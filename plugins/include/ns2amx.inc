@@ -10,23 +10,19 @@
 #endif
 #define _ns2amx_included
 
-#include <engine>
-#include <ns>
+#include <engine>     // various engine calls
+#include <fakemeta>   // pev/engfunc/dllfunc/various calls which rely on engfunc/dllfunc
+#include <ns>         // ns specifics
 
 stock is_entity(id)
-{
 	return is_valid_ent(id)
-}
 
-stock get_build(classname[], value, number=0, NS_Version)
-{
-	return ns_get_build(classname, value, number, NS_Version)
-}
+/* The end of the native is buffered incase the plugin is including an NS_VERSION (no longer supported), ignore it */
+stock get_build(classname[], value, number=0,{Float,_}:...)
+	return ns_get_build(classname, value, number)
 
 stock get_private_i(index, offset, linuxdiff=5)
-{
 	return get_offset_int(index, offset, linuxdiff)
-}
 
 stock set_private_i(index, offset, value, linuxdiff=5)
 {
@@ -44,84 +40,80 @@ stock Float:set_private_f(index, offset, Float:value, linuxdiff=5)
 }
 
 stock make_string(value[])
-{
-	return 0
-}
+	return EngFunc(EngFunc_AllocString,value)
 
 stock string(value, ret[])
 {
-	return 0
+  new szString[128] // gah...
+  EngFunc(EngFunc_SzFromIndex,value,szString,127)
+  copy(ret,szString,127)
 }
 
 stock gpgobals_time()
-{
 	return halflife_time()
-}
 
 stock get_range(ida, idb)
-{
 	return entity_get_range(ida, idb)
-}
 
 stock supercede()
-{
-	return 0
-}
+  return 0
 
 stock register_clientkill()
-{
 	return 0
-}
 
 stock register_changelvl()
-{
 	return 0
-}
 
 stock register_msgblock(msgName[])
-{
 	return set_msg_block(get_user_msgid(msgName), BLOCK_SET)
-}
 
 stock register_msgedit(msgName[], cmd[])
-{
 	return register_message(get_user_msgid(msgName), cmd)
-}
 
 stock register_playback(event, cmd[])
-{
 	return 0
-}
 
 stock get_spwan(type, number=0, Float:ret[3])
-{
 	return ns_get_spawn(type, number, ret)
-}
 
 stock has_weapon(index, weapon, setweapon=-1)
-{
-	return user_has_weapon(index, weapon, setweapon)
-}
+	return ns_has_weapon(index, weapon, setweapon)
 
 stock gpglobals_v(type, Float:ret[3])
 {
-	return get_global_vector(type, ret)
+  new v_type=0
+  switch (type)
+  {
+  case 1:
+    v_type = GL_v_forward
+  case 2:
+    v_type = GL_v_right
+  case 3:
+    v_type = GL_v_up
+  }
+  if (!v_type)
+    return 0
+	return get_global_vector(v_type, ret)
 }
 
-stock pev(index, value, ...)
+stock pev_i(_index,_field)
+	return pev(_index,_field)
+
+stock set_pev_i(_index, _field, _val)
+	return set_pev(_index,_field,_val)
+	
+stock Float:pev_f(_index,_field)
 {
-	return 0
+  new Float:f
+  pev(_index,_field,f)
+  return f
 }
-
-stock set_pev(index, value, ...)
-{
-	return 0
-}
-
+stock set_pev_f(_index,_field,Float:_val)
+  return set_pev(_index,_field,_val)
+  
+  
 stock msg_args()
-{
 	return get_msg_args()
-}
 
 stock Float:msg_loc(vec)
 {
@@ -134,49 +126,31 @@ stock Float:msg_loc(vec)
 }
 
 stock msg_dest()
-{
 	return 0
-}
 
 stock msg_type()
-{
 	return 0
-}
 
 stock msg_name()
-{
 	return 0
-}
 
 stock msg_set_s(number, value[])
-{
 	return set_msg_arg_string(number, value)
-}
 
 stock msg_set_f(number, Float:value)
-{
 	return set_msg_arg_float(number, value)
-}
 
 stock msg_set_i(number, value)
-{
 	return set_msg_arg_int(number, value)
-}
 
 stock msg_data_type(value)
-{
 	return get_msg_arg_type(value)
-}
 
 stock msg_strdata(value)
-{
 	return 0
-}
 
 stock msg_data(value, ...)
-{
 	return 0
-}
 
 stock get_filename(szFile[], len=-1)
 {
@@ -185,72 +159,45 @@ stock get_filename(szFile[], len=-1)
 	return res
 }
 
-stock get_speedchange(id, speed)
-{
-	return ns_get_speedchange(id, speed)
-}
+stock get_speedchange(id)
+	return ns_get_speedchange(id)
 
 stock set_speedchange(id, speed)
-{
-	return ns_set_speedchange(id)
-}
+	return ns_set_speedchange(id,speed)
 
 stock get_maxspeed(id)
-{
 	return ns_get_maxspeed(id)
-}
-
-stock set_ns_menu(id,r=NSMENU_R,g=NSMENU_G,b=NSMENU_B,Float:x=NSMENU_X,Float:y=NSMENU_Y, effects=0, Float:fadeintime=0.0, Float:fadeouttime=0.0,channel1=NSMENU_CHAN1,channel2=NSMENU_CHAN2)
-{
-	return ns_set_menu(id, r, g, b, x, y, effects, fadeintime, fadeouttime, channel1, channel2)
-}
-
-stock show_ns_menu(id, cmd[], text[], keys, time)
-{
-	ns_show_menu(id, cmd, text, keys, time)
-}
 
 stock set_player_model(id, model[]="")
-{
 	return ns_set_player_model(id, model)
-}
 
 stock set_player_skin(id, skin=-1)
-{
 	return ns_set_player_skin(id, skin)
-}
 
 stock set_player_body(id, body=-1)
-{
 	return ns_set_player_body(id, body)
-}
 
 stock ns2amx_version()
-{
-	return ns_version()
-}
+	return 0
 
 stock set_kvhandled()
-{
 	return 0
-}
 
 stock ns2amx_getammo(id,Weapon)
-{
-	return ns_getammo(id, Weapon)
-}
-stock ns2amx_setammo(id,Weapon,Value)
-{
-	return ns_setammo(id, Weapon, Value)
-}
-stock ns2amx_giveitem(id,svClassname[])
-{
-	return ns_giveitem(id, svClassname)
+	return ns_get_weap_reserve(id, Weapon)
 
-}
+stock ns2amx_setammo(id,Weapon,Value)
+	return ns_set_weap_reserve(id, Weapon, Value)
+
+stock ns2amx_giveitem(id,svClassname[])
+	return ns_give_item(id, svClassname)
+
 stock ns2amx_moveto(idMoved,idDest)
 {
-	return ns_moveto(idMoved, idDest)
+  new Float:origin[3]
+  entity_get_vector(idDest, EV_VEC_origin,origin)
+  entity_set_origin(idMoved, origin)
+  return 1
 }
 /* Returns whether or not the player has the MASK_DIGESTING flag set. */
 stock ns2amx_isdigesting(id)
@@ -269,53 +216,39 @@ stock ns2amx_inrange(ida,idb,range)
 }
 
 stock ns2amx_nspopup(id,svMessage[190])
-{
-	return ns_nspopup(id, svMessage)
-}
+	return ns_popup(id, svMessage)
+
 stock ns2amx_setres(id,value)
-{
-	return ns_setres(id, value)
-}
+	return ns_set_res(id, float(value))
+
 stock ns2amx_getenergy(id)
-{
-	return ns_getenergy(id)
-}
+	return floatround(ns_get_energy(id))
+
 stock ns2amx_setenergy(id,energy)
-{
-	return ns_setenergy(id, energy)
-}
+	return ns_set_energy(id, float(energy))
+
 stock ns2amx_getjpfuel(id)
-{
-	return ns_getjpfuel(id)
-}
+	return floatround(ns_get_jpfuel(id))
+
 stock ns2amx_setjpfuel(id,fuel)
-{
-	return ns_setjpfuel(id, fuel)
-}
+	return ns_set_jpfuel(id, float(fuel))
+
 stock get_mask(id,mask)
-{
   return ns_get_mask(id, mask)
-}
+
 stock set_mask(id,mask,value)
-{
   return ns_set_mask(id,mask,value)
-}
+
 stock get_special(id,mask)
-{
 	return ns_get_special(id,mask)
-}
+
 stock get_res(id)
-{
-	return ns_get_res(id)
-}
+	return floatround(ns_get_res(id))
+
 stock get_class(id)
-{
   return ns_get_class(id)
-}
 
 
 
 stock is_combat()
-{
 	return ns_is_combat()
-}

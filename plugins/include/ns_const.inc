@@ -10,17 +10,7 @@
 #endif
 #define NS_CONST_INC
 
-// These values are customizable (for the custom menus)
-// If your menu uses the default menu scheme, then it will use this.
-#define NSMENU_X	0.2
-#define NSMENU_Y	0.1
-#define NSMENU_R	255
-#define NSMENU_G	200
-#define NSMENU_B	100
-
-#define NSMENU_CHAN1	2
-#define NSMENU_CHAN2	3
-
+// entity pev->iuser4 fields
 enum masks
 {
 	MASK_NONE = 0,
@@ -129,7 +119,18 @@ enum weapons
 	WEAPON_DEVOUR,
 	WEAPON_MAX
 }
+enum playerIcons {
+  ICON_DEVELOPER      = 1,
+  ICON_GUIDE          = 2,
+  ICON_SERVEROP       = 4,
+  ICON_PLAYTESTER     = 8,
+  ICON_CONTRIBUTOR    = 16,
+  ICON_CHEATINGDEATH  = 32,
+  ICON_VETERAN        = 64,
+  ICON_BETASERVEROP   = 128, // Using this messes with ICON_SERVEROPs
+  ICON_CUSTOM         = 512
 
+}
 enum hivetraits
 {
 	HIVETRAIT_NONE	= 0,

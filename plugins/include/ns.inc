@@ -84,12 +84,6 @@ native ns_has_weapon(id,NSWeapon:weapon,setweapon=-1);
 */
 native ns_get_spawn(team,number=0,Float:ret[3]);
 
-/* Configures display of the custom menus.  This display is _very_ similar to set_hudmessage() */
-native ns_set_menu(id,r=NSMENU_R,g=NSMENU_G,b=NSMENU_B,Float:x=NSMENU_X,Float:y=NSMENU_Y, effects=0, Float:fadeintime=0.0, Float:fadeouttime=0.0,channel1=NSMENU_CHAN1,channel2=NSMENU_CHAN2);
-
-/* Displays a custom menu.  It will execute command(id,keys) when the menu is pressed. */
-native ns_show_menu(id,szCommand[],szText[],keys,time);
-
 /* Returns the class of the player.  Look in the classes enum in ns_const.inc for the value's meaning. */
 native ns_get_class(id);
 
@@ -173,4 +167,8 @@ native ns_get_hive_trait(idHive);
 /* Sets the trait type tied to the hive.  Look at the hivetrait enum for the values. */
 native ns_set_hive_trait(idHive,trait);
 
+/* Sets the players field of view, set "_fov" to 0.0 (or omit it) to return to normal. FOV change will persist until disconnect unless reset by a plugin */
 native ns_set_fov(idPlayer,Float:_fov=0.0);
+
+/* Give a player an item. */
+native ns_give_item(id,const _szClassName[]);

@@ -204,3 +204,13 @@ stock set_entity_visibility(entity, visible = 1) {
 stock get_entity_visibility(entity) {
 	return (entity_get_int(entity, EV_INT_effects) & EF_NODRAW)
 }
+
+stock set_user_velocity(entity, Float:vec[3])
+{
+	return entity_set_vector(entity, EV_SZ_velocity, vec)
+}
+
+stock get_user_velocity(entity, Flaot:vec[3])
+{
+	return entity_get_vector(entity, EV_SZ_velocity, vec)
+}

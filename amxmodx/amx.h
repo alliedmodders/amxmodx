@@ -164,7 +164,7 @@ typedef int (AMXAPI *AMX_DEBUG)(struct tagAMX *amx);
 typedef struct {
   const char _FAR *name PACKED;
   AMX_NATIVE func       PACKED;
-} AMX_NATIVE_INFO       PACKED;
+} AMX_NATIVE_INFO;
 
 #define AMX_USERNUM     4
 #define sEXPMAX         19      /* maximum name length for file version <= 6 */
@@ -173,7 +173,7 @@ typedef struct {
 typedef struct tagAMX_FUNCSTUB {
   uint32_t address           PACKED;
   const char name[sEXPMAX+1] PACKED;
-} AMX_FUNCSTUB               PACKED;
+} AMX_FUNCSTUB;
 
 /* The AMX structure is the internal structure for many functions. Not all
  * fields are valid at all times; many fields are cached in local variables.
@@ -214,7 +214,7 @@ typedef struct tagAMX {
     int reloc_size      PACKED; /* required temporary buffer for relocations */
     long code_size      PACKED; /* estimated memory footprint of the native code */
   #endif
-} AMX                   PACKED;
+} AMX;
 
 /* The AMX_HEADER structure is both the memory format as the file format. The
  * structure is used internaly.

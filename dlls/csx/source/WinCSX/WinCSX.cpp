@@ -209,7 +209,7 @@ void ListboxItemSelected(HWND hDlg) {
 	SetDlgItemInt(hDlg, IDC_EDIT_DEFUSED, stats->bDefused, 0);
 }
 
-// Message handler for about WinCSXBox.
+// Message handler for WinCSXBox.
 LRESULT CALLBACK WinCSXBox(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
@@ -237,8 +237,31 @@ LRESULT CALLBACK WinCSXBox(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 				} 
 				break;
 			case IDC_ABOUT:
-				DialogBox(hInst, (LPCTSTR)IDD_ABOUTBOX, hDlg, (DLGPROC)WinCSXBox);
+				DialogBox(hInst, (LPCTSTR)IDD_ABOUTBOX, hDlg, (DLGPROC)AboutBox);
 				break;
+		}
+		break;
+	}
+
+	return FALSE;
+}
+
+// Message handler for AboutBox.
+LRESULT CALLBACK AboutBox(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return InitWinCSXBox(hDlg); // load all data from file and fill the listbox with the shit
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+			case IDOK:
+			case IDCANCEL:
+				EndDialog(hDlg, LOWORD(wParam));
+				
+				return TRUE;
 		}
 		break;
 	}

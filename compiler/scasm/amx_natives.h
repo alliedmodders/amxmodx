@@ -36,8 +36,10 @@ public:
 public:
 	~NativeMngr();
 	void AddNative(SymbolList::Symbol *S);
+	void Clear();
 	NativeMngr::Native *FindNative(std::string &sym);
 	int GetNativeId(std::string &sym);
+	void GetNatives(std::vector<NativeMngr::Native *> &nList);
 public:
 	static const int ncip = -1;
 private:

@@ -37,6 +37,7 @@ public:
 	void AddLabel(SymbolList::Symbol *sym, int cip);
 	LabelMngr::Label *FindLabel(std::string &sym);
 	int GetCip(std::string &sym);
+	void Clear();
 private:
 	std::vector<LabelMngr::Label *> List;
 public:

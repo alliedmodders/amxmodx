@@ -25,7 +25,17 @@
 ErrorMngr::ErrorMngr()
 {
 	printf("Not instantiated with a compiler.");
-	exit(0);
+	Cmp = NULL;
+	assert(Cmp);
+}
+
+void ErrorMngr::Clear()
+{
+	Totals[0] = 0;
+	Totals[1] = 0;
+	Totals[2] = 0;
+	Totals[3] = 0;
+	HighestError = Err_None;	
 }
 
 ErrorMngr::ErrorMngr(void *c)
@@ -36,6 +46,7 @@ ErrorMngr::ErrorMngr(void *c)
 	Totals[1] = 0;
 	Totals[2] = 0;
 	Totals[3] = 0;
+	HighestError = Err_None;
 }
 
 ErrorType ErrorMngr::GetErrorType(ErrorCode id)
@@ -82,8 +93,21 @@ void ErrorMngr::DefineErrors()
 	List.at(Err_MacroParamCount) = "Parameter count for macro \"%s\" incorrect";
 	List.at(Err_FatalTokenError) = "Fatal token error encountered"; 
 	List.at(Err_Invalid_Section) = "Section identifier \"%s\" is not valid, ignoring section.";
+}
 
-	HighestError = Err_None;
+void ErrorMngr::PrintReport()
+{
+	static char *ErrorSwi[4] = {"Notice", "Warning", "Error", "Fatal Error"};
+	int i = 0;
+
+	printf("+---------------------------+\n");
+
+	for (i=0; i<4; i++)
+	{
+		printf("| %ss: %s%d   |\n", ErrorSwi[i], (i!=3)?"\t\t":"\t", Totals[i]);
+	}
+
+	printf("+---------------------------+\n");
 }
 
 void ErrorMngr::ErrorMsg(ErrorCode error, ...)

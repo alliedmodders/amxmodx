@@ -40,6 +40,7 @@ public:
 	int GetCip(std::string &sym);
 	bool SetPublic(std::string &sym);
 	void GetPublics(std::vector<ProcMngr::AsmProc *> &pbList);
+	void Clear();
 private:
 	std::vector<ProcMngr::AsmProc *> List;
 public:

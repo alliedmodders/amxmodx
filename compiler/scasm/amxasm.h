@@ -57,6 +57,7 @@ public:
 #include "amx_proc.h"
 #include "amx_label.h"
 #include "amx_natives.h"
+#include "amx_nametable.h"
 #include "amx_compiler.h"	//This should be last!
 
 #define SMALL_CELL_SIZE		32

@@ -235,6 +235,9 @@ cExprType CExpr::Evaluate()
 					} else {
 						/* STRING DISCOVERED */
 						t = Val_String;
+						/* Erase literals */
+						data.erase(0, 1);
+						data.erase(data.size()-1, 1);
 						numVal = (int)(data.size()+1);
 						break;
 					}

@@ -24,6 +24,11 @@
 
 LabelMngr::~LabelMngr()
 {
+	Clear();
+}
+
+void LabelMngr::Clear()
+{	
 	std::vector<LabelMngr::Label *>::iterator i;
 
 	for (i=List.begin(); i!=List.end(); i++)

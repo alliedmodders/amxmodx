@@ -20,45 +20,21 @@
  * Version: $Id$
  */
 
-#ifndef _INCLUDE_SYMBOL_H
-#define _INCLUDE_SYMBOL_H
+#ifndef _INCLUDE_NAMETABLE_H
+#define _INCLUDE_NAMETABLE_H
 
-bool IsValidSymbol(std::string &text);
-
-typedef enum
-{
-	Sym_None,
-	Sym_Define,
-	Sym_Macro,
-	Sym_Proc,
-	Sym_Dat,
-	Sym_Reserved,
-	Sym_Label,
-	Sym_Native,
-} SymbolType;
-
-class SymbolList
+class NameRecord
 {
 public:
-	class Symbol
-	{
-	public:
-		bool IsEqual(std::string &s);
-		SymbolType type;
-		std::string sym;
-		int line;
-	};
-
-public:
-	~SymbolList();
-	SymbolList::Symbol* AddSymbol(std::string &sym, SymbolType type, int line);
-	SymbolList::Symbol* AddSymbol(const char *szSym, SymbolType type, int line);
-	SymbolList::Symbol* FindSymbol(std::string &sym);
-	void PrintTable();
-	void Clear();
-private:
-	std::vector<Symbol*> List;
+	const char *Name;
+	int32_t offset;
 };
 
+class AddrTable
+{
+public:
+	int32_t addr;
+	int32_t offset;
+};
 
-#endif //_INCLUDE_SYMBOL_H
+#endif //_INCLUDE_NAMETABLE_H

@@ -37,15 +37,19 @@ public:
 	};
 public:
 	~DataMngr();
-	DataMngr() { cellsize = 4; lastOffset = 0; }
-	DataMngr(int cell) { lastOffset = 0; cellsize = cell; }
+	DataMngr() { cellsize = 4; lastOffset = 0; cursize = 0; }
+	DataMngr(int cell) { lastOffset = 0; cellsize = cell; cursize = 0; }
 	void Add(std::string &s, CExpr &expr, bool db = false);
 	DataMngr::Datum *FindData(std::string &sym);
+	void GetData(std::vector<DataMngr::Datum *> &dList);
 	int GetOffset(std::string &sym);
+	int GetSize();
+	void Clear();
 private:
 	std::vector<DataMngr::Datum *> List;
 	int lastOffset;
 	int cellsize;
+	int cursize;
 public:
 	static const int nof = -1;
 };

@@ -24,6 +24,11 @@
 
 DefineMngr::~DefineMngr()
 {
+	Clear();
+}
+
+void DefineMngr::Clear()
+{
 	std::vector<DefineMngr::Define *>::iterator i;
 
 	for (i=List.begin(); i!=List.end(); i++)

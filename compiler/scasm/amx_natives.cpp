@@ -24,6 +24,11 @@
 
 NativeMngr::~NativeMngr()
 {
+	Clear();
+}
+
+void NativeMngr::Clear()
+{
 	std::vector<NativeMngr::Native *>::iterator i;
 
 	for (i=List.begin(); i!=List.end(); i++)
@@ -75,4 +80,14 @@ NativeMngr::Native *NativeMngr::FindNative(std::string &sym)
 	}
 
 	return NULL;
+}
+
+void NativeMngr::GetNatives(std::vector<NativeMngr::Native *> &nList)
+{
+	std::vector<NativeMngr::Native *>::iterator i;
+
+	for (i=List.begin(); i!=List.end(); i++)
+	{
+		nList.push_back( (*i) );
+	}
 }

@@ -51,7 +51,7 @@ bool IsValidSymbol(std::string &text)
 	return true;
 }
 
-SymbolList::~SymbolList()
+void SymbolList::Clear()
 {
 	std::vector<SymbolList::Symbol *>::iterator i;
 
@@ -64,23 +64,38 @@ SymbolList::~SymbolList()
 	List.clear();
 }
 
-SymbolList::Symbol::Symbol(SymbolType t, const char *s, int l)
+SymbolList::~SymbolList()
 {
-	line = l;
-	sym.assign(s);
-	type = t;
+	Clear();
 }
 
-int SymbolList::Symbol::IsEqual(std::string &s)
+bool SymbolList::Symbol::IsEqual(std::string &s)
 {
 	return (sym.compare(s)==0);
 }
 
-SymbolList::Symbol *SymbolList::AddSymbol(const char *s, SymbolType type, int line)
+SymbolList::Symbol* SymbolList::AddSymbol(const char *szSym, SymbolType type, int line)
 {
-	Symbol *sym = new Symbol(type, s, line);
-	List.push_back(sym);
-	return sym;
+	SymbolList::Symbol *S = new SymbolList::Symbol;
+
+	S->line = line;
+	S->type = type;
+	S->sym.assign(szSym);
+
+	List.push_back(S);
+	return S;
+}
+
+SymbolList::Symbol *SymbolList::AddSymbol(std::string &sym, SymbolType type, int line)
+{
+	SymbolList::Symbol *S = new SymbolList::Symbol;
+
+	S->line = line;
+	S->type = type;
+	S->sym.assign(sym);
+
+	List.push_back(S);
+	return S;
 }
 
 SymbolList::Symbol* SymbolList::FindSymbol(std::string &sym)
@@ -100,6 +115,6 @@ void SymbolList::PrintTable()
 	std::vector<Symbol*>::iterator i;
 	for (i=List.begin(); i!=List.end(); i++)
 	{
-		printf("Symbol \"%s\" defined on line %d\n", (*i)->GetSymbol(), (*i)->GetLine());
+		printf("Symbol \"%s\" defined on line %d\n", (*i)->sym.c_str(), (*i)->line);
 	}
 }

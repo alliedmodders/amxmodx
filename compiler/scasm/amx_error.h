@@ -87,8 +87,10 @@ private:
 public:
 	ErrorMngr();
 	ErrorMngr(void *c);
+	void Clear();
 	void ErrorMsg(ErrorCode error, ...);
 	ErrorType GetStatus() { return HighestError; }
+	void PrintReport();
 };
 
 #endif //_INCLUDE_AMX_ERROR

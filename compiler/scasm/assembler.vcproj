@@ -175,6 +175,9 @@
 				RelativePath=".\amx_macro.h">
 			</File>
 			<File
+				RelativePath=".\amx_nametable.h">
+			</File>
+			<File
 				RelativePath=".\amx_natives.h">
 			</File>
 			<File

@@ -40,6 +40,7 @@ private:
 	std::vector<Define *> List;
 public:
 	~DefineMngr();
+	void Clear();
 	DefineMngr::Define *AddDefine(std::string &sym, std::string &def);
 	DefineMngr::Define *FindDefine(std::string &sym);
 	void SearchAndReplace(std::string &text);

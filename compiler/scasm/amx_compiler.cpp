@@ -26,11 +26,14 @@ Compiler::Compiler()
 {
 	curLine = -1;
 	cellsize = 4;
+	Output = 0;
+	stacksize = cellsize * 4096;
 	Init();
 }
 
 Compiler::~Compiler()
 {
+	Clear();
 	delete CDefines;
 	delete CError;
 	delete CLabels;
@@ -43,10 +46,12 @@ Compiler::~Compiler()
 
 Compiler::Compiler(std::string &f)
 {
-	Init();
-	filename.assign(f);
 	curLine = -1;
 	cellsize = 4;
+	Output = 0;
+	filename.assign(f);
+	stacksize = cellsize * 4096;
+	Init();
 }
 
 void Compiler::Load(std::string &f)
@@ -77,13 +82,241 @@ void Compiler::Init()
 	InitOpcodes();
 }
 
+int Compiler::CipCount()
+{
+	std::vector<Asm *>::iterator i;
+	std::vector<int>::iterator j;
+	int cipc = 0;
+
+    for (i=CodeList.begin(); i!=CodeList.end(); i++)
+	{
+		cipc+=cellsize;
+		for (j=(*i)->params.begin(); j!=(*i)->params.end(); j++)
+		{
+			cipc+=cellsize;
+		}
+	}
+
+	return cipc;
+}
+
+bool Compiler::Compile()
+{
+	if (CodeList.size() < 1 || !CError || CError->GetStatus() >= Err_Error)
+	{
+		return false;
+	}
+
+	int32_t fileSize = 0;
+	int16_t magic = AMX_MAGIC;
+	char file_version = CUR_FILE_VERSION;
+    char amx_version = MIN_AMX_VERSION;
+	int16_t flags = 0;
+	int16_t defsize = 8;
+	int32_t cod, dat, hea, stp, cip, publics, natives, libraries;
+	int32_t pubvars, tags, names;
+	int hdrEnd = sizeof(AMX_HEADER);
+	
+	std::vector<ProcMngr::AsmProc *> ProcList;
+	std::vector<ProcMngr::AsmProc *>::iterator pl;
+	std::vector<NativeMngr::Native *> NativeList;
+	std::vector<NativeMngr::Native *>::iterator nl;
+	std::map<int,int> NameMap;
+
+	/* Tables */
+	std::vector<NameRecord> Nametbl;
+	std::vector<AddrTable> PublicsTable;
+	std::vector<AddrTable> NativesTable;
+	std::vector<AddrTable>::iterator ai;
+	std::vector<NameRecord>::iterator nt;
+
+	PROC->GetPublics(ProcList);
+	CNatives->GetNatives(NativeList);	
+
+	/* The only way I see to do this is to build the nametable first.
+	 */
+
+	/* Public table starts right after the header */
+	publics = hdrEnd;
+	for (pl = ProcList.begin(); pl != ProcList.end(); pl++)
+	{
+		NameRecord n;
+		AddrTable a;
+		n.Name = (*pl)->Symbol->sym.c_str();
+		a.addr = (*pl)->ASM->cip;
+		printf("%s cip = %d\n", n.Name, a.addr);
+		a.offset = Nametbl.size();
+		Nametbl.push_back(n);
+		PublicsTable.push_back(a);
+	}
+
+    natives = publics + (PublicsTable.size() * (sizeof(int32_t) * 2));
+	for (nl = NativeList.begin(); nl != NativeList.end(); nl++)
+	{
+		NameRecord n;
+		AddrTable a;
+		n.Name = (*nl)->S->sym.c_str();
+		a.addr = 0;
+		a.offset = Nametbl.size();
+		Nametbl.push_back(n);
+		NativesTable.push_back(a);
+	}
+
+	libraries = natives + (NativesTable.size() * (sizeof(int32_t) * 2));
+	pubvars = libraries;
+	tags = pubvars;
+	names = tags;
+
+	/* Fill out the tables */
+	int cOffset = names + sizeof(int16_t);
+	int16_t nameHdr = 0x1F;
+	for (ai = PublicsTable.begin(); ai != PublicsTable.end(); ai++)
+	{
+		int off = (*ai).offset;
+		NameMap[cOffset] = off;
+		(*ai).offset = cOffset;
+		cOffset += strlen(Nametbl.at(off).Name) + 1;
+	}
+	for (ai = NativesTable.begin(); ai != NativesTable.end(); ai++)
+	{
+		int off = (*ai).offset;
+		NameMap[cOffset] = off;
+		(*ai).offset = cOffset;
+		cOffset += strlen(Nametbl.at(off).Name) + 1;
+	}
+
+	cod = cOffset;
+	dat = cod + CipCount();
+	hea = dat + DAT->GetSize();
+	stp = hea + stacksize;
+	int16_t cipHdr = 0x00;
+	cip = -1;
+	fileSize = hea;
+
+	std::string amxname;
+	amxname.assign(filename);
+	int pos = amxname.find(".asm");
+	if (pos != std::string::npos)
+	{
+		amxname.replace(pos, 4, ".amx");
+	} else {
+		amxname.append(".amx");
+	}
+
+	FILE *fp = fopen(amxname.c_str(), "wb");
+
+	fwrite((void*)&fileSize, sizeof(int32_t), 1, fp);
+	fwrite((void*)&magic, sizeof(int16_t), 1, fp);
+	fwrite((void*)&file_version, sizeof(char), 1, fp);
+	fwrite((void*)&amx_version, sizeof(char), 1, fp);
+	fwrite((void*)&flags, sizeof(int16_t), 1, fp);
+	fwrite((void*)&defsize, sizeof(int16_t), 1, fp);
+
+	fwrite((void*)&cod, sizeof(int32_t), 1, fp);
+	fwrite((void*)&dat, sizeof(int32_t), 1, fp);
+	fwrite((void*)&hea, sizeof(int32_t), 1, fp);
+	fwrite((void*)&stp, sizeof(int32_t), 1, fp);
+	fwrite((void*)&cip, sizeof(int32_t), 1, fp);
+	fwrite((void*)&publics, sizeof(int32_t), 1, fp);
+	fwrite((void*)&natives, sizeof(int32_t), 1, fp);
+	fwrite((void*)&libraries, sizeof(int32_t), 1, fp);
+	fwrite((void*)&pubvars, sizeof(int32_t), 1, fp);
+	fwrite((void*)&tags, sizeof(int32_t), 1, fp);
+	fwrite((void*)&names, sizeof(int32_t), 1, fp);
+
+	for (ai = PublicsTable.begin(); ai != PublicsTable.end(); ai++)
+	{
+		fwrite((void*)&((*ai).addr), sizeof(int32_t), 1, fp);
+		fwrite((void*)&((*ai).offset), sizeof(int32_t), 1, fp);
+	}
+
+	for (ai = NativesTable.begin(); ai != NativesTable.end(); ai++)
+	{
+		fwrite((void*)&((*ai).addr), sizeof(int32_t), 1, fp);
+		fwrite((void*)&((*ai).offset), sizeof(int32_t), 1, fp);
+	}
+
+	fwrite((void*)&(nameHdr), sizeof(int16_t), 1, fp);
+
+	for (ai = PublicsTable.begin(); ai != PublicsTable.end(); ai++)
+	{
+		int off = (*ai).offset;
+		int offs = NameMap[off];
+		const char *s = Nametbl.at(offs).Name;
+		fwrite(s, sizeof(char), strlen(s)+1, fp);
+	}
+
+	for (ai = NativesTable.begin(); ai != NativesTable.end(); ai++)
+	{
+		int off = (*ai).offset;
+		int offs = NameMap[off];
+		const char *s = Nametbl.at(offs).Name;
+		fwrite(s, sizeof(char), strlen(s)+1, fp);
+	}
+
+	//fwrite((void*)&cipHdr, sizeof(int16_t), 1, fp);
+
+	/* Write the code */
+
+	std::vector<Asm *>::iterator ci;
+	std::vector<int>::iterator di;
+	int cop = 0;
+	for (ci = CodeList.begin(); ci != CodeList.end(); ci++)
+	{
+		cop = (*ci)->op;
+		fwrite((void *)&cop, sizeof(int32_t), 1, fp);
+		for (di = (*ci)->params.begin(); di != (*ci)->params.end(); di++)
+		{
+			cop = (*di);
+			fwrite((void *)&cop, sizeof(int32_t), 1, fp);
+		}
+	}
+
+	std::vector<DataMngr::Datum *> dm;
+	std::vector<DataMngr::Datum *>::iterator dmi;
+	DAT->GetData(dm);
+
+	int val = 0;
+	const char *s = 0;
+	for (dmi = dm.begin(); dmi != dm.end(); dmi++)
+	{
+		if ( (*dmi)->e.GetType() == Val_Number )
+		{
+			val = (*dmi)->e.GetNumber();
+			fwrite((void *)&val, sizeof(int32_t), 1, fp);
+		} else {
+			s = (*dmi)->e.GetString();
+			for (int q = 0; q < (*dmi)->e.Size(); q++)
+			{
+				val = s[q];
+				fwrite((void*)&val, sizeof(int32_t), 1, fp);
+			}
+		}
+	}
+	
+	fclose(fp);
+
+	return true;
+}
+
+void Compiler::Clear()
+{
+	DAT->Clear();
+	CDefines->Clear();
+	CMacros->Clear();
+	CLabels->Clear();
+	CNatives->Clear();
+	PROC->Clear();
+	CSymbols->Clear();
+}
+
 bool Compiler::Parse()
 {
 	std::ifstream fp(filename.c_str());
 	char buffer[256] = {0};
 	curLine = 0;
 	AsmSection sec = Asm_None;
-	lastCip = -1;
+	lastCip = 0-cellsize;
 
 	if (!fp.is_open())
 	{
@@ -157,7 +390,7 @@ bool Compiler::Parse()
 				SymbolList::Symbol *S = NULL;
 				if ((S = CSymbols->FindSymbol(symbol)) != NULL)
 				{
-					CError->ErrorMsg(Err_Symbol_Reuse, symbol.c_str(), S->GetLine());
+					CError->ErrorMsg(Err_Symbol_Reuse, symbol.c_str(), S->line);
 					continue;
 				}
 				
@@ -174,7 +407,7 @@ bool Compiler::Parse()
 				
 				/* Add into the DAT section */
 				DAT->Add(symbol, e, (fmt.compare("db")==0)?true:false);
-				CSymbols->AddSymbol(symbol.c_str(), Sym_Dat, CurLine());
+				CSymbols->AddSymbol(symbol, Sym_Dat, CurLine());
 			} else if (sec == Asm_Public) {
 				if (!IsValidSymbol(line))
 				{
@@ -187,9 +420,9 @@ bool Compiler::Parse()
 					CError->ErrorMsg(Err_Unknown_Symbol, line.c_str());
 					continue;
 				}
-				if ( (S->GetType() != Sym_Proc) )
+				if ( (S->type != Sym_Proc) )
 				{
-					CError->ErrorMsg(Err_Symbol_Type, Sym_Proc, S->GetType());
+					CError->ErrorMsg(Err_Symbol_Type, Sym_Proc, S->type);
 					continue;
 				}
 				if (!PROC->SetPublic(line))
@@ -206,10 +439,10 @@ bool Compiler::Parse()
 				SymbolList::Symbol *S = NULL;
 				if ( (S = CSymbols->FindSymbol(line)) != NULL)
 				{
-					CError->ErrorMsg(Err_Invalid_Symbol, line.c_str(), S->GetLine());
+					CError->ErrorMsg(Err_Invalid_Symbol, line.c_str(), S->line);
 					continue;
 				}
-				S = CSymbols->AddSymbol(line.c_str(), Sym_Native, CurLine());
+				S = CSymbols->AddSymbol(line, Sym_Native, CurLine());
 				CNatives->AddNative(S);
 			} else if (sec == Asm_Code) {
 				std::string code;
@@ -229,15 +462,16 @@ bool Compiler::Parse()
 					/* Check if the symbol is already used */
 					if ( (S = CSymbols->FindSymbol(params)) != NULL)
 					{
-						CError->ErrorMsg(Err_Invalid_Symbol, params.c_str(), S->GetLine());
+						CError->ErrorMsg(Err_Invalid_Symbol, params.c_str(), S->line);
 						continue;
 					}
 					/* Create instruction */
 					Asm *ASM = new Asm;
-					ASM->cip = ++lastCip;
+					ASM->cip = lastCip + cellsize;
 					ASM->op = OpCodes["proc"];
+					lastCip += cellsize;
 					/* Add symbol */
-					S = CSymbols->AddSymbol(params.c_str(), Sym_Proc, CurLine());
+					S = CSymbols->AddSymbol(params, Sym_Proc, CurLine());
 					/* Add to code list */
 					CodeList.push_back(ASM);
 					/* Add to PROC list */
@@ -255,11 +489,11 @@ bool Compiler::Parse()
 					/* Check if the symbol is already used */
 					if ( (S = CSymbols->FindSymbol(code)) != NULL)
 					{
-						CError->ErrorMsg(Err_Invalid_Symbol, code.c_str(), S->GetLine());
+						CError->ErrorMsg(Err_Invalid_Symbol, code.c_str(), S->line);
 						continue;
 					}
-					S = CSymbols->AddSymbol(code.c_str(), Sym_Label, CurLine());
-					CLabels->AddLabel(S, lastCip+1);
+					S = CSymbols->AddSymbol(code, Sym_Label, CurLine());
+					CLabels->AddLabel(S, lastCip+cellsize);
 				} else {
 					/* Check if there is a valid opcode */
 					int op = OpCodes[code];
@@ -283,8 +517,9 @@ bool Compiler::Parse()
 						}
 					}
 
-					ASM->cip = ++lastCip;
+					ASM->cip = (lastCip+cellsize);
 					ASM->op = op;
+					lastCip += cellsize;
 
 					switch (op)
 					{
@@ -1072,8 +1307,10 @@ bool Compiler::Parse()
 					CodeList.push_back(ASM);
 				} /* Asm_Code */
 			} /* Section If */
-		}
-	}
+		} /* Line processing */
+	} /* While */
+
+	CError->PrintReport();
 
 	return true;
 }
@@ -1432,7 +1669,7 @@ void Compiler::ProcessDirective(std::string &text)
 			SymbolList::Symbol *S;
 			if ((S = CSymbols->FindSymbol(symbol)) != NULL)
 			{
-				CError->ErrorMsg(Err_SymbolRedef, curLine, S->GetSymbol(), S->GetLine());
+				CError->ErrorMsg(Err_SymbolRedef, curLine, S->sym.c_str(), S->line);
 			}
 			/* Store the argstring, which is the rest of the data */
 			std::string argstring;
@@ -1455,7 +1692,7 @@ void Compiler::ProcessDirective(std::string &text)
 			}
 			CMacros->AddMacroEnd(m);
 			/* Make sure to add the symbol */
-			CSymbols->AddSymbol(symbol.c_str(), Sym_Macro, curLine);
+			CSymbols->AddSymbol(symbol, Sym_Macro, curLine);
 			//TODO: ClearList(ArgList);
 		}
 	} else if (!directive.compare("stacksize")) {
@@ -1467,11 +1704,11 @@ void Compiler::ProcessDirective(std::string &text)
 		SymbolList::Symbol *S;
 		if ((S = CSymbols->FindSymbol(symbol)) != NULL)
 		{
-			CError->ErrorMsg(Err_SymbolRedef, curLine, S->GetSymbol(), S->GetLine());
+			CError->ErrorMsg(Err_SymbolRedef, curLine, S->sym.c_str(), S->line);
 		}
 		if (def.size() < 1)
 			def.assign("1");
-		CSymbols->AddSymbol(symbol.c_str(), Sym_Define, curLine);
+		CSymbols->AddSymbol(symbol, Sym_Define, curLine);
 		CDefines->AddDefine(symbol, def);
 	}
 }
@@ -1531,13 +1768,13 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 						assert(0);
 						return 0;
 					}
-					if (sym != Sym_Dat && S->GetType() != sym)
+					if (sym != Sym_Dat && S->type != sym)
 					{
 						assert(0);
 						CError->ErrorMsg(Err_Invalid_Symbol);
 						return 0;
 					}
-					switch (S->GetType())
+					switch (S->type)
 					{
 						case Sym_Proc:
 							{
@@ -1624,13 +1861,13 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 							assert(0);
 							return 0;
 						}
-						if (sym != Sym_Dat && S->GetType() != sym)
+						if (sym != Sym_Dat && S->type != sym)
 						{
 							assert(0);
 							CError->ErrorMsg(Err_Invalid_Symbol);
 							return 0;
 						}
-						switch (S->GetType())
+						switch (S->type)
 						{
 						case Sym_Proc:
 							{
@@ -1712,13 +1949,13 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 							assert(0);
 							return 0;
 						}
-						if (sym != Sym_Dat && S->GetType() != sym)
+						if (sym != Sym_Dat && S->type != sym)
 						{
 							assert(0);
 							CError->ErrorMsg(Err_Invalid_Symbol);
 							return 0;
 						}
-						switch (S->GetType())
+						switch (S->type)
 						{
 						case Sym_Proc:
 							{
@@ -1810,13 +2047,13 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 							assert(0);
 							return 0;
 						}
-						if (sym != Sym_Dat && S->GetType() != sym)
+						if (sym != Sym_Dat && S->type != sym)
 						{
 							assert(0);
 							CError->ErrorMsg(Err_Invalid_Symbol);
 							return 0;
 						}
-						switch (S->GetType())
+						switch (S->type)
 						{
 						case Sym_Proc:
 							{

@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 
 	Program.Load(filename);
 	Program.Parse();
-	Program.PrintCodeList();
+	Program.Compile();
 
 	exit(0);
 }

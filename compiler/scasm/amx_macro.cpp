@@ -24,6 +24,11 @@
 
 MacroList::~MacroList()
 {
+	Clear();
+}
+
+void MacroList::Clear()
+{
 	std::vector<MacroList::Macro *>::iterator i;
 
 	for (i=List.begin(); i!=List.end(); i++)

@@ -37,7 +37,7 @@
 	if (paramList.size() >= n) \
 	{ \
 		ASM->params.push_back(Eval(*(paramList[n-1]), sym)); \
-		lastCip++; \
+		lastCip+=cellsize; \
 	}
 
 typedef enum
@@ -80,6 +80,8 @@ public:
 	void PrintCodeList();
 public:
 	int FindArguments(std::string &text, std::vector<std::string*> &List, int &end, bool simple = false);
+	void Clear();
+	int CipCount();
 private:
 	void ProcessDirective(std::string &text);
 	void Init();
@@ -91,6 +93,7 @@ private:
 private:
 	std::vector<Asm *> CodeList;
 	std::map<std::string,int> OpCodes;
+	char *Output;
 	ErrorMngr *CError;
 	SymbolList *CSymbols;
 	DefineMngr *CDefines;
@@ -103,6 +106,7 @@ private:
 	int curLine;
 	int lastCip;
 	int cellsize;
+	int stacksize;
 };
 
 #endif //_INCLUDE_AMXCOMPILER_H

@@ -24,6 +24,11 @@
 
 ProcMngr::~ProcMngr()
 {
+	Clear();
+}
+
+void ProcMngr::Clear()
+{
 	std::vector<ProcMngr::AsmProc *>::iterator i;
 
 	for (i=List.begin(); i!=List.end(); i++)

@@ -40,6 +40,7 @@ public:
 	MacroList();
 	MacroList(void *c);
 	~MacroList();
+	void Clear();
 	MacroList::Macro *AddMacroBegin(std::string &symbol, std::string &mac);
 	void AddMacroArgument(MacroList::Macro *m, std::string &arg);
 	void AddMacroEnd(MacroList::Macro *m);

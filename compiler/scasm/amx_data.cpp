@@ -24,6 +24,11 @@
 
 DataMngr::~DataMngr()
 {
+	Clear();
+}
+
+void DataMngr::Clear()
+{
 	std::vector<DataMngr::Datum *>::iterator i;
 
 	for (i=List.begin(); i!=List.end(); i++)
@@ -48,6 +53,9 @@ void DataMngr::Add(std::string &s, CExpr &expr, bool db)
 	D->symbol.assign(s);
 	D->e = expr;
 
+	int size = ((D->e.GetType() == Val_Number) ?
+				cellsize : D->e.Size() * cellsize);
+
 	if (List.size() == 0)
 	{
 		D->offset = 0;
@@ -57,6 +65,8 @@ void DataMngr::Add(std::string &s, CExpr &expr, bool db)
 			((p->e.GetType() == Val_Number) ? 
 			cellsize : p->e.Size() * cellsize);
 	}
+
+	cursize += size;
 
 	List.push_back(D);
 }
@@ -86,4 +96,19 @@ int DataMngr::GetOffset(std::string &sym)
 		return DataMngr::nof;
 
 	return D->offset;
+}
+
+int DataMngr::GetSize()
+{
+	return cursize;
+}
+
+void DataMngr::GetData(std::vector<DataMngr::Datum *> &dList)
+{
+	std::vector<DataMngr::Datum *>::iterator i;
+
+	for (i=List.begin(); i!=List.end(); i++)
+	{
+		dList.push_back( (*i) );
+	}
 }

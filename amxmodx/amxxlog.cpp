@@ -64,7 +64,7 @@ void CLog::CloseFile()
 		if (fp)
 		{
 			fclose(fp);
-			fopen(m_LogFile.c_str(), "a+");
+			fp = fopen(m_LogFile.c_str(), "a+");
 
 			// get time
 			time_t td;
@@ -106,8 +106,11 @@ void CLog::CreateNewFile()
 		ALERT(at_logged, "[AMXX] Unexpected fatal logging error. AMXX Logging disabled.\n");
 		SET_LOCALINFO("amxx_logging", "0");
 	}
-	fprintf(fp, "AMX Mod X log file started (file \"%s/L%02d%02d%03d.log\") (version \"%s\")\n", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday, i, AMX_VERSION);
-	fclose(fp);
+	else
+	{
+		fprintf(fp, "AMX Mod X log file started (file \"%s/L%02d%02d%03d.log\") (version \"%s\")\n", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday, i, AMX_VERSION);
+		fclose(fp);
+	}
 }
 
 void CLog::UseFile(const String &fileName)

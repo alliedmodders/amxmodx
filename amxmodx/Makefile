@@ -2,7 +2,7 @@ MODNAME = amxx_mm
 SRCFILES = meta_api.cpp CFile.cpp CString.cpp CVault.cpp vault.cpp\
 float.cpp file.cpp modules.cpp CMisc.cpp CTask.cpp string.cpp\
 amxmodx.cpp CEvent.cpp CCmd.cpp CLogEvent.cpp srvcmd.cpp strptime.cpp\
-CForward.cpp CPlugin.cpp CModule.cpp CMenu.cpp emsg.cpp util.cpp
+CForward.cpp CPlugin.cpp CModule.cpp CMenu.cpp emsg.cpp util.cpp amxxlog.cpp
 CSRCFILES = amx.c amxcore.c amxtime.c power.c
 
 EXTRA_LIBS_LINUX =

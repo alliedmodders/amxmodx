@@ -1,12 +1,15 @@
 @echo off
 rem AMX Mod X
 rem
-rem (c) 2002-2004, OLO
-rem  modified by the AMX Mod X Development Team
+rem by the AMX Mod X Development Team
+rem  originally developed by OLO
+rem
+rem This file is part of AMX Mod X.
+
 
 if not exist compiled mkdir compiled
 if exist temp.txt del temp.txt
-for %%i in (*.sma) do sc %%i -e%%i.txt -ocompiled\%%i >> temp.txt
+for %%i in (*.sma) do sc %%i -ocompiled\%%i >> temp.txt
 copy compiled\*.sma compiled\*.amx
 del compiled\*.sma
 cls

@@ -1,9 +1,11 @@
 #!/bin/bash
 
-#AMX Mod X
+# AMX Mod X
 #
-# (c) 2002-2004, OLO
-#  modified by the AMX Mod X Development Team
+# by the AMX Mod X Development Team
+#  originally developed by OLO
+#
+# This file is part of AMX Mod X.
 
 test -e compiled || mkdir compiled
 ls *.sma | xargs -i ./sc \{\} -ocompiled/\{\} > temp.txt 

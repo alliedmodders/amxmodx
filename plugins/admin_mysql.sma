@@ -41,7 +41,7 @@ new g_aName[MAX_ADMINS][32]
 new g_aFlags[MAX_ADMINS]
 new g_aAccess[MAX_ADMINS]
 new g_aNum
-#if !defined NO_STEAM 
+#if !defined NO_STEAM
 new g_cmdLoopback[16]
 #endif
 
@@ -56,7 +56,17 @@ public plugin_init()
   register_cvar("amx_mysql_host","127.0.0.1")
   register_cvar("amx_mysql_user","root")
   register_cvar("amx_mysql_pass","")
-  register_cvar("amx_mysql_db","amx")  
+  register_cvar("amx_mysql_db","amx") 
+
+  register_cvar("amx_vote_ratio","0.02")
+  register_cvar("amx_votekick_ratio","0.40")
+  register_cvar("amx_voteban_ratio","0.40")
+  register_cvar("amx_votemap_ratio","0.40") 
+  register_cvar("amx_vote_time","10") 
+  register_cvar("amx_vote_answers","1")
+  register_cvar("amx_vote_delay","60")
+  register_cvar("amx_last_voting","0")
+  set_cvar_float("amx_last_voting",0.0)
 
 #if !defined NO_STEAM   
   format( g_cmdLoopback, 15, "amxauth%c%c%c%c" , 
@@ -69,7 +79,7 @@ public plugin_init()
   new filename[32]
   get_basedir( filename , 31 )
   server_cmd("exec %s/amx.cfg" , filename)
-  server_cmd("exec %s/mysql.cfg;amx_sqladmins" , filename)
+  server_cmd("exec %s/configs/mysql.cfg;amx_sqladmins" , filename)
 }
 
 public adminSql(){
@@ -93,7 +103,7 @@ public adminSql(){
     return PLUGIN_HANDLED
   }
 
-  new szFlags[32], szAccess[32]
+  new szFlags[32],szAccess[32]
   g_aNum = 0 /* reset admins settings */
   while( mysql_nextrow(mysql) > 0 )
   {
@@ -101,6 +111,10 @@ public adminSql(){
     mysql_getfield(mysql, 2, g_aPassword[ g_aNum ] ,31)
     mysql_getfield(mysql, 3, szAccess,31)
     mysql_getfield(mysql, 4, szFlags,31)
+
+    if ( (containi(szAccess,"z")==-1) && (containi(szAccess,"y")==-1) )
+      szAccess[strlen(szAccess)] = 'y'
+
     g_aAccess[ g_aNum ] = read_flags( szAccess )
     g_aFlags[ g_aNum ] = read_flags( szFlags )
     ++g_aNum
@@ -153,7 +167,7 @@ getAccess(id,name[],authid[],ip[], password[]){
       new sflags[32]
       get_flags(g_aAccess[index],sflags,31)
       set_user_flags(id,g_aAccess[index])
-      log_amx("Login: ^"%s<%d><%s><>^" become an admin (account ^"%s^") (access ^"%s^") (address ^"%s^")",
+      log_amx("Login: ^"%s<%d><%s><>^" became an admin (account ^"%s^") (access ^"%s^") (address ^"%s^")",
         name,get_user_userid(id),authid,g_aName[index] ,sflags,ip)
     }
     else if (equal(password,g_aPassword[index])) {
@@ -161,7 +175,7 @@ getAccess(id,name[],authid[],ip[], password[]){
       set_user_flags(id,g_aAccess[index])
       new sflags[32]
       get_flags(g_aAccess[index],sflags,31)
-      log_amx("Login: ^"%s<%d><%s><>^" become an admin (account ^"%s^") (access ^"%s^") (address ^"%s^")",
+      log_amx("Login: ^"%s<%d><%s><>^" became an admin (account ^"%s^") (access ^"%s^") (address ^"%s^")",
         name,get_user_userid(id),authid,g_aName[index] ,sflags,ip)
     }
     else {

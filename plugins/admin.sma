@@ -52,7 +52,14 @@ public plugin_init()
   register_cvar("amx_password_field","_pw")
   register_cvar("amx_default_access","")
 
-#if !defined NO_STEAM  
+  register_cvar("amx_vote_ratio","0.02") 
+  register_cvar("amx_vote_time","10") 
+  register_cvar("amx_vote_answers","1") 
+  register_cvar("amx_vote_delay","60")
+  register_cvar("amx_last_voting","0")
+  set_cvar_float("amx_last_voting",0.0)
+
+#if !defined NO_STEAM
   format( g_cmdLoopback, 15, "amxauth%c%c%c%c" , 
   	random_num('A','Z') , random_num('A','Z') ,random_num('A','Z'),random_num('A','Z')  )
   	
@@ -81,7 +88,10 @@ loadSettings(szFilename[])
     
     if ( parse(szText, g_aName[ g_aNum ] ,31, 
       g_aPassword[ g_aNum ], 31, szAccess,31,szFlags,31 ) < 2 ) continue
-      
+
+    if ( (containi(szAccess,"z")==-1) && (containi(szAccess,"y")==-1) )
+      szAccess[strlen(szAccess)] = 'y'
+
     g_aAccess[ g_aNum ] = read_flags( szAccess )
     g_aFlags[ g_aNum ] = read_flags( szFlags )  
     ++g_aNum
@@ -133,7 +143,7 @@ getAccess(id,name[],authid[],ip[], password[])
       new sflags[32]
       get_flags(g_aAccess[index],sflags,31)
       set_user_flags(id,g_aAccess[index])
-      log_amx("Login: ^"%s<%d><%s><>^" become an admin (account ^"%s^") (access ^"%s^") (address ^"%s^")",
+      log_amx("Login: ^"%s<%d><%s><>^" became an admin (account ^"%s^") (access ^"%s^") (address ^"%s^")",
         name,get_user_userid(id),authid,g_aName[index] ,sflags,ip)
     }
     else if (equal(password,g_aPassword[index])) {
@@ -141,7 +151,7 @@ getAccess(id,name[],authid[],ip[], password[])
       set_user_flags(id,g_aAccess[index])
       new sflags[32]
       get_flags(g_aAccess[index],sflags,31)
-      log_amx("Login: ^"%s<%d><%s><>^" become an admin (account ^"%s^") (access ^"%s^") (address ^"%s^")",
+      log_amx("Login: ^"%s<%d><%s><>^" became an admin (account ^"%s^") (access ^"%s^") (address ^"%s^")",
         name,get_user_userid(id),authid,g_aName[index] ,sflags,ip)
     }
     else {

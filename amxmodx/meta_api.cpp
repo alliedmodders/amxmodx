@@ -433,7 +433,7 @@ void C_ServerDeactivate_Post() {
 
   g_initialized	= false;
 
-  detachReloadModules();
+  dettachReloadModules();
 
   g_auth.clear();
   g_forwards.clear();
@@ -535,9 +535,9 @@ void C_ClientDisconnect( edict_t *pEntity	) {
   CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
   if (pPlayer->ingame)	{
 	executeForwards(FF_ClientDisconnect, pPlayer->index);
-	pPlayer->Disconnect();
 	--g_players_num;
   }
+  pPlayer->Disconnect();
   RETURN_META(MRES_IGNORED);
 }
 
@@ -1106,7 +1106,7 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)	{
   g_plugins.clear();
   g_cvars.clear();
 
-  detachModules();
+  dettachModules();
 
   //  ###### Now detach metamod modules
   g_FakeMeta.Meta_Detach(now, reason);

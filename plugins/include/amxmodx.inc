@@ -17,7 +17,6 @@
 #include <string>
 #include <file>
 #include <vault>
-#include <fun>
 
 /* Function is called just after server activation.
 * Good place for configuration loading, commands and cvars registration. */

@@ -73,10 +73,10 @@ native cs_get_user_money(index);
 native cs_set_user_money(index, money, flash = 1);
 
 /* Does user have night vision goggles? */
-native cs_get_user_nvgoggles(index);
+native cs_get_user_nvg(index);
 
 /* Set nvgoggles to 1 to give night vision goggles to index. Set it to 0 to remove them. */
-native cs_set_user_nvgoggles(index, nvgoggles = 1);
+native cs_set_user_nvg(index, nvgoggles = 1);
 
 /* Returns 1 if user has the "skill" to plant bomb, else 0. Normally this would only be true for a terrorist carrying a bomb. */
 native cs_get_user_plant(index);

@@ -25,7 +25,7 @@ $ccf = "cc";
 my %OPTIONS, %OPT;
 
 $OPT{"debug"} = "-g -ggdb";
-$OPT{"opt"} = "-O2 -ffast-math -funroll-loops -fomit-frame-pointer -s -DNDEBUG -Wall -Wno-unknown-pragmas -DOPT_TYPE=\"optimized\"";
+$OPT{"opt"} = "-O2 -ffast-math -funroll-loops -fomit-frame-pointer -s -DNDEBUG -Wall -Wno-unknown-pragmas -DOPT_TYPE=\"optimized\" -fno-exceptions -fno-rtti";
 
 $OPTIONS{"include"} = "-I$sdk -I. -I$mm -I$sdk/engine -I$sdk/common -I$sdk/pm_shared -I$sdk/dlls -I$geoip";
 

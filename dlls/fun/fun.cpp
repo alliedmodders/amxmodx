@@ -619,17 +619,31 @@ int ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress,
 }
 
 void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr) {
+	if ( (pentToSkip->v.flags & (FL_CLIENT | FL_FAKECLIENT)) == false || pentToSkip->v.deadflag != DEAD_NO)
+		RETURN_META(MRES_IGNORED);
+
 	TRACE_LINE(v1, v2, fNoMonsters, pentToSkip, ptr); // pentToSkip gotta be the one that is shooting, so filter it
 
+	if ( (ptr->pHit->v.flags & (FL_CLIENT | FL_FAKECLIENT)) == false )
+		RETURN_META(MRES_SUPERCEDE);
+
 	int hitIndex = ENTINDEX(ptr->pHit);
-	if (hitIndex >= 1 && hitIndex <= gpGlobals->maxClients) {
-		if ( !(
-			g_zones_getHit[hitIndex] & (1 << ptr->iHitgroup) // can ptr->pHit get hit in ptr->iHitgroup at all?
-		&&	g_zones_toHit[hitIndex] & (1 << ptr->iHitgroup) ) // can pentToSkip hit other people in that hit zone?
-		) {
-			ptr->flFraction = 1.0;	// set to not hit anything (1.0 = shot doesn't hit anything)
-		}
+	//bool blocked = false;
+	int canTargetGetHit = g_zones_getHit[hitIndex] & (1 << ptr->iHitgroup);
+	int canShooterHitThere = g_zones_toHit[ENTINDEX(pentToSkip)] & (1 << ptr->iHitgroup);
+
+	if (!canTargetGetHit || !canShooterHitThere) {
+		ptr->flFraction = 1.0;	// set to not hit anything (1.0 = shot doesn't hit anything)
+		//blocked = true;
 	}
+	/*
+	if (blocked) {
+		MF_PrintSrvConsole("%s was blocked from hitting %s: %d and %d\n", MF_GetPlayerName(ENTINDEX(pentToSkip)), MF_GetPlayerName(hitIndex), canTargetGetHit, canShooterHitThere);
+	}
+	else {
+		MF_PrintSrvConsole("%s was NOT blocked from hitting %s: %d and %d\n", MF_GetPlayerName(ENTINDEX(pentToSkip)), MF_GetPlayerName(hitIndex), canTargetGetHit, canShooterHitThere);
+	}
+	*/
 
 	RETURN_META(MRES_SUPERCEDE);
 }

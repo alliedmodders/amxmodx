@@ -2567,6 +2567,8 @@ static cell AMX_NATIVE_CALL get_global_int(AMX *amx, cell *params)
 			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 			return 0;
 	}
+
+	return returnValue;
 }
 
 static cell AMX_NATIVE_CALL get_global_string(AMX *amx, cell *params)

@@ -116,6 +116,19 @@ int AMX_MAKE_STRING(AMX *oPlugin, cell tParam, int &iLength) {
 	return MAKE_STRING(szCopyValue);
 }
 
+// Makes a char pointer out of an AMX cell. 
+//Note that this does not deallocate and should only be used
+// with hl engfuncs that store the pointers for secret eating
+char *AMX_GET_STRING(AMX *oPlugin, cell tParam, int &iLength) { 	 
+	char *szNewValue = GET_AMXSTRING(oPlugin, tParam, 0, iLength); 	 
+ 	 
+	char* szCopyValue = new char[iLength + 1]; 	 
+	strncpy(szCopyValue , szNewValue, iLength); 	 
+	*(szCopyValue + iLength) = '\0'; 	 
+ 	 
+	return szCopyValue; 	 
+}
+
 /********************************************************
   exported functions
   ******************************************************/
@@ -1966,8 +1979,8 @@ static cell AMX_NATIVE_CALL DispatchKeyValue(AMX *amx, cell *params) {
 	edict_t* pTarget = INDEXENT(params[1]);
 	int iKeyLength;
 	int iValueLength;
-	char *szKey = GET_AMXSTRING(amx, params[2], 0, iKeyLength);
-	char *szValue = GET_AMXSTRING(amx, params[3], 1, iValueLength);
+	char *szKey = AMX_GET_STRING(amx, params[2], iKeyLength);
+	char *szValue = AMX_GET_STRING(amx, params[3], iValueLength);
 
 
 	if(FNullEnt(pTarget)) {
@@ -2036,7 +2049,7 @@ static cell AMX_NATIVE_CALL entity_set_model(AMX *amx, cell *params) {
 	edict_t* pTarget = INDEXENT(params[1]);
 
 	int iLength;
-	char *szNewValue = GET_AMXSTRING(amx, params[2], 0, iLength);
+	char *szNewValue = AMX_GET_STRING(amx, params[2], iLength);
 
 	if(FNullEnt(pTarget)) {
 		return 0;

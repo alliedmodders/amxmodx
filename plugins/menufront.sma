@@ -211,4 +211,9 @@ public plugin_init() {
   g_coloredMenus = colored_menus()
 
   AddDefaultMenus()
+
+  // Add custom menu items
+  new configs[128]
+  get_configsdir(configs, 127)
+  server_cmd("exec %s/custommenuitems.cfg", configs)
 }

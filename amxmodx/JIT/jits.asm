@@ -137,7 +137,6 @@
 ;
 %define DORUNTIMECHECKS
 
-
 	struc amx_s
 _base:       resd 1
 _dataseg:    resd 1

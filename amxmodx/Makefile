@@ -61,7 +61,7 @@ OBJ_WIN32 := $(SRCFILES:%.cpp=$(OBJDIR_WIN32)/%.o)
 OBJC_WIN32 := $(CSRCFILES:%.c=$(OBJDIR_WIN32)/%.o)
 
 
-CCOPT = -march=i586 -O6 -ffast-math -funroll-loops \
+CCOPT = -O2 -m64 -ffast-math -funroll-loops \
 	-fomit-frame-pointer -fexpensive-optimizations -malign-loops=2 \
 	-malign-jumps=2 -malign-functions=2 -s	-DNDEBUG
 
@@ -72,7 +72,7 @@ CFLAGS:=$(CCOPT) $(CFLAGS) $(ODEF) $(EXTRA_FLAGS)
 
 DO_CC_LINUX=$(CC_LINUX) $(CFLAGS) -fPIC $(INCLUDEDIRS) -o $@ -c $<
 DO_CC_WIN32=$(CC_WIN32) $(CFLAGS) $(INCLUDEDIRS) -o $@ -c $<
-LINK_LINUX=$(CC_LINUX) $(CFLAGS) -lstdc++ -shared -ldl -lm $(OBJ_LINUX) $(OBJC_LINUX) $(EXTRA_LIBDIRS_LINUX) $(EXTRA_LIBS_LINUX) -o $@
+LINK_LINUX=$(CC_LINUX) $(CFLAGS) -shared -ldl -lm $(OBJ_LINUX) $(OBJC_LINUX) $(EXTRA_LIBDIRS_LINUX) $(EXTRA_LIBS_LINUX) -o $@
 LINK_WIN32=$(LD_WINDLL) -mwindows --def $(MODNAME).def --add-stdcall-alias $(OBJ_WIN32) $(OBJC_WIN32) $(EXTRA_LIBDIRS_WIN32) $(EXTRA_LIBS_WIN32) -o $@
 
 $(OBJDIR_LINUX)/%.o: $(SRCDIR)/%.c

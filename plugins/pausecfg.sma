@@ -43,8 +43,8 @@
 #define MAX_SYSTEM 32
  
 new g_menuPos[33]
-new g_fileToSave[64];
-new g_cstrikeRunning
+new g_fileToSave[64]
+new g_coloredMenus
 new g_Modified
 new g_couldntFind[] = "Couldn't find a plugin matching ^"%s^""
 new g_pluginMatch[] = "Plugin matching ^"%s^" %s"
@@ -52,7 +52,7 @@ new g_addCmd[] = "amx_pausecfg add ^"%s^""
 new g_system[MAX_SYSTEM]
 new g_systemNum
 
-public plugin_init(){
+public plugin_init() {
   register_plugin("Pause Plugins","0.20","AMXX Dev Team")
   register_concmd("amx_pausecfg","cmdPlugin",ADMIN_CFG,"- list commands for pause/unpause managment")
   register_clcmd("amx_pausecfgmenu","cmdMenu",ADMIN_CFG,"- pause/unpause plugins with menu")
@@ -61,7 +61,7 @@ public plugin_init(){
   register_concmd("amx_on","cmdON",ADMIN_CFG,"- unpauses some plugins")
 #endif
   register_menucmd(register_menuid("Pause/Unpause Plugins"),1023,"actionMenu")
-  g_cstrikeRunning = (is_running("cstrike") || is_running("czero"))
+  g_coloredMenus = colored_menus()
   get_configsdir(g_fileToSave, 63);
   format(g_fileToSave, 63, "%s/pausecfg.ini", g_fileToSave);
   
@@ -70,13 +70,13 @@ public plugin_init(){
 
 #if defined DIRECT_ONOFF
 
-public cmdOFF(id,level,cid){
+public cmdOFF(id,level,cid) {
   if (cmd_access(id,level,cid,1))
     pausePlugins(id)
   return PLUGIN_HANDLED
 }
 
-public cmdON(id,level,cid){
+public cmdON(id,level,cid) {
   if (cmd_access(id,level,cid,1))
     unpausePlugins(id)
   return PLUGIN_HANDLED
@@ -87,26 +87,26 @@ public cmdON(id,level,cid){
 public plugin_cfg() {
   loadSettings(g_fileToSave)
   // Put here titles of plugins which you don't want to pause
-  server_cmd(g_addCmd , "Pause Plugins" )
-  server_cmd(g_addCmd , "Admin Commands" )
-  server_cmd(g_addCmd , "TimeLeft" )
-  server_cmd(g_addCmd , "Slots Reservation" )
-  server_cmd(g_addCmd , "Admin Chat" )
-  server_cmd(g_addCmd , "NextMap" )
-  server_cmd(g_addCmd , "Admin Help" )
-  server_cmd(g_addCmd , "Admin Base" )
-  server_cmd(g_addCmd , "Admin Votes" )  
-  server_cmd(g_addCmd , "Welcome Message" )
-  server_cmd(g_addCmd , "Stats Configuration" )
-  server_cmd(g_addCmd , "Commands Menu" )
-  server_cmd(g_addCmd , "Maps Menu" )
-  server_cmd(g_addCmd , "Menus Front-End" )
-  server_cmd(g_addCmd , "Admin Base for MySQL" )
-  server_cmd(g_addCmd , "Players Menu" )
-  server_cmd(g_addCmd , "Teleport Menu" )
+  server_cmd(g_addCmd, "Pause Plugins" )
+  server_cmd(g_addCmd, "Admin Commands" )
+  server_cmd(g_addCmd, "TimeLeft" )
+  server_cmd(g_addCmd, "Slots Reservation" )
+  server_cmd(g_addCmd, "Admin Chat" )
+  server_cmd(g_addCmd, "NextMap" )
+  server_cmd(g_addCmd, "Admin Help" )
+  server_cmd(g_addCmd, "Admin Base" )
+  server_cmd(g_addCmd, "Admin Votes" )  
+  server_cmd(g_addCmd, "Welcome Message" )
+  server_cmd(g_addCmd, "Stats Configuration" )
+  server_cmd(g_addCmd, "Commands Menu" )
+  server_cmd(g_addCmd, "Maps Menu" )
+  server_cmd(g_addCmd, "Menus Front-End" )
+  server_cmd(g_addCmd, "Admin Base for MySQL" )
+  server_cmd(g_addCmd, "Players Menu" )
+  server_cmd(g_addCmd, "Teleport Menu" )
 }
 
-public actionMenu(id,key){
+public actionMenu(id,key) {
   switch(key){
   case 6:{
       if (file_exists(g_fileToSave)){
@@ -149,7 +149,7 @@ public actionMenu(id,key){
   return PLUGIN_HANDLED
 }
 
-getStatus( code, arg[], iarg ){
+getStatus( code, arg[], iarg ) {
   switch(code){
     case 'r': copy( arg, iarg , "ON" )
     case 's': copy( arg, iarg , "STOPPED" )
@@ -159,21 +159,21 @@ getStatus( code, arg[], iarg ){
   }
 }
 
-isSystem( id ){
+isSystem( id ) {
   for( new a = 0; a < g_systemNum; ++a)
     if ( g_system[ a ] == id )
       return 1
   return 0
 }
 
-displayMenu(id, pos){
+displayMenu(id, pos) {
   if (pos < 0) return
   new filename[32],title[32],status[8]
   new datanum = get_pluginsnum()
   new menu_body[512], start = pos * 6, k = 0
   if (start >= datanum) start = pos = g_menuPos[id] = 0
   new len = format(menu_body,511,
-  g_cstrikeRunning ? "\yPause/Unpause Plugins\R%d/%d^n\w^n" : "Pause/Unpause Plugins %d/%d^n^n" ,
+    g_coloredMenus ? "\yPause/Unpause Plugins\R%d/%d^n\w^n" : "Pause/Unpause Plugins %d/%d^n^n" ,
       pos + 1,((datanum/6)+((datanum%6)?1:0)))
   new end = start + 6, keys = (1<<9)|(1<<7)|(1<<6)
   if (end > datanum) end = datanum
@@ -181,7 +181,7 @@ displayMenu(id, pos){
     get_plugin(a,filename,31,title,31,status,0,status,0,status,1)
     getStatus( status[0] , status , 7  )
     if ( isSystem( a ) || (status[0]!='O'&&status[0]!='S')) {
-      if (g_cstrikeRunning){
+      if ( g_coloredMenus ) {
         len += format(menu_body[len],511-len, "\d%d. %s\R%s^n\w",++k, title, status )     
       }
       else{
@@ -191,11 +191,11 @@ displayMenu(id, pos){
     }
     else{
       keys |= (1<<k)
-      len += format(menu_body[len],511-len,g_cstrikeRunning ? "%d. %s\y\R%s^n\w" : "%d. %s %s^n",++k,title, status )
+      len += format(menu_body[len],511-len,g_coloredMenus ? "%d. %s\y\R%s^n\w" : "%d. %s %s^n",++k,title, status )
     }
   }
   len += format(menu_body[len],511-len,"^n7. Clear file with stopped^n")  
-  len += format(menu_body[len],511-len,g_cstrikeRunning ? "8. Save stopped \y\R%s^n\w"
+  len += format(menu_body[len],511-len,g_coloredMenus ? "8. Save stopped \y\R%s^n\w"
     : "8. Save stopped %s^n" ,g_Modified ? "*" : "")
   if (end != datanum){
     format(menu_body[len],511-len,"^n9. More...^n0. %s", pos ? "Back" : "Exit")

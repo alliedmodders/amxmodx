@@ -559,3 +559,16 @@ native set_xvar_num( id, value = 0 );
 /* Sets a float value of a public variable. Id is a value
 * returned by get_xvar_id(...) native. */
 native set_xvar_float( id, Float:value = 0.0 );
+
+/* Checks whether a module is loaded. If it is, its index is returned. If not, the return value is < 0. */
+native is_module_loaded(const name[]);
+
+/* Checks whether a plugin is loaded. If it is, its index is returned. If not, the return value is < 0. */
+native is_plugin_loaded(const name[]);
+
+/* Returns the number of currently loaded modules */
+native get_modulesnum();
+
+/* Gets info about a module. 
+   Return value: -1 on error, id otherwise */
+native get_module(id, name[], nameLen, author[], authorLen, version[], versionLen);

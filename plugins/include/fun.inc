@@ -1,13 +1,10 @@
 /* Fun functions
- *
- * (c) 2002-2003, OLO
- * This file is provided as is (no warranties).
- */
-
-#if defined _fun_included
-	#endinput
-#endif
-#define _fun_included
+*
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN, Manip, PM, SniperBeamer
+*
+* This file is provided as is (no warranties).
+*/
 
 /* Sets who can listen who. Function returns 0
 * if for some reasons this setting can't be done. */

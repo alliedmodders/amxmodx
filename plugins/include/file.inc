@@ -1,14 +1,10 @@
 /* Files functions
- *
- * (c) 2002-2003, OLO
- * This file is provided as is (no warranties).
- */
-
-#if defined _file_included
-  #endinput
-#endif
-#define _file_included
-
+*
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN, Manip, PM, SniperBeamer
+*
+* This file is provided as is (no warranties).
+*/
 
 /* Reads content from directory.
 * Returns index of next element or 0 when end of dir. is reached. */

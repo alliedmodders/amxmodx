@@ -1,13 +1,10 @@
 /* MySQL functions
- *
- * (c) Copyright 2002, dJeyL
- * This file is provided as is (no warranties).
- */
-
-#if defined _mysql_included
-  #endinput
-#endif
-#define _mysql_included
+*
+* (c) Copyright 2002-2004, dJeyL
+*  modified by BAILOPAN, Manip, PM, SniperBeamer
+*
+* This file is provided as is (no warranties).
+*/
 
 /* Opens connection. If already such exists then that will be used.
 * Function returns sql id to use with other sql natives.

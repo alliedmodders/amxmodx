@@ -1,13 +1,10 @@
 /* Strings manipulation
- *
- * (c) 2002-2003, OLO
- * This file is provided as is (no warranties).
- */
-
-#if defined _string_included
-  #endinput
-#endif
-#define _string_included
+*
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN, Manip, PM, SniperBeamer
+*
+* This file is provided as is (no warranties).
+*/
 
 /* Checks if source contains string. On success function
 * returns position in source, on failure returns -1. */

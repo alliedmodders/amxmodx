@@ -1,13 +1,10 @@
-/* AMX Mod functions
- *
- * (c) 2002-2003, OLO
- * This file is provided as is (no warranties).
- */
-
-#if defined _amxmod_included
-  #endinput
-#endif
-#define _amxmod_included
+/* AMX Mod X functions
+*
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN, Manip, PM, SniperBeamer
+*
+* This file is provided as is (no warranties).
+*/
 
 #include <core>
 #include <float>

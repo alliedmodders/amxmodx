@@ -1,13 +1,10 @@
 /* CS Stats functions
- *
- * (c) 2002-2003, OLO
- * This file is provided as is (no warranties).
- */
-
-#if defined _csstats_included
-  #endinput
-#endif
-#define _csstats_included
+*
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN, Manip, PM, SniperBeamer
+*
+* This file is provided as is (no warranties).
+*/
 
 /* Gets stats from given weapon index. If wpnindex is 0
 * then the stats are from all weapons. If weapon has not been used function

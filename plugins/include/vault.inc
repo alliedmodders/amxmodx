@@ -1,13 +1,10 @@
 /* Vault
 *
-* (c) 2002-2003, OLO
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN, Manip, PM, SniperBeamer
+*
 * This file is provided as is (no warranties).
 */
-
-#if defined _vault_included
-  #endinput
-#endif
-#define _vault_included
 
 /* Reads a data from given key.
 * If len is set to zero then get_vaultdata

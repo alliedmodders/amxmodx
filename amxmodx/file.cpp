@@ -35,8 +35,8 @@
 	#define _INTPTR_T_DEFINED
 #endif
 
-#include <meta_api.h>
 #include <extdll.h>
+#include <meta_api.h>
 #include "amxmodx.h"
 
 // header file for unlink()

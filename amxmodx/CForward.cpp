@@ -141,8 +141,8 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 							for (unsigned int j = 0; j < preparedArrays[params[i]].size; ++j)
 								*data++ = static_cast<char>(*tmp++ & 0xFF);
 						}
-						amx_Release(iter->pPlugin->getAMX(), realParams[i]);
 					}
+					amx_Release(iter->pPlugin->getAMX(), realParams[i]);
 				}
 			}
 
@@ -275,8 +275,8 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 					for (unsigned int j = 0; j < preparedArrays[params[i]].size; ++j)
 						*data++ = static_cast<char>(*tmp++ & 0xFF);
 				}
-				amx_Release(m_Amx, realParams[i]);
 			}
+			amx_Release(m_Amx, realParams[i]);
 		}
 	}
 

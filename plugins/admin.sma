@@ -32,8 +32,13 @@
 *  version.
 */
 
+//#define USING_SQL	1
+
 #include <amxmodx>
 #include <amxmisc>
+#if defined USING_SQL
+#include <dbi>
+#endif
 
 #define MAX_ADMINS  64
 
@@ -48,7 +53,11 @@ new g_cmdLoopback[16]
 
 public plugin_init()
 {
-  register_plugin("Admin Base","0.16","AMXX Dev Team")
+#if defined USING_SQL
+  register_plugin("Admin Base","0.20","AMXX Dev Team")
+#else
+  register_plugin("Admin Base(SQL)", "0.20", "AMXX Dev Team")
+#endif
   register_cvar("amx_mode","1")
   register_cvar("amx_password_field","_pw")
   register_cvar("amx_default_access","")
@@ -59,7 +68,19 @@ public plugin_init()
   register_cvar("amx_vote_delay","60")
   register_cvar("amx_last_voting","0")
   register_cvar("amx_show_activity","2")
+  register_cvar("amx_votekick_ratio","0.40")
+  register_cvar("amx_voteban_ratio","0.40")
+  register_cvar("amx_votemap_ratio","0.40")
+
   set_cvar_float("amx_last_voting",0.0)
+  
+#if defined USING_SQL
+  register_srvcmd("amx_sqladmins","adminSql")
+  register_cvar("amx_sql_host","127.0.0.1")
+  register_cvar("amx_sql_user","root")
+  register_cvar("amx_sql_pass","")
+  register_cvar("amx_sql_db","amx")
+#endif
 
   register_concmd("amx_reloadadmins","cmdReload",ADMIN_ADMIN)
 
@@ -75,10 +96,15 @@ public plugin_init()
   new configsDir[64]
   get_configsdir(configsDir, 63)
   server_cmd("exec %s/amxx.cfg", configsDir) // Execute main configuration file
+#if defined USING_SQL
+  server_cmd("exec %s/sql.cfg;amx_sqladmins")
+#else
   format(configsDir, 63, "%s/users.ini", configsDir)
   loadSettings(configsDir) // Load admins accounts
+#endif
 }
 
+#if !defined USING_SQL
 loadSettings(szFilename[])
 {
   if (!file_exists(szFilename)) return 0
@@ -103,18 +129,76 @@ loadSettings(szFilename[])
   server_print("[AMXX] Loaded %d admin%s from file",g_aNum, (g_aNum == 1) ? "" : "s" )
   return 1
 }
+#endif
+
+#if defined USING_SQL
+public adminSql() {
+  new host[64],user[32],pass[32],db[32],error[128]
+  get_cvar_string("amx_sql_host",host,63)
+  get_cvar_string("amx_sql_user",user,31)
+  get_cvar_string("amx_sql_pass",pass,31)
+  get_cvar_string("amx_sql_db",db,31)
+  
+  new sql = dbi_connect(host,user,pass,db,error,127)
+  if(sql < 1){
+    server_print("[AMXX] SQL error: can't connect: '%s'",error)
+    return PLUGIN_HANDLED 
+  }
+
+  dbi_query(sql,"CREATE TABLE IF NOT EXISTS admins ( auth varchar(32) NOT NULL default '', password varchar(32) NOT NULL default '', access varchar(32) NOT NULL default '', flags varchar(32) NOT NULL default '' )")
+  
+  new Result = dbi_query(sql,"SELECT auth,password,access,flags FROM admins")
+
+  if(Result < 0)  {
+    dbi_error(sql,error,127)
+    server_print("[AMXX] SQL error: can't load admins: '%s'",error)
+    return PLUGIN_HANDLED
+  } else if (Result == 0) {
+	server_print("[AMXX] No admins found.")
+  }
+
+  new szFlags[32],szAccess[32]
+  g_aNum = 0
+  while( dbi_nextrow(sql) > 0 )
+  {
+    dbi_field(Result, 1, g_aName[ g_aNum ] ,31)
+    dbi_field(Result, 2, g_aPassword[ g_aNum ] ,31)
+    dbi_field(Result, 3, szAccess,31)
+    dbi_field(Result, 4, szFlags,31)
+
+    if ( (containi(szAccess,"z")==-1) && (containi(szAccess,"y")==-1) )
+      szAccess[strlen(szAccess)] = 'y'
+
+    g_aAccess[ g_aNum ] = read_flags( szAccess )
+    if (!(g_aAccess[g_aNum] & ADMIN_USER) && !(g_aAccess[g_aNum] & ADMIN_ADMIN))
+      g_aAccess[g_aNum] |= ADMIN_ADMIN
+
+    g_aFlags[ g_aNum ] = read_flags( szFlags )
+    ++g_aNum
+  }
+
+  server_print("[AMXX] Loaded %d admin%s from database",g_aNum, (g_aNum == 1) ? "" : "s" )
+  dbi_free_result(Result)
+  dbi_close(sql)
+  return PLUGIN_HANDLED
+}
+#endif
 
 public cmdReload(id,level,cid)
 {
   if (!cmd_access(id,level,cid,1))
     return PLUGIN_HANDLED
 
+#if !defined USING_SQL
   new filename[128]
   get_configsdir(filename,127)
   format(filename,63,"%s/users.ini", filename)
 
   g_aNum = 0
   loadSettings(filename) // Re-Load admins accounts
+#else
+  adminSql()
+#endif
 
   return PLUGIN_HANDLED
 }

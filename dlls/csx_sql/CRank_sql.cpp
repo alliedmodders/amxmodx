@@ -14,7 +14,7 @@
 #include <time.h>
 #define MYSQL_QUERY_IS_A_OKAY 0
 
-cvar_t init_csx_sqlstats_host = {"csx_sqlstats_ip", "127.0.0.1", FCVAR_SPONLY | FCVAR_PROTECTED};
+cvar_t init_csx_sqlstats_host = {"csx_sqlstats_host", "127.0.0.1", FCVAR_SPONLY | FCVAR_PROTECTED};
 cvar_t init_csx_sqlstats_username = {"csx_sqlstats_username", "", FCVAR_SPONLY | FCVAR_PROTECTED};
 cvar_t init_csx_sqlstats_password = {"csx_sqlstats_password", "", FCVAR_SPONLY | FCVAR_PROTECTED};
 cvar_t init_csx_sqlstats_db = {"csx_sqlstats_db", "amxmodx_stats_cs", FCVAR_SPONLY | FCVAR_PROTECTED};
@@ -51,13 +51,25 @@ void RankSystem::saveRankSql()
 {
 	MF_PrintSrvConsole("[CSX Sql] Exporting players' statistics to SQL db...");
 	clock_t startTime = clock();
-	time_t now = time(NULL);
 
 	MYSQL *mysql = NULL;
-
 	mysql = mysql_init(NULL);
-	int port = 0, error = 0;
-	if (!mysql_real_connect(mysql, csx_sqlstats_host->string, csx_sqlstats_username->string, csx_sqlstats_password->string, NULL, port, NULL, 0)) {
+
+
+	/* Get host */
+	char host[128];
+	strncpy(host, csx_sqlstats_host->string, strcspn(csx_sqlstats_host->string, ":"));
+	/*************************/	
+	int port = 0;
+	/* Attempt to get a port */
+	char *p = strchr(csx_sqlstats_host->string, ':');
+	if (p)
+		port = atoi(p+1);
+	/*************************/	
+	//MF_PrintSrvConsole("Host: %s (%d) Port: %d", host, strcspn(csx_sqlstats_host->string, ":"), port);
+
+	int error = 0;
+	if (!mysql_real_connect(mysql, host, csx_sqlstats_username->string, csx_sqlstats_password->string, NULL, port, NULL, 0)) {
 		error = Error(mysql);
 		if (error) {
 			MF_Log("DB Connection failed (%d): %s", error, mysql_error(mysql));
@@ -83,6 +95,7 @@ void RankSystem::saveRankSql()
 
 	char *authid, *name;
 	int tks, damage, deaths, kills, shots, hits, hs, defusions, defused, plants, explosions, *bodyHits;
+	time_t now = time(NULL);
 
 	while ( a )
 	{

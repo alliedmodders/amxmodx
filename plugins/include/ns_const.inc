@@ -1,17 +1,14 @@
-/* NS2AMXDEFINES.INC
- * Various enums and definitions required for the ns2amx module.
- * Version 1.0
+/* NS module constants
+ * -
+ * (c) 2004, Steve Dudenhoeffer
+ * This file is provided as is (no warranties).
  */
 
-#if defined __ns2amxxdefines__
- 	#endinput
+
+#if defined NS_CONST_INC
+	#endinput
 #endif
-#define __ns2amxxdefines__ 02
-
-// Set this to either 3 or 2.  If set to two, it will do NS 2.01 offsets.
-// If set to 3, it will do the most recent NS 3.0 offsets.
-#define NS_VERSION	3
-
+#define NS_CONST_INC
 
 // These values are customizable (for the custom menus)
 // If your menu uses the default menu scheme, then it will use this.
@@ -21,102 +18,10 @@
 #define NSMENU_G	200
 #define NSMENU_B	100
 
+#define NSMENU_CHAN1	2
+#define NSMENU_CHAN2	3
 
-
-
-#if NS_VERSION == 3
-#define PRIVATE_ALIEN_RES		0x190
-#define PRIVATE_AMMO_LMG		0xE6
-#define PRIVATE_AMMO_PISTOL		0xE7
-#define PRIVATE_AMMO_SHOTGUN	0xE8
-#define PRIVATE_AMMO_HMG		0xE9
-#define PRIVATE_AMMO_GL			0xEA
-
-//Thanks, voogru
-#define PRIVATE_LEVELS_SPENT_WIN	0x62D
-#define PRIVATE_EXPERIENCE_WIN		0x615
-#define PRIVATE_LEVELS_SPENT_LINUX	0x62D
-#define PRIVATE_EXPERIENCE_LINUX	0x612
-
-#else
-
-#define PRIVATE_ALIEN_RES	0x18E
-#define PRIVATE_AMMO_LMG	0xE6
-#define PRIVATE_AMMO_PISTOL	0xE7
-#define PRIVATE_AMMO_SHOTGUN	0xE8
-#define PRIVATE_AMMO_HMG	0xE9
-#define PRIVATE_AMMO_GL		0xEA
-#endif
-
-// Used for anglevector()
-#define ANGLEVECTOR_FORWARD		1
-#define ANGLEVECTOR_RIGHT		2
-#define ANGLEVECTOR_UP			3
-
-// used for gpglobals_return()
-#define GPGLOBALS_FORWARD 1
-#define GPGLOBALS_RIGHT 2
-#define GPGLOBALS_UP 3
-
-// Used for get_class
-#define CLASS_UNKNOWN	0
-#define CLASS_SKULK		1
-#define CLASS_GORGE		2
-#define CLASS_LERK		3
-#define CLASS_FADE		4
-#define CLASS_ONOS		5
-#define CLASS_MARINE	6
-#define CLASS_JETPACK	7
-#define CLASS_HEAVY		8
-#define CLASS_COMMANDER	9
-#define CLASS_GESTATE	10
-#define CLASS_DEAD		11
-#define CLASS_NOTEAM	12
-// used for trace_hull
-#define HULL_POINT 0
-#define HULL_HUMAN 1
-#define HULL_LARGE 2
-#define HULL_HEAD 3
-
- // Taken from the NS mini SDK
-enum
-{
-	WEAPON_NONE = 0,
-	WEAPON_CLAWS,
-	WEAPON_SPIT,
-	WEAPON_SPORES,
-	WEAPON_SPIKE,
-	WEAPON_BITE,
-	WEAPON_BITE2,
-	WEAPON_SWIPE,
-	WEAPON_WEBSPINNER,
-	WEAPON_METABOLIZE,
-	WEAPON_PARASITE,
-	WEAPON_BLINK,
-	WEAPON_DIVINEWIND,
-	WEAPON_KNIFE,
-	WEAPON_PISTOL,
-	WEAPON_MG,
-	WEAPON_SHOTGUN,
-	WEAPON_HMG,
-	WEAPON_WELDER,
-	WEAPON_MINE,
-	WEAPON_GRENADE_GUN,
-	WEAPON_LEAP,
-	WEAPON_CHARGE,
-	WEAPON_UMBRA,
-	WEAPON_PRIMALSCREAM,
-	WEAPON_BILEBOMB,
-	WEAPON_ACIDROCKET,
-	WEAPON_HEALINGSPRAY,
-	WEAPON_HANDGRENADE,
-	WEAPON_STOMP,
-	WEAPON_DEVOUR,
-	WEAPON_MAX
-}
-#define WEAPON_BABBLER WEAPON_HANDGRENADE
-// A few of the AvHSpecials.h iuser4 flags, modified for ease-of-use...
-enum
+enum masks
 {
 	MASK_NONE = 0,
 	MASK_SIGHTED = 1,
@@ -171,12 +76,64 @@ enum
 
 }
 
-#if !defined NULL
-#define NULL 0
-#endif
-#if !defined FALSE
-#define FALSE 0
-#endif
-#if !defined TRUE
-#define TRUE 1
-#endif
+
+enum classes
+{
+	CLASS_UNKNOWN = 0,
+	CLASS_SKULK,
+	CLASS_GORGE,
+	CLASS_LERK,
+	CLASS_FADE,
+	CLASS_ONOS,
+	CLASS_MARINE,
+	CLASS_JETPACK,
+	CLASS_HEAVY,
+	CLASS_COMMANDER,
+	CLASS_GESTATE,
+	CLASS_DEAD,
+	CLASS_NOTEAM
+}
+
+enum weapons
+{
+	WEAPON_NONE = 0,
+	WEAPON_CLAWS,
+	WEAPON_SPIT,
+	WEAPON_SPORES,
+	WEAPON_SPIKE,
+	WEAPON_BITE,
+	WEAPON_BITE2,
+	WEAPON_SWIPE,
+	WEAPON_WEBSPINNER,
+	WEAPON_METABOLIZE,
+	WEAPON_PARASITE,
+	WEAPON_BLINK,
+	WEAPON_DIVINEWIND,
+	WEAPON_KNIFE,
+	WEAPON_PISTOL,
+	WEAPON_LMG,
+	WEAPON_SHOTGUN,
+	WEAPON_HMG,
+	WEAPON_WELDER,
+	WEAPON_MINE,
+	WEAPON_GRENADE_GUN,
+	WEAPON_LEAP,
+	WEAPON_CHARGE,
+	WEAPON_UMBRA,
+	WEAPON_PRIMALSCREAM,
+	WEAPON_BILEBOMB,
+	WEAPON_ACIDROCKET,
+	WEAPON_HEALINGSPRAY,
+	WEAPON_GRENADE,
+	WEAPON_STOMP,
+	WEAPON_DEVOUR,
+	WEAPON_MAX
+}
+
+enum hivetraits
+{
+	HIVETRAIT_NONE	= 0,
+	HIVETRAIT_DC	= 92,
+	HIVETRAIT_SC	= 93,
+	HIVETRAIT_MC	= 94
+}

@@ -618,21 +618,32 @@ int ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress,
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
+/*
+  TRACE_LINE(v1, v2, fNoMonsters, e, ptr);
+  if (ptr->pHit&&(ptr->pHit->v.flags& (FL_CLIENT | FL_FAKECLIENT) )&&e&&(e->v.flags & (FL_CLIENT | FL_FAKECLIENT) )){
+    player_t* pPlayer = GET_PLAYER_POINTER(e);
+    if ( !(pPlayer->bodyhits[ENTINDEX(ptr->pHit)]&(1<<ptr->iHitgroup)) )
+      ptr->flFraction = 1.0;
+  }
+  RETURN_META(MRES_SUPERCEDE);
+*/
+
+int g_hitIndex, g_canTargetGetHit, g_canShooterHitThere;
 void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr) {
-	if ( (pentToSkip->v.flags & (FL_CLIENT | FL_FAKECLIENT)) == false || pentToSkip->v.deadflag != DEAD_NO)
+	if (!pentToSkip || (pentToSkip->v.flags & (FL_CLIENT | FL_FAKECLIENT)) == false || pentToSkip->v.deadflag != DEAD_NO)
 		RETURN_META(MRES_IGNORED);
 
 	TRACE_LINE(v1, v2, fNoMonsters, pentToSkip, ptr); // pentToSkip gotta be the one that is shooting, so filter it
 
-	if ( (ptr->pHit->v.flags & (FL_CLIENT | FL_FAKECLIENT)) == false )
+	if (!ptr->pHit || (ptr->pHit->v.flags & (FL_CLIENT | FL_FAKECLIENT)) == false )
 		RETURN_META(MRES_SUPERCEDE);
 
-	int hitIndex = ENTINDEX(ptr->pHit);
+	g_hitIndex = ENTINDEX(ptr->pHit);
 	//bool blocked = false;
-	int canTargetGetHit = g_zones_getHit[hitIndex] & (1 << ptr->iHitgroup);
-	int canShooterHitThere = g_zones_toHit[ENTINDEX(pentToSkip)] & (1 << ptr->iHitgroup);
+	g_canTargetGetHit = g_zones_getHit[g_hitIndex] & (1 << ptr->iHitgroup);
+	g_canShooterHitThere = g_zones_toHit[ENTINDEX(pentToSkip)] & (1 << ptr->iHitgroup);
 
-	if (!canTargetGetHit || !canShooterHitThere) {
+	if (!g_canTargetGetHit || !g_canShooterHitThere) {
 		ptr->flFraction = 1.0;	// set to not hit anything (1.0 = shot doesn't hit anything)
 		//blocked = true;
 	}

@@ -42,7 +42,7 @@
 * 0 - kills
 * 1 - deaths
 * 2 - headshots
-* 3 - teamkilling
+* 3 - teamkills
 * 4 - shots
 * 5 - hits
 * 6 - damage
@@ -51,4 +51,4 @@
 * makes that rank won't be saved. */
 
 public get_score( stats[8] , body[8] )
-  return stats[0] - stats[1] // kills - deaths
+  return stats[0] - stats[1] - stats[3] // kills - deaths - teamkills

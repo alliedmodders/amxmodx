@@ -1,6 +1,6 @@
 /* Fun functions
 *
-* (c) 2004, the AMX Mod X Development Team
+* by the AMX Mod X Development Team
 *
 * This file is provided as is (no warranties).
 */
@@ -51,16 +51,8 @@ native give_item(index, const item[]);
 * 128 - right leg */
 native set_hitzones(body = 255);
 
-/* backwards compatibility */
-stock set_user_hitzones(index=0,target=0,body=255)
-  return set_hitzones(body)
-
 /* Get current hitzones. */
 native get_hitzones();
-
-/* backwards compatibility */
-stock get_user_hitzones(index,target)
-  return get_hitzones()
 
 /* Sets users max. speed. */
 native set_user_maxspeed(index, Float:speed = -1.0);
@@ -76,10 +68,6 @@ native get_user_gravity(index);
 
 /* Spawns entity. */
 native spawn(index);
-
-/* backwards compatibility */
-stock user_spawn(index)
-  return spawn(index)
 
 /* Sets player noclip. If you want to disable noclip set only first parameter. */
 native set_user_noclip(index, noclip = 0);

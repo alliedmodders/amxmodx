@@ -100,7 +100,3 @@ stock build_path( path[] , len , {Float,_}:... ) {
 
 stock get_basedir( name[], len )
   return get_localinfo( "amxx_basedir", name , len )
-
-/* use log_amx() instead */
-stock get_logfile( name[], len )
-  return get_time("admin%m%d.log",name,len)

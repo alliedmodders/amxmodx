@@ -17,12 +17,6 @@
 #include <string>
 #include <file>
 #include <vault>
-/* default modules */
-#include <csstats>
-#include <cstrike>
-#include <engine>
-#include <fun>
-#include <mysql>
 
 /* Function is called just after server activation.
 * Good place for configuration loading, commands and cvars registration. */

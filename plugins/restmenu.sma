@@ -1,11 +1,9 @@
-/* AMX Mod script. 
-* 
-* (c) 2003, OLO 
-* This file is provided as is (no warranties). 
+/* AMX Mod X script.
 *
-* Commands:
-* amx_restmenu - displays restriction menu
-* amx_restrict - displays help for restrict weapons command
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN,Manip,PM,SniperBeamer and XAD
+*
+* This file is provided as is (no warranties).
 */
 
 // Uncomment if you want to have seperate settings for each map
@@ -21,7 +19,6 @@
 #endif
 
 new g_Position[33]
-new g_allowCheck[33]
 new g_Modified
 new g_blockPos[112]
 new g_saveFile[64]
@@ -267,8 +264,9 @@ new g_Aliases[MAXMENUPOS][] = {
 "primammo",//Ammo
 "secammo"
 }
+
 #if !defined NO_STEAM
-new g_moreAliases[MAXMENUPOS][] = {
+new g_Aliases2[MAXMENUPOS][] = {
 "km45",//Pistols
 "9x19mm",
 "nighthawk",
@@ -286,13 +284,11 @@ new g_moreAliases[MAXMENUPOS][] = {
 "ump45",
 
 "cv47",//Rifles
-//#if !defined NO_STEAM
 "defender",
 "clarion",
-//#endif
 "krieg552",
 "m4a1",
-"bullup",
+"bullpup",
 "scout",
 "magnum",
 "d3au1",
@@ -307,17 +303,22 @@ new g_moreAliases[MAXMENUPOS][] = {
 "sgren",
 "defuser",
 "nvgs",
-//#if !defined NO_STEAM
 "shield",
-//#endif
 "primammo",//Ammo
 "secammo"
 }
 #endif
+
 public plugin_init(){ 
-  register_plugin("Restrict Weapons","0.9.6","default")
+  register_plugin("Restrict Weapons","0.1","default")
   register_clcmd("buyammo1","ammoRest1")
   register_clcmd("buyammo2","ammoRest2")  
+#if !defined NO_STEAM
+  register_clcmd("cl_setautobuy","blockcommand")
+  register_clcmd("cl_autobuy","blockcommand")
+  register_clcmd("cl_setrebuy","blockcommand")
+  register_clcmd("cl_rebuy","blockcommand")
+#endif
   register_clcmd("amx_restmenu","cmdMenu",ADMIN_CFG,"- displays weapons restriction menu")
   register_menucmd(register_menuid("#Buy", 1 ),511,"menuBuy")
   register_menucmd(register_menuid("\yRestrict Weapons"),1023,"actionMenu")
@@ -335,8 +336,6 @@ public plugin_init(){
   register_menucmd(-33,511,"menuMachine")
   register_menucmd(-34,511,"menuItem")
   register_concmd("amx_restrict","cmdRest",ADMIN_CFG,"- displays help for weapons restriction")
-	
-  register_event("StatusIcon","buyZone","b","2&buy")
 
 #if defined MAPSETTINGS
   new mapname[32]
@@ -347,9 +346,6 @@ public plugin_init(){
 #endif  
   loadSettings(g_saveFile)
 }
-
-public buyZone(id)
-	g_allowCheck[ id ] = read_data(1)
 
 setWeapon( a , action  ){
   new b, m = g_Keys[a][0] * 8
@@ -399,8 +395,7 @@ findAliasId( name[] ){
 switchCommand( id, action ){
   new c = read_argc()
   if ( c < 3 ){
-    for(new a = 0; a < MAXMENUPOS; ++a)	
-        setWeapon( a , action )
+    setc( g_blockPos, 112, action )
     console_print( id , "Equipment and weapons have been %srestricted" , action ? "" : "un" )
     g_Modified = true
   }
@@ -472,8 +467,7 @@ public cmdRest(id,level,cid){
     else console_print( id , "Couldn't save configuration (file ^"%s^")" , g_saveFile )
   }
   else if ( equali( "load" , cmd ) ) {
-    for(new a = 0; a < MAXMENUPOS; ++a)	
-        setWeapon( a , 0 ) // Clear current settings
+    setc( g_blockPos, 112, 0 ) // Clear current settings
     new arg1[64]
     if ( read_argv(2, arg1 , 63 ) ) build_path( arg1 , 63, "$basedir/%s", arg1 )
     else copy( arg1, 63,  g_saveFile )
@@ -543,18 +537,27 @@ public actionMenu(id,key){
 
 #if !defined NO_STEAM
 public client_command( id ){
-  if ( g_AliasBlockNum && g_allowCheck[ id ] ) {
-    new arg[16]
-    read_argv( 0, arg , 15 )
+  if ( g_AliasBlockNum  ) {
+    new arg[13]
+    if ( read_argv( 0, arg , 12 ) > 11 ) /* Longest buy command has 11 chars so if command is longer then don't care */
+      return PLUGIN_CONTINUE
     new a = 0
     do {
-      if ( equal( g_Aliases[g_AliasBlock[ a ]] , arg  ) || equal( g_moreAliases[g_AliasBlock[ a ]] , arg  ) ) {
+      if ( equal( g_Aliases[g_AliasBlock[ a ]] , arg  ) ||
+           equal( g_Aliases2[g_AliasBlock[ a ]] , arg  ) ) {
         client_print(id,print_center,g_Restricted )
         return PLUGIN_HANDLED
       }
     } while( ++a < g_AliasBlockNum )
   }
   return PLUGIN_CONTINUE
+}
+#endif
+
+#if !defined NO_STEAM
+public blockcommand(id) {
+    client_print(id,print_center, g_Restricted )
+    return PLUGIN_HANDLED 
 }
 #endif
 
@@ -610,4 +613,4 @@ loadSettings(filename[]){
       setWeapon( a , 1 )
   }
   return 1
-} 
+}

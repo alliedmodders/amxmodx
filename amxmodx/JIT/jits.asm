@@ -101,15 +101,6 @@
 ;         to compute the destination address: It searches backwards now.
 ; 1999/07/08    MP - initial revision
 
-
-; Controls generation of LINE op-codes: 0 - no,  all other values - yes
-; Beware that, if set to 1, this makes the compiled code slower by a factor of
-; up to 3!
-;
-; GWMV: to generate LINE opcode, %define ALLOWOPLINE
-;
-%undef ALLOWOPLINE
-
 ;
 ; If this is set to 1 the JIT generates relocatable code for case tables, too.
 ; If set to 0, a faster variant for switch (using absolute addresses) is
@@ -136,6 +127,7 @@
 ; GWMV: To disable runtime checks, %undef it, instread of setting it to zero
 ;
 %define DORUNTIMECHECKS
+
 
 	struc amx_s
 _base:       resd 1
@@ -230,6 +222,7 @@ DBG_SYMTAG		equ 9
 
 AMX_FLAG_CHAR16		equ 0001h ; characters are 16-bit
 AMX_FLAG_DEBUG		equ 0002h ; symbolic info. available
+AMX_FLAG_LINEOPS	equ 0020h ; line ops should be parsed [load time only flag] - ~dvander
 AMX_FLAG_BROWSE		equ 4000h
 AMX_FLAG_RELOC		equ 8000h ; jump/call addresses relocated
 
@@ -791,7 +784,7 @@ OP_ALIGN_PRI:
 	CHECKCODESIZE j_align_pri
 
 OP_ALIGN_ALT:
-;nop;
+;nop
         mov     eax,4
         sub     eax,[ebx+4]
         mov     dword [j_align_alt+1],eax
@@ -1734,13 +1727,24 @@ OP_FILE:                                ;opcode is simply ignored
 
 OP_LINE:
 ;nop;
-%ifndef ALLOWOPLINE
+;~dvander - opline is now variable on compile time :]
+		push	eax
+		push	ebp
+		mov 	ebp,[amxhead]
+		mov		eax,[ebp+_h_flags]
+		and		eax,AMX_FLAG_LINEOPS
+		cmp		eax,AMX_FLAG_LINEOPS
+		pop		ebp
+		pop		eax
+		je		_go_debug
+
         mov     [ebx],edi               ; no line number support: ignore opcode
         add     ebx,12                  ; move on to next opcode
         cmp     ebx,[end_code]
         jae     code_gen_done
         jmp     dword [ebx]         ; go on with the next opcode
-%else
+
+_go_debug:
         putval  j_line+6
         mov     eax,[ebx+8]
         mov     [j_line_sm],eax
@@ -1750,7 +1754,6 @@ OP_LINE:
                 DD      0               ; space for curline
 j_line_sm       DD      0               ; space for curfile
 	CHECKCODESIZE j_line
-%endif
 
 OP_SYMBOL:                              ;ignored
         mov     [ebx],edi

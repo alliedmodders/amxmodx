@@ -32,9 +32,10 @@
 #ifndef AMXMODX_H
 #define AMXMODX_H
 
+#include "CVector.h"
+#include "CList.h"
 #include "modules.h"
 #include "CString.h"
-#include "CList.h"
 #include "CPlugin.h"
 #include "CMisc.h"
 #include "CVault.h"
@@ -227,6 +228,7 @@ enum CountModulesMode
 };
 
 int countModules(CountModulesMode mode);
+void modules_callPluginsLoaded();
 
 int add_amxnatives(module_info_s* info,AMX_NATIVE_INFO*natives);
 cell* get_amxaddr(AMX *amx,cell amx_addr);
@@ -249,10 +251,34 @@ void free_amxmemory(void **ptr);
 // get_localinfo
 const char* get_localinfo( const char* name , const char* def );
 
-extern CModule *g_CurrentlyAttachedModule;		// modules.cpp
+enum ModuleCallReason
+{
+	ModuleCall_NotCalled = 0,			// nothing
+	ModuleCall_Query,					// in Query func
+	ModuleCall_Attach,					// in Attach func
+	ModuleCall_Detach,					// in Detach func
+};
+
+extern ModuleCallReason g_ModuleCallReason;		// modules.cpp
+extern CModule *g_CurrentlyCalledModule;		// modules.cpp
 extern const char *g_LastRequestedFunc;			// modules.cpp
 
 void *Module_ReqFnptr(const char *funcName);	// modules.cpp
+
+// standard forwards
+// defined in meta_api.cpp
+extern int FF_ClientCommand;
+extern int FF_ClientConnect;
+extern int FF_ClientDisconnect;
+extern int FF_ClientInfoChanged;
+extern int FF_ClientPutInServer;
+extern int FF_PluginInit;
+extern int FF_PluginCfg;
+extern int FF_PluginPrecache;
+extern int FF_PluginLog;
+extern int FF_PluginEnd;
+extern int FF_InconsistentFile;
+extern int FF_ClientAuthorized;	
 
 #endif // AMXMODX_H
 

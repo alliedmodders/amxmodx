@@ -15,10 +15,7 @@
 * 4 - shots
 * 5 - hits
 * 6 - damage
-* 7 - defusions
-* 8 - bomb defused
-* 9 - bomb plants
-* 10 - bomb explosions
+
 * For body hits fields see amxconst.inc. */
 native get_user_wstats(index,wpnindex,stats[8],bodyhits[8]);
 

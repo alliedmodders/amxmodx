@@ -174,9 +174,9 @@ stock AddMenuItem_call(const MENU_TEXT[], const MENU_CMD[], const MENU_ACCESS, c
 	new bool:failed = true
 	switch (status) {
 		case 1: failed = false
-		case 0: log_amx("Run time error!")
-		case -2: log_amx("Function not found!")
-		case -1: log_amx("Plugin not found!")
+		case 0: log_amx("Run time error! (AddMenuItem_call failed)")
+		case -2: log_amx("Function not found! (AddMenuItem_call failed)")
+		case -1: log_amx("Plugin not found! (AddMenuItem_call failed)")
 	}
 	if (failed)
 		return

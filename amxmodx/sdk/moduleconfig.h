@@ -29,7 +29,7 @@
 //   Do native functions init here (MF_AddNatives)
 // #define FN_AMXX_ATTACH OnAmxxAttach
 // AMXX detach
-//#define FN_AMXX_DETACH OnAmxxDettach
+//#define FN_AMXX_DETACH OnAmxxDetach
 // All plugins loaded
 //   Do forward functions init here (MF_RegisterForward)
 // #define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
@@ -49,7 +49,7 @@
 // Meta attach
 //#define FN_META_ATTACH OnMetaAttach
 // Meta detach
-//#define FN_META_DETACH OnMetaDettach
+//#define FN_META_DETACH OnMetaDetach
 
 // (wd) are Will Day's notes
 // - GetEntityAPI2 functions

@@ -43,6 +43,7 @@
 				OutputFile=".\Release/pgsql_amxx.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
+				IgnoreDefaultLibraryNames="LIBCMT, LIBC"
 				ModuleDefinitionFile=""
 				ProgramDatabaseFile=".\Release/pgsql.pdb"
 				ImportLibrary=".\Release/pgsql.lib"
@@ -89,7 +90,7 @@
 				Optimization="0"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;PGSQL_EXPORTS"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\Debug/pgsql.pch"
 				AssemblerListingLocation=".\Debug/"
@@ -103,7 +104,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wsock32.lib libpq.lib"
+				AdditionalDependencies="wsock32.lib lib\libpq.lib"
 				OutputFile="Debug/pgsql_amxx.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"

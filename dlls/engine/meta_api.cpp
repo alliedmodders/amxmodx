@@ -8,7 +8,7 @@
  *			VexD gets the credit for setting up the framework for this, as it was
  *			Originally VexD Utilities
  *
- *	Licence:
+ *	License:
  *			This program is free software; you can redistribute it and/or modify
  *			it under the terms of the GNU General Public License as published by
  *			the Free Software Foundation; either version 2 of the License, or
@@ -23,25 +23,92 @@
  *			along with this program; if not, write to the Free Software
  *			Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *	Full licence can be found at:
+ *	Full license can be found at:
  *			http://www.gnu.org/licenses/gpl.txt
  ***************************************************************************/
+
 
 #include <extdll.h>
 #include <meta_api.h>
 #include <dllapi.h>
 #include "sdk_util.h"
 #include <h_export.h>
-#include "modules.h"
+#include <modules.h>
 #include <vector>
 #include <limits.h>
 
-#define NAME "Engine Module"
-#define AUTHOR "BAILOPAN"
-#define VERSION "0.3"
-#define URL "No Website"
-#define LOGTAG "AMXXE"
-#define DATE __DATE__
+#define VERSION "0.5"
+
+plugin_info_t Plugin_info = {
+
+	META_INTERFACE_VERSION, // ifvers
+
+	"ENGINE", // name
+
+	VERSION,  // version
+
+	__DATE__, // date
+
+	"BAILOPAN",  // author
+
+	"http://www.amxmod.info/",  // url
+
+	"AMXXE", // logtag
+
+	PT_ANYTIME,// (when) loadable
+
+	PT_ANYTIME,// (when) unloadable
+
+};
+
+module_info_s module_info = {
+
+	"ENGINE", // name
+
+	"BAILOPAN", // author
+
+	VERSION, // version
+
+	AMX_INTERFACE_VERSION,
+
+	STATIC_MODULE,
+
+};
+
+class AmxCallList {
+  public:
+struct AmxCall {
+  AMX *amx;
+  //void* code;
+  int iFunctionIdx;
+   AmxCall* next;
+   AmxCall( AMX *a , int i, AmxCall* n  ) : amx(a), iFunctionIdx(i), next(n) {}
+} *head;
+
+  AmxCallList() { head = 0; }
+
+  ~AmxCallList() { clear(); }
+
+  void clear() {
+      while ( head )  {
+          AmxCall* a = head->next;
+          delete head;
+          head = a;
+      }
+  }
+
+  void put( AMX *a , int i )
+  {
+    head = new AmxCall( a, i , head  );
+  }
+
+};
+
+AmxCallList pfnTouch;
+AmxCallList serverFrame;
+AmxCallList preThink;
+AmxCallList postThink;
+AmxCallList clientKill;
 
 meta_globals_t *gpMetaGlobals;
 gamedll_funcs_t *gpGamedllFuncs;
@@ -49,34 +116,13 @@ mutil_funcs_t *gpMetaUtilFuncs;
 enginefuncs_t g_engfuncs;
 globalvars_t  *gpGlobals;
 pfnamx_engine_g* g_engAmxFunc;
-static META_FUNCTIONS gMetaFunctionTable;
-DLL_FUNCTIONS gFunctionTable;
-enginefuncs_t meta_engfuncs;
 pfnmodule_engine_g* g_engModuleFunc;
 
+extern AMX_NATIVE_INFO Engine_Natives[];
 
-module_info_s module_info = {
-	"AMXXE", // name
-	"BAILOPAN", // author
-	VERSION, // version
-	AMX_INTERFACE_VERSION,
-	STATIC_MODULE,
-};
+void (*function)(void*);
 
-plugin_info_t Plugin_info = {
-	META_INTERFACE_VERSION, // ifvers
-	"AMXXE", // name
-	VERSION,  // version
-	__DATE__, // date
-	"BAILOPAN",  // author
-	"http://www.amxmod.info",  // url
-	"AMXXE", // logtag
-	PT_ANYTIME,// (when) loadable
-	PT_ANYTIME,// (when) unloadable
-};
-
-//This was originally by VexD
-//Thank you for an excellent piece of work, VexD!
+void (*endfunction)(void*);
 
 #define AMS_OFFSET 0.01
 
@@ -270,10 +316,71 @@ GlobalInfo GlInfo;
 
 cvar_t amxxe_version = {"amxxe_version", VERSION, FCVAR_SERVER, 0};
 
-/********************* Begin Utility Functions ******************************/
+/********************************************************
+  vexd's utility funcs
+  ******************************************************/
+// Finds edict points that are in a sphere, used in RadiusDamage.
+edict_t *UTIL_FindEntityInSphere(edict_t *pStart, const Vector &vecCenter, float flRadius) {
+	if (!pStart) pStart = NULL;
+
+	pStart = FIND_ENTITY_IN_SPHERE(pStart, vecCenter, flRadius);
+
+	if (!FNullEnt(pStart)) return pStart;
+	return NULL;
+}
+
+// Makes A Half-Life string (which is just an integer, an index of the string
+// half-life uses to refer to the string) out of an AMX cell.
+int AMX_MAKE_STRING(AMX *oPlugin, cell tParam, int &iLength) {
+	char *szNewValue = GET_AMXSTRING(oPlugin, tParam, 0, iLength);
+
+	char* szCopyValue = new char[iLength + 1]; 
+	strncpy(szCopyValue , szNewValue, iLength); 
+	*(szCopyValue + iLength) = '\0'; 
+
+	return MAKE_STRING(szCopyValue);
+}
+
+// Makes a char pointer out of an AMX cell.
+char *AMX_GET_STRING(AMX *oPlugin, cell tParam, int &iLength) {
+	char *szNewValue = GET_AMXSTRING(oPlugin, tParam, 0, iLength);
+
+	char* szCopyValue = new char[iLength + 1]; 
+	strncpy(szCopyValue , szNewValue, iLength); 
+	*(szCopyValue + iLength) = '\0';
+
+	return szCopyValue;
+}
+
+/********************************************************
+  exported functions
+  ******************************************************/
 
 //(BAILOPAN)
 //Sets a pvPrivateData offset for a player (player, offset, val, float=0)
+static cell AMX_NATIVE_CALL set_offset_short(AMX *amx, cell *params)
+{
+	int index = params[1];
+	int off = params[2];
+	
+	if (index < 1 || index > gpGlobals->maxClients) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+	
+	edict_t *Player = INDEXENT(index);
+	
+#ifndef __linux__
+       off -= 5;
+#endif
+	
+	*((short *)Player->pvPrivateData + off) = params[3];
+	
+	return 1;
+}
+
+//(BAILOPAN)
+//Sets a pvPrivateData offset for a player (player, offset, val)
 static cell AMX_NATIVE_CALL set_offset(AMX *amx, cell *params)
 {
 	int index = params[1];
@@ -319,6 +426,28 @@ static cell AMX_NATIVE_CALL set_offset_float(AMX *amx, cell *params)
 }
 
 //(BAILOPAN)
+//Gets a pvPrivateData offset for a player (player, offset)
+static cell AMX_NATIVE_CALL get_offset_short(AMX *amx, cell *params)
+{
+	int index = params[1];
+	int off = params[2];
+	
+	if (index < 1 || index > gpGlobals->maxClients) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+	
+	edict_t *Player = INDEXENT(index);
+	
+#ifndef __linux__
+       off -= 5;
+#endif
+	
+	return (int)*((short *)Player->pvPrivateData + off);
+	
+}
+
+//(BAILOPAN)
 //Gets a pvPrivateData offset for a player (player, offset, float=0)
 static cell AMX_NATIVE_CALL get_offset(AMX *amx, cell *params)
 {
@@ -338,11 +467,10 @@ static cell AMX_NATIVE_CALL get_offset(AMX *amx, cell *params)
 	
 	return (int)*((int *)Player->pvPrivateData + off);
 	
-	return 1;
 }
 
 //(BAILOPAN)
-//Gets a pvPrivateData offset for a player (player, offset, float=0)
+//Gets a pvPrivateData offset for a player (player, offset)
 static cell AMX_NATIVE_CALL get_offset_float(AMX *amx, cell *params)
 {
 	int index = params[1];
@@ -367,43 +495,10 @@ static cell AMX_NATIVE_CALL get_offset_float(AMX *amx, cell *params)
 	return 1;
 }
 
-// Finds edict points that are in a sphere, used in RadiusDamage.
-edict_t *UTIL_FindEntityInSphere(edict_t *pStart, const Vector &vecCenter, float flRadius) {
-	if (!pStart) pStart = NULL;
-
-	pStart = FIND_ENTITY_IN_SPHERE(pStart, vecCenter, flRadius);
-
-	if (!FNullEnt(pStart)) return pStart;
-	return NULL;
-}
-
-// Makes A Half-Life string (which is just an integer, an index of the string
-// half-life uses to refer to the string) out of an AMX cell.
-int AMX_MAKE_STRING(AMX *oPlugin, cell tParam, int &iLength) {
-	char *szNewValue = GET_AMXSTRING(oPlugin, tParam, 0, iLength);
-
-	char* szCopyValue = new char[iLength + 1]; 
-	strncpy(szCopyValue , szNewValue, iLength); 
-	*(szCopyValue + iLength) = '\0'; 
-
-	return MAKE_STRING(szCopyValue);
-}
-
-// Makes a char pointer out of an AMX cell.
-char *AMX_GET_STRING(AMX *oPlugin, cell tParam, int &iLength) {
-	char *szNewValue = GET_AMXSTRING(oPlugin, tParam, 0, iLength);
-
-	char* szCopyValue = new char[iLength + 1]; 
-	strncpy(szCopyValue , szNewValue, iLength); 
-	*(szCopyValue + iLength) = '\0';
-
-	return szCopyValue;
-}
-
-/********************* Begin Exported Functions *****************************/
 
 // Get an integer from an entities entvars.
-static cell AMX_NATIVE_CALL Entvars_Get_Int(AMX *amx, cell *params) { 
+// (vexd)
+static cell AMX_NATIVE_CALL entity_get_int(AMX *amx, cell *params) { 
 	int iTargetEntity = params[1];
 	int iValueSet = params[2];
 	int iRetValue = 0;
@@ -544,8 +639,8 @@ static cell AMX_NATIVE_CALL Entvars_Get_Int(AMX *amx, cell *params) {
 	return iRetValue;
 }
 
-// Set an integer in entvars. mostly the same as get_integer. look there for comments.
-static cell AMX_NATIVE_CALL Entvars_Set_Int(AMX *amx, cell *params) { 
+//vexd
+static cell AMX_NATIVE_CALL entity_set_int(AMX *amx, cell *params) { 
 	int iTargetEntity = params[1];
 	int iValueSet = params[2];
 	int iNewValue = params[3];
@@ -684,7 +779,8 @@ static cell AMX_NATIVE_CALL Entvars_Set_Int(AMX *amx, cell *params) {
 }
 
 // Gets a float out of entvars.
-static cell AMX_NATIVE_CALL Entvars_Get_Float(AMX *amx, cell *params) { 
+//(vexd)
+static cell AMX_NATIVE_CALL entity_get_float(AMX *amx, cell *params) { 
 	int iTargetEntity = params[1];
 	int iValueSet = params[2];
 	float fRetValue = 0;
@@ -826,7 +922,7 @@ static cell AMX_NATIVE_CALL Entvars_Get_Float(AMX *amx, cell *params) {
 }
 
 // Almost the same as Get_float, look there for comments.
-static cell AMX_NATIVE_CALL Entvars_Set_Float(AMX *amx, cell *params) { 
+static cell AMX_NATIVE_CALL entity_set_float(AMX *amx, cell *params) { 
 	int iTargetEntity = params[1];
 	int iValueSet = params[2];
 	float fNewValue = *(float *)((void *)&params[3]);
@@ -968,7 +1064,8 @@ static cell AMX_NATIVE_CALL Entvars_Set_Float(AMX *amx, cell *params) {
 // as this is how half-life handles vectors. also angle vectors and the such are
 // less then 1, so you need floats. All functions that i have that work with vectors
 // use the float[3], this makes it easier.
-static cell AMX_NATIVE_CALL Entvars_Get_Vector(AMX *amx, cell *params) { 
+//(vexd)
+static cell AMX_NATIVE_CALL entity_get_vector(AMX *amx, cell *params) { 
 	int iTargetEntity = params[1];
 	int iValueSet = params[2];
 
@@ -1073,7 +1170,7 @@ static cell AMX_NATIVE_CALL Entvars_Get_Vector(AMX *amx, cell *params) {
 }
 
 // Set is close to get, these functions are pretty self-explanitory.
-static cell AMX_NATIVE_CALL Entvars_Set_Vector(AMX *amx, cell *params) { 
+static cell AMX_NATIVE_CALL entity_set_vector(AMX *amx, cell *params) { 
 	int iTargetEntity = params[1];
 	int iValueSet = params[2];
 	cell *vInput = GET_AMXADDR(amx,params[3]);
@@ -1176,7 +1273,8 @@ static cell AMX_NATIVE_CALL Entvars_Set_Vector(AMX *amx, cell *params) {
 }
 
 // Get an edict pointer (or index, amx does not have pointers) from entvars.
-static cell AMX_NATIVE_CALL Entvars_Get_Edict(AMX *amx, cell *params) { 
+//(vexd)
+static cell AMX_NATIVE_CALL entity_get_edict(AMX *amx, cell *params) { 
 	int iTargetEntity = params[1];
 	int iValueSet = params[2];
 
@@ -1246,7 +1344,8 @@ static cell AMX_NATIVE_CALL Entvars_Get_Edict(AMX *amx, cell *params) {
 }
 
 // Set edict is almost the same as get, look there for comments.
-static cell AMX_NATIVE_CALL Entvars_Set_Edict(AMX *amx, cell *params) { 
+//(vexd)
+static cell AMX_NATIVE_CALL entity_set_edict(AMX *amx, cell *params) { 
 	int iTargetEntity = params[1];
 	int iValueSet = params[2];
 	edict_t *pNewValue = INDEXENT(params[3]);
@@ -1314,7 +1413,8 @@ static cell AMX_NATIVE_CALL Entvars_Set_Edict(AMX *amx, cell *params) {
 // Strings. I remember now that weaponmodel and viewmodel are strings as well,
 // even though half-life declares them as integers. (a half-life string is just a
 // typedefed integer.).
-static cell AMX_NATIVE_CALL Entvars_Get_String(AMX *amx, cell *params) { 
+//(vexd)
+static cell AMX_NATIVE_CALL entity_get_string(AMX *amx, cell *params) { 
 	int iTargetEntity = params[1];
 	int iValueSet = params[2];
 	int iszRetValue = 0;
@@ -1384,7 +1484,8 @@ static cell AMX_NATIVE_CALL Entvars_Get_String(AMX *amx, cell *params) {
 }
 
 // Almost the same as Get_String, look there for comments.
-static cell AMX_NATIVE_CALL Entvars_Set_String(AMX *amx, cell *params) { 
+//(vexd)
+static cell AMX_NATIVE_CALL entity_set_string(AMX *amx, cell *params) { 
 	int iTargetEntity = params[1];
 	int iValueSet = params[2];
 	int iLength;
@@ -1454,7 +1555,8 @@ static cell AMX_NATIVE_CALL Entvars_Set_String(AMX *amx, cell *params) {
 // Bytes, these were used for some things, mostly useless, but might be useful.
 // They are arrays, but we just use numbers in naming of the enum variables to
 // let us pass get different positions in the array.
-static cell AMX_NATIVE_CALL Entvars_Get_Byte(AMX *amx, cell *params) { 
+//(vexd)
+static cell AMX_NATIVE_CALL entity_get_byte(AMX *amx, cell *params) { 
 	int iTargetEntity = params[1];
 	int iValueSet = params[2];
 	int iRetValue = 0;
@@ -1500,7 +1602,8 @@ static cell AMX_NATIVE_CALL Entvars_Get_Byte(AMX *amx, cell *params) {
 }
 
 // Like Get_Byte, but sets.
-static cell AMX_NATIVE_CALL Entvars_Set_Byte(AMX *amx, cell *params) { 
+//(vexd)
+static cell AMX_NATIVE_CALL entity_set_byte(AMX *amx, cell *params) { 
 	int iTargetEntity = params[1];
 	int iValueSet = params[2];
 	int iNewValue = params[3];
@@ -1550,6 +1653,7 @@ static cell AMX_NATIVE_CALL Entvars_Set_Byte(AMX *amx, cell *params) {
 
 // VelocityByAim, this function will take the aimvectors of an entity, and create a velocity
 // of iVelocity in the direction of the aimvec.
+//(vexd)
 static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params) { 
 	int iTargetEntity = params[1];
 	int iVelocity = params[2];
@@ -1582,6 +1686,7 @@ static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params) {
 // RadiusDamage. Damages players within a certain radius. ToDo: add the
 // damage messaging so players know where the damage is coming from
 // (the red arrow-like things on the screen).
+//(vexd)
 static cell AMX_NATIVE_CALL RadiusDamage(AMX *amx, cell *params) {
 	cell *vInput = GET_AMXADDR(amx,params[1]);
 
@@ -1646,6 +1751,7 @@ static cell AMX_NATIVE_CALL RadiusDamage(AMX *amx, cell *params) {
 }
 
 // Gets the contents of a point. Return values for this are probably in const.h.
+//(vexd)
 static cell AMX_NATIVE_CALL PointContents(AMX *amx, cell *params) {
 	cell *vInput = GET_AMXADDR(amx,params[1]);
 
@@ -1658,8 +1764,10 @@ static cell AMX_NATIVE_CALL PointContents(AMX *amx, cell *params) {
 	return POINT_CONTENTS(vTestValue);
 }
 
+
 // CreateEntity. Makes an entity.
-static cell AMX_NATIVE_CALL CreateEntity(AMX *amx, cell *params) { 
+//(vexd)
+static cell AMX_NATIVE_CALL create_entity(AMX *amx, cell *params) { 
 	int iLength;
 	int iszNewClassName = AMX_MAKE_STRING(amx, params[1], iLength);
 
@@ -1673,8 +1781,39 @@ static cell AMX_NATIVE_CALL CreateEntity(AMX *amx, cell *params) {
 	return ENTINDEX(pNewEntity);
 }
 
+// FindEntity, use this in a while loop. will return -1 when theres no entities left.
+// It searches by classname.
+//(vexd)
+static cell AMX_NATIVE_CALL find_entity(AMX *amx, cell *params) {
+	int iStartEnt = params[1];
+
+	int iLengthSearchStrn;
+	char *szValue = AMX_GET_STRING(amx, params[2], iLengthSearchStrn);
+
+	edict_t *pStartEnt;
+
+	if(iStartEnt == -1) {
+		pStartEnt = NULL;
+	} else {
+		pStartEnt = INDEXENT(iStartEnt);
+
+		if(FNullEnt(pStartEnt)) {
+			return -1;
+		}
+	}
+
+	int iReturnEnt = ENTINDEX(FIND_ENTITY_BY_STRING(pStartEnt, "classname", szValue));
+
+	if(!iReturnEnt || FNullEnt(iReturnEnt)) {
+		return -1;
+	}
+
+	return iReturnEnt;
+}
+
 // DispatchKeyValue, sets a key-value pair for a newly created entity.
 // Use DispatchSpawn after doing ALL DispatchKeyValues on an entity.
+//(vexd)
 static cell AMX_NATIVE_CALL DispatchKeyValue(AMX *amx, cell *params) { 
 	edict_t* pTarget = INDEXENT(params[1]);
 	int iKeyLength;
@@ -1700,6 +1839,7 @@ static cell AMX_NATIVE_CALL DispatchKeyValue(AMX *amx, cell *params) {
 
 // DispatchSpawn. Call this after doing any DispatchKeyValues you are
 // doing on an entity your creating.
+//(vexd)
 static cell AMX_NATIVE_CALL DispatchSpawn(AMX *amx, cell *params) { 
 	edict_t* pTarget = INDEXENT(params[1]);
 
@@ -1713,27 +1853,10 @@ static cell AMX_NATIVE_CALL DispatchSpawn(AMX *amx, cell *params) {
 	return 1;
 }
 
-// Sets a model on an entity. Dont set models in entvars, it wont
-// update the engine of the model change.
-static cell AMX_NATIVE_CALL ENT_SetModel(AMX *amx, cell *params) { 
-	edict_t* pTarget = INDEXENT(params[1]);
-
-	int iLength;
-	char *szNewValue = AMX_GET_STRING(amx, params[2], iLength);
-
-	if(FNullEnt(pTarget)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
-
-	SET_MODEL(pTarget, szNewValue);
-
-	return 1;
-}
-
 // Set origin for entities. Use this instead of entvars, as it updates the engine.
 // It also does a SetSize, this way we can set the size at the same time as origin.
-static cell AMX_NATIVE_CALL ENT_SetOrigin(AMX *amx, cell *params) { 
+//(vexd)
+static cell AMX_NATIVE_CALL entity_set_origin(AMX *amx, cell *params) { 
 	int iTargetEntity = params[1];
 	cell *vInput = GET_AMXADDR(amx,params[2]);
 
@@ -1761,38 +1884,29 @@ static cell AMX_NATIVE_CALL ENT_SetOrigin(AMX *amx, cell *params) {
 	return 1;
 }
 
-// FindEntity, use this in a while loop. will return -1 when theres no entities left.
-// It searches by classname.
-static cell AMX_NATIVE_CALL FindEntity(AMX *amx, cell *params) {
-	int iStartEnt = params[1];
 
-	int iLengthSearchStrn;
-	char *szValue = AMX_GET_STRING(amx, params[2], iLengthSearchStrn);
+// Sets a model on an entity. Dont set models in entvars, it wont
+// update the engine of the model change.
+//(vexd)
+static cell AMX_NATIVE_CALL entity_set_model(AMX *amx, cell *params) { 
+	edict_t* pTarget = INDEXENT(params[1]);
 
-	edict_t *pStartEnt;
+	int iLength;
+	char *szNewValue = AMX_GET_STRING(amx, params[2], iLength);
 
-	if(iStartEnt == -1) {
-		pStartEnt = NULL;
-	} else {
-		pStartEnt = INDEXENT(iStartEnt);
-
-		if(FNullEnt(pStartEnt)) {
-			return -1;
-		}
+	if(FNullEnt(pTarget)) {
+		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
+		return 0;
 	}
 
-	int iReturnEnt = ENTINDEX(FIND_ENTITY_BY_STRING(pStartEnt, "classname", szValue));
+	SET_MODEL(pTarget, szNewValue);
 
-	if(!iReturnEnt || FNullEnt(iReturnEnt)) {
-		return -1;
-	}
-
-	return iReturnEnt;
+	return 1;
 }
 
 //FindEntityByTarget (BAILOPAN)
 // Works like FindEntity except finds by Target
-static cell AMX_NATIVE_CALL FindEntityByTarget(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL find_ent_by_target(AMX *amx, cell *params)
 {
 	int iStart = params[1];
 	int iLength;
@@ -1820,7 +1934,7 @@ static cell AMX_NATIVE_CALL FindEntityByTarget(AMX *amx, cell *params)
 
 //FindEntityByModel (BAILOPAN)
 //Takes in a classname and model...
-static cell AMX_NATIVE_CALL FindEntityByModel(AMX *amx, cell *params) { 
+static cell AMX_NATIVE_CALL find_ent_by_model(AMX *amx, cell *params) { 
 	int iStart = params[1];
 	int iLength, iLength2;
 	char *szClass = AMX_GET_STRING(amx, params[2], iLength);
@@ -1860,7 +1974,7 @@ static cell AMX_NATIVE_CALL FindEntityByModel(AMX *amx, cell *params) {
 
 //FindEntityByTName (BAILOPAN)
 // Works like FindEntity except finds by TargetName
-static cell AMX_NATIVE_CALL FindEntityByTName(AMX *amx, cell *params) {
+static cell AMX_NATIVE_CALL find_ent_by_tname(AMX *amx, cell *params) {
 	int iStart = params[1];
 	int iLength;
 	char *szValue = AMX_GET_STRING(amx, params[2], iLength);
@@ -1888,7 +2002,7 @@ static cell AMX_NATIVE_CALL FindEntityByTName(AMX *amx, cell *params) {
 // FindEntityByOwner (BAILOPAN)
 // Works like FindEntity except only returns by owner.
 // Searches by classname.
-static cell AMX_NATIVE_CALL FindEntityByOwner(AMX *amx, cell *params) { 
+static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params) { 
 	int iStartEnt = params[1];
 	int iEntOwner = params[3];
 	int iLengthSearchStrn;
@@ -1927,119 +2041,118 @@ static cell AMX_NATIVE_CALL FindEntityByOwner(AMX *amx, cell *params) {
 }
 
 //returns current number of entities in game (BAILOPAN)
-static cell AMX_NATIVE_CALL EntityCount(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL entity_count(AMX *amx, cell *params)
 { 
 	return NUMBER_OF_ENTITIES(); 
 }
 
-// BAILOPAN
-static cell AMX_NATIVE_CALL set_user_footsteps(AMX *amx, cell *params)
-{
-	int index = params[1];
-	int steps = params[2];
+// RemoveEntity, this removes an entity from the world.
+// Could also be done setting the flag FL_KILLME in entvars.
+//(vexd)
+static cell AMX_NATIVE_CALL remove_entity(AMX *amx, cell *params) { 
+	int iTarget = params[1];
 
-	if (index<1||index>gpGlobals->maxClients) {
+	edict_t* pTarget = INDEXENT(iTarget);
+
+	if(FNullEnt(pTarget)) {
 		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
-	edict_t* pEdict = INDEXENT(index);
-	
-	if (steps>0) {                
-		pEdict->v.flTimeStepSound = steps;
-	} else if (steps == 0) {
-		pEdict->v.flTimeStepSound = 400;
-	} else if (steps < 0) {
-		pEdict->v.flTimeStepSound = 999;
-	}
+	REMOVE_ENTITY(pTarget);
 
 	return 1;
 }
 
-// BAILOPAN
-static cell AMX_NATIVE_CALL get_user_footsteps(AMX *amx, cell *params)
-{
-	int index = params[1];
+// VecToAngles, this is a half-life function for making a vector out of
+// angles.
+//(vexd)
+static cell AMX_NATIVE_CALL vector_to_angle(AMX *amx, cell *params) { 
+	cell *vInput = GET_AMXADDR(amx,params[1]);
+	float fInX = *(float *)((void *)&vInput[0]);
+	float fInY = *(float *)((void *)&vInput[1]);
+	float fInZ = *(float *)((void *)&vInput[2]);
 
-	if (index<1||index>gpGlobals->maxClients) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	Vector vVector = Vector(fInX, fInY, fInZ);
+	Vector vAngle = Vector(0, 0, 0);
+	VEC_TO_ANGLES(vVector, vAngle);
 
-	edict_t* pEdict = INDEXENT(index);
-	
-	return pEdict->v.flTimeStepSound;
-}
-
-// SpaceDude
-static cell AMX_NATIVE_CALL get_grenade_id(AMX *amx, cell *params)  /* 4 param */ 
-{
-	int index = params[1];
-	char* szModel;
-
-	if (index<1||index>gpGlobals->maxClients)
-	{
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE); 
-		return 0; 
-	}
-
-	edict_t* pentFind = INDEXENT(params[4]);
-	edict_t* pentOwner = INDEXENT(index);
-
-	pentFind = FIND_ENTITY_BY_CLASSNAME( pentFind, "grenade" );
-	while ( !FNullEnt( pentFind ) )
-	{
-		if (pentFind->v.owner == pentOwner)
-		{
-			szModel = new char[params[3]];
-			szModel = (char*)STRING(pentFind->v.model);
-			SET_AMXSTRING(amx,params[2],szModel,params[3]);
-			delete [] szModel;
-			return ENTINDEX(pentFind);
-		}
-		pentFind = FIND_ENTITY_BY_CLASSNAME( pentFind, "grenade" );
-	}
-	return 0;
-}
-
-// SpaceDude
-static cell AMX_NATIVE_CALL get_user_velocity(AMX *amx, cell *params)  /* 2 param */ 
-{ 
-	int index = params[1];
-	cell *Velocity = GET_AMXADDR(amx,params[2]);
-  
-	if (index<1||index>gpGlobals->maxClients)
-	{ 
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE); 
-		return 0; 
-	} 
-
-	edict_t* pEdict = INDEXENT(index);
-
-	Velocity[0] = (cell)pEdict->v.velocity.x;
-	Velocity[1] = (cell)pEdict->v.velocity.y;
-	Velocity[2] = (cell)pEdict->v.velocity.z;
+	cell *vReturnTo = GET_AMXADDR(amx,params[2]);
+	vReturnTo[0] = *(cell*)((void *)&vAngle.x);
+	vReturnTo[1] = *(cell*)((void *)&vAngle.y);
+	vReturnTo[2] = *(cell*)((void *)&vAngle.z);
 
 	return 1;
 }
 
-// SpaceDude
-static cell AMX_NATIVE_CALL set_user_velocity(AMX *amx, cell *params)  /* 2 param */ 
-{ 
-	int index = params[1];
-	cell *Velocity = GET_AMXADDR(amx,params[2]);
-  
-	if (index<1||index>gpGlobals->maxClients)
-	{ 
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE); 
-		return 0; 
-	} 
+// VecLength, this gives you the length of a vector (float[3] type).
+//(vexd)
+static cell AMX_NATIVE_CALL vector_length(AMX *amx, cell *params) { 
+	cell *vInput = GET_AMXADDR(amx,params[1]);
+	float fInX = *(float *)((void *)&vInput[0]);
+	float fInY = *(float *)((void *)&vInput[1]);
+	float fInZ = *(float *)((void *)&vInput[2]);
 
-	edict_t* pEdict = INDEXENT(index);
+	Vector vVector = Vector(fInX, fInY, fInZ);
 
-	pEdict->v.velocity.x = Velocity[0];
-	pEdict->v.velocity.y = Velocity[1];
-	pEdict->v.velocity.z = Velocity[2];
+	float flLength = vVector.Length();
+
+	return *(cell*)((void *)&flLength);
+}
+
+// VecDist, this gives you the distance between 2 vectors (float[3] type).
+//(vexd)
+static cell AMX_NATIVE_CALL vector_distance(AMX *amx, cell *params) { 
+	cell *vInput = GET_AMXADDR(amx,params[1]);
+	float fInX = *(float *)((void *)&vInput[0]);
+	float fInY = *(float *)((void *)&vInput[1]);
+	float fInZ = *(float *)((void *)&vInput[2]);
+
+	cell *vInput2 = GET_AMXADDR(amx,params[2]);
+	float fInX2 = *(float *)((void *)&vInput2[0]);
+	float fInY2 = *(float *)((void *)&vInput2[1]);
+	float fInZ2 = *(float *)((void *)&vInput2[2]);
+
+	Vector vVector = Vector(fInX, fInY, fInZ);
+	Vector vVector2 = Vector(fInX2, fInY2, fInZ2);
+
+	float flLength = (vVector - vVector2).Length();
+
+	return *(cell*)((void *)&flLength);
+}
+
+// TraceNormal. This is just like TraceLine, but it gives back the
+// Normal of whatever plane it hit. Use with TraceLine and you can have
+// A point on a plane, with its normal, good for creating things that attach
+// to walls (like tripmines).
+//(vexd)
+static cell AMX_NATIVE_CALL trace_normal(AMX *amx, cell *params) { 
+	int iIgnoreEnt = params[1];
+
+	cell *fpStart = GET_AMXADDR(amx,params[2]);
+	float fStartX = *(float *)((void *)&fpStart[0]);
+	float fStartY = *(float *)((void *)&fpStart[1]);
+	float fStartZ = *(float *)((void *)&fpStart[2]);
+
+	cell *fpEnd = GET_AMXADDR(amx,params[3]);
+	float fEndX = *(float *)((void *)&fpEnd[0]);
+	float fEndY = *(float *)((void *)&fpEnd[1]);
+	float fEndZ = *(float *)((void *)&fpEnd[2]);
+
+
+	cell *vReturnTo = GET_AMXADDR(amx,params[4]);
+
+	Vector vStart = Vector(fStartX, fStartY, fStartZ);
+	Vector vEnd = Vector(fEndX, fEndY, fEndZ);
+
+	TraceResult tr;
+	TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT(iIgnoreEnt), &tr);
+
+	vReturnTo[0] = *(cell*)((void *)&tr.vecPlaneNormal.x); 
+	vReturnTo[1] = *(cell*)((void *)&tr.vecPlaneNormal.y); 
+	vReturnTo[2] = *(cell*)((void *)&tr.vecPlaneNormal.z); 
+
+	if (tr.flFraction >= 1.0) return 0;
 
 	return 1;
 }
@@ -2048,7 +2161,8 @@ static cell AMX_NATIVE_CALL set_user_velocity(AMX *amx, cell *params)  /* 2 para
 // An entity is at the end of a line.
 // The return value is either the end of the line (where it crashed into an object,
 // or the end you supplied.)
-static cell AMX_NATIVE_CALL TraceLn(AMX *amx, cell *params) { 
+//(vexd)
+static cell AMX_NATIVE_CALL trace_line(AMX *amx, cell *params) { 
 	int iIgnoreEnt = params[1];
 
 	cell *fpStart = GET_AMXADDR(amx,params[2]);
@@ -2088,115 +2202,127 @@ static cell AMX_NATIVE_CALL TraceLn(AMX *amx, cell *params) {
 	return ENTINDEX(pHit);
 }
 
-// TraceNormal. This is just like TraceLine, but it gives back the
-// Normal of whatever plane it hit. Use with TraceLine and you can have
-// A point on a plane, with its normal, good for creating things that attach
-// to walls (like tripmines).
-static cell AMX_NATIVE_CALL TraceNormal(AMX *amx, cell *params) { 
-	int iIgnoreEnt = params[1];
+// Get gpGlobals->time, this is useful for timing things.
+//(vexd)
+static cell AMX_NATIVE_CALL halflife_time(AMX *amx, cell *params) {
+	float fRetValue = gpGlobals->time;
+	return *(cell*)((void *)&fRetValue);
+}
 
-	cell *fpStart = GET_AMXADDR(amx,params[2]);
-	float fStartX = *(float *)((void *)&fpStart[0]);
-	float fStartY = *(float *)((void *)&fpStart[1]);
-	float fStartZ = *(float *)((void *)&fpStart[2]);
+//simulate two objects coliding
+//(vexd)
+static cell AMX_NATIVE_CALL fake_touch(AMX *amx, cell *params) {
+	int iToucher = params[1];
+	int iTouched = params[2];
 
-	cell *fpEnd = GET_AMXADDR(amx,params[3]);
-	float fEndX = *(float *)((void *)&fpEnd[0]);
-	float fEndY = *(float *)((void *)&fpEnd[1]);
-	float fEndZ = *(float *)((void *)&fpEnd[2]);
+	if(iToucher < 1 || iTouched < 1) return 0;
+	if(iToucher > gpGlobals->maxEntities || iTouched > gpGlobals->maxEntities) return 0;
 
+	edict_t *pToucher = INDEXENT(iToucher);
+	edict_t *pTouched = INDEXENT(iTouched);
 
-	cell *vReturnTo = GET_AMXADDR(amx,params[4]);
+	if(FNullEnt(pToucher) || FNullEnt(pTouched)) return 0;
 
-	Vector vStart = Vector(fStartX, fStartY, fStartZ);
-	Vector vEnd = Vector(fEndX, fEndY, fEndZ);
-
-	TraceResult tr;
-	TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT(iIgnoreEnt), &tr);
-
-	vReturnTo[0] = *(cell*)((void *)&tr.vecPlaneNormal.x); 
-	vReturnTo[1] = *(cell*)((void *)&tr.vecPlaneNormal.y); 
-	vReturnTo[2] = *(cell*)((void *)&tr.vecPlaneNormal.z); 
-
-	if (tr.flFraction >= 1.0) return 0;
+	MDLL_Touch(pToucher, pTouched);
 
 	return 1;
 }
 
-// VecToAngles, this is a half-life function for making a vector out of
-// angles.
-static cell AMX_NATIVE_CALL VecToAngles(AMX *amx, cell *params) { 
-	cell *vInput = GET_AMXADDR(amx,params[1]);
-	float fInX = *(float *)((void *)&vInput[0]);
-	float fInY = *(float *)((void *)&vInput[1]);
-	float fInZ = *(float *)((void *)&vInput[2]);
+//(SpaceDude)
+static cell AMX_NATIVE_CALL get_grenade_id(AMX *amx, cell *params)  /* 4 param */ 
+{
+	int index = params[1];
+	char* szModel;
 
-	Vector vVector = Vector(fInX, fInY, fInZ);
-	Vector vAngle = Vector(0, 0, 0);
-	VEC_TO_ANGLES(vVector, vAngle);
+	if (index<1||index>gpGlobals->maxClients)
+	{
+		AMX_RAISEERROR(amx,AMX_ERR_NATIVE); 
+		return 0; 
+	}
 
-	cell *vReturnTo = GET_AMXADDR(amx,params[2]);
-	vReturnTo[0] = *(cell*)((void *)&vAngle.x);
-	vReturnTo[1] = *(cell*)((void *)&vAngle.y);
-	vReturnTo[2] = *(cell*)((void *)&vAngle.z);
+	edict_t* pentFind = INDEXENT(params[4]);
+	edict_t* pentOwner = INDEXENT(index);
 
-	return 1;
+	pentFind = FIND_ENTITY_BY_CLASSNAME( pentFind, "grenade" );
+	while ( !FNullEnt( pentFind ) )
+	{
+		if (pentFind->v.owner == pentOwner)
+		{
+			szModel = new char[params[3]];
+			szModel = (char*)STRING(pentFind->v.model);
+			SET_AMXSTRING(amx,params[2],szModel,params[3]);
+			delete [] szModel;
+			return ENTINDEX(pentFind);
+		}
+		pentFind = FIND_ENTITY_BY_CLASSNAME( pentFind, "grenade" );
+	}
+	return 0;
 }
 
-// VecLength, this gives you the length of a vector (float[3] type).
-static cell AMX_NATIVE_CALL VecLength(AMX *amx, cell *params) { 
-	cell *vInput = GET_AMXADDR(amx,params[1]);
-	float fInX = *(float *)((void *)&vInput[0]);
-	float fInY = *(float *)((void *)&vInput[1]);
-	float fInZ = *(float *)((void *)&vInput[2]);
+// Sets a message block.
+static cell AMX_NATIVE_CALL set_msg_block(AMX *amx, cell *params) { 
+	int iMessage = params[1];
+	int iMessageFlags = params[2];
 
-	Vector vVector = Vector(fInX, fInY, fInZ);
-
-	float flLength = vVector.Length();
-
-	return *(cell*)((void *)&flLength);
-}
-
-// VecDist, this gives you the distance between 2 vectors (float[3] type).
-static cell AMX_NATIVE_CALL VecDist(AMX *amx, cell *params) { 
-	cell *vInput = GET_AMXADDR(amx,params[1]);
-	float fInX = *(float *)((void *)&vInput[0]);
-	float fInY = *(float *)((void *)&vInput[1]);
-	float fInZ = *(float *)((void *)&vInput[2]);
-
-	cell *vInput2 = GET_AMXADDR(amx,params[2]);
-	float fInX2 = *(float *)((void *)&vInput2[0]);
-	float fInY2 = *(float *)((void *)&vInput2[1]);
-	float fInZ2 = *(float *)((void *)&vInput2[2]);
-
-	Vector vVector = Vector(fInX, fInY, fInZ);
-	Vector vVector2 = Vector(fInX2, fInY2, fInZ2);
-
-	float flLength = (vVector - vVector2).Length();
-
-	return *(cell*)((void *)&flLength);
-}
-
-// RemoveEntity, this removes an entity from the world.
-// Could also be done setting the flag FL_KILLME in entvars.
-static cell AMX_NATIVE_CALL RemoveEntity(AMX *amx, cell *params) { 
-	int iTarget = params[1];
-
-	edict_t* pTarget = INDEXENT(iTarget);
-
-	if(FNullEnt(pTarget)) {
+	if (iMessage < 1 || iMessage > MAX_MESSAGES) {
 		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
-	REMOVE_ENTITY(pTarget);
+	GlInfo.iMessageBlock[iMessage] = iMessageFlags;
 
 	return 1;
 }
 
+// Gets a message block.
+static cell AMX_NATIVE_CALL get_msg_block(AMX *amx, cell *params) { 
+	int iMessage = params[1];
+
+	if (iMessage < 1 || iMessage > MAX_MESSAGES) {
+		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	return GlInfo.iMessageBlock[iMessage];
+}
+
+// SetLights, this sets the lights for the map.
+//(vexd)
+static cell AMX_NATIVE_CALL set_lights(AMX *amx, cell *params) { 
+	int iLength;
+
+	char *szLights = AMX_GET_STRING(amx, params[1], iLength);
+
+	if(FStrEq(szLights, "#OFF")) {
+		GlInfo.bLights = false;
+		memset(GlInfo.szLastLights, 0x0, 128);
+		(g_engfuncs.pfnLightStyle)(0, (char *)GlInfo.szRealLights);
+		return 1;
+	}
+
+	GlInfo.bLights = true;
+
+	//Reset LastLights
+	memset(GlInfo.szLastLights, 0x0, 128);
+	//Store the previous lighting.
+	memcpy(GlInfo.szLastLights, szLights, strlen(szLights));
+
+	(g_engfuncs.pfnLightStyle)(0, szLights);
+
+	// These make it so that players/weaponmodels look like whatever the lighting is
+	// at. otherwise it would color players under the skybox to these values.
+	SERVER_COMMAND("sv_skycolor_r 0\n");
+	SERVER_COMMAND("sv_skycolor_g 0\n");
+	SERVER_COMMAND("sv_skycolor_b 0\n");
+
+	return 1;
+}
+
+
 // SetView, this sets the view of a player. This is done by
 // Creating a camera entity, which follows the player.
-static cell AMX_NATIVE_CALL SetView(AMX *amx, cell *params) { 
+//(vexd)
+static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) { 
 	int iIndex = params[1];
 	int iCameraType = params[2];
 
@@ -2321,7 +2447,8 @@ static cell AMX_NATIVE_CALL SetView(AMX *amx, cell *params) {
 
 // Attachview, this allows you to attach a player's view to an entity.
 // use AttachView(player, player) to reset view.
-static cell AMX_NATIVE_CALL AttachView(AMX *amx, cell *params) { 
+//(vexd)
+static cell AMX_NATIVE_CALL attach_view(AMX *amx, cell *params) { 
 	int iIndex = params[1];
 	int iTargetIndex = params[2];
 
@@ -2340,135 +2467,55 @@ static cell AMX_NATIVE_CALL AttachView(AMX *amx, cell *params) {
 	return 1;
 }
 
-// SetSpeak, this sets who a player can speak to/who he can listen to.
-static cell AMX_NATIVE_CALL SetSpeak(AMX *amx, cell *params) { 
-	int iIndex = params[1];
-	int iNewSpeakFlags = params[2];
+/********************************************
+   METAMOD HOOKED FUNCTIONS
+   *****************************************/
 
-	if (iIndex < 1 || iIndex > gpGlobals->maxClients) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
-
-	PlInfo[iIndex].iSpeakFlags = iNewSpeakFlags;
-
-	return 1;
-}
-
-//GetSpeak, this gets whether a player can speak to
-// (BAILOPAN)
-static cell AMX_NATIVE_CALL GetSpeak(AMX *amx, cell *params) {
-	int iIndex = params[1];
-
-	if (iIndex < 1 || iIndex > gpGlobals->maxClients)
-	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
-
-	return PlInfo[iIndex].iSpeakFlags;
-}
-
-/*//SetPhysicsKey, sets a physics key.
-//(BAILOPAN)
-static cell AMX_NATIVE_CALL set_user_physics(AMX *amx, cell *params)
+//Added by BAILOPAN.  ClientKill() forward.
+void ClientKill(edict_t *pEntity)
 {
-	int iKey;
-}*/
-
-// SetLights, this sets the lights for the map.
-static cell AMX_NATIVE_CALL SetLights(AMX *amx, cell *params) { 
-	int iLength;
-
-	char *szLights = AMX_GET_STRING(amx, params[1], iLength);
-
-	if(FStrEq(szLights, "#OFF")) {
-		GlInfo.bLights = false;
-		memset(GlInfo.szLastLights, 0x0, 128);
-		(g_engfuncs.pfnLightStyle)(0, (char *)GlInfo.szRealLights);
-		return 1;
+	cell iRetVal = 0;
+	META_RES result = MRES_IGNORED;
+	
+	for (AmxCallList::AmxCall* i = clientKill.head; i; i = i->next) {
+		AMX_EXEC(i->amx, &iRetVal, i->iFunctionIdx, 1, ENTINDEX(pEntity));
+		if (iRetVal & 2) {
+			RETURN_META(MRES_SUPERCEDE);
+		} else if (iRetVal & 1) {
+			result = MRES_SUPERCEDE;
+		}
 	}
 
-	GlInfo.bLights = true;
-
-	//Reset LastLights
-	memset(GlInfo.szLastLights, 0x0, 128);
-	//Store the previous lighting.
-	memcpy(GlInfo.szLastLights, szLights, strlen(szLights));
-
-	(g_engfuncs.pfnLightStyle)(0, szLights);
-
-	// These make it so that players/weaponmodels look like whatever the lighting is
-	// at. otherwise it would color players under the skybox to these values.
-	SERVER_COMMAND("sv_skycolor_r 0\n");
-	SERVER_COMMAND("sv_skycolor_g 0\n");
-	SERVER_COMMAND("sv_skycolor_b 0\n");
-
-	return 1;
+	RETURN_META(result);
 }
 
-// Sets a message block.
-static cell AMX_NATIVE_CALL MessageBlock(AMX *amx, cell *params) { 
-	int iMessage = params[1];
-	int iMessageFlags = params[2];
-
-	if (iMessage < 1 || iMessage > MAX_MESSAGES) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
-		return 0;
+// This allows us to make the player transparent when in third person (but visable to others).
+//(vexd)
+int AddToFullPack(struct entity_state_s *state, int e, edict_t *ent, edict_t *host, int hostflags, int player, unsigned char *pSet) {
+	if(ent == host) {
+		if(FStrEq(STRING(ent->v.classname), "player")) {
+			if(PlInfo[ENTINDEX(ent)].iViewType != CAMERA_NONE) {
+				ent->v.rendermode = kRenderTransTexture;
+				ent->v.renderamt = 100;
+				RETURN_META_VALUE(MRES_IGNORED, 0);
+			}
+		}
 	}
 
-	GlInfo.iMessageBlock[iMessage] = iMessageFlags;
-
-	return 1;
-}
-
-// Gets a message block.
-static cell AMX_NATIVE_CALL GetMessageBlock(AMX *amx, cell *params) { 
-	int iMessage = params[1];
-
-	if (iMessage < 1 || iMessage > MAX_MESSAGES) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
-		return 0;
+	if(FStrEq(STRING(ent->v.classname), "player")) {
+		if(PlInfo[ENTINDEX(ent)].iViewType != CAMERA_NONE) {
+			ent->v.rendermode = PlInfo[ENTINDEX(ent)].iRenderMode;
+			ent->v.renderamt = PlInfo[ENTINDEX(ent)].fRenderAmt;
+		}
 	}
 
-	return GlInfo.iMessageBlock[iMessage];
-}
-
-// Get gpGlobals->time, this is useful for timing things.
-static cell AMX_NATIVE_CALL HLTime(AMX *amx, cell *params) {
-	float fRetValue = gpGlobals->time;
-	return *(cell*)((void *)&fRetValue);
-}
-
-static cell AMX_NATIVE_CALL FakeTouch(AMX *amx, cell *params) {
-	int iToucher = params[1];
-	int iTouched = params[2];
-
-	if(iToucher < 1 || iTouched < 1) return 0;
-	if(iToucher > gpGlobals->maxEntities || iTouched > gpGlobals->maxEntities) return 0;
-
-	edict_t *pToucher = INDEXENT(iToucher);
-	edict_t *pTouched = INDEXENT(iTouched);
-
-	if(FNullEnt(pToucher) || FNullEnt(pTouched)) return 0;
-
-	MDLL_Touch(pToucher, pTouched);
-
-	return 1;
-}
-
-/*********************** End Exported Functions *****************************/
-
-/*********************** Begin Hooked Functions *****************************/
-
-// This is where we register any Console-variables we have.
-void GameInit(void) {
-	CVAR_REGISTER(&amxxe_version);
+	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
 // Check if they are using a model, if so, don't let CS know.
 // HACKHACK: this might mess up some stuff with other infobuffers,
 // ie you may not see when a modeled player changes thier name, etc.
+//(vexd)
 void ClientUserInfoChanged(edict_t *pEntity, char *infobuffer) {
 	if(PlInfo[ENTINDEX(pEntity)].bModeled && pEntity->v.deadflag == DEAD_NO) {
 		RETURN_META(MRES_SUPERCEDE);
@@ -2477,16 +2524,8 @@ void ClientUserInfoChanged(edict_t *pEntity, char *infobuffer) {
 	}
 }
 
-//(BAILOPAN) - forward this
-
-void PlayerPreThink(edict_t *pEntity) {
-	
-	RETURN_META(MRES_IGNORED);
-}
-
 // This code is to set the model at a specified time. the second part of the code updates the
-// SetView camera.
-//(BAILOPAN) - now a forward
+// SetView camera. (vexd)
 void PlayerPostThink(edict_t *pEntity) {
 	if((PlInfo[ENTINDEX(pEntity)].bModeled) && (PlInfo[ENTINDEX(pEntity)].fModelSet != 0) && (PlInfo[ENTINDEX(pEntity)].fModelSet < gpGlobals->time)) {
 		(g_engfuncs.pfnSetClientKeyValue)(ENTINDEX(pEntity), (g_engfuncs.pfnGetInfoKeyBuffer)(pEntity), "model", PlInfo[ENTINDEX(pEntity)].szModel);
@@ -2528,6 +2567,9 @@ void PlayerPostThink(edict_t *pEntity) {
 				break;
 		}
 	}
+	for (AmxCallList::AmxCall* i = postThink.head; i; i = i->next) {
+		AMX_EXEC(i->amx, NULL, i->iFunctionIdx, 1, ENTINDEX(pEntity));
+	}
 	
 	RETURN_META(MRES_IGNORED);
 }
@@ -2535,6 +2577,7 @@ void PlayerPostThink(edict_t *pEntity) {
 // This is called once every server frame. This code resets the lights once every second.
 // this is so joining players will see ther correct lighting.
 // Also forward, may cause lag, but it is good for checking things.
+//(vexd)
 void StartFrame() {
 	if(!FStrEq((const char *)GlInfo.szLastLights, "")) {
 		if(GlInfo.fNextLights < gpGlobals->time) {
@@ -2543,25 +2586,24 @@ void StartFrame() {
 		}
 	}
 
-	RETURN_META(MRES_IGNORED);
-}
-
-// pfnTouch, this is a forward that is called whenever 2 entities collide.
-void Touch(edict_t *pToucher, edict_t *pTouched) {
+	for (AmxCallList::AmxCall* i = serverFrame.head; i; i = i->next) {
+		AMX_EXEC(i->amx, NULL, i->iFunctionIdx, 0);
+	}
 
 	RETURN_META(MRES_IGNORED);
 }
 
-//Added by BAILOPAN.  ClientKill() forward.
-void ClientKill(edict_t *pEntity)
-{
-	cell iRetVal = 0;
-	META_RES result = MRES_IGNORED;
+//(BAILOPAN) - forward this
 
-	RETURN_META(result);
+void PlayerPreThink(edict_t *pEntity) {
+	for (AmxCallList::AmxCall* i = preThink.head; i; i = i->next) {
+		AMX_EXEC(i->amx, NULL, i->iFunctionIdx, 1, ENTINDEX(pEntity));
+	}
+	RETURN_META(MRES_IGNORED);
 }
 
 // ClientDisconnect. Reinitialize the PlayerInfo struct for that player.
+//(vexd)
 void ClientDisconnect(edict_t *pEntity) {
 	memset(PlInfo[ENTINDEX(pEntity)].szModel, 0x0, sizeof(PlInfo[ENTINDEX(pEntity)].szModel));
 	PlInfo[ENTINDEX(pEntity)].bModeled = false;
@@ -2574,8 +2616,20 @@ void ClientDisconnect(edict_t *pEntity) {
 	RETURN_META(MRES_IGNORED);
 }
 
+
+// pfnTouch, this is a forward that is called whenever 2 entities collide.
+void Touch(edict_t *pToucher, edict_t *pTouched) {
+
+	for (AmxCallList::AmxCall* i = pfnTouch.head; i; i = i->next) {
+		AMX_EXEC(i->amx, NULL, i->iFunctionIdx, 2, pToucher, pTouched);
+	}
+
+	RETURN_META(MRES_IGNORED);
+}
+
 // ClientConnect, reinitialize player info here as well.
 // Also gives small message that its using the model.
+//(vexd)
 BOOL ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[128]) {
 	memset(PlInfo[ENTINDEX(pEntity)].szModel, 0x0, sizeof(PlInfo[ENTINDEX(pEntity)].szModel));
 	PlInfo[ENTINDEX(pEntity)].bModeled = false;
@@ -2591,120 +2645,13 @@ BOOL ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
-// This allows us to make the player transparent when in third person (but visable to others).
-int AddToFullPack(struct entity_state_s *state, int e, edict_t *ent, edict_t *host, int hostflags, int player, unsigned char *pSet) {
-	if(ent == host) {
-		if(FStrEq(STRING(ent->v.classname), "player")) {
-			if(PlInfo[ENTINDEX(ent)].iViewType != CAMERA_NONE) {
-				ent->v.rendermode = kRenderTransTexture;
-				ent->v.renderamt = 100;
-				RETURN_META_VALUE(MRES_IGNORED, 0);
-			}
-		}
-	}
-
-	if(FStrEq(STRING(ent->v.classname), "player")) {
-		if(PlInfo[ENTINDEX(ent)].iViewType != CAMERA_NONE) {
-			ent->v.rendermode = PlInfo[ENTINDEX(ent)].iRenderMode;
-			ent->v.renderamt = PlInfo[ENTINDEX(ent)].fRenderAmt;
-		}
-	}
-
-	RETURN_META_VALUE(MRES_IGNORED, 0);
-}
-
-// ServerActivate. This is called when the server starts a new map.
-void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax) {
-	/*
-	plugin_t *pCurrent = FIND_PLUGIN_BY_INDEX(0, 0);
-	int iFunctionIndex = 0;
-
-	// Search for plugins that have the forward functions.
-	while(pCurrent){	//Iterate Plugin List
-		//THIS IS FOR BACKWARD COMPATIBILITY
-	
-		if(AMX_FINDPUBLIC(&pCurrent->amx, "vexd_pfntouch", &iFunctionIndex) == AMX_ERR_NONE) {
-			AmxCall sNewCall;
-			sNewCall.pPlugin = pCurrent;
-			sNewCall.iFunctionIdx = iFunctionIndex;
-			vTouchCallList.push_back(sNewCall);
-		}
-
-		iFunctionIndex = 0;
-
-		if(AMX_FINDPUBLIC(&pCurrent->amx, "pfntouch", &iFunctionIndex) == AMX_ERR_NONE) {
-			AmxCall sNewCall;
-			sNewCall.pPlugin = pCurrent;
-			sNewCall.iFunctionIdx = iFunctionIndex;
-			vTouchCallList.push_back(sNewCall);
-		}
-
-		iFunctionIndex = 0;
-
-		if(AMX_FINDPUBLIC(&pCurrent->amx, "ServerFrame", &iFunctionIndex) == AMX_ERR_NONE) {
-			AmxCall sNewCall;
-			sNewCall.pPlugin = pCurrent;
-			sNewCall.iFunctionIdx = iFunctionIndex;
-			vServerFrameCallList.push_back(sNewCall);
-		}
-
-		iFunctionIndex = 0;
-		
-		if (AMX_FINDPUBLIC(&pCurrent->amx, "client_kill", &iFunctionIndex) == AMX_ERR_NONE) {
-			AmxCall sNewCall;
-			sNewCall.pPlugin = pCurrent;
-			sNewCall.iFunctionIdx = iFunctionIndex;
-			vCliKillList.push_back(sNewCall);
-		}
-		
-		iFunctionIndex = 0;
-		
-		if (AMX_FINDPUBLIC(&pCurrent->amx, "PlayerPreThink", &iFunctionIndex) == AMX_ERR_NONE) {
-			AmxCall sNewCall;
-			sNewCall.pPlugin = pCurrent;
-			sNewCall.iFunctionIdx = iFunctionIndex;
-			vPreThinkList.push_back(sNewCall);
-		}
-		
-		iFunctionIndex = 0;
-		
-		if (AMX_FINDPUBLIC(&pCurrent->amx, "PlayerPostThink", &iFunctionIndex) == AMX_ERR_NONE) {
-			AmxCall sNewCall;
-			sNewCall.pPlugin = pCurrent;
-			sNewCall.iFunctionIdx = iFunctionIndex;
-			vPostThinkList.push_back(sNewCall);
-		}
-		
-		iFunctionIndex = 0;
-		pCurrent = pCurrent->next;
-		
-	}
-*/
-	RETURN_META(MRES_IGNORED);
-}
-
-// Every call to ServerActivate is matched by ServerDeactivate. This is called when the server
-// Is unloading the old map.
-void ServerDeactivate(void) {
-
-	// Clear the call list for forwards. this is important as the address of plugins can change
-	// from map-to-map.
-
-	// Reset Lights.
-	memset(GlInfo.szLastLights, 0x0, 128);
-	memset(GlInfo.szRealLights, 0x0, 128);
-	GlInfo.bLights = false;
-	GlInfo.fNextLights = 0;
-
-	// Reset message blocks.
-	for(int i = 0; i < MAX_MESSAGES; i++) {
-		GlInfo.iMessageBlock[i] = BLOCK_NOT;
-	}
-
-	RETURN_META(MRES_IGNORED);
+//(vexd)
+void GameInit(void) {
+	CVAR_REGISTER(&amxxe_version);
 }
 
 // make sure that if we currently have an edited light value, to use it.
+//(vexd)
 void LightStyle(int style, char *val) {
 	if(style == 0) {
 		memset(GlInfo.szRealLights, 0x0, 128);
@@ -2714,28 +2661,7 @@ void LightStyle(int style, char *val) {
 	RETURN_META(MRES_IGNORED);
 }
 
-// This checks who can hear who through voice comm. this reads flags set,
-// and lets us choose who hears who based on the previously set flags.
-qboolean Voice_SetClientListening(int iReceiver, int iSender, qboolean bListen) {
-	if((PlInfo[iSender].iSpeakFlags & SPEAK_MUTED) != 0) {
-		(g_engfuncs.pfnVoice_SetClientListening)(iReceiver, iSender, false);
-		RETURN_META_VALUE(MRES_SUPERCEDE, false);
-	}
-
-	if((PlInfo[iSender].iSpeakFlags & SPEAK_ALL) != 0) {
-		(g_engfuncs.pfnVoice_SetClientListening)(iReceiver, iSender, true);
-		RETURN_META_VALUE(MRES_SUPERCEDE, true);
-	}
-
-	if((PlInfo[iReceiver].iSpeakFlags & SPEAK_LISTENALL) != 0) {
-		(g_engfuncs.pfnVoice_SetClientListening)(iReceiver, iSender, true);
-		RETURN_META_VALUE(MRES_SUPERCEDE, true);
-	}
-
-	RETURN_META_VALUE(MRES_IGNORED, bListen);
-}
-
-// Engine message functions.
+// Engine message functions. (vexd)
 void MessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed) {
 
 	// Reset player model a couple milliseconds after this if they are using an edited model.
@@ -2823,72 +2749,178 @@ void WriteEntity(int iValue) {
 	RETURN_META(MRES_IGNORED);
 }
 
-/*********************** End Hooked Functions *****************************/
+void ServerActivate( edict_t *pEdictList, int edictCount, int clientMax ){
+ 	AMX* amx;
+	void* code;
+	const char* filename;
+	int iFunctionIndex;
+	int i=0;
+	while ((amx = GET_AMXSCRIPT(i++, &code, &filename)) != 0) {
+		if (AMX_FINDPUBLIC(amx, "vexd_pfntouch", &iFunctionIndex) == AMX_ERR_NONE) {
+			pfnTouch.put(amx, iFunctionIndex);
+		}
+		if (AMX_FINDPUBLIC(amx, "pfn_touch", &iFunctionIndex) == AMX_ERR_NONE) {
+			pfnTouch.put(amx, iFunctionIndex);
+		}
+		if (AMX_FINDPUBLIC(amx, "server_frame", &iFunctionIndex) == AMX_ERR_NONE) {
+			serverFrame.put(amx, iFunctionIndex);
+		}
+		if (AMX_FINDPUBLIC(amx, "ServerFrame", &iFunctionIndex) == AMX_ERR_NONE) {
+			serverFrame.put(amx, iFunctionIndex);
+		}
+		if (AMX_FINDPUBLIC(amx, "client_PreThink", &iFunctionIndex) == AMX_ERR_NONE) {
+			preThink.put(amx, iFunctionIndex);
+		}
+		if (AMX_FINDPUBLIC(amx, "client_PostThink", &iFunctionIndex) == AMX_ERR_NONE) {
+			postThink.put(amx, iFunctionIndex);
+		}
+		if (AMX_FINDPUBLIC(amx, "client_kill", &iFunctionIndex) == AMX_ERR_NONE) {
+			clientKill.put(amx, iFunctionIndex);
+		}
+	}
 
-// Native list.
-AMX_NATIVE_INFO Engine_Exports[] = {
-	{"AttachView",			AttachView},
-	{"SetView",				SetView},
-	{"SetSpeak",			SetSpeak},
-	{"GetSpeak",			GetSpeak},
-	{"SetLights",			SetLights},
-	{"Entvars_Get_Int",		Entvars_Get_Int},
-	{"Entvars_Set_Int",		Entvars_Set_Int},
-	{"Entvars_Get_Float",	Entvars_Get_Float},
-	{"Entvars_Set_Float",	Entvars_Set_Float},
-	{"Entvars_Get_Vector",	Entvars_Get_Vector},
-	{"Entvars_Set_Vector",	Entvars_Set_Vector},
-	{"Entvars_Get_Edict",	Entvars_Get_Edict},
-	{"Entvars_Set_Edict",	Entvars_Set_Edict},
-	{"Entvars_Get_String",	Entvars_Get_String},
-	{"Entvars_Set_String",	Entvars_Set_String},
-	{"Entvars_Get_Byte",	Entvars_Get_Byte},
-	{"Entvars_Set_Byte",	Entvars_Set_Byte},
+	RETURN_META(MRES_IGNORED);
+}
 
-	{"VelocityByAim",		VelocityByAim},
-	{"PointContents",		PointContents},
-	{"RadiusDamage",		RadiusDamage},
+void ServerDeactivate() {
+	memset(GlInfo.szLastLights, 0x0, 128);
+	memset(GlInfo.szRealLights, 0x0, 128);
+	GlInfo.bLights = false;
+	GlInfo.fNextLights = 0;
 
-	{"CreateEntity",		CreateEntity},
-	{"DispatchKeyValue",	DispatchKeyValue},
-	{"DispatchSpawn",		DispatchSpawn},
-	{"ENT_SetModel",		ENT_SetModel},
-	{"ENT_SetOrigin",		ENT_SetOrigin},
-	{"FindEntity",			FindEntity},
-	{"FindEntityByOwner",	FindEntityByOwner},
-	{"FindEntityByModel",	FindEntityByModel},
-	{"FindEntityByTarget",	FindEntityByTarget},
-	{"FindEntityByTName",	FindEntityByTName},
-	{"RemoveEntity",		RemoveEntity},
-	{"EntityCount",			EntityCount},
+	pfnTouch.clear();
+	serverFrame.clear();
+	postThink.clear();
+	preThink.clear();
+	clientKill.clear();
 
-	{"get_user_velocity",	get_user_velocity },
-	{"set_user_velocity",	set_user_velocity },
-	{"get_grenade_id",		get_grenade_id },
-	{"set_user_footsteps",	set_user_footsteps },
-	{"get_user_footsteps",	set_user_footsteps },
-	
-	{"get_offset", 			get_offset},
-	{"get_offset_float",	get_offset_float},
-	{"set_offset",			set_offset},
-	{"set_offset_float",	set_offset_float},
+	// Reset message blocks.
+	for(int i = 0; i < MAX_MESSAGES; i++) {
+		GlInfo.iMessageBlock[i] = BLOCK_NOT;
+	}
 
-	{"TraceLn",				TraceLn},
-	{"TraceNormal",			TraceNormal},
-	{"VecToAngles",			VecToAngles},
-	{"VecLength",			VecLength},
-	{"VecDist",				VecDist},
+	RETURN_META(MRES_IGNORED);
 
-	{"MessageBlock",		MessageBlock},
-	{"GetMessageBlock",		GetMessageBlock},
+}
 
-	{"HLTime",				HLTime},
-	{"FakeTouch",			FakeTouch},
+C_DLLEXPORT int Meta_Query(char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_t *pMetaUtilFuncs) {
 
-	{NULL,					NULL} 
-};
+	gpMetaUtilFuncs=pMetaUtilFuncs;
+	*pPlugInfo=&Plugin_info;
 
-C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion) {
+	if(strcmp(ifvers, Plugin_info.ifvers)) {
+
+		int mmajor=0, mminor=0, pmajor=0, pminor=0;
+		LOG_MESSAGE(PLID, "WARNING: meta-interface version mismatch; requested=%s ours=%s", Plugin_info.logtag, ifvers);
+		sscanf(ifvers, "%d:%d", &mmajor, &mminor);
+		sscanf(META_INTERFACE_VERSION, "%d:%d", &pmajor, &pminor);
+
+		if(pmajor > mmajor || (pmajor==mmajor && pminor > mminor)) {
+			LOG_ERROR(PLID, "metamod version is too old for this plugin; update metamod");
+			return(FALSE);
+
+		}
+
+		else if(pmajor < mmajor) {
+			LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin");
+			return(FALSE);
+
+		}
+
+		else if(pmajor==mmajor && pminor < mminor)
+			LOG_MESSAGE(PLID, "WARNING: metamod version is newer than expected; consider finding a newer version of this plugin");
+		else
+			LOG_ERROR(PLID, "unexpected version comparison; metavers=%s, mmajor=%d, mminor=%d; plugvers=%s, pmajor=%d, pminor=%d", ifvers, mmajor, mminor, META_INTERFACE_VERSION, pmajor, pminor);
+
+	}
+
+	return(TRUE);
+
+}
+
+static META_FUNCTIONS gMetaFunctionTable;
+
+C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, meta_globals_t *pMGlobals, gamedll_funcs_t *pGamedllFuncs) {
+
+	if(now > Plugin_info.loadable) {
+
+		LOG_ERROR(PLID, "Can't load plugin right now");
+
+		return(FALSE);
+
+	}
+
+	gpMetaGlobals=pMGlobals;
+	gMetaFunctionTable.pfnGetEntityAPI2 = GetEntityAPI2;
+	gMetaFunctionTable.pfnGetEngineFunctions = GetEngineFunctions;
+
+	memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
+
+	gpGamedllFuncs=pGamedllFuncs;
+
+	return(TRUE);
+
+}
+
+
+
+C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason) {
+
+	if(now > Plugin_info.unloadable && reason != PNL_CMD_FORCED) {
+		LOG_ERROR(PLID, "Can't unload plugin right now");
+		return(FALSE);
+
+	}
+
+	return(TRUE);
+
+}
+
+
+
+void WINAPI GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals ) {
+
+	memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
+	gpGlobals = pGlobals;
+
+}
+
+
+
+DLL_FUNCTIONS gFunctionTable;
+
+C_DLLEXPORT int GetEntityAPI2( DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion ){
+
+	gFunctionTable.pfnGameInit = GameInit;
+	gFunctionTable.pfnStartFrame = StartFrame;
+	gFunctionTable.pfnTouch = Touch;
+	gFunctionTable.pfnServerDeactivate = ServerDeactivate;
+	gFunctionTable.pfnClientDisconnect = ClientDisconnect;
+	gFunctionTable.pfnServerActivate = ServerActivate;
+	gFunctionTable.pfnClientConnect = ClientConnect;
+	gFunctionTable.pfnClientDisconnect = ClientDisconnect;
+	gFunctionTable.pfnPlayerPostThink = PlayerPostThink;
+	gFunctionTable.pfnPlayerPreThink = PlayerPreThink;
+	gFunctionTable.pfnClientUserInfoChanged = ClientUserInfoChanged;
+	gFunctionTable.pfnAddToFullPack = AddToFullPack;
+	gFunctionTable.pfnClientKill = ClientKill;
+
+	if(*interfaceVersion!=INTERFACE_VERSION) {
+		LOG_ERROR(PLID, "GetEntityAPI2 version mismatch; requested=%d ours=%d", *interfaceVersion, INTERFACE_VERSION);
+		*interfaceVersion = INTERFACE_VERSION;
+		return(FALSE);
+
+	}
+	memcpy( pFunctionTable, &gFunctionTable, sizeof( DLL_FUNCTIONS ) );
+
+	return(TRUE);
+
+}
+
+enginefuncs_t meta_engfuncs;
+
+C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion ) {
+
 	meta_engfuncs.pfnMessageBegin = MessageBegin;
 	meta_engfuncs.pfnMessageEnd = MessageEnd;
 	meta_engfuncs.pfnWriteByte = WriteByte;
@@ -2900,108 +2932,122 @@ C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
 	meta_engfuncs.pfnWriteString = WriteString;
 	meta_engfuncs.pfnWriteEntity = WriteEntity;
 	meta_engfuncs.pfnLightStyle = LightStyle;
-//	meta_engfuncs.pfnVoice_SetClientListening = Voice_SetClientListening;
 
 	if(*interfaceVersion!=ENGINE_INTERFACE_VERSION) {
 		LOG_ERROR(PLID, "GetEngineFunctions version mismatch; requested=%d ours=%d", *interfaceVersion, ENGINE_INTERFACE_VERSION);
 		*interfaceVersion = ENGINE_INTERFACE_VERSION;
 		return(FALSE);
-	}
 
+	}
 	memcpy(pengfuncsFromEngine, &meta_engfuncs, sizeof(enginefuncs_t));
 
-	return TRUE;
+	return(TRUE);
+
 }
 
-C_DLLEXPORT int GetEntityAPI2( DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion ) {
-	gFunctionTable.pfnGameInit = GameInit;
-	/*gFunctionTable.pfnTouch = Touch;
-	gFunctionTable.pfnStartFrame = StartFrame;
-	gFunctionTable.pfnClientConnect = ClientConnect;
-	gFunctionTable.pfnClientDisconnect = ClientDisconnect;
-	gFunctionTable.pfnPlayerPostThink = PlayerPostThink;
-	gFunctionTable.pfnClientUserInfoChanged = ClientUserInfoChanged;
-	gFunctionTable.pfnAddToFullPack = AddToFullPack;
-	gFunctionTable.pfnServerActivate = ServerActivate;
-	gFunctionTable.pfnServerDeactivate = ServerDeactivate;
-	gFunctionTable.pfnClientKill = ClientKill;
-	gFunctionTable.pfnPlayerPreThink = PlayerPreThink;*/
 
-	if(*interfaceVersion!=INTERFACE_VERSION) {
-		LOG_ERROR(PLID, "GetEntityAPI2 version mismatch; requested=%d ours=%d", *interfaceVersion, INTERFACE_VERSION);
-		*interfaceVersion = INTERFACE_VERSION;
+
+enginefuncs_t meta_engfuncs_post;
+
+C_DLLEXPORT int GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion ) {
+
+
+	if(*interfaceVersion!=ENGINE_INTERFACE_VERSION) {
+		LOG_ERROR(PLID, "GetEngineFunctions_Post version mismatch; requested=%d ours=%d", *interfaceVersion, ENGINE_INTERFACE_VERSION);
+		*interfaceVersion = ENGINE_INTERFACE_VERSION;
 		return(FALSE);
-	}
 
-	memcpy( pFunctionTable, &gFunctionTable, sizeof( DLL_FUNCTIONS ) );
+	}
+	memcpy(pengfuncsFromEngine, &meta_engfuncs_post, sizeof(enginefuncs_t));
 
 	return(TRUE);
+
 }
 
-C_DLLEXPORT int Meta_Query(char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_t *pMetaUtilFuncs) {
-	gpMetaUtilFuncs=pMetaUtilFuncs;
-	*pPlugInfo=&Plugin_info;
-	if(strcmp(ifvers, Plugin_info.ifvers)) {
-		int mmajor=0, mminor=0, pmajor=0, pminor=0;
-		LOG_MESSAGE(PLID, "WARNING: meta-interface version mismatch; requested=%s ours=%s", Plugin_info.logtag, ifvers);
-		sscanf(ifvers, "%d:%d", &mmajor, &mminor);
-		sscanf(META_INTERFACE_VERSION, "%d:%d", &pmajor, &pminor);
-		if(pmajor > mmajor || (pmajor==mmajor && pminor > mminor)) {
-			LOG_ERROR(PLID, "metamod version is too old for this plugin; update metamod");
-			return(FALSE);
-		}
-		else if(pmajor < mmajor) {
-			LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin");
-			return(FALSE);
-		}
-		else if(pmajor==mmajor && pminor < mminor)
-			LOG_MESSAGE(PLID, "WARNING: metamod version is newer than expected; consider finding a newer version of this plugin");
-		else
-			LOG_ERROR(PLID, "unexpected version comparison; metavers=%s, mmajor=%d, mminor=%d; plugvers=%s, pmajor=%d, pminor=%d", ifvers, mmajor, mminor, META_INTERFACE_VERSION, pmajor, pminor);
-	}
-	return(TRUE);
-}
+C_DLLEXPORT int AMX_Query(module_info_s** info) {
 
-C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, meta_globals_t *pMGlobals, gamedll_funcs_t *pGamedllFuncs) {
-	if(now > Plugin_info.loadable) {
-		LOG_ERROR(PLID, "Can't load plugin right now");
-		return(FALSE);
-	}
-	gpMetaGlobals=pMGlobals;
-	gMetaFunctionTable.pfnGetEntityAPI2 = GetEntityAPI2;
-	gMetaFunctionTable.pfnGetEngineFunctions = GetEngineFunctions;
-	
-	memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
-	gpGamedllFuncs=pGamedllFuncs;
-	
-	return(TRUE);
-}
-
-C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason) {
-	if(now && reason) {
-	  return(TRUE);
-	} else {
-	  return(FALSE);
-	}
-}
-
-void WINAPI GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals ) {
-	memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
-	gpGlobals = pGlobals;
-}
-
-C_DLLEXPORT int AMX_Attach(pfnamx_engine_g* amxeng,pfnmodule_engine_g* meng) {
-	g_engAmxFunc = amxeng;
-	g_engModuleFunc = meng;
-	
-	if (!gpMetaGlobals)
-		REPORT_ERROR( 1 , "[AMXXE] Module is not attached to Metamod!\n");
-	
-	ADD_AMXNATIVES( &module_info , Engine_Exports);
+	*info = &module_info;
 
 	return 1;
+
 }
 
-C_DLLEXPORT int AMX_Detach() {
-	return(1);
+
+
+C_DLLEXPORT int AMX_Attach(pfnamx_engine_g* amxeng,pfnmodule_engine_g* meng) {
+
+	g_engAmxFunc = amxeng;
+	g_engModuleFunc = meng;
+
+	if (!gpMetaGlobals)
+		REPORT_ERROR( 1 , "[CS STATS] Module is not attached to MetaMod\n");
+
+	ADD_AMXNATIVES( &module_info , Engine_Natives);
+
+	return 1;
+
 }
+
+
+
+C_DLLEXPORT int AMX_Detach() {
+
+	return 1;
+
+}
+
+AMX_NATIVE_INFO Engine_Natives[] = {
+	{"set_offset_float",	set_offset_float},
+	{"set_offset_short",	set_offset_short},
+	{"set_offset",			set_offset},
+	{"get_offset_float",	get_offset_float},
+	{"get_offset_short",	get_offset_short},
+	{"get_offset",			get_offset},
+
+	{"entity_get_float",	entity_get_float},
+	{"entity_set_float",	entity_set_float},
+	{"entity_set_int",		entity_set_int},
+	{"entity_get_int",		entity_get_int},
+	{"entity_get_vector",	entity_get_vector},
+	{"entity_get_string",	entity_get_string},
+	{"entity_get_edict",	entity_get_edict},
+	{"entity_get_byte",		entity_get_byte},
+	{"entity_set_vector",	entity_set_vector},
+	{"entity_set_string",	entity_set_string},
+	{"entity_set_edict",	entity_set_edict},
+	{"entity_set_byte",		entity_set_byte},
+	{"entity_set_origin",	entity_set_origin},
+	{"entity_set_model",	entity_set_model},
+
+	{"PointContents",		PointContents},
+	{"RadiusDamage",		RadiusDamage},
+	{"VelocityByAim",		VelocityByAim},
+	{"vector_length",		vector_length},
+	{"vector_distance",		vector_distance},
+	{"vector_to_angle",		vector_to_angle},
+	{"trace_line",			trace_line},
+	{"trace_normal",		trace_normal},
+	{"halflife_time",		halflife_time},
+	{"fake_touch",			fake_touch},
+	{"get_grenade_id",		get_grenade_id},
+
+	{"create_entity",		create_entity},
+	{"remove_entity",		remove_entity},
+	{"find_entity",			find_entity},
+	{"find_ent_by_owner",	find_ent_by_owner},
+	{"find_ent_by_target",	find_ent_by_target},
+	{"find_ent_by_tname",	find_ent_by_tname},
+	{"find_ent_by_model",	find_ent_by_model},
+	{"entity_count",		entity_count},
+	{"DispatchKeyValue",	DispatchKeyValue},
+	{"DispatchSpawn",		DispatchSpawn},
+
+	{"set_msg_block",		set_msg_block},
+	{"get_msg_block",		get_msg_block},
+	{"set_lights",			set_lights},
+	{"set_view",			set_view},
+	{"attach_view",			attach_view},
+
+	{ NULL, NULL }
+
+};

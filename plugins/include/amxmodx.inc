@@ -597,21 +597,3 @@ forward inconsistent_file(id,const filename[], reason[64] );
 /* Forces the client and server to be running with the same
 * version of the specified file ( e.g., a player model ). */
 native force_unmodified(force_type, mins[3] , maxs[3], const filename[]);
-
-/* backwards compatibility */
-stock get_user_deaths(index)
-  return cs_get_user_deaths(index)
-
-/* backwards compatibility */
-stock set_user_deaths(index,newdeaths)
-  return cs_set_user_deaths(index,newdeaths)
-
-/* backwards compatibility */
-stock get_user_money(index)
-  return cs_get_user_money(index)
-
-/* backwards compatibility */
-stock set_user_money(index,money,flash=1)
-  return cs_set_user_money(index,money,flash)
-
-#include <amxmisc>

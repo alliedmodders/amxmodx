@@ -85,6 +85,9 @@ native strtolower(string[]);
 /* Converts all chars in string to upper case. */
 native strtoupper(string[]);
 
+/* Make a string's first character uppercase */
+native ucfirst(string[]);
+
 /* Returns true when value is digit. */
 native isdigit(ch);
 

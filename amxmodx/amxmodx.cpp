@@ -1580,6 +1580,12 @@ static cell AMX_NATIVE_CALL remove_task(AMX *amx, cell *params) /* 1 param */
   return g_tasksMngr.removeTasks( params[1] ,  params[2] ? 0 : amx   );
 }
 
+static cell AMX_NATIVE_CALL change_task(AMX *amx, cell *params)
+{
+  REAL flNewTime = amx_ctof(params[2]);
+  return g_tasksMngr.changeTask(params[1], params[3] ? 0 : amx, flNewTime);
+}
+
 static cell AMX_NATIVE_CALL task_exists(AMX *amx, cell *params) /* 1 param */
 {
   return g_tasksMngr.taskExists(  params[1] ,  params[2] ? 0 : amx  );
@@ -2599,6 +2605,7 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "remove_cvar_flags",    remove_cvar_flags },
   { "remove_quotes",    remove_quotes },
   { "remove_task",      remove_task },
+  { "change_task",		change_task },
   { "remove_user_flags",  remove_user_flags },
   { "server_cmd",       server_cmd },
   { "server_exec",      server_exec },

@@ -62,6 +62,7 @@ public:
 		CTask* next;
 		CTask* prev;
 		inline void setToRemove() { exec_time = -1.0f; }
+		inline void changeTime(float flNewTime) { exec_time = flNewTime; }
 		inline bool isToReply() { return  (repeat-- > 0); }
 		inline bool isRemoved() { return (exec_time == -1.0f);  }
 		CTask( CPluginMngr::CPlugin* p, int f, int flags, int i, 
@@ -103,6 +104,7 @@ public:
 	void registerTimers( float* timer , float* timelimit, float* timeleft );
 	void registerTask( CPluginMngr::CPlugin* plugin, int func, int flags, int i, float base, float exec, int parlen , const cell* par, int repeat );
 	inline int taskExists(  int id ,AMX* amx) { return findTask(id,amx ) ? 1 : 0; }
+	int changeTask(int id, AMX *amx, float flNewTime);
 	int removeTasks( int id , AMX* amx );
 	void clear();
 

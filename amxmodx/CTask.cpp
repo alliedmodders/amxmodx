@@ -168,6 +168,20 @@ CTaskMngr::CTask* CTaskMngr::findTask( int id , AMX* amx )
 	return 0;
 }
 
+int CTaskMngr::changeTask(int id, AMX *amx, float flNewTime)
+{
+	CTask *a;
+	int i = 0;
+
+	while ( (a=findTask(id, amx)) != 0)
+	{
+		a->changeTime(flNewTime > 0.1 ? flNewTime : 0.1);
+		++i;
+	}
+
+	return i;
+}
+
 void CTaskMngr::unlink(CTask* a){
 	if ( a->prev ) a->prev->next = a->next;
 	else head = a->next;

@@ -139,8 +139,12 @@ native cs_set_user_team(index, team, model = CS_DONTCHANGE);
  */
 native cs_get_user_vip(index);
 
-/* If vip = 1, user is set to vip. Note that this is useful to unset vips, so they can change teams properly.
- * This will not change the player's model to/from vip, or add/remove the "VIP" text in scoreboard.
+/* If vip = 1, user is set to vip.
+ * Model will be changed to VIP model if 1, else it will be changed to a random CT model.
+ * This shouldn't be used for players on teams other than CT.
+ * NOTE:	this is mostly useful for unsetting vips, so they can change teams and/or buy items properly.
+ * It does not alter game play; the one being VIP at start of round will retain internal status as VIP; terrorists
+ * can terminate him and accomplish their objective, etc.
  */
 native cs_set_user_vip(index, vip = 1);
 

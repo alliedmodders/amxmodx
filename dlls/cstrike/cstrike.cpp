@@ -475,10 +475,43 @@ static cell AMX_NATIVE_CALL cs_set_user_vip(AMX *amx, cell *params) // cs_set_us
 		return 0;
 	}
 
-	if (params[2])
+	if (params[2] == 1) {
+		// Set to "be" vip.
 		*((int *)pPlayer->pvPrivateData + OFFSET_VIP) |= PLAYER_IS_VIP;
-	else
+
+		// Set vip model
+		*((int *)pPlayer->pvPrivateData + OFFSET_INTERNALMODEL) = CS_CT_VIP;
+		// This makes the model get updated right away.
+		MDLL_ClientUserInfoChanged(pPlayer, GETINFOKEYBUFFER(pPlayer)); //  If this causes any problems for WON, do this line only in STEAM builds.
+
+		// Set VIP on scoreboard. Probably doesn't work for terrorist team.
+		MESSAGE_BEGIN(MSG_ALL, GET_USER_MSG_ID(PLID, "ScoreAttrib", NULL));
+		WRITE_BYTE(params[1]);
+		WRITE_BYTE(SCOREATTRIB_VIP);
+		MESSAGE_END();
+	}
+	else {
+		// Set to not be vip.
 		*((int *)pPlayer->pvPrivateData + OFFSET_VIP) &= ~PLAYER_IS_VIP;
+
+		// Set a random CT model.
+		CS_Internal_Models CTmodels[4] = {CS_CT_URBAN, CS_CT_GSG9, CS_CT_GIGN, CS_CT_SAS};
+		CS_Internal_Models ct_model = CTmodels[RANDOM_LONG(0, 3)];
+		*((int *)pPlayer->pvPrivateData + OFFSET_INTERNALMODEL) = ct_model;
+		// This makes the model get updated right away.
+		MDLL_ClientUserInfoChanged(pPlayer, GETINFOKEYBUFFER(pPlayer)); //  If this causes any problems for WON, do this line only in STEAM builds.
+
+		// Set nothing/dead on scoreboard.
+		int scoreattrib;
+		if (pPlayer->v.deadflag == DEAD_NO && pPlayer->v.health > 0)
+			scoreattrib = SCOREATTRIB_NOTHING; // cts can't have bombs anyway
+		else
+			scoreattrib = SCOREATTRIB_DEAD;
+		MESSAGE_BEGIN(MSG_ALL, GET_USER_MSG_ID(PLID, "ScoreAttrib", NULL));
+		WRITE_BYTE(params[1]);
+		WRITE_BYTE(scoreattrib);
+		MESSAGE_END();
+	}
 
 	return 1;
 }
@@ -504,7 +537,7 @@ static cell AMX_NATIVE_CALL cs_get_user_team(AMX *amx, cell *params) // cs_get_u
 		return 0;
 	}
 
-	return (int)*((int *)pPlayer->pvPrivateData + OFFSET_TEAM);
+	return *((int *)pPlayer->pvPrivateData + OFFSET_TEAM);
 }
 
 static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params) // cs_set_user_team(index, team, model = 0); = 3 params

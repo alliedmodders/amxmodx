@@ -212,6 +212,24 @@ pfnmodule_engine_g* g_engModuleFunc;
 #define DEFUSER_COLOUR_B				0
 
 #define HAS_NVGOGGLES					(1<<0)
+
+#define SCOREATTRIB_NOTHING				0
+#define SCOREATTRIB_DEAD				1
+#define SCOREATTRIB_BOMB				2 // t only
+#define SCOREATTRIB_VIP					4 // ct only
+
+enum CS_Internal_Models {
+	CS_DONTCHANGE = 0,
+	CS_CT_URBAN = 1,
+	CS_T_TERROR = 2,
+	CS_T_LEET = 3,
+	CS_T_ARCTIC = 4,
+	CS_CT_GSG9 = 5,
+	CS_CT_GIGN = 6,
+	CS_CT_SAS = 7,
+	CS_T_GUERILLA = 8,
+	CS_CT_VIP = 9
+};
 // cstrike-specific defines above
 
 // Globals below

@@ -175,6 +175,15 @@ static cell AMX_NATIVE_CALL cs_set_user_deaths(AMX *amx, cell *params) // cs_set
 	// Set deaths
 	*((int *)pPlayer->pvPrivateData + OFFSET_CSDEATHS) = params[2];
 
+	// Update scoreboard here..?
+	MESSAGE_BEGIN(MSG_ALL, GET_USER_MSG_ID(PLID, "ScoreInfo", NULL));
+	WRITE_BYTE(params[1]);
+	WRITE_SHORT(pPlayer->v.frags);
+	WRITE_SHORT(params[2]);
+	WRITE_SHORT(0); // dunno what this parameter is (doesn't seem to be vip)
+	WRITE_SHORT(*((int *)pPlayer->pvPrivateData + OFFSET_TEAM));
+	MESSAGE_END();
+
 	return 1;
 }
 
@@ -419,7 +428,7 @@ static cell AMX_NATIVE_CALL cs_get_user_vip(AMX *amx, cell *params) // cs_get_us
 		return 0;
 	}
 
-	if ((int)((int *)pPlayer->pvPrivateData + OFFSET_VIP) == PLAYER_IS_VIP)
+	if ( *((int *)pPlayer->pvPrivateData + OFFSET_VIP) & PLAYER_IS_VIP )
 		return 1;
 
 	return 0;
@@ -448,9 +457,9 @@ static cell AMX_NATIVE_CALL cs_set_user_vip(AMX *amx, cell *params) // cs_set_us
 	}
 
 	if (params[2])
-		*((int *)pPlayer->pvPrivateData + OFFSET_VIP) = PLAYER_IS_VIP;
+		*((int *)pPlayer->pvPrivateData + OFFSET_VIP) |= PLAYER_IS_VIP;
 	else
-		*((int *)pPlayer->pvPrivateData + OFFSET_VIP) = PLAYER_IS_NOT_VIP;
+		*((int *)pPlayer->pvPrivateData + OFFSET_VIP) &= ~PLAYER_IS_VIP;
 
 	return 1;
 }

@@ -209,8 +209,7 @@ pfnmodule_engine_g* g_engModuleFunc;
 #define FAMAS_AUTOMATIC					0
 #define FAMAS_BURSTMODE					16
 
-#define PLAYER_IS_NOT_VIP				0
-#define PLAYER_IS_VIP					256
+#define PLAYER_IS_VIP					(1<<8)
 
 #define TEAM_T							1
 #define TEAM_CT							2

@@ -65,7 +65,7 @@ void FakeError()
 			prev_mres = mres; \
 			if (mres == MRES_UNSET) \
 				AMXXLOG_Log("[AMXX] Module \"%s\" (\"%s\") has not set meta result in \"%s\"", \
-				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnArgs); \
+				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnName); \
 		} \
 	} \
 	/* Set meta result to the highest value */ \
@@ -109,7 +109,7 @@ void FakeError()
 			prev_mres = mres; \
 			if (mres == MRES_UNSET) \
 				AMXXLOG_Log("[AMXX] Module \"%s\" (\"%s\") has not set meta result in \"%s\"", \
-				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnArgs); \
+				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnName); \
 		} \
 	} \
 	/* Set meta result to the highest value */ \
@@ -147,7 +147,7 @@ void FakeError()
 			prev_mres = mres; \
 			if (mres == MRES_UNSET) \
 				AMXXLOG_Log("[AMXX] Module \"%s\" (\"%s\") has not set meta result in \"%s\"", \
-				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnArgs); \
+				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnName); \
 			if (mres == MRES_SUPERCEDE) \
 				AMXXLOG_Log("[AMXX] Module \"%s\" (\"%s\") has set meta result in \"%s\" to supercede", \
 				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnName); \
@@ -195,10 +195,10 @@ void FakeError()
 			prev_mres = mres; \
 			if (mres == MRES_UNSET) \
 				AMXXLOG_Log("[AMXX] Module \"%s\" (\"%s\") has not set meta result in \"%s\"", \
-				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnArgs); \
+				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnName); \
 			if (mres == MRES_SUPERCEDE) \
 				AMXXLOG_Log("[AMXX] Module \"%s\" (\"%s\") has set meta result in \"%s\" to supercede", \
-				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnArgs); \
+				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnName); \
 		} \
 	} \
 	/* Set meta result to the highest value */ \
@@ -238,7 +238,7 @@ void FakeError()
 			prev_mres = mres; \
 			if (mres == MRES_UNSET) \
 				AMXXLOG_Log("[AMXX] Module \"%s\" (\"%s\") has not set meta result in \"%s\"", \
-				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnArgs); \
+				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnName); \
 		} \
 	} \
 	/* Set meta result to the highest value */ \
@@ -282,7 +282,7 @@ void FakeError()
 			prev_mres = mres; \
 			if (mres == MRES_UNSET) \
 				AMXXLOG_Log("[AMXX] Module \"%s\" (\"%s\") has not set meta result in \"%s\"", \
-				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnArgs); \
+				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnName); \
 		} \
 	} \
 	/* Set meta result to the highest value */ \
@@ -312,7 +312,7 @@ void FakeError()
 			prev_mres = mres; \
 			if (mres == MRES_UNSET) \
 				AMXXLOG_Log("[AMXX] Module \"%s\" (\"%s\") has not set meta result in \"%s\"", \
-				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnArgs); \
+				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnName); \
 		} \
 	} \
 	/* Set meta result to the highest value */ \
@@ -338,30 +338,32 @@ void FakeError()
 	{ \
 		if ((*iter).GetStatus() == PL_RUNNING && (*iter).GetDllFuncTable_Post().pfn##pfnName) \
 		{ \
+			/* Initialize meta globals */ \
+			gpMetaGlobals->mres = MRES_UNSET; \
+			gpMetaGlobals->prev_mres = prev_mres; \
+			gpMetaGlobals->status = status; \
+			/* Actual call */ \
+			curRet = (*iter).GetDllFuncTable_Post().pfn##pfnName pfnArgs; \
+			/* Process return value */ \
+			if (mres >= MRES_OVERRIDE && mayOverride) \
+			{ \
+				mayOverride = false; \
+				returnValue = curRet; \
+			} \
+			mres = gpMetaGlobals->mres; \
+			if (mres > status) \
+				status = mres; \
+			prev_mres = mres; \
+			if (mres == MRES_UNSET) \
+				AMXXLOG_Log("[AMXX] Module \"%s\" (\"%s\") has not set meta result in \"%s\"", \
+				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnName); \
+			if (mres == MRES_SUPERCEDE) \
+				AMXXLOG_Log("[AMXX] Module \"%s\" (\"%s\") has set meta result in \"%s\" to supercede", \
+				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnName); \
 		} \
 	} \
 	/* Set meta result to the highest value */ \
 	RETURN_META_VALUE(status, returnValue);
-
-//			/* Initialize meta globals */ \
-//			gpMetaGlobals->mres = MRES_UNSET; \
-//			gpMetaGlobals->prev_mres = prev_mres; \
-//			gpMetaGlobals->status = status; \
-//			/* Actual call */ \
-//			curRet = (*iter).GetDllFuncTable_Post().pfn##pfnName pfnArgs; \
-//			/* Process return value */ \
-//			if (mres >= MRES_OVERRIDE && mayOverride) \
-//			{ \
-//				mayOverride = false; \
-//				returnValue = curRet; \
-//			} \
-//			mres = gpMetaGlobals->mres; \
-//			if (mres > status) \
-//				status = mres; \
-//			prev_mres = mres; \
-//			if (mres == MRES_UNSET) \
-//				AMXXLOG_Log("[AMXX] Module \"%s\" (\"%s\") has not set meta result in \"%s\"", \
-//				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnArgs); \
 
 // New Dll normal
 #define FAKEMETA_NEWDLL_HANDLE_void(pfnName, pfnArgs) \

@@ -105,10 +105,7 @@ static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params)
 	cell *vRet = MF_GetAmxAddr(amx, params[3]);
 	Vector vVector = Vector(0, 0, 0);
 
-	if (!is_ent_valid(iEnt)) {
-		EngineError(amx, "Invalid Entity %d", iEnt);
-		return 0;
-	}
+	CHECK_ENTITY(iEnt);
 
 	edict_t *pEnt = INDEXENT2(iEnt);
 
@@ -329,8 +326,8 @@ static cell AMX_NATIVE_CALL set_speak(AMX *amx, cell *params) {
 	int iIndex = params[1];
 	int iNewSpeakFlags = params[2];
 
-	if (iIndex> gpGlobals->maxClients || !is_ent_valid(iIndex)) {
-		EngineError(amx, "Invalid player %d", iIndex);
+	if (iIndex > gpGlobals->maxClients || !MF_IsPlayerIngame(iIndex)) {
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", iIndex);
 		return 0;
 	}
 
@@ -342,8 +339,8 @@ static cell AMX_NATIVE_CALL set_speak(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL get_speak(AMX *amx, cell *params) {
 	int iIndex = params[1];
 
-	if (!is_ent_valid(iIndex) || iIndex > gpGlobals->maxClients) {
-		EngineError(amx, "Invalid player %d", iIndex);
+	if (iIndex > gpGlobals->maxClients || !MF_IsPlayerIngame(iIndex)) {
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", iIndex);
 		return 0;
 	}
 
@@ -369,10 +366,7 @@ static cell AMX_NATIVE_CALL get_info_keybuffer(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
 	
-	if (FNullEnt(iEnt) || iEnt < 1 || iEnt > gpGlobals->maxClients) {
-		EngineError(amx, "Invalid Entity %d", iEnt);
-		return 0;
-	}
+	CHECK_ENTITY(iEnt);
 
 	edict_t *e = INDEXENT2(iEnt);
 
@@ -387,10 +381,7 @@ static cell AMX_NATIVE_CALL drop_to_floor(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
 
-	if (!is_ent_valid(iEnt)) {
-		EngineError(amx, "Invalid Entity %d", iEnt);
-		return 0;
-	}
+	CHECK_ENTITY(iEnt);
 
 	edict_t *e = INDEXENT2(iEnt);
 
@@ -413,15 +404,12 @@ static cell AMX_NATIVE_CALL attach_view(AMX *amx, cell *params)
 	int iIndex = params[1];
 	int iTargetIndex = params[2];
 
-	if (iIndex > gpGlobals->maxClients || !is_ent_valid(iIndex)) {
-		EngineError(amx, "Invalid player %d", iIndex);
+	if (iIndex > gpGlobals->maxClients || !MF_IsPlayerIngame(iIndex)) {
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", iIndex);
 		return 0;
 	}
 
-	if (!is_ent_valid(iTargetIndex)) {
-		EngineError(amx, "Invalid Entity %d", iIndex);
-		return 0;
-	}
+	CHECK_ENTITY(iIndex);
 
 	SET_VIEW(INDEXENT2(iIndex), INDEXENT2(iTargetIndex));
 
@@ -435,8 +423,8 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 	int iIndex = params[1];
 	int iCameraType = params[2];
 
-	if (iIndex > gpGlobals->maxClients || !is_ent_valid(iIndex)) {
-		EngineError(amx, "Invalid player %d", iIndex);
+	if (iIndex > gpGlobals->maxClients || !MF_IsPlayerIngame(iIndex)) {
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", iIndex);
 		return 0;
 	}
 

@@ -11,17 +11,6 @@ int AmxStringToEngine(AMX *amx, cell param, int &len)
 	return ALLOC_STRING(szString);
 }
 
-void EngineError(AMX *amx, char *fmt, ...)
-{
-	va_list p;
-	va_start(p, fmt);
-	char errbuf[512];
-	vsprintf(errbuf, fmt, p);
-	va_end(p);
-	MF_Log("%s (\"%s\", line %d)", errbuf, MF_GetScriptName(MF_FindScriptByAmx(amx)), amx->curline);
-	MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-}
-
 void ClearHooks()
 {
 	register unsigned int i = 0;
@@ -240,7 +229,7 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 	Msg.clear();
 	register int i = 0, j = 0;
 	for (i=0; i<256; i++) {
-		for (j=0; j<msgHooks[i].size(); j++)
+		for (j=0; j<(int)msgHooks[i].size(); j++)
 			if (msgHooks[i].at(j) != -1)
 				MF_UnregisterSPForward(msgHooks[i].at(j));
 		msgHooks[i].clear();

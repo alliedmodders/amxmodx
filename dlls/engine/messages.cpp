@@ -2,7 +2,6 @@
 
 CVector<argMsg*> Msg;
 CVector<int> msgHooks[256];
-//int msgHooks[256] = {0};
 int msgBlocks[256] = {0};
 int msgDest;
 int msgType;

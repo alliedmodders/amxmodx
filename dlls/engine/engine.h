@@ -13,8 +13,6 @@
 #include "entity.h"
 #include "gpglobals.h"
 
-//#define CHECK_ENTITY(x) if (x != 0 && (FNullEnt(INDEXENT2(x)) || x < 0 || x > gpGlobals->maxEntities)) { MF_RaiseAmxError(amx,AMX_ERR_NATIVE); return 0; }
-
 extern DLL_FUNCTIONS *g_pFunctionTable;
 extern DLL_FUNCTIONS *g_pFunctionTable_Post;
 extern enginefuncs_t *g_pengfuncsTable;
@@ -170,8 +168,6 @@ inline edict_t* INDEXENT2( int iEdictNum )
 		return (*g_engfuncs.pfnPEntityOfEntIndex)(iEdictNum); 
 }
 
-void EngineError(AMX *amx, char *fmt, ...);
-
 int Spawn(edict_t *pEntity);
 void ChangeLevel(char* s1, char* s2);
 void PlaybackEvent(int flags, const edict_t *pInvoker, unsigned short eventindex, float delay, float *origin, float *angles, float fparam1, float fparam2, int iparam1, int iparam2, int bparam1, int bparam2);
@@ -184,7 +180,20 @@ void PlayerPostThink_Post(edict_t *pEntity);
 void pfnTouch(edict_t *pToucher, edict_t *pTouched);
 void Think(edict_t *pent);
 
-#define CHECK_ENTITY(x) if (x != 0 && (FNullEnt(INDEXENT2(x)) || x < 0 || x > gpGlobals->maxEntities)) { EngineError(amx, "Invalid entity %d", x); return 0; }
+#define CHECK_ENTITY(x) \
+	if (x <= 0 || x > gpGlobals->maxEntities) { \
+		MF_LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", x); \
+	} else { \
+		if (x <= gpGlobals->maxClients) { \
+			if (!MF_IsPlayerIngame(x)) { \
+				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d (not in-game)", x); \
+			} \
+		} else { \
+			if (FNullEnt(INDEXENT2(x))) { \
+				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", x); \
+			} \
+		} \
+	}
 
 extern bool g_inKeyValue;
 extern KeyValueData *g_pkvd;

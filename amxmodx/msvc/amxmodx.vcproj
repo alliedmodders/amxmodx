@@ -112,7 +112,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ..\zlib\zlib.lib"
 				OutputFile="release/amxmodx_mm.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -179,7 +179,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ..\zlib\zlib.lib"
 				OutputFile="memtestdebug/amxmodx_mm.dll"
 				Version="0.1"
 				LinkIncremental="2"
@@ -249,7 +249,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ..\zlib\zlib.lib"
 				OutputFile="memtestrelease/amxmodx_mm.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -316,7 +316,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib ..\jit\jits.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ..\jit\jits.lib ..\zlib\zlib.lib"
 				OutputFile="jitdebug/amxmodx_mm.dll"
 				Version="0.1"
 				LinkIncremental="1"
@@ -454,7 +454,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib ..\jit\jits.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ..\jit\jits.lib ..\zlib\zlib.lib"
 				OutputFile="jitmemtestrelease/amxmodx_mm.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -525,7 +525,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib ..\jit\jits.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ..\jit\jits.lib ..\zlib\zlib.lib"
 				OutputFile="MaximalSpeed/amxmodx_mm.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"

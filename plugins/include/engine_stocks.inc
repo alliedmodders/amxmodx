@@ -231,10 +231,10 @@ stock get_entity_visibility(entity) {
 
 stock set_user_velocity(entity, Float:vec[3])
 {
-	return entity_set_vector(entity, EV_SZ_velocity, vec)
+	return entity_set_vector(entity, EV_VEC_velocity, vec)
 }
 
-stock get_user_velocity(entity, Flaot:vec[3])
+stock get_user_velocity(entity, Float:vec[3])
 {
-	return entity_get_vector(entity, EV_SZ_velocity, vec)
+	return entity_get_vector(entity, EV_VEC_velocity, vec)
 }

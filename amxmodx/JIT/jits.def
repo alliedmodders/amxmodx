@@ -1,0 +1,10 @@
+LIBRARY jits
+DESCRIPTION "JIT for AMX Mod X"
+EXPORTS
+	asm_runJIT		@1
+	getMaxCodeSize		@2
+	amx_exec_asm		@3
+	amx_opcodelist		@4
+SECTIONS
+	.data READ WRITE
+	.code EXECUTE

@@ -233,7 +233,6 @@ CLangMngr::CLang::LangEntry::LangEntry(int pKey, uint32_t defHash, const char *p
 {
 	Clear();
 	key = pKey;
-	this->
 	m_DefHash = defHash;
 	m_pDef.assign(pDef);
 }
@@ -295,7 +294,7 @@ void CLangMngr::CLang::Clear()
 
 CLangMngr::CLang::LangEntry * CLangMngr::CLang::GetEntry(int pkey)
 {
-	unsigned int i = 0;
+	unsigned int i;
 	
 	for (i=0; i<m_LookUpTable.size(); i++)
 	{
@@ -308,6 +307,7 @@ CLangMngr::CLang::LangEntry * CLangMngr::CLang::GetEntry(int pkey)
 	LangEntry *e = new LangEntry(pkey);
 	e->SetKey(pkey);
 	m_LookUpTable.push_back(e);
+
 	return e;
 }
 
@@ -333,7 +333,7 @@ void CLangMngr::CLang::MergeDefinitions(CQueue<sKeyDef*> &vec)
 const char * CLangMngr::CLang::GetDef(const char *key)
 {
 	static char nfind[1024] = "ML_NOTFOUND";
-	int ikey = lman->GetKeyEntry(key);
+	int ikey = m_LMan->GetKeyEntry(key);
 	if (ikey == -1)
 	{
 		sprintf(nfind, "ML_NOTFOUND: %s", key);
@@ -642,17 +642,17 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 				}
 			case 'L':
 				{
-					cell langName = params[parm];
-					cell *pLangName = get_amxaddr(amx, params[parm++]);
+					cell langName = params[parm];		// "en" case (langName contains the address to the string)
+					cell *pAmxLangName = get_amxaddr(amx, params[parm++]);	// other cases
 					const char *cpLangName=NULL;
 					// Handle player ids (1-32) and server language
-					if (*pLangName == LANG_PLAYER)
-						*pLangName = m_CurGlobId;
-					if (*pLangName == LANG_SERVER)
+					if (*pAmxLangName == LANG_PLAYER)	// LANG_PLAYER
+						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(m_CurGlobId)->pEdict, "lang");
+					else if (*pAmxLangName == LANG_SERVER)	// LANG_SERVER
 						cpLangName = g_vault.get("server_language");
-					else if (*pLangName >= 1 && *pLangName <= 32)
-						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(*pLangName)->pEdict, "lang");
-					else
+					else if (*pAmxLangName >= 1 && *pAmxLangName <= 32)	// Direct Client Id
+						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(*pAmxLangName)->pEdict, "lang");
+					else		// Language Name
 					{
 						int len = 0;
 						cpLangName = get_amxstring(amx, langName, 2, len);
@@ -664,7 +664,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 					const char *def = GetDef(cpLangName, key);
 					if (def == NULL)
 					{
-						if (*pLangName != LANG_SERVER)
+						if (*pAmxLangName != LANG_SERVER)
 						{
 							def = GetDef(g_vault.get("server_language"), key);
 						}
@@ -937,7 +937,11 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 			} // if !multiline
 		} //if - main
 	}
-
+	// merge last section
+	if (!Defq.empty())
+	{
+		MergeDefinitions(language, Defq);
+	}
 	return 1;
 }
 

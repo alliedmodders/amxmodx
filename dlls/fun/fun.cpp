@@ -70,12 +70,11 @@
 // ######## Utils:
 void FUNUTIL_ResetPlayer(int index)
 {
+	// Reset hitzones
+	memset(g_bodyhits[index], 0xFF, sizeof(char)*33);
+
 	// Reset silent slippers
 	g_silent[index] = false;
-
-	// Reset hitzones
-	g_zones_toHit[index] = (1<<HITGROUP_GENERIC) | (1<<HITGROUP_HEAD) | (1<<HITGROUP_CHEST) | (1<<HITGROUP_STOMACH) | (1<<HITGROUP_LEFTARM) | (1<<HITGROUP_RIGHTARM)| (1<<HITGROUP_LEFTLEG) | (1<<HITGROUP_RIGHTLEG);
-	g_zones_getHit[index] = (1<<HITGROUP_GENERIC) | (1<<HITGROUP_HEAD) | (1<<HITGROUP_CHEST) | (1<<HITGROUP_STOMACH) | (1<<HITGROUP_LEFTARM) | (1<<HITGROUP_RIGHTARM)| (1<<HITGROUP_LEFTLEG) | (1<<HITGROUP_RIGHTLEG);
 }
 
 // ######## Natives:
@@ -229,7 +228,7 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params) // native give_ite
 	//VARS(pItemEntity)->origin = VARS(pPlayer)->origin; // nice to do VARS(ent)->origin instead of ent->v.origin? :-I
 	//I'm not sure, normally I use macros too =P
 	pItemEntity->v.origin = pPlayer->v.origin;
-	pItemEntity->v.spawnflags |= (1<<30);	//SF_NORESPAWN;
+	pItemEntity->v.spawnflags |= SF_NORESPAWN;	//SF_NORESPAWN;
 
 	MDLL_Spawn(pItemEntity);
 
@@ -546,6 +545,7 @@ static cell AMX_NATIVE_CALL get_user_gravity(AMX *amx, cell *params) // Float:ge
 	return g_body;
 }*/
 
+/*
 static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params) // set_user_hitzones(index = 0, target = 0, body = 255); = 3 arguments
 {
 	// Sets user hitzones.
@@ -589,7 +589,77 @@ static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params) // set_use
 
 	return 1;
 }
+*/
 
+static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params) // set_user_hitzones(index = 0, target = 0, body = 255); = 3 arguments
+{
+	int index = params[1];
+	if (index < 0 || index > gpGlobals->maxClients){
+		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+	int target = params[2];
+
+	if (target < 0 || target > gpGlobals->maxClients){
+		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+	int bodyhits = params[3];
+
+	if (index) {
+		//player_t* pPlayer = GET_PLAYER_POINTER_I(index);
+
+		if (true) { // pPlayer->ingame (we have no in-game check yet)
+			//pPlayer->CountCheat(FUN_HITZONE);
+
+			if (target) {
+				g_bodyhits[index][target] = bodyhits; // pPlayer->bodyhits[target] = bodyhits;
+			}
+			else {
+				for(int i = 1; i <= gpGlobals->maxClients; ++i)
+					g_bodyhits[index][i] = bodyhits; // pPlayer->bodyhits[i] = bodyhits;
+			}
+			return 1;
+		}
+		return 0;
+	}
+	else {
+		//player_t* pPlayer;
+
+		for(int i = 1; i <= gpGlobals->maxClients; ++i){
+			//pPlayer = GET_PLAYER_POINTER_I(i);
+			//pPlayer->CountCheat(FUN_HITZONE);
+
+			if (target) {
+				//pPlayer->bodyhits[target] = bodyhits;
+				g_bodyhits[index][target] = bodyhits;
+			}
+			else {
+				for(int i = 1; i <= gpGlobals->maxClients; ++i)
+					g_bodyhits[index][i] = bodyhits; // pPlayer->bodyhits[i] = bodyhits;
+			}
+		}
+	}
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL get_user_hitzones(AMX *amx, cell *params) // get_user_hitzones(index, target); = 2 arguments
+{
+	int index = params[1];
+	if (index < 1 || index > gpGlobals->maxClients) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+	int target = params[2];
+	if (target < 1 || target > gpGlobals->maxClients) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+	//return GET_PLAYER_POINTER_I(index)->bodyhits[target];
+	return g_bodyhits[index][target];
+}
+
+/*
 static cell AMX_NATIVE_CALL get_user_hitzones(AMX *amx, cell *params) // get_user_hitzones(index, target); = 2 arguments
 {
 	// Gets user hitzones.
@@ -622,6 +692,7 @@ static cell AMX_NATIVE_CALL get_user_hitzones(AMX *amx, cell *params) // get_use
 		}
 	}
 }
+*/
 
 static cell AMX_NATIVE_CALL set_user_noclip(AMX *amx, cell *params) // set_user_noclip(index, noclip = 0); = 2 arguments
 {
@@ -749,44 +820,13 @@ void PlayerPreThink(edict_t *pEntity)
 	RETURN_META(MRES_IGNORED);
 }
 
-/*  <--- removed, only needed with akimbot
 int ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress, char szRejectReason[128])
 {
-	int index = ENTINDEX(pPlayer);
-
-	if (index < 1 || index > gpGlobals->maxClients) // This is probably not really necessary... but just in case to not cause out of bounds errors below.
-		return 1;
-	
-	// Find out if user is bot (this doesn't seem to be ever called when bot connects though, but leave it here)
-	const char* auth = GETPLAYERAUTHID(pPlayer);
-
-	if (strcmp(auth, "BOT") == 0)
-		g_bot[index] = true;
-	else
-		g_bot[index] = false;
-
 	// Reset stuff:
-	FUNUTIL_ResetPlayer(index);
+	FUNUTIL_ResetPlayer(ENTINDEX(pPlayer));
 
 	return 1;
 }
-
-void ClientDisconnect(edict_t *pEntity)
-{
-	int index = ENTINDEX(pEntity);
-
-	if (index < 1 || index > gpGlobals->maxClients) // This is probably not really necessary... but just in case to not cause out of bounds errors below.
-		RETURN_META(MRES_IGNORED);
-	
-	// Reset stuff:
-	FUNUTIL_ResetPlayer(index);
-
-	// Set to be bot until proven not in ClientConnect
-	g_bot[index] = true;
-
-	RETURN_META(MRES_IGNORED);
-}
-*/
 
 DLL_FUNCTIONS gFunctionTable; /* = {
 	NULL,					// pfnGameInit
@@ -852,6 +892,9 @@ DLL_FUNCTIONS gFunctionTable; /* = {
 };*/
 C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion)
 {
+	gFunctionTable.pfnClientConnect = ClientConnect;
+	gFunctionTable.pfnPlayerPreThink = PlayerPreThink;
+
 	if(!pFunctionTable) {
 		LOG_ERROR(PLID, "GetEntityAPI2 called with null pFunctionTable");
 		return(FALSE);
@@ -863,17 +906,51 @@ C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersi
 		return(FALSE);
 	}
 
-	//gFunctionTable.pfnClientConnect = ClientConnect; <--- removed, only needed with akimbot
-	//gFunctionTable.pfnClientDisconnect = ClientDisconnect; <--- removed, only needed with akimbot
-	//gFunctionTable.pfnClientPutInServer = ClientPutInServer;
-	gFunctionTable.pfnPlayerPreThink = PlayerPreThink;
-
 	memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
 
 	return(TRUE);
 }
 
-/********/
+/******************************************************************************************/
+
+/*
+void MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed) {
+	if (msg_type == GET_USER_MSG_ID(PLID, "ResetHUD", NULL)) {
+		g_ResetHUDbool = true;
+		g_edict = ed;
+	}
+	else
+		g_ResetHUDbool = false;
+
+	RETURN_META(MRES_IGNORED);
+}
+void MessageEnd_Post(void) {
+	if (g_ResetHUDbool) {
+		int index = ENTINDEX(g_edict);
+		memset(g_bodyhits[index], 0xFF, sizeof(char)*33);
+		g_ResetHUDbool = false;
+	}
+	RETURN_META(MRES_IGNORED);
+}
+
+enginefuncs_t meta_engfuncs_post;
+C_DLLEXPORT int GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion ) {
+	meta_engfuncs_post.pfnMessageBegin = MessageBegin_Post;
+	meta_engfuncs_post.pfnMessageEnd = MessageEnd_Post;
+
+	if (*interfaceVersion!=ENGINE_INTERFACE_VERSION) {
+		LOG_ERROR(PLID, "GetEngineFunctions_Post version mismatch; requested=%d ours=%d", *interfaceVersion, ENGINE_INTERFACE_VERSION);
+		*interfaceVersion = ENGINE_INTERFACE_VERSION;
+		return(FALSE);
+	}
+
+	memcpy(pengfuncsFromEngine, &meta_engfuncs_post, sizeof(enginefuncs_t));
+
+	return(TRUE);
+}
+*/
+
+/******************************************************************************************/
 
 /*void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr)
 {
@@ -892,56 +969,17 @@ C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersi
 	}
 }*/
 
-void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr)
-{
-	/* from eiface.h:
-	// Returned by TraceLine
-	typedef struct
-		{
-		int		fAllSolid;			// if true, plane is not valid
-		int		fStartSolid;		// if true, the initial point was in a solid area
-		int		fInOpen;
-		int		fInWater;
-		float	flFraction;			// time completed, 1.0 = didn't hit anything
-		vec3_t	vecEndPos;			// final position
-		float	flPlaneDist;
-		vec3_t	vecPlaneNormal;		// surface normal at impact
-		edict_t	*pHit;				// entity the surface is on
-		int		iHitgroup;			// 0 == generic, non zero is specific body part
-		} TraceResult;
-	*/
+void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *e, TraceResult *ptr) {
+	TRACE_LINE(v1, v2, fNoMonsters, e, ptr);
 
-	/*if (g_bot[ENTINDEX(pentToSkip)])  <--- removed, only needed with akimbot
-		RETURN_META(MRES_IGNORED);*/
+	if (ptr->pHit&&(ptr->pHit->v.flags& (FL_CLIENT | FL_FAKECLIENT) )&&e&&(e->v.flags & (FL_CLIENT | FL_FAKECLIENT) )) {
+		//player_t* pPlayer = GET_PLAYER_POINTER(e);
 
-	TRACE_LINE(v1, v2, fNoMonsters, pentToSkip, ptr); // pentToSkip gotta be the one that is shooting, so filter it
-
-	int hitIndex = ENTINDEX(ptr->pHit);
-	if (hitIndex >= 1 && hitIndex <= gpGlobals->maxClients) {
-		if ( !(
-			g_zones_getHit[hitIndex] & (1 << ptr->iHitgroup) // can ptr->pHit get hit in ptr->iHitgroup at all?
-		&&	g_zones_toHit[hitIndex] & (1 << ptr->iHitgroup) ) // can pentToSkip hit other people in that hit zone?
-		) {
-			ptr->flFraction = 1.0;	// set to not hit anything (1.0 = shot doesn't hit anything)
-		}
+		if ( !(g_bodyhits[ENTINDEX(e)][ENTINDEX(ptr->pHit)]&(1<<ptr->iHitgroup)) ) // if ( !(pPlayer->bodyhits[ENTINDEX(ptr->pHit)]&(1<<ptr->iHitgroup)) )
+			ptr->flFraction = 1.0;
 	}
-/*	if ( !(
-		g_zones_getHit[ENTINDEX(ptr->pHit)] & (1 << ptr->iHitgroup) // can ptr->pHit get hit in ptr->iHitgroup at all?
-	&&	g_zones_toHit[ENTINDEX(pentToSkip)] & (1 << ptr->iHitgroup) ) // can pentToSkip hit other people in that hit zone?
-	) {
-		ptr->flFraction = 1.0;	// set to not hit anything (1.0 = shot doesn't hit anything)
-	}*/
 
 	RETURN_META(MRES_SUPERCEDE);
-
-	/*
-	MRES_IGNORED,		// plugin didn't take any action
-	MRES_HANDLED,		// plugin did something, but real function should still be called
-	MRES_OVERRIDE,		// call real function, but use my return value
-	MRES_SUPERCEDE,		// skip real function; use my return value
-	*/
-
-	//RETURN_META(MRES_IGNORED);
 }
 
 enginefuncs_t meta_engfuncs;
@@ -976,38 +1014,14 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
 	gpGamedllFuncs = pGamedllFuncs;
 
-
-	// JGHG added stuff below (initing stuff here)
-	//g_body = (1<<HITGROUP_GENERIC) | (1<<HITGROUP_HEAD) | (1<<HITGROUP_CHEST) | (1<<HITGROUP_STOMACH) | (1<<HITGROUP_LEFTARM) | (1<<HITGROUP_RIGHTARM)| (1<<HITGROUP_LEFTLEG) | (1<<HITGROUP_RIGHTLEG); // init hs_body
-
-	// generic is needed or bots go crazy... don't know what its for otherwise. You can still kill people.
-	// these hitzones never affect CS knife? ie you can always hit with knife no matter what you set here
-	//hs_body = (1<<HITGROUP_GENERIC) | (1<<HITGROUP_LEFTLEG) | (1<<HITGROUP_LEFTARM); // init hs_body
-	// Set default zones for people to hit and get hit.
-	for (int i = 1; i <= 32; i++) {
-		g_zones_toHit[i] = (1<<HITGROUP_GENERIC) | (1<<HITGROUP_HEAD) | (1<<HITGROUP_CHEST) | (1<<HITGROUP_STOMACH) | (1<<HITGROUP_LEFTARM) | (1<<HITGROUP_RIGHTARM)| (1<<HITGROUP_LEFTLEG) | (1<<HITGROUP_RIGHTLEG);
-		g_zones_getHit[i] = (1<<HITGROUP_GENERIC) | (1<<HITGROUP_HEAD) | (1<<HITGROUP_CHEST) | (1<<HITGROUP_STOMACH) | (1<<HITGROUP_LEFTARM) | (1<<HITGROUP_RIGHTARM)| (1<<HITGROUP_LEFTLEG) | (1<<HITGROUP_RIGHTLEG);
-		// Also set to be bot until proven not in ClientDisconnect (that seems to be only called by real players...)
-		// g_bot[i] = true;  <--- removed, only needed with akimbot
-	}
-	// JGHG added stuff above
-
-	/*
-	#define HITGROUP_GENERIC	0 // none == 1
-	#define HITGROUP_HEAD		1 = 2
-	#define HITGROUP_CHEST		2 = 4
-	#define HITGROUP_STOMACH	3 = 8
-	#define HITGROUP_LEFTARM	4 = 16
-	#define HITGROUP_RIGHTARM	5 = 32
-	#define HITGROUP_LEFTLEG	6 = 64
-	#define HITGROUP_RIGHTLEG	7 = 128
-	*/
+	for (int index = 1; index < 33; index++)
+		memset(g_bodyhits[index], 0xFF, sizeof(char)*33);
 
 	return(TRUE);
 }
 
 C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason) {
-	if(now && reason) {
+	if (now && reason) {
 		return(TRUE);
 	} else {
 		return(FALSE);
@@ -1025,6 +1039,7 @@ void WINAPI GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *p
 
 C_DLLEXPORT int AMX_Query(module_info_s** info) {
 	*info = &module_info;
+
 	return 1;
 }
 

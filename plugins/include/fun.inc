@@ -49,15 +49,10 @@ native give_item(index, const item[]);
  * 16  - left arm
  * 32  - right arm
  * 64  - left leg
- * 128 - right leg 
- * Set index to a player's index and leave target at 0 to define what bodyparts this player can hit when he is firing.
- * Set index to 0 and target to a player's index to define what bodyparts on player other players can hit when they are firing.
- * Set both index and target to 0 to define globally what bodyparts people can hit and what bodyparts can be hit when firing. */
+ * 128 - right leg */
 native set_user_hitzones(index = 0, target = 0, body = 255);
 
-/* Get user hitzones.
- * To get what bodyparts a player can hit when firing, set the player's index to index and target to 0.
- * To get what bodyparts other players can hit when firing at player, set index to 0 and target to player's index. */
+/* Get user hitzones. */
 native get_user_hitzones(index, target);
 
 /* Sets users max. speed. */

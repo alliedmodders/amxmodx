@@ -103,8 +103,12 @@ module_info_s module_info = {
 };
 
 // The stuff below might end up in a class soon
-int g_zones_toHit[33];		// where can people hit other people?
-int g_zones_getHit[33];		// where can people get hit by other people?
+//int g_zones_toHit[33];		// where can people hit other people?
+//int g_zones_getHit[33];		// where can people get hit by other people?
+char g_bodyhits[33][33];
 bool g_silent[33];			// used for set_user_footsteps()
+//int g_ResetHUD;
+bool g_ResetHUDbool;
+edict_t* g_edict;
 //bool g_bot[33];				// is user bot? <--- removed, only needed with akimbot
 // Globals above

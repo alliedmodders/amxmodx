@@ -197,7 +197,7 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 
 	if (!m_HasFunc)
 		return 0;
-
+	
 	CPluginMngr::CPlugin *pPlugin = g_plugins.findPluginFast(m_Amx);
 	if (!pPlugin->isExecutable(m_Func))
 		return 0;
@@ -397,13 +397,11 @@ bool CForwardMngr::isSPForward(int id) const
 
 void CForwardMngr::unregisterSPForward(int id)
 {
-	unsigned int i = 0;
-
 	//make sure the id is valid
-	if ( !isIdValid(id) || m_SPForwards.at(i >> 1)->isFree )
+	if ( !isIdValid(id) || m_SPForwards.at(id >> 1)->isFree )
 		return;
 
-	m_SPForwards.at(i >> 1)->isFree = true;
+	m_SPForwards.at(id >> 1)->isFree = true;
 
 	m_FreeSPForwards.push(id);
 }

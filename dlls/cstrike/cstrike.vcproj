@@ -119,6 +119,8 @@
 				TypeLibraryName=".\Release/cstrike.tlb"
 				HeaderFileName=""/>
 			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
@@ -212,6 +214,9 @@
 				RelativePath=".\moduleconfig.h">
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\plugins\include\cstrike.inc">
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

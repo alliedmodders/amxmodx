@@ -546,6 +546,46 @@ static cell AMX_NATIVE_CALL get_user_attacker(AMX *amx, cell *params) /* 2 param
   return (enemy ? pPlayer->index : 0);
 }
 
+static cell AMX_NATIVE_CALL user_has_weapon(AMX *amx,cell *params)
+{
+  int index = params[1];
+  if (index < 1 || index > gpGlobals->maxClients){
+    amx_RaiseError(amx,AMX_ERR_NATIVE);
+    return 0;
+  }
+  CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+  edict_t *pEntity = pPlayer->pEdict;
+  if (params[3] == -1)
+  {
+    if ((pEntity->v.weapons & (1<<params[2])) > 0)
+    {
+      return 1;
+    }
+  }
+  else
+  {
+    if ((pEntity->v.weapons & (1<<params[2])) > 0)
+    {
+      if (params[3] == 0)
+      {
+        pEntity->v.weapons &= ~(1<<params[2]);
+        return 1;
+      }
+      return 0;
+    }
+    else
+    {
+      if (params[3] == 1)
+      {
+        pEntity->v.weapons |= (1<<params[2]);
+        return 1;
+      }
+    }
+    return 0;
+  }
+  return 0;
+}
+
 static cell AMX_NATIVE_CALL get_user_weapon(AMX *amx, cell *params) /* 3 param */
 {
   int index = params[1];
@@ -2502,6 +2542,7 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "get_user_team",    get_user_team },
   { "get_user_time",    get_user_time },
   { "get_user_userid",  get_user_userid },
+  { "user_has_weapon",	user_has_weapon },
   { "get_user_weapon",  get_user_weapon},
   { "get_user_weapons", get_user_weapons},
   { "get_weaponname",   get_weaponname},

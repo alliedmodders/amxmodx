@@ -66,11 +66,11 @@ pfnmodule_engine_g* g_engModuleFunc;
 
 #define NAME "Counter-Strike"
 #define AUTHOR "AMX Mod X Dev Team"
-#if defined CS_WON_BUILD
+#if defined __cswonbuild__
 #define VERSION "0.1 WON" // change both these versions
 #else
 #define VERSION "0.1" // change both these versions
-#endif // defined CS_WON_BUILD
+#endif // defined __cswonbuild__
 #define URL "http://www.amxmodx.org"
 #define LOGTAG "AMXCS"
 #define DATE __DATE__
@@ -114,7 +114,7 @@ pfnmodule_engine_g* g_engModuleFunc;
 	#define OFFSET_WEAPONTYPE			43 + EXTRAOFFSET // same as STEAM
 	#define OFFSET_SILENCER_FIREMODE	70 + EXTRAOFFSET // differs -4 from STEAM
 	// "hostage_entity" entities
-	//#define OFFSET_HOSTAGEFOLLOW		86 + EXTRAOFFSET // NOT YET CHECKED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! find out before build
+	#define OFFSET_HOSTAGEFOLLOW		86 + EXTRAOFFSET // same as STEAM
 	#define OFFSET_HOSTAGEID			487 + EXTRAOFFSET // same as STEAM
 #else // from here STEAM build looks for offsets
 	// "player" entities

@@ -29,7 +29,6 @@
 *  version.
 */
 
-#include <string>
 #include <time.h>
 #include "amxmodx.h"
 
@@ -193,7 +192,7 @@ static cell AMX_NATIVE_CALL console_print(AMX *amx, cell *params) /* 2 param */
 
 static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 {
-	int len;
+	int len = 0;
 	char *msg;
 	if (params[1] == 0)
 	{
@@ -310,7 +309,7 @@ static cell AMX_NATIVE_CALL get_user_name(AMX *amx, cell *params)  /* 3 param */
 {
   int index = params[1];
   return set_amxstring(amx,params[2],(index<1||index>gpGlobals->maxClients) ?
-    hostname->string : g_players[index].name.str() , params[3]);
+    hostname->string : g_players[index].name.c_str() , params[3]);
 }
 
 static cell AMX_NATIVE_CALL get_user_index(AMX *amx, cell *params)  /* 1 param */
@@ -319,7 +318,7 @@ static cell AMX_NATIVE_CALL get_user_index(AMX *amx, cell *params)  /* 1 param *
   char* sptemp = get_amxstring(amx,params[1],0,i);
   for(i = 1; i <= gpGlobals->maxClients; ++i) {
     CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
-    if ( strcmp(pPlayer->name.str(), sptemp) == 0 )
+    if ( strcmp(pPlayer->name.c_str(), sptemp) == 0 )
       return i;
   }
 
@@ -471,7 +470,7 @@ static cell AMX_NATIVE_CALL get_weaponname(AMX *amx, cell *params) /* 3 param */
     amx_RaiseError(amx,AMX_ERR_NATIVE);
     return 0;
   }
-  return set_amxstring(amx,params[2],g_weaponsData[index].fullName.str(),params[3]);
+  return set_amxstring(amx,params[2],g_weaponsData[index].fullName.c_str(),params[3]);
 }
 
 static cell AMX_NATIVE_CALL get_user_weapons(AMX *amx, cell *params) /* 3 param */
@@ -554,7 +553,7 @@ static cell AMX_NATIVE_CALL get_user_ip(AMX *amx, cell *params) /* 3 param */
   char *ptr;
   char szIp[32];
   strcpy(szIp,(index<1||index>gpGlobals->maxClients)?
-    CVAR_GET_STRING("net_address"):g_players[index].ip.str());
+    CVAR_GET_STRING("net_address"):g_players[index].ip.c_str());
   if (params[4] && (ptr = strstr(szIp,":"))!=0)
     *ptr = '\0';
   return set_amxstring(amx,params[2],szIp,params[3]);
@@ -701,7 +700,7 @@ static cell AMX_NATIVE_CALL get_user_team(AMX *amx, cell *params) /* 3 param */
 	}
 	//
     if ( params[3] )
-	  set_amxstring(amx,params[2],pPlayer->team.str(),params[3]);
+	  set_amxstring(amx,params[2],pPlayer->team.c_str(),params[3]);
 
     return pPlayer->teamId;
   }
@@ -1248,7 +1247,7 @@ static cell AMX_NATIVE_CALL log_to_file(AMX *amx, cell *params) /* 1 param */
   int ilen;
   char* szFile = get_amxstring(amx,params[1],0,ilen);
   FILE*fp;
-  const char* filename = build_pathname("%s/%s",g_log_dir.str(),szFile);
+  const char* filename = build_pathname("%s/%s",g_log_dir.c_str(),szFile);
   bool first_time = true;
   if ((fp=fopen(filename,"r"))!=NULL){
     first_time = false;
@@ -1270,11 +1269,11 @@ static cell AMX_NATIVE_CALL log_to_file(AMX *amx, cell *params) /* 1 param */
   if ( first_time ){
     char game_dir[512];
     GET_GAME_DIR(game_dir);
-    filename = build_pathname("%s/%s",g_log_dir.str(),szFile);
+    filename = build_pathname("%s/%s",g_log_dir.c_str(),szFile);
     fprintf(fp,"L %s: Log file started (file \"%s\") (game \"%s\") (amx \"%s\")\n",
-      date,filename,g_mod_name.str(),Plugin_info.version);
+      date,filename,g_mod_name.c_str(),Plugin_info.version);
     print_srvconsole("L %s: Log file started (file \"%s\") (game \"%s\") (amx \"%s\")\n",
-      date,filename,g_mod_name.str(),Plugin_info.version);
+      date,filename,g_mod_name.c_str(),Plugin_info.version);
   }
   fprintf(fp,"L %s: %s",date,message);
   print_srvconsole("L %s: %s",date,message);
@@ -1442,18 +1441,18 @@ static cell AMX_NATIVE_CALL get_players(AMX *amx, cell *params) /* 4 param */
     continue;
     /*if ( flags & 16  ) {
           if (flags & 64){
-            if (strcmpi(pPlayer->team.str(),sptemp))
+            if (strcmpi(pPlayer->team.c_str(),sptemp))
               continue;
           }
-          else if (strcmp(pPlayer->team.str(),sptemp))
+          else if (strcmp(pPlayer->team.c_str(),sptemp))
               continue;
     }*/
       if (flags & 32){
           if (flags & 64){
-            if (stristr(pPlayer->name.str(),sptemp)==NULL)
+            if (stristr(pPlayer->name.c_str(),sptemp)==NULL)
               continue;
           }
-          else if (strstr(pPlayer->name.str(),sptemp)==NULL)
+          else if (strstr(pPlayer->name.c_str(),sptemp)==NULL)
               continue;
       }
       aPlayers[iNum++] = i;
@@ -1484,18 +1483,18 @@ static cell AMX_NATIVE_CALL find_player(AMX *amx, cell *params) /* 1 param */
         continue;
       if (flags&1){
         if (flags&2048) {
-          if (strcmpi(pPlayer->name.str(),sptemp))
+          if (strcmpi(pPlayer->name.c_str(),sptemp))
             continue;
         }
-        else if (strcmp(pPlayer->name.str(),sptemp))
+        else if (strcmp(pPlayer->name.c_str(),sptemp))
           continue;
       }
       if (flags&2){
         if (flags&2048) {
-          if (stristr(pPlayer->name.str(),sptemp)==NULL)
+          if (stristr(pPlayer->name.c_str(),sptemp)==NULL)
             continue;
         }
-        else if (strstr(pPlayer->name.str(),sptemp)==NULL)
+        else if (strstr(pPlayer->name.c_str(),sptemp)==NULL)
           continue;
       }
       if (flags&4){
@@ -1508,15 +1507,15 @@ static cell AMX_NATIVE_CALL find_player(AMX *amx, cell *params) /* 1 param */
           continue;
       }
       if (flags&8){
-        if (strncmp(pPlayer->ip.str(),sptemp,ilen))
+        if (strncmp(pPlayer->ip.c_str(),sptemp,ilen))
           continue;
       }
       if (flags&16){
         if (flags&2048) {
-          if (strcmpi(pPlayer->team.str(),sptemp))
+          if (strcmpi(pPlayer->team.c_str(),sptemp))
             continue;
         }
-        else if (strcmp(pPlayer->team.str(),sptemp))
+        else if (strcmp(pPlayer->team.c_str(),sptemp))
           continue;
       }
       result = i;
@@ -1546,7 +1545,7 @@ static cell AMX_NATIVE_CALL get_mapname(AMX *amx, cell *params) /* 2 param */
 
 static cell AMX_NATIVE_CALL get_modname(AMX *amx, cell *params) /* 2 param */
 {
-  return set_amxstring(amx,params[1],g_mod_name.str(),params[2]);
+  return set_amxstring(amx,params[1],g_mod_name.c_str(),params[2]);
 }
 
 

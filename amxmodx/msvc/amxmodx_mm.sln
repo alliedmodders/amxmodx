@@ -1,18 +1,18 @@
-Microsoft Visual Studio Solution File, Format Version 7.00
+Microsoft Visual Studio Solution File, Format Version 8.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "amxmodx_mm", "amxmodx_mm.vcproj", "{CDD792EF-ABC5-4C61-803F-616E209C03D6}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
-		ConfigName.0 = Debug
-		ConfigName.1 = JITDebug
-		ConfigName.2 = JITMemtestRelease
-		ConfigName.3 = JITRelease
-		ConfigName.4 = MaximalSpeed
-		ConfigName.5 = MemtestDebug
-		ConfigName.6 = MemtestRelease
-		ConfigName.7 = Release
-	EndGlobalSection
-	GlobalSection(ProjectDependencies) = postSolution
+		Debug = Debug
+		JITDebug = JITDebug
+		JITMemtestRelease = JITMemtestRelease
+		JITRelease = JITRelease
+		MaximalSpeed = MaximalSpeed
+		MemtestDebug = MemtestDebug
+		MemtestRelease = MemtestRelease
+		Release = Release
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
 		{CDD792EF-ABC5-4C61-803F-616E209C03D6}.Debug.ActiveCfg = Debug|Win32

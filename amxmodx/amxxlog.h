@@ -34,11 +34,11 @@
 class CLog
 {
 private:
-	String m_LogFile;
+	CString m_LogFile;
 	int m_LogType;
 
-	void GetLastFile(int &outMonth, int &outDay, String &outFilename);
-	void UseFile(const String &fileName);
+	void GetLastFile(int &outMonth, int &outDay, CString &outFilename);
+	void UseFile(const CString &fileName);
 public:
 	CLog();
 	~CLog();

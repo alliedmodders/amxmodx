@@ -147,7 +147,7 @@ void CModule::clear(bool clearFilename)
 	m_Handle = NULL;
 	m_Status = MODULE_NONE;
 	if (clearFilename)
-		m_Filename.set("unknown");
+		m_Filename.assign("unknown");
 
 	// old
 	m_InfoOld = NULL;
@@ -187,7 +187,7 @@ bool CModule::attachModule()
 			m_Status = MODULE_LOADED;
 			return true;
 		case AMXX_PARAM:
-			AMXXLOG_Log("[AMXX] Internal Error: Module \"%s\" (version \"%s\") retured \"Invalid parameter\" from Attach func.", m_Filename.str(), getVersion());
+			AMXXLOG_Log("[AMXX] Internal Error: Module \"%s\" (version \"%s\") retured \"Invalid parameter\" from Attach func.", m_Filename.c_str(), getVersion());
 			m_Status = MODULE_INTERROR;
 			return false;
 		case AMXX_FUNC_NOT_PRESENT:
@@ -195,7 +195,7 @@ bool CModule::attachModule()
 			m_MissingFunc = g_LastRequestedFunc;
 			return false;
 		default:
-			AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.",  m_Filename.str(), getVersion());
+			AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.",  m_Filename.c_str(), getVersion());
 			m_Status = MODULE_BADLOAD;
 			return false;
 		}
@@ -217,7 +217,7 @@ bool CModule::queryModule()
 	if (m_Status != MODULE_NONE)			// don't check if already queried
 		return false;
 
-	m_Handle = DLLOAD(m_Filename.str());		// load file
+	m_Handle = DLLOAD(m_Filename.c_str());		// load file
 	if (!m_Handle)
 	{
 		m_Status = MODULE_BADLOAD;
@@ -242,7 +242,7 @@ bool CModule::queryModule()
 		switch (retVal)
 		{
 		case AMXX_PARAM:
-			AMXXLOG_Log("[AMXX] Internal Error: Module \"%s\" (version \"%s\") retured \"Invalid parameter\" from Attach func.", m_Filename.str(), getVersion());
+			AMXXLOG_Log("[AMXX] Internal Error: Module \"%s\" (version \"%s\") retured \"Invalid parameter\" from Attach func.", m_Filename.c_str(), getVersion());
 			m_Status = MODULE_INTERROR;
 			return false;
 		case AMXX_IFVERS:
@@ -254,7 +254,7 @@ bool CModule::queryModule()
 		case AMXX_OK:
 			break;
 		default:
-			AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.",  m_Filename.str(), getVersion());
+			AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.",  m_Filename.c_str(), getVersion());
 			m_Status = MODULE_BADLOAD;
 			return false;
 		}

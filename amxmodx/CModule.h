@@ -69,7 +69,7 @@ struct amxx_module_info_s
 
 class CModule 
 {
-	String m_Filename;				// Filename
+	CString m_Filename;				// Filename
 	bool m_Metamod;					// Using metamod?
 	bool m_Amxx;					// Using new module interface?
 	module_info_s* m_InfoOld;		// module info (old module interface)
@@ -95,11 +95,11 @@ public:
 	inline module_info_s* getInfo() const { return m_InfoOld; }	// old
 	inline const amxx_module_info_s* getInfoNew() const { return &m_InfoNew; }	// new
 	inline int getStatusValue() { return m_Status; }
-	inline bool operator==( void* fname ) { return !strcmp( m_Filename.str() , (char*)fname );  }
+	inline bool operator==( void* fname ) { return !strcmp( m_Filename.c_str() , (char*)fname );  }
 	inline bool isReloadable() { return m_Amxx ? ((m_Status == MODULE_LOADED) && (m_InfoNew.reload != 0)) : ( (m_Status==MODULE_LOADED) && (m_InfoOld->type==RELOAD_MODULE)); }
 	inline bool isAmxx() const { return m_Amxx; }
 	inline const char *getMissingFunc() const { return m_MissingFunc; }
-	inline const char *getFilename() const { return m_Filename.str(); }
+	inline const char *getFilename() { return m_Filename.c_str(); }
 	void CModule::CallPluginsLoaded();
 
 	CList<AMX_NATIVE_INFO*> m_Natives;

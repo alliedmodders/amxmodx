@@ -112,7 +112,7 @@ CPluginMngr::CPlugin* CPluginMngr::findPlugin(const char* name) {
 	int len = strlen(name);
 	if (!len) return 0;
 	CPlugin*a = head;
-	while( a && strncmp(a->name.str(), name,len) )
+	while( a && strncmp(a->name.c_str(), name,len) )
 		a=a->next;
 	return a;
 }
@@ -130,9 +130,9 @@ const char* CPluginMngr::CPlugin::getStatus() const {
 
 CPluginMngr::CPlugin::CPlugin(int i, const char* p,const char* n, char* e) : name(n), title(n) {
 	const char* unk = "unknown";
-	title.set(unk);
-	author.set(unk);
-	version.set(unk);
+	title.assign(unk);
+	author.assign(unk);
+	version.assign(unk);
 	char* path = build_pathname("%s/%s",p,n);
 	code = 0;
 	int err = load_amxscript(&amx,&code,path,e );

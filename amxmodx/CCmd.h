@@ -52,10 +52,10 @@ public:
 		friend class CmdMngr;
 		CPluginMngr::CPlugin* plugin;
 		CmdMngr* parent;
-		String command;
-		String argument;
-		String commandline;
-		String info;
+		CString command;
+		CString argument;
+		CString commandline;
+		CString info;
 		bool listable;
 		int function;
 		int flags;
@@ -67,12 +67,12 @@ public:
 		~Command();
 	public:
 
-		inline const char* getCommand() const{ return command.str(); }
-		inline const char* getArgument() const{ return argument.str(); }
-		inline const char* getCmdInfo() const{ return info.str(); }
-		inline const char* getCmdLine() const{ return commandline.str(); }
-		inline bool matchCommandLine(const char* cmd, const char* arg) 	{ return (!stricmp(command.str()+prefix, cmd+prefix ) && (argument.empty() || !stricmp(argument.str() , arg ))); }
-		inline bool matchCommand(const char* cmd) {	return (!strcmp(command.str(), cmd ));	}
+		inline const char* getCommand() { return command.c_str(); }
+		inline const char* getArgument() { return argument.c_str(); }
+		inline const char* getCmdInfo() { return info.c_str(); }
+		inline const char* getCmdLine() { return commandline.c_str(); }
+		inline bool matchCommandLine(const char* cmd, const char* arg) 	{ return (!stricmp(command.c_str()+prefix, cmd+prefix ) && (argument.empty() || !stricmp(argument.c_str() , arg ))); }
+		inline bool matchCommand(const char* cmd) {	return (!strcmp(command.c_str(), cmd ));	}
 		inline int getFunction() const { return function; }
 		inline bool gotAccess(int f) const { return (!flags||((flags & f)==flags)); }
 		inline CPluginMngr::CPlugin* getPlugin() { return plugin; }
@@ -100,7 +100,7 @@ private:
 	CmdLink* clcmdlist;
 
 	struct CmdPrefix {
-		String name;
+		CString name;
 		CmdMngr* parent;
 		CmdLink* list;
 		CmdPrefix* next;

@@ -638,9 +638,6 @@
 				RelativePath="..\CPlugin.cpp">
 			</File>
 			<File
-				RelativePath="..\CString.cpp">
-			</File>
-			<File
 				RelativePath="..\CTask.cpp">
 			</File>
 			<File
@@ -740,6 +737,9 @@
 			</File>
 			<File
 				RelativePath="..\amxxfile.h">
+			</File>
+			<File
+				RelativePath="..\amxxlog.h">
 			</File>
 			<File
 				RelativePath="..\CCmd.h">

@@ -40,7 +40,7 @@ class MenuMngr
 {
   struct MenuIdEle
   {
-    String name;
+    CString name;
     AMX* amx;
     MenuIdEle* next;
 	int id;

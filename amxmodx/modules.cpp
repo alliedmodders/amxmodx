@@ -263,7 +263,7 @@ const char* get_amxscriptname(AMX* amx)
 
 void get_modname(char* buffer )
 {
-	strcpy( buffer , g_mod_name.str() );
+	strcpy( buffer , g_mod_name.c_str() );
 }
 
 char* build_pathname(char *fmt, ... )
@@ -279,7 +279,7 @@ char* build_pathname(char *fmt, ... )
 #else
 		"%s/",
 #endif
-		g_mod_name.str());
+		g_mod_name.c_str());
 
 	va_list argptr;
 	va_start (argptr, fmt);
@@ -609,7 +609,7 @@ const char *MNF_GetModname(void)
 {
 	// :TODO: Do we have to do this??
 	static char buffer[64];
-	strcpy(buffer, g_mod_name.str());
+	strcpy(buffer, g_mod_name.c_str());
 	return buffer;
 }
 
@@ -713,13 +713,13 @@ const char * MNF_GetPlayerName(int id)
 {
 	if (id < 1 || id > gpGlobals->maxClients)
 		return NULL;
-	return GET_PLAYER_POINTER_I(id)->name.str();
+	return GET_PLAYER_POINTER_I(id)->name.c_str();
 }
 const char * MNF_GetPlayerIP(int id)
 {
 	if (id < 1 || id > gpGlobals->maxClients)
 		return NULL;
-	return GET_PLAYER_POINTER_I(id)->ip.str();
+	return GET_PLAYER_POINTER_I(id)->ip.c_str();
 }
 int MNF_IsPlayerInGame(int id)
 {

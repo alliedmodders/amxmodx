@@ -56,8 +56,8 @@ CmdMngr::Command::Command( CPluginMngr::CPlugin* pplugin,const char* pcmd,
 	char szCmd[64], szArg[64];
 	*szCmd = 0; *szArg=0;
 	sscanf(pcmd,"%s %s",szCmd,szArg);
-	command.set(szCmd);
-	argument.set(szArg);
+	command.assign(szCmd);
+	argument.assign(szArg);
 	plugin = pplugin;
 	flags = pflags;
 	cmdtype = 0;
@@ -238,7 +238,7 @@ void CmdMngr::registerPrefix( const char* nn )
 CmdMngr::CmdPrefix** CmdMngr::findPrefix(  const char* nn ){
 	CmdPrefix** aa = &prefixHead;
 	while(*aa){
-		if ( !strncmp( (*aa)->name.str(), nn, (*aa)->name.size() ) ) 
+		if ( !strncmp( (*aa)->name.c_str(), nn, (*aa)->name.size() ) ) 
 			break;
 		aa=&(*aa)->next;
 	}

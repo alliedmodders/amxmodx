@@ -74,7 +74,7 @@ public:
 	{
 	private:
 		// plugin info
-		String m_Path;
+		CString m_Path;
 		PLUG_STATUS m_Status;
 		plugin_info_t *m_Info;
 		// Function tables
@@ -104,8 +104,8 @@ public:
 		inline void SetInfo(plugin_info_t *newInfo)
 		{ m_Info = newInfo; }
 
-		inline const char * GetPath() const
-		{ return m_Path.str(); }
+		inline const char * GetPath() 
+		{ return m_Path.c_str(); }
 
 		inline const META_FUNCTIONS &GetMetaFunctions() const
 		{ return m_MetaFuncTable; }

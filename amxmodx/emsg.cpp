@@ -90,7 +90,7 @@ void Client_TeamInfo(void* mValue)
   case 1:
 	if ( index < 1 || index > gpGlobals->maxClients ) break;
 	char* msg = (char*)mValue;
-    g_players[ index ].team.set( msg );
+    g_players[ index ].team.assign( msg );
 	g_teamsIds.registerTeam( msg , -1 );
   }
 }
@@ -169,7 +169,7 @@ void Client_WeaponList(void* mValue)
     wpnList |= (1<<iId);
     g_weaponsData[iId].iId = iId;
     g_weaponsData[iId].ammoSlot = iSlot;
-    g_weaponsData[iId].fullName.set(wpnName);
+    g_weaponsData[iId].fullName.assign(wpnName);
 
   }
 }
@@ -243,7 +243,7 @@ void Client_ScoreInfo(void* mValue)
     pPlayer->deaths = deaths;
     pPlayer->teamId = *(int*)mValue;
     if ( g_teamsIds.isNewTeam() )
-      g_teamsIds.registerTeam( pPlayer->team.str() , pPlayer->teamId );
+      g_teamsIds.registerTeam( pPlayer->team.c_str() , pPlayer->teamId );
   }
 }
 
@@ -257,7 +257,7 @@ void Client_DamageEnd(void* mValue)
 		g_events.parseValue( dead->death_killer  );
 		g_events.parseValue( dead->index  );
 		g_events.parseValue( dead->death_headshot  );
-		g_events.parseValue( dead->death_weapon.str()  );
+		g_events.parseValue( dead->death_weapon.c_str()  );
 		g_events.parseValue( dead->death_tk ? 1 : 0  );
 		g_events.executeEvents();
 		dead->death_killer = 0;
@@ -291,7 +291,7 @@ void Client_DeathMsg(void* mValue)
 		if (  !killer || !victim ) break;
 
 		victim->death_killer = killer_id;
-		victim->death_weapon.set((char*)mValue);
+		victim->death_weapon.assign((char*)mValue);
 		victim->death_headshot = hs;
 		victim->death_tk = (killer->teamId == victim->teamId);
 	}

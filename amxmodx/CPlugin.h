@@ -59,10 +59,10 @@ public:
 	
 		AMX amx;
 		void* code;
-		String name;
-		String version;
-		String title;
-		String author;
+		CString name;
+		CString version;
+		CString title;
+		CString author;
 		int paused_fun;
 		int status;
 		CPlugin* next;
@@ -72,15 +72,15 @@ public:
 
 	public:
 
-		inline const char* getName() const { return name.str();}
-		inline const char* getVersion() const { return version.str();}
-		inline const char* getTitle() const { return title.str();}
-		inline const char* getAuthor()const { return author.str();}
+		inline const char* getName() { return name.c_str();}
+		inline const char* getVersion() { return version.c_str();}
+		inline const char* getTitle() { return title.c_str();}
+		inline const char* getAuthor() { return author.c_str();}
 		inline int getId() const { return id; }
 		inline AMX* getAMX() { return &amx; }
-		inline void setTitle( const char* n ) { title.set(n); }
-		inline void setAuthor( const char* n ) { author.set(n); }
-		inline void setVersion( const char* n ) { version.set(n); }
+		inline void setTitle( const char* n ) { title.assign(n); }
+		inline void setAuthor( const char* n ) { author.assign(n); }
+		inline void setVersion( const char* n ) { version.assign(n); }
 		inline bool isValid() const { return ((status != ps_bad_load) && (status != ps_locked)); }
 		inline bool isPaused() const { return ( (status == ps_paused) || (status == ps_stopped)); }
 		inline bool isFunctionPaused( int id ) const { return (paused_fun & (1<<id)) ? true : false; 	}

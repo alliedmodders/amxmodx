@@ -169,7 +169,7 @@ void EventsMngr::ClEvent::registerFilter(char *filter)
 	tmpCond->paramId = atoi(filter);
 
 	// rest of line
-	tmpCond->sValue.set(value);
+	tmpCond->sValue.assign(value);
 	tmpCond->fValue = atof(value);
 	tmpCond->iValue = atoi(value);
 	
@@ -381,9 +381,9 @@ void EventsMngr::parseValue(const char *sz)
 				anyConditions = true;
 				switch(condIter->type)
 				{
-				case '=': if (!strcmp(sz, condIter->sValue.str())) execute=true; break;
-				case '!': if (strcmp(sz, condIter->sValue.str())) execute=true; break;
-				case '&': if (strstr(sz, condIter->sValue.str())) execute=true; break;
+				case '=': if (!strcmp(sz, condIter->sValue.c_str())) execute=true; break;
+				case '!': if (strcmp(sz, condIter->sValue.c_str())) execute=true; break;
+				case '&': if (strstr(sz, condIter->sValue.c_str())) execute=true; break;
 				}
 				if (execute)
 					break;

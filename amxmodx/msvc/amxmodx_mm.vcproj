@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="amxmodx_mm"
 	SccProjectName=""
 	SccLocalPath="">
@@ -74,7 +74,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -139,7 +145,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="MemtestDebug|Win32"
@@ -205,7 +217,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="MemtestRelease|Win32"
@@ -270,7 +288,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="JITDebug|Win32"
@@ -336,7 +360,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="JITRelease|Win32"
@@ -401,7 +431,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="JITMemtestRelease|Win32"
@@ -466,7 +502,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="MaximalSpeed|Win32"
@@ -534,13 +576,36 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
+			<File
+				RelativePath="..\amx.cpp">
+			</File>
+			<File
+				RelativePath="..\amxcore.cpp">
+			</File>
+			<File
+				RelativePath="..\amxmodx.cpp">
+			</File>
+			<File
+				RelativePath="..\amxtime.cpp">
+			</File>
+			<File
+				RelativePath="..\amxxlog.cpp">
+			</File>
 			<File
 				RelativePath="..\CCmd.cpp">
 			</File>
@@ -576,21 +641,6 @@
 			</File>
 			<File
 				RelativePath="..\CVault.cpp">
-			</File>
-			<File
-				RelativePath="..\amx.cpp">
-			</File>
-			<File
-				RelativePath="..\amxcore.cpp">
-			</File>
-			<File
-				RelativePath="..\amxmodx.cpp">
-			</File>
-			<File
-				RelativePath="..\amxtime.cpp">
-			</File>
-			<File
-				RelativePath="..\amxxlog.cpp">
 			</File>
 			<File
 				RelativePath="..\emsg.cpp">
@@ -676,6 +726,15 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
+				RelativePath="..\amx.h">
+			</File>
+			<File
+				RelativePath="..\amxmodx.h">
+			</File>
+			<File
+				RelativePath="..\amxxfile.h">
+			</File>
+			<File
 				RelativePath="..\CCmd.h">
 			</File>
 			<File
@@ -716,15 +775,6 @@
 			</File>
 			<File
 				RelativePath="..\CVector.h">
-			</File>
-			<File
-				RelativePath="..\amx.h">
-			</File>
-			<File
-				RelativePath="..\amxmodx.h">
-			</File>
-			<File
-				RelativePath="..\amxxfile.h">
 			</File>
 			<File
 				RelativePath="..\fakemeta.h">

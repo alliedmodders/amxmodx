@@ -40,20 +40,20 @@
 class CCVar
 {
     cvar_t cvar;
-    String name;
-    String plugin;
+    CString name;
+    CString plugin;
 public:	
     CCVar( const char* pname, const char* pplugin, 
 		int pflags, float pvalue ) : name(pname) , plugin(pplugin ) {
-		cvar.name = (char*)name.str();
+		cvar.name = (char*)name.c_str();
 		cvar.flags = pflags;
 		cvar.string = "";
 		cvar.value = pvalue;
     }
 	inline cvar_t* getCvar() { return &cvar; }
-	inline const char* getPluginName() { return plugin.str(); }
-	inline const char* getName() { return name.str(); }
-	inline bool operator == ( const char* string ) const { return (strcmp(name.str(),string)==0); }
+	inline const char* getPluginName() { return plugin.c_str(); }
+	inline const char* getName() { return name.c_str(); }
+	inline bool operator == ( const char* string ) { return (strcmp(name.c_str(),string)==0); }
 };
 
 
@@ -68,9 +68,9 @@ class CPlayer
 public:
 	edict_t* pEdict;
 	
-	String name;
-	String ip;
-	String team;
+	CString name;
+	CString ip;
+	CString team;
 
 	bool initialized;
 	bool ingame;
@@ -98,7 +98,7 @@ public:
 	int death_killer;
 	int death_victim;
 	bool death_tk;
-	String death_weapon;
+	CString death_weapon;
 	
 	Vector lastTrace;
 	Vector thisTrace;
@@ -150,7 +150,7 @@ public:
 // class ForceObject
 // *****************************************************
 class ForceObject {
-    String filename;
+    CString filename;
     FORCE_TYPE type;
     Vector mins;
     Vector maxs;
@@ -158,7 +158,7 @@ class ForceObject {
 public:
     ForceObject(const char* n, FORCE_TYPE c,Vector& mi, Vector& ma, AMX* a) :
     filename(n) , type(c), mins(mi), maxs(ma), amx(a) {}
-	inline const char* getFilename() { return filename.str(); }
+	inline const char* getFilename() { return filename.c_str(); }
 	inline AMX* getAMX() { return amx; }
 	Vector& getMin() { return mins; }
 	Vector& getMax() { return maxs; }
@@ -204,13 +204,13 @@ public:
 // *****************************************************
 class CScript
 {
-	String filename;
+	CString filename;
 	AMX* amx;
 	void* code;
 public:
 	CScript(AMX* aa, void* cc,const char* ff):filename(ff),amx(aa),code(cc){}
 	inline AMX* getAMX() { return amx; }
-	inline const char* getName() { return filename.str(); }
+	inline const char* getName() { return filename.c_str(); }
 	inline bool operator==( void* a ) { return (amx == (AMX*)a); }
 	inline void* getCode() { return code; }
 };
@@ -221,7 +221,7 @@ public:
 class TeamIds
 {
   struct TeamEle {
-    String name;
+    CString name;
     int id;
 	char tid;
 	static char uid;

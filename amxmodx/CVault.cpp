@@ -60,7 +60,7 @@ void Vault::put( const char* k, const char* v )
 
 	if ( *a )
 	{
-		(*a)->value.set(v);
+		(*a)->value.assign(v);
 		(*a)->number = atoi( v );
 	}
 	else
@@ -78,7 +78,7 @@ Vault::Obj** Vault::find( const char* n )
 
 	while( *a )
 	{
-		if ( strcmp((*a)->key.str(), n) == 0 )
+		if ( strcmp((*a)->key.c_str(), n) == 0 )
 			return a;
 
 		a = &(*a)->next;
@@ -107,7 +107,7 @@ const char* Vault::get( const char* n )
 
 	if ( b == 0 ) return "";
 
-	return b->value.str();
+	return b->value.c_str();
 }
 
 void Vault::clear()
@@ -133,7 +133,7 @@ void Vault::remove( const char* n )
 
 void Vault::setSource( const char* n )
 {
-	path.set(n);
+	path.assign(n);
 }
 
 
@@ -143,7 +143,7 @@ bool Vault::loadVault(  )
 
 	clear();
 
-	File a( path.str() , "r" );
+	File a( path.c_str() , "r" );
 
 	if ( !a ) return false;
 
@@ -165,7 +165,7 @@ bool Vault::saveVault( )
 {
 	if ( path.empty() ) return false;
 
-	File a( path.str() , "w" );
+	File a( path.c_str() , "w" );
 
 	if ( !a ) return false;
 

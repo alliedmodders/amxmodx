@@ -63,7 +63,7 @@ public:
 	friend class LogEventsMngr;
 	friend class CLogEvent;
 	LogEventsMngr* parent;
-    String text;
+    CString text;
     int logid;
     int pos;
     int result;

@@ -52,9 +52,9 @@ File::operator bool ( ) const
   return fp && !feof(fp);
 }
 
-File& operator<<( File& f, const String& n )
+File& operator<<( File& f, const CString& n )
 {
-  if ( f ) fputs( n.str() , f.fp ) ;
+  if ( f ) fputs( n.c_str() , f.fp ) ;
   return f;
 }
 
@@ -77,12 +77,12 @@ File& operator<<( File& f, const char& c )
   return f;
 }
 
-File& operator>>( File& f, String& n )
+File& operator>>( File& f, CString& n )
 {
   if ( !f ) return f;
   char temp[1024];
   fscanf( f.fp , "%s", temp );
-  n.set(temp);
+  n.assign(temp);
   return f;
 }
 

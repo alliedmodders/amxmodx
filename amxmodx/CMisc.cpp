@@ -29,10 +29,10 @@
 *  version.
 */
 #include "amxmodx.h"
-
 // *****************************************************
 // class CPlayer
 // *****************************************************
+
 void CPlayer::Init( edict_t* e , int i )
 {
 	index = i;
@@ -61,13 +61,14 @@ void CPlayer::Disconnect() {
   authorized = false;
   bot = 0;
 }
+
 void CPlayer::PutInServer() {
   playtime = gpGlobals->time;
   ingame = true;
 }
 bool CPlayer::Connect(const char* connectname,const char* ipaddress) {
-  name.set(connectname);
-  ip.set(ipaddress);
+  name.assign(connectname);
+  ip.assign(ipaddress);
   time = gpGlobals->time;
   bot = IsBot();
   death_killer = 0;
@@ -118,7 +119,8 @@ bool Grenades::find( edict_t* enemy, CPlayer** p, int& type )
       Obj* b = (*a)->next;
       delete *a;
       *a = b;
-      continue;
+
+     continue;
 
     }
     a = &(*a)->next;
@@ -190,7 +192,7 @@ void TeamIds::registerTeam( const char* n ,int s )
 {
     TeamEle** a = &head;
     while( *a ){
-		if ( strcmp((*a)->name.str(),n) == 0 ){
+		if ( strcmp((*a)->name.c_str(),n) == 0 ){
 			if (s != -1){
 				(*a)->id = s;
 				newTeam &= ~(1<<(*a)->tid);				
@@ -208,7 +210,7 @@ int TeamIds::findTeamId( const char* n )
 {
 	TeamEle* a = head;
     while( a ){
-		if ( !strcmpi(a->name.str(),n) )
+		if ( !strcmpi(a->name.c_str(),n) )
 			return a->id;
 		a = a->next;
     }
@@ -219,7 +221,7 @@ int TeamIds::findTeamIdCase( const char* n)
 {
 	TeamEle* a = head;
     while( a ){
-		if ( !strcmp(a->name.str(), n) )
+		if ( !strcmp(a->name.c_str(), n) )
 			return a->id;
 		a = a->next;
     }

@@ -2319,7 +2319,7 @@ enginefuncs_t g_EngineFunctionTable_Post =
 // ***** CFakeMetaPlugin
 CFakeMeta::CFakeMetaPlugin::CFakeMetaPlugin(const char *path)
 {
-	m_Path.set(path);
+	m_Path.assign(path);
 	m_Status = PL_EMPTY;
 	m_Info = NULL;
 	memset((void *)&m_DllFuncTable, 0, sizeof(DLL_FUNCTIONS));
@@ -2345,7 +2345,7 @@ int CFakeMeta::CFakeMetaPlugin::Query(mutil_funcs_t *pMetaUtilFuncs)
 {
 	// Load the library
 	// We don't have to DLCLOSE here.
-	m_Handle = DLOPEN(build_pathname("%s", m_Path.str()));
+	m_Handle = DLOPEN(build_pathname("%s", m_Path.c_str()));
 	if (!m_Handle)
 	{
 		m_Status = PL_BADFILE;
@@ -2360,25 +2360,25 @@ int CFakeMeta::CFakeMetaPlugin::Query(mutil_funcs_t *pMetaUtilFuncs)
 	bool missingFunc = false;
 	if (!queryFn)
 	{
-		AMXXLOG_Log("[AMXX] Module \"%s\" doesn't provide a Query function.", m_Path.str());
+		AMXXLOG_Log("[AMXX] Module \"%s\" doesn't provide a Query function.", m_Path.c_str());
 		missingFunc = true;
 	}
 
 	if (!giveEngFuncsFn)
 	{
-		AMXXLOG_Log("[AMXX] Module \"%s\" doesn't provide a GiveFnptrsToDll function.", m_Path.str());
+		AMXXLOG_Log("[AMXX] Module \"%s\" doesn't provide a GiveFnptrsToDll function.", m_Path.c_str());
 		missingFunc = true;
 	}
 
 	// Also check for Attach and Detach
 	if (DLSYM(m_Handle, "Meta_Attach") == NULL)
 	{
-		AMXXLOG_Log("[AMXX] Module \"%s\" doesn't provide a Meta_Attach function.", m_Path.str());
+		AMXXLOG_Log("[AMXX] Module \"%s\" doesn't provide a Meta_Attach function.", m_Path.c_str());
 		missingFunc = true;
 	}
 	if (DLSYM(m_Handle, "Meta_Detach") == NULL)
 	{
-		AMXXLOG_Log("[AMXX] Module \"%s\" doesn't provide a Meta_Detach function.", m_Path.str());
+		AMXXLOG_Log("[AMXX] Module \"%s\" doesn't provide a Meta_Detach function.", m_Path.c_str());
 		missingFunc = true;
 	}
 
@@ -2391,7 +2391,7 @@ int CFakeMeta::CFakeMetaPlugin::Query(mutil_funcs_t *pMetaUtilFuncs)
 
 	if (queryFn(META_INTERFACE_VERSION, &m_Info, pMetaUtilFuncs) != 1)
 	{
-		AMXXLOG_Log("[AMXX] Query Module \"%s\" failed.", m_Path.str());
+		AMXXLOG_Log("[AMXX] Query Module \"%s\" failed.", m_Path.c_str());
 		m_Status = PL_BADFILE;
 		return 0;
 	}
@@ -2413,7 +2413,7 @@ int CFakeMeta::CFakeMetaPlugin::Attach(PLUG_LOADTIME now, meta_globals_t *pMGlob
 	}
 	if (attachFn(now, &m_MetaFuncTable, pMGlobals, pGameDllFuncs) != 1)
 	{
-		AMXXLOG_Log("[AMXX] Can't Attach Module \"%s\" (\"%s\").", m_Info->name, m_Path.str());
+		AMXXLOG_Log("[AMXX] Can't Attach Module \"%s\" (\"%s\").", m_Info->name, m_Path.c_str());
 		m_Status = PL_FAILED;
 		return 0;
 	}
@@ -2435,7 +2435,7 @@ int CFakeMeta::CFakeMetaPlugin::Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reaso
 	}
 	if (detachFn(now, reason) != 1)
 	{
-		AMXXLOG_Log("[AMXX] Can't Detach Module \"%s\" (\"%s\").", m_Info->name, m_Path.str());
+		AMXXLOG_Log("[AMXX] Can't Detach Module \"%s\" (\"%s\").", m_Info->name, m_Path.c_str());
 		m_Status = PL_FAILED;
 		return 0;
 	}
@@ -2452,7 +2452,7 @@ int CFakeMeta::CFakeMetaPlugin::Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reaso
 	{ \
 		if (!m_MetaFuncTable.pfn##getFunc(&table, &ifVers)) \
 		{ \
-			AMXXLOG_Log("[AMXX] Failed calling \"%s\" in module \"%s\" (\"%s\")", #getFunc, m_Info->name, m_Path.str()); \
+			AMXXLOG_Log("[AMXX] Failed calling \"%s\" in module \"%s\" (\"%s\")", #getFunc, m_Info->name, m_Path.c_str()); \
 			return 0; \
 		} \
 	} \

@@ -73,8 +73,8 @@ Grenades g_grenades;
 LogEventsMngr g_logevents;
 MenuMngr g_menucmds;
 CLangMngr g_langMngr;
-String g_log_dir;
-String g_mod_name;
+CString g_log_dir;
+CString g_mod_name;
 XVars g_xvars;
 bool g_bmod_cstrike;
 bool g_bmod_dod;
@@ -91,7 +91,7 @@ float g_auth_time;
 #ifdef MEMORY_TEST
 float g_next_memreport_time;
 unsigned int g_memreport_count;
-String g_memreport_dir;
+CString g_memreport_dir;
 bool g_memreport_enabled;
 #define MEMREPORT_INTERVAL 300.0f	/* 5 mins */
 #endif // MEMORY_TEST
@@ -480,10 +480,10 @@ void C_ServerDeactivate_Post() {
 				char buffer[256];
 				sprintf(buffer, "%s/memreports/D%02d%02d%03d", get_localinfo("amxx_basedir", "addons/amxx"), curTime->tm_mon + 1, curTime->tm_mday, i);
 #ifdef __linux__
-				mkdir(build_pathname("%s", g_log_dir.str()), 0700);
+				mkdir(build_pathname("%s", g_log_dir.c_str()), 0700);
 				if (mkdir(build_pathname(buffer), 0700) < 0)
 #else
-				mkdir(build_pathname("%s", g_log_dir.str()));
+				mkdir(build_pathname("%s", g_log_dir.c_str()));
 				if (mkdir(build_pathname(buffer)) < 0)
 #endif
 				{
@@ -501,13 +501,13 @@ void C_ServerDeactivate_Post() {
 						break;
 					}
 				}
-				g_memreport_dir.set(buffer);
+				g_memreport_dir.assign(buffer);
 				// g_memreport_dir should be valid now
 				break;
 			}
 		}
-		m_dumpMemoryReport(build_pathname("%s/r%03d", g_memreport_dir.str(), g_memreport_count));
-		AMXXLOG_Log("Memreport #%d created (file \"%s/r%03d\") (interval %f)", g_memreport_count + 1, g_memreport_dir.str(), g_memreport_count, MEMREPORT_INTERVAL);
+		m_dumpMemoryReport(build_pathname("%s/r%03d", g_memreport_dir.c_str(), g_memreport_count));
+		AMXXLOG_Log("Memreport #%d created (file \"%s/r%03d\") (interval %f)", g_memreport_count + 1, g_memreport_dir.c_str(), g_memreport_count, MEMREPORT_INTERVAL);
 		g_memreport_count++;
 	}
 #endif // MEMORY_TEST
@@ -569,7 +569,7 @@ void C_ClientUserInfoChanged_Post( edict_t *pEntity, char	*infobuffer	) {
   // Emulate bot connection	and	putinserver
   if ( pPlayer->ingame )
   {
-	pPlayer->name.set(name); //	Make sure player have name up to date
+	pPlayer->name.assign(name); //	Make sure player have name up to date
   }
   else if (	pPlayer->IsBot() )
   {
@@ -745,10 +745,10 @@ void C_StartFrame_Post( void ) {
 				char buffer[256];
 				sprintf(buffer, "%s/memreports/D%02d%02d%03d", get_localinfo("amxx_basedir", "addons/amxx"), curTime->tm_mon + 1, curTime->tm_mday, i);
 #ifdef __linux__
-				mkdir(build_pathname("%s", g_log_dir.str()), 0700);
+				mkdir(build_pathname("%s", g_log_dir.c_str()), 0700);
 				if (mkdir(build_pathname(buffer), 0700) < 0)
 #else
-				mkdir(build_pathname("%s", g_log_dir.str()));
+				mkdir(build_pathname("%s", g_log_dir.c_str()));
 				if (mkdir(build_pathname(buffer)) < 0)
 #endif
 				{
@@ -766,13 +766,13 @@ void C_StartFrame_Post( void ) {
 						break;
 					}
 				}
-				g_memreport_dir.set(buffer);
+				g_memreport_dir.assign(buffer);
 				// g_memreport_dir should be valid now
 				break;
 			}
 		}
-		m_dumpMemoryReport(build_pathname("%s/r%03d", g_memreport_dir.str(), g_memreport_count));
-		AMXXLOG_Log("Memreport #%d created (file \"%s/r%03d\") (interval %f)", g_memreport_count + 1, g_memreport_dir.str(), g_memreport_count, MEMREPORT_INTERVAL);
+		m_dumpMemoryReport(build_pathname("%s/r%03d", g_memreport_dir.c_str(), g_memreport_count));
+		AMXXLOG_Log("Memreport #%d created (file \"%s/r%03d\") (interval %f)", g_memreport_count + 1, g_memreport_dir.c_str(), g_memreport_count, MEMREPORT_INTERVAL);
 		g_memreport_count++;
 	}
 #endif // MEMORY_TEST
@@ -1038,7 +1038,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
   while	( gameDir[i] )
 	if (gameDir[i++] ==	'/')
 	  a	= &gameDir[i];
-  g_mod_name.set(a);
+  g_mod_name.assign(a);
 
   // ###### Print short GPL
   print_srvconsole(	"\n  AMX Mod X version %s Copyright (c) 2004 AMX Mod X Development Team \n"
@@ -1053,14 +1053,14 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
   if ( amx_config.loadVault() ){
 	Vault::iterator	a =	amx_config.begin();
 	while (	a != amx_config.end() )	{
-	  SET_LOCALINFO( (char*)a.key().str() ,	(char*)a.value().str() );
+	  SET_LOCALINFO( (char*)a.key().c_str(), (char*)a.value().c_str() );
 	  ++a;
 	}
 	amx_config.clear();
   }
 
   // ######	Initialize logging here
-  g_log_dir.set(get_localinfo("amxx_logs", "addons/amxx/logs"));
+  g_log_dir.assign(get_localinfo("amxx_logs", "addons/amxx/logs"));
 
   //  ###### Now attach	metamod	modules
   // This will also call modules Meta_Query and Meta_Attach functions
@@ -1205,7 +1205,7 @@ C_DLLEXPORT	int	GetEntityAPI2_Post(	DLL_FUNCTIONS *pFunctionTable, int *interfac
 enginefuncs_t meta_engfuncs;
 C_DLLEXPORT	int	GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion ) {
 
-  if ( stricmp(g_mod_name.str(),"cstrike") == 0	|| stricmp(g_mod_name.str(),"czero")==0 )
+  if ( stricmp(g_mod_name.c_str(),"cstrike") == 0	|| stricmp(g_mod_name.c_str(),"czero")==0 )
   {
 	meta_engfuncs.pfnSetModel =	C_SetModel;
 	g_bmod_cstrike = true;
@@ -1213,7 +1213,7 @@ C_DLLEXPORT	int	GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
   else
   {
 	g_bmod_cstrike = false;
-	g_bmod_dod = !stricmp(g_mod_name.str(),"dod");
+	g_bmod_dod = !stricmp(g_mod_name.c_str(),"dod");
   }
 
 

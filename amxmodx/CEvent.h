@@ -88,7 +88,7 @@ public:
 		{
 			int paramId;				// the message parameter id
 
-			String sValue;				// value (string)
+			CString sValue;				// value (string)
 			float fValue;				// value (float)
 			int iValue;					// value (int)
 			int type;					// type (can be int, float, string)

@@ -43,14 +43,14 @@ class Vault
 {
   struct Obj
   {
-	String key;
-	String value;
+	CString key;
+	CString value;
 	int number;
     Obj *next;
 	Obj( const char* k,  const char* v);
   } *head;
 
-  String path;
+  CString path;
 
   Obj** find( const char* n );
 
@@ -79,8 +79,8 @@ public:
 	iterator& operator++() { if ( a ) a = a->next; return *this; }
 	bool operator==(const iterator& b) const { return a == b.a; }
 	bool operator!=(const iterator& b) const { return !operator==(b); }
-	String& key() const { return a->key; }
-	String& value() const { return a->value; }
+	CString& key() const { return a->key; }
+	CString& value() const { return a->value; }
   };
 
   inline iterator begin() const { return iterator(head); }

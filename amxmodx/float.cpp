@@ -21,6 +21,12 @@
 #include <stdio.h>      /* for NULL */
 #include <assert.h>
 #include <math.h>
+
+// this file does not include amxmodx.h, so we have to include the memory manager here
+#ifdef MEMORY_TEST
+#include "mmgr/mmgr.h"
+#endif // MEMORY_TEST
+
 #include "amx.h"
 
 /*
@@ -28,14 +34,6 @@
     #pragma resource "amxFloat.res"
   #endif
 */
-
-#if SMALL_CELL_SIZE==32
-  #define REAL          float
-#elif SMALL_CELL_SIZE==64
-  #define REAL          double
-#else
-  #error Unsupported cell size
-#endif
 
 #define PI  3.1415926535897932384626433832795
 

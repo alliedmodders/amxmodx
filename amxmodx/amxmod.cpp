@@ -401,11 +401,6 @@ static cell AMX_NATIVE_CALL get_user_userid(AMX *amx, cell *params) /* 1 param *
   return pPlayer->initialized ? GETPLAYERUSERID(pPlayer->pEdict) : -1;
 }
 
-static cell AMX_NATIVE_CALL get_user_wonid(AMX *amx, cell *params) //1 param
-{
-  return 0;
-}
-
 
 static cell AMX_NATIVE_CALL get_user_authid(AMX *amx, cell *params) /* 3 param */
 {
@@ -2390,7 +2385,6 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "get_user_userid",  get_user_userid },
   { "get_user_weapon",  get_user_weapon},
   { "get_user_weapons", get_user_weapons},
-  { "get_user_wonid",   get_user_wonid},
   { "get_weaponname",   get_weaponname},
   { "get_xvar_float",   get_xvar_num },
   { "get_xvar_id",      get_xvar_id },

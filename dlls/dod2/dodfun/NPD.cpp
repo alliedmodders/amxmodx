@@ -274,9 +274,9 @@ static cell AMX_NATIVE_CALL set_user_ammo(AMX *amx, cell *params){
 		case DODW_KAR:
 		case DODW_SCOPED_KAR:
 		case DODW_ENFIELD:
-			*( (int*)pPlayer->pEdict->pvPrivateData + 56+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 281+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 313+LINUXOFFSET ) = params[3];
+			*( (int*)pPlayer->pEdict->pvPrivateData + 54+LINUXOFFSET ) = params[3];
+			*( (int*)pPlayer->pEdict->pvPrivateData + 283+LINUXOFFSET ) = params[3];
+			*( (int*)pPlayer->pEdict->pvPrivateData + 315+LINUXOFFSET ) = params[3];
 			break;
 
 		//57,286,318
@@ -284,9 +284,9 @@ static cell AMX_NATIVE_CALL set_user_ammo(AMX *amx, cell *params){
 		case DODW_BAR:
 		case DODW_FG42:
 		case DODW_BREN:
-			*( (int*)pPlayer->pEdict->pvPrivateData + 56+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 281+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 313+LINUXOFFSET ) = params[3];
+			*( (int*)pPlayer->pEdict->pvPrivateData + 57+LINUXOFFSET ) = params[3];
+			*( (int*)pPlayer->pEdict->pvPrivateData + 286+LINUXOFFSET ) = params[3];
+			*( (int*)pPlayer->pEdict->pvPrivateData + 318+LINUXOFFSET ) = params[3];
 			break;
 
 		//56,281,313
@@ -386,7 +386,7 @@ static cell AMX_NATIVE_CALL get_user_ammo(AMX *amx, cell *params){
 		case DODW_KAR:
 		case DODW_SCOPED_KAR:
 		case DODW_ENFIELD:
-			return *( (int*)pPlayer->pEdict->pvPrivateData + 56+LINUXOFFSET );
+			return *( (int*)pPlayer->pEdict->pvPrivateData + 54+LINUXOFFSET );
 			break;
 
 		//55,285,317

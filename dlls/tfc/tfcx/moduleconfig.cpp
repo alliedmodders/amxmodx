@@ -288,14 +288,14 @@ void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 	else{
 		if ( e->v.owner && e->v.owner->v.flags& (FL_CLIENT | FL_FAKECLIENT) ){
 			CPlayer *pPlayer = GET_PLAYER_POINTER(e->v.owner);
-		
-			for ( int i=0;i<MAX_TRACE;i++){
-				if ( util_strncmp( traceData[i].szTa,traceData[i].start ? STRING(e->v.classname)+traceData[i].start :  STRING(e->v.classname) ,traceData[i].stop) ){
+			int i;
+			for ( i=0;i<MAX_TRACE;i++){
+				if ( util_strncmp( traceData[i].szTag,traceData[i].start ? STRING(e->v.classname)+traceData[i].start :  STRING(e->v.classname) ,traceData[i].stop) ){
 					if ( traceData[i].iAction & ACT_NADE_SHOT  ){
 						pPlayer->saveShot(traceData[i].iId);
 					}
 					if ( traceData[i].iAction & ACT_NADE_PUT ){
-						g_grenades.put(e,traceData[i].fDel,traceData[i].iId,GET_PLAYER_POINTER(e->v.owner));
+						g_grenades.put(e,traceData[i].fDel,traceData[i].iId,pPlayer);
 					}
 					break;
 				}

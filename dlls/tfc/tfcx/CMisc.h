@@ -99,7 +99,7 @@ struct weaponsVault {
 
 struct traceVault {
 	char * szName;
-	char * szTa;
+	char szTag[6];
 	int iId;
 	int iAction;
 	float fDel;

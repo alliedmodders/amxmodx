@@ -796,6 +796,41 @@ static cell AMX_NATIVE_CALL get_plugin(AMX *amx, cell *params) /* 11 param */
   return -1;
 }
 
+static cell AMX_NATIVE_CALL amx_md5(AMX *amx, cell *params)
+{
+	int len = 0;
+	char *str = get_amxstring(amx, params[1], 0, len);
+	char buffer[33];
+
+	MD5 md5;
+	md5.update((unsigned char *)str, len);
+	md5.finalize();
+	md5.hex_digest(buffer);
+
+	return set_amxstring(amx, params[2], buffer, 32);
+}
+
+static cell AMX_NATIVE_CALL amx_md5_file(AMX *amx, cell *params)
+{
+	int len = 0;
+	char *str = get_amxstring(amx, params[1], 0, len);
+	char buffer[33];
+
+	FILE *fp = fopen(str, "rb");
+	if (!fp)
+	{
+		amx_RaiseError(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	MD5 md5;
+	md5.update(fp);			//closes for you
+	md5.finalize();
+	md5.hex_digest(buffer);
+
+	return set_amxstring(amx, params[2], buffer, 32);
+}
+
 static cell AMX_NATIVE_CALL get_pluginsnum(AMX *amx, cell *params)
 {
   return g_plugins.getPluginsNum();
@@ -2749,5 +2784,7 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "get_lang",				get_lang },
   { "register_dictionary",	register_dictionary },
   { "lang_exists",			lang_exists },
+  { "md5",				amx_md5 },
+  { "md5_file",			amx_md5_file },
   { NULL, NULL }
 };

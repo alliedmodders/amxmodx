@@ -35,14 +35,28 @@
 #define LANG_SERVER 0
 #define LANG_PLAYER -1
 
+struct md5Pair
+{
+	String file;
+	String val;
+};
+
+struct keyEntry
+{
+	String key;
+	uint32_t hash;
+};
+
+struct sKeyDef
+{
+	sKeyDef() { key = -1; def = 0; }
+	~sKeyDef() { if (def) delete def; }
+	int key;
+	String *def;
+};
+
 class CLangMngr
 {
-	struct sKeyDef
-	{
-		const char *key;
-		const char *def;
-	};
-
 	class CLang
 	{
 	public:
@@ -51,7 +65,7 @@ class CLangMngr
 		~CLang();
 
 		const char *GetDef(const char *key);
-		void MergeDefinitions(CVector<sKeyDef> & vec);
+		void MergeDefinitions(CQueue <sKeyDef*> & vec);
 		void Clear();
 
 		friend bool operator == (const CLang &left, const char *right)
@@ -59,9 +73,9 @@ class CLangMngr
 			return strcmp(left.m_LanguageName, right)==0 ? true : false;
 		}
 		const char *GetName() { return m_LanguageName; }
-		void Dump();
 		bool Save(FILE *fp);
 		bool Load(FILE *fp);
+		void SetMngr(CLangMngr *l) { lman = l; }
 	private:
 
 		static uint32_t MakeHash(const char *src, bool makeLower = false);
@@ -69,56 +83,62 @@ class CLangMngr
 		class LangEntry
 		{
 			uint32_t m_DefHash;
-			uint32_t m_KeyHash;
-			char *m_pKey;
-			char *m_pDef;
-			void SetKey(const char *pKey);
-			void SetDef(const char *pDef);
+			int key;
+			String m_pDef;
 		public:
+			void SetKey(int key);
+			void SetDef(const char *pDef);
 			uint32_t GetDefHash();
-			uint32_t GetKeyHash();
-			const char *GetKey();
+
+			int GetKey();
 			const char *GetDef();
 
 			LangEntry();
-			LangEntry(const char *pKey);
-			LangEntry(const char *pKey, const char *pDef);
+			LangEntry(int key);
+			LangEntry(int key, const char *pDef);
 			LangEntry(const LangEntry &other);
-
-			void operator= (const char *pNewDef);
-			bool operator== (uint32_t hash);
 
 			void Clear();
 		};
 
-		LangEntry & GetEntry(const char *key);
-		typedef CVector<LangEntry>	LookUpVec;
+		LangEntry * GetEntry(int key);
+		typedef CVector<LangEntry*>	LookUpVec;
 		typedef LookUpVec::iterator	LookUpVecIter;
 
 		char m_LanguageName[3];
 
 		LookUpVec m_LookUpTable;
+		CLangMngr *lman;
 	};
 
-	void MergeDefinitions(const char *lang, CVector<sKeyDef> &tmpVec);
+	void MergeDefinitions(const char *lang, CQueue <sKeyDef*> &tmpVec);
 	static size_t strip(char *str, char *newstr, bool makelower=false);
 
-	typedef CVector<CLang> LangVec;
-	typedef LangVec::iterator LangVecIter;
+	typedef CVector<CLang*> LangVec;
+	typedef CVector<CLang*>::iterator LangVecIter;
 	
 	LangVec m_Languages;
+	CVector<md5Pair *> FileList;
+	CVector<keyEntry*> KeyList;
 
-	CLang & GetLang(const char *name);
+	CLang * GetLang(const char *name);
 
 	int m_CurGlobId;
 public:
 	int MergeDefinitionFile(const char *file);
-	void Dump();
 	const char *GetDef(const char *langName, const char *key);
 	const char *Format(const char *src, ...);
 	char *FormatAmxString(AMX *amx, cell *params, int parm, int &len);
 	bool Save(const char *filename);
 	bool Load(const char *filename);
+	bool LoadCache(const char *filename);
+	bool SaveCache(const char *filename);
+	int GetKeyEntry(String &key);
+	int GetKeyEntry(const char *key);
+	int GetKeyHash(int key);
+	const char *GetKey(int key);
+	int AddKeyEntry(String &key);
+	uint32_t MakeHash(const char *src, bool makeLower);
 
 	int GetLangsNum();
 	const char *GetLangName(int langId);
@@ -127,6 +147,9 @@ public:
 	// When a language id in a format string in FormatAmxString is 0, the glob id decides which language to take.
 	void SetDefLang(int id);
 	void Clear();
+
+	CLangMngr();
+	~CLangMngr();
 };
 
 #endif //_INCLUDE_CLANG_H

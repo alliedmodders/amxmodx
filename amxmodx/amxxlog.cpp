@@ -106,7 +106,7 @@ void CLog::CreateNewFile()
 	fclose(fp);
 }
 
-void CLog::UseFile(const CString &fileName)
+void CLog::UseFile(const String &fileName)
 {
 	m_LogFile.assign(build_pathname("%s/%s", g_log_dir.c_str(), fileName.c_str()));
 }

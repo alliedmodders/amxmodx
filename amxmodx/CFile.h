@@ -30,7 +30,7 @@
 */
 
 #include <stdio.h>
-#include "CString.h"
+#include "String.h"
 
 // *****************************************************
 // class File
@@ -44,11 +44,11 @@ public:
 	File( const char* n, const char* m );
 	~File( );
 	operator bool ( ) const;
-	friend File& operator<<( File& f, const CString& n );
+	friend File& operator<<( File& f, const String& n );
 	friend File& operator<<( File& f, const char* n );
 	friend File& operator<<( File& f, const char& c );
 	friend File& operator<<( File& f, int n );
-	friend File& operator>>( File& f, CString& n );
+	friend File& operator>>( File& f, String& n );
 	friend File& operator>>( File& f, char* n );
 	int getline( char* buf, int sz );
 	File& skipWs( );

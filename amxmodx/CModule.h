@@ -69,7 +69,7 @@ struct amxx_module_info_s
 
 class CModule 
 {
-	CString m_Filename;				// Filename
+	String m_Filename;				// Filename
 	bool m_Metamod;					// Using metamod?
 	bool m_Amxx;					// Using new module interface?
 	module_info_s* m_InfoOld;		// module info (old module interface)

@@ -52,7 +52,7 @@ File::operator bool ( ) const
   return fp && !feof(fp);
 }
 
-File& operator<<( File& f, const CString& n )
+File& operator<<( File& f, const String& n )
 {
   if ( f ) fputs( n.c_str() , f.fp ) ;
   return f;
@@ -77,7 +77,7 @@ File& operator<<( File& f, const char& c )
   return f;
 }
 
-File& operator>>( File& f, CString& n )
+File& operator>>( File& f, String& n )
 {
   if ( !f ) return f;
   char temp[1024];

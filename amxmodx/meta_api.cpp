@@ -73,8 +73,8 @@ Grenades g_grenades;
 LogEventsMngr g_logevents;
 MenuMngr g_menucmds;
 CLangMngr g_langMngr;
-CString g_log_dir;
-CString g_mod_name;
+String g_log_dir;
+String g_mod_name;
 XVars g_xvars;
 bool g_bmod_cstrike;
 bool g_bmod_dod;
@@ -91,7 +91,7 @@ float g_auth_time;
 #ifdef MEMORY_TEST
 float g_next_memreport_time;
 unsigned int g_memreport_count;
-CString g_memreport_dir;
+String g_memreport_dir;
 bool g_memreport_enabled;
 #define MEMREPORT_INTERVAL 300.0f	/* 5 mins */
 #endif // MEMORY_TEST
@@ -218,8 +218,8 @@ int	C_Spawn( edict_t *pent ) {
   g_tasksMngr.registerTimers( &gpGlobals->time,	&mp_timelimit->value,  &g_game_timeleft		);
 
   //  ###### Load lang
-  g_langMngr.Load(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxx/data")));
-  g_langMngr.MergeDefinitionFile(build_pathname("%s/langnames.lng", get_localinfo("amxx_datadir", "addons/amxx/data")));
+  g_langMngr.LoadCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxx/data")));
+//  g_langMngr.Load(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxx/data")));
   // ######	Initialize commands	prefixes
   g_commands.registerPrefix( "amx" );
   g_commands.registerPrefix( "amxx"	);
@@ -402,6 +402,7 @@ void C_ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax )
   executeForwards(FF_PluginCfg);
 
   //  ###### Save lang
+  g_langMngr.SaveCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxx/data")));
   g_langMngr.Save(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxx/data")));
 
 // Correct time in Counter-Strike	and	other mods (except DOD)
@@ -461,6 +462,7 @@ void C_ServerDeactivate_Post() {
   g_vault.clear();
   g_xvars.clear();
   g_plugins.clear();
+  g_langMngr.SaveCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxx/data")));
   g_langMngr.Save(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxx/data")));
   g_langMngr.Clear();
   // last memreport

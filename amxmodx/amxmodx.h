@@ -41,8 +41,10 @@
 #include "mmgr/mmgr.h"
 #endif
 
+#include "md5.h"
 #include "CVector.h"
 #include "CList.h"
+#include "CQueue.h"
 #include "modules.h"
 #include "CString.h"
 #include "CPlugin.h"
@@ -115,7 +117,7 @@ void UTIL_ShowMenu( edict_t* pEntity, int slots, int time, char *menu, int mlen 
 #define GET_PLAYER_POINTER_I(i) (&g_players[i])
 
 struct WeaponsVault {
-  CString fullName;
+  String fullName;
   short int iId;
   short int ammoSlot;
 };
@@ -145,8 +147,8 @@ extern Grenades g_grenades;
 extern LogEventsMngr g_logevents;
 extern MenuMngr g_menucmds;
 extern CLangMngr g_langMngr;
-extern CString g_log_dir;
-extern CString g_mod_name;
+extern String g_log_dir;
+extern String g_mod_name;
 extern TeamIds g_teamsIds;
 extern Vault g_vault;
 extern CForwardMngr  g_forwards;

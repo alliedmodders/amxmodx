@@ -74,7 +74,7 @@ public:
 	{
 	private:
 		// plugin info
-		CString m_Path;
+		String m_Path;
 		PLUG_STATUS m_Status;
 		plugin_info_t *m_Info;
 		// Function tables

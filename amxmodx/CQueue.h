@@ -1,6 +1,7 @@
 /* AMX Mod X
 *
 * by the AMX Mod X Development Team
+*  originally developed by OLO
 *
 *
 *  This program is free software; you can redistribute it and/or modify it
@@ -28,25 +29,97 @@
 *  version.
 */
 
-#ifndef __AMXXLOG_H__
-#define __AMXXLOG_H__
+//by David "BAILOPAN" Anderson
+#ifndef _INCLUDE_CQUEUE_H
+#define _INCLUDE_CQUEUE_H
 
-class CLog
+template <class T>
+class CQueue
 {
-private:
-	String m_LogFile;
-	int m_LogType;
-
-	void GetLastFile(int &outMonth, int &outDay, String &outFilename);
-	void UseFile(const String &fileName);
 public:
-	CLog();
-	~CLog();
-	void CreateNewFile();
-	void CloseFile();
-	void MapChange();
-	void Log(const char *fmt, ...);
+	class CQueueItem
+	{
+	public:
+		CQueueItem(const T &i, CQueueItem *n)
+		{
+			item = i;
+			next = n;
+		}
+		CQueueItem *GetNext()
+		{
+			return next;
+		}
+		T & GetItem()
+		{
+			return item;
+		}
+		void SetNext(CQueueItem *n)
+		{
+			next = n;
+		}
+	private:
+		T item;
+		CQueueItem *next;
+	};
+public:
+	CQueue()
+	{
+		mSize = 0;
+		mFirst = NULL;
+		mLast = NULL;
+	}
+
+	bool empty()
+	{
+		return ((mSize==0)?true:false);
+	}
+
+	void push(const T &v)
+	{
+		CQueueItem *p = new CQueueItem(v, NULL);
+		if (empty())
+		{
+			mFirst = p;
+		} else {
+			mLast->SetNext(p);
+		}
+		mLast = p;
+		mSize++;
+	}
+
+	void pop()
+	{
+		if (mFirst == mLast)
+		{
+			delete mFirst;
+			mFirst = NULL;
+			mLast = NULL;
+		} else {
+			CQueueItem *p = mFirst->GetNext();
+			delete mFirst;
+			mFirst = p;
+		}
+		mSize--;
+	}
+
+	T & front()
+	{
+		return mFirst->GetItem();
+	}
+
+	T & back()
+	{
+		return mLast->GetItem();
+	}
+
+	unsigned int size()
+	{
+		return mSize;
+	}
+private:
+	CQueueItem *mFirst;
+	CQueueItem *mLast;
+	unsigned int mSize;
 };
 
-#endif // __AMXXLOG_H__
-
+#endif //_INCLUDE_CQUEUE_H

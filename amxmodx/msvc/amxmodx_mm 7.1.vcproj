@@ -25,7 +25,7 @@
 				AdditionalIncludeDirectories="&quot;C:\Hry\Half-Life\SDK\Multiplayer Source\pm_shared&quot;;&quot;C:\Hry\Half-Life\SDK\Multiplayer Source\dlls&quot;;&quot;C:\Hry\Half-Life\SDK\Multiplayer Source\engine&quot;;&quot;C:\Hry\Half-Life\SDK\Multiplayer Source\common&quot;;C:\Files\Programming\metamod\metamod"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;amxmodx_mm_EXPORTS"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="5"
 				StructMemberAlignment="3"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="amxmodx.h"
@@ -662,6 +662,9 @@
 				RelativePath="..\float.cpp">
 			</File>
 			<File
+				RelativePath="..\md5.cpp">
+			</File>
+			<File
 				RelativePath="..\meta_api.cpp">
 			</File>
 			<File
@@ -775,6 +778,12 @@
 				RelativePath="..\CPlugin.h">
 			</File>
 			<File
+				RelativePath="..\CQueue.h">
+			</File>
+			<File
+				RelativePath="..\CRList.h">
+			</File>
+			<File
 				RelativePath="..\CString.h">
 			</File>
 			<File
@@ -788,6 +797,9 @@
 			</File>
 			<File
 				RelativePath="..\fakemeta.h">
+			</File>
+			<File
+				RelativePath="..\md5.h">
 			</File>
 			<File
 				RelativePath="..\modules.h">

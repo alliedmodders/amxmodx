@@ -40,8 +40,8 @@
 class CCVar
 {
     cvar_t cvar;
-    CString name;
-    CString plugin;
+    String name;
+    String plugin;
 public:	
     CCVar( const char* pname, const char* pplugin, 
 		int pflags, float pvalue ) : name(pname) , plugin(pplugin ) {
@@ -68,9 +68,9 @@ class CPlayer
 public:
 	edict_t* pEdict;
 	
-	CString name;
-	CString ip;
-	CString team;
+	String name;
+	String ip;
+	String team;
 
 	bool initialized;
 	bool ingame;
@@ -98,7 +98,7 @@ public:
 	int death_killer;
 	int death_victim;
 	bool death_tk;
-	CString death_weapon;
+	String death_weapon;
 	
 	Vector lastTrace;
 	Vector thisTrace;
@@ -149,7 +149,7 @@ public:
 // class ForceObject
 // *****************************************************
 class ForceObject {
-    CString filename;
+    String filename;
     FORCE_TYPE type;
     Vector mins;
     Vector maxs;
@@ -203,7 +203,7 @@ public:
 // *****************************************************
 class CScript
 {
-	CString filename;
+	String filename;
 	AMX* amx;
 	void* code;
 public:
@@ -220,7 +220,7 @@ public:
 class TeamIds
 {
   struct TeamEle {
-    CString name;
+    String name;
     int id;
 	char tid;
 	static char uid;

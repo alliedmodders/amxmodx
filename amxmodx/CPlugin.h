@@ -59,10 +59,10 @@ public:
 	
 		AMX amx;
 		void* code;
-		CString name;
-		CString version;
-		CString title;
-		CString author;
+		String name;
+		String version;
+		String title;
+		String author;
 		int paused_fun;
 		int status;
 		CPlugin* next;

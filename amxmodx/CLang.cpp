@@ -29,9 +29,9 @@
 *  version.
 */
 
+#include <stdarg.h>
 #include "amxmodx.h"
 #include "CLang.h"
-
 
 #define LITIDX_NONE			0
 #define LITIDX_BRACKET		1
@@ -42,43 +42,45 @@
 #define INSERT_STRING		3
 #define INSERT_NEWLINE		4
 
-// dictionary format is Fast-Format-Hash-Lookup, v3
+void qdbg(const char *s, ...)
+{
+	va_list argptr;
+	FILE *dbg = fopen("c:\\beta.txt", "at");
+	va_start(argptr, s);
+	char buf[2048];
+	vsprintf(buf, s, argptr);
+	va_end(argptr);
+	fprintf(dbg, "%s", buf);
+	fclose(dbg);
+}
+
+// dictionary format is Fast-Format-Hash-Lookup, v4
 #define MAGIC_HDR			0x4646484C
+#define FFHL_VERSION		4
 
 /*
-	FORMAT:
-	Magic							(4 bytes)
-	Number of languages				(4 bytes)
-	LANGUAGE INFO TABLE
-		For every language:
-			Language Name			(2 bytes)
-			Absolut offset			(4 bytes)
-	LANGUAGES
-		For every language:
-			Number of entries				(4 bytes)
-
-			Offset to Definition Table		(4 bytes)
-			Length of Definition Table		(4 bytes)
-
-			Offset to Reverse Lookup Table	(4 bytes)
-			Size of Reverse Lookup Table	(4 bytes)
-
-
-			LOOK UP TABLE
-				For every entry:
-					Key hash				(4 bytes)
-					Definition hash			(4 bytes)
-					Definition offset		(4 bytes)		(into the Def table)
-					Key offset				(4 bytes)		(into the Rev table)
-			DEFINITION TABLE
-				For every entry:
-					Definition length		(2 bytes)
-					Definition				(variable size)
-			REVERSE LOOKUP TABLE
-				For every entry:
-					Key length				(1 byte)
-					Key						(variable size)
-*/
+FORMAT:
+Magic				4bytes
+Version				1byte
+Number of Languages		4bytes
+LANG INFO TABLE[]		
+	Language Name		2bytes
+	Offset			4bytes
+KEY TABLE[]
+	Key Hash		4bytes
+	Key Lookup Offset	4bytes
+LANGUAGES TABLE[]
+	Language[]
+		Key Hash #	4bytes (virtual # in hash table, 0 indexed)
+		Def Hash	4bytes
+		Def Offset	4bytes
+KEY LOOKUP TABLE[]
+	Key length		1byte
+	Key string		variable
+DEF LOOKUP TABLE[]
+	Def length		2bytes
+	Def string		variable
+	*/
 
 /******** CRC & Strip *********/
 const uint32_t CRCTable[256] = {
@@ -136,6 +138,15 @@ uint32_t CLangMngr::CLang::MakeHash(const char *src, bool makeLower)
 	return ~crc;
 }
 
+uint32_t CLangMngr::MakeHash(const char *src, bool makeLower)
+{
+	uint32_t crc = 0xFFFFFFFF;
+	
+	while (*src)
+		crc = ((crc>>8)&0xFFFFFFFF)^CRCTable[(crc^ (makeLower ? tolower(*src++) : *src++) )&0xFF];
+	
+	return ~crc;
+}
 
 // strip the whitespaces at the beginning and the end of a string
 // also convert to lowercase if needed
@@ -183,34 +194,28 @@ uint32_t CLangMngr::CLang::LangEntry::GetDefHash()
 	return m_DefHash;
 }
 
-uint32_t CLangMngr::CLang::LangEntry::GetKeyHash()
-{
-	return m_KeyHash;
-}
-
-const char *CLangMngr::CLang::LangEntry::GetKey()
-{
-	return m_pKey;
-}
-
 const char *CLangMngr::CLang::LangEntry::GetDef()
 {
-	return m_pDef;
+	return m_pDef.c_str();
 }
 
+int CLangMngr::CLang::LangEntry::GetKey()
+{ 
+	return 0;
+}
 
 CLangMngr::CLang::LangEntry::LangEntry()
 {
 	Clear();
 }
 
-CLangMngr::CLang::LangEntry::LangEntry(const char *pKey)
+CLangMngr::CLang::LangEntry::LangEntry(int pKey)
 {
 	Clear();
 	SetKey(pKey);
 }
 
-CLangMngr::CLang::LangEntry::LangEntry(const char *pKey, const char *pDef)
+CLangMngr::CLang::LangEntry::LangEntry(int pKey, const char *pDef)
 {
 	Clear();
 	SetKey(pKey);
@@ -220,42 +225,24 @@ CLangMngr::CLang::LangEntry::LangEntry(const char *pKey, const char *pDef)
 CLangMngr::CLang::LangEntry::LangEntry(const LangEntry &other)
 {
 	Clear();
-	SetKey(other.m_pKey);
-	SetDef(other.m_pDef);
-}
-
-
-void CLangMngr::CLang::LangEntry::operator= (const char *pNewDef)
-{
-	SetDef(pNewDef);
-}
-
-bool CLangMngr::CLang::LangEntry::operator== (uint32_t hash)
-{
-	return m_KeyHash == hash;
+	SetKey(other.key);
+	SetDef(other.m_pDef.c_str());
 }
 
 void CLangMngr::CLang::LangEntry::Clear()
 {
-	m_pKey = NULL;
-	m_pDef = NULL;
-	m_KeyHash = 0;
-	m_DefHash = 0;
+	m_pDef.clear();
+	key = -1;
 }
 
-void CLangMngr::CLang::LangEntry::SetKey(const char *pKey)
+void CLangMngr::CLang::LangEntry::SetKey(int pkey)
 {
-	delete [] m_pKey;
-	m_pKey = new char[strlen(pKey)+1];
-	strcpy(m_pKey, pKey);
-	m_KeyHash = MakeHash(pKey, true);
+	key = pkey;
 }
 
 void CLangMngr::CLang::LangEntry::SetDef(const char *pDef)
 {
-	delete [] m_pDef;
-	m_pDef = new char[strlen(pDef)+1];
-	strcpy(m_pDef, pDef);
+	m_pDef.assign(pDef);
 	m_DefHash = MakeHash(pDef);
 }
 
@@ -280,51 +267,65 @@ CLangMngr::CLang::~CLang()
 
 void CLangMngr::CLang::Clear()
 {
+	/*for (int i=0; i<m_LookUpTable.size(); i++)
+	{
+		if (m_LookUpTable[i])
+			delete m_LookUpTable[i];
+	}*/
 	m_LookUpTable.clear();
 }
 
-CLangMngr::CLang::LangEntry & CLangMngr::CLang::GetEntry(const char *key)
+CLangMngr::CLang::LangEntry * CLangMngr::CLang::GetEntry(int key)
 {
-	LookUpVecIter iter;
-	uint32_t hash = MakeHash(key, true);
-	for (iter = m_LookUpTable.begin(); iter != m_LookUpTable.end(); ++iter)
-		if (*iter == hash)
+	LangEntry *e = 0;
+	unsigned int i = 0;
+	uint32_t hash = lman->GetKeyHash(key);
+	for (i=0; i<m_LookUpTable.size(); i++)
+	{
+		e = m_LookUpTable.at(i);
+		if (lman->GetKeyHash(e->GetKey()) == hash)
 			break;
-	if (iter != m_LookUpTable.end())
-		return *iter;
+	}
+	if (i < m_LookUpTable.size())
+		return m_LookUpTable.at(i);
 	
-	m_LookUpTable.push_back(LangEntry(key));
+	e = new LangEntry(key);
+	m_LookUpTable.push_back(e);
 	return m_LookUpTable.back();
 }
 
-void CLangMngr::CLang::MergeDefinitions(CVector<sKeyDef> &vec)
+void CLangMngr::CLang::MergeDefinitions(CQueue<sKeyDef*> &vec)
 {
-	for (CVector<sKeyDef>::iterator iter = vec.begin(); iter != vec.end(); ++iter)
+	const char *def = 0;
+	int key = -1;
+	while (!vec.empty())
 	{
-		LangEntry & entry = GetEntry(iter->key);
-		if (entry.GetDefHash() != MakeHash(iter->def))
-			entry = iter->def;
+		key = vec.front()->key;
+		def = vec.front()->def->c_str();
+		LangEntry *entry = GetEntry(key);
+		if (entry->GetDefHash() != MakeHash(def))
+		{
+			entry->SetDef(def);
+		}
+		delete vec.front();
+		vec.pop();
 	}
 }
-
-void CLangMngr::CLang::Dump()
-{
-	LookUpVecIter iter;
-	for (iter = m_LookUpTable.begin(); iter != m_LookUpTable.end(); ++iter)
-		printf(" %s(%d)=%s(%d)\n", iter->GetKey(), iter->GetKeyHash(), iter->GetDef(), iter->GetDefHash());
-}
-
 
 const char * CLangMngr::CLang::GetDef(const char *key)
 {
-	static char nfind[1024];
-	uint32_t hash = MakeHash(key, true);
-	for (LookUpVecIter iter = m_LookUpTable.begin(); iter != m_LookUpTable.end(); ++iter)
+	static char nfind[1024] = "ML_NOTFOUND";
+	int ikey = lman->GetKeyEntry(key);
+	if (ikey == -1)
+		return nfind;
+	for (unsigned int i = 0; i<m_LookUpTable.size(); i++)
 	{
-		if (*iter == hash)
-			return iter->GetDef();
+		qdbg("Key: %d\tLookup: %d\tString: %s\n", 
+			ikey, m_LookUpTable[i]->GetKey(), m_LookUpTable[i]->GetDef());
+		if (m_LookUpTable[i]->GetKey() == ikey)
+			return m_LookUpTable[i]->GetDef();
 	}
-	return nfind;
+	return "ML_LNOTFOUND";
 }
 
 
@@ -336,143 +337,84 @@ struct OffsetPair
 // Assumes fp is set to the right position
 bool CLangMngr::CLang::Save(FILE *fp)
 {
-	uint32_t tmpu32;
-
-	long startOffset = ftell(fp);
-
-	tmpu32 = m_LookUpTable.size();
-	fflush(fp);
-	// number of entries
-	fwrite((void*)&tmpu32, sizeof(tmpu32), 1, fp);
-
-	// write fields that will be filled later
-	tmpu32 = 0;
-	// offset to definition table
-	fwrite((void*)&tmpu32, sizeof(tmpu32), 1, fp);
-	// size of definition table
-	fwrite((void*)&tmpu32, sizeof(tmpu32), 1, fp);
-	// offset to rev lookup table
-	fwrite((void*)&tmpu32, sizeof(tmpu32), 1, fp);
-	// size of rev lookup table
-	fwrite((void*)&tmpu32, sizeof(tmpu32), 1, fp);
-	uint32_t dtb, rtb;
-
-	fflush(fp);
-	// Write the lookup table
-	for (LookUpVecIter iter = m_LookUpTable.begin(); iter != m_LookUpTable.end(); ++iter)
-	{
-		uint32_t ltbE[4] = {
-			iter->GetKeyHash(),
-			iter->GetDefHash(),
-			0,					// def offset
-			0					// key offset
-		};
-		fwrite((void*)ltbE, sizeof(uint32_t), 4, fp);
-	}
-
-	// Write the definition table
-	dtb = ftell(fp);
-	CVector<OffsetPair> offsetVec;
-	offsetVec.reserve(m_LookUpTable.size());
-	OffsetPair tmp;
-	tmp.keyOffset = 0;
-	for (LookUpVecIter iter = m_LookUpTable.begin(); iter != m_LookUpTable.end(); ++iter)
-	{
-		tmp.defOffset = ftell(fp);
-		offsetVec.push_back(tmp);
-		uint16_t defLength = strlen(iter->GetDef());
-		fwrite((void*)&defLength, sizeof(defLength), 1, fp);
-		fwrite((void*)iter->GetDef(), 1, defLength, fp);
-	}
-
-	// Write the reverse lookup table
-	rtb = ftell(fp);
-	CVector<OffsetPair>::iterator offsetVecIter = offsetVec.begin();
-	for (LookUpVecIter iter = m_LookUpTable.begin(); iter != m_LookUpTable.end(); ++iter)
-	{
-		offsetVecIter->keyOffset = ftell(fp);
-		++offsetVecIter;
-
-		char keyLength = strlen(iter->GetKey());
-		fwrite((void*)&keyLength, 1, 1, fp);
-		fwrite((void*)iter->GetKey(), 1, keyLength, fp);
-	}
-
-	// Write the offsets
-	fflush(fp);
-	int i = 0;
-	for (CVector<OffsetPair>::iterator iter = offsetVec.begin(); iter != offsetVec.end(); ++iter)
-	{
-		fseek(fp, startOffset + 20 + i*16 + 8, SEEK_SET);
-
-		tmpu32 = iter->defOffset;
-		fwrite((void*)&tmpu32, sizeof(tmpu32), 1, fp);
-		tmpu32 = iter->keyOffset;
-		fwrite((void*)&tmpu32, sizeof(tmpu32), 1, fp);
-		fflush(fp);
-		++i;
-	}
-
-	fseek(fp, 0, SEEK_END);
-	uint32_t dtbSize = rtb - dtb;
-	uint32_t rtbSize = ftell(fp) - rtb;
-	fseek(fp, startOffset + 4, SEEK_SET);
-	fwrite((void*)&dtb, sizeof(uint32_t), 1,fp);
-	fwrite((void*)&dtbSize, sizeof(uint32_t), 1,fp);
-	fwrite((void*)&rtb, sizeof(uint32_t), 1,fp);
-	fwrite((void*)&rtbSize, sizeof(uint32_t), 1,fp);
-	return true;
+	return false;
 }
 
 // assumes fp is set to the right position
 bool CLangMngr::CLang::Load(FILE *fp)
 {
-	uint32_t numOfEntries;
-	uint32_t dtb, rtb, dtbSize, rtbSize;
 
-	Clear();
-
-	fread((void*)&numOfEntries, sizeof(uint32_t), 1, fp);
-	fread((void*)&dtb, sizeof(uint32_t), 1, fp);
-	fread((void*)&dtbSize, sizeof(uint32_t), 1, fp);
-	fread((void*)&rtb, sizeof(uint32_t), 1, fp);
-	fread((void*)&rtbSize, sizeof(uint32_t), 1, fp);
-
-	char keyBuf[257];
-	char defBuf[4096];
-
-	for (unsigned int i = 0; i < numOfEntries; ++i)
-	{
-		uint32_t keyHash, defHash;
-		uint32_t tmp1, tmp2, tmp3;
-		fread((void*)&keyHash, sizeof(uint32_t), 1, fp);
-		fread((void*)&defHash, sizeof(uint32_t), 1, fp);
-		fread((void*)&tmp1, sizeof(uint32_t), 1, fp);
-		fread((void*)&tmp2, sizeof(uint32_t), 1, fp);
-		tmp3 = ftell(fp);
-		unsigned char tmpu8;
-		uint16_t tmpu16;
-		// definition
-		fseek(fp, tmp2, SEEK_SET);
-		fread((void*)&tmpu8, 1, 1, fp);
-		fread((void*)keyBuf, 1, tmpu8, fp);
-		keyBuf[tmpu8] = 0;
-		//key
-		fseek(fp, tmp1, SEEK_SET);
-		fread((void*)&tmpu16, 2, 1, fp);
-		fread((void*)defBuf, 1, tmpu16, fp);
-		defBuf[tmpu16] = 0;
-
-		// add to the entries
-		m_LookUpTable.push_back(LangEntry(keyBuf, defBuf));
-
-		// seek back
-		fseek(fp, tmp3, SEEK_SET);
-	}
 	return true;
 }
 
 /******** CLangMngr *********/
+
+CLangMngr::CLangMngr()
+{
+	Clear();
+}
+
+const char * CLangMngr::GetKey(int key)
+{
+	if (key < 0 || key >= (int)KeyList.size())
+		return 0;
+
+	return KeyList[key]->key.c_str();
+}
+
+int CLangMngr::GetKeyHash(int key)
+{
+	if (key < 0 || key >= (int)KeyList.size())
+		return 0;
+
+	return KeyList[key]->hash;
+}
+
+int CLangMngr::GetKeyEntry(const char *key)
+{
+	uint32_t hKey = MakeHash(key, true);
+	uint32_t cmpKey = 0;
+	unsigned int i = 0;
+
+	for (i = 0; i<KeyList.size(); i++)
+	{
+		cmpKey = KeyList[i]->hash;
+		if (hKey == cmpKey)
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+int CLangMngr::AddKeyEntry(String &key)
+{
+	uint32_t hKey = MakeHash(key.c_str(), true);
+
+	keyEntry *e = new keyEntry;
+	e->key.assign(key);
+	e->hash = hKey;
+	KeyList.push_back(e);
+
+	return (KeyList.size() - 1);
+}
+
+int CLangMngr::GetKeyEntry(String &key)
+{
+	uint32_t hKey = MakeHash(key.c_str(), true);
+	unsigned int i = 0;
+
+	for (i = 0; i<KeyList.size(); i++)
+	{
+		if (hKey == KeyList[i]->hash)
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
 
 const char *CLangMngr::Format(const char *src, ...)
 {
@@ -745,10 +687,11 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 	return outbuf;
 }
 
-void CLangMngr::MergeDefinitions(const char *lang, CVector<sKeyDef> &tmpVec)
+void CLangMngr::MergeDefinitions(const char *lang, CQueue<sKeyDef*> &tmpVec)
 {
-	CLang & language = GetLang(lang);
-	language.MergeDefinitions(tmpVec);
+	CLang * language = GetLang(lang);
+	if (language)
+		language->MergeDefinitions(tmpVec);
 }
 
 //this is the file parser for dictionary text files
@@ -757,220 +700,253 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 {
 	FILE *fp = fopen(file, "rt");
 	if (!fp)
-		return 0;
-	char buf[4096];
-	char language[3];
-	char bufstk[4096];
-
-	// Allocate enough memory to store everything
-	fseek(fp, 0, SEEK_END);
-	long fileSize = ftell(fp);
-	char *tempStorage = new char[fileSize];
-	fseek(fp, 0, SEEK_SET);
-	char *ptrStorage = tempStorage;
-
-	unsigned int i = 0, j = 0;
-	int litidx = LITIDX_NONE;
-	int stk = 0;
-	int max = 0;
-	int multiline = 0;
-	CLang lang;
-	CVector<sKeyDef> tmpVec;
-	sKeyDef tmpEntry;
-	while (fgets(buf, 4095, fp) != NULL)
 	{
-		j++;
-		size_t len=strlen(buf);
-		for (i=0; i<len; i++)
+		CVector<md5Pair *>::iterator iter;
+		for (iter=FileList.begin(); iter!=FileList.end(); iter++)
 		{
-			// be very careful not to mess up litidx assignments.
-			//  also stk assignments.
-			switch (litidx)
+			if ( (*iter)->file.compare(file) == 0 )
 			{
-			case LITIDX_NONE:
-				{
-					if (buf[i] == '[')
-					{
-						// Merge last language
-						if (!tmpVec.empty())
-						{
-							MergeDefinitions(language, tmpVec);
-							tmpVec.clear();
-						}
-						litidx = LITIDX_BRACKET;
-						stk = 0;
-					} else if (buf[i] == '=') {
-						bufstk[stk] = 0;
-						tmpEntry.key = ptrStorage;
-						ptrStorage += strip(bufstk, ptrStorage, true);
-						stk = 0;
-						bufstk[stk] = 0;
-						litidx = LITIDX_DEFINITION;
-					} else if (buf[i] == ':') {
-						bufstk[stk] = 0;
-						tmpEntry.key = ptrStorage;
-						ptrStorage += strip(bufstk, ptrStorage, true);
-						stk = 0;
-						bufstk[stk] = 0;
-						multiline = 1;
-						litidx = LITIDX_DEFINITION;
-					} else {
-						bufstk[stk++] = buf[i];
-					}
-					break;
-				}
-			case LITIDX_DEFINITION:
-				{
-					if (buf[i] == '\n' && !multiline)
-					{
-						bufstk[stk] = 0;
-						tmpEntry.def = ptrStorage;
-						tmpVec.push_back(tmpEntry);
-						ptrStorage += strip(bufstk, ptrStorage);
-						stk = 0;
-						bufstk[stk] = 0;
-						multiline = 0;
-						litidx = LITIDX_NONE;
-					} else if (buf[i] == '%') {
-						i++;
-						if (buf[i] == 's')
-						{
-							bufstk[stk++] = INSERT_STRING;
-						} else if (buf[i] == 'f') {
-							bufstk[stk++] = INSERT_FLOAT;
-						} else if (buf[i] == 'd') {
-							bufstk[stk++] = INSERT_NUMBER;
-						} else if (buf[i] == 'n') {
-							bufstk[stk++] = INSERT_NEWLINE;
-						} else {
-							bufstk[stk++] = '%';
-							bufstk[stk++] = buf[i];
-						}
-					} else if (buf[i] == ':' && multiline && i == 0) {
-						bufstk[stk] = 0;
-						tmpEntry.def = ptrStorage;
-						tmpVec.push_back(tmpEntry);
-						ptrStorage += strip(bufstk, ptrStorage);
-						stk = 0;
-						bufstk[stk] = 0;
-						//lang.MergeDefinition(key, def);
-						litidx = LITIDX_NONE;
-						multiline = 0;
-					} else {
-						if (stk < (sizeof(bufstk)-1))
-							bufstk[stk++] = buf[i];
-					}
-					break;
-				}
-			case LITIDX_BRACKET:
-				{
-					if (buf[i] == ']')
-					{
-						language[stk] = 0;
-						ptrStorage = tempStorage;			// reset storage pointer
-						stk = 0;
-						litidx = LITIDX_NONE;
-					} else {
-						if (stk < (sizeof(language)-1) && isalpha(buf[i]))
-							language[stk++] = tolower(buf[i]);
-					}
-					break;
-				}
+				char buf[33] = {0};
+				(*iter)->val.assign(buf);
+				break;
+			}	
+		}
+		return 0;
+	}
+	MD5 md5;
+	md5.update(fp);
+	md5.finalize();
+	char md5buffer[33];
+	md5.hex_digest(md5buffer);
+	bool foundFlag = false;
+	
+/*	CVector<md5Pair *>::iterator iter;
+	for (iter=FileList.begin(); iter!=FileList.end(); iter++)
+	{
+		if ( (*iter)->file.compare(file) == 0 )
+		{
+			if ( (*iter)->val.compare(md5buffer) == 0 )
+			{
+				return 2;
+			} else {
+				(*iter)->val.assign(md5buffer);
+				break;
 			}
+			foundFlag = true;
 		}
 	}
-	// finish last definition if no newline is at the end of file
-	if (litidx==LITIDX_DEFINITION)
+
+	if (!foundFlag)
 	{
-		bufstk[stk] = 0;
-		tmpEntry.def = ptrStorage;
-		tmpVec.push_back(tmpEntry);
-		ptrStorage += strip(bufstk, ptrStorage);
+		md5Pair *p = new md5Pair;
+		p->file.assign(file);
+		p->val.assign(md5buffer);
+		FileList.push_back(p);
+	}*/
+
+	fp = fopen(file, "rt");
+	if (!fp)
+	{
+		return 0;
 	}
-	// merge last language
-	if (!tmpVec.empty())
-		MergeDefinitions(language, tmpVec);
-	delete [] tempStorage;
+
+	// Allocate enough memory to store everything
+	bool multiline = 0;
+	int pos = 0, line = 0;
+	CQueue<sKeyDef*> Defq;
+	String buf;
+	char language[3];
+	sKeyDef *tmpEntry = NULL;
+
+	while (!feof(fp))
+	{
+		line++;
+		buf._fread(fp);
+		buf.trim();
+		if (buf[0] == 0)
+			continue;
+		if (buf[0] == '[' && buf.size() >= 3)
+		{
+			if (multiline)
+			{
+				AMXXLOG_Log("New section, multiline unterminated (file \"%s\" line %d)", file, line);
+				if (tmpEntry)
+					delete tmpEntry;
+				tmpEntry = 0;
+			}
+			if (!Defq.empty())
+			{
+				MergeDefinitions(language, Defq);
+			}
+			language[0] = buf[1];
+			language[1] = buf[2];
+			language[2] = 0;
+		} else if (buf.size() > 4) {
+			if (!multiline)
+			{
+				pos = buf.find('=');
+				if (pos > String::npos)
+				{
+					tmpEntry = new sKeyDef;
+					String key = buf.substr(0, pos);
+					String def = buf.substr(pos+1, def.size()-pos);
+					key.trim();
+					key.toLower();
+					int iKey = GetKeyEntry(key);
+					if (iKey == -1)
+						iKey = AddKeyEntry(key);
+					qdbg("key=%d\n", iKey);
+					tmpEntry->key = iKey;
+					tmpEntry->def = new String;
+					tmpEntry->def->assign(def.c_str());
+					tmpEntry->def->trim();
+					Defq.push(tmpEntry);
+					tmpEntry = 0;
+				} else {
+					pos = buf.find(':');
+					if (pos > String::npos)
+					{
+						tmpEntry = new sKeyDef;
+						String key = buf.substr(0, pos);
+						key.trim();
+						key.toLower();
+						int iKey = GetKeyEntry(key);
+						if (iKey == -1)
+							iKey = AddKeyEntry(key);
+						tmpEntry->key = iKey;
+						tmpEntry->def = new String;
+						multiline = true;
+					} else {
+						//user typed a line with no directives
+						AMXXLOG_Log("Invalid multi-lingual line (file \"%s\" line %d)", file, line);
+					}
+				}
+			} else {
+				if (buf[0] == ':')
+				{
+					Defq.push(tmpEntry);
+					tmpEntry = 0;
+					multiline = false;
+				} else {
+					tmpEntry->def->append(buf);
+				}
+			} // if !multiline
+		} //if - main
+	}
+
 	return 1;
 }
 
 // Find a CLang by name, if not found, add it
-CLangMngr::CLang & CLangMngr::GetLang(const char *name)
+CLangMngr::CLang * CLangMngr::GetLang(const char *name)
 {
 	LangVecIter iter;
-	for (iter = m_Languages.begin(); iter != m_Languages.end(); ++iter)
-		if (*iter == name)
-			break;
-	if (iter != m_Languages.end())
-		return *iter;
-
-	m_Languages.push_back(CLang(name));
-	return m_Languages.back();
-}
-
-void CLangMngr::Dump()
-{
-	LangVecIter iter;
-	for (iter = m_Languages.begin(); iter != m_Languages.end(); ++iter)
+	for (iter=m_Languages.begin(); iter!=m_Languages.end(); iter++)
 	{
-		printf("LANGUAGE: %s\n", iter->GetName());
-		iter->Dump();
+		if ( strcmp((*iter)->GetName(), name)==0 )
+			return (*iter);
 	}
+
+	CLang *p = new CLang(name);
+	p->SetMngr(this);
+
+	m_Languages.push_back(p);
+	return p;
 }
 
 const char *CLangMngr::GetDef(const char *langName, const char *key)
 {
-	CLang & lang = GetLang(langName);
-	return lang.GetDef(key);
+	CLang *lang = GetLang(langName);
+	if (lang)
+		return lang->GetDef(key);
+	return "";
 }
 
 bool CLangMngr::Save(const char *filename)
 {
-	FILE *fp = fopen(filename, "wb");
+	/*FILE *fp = fopen(filename, "wb");
+
 	if (!fp)
 		return false;
-	uint32_t tmpu32;
-	// Magic
-	tmpu32 = MAGIC_HDR;
-	fwrite((void*)&tmpu32, sizeof(tmpu32), 1, fp);
-	tmpu32 = m_Languages.size();
-	fwrite((void*)&tmpu32, sizeof(tmpu32), 1, fp);
-	// Write language info table
-	tmpu32 = 0;
-	for (LangVecIter iter = m_Languages.begin(); iter != m_Languages.end(); ++iter)
-	{
-		// name
-		fwrite((void*)iter->GetName(), 2, 1, fp);
-		// offset ( to be set later )
-		fwrite((void*)&tmpu32, sizeof(tmpu32), 1, fp);
-	}
-	fflush(fp);
-	CVector<uint32_t> langOffsets;
-	langOffsets.reserve(m_Languages.size());
 
-	// write the languages
-	for (LangVecIter iter1 = m_Languages.begin(); iter1 != m_Languages.end(); ++iter1)
+	uint32_t magic = MAGIC_HDR;
+	unsigned char version = FFHL_VERSION;
+	uint32_t langNum = m_Languages.size();
+	const char *langName = 0;
+
+	fwrite((void *)&magic, sizeof(uint32_t), 1, fp);
+	fwrite((void *)&version, sizeof(unsigned char), 1, fp);
+	fwrite((void *)&langNum, sizeof(uint32_t), 1, fp);
+
+	LangVecIter iter;
+	for (iter = m_Languages.begin(); iter!=m_Languages.end(); iter++)
 	{
-		langOffsets.push_back((uint32_t)ftell(fp));
-		if (!iter1->Save(fp))
-		{
-			fclose(fp);
-			return false;
-		}
-		// Make sure we are at the end of the file again
-		fseek(fp, 0, SEEK_END);
+		langName = (*iter)->GetName();
+		fwrite(langName, sizeof(char), 2, fp);
+
+	}*/
+	return false;
+}
+
+bool CLangMngr::SaveCache(const char *filename)
+{
+	FILE *fp = fopen(filename, "wb");
+	if (!fp)
+	{
+		return false;
 	}
 
-	// write the offsets
-	int i = 0;
-	for (CVector<uint32_t>::iterator iter2 = langOffsets.begin(); iter2 != langOffsets.end(); ++iter2)
+	CVector<md5Pair *>::iterator i;
+	short dictCount = FileList.size();
+	char len = 0;
+	
+	fwrite((void *)&dictCount, sizeof(short), 1, fp);
+
+	for (i=FileList.begin(); i!=FileList.end(); i++)
 	{
-		fseek(fp, 8 + i*6 + 2, SEEK_SET);
-		tmpu32 = *iter2;
-		fwrite((void*)&tmpu32, sizeof(tmpu32), 1, fp);
-		++i;
+		len = (*i)->file.size();
+		fwrite((void *)&len, sizeof(char), 1, fp);
+		fwrite((*i)->file.c_str(), sizeof(char), len, fp);
+		fwrite((*i)->val.c_str(), sizeof(char), 32, fp);
 	}
+
 	fclose(fp);
+
+	return true;
+}
+
+bool CLangMngr::LoadCache(const char *filename)
+{
+	FILE *fp = fopen(filename, "rb");
+	if (!fp)
+	{
+		return false;
+	}
+
+	short dictCount = 0;
+	char len = 0;
+	char buf[255];
+	char md5[34];
+	fread((void*)&dictCount, sizeof(short), 1, fp);
+	md5Pair *p = 0;
+
+
+	for (int i=1; i<=dictCount; i++)
+	{
+		fread((void*)&len, sizeof(char), 1, fp);
+		fread(buf, sizeof(char), len, fp);
+		buf[len] = 0;
+		fread(md5, sizeof(char), 32, fp);
+		md5[32] = 0;
+		p = new md5Pair;
+		p->file.assign(buf);
+		p->val.assign(md5);
+		FileList.push_back(p);
+		p = 0;
+	}
+
+	fclose(fp);
+
 	return true;
 }
 
@@ -978,47 +954,38 @@ bool CLangMngr::Load(const char *filename)
 {
 	Clear();
 
-	// open the file
-	FILE *fp = fopen(filename, "rb");
-	if (!fp)
-		return false;
-
-	uint32_t tmpu32;
-	// Check magic
-	fread((void*)&tmpu32, sizeof(uint32_t), 1, fp);
-	if (tmpu32 != MAGIC_HDR)
-		return false;
-
-	uint32_t numOfLangs;
-	fread((void*)&numOfLangs, sizeof(uint32_t), 1, fp);
-
-	// Read language info table
-	CVector<uint32_t> langOffsets;
-	langOffsets.reserve(numOfLangs);
-	for (uint32_t i = 0; i < numOfLangs; ++i)
-	{
-		char langName[3];
-		fread((void*)langName, 2, 1, fp);
-		langName[2] = 0;
-		GetLang(langName);
-		fread((void*)&tmpu32, sizeof(uint32_t), 1, fp);
-		langOffsets.push_back(tmpu32);
-	}
-
-	// read languages
-	for (uint32_t i = 0; i < numOfLangs; ++i)
-	{
-		fseek(fp, langOffsets[i], SEEK_SET);
-		if (!m_Languages[i].Load(fp))
-			return false;
-	}
-	fclose(fp);
 	return true;
+}
+
+CLangMngr::~CLangMngr()
+{
+	Clear();
 }
 
 void CLangMngr::Clear()
 {
+	/*int i = 0;
+	for (i=0; i<m_Languages.size(); i++)
+	{
+		if (m_Languages[i])
+			delete m_Languages[i];
+	}
+
+	for (i=0; i<FileList.size(); i++)
+	{
+		if (FileList[i])
+			delete FileList[i];
+	}
+
+	for (i=0; i<KeyList.size(); i++)
+	{
+		if (KeyList[i])
+			delete KeyList[i];
+	}*/
+
 	m_Languages.clear();
+	KeyList.clear();
+	FileList.clear();
 }
 
 int CLangMngr::GetLangsNum()
@@ -1028,7 +995,17 @@ int CLangMngr::GetLangsNum()
 
 const char *CLangMngr::GetLangName(int langId)
 {
-	return m_Languages.at(langId).GetName();
+	int i = 0;
+	LangVecIter iter;
+	for (iter=m_Languages.begin(); iter!=m_Languages.end(); iter++)
+	{
+		if (i == langId)
+		{
+			return (*iter)->GetName();
+		}
+		i++;
+	}
+	return "";
 }
 
 bool CLangMngr::LangExists(const char *langName)
@@ -1041,9 +1018,13 @@ bool CLangMngr::LangExists(const char *langName)
 			break;
 	}
 	
-	for (LangVecIter iter = m_Languages.begin(); iter != m_Languages.end(); ++iter)
-		if (*iter == buf)
+	LangVecIter iter;
+	for (iter=m_Languages.begin(); iter!=m_Languages.end(); iter++)
+	{
+		if ( strcmp((*iter)->GetName(), langName)==0 )
 			return true;
+		iter++;
+	}
 	return false;
 }
 

@@ -52,10 +52,10 @@ public:
 		friend class CmdMngr;
 		CPluginMngr::CPlugin* plugin;
 		CmdMngr* parent;
-		CString command;
-		CString argument;
-		CString commandline;
-		CString info;
+		String command;
+		String argument;
+		String commandline;
+		String info;
 		bool listable;
 		int function;
 		int flags;
@@ -100,7 +100,7 @@ private:
 	CmdLink* clcmdlist;
 
 	struct CmdPrefix {
-		CString name;
+		String name;
 		CmdMngr* parent;
 		CmdLink* list;
 		CmdPrefix* next;

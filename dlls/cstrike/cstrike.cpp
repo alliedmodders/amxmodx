@@ -346,6 +346,51 @@ static cell AMX_NATIVE_CALL cs_set_weapon_burstmode(AMX *amx, cell *params) // c
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL cs_get_user_armor(AMX *amx, cell *params) // cs_get_user_armor(index, CsArmorType:&armortype); = 2 params
+{
+	// Return how much armor and set reference of what type...
+	// params[1] = user index
+	// params[2] = byref, set armor type here (no armor/vest/vest+helmet)
+
+	CHECK_PLAYER(params[1]);
+
+	// Make into edict pointer
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+
+	cell *armorTypeByRef = MF_GetAmxAddr(amx, params[2]);
+	*armorTypeByRef = *((int *)pPlayer->pvPrivateData + OFFSET_ARMORTYPE);
+
+	return pPlayer->v.armorvalue;
+}
+
+static cell AMX_NATIVE_CALL cs_set_user_armor(AMX *amx, cell *params) // cs_set_user_armor(index, armorvalue, CsArmorType:armortype); = 3 params
+{
+	// Set armor and set what type and send a message to client...
+	// params[1] = user index
+	// params[2] = armor value
+	// params[3] = armor type (no armor/vest/vest+helmet)
+
+	CHECK_PLAYER(params[1]);
+
+	// Make into edict pointer
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+
+	// Set armor value
+	pPlayer->v.armorvalue = params[2];
+
+	// Set armor type
+	*((int *)pPlayer->pvPrivateData + OFFSET_ARMORTYPE) = params[3];
+	
+	if (params[3] == CS_ARMOR_KEVLAR || params[3] == CS_ARMOR_ASSAULTSUIT) {
+		// And send appropriate message
+		MESSAGE_BEGIN(params[1], GET_USER_MSG_ID(PLID, "ItemPickup", NULL), NULL, pPlayer);
+		WRITE_STRING(params[3] == CS_ARMOR_KEVLAR ? "item_kevlar" : "item_assaultsuit");
+		MESSAGE_END();
+	}
+
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL cs_get_user_vip(AMX *amx, cell *params) // cs_get_user_vip(index); = 1 param
 {
 	// Is user vip?
@@ -1193,6 +1238,8 @@ AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_user_tked",			cs_set_user_tked},
 	{"cs_get_user_driving",			cs_get_user_driving},
 	{"cs_get_user_stationary",		cs_get_user_stationary},
+	{"cs_get_user_armor",			cs_get_user_armor},
+	{"cs_set_user_armor",			cs_set_user_armor},
 	//------------------- <-- max 19 characters!
 	{NULL,							NULL}
 };

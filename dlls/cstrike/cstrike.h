@@ -63,6 +63,7 @@
 // "player" entities
 #if !defined __amd64__
 	// 32 bit offsets here
+	#define OFFSET_ARMORTYPE			112 + EXTRAOFFSET
 	#define OFFSET_TEAM					114 + EXTRAOFFSET
 	#define OFFSET_CSMONEY				115 + EXTRAOFFSET
 	#define OFFSET_PRIMARYWEAPON		116 + EXTRAOFFSET
@@ -100,6 +101,7 @@
 	#define OFFSET_HOSTAGEID			487 + EXTRAOFFSET
 #else
 	// Amd64 offsets here
+	//#define OFFSET_ARMORTYPE			??? + EXTRAOFFSET // need to find this one out! :-)
 	#define OFFSET_TEAM					139 + EXTRAOFFSET // +25
 	#define OFFSET_CSMONEY				140 + EXTRAOFFSET // +25
 	#define OFFSET_PRIMARYWEAPON		141 + EXTRAOFFSET // +25
@@ -204,6 +206,10 @@
 
 #define AMD64_STATIONARY_NO				2
 #define AMD64_STATIONARY_YES			3
+
+#define CS_ARMOR_NONE					0
+#define CS_ARMOR_KEVLAR					1
+#define CS_ARMOR_ASSAULTSUIT			2
 
 enum CS_Internal_Models {
 	CS_DONTCHANGE = 0,

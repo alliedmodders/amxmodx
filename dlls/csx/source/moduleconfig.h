@@ -332,7 +332,7 @@
 // #define FN_DropToFloor_Post					DropToFloor_Post
 // #define FN_WalkMove_Post						WalkMove_Post
 // #define FN_SetOrigin_Post					SetOrigin_Post
-// #define FN_EmitSound_Post					EmitSound_Post
+#define FN_EmitSound_Post					EmitSound_Post
 // #define FN_EmitAmbientSound_Post				EmitAmbientSound_Post
 #define FN_TraceLine_Post					TraceLine_Post
 // #define FN_TraceToss_Post					TraceToss_Post

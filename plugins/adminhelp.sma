@@ -34,6 +34,7 @@
 
 #include <amxmodx>
 
+#define DISPLAY_MSG // Comment to disable message on join
 #define HELPAMOUNT 10 // Number of commands per page
 
 public plugin_init() {
@@ -42,8 +43,11 @@ public plugin_init() {
   register_concmd("amx_help","cmdHelp",0,"<page> [nr of cmds (only for server)] - displays this help")
 }
 
-public client_putinserver(id)
-  setHelp(id)
+#if defined DISPLAY_MSG
+public client_putinserver(id) {
+  set_task(15.0,"dispInfo",id)
+}
+#endif
 
 public cmdHelp(id,level,cid) {
 	new arg1[8], flags = get_user_flags(id)
@@ -82,18 +86,17 @@ public cmdHelp(id,level,cid) {
 	return PLUGIN_HANDLED
 }
 
+#if defined DISPLAY_MSG
 public dispInfo(id) {
   client_print(id,print_chat,"%L",id,"TYPE_HELP")
   new nextmap[32]
   get_cvar_string("amx_nextmap",nextmap,31)
-  if (get_cvar_float("mp_timelimit")){
+  if (get_cvar_float("mp_timelimit")) {
     new timeleft = get_timeleft()
-    if (timeleft > 0){
+    if (timeleft > 0) {
       client_print(id,print_chat, "%L" , id, "TIME_INFO_1", timeleft / 60, timeleft % 60,nextmap)
     }
   }
   client_print(id,print_chat,"%L",id,"TIME_INFO_2",nextmap)
 }
-
-setHelp(id)
-  set_task(15.0,"dispInfo",id)
+#endif

@@ -2066,12 +2066,14 @@ static cell AMX_NATIVE_CALL is_module_loaded(AMX *amx, cell *params)
 	// param1: name
 	int len;
 	char *name = get_amxstring(amx, params[1], 0, len);
+	int id = 0;
 	for (CList<CModule>::iterator iter = g_modules.begin(); iter; ++iter)
 	{
 		if (stricmp((*iter).getName(), name) == 0)
-			return 1;
+			return id;
+		++id;
 	}
-	return 0;
+	return -1;
 }
 
 // native is_plugin_loaded(const name[]);
@@ -2080,12 +2082,14 @@ static cell AMX_NATIVE_CALL is_plugin_loaded(AMX *amx, cell *params)
 	// param1: name
 	int len;
 	char *name = get_amxstring(amx, params[1], 0, len);
+	int id = 0;
 	for (CPluginMngr::iterator iter = g_plugins.begin(); iter; ++iter)
 	{
 		if (stricmp((*iter).getName(), name) == 0)
-			return 1;
+			return id;
+		++id;
 	}
-	return 0;
+	return -1;
 }
 // native get_modulesnum();
 static cell AMX_NATIVE_CALL get_modulesnum(AMX *amx, cell *params)

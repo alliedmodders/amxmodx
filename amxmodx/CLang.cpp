@@ -584,55 +584,64 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 					if (*def == '%')
 					{
 						++def;
-						static char format[32];
-						format[0] = '%';
-						char *ptr = format+1;
-						while (ptr-format<sizeof(format) && !isalpha(*ptr++ = *def++))
-							/*nothing*/;
-						ZEROTERM(format);
-
-						*ptr = 0;
-						switch ( *(ptr-1) )
+						if (*def == '%' || *def == 0)
 						{
-						case 's':
-							{
-								static char tmpString[4096];
-								char *tmpPtr = tmpString;
-								NEXT_PARAM();
-								cell *tmpCell = get_amxaddr(amx, params[parm++]);
-								while (tmpPtr-tmpString < sizeof(tmpString) && *tmpCell)
-									*tmpPtr++ = *tmpCell++;
-
-								*tmpPtr = 0;
-								sprintf(outptr, format, tmpString);
-								ZEROTERM(outbuf);
-								break;
-							}
-						case 'g':
-						case 'f':
-							{
-								NEXT_PARAM();
-								sprintf(outptr, format, *(REAL*)get_amxaddr(amx, params[parm++]));
-								ZEROTERM(outbuf);
-								break;
-							}
-						case 'i':
-						case 'd':
-						case 'c':
-							{
-								NEXT_PARAM();
-								sprintf(outptr, format, (int)*get_amxaddr(amx, params[parm++]));
-								ZEROTERM(outbuf);
-								break;
-							}
-						default:
-							{
-								CHECK_OUTPTR(strlen(format)+1);
-								strcpy(outptr, format);
-								break;
-							}
+							*outptr++ = '%';
+							++def;
 						}
-						outptr += strlen(outptr);
+						else
+						{
+							static char format[32];
+							format[0] = '%';
+							char *ptr = format+1;
+							
+							while (ptr-format<sizeof(format) && !isalpha(*ptr++ = *def++))
+								/*nothing*/;
+							ZEROTERM(format);
+
+							*ptr = 0;
+							switch ( *(ptr-1) )
+							{
+							case 's':
+								{
+									static char tmpString[4096];
+									char *tmpPtr = tmpString;
+									NEXT_PARAM();
+									cell *tmpCell = get_amxaddr(amx, params[parm++]);
+									while (tmpPtr-tmpString < sizeof(tmpString) && *tmpCell)
+										*tmpPtr++ = *tmpCell++;
+
+									*tmpPtr = 0;
+									sprintf(outptr, format, tmpString);
+									ZEROTERM(outbuf);
+									break;
+								}
+							case 'g':
+							case 'f':
+								{
+									NEXT_PARAM();
+									sprintf(outptr, format, *(REAL*)get_amxaddr(amx, params[parm++]));
+									ZEROTERM(outbuf);
+									break;
+								}
+							case 'i':
+							case 'd':
+							case 'c':
+								{
+									NEXT_PARAM();
+									sprintf(outptr, format, (int)*get_amxaddr(amx, params[parm++]));
+									ZEROTERM(outbuf);
+									break;
+								}
+							default:
+								{
+									CHECK_OUTPTR(strlen(format)+1);
+									strcpy(outptr, format);
+									break;
+								}
+							}
+							outptr += strlen(outptr);
+						}
 					}
 					else if (*def == '^')
 					{

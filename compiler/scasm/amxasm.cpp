@@ -24,11 +24,10 @@
 
 std::string filename;
 std::string output_name;
+Compiler Program;
 
 int main(int argc, char **argv)
-{
-	Compiler Program;
-
+{	
 	get_options(argc, argv, Program);
 
 	if (filename.size() < 1)
@@ -76,6 +75,12 @@ void get_options(int argc, char **argv, Compiler &Prog)
 					}
 					break;
 				}
+			case 'c':
+				{
+					Program.SetPack();
+					opt_flag = 0;
+					break;
+				}
 			case 'v':
 				{
 					opt_flag = 0;	/* no options expected */
@@ -88,6 +93,18 @@ void get_options(int argc, char **argv, Compiler &Prog)
 					opt_flag = 0;
 					Prog.SetDebug();
 					break;
+				}
+			case 'h':
+				{
+					opt_flag = 0;
+					Prog.SetDOpt();
+					break;
+				}
+			case 'f':
+				{
+					opt_flag = 0;
+					Prog.SetDOpt();
+					Prog.SetPack();
 				}
 			} /* switch */
 		} else { /* - */
@@ -110,7 +127,7 @@ void get_options(int argc, char **argv, Compiler &Prog)
 
 void print_version()
 {
-	printf("Small/AMX Assembler 1.00\n");
+	printf("Small/AMX Assembler 1.01\n");
 	printf("(C)2004 David 'BAILOPAN' Anderson\n");
 }
 
@@ -120,5 +137,8 @@ void print_options()
 	printf("\t-d\t\t- Add debug opcodes (will double file size)\n");
 	printf("\t-v\t\t- Output version and exit\n");
 	printf("\t-o\t\t- Specify file to write\n");
+	printf("\t-c\t\t- Enable compact encoding\n");
+	printf("\t-h\t\t- Optimize DAT section\n");
+	printf("\t-f\t\t- Optimal Build\n");
 	printf("\n");
 }

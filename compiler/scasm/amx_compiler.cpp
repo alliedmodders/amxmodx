@@ -29,6 +29,8 @@ Compiler::Compiler()
 	Output = 0;
 	stacksize = cellsize * 4096;
 	debug = false;
+	pack = false;
+	dopt = false;
 	Init();
 }
 
@@ -53,7 +55,18 @@ Compiler::Compiler(std::string &f)
 	filename.assign(f);
 	stacksize = cellsize * 4096;
 	debug = false;
+	pack = false;
+	dopt = false;
 	Init();
+}
+
+bool Compiler::SetDOpt()
+{
+	bool state = dopt;
+
+	dopt = dopt ? false : true;
+
+	return state;
 }
 
 bool Compiler::SetDebug()
@@ -61,6 +74,15 @@ bool Compiler::SetDebug()
 	bool state = debug;
 
 	debug = debug ? false : true;
+
+	return state;
+}
+
+bool Compiler::SetPack()
+{
+	bool state = pack;
+
+	pack = pack ? false : true;
 
 	return state;
 }
@@ -111,6 +133,49 @@ int Compiler::CipCount()
 	return cipc;
 }
 
+void Compiler::WriteCell(FILE *fp, ucell *c, int repeat)
+{
+	unsigned char T[5] = {0,0,0,0,0};
+	unsigned char code = 0;
+	int index = 0;
+	ucell p = (*c);
+	int i = 0;
+
+	for (i=1; i<=repeat; i++)
+	{
+		if (pack)
+		{
+			for (index=0;index<5;index++)
+			{
+				T[index]=(unsigned char)(p & 0x7f);
+				p>>=7;
+			}
+			while (index>1 && T[index-1]==0 && (T[index-2] & 0x40)==0)
+			{
+				index--;
+			}
+			if (index==5 && T[index-1]==0x0f && (T[index-2] & 0x40)!=0)
+			{
+				index--;
+			}
+			while (index>1 && T[index-1]==0x7f && (T[index-2] & 0x40)!=0)
+			{
+				index--;
+			}
+			assert(index>0);
+			while (index-->0)
+			{
+				code=(unsigned char)((index==0)?T[index]:(T[index]|0x80));
+				fwrite((void*)&code, sizeof(unsigned char), 1, fp);
+				bitsOut += sizeof(unsigned char);
+			}
+		} else {
+			fwrite((void*)c, sizeof(ucell), 1, fp);
+			bitsOut += sizeof(ucell);
+		}
+	}
+}
+
 bool Compiler::Compile(std::string &out)
 {
 	if (CodeList.size() < 1 || !CError || CError->GetStatus() >= Err_Error)
@@ -118,6 +183,7 @@ bool Compiler::Compile(std::string &out)
 		return false;
 	}
 
+	bitsOut = 0;
 	int32_t fileSize = 0;
 	int16_t magic = (int16_t)AMX_MAGIC;
 	char file_version = CUR_FILE_VERSION;
@@ -127,6 +193,15 @@ bool Compiler::Compile(std::string &out)
 	int32_t cod, dat, hea, stp, cip, publics, natives, libraries;
 	int32_t pubvars, tags, names;
 	int hdrEnd = sizeof(AMX_HEADER);
+
+	if (debug)
+	{
+		flags |= AMX_FLAG_DEBUG;
+	}
+	if (pack)
+	{
+		flags |= AMX_FLAG_COMPACT;
+	}
 	
 	std::vector<ProcMngr::AsmProc *> ProcList;
 	std::vector<ProcMngr::AsmProc *>::iterator pl;
@@ -195,6 +270,7 @@ bool Compiler::Compile(std::string &out)
 		cOffset += (int)strlen(Nametbl.at(off).Name) + 1;
 	}
 
+	bitsOut = cOffset;
 	cod = cOffset;
 	dat = cod + CipCount();
 	hea = dat + DAT->GetSize();
@@ -267,15 +343,15 @@ bool Compiler::Compile(std::string &out)
 
 	std::vector<Asm *>::iterator ci;
 	std::vector<int>::iterator di;
-	int cop = 0;
+	ucell cop = 0;
 	for (ci = CodeList.begin(); ci != CodeList.end(); ci++)
 	{
 		cop = (*ci)->op;
-		fwrite((void *)&cop, sizeof(int32_t), 1, fp);
+		WriteCell(fp, &cop, 1);
 		for (di = (*ci)->params.begin(); di != (*ci)->params.end(); di++)
 		{
 			cop = (*di);
-			fwrite((void *)&cop, sizeof(int32_t), 1, fp);
+			WriteCell(fp, &cop, 1);
 		}
 	}
 
@@ -283,7 +359,7 @@ bool Compiler::Compile(std::string &out)
 	std::vector<DataMngr::Datum *>::iterator dmi;
 	DAT->GetData(dm);
 
-	int val = 0;
+	ucell val = 0;
 	const char *s = 0;
 	for (dmi = dm.begin(); dmi != dm.end(); dmi++)
 	{
@@ -298,18 +374,25 @@ bool Compiler::Compile(std::string &out)
 				for (int q = 0; q < (*dmi)->e.Size(); q++)
 				{
 					val = s[q];
-					fwrite((void*)&val, sizeof(int32_t), 1, fp);
+					WriteCell(fp, &val, 1);
 				}
 			}
 		} else {
-			char c = (*dmi)->fill;
-			for (int iter=0; iter<=(*dmi)->e.GetNumber(); iter++)
-			{
-				fwrite((void*)&c, sizeof(int32_t), 1, fp);
-			}
+			if (DAT->IsOptimized())
+				break;
+			ucell c = (*dmi)->fill;
+			WriteCell(fp, &c, (*dmi)->e.GetNumber());
 		}
 	}
 	
+	/* Was packing enabled? Re-output the actual size */
+	if (pack)
+	{
+		fseek(fp, 0, SEEK_SET);
+		fwrite((void *)&bitsOut, sizeof(int32_t), 1, fp);
+		fseek(fp, 0, SEEK_END);
+	}
+
 	fclose(fp);
 
 	return true;
@@ -326,32 +409,44 @@ void Compiler::Clear()
 	CSymbols->Clear();
 }
 
+/* Two pass parser.
+ * The first pass applies macros + defines + directives
+ *   natives, and data.
+ * The second pass eats up everything else (code, publics)
+ */
 bool Compiler::Parse()
 {
-	std::ifstream fp(filename.c_str());
+	FILE *fp = 0;
 	char buffer[256] = {0};
 	std::stack<int> DefStack;
 	std::stack<std::string> LabelStack;
 	curLine = 0;
 	AsmSection sec = Asm_None;
 	lastCip = 0-cellsize;
+	int pass = 0;
 
-	if (!fp.is_open())
+Start:
+	fp = fopen(filename.c_str(), "rt");
+	curLine = 0;
+	sec = Asm_None;
+	lastCip = 0-cellsize;
+
+	if (!fp)
 	{
 		CError->ErrorMsg(Err_FileOpen, filename.c_str());
 		return false;
 	}
 
-	while (!fp.eof())
+	while (!feof(fp))
 	{
-		fp.getline(buffer, 255);
+		fgets(buffer, 255, fp);
 		curLine+=1;
 
 		/* Check for preprocessor directives */
 		if (buffer[0] == '#')
 		{
 			std::string procline(buffer);
-			if (procline.substr(0, 3).compare("#if") == 0)
+			if (procline.substr(0, 6).compare("#ifdef") == 0)
 			{
 				std::string def;
 				std::string temp;
@@ -359,16 +454,37 @@ bool Compiler::Parse()
 				StringBreak(procline, def, temp);
 				StringBreak(temp, def, comp);
 				DefineMngr::Define *D = 0;
-				if ((D = CDefines->FindDefine(def)) == 0)
+				if ( (D = CDefines->FindDefine(def)) == NULL)
 				{
 					DefStack.push(0);
-				} else if (D->GetDefine()->compare(comp) == 0) {
+				} else {
+					if (D->GetDefine()->compare("0") == 0)
+					{
+						DefStack.push(0);
+					} else {
+						DefStack.push(1);
+					}
+				}
+			} else if (procline.substr(0, 7).compare("#ifndef") == 0) {
+				std::string def;
+				std::string temp;
+				std::string comp;
+				StringBreak(procline, def, temp);
+				StringBreak(temp, def, comp);
+				DefineMngr::Define *D = 0;
+				if ( (D = CDefines->FindDefine(def)) == NULL)
+				{
 					DefStack.push(1);
 				} else {
-					DefStack.push(0);
+					if (D->GetDefine()->compare("0") == 0)
+					{
+						DefStack.push(1);
+					} else {
+						DefStack.push(0);
+					}
 				}
 			} else if (procline.substr(0, 5).compare("#else") == 0) {
-				if (DefStack.size())
+				if (!DefStack.empty())
 				{
 					if (DefStack.top() == 1)
 					{
@@ -383,7 +499,7 @@ bool Compiler::Parse()
 				}
 				continue;
 			} else if (procline.substr(0, 6).compare("#endif") == 0) {
-				if (DefStack.size())
+				if (!DefStack.empty())
 				{
 					DefStack.pop();
 				} else {
@@ -399,7 +515,11 @@ bool Compiler::Parse()
 						continue;
 					}
 				}
-				ProcessDirective(procline);
+				// only process directives on pass one
+				if (pass == 0)
+				{
+					ProcessDirective(procline);
+				}
 			}
 			continue;
 		}
@@ -428,7 +548,7 @@ bool Compiler::Parse()
 			if (line.compare(".DATA") == 0)
 			{
 				sec = Asm_Data;
-			} else if (line.compare(".CODE") == 0) {
+			} else if (line.compare(".CODE") == 0) {;
 				sec = Asm_Code;
 			} else if (line.compare(".PUBLIC") == 0) {
 				sec = Asm_Public;
@@ -438,13 +558,16 @@ bool Compiler::Parse()
 				sec = Asm_Invalid;
 				CError->ErrorMsg(Err_Invalid_Section, buffer);
 			}
-			/* Update the labels */
-			CLabels->CompleteQueue(true);
-			while (!LabelStack.empty())
+			if (pass == 1)
 			{
-				CLabels->EraseLabel(LabelStack.top());
-				CSymbols->EraseSymbol(LabelStack.top());
-				LabelStack.pop();
+				/* Update the labels */
+				CLabels->CompleteQueue(true);
+				while (!LabelStack.empty())
+				{
+					CLabels->EraseLabel(LabelStack.top());
+					CSymbols->EraseSymbol(LabelStack.top());
+					LabelStack.pop();
+				}
 			}
 		} else {
 			/* Do pre-processing */
@@ -461,6 +584,8 @@ bool Compiler::Parse()
 			} else if (sec == Asm_Invalid) {
 				/* Just ignore it */
 			} else if (sec == Asm_Data) {
+				if (pass == 1)
+					continue;
 				/* Format is Symbol, [db|stat], Data */
 				std::string symbol;
 				std::string data;
@@ -505,17 +630,17 @@ bool Compiler::Parse()
 						CExpr t(CError);
 						t.Set(fill);
 						t.Evaluate();
-						e.Set(amt);
-						e.Evaluate();
+						e = EvalE(amt, Sym_None);
 						DAT->Add(symbol, e, false, t.GetNumber());
 					} else {
-						e.Set(data);
-						e.Evaluate();
+						e = EvalE(data, Sym_None);
 						DAT->Add(symbol, e, false, 0);
 					}
 				}
 				CSymbols->AddSymbol(symbol, Sym_Dat, CurLine());
 			} else if (sec == Asm_Public) {
+				if (pass == 0)
+					continue;
 				if (!IsValidSymbol(line))
 				{
 					CError->ErrorMsg(Err_Invalid_Symbol);
@@ -538,6 +663,8 @@ bool Compiler::Parse()
 					continue;
 				}
 			} else if (sec == Asm_Native) {
+				if (pass == 1)
+					continue;
 				if (!IsValidSymbol(line))
 				{
 					CError->ErrorMsg(Err_Invalid_Symbol);
@@ -552,6 +679,8 @@ bool Compiler::Parse()
 				S = CSymbols->AddSymbol(line, Sym_Native, CurLine());
 				CNatives->AddNative(S);
 			} else if (sec == Asm_Code) {
+				if (pass == 0)
+					continue;
 				std::string code;
 				std::string params;
 				SymbolList::Symbol *S;
@@ -1454,12 +1583,25 @@ bool Compiler::Parse()
 		} /* Line processing */
 	} /* While */
 
+	// go for second pass
+	if (pass == 0)
+	{
+		pass = 1;
+		fclose(fp);
+		if (dopt)
+			DAT->Optimize();
+		goto Start;
+	}
+
 	/* We're not done! Check the label Queue */
 	CLabels->CompleteQueue();
 
 	CError->PrintReport();
+
 	if (CError->GetStatus() >= Err_Error)
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -1882,13 +2024,22 @@ void Compiler::ProcessDirective(std::string &text)
 	}
 }
 
+int Compiler::Eval(std::string &str, SymbolType sym)
+{
+	CExpr e(CError);
+
+	e = EvalE(str, sym);
+
+	return e.GetNumber();
+}
+
 /* The evaluator works by storing expressions on a stack.
    Each expression is an RPN-ordered pair of lists for ops and values
    Every time the stack is popped, the expression is evaluated by searching
 	for the highest operators and evaluating them.
    Note that string literals are not allowed here yet.
    */
-int Compiler::Eval(std::string &str, SymbolType sym)
+CExpr Compiler::EvalE(std::string &str, SymbolType sym)
 {
 	std::stack<rpn *> Stack;
 	std::string bpstr;
@@ -2025,7 +2176,7 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 	delete r;
 	r = 0;
 
-	return final.GetNumber();
+	return final;
 }
 
 CExpr Compiler::EvalRpn(rpn *r, SymbolType sym)

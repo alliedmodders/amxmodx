@@ -45,6 +45,7 @@ DataMngr::Datum::Datum()
 	db = false;
 	offset = -1;
 	fill = 0;
+	zeroed = false;
 }
 
 void DataMngr::Add(std::string &s, CExpr &expr, bool db, int fill)
@@ -128,3 +129,68 @@ void DataMngr::GetData(std::vector<DataMngr::Datum *> &dList)
 	}
 }
 
+void DataMngr::PrintTable()
+{
+	std::vector<DataMngr::Datum *>::iterator i;
+	DataMngr::Datum *p = 0;
+
+	printf("Symbol\tSize\n");
+	for (i=List.begin(); i!=List.end(); i++)
+	{
+		p = (*i);
+		printf("%s\t%d\n", p->symbol.c_str(), p->offset);
+	}
+}
+
+//Rewrite the DAT section so empties are at the end
+void DataMngr::Optimize()
+{
+	std::vector<DataMngr::Datum *> DbList;
+	std::vector<DataMngr::Datum *> MtList;
+	std::vector<DataMngr::Datum *>::iterator i;
+
+	for (i=List.begin(); i!=List.end(); i++)
+	{
+		if ( (*i)->db )
+		{
+			DbList.push_back( (*i) );
+		} else if ( (*i)->fill == 0 ) {
+			MtList.push_back( (*i) );
+		} else {
+			DbList.push_back( (*i) );
+		}
+	}
+
+	List.clear();
+
+	lastOffset = 0;
+	cursize = 0;
+	int size = 0;
+
+	for (i=DbList.begin(); i!=DbList.end(); i++)
+	{
+		size = (( (*i)->e.GetType() == Val_Number 
+				|| (*i)->e.GetType() == Val_Float ) ?
+					cellsize : (*i)->e.Size() * cellsize);
+		(*i)->offset = lastOffset;
+		lastOffset += size;
+		(*i)->zeroed = false;
+		List.push_back( (*i) );
+	}
+
+	cursize = lastOffset;
+	DbList.clear();
+
+	for (i=MtList.begin(); i!=MtList.end(); i++)
+	{
+		size = ( (*i)->e.GetNumber() * cellsize );
+		(*i)->offset = lastOffset;
+		lastOffset += size;
+		(*i)->zeroed = true;
+		List.push_back( (*i) );
+	}
+
+	MtList.clear();
+
+	optimized = true;
+}

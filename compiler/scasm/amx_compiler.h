@@ -68,16 +68,20 @@ public:
 	int CurCip() { return lastCip; }
 	Asm *CurAsm() { return curAsm; }
 	bool SetDebug();
-public:	//private
+	bool SetPack();
+	bool SetDOpt();
 	int DerefSymbol(std::string &str, SymbolType sym = Sym_None);
+	bool IsSymbol(std::string &str);
+private:
 	void ProcessDirective(std::string &text);
 	void Init();
 	void InitOpcodes();
 	int Eval(std::string &str, SymbolType sym = Sym_None);
+	CExpr EvalE(std::string &str, SymbolType sym = Sym_None);
 	CExpr EvalRpn(rpn *r, SymbolType sym);
 	OpToken OperToken(char c);
 	char OperChar(OpToken c);
-	bool IsSymbol(std::string &str);
+	void WriteCell(FILE *fp, ucell *c, int repeat);
 private:
 	std::vector<Asm *> CodeList;
 	std::map<std::string,int> OpCodes;
@@ -96,6 +100,9 @@ private:
 	int cellsize;
 	int stacksize;
 	bool debug;
+	bool pack;
+	bool dopt;
+	int bitsOut;
 	Asm *curAsm;
 };
 

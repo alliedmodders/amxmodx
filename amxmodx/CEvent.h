@@ -32,10 +32,6 @@
 #ifndef __CEVENTS_H__
 #define __CEVENTS_H__
 
-#include <vector>
-#include <map>
-#include <string>
-
 #define MAX_AMX_REG_MSG MAX_REG_MSGS+16
  
 enum {
@@ -90,46 +86,48 @@ public:
 		// conditions
 		struct cond_t
 		{
-			std::string sValue;			// value
-			float fValue;
-			int iValue;
-			int type;
+			int paramId;				// the message parameter id
+
+			String sValue;				// value (string)
+			float fValue;				// value (float)
+			int iValue;					// value (int)
+			int type;					// type (can be int, float, string)
+
+			cond_t *next;
 		};
 
-		typedef std::pair<int, cond_t> CondMapPair;
-		typedef std::map<int, cond_t> CondMap;
-		typedef CondMap::iterator CondMapIter;
-		
-		CondMap m_Conditions;
+		cond_t *m_Conditions;
 
+	public:
 		// constructors & destructors
 		ClEvent(CPluginMngr::CPlugin* plugin,  int func, int flags);
 		~ClEvent();
-	public:
+
 		inline CPluginMngr::CPlugin* getPlugin();
 		inline int getFunction();
 		void registerFilter(char* filter);			// add a condition
 	};
 
 private:
-	struct MsgDataVault
+	struct MsgDataEntry
 	{
 		float fValue;
 		int iValue;
 		const char* sValue;
 		MsgParamType type;
 	};
-	typedef std::vector<MsgDataVault> MsgDataVaultVec;
-	typedef MsgDataVaultVec::iterator MsgDataVaultVecIter;
-	MsgDataVaultVec m_ParseVault;
+	MsgDataEntry *m_ParseVault;
+	int m_ParseVaultSize;
+	void NextParam();				// make sure a new parameter can be added
 
-	typedef std::vector<ClEvent*> ClEventVec;
+	typedef CList<ClEvent> ClEventVec;
 	typedef ClEventVec::iterator ClEventVecIter;
+
 	ClEventVec m_Events[MAX_AMX_REG_MSG];
 	ClEventVec *m_ParseFun;	// current Event vector
 
 	bool m_ParseNotDone;
-	int m_ParsePos;				// is -1 less then args. num.
+	int m_ParsePos;				// is args. num. - 1
 	float* m_Timer;
 	
 	ClEvent* getValidEvent(ClEvent* a );

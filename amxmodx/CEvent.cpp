@@ -58,11 +58,54 @@ EventsMngr::ClEvent::ClEvent(CPluginMngr::CPlugin* plugin,  int func, int flags)
 
 	m_Stamp = 0.0f;
 	m_Done = false;
+
+	m_Conditions = NULL;
 }
 
 EventsMngr::ClEvent::~ClEvent()
 {
+	cond_t *tmp1 = m_Conditions;
+	cond_t *tmp2 = NULL;
+	while (tmp1)
+	{
+		tmp2 = tmp1->next;
+		delete tmp1;
+		tmp1 = tmp2;
+	}
+	m_Conditions = NULL;
+}
 
+void EventsMngr::NextParam()
+{
+	const int INITIAL_PARSEVAULT_SIZE = 32;
+
+	if (m_ParsePos < m_ParseVaultSize)
+		return;
+
+	MsgDataEntry *tmp = NULL;
+	int tmpSize = 0;
+	if (m_ParseVault)
+	{
+		// copy to tmp
+		tmp = new MsgDataEntry[m_ParseVaultSize];
+		memcpy(tmp, m_ParseVault, m_ParseVaultSize * sizeof(MsgDataEntry));
+		tmpSize = m_ParseVaultSize;
+		delete [] m_ParseVault;
+		m_ParseVault = NULL;
+	}
+
+	if (m_ParseVaultSize > 0)
+		m_ParseVaultSize *= 2;
+	else
+		m_ParseVaultSize = INITIAL_PARSEVAULT_SIZE;
+
+	m_ParseVault = new MsgDataEntry[m_ParseVaultSize];
+	if (tmp)
+	{
+		memcpy(m_ParseVault, tmp, tmpSize * sizeof(MsgDataEntry));
+		delete [] tmp;
+		tmp = NULL;
+	}
 }
 
 int EventsMngr::ClEvent::getFunction()
@@ -72,12 +115,20 @@ int EventsMngr::ClEvent::getFunction()
 
 EventsMngr::EventsMngr()
 {
+	m_ParseVault = NULL;
+	m_ParseVaultSize = 0;
 	clearEvents();
 }
 
 EventsMngr::~EventsMngr()
 {
 	clearEvents();
+	// delete parsevault
+	if (m_ParseVault)
+	{
+		delete [] m_ParseVault;
+		m_ParseVault = NULL;
+	}
 }
 
 
@@ -109,23 +160,34 @@ void EventsMngr::ClEvent::registerFilter(char *filter)
 	if (!*value)
 		return;
 
-	CondMapPair pair;
+	cond_t *tmpCond = new cond_t;
+	if (!tmpCond)
+		return;
 
 	// type character
-	pair.second.type = *value;
+	tmpCond->type = *value;
 
-	// set a null here so param id can be recognized later
+	// set a null here so param id can be recognized, and save it
 	*value++ = 0;
+	tmpCond->paramId = atoi(filter);
 
 	// rest of line
-	pair.second.sValue = value;
-	pair.second.fValue = atof(value);
-	pair.second.iValue = atoi(value);
+	tmpCond->sValue.set(value);
+	tmpCond->fValue = atof(value);
+	tmpCond->iValue = atoi(value);
+	
+	tmpCond->next = NULL;
 
-	// param id
-	pair.first = atoi(filter);
+	if (m_Conditions)
+	{
+		cond_t *tmp = m_Conditions;
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = tmpCond;
 
-	m_Conditions.insert(pair);
+	}
+	else
+		m_Conditions = tmpCond;
 }
 
 EventsMngr::ClEvent* EventsMngr::registerEvent(CPluginMngr::CPlugin* plugin, int func, int flags, int msgid)
@@ -138,14 +200,13 @@ EventsMngr::ClEvent* EventsMngr::registerEvent(CPluginMngr::CPlugin* plugin, int
 	if (!event)
 		return NULL;
 
-	m_Events[msgid].push_back(event);
+	m_Events[msgid].put(event);
 
 	return event;
 }
 
 void EventsMngr::parserInit(int msg_type, float* timer, CPlayer* pPlayer, int index)
 {
-
 	if (msg_type < 0 || msg_type > MAX_AMX_REG_MSG)
 		return;
 
@@ -153,37 +214,38 @@ void EventsMngr::parserInit(int msg_type, float* timer, CPlayer* pPlayer, int in
 	m_Timer = timer;
 
 	// don't parse if nothing to do
-	if (m_Events[msg_type].empty())
+	if (!m_Events[msg_type].size())
 		return;
 
-	for(ClEventVecIter iter = m_Events[msg_type].begin(); iter != m_Events[msg_type].end(); ++iter)
+	for(ClEventVecIter iter = m_Events[msg_type].begin(); iter; ++iter)
 	{
-		if ((*iter)->m_Done)
+		if ((*iter).m_Done)
 			continue;
 
-		if (!(*iter)->m_Plugin->isExecutable((*iter)->m_Func))
+
+		if (!(*iter).m_Plugin->isExecutable((*iter).m_Func))
 		{
-			(*iter)->m_Done = true;
+			(*iter).m_Done = true;
 			continue;
 		}
 
 		if (pPlayer)
 		{
-			if (!(*iter)->m_FlagPlayer || (pPlayer->IsAlive() ? !(*iter)->m_FlagAlive : !(*iter)->m_FlagDead ) )
+			if (!(*iter).m_FlagPlayer || (pPlayer->IsAlive() ? !(*iter).m_FlagAlive : !(*iter).m_FlagDead ) )
 			{
-				(*iter)->m_Done = true;
+				(*iter).m_Done = true;
 				continue;
 			}
 		}
-		else if (!(*iter)->m_FlagWorld)
+		else if (!(*iter).m_FlagWorld)
 		{
-			(*iter)->m_Done = true;
+			(*iter).m_Done = true;
 			continue;
 		}
 
-		if ((*iter)->m_FlagOnce && (*iter)->m_Stamp == (float)(*timer))
+		if ((*iter).m_FlagOnce && (*iter).m_Stamp == (float)(*timer))
 		{
-			(*iter)->m_Done = true;
+			(*iter).m_Done = true;
 			continue;
 		}
 		m_ParseNotDone = true;
@@ -191,21 +253,12 @@ void EventsMngr::parserInit(int msg_type, float* timer, CPlayer* pPlayer, int in
 
 	if (m_ParseNotDone)
 	{
-		// we don't clear it (performance)
-		if (m_ParseVault.size() < 1)
-		{
-			m_ParseVault.reserve(32);				// 32 as default
-			m_ParseVault.push_back(MsgDataVault());
-		}
 		m_ParsePos = 0;
+		NextParam();
 		m_ParseVault[m_ParsePos].type = MSG_INTEGER;
 		m_ParseVault[m_ParsePos].iValue = index;
-		m_ParseFun = &m_Events[msg_type];
 	}
-	else
-	{
-		m_ParseFun = NULL;
-	}
+	m_ParseFun = &m_Events[msg_type];
 }
 
 void EventsMngr::parseValue(int iValue)
@@ -214,46 +267,42 @@ void EventsMngr::parseValue(int iValue)
 	if (!m_ParseNotDone || !m_ParseFun)
 		return;
 
+
 	// grow if needed
-	if (m_ParseVault.size() <= static_cast<size_t>(++m_ParsePos))
-	{
-		MsgDataVault tmp;
-		m_ParseVault.push_back(tmp);
-	}
+	++m_ParsePos;
+	NextParam();
 
 	m_ParseVault[m_ParsePos].type = MSG_INTEGER;
 	m_ParseVault[m_ParsePos].iValue = iValue;
 
-	// loop through the registered funcs, and decide whether they have to be called
-	bool skip;
-	for (ClEventVecIter iter = m_ParseFun->begin(); iter != m_ParseFun->end(); ++iter)
+	// loop through the registered funcs, and decide whether they have to be called or not
+	// if they shouldnt, their m_Done is set to true
+	for (ClEventVecIter iter = m_ParseFun->begin(); iter; ++iter)
 	{
-		if ((*iter)->m_Done)
-			continue;
+		if ((*iter).m_Done)
+			continue;		// already skipped; don't bother with parsing
 
-		skip = false;
-		ClEvent::CondMapIter condIter = (*iter)->m_Conditions.find(m_ParsePos);
-		if (condIter == (*iter)->m_Conditions.end())
-			continue;
-
-		do
+		// loop through conditions
+		bool execute;
+		for (ClEvent::cond_t *condIter = (*iter).m_Conditions; condIter; condIter = condIter->next)
 		{
-			switch(condIter->second.type)
+			if (condIter->paramId == m_ParsePos)
 			{
-			case '=': if (condIter->second.iValue == iValue) skip=true; break;
-			case '!': if (condIter->second.iValue != iValue) skip=true; break;
-			case '&': if (iValue & condIter->second.iValue) skip=true; break;
-			case '<': if (iValue < condIter->second.iValue) skip=true; break;
-			case '>': if (iValue > condIter->second.iValue) skip=true; break;
-			}
-			if (skip)
+				execute = false;
+				switch(condIter->type)
+				{
+				case '=': if (condIter->iValue == iValue) execute=true; break;
+				case '!': if (condIter->iValue != iValue) execute=true; break;
+				case '&': if (iValue & condIter->iValue) execute=true; break;
+				case '<': if (iValue < condIter->iValue) execute=true; break;
+				case '>': if (iValue > condIter->iValue) execute=true; break;
+				}
+				if (execute)
+					continue;
+				(*iter).m_Done = true;		// don't execute
 				break;
-		} while ( ++condIter != (*iter)->m_Conditions.end() );
-
-		if (skip)
-			continue;
-
-		(*iter)->m_Done = true;
+			}
+		}
 	}
 }
 
@@ -263,44 +312,40 @@ void EventsMngr::parseValue(float fValue)
 	if (!m_ParseNotDone || !m_ParseFun)
 		return;
 
+
 	// grow if needed
-	if (m_ParseVault.size() <= static_cast<size_t>(++m_ParsePos))
-	{
-		MsgDataVault tmp;
-		m_ParseVault.push_back(tmp);
-	}
+	++m_ParsePos;
+	NextParam();
 
 	m_ParseVault[m_ParsePos].type = MSG_FLOAT;
 	m_ParseVault[m_ParsePos].fValue = fValue;
 
-	// loop through the registered funcs, and decide whether they have to be called
-	bool skip;
-	for (ClEventVecIter iter = m_ParseFun->begin(); iter != m_ParseFun->end(); ++iter)
+	// loop through the registered funcs, and decide whether they have to be called or not
+	// if they shouldnt, their m_Done is set to true
+	for (ClEventVecIter iter = m_ParseFun->begin(); iter; ++iter)
 	{
-		if ((*iter)->m_Done)
-			continue;
+		if ((*iter).m_Done)
+			continue;		// already skipped; don't bother with parsing
 
-		skip = false;
-		ClEvent::CondMapIter condIter = (*iter)->m_Conditions.find(m_ParsePos);
-		if (condIter == (*iter)->m_Conditions.end())
-			continue;
-
-		do
+		// loop through conditions
+		for (ClEvent::cond_t *condIter = (*iter).m_Conditions; condIter; condIter = condIter->next)
 		{
-			switch(condIter->second.type)
+			if (condIter->paramId == m_ParsePos)
 			{
-			case '=': if (condIter->second.fValue == fValue) skip=true; break;
-			case '!': if (condIter->second.fValue != fValue) skip=true; break;
-			case '<': if (fValue < condIter->second.fValue) skip=true; break;
-			case '>': if (fValue > condIter->second.fValue) skip=true; break;
-			}
-			if (skip)
+				bool execute = false;
+				switch(condIter->type)
+				{
+				case '=': if (condIter->fValue == fValue) execute=true; break;
+				case '!': if (condIter->fValue != fValue) execute=true; break;
+				case '<': if (fValue < condIter->fValue) execute=true; break;
+				case '>': if (fValue > condIter->fValue) execute=true; break;
+				}
+				if (execute)
+					continue;
+				(*iter).m_Done = true;		// don't execute
 				break;
-		} while ( ++condIter != (*iter)->m_Conditions.end() );
-
-		if (skip)
-			continue;
-		(*iter)->m_Done = true;
+			}
+		}
 	}
 }
 
@@ -311,42 +356,37 @@ void EventsMngr::parseValue(const char *sz)
 		return;
 
 	// grow if needed
-	if (m_ParseVault.size() <= static_cast<size_t>(++m_ParsePos))
-	{
-		MsgDataVault tmp;
-		m_ParseVault.push_back(tmp);
-	}
+	++m_ParsePos;
+	NextParam();
 
 	m_ParseVault[m_ParsePos].type = MSG_STRING;
 	m_ParseVault[m_ParsePos].sValue = sz;
 
-	// loop through the registered funcs, and decide whether they have to be called
-	bool skip;
-	for (ClEventVecIter iter = m_ParseFun->begin(); iter != m_ParseFun->end(); ++iter)
+	// loop through the registered funcs, and decide whether they have to be called or not
+	// if they shouldnt, their m_Done is set to true
+	for (ClEventVecIter iter = m_ParseFun->begin(); iter; ++iter)
 	{
-		if ((*iter)->m_Done)
-			continue;
+		if ((*iter).m_Done)
+			continue;		// already skipped; don't bother with parsing
 
-		skip = false;
-		ClEvent::CondMapIter condIter = (*iter)->m_Conditions.find(m_ParsePos);
-		if (condIter == (*iter)->m_Conditions.end())
-			continue;
-
-		do
+		// loop through conditions
+		for (ClEvent::cond_t *condIter = (*iter).m_Conditions; condIter; condIter = condIter->next)
 		{
-			switch(condIter->second.type)
+			if (condIter->paramId == m_ParsePos)
 			{
-			case '=': if (!strcmp(sz, condIter->second.sValue.c_str())) skip=true; break;
-			case '!': if (strcmp(sz, condIter->second.sValue.c_str())) skip=true; break;
-			case '&': if (strstr(sz, condIter->second.sValue.c_str())) skip=true; break;
-			}
-			if (skip)
+				bool execute = false;
+				switch(condIter->type)
+				{
+				case '=': if (!strcmp(sz, condIter->sValue.str())) execute=true; break;
+				case '!': if (strcmp(sz, condIter->sValue.str())) execute=true; break;
+				case '&': if (strstr(sz, condIter->sValue.str())) execute=true; break;
+				}
+				if (execute)
+					continue;
+				(*iter).m_Done = true;		// don't execute
 				break;
-		} while ( ++condIter != (*iter)->m_Conditions.end() );
-
-		if (skip)
-			continue;
-		(*iter)->m_Done = true;
+			}
+		}
 	}
 }
 
@@ -363,20 +403,20 @@ void EventsMngr::executeEvents()
 	try
 	{
 #endif		// #ifdef ENABLEEXEPTIONS
-		for (ClEventVecIter iter = m_ParseFun->begin(); iter != m_ParseFun->end(); ++iter)
+		for (ClEventVecIter iter = m_ParseFun->begin(); iter; ++iter)
 		{
-			if ( (*iter)->m_Done ) 
+			if ( (*iter).m_Done ) 
 			{
-				(*iter)->m_Done = false;
+				(*iter).m_Done = false;
 				continue;
 			}
 
-			(*iter)->m_Stamp = *m_Timer;
+			(*iter).m_Stamp = (float)*m_Timer;
 
-			if ((err = amx_Exec((*iter)->m_Plugin->getAMX(), NULL, (*iter)->m_Func, 1, m_ParseVault.size() ? m_ParseVault[0].iValue : 0)) != AMX_ERR_NONE)
+			if ((err = amx_Exec((*iter).m_Plugin->getAMX(), NULL, (*iter).m_Func, 1, m_ParseVaultSize ? m_ParseVault[0].iValue : 0)) != AMX_ERR_NONE)
 			{
 				UTIL_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")", err, 
-					(*iter)->m_Plugin->getAMX()->curline, (*iter)->m_Plugin->getName());
+					(*iter).m_Plugin->getAMX()->curline, (*iter).m_Plugin->getName());
 			}
 		}
 
@@ -452,11 +492,6 @@ void EventsMngr::clearEvents(void)
 {
 	for (int i = 0; i < MAX_AMX_REG_MSG; ++i)
 	{
-		for (ClEventVecIter iter = m_Events[i].begin(); iter != m_Events[i].end(); ++iter)
-		{
-			if (*iter)
-				delete *iter;
-		}
 		m_Events[i].clear();
 	}
 }

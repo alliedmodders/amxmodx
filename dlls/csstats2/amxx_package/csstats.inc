@@ -61,12 +61,6 @@ native get_statsnum();
 native get_user_stats2(index,stats[4]);
 native get_stats2(index,stats[4]);
 
-/* Custom weapons support ( like: gasnades, lasers ) */
-native reg_custom_weapon( wpnname[],melee = 0,logname[]="" ); 
-native custom_weapon_dmg( weapon, att, vic, damage, hitplace ); 
-native custom_weapon_shot( weapon,index ); // weapon id , player id
-native get_custom_wpnname( weapon,szName[],len );
-
 /*
 * Forwards
 */
@@ -78,7 +72,46 @@ enum {
 	CSF_DEATH,
 }
 
-/* You must register client_* forwards using register_statsfwd native */
-native register_statsfwd( ftype )
-forward client_damage( attacker,victim,damage,wpnindex,hitplace,TA );
-forward client_death( killer,victim,wpnindex,hitplace,TK );
+/************* Shared Natives Start ********************************/
+
+/* Forward types */
+enum {
+  XMF_DAMAGE = 0,
+  XMF_DEATH,
+}
+
+/* Use this function to register forwards */
+native register_statsfwd( ftype );
+
+/* Function is called after player to player attacks ,
+* if players were damaged by teammate TA is set to 1 */
+forward client_damage(attacker,victim,damage,wpnindex,hitplace,TA);
+
+/* Function is called after player death ,
+* if player was killed by teammate TK is set to 1 */
+forward client_death(killer,victim,wpnindex,hitplace,TK);
+
+/* Custom Weapon Support */
+/* function will return index of new weapon */
+native custom_weapon_add( wpnname[],melee = 0,logname[]="" ); 
+/* Function will pass damage done by this custom weapon to stats module and other plugins */
+native custom_weapon_dmg( weapon, att, vic, damage, hitplace=0 ); 
+/* Function will pass info about custom weapon shot to stats module */
+native custom_weapon_shot( weapon,index ); // weapon id , player id
+
+/* function will return 1 if true */
+native xmod_is_melee_wpn(wpnindex);
+
+/* Returns weapon name. */
+native xmod_get_wpnname(wpnindex,name[],len);
+
+/* Returns weapon logname. */
+native xmod_get_wpnlogname(wpnindex,name[],len);
+
+/* Returns weapons array size */
+native xmod_get_maxweapons();
+
+/* Returns stats array size */
+native xmod_get_stats_size();
+
+/************* Shared Natives End ********************************/

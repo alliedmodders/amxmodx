@@ -41,6 +41,7 @@ void Client_ResetHUD_End(void* mValue){
 		mPlayer->items = 0;
 		mPlayer->is_specialist = 0;
 		mPlayer->killingSpree = 0;
+		mPlayer->killFlags = 0;
 		mPlayer->frags = (int)mPlayer->pEdict->v.frags;
 		/* 
 		fix dla user_kill() z addfrag 
@@ -216,8 +217,9 @@ void Client_TSHealth_End(void* mValue){
 			}
 	}
 
+	pAttacker->killFlags = killFlags;
 	pAttacker->saveKill(mPlayer,weapon,( aim == 1 ) ? 1:0 ,TA);
-	g_death_info.exec( pAttacker->index, mPlayer->index, weapon, aim, killFlags, TA );
+	g_death_info.exec( pAttacker->index, mPlayer->index, weapon, aim, TA );
 
 }
 

@@ -19,7 +19,9 @@ extern AMX_NATIVE_INFO stats_Natives[];
 
 struct weaponsVault {
   char* name;
+  char* logname;
   short int ammoSlot;
+  bool melee;
 };
 
 extern bool rankBots;

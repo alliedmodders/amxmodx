@@ -267,6 +267,8 @@ static cell AMX_NATIVE_CALL TFC_GetWeaponBAmmo(AMX *amx, cell *params) {
 	case TFC_WPN_GASGRENADE:
 	case TFC_WPN_EMPGRENADE:
 		return *( (int*)pPlayer->pEdict->pvPrivateData + PD_AMMO_NADE2);
+
+
 		break;
 	default : 
 		return 0;
@@ -415,6 +417,14 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params){ // forward
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL get_maxweapons(AMX *amx, cell *params){
+	return TFCMAX_WEAPONS;
+}
+
+static cell AMX_NATIVE_CALL get_stats_size(AMX *amx, cell *params){
+	return 8;
+}
+
 // Native list.
 AMX_NATIVE_INFO base_Natives[] = {
 	{"tfc_setmodel", TFC_SetModel},
@@ -423,10 +433,13 @@ AMX_NATIVE_INFO base_Natives[] = {
 	{"tfc_getbammo", TFC_GetBAmmo},
 	{"tfc_getweaponbammo", TFC_GetWeaponBAmmo},
 	{"tfc_setweaponbammo", TFC_SetWeaponBAmmo},
-	{"tfc_getwpnname", TFC_GetWpnName},
-	{"tfc_getwpnlogname", TFC_GetWpnLogName},
 
-	{"tfc_ismelee", TFC_IsMelee},
+	{"xmod_get_wpnname", TFC_GetWpnName},
+	{"xmod_get_wpnlogname", TFC_GetWpnLogName},
+	{"xmod_is_melee_wpn", TFC_IsMelee},
+	{"xmod_get_maxweapons", get_maxweapons},
+	{"xmod_get_stats_size", get_stats_size},
+
 	{"tfc_userkill" , TFC_UserKill},
 	
 	{"tfc_setpddata", TFC_SetPDdata },

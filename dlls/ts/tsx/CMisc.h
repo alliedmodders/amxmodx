@@ -83,6 +83,7 @@ struct CPlayer {
 	//
 	int killingSpree;
 	int is_specialist;
+	int killFlags;
 	int lastFrag; // oblicz ostatni frag, sprawdza czy poprawna jest detekcja broni i bonusow 
 	float lastKill;  // kiedy ostatni , dla double kill
 	//

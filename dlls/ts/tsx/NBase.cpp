@@ -186,6 +186,19 @@ static cell AMX_NATIVE_CALL get_lastFrag(AMX *amx, cell *params){
 	return 0;
 }
 
+static cell AMX_NATIVE_CALL get_killflags(AMX *amx, cell *params){
+	int id = params[1];
+	if ( id<1 || id>gpGlobals->maxClients ){ 
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+	CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
+	if ( pPlayer->ingame ){
+		return pPlayer->killFlags;
+	}
+	return 0;
+}
+
 static cell AMX_NATIVE_CALL give_weapon(AMX *amx, cell *params){ // index,weapon,clips,extra
 	int id = params[1];
 	if ( id<1 || id>gpGlobals->maxClients ){ 
@@ -361,12 +374,26 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params){ // forward
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL get_maxweapons(AMX *amx, cell *params){
+	return TSMAX_WEAPONS;
+}
+
+static cell AMX_NATIVE_CALL get_stats_size(AMX *amx, cell *params){
+	return 8;
+}
+
+
 AMX_NATIVE_INFO base_Natives[] = {
-	{ "ts_getwpnname", get_weapon_name },
-	{ "ts_getwpnlogname", get_weapon_logname },
+
+	{ "xmod_get_wpnname", get_weapon_name },
+	{ "xmod_get_wpnlogname", get_weapon_logname },
+	{ "xmod_is_melee_wpn", is_melee },
+	{ "xmod_get_maxweapons", get_maxweapons },
+	{ "xmod_get_stats_size", get_stats_size },
+	
 	{ "ts_wpnlogtoname", wpnlog_to_name },
 	{ "ts_wpnlogtoid", wpnlog_to_id },
-	{ "ts_ismelee", is_melee },
+	
 	{ "ts_getuserwpn", get_user_weapon },
 	{ "ts_getusercash", get_user_cash },
 	{ "ts_getuserspace", get_user_space },
@@ -374,6 +401,7 @@ AMX_NATIVE_INFO base_Natives[] = {
 	{ "ts_getuseritems",get_user_items },
 	{ "ts_getkillingstreak",get_killingStreak },
 	{ "ts_getuserlastfrag",get_lastFrag },
+	{ "ts_getuserkillflags",get_killflags },
 
 	{ "ts_giveweapon",give_weapon },
 	{ "ts_createpwup",create_pwup },

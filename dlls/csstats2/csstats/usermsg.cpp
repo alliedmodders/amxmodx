@@ -46,6 +46,7 @@ void Client_WeaponList(void* mValue){
 		weaponData[iId].name = wpnPrefix + 7;
 		if ( strcmp( weaponData[iId].name, "hegrenade" ) == 0 )
 			weaponData[iId].name += 2;
+		weaponData[iId].logname = weaponData[iId].name;
 	}
   } 
 }

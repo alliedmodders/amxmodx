@@ -213,13 +213,18 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params){ // forward
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL get_maxweapons(AMX *amx, cell *params){
+	return DODMAX_WEAPONS;
+}
+
+static cell AMX_NATIVE_CALL get_stats_size(AMX *amx, cell *params){
+	return 9;
+}
+
 AMX_NATIVE_INFO base_Natives[] = {
 
-  { "dod_get_wpnname", get_weapon_name },
-  { "dod_get_wpnlogname", get_weapon_logname },
   { "dod_wpnlog_to_name", wpnlog_to_name },
   { "dod_wpnlog_to_id", wpnlog_to_id },
-  { "dod_is_melee", is_melee },
 
   { "dod_get_team_score", get_team_score },
   { "dod_get_user_score", get_user_score },
@@ -230,6 +235,12 @@ AMX_NATIVE_INFO base_Natives[] = {
   { "dod_user_kill", user_kill },
   { "dod_get_pronestate", get_user_pronestate },
 
+  { "xmod_get_wpnname", get_weapon_name },
+  { "xmod_get_wpnlogname", get_weapon_logname },
+  { "xmod_is_melee_wpn", is_melee },
+  { "xmod_get_maxweapons", get_maxweapons },
+  { "xmod_get_stats_size", get_stats_size },
+  
   {"register_statsfwd",register_forward },
 
   ///*******************

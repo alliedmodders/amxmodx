@@ -290,9 +290,12 @@ static cell AMX_NATIVE_CALL register_cwpn(AMX *amx, cell *params){ // name,logna
 
 	int iLen;
 	char *szName = MF_GetAmxString(amx, params[1], 0, &iLen);
+	char *szLogName = MF_GetAmxString(amx, params[3], 0, &iLen);
 
 	strcpy(weaponData[i].name,szName);
+	strcpy(weaponData[i].logname,szLogName);
 	weaponData[i].ammoSlot = 1;
+	weaponData[i].melee = params[2] ? true:false;
 
 	return i;
 }
@@ -370,14 +373,36 @@ static cell AMX_NATIVE_CALL custom_wpn_shot(AMX *amx, cell *params){ // player,w
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL get_custom_wpnname(AMX *amx, cell *params){ 
+static cell AMX_NATIVE_CALL get_wpnname(AMX *amx, cell *params){ 
 	int id = params[1];
-	if (id<MAX_WEAPONS || id>=MAX_WEAPONS+MAX_CWEAPONS ){ 
+	if (id<0 || id>=MAX_WEAPONS+MAX_CWEAPONS ){ 
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		MF_PrintSrvConsole("Weapon ID Is Not Valid!\n");
 		return 0;
 	}
 	return MF_SetAmxString(amx,params[2],weaponData[id].name,params[3]);
+}
+
+static cell AMX_NATIVE_CALL get_wpnlogname(AMX *amx, cell *params){ 
+	int id = params[1];
+	if (id<0 || id>=MAX_WEAPONS+MAX_CWEAPONS ){ 
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_PrintSrvConsole("Weapon ID Is Not Valid!\n");
+		return 0;
+	}
+	return MF_SetAmxString(amx,params[2],weaponData[id].logname,params[3]);
+}
+
+static cell AMX_NATIVE_CALL is_melee(AMX *amx, cell *params){ 
+	int id = params[1];
+	if (id<0 || id>=MAX_WEAPONS+MAX_CWEAPONS ){ 
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_PrintSrvConsole("Weapon ID Is Not Valid!\n");
+		return 0;
+	}
+	if ( id = 29 )
+		return 1;
+	return weaponData[id].melee ? 1:0;
 }
 
 static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params){ // forward 
@@ -404,6 +429,14 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params){ // forward
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL get_maxweapons(AMX *amx, cell *params){
+	return MAX_WEAPONS+MAX_CWEAPONS;
+}
+
+static cell AMX_NATIVE_CALL get_stats_size(AMX *amx, cell *params){
+	return 8;
+}
+
 AMX_NATIVE_INFO stats_Natives[] = {
 	{ "get_stats",      get_stats},
 	{ "get_stats2",      get_stats2},
@@ -419,12 +452,17 @@ AMX_NATIVE_INFO stats_Natives[] = {
 	{ "reset_user_wstats",  reset_user_wstats },
 
 	// Custom Weapon Support
-	{ "reg_custom_weapon", register_cwpn },
+	{ "custom_weapon_add", register_cwpn },
 	{ "custom_weapon_dmg", custom_wpn_dmg },
 	{ "custom_weapon_shot", custom_wpn_shot },
-	{ "get_custom_wpnname", get_custom_wpnname },
 
-	{"register_statsfwd",register_forward },
+	{ "xmod_get_wpnname", get_wpnname },
+	{ "xmod_get_wpnlogname", get_wpnlogname },
+	{ "xmod_is_melee_wpn", is_melee },
+	{ "xmod_get_maxweapons", get_maxweapons },
+	{ "xmod_get_stats_size", get_stats_size },
+
+	{ "register_statsfwd",register_forward },
 
 	///*******************
 	{ NULL, NULL }

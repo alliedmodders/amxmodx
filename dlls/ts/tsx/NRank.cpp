@@ -1,5 +1,5 @@
 /*
- * TFCX 
+ * TSX 
  * Copyright (c) 2004 Lukasz Wlasinski
  *
  *
@@ -363,7 +363,7 @@ AMX_NATIVE_INFO stats_Natives[] = {
 	{ "reset_user_wstats",  reset_user_wstats },
 
 	// Custom Weapon Support
-	{ "reg_custom_weapon", register_cwpn },
+	{ "custom_weapon_add", register_cwpn },
 	{ "custom_weapon_dmg", cwpn_dmg },
 	{ "custom_weapon_shot", cwpn_shot },
 

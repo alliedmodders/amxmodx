@@ -31,7 +31,7 @@
 
 #include "amxmodx.h"
 #include "amxxfile.h"
-#include "minilzo/minilzo.h"
+#include "zlib/zlib.h"
 
 /**********************
  ****** AMXXFILE ******
@@ -51,7 +51,7 @@
   #endif
 #endif
 
-typedef lzo_byte	mint8_t;
+typedef char	mint8_t;
 typedef int16_t		mint16_t;
 typedef int32_t		mint32_t;
 
@@ -85,13 +85,6 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 	m_Status = Err_None;
 	m_CellSize = cellsize;
 
-	// Make sure the decompressor runs
-	if (lzo_init() != LZO_E_OK)
-	{
-		m_Status = Err_DecompressorInit;
-		return;
-	}
-
 	m_pFile = fopen(filename, "rb");
 	if (!m_pFile)
 	{
@@ -103,7 +96,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 	DATAREAD(&magic, sizeof(magic), 1);
 
 	m_OldFile = false;
-	if (magic != 0x524C4542)
+	if (magic != 0x414D5842)
 	{
 		// check for old file
 		AMX_HEADER hdr;
@@ -205,11 +198,15 @@ size_t CAmxxReader::GetBufferSize()
 	if (!m_pFile)
 		return 0;
 
+
+	long save = ftell(m_pFile);
+
 	if (m_OldFile)
 	{
 		rewind(m_pFile);
 		AMX_HEADER hdr;
 		DATAREAD(&hdr, sizeof(hdr), 1);
+		fseek(m_pFile, save, SEEK_SET);
 		return hdr.stp;
 	}
 
@@ -217,6 +214,7 @@ size_t CAmxxReader::GetBufferSize()
 
 	TableEntry entry;
 	DATAREAD(&entry, sizeof(entry), 1);
+	fseek(m_pFile, save, SEEK_SET);
 	return entry.origSize + 1;			// +1 : safe
 }
 
@@ -255,16 +253,18 @@ CAmxxReader::Error CAmxxReader::GetSection(void *buffer)
 	TableEntry entry;
 	DATAREAD(&entry, sizeof(entry), 1);
 	fseek(m_pFile, entry.offset, SEEK_SET);
-
+//	AMXXLOG_Log("|||| Offset needed: %d At: %d", entry.offset, ftell(m_pFile));
+	uLongf destLen = GetBufferSize();
 	// read the data to a temporary buffer
-	lzo_byte *tempBuffer = new lzo_byte[m_SectionLength + 1];
+	char *tempBuffer = new char[m_SectionLength + 1];
+	//fread(tempBuffer, sizeof(char), m_SectionLength, m_pFile);
 	DATAREAD((void*)tempBuffer, 1, m_SectionLength);
 	// decompress
-	lzo_uint destLen = GetBufferSize();
-	int result = lzo1x_decompress_safe(tempBuffer, m_SectionLength,
-			(lzo_byte*)buffer, &destLen,
-			NULL /*unused*/ );
-	if (result != LZO_E_OK)
+//	AMXXLOG_Log("|||| First Bytes: %d %d %d %d", tempBuffer[0], tempBuffer[1], tempBuffer[2], tempBuffer[3]);
+	int result = uncompress((Bytef *)buffer, &destLen,
+			(Bytef *)tempBuffer, m_SectionLength);
+//	AMXXLOG_Log("|||| Result: %d, m_SectionLength=%d, destLen=%d", result, m_SectionLength, destLen);
+	if (result != Z_OK)
 	{
 		m_Status = Err_Decompress;
 		return Err_Decompress;

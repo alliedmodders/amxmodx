@@ -386,7 +386,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib ..\jit\jits.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ..\jit\jits.lib ..\zlib\zlib.lib"
 				OutputFile="jitrelease/amxx_mm.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -645,9 +645,6 @@
 			</File>
 			<File
 				RelativePath="..\meta_api.cpp">
-			</File>
-			<File
-				RelativePath="..\minilzo\minilzo.c">
 			</File>
 			<File
 				RelativePath="..\modules.cpp">

@@ -39,7 +39,7 @@ bool UTIL_IsPlayer(AMX* amx, edict_t* pPlayer) {
 	bool player = false;
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 	if (strcmp(STRING(pPlayer->v.classname), "player") == 0)
@@ -76,7 +76,7 @@ static cell AMX_NATIVE_CALL cs_set_user_money(AMX *amx, cell *params) // cs_set_
 	// Check index
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -85,7 +85,7 @@ static cell AMX_NATIVE_CALL cs_set_user_money(AMX *amx, cell *params) // cs_set_
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -109,7 +109,7 @@ static cell AMX_NATIVE_CALL cs_get_user_money(AMX *amx, cell *params) // cs_get_
 	// Check index
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -118,7 +118,7 @@ static cell AMX_NATIVE_CALL cs_get_user_money(AMX *amx, cell *params) // cs_get_
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -134,7 +134,7 @@ static cell AMX_NATIVE_CALL cs_get_user_deaths(AMX *amx, cell *params) // cs_get
 	// Check index
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -143,7 +143,7 @@ static cell AMX_NATIVE_CALL cs_get_user_deaths(AMX *amx, cell *params) // cs_get
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -159,7 +159,7 @@ static cell AMX_NATIVE_CALL cs_set_user_deaths(AMX *amx, cell *params) // cs_set
 	// Check index
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -168,7 +168,7 @@ static cell AMX_NATIVE_CALL cs_set_user_deaths(AMX *amx, cell *params) // cs_set
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -195,7 +195,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_id(AMX *amx, cell *params) // cs_get_
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -204,13 +204,13 @@ static cell AMX_NATIVE_CALL cs_get_hostage_id(AMX *amx, cell *params) // cs_get_
 
 	// Check entity validity
 	if (FNullEnt(pEdict)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	// Make sure this is a hostage.
 	if (strcmp(STRING(pEdict->v.classname), "hostage_entity") != 0) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -226,7 +226,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_silenced(AMX *amx, cell *params) // cs
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -235,7 +235,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_silenced(AMX *amx, cell *params) // cs
 
 	// Check entity validity
 	if (FNullEnt(pWeapon)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -263,7 +263,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_silenced(AMX *amx, cell *params) // cs
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -272,7 +272,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_silenced(AMX *amx, cell *params) // cs
 
 	// Check entity validity
 	if (FNullEnt(pWeapon)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -327,7 +327,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_burstmode(AMX *amx, cell *params) // c
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -336,7 +336,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_burstmode(AMX *amx, cell *params) // c
 
 	// Check entity validity
 	if (FNullEnt(pWeapon)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -364,7 +364,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_burstmode(AMX *amx, cell *params) // c
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -373,7 +373,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_burstmode(AMX *amx, cell *params) // c
 
 	// Check entity validity
 	if (FNullEnt(pWeapon)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -434,7 +434,7 @@ static cell AMX_NATIVE_CALL cs_get_user_vip(AMX *amx, cell *params) // cs_get_us
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -443,7 +443,7 @@ static cell AMX_NATIVE_CALL cs_get_user_vip(AMX *amx, cell *params) // cs_get_us
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -462,7 +462,7 @@ static cell AMX_NATIVE_CALL cs_set_user_vip(AMX *amx, cell *params) // cs_set_us
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -471,7 +471,7 @@ static cell AMX_NATIVE_CALL cs_set_user_vip(AMX *amx, cell *params) // cs_set_us
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -524,7 +524,7 @@ static cell AMX_NATIVE_CALL cs_get_user_team(AMX *amx, cell *params) // cs_get_u
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -533,7 +533,7 @@ static cell AMX_NATIVE_CALL cs_get_user_team(AMX *amx, cell *params) // cs_get_u
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -550,7 +550,7 @@ static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params) // cs_set_u
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -559,7 +559,7 @@ static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params) // cs_set_u
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -607,7 +607,7 @@ static cell AMX_NATIVE_CALL cs_get_user_inside_buyzone(AMX *amx, cell *params) /
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -616,7 +616,7 @@ static cell AMX_NATIVE_CALL cs_get_user_inside_buyzone(AMX *amx, cell *params) /
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -631,7 +631,7 @@ static cell AMX_NATIVE_CALL cs_get_user_plant(AMX *amx, cell *params) // cs_get_
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -640,7 +640,7 @@ static cell AMX_NATIVE_CALL cs_get_user_plant(AMX *amx, cell *params) // cs_get_
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -660,7 +660,7 @@ static cell AMX_NATIVE_CALL cs_set_user_plant(AMX *amx, cell *params) // cs_set_
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -669,7 +669,7 @@ static cell AMX_NATIVE_CALL cs_set_user_plant(AMX *amx, cell *params) // cs_set_
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 	
@@ -716,7 +716,7 @@ static cell AMX_NATIVE_CALL cs_get_user_defusekit(AMX *amx, cell *params) // cs_
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -725,7 +725,7 @@ static cell AMX_NATIVE_CALL cs_get_user_defusekit(AMX *amx, cell *params) // cs_
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -749,7 +749,7 @@ static cell AMX_NATIVE_CALL cs_set_user_defusekit(AMX *amx, cell *params) // cs_
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -758,7 +758,7 @@ static cell AMX_NATIVE_CALL cs_set_user_defusekit(AMX *amx, cell *params) // cs_
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 	
@@ -774,7 +774,7 @@ static cell AMX_NATIVE_CALL cs_set_user_defusekit(AMX *amx, cell *params) // cs_
 		char* icon;
 		if (params[6] != -1) {
 			int len;
-			icon = GET_AMXSTRING(amx, params[6], 1, len);
+			icon = MF_GetAmxString(amx, params[6], 1, &len);
 		}
 		else
 			icon = "defuser";
@@ -824,7 +824,7 @@ static cell AMX_NATIVE_CALL cs_get_user_backpackammo(AMX *amx, cell *params) // 
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -833,7 +833,7 @@ static cell AMX_NATIVE_CALL cs_get_user_backpackammo(AMX *amx, cell *params) // 
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -897,7 +897,7 @@ static cell AMX_NATIVE_CALL cs_get_user_backpackammo(AMX *amx, cell *params) // 
 			offset = OFFSET_C4_AMMO;
 			break;
 		default:
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;
 	}
 
@@ -916,7 +916,7 @@ static cell AMX_NATIVE_CALL cs_set_user_backpackammo(AMX *amx, cell *params) // 
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -925,7 +925,7 @@ static cell AMX_NATIVE_CALL cs_set_user_backpackammo(AMX *amx, cell *params) // 
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -989,7 +989,7 @@ static cell AMX_NATIVE_CALL cs_set_user_backpackammo(AMX *amx, cell *params) // 
 			offset = OFFSET_C4_AMMO;
 			break;
 		default:
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;
 	}
 
@@ -1006,7 +1006,7 @@ static cell AMX_NATIVE_CALL cs_get_user_nvg(AMX *amx, cell *params) // cs_get_us
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1015,7 +1015,7 @@ static cell AMX_NATIVE_CALL cs_get_user_nvg(AMX *amx, cell *params) // cs_get_us
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1034,7 +1034,7 @@ static cell AMX_NATIVE_CALL cs_set_user_nvg(AMX *amx, cell *params) // cs_set_us
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1043,7 +1043,7 @@ static cell AMX_NATIVE_CALL cs_set_user_nvg(AMX *amx, cell *params) // cs_set_us
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 	
@@ -1075,7 +1075,7 @@ static cell AMX_NATIVE_CALL cs_get_user_model(AMX *amx, cell *params) // cs_get_
 	// Valid player index should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1084,11 +1084,11 @@ static cell AMX_NATIVE_CALL cs_get_user_model(AMX *amx, cell *params) // cs_get_
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
-	return SET_AMXSTRING(amx, params[2], GETCLIENTKEYVALUE(GETINFOKEYBUFFER(pPlayer), "model"), params[3]);
+	return MF_SetAmxString(amx, params[2], GETCLIENTKEYVALUE(GETINFOKEYBUFFER(pPlayer), "model"), params[3]);
 }
 
 static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params) // cs_set_user_model(index, const model[]); = 2 params
@@ -1100,7 +1100,7 @@ static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params) // cs_set_
 	// Valid player index should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1109,19 +1109,19 @@ static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params) // cs_set_
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	if (params[2] == -1) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	char model[32];
 	int len;
 
-	strcpy(model, GET_AMXSTRING(amx, params[2], 0, len));
+	strcpy(model, MF_GetAmxString(amx, params[2], 0, &len));
 	
 	g_players[params[1]].SetModel(model);
 	g_players[params[1]].SetModelled(true);
@@ -1139,7 +1139,7 @@ static cell AMX_NATIVE_CALL cs_reset_user_model(AMX *amx, cell *params) // cs_re
 	// Valid player index should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1148,7 +1148,7 @@ static cell AMX_NATIVE_CALL cs_reset_user_model(AMX *amx, cell *params) // cs_re
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1167,7 +1167,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_follow(AMX *amx, cell *params) // cs_
 	// Valid index should be within range
 	if (params[1] < gpGlobals->maxClients + 1 || params[1] > gpGlobals->maxEntities) // highest player index on a 10 player server is 10 :-)!
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1176,13 +1176,13 @@ static cell AMX_NATIVE_CALL cs_get_hostage_follow(AMX *amx, cell *params) // cs_
 
 	// Check entity validity
 	if (FNullEnt(pHostage)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	// Make sure this is a hostage.
 	if (strcmp(STRING(pHostage->v.classname), "hostage_entity") != 0) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1195,7 +1195,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_follow(AMX *amx, cell *params) // cs_
 	edict_t* pEntity = (edict_t*)following;
 
 	if (FNullEnt(pEntity)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1211,7 +1211,7 @@ static cell AMX_NATIVE_CALL cs_set_hostage_follow(AMX *amx, cell *params) // cs_
 	// Valid index should be within range
 	if (params[1] < gpGlobals->maxClients + 1 || params[1] > gpGlobals->maxEntities) // highest player index on a 10 player server is 10 :-)!
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1220,13 +1220,13 @@ static cell AMX_NATIVE_CALL cs_set_hostage_follow(AMX *amx, cell *params) // cs_
 
 	// Check entity validity
 	if (FNullEnt(pHostage)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	// Make sure this is a hostage.
 	if (strcmp(STRING(pHostage->v.classname), "hostage_entity") != 0) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1238,7 +1238,7 @@ static cell AMX_NATIVE_CALL cs_set_hostage_follow(AMX *amx, cell *params) // cs_
 	// Valid index should be within range
 	if (params[2] < 1 || params[2] > gpGlobals->maxEntities)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1247,7 +1247,7 @@ static cell AMX_NATIVE_CALL cs_set_hostage_follow(AMX *amx, cell *params) // cs_
 
 	// Check entity validity
 	if (FNullEnt(pEntity)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1264,7 +1264,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_ammo(AMX *amx, cell *params) // cs_get
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1273,7 +1273,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_ammo(AMX *amx, cell *params) // cs_get
 
 	// Check entity validity
 	if (FNullEnt(pWeapon)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1289,7 +1289,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_ammo(AMX *amx, cell *params) // cs_set
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1298,7 +1298,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_ammo(AMX *amx, cell *params) // cs_set
 
 	// Check entity validity
 	if (FNullEnt(pWeapon)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1354,21 +1354,6 @@ void MessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
 	RETURN_META(MRES_IGNORED);
 }
 
-C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion) {
-	if(!pengfuncsFromEngine)
-		return(FALSE);
-	else if(*interfaceVersion != ENGINE_INTERFACE_VERSION) {
-		*interfaceVersion = ENGINE_INTERFACE_VERSION;
-		return(FALSE);
-	}
-
-	//meta_engfuncs.pfnSetModel = SetModel;
-	meta_engfuncs.pfnMessageBegin = MessageBegin;
-
-	memcpy(pengfuncsFromEngine, &meta_engfuncs, sizeof(enginefuncs_t));
-
-	return TRUE;
-}
 
 /***GetEntityAPI2******************/
 void ClientDisconnect(edict_t *pEntity) {
@@ -1402,15 +1387,6 @@ void PlayerPostThink(edict_t* pPlayer) {
 	RETURN_META(MRES_IGNORED);
 }
 
-C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion) {
-	gFunctionTable.pfnClientDisconnect = ClientDisconnect;
-	gFunctionTable.pfnClientUserInfoChanged = ClientUserInfoChanged;
-	gFunctionTable.pfnPlayerPostThink = PlayerPostThink;
-
-	memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
-
-	return(TRUE);
-}
 /****GetEntityAPI2_Post**********************************************************/
 void ClientUserInfoChanged_Post( edict_t *pEntity, char *infobuffer ) {
 	int index = ENTINDEX(pEntity);
@@ -1436,85 +1412,7 @@ void ClientPutInServer_Post( edict_t *pEntity ) {
 	RETURN_META(MRES_IGNORED);
 }
 
-DLL_FUNCTIONS gFunctionTable_Post;
-C_DLLEXPORT int GetEntityAPI2_Post( DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion ) {
-	gFunctionTable_Post.pfnClientUserInfoChanged = ClientUserInfoChanged_Post;
-	gFunctionTable_Post.pfnClientPutInServer = ClientPutInServer_Post;
-
-	if(*interfaceVersion!=INTERFACE_VERSION) {
-		LOG_ERROR(PLID, "GetEntityAPI2_Post version mismatch; requested=%d ours=%d", *interfaceVersion, INTERFACE_VERSION);
-		*interfaceVersion = INTERFACE_VERSION;
-		return(FALSE);
-	}
-	memcpy( pFunctionTable, &gFunctionTable_Post, sizeof( DLL_FUNCTIONS ) );
-	return(TRUE);
-}
-/******************************************************************************************/
-C_DLLEXPORT int Meta_Query(char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_t *pMetaUtilFuncs) {
-	*pPlugInfo = &Plugin_info;
-	gpMetaUtilFuncs = pMetaUtilFuncs;
-
-	return(TRUE);
-}
-
-C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, meta_globals_t *pMGlobals, gamedll_funcs_t *pGamedllFuncs) {
-	if(!pMGlobals) {
-		LOG_ERROR(PLID, "Meta_Attach called with null pMGlobals");
-		return(FALSE);
-	}
-
-	gpMetaGlobals = pMGlobals;
-
-	if(!pFunctionTable) {
-		LOG_ERROR(PLID, "Meta_Attach called with null pFunctionTable");
-		return(FALSE);
-	}
-
-	gMetaFunctionTable.pfnGetEntityAPI2 = GetEntityAPI2;
-	gMetaFunctionTable.pfnGetEntityAPI2_Post = GetEntityAPI2_Post;
-	gMetaFunctionTable.pfnGetEngineFunctions = GetEngineFunctions;
-
-	memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
-	gpGamedllFuncs = pGamedllFuncs;
-
-	// Init stuff here
-
-	return(TRUE);
-}
-
-C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason) {
-	if(now && reason) {
-		return(TRUE);
-	} else {
-		return(FALSE);
-	}
-}
-
-#ifdef __linux__
-C_DLLEXPORT void GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals ) {
-#else
-void WINAPI GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals ) {
-#endif
-	memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
-	gpGlobals = pGlobals;
-}
-
-C_DLLEXPORT int AMX_Query(module_info_s** info) {
-	*info = &module_info;
-	return 1;
-}
-
-C_DLLEXPORT int AMX_Attach(pfnamx_engine_g* amxeng,pfnmodule_engine_g* meng) {
-	g_engAmxFunc = amxeng;
-	g_engModuleFunc = meng;
-
-	if(!gpMetaGlobals) REPORT_ERROR(1, "[AMX] %s is not attached to metamod (module \"%s\")\n", NAME, LOGTAG);
-
-	ADD_AMXNATIVES(&module_info, cstrike_Exports);
-
-	return(1);
-}
-
-C_DLLEXPORT int AMX_Detach() {
-	return(1);
+void OnAmxxAttach()
+{
+	MF_AddNatives(cstrike_Exports);
 }

@@ -1,5 +1,5 @@
 MODNAME = cstrike_amx
-SRCFILES = CstrikePlayer.cpp cstrike.cpp
+SRCFILES = CstrikePlayer.cpp cstrike.cpp amxxmodule.cpp
 
 EXTRA_LIBS_LINUX =
 EXTRA_LIBS_WIN32 =

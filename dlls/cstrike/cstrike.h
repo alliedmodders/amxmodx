@@ -38,42 +38,8 @@
 
 #include <extdll.h>
 #include <meta_api.h>
-#include <modules.h>
+#include "amxxmodule.h"
 #include "CstrikePlayer.h"
-
-meta_globals_t *gpMetaGlobals;		// Variables provided to plugins.
-gamedll_funcs_t *gpGamedllFuncs;	// Pair of function tables provided by game DLL.
-mutil_funcs_t *gpMetaUtilFuncs;		// Meta Utility Function table type.
-enginefuncs_t g_engfuncs;			// Engine hands this to DLLs for functionality callbacks
-enginefuncs_t meta_engfuncs;
-globalvars_t  *gpGlobals;
-DLL_FUNCTIONS gFunctionTable;
-
-// Must provide at least one of these...
-static META_FUNCTIONS gMetaFunctionTable; /* = {
-	NULL,						// pfnGetEntityAPI				HL SDK; called before game DLL
-	NULL,						// pfnGetEntityAPI_Post			META; called after game DLL
-	NULL,						// pfnGetEntityAPI2				HL SDK2; called before game DLL
-	NULL,						// pfnGetEntityAPI2_Post		META; called after game DLL
-	NULL,						// pfnGetNewDLLFunctions		HL SDK2; called before game DLL
-	NULL,						// pfnGetNewDLLFunctions_Post	META; called after game DLL
-	NULL,						// pfnGetEngineFunctions		META; called before HL engine
-	NULL						// pfnGetEngineFunctions_Post	META; called after HL engine
-};*/
-
-pfnamx_engine_g* g_engAmxFunc;
-pfnmodule_engine_g* g_engModuleFunc;
-
-#define NAME "Counter-Strike"
-#define AUTHOR "AMX Mod X Dev Team"
-#if defined __cswonbuild__
-#define VERSION "0.16 WON" // change both these versions
-#else
-#define VERSION "0.16 STEAM" // change both these versions
-#endif // defined __cswonbuild__
-#define URL "http://www.amxmodx.org"
-#define LOGTAG "AMXCS"
-#define DATE __DATE__
 
 #define GETINFOKEYBUFFER				(*g_engfuncs.pfnGetInfoKeyBuffer)
 #define	SETCLIENTKEYVALUE				(*g_engfuncs.pfnSetClientKeyValue)
@@ -231,26 +197,6 @@ enum CS_Internal_Models {
 	CS_CT_VIP = 9
 };
 // cstrike-specific defines above
-
-// Globals below
-plugin_info_t Plugin_info = {
-  META_INTERFACE_VERSION,
-  NAME,
-  VERSION,
-  DATE,
-  AUTHOR,
-  URL,
-  LOGTAG,
-  PT_ANYPAUSE,
-  PT_ANYPAUSE,
-};
-module_info_s module_info = {
-  NAME,
-  AUTHOR,
-  VERSION,
-  AMX_INTERFACE_VERSION,
-  RELOAD_MODULE,
-};
 
 CCstrikePlayer g_players[33];
 //bool g_initialized = false;

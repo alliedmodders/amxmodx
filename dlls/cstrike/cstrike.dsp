@@ -56,7 +56,7 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PostBuild_Cmds=echo    Copying    dll...   	copy    Release\cstrike.dll    K:\S\cstrike\addons\amxx\modules\cstrike_amx.dll   	echo    Copying    inc...   	copy    ..\plugins\include\cstrike.inc    K:\S\cstrike\addons\amxx\scripting\include\ 
+PostBuild_Cmds=echo     Copying     dll...    	copy     Release\cstrike.dll     K:\S\cstrike\addons\amxx\modules\cstrike_amx.dll    	echo     Copying     inc...    	copy     ..\plugins\include\cstrike.inc     K:\S\cstrike\addons\amxx\scripting\include\ 
 # End Special Build Tool
 
 !ELSEIF  "$(CFG)" == "cstrike - Win32 Debug"
@@ -86,7 +86,7 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /out:"Debug/cstrike_amx.dll" /pdbtype:sept
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PostBuild_Cmds=copy   Debug\cstrike_amx.dll   k:\s\cstrike\addons\amxx\modules\  	copy   ..\plugins\include\cstrike.inc   k:\s\cstrike\addons\amxx\scripting\include\ 
+PostBuild_Cmds=copy    Debug\cstrike_amx.dll    k:\s\cstrike\addons\amxx\modules\   	copy    ..\plugins\include\cstrike.inc    k:\s\cstrike\addons\amxx\scripting\include\ 
 # End Special Build Tool
 
 !ENDIF 
@@ -98,6 +98,10 @@ PostBuild_Cmds=copy   Debug\cstrike_amx.dll   k:\s\cstrike\addons\amxx\modules\ 
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+# Begin Source File
+
+SOURCE=.\amxxmodule.cpp
+# End Source File
 # Begin Source File
 
 SOURCE=.\cstrike.cpp
@@ -116,11 +120,19 @@ SOURCE=.\CstrikePlayer.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=.\amxxmodule.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\cstrike.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\CstrikePlayer.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\moduleconfig.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

@@ -1,19 +1,17 @@
-MODNAME = fun_amx
-SRCFILES = fun.cpp
+MODNAME = pgsql_amx
+SRCFILES = pgsql_amx.cpp
 
-EXTRA_LIBS_LINUX =
-EXTRA_LIBS_WIN32 =
-EXTRA_LIBDIRS_LINUX = -Lextra/lib_linux
-EXTRA_LIBDIRS_WIN32 = -Lextra/lib_win32
+EXTRA_LIBS_LINUX = lib/libpq.a -lpq libz.a -lz -lcrypt
+EXTRA_LIBS_WIN32 = libpq.a -lws2_32 -lwsock32
+EXTRA_LIBDIRS_LINUX = -Llib
+EXTRA_LIBDIRS_WIN32 = -L
 
-EXTRA_INCLUDEDIRS = -Iextra/include -I../amxmodx
+EXTRA_INCLUDEDIRS = -Iextra/include -I../../amxmodx -Ipostgresql-7.4.2/src/include -Ipostgresql-7.4.2/src/interfaces/libpq
 
 EXTRA_FLAGS = -Dstrcmpi=strcasecmp
 
-AMXDIR=../amxmodx
-SDKTOP=../hlsdk
-METADIR=../metamodx
-
+SDKTOP=../../hlsdk
+METADIR=../../metamodx/
 
 SDKSRC=$(SDKTOP)/SourceCode
 OBJDIR_LINUX=obj.linux
@@ -41,7 +39,7 @@ endif
 
 
 
-LIBFILE_LINUX = $(MODNAME)_i386.so
+LIBFILE_LINUX = $(MODNAME)_i686.so
 LIBFILE_WIN32 = $(MODNAME).dll
 TARGET_LINUX = $(OBJDIR_LINUX)/$(LIBFILE_LINUX)
 TARGET_WIN32 = $(OBJDIR_WIN32)/$(LIBFILE_WIN32)
@@ -55,18 +53,16 @@ endif
 OBJ_LINUX := $(SRCFILES:%.cpp=$(OBJDIR_LINUX)/%.o)
 OBJ_WIN32 := $(SRCFILES:%.cpp=$(OBJDIR_WIN32)/%.o)
 
-CCOPT = -march=i586 -O6 -ffast-math -funroll-loops \
-	-fomit-frame-pointer -fexpensive-optimizations -malign-loops=2 \
-	-malign-jumps=2 -malign-functions=2 -s -DNDEBUG
+#CCOPT = -funroll-loops \
 
-INCLUDEDIRS=-I../curl/include -I$(SRCDIR) -I$(AMXDIR) -I$(METADIR) -I$(SDKSRC)/engine -I$(SDKSRC)/common -I$(SDKSRC)/pm_shared -I$(SDKSRC)/dlls -I$(SDKSRC) $(EXTRA_INCLUDEDIRS)
-CFLAGS=-Wall -Wno-unknown-pragmas
+INCLUDEDIRS=-I../curl/include -I$(SRCDIR) -I$(METADIR) -I$(SDKSRC)/engine -I$(SDKSRC)/common -I$(SDKSRC)/pm_shared -I$(SDKSRC)/dlls -I$(SDKSRC) $(EXTRA_INCLUDEDIRS)
+CFLAGS=-Wall -Wno-unknown-pragmas -march=i686
 ODEF = -DOPT_TYPE=\"optimized\"
 CFLAGS:=$(CCOPT) $(CFLAGS) $(ODEF) $(EXTRA_FLAGS)
 
 DO_CC_LINUX=$(CC_LINUX) $(CFLAGS) -fPIC $(INCLUDEDIRS) -o $@ -c $<
 DO_CC_WIN32=$(CC_WIN32) $(CFLAGS) $(INCLUDEDIRS) -o $@ -c $<
-LINK_LINUX=$(CC_LINUX) $(CFLAGS) -shared -ldl -lm $(OBJ_LINUX) $(EXTRA_LIBDIRS_LINUX) $(EXTRA_LIBS_LINUX) -o $@
+LINK_LINUX=$(CC_LINUX) $(CFLAGS) -shared -lc -lgcc -ldl -lm $(OBJ_LINUX) $(EXTRA_LIBDIRS_LINUX) $(EXTRA_LIBS_LINUX) -o $@
 LINK_WIN32=$(LD_WINDLL) -mwindows --def $(MODNAME).def --add-stdcall-alias $(OBJ_WIN32) $(EXTRA_LIBDIRS_WIN32) $(EXTRA_LIBS_WIN32) -o $@
 
 $(OBJDIR_LINUX)/%.o: $(SRCDIR)/%.cpp

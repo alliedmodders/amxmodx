@@ -2618,9 +2618,9 @@ static cell get_lang(AMX *amx, cell *params)
 static cell register_dictionary(AMX *amx, cell *params)
 {
 	int len;
-	g_langMngr.MergeDefinitionFile(build_pathname("%s/lang/%s",
+	int result = g_langMngr.MergeDefinitionFile(build_pathname("%s/lang/%s",
 		get_localinfo("amxx_datadir", "addons/amxx/data"), get_amxstring(amx, params[1], 1, len)));
-	return 0;
+	return result;
 }
 
 // lang_exists(const name[]);

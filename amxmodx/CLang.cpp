@@ -335,13 +335,16 @@ const char * CLangMngr::CLang::GetDef(const char *key)
 	static char nfind[1024] = "ML_NOTFOUND";
 	int ikey = lman->GetKeyEntry(key);
 	if (ikey == -1)
+	{
+		sprintf(nfind, "ML_NOTFOUND: %s", key);
 		return nfind;
+	}
 	for (unsigned int i = 0; i<m_LookUpTable.size(); i++)
 	{
 		if (m_LookUpTable[i]->GetKey() == ikey)
 			return m_LookUpTable[i]->GetDef();
 	}
-	return "ML_LNOTFOUND";
+	return NULL;
 }
 
 
@@ -659,6 +662,23 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 					int len;
 					char *key = get_amxstring(amx, params[parm++], 1, len);
 					const char *def = GetDef(cpLangName, key);
+					if (def == NULL)
+					{
+						if (*pLangName != LANG_SERVER)
+						{
+							def = GetDef(g_vault.get("server_language"), key);
+						}
+						if (strcmp(cpLangName, "en")!=0 && strcmp(g_vault.get("server_language"), "en")!=0)
+						{
+							def = GetDef("en", key);
+						}
+						if (!def)
+						{
+							static char buf[255];
+							sprintf(buf, "ML_LNOTFOUND: %s", key);
+							def = buf;
+						}
+					}
 					while (*def)
 					{
 						switch (*def)
@@ -770,6 +790,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 				break;
 			}	
 		}
+		AMXXLOG_Log("[AMXX] Failed to open dictionary file: %s", file);
 		return 0;
 	}
 	MD5 md5;
@@ -786,7 +807,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 		{
 			if ( (*iter)->val.compare(md5buffer) == 0 )
 			{
-				return 2;
+				return -1;
 			} else {
 				(*iter)->val.assign(md5buffer);
 				break;
@@ -806,6 +827,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 	fp = fopen(file, "rt");
 	if (!fp)
 	{
+		AMXXLOG_Log("[AMXX] Failed to re-open dictionary file: %s", file);
 		return 0;
 	}
 
@@ -870,6 +892,8 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 							r = INSERT_FLOAT;
 						} else if (c == 's') {
 							r = INSERT_STRING;
+						} else if (c == 'n') {
+							r = '\n';
 						} else {
 							r = 0;
 						}

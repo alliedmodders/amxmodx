@@ -1147,7 +1147,7 @@ _go_jit_nodebug:
 		RELOC 1
 		GO_ON	j_call_nodebug, _j_call_go_on, 8
 		j_call_nodebug:
-		call	12345678h
+		db      0e8h, 0, 0, 0, 0
 		CHECKCODESIZE j_call_nodebug
 
 _j_call_go_on:
@@ -1183,7 +1183,7 @@ _go_jit_debug:
 		pop		eax
 		pop		ebp
 	_go_jit_reloc:
-		call	12345678h
+		db      0e8h, 0, 0, 0, 0
 		CHECKCODESIZE j_call
 _opcall_end:
 

@@ -32,6 +32,7 @@
 #include "amxmodx.h"
 #include "osdep.h"			// sleep, etc
 #include "CFile.h"
+#include "amxxfile.h"
 
 CList<CModule> g_modules;
 CList<CScript,AMX*> g_loadedscripts;
@@ -87,9 +88,9 @@ void free_amxmemory(void **ptr)
 	*ptr = 0;
 }
 
-int load_amxscript(AMX *amx, void **program, const char *filename, char error[64]){
-
-	int err; 
+int load_amxscript(AMX *amx, void **program, const char *filename, char error[64])
+{
+	/* :TODO: REMOVE
 	FILE *fp;
 
 	AMX_HEADER hdr;
@@ -128,7 +129,58 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 	rewind(fp);
 	fread(*program, 1, (size_t)hdr.size, fp);
 	fclose(fp);
+	*/
 
+	*error = 0;
+	CAmxxReader reader(filename, SMALL_CELL_SIZE);
+	if (reader.GetStatus() == CAmxxReader::Err_None)
+	{
+		size_t bufSize = reader.GetBufferSize();
+		if (bufSize != 0)
+		{
+			*program = (void*) (new char[bufSize]);
+			if (!*program)
+			{
+				strcpy(error, "Failed to allocate memory");
+				return (amx->error = AMX_ERR_MEMORY);
+			}
+			reader.GetSection(*program);
+		}
+	}
+
+	switch (reader.GetStatus())
+	{
+	case CAmxxReader::Err_None:
+		break;
+	case CAmxxReader::Err_FileOpen:
+		strcpy(error, "Plugin file open error");
+		return (amx->error = AMX_ERR_NOTFOUND);
+	case CAmxxReader::Err_FileRead:
+		strcpy(error, "Plugin file read error");
+		return (amx->error = AMX_ERR_NOTFOUND);
+	case CAmxxReader::Err_InvalidParam:
+		strcpy(error, "Internal error: Invalid parameter");
+		return (amx->error = AMX_ERR_NOTFOUND);
+	case CAmxxReader::Err_FileInvalid:
+		strcpy(error, "Invalid Plugin");
+		return (amx->error = AMX_ERR_FORMAT);
+	default:
+		strcpy(error, "Unknown error");
+		return (amx->error = AMX_ERR_NOTFOUND);
+	}
+
+	// check for magic
+	AMX_HEADER *hdr = (AMX_HEADER*)*program;
+	uint16_t magic = hdr->magic;
+	amx_Align16(&magic);
+	if (magic != AMX_MAGIC)
+	{
+		strcpy(error, "Invalid Plugin");
+		return (amx->error = AMX_ERR_FORMAT);
+	}
+
+	int err;
+	memset(amx, 0, sizeof(*amx));
 	if ((err = amx_Init( amx, *program )) != AMX_ERR_NONE)
 	{
 		sprintf(error,"Load error %d (invalid file format or version)", err);

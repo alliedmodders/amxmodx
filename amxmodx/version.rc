@@ -48,7 +48,7 @@ BEGIN
             VALUE "FileVersion", "1.00"
             VALUE "InternalName", "amxmodx"
             VALUE "LegalCopyright", "Copyright (c) 2004, AMX Mod X Dev Team"
-            VALUE "OriginalFilename", "amxx_mm.dll"
+            VALUE "OriginalFilename", "amxmodx_mm.dll"
             VALUE "ProductName", "AMX Mod X"
             VALUE "ProductVersion", "1.00"
         END

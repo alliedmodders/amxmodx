@@ -18,12 +18,6 @@ native set_user_godmode(index, godmode = 0);
 /* Returns 1 if godmode is set. */
 native get_user_godmode(index);
 
-/* Sets player deaths. */
-native set_user_deaths(index, newdeaths);
-
-/* Sets player frags. */
-native set_user_frags(index, frags);
-
 /* Sets player armor. */
 native set_user_armor(index, armor);
 

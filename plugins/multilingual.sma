@@ -41,8 +41,9 @@ new g_langNum
 new g_coloredMenus
 
 public plugin_init() {
-  register_plugin("Multi-Lingual System","0.20","AMXX Dev Team")
+  register_plugin("Multi-Lingual System",AMXX_VERSION_STR,"AMXX Dev Team")
   register_dictionary("multilingual.txt")
+  register_dictionary("common.txt")
   register_cvar("amxx_language","en",FCVAR_SERVER|FCVAR_EXTDLL|FCVAR_SPONLY)
   register_concmd("amxx_setlang","cmdLang",ADMIN_CFG,"<language>")
   register_clcmd("amxx_setlangmenu","cmdLangMenu",ADMIN_ALL)
@@ -83,7 +84,7 @@ public cmdLang(id,level,cid) {
   read_argv(1,arg,2)
 
   if ( !lang_exists(arg) ) {
-    console_print(id,"[AMXX] %L",id,"LANG_NOT_EXISTS") // The language does not exist
+    console_print(id,"[AMXX] %L",id,"LANG_NOT_EXISTS")
     return PLUGIN_HANDLED
   }
 
@@ -152,7 +153,7 @@ public actionMenu(id,key) {
     set_vaultdata("server_language",sLang)
     set_cvar_string("amxx_language",sLang)
     g_serverLang = g_menuLang[id][1]
-    client_print(id,print_chat,"%L",id,"SET_LANG_USER",sLang) // The server language has been set to "%s"
+    client_print(id,print_chat,"%L",id,"SET_LANG_USER",sLang)
   }
 
   if ( ( isAdmin && (key==2) ) || ( !isAdmin && (key==1) ) ) {
@@ -160,7 +161,7 @@ public actionMenu(id,key) {
     get_lang(g_menuLang[id][0],pLang)
     copy(g_userLang[id],2,pLang)
     set_user_info(id,"_language",pLang)
-    client_print(id,print_chat,"%L",id,"SET_LANG_USER",pLang) // Your language has been set to "%s"
+    client_print(id,print_chat,"%L",id,"SET_LANG_USER",pLang)
     showMenu(id)
   }
 }

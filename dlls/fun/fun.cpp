@@ -213,23 +213,46 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params) // native give_ite
 	int length;
 	const char *szItem = GET_AMXSTRING(amx, params[2], 1, length);
 
+	//check for valid item
+	if (strncmp(szItem, "weapon_", 7) && 
+		strncmp(szItem, "ammo_", 5) && 
+		strncmp(szItem, "item_", 5)) {
+		return 0;
+	}
+
 	//string_t item = MAKE_STRING(szItem);
 	string_t item = ALLOC_STRING(szItem); // Using MAKE_STRING makes "item" contents get lost when we leave this scope! ALLOC_STRING seems to allocate properly...
 
 	// Create the entity, returns to pointer
 	pItemEntity = CREATE_NAMED_ENTITY(item);
 
-	VARS(pItemEntity)->origin = VARS(pPlayer)->origin; // nice to do VARS(ent)->origin instead of ent->v.origin? :-I
-	pItemEntity->v.spawnflags |= SF_NORESPAWN;
+	//VARS(pItemEntity)->origin = VARS(pPlayer)->origin; // nice to do VARS(ent)->origin instead of ent->v.origin? :-I
+	//I'm not sure, normally I use macros too =P
+	pItemEntity->v.origin = pPlayer->v.origin;
+	pItemEntity->v.spawnflags |= (1<<30);	//SF_NORESPAWN;
 
 	MDLL_Spawn(pItemEntity);
+
+	int save = pItemEntity->v.solid;
+
 	MDLL_Touch(pItemEntity, ENT(pPlayer));
+
+	//The problem with the original give_item was the
+	// item was not removed.  I had tried this but it
+	// did not work.  OLO's implementation is better.
+	/*
 	int iEnt = ENTINDEX(pItemEntity->v.owner);
 	if (iEnt > 32 || iEnt <1 ) {
 		MDLL_Think(pItemEntity);
+	}*/
+
+	if (pItemEntity->v.solid == save) {
+		REMOVE_ENTITY(pItemEntity);
+		//the function did not fail - we're just deleting the item
+		return -1;
 	}
 
-	return 1;
+	return ENTINDEX(pItemEntity);
 }
 
 static cell AMX_NATIVE_CALL spawn(AMX *amx, cell *params) // spawn(id) = 1 param

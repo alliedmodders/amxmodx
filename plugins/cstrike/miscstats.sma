@@ -492,7 +492,7 @@ public eBombDefL(id)
 public eBombPlanted() 
   if ( g_C4Timer != -2 ) {
     if (BombPlanted) announceEvent(g_Planter, "SET_UP_BOMB" )
-    g_C4Timer = get_cvar_num("mp_c4timer") - 2 
+    g_C4Timer = get_cvar_num("mp_c4timer")
     set_task(1.0,"bombTimer",8038,"",0,"b") 
     g_LastPlan = 0.0
   }

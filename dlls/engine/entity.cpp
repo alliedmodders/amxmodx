@@ -137,7 +137,8 @@ static cell AMX_NATIVE_CALL DispatchKeyValue(AMX *amx, cell *params)
 {
 	int count = *params/sizeof(cell);
 	if (count == 3) {
-		int iValue = params[1];
+		cell *cVal = MF_GetAmxAddr(amx, params[1]);
+		int iValue = *cVal;
 		if (!is_ent_valid(iValue)) {
 			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;

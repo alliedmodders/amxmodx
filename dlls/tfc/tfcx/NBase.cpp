@@ -38,10 +38,7 @@
 static cell AMX_NATIVE_CALL TFC_SetModel(AMX *amx, cell *params) { 
 	int iIndex = params[1];
 	// Make sure its a player.
-	if (iIndex < 1 || iIndex > gpGlobals->maxClients) {
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(iIndex);
 
 	int iLen;
 
@@ -78,10 +75,7 @@ static cell AMX_NATIVE_CALL TFC_SetModel(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL TFC_ClearModel(AMX *amx, cell *params) { 
 	int iIndex = params[1];
   
-	if (iIndex < 1 || iIndex > gpGlobals->maxClients) {
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(iIndex)
 
 	edict_t* pPlayer = INDEXENT(iIndex);
 
@@ -148,14 +142,11 @@ static cell AMX_NATIVE_CALL TFC_ClearModel(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL TFC_SetBAmmo(AMX *amx, cell *params) { 
 	int iIndex = params[1];
   
-	if (iIndex < 1 || iIndex > gpGlobals->maxClients) {
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(iIndex);
 	int iValue = params[3];
 		
 	if (iValue < 0 )  {
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid ammo amount %d", iValue);
 		return 0;
 	}
 
@@ -190,10 +181,7 @@ static cell AMX_NATIVE_CALL TFC_SetBAmmo(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL TFC_GetBAmmo(AMX *amx, cell *params) { 
 	int iIndex = params[1];
   
-	if (iIndex < 1 || iIndex > gpGlobals->maxClients) {
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(iIndex);
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(iIndex);
 	
@@ -226,10 +214,7 @@ static cell AMX_NATIVE_CALL TFC_GetBAmmo(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL TFC_GetWeaponBAmmo(AMX *amx, cell *params) { 
 	int iIndex = params[1];
   
-	if (iIndex < 1 || iIndex > gpGlobals->maxClients) {
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(iIndex);
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(iIndex);
 
@@ -281,15 +266,12 @@ static cell AMX_NATIVE_CALL TFC_GetWeaponBAmmo(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL TFC_SetWeaponBAmmo(AMX *amx, cell *params) { 
 	int iIndex = params[1];
   
-	if (iIndex < 1 || iIndex > gpGlobals->maxClients) {
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(iIndex);
 	
 	int iValue = params[3];
 		
 	if (iValue < 0 )  {
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid ammo amount %d", iValue);
 		return 0;
 	}
 
@@ -341,7 +323,7 @@ static cell AMX_NATIVE_CALL TFC_SetWeaponBAmmo(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL TFC_GetWpnName(AMX *amx, cell *params) { 
 	int iIndex = params[1];
 	if ( iIndex < 1 || iIndex > TFCMAX_WEAPONS ){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", iIndex);
 		return 0;
 	}
 	return MF_SetAmxString(amx,params[2],weaponData[iIndex].name,params[3]);
@@ -350,7 +332,7 @@ static cell AMX_NATIVE_CALL TFC_GetWpnName(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL TFC_GetWpnLogName(AMX *amx, cell *params) { 
 	int iIndex = params[1];
 	if ( iIndex < 1 || iIndex > TFCMAX_WEAPONS ){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", iIndex);
 		return 0;
 	}
 	return MF_SetAmxString(amx,params[2],weaponData[iIndex].logName,params[3]);
@@ -375,7 +357,7 @@ static cell AMX_NATIVE_CALL TFC_SetPDdata(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL TFC_IsMelee(AMX *amx, cell *params){ // player,wid
 	int weapon = params[1];
 	if (  weapon < 1 || weapon >= TFCMAX_WEAPONS  ){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", weapon);
 		return 0;
 	}
 	return weaponData[weapon].melee;
@@ -383,10 +365,7 @@ static cell AMX_NATIVE_CALL TFC_IsMelee(AMX *amx, cell *params){ // player,wid
 
 static cell AMX_NATIVE_CALL TFC_UserKill(AMX *amx, cell *params){ // player,wid
 	int index = params[1];
-	if (  index < 1 || index >gpGlobals->maxClients   ){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	pPlayer->killPlayer();
 
@@ -395,23 +374,24 @@ static cell AMX_NATIVE_CALL TFC_UserKill(AMX *amx, cell *params){ // player,wid
 
 static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params){ // forward 
 	int iFunctionIndex;
+	int err;
 	switch( params[1] ){
 	case 0:
-		if( MF_AmxFindPublic(amx, "client_damage", &iFunctionIndex) == AMX_ERR_NONE )
+		if( (err=MF_AmxFindPublic(amx, "client_damage", &iFunctionIndex)) == AMX_ERR_NONE )
 			g_damage_info.put( amx , iFunctionIndex );
 		else
-			MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+			MF_LogError(amx, err, "Error finding function \"client_damage\"");
 			return 0;
 		break;
 	case 1:
-		if( MF_AmxFindPublic(amx, "client_death", &iFunctionIndex) == AMX_ERR_NONE )
+		if( (err=MF_AmxFindPublic(amx, "client_death", &iFunctionIndex)) == AMX_ERR_NONE )
 			g_death_info.put( amx , iFunctionIndex );
 		else
-			MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+			MF_LogError(amx, err, "Error finding function \"client_death\"");
 			return 0;
 		break;
 	default:
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid forward id %d", params[1]);
 		return 0;
 	}
 	return 1;

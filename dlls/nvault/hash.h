@@ -34,15 +34,19 @@ public:		//STRUCTORS
 public:		//PRE-DEF
 	class iterator;
 	struct htNode;
+	friend class Vault;
 private:	//PRE-DEF
 	struct htNodeSet;
 public:		//PUBLIC FUNCTIONS
 	void Store(const char *key, const char *value, bool temporary=true);
+	void Store(const char *key, const char *value, time_t stamp);
 	htNode *Retrieve(const char *key);
 	iterator Enumerate();
 	size_t Prune(time_t begin, time_t end, bool all=false);
 	void Clear();
 	bool KeyExists(const char *key);
+	size_t UsedHashes();
+	void EraseKey(const char *key);
 public:		//PUBLIC CLASSES
 	class iterator
 	{

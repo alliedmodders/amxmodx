@@ -23,7 +23,7 @@ HashTable::htNode *HashTable::Retrieve(const char *key)
 	return _FindNode(key);
 }
 
-//Adds an entry into the hash table
+//Adds an entry into the hash table with current time
 void HashTable::Store(const char *key, const char *value, bool temporary)
 {
 	time_t stamp = 0;
@@ -32,6 +32,22 @@ void HashTable::Store(const char *key, const char *value, bool temporary)
 		stamp = time(NULL);
 
 	_Insert(key, value, stamp);
+}
+
+//Adds an entry into the hash table with preset time
+void HashTable::Store(const char *key, const char *value, time_t stamp)
+{
+	_Insert(key, value, stamp);
+}
+
+//Erases a key
+void HashTable::EraseKey(const char *key)
+{
+	HashTable::htNodeSet *set = _FindNodeSet(key);
+	HashTable::htNode *node = _FindNode(key, false);
+
+	if (set && node)
+		_Unlink(set, node);
 }
 
 //Deletes all keys between the two times.
@@ -106,7 +122,20 @@ void HashTable::Clear()
 
 bool HashTable::KeyExists(const char *key)
 {
-	return _FindNode(key, false);
+	return (_FindNode(key, false) != NULL);
+}
+
+size_t HashTable::UsedHashes()
+{
+	size_t num = 0;
+
+	for (uint32_t i=0; i<HT_SIZE; i++)
+	{
+		if (m_Table[i])
+			num++;
+	}
+
+	return num;
 }
 
 ////////////////////

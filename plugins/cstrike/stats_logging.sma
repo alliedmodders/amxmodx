@@ -54,15 +54,12 @@ public client_disconnect(id) {
   get_user_authid(id, szAuthid , 31 )
   for (new i = 1 ; i < 31 ; ++i ) {
     if ( get_user_wstats( id , i ,iStats , iHits ) ) {
-      if ( i == CSW_HEGRENADE)
-        copy(szWeapon[7],16,"grenade")
-      else
-        get_weaponname( i , szWeapon , 23 )
+      get_weaponname( i , szWeapon , 23 )
 
       log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats^" (weapon ^"%s^") (shots ^"%d^") (hits ^"%d^") (kills ^"%d^") (headshots ^"%d^") (tks ^"%d^") (damage ^"%d^") (deaths ^"%d^")",
-        szName,iUserid,szAuthid,szTeam,szWeapon[7],iStats[4],iStats[5],iStats[0], iStats[2],iStats[3],iStats[6],iStats[1])
+        szName,iUserid,szAuthid,szTeam,szWeapon,iStats[4],iStats[5],iStats[0], iStats[2],iStats[3],iStats[6],iStats[1])
       log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats2^" (weapon ^"%s^") (head ^"%d^") (chest ^"%d^") (stomach ^"%d^") (leftarm ^"%d^") (rightarm ^"%d^") (leftleg ^"%d^") (rightleg ^"%d^")",
-        szName,iUserid,szAuthid,szTeam,szWeapon[7],iHits[1],iHits[2],iHits[3],  iHits[4],iHits[5],iHits[6],iHits[7])
+        szName,iUserid,szAuthid,szTeam,szWeapon,iHits[1],iHits[2],iHits[3],  iHits[4],iHits[5],iHits[6],iHits[7])
     }
   }
   new iTime = get_user_time(id,1)

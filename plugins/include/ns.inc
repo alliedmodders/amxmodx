@@ -172,3 +172,9 @@ native ns_set_fov(idPlayer,Float:_fov=0.0);
 
 /* Give a player an item. */
 native ns_give_item(id,const _szClassName[]);
+
+/* A player's team entvar has changed */
+forward client_changeteam(id,newteam,oldteam);
+
+/* A player's deadflag entvar has changed from >0 to 0 */
+forward client_spawn(id);

@@ -1989,7 +1989,7 @@ err_stacklow:
 
 _CHKMARGIN_STACK:               ; some run-time check routines
         cmp     esp,stp
-		lea		ebp,[esp-STACKRESERVE]
+        lea     ebp,[esp-STACKRESERVE]
         jg      err_stacklow
         sub     ebp,edi
         cmp     hea,ebp

@@ -64,13 +64,12 @@ while ($cmd = shift)
 $gcc = `$gccf --version`;
 if ($gcc =~ /2\.9/)
 {
-	`ln -s amx.cpp amx.c`;
-	push(@C_SOURCE_FILES, "amx.c");
+	push(@CPP_SOURCE_FILES, "amx.cpp");
 	$OPT{"opt"} .= " -malign-loops=2 -malign-jumps=2 -malign-functions=2";
 } else {
 	if ($OPTIONS{"amd64"})
 	{
-		`cp amx.cpp amx.c`;
+		`ln -s amx.cpp amx.c`;
 		push(@C_SOURCE_FILES, "amx.c");
 	} else {
 		push(@CPP_SOURCE_FILES, "amx.cpp");
@@ -220,6 +219,6 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	}
 }
 
-$gcc = "$gccf $cflags -Lzlib/ -shared -ldl -lm @LINK -lz -o $outdir/$bin";
+$gcc = "$gccf $cflags -Lzlib/ -shared -ldl -lstdc++ @LINK -lm -lz -o $outdir/$bin";
 print "$gcc\n";
 `$gcc`;

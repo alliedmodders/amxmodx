@@ -22,13 +22,11 @@
  */
 
 #if defined __linux__
-  #include "sclinux.h"
+  #include <sclinux.h>
 #endif
 
 #ifndef AMX_H_INCLUDED
 #define AMX_H_INCLUDED
-
-//#define JIT
 
 #if defined __LCC__ || defined __DMC__ || defined __linux__
   #include <stdint.h>
@@ -337,6 +335,7 @@ uint32_t * AMXAPI amx_Align32(uint32_t *v);
 #if defined _I64_MAX || defined HAVE_I64
   uint64_t * AMXAPI amx_Align64(uint64_t *v);
 #endif
+
 #if SMALL_CELL_SIZE==32
 #define amx_AlignCell amx_Align32
 #elif SMALL_CELL_SIZE==64
@@ -344,6 +343,7 @@ uint32_t * AMXAPI amx_Align32(uint32_t *v);
 #else
 #error Unsupported cell size
 #endif
+
 int AMXAPI amx_Allot(AMX *amx, int cells, cell *amx_addr, cell **phys_addr);
 int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params);
 int AMXAPI amx_Cleanup(AMX *amx);

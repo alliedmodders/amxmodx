@@ -21,9 +21,9 @@
  *  Version: $Id$
  */
 
-#include <stdio.h>
+// not used
 #define AMX_NODYNALOAD
- 
+
 // bad bad workaround but we have to prevent a compiler crash :/
 #if (BUILD_PLATFORM== WINDOWS) && (BUILD_TYPE== RELEASE) && (BUILD_COMPILER== MSVC) && (SMALL_CELL_SIZE== 64)
   #pragma optimize("g",off)
@@ -51,27 +51,30 @@
     #include <dlfcn.h>
   #endif
 #endif
-#if defined __LCC__ || defined __linux__
+#if defined __LCC__ || defined __GNUC__
   #include <wchar.h>    /* for wcslen() */
 #endif
+#if (defined _Windows && !defined AMX_NODYNALOAD) || (defined JIT && !defined __linux__)
+  #include <windows.h>
+#endif
 
-// this file does not include amxmodx.h so we have to include the mem mngr here
+// this file does not include amxmodx.h, so we have to include the memory manager here
 #ifdef MEMORY_TEST
 #include "mmgr/mmgr.h"
-#endif //MEMORY_TEST
+#endif // MEMORY_TEST
 
 #include "amx.h"
 
 #ifdef JIT
 # ifdef __WIN32__
-#  include <windows.h>
+#  include <windows.h>		// DWORD, VirtualProtect, ...
 # elif defined __linux__
-#  include <sys/mman.h>
+#  include <sys/mman.h>		// mprotect, PROT_*
 #  include <unistd.h>
 # else
    // :TODO:
 # endif
-#endif //JIT
+#endif // JIT
 
 /* When one or more of the AMX_funcname macris are defined, we want
  * to compile only those functions. However, when none of these macros
@@ -477,14 +480,9 @@ int AMXAPI amx_Debug(AMX *amx)
 }
 
 #if defined JIT
-#if _cplusplus
   extern "C" int AMXAPI getMaxCodeSize(void);
   extern "C" int AMXAPI asm_runJIT(void *sourceAMXbase, void *jumparray, void *compiledAMXbase);
-#else
-  int AMXAPI getMaxCodeSize(void);
-  int AMXAPI asm_runJIT(void *sourceAMXbase, void *jumparray, void *compiledAMXbase);
-#endif //_cplusplus
-#endif //JIT
+#endif
 
 #if SMALL_CELL_SIZE==16
   #define JUMPABS(base,ip)      ((cell *)(base+*ip))
@@ -540,19 +538,16 @@ static int amx_BrowseRelocate(AMX *amx)
   if (debug)
     amx->flags|=AMX_FLAG_DEBUG;
 
-  #if (defined __GNUC__ || defined ASM32 || defined JIT) && !defined __64BIT__
+  #if defined __GNUC__ || defined ASM32 || defined JIT && !defined __64BIT__
     amx_Exec(amx, (cell*)&opcode_list, 0, 0);
     #if !defined JIT
-      /* to use direct system requests, a function pointer must fit in a cell;
-       * because the native function's address will be stored as the parameter
-       * of SYSREQ.D
-       */
-      amx->sysreq_d= (sizeof(AMX_NATIVE)<=sizeof(cell)) ? opcode_list[OP_SYSREQ_D] : 0;
+	  amx->sysreq_d=(sizeof(AMX_NATIVE)<=sizeof(cell)) ? opcode_list[OP_SYSREQ_D] : 0;
     #endif
   #else
     /* ANSI C
      * to use direct system requests, a function pointer must fit in a cell;
-     * see the comment above
+     * because the native function's address will be stored as the parameter
+     * of SYSREQ.D
      */
     amx->sysreq_d= (sizeof(AMX_NATIVE)<=sizeof(cell)) ? OP_SYSREQ_D : 0;
   #endif
@@ -1054,19 +1049,16 @@ int AMXAPI amx_Init(AMX *amx,void *program)
     }
 
   #else /* #if defined __WIN32 __ */
+	// DOS32 has no imposed limits on its segments.
+	#if defined __BORLANDC__ || defined __WATCOMC__
+		#pragma argsused
+	#endif
+	int memoryFullAccess( void* addr, int len ) { return 1; }
 
-    // TODO: Add cases for Linux, Unix, OS/2, ...
-
-    // DOS32 has no imposed limits on its segments.
-    #if defined __BORLANDC__ || defined __WATCOMC__
-      #pragma argsused
-    #endif
-    int memoryFullAccess( void* addr, int len ) { return 1; }
-
-    #if defined __BORLANDC__ || defined __WATCOMC__
-      #pragma argsused
-    #endif
-    int memorySetAccess( void* addr, int len, int access ) { return 1; }
+	#if defined __BORLANDC__ || defined __WATCOMC__
+		#pragma argsused
+	#endif
+	int memorySetAccess( void* addr, int len, int access ) { return 1; }
 
   #endif /* #if defined __WIN32 __ */
 
@@ -1108,7 +1100,7 @@ int AMXAPI amx_InitJIT(AMX *amx, void *reloc_table, void *native_code)
   *(cell *)((char*)native_code + hdr->dat + hdr->stp - sizeof(cell)) = 0;
   amx->stk = amx->stp;
 
-  memorySetAccess( asm_runJIT, 20000, mac );
+  memorySetAccess( (void*)asm_runJIT, 20000, mac );
   return AMX_ERR_NONE;
 }
 
@@ -1578,8 +1570,7 @@ static AMX_NATIVE findfunction(const char *name, AMX_NATIVE_INFO *list, int numb
   return NULL;
 }
 
-const char *no_function;
-
+const char *no_function;			// PM: Nice hack ;)
 int AMXAPI amx_Register(AMX *amx, AMX_NATIVE_INFO *list, int number)
 {
   AMX_FUNCSTUB *func;
@@ -1599,15 +1590,11 @@ int AMXAPI amx_Register(AMX *amx, AMX_NATIVE_INFO *list, int number)
     if (func->address==0) {
       /* this function is not yet located */
       funcptr=(list!=NULL) ? findfunction(GETENTRYNAME(hdr,func),list,number) : NULL;
-      /* on 64-bit architectures with, only the lower 32-bits of the address
-       * can be stored; hopefully, all addresses can be assumed to have the
-       * same value for the upper 32-bits
-       */
       if (funcptr!=NULL)
         func->address=(ucell)funcptr;
       else
       {
-	    no_function = GETENTRYNAME(hdr,func);
+        no_function = GETENTRYNAME(hdr,func);
         err=AMX_ERR_NOTFOUND;
       }
     } /* if */
@@ -1639,7 +1626,7 @@ AMX_NATIVE_INFO * AMXAPI amx_NativeInfo(const char *name, AMX_NATIVE func)
 #define CHKSTACK()      if (stk>amx->stp) return AMX_ERR_STACKLOW
 #define CHKHEAP()       if (hea<amx->hlw) return AMX_ERR_HEAPLOW
 
-#if defined __GNUC__ && !defined ASM32
+#if defined __GNUC__ && !defined ASM32 && !defined JIT
     /* GNU C version uses the "labels as values" extension to create
      * fast "indirect threaded" interpreter.
      */
@@ -2750,7 +2737,7 @@ static void *amx_opcodelist_nodebug[] = {
 
 #if defined ASM32 || defined JIT
 	extern "C" void *amx_opcodelist[];
-	extern "C" void *amx_opcodelist_nodebug[];
+    extern "C" void *amx_opcodelist_nodebug[];
 #endif
 
 int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
@@ -4044,7 +4031,7 @@ static long utf8_lowmark[5] = { 0x80, 0x800, 0x10000, 0x200000, 0x4000000 };
      */
     if (result<utf8_lowmark[followup])
       goto error;
-    if (result>=0xd800 && result<=0xdfff || result==0xfffe || result==0xffff)
+    if ((result>=0xd800 && result<=0xdfff) || result==0xfffe || result==0xffff)
       goto error;
   } /* if */
 

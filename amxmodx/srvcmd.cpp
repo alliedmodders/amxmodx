@@ -165,8 +165,13 @@ void amx_command(){
 				}
 
 				print_srvconsole( "%d modules, %d correct\n",modules,running);
-		}
-		else if (!strcmp(cmd, "gpl"))
+		} else if (!strcmp(cmd, "jit")) {
+#ifdef JIT
+			print_srvconsole("Using the JIT.\n");
+#else
+			print_srvconsole("Not using the JIT.\n");
+#endif
+		} else if (!strcmp(cmd, "gpl"))
 		{
 			print_srvconsole("AMX Mod X\n");
 			print_srvconsole("\n");

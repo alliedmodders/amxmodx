@@ -77,14 +77,13 @@ public cmdSayChat(id) {
     case 'c': a = 6
     case 'o': a = 7
   }
-  new name[32], authid[32], userid, color[16]
+  new name[32], authid[32], userid
   get_user_authid(id,authid,31)
   get_user_name(id,name,31)
   userid = get_user_userid(id)
-  format(color,15,"%L","en",g_Colors[a])
   log_amx("Chat: ^"%s<%d><%s><>^" tsay ^"%s^"",name,userid,authid,message[i+1])
-  log_message("^"%s<%d><%s><>^" triggered ^"amx_tsay^" (text ^"%s^") (color ^"%s^")",
-    name,userid,authid,message[ i+1 ],color)
+  log_message("^"%s<%d><%s><>^" triggered ^"amx_tsay^" (text ^"%s^") (color ^"%L^")",
+    name,userid,authid,message[ i+1 ],"en",g_Colors[a])
   if (++g_msgChannel>6||g_msgChannel<3)
     g_msgChannel = 3
   new Float:verpos = g_Pos[i][1] + float(g_msgChannel) / 35.0

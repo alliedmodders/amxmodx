@@ -78,7 +78,6 @@ public cmdCancelVote(id,level,cid) {
     get_players(players,pnum,"c")
     for (new i=0;i<pnum;i++) {
       format(lTag,15,"%L",players[i],is_user_admin(id) ? "ADMIN" : "PLAYER")
-      strtoupper(lTag)
       switch (activity) {
         case 2: client_print(players[i],print_chat,"%L", LANG_PLAYER, "ADMIN_CANC_VOTE_2", lTag, name)
         case 1: client_print(players[i],print_chat,"%L", LANG_PLAYER, "ADMIN_CANC_VOTE_1", lTag)
@@ -150,8 +149,6 @@ public checkVotes() {
       format(lTheResult,31,"%L",g_voteCaller,"THE_RESULT")
       format(lYes,15,"%L",g_voteCaller,"YES")
       format(lNo,15,"%L",g_voteCaller,"NO")
-      ucfirst(lYes)
-      ucfirst(lNo)
       new len = format(menuBody,511,g_coloredMenus ? "\y%s: \w%s^n^n" : "%s: %s^n^n", lTheResult, g_Execute )
       len += format( menuBody[len] ,511 - len, g_coloredMenus ? "\y%L^n\w" : "%L^n", g_voteCaller, "WANT_CONTINUE" )
       format( menuBody[len] ,511 - len, "^n1. %s^n2. %s",lYes,lNo)
@@ -233,8 +230,6 @@ public cmdVoteMap(id,level,cid) {
     format(lChangeMap,31,"%L",LANG_SERVER,"CHANGE_MAP_TO")
     format(lYes,15,"%L",LANG_SERVER,"YES")
     format(lNo,15,"%L",LANG_SERVER,"NO")
-    ucfirst(lYes)
-    ucfirst(lNo)
     format(menu_msg,255,g_coloredMenus ? "\y%s %s?\w^n^n1.  %s^n2.  %s"
         : "%s %s?^n^n1.  %s^n2.  %s",lChangeMap,g_optionName[0],lYes,lNo)
     keys = MENU_KEY_1|MENU_KEY_2
@@ -256,7 +251,6 @@ public cmdVoteMap(id,level,cid) {
     get_players(players,pnum,"c")
     for (new i=0;i<pnum;i++) {
       format(lTag,15,"%L",players[i],is_user_admin(id)?"ADMIN":"PLAYER")
-      strtoupper(lTag)
       switch (activity) {
         case 2: client_print(players[i],print_chat,"%L",
           players[i],"ADMIN_VOTE_MAP_2",lTag,name)
@@ -314,7 +308,6 @@ public cmdVote(id,level,cid) {
     get_players(players,pnum,"c")
     for (new i=0;i<pnum;i++) {
       format(lTag,15,"%L",players[i],is_user_admin(id)?"ADMIN":"PLAYER")
-      strtoupper(lTag)
       switch (activity) {
         case 2: client_print(players[i],print_chat,"%L","ADMIN_VOTE_CUS_2",lTag,name)
         case 1: client_print(players[i],print_chat,"%L","ADMIN_VOTE_CUS_1",lTag)
@@ -372,8 +365,6 @@ public cmdVoteKickBan(id,level,cid) {
   format(lYes,15,"%L",LANG_SERVER,"YES")
   format(lNo,15,"%L",LANG_SERVER,"NO")
   format(lKickBan,15,"%L",LANG_SERVER,voteban?"BAN":"KICK")
-  ucfirst(lYes)
-  ucfirst(lNo)
   ucfirst(lKickBan)
   get_user_name(player,arg,31)
   format(menu_msg,255,g_coloredMenus ?

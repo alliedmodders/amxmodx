@@ -337,9 +337,7 @@ public client_infochanged(id)
 }
 
 public ackSignal(id) {
-  new no_entry[64]
-  format(no_entry,63,"%L",id,"NO_ENTRY")
-  server_cmd("kick #%d ^"%L^"", get_user_userid(id), no_entry )
+  server_cmd("kick #%d ^"%L^"", get_user_userid(id), id, "NO_ENTRY" )
 }
 
 public client_authorized(id)

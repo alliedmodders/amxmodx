@@ -220,7 +220,6 @@ public cmdBan(id,level,cid) {
     get_players(players,pnum,"c")
     for (new i=0;i<pnum;i++) {
       len = format(msg,255,"%L",players[i],"ADMIN")
-      strtoupper(msg)
       if (activity==1)
         len += copy(msg[len],255-len,":")
       else
@@ -234,6 +233,7 @@ public cmdBan(id,level,cid) {
       client_print(players[i],print_chat,msg)
     }
   }
+
 
   console_print(id,"[AMXX] %L",id,"CLIENT_BANNED",name2)
   return PLUGIN_HANDLED
@@ -370,7 +370,6 @@ public cmdCvar(id,level,cid) {
     get_players(players,pnum,"c")
     for (new i=0;i<pnum;i++) {
       len = format(admin,255,"%L",players[i],"ADMIN")
-      strtoupper(admin)
       if (activity == 1)
         len += copy(admin[len],255-len,":")
       else
@@ -393,13 +392,13 @@ public cmdPlugins(id,level,cid) {
     return PLUGIN_HANDLED
 
   new name[32],version[32],author[32],filename[32],status[32]
-  new Lname[32],Lversion[32],Lauthor[32],Lfile[32],Lstatus[32]
+  new lName[32],lVersion[32],lAuthor[32],lFile[32],lStatus[32]
 
-  format(Lname,31,"%L",id,"NAME")
-  format(Lversion,31,"%L",id,"VERSION")
-  format(Lauthor,31,"%L",id,"AUTHOR")
-  format(Lfile,31,"%L",id,"FILE")
-  format(Lstatus,31,"%L",id,"STATUS")
+  format(lName,31,"%L",id,"NAME")
+  format(lVersion,31,"%L",id,"VERSION")
+  format(lAuthor,31,"%L",id,"AUTHOR")
+  format(lFile,31,"%L",id,"FILE")
+  format(lStatus,31,"%L",id,"STATUS")
 
 /*
   new motd_body[MOTD_LEN],state[4]
@@ -425,7 +424,7 @@ public cmdPlugins(id,level,cid) {
   new running = 0
   console_print(id,"%L:",id,"LOADED_PLUGINS")
 
-  console_print(id,"%-18.17s %-8.7s %-17.16s %-16.15s %-9.8s",Lname,Lversion,Lauthor,Lfile,Lstatus)
+  console_print(id,"%-18.17s %-8.7s %-17.16s %-16.15s %-9.8s",lName,lVersion,lAuthor,lFile,lStatus)
   for (new i=0;i<num;i++) {
     get_plugin(i,filename,31,name,31,version,31,author,31,status,31)
     console_print(id,"%-18.17s %-8.7s %-17.16s %-16.15s %-9.8s",name,version,author,filename,status)
@@ -442,11 +441,11 @@ public cmdModules(id,level,cid) {
     return PLUGIN_HANDLED
 
   new name[32],version[32],author[32],status,sStatus[16]
-  new Lname[32],Lversion[32],Lauthor[32]
+  new lName[32],lVersion[32],lAuthor[32]
 
-  format(Lname,31,"%L",id,"NAME")
-  format(Lversion,31,"%L",id,"VERSION")
-  format(Lauthor,31,"%L",id,"AUTHOR")
+  format(lName,31,"%L",id,"NAME")
+  format(lVersion,31,"%L",id,"VERSION")
+  format(lAuthor,31,"%L",id,"AUTHOR")
 
 /*
   new motd_body[MOTD_LEN],state[4]
@@ -467,7 +466,7 @@ public cmdModules(id,level,cid) {
 */
   new num = get_modulesnum()
   console_print(id,"%L:",id,"LOADED_MODULES")
-  console_print(id,"%-23.22s %-8.7s %-20.19s",Lname,Lversion,Lauthor)
+  console_print(id,"%-23.22s %-8.7s %-20.19s",lName,lVersion,lAuthor)
   for (new i=0;i<num;i++) {
     get_module(i,name,31,author,31,version,31,status)
     switch (status) {
@@ -486,9 +485,9 @@ public cmdCfg(id,level,cid) {
     return PLUGIN_HANDLED
   new arg[128]
   read_argv(1,arg,127)
-  if (!file_exists(arg)){
+  if (!file_exists(arg)) {
     console_print(id,"[AMXX] %L",id,"FILE_NOT_FOUND",arg)
-    return PLUGIN_HANDLED 
+    return PLUGIN_HANDLED
   }
   new authid[32],name[32]
   get_user_authid(id,authid,31)
@@ -497,26 +496,26 @@ public cmdCfg(id,level,cid) {
     name,get_user_userid(id),authid, arg)
   console_print(id,"[AMXX] Executing file ^"%s^"",arg)
   server_cmd("exec %s",arg)
-  
+
   switch(get_cvar_num("amx_show_activity")) {
-      case 2: client_print(0,print_chat,"%L",LANG_PLAYER,"ADMIN_CONF_2",name,arg)
-      case 1: client_print(0,print_chat,"%L",LANG_PLAYER,"ADMIN_CONF_1",arg)
+    case 2: client_print(0,print_chat,"%L",LANG_PLAYER,"ADMIN_CONF_2",name,arg)
+    case 1: client_print(0,print_chat,"%L",LANG_PLAYER,"ADMIN_CONF_1",arg)
   }
-  
+
   return PLUGIN_HANDLED
 }
 
-public cmdLBack() { 
+public cmdLBack() {
   new paused[16]
   format(paused,15,"%L",g_pauseCon,g_Paused ? "UNPAUSED" : "PAUSED")
   set_cvar_float("pausable",g_pausAble)
-  console_print(g_pauseCon,"[AMXX] Server %s", paused) 
+  console_print(g_pauseCon,"[AMXX] Server %s", paused)
   if (g_Paused) g_Paused = false
   else g_Paused = true
   return PLUGIN_HANDLED
 }
 
-public cmdPause(id,level,cid) { 
+public cmdPause(id,level,cid) {
   if (!cmd_access(id,level,cid,1))
     return PLUGIN_HANDLED 
   new authid[32],name[32],slayer = id
@@ -524,7 +523,7 @@ public cmdPause(id,level,cid) {
   get_user_name(id,name,31) 
   g_pausAble = get_cvar_float("pausable")
   if (!slayer) slayer = find_player("h") 
-  if (!slayer){ 
+  if (!slayer) { 
     console_print(id,"[AMXX] %L",id,"UNABLE_PAUSE") 
     return PLUGIN_HANDLED  
   }
@@ -533,7 +532,7 @@ public cmdPause(id,level,cid) {
   log_amx("Cmd: ^"%s<%d><%s><>^" %s server", 
     name,get_user_userid(id),authid, g_Paused ? "unpause" : "pause" )
   new pausing[16]
-  format(pausing,15,"%L",id,g_Paused ? "unpausing" : "pausing")
+  format(pausing,15,"%L",id,g_Paused ? "UNPAUSING" : "PAUSING")
   console_print(id,"[AMXX] %L", id, pausing)
 
   new activity = get_cvar_num("amx_show_activity")
@@ -542,7 +541,6 @@ public cmdPause(id,level,cid) {
     get_players(players,pnum,"c")
     for (new i=0;i<pnum;i++) {
       len = format(msg,127,"%L",players[i],"ADMIN")
-      strtoupper(msg)
       if (activity==1)
         len += copy(msg[len],127-len,":")
       else

@@ -2,12 +2,11 @@
 BACK = Back
 EXIT = Exit
 MORE = More
-ADMIN = admin
-ADMINS = admins
-PLAYER = player
-PLAYERS = players
+NONE = None
+ADMIN = ADMIN
+PLAYER = PLAYER
 ERROR = error
-YES = yes
-NO = no
+YES = Yes
+NO = No
 BAN = ban
 KICK = kick

@@ -1,6 +1,6 @@
 [en]
 COULDNT_FIND = Couldn't find a plugin matching "%s"
-PLUGIN_MATCH = Plugin matching "%s" %L
+PLUGIN_MATCH = Plugin matching "%s"
 CONF_CLEARED = Configuration file cleared. Reload the map if needed
 ALR_CLEARED = Configuration was already cleared!
 CONF_SAVED = Configuration saved successfully

@@ -218,5 +218,6 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	}
 }
 
-$gcc = "gcc $cflags -Lzlib/ -lz -shared -ldl -lm @LINK -o $outdir/$bin";
+$gcc = "gcc $cflags -Lzlib/ -shared -ldl -lm @LINK -lz -o $outdir/$bin";
+print "$gcc\n";
 `$gcc`;

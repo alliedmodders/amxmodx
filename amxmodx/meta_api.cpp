@@ -274,7 +274,7 @@ int Spawn( edict_t *pent ) {
   memset(g_players[0].flags,-1,sizeof(g_players[0].flags));
 
   //  ###### Load AMX scripts
-  g_plugins.loadPluginsFromFile( "addons/amxx/configs/plugins.ini" );
+  g_plugins.loadPluginsFromFile( "addons/amxx/plugins.ini" );
 
   //  ###### Call precache forward function
   g_dontprecache = false;

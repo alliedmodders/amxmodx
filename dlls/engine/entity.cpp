@@ -1526,8 +1526,8 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native
 {
 	int iEnt = params[1];
 	int oEnt = params[3];
-	// Check index to start searching at, 0 must be possible.
-	if (!is_ent_valid(iEnt) || !is_ent_valid(oEnt)) {
+	// Check index to start searching at, 0 must be possible for iEnt.
+	if ((iEnt != 0 && !is_ent_valid(iEnt)) || !is_ent_valid(oEnt)) {
 		EngineError(amx, "Invalid Entity");
 		return 0;
 	}

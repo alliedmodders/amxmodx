@@ -12,7 +12,7 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 			return 0;
 		}
 	} else {
-		if (index > gpGlobals->maxEntities)
+		if (index > gpGlobals->maxEntities || i<1)
 		{
 			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;

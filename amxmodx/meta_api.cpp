@@ -81,7 +81,6 @@ bool g_bmod_dod;
 bool g_dontprecache;
 bool g_forcedmodules;
 bool g_forcedsounds;
-bool g_initialized;
 fakecmd_t g_fakecmd;
 float g_game_restarting;
 float g_game_timeleft;
@@ -200,9 +199,6 @@ const char*	get_localinfo( const char* name	, const	char* def )
 // Call	precache forward function from plugins
 int	C_Spawn( edict_t *pent ) {
 
-  if ( g_initialized ) RETURN_META_VALUE(MRES_IGNORED, 0);
-
-  g_initialized	= true;
   g_forcedmodules =	false;
   g_forcedsounds = false;
 
@@ -299,6 +295,9 @@ int	C_Spawn( edict_t *pent ) {
   }
 
 
+  // HACKHACK:
+  //  Make sure this function wont be called anymore
+  g_FakeMeta.m_Plugins.begin()->GetDllFuncTable().pfnSpawn = NULL;
   RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
@@ -440,7 +439,9 @@ void C_ServerDeactivate()	{
 // However leave AMX modules which are loaded only once
 void C_ServerDeactivate_Post() {
 
-  g_initialized	= false;
+  // HACKHACK:
+  //  Make sure the spawn function will be called again
+  g_FakeMeta.m_Plugins.begin()->GetDllFuncTable().pfnSpawn = C_Spawn;
 
   detachReloadModules();
 

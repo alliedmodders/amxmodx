@@ -522,19 +522,11 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 	char *outptr = outbuf;
 	cell *src = get_amxaddr(amx, params[parm++]);
 
-	enum State
-	{
-		S_Normal,
-		S_PercentSign,
-	};
-
-	State curState = S_Normal;
 	while (*src)
 	{
-		if (*src == '%' && curState == S_Normal)
-			curState = S_PercentSign;
-		else if (curState == S_PercentSign)
+		if (*src == '%')
 		{
+			++src;
 			if (*src=='L')
 			{
 				cell langName = params[parm];		// "en" case (langName contains the address to the string)
@@ -592,7 +584,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 					if (*def == '%')
 					{
 						++def;
-						char format[32];
+						static char format[32];
 						format[0] = '%';
 						char *ptr = format+1;
 						while (ptr-format<sizeof(format) && !isalpha(*ptr++ = *def++))
@@ -604,7 +596,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 						{
 						case 's':
 							{
-								char tmpString[4096];
+								static char tmpString[4096];
 								char *tmpPtr = tmpString;
 								NEXT_PARAM();
 								cell *tmpCell = get_amxaddr(amx, params[parm++]);
@@ -676,7 +668,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 			}
 			else
 			{
-				char tmpString[4096];
+				static char tmpString[4096];
 				char *tmpPtr = tmpString;
 				int tmpLen = 0;
 				char format[32];
@@ -730,7 +722,6 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 					*outptr++ = '%';
 				}
 			}
-			curState = S_Normal;
 		}
 		else
 		{

@@ -157,7 +157,6 @@ extern XVars g_xvars;
 extern bool g_bmod_cstrike;
 extern bool g_bmod_dod;
 extern bool g_dontprecache;
-extern bool g_initialized;
 extern int g_srvindex;
 extern cvar_t* amxmodx_version;
 extern cvar_t* hostname;

@@ -1206,22 +1206,22 @@ static cell AMX_NATIVE_CALL entity_set_byte(AMX *amx, cell *params)
 	switch (idx)
 	{
 		case controller1:
-			pEnt->v.controller[1] = iNewValue;
+			pEnt->v.controller[0] = iNewValue;
 			break;
 		case controller2:
-			pEnt->v.controller[2] = iNewValue;
+			pEnt->v.controller[1] = iNewValue;
 			break;
 		case controller3:
-			pEnt->v.controller[3] = iNewValue;
+			pEnt->v.controller[2] = iNewValue;
 			break;
 		case controller4:
-			pEnt->v.controller[4] = iNewValue;
+			pEnt->v.controller[3] = iNewValue;
 			break;
 		case blending1:
-			pEnt->v.blending[1] = iNewValue;
+			pEnt->v.blending[0] = iNewValue;
 			break;
 		case blending2:
-			pEnt->v.blending[2] = iNewValue;
+			pEnt->v.blending[1] = iNewValue;
 			break;
 		default:
 			return 0;

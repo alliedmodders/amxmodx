@@ -86,19 +86,6 @@ edict_t *valid_ent(int ent)
 	return e;
 }
 
-//from OLO
-char* get_amxstring(AMX *amx,cell amx_addr,int id, int& len)
-{
-  static char buffor[4][3072];
-  register cell* source = (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
-  register char* dest = buffor[id];
-  char* start = dest;
-  while (*dest++=(char)*source++)
-    ;
-  len = --dest - start;
-  return start;
-}
-
 cell* get_amxaddr(AMX *amx,cell amx_addr)
 {
   return (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
@@ -129,17 +116,6 @@ int AMX_MAKE_STRING(AMX *oPlugin, cell tParam, int &iLength) {
 	return MAKE_STRING(szCopyValue);
 }
 
-// Makes a char pointer out of an AMX cell.
-char *AMX_GET_STRING(AMX *oPlugin, cell tParam, int &iLength) {
-	char *szNewValue = GET_AMXSTRING(oPlugin, tParam, 0, iLength);
-
-	char* szCopyValue = new char[iLength + 1]; 
-	strncpy(szCopyValue , szNewValue, iLength); 
-	*(szCopyValue + iLength) = '\0';
-
-	return szCopyValue;
-}
-
 /********************************************************
   exported functions
   ******************************************************/
@@ -168,7 +144,7 @@ static cell AMX_NATIVE_CALL register_message(AMX *amx, cell *params)
 	int iLen;
 	int iFunctionIndex;
 	int iMessage = params[1];
-	char *szFunction = AMX_GET_STRING(amx, params[2], iLen);
+	char *szFunction = GET_AMXSTRING(amx, params[2], 0, iLen);
 
 	if (iMessage > 0 && iMessage < MAX_MESSAGES) {
 		if (AMX_FINDPUBLIC(amx, szFunction, &iFunctionIndex) == AMX_ERR_NONE) {
@@ -298,7 +274,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_string(AMX *amx, cell *params)
 {
 	int argn = params[1];
 	int iLen;
-	char *szData = AMX_GET_STRING(amx, params[2], iLen);
+	char *szData = GET_AMXSTRING(amx, params[2], 0, iLen);
 	
 	if (inHookProcess && msgd!=NULL) {
 		if (argn <= msgd->args() && argn > 0) {
@@ -1920,7 +1896,7 @@ static cell AMX_NATIVE_CALL find_ent_by_class(AMX *amx, cell *params) /* 3 param
 	edict_t *pEnt = INDEXENT(params[1]);
 
 	int len;
-	char* sValue = GET_AMXSTRING(amx, params[2], 1, len);
+	char* sValue = GET_AMXSTRING(amx, params[2], 0, len);
 
 	pEnt = FIND_ENTITY_BY_STRING(pEnt, "classname", sValue);
 
@@ -1990,8 +1966,8 @@ static cell AMX_NATIVE_CALL DispatchKeyValue(AMX *amx, cell *params) {
 	edict_t* pTarget = INDEXENT(params[1]);
 	int iKeyLength;
 	int iValueLength;
-	char *szKey = AMX_GET_STRING(amx, params[2], iKeyLength);
-	char *szValue = AMX_GET_STRING(amx, params[3], iValueLength);
+	char *szKey = GET_AMXSTRING(amx, params[2], 0, iKeyLength);
+	char *szValue = GET_AMXSTRING(amx, params[3], 1, iValueLength);
 
 
 	if(FNullEnt(pTarget)) {
@@ -2060,7 +2036,7 @@ static cell AMX_NATIVE_CALL entity_set_model(AMX *amx, cell *params) {
 	edict_t* pTarget = INDEXENT(params[1]);
 
 	int iLength;
-	char *szNewValue = AMX_GET_STRING(amx, params[2], iLength);
+	char *szNewValue = GET_AMXSTRING(amx, params[2], 0, iLength);
 
 	if(FNullEnt(pTarget)) {
 		return 0;
@@ -2077,7 +2053,7 @@ static cell AMX_NATIVE_CALL find_ent_by_target(AMX *amx, cell *params)
 {
 	int iStart = params[1];
 	int iLength;
-	char *szValue = AMX_GET_STRING(amx, params[2], iLength);
+	char *szValue = GET_AMXSTRING(amx, params[2], 0, iLength);
 
 	edict_t *pStart;
 
@@ -2104,8 +2080,8 @@ static cell AMX_NATIVE_CALL find_ent_by_target(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL find_ent_by_model(AMX *amx, cell *params) { 
 	int iStart = params[1];
 	int iLength, iLength2;
-	char *szClass = AMX_GET_STRING(amx, params[2], iLength);
-	char *szModel = AMX_GET_STRING(amx, params[3], iLength2);
+	char *szClass = GET_AMXSTRING(amx, params[2], 0, iLength);
+	char *szModel = GET_AMXSTRING(amx, params[3], 1, iLength2);
 	int iModel = MAKE_STRING(szModel);
 
 	edict_t *pStart;
@@ -2144,7 +2120,7 @@ static cell AMX_NATIVE_CALL find_ent_by_model(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL find_ent_by_tname(AMX *amx, cell *params) {
 	int iStart = params[1];
 	int iLength;
-	char *szValue = AMX_GET_STRING(amx, params[2], iLength);
+	char *szValue = GET_AMXSTRING(amx, params[2], 0, iLength);
 
 	edict_t *pStart;
 
@@ -2194,7 +2170,7 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native
 	// No need to check if there is a real ent where entOwner points at since we don't access it anyway.
 
 	int len;
-	char* classname = GET_AMXSTRING(amx, params[2], 1, len);
+	char* classname = GET_AMXSTRING(amx, params[2], 0, len);
 
 	while (true) {
 		pEnt = FIND_ENTITY_BY_STRING(pEnt, sCategory, classname);
@@ -2456,7 +2432,7 @@ static cell AMX_NATIVE_CALL get_msg_block(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL set_lights(AMX *amx, cell *params) { 
 	int iLength;
 
-	char *szLights = AMX_GET_STRING(amx, params[1], iLength);
+	char *szLights = GET_AMXSTRING(amx, params[1], 0, iLength);
 
 	if(FStrEq(szLights, "#OFF")) {
 		GlInfo.bLights = false;

@@ -29,7 +29,7 @@ else
 	OS=LINUX
 endif
 
-CC_LINUX=gcc
+CC_LINUX=gcc-2.95
 ifeq "$(OS)" "WIN32"
 	CC_WIN32=gcc
 	LD_WINDLL=dllwrap
@@ -61,7 +61,7 @@ OBJ_WIN32 := $(SRCFILES:%.cpp=$(OBJDIR_WIN32)/%.o)
 OBJC_WIN32 := $(CSRCFILES:%.c=$(OBJDIR_WIN32)/%.o)
 
 
-CCOPT = -O2 -m64 -ffast-math -funroll-loops \
+CCOPT = -O2 -march=i686 -ffast-math -funroll-loops \
 	-fomit-frame-pointer -fexpensive-optimizations -malign-loops=2 \
 	-malign-jumps=2 -malign-functions=2 -s	-DNDEBUG
 

@@ -399,10 +399,10 @@ public cmdRest(id,level,cid) {
   }
   else if ( equali( "save" , cmd ) ) {
     if ( saveSettings( g_saveFile ) ){
-      console_print( id , "%L", id, "CONF_SAVED", g_saveFile )
+      console_print( id , "%L", id, "REST_CONF_SAVED", g_saveFile )
       g_Modified = false
     }
-    else console_print( id, "%L", id, "COULDNT_SAVE", g_saveFile )
+    else console_print( id, "%L", id, "REST_COULDNT_SAVE", g_saveFile )
   }
   else if ( equali( "load" , cmd ) ) {
     setc( g_blockPos, 112, 0 ) // Clear current settings
@@ -413,10 +413,10 @@ public cmdRest(id,level,cid) {
       format(arg1,63,"%s/%s",configsdir,arg1)
     }
     if ( loadSettings( arg1 ) ) {
-      console_print( id, "%L", id, "CONF_LOADED", arg1 )
+      console_print( id, "%L", id, "REST_CONF_LOADED", arg1 )
       g_Modified = true
     }
-    else console_print( id, "%L", id, "COULDNT_LOAD", arg1 )
+    else console_print( id, "%L", id, "REST_COULDNT_LOAD", arg1 )
   }
   else {
     console_print(id,"%L",id,"COM_REST_USAGE")

@@ -1,10 +1,10 @@
 [en]
-COULDNT_FIND = Couldn't find a plugin matching "%s"
-PLUGIN_MATCH = Plugin matching "%s"
-CONF_CLEARED = Configuration file cleared. Reload the map if needed
-ALR_CLEARED = Configuration was already cleared!
-CONF_SAVED = Configuration saved successfully
-SAVE_FAILED = Configuration saving failed!!!
+PAUSE_COULDNT_FIND = Couldn't find a plugin matching "%s"
+PAUSE_PLUGIN_MATCH = Plugin matching "%s"
+PAUSE_CONF_CLEARED = Configuration file cleared. Reload the map if needed
+PAUSE_ALR_CLEARED = Configuration was already cleared!
+PAUSE_CONF_SAVED = Configuration saved successfully
+PAUSE_SAVE_FAILED = Configuration saving failed!!!
 ON = ON
 STOPPED = STOPPED
 OFF = OFF
@@ -43,12 +43,12 @@ COM_PAUSE_LIST = ^tlist [id] - lists plugins
 COM_PAUSE_ADD = ^tadd <title> - marks a plugin as unpauseable
 
 [bp]
-COULDNT_FIND = Nao pude encontrar o plugin que confere  "%s"
-PLUGIN_MATCH = Plugin confere "%s"
-CONF_CLEARED = Arquivo de configuracao foi limpado. Recarregue o mapa se necessario
-ALR_CLEARED = O arquivo de configuracao ja esta vazio limpo!
-CONF_SAVED = Configuracao salva com sucesso
-SAVE_FAILED = Falha ao salvar a configuracao!!!
+PAUSE_COULDNT_FIND = Nao pude encontrar o plugin que confere  "%s"
+PAUSE_PLUGIN_MATCH = Plugin confere "%s"
+PAUSE_CONF_CLEARED = Arquivo de configuracao foi limpado. Recarregue o mapa se necessario
+PAUSE_ALR_CLEARED = O arquivo de configuracao ja esta vazio limpo!
+PAUSE_CONF_SAVED = Configuracao salva com sucesso
+PAUSE_SAVE_FAILED = Falha ao salvar a configuracao!!!
 ON = LIGADO
 STOPPED = PARADO
 OFF = DESLIGADO
@@ -87,12 +87,12 @@ COM_PAUSE_LIST = ^tlist [id] - lista os plugins
 COM_PAUSE_ADD = ^tadd <titulo> - marca um plugin como nao pausavel
 
 [da]
-COULDNT_FIND = Kunne ikke finde et plugin der matcher til "%s"
-PLUGIN_MATCH = Plugin matcher "%s"
-CONF_CLEARED = Konfigurationsfil ryddet. Genindlaes banen, hvis noedvendigt
-ALR_CLEARED = Konfiguration var allerede ryddet!
-CONF_SAVED = Konfiguration gemt
-SAVE_FAILED = Gem Konfiguration mislykkedes!!!
+PAUSE_COULDNT_FIND = Kunne ikke finde et plugin der matcher til "%s"
+PAUSE_PLUGIN_MATCH = Plugin matcher "%s"
+PAUSE_CONF_CLEARED = Konfigurationsfil ryddet. Genindlaes banen, hvis noedvendigt
+PAUSE_ALR_CLEARED = Konfiguration var allerede ryddet!
+PAUSE_CONF_SAVED = Konfiguration gemt
+PAUSE_SAVE_FAILED = Gem Konfiguration mislykkedes!!!
 ON = ON
 STOPPED = STOPPED
 OFF = OFF
@@ -131,12 +131,12 @@ COM_PAUSE_LIST = ^tlist [id] - lister plugins
 COM_PAUSE_ADD = ^tadd <title> - Markerer et plugin som upauserbart
 
 [de]
-COULDNT_FIND = Konnte kein Plugin finden, dass mit "%s" uebereinstimmt
-PLUGIN_MATCH = Plugin stimmt mit "%s" ueberein
-CONF_CLEARED = Konfigurationsdatei geloescht. Bei Bedarf Map neu starten.
-ALR_CLEARED = Konfiguration war bereits geloescht!
-CONF_SAVED = Konfiguration erfolgreich gespeichert.
-SAVE_FAILED = Fehler beim Speichern der Konfiguration!!!
+PAUSE_COULDNT_FIND = Konnte kein Plugin finden, dass mit "%s" uebereinstimmt
+PAUSE_PLUGIN_MATCH = Plugin stimmt mit "%s" ueberein
+PAUSE_CONF_CLEARED = Konfigurationsdatei geloescht. Bei Bedarf Map neu starten.
+PAUSE_ALR_CLEARED = Konfiguration war bereits geloescht!
+PAUSE_CONF_SAVED = Konfiguration erfolgreich gespeichert.
+PAUSE_SAVE_FAILED = Fehler beim Speichern der Konfiguration!!!
 ON = AN
 STOPPED = GESTOPPT
 OFF = AUS
@@ -175,12 +175,12 @@ COM_PAUSE_LIST = ^tlist [id] - Plugins anzeigen
 COM_PAUSE_ADD = ^tadd <title> - markiert ein Plugin als nicht pausierbar
 
 [es]
-COULDNT_FIND =No se a podido encontrar un plugin que concuerde con "%s"
-PLUGIN_MATCH = Plugin que coincide "%s"
-CONF_CLEARED = Archivo de configuracion creado. Recargar el mapa de ser necesario
-ALR_CLEARED = Configuracion anteriormente limpiada!
-CONF_SAVED = Configuracion guardada exitosamente
-SAVE_FAILED = Gravado de Configuracion fallido!!!
+PAUSE_COULDNT_FIND =No se a podido encontrar un plugin que concuerde con "%s"
+PAUSE_PLUGIN_MATCH = Plugin que coincide "%s"
+PAUSE_CONF_CLEARED = Archivo de configuracion creado. Recargar el mapa de ser necesario
+PAUSE_ALR_CLEARED = Configuracion anteriormente limpiada!
+PAUSE_CONF_SAVED = Configuracion guardada exitosamente
+PAUSE_SAVE_FAILED = Gravado de Configuracion fallido!!!
 ON = ON
 STOPPED = STOPPED
 OFF = OFF
@@ -219,12 +219,12 @@ COM_PAUSE_LIST = ^tlist [id] - lista los plugins
 COM_PAUSE_ADD = ^tadd <title> - establece un plugin como no pausable.
 
 [fr]
-COULDNT_FIND = Impossible de trouver un plugin correspondant a "%s"
-PLUGIN_MATCH = Plugin correspondant "%s"
-CONF_CLEARED = Fichier de configuration vide. Relancez la map si besoin
-ALR_CLEARED = Le fichier de configuration a deja ete vide!
-CONF_SAVED = Configuration sauvegardee
-SAVE_FAILED = Sauvegarde de la configuration echouee!!!
+PAUSE_COULDNT_FIND = Impossible de trouver un plugin correspondant a "%s"
+PAUSE_PLUGIN_MATCH = Plugin correspondant "%s"
+PAUSE_CONF_CLEARED = Fichier de configuration vide. Relancez la map si besoin
+PAUSE_ALR_CLEARED = Le fichier de configuration a deja ete vide!
+PAUSE_CONF_SAVED = Configuration sauvegardee
+PAUSE_SAVE_FAILED = Sauvegarde de la configuration echouee!!!
 ON = ACTIF
 STOPPED = ARRETE
 OFF = INACTIF
@@ -263,12 +263,12 @@ COM_PAUSE_LIST = ^tlist [id] - listes  des plugins
 COM_PAUSE_ADD = ^tadd <title> - marquer un plugin comme impossible a mettre en pause
 
 [nl]
-COULDNT_FIND = Kon plugin met de naam "%s" niet vinden
-PLUGIN_MATCH = Gevonden plugin "%s"
-CONF_CLEARED = Configuratie bestand geleegd. Herlaad de map indien nodig
-ALR_CLEARED = Configuratie is al geleegd!
-CONF_SAVED = Configuratie succesvol opgeslagen
-SAVE_FAILED = Opslaan configuratie gefaald!
+PAUSE_COULDNT_FIND = Kon plugin met de naam "%s" niet vinden
+PAUSE_PLUGIN_MATCH = Gevonden plugin "%s"
+PAUSE_CONF_CLEARED = Configuratie bestand geleegd. Herlaad de map indien nodig
+PAUSE_ALR_CLEARED = Configuratie is al geleegd!
+PAUSE_CONF_SAVED = Configuratie succesvol opgeslagen
+PAUSE_SAVE_FAILED = Opslaan configuratie gefaald!
 ON = AAN
 STOPPED = GESTOPT
 OFF = UIT
@@ -307,12 +307,12 @@ COM_PAUSE_LIST = ^tlist [id] - plugins weergeven
 COM_PAUSE_ADD = ^tadd <title> - markeert een plugins als gepauseerd
 
 [pl]
-COULDNT_FIND = Nie mozna znalesc pluginu "%s"
-PLUGIN_MATCH = Plugin pasujacy "%s"
-CONF_CLEARED = Plik konfiguracji wyczyszczony. Przeladuj mape jezeli potrzeba
-ALR_CLEARED = Konfiguracja juz zostala wyczyszczona !
-CONF_SAVED = Konfiguracja zapisana
-SAVE_FAILED = Konfiguracji nie udalo sie zapisac
+PAUSE_COULDNT_FIND = Nie mozna znalesc pluginu "%s"
+PAUSE_PLUGIN_MATCH = Plugin pasujacy "%s"
+PAUSE_CONF_CLEARED = Plik konfiguracji wyczyszczony. Przeladuj mape jezeli potrzeba
+PAUSE_ALR_CLEARED = Konfiguracja juz zostala wyczyszczona !
+PAUSE_CONF_SAVED = Konfiguracja zapisana
+PAUSE_SAVE_FAILED = Konfiguracji nie udalo sie zapisac
 ON = WL
 STOPPED = ZATRZYMANY
 OFF = WYL
@@ -351,12 +351,12 @@ COM_PAUSE_LIST = ^tlist [id] - wyswietla liste pluginow
 COM_PAUSE_ADD = ^tadd <title> - oznacza plugin jako niewzawialny
 
 [sr]
-COULDNT_FIND = Nije moguce naci plugin koji se poklapa sa "%s"
-PLUGIN_MATCH = Poklapajuci Plugin "%s"
-CONF_CLEARED = Konfiguracioni fajl ispraznjen. Ucitajte mapu ponovo ukoliko je potrebno
-ALR_CLEARED = Konfiguracioni fajl je vec ispraznjen!
-CONF_SAVED = Konfiguracija je sacuvana uspesno
-SAVE_FAILED = Konfiguracija je sacuvana neuspesno!!!
+PAUSE_COULDNT_FIND = Nije moguce naci plugin koji se poklapa sa "%s"
+PAUSE_PLUGIN_MATCH = Poklapajuci Plugin "%s"
+PAUSE_CONF_CLEARED = Konfiguracioni fajl ispraznjen. Ucitajte mapu ponovo ukoliko je potrebno
+PAUSE_ALR_CLEARED = Konfiguracioni fajl je vec ispraznjen!
+PAUSE_CONF_SAVED = Konfiguracija je sacuvana uspesno
+PAUSE_SAVE_FAILED = Konfiguracija je sacuvana neuspesno!!!
 ON = UKLJUCEN
 STOPPED = ZAUSTAVLJEN
 OFF = ISKLJUCEN
@@ -395,12 +395,12 @@ COM_PAUSE_LIST = ^tlist [id] - lista pluginove
 COM_PAUSE_ADD = ^tadd <title> - zakljucava plugin
 
 [sv]
-COULDNT_FIND = Kunde inte hitta ett plugin som matchar "%s"
-PLUGIN_MATCH = Plugin som matchar "%s"
-CONF_CLEARED = Konfigurationsfil rensad. Ladda kartan igen vid behov
-ALR_CLEARED = Konfigurationsfil redan rensad!
-CONF_SAVED = Konfiguration sparad
-SAVE_FAILED = Konfigurationsfilen kunde inte sparas!!
+PAUSE_COULDNT_FIND = Kunde inte hitta ett plugin som matchar "%s"
+PAUSE_PLUGIN_MATCH = Plugin som matchar "%s"
+PAUSE_CONF_CLEARED = Konfigurationsfil rensad. Ladda kartan igen vid behov
+PAUSE_ALR_CLEARED = Konfigurationsfil redan rensad!
+PAUSE_CONF_SAVED = Konfiguration sparad
+PAUSE_SAVE_FAILED = Konfigurationsfilen kunde inte sparas!!
 ON = AKTIV
 STOPPED = STOPPAD
 OFF = AV
@@ -439,12 +439,12 @@ COM_PAUSE_LIST = ^tlist [id] - listar plugins
 COM_PAUSE_ADD = ^tadd <titel> - markerar ett plugin som icke pausbar
 
 [tr]
-COULDNT_FIND = "%s" Buna benzer bir plugin bulunamadi
-PLUGIN_MATCH = "%s" Benzer plugin
-CONF_CLEARED = Config dosyasi temizlendi. Gerekliyse mapi tekrar yukleyin
-ALR_CLEARED = Config dosyasi zaten temizlenmisdi!
-CONF_SAVED = Config dosyasina basari ile saklandi
-SAVE_FAILED = Config dosyasina eklenemedi!!!
+PAUSE_COULDNT_FIND = "%s" Buna benzer bir plugin bulunamadi
+PAUSE_PLUGIN_MATCH = "%s" Benzer plugin
+PAUSE_CONF_CLEARED = Config dosyasi temizlendi. Gerekliyse mapi tekrar yukleyin
+PAUSE_ALR_CLEARED = Config dosyasi zaten temizlenmisdi!
+PAUSE_CONF_SAVED = Config dosyasina basari ile saklandi
+PAUSE_SAVE_FAILED = Config dosyasina eklenemedi!!!
 ON = ACIK
 STOPPED = DURDURULDU 
 OFF = KAPALI

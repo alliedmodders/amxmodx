@@ -189,6 +189,7 @@ new t_sWpn[MAX_WEAPON_LENGTH+1]                     = ""
 public plugin_init() {
   // Register plugin.
   register_plugin( "StatsX", AMXX_VERSION_STR, "AMXX Dev Team")
+  register_dictionary("statsx.txt")
 
   // Register events.
   register_event( "TextMsg", "eventStartGame", "a", 

@@ -54,7 +54,7 @@ public plugin_precache() {
 
 public plugin_init() {
   register_plugin("Stats Configuration",AMXX_VERSION_STR,"AMXX Dev Team")
-  register_menucmd(register_menuid("\yStats Configuration"),1023,"actionCfgMenu")
+  register_menucmd(register_menuid("Stats Configuration"),1023,"actionCfgMenu")
   get_configsdir(g_fileToSave, 63)
   format(g_fileToSave, 63, "%s/stats.ini", g_fileToSave)
   loadSettings(g_fileToSave)
@@ -77,34 +77,34 @@ public cmdCfg( id,level,cid ) {
         ++enabled
         if ( option == 1 ) {
           set_xvar_num( g_menuDataId[a] , 1  )
-          console_print(id,"Enabled %s" , g_menuData[a] )
+          console_print(id,"%L %s", id, "STATS_ENABLED", g_menuData[a] )
         }
         else {
           set_xvar_num( g_menuDataId[a] , 0  )
-          console_print(id,"Disabled %s" , g_menuData[a] )
+          console_print(id,"%L %s", id, "STATS_DISABLED", g_menuData[a] )
         }
       }
     }
     if ( enabled )
       console_print(id,"%L", id, "TOTAL_NUM", enabled )
     else
-      console_print(id,"%L",id,"NO_OPTION",var )
+      console_print(id,"%L",id,"NO_OPTION", var )
   }
   else if ( equali(cmds, "save" )  ) {
     if ( saveSettings( g_fileToSave ) ){
       g_modified = false
-      console_print(id,"%L",id,"CONF_SAVED")
+      console_print(id,"%L",id,"STATS_CONF_SAVED")
     }
     else
-      console_print(id,"%L",id,"CONF_FAILED")  
+      console_print(id,"%L",id,"STATS_CONF_FAILED")  
   }
   else if ( equali(cmds, "load" )  ) {
     if ( loadSettings( g_fileToSave ) ){
       g_modified = false
-      console_print(id,"%L",id,"CONF_LOADED")
+      console_print(id,"%L",id,"STATS_CONF_LOADED")
     }
     else
-      console_print(id,"%L",id,"CONF_FAIL_LOAD")
+      console_print(id,"%L",id,"STATS_CONF_FAIL_LOAD")
   }
   else if ( equali(cmds, "list" )  ) {
     new arg1[8]
@@ -180,7 +180,7 @@ displayCfgMenu(id,pos) {
     len += format(menu_body[len],511-len,"\d%L\w",id,"NO_STATS")
   len += format(menu_body[len],511-len,"^n8. %L\y\R%s^n\w",id,"SAVE_CONF",g_modified ? "*" : "")
   if (end != g_menuDataNum) {
-    format(menu_body[len],511-len,"^n9. %L...^n0. %s", id, "MORE", id, pos ? "BACK" : "EXIT")
+    format(menu_body[len],511-len,"^n9. %L...^n0. %L", id, "MORE", id, pos ? "BACK" : "EXIT")
     keys |= MENU_KEY_9
   }
   else format(menu_body[len],511-len,"^n0. %L", id, pos ? "BACK" : "EXIT")
@@ -192,10 +192,10 @@ public actionCfgMenu(id,key) {
     case 7: {
       if (saveSettings(g_fileToSave)) {
         g_modified = false
-        client_print(id,print_chat,"* %L",id,"CONF_SAVED")
+        client_print(id,print_chat,"* %L",id,"STATS_CONF_SAVED")
       }
       else
-        client_print(id,print_chat,"* %L",id,"CONF_FAILED")
+        client_print(id,print_chat,"* %L",id,"STATS_CONF_FAILED")
       displayCfgMenu(id,g_menuPosition[id])
     }
     case 8: displayCfgMenu(id,++g_menuPosition[id])

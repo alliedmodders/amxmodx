@@ -120,7 +120,7 @@ enum CsTeams {
 	CS_TEAM_CT = 2,
 	CS_TEAM_SPECTATOR = 3
 };
-native cs_get_user_team(index);
+native CsTeams:cs_get_user_team(index);
 
 /* Set user team without killing player.
  * If model is anything other than CS_DONTCHANGE, that will be set as player's model.
@@ -137,7 +137,7 @@ enum CsInternalModel {
 	CS_T_GUERILLA = 8,
 	CS_CT_VIP = 9
 };
-native cs_set_user_team(index, team, model = CS_DONTCHANGE);
+native cs_set_user_team(index, CsTeams:team, CsInternalModel:model = CS_DONTCHANGE);
 
 /* Is user vip? Returns 1 if true, 0 if false.
  */

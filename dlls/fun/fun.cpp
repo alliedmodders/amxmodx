@@ -430,7 +430,7 @@ static cell AMX_NATIVE_CALL set_user_maxspeed(AMX *amx, cell *params) // set_use
 	// params[1] = index
 	// params[2] = speed (should be -1.0 if not specified) (JGHG: unspecified parameters seems to always be -1.0!)
 
-	float fNewSpeed = *(float *)((void *)&params[2]);
+	REAL fNewSpeed = amx_ctof(params[2]);
 
 	// Check index
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
@@ -447,7 +447,6 @@ static cell AMX_NATIVE_CALL set_user_maxspeed(AMX *amx, cell *params) // set_use
 		return 0;
 	}
 
-	//pPlayer->v.maxspeed = ; // JGHG: Gotta love the way to get floats from parameters :-P
 	SETCLIENTMAXSPEED(pPlayer, fNewSpeed);
 	pPlayer->v.maxspeed = fNewSpeed;
 
@@ -474,7 +473,7 @@ static cell AMX_NATIVE_CALL get_user_maxspeed(AMX *amx, cell *params) // Float:g
 		return 0;
 	}
 
-	return *(cell*)((void *)&(pPlayer->v.maxspeed)); // The way to return floats... (sigh)
+	return amx_ftoc(pPlayer->v.maxspeed);
 }
 
 static cell AMX_NATIVE_CALL set_user_gravity(AMX *amx, cell *params) // set_user_gravity(index, Float:gravity = 1.0) = 2 arguments
@@ -497,7 +496,7 @@ static cell AMX_NATIVE_CALL set_user_gravity(AMX *amx, cell *params) // set_user
 		return 0;
 	}
 
-	pPlayer->v.gravity = *(float *)((void *)&params[2]); // JGHG: Gotta love the way to get floats from parameters :-P
+	pPlayer->v.gravity = amx_ctof(params[2]);
 
 	return 1;
 }
@@ -522,7 +521,7 @@ static cell AMX_NATIVE_CALL get_user_gravity(AMX *amx, cell *params) // Float:ge
 		return 0;
 	}
 
-	return *(cell*)((void *)&(pPlayer->v.gravity)); // The way to return floats... (sigh)
+	return amx_ftoc(pPlayer->v.gravity); 
 }
 
 /*static cell AMX_NATIVE_CALL set_hitzones(AMX *amx, cell *params) // set_hitzones(body = 255) = 1 argument

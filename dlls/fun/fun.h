@@ -31,8 +31,6 @@
 *  version.
 */
 
-#include <extdll.h>
-#include <meta_api.h>
 #include "amxxmodule.h"
 
 // Fun-specific defines below

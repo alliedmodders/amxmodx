@@ -26,21 +26,25 @@ std::string filename;
 
 int main(int argc, char **argv)
 {
-	printf("debug clamp.\n");
-	getchar();
-
-	get_options(argc, argv);
-
 	Compiler Program;
 
+	get_options(argc, argv, Program);
+
+	if (filename.size() < 1)
+	{
+		print_version();
+		exit(0);
+	}
+
 	Program.Load(filename);
-	Program.Parse();
-	Program.Compile();
+	if (Program.Parse())
+		if (Program.Compile())
+			printf("Done.\n");
 
 	exit(0);
 }
 
-void get_options(int argc, char **argv)
+void get_options(int argc, char **argv, Compiler &Prog)
 {
 	int i = 0;			/* index */
 	int opt_flag = 0;	/* flag for option detection */
@@ -56,9 +60,15 @@ void get_options(int argc, char **argv)
 			case 'v':
 				{
 					opt_flag = 0;	/* no options expected */
-					//print_version();
+					print_version();
 					break;
 				} /* case */
+			case 'd':
+				{
+					opt_flag = 0;
+					Prog.SetDebug();
+					break;
+				}
 			} /* switch */
 		} else { /* - */
 			if (!opt_flag)
@@ -69,4 +79,11 @@ void get_options(int argc, char **argv)
 			}
 		} /* if */
 	}
+}
+
+void print_version()
+{
+	printf("AMX Assembler 1.00\n");
+	printf("(C)2004 David 'BAILOPAN' Anderson\n");
+	exit(0);
 }

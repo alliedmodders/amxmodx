@@ -87,6 +87,9 @@ void StringBreak(std::string &Source, std::string &Left, std::string &Right)
 	int l=0;
 	unsigned int i=0;
 
+	Left.clear();
+	Right.clear();
+
 	for (i=0; i<Source.size(); i++)
 	{
 		if (isspace(Source[i]) && !done_flag)

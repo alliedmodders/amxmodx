@@ -38,6 +38,16 @@ void ErrorMngr::Clear()
 	HighestError = Err_None;	
 }
 
+int ErrorMngr::CurLine()
+{
+	return ((Compiler *)Cmp)->CurLine();
+}
+
+int ErrorMngr::CurCip()
+{
+	return ((Compiler *)Cmp)->CurCip();
+}
+
 ErrorMngr::ErrorMngr(void *c)
 {
 	Cmp = c;
@@ -82,6 +92,8 @@ void ErrorMngr::DefineErrors()
 	List.at(Err_Opcode) = "Invalid or unrecognized opcode";
 	List.at(Err_Unmatched_Token) = "Unmatched token '%c'";
 	List.at(Err_Param_Count) = "Expected %d parameters, found %d";
+	List.at(Err_Unknown_Define) = "Unknown define referenced";
+	List.at(Err_Misplaced_Directive) = "Misplaced preprocessor directive.";
 
 	List.at(Err_FileNone) = "No file specified";
 	List.at(Err_FileOpen) = "Could not open file \"%s\"";

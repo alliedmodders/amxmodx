@@ -34,12 +34,13 @@ public:
 		CExpr e;
 		bool db;
 		int offset;
+		char fill;
 	};
 public:
 	~DataMngr();
 	DataMngr() { cellsize = 4; lastOffset = 0; cursize = 0; }
 	DataMngr(int cell) { lastOffset = 0; cellsize = cell; cursize = 0; }
-	void Add(std::string &s, CExpr &expr, bool db = false);
+	void Add(std::string &s, CExpr &expr, bool db = false, char fill = 0);
 	DataMngr::Datum *FindData(std::string &sym);
 	void GetData(std::vector<DataMngr::Datum *> &dList);
 	int GetOffset(std::string &sym);

@@ -44,26 +44,40 @@ DataMngr::Datum::Datum()
 {
 	db = false;
 	offset = -1;
+	fill = 0;
 }
 
-void DataMngr::Add(std::string &s, CExpr &expr, bool db)
+void DataMngr::Add(std::string &s, CExpr &expr, bool db, char fill)
 {
 	DataMngr::Datum *D = new DataMngr::Datum();
 
 	D->symbol.assign(s);
 	D->e = expr;
+	D->fill = fill;
 
-	int size = ((D->e.GetType() == Val_Number) ?
-				cellsize : D->e.Size() * cellsize);
+	int size = 0;
+
+	if (db)
+	{
+		size = ((D->e.GetType() == Val_Number) ?
+					cellsize : D->e.Size() * cellsize);
+	} else {
+		size = D->e.GetNumber();
+	}
 
 	if (List.size() == 0)
 	{
 		D->offset = 0;
 	} else {
 		DataMngr::Datum *p = List[List.size()-1];
-		D->offset = p->offset + 
-			((p->e.GetType() == Val_Number) ? 
-			cellsize : p->e.Size() * cellsize);
+		if (p->db)
+		{
+			D->offset = p->offset + 
+				((p->e.GetType() == Val_Number) ? 
+				cellsize : p->e.Size() * cellsize);
+		} else {
+			D->offset = p->offset + p->e.GetNumber();
+		}
 	}
 
 	cursize += size;

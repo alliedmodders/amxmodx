@@ -57,6 +57,8 @@ typedef enum
 	Err_Opcode,
 	Err_Unmatched_Token,
 	Err_Param_Count,
+	Err_Unknown_Define,
+	Err_Misplaced_Directive,
 	errors_end,
 
 	fatals_start,
@@ -91,6 +93,8 @@ public:
 	void ErrorMsg(ErrorCode error, ...);
 	ErrorType GetStatus() { return HighestError; }
 	void PrintReport();
+	int CurLine();
+	int CurCip();
 };
 
 #endif //_INCLUDE_AMX_ERROR

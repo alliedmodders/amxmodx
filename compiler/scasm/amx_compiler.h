@@ -82,7 +82,9 @@ public:
 	int FindArguments(std::string &text, std::vector<std::string*> &List, int &end, bool simple = false);
 	void Clear();
 	int CipCount();
-private:
+	int CurCip() { return lastCip; }
+	bool SetDebug();
+public:	//private
 	void ProcessDirective(std::string &text);
 	void Init();
 	void InitOpcodes();
@@ -107,6 +109,7 @@ private:
 	int lastCip;
 	int cellsize;
 	int stacksize;
+	bool debug;
 };
 
 #endif //_INCLUDE_AMXCOMPILER_H

@@ -215,8 +215,9 @@ typedef enum {
   OP_NUM_OPCODES
 } OPCODE;
 
-void get_options(int argc, char **argv);
+void get_options(int argc, char **argv, Compiler &Prog);
 void InitOpcodes();
 void DestroyArgList(std::vector<std::string *> &List);
+void print_version();
 
 #endif //_INCLUDE_AMXASM_H

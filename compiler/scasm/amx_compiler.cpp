@@ -28,6 +28,7 @@ Compiler::Compiler()
 	cellsize = 4;
 	Output = 0;
 	stacksize = cellsize * 4096;
+	debug = false;
 	Init();
 }
 
@@ -51,7 +52,17 @@ Compiler::Compiler(std::string &f)
 	Output = 0;
 	filename.assign(f);
 	stacksize = cellsize * 4096;
+	debug = false;
 	Init();
+}
+
+bool Compiler::SetDebug()
+{
+	bool state = debug;
+
+	debug = debug ? false : true;
+
+	return state;
 }
 
 void Compiler::Load(std::string &f)
@@ -108,7 +119,7 @@ bool Compiler::Compile()
 	}
 
 	int32_t fileSize = 0;
-	int16_t magic = AMX_MAGIC;
+	int16_t magic = (int16_t)AMX_MAGIC;
 	char file_version = CUR_FILE_VERSION;
     char amx_version = MIN_AMX_VERSION;
 	int16_t flags = 0;
@@ -145,24 +156,24 @@ bool Compiler::Compile()
 		n.Name = (*pl)->Symbol->sym.c_str();
 		a.addr = (*pl)->ASM->cip;
 		printf("%s cip = %d\n", n.Name, a.addr);
-		a.offset = Nametbl.size();
+		a.offset = (int)Nametbl.size();
 		Nametbl.push_back(n);
 		PublicsTable.push_back(a);
 	}
 
-    natives = publics + (PublicsTable.size() * (sizeof(int32_t) * 2));
+    natives = publics + (int)(PublicsTable.size() * (sizeof(int32_t) * 2));
 	for (nl = NativeList.begin(); nl != NativeList.end(); nl++)
 	{
 		NameRecord n;
 		AddrTable a;
 		n.Name = (*nl)->S->sym.c_str();
 		a.addr = 0;
-		a.offset = Nametbl.size();
+		a.offset = (int)Nametbl.size();
 		Nametbl.push_back(n);
 		NativesTable.push_back(a);
 	}
 
-	libraries = natives + (NativesTable.size() * (sizeof(int32_t) * 2));
+	libraries = natives + (int)(NativesTable.size() * (sizeof(int32_t) * 2));
 	pubvars = libraries;
 	tags = pubvars;
 	names = tags;
@@ -175,14 +186,14 @@ bool Compiler::Compile()
 		int off = (*ai).offset;
 		NameMap[cOffset] = off;
 		(*ai).offset = cOffset;
-		cOffset += strlen(Nametbl.at(off).Name) + 1;
+		cOffset += (int)strlen(Nametbl.at(off).Name) + 1;
 	}
 	for (ai = NativesTable.begin(); ai != NativesTable.end(); ai++)
 	{
 		int off = (*ai).offset;
 		NameMap[cOffset] = off;
 		(*ai).offset = cOffset;
-		cOffset += strlen(Nametbl.at(off).Name) + 1;
+		cOffset += (int)strlen(Nametbl.at(off).Name) + 1;
 	}
 
 	cod = cOffset;
@@ -280,16 +291,25 @@ bool Compiler::Compile()
 	const char *s = 0;
 	for (dmi = dm.begin(); dmi != dm.end(); dmi++)
 	{
-		if ( (*dmi)->e.GetType() == Val_Number )
+		if ( (*dmi)->db )
 		{
-			val = (*dmi)->e.GetNumber();
-			fwrite((void *)&val, sizeof(int32_t), 1, fp);
-		} else {
-			s = (*dmi)->e.GetString();
-			for (int q = 0; q < (*dmi)->e.Size(); q++)
+			if ( (*dmi)->e.GetType() == Val_Number )
 			{
-				val = s[q];
-				fwrite((void*)&val, sizeof(int32_t), 1, fp);
+				val = (*dmi)->e.GetNumber();
+				fwrite((void *)&val, sizeof(int32_t), 1, fp);
+			} else {
+				s = (*dmi)->e.GetString();
+				for (int q = 0; q < (*dmi)->e.Size(); q++)
+				{
+					val = s[q];
+					fwrite((void*)&val, sizeof(int32_t), 1, fp);
+				}
+			}
+		} else {
+			char c = (*dmi)->fill;
+			for (int iter=0; iter<=(*dmi)->e.GetNumber(); iter++)
+			{
+				fwrite((void*)&c, sizeof(char), 1, fp);
 			}
 		}
 	}
@@ -314,6 +334,7 @@ bool Compiler::Parse()
 {
 	std::ifstream fp(filename.c_str());
 	char buffer[256] = {0};
+	std::stack<int> DefStack;
 	curLine = 0;
 	AsmSection sec = Asm_None;
 	lastCip = 0-cellsize;
@@ -328,13 +349,71 @@ bool Compiler::Parse()
 	{
 		fp.getline(buffer, 255);
 		curLine++;
-		
+
 		/* Check for preprocessor directives */
 		if (buffer[0] == '#')
 		{
 			std::string procline(buffer);
-			ProcessDirective(procline);
+			if (procline.substr(0, 3).compare("#if") == 0)
+			{
+				std::string def;
+				std::string temp;
+				std::string comp;
+				StringBreak(procline, def, temp);
+				StringBreak(temp, def, comp);
+				DefineMngr::Define *D = 0;
+				if ((D = CDefines->FindDefine(def)) == 0)
+				{
+					DefStack.push(0);
+				} else if (D->GetDefine()->compare(comp) == 0) {
+					DefStack.push(1);
+				} else {
+					DefStack.push(0);
+				}
+			} else if (procline.substr(0, 5).compare("#else") == 0) {
+				if (DefStack.size())
+				{
+					if (DefStack.top() == 1)
+					{
+						DefStack.pop();
+						DefStack.push(0);
+					} else if (DefStack.top() == 0) {
+						DefStack.pop();
+						DefStack.push(1);
+					}
+				} else {
+					CError->ErrorMsg(Err_Misplaced_Directive);
+				}
+				continue;
+			} else if (procline.substr(0, 6).compare("#endif") == 0) {
+				if (DefStack.size())
+				{
+					DefStack.pop();
+				} else {
+					CError->ErrorMsg(Err_Misplaced_Directive);
+				}
+				continue;
+			} else {
+				/* Check for previous operations */
+				if (DefStack.size())
+				{
+					if (DefStack.top() < 1)
+					{
+						continue;
+					}
+				}
+				ProcessDirective(procline);
+			}
 			continue;
+		}
+
+		/* Check for previous operations */
+		if (DefStack.size())
+		{
+			if (DefStack.top() < 1)
+			{
+				continue;
+			}
 		}
 
 		/* Strip the line */
@@ -400,13 +479,35 @@ bool Compiler::Parse()
 					continue;
 				}
 
-				/* Add and evaluate the expression */
-				CExpr e(CError);
-				e.Set(data);
-				e.Evaluate();
-				
-				/* Add into the DAT section */
-				DAT->Add(symbol, e, (fmt.compare("db")==0)?true:false);
+				if (fmt.compare("db") == 0)
+				{
+					/* Add and evaluate the expression */
+					CExpr e(CError);
+					e.Set(data);
+					e.Evaluate();
+					
+					/* Add into the DAT section */
+					DAT->Add(symbol, e, true);
+				} else  if (fmt.compare("stat") == 0) {
+					CExpr e(CError);
+					
+					if (data.find("fill") != std::string::npos)
+					{
+						std::string fill, amt;
+						StringBreak(data, amt, buf);
+						StringBreak(buf, data, fill);
+						CExpr t(CError);
+						t.Set(fill);
+						t.Evaluate();
+						e.Set(amt);
+						e.Evaluate();
+						DAT->Add(symbol, e, false, (char)t.GetNumber());
+					} else {
+						e.Set(data);
+						e.Evaluate();
+						DAT->Add(symbol, e, false, 0);
+					}
+				}
 				CSymbols->AddSymbol(symbol, Sym_Dat, CurLine());
 			} else if (sec == Asm_Public) {
 				if (!IsValidSymbol(line))
@@ -504,7 +605,21 @@ bool Compiler::Parse()
 						continue;
 					}
 
-					Asm *ASM = new Asm;
+					Asm *ASM = 0;
+
+					if (debug)
+					{
+						ASM = new Asm;
+						ASM->cip = lastCip+cellsize;
+						ASM->op = OP_LINE;
+						ASM->params.push_back(curLine);
+						ASM->params.push_back(0);
+						CodeList.push_back(ASM);
+						lastCip+=cellsize*3;
+					}
+
+					ASM = new Asm;
+
 					std::vector<std::string *> paramList;
 
 					if (params.size() > 0)
@@ -1221,12 +1336,9 @@ bool Compiler::Parse()
 						}
 						case OP_LINE:
 						{
-							/* Not yet implemented */
-							assert(0);
-							/*CHK_PARAMS(3);
+							CHK_PARAMS(2);
 							PUSH_PARAM(1, Sym_Dat);
 							PUSH_PARAM(1, Sym_Dat);
-							PUSH_PARAM(1, Sym_Dat);*/
 							break;
 						}
 						case OP_SYMBOL:
@@ -1241,12 +1353,9 @@ bool Compiler::Parse()
 						}
 						case OP_SRANGE:
 						{
-							/* Not yet implemented */
-							assert(0);
-							/*CHK_PARAMS(3);
+							CHK_PARAMS(2);
 							PUSH_PARAM(1, Sym_Dat);
 							PUSH_PARAM(1, Sym_Dat);
-							PUSH_PARAM(1, Sym_Dat);*/
 							break;
 						}
 						case OP_JUMP_PRI:

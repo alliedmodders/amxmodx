@@ -300,7 +300,6 @@ int	C_Spawn( edict_t *pent ) {
 	  (*a).getMin(),(*a).getMax(),(*a).getFilename());
   }
 
-
   RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 

@@ -22,6 +22,10 @@
 * Good place for configuration loading, commands and cvars registration. */
 forward plugin_init();
 
+forward plugin_pause();
+
+forward plugin_unpause();
+
 /* Function is called when all plugin_init from plugins
 * were called, so all commmands and cvars should be already registered. */
 forward plugin_cfg();

@@ -71,8 +71,8 @@ native parse(const text[], ... );
    (A left side and right side of the string)
    Example: to split text: "^"This is^" the best year",
    split(text, arg1, len1, arg2, len2)
-   arg1="^"This is^"", arg2="the best year"
-   This more useful than parse() because you can keep breaking
+   arg1="This is", arg2=the best year
+   This is more useful than parse() because you can keep breaking
    any number of arguments */
 native strbreak(const text[], Left[], leftLen, Right[], rightLen);
 

@@ -5,7 +5,7 @@ int is_ent_valid(int iEnt)
 	if (iEnt < 1 || iEnt > gpGlobals->maxEntities) 
 		return 0;
 
-	if (iEnt >= 1 && iEnt <= 32)
+	if (iEnt >= 1 && iEnt <= gpGlobals->maxClients)
 		if (!MF_IsPlayerIngame(iEnt))
 			return 0;
 

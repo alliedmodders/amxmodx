@@ -25,8 +25,6 @@
   #include <sclinux.h>
 #endif
 
-#define JIT
-
 #ifndef AMX_H_INCLUDED
 #define AMX_H_INCLUDED
 

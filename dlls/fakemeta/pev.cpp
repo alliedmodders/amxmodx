@@ -39,6 +39,8 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 		valuetype=VALUETYPE_BYTE;
 	else if (iSwitch > pev_string_start && iSwitch < pev_string_end)
 		valuetype=VALUETYPE_STRING;
+	else if (iSwitch > pev_edict_start && iSwitch < pev_edict_end)
+		valuetype=VALUETYPE_EDICT;
 	if (iSwitch > pev_int_start && iSwitch < pev_int_end)
 	{
 		valuetype=VALUETYPE_INT;
@@ -623,7 +625,6 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 	CHECK_ENTITY(index);
 	edict_t *pPlayer = INDEXENT2(index);
 	int iSwitch = params[2];
-	
 	cell *blah = MF_GetAmxAddr(amx,params[3]);
 	if (iSwitch > pev_int_start && iSwitch < pev_int_end)
 	{
@@ -918,37 +919,38 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 	}
 	else if (iSwitch > pev_edict_start && iSwitch < pev_edict_end)
 	{
+		int iValue = blah[0];
 		switch (iSwitch)
 		{
 		case chain:
-			pPlayer->v.chain = INDEXENT2(params[3]);
+			pPlayer->v.chain = INDEXENT2(iValue);
 			return 1;
 		case dmg_inflictor:
-			pPlayer->v.dmg_inflictor = INDEXENT2(params[3]);
+			pPlayer->v.dmg_inflictor = INDEXENT2(iValue);
 			return 1;
 		case enemy:
-			pPlayer->v.enemy = INDEXENT2(params[3]);
+			pPlayer->v.enemy = INDEXENT2(iValue);
 			return 1;
 		case aiment:
-			pPlayer->v.aiment = INDEXENT2(params[3]);
+			pPlayer->v.aiment = INDEXENT2(iValue);
 			return 1;
 		case owner:
-			pPlayer->v.owner = INDEXENT2(params[3]);
+			pPlayer->v.owner = INDEXENT2(iValue);
 			return 1;
 		case groundentity:
-			pPlayer->v.groundentity = INDEXENT2(params[3]);
+			pPlayer->v.groundentity = INDEXENT2(iValue);
 			return 1;
 		case euser1:
-			pPlayer->v.euser1 = INDEXENT2(params[3]);
+			pPlayer->v.euser1 = INDEXENT2(iValue);
 			return 1;
 		case euser2:
-			pPlayer->v.euser2 = INDEXENT2(params[3]);
+			pPlayer->v.euser2 = INDEXENT2(iValue);
 			return 1;
 		case euser3:
-			pPlayer->v.euser3 = INDEXENT2(params[3]);
+			pPlayer->v.euser3 = INDEXENT2(iValue);
 			return 1;
 		case euser4:
-			pPlayer->v.euser4 = INDEXENT2(params[3]);
+			pPlayer->v.euser4 = INDEXENT2(iValue);
 			return 1;
 		default:
 			return 0;

@@ -37,8 +37,8 @@ CList<CModule> g_modules;
 CList<CScript,AMX*> g_loadedscripts;
 
 CModule *g_CurrentlyCalledModule = NULL;	// The module we are in at the moment; NULL otherwise
-											// also NULL for non-amxx modules
-											// This is needed so we know which module called a function
+// also NULL for non-amxx modules
+// This is needed so we know which module called a function
 ModuleCallReason g_ModuleCallReason;
 
 extern const char* no_function; // stupid work around
@@ -65,13 +65,13 @@ void report_error( int code, char* fmt, ... )
 
 void print_srvconsole( char *fmt, ... )
 {
-  va_list argptr;
-  char string[256];
-  va_start (argptr, fmt);
-  vsnprintf (string, 255, fmt,argptr);
-  string[255] = 0;
-  va_end (argptr);
-  SERVER_PRINT(string);
+	va_list argptr;
+	char string[256];
+	va_start (argptr, fmt);
+	vsnprintf (string, 255, fmt,argptr);
+	string[255] = 0;
+	va_end (argptr);
+	SERVER_PRINT(string);
 }
 
 void* alloc_amxmemory(void** p, int size)
@@ -87,98 +87,98 @@ void free_amxmemory(void **ptr)
 }
 
 int load_amxscript(AMX *amx, void **program, const char *filename, char error[64]){
-  
-  AMX_HEADER hdr; 
-  int err; 
-  FILE *fp;
 
-  memset(amx, 0, sizeof(*amx));
-  *program = 0;
-  *error = 0;
+	AMX_HEADER hdr; 
+	int err; 
+	FILE *fp;
 
-  if ( (fp = fopen( filename, "rb" )) == NULL)
-  {
-    strcpy(error,"Plugin file open error");
-    return (amx->error = AMX_ERR_NOTFOUND);
-  }
+	memset(amx, 0, sizeof(*amx));
+	*program = 0;
+	*error = 0;
 
-  fread(&hdr, sizeof(hdr), 1, fp);
+	if ( (fp = fopen( filename, "rb" )) == NULL)
+	{
+		strcpy(error,"Plugin file open error");
+		return (amx->error = AMX_ERR_NOTFOUND);
+	}
 
-  amx_Align16(&hdr.magic);
+	fread(&hdr, sizeof(hdr), 1, fp);
 
-  if (hdr.magic!=AMX_MAGIC) 
-  {
-    strcpy(error,"Invalid plugin");
-    return (amx->error = AMX_ERR_FORMAT);
-  }
+	amx_Align16(&hdr.magic);
 
-  amx_Align32((uint32_t *)&hdr.stp);
-  amx_Align32((uint32_t *)&hdr.size);
+	if (hdr.magic!=AMX_MAGIC) 
+	{
+		strcpy(error,"Invalid plugin");
+		return (amx->error = AMX_ERR_FORMAT);
+	}
 
-  if ( (*program  = new unsigned char[ (int)hdr.stp ]) == 0 )
-  //if ( (*program = malloc( (int)hdr.stp )) == 0 )
-  {
-    strcpy(error,"Failed to allocate memory");
-    return (amx->error = AMX_ERR_MEMORY);
-  }
+	amx_Align32((uint32_t *)&hdr.stp);
+	amx_Align32((uint32_t *)&hdr.size);
 
-  rewind(fp);
-  fread(*program, 1, (size_t)hdr.size, fp);
-  fclose(fp);
-
-  if ((err = amx_Init( amx, *program )) != AMX_ERR_NONE)
-  {
-    sprintf(error,"Load error %d (invalid file format or version)", err);
-    return (amx->error = AMX_ERR_INIT);
-  }
-
-
-#ifdef JIT
-  void *np = new char[ amx->code_size ];
-  void *rt = new char[ amx->reloc_size ];
-  if ( !np || (!rt && amx->reloc_size > 0) )
-  {
-    delete[] np;
-    delete[] rt;
-    strcpy(error,"Failed to initialize plugin");
-    return (amx->error = AMX_ERR_INIT);
-  }
-
-  if (amx_InitJIT(amx, rt, np) == AMX_ERR_NONE) 
-  {
-    //amx->base = (unsigned char FAR *)realloc( np, amx->code_size );
-	amx->base = new unsigned char[ amx->code_size ];
-	if ( amx->base )
-		memcpy( amx->base , np , amx->code_size );
-	delete[] np;
-    delete[] rt;
-    delete[] *program;
-    (*program) = amx->base;
-	if ( *program == 0 ){
+	if ( (*program  = new unsigned char[ (int)hdr.stp ]) == 0 )
+		//if ( (*program = malloc( (int)hdr.stp )) == 0 )
+	{
 		strcpy(error,"Failed to allocate memory");
 		return (amx->error = AMX_ERR_MEMORY);
 	}
-  }
-  else 
-  {
-    delete[] np;
-    delete[] rt;
-    strcpy(error,"Failed to initialize plugin");
-    return (amx->error = AMX_ERR_INIT_JIT);
-  }
+
+	rewind(fp);
+	fread(*program, 1, (size_t)hdr.size, fp);
+	fclose(fp);
+
+	if ((err = amx_Init( amx, *program )) != AMX_ERR_NONE)
+	{
+		sprintf(error,"Load error %d (invalid file format or version)", err);
+		return (amx->error = AMX_ERR_INIT);
+	}
+
+
+#ifdef JIT
+	void *np = new char[ amx->code_size ];
+	void *rt = new char[ amx->reloc_size ];
+	if ( !np || (!rt && amx->reloc_size > 0) )
+	{
+		delete[] np;
+		delete[] rt;
+		strcpy(error,"Failed to initialize plugin");
+		return (amx->error = AMX_ERR_INIT);
+	}
+
+	if (amx_InitJIT(amx, rt, np) == AMX_ERR_NONE) 
+	{
+		//amx->base = (unsigned char FAR *)realloc( np, amx->code_size );
+		amx->base = new unsigned char[ amx->code_size ];
+		if ( amx->base )
+			memcpy( amx->base , np , amx->code_size );
+		delete[] np;
+		delete[] rt;
+		delete[] *program;
+		(*program) = amx->base;
+		if ( *program == 0 ){
+			strcpy(error,"Failed to allocate memory");
+			return (amx->error = AMX_ERR_MEMORY);
+		}
+	}
+	else 
+	{
+		delete[] np;
+		delete[] rt;
+		strcpy(error,"Failed to initialize plugin");
+		return (amx->error = AMX_ERR_INIT_JIT);
+	}
 
 #endif
 
-  CScript* aa  =  new CScript(amx,*program,filename);
+	CScript* aa  =  new CScript(amx,*program,filename);
 
-  if ( aa == 0 )
-  {
-	strcpy(error,"Failed to allocate memory");
-	return (amx->error = AMX_ERR_MEMORY);
-  }
+	if ( aa == 0 )
+	{
+		strcpy(error,"Failed to allocate memory");
+		return (amx->error = AMX_ERR_MEMORY);
+	}
 
-  g_loadedscripts.put( aa );
-  return set_amxnatives(amx,error);
+	g_loadedscripts.put( aa );
+	return set_amxnatives(amx,error);
 }
 
 int set_amxnatives(AMX* amx,char error[64])
@@ -189,7 +189,7 @@ int set_amxnatives(AMX* amx,char error[64])
 			(*a).m_Natives.begin(); cc; ++cc )
 			amx_Register(amx, *cc , -1);
 	}
-		
+
 	amx_Register(amx, string_Natives, -1);
 	amx_Register(amx, float_Natives, -1);
 	amx_Register(amx, file_Natives, -1);
@@ -197,25 +197,25 @@ int set_amxnatives(AMX* amx,char error[64])
 	amx_Register(amx, power_Natives, -1);
 	amx_Register(amx, time_Natives, -1);
 	amx_Register(amx, vault_Natives, -1);
-	
+
 	if ( amx_Register(amx, core_Natives, -1) != AMX_ERR_NONE )
 	{
 		sprintf(error,"Function not found (name \"%s\")",no_function);
 		return (amx->error = AMX_ERR_NATIVE);
 	}
-	
+
 	return AMX_ERR_NONE;
 }
 
 
 int unload_amxscript(AMX* amx, void** program)
 {
-  CList<CScript,AMX*>::iterator a = g_loadedscripts.find( amx  );
-  if ( a ) a.remove();
-  delete[] *program;
-  //free( *program );
-  *program = 0;
-  return AMX_ERR_NONE;
+	CList<CScript,AMX*>::iterator a = g_loadedscripts.find( amx  );
+	if ( a ) a.remove();
+	delete[] *program;
+	//free( *program );
+	*program = 0;
+	return AMX_ERR_NONE;
 }
 
 
@@ -246,7 +246,7 @@ void get_modname(char* buffer )
 char* build_pathname(char *fmt, ... )
 {
 	static char string[256];
-	
+
 	int b;
 
 	int a = b = snprintf(string , 255 ,
@@ -257,15 +257,15 @@ char* build_pathname(char *fmt, ... )
 		"%s/",
 #endif
 		g_mod_name.str());
-	
+
 	va_list argptr;
 	va_start (argptr, fmt);
 	a += vsnprintf (&string[a], 255 - a , fmt,argptr);
 	string[ a ] = 0;
 	va_end (argptr);
-	
+
 	char* path = &string[b];
-	
+
 	while (*path) 
 	{
 #ifndef __linux__
@@ -275,7 +275,7 @@ char* build_pathname(char *fmt, ... )
 #endif
 		++path;
 	}
-	
+
 	return string;
 }
 
@@ -284,14 +284,14 @@ char* build_pathname(char *fmt, ... )
 char* build_pathname_addons(char *fmt, ... )
 {
 	static char string[256];
-	
+
 	va_list argptr;
 	va_start (argptr, fmt);
 	vsnprintf (string, 255, fmt, argptr);
 	va_end (argptr);
-	
+
 	char* path = string;
-	
+
 	while (*path) 
 	{
 #ifndef __linux__
@@ -301,14 +301,14 @@ char* build_pathname_addons(char *fmt, ... )
 #endif
 		++path;
 	}
-	
+
 	return string;
 }
 
 int add_amxnatives(module_info_s* info,AMX_NATIVE_INFO*natives)
 {
 	CList<CModule>::iterator  a  = g_modules.begin();
-		
+
 	while ( a )
 	{
 		if (  (*a).getInfo() == info )
@@ -318,96 +318,98 @@ int add_amxnatives(module_info_s* info,AMX_NATIVE_INFO*natives)
 			(*a).m_Natives.put( aa  );
 			return AMX_ERR_NONE;
 		}
-			
+
 		++a;
 	}
 
-  return AMX_ERR_NATIVE;
+	return AMX_ERR_NATIVE;
 }
 
 
 bool validFile(const char* file)
 {
-  const char* a = 0;
-  while(*file)
-    if (*file++=='.')
-      a = file;
+	const char* a = 0;
+	while(*file)
+		if (*file++=='.')
+			a = file;
 #ifndef __linux__
-  return (a && !strcmp(a,"dll"));
+	return (a && !strcmp(a,"dll"));
 #else
-  return (a && !strcmp(a,"so"));
+	return (a && !strcmp(a,"so"));
 #endif
 }
 
 int loadModules(const char* filename)
 {
-  File fp( build_pathname("%s",filename), "r"  );
+	File fp( build_pathname("%s",filename), "r"  );
 
-  if ( !fp )
-  {
-    AMXXLOG_Log( "[AMXX] Modules list not found (file \"%s\")",filename);
-    return 0;
-  }
+	if ( !fp )
+	{
+		AMXXLOG_Log( "[AMXX] Modules list not found (file \"%s\")",filename);
+		return 0;
+	}
 
-  char line[256], moduleName[256];
-  int loaded = 0;
-  
-  while ( fp.getline( line ,  255  ) )
-  {
-	  *moduleName = 0;
-	  sscanf(line,"%s",moduleName);
-	  if (!isalnum(*moduleName) || !validFile(moduleName) )  
-		  continue;
-	  
-	  char* pathname = build_pathname("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxx/modules"), line);
+	char line[256], moduleName[256];
+	int loaded = 0;
 
-	  CList<CModule>::iterator a = g_modules.find(  pathname  );
+	while ( fp.getline( line ,  255  ) )
+	{
+		*moduleName = 0;
+		sscanf(line,"%s",moduleName);
+		if (!isalnum(*moduleName) || !validFile(moduleName) )  
+			continue;
 
-	  if ( a ) continue; // already loaded
+		char* pathname = build_pathname("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxx/modules"), line);
 
-	  CModule* cc = new CModule( pathname  );
+		CList<CModule>::iterator a = g_modules.find(  pathname  );
 
-	  if ( cc == 0 ) return loaded;
+		if ( a ) continue; // already loaded
 
-	  cc->queryModule();
+		CModule* cc = new CModule( pathname  );
 
-	  switch(  cc->getStatusValue()  )  {
+		if ( cc == 0 ) return loaded;
+
+		cc->queryModule();
+
+		switch(  cc->getStatusValue()  )  {
 	  case MODULE_BADLOAD:
-        report_error( 1 , "[AMXX] Module is not a valid library (file \"%s\")",pathname );
-		break;
+		  report_error( 1 , "[AMXX] Module is not a valid library (file \"%s\")",pathname );
+		  break;
 	  case MODULE_NOINFO:
-        report_error( 1 ,"[AMXX] Couldn't find info. about module (file \"%s\")",pathname );
-		break;
+		  report_error( 1 ,"[AMXX] Couldn't find info. about module (file \"%s\")",pathname );
+		  break;
 	  case MODULE_NOQUERY:
 		  report_error( 1 , "[AMXX] Couldn't find \"AMX_Query\" or \"AMXX_Query\" (file \"%s\")", pathname );
-		break;
+		  break;
 	  case MODULE_NOATTACH:
-		report_error( 1 , "[AMXX] Couldn't find \"%s\" (file \"%s\")", cc->isAmxx() ? "AMXX_Attach" : "AMX_Attach", pathname );
-		break;
+		  report_error( 1 , "[AMXX] Couldn't find \"%s\" (file \"%s\")", cc->isAmxx() ? "AMXX_Attach" : "AMX_Attach", pathname );
+		  break;
 	  case MODULE_OLD:
-        report_error( 1 , "[AMXX] Module has a different interface version (file \"%s\")",pathname );
-		break;
+		  report_error( 1 , "[AMXX] Module has a different interface version (file \"%s\")",pathname );
+		  break;
 	  case MODULE_NEWER:
-		report_error(1, "[AMXX] Module has a newer interface version (file \"%s\"). Please download a new amxmodx.", pathname);
-		break;
+		  report_error(1, "[AMXX] Module has a newer interface version (file \"%s\"). Please download a new amxmodx.", pathname);
+		  break;
 	  case MODULE_INTERROR:
-		report_error(1, "[AMXX] Internal error during module load (file \"%s\")", pathname);
-		break;
+		  report_error(1, "[AMXX] Internal error during module load (file \"%s\")", pathname);
+		  break;
+	  case MODULE_NOT64BIT:
+		  report_error(1, "[AMXX] Module \"%s\" is not 64 bit compatible.", pathname);
+		  break;
 	  default:
-		++loaded; 
-	  }
+		  ++loaded; 
+		}
 
+		g_modules.put( cc );
+	}
 
-	  g_modules.put( cc );
-  }
-
-  return loaded;
+	return loaded;
 }
 
 void dettachModules()
 {
 	CList<CModule>::iterator  a  = g_modules.begin();
-	
+
 	while ( a )
 	{
 		(*a).detachModule();
@@ -418,7 +420,7 @@ void dettachModules()
 void dettachReloadModules()
 {
 	CList<CModule>::iterator  a  = g_modules.begin();
-	
+
 	while ( a )
 	{
 		if ( (*a).isReloadable() )
@@ -430,13 +432,13 @@ void dettachReloadModules()
 
 		++a;
 	}
-	
+
 }
 
 void attachModules()
 {
 	CList<CModule>::iterator  a  = g_modules.begin();
-	
+
 	while ( a )
 	{
 		bool retVal = (*a).attachModule();
@@ -465,57 +467,57 @@ void attachModules()
 
 const char* strip_name( const char* a )
 {
-  const char* ret = a;
-  while(*a){
-     if ( *a== '/' || *a=='\\' ){
-      ret = ++a;
-      continue;
-    }
-     ++a;
-  }
-  return ret;
+	const char* ret = a;
+	while(*a){
+		if ( *a== '/' || *a=='\\' ){
+			ret = ++a;
+			continue;
+		}
+		++a;
+	}
+	return ret;
 }
 
 void attachMetaModModules(PLUG_LOADTIME now, const char* filename)
 {
-  File fp( build_pathname("%s",filename), "r"  );
+	File fp( build_pathname("%s",filename), "r"  );
 
-  if ( !fp )
-  {
-    AMXXLOG_Log( "[AMXX] Modules list not found (file \"%s\")",filename);
-    return;
-  }
+	if ( !fp )
+	{
+		AMXXLOG_Log( "[AMXX] Modules list not found (file \"%s\")",filename);
+		return;
+	}
 
-  char line[256], moduleName[256];
-  DLHANDLE module;
+	char line[256], moduleName[256];
+	DLHANDLE module;
 
-  int loaded = 0;
+	int loaded = 0;
 
-  while ( fp.getline( line ,  255  ) )
-  {
-	  *moduleName = 0;
-	  sscanf(line,"%s",moduleName);
-	  
-	  if (!isalnum(*moduleName) || !validFile(moduleName) )  
-		  continue;
-	  
-	  char* pathname = build_pathname("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxx/modules"), line);
-	  char* mmpathname = build_pathname_addons("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxx/modules"), line);
-	  module = DLLOAD( pathname ); // link dll
+	while ( fp.getline( line ,  255  ) )
+	{
+		*moduleName = 0;
+		sscanf(line,"%s",moduleName);
 
-	  if ( module )
-	  {
-		int a = (int)DLPROC(module,"Meta_Attach");
-		DLFREE(module);
+		if (!isalnum(*moduleName) || !validFile(moduleName) )  
+			continue;
 
-		if ( a )
+		char* pathname = build_pathname("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxx/modules"), line);
+		char* mmpathname = build_pathname_addons("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxx/modules"), line);
+		module = DLLOAD( pathname ); // link dll
+
+		if ( module )
 		{
-			g_FakeMeta.AddPlugin(mmpathname);
-			g_FakeMeta.Meta_Query(gpMetaUtilFuncs);
-			g_FakeMeta.Meta_Attach(now, gpMetaGlobals, gpGamedllFuncs);
+			int a = (int)DLPROC(module,"Meta_Attach");
+			DLFREE(module);
+
+			if ( a )
+			{
+				g_FakeMeta.AddPlugin(mmpathname);
+				g_FakeMeta.Meta_Query(gpMetaUtilFuncs);
+				g_FakeMeta.Meta_Attach(now, gpMetaGlobals, gpGamedllFuncs);
+			}
 		}
-	  }
-  }
+	}
 }
 
 
@@ -567,7 +569,7 @@ void modules_callPluginsLoaded()
 int MNF_AddNatives(AMX_NATIVE_INFO* natives)
 {
 	CList<CModule>::iterator a = g_modules.begin();
-	
+
 	if (!g_CurrentlyCalledModule || g_ModuleCallReason != ModuleCall_Attach)
 		return FALSE;				// may only be called from attach
 
@@ -763,6 +765,16 @@ void MNF_HiddenStuff()
 	// :TODO:
 }
 
+cell MNF_RealToCell(REAL x)
+{
+	return *(cell*)&x;
+}
+
+REAL MNF_CellToReal(cell x)
+{
+	return *(REAL*)&x;
+}
+
 // Fnptr Request function for the new interface
 const char *g_LastRequestedFunc = NULL;
 #define REGISTER_FUNC(name, func) { name, (void*)func },
@@ -777,68 +789,70 @@ void *Module_ReqFnptr(const char *funcName)
 	static Func_s functions[] = {
 		// Misc
 		REGISTER_FUNC("BuildPathname", build_pathname)
-		REGISTER_FUNC("PrintSrvConsole", print_srvconsole)
-		REGISTER_FUNC("GetModname", MNF_GetModname)
-		REGISTER_FUNC("Log", AMXXLOG_Log)
-		
-		// Amx scripts loading / unloading / managing
-		REGISTER_FUNC("GetAmxScript", MNF_GetAmxScript)
-		REGISTER_FUNC("GetAmxScriptName", MNF_GetAmxScriptName)
-		REGISTER_FUNC("FindAmxScriptByName", MNF_FindAmxScriptByName)
-		REGISTER_FUNC("FindAmxScriptByAmx", MNF_FindAmxScriptByAmx)
-		REGISTER_FUNC("LoadAmxScript", load_amxscript)
-		REGISTER_FUNC("UnloadAmxScript", unload_amxscript)
+			REGISTER_FUNC("PrintSrvConsole", print_srvconsole)
+			REGISTER_FUNC("GetModname", MNF_GetModname)
+			REGISTER_FUNC("Log", AMXXLOG_Log)
 
-		// String / mem in amx scripts support
-		REGISTER_FUNC("SetAmxString", set_amxstring)
-		REGISTER_FUNC("GetAmxString", MNF_GetAmxString)
-		REGISTER_FUNC("GetAmxStringLen", MNF_GetAmxStringLen)
-		REGISTER_FUNC("FormatAmxString", MNF_FormatAmxString)
-		REGISTER_FUNC("CopyAmxMemory", MNF_CopyAmxMemory)
-		REGISTER_FUNC("GetAmxAddr", get_amxaddr)
+			// Amx scripts loading / unloading / managing
+			REGISTER_FUNC("GetAmxScript", MNF_GetAmxScript)
+			REGISTER_FUNC("GetAmxScriptName", MNF_GetAmxScriptName)
+			REGISTER_FUNC("FindAmxScriptByName", MNF_FindAmxScriptByName)
+			REGISTER_FUNC("FindAmxScriptByAmx", MNF_FindAmxScriptByAmx)
+			REGISTER_FUNC("LoadAmxScript", load_amxscript)
+			REGISTER_FUNC("UnloadAmxScript", unload_amxscript)
 
-		// other amx stuff
-		REGISTER_FUNC("amx_Exec", amx_Exec)
-		REGISTER_FUNC("amx_Execv", amx_Execv)
-		REGISTER_FUNC("amx_Allot", amx_Allot)
-		REGISTER_FUNC("amx_FindPublic", amx_FindPublic)
+			// String / mem in amx scripts support
+			REGISTER_FUNC("SetAmxString", set_amxstring)
+			REGISTER_FUNC("GetAmxString", MNF_GetAmxString)
+			REGISTER_FUNC("GetAmxStringLen", MNF_GetAmxStringLen)
+			REGISTER_FUNC("FormatAmxString", MNF_FormatAmxString)
+			REGISTER_FUNC("CopyAmxMemory", MNF_CopyAmxMemory)
+			REGISTER_FUNC("GetAmxAddr", get_amxaddr)
 
-		// Natives / Forwards
-		REGISTER_FUNC("AddNatives", MNF_AddNatives)
-		REGISTER_FUNC("RaiseAmxError", amx_RaiseError)
-		REGISTER_FUNC("RegisterForward", registerForward)
-		REGISTER_FUNC("ExecuteForward", executeForwards)
-		REGISTER_FUNC("PrepareCellArray", prepareCellArray)
-		REGISTER_FUNC("PrepareCharArray", prepareCharArray)
+			// other amx stuff
+			REGISTER_FUNC("amx_Exec", amx_Exec)
+			REGISTER_FUNC("amx_Execv", amx_Execv)
+			REGISTER_FUNC("amx_Allot", amx_Allot)
+			REGISTER_FUNC("amx_FindPublic", amx_FindPublic)
 
-		// Player
-		REGISTER_FUNC("IsPlayerValid", MNF_IsPlayerValid)
-		REGISTER_FUNC("GetPlayerName", MNF_GetPlayerName)
-		REGISTER_FUNC("GetPlayerIP", MNF_GetPlayerIP)
-		REGISTER_FUNC("IsPlayerInGame", MNF_IsPlayerInGame)
-		REGISTER_FUNC("IsPlayerBot", MNF_IsPlayerBot)
-		REGISTER_FUNC("IsPlayerAuthorized", MNF_IsPlayerAuthorized)
-		REGISTER_FUNC("GetPlayerTime", MNF_GetPlayerTime)
-		REGISTER_FUNC("GetPlayerPlayTime", MNF_GetPlayerPlayTime)
-		REGISTER_FUNC("GetPlayerCurweapon", MNF_GetPlayerCurweapon)
-		REGISTER_FUNC("GetPlayerTeamID", MNF_GetPlayerTeamID)
-		REGISTER_FUNC("GetPlayerDeaths", MNF_GetPlayerDeaths)
-		REGISTER_FUNC("GetPlayerFrags", MNF_GetPlayerFrags)
-		REGISTER_FUNC("GetPlayerMenu", MNF_GetPlayerMenu)
-		REGISTER_FUNC("GetPlayerKeys", MNF_GetPlayerKeys)
-		REGISTER_FUNC("IsPlayerAlive", MNF_IsPlayerAlive)
-		REGISTER_FUNC("IsPlayerConnecting", MNF_IsPlayerConnecting)
-		REGISTER_FUNC("IsPlayerHLTV", MNF_IsPlayerHLTV)
-		REGISTER_FUNC("GetPlayerArmor", MNF_GetPlayerArmor)
-		REGISTER_FUNC("GetPlayerHealth", MNF_GetPlayerHealth)
+			// Natives / Forwards
+			REGISTER_FUNC("AddNatives", MNF_AddNatives)
+			REGISTER_FUNC("RaiseAmxError", amx_RaiseError)
+			REGISTER_FUNC("RegisterForward", registerForward)
+			REGISTER_FUNC("ExecuteForward", executeForwards)
+			REGISTER_FUNC("PrepareCellArray", prepareCellArray)
+			REGISTER_FUNC("PrepareCharArray", prepareCharArray)
+
+			// Player
+			REGISTER_FUNC("IsPlayerValid", MNF_IsPlayerValid)
+			REGISTER_FUNC("GetPlayerName", MNF_GetPlayerName)
+			REGISTER_FUNC("GetPlayerIP", MNF_GetPlayerIP)
+			REGISTER_FUNC("IsPlayerInGame", MNF_IsPlayerInGame)
+			REGISTER_FUNC("IsPlayerBot", MNF_IsPlayerBot)
+			REGISTER_FUNC("IsPlayerAuthorized", MNF_IsPlayerAuthorized)
+			REGISTER_FUNC("GetPlayerTime", MNF_GetPlayerTime)
+			REGISTER_FUNC("GetPlayerPlayTime", MNF_GetPlayerPlayTime)
+			REGISTER_FUNC("GetPlayerCurweapon", MNF_GetPlayerCurweapon)
+			REGISTER_FUNC("GetPlayerTeamID", MNF_GetPlayerTeamID)
+			REGISTER_FUNC("GetPlayerDeaths", MNF_GetPlayerDeaths)
+			REGISTER_FUNC("GetPlayerFrags", MNF_GetPlayerFrags)
+			REGISTER_FUNC("GetPlayerMenu", MNF_GetPlayerMenu)
+			REGISTER_FUNC("GetPlayerKeys", MNF_GetPlayerKeys)
+			REGISTER_FUNC("IsPlayerAlive", MNF_IsPlayerAlive)
+			REGISTER_FUNC("IsPlayerConnecting", MNF_IsPlayerConnecting)
+			REGISTER_FUNC("IsPlayerHLTV", MNF_IsPlayerHLTV)
+			REGISTER_FUNC("GetPlayerArmor", MNF_GetPlayerArmor)
+			REGISTER_FUNC("GetPlayerHealth", MNF_GetPlayerHealth)
+			REGISTER_FUNC("CellToReal", MNF_CellToReal)
+			REGISTER_FUNC("RealToCell", MNF_RealToCell)
 
 #ifdef MEMORY_TEST
-		REGISTER_FUNC("Allocator", m_allocator)
-		REGISTER_FUNC("Deallocator", m_deallocator)
-		REGISTER_FUNC("Reallocator", m_reallocator)
+			REGISTER_FUNC("Allocator", m_allocator)
+			REGISTER_FUNC("Deallocator", m_deallocator)
+			REGISTER_FUNC("Reallocator", m_reallocator)
 #endif // MEMORY_TEST
 
-		REGISTER_FUNC("Haha_HiddenStuff", MNF_HiddenStuff)
+			REGISTER_FUNC("Haha_HiddenStuff", MNF_HiddenStuff)
 	};
 
 	// code

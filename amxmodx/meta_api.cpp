@@ -240,11 +240,7 @@ int	C_Spawn( edict_t *pent ) {
   attachModules();
   int loaded = countModules(CountModules_Running);	// Call	after attachModules	so all modules don't have pending stat
   // Set some info about amx version and modules
-  CVAR_SET_STRING(init_amxmodx_version.name, AMX_VERSION
-#ifdef JIT
-	  "J"
-#endif
-	  );
+  CVAR_SET_STRING(init_amxmodx_version.name, AMX_VERSION);
   char buffer[32];
   sprintf(buffer, "%d", loaded);
   CVAR_SET_STRING(init_amxmodx_modules.name, buffer);

@@ -2544,7 +2544,7 @@ void CFakeMeta::ReleasePlugins()
 bool CFakeMeta::AddCorePlugin()
 {
 	// Check whether there already is a core plugin
-	if (strcmp((*m_Plugins.begin()).GetPath(), "[AMXX Core]") == 0)
+	if (m_Plugins.begin() && strcmp((*m_Plugins.begin()).GetPath(), "[AMXX Core]") == 0)
 		return true;
 
 	// make a fake plugin for the core
@@ -2560,6 +2560,8 @@ bool CFakeMeta::AddCorePlugin()
 // Query all added plugins
 void CFakeMeta::Meta_Query(mutil_funcs_t *pMetaUtilFuncs)
 {
+	AddCorePlugin();
+
 	// Query all plugins except core
 	CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin();
 	++iter;			// Skip core
@@ -2572,6 +2574,8 @@ void CFakeMeta::Meta_Query(mutil_funcs_t *pMetaUtilFuncs)
 // Attach all added plugins
 void CFakeMeta::Meta_Attach(PLUG_LOADTIME now, meta_globals_t *pMGlobals, gamedll_funcs_t *pGamedllFuncs)
 {
+	AddCorePlugin();
+
 	// Attach all plugins except core
 	CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin();
 	++iter;			// Skip core

@@ -62,7 +62,7 @@ static cell AMX_NATIVE_CALL regex_match(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL regex_substr(AMX *amx, cell *params)
 {
-	int id = params[1];
+	int id = params[1]-1;
 	if (id >= (int)PEL.size() || id < 0 || PEL[id]->isFree())
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid regex handle %d", id);
@@ -88,6 +88,7 @@ static cell AMX_NATIVE_CALL regex_free(AMX *amx, cell *params)
 	cell *c = MF_GetAmxAddr(amx, params[1]);
 	int id = *c;
 	*c = 0;
+	id -= 1;
 	if (id >= (int)PEL.size() || id < 0 || PEL[id]->isFree())
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid regex handle %d", id);

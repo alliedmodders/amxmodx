@@ -35,6 +35,7 @@
 // *****************************************************
 // class CList
 // *****************************************************
+// Linked list
 
 template <typename T, typename F = char* >
 class CList {

@@ -53,7 +53,7 @@ public chkFlood(id) {
 
     if ( g_Flooding[id] > nexTime ) {
 	  if (g_Flood[id] >= 3) {
-        client_print( id , print_notify , "** %L **", id, "STOP_FLOODING" )
+        client_print( id , print_notify , "** %L **", id, "STOP_FLOOD" )
         g_Flooding[ id ] = nexTime + maxChat + 3.0
         return PLUGIN_HANDLED
       }

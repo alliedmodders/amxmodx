@@ -45,35 +45,35 @@ new Float:g_xPos
 new g_Length
 new g_Frequency
 
-public plugin_init(){
+public plugin_init() {
   register_plugin("Scrolling Message",AMXX_VERSION_STR,"AMXX Dev Team")
+  register_dictionary("scrollmsg.txt")
   register_srvcmd("amx_scrollmsg","setMessage")
 }
 
-public showMsg(){
+public showMsg() {
   new a = g_startPos, i = 0
-  
+
   while( a < g_endPos )
     g_displayMsg[i++] = g_scrollMsg[a++]
-    
+
   g_displayMsg[i] = 0
-  
+
   if (g_endPos < g_Length)
     g_endPos++
-    
+
   if (g_xPos > 0.35)
     g_xPos -= 0.0063
-  else 
-  {
+  else  {
     g_startPos++
     g_xPos = 0.35
   }
-  
+
   set_hudmessage(200, 100, 0, g_xPos, 0.90, 0, SPEED, SPEED, 0.05, 0.05, 2)
   show_hudmessage(0,g_displayMsg)
 }
 
-public msgInit(){
+public msgInit() {
   g_endPos = 1
   g_startPos = 0
   g_xPos = 0.65
@@ -81,9 +81,7 @@ public msgInit(){
   client_print(0,print_console,g_scrollMsg)
 }
 
-public setMessage(id,level,cid) {
-  if (!cmd_access(id,level,cid,3))
-    return PLUGIN_HANDLED
+public setMessage() {
   remove_task(123) /* remove current messaging */
   read_argv(1,g_scrollMsg,380)
   new hostname[64]
@@ -96,14 +94,14 @@ public setMessage(id,level,cid) {
   if (g_Frequency > 0) {    
     new minimal = floatround((g_Length + 48) * (SPEED + 0.1))
     if (g_Frequency < minimal)  {
-      console_print(id,"Minimal frequency for this message is %d seconds",minimal)
+      server_print("%L",LANG_SERVER,"MIN_FREQ",minimal)
       g_Frequency = minimal
     }
-    console_print(id,"Scrolling message displaying frequency: %d:%02d minutes",
+    server_print("%L",LANG_SERVER,"MSG_FREQ")
       g_Frequency/60,g_Frequency%60)
     set_task(float(g_Frequency),"msgInit",123,"",0,"b")
   }
   else
-    console_print(id,"Scrolling message disabled")
+    server_print("%L",LANG_SERVER,"MSG_DISABLED")
   return PLUGIN_HANDLED
 }

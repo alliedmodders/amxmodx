@@ -45,6 +45,8 @@ new g_coloredMenus
 
 public plugin_init() {
   register_plugin("Teleport Menu",AMXX_VERSION_STR,"AMXX Dev Team")
+  register_dictionary("telemenu.txt")
+  register_dictionary("common.txt")
   register_clcmd("amx_teleportmenu","cmdTelMenu",ADMIN_CFG,"- displays teleport menu")
   register_menucmd(register_menuid("Teleport Menu"),1023,"actionTelMenu")
 
@@ -52,7 +54,7 @@ public plugin_init() {
 }
 
 public actionTelMenu(id,key) {
-  switch(key) {
+  switch (key) {
     case 6: {
       g_menuOption[id] = 1 - g_menuOption[id]
       displayTelMenu(id,g_menuPosition[id])
@@ -72,7 +74,7 @@ public actionTelMenu(id,key) {
       get_user_name(player,name2,31)
 
       if (!is_user_alive(player)) {
-        client_print(id,print_chat,"That action can't be performed on dead client ^"%s^"",name2)
+        client_print(id,print_chat,"%L",id,"CANT_PERF_DEAD",name2)
         displayTelMenu(id,g_menuPosition[id])
         return PLUGIN_HANDLED
       }
@@ -95,9 +97,9 @@ public actionTelMenu(id,key) {
       log_amx("Cmd: ^"%s<%d><%s><>^" teleport ^"%s<%d><%s><>^"",
         name,get_user_userid(id),authid, name2,get_user_userid(player),authid2 )
 
-      switch(get_cvar_num("amx_show_activity")) {
-        case 2:    client_print(0,print_chat,"ADMIN %s: teleport %s",name,name2)
-        case 1:    client_print(0,print_chat,"ADMIN: teleport %s",name2)
+      switch (get_cvar_num("amx_show_activity")) {
+        case 2: client_print(0,print_chat,"%L",LANG_PLAYER,"ADMIN_TELEPORT_2",name,name2)
+        case 1: client_print(0,print_chat,"%L",LANG_PLAYER,"ADMIN_TELEPORT_1",name2)
       }
 
       displayTelMenu(id,g_menuPosition[id])
@@ -123,8 +125,8 @@ displayTelMenu(id,pos) {
     start = pos = g_menuPosition[id] = 0
 
   new len = format(menuBody,511, g_coloredMenus ?
-    "\yTeleport Menu\R%d/%d^n\w^n" : "Teleport Menu %d/%d^n^n" ,
-      pos+1,(  g_menuPlayersNum[id] / 6 + ((g_menuPlayersNum[id] % 6) ? 1 : 0 )) )
+    "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n" ,
+      id, "TELE_MENU", pos+1,(  g_menuPlayersNum[id] / 6 + ((g_menuPlayersNum[id] % 6) ? 1 : 0 )) )
 
   new end = start + 6
   new keys = MENU_KEY_0|MENU_KEY_8
@@ -156,30 +158,30 @@ displayTelMenu(id,pos) {
   }
   else if ( g_menuOption[id] ) { // -1
     if ( g_coloredMenus )
-      len += format(menuBody[len],511-len,"^n\d7. Current Location^n\w")
+      len += format(menuBody[len],511-len,"^n\d7. %L^n\w",id,"CUR_LOC")
     else
-      len += format(menuBody[len],511-len,"^n#. Current Location^n")
+      len += format(menuBody[len],511-len,"^n#. %L^n",id,"CUR_LOC")
   }
   else { // 0
     keys |= MENU_KEY_7
-    len += format(menuBody[len],511-len,"^n7. Current Location^n")
+    len += format(menuBody[len],511-len,"^n7. %L^n",id,"CUR_LOC")
   }
 
-  len += format(menuBody[len],511-len,"8. Save Location^n")
+  len += format(menuBody[len],511-len,"8. %L^n",id,"SAVE_LOC")
 
   if (end != g_menuPlayersNum[id]) {
-    format(menuBody[len],511-len,"^n9. More...^n0. %s", pos ? "Back" : "Exit")
+    format(menuBody[len],511-len,"^n9. %L...^n0. %s", id, "MORE", id, pos ? "BACK" : "EXIT")
     keys |= MENU_KEY_9
   }
   else
-    format(menuBody[len],511-len,"^n0. %s", pos ? "Back" : "Exit")
+    format(menuBody[len],511-len,"^n0. %L", id, pos ? "BACK" : "EXIT")
 
-  show_menu(id,keys,menuBody)
+  show_menu(id,keys,menuBody,-1,"Teleport Menu")
 }
 
 public cmdTelMenu(id,level,cid) {
   if (cmd_access(id,level,cid,1))
     displayTelMenu(id,g_menuPosition[id] = 0)
-     
+
   return PLUGIN_HANDLED
 }

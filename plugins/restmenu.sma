@@ -149,47 +149,47 @@ new g_WeaponNames[MAXMENUPOS][] = {
 }
 
 new g_MenuItem[MAXMENUPOS][] = {
-  "\yHandguns^n\w^n%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w^n",
+  "\yHandguns^n\w^n%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w^n",
 
-  "\yShotguns^n\w^n%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w^n",
+  "\yShotguns^n\w^n%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w^n",
 
   "\ySub-Machine Guns^n\w^n%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w^n",
+  "%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w^n",
 
   "\yAssault Rifles^n\w^n%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w^n",
+  "%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w^n",
 
   "\ySniper Rifles^n\w^n%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w^n",
+  "%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w^n",
 
-  "\yMachine Guns^n\w^n%d. %s\y\R%s^n\w^n",
+  "\yMachine Guns^n\w^n%d. %s\y\R%L^n\w^n",
 
-  "\yEquipment^n\w^n%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w^n",
+  "\yEquipment^n\w^n%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w^n",
 
-  "\yAmmunition^n\w^n%d. %s\y\R%s^n\w",
-  "%d. %s\y\R%s^n\w"
+  "\yAmmunition^n\w^n%d. %s\y\R%L^n\w",
+  "%d. %s\y\R%L^n\w"
 }
 
 new g_Aliases[MAXMENUPOS][] = {
@@ -281,7 +281,7 @@ new g_Aliases2[MAXMENUPOS][] = {
 new g_Autobuy[33][AUTOBUYLENGTH + 1]
 //new g_Rebuy[33][AUTOBUYLENGTH + 1]
 
-setWeapon( a , action  ){
+setWeapon( a , action  ) {
   new b, m = g_Keys[a][0] * 8
   if (g_Keys[a][1] != -1) {
     b = m + g_Keys[a][1]
@@ -298,7 +298,7 @@ setWeapon( a , action  ){
       g_blockPos[ b ] = action
   }
 
-  for(new i = 0; i < g_AliasBlockNum; ++i)
+  for (new i = 0; i < g_AliasBlockNum; ++i)
     if ( g_AliasBlock[ i ] == a ){
       if ( !action || action == 2 ) {
         --g_AliasBlockNum
@@ -311,58 +311,58 @@ setWeapon( a , action  ){
     g_AliasBlock[ g_AliasBlockNum++ ] = a
 }
 
-findMenuId( name[] ){
+findMenuId( name[] ) {
   for(new i = 0; i < 7 ; ++i)
     if( equal( name , g_menusNames[i] ) )
       return i
   return -1
 }
 
-findAliasId( name[] ){
+findAliasId( name[] ) {
   for(new i = 0; i < MAXMENUPOS ; ++i)
     if( equal( name , g_Aliases[i] ) )
       return i
   return -1
 }
 
-switchCommand( id, action ){
+switchCommand( id, action ) {
   new c = read_argc()
-  if ( c < 3 ){
+  if ( c < 3 ) {
     setc( g_blockPos, 112, action )
-    console_print( id , "Equipment and weapons have been %srestricted" , action ? "" : "un" )
+    console_print( id, "%L", id, action ? "EQ_WE_RES" : "EQ_WE_UNRES" )
     g_Modified = true
   }
   else {
     new arg[32], a
     new bool:found = false
-    for(new b = 2; b < c; ++b){
+    for (new b = 2; b < c; ++b) {
       read_argv(b,arg,31)
-      if ( (a = findMenuId( arg )) != -1 ){
+      if ( (a = findMenuId( arg )) != -1 ) {
         c = g_menusSets[a][1]
-        for(new i = g_menusSets[a][0]; i < c; ++i)
+        for (new i = g_menusSets[a][0]; i < c; ++i)
           setWeapon( i , action )
-        console_print( id , "%s %s been %srestricted" , g_MenuTitle[a], (a<5) ? "have" : "has" , action ? "" : "un" )
+        console_print( id , "%s %L %L", g_MenuTitle[a], id, (a<5) ? "HAVE_BEEN" : "HAS_BEEN" , action ? "RESTRICTED" : "UNRESTRICTED" )
         g_Modified = found = true
       }
-      else if ( (a = findAliasId( arg )) != -1  ){
+      else if ( (a = findAliasId( arg )) != -1  ) {
         g_Modified = found = true
         setWeapon( a , action )
-        console_print( id , "%s has been %srestricted" , g_WeaponNames[a], action ? "" : "un" )
+        console_print( id , "%s %L %L", g_WeaponNames[a], id, "HAS_BEEN", id, action ? "RESTRICTED" : "UNRESTRICTED " )
       }
     }
     if ( !found )
-      console_print( id , "Couldn't find such equipment or weapon" )
+      console_print( id , "%L", id, "NO_EQ_WE" )
   }
 }
 
 positionBlocked( a ) {
   new m = g_Keys[a][0] * 8
   new d = ( g_Keys[a][1]==-1) ? 0 : g_blockPos[ m + g_Keys[a][1] ]
-  d += ( g_Keys[a][2]==-1) ? 0 : g_blockPos[ m + g_Keys[a][2] + 56  ]
+  d += ( g_Keys[a][2]==-1) ? 0 : g_blockPos[ m + g_Keys[a][2] + 56 ]
   return d
 }
 
-public cmdRest(id,level,cid){
+public cmdRest(id,level,cid) {
   if (!cmd_access(id,level,cid,1))
     return PLUGIN_HANDLED
   new cmd[8]
@@ -378,140 +378,146 @@ public cmdRest(id,level,cid){
     if (start >= MAXMENUPOS) start = MAXMENUPOS - 1
     new end = start + 10
     if (end > MAXMENUPOS) end = MAXMENUPOS
-    console_print(id, "^n----- Weapons Restriction: -----")
-    console_print(id, "     %-32.31s   %-10.9s   %-9.8s","name","value","status")
+    new lName[16],lValue[16],lStatus[16],lOnOf[16]
+    format(lName,15,"%L",id,"NAME")
+    format(lValue,15,"%L",id,"VALUE")
+    format(lStatus,15,"%L",id,"STATUS")
+    format(lOnOff,15,"%L",id,positionBlocked(a) ? "ON" : "OFF")
+    console_print(id, "^n----- %L: -----", id, "WEAP_RES")
+    console_print(id, "     %-32.31s   %-10.9s   %-9.8s",lName,lValue,lStatus)
     if ( start != -1 ) {
-      for(new a = start; a < end; ++a){
+      for (new a = start; a < end; ++a) {
         console_print(id, "%3d: %-32.31s   %-10.9s   %-9.8s",a + 1,
-        g_WeaponNames[a], g_Aliases[a], positionBlocked(a) ? "ON" : "OFF")
+        g_WeaponNames[a], g_Aliases[a], lOnOff)
       }
     }
-    console_print(id,"----- Entries %i - %i of %i -----",start+1,end,MAXMENUPOS)
+    console_print(id,"----- %L -----",id,"ENTRIES_OF",start+1,end,MAXMENUPOS)
     if (end < MAXMENUPOS)
-      console_print(id,"----- Use 'amx_restrict list %i' for more -----",end+1)
+      console_print(id,"----- %L -----",id,"USE_MORE",end+1)
     else
-      console_print(id,"----- Use 'amx_restrict list 1' for begin -----")
+      console_print(id,"----- %L -----",id,"USE_BEGIN")
   }
   else if ( equali( "save" , cmd ) ) {
     if ( saveSettings( g_saveFile ) ){
-      console_print( id , "Configuration has been saved (file ^"%s^")" , g_saveFile )
+      console_print( id , "%L", id, "CONF_SAVED", g_saveFile )
       g_Modified = false
     }
-    else console_print( id , "Couldn't save configuration (file ^"%s^")" , g_saveFile )
+    else console_print( id, "%L", id, "COULDNT_SAVE", g_saveFile )
   }
   else if ( equali( "load" , cmd ) ) {
     setc( g_blockPos, 112, 0 ) // Clear current settings
     new arg1[64]
-    if ( read_argv(2, arg1 , 63 ) )
-    {
+    if ( read_argv(2, arg1 , 63 ) ) {
       new configsdir[32]
       get_configsdir(configsdir,31)
       format(arg1,63,"%s/%s",configsdir,arg1)
     }
-    if ( loadSettings( arg1 ) ){
-      console_print( id , "Configuration has been loaded (file ^"%s^")" , arg1 )
+    if ( loadSettings( arg1 ) ) {
+      console_print( id, "%L", id, "CONF_LOADED", arg1 )
       g_Modified = true
     }
-    else console_print( id , "Couldn't load configuration (file ^"%s^")" , arg1 )
+    else console_print( id, "%L", id, "COULDNT_LOAD", arg1 )
   }
   else {
-    console_print(id,"Usage:  amx_restrict <command> [value]")
-    console_print(id,"Commands:")
-    console_print(id,"^ton - set restriction on whole equipment")
-    console_print(id,"^toff - remove restriction from whole equipment")
-    console_print(id,"^ton <value> [...] - set specified restriction")
-    console_print(id,"^toff <value> [...] - remove specified restriction")
-    console_print(id,"^tlist - display list of available equipment and weapons")
-    console_print(id,"^tsave - save restriction")
-    console_print(id,"^tload [file] - load restriction [from a file]")
-    console_print(id,"Available values to restrict are:^nammo, equip, pistol, shotgun, sub, rifle, machine")
-    console_print(id,"Type 'amx_restrict list' for more specified values")
+    console_print(id,"%L",id,"COM_USAGE")
+    console_print(id,"%L",id,"COM_COMMANDS")
+    console_print(id,"%L",id,"COM_ON")
+    console_print(id,"%L",id,"COM_OFF")
+    console_print(id,"%L",id,"COM_ON")
+    console_print(id,"%L",id,"COM_OFF")
+    console_print(id,"%L",id,"COM_LIST")
+    console_print(id,"%L",id,"COM_SAVE")
+    console_print(id,"%L",id,"COM_LOAD")
+    console_print(id,"%L",id,"COM_VALUES")
+    console_print(id,"%L",id,"COM_TYPE")
   }
   return PLUGIN_HANDLED
 }
 
-displayMenu(id,pos){
-   if (pos < 0) return
-   new menubody[512], start = pos * 7
-   if (start >= MAXMENUPOS) start = pos = g_Position[id] = 0
-   new len = format(menubody,511,"\yRestrict Weapons\R%d/5^n\w^n",pos+1)
-   new end = start + 7, keys = MENU_KEY_0|MENU_KEY_8, k = 0
-   if (end > MAXMENUPOS) end = MAXMENUPOS
-   for(new a = start; a < end; ++a){
-      keys |= (1<<k)
-      len += format(menubody[len],511-len,g_MenuItem[a],++k,g_WeaponNames[a],
-        positionBlocked(a) ? "ON" : "OFF" )
-   }
-   len += format(menubody[len],511-len,"^n8. Save settings \y\R%s^n\w",g_Modified?"*":"")
-   if (end != MAXMENUPOS){
-      format(menubody[len],511-len,"^n9. More...^n0. %s", pos ? "Back" : "Exit")
-      keys |= MENU_KEY_9
-   }
-   else format(menubody[len],511-len,"^n0. %s", pos ? "Back" : "Exit")
-   show_menu(id,keys,menubody)
+displayMenu(id,pos) {
+  if (pos < 0) return
+  new menubody[512], start = pos * 7
+  if (start >= MAXMENUPOS) start = pos = g_Position[id] = 0
+  new len = format(menubody,511,"\y%L\R%d/5^n\w^n",id,"REST_WEAP",pos+1)
+  new end = start + 7, keys = MENU_KEY_0|MENU_KEY_8, k = 0
+  if (end > MAXMENUPOS) end = MAXMENUPOS
+  for (new a = start; a < end; ++a) {
+    keys |= (1<<k)
+    len += format(menubody[len],511-len,g_MenuItem[a],++k,g_WeaponNames[a],
+      id, positionBlocked(a) ? "ON" : "OFF" )
+  }
+  len += format(menubody[len],511-len,"^n8. %L \y\R%s^n\w",id,"SAVE_SET",g_Modified?"*":"")
+  if (end != MAXMENUPOS) {
+    format(menubody[len],511-len,"^n9. %L...^n0. %L", id, "MORE", id, pos ? "BACK" : "EXIT")
+    keys |= MENU_KEY_9
+  }
+  else format(menubody[len],511-len,"^n0. %L", id, pos ? "BACK" : "EXIT")
+  show_menu(id,keys,menubody,-1,"Restrict Weapons")
 }
 
-public actionMenu(id,key){
-   switch(key){
-   case 7: {
-      if (saveSettings(g_saveFile)){
+public actionMenu(id,key) {
+  switch (key) {
+    case 7: {
+      if (saveSettings(g_saveFile)) {
         g_Modified = false
-        client_print(id,print_chat,"* Configuration saved successfully")
+        client_print(id,print_chat,"* %L",id,"CONF_SAV_SUC")
       }
-      else client_print(id,print_chat,"* Configuration saving failed!!!")
+      else client_print(id,print_chat,"* %L",id,"CONF_SAV_FAIL")
       displayMenu(id,g_Position[id])
     }
-   case 8: displayMenu(id,++g_Position[id])
-   case 9: displayMenu(id,--g_Position[id])
-   default: {
-        setWeapon( g_Position[id] * 7 + key , 2 )
-        g_Modified = true
-        displayMenu(id,g_Position[id])
-      }
-   }
-   return PLUGIN_HANDLED
+    case 8: displayMenu(id,++g_Position[id])
+    case 9: displayMenu(id,--g_Position[id])
+    default: {
+      setWeapon( g_Position[id] * 7 + key , 2 )
+      g_Modified = true
+      displayMenu(id,g_Position[id])
+    }
+  }
+  return PLUGIN_HANDLED
 }
 
-public client_command( id ){
-	if ( g_AliasBlockNum  ) {
-		new arg[13]
+public client_command( id ) {
+  if ( g_AliasBlockNum  ) {
+    new arg[13]
 
-		if ( read_argv( 0, arg , 12 ) > 11 ) /* Longest buy command has 11 chars so if command is longer then don't care */
-			return PLUGIN_CONTINUE
+    if ( read_argv( 0, arg , 12 ) > 11 ) /* Longest buy command has 11 chars so if command is longer then don't care */
+      return PLUGIN_CONTINUE
 
-		new a = 0
+    new a = 0
 
-		do {
-			if ( equal( g_Aliases[g_AliasBlock[ a ]] , arg  ) ||
-			equal( g_Aliases2[g_AliasBlock[ a ]] , arg  ) ) {
-				client_print(id,print_center,g_Restricted )
-				return PLUGIN_HANDLED
-			}
-		} while( ++a < g_AliasBlockNum )
-	}
-	return PLUGIN_CONTINUE
+    do {
+      if ( equal( g_Aliases[g_AliasBlock[ a ]] , arg  ) ||
+           equal( g_Aliases2[g_AliasBlock[ a ]] , arg  ) )
+      {
+        client_print(id,print_center,g_Restricted )
+        return PLUGIN_HANDLED
+      }
+    } while( ++a < g_AliasBlockNum )
+  }
+  return PLUGIN_CONTINUE
 }
 
 // JGHG: Send weapon string to this function and it returns true if weapon is blocked or false if not blocked...
-stock WeaponIsBlocked(weapon[]) {
-	for (new a = 0; a < g_AliasBlockNum; a++) {
-		server_print("%d", a)
-		server_print(weapon)
-		server_print(g_Aliases[g_AliasBlock[ a ]])
-		server_print(g_Aliases2[g_AliasBlock[ a ]])
+WeaponIsBlocked(weapon[]) {
+  for (new a = 0; a < g_AliasBlockNum; a++) {
+    server_print("%d", a)
+    server_print(weapon)
+    server_print(g_Aliases[g_AliasBlock[ a ]])
+    server_print(g_Aliases2[g_AliasBlock[ a ]])
 
-		if ( equal( g_Aliases[g_AliasBlock[ a ]] , weapon  ) ||
-		equal( g_Aliases2[g_AliasBlock[ a ]] , weapon  ) ) {
-			return true // blocked
-		}
-	}
+    if ( equal( g_Aliases[g_AliasBlock[ a ]] , weapon  ) ||
+         equal( g_Aliases2[g_AliasBlock[ a ]] , weapon  ) )
+    {
+      return true // blocked
+    }
+  }
 
-	return false // not blocked
+  return false // not blocked
 }
 
 public blockcommand(id) {
-    client_print(id,print_center, g_Restricted )
-    return PLUGIN_HANDLED
+  client_print(id,print_center, g_Restricted )
+  return PLUGIN_HANDLED
 }
 
 public cmdMenu(id,level,cid){
@@ -540,13 +546,13 @@ public menuRifle(id,key)    return checkRest(id,4,key)
 public menuMachine(id,key)  return checkRest(id,5,key)
 public menuItem(id,key)     return checkRest(id,6,key)
 
-saveSettings(filename[]){
+saveSettings(filename[]) {
   if (file_exists(filename))
     delete_file(filename)
   if (!write_file(filename,"; Generated by Restrict Weapons Plugin. Do not modify!^n; value name"))
     return 0
   new text[64]
-  for(new a = 0; a < MAXMENUPOS; ++a){
+  for(new a = 0; a < MAXMENUPOS; ++a) {
     if ( positionBlocked( a ) ) {
       format(text,63,"%-16.15s ; %s", g_Aliases[a] , g_WeaponNames[a])
       write_file(filename,text)
@@ -559,7 +565,7 @@ loadSettings(filename[]){
   if (!file_exists(filename)) return 0
   new text[16]
   new a, pos = 0
-  while (read_file(filename,pos++,text,15, a )){
+  while (read_file(filename,pos++,text,15, a )) {
     if ( text[0] == ';' || !a ) continue // line is a comment
     parse( text, text , 15 )
     if ( (a = findAliasId( text )) != -1 )
@@ -570,125 +576,126 @@ loadSettings(filename[]){
 
 // JGHG
 public fn_setautobuy(id) {
-	// Don't do anything if no items are blocked.
-	if (!g_AliasBlockNum)
-		return PLUGIN_CONTINUE
+  // Don't do anything if no items are blocked.
+  if (!g_AliasBlockNum)
+    return PLUGIN_CONTINUE
 
-	// Empty user's autobuy prefs. (unnecessary?)
-	g_Autobuy[id][0] = '^0'
+  // Empty user's autobuy prefs. (unnecessary?)
+  g_Autobuy[id][0] = '^0'
 
-	new argCount = read_argc()
+  new argCount = read_argc()
 
-	new arg[128]
-	new autobuyLen = 0
-	for (new i = 1; i < argCount; i++) { // Start at parameter 1; parameter 0 is just "cl_setautobuy"
-		read_argv(i, arg, 127)
+  new arg[128]
+  new autobuyLen = 0
+  for (new i = 1; i < argCount; i++) { // Start at parameter 1; parameter 0 is just "cl_setautobuy"
+    read_argv(i, arg, 127)
 
-		// Add this parameter to user's autobuy prefs
-		autobuyLen += format(g_Autobuy[id][autobuyLen], AUTOBUYLENGTH - autobuyLen, "%s", arg)
-		// If we detect more parameters, add a space
-		if (i + 1 < argCount)
-			autobuyLen += format(g_Autobuy[id][autobuyLen], AUTOBUYLENGTH - autobuyLen, " ")
-	}
+  // Add this parameter to user's autobuy prefs
+  autobuyLen += format(g_Autobuy[id][autobuyLen], AUTOBUYLENGTH - autobuyLen, "%s", arg)
+  // If we detect more parameters, add a space
+  if (i + 1 < argCount)
+    autobuyLen += format(g_Autobuy[id][autobuyLen], AUTOBUYLENGTH - autobuyLen, " ")
+  }
 
-	// Strip any blocked items
-	new strippedItems[AUTOBUYLENGTH + 1]
-	if (!StripBlockedItems(g_Autobuy[id], strippedItems))
-		return PLUGIN_CONTINUE // don't touch anything if we didn't strip anything...
+  // Strip any blocked items
+  new strippedItems[AUTOBUYLENGTH + 1]
+  if (!StripBlockedItems(g_Autobuy[id], strippedItems))
+    return PLUGIN_CONTINUE // don't touch anything if we didn't strip anything...
 
-	//server_print("Stripped items: ^"%s^"", strippedItems)
-	engclient_cmd(id, "cl_setautobuy", strippedItems)
-	return PLUGIN_HANDLED
+  //server_print("Stripped items: ^"%s^"", strippedItems)
+  engclient_cmd(id, "cl_setautobuy", strippedItems)
+  return PLUGIN_HANDLED
 
-	/*
-	// Check g_Autobuy[id] for blocked items.
-	if (g_AliasBlockNum > 0) {
-		new blockedItem[AUTOBUYLENGTH + 1]
-		if (CheckBlockedItems(g_Autobuy[id], blockedItem)) {
-			client_print(id, print_center, "%c%s is blocked!", blockedItem[0] < 'a' || blockedItem[0] > 'z' ? blockedItem[0] : blockedItem[0] - 32, blockedItem[1]) // Tell what item is blocked (if first char is a letter it will be capital)
-			return PLUGIN_HANDLED
-		}
-	}
-	*/
+  /*
+  // Check g_Autobuy[id] for blocked items.
+  if (g_AliasBlockNum > 0) {
+    new blockedItem[AUTOBUYLENGTH + 1]
+    if (CheckBlockedItems(g_Autobuy[id], blockedItem)) {
+      client_print(id, print_center, "%c%s is blocked!", blockedItem[0] < 'a' || blockedItem[0] > 'z' ? blockedItem[0] : blockedItem[0] - 32, blockedItem[1]) // Tell what item is blocked (if first char is a letter it will be capital)
+      return PLUGIN_HANDLED
+    }
+  }
+  */
 
-	//return PLUGIN_CONTINUE
+  //return PLUGIN_CONTINUE
 }
 
 // Returns true if this strips any items, else false.
 StripBlockedItems(inString[AUTOBUYLENGTH + 1], outString[AUTOBUYLENGTH + 1]) {
-	// First copy string
-	format(outString, AUTOBUYLENGTH, inString)
+  // First copy string
+  format(outString, AUTOBUYLENGTH, inString)
 
-	// Then strip those that are blocked.
-	for (new i = 0; i < g_AliasBlockNum; i++) {
-		while (contain(outString, g_Aliases[g_AliasBlock[i]]) != -1)
-			replace(outString, AUTOBUYLENGTH, g_Aliases[g_AliasBlock[i]], "")
-		while (contain(outString, g_Aliases2[g_AliasBlock[i]]) != -1)
-			replace(outString, AUTOBUYLENGTH, g_Aliases2[g_AliasBlock[i]], "")
-	}
+  // Then strip those that are blocked.
+  for (new i = 0; i < g_AliasBlockNum; i++) {
+    while (contain(outString, g_Aliases[g_AliasBlock[i]]) != -1)
+      replace(outString, AUTOBUYLENGTH, g_Aliases[g_AliasBlock[i]], "")
+    while (contain(outString, g_Aliases2[g_AliasBlock[i]]) != -1)
+      replace(outString, AUTOBUYLENGTH, g_Aliases2[g_AliasBlock[i]], "")
+  }
 
-	// We COULD trim white space from outString here, but I don't think it really is necessary currently...
+  // We COULD trim white space from outString here, but I don't think it really is necessary currently...
 
-	if (strlen(outString) < strlen(inString))
-		return true // outstring is shorter: we stripped items, return true
+  if (strlen(outString) < strlen(inString))
+    return true // outstring is shorter: we stripped items, return true
 
-	return false // else end here, return false, no items were stripped
+  return false // else end here, return false, no items were stripped
 }
 
 // Returns true if any of the items in items[] are blocked, else false.
-stock CheckBlockedItems(items[], blockedItem[AUTOBUYLENGTH + 1]) {
-	if (g_AliasBlockNum <= 0)
-		return false
+CheckBlockedItems(items[], blockedItem[AUTOBUYLENGTH + 1]) {
+  if (g_AliasBlockNum <= 0)
+    return false
 
-	new l_items[AUTOBUYLENGTH + 1]
-	format(l_items, AUTOBUYLENGTH, items)
+  new l_items[AUTOBUYLENGTH + 1]
+  format(l_items, AUTOBUYLENGTH, items)
 
-	new aValueWasParsed, parsedItem[128]
-	do {
-		aValueWasParsed = parse(l_items, parsedItem, 127)
-		if (strlen(parsedItem) == 0)
-			return false // no more items
+  new aValueWasParsed, parsedItem[128]
+  do {
+    aValueWasParsed = parse(l_items, parsedItem, 127)
+    if (strlen(parsedItem) == 0)
+      return false // no more items
 
-		if (aValueWasParsed) {
-			replace(l_items, AUTOBUYLENGTH, parsedItem, "") // Remove first parameter
+    if (aValueWasParsed) {
+      replace(l_items, AUTOBUYLENGTH, parsedItem, "") // Remove first parameter
 
-			if (WeaponIsBlocked(parsedItem)) {
-				format(blockedItem, AUTOBUYLENGTH, parsedItem)
-				return true // item is blocked, return true
-			}
-		}
-		else
-			break
-	}
-	while (aValueWasParsed)
+      if (WeaponIsBlocked(parsedItem)) {
+        format(blockedItem, AUTOBUYLENGTH, parsedItem)
+        return true // item is blocked, return true
+      }
+    }
+    else
+      break
+  } while (aValueWasParsed)
 
-	return false // no blocked items found
+  return false // no blocked items found
 }
 
 public fn_autobuy(id) {
-	// Don't do anything if no items are blocked.
-	if (!g_AliasBlockNum)
-		return PLUGIN_CONTINUE
+  // Don't do anything if no items are blocked.
+  if (!g_AliasBlockNum)
+    return PLUGIN_CONTINUE
 
-	// Strip any blocked items
-	new strippedItems[AUTOBUYLENGTH + 1]
-	if (!StripBlockedItems(g_Autobuy[id], strippedItems))
-		return PLUGIN_CONTINUE // don't touch anything if we didn't strip anything...
+  // Strip any blocked items
+  new strippedItems[AUTOBUYLENGTH + 1]
+  if (!StripBlockedItems(g_Autobuy[id], strippedItems))
+    return PLUGIN_CONTINUE // don't touch anything if we didn't strip anything...
 
-	//server_print("Stripped items: ^"%s^"", strippedItems)
-	engclient_cmd(id, "cl_setautobuy", strippedItems)
-	return PLUGIN_HANDLED
+  //server_print("Stripped items: ^"%s^"", strippedItems)
+  engclient_cmd(id, "cl_setautobuy", strippedItems)
+  return PLUGIN_HANDLED
 }
 
 public plugin_init() {
   register_plugin("Restrict Weapons",AMXX_VERSION_STR,"AMXX Dev Team")
+  register_dictionary("restmenu.txt")
+  register_dictionary("common.txt")
   register_clcmd("buyammo1","ammoRest1")
   register_clcmd("buyammo2","ammoRest2")
   register_clcmd("cl_setautobuy", "fn_setautobuy")
   register_clcmd("cl_autobuy", "fn_autobuy")
   register_clcmd("amx_restmenu","cmdMenu",ADMIN_CFG,"- displays weapons restriction menu")
   register_menucmd(register_menuid("#Buy", 1 ),511,"menuBuy")
-  register_menucmd(register_menuid("\yRestrict Weapons"),1023,"actionMenu")
+  register_menucmd(register_menuid("Restrict Weapons"),1023,"actionMenu")
   register_menucmd(register_menuid("BuyPistol", 1 ),511,"menuPistol")
   register_menucmd(register_menuid("BuyShotgun", 1 ),511,"menuShotgun")
   register_menucmd(register_menuid("BuySub", 1 ),511,"menuSub")

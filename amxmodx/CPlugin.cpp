@@ -29,8 +29,6 @@
 *  version.
 */
 
-#include <extdll.h>
-#include <meta_api.h>
 #include "amxmodx.h"
 #include "CPlugin.h"
 #include "CForward.h"
@@ -162,9 +160,50 @@ void CPluginMngr::CPlugin::unpauseFunction( int id ) {
 		g_commands.clearBufforedInfo();
 	}
 }
+
 void CPluginMngr::CPlugin::setStatus( int a   ) { 
 	status = a; 
 	g_commands.clearBufforedInfo(); // ugly way
 }
 
+// Pause a plugin
+void CPluginMngr::CPlugin::pausePlugin()
+{
+	if (isValid())
+	{
+		// call plugin_pause if provided
+		int func;
+		cell retval;
+		if (amx_FindPublic(&amx, "plugin_pause", &func) == AMX_ERR_NONE)
+		{
+			if (isExecutable(func))
+			{
 
+				amx_Exec(&amx, &retval, func, 0);
+			}
+		}
+	
+		setStatus(ps_paused);
+	}
+}
+
+// Unpause a plugin
+void CPluginMngr::CPlugin::unpausePlugin()
+{
+	if (isValid())
+	{
+		// set status first so the function will be marked executable
+
+		setStatus(ps_running);
+		// call plugin_unpause if provided
+		int func;
+		cell retval;
+		if (amx_FindPublic(&amx, "plugin_unpause", &func) == AMX_ERR_NONE)
+		{
+			if (isExecutable(func))
+			{
+				amx_Exec(&amx, &retval, func, 0);
+			}
+		}
+	}
+}

@@ -127,7 +127,7 @@ public:
 		}
 
 		// constructor based on other iterator
-		iterator(iterator &other)
+		iterator(const iterator &other)
 		{
 			m_pList = other.m_pList;
 			m_CurPos = other.m_CurPos;
@@ -161,7 +161,7 @@ public:
 		inline iterator operator++(int)
 		{
 			iterator tmp(*this);
-			m_CurPos = m_CurPos)->next;
+			m_CurPos = m_CurPos->next;
 			return tmp;
 		}
 

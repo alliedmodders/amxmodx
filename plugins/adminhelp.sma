@@ -51,7 +51,7 @@ public client_putinserver(id)
 
 public cmdHelp(id,level,cid){
   new arg1[8],flags = get_user_flags(id)
-  new start = read_argv(1,arg1,7) ? str_to_int(arg1) : 1
+  new start = read_argv(1,arg1,7) ? str_to_num(arg1) : 1
   if (--start < 0) start = 0
   new clcmdsnum = get_concmdsnum(flags,id)
   if (start >= clcmdsnum) start = clcmdsnum - 1

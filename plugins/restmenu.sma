@@ -466,7 +466,7 @@ public cmdRest(id,level,cid){
     switchCommand( id, 0 )
   else if ( equali( "list" , cmd ) ) {
     new arg1[8]
-    new start = read_argv(2,arg1,7) ? str_to_int(arg1) : 1
+    new start = read_argv(2,arg1,7) ? str_to_num(arg1) : 1
     if (--start < 0) start = 0
     if (start >= MAXMENUPOS) start = MAXMENUPOS - 1
     new end = start + 10

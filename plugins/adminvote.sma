@@ -333,7 +333,7 @@ public cmdVoteKickBan(id,level,cid) {
   if (voteban) 
     get_user_authid(player,g_optionName[0],31) 
   else 
-    int_to_str(get_user_userid(player),g_optionName[0],31) 
+    num_to_str(get_user_userid(player),g_optionName[0],31) 
   new authid[32],name[32]
   get_user_authid(id,authid,31) 
   get_user_name(id,name,31) 

@@ -53,7 +53,7 @@ public plugin_init()
   new szString[32], szString2[32], szString3[8]
   get_localinfo( "lastmapcycle", szString , 31 )
   parse( szString, szString2, 31, szString3 , 7 )
-  g_pos = str_to_int( szString3 )
+  g_pos = str_to_num( szString3 )
   get_cvar_string( "mapcyclefile" , g_mapCycle , 31 )
   
   if ( !equal( g_mapCycle ,  szString2  )  )

@@ -51,7 +51,7 @@ public plugin_init(){
   register_cvar("amx_freq_imessage","10")
   new lastinfo[8]
   get_localinfo("lastinfomsg",lastinfo,7)
-  g_Current = str_to_int(lastinfo)
+  g_Current = str_to_num(lastinfo)
   set_localinfo("lastinfomsg","")
 }
 
@@ -82,11 +82,11 @@ public setMessage(id,level,cid) {
   while(replace(g_Messages[g_MessagesNum],380,"\n","^n")){}
   new mycol[12]
   read_argv(2,mycol,11) // RRRGGGBBB
-  g_Values[g_MessagesNum][2] = str_to_int(mycol[6])
+  g_Values[g_MessagesNum][2] = str_to_num(mycol[6])
   mycol[6] = 0
-  g_Values[g_MessagesNum][1] = str_to_int(mycol[3])
+  g_Values[g_MessagesNum][1] = str_to_num(mycol[3])
   mycol[3] = 0
-  g_Values[g_MessagesNum][0] = str_to_int(mycol[0])
+  g_Values[g_MessagesNum][0] = str_to_num(mycol[0])
   g_MessagesNum++
   new Float:freq_im = get_cvar_float("amx_freq_imessage")
   if ( freq_im > 0.0 ) set_task( freq_im ,"infoMessage",12345)
@@ -95,6 +95,6 @@ public setMessage(id,level,cid) {
 
 public plugin_end(){
   new lastinfo[8]
-  int_to_str(g_Current,lastinfo,7)
+  num_to_str(g_Current,lastinfo,7)
   set_localinfo("lastinfomsg",lastinfo)
 }

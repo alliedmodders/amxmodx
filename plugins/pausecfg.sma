@@ -318,7 +318,7 @@ public cmdPlugin(id,level,cid){
   }
   else if ( equal(cmds, "list" )  ) {
   	new arg1[8], running = 0
-  	new start = read_argv(2,arg1,7) ? str_to_int(arg1) : 1
+  	new start = read_argv(2,arg1,7) ? str_to_num(arg1) : 1
   	if (--start < 0) start = 0
   	new plgnum = get_pluginsnum()
   	if (start >= plgnum) start = plgnum - 1

@@ -92,7 +92,7 @@ public setMessage(id,level,cid) {
   g_Length = strlen(g_scrollMsg)
   new mytime[32]
   read_argv(2,mytime,31)
-  g_Frequency = str_to_int(mytime)
+  g_Frequency = str_to_num(mytime)
   if (g_Frequency > 0) {    
     new minimal = floatround((g_Length + 48) * (SPEED + 0.1))
     if (g_Frequency < minimal)  {

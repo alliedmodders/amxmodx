@@ -84,7 +84,7 @@ loadSettings(szFilename[])
   if (!file_exists(szFilename)) return 0
     
   new szText[256], szFlags[32], szAccess[32]
-  new a, pos = 0, iAccess
+  new a, pos = 0
   
   while ( g_aNum < MAX_ADMINS && read_file(szFilename,pos++,szText,255,a) ) 
   {         
@@ -93,13 +93,10 @@ loadSettings(szFilename[])
     if ( parse(szText, g_aName[ g_aNum ] ,31, g_aPassword[ g_aNum ], 31, szAccess,31,szFlags,31 ) < 2 )
         continue
 	
-    iAccess = read_flags(szAccess)
-	
-    if (!(iAccess & ADMIN_USER) && !(iAccess & ADMIN_ADMIN)) {
-        iAccess |= ADMIN_ADMIN
-    }
-	
-    g_aAccess[ g_aNum ] = iAccess
+    g_aAccess[ g_aNum ] = read_flags(szAccess)
+    if (!(g_aAccess[g_aNum] & ADMIN_USER) && !(g_aAccess[g_aNum] & ADMIN_ADMIN))
+        g_aAccess[g_aNum] |= ADMIN_ADMIN
+
     g_aFlags[ g_aNum ] = read_flags( szFlags )  
     ++g_aNum
   }

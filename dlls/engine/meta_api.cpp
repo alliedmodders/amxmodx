@@ -3163,6 +3163,7 @@ void MessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
 		if (isMsgHooked[msg_type] && !inHookProcess) {
 			inHookProcess = msg_type;
 			msgd = new MessageInfo(msg_dest, msg_type, pOrigin, ed);
+			msgd->target = ENTINDEX(ed);
 			RETURN_META(MRES_SUPERCEDE);
 		}
 	}
@@ -3183,7 +3184,7 @@ void MessageEnd(void) {
 
 	if (inHookProcess) {
 		for (AmxCallList::AmxCall* i = Msgs.head; i; i = i->next) {
-			AMX_EXEC(i->amx, &iResult, i->iFunctionIdx, 1, msg_type);
+			AMX_EXEC(i->amx, &iResult, i->iFunctionIdx, 3, msg_type, msgd->msg_dest, msgd->target);
 			if (iResult & 2) {
 				RETURN_META(MRES_SUPERCEDE);
 			} else if (iResult & 1) {
@@ -3374,6 +3375,7 @@ void ServerDeactivate() {
 	preThink.clear();
 	clientKill.clear();
 	Msgs.clear();
+	clientImpulse.clear();
 
 	int i;
 	// Reset message blocks.

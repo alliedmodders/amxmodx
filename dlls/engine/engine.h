@@ -986,10 +986,12 @@ public:
 		return argcount;
 	}
 
+	int msg_dest;
+	int target;
+
 private:
 	int argcount;
 	int msgID;
-	int msg_dest;
 	const float *pOrigin;
 	edict_t *v;
 	argStack *CHeadArg;

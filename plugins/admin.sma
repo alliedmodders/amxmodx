@@ -190,9 +190,9 @@ public adminSql() {
   }
 
   if (g_aNum == 1)
-    server_print("[AMXX] %L", SERVER_LANG, "SQL_LOADED_ADMIN" )
+    server_print("[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMIN" )
   else
-    server_print("[AMXX] %L", SERVER_LANG, "SQL_LOADED_ADMINS", g_aNum )
+    server_print("[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMINS", g_aNum )
   dbi_free_result(Res)
   dbi_close(sql)
   return PLUGIN_HANDLED

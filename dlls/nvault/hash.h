@@ -42,6 +42,7 @@ public:		//PUBLIC FUNCTIONS
 	iterator Enumerate();
 	size_t Prune(time_t begin, time_t end, bool all=false);
 	void Clear();
+	bool KeyExists(const char *key);
 public:		//PUBLIC CLASSES
 	class iterator
 	{
@@ -62,7 +63,7 @@ public:		//PUBLIC CLASSES
 	};
 private:	//PRIVATE API
 	void _Insert(const char *key, const char *val, time_t stamp);
-	htNode *_FindNode(const char *key);
+	htNode *_FindNode(const char *key, bool autoMake=true);
 	htNodeSet *_FindNodeSet(const char *key);
 	htNode *_InsertIntoNodeSet(htNodeSet *set, const char *key, bool skip=false);
 	void _Unlink(htNodeSet *set, htNode *node);

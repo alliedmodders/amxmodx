@@ -104,6 +104,11 @@ void HashTable::Clear()
 	}
 }
 
+bool HashTable::KeyExists(const char *key)
+{
+	return _FindNode(key, false);
+}
+
 ////////////////////
 // Iterator stuff //
 ////////////////////
@@ -209,7 +214,7 @@ void HashTable::_Unlink(HashTable::htNodeSet *set, HashTable::htNode *node)
 }
 
 //Finds a node by key
-HashTable::htNode *HashTable::_FindNode(const char *key)
+HashTable::htNode *HashTable::_FindNode(const char *key, bool autoMake)
 {
 	HashTable::htNodeSet *set;
 	HashTable::htNode *node;
@@ -224,7 +229,10 @@ HashTable::htNode *HashTable::_FindNode(const char *key)
 		node = node->next;
 	}
 
-	return _InsertIntoNodeSet(set, key, true);
+	if (autoMake)
+		return _InsertIntoNodeSet(set, key, true);
+
+	return NULL;
 }
 
 //Inserts a new set of data into a bucket

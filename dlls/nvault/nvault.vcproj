@@ -118,6 +118,9 @@
 			<File
 				RelativePath=".\hash.cpp">
 			</File>
+			<File
+				RelativePath=".\nvault.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -125,6 +128,9 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
 				RelativePath=".\hash.h">
+			</File>
+			<File
+				RelativePath=".\nvault.h">
 			</File>
 		</Filter>
 		<Filter

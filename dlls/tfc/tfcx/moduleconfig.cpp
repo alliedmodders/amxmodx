@@ -326,7 +326,7 @@ void OnAmxxAttach() {
 	MF_AddNatives( stats_Natives );
 	MF_AddNatives( base_Natives );
 
-	const char* path =  get_localinfo("tfcstats_score","addons/amxx/data/tfcstats.amxx");
+	const char* path =  get_localinfo("tfcstats_score","addons/amxmodx/data/tfcstats.amxx");
 	if ( path && *path ) 
 	{
 		char error[128];
@@ -334,7 +334,7 @@ void OnAmxxAttach() {
 	}
 	if ( !g_rank.begin() )
 	{		
-		g_rank.loadRank( MF_BuildPathname("%s",get_localinfo("tfcstats","addons/amxx/data/tfcstats.dat") ) );
+		g_rank.loadRank( MF_BuildPathname("%s",get_localinfo("tfcstats","addons/amxmodx/data/tfcstats.dat") ) );
 	}
 
 	// set default PrivateData offsets

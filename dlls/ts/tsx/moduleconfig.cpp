@@ -295,7 +295,7 @@ void OnAmxxAttach() {
 	MF_AddNatives( stats_Natives );
 	MF_AddNatives( base_Natives );
 
-	const char* path =  get_localinfo("tsstats_score","addons/amxx/data/tsstats.amxx");
+	const char* path =  get_localinfo("tsstats_score","addons/amxmodx/data/tsstats.amxx");
 	if ( path && *path ) 
 	{
 		char error[128];
@@ -303,7 +303,7 @@ void OnAmxxAttach() {
 	}
 	if ( !g_rank.begin() )
 	{		
-		g_rank.loadRank( MF_BuildPathname("%s",get_localinfo("tsstats","addons/amxx/data/tsstats.dat") ) );
+		g_rank.loadRank( MF_BuildPathname("%s",get_localinfo("tsstats","addons/amxmodx/data/tsstats.dat") ) );
 	}
 }
 

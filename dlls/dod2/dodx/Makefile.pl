@@ -15,6 +15,7 @@
 $PROJECT = "dodx_amxx";
 $sdk = "../../../hlsdk/SourceCode";
 $mm = "../../../metamod/metamod";
+$gccf = "gcc";
 
 @CPP_SOURCE_FILES = ("CMisc.cpp", "CRank.cpp", "NBase.cpp", "NRank.cpp", "Utils.cpp", "moduleconfig.cpp", "usermsg.cpp", "amxxmodule.cpp");
 
@@ -45,7 +46,7 @@ while ($cmd = shift)
 	}
 }
 
-$gcc = `gcc --version`;
+$gcc = `$gccf --version`;
 if ($gcc =~ /2\.9/)
 {
 	$OPT{"opt"} .= " -malign-loops=2 -malign-jumps=2 -malign-functions=2";
@@ -134,11 +135,11 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	$ofile = $file;
 	$ofile =~ s/\.cpp/\.o/;
 	$ofile = "$outdir/$ofile";
-	$gcc = "gcc $cflags -Dstrcmpi=strcasecmp -fPIC $inc -c $file -o $ofile";
+	$gcc = "$gccf $cflags -Dstrcmpi=strcasecmp -fPIC $inc -c $file -o $ofile";
 	if (-e $ofile)
 	{
 		$file_time = (stat($file))[9];
-		$ofile_time = (stat($file))[9];
+		$ofile_time = (stat($ofile))[9];
 		if ($file_time > $ofile_time)
 		{
 			print "$gcc\n";
@@ -160,7 +161,7 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	if (-e $ofile)
 	{
 		$file_time = (stat($file))[9];
-		$ofile_time = (stat($file))[9];
+		$ofile_time = (stat($ofile))[9];
 		if ($file_time > $ofile_time)
 		{
 			print "$gcc\n";
@@ -172,6 +173,6 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	}
 }
 
-$gcc = "gcc $cflags -shared -ldl -lm @LINK -o $outdir/$bin";
+$gcc = "$gccf $cflags -shared -ldl -lm @LINK -o $outdir/$bin";
 print "$gcc\n";
 `$gcc`;

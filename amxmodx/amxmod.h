@@ -46,7 +46,7 @@
 #include "CMenu.h"
 #include "CEvent.h"
 
-#define AMX_VERSION     "0.9.7"
+#define AMX_VERSION     "0.1"
 
 #ifdef  __cplusplus
 extern "C" {
@@ -148,6 +148,7 @@ extern bool g_dontprecache;
 extern bool g_initialized;
 extern int g_srvindex;
 extern cvar_t* amx_version;
+extern cvar_t* amxmodx_version;
 extern cvar_t* hostname;
 extern cvar_t* mp_timelimit;
 extern fakecmd_t g_fakecmd;

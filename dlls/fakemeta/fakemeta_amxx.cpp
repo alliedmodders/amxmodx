@@ -8,8 +8,9 @@ void OnAmxxAttach()
 	MF_AddNatives(dllfunc_natives);
 	MF_AddNatives(pev_natives);
 	MF_AddNatives(forward_natives);
+	MF_AddNatives(pdata_natives);
 }
-
+int GetHullBounds(int hullnumber, float *mins, float *maxs);
 // sawce:  Do not null out the forward for ServerActivate.  It's required for the INDEXENT() fix. (I don't think ServerActivate is planned on being forwarded anyway)
 void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 {
@@ -106,6 +107,21 @@ void OnPluginsLoaded()
 	RESETE(InfoKeyValue);
 	RESETE(SetKeyValue);
 	RESETE(SetClientKeyValue);
+	RESETE(MessageBegin);
+	RESETE(MessageEnd);
+	RESETE(WriteByte);
+	RESETE(WriteChar);
+	RESETE(WriteShort);
+	RESETE(WriteLong);
+	RESETE(WriteAngle);
+	RESETE(WriteCoord);
+	RESETE(WriteString);
+	RESETE(WriteEntity);
+	RESETE(CVarGetFloat);
+	RESETE(CVarGetString);
+	RESETE(CVarSetFloat);
+	RESETE(CVarSetString);
+
 
 	RESETD(Spawn);
 	RESETD(Think);
@@ -132,7 +148,6 @@ void OnPluginsLoaded()
 	RESETD(Sys_Error);
 	RESETD(PM_FindTextureType);
 	RESETD(RegisterEncoders);
-	RESETD(GetHullBounds);
 	RESETD(CreateInstancedBaselines);
 	RESETD(AllowLagCompensation);
 

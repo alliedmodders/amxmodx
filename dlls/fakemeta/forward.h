@@ -27,11 +27,11 @@ enum {
 	FM_ChangePitch,			// done
 	FM_FindEntityByString,	// done
 	FM_GetEntityIllum,		// done
-	FM_FindEntityInSphere,	// edict)	(edict_t *pEdictStartSearchAfter, const float *org, float rad);
-	FM_FindClientInPVS,		// edict)		(edict_t *pEdict);
-	FM_EntitiesInPVS,		// edict)			(edict_t *pplayer);
-	FM_MakeVectors,			// void )			(const float *rgflVector);
-	FM_AngleVectors,		// void )			(const float *rgflVector, float *forward, float *right, float *up);
+	FM_FindEntityInSphere,	// done
+	FM_FindClientInPVS,		// done
+	FM_EntitiesInPVS,		// done
+	FM_MakeVectors,			// done
+	FM_AngleVectors,		// done
 	FM_CreateEntity,		// done
 	FM_RemoveEntity,		// done
 	FM_CreateNamedEntity,	// done
@@ -39,9 +39,9 @@ enum {
 	FM_EntIsOnFloor,		// done
 	FM_DropToFloor,			// done
 	FM_WalkMove,			// int  )				(edict_t *ent, float yaw, float dist, int iMode);
-	FM_SetOrigin,			// void )				(edict_t *e, const float *rgflOrigin);
-	FM_EmitSound,			// void )				(edict_t *entity, int channel, const char *sample, /*int*/float volume, float attenuation, int fFlags, int pitch);
-	FM_EmitAmbientSound,	// void )		(edict_t *entity, float *pos, const char *samp, float vol, float attenuation, int fFlags, int pitch);
+	FM_SetOrigin,			// done
+	FM_EmitSound,			// done
+	FM_EmitAmbientSound,	// done
 	FM_TraceLine,			// void )				(const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr);
 	FM_TraceToss,			// void )				(edict_t* pent, edict_t* pentToIgnore, TraceResult *ptr);
 	FM_TraceMonsterHull,	// int  )		(edict_t *pEdict, const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr);
@@ -50,43 +50,59 @@ enum {
 	FM_TraceTexture,		// const char *)			(edict_t *pTextureEntity, const float *v1, const float *v2 );
 	FM_TraceSphere,			// void )			(const float *v1, const float *v2, int fNoMonsters, float radius, edict_t *pentToSkip, TraceResult *ptr);
 	FM_GetAimVector,		// void )			(edict_t* ent, float speed, float *rgflReturn);
-	FM_ParticleEffect,		// void )		(const float *org, const float *dir, float color, float count);
-	FM_LightStyle,			// void )			(int style, char* val);
+	FM_ParticleEffect,		// done
+	FM_LightStyle,			// done
 	FM_DecalIndex,			// done
-	FM_PointContents,		// int )			(const float *rgflVector);
+	FM_PointContents,		// done
+	FM_MessageBegin,		// done
+	FM_MessageEnd,			// done
+	FM_WriteByte,			// done
+	FM_WriteChar,			// done
+	FM_WriteShort,			// done
+	FM_WriteLong,			// done
+	FM_WriteAngle,			// done
+	FM_WriteCoord,			// done
+	FM_WriteString,			// done
+	FM_WriteEntity,			// done
+	FM_CVarGetFloat,		// done
+	FM_CVarGetString,		// done
+	FM_CVarSetFloat,		// done
+	FM_CVarSetString,		// done
 	FM_FreeEntPrivateData,	// done
-	FM_SzFromIndex,			// const char * )			(int iString);
+	FM_SzFromIndex,			// done
 	FM_AllocString,			// done
-	FM_RegUserMsg,			// int	)			(const char *pszName, int iSize);
-	FM_AnimationAutomove,	// void )		(const edict_t* pEdict, float flTime);
+	FM_RegUserMsg,			// done
+	FM_AnimationAutomove,	// done
 	FM_GetBonePosition,		// void )		(const edict_t* pEdict, int iBone, float *rgflOrigin, float *rgflAngles );
 	FM_GetAttachment,		// void	)			(const edict_t *pEdict, int iAttachment, float *rgflOrigin, float *rgflAngles );
-	FM_SetView,				// void )				(const edict_t *pClient, const edict_t *pViewent );
-	FM_Time,				// float)					( void );
-	FM_CrosshairAngle,		// void )		(const edict_t *pClient, float pitch, float yaw);
+	FM_SetView,				// done
+	FM_Time,				// done
+	FM_CrosshairAngle,		// done
 	FM_FadeClientVolume,	// void )      (const edict_t *pEdict, int fadePercent, int fadeOutSeconds, int holdTime, int fadeInSeconds);
-	FM_SetClientMaxspeed,	// void )     (const edict_t *pEdict, float fNewMaxspeed);
-	FM_CreateFakeClient,	// edict)		(const char *netname);	// returns NULL if fake client can't be created
+	FM_SetClientMaxspeed,	// done
+	FM_CreateFakeClient,	// done
 	FM_RunPlayerMove,		// void )			(edict_t *fakeclient, const float *viewangles, float forwardmove, float sidemove, float upmove, unsigned short buttons, byte impulse, byte msec );
 	FM_NumberOfEntities,	// done
 	FM_StaticDecal,			// void )			( const float *origin, int decalIndex, int entityIndex, int modelIndex );
 	FM_PrecacheGeneric,		// done
 	FM_BuildSoundMsg,		// void )			(edict_t *entity, int channel, const char *sample, /*int*/float volume, float attenuation, int fFlags, int pitch, int msg_dest, int msg_type, const float *pOrigin, edict_t *ed);
-	FM_GetPhysicsKeyValue,	// const char* )	( const edict_t *pClient, const char *key );
-	FM_SetPhysicsKeyValue,	// void )	( const edict_t *pClient, const char *key, const char *value );
-	FM_GetPhysicsInfoString,// const char* )	( const edict_t *pClient );
-	FM_PrecacheEvent,		// unsigned short )		( int type, const char*psz );
-	FM_PlaybackEvent,		// void )			( int flags, const edict_t *pInvoker, unsigned short eventindex, float delay, float *origin, float *angles, float fparam1, float fparam2, int iparam1, int iparam2, int bparam1, int bparam2 );
+	FM_GetPhysicsKeyValue,	// done
+	FM_SetPhysicsKeyValue,	// done
+	FM_GetPhysicsInfoString,// done
+	FM_PrecacheEvent,		// done
+	FM_PlaybackEvent,		// done
 	FM_CheckVisibility,			//)		( const edict_t *entity, unsigned char *pset );
-	FM_GetCurrentPlayer,			//)		( void );
-	FM_CanSkipPlayer,			//)			( const edict_t *player );
-	FM_SetGroupMask,				//)			( int mask, int op );
-	FM_Voice_GetClientListening,	// bool (int iReceiver, int iSender)
-	FM_Voice_SetClientListening,	// bool (int iReceiver, int iSender, bool Listen)
-	FM_InfoKeyValue,	// char*	)			(char *infobuffer, char *key);
-	FM_SetKeyValue,	// void )			(char *infobuffer, char *key, char *value);
-	FM_SetClientKeyValue,	 // void )		(int clientIndex, char *infobuffer, char *key, char *value);
-
+	FM_GetCurrentPlayer,			// done
+	FM_CanSkipPlayer,			// done
+	FM_SetGroupMask,				//done
+	FM_Voice_GetClientListening,	// done
+	FM_Voice_SetClientListening,	// done
+	FM_InfoKeyValue,	// done
+	FM_SetKeyValue,	// done
+	FM_SetClientKeyValue,	 // done
+	FM_GetPlayerAuthId,	// done
+	FM_GetPlayerWONId,	// done
+	FM_IsMapValid,	// done
 
 
 	// FM_GameInit,	// Removed -- it will *never* be called after plugins are loaded
@@ -97,7 +113,7 @@ enum {
 	FM_Blocked,	// done
 	FM_KeyValue,	// void )			( edict_t *pentKeyvalue, KeyValueData *pkvd );
 	FM_SetAbsBox,			// done
-	FM_ClientConnect,		// bool)		( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ] );
+	FM_ClientConnect,		// done
 	
 	FM_ClientDisconnect,	// done
 	FM_ClientKill,		// done
@@ -114,7 +130,7 @@ enum {
 	FM_ParmsChangeLevel,	// done
 
 	 // Returns string describing current .dll.  E.g., TeamFotrress 2, Half-Life
-	FM_GetGameDescription,	 // const char * )( void );     
+	FM_GetGameDescription,	 // done
 
 	// Spectator funcs
 	FM_SpectatorConnect,	// done
@@ -128,7 +144,6 @@ enum {
 	FM_RegisterEncoders,	// done
 
 	// Enumerates player hulls.  Returns 0 if the hull number doesn't exist, 1 otherwise
-	FM_GetHullBounds,	// int)	( int hullnumber, float *mins, float *maxs );
 
 	// Create baselines for certain "unplaced" items.
 	FM_CreateInstancedBaselines,	// done 

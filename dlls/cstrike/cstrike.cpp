@@ -927,7 +927,7 @@ static cell AMX_NATIVE_CALL cs_set_user_backpackammo(AMX *amx, cell *params) // 
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL cs_get_user_nvgoggles(AMX *amx, cell *params) // cs_get_user_nvgoggles(index); = 1 param
+static cell AMX_NATIVE_CALL cs_get_user_nvg(AMX *amx, cell *params) // cs_get_user_nvg(index); = 1 param
 {
 	// Does user have night vision goggles?
 	// params[1] = user index
@@ -954,7 +954,7 @@ static cell AMX_NATIVE_CALL cs_get_user_nvgoggles(AMX *amx, cell *params) // cs_
 	return 0;
 }
 
-static cell AMX_NATIVE_CALL cs_set_user_nvgoggles(AMX *amx, cell *params) // cs_set_user_nvgoggles(index, nvgoggles = 1); = 2 params
+static cell AMX_NATIVE_CALL cs_set_user_nvg(AMX *amx, cell *params) // cs_set_user_nvg(index, nvgoggles = 1); = 2 params
 {
 	// Give/take nvgoggles..
 	// params[1] = user index
@@ -1206,8 +1206,8 @@ AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_user_defusekit",		cs_set_user_defusekit},
 	{"cs_get_user_backpackammo",	cs_get_user_backpackammo},
 	{"cs_set_user_backpackammo",	cs_set_user_backpackammo},
-	{"cs_get_user_nvgoggles",		cs_get_user_nvgoggles},
-	{"cs_set_user_nvgoggles",		cs_set_user_nvgoggles},
+	{"cs_get_user_nvg",		cs_get_user_nvg},
+	{"cs_set_user_nvg",		cs_set_user_nvg},
 	{"cs_get_hostage_follow",		cs_get_hostage_follow},
 	{"cs_set_hostage_follow",		cs_set_hostage_follow},
 

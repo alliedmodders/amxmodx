@@ -1,5 +1,5 @@
-//#define __cswonbuild__ // comment when compiling for STEAM
-//#define CS_WON_BUILD
+#define __cswonbuild__ // comment when compiling for STEAM
+#define CS_WON_BUILD
 
  /* AMX Mod X 
    *   Counter-Strike Module 

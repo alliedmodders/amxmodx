@@ -51,7 +51,7 @@ public plugin_init()
 {
   register_plugin("Admin Base for MySQL","0.16","AMXX Dev Team")
 
-  register_cvar("amx_mode","2.0")
+  register_cvar("amx_mode","1")
   register_cvar("amx_password_field","_pw")
   register_cvar("amx_default_access","")
   register_srvcmd("amx_sqladmins","adminSql")

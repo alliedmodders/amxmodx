@@ -126,12 +126,12 @@ const uint32_t CRCTable[256] = {
   0x54de5729, 0x23d967bf, 0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94,
   0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d};
 
-uint32_t CLangMngr::CLang::MakeHash(const char *src)
+uint32_t CLangMngr::CLang::MakeHash(const char *src, bool makeLower)
 {
 	uint32_t crc = 0xFFFFFFFF;
 	
 	while (*src)
-		crc = ((crc>>8)&0xFFFFFFFF)^CRCTable[(crc^*src++)&0xFF];
+		crc = ((crc>>8)&0xFFFFFFFF)^CRCTable[(crc^ (makeLower ? tolower(*src++) : *src++) )&0xFF];
 	
 	return ~crc;
 }
@@ -248,7 +248,7 @@ void CLangMngr::CLang::LangEntry::SetKey(const char *pKey)
 	delete [] m_pKey;
 	m_pKey = new char[strlen(pKey)+1];
 	strcpy(m_pKey, pKey);
-	m_KeyHash = MakeHash(pKey);
+	m_KeyHash = MakeHash(pKey, true);
 }
 
 void CLangMngr::CLang::LangEntry::SetDef(const char *pDef)
@@ -286,7 +286,7 @@ void CLangMngr::CLang::Clear()
 CLangMngr::CLang::LangEntry & CLangMngr::CLang::GetEntry(const char *key)
 {
 	LookUpVecIter iter;
-	uint32_t hash = MakeHash(key);
+	uint32_t hash = MakeHash(key, true);
 	for (iter = m_LookUpTable.begin(); iter != m_LookUpTable.end(); ++iter)
 		if (*iter == hash)
 			break;
@@ -317,7 +317,7 @@ void CLangMngr::CLang::Dump()
 
 const char * CLangMngr::CLang::GetDef(const char *key)
 {
-	uint32_t hash = MakeHash(key);
+	uint32_t hash = MakeHash(key, true);
 	for (LookUpVecIter iter = m_LookUpTable.begin(); iter != m_LookUpTable.end(); ++iter)
 		if (*iter == hash)
 			return iter->GetDef();
@@ -438,7 +438,7 @@ bool CLangMngr::CLang::Load(FILE *fp)
 	char keyBuf[257];
 	char defBuf[4096];
 
-	for (int i = 0; i < numOfEntries; ++i)
+	for (unsigned int i = 0; i < numOfEntries; ++i)
 	{
 		uint32_t keyHash, defHash;
 		uint32_t tmp1, tmp2, tmp3;
@@ -471,10 +471,10 @@ bool CLangMngr::CLang::Load(FILE *fp)
 
 /******** CLangMngr *********/
 
-const char *CLangMngr::Format(const char *pKey, ...)
+const char *CLangMngr::Format(const char *src, ...)
 {
 	va_list argptr;
-	va_start(argptr, pKey);
+	va_start(argptr, src);
 	static char outbuf[4096];
 	char *outptr = outbuf;
 	enum State
@@ -485,13 +485,13 @@ const char *CLangMngr::Format(const char *pKey, ...)
 
 	State curState = S_Normal;
 
-	while (*pKey)
+	while (*src)
 	{
-		if (*pKey == '%' && curState == S_Normal)
+		if (*src == '%' && curState == S_Normal)
 			curState = S_PercentSign;
 		else if (curState == S_PercentSign)
 		{
-			switch (*pKey)
+			switch (*src)
 			{
 			case 's':
 				{
@@ -517,6 +517,10 @@ const char *CLangMngr::Format(const char *pKey, ...)
 			case 'L':
 				{
 					char *langName = va_arg(argptr, char*);
+					// Handle player ids (1-32)
+					if ((int)langName >= 1 && (int)langName <= 32)
+						langName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I((int)langName)->pEdict, "_language");
+
 					char *key = va_arg(argptr, char*);
 					const char *def = GetDef(langName, key);
 					while (*def)
@@ -556,17 +560,136 @@ const char *CLangMngr::Format(const char *pKey, ...)
 				}
 			default:
 				*outptr++= '%';
-				*outptr++ = *pKey;
+				*outptr++ = *src;
 			}
 			curState = S_Normal;
 		}
 		else
-			*outptr++ = *pKey;
-		++pKey;
+			*outptr++ = *src;
+		++src;
 	}
+	*outptr++ = 0;
 	return outbuf;
 }
 
+char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
+{
+	cell *src = get_amxaddr(amx, params[parm++]);
+	static char outbuf[4096];
+	char *outptr = outbuf;
+	enum State
+	{
+		S_Normal,
+		S_PercentSign,
+	};
+
+	State curState = S_Normal;
+	while (*src)
+	{
+		if (*src == '%' && curState == S_Normal)
+			curState = S_PercentSign;
+		else if (curState == S_PercentSign)
+		{
+			switch (*src)
+			{
+			case 's':
+				{
+					cell *tmpArg = get_amxaddr(amx, params[parm++]);;
+					while (*tmpArg)
+						*outptr++ = *tmpArg++;
+					break;
+				}
+			case 'f':
+			case 'g':
+				{
+					char format[16];
+					format[0] = '%';
+					char *ptr = format+1;
+					while (!isalpha(*ptr++ = *src++))
+						/*nothing*/;
+					--src;
+					*ptr = 0;
+					sprintf(outptr, format, *(REAL*)get_amxaddr(amx, params[parm++]));
+					outptr += strlen(outptr);
+					break;
+				}
+			case 'L':
+				{
+					cell langName = params[parm];
+					cell *pLangName = get_amxaddr(amx, params[parm++]);
+					const char *cpLangName=NULL;
+					// Handle player ids (1-32) and server language
+					if (*pLangName == 0)
+						*pLangName = m_CurGlobId;
+					if (*pLangName == -1)
+						cpLangName = g_vault.get("server_language");
+					else if (*pLangName > 1 && *pLangName < 32)
+						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(*pLangName)->pEdict, "_language");
+					else
+					{
+						int len = 0;
+						cpLangName = get_amxstring(amx, langName, 2, len);
+					}
+					int len;
+					char *key = get_amxstring(amx, params[parm++], 1, len);
+					const char *def = GetDef(cpLangName, key);
+					while (*def)
+					{
+						switch (*def)
+						{
+						case INSERT_NUMBER:
+							{
+								itoa((float)*(REAL*)get_amxaddr(amx, params[parm++]), outptr, 10);
+								outptr += strlen(outptr);
+								break;
+							}
+						case INSERT_STRING:
+							{
+								cell *tmpArg = get_amxaddr(amx, params[parm++]);;
+								while (*tmpArg)
+									*outptr++ = *tmpArg++;
+								break;
+							}
+						case INSERT_FLOAT:
+							{
+								sprintf(outptr, "%f", *(REAL*)get_amxaddr(amx, params[parm++]));
+								outptr += strlen(outptr);
+								break;
+							}
+						case INSERT_NEWLINE:
+							*outptr++ = '\n';
+							break;
+						default:
+							*outptr++ = *def;
+						}
+						++def;
+					}
+					break;
+				}
+			default:
+				{
+					char format[16];
+					format[0] = '%';
+					char *ptr = format+1;
+					while (!isalpha(*ptr++ = *src++))
+						/*nothing*/;
+					--src;
+					*ptr = 0;
+					sprintf(outptr, format, *get_amxaddr(amx, params[parm++]));
+					outptr += strlen(outptr);
+					break;
+				}
+			}
+			curState = S_Normal;
+		}
+		else
+			*outptr++ = *src;
+		++src;
+	}
+	len = outptr - outbuf;
+	*outptr++ = 0;
+	return outbuf;
+}
 
 void CLangMngr::MergeDefinitions(const char *lang, CVector<sKeyDef> &tmpVec)
 {
@@ -842,4 +965,35 @@ bool CLangMngr::Load(const char *filename)
 void CLangMngr::Clear()
 {
 	m_Languages.clear();
+}
+
+int CLangMngr::GetLangsNum()
+{
+	return m_Languages.size();
+}
+
+const char *CLangMngr::GetLangName(int langId)
+{
+	return m_Languages.at(langId).GetName();
+}
+
+bool CLangMngr::LangExists(const char *langName)
+{
+	char buf[3] = { 0 };
+	int i = 0;
+	while (buf[i] = tolower(*langName++))
+	{	
+		if (++i == 2)
+			break;
+	}
+	
+	for (LangVecIter iter = m_Languages.begin(); iter != m_Languages.end(); ++iter)
+		if (*iter == buf)
+			return true;
+	return false;
+}
+
+void CLangMngr::SetDefLang(int id)
+{
+	m_CurGlobId = id;
 }

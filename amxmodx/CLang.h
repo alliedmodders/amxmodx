@@ -32,6 +32,8 @@
 #ifndef _INCLUDE_CLANG_H
 #define _INCLUDE_CLANG_H
 
+#define LANG_SERVER -1
+
 class CLangMngr
 {
 	struct sKeyDef
@@ -61,7 +63,7 @@ class CLangMngr
 		bool Load(FILE *fp);
 	private:
 
-		static uint32_t MakeHash(const char *src);
+		static uint32_t MakeHash(const char *src, bool makeLower = false);
 
 		class LangEntry
 		{
@@ -107,14 +109,23 @@ class CLangMngr
 
 	CLang & GetLang(const char *name);
 
-	void Clear();
+	int m_CurGlobId;
 public:
 	int MergeDefinitionFile(const char *file);
 	void Dump();
 	const char *GetDef(const char *langName, const char *key);
-	const char *Format(const char *Key, ...);
+	const char *Format(const char *src, ...);
+	char *FormatAmxString(AMX *amx, cell *params, int parm, int &len);
 	bool Save(const char *filename);
 	bool Load(const char *filename);
+
+	int GetLangsNum();
+	const char *GetLangName(int langId);
+	bool LangExists(const char *langName);
+
+	// When a language id in a format string in FormatAmxString is 0, the glob id decides which language to take.
+	void SetDefLang(int id);
+	void Clear();
 };
 
 #endif //_INCLUDE_CLANG_H

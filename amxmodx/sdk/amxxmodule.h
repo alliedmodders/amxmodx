@@ -1954,6 +1954,7 @@ typedef REAL			(*PFN_CELL_TO_REAL)				(cell /*x*/);
 typedef int				(*PFN_REGISTER_SPFORWARD)		(AMX * /*amx*/, int /*func*/, ... /*params*/);
 typedef int				(*PFN_REGISTER_SPFORWARD_BYNAME)	(AMX * /*amx*/, const char * /*funcName*/, ... /*params*/);
 typedef void			(*PFN_UNREGISTER_SPFORWARD)		(int /*id*/);
+typedef	void			(*PFN_MERGEDEFINITION_FILE)		(const char * /*filename*/);
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
 extern PFN_BUILD_PATHNAME			g_fn_BuildPathname;
@@ -2005,6 +2006,7 @@ extern PFN_CELL_TO_REAL				g_fn_CellToReal;
 extern PFN_REGISTER_SPFORWARD		g_fn_RegisterSPForward;
 extern PFN_REGISTER_SPFORWARD_BYNAME	g_fn_RegisterSPForwardByName;
 extern PFN_UNREGISTER_SPFORWARD		g_fn_UnregisterSPForward;
+extern PFN_MERGEDEFINITION_FILE		g_fn_MergeDefinition_File;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems

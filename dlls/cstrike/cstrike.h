@@ -52,6 +52,7 @@
 
 // "player" entities
 #if !defined __amd64__
+	// 32 bit offsets here
 	#define OFFSET_TEAM					114 + EXTRAOFFSET
 	#define OFFSET_CSMONEY				115 + EXTRAOFFSET
 	#define OFFSET_PRIMARYWEAPON		116 + EXTRAOFFSET
@@ -59,7 +60,9 @@
 	#define OFFSET_NVGOGGLES			129 + EXTRAOFFSET
 	#define OFFSET_DEFUSE_PLANT			193 + EXTRAOFFSET
 	#define OFFSET_VIP					209 + EXTRAOFFSET
+	#define OFFSET_TK					216 + EXTRAOFFSET // 040926
 	#define OFFSET_BUYZONE				235 + EXTRAOFFSET
+	#define OFFSET_ISDRIVING			350 + EXTRAOFFSET // 040926
 
 	#define OFFSET_AWM_AMMO				382 + EXTRAOFFSET
 	#define OFFSET_SCOUT_AMMO			383 + EXTRAOFFSET
@@ -76,7 +79,7 @@
 	#define OFFSET_SMOKE_AMMO			394 + EXTRAOFFSET
 	#define OFFSET_C4_AMMO				395	+ EXTRAOFFSET
 
-	#define OFFSET_CSDEATHS				449 + EXTRAOFFSET
+	#define OFFSET_CSDEATHS				444 + EXTRAOFFSET // 040926
 	// "weapon_*" entities
 	#define OFFSET_WEAPONTYPE			43 + EXTRAOFFSET
 	#define OFFSET_CLIPAMMO				51 + EXTRAOFFSET
@@ -85,6 +88,7 @@
 	#define OFFSET_HOSTAGEFOLLOW		86 + EXTRAOFFSET
 	#define OFFSET_HOSTAGEID			487 + EXTRAOFFSET
 #else
+	// Amd64 offsets here
 	#define OFFSET_TEAM					139 + EXTRAOFFSET // +25
 	#define OFFSET_CSMONEY				140 + EXTRAOFFSET // +25
 	#define OFFSET_PRIMARYWEAPON		141 + EXTRAOFFSET // +25
@@ -92,7 +96,9 @@
 	#define OFFSET_NVGOGGLES			155 + EXTRAOFFSET // +26
 	#define OFFSET_DEFUSE_PLANT			219 + EXTRAOFFSET // +26
 	#define OFFSET_VIP					242 + EXTRAOFFSET // +27
+	#define OFFSET_TK					å2äA;;#ÖAwä3ä2åa3ÖÄ2e;;åöA"Å! 1ö ÅÄ3åA"Ö  <-- this needs to be researched for amd64 ;-) (likely +27 though!)
 	#define OFFSET_BUYZONE				268 + EXTRAOFFSET // +27
+	#define OFFSET_ISDRIVING			å2äA#ÖAw;;ä3ä2åa3ÖÄ2eåöA;;"Å! 1ö ÅÄ3åA"Ö  <-- this needs to be researched for amd64 ;-)
 
 	#define OFFSET_AWM_AMMO				426 + EXTRAOFFSET // +44
 	#define OFFSET_SCOUT_AMMO			427 + EXTRAOFFSET // +44
@@ -109,7 +115,7 @@
 	#define OFFSET_SMOKE_AMMO			438 + EXTRAOFFSET // +44
 	#define OFFSET_C4_AMMO				439	+ EXTRAOFFSET // +44
 
-	#define OFFSET_CSDEATHS				493 + EXTRAOFFSET // +44
+	#define OFFSET_CSDEATHS				493 + EXTRAOFFSET // +49
 	// "weapon_*" entities
 	#define OFFSET_WEAPONTYPE			57 + EXTRAOFFSET // +14
 	#define OFFSET_CLIPAMMO				65 + EXTRAOFFSET // +14

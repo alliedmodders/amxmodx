@@ -152,6 +152,26 @@ native cs_get_user_vip(index);
  */
 native cs_set_user_vip(index, vip = 1);
 
+/* Returns 1 of specified user has tk:ed (team killed).
+ */
+native cs_get_user_tked(index);
+
+/* Returns 1 of specified user has TKed (team killed).
+ * tk = 1: player has TKed
+ * tk = 0: player hasn't TKed
+ * Set subtract to how many frags to subtract. Set subtract to negative value to add frags.
+ */
+native cs_set_user_tked(index, tk = 1, subtract = 1);
+
+/* Returns different values depending on if user is driving a value - and if so at what speed.
+ * 0: no driving
+ * 1: driving, but standing still
+ * 2-4: driving, different positive speeds
+ * 5: driving, negative speed (backing)
+ * Note: these values were tested quickly, they may differ.
+ */
+native cs_get_user_driving(index);
+
 /* Returns 1 if specified weapon is in burst mode.
  */
 native cs_get_weapon_burst(index);

@@ -1375,6 +1375,105 @@ static cell AMX_NATIVE_CALL cs_set_no_knives(AMX *amx, cell *params) // cs_set_n
 	return 1;
 }
 
+// Damaged Soul
+static cell AMX_NATIVE_CALL cs_get_user_tked(AMX *amx, cell *params) // cs_get_user_tked(index); = 1 param 
+{ 
+	// Return 1 if user has committed a team killing) 
+	// params[1] = user index 
+
+	// Check player 
+	if (!MF_IsPlayerIngame(params[1])) 
+	{ 
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE); 
+		return 0; 
+	} 
+
+	// Make into edict pointer 
+	edict_t *pPlayer = INDEXENT(params[1]); 
+
+	// Check entity validity 
+	if (FNullEnt(pPlayer)) { 
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE); 
+		return 0; 
+	} 
+
+	return *((int *)pPlayer->pvPrivateData + OFFSET_TK); 
+}
+
+// Damaged Soul
+static cell AMX_NATIVE_CALL cs_set_user_tked(AMX *amx, cell *params) // cs_set_user_tked(index, tk = 1, subtract = 1); = 2 arguments 
+{ 
+	// Sets whether or not player has committed a TK. 
+	// params[1] = user 
+	// params[2] = 1: player has TKed, 0: player hasn't TKed 
+	// params[3] = number of frags to subtract 
+
+	// Check index 
+	if (!MF_IsPlayerIngame(params[1])) 
+	{ 
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE); 
+		return 0; 
+	} 
+
+	// Fetch player pointer 
+	edict_t *pPlayer = INDEXENT(params[1]); 
+
+	// Check entity validity 
+	if (FNullEnt(pPlayer)) { 
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE); 
+		return 0; 
+	} 
+
+	if (params[2]) { 
+		*((int *)pPlayer->pvPrivateData + OFFSET_TK) = 1; 
+	} else { 
+		*((int *)pPlayer->pvPrivateData + OFFSET_TK) = 0; 
+	} 
+
+	if (params[3]) { 
+		pPlayer->v.frags = pPlayer->v.frags - params[3]; 
+
+		MESSAGE_BEGIN(MSG_ALL, GET_USER_MSG_ID(PLID, "ScoreInfo", NULL)); 
+		WRITE_BYTE(params[1]); // user index 
+		WRITE_SHORT((int)pPlayer->v.frags); // frags 
+		WRITE_SHORT(*((int *)pPlayer->pvPrivateData + OFFSET_CSDEATHS)); // deaths 
+		WRITE_SHORT(0); // ? 
+		WRITE_SHORT(*((int *)pPlayer->pvPrivateData + OFFSET_TEAM)); // team 
+		MESSAGE_END(); 
+	} 
+
+	return 1; 
+}
+
+static cell AMX_NATIVE_CALL cs_get_user_driving(AMX *amx, cell *params) // cs_get_user_driving(index); = 1 param 
+{ 
+	// Returns different values depending on if user is driving a value - and if so at what speed.
+	// 0: no driving
+	// 1: driving, but standing still
+	// 2-4: different positive speeds
+	// 5: negative speed (backing)
+	// params[1] = user index 
+
+	// Check player 
+	if (!MF_IsPlayerIngame(params[1])) 
+	{ 
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE); 
+		return 0; 
+	} 
+
+	// Make into edict pointer 
+	edict_t *pPlayer = INDEXENT(params[1]); 
+
+	// Check entity validity 
+	if (FNullEnt(pPlayer)) { 
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE); 
+		return 0; 
+	} 
+
+	// If player driving, return 1, if not, return 0 
+	return *((int *)pPlayer->pvPrivateData + OFFSET_ISDRIVING); 
+}
+
 AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_user_money",			cs_set_user_money},
 	{"cs_get_user_money",			cs_get_user_money},
@@ -1409,6 +1508,9 @@ AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_get_no_knives",			cs_get_no_knives},
 	{"cs_set_no_knives",			cs_set_no_knives},
 	{"cs_get_weapon_type",			cs_get_weapon_type},
+	{"cs_get_user_tked",			cs_get_user_tked},
+	{"cs_set_user_tked",			cs_set_user_tked},
+	{"cs_get_user_driving",			cs_get_user_driving},
 	//------------------- <-- max 19 characters!
 	{NULL,							NULL}
 };

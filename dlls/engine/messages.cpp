@@ -22,7 +22,7 @@ void argMsg::Reset()
 {
 	iData = 0;
 	fData = 0.0;
-	cData.clear();
+	cData.assign("");
 	type = 0;
 }
 
@@ -120,8 +120,8 @@ void WriteByte(int iValue)
 			p->type = arg_byte;
 			Msg.push_back(p);
 		} else {
-			Msg.at(msgCount-1)->iData = iValue;
-			Msg.at(msgCount-1)->type = arg_byte;
+			Msg[msgCount-1]->iData = iValue;
+			Msg[msgCount-1]->type = arg_byte;
 		}
 		RETURN_META(MRES_SUPERCEDE);
 	}
@@ -140,8 +140,8 @@ void WriteChar(int iValue)
 			p->type = arg_char;
 			Msg.push_back(p);
 		} else {
-			Msg.at(msgCount-1)->iData = iValue;
-			Msg.at(msgCount-1)->type = arg_char;
+			Msg[msgCount-1]->iData = iValue;
+			Msg[msgCount-1]->type = arg_char;
 		}
 		RETURN_META(MRES_SUPERCEDE);
 	}
@@ -160,8 +160,8 @@ void WriteShort(int iValue)
 			p->type = arg_short;
 			Msg.push_back(p);
 		} else {
-			Msg.at(msgCount-1)->iData = iValue;
-			Msg.at(msgCount-1)->type = arg_short;
+			Msg[msgCount-1]->iData = iValue;
+			Msg[msgCount-1]->type = arg_short;
 		}
 		RETURN_META(MRES_SUPERCEDE);
 	}
@@ -180,8 +180,8 @@ void WriteLong(int iValue)
 			p->type = arg_long;
 			Msg.push_back(p);
 		} else {
-			Msg.at(msgCount-1)->iData = iValue;
-			Msg.at(msgCount-1)->type = arg_long;
+			Msg[msgCount-1]->iData = iValue;
+			Msg[msgCount-1]->type = arg_long;
 		}
 		RETURN_META(MRES_SUPERCEDE);
 	}
@@ -200,8 +200,8 @@ void WriteAngle(float flValue)
 			p->type = arg_angle;
 			Msg.push_back(p);
 		} else {
-			Msg.at(msgCount-1)->fData = flValue;
-			Msg.at(msgCount-1)->type = arg_angle;
+			Msg[msgCount-1]->fData = flValue;
+			Msg[msgCount-1]->type = arg_angle;
 		}
 		RETURN_META(MRES_SUPERCEDE);
 	}
@@ -220,8 +220,8 @@ void WriteCoord(float flValue)
 			p->type = arg_coord;
 			Msg.push_back(p);
 		} else {
-			Msg.at(msgCount-1)->fData = flValue;
-			Msg.at(msgCount-1)->type = arg_coord;
+			Msg[msgCount-1]->fData = flValue;
+			Msg[msgCount-1]->type = arg_coord;
 		}
 		RETURN_META(MRES_SUPERCEDE);
 	}
@@ -240,8 +240,8 @@ void WriteString(const char *sz)
 			p->type = arg_string;
 			Msg.push_back(p);
 		} else {
-			Msg.at(msgCount-1)->cData.assign(sz);
-			Msg.at(msgCount-1)->type = arg_string;
+			Msg[msgCount-1]->cData.assign(sz);
+			Msg[msgCount-1]->type = arg_string;
 		}
 		RETURN_META(MRES_SUPERCEDE);
 	}
@@ -260,8 +260,8 @@ void WriteEntity(int iValue)
 			p->type = arg_entity;
 			Msg.push_back(p);
 		} else {
-			Msg.at(msgCount-1)->iData = iValue;
-			Msg.at(msgCount-1)->type = arg_entity;
+			Msg[msgCount-1]->iData = iValue;
+			Msg[msgCount-1]->type = arg_entity;
 		}
 		RETURN_META(MRES_SUPERCEDE);
 	}
@@ -272,7 +272,6 @@ void WriteEntity(int iValue)
 void MessageEnd(void)
 {
 	int mres = 0;
-	int mct = msgCount;
 	unsigned int i = 0;
 	if (inblock) {
 		if (msgBlocks[msgType] == BLOCK_ONCE)
@@ -286,8 +285,8 @@ void MessageEnd(void)
 			RETURN_META(MRES_SUPERCEDE);
 		MESSAGE_BEGIN(msgDest, msgType, msgOrigin, msgpEntity);
 		for (i=0; i<msgCount; i++) {
-			Msg.at(i)->Send();
-			Msg.at(i)->Reset();
+			Msg[i]->Send();
+			Msg[i]->Reset();
 		}
 		MESSAGE_END();
 		RETURN_META(MRES_SUPERCEDE);
@@ -327,7 +326,6 @@ static cell AMX_NATIVE_CALL set_msg_block(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_msg_block(AMX *amx, cell *params)
 {
 	int msgid = params[1];
-	int block = params[2];
 
 	if (msgid < 1 || msgid > 255) {
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
@@ -351,7 +349,7 @@ static cell AMX_NATIVE_CALL get_msg_argtype(AMX *amx, cell *params)
 		return 0;
 	}
 
-	return Msg.at(argn-1)->Type();
+	return Msg[argn-1]->Type();
 }
 
 static cell AMX_NATIVE_CALL get_msg_arg_int(AMX *amx, cell *params)
@@ -363,7 +361,7 @@ static cell AMX_NATIVE_CALL get_msg_arg_int(AMX *amx, cell *params)
 		return 0;
 	}
 
-	int iVal = Msg.at(argn-1)->iData;
+	int iVal = Msg[argn-1]->iData;
 
 	return iVal;
 }
@@ -377,7 +375,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_int(AMX *amx, cell *params)
 		return 0;
 	}
 
-	Msg.at(argn-1)->iData = params[2];
+	Msg[argn-1]->iData = params[2];
 
 	return 1;
 }
@@ -391,7 +389,7 @@ static cell AMX_NATIVE_CALL get_msg_arg_float(AMX *amx, cell *params)
 		return 0;
 	}
 
-	return amx_ftoc(Msg.at(argn-1)->fData);
+	return amx_ftoc(Msg[argn-1]->fData);
 }
 
 static cell AMX_NATIVE_CALL set_msg_arg_float(AMX *amx, cell *params)
@@ -405,7 +403,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_float(AMX *amx, cell *params)
 
 	REAL fVal = amx_ctof(params[2]);
 
-	Msg.at(argn-1)->fData = fVal;
+	Msg[argn-1]->fData = fVal;
 
 	return 1;
 }
@@ -419,7 +417,7 @@ static cell AMX_NATIVE_CALL get_msg_arg_string(AMX *amx, cell *params)
 		return 0;
 	}
 
-	const char *szVal = Msg.at(argn-1)->cData.c_str();
+	const char *szVal = Msg[argn-1]->cData.c_str();
 
 	return MF_SetAmxString(amx, params[2], szVal, params[3]);
 }
@@ -436,7 +434,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_string(AMX *amx, cell *params)
 
 	char *szVal = MF_GetAmxString(amx, params[2], 0, &iLen);
 
-	Msg.at(argn-1)->cData.assign(szVal);
+	Msg[argn-1]->cData.assign(szVal);
 
 	return 1;
 }

@@ -586,7 +586,7 @@ static cell AMX_NATIVE_CALL playback_event(AMX *amx, cell *params)
 }
 
 //(mahnsawce)
-static cell AMX_NATIVE_CALL ns2amx_anglevector(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL angle_vector(AMX *amx, cell *params)
 {
 	Vector v_angles,v_forward,v_right,v_up,v_return;
 	cell *vCell = MF_GetAmxAddr(amx, params[1]);
@@ -786,6 +786,7 @@ AMX_NATIVE_INFO engine_Natives[] = {
 	{"RadiusDamage",		RadiusDamage},
 	{"PointContents",		PointContents},
 	{"vector_to_angle",		vector_to_angle},
+	{"angle_vector",		angle_vector},
 	{"vector_length",		vector_length},
 	{"vector_distance",		vector_distance},
 	{"trace_normal",		trace_normal},

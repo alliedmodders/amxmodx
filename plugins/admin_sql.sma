@@ -100,7 +100,7 @@ public adminSql() {
     return PLUGIN_HANDLED 
   }
 
-  dbi_query(sql,"CREATE TABLE IF NOT EXISTS admins ( auth varchar(32) NOT NULL default '', password varchar(32) NOT NULL default '', access varchar(32) NOT NULL default '', flags varchar(32) NOT NULL default '' ) TYPE=MyISAM")
+  dbi_query(sql,"CREATE TABLE IF NOT EXISTS admins ( auth varchar(32) NOT NULL default '', password varchar(32) NOT NULL default '', access varchar(32) NOT NULL default '', flags varchar(32) NOT NULL default '' )")
 
   if(dbi_query(sql,"SELECT auth,password,access,flags FROM admins") < 1)  {
     dbi_error(sql,error,127)

@@ -533,6 +533,8 @@ static cell AMX_NATIVE_CALL strbreak(AMX *amx, cell *params)	/* 5 param */
 	right[right_pos] = '\0';
 	set_amxstring(amx, params[2], left, params[3]);
 	set_amxstring(amx, params[4], right, params[5]);
+	delete [] left;
+	delete [] right;
 
 	return 1;
 }

@@ -346,7 +346,6 @@ X_RANK_IS = %ss rank 'a'r %d av %d
 DISABLED_MSG = Servern har den valm'o'jligheten avst'a'ngd 
 
 [da]
-[da] 
 WHOLEBODY = Helekrop 
 HEAD = hoved 
 CHEST = bryst 

@@ -18,5 +18,4 @@ INF_REACH = Limite de Messages d'Information atteinte!
 INF_REACH = Maximalt antal informationsmeddelanden!
 
 [da]
-[da] 
 INF_REACH = Informations beskeder graense naaet! 

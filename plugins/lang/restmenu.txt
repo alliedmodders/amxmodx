@@ -178,8 +178,40 @@ CONF_SAV_SUC = Configuration sauvegardee
 CONF_SAV_FAIL = Sauvegarde de la configuration echouee!!!
 
 
+[sv]
+EQ_WE_RES = Utrustning och vapen har begr'a'nsats
+EQ_WE_UNRES = Utrustning och vapen har blivit obegr'a'nsade
+HAVE_BEEN = har blivit
+HAS_BEEN = har blivit
+RESTRICTED = begr'a'nsad
+UNRESTRICTED = obegr'a'nsad
+NO_EQ_WE = Hittade ingen dylik utrustning eller vapen.
+WEAP_RES = Vapen begr'a'nsning
+VALUE = pris
+REST_ENTRIES_OF = Poster %i - %i av %i
+REST_USE_MORE = Skriv 'amx_restrict list %i' f'o'r mera
+REST_USE_BEGIN = Skriv 'amx_restrict list 1' f'o'r b'o'rjan
+REST_CONF_SAVED = Konfigurationen har sparats (fil "%s")
+REST_COULDNT_SAVE = Kunde inte spara konfigurationen (fil "%s")
+REST_CONF_LOADED = Konfigurationen har laddats (fil "%s")
+REST_COULDNT_LOAD = Kunde inte ladda konfigurationen (fil "%s")
+COM_REST_USAGE = Skriv:  amx_restrict <kommando> [v'a'rde]
+COM_REST_COMMANDS = Kommandon:
+COM_REST_ON = ^ton - s'a'tter begr'a'nsningar pa hela utrustningen
+COM_REST_OFF = ^toff - ta bort begr'a'nsningar pa hela utrustningen
+COM_REST_ON = ^ton <v'a'rde> [...] - s'a'tter vald begr'a'nsning
+COM_REST_OFF = ^toff <v'a'rde> [...] - tar bort vald begr'a'nsning
+COM_REST_LIST = ^tlist - visar lista med befintlig utrustning och vapen
+COM_REST_SAVE = ^tsave - Spara begr'a'nsningar
+COM_REST_LOAD = ^tload [fil] - ladda begr'a'nsningar
+COM_REST_VALUES = Tillg'a'ngliga v'a'rden att begr'a'nsa e: :^nammo, equip, pistol, shotgun, sub, rifle, machine
+COM_REST_TYPE = Skriv 'amx_restrict list' f'o'r mer v'a'rden
+REST_WEAP = Begr'a'nsa vapen
+SAVE_SET = Spara inst'a'llningar
+CONF_SAV_SUC = Inst'a'llning sparad
+CONF_SAV_FAIL = Spara inst'a'llningar misslyckades!!!
+
 [da]
-[da] 
 EQ_WE_RES = Udstyr og vaaben er blevet forbudt 
 EQ_WE_UNRES = Udstyr og vaaben er blevet tilladt 
 HAVE_BEEN = er blevet 

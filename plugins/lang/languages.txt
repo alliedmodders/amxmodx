@@ -24,6 +24,5 @@ LANG_NAME_NATIVE = Svenska
 
 
 [da]
-[da] 
 LANG_NAME = Danish 
 LANG_NAME_NATIVE = Dansk 

@@ -25,8 +25,12 @@ MIN_FREQ = La frequence minimale pour ce message est de %d secondes
 MSG_FREQ = La frequence d'affichage des messages deroulants est de: %d:%02d minutes
 MSG_DISABLED = Les messages deroulants sont desactives
 
+[sv]
+MIN_FREQ = Minimefrekvens f'o'r detta meddelande e %d sekunder
+MSG_FREQ = Frekvens f'o'r rullande meddelanden: %d:%02d minuter
+MSG_DISABLED = Rullande meddelande avst'a'ngt
+
 [da]
-[da] 
 MIN_FREQ = Minimum frekvens for denne besked er %d sekunder 
 MSG_FREQ = Rullende besked visnings frekvens: %d:%02d minutter 
 MSG_DISABLED = Rullende besked slaaet fra 

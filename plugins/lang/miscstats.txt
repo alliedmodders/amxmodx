@@ -158,7 +158,11 @@ DEFUSED_BOMB = %s Bombayi etkisiz hale getirdi!
 FAILED_DEFU = %s Malesef bombayi etkisiz hale getiremedi... 
 PICKED_BOMB = %s Bombayi yerden aldi... 
 DROPPED_BOMB = %s Bombayi dusurdu!!! 
-
+CT = CT 
+CTS = CTS 
+TERRORIST = TERORIST
+TERRORISTS = TERORISLER 
+REMAINING = %d %s Geriye kaldi... 
 
 [fr]
 WITH = avec
@@ -200,8 +204,47 @@ FAILED_DEFU = %s a echoue a sa tentative de desamorcage...
 PICKED_BOMB = %s ramasse la bombe...
 DROPPED_BOMB = %s jette la bombe!!!
 
+[sv]
+WITH = med
+KNIFE_MSG_1 = %s skar och skivade %s
+KNIFE_MSG_2 = %s drog sin kniv och kuttade %s
+KNIFE_MSG_3 = %s sm'o'g kniven i ryggen pa %s
+KNIFE_MSG_4 = %s knivade %s
+LAST_MSG_1 = Nu e allt upp till dig!
+LAST_MSG_2 = Du har bandage va?
+LAST_MSG_3 = Alla i ditt lag har blivit likviderade. Lycka till!
+LAST_MSG_4 = Nu e du ensam. Ha en trevlig dag!
+HE_MSG_1 = %s ger en liten present till %s
+HE_MSG_2 = %s kastar en liten present till %s
+HE_MSG_3 = %s gjorde ett precisionskast till %s
+HE_MSG_4 = %s har en stor explosion till %s
+SHE_MSG_1 = %s detonerade sig med sin granat
+SHE_MSG_2 = %s lekte med en granat.
+SHE_MSG_3 = %s svalde granaten hel!
+SHE_MSG_4 = %s exploderade!
+HS_MSG_1 = $kn likviderade $vn med ett proffs-^nplacerat pannskott!
+HS_MSG_2 = $kn gjorde en extra mun i $vns^nhuvud med $wn
+HS_MSG_3 = $kn gjorde om $vns huvud^ntill slarvsylta med $wn
+HS_MSG_4 = $vn blev 'a'gd av $kn
+HS_MSG_5 = $vn's huvud blev omgjort ^ntill jordgubbssylt med vanilj
+HS_MSG_6 = $kn e grym pa $wn,^nsom $vn olyckligt erfarit.
+HS_MSG_7 = $vn's huvud var i $kn's^nsikte en stund tills...
+DOUBLE_KILL = Wow! %s slog tva flugor i en sm'a'll!!!
+PREPARE_FIGHT = Nu startar det!^nRunda %d
+KILLED_ROW = Du har likviderat %d utan att stryka med sj'a'lv...
+DIED_ROUNDS = Vafasen! Du har slaktats %d rundor i rad nu...
+KILLED_CHICKEN = KAKKEL! en kyckling mindre.. 
+BLEW_RADIO = Radion blev ett minne blott!
+REACHED_TARGET = Oj! %s e framme vid destinationen!
+PLANT_BOMB = %s apterar bomben!
+DEFUSING_BOMB = %s desarmerar bomben...
+SET_UP_BOMB = %s set us up the bomb!!!
+DEFUSED_BOMB = %s desarmerade bomben!
+FAILED_DEFU = %s misslyckades med att desarmera bomben...
+PICKED_BOMB = %s plockade upp bomben...
+DROPPED_BOMB = %s tappade bomben!
+
 [da]
-[da] 
 WITH = med 
 KNIFE_MSG_1 = %s skar %s i stumper og stykker 
 KNIFE_MSG_2 = %s trak kniven frem og parterede %s 

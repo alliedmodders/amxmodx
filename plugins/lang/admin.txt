@@ -11,7 +11,6 @@ PAS_ACC = Password accepted
 PRIV_SET = Privileges set
 NO_ENTRY = You have no entry to the server...
 
-
 [de]
 LOADED_ADMIN = 1 Admin aus der Datei geladen
 LOADED_ADMINS = %d Admins aus der Datei geladen
@@ -78,15 +77,14 @@ PRIV_SET = Befogenheter satta
 NO_ENTRY = Du har ingen tillgang till servern...
 
 [da]
-[da] 
-LOADED_ADMIN = Indlaest 1 admin fra fil 
-LOADED_ADMINS = Indlaest %d adminer fra fil 
-SQL_CANT_CON = SQL fejl: kan ikke opnaa forbindelse: '%s' 
-SQL_CANT_LOAD_ADMINS = SQL fejl: kan ikke indlaese adminer: '%s' 
-NO_ADMINS = Ingen adminer fundet. 
-SQL_LOADED_ADMIN = Indlaest 1 admin fra database 
-SQL_LOADED_ADMINS = Indlaest %d adminer fra database 
-INV_PAS = Ugyldig adgangskode! 
-PAS_ACC = Adgangskode accepteret 
-PRIV_SET = Privilegier sat 
-NO_ENTRY = Du er ikke registreret paa serveren ... 
+LOADED_ADMIN = Indlaest 1 admin fra fil
+LOADED_ADMINS = Indlaest %d adminer fra fil
+SQL_CANT_CON = SQL fejl: kan ikke opnaa forbindelse: '%s'
+SQL_CANT_LOAD_ADMINS = SQL fejl: kan ikke indlaese adminer: '%s'
+NO_ADMINS = Ingen adminer fundet.
+SQL_LOADED_ADMIN = Indlaest 1 admin fra database
+SQL_LOADED_ADMINS = Indlaest %d adminer fra database
+INV_PAS = Ugyldig adgangskode!
+PAS_ACC = Adgangskode accepteret
+PRIV_SET = Privilegier sat
+NO_ENTRY = Du er ikke registreret paa serveren ...

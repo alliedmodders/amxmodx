@@ -209,7 +209,6 @@ ADMIN_VOTE_FOR_2 = %s %s: val %s av %s
 
 
 [da]
-[da] 
 ADMIN_CANC_VOTE_1 = %s: annuller afstemning 
 ADMIN_CANC_VOTE_2 = %s %s: annuller afstemning 
 VOTING_CANC = Afstemning annulleret 

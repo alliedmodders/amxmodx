@@ -29,7 +29,6 @@ CONF_MENU = Konfigurationsmeny
 SPE_MENU = Talmeny
 
 [da]
-[da] 
 CMD_MENU = Kommando Menu 
 CONF_MENU = Konfigurations Menu 
 SPE_MENU = Tale Menu 

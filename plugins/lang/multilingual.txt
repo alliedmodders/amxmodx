@@ -28,6 +28,7 @@ SAVE_LANG = Sacuvaj Jezik
 SET_LANG_SERVER = Jezik Servera je postavljen na "%s"
 SET_LANG_USER = Vas jezik je postavljen na "%s"
 TYPE_LANGMENU = Unesi 'amx_langmenu' u konzoli da bi otvorio meni za menjanje jezika 
+LANG_MENU_DISABLED = Meni za izbor jezika je iskljucen.
 
 [tr]
 LANG_NOT_EXISTS = Aradiginiz dil mevcud degildir 
@@ -38,6 +39,7 @@ SAVE_LANG = Lisan/dili saklayin
 SET_LANG_SERVER = Serverin dili "%s" buna degisdirildi 
 SET_LANG_USER = Sahiz diliniz "%s" buna degisdirildi 
 TYPE_LANGMENU = Konsolda mevcud olan dillerin menusunu gormek icin 'amx_langmenu' yazin 
+LANG_MENU_DISABLED = Lisan menusu kapatildi. 
 
 [fr]
 LANG_NOT_EXISTS = Cette langue n'existe pas
@@ -48,9 +50,20 @@ SAVE_LANG = Sauver la langue
 SET_LANG_SERVER = Langue du serveur : "%s"
 SET_LANG_USER = Langue personnelle : "%s"
 TYPE_LANGMENU = Tape 'amx_langmenu' dans la console pour afficher un menu ou tu pourras choisir ta langue
+LANG_MENU_DISABLED = Menu Langue Desactive.
+
+[sv]
+LANG_NOT_EXISTS = Det spraket existerar inte
+PERSO_LANG = Personligt sprak
+LANG_MENU = Sprakmeny
+SERVER_LANG = Serversprak
+SAVE_LANG = Spara sprak
+SET_LANG_SERVER = Serverspraket har satts till "%s"
+SET_LANG_USER = Ditt sprak har satts till "%s"
+TYPE_LANGMENU = Skriv 'amx_langmenu' i konsolen f'o'r att visa Sprakvalsmenyn
+LANG_MENU_DISABLED = Sprakmenyn avst'a'ngd.
 
 [da]
-[da] 
 LANG_NOT_EXISTS = Sproget eksisterer ikke 
 PERSO_LANG = Personligt sprog 
 LANG_MENU = Sprog Menu 

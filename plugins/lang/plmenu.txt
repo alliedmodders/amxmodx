@@ -103,8 +103,24 @@ CL_CMD_MENU = Menu Cmds Client
 NO_CMDS = Aucune commande disponible
 
 
+[sv]
+ADMIN_BAN_1 = ADMIN: bannlys %s
+ADMIN_BAN_2 = ADMIN %s: bannlys %s
+BAN_MENU = Bannlysnings Meny
+BAN_FOR_MIN = Bannlys i %d minuter
+BAN_PERM = Permanent bannlysning
+SLAP_SLAY_MENU = Smiska/Slakta Meny
+SLAP_WITH_DMG = Smiska med %d skada
+SLAY = Slakta
+KICK_MENU = Sparka Meny
+ADMIN_TRANSF_1 = ADMIN: skicka %s till %s
+ADMIN_TRANSF_2 = ADMIN %s: skicka %s till %s
+TEAM_MENU = Lagmeny
+TRANSF_TO = Skicka till %s
+CL_CMD_MENU = Klientkommandomeny
+NO_CMDS = Det finns inga kommandon
+
 [da]
-[da] 
 ADMIN_BAN_1 = ADMIN: ban %s 
 ADMIN_BAN_2 = ADMIN %s: ban %s 
 BAN_MENU = Ban Menu 

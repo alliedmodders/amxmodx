@@ -118,7 +118,7 @@ BAN = bannlys
 KICK = sparka
 NO_ACC_COM = Du saknar befogenhet till det kommandot
 USAGE = Utnyttjande
-MORE_CL_MATCHT = mer klienter som passar argumentet
+MORE_CL_MATCHT = fler klienter som passar argumentet
 CL_NOT_FOUND = Klient med det namnet eller userid'et kan inte hittas
 CLIENT_IMM = Klient "%s" har immunitet
 CANT_PERF_DEAD = Handling kan inte utf'o'ras pa den likviderade klienten "%s"
@@ -128,7 +128,6 @@ OFF = Av
 
 
 [da]
-[da] 
 BACK = Tilbage 
 EXIT = Exit 
 MORE = Mere 

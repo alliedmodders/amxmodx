@@ -202,8 +202,42 @@ COM_PAUSE_CLEAR = ^tclear - effacer la liste des plugins arretes
 COM_PAUSE_LIST = ^tlist [id] - listes  des plugins
 COM_PAUSE_ADD = ^tadd <title> - marquer un plugin comme impossible a mettre en paus
 
+[sv]
+PAUSE_COULDNT_FIND = Kunde inte hitta plugin som matchar "%s"
+PAUSE_PLUGIN_MATCH = Plugin som matchar "%s"
+PAUSE_CONF_CLEARED = Konfigurationsfil rensad. Ladda kartan igen vid behov
+PAUSE_ALR_CLEARED = Konfigurationsfil redan rensad!
+PAUSE_CONF_SAVED = Konfiguration sparad
+PAUSE_SAVE_FAILED = Konfigurationsfilen kunde inte sparas!!
+LOCKED = BUNDEN
+PAUSE_UNPAUSE = Pausa/Starta Plugins
+CLEAR_STOPPED = Rensa fil med stoppade
+SAVE_STOPPED = Spara stoppade
+PAUSED_PLUGIN = Pausade %d plugin
+PAUSED_PLUGINS = Pausade %d plugins
+UNPAUSED_PLUGIN = Startade %d plugin
+UNPAUSED_PLUGINS = Startade %d plugins
+CANT_MARK_MORE = Kan inte markera mer plugins som icke pausbara!
+PAUSE_LOADED = Pausa plugins: Ladda plugins
+STOPPED = stoppad
+VERSION = version
+FILE = fil
+PAUSE_ENTRIES = Poster %d - %d av %d (%d e aktiva)
+PAUSE_USE_MORE = Skriv 'amx_pausecfg list %d' f'o'r mera
+PAUSE_USE_BEGIN = Skriv 'amx_pausecfg list 1' f'o'r b'o'rjan
+PAUSE_USAGE = Skriv:  amx_pausecfg <kommando> [namn]
+PAUSE_COMMANDS = Kommandon
+COM_PAUSE_OFF = ^toff - pausar alla plugins i listan
+COM_PAUSE_ON = ^ton - startar alla plugins i listan
+COM_PAUSE_STOP = ^tstop <file> - stoppar en plugin
+COM_PAUSE_PAUSE = ^tpaus <file> - pausar en plugin
+COM_PAUSE_ENABLE = ^tstart <file> - startar en plugin
+COM_PAUSE_SAVE = ^tsave - sparar lista av stoppade plugins
+COM_PAUSE_CLEAR = ^tclear - rensar lista av stoppade plugins
+COM_PAUSE_LIST = ^tlist [id] - listar plugins
+COM_PAUSE_ADD = ^tadd <titel> - markerar ett plugin som icke pausbar
+
 [da]
-[da] 
 COULDNT_FIND = Kunne ikke finde et plugin der matcher til "%s" 
 PLUGIN_MATCH = Plugin matcher "%s" 
 CONF_CLEARED = Konfigurationsfil ryddet. Genindlaes banen, hvis noedvendigt 

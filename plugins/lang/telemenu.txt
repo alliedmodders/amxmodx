@@ -34,8 +34,14 @@ TELE_MENU = Menu Teleportation
 CUR_LOC = Emplacement Actuel
 SAVE_LOC = Sauver l'emplacement
 
+[sv]
+ADMIN_TELEPORT_1 = ADMIN: teleportera %s
+ADMIN_TELEPORT_2 = ADMIN %s: teleportera %s
+TELE_MENU = Teleportmeny
+CUR_LOC = Nuvarande position
+SAVE_LOC = Spara position
+
 [da]
-[da] 
 ADMIN_TELEPORT_1 = ADMIN: teleport %s 
 ADMIN_TELEPORT_2 = ADMIN %s: teleport %s 
 TELE_MENU = Teleport Menu 

@@ -119,8 +119,29 @@ NO_STATS = Les plugins de stats ne sont pas^ninstalles sur ce serveur^n
 SAVE_CONF = Sauver la configuration
 
 
+[sv]
+NO_OPTION = Kunde inte hitta val(en) med en dylik variabel (namn "%s")
+STATS_CONF_SAVED = Statistikinst'a'llningar sparade
+STATS_CONF_FAILED = Misslyckades att spara inst'a'llningar.
+STATS_CONF_LOADED = Statistikinst'a'llningar laddade
+STATS_CONF_FAIL_LOAD = Misslyckades att ladda inst'a'llningar.
+STATS_CONF = Statistikinst'a'llningar
+STATS_ENTRIES_OF = Post %i - %i av %i
+STATS_USE_MORE = Skriv 'amx_statscfg list %i' f'o'r mer
+STATS_USE_BEGIN = Skriv 'amx_statscfg list 1' f'o'r b'o'rjan
+CANT_ADD_STATS = Kan inte ladda till listan, begr'a'nsning nadd!
+COM_STATS_USAGE = Skriv:  amx_statscfg <kommando> [parametrar] ...
+COM_STATS_COM = Kommandon:
+COM_STATS_ON = ^ton <variabel> - aktivera markerat val
+COM_STATS_OFF = ^toff <variabel> - stoppa markerat val
+COM_STATS_SAVE = ^tsave - spara statistikinst'a'llningar
+COM_STATS_LOAD = ^tload - ladda statistikinst'a'llningar
+COM_STATS_LIST = ^tlist [id] - lista statistikstatus
+COM_STATS_ADD = ^tadd <namn> <variabel> - addera statistik till listan
+NO_STATS = Statistikplugins e inte installerade pa denna server^n
+SAVE_CONF = Spara inst'a'llningar
+
 [da]
-[da] 
 TOTAL_NUM = Total %d 
 NO_OPTION = Kunne ikke finde mulighed(er)med en saadan variabel (name "%s") 
 CONF_SAVED = Statestik Konfiguration gemt 

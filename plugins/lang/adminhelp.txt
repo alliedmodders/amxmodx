@@ -55,7 +55,6 @@ TIME_INFO_2 = Ingen tid satt tills kommande karta. Kommande karta: %s
 
 
 [da]
-[da] 
 HELP_COMS = AMX Mod X Hjaelp: Kommandoer 
 ENTRIES = Indskrivninger %d - %d of %d 
 USE_MORE = Brug 'amx_help %d' for mere 

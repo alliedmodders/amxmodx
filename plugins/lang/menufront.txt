@@ -108,7 +108,6 @@ RES_WEAP = Definiera vapen
 TELE_PLAYER = Teleportera spelare
 
 [da]
-[da] 
 KICK_PLAYER = Kick Spiller 
 BAN_PLAYER = Ban Spiller 
 SLAP_SLAY = Klask/Draeb Spiller 

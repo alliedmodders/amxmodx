@@ -55,7 +55,6 @@ EXTED_MAP = Fortsatt karta %s
 TIME_CHOOSE = Dags att utse kommande karta...
 
 [da]
-[da] 
 CHO_FIN_EXT = Valg afsluttet. Nuvaerende bane bliver forlaenget til naeste %.0 minutter 
 CHO_FIN_NEXT = Valg afsluttet. Naeste bane bliver %s 
 CHOSE_EXT = %s valgte bane forlaengelse 

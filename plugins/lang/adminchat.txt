@@ -78,7 +78,6 @@ PRINT_ALL = (ALLA) %s : %s
 
 
 [da]
-[da] 
 COL_WHITE = hvid 
 COL_RED = roed 
 COL_GREEN = groen 

@@ -396,7 +396,6 @@ CHANGED_NICK = Bytt namn pa %s till "%s"
 
 
 [da]
-[da] 
 ADMIN_KICK_1 = ADMIN: kick %s 
 ADMIN_KICK_2 = ADMIN %s: kick %s 
 IP_REMOVED = Ip "%s" fjernet fra ban liste 

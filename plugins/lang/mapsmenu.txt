@@ -145,7 +145,6 @@ ADMIN_CHANGEL_2 = ADMIN %s: bytkarta %s
 CHANGLE_MENU = Bytkarta meny
 
 [da]
-[da] 
 RESULT_REF = Resultat afvist 
 RESULT_ACC = Resultat accepteret 
 VOTE_SUCCESS = Afstemning lykkedes. Bane bliver skiftet til 

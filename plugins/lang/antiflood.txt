@@ -18,5 +18,4 @@ STOP_FLOOD = Arrete de flooder le serveur!
 STOP_FLOOD = Sluta flooda servern!
 
 [da]
-[da] 
 STOP_FLOOD = Stop med at oversvoemme serveren! 

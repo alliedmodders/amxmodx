@@ -56,13 +56,13 @@ public unStuck(id) {
 	new Float:minfrequency = get_cvar_float("amx_unstuck_frequency")
 	new Float:elapsedcmdtime = get_gametime() - g_lastcmdtime[id]
 	if ( elapsedcmdtime < minfrequency ) {
-		client_print(id, print_chat, "[UnStuck] You must wait %.1f seconds before retrying", minfrequency - elapsedcmdtime)
+		client_print(id, print_chat, "[AMXX] You must wait %.1f seconds before trying to free yourself", minfrequency - elapsedcmdtime)
 		return PLUGIN_HANDLED
 	}
 	g_lastcmdtime[id] = get_gametime()
 
 	if (ns_get_mask(id, BLOCKED_MASKS)) {
-		client_print(id, print_chat, "[UnStuck] You cannot use unstuck while evolving, stunned or webbed")
+		client_print(id, print_chat, "[AMXX] You cannot free yourself while evolving, stunned or webbed")
 		return PLUGIN_CONTINUE
 	}
 
@@ -89,7 +89,7 @@ public unStuck(id) {
 		}
 		distance += START_DISTANCE
 	}
-	client_print(id, print_chat, "[UnStuck] Couldn't find a free spot to move you too.")
+	client_print(id, print_chat, "[AMXX] Couldn't find a free spot to move you too.")
 	return PLUGIN_CONTINUE
 }
 
@@ -102,7 +102,7 @@ getHullSize(id) {
 		case 5:
 			return (entity_get_int(id, EV_INT_flags) & FL_DUCKING) ? HULL_HUMAN : HULL_LARGE
 		default: {
-			client_print(id, print_chat, "[UnStuck] You cannot use UnStuck at this time.")
+			client_print(id, print_chat, "[AMXX] You cannot free yourself at this time.")
 			return false
 		}
 	}

@@ -55,14 +55,6 @@
 				TypeLibraryName=".\Release/fun.tlb"
 				HeaderFileName=""/>
 			<Tool
-				Name="VCPostBuildEventTool"
-				CommandLine="echo Copying dll...
-copy Release\fun.dll K:\S\cstrike\addons\amx\dlls
-echo Copying inc...
-copy fun.inc K:\S\cstrike\addons\amx\examples\include
-copy fun.inc K:\S\cstrike\addons\amx\plugins\include
-"/>
-			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>

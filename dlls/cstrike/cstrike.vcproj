@@ -119,13 +119,6 @@
 				TypeLibraryName=".\Release/cstrike.tlb"
 				HeaderFileName=""/>
 			<Tool
-				Name="VCPostBuildEventTool"
-				CommandLine="echo Copying dll...
-copy Release\cstrike_amx.dll K:\S\cstrike\addons\amx\dlls
-echo Copying inc...
-copy cstrike_amx.inc K:\S\cstrike\addons\amx\examples\include
-"/>
-			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>

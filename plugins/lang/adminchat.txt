@@ -89,3 +89,16 @@ COL_ORANGE = orange
 COL_OCEAN = ocean blaa 
 COL_MAROON = brun 
 PRINT_ALL = (ALLE) %s : %s 
+
+[pl]
+COL_WHITE = bialy 
+COL_RED = czerwony 
+COL_GREEN = zielony 
+COL_BLUE = niebieski 
+COL_YELLOW = zolty 
+COL_MAGENTA = ciemnorozowy 
+COL_CYAN = turkusowy 
+COL_ORANGE = pomaranczowy 
+COL_OCEAN = blekitny 
+COL_MAROON = bordowy 
+PRINT_ALL = (WSZYSTKO) %s : %s 

@@ -32,3 +32,8 @@ SPE_MENU = Talmeny
 CMD_MENU = Kommando Menu 
 CONF_MENU = Konfigurations Menu 
 SPE_MENU = Tale Menu 
+
+[pl]
+CMD_MENU = Menu komend 
+CONF_MENU = Menu konfiguracji 
+SPE_MENU = Menu rozmowy 

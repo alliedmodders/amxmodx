@@ -146,3 +146,25 @@ CL_NOT_FOUND = Klient med det navn eller brugerid ikke fundet
 CLIENT_IMM = Klient "%s" har immunitet 
 CANT_PERF_DEAD = Den handling kan ikke udfoeres paa doed klient "%s" 
 CANT_PERF_BOT = Den handling kan ikke udfoeres paa bot "%s" 
+ON = Til
+OFF = Fra
+
+[pl]
+BACK = Wstecz 
+EXIT = Wyjscie 
+MORE = Wiecej 
+NONE = Nic 
+ADMIN = ADMIN 
+PLAYER = GRACZ 
+ERROR = blad 
+YES = Tak 
+NO = Nie 
+BAN = ban 
+KICK = kick 
+NO_ACC_COM = Nie mozesz uzyc tej komendy 
+USAGE = Uzycie 
+MORE_CL_MATCHT = tutaj jest wiecej klientow pasujacych do twojego wyboru 
+CL_NOT_FOUND = Nie znaleziono klienta z tym nickiem lub ID 
+CLIENT_IMM = Klient "%s" ma immunitet 
+CANT_PERF_DEAD = Nie mozesz tego wykonac na martwym kliencie "%s" 
+CANT_PERF_BOT = Nie mozesz tego wykonac na bocie "%s"

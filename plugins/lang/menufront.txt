@@ -124,3 +124,22 @@ STATS_SET = statistik indstillinger ^n
 PAUSE_PLUG = Pause Plugins 
 RES_WEAP = Forbyd Vaaben 
 TELE_PLAYER = Teleport Spiller 
+
+
+[pl]
+KICK_PLAYER = Wywal gracza 
+BAN_PLAYER = Zbanuj gracza 
+SLAP_SLAY = Uderz/zgladz gracza 
+TEAM_PLAYER = Gracz druzyny ^n 
+CHANGEL = Zmien mape 
+VOTE_MAPS = Glosuj na mapy ^n 
+SPECH_STUFF = Rzeczy zw. z rozmowa 
+CLIENT_COM = Komendy Klienta 
+SERVER_COM = Komendy Serwera 
+CVARS_SET = Ustawienia Cvar'ow 
+CONFIG = Konfiguracja 
+LANG_SET = Ustawienia jezyka 
+STATS_SET = Ustawienia statystyk ^n 
+PAUSE_PLUG = Zatrzymaj pluginy 
+RES_WEAP = Ogranicz bronie 
+TELE_PLAYER = Teleportuj gracza 

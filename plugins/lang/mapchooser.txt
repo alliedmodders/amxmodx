@@ -62,3 +62,12 @@ X_CHOSE_X = %s valgte %s
 CHOOSE_NEXTM = AMX vaelg naeste bane 
 EXTED_MAP = Forlaeng bane %s 
 TIME_CHOOSE = Det er tid til at vaelge naeste bane... 
+
+[pl]
+CHO_FIN_EXT = Wybor zakonczony. aktualna mapa zostanie rozszerzona o %.0f minut 
+CHO_FIN_NEXT = Wybor zakonczony. Nastepna mapa to %s 
+CHOSE_EXT = %s wybral rozszerzenie mapy 
+X_CHOSE_X = %s wybral %s 
+CHOOSE_NEXTM = AMX wybral nastepna mape 
+EXTED_MAP = Rozszerz mape %s 
+TIME_CHOOSE = Nadszedl czas wyboru mapy... 

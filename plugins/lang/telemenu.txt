@@ -47,3 +47,10 @@ ADMIN_TELEPORT_2 = ADMIN %s: teleport %s
 TELE_MENU = Teleport Menu 
 CUR_LOC = Nuvaerende lokation 
 SAVE_LOC = Gem Lokation 
+
+[pl]
+ADMIN_TELEPORT_1 = ADMIN: teleportowal %s 
+ADMIN_TELEPORT_2 = ADMIN %s: teleportowal %s 
+TELE_MENU = Menu teleportu 
+CUR_LOC = Aktualna pozycja 
+SAVE_LOC = Zapisz pozycje 

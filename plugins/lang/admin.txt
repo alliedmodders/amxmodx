@@ -88,3 +88,16 @@ INV_PAS = Ugyldig adgangskode!
 PAS_ACC = Adgangskode accepteret
 PRIV_SET = Privilegier sat
 NO_ENTRY = Du er ikke registreret paa serveren ...
+
+[pl]
+LOADED_ADMIN = Zaladowano 1 admina z pliku 
+LOADED_ADMINS = Zaladowano %d adminow z pliku 
+SQL_CANT_CON = Blad SQL: nie mozna polaczyc: '%s' 
+SQL_CANT_LOAD_ADMINS = Blad SQL: nie mozna zalad. adminow: '%s' 
+NO_ADMINS = Nie znaleziono adminow. 
+SQL_LOADED_ADMIN = Zaladowano 1 admina z bazy danych 
+SQL_LOADED_ADMINS = Zaladowano %d admino z bazy danych 
+INV_PAS = Zle haslo! 
+PAS_ACC = Haslo zaakceptowane 
+PRIV_SET = Przywileje ustawione 
+NO_ENTRY = Nie mozesz wejsc na ten serwer...

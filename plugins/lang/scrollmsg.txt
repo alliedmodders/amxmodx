@@ -34,3 +34,9 @@ MSG_DISABLED = Rullande meddelande avst'a'ngt
 MIN_FREQ = Minimum frekvens for denne besked er %d sekunder 
 MSG_FREQ = Rullende besked visnings frekvens: %d:%02d minutter 
 MSG_DISABLED = Rullende besked slaaet fra 
+
+
+[pl]
+MIN_FREQ = Minimalna czestotliwosc dla tej wiadomosci to %d sekund 
+MSG_FREQ = Czestotliwosc wyswietlania wiadomosci: %d:%02d minut 
+MSG_DISABLED = Wiadomosci przesuwane wylaczone 

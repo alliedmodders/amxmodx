@@ -142,3 +142,27 @@ TEAM_MENU = Hold Menu
 TRANSF_TO = Overflyt til %s 
 CL_CMD_MENU = Klient Kommando Menu 
 NO_CMDS = Ingen kommandoer til raadighed 
+
+
+[pl]
+ADMIN_BAN_1 = ADMIN: ban %s 
+ADMIN_BAN_2 = ADMIN %s: ban %s 
+BAN_MENU = Menu Bana 
+BAN_FOR_MIN = Ban na %d minut 
+BAN_PERM = Kompletny Ban 
+ADMIN_SLAP_1 = ADMIN: uderzyl %s zadajac %d obrazen 
+ADMIN_SLAP_2 = ADMIN %s: uderzyl %s zadajac %d obrazen 
+ADMIN_SLAY_1 = ADMIN: zgladzil %s 
+ADMIN_SLAY_2 = ADMIN %s: zgladzil %s 
+SLAP_SLAY_MENU = Menu udzerzen/zgladzen 
+SLAP_WITH_DMG = Uderz zadajac %d obrazen 
+SLAY = Zgladzenie 
+ADMIN_KICK_1 = ADMIN: kicknal %s 
+ADMIN_KICK_2 = ADMIN %s: kicknal %s 
+KICK_MENU = Menu kicka 
+ADMIN_TRANSF_1 = ADMIN: %s przeszedl do %s 
+ADMIN_TRANSF_2 = ADMIN %s: %s przeszedl do %s 
+TEAM_MENU = Menu druzyny 
+TRANSF_TO = Przejdz do %s 
+CL_CMD_MENU = menu komend klienta 
+NO_CMDS = Nie ma zadnych komend 

@@ -60,3 +60,13 @@ MINUTE = minut
 MINUTES = minutter 
 SECOND = sekund 
 SECONDs = sekunder 
+
+
+[pl]
+THE_TIME = Czas 
+TIME_LEFT = Pozostalo czasu 
+NO_T_LIMIT = Bez limitu czasu 
+MINUTE = minuta 
+MINUTES = minut 
+SECOND = sekunda 
+SECONDS = sekund 

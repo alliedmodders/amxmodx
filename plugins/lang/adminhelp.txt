@@ -56,9 +56,18 @@ TIME_INFO_2 = Ingen tid satt tills kommande karta. Kommande karta: %s
 
 [da]
 HELP_COMS = AMX Mod X Hjaelp: Kommandoer 
-ENTRIES = Indskrivninger %d - %d of %d 
-USE_MORE = Brug 'amx_help %d' for mere 
-USE_BEGIN = Brug 'amx_help 1' for at begynde 
+HELP_ENTRIES = Indskrivninger %d - %d of %d 
+HELP_USE_MORE = Brug 'amx_help %d' for mere 
+HELP_USE_BEGIN = Brug 'amx_help 1' for at begynde 
 TYPE_HELP = Skriv 'amx_help' i konsollen for at se kommandoer til raadighed 
 TIME_INFO_1 = Tid tilbage: %d:%02d min. Naeste bane: %s 
 TIME_INFO_2 = Ingen tidsgraense. Naeste bane: %s 
+
+[pl]
+HELP_COMS = AMX Mod X pomoc: Komendy 
+ENTRIES = Wpisy %d - %d z %d 
+USE_MORE = Uzyj 'amx_help %d' aby dowiedziec sie wiecej 
+USE_BEGIN = Uzyj 'amx_help 1' aby dojsc do poczatku 
+TYPE_HELP = Wpisz 'amx_help' w konsoli aby uzyskac liste komend 
+TIME_INFO_1 = Pozostaly czas: %d:%02d min. Nastepna mapa: %s 
+TIME_INFO_2 = Bez limitu czasu. Nastepna mapa: %s 

@@ -72,3 +72,15 @@ SAVE_LANG = Gem Sprog
 SET_LANG_SERVER = Server sproget er sat til "%s" 
 SET_LANG_USER = Dit sprog er sat til "%s" 
 TYPE_LANGMENU = Skriv 'amx_langmenu' i konsollen for at vise en menu hvor du kan vaelge sprog 
+LANG_MENU_DISABLED = Sprog menu slaaet fra.
+
+[pl]
+LANG_NOT_EXISTS = Ten jezyk nie istnieje 
+PERSO_LANG = Twoj jezyk 
+LANG_MENU = Menu jezykowe 
+SERVER_LANG = Jezyk serwera 
+SAVE_LANG = Zapisz jezyk 
+SET_LANG_SERVER = Jezyk serwera zostal ustawiony na "%s" 
+SET_LANG_USER = Twoj jezyk zostal ustawiony na "%s" 
+TYPE_LANGMENU = Wpisz 'amx_langmenu' w konsoli aby wyswietlic menu z wyborem jezyka 
+LANG_MENU_DISABLED = Menu jezykowe zostalo wylaczone.

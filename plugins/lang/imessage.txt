@@ -19,3 +19,6 @@ INF_REACH = Maximalt antal informationsmeddelanden!
 
 [da]
 INF_REACH = Informations beskeder graense naaet! 
+
+[pl]
+INF_REACH = Osiagniety limit wiadomosci informacyjnych! 

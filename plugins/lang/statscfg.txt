@@ -48,29 +48,28 @@ NO_STATS = Statistik-Plugin ist nicht^nauf diesem Server installiert^n
 SAVE_CONF = Konfiguration speichern 
 
 [sr]
-TOTAL_NUM = Ukupno %d
 NO_OPTION = Nepostoji optcija(e) sa tom promenljivom (ime "%s")
-CONF_SAVED = Podesavanja Statistike su uspesno snimljena
-CONF_FAILED = Podesavanja Statistike su neuspesno snimljena!!!
-CONF_LOADED = Podesavanja Statistike su uspesno ucitana
-CONF_FAIL_LOAD = Podesavanja Statistike su neuspesno ucitana!!!
+STATS_CONF_SAVED = Podesavanja Statistike su uspesno snimljena
+STATS_CONF_FAILED = Podesavanja Statistike su neuspesno snimljena!!!
+STATS_CONF_LOADED = Podesavanja Statistike su uspesno ucitana
+STATS_CONF_FAIL_LOAD = Podesavanja Statistike su neuspesno ucitana!!!
 STATS_CONF = Podesavanja Statistike
-ENTRIES_OF = Vrednosti %i - %i od %i
-USE_MORE = Koristi 'amx_statscfg list %i' za jos
-USE_BEGIN = Koristi 'amx_statscfg list 1' za pocetak
-CANT_ADD = Nije moguce dodati statistiku na listu, limit popunjen!
-COM_USAGE = Koriscenje: amx_statscfg <komanda> [parametar] ...
-COM_COM = Komande:
-COM_ON = ^ton <variable> - ukljuci opciju
-COM_OFF = ^toff <variable> - iskljuci opciju
-COM_SAVE = ^tsave - sacuvaj podesavanja statistike
-COM_LOAD = ^tload - ucitaj podesavanja statistike
-COM_LIST = ^tlist [id] - prikazi status statistike
-COM_ADD = ^tadd <name> <variable> - dodaj statistiku na kraj liste
-ON = ON
-OFF = OFF
+STATS_ENTRIES_OF = Vrednosti %i - %i od %i
+STATS_USE_MORE = Koristi 'amx_statscfg list %i' za jos
+STATS_USE_BEGIN = Koristi 'amx_statscfg list 1' za pocetak
+STATS_ENABLED = Stats enabled
+STATS_DISABLED = Stats disabled 
+CANT_ADD_STATS = Nije moguce dodati statistiku na listu, limit popunjen!
+COM_STATS_USAGE = Koriscenje: amx_statscfg <komanda> [parametar] ...
+COM_STATS_COM = Komande:
+COM_STATS_ON = ^ton <variable> - ukljuci opciju
+COM_STATS_OFF = ^toff <variable> - iskljuci opciju
+COM_STATS_SAVE = ^tsave - sacuvaj podesavanja statistike
+COM_STATS_LOAD = ^tload - ucitaj podesavanja statistike
+COM_STATS_LIST = ^tlist [id] - prikazi status statistike
+COM_STATS_ADD = ^tadd <name> <variable> - dodaj statistiku na kraj liste
 NO_STATS = Plugin za statistiku^nnije instaliran na ovom serveru^n
-SAVE_CONF = Sacuvaj konfiguraciju 
+SAVE_CONF = Sacuvaj konfiguraciju
 
 [tr]
 TOTAL_NUM = Tam %d 
@@ -97,7 +96,7 @@ OFF = KAPALI
 NO_STATS = Statistik plugini^nserverde mevcud degildir^n 
 SAVE_CONF = Configleri sakla 
 STATS_ENABLED = Statistik kullanima acik 
-STATS_DISABLED = Stat´tistik kullanima kapali
+STATS_DISABLED = Statistik kullanima kapali
 
 
 [fr]
@@ -121,6 +120,8 @@ COM_STATS_LIST = ^tlist [id] - liste le status des stats
 COM_STATS_ADD = ^tadd <nom> <variable> - ajoute des stats a la liste
 NO_STATS = Les plugins de stats ne sont pas^ninstalles sur ce serveur^n
 SAVE_CONF = Sauver la configuration
+STATS_ENABLED = Stats activees
+STATS_DISABLED = Stats desactivees
 
 
 [sv]
@@ -146,26 +147,51 @@ NO_STATS = Statistikplugins e inte installerade pa denna server^n
 SAVE_CONF = Spara inst'a'llningar
 
 [da]
-TOTAL_NUM = Total %d 
 NO_OPTION = Kunne ikke finde mulighed(er)med en saadan variabel (name "%s") 
-CONF_SAVED = Statestik Konfiguration gemt 
-CONF_FAILED = Gem Statestik konfiguration mislykkedes!!! 
-CONF_LOADED = Statestik Konfiguration indlaest 
-CONF_FAIL_LOAD = Indlaes statestik konfiguration mislykkedes!!! 
+STATS_CONF_SAVED = Statestik Konfiguration gemt 
+STATS_CONF_FAILED = Gem Statestik konfiguration mislykkedes!!! 
+STATS_CONF_LOADED = Statestik Konfiguration indlaest 
+STATS_CONF_FAIL_LOAD = Indlaes statestik konfiguration mislykkedes!!! 
 STATS_CONF = Statestik Konfiguration 
-ENTRIES_OF = Indskrivninger %i - %i af %i 
-USE_MORE = Brug 'amx_statscfg list %i' for mere 
-USE_BEGIN = Brug 'amx_statscfg list 1' for at begynde 
-CANT_ADD = Kan ikke tilfoeje statestik til listen, graense naaet! 
-COM_USAGE = Brug: amx_statscfg <kommando> [parameters] ... 
-COM_COM = Kommandoer: 
-COM_ON = ^ton <variable> - Starter specificeret mulighed 
-COM_OFF = ^toff <variable> - Stopper specificeret mulighed 
-COM_SAVE = ^tsave - Gem statestik konfiguration 
-COM_LOAD = ^tload - Indlaes Statestik konfiguration 
-COM_LIST = ^tlist [id] - Lister statestik status 
-COM_ADD = ^tadd <navn> <variable> - Tilfoejer statestik til listen 
-ON = ON 
-OFF = OFF 
+STATS_ENTRIES_OF = Indskrivninger %i - %i af %i 
+STATS_USE_MORE = Brug 'amx_statscfg list %i' for mere 
+STATS_USE_BEGIN = Brug 'amx_statscfg list 1' for at begynde 
+STATS_ENABLED = Statstik slaaet til
+STATS_DISABLED = Statestik slaaet fra
+CANT_ADD_STATS = Kan ikke tilfoeje statestik til listen, graense naaet! 
+COM_STATS_USAGE = Brug: amx_statscfg <kommando> [parameters] ... 
+COM_STATS_COM = Kommandoer: 
+COM_STATS_ON = ^ton <variable> - Starter specificeret mulighed 
+COM_STATS_OFF = ^toff <variable> - Stopper specificeret mulighed 
+COM_STATS_SAVE = ^tsave - Gem statestik konfiguration 
+COM_STATS_LOAD = ^tload - Indlaes Statestik konfiguration 
+COM_STATS_LIST = ^tlist [id] - Lister statestik status 
+COM_STATS_ADD = ^tadd <navn> <variable> - Tilfoejer statestik til listen 
 NO_STATS = Statestik plugins er ikke ^ninstalleret paa denne server^n 
 SAVE_CONF = Gem Konfiguration 
+
+
+[pl]
+TOTAL_NUM = Calkowite %d 
+NO_OPTION = Nie mozna znalesc opcji z podana zmienna (nazwa "%s") 
+CONF_SAVED = Konfiguracja statystyk zapisana 
+CONF_FAILED = Nie udalo sie zapisac konfiguracji statystyk 
+CONF_LOADED = Konfiguracja statystyk zaladowana 
+CONF_FAIL_LOAD = Nie udalo sie zaladowac konfiguracji statystyk 
+STATS_CONF = Konfiguracja statystyk 
+ENTRIES_OF = Wpisy %i - %i z %i 
+USE_MORE = Uzyj 'amx_statscfg list %i' po wiecej 
+USE_BEGIN = Uzyj 'amx_statscfg list 1' do poczatku 
+CANT_ADD = Nie mozna dodac statystyk, limit przekroczony 
+COM_USAGE = Uzycie: amx_statscfg <komenda> [parametr] ... 
+COM_COM = Komendy: 
+COM_ON = ^ton <zmienna> - wlacz konkretne opcje 
+COM_OFF = ^toff <zmienna> - wylacz konkretne opcje 
+COM_SAVE = ^tsave - zapisz konfiguracje statystyk 
+COM_LOAD = ^tload - zaladuj konfiguracje statystyk 
+COM_LIST = ^tlist [id] - pokaz status statystyk 
+COM_ADD = ^tadd <name> <zmienna> - dodaj statystyki do listy 
+ON = WL 
+OFF = WYL 
+NO_STATS = Pluginy statystyk nie^nistnieja na serwerze^n 
+SAVE_CONF = Zapisz konfiguracje 

@@ -19,3 +19,7 @@ NEXT_MAP = N'a'sta karta:
 
 [da]
 NEXT_MAP = Naeste bane: 
+
+
+[pl]
+NEXT_MAP = Nastepna Mapa:

@@ -20,3 +20,6 @@ DROPPED_RES = Nerkopplad pga platsreservation
 
 [da]
 DROPPED_RES = Frakoblet pga. plads reservation 
+
+[pl]
+DROPPED_RES = Wyrzucony z powodu rezerwacji slotow 

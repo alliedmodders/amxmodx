@@ -14,6 +14,10 @@
 #include <engine_const>
 
 
+native engfunc(type,{Float,_}:...)
+native dllfunc(type,{Float,_}:...)
+native traceresult(type,{Float,_}:...)
+
 /* Registers a client impulse to a function.  Function is passed the ID of the user. */
 native register_impulse(impulse, function[]);
 

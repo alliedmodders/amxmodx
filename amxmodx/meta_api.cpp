@@ -231,9 +231,10 @@ int Spawn( edict_t *pent ) {
   g_commands.registerPrefix( "sm_" );
   g_commands.registerPrefix( "cm_" );
 
-  // make sure basedir is set
+  // make sure localinfos are set
   get_localinfo("amxx_basedir", "addons/amxx");
-
+  get_localinfo("amxx_pluginsdir", "addons/amxx/plugins");
+  get_localinfo("amxx_modulesdir", "addons/amxx/modules");
   //  ###### Load modules
   loadModules(get_localinfo("amxx_modules", "addons/amxx/modules.ini"));
   attachModules();

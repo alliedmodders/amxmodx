@@ -362,7 +362,7 @@ int loadModules(const char* filename)
 	  if (!isalnum(*moduleName) || !validFile(moduleName) )  
 		  continue;
 	  
-	  char* pathname = build_pathname("addons/amxx/modules/%s", line);
+	  char* pathname = build_pathname("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxx/modules"), line);
 
 	  CList<CModule>::iterator a = g_modules.find(  pathname  );
 
@@ -476,8 +476,8 @@ void dettachMetaModModules( const char* filename )
 	  if (!isalnum(*moduleName) || !validFile(moduleName) )  
 		  continue;
 	  
-	  char* pathname = build_pathname_addons("addons/amxx/modules/%s", line);
-	  char* mmpathname = build_pathname_addons("addons/amxx/modules/%s", line);
+	  char* pathname = build_pathname("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxx/modules"), line);
+	  char* mmpathname = build_pathname_addons("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxx/modules"), line);
 
 	  module = DLLOAD( pathname ); // link dll
 
@@ -520,8 +520,8 @@ void attachMetaModModules( const char* filename )
 	  if (!isalnum(*moduleName) || !validFile(moduleName) )  
 		  continue;
 	  
-	  char* pathname = build_pathname("addons/amxx/modules/%s", line);
-	  char* mmpathname = build_pathname_addons("addons/amxx/modules/%s", line);
+	  char* pathname = build_pathname("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxx/modules"), line);
+	  char* mmpathname = build_pathname_addons("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxx/modules"), line);
 	  module = DLLOAD( pathname ); // link dll
 
 	  if ( module )

@@ -240,7 +240,8 @@ void print_srvconsole( char *fmt, ... );
 void report_error( int code, char* fmt, ... );
 void* alloc_amxmemory(void**, int size);
 void free_amxmemory(void **ptr);
-
+// get_localinfo
+const char* get_localinfo( const char* name , const char* def );
 
 #endif // AMXMODX_H
 

@@ -62,7 +62,7 @@ int  CPluginMngr::loadPluginsFromFile( const char* filename )
 	
 	// Find now folder
 	char pluginName[256], line[256], error[256];
-	const char pluginsDir[] = "addons/amxx/plugins";	// hardcoded; :TODO: make it localinfo
+	const char *pluginsDir = get_localinfo("amxx_pluginsdir", "addons/amxx/plugins");
 	
 	
 	while ( fp.getline(line , 255 ) ) 

@@ -71,12 +71,12 @@ public cmdKick(id,level,cid){
   userid2 = get_user_userid(player)
   read_argv(2,arg2,31)
   log_to_file(g_logFile,"Kick: ^"%s<%d><%s><>^" kick ^"%s<%d><%s><>^" (reason ^"%s^")", 
-    name,get_user_userid(id),authid, name2,userid2,authid2,arg2 )
+    name,get_user_userid(id),authid,name2,userid2,authid2,arg2)
   switch(get_cvar_num("amx_show_activity")) {
-  case 2: client_print(0,print_chat,"ADMIN %s: kick %s",name,name2)
-  case 1: client_print(0,print_chat,"ADMIN: kick %s",name2)
+  case 2: client_print(0,print_chat,"ADMIN %s: kick %s",name,name2,arg2)
+  case 1: client_print(0,print_chat,"ADMIN: kick %s",name2,arg2)
   } 
-  server_cmd("kick #%d",userid2)
+  server_cmd("kick #%d ^"%s^"",userid2,arg2)
   console_print(id,"Client ^"%s^" kicked",name2)
   return PLUGIN_HANDLED
 }

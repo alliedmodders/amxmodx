@@ -138,6 +138,8 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 		msgHooks[i] = 0;
 		msgBlocks[i] = 0;
 	}
+
+	RETURN_META(MRES_IGNORED);
 }
 
 void LightStyle(int style, char *val) {

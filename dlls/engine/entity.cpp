@@ -1351,7 +1351,7 @@ static cell AMX_NATIVE_CALL get_offset_short(AMX *amx, cell *params)
 
 	edict_t *pEnt = INDEXENT(idx);
 #ifdef __linux__
-	off += 5;
+	off += params[3];
 #endif
 
 	return *((short *)pEnt->pvPrivateData + off);
@@ -1369,7 +1369,7 @@ static cell AMX_NATIVE_CALL set_offset_short(AMX *amx, cell *params)
 
 	edict_t *pEnt = INDEXENT(idx);
 #ifdef __linux__
-	off += 5;
+	off += params[3];
 #endif
 	
 	*((short *)pEnt->pvPrivateData + off) = (short)params[3];
@@ -1389,7 +1389,7 @@ static cell AMX_NATIVE_CALL get_offset_char(AMX *amx, cell *params)
 
 	edict_t *pEnt = INDEXENT(idx);
 #ifdef __linux__
-	off += 5;
+	off += params[3];
 #endif
 	
 	char r = *((char *)pEnt->pvPrivateData + off);
@@ -1408,7 +1408,7 @@ static cell AMX_NATIVE_CALL set_offset_char(AMX *amx, cell *params)
 
 	edict_t *pEnt = INDEXENT(idx);
 #ifdef __linux__
-	off += 5;
+	off += params[3];
 #endif
 	
 	char data = params[3];
@@ -1429,7 +1429,7 @@ static cell AMX_NATIVE_CALL get_offset_int(AMX *amx, cell *params)
 
 	edict_t *pEnt = INDEXENT(idx);
 #ifdef __linux__
-	off += 5;
+	off += params[3];
 #endif
 	
 	return *((int *)pEnt->pvPrivateData + off);
@@ -1447,7 +1447,7 @@ static cell AMX_NATIVE_CALL set_offset_int(AMX *amx, cell *params)
 
 	edict_t *pEnt = INDEXENT(idx);
 #ifdef __linux__
-	off += 5;
+	off += params[3];
 #endif
 	
 	*((int *)pEnt->pvPrivateData + off) = params[3];
@@ -1467,7 +1467,7 @@ static cell AMX_NATIVE_CALL get_offset_float(AMX *amx, cell *params)
 
 	edict_t *pEnt = INDEXENT(idx);
 #ifdef __linux__
-	off += 5;
+	off += params[3];
 #endif
 	
    REAL fRet = (REAL)(*((REAL*)pEnt->pvPrivateData + off));
@@ -1487,7 +1487,7 @@ static cell AMX_NATIVE_CALL set_offset_float(AMX *amx, cell *params)
 
 	edict_t *pEnt = INDEXENT(idx);
 #ifdef __linux__
-	off += 5;
+	off += params[3];
 #endif
 	
 	REAL fVal = amx_ctof(params[3]);

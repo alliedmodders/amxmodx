@@ -6,3 +6,4 @@ SERVER_LANG = Server Language
 SAVE_LANG = Save Language
 SET_LANG_SERVER = The server language has been set to "%s"
 SET_LANG_USER = Your language has been set to "%s"
+TYPE_LANGMENU = Type 'amx_langmenu' in the console to display a menu where you can choose your language

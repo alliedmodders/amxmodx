@@ -33,6 +33,7 @@
 */
 
 #include <amxmodx>
+#include <csx>
 
 public MultiKill
 public MultiKillSound
@@ -328,7 +329,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK) {
   if ( headshot && (HeadShotKill || HeadShotKillSound) ) {
     if ( HeadShotKill ) {
       new killer_name[32], victim_name[32], weapon_name[32], message[128], players[32], pnum
-      get_weaponname(wpnindex,weapon_name,31)
+      xmod_get_wpnname(wpnindex,weapon_name,31)
       get_user_name(killer,killer_name,31) 
       get_user_name(victim,victim_name,31)
 
@@ -385,7 +386,7 @@ public showStatus(id) {
     if (g_friend[id]==1) { // friend
       new clip, ammo, wpnid = get_user_weapon(pid,clip,ammo) 
       new wpnname[32] 
-      get_weaponname(wpnid,wpnname,31) 
+      xmod_get_wpnname(wpnid,wpnname,31) 
       set_hudmessage(color1,50,color2,-1.0,0.60,1, 0.01, 3.0, 0.01, 0.01, 4)
       show_hudmessage(id,"%s -- %d HP / %d AP / %s",name, 
         get_user_health(pid),get_user_armor(pid),wpnname)

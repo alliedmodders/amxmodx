@@ -800,7 +800,7 @@ format_stats( id, sBuffer[MAX_BUFFER_LENGTH+1] ) {
                   lWeapon, lKills, lDeaths, lHits, lShots, lDamage, lAcc )
   for ( iWeapon = 1; iWeapon < xmod_get_maxweapons() && MAX_BUFFER_LENGTH - iLen > 0 ; iWeapon++ ) {
     if ( get_user_wstats( id, iWeapon, izStats, izBody ) ) {
-      get_weaponname( iWeapon, t_sWpn, MAX_WEAPON_LENGTH )
+      xmod_get_wpnname( iWeapon, t_sWpn, MAX_WEAPON_LENGTH )
       iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
                       "%-12.12s  %6d  %6d  %6d  %6d  %6d  %3.0f%%^n",
                       t_sWpn, izStats[STATS_KILLS], izStats[STATS_DEATHS], 
@@ -999,7 +999,7 @@ public cmdReport( id ) {
   }
   new iWeapon, iClip, iAmmo, iHealth, iArmor
   iWeapon = get_user_weapon( id, iClip, iAmmo ) 
-  get_weaponname( iWeapon, t_sWpn, MAX_WEAPON_LENGTH )
+  xmod_get_wpnname( iWeapon, t_sWpn, MAX_WEAPON_LENGTH )
   iHealth = get_user_health( id ) 
   iArmor = get_user_armor( id )
   new lWeapon[16]

@@ -32,7 +32,7 @@
 #define FN_AMXX_DETTACH OnAmxxDettach
 // All plugins loaded
 //   Do forward functions init here (MF_RegisterForward)
-#define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
+//#define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
 
 /**** METAMOD ****/
 // If your module doesn't use metamod, you may close the file now :)

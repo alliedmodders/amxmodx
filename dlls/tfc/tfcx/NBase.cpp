@@ -391,6 +391,30 @@ static cell AMX_NATIVE_CALL TFC_UserKill(AMX *amx, cell *params){ // player,wid
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params){ // forward 
+	int iFunctionIndex;
+	switch( params[1] ){
+	case 0:
+		if( MF_AmxFindPublic(amx, "client_damage", &iFunctionIndex) == AMX_ERR_NONE )
+			g_damage_info.put( amx , iFunctionIndex );
+		else
+			MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+			return 0;
+		break;
+	case 1:
+		if( MF_AmxFindPublic(amx, "client_death", &iFunctionIndex) == AMX_ERR_NONE )
+			g_death_info.put( amx , iFunctionIndex );
+		else
+			MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+			return 0;
+		break;
+	default:
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+	return 1;
+}
+
 // Native list.
 AMX_NATIVE_INFO base_Natives[] = {
 	{"tfc_setmodel", TFC_SetModel},
@@ -406,6 +430,8 @@ AMX_NATIVE_INFO base_Natives[] = {
 	{"tfc_userkill" , TFC_UserKill},
 	
 	{"tfc_setpddata", TFC_SetPDdata },
+
+	{"register_forward",register_forward },
 	//******************* 19 :)
 	{NULL,			NULL} 
 };

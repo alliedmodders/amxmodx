@@ -77,7 +77,7 @@ native dbi_free_result(&Result:result);
  * mark the handle as free, so this particular handle may
  * be re-used in the future to save time.
  */
-native dbi_close(&Sql:sql);
+native dbi_close(&Sql:_sql);
 
 /* Returns an error message set.  For PGSQL and MySQL,
  * this is a direct error return from the database handle/API.

@@ -37,7 +37,7 @@ forward plugin_cfg();
 forward plugin_end();
 
 /* Function called to handle changelevel */
-forward server_changelevel();
+forward server_changelevel(map[]);
 
 /* Called on log message. */
 forward plugin_log();

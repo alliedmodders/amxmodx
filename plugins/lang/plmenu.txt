@@ -167,6 +167,8 @@ TEAM_MENU = Lagmeny
 TRANSF_TO = Skicka till %s
 CL_CMD_MENU = Klientkommandomeny
 NO_CMDS = Det finns inga kommandon
+
+[tr]
 ADMIN_BAN_1 = ADMIN: ban %s
 ADMIN_BAN_2 = ADMIN %s: ban %s
 BAN_MENU = Ban Menusu

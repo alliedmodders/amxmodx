@@ -50,7 +50,7 @@ void CPluginMngr::unloadPlugin( CPlugin** a ) {
 
 int  CPluginMngr::loadPluginsFromFile( const char* filename )
 {
-	File fp( build_pathname("%s",filename) , "r" );
+	FILE *fp = fopen(build_pathname("%s",filename) , "rt");
 
 	if ( !fp ) 
 	{
@@ -59,17 +59,20 @@ int  CPluginMngr::loadPluginsFromFile( const char* filename )
 	}
 	
 	// Find now folder
-	char pluginName[256], line[256], error[256], debug[256];
+	char pluginName[256], error[256], debug[256];
 	int debugFlag = 0;
 	const char *pluginsDir = get_localinfo("amxx_pluginsdir", "addons/amxmodx/plugins");
 	
-	
-	while ( fp.getline(line , 255 ) ) 
+	String line;
+
+	while ( !feof(fp) ) 
 	{
 		*pluginName = 0;
 		*debug = 0;
 		debugFlag = 0;
-		sscanf(line,"%s %s",pluginName, debug);
+		line.clear();
+		line._fread(fp);
+		sscanf(line.c_str(),"%s %s",pluginName, debug);
 		if (!isalnum(*pluginName))  continue;
 
 		if (isalnum(*debug) && strcmp(debug, "debug") == 0)
@@ -87,6 +90,8 @@ int  CPluginMngr::loadPluginsFromFile( const char* filename )
 			AMXXLOG_Log("[AMXX] %s", plugin->getError());
 		}
 	}
+
+	fclose(fp);
 
 	return pCounter;
 }

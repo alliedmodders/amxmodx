@@ -28,27 +28,63 @@
 *  version.
 */
 
-#include <time.h>
+// amxx_logging localinfo:
+//  0 = no logging
+//  1 = one logfile / day
+//  2 = one logfile / map
+//  3 = HL Logs
 
+#include <time.h>
+#include <io.h>
 #include "amxmodx.h"
 
-String g_AMXXLOG_LogFile;
-cvar_t init_amx_logging = {"amx_logging", "", FCVAR_SPONLY};
-cvar_t *amx_logging = NULL;
-
-// Initialize cvar; Called from Meta_Attach
-void AMXXLOG_Init()
+CLog::CLog()
 {
-	CVAR_REGISTER(&init_amx_logging);
-	amx_logging = CVAR_GET_POINTER(init_amx_logging.name);
-	CVAR_SET_STRING(init_amx_logging.name, "1");
+	m_LogType = 0;
+	m_LogFile.clear();
 }
 
-void AMXXLOG_MapChange()
+CLog::~CLog()
 {
-	if (amx_logging && (amx_logging->value == 0.0f || amx_logging->value == 3.0f))
-		return;
+	CloseFile();
+}
 
+void CLog::CloseFile()
+{
+	// log "log file closed" to old file, if any
+	if (!m_LogFile.empty())
+	{
+		FILE *fp = fopen(m_LogFile.str(), "r");
+		if (fp)
+		{
+			fclose(fp);
+			fopen(m_LogFile.str(), "a+");
+
+			// get time
+			time_t td;
+			time(&td);
+			tm *curTime = localtime(&td);
+
+			char date[32];
+			strftime(date, 31, "%m/%d/%Y - %H:%M:%S", curTime);
+
+			fprintf(fp, "L %s: %s\n", date, "Log file closed.");
+			fclose(fp);
+		}
+		m_LogFile.clear();
+#if REOPEN_ON_LOG == 0
+		if (m_pFile)
+		{
+			fclose(m_pFile);
+			m_pFile = NULL;
+		}
+#endif
+	}
+}
+
+void CLog::CreateNewFile()
+{
+	CloseFile();
 	// build filename
 	time_t td;
 	time(&td);
@@ -61,61 +97,128 @@ void AMXXLOG_MapChange()
 	mkdir(build_pathname("%s", g_log_dir.str()));
 #endif
 
-	if (amx_logging && amx_logging->value != 1.0f)
+	int i = 0;
+	while (true)
 	{
-		// 2.0f probably :)
-		g_AMXXLOG_LogFile.set(build_pathname("%s/L%02d%02d.log", g_log_dir.str(), curTime->tm_mon + 1, curTime->tm_mday));
-		AMXXLOG_Log("AMX Mod X log file started.");
+		m_LogFile.set(build_pathname("%s/L%02d%02d%03d.log", g_log_dir.str(), curTime->tm_mon + 1, curTime->tm_mday, i));
+		FILE *pTmpFile = fopen(m_LogFile.str(), "r");		// open for reading to check whether the file exists
+		if (!pTmpFile)
+			break;
+		fclose(pTmpFile);
+		++i;
 	}
-	else
+	// Log logfile start
+	FILE *fp = fopen(m_LogFile.str(), "w");
+	if (!fp)
 	{
-		int i = 0;
-		while (true)
-		{
-			g_AMXXLOG_LogFile.set(build_pathname("%s/L%02d%02d%03d.log", g_log_dir.str(), curTime->tm_mon + 1, curTime->tm_mday, i));
-			FILE *pTmpFile = fopen(g_AMXXLOG_LogFile.str(), "r");		// open for reading to check whether the file exists
-			if (!pTmpFile)
-				break;
-			fclose(pTmpFile);
-			++i;
-		}
-		// Log logfile start
-		AMXXLOG_Log("AMX Mod X log file started (file \"%s/L%02d%02d%03d.log\") (version \"%s\")", g_log_dir.str(), curTime->tm_mon + 1, curTime->tm_mday, i, AMX_VERSION);
+		ALERT(at_logged, "[AMXX] Unexpected fatal logging error. AMXX Logging disabled.\n");
+		SET_LOCALINFO("amxx_logging", "0");
 	}
+	fprintf(fp, "AMX Mod X log file started (file \"%s/L%02d%02d%03d.log\") (version \"%s\")\n", g_log_dir.str(), curTime->tm_mon + 1, curTime->tm_mday, i, AMX_VERSION);
+#if REOPEN_ON_LOG == 1
+	fclose(fp);
+#else
+	m_pFile = fp;
+#endif
 }
 
-void AMXXLOG_Log(const char *fmt, ...)
+void CLog::GetLastFile(int &outMonth, int &outDay, String &outFilename)
 {
-	if (!amx_logging)
-		return;
-	int logType = (int)amx_logging->value;
-	static int lastLogType = -1;
+	_finddata_t dat;
+	outMonth = 0;
+	outDay = 0;
 
-	if (lastLogType == -1)
-		lastLogType = logType;
-	
-	if (lastLogType != logType)
+	char filename[260];
+	intptr_t fh = _findfirst(build_pathname("%s/L*.log", g_log_dir.str()), &dat);
+	time_t tmpTime=0;
+	if (fh < 0)
+		return;
+	do
 	{
-		// User changed logType
-		lastLogType = logType;
-		AMXXLOG_MapChange();
+		if (dat.time_write > tmpTime)
+		{
+			tmpTime = dat.time_write;
+			strcpy(filename, dat.name);
+		}
+	} while (_findnext(fh, &dat) == 0);
+
+	// get filename only (without path)
+	char *ptr = strrchr(filename, '\\');
+	char *sourceFile = NULL;
+	if (ptr)
+		sourceFile = ptr + 1;
+	else
+	{
+		ptr = strrchr(filename, '/');
+		if (ptr)
+			sourceFile = ptr + 1;
+		else
+			sourceFile = filename;
 	}
 
-	if (logType == 0)
-	{
-		lastLogType = logType;
-		return;
-	}
-	else if (logType == 1 || logType == 2)
-	{
-		// build message
-		// :TODO: Overflow possible here
-		char msg[3072];
-		va_list arglst;
-		va_start(arglst, fmt);
-		vsprintf(msg, fmt, arglst);
-		va_end(arglst);
+	// store it
+	char *origSourceFile = sourceFile;
 
+	// parse and set output
+	if (sourceFile[0] != 'L')
+		return;
+	++sourceFile;
+	if (strlen(sourceFile) < 4)	// MMDD
+		return;
+
+	outMonth = (sourceFile[1]-'0') + 10*(sourceFile[0]-'0');
+	outDay = (sourceFile[3]-'0') + 10*(sourceFile[2]-'0');
+
+	outFilename.set(origSourceFile);
+}
+
+void CLog::UseFile(const String &fileName)
+{
+	m_LogFile.set(build_pathname("%s/%s", g_log_dir.str(), fileName.str()));
+#if REOPEN_ON_LOG == 0
+	m_pFile = fopen(m_LogFile.str(), "a+");
+#endif
+}
+
+void CLog::MapChange()
+{
+	m_LogType = atoi(get_localinfo("amxx_logging", "1"));
+	if (m_LogType < 0 || m_LogType > 3)
+	{
+		SET_LOCALINFO("amxx_logging", "1");
+		m_LogType = 1;
+		print_srvconsole("[AMXX] Invalid amxx_logging value; setting back to 1...");
+	}
+
+	if (m_LogType == 2)
+	{
+		// create new logfile
+		CreateNewFile();
+	}
+	else if (m_LogType == 1)
+	{
+		int fileMonth, fileDay;
+		String fileName;
+		// create new logfile if the last logfile is not from today, otherwise use the old logfile
+		GetLastFile(fileMonth, fileDay, fileName);
+		// get current timedate
+		time_t tmpTime;
+		time(&tmpTime);
+		tm *curTime = localtime(&tmpTime);
+		if (curTime->tm_mon+1 != fileMonth || curTime->tm_mday != fileDay)
+			CreateNewFile();
+		else
+			UseFile(fileName);
+		Log("-------- Mapchange --------");
+	}
+	else
+		return;
+}
+
+void CLog::Log(const char *fmt, ...)
+{
+	if (m_LogType == 1 || m_LogType == 2)
+	{
 		// get time
 		time_t td;
 		time(&td);
@@ -124,28 +227,46 @@ void AMXXLOG_Log(const char *fmt, ...)
 		char date[32];
 		strftime(date, 31, "%m/%d/%Y - %H:%M:%S", curTime);
 
-		static bool s_inCreatingLogFile = false;
-		FILE *pF = fopen(g_AMXXLOG_LogFile.str(), "a+");
+#if REOPEN_ON_LOG == 1
+		FILE *pF = fopen(m_LogFile.str(), "a+");
+#else
+		FILE *pF = m_pFile;
+#endif
 		if (!pF)
 		{
-			if (s_inCreatingLogFile)
+			CreateNewFile();
+#if REOPEN_ON_LOG == 1
+			pF = fopen(m_LogFile.str(), "a+");
+#else
+			pF = m_pFile;
+#endif
+			if (!pF)
 			{
-				ALERT(at_logged, "[AMXX] Unexpected fatal logging error. AMXX Logging disabled.\n");
-				CVAR_SET_FLOAT(init_amx_logging.name, 0.0f);
+				ALERT(at_logged, "[AMXX] Unexpected fatal logging error (couldn't open %s for a+). AMXX Logging disabled for this map.\n", m_LogFile.str());
+				m_LogType = 0;
 				return;
 			}
-			// Create new logfile
-			s_inCreatingLogFile = true;
-			AMXXLOG_MapChange();
-			s_inCreatingLogFile = false;
 		}
 
-		// log msg now
+		// msg
+		char msg[3072];
+
+		va_list arglst;
+		va_start(arglst, fmt);
+		vsprintf(msg, fmt, arglst);
+		va_end(arglst);
+
 		fprintf(pF, "L %s: %s\n", date, msg);
+
+#if REOPEN_ON_LOG == 1
 		fclose(pF);
+#else
+		fflush(pF);
+#endif
+		// print on server console
 		print_srvconsole("L %s: %s\n", date, msg);
 	}
-	else if (logType == 3)
+	else if (m_LogType == 3)
 	{
 		// build message
 		// :TODO: Overflow possible here
@@ -156,10 +277,4 @@ void AMXXLOG_Log(const char *fmt, ...)
 		va_end(arglst);
 		ALERT(at_logged, "%s\n", msg);
 	}
-	else
-	{
-		ALERT(at_logged, "[AMXX] Invalid %s value. Setting to 0\n", init_amx_logging.name);
-		CVAR_SET_FLOAT(init_amx_logging.name, 0.0f);
-	}
-	lastLogType = logType;
 }

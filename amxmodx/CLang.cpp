@@ -521,9 +521,9 @@ const char *CLangMngr::Format(const char *src, ...)
 					char *langName = va_arg(argptr, char*);
 					const char *cpLangName=NULL;
 					// Handle player ids (1-32) and server language
-					if ((int)langName == 0)
+					if ((int)langName == LANG_PLAYER)
 						langName = (char*)m_CurGlobId;
-					if ((int)langName == -1)
+					if ((int)langName == LANG_SERVER)
 						cpLangName = g_vault.get("server_language");
 					else if ((int)langName >= 1 && (int)langName <= 32)
 						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I((int)langName)->pEdict, "lang");
@@ -642,9 +642,9 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 					cell *pLangName = get_amxaddr(amx, params[parm++]);
 					const char *cpLangName=NULL;
 					// Handle player ids (1-32) and server language
-					if (*pLangName == 0)
+					if (*pLangName == LANG_PLAYER)
 						*pLangName = m_CurGlobId;
-					if (*pLangName == -1)
+					if (*pLangName == LANG_SERVER)
 						cpLangName = g_vault.get("server_language");
 					else if (*pLangName >= 1 && *pLangName <= 32)
 						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(*pLangName)->pEdict, "lang");

@@ -32,7 +32,8 @@
 #ifndef _INCLUDE_CLANG_H
 #define _INCLUDE_CLANG_H
 
-#define LANG_SERVER -1
+#define LANG_SERVER 0
+#define LANG_PLAYER -1
 
 class CLangMngr
 {

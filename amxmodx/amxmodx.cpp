@@ -709,14 +709,16 @@ static cell AMX_NATIVE_CALL get_user_team(AMX *amx, cell *params) /* 3 param */
 
 static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 {
-  int ilen;
-  char* sMenu = get_amxstring(amx,params[3],0,ilen);
-  int numparam = *params/sizeof(cell);
+  int ilen=0, ilen2=0;
+  char *sMenu = get_amxstring(amx, params[3], 0, ilen);
+  char *lMenu = get_amxstring(amx, params[4], 1, ilen2);
   int menuid = 0;
-  if (numparam == 4)
-    menuid = g_menucmds.findMenuId(get_amxstring(amx, params[4], 1, ilen), amx);
-  else
+  if (ilen2 && lMenu)
+  {
+    menuid = g_menucmds.findMenuId(lMenu, amx);
+  } else {
     menuid = g_menucmds.findMenuId(sMenu, amx);
+  }
   int keys = params[2];
   int time = params[4];
   if (params[1] == 0) {

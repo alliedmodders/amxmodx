@@ -417,9 +417,10 @@ bool Compiler::Parse()
 
 		/* Strip the line */
 		std::string line(buffer);
+
 		StripComments(line);
 		Strip(line);
-
+	
 		if (line.size() < 1)
 			continue;
 

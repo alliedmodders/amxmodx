@@ -120,30 +120,41 @@ void Strip(std::string &text)
 		}
 	}
 
-	for (i=0; i<(int)text.size(); i++)
+	if (isspace(text[0]))
 	{
-		if (!isspace(text[i]))
+		for (i=0; i<(int)text.size(); i++)
 		{
-			if (i!=0)
+			if (!isspace(text[i]) 
+				|| (isspace(text[i]) && (i==(int)(text.size()-1))))
 			{
 				text.erase(0, i);
+				break;
 			}
-			break;
 		}
 	}
 
 	if (text.size() < 1)
 		return;
 
-	for (i=(int)(text.size()-1); i>=0; i--)
+	if (isspace(text[text.size()-1]))
 	{
-		if (!isspace(text[i]))
+		for (i=(int)(text.size()-1); i>=0; i--)
 		{
-			if (i != (int)(text.size() - 1))
+			if (!isspace(text[i]) 
+				|| (isspace(text[i]) && (i==0)))
 			{
 				text.erase(i+1, text.size()-1-i);
+				break;
 			}
-			break;
+		}
+	}
+
+	if (text.size() == 1)
+	{
+		if (isspace(text[0]))
+		{
+			text.clear();
+			return;
 		}
 	}
 }

@@ -13,6 +13,8 @@ int PlayerPostThinkForward = 0;
 int ClientKillForward = 0;
 int CmdStartForward = 0;
 int StartFrameForward = 0;
+int VexdTouchForward = 0;
+int VexdServerForward = 0;
 std::vector<Impulse *> Impulses;
 std::vector<EntClass *> Thinks;
 std::vector<EntClass *> Uses;
@@ -125,6 +127,8 @@ void StartFrame_Post()
 
 	if (StartFrameForward)
 		MF_ExecuteForward(StartFrameForward);
+	else if (VexdServerForward)
+		MF_ExecuteForward(VexdServerForward);
 
 	RETURN_META(MRES_IGNORED);
 }
@@ -267,6 +271,10 @@ void DispatchTouch(edict_t *pToucher, edict_t *pTouched)
 	/* Execute pfnTouch forwards */
 	if (pfnTouchForward) {
 		retVal = MF_ExecuteForward(pfnTouchForward, ENTINDEX(pToucher), ENTINDEX(pTouched));
+		if (retVal)
+			RETURN_META(MRES_SUPERCEDE);
+	} else if (VexdTouchForward) {
+		retVal = MF_ExecuteForward(VexdTouchForward, ENTINDEX(pToucher), ENTINDEX(pTouched));
 		if (retVal)
 			RETURN_META(MRES_SUPERCEDE);
 	}

@@ -45,6 +45,8 @@ void OnPluginsLoaded()
 	SpawnForward = MF_RegisterForward("pfn_spawn", ET_IGNORE, FP_CELL, FP_DONE);
 	DispatchUseForward = MF_RegisterForward("pfn_use", ET_STOP, FP_CELL, FP_CELL, FP_DONE);
 	pfnTouchForward = MF_RegisterForward("pfn_touch", ET_STOP, FP_CELL, FP_CELL, FP_DONE);
+	VexdTouchForward = MF_RegisterForward("vexd_pfntouch", ET_IGNORE, FP_CELL, FP_CELL, FP_DONE);
+	VexdServerForward = MF_RegisterForward("ServerFrame", ET_IGNORE, FP_DONE);
 }
 
 qboolean Voice_SetClientListening(int iReceiver, int iSender, qboolean bListen)

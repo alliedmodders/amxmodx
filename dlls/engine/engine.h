@@ -32,6 +32,8 @@ extern int ClientKillForward;
 extern int CmdStartForward;
 extern int StartFrameForward;
 extern int DispatchUseForward;
+extern int VexdTouchForward;
+extern int VexdServerForward;
 
 #define AMS_OFFSET 0.01
 

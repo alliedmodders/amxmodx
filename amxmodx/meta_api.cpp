@@ -602,6 +602,19 @@ void C_ClientCommand(	edict_t	*pEntity ) {
   META_RES result =	MRES_IGNORED;
   cell ret = 0;
   int err;
+  const	char* cmd =	CMD_ARGV(0);
+  const	char* arg =	CMD_ARGV(1);
+
+  // Handle "amxx" if not on listenserver
+  if (IS_DEDICATED_SERVER())
+  {
+    if (cmd && stricmp(cmd, "amxx")==0)
+    {
+      // Print version
+      CLIENT_PRINT(pEntity, print_console, AMX_VERSION);
+      RETURN_META(MRES_SUPERCEDE);
+    }
+  }
 
 #ifdef ENABLEEXEPTIONS
   try
@@ -618,10 +631,7 @@ void C_ClientCommand(	edict_t	*pEntity ) {
   }
 #endif
 
-
   /* check for command and if needed also for first	argument and call proper function */
-  const	char* cmd =	CMD_ARGV(0);
-  const	char* arg =	CMD_ARGV(1);
 
 #ifdef ENABLEEXEPTIONS
   try{

@@ -88,3 +88,9 @@ stock user_spawn(index)
 
 /* CS: Set deaths(should be removed to CS module later) (doesn't update info right away? fix later?) */
 native set_user_deaths_cs(index, newdeaths);
+
+/* Sets player noclip. If you want to disable noclip set only first parameter. */
+native set_user_noclip(index, noclip = 0);
+
+/* Returns 1 if noclip is set. */
+native get_user_noclip(index);

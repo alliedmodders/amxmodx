@@ -564,6 +564,61 @@ static cell AMX_NATIVE_CALL get_hitzones(AMX *amx, cell *params) // get_hitzones
 	return g_body;
 }
 
+static cell AMX_NATIVE_CALL set_user_noclip(AMX *amx, cell *params) // set_user_noclip(index, noclip = 0); = 2 arguments
+{
+	// Sets user to no clipping mode.
+	// params[1] = index
+	// params[2] = no clip or not...
+
+	// Check index
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	{
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// Fetch player pointer
+	edict_t *pPlayer = INDEXENT(params[1]);
+
+	// Check validity.
+	if (FNullEnt(pPlayer)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	if (params[2] == 1)
+		pPlayer->v.movetype = MOVETYPE_NOCLIP;
+	else
+		pPlayer->v.movetype = MOVETYPE_WALK;
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL get_user_noclip(AMX *amx, cell *params) // get_user_noclip(index); = 1 argument
+{
+	// Gets user noclip.
+	// params[1] = index
+
+	// Check index
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	{
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// Fetch player pointer
+	edict_t *pPlayer = INDEXENT(params[1]);
+
+	// Check validity.
+	if (FNullEnt(pPlayer)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	return pPlayer->v.movetype == MOVETYPE_NOCLIP;
+}
+
+
 AMX_NATIVE_INFO fun_Exports[] = {
 	{"get_client_listen",		get_client_listening},
 	{"set_client_listen",		set_client_listening},
@@ -586,6 +641,8 @@ AMX_NATIVE_INFO fun_Exports[] = {
 	{"get_user_gravity",		get_user_gravity},
 	{"set_hitzones",			set_hitzones},
 	{"get_hitzones",			get_hitzones},
+	{"set_user_noclip",			set_user_noclip},
+	{"get_user_noclip",			get_user_noclip},
 	  /////////////////// <--- 19 chars max in current small version
 	{NULL,					NULL}
 };

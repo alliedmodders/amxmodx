@@ -196,8 +196,10 @@ void EventsMngr::parserInit(int msg_type, float* timer, CPlayer* pPlayer, int in
 		m_ParsePos = 0;
 		m_ParseVault[m_ParsePos].type = MSG_INTEGER;
 		m_ParseVault[m_ParsePos].iValue = index;
+		m_ParseFun = &m_Events[msg_type];
 	}
-	m_ParseFun = &m_Events[msg_type];
+	else
+		m_ParseFun = NULL;
 }
 
 void EventsMngr::parseValue(int iValue)
@@ -328,7 +330,7 @@ void EventsMngr::parseValue(const char *sz)
 			switch(condIter->second.type)
 			{
 			case '=': if (!strcmp(sz, condIter->second.sValue.c_str())) skip=true; break;
-			case '!': if (!strstr(sz, condIter->second.sValue.c_str())) skip=true; break;
+			case '!': if (strcmp(sz, condIter->second.sValue.c_str())) skip=true; break;
 			case '&': if (strstr(sz, condIter->second.sValue.c_str())) skip=true; break;
 			}
 			if (skip)
@@ -378,6 +380,8 @@ void EventsMngr::executeEvents()
 		UTIL_Log( "[AMXX] fatal error at event execution");
 	}
 #endif		// #ifdef ENABLEEXEPTIONS
+
+	m_ParseFun = NULL;
 }
 
 int EventsMngr::getArgNum()

@@ -46,6 +46,7 @@ private:
 	std::vector<DataMngr::Datum *> List;
 	int lastOffset;
 	int cellsize;
+public:
 	static const int nof = -1;
 };
 

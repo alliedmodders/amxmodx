@@ -57,6 +57,8 @@ void DataMngr::Add(std::string &s, CExpr &expr, bool db)
 			((p->e.GetType() == Val_Number) ? 
 			cellsize : p->e.Size() * cellsize);
 	}
+
+	List.push_back(D);
 }
 
 DataMngr::Datum *DataMngr::FindData(std::string &sym)

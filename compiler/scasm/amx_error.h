@@ -40,6 +40,7 @@ typedef enum
 	warnings_start,
 	Warning_Hex_Start,
 	Warning_Null_Expression,
+	Warning_Param_Count,
 	warnings_end,
 
 	errors_start,
@@ -55,6 +56,7 @@ typedef enum
 	Err_Invalid_Symbol,
 	Err_Opcode,
 	Err_Unmatched_Token,
+	Err_Param_Count,
 	errors_end,
 
 	fatals_start,

@@ -57,6 +57,7 @@ void ErrorMngr::DefineErrors()
 
 	List.at(Warning_Hex_Start) = "Hexadecimal notation is 0xN, 0 missing";
 	List.at(Warning_Null_Expression) = "Bad expression will evaluate to 0";
+	List.at(Warning_Param_Count) = "Expected %d parameters, found %d";
 
 	List.at(Err_String_Terminate) = "String not terminated properly";
 	List.at(Err_String_Extra) = "Unexpected characters after string end (character '%c')";
@@ -69,6 +70,7 @@ void ErrorMngr::DefineErrors()
 	List.at(Err_Invalid_Symbol) = "Invalid symbol";
 	List.at(Err_Opcode) = "Invalid or unrecognized opcode";
 	List.at(Err_Unmatched_Token) = "Unmatched token '%c'";
+	List.at(Err_Param_Count) = "Expected %d parameters, found %d";
 
 	List.at(Err_FileNone) = "No file specified";
 	List.at(Err_FileOpen) = "Could not open file \"%s\"";

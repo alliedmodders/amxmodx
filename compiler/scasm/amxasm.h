@@ -216,5 +216,6 @@ typedef enum {
 
 void get_options(int argc, char **argv);
 void InitOpcodes();
+void DestroyArgList(std::vector<std::string *> &List);
 
 #endif //_INCLUDE_AMXASM_H

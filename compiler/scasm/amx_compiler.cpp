@@ -24,9 +24,9 @@
 
 Compiler::Compiler()
 {
-	Init();
 	curLine = -1;
 	cellsize = 4;
+	Init();
 }
 
 Compiler::~Compiler()
@@ -174,6 +174,7 @@ bool Compiler::Parse()
 				
 				/* Add into the DAT section */
 				DAT->Add(symbol, e, (fmt.compare("db")==0)?true:false);
+				CSymbols->AddSymbol(symbol.c_str(), Sym_Dat, CurLine());
 			} else if (sec == Asm_Public) {
 				if (!IsValidSymbol(line))
 				{
@@ -277,561 +278,800 @@ bool Compiler::Parse()
 						FindArguments(params, paramList, argPos, true);
 						if (argPos != params.size()-1)
 						{
-							printf("line: %s|%d|%d\n", line.c_str(), argPos, params.size());
 							CError->ErrorMsg(Err_Unexpected_Char, params[argPos]);
 							continue;
 						}
 					}
 
+					ASM->cip = ++lastCip;
+					ASM->op = op;
+
 					switch (op)
 					{
 						case OP_LOAD_PRI:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_LOAD_ALT:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_LOAD_S_PRI:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_LOAD_S_ALT:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_LREF_PRI:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_LREF_ALT:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_LREF_S_PRI:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_LREF_S_ALT:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_LOAD_I:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_LODB_I:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_CONST_PRI:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_CONST_ALT:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_ADDR_PRI:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_ADDR_ALT:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_STOR_PRI:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_STOR_ALT:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_STOR_S_PRI:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_STOR_S_ALT:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_SREF_PRI:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_SREF_ALT:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_SREF_S_PRI:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_SREF_S_ALT:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_STOR_I:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_STRB_I:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_LIDX:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_LIDX_B:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_IDXADDR:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_IDXADDR_B:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_ALIGN_PRI:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_ALIGN_ALT:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_LCTRL:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_SCTRL:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_MOVE_PRI:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_MOVE_ALT:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_XCHG:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_PUSH_PRI:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_PUSH_ALT:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_PUSH_R:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_PUSH_C:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_PUSH:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_PUSH_S:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_POP_PRI:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_POP_ALT:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_STACK:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_HEAP:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_PROC:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_RET:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_RETN:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_CALL:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Proc);
+							break;
 						}
 						case OP_CALL_PRI:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_JUMP:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Label);
+							break;
 						}
 						case OP_JREL:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Label);
+							break;
 						}
 						case OP_JZER:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Label);
+							break;
 						}
 						case OP_JNZ:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Label);
+							break;
 						}
 						case OP_JEQ:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Label);
+							break;
 						}
 						case OP_JNEQ:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Label);
+							break;
 						}
 						case OP_JLESS:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Label);
+							break;
 						}
 						case OP_JLEQ:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Label);
+							break;
 						}
 						case OP_JGRTR:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Label);
+							break;
 						}
 						case OP_JGEQ:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Label);
+							break;
 						}
 						case OP_JSLESS:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Label);
+							break;
 						}
 						case OP_JSLEQ:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Label);
+							break;
 						}
 						case OP_JSGRTR:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Label);
+							break;
 						}
 						case OP_JSGEQ:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Label);
+							break;
 						}
 						case OP_SHL:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_SHR:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_SSHR:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_SHL_C_PRI:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_SHL_C_ALT:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_SHR_C_PRI:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_SHR_C_ALT:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_SMUL:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_SDIV:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_SDIV_ALT:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_UMUL:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_UDIV:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_UDIV_ALT:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_ADD:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_SUB:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_SUB_ALT:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_AND:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_OR:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_XOR:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_NOT:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_NEG:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_INVERT:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_ADD_C:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_SMUL_C:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_ZERO_PRI:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_ZERO_ALT:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_ZERO:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_ZERO_S:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_SIGN_PRI:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_SIGN_ALT:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_EQ:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_NEQ:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_LESS:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_LEQ:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_GRTR:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_GEQ:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_SLESS:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_SLEQ:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_SGRTR:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_SGEQ:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_EQ_C_PRI:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_EQ_C_ALT:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_INC_PRI:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_INC_ALT:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_INC:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_INC_S:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_INC_I:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_DEC_PRI:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_DEC_ALT:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_DEC:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_DEC_S:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_DEC_I:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_MOVS:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_CMPS:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_FILL:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_HALT:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_BOUNDS:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_SYSREQ_PRI:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_SYSREQ_C:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Native);
+							break;
 						}
 						case OP_FILE:
 						{
-								break;
+							/* Not yet implemented */
+							assert(0);
+							/*CHK_PARAMS(3);
+							PUSH_PARAM(1, Sym_Dat);
+							PUSH_PARAM(1, Sym_Dat);
+							PUSH_PARAM(1, Sym_Dat);*/
+							break;
 						}
 						case OP_LINE:
 						{
-								break;
+							/* Not yet implemented */
+							assert(0);
+							/*CHK_PARAMS(3);
+							PUSH_PARAM(1, Sym_Dat);
+							PUSH_PARAM(1, Sym_Dat);
+							PUSH_PARAM(1, Sym_Dat);*/
+							break;
 						}
 						case OP_SYMBOL:
 						{
-								break;
+							/* Not yet implemented */
+							assert(0);
+							/*CHK_PARAMS(3);
+							PUSH_PARAM(1, Sym_Dat);
+							PUSH_PARAM(1, Sym_Dat);
+							PUSH_PARAM(1, Sym_Dat);*/
+							break;
 						}
 						case OP_SRANGE:
 						{
-								break;
+							/* Not yet implemented */
+							assert(0);
+							/*CHK_PARAMS(3);
+							PUSH_PARAM(1, Sym_Dat);
+							PUSH_PARAM(1, Sym_Dat);
+							PUSH_PARAM(1, Sym_Dat);*/
+							break;
 						}
 						case OP_JUMP_PRI:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_SWITCH:
 						{
-								break;
+							/* Not yet implemented */
+							assert(0);
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Label);
+							break;
 						}
 						case OP_CASETBL:
 						{
-								break;
+							/* Not yet implemented */
+							assert(0);
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Native);
+							break;
 						}
 						case OP_SWAP_PRI:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_SWAP_ALT:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_PUSHADDR:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_NOP:
 						{
-								break;
+							CHK_PARAMS(0);
+							break;
 						}
 						case OP_SYSREQ_D:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
 						case OP_SYMTAG:
 						{
-								break;
+							CHK_PARAMS(1);
+							PUSH_PARAM(1, Sym_Dat);
+							break;
 						}
-					}
-				}
-			}
+					} /* Switch */
+					CodeList.push_back(ASM);
+				} /* Asm_Code */
+			} /* Section If */
 		}
 	}
 
@@ -1079,7 +1319,7 @@ OpToken Compiler::OperToken(char c)
 
 /* Returns all the arguments in a list
  * This takes literals and expressions into account
- * It is assumed that the first ( is stripped!
+ * In non-simple mode, It is assumed that the first ( is stripped!
  */
 int Compiler::FindArguments(std::string &text, std::vector<std::string*> &List, int &end, bool simple)
 {
@@ -1124,18 +1364,23 @@ int Compiler::FindArguments(std::string &text, std::vector<std::string*> &List, 
 			}
 		} else {
 			/* Check if an expression or argument is starting */
-			if (expr(d) && (i!=text.size()-1) && (text[i] != ')'))
+			if (expr(d) && (i!=text.size()-1) && (text[i] != ')' && !simple))
 			{
 				Stack.push(d);
 			} else {
 				/* Check to push another argument */
-				if (text[i] == ',' || (text[i] == ')') || i==text.size()-1)
+				if (text[i] == ',' || (text[i] == ')' && !simple) || i==text.size()-1)
 				{
 lCheck:
 					std::string *p = new std::string;
-					p->assign(text.substr(pos, 
-						(i==text.size()-1 && text[i]!=')')?
-						(i-pos+1):(i-pos)));
+					if (!simple)
+					{
+						p->assign(text.substr(pos, 
+							(i==text.size()-1 && text[i]!=')')?
+							(i-pos+1):(i-pos)));
+					} else {
+						p->assign(text.substr(pos, i-pos+1));
+					}
 					Strip(*p);
 					pos = i+1;
 					if (p->size() < 1)
@@ -1254,7 +1499,9 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 	{
 		if (OperToken(str[i]) != Token_None)
 		{
-			if (i == (int)(str.size() - 1))
+			if ((i == (int)(str.size() - 1))
+				|| ((OperToken(str[i]) != Token_Not && OperToken(str[i]) != Token_Sub)
+					&& i == 0))
 			{
 				CError->ErrorMsg(Err_Unexpected_Char, str[i]);
 				return 0;
@@ -1270,7 +1517,7 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 				return 0;
 			}
 			/* Check to see if there are extra tokens */
-			if (pos < i)
+			if (pos < i || (pos == i && (OperToken(str[i]) == Token_Sub)))
 			{
 				bpstr.assign(str.substr(pos, i-pos));
 				e.Set(bpstr);
@@ -1281,9 +1528,10 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 					if ( (S = CSymbols->FindSymbol(bpstr)) == NULL)
 					{
 						CError->ErrorMsg(Err_Unknown_Symbol, bpstr.c_str());
+						assert(0);
 						return 0;
 					}
-					if (S->GetType() != sym)
+					if (sym != Sym_Dat && S->GetType() != sym)
 					{
 						assert(0);
 						CError->ErrorMsg(Err_Invalid_Symbol);
@@ -1297,6 +1545,7 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 								if (val == ProcMngr::ncip)
 								{
 									CError->ErrorMsg(Err_Invalid_Symbol);
+									assert(0);
 									return 0;
 								}
 								break;
@@ -1307,16 +1556,18 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 								if (val == NativeMngr::ncip)
 								{
 									CError->ErrorMsg(Err_Invalid_Symbol);
+									assert(0);
 									return 0;
 								}
 								break;
 							}
-						case Sym_Data:
+						case Sym_Dat:
 							{
 								val = DAT->GetOffset(bpstr);
 								if (val == DataMngr::nof)
 								{
 									CError->ErrorMsg(Err_Invalid_Symbol);
+									assert(0);
 									return 0;
 								}
 								break;
@@ -1327,6 +1578,7 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 								if (val == LabelMngr::ncip)
 								{
 									CError->ErrorMsg(Err_Invalid_Symbol);
+									assert(0);
 									return 0;
 								}
 								break;
@@ -1334,6 +1586,7 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 						default:
 							{
 								CError->ErrorMsg(Err_Invalid_Symbol);
+								assert(0);
 								return 0;
 								break;
 							}
@@ -1368,9 +1621,10 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 						if ( (S = CSymbols->FindSymbol(bpstr)) == NULL)
 						{
 							CError->ErrorMsg(Err_Unknown_Symbol, bpstr.c_str());
+							assert(0);
 							return 0;
 						}
-						if (S->GetType() != sym)
+						if (sym != Sym_Dat && S->GetType() != sym)
 						{
 							assert(0);
 							CError->ErrorMsg(Err_Invalid_Symbol);
@@ -1384,6 +1638,7 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 								if (val == ProcMngr::ncip)
 								{
 									CError->ErrorMsg(Err_Invalid_Symbol);
+									assert(0);
 									return 0;
 								}
 								break;
@@ -1394,16 +1649,18 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 								if (val == NativeMngr::ncip)
 								{
 									CError->ErrorMsg(Err_Invalid_Symbol);
+									assert(0);
 									return 0;
 								}
 								break;
 							}
-						case Sym_Data:
+						case Sym_Dat:
 							{
 								val = DAT->GetOffset(bpstr);
 								if (val == DataMngr::nof)
 								{
 									CError->ErrorMsg(Err_Invalid_Symbol);
+									assert(0);
 									return 0;
 								}
 								break;
@@ -1414,6 +1671,7 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 								if (val == LabelMngr::ncip)
 								{
 									CError->ErrorMsg(Err_Invalid_Symbol);
+									assert(0);
 									return 0;
 								}
 								break;
@@ -1421,6 +1679,7 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 						default:
 							{
 								CError->ErrorMsg(Err_Invalid_Symbol);
+								assert(0);
 								return 0;
 								break;
 							}
@@ -1450,9 +1709,10 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 						if ( (S = CSymbols->FindSymbol(bpstr)) == NULL)
 						{
 							CError->ErrorMsg(Err_Unknown_Symbol, bpstr.c_str());
+							assert(0);
 							return 0;
 						}
-						if (S->GetType() != sym)
+						if (sym != Sym_Dat && S->GetType() != sym)
 						{
 							assert(0);
 							CError->ErrorMsg(Err_Invalid_Symbol);
@@ -1480,7 +1740,7 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 								}
 								break;
 							}
-						case Sym_Data:
+						case Sym_Dat:
 							{
 								val = DAT->GetOffset(bpstr);
 								if (val == DataMngr::nof)
@@ -1496,6 +1756,7 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 								if (val == LabelMngr::ncip)
 								{
 									CError->ErrorMsg(Err_Invalid_Symbol);
+									assert(0);
 									return 0;
 								}
 								break;
@@ -1503,6 +1764,7 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 						default:
 							{
 								CError->ErrorMsg(Err_Invalid_Symbol);
+								assert(0);
 								return 0;
 								break;
 							}
@@ -1531,7 +1793,7 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 			} else if (i == (int)(str.size() - 1)) {
 				if (pos < i)
 				{
-					bpstr.assign(str.substr(pos, i-pos));
+					bpstr.assign(str.substr(pos));
 				} else if (pos == i) {
 					bpstr.assign(str.substr(pos, 1));
 				}
@@ -1545,9 +1807,10 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 						if ( (S = CSymbols->FindSymbol(bpstr)) == NULL)
 						{
 							CError->ErrorMsg(Err_Unknown_Symbol, bpstr.c_str());
+							assert(0);
 							return 0;
 						}
-						if (S->GetType() != sym)
+						if (sym != Sym_Dat && S->GetType() != sym)
 						{
 							assert(0);
 							CError->ErrorMsg(Err_Invalid_Symbol);
@@ -1571,16 +1834,18 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 								if (val == NativeMngr::ncip)
 								{
 									CError->ErrorMsg(Err_Invalid_Symbol);
+									assert(0);
 									return 0;
 								}
 								break;
 							}
-						case Sym_Data:
+						case Sym_Dat:
 							{
 								val = DAT->GetOffset(bpstr);
 								if (val == DataMngr::nof)
 								{
 									CError->ErrorMsg(Err_Invalid_Symbol);
+									assert(0);
 									return 0;
 								}
 								break;
@@ -1591,6 +1856,7 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 								if (val == LabelMngr::ncip)
 								{
 									CError->ErrorMsg(Err_Invalid_Symbol);
+									assert(0);
 									return 0;
 								}
 								break;
@@ -1598,6 +1864,7 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 						default:
 							{
 								CError->ErrorMsg(Err_Invalid_Symbol);
+								assert(0);
 								return 0;
 								break;
 							}
@@ -1606,6 +1873,7 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 						val = e.GetNumber();
 					} else {
 						CError->ErrorMsg(Err_Invalid_Symbol);
+						assert(0);
 						return 0;
 					}
 					r->vals.push_back(val);
@@ -1616,7 +1884,11 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 
 	if (Stack.size() != 1)
 	{
-		//TODO: Clear memory
+		while (!Stack.empty())
+		{
+			delete Stack.top();
+			Stack.pop();
+		}
 		CError->ErrorMsg(Err_Unmatched_Token, '(');
 		return 0;
 	}
@@ -1653,7 +1925,9 @@ int Compiler::EvalRpn(rpn *r, SymbolType sym)
 					if (i != Token_Not)
 					{
 						if ((int)r->vals.size() <= j+1)
+						{
 							assert(0);
+						}
 						rval = r->vals[j+1];
 					}
 					switch (i)
@@ -1740,4 +2014,32 @@ int Compiler::EvalRpn(rpn *r, SymbolType sym)
 	}
 
 	return r->vals[0];
+}
+
+void DestroyArgList(std::vector<std::string *> &List)
+{
+	std::vector<std::string *>::iterator i;
+
+	for (i=List.begin(); i!=List.end(); i++)
+	{
+		if ( (*i) )
+			delete (*i);
+	}
+
+	List.clear();
+}
+
+void Compiler::PrintCodeList()
+{
+	std::vector<Asm *>::iterator i;
+	std::vector<int>::iterator j;
+
+	for (i=CodeList.begin(); i!=CodeList.end(); i++)
+	{
+		printf("OP: %d [%d]\n", (*i)->op, (*i)->cip);
+		for (j=(*i)->params.begin(); j!=(*i)->params.end(); j++)
+		{
+			printf("\tParameter: %d\n", (*j));
+		}
+	}
 }

@@ -1,14 +1,19 @@
 /* MySQL functions
 *
-* (c) Copyright 2002-2004, dJeyL
-*  modified by the AMX Mod X Development Team
+* by the AMX Mod X Development Team
+*  originally developed by OLO
 *
 * This file is provided as is (no warranties).
 */
 
+#if defined _mysql_included
+  #endinput
+#endif
+#define _mysql_included
+
 /* Opens connection. If already such exists then that will be used.
- * Function returns sql id to use with other sql natives.
- * Host can be plain ip or with port seperated with ':' char. */
+* Function returns sql id to use with other sql natives.
+* Host can be plain ip or with port seperated with ':' char. */
 native mysql_connect(host[],user[],pass[],dbname[],error[],maxlength);
 
 /* Uses an existing connection (sql) to perform a new query (query) (might close previous query if any). */

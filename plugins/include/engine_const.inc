@@ -1,9 +1,14 @@
-/* Engine Constants
+/* Engine constants
 *
-* (c) 2004, by the AMX Mod X Development Team
+* by the AMX Mod X Development Team
 *
 * This file is provided as is (no warranties).
 */
+
+#if defined _engine_const_included
+  #endinput
+#endif
+#define _engine_const_included
 
 #define SPEAK_NORMAL		0
 #define SPEAK_MUTED		1
@@ -48,7 +53,7 @@ enum {
 	EV_INT_iStepLeft,
 	EV_INT_movetype,
 	EV_INT_solid,
-	EV_INT_skin,			
+	EV_INT_skin,
 	EV_INT_body,
 	EV_INT_effects,
 	EV_INT_light_level,

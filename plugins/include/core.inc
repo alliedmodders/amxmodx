@@ -5,6 +5,11 @@
 * This file is provided as is (no warranties).
 */
 
+#if defined _core_included
+  #endinput
+#endif
+#define _core_included
+
 native heapspace();
 
 native funcidx(const name[]);

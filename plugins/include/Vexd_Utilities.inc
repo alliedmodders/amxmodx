@@ -1,9 +1,14 @@
 /* Vexd Utility backwards compatibility
 *
-* (c) 2004, the AMX Mod X Development Team
+* by the AMX Mod X Development Team
 *
 * This file is provided as is (no warranties).
 */
+
+#if defined _Vexd_Utilities_included
+  #endinput
+#endif
+#define _Vexd_Utilities_included
 
 #include <engine>
 

@@ -1,10 +1,15 @@
 /* AMX Mod X misc.
 *
-* (c) 2002-2004, OLO
-*  modified by the AMX Mod X Development Team
+* by the AMX Mod X Development Team
+*  originally developed by OLO
 *
 * This file is provided as is (no warranties).
 */
+
+#if defined _amxmisc_included
+  #endinput
+#endif
+#define _amxmisc_included
 
 stock cmd_access(id,level,cid,num) {
   if ( ((get_user_flags(id)&level)!=level) && (id!=(is_dedicated_server()?0:1)) ) {
@@ -24,10 +29,10 @@ stock access(id,level)
   return (get_user_flags(id) & level)
 
 /* Flags:
- *  1 - obey immunity
- *  2 - allow yourself
- *  4 - must be alive
- *  8 - can't be bot */
+*  1 - obey immunity
+*  2 - allow yourself
+*  4 - must be alive
+*  8 - can't be bot */
 stock cmd_target(id,const arg[],flags = 1) {
   new player = find_player("bl",arg)
   if (player) {

@@ -1,10 +1,15 @@
-/* Engine
+/* Engine functions
 *
-* (c) 2004, the AMX Mod X Development Team
+* by the AMX Mod X Development Team
 *  thanks to Vexd
 *
 * This file is provided as is (no warranties).
 */
+
+#if defined _engine_included
+  #endinput
+#endif
+#define _engine_included
 
 #include <engine_const>
 #include <engine_stocks>

@@ -1,10 +1,15 @@
-/* Engine Stocks
+/* Engine stocks
 *
-* (c) 2004, AssKicR, Freecode & T(+)rget
-*  modified by the AMX Mod X Development Team
+* by the AMX Mod X Development Team
+*  thanks to AssKicR, Freecode and T(+)rget
 *
 * This file is provided as is (no warranties).
 */
+
+#if defined _engine_stocks_included
+  #endinput
+#endif
+#define _engine_stocks_included
 
 /* Changes an integer vec to a floating vec */
 stock IVecFVec(IVec[3], Float:FVec[3])

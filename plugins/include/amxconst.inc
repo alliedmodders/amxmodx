@@ -1,10 +1,18 @@
-/* AMX Mod X
+/* AMX Mod X constants
 *
-* (c) 2002-2004, OLO
-*  modified by the AMX Mod X Development Team
+* by the AMX Mod X Development Team
+*  originally developed by OLO
 *
 * This file is provided as is (no warranties).
 */
+
+#if defined _amxconst_included
+  #endinput
+#endif
+#define _amxconst_included
+
+#define AMX_VERSION 0.1
+new AMX_VERSION_STR[] = "0.1"
 
 /* Uncomment if you are not using Steam */
 //#define NO_STEAM

@@ -1,14 +1,19 @@
-/* Vault
+/* Vault functions
 *
-* (c) 2002-2004, OLO
-*  modified by the AMX Mod X Development Team
+* by the AMX Mod X Development Team
+*  originally developed by OLO
 *
 * This file is provided as is (no warranties).
 */
 
+#if defined _vault_included
+  #endinput
+#endif
+#define _vault_included
+
 /* Reads a data from given key.
- * If len is set to zero then get_vaultdata
- * returns value as an number. */
+* If len is set to zero then get_vaultdata
+* returns value as an number. */
 native get_vaultdata(const key[], data[] = "", len = 0);
 
 /* Sets a data under given key. */

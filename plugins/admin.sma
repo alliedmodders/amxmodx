@@ -37,9 +37,15 @@
 
 #include <amxmodx>
 #include <amxmisc>
+<<<<<<< admin.sma
+#include <amxconst>
+#include <string>
+#include <file>
+=======
 #if defined USING_SQL
 #include <dbi>
 #endif
+>>>>>>> 1.25
 
 #define MAX_ADMINS 64
 

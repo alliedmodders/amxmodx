@@ -34,6 +34,7 @@
 
 #include <amxmodx>
 #include <amxmisc>
+#include <string>
 
 #define SPEED 0.3
 

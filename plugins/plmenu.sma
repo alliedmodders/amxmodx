@@ -56,8 +56,9 @@ new g_coloredMenus
 public plugin_init() {
   register_plugin("Players Menu",AMXX_VERSION_STR,"AMXX Dev Team")
 
-  register_dictionary("plmenu.txt")
   register_dictionary("common.txt")
+  register_dictionary("admincmd.txt")
+  register_dictionary("plmenu.txt")
 
   register_clcmd("amx_kickmenu","cmdKickMenu",ADMIN_KICK,"- displays kick menu")
   register_clcmd("amx_banmenu","cmdBanMenu",ADMIN_BAN,"- displays ban menu")

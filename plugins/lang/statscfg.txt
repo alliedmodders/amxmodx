@@ -1,5 +1,4 @@
 [en]
-TOTAL_NUM = Total %d
 NO_OPTION = Couldn't find option(s) with such variable (name "%s")
 STATS_CONF_SAVED = Stats configuration saved successfully
 STATS_CONF_FAILED = Failed to save stats configuration!!!
@@ -24,7 +23,6 @@ NO_STATS = Stats plugins are not^ninstalled on this server^n
 SAVE_CONF = Save configuration
 
 [bp]
-TOTAL_NUM = Total %d
 NO_OPTION = Nao pude encontrar opcao(s) com essa variavel (nome "%s")
 STATS_CONF_SAVED = A configuracao do stats foi salva com sucesso
 STATS_CONF_FAILED = A configuracao do stats nao pode ser salva!!!
@@ -49,7 +47,6 @@ NO_STATS = Plugins de Stats nao estao^ninstalados neste servidor^n
 SAVE_CONF = Salvar Configuracao
 
 [da]
-TOTAL_NUM = Total %d
 NO_OPTION = Kunne ikke finde mulighed(er)med en saadan variabel (name "%s")
 STATS_CONF_SAVED = Statestik Konfiguration gemt
 STATS_CONF_FAILED = Gem Statestik konfiguration mislykkedes!!!
@@ -74,7 +71,6 @@ NO_STATS = Statestik plugins er ikke ^ninstalleret paa denne server^n
 SAVE_CONF = Gem Konfiguration
 
 [de]
-TOTAL_NUM = Gesamt %d
 NO_OPTION = Finde keine Optionen mit dieser Variable (Name "%s")
 STATS_CONF_SAVED = Statistik-Konfiguration erfolgreich gespeichert.
 STATS_CONF_FAILED = Fehler beim Speichern der Statistik-Konfiguration!!!
@@ -99,7 +95,6 @@ NO_STATS = Statistik-Plugin ist nicht^nauf diesem Server installiert^n
 SAVE_CONF = Konfiguration speichern
 
 [es]
-TOTAL_NUM = Total %d
 NO_OPTION = No se ha podido encontrar opciones con esa variable (nombre "%s")
 STATS_CONF_SAVED = La Configuracion de Stats ha sido gravada exitosamente
 STATS_CONF_FAILED = No se ha podido gravar la La Configuacion de Stats!!!
@@ -124,7 +119,6 @@ NO_STATS = El plugin Stats no esta^ninstalado en este servidor^n
 SAVE_CONF = Gravar configuracion
 
 [fr]
-TOTAL_NUM = Total %d
 NO_OPTION = Option(s) introuvable(s) avec cette variable (nom ^"%s^")
 STATS_CONF_SAVED = Sauvegarde de la configuration des stats effectuee
 STATS_CONF_FAILED = Echec de sauvegarde de la configuration des stats!!!
@@ -149,7 +143,6 @@ NO_STATS = Les plugins de stats ne sont pas^ninstalles sur ce serveur^n
 SAVE_CONF = Sauver la configuration
 
 [nl]
-TOTAL_NUM = Totaal %d
 NO_OPTION = Kon optie(s) met deze variabel niet vinden (naam "%s")
 STATS_CONF_SAVED = opslaan van stats configuratie is gelukt
 STATS_CONF_FAILED = opslaan van stats configuratie is gefaald!!!
@@ -174,7 +167,6 @@ NO_STATS = Stats plugins zijn niet^ngeinstalleerd op deze server^n
 SAVE_CONF = Configuratie opslaan
 
 [pl]
-TOTAL_NUM = Calkowite %d
 NO_OPTION = Nie mozna znalesc opcji z podana zmienna (nazwa "%s")
 STATS_CONF_SAVED = Konfiguracja statystyk zapisana
 STATS_CONF_FAILED = Nie udalo sie zapisac konfiguracji statystyk
@@ -199,7 +191,6 @@ NO_STATS = Pluginy statystyk nie^nistnieja na serwerze^n
 SAVE_CONF = Zapisz konfiguracje
 
 [sr]
-TOTAL_NUM = Ukupno %d
 NO_OPTION = Nepostoji optcija(e) sa tom promenljivom (ime "%s")
 STATS_CONF_SAVED = Podesavanja Statistike su uspesno snimljena
 STATS_CONF_FAILED = Podesavanja Statistike su neuspesno snimljena!!!
@@ -224,7 +215,6 @@ NO_STATS = Plugin za statistiku^nnije instaliran na ovom serveru^n
 SAVE_CONF = Sacuvaj konfiguraciju
 
 [sv]
-TOTAL_NUM = Summa %d
 NO_OPTION = Kunde inte hitta val(en) med en dylik variabel (namn "%s")
 STATS_CONF_SAVED = Statistikinst'a'llningar sparade
 STATS_CONF_FAILED = Misslyckades att spara inst'a'llningar.
@@ -249,7 +239,6 @@ NO_STATS = Statistikplugins e inte installerade pa denna server^n
 SAVE_CONF = Spara inst'a'llningar
 
 [tr]
-TOTAL_NUM = Tam %d
 NO_OPTION =O isimde aranan secenek(ler) bulunamadi (isim "%s")
 STATS_CONF_SAVED = Statistik configi basari ile saklandi
 STATS_CONF_FAILED = Statistik configi malesef saklanamadi!!!

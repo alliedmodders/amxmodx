@@ -40,6 +40,10 @@
 #endif
 #include "amxmodx.h"
 
+#ifndef __linux__
+#define	vsnprintf	_vsnprintf
+#endif
+
 CLog::CLog()
 {
 	m_LogType = 0;
@@ -158,7 +162,7 @@ void CLog::Log(const char *fmt, ...)
 
 		va_list arglst;
 		va_start(arglst, fmt);
-		vsprintf(msg, fmt, arglst);
+		vsnprintf(msg, 3071, fmt, arglst);
 		va_end(arglst);
 
 		FILE *pF;
@@ -203,7 +207,7 @@ void CLog::Log(const char *fmt, ...)
 		char msg[3072];
 		va_list arglst;
 		va_start(arglst, fmt);
-		vsprintf(msg, fmt, arglst);
+		vsnprintf(msg, 3071, fmt, arglst);
 		va_end(arglst);
 		ALERT(at_logged, "%s\n", msg);
 	}

@@ -217,11 +217,9 @@ typedef struct tagAMX {
   cell reset_stk        PACKED;
   cell reset_hea        PACKED;
   cell sysreq_d         PACKED; /* relocated address/value for the SYSREQ.D opcode */
-  #if defined JIT
     /* support variables for the JIT */
-    int reloc_size      PACKED; /* required temporary buffer for relocations */
-    long code_size      PACKED; /* estimated memory footprint of the native code */
-  #endif
+  int reloc_size      PACKED; /* required temporary buffer for relocations */
+  long code_size      PACKED; /* estimated memory footprint of the native code */
 } AMX;
 
 /* The AMX_HEADER structure is both the memory format as the file format. The

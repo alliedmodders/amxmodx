@@ -626,6 +626,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 							}
 						case 'i':
 						case 'd':
+						case 'c':
 							{
 								NEXT_PARAM();
 								sprintf(outptr, format, (int)*get_amxaddr(amx, params[parm++]));
@@ -710,6 +711,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 						}
 					case 'i':
 					case 'd':
+					case 'c':
 						{
 							NEXT_PARAM();
 							sprintf(outptr, format, (int)*get_amxaddr(amx, params[parm++]));

@@ -36,7 +36,6 @@
 
 #define DISPLAY_MSG // Comment to disable message on join
 
-new g_userLang[33][3]
 new g_menuLang[33][2]
 new g_serverLang
 new g_langNum
@@ -46,6 +45,7 @@ public plugin_init() {
   register_plugin("Multi-Lingual System",AMXX_VERSION_STR,"AMXX Dev Team")
   register_dictionary("multilingual.txt")
   register_dictionary("common.txt")
+  register_dictionary("languages.txt")
   register_cvar("amx_language","en",FCVAR_SERVER|FCVAR_EXTDLL|FCVAR_SPONLY)
   register_concmd("amx_setlang","cmdLang",ADMIN_CFG,"<language>")
   register_clcmd("amx_langmenu","cmdLangMenu",ADMIN_ALL)
@@ -70,23 +70,7 @@ public plugin_init() {
 public client_putinserver(id) {
   set_task(10.0,"dispInfo",id)
 }
-#endif
 
-public client_infochanged(id) {
-  new lang[3]
-  get_user_info(id,"lang",lang,2)
-
-  if ( strlen(lang)>0 ) {
-    if ( lang_exists(lang) )
-      copy(g_userLang[id],2,lang)
-    else if ( g_userLang[id][0] )
-      set_user_info(id,"lang",g_userLang[id])
-    else
-      set_user_info(id,"lang","en")
-  }
-}
-
-#if defined DISPLAY_MSG
 public dispInfo(id) {
   client_print(id,print_chat,"%L",id,"TYPE_LANGMENU")
 }
@@ -112,7 +96,10 @@ public cmdLang(id,level,cid) {
 }
 
 public cmdLangMenu(id,level,cid) {
-  g_menuLang[id][0] = get_lang_id(g_userLang[id])
+  new buffer[3]
+  get_user_info(id,"lang",buffer,2)
+
+  g_menuLang[id][0] = get_lang_id(buffer)
   g_menuLang[id][1] = g_serverLang
 
   showMenu(id)
@@ -121,19 +108,17 @@ public cmdLangMenu(id,level,cid) {
 }
 
 showMenu(id) {
-  new menuBody[512],perso_lang[64],pLang[3]
+  new menuBody[512],pLang[3]
 
-  format(perso_lang,63,"%L",id,"PERSO_LANG")
   get_lang(g_menuLang[id][0],pLang)
 
   new len = format( menuBody,511,(g_coloredMenus ? "\y%L\w^n^n" : "%L^n^n"),id,"LANG_MENU" )
-  len += format( menuBody[len],511-len,(g_coloredMenus ? "1. %s\R\r%s\w^n" : "1. %s %s^n"),perso_lang,pLang )
+  len += format( menuBody[len],511-len,(g_coloredMenus ? "1. %L\R\r%L\w^n" : "1. %L %L^n"),id,"PERSO_LANG",pLang,"LANG_NAME" )
 
   if ( access(id,ADMIN_CFG) ) {
-    new server_lang[64],sLang[3]
-    format(server_lang,63,"%L",id,"SERVER_LANG")
+    new sLang[3]
     get_lang(g_menuLang[id][1],sLang)
-    len += format( menuBody[len],511-len,(g_coloredMenus ? "2. %s\R\r%s\w^n^n" : "2. %s %s^n^n"),server_lang,sLang )
+    len += format( menuBody[len],511-len,(g_coloredMenus ? "2. %L\R\r%s\w^n^n" : "2. %L %s^n^n"),id,"SERVER_LANG",sLang,"LANG_NAME" )
     len += format( menuBody[len],511-len,"3. %L",id,"SAVE_LANG" )
   }
   else {
@@ -163,22 +148,24 @@ public actionMenu(id,key) {
     showMenu(id)
   }
 
-  if ( isAdmin && (key==2) ) {
-    new sLang[3]
-    get_lang(g_menuLang[id][1],sLang)
+  new pLang[3],pLang_old[3],sLang[3],sLang_old[3],lName[64]
+  get_lang(g_menuLang[id][0],pLang)
+  get_lang(g_menuLang[id][1],sLang)
+  get_user_info(id,"lang",pLang_old,2)
+  get_lang(g_serverLang,sLang_old)
+
+  if ( isAdmin && (key==2) && !equali(sLang,sLang_old) ) {
     set_vaultdata("server_language",sLang)
     set_cvar_string("amxx_language",sLang)
     g_serverLang = g_menuLang[id][1]
-    client_print(id,print_chat,"%L",id,"SET_LANG_SERVER",sLang)
+    format(lName,63,"%L",sLang,"LANG_NAME")
+    client_print(id,print_chat,"%L",pLang,"SET_LANG_SERVER",lName)
   }
 
-  if ( ( isAdmin && (key==2) ) || ( !isAdmin && (key==1) ) ) {
-    new pLang[3]
-    get_lang(g_menuLang[id][0],pLang)
-    copy(g_userLang[id],2,pLang)
-    set_user_info(id,"lang",pLang)
-    client_print(id,print_chat,"%L",id,"SET_LANG_USER",pLang)
-    showMenu(id)
+  if ( !equali(pLang,pLang_old) && ( ( isAdmin && (key==2) ) || ( !isAdmin && (key==1) ) ) ) {
+    client_cmd(id,"setinfo ^"lang^" ^"%s^"",pLang)
+    format(lName,63,"%L",pLang,"LANG_NAME")
+    client_print(id,print_chat,"%L",pLang,"SET_LANG_USER",lName)
   }
 }
 

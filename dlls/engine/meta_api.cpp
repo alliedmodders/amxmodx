@@ -3386,6 +3386,7 @@ AMX_NATIVE_INFO Engine_Natives[] = {
 	{"set_size",			set_size},
 	{"get_decal_index",		get_decal_index},
 	{"precache_event",		precache_event},
+	{"call_think",			call_think},
 
 	{ NULL, NULL }
 

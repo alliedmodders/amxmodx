@@ -33,6 +33,7 @@
 */
 
 #include <amxmodx>
+#include <amxmisc>
 
 // Uncomment if you want to display
 // names with hud messages

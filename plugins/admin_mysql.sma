@@ -33,6 +33,8 @@
 */
 
 #include <amxmodx>
+#include <amxmisc>
+#include <mysql>
 
 #define MAX_ADMINS 64
 

@@ -35,7 +35,8 @@
 // Uncomment if you want to have seperate settings for each map
 //#define MAPSETTINGS
 
-#include <amxmodx> 
+#include <amxmodx>
+#include <amxmisc>
 
 #if !defined NO_STEAM
 #define MAXMENUPOS 34
@@ -465,7 +466,7 @@ public cmdRest(id,level,cid){
     switchCommand( id, 0 )
   else if ( equali( "list" , cmd ) ) {
     new arg1[8]
-    new start = read_argv(2,arg1,7) ? strtonum(arg1) : 1
+    new start = read_argv(2,arg1,7) ? str_to_int(arg1) : 1
     if (--start < 0) start = 0
     if (start >= MAXMENUPOS) start = MAXMENUPOS - 1
     new end = start + 10

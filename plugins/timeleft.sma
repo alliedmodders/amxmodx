@@ -54,8 +54,8 @@ public sayTheTime(id){
     new mhours[6], mmins[6], whours[32], wmins[32], wpm[6]
     get_time("%H",mhours,5)
     get_time("%M",mmins,5)
-    new mins = strtonum(mmins)
-    new hrs = strtonum(mhours)
+    new mins = str_to_int(mmins)
+    new hrs = str_to_int(mhours)
     if (mins)
       num_to_word(mins,wmins,31)
     else
@@ -154,7 +154,7 @@ public setDisplaying(){
   while (i < argc && i < 32){
     read_argv(i+1,arg,31)
     parse(arg,flags,31,num,31)
-    g_TimeSet[i][0] = str_to_num(num)
+    g_TimeSet[i][0] = str_to_int(num)
     g_TimeSet[i][1] = read_flags(flags)
     i++
   }

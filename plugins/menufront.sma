@@ -33,6 +33,7 @@
 */
 
 #include <amxmodx>
+#include <amxmisc>
 
 new g_menuPosition[33]
 

@@ -33,6 +33,7 @@
 */
 
 #include <amxmodx>
+#include <amxmisc>
 
 #define MAX_MAPS    128
 #define SELECTMAPS  5

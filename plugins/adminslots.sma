@@ -33,6 +33,7 @@
 */
 
 #include <amxmodx>
+#include <amxmisc>
 
 // Comment if you don't want to hide not used reserved slots
 #define HIDE_RESERVED_SLOTS
@@ -60,7 +61,7 @@ public client_authorized(id)
 public client_connect(id)
 #endif
 {
-	new maxplayers = get_maxplayers( )
+	new maxplayers = get_maxplayers()
 	new players = get_playersnum( 1 )
 	new limit = maxplayers - get_cvar_num( "amx_reservation" )
   
@@ -75,7 +76,7 @@ public client_connect(id)
 #if !defined NO_STEAM
 	client_cmd(id,g_cmdLoopback)
 #else
-	if ( is_user_bot(id) ) 
+	if ( is_user_bot(id) )
 		server_cmd("kick #%d", get_user_userid(id)  )
 	else 
 		client_cmd(id,"echo ^"Dropped due to slot reservation^";disconnect")

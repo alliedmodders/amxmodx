@@ -33,6 +33,8 @@
 */
 
 #include <amxmodx>
+#include <amxmisc>
+#include <csstats>
 
 // You can also manualy enable these options by setting them to 1
 // For example:

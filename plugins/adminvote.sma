@@ -33,6 +33,7 @@
 */
 
 #include <amxmodx>
+#include <amxmisc>
 
 new g_Answer[128] 
 new g_optionName[4][32] 
@@ -332,7 +333,7 @@ public cmdVoteKickBan(id,level,cid) {
   if (voteban) 
     get_user_authid(player,g_optionName[0],31) 
   else 
-    numtostr(get_user_userid(player),g_optionName[0],31) 
+    int_to_str(get_user_userid(player),g_optionName[0],31) 
   new authid[32],name[32]
   get_user_authid(id,authid,31) 
   get_user_name(id,name,31) 

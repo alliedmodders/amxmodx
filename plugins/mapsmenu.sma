@@ -32,8 +32,9 @@
 *  version.
 */
 
-
 #include <amxmodx>
+#include <amxmisc>
+#include <engine>
 
 #define MAX_MAPS 64
 

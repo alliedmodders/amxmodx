@@ -32,7 +32,8 @@
 *  version.
 */
 
-#include <amxmodx> 
+#include <amxmodx>
+#include <amxmisc>
 
 new g_menuPosition[33]
 new g_menuPlayers[33][32]
@@ -574,7 +575,7 @@ public actionClcmdMenu(id,key)
         copy(command,63,g_clcmdCmd[g_menuSelect[id][g_menuOption[id]]])
         get_user_authid(player,authid,31)
         get_user_name(player,name,31)
-        numtostr(get_user_userid(player),userid,31)
+        int_to_str(get_user_userid(player),userid,31)
         replace(command,63,"%userid%",userid)
         replace(command,63,"%authid%",authid)
         replace(command,63,"%name%",name)

@@ -33,6 +33,8 @@
 */
 
 #include <amxmodx>
+#include <amxmisc>
+#include <fun>
 
 new g_menuPosition[33] 
 new g_menuPlayers[33][32] 

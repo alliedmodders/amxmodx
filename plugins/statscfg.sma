@@ -33,6 +33,7 @@
 */
 
 #include <amxmodx>
+#include <amxmisc>
 
 #define MAX_MENU_DATA 64
 
@@ -104,7 +105,7 @@ public cmdCfg( id,level,cid ){
   }
   else if ( equali(cmds, "list" )  ) {
     new arg1[8]
-    new start = read_argv(2,arg1,7) ? strtonum(arg1) : 1
+    new start = read_argv(2,arg1,7) ? str_to_int(arg1) : 1
     if (--start < 0) start = 0
     if (start >= g_menuDataNum) start = g_menuDataNum - 1
     new end = start + 10

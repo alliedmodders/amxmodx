@@ -33,6 +33,8 @@
 */
 
 #include <amxmodx>
+#include <amxmisc>
+#include <engine>
 
 #define MAXRCONCVARS 16
 new g_cvarRcon[ MAXRCONCVARS ][32]
@@ -181,7 +183,7 @@ public cmdBan(id,level,cid){
     name,get_user_userid(id),authid, name2,userid2,authid2,minutes,reason)
 
   new temp[64]
-  if (strtonum(minutes))
+  if (str_to_int(minutes))
     format(temp,63,"for %s min.",minutes)
   else
     temp = "permanently"
@@ -254,7 +256,7 @@ public cmdSlap(id,level,cid){
   if (!player) return PLUGIN_HANDLED
   new spower[32],authid[32],name2[32],authid2[32],name[32]
   read_argv(2,spower,31)
-  new damage = strtonum(spower)
+  new damage = str_to_int(spower)
   user_slap(player,damage)
   get_user_authid(id,authid,31)
   get_user_name(id,name,31)

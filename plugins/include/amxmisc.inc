@@ -42,7 +42,7 @@ stock cmd_target(id,const arg[],flags = 1) {
     }
   }
   else if ( ( player = find_player("c",arg) )==0 && arg[0]=='#' && arg[1] )
-    player = find_player("k",str_to_num(arg[1]))    
+    player = find_player("k",str_to_int(arg[1]))    
   if (!player) {
     console_print(id,"Client with that name or userid not found")
     return 0

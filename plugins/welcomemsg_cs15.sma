@@ -33,6 +33,7 @@
 */
 
 #include <amxmodx>
+#include <amxmisc>
 
 // Settings (comment unwanted options)
 #define SHOW_MODS

@@ -92,9 +92,7 @@ int mPlayerIndex;
 int mState;
 int g_srvindex;
 
-cvar_t  init_amx_version={"amx_version","", FCVAR_SERVER | FCVAR_SPONLY};
 cvar_t  init_amxmodx_version={"amxmodx_version","", FCVAR_SERVER | FCVAR_SPONLY};
-cvar_t* amx_version = NULL;
 cvar_t* amxmodx_version = NULL;
 cvar_t* hostname = NULL;
 cvar_t* mp_timelimit = NULL;
@@ -243,15 +241,14 @@ int Spawn( edict_t *pent ) {
   attachModules();
   int loaded = countModules(CountModules_Running);	// Call after attachModules so all modules don't have pending stat
   // Set some info about amx version and modules
+  // :TODO: Remove modules num from amxmodx_version, make amxmodx_modules cvar
   if ( loaded ){
     char buffer[64];
     sprintf( buffer,"%s (%d module%s)",
       AMX_VERSION, loaded , (loaded == 1) ? "" : "s" );
-    CVAR_SET_STRING( "amx_version" , buffer );
 	CVAR_SET_STRING( "amxmodx_version", buffer);
   }
   else {
-    CVAR_SET_STRING( "amx_version", AMX_VERSION );
 	CVAR_SET_STRING( "amxmodx_version", AMX_VERSION );
   }
 
@@ -270,7 +267,7 @@ int Spawn( edict_t *pent ) {
   memset(g_players[0].flags,-1,sizeof(g_players[0].flags));
 
   //  ###### Load AMX scripts
-  g_plugins.loadPluginsFromFile( get_localinfo("amxx_plugins", "addons/amxx/plugins.ini") );	// :TODO: Where the hell should this be!?!?!
+  g_plugins.loadPluginsFromFile( get_localinfo("amxx_plugins", "addons/amxx/plugins.ini") );
 
   //  ###### Call precache forward function
   g_dontprecache = false;
@@ -953,9 +950,7 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
   gMetaFunctionTable.pfnGetEngineFunctions_Post = GetEngineFunctions_Post;
   memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
   gpGamedllFuncs=pGamedllFuncs;
-  CVAR_REGISTER (&init_amx_version);
   CVAR_REGISTER (&init_amxmodx_version);
-  amx_version = CVAR_GET_POINTER(init_amx_version.name  );
   amxmodx_version = CVAR_GET_POINTER(init_amxmodx_version.name);
   REG_SVR_COMMAND("amxx",amx_command);
 

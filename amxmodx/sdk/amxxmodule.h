@@ -240,6 +240,14 @@ enum {
   AMX_ERR_DOMAIN,       /* domain error, expression result does not fit in range */
 };
 
+#if !defined AMX_NO_ALIGN
+  #if defined __linux__
+    #pragma pack()    /* reset default packing */
+  #else
+    #pragma pack(pop) /* reset previous packing */
+  #endif
+#endif
+
 
 // ***** declare functions *****
 
@@ -2154,5 +2162,6 @@ void	Mem_Deallocator(const char *sourceFile, const unsigned int sourceLine, cons
 #define	calloc(sz)	Mem_Allocator  (__FILE__,__LINE__,__FUNCTION__,m_alloc_calloc,sz)
 #define	realloc(ptr,sz)	Mem_Reallocator(__FILE__,__LINE__,__FUNCTION__,m_alloc_realloc,sz,ptr)
 #define	free(ptr)	Mem_Deallocator(__FILE__,__LINE__,__FUNCTION__,m_alloc_free,ptr)
+
 
 #endif // #ifndef __AMXXMODULE_H__

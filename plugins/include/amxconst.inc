@@ -13,9 +13,6 @@
 
 #define AMXX_VERSION 0.2
 
-/* Uncomment if you are not using Steam */
-//#define NO_STEAM
-
 #define ADMIN_IMMUNITY		(1<<0)	/* flag "a" */
 #define ADMIN_RESERVATION	(1<<1)	/* flag "b" */
 #define ADMIN_KICK		(1<<2)	/* flag "c" */

@@ -4,7 +4,7 @@
 static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 {
 	int index=params[1];
-	if (index >= 1 && index <= gpGlobalx->maxClients)
+	if (index >= 1 && index <= gpGlobals->maxClients)
 	{
 		if (!MF_IsPlayerIngame(index))
 		{

@@ -208,3 +208,15 @@ enum {
 	force_model_samebounds,		/* For model files only, the geometry must fit in the same bbox */
 	force_model_specifybounds,	/* For model files only, the geometry must fit in the specified bbox */
 }
+
+/* Status for get_module() */
+enum {
+	module_none = 0,
+	module_query,
+	module_badload,
+	module_loaded,
+	module_noinfo,
+	module_noquery,
+	module_noattach,
+	module_old,
+};

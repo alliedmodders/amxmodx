@@ -272,7 +272,7 @@ void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1, 
 	g_fakecmd.fake = false;
 }
 
-std::string g_UTIL_LogFile;
+String g_UTIL_LogFile;
 
 void UTIL_MakeNewLogFile()
 {
@@ -292,8 +292,8 @@ void UTIL_MakeNewLogFile()
 	int i = 0;
 	while (true)
 	{
-		g_UTIL_LogFile = build_pathname("%s/L%02d%02d%03d.log", g_log_dir.str(), curTime->tm_mon + 1, curTime->tm_mday, i);
-		FILE *pTmpFile = fopen(g_UTIL_LogFile.c_str(), "r");		// open for reading to check whether the file exists
+		g_UTIL_LogFile.set(build_pathname("%s/L%02d%02d%03d.log", g_log_dir.str(), curTime->tm_mon + 1, curTime->tm_mday, i));
+		FILE *pTmpFile = fopen(g_UTIL_LogFile.str(), "r");		// open for reading to check whether the file exists
 		if (!pTmpFile)
 			break;
 		fclose(pTmpFile);
@@ -322,7 +322,7 @@ void UTIL_Log(const char *fmt, ...)
 	strftime(date, 31, "%m/%d/%Y - %H:%M:%S", curTime);
 
 	// log msg now
-	FILE *pF = fopen(g_UTIL_LogFile.c_str(), "a+");
+	FILE *pF = fopen(g_UTIL_LogFile.str(), "a+");
 	if (!pF)
 		return;		// don't try to create a new logfile to prevent recursion crashes if there is an unforseen error
 

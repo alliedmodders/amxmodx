@@ -181,3 +181,32 @@ stock AddMenuItem(const MENU_TEXT[], const MENU_CMD[], const MENU_ACCESS, const 
 
 	callfunc_end()
 }
+
+/* Find plugin by an attribute */
+stock find_plugin_byfile(pname[], bool:ignorecase=true)
+{
+	new num_of_plugins = get_pluginsnum();
+	new dummy[1];
+	new name[64];
+	for (new i = 0; i < num_of_plugins; ++i)
+	{
+		get_plugin(i, name, 0, dummy, 63, dummy, 0, dummy, 0, dummy, 0);
+		if (ignorecase ? equali(name, pname) : equal(name, pname))
+			return i;
+	}
+	return -1;
+}
+
+stock find_plugin_bydesc(pdesc[], bool:ignorecase=true)
+{
+	new num_of_plugins = get_pluginsnum();
+	new dummy[1];
+	new desc[64];
+	for (new i = 0; i < num_of_plugins; ++i)
+	{
+		get_plugin(i, dummy, 0, desc, 63, dummy, 0, dummy, 0, dummy, 0);
+		if (ignorecase ? equali(desc, pdesc) : equal(desc, pdesc))
+			return i;
+	}
+	return -1;
+}

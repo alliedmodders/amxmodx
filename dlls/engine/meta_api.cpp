@@ -381,7 +381,7 @@ static cell AMX_NATIVE_CALL set_offset_short(AMX *amx, cell *params)
 		return 0;
 	}
 
-	if ((index < gpGlobals->maxClients) && !is_PlayerOn[index]) {
+	if ((index <= gpGlobals->maxClients) && !is_PlayerOn[index]) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -409,7 +409,7 @@ static cell AMX_NATIVE_CALL set_offset(AMX *amx, cell *params)
 		return 0;
 	}
 
-	if ((index < gpGlobals->maxClients) && !is_PlayerOn[index]) {
+	if ((index <= gpGlobals->maxClients) && !is_PlayerOn[index]) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -437,7 +437,7 @@ static cell AMX_NATIVE_CALL set_offset_char(AMX *amx, cell *params)
 		return 0;
 	}
 
-	if ((index < gpGlobals->maxClients) && !is_PlayerOn[index]) {
+	if ((index <= gpGlobals->maxClients) && !is_PlayerOn[index]) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -469,7 +469,7 @@ static cell AMX_NATIVE_CALL set_offset_float(AMX *amx, cell *params)
 		return 0;
 	}
 
-	if ((index < gpGlobals->maxClients) && !is_PlayerOn[index]) {
+	if ((index <= gpGlobals->maxClients) && !is_PlayerOn[index]) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -497,7 +497,7 @@ static cell AMX_NATIVE_CALL get_offset_short(AMX *amx, cell *params)
 		return 0;
 	}
 
-	if ((index < gpGlobals->maxClients) && !is_PlayerOn[index]) {
+	if ((index <= gpGlobals->maxClients) && !is_PlayerOn[index]) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -525,7 +525,7 @@ static cell AMX_NATIVE_CALL get_offset_char(AMX *amx, cell *params)
 	}
 
 	//!!!1111 don't uncomment jghg or I will pull my hair out
-	if ((index < gpGlobals->maxClients) && !is_PlayerOn[index]) {
+	if ((index <= gpGlobals->maxClients) && !is_PlayerOn[index]) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -553,7 +553,7 @@ static cell AMX_NATIVE_CALL get_offset(AMX *amx, cell *params)
 	}
 
 	//jghg comment this out again and I bite you
-	if ((index < gpGlobals->maxClients) && !is_PlayerOn[index]) {
+	if ((index <= gpGlobals->maxClients) && !is_PlayerOn[index]) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -581,7 +581,7 @@ static cell AMX_NATIVE_CALL get_offset_float(AMX *amx, cell *params)
 	}
 
 	//jghg comment this out again and I bite you
-	if ((index < gpGlobals->maxClients) && !is_PlayerOn[index]) {
+	if ((index <= gpGlobals->maxClients) && !is_PlayerOn[index]) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
 	}

@@ -48,7 +48,8 @@ public plugin_init() {
   register_dictionary("admincmd.txt")
   register_dictionary("common.txt")
   register_concmd("amx_kick","cmdKick",ADMIN_KICK,"<name or #userid> [reason]")
-  register_concmd("amx_ban","cmdBan",ADMIN_BAN,"<name or #userid> <id/ip> <minutes> [reason]")
+  register_concmd("amx_ban","cmdBan",ADMIN_BAN,"<name or #userid> <minutes> [reason]")
+  register_concmd("amx_banip","cmdBanIP",ADMIN_BAN,"<name or #userid> <minutes> [reason]")
   register_concmd("amx_addban","cmdAddBan",ADMIN_BAN,"<authid or ip> <minutes> [reason]")
   register_concmd("amx_unban","cmdUnban",ADMIN_BAN,"<authid or ip>")
   register_concmd("amx_slay","cmdSlay",ADMIN_SLAY,"<name or #userid>")
@@ -163,20 +164,12 @@ public cmdAddBan(id,level,cid) {
 }
     
 public cmdBan(id,level,cid) {
-  if (!cmd_access(id,level,cid,4))
+  if (!cmd_access(id,level,cid,3))
     return PLUGIN_HANDLED
-  new target[32],mode[3],minutes[8],reason[32]
+  new target[32],minutes[8],reason[64]
   read_argv(1,target,31)
-  read_argv(2,mode,2)
-  strtolower(mode)
-  read_argv(3,minutes,7)
-  read_argv(4,reason,31)
-  if ( (!equal(mode,"id")) && (!equal(mode,"ip")) ) {
-    new hcmd[32],hinfo[128],hflag
-    get_concmd(cid,hcmd,31,hflag,hinfo,127,level)
-    console_print(id,"Usage:  %s %s",hcmd,hinfo)
-    return PLUGIN_HANDLED
-  }
+  read_argv(2,minutes,7)
+  read_argv(3,reason,63)
   new player = cmd_target(id,target,9)
   if (!player) return PLUGIN_HANDLED
   new authid[32],name2[32],authid2[32],name[32]
@@ -186,8 +179,8 @@ public cmdBan(id,level,cid) {
   get_user_name(player,name2,31)
   get_user_name(id,name,31)
   userid2 = get_user_userid(player)
-  log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (mode ^"%s^") (minutes ^"%s^") (reason ^"%s^")", 
-    name,get_user_userid(id),authid, name2,userid2,authid2,mode,minutes,reason)
+  log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%s^") (reason ^"%s^")", 
+    name,get_user_userid(id),authid, name2,userid2,authid2,minutes,reason)
 
   new temp[64],banned[16],nNum = str_to_num(minutes)
   if (nNum)
@@ -197,22 +190,70 @@ public cmdBan(id,level,cid) {
 
   format(banned,15,"%L",player,"BANNED")
 
-  if ( equal(mode,"ip") ){
-    new address[32]
-    get_user_ip(player,address,31,1)
-
-    if (reason[0])
-      server_cmd("kick #%d ^"%s (%s %s)^";wait;addip ^"%s^" ^"%s^";wait;writeip",userid2,reason,banned,temp,minutes,address)
-    else
-      server_cmd("kick #%d ^"%s %s^";wait;addip ^"%s^" ^"%s^";wait;writeip",userid2,banned,temp,minutes,address)
-  }
+  if (reason[0])
+    server_cmd("kick #%d ^"%s (%s %s)^";wait;banid ^"%s^" ^"%s^";wait;writeid",userid2,reason,banned,temp,minutes,authid2)
   else
-  {
-    if (reason[0])
-      server_cmd("kick #%d ^"%s (%s %s)^";wait;banid ^"%s^" ^"%s^";wait;writeid",userid2,reason,banned,temp,minutes,authid2)
-    else
-      server_cmd("kick #%d ^"%s %s^";wait;banid ^"%s^" ^"%s^";wait;writeid",userid2,banned,temp,minutes,authid2)
+    server_cmd("kick #%d ^"%s %s^";wait;banid ^"%s^" ^"%s^";wait;writeid",userid2,banned,temp,minutes,authid2)
+    
+  new activity = get_cvar_num("amx_show_activity")
+  if (activity!=0) {
+    new players[32],pnum,msg[256],len
+    get_players(players,pnum,"c")
+    for (new i=0;i<pnum;i++) {
+      len = format(msg,255,"%L",players[i],"ADMIN")
+      if (activity==1)
+        len += copy(msg[len],255-len,":")
+      else
+        len += format(msg[len],255-len," %s:",name)
+      len += format(msg[len],255-len," %L",players[i],"BAN")
+      len += format(msg[len],255-len," %s ",name2)
+      if (nNum)
+        format(msg[len],255-len,"%L",players[i],"FOR_MIN",minutes)
+      else
+        format(msg[len],255-len,"%L",players[i],"PERM")
+      client_print(players[i],print_chat,msg)
+    }
   }
+
+
+  console_print(id,"[AMXX] %L",id,"CLIENT_BANNED",name2)
+  return PLUGIN_HANDLED
+}
+    
+public cmdBanIP(id,level,cid) {
+  if (!cmd_access(id,level,cid,3))
+    return PLUGIN_HANDLED
+  new target[32],minutes[8],reason[64]
+  read_argv(1,target,31)
+  read_argv(2,minutes,7)
+  read_argv(3,reason,63)
+  new player = cmd_target(id,target,9)
+  if (!player) return PLUGIN_HANDLED
+  new authid[32],name2[32],authid2[32],name[32]
+  new userid2 = get_user_userid(player)
+  get_user_authid(player,authid2,31)
+  get_user_authid(id,authid,31)
+  get_user_name(player,name2,31)
+  get_user_name(id,name,31)
+  userid2 = get_user_userid(player)
+  log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%s^") (reason ^"%s^")", 
+    name,get_user_userid(id),authid, name2,userid2,authid2,minutes,reason)
+
+  new temp[64],banned[16],nNum = str_to_num(minutes)
+  if (nNum)
+    format(temp,63,"%L",player,"FOR_MIN",minutes)
+  else
+    format(temp,63,"%L",player,"PERM")
+
+  format(banned,15,"%L",player,"BANNED")
+
+  new address[32]
+  get_user_ip(player,address,31,1)
+
+  if (reason[0])
+    server_cmd("kick #%d ^"%s (%s %s)^";wait;addip ^"%s^" ^"%s^";wait;writeip",userid2,reason,banned,temp,minutes,address)
+  else
+    server_cmd("kick #%d ^"%s %s^";wait;addip ^"%s^" ^"%s^";wait;writeip",userid2,banned,temp,minutes,address)
     
   new activity = get_cvar_num("amx_show_activity")
   if (activity!=0) {

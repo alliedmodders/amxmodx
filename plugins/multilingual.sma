@@ -153,7 +153,7 @@ public actionMenu(id,key) {
     set_vaultdata("server_language",sLang)
     set_cvar_string("amxx_language",sLang)
     g_serverLang = g_menuLang[id][1]
-    client_print(id,print_chat,"%L",id,"SET_LANG_USER",sLang)
+    client_print(id,print_chat,"%L",id,"SET_LANG_SERVER",sLang)
   }
 
   if ( ( isAdmin && (key==2) ) || ( !isAdmin && (key==1) ) ) {

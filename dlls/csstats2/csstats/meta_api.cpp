@@ -289,7 +289,7 @@ void OnMetaAttach() {
 
 void OnAmxxAttach(){
 	MF_AddNatives(stats_Natives);
-	const char* path =  get_localinfo("csstats_score");
+	const char* path =  get_localinfo("csstats_score","addons/amxx/data/csstats.amxx");
 	if ( path && *path ) 
 	{
 		char error[128];
@@ -299,7 +299,7 @@ void OnAmxxAttach(){
 	if ( !g_rank.begin() )
 	{		
 		g_rank.loadRank( MF_BuildPathname("%s",
-			get_localinfo("csstats") ) );
+			get_localinfo("csstats","addons/amxx/data/csstats.dat") ) );
 	}
 }
 

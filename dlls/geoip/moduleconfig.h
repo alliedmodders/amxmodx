@@ -19,7 +19,7 @@
 #endif // __DATE__
 
 // metamod plugin?
-// #define USE_METAMOD
+#define USE_METAMOD
 
 // - AMXX Init functions
 // Also consider using FN_META_*

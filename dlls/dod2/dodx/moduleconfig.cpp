@@ -372,7 +372,7 @@ void OnAmxxAttach() {
 	MF_AddNatives( stats_Natives );
 	MF_AddNatives( base_Natives );
 
-	const char* path =  get_localinfo("dodstats_score"/*,"addons/amxx/dodstats.amx"*/);
+	const char* path =  get_localinfo("dodstats_score","addons/amxx/data/dodstats.amxx");
 	if ( path && *path ) {
 		char error[128];
 		g_rank.loadCalc( MF_BuildPathname("%s",path) , error  );
@@ -380,7 +380,7 @@ void OnAmxxAttach() {
 	
 	if ( !g_rank.begin() ){		
 		g_rank.loadRank( MF_BuildPathname("%s",
-			get_localinfo("dodstats"/*,"addons/amxx/dodstats.dat"*/) ) );
+			get_localinfo("dodstats","addons/amxx/data/dodstats.dat") ) );
 	}
 
 	g_map.Init();

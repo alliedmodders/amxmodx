@@ -382,7 +382,8 @@ static cell AMX_NATIVE_CALL set_msg_arg_int(AMX *amx, cell *params)
 		return 0;
 	}
 
-	Msg[argn]->iData = params[2];
+	Msg[argn]->type = params[2];
+	Msg[argn]->iData = params[3];
 
 	return 1;
 }

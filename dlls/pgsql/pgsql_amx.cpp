@@ -1,7 +1,5 @@
 #include "pgsql_amx.h"
 
-using namespace std;
-
 bool is_ipaddr(const char *IP)
 {
 	do {

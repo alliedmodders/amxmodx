@@ -1,7 +1,9 @@
-#include <vector>
-#include <string>
-#include <map>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <libpq-fe.h>
+#include "CVector.h"
+#include "CString.h"
 #include "amxxmodule.h"
 
 class SQL
@@ -16,14 +18,14 @@ public:
 
 	PGconn *cn;
 
-	std::string ErrorStr;
+	CString ErrorStr;
 	int ErrorCode;
 
-	std::string Host;
-	std::string Password;
-	std::string Username;
-	std::string Database;
-	std::string cstr;
+	CString Host;
+	CString Password;
+	CString Username;
+	CString Database;
+	CString cstr;
 
 	bool isFree;
 };
@@ -45,10 +47,10 @@ public:
 	int RowCount;
 	bool isFree;
 	SQL *sql;
-	std::vector<const char *> Fields;
+	CVector<const char *> Fields;
 };
 
 char *amx_string(AMX *amx, cell &param, int &len);
 
-extern std::vector<SQLResult*> Results;
-extern std::vector<SQL*> DBList;
+extern CVector<SQLResult*> Results;
+extern CVector<SQL*> DBList;

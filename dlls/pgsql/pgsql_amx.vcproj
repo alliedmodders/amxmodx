@@ -189,6 +189,12 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
+				RelativePath=".\CString.h">
+			</File>
+			<File
+				RelativePath=".\CVector.h">
+			</File>
+			<File
 				RelativePath="pgsql_amx.h">
 			</File>
 		</Filter>

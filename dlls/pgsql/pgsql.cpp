@@ -31,25 +31,22 @@
 *	version.
 */
 
-#include <vector>
 #include "pgsql_amx.h"
 #include "amxxmodule.h"
 
-using namespace std;
-
-std::vector<SQLResult*> Results;
-std::vector<SQL*> DBList;
+CVector<SQLResult*> Results;
+CVector<SQL*> DBList;
 
 int sql_exists(const char* host,const char* user,const char* pass,const char* dbase) {
-	vector<SQL*>::iterator i;
+	unsigned int i = 0;
 	int id = 0;
-	for (i=DBList.begin(); i!=DBList.end(); i++) {
+	for (i=0; i<=DBList.size(); i++) {
 		id++;
-		if (((*i)->Host.compare(host) == 0) &&
-			((*i)->Username.compare(user) == 0) &&
-			((*i)->Password.compare(pass) == 0) &&
-			((*i)->Database.compare(dbase) == 0) &&
-			(!(*i)->isFree)) {
+		if ((DBList[i]->Host.compare(host) == 0) &&
+			(DBList[i]->Username.compare(user) == 0) &&
+			(DBList[i]->Password.compare(pass) == 0) &&
+			(DBList[i]->Database.compare(dbase) == 0) &&
+			(!DBList[i]->isFree)) {
 				return id;
 		}
 	}

@@ -14,6 +14,21 @@
 #include <engine_const>
 #include <engine_stocks>
 
+/* These functinos are used to generate client messages.
+* You may generate menu, smoke, shockwaves, thunderlights,
+* intermission and many many others messages.
+* See HL SDK for more examples. */
+native message_begin( dest, msg_type, origin[3]={0,0,0},player=0);
+native message_end();
+native write_byte( x );
+native write_char( x );
+native write_short( x );
+native write_long( x );
+native write_entity( x );
+native write_angle( x );
+native write_coord( x );
+native write_string( x[] );
+
 /* This is a highly experimental command that will directly hook a message in the engine!
  * You can overwrite the message before anything happens and either let the message continue
  * or fully block it. Here is how it works:
@@ -29,20 +44,20 @@ native register_message(iMsgId, szFunction[]);
  * of the argument. Exceeding the bounds of 1 to get_msg_args() is a bad idea. */
 
 /* Gets number of arguments that were passed to this message */
-native get_msg_args(msg_id);
+native get_msg_args();
 
 /* Gets the argument type of argument argn */
-native get_msg_argtype(msg_id, argn);
+native get_msg_argtype(argn);
 
 /* Gets the value of argn. */
-native get_msg_arg_int(msg_id, argn);
-native Float:get_msg_arg_float(msg_id, argn);
-native get_msg_arg_string(msg_id, argn, szReturn[], iLength);
+native get_msg_arg_int(argn);
+native Float:get_msg_arg_float(argn);
+native get_msg_arg_string(argn, szReturn[], iLength);
 
 /* sets the value of argn. */
-native set_msg_arg_int(msg_id, argn, argtype, iValue);
-native set_msg_arg_float(msg_id, argn, argtype, Float:fValue);
-native set_msg_arg_string(msg_id, argn, szString[]);
+native set_msg_arg_int(argn, argtype, iValue);
+native set_msg_arg_float(argn, argtype, Float:fValue);
+native set_msg_arg_string(argn, szString[]);
 
 /* Note, the offsets are passed as linux values, not windows values.
  * Although the engine module will automatically calculate the difference,
@@ -84,6 +99,9 @@ native find_ent_by_owner(iIndex, szClass[], iOwner);
 native find_ent_by_target(iIndex, szClass[]);
 native find_ent_by_tname(iIndex, szClass[]);
 native find_ent_by_model(iIndex, szClass[], szModel[]);
+
+//this will CBaseEntity::Think() or something from the entity
+native call_think(entity)
 
 /* Is entity valid? */
 native is_valid_ent(iIndex);

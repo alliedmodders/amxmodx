@@ -91,6 +91,7 @@ AmxCallList serverFrame;
 AmxCallList preThink;
 AmxCallList postThink;
 AmxCallList clientKill;
+AmxCallList Msgs;
 
 meta_globals_t *gpMetaGlobals;
 gamedll_funcs_t *gpGamedllFuncs;
@@ -928,13 +929,4 @@ private:
 	edict_t *v;
 	argStack *CHeadArg;
 	argStack *CTailArg;
-};
-
-struct MsgSets
-{
-	bool isHooked;
-	bool isCalled;
-	int type;
-	MessageInfo *msg;
-	AmxCallList msgCalls;
 };

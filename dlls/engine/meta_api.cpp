@@ -40,7 +40,6 @@
 #include <modules.h>
 #include <vector>
 #include <limits.h>
-#include <iostream>
 #include "engine.h"
 
 extern "C" void destroy(MessageInfo* p) {
@@ -48,12 +47,29 @@ extern "C" void destroy(MessageInfo* p) {
 }
 
 GlobalInfo GlInfo;
-MsgSets Msg[MAX_MESSAGES];
-int LastMessage;
+MessageInfo *msgd;
+bool isMsgHooked[MAX_MESSAGES];
+int inHookProcess;
 
 cvar_t amxxe_version = {"amxxe_version", VERSION, FCVAR_SERVER, 0};
 
+//from OLO
+char* get_amxstring(AMX *amx,cell amx_addr,int id, int& len)
+{
+  static char buffor[4][3072];
+  register cell* source = (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
+  register char* dest = buffor[id];
+  char* start = dest;
+  while (*dest++=(char)*source++)
+    ;
+  len = --dest - start;
+  return start;
+}
 
+cell* get_amxaddr(AMX *amx,cell amx_addr)
+{
+  return (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
+}
  
 /********************************************************
   vexd's utility funcs
@@ -96,6 +112,23 @@ char *AMX_GET_STRING(AMX *oPlugin, cell tParam, int &iLength) {
   ******************************************************/
 
 //(BAILOPAN)
+//Calls think
+static cell AMX_NATIVE_CALL call_think(AMX *amx, cell *params)
+{
+	int iEnt = params[1];
+
+	edict_t *pEnt = INDEXENT(iEnt);
+
+	if (FNullEnt(pEnt)) {
+		return 0;
+	}
+
+	MDLL_Think(pEnt);
+
+	return 1;
+}
+
+//(BAILOPAN)
 //Hooks a register_message()
 static cell AMX_NATIVE_CALL register_message(AMX *amx, cell *params)
 {
@@ -106,9 +139,8 @@ static cell AMX_NATIVE_CALL register_message(AMX *amx, cell *params)
 
 	if (iMessage > 0 && iMessage < MAX_MESSAGES) {
 		if (AMX_FINDPUBLIC(amx, szFunction, &iFunctionIndex) == AMX_ERR_NONE) {
-			Msg[iMessage].isHooked = true;
-			Msg[iMessage].type = iMessage;
-			Msg[iMessage].msgCalls.put(amx, iFunctionIndex);
+			isMsgHooked[iMessage] = true;
+			Msgs.put(amx, iFunctionIndex);
 		} else {
 			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 			return 0;
@@ -125,19 +157,13 @@ static cell AMX_NATIVE_CALL register_message(AMX *amx, cell *params)
 //Gets the argument type of a message argument
 static cell AMX_NATIVE_CALL get_msg_argtype(AMX *amx, cell *params)
 {
-	int msg_type = params[1];
-	int argn = params[2];
+	int argn = params[1];
 
-	if (msg_type < 0 || msg_type > MAX_MESSAGES) {
+	if ((inHookProcess) && (msgd != NULL)) {
+		return msgd->ArgType(argn);
+	} else {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
-	} else {
-		if ((Msg[msg_type].isHooked) && (Msg[msg_type].msg != NULL)) {
-			return Msg[msg_type].msg->ArgType(argn);
-		} else {
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-			return 0;
-		}
 	}
 
 	return 1;
@@ -147,18 +173,11 @@ static cell AMX_NATIVE_CALL get_msg_argtype(AMX *amx, cell *params)
 //Gets the argument count for a message.
 static cell AMX_NATIVE_CALL get_msg_args(AMX *amx, cell *params)
 {
-	int msg_type = params[1];
-
-	if (msg_type < 0 || msg_type > MAX_MESSAGES) {
+	if ((inHookProcess) && (msgd != NULL)) {
+		return msgd->args();
+	} else {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
-	} else {
-		if ((Msg[msg_type].isHooked) && (Msg[msg_type].msg != NULL)) {
-			return Msg[msg_type].msg->args();
-		} else {
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-			return 0;
-		}
 	}
 }
 
@@ -166,24 +185,18 @@ static cell AMX_NATIVE_CALL get_msg_args(AMX *amx, cell *params)
 //gets a message argument as an integer
 static cell AMX_NATIVE_CALL get_msg_arg_int(AMX *amx, cell *params)
 {
-	int msg_type = params[1];
-	int argn = params[2];
+	int argn = params[1];
 	
-	if (msg_type < 0 || msg_type > MAX_MESSAGES) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return 0;
-	} else {
-		if (Msg[msg_type].isHooked && Msg[msg_type].msg!=NULL) {
-			if (argn < Msg[msg_type].msg->args() && argn > 0) {
-				return Msg[msg_type].msg->RetArg_Int(argn);
-			} else {
-				AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-				return 0;
-			}
+	if (inHookProcess && msgd!=NULL) {
+		if (argn < msgd->args() && argn > 0) {
+			return msgd->RetArg_Int(argn);
 		} else {
 			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 			return 0;
 		}
+	} else {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
 	}
 
 	return 1;
@@ -193,46 +206,22 @@ static cell AMX_NATIVE_CALL get_msg_arg_int(AMX *amx, cell *params)
 //gets a message argument as a float
 static cell AMX_NATIVE_CALL get_msg_arg_float(AMX *amx, cell *params)
 {
-	int msg_type = params[1];
-	int argn = params[2];
+	int argn = params[1];
 
 	float retVal;
 	
-	if (msg_type < 0 || msg_type > MAX_MESSAGES) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return 0;
-	} else {
-		if (Msg[msg_type].isHooked && Msg[msg_type].msg!=NULL) {
-			if (argn < Msg[msg_type].msg->args() && argn > 0) {
-				retVal = Msg[msg_type].msg->RetArg_Float(argn);
-				return *(cell*)((void *)&retVal);
-			} else {
-				AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-				return 0;
-			}
+	if (inHookProcess && msgd!=NULL) {
+		if (argn < msgd->args() && argn > 0) {
+			retVal = msgd->RetArg_Float(argn);
+			return *(cell*)((void *)&retVal);
 		} else {
 			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 			return 0;
 		}
+	} else {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
 	}
-
-	return 1;
-}
-
-//(JGHG(
-static cell AMX_NATIVE_CALL spawn_user(AMX *amx, cell *params) // spawn(id) = 1 param
-{
-	// Spawns an entity, this can be a user/player -> spawns at spawnpoints, or created entities seems to need this as a final "kick" into the game? :-)
-	// params[1] = entity to spawn
-
-    if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
-    {
-        AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-        return 0;
-    }
-	edict_t *pEnt = INDEXENT(params[1]);
-
-	MDLL_Spawn(pEnt);
 
 	return 1;
 }
@@ -241,33 +230,27 @@ static cell AMX_NATIVE_CALL spawn_user(AMX *amx, cell *params) // spawn(id) = 1 
 //gets a message argument as a string
 static cell AMX_NATIVE_CALL get_msg_arg_string(AMX *amx, cell *params)
 {
-	int msg_type = params[1];
-	int argn = params[2];
+	int argn = params[1];
 	int iLen = 0;
 	char *szValue = '\0';
 	
-	if (msg_type < 0 || msg_type > MAX_MESSAGES) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return 0;
-	} else {
-		if (Msg[msg_type].isHooked && Msg[msg_type].msg!=NULL) {
-			if (argn < Msg[msg_type].msg->args() && argn > 0) {
-				iLen = Msg[msg_type].msg->RetArg_Strlen(argn);
-				szValue = new char[iLen+1];
-				strcpy(szValue, Msg[msg_type].msg->RetArg_String(argn));
-				if (strlen(szValue)) {
-					return SET_AMXSTRING(amx, params[3], szValue, params[4]);
-				} else {
-					return SET_AMXSTRING(amx, params[3], "", params[4]);
-				}
+	if (inHookProcess && msgd!=NULL) {
+		if (argn < msgd->args() && argn > 0) {
+			iLen = msgd->RetArg_Strlen(argn);
+			szValue = new char[iLen+1];
+			strcpy(szValue, msgd->RetArg_String(argn));
+			if (strlen(szValue)) {
+				return SET_AMXSTRING(amx, params[2], szValue, params[3]);
 			} else {
-				AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-				return 0;
+				return SET_AMXSTRING(amx, params[2], "", params[3]);
 			}
 		} else {
 			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 			return 0;
 		}
+	} else {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
 	}
 
 	return 1;
@@ -276,30 +259,24 @@ static cell AMX_NATIVE_CALL get_msg_arg_string(AMX *amx, cell *params)
 //(BAILOPAN)
 static cell AMX_NATIVE_CALL set_msg_arg_string(AMX *amx, cell *params)
 {
-	int msg_type = params[1];
-	int argn = params[2];
+	int argn = params[1];
 	int iLen;
-	char *szData = AMX_GET_STRING(amx, params[3], iLen);
+	char *szData = AMX_GET_STRING(amx, params[2], iLen);
 	
-	if (msg_type < 0 || msg_type > MAX_MESSAGES) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return 0;
-	} else {
-		if (Msg[msg_type].isHooked && Msg[msg_type].msg!=NULL) {
-			if (argn < Msg[msg_type].msg->args() && argn > 0) {
-				if (Msg[msg_type].msg->Set(argn, arg_string, szData)) {
-					return 1;
-				} else {
-					return 0;
-				}
+	if (inHookProcess && msgd!=NULL) {
+		if (argn < msgd->args() && argn > 0) {
+			if (msgd->Set(argn, arg_string, szData)) {
+				return 1;
 			} else {
-				AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 				return 0;
 			}
 		} else {
 			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 			return 0;
 		}
+	} else {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
 	}
 
 	return 1;
@@ -308,29 +285,23 @@ static cell AMX_NATIVE_CALL set_msg_arg_string(AMX *amx, cell *params)
 //(BAILOPAN)
 static cell AMX_NATIVE_CALL set_msg_arg_float(AMX *amx, cell *params)
 {
-	int msg_type = params[1];
-	int argn = params[2];
-	int argtype = params[3];
+	int argn = params[1];
+	int argtype = params[2];
 	
-	if (msg_type < 0 || msg_type > MAX_MESSAGES) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return 0;
-	} else {
-		if (Msg[msg_type].isHooked && Msg[msg_type].msg!=NULL) {
-			if (argn < Msg[msg_type].msg->args() && argn > 0) {
-				if (Msg[msg_type].msg->Set(argn, argtype, params[4])) {
-					return 1;
-				} else {
-					return 0;
-				}
+	if (inHookProcess && msgd!=NULL) {
+		if (argn < msgd->args() && argn > 0) {
+			if (msgd->Set(argn, argtype, params[3])) {
+				return 1;
 			} else {
-				AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 				return 0;
 			}
 		} else {
 			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 			return 0;
 		}
+	} else {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
 	}
 
 	return 1;
@@ -339,30 +310,24 @@ static cell AMX_NATIVE_CALL set_msg_arg_float(AMX *amx, cell *params)
 //(BAILOPAN)
 static cell AMX_NATIVE_CALL set_msg_arg_int(AMX *amx, cell *params)
 {
-	int msg_type = params[1];
-	int argn = params[2];
-	int argtype = params[3];
-	int iData = params[4];
+	int argn = params[1];
+	int argtype = params[2];
+	int iData = params[3];
 	
-	if (msg_type < 0 || msg_type > MAX_MESSAGES) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return 0;
-	} else {
-		if (Msg[msg_type].isHooked && Msg[msg_type].msg!=NULL) {
-			if (argn < Msg[msg_type].msg->args() && argn > 0) {
-				if (Msg[msg_type].msg->Set(argn, argtype, iData)) {
-					return 1;
-				} else {
-					return 0;
-				}
+	if (inHookProcess && msgd!=NULL) {
+		if (argn < msgd->args() && argn > 0) {
+			if (msgd->Set(argn, argtype, iData)) {
+				return 1;
 			} else {
-				AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 				return 0;
 			}
 		} else {
 			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 			return 0;
 		}
+	} else {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
 	}
 
 	return 1;
@@ -459,6 +424,100 @@ static cell AMX_NATIVE_CALL get_offset_short(AMX *amx, cell *params)
 	
 }
 
+////////////////////////////////////////////
+//THESE ARE FROM amxmod.cpp!!!
+////////////////////////////////////////////
+static cell AMX_NATIVE_CALL message_begin(AMX *amx, cell *params) /* 4 param */
+{
+	int numparam = *params/sizeof(cell);
+	Vector vecOrigin;
+	cell *cpOrigin;
+	switch (params[1]){
+	case MSG_BROADCAST:
+	case MSG_ALL:
+	case MSG_SPEC:
+		MESSAGE_BEGIN( params[1], params[2],NULL );
+		break;
+	case MSG_PVS: case MSG_PAS:
+		if (numparam < 3) {
+			AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
+			return 0;
+		}
+		cpOrigin = get_amxaddr(amx,params[3]);
+		vecOrigin.x = *cpOrigin;
+		vecOrigin.y = *(cpOrigin+1);
+		vecOrigin.z = *(cpOrigin+2);
+		MESSAGE_BEGIN( params[1], params[2] , vecOrigin );
+		break;
+	case MSG_ONE:
+		if (numparam < 4) {
+			AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
+			return 0;
+		}
+		MESSAGE_BEGIN( MSG_ONE, params[2], NULL, INDEXENT(params[4]) );
+		break;
+	}
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL message_end(AMX *amx, cell *params)
+{
+	MESSAGE_END();
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL write_byte(AMX *amx, cell *params) /* 1 param */
+{
+	WRITE_BYTE( params[1] );
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL write_char(AMX *amx, cell *params) /* 1 param */
+{
+	WRITE_CHAR( params[1] );
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL write_short(AMX *amx, cell *params)	/* 1 param */
+{
+	WRITE_SHORT( params[1] );
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL write_long(AMX *amx, cell *params)	/* 1 param */
+{
+	WRITE_LONG( params[1] );
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL write_entity(AMX *amx, cell *params) /* 1 param */
+{
+	WRITE_ENTITY( params[1] );
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL write_angle(AMX *amx, cell *params) /* 1 param */
+{
+	WRITE_ANGLE( params[1] );
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL write_coord(AMX *amx, cell *params) /* 1 param */
+{
+	WRITE_COORD( params[1] );
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL write_string(AMX *amx, cell *params) /* 1 param */
+{
+	int a;
+	WRITE_STRING( get_amxstring(amx,params[1],3,a) );
+	return 1;
+}
+////////////////////////////////////////////
+////////////////////////////////////////////
+
 //(BAILOPAN)
 //Gets a pvPrivateData offset for a player (player, offset, float=0)
 static cell AMX_NATIVE_CALL get_offset(AMX *amx, cell *params)
@@ -534,7 +593,7 @@ static cell AMX_NATIVE_CALL entity_get_int(AMX *amx, cell *params) {
 
 	// Is it a valid entity?
 	if (iTargetEntity < 1 || iTargetEntity > gpGlobals->maxEntities) {
-		return 0;
+		return -1;
 	}
 
 	// get its edict pointer.
@@ -542,7 +601,7 @@ static cell AMX_NATIVE_CALL entity_get_int(AMX *amx, cell *params) {
 
 	// Is it a real entity?
 	if(FNullEnt(pEntity)) {
-		return 0;
+		return -1;
 	}
 
 	switch(iValueSet) {
@@ -810,7 +869,7 @@ static cell AMX_NATIVE_CALL entity_get_float(AMX *amx, cell *params) {
   
 	// Valid entity?
 	if (iTargetEntity < 1 || iTargetEntity > gpGlobals->maxEntities) {
-		return 0;
+		return -1;
 	}
 
 	// Get pointer.
@@ -818,7 +877,7 @@ static cell AMX_NATIVE_CALL entity_get_float(AMX *amx, cell *params) {
 
 	// is it a valid entity?
 	if(FNullEnt(pEntity)) {
-		return 0;
+		return -1;
 	}
 
 	switch(iValueSet) {
@@ -2460,6 +2519,7 @@ static cell AMX_NATIVE_CALL precache_generic(AMX *amx, cell *params)
    METAMOD HOOKED FUNCTIONS
    *****************************************/
 
+
 //Added by BAILOPAN.  ClientKill() forward.
 void ClientKill(edict_t *pEntity)
 {
@@ -2673,10 +2733,9 @@ void MessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
 
 		RETURN_META(MRES_SUPERCEDE);
 	} else {
-		if (Msg[msg_type].isHooked && !Msg[msg_type].isCalled) {
-			LastMessage = msg_type;
-			Msg[msg_type].msg = new MessageInfo(msg_dest, msg_type, pOrigin, ed);
-			Msg[msg_type].isCalled = true;
+		if (isMsgHooked[msg_type] && !inHookProcess) {
+			inHookProcess = msg_type;
+			msgd = new MessageInfo(msg_dest, msg_type, pOrigin, ed);
 			RETURN_META(MRES_SUPERCEDE);
 		}
 	}
@@ -2693,10 +2752,10 @@ void MessageEnd(void) {
 		RETURN_META(MRES_SUPERCEDE);
 	}
 
-	int msg_type = LastMessage;
+	int msg_type = inHookProcess;
 
-	if (Msg[msg_type].isHooked && Msg[msg_type].isCalled) {
-		for (AmxCallList::AmxCall* i = Msg[msg_type].msgCalls.head; i; i = i->next) {
+	if (inHookProcess) {
+		for (AmxCallList::AmxCall* i = Msgs.head; i; i = i->next) {
 			AMX_EXEC(i->amx, &iResult, i->iFunctionIdx, 1, msg_type);
 			if (iResult & 2) {
 				RETURN_META(MRES_SUPERCEDE);
@@ -2704,12 +2763,14 @@ void MessageEnd(void) {
 				result = MRES_SUPERCEDE;
 			}
 		}
-		Msg[msg_type].isCalled = false;
+		//clear the message
+		inHookProcess = 0;
 		if (result != MRES_SUPERCEDE) {	//supercede the message ANYWAY
-			Msg[msg_type].msg->SendMsg();
+			msgd->SendMsg();
 			RETURN_META(MRES_SUPERCEDE);
 		}
-		destroy(Msg[msg_type].msg);
+		destroy(msgd);
+		msgd = NULL;
 	}
 
 	RETURN_META(result);
@@ -2719,9 +2780,9 @@ void WriteByte(int iValue) {
 	if(GlInfo.bBlocking) {
 		RETURN_META(MRES_SUPERCEDE);
 	}
-	int msg_type = LastMessage;
-	if (msg_type && Msg[msg_type].isCalled && Msg[msg_type].isHooked) {
-		Msg[msg_type].msg->AddArg(arg_byte, iValue);
+	int msg_type = inHookProcess;
+	if (msg_type && msgd!=NULL) {
+		msgd->AddArg(arg_byte, iValue);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 	RETURN_META(MRES_IGNORED);
@@ -2731,9 +2792,9 @@ void WriteChar(int iValue) {
 	if(GlInfo.bBlocking) {
 		RETURN_META(MRES_SUPERCEDE);
 	}
-	int msg_type = LastMessage;
-	if (msg_type && Msg[msg_type].isCalled && Msg[msg_type].isHooked) {
-		Msg[msg_type].msg->AddArg(arg_char, iValue);
+	int msg_type = inHookProcess;
+	if (msg_type && msgd!=NULL) {
+		msgd->AddArg(arg_char, iValue);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 	RETURN_META(MRES_IGNORED);
@@ -2743,9 +2804,9 @@ void WriteShort(int iValue) {
 	if(GlInfo.bBlocking) {
 		RETURN_META(MRES_SUPERCEDE);
 	}
-	int msg_type = LastMessage;
-	if (msg_type && Msg[msg_type].isCalled && Msg[msg_type].isHooked) {
-		Msg[msg_type].msg->AddArg(arg_short, iValue);
+	int msg_type = inHookProcess;
+	if (msg_type && msgd!=NULL) {
+		msgd->AddArg(arg_short, iValue);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 	RETURN_META(MRES_IGNORED);
@@ -2755,9 +2816,9 @@ void WriteLong(int iValue) {
 	if(GlInfo.bBlocking) {
 		RETURN_META(MRES_SUPERCEDE);
 	}
-	int msg_type = LastMessage;
-	if (msg_type && Msg[msg_type].isCalled && Msg[msg_type].isHooked) {
-		Msg[msg_type].msg->AddArg(arg_long, iValue);
+	int msg_type = inHookProcess;
+	if (msg_type && msgd!=NULL) {
+		msgd->AddArg(arg_long, iValue);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 	RETURN_META(MRES_IGNORED);
@@ -2767,9 +2828,9 @@ void WriteAngle(float flValue) {
 	if(GlInfo.bBlocking) {
 		RETURN_META(MRES_SUPERCEDE);
 	}
-	int msg_type = LastMessage;
-	if (msg_type && Msg[msg_type].isCalled && Msg[msg_type].isHooked) {
-		Msg[msg_type].msg->AddArg(arg_angle, flValue);
+	int msg_type = inHookProcess;
+	if (msg_type && msgd!=NULL) {
+		msgd->AddArg(arg_angle, flValue);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 	RETURN_META(MRES_IGNORED);
@@ -2779,9 +2840,9 @@ void WriteCoord(float flValue) {
 	if(GlInfo.bBlocking) {
 		RETURN_META(MRES_SUPERCEDE);
 	}
-	int msg_type = LastMessage;
-	if (msg_type && Msg[msg_type].isCalled && Msg[msg_type].isHooked) {
-		Msg[msg_type].msg->AddArg(arg_coord, flValue);
+	int msg_type = inHookProcess;
+	if (msg_type && msgd!=NULL) {
+		msgd->AddArg(arg_coord, flValue);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 	RETURN_META(MRES_IGNORED);
@@ -2791,9 +2852,9 @@ void WriteString(const char *sz) {
 	if(GlInfo.bBlocking) {
 		RETURN_META(MRES_SUPERCEDE);
 	}
-	int msg_type = LastMessage;
-	if (msg_type && Msg[msg_type].isCalled && Msg[msg_type].isHooked) {
-		Msg[msg_type].msg->AddArgString(arg_string, sz);
+	int msg_type = inHookProcess;
+	if (msg_type && msgd!=NULL) {
+		msgd->AddArgString(arg_string, sz);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 	RETURN_META(MRES_IGNORED);
@@ -2803,9 +2864,9 @@ void WriteEntity(int iValue) {
 	if(GlInfo.bBlocking) {
 		RETURN_META(MRES_SUPERCEDE);
 	}
-	int msg_type = LastMessage;
-	if (msg_type && Msg[msg_type].isCalled && Msg[msg_type].isHooked) {
-		Msg[msg_type].msg->AddArg(arg_entity, iValue);
+	int msg_type = inHookProcess;
+	if (msg_type && msgd!=NULL) {
+		msgd->AddArg(arg_entity, iValue);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 	RETURN_META(MRES_IGNORED);
@@ -2841,11 +2902,9 @@ void ServerActivate( edict_t *pEdictList, int edictCount, int clientMax ){
 		}
 	}
 
+	inHookProcess = 0;
 	for (i=0; i<MAX_MESSAGES; i++) {
-		Msg[i].isHooked = false;
-		Msg[i].isCalled = false;
-		Msg[i].msg = NULL;
-		Msg[i].type = 0;
+		isMsgHooked[i] = false;
 	}
 
 	RETURN_META(MRES_IGNORED);
@@ -2862,15 +2921,18 @@ void ServerDeactivate() {
 	postThink.clear();
 	preThink.clear();
 	clientKill.clear();
+	Msgs.clear();
 
 	int i;
 	// Reset message blocks.
 	for(i = 0; i < MAX_MESSAGES; i++) {
 		GlInfo.iMessageBlock[i] = BLOCK_NOT;
-		if (Msg[i].msg != NULL) {
-			destroy(Msg[i].msg);
-			Msg[i].msgCalls.clear();
-		}
+		isMsgHooked[i] = false;
+	}
+
+	if (msgd != NULL) {
+		destroy(msgd);
+		msgd = NULL;
 	}
 
 	RETURN_META(MRES_IGNORED);
@@ -3132,9 +3194,17 @@ AMX_NATIVE_INFO Engine_Natives[] = {
 	{"get_msg_arg_string",	get_msg_arg_string},
 	{"get_msg_args",		get_msg_args},
 	{"get_msg_argtype",		get_msg_argtype},
-
+	{"message_begin",		message_begin},
+	{"message_end",			message_end},
+	{"write_angle",			write_angle},
+	{"write_byte",			write_byte},
+	{"write_char",		    write_char},
+	{"write_coord",		    write_coord},
+	{"write_entity",	    write_entity},
+	{"write_long",	   	    write_long},
+	{"write_short",		    write_short},
+	{"write_string",	    write_string},
 	{"is_valid_ent",		is_valid_ent},
-	{"spawn_user",			spawn_user},
 
 	{ NULL, NULL }
 

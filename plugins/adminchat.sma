@@ -41,9 +41,9 @@
 
 new g_msgChannel
 
-#define MAX_CLR 7
-new g_Colors[MAX_CLR][] = {"white","red","green","blue","yellow","magenta","cyan"}
-new g_Values[MAX_CLR][] = {{255,255,255},{255,0,0},{0,255,0},{0,0,255},{255,255,0},{255,0,255},{0,255,255}}
+#define MAX_CLR 10
+new g_Colors[MAX_CLR][] = {"white","red","green","blue","yellow","magenta","cyan","orange","ocean","maroon"}
+new g_Values[MAX_CLR][] = {{255,255,255},{255,0,0},{0,255,0},{0,0,255},{255,255,0},{255,0,255},{0,255,255},{227,96,8},{45,89,116},{103,44,38}}
 new Float:g_Pos[4][] = {{0.0,0.0},{0.05,0.55},{-1.0,0.2},{-1.0,0.7}} 
 
 public plugin_init(){
@@ -68,12 +68,13 @@ public cmdSayChat(id) {
   read_args(message,191)
   remove_quotes(message)
   switch(said[i]){ 
-    case 'r': a = 1 
-    case 'g': a = 2 
-    case 'b': a = 3 
-    case 'y': a = 4 
-    case 'm': a = 5 
-    case 'c': a = 6 
+    case 'r': a = 1
+    case 'g': a = 2
+    case 'b': a = 3
+    case 'y': a = 4
+    case 'm': a = 5
+    case 'c': a = 6
+    case 'o': a = 7
   }
   new name[32], authid[32], userid
   get_user_authid(id,authid,31)

@@ -150,7 +150,7 @@ void FakeError()
 				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnArgs); \
 			if (mres == MRES_SUPERCEDE) \
 				AMXXLOG_Log("[AMXX] Module \"%s\" (\"%s\") has set meta result in \"%s\" to supercede", \
-				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnArgs); \
+				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnName); \
 		} \
 	} \
 	/* Set meta result to the highest value */ \
@@ -2519,7 +2519,7 @@ int CFakeMeta::CFakeMetaPlugin::GetEngineFunctions(int interfaceVersion)
 
 int CFakeMeta::CFakeMetaPlugin::GetEngineFunctions_Post(int interfaceVersion)
 {
-	FAKEMETA_GET_FUNCTABLE(GetEngineFunctions, interfaceVersion, m_EngineFuncTable_Post);
+	FAKEMETA_GET_FUNCTABLE(GetEngineFunctions_Post, interfaceVersion, m_EngineFuncTable_Post);
 }
 
 int CFakeMeta::CFakeMetaPlugin::GetNewDLLFunctions(int interfaceVersion)

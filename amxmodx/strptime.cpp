@@ -14,6 +14,11 @@
 #define strnicmp strncasecmp
 #endif
 
+// this file does not include amxmodx.h, so we have to include the memory manager here
+#ifdef MEMORY_TEST
+#include "mmgr/mmgr.h"
+#endif // MEMORY_TEST
+
 const char *_lc_Wday_ [2][ 7],
                   *_lc_Month_[2][12],
                   *_lc_AmPm_ [2][ 2];

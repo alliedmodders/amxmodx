@@ -49,6 +49,7 @@ new Float:g_Pos[4][] = {{0.0,0.0},{0.05,0.55},{-1.0,0.2},{-1.0,0.7}}
 public plugin_init() {
   register_plugin("Admin Chat",AMXX_VERSION_STR,"AMXX Dev Team")
   register_dictionary("adminchat.txt")
+  register_dictionary("common.txt")
   register_clcmd("say","cmdSayChat",ADMIN_CHAT,"@[@|@|@][w|r|g|b|y|m|c]<text> - displays hud message")
   register_clcmd("say_team","cmdSayAdmin",0,"@<text> - displays message to admins")
   register_concmd("amx_say","cmdSay",ADMIN_CHAT,"<message> - sends message to all players")

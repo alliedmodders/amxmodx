@@ -48,6 +48,7 @@ new g_Current
 public plugin_init() {
   register_plugin("Info. Messages",AMXX_VERSION_STR,"AMXX Dev Team")
   register_dictionary("imessage.txt")
+  register_dictionary("common.txt")
   register_srvcmd("amx_imessage","setMessage")
   register_cvar("amx_freq_imessage","10")
   new lastinfo[8]

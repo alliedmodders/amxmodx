@@ -58,6 +58,7 @@ public plugin_init()
   register_plugin("Admin Base",AMXX_VERSION_STR,"AMXX Dev Team")
 #endif
   register_dictionary("admin.txt")
+  register_dictionary("common.txt")
   register_cvar("amx_mode","1")
   register_cvar("amx_password_field","_pw")
   register_cvar("amx_default_access","")

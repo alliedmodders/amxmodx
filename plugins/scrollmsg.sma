@@ -48,6 +48,7 @@ new g_Frequency
 public plugin_init() {
   register_plugin("Scrolling Message",AMXX_VERSION_STR,"AMXX Dev Team")
   register_dictionary("scrollmsg.txt")
+  register_dictionary("common.txt")
   register_srvcmd("amx_scrollmsg","setMessage")
 }
 

@@ -42,6 +42,7 @@ public cmdSayChat(id) {
   if ( !i || i > 3 ) return PLUGIN_CONTINUE 
   new message[192], a = 0
   read_args(message,191)
+  remove_quotes(message)
   switch(said[i]){ 
     case 'r': a = 1 
     case 'g': a = 2 
@@ -75,12 +76,13 @@ public cmdSayChat(id) {
 }
 
 public cmdSayAdmin(id) { 
-  new said[2] 
-  read_argv(1,said,1) 
-  if (said[0]!='@') return PLUGIN_CONTINUE 
+  new said[2]
+  read_argv(1,said,1)
+  if (said[0]!='@') return PLUGIN_CONTINUE
   new message[192], name[32],authid[32], userid
-  new players[32], inum  
+  new players[32], inum
   read_args(message,191)
+  remove_quotes(message)
   get_user_authid(id,authid,31)
   get_user_name(id,name,31)
   userid = get_user_userid(id)  

@@ -6,3 +6,75 @@ X_CHOSE_X = %s chose %s
 CHOOSE_NEXTM = AMX Choose nextmap
 EXTED_MAP = Extend map %s
 TIME_CHOOSE = It's time to choose the nextmap...
+
+[da]
+CHO_FIN_EXT = Valg afsluttet. Nuvaerende bane bliver forlaenget til naeste %.0 minutter
+CHO_FIN_NEXT = Valg afsluttet. Naeste bane bliver %s
+CHOSE_EXT = %s valgte bane forlaengelse
+X_CHOSE_X = %s valgte %s
+CHOOSE_NEXTM = AMX vaelg naeste bane
+EXTED_MAP = Forlaeng bane %s
+TIME_CHOOSE = Det er tid til at vaelge naeste bane...
+
+[de]
+CHO_FIN_EXT = Auswahl beedent. Laufende Map wird um %.0f Minuten verlaengert.
+CHO_FIN_NEXT = Auswahl beendet. Naechste Map ist %s
+CHOSE_EXT = %s waehlten Map-Verlaengerung
+X_CHOSE_X = %s waehlten %s
+CHOOSE_NEXTM = AMXX waehlt naechste Map
+EXTED_MAP = Verlangere Map %s
+TIME_CHOOSE = Es ist an der Zeit, die neue Map zu waehlen...
+
+[es]
+CHO_FIN_EXT = Seleccion finalizada. El presente mapa sera ejecutado los proximos %. minutos
+CHO_FIN_NEXT = Seleccion finalizada. El siguiente mapa sera %s
+CHOSE_EXT = %s Seleccion prolongada.
+X_CHOSE_X = %s elegir %s
+CHOOSE_NEXTM = AMX Ejegir Mapa
+EXTED_MAP = Extender mapa %s
+TIME_CHOOSE = Es tiempo de elegir el proximo mapa...
+
+[fr]
+CHO_FIN_EXT = Les choix sont termines. La carte est prolongee de %.0f minutes
+CHO_FIN_NEXT = Les choix sont termines. La prochaine carte sera %s
+CHOSE_EXT = %s a choisi de prolonger la carte.
+X_CHOSE_X = %s a choisi la carte %s
+CHOOSE_NEXTM = AMX Choisir la prochaine carte
+EXTED_MAP = Prolonger la carte %s
+TIME_CHOOSE = Il est temps de choisir la prochaine carte...
+
+[pl]
+CHO_FIN_EXT = Wybor zakonczony. aktualna mapa zostanie rozszerzona o %.0f minut
+CHO_FIN_NEXT = Wybor zakonczony. Nastepna mapa to %s
+CHOSE_EXT = %s wybral rozszerzenie mapy
+X_CHOSE_X = %s wybral %s
+CHOOSE_NEXTM = AMX wybral nastepna mape
+EXTED_MAP = Rozszerz mape %s
+TIME_CHOOSE = Nadszedl czas wyboru mapy...
+
+[sr]
+CHO_FIN_EXT = Biranje zavrseno. Sadasnja mapa ce biti produzena za %.0f minuta
+CHO_FIN_NEXT = Biranje zavrseno. Sledeca mapa ce biti %s
+CHOSE_EXT = %s bitaj mapu sa prodizivanjem
+X_CHOSE_X = %s izabrao %s
+CHOOSE_NEXTM = AMX izaberi sledecu mapu
+EXTED_MAP = Produzi mapu %s
+TIME_CHOOSE = Vreme je da se izabere sledeca map...
+
+[sv]
+CHO_FIN_EXT = Val avslutat. Aktuell karta kommer att vara ytterligare % minuter
+CHO_FIN_NEXT = Val avslutat. Kommande karta kommer att vara %s
+CHOSE_EXT = %s fortsatta aktuell karta
+X_CHOSE_X = %s valde %s
+CHOOSE_NEXTM = AMX valde kommande karta
+EXTED_MAP = Fortsatt karta %s
+TIME_CHOOSE = Dags att utse kommande karta…
+
+[tr]
+CHO_FIN_EXT = Oylama bitmisdir. Su anki map %.0f dakika uzatilacakdir 
+CHO_FIN_NEXT = Oylama bitmisdir. Secilen map ise %s
+CHOSE_EXT = %s Map uzatilmasini secin
+X_CHOSE_X = %s Secin %s
+CHOOSE_NEXTM = AMX diger map secimi
+EXTED_MAP = %s Map surecini uzat
+TIME_CHOOSE = Yeni map secimi baslamisdir...

@@ -6,3 +6,76 @@ MINUTE = minute
 MINUTES = minutes
 SECOND = second
 SECONDS = seconds
+
+
+[da]
+THE_TIME = Tiden
+TIME_LEFT = Tid tilbage
+NO_T_LIMIT = Ingen tidsbegraensning
+MINUTE = minut
+MINUTES = minutter
+SECOND = sekund
+SECONDs = sekunder
+
+[de]
+THE_TIME = Es ist
+TIME_LEFT = Zeit uebrig
+NO_T_LIMIT = Kein Zeitlimit
+MINUTE = Minute
+MINUTES = Minuten
+SECOND = Sekunden
+SECONDS = Sekunden
+
+[es]
+THE_TIME = El tiempo
+TIME_LEFT = Tiempo remanente
+NO_T_LIMIT = No hay limite de tiempo
+MINUTE = minuto
+MINUTES = minutos
+SECOND = segundo
+SECONDS = segundos
+
+[fr]
+THE_TIME = Il est
+TIME_LEFT = Temps Restant
+NO_T_LIMIT = Aucun Temps Limite
+MINUTE = minute
+MINUTES = minutes
+SECOND = seconde
+SECONDS = secondes
+
+[pl]
+THE_TIME = Czas
+TIME_LEFT = Pozostalo czasu
+NO_T_LIMIT = Bez limitu czasu
+MINUTE = minuta
+MINUTES = minut
+SECOND = sekunda
+SECONDS = sekund
+
+[sr]
+THE_TIME = Vreme
+TIME_LEFT = Preostalo Vreme
+NO_T_LIMIT = Nema Ogranicenja Vremena
+MINUTE = minut
+MINUTES = minute
+SECOND = sekund
+SECONDS = sekundi
+
+[sv]
+THE_TIME = Tid
+TIME_LEFT = Tid kvar
+NO_T_LIMIT = Ingen tidsbegr'a'nsning
+MINUTE = minut
+MINUTES = minuter
+SECOND = sekund
+SECONDS = sekunder
+
+[tr]
+THE_TIME = Saat
+TIME_LEFT = Kalan zaman
+NO_T_LIMIT = Suresiz zaman
+MINUTE = dakika
+MINUTES = dakikalar
+SECOND = saniye
+SECONDS = saniyeler

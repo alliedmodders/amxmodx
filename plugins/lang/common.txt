@@ -17,3 +17,163 @@ CL_NOT_FOUND = Client with that name or userid not found
 CLIENT_IMM = Client "%s" has immunity
 CANT_PERF_DEAD = That action can't be performed on dead client "%s"
 CANT_PERF_BOT = That action can't be performed on bot "%s"
+
+[da]
+BACK = Tilbage
+EXIT = Exit
+MORE = Mere
+NONE = Ingen
+ADMIN = ADMIN
+PLAYER = SPILLER
+ERROR = fejl
+YES = Ja
+NO = Nej
+BAN = ban
+KICK = kick
+NO_ACC_COM = Du har ikke adgang til den kommando
+USAGE = brug
+MORE_CL_MATCHT = her er flere klienter der passer paa dit argument
+CL_NOT_FOUND = Klient med det navn eller brugerid ikke fundet
+CLIENT_IMM = Klient "%s" har immunitet
+CANT_PERF_DEAD = Den handling kan ikke udfoeres paa doed klient "%s"
+CANT_PERF_BOT = Den handling kan ikke udfoeres paa bot "%s"
+
+[de]
+BACK = Zurueck
+EXIT = Beenden
+MORE = Mehr
+NONE = Keine
+ADMIN = ADMIN
+PLAYER = Spieler
+ERROR = Fehler
+YES = Ja
+NO = Nein
+BAN = ban
+KICK = kick
+NO_ACC_COM = Du hast nicht genuegend Rechte, um diesen Befehl auszufuehren!
+USAGE = Anwendung
+MORE_CL_MATCHT = hier sind mehrere Spieler, auf die deine Angaben zutreffen
+CL_NOT_FOUND = Spieler mit diesem Namen oder dieser UserID nicht gefunden
+CLIENT_IMM = Spieler "%s" hat Immnuitaet
+CANT_PERF_DEAD = Diese Aktion kann nicht am toten Spieler "%s" ausgefuehrt werden.
+CANT_PERF_BOT = Diese Aktion kann nicht am Bot "%s" ausgefuehrt werden.
+
+[es]
+BACK = Atras
+EXIT = Salir
+MORE = Mas
+NONE = Ninguna
+ADMIN = ADMIN
+PLAYER = PLAYER
+ERROR = error
+YES = si 
+NO = no
+BAN = prohibir
+KICK = echar
+NO_ACC_COM = Usted no tiene acceso a ese comando
+USAGE = uso
+MORE_CL_MATCHT = aca hay mas clientes que coinciden con su argumento
+CL_NOT_FOUND = Cliente con ese nombre o Id de usuario no encontrado.
+CLIENT_IMM = Cliente "%s" tiene inmunidad
+CANT_PERF_DEAD = Esa accion no puede ser realizada en un cliente muerto "%s"
+CANT_PERF_BOT = Esa accion no puede ser realizada en un bot "%s"
+
+[fr]
+BACK = Retour
+EXIT = Sortir
+MORE = Plus
+NONE = Aucun
+ADMIN = ADMIN
+PLAYER = JOUEUR
+ERROR = erreur
+YES = Oui
+NO = Non
+BAN = bannir
+KICK = kicker
+NO_ACC_COM = Tu n'as pas acces a cette commande
+USAGE = Utilisation
+MORE_CL_MATCHT = Plusieurs clients correspondent a tes criteres
+CL_NOT_FOUND = Le client avec ce nom ou cette userid est introuvable
+CLIENT_IMM = Client "%s" est immunise
+CANT_PERF_DEAD = Cette action ne peut pas etre faite sur un joueur mort "%s"
+CANT_PERF_BOT = Cette action ne peut pas etre faite sur un BOT "%s"
+
+[pl]
+BACK = Wstecz
+EXIT = Wyjscie
+MORE = Wiecej
+NONE = Nic
+ADMIN = ADMIN
+PLAYER = GRACZ
+ERROR = blad
+YES = Tak
+NO = Nie
+BAN = ban
+KICK = kick
+NO_ACC_COM = Nie mozesz uzyc tej komendy
+USAGE = Uzycie
+MORE_CL_MATCHT = tutaj jest wiecej klientow pasujacych do twojego wyboru
+CL_NOT_FOUND = Nie znaleziono klienta z tym nickiem lub ID
+CLIENT_IMM = Klient "%s" ma immunitet
+CANT_PERF_DEAD = Nie mozesz tego wykonac na martwym kliencie "%s"
+CANT_PERF_BOT = Nie mozesz tego wykonac na bocie "%s"
+
+[sr]
+BACK = Nazad
+EXIT = Izlaz
+MORE = Jos
+NONE = Nema
+ADMIN = ADMIN
+PLAYER = IGRAC
+ERROR = greska
+YES = Da
+NO = Ne
+BAN = ban
+KICK = kick
+NO_ACC_COM = Nemate pristup zadatoj komandi
+USAGE = Iskoriscenost
+MORE_CL_MATCHT = vise korisnika zadovoljava vas argument
+CL_NOT_FOUND = Klijent sa tim imenom ili korisnickim ID-om nije nadjen
+CLIENT_IMM = Klijent "%s" ima iminitet
+CANT_PERF_DEAD = Komanda ne moze biti izvrsena na mrtvom klijentu "%s"
+CANT_PERF_BOT = Komanda ne moze biti izvrsena na botu "%s"
+
+[sv]
+BACK = Tillbaka
+EXIT = Avsluta
+MORE = Mer
+NONE = Ingen
+ADMIN = ADMIN
+PLAYER = SPELARE
+ERROR = fel
+YES = Ja
+NO = Nej
+BAN = bannlys
+KICK = sparka
+NO_ACC_COM = Du saknar befogenhet till det kommandot
+USAGE = Utnyttjande
+MORE_CL_MATCHT = mer klienter som passar argumentet
+CL_NOT_FOUND = Klient med det namnet eller userid’et kan inte hittas
+CLIENT_IMM = Klient "%s" har immunitet
+CANT_PERF_DEAD = Handling kan inte utf'o'ras pa den likviderade klienten "%s"
+CANT_PERF_BOT = Den handlingen kan inte utf'o'ras pa bot "%s"
+
+[tr]
+BACK = Geri
+EXIT = Cikis
+MORE = Daha
+NONE = Hic
+ADMIN = ADMIN
+PLAYER = Oyuncu
+ERROR = hata
+YES = evet
+NO = hayir
+BAN = ban
+KICK = at
+NO_ACC_COM = O emiri kullanma hakkiniz yok
+USAGE = kullanim
+MORE_CL_MATCHT = Aradiginiz konuya uygun oyuncular
+CL_NOT_FOUND = O isimde oyuncu yada kullaniciID'si bulunamadi
+CLIENT_IMM = "%s" oyuncunun dokunulmazligi var
+CANT_PERF_DEAD = Bunu olu bir oyuncunun uzerinde yapamazsiniz "%s"
+CANT_PERF_BOT = Bot uzerinde bunu yapamazsiniz "%s"

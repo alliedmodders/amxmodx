@@ -490,6 +490,13 @@ static cell AMX_NATIVE_CALL amx_fputf(AMX *amx, cell *params)
 	return -1;
 }
 
+static cell AMX_NATIVE_CALL amx_build_pathname(AMX *amx, cell *params)
+{
+	int len;
+	char *szPath = get_amxstring(amx, params[1], 0, len);
+	return set_amxstring(amx, params[2], build_pathname("%s", szPath), params[3]);
+}
+
 AMX_NATIVE_INFO file_Natives[] = {
   { "delete_file",    delete_file },
   { "file_exists",    file_exists },
@@ -520,6 +527,7 @@ AMX_NATIVE_INFO file_Natives[] = {
   { "unlink",		delete_file },
   { "fgetf",		amx_fgetf },
   { "fputf",		amx_fputf },
+  { "build_pathname", amx_build_pathname},
   
   { NULL, NULL }
 };

@@ -502,7 +502,7 @@ static cell AMX_NATIVE_CALL strbreak(AMX *amx, cell *params)	/* 5 param */
 	int RightMax = params[5];
 
 	for (i=0; i<strlen(string); i++) {
-		if (string[i] == '"') {
+		if (string[i] == '"' && !quote_flag) {
 			quote_flag = true;
 		} else if (string[i] == '"' && quote_flag) {
 			quote_flag = false;
@@ -518,6 +518,8 @@ static cell AMX_NATIVE_CALL strbreak(AMX *amx, cell *params)	/* 5 param */
 					left[left_pos] = hold;
 				}
 				left_pos++;
+			} else {
+				done_flag = true;
 			}
 		} else {
 			if (right_pos < RightMax && string[i]!='"') {

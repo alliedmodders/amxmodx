@@ -263,6 +263,233 @@ static cell AMX_NATIVE_CALL file_size(AMX *amx, cell *params) /* 1 param */
   return -1;
 }
 
+//ported from Sanji's file access module by BAILOPAN
+static cell AMX_NATIVE_CALL amx_fopen(AMX *amx, cell *params)
+{
+	int len;
+	char *file = build_pathname("%s", get_amxstring(amx, params[1], 1, len));
+	char *flags = get_amxstring(amx, params[2], 0, len);
+	FILE *fp = fopen(file, flags);
+	return (int)file;
+}
+
+static cell AMX_NATIVE_CALL amx_fclose(AMX *amx, cell *params)
+{
+	FILE *file = (FILE *)params[1];
+	if (file) {
+		return fclose(file);
+	} else {
+		return -1;
+	}
+}
+
+static cell AMX_NATIVE_CALL amx_fgetc(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+	if (fp) {
+		return fgetc(fp);
+	} else {
+		return -1;
+	}
+}
+
+static cell AMX_NATIVE_CALL amx_fread(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+	char *buffer;
+	if (fp) {
+		buffer = new char[params[3]];
+		fread(buffer, sizeof(char), params[3], fp);
+		return set_amxstring(amx, params[2], buffer, params[3]);
+	}
+	return -1;
+}
+
+static cell AMX_NATIVE_CALL amx_fwrite(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+	char *buf;
+	int len;
+	if (fp) {
+		buf = format_amxstring(amx, params, 2, len);
+		return fwrite(buf, sizeof(char), strlen(buf), fp);
+	}
+	return -1;
+}
+
+static cell AMX_NATIVE_CALL amx_feof(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+	if (fp) {
+		if (feof(fp)) {
+			return 1;
+		}
+		return 0;
+	}
+	return -1;
+}
+
+static cell AMX_NATIVE_CALL amx_fseek(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+	if (fp) {
+		return fseek(fp, (long)params[2], params[3]);
+	}
+	return -1;
+}
+
+static cell AMX_NATIVE_CALL amx_fputc(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+	if (fp) {
+		return fputc(params[2], fp);
+	}
+	return -1;
+}
+
+static cell AMX_NATIVE_CALL amx_rewind(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+	if (fp) {
+		rewind(fp);
+		return 1;
+	}
+	return -1;
+}
+
+static cell AMX_NATIVE_CALL amx_fflush(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+	if (fp) {
+		return fflush(fp);
+	}
+	return -1;
+}
+
+static cell AMX_NATIVE_CALL amx_fscanf(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+	char *buf;
+	int len;
+	buf = format_amxstring(amx, params, 2, len);
+	if (fp) {
+		return fscanf(fp, "%s", buf);
+	}
+
+	return -1;
+}
+
+static cell AMX_NATIVE_CALL amx_ftell(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+	if (fp) {
+		return ftell(fp);
+	}
+	return -1;
+}
+
+static cell AMX_NATIVE_CALL amx_filesize(AMX *amx, cell *params)
+{
+	int len;
+	char *file = build_pathname("%s", format_amxstring(amx, params, 1, len));
+	long size;
+	FILE *fp = fopen(file, "rb");
+	if (fp) {
+		fseek(fp, 0, SEEK_END);
+		size = ftell(fp);
+		return size;
+	}
+	return -1;
+}
+
+static cell AMX_NATIVE_CALL amx_fgetl(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+	long *t;
+	t = new long;
+	if (fp) {
+		fread(t, sizeof(long), 1, fp);
+		return *t;
+	}
+	return -1;
+}
+
+static cell AMX_NATIVE_CALL amx_fgeti(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+	int *t;
+	t = new int;
+	if (fp) {
+		fread(t, sizeof(int), 1, fp);
+		return *t;
+	}
+	return -1;
+}
+
+static cell AMX_NATIVE_CALL amx_fgets(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+	short *t;
+	t = new short;
+	if (fp) {
+		fread(t, sizeof(short), 1, fp);
+		return *t;
+	}
+	return -1;
+}
+
+static cell AMX_NATIVE_CALL amx_fputs(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+	short size = params[2];
+	if (fp) {
+		return fwrite(&size, sizeof(short), 1, fp);
+	}
+	return -1;
+}
+
+static cell AMX_NATIVE_CALL amx_fputl(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+	long size = params[2];
+	if (fp) {
+		return fwrite(&size, sizeof(long), 1, fp);
+	}
+	return -1;
+}
+
+static cell AMX_NATIVE_CALL amx_fputi(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+	int size = params[2];
+	if (fp) {
+		return fwrite(&size, sizeof(int), 1, fp);
+	}
+	return -1;
+}
+
+static cell AMX_NATIVE_CALL amx_fgetf(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+	float *t;
+	t = new float;
+	if (fp) {
+		fread(t, sizeof(float), 1, fp);
+		return *(cell*)((void *)t);
+	}
+	return -1;
+}
+
+static cell AMX_NATIVE_CALL amx_fputf(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+	float size = *(float *)((void *)&params[2]);
+	if (fp) {
+		return fwrite(&size, sizeof(float), 1, fp);
+	}
+	return -1;
+}
+
 AMX_NATIVE_INFO file_Natives[] = {
   { "delete_file",    delete_file },
   { "file_exists",    file_exists },
@@ -270,6 +497,30 @@ AMX_NATIVE_INFO file_Natives[] = {
   { "read_dir",     read_dir },
   { "read_file",      read_file },
   { "write_file",     write_file },
+  //Sanji's File Natives
+  { "fopen",		amx_fopen },
+  { "fclose",		amx_fclose },
+  { "fgetc",		amx_fgetc },
+  { "fread",		amx_fread },
+  { "fwrite",		amx_fwrite },
+  { "feof",			amx_feof },
+  { "fseek",		amx_fseek },
+  { "fputc",		amx_fputc },
+  { "rewind",		amx_rewind },
+  { "fflush",		amx_fflush },
+  { "fscanf",		amx_fscanf },
+  { "ftell",		amx_ftell },
+  { "filesize",		amx_filesize },
+  { "fgetl",		amx_fgetl },
+  { "fgeti",		amx_fgeti },
+  { "fgets",		amx_fgets },
+  { "fputs",		amx_fputs },
+  { "fputl",		amx_fputl },
+  { "fputi",		amx_fputi },
+  { "unlink",		delete_file },
+  { "fgetf",		amx_fgetf },
+  { "fputf",		amx_fputf },
+  
   { NULL, NULL }
 };
 

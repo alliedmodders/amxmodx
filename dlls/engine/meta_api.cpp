@@ -36,37 +36,47 @@
 #include <vector>
 #include <limits.h>
 
-meta_globals_t *gpMetaGlobals;
-gamedll_funcs_t *gpGamedllFuncs;
-mutil_funcs_t *gpMetaUtilFuncs;
-enginefuncs_t g_engfuncs;
-globalvars_t  *gpGlobals;
-pfnamx_engine_g* g_engAmxFunc;
-pfnms_engine_g* g_engModuleFunc;
-static META_FUNCTIONS gMetaFunctionTable;
-DLL_FUNCTIONS gFunctionTable;
-enginefuncs_t meta_engfuncs;
-
-struct AmxCall {
-	plugin_t *pPlugin;
-	int iFunctionIdx;
-};
-
-std::vector<AmxCall> vTouchCallList;
-std::vector<AmxCall> vServerFrameCallList;
-std::vector<AmxCall> vCliKillList;
-std::vector<AmxCall> vPreThinkList;
-std::vector<AmxCall> vPostThinkList;
-
-//This was originally by VexD
-//Thank you for an excellent piece of work, VexD!
-
 #define NAME "Engine Module"
 #define AUTHOR "BAILOPAN"
 #define VERSION "0.3"
 #define URL "No Website"
 #define LOGTAG "AMXXE"
 #define DATE __DATE__
+
+meta_globals_t *gpMetaGlobals;
+gamedll_funcs_t *gpGamedllFuncs;
+mutil_funcs_t *gpMetaUtilFuncs;
+enginefuncs_t g_engfuncs;
+globalvars_t  *gpGlobals;
+pfnamx_engine_g* g_engAmxFunc;
+static META_FUNCTIONS gMetaFunctionTable;
+DLL_FUNCTIONS gFunctionTable;
+enginefuncs_t meta_engfuncs;
+pfnmodule_engine_g* g_engModuleFunc;
+
+
+module_info_s module_info = {
+	"AMXXE", // name
+	"BAILOPAN", // author
+	VERSION, // version
+	AMX_INTERFACE_VERSION,
+	STATIC_MODULE,
+};
+
+plugin_info_t Plugin_info = {
+	META_INTERFACE_VERSION, // ifvers
+	"AMXXE", // name
+	VERSION,  // version
+	__DATE__, // date
+	"BAILOPAN",  // author
+	"http://www.amxmod.info",  // url
+	"AMXXE", // logtag
+	PT_ANYTIME,// (when) loadable
+	PT_ANYTIME,// (when) unloadable
+};
+
+//This was originally by VexD
+//Thank you for an excellent piece of work, VexD!
 
 #define AMS_OFFSET 0.01
 
@@ -259,26 +269,6 @@ struct GlobalInfo {
 GlobalInfo GlInfo;
 
 cvar_t amxxe_version = {"amxxe_version", VERSION, FCVAR_SERVER, 0};
-
-plugin_info_t Plugin_info = {
-  META_INTERFACE_VERSION,
-  NAME,
-  VERSION,
-  DATE,
-  AUTHOR,
-  URL,
-  LOGTAG,
-  PT_STARTUP,
-  PT_NEVER,
-};
-
-module_info_s AMXInfo = {
-	NAME,
-	AUTHOR,
-	VERSION,
-	AMX_INTERFACE_VERSION,
-	RELOAD_MODULE,
-};
 
 /********************* Begin Utility Functions ******************************/
 
@@ -2488,18 +2478,12 @@ void ClientUserInfoChanged(edict_t *pEntity, char *infobuffer) {
 }
 
 //(BAILOPAN) - forward this
-/*
+
 void PlayerPreThink(edict_t *pEntity) {
-	if (!vPreThinkList.empty()) {
-		for(std::vector<AmxCall>::iterator i = vPreThinkList.begin(); i != vPreThinkList.end(); i++) {
-			cell iRetVal = 0;
-			AMX_EXEC(&i->pPlugin->amx, &iRetVal, i->iFunctionIdx, 1, ENTINDEX(pEntity));
-		}
-	}
 	
 	RETURN_META(MRES_IGNORED);
 }
-*/
+
 // This code is to set the model at a specified time. the second part of the code updates the
 // SetView camera.
 //(BAILOPAN) - now a forward
@@ -2545,13 +2529,6 @@ void PlayerPostThink(edict_t *pEntity) {
 		}
 	}
 	
-	if (!vPostThinkList.empty()) {
-		for(std::vector<AmxCall>::iterator i = vPostThinkList.begin(); i != vPostThinkList.end(); i++) {
-			cell iRetVal = 0;
-			AMX_EXEC(&i->pPlugin->amx, &iRetVal, i->iFunctionIdx, 1, ENTINDEX(pEntity));
-		}
-	}
-
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -2566,44 +2543,23 @@ void StartFrame() {
 		}
 	}
 
-	if(!vServerFrameCallList.empty()) {
-		for(std::vector<AmxCall>::iterator i = vServerFrameCallList.begin(); i != vServerFrameCallList.end(); i++) {
-			cell iRetVal = 0;
-			AMX_EXEC(&i->pPlugin->amx, &iRetVal, i->iFunctionIdx, 0);
-		}
-	}
-
 	RETURN_META(MRES_IGNORED);
 }
 
 // pfnTouch, this is a forward that is called whenever 2 entities collide.
 void Touch(edict_t *pToucher, edict_t *pTouched) {
-	for(std::vector<AmxCall>::iterator i = vTouchCallList.begin(); i != vTouchCallList.end(); i++) {
-		cell iRetVal = 0;
-		AMX_EXEC(&i->pPlugin->amx, &iRetVal, i->iFunctionIdx, 2, ENTINDEX(pToucher), ENTINDEX(pTouched));
-	}
 
 	RETURN_META(MRES_IGNORED);
 }
 
 //Added by BAILOPAN.  ClientKill() forward.
-/*void ClientKill(edict_t *pEntity)
+void ClientKill(edict_t *pEntity)
 {
 	cell iRetVal = 0;
 	META_RES result = MRES_IGNORED;
-	
-	for(std::vector<AmxCall>::iterator i = vCliKillList.begin(); i != vCliKillList.end(); i++) {
-		AMX_EXEC(&i->pPlugin->amx, &iRetVal, i->iFunctionIdx, 1, ENTINDEX(pEntity));
-		if (iRetVal & 2) {
-			RETURN_META(MRES_SUPERCEDE);
-		}
-		if (iRetVal & 1) {
-			result = MRES_SUPERCEDE;
-		}
-	}
 
 	RETURN_META(result);
-}*/
+}
 
 // ClientDisconnect. Reinitialize the PlayerInfo struct for that player.
 void ClientDisconnect(edict_t *pEntity) {
@@ -2659,12 +2615,14 @@ int AddToFullPack(struct entity_state_s *state, int e, edict_t *ent, edict_t *ho
 
 // ServerActivate. This is called when the server starts a new map.
 void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax) {
+	/*
 	plugin_t *pCurrent = FIND_PLUGIN_BY_INDEX(0, 0);
 	int iFunctionIndex = 0;
 
 	// Search for plugins that have the forward functions.
 	while(pCurrent){	//Iterate Plugin List
 		//THIS IS FOR BACKWARD COMPATIBILITY
+	
 		if(AMX_FINDPUBLIC(&pCurrent->amx, "vexd_pfntouch", &iFunctionIndex) == AMX_ERR_NONE) {
 			AmxCall sNewCall;
 			sNewCall.pPlugin = pCurrent;
@@ -2673,8 +2631,8 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax) {
 		}
 
 		iFunctionIndex = 0;
-		
-		/*if(AMX_FINDPUBLIC(&pCurrent->amx, "pfntouch", &iFunctionIndex) == AMX_ERR_NONE) {
+
+		if(AMX_FINDPUBLIC(&pCurrent->amx, "pfntouch", &iFunctionIndex) == AMX_ERR_NONE) {
 			AmxCall sNewCall;
 			sNewCall.pPlugin = pCurrent;
 			sNewCall.iFunctionIdx = iFunctionIndex;
@@ -2682,7 +2640,7 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax) {
 		}
 
 		iFunctionIndex = 0;
-*/
+
 		if(AMX_FINDPUBLIC(&pCurrent->amx, "ServerFrame", &iFunctionIndex) == AMX_ERR_NONE) {
 			AmxCall sNewCall;
 			sNewCall.pPlugin = pCurrent;
@@ -2690,7 +2648,7 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax) {
 			vServerFrameCallList.push_back(sNewCall);
 		}
 
-		/*iFunctionIndex = 0;
+		iFunctionIndex = 0;
 		
 		if (AMX_FINDPUBLIC(&pCurrent->amx, "client_kill", &iFunctionIndex) == AMX_ERR_NONE) {
 			AmxCall sNewCall;
@@ -2716,11 +2674,12 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax) {
 			sNewCall.iFunctionIdx = iFunctionIndex;
 			vPostThinkList.push_back(sNewCall);
 		}
-		*/
+		
 		iFunctionIndex = 0;
 		pCurrent = pCurrent->next;
+		
 	}
-
+*/
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -2730,9 +2689,6 @@ void ServerDeactivate(void) {
 
 	// Clear the call list for forwards. this is important as the address of plugins can change
 	// from map-to-map.
-	vTouchCallList.clear();
-	vServerFrameCallList.clear();
-	vCliKillList.clear();
 
 	// Reset Lights.
 	memset(GlInfo.szLastLights, 0x0, 128);
@@ -2933,12 +2889,6 @@ AMX_NATIVE_INFO Engine_Exports[] = {
 };
 
 C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion) {
-	if(!pengfuncsFromEngine) return(FALSE);
-	else if(*interfaceVersion != ENGINE_INTERFACE_VERSION) {
-		*interfaceVersion = ENGINE_INTERFACE_VERSION;
-		return(FALSE);
-	}
-
 	meta_engfuncs.pfnMessageBegin = MessageBegin;
 	meta_engfuncs.pfnMessageEnd = MessageEnd;
 	meta_engfuncs.pfnWriteByte = WriteByte;
@@ -2950,7 +2900,13 @@ C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
 	meta_engfuncs.pfnWriteString = WriteString;
 	meta_engfuncs.pfnWriteEntity = WriteEntity;
 	meta_engfuncs.pfnLightStyle = LightStyle;
-	meta_engfuncs.pfnVoice_SetClientListening = Voice_SetClientListening;
+//	meta_engfuncs.pfnVoice_SetClientListening = Voice_SetClientListening;
+
+	if(*interfaceVersion!=ENGINE_INTERFACE_VERSION) {
+		LOG_ERROR(PLID, "GetEngineFunctions version mismatch; requested=%d ours=%d", *interfaceVersion, ENGINE_INTERFACE_VERSION);
+		*interfaceVersion = ENGINE_INTERFACE_VERSION;
+		return(FALSE);
+	}
 
 	memcpy(pengfuncsFromEngine, &meta_engfuncs, sizeof(enginefuncs_t));
 
@@ -2959,7 +2915,7 @@ C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
 
 C_DLLEXPORT int GetEntityAPI2( DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion ) {
 	gFunctionTable.pfnGameInit = GameInit;
-	gFunctionTable.pfnTouch = Touch;
+	/*gFunctionTable.pfnTouch = Touch;
 	gFunctionTable.pfnStartFrame = StartFrame;
 	gFunctionTable.pfnClientConnect = ClientConnect;
 	gFunctionTable.pfnClientDisconnect = ClientDisconnect;
@@ -2968,8 +2924,14 @@ C_DLLEXPORT int GetEntityAPI2( DLL_FUNCTIONS *pFunctionTable, int *interfaceVers
 	gFunctionTable.pfnAddToFullPack = AddToFullPack;
 	gFunctionTable.pfnServerActivate = ServerActivate;
 	gFunctionTable.pfnServerDeactivate = ServerDeactivate;
-	//gFunctionTable.pfnClientKill = ClientKill;
-	//gFunctionTable.pfnPlayerPreThink = PlayerPreThink;
+	gFunctionTable.pfnClientKill = ClientKill;
+	gFunctionTable.pfnPlayerPreThink = PlayerPreThink;*/
+
+	if(*interfaceVersion!=INTERFACE_VERSION) {
+		LOG_ERROR(PLID, "GetEntityAPI2 version mismatch; requested=%d ours=%d", *interfaceVersion, INTERFACE_VERSION);
+		*interfaceVersion = INTERFACE_VERSION;
+		return(FALSE);
+	}
 
 	memcpy( pFunctionTable, &gFunctionTable, sizeof( DLL_FUNCTIONS ) );
 
@@ -2977,29 +2939,41 @@ C_DLLEXPORT int GetEntityAPI2( DLL_FUNCTIONS *pFunctionTable, int *interfaceVers
 }
 
 C_DLLEXPORT int Meta_Query(char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_t *pMetaUtilFuncs) {
-	*pPlugInfo=&Plugin_info;
 	gpMetaUtilFuncs=pMetaUtilFuncs;
-	
+	*pPlugInfo=&Plugin_info;
+	if(strcmp(ifvers, Plugin_info.ifvers)) {
+		int mmajor=0, mminor=0, pmajor=0, pminor=0;
+		LOG_MESSAGE(PLID, "WARNING: meta-interface version mismatch; requested=%s ours=%s", Plugin_info.logtag, ifvers);
+		sscanf(ifvers, "%d:%d", &mmajor, &mminor);
+		sscanf(META_INTERFACE_VERSION, "%d:%d", &pmajor, &pminor);
+		if(pmajor > mmajor || (pmajor==mmajor && pminor > mminor)) {
+			LOG_ERROR(PLID, "metamod version is too old for this plugin; update metamod");
+			return(FALSE);
+		}
+		else if(pmajor < mmajor) {
+			LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin");
+			return(FALSE);
+		}
+		else if(pmajor==mmajor && pminor < mminor)
+			LOG_MESSAGE(PLID, "WARNING: metamod version is newer than expected; consider finding a newer version of this plugin");
+		else
+			LOG_ERROR(PLID, "unexpected version comparison; metavers=%s, mmajor=%d, mminor=%d; plugvers=%s, pmajor=%d, pminor=%d", ifvers, mmajor, mminor, META_INTERFACE_VERSION, pmajor, pminor);
+	}
 	return(TRUE);
 }
 
 C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, meta_globals_t *pMGlobals, gamedll_funcs_t *pGamedllFuncs) {
-	if(!pMGlobals) {
-		LOG_ERROR(PLID, "Meta_Attach called with null pMGlobals");
+	if(now > Plugin_info.loadable) {
+		LOG_ERROR(PLID, "Can't load plugin right now");
 		return(FALSE);
 	}
 	gpMetaGlobals=pMGlobals;
-	if(!pFunctionTable) {
-		LOG_ERROR(PLID, "Meta_Attach called with null pFunctionTable");
-		return(FALSE);
-	}
-
 	gMetaFunctionTable.pfnGetEntityAPI2 = GetEntityAPI2;
 	gMetaFunctionTable.pfnGetEngineFunctions = GetEngineFunctions;
-
+	
 	memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
 	gpGamedllFuncs=pGamedllFuncs;
-
+	
 	return(TRUE);
 }
 
@@ -3012,18 +2986,20 @@ C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason) {
 }
 
 void WINAPI GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals ) {
-  memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
-  gpGlobals = pGlobals;
+	memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
+	gpGlobals = pGlobals;
 }
 
-C_DLLEXPORT int AMX_Attach(module_info_s** info,pfnamx_engine_g* amxeng,pfnms_engine_g* mseng) {
-	*info = &AMXInfo;
+C_DLLEXPORT int AMX_Attach(pfnamx_engine_g* amxeng,pfnmodule_engine_g* meng) {
 	g_engAmxFunc = amxeng;
-	g_engModuleFunc = mseng;
+	g_engModuleFunc = meng;
+	
+	if (!gpMetaGlobals)
+		REPORT_ERROR( 1 , "[AMXXE] Module is not attached to Metamod!\n");
+	
+	ADD_AMXNATIVES( &module_info , Engine_Exports);
 
-	ADD_NATIVES(Engine_Exports);
-
-	return(1);
+	return 1;
 }
 
 C_DLLEXPORT int AMX_Detach() {

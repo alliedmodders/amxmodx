@@ -73,6 +73,11 @@ void CTaskMngr::CTask::set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags,
 
 void CTaskMngr::CTask::clear()
 {
+	if (m_iFunc >= 0)
+	{
+		unregisterSPForward(m_iFunc);
+		m_iFunc = -1;
+	}
 	m_bFree = true;
 	if (m_pParams)
 	{
@@ -133,7 +138,7 @@ void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, f
 		else
 		{
 			unregisterSPForward(m_iFunc);
-			m_iFunc = 0;
+			m_iFunc = -1;
 			m_bFree = true;
 		}
 	}

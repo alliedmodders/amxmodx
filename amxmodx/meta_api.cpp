@@ -444,13 +444,13 @@ void C_ServerDeactivate_Post() {
 
   detachReloadModules();
   g_auth.clear();
-  g_forwards.clear();
   g_commands.clear();
   g_forcemodels.clear();
   g_forcesounds.clear();
   g_forcegeneric.clear();
   g_grenades.clear();
   g_tasksMngr.clear();
+  g_forwards.clear();
   g_logevents.clearLogEvents();
   g_events.clearEvents();
   g_menucmds.clear();
@@ -460,7 +460,6 @@ void C_ServerDeactivate_Post() {
   g_langMngr.Save(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
   g_langMngr.SaveCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
   g_langMngr.Clear();
-
   //clear module name cache
   while (!CurModuleList.empty())
   {

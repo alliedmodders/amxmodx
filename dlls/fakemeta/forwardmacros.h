@@ -650,14 +650,26 @@
 #define SIMPLE_VOID_HOOK_INT_INT_CONSTVECT_EDICT(call) \
 	void call (int v, int vb, const float *vec, edict_t *e) \
 	{ \
-		PREPARE_VECTOR(vec); \
-		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  v, vb, p_vec, ENTINDEX(e))); \
+		if (vec) { \
+			PREPARE_VECTOR(vec); \
+			FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  v, vb, p_vec, ENTINDEX(e))); \
+		} else { \
+			const float b[3]={0.0,0.0,0.0}; \
+			PREPARE_VECTOR(b); \
+			FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  v, vb, p_b, ENTINDEX(e))); \
+		} \
 		RETURN_META(mswi(lastFmRes)); \
 	} \
 	void call##_post (int v, int vb, const float *vec, edict_t *e) \
 	{ \
-		PREPARE_VECTOR(vec); \
-		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  v, vb, p_vec, ENTINDEX(e))); \
+		if (vec) { \
+			PREPARE_VECTOR(vec); \
+			FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  v, vb, p_vec, ENTINDEX(e))); \
+		} else { \
+			const float b[3]={0.0,0.0,0.0}; \
+			PREPARE_VECTOR(b); \
+			FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  v, vb, p_b, ENTINDEX(e))); \
+		} \
 		RETURN_META(MRES_IGNORED); \
 	}
 #define SIMPLE_BOOL_HOOK_EDICT_CONSTSTRING_CONSTSTRING_STRING128(call) \

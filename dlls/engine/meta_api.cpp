@@ -1,6 +1,7 @@
 /****************************************************************************
  *  Project: AMX Mod X
- *		By:  BAILOPAN, JohnnyGotHisGun, Manip, PM, SniperBeamer
+ *      Engine module by: BAILOPAN
+ *		AMX Mod X Team:  BAILOPAN, JohnnyGotHisGun, Manip, PM, SniperBeamer
  *
  *	Purpose:Engine and entity related natives for AMXX scripting.
  *
@@ -498,31 +499,34 @@ static cell AMX_NATIVE_CALL system_cmd(AMX  *amx, cell *params)
 	int iLen, retVal, iLen2;
 	char *szCommand = AMX_GET_STRING(amx, params[2], iLen);
 	char *szDirectory = AMX_GET_STRING(amx, params[3], iLen2);
+	if (!iLen2) {
+		szDirectory = NULL;
+	}
 #ifndef __linux__
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
 
 	ZeroMemory(&si, sizeof(si));
+	if (i_apptype & 2) {
+		si.dwFlags = STARTF_USESHOWWINDOW;
+		si.wShowWindow = SW_HIDE;
+	}
 	si.cb = sizeof(si);
 	ZeroMemory(&pi, sizeof(pi));
 
-	if (!i_apptype) {
+	if (!i_apptype & 1) {
 		if (!CreateProcess(NULL, (LPTSTR)szCommand, NULL, NULL, FALSE, 0, NULL, (LPCTSTR)szDirectory, &si, &pi)) {
 			return 0;
 		} else {
 			retVal = 1;
 		}
-	} else if (i_apptype == 1) {
+	} else {
 		if (!CreateProcess((LPCTSTR)szCommand, NULL, NULL, NULL, FALSE, 0, NULL, (LPCTSTR)szDirectory, &si, &pi)) {
 			return 0;
 		} else {
 			retVal = 1;
 		}
 	}
-
-	WaitForSingleObject(pi.hProcess, INFINITE);
-	CloseHandle(pi.hProcess);
-	CloseHandle(pi.hThread);
 #else
 	void *stack;
 	pid_t pid;
@@ -531,12 +535,12 @@ static cell AMX_NATIVE_CALL system_cmd(AMX  *amx, cell *params)
 		app_type = 64;
 	}
 
-	stack = malloc(app_type * 64);
+	stack = malloc(app_type * 1024);
 	if (stack == 0) {
 		return -1;
 	}
 
-	pid = clone(&thread_fork, (char *)stack + app_type*64, 0, szCommand);
+	pid = clone(&thread_fork, (char *)stack + app_type*1024, 0, szCommand);
 	if (pid == -1) {
 		return -1;
 	}

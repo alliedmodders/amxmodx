@@ -5,7 +5,7 @@
 #include <signal.h>
 #include <sched.h>
 #endif
-#define VERSION "0.74"
+#define VERSION "0.75"
 
 plugin_info_t Plugin_info = {
 

@@ -15,9 +15,6 @@
 #include <engine>
 #include <fun>
 
-stock get_user_hitzones(index,target)
-  return get_hitzones()
-  
 stock user_spawn(index)
   return spawn(index)
 

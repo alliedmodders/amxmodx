@@ -281,7 +281,7 @@ int	C_Spawn( edict_t *pent ) {
   FF_ClientPutInServer = registerForward("client_putinserver", ET_IGNORE, FP_CELL, FP_DONE);
   FF_PluginCfg = registerForward("plugin_cfg", ET_IGNORE, FP_DONE);
   FF_PluginPrecache = registerForward("plugin_precache", ET_IGNORE, FP_DONE);
-  FF_PluginLog = registerForward("plugin_log", ET_IGNORE, FP_DONE);
+  FF_PluginLog = registerForward("plugin_log", ET_STOP, FP_DONE);
   FF_PluginEnd = registerForward("plugin_end", ET_IGNORE, FP_DONE);
   FF_InconsistentFile = registerForward("inconsistent_file", ET_STOP, FP_CELL, FP_STRING, FP_STRINGEX, FP_DONE);
   FF_ClientAuthorized = registerForward("client_authorized", ET_IGNORE, FP_CELL, FP_DONE);
@@ -985,7 +985,9 @@ void C_AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...)
 		g_logevents.parseLogString(	);
 		if (g_logevents.logEventsExist())
 			g_logevents.executeLogEvents( );
-		executeForwards(FF_PluginLog);
+		cell retVal = executeForwards(FF_PluginLog);
+		if (retVal)
+			RETURN_META(MRES_HANDLED);
 	}
 
 	RETURN_META(MRES_IGNORED);

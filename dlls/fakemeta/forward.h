@@ -1,7 +1,7 @@
 #ifndef _INCLUDE_FORWARD_H
 #define _INCLUDE_FORWARD_H
 
-#define ENGFUNC_NUM		108
+#define ENGFUNC_NUM		118
 
 #define	FMV_STRING		1
 #define FMV_FLOAT		2
@@ -148,6 +148,7 @@ enum {
 	// Create baselines for certain "unplaced" items.
 	FM_CreateInstancedBaselines,	// done 
 	FM_AllowLagCompensation,	// done
+	FM_AlertMessage,
 };
 
 extern CVector<int> Engine[];

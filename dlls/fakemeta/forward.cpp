@@ -111,6 +111,28 @@ void TraceLine_post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 	RETURN_META(MRES_IGNORED);
 }
 
+void AlertMessage(ALERT_TYPE atype, char *szFmt, ...)
+{
+	static char buf[2048];
+	va_list ap;
+	va_start(ap, szFmt);
+	vsprintf(buf, szFmt, ap);
+	va_end(ap);
+	FM_ENG_HANDLE(FM_AlertMessage, (Engine[FM_AlertMessage].at(i), atype, buf));
+	RETURN_META(mswi(lastFmRes));
+}
+
+void AlertMessage_post(ALERT_TYPE atype, char *szFmt, ...)
+{
+	static char buf[2048];
+	va_list ap;
+	va_start(ap, szFmt);
+	vsprintf(buf, szFmt, ap);
+	va_end(ap);
+	FM_ENG_HANDLE(FM_AlertMessage, (Engine[FM_AlertMessage].at(i), atype, buf));
+	RETURN_META(MRES_IGNORED);
+}
+
 // pfnModelIndex
 SIMPLE_INT_HOOK_CONSTSTRING(ModelIndex);
 
@@ -872,7 +894,10 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 		ENGHOOK(IsMapValid);
 		break;
 
-
+	case FM_AlertMessage:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_STRING, FP_DONE);
+		ENGHOOK(AlertMessage);
+		break;
 
 /*
  * Begin of DLLFuncs 

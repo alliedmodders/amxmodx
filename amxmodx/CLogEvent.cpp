@@ -153,9 +153,11 @@ void LogEventsMngr::executeLogEvents()
 {
     int err;
     bool valid;
-    for(CLogEvent* a = logevents[ logArgc ]; a ; a = a->next){
+    for(CLogEvent* a = logevents[ logArgc ]; a ; a = a->next)
+	{
 		valid = true;
-		for( CLogEvent::LogCond* b = a->filters; b ; b = b->next){
+		for( CLogEvent::LogCond* b = a->filters; b ; b = b->next)
+		{
 			valid = false;
 			for( CLogEvent::LogCondEle* c = b->list; c ; c = c->next) {
 				if ( c->cmp->compareCondition( logArgs[b->argnum] ) == 0 ){
@@ -163,27 +165,15 @@ void LogEventsMngr::executeLogEvents()
 					break;
 				}
 			}
-			if (!valid) break;
+			if (!valid) 
+				break;
 		}
 		
-#ifdef ENABLEEXEPTIONS
-		try
+		if (valid)
 		{
-#endif
-			
-			if (valid){
-				if ((err = amx_Exec(a->plugin->getAMX(), NULL , a->func , 0)) != AMX_ERR_NONE)
-					LogError(a->plugin->getAMX(), err, "");
-			}
-			
-#ifdef ENABLEEXEPTIONS
+			if ((err = amx_Exec(a->plugin->getAMX(), NULL , a->func , 0)) != AMX_ERR_NONE)
+				LogError(a->plugin->getAMX(), err, "");
 		}
-		catch( ... )
-		{
-			AMXXLOG_Log( "[AMXX] fatal error at log forward function execution");
-		}
-#endif
-		
     }
 }
 

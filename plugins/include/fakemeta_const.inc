@@ -436,6 +436,7 @@ enum {
 	// Create baselines for certain "unplaced" items.
 	FM_CreateInstancedBaseline,	// done 
 	FM_AllowLagCompensation,	// done
+	FM_AlertMessage, //done (at_type, message[])
 };
 
 enum TraceResult

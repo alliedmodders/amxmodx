@@ -1,0 +1,4 @@
+[en]
+CMD_MENU = Commands Menu
+CONF_MENU = Configs Menu
+SPE_MENU = Speech Menu

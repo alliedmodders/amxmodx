@@ -1,0 +1,23 @@
+[en]
+RESULT_REF = Result refused
+RESULT_ACC = Result accepted
+VOTE_SUCCESS = Voting successful. Map will be changed to
+VOTE_FAILED = Voting failed
+THE_WINNER = The winner
+WANT_CONT = Do you want to continue?
+VOT_CANC = Voting has been canceled
+X_VOTED_FOR = %s voted for option #%d
+VOTEMAP_MENU = Votemap Menu
+START_VOT = Start Voting
+SEL_MAPS = Selected Maps
+ALREADY_VOT = There is already one voting...
+NO_MAPS_MENU = There are no maps in menu
+VOT_NOW_ALLOW = Voting not allowed at this time
+WHICH_MAP = Which map do you want?
+CHANGE_MAP_TO = Change map to
+CANC_VOTE = Cancel Vote
+ADMIN_V_MAP_1 = ADMIN: vote map(s)
+ADMIN_V_MAP_2 = ADMIN %s: vote map(s)
+ADMIN_CHANGEL_1 = ADMIN: changelevel %s
+ADMIN_CHANGEL_2 = ADMIN %s: changelevel %s
+CHANGLE_MENU = Changelevel Menu

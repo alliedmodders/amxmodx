@@ -1,0 +1,2 @@
+[en]
+INF_REACH = Information Messages limit reached!

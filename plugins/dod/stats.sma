@@ -281,7 +281,7 @@ getAttackers(id) {
   new amax = get_maxplayers() 
   for(new a = 1; a <= amax; ++a){ 
 
-    if(is_user_connected(a) && get_user_astats(id,a,stats,body,wpn,31))
+    if(get_user_astats(id,a,stats,body,wpn,31))
     { 
       found = 1 
       if (stats[0]) 
@@ -302,7 +302,7 @@ getVictims(id) {
   new pos = format(g_Buffer,2047,"%L^n",id,"VICTIMS") 
   new amax = get_maxplayers() 
   for(new a = 1; a <= amax; ++a){ 
-    if(is_user_connected(a) && get_user_vstats(id,a,stats,body,wpn,31))
+    if(get_user_vstats(id,a,stats,body,wpn,31))
     { 
       found = 1 
       if (stats[1]) 

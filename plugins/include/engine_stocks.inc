@@ -132,7 +132,7 @@ stock make_deathmsg(killer,victim,headshot,weapon[])
 	write_byte( killer )
 	write_byte( victim )
 	write_byte( headshot )
-	write_string( weapon[] )
+	write_string( weapon )
 	message_end()
 
 	return 1

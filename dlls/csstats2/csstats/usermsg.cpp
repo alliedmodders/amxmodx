@@ -50,6 +50,7 @@ void Client_Damage(void* mValue){
   static int TK;
   static int weapon;
   static int aim;
+  static bool ignore;
   static CPlayer *pAttacker;
 
   switch (mState++) {
@@ -60,7 +61,7 @@ void Client_Damage(void* mValue){
     bits = *(int*)mValue;
     break;
   case 3:
-    if (!mPlayer || !damage || !*(float*)mValue || bits)  break;
+    if ( ignore = (!mPlayer || !damage || !*(float*)mValue || bits) )  break;
     edict_t *enemy;
 	enemy = mPlayer->pEdict->v.dmg_inflictor;
     
@@ -81,12 +82,15 @@ void Client_Damage(void* mValue){
 		pAttacker->saveHit( mPlayer , weapon , damage, aim );
 	break;
   case 4:
+	if ( ignore || mPlayer->IsAlive() )
+		break;
 	if ( !pAttacker )
 		pAttacker = mPlayer;
 	TK = 0;
 	if ( (mPlayer->teamId == pAttacker->teamId) && (mPlayer != pAttacker) )
 		TK = 1;
 	pAttacker->saveKill(mPlayer,weapon,( aim == 1 ) ? 1:0 ,TK);
+
 	break;
   }
 }

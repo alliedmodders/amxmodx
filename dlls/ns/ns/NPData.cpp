@@ -303,7 +303,7 @@ static cell AMX_NATIVE_CALL ns_set_deaths(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL ns_get_struct_owner(AMX *amx, cell *params)
 {
 	int id = params[1];
-	if (id <= gpGlobals->maxClients || id <= gpGlobals->maxEntities)
+	if (id <= gpGlobals->maxClients || id >= gpGlobals->maxEntities)
 		return 0;
 	edict_t *pEntity = INDEXENT2(id);
 	if (!pEntity)
@@ -316,7 +316,7 @@ static cell AMX_NATIVE_CALL ns_set_struct_owner(AMX *amx, cell *params)
 {
 	int id = params[1];
 	int ido = params[2];
-	if (id <= gpGlobals->maxClients || id <= gpGlobals->maxEntities)
+	if (id <= gpGlobals->maxClients || id >= gpGlobals->maxEntities)
 		return 0;
 	if (ido > gpGlobals->maxClients || ido < -1)
 		return 0;

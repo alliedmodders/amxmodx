@@ -13,20 +13,21 @@
 # clean - clean the specifications above
 
 $PROJECT = "sqlite_amxx";
-$sdk = "../../../hlmultisource";
-$mm = "../../../metamodsrc/metamod";
-$sqlite = "sqlite-source-3_1_2";
+$sdk = "../../hlsdk/SourceCode";
+$mm = "../../metamod/metamod";
+$sql = "sqlite-source-3_1_2";
 $gccf = "gcc";
 
 @CPP_SOURCE_FILES = ("sqlite.cpp", "sqlite_amx.cpp", "amxxmodule.cpp");
 
-@C_SOURCE_FILES = ();
+@C_SOURCE_FILES = ("$sql/attach.c", "$sql/auth.c", "$sql/btree.c", "$sql/build.c", "$sql/date.c", "$sql/delete.c", "$sql/expr.c", "$sql/func.c", "$sql/hash.c", "$sql/insert.c", "$sql/legacy.c", "$sql/main.c", "$sql/opcodes.c", "$sql/os_unix.c", "$sql/os_win.c", "$sql/pager.c", "$sql/parse.c", "$sql/pragma.c", "$sql/printf.c", "$sql/random.c", "$sql/select.c", "$sql/shell.c", "$sql/table.c", "$sql/tokenize.c", "$sql/trigger.c", "$sql/update.c", "$sql/utf.c", "$sql/util.c", "$sql/vacuum.c", "$sql/vdbe.c", "$sql/vdbeapi.c", "$sql/vdbeaux.c", "$sql/vdbemem.c", "$sql/where.c");
+
 my %OPTIONS, %OPT;
 
 $OPT{"debug"} = "-g -ggdb";
 $OPT{"opt"} = "-O2 -ffast-math -funroll-loops -fomit-frame-pointer -s -DNDEBUG -Wall -Wno-unknown-pragmas -DOPT_TYPE=\"optimized\" -fno-exceptions -fno-rtti";
 
-$OPTIONS{"include"} = "-I$sdk -I. -I$mm -I$sdk/engine -I$sdk/common -I$sdk/pm_shared -I$sdk/dlls -I$sqlite";
+$OPTIONS{"include"} = "-I$sdk -I. -I$mm -I$sdk/engine -I$sdk/common -I$sdk/pm_shared -I$sdk/dlls -I$sql";
 
 while ($cmd = shift)
 {
@@ -127,6 +128,10 @@ if (!(-d $outdir))
 {
 	mkdir($outdir);
 }
+if (!(-d "$outdir/$sql"))
+{
+	mkdir("$outdir/$sql");
+}
 
 $inc = $OPTIONS{"include"};
 
@@ -152,7 +157,7 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	}
 }
 
-for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
+for ($i=0; $i<=$#C_SOURCE_FILES; $i++)
 {
 	$file = $C_SOURCE_FILES[$i];
 	$ofile = $file;

@@ -299,23 +299,6 @@ static cell AMX_NATIVE_CALL ns_set_deaths(AMX *amx, cell *params)
 	set_private(player->edict,OFFSET_WIN_DEATHS,OFFSET_LIN_DEATHS,(int)params[2]);
 	return 1;
 }
-static cell AMX_NATIVE_CALL ns_get_icon(AMX *amx, cell *params)
-{
-	int id = params[1];
-	if (id < 1 || id > gpGlobals->maxClients)
-		return 0;
-	CPlayer *player = GET_PLAYER_I(id);
-	return get_private(player->edict,OFFSET_WIN_ICON,OFFSET_LIN_ICON);
-}
-static cell AMX_NATIVE_CALL ns_set_icon(AMX *amx, cell *params)
-{
-	int id = params[1];
-	if (id < 1 || id > gpGlobals->maxClients)
-		return 0;
-	CPlayer *player = GET_PLAYER_I(id);
-	set_private(player->edict,OFFSET_WIN_ICON,OFFSET_LIN_ICON,(int)params[2]);
-	return 1;
-}
 
 static cell AMX_NATIVE_CALL ns_get_struct_owner(AMX *amx, cell *params)
 {
@@ -374,9 +357,6 @@ AMX_NATIVE_INFO ns_pdata_natives[] = {
 
 	{ "ns_get_deaths",			ns_get_deaths },
 	{ "ns_set_deaths",			ns_set_deaths },
-
-	{ "ns_get_icon",			ns_get_icon },
-	{ "ns_set_icon",			ns_set_icon },
 
 	{ "ns_get_hive_trait",		ns_get_hive_trait },
 	{ "ns_set_hive_trait",		ns_set_hive_trait },

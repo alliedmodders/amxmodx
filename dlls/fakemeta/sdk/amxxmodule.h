@@ -2122,8 +2122,6 @@ void MF_Log(const char *fmt, ...);
 #define MF_UnregisterSPForward g_fn_UnregisterSPForward
 #define MF_GetPlayerFlags g_fn_GetPlayerFlags
 
-#ifdef MEMORY_TEST
-
 /*** Memory ***/
 void	*operator new(size_t reportedSize);
 void	*operator new[](size_t reportedSize);
@@ -2166,7 +2164,5 @@ void	Mem_Deallocator(const char *sourceFile, const unsigned int sourceLine, cons
 #define	calloc(sz)	Mem_Allocator  (__FILE__,__LINE__,__FUNCTION__,m_alloc_calloc,sz)
 #define	realloc(ptr,sz)	Mem_Reallocator(__FILE__,__LINE__,__FUNCTION__,m_alloc_realloc,sz,ptr)
 #define	free(ptr)	Mem_Deallocator(__FILE__,__LINE__,__FUNCTION__,m_alloc_free,ptr)
-
-#endif //MEMORY_TEST
 
 #endif // #ifndef __AMXXMODULE_H__

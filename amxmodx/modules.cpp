@@ -1196,7 +1196,10 @@ void LogError(AMX *amx, int err, const char *fmt, ...)
 			GenericError(amx, err, amx->curline, buf, NULL);
 		}
 		AMXXLOG_Log("[AMXX] %s", buf);
-		AMXXLOG_Log("%s", vbuf);
+		if (*vbuf)
+		{
+			AMXXLOG_Log("%s", vbuf);
+		}
 	} else {
 		AMX_TRACE *t = dbg->tail;
 		AMX_DEBUGCALL tracer = (AMX_DEBUGCALL)(amx->userdata[1]);

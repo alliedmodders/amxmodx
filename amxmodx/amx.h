@@ -21,7 +21,8 @@
  *  Version: $Id$
  */
 
-#define LINUX
+// JIT used
+//#define JIT
 #if defined __linux__
   #include <sclinux.h>
 #endif
@@ -118,6 +119,14 @@ extern  "C" {
   typedef int64_t   cell;
 #else
   #error Unsupported cell size (SMALL_CELL_SIZE)
+#endif
+
+#if SMALL_CELL_SIZE==32
+  #define REAL          float
+#elif SMALL_CELL_SIZE==64
+  #define REAL          double
+#else
+  #error Unsupported cell size
 #endif
 
 #define UNPACKEDMAX   ((1 << (sizeof(cell)-1)*8) - 1)

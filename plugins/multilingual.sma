@@ -34,6 +34,8 @@
 #include <amxmodx>
 #include <amxmisc>
 
+#define DISPLAY_MSG // Comment to disable message on join
+
 new g_userLang[33][3]
 new g_menuLang[33][2]
 new g_serverLang
@@ -46,7 +48,7 @@ public plugin_init() {
   register_dictionary("common.txt")
   register_cvar("amx_language","en",FCVAR_SERVER|FCVAR_EXTDLL|FCVAR_SPONLY)
   register_concmd("amx_setlang","cmdLang",ADMIN_CFG,"<language>")
-  register_clcmd("amx_setlangmenu","cmdLangMenu",ADMIN_ALL)
+  register_clcmd("amx_langmenu","cmdLangMenu",ADMIN_ALL)
   register_menu("Language Menu",1023,"actionMenu")
 
   new lang[3]
@@ -64,6 +66,12 @@ public plugin_init() {
   g_coloredMenus = colored_menus()
 }
 
+#if defined DISPLAY_MSG
+public client_putinserver(id) {
+  set_task(10.0,"dispInfo",id)
+}
+#endif
+
 public client_infochanged(id) {
   new lang[3]
   get_user_info(id,"lang",lang,2)
@@ -75,6 +83,12 @@ public client_infochanged(id) {
   else
     set_user_info(id,"lang","en")
 }
+
+#if defined DISPLAY_MSG
+public dispInfo(id) {
+  client_print(id,print_chat,"%L",id,"TYPE_LANGMENU")
+}
+#endif
 
 public cmdLang(id,level,cid) {
   if (!cmd_access(id,level,cid,2))

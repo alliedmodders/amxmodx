@@ -51,21 +51,28 @@ public:
 	};
 private:
 	CListEle *head;
-	int cur_size;
 public:
-	CList<T,F>() { head = 0; cur_size = 0; }
+	CList<T,F>() { head = 0; }
 	~CList<T,F>() {	clear(); }
 	void clear() {
 		iterator a = begin();
 		while( a ) a.remove();
-		cur_size = 0;
+	}
+	bool empty() {
+		return (head ? false : true);
 	}
 	void put( T* a ) {	
 		head = new CListEle( a , head ); 
-		++cur_size;
 	}
 	int size() {
-		return cur_size;
+		CListEle *p = head;
+		int i = 0;
+		while (p)
+		{
+			p = p->next;
+			++i;
+		}
+		return i;
 	}
 	class iterator {
 		CListEle** a;

@@ -261,6 +261,7 @@ public plugin_cfg() {
   server_cmd( addStast, "Show Total Stats", "ShowTotalStats" )
   server_cmd( addStast, "Show Best Score", "ShowBestScore" )
   server_cmd( addStast, "Show Most Disruptive", "ShowMostDisruptive" )
+  server_cmd( addStast, "Show HUD Stats", "ShowFullStats" )
 
   server_cmd( addStast, "HUD-stats default", "ShowStats" )
   server_cmd( addStast, "Dist&HS in HUD lists", "ShowDistHS" )

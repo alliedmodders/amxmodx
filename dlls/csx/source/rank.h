@@ -14,9 +14,10 @@
 extern AMX_NATIVE_INFO stats_Natives[];
 
 struct weaponsVault {
-  char* name;
-  char* logname;
+  char name[32];
+  char logname[16];
   short int ammoSlot;
+  bool used;
   bool melee;
 };
 

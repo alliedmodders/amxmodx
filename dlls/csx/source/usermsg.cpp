@@ -34,14 +34,13 @@ void Client_WeaponList(void* mValue){
     wpnList |= (1<<iId);
     weaponData[iId].ammoSlot = iSlot;
 
-	char* wpnPrefix = strstr( wpnName,"weapon_");
-
-	if ( wpnPrefix )
+	if ( strstr( wpnName,"weapon_") )
 	{
-		weaponData[iId].name = wpnPrefix + 7;
-		if ( strcmp( weaponData[iId].name, "hegrenade" ) == 0 )
-			weaponData[iId].name += 2;
-		weaponData[iId].logname = weaponData[iId].name;
+		if ( strcmp(wpnName+7,"hegrenade") == 0 )
+			strcpy(weaponData[iId].name,wpnName+9);
+		else
+			strcpy(weaponData[iId].name,wpnName+7);
+		strcpy(weaponData[iId].logname,weaponData[iId].name);
 	}
   } 
 }
@@ -75,6 +74,8 @@ void Client_Damage(void* mValue){
 	}
     if( g_grenades.find(enemy , &pAttacker , &weapon ) )
         pAttacker->saveHit( mPlayer , weapon , damage, aim );
+	else if ( strcmp("grenade",STRING(enemy->v.classname))==0 ) // ? more checks ?
+			weapon = CSW_C4;
   }
 }
 
@@ -90,7 +91,8 @@ void Client_Damage_End(void* mValue){
 	MF_ExecuteForward( iFDamage,pAttacker->index , mPlayer->index , damage, weapon, aim, TA );
 	 
 	if ( !mPlayer->IsAlive() ){
-		pAttacker->saveKill(mPlayer,weapon,( aim == 1 ) ? 1:0 ,TA);
+		if ( weapon != CSW_C4 )
+			pAttacker->saveKill(mPlayer,weapon,( aim == 1 ) ? 1:0 ,TA);
 		MF_ExecuteForward( iFDeath,pAttacker->index, mPlayer->index, weapon, aim, TA );
 	}
 }

@@ -287,8 +287,8 @@ void SetModel_Post(edict_t *e, const char *m){
 		switch(m[9]){
 		case 'h':
 			w_id = CSW_HEGRENADE;
-			g_grenades.put(e, 1.75, 4, pPlayer);
-			pPlayer->saveShot(4);
+			g_grenades.put(e, 2.0, 4, pPlayer);
+			pPlayer->saveShot(CSW_HEGRENADE);
 			break;
 		case 'f':
 			if (m[10]=='l') w_id = CSW_FLASHBANG;

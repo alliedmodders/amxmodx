@@ -138,9 +138,11 @@ new g_HeadShots[7][] = {
   "HS_MSG_7"
 }
 
-new g_teamsNames[2][] = {
+new g_teamsNames[4][] = {
   "TERRORIST",
-  "CT"
+  "CT",
+  "TERRORISTS",
+  "CTS"
 }
 
 public plugin_init() {
@@ -244,11 +246,13 @@ public client_death(killer,victim,wpnindex,hitplace,TK) {
       new eppl[32], epplnum 
       get_players(eppl,epplnum,"ae",g_teamsNames[team]) 
       if (epplnum) { 
-        new message[128]
-        format(message,127,"%d %s%s Remaining...",epplnum,g_teamsNames[team],(epplnum==1)?"":"S" ) 
-        set_hudmessage(255,255,255,0.02,0.85,2, 0.05, 0.1, 0.02, 3.0, 3) 
-        for(new a=0; a<pplnum; ++a) show_hudmessage(ppl[a],message)
-        //client_print(ppl[a],print_chat,message)
+        new message[128],team_name[32]
+        set_hudmessage(255,255,255,0.02,0.85,2, 0.05, 0.1, 0.02, 3.0, 3)
+        for(new a=0; a<pplnum; ++a){
+           format(team_name,31,"%L",ppl[a],(epplnum==1)?g_teamsNames[team]:g_teamsNames[team+2])
+           format(message,127,"%L",ppl[a],"REMAINING",epplnum,team_name)
+           show_hudmessage(ppl[a],message)
+        }
       }
     }
   }
@@ -450,7 +454,14 @@ announceEvent( id, message[] ) {
   show_hudmessage(0,"%L",LANG_PLAYER,message,name)
 }
 
-public eGotBomb(id) { 
+public eBombPickUp(id)
+	if (BombPickUp) announceEvent(id , "PICKED_BOMB")
+
+public eBombDrop()
+	if (BombDrop) announceEvent(g_Planter , "DROPPED_BOMB")
+
+public eGotBomb(id) {
+  g_Planter = id  
   if ( BombReached && read_data(1)==2 && g_LastOmg<get_gametime()) { 
     g_LastOmg = get_gametime() + 15.0
     announceEvent(g_Planter, "REACHED_TARGET" )
@@ -478,11 +489,10 @@ public bombTimer() {
 
 public bomb_planted(planter){
   g_Defusing = 0
-  if ( g_C4Timer != -2 ) {
-    if (BombPlanted) announceEvent(planter, "SET_UP_BOMB" )
-    g_C4Timer = get_cvar_num("mp_c4timer") - 2 
-    set_task(1.0,"bombTimer",8038,"",0,"b") 
-  }
+  if (BombPlanted) announceEvent(planter, "SET_UP_BOMB" )
+  g_C4Timer = get_cvar_num("mp_c4timer") 
+  set_task(1.0,"bombTimer",8038,"",0,"b") 
+
 }
 
 public bomb_planting(planter)
@@ -493,21 +503,11 @@ public bomb_defusing(defuser){
 	g_Defusing = defuser
 }
 
-public bomb_defused(defuser){
+public bomb_defused(defuser)
 	if (BombDefused) announceEvent(defuser, "DEFUSED_BOMB" )
-}
 
-public bomb_explode(planter,defuser){
+public bomb_explode(planter,defuser)
 	if (BombFailed && defuser) announceEvent(defuser ,  "FAILED_DEFU" )
-}
-
-public eBombPickUp(id){
-	if (BombPickUp) announceEvent(id , "PICKED_BOMB")
-	g_Planter = id
-}
-
-public eBombDrop()
-  if (BombDrop) announceEvent(g_Planter , "DROPPED_BOMB")
 
 public plugin_modules()
 {

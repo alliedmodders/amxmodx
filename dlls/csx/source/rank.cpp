@@ -273,36 +273,30 @@ static cell AMX_NATIVE_CALL get_statsnum(AMX *amx, cell *params)
 	return g_rank.getRankNum();
 }
 
-static cell AMX_NATIVE_CALL register_cwpn(AMX *amx, cell *params){ // name,logname,melee=0 
-	int i;
-	bool bFree = false;
+static cell AMX_NATIVE_CALL register_cwpn(AMX *amx, cell *params){ // name,melee=0,logname 
+	int i,iLen;
 	for ( i=MAX_WEAPONS;i<MAX_WEAPONS+MAX_CWEAPONS;i++){
-		if ( !weaponData[i].ammoSlot ){
-			bFree = true;
-			break;
+		if ( !weaponData[i].used ){
+
+			char* szName = MF_GetAmxString(amx, params[1], 0, &iLen);
+			char *szLog = MF_GetAmxString(amx, params[3], 0, &iLen);
+
+			strcpy(weaponData[i].name,szName);
+			strcpy(weaponData[i].logname,szLog);
+			
+			weaponData[i].used = true;
+			weaponData[i].melee = params[2] ? true:false;
+			return i;
 		}
 	}
 
-	if ( !bFree ){
-		MF_PrintSrvConsole("No More Custom Weapon Slots!\n");
-		return 0;
-	}
-
-	int iLen;
-	char *szName = MF_GetAmxString(amx, params[1], 0, &iLen);
-	char *szLogName = MF_GetAmxString(amx, params[3], 0, &iLen);
-
-	strcpy(weaponData[i].name,szName);
-	strcpy(weaponData[i].logname,szLogName);
-	weaponData[i].ammoSlot = 1;
-	weaponData[i].melee = params[2] ? true:false;
-
-	return i;
+	MF_PrintSrvConsole("No More Custom Weapon Slots!\n");
+	return 0;
 }
 
 static cell AMX_NATIVE_CALL custom_wpn_dmg(AMX *amx, cell *params){ // wid,att,vic,dmg,hp=0
 	int weapon = params[1];
-	if (  weapon < MAX_WEAPONS || weapon >= MAX_WEAPONS+MAX_CWEAPONS ||  !weaponData[weapon].ammoSlot ){ // only for custom weapons
+	if (  weapon < MAX_WEAPONS || weapon >= MAX_WEAPONS+MAX_CWEAPONS ||  !weaponData[weapon].used ){ // only for custom weapons
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		MF_PrintSrvConsole("Weapon ID Is Not Valid!\n");
 		return 0;
@@ -361,7 +355,7 @@ static cell AMX_NATIVE_CALL custom_wpn_shot(AMX *amx, cell *params){ // player,w
 	}
 
 	int weapon = params[1];
-	if (  weapon < MAX_WEAPONS  || weapon >= MAX_WEAPONS+MAX_CWEAPONS ||  !weaponData[weapon].ammoSlot ){
+	if (  weapon < MAX_WEAPONS  || weapon >= MAX_WEAPONS+MAX_CWEAPONS || !weaponData[weapon].used ){
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		MF_PrintSrvConsole("Weapon ID Is Not Valid!\n");
 		return 0;
@@ -375,7 +369,7 @@ static cell AMX_NATIVE_CALL custom_wpn_shot(AMX *amx, cell *params){ // player,w
 
 static cell AMX_NATIVE_CALL get_wpnname(AMX *amx, cell *params){ 
 	int id = params[1];
-	if (id<0 || id>=MAX_WEAPONS+MAX_CWEAPONS ){ 
+	if (id<1 || id>=MAX_WEAPONS+MAX_CWEAPONS ){ 
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		MF_PrintSrvConsole("Weapon ID Is Not Valid!\n");
 		return 0;
@@ -385,7 +379,7 @@ static cell AMX_NATIVE_CALL get_wpnname(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL get_wpnlogname(AMX *amx, cell *params){ 
 	int id = params[1];
-	if (id<0 || id>=MAX_WEAPONS+MAX_CWEAPONS ){ 
+	if (id<1 || id>=MAX_WEAPONS+MAX_CWEAPONS ){ 
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		MF_PrintSrvConsole("Weapon ID Is Not Valid!\n");
 		return 0;
@@ -395,7 +389,7 @@ static cell AMX_NATIVE_CALL get_wpnlogname(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL is_melee(AMX *amx, cell *params){ 
 	int id = params[1];
-	if (id<0 || id>=MAX_WEAPONS+MAX_CWEAPONS ){ 
+	if (id<1 || id>=MAX_WEAPONS+MAX_CWEAPONS ){ 
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		MF_PrintSrvConsole("Weapon ID Is Not Valid!\n");
 		return 0;

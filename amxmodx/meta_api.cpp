@@ -900,7 +900,6 @@ void C_ChangeLevel(char* s1, char* s2)
 	RETURN_META(MRES_IGNORED);
 }
 
-#if 0
 const char *C_Cmd_Args( void )
 {
 	// if the global "fake" flag is set, which means that engclient_cmd was used, supercede the function
@@ -927,7 +926,6 @@ int	C_Cmd_Argc( void )
 	// otherwise ignore it
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
-#endif
 
 // Grenade has been	thrown.
 // Only	here we	may	find out who is	an owner.
@@ -1210,11 +1208,10 @@ C_DLLEXPORT	int	GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
 	g_bmod_dod = !stricmp(g_mod_name.str(),"dod");
   }
 
-#if 0
+
   meta_engfuncs.pfnCmd_Argc	= C_Cmd_Argc;
   meta_engfuncs.pfnCmd_Argv	= C_Cmd_Argv;
   meta_engfuncs.pfnCmd_Args	= C_Cmd_Args;
-#endif
   meta_engfuncs.pfnPrecacheModel = C_PrecacheModel;
   meta_engfuncs.pfnPrecacheSound = C_PrecacheSound;
   meta_engfuncs.pfnChangeLevel = C_ChangeLevel;

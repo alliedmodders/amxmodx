@@ -120,6 +120,11 @@ struct GlobalInfo {
 class Impulse
 {
 public:
+	~Impulse()
+	{
+		if (Forward != -1)
+			MF_UnregisterSPForward(Forward);
+	}
 	int Forward;
 	int Check;
 };
@@ -140,6 +145,8 @@ public:
 			delete [] Touched;
 			Touched = 0;
 		}
+		if (Forward != -1)
+			MF_UnregisterSPForward(Forward);
 	}
 };
 

@@ -267,7 +267,8 @@ void pfnTouch(edict_t *pToucher, edict_t *pTouched)
 		retVal = MF_ExecuteForward(pfnTouchForward, ENTINDEX(pToucher), ENTINDEX(pTouched));
 		if (retVal)
 			RETURN_META(MRES_SUPERCEDE);
-	} else if (VexdTouchForward != -1) {
+	}
+	if (VexdTouchForward != -1) {
 		retVal = MF_ExecuteForward(VexdTouchForward, ENTINDEX(pToucher), ENTINDEX(pTouched));
 		if (retVal)
 			RETURN_META(MRES_SUPERCEDE);

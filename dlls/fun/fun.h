@@ -51,9 +51,7 @@
 // Fun-specific defines above
 
 // The stuff below might end up in a class soon
-int g_zones_toHit[33];		// where can people hit other people?
-int g_zones_getHit[33];		// where can people get hit by other people?
-//char g_bodyhits[33][33];
+char g_bodyhits[33][33];	// where can the guy in the first dimension hit the people in the 2nd dimension? :-)
 bool g_silent[33];			// used for set_user_footsteps()
 //int g_ResetHUD;
 bool g_ResetHUDbool;

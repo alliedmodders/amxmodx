@@ -61,22 +61,16 @@
 // ######## Utils:
 void FUNUTIL_ResetPlayer(int index)
 {
-	g_zones_toHit[index] = (1<<HITGROUP_GENERIC) | 
+	for (int i = 1; i <= gpGlobals->maxClients; i++) {
+		g_bodyhits[index][i] = (1<<HITGROUP_GENERIC) | 
 						(1<<HITGROUP_HEAD) | 
 						(1<<HITGROUP_CHEST) | 
 						(1<<HITGROUP_STOMACH) | 
 						(1<<HITGROUP_LEFTARM) | 
 						(1<<HITGROUP_RIGHTARM)| 
 						(1<<HITGROUP_LEFTLEG) | 
-						(1<<HITGROUP_RIGHTLEG); 	 
-	g_zones_getHit[index] = (1<<HITGROUP_GENERIC) | 
-						(1<<HITGROUP_HEAD) |
-						(1<<HITGROUP_CHEST) | 
-						(1<<HITGROUP_STOMACH) | 
-						(1<<HITGROUP_LEFTARM) | 
-						(1<<HITGROUP_RIGHTARM)| 
-						(1<<HITGROUP_LEFTLEG) | 
-						(1<<HITGROUP_RIGHTLEG); 
+						(1<<HITGROUP_RIGHTLEG);
+	}
 	// Reset silent slippers
 	g_silent[index] = false;
 }
@@ -423,23 +417,32 @@ static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params) // set_use
 	//set_user_hitzones(id, 0, 0) // Makes ID not able to shoot EVERYONE - id can shoot on 0 (all) at 0
 	//set_user_hitzones(0, id, 0) // Makes EVERYONE not able to shoot ID - 0 (all) can shoot id at 0
 	if (shooter == 0 && gettingHit == 0) {
-		// set hitzones for ALL, both where people can hit and where they can _get_ hit.
-		for (int i = 1; i <= 32; i++) {
-			g_zones_toHit[i] = hitzones;
-			g_zones_getHit[i] = hitzones;
+		for (int i = 1; i <= gpGlobals->maxClients; i++) {
+			for (int j = 1; j <= gpGlobals->maxClients; j++) {
+				g_bodyhits[i][j] = hitzones;
+			}
+			//g_zones_toHit[i] = hitzones;
+			//g_zones_getHit[i] = hitzones;
 		}
 	}
+	else if (shooter == 0 && gettingHit != 0) {
+		// "All" shooters, target (gettingHit) should be existing player id
+		CHECK_PLAYER(gettingHit);
+		// Where can all hit gettingHit?
+		for (int i = 1; i <= gpGlobals->maxClients; i++)
+			g_bodyhits[i][gettingHit] = hitzones;
+	}
+	else if (shooter != 0 && gettingHit == 0) {
+		// Shooter can hit all in bodyparts.
+		CHECK_PLAYER(shooter);
+		for (int i = 1; i <= gpGlobals->maxClients; i++)
+			g_bodyhits[shooter][i] = hitzones;
+	}
 	else {
-		if (shooter == 0) {
-			// "All" shooters, target (gettingHit) should be existing player id
-			CHECK_PLAYER(gettingHit);
-			// Where can gettingHit get hit by all?
-			g_zones_getHit[gettingHit] = hitzones;
-		}
-		else {
-			// "shooter" will now only be able to hit other people in "hitzones". (target should be 0 here)
-			g_zones_toHit[shooter] = hitzones;
-		}
+		// Specified, where can player A hit player B?
+		CHECK_PLAYER(shooter);
+		CHECK_PLAYER(gettingHit);
+		g_bodyhits[shooter][gettingHit] = hitzones;
 	}
 
 	return 1;
@@ -447,24 +450,11 @@ static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params) // set_use
 
 static cell AMX_NATIVE_CALL get_user_hitzones(AMX *amx, cell *params) // get_user_hitzones(index, target); = 2 arguments
 {
-	// Gets user hitzones.
-	// params[1] = if this is not 0, return what zones this player can hit
 	int shooter = params[1];
-	// params[2] = if shooter was 0, and if this is a player, return what zones this player can get hit in, else... make runtime error?
-	int gettingHit = params[2];
-
-	if (shooter) {
-		if (shooter < 1 || shooter > gpGlobals->maxClients) {
-			MF_LogError(amx, AMX_ERR_NATIVE, "Player out of range (%d)", shooter);
-			return 0;
-		}
-
-		return g_zones_toHit[shooter];
-	}
-	else {
-		CHECK_PLAYER(gettingHit);
-		return g_zones_getHit[gettingHit];
-	}
+	CHECK_PLAYER(shooter);
+	int target = params[2];
+	CHECK_PLAYER(target);
+	return g_bodyhits[shooter][target];
 }
 
 static cell AMX_NATIVE_CALL set_user_noclip(AMX *amx, cell *params) // set_user_noclip(index, noclip = 0); = 2 arguments
@@ -618,53 +608,55 @@ int ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress,
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
-/*
-  TRACE_LINE(v1, v2, fNoMonsters, e, ptr);
-  if (ptr->pHit&&(ptr->pHit->v.flags& (FL_CLIENT | FL_FAKECLIENT) )&&e&&(e->v.flags & (FL_CLIENT | FL_FAKECLIENT) )){
-    player_t* pPlayer = GET_PLAYER_POINTER(e);
-    if ( !(pPlayer->bodyhits[ENTINDEX(ptr->pHit)]&(1<<ptr->iHitgroup)) )
-      ptr->flFraction = 1.0;
-  }
-  RETURN_META(MRES_SUPERCEDE);
-*/
-
-int g_hitIndex, g_canTargetGetHit, g_canShooterHitThere;
-void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr) {
-	if (!pentToSkip || (pentToSkip->v.flags & (FL_CLIENT | FL_FAKECLIENT)) == false || pentToSkip->v.deadflag != DEAD_NO)
-		RETURN_META(MRES_IGNORED);
-
-	TRACE_LINE(v1, v2, fNoMonsters, pentToSkip, ptr); // pentToSkip gotta be the one that is shooting, so filter it
-
-	if (!ptr->pHit || (ptr->pHit->v.flags & (FL_CLIENT | FL_FAKECLIENT)) == false )
-		RETURN_META(MRES_SUPERCEDE);
-
-	g_hitIndex = ENTINDEX(ptr->pHit);
-	//bool blocked = false;
-	g_canTargetGetHit = g_zones_getHit[g_hitIndex] & (1 << ptr->iHitgroup);
-	g_canShooterHitThere = g_zones_toHit[ENTINDEX(pentToSkip)] & (1 << ptr->iHitgroup);
-
-	if (!g_canTargetGetHit || !g_canShooterHitThere) {
-		ptr->flFraction = 1.0;	// set to not hit anything (1.0 = shot doesn't hit anything)
-		//blocked = true;
+void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *shooter, TraceResult *ptr) {
+	TRACE_LINE(v1, v2, fNoMonsters, shooter, ptr);
+	if ( ptr->pHit && (ptr->pHit->v.flags& (FL_CLIENT | FL_FAKECLIENT))
+	&& shooter && (shooter->v.flags & (FL_CLIENT | FL_FAKECLIENT)) ) {
+		int shooterIndex = ENTINDEX(shooter);
+		if ( !(g_bodyhits[shooterIndex][ENTINDEX(ptr->pHit)] & (1<<ptr->iHitgroup)) )
+			ptr->flFraction = 1.0;
 	}
-	/*
-	if (blocked) {
-		MF_PrintSrvConsole("%s was blocked from hitting %s: %d and %d\n", MF_GetPlayerName(ENTINDEX(pentToSkip)), MF_GetPlayerName(hitIndex), canTargetGetHit, canShooterHitThere);
-	}
-	else {
-		MF_PrintSrvConsole("%s was NOT blocked from hitting %s: %d and %d\n", MF_GetPlayerName(ENTINDEX(pentToSkip)), MF_GetPlayerName(hitIndex), canTargetGetHit, canShooterHitThere);
-	}
-	*/
-
 	RETURN_META(MRES_SUPERCEDE);
 }
+
+
+//int g_hitIndex, g_canTargetGetHit, g_canShooterHitThere;
+//void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *shooter, TraceResult *ptr) {
+//	if (!pentToSkip || (pentToSkip->v.flags & (FL_CLIENT | FL_FAKECLIENT)) == false || pentToSkip->v.deadflag != DEAD_NO)
+//		RETURN_META(MRES_IGNORED);
+//
+//	TRACE_LINE(v1, v2, fNoMonsters, shooter, ptr); // Filter shooter
+//
+//	if (!ptr->pHit || (ptr->pHit->v.flags & (FL_CLIENT | FL_FAKECLIENT)) == false )
+//		RETURN_META(MRES_SUPERCEDE);
+//
+//	g_hitIndex = ENTINDEX(ptr->pHit);
+//	//bool blocked = false;
+//	g_canTargetGetHit = g_zones_getHit[g_hitIndex] & (1 << ptr->iHitgroup);
+//	g_canShooterHitThere = g_zones_toHit[ENTINDEX(shooter)] & (1 << ptr->iHitgroup);
+//
+//	if (!g_canTargetGetHit || !g_canShooterHitThere) {
+//		ptr->flFraction = 1.0;	// set to not hit anything (1.0 = shot doesn't hit anything)
+//		//blocked = true;
+//	}
+//	/*
+//	if (blocked) {
+//		MF_PrintSrvConsole("%s was blocked from hitting %s: %d and %d\n", MF_GetPlayerName(ENTINDEX(pentToSkip)), MF_GetPlayerName(hitIndex), canTargetGetHit, canShooterHitThere);
+//	}
+//	else {
+//		MF_PrintSrvConsole("%s was NOT blocked from hitting %s: %d and %d\n", MF_GetPlayerName(ENTINDEX(pentToSkip)), MF_GetPlayerName(hitIndex), canTargetGetHit, canShooterHitThere);
+//	}
+//	*/
+//
+//	RETURN_META(MRES_SUPERCEDE);
+//}
 
 void OnAmxxAttach()
 {
 	MF_AddNatives(fun_Exports);
 
 	// Reset stuff - hopefully this should
-	for (int i = 1; i <= 32; i++) {
+	for (int i = 1; i <= gpGlobals->maxClients; i++) {
 		// Reset all hitzones
 		FUNUTIL_ResetPlayer(i);
 	}

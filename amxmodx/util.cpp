@@ -330,3 +330,36 @@ void UTIL_Log(const char *fmt, ...)
 	fclose(pF);
 	print_srvconsole("L %s: %s\n", date, msg);
 }
+
+// Get the number of running modules
+int UTIL_GetModulesNum(int mode)
+{
+	CList<CModule>::iterator iter;
+	int num;
+	switch (mode)
+	{
+	case UTIL_MODULES_ALL:
+		return g_modules.size();
+	case UTIL_MODULES_RUNNING:
+		iter = g_modules.begin();
+		num = 0;
+		while (iter)
+		{
+			if ((*iter).getStatusValue() == MODULE_LOADED)
+				++num;
+			++iter;
+		}
+		return num;
+	case UTIL_MODULES_STOPPED:
+		iter = g_modules.begin();
+		num = 0;
+		while (iter)
+		{
+			if ((*iter).getStatusValue() != MODULE_LOADED)
+				++num;
+			++iter;
+		}
+		return num;
+	}
+	return 0;
+}

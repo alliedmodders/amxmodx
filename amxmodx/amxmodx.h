@@ -103,6 +103,12 @@ void UTIL_ShowMenu( edict_t* pEntity, int slots, int time, char *menu, int mlen 
 void UTIL_MakeNewLogFile();
 void UTIL_Log(const char *fmt, ...);
 
+#define UTIL_MODULES_RUNNING	0
+#define UTIL_MODULES_ALL		1
+#define UTIL_MODULES_STOPPED	2
+
+int UTIL_GetModulesNum(int mode);
+
 #define GET_PLAYER_POINTER(e)   (&g_players[ENTINDEX(e)])
 //#define GET_PLAYER_POINTER(e)   (&g_players[(((int)e-g_edict_point)/sizeof(edict_t ))])
 #define GET_PLAYER_POINTER_I(i) (&g_players[i])

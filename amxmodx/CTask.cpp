@@ -32,173 +32,214 @@
 #include "amxmodx.h"
 #include "CTask.h"
 
+/*********************** CTask ***********************/
+int CTaskMngr::CTask::getTaskId() const
+{
+	return m_iId;
+}
 
-CTaskMngr::CTask::CTask( CPluginMngr::CPlugin* p, int f, int flags, 
-						int i, float base,  float exec,	int parlen , 
-						const cell* par, int r){
-	plugin = p;
-	func = f;
-	id = i;
-	next = 0;
-	prev = 0;
-	param_len = 0;
-	param = 0;
-	base_time = base;
-	exec_time = exec;
-	repeat = (flags & 1) ? r : 0;
-	loop = (flags & 2) ?  true : false;
-	afterstart = (flags & 4) ?  true : false;
-	beforeend = (flags & 8) ?  true : false;
+CPluginMngr::CPlugin *CTaskMngr::CTask::getPlugin() const
+{
+	return m_pPlugin;
+}
 
-	if ( parlen )
+void CTaskMngr::CTask::set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, int iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat, float fCurrentTime)
+{
+	m_bFree = false;
+
+	m_pPlugin = pPlugin;
+	m_iFunc = iFunc;
+	m_iId = iId;
+	m_fBase = fBase;
+
+	m_iRepeat =		(iFlags & 1) ? iRepeat : 0;
+	m_bLoop =		(iFlags & 2) ?  true : false;
+	m_bAfterStart =	(iFlags & 4) ?  true : false;
+	m_bBeforeEnd =	(iFlags & 8) ?  true : false;
+
+	m_fNextExecTime = fCurrentTime + m_fBase;
+
+	if (iParamsLen)
 	{
-		param = new cell[ parlen + 1 ];
+		// also add a cell to the back with the value 0
+		m_iParamLen = iParamsLen + 1;
+		m_pParams = new cell[m_iParamLen];
+		memcpy(m_pParams, pParams, sizeof(cell)*iParamsLen);
+		m_pParams[iParamsLen] = 0;
+	}
+	else
+	{
+		m_iParamLen = 0;
+		m_pParams = NULL;
+	}
+}
 
-		if ( param ){
-			param_len = parlen + 1;
-			memcpy( param , par , sizeof( cell ) * parlen );
-			param[ parlen ] = 0; 
+void CTaskMngr::CTask::clear()
+{
+	m_bFree = true;
+	if (m_pParams)
+		delete [] m_pParams;
+}
+
+bool CTaskMngr::CTask::isFree() const
+{
+	return m_bFree;
+}
+
+void CTaskMngr::CTask::changeBase(float fNewBase)
+{
+	m_fBase = fNewBase;
+}
+
+void CTaskMngr::CTask::resetNextExecTime(float fCurrentTime)
+{
+	m_fNextExecTime = fCurrentTime + m_fBase;
+}
+
+void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, float fTimeLeft)
+{
+	bool execute=false;
+	if (m_bAfterStart)
+	{
+		if (fCurrentTime - fTimeLeft + 1.0f >= m_fBase)
+			execute = true;
+	}
+	else if (m_bBeforeEnd)
+	{
+		if (fTimeLimit != 0.0f && (fTimeLeft + fTimeLimit * 60.0f) - fCurrentTime - 1.0f <= m_fBase)
+			execute = true;
+	}
+	else if (m_fNextExecTime <= fCurrentTime)
+		execute = true;
+
+	if (execute)
+	{
+		if (m_pPlugin->isExecutable(m_iFunc))
+		{
+			int err;
+			if (m_iParamLen)	// call with parameters
+			{
+				cell amx_addr, *phys_addr;
+				if (amx_Allot(m_pPlugin->getAMX(), m_iParamLen, &amx_addr, &phys_addr) != AMX_ERR_NONE)
+					AMXXLOG_Log("[AMXX] Failed to allocate AMX memory (task \"%d\") (plugin \"%s\")", m_iId, m_pPlugin->getName());
+				else
+				{
+					copy_amxmemory(phys_addr, m_pParams, m_iParamLen);
+					if ((err = amx_Exec(m_pPlugin->getAMX(), NULL, m_iFunc, 2, amx_addr, m_iId)) != AMX_ERR_NONE)
+						AMXXLOG_Log("[AMXX]	Run	time error %d on line %ld (task	\"%d\")	(plugin	\"%s\")", err, m_pPlugin->getAMX()->curline, m_iId, m_pPlugin->getName());
+
+					amx_Release(m_pPlugin->getAMX(), amx_addr);
+				}
+			}
+			else
+			{
+				if ((err = amx_Exec(m_pPlugin->getAMX(), NULL, m_iFunc, 1, m_iId)) != AMX_ERR_NONE)
+					AMXXLOG_Log("[AMXX]	Run	time error %d on line %ld (task	\"%d\")	(plugin	\"%s\")", err, m_pPlugin->getAMX()->curline, m_iId, m_pPlugin->getName());
+			}
+		}
+
+		// set new exec time OR remove the task if needed
+		if (m_bLoop || (--m_iRepeat > 0))
+		{
+			m_fNextExecTime += m_fBase;
+		}
+		else
+		{
+			m_bFree = true;
 		}
 	}
 }
 
-CTaskMngr::CTask* CTaskMngr::getFirstValidTask(CTask* h){
-	CTask* a = h;
-	while( a ) {
-		if ( a->isRemoved() )  {
-			CTask* b = a->next;
-			unlink( a );
-			delete a;
-			a = b;
-			continue;
-		}
-		else if (  a->afterstart  ){
-			if ( *m_timer - *m_timeleft + 1 < a->base_time ) {
-				a = a->next;
-				continue;
-			}
-		}
-		else if ( a->beforeend ){
-			if ( *m_timelimit == 0 ){
-				a = a->next;
-				continue;
-			}
-			if (  (*m_timeleft + *m_timelimit * 60.0) - *m_timer - 1 >
-				a->base_time ){
-				a = a->next;
-				continue;
-			}
-		}
-		else if ( a->exec_time > *m_timer ) {
-			a = a->next;
-			continue;
-		}
-		return a;
-	}
-	return 0;
+CTaskMngr::CTask::CTask()
+{
+	m_bFree = true;
 }
 
-CTaskMngr::CTask* CTaskMngr::getNextTask(CTask* a) {
-	if ( a->isRemoved() )
-		return a->next;
-	if ( a->loop || a->isToReply() ){
-		a->exec_time = *m_timer + a->base_time;
-		return a->next;
-	}
-	a->setToRemove();
-	return a->next;
-}
-
-
-CTaskMngr::CTaskMngr() {
-	head = 0;
-	tail = 0;
-	m_timer = 0;
-	m_timelimit = 0;
-	m_timeleft = 0;
-}
-
-CTaskMngr::~CTaskMngr() {
+CTaskMngr::CTask::~CTask()
+{
 	clear();
 }
 
-void CTaskMngr::clear() {
-	while ( head )  {
-		tail = head->next;
-		delete head;
-		head = tail;
-	}
-}
-
-void CTaskMngr::registerTimers( float* timer , float* timelimit, float* timeleft ) {
-	m_timer = timer;
-	m_timelimit = timelimit;
-	m_timeleft = timeleft;
-}
-
-void CTaskMngr::registerTask( CPluginMngr::CPlugin* plugin, int func,
-							 int flags, int i, float base,  float exec, 
-							 int parlen , const cell* par, int repeat ){
-
-	CTask* a = new CTask(plugin,func,flags,i,base,exec,parlen,par,repeat );
-
-	if ( a == 0 ) return;
-
-	if ( tail ) 
-	{
-		tail->next = a;
-		a->prev = tail;
-		tail = a;
-	}
-	else {
-		head = a;
-		tail = a;
-	}
-}
-
-CTaskMngr::CTask* CTaskMngr::findTask( int id , AMX* amx )
+/*********************** CTaskMngr ***********************/
+CTaskMngr::CTaskMngr()
 {
-	for (CTask* a = head; a ; a = a->next) 
-	{
-		if ( !a->isRemoved() && (a->getTaskId() == id) && (!amx || 
-			(a->getPlugin()->getAMX() == amx)) )
-			return a;
-	}
-	
-	return 0;
+	m_pTmr_CurrentTime = NULL;
+	m_pTmr_TimeLimit = NULL;
+	m_pTmr_TimeLeft = NULL;
 }
 
-int CTaskMngr::changeTask(int id, AMX *amx, float flNewTime)
+void CTaskMngr::registerTimers(float *pCurrentTime, float *pTimeLimit, float *pTimeLeft)
 {
-	CTask *a;
-	int i = 0;
+	m_pTmr_CurrentTime = pCurrentTime;
+	m_pTmr_TimeLimit = pTimeLimit;
+	m_pTmr_TimeLeft = pTimeLeft;
+}
 
-	while ( (a=findTask(id, amx)) != 0)
+void CTaskMngr::registerTask(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, int iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat)
+{
+	// first, search for free tasks
+	TaskListIter iter = m_Tasks.find(CTaskDescriptor(0, NULL, true));
+	if (iter)
 	{
-		a->changeTime(flNewTime > 0.1 ? flNewTime : 0.1);
-		++i;
+		// found: reuse it
+		iter->set(pPlugin, iFunc, iFlags, iId, fBase, iParamsLen, pParams, iRepeat, *m_pTmr_CurrentTime);
 	}
+	else
+	{
+		// not found: make a new one
+		CTask *pTmp = new CTask;
+		if (!pTmp)
+			return;
+		pTmp->set(pPlugin, iFunc, iFlags, iId, fBase, iParamsLen, pParams, iRepeat, *m_pTmr_CurrentTime);
+		m_Tasks.put(pTmp);
+	}
+}
 
+int CTaskMngr::removeTasks(int iId, AMX *pAmx)
+{
+	CTaskDescriptor descriptor(iId, pAmx);
+	TaskListIter iter = m_Tasks.find(descriptor);
+	int i=0;
+	while (iter)
+	{
+			iter->clear();
+			++i;
+			iter = m_Tasks.find(++iter, descriptor);
+	}
 	return i;
 }
 
-void CTaskMngr::unlink(CTask* a){
-	if ( a->prev ) a->prev->next = a->next;
-	else head = a->next;
-	if ( a->next ) a->next->prev  = a->prev;
-	else tail = a->prev;
-}
-
-int CTaskMngr::removeTasks( int id , AMX* amx )
+int CTaskMngr::changeTasks(int iId, AMX *pAmx, float fNewBase)
 {
-	CTask* a;
-	int i = 0;
-	
-	while ( (a = findTask(id, amx )) != 0 )	{
-		a->setToRemove();
-		++i;
+	CTaskDescriptor descriptor(iId, pAmx);
+	TaskListIter iter = m_Tasks.find(descriptor);
+	int i=0;
+	while (iter)
+	{
+			iter->changeBase(fNewBase);
+			iter->resetNextExecTime(*m_pTmr_CurrentTime);
+			++i;
+			iter = m_Tasks.find(++iter, descriptor);
 	}
-	
 	return i;
 }
 
+bool CTaskMngr::taskExists(int iId, AMX *pAmx)
+{
+	return m_Tasks.find(CTaskDescriptor(iId, pAmx));
+}
+
+void CTaskMngr::startFrame()
+{
+	for (TaskListIter iter = m_Tasks.begin(); iter; ++iter)
+	{
+		if (iter->isFree())
+			continue;
+		iter->executeIfRequired(*m_pTmr_CurrentTime, *m_pTmr_TimeLimit, *m_pTmr_TimeLeft);
+	}
+}
+
+void CTaskMngr::clear()
+{
+	m_Tasks.clear();
+}

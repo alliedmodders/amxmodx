@@ -32,97 +32,88 @@
 #ifndef CTASK_H
 #define CTASK_H
 
-// *****************************************************
-// class CTaskMngr
-// *****************************************************
-
 class CTaskMngr
 {
-public:
-	
-	class iterator;
-
+private:
+	/*** class CTask ***/
 	class CTask
 	{
+		// task settings
+		CPluginMngr::CPlugin *m_pPlugin;
+		int m_iId;
+		int m_iFunc;
+		int m_iRepeat;
+		bool m_bLoop;
+		bool m_bAfterStart;
+		bool m_bBeforeEnd;
+		float m_fBase;		// for normal tasks, stores the interval, for the others, stores the amount of time before start / after end
+		int m_iParamLen;
+		cell *m_pParams;
+		bool m_bFree;
 
-		friend class iterator;
-		friend class CTaskMngr;
-
-		CPluginMngr::CPlugin* plugin;
-		int id;
-		int func;
-		int repeat;
-		bool loop;
-		bool afterstart;
-		bool beforeend;
-		float base_time;
-		float exec_time;
-		int param_len;
-		cell* param;
-		CTask* next;
-		CTask* prev;
-		inline void setToRemove() { exec_time = -1.0f; }
-		inline void changeTime(float flNewTime) { exec_time = flNewTime; }
-		inline bool isToReply() { return  (repeat-- > 0); }
-		inline bool isRemoved() { return (exec_time == -1.0f);  }
-		CTask( CPluginMngr::CPlugin* p, int f, int flags, int i, 
-			float base,  float exec, int parlen , const cell* par, int r );
-		~CTask() { if ( param_len ) delete[] param; }	
-	
+		// execution
+		float m_fNextExecTime;
 	public:
+		inline void set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, int iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat, float fCurrentTime);
+		inline void clear();
+		inline bool isFree() const;
 
-		inline int getParamLen() { return param_len; }
-		inline int getTaskId() { return id; }
-		inline int getFunction() { return func; }
-		cell* getParam() { return param; }
-		CPluginMngr::CPlugin* getPlugin() { return plugin; }
+		inline CPluginMngr::CPlugin *getPlugin() const;
+		inline int getTaskId() const;
+
+		inline void executeIfRequired(float fCurrentTime, float fTimeLimit, float fTimeLeft);	// also removes the task if needed
+
+		inline void changeBase(float fNewBase);
+		inline void resetNextExecTime(float fCurrentTime);
+
+		inline bool shouldRepeat();
+
+		CTask();
+		~CTask();
 	};
 
-
-
-private:  
-	
-	friend class iterator;
-	CTask *head;
-	CTask *tail;
-	float* m_timer;
-	float* m_timelimit;
-	float* m_timeleft;
-	CTask* getFirstValidTask(CTask* a);
-	CTask* getNextTask(CTask* a);	
-	CTask* findTask( int id , AMX* amx );
-	void unlink(CTask* a);
-
-public:
-	
-	CTaskMngr();
-	~CTaskMngr();
-
-	// Interface
-
-
-	void registerTimers( float* timer , float* timelimit, float* timeleft );
-	void registerTask( CPluginMngr::CPlugin* plugin, int func, int flags, int i, float base, float exec, int parlen , const cell* par, int repeat );
-	inline int taskExists(  int id ,AMX* amx) { return findTask(id,amx ) ? 1 : 0; }
-	int changeTask(int id, AMX *amx, float flNewTime);
-	int removeTasks( int id , AMX* amx );
-	void clear();
-
-	class iterator {
-		CTask* a;
-		CTaskMngr* b;
+	class CTaskDescriptor
+	{
 	public:
-		iterator(CTask*aa,CTaskMngr* bb) : a(aa), b(bb) {}
-		iterator& operator++() {
-			a = b->getNextTask( a );
-			a = b->getFirstValidTask( a );
-			return *this;
+		int m_iId;
+		AMX *m_pAmx;
+		bool m_bFree;
+
+		CTaskDescriptor(int iId, AMX *pAmx, bool bFree = false)
+		{
+			m_iId = iId;
+			m_pAmx = pAmx;
+			m_bFree = bFree;
 		}
-		CTask& operator*() { return *a; }
-		operator bool ( ) const { return a ? true : false; }
-	};
-	inline iterator begin() { return iterator(getFirstValidTask(head),this); }
 
+		friend bool operator == (const CTask &left, const CTaskDescriptor &right)
+		{
+			if (right.m_bFree)
+				return left.isFree();
+			
+			return !left.isFree() &&
+				(right.m_pAmx ? left.getPlugin()->getAMX() == right.m_pAmx : true) &&
+				left.getTaskId() == right.m_iId;
+		}
+	};
+
+	/*** CTaskMngr priv members ***/
+	typedef CList<CTask, CTaskDescriptor> TaskList;
+	typedef TaskList::iterator TaskListIter;
+	TaskList m_Tasks;
+	float *m_pTmr_CurrentTime;
+	float *m_pTmr_TimeLimit;
+	float *m_pTmr_TimeLeft;
+public:
+	CTaskMngr();
+
+	void registerTimers(float *pCurrentTime, float *pTimeLimit, float *pTimeLeft);	// The timers will always point to the right value
+	void registerTask(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, int iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat);
+	int removeTasks(int iId, AMX *pAmx);	// remove all tasks that match the id and amx
+	int changeTasks(int iId, AMX *pAmx, float fNewBase);	// change all tasks that match the id and amx
+	bool taskExists(int iId, AMX *pAmx);
+	void startFrame();
+	void clear();
 };
 
 #endif

@@ -158,7 +158,7 @@ static cell AMX_NATIVE_CALL console_cmd(AMX *amx, cell *params) /* 2 param */
   }
   else{
     CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
-    if ( !pPlayer->bot && pPlayer->initialized )  CLIENT_COMMAND(pPlayer->pEdict, cmd );
+    if ( !pPlayer->IsBot() && pPlayer->initialized )  CLIENT_COMMAND(pPlayer->pEdict, cmd );
   }
 
   return len;
@@ -399,7 +399,7 @@ static cell AMX_NATIVE_CALL is_user_bot(AMX *amx, cell *params) /* 1 param */
   int index = params[1];
   if (index<1||index>gpGlobals->maxClients)
     return 0;
-  return (GET_PLAYER_POINTER_I(index)->bot ? 1 : 0);
+  return (GET_PLAYER_POINTER_I(index)->IsBot() ? 1 : 0);
 }
 
 
@@ -1140,7 +1140,7 @@ static cell AMX_NATIVE_CALL client_cmd(AMX *amx, cell *params) /* 2 param */
   if (params[1] == 0) {
     for(int i = 1; i <= gpGlobals->maxClients; ++i){
       CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
-      if (!pPlayer->bot &&  pPlayer->initialized /*&& pPlayer->ingame*/ )
+      if (!pPlayer->IsBot() &&  pPlayer->initialized /*&& pPlayer->ingame*/ )
         CLIENT_COMMAND(pPlayer->pEdict, cmd );
     }
   }
@@ -1151,7 +1151,7 @@ static cell AMX_NATIVE_CALL client_cmd(AMX *amx, cell *params) /* 2 param */
       return 0;
     }
     CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
-    if ( !pPlayer->bot && pPlayer->initialized /*&& pPlayer->ingame*/ )
+    if ( !pPlayer->IsBot() && pPlayer->initialized /*&& pPlayer->ingame*/ )
     CLIENT_COMMAND(pPlayer->pEdict, cmd );
   }
   return len;
@@ -1503,7 +1503,7 @@ static cell AMX_NATIVE_CALL get_players(AMX *amx, cell *params) /* 4 param */
     if (pPlayer->ingame){
       if (pPlayer->IsAlive() ? (flags & 2) : (flags & 1))
         continue;
-      if (pPlayer->bot ? (flags & 4) : (flags & 8))
+      if (pPlayer->IsBot() ? (flags & 4) : (flags & 8))
         continue;
       if ((flags & 16) && (pPlayer->teamId != team) )
     continue;
@@ -1547,7 +1547,7 @@ static cell AMX_NATIVE_CALL find_player(AMX *amx, cell *params) /* 1 param */
     if (pPlayer->ingame){
       if (pPlayer->IsAlive()?(flags&64):(flags&32))
         continue;
-      if (pPlayer->bot?(flags&128):(flags&256))
+      if (pPlayer->IsBot()?(flags&128):(flags&256))
         continue;
       if (flags&1){
         if (flags&2048) {

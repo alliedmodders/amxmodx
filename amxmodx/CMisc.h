@@ -74,7 +74,6 @@ public:
 
 	bool initialized;
 	bool ingame;
-	bool bot;
 	bool authorized;
 	
 	float time;

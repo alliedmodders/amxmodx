@@ -524,7 +524,7 @@ void C_ServerDeactivate_Post() {
 
 BOOL C_ClientConnect_Post( edict_t *pEntity, const char *pszName,	const char *pszAddress,	char szRejectReason[ 128 ]	){
   CPlayer* pPlayer = GET_PLAYER_POINTER(pEntity);
-  if (!pPlayer->bot) {
+  if (!pPlayer->IsBot()) {
 
 	bool a = pPlayer->Connect(pszName,pszAddress);
 
@@ -556,7 +556,7 @@ void C_ClientDisconnect( edict_t *pEntity	) {
 
 void C_ClientPutInServer_Post( edict_t *pEntity )	{
   CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-  if (!pPlayer->bot) {
+  if (!pPlayer->IsBot()) {
 	pPlayer->PutInServer();
 	++g_players_num;
 

@@ -188,6 +188,10 @@ int CExpr::Analyze()
 {
 	size_t pos = 0, xc = 0, xpos = 0;
 	/* run through the characters */
+	if (data.compare("$") == 0)
+	{
+		return 1;
+	}
 	for (pos = 0; pos < data.size(); pos++)
 	{
 		if (data[pos] == 'x')
@@ -215,12 +219,48 @@ cExprType CExpr::Evaluate()
 
 	block = new char[2];
 
+	if (data.compare("$") == 0)
+	{
+		t = Val_Number;
+		numVal = CError->CurCip();
+		char buf[32];
+		sprintf(buf, "%d", numVal);
+		data.assign(buf);
+	}
+
 	if (data.find('\'', 0) != std::string::npos || data.find('"', 0) != std::string::npos)
 	{
 		/* STRESS TEST */
 		for (i=0; i<data.size(); i++)
 		{
 			c = data[i];
+			if (c == '\\')
+			{
+				if (i == data.size() - 1)
+				{
+					if (CError)
+						CError->ErrorMsg(Err_String_Terminate);
+					t = Val_Error;
+				} else {
+					char cp = data[i+1];
+					char *nc = 0;
+					if (cp == 't')
+						nc = "\t";
+					else if (cp == 'n')
+						nc = "\n";
+					else if (cp == '\\')
+						nc = "\\";
+					else if (cp == '"')
+						nc = "\"";
+					else if (cp == '\'')
+						nc = "'";
+					if (nc)
+					{
+						data.replace(i, 2, nc);
+						continue;
+					}
+				}
+			}
 			if (IsLiteral(c) != 0)
 			{
 				if (litc == IsLiteral(c))
@@ -267,6 +307,7 @@ cExprType CExpr::Evaluate()
 			numVal++;
 		}
 	} else {
+		
 		/* Just get the number */
 		t = Val_Number;
 		numVal = DeHex(data);

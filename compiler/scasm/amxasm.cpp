@@ -28,6 +28,8 @@ int main(int argc, char **argv)
 {
 	Compiler Program;
 
+	getchar();
+
 	get_options(argc, argv, Program);
 
 	if (filename.size() < 1)

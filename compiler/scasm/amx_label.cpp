@@ -27,6 +27,12 @@ LabelMngr::~LabelMngr()
 	Clear();
 }
 
+LabelMngr::Label::Label()
+{
+	cip = -1;
+	sym = 0;
+}
+
 void LabelMngr::Clear()
 {	
 	std::vector<LabelMngr::Label *>::iterator i;
@@ -63,6 +69,54 @@ LabelMngr::Label *LabelMngr::FindLabel(std::string &sym)
 	}
 
 	return NULL;
+}
+
+bool LabelMngr::SetCip(std::string &sym, int cip)
+{
+	LabelMngr::Label *p = NULL;
+
+	p = FindLabel(sym);
+
+	if (p == NULL)
+		return false;
+
+	p->cip = cip;
+
+	return true;
+}
+
+void LabelMngr::QueueLabel(std::string &sym, Asm *ASM)
+{
+	std::string d(sym);
+	LQ[d].push(ASM);
+}
+
+void LabelMngr::CompleteQueue()
+{
+	std::map<std::string,std::stack<Asm *> >::iterator i;
+	std::stack<Asm *> *stk = 0;
+	std::string search;
+	Asm *ASM = 0;
+	LabelMngr::Label *p = 0;
+
+	for (i=LQ.begin(); i!=LQ.end(); i++)
+	{
+		search.assign( (*i).first );
+		p = FindLabel(search);
+		stk = &((*i).second);
+		if (p == NULL || p->cip == LabelMngr::ncip)
+		{
+			CError->ErrorMsg(Err_Bad_Label);
+		}
+		while (!stk->empty())
+		{
+			ASM = stk->top();
+			ASM->params[0] = p->cip;
+			stk->pop();
+		}
+	}
+
+	LQ.clear();
 }
 
 int LabelMngr::GetCip(std::string &sym)

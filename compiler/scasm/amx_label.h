@@ -29,17 +29,25 @@ public:
 	class Label
 	{
 	public:
+		Label();
 		SymbolList::Symbol *sym;
 		int cip;
 	};
 public:
 	~LabelMngr();
+	LabelMngr() { CError = NULL; assert(CError!=NULL); }
+	LabelMngr(ErrorMngr *e) { CError = e; }
 	void AddLabel(SymbolList::Symbol *sym, int cip);
 	LabelMngr::Label *FindLabel(std::string &sym);
 	int GetCip(std::string &sym);
 	void Clear();
+	bool SetCip(std::string &sym, int cip);
+	void QueueLabel(std::string &sym, Asm *ASM);
+	void CompleteQueue();
 private:
 	std::vector<LabelMngr::Label *> List;
+	std::map<std::string, std::stack<Asm *> > LQ;
+	ErrorMngr *CError;
 public:
 	static const int ncip = -1;
 };

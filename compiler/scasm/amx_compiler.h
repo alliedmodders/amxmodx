@@ -83,8 +83,10 @@ public:
 	void Clear();
 	int CipCount();
 	int CurCip() { return lastCip; }
+	Asm *CurAsm() { return curAsm; }
 	bool SetDebug();
 public:	//private
+	int DerefSymbol(std::string &str, SymbolType sym = Sym_None);
 	void ProcessDirective(std::string &text);
 	void Init();
 	void InitOpcodes();
@@ -110,6 +112,7 @@ private:
 	int cellsize;
 	int stacksize;
 	bool debug;
+	Asm *curAsm;
 };
 
 #endif //_INCLUDE_AMXCOMPILER_H

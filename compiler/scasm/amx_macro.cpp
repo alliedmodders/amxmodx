@@ -152,7 +152,7 @@ void MacroList::SearchAndReplace(std::string &text)
 			symPos = pos + (int)m->symbol.size();
 			argstring.assign(text.substr(symPos+1, text.size()-symPos));
 			std::vector<std::string *> argList;
-			((Compiler *)Cmp)->FindArguments(argstring, argList, bPos);
+			((Compiler *)Cmp)->FindArguments(argstring, argList, bPos, true);
 			/* Build the macro */
 			std::string *ms;
 			ms = BeginReplacement(m);

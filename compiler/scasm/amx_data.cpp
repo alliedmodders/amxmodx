@@ -54,6 +54,7 @@ void DataMngr::Add(std::string &s, CExpr &expr, bool db, char fill)
 	D->symbol.assign(s);
 	D->e = expr;
 	D->fill = fill;
+	D->db = db;
 
 	int size = 0;
 

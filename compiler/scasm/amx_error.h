@@ -59,6 +59,7 @@ typedef enum
 	Err_Param_Count,
 	Err_Unknown_Define,
 	Err_Misplaced_Directive,
+	Err_Bad_Label,
 	errors_end,
 
 	fatals_start,

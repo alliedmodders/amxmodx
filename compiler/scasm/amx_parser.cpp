@@ -111,6 +111,15 @@ void Strip(std::string &text)
 {
 	int i = 0;
 
+	if (text.size() == 1)
+	{
+		if (isspace(text[0]))
+		{
+			text.clear();
+			return;
+		}
+	}
+
 	for (i=0; i<(int)text.size(); i++)
 	{
 		if (!isspace(text[i]))

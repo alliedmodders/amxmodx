@@ -93,7 +93,8 @@ void ErrorMngr::DefineErrors()
 	List.at(Err_Unmatched_Token) = "Unmatched token '%c'";
 	List.at(Err_Param_Count) = "Expected %d parameters, found %d";
 	List.at(Err_Unknown_Define) = "Unknown define referenced";
-	List.at(Err_Misplaced_Directive) = "Misplaced preprocessor directive.";
+	List.at(Err_Misplaced_Directive) = "Misplaced preprocessor directive";
+	List.at(Err_Bad_Label) = "Label referenced without being created";
 
 	List.at(Err_FileNone) = "No file specified";
 	List.at(Err_FileOpen) = "Could not open file \"%s\"";

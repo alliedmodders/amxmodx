@@ -86,7 +86,7 @@ void Compiler::Init()
 	/* Load Proc management */
 	PROC = new ProcMngr;
 	/* Load Label management */
-	CLabels = new LabelMngr;
+	CLabels = new LabelMngr(CError);
 	/* Load Native management */
 	CNatives = new NativeMngr;
 	/* Load the default symbols + opcodes */
@@ -155,7 +155,6 @@ bool Compiler::Compile()
 		AddrTable a;
 		n.Name = (*pl)->Symbol->sym.c_str();
 		a.addr = (*pl)->ASM->cip;
-		printf("%s cip = %d\n", n.Name, a.addr);
 		a.offset = (int)Nametbl.size();
 		Nametbl.push_back(n);
 		PublicsTable.push_back(a);
@@ -582,6 +581,7 @@ bool Compiler::Parse()
 				} else if (params.size() < 1 && code[code.size()-1] == ':') {
 					/* Label! */
 					/* Check if symbol is valid */
+					code.erase(code.size()-1, 1);
 					if (!IsValidSymbol(code))
 					{
 						CError->ErrorMsg(Err_Invalid_Symbol);
@@ -590,7 +590,17 @@ bool Compiler::Parse()
 					/* Check if the symbol is already used */
 					if ( (S = CSymbols->FindSymbol(code)) != NULL)
 					{
-						CError->ErrorMsg(Err_Invalid_Symbol, code.c_str(), S->line);
+						if (S->type == Sym_Label)
+						{
+							LabelMngr::Label *p = CLabels->FindLabel(code);
+							if (p == NULL)
+								CError->ErrorMsg(Err_Invalid_Symbol);
+							else
+								p->cip = lastCip+cellsize;
+							continue;
+						} else {
+							CError->ErrorMsg(Err_Symbol_Reuse, code.c_str(), S->line);
+						}
 						continue;
 					}
 					S = CSymbols->AddSymbol(code, Sym_Label, CurLine());
@@ -619,6 +629,8 @@ bool Compiler::Parse()
 					}
 
 					ASM = new Asm;
+
+					curAsm = ASM;
 
 					std::vector<std::string *> paramList;
 
@@ -1419,6 +1431,9 @@ bool Compiler::Parse()
 		} /* Line processing */
 	} /* While */
 
+	/* We're not done! Check the label Queue */
+	CLabels->CompleteQueue();
+
 	CError->PrintReport();
 
 	return true;
@@ -1574,6 +1589,13 @@ void Compiler::InitOpcodes()
 	CSymbols->AddSymbol("PROC", Sym_Reserved, 0);
 	CSymbols->AddSymbol("ENDP", Sym_Reserved, 0);
 	CSymbols->AddSymbol("stat", Sym_Reserved, 0);
+
+	char buf[24];
+	sprintf(buf, "%d", cellsize?cellsize:4);
+	std::string CellDef("CELL");
+	std::string Cell(buf);
+	CDefines->AddDefine(CellDef, Cell);
+	CSymbols->AddSymbol("CELL", Sym_Define, 0);
 }
 
 char Compiler::OperChar(OpToken c)
@@ -1813,7 +1835,7 @@ void Compiler::ProcessDirective(std::string &text)
 		SymbolList::Symbol *S;
 		if ((S = CSymbols->FindSymbol(symbol)) != NULL)
 		{
-			CError->ErrorMsg(Err_SymbolRedef, curLine, S->sym.c_str(), S->line);
+			CError->ErrorMsg(Err_SymbolRedef, S->sym.c_str(), S->line);
 		}
 		if (def.size() < 1)
 			def.assign("1");
@@ -1866,81 +1888,15 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 			if (pos < i || (pos == i && (OperToken(str[i]) == Token_Sub)))
 			{
 				bpstr.assign(str.substr(pos, i-pos));
+				Strip(bpstr);
 				e.Set(bpstr);
 				val = 0;
 				if (!e.Analyze() && IsValidSymbol(bpstr))
 				{
-					SymbolList::Symbol *S = NULL;
-					if ( (S = CSymbols->FindSymbol(bpstr)) == NULL)
-					{
-						CError->ErrorMsg(Err_Unknown_Symbol, bpstr.c_str());
-						assert(0);
-						return 0;
-					}
-					if (sym != Sym_Dat && S->type != sym)
-					{
-						assert(0);
-						CError->ErrorMsg(Err_Invalid_Symbol);
-						return 0;
-					}
-					switch (S->type)
-					{
-						case Sym_Proc:
-							{
-								val = PROC->GetCip(bpstr);
-								if (val == ProcMngr::ncip)
-								{
-									CError->ErrorMsg(Err_Invalid_Symbol);
-									assert(0);
-									return 0;
-								}
-								break;
-							}
-						case Sym_Native:
-							{
-								val = CNatives->GetNativeId(bpstr);
-								if (val == NativeMngr::ncip)
-								{
-									CError->ErrorMsg(Err_Invalid_Symbol);
-									assert(0);
-									return 0;
-								}
-								break;
-							}
-						case Sym_Dat:
-							{
-								val = DAT->GetOffset(bpstr);
-								if (val == DataMngr::nof)
-								{
-									CError->ErrorMsg(Err_Invalid_Symbol);
-									assert(0);
-									return 0;
-								}
-								break;
-							}
-						case Sym_Label:
-							{
-								val = CLabels->GetCip(bpstr);
-								if (val == LabelMngr::ncip)
-								{
-									CError->ErrorMsg(Err_Invalid_Symbol);
-									assert(0);
-									return 0;
-								}
-								break;
-							}
-						default:
-							{
-								CError->ErrorMsg(Err_Invalid_Symbol);
-								assert(0);
-								return 0;
-								break;
-							}
-					}
+					val = DerefSymbol(bpstr, sym);
 				} else if (e.Analyze() && (e.Evaluate() == Val_Number)) {
 					val = e.GetNumber();
 				} else {
-					assert(0);
 					CError->ErrorMsg(Err_Invalid_Symbol);
 					return 0;
 				}
@@ -1959,81 +1915,15 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 				if (pos < i)
 				{
 					bpstr.assign(str.substr(pos, i-pos));
+					Strip(bpstr);
 					e.Set(bpstr);
 					val = 0;
 					if (!e.Analyze() && IsValidSymbol(bpstr))
 					{
-						SymbolList::Symbol *S = NULL;
-						if ( (S = CSymbols->FindSymbol(bpstr)) == NULL)
-						{
-							CError->ErrorMsg(Err_Unknown_Symbol, bpstr.c_str());
-							assert(0);
-							return 0;
-						}
-						if (sym != Sym_Dat && S->type != sym)
-						{
-							assert(0);
-							CError->ErrorMsg(Err_Invalid_Symbol);
-							return 0;
-						}
-						switch (S->type)
-						{
-						case Sym_Proc:
-							{
-								val = PROC->GetCip(bpstr);
-								if (val == ProcMngr::ncip)
-								{
-									CError->ErrorMsg(Err_Invalid_Symbol);
-									assert(0);
-									return 0;
-								}
-								break;
-							}
-						case Sym_Native:
-							{
-								val = CNatives->GetNativeId(bpstr);
-								if (val == NativeMngr::ncip)
-								{
-									CError->ErrorMsg(Err_Invalid_Symbol);
-									assert(0);
-									return 0;
-								}
-								break;
-							}
-						case Sym_Dat:
-							{
-								val = DAT->GetOffset(bpstr);
-								if (val == DataMngr::nof)
-								{
-									CError->ErrorMsg(Err_Invalid_Symbol);
-									assert(0);
-									return 0;
-								}
-								break;
-							}
-						case Sym_Label:
-							{
-								val = CLabels->GetCip(bpstr);
-								if (val == LabelMngr::ncip)
-								{
-									CError->ErrorMsg(Err_Invalid_Symbol);
-									assert(0);
-									return 0;
-								}
-								break;
-							}
-						default:
-							{
-								CError->ErrorMsg(Err_Invalid_Symbol);
-								assert(0);
-								return 0;
-								break;
-							}
-						}
+						val = DerefSymbol(bpstr, sym);
 					} else if (e.Analyze() && (e.Evaluate() == Val_Number)) {
 						val = e.GetNumber();
 					} else {
-						assert(0);
 						CError->ErrorMsg(Err_Invalid_Symbol);
 						return 0;
 					}
@@ -2047,78 +1937,15 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 				if (pos < i)
 				{
 					bpstr.assign(str.substr(pos, i-pos));
+					Strip(bpstr);
 					e.Set(bpstr);
 					val = 0;
 					if (!e.Analyze() && IsValidSymbol(bpstr))
 					{
-						SymbolList::Symbol *S = NULL;
-						if ( (S = CSymbols->FindSymbol(bpstr)) == NULL)
-						{
-							CError->ErrorMsg(Err_Unknown_Symbol, bpstr.c_str());
-							assert(0);
-							return 0;
-						}
-						if (sym != Sym_Dat && S->type != sym)
-						{
-							assert(0);
-							CError->ErrorMsg(Err_Invalid_Symbol);
-							return 0;
-						}
-						switch (S->type)
-						{
-						case Sym_Proc:
-							{
-								val = PROC->GetCip(bpstr);
-								if (val == ProcMngr::ncip)
-								{
-									CError->ErrorMsg(Err_Invalid_Symbol);
-									return 0;
-								}
-								break;
-							}
-						case Sym_Native:
-							{
-								val = CNatives->GetNativeId(bpstr);
-								if (val == NativeMngr::ncip)
-								{
-									CError->ErrorMsg(Err_Invalid_Symbol);
-									return 0;
-								}
-								break;
-							}
-						case Sym_Dat:
-							{
-								val = DAT->GetOffset(bpstr);
-								if (val == DataMngr::nof)
-								{
-									CError->ErrorMsg(Err_Invalid_Symbol);
-									return 0;
-								}
-								break;
-							}
-						case Sym_Label:
-							{
-								val = CLabels->GetCip(bpstr);
-								if (val == LabelMngr::ncip)
-								{
-									CError->ErrorMsg(Err_Invalid_Symbol);
-									assert(0);
-									return 0;
-								}
-								break;
-							}
-						default:
-							{
-								CError->ErrorMsg(Err_Invalid_Symbol);
-								assert(0);
-								return 0;
-								break;
-							}
-						}
+						val = DerefSymbol(bpstr, sym);
 					} else if (e.Analyze() && (e.Evaluate() == Val_Number)) {
 						val = e.GetNumber();
 					} else {
-						assert(0);
 						CError->ErrorMsg(Err_Invalid_Symbol);
 						return 0;
 					}
@@ -2128,7 +1955,12 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 				delete r;
 				if (Stack.size() < 2)
 				{
-					//TODO: Clear memory
+					while (Stack.size())
+					{
+						if (Stack.top())
+							delete Stack.top();
+						Stack.pop();
+					}
 					CError->ErrorMsg(Err_Unmatched_Token, str[i]);
 					return 0;
 				}
@@ -2145,81 +1977,16 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 				}
 				if (pos < i || pos == i)
 				{
+					Strip(bpstr);
 					e.Set(bpstr);
 					val = 0;
 					if (!e.Analyze() && IsValidSymbol(bpstr))
 					{
-						SymbolList::Symbol *S = NULL;
-						if ( (S = CSymbols->FindSymbol(bpstr)) == NULL)
-						{
-							CError->ErrorMsg(Err_Unknown_Symbol, bpstr.c_str());
-							assert(0);
-							return 0;
-						}
-						if (sym != Sym_Dat && S->type != sym)
-						{
-							assert(0);
-							CError->ErrorMsg(Err_Invalid_Symbol);
-							return 0;
-						}
-						switch (S->type)
-						{
-						case Sym_Proc:
-							{
-								val = PROC->GetCip(bpstr);
-								if (val == ProcMngr::ncip)
-								{
-									CError->ErrorMsg(Err_Invalid_Symbol);
-									return 0;
-								}
-								break;
-							}
-						case Sym_Native:
-							{
-								val = CNatives->GetNativeId(bpstr);
-								if (val == NativeMngr::ncip)
-								{
-									CError->ErrorMsg(Err_Invalid_Symbol);
-									assert(0);
-									return 0;
-								}
-								break;
-							}
-						case Sym_Dat:
-							{
-								val = DAT->GetOffset(bpstr);
-								if (val == DataMngr::nof)
-								{
-									CError->ErrorMsg(Err_Invalid_Symbol);
-									assert(0);
-									return 0;
-								}
-								break;
-							}
-						case Sym_Label:
-							{
-								val = CLabels->GetCip(bpstr);
-								if (val == LabelMngr::ncip)
-								{
-									CError->ErrorMsg(Err_Invalid_Symbol);
-									assert(0);
-									return 0;
-								}
-								break;
-							}
-						default:
-							{
-								CError->ErrorMsg(Err_Invalid_Symbol);
-								assert(0);
-								return 0;
-								break;
-							}
-						}
+						val = DerefSymbol(bpstr, sym);
 					} else if (e.Analyze() && (e.Evaluate() == Val_Number)) {
 						val = e.GetNumber();
 					} else {
 						CError->ErrorMsg(Err_Invalid_Symbol);
-						assert(0);
 						return 0;
 					}
 					r->vals.push_back(val);
@@ -2388,4 +2155,80 @@ void Compiler::PrintCodeList()
 			printf("\tParameter: %d\n", (*j));
 		}
 	}
+}
+
+int Compiler::DerefSymbol(std::string &str, SymbolType sym)
+{
+	int val = 0;
+
+	SymbolList::Symbol *S = NULL;
+	if ( ((S = CSymbols->FindSymbol(str)) == NULL) )
+	{
+		if (sym == Sym_Label)
+		{
+			S = CSymbols->AddSymbol(str, Sym_Label, -1);
+		} else {
+			CError->ErrorMsg(Err_Unknown_Symbol, str.c_str());
+			return 0;
+		}
+	}
+	if (sym != Sym_Dat && S->type != sym)
+	{
+		CError->ErrorMsg(Err_Invalid_Symbol);
+		return 0;
+	}
+	switch (S->type)
+	{
+	case Sym_Proc:
+		{
+			val = PROC->GetCip(str);
+			if (val == ProcMngr::ncip)
+			{
+				CError->ErrorMsg(Err_Invalid_Symbol);
+				return 0;
+			}
+			break;
+			}
+	case Sym_Native:
+		{
+			val = CNatives->GetNativeId(str);
+			if (val == NativeMngr::ncip)
+			{
+				CError->ErrorMsg(Err_Invalid_Symbol);
+				return 0;
+				}
+			break;
+		}
+	case Sym_Dat:
+		{
+			val = DAT->GetOffset(str);
+			if (val == DataMngr::nof)
+			{
+				CError->ErrorMsg(Err_Invalid_Symbol);
+				return 0;
+				}
+			break;
+		}
+	case Sym_Label:
+		{
+			val = CLabels->GetCip(str);
+			if (val == LabelMngr::ncip)
+			{
+				/* Labels we handle differently. 
+				   Add it to the label queue
+			     */
+				CLabels->AddLabel(S, LabelMngr::ncip);
+				CLabels->QueueLabel(str, CurAsm());
+			}
+			break;
+		}
+	default:
+		{
+			CError->ErrorMsg(Err_Invalid_Symbol);
+			return 0;
+			break;
+		}
+	}
+
+	return val;
 }

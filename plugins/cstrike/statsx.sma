@@ -36,15 +36,12 @@
 
 #include <amxmodx>
 #include <amxmisc>
-#include <csstats>
+#include <csx>
 
 //--------------------------------
 
 // Uncomment to activate log debug messages.
 //#define STATSX_DEBUG
-
-// Comment to activate new DeathMsg process (if fixed).
-#define STATSX_OLD_DEATHMSG
 
 // HUD statistics duration in seconds (minimum 1.0 seconds).
 #define HUD_DURATION_CVAR   "amx_statsx_duration"
@@ -91,7 +88,7 @@ public SayTop15             = 0 // displays first 15 players
 public SayStatsAll          = 0 // displays all players stats and rank
 public SayMiscFunc          = 0 // displays timeleft, thetime, currentmap, ff
 
-public ShowStats            = 0 // set client HUD-stats switched off by default
+public ShowStats            = 1 // set client HUD-stats switched off by default
 public ShowDistHS           = 0 // show distance and HS in attackers and
                                 //  victims HUD lists
 public ShowFullStats        = 0 // show full HUD stats (more than 78 chars)
@@ -197,13 +194,6 @@ public plugin_init() {
   register_event( "ResetHUD", "eventResetHud", "be" )
   register_event( "RoundTime", "eventStartRound", "bc" )
 
-  #if defined STATSX_OLD_DEATHMSG
-  register_event( "DeathMsg", "eventDeathMsg", "a" )
-  register_event( "Damage", "eventDamage", "b", "2!0", "3=0", "4!0" )
-  #else
-  register_event( "CS_DeathMsg", "eventCSDeathMsg", "a" )
-  #endif
-
   register_event( "SendAudio", "eventEndRound", "a", 
                   "2=%!MRAD_terwin", "2=%!MRAD_ctwin", "2=%!MRAD_rounddraw" )
   register_event( "TeamScore", "eventTeamScore", "a" )
@@ -261,7 +251,6 @@ public plugin_cfg() {
   server_cmd( addStast, "Show Total Stats", "ShowTotalStats" )
   server_cmd( addStast, "Show Best Score", "ShowBestScore" )
   server_cmd( addStast, "Show Most Disruptive", "ShowMostDisruptive" )
-  server_cmd( addStast, "Show HUD Stats", "ShowFullStats" )
 
   server_cmd( addStast, "HUD-stats default", "ShowStats" )
   server_cmd( addStast, "Dist&HS in HUD lists", "ShowDistHS" )
@@ -809,12 +798,12 @@ format_stats( id, sBuffer[MAX_BUFFER_LENGTH+1] ) {
   iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
                   "%-12.12s  %6s  %6s  %6s  %6s  %6s  %4s^n",
                   lWeapon, lKills, lDeaths, lHits, lShots, lDamage, lAcc )
-  for ( iWeapon = 1; iWeapon < 31 && MAX_BUFFER_LENGTH - iLen > 0 ; iWeapon++ ) {
+  for ( iWeapon = 1; iWeapon < xmod_get_maxweapons() && MAX_BUFFER_LENGTH - iLen > 0 ; iWeapon++ ) {
     if ( get_user_wstats( id, iWeapon, izStats, izBody ) ) {
       get_weaponname( iWeapon, t_sWpn, MAX_WEAPON_LENGTH )
       iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
                       "%-12.12s  %6d  %6d  %6d  %6d  %6d  %3.0f%%^n",
-                      t_sWpn[7], izStats[STATS_KILLS], izStats[STATS_DEATHS], 
+                      t_sWpn, izStats[STATS_KILLS], izStats[STATS_DEATHS], 
                       izStats[STATS_HITS], izStats[STATS_SHOTS], 
                       izStats[STATS_DAMAGE], accuracy( izStats ) )
     }
@@ -1019,7 +1008,7 @@ public cmdReport( id ) {
   if ( iClip >= 0 ) {
     format( g_sBuffer, MAX_BUFFER_LENGTH,
             "%s: %s, %L: %d/%d, %L: %d, %L: %d", 
-            lWeapon, t_sWpn[7], LANG_SERVER, "AMMO", iClip, iAmmo,
+            lWeapon, t_sWpn, LANG_SERVER, "AMMO", iClip, iAmmo,
             LANG_SERVER, "HEALTH", iHealth, LANG_SERVER, "ARMOR", iArmor ) 
   }
   else
@@ -1296,114 +1285,36 @@ public delay_resethud( args[] ) {
   return PLUGIN_CONTINUE
 }
 
-#if defined STATSX_OLD_DEATHMSG
-
 // Save killer info on death.
-public eventDeathMsg() {
-  new iKiller = read_data( 1 )
-  new iVictim = read_data( 2 )
+public client_death(killer,victim,wpnindex,hitplace,TK) {
 
   // Bail out if no killer.
-  if ( !iKiller ) return PLUGIN_CONTINUE
+  if ( !killer ) return PLUGIN_CONTINUE
 
-  if ( iKiller != iVictim ) {
+  if ( killer != victim ) {
     new iaVOrigin[3], iaKOrigin[3]
     new iDistance
-    get_user_origin( iVictim, iaVOrigin )
-    get_user_origin( iKiller, iaKOrigin )
-    g_izKilled[iVictim][KILLED_KILLER_ID] = iKiller
-    g_izKilled[iVictim][KILLED_KILLER_HEALTH] = get_user_health( iKiller )
-    g_izKilled[iVictim][KILLED_KILLER_ARMOUR] = get_user_armor( iKiller )
-    g_izKilled[iVictim][KILLED_KILLER_STATSFIX] = 0
+    get_user_origin( victim, iaVOrigin )
+    get_user_origin( killer, iaKOrigin )
+    g_izKilled[victim][KILLED_KILLER_ID] = killer
+    g_izKilled[victim][KILLED_KILLER_HEALTH] = get_user_health( killer )
+    g_izKilled[victim][KILLED_KILLER_ARMOUR] = get_user_armor( killer )
+    g_izKilled[victim][KILLED_KILLER_STATSFIX] = 0
     
     iDistance = get_distance( iaVOrigin, iaKOrigin )
-    g_izUserAttackerDistance[iVictim] = iDistance
-    g_izUserVictimDistance[iKiller][iVictim] = iDistance
+    g_izUserAttackerDistance[victim] = iDistance
+    g_izUserVictimDistance[killer][victim] = iDistance
   }
-  g_izKilled[iVictim][KILLED_TEAM] = get_user_team( iVictim )
-  new args[1]
-  args[0] = iVictim
-  set_task( 0.25, "delay_damage", 100 + iVictim, args, 1 )
-
-  return PLUGIN_CONTINUE
-}
-
-public delay_damage( args[] ) {
-  new id = args[0]
-
-  // Display stats to killed player if player
-  // has not already been processed.
-  if ( !g_izKilled[id][KILLED_KILLER_STATSFIX] ) {
-    g_izKilled[id][KILLED_KILLER_STATSFIX] = 1
-
-    // Display round end stats to all players if
-    // round end has already been triggered.
-    if ( g_iRoundEndTriggered )
-      endround_stats()
-    // Display kill stats for the player if round
-    // end stats was not processed.
-    if ( !g_iRoundEndProcessed )
-      kill_stats( id )
-  }
-}
-
-// Trigger death stats processing.
-public eventDamage( id ) {
-  // Bail out if player not killed or if player
-  // player has already been processed.
-  if ( !g_izKilled[id][KILLED_KILLER_ID] || g_izKilled[id][KILLED_KILLER_STATSFIX] )
-    return PLUGIN_CONTINUE
-
-  // Remove task if not alreay done and process.
-  remove_task( 100 + id )
-
-  // Process player deaths.
-  new izData[1]
-  izData[0] = id
-  delay_damage( izData )
-
-  return PLUGIN_CONTINUE
-}
-
-#endif  // if defined STATSX_OLD_DEATHMSG
-
-
-#if !defined STATSX_OLD_DEATHMSG
-
-// Save killer info on death.
-public eventCSDeathMsg() {
-  new iKiller = read_data( 1 )
-  new iVictim = read_data( 2 )
-
-  // Bail out if no killer.
-  if ( !iKiller ) return PLUGIN_CONTINUE
-
-  if ( iKiller != iVictim ) {
-    new iaVOrigin[3], iaKOrigin[3]
-    new iDistance
-    get_user_origin( iVictim, iaVOrigin )
-    get_user_origin( iKiller, iaKOrigin )
-    g_izKilled[iVictim][KILLED_KILLER_ID] = iKiller
-    g_izKilled[iVictim][KILLED_KILLER_HEALTH] = get_user_health( iKiller )
-    g_izKilled[iVictim][KILLED_KILLER_ARMOUR] = get_user_armor( iKiller )
-    g_izKilled[iVictim][KILLED_KILLER_STATSFIX] = 0
-    
-    iDistance = get_distance( iaVOrigin, iaKOrigin )
-    g_izUserAttackerDistance[iVictim] = iDistance
-    g_izUserVictimDistance[iKiller][iVictim] = iDistance
-  }
-  g_izKilled[iVictim][KILLED_TEAM] = get_user_team( iVictim )
-  g_izKilled[iVictim][KILLED_KILLER_STATSFIX] = 1
+  g_izKilled[victim][KILLED_TEAM] = get_user_team( victim )
+  g_izKilled[victim][KILLED_KILLER_STATSFIX] = 1
 
   // Display kill stats for the player if round
   // end stats was not processed.
   if ( !g_iRoundEndProcessed )
-    kill_stats( iVictim )
+    kill_stats( victim )
 
   return PLUGIN_CONTINUE
 }
-
-#endif
 
 // Display hudmessage stats on death.
 // This will also update all round and game stats.
@@ -1646,5 +1557,5 @@ public client_connect( id ) {
 
 public plugin_modules()
 {
-	require_module("csstats")
+	require_module("csx")
 }

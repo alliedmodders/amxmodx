@@ -66,12 +66,10 @@ public FirstBloodSound
 
 new g_streakKills[33][2]
 new g_multiKills[33][2]
-new g_Planter
-new g_Defuser
 new g_C4Timer
 new g_Defusing
+new g_Planter 
 new Float:g_LastOmg
-new Float:g_LastPlan
 new g_LastAnnounce
 new g_roundCount
 new Float:g_doubleKill
@@ -80,13 +78,13 @@ new g_friend[33]
 new g_firstBlood
 
 new g_MultiKillMsg[7][] = {
-  "Multi-Kill! %s^n%L %d kills (%d hs)",
-  "Ultra-Kill!!! %s^n%L %d kills (%d hs)",
-  "%s IS ON A KILLING SPREE!!!^n%L %d kills (%d hs)",
-  "RAMPAGE!!! %s^n%L %d kills (%d hs)" ,
-  "%s IS UNSTOPPABLE!!!^n%L %d kills (%d hs)",
-  "%s IS A MONSTER!^n%L %d kills (%d hs)",
-  "%s IS GODLIKE!!!!^n%L %d kills (%d hs)"
+  "Multi-Kill! %s^n%L %d %L (%d %L)",
+  "Ultra-Kill!!! %s^n%L %d %L (%d %L)",
+  "%s IS ON A KILLING SPREE!!!^n%L %d %L (%d %L)",
+  "RAMPAGE!!! %s^n%L %d %L (%d hs)" ,
+  "%s IS UNSTOPPABLE!!!^n%L %d %L (%d %L)",
+  "%s IS A MONSTER!^n%L %d %L (%d %L)",
+  "%s IS GODLIKE!!!!^n%L %d %L (%d %L)"
 }
 new g_Sounds[7][] = {
   "multikill",
@@ -140,15 +138,16 @@ new g_HeadShots[7][] = {
   "HS_MSG_7"
 }
 
-new g_teamsNames[2][] = {
+new g_teamsNames[4][] = {
   "TERRORIST",
-  "CT"
+  "CT",
+  "TERRORISTS",
+  "CTS"
 }
 
 public plugin_init() {
   register_plugin("CS Misc. Stats",AMXX_VERSION_STR,"AMXX Dev Team") 
   register_dictionary("miscstats.txt")
-  register_event("DeathMsg","eDeathMsg","a")
   register_event("TextMsg","eRestart","a","2&#Game_C","2&#Game_w")
   register_event("SendAudio", "eEndRound", "a", "2&%!MRAD_terwin","2&%!MRAD_ctwin","2&%!MRAD_rounddraw") 
   register_event("RoundTime", "eNewRound", "bc") 
@@ -159,11 +158,6 @@ public plugin_init() {
   get_mapname(mapname,31)
   if (equali(mapname,"de_",3)||equali(mapname,"csde_",5)) {
     register_event("StatusIcon", "eGotBomb", "be", "1=1", "1=2", "2=c4")
-    register_event("SendAudio", "eBombPlanted", "a", "2&%!MRAD_BOMBPL")
-    register_event("SendAudio", "eBombDef", "a", "2&%!MRAD_BOMBDEF")
-    register_event("TextMsg", "eBombFail", "a", "2&#Target_B")
-    register_event("BarTime", "eBombDefG", "be", "1=10", "1=5","1=3")
-    register_event("BarTime", "eBombDefL", "be", "1=0")
     register_event("TextMsg", "eBombPickUp", "bc", "2&#Got_bomb")
     register_event("TextMsg", "eBombDrop", "bc", "2&#Game_bomb_d")
   }
@@ -209,25 +203,23 @@ public plugin_cfg() {
 public client_putinserver(id)
   g_multiKills[id] = g_streakKills[ id ] = { 0 , 0 }
 
-public eDeathMsg() {
-  new killerId = read_data(1)
-  if ( killerId == 0 ) return
-  new victimId = read_data(2) 
-  new bool:enemykill = (get_user_team(killerId) != get_user_team(victimId))
-  new headshot = read_data(3)
+public client_death(killer,victim,wpnindex,hitplace,TK) {
+
+  new headshot = ( hitplace == HIT_HEAD ) ? 1:0
+
   if ( g_firstBlood ) {
   	g_firstBlood = 0
   	if ( FirstBloodSound ) client_cmd(0,"spk misc/firstblood")
   }
-  if ( (KillingStreak || KillingStreakSound) && enemykill ) {    
-    g_streakKills[ killerId ][ 0 ]++
-    g_streakKills[ killerId ][ 1 ] = 0
-    g_streakKills[ victimId ][ 1 ]++
-    g_streakKills[ victimId ][ 0 ] = 0
-    new a = g_streakKills[ killerId ][ 0 ] - 3
+  if ( (KillingStreak || KillingStreakSound) && !TK ) {    
+    g_streakKills[ killer ][ 0 ]++
+    g_streakKills[ killer ][ 1 ] = 0
+    g_streakKills[ victim ][ 1 ]++
+    g_streakKills[ victim ][ 0 ] = 0
+    new a = g_streakKills[ killer ][ 0 ] - 3
     if ( (a > -1) && !( a % 2 ) ) {
       new name[32]
-      get_user_name( killerId , name , 31 )
+      get_user_name( killer , name , 31 )
       if ( (a >>= 1) > 6 ) a = 6
       if ( KillingStreak ){
         set_hudmessage(0, 100, 255, 0.05, 0.55, 2, 0.02, 6.0, 0.01, 0.1, 3)
@@ -237,28 +229,30 @@ public eDeathMsg() {
     }
   }
   if ( MultiKill || MultiKillSound ) {
-    if (killerId && enemykill ) { 
-      g_multiKills[killerId][0]++ 
-      g_multiKills[killerId][1] += headshot
+    if (killer && !TK ) { 
+      g_multiKills[killer][0]++ 
+      g_multiKills[killer][1] += headshot
       new param[2]
-      param[0] = killerId 
-      param[1] = g_multiKills[killerId][0] 
+      param[0] = killer 
+      param[1] = g_multiKills[killer][0] 
       set_task( 4.0 + float( param[1] ) ,"checkKills",0,param,2)
     }
   }
   if ( EnemyRemaining ) {
     new ppl[32], pplnum
-    new team = get_user_team( victimId ) - 1
+    new team = get_user_team( victim ) - 1
     get_players(ppl,pplnum,"e", g_teamsNames[1 - team] ) 
     if (pplnum) {
       new eppl[32], epplnum 
       get_players(eppl,epplnum,"ae",g_teamsNames[team]) 
       if (epplnum) { 
-        new message[128]
-        format(message,127,"%d %s%s Remaining...",epplnum,g_teamsNames[team],(epplnum==1)?"":"S" ) 
-        set_hudmessage(255,255,255,0.02,0.85,2, 0.05, 0.1, 0.02, 3.0, 3) 
-        for(new a=0; a<pplnum; ++a) show_hudmessage(ppl[a],message)
-        //client_print(ppl[a],print_chat,message)
+        new message[128],team_name[32]
+        set_hudmessage(255,255,255,0.02,0.85,2, 0.05, 0.1, 0.02, 3.0, 3)
+        for(new a=0; a<pplnum; ++a){
+           format(team_name,31,"%L",ppl[a],(epplnum==1)?g_teamsNames[team]:g_teamsNames[team+2])
+           format(message,127,"%L",ppl[a],"REMAINING",epplnum,team_name)
+           show_hudmessage(ppl[a],message)
+        }
       }
     }
   }
@@ -297,62 +291,63 @@ public eDeathMsg() {
       }
     }
   }
-  new arg[4]
-  read_data( 4 , arg , 3 )  
-  if ( equal( arg, "kni" ) && ( KnifeKill || KnifeKillSound ) ) {
+
+  if ( wpnindex == 29 && ( KnifeKill || KnifeKillSound ) ) {
     if ( KnifeKill ) {
-      new killer[32], victim[32] 
-      get_user_name(killerId,killer,31) 
-      get_user_name(victimId,victim,31) 
+      new killer_name[32],victim_name[32] 
+      get_user_name(killer,killer_name,31) 
+      get_user_name(victim,victim_name,31) 
       set_hudmessage(255, 100, 100, -1.0, 0.25, 1, 6.0, 6.0, 0.5, 0.15, 1) 
-      show_hudmessage(0,"%L",LANG_PLAYER,g_KinfeMsg[ random_num(0,3) ],killer,victim) 
+      show_hudmessage(0,"%L",LANG_PLAYER,g_KinfeMsg[ random_num(0,3) ],killer_name,victim_name) 
     }
     if ( KnifeKillSound ) client_cmd(0,"spk misc/humiliation") 
   }
-  else if ( equal( arg, "gre" ) && (GrenadeKill || GrenadeSuicide) ) {
-    new killer[32], victim[32] 
-    get_user_name(killerId,killer,32) 
-    get_user_name(victimId,victim,32) 
+
+  if ( wpnindex == 4 && (GrenadeKill || GrenadeSuicide) ) {
+    new killer_name[32],victim_name[32] 
+    get_user_name(killer,killer_name,32) 
+    get_user_name(victim,victim_name,32) 
     set_hudmessage(255, 100, 100, -1.0, 0.25, 1, 6.0, 6.0, 0.5, 0.15, 1)    
-    if ( killerId != victimId ) {
-      if ( GrenadeKill ) show_hudmessage(0,"%L",LANG_PLAYER,g_HeMessages[ random_num(0,3)],killer,victim) 
+    if ( killer != victim ) {
+      if ( GrenadeKill ) show_hudmessage(0,"%L",LANG_PLAYER,g_HeMessages[ random_num(0,3)],killer_name,victim_name) 
     }
-    else if ( GrenadeSuicide ) show_hudmessage(0,"%L",LANG_PLAYER,g_SHeMessages[ random_num(0,3) ],victim) 
+    else if ( GrenadeSuicide ) show_hudmessage(0,"%L",LANG_PLAYER,g_SHeMessages[ random_num(0,3) ],victim_name) 
   }
   if ( headshot && (HeadShotKill || HeadShotKillSound) ) {
     if ( HeadShotKill ) {
-      new killer[32], victim[32], weapon[32], message[128], players[32], pnum
-      get_user_name(killerId,killer,31) 
-      get_user_name(victimId,victim,31)
-      read_data( 4 , weapon , 31  )  
+      new killer_name[32], victim_name[32], weapon_name[32], message[128], players[32], pnum
+      get_weaponname(wpnindex,weapon_name,31)
+      get_user_name(killer,killer_name,31) 
+      get_user_name(victim,victim_name,31)
+
       get_players(players,pnum,"c")
       for (new i=0;i<pnum;i++) {
         format( message, 127, "%L",players[i],g_HeadShots[ random_num(0,6) ] )
-        replace( message, 127 , "$vn", victim )
-        replace( message, 127 , "$wn", weapon )    
-        replace( message, 127 , "$kn", killer )
+        replace( message, 127 , "$vn", victim_name )
+        replace( message, 127 , "$wn", weapon_name )    
+        replace( message, 127 , "$kn", killer_name )
         set_hudmessage(100, 100, 255, -1.0, 0.29, 0, 6.0, 6.0, 0.5, 0.15, 1)    
         show_hudmessage(players[i],message ) 
       }
     }
     if ( HeadShotKillSound ) {
-    	client_cmd(killerId,"spk misc/headshot") 
-    	client_cmd(victimId,"spk misc/headshot")
+    	client_cmd(killer,"spk misc/headshot") 
+    	client_cmd(victim,"spk misc/headshot")
    	}
   }
   if ( DoubleKill || DoubleKillSound ) {
     new Float:nowtime = get_gametime()
-    if ( g_doubleKill == nowtime && g_doubleKillId == killerId ) {
+    if ( g_doubleKill == nowtime && g_doubleKillId == killer ) {
       if ( DoubleKill ) {
         new name[32]
-        get_user_name( killerId , name , 31  )
+        get_user_name( killer , name , 31  )
         set_hudmessage(255, 0, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, 3)
         show_hudmessage(0,"%L",LANG_PLAYER,"DOUBLE_KILL",name )
       }
       if ( DoubleKillSound ) client_cmd(0,"spk misc/doublekill") 
     }
     g_doubleKill = nowtime
-    g_doubleKillId = killerId
+    g_doubleKillId = killer
   }
 } 
 
@@ -421,9 +416,7 @@ public eRestart() {
 
 public eEndRound() {
   g_C4Timer = -2
-  g_LastPlan = 0.0 
   g_LastOmg = 0.0
-  g_LastPlan = 0.0
   remove_task(8038)
   g_LastAnnounce = 0
 }
@@ -439,7 +432,7 @@ public checkKills(param[]) {
         get_user_name(id,name,31)
         set_hudmessage(255, 0, 100, 0.05, 0.65, 2, 0.02, 6.0, 0.01, 0.1, 2)
         if ( a > 6 ) a = 6
-        show_hudmessage(0,g_MultiKillMsg[a],name,LANG_PLAYER,"WITH",g_multiKills[id][0],g_multiKills[id][1])          
+        show_hudmessage(0,g_MultiKillMsg[a],name,LANG_PLAYER,"WITH",g_multiKills[id][0],LANG_PLAYER,"KILLS",g_multiKills[id][1],LANG_PLAYER,"HS")          
       }
       if ( MultiKillSound ) client_cmd(0,"spk misc/%s",g_Sounds[a])
     }
@@ -461,41 +454,19 @@ announceEvent( id, message[] ) {
   show_hudmessage(0,"%L",LANG_PLAYER,message,name)
 }
 
-public eGotBomb(id) { 
-  g_Planter = id 
-  g_Defuser = g_Defusing = 0 
+public eBombPickUp(id)
+	if (BombPickUp) announceEvent(id , "PICKED_BOMB")
+
+public eBombDrop()
+	if (BombDrop) announceEvent(g_Planter , "DROPPED_BOMB")
+
+public eGotBomb(id) {
+  g_Planter = id  
   if ( BombReached && read_data(1)==2 && g_LastOmg<get_gametime()) { 
     g_LastOmg = get_gametime() + 15.0
     announceEvent(g_Planter, "REACHED_TARGET" )
   } 
 } 
-
-public eBombDefG(id) { 
-  if (read_data(1) == 3) {
-    if ( BombPlanting && g_LastPlan<get_gametime() ) { 
-      g_LastPlan = get_gametime() + 15.0
-      announceEvent(g_Planter, "PLANT_BOMB" )
-    } 
-  } 
-  else { 
-    g_Defuser = g_Defusing = id 
-    if ( BombDefusing && g_LastPlan<get_gametime()) { 
-      g_LastPlan = get_gametime() + 15.0
-      announceEvent(g_Defusing, "DEFUSING_BOMB" )
-    } 
-  } 
-} 
-
-public eBombDefL(id) 
-  g_Defusing = 0
-
-public eBombPlanted() 
-  if ( g_C4Timer != -2 ) {
-    if (BombPlanted) announceEvent(g_Planter, "SET_UP_BOMB" )
-    g_C4Timer = get_cvar_num("mp_c4timer")
-    set_task(1.0,"bombTimer",8038,"",0,"b") 
-    g_LastPlan = 0.0
-  }
 
 public bombTimer() { 
   if (--g_C4Timer > 0) { 
@@ -516,14 +487,29 @@ public bombTimer() {
   else remove_task(8038)
 }
 
-public eBombDef()
-  if (BombDefused) announceEvent(g_Defuser, "DEFUSED_BOMB" )
- 
-public eBombFail()
-  if (BombFailed && g_Defuser ) announceEvent(g_Defuser ,  "FAILED_DEFU" )
+public bomb_planted(planter){
+  g_Defusing = 0
+  if (BombPlanted) announceEvent(planter, "SET_UP_BOMB" )
+  g_C4Timer = get_cvar_num("mp_c4timer") 
+  set_task(1.0,"bombTimer",8038,"",0,"b") 
 
-public eBombPickUp(id)
-  if (BombPickUp) announceEvent(id , "PICKED_BOMB")
+}
 
-public eBombDrop()
-  if (BombDrop) announceEvent(g_Planter , "DROPPED_BOMB")
+public bomb_planting(planter)
+	if (BombPlanting)	announceEvent(planter, "PLANT_BOMB" )
+
+public bomb_defusing(defuser){
+	if (BombDefusing) announceEvent(defuser, "DEFUSING_BOMB" )
+	g_Defusing = defuser
+}
+
+public bomb_defused(defuser)
+	if (BombDefused) announceEvent(defuser, "DEFUSED_BOMB" )
+
+public bomb_explode(planter,defuser)
+	if (BombFailed && defuser) announceEvent(defuser ,  "FAILED_DEFU" )
+
+public plugin_modules()
+{
+	require_module("csx")
+}

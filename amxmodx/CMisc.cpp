@@ -28,9 +28,6 @@
 *  you do not wish to do so, delete this exception statement from your
 *  version.
 */
-
-#include <extdll.h>
-#include <meta_api.h>
 #include "amxmodx.h"
 
 // *****************************************************

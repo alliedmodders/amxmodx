@@ -29,10 +29,8 @@
 *  version.
 */
 
-#include <extdll.h>
-#include <meta_api.h>
-#include "CVault.h"
 #include "amxmodx.h"
+#include "CVault.h"
 
 Vault g_vault;
 

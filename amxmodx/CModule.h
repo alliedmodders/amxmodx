@@ -47,7 +47,8 @@ enum MODULE_STATUS {
   MODULE_OLD,				// Old interface
   MODULE_NEWER,				// newer interface
   MODULE_INTERROR,			// Internal error
-  MODULE_FUNCNOTPRESENT		// Function not present
+  MODULE_FUNCNOTPRESENT,	// Function not present
+  MODULE_NOT64BIT			// Not 64 bit compatible
 };
 
 struct amxx_module_info_s

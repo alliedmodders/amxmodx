@@ -1073,11 +1073,57 @@ OP_RET:
 ;good
 OP_RETN:
 ;nop;
-        GO_ON   j_retn, OP_CALL
+        ;save registers
+        push    eax
+        push    ebp
+        ;get .amx flags
+        mov     ebp,[amxhead]
+        mov	    eax,[ebp+_h_flags]
+        ;check to see if the flag has line ops 
+        and     eax,AMX_FLAG_DEBUG
+        cmp     eax,AMX_FLAG_DEBUG
+        ;restore registers
+        pop     ebp
+        pop     eax
+        ;if so, skip down to debug compiler
+        jmp     _go_jit_retn_debug
 
-        j_retn:
+_go_jit_retn_nodebug:
+        GO_ON   j_retn_nodebug, _go_jit_retn_go
+      j_retn_nodebug:
         jmp     [jit_retn]
-	CHECKCODESIZE j_retn
+		CHECKCODESIZE j_retn_nodebug
+_go_jit_retn_go:
+		jmp		_go_jit_retn_end
+
+_go_jit_retn_debug:
+		GO_ON	j_retn, OP_CALL
+	  j_retn:
+	  	push	ebp
+		push	eax
+		push	edx
+		;get AMX
+		mov		ebp,amx
+		;get debug call ptr
+		mov		eax,[ebp+_userdata2]
+		;check validity
+		mov		edx, dword 0
+		cmp		eax, edx
+		je		_go_jit_skip_debug
+		xchg	esp,esi		;switch stack
+		push	1			;param 2 mode 1 = pop
+		push	ebp			;param 1 - amx
+		call	eax			;indirect debug call
+		add		esp, 8		;restore stack
+		xchg	esp,esi		;return to AMX stack
+		mov		ebp,amx		;restore AMX [necessary?]
+	  _go_jit_skip_debug:
+	    pop		edx
+		pop		eax
+		pop		ebp
+	  	jmp		[jit_retn]
+		CHECKCODESIZE j_retn
+_go_jit_retn_end:
 
 ;good
 OP_CALL:

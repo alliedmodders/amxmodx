@@ -884,12 +884,21 @@ void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *pentT
 
 	TRACE_LINE(v1, v2, fNoMonsters, pentToSkip, ptr); // pentToSkip gotta be the one that is shooting, so filter it
 
-	if ( !(
+	int hitIndex = ENTINDEX(ptr->pHit);
+	if (hitIndex >= 1 && hitIndex <= gpGlobals->maxClients) {
+		if ( !(
+			g_zones_getHit[hitIndex] & (1 << ptr->iHitgroup) // can ptr->pHit get hit in ptr->iHitgroup at all?
+		&&	g_zones_toHit[hitIndex] & (1 << ptr->iHitgroup) ) // can pentToSkip hit other people in that hit zone?
+		) {
+			ptr->flFraction = 1.0;	// set to not hit anything (1.0 = shot doesn't hit anything)
+		}
+	}
+/*	if ( !(
 		g_zones_getHit[ENTINDEX(ptr->pHit)] & (1 << ptr->iHitgroup) // can ptr->pHit get hit in ptr->iHitgroup at all?
 	&&	g_zones_toHit[ENTINDEX(pentToSkip)] & (1 << ptr->iHitgroup) ) // can pentToSkip hit other people in that hit zone?
 	) {
 		ptr->flFraction = 1.0;	// set to not hit anything (1.0 = shot doesn't hit anything)
-	}
+	}*/
 
 	RETURN_META(MRES_SUPERCEDE);
 

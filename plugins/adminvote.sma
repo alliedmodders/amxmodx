@@ -310,8 +310,8 @@ public cmdVote(id,level,cid) {
     for (new i=0;i<pnum;i++) {
       format(lTag,15,"%L",players[i],is_user_admin(id)?"ADMIN":"PLAYER")
       switch (activity) {
-        case 2: client_print(players[i],print_chat,"%L","ADMIN_VOTE_CUS_2",lTag,name)
-        case 1: client_print(players[i],print_chat,"%L","ADMIN_VOTE_CUS_1",lTag)
+        case 2: client_print(players[i],print_chat,"%L",players[i],"ADMIN_VOTE_CUS_2",lTag,name)
+        case 1: client_print(players[i],print_chat,"%L",players[i],"ADMIN_VOTE_CUS_1",lTag)
       }
     }
   }

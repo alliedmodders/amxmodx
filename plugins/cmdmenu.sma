@@ -66,7 +66,7 @@ new g_cmdMenuHelp[ MAX_CMDS_LAYERS ][] = {
 /* End of Commands Menu */
 
 #define MAX_CMDS    32
-#define MAX_CVARS   32
+#define MAX_CVARS   48
 
 new g_cmdName[MAX_CMDS*MAX_CMDS_LAYERS][32]
 new g_cmdCmd[MAX_CMDS*MAX_CMDS_LAYERS][64]

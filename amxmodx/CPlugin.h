@@ -81,6 +81,7 @@ public:
 		inline int getStatusCode() { return status; }
 		inline int getId() const { return id; }
 		inline AMX* getAMX() { return &amx; }
+		inline const AMX* getAMX() const { return &amx; }
 		inline void setTitle( const char* n ) { title.assign(n); }
 		inline void setAuthor( const char* n ) { author.assign(n); }
 		inline void setVersion( const char* n ) { version.assign(n); }

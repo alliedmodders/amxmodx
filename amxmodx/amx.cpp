@@ -1817,7 +1817,12 @@ static void *amx_opcodelist_nodebug[] = {
   if ((amx->flags & AMX_FLAG_BROWSE)==AMX_FLAG_BROWSE) {
     assert(sizeof(cell)==sizeof(void *));
     assert(retval!=NULL);
-    *retval=(cell)(amx_opcodelist_nodebug);
+	if (amx->flags & AMX_FLAG_DEBUG)
+	{
+    	*retval=(cell)(amx_opcodelist);
+	} else {
+    	*retval=(cell)(amx_opcodelist_nodebug);
+	}
     return 0;
   } /* if */
 
@@ -2223,10 +2228,6 @@ static void *amx_opcodelist_nodebug[] = {
     cip=(cell *)(code+(int)offs);
     NEXT(cip);
   op_ret_nodebug:
-	if (tracer)
-	{
-        (tracer)(amx, 1);
-	}
     POP(frm);
     POP(offs);
     /* verify the return address */
@@ -2248,10 +2249,6 @@ static void *amx_opcodelist_nodebug[] = {
     stk+= *(cell *)(data+(int)stk) + sizeof(cell); /* remove parameters from the stack */
     NEXT(cip);
   op_retn_nodebug:
-	if (tracer)
-	{
-        (tracer)(amx, 1);
-	}
     POP(frm);
     POP(offs);
     /* verify the return address */
@@ -2269,10 +2266,6 @@ static void *amx_opcodelist_nodebug[] = {
     cip=JUMPABS(code, cip);                     /* jump to the address */
     NEXT(cip);
   op_call_nodebug:
-	if (tracer)
-	{
-        (tracer)(amx, 2);
-	}
     PUSH(((unsigned char *)cip-code)+sizeof(cell));/* push address behind instruction */
     cip=JUMPABS(code, cip);                     /* jump to the address */
     NEXT(cip);
@@ -2285,10 +2278,6 @@ static void *amx_opcodelist_nodebug[] = {
     cip=(cell *)(code+(int)pri);
     NEXT(cip);
   op_call_pri_nodebug:
-	if (tracer)
-	{
-        (tracer)(amx, 2);
-	}
     PUSH((unsigned char *)cip-code);
     cip=(cell *)(code+(int)pri);
     NEXT(cip);
@@ -2849,7 +2838,12 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
          */
         *retval=(cell)amx_opcodelist;
       #else
-        *retval=(cell)(amx_opcodelist_nodebug);
+		if (amx->flags & AMX_FLAG_DEBUG)
+		{
+        	*retval=(cell)(amx_opcodelist);
+		} else {
+        	*retval=(cell)(amx_opcodelist_nodebug);
+		}
       #endif
       return 0;
     } /* if */

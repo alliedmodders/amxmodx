@@ -117,8 +117,14 @@
     _dbgaddr    EQU 38h ;DD ?
     _dbgparam   EQU 3ch ;DD ?
     _dbgname    EQU 40h ;DD ?
-    _usertags   EQU 44h ;DD 4 DUP (?)    ; 4 = AMX_USERNUM (#define'd in amx.h)
-    _userdata   EQU 54h ;DD 4 DUP (?)    ; 4 = AMX_USERNUM (#define'd in amx.h)
+    _usertags1  EQU 44h ;DD 4 DUP (?)    ; 4 = AMX_USERNUM (#define'd in amx.h)
+    _usertags2  EQU 44h ;DD 4 DUP (?)    ; 4 = AMX_USERNUM (#define'd in amx.h)
+    _usertags3  EQU 44h ;DD 4 DUP (?)    ; 4 = AMX_USERNUM (#define'd in amx.h)
+    _usertags4  EQU 44h ;DD 4 DUP (?)    ; 4 = AMX_USERNUM (#define'd in amx.h)
+    _userdata1  EQU 54h ;DD 4 DUP (?)    ; 4 = AMX_USERNUM (#define'd in amx.h)
+    _userdata2  EQU 54h ;DD 4 DUP (?)    ; 4 = AMX_USERNUM (#define'd in amx.h)
+    _userdata3  EQU 54h ;DD 4 DUP (?)    ; 4 = AMX_USERNUM (#define'd in amx.h)
+    _userdata4  EQU 54h ;DD 4 DUP (?)    ; 4 = AMX_USERNUM (#define'd in amx.h)
     _error      EQU 64h ;DD ?
     _pri        EQU 68h ;DD ?
     _alt        EQU 6ch ;DD ?
@@ -171,6 +177,8 @@
 
         AMX_FLAG_CHAR16     EQU 0001h   ; characters are 16-bit
         AMX_FLAG_DEBUG      EQU 0002h   ; symbolic info. available
+		AMX_FLAG_LINEOPS	EQU	0020h	; line op information
+		AMX_FLAG_TRACED		EQU	0040h	; 
         AMX_FLAG_BROWSE     EQU 4000h
         AMX_FLAG_RELOC      EQU 8000h   ; jump/call addresses relocated
 

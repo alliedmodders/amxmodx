@@ -148,7 +148,7 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 		return (amx->error = AMX_ERR_FORMAT);
 	}
 
-	if ( ((int)CVAR_GET_FLOAT("amx_debug") >= 2 || (debug && (int)CVAR_GET_FLOAT("amx_debug"))) )
+	if ( (int)CVAR_GET_FLOAT("amx_debug") >= 2 || debug)
 	{
 		//automatic debug mode
 		hdr->flags |= AMX_FLAG_LINEOPS;
@@ -1200,7 +1200,11 @@ void LogError(AMX *amx, int err, const char *fmt, ...)
 		} else {
 			GenericError(amx, err, line, buf, dbg->files[file]);
 		}
-		AMXXLOG_Log("[AMXX] %s %s", buf, vbuf);
+		AMXXLOG_Log("[AMXX] %s", buf);
+		if (*vbuf)
+		{
+			AMXXLOG_Log("[AMXX] %s", vbuf);
+		}
 		AMXXLOG_Log("[AMXX] Debug Trace =>");
 		//log the error right away
 		while (t != NULL)
@@ -1209,9 +1213,9 @@ void LogError(AMX *amx, int err, const char *fmt, ...)
 			file = t->file;
 			if (file >= dbg->numFiles)
 			{
-				AMXXLOG_Log("[AMXX]       [%d] Line %d, Plugin \"%s\"", i++, line, g_plugins.findPluginFast(amx)->getName());	
+				AMXXLOG_Log("[AMXX]       [%d] Line %d, File \"%s\"", i++, line, g_plugins.findPluginFast(amx)->getName());	
 			} else {
-				AMXXLOG_Log("[AMXX]       [%d] Line %d, Plugin \"%s\"", i++, line, dbg->files[file]);	
+				AMXXLOG_Log("[AMXX]       [%d] Line %d, File \"%s\"", i++, line, dbg->files[file]);	
 			}
 			if (tracer)
 				(tracer)(amx, 1);		//pop	

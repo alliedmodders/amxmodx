@@ -72,12 +72,10 @@ int  CPluginMngr::loadPluginsFromFile( const char* filename )
 		sscanf(line,"%s %s",pluginName, debug);
 		if (!isalnum(*pluginName))  continue;
 
-#ifdef JIT
 		if (isalnum(*debug) && strcmp(debug, "debug") == 0)
 		{
 			debugFlag = 1;
 		}
-#endif
 
 		CPlugin* plugin = loadPlugin( pluginsDir , pluginName  , error,  debugFlag);
 		
@@ -130,7 +128,16 @@ CPluginMngr::CPlugin* CPluginMngr::findPlugin(const char* name) {
 
 const char* CPluginMngr::CPlugin::getStatus() const {
 	switch(status){
-	case ps_running: return "running";
+	case ps_running: 
+			{
+					if (getAMX()->flags & AMX_FLAG_DEBUG)
+					{
+						return "debug";
+					} else {
+						return "running";
+					}
+					break;
+			}
 	case ps_paused: return "paused";
 	case ps_bad_load: return "bad load";
 	case ps_stopped: return "stopped";

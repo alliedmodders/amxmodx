@@ -13,7 +13,6 @@
  * - code structure renewed
  */
 
-#include <iostream>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <errno.h>

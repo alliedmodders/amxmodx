@@ -728,7 +728,6 @@ int ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress,
 	
 	// Find out if user is bot (this doesn't seem to be ever called when bot connects though, but leave it here)
 	const char* auth = GETPLAYERAUTHID(pPlayer);
-	LOG_CONSOLE(PLID, "Fun debug: ClientConnect: Player's auth is: %s", auth);
 
 	if (strcmp(auth, "BOT") == 0)
 		g_bot[index] = true;

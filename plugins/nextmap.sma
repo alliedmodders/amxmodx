@@ -79,8 +79,10 @@ public sayNextMap(){
   client_print(0,print_chat,"Next Map:  %s",name)
 }
 
-public delayedChange( param[] )
+public delayedChange( param[] ){
+  set_cvar_float("mp_chattime",get_cvar_float("mp_chattime")-2.0)
   server_cmd( "changelevel %s", param )
+}
 
 public changeMap(){
   new string[32]

@@ -55,6 +55,7 @@ const char* stristr(const char* str,const char* substr)
 
 char* format_amxstring(AMX *amx, cell *params, int parm,int& len)
 {
+	/*
   static char buffer[2][3072];
   static char format[16];
   char *ptr,*arg;
@@ -88,6 +89,8 @@ char* format_amxstring(AMX *amx, cell *params, int parm,int& len)
   *dest=0;
   len = dest - *buffer;
   return *buffer;
+  */
+	return g_langMngr.FormatAmxString(amx, params, parm, len);
 }
 
 int amxstring_len(cell* a)

@@ -72,6 +72,7 @@ EventsMngr g_events;
 Grenades g_grenades;
 LogEventsMngr g_logevents;
 MenuMngr g_menucmds;
+CLangMngr g_langMngr;
 String g_log_dir;
 String g_mod_name;
 XVars g_xvars;
@@ -216,6 +217,9 @@ int	C_Spawn( edict_t *pent ) {
   // ######	Initialize task	manager
   g_tasksMngr.registerTimers( &gpGlobals->time,	&mp_timelimit->value,  &g_game_timeleft		);
 
+  //  ###### Load lang
+  g_langMngr.Load(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxx/data")));
+  g_langMngr.MergeDefinitionFile(build_pathname("%s/langnames.lng", get_localinfo("amxx_datadir", "addons/amxx/data")));
   // ######	Initialize commands	prefixes
   g_commands.registerPrefix( "amx" );
   g_commands.registerPrefix( "amxx"	);
@@ -393,6 +397,9 @@ void C_ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax )
   executeForwards(FF_PluginInit);
   executeForwards(FF_PluginCfg);
 
+  //  ###### Save lang
+  g_langMngr.Save(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxx/data")));
+
 // Correct time in Counter-Strike	and	other mods (except DOD)
   if ( !g_bmod_dod)	 g_game_timeleft = 0;
 
@@ -450,7 +457,8 @@ void C_ServerDeactivate_Post() {
   g_vault.clear();
   g_xvars.clear();
   g_plugins.clear();
-
+  g_langMngr.Save(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxx/data")));
+  g_langMngr.Clear();
   // last memreport
 #ifdef MEMORY_TEST
 	if (g_memreport_enabled)

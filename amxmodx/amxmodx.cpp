@@ -97,6 +97,7 @@ static cell AMX_NATIVE_CALL emit_sound(AMX *amx, cell *params) /* 7 param */
 static cell AMX_NATIVE_CALL server_print(AMX *amx, cell *params) /* 1 param */
 {
   int len;
+  g_langMngr.SetDefLang(LANG_SERVER);			// Default language = server
   char* message = format_amxstring(amx,params,1,len);
   if ( len > 254 ) len = 254;
   message[len++]='\n';
@@ -107,38 +108,52 @@ static cell AMX_NATIVE_CALL server_print(AMX *amx, cell *params) /* 1 param */
 
 static cell AMX_NATIVE_CALL engclient_print(AMX *amx, cell *params)  /* 3 param */
 {
-  int len;
-  char* message = format_amxstring(amx,params,3,len);
-  message[len++]='\n';
-  message[len]=0;
-  if (params[1] == 0) {
-    for(int i = 1; i <= gpGlobals->maxClients ; ++i){
-      CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
-      if (pPlayer->ingame)
-        CLIENT_PRINT(pPlayer->pEdict, (PRINT_TYPE)(int)params[2]  , message );
-    }
-  }
-  else {
-    int index = params[1];
-    if (index < 1 || index > gpGlobals->maxClients){
-      amx_RaiseError(amx,AMX_ERR_NATIVE);
-      return 0;
-    }
-    CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
-    if (pPlayer->ingame)
-      CLIENT_PRINT(pPlayer->pEdict, (PRINT_TYPE)(int)params[2]  , message );
-  }
-  return len;
+	int len;
+	char *msg;
+	if (params[1] == 0)
+	{
+		for(int i = 1; i <= gpGlobals->maxClients; ++i)
+		{
+			CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
+			if (pPlayer->ingame)
+			{
+				g_langMngr.SetDefLang(i);
+				msg = format_amxstring(amx, params, 3, len);
+				msg[len++] = '\n';
+				msg[len] = 0;
+				CLIENT_PRINT(pPlayer->pEdict, (PRINT_TYPE)(int)params[2], msg);
+			}
+		}
+	}
+	else
+	{
+		int index = params[1];
+		if (index < 1 || index > gpGlobals->maxClients){
+			amx_RaiseError(amx,AMX_ERR_NATIVE);
+			return 0;
+		}
+		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+		if (pPlayer->ingame)
+		{
+			g_langMngr.SetDefLang(index);
+			msg = format_amxstring(amx, params, 3, len);
+			msg[len++] = '\n';
+			msg[len] = 0;
+			CLIENT_PRINT(pPlayer->pEdict, (PRINT_TYPE)(int)params[2], msg);
+		}
+	}
+	return len;
 }
 
 static cell AMX_NATIVE_CALL console_cmd(AMX *amx, cell *params) /* 2 param */
 {
+  int index = params[1];
+  g_langMngr.SetDefLang(index);
   int len;
   char* cmd = format_amxstring(amx,params,2,len);
   cmd[len++]='\n';
   cmd[len]=0;
 
-  int index = params[1];
   if (index < 1 || index > gpGlobals->maxClients){
     SERVER_COMMAND( cmd );
   }
@@ -152,44 +167,66 @@ static cell AMX_NATIVE_CALL console_cmd(AMX *amx, cell *params) /* 2 param */
 
 static cell AMX_NATIVE_CALL console_print(AMX *amx, cell *params) /* 2 param */
 {
-  int len;
-  char* message = format_amxstring(amx,params,2,len);
-  if ( len > 254 ) len = 254;
-  message[len++]='\n';
-  message[len]=0;
-  int index = params[1];
-  if (index < 1 || index > gpGlobals->maxClients){
-    SERVER_PRINT( message );
-  }
-  else {
-    CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
-    if (pPlayer->ingame)
-      UTIL_ClientPrint(pPlayer->pEdict, 2 , message );
-  }
-  return len;
+	int index = params[1];
+	if (index < 1 || index > gpGlobals->maxClients)
+		g_langMngr.SetDefLang(LANG_SERVER);
+	else
+		g_langMngr.SetDefLang(index);
+
+	int len;
+	char* message = format_amxstring(amx,params,2,len);
+	if (len > 254 )
+		len = 254;
+	message[len++] = '\n';
+	message[len] = 0;
+	if (index < 1 || index > gpGlobals->maxClients)
+		SERVER_PRINT( message );
+	else
+	{
+		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+		if (pPlayer->ingame)
+			UTIL_ClientPrint(pPlayer->pEdict, 2 , message );
+	}
+	return len;
 }
 
 
 static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 {
-  int len;
-  char* message = format_amxstring(amx,params,3,len);
-  message[len++]='\n';
-  message[len]=0;
-  if (params[1] == 0) {
-    UTIL_ClientPrint(NULL, params[2]  , message );
-  }
-  else {
-    int index = params[1];
-    if (index < 1 || index > gpGlobals->maxClients){
-      amx_RaiseError(amx,AMX_ERR_NATIVE);
-      return 0;
-    }
-    CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
-    if (pPlayer->ingame)
-      UTIL_ClientPrint(pPlayer->pEdict, params[2]  , message );
-  }
-  return len;
+	int len;
+	char *msg;
+	if (params[1] == 0)
+	{
+		for (int i = 1; i <= gpGlobals->maxClients; ++i)
+		{
+			CPlayer *pPlayer = GET_PLAYER_POINTER_I(i);
+			if (pPlayer->ingame)
+			{
+				g_langMngr.SetDefLang(i);
+				msg = format_amxstring(amx, params, 3, len);
+				msg[len++] = '\n';
+				msg[len] = 0;
+				UTIL_ClientPrint(NULL, params[2], msg);
+			}
+		}
+	}
+	else
+	{
+		int index = params[1];
+		if (index < 1 || index > gpGlobals->maxClients)
+		{
+			amx_RaiseError(amx,AMX_ERR_NATIVE);
+			return 0;
+		}
+		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+		g_langMngr.SetDefLang(index);
+		msg = format_amxstring(amx, params, 3, len);
+		msg[len++] = '\n';
+		msg[len] = 0;
+		if (pPlayer->ingame)
+			UTIL_ClientPrint(pPlayer->pEdict, params[2], format_amxstring(amx, params, 3, len));
+	}
+	return len;
 }
 
 static cell AMX_NATIVE_CALL show_motd(AMX *amx, cell *params)  /* 2 param */
@@ -251,6 +288,7 @@ static cell AMX_NATIVE_CALL set_hudmessage(AMX *amx, cell *params)  /* 11 param 
 static cell AMX_NATIVE_CALL show_hudmessage(AMX *amx, cell *params)  /* 2 param */
 {
   int len;
+  g_langMngr.SetDefLang(params[1]);
   char* message = UTIL_SplitHudMessage(  format_amxstring(amx,params,2,len) );
   if (params[1] == 0) {
     UTIL_HudMessage(NULL, g_hudset, message );
@@ -1003,6 +1041,7 @@ static cell AMX_NATIVE_CALL user_slap(AMX *amx, cell *params) /* 2 param */
 static cell AMX_NATIVE_CALL server_cmd(AMX *amx, cell *params) /* 1 param */
 {
   int len;
+  g_langMngr.SetDefLang(LANG_SERVER);
   char* cmd = format_amxstring(amx,params,1,len);
   cmd[len++]='\n';
   cmd[len]=0;
@@ -1172,6 +1211,7 @@ static cell AMX_NATIVE_CALL write_string(AMX *amx, cell *params) /* 1 param */
 static cell AMX_NATIVE_CALL log_message(AMX *amx, cell *params) /* 1 param */
 {
   int len;
+  g_langMngr.SetDefLang(LANG_SERVER);
   char* message =  format_amxstring(amx,params,1,len);
   message[len++]='\n';
   message[len]=0;
@@ -1199,6 +1239,7 @@ static cell AMX_NATIVE_CALL log_to_file(AMX *amx, cell *params) /* 1 param */
   time_t td; time(&td);
   strftime(date,31,"%m/%d/%Y - %H:%M:%S",localtime(&td));
   int len;
+  g_langMngr.SetDefLang(LANG_SERVER);
   char* message =  format_amxstring(amx,params,2,len);
   message[len++]='\n';
   message[len]=0;
@@ -2228,6 +2269,7 @@ static cell AMX_NATIVE_CALL log_amx(AMX *amx, cell *params)
 	CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
 	int len;
 
+	g_langMngr.SetDefLang(LANG_SERVER);
 	AMXXLOG_Log("[%s] %s", plugin->getName(), format_amxstring(amx, params, 1, len));
 	return 0;
 }
@@ -2499,6 +2541,35 @@ static cell callfunc_push_str(AMX *amx, cell *params)
 	return 0;
 }
 
+// get_langsnum();
+static cell get_langsnum(AMX *amx, cell *params)
+{
+	return g_langMngr.GetLangsNum();
+}
+
+// get_lang(id, name[(at least 3)]);
+static cell get_lang(AMX *amx, cell *params)
+{
+	set_amxstring(amx, params[2], g_langMngr.GetLangName(params[1]), 2);
+	return 0;
+}
+
+// register_dictionary(const filename[]);
+static cell register_dictionary(AMX *amx, cell *params)
+{
+	int len;
+	g_langMngr.MergeDefinitionFile(build_pathname("%s/lang/%s",
+		get_localinfo("amxx_datadir", "addons/amxx/data"), get_amxstring(amx, params[1], 1, len)));
+	return 0;
+}
+
+// lang_exists(const name[]);
+static cell lang_exists(AMX *amx, cell *params)
+{
+	int len;
+	return g_langMngr.LangExists(get_amxstring(amx, params[1], 1, len)) ? 1 : 0;
+}
+
 AMX_NATIVE_INFO amxmod_Natives[] = {
   { "client_cmd",       client_cmd },
   { "client_print",     client_print },
@@ -2649,5 +2720,9 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "write_long",     write_long },
   { "write_short",    write_short },
   { "write_string",   write_string },
+  { "get_langsnum",			get_langsnum },
+  { "get_lang",				get_lang },
+  { "register_dictionary",	register_dictionary },
+  { "lang_exists",			lang_exists },
   { NULL, NULL }
 };

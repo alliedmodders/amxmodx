@@ -35,126 +35,64 @@
 #include <amxmodx>
 #include <amxmisc>
 
+#define MAXMENUS			128
+#define STRINGSIZE			32
+#define STRINGLENGTH 		STRINGSIZE - 1
+#define MENUITEMSPERPAGE	8
+//#define MENUS_NUMBER 16
+
 new g_menuPosition[33]
-
-#define MENUS_NUMBER 16
-
-new g_menuBody[MENUS_NUMBER][] = {
-  "KICK_PLAYER",
-  "BAN_PLAYER",
-  "SLAP_SLAY",
-  "TEAM_PLAYER",
-
-  "CHANGEL",
-  "VOTE_MAPS",
-
-  "SPECH_STUFF",
-  "CLIENT_COM",
-
-  // Next Page
-
-  "SERVER_COM",
-  "CVARS_SET",
-  "CONFIG",
-  "LANG_SET",
-  "STATS_SET",
-
-  "PAUSE_PLUG",
-  "RES_WEAP",
-
-  "TELE_PLAYER"
-}
-
-new g_menuCmd[MENUS_NUMBER][] = {
-  "amx_kickmenu",
-  "amx_banmenu",
-  "amx_slapmenu",
-  "amx_teammenu",
-
-  "amx_mapmenu",
-  "amx_votemapmenu",
-
-  "amx_speechmenu",
-  "amx_clcmdmenu",
-
-  // Next Page
-
-  "amx_cmdmenu",
-  "amx_cvarmenu",
-  "amx_cfgmenu",
-  "amx_langmenu",
-  "amx_statscfgmenu",
-
-  "amx_pausecfgmenu",
-  "amx_restmenu",
-
-  "amx_teleportmenu"
-}
-
-new g_menuAccess[MENUS_NUMBER] = {
-  ADMIN_KICK,
-  ADMIN_BAN,
-  ADMIN_SLAY,
-  ADMIN_LEVEL_A,
-
-  ADMIN_MAP,
-  ADMIN_MAP,
-
-  ADMIN_MENU,
-  ADMIN_LEVEL_A,
-
-  // Next Page
-
-  ADMIN_MENU,
-  ADMIN_CVAR,
-  ADMIN_MENU,
-  ADMIN_CFG,
-  ADMIN_CFG,
-
-  ADMIN_CFG,
-  ADMIN_CFG,
-
-  ADMIN_LEVEL_A
-}
-
-new g_menuPlugin[MENUS_NUMBER][] = {
-  "Players Menu",
-  "Players Menu",
-  "Players Menu",
-  "Players Menu",
-
-  "Maps Menu",
-  "Maps Menu",
-
-  "Commands Menu",
-  "Players Menu",
-
-  // Next Page
-
-  "Commands Menu",
-  "Commands Menu",
-  "Commands Menu",
-  "Multi-Lingual System",
-  "Stats Configuration",
-
-  "Pause Plugins",
-  "Restrict Weapons",
-
-  "Teleport Menu"
-}
-
+new g_menusNumber = 0
+new g_menuBody[MAXMENUS][STRINGSIZE]
+new bool:g_menuBodyPhrase[MAXMENUS]
+new g_menuCmd[MAXMENUS][STRINGSIZE]
+new g_menuAccess[MAXMENUS]
+new g_menuPlugin[MAXMENUS][STRINGSIZE]
 new g_coloredMenus
 
-public plugin_init() {
-  register_plugin("Menus Front-End",AMXX_VERSION_STR,"AMXX Dev Team")
+// menuBody: Text that will be shown for this item in menu
+// menuCmd: Command that should be executed to start menu
+// menuAccess: Access required for menu
+// menuPlugin: The exact case-insensitive name of plugin holding the menu command
+public AddMenu(const menuBody[], const menuCmd[], const menuAccess, const menuPlugin[]) {
+	copy(g_menuBody[g_menusNumber], STRINGLENGTH, menuBody)
+	g_menuBodyPhrase[g_menusNumber] = false
+	copy(g_menuCmd[g_menusNumber], STRINGLENGTH, menuCmd)
+	g_menuAccess[g_menusNumber] = menuAccess
+	copy(g_menuPlugin[g_menusNumber], STRINGLENGTH, menuPlugin)
 
-  register_dictionary("menufront.txt")
-  register_dictionary("common.txt")
+	g_menusNumber++
 
-  register_menucmd(register_menuid("AMX Mod X Menu"),1023,"actionMenu")
-  register_clcmd("amxmodmenu","cmdMenu",ADMIN_MENU,"- displays menus")
+	server_print("Menu item added to Menus Front-End: ^"%s^" from plugin ^"%s^"", menuBody, menuPlugin)
+}
+public AddMenuLang(const menuBody[], const menuCmd[], const menuAccess, const menuPlugin[]) {
+	copy(g_menuBody[g_menusNumber], STRINGLENGTH, menuBody)
+	g_menuBodyPhrase[g_menusNumber] = true
+	copy(g_menuCmd[g_menusNumber], STRINGLENGTH, menuCmd)
+	g_menuAccess[g_menusNumber] = menuAccess
+	copy(g_menuPlugin[g_menusNumber], STRINGLENGTH, menuPlugin)
+	g_menusNumber++
 
-  g_coloredMenus = colored_menus()
+	//server_print("Menu item added to Menus Front-End: ^"%s^" (LANG) from plugin ^"%s^"", menuBody, menuPlugin)
+}
+
+AddDefaultMenus() {
+	AddMenuLang("KICK_PLAYER", "amx_kickmenu", ADMIN_KICK, "Players Menu")
+	AddMenuLang("BAN_PLAYER", "amx_banmenu", ADMIN_BAN, "Players Menu")
+	AddMenuLang("SLAP_SLAY", "amx_slapmenu", ADMIN_SLAY, "Players Menu")
+	AddMenuLang("TEAM_PLAYER", "amx_teammenu", ADMIN_LEVEL_A, "Players Menu")
+	AddMenuLang("CHANGEL", "amx_mapmenu", ADMIN_MAP, "Maps Menu")
+	AddMenuLang("VOTE_MAPS", "amx_votemapmenu", ADMIN_MAP, "Maps Menu")
+	AddMenuLang("SPECH_STUFF", "amx_speechmenu", ADMIN_MENU, "Commands Menu")
+	AddMenuLang("CLIENT_COM", "amx_clcmdmenu", ADMIN_LEVEL_A, "Players Menu")
+	AddMenuLang("SERVER_COM", "amx_cmdmenu", ADMIN_MENU, "Commands Menu")
+	AddMenuLang("CVARS_SET", "amx_cvarmenu", ADMIN_CVAR, "Commands Menu")
+	AddMenuLang("CONFIG", "amx_cfgmenu", ADMIN_MENU, "Commands Menu")
+	AddMenuLang("LANG_SET", "amx_langmenu", ADMIN_CFG, "Multi-Lingual System")
+	AddMenuLang("STATS_SET", "amx_statscfgmenu", ADMIN_CFG, "Stats Configuration")
+	AddMenuLang("PAUSE_PLUG", "amx_pausecfgmenu", ADMIN_CFG, "Pause Plugins")
+	AddMenuLang("RES_WEAP", "amx_restmenu", ADMIN_CFG, "Restrict Weapons")
+	AddMenuLang("TELE_PLAYER", "amx_teleportmenu", ADMIN_LEVEL_A, "Teleport Menu")
 }
 
 public actionMenu(id,key) {
@@ -167,47 +105,61 @@ public actionMenu(id,key) {
 }
 
 displayMenu(id,pos) {
-  if (pos < 0)  return
-    
-  new menuBody[512]
-  new b = 0
-  new start = pos * 8
-  
-  if ( start >= MENUS_NUMBER )
-    start = pos = g_menuPosition[id] = 0
-      
-  new len = format(menuBody,511,
-   g_coloredMenus ? "\yAMX Mod X Menu\R%d/%d^n\w^n" : "AMX Mod X Menu %d/%d^n^n" , pos+1, 2 )
-    
-  new end = start + 8
-  new keys = MENU_KEY_0
-  
-  if (end > MENUS_NUMBER )
-    end = MENUS_NUMBER
-    
-  new flags = get_user_flags(id)
-    
-  for (new a = start; a < end; ++a) {
-    if ( (flags & g_menuAccess[a]) && ( is_plugin_loaded(g_menuPlugin[a])!=-1 ) ) {
-      keys |= (1<<b)
-      len += format(menuBody[len],511-len,"%d. %L^n",++b, id, g_menuBody[ a ] )
-    }
-    else {
-      ++b     
-      if ( g_coloredMenus )
-        len += format(menuBody[len],511-len, "\d%d. %L^n\w",b, id, g_menuBody[ a ] )
-      else
-        len += format(menuBody[len],511-len, "#. %L^n", id, g_menuBody[ a ] )
-    }
-  }
-      
-  if (end != MENUS_NUMBER ) {
-    format(menuBody[len],511-len,"^n9. %L...^n0. %L", id, "MORE", id, pos ? "BACK" : "EXIT")
-    keys |= MENU_KEY_9
-  }
-  else format(menuBody[len],511-len,"^n0. %L", id, pos ? "BACK" : "EXIT")
- 
-  show_menu(id,keys,menuBody)
+	if (pos < 0)
+		return
+
+	new menuBody[512]
+	new b = 0
+	new start = pos * MENUITEMSPERPAGE
+
+	if ( start >= g_menusNumber ) // MENUS_NUMBER
+		start = pos = g_menuPosition[id] = 0
+
+	new len = format(menuBody,511,
+	g_coloredMenus ? "\yAMX Mod X Menu\R%d/%d^n\w^n" : "AMX Mod X Menu %d/%d^n^n" , pos+1, (g_menusNumber / MENUITEMSPERPAGE) + (((g_menusNumber % MENUITEMSPERPAGE) > 0) ? 1 : 0))
+
+	new end = start + MENUITEMSPERPAGE
+	new keys = MENU_KEY_0
+
+	if (end > g_menusNumber ) // MENUS_NUMBER
+		end = g_menusNumber // MENUS_NUMBER
+
+	new flags = get_user_flags(id)
+
+	for (new a = start; a < end; ++a) {
+		if ( (flags & g_menuAccess[a]) && ( is_plugin_loaded(g_menuPlugin[a])!=-1 ) ) {
+			keys |= (1<<b)
+			if (g_menuBodyPhrase[a])
+				len += format(menuBody[len],511-len,"%d. %L^n",++b, id, g_menuBody[ a ] )
+			else
+				len += format(menuBody[len],511-len,"%d. %s^n",++b, g_menuBody[ a ] )
+		}
+		else {
+			++b
+			if ( g_coloredMenus ) {
+				if (g_menuBodyPhrase[a])
+					len += format(menuBody[len],511-len, "\d%d. %L^n\w",b, id, g_menuBody[ a ] )
+				else
+					len += format(menuBody[len],511-len, "\d%d. %s^n\w",b, g_menuBody[ a ] )
+			}
+			else {
+				if (g_menuBodyPhrase[a])
+					len += format(menuBody[len],511-len, "#. %L^n", id, g_menuBody[ a ] )
+				else
+					len += format(menuBody[len],511-len, "#. %s^n", g_menuBody[ a ] )
+			}
+		}
+	}
+
+	if (end != g_menusNumber ) { // MENUS_NUMBER
+		format(menuBody[len],511-len,"^n9. %L...^n0. %L", id, "MORE", id, pos ? "BACK" : "EXIT")
+		keys |= MENU_KEY_9
+	}
+	else {
+		format(menuBody[len],511-len,"^n0. %L", id, pos ? "BACK" : "EXIT")
+	}
+
+	show_menu(id,keys,menuBody)
 }
 
 public cmdMenu(id,level,cid) {
@@ -215,4 +167,18 @@ public cmdMenu(id,level,cid) {
     displayMenu(id,g_menuPosition[id] = 0)
 
   return PLUGIN_HANDLED
+}
+
+public plugin_init() {
+  register_plugin("Menus Front-End",AMXX_VERSION_STR,"AMXX Dev Team")
+
+  register_dictionary("menufront.txt")
+  register_dictionary("common.txt")
+
+  register_menucmd(register_menuid("AMX Mod X Menu"),1023,"actionMenu")
+  register_clcmd("amxmodmenu","cmdMenu",ADMIN_MENU,"- displays menus")
+
+  g_coloredMenus = colored_menus()
+
+  AddDefaultMenus()
 }

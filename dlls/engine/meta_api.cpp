@@ -1829,35 +1829,25 @@ static cell AMX_NATIVE_CALL create_entity(AMX *amx, cell *params) {
 	return ENTINDEX(pNewEntity);
 }
 
-// FindEntity, use this in a while loop. will return 0 when theres no entities left.
-// It searches by classname.
-//(vexd)
-static cell AMX_NATIVE_CALL find_entity(AMX *amx, cell *params) {
-	int iStartEnt = params[1];
+//ej ref'd by jghg
+static cell AMX_NATIVE_CALL find_entity(AMX *amx, cell *params) /* 3 param */
+{
+	edict_t *pSearch_after_ent = INDEXENT(params[1]);
 
-	int iLengthSearchStrn;
-	char *szValue = AMX_GET_STRING(amx, params[2], iLengthSearchStrn);
+	char* sCatagory = NULL;
 
-	edict_t *pStartEnt;
+	int len;
+	char* sValue = GET_AMXSTRING(amx, params[3], 1, len);
 
-	if(iStartEnt == -1) {
-		pStartEnt = NULL;
-	} else {
-		pStartEnt = INDEXENT(iStartEnt);
+	edict_t *pEnt = FIND_ENTITY_BY_STRING(pSearch_after_ent, "classname", sValue);
 
-		if(FNullEnt(pStartEnt)) {
-			return 0;
-		}
-	}
 
-	int iReturnEnt = ENTINDEX(FIND_ENTITY_BY_STRING(pStartEnt, "classname", szValue));
+	if(pEnt) // This even needed?
+		return ENTINDEX(pEnt);
+	else
+		return 0;
+} 
 
-	if(!iReturnEnt || FNullEnt(iReturnEnt)) {
-		return -1;
-	}
-
-	return iReturnEnt;
-}
 
 // DispatchKeyValue, sets a key-value pair for a newly created entity.
 // Use DispatchSpawn after doing ALL DispatchKeyValues on an entity.

@@ -67,6 +67,10 @@ native cs_set_user_defuse(index, defusekit = 1, r = 0, g = 160, b = 0, icon[] = 
  */
 native cs_get_user_buyzone(index);
 
+/* Returns 1 when user has a primary weapon OR a shield in inventory, else 0.
+ */
+native cs_get_user_hasprim(index);
+
 /* Get user model.
  */
 native cs_get_user_model(index, model[], len);

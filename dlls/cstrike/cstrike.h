@@ -55,6 +55,7 @@
 	// "player" entities
 	#define OFFSET_TEAM					114 + EXTRAOFFSET // same as STEAM
 	#define OFFSET_CSMONEY				115 + EXTRAOFFSET // same as STEAM
+	//#define OFFSET_PRIMARYWEAPON		116 + EXTRAOFFSET // not confirmed (very likely it's the same though)
 	#define OFFSET_INTERNALMODEL		126 + EXTRAOFFSET // same as STEAM
 	#define OFFSET_NVGOGGLES			129 + EXTRAOFFSET // same as STEAM
 	#define OFFSET_DEFUSE_PLANT			193 + EXTRAOFFSET // same as STEAM
@@ -88,6 +89,7 @@
 	// "player" entities
 	#define OFFSET_TEAM					114 + EXTRAOFFSET
 	#define OFFSET_CSMONEY				115 + EXTRAOFFSET
+	#define OFFSET_PRIMARYWEAPON		116 + EXTRAOFFSET
 	#define OFFSET_INTERNALMODEL		126 + EXTRAOFFSET
 	#define OFFSET_NVGOGGLES			129 + EXTRAOFFSET
 	#define OFFSET_DEFUSE_PLANT			193 + EXTRAOFFSET

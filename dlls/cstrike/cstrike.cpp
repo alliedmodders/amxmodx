@@ -1308,6 +1308,24 @@ static cell AMX_NATIVE_CALL cs_set_weapon_ammo(AMX *amx, cell *params) // cs_set
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL cs_get_user_hasprimary(AMX *amx, cell *params) // cs_get_user_hasprimary(index); = 1 param
+{
+	// Return 1 if user has a primary or shield (actually just return the value at the offset)
+	// params[1] = user index
+
+	// Check player
+	if (!MF_IsPlayerIngame(params[1]))
+	{
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// Make into edict pointer
+	edict_t *pPlayer = INDEXENT(params[1]);
+
+	return *((int *)pPlayer->pvPrivateData + OFFSET_PRIMARYWEAPON);
+}
+
 AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_user_money",			cs_set_user_money},
 	{"cs_get_user_money",			cs_get_user_money},
@@ -1338,6 +1356,7 @@ AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_reset_user_model",			cs_reset_user_model},
 	{"cs_set_weapon_ammo",			cs_set_weapon_ammo},
 	{"cs_get_weapon_ammo",			cs_get_weapon_ammo},
+	{"cs_get_user_hasprim",			cs_get_user_hasprimary},
 	//------------------- <-- max 19 characters!
 	{NULL,							NULL}
 };

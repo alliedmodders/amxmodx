@@ -244,7 +244,7 @@ int Spawn( edict_t *pent ) {
   get_localinfo("amxx_basedir" , "addons/amxx" );
 
   //  ###### Load modules
-  int loaded = loadModules( get_localinfo("amxx_modules" , "addons/amxx/config/modules.ini" ) );
+  int loaded = loadModules( get_localinfo("amxx_modules" , "addons/amxx/modules.ini" ) );
   attachModules();
   // Set some info about amx version and modules
   if ( loaded ){
@@ -276,7 +276,7 @@ int Spawn( edict_t *pent ) {
 
   //  ###### Load AMX scripts
   g_plugins.loadPluginsFromFile(
-    get_localinfo("amxx_plugins" , "addons/amxx/config/plugins.ini" )  );
+    get_localinfo("amxx_plugins" , "addons/amxx/plugins.ini" )  );
 
   //  ###### Call precache forward function
   g_dontprecache = false;
@@ -975,7 +975,7 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
   //  ###### Now attach metamod modules
   attachMetaModModules( get_localinfo("amxx_modules" ,
-    "addons/amxx/config/modules.ini" ) );
+    "addons/amxx/modules.ini" ) );
 
   return(TRUE);
 }
@@ -1005,7 +1005,7 @@ C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason) {
 
   //  ###### Now dettach metamod modules
   dettachMetaModModules( get_localinfo("amxx_modules" ,
-    "addons/amxx/config/modules.ini" ) );
+    "addons/amxx/modules.ini" ) );
 
   return(TRUE);
 }

@@ -18,14 +18,14 @@ public:
 
 	PGconn *cn;
 
-	CString ErrorStr;
+	String ErrorStr;
 	int ErrorCode;
 
-	CString Host;
-	CString Password;
-	CString Username;
-	CString Database;
-	CString cstr;
+	String Host;
+	String Password;
+	String Username;
+	String Database;
+	String cstr;
 
 	bool isFree;
 };

@@ -91,8 +91,8 @@ int get_weaponid(CPlayer* pPlayer){
 	case 23: 
 		if ( pPlayer->pEdict->v.weaponmodel )
 			pPlayer->wpnModel = pPlayer->pEdict->v.weaponmodel; 
-		if ( !( pPlayer->wpnModel&(1<<2) ) ) 
-			weapon = 32; 		
+		if ( !( pPlayer->wpnModel&(1<<3) ) ) 
+			weapon = 32; 	
 		break;
 	case 24: if ( pPlayer->pEdict->v.button&IN_ATTACK2 ) weapon = 41; break;
 	case 25:

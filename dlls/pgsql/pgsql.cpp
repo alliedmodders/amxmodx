@@ -31,26 +31,21 @@
 *	version.
 */
 
+#include <stdarg.h>
 #include "pgsql_amx.h"
 #include "amxxmodule.h"
 
 CVector<SQLResult*> Results;
 CVector<SQL*> DBList;
 
-int sql_exists(const char* host,const char* user,const char* pass,const char* dbase) {
-	unsigned int i = 0;
-	int id = 0;
-	for (i=0; i<DBList.size(); i++) {
-		id++;
-		if ((DBList[i]->Host.compare(host) == 0) &&
-			(DBList[i]->Username.compare(user) == 0) &&
-			(DBList[i]->Password.compare(pass) == 0) &&
-			(DBList[i]->Database.compare(dbase) == 0) &&
-			(!DBList[i]->isFree)) {
-				return id;
-		}
-	}
-	return -1;
+void SqlError(AMX *amx, const char *fmt, ...)
+{
+	va_list p;
+	va_start(p,fmt);
+	static char buf[512];
+	vsprintf(buf, fmt, p);
+	va_end(p);
+	MF_Log("SQL Error: %s (plugin \"%s\" line %d)", buf, MF_GetScriptName(MF_FindScriptByAmx(amx)), amx->curline); \
 }
 
 // ///////////////////////////////
@@ -69,14 +64,11 @@ static cell AMX_NATIVE_CALL sql_connect(AMX *amx, cell *params) //	6 param
 	i = 0;
 
 	if (!strlen(host) || !strlen(user) || !strlen(dbname)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		SqlError(amx, "Could not connect");
 		return -1;
 	}
 	
-	int id = sql_exists(host,user,pass,dbname);
-	
-	if (id > 0)
-		return id;
+	int id = -1;
 
 	SQL *c=NULL;
 	
@@ -113,7 +105,7 @@ static cell AMX_NATIVE_CALL sql_error(AMX *amx, cell *params) // 3 params
 	unsigned int id = params[1]-1;
 	if (id >= DBList.size() || DBList[id]->isFree)
 	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		SqlError(amx, "Invalid DB handle: %d", id);
 		return 0;
 	}
 
@@ -143,8 +135,7 @@ static cell AMX_NATIVE_CALL sql_query(AMX *amx, cell *params) //	2 params
 	unsigned int id = params[1]-1;
 
 	if (id >= DBList.size() || DBList[id]->isFree) {
-		MF_Log("Invalid Database Handle %d", id);
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		SqlError(amx, "Invalid database handle %d", id);
 		return -1;
 	}
 
@@ -165,10 +156,14 @@ static cell AMX_NATIVE_CALL sql_nextrow(AMX *amx, cell *params) //	1 param
 {
 	unsigned int id = params[1]-1;
 
+	if (id == -1)
+	{
+		return 0;
+	}
+
 	if (id >= Results.size() || Results[id]->isFree)
 	{
-		MF_Log("Invalid result handle %d", id);
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		SqlError(amx, "Invalid result handle %d", id);
 		return 0;
 	}
 
@@ -183,16 +178,19 @@ static cell AMX_NATIVE_CALL sql_nextrow(AMX *amx, cell *params) //	1 param
 // - close connection
 static cell AMX_NATIVE_CALL sql_close(AMX *amx, cell *params) // 1 param
 {
-	unsigned int id = params[1]-1;
+	cell *addr = MF_GetAmxAddr(amx, params[1]);
+	unsigned int id = (*addr)-1;
+
 	if (id >= DBList.size() || DBList[id]->isFree) {
-		MF_Log("Invalid Database Handle %d", id);
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		SqlError(amx, "Invalid database handle %d", id);
 		return 0;
 	}
 
 	SQL *sql = DBList[id];
 	
 	sql->Disconnect();
+
+	*addr = 0;
 
 	return 1;
 }
@@ -207,8 +205,7 @@ static cell AMX_NATIVE_CALL sql_getfield(AMX *amx, cell *params) // 2-4 params
 
 	if (id >= Results.size() || Results[id]->isFree)
 	{
-		MF_Log("Invalid result handle %d", id);
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		SqlError(amx, "Invalid result handle %d", id);
 		return 0;
 	}
 
@@ -252,8 +249,7 @@ static cell AMX_NATIVE_CALL sql_getresult(AMX *amx, cell *params) // 4 params
 
 	if (id >= Results.size() || Results[id]->isFree)
 	{
-		MF_Log("Invalid result handle %d", id);
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		SqlError(amx, "Invalid result handle %d", id);
 		return 0;
 	}
 
@@ -291,12 +287,15 @@ static cell AMX_NATIVE_CALL sql_getresult(AMX *amx, cell *params) // 4 params
 
 static cell AMX_NATIVE_CALL sql_free_result(AMX *amx, cell *params)
 {
-	unsigned int id = params[1]-1;
+	cell *addr = MF_GetAmxAddr(amx, params[1]);
+	unsigned int id = (*addr)-1;
+
+	if (id == -1)
+		return 0;
 
 	if (id >= Results.size() || Results[id]->isFree)
 	{
-		MF_Log("Invalid result handle %d", id);
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		SqlError(amx, "Invalid result handle %d", id);
 		return 0;
 	}
 
@@ -304,12 +303,17 @@ static cell AMX_NATIVE_CALL sql_free_result(AMX *amx, cell *params)
 
 	Result->FreeResult();
 
+	*addr = 0;
+
 	return 1;
 }
 
 static cell AMX_NATIVE_CALL sql_num_rows(AMX *amx, cell *params)
 {
 	unsigned int id = params[1]-1;
+
+	if (id == -1)
+		return 0;
 
 	if (id >= Results.size() || Results[id]->isFree)
 	{

@@ -26,6 +26,9 @@ SQLResult::SQLResult()
 {
 	isFree = true;
 	RowCount = 0;
+	Fields.clear();
+	res = NULL;
+	row = 0;
 }
 
 SQLResult::~SQLResult()
@@ -106,14 +109,6 @@ int SQL::Query(const char *query)
 		return -1;
 	}
 
-	SQLResult *p = new SQLResult;
-	int ret = p->Query(this, query);
-
-	if (ret < 1)
-	{
-		delete p;
-		return ret;
-	}
 
 	unsigned int i = 0;
 	int id = -1;
@@ -126,13 +121,33 @@ int SQL::Query(const char *query)
 	}
 
 	if (id < 0) {
-		Results.push_back(p);
-		return Results.size();
+
+		SQLResult *p = new SQLResult;
+		int ret = p->Query(this, query);
+
+		if (ret != 0)
+		{
+			delete p;
+			if (ret == -1)
+				return 0;
+			else
+				return -1;
+		} else {
+			Results.push_back(p);
+			return Results.size();
+		}
 	} else {
 		SQLResult *r = Results[id];
-		Results[id] = p;
-		delete r;
-		return (id + 1);
+		int ret = Results[id]->Query(this, query);
+		if (ret != 0)
+		{
+			if (ret == -1)
+				return 0;
+			else
+				return -1;
+		} else {
+			return (id + 1);
+		}
 	}
 }
 
@@ -154,7 +169,7 @@ int SQLResult::Query(SQL *cn, const char *query)
 	RowCount = PQntuples(res);
 
 	if (RowCount < 1)
-		return 0;
+		return -1;
 
 	int i = 0;
 	const char *fld;
@@ -164,7 +179,7 @@ int SQLResult::Query(SQL *cn, const char *query)
 		Fields.push_back(fld);
 	}
 
-	return 1;
+	return 0;
 }
 
 bool SQLResult::Nextrow()
@@ -189,6 +204,9 @@ void SQLResult::FreeResult()
 
 	PQclear(res);
 	Fields.clear();
+	res = 0;
+	row = 0;
+	isFree = true;
 }
 
 const char *SQLResult::GetField(unsigned int field)

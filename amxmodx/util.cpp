@@ -79,12 +79,15 @@ void UTIL_ShowMenu( edict_t* pEdict, int slots, int time, char *menu, int mlen )
 /* warning - don't pass here const string */
 void UTIL_ShowMOTD( edict_t *client , char *motd, int mlen, const char *name)
 {
-	if (!gmsgServerName)
+	if (!gmsgMOTD)
 		return;				// :TODO: Maybe output a warning log?
 
-	MESSAGE_BEGIN( MSG_ONE , gmsgServerName, NULL, client );
-	WRITE_STRING(name);
-	MESSAGE_END();
+	if (gmsgServerName)
+	{
+		MESSAGE_BEGIN( MSG_ONE , gmsgServerName, NULL, client );
+		WRITE_STRING(name);
+		MESSAGE_END();
+	}
 
 	char *n = motd;
 	char c = 0;
@@ -104,9 +107,12 @@ void UTIL_ShowMOTD( edict_t *client , char *motd, int mlen, const char *name)
 		motd = n;
 	}
 
-	MESSAGE_BEGIN( MSG_ONE , gmsgServerName, NULL, client );
-	WRITE_STRING( hostname->string );
-	MESSAGE_END();
+	if (gmsgServerName)
+	{
+		MESSAGE_BEGIN( MSG_ONE , gmsgServerName, NULL, client );
+		WRITE_STRING( hostname->string );
+		MESSAGE_END();
+	}
 }
 
 void UTIL_IntToString(int value, char *output)

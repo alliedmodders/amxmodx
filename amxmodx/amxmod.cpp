@@ -1898,7 +1898,7 @@ static cell AMX_NATIVE_CALL remove_cvar_flags(AMX *amx, cell *params)
 {
   int ilen;
   char* sCvar = get_amxstring(amx,params[1],0,ilen);
-  if ( !strcmp(sCvar,"amx_version") ||
+  if ( !strcmp(sCvar,"amx_version") || !strcmp(sCvar,"amxmodx_version") ||
     !strcmp(sCvar,"fun_version") ||  !strcmp(sCvar,"sv_cheats")  )
     return 0;
   cvar_t* pCvar = CVAR_GET_POINTER(sCvar);
@@ -1921,7 +1921,7 @@ static cell AMX_NATIVE_CALL set_cvar_flags(AMX *amx, cell *params)
 {
   int ilen;
   char* sCvar = get_amxstring(amx,params[1],0,ilen);
-  if ( !strcmp(sCvar,"amx_version") ||
+  if ( !strcmp(sCvar,"amx_version") || !strcmp(sCvar,"amxmodx_version") ||
     !strcmp(sCvar,"fun_version")  ||  !strcmp(sCvar,"sv_cheats") )
     return 0;
   cvar_t* pCvar = CVAR_GET_POINTER(sCvar);

@@ -93,7 +93,9 @@ int mState;
 int g_srvindex;
 
 cvar_t  init_amx_version={"amx_version","", FCVAR_SERVER | FCVAR_SPONLY};
+cvar_t  init_amxmodx_version={"amxmodx_version","", FCVAR_SERVER | FCVAR_SPONLY};
 cvar_t* amx_version = NULL;
+cvar_t* amxmodx_version = NULL;
 cvar_t* hostname = NULL;
 cvar_t* mp_timelimit = NULL;
 
@@ -246,8 +248,12 @@ int Spawn( edict_t *pent ) {
     sprintf( buffer,"%s (%d module%s)",
       AMX_VERSION, loaded , (loaded == 1) ? "" : "s" );
     CVAR_SET_STRING( "amx_version" , buffer );
+	CVAR_SET_STRING( "amxmodx_version", buffer);
   }
-  else CVAR_SET_STRING( "amx_version" , AMX_VERSION );
+  else {
+    CVAR_SET_STRING( "amx_version", AMX_VERSION );
+	CVAR_SET_STRING( "amxmodx_version", AMX_VERSION );
+  }
 
   //  ######  Save log dir
   g_log_dir.set( get_localinfo("amx_logdir" , "addons/amx/logs" ) );
@@ -950,7 +956,9 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
   memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
   gpGamedllFuncs=pGamedllFuncs;
   CVAR_REGISTER (&init_amx_version);
+  CVAR_REGISTER (&init_amxmodx_version);
   amx_version = CVAR_GET_POINTER(init_amx_version.name  );
+  amxmodx_version = CVAR_GET_POINTER(init_amxmodx_version.name);
   REG_SVR_COMMAND("amx",amx_command);
 
   char gameDir[512];

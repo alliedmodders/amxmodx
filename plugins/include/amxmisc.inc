@@ -88,6 +88,8 @@ stock show_activity( id, const name[], {Float,_}: ... ) {
 stock is_running(const arg[]) {
   new mod_name[32]
   get_modname(mod_name,31)
+  if (equal(arg,"cstrike"))
+    return (equal(mod_name,"cstrike")||equal(mod_name,"czero"))
   return equal(mod_name,arg)
 }
 

@@ -252,6 +252,18 @@ void UTIL_ClientPrint( edict_t *pEntity, int msg_dest,  char *msg )
 //  4) unsets the global "fake" flag
 void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1, const char *arg2)
 {
+	if (!cmd) 
+		return;                              // no command 
+ 
+	char clCmd[256]; 
+	snprintf(g_fakecmd.args, 255, "%s%s%s%s%s", cmd, 
+		arg1 ? " " : "", arg1 ? arg1 : "",  
+		arg2 ? " " : "", arg2 ? arg2 : ""); 
+	clCmd[255] = 0; 
+	CLIENT_COMMAND(pEdict, clCmd); 
+	return; 
+#if 0
+	/*
 	if (!cmd)
 		return;						// no command
 
@@ -295,4 +307,6 @@ void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1, 
 	MDLL_ClientCommand(pEdict);
 	// unset the global "fake" flag
 	g_fakecmd.fake = false;
+	*/
+#endif 
 }

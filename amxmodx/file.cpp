@@ -269,7 +269,8 @@ static cell AMX_NATIVE_CALL file_size(AMX *amx, cell *params) /* 1 param */
 // Important update - now uses new handles
 static cell AMX_NATIVE_CALL amx_fopen(AMX *amx, cell *params)
 {
-	int len, i, j=-1;
+	unsigned int i;
+	int len, j=-1;
 	char *file = build_pathname("%s", get_amxstring(amx, params[1], 1, len));
 	char *flags = get_amxstring(amx, params[2], 0, len);
 	FILE *fp = fopen(file, flags);

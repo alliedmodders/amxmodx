@@ -22,21 +22,21 @@ stock get_build(classname[], value, number=0,{Float,Sql,Result,_}:...)
 	return ns_get_build(classname, value, number)
 
 stock get_private_i(index, offset, linuxdiff=5)
-	return get_offset_int(index, offset, linuxdiff)
+	return get_pdata_int(index, offset, linuxdiff)
 
 stock set_private_i(index, offset, value, linuxdiff=5)
 {
-	return set_private_i(index, offset, value, linuxdiff)
+	return set_pdata_int(index, offset, value, linuxdiff)
 }
 
 stock Float:get_private_f(index, offset, linuxdiff=5)
 {
-	return get_private_f(index, offset, linuxdiff)
+	return get_pdata_float(index, offset, linuxdiff)
 }
 
 stock Float:set_private_f(index, offset, Float:value, linuxdiff=5)
 {
-	return set_private_f(index, offset, value, linuxdiff)
+	return set_pdata_float(index, offset, value, linuxdiff)
 }
 
 stock make_string(value[])
@@ -52,7 +52,7 @@ stock string(value, ret[])
 stock gpgobals_time()
 	return halflife_time()
 
-stock get_range(ida, idb)
+stock Float:get_range(ida, idb)
 	return entity_range(ida, idb)
 
 stock supercede()

@@ -2181,10 +2181,20 @@ static cell AMX_NATIVE_CALL get_module(AMX *amx, cell *params)
 		return -1;						// not found
 
 	// set name, author, version
-	module_info_s *info = (*moduleIter).getInfo();
-	set_amxstring(amx, params[2], info->name, params[3]);
-	set_amxstring(amx, params[4], info->author, params[5]);
-	set_amxstring(amx, params[6], info->version, params[7]);
+	if ((*moduleIter).isAmxx())
+	{
+		const amxx_module_info_s *info = (*moduleIter).getInfoNew();
+		set_amxstring(amx, params[2], info->name, params[3]);
+		set_amxstring(amx, params[4], info->author, params[5]);
+		set_amxstring(amx, params[6], info->version, params[7]);
+	}
+	else
+	{
+		module_info_s *info = (*moduleIter).getInfo();
+		set_amxstring(amx, params[2], info->name, params[3]);
+		set_amxstring(amx, params[4], info->author, params[5]);
+		set_amxstring(amx, params[6], info->version, params[7]);
+	}
 
 	// compatibility problem possible
 	int numParams = params[0] / sizeof(cell);

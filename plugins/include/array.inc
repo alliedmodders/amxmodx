@@ -131,7 +131,7 @@ native list_push_int(list_id, value)
 native list_store_string(list_id, list_posn, value[])
 
 //Push a string to the end of the list
-native list_push_string(list_id, list_posn, value[])
+native list_push_string(list_id, value[])
 
 
 /* Functions to get data from lists */

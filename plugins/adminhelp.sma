@@ -88,6 +88,8 @@ public cmdHelp(id,level,cid) {
 
 #if defined DISPLAY_MSG
 public dispInfo(id) {
+  if (!is_user_connected(id))
+  	return
   client_print(id,print_chat,"%L",id,"TYPE_HELP")
   new nextmap[32]
   get_cvar_string("amx_nextmap",nextmap,31)

@@ -48,6 +48,7 @@ static cell AMX_NATIVE_CALL regex_match(AMX *amx, cell *params)
 		x->Clear();
 		return -2;
 	} else if (e == 0) {
+		cell *res = MF_GetAmxAddr(amx, params[3]);
 		*res = 0;
 		x->Clear();
 		return 0;

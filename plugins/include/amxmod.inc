@@ -15,9 +15,6 @@
 #include <engine>
 #include <fun>
 
-stock set_user_hitzones(index=0,target=0,body=255)
-  return set_hitzones(body)
-
 stock get_user_hitzones(index,target)
   return get_hitzones()
   

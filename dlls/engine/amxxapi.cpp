@@ -22,6 +22,27 @@ void EngineError(AMX *amx, char *fmt, ...)
 	MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 }
 
+void OnAmxxDetach()
+{
+	register unsigned int i = 0;
+	for (i=0; i<256; i++) {
+		msgHooks[i].clear();
+		msgBlocks[i] = 0;
+	}
+	for (i=0; i<Msg.size(); i++)
+		delete Msg[i];
+	for (i=0; i<Touches.size(); i++)
+		delete Touches[i];
+	for (i=0; i<Impulses.size(); i++)
+		delete Impulses[i];
+	for (i=0; i<Thinks.size(); i++)
+		delete Thinks[i];
+	Msg.clear();
+	Touches.clear();
+	Impulses.clear();
+	Thinks.clear();
+}
+
 void OnAmxxAttach()
 {
 	pfnTouchForward = 0;
@@ -193,16 +214,6 @@ void ServerDeactivate()
 	memset(glinfo.szRealLights, 0x0, 128);
 	glinfo.bLights = false;
 	glinfo.fNextLights = 0;
-	Msg.clear();
-	register int i = 0;
-	for (i=0; i<256; i++) {
-		msgHooks[i].clear();
-		msgBlocks[i] = 0;
-	}
-
-	Touches.clear();
-	Impulses.clear();
-	Thinks.clear();
 	
 	// Reset all forwarding function tables (so that forwards won't be called before plugins are initialized)
 	g_pFunctionTable->pfnAddToFullPack=NULL;

@@ -825,7 +825,7 @@ int ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress,
 	// Reset stuff:
 	FUNUTIL_ResetPlayer(ENTINDEX(pPlayer));
 
-	return 1;
+	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
 DLL_FUNCTIONS gFunctionTable; /* = {
@@ -890,6 +890,7 @@ DLL_FUNCTIONS gFunctionTable; /* = {
 	NULL,					// pfnInconsistentFile
 	NULL,					// pfnAllowLagCompensation
 };*/
+
 C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion)
 {
 	gFunctionTable.pfnClientConnect = ClientConnect;
@@ -912,62 +913,6 @@ C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersi
 }
 
 /******************************************************************************************/
-
-/*
-void MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed) {
-	if (msg_type == GET_USER_MSG_ID(PLID, "ResetHUD", NULL)) {
-		g_ResetHUDbool = true;
-		g_edict = ed;
-	}
-	else
-		g_ResetHUDbool = false;
-
-	RETURN_META(MRES_IGNORED);
-}
-void MessageEnd_Post(void) {
-	if (g_ResetHUDbool) {
-		int index = ENTINDEX(g_edict);
-		memset(g_bodyhits[index], 0xFF, sizeof(char)*33);
-		g_ResetHUDbool = false;
-	}
-	RETURN_META(MRES_IGNORED);
-}
-
-enginefuncs_t meta_engfuncs_post;
-C_DLLEXPORT int GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion ) {
-	meta_engfuncs_post.pfnMessageBegin = MessageBegin_Post;
-	meta_engfuncs_post.pfnMessageEnd = MessageEnd_Post;
-
-	if (*interfaceVersion!=ENGINE_INTERFACE_VERSION) {
-		LOG_ERROR(PLID, "GetEngineFunctions_Post version mismatch; requested=%d ours=%d", *interfaceVersion, ENGINE_INTERFACE_VERSION);
-		*interfaceVersion = ENGINE_INTERFACE_VERSION;
-		return(FALSE);
-	}
-
-	memcpy(pengfuncsFromEngine, &meta_engfuncs_post, sizeof(enginefuncs_t));
-
-	return(TRUE);
-}
-*/
-
-/******************************************************************************************/
-
-/*void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr)
-{
-	if (g_body == 255) {
-		RETURN_META(MRES_IGNORED);
-	}
-	else {
-		TRACE_LINE(v1, v2, fNoMonsters, pentToSkip, ptr);
-
-		if ( !(g_body & (1 << ptr->iHitgroup)) )
-			ptr->flFraction = 1.0;
-
-		// pentToSkip seems to be the user that is aiming (shooting), so it doesn't accidentally hit himself?
-
-		RETURN_META(MRES_SUPERCEDE);
-	}
-}*/
 
 void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *e, TraceResult *ptr) {
 	TRACE_LINE(v1, v2, fNoMonsters, e, ptr);

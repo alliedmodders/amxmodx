@@ -59,7 +59,6 @@ public plugin_init() {
   register_concmd("amx_modules","cmdModules",ADMIN_ADMIN)
   register_concmd("amx_map","cmdMap",ADMIN_MAP,"<mapname>")
   register_concmd("amx_cfg","cmdCfg",ADMIN_CFG,"<fliename>")
-  register_concmd("amx_clexec","cmdClExec",ADMIN_RCON,"<name or #userid> <command>")
   register_concmd("amx_nick","cmdNick",ADMIN_SLAY,"<name or #userid> <new nick>")
   register_clcmd("amx_rcon","cmdRcon",ADMIN_RCON,"<command line>")
   register_clcmd("pauseAck","cmdLBack")
@@ -600,42 +599,6 @@ public cmdLeave(id,level,cid) {
     case 1: client_print(0,print_chat,"ADMIN: leave %s %s %s %s",ltags[0],ltags[1],ltags[2],ltags[3])
   } 
     
-  return PLUGIN_HANDLED
-}
-
-public cmdClExec(id,level,cid) {
-  if (!cmd_access(id,level,cid,3))
-    return PLUGIN_HANDLED
-
-  new arg0[32],arg1[32],command[128],authid[32],name[32],authid2[32],name2[32]
-
-  read_argv(0,arg0,31)
-  read_argv(1,arg1,31)
-  read_args(command,127)
-  replace(command,127,arg0,"")
-  replace(command,127,arg1,"")
-  trim(command)
-
-  new player = cmd_target(id,arg1,1)
-  if (!player) return PLUGIN_HANDLED
-
-  client_cmd(player,command)
-
-  get_user_authid(id,authid,31)
-  get_user_name(id,name,31)
-  get_user_authid(player,authid2,31)
-  get_user_name(player,name2,31)
-
-  log_amx("Cmd: ^"%s<%d><%s><>^" execute ^"%s^" on ^"%s<%d><%s><>^"",
-    name,get_user_userid(id),authid,command,name2,get_user_userid(player),authid2 )
-    
-  switch (get_cvar_num("amx_show_activity")) {
-    case 2: client_print(0,print_chat,"ADMIN %s: execute a command on %s",name,name2)
-    case 1: client_print(0,print_chat,"ADMIN: execute a command on %s",name2)
-  }
-
-  console_print(id,"[AMXX] Executed ^"%s^" on %s",command,name2)  
-
   return PLUGIN_HANDLED
 }
 

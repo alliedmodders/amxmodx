@@ -12,7 +12,19 @@
 #define _amxmisc_included
 
 stock cmd_access(id,level,cid,num) {
-  if ( ((get_user_flags(id)&level)!=level) && (id!=(is_dedicated_server()?0:1)) ) {
+  new has_access = 0
+  if ( id==(is_dedicated_server()?0:1) ) {
+    has_access = 1
+  }
+  else if ( level==ADMIN_ADMIN ) {
+    if ( is_user_admin(id) )
+      has_access = 1
+  }
+  else if ( get_user_flags(id) & level ) {
+    has_access = 1
+  }
+
+  if ( has_access==0 ) {
     console_print(id,"You have no access to that command")
     return 0
   }
@@ -25,8 +37,16 @@ stock cmd_access(id,level,cid,num) {
   return 1
 }
 
-stock access(id,level)
-  return (get_user_flags(id) & level)
+stock access(id,level) {
+  if ( level==ADMIN_ADMIN )
+    return is_user_admin(id)
+  else
+    return (get_user_flags(id) & level)
+}
+
+stock is_user_admin(id) {
+  return ( get_user_flags(id)>0 && !(get_user_flags(id)&ADMIN_USER) )
+}
 
 /* Flags:
 *  1 - obey immunity
@@ -106,17 +126,3 @@ stock get_datadir(name[],len)
 * don't use it! */
 stock get_customdir(name[],len)
   return get_localinfo("amxx_configsdir",name,len)
-
-#if defined NO_STEAM
-stock get_user_wonid(index)
-{
-  new authid[32]
-  get_user_authid(index,authid,31)
-  return str_to_num(authid)
-}
-#endif
-
-stock is_user_admin(userid)
-{
-  return (get_user_flags(id) & ADMIN_ADMIN)
-}

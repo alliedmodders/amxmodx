@@ -325,7 +325,7 @@ static cell AMX_NATIVE_CALL set_speak(AMX *amx, cell *params) {
 	int iIndex = params[1];
 	int iNewSpeakFlags = params[2];
 
-	if (iIndex> 32 || !is_ent_valid(iIndex)) {
+	if (iIndex> gpGlobals->maxClients || !is_ent_valid(iIndex)) {
 		EngineError(amx, "Invalid player %d", iIndex);
 		return 0;
 	}
@@ -338,7 +338,7 @@ static cell AMX_NATIVE_CALL set_speak(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL get_speak(AMX *amx, cell *params) {
 	int iIndex = params[1];
 
-	if (!is_ent_valid(iIndex) || iIndex > 32) {
+	if (!is_ent_valid(iIndex) || iIndex > gpGlobals->maxClients) {
 		EngineError(amx, "Invalid player %d", iIndex);
 		return 0;
 	}
@@ -409,7 +409,7 @@ static cell AMX_NATIVE_CALL attach_view(AMX *amx, cell *params)
 	int iIndex = params[1];
 	int iTargetIndex = params[2];
 
-	if (iIndex > 32 || !is_ent_valid(iIndex)) {
+	if (iIndex > gpGlobals->maxClients || !is_ent_valid(iIndex)) {
 		EngineError(amx, "Invalid player %d", iIndex);
 		return 0;
 	}
@@ -431,7 +431,7 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 	int iIndex = params[1];
 	int iCameraType = params[2];
 
-	if (iIndex > 32 || !is_ent_valid(iIndex)) {
+	if (iIndex > gpGlobals->maxClients || !is_ent_valid(iIndex)) {
 		EngineError(amx, "Invalid player %d", iIndex);
 		return 0;
 	}

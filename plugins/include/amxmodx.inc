@@ -16,8 +16,13 @@
 #include <amxconst>
 #include <string>
 #include <file>
-#include <fun>
 #include <vault>
+/* default modules */
+#include <csstats>
+#include <cstrike>
+#include <engine>
+#include <fun>
+#include <mysql>
 
 /* Function is called just after server activation.
 * Good place for configuration loading, commands and cvars registration. */
@@ -191,9 +196,6 @@ native Float:get_user_aiming(index,&id,&body,dist=9999);
 /* Returns player frags. */
 native get_user_frags(index);
 
-/* Returns player deaths. */
-native get_user_deaths(index);
-
 /* Returns player armor. */
 native get_user_armor(index);
 
@@ -260,6 +262,14 @@ native user_slap(index,power,rnddir=1);
 
 /* Kills player. When flag is set to 1 then death won't decrase frags. */
 native user_kill(index,flag=0);
+
+/* Logs something into the current amx logfile
+* Parameters:
+*  string[] - format string
+*  ...      - optional parameters
+* Return value:
+*  always 0 */
+native log_amx(const string[], {Float,_}:...);
 
 /* Sends message to standard HL logs. */
 native log_message(const message[],{Float,_}:...);
@@ -487,7 +497,6 @@ native random_num(a,b);
 * Example: get_user_msgid("TextMsg"). */
 native get_user_msgid(const name[]);
 
-/******************** XVARS ********************/
 /* Checks if public variable with given name exists in loaded plugins. */
 native xvar_exists( const name[] );
 
@@ -511,21 +520,9 @@ native set_xvar_num( id, value = 0 );
 * returned by get_xvar_id(...) native. */
 native set_xvar_float( id, Float:value = 0.0 );
 
-/******************** PLUGIN / MODULE SUPPORT ********************/
 /* Checks whether a module is loaded. If it is not, the return value is 0, otherwise
 * the return value is non-zero. The function is case insensitive. */
 native is_module_loaded(const name[]);
-
-/* Checks whether a plugin is loaded. If it is not, the return value is 0, otherwise
-* the return value is non-zero. The function is case insensitive. */
-native is_plugin_loaded(const name[]);
-
-/* Gets info about plugin by given index.
-* Function returns -1 if plugin doesn't exist with given index. */
-native get_plugin(index,filename[],len1,name[],len2,version[],len3,author[],len4,status[],len5);
-
-/* Returns number of all loaded plugins. */
-native get_pluginsnum();
 
 /* Gets info about a module.
 * Parameters:
@@ -543,6 +540,17 @@ native get_module(id, name[], nameLen, author[], authorLen, version[], versionLe
 
 /* Returns number of currently registered modules */
 native get_modulesnum();
+
+/* Checks whether a plugin is loaded. If it is not, the return value is 0, otherwise
+* the return value is non-zero. The function is case insensitive. */
+native is_plugin_loaded(const name[]);
+
+/* Gets info about plugin by given index.
+* Function returns -1 if plugin doesn't exist with given index. */
+native get_plugin(index,filename[],len1,name[],len2,version[],len3,author[],len4,status[],len5);
+
+/* Returns number of all loaded plugins. */
+native get_pluginsnum();
 
 /* Pauses function or plugin so it won't be executed.
 * In most cases param1 is name of function and
@@ -565,7 +573,6 @@ native pause(flag[], const param1[]="",const param2[]="");
 * "c" - look outside the plugin (by given plugin name). */
 native unpause(flag[], const param1[]="",const param2[]="");
 
-/********************  CALLFUNC ********************/
 /* Call a function in this / an another plugin by name.
 * Parameters:
 *  plugin - plugin name; if "", the caller plugin is used.
@@ -578,10 +585,6 @@ native unpause(flag[], const param1[]="",const param2[]="");
 *  -2     - Function not found */
 native callfunc_begin(const plugin[]="", const func[]);
 
-/* Make the actual call.
-* Return value of the function called. */
-native callfunc_end();
-
 /* Push a parameter (integer, string, float) */
 native callfunc_push_int(value);
 native callfunc_push_str(value[]);
@@ -589,14 +592,9 @@ native callfunc_push_float(Float: value);
 native callfunc_push_intrf(&value);
 //native callfunc_push_floatrf(Float&: value);
 
-/******************** UTILS / OTHERS ********************/
-/* Logs something into the current amx logfile
-* Parameters:
-*  string[] - format string
-*  ...      - optional parameters
-* Return value:
-*  always 0 */
-native log_amx(const string[], {Float,_}:...);
+/* Make the actual call.
+* Return value of the function called. */
+native callfunc_end();
 
 /* Called on inconsistent file. You can put any text
 * into reason to change an original message. */
@@ -605,3 +603,21 @@ forward inconsistent_file(id,const filename[], reason[64] );
 /* Forces the client and server to be running with the same
 * version of the specified file ( e.g., a player model ). */
 native force_unmodified(force_type, mins[3] , maxs[3], const filename[]);
+
+/* backwards compatibility */
+stock get_user_deaths(index)
+  return cs_get_user_deaths(index)
+
+/* backwards compatibility */
+stock set_user_deaths(index,newdeaths)
+  return cs_set_user_deaths(index,newdeaths)
+
+/* backwards compatibility */
+stock get_user_money(index)
+  return cs_get_user_money(index)
+
+/* backwards compatibility */
+stock set_user_money(index,money,flash=1)
+  return cs_set_user_money(index,money,flash)
+
+#include <amxmisc>

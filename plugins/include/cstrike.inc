@@ -40,12 +40,6 @@ native cs_get_user_backpackammo(index, weapon);
 /* Restock/remove ammo in a user's backpack. */
 native cs_set_user_backpackammo(index, weapon, amount);
 
-/* Returns player deaths. */
-native cs_get_user_deaths(index);
-
-/* Sets deaths. (Doesn't update scoreboard right away? fix later?) */
-native cs_set_user_deaths(index, newdeaths);
-
 /* Returns 1 if user has a defuse kit. */
 native cs_get_user_defusekit(index);
 

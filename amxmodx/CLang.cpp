@@ -611,8 +611,6 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 								while (tmpPtr-tmpString < sizeof(tmpString) && *tmpCell)
 									*tmpPtr++ = *tmpCell++;
 
-								ZEROTERM(tmpString);
-
 								*tmpPtr = 0;
 								sprintf(outptr, format, tmpString);
 								ZEROTERM(outbuf);
@@ -687,9 +685,9 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 				{
 					while (*src != 0 && ptr-format<sizeof(format) && !isalpha(*ptr++ = *src++))
 						/*nothing*/;
+					*ptr = 0;
 					ZEROTERM(format);
 					--src;
-					*ptr = 0;
 					switch ( *(ptr-1) )
 					{
 					case 's':

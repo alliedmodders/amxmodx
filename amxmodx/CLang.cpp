@@ -350,7 +350,7 @@ void CLangMngr::CLang::MergeDefinitions(CQueue<sKeyDef*> &vec)
 				entry->SetKey(key);
 				entry->SetCache(false);
 			} else {
-				AMXXLOG_Log("[AMXX] Language key %s[%s] defined twice", m_LMan->GetKey(key), m_LanguageName);
+				//AMXXLOG_Log("[AMXX] Language key %s[%s] defined twice", m_LMan->GetKey(key), m_LanguageName);
 			}
 		}
 		delete vec.front();
@@ -785,7 +785,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 				char format[16];
 				format[0] = '%';
 				char *ptr = format+1;
-				if (*src != '%')
+				if (*src == 's' || *src == 'd' || *src == 'f' || *src == 'i' || *src == 'g')
 				{
 					while (*src != 0 && !isalpha(*ptr++ = *src++))
 						/*nothing*/;

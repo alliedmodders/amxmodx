@@ -32,8 +32,8 @@
 *  version.
 */
 
-// comment for non-mysql version
-#define USING_SQL
+// Uncomment for SQL version
+//#define USING_SQL
 
 #include <amxmodx>
 #include <amxmisc>

@@ -484,7 +484,6 @@ const char *CLangMngr::Format(const char *src, ...)
 	};
 
 	State curState = S_Normal;
-
 	while (*src)
 	{
 		if (*src == '%' && curState == S_Normal)
@@ -500,36 +499,44 @@ const char *CLangMngr::Format(const char *src, ...)
 						*outptr++ = *tmpArg++;
 					break;
 				}
-			case 'd':
-				{
-					itoa(va_arg(argptr, int), outptr, 10);
-					outptr += strlen(outptr);
-					break;
-				}
 			case 'f':
 			case 'g':
 				{
-					double tmpArg = va_arg(argptr, double);
-					sprintf(outptr, "%f", tmpArg);
+					char format[16];
+					format[0] = '%';
+					char *ptr = format+1;
+					while (!isalpha(*ptr++ = *src++))
+						/*nothing*/;
+					--src;
+					*ptr = 0;
+					sprintf(outptr, format, va_arg(argptr, double));
 					outptr += strlen(outptr);
 					break;
 				}
 			case 'L':
 				{
 					char *langName = va_arg(argptr, char*);
-					// Handle player ids (1-32)
-					if ((int)langName >= 1 && (int)langName <= 32)
-						langName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I((int)langName)->pEdict, "_language");
-
+					const char *cpLangName=NULL;
+					// Handle player ids (1-32) and server language
+					if ((int)langName == 0)
+						langName = (char*)m_CurGlobId;
+					if ((int)langName == -1)
+						cpLangName = g_vault.get("server_language");
+					else if ((int)langName >= 1 && (int)langName <= 32)
+						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I((int)langName)->pEdict, "_language");
+					else
+					{
+						cpLangName = langName;
+					}
 					char *key = va_arg(argptr, char*);
-					const char *def = GetDef(langName, key);
+					const char *def = GetDef(cpLangName, key);
 					while (*def)
 					{
 						switch (*def)
 						{
 						case INSERT_NUMBER:
 							{
-								itoa(va_arg(argptr, int), outptr, 10);
+								sprintf(outptr, "%d", va_arg(argptr, int));
 								outptr += strlen(outptr);
 								break;
 							}
@@ -554,12 +561,24 @@ const char *CLangMngr::Format(const char *src, ...)
 						default:
 							*outptr++ = *def;
 						}
-						++def;
 					}
 					break;
 				}
+			case 'd':
+				{
+					char format[16];
+					format[0] = '%';
+					char *ptr = format+1;
+					while (!isalpha(*ptr++ = *src++))
+						/*nothing*/;
+					--src;
+					*ptr = 0;
+					sprintf(outptr, format, va_arg(argptr, int));
+					outptr += strlen(outptr);
+					break;
+				}
 			default:
-				*outptr++= '%';
+				*outptr++ = '%';
 				*outptr++ = *src;
 			}
 			curState = S_Normal;
@@ -623,7 +642,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 						*pLangName = m_CurGlobId;
 					if (*pLangName == -1)
 						cpLangName = g_vault.get("server_language");
-					else if (*pLangName > 1 && *pLangName < 32)
+					else if (*pLangName >= 1 && *pLangName <= 32)
 						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(*pLangName)->pEdict, "_language");
 					else
 					{
@@ -639,7 +658,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 						{
 						case INSERT_NUMBER:
 							{
-								itoa((float)*(REAL*)get_amxaddr(amx, params[parm++]), outptr, 10);
+								sprintf(outptr, "%d", *get_amxaddr(amx, params[parm++]));
 								outptr += strlen(outptr);
 								break;
 							}

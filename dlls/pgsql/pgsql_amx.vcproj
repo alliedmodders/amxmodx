@@ -43,7 +43,7 @@
 				OutputFile=".\Release/pgsql_amxx.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				IgnoreDefaultLibraryNames="LIBCMT, LIBC"
+				IgnoreDefaultLibraryNames=""
 				ModuleDefinitionFile=""
 				ProgramDatabaseFile=".\Release/pgsql.pdb"
 				ImportLibrary=".\Release/pgsql.lib"

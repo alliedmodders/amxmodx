@@ -397,16 +397,10 @@ static cell AMX_NATIVE_CALL set_user_origin(AMX *amx, cell *params) // set_user_
 		return 0;
 	}
 
-	cell *newVectorCell = GET_AMXADDR(amx, params[3]);
-
-	float newX = *(float *)((void *)&newVectorCell[0]); // JGHG: I cast a spell on you.....
-	float newY = *(float *)((void *)&newVectorCell[1]);
-	float newZ = *(float *)((void *)&newVectorCell[2]);
-
-	Vector newVector = Vector(newX, newY, newZ);
+	cell *newVectorCell = GET_AMXADDR(amx, params[2]);
 
 	SET_SIZE(pPlayer, pPlayer->v.mins, pPlayer->v.maxs);
-	SET_ORIGIN(pPlayer, newVector);
+	SET_ORIGIN(pPlayer, Vector((float)newVectorCell[0], (float)newVectorCell[1], (float)newVectorCell[2]));
 	
 	return 1;
 }

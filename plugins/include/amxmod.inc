@@ -14,7 +14,6 @@
 #include <amxconst>
 #include <string>
 #include <file>
-#include <fun>
 #include <vault>
 
 /* Function is called just after server activation.

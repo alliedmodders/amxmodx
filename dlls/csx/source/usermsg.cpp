@@ -59,10 +59,11 @@ void Client_Damage(void* mValue){
     bits = *(int*)mValue;
     break;
   case 3:
-	  if (!mPlayer || !damage || !*(float*)mValue || bits)  {
+	  if (!mPlayer || !damage || bits){
 	    ignore = true;
 		break;
 	  }
+
     edict_t *enemy;
 	enemy = mPlayer->pEdict->v.dmg_inflictor;
     

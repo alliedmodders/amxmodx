@@ -450,6 +450,59 @@ void C_ServerDeactivate_Post() {
   g_xvars.clear();
   g_plugins.clear();
 
+  // last memreport
+#ifdef MEMORY_TEST
+	if (g_memreport_enabled)
+	{
+		if (g_memreport_count == 0)
+		{
+			// make new directory
+			time_t td;
+			time(&td);
+			tm *curTime = localtime(&td);
+			int i = 0;
+#ifdef __linux__
+			mkdir(build_pathname("%s/memreports", get_localinfo("amxx_basedir", "addons/amxx")), 0700);
+#else
+			mkdir(build_pathname("%s/memreports", get_localinfo("amxx_basedir", "addons/amxx")));
+#endif
+			while (true)
+			{
+				char buffer[256];
+				sprintf(buffer, "%s/memreports/D%02d%02d%03d", get_localinfo("amxx_basedir", "addons/amxx"), curTime->tm_mon + 1, curTime->tm_mday, i);
+#ifdef __linux__
+				mkdir(build_pathname("%s", g_log_dir.str()), 0700);
+				if (mkdir(build_pathname(buffer), 0700) < 0)
+#else
+				mkdir(build_pathname("%s", g_log_dir.str()));
+				if (mkdir(build_pathname(buffer)) < 0)
+#endif
+				{
+					if (errno == EEXIST)
+					{
+						// good
+						++i;
+						continue;
+					}
+					else
+					{
+						// bad
+						g_memreport_enabled = false;
+						AMXXLOG_Log("[AMXX] Fatal error: Can't create directory for memreport files (%s)", buffer);
+						break;
+					}
+				}
+				g_memreport_dir.set(buffer);
+				// g_memreport_dir should be valid now
+				break;
+			}
+		}
+		m_dumpMemoryReport(build_pathname("%s/r%03d", g_memreport_dir.str(), g_memreport_count));
+		AMXXLOG_Log("Memreport #%d created (file \"%s/r%03d\") (interval %f)", g_memreport_count + 1, g_memreport_dir.str(), g_memreport_count, MEMREPORT_INTERVAL);
+		g_memreport_count++;
+	}
+#endif // MEMORY_TEST
+
   g_log_dir.clear();
   AMXXLOG_Log("Log file	closed.");
 
@@ -873,7 +926,7 @@ const char *C_Cmd_Args( void )
 {
 	// if the global "fake" flag is set, which means that engclient_cmd was used, supercede the function
 	if (g_fakecmd.fake)
-		RETURN_META_VALUE(MRES_SUPERCEDE, (g_fakecmd.argc > 1) ? g_fakecmd.args : NULL);
+		RETURN_META_VALUE(MRES_SUPERCEDE, (g_fakecmd.argc > 1) ? g_fakecmd.args : g_fakecmd.argv[0]);
 	// otherwise ignore it
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 }

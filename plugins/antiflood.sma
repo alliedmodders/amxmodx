@@ -34,7 +34,8 @@
 
 #include <amxmodx>
 
-new Float:g_Flooding[33]
+new Float:g_Flooding[33] = {0, ...}
+new g_Flood[33] = {0, ...}
 
 public plugin_init()
 {
@@ -54,9 +55,16 @@ public chkFlood(id)
 
     if ( g_Flooding[id] > nexTime )   
     {
-      client_print( id , print_notify , "** Stop flooding the server!" )
-      g_Flooding[ id ] = nexTime + maxChat + 3.0
-      return PLUGIN_HANDLED
+	  if (g_Flood[id] >= 3)
+	  {
+        client_print( id , print_notify , "** Stop flooding the server!" )
+        g_Flooding[ id ] = nexTime + maxChat + 3.0
+        return PLUGIN_HANDLED
+      }
+	  g_Flood[id]++
+    } else {
+	  if (g_Flood[id])
+	    g_Flood[id]--
     }
 
     g_Flooding[id] = nexTime + maxChat

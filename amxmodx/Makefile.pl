@@ -16,6 +16,8 @@
 $PROJECT = "amxmodx_mm";
 $sdk = "../hlsdk/SourceCode";
 $mm = "../metamod/metamod";
+$gccf = "gcc";
+$ccf = "cc";
 
 @CPP_SOURCE_FILES = ("meta_api.cpp", "CFile.cpp", "CVault.cpp", "vault.cpp", "float.cpp", "file.cpp", "modules.cpp", "CMisc.cpp", "CTask.cpp", "string.cpp", "amxmodx.cpp", "CEvent.cpp", "CCmd.cpp", "CLogEvent.cpp", "srvcmd.cpp", "strptime.cpp", "amxcore.cpp", "amxtime.cpp", "power.cpp", "amxxlog.cpp", "fakemeta.cpp", "MMGR/MMGR.cpp", "amxxfile.cpp", "CLang.cpp", "md5.cpp", "emsg.cpp", "CForward.cpp", "CPlugin.cpp", "CModule.cpp", "CMenu.cpp", "util.cpp");
 
@@ -59,7 +61,7 @@ while ($cmd = shift)
 	}
 }
 
-$gcc = `gcc --version`;
+$gcc = `$gccf --version`;
 if ($gcc =~ /2\.9/)
 {
 	`ln -s amx.cpp amx.c`;
@@ -100,7 +102,7 @@ if ($OPTIONS{"amd64"})
 
 if ($OPTIONS{"jit"})
 {
-	$cflags .= "-DJIT";
+	$cflags .= " -DJIT";
 }
 
 if ($OPTIONS{"debug"})
@@ -180,7 +182,7 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	$ofile = $file;
 	$ofile =~ s/\.cpp/\.o/;
 	$ofile = "$outdir/$ofile";
-	$gcc = "gcc $cflags -Dstrcmpi=strcasecmp -fPIC $inc -c $file -o $ofile";
+	$gcc = "$gccf $cflags -Dstrcmpi=strcasecmp -fPIC $inc -c $file -o $ofile";
 	if (-e $ofile)
 	{
 		$file_time = (stat($file))[9];
@@ -202,7 +204,7 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	$ofile = $file;
 	$ofile =~ s/\.c/\.o/;
 	$ofile = "$outdir/$ofile";
-	$gcc = "cc $cflags -Dstrcmpi=strcasecmp -fPIC $inc -c $file -o $ofile";
+	$gcc = "$ccf $cflags -Dstrcmpi=strcasecmp -fPIC $inc -c $file -o $ofile";
 	if (-e $ofile)
 	{
 		$file_time = (stat($file))[9];
@@ -218,6 +220,6 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	}
 }
 
-$gcc = "gcc $cflags -Lzlib/ -shared -ldl -lm @LINK -lz -o $outdir/$bin";
+$gcc = "$gccf $cflags -Lzlib/ -shared -ldl -lm @LINK -lz -o $outdir/$bin";
 print "$gcc\n";
 `$gcc`;

@@ -477,9 +477,14 @@ int AMXAPI amx_Debug(AMX *amx)
 }
 
 #if defined JIT
+#if _cplusplus
   extern "C" int AMXAPI getMaxCodeSize(void);
   extern "C" int AMXAPI asm_runJIT(void *sourceAMXbase, void *jumparray, void *compiledAMXbase);
-#endif
+#else
+  int AMXAPI getMaxCodeSize(void);
+  int AMXAPI asm_runJIT(void *sourceAMXbase, void *jumparray, void *compiledAMXbase);
+#endif //_cplusplus
+#endif //JIT
 
 #if SMALL_CELL_SIZE==16
   #define JUMPABS(base,ip)      ((cell *)(base+*ip))

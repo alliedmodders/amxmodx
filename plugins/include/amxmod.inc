@@ -15,10 +15,6 @@
 #include <engine>
 #include <fun>
 
-native numtostr(num,string[],len)
-
-native strtonum(const string[])
-
 stock set_user_hitzones(index=0,target=0,body=255)
   return set_hitzones(body)
   

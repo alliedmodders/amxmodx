@@ -229,7 +229,7 @@ int Spawn( edict_t *pent ) {
   Vault amx_config;
   // ###### Load custom path configuration
   amx_config.setSource( build_pathname("%s",
-    get_localinfo("amx_cfg" , "addons/amxx/config/core.ini")) );
+    get_localinfo("amxx_cfg" , "addons/amxx/config/core.ini")) );
 
   if ( amx_config.loadVault() ){
     Vault::iterator a = amx_config.begin();
@@ -241,10 +241,10 @@ int Spawn( edict_t *pent ) {
   }
 
   //  ###### Make sure basedir is set
-  get_localinfo("amx_basedir" , "addons/amxx" );
+  get_localinfo("amxx_basedir" , "addons/amxx" );
 
   //  ###### Load modules
-  int loaded = loadModules( get_localinfo("amx_modules" , "addons/amxx/config/modules.ini" ) );
+  int loaded = loadModules( get_localinfo("amxx_modules" , "addons/amxx/config/modules.ini" ) );
   attachModules();
   // Set some info about amx version and modules
   if ( loaded ){
@@ -261,7 +261,7 @@ int Spawn( edict_t *pent ) {
 
   //  ######  Load Vault
   g_vault.setSource( build_pathname("%s",
-    get_localinfo("amx_vault" , "addons/amxx/config/vault.ini" ) ) );
+    get_localinfo("amxx_vault" , "addons/amxx/config/vault.ini" ) ) );
   g_vault.loadVault( );
 
 
@@ -276,7 +276,7 @@ int Spawn( edict_t *pent ) {
 
   //  ###### Load AMX scripts
   g_plugins.loadPluginsFromFile(
-    get_localinfo("amx_plugins" , "addons/amxx/config/plugins.ini" )  );
+    get_localinfo("amxx_plugins" , "addons/amxx/config/plugins.ini" )  );
 
   //  ###### Call precache forward function
   g_dontprecache = false;
@@ -974,7 +974,7 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
   g_mod_name.set(a);
 
   //  ###### Now attach metamod modules
-  attachMetaModModules( get_localinfo("amx_modules" ,
+  attachMetaModModules( get_localinfo("amxx_modules" ,
     "addons/amxx/config/modules.ini" ) );
 
   return(TRUE);
@@ -1004,7 +1004,7 @@ C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason) {
   dettachModules();
 
   //  ###### Now dettach metamod modules
-  dettachMetaModModules( get_localinfo("amx_modules" ,
+  dettachMetaModModules( get_localinfo("amxx_modules" ,
     "addons/amxx/config/modules.ini" ) );
 
   return(TRUE);

@@ -212,9 +212,13 @@ int Spawn( edict_t *pent ) {
   hostname = CVAR_GET_POINTER("hostname");
   mp_timelimit = CVAR_GET_POINTER("mp_timelimit");
 
-  // ###### Initialize logging
-  g_log_dir.set("addons/amxx/logs");			// :TODO: maybe not do this through String as an optimalization ( a #define or const char * ?)
-  UTIL_MakeNewLogFile();
+  // we need to initialize logging in Meta_Attach, but we have to create a new logfile each map,
+  // so we clear g_log_dir in ServerDeactivate_Post to know we should create one...
+  if (g_log_dir.empty())
+  {
+    g_log_dir.set("addons/amxx/logs");			// :TODO: maybe not do this through String as an optimalization ( a #define or const char * ?)
+    UTIL_MakeNewLogFile();
+  }
 
   // ###### Initialize task manager
   g_tasksMngr.registerTimers( &gpGlobals->time, &mp_timelimit->value,  &g_game_timeleft     );
@@ -240,7 +244,7 @@ int Spawn( edict_t *pent ) {
   }
 
   //  ###### Load modules
-  int loaded = loadModules( "addons/amxx/modules.ini" );
+  int loaded = loadModules( "addons/amxx/configs/modules.ini" );
   attachModules();
   // Set some info about amx version and modules
   if ( loaded ){
@@ -270,7 +274,7 @@ int Spawn( edict_t *pent ) {
   memset(g_players[0].flags,-1,sizeof(g_players[0].flags));
 
   //  ###### Load AMX scripts
-  g_plugins.loadPluginsFromFile( build_pathname("%s", "addons/amxx/plugins.ini" )  );
+  g_plugins.loadPluginsFromFile( "addons/amxx/configs/plugins.ini" );
 
   //  ###### Call precache forward function
   g_dontprecache = false;
@@ -434,6 +438,7 @@ void ServerDeactivate_Post() {
   g_xvars.clear();
   g_plugins.clear();
 
+  g_log_dir.clear();
   UTIL_Log("Log file closed.");
 
   RETURN_META(MRES_IGNORED);
@@ -967,8 +972,12 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
       a = &gameDir[i];
   g_mod_name.set(a);
 
+  // ###### Initialize logging here
+  g_log_dir.set("addons/amxx/logs");			// :TODO: maybe not do this through String as an optimalization ( a #define or const char * ?)
+  UTIL_MakeNewLogFile();
+
   //  ###### Now attach metamod modules
-  attachMetaModModules( "addons/amxx/modules.ini" );
+  attachMetaModModules( "addons/amxx/configs/modules.ini" );
 
   return(TRUE);
 }
@@ -997,7 +1006,7 @@ C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason) {
   dettachModules();
 
   //  ###### Now dettach metamod modules
-  dettachMetaModModules( "addons/amxx/modules.ini" );
+  dettachMetaModModules( "addons/amxx/configs/modules.ini" );
 
   return(TRUE);
 }

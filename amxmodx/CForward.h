@@ -92,13 +92,13 @@ class CForward
 		CPluginMngr::CPlugin *pPlugin;
 		int func;
 	};
-	typedef CVector<AMXForward*> AMXForwardList;
+	typedef CVector<AMXForward> AMXForwardList;
 	AMXForwardList m_Funcs;
 	ForwardParam m_ParamTypes[FORWARD_MAX_PARAMS];
 public:
 	CForward(const char *name, ForwardExecType et, int numParams, const ForwardParam * paramTypes);
 	CForward()
-	{ }			// leaves everything unitialized
+	{ }			// leaves everything unitialized'
 	cell execute(cell *params, ForwardPreparedArray *preparedArrays);
 	int getParamsNum() const
 	{

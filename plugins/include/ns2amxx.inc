@@ -15,11 +15,6 @@ native ns_get_ent(classname[],Value);
 /* Same as get_ent, but only returns fully built structures (if Value > 0) */
 native ns_get_build(classname[],Value,Number=0,NSVersion=NS_VERSION);
 
-/* Mirrors MAKE_STRING() */
-native ns_make_string(svValue[]);
-/* Mirrors STRING() */
-native ns_string(iValue,svReturnedValue[]);
-
 /* Get's spawn point for specified team (type). */
 native ns_get_spawn(type,number=0,Float:ret[3]);
 

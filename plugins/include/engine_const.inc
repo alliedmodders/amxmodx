@@ -459,6 +459,7 @@ enum {
 	EngFunc_SetKeyValue,	// void )			(char *infobuffer, char *key, char *value);
 	EngFunc_SetClientKeyValue	 // void )		(int clientIndex, char *infobuffer, char *key, char *value);
 };
+
 enum
 {
 	DLLFunc_GameInit,	// void)			( void );				

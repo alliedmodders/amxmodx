@@ -4,7 +4,7 @@
 #define __MODULECONFIG_H__
 
 // Module info
-#define MODULE_NAME "Counter-Strike"
+#define MODULE_NAME "CStrike"
 #define MODULE_VERSION "1.00"
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "http://www.amxmodx.org"

@@ -284,7 +284,7 @@ stock VelocityByAim(iIndex,iVelocity, Float:vRetValue[3]) {
 }
 /* Will return the contents of a point (inside map? in sky? outside map? etc.). */
 stock PointContents(Float:fCheckAt[3]) {
-  return point_contents(fCheckAt[3]);
+  return point_contents(fCheckAt);
 }
 
 stock set_size(index, Float:mins[3], Float:maxs[3]) {

@@ -8,6 +8,8 @@ STATS_CONF = Stats Configuration
 STATS_ENTRIES_OF = Entries %i - %i of %i
 STATS_USE_MORE = Use 'amx_statscfg list %i' for more
 STATS_USE_BEGIN = Use 'amx_statscfg list 1' for begin
+STATS_ENABLED = Stats enabled
+STATS_DISABLED = Stats disabled
 CANT_ADD_STATS = Can't add stats to the list, limit reached!
 COM_STATS_USAGE = Usage:  amx_statscfg <command> [parameters] ...
 COM_STATS_COM = Commands:
@@ -94,6 +96,8 @@ ON = ACIK
 OFF = KAPALI 
 NO_STATS = Statistik plugini^nserverde mevcud degildir^n 
 SAVE_CONF = Configleri sakla 
+STATS_ENABLED = Statistik kullanima acik 
+STATS_DISABLED = Stat´tistik kullanima kapali
 
 
 [fr]

@@ -203,6 +203,11 @@ DEFUSED_BOMB = La bombe vient d'etre desamorcee par %s , Ouffff!
 FAILED_DEFU = %s a echoue a sa tentative de desamorcage...
 PICKED_BOMB = %s ramasse la bombe...
 DROPPED_BOMB = %s jette la bombe!!!
+CT = CT 
+CTS = CTS 
+TERRORIST = TERRORISTE 
+TERRORISTS = TERRORISTES 
+REMAINING = %d %s Restant...
 
 [sv]
 WITH = med

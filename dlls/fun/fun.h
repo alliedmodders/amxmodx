@@ -108,5 +108,5 @@ cvar_t fun_version = {"fun_version", "0.1", FCVAR_EXTDLL};
 int g_zones_toHit[33];		// where can people hit other people?
 int g_zones_getHit[33];		// where can people get hit by other people?
 bool g_silent[33];			// used for set_user_footsteps()
-bool g_bot[33];				// is user bot?
+//bool g_bot[33];				// is user bot? <--- removed, only needed with akimbot
 // Globals above

@@ -719,6 +719,7 @@ void PlayerPreThink(edict_t *pEntity)
 	RETURN_META(MRES_IGNORED);
 }
 
+/*  <--- removed, only needed with akimbot
 int ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress, char szRejectReason[128])
 {
 	int index = ENTINDEX(pPlayer);
@@ -755,6 +756,7 @@ void ClientDisconnect(edict_t *pEntity)
 
 	RETURN_META(MRES_IGNORED);
 }
+*/
 
 DLL_FUNCTIONS gFunctionTable; /* = {
 	NULL,					// pfnGameInit
@@ -831,8 +833,8 @@ C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersi
 		return(FALSE);
 	}
 
-	gFunctionTable.pfnClientConnect = ClientConnect;
-	gFunctionTable.pfnClientDisconnect = ClientDisconnect;
+	//gFunctionTable.pfnClientConnect = ClientConnect; <--- removed, only needed with akimbot
+	//gFunctionTable.pfnClientDisconnect = ClientDisconnect; <--- removed, only needed with akimbot
 	//gFunctionTable.pfnClientPutInServer = ClientPutInServer;
 	gFunctionTable.pfnPlayerPreThink = PlayerPreThink;
 
@@ -879,8 +881,8 @@ void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *pentT
 		} TraceResult;
 	*/
 
-	if (g_bot[ENTINDEX(pentToSkip)])
-		RETURN_META(MRES_IGNORED);
+	/*if (g_bot[ENTINDEX(pentToSkip)])  <--- removed, only needed with akimbot
+		RETURN_META(MRES_IGNORED);*/
 
 	TRACE_LINE(v1, v2, fNoMonsters, pentToSkip, ptr); // pentToSkip gotta be the one that is shooting, so filter it
 
@@ -956,7 +958,7 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 		g_zones_toHit[i] = (1<<HITGROUP_GENERIC) | (1<<HITGROUP_HEAD) | (1<<HITGROUP_CHEST) | (1<<HITGROUP_STOMACH) | (1<<HITGROUP_LEFTARM) | (1<<HITGROUP_RIGHTARM)| (1<<HITGROUP_LEFTLEG) | (1<<HITGROUP_RIGHTLEG);
 		g_zones_getHit[i] = (1<<HITGROUP_GENERIC) | (1<<HITGROUP_HEAD) | (1<<HITGROUP_CHEST) | (1<<HITGROUP_STOMACH) | (1<<HITGROUP_LEFTARM) | (1<<HITGROUP_RIGHTARM)| (1<<HITGROUP_LEFTLEG) | (1<<HITGROUP_RIGHTLEG);
 		// Also set to be bot until proven not in ClientDisconnect (that seems to be only called by real players...)
-		g_bot[i] = true;
+		// g_bot[i] = true;  <--- removed, only needed with akimbot
 	}
 	// JGHG added stuff above
 

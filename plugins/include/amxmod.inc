@@ -32,3 +32,11 @@ stock numtostr(num,string[],len)
 
 stock strtonum(const string[])
   return str_to_num(string)
+
+stock build_path( path[] , len , {Float,_}:... )
+{
+  new basedir[32]
+  get_localinfo("amxx_basedir",basedir,31)
+  format_args(path,len,2)
+  return replace(path,len,"$basedir",basedir)
+}

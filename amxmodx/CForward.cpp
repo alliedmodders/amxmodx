@@ -103,8 +103,6 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 				else
 				{
 					realParams[i] = params[i];
-					if (i == 0)
-						AMXXLOG_Log("CForward::execute called with %d", params[i]);
 				}
 			}
 			// exec
@@ -461,8 +459,6 @@ cell executeForwards(int id, ...)
 			params[i] = *(cell*)&tmp;
 		}
 		params[i] = (cell)va_arg(argptr, cell);
-		if (i == 0)
-			AMXXLOG_Log("executeForwards called with %d", params[i]);
 	}
 	va_end(argptr);
 	return g_forwards.executeForwards(id, params);

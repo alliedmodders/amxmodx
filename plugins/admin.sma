@@ -155,6 +155,7 @@ public adminSql() {
   }
 
   dbi_query(sql,"CREATE TABLE IF NOT EXISTS `%s` ( `auth` VARCHAR( 32 ) NOT NULL, `password` VARCHAR( 32 ) NOT NULL, `access` VARCHAR( 32 ) NOT NULL, `flags` VARCHAR( 32 ) NOT NULL ) COMMENT = 'AMX Mod X Admins'",table)
+  
 
   new Result:Res = dbi_query(sql,"SELECT `auth`,`password`,`access`,`flags` FROM `%s`",table)
 
@@ -162,13 +163,13 @@ public adminSql() {
     dbi_error(sql,error,127)
     server_print("[AMXX] %L",LANG_SERVER,"SQL_CANT_LOAD_ADMINS",error)
     dbi_free_result(Res)
-    dbi_close(Sql)
+    dbi_close(sql)
     return PLUGIN_HANDLED
   }
   else if (Res == RESULT_NONE) {
     server_print("[AMXX] %L",LANG_SERVER,"NO_ADMINS")
     dbi_free_result(Res)
-    dbi_close(Sql)
+    dbi_close(sql)
     return PLUGIN_HANDLED
   }
 

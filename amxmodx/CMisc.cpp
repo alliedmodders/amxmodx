@@ -39,6 +39,7 @@ void CPlayer::Init( edict_t* e , int i )
 	pEdict = e;
 	initialized = false;
 	ingame = false;
+	bot = false;
 	authorized = false;
 
 	current = 0;
@@ -58,6 +59,7 @@ void CPlayer::Disconnect() {
   ingame = false;
   initialized = false;
   authorized = false;
+  bot = 0;
 }
 
 void CPlayer::PutInServer() {
@@ -68,6 +70,7 @@ bool CPlayer::Connect(const char* connectname,const char* ipaddress) {
   name.assign(connectname);
   ip.assign(ipaddress);
   time = gpGlobals->time;
+  bot = IsBot();
   death_killer = 0;
   memset(flags,0,sizeof(flags));
   memset(weapons,0,sizeof(weapons));

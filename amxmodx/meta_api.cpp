@@ -524,7 +524,7 @@ void C_ServerDeactivate_Post() {
 
 BOOL C_ClientConnect_Post( edict_t *pEntity, const char *pszName,	const char *pszAddress,	char szRejectReason[ 128 ]	){
   CPlayer* pPlayer = GET_PLAYER_POINTER(pEntity);
-  if (!pPlayer->IsBot()) {
+  if (!pPlayer->bot) {
 
 	bool a = pPlayer->Connect(pszName,pszAddress);
 
@@ -554,14 +554,9 @@ void C_ClientDisconnect( edict_t *pEntity	) {
   RETURN_META(MRES_IGNORED);
 }
 
-void C_ClientDisconnect_Post(edict_t *pEntity)
-{
-	pEntity->v.flags &= ~FL_FAKECLIENT;
-}
-
 void C_ClientPutInServer_Post( edict_t *pEntity )	{
   CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-  if (!pPlayer->IsBot()) {
+  if (!pPlayer->bot) {
 	pPlayer->PutInServer();
 	++g_players_num;
 
@@ -1235,7 +1230,6 @@ C_DLLEXPORT	int	GetEntityAPI2_Post(	DLL_FUNCTIONS *pFunctionTable, int *interfac
   gFunctionTable_Post.pfnClientUserInfoChanged = C_ClientUserInfoChanged_Post;
   gFunctionTable_Post.pfnServerActivate	= C_ServerActivate_Post;
   gFunctionTable_Post.pfnClientConnect = C_ClientConnect_Post;
-  gFunctionTable_Post.pfnClientDisconnect = C_ClientDisconnect_Post;
   gFunctionTable_Post.pfnStartFrame	= C_StartFrame_Post;
   gFunctionTable_Post.pfnServerDeactivate =	C_ServerDeactivate_Post;
 

@@ -39,11 +39,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libpq.lib wsock32.lib"
-				OutputFile=".\Release/pgsql_amx.dll"
+				AdditionalDependencies="wsock32.lib libpq.lib"
+				OutputFile=".\Release/pgsql_amxx.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				ModuleDefinitionFile=".\pgsql_amx.def"
+				ModuleDefinitionFile=""
 				ProgramDatabaseFile=".\Release/pgsql.pdb"
 				ImportLibrary=".\Release/pgsql.lib"
 				TargetMachine="1"/>
@@ -103,10 +103,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="Debug/pgsql_debug.dll"
+				AdditionalDependencies="wsock32.lib libpq.lib"
+				OutputFile="Debug/pgsql_amxx.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				ModuleDefinitionFile=".\pgsql_amx.def"
+				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\Debug/pgsql_debug.pdb"
 				ImportLibrary=".\Debug/pgsql_debug.lib"
@@ -167,9 +168,19 @@
 						BrowseInformation="1"/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath="pgsql_amx.def">
-			</File>
+			<Filter
+				Name="SDK"
+				Filter="">
+				<File
+					RelativePath=".\amxxmodule.cpp">
+				</File>
+				<File
+					RelativePath=".\amxxmodule.h">
+				</File>
+				<File
+					RelativePath=".\moduleconfig.h">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -182,9 +193,6 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
 		</Filter>
-		<File
-			RelativePath="pgsql.inc">
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

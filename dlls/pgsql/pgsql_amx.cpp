@@ -30,7 +30,24 @@
 
 #include "pgsql_amx.h"
 
-pgs *cns = NULL;
+std::string error;
+std::vector<pgdb*> dblist;
+
+int sql_exists(const char* host,const char* user,const char* pass,const char* dbase) {
+	std::vector<pgdb*>::iterator i;
+	int id = 0;
+	for (i=dblist.begin(); i!=dblist.end(); i++) {
+		id++;
+		if (((*i)->host.compare(host) == 0) &&
+			((*i)->user.compare(user) == 0) &&
+			((*i)->pass.compare(pass) == 0) &&
+			((*i)->name.compare(dbase) == 0) &&
+			(!(*i)->free)) {
+				return id;
+		}
+	}
+	return -1;
+}
 
 bool is_ipaddr(const char *IP)
 {
@@ -43,178 +60,199 @@ bool is_ipaddr(const char *IP)
 	return true;
 }
 
-
-char *make_connstring(const char *host, const char *user, const char *pass, const char *name)
+void pgdb::Kill()
 {
-	int len = 46 + strlen(host) + strlen(user) + strlen(pass) + strlen(name) + 2;
-	char *c_info = new char[len];
-
-	if (is_ipaddr(host)) {
-		sprintf(c_info, "hostaddr = '%s' user = '%s' pass = '%s' name = '%s'", host, user, pass, name);
-	} else {
-		sprintf(c_info, "host = '%s' user = '%s' pass = '%s' name = '%s'", host, user, pass, name);
-	}
-
-	return c_info;
+	if (free)
+		return;
+	PQfinish(cn);
+	host.clear();
+	user.clear();
+	pass.clear();
+	name.clear();
+	row = 0;
+	free = true;
 }
 
-PGconn* make_connection(const char *h, const char *u, const char *ps, const char *n)
+int pgdb::Connect(const char *hh, const char *uu, const char *pp, const char *dd)
 {
-	pgs *p = cns;
-	int last = 0;
+	host.assign(hh);
+	user.assign(uu);
+	pass.assign(pp);
+	name.assign(dd);
+
+	if (is_ipaddr(host.c_str())) {
+		cstr.assign("hostaddr = '");
+	} else {
+		cstr.assign("host = '");
+	}
 	
-	while (p) {
-		last = p->ii();
-		if (p->v.host==h && p->v.user==u && p->v.pass==ps && p->v.name==n) {
-			return p->v.cn;
-		}
-	}
-	char *c_info = make_connstring(h, u, ps, n);
-	/* now search for a free one */
-	p = cns;
-	while (p) {
-		if (p->free) {
-			p->set(h, u, ps, n, p->ii());
-			return p->v.cn;
-		} else {
-			p = p->link();
-		}
-	}
-	if (cns == NULL) {
-		cns = new pgs;
-		PGconn *cn = PQconnectdb(c_info);
-		cns->set(h, u, ps, n, 1);
-		cns->scn(cn);
-		return cn;
-	} else {
-		p = new pgs(h, u, ps, n, last+1);
-		cns->sln(p);
-		PGconn *cn = PQconnectdb(c_info);
-		cns->scn(cn);
-		return cn;
-	}
-}
+	cstr.append(host);
+	cstr.append("' user = '");
+	cstr.append(user);
+	cstr.append("' pass = '");
+	cstr.append(pass);
+	cstr.append("' name = '");
+	cstr.append(name);
+	cstr.append("'");
 
-pgs* get_conn_i(int n=1)
-{
-	pgs *p = cns;
-	int i=0;
-	while (p) {
-		if (++i==n) {
-			return p;
-		} else {
-			p = p->link();
-		}
+	cn = PQconnectdb(cstr.c_str());
+
+	if (PQstatus(cn) != CONNECTION_OK) {
+		err.assign(PQerrorMessage(cn));
+		free = true;
+		lastError = PQstatus(cn);
+		return 0;
 	}
 
-	return NULL;
+	free = false;
+	return true;
 }
 
 static cell AMX_NATIVE_CALL pgsql_connect(AMX  *amx, cell *params)
 {
-	int i;
-	const char *host = GET_AMXSTRING(amx,params[1],0,i);
-	const char *user = GET_AMXSTRING(amx,params[2],1,i);
-	const char *pass = GET_AMXSTRING(amx,params[3],2,i);
-	const char *name = GET_AMXSTRING(amx,params[4],3,i);
+	int len;
+	unsigned int i;
+	pgdb *c = NULL;
 
-	PGconn *cn = make_connection(host, user, pass, name);
+	const char *host = MF_GetAmxString(amx,params[1],0,&len);
+	const char *user = MF_GetAmxString(amx,params[2],1,&len);
+	const char *pass = MF_GetAmxString(amx,params[3],2,&len);
+	const char *name = MF_GetAmxString(amx,params[4],3,&len);
 
-	if (PQstatus(cn) != CONNECTION_OK) {
-		char *error = PQerrorMessage(cn);
-		SET_AMXSTRING(amx, params[5], (error?error:""), params[6]);
+	int id = sql_exists(host, user, pass, name);
+	
+	if (id >= 0)
+		return id;
+	
+	id = -1;
+	for (i=0; i<dblist.size(); i++) {
+		if (dblist[i]->free) {
+			id = i;
+			break;
+		}
+	}
+
+	if (id < 0) {
+		c = new pgdb;
+		dblist.push_back(c);
+		id = dblist.size() - 1;
+	} else {
+		c = dblist[id];
+	}
+
+	if (!c->Connect(host, user, pass, name)) {
+		MF_SetAmxString(amx, params[5], c->err.c_str(), params[6]);
 		return 0;
 	}
 
-	return 1;
+	return id+1;
 }
+
 
 static cell AMX_NATIVE_CALL pgsql_error(AMX *amx, cell *params)
 {
-	int c = params[1];
-	pgs *p = get_conn_i(c);
-	char *error = PQerrorMessage(p->v.cn);
-	SET_AMXSTRING(amx, params[2], (error==NULL?"":error), params[3]);
-	return 1;
+	unsigned int id = params[1] - 1;
+
+	if (id >= dblist.size() || dblist[id]->free) {
+		error.assign("Invalid handle.");
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	dblist[id]->err.assign(PQerrorMessage(dblist[id]->cn));
+	MF_SetAmxString(amx, params[2], dblist[id]->err.c_str(), params[3]);
+	return dblist[id]->lastError;
 }
 
 static cell AMX_NATIVE_CALL pgsql_query(AMX *amx, cell *params)
 {
-	pgs *p = get_conn_i(params[1]);
-	if (p == NULL) {
+	unsigned int id = params[1] - 1;
+
+	if (id >= dblist.size() || dblist[id]->free) {
+		error.assign("Invalid handle.");
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
-	if (p->v.res) {
-		p->reset();
-	}
+	pgdb *c = dblist[id];
+
+	if (c->res)
+		c->reset();
 
 	int i;
-	const char *query = FORMAT_AMXSTRING(amx, params, 2, i);
+	const char *query = MF_FormatAmxString(amx, params, 2, &i);
 
-	p->v.res = PQexec(p->v.cn, query);
+	c->res = PQexec(c->cn, query);
+	c->row = 0;
 	
-	if (PQresultStatus(p->v.res) != PGRES_COMMAND_OK) {
+	if (PQresultStatus(c->res) != PGRES_COMMAND_OK) {
+		c->lastError = PQresultStatus(c->res);
 		return -1;
 	}
 
-	return PQntuples(p->v.res);
+	return PQntuples(c->res);
 }
 
 static cell AMX_NATIVE_CALL pgsql_nextrow(AMX *amx, cell *params)
 {
-	pgs *p = get_conn_i(params[1]);
+	unsigned int id = params[1] - 1;
 
-	if (p == NULL) {
+	if (id >= dblist.size() || dblist[id]->free) {
+		error.assign("Invalid handle.");
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
-	if (p->v.cn == NULL) {
-		return -1;
-	}
-	if (PQstatus(p->v.cn)!= CONNECTION_OK) {
-		return -1;
-	}
+	pgdb *c = dblist[id];
 
-	if (p->v.row > PQntuples(p->v.res)) {
+	if (c->row > PQntuples(c->res))
 		return 0;
-	}
 	
-	p->v.row++;
+	c->row++;
 
 	return 1;
 }
 
 static cell AMX_NATIVE_CALL pgsql_getfield(AMX *amx, cell *params)
 {
-	pgs *p = get_conn_i(params[1]);
-	int col = params[2] + 1;
-	if (p == NULL) {
+	unsigned int id = params[1] - 1;
+	int col = params[2];
+
+	if (id >= dblist.size() || dblist[id]->free) {
+		error.assign("Invalid handle.");
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
-	if (p->v.cn == NULL) {
-		return -1;
-	}
-	if (PQstatus(p->v.cn)!= CONNECTION_OK) {
-		return -1;
-	}
+	pgdb *c = dblist[id];
 
-	if (col-1 > PQnfields(p->v.res)) {
+	if (col-1 > PQnfields(c->res))
 		return 0;
-	}
 
-	char *field = PQgetvalue(p->v.res, p->v.row, col);
-	return SET_AMXSTRING(amx, params[3], field?field:"", params[4]);
+	char *field = PQgetvalue(c->res, c->row, col);
+	return MF_SetAmxString(amx, params[3], field?field:"", params[4]);
 }
 
 static cell AMX_NATIVE_CALL pgsql_close(AMX *amx, cell *params)
 {
-	pgs *p = get_conn_i(params[1]);
-	
-	p->close();
+	unsigned int id = params[1] - 1;
+
+	if (id >= dblist.size() || dblist[id]->free) {
+		error.assign("Invalid handle.");
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	pgdb *c = dblist[id];
+
+	c->Kill();
 
 	return 1;
+}
+
+void OnAmxxAttach()
+{
+	MF_AddNatives(pgsql_exports);
 }
 
 AMX_NATIVE_INFO pgsql_exports[] = {
@@ -224,25 +262,12 @@ AMX_NATIVE_INFO pgsql_exports[] = {
 	{"dbi_nextrow",		pgsql_nextrow},
 	{"dbi_close",		pgsql_close},
 	{"dbi_getfield",	pgsql_getfield},
+	{"pgsql_connect",	pgsql_connect},
+	{"pgsql_error",		pgsql_error},
+	{"pgsql_query",		pgsql_query},
+	{"pgsql_nextrow",	pgsql_nextrow},
+	{"pgsql_close",		pgsql_close},
+	{"pgsql_getfield",	pgsql_getfield},
 
 	{NULL,			NULL},
 };
-
-C_DLLEXPORT int AMX_Query(module_info_s** info) {
-	*info = &module_info;
-	return 1;
-}
-
-C_DLLEXPORT int AMX_Attach(pfnamx_engine_g* amxeng,pfnmodule_engine_g* meng) {
-	g_engAmxFunc = amxeng;
-	g_engModuleFunc = meng;
-
-	ADD_AMXNATIVES(&module_info, pgsql_exports);
-
-	return(1);
-}
-
-C_DLLEXPORT int AMX_Detach() {
-	delete cns;
-	return(1);
-}

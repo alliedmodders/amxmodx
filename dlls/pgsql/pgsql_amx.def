@@ -1,6 +1,0 @@
-LIBRARY fun_amx
-EXPORTS
-	AMX_Attach				@1
-	AMX_Detach				@3
-SECTIONS
-	.data READ WRITE

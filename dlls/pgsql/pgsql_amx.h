@@ -31,109 +31,32 @@
 #include <stdlib.h>
 #include <string.h>
 #include <libpq-fe.h>
-#include <modules.h>
+#include <string>
+#include <vector>
+#include "amxxmodule.h"
 
-#define destroy(x) if(x){delete(x);x=0;}
-#define destarr(x) if(x){delete[]x;x=0;}
-
-pfnamx_engine_g* g_engAmxFunc;
-pfnmodule_engine_g* g_engModuleFunc;
-
-#define NAME "PgSQL"
-#define AUTHOR "BAILOPAN"
-#define VERSION "1.00"
-#define URL "http://www.bailopan.com/"
-#define LOGTAG "PGSQL"
-#define DATE __DATE__
-
-module_info_s module_info = {
-  NAME,
-  AUTHOR,
-  VERSION,
-  AMX_INTERFACE_VERSION,
-  RELOAD_MODULE,
-};
-
-class pgs
+class pgdb
 {
 public:
-	pgs()
-	{
-	}
-
-	pgs(const char *h, const char *u, const char *p, const char *n, int i=1)
-	{
-		set(h, u, p, n, i);
-	}
-
-	void set(const char *h, const char *u, const char *p, const char *n, int i=1)
-	{
-		v.host = h;
-		v.user = u;
-		v.pass = p;
-		v.name = n;
-		v.cn = NULL;
-		v.row = 0;
-		next = NULL;
-		id = i;
-		free = false;
-	}
-
-	pgs* link()
-	{
-		return next;
-	}
-
-	int ii()
-	{
-		return id;
-	}
-
-	void scn(PGconn *cn)
-	{
-		v.cn = cn;
-	}
-
-	void sln(pgs *p)
-	{
-		next = p;
-	}
-
-	void reset()
-	{
-		PQclear(v.res);
-		v.row = 0;
-	}
-
-	void close()
-	{
-		PQfinish(v.cn);
-		destroy(v.host);
-		destroy(v.user);
-		destroy(v.pass);
-		destroy(v.name);
-		v.row = 0;
-		free = true;
-	}
-
-	struct pgsql {
-		const char *host;
-		const char *user;
-		const char *pass;
-		const char *name;
-		PGconn *cn;
-		PGresult *res;
-		int row;
-	} v;
-
-	~pgs()
-	{
-		close();
-	}
+	void reset() { PQclear(res); row = 0; }
+	pgdb() { free = true; }
+	int Connect(const char *hh, const char *uu, const char *pp, const char *dd);
+	void Kill();
+	~pgdb() { Kill(); }
 
 	bool free;
-
-private:
-	pgs *next;
-	int id;
+	PGconn *cn;
+	PGresult *res;
+	int row;
+	std::string host;
+	std::string user;
+	std::string pass;
+	std::string name;
+	std::string cstr;
+	std::string err;
+	int lastError;
 };
+
+extern std::string error;
+extern std::vector<pgdb*> dblist;
+extern AMX_NATIVE_INFO pgsql_exports[];

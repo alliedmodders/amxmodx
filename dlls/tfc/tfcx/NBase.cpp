@@ -393,19 +393,19 @@ static cell AMX_NATIVE_CALL TFC_UserKill(AMX *amx, cell *params){ // player,wid
 
 // Native list.
 AMX_NATIVE_INFO base_Natives[] = {
-	{"TFC_SetModel", TFC_SetModel},
-	{"TFC_ClearModel", TFC_ClearModel},
-	{"TFC_SetBAmmo", TFC_SetBAmmo},
-	{"TFC_GetBAmmo", TFC_GetBAmmo},
-	{"TFC_GetWeaponBAmmo", TFC_GetWeaponBAmmo},
-	{"TFC_SetWeaponBAmmo", TFC_SetWeaponBAmmo},
-	{"TFC_GetWpnName", TFC_GetWpnName},
-	{"TFC_GetWpnLogName", TFC_GetWpnLogName},
+	{"tfc_setmodel", TFC_SetModel},
+	{"tfc_clearmodel", TFC_ClearModel},
+	{"tfc_setbammo", TFC_SetBAmmo},
+	{"tfc_getbammo", TFC_GetBAmmo},
+	{"tfc_getweaponbammo", TFC_GetWeaponBAmmo},
+	{"tfc_setweaponbammo", TFC_SetWeaponBAmmo},
+	{"tfc_getwpnname", TFC_GetWpnName},
+	{"tfc_getwpnlogname", TFC_GetWpnLogName},
 
-	{"TFC_IsMelee", TFC_IsMelee},
-	{"TFC_UserKill" , TFC_UserKill},
+	{"tfc_ismelee", TFC_IsMelee},
+	{"tfc_userkill" , TFC_UserKill},
 	
-	{"TFC_SetPDdata", TFC_SetPDdata },
+	{"tfc_setpddata", TFC_SetPDdata },
 	//******************* 19 :)
 	{NULL,			NULL} 
 };

@@ -338,24 +338,24 @@ static cell AMX_NATIVE_CALL ts_setup(AMX *amx, cell *params){ // index,pwupentin
 }
 
 AMX_NATIVE_INFO base_Natives[] = {
-	{ "TS_GetWpnName", get_weapon_name },
-	{ "TS_GetWpnLogName", get_weapon_logname },
-	{ "TS_WpnLogToName", wpnlog_to_name },
-	{ "TS_WpnLogToId", wpnlog_to_id },
-	{ "TS_IsMelee", is_melee },
-	{ "TS_GetUserWpn", get_user_weapon },
-	{ "TS_GetUserCash", get_user_cash },
-	{ "TS_GetUserSpace", get_user_space },
-	{ "TS_GetUserPwUp",get_user_pwup },
-	{ "TS_GetUserItems",get_user_items },
-	{ "TS_GetKillingStreak",get_killingStreak },
-	{ "TS_GetUserLastFrag",get_lastFrag },
+	{ "ts_getwpnname", get_weapon_name },
+	{ "ts_getwpnlogname", get_weapon_logname },
+	{ "ts_wpnlogtoname", wpnlog_to_name },
+	{ "ts_wpnlogtoid", wpnlog_to_id },
+	{ "ts_ismelee", is_melee },
+	{ "ts_getuserwpn", get_user_weapon },
+	{ "ts_getusercash", get_user_cash },
+	{ "ts_getuserspace", get_user_space },
+	{ "ts_getuserpwup",get_user_pwup },
+	{ "ts_getuseritems",get_user_items },
+	{ "ts_getkillingstreak",get_killingStreak },
+	{ "ts_getuserlastfrag",get_lastFrag },
 
-	{ "TS_GiveWeapon",give_weapon },
-	{ "TS_CreatePwUp",create_pwup },
-	{ "TS_GivePwUp",give_pwup },
+	{ "ts_giveweapon",give_weapon },
+	{ "ts_createpwup",create_pwup },
+	{ "ts_givepwup",give_pwup },
 
-	{ "TS_SetPDdata",ts_setup },
+	{ "ts_setpddata",ts_setup },
 
 	//"*******************"
 	{ NULL, NULL } 

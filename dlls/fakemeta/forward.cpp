@@ -92,6 +92,7 @@ void SetModel_post(edict_t *e, const char *m)
 
 void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr)
 {
+	TRACE_LINE(v1, v2, fNoMonsters, pentToSkip, ptr);	//from fun module - prevents crash? - t(+)rget/freecode
 	cell vec1[3] = {amx_ftoc(v1[0]), amx_ftoc(v1[1]), amx_ftoc(v1[2])};
 	cell vec2[3] = {amx_ftoc(v2[0]), amx_ftoc(v2[1]), amx_ftoc(v2[2])};
 	cell retvec1 = MF_PrepareCellArray(vec1, 3);

@@ -70,8 +70,8 @@ static cell AMX_NATIVE_CALL emit_sound(AMX *amx, cell *params) /* 7 param */
 
   int len;
   char* szSample = get_amxstring(amx,params[3],0,len);
-  float vol = *(REAL *)((void *)&params[4]);
-  float att = *(REAL *)((void *)&params[5]);
+  REAL vol = amx_ctof(params[4]);
+  REAL att = amx_ctof(params[5]);
   int channel = params[2];
   int pitch = params[7];
   int flags = params[6];
@@ -273,13 +273,13 @@ static cell AMX_NATIVE_CALL set_hudmessage(AMX *amx, cell *params)  /* 11 param 
   g_hudset.r1 = params[1];
   g_hudset.g1 = params[2];
   g_hudset.b1 = params[3];
-  g_hudset.x = *(REAL *)((void *)&params[4]);
-  g_hudset.y = *(REAL *)((void *)&params[5]);
+  g_hudset.x = amx_ctof(params[4]);
+  g_hudset.y = amx_ctof(params[5]);
   g_hudset.effect = params[6];
-  g_hudset.fxTime = *(REAL *)((void *)&params[7]);
-  g_hudset.holdTime = *(REAL *)((void *)&params[8]);
-  g_hudset.fadeinTime = *(REAL *)((void *)&params[9]);
-  g_hudset.fadeoutTime = *(REAL *)((void *)&params[10]);
+  g_hudset.fxTime = amx_ctof(params[7]);
+  g_hudset.holdTime = amx_ctof(params[8]);
+  g_hudset.fadeinTime = amx_ctof(params[9]);
+  g_hudset.fadeoutTime = amx_ctof(params[10]);
   g_hudset.channel = params[11];
   return 1;
 }
@@ -1159,13 +1159,13 @@ static cell AMX_NATIVE_CALL get_cvar_float(AMX *amx, cell *params) /* 1 param */
 {
   int ilen;
   REAL pFloat = CVAR_GET_FLOAT(get_amxstring(amx,params[1],0,ilen));
-  return *(cell*)((void *)&pFloat);
+  return amx_ftoc(pFloat);
 }
 
 static cell AMX_NATIVE_CALL set_cvar_float(AMX *amx, cell *params) /* 2 param */
 {
   int ilen;
-  CVAR_SET_FLOAT(get_amxstring(amx,params[1],0,ilen),*(REAL *)((void *)&params[2]));
+  CVAR_SET_FLOAT(get_amxstring(amx,params[1],0,ilen), amx_ctof(params[2]));
   return 1;
 }
 
@@ -1584,7 +1584,7 @@ static cell AMX_NATIVE_CALL get_maxplayers(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_gametime(AMX *amx, cell *params)
 {
   REAL pFloat = gpGlobals->time;
-  return *(cell*)((void *)&pFloat);
+  return amx_ftoc(pFloat);
 }
 
 static cell AMX_NATIVE_CALL get_mapname(AMX *amx, cell *params) /* 2 param */
@@ -1689,7 +1689,7 @@ static cell AMX_NATIVE_CALL set_task(AMX *amx, cell *params) /* 2 param */
     return 0;
   }
 
-  float base = *(REAL *)((void *)&params[1]);
+  float base = amx_ctof(params[1]);
 
   if ( base < 0.1 )
     base = 0.1;
@@ -1732,7 +1732,7 @@ static cell AMX_NATIVE_CALL register_cvar(AMX *amx, cell *params) /* 3 param */
   {
   CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
   CCVar* cvar = new CCVar( temp , plugin->getName() , params[3] ,
-    *(REAL *)((void *)&params[4])  );
+    amx_ctof(params[4])  );
 
   if ( cvar == 0 )
     return 0;
@@ -2015,10 +2015,10 @@ static cell AMX_NATIVE_CALL get_distance(AMX *amx, cell *params) /* 2 param */
 
 static cell AMX_NATIVE_CALL random_float(AMX *amx, cell *params) /* 2 param */
 {
-  float one = *(REAL *)((void *)&params[1]);
-  float two = *(REAL *)((void *)&params[2]);
+  float one = amx_ctof(params[1]);
+  float two = amx_ctof(params[2]);
   REAL fRnd = RANDOM_FLOAT(one,two);
-  return *(cell*)((void *)&fRnd);
+  return amx_ftoc(fRnd);
 }
 
 static cell AMX_NATIVE_CALL random_num(AMX *amx, cell *params) /* 2 param */

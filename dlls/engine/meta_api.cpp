@@ -1571,22 +1571,22 @@ static cell AMX_NATIVE_CALL entity_get_byte(AMX *amx, cell *params) {
 
 	switch(iValueSet) {
 		case controller1:
-			iRetValue = pEntity->v.controller[1];
+			iRetValue = pEntity->v.controller[0];
 			break;
 		case controller2:
-			iRetValue = pEntity->v.controller[2];
+			iRetValue = pEntity->v.controller[1];
 			break;
 		case controller3:
-			iRetValue = pEntity->v.controller[3];
+			iRetValue = pEntity->v.controller[2];
 			break;
 		case controller4:
-			iRetValue = pEntity->v.controller[4];
+			iRetValue = pEntity->v.controller[3];
 			break;
 		case blending1:
-			iRetValue = pEntity->v.blending[1];
+			iRetValue = pEntity->v.blending[0];
 			break;
 		case blending2:
-			iRetValue = pEntity->v.blending[2];
+			iRetValue = pEntity->v.blending[1];
 			break;
 		default:
 			return 0;
@@ -2335,8 +2335,8 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 			SET_MODEL(pNewCamera, "models/rpgrocket.mdl");
 			SET_SIZE(pNewCamera, Vector(0, 0, 0), Vector(0, 0, 0));
 
-			pNewCamera->v.movetype = MOVETYPE_FLY;
-			pNewCamera->v.solid = SOLID_BBOX;
+			pNewCamera->v.movetype = MOVETYPE_NOCLIP;
+			pNewCamera->v.solid = SOLID_NOT;
 			pNewCamera->v.takedamage = DAMAGE_NO;
 			pNewCamera->v.gravity = 0;
 			pNewCamera->v.owner = pPlayer;
@@ -2364,8 +2364,8 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 			SET_MODEL(pNewCamera, "models/rpgrocket.mdl");
 			SET_SIZE(pNewCamera, Vector(0, 0, 0), Vector(0, 0, 0));
 
-			pNewCamera->v.movetype = MOVETYPE_FLY;
-			pNewCamera->v.solid = SOLID_BBOX;
+			pNewCamera->v.movetype = MOVETYPE_NOCLIP;
+			pNewCamera->v.solid = SOLID_NOT;
 			pNewCamera->v.takedamage = DAMAGE_NO;
 			pNewCamera->v.gravity = 0;
 			pNewCamera->v.owner = pPlayer;
@@ -2393,8 +2393,8 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 			SET_MODEL(pNewCamera, "models/rpgrocket.mdl");
 			SET_SIZE(pNewCamera, Vector(0, 0, 0), Vector(0, 0, 0));
 
-			pNewCamera->v.movetype = MOVETYPE_FLY;
-			pNewCamera->v.solid = SOLID_BBOX;
+			pNewCamera->v.movetype = MOVETYPE_NOCLIP;
+			pNewCamera->v.solid = SOLID_NOT;
 			pNewCamera->v.takedamage = DAMAGE_NO;
 			pNewCamera->v.gravity = 0;
 			pNewCamera->v.owner = pPlayer;
@@ -3047,6 +3047,7 @@ void WriteEntity(int iValue) {
 }
 
 void ServerActivate( edict_t *pEdictList, int edictCount, int clientMax ){
+	PRECACHE_MODEL("models/rpgrocket.mdl");
  	AMX* amx;
 	void* code;
 	const char* filename;

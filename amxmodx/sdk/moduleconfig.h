@@ -18,6 +18,9 @@
 #define MODULE_DATE "Unknown"
 #endif // __DATE__
 
+// looking for mem leaks?
+// #define MEMORY_TEST
+
 // metamod plugin?
 // #define USE_METAMOD
 

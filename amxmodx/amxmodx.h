@@ -65,13 +65,13 @@ extern  AMX_NATIVE_INFO vault_Natives[];
 
 
 #ifndef __linux__
-#define DLLOAD(path) (DLHANDLE)LoadLibrary(path);
-#define DLPROC(m,func) GetProcAddress(m,func);
-#define DLFREE(m) FreeLibrary(m);
+#define DLLOAD(path) (DLHANDLE)LoadLibrary(path)
+#define DLPROC(m,func) GetProcAddress(m,func)
+#define DLFREE(m) FreeLibrary(m)
 #else
-#define DLLOAD(path) (DLHANDLE)dlopen(path, RTLD_NOW);
-#define DLPROC(m,func) dlsym(m,func);
-#define DLFREE(m) dlclose(m);
+#define DLLOAD(path) (DLHANDLE)dlopen(path, RTLD_NOW)
+#define DLPROC(m,func) dlsym(m,func)
+#define DLFREE(m) dlclose(m)
 #endif
 
 #ifndef __linux__
@@ -152,7 +152,6 @@ extern bool g_bmod_dod;
 extern bool g_dontprecache;
 extern bool g_initialized;
 extern int g_srvindex;
-extern cvar_t* amx_version;
 extern cvar_t* amxmodx_version;
 extern cvar_t* hostname;
 extern cvar_t* mp_timelimit;
@@ -249,6 +248,11 @@ void* alloc_amxmemory(void**, int size);
 void free_amxmemory(void **ptr);
 // get_localinfo
 const char* get_localinfo( const char* name , const char* def );
+
+extern CModule *g_CurrentlyAttachedModule;		// modules.cpp
+extern const char *g_LastRequestedFunc;			// modules.cpp
+
+void *Module_ReqFnptr(const char *funcName);	// modules.cpp
 
 #endif // AMXMODX_H
 

@@ -60,98 +60,140 @@ class CLangMngr
 	class CLang
 	{
 	public:
+		// Construct an empty CLang object
 		CLang();
+		// Construct a CLang object initialized with a language name
 		CLang(const char *lang);
+		// Destructor
 		~CLang();
 
+		// Get the definition
 		const char *GetDef(const char *key);
+		// Add definitions to this language
 		void MergeDefinitions(CQueue <sKeyDef*> & vec);
+		// Reset this language
 		void Clear();
 
+		// compare this language to a language name
 		friend bool operator == (const CLang &left, const char *right)
 		{
 			return strcmp(left.m_LanguageName, right)==0 ? true : false;
 		}
+		// Get language name
 		const char *GetName() { return m_LanguageName; }
+		// Save to file
 		bool Save(FILE *fp, int &defOffset, uint32_t &curOffset);
 		bool SaveDefinitions(FILE *fp, uint32_t &curOffset);
+		// Load
 		bool Load(FILE *fp);
-		void SetMngr(CLangMngr *l) { lman = l; }
+		void SetMngr(CLangMngr *l) { m_LMan = l; }
+		// Get number of entries
 		int Entries() { return m_LookUpTable.size(); }
-	private:
-
+	protected:
+		// Make a hash from a string; convert to lowercase first if needed
 		static uint32_t MakeHash(const char *src, bool makeLower = false);
 
+		// An entry in the language
 		class LangEntry
 		{
+			// the definition hash
 			uint32_t m_DefHash;
+			// index into the lookup table?
 			int key;
+			// the definition
 			String m_pDef;
 		public:
+			// Set
 			void SetKey(int key);
 			void SetDef(const char *pDef);
+			// Get
 			uint32_t GetDefHash();
-
 			int GetKey();
 			const char *GetDef();
 			int GetDefLength();
 
+			// Constructors / destructors
 			LangEntry();
 			LangEntry(int key);
 			LangEntry(int key, const char *pDef);
 			LangEntry(const LangEntry &other);
 			LangEntry(int pKey, uint32_t defHash, const char *pDef);
 
+			// Reset
 			void Clear();
 		};
 
+		// Get (construct if needed) an entry
 		LangEntry * GetEntry(int key);
+
 		typedef CVector<LangEntry*>	LookUpVec;
 		typedef LookUpVec::iterator	LookUpVecIter;
 
 		char m_LanguageName[3];
 
+		// our lookup table
 		LookUpVec m_LookUpTable;
-		CLangMngr *lman;
+		CLangMngr *m_LMan;
 	public:
-				LangEntry *AddEntry(int pKey, uint32_t defHash, const char *def);
+		LangEntry *AddEntry(int pKey, uint32_t defHash, const char *def);
 	};
 
+	// Merge definitions into a language
 	void MergeDefinitions(const char *lang, CQueue <sKeyDef*> &tmpVec);
+	// strip lowercase; make lower if needed
 	static size_t strip(char *str, char *newstr, bool makelower=false);
 
 	typedef CVector<CLang*> LangVec;
 	typedef CVector<CLang*>::iterator LangVecIter;
 	
 	LangVec m_Languages;
+
 	CVector<md5Pair *> FileList;
 	CVector<keyEntry*> KeyList;
 
+	// Get a lang object (construct if needed)
 	CLang * GetLang(const char *name);
 
+	// Current global client-id for functions like client_print with first parameter 0
 	int m_CurGlobId;
 public:
+	// Merge a definitions file
 	int MergeDefinitionFile(const char *file);
+	// Get a definition from a lang name and a kyer
 	const char *GetDef(const char *langName, const char *key);
+	// Format a string
 	const char *Format(const char *src, ...);
+	// Format a string for an AMX plugin
 	char *FormatAmxString(AMX *amx, cell *params, int parm, int &len);
+	// Save
 	bool Save(const char *filename);
+	// Load
 	bool Load(const char *filename);
+	// Cache
 	bool LoadCache(const char *filename);
 	bool SaveCache(const char *filename);
+	// Get index
 	int GetKeyEntry(String &key);
 	int GetKeyEntry(const char *key);
 	int GetKeyHash(int key);
+	// Get key from index
 	const char *GetKey(int key);
+	// Add key
 	int AddKeyEntry(String &key);
+	// Make a hash from a string; convert to lowercase first if needed
 	uint32_t MakeHash(const char *src, bool makeLower);
 
+	// Get the number of languages
 	int GetLangsNum();
+	// Get the name of a language
 	const char *GetLangName(int langId);
+	// Check if a language exists
 	bool LangExists(const char *langName);
 
-	// When a language id in a format string in FormatAmxString is 0, the glob id decides which language to take.
+	// When a language id in a format string in FormatAmxString is LANG_PLAYER, the glob id decides which language to take.
 	void SetDefLang(int id);
+
+	// Reset
 	void Clear();
 
 	CLangMngr();

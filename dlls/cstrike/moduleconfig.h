@@ -4,10 +4,10 @@
 #define __MODULECONFIG_H__
 
 // Module info
-#define MODULE_NAME "Cstrike"
+#define MODULE_NAME "Counter-Strike"
 #define MODULE_VERSION "0.20"
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
-#define MODULE_URL "www.amxmodx.org"
+#define MODULE_URL "http://www.amxmodx.org"
 #define MODULE_LOGTAG "CSTRIKE"
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line
 #define MODULE_RELOAD_ON_MAPCHANGE

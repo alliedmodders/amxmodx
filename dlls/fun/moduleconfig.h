@@ -7,7 +7,7 @@
 #define MODULE_NAME "Fun"
 #define MODULE_VERSION "0.20"
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
-#define MODULE_URL "www.amxmodx.org"
+#define MODULE_URL "http://www.amxmodx.org"
 #define MODULE_LOGTAG "FUN"
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line
 #define MODULE_RELOAD_ON_MAPCHANGE

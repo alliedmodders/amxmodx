@@ -44,9 +44,9 @@ public plugin_init() {
   register_plugin("Multi-Lingual System",AMXX_VERSION_STR,"AMXX Dev Team")
   register_dictionary("multilingual.txt")
   register_dictionary("common.txt")
-  register_cvar("amxx_language","en",FCVAR_SERVER|FCVAR_EXTDLL|FCVAR_SPONLY)
-  register_concmd("amxx_setlang","cmdLang",ADMIN_CFG,"<language>")
-  register_clcmd("amxx_setlangmenu","cmdLangMenu",ADMIN_ALL)
+  register_cvar("amx_language","en",FCVAR_SERVER|FCVAR_EXTDLL|FCVAR_SPONLY)
+  register_concmd("amx_setlang","cmdLang",ADMIN_CFG,"<language>")
+  register_clcmd("amx_setlangmenu","cmdLangMenu",ADMIN_ALL)
   register_menu("Language Menu",1023,"actionMenu")
 
   new lang[3]

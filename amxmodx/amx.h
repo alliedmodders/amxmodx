@@ -46,13 +46,14 @@
       typedef long int          int32_t;
       typedef unsigned long int uint32_t;
     #endif
-    #if defined __WIN32__ || defined _WIN32 || defined WIN32
-      typedef __int64			int64_t;
-      typedef unsigned __int64	uint64_t;
-      #define HAVE_I64
-    #elif defined __GNUC__
+    // evilspy's fix for mingw
+    #if defined __GNUC__
       typedef long long			int64_t;
       typedef unsigned long long uint64_t;
+      #define HAVE_I64
+    #elif defined __WIN32__ || defined _WIN32 || defined WIN32
+      typedef __int64			int64_t;
+      typedef unsigned __int64	uint64_t;
       #define HAVE_I64
     #endif
   #endif

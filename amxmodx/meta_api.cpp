@@ -50,6 +50,7 @@ gamedll_funcs_t *gpGamedllFuncs;
 mutil_funcs_t *gpMetaUtilFuncs;
 enginefuncs_t g_engfuncs;
 globalvars_t  *gpGlobals;
+pextension_funcs_t *gpMetaPExtFuncs;
 
 funEventCall modMsgsEnd[MAX_REG_MSGS];
 funEventCall modMsgs[MAX_REG_MSGS];
@@ -1042,8 +1043,22 @@ C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_
 	else
 	  LOG_ERROR(PLID, "unexpected version comparison; metavers=%s, mmajor=%d, mminor=%d; plugvers=%s, pmajor=%d, pminor=%d", ifvers, mmajor, mminor, META_INTERFACE_VERSION, pmajor, pminor);
   }
+
+  // We can set this to null here because Meta_PExtGiveFnptrs is called after this
+  gpMetaPExtFuncs = NULL;
+
   // :NOTE: Don't call modules query here (g_FakeMeta.Meta_Query), because we don't know modules yet. Do it in Meta_Attach
   return(TRUE);
+}
+
+// evilspy's patch for mm-p ext support
+// this is called right after Meta_Query
+C_DLLEXPORT int Meta_PExtGiveFnptrs(int interfaceVersion, pextension_funcs_t *pMetaPExtFuncs) {
+	if(interfaceVersion<META_PEXT_VERSION) {
+		return(META_PEXT_VERSION);
+	}
+	gpMetaPExtFuncs = pMetaPExtFuncs;
+	return(META_PEXT_VERSION);
 }
 
 static META_FUNCTIONS gMetaFunctionTable;

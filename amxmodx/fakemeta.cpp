@@ -2354,6 +2354,14 @@ void FakeMeta_New_CVarRegister(cvar_t *pCVar)
 
 int CFakeMeta::CFakeMetaPlugin::Query(mutil_funcs_t *pMetaUtilFuncs)
 {
+	//using metamod p-extensions?
+	if(gpMetaPExtFuncs)
+	{
+		//load plugins in meta_attach
+		m_Status = PL_OPENED;
+		return 1;
+	}
+	
 	// Load the library
 	// We don't have to DLCLOSE here.
 	m_Handle = DLOPEN(build_pathname("%s", m_Path.c_str()));
@@ -2419,6 +2427,18 @@ int CFakeMeta::CFakeMetaPlugin::Query(mutil_funcs_t *pMetaUtilFuncs)
 
 int CFakeMeta::CFakeMetaPlugin::Attach(PLUG_LOADTIME now, meta_globals_t *pMGlobals, gamedll_funcs_t *pGameDllFuncs)
 {
+	// evilspy's patch:
+	//using metamod p-extensions?
+	if(gpMetaPExtFuncs) {
+		if(PEXT_LOAD_PLUGIN_BY_NAME(PLID, m_Path.c_str(), now, (void**)&m_Handle) || !m_Handle) {
+			m_Status = PL_FAILED;
+			return 0;
+		}
+		
+		m_Status = PL_RUNNING;
+		return 1;
+	}
+	
 	if (!m_Handle)
 		return 0;
 	META_ATTACH_FN attachFn = (META_ATTACH_FN)DLSYM(m_Handle, "Meta_Attach");
@@ -2443,6 +2463,19 @@ int CFakeMeta::CFakeMetaPlugin::Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reaso
 {
 	if (!m_Handle)
 		return 0;
+
+	// evilspy's patch:
+	//using metamod p-extensions?
+	if (gpMetaPExtFuncs) {
+		if(PEXT_UNLOAD_PLUGIN_BY_HANDLE(PLID, (void*)m_Handle, now, reason)) {
+			m_Status = PL_FAILED;
+			return 0;
+		}
+		m_Status = PL_OPENED;
+		m_Handle = NULL;
+		return 1;
+	}
+	
 	META_DETACH_FN detachFn = (META_DETACH_FN)DLSYM(m_Handle, "Meta_Detach");
 	if (!detachFn)
 	{
@@ -2533,6 +2566,11 @@ void CFakeMeta::ReleasePlugins()
 
 bool CFakeMeta::AddCorePlugin()
 {
+	// evilspy:
+	// not needed when using metamod p-extensions
+	if(gpMetaPExtFuncs)
+		return true;
+
 	// Check whether there already is a core plugin
 	if (m_Plugins.begin() && strcmp((*m_Plugins.begin()).GetPath(), "[AMXX Core]") == 0)
 		return true;
@@ -2596,6 +2634,14 @@ int CFakeMeta::GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable /*from metamod*/, int
 		*interfaceVersion =	INTERFACE_VERSION;
 		return(FALSE);
 	}
+
+	// evilspy:
+	//using metamod p-extensions?
+	if(gpMetaPExtFuncs) {
+		memcpy( pFunctionTable, pAMXXFunctionTable, sizeof( DLL_FUNCTIONS ) );
+		return TRUE;
+	}
+	
 	memcpy( pFunctionTable, &g_DllFunctionTable, sizeof( DLL_FUNCTIONS ) );
 
 	// Make sure there is a core plugin
@@ -2625,6 +2671,14 @@ int CFakeMeta::GetEntityAPI2_Post(DLL_FUNCTIONS *pFunctionTable /*from metamod*/
 		*interfaceVersion =	INTERFACE_VERSION;
 		return(FALSE);
 	}
+	
+	// evilspy
+	//using metamod p-extensions?
+	if(gpMetaPExtFuncs) {
+		memcpy( pFunctionTable, pAMXXFunctionTable, sizeof( DLL_FUNCTIONS ) );
+		return TRUE;
+	}
+	
 	memcpy( pFunctionTable, &g_DllFunctionTable_Post, sizeof( DLL_FUNCTIONS ) );
 
 	// Make sure there is a core plugin
@@ -2654,6 +2708,14 @@ int CFakeMeta::GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inter
 		*interfaceVersion =	ENGINE_INTERFACE_VERSION;
 		return FALSE;
 	}
+	
+	// evilspy:
+	//using metamod p-extensions?
+	if(gpMetaPExtFuncs) {
+		memcpy( pengfuncsFromEngine, pAMXXFunctionTable, sizeof( enginefuncs_t ) );
+		return TRUE;
+	}
+	
 	memcpy( pengfuncsFromEngine, &g_EngineFunctionTable, sizeof( enginefuncs_t ) );
 
 	// Make sure there is a core plugin
@@ -2682,6 +2744,14 @@ int CFakeMeta::GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine, int *
 		*interfaceVersion =	ENGINE_INTERFACE_VERSION;
 		return FALSE;
 	}
+	
+	// evilspy:
+	//using metamod p-extensions?
+	if(gpMetaPExtFuncs) {
+		memcpy( pengfuncsFromEngine, pAMXXFunctionTable, sizeof( enginefuncs_t ) );
+		return TRUE;
+	}
+	
 	memcpy( pengfuncsFromEngine, &g_EngineFunctionTable_Post, sizeof( enginefuncs_t ) );
 
 	// Make sure there is a core plugin
@@ -2717,6 +2787,14 @@ int CFakeMeta::GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pNewFunctionTable, int *int
 		*interfaceVersion =	NEW_DLL_FUNCTIONS_VERSION;
 		return(FALSE);
 	}
+	
+	// evilspy:
+	//using metamod p-extensions?
+	if(gpMetaPExtFuncs) {
+		memcpy( pNewFunctionTable, pAMXXFunctionTable, sizeof( NEW_DLL_FUNCTIONS ) );
+		return TRUE;
+	}
+	
 	memcpy( pNewFunctionTable, &g_NewDllFunctionTable, sizeof( NEW_DLL_FUNCTIONS ) );
 
 	// Make sure there is a core plugin
@@ -2752,6 +2830,14 @@ int CFakeMeta::GetNewDLLFunctions_Post(NEW_DLL_FUNCTIONS *pNewFunctionTable, int
 		*interfaceVersion =	NEW_DLL_FUNCTIONS_VERSION;
 		return(FALSE);
 	}
+	
+	// evilspy:
+	//using metamod p-extensions?
+	if(gpMetaPExtFuncs) {
+		memcpy( pNewFunctionTable, pAMXXFunctionTable, sizeof( NEW_DLL_FUNCTIONS ) );
+		return TRUE;
+	}
+	
 	memcpy( pNewFunctionTable, &g_NewDllFunctionTable_Post, sizeof( NEW_DLL_FUNCTIONS ) );
 
 	// Make sure there is a core plugin

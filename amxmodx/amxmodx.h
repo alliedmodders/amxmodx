@@ -37,9 +37,11 @@
 #include <unistd.h>
 #include <stdlib.h>
 #endif
+#include <ctype.h> //tolower, etc
 #include "string.h"
 #include <extdll.h>
 #include <meta_api.h>
+#include "mm_pextensions.h"			// metamod-p extensions
 
 #ifdef MEMORY_TEST
 #include "mmgr/mmgr.h"
@@ -134,6 +136,7 @@ struct fakecmd_t {
   bool fake;
 };
 
+extern pextension_funcs_t *gpMetaPExtFuncs;
 extern CLog g_log;
 extern CPluginMngr g_plugins;
 extern CTaskMngr g_tasksMngr;

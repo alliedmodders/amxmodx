@@ -2379,6 +2379,13 @@ static cell AMX_NATIVE_CALL GetSpeak(AMX *amx, cell *params) {
 	return PlInfo[iIndex].iSpeakFlags;
 }
 
+/*//SetPhysicsKey, sets a physics key.
+//(BAILOPAN)
+static cell AMX_NATIVE_CALL set_user_physics(AMX *amx, cell *params)
+{
+	int iKey;
+}*/
+
 // SetLights, this sets the lights for the map.
 static cell AMX_NATIVE_CALL SetLights(AMX *amx, cell *params) { 
 	int iLength;
@@ -2581,12 +2588,20 @@ void Touch(edict_t *pToucher, edict_t *pTouched) {
 //Added by BAILOPAN.  ClientKill() forward.
 void ClientKill(edict_t *pEntity)
 {
-	for(std::vector<AmxCall>::iterator i = vCliKillList.begin(); i != vCliKillList.end(); i++) {
-		cell iRetVal = 0;
-		AMX_EXEC(&i->pPlugin->amx, &iRetVal, i->iFunctionIdx, 1, ENTINDEX(pEntity));
-	}
+	cell iRetVal = 0;
+	META_RES result = MRES_IGNORED;
 	
-	RETURN_META(MRES_IGNORED);
+	for(std::vector<AmxCall>::iterator i = vCliKillList.begin(); i != vCliKillList.end(); i++) {
+		AMX_EXEC(&i->pPlugin->amx, &iRetVal, i->iFunctionIdx, 1, ENTINDEX(pEntity));
+		if (iRetVal & 2) {
+			RETURN_META(MRES_SUPERCEDE);
+		}
+		if (iRetVal & 1) {
+			result = MRES_SUPERCEDE;
+		}
+	}
+
+	RETURN_META(result);
 }
 
 // ClientDisconnect. Reinitialize the PlayerInfo struct for that player.

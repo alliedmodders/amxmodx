@@ -1205,6 +1205,14 @@ static cell AMX_NATIVE_CALL message_begin(AMX *amx, cell *params) /* 4 param */
 	int numparam = *params/sizeof(cell);
 	float vecOrigin[3];
 	cell *cpOrigin;
+
+	if (params[2] < 1 || ((params[2] > 63)		// maximal number of engine messages
+		&& !GET_USER_MSG_NAME(PLID, params[2], NULL)))
+	{
+		AMXXLOG_Log("[AMXX] Plugin called message_begin with an invalid message id (%d).", params[2]);
+		amx_RaiseError(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
 	switch (params[1]){
   case MSG_BROADCAST:
   case MSG_ALL:

@@ -103,6 +103,8 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 				else
 				{
 					realParams[i] = params[i];
+					if (i == 0)
+						AMXXLOG_Log("CForward::execute called with %d", params[i]);
 				}
 			}
 			// exec
@@ -341,8 +343,14 @@ cell CForwardMngr::executeForwards(int id, cell *params)
 
 int CForwardMngr::getParamsNum(int id) const
 {
-	return (id & 1) ? m_SPForwards[id >> 1]->getParamsNum() : 
+	return (id & 1) ? m_SPForwards[id >> 1]->getParamsNum() :
 		m_Forwards[id >> 1]->getParamsNum();
+}
+
+ForwardParam CForwardMngr::getParamType(int id, int paramNum) const
+{
+	return (id & 1) ? m_SPForwards[id >> 1]->getParamType(paramNum) :
+		m_Forwards[id >> 1]->getParamType(paramNum);
 }
 
 void CForwardMngr::clear()
@@ -447,12 +455,14 @@ cell executeForwards(int id, ...)
 	va_start(argptr, id);
 	for (int i = 0; i < paramsNum && i < FORWARD_MAX_PARAMS; ++i)
 	{
-		if (params[i] == FP_FLOAT)
+		if (g_forwards.getParamType(id, i) == FP_FLOAT)
 		{
 			REAL tmp = (REAL)va_arg(argptr, double);			// floats get converted to doubles
 			params[i] = *(cell*)&tmp;
 		}
 		params[i] = (cell)va_arg(argptr, cell);
+		if (i == 0)
+			AMXXLOG_Log("executeForwards called with %d", params[i]);
 	}
 	va_end(argptr);
 	return g_forwards.executeForwards(id, params);

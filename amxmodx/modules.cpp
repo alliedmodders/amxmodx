@@ -384,7 +384,7 @@ int loadModules(const char* filename)
 		if (!isalnum(*moduleName) || !validFile(moduleName) )  
 			continue;
 
-		char* pathname = build_pathname("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxx/modules"), line);
+		char* pathname = build_pathname("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"), line);
 
 		CList<CModule>::iterator a = g_modules.find(  pathname  );
 

@@ -2635,7 +2635,7 @@ static cell register_dictionary(AMX *amx, cell *params)
 {
 	int len;
 	int result = g_langMngr.MergeDefinitionFile(build_pathname("%s/lang/%s",
-		get_localinfo("amxx_datadir", "addons/amxx/data"), get_amxstring(amx, params[1], 1, len)));
+		get_localinfo("amxx_datadir", "addons/amxmodx/data"), get_amxstring(amx, params[1], 1, len)));
 	return result;
 }
 

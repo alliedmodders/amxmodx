@@ -218,8 +218,8 @@ int	C_Spawn( edict_t *pent ) {
   g_tasksMngr.registerTimers( &gpGlobals->time,	&mp_timelimit->value,  &g_game_timeleft		);
 
   //  ###### Load lang
-  g_langMngr.LoadCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxx/data")));
-  g_langMngr.Load(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxx/data")));
+  g_langMngr.LoadCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
+  g_langMngr.Load(build_pathname("%s/languages.dat", get_localinfo("amxmodx_datadir", "addons/amxmodx/data")));
   // ######	Initialize commands	prefixes
   g_commands.registerPrefix( "amx" );
   g_commands.registerPrefix( "amxx"	);
@@ -229,14 +229,14 @@ int	C_Spawn( edict_t *pent ) {
   g_commands.registerPrefix( "cm_" );
 
   // make sure localinfos are set
-  get_localinfo("amxx_basedir",	"addons/amxx");
-  get_localinfo("amxx_pluginsdir", "addons/amxx/plugins");
-  get_localinfo("amxx_modulesdir", "addons/amxx/modules");
-  get_localinfo("amxx_configsdir", "addons/amxx/configs");
-  get_localinfo("amxx_customdir", "addons/amxx/custom");
+  get_localinfo("amxx_basedir",	"addons/amxmodx");
+  get_localinfo("amxx_pluginsdir", "addons/amxmodx/plugins");
+  get_localinfo("amxx_modulesdir", "addons/amxmodx/modules");
+  get_localinfo("amxx_configsdir", "addons/amxmodx/configs");
+  get_localinfo("amxx_customdir", "addons/amxmodx/custom");
 
   //  ###### Load modules
-  loadModules(get_localinfo("amxx_modules",	"addons/amxx/configs/modules.ini"));
+  loadModules(get_localinfo("amxx_modules",	"addons/amxmodx/configs/modules.ini"));
   attachModules();
   int loaded = countModules(CountModules_Running);	// Call	after attachModules	so all modules don't have pending stat
   // Set some info about amx version and modules
@@ -246,7 +246,7 @@ int	C_Spawn( edict_t *pent ) {
   CVAR_SET_STRING(init_amxmodx_modules.name, buffer);
 
   //  ######  Load Vault
-  g_vault.setSource( build_pathname("%s", get_localinfo("amxx_vault", "addons/amxx/configs/vault.ini"))	);
+  g_vault.setSource( build_pathname("%s", get_localinfo("amxx_vault", "addons/amxmodx/configs/vault.ini"))	);
   g_vault.loadVault( );
   if (strlen(g_vault.get("server_language")) < 1)
   {
@@ -268,7 +268,7 @@ int	C_Spawn( edict_t *pent ) {
   memset(g_players[0].flags,-1,sizeof(g_players[0].flags));
 
   //  ###### Load AMX scripts
-  g_plugins.loadPluginsFromFile( get_localinfo("amxx_plugins", "addons/amxx/configs/plugins.ini") );
+  g_plugins.loadPluginsFromFile( get_localinfo("amxx_plugins", "addons/amxmodx/configs/plugins.ini") );
 
   // Register forwards
   FF_PluginInit = registerForward("plugin_init", ET_IGNORE, FP_DONE);
@@ -398,8 +398,8 @@ void C_ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax )
   executeForwards(FF_PluginCfg);
 
   //  ###### Save lang
-  g_langMngr.Save(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxx/data")));
-  g_langMngr.SaveCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxx/data")));
+  g_langMngr.Save(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
+  g_langMngr.SaveCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
 
 // Correct time in Counter-Strike	and	other mods (except DOD)
   if ( !g_bmod_dod)	 g_game_timeleft = 0;
@@ -458,8 +458,8 @@ void C_ServerDeactivate_Post() {
   g_vault.clear();
   g_xvars.clear();
   g_plugins.clear();
-  g_langMngr.Save(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxx/data")));
-  g_langMngr.SaveCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxx/data")));
+  g_langMngr.Save(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
+  g_langMngr.SaveCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
   g_langMngr.Clear();
   // last memreport
 #ifdef MEMORY_TEST
@@ -473,14 +473,14 @@ void C_ServerDeactivate_Post() {
 			tm *curTime = localtime(&td);
 			int i = 0;
 #ifdef __linux__
-			mkdir(build_pathname("%s/memreports", get_localinfo("amxx_basedir", "addons/amxx")), 0700);
+			mkdir(build_pathname("%s/memreports", get_localinfo("amxx_basedir", "addons/amxmodx")), 0700);
 #else
-			mkdir(build_pathname("%s/memreports", get_localinfo("amxx_basedir", "addons/amxx")));
+			mkdir(build_pathname("%s/memreports", get_localinfo("amxx_basedir", "addons/amxmodx")));
 #endif
 			while (true)
 			{
 				char buffer[256];
-				sprintf(buffer, "%s/memreports/D%02d%02d%03d", get_localinfo("amxx_basedir", "addons/amxx"), curTime->tm_mon + 1, curTime->tm_mday, i);
+				sprintf(buffer, "%s/memreports/D%02d%02d%03d", get_localinfo("amxx_basedir", "addons/amxmodx"), curTime->tm_mon + 1, curTime->tm_mday, i);
 #ifdef __linux__
 				mkdir(build_pathname("%s", g_log_dir.c_str()), 0700);
 				if (mkdir(build_pathname(buffer), 0700) < 0)
@@ -738,14 +738,14 @@ void C_StartFrame_Post( void ) {
 			tm *curTime = localtime(&td);
 			int i = 0;
 #ifdef __linux__
-			mkdir(build_pathname("%s/memreports", get_localinfo("amxx_basedir", "addons/amxx")), 0700);
+			mkdir(build_pathname("%s/memreports", get_localinfo("amxx_basedir", "addons/amxmodx")), 0700);
 #else
-			mkdir(build_pathname("%s/memreports", get_localinfo("amxx_basedir", "addons/amxx")));
+			mkdir(build_pathname("%s/memreports", get_localinfo("amxx_basedir", "addons/amxmodx")));
 #endif
 			while (true)
 			{
 				char buffer[256];
-				sprintf(buffer, "%s/memreports/D%02d%02d%03d", get_localinfo("amxx_basedir", "addons/amxx"), curTime->tm_mon + 1, curTime->tm_mday, i);
+				sprintf(buffer, "%s/memreports/D%02d%02d%03d", get_localinfo("amxx_basedir", "addons/amxmodx"), curTime->tm_mon + 1, curTime->tm_mday, i);
 #ifdef __linux__
 				mkdir(build_pathname("%s", g_log_dir.c_str()), 0700);
 				if (mkdir(build_pathname(buffer), 0700) < 0)
@@ -1050,7 +1050,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
   // ######	Load custom	path configuration
   Vault	amx_config;
-  amx_config.setSource(build_pathname("%s",	get_localinfo("amxx_cfg", "addons/amxx/configs/core.ini")));
+  amx_config.setSource(build_pathname("%s",	get_localinfo("amxx_cfg", "addons/amxmodx/configs/core.ini")));
 
   if ( amx_config.loadVault() ){
 	Vault::iterator	a =	amx_config.begin();
@@ -1062,11 +1062,11 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
   }
 
   // ######	Initialize logging here
-  g_log_dir.assign(get_localinfo("amxx_logs", "addons/amxx/logs"));
+  g_log_dir.assign(get_localinfo("amxx_logs", "addons/amxmodx/logs"));
 
   //  ###### Now attach	metamod	modules
   // This will also call modules Meta_Query and Meta_Attach functions
-  attachMetaModModules(now,	get_localinfo("amxx_modules", "addons/amxx/configs/modules.ini") );
+  attachMetaModModules(now,	get_localinfo("amxx_modules", "addons/amxmodx/configs/modules.ini") );
 
   return(TRUE);
 }

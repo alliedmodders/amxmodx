@@ -94,7 +94,7 @@ stock Float:operator--(Float:oper)
 	return oper-1.0;
 
 stock Float:operator-(Float:oper)
-	return oper^Float:0x80000000; /* IEEE values are sign/magnitude */
+	return oper^Float:((-1)^((-1)/2)); /* IEEE values are sign/magnitude */
 
 stock Float:operator*(Float:oper1, oper2)
 	return floatmul(oper1, float(oper2)); /* "*" is commutative */
@@ -163,8 +163,8 @@ stock bool:operator<=(oper1, Float:oper2)
 	return floatcmp(float(oper1), oper2) <= 0;
 
 stock bool:operator!(Float:oper)
-	return (_:oper & 0x7fffffff) == 0;
-
+	return (_:oper & ((-1)/2)) == 0;		/* -1 = all bits to 1; /2 = remove most significant bit (sign)
+							works on both 32bit and 64bit systems; no constant required */
 /* forbidden operations */
 forward operator%(Float:oper1, Float:oper2);
 forward operator%(Float:oper1, oper2);

@@ -116,7 +116,7 @@ public alt_motd(param[]) {
 #if defined SHOW_MODS
   new mod_ver[32]
   len += copy(motdBody[len],MOTD_LENGTH-len,"<br>Server mods:<ul>")
-  get_cvar_string("amx_version",mod_ver,31)
+  get_cvar_string("amxmodx_version",mod_ver,31)
   if (mod_ver[0]) len += format(motdBody[len],MOTD_LENGTH-len,"<li>AMX Mod %s</li>",mod_ver)    
   get_cvar_string("statsme_version",mod_ver,31)
   if (mod_ver[0]) len += format(motdBody[len],MOTD_LENGTH-len,"<li>StatsMe %s</li>",mod_ver)

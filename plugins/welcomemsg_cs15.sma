@@ -102,7 +102,7 @@ public client_connect(id) {
 #if defined SHOW_MODS
   new mod_ver[32]
   client_cmd(id, "echo ;echo ^"   Server mods:^"")
-  get_cvar_string("amx_version",mod_ver,31)
+  get_cvar_string("amxmodx_version",mod_ver,31)
   if (mod_ver[0]) client_cmd(id, "echo ^"   o AMX Mod %s^"",mod_ver)    
   get_cvar_string("statsme_version",mod_ver,31)
   if (mod_ver[0]) client_cmd(id, "echo ^"   o StatsMe %s^"",mod_ver)

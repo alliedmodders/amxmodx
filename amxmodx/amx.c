@@ -1329,7 +1329,7 @@ int AMXAPI amx_Register(AMX *amx, AMX_NATIVE_INFO *list, int number)
       else
 	  {
         err=AMX_ERR_NOTFOUND;
-		no_function = func->name;
+		no_function = GETENTRYNAME(hdr,func);
 	  }
     } /* if */
     func=(AMX_FUNCSTUB*)((unsigned char*)func+hdr->defsize);

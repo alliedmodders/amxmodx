@@ -48,6 +48,8 @@ int gmsgSendAudio;
 int gmsgTextMsg;
 int gmsgBarTime;
 
+int g_CurrentMsg;
+
 cvar_t init_csstats_maxsize ={"csstats_maxsize","3500", 0 , 3500.0 };
 cvar_t init_csstats_reset ={"csstats_reset","0"};
 cvar_t init_csstats_rank ={"csstats_rank","0"};
@@ -162,7 +164,7 @@ void ServerDeactivate() {
 
 	// clear custom weapons info
 	for ( i=MAX_WEAPONS;i<MAX_WEAPONS+MAX_CWEAPONS;i++)
-		weaponData[i].ammoSlot = 0;
+		weaponData[i].used = false;
 
 	RETURN_META(MRES_IGNORED);
 }
@@ -211,11 +213,12 @@ void MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict_t
 		mPlayerIndex = 0;
 		mPlayer = 0;
 	}
-	mState = 0;	
-	if ( msg_type < 0 || msg_type >= MAX_REG_MSGS )
-		msg_type = 0;
-	function=modMsgs[msg_type];
-	endfunction=modMsgsEnd[msg_type];
+	mState = 0;
+	g_CurrentMsg = msg_type;
+	if ( g_CurrentMsg < 0 || g_CurrentMsg >= MAX_REG_MSGS )
+		g_CurrentMsg = 0;
+	function=modMsgs[g_CurrentMsg];
+	endfunction=modMsgsEnd[g_CurrentMsg];
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -332,7 +335,6 @@ void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 }
 
 void OnMetaAttach() {
-
 	CVAR_REGISTER (&init_csstats_maxsize);
 	CVAR_REGISTER (&init_csstats_reset);
 	CVAR_REGISTER (&init_csstats_rank);

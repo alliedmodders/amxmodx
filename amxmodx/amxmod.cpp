@@ -364,15 +364,6 @@ static cell AMX_NATIVE_CALL get_user_frags(AMX *amx, cell *params) /* 1 param */
   return (cell)(pPlayer->ingame ? pPlayer->pEdict->v.frags : 0);
 }
 
-static cell AMX_NATIVE_CALL get_user_deaths(AMX *amx, cell *params) /* 1 param */
-{
-  int index = params[1];
-  if (index<1||index>gpGlobals->maxClients)
-    return 0;
-  CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
-  return (pPlayer->ingame ? pPlayer->deaths : 0);
-}
-
 static cell AMX_NATIVE_CALL get_user_armor(AMX *amx, cell *params) /* 1 param */
 {
   int index = params[1];
@@ -2290,7 +2281,6 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "get_user_armor",   get_user_armor },
   { "get_user_attacker",get_user_attacker },
   { "get_user_authid",  get_user_authid },
-  { "get_user_deaths",  get_user_deaths },
   { "get_user_flags",   get_user_flags },
   { "get_user_frags",   get_user_frags },
   { "get_user_health",  get_user_health },

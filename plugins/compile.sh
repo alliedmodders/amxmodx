@@ -7,8 +7,18 @@
 #
 # This file is part of AMX Mod X.
 
+# new code contributed by \malex\
+
 test -e compiled || mkdir compiled
-ls *.sma | xargs -i ./amxxsc \{\} -ocompiled/\{\} > temp.txt 
-ls compiled/*.amx | xargs -i basename \{\} .amx | xargs -i mv compiled/\{\}.amxx compiled/\{\}.amxx
-more temp.txt
+rm test.txt
+
+for sourcefile in *.sma
+do
+        amxxfile="`echo $sourcefile | sed -e 's/\.sma$/.amxx/'`"
+        echo -n "Compiling $sourcefile ..."
+        ./amxxsc $sourcefile -ocompiled/$amxxfile >> temp.txt
+        echo "done"
+done
+
+less temp.txt
 rm temp.txt

@@ -34,10 +34,6 @@
 
 #define VERSION "0.15"
 
-#include <string>
-
-using namespace std;
-
 plugin_info_t Plugin_info = {
 
 	META_INTERFACE_VERSION, // ifvers
@@ -378,6 +374,7 @@ public:
 		writeangle = 0.0;
 		writecoord = 0.0;
 		writeentity = 0;
+		writestring = NULL;
 	}
 
 	argStack* arg()
@@ -391,6 +388,13 @@ public:
 	argStack* link()		//return link
 	{
 		return next;
+	}
+
+	~argStack()
+	{
+		if (writestring != NULL) {
+			delete [] writestring;
+		}
 	}
 
 	void put(int arg_type, int i)
@@ -436,7 +440,9 @@ public:
 		switch (argtype)
 		{
 		case arg_string:
-			writestring.append((char *)sz);
+			delete [] writestring;
+			writestring = new char[strlen(sz)+1];
+			strcpy(writestring, sz);
 			break;
 		}
 	}
@@ -464,7 +470,7 @@ public:
 			WRITE_COORD(writecoord);
 			break;
 		case arg_string:
-			WRITE_STRING(writestring.c_str());
+			WRITE_STRING(writestring);
 			break;
 		case arg_entity:
 			WRITE_ENTITY(writeentity);
@@ -515,7 +521,7 @@ public:
 		switch (argtype)
 		{
 		case arg_string:
-			return (writestring.length());
+			return strlen(writestring);
 			break;
 		}
 		return 0;
@@ -526,7 +532,7 @@ public:
 		switch (argtype)
 		{
 		case arg_string:
-			return writestring.c_str();
+			return (const char*)writestring;
 			break;
 		}
 
@@ -720,6 +726,20 @@ public:
 		}
 	}
 
+	void destroy()
+	{
+		argStack *p;
+		while (next != NULL) {
+			p = next->link();
+			delete next;
+			next = p;
+		}
+		if (p != NULL) {
+			delete p;
+			p = NULL;
+		}
+	}
+
 private:
 	int argtype;
 	int writebyte;
@@ -728,7 +748,7 @@ private:
 	int writelong;
 	float writeangle;
 	float writecoord;
-	std::string writestring;
+	char *writestring;
 	int writeentity;
 	argStack *next;
 };
@@ -808,16 +828,9 @@ public:
 
 	void Destroy()
 	{
-		argStack *p;
-
-		p = CHeadArg->link();
-
-		while (p)  {
-			argStack *n = p->link();
-			delete p;
-			p = n;
-		}
-		argcount = 0;
+		CHeadArg->destroy();
+		delete CHeadArg;
+		CHeadArg = NULL;
 	}
 
 	bool Set(int n, int arg_type, int data)

@@ -42,12 +42,8 @@
 #include <limits.h>
 #include "engine.h"
 
-extern "C" void destroy(MessageInfo* p) {
-    delete p;
-}
-
 GlobalInfo GlInfo;
-MessageInfo *msgd;
+MessageInfo *msgd = NULL;
 bool isMsgHooked[MAX_MESSAGES];
 int inHookProcess;
 edict_t *valid_ent(int ent);
@@ -268,16 +264,20 @@ static cell AMX_NATIVE_CALL get_msg_arg_string(AMX *amx, cell *params)
 	int argn = params[1];
 	int iLen = 0;
 	char *szValue = '\0';
+	char *szRetr;
 	
 	if (inHookProcess && msgd!=NULL) {
 		if (argn <= msgd->args() && argn > 0) {
 			iLen = msgd->RetArg_Strlen(argn);
 			szValue = new char[iLen+1];
-			strcpy(szValue, msgd->RetArg_String(argn));
-			if (strlen(szValue)) {
-				return SET_AMXSTRING(amx, params[2], szValue, params[3]);
-			} else {
-				return SET_AMXSTRING(amx, params[2], "", params[3]);
+			szRetr = (char *)msgd->RetArg_String(argn);
+			if (szRetr != NULL) {
+				strcpy(szValue, szRetr);
+				if (strlen(szValue)) {
+					return SET_AMXSTRING(amx, params[2], szValue, params[3]);
+				} else {
+					return SET_AMXSTRING(amx, params[2], "", params[3]);
+				}
 			}
 		} else {
 			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
@@ -2943,7 +2943,7 @@ void MessageEnd(void) {
 			msgd->SendMsg();
 			RETURN_META(MRES_SUPERCEDE);
 		}
-		destroy(msgd);
+		delete msgd;
 		msgd = NULL;
 	}
 
@@ -3106,7 +3106,7 @@ void ServerDeactivate() {
 	}
 
 	if (msgd != NULL) {
-		destroy(msgd);
+		delete msgd;
 		msgd = NULL;
 	}
 

@@ -146,7 +146,7 @@ static cell AMX_NATIVE_CALL mssql_close(AMX *amx, cell *params)
 {
 	unsigned int id = params[1] - 1;
 	
-	if (id >= DBList.size() || id < 0 || DBList.at(id)->free) {
+	if (id >= DBList.size() || DBList.at(id)->free) {
 		error.assign("Invalid handle.");
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -159,7 +159,7 @@ static cell AMX_NATIVE_CALL mssql_query(AMX *amx, cell *params)
 {
 	unsigned int id = params[1] - 1;
 	
-	if (id >= DBList.size() || id < 0 || DBList.at(id)->free) {
+	if (id >= DBList.size() || DBList.at(id)->free) {
 		error.assign("Invalid handle.");
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -209,7 +209,7 @@ static cell AMX_NATIVE_CALL mssql_nextrow(AMX *amx, cell *params)
 {
 	unsigned int id = params[1] - 1;
 	
-	if (id >= DBList.size() || id < 0 || DBList.at(id)->free) {
+	if (id >= DBList.size() || DBList.at(id)->free) {
 		error.assign("Invalid handle.");
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -242,7 +242,7 @@ static cell AMX_NATIVE_CALL mssql_getfield(AMX *amx, cell *params)
 {
 	unsigned int id = params[1] - 1;
 	
-	if (id >= DBList.size() || id < 0 || DBList.at(id)->free) {
+	if (id >= DBList.size() || DBList.at(id)->free) {
 		error.assign("Invalid handle.");
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -292,7 +292,6 @@ static cell AMX_NATIVE_CALL mssql_getfield(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL mssql_error(AMX *amx, cell *params)
 {
-	error.assign("Invalid handle.");
 	MF_SetAmxString(amx, params[2], error.c_str(), params[3]);
 	return lastError;
 }

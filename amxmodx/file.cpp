@@ -35,17 +35,6 @@
 	#define _INTPTR_T_DEFINED
 #endif
 
-#include <extdll.h>
-#include <meta_api.h>
-#include "amxmodx.h"
-
-// header file for unlink()
-#ifdef __linux__
-#include <unistd.h>
-#else
-#include <io.h>
-#endif
-
 #ifdef __GNUC__
 
 //#include <stddef.h>
@@ -54,6 +43,18 @@
 #include <dirent.h>
 
 #endif
+
+// header file for unlink()
+#ifdef __linux__
+#include <unistd.h>
+#else
+#include <io.h>
+#endif
+
+#include <extdll.h>
+#include <meta_api.h>
+#include "amxmodx.h"
+
 
 static cell AMX_NATIVE_CALL read_dir(AMX *amx, cell *params)
 {
@@ -531,4 +532,5 @@ AMX_NATIVE_INFO file_Natives[] = {
   
   { NULL, NULL }
 };
+
 

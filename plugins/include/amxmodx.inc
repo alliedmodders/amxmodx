@@ -555,8 +555,8 @@ native set_xvar_num( id, value = 0 );
 * returned by get_xvar_id(...) native. */
 native set_xvar_float( id, Float:value = 0.0 );
 
-/* Checks whether a module is loaded. If it is not, the return value is 0, otherwise
-* the return value is non-zero. The function is case insensitive. */
+/* Checks whether a module is loaded. If it is not, the return value is -1, otherwise
+* the return value is the module id. The function is case insensitive. */
 native is_module_loaded(const name[]);
 
 /* Gets info about a module.
@@ -577,8 +577,8 @@ native get_module(id, name[], nameLen, author[], authorLen, version[], versionLe
 /* Returns number of currently registered modules */
 native get_modulesnum();
 
-/* Checks whether a plugin is loaded. If it is not, the return value is 0, otherwise
-* the return value is non-zero. The function is case insensitive. */
+/* Checks whether a plugin is loaded. If it is not, the return value is -1, otherwise
+* the return value is the plugin id. The function is case insensitive. */
 native is_plugin_loaded(const name[]);
 
 /* Gets info about plugin by given index.

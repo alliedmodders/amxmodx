@@ -95,7 +95,7 @@ public:
 	inline module_info_s* getInfo() const { return m_InfoOld; }	// old
 	inline const amxx_module_info_s* getInfoNew() const { return &m_InfoNew; }	// new
 	inline int getStatusValue() { return m_Status; }
-	inline bool operator==( void* fname ) { return !strcmp( m_Filename.c_str() , (char*)fname );  }
+	inline bool operator==( const char* fname ) { return !strcmp( m_Filename.c_str() , fname );  }
 	inline bool isReloadable() { return m_Amxx ? ((m_Status == MODULE_LOADED) && (m_InfoNew.reload != 0)) : ( (m_Status==MODULE_LOADED) && (m_InfoOld->type==RELOAD_MODULE)); }
 	inline bool isAmxx() const { return m_Amxx; }
 	inline const char *getMissingFunc() const { return m_MissingFunc; }

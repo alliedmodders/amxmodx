@@ -71,7 +71,7 @@ public:
 
 	void append(const char *t)
 	{
-		Grow(cSize + strlen(t));
+		Grow(cSize + strlen(t) + 1);
 		strcat(v, t);
 		cSize = strlen(v);
 	}

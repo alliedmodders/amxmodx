@@ -219,6 +219,7 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 		$ofile_time = (stat($ofile))[9];
 		if ($file_time > $ofile_time)
 		{
+			`rm $ofile`;
 			print "$gcc\n";
 			`$gcc`;
 		}

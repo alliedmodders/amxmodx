@@ -34,7 +34,7 @@
 #include "CFile.h"
 #include "amxxfile.h"
 
-CList<CModule> g_modules;
+CList<CModule,const char*> g_modules;
 CList<CScript,AMX*> g_loadedscripts;
 
 CModule *g_CurrentlyCalledModule = NULL;	// The module we are in at the moment; NULL otherwise
@@ -43,7 +43,6 @@ CModule *g_CurrentlyCalledModule = NULL;	// The module we are in at the moment; 
 ModuleCallReason g_ModuleCallReason;
 
 extern const char* no_function; // stupid work around
-
 
 void report_error( int code, char* fmt, ... )
 {
@@ -234,7 +233,7 @@ int CheckModules(AMX *amx, char error[64])
 				}
 				//assume module is not found
 				flag = 0;
-				for (CList<CModule>::iterator pMod = g_modules.begin(); pMod; ++pMod)
+				for (CList<CModule,const char *>::iterator pMod = g_modules.begin(); pMod; ++pMod)
 				{
 					if (strcmpi(CurModuleList.front().c_str(), "dbi") == 0)
 					{
@@ -273,7 +272,7 @@ int CheckModules(AMX *amx, char error[64])
 
 int set_amxnatives(AMX* amx,char error[64])
 {
-	for ( CList<CModule>::iterator  a  = g_modules.begin(); a ; ++a )
+	for ( CList<CModule,const char *>::iterator  a  = g_modules.begin(); a ; ++a )
 	{
 		for( CList<AMX_NATIVE_INFO*>::iterator cc = 
 			(*a).m_Natives.begin(); cc; ++cc )
@@ -411,7 +410,7 @@ char* build_pathname_addons(char *fmt, ... )
 
 int add_amxnatives(module_info_s* info,AMX_NATIVE_INFO*natives)
 {
-	CList<CModule>::iterator  a  = g_modules.begin();
+	CList<CModule,const char *>::iterator  a  = g_modules.begin();
 
 	while ( a )
 	{
@@ -443,9 +442,68 @@ bool validFile(const char* file)
 #endif
 }
 
+void ConvertModuleName(const char *pathString, String &path)
+{
+#if SMALL_CELL_SIZE==64
+	char *ptr = strstr(pathString, "i386");
+	if (ptr)
+	{
+		//attempt to fix the binary name
+		*ptr = 0;
+		path.assign(pathString);
+		path.append("amd64.so");
+	} else {
+		ptr = strstr(pathString, ".dll");
+		if (ptr)
+		{
+			*ptr = 0;
+			path.assign(pathString);
+			path.append("_amd64.so");
+		} else {
+			ptr = strstr(pathString, ".so");
+			if (ptr)
+			{
+				path.assign(pathString);
+			} else {
+				//no extension at all
+				path.assign(pathString);
+				path.append("_amd64.so");
+			}
+		}
+	}
+#else
+	char *ptr = strstr(pathString, "amd64");
+	if (ptr) 
+	{
+		//attempt to fix the binary name
+		*ptr = 0;
+		path.assign(pathString);
+		path.append("i386.so");
+	} else {
+		ptr = strstr(pathString, ".dll");
+		if (ptr)
+		{
+			*ptr = 0;
+			path.assign(pathString);
+			path.append("_i386.so");
+		} else {
+			//check to see if this file even has an extenti
+			ptr = strstr(pathString, ".so");
+			if (ptr)
+			{
+				path.assign(pathString);
+			} else {
+				path.assign(pathString);
+				path.append("_i386.so");
+			}
+		}
+	}
+#endif
+}
+
 int loadModules(const char* filename)
 {
-	File fp( build_pathname("%s",filename), "r"  );
+	FILE *fp = fopen(build_pathname("%s",filename), "rt");
 
 	if ( !fp )
 	{
@@ -453,23 +511,40 @@ int loadModules(const char* filename)
 		return 0;
 	}
 
-	char line[256], moduleName[256];
+	char moduleName[256];
+	char pathString[512];
+	String line;
 	int loaded = 0;
 
-	while ( fp.getline( line ,  255  ) )
+	String path;
+
+	while (!feof(fp))
 	{
+		if (!line._fread(fp) || line.size() < 1)
+			continue;
+		line.trim();
 		*moduleName = 0;
-		sscanf(line,"%s",moduleName);
-		if (!isalnum(*moduleName) || !validFile(moduleName) )  
+		if (sscanf(line.c_str(),"%s",moduleName) == EOF)
+			continue;
+		if (moduleName[0] == ';')  
 			continue;
 
-		char* pathname = build_pathname("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"), line);
 
-		CList<CModule>::iterator a = g_modules.find(  pathname  );
+		char* pathname = build_pathname("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"), moduleName);
+		strcpy(pathString, pathname);
+
+		path.assign("");
+
+		ConvertModuleName(pathString, path);	
+
+		if (!validFile(path.c_str()))
+			continue;
+
+		CList<CModule,const char *>::iterator a = g_modules.find(  path.c_str() );
 
 		if ( a ) continue; // already loaded
 
-		CModule* cc = new CModule( pathname  );
+		CModule* cc = new CModule( path.c_str() );
 
 		if ( cc == 0 ) return loaded;
 
@@ -477,42 +552,45 @@ int loadModules(const char* filename)
 
 		switch(  cc->getStatusValue()  )  {
 	  case MODULE_BADLOAD:
-		  report_error( 1 , "[AMXX] Module is not a valid library (file \"%s\")",pathname );
+		  report_error( 1 , "[AMXX] Module is not a valid library (file \"%s\")", path.c_str());
 		  break;
 	  case MODULE_NOINFO:
-		  report_error( 1 ,"[AMXX] Couldn't find info. about module (file \"%s\")",pathname );
+		  report_error( 1 ,"[AMXX] Couldn't find info. about module (file \"%s\")", path.c_str());
 		  break;
 	  case MODULE_NOQUERY:
-		  report_error( 1 , "[AMXX] Couldn't find \"AMX_Query\" or \"AMXX_Query\" (file \"%s\")", pathname );
+		  report_error( 1 , "[AMXX] Couldn't find \"AMX_Query\" or \"AMXX_Query\" (file \"%s\")", path.c_str());
 		  break;
 	  case MODULE_NOATTACH:
-		  report_error( 1 , "[AMXX] Couldn't find \"%s\" (file \"%s\")", cc->isAmxx() ? "AMXX_Attach" : "AMX_Attach", pathname );
+		  report_error( 1 , "[AMXX] Couldn't find \"%s\" (file \"%s\")", cc->isAmxx() ? "AMXX_Attach" : "AMX_Attach", path.c_str());
 		  break;
 	  case MODULE_OLD:
-		  report_error( 1 , "[AMXX] Module has a different interface version (file \"%s\")",pathname );
+		  report_error( 1 , "[AMXX] Module has a different interface version (file \"%s\")",path.c_str());
 		  break;
 	  case MODULE_NEWER:
-		  report_error(1, "[AMXX] Module has a newer interface version (file \"%s\"). Please download a new amxmodx.", pathname);
+		  report_error(1, "[AMXX] Module has a newer interface version (file \"%s\"). Please download a new amxmodx.", path.c_str());
 		  break;
 	  case MODULE_INTERROR:
-		  report_error(1, "[AMXX] Internal error during module load (file \"%s\")", pathname);
+		  report_error(1, "[AMXX] Internal error during module load (file \"%s\")", path.c_str());
 		  break;
 	  case MODULE_NOT64BIT:
-		  report_error(1, "[AMXX] Module \"%s\" is not 64 bit compatible.", pathname);
+		  report_error(1, "[AMXX] Module \"%s\" is not 64 bit compatible.", path.c_str());
 		  break;
 	  default:
 		  ++loaded; 
 		}
 
 		g_modules.put( cc );
+
 	}
+
+	fclose(fp);
 
 	return loaded;
 }
 
 void detachModules()
 {
-	CList<CModule>::iterator  a  = g_modules.begin();
+	CList<CModule,const char *>::iterator  a  = g_modules.begin();
 
 	while ( a )
 	{
@@ -523,7 +601,7 @@ void detachModules()
 
 void detachReloadModules()
 {
-	CList<CModule>::iterator  a  = g_modules.begin();
+	CList<CModule,const char *>::iterator  a  = g_modules.begin();
 
 	while ( a )
 	{
@@ -541,7 +619,7 @@ void detachReloadModules()
 
 void attachModules()
 {
-	CList<CModule>::iterator  a  = g_modules.begin();
+	CList<CModule,const char *>::iterator  a  = g_modules.begin();
 
 	while ( a )
 	{
@@ -593,6 +671,7 @@ void attachMetaModModules(PLUG_LOADTIME now, const char* filename)
 	}
 
 	char line[256], moduleName[256];
+	String modPath, mmPath;
 	DLHANDLE module;
 
 	while ( fp.getline( line ,  255  ) )
@@ -600,12 +679,16 @@ void attachMetaModModules(PLUG_LOADTIME now, const char* filename)
 		*moduleName = 0;
 		sscanf(line,"%s",moduleName);
 
-		if (!isalnum(*moduleName) || !validFile(moduleName) )  
+		if (!isalnum(*moduleName))  
 			continue;
 
-		char* pathname = build_pathname("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxx/modules"), line);
-		char* mmpathname = build_pathname_addons("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxx/modules"), line);
-		module = DLLOAD( pathname ); // link dll
+		char* pathname = build_pathname("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"), line);
+		char* mmpathname = build_pathname_addons("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"), line);
+
+		ConvertModuleName(pathname, modPath);
+		ConvertModuleName(mmpathname, mmPath);
+		
+		module = DLLOAD( modPath.c_str() ); // link dll
 
 		if ( module )
 		{
@@ -614,7 +697,7 @@ void attachMetaModModules(PLUG_LOADTIME now, const char* filename)
 
 			if ( a )
 			{
-				g_FakeMeta.AddPlugin(mmpathname);
+				g_FakeMeta.AddPlugin(mmPath.c_str());
 			}
 		}
 	}
@@ -627,7 +710,7 @@ void attachMetaModModules(PLUG_LOADTIME now, const char* filename)
 // Get the number of running modules
 int countModules(CountModulesMode mode)
 {
-	CList<CModule>::iterator iter;
+	CList<CModule,const char *>::iterator iter;
 	int num;
 	switch (mode)
 	{
@@ -660,7 +743,7 @@ int countModules(CountModulesMode mode)
 // Call all modules' AMXX_PluginsLoaded functions
 void modules_callPluginsLoaded()
 {
-	CList<CModule>::iterator iter = g_modules.begin();
+	CList<CModule,const char *>::iterator iter = g_modules.begin();
 	while (iter)
 	{
 		(*iter).CallPluginsLoaded();
@@ -672,7 +755,7 @@ void modules_callPluginsLoaded()
 
 int MNF_AddNatives(AMX_NATIVE_INFO* natives)
 {
-	CList<CModule>::iterator a = g_modules.begin();
+	CList<CModule,const char *>::iterator a = g_modules.begin();
 
 	if (!g_CurrentlyCalledModule || g_ModuleCallReason != ModuleCall_Attach)
 		return FALSE;				// may only be called from attach

@@ -2257,7 +2257,7 @@ static cell AMX_NATIVE_CALL is_module_loaded(AMX *amx, cell *params)
 	int len;
 	char *name = get_amxstring(amx, params[1], 0, len);
 	int id = 0;
-	for (CList<CModule>::iterator iter = g_modules.begin(); iter; ++iter)
+	for (CList<CModule,const char *>::iterator iter = g_modules.begin(); iter; ++iter)
 	{
 		if (stricmp((*iter).getName(), name) == 0)
 			return id;
@@ -2290,7 +2290,7 @@ static cell AMX_NATIVE_CALL get_modulesnum(AMX *amx, cell *params)
 // native get_module(id, name[], nameLen, author[], authorLen, version[], versionLen, &status);
 static cell AMX_NATIVE_CALL get_module(AMX *amx, cell *params)
 {
-	CList<CModule>::iterator moduleIter;
+	CList<CModule,const char *>::iterator moduleIter;
 
 	// find the module
 	int i = params[1];

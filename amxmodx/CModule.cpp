@@ -126,8 +126,9 @@ pfnmodule_engine_g engModuleFunc = {
 // class CModule
 // *****************************************************
 
-CModule::CModule(const char* fname) : m_Filename(fname)
+CModule::CModule(const char* fname)
 {
+	m_Filename.assign(fname);
 	clear(false);
 }
 

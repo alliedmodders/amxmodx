@@ -169,7 +169,7 @@ void amx_command(){
 				int running = 0;
 				int modules = 0;
 
-				CList<CModule>::iterator a = g_modules.begin();
+				CList<CModule,const char *>::iterator a = g_modules.begin();
 
 				while ( a )
 				{

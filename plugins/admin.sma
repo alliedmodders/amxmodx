@@ -137,8 +137,8 @@ getAccess(id,name[],authid[],ip[], password[])
   else {
     new defaccess[32]
     get_cvar_string("amx_default_access",defaccess,31)
-    if (containi(defaccess,"z")==-1)
-      format(defaccess,31,"%sz",defaccess)
+    if (!defaccess[0])
+      defaccess[0] = 'z'
     new idefaccess = read_flags(defaccess)
     if (idefaccess){
       result |= 8

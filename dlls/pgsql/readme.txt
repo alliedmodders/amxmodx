@@ -30,3 +30,6 @@ geoip_amx.dll
 Place admin_pgsql.amx in addons/amxx/plugins/
 And add this line to addons/amxx/plugins.ini:
 admin_pgsql.amx
+
+5] Put pgsql.cfg in addons/amxx/configs/
+Open it and make sure the host, user, password, and database name are correct

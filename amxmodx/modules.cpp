@@ -959,6 +959,23 @@ const char *MNF_Format(const char *fmt, ...)
 	return retVal;
 }
 
+#ifndef MEMORY_TEST
+void *MNF_Allocator(const char *sourceFile, const unsigned int sourceLine, const char *sourceFunc, const unsigned int allocationType, const size_t reportedSize)
+{
+	return malloc(reportedSize);
+}
+
+void *MNF_Reallocator(const char *sourceFile, const unsigned int sourceLine, const char *sourceFunc, const unsigned int reallocationType, const size_t reportedSize, void *reportedAddress)
+{
+	return realloc(reportedAddress, reportedSize);
+}
+
+void MNF_Deallocator(const char *sourceFile, const unsigned int sourceLine, const char *sourceFunc, const unsigned int deallocationType, void *reportedAddress)
+{
+	free(reportedAddress);
+}
+#endif
+
 // Fnptr Request function for the new interface
 const char *g_LastRequestedFunc = NULL;
 #define REGISTER_FUNC(name, func) { name, (void*)func },
@@ -1042,6 +1059,10 @@ void *Module_ReqFnptr(const char *funcName)
 			REGISTER_FUNC("Allocator", m_allocator)
 			REGISTER_FUNC("Deallocator", m_deallocator)
 			REGISTER_FUNC("Reallocator", m_reallocator)
+#else
+			REGISTER_FUNC("Allocator", MNF_Allocator)
+			REGISTER_FUNC("Deallocator", MNF_Deallocator)
+			REGISTER_FUNC("Reallocator", MNF_Reallocator)
 #endif // MEMORY_TEST
 
 			REGISTER_FUNC("Haha_HiddenStuff", MNF_HiddenStuff)

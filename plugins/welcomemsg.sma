@@ -45,16 +45,13 @@
 new g_cstrikeRunning
 
 #if defined READ_FROM_FILE
-new g_motdFile[64]
+new g_motdFile[] = "addons/amxx/configs/conmotd.txt"
 #endif
 
 public plugin_init()
 {
   register_plugin("Welcome Message","0.1","AMXX Dev Team")
   g_cstrikeRunning = is_running("cstrike")
-#if defined READ_FROM_FILE
-  build_path( g_motdFile , 63 , "$basedir/configs/conmotd.txt" )
-#endif  
 }
 
 public plugin_cfg()
@@ -118,7 +115,7 @@ public alt_motd(param[]) {
   new mod_ver[32]
   len += copy(motdBody[len],MOTD_LENGTH-len,"<br>Server mods:<ul>")
   get_cvar_string("amxmodx_version",mod_ver,31)
-  if (mod_ver[0]) len += format(motdBody[len],MOTD_LENGTH-len,"<li>AMX Mod %s</li>",mod_ver)    
+  if (mod_ver[0]) len += format(motdBody[len],MOTD_LENGTH-len,"<li>AMX Mod X %s</li>",mod_ver)    
   get_cvar_string("statsme_version",mod_ver,31)
   if (mod_ver[0]) len += format(motdBody[len],MOTD_LENGTH-len,"<li>StatsMe %s</li>",mod_ver)
   get_cvar_string("clanmod_version",mod_ver,31)

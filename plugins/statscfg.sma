@@ -42,7 +42,7 @@ new g_menuDataVar[MAX_MENU_DATA][32]
 new g_menuDataId[MAX_MENU_DATA]
 new g_menuDataNum
 new g_menuPosition[33]
-new g_fileToSave[64]
+new g_fileToSave[] = "addons/amxx/configs/stats.ini"
 new bool:g_modified
 
 public plugin_precache(){
@@ -53,7 +53,6 @@ public plugin_precache(){
 public plugin_init() {
   register_plugin("Stats Configuration","0.1","AMXX Dev Team")
   register_menucmd(register_menuid("\yStats Configuration"),1023,"actionCfgMenu")
-  build_path( g_fileToSave , 63 , "$basedir/configs/stats.ini" )  
   loadSettings(g_fileToSave)
 }
 

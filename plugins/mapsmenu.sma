@@ -63,10 +63,8 @@ public plugin_init()
   register_menucmd(register_menuid("Change map to"),527,"voteCount")
   register_menucmd(register_menuid("Votemap Menu"),1023,"actionVoteMapMenu")
   register_menucmd(register_menuid("The winner: ") ,3,"actionResult")
-  
-  new filename[64]
-  build_path( filename , 63 , "$basedir/configs/maps.ini" )  
-  load_settings( filename )
+
+  load_settings("addons/amxx/configs/maps.ini")
 
   g_cstrikeRunning = is_running("cstrike")
 }

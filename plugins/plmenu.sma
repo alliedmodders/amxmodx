@@ -70,9 +70,7 @@ public plugin_init()
 
   g_cstrikeRunning = is_running("cstrike")
 
-  new filename[64]
-  build_path( filename , 63 , "$basedir/configs/clcmds.ini" )  
-  load_settings( filename )
+  load_settings("addons/amxx/configs/clcmds.ini")
 }
 
 /* Ban menu */

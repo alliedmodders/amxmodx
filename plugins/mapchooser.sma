@@ -63,9 +63,7 @@ public plugin_init()
   get_localinfo("lastMap",g_lastMap,31)
   set_localinfo("lastMap","")
 
-  new filename[64]
-  build_path( filename , 63 , "$basedir/configs/maps.ini" )   
-  if ( loadSettings( filename ) )
+  if ( loadSettings("addons/amxx/configs/maps.ini") )
     set_task(15.0,"voteNextmap",987456,"",0,"b")
 }
 

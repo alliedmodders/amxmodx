@@ -92,11 +92,9 @@ stock is_running(const arg[]) {
 }
 
 stock build_path( path[] , len , {Float,_}:... ) {
-  new basedir[32]
-  get_localinfo( "amxx_basedir", basedir , 31 )
   format_args( path , len , 2 )
-  return replace( path , len , "$basedir", basedir  )
+  return replace( path , len , "$basedir", "addons/amxx" )
 }
 
 stock get_basedir( name[], len )
-  return get_localinfo( "amxx_basedir", name , len )
+  return copy(name,len,"addons/amxx")

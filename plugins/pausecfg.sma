@@ -43,7 +43,7 @@
 #define MAX_SYSTEM 32
  
 new g_menuPos[33]
-new g_fileToSave[64]
+new g_fileToSave[] = "addons/amxx/configs/pausecfg.ini"
 new g_cstrikeRunning
 new g_Modified
 new g_couldntFind[] = "Couldn't find a plugin matching ^"%s^""
@@ -82,7 +82,6 @@ public cmdON(id,level,cid){
 #endif
 
 public plugin_cfg() {
-  build_path( g_fileToSave , 63 , "$basedir/configs/pausecfg.ini" )  
   loadSettings(g_fileToSave)
   // Put here titles of plugins which you don't want to pause
   server_cmd(g_addCmd , "Pause Plugins" )

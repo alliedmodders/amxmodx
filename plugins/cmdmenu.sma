@@ -90,21 +90,19 @@ public plugin_init()
 {
   register_plugin("Commands Menu","0.1","AMXX Dev Team")
 
-  new basedir[32], workdir[64]
-  get_basedir( basedir , 31 )
+  new config[64]
   for(new a = 0; a < MAX_CMDS_LAYERS; ++a)  {
     register_menucmd(register_menuid( g_cmdMenuName[ a ] ),1023,"actionCmdMenu")
     register_clcmd( g_cmdMenuCmd[ a ] ,"cmdCmdMenu",ADMIN_MENU, g_cmdMenuHelp[ a ] )
-    format( workdir, 63, "%s/configs/%s" , basedir , g_cmdMenuCfg[ a ] )   
-    loadCmdSettings( workdir , a )  
+    format(config,63,"addons/amxx/configs/%s",g_cmdMenuCfg[a])   
+    loadCmdSettings(config,a)  
   }
-    
+
   register_menucmd(register_menuid("Cvars Menu"),1023,"actionCvarMenu")   
   register_clcmd("amx_cvarmenu","cmdCvarMenu",ADMIN_CVAR,"- displays cvars menu")
-  
-  format( workdir, 63, "%s/configs/cvars.ini" , basedir )   
-  loadCvarSettings( workdir )
-  
+
+  loadCvarSettings("addons/amxx/configs/cvars.ini")
+
   g_cstrikeRunning = is_running("cstrike")
 }
 

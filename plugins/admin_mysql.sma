@@ -80,10 +80,8 @@ public plugin_init()
 
   remove_user_flags(0,read_flags("z")) // remove 'user' flag from server rights
 
-  new filename[32]
-  get_basedir( filename , 31 )
-  server_cmd("exec %s/amx.cfg" , filename)
-  server_cmd("exec %s/configs/mysql.cfg;amx_sqladmins" , filename)
+  server_cmd("exec addons/amxx/amx.cfg")
+  server_cmd("exec addons/amxx/configs/mysql.cfg;amx_sqladmins")
 }
 
 public adminSql() {

@@ -58,7 +58,7 @@ weapon_t weaponData[] = {
 	{ 0,"Glock-20C","glock-20c",1 },
 	{ 0,"UMP", "ump",1 }, 
 	{ 0,"M61 Grenade","m61_grenade",1 },
-	{ 1,"Combat Knife","combat_knife",3 },
+	{ 1,"Combat Knife","combat_knife",1 },
 	{ 0,"MOSSBERG 500","mossberg_500",1 },
 	{ 0,"M16A4","m16a4",1 },
 	{ 0,"Ruger-MK1","ruger-mk1",1 },
@@ -68,9 +68,9 @@ weapon_t weaponData[] = {
 	{ 0,"M60E3","m60e3",1 }, 
 	{ 0,"Sawed-off","sawed-off",1 }, // 33 
 	{ 1,"Katana", "katana",2 }, 
-	{ 1,"Seal Knife","seal_knife",3 }, // 35 
+	{ 1,"Seal Knife","seal_knife",1 }, // 35 
 	{ 1,"Kung Fu","kung_fu",3 }, // Again new id 36 
-	{ 1,"Throwing Knife","throwing_knife",3 }, // new id 37 
+	{ 1,"Throwing Knife","throwing_knife",2 }, // new id 37 
 	{ 0,"breakable", "breakable", 1 },
 };
 

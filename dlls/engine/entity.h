@@ -153,3 +153,4 @@ void UTIL_SetSize(edict_t *pev, const Vector &vecMin, const Vector &vecMax);
 extern AMX_NATIVE_INFO ent_Natives[];
 
 #endif //_INCLUDE_ENGINE_ENTSTUFF
+

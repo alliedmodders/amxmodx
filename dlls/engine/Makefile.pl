@@ -50,7 +50,7 @@ if ($gcc =~ /2\.9/)
 {
 	$OPT{"opt"} .= " -malign-loops=2 -malign-jumps=2 -malign-functions=2";
 } else {
-	$OPT{"opt"} .= " -falign-loops=2 -falign-jumps=2 -falign-functions=2";
+	$OPT{"opt"} .= " -falign-loops=2 -falign-jumps=2 ";
 }
 
 if ($OPTIONS{"debug"})

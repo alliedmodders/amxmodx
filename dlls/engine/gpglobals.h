@@ -51,3 +51,4 @@ enum globals {
 extern AMX_NATIVE_INFO global_Natives[];
 
 #endif //_INCLUDE_ENGINE_GLOBAL
+

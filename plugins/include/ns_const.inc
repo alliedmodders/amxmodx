@@ -11,8 +11,7 @@
 #define NS_CONST_INC
 
 // entity pev->iuser4 fields
-enum masks
-{
+enum {
 	MASK_NONE = 0,
 	MASK_SIGHTED = 1,
 	MASK_DETECTED = 2,
@@ -67,8 +66,7 @@ enum masks
 }
 
 
-enum classes
-{
+enum {
 	CLASS_UNKNOWN = 0,
 	CLASS_SKULK,
 	CLASS_GORGE,
@@ -84,8 +82,7 @@ enum classes
 	CLASS_NOTEAM
 }
 
-enum weapons
-{
+enum {
 	WEAPON_NONE = 0,
 	WEAPON_CLAWS,
 	WEAPON_SPIT,
@@ -119,20 +116,8 @@ enum weapons
 	WEAPON_DEVOUR,
 	WEAPON_MAX
 }
-enum playerIcons {
-  ICON_DEVELOPER      = 1,
-  ICON_GUIDE          = 2,
-  ICON_SERVEROP       = 4,
-  ICON_PLAYTESTER     = 8,
-  ICON_CONTRIBUTOR    = 16,
-  ICON_CHEATINGDEATH  = 32,
-  ICON_VETERAN        = 64,
-  ICON_BETASERVEROP   = 128, // Using this messes with ICON_SERVEROPs
-  ICON_CUSTOM         = 512
 
-}
-enum hivetraits
-{
+enum {
 	HIVETRAIT_NONE	= 0,
 	HIVETRAIT_DC	= 92,
 	HIVETRAIT_SC	= 93,

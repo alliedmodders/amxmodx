@@ -155,11 +155,11 @@ native ns_get_deaths(idPlayer);
 /* Sets a player's death count. */
 native ns_set_deaths(idPlayer,numdeaths);
 
-/* Gets a player's icon value (from the scoreboard) is a bitmask.  Use enum "icons" for values. Returns -1 for unauthed */
-native ns_get_icon(idPlayer);
+/* Gets the index of the owner of a structure. -1 for no owner. */
+native ns_get_struct_owner(idStructsure);
 
-/* Sets a player's icon value. */
-native ns_set_icon(idPlayer,iconvalue);
+/* Sets the index of the owner of a structure. -1 for no owner. */
+native ns_set_struct_owner(idStructure,indexOwner);
 
 /* Gets the trait type tied to the hive.  Look at the hivetrait enum for the values. */
 native ns_get_hive_trait(idHive);

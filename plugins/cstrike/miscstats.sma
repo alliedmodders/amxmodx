@@ -206,30 +206,33 @@ public client_putinserver(id)
 public client_death(killer,victim,wpnindex,hitplace,TK) {
 
   new headshot = ( hitplace == HIT_HEAD ) ? 1:0
+  new selfkill = ( killer == victim ) ? 1:0
 
   if ( g_firstBlood ) {
   	g_firstBlood = 0
   	if ( FirstBloodSound ) client_cmd(0,"spk misc/firstblood")
   }
-  if ( (KillingStreak || KillingStreakSound) && !TK ) {    
-    g_streakKills[ killer ][ 0 ]++
-    g_streakKills[ killer ][ 1 ] = 0
+  if ( (KillingStreak || KillingStreakSound) && !TK ) { 
     g_streakKills[ victim ][ 1 ]++
     g_streakKills[ victim ][ 0 ] = 0
-    new a = g_streakKills[ killer ][ 0 ] - 3
-    if ( (a > -1) && !( a % 2 ) ) {
-      new name[32]
-      get_user_name( killer , name , 31 )
-      if ( (a >>= 1) > 6 ) a = 6
-      if ( KillingStreak ){
-        set_hudmessage(0, 100, 255, 0.05, 0.55, 2, 0.02, 6.0, 0.01, 0.1, 3)
-        show_hudmessage(0,g_KillingMsg[ a ], name )        
+    if (!selfkill){  
+      g_streakKills[ killer ][ 0 ]++
+      g_streakKills[ killer ][ 1 ] = 0
+      new a = g_streakKills[ killer ][ 0 ] - 3
+      if ( (a > -1) && !( a % 2 ) ) {
+        new name[32]
+        get_user_name( killer , name , 31 )
+        if ( (a >>= 1) > 6 ) a = 6
+        if ( KillingStreak ){
+          set_hudmessage(0, 100, 255, 0.05, 0.55, 2, 0.02, 6.0, 0.01, 0.1, 3)
+          show_hudmessage(0,g_KillingMsg[ a ], name )        
+        }
+        if (  KillingStreakSound )  client_cmd( 0, "spk misc/%s", g_Sounds[ a ] )
       }
-      if (  KillingStreakSound )  client_cmd( 0, "spk misc/%s", g_Sounds[ a ] )
     }
   }
   if ( MultiKill || MultiKillSound ) {
-    if (killer && !TK ) { 
+    if (!selfkill && !TK ) { 
       g_multiKills[killer][0]++ 
       g_multiKills[killer][1] += headshot
       new param[2]
@@ -292,7 +295,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK) {
     }
   }
 
-  if ( wpnindex == 29 && ( KnifeKill || KnifeKillSound ) ) {
+  if ( wpnindex == CSW_KNIFE && ( KnifeKill || KnifeKillSound ) ) {
     if ( KnifeKill ) {
       new killer_name[32],victim_name[32] 
       get_user_name(killer,killer_name,31) 
@@ -303,12 +306,12 @@ public client_death(killer,victim,wpnindex,hitplace,TK) {
     if ( KnifeKillSound ) client_cmd(0,"spk misc/humiliation") 
   }
 
-  if ( wpnindex == 4 && (GrenadeKill || GrenadeSuicide) ) {
+  if ( wpnindex == CSW_HEGRENADE && (GrenadeKill || GrenadeSuicide) ) {
     new killer_name[32],victim_name[32] 
     get_user_name(killer,killer_name,32) 
     get_user_name(victim,victim_name,32) 
     set_hudmessage(255, 100, 100, -1.0, 0.25, 1, 6.0, 6.0, 0.5, 0.15, 1)    
-    if ( killer != victim ) {
+    if ( !selfkill ) {
       if ( GrenadeKill ) show_hudmessage(0,"%L",LANG_PLAYER,g_HeMessages[ random_num(0,3)],killer_name,victim_name) 
     }
     else if ( GrenadeSuicide ) show_hudmessage(0,"%L",LANG_PLAYER,g_SHeMessages[ random_num(0,3) ],victim_name) 
@@ -335,7 +338,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK) {
     	client_cmd(victim,"spk misc/headshot")
    	}
   }
-  if ( DoubleKill || DoubleKillSound ) {
+  if ( (DoubleKill || DoubleKillSound) && !selfkill ) {
     new Float:nowtime = get_gametime()
     if ( g_doubleKill == nowtime && g_doubleKillId == killer ) {
       if ( DoubleKill ) {

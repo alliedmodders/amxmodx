@@ -1168,7 +1168,7 @@ showStatsMenu( id, iMenuPos ) {
   if ( iMenuPos > 0 )
     iLen += format( g_sBuffer[iLen], MAX_BUFFER_LENGTH - iLen, "^n0. %L", id, "BACK" )
   else
-    iLen += format( g_sBuffer[iLen], MAX_BUFFER_LENGTH - iLen, "^n0. %L", id, "MORE" )
+    iLen += format( g_sBuffer[iLen], MAX_BUFFER_LENGTH - iLen, "^n0. %L", id, "EXIT" )
   show_menu( id, iKeyMask, g_sBuffer, -1, "Server Stats" )
   return PLUGIN_HANDLED
 }

@@ -34,10 +34,7 @@
 
 static cell AMX_NATIVE_CALL set_user_class(AMX *amx, cell *params){
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index)
 	int iClass = params[2];
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
@@ -59,13 +56,10 @@ static cell AMX_NATIVE_CALL set_user_class(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL set_user_team(AMX *amx, cell *params){
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 	int iTeam = params[2];
 	if ( iTeam<1 || iTeam>3 ){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid team id %d", iTeam);
 		return 0;
 	}
 
@@ -101,10 +95,7 @@ static cell AMX_NATIVE_CALL set_user_team(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL get_user_nextclass(AMX *amx, cell *params){
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if ( pPlayer->ingame ){
@@ -116,10 +107,7 @@ static cell AMX_NATIVE_CALL get_user_nextclass(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL is_randomclass(AMX *amx, cell *params){
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if ( pPlayer->ingame ){
@@ -130,10 +118,7 @@ static cell AMX_NATIVE_CALL is_randomclass(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL get_user_deaths(AMX *amx, cell *params){
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return -1;
-	}
+	CHECK_PLAYER(index);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->ingame){
 		return *( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_DEATHS );
@@ -143,10 +128,7 @@ static cell AMX_NATIVE_CALL get_user_deaths(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL set_user_deaths(AMX *amx, cell *params){
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->ingame){
 		*( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_DEATHS ) = params[2];
@@ -166,10 +148,7 @@ static cell AMX_NATIVE_CALL set_user_deaths(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL set_user_score(AMX *amx, cell *params){
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if (pPlayer->ingame){
@@ -192,10 +171,7 @@ static cell AMX_NATIVE_CALL set_user_score(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL set_user_frags(AMX *amx, cell *params){
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if (pPlayer->ingame){
@@ -217,10 +193,7 @@ static cell AMX_NATIVE_CALL set_user_frags(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL get_user_frags(AMX *amx, cell *params){
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return -1;
-	}
+	CHECK_PLAYER(index);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if (pPlayer->ingame)
@@ -231,10 +204,7 @@ static cell AMX_NATIVE_CALL get_user_frags(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL set_user_teamname(AMX *amx, cell *params){
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
@@ -252,10 +222,7 @@ static cell AMX_NATIVE_CALL set_user_teamname(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL get_user_teamname(AMX *amx, cell *params){
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
@@ -273,10 +240,7 @@ static cell AMX_NATIVE_CALL get_user_teamname(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL is_weapon_deployed(AMX *amx, cell *params){
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->ingame){
 		if ( *( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_WDEPLOY) == 1 )
@@ -288,10 +252,7 @@ static cell AMX_NATIVE_CALL is_weapon_deployed(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL set_user_ammo(AMX *amx, cell *params){
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if ( !pPlayer->ingame )
@@ -395,10 +356,7 @@ static cell AMX_NATIVE_CALL set_user_ammo(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL get_user_ammo(AMX *amx, cell *params){
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if ( !pPlayer->ingame )
@@ -484,10 +442,7 @@ static cell AMX_NATIVE_CALL get_user_ammo(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL test_pd(AMX *amx, cell *params){
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 	int type = params[2];
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->ingame){

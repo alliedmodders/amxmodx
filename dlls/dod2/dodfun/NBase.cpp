@@ -34,10 +34,7 @@
 
 static cell AMX_NATIVE_CALL set_player_stamina(AMX *amx, cell *params){ // id,(re)set,min,max
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index)
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if ( params[2] ){ // 0 set , 1 reset
@@ -49,12 +46,12 @@ static cell AMX_NATIVE_CALL set_player_stamina(AMX *amx, cell *params){ // id,(r
 
 	int min = params[3];
 	if ( min<0 || min>100 ){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid minimum stamina %d", min);
 		return 0;
 	}
 	int max = params[4];
 	if ( max<min || max>100 ){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid maximum stamina %d", max);
 		return 0;
 	}
 	if ( pPlayer->ingame ){
@@ -68,10 +65,7 @@ static cell AMX_NATIVE_CALL set_player_stamina(AMX *amx, cell *params){ // id,(r
 
 static cell AMX_NATIVE_CALL nade_set_fuse(AMX *amx, cell *params){ // id,(re)set,time,type
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if ( params[2] ){ // 0 set , 1 reset
@@ -82,7 +76,7 @@ static cell AMX_NATIVE_CALL nade_set_fuse(AMX *amx, cell *params){ // id,(re)set
 
 	float fFuse = *(float *)((void *)&params[3]);
 	if ( fFuse<0.1 || fFuse>20.0 ){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid fuse %f", fFuse);
 		return 0;
 	}
 

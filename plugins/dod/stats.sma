@@ -157,8 +157,6 @@ new mortarmsg[2][]={
 
 new g_addStast[] = "amx_statscfg add ^"%s^" %s"
 new g_disabledMsg[] = "DISABLED_MSG"
-new g_htmlFile[64]
-new g_htmlDir[64]
 
 public plugin_init() {
   register_plugin("DoD Stats","0.20dod","SidLuke")
@@ -183,7 +181,7 @@ public plugin_init() {
   register_clcmd("say /rank","cmdRank",0,"- displays your server stats")
   register_clcmd("say /ff","cmdFF",0,"- displays friendly fire status")
 
-  register_cvar("dodstats_topvalue","15")
+  register_cvar("dodstats_topvalue","10")
   register_cvar("dodstats_maxmenupos","7")
   register_cvar("dodstats_statstime","5.0")
 
@@ -191,9 +189,6 @@ public plugin_init() {
   register_statsfwd(XMF_DEATH)
   
   register_menucmd(register_menuid("Server Stats"),1023,"actionStatsMenu")
-
-  get_datadir(g_htmlDir,63)
-
 }
 
 public plugin_cfg(){
@@ -241,155 +236,6 @@ public cmdFF(id){
   }
   client_print( 0, print_chat,"%L^t%L",LANG_PLAYER,"FFIRE_IS",LANG_PLAYER, ( get_cvar_num( "mp_friendlyfire" ) ) ? "ON" : "OFF" )
   return PLUGIN_CONTINUE
-}
-
-public cmdStatsMe(id){
-  if ( !SayStatsMe || !isDSMActive() ){
-    client_print(id,print_chat,"%L",id,g_disabledMsg )
-    return PLUGIN_HANDLED
-  }
-  displayStats_steam(id,id)
-  return PLUGIN_CONTINUE
-}
-
-displayStats_steam(id,dest) {
- new name[32], stats[9], body[8]
- get_user_wstats(id,0,stats,body)
-
- format(g_htmlFile,63,"%s/%d.htm",g_htmlDir,dest)
-
- delete_file(g_htmlFile)
-
- copy(g_Buffer,2047,"<html><head><style type=^"text/css^">pre{color:#FFB000;}body{background:Black;margin-left:8px;margin-top:0px; color:#FFB000;}</style></head><pre><body>")
-
- write_file(g_htmlFile,g_Buffer,-1)
-
- format(g_Buffer,2047,"<table><tr><td><center>%L</center></td><td><center>%L</center></td><td><center>%L</center></td><td><center>%L</center></td><td><center>%L</center></td><td><center>%L</center></td><td><center>%L</center></td></tr>",
-               dest,"M_KILLS",dest,"M_DEATHS",dest,"M_SCORE",dest,"M_TKS",dest,"M_HITS",dest,"M_SHOTS",dest,"M_HS")
-
- write_file(g_htmlFile,g_Buffer,-1) 
-
- format(g_Buffer,2047,"<tr><td><center>%d</center></td><td><center>%d</center></td><td><center>%d</center></td><td><center>%d</center></td><td><center>%d</center></td><td><center>%d</center></td><td><center>%d</center></td></tr></table><br><br><br>",stats[0],stats[1],stats[7],stats[3],stats[5],stats[4],stats[2])
-
- write_file(g_htmlFile,g_Buffer,-1)
-
- format(g_Buffer,2047,"<table><tr><td><center>%L</center></td><td><center>%L</center></td><td><center>%L</center></td><td><center>%L</center></td><td><center>%L</center></td><td><center>%L</center><td></tr>",
-               dest,"M_WEAPON",dest,"M_SHOTS",dest,"M_HITS",dest,"M_DAMAGE",dest,"M_KILLS",dest,"M_DEATHS")
-
- write_file(g_htmlFile,g_Buffer,-1)
-
- for(new a = 1; a < DODMAX_WEAPONS; ++a) {
-   if (get_user_wstats(id,a,stats,body)){
-     if ( xmod_is_melee_wpn(a) )
-       stats[4] = -1;
-     xmod_get_wpnname(a,name,31)
-     format(g_Buffer,2047,"<tr><td><center>%s</center></td><td><center>%d</center></td><td><center>%d</center></td><td><center>%d</center></td><td><center>%d</center></td><td><center>%d</center></td></tr>^n",name,stats[4],stats[5],stats[6],stats[0],stats[1])
-
-     write_file(g_htmlFile,g_Buffer,-1)
-   }
- }
- copy(g_Buffer,2047,"</table></pre></body></html>")
-
- write_file(g_htmlFile,g_Buffer,-1)
-
- get_user_name(id,name,31)
- link_html_motd(dest,name)
-}
-
-public cmdRank(id){
-  if ( !SayRank || !isDSMActive() ){
-    client_print(id,print_chat,"%L",id,g_disabledMsg )
-    return PLUGIN_HANDLED
-  }
-  displayRank_steam(id,id)
-
-  return PLUGIN_CONTINUE
-}
-
-displayRank_steam(id,dest) {
- new name[32], stats[9], body[8]
- new rank_pos = get_user_stats(id,stats,body)
-
- format(g_htmlFile,63,"%s/%d.htm",g_htmlDir,dest)
-
- delete_file(g_htmlFile)
-
- copy(g_Buffer,2047,"<html><head><style type=^"text/css^">pre{color:#FFB000;}body{background:Black;margin-left:8px;margin-top:0px;color:#FFB000;}</style></head><pre><body>")
-
- write_file(g_htmlFile,g_Buffer,-1)
-
- format(g_Buffer,2047,
-               "<table><tr><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td></tr>",dest,"M_KILLS",dest,"M_DEATHS",dest,"M_SCORE",dest,"M_TKS",dest,"M_HITS",dest,"M_SHOTS",dest,"M_HS")
-
- write_file(g_htmlFile,g_Buffer,-1)
-
- format(g_Buffer,2047,
-               "<tr><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td></tr></table><br><br>",
-               stats[0],stats[1],stats[7],stats[3],stats[5],stats[4],stats[2])
-
- write_file(g_htmlFile,g_Buffer,-1)
-
- format(g_Buffer,2047,"%L^n%L: %d^n%L: %d^n%L: %d^n%L: %d^n%L: %d^n%L: %d^n%L: %d^n",dest,"M_HITS",dest,g_bodyParts[1],body[1],dest,g_bodyParts[2],body[2],dest,g_bodyParts[3],body[3],dest,g_bodyParts[4],body[4],dest,g_bodyParts[5],body[5],dest,g_bodyParts[6],body[6],dest,g_bodyParts[7],body[7])
-
- write_file(g_htmlFile,g_Buffer,-1)
-
- format(g_Buffer,2047,"%L <b>%d</b> %L <b>%d</b>",dest,(id==dest)?"M_YOUR_RANK_IS":"M_THEIR_RANK_IS",
-											rank_pos,dest,"M_OF",get_statsnum())
-
- write_file(g_htmlFile,g_Buffer,-1)
-
- format(g_Buffer,2047,"</pre></body></html>")
-
- write_file(g_htmlFile,g_Buffer,-1)
-
- get_user_name(id,name,31)
-
- link_html_motd(dest,name)
-}
-
-public cmdTop15(id) {
-  if ( !SayTop15 || !isDSMActive() ){
-    client_print(id,print_chat,"%L",id,g_disabledMsg )
-    return PLUGIN_HANDLED
-  }
-
-  format(g_htmlFile,63,"%s/%d.htm",g_htmlDir,id)
-
-  delete_file(g_htmlFile)
-
-  getTop15_steam(id)
-
-  new g_Top[8]
-  format(g_Top,7,"%L",id,"TOPX",get_cvar_num("dodstats_topvalue")) 
-
-  link_html_motd(id,g_Top)
-  return PLUGIN_CONTINUE
-}
-
-/* get top 15 */
-getTop15_steam(id){
-  new stats[9], body[8], name[32]
-  copy(g_Buffer,2047,"<html><head><style type=^"text/css^">pre{color:#FFB000;}body{background:Black;margin-left:8px;margin-top:0px;color:#FFB000;}</style></head><pre><body>")
-
-  write_file(g_htmlFile,g_Buffer,-1)
-
-  format(g_Buffer,2047,"<table><tr><td><center>#</center></td><td><center>%L</center></td><td><center>%L</center></td><td><center>%L</center></td><td><center>%L</center></td><td><center>%L</center></td><td><center>%L</center></td><td><center>%L</center></td><td><center>%L</center></td></tr>", id,"M_NICK",id,"M_KILLS",id,"M_DEATHS",id,"M_SCORE",id,"M_HS",id,"M_HITS",id,"M_SHOTS",id,"M_HS")
-
-  write_file(g_htmlFile,g_Buffer,-1)
-
-  new imax = get_statsnum()
-  new itmax =  get_cvar_num("dodstats_topvalue")
-  if (imax > itmax ) 
-    imax = itmax
-
-  for(new a = 0; a < imax; ++a){
-    get_stats(a,stats,body,name,31);
-
-    format(g_Buffer,2047,"<tr><td><center>%d.</center></td><td><center>%s</center></td><td><center>%d</center></td><td><center>%d</center></td><td><center>%d</center></td><td><center>%d</center></td><td><center>%d</center></td><td><center>%d</center></td><td><center>%d</center></td></tr>^n",a+1,name,stats[0],stats[1],stats[7],stats[3],stats[5],stats[4],stats[2])
-    write_file(g_htmlFile,g_Buffer,-1)
-  }
-  format(g_Buffer,2047,"</table></pre></body></html>") 
-  write_file(g_htmlFile,g_Buffer,-1)
 }
 
 public endGameStats(){
@@ -628,7 +474,6 @@ public round_end(){
         who1 = players[i]
         score = stats[7]
 
-
      }  
   }
   for(new i = 0; i < pnum; ++i){
@@ -749,7 +594,6 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
   }
 
   if ( selfKill || TK )
-
     return PLUGIN_CONTINUE
 
   new vorigin[3], korigin[3] 
@@ -999,7 +843,6 @@ public get_score(){
   if ( PlayerScore > PScore[PlayerID] ){ 
     PScore[PlayerID] = PlayerScore 
 
-
     if ( PlayerScore > LeaderScore  ){ 
       if ( NumOfLeaders == 1 ){ 
         if ( LeaderID != PlayerID ){  
@@ -1034,15 +877,6 @@ public get_score(){
   return PLUGIN_CONTINUE 
 }
 
-new g_BufferSmall[256]
-link_html_motd(index,name[]){
-
-format(g_BufferSmall,127,"<html><frameset cols=^"*^" framespacing=^"0^" frameborder=^"no^" border=^"0^">\
-<frame src=^"%s/%d.htm^" name=^"frame_main^"></frameset></html>",g_htmlDir,index) 
-
-show_motd(index,g_BufferSmall,name)
-}
-
 isDSMActive(){
   if ( get_cvar_num("dodstats_pause") ) 
     return 0
@@ -1052,4 +886,111 @@ isDSMActive(){
 public plugin_modules()
 {
 	require_module("dodx")
+}
+
+public cmdStatsMe(id){
+  if ( !SayStatsMe || !isDSMActive() ){
+    client_print(id,print_chat,"%L",id,g_disabledMsg )
+    return PLUGIN_HANDLED
+  }
+  displayStats_steam(id,id)
+  return PLUGIN_CONTINUE
+}
+
+displayStats_steam(id,dest) {
+ new name[32], stats[9], body[8]
+ get_user_wstats(id,0,stats,body)
+
+ new pos = copy(g_Buffer,2047,"<html><head><style type=^"text/css^">pre{color:#FFB000;}body{background:Black;margin-left:8px;margin-top:0px; color:#FFB000;}</style></head><pre><body>")
+ pos += format(g_Buffer[pos],2047-pos,"<table><tr><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td></tr>",
+               dest,"M_KILLS",dest,"M_DEATHS",dest,"M_SCORE",dest,"M_TKS",dest,"M_HITS",dest,"M_SHOTS",dest,"M_HS")
+
+ pos += format(g_Buffer[pos],2047-pos,"<tr><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td></tr></table><br><br><br>",
+		stats[0],stats[1],stats[7],stats[3],stats[5],stats[4],stats[2])
+
+ pos += format(g_Buffer[pos],2047-pos,"<table><tr><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L<td></tr>",
+               dest,"M_WEAPON",dest,"M_SHOTS",dest,"M_HITS",dest,"M_DAMAGE",dest,"M_KILLS",dest,"M_DEATHS")
+
+ for(new a = 1; a < DODMAX_WEAPONS; ++a) {
+   if (get_user_wstats(id,a,stats,body)){
+     if ( xmod_is_melee_wpn(a) )
+       stats[4] = -1;
+     xmod_get_wpnname(a,name,31)
+     pos += format(g_Buffer[pos],2047-pos,"<tr><td>%s</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td></tr>^n",
+		name,stats[4],stats[5],stats[6],stats[0],stats[1])
+   }
+ }
+ copy(g_Buffer[pos],2047-pos,"</table></pre></body></html>")
+
+ get_user_name(id,name,31)
+ show_motd(id,g_Buffer,name)
+}
+
+public cmdRank(id){
+  if ( !SayRank || !isDSMActive() ){
+    client_print(id,print_chat,"%L",id,g_disabledMsg )
+    return PLUGIN_HANDLED
+  }
+  displayRank_steam(id,id)
+
+  return PLUGIN_CONTINUE
+}
+
+displayRank_steam(id,dest) {
+ new name[32], stats[9], body[8]
+ new rank_pos = get_user_stats(id,stats,body)
+
+ new pos = copy(g_Buffer,2047,"<html><head><style type=^"text/css^">pre{color:#FFB000;}body{background:Black;margin-left:8px;margin-top:0px;color:#FFB000;}</style></head><pre><body>")
+
+ pos += format(g_Buffer[pos],2047-pos,
+               "<table><tr><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td></tr>",dest,"M_KILLS",dest,"M_DEATHS",dest,"M_SCORE",dest,"M_TKS",dest,"M_HITS",dest,"M_SHOTS",dest,"M_HS")
+
+ pos += format(g_Buffer[pos],2047-pos,
+               "<tr><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td></tr></table><br><br>",
+               stats[0],stats[1],stats[7],stats[3],stats[5],stats[4],stats[2])
+
+ pos += format(g_Buffer[pos],2047-pos,"%L^n%L: %d^n%L: %d^n%L: %d^n%L: %d^n%L: %d^n%L: %d^n%L: %d^n",dest,"M_HITS",dest,g_bodyParts[1],body[1],dest,g_bodyParts[2],body[2],dest,g_bodyParts[3],body[3],dest,g_bodyParts[4],body[4],dest,g_bodyParts[5],body[5],dest,g_bodyParts[6],body[6],dest,g_bodyParts[7],body[7])
+
+ pos += format(g_Buffer[pos],2047-pos,"%L <b>%d</b> %L <b>%d</b>",dest,(id==dest)?"M_YOUR_RANK_IS":"M_THEIR_RANK_IS",
+											rank_pos,dest,"M_OF",get_statsnum())
+
+ pos += format(g_Buffer[pos],2047-pos,"</pre></body></html>")
+
+ get_user_name(id,name,31)
+
+ show_motd(dest,g_Buffer,name)
+}
+
+public cmdTop15(id) {
+  if ( !SayTop15 || !isDSMActive() ){
+    client_print(id,print_chat,"%L",id,g_disabledMsg )
+    return PLUGIN_HANDLED
+  }
+  getTop15_steam(id)
+  new g_Top[8]
+  format(g_Top,7,"%L",id,"TOPX",get_cvar_num("dodstats_topvalue")) 
+
+  show_motd(id,g_Buffer,g_Top)
+  return PLUGIN_CONTINUE
+}
+
+/* get top 15 */
+getTop15_steam(id){
+  new stats[9], body[8], name[32]
+
+  new pos = copy(g_Buffer,2047,"<html><head><style type=^"text/css^">pre{color:#FFB000;}body{background:Black;margin-left:8px;margin-top:0px;color:#FFB000;}</style></head><pre><body>")
+
+  pos += format(g_Buffer[pos],2047-pos,"<table><tr><td>#</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td></tr>",
+		id,"M_NICK",id,"M_KILLS",id,"M_DEATHS",id,"M_SCORE",id,"M_HS",id,"M_HITS",id,"M_SHOTS",id,"M_HS")
+  new imax = get_statsnum()
+  new itmax =  get_cvar_num("dodstats_topvalue")
+  if (imax > itmax ) 
+    imax = itmax
+  for(new a = 0; a < imax; ++a){
+    get_stats(a,stats,body,name,31);
+    pos += format(g_Buffer[pos],2047-pos,"<tr><td>%d.</td><td>%s</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td></tr>^n",
+		a+1,name,stats[0],stats[1],stats[7],stats[3],stats[5],stats[4],stats[2])
+  }
+  pos += format(g_Buffer[pos],2047-pos,"</table></pre></body></html>") 
+
 }

@@ -641,7 +641,7 @@ forward inconsistent_file(id,const filename[], reason[64] );
 native force_unmodified(force_type, mins[3] , maxs[3], const filename[]);
 
 /* Calculates the md5 keysum of a string */
-native md5(const szString[], md5buffer[33]);
+native md5(const szString[], md5buffer[34]);
 
 /* Calculates the md5 keysum of a file */
-native md5_file(const file[], md5buffer[33]);
+native md5_file(const file[], md5buffer[34]);

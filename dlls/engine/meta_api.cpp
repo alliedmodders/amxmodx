@@ -54,6 +54,7 @@ struct AmxCall {
 
 std::vector<AmxCall> vTouchCallList;
 std::vector<AmxCall> vServerFrameCallList;
+std::vector<AmxCall> vCliKillList;
 
 //This was originally by VexD
 //Thank you for an excellent piece of work, VexD!
@@ -2555,6 +2556,17 @@ void Touch(edict_t *pToucher, edict_t *pTouched) {
 	RETURN_META(MRES_IGNORED);
 }
 
+//Added by BAILOPAN.  ClientKill() forward.
+void ClientKill(edict_t *pEntity)
+{
+	for(std::vector<AmxCall>::iterator i = vCliKillList.begin(); i != vCliKillList.end(); i++) {
+		cell iRetVal = 0;
+		AMX_EXEC(&i->pPlugin->amx, &iRetVal, i->iFunctionIdx, 1, ENTINDEX(pEntity));
+	}
+	
+	RETURN_META(MRES_IGNORED);
+}
+
 // ClientDisconnect. Reinitialize the PlayerInfo struct for that player.
 void ClientDisconnect(edict_t *pEntity) {
 	memset(PlInfo[ENTINDEX(pEntity)].szModel, 0x0, sizeof(PlInfo[ENTINDEX(pEntity)].szModel));
@@ -2612,9 +2624,19 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax) {
 	plugin_t *pCurrent = FIND_PLUGIN_BY_INDEX(0, 0);
 	int iFunctionIndex = 0;
 
-	// Search for plugins that have my forward functions.
+	// Search for plugins that have the forward functions.
 	while(pCurrent){	//Iterate Plugin List
+		//THIS IS FOR BACKWARD COMPATIBILITY
 		if(AMX_FINDPUBLIC(&pCurrent->amx, "vexd_pfntouch", &iFunctionIndex) == AMX_ERR_NONE) {
+			AmxCall sNewCall;
+			sNewCall.pPlugin = pCurrent;
+			sNewCall.iFunctionIdx = iFunctionIndex;
+			vTouchCallList.push_back(sNewCall);
+		}
+
+		iFunctionIndex = 0;
+		
+		if(AMX_FINDPUBLIC(&pCurrent->amx, "pfntouch", &iFunctionIndex) == AMX_ERR_NONE) {
 			AmxCall sNewCall;
 			sNewCall.pPlugin = pCurrent;
 			sNewCall.iFunctionIdx = iFunctionIndex;
@@ -2631,6 +2653,15 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax) {
 		}
 
 		iFunctionIndex = 0;
+		
+		if (AMX_FINDPUBLIC(&pCurrent->amx, "client_kill", &iFunctionIndex) == AMX_ERR_NONE) {
+			AmxCall sNewCall;
+			sNewCall.pPlugin = pCurrent;
+			sNewCall.iFunctionIdx = iFunctionIndex;
+			vCliKillList.push_back(sNewCall);
+		}
+		
+		iFunctionIndex = 0;
 		pCurrent = pCurrent->next;
 	}
 
@@ -2645,6 +2676,7 @@ void ServerDeactivate(void) {
 	// from map-to-map.
 	vTouchCallList.clear();
 	vServerFrameCallList.clear();
+	vCliKillList.clear();
 
 	// Reset Lights.
 	memset(GlInfo.szLastLights, 0x0, 128);

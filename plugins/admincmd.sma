@@ -1,7 +1,7 @@
 /* AMX Mod X script.
 *
 * (c) 2002-2004, OLO
-*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*  modified by the AMX Mod X Development Team
 *
 * This file is provided as is (no warranties).
 */
@@ -344,7 +344,8 @@ public cmdCfg(id,level,cid){
 public cmdLBack(){ 
   set_cvar_float("pausable",g_pausAble)
   console_print(g_pauseCon,"Server %s", g_Paused ? "unpaused" : "paused") 
-  g_Paused = !g_Paused
+  if (g_Paused) g_Paused = false
+  else g_Paused = true
   return PLUGIN_HANDLED
 }
 

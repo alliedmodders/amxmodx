@@ -1,7 +1,7 @@
 /* AMX Mod X script.
 *
 * (c) 2002-2004, tcquest78
-*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*  modified by the AMX Mod X Development Team
 *
 * This file is provided as is (no warranties).
 */

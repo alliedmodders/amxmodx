@@ -1,7 +1,7 @@
 /* AMX Mod X script.
 *
 * (c) 2002-2004, OLO
-*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*  modified by the AMX Mod X Development Team
 *
 * This file is provided as is (no warranties).
 */
@@ -146,8 +146,9 @@ public cmdPsay(id,level,cid){
   get_user_name(id,name2,31)
   userid = get_user_userid(id)  
   read_args(message,191)
-  if (message[0]=='"' && message[length]=='"'){// HLSW fix
-    message[0]=message[length]=' '
+  if (message[0]=='"' && message[length]=='"'){ // HLSW fix
+    message[0]=' '
+    message[length]=' '
     length+=2
   }
   remove_quotes(message[length])

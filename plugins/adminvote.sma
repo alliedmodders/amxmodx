@@ -1,7 +1,7 @@
 /* AMX Mod X script. 
 * 
 * (c) 2002-2004, OLO
-*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*  modified by the AMX Mod X Development Team
 *
 * This file is provided as is (no warranties). 
 */
@@ -168,7 +168,10 @@ public cmdVoteMap(id,level,cid) {
   new argc = read_argc() 
   if (argc > 5) argc = 5
   g_validMaps = 0
-  g_optionName[0][0] = g_optionName[1][0] = g_optionName[2][0] = g_optionName[3][0] = 0
+  g_optionName[0][0] = 0
+  g_optionName[1][0] = 0
+  g_optionName[2][0] = 0
+  g_optionName[3][0] = 0
   for(new i = 1; i < argc; ++i){ 
     read_argv(i,g_optionName[g_validMaps],31) 
     if (is_map_valid(g_optionName[g_validMaps])) 

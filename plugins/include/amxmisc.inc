@@ -100,9 +100,11 @@ stock get_configsdir(name[],len)
 stock get_customdir(name[],len)
   return get_localinfo("amxx_customdir",name,len)
 
+#if defined NO_STEAM
 stock get_user_wonid(index)
 {
   new authid[32]
   get_user_authid(index,authid,31)
   return str_to_num(authid)
 }
+#endif

@@ -1,4 +1,4 @@
-MODNAME = cstrike_mm
+MODNAME = cstrike_amx
 SRCFILES = cstrike.cpp CstrikePlayer.cpp
 
 EXTRA_LIBS_LINUX =
@@ -25,7 +25,7 @@ else
 	OS=LINUX
 endif
 
-CC_LINUX=gcc
+CC_LINUX=gcc-2.95
 ifeq "$(OS)" "WIN32"
 	CC_WIN32=gcc
 	LD_WINDLL=dllwrap
@@ -40,7 +40,7 @@ endif
 
 
 
-LIBFILE_LINUX = $(MODNAME)_i386.so
+LIBFILE_LINUX = $(MODNAME)_i686.so
 LIBFILE_WIN32 = $(MODNAME).dll
 TARGET_LINUX = $(OBJDIR_LINUX)/$(LIBFILE_LINUX)
 TARGET_WIN32 = $(OBJDIR_WIN32)/$(LIBFILE_WIN32)
@@ -57,7 +57,7 @@ OBJ_WIN32 := $(SRCFILES:%.cpp=$(OBJDIR_WIN32)/%.o)
 OBJC_WIN32 := $(CSRCFILES:%.c=$(OBJDIR_WIN32)/%.o)
 
 
-CCOPT = -march=i586 -O6 -ffast-math -funroll-loops \
+CCOPT = -march=i686 -O2 -ffast-math -funroll-loops \
 	-fomit-frame-pointer -fexpensive-optimizations -malign-loops=2 \
 	-malign-jumps=2 -malign-functions=2 -s	-DNDEBUG -lstdc++
 

@@ -59,7 +59,7 @@ pfnmodule_engine_g* g_engModuleFunc;		// These seem to be meta/amxmod related
 
 #define NAME "Fun"
 #define AUTHOR "AMX Mod X Dev Team"
-#define VERSION "0.1"
+#define VERSION "0.15"
 #define URL "http://www.amxmodx.org"
 #define LOGTAG "FUN"
 #define DATE __DATE__

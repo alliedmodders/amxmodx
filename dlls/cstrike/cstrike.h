@@ -1,5 +1,5 @@
-#define __cswonbuild__ // comment when compiling for STEAM
-#define CS_WON_BUILD
+//#define __cswonbuild__ // comment when compiling for STEAM
+//#define CS_WON_BUILD
 
  /* AMX Mod X 
    *   Counter-Strike Module 
@@ -68,9 +68,9 @@ pfnmodule_engine_g* g_engModuleFunc;
 #define NAME "Counter-Strike"
 #define AUTHOR "AMX Mod X Dev Team"
 #if defined __cswonbuild__
-#define VERSION "0.1 WON" // change both these versions
+#define VERSION "0.15 WON" // change both these versions
 #else
-#define VERSION "0.1 STEAM" // change both these versions
+#define VERSION "0.15 STEAM" // change both these versions
 #endif // defined __cswonbuild__
 #define URL "http://www.amxmodx.org"
 #define LOGTAG "AMXCS"

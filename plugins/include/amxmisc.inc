@@ -170,13 +170,13 @@ stock AddMenuItem(const MENU_TEXT[], const MENU_CMD[], const MENU_ACCESS, const 
 	}
 	if (failed)
 		return
-	// Body (identifier)
+	// Item text
 	callfunc_push_str(MENU_TEXT)
 	// Cmd
 	callfunc_push_str(MENU_CMD)
 	// Access
 	callfunc_push_int(MENU_ACCESS)
-	// Description
+	// Menu exists in this plugin
 	callfunc_push_str(MENU_PLUGIN)
 
 	callfunc_end()

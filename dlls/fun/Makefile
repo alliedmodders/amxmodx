@@ -26,7 +26,7 @@ else
 	OS=LINUX
 endif
 
-CC_LINUX=gcc-2.95
+CC_LINUX=gcc
 ifeq "$(OS)" "WIN32"
 	CC_WIN32=gcc
 	LD_WINDLL=dllwrap
@@ -41,7 +41,7 @@ endif
 
 
 
-LIBFILE_LINUX = $(MODNAME)_i386.so
+LIBFILE_LINUX = $(MODNAME)_amd64.so
 LIBFILE_WIN32 = $(MODNAME).dll
 TARGET_LINUX = $(OBJDIR_LINUX)/$(LIBFILE_LINUX)
 TARGET_WIN32 = $(OBJDIR_WIN32)/$(LIBFILE_WIN32)
@@ -55,7 +55,7 @@ endif
 OBJ_LINUX := $(SRCFILES:%.cpp=$(OBJDIR_LINUX)/%.o)
 OBJ_WIN32 := $(SRCFILES:%.cpp=$(OBJDIR_WIN32)/%.o)
 
-CCOPT = -march=i386 -O2 -ffast-math -funroll-loops \
+CCOPT = -m64 -O2 -ffast-math -funroll-loops \
 	-s -DNDEBUG
 
 INCLUDEDIRS=-I../curl/include -I$(SRCDIR) -I$(AMXDIR) -I$(METADIR) -I$(SDKSRC)/engine -I$(SDKSRC)/common -I$(SDKSRC)/pm_shared -I$(SDKSRC)/dlls -I$(SDKSRC) $(EXTRA_INCLUDEDIRS)

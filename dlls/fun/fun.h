@@ -30,7 +30,7 @@
 *  you do not wish to do so, delete this exception statement from your
 *  version.
 */
-
+#define SMALL_CELL_SIZE 64
 #include "amxxmodule.h"
 
 // Fun-specific defines below

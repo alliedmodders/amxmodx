@@ -184,7 +184,12 @@ if ($OPTIONS{"jit"})
 		push(@LINK, "JIT/jits.o");
 	}	 
 }
-push(@LINK, "zlib/libz.a");
+if ($OPTIONS{"amd64"})
+{
+	push(@LINK, "zlib/libz64.a");
+} else {
+	push(@LINK, "zlib/libz.a");
+}
 if ($OPTIONS{"asm"})
 {
 	push(@LINK, "amxexecn.o");

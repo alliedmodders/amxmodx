@@ -115,9 +115,14 @@ public plugin_cfg() {
   new configFile[64],curMap[32]
   get_configsdir(configFile,31)
   get_mapname(curMap,31)
-  format(configFile,63,"%s/maps/%s.cfg",configFile,curMap)
+  new len = format(configFile,63,"%s/maps/%s.cfg",configFile,curMap)
   if ( file_exists(configFile) )
-    server_cmd("exec %s",configFile)
+    set_task(6.1,"delayed_load",0,configFile,len+1)
+}
+
+public delayed_load(configFile[])
+{
+  server_cmd("exec %s",configFile)
 }
 
 loadSettings(szFilename[]) {

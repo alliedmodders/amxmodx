@@ -2728,16 +2728,16 @@ static void *amx_opcodelist_nodebug[] = {
     #endif
   #elif defined __GNUC__
     /* force "cdecl" by adding an "attribute" to the declaration */
-    extern "C" cell amx_exec_asm(cell *regs,cell *retval,cell stp,cell hea) __attribute__((cdecl));
+    extern cell amx_exec_asm(cell *regs,cell *retval,cell stp,cell hea) __attribute__((cdecl));
   #else
     /* force "cdecl" by specifying it as a "function class" with the "__cdecl" keyword */
-    extern "C" cell __cdecl amx_exec_asm(cell *regs,cell *retval,cell stp,cell hea);
+    extern cell __cdecl amx_exec_asm(cell *regs,cell *retval,cell stp,cell hea);
   #endif
 #endif
 
 #if defined ASM32 || defined JIT
-	extern "C" void *amx_opcodelist[];
-    extern "C" void *amx_opcodelist_nodebug[];
+	extern void *amx_opcodelist[];
+    extern void *amx_opcodelist_nodebug[];
 #endif
 
 int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)

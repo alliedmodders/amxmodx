@@ -12,6 +12,8 @@
 # amd64 - compile for AMD64 (impiles no jit)
 # proc=ix86 - assumed not amd64
 # clean - clean the specifications above
+# asm - for ASM implementation
+# !! TODO - add memory mananger support
 
 $PROJECT = "amxmodx_mm";
 $sdk = "../hlsdk/SourceCode";
@@ -19,7 +21,7 @@ $mm = "../metamod/metamod";
 $gccf = "gcc";
 $ccf = "cc";
 
-@CPP_SOURCE_FILES = ("meta_api.cpp", "CFile.cpp", "CVault.cpp", "vault.cpp", "float.cpp", "file.cpp", "modules.cpp", "CMisc.cpp", "CTask.cpp", "string.cpp", "amxmodx.cpp", "CEvent.cpp", "CCmd.cpp", "CLogEvent.cpp", "srvcmd.cpp", "strptime.cpp", "amxcore.cpp", "amxtime.cpp", "power.cpp", "amxxlog.cpp", "fakemeta.cpp", "MMGR/MMGR.cpp", "amxxfile.cpp", "CLang.cpp", "md5.cpp", "emsg.cpp", "CForward.cpp", "CPlugin.cpp", "CModule.cpp", "CMenu.cpp", "util.cpp");
+@CPP_SOURCE_FILES = ("meta_api.cpp", "CFile.cpp", "CVault.cpp", "vault.cpp", "float.cpp", "file.cpp", "modules.cpp", "CMisc.cpp", "CTask.cpp", "string.cpp", "amxmodx.cpp", "CEvent.cpp", "CCmd.cpp", "CLogEvent.cpp", "srvcmd.cpp", "strptime.cpp", "amxcore.cpp", "amxtime.cpp", "power.cpp", "amxxlog.cpp", "fakemeta.cpp", "amxxfile.cpp", "CLang.cpp", "md5.cpp", "emsg.cpp", "CForward.cpp", "CPlugin.cpp", "CModule.cpp", "CMenu.cpp", "util.cpp");
 
 @C_SOURCE_FILES = ();
 my %OPTIONS, %OPT;
@@ -31,6 +33,15 @@ $OPTIONS{"include"} = "-I$sdk -I. -I$mm -I$sdk/engine -I$sdk/common -I$sdk/pm_sh
 
 while ($cmd = shift)
 {
+	if ($cmd =~ /asm/)
+	{
+		if ($OPTIONS{"amd64"})
+		{
+			die "You cannot compile the ASM core with AMD64 yet.\n";
+		} else {
+			$OPTIONS{"asm"} = 1;
+		}
+	}
 	if ($cmd =~ /jit/)
 	{
 		if ($OPTIONS{"amd64"})
@@ -40,9 +51,9 @@ while ($cmd = shift)
 			$OPTIONS{"jit"} = 1;
 		}
 	} elsif ($cmd =~ /amd64/) {
-		if ($OPTIONS{"jit"})
+		if ($OPTIONS{"jit"} || $OPTIONS{"asm"})
 		{
-			die "You cannot compile the JIT and AMD64 yet.\n";
+			die "You cannot compile the JIT or ASM and AMD64 yet.\n";
 		} else {
 			$OPTIONS{"amd64"} = 1;
 		}
@@ -64,8 +75,14 @@ while ($cmd = shift)
 $gcc = `$gccf --version`;
 if ($gcc =~ /2\.9/)
 {
-	push(@CPP_SOURCE_FILES, "amx.cpp");
-	$OPT{"opt"} .= " -malign-loops=2 -malign-jumps=2 -malign-functions=2";
+	if ($OPTIONS{"jit"})
+	{
+		push(@CPP_SOURCE_FILES, "amx.cpp");
+		$OPT{"opt"} .= " -malign-loops=2 -malign-jumps=2 -malign-functions=2";
+	} else {
+		`ln -s amx.cpp amx.c`;
+		push(@C_SOURCE_FILES, "amx.c");
+	}
 } else {
 	if ($OPTIONS{"amd64"})
 	{
@@ -102,6 +119,11 @@ if ($OPTIONS{"amd64"})
 if ($OPTIONS{"jit"})
 {
 	$cflags .= " -DJIT";
+}
+
+if ($OPTIONS{"asm"})
+{
+	$cflags .= " -DASM32";
 }
 
 if ($OPTIONS{"debug"})
@@ -154,6 +176,11 @@ for ($i=0; $i<=$#C_SOURCE_FILES; $i++)
 if ($OPTIONS{"jit"})
 {
 	push(@LINK, "JIT/jits.o");
+}
+
+if ($OPTIONS{"asm"})
+{
+	push(@LINK, "amxexecn.o");
 }
 
 if (!(-d $outdir))
@@ -219,6 +246,6 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	}
 }
 
-$gcc = "$gccf $cflags -Lzlib/ -shared -ldl -lstdc++ @LINK -lm -lz -o $outdir/$bin";
+$gcc = "$gccf $cflags -Lzlib/ -shared -ldl -lm -lz @LINK -o $outdir/$bin";
 print "$gcc\n";
 `$gcc`;

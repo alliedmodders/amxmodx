@@ -77,11 +77,11 @@ public cmdCfg( id,level,cid ) {
         ++enabled
         if ( option == 1 ) {
           set_xvar_num( g_menuDataId[a] , 1  )
-          console_print(id,"%L %s", id, "STATS_ENABLED", g_menuData[a] )
+          console_print(id,"%L: %s", id, "STATS_ENABLED", g_menuData[a] )
         }
         else {
           set_xvar_num( g_menuDataId[a] , 0  )
-          console_print(id,"%L %s", id, "STATS_DISABLED", g_menuData[a] )
+          console_print(id,"%L: %s", id, "STATS_DISABLED", g_menuData[a] )
         }
       }
     }

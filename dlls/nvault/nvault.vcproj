@@ -21,17 +21,19 @@
 				Optimization="0"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;NVAULT_EXPORTS"
 				MinimalRebuild="TRUE"
+				ExceptionHandling="FALSE"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="5"
+				StructMemberAlignment="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="4"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/nvault.dll"
+				OutputFile="$(OutDir)/nvault_amxx.dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/nvault.pdb"
@@ -116,6 +118,18 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
+				RelativePath=".\amxxapi.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ExceptionHandling="FALSE"
+						RuntimeLibrary="5"
+						StructMemberAlignment="3"
+						Detect64BitPortabilityProblems="FALSE"/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\hash.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -141,6 +155,9 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			<File
+				RelativePath=".\amxxapi.h">
+			</File>
 			<File
 				RelativePath=".\hash.h">
 			</File>

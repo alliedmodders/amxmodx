@@ -46,6 +46,7 @@ public:
 	bool KeyExists(const char *key);
 	void Clear();
 	void EraseKey(const char *key);
+	const char  *GetFileName();
 private:
 	void _WriteHeaders(FILE *fp, uint32_t hashes);
 private:

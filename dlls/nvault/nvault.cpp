@@ -15,6 +15,11 @@ Vault::~Vault()
 	}
 }
 
+const char *Vault::GetFileName()
+{
+	return m_File.c_str();
+}
+
 void Vault::Clear()
 {
 	if (m_Vault)

@@ -27,7 +27,7 @@
 //#define FN_AMXX_QUERY OnAmxxQuery
 // AMXX attach
 //   Do native functions init here (MF_AddNatives)
-// #define FN_AMXX_ATTACH OnAmxxAttach
+#define FN_AMXX_ATTACH OnAmxxAttach
 // AMXX detach
 //#define FN_AMXX_DETACH OnAmxxDetach
 // All plugins loaded

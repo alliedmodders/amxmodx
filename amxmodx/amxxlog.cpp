@@ -28,8 +28,6 @@
 *  version.
 */
 
-#include <extdll.h>
-#include <meta_api.h>
 #include <time.h>
 
 #include "amxmodx.h"
@@ -46,9 +44,9 @@ void AMXXLOG_Init()
 	CVAR_SET_STRING(init_amx_logging.name, "1");
 }
 
-void AMXXLOG_MakeNewLogFile()
+void AMXXLOG_MapChange()
 {
-	if (amx_logging && amx_logging->value == 0.0f)
+	if (amx_logging && (amx_logging->value == 0.0f || amx_logging->value == 3.0f))
 		return;
 
 	// build filename
@@ -63,18 +61,27 @@ void AMXXLOG_MakeNewLogFile()
 	mkdir(build_pathname("%s", g_log_dir.str()));
 #endif
 
-	int i = 0;
-	while (true)
+	if (amx_logging && amx_logging->value != 1.0f)
 	{
-		g_AMXXLOG_LogFile.set(build_pathname("%s/L%02d%02d%03d.log", g_log_dir.str(), curTime->tm_mon + 1, curTime->tm_mday, i));
-		FILE *pTmpFile = fopen(g_AMXXLOG_LogFile.str(), "r");		// open for reading to check whether the file exists
-		if (!pTmpFile)
-			break;
-		fclose(pTmpFile);
-		++i;
+		// 2.0f probably :)
+		g_AMXXLOG_LogFile.set(build_pathname("%s/L%02d%02d.log", g_log_dir.str(), curTime->tm_mon + 1, curTime->tm_mday));
+		AMXXLOG_Log("AMX Mod X log file started.");
 	}
-	// Log logfile start
-	AMXXLOG_Log("AMX Mod X log file started (file \"%s/L%02d%02d%03d.log\") (version \"%s\")", g_log_dir.str(), curTime->tm_mon + 1, curTime->tm_mday, i, AMX_VERSION);
+	else
+	{
+		int i = 0;
+		while (true)
+		{
+			g_AMXXLOG_LogFile.set(build_pathname("%s/L%02d%02d%03d.log", g_log_dir.str(), curTime->tm_mon + 1, curTime->tm_mday, i));
+			FILE *pTmpFile = fopen(g_AMXXLOG_LogFile.str(), "r");		// open for reading to check whether the file exists
+			if (!pTmpFile)
+				break;
+			fclose(pTmpFile);
+			++i;
+		}
+		// Log logfile start
+		AMXXLOG_Log("AMX Mod X log file started (file \"%s/L%02d%02d%03d.log\") (version \"%s\")", g_log_dir.str(), curTime->tm_mon + 1, curTime->tm_mday, i, AMX_VERSION);
+	}
 }
 
 void AMXXLOG_Log(const char *fmt, ...)
@@ -82,9 +89,24 @@ void AMXXLOG_Log(const char *fmt, ...)
 	if (!amx_logging)
 		return;
 	int logType = (int)amx_logging->value;
+	static int lastLogType = -1;
+
+	if (lastLogType == -1)
+		lastLogType = logType;
+	
+	if (lastLogType != logType)
+	{
+		// User changed logType
+		lastLogType = logType;
+		AMXXLOG_MapChange();
+	}
+
 	if (logType == 0)
+	{
+		lastLogType = logType;
 		return;
-	else if (logType == 1)
+	}
+	else if (logType == 1 || logType == 2)
 	{
 		// build message
 		// :TODO: Overflow possible here
@@ -114,7 +136,7 @@ void AMXXLOG_Log(const char *fmt, ...)
 			}
 			// Create new logfile
 			s_inCreatingLogFile = true;
-			AMXXLOG_MakeNewLogFile();
+			AMXXLOG_MapChange();
 			s_inCreatingLogFile = false;
 		}
 
@@ -123,7 +145,7 @@ void AMXXLOG_Log(const char *fmt, ...)
 		fclose(pF);
 		print_srvconsole("L %s: %s\n", date, msg);
 	}
-	else if (logType == 2)
+	else if (logType == 3)
 	{
 		// build message
 		// :TODO: Overflow possible here
@@ -139,4 +161,5 @@ void AMXXLOG_Log(const char *fmt, ...)
 		ALERT(at_logged, "[AMXX] Invalid %s value. Setting to 0\n", init_amx_logging.name);
 		CVAR_SET_FLOAT(init_amx_logging.name, 0.0f);
 	}
+	lastLogType = logType;
 }

@@ -385,10 +385,10 @@ public cmdPlugins(id,level,cid)
   if (!cmd_access(id,level,cid,1))
     return PLUGIN_HANDLED
 
-#if !defined NO_STEAM
-  #define MOTD_LEN 2048
-  new motd_body[MOTD_LEN],state[4]
   new name[32],version[32],author[32],filename[32],status[32]
+
+/*
+  new motd_body[MOTD_LEN],state[4]
   new num = get_pluginsnum()
   new running = 0
   new pos = copy(motd_body,MOTD_LEN,"<html><head><body><style type=^"text/css^">")
@@ -406,7 +406,8 @@ public cmdPlugins(id,level,cid)
   }
   format(motd_body[pos],MOTD_LEN-pos,"</table>%d plugins, %d running</body></html>",num,running)
   show_motd(id,motd_body,"Currently loaded plugins:")
-#else
+  write_file("_plugins.htm",motd_body)
+*/
   new num = get_pluginsnum()
   new running = 0
   console_print(id,"Currently loaded plugins:")
@@ -414,12 +415,11 @@ public cmdPlugins(id,level,cid)
   for (new i=0;i<num;i++)
   {
     get_plugin(i,filename,31,name,31,version,31,author,31,status,31)
-    console_print("%-18.17s %-8.7s %-17.16s %-16.15s %-9.8s",name,version,author,filename,status)
+    console_print(id,"%-18.17s %-8.7s %-17.16s %-16.15s %-9.8s",name,version,author,filename,status)
     if (equal(status,"running"))
       running++
   }
   console_print(id,"%d plugins, %d running",num,running)
-#endif
 
   return PLUGIN_HANDLED
 }
@@ -429,14 +429,12 @@ public cmdModules(id,level,cid)
   if (!cmd_access(id,level,cid,1))
     return PLUGIN_HANDLED
 
-#if !defined NO_STEAM
-  #if !defined MOTD_LEN
-    #define MOTD_LEN 2048
-  #endif
+  new name[32],version[32],author[32]
+
+/*
   new motd_body[MOTD_LEN],state[4]
   new num = get_modulesnum()
   new pos = copy(motd_body,MOTD_LEN,"<html><head><body><style type=^"text/css^">")
-  new name[32],version[32],author[32]
   pos += copy(motd_body[pos],MOTD_LEN-pos,"body{font-family:Arial,sans-serif;font-size:12px;color:#FFCC99;background-color:#000000;margin-left:8px;margin-top:3px}.header{background-color:#9C0000;}.one{background-color:#310000;}.two{background-color:#630000;}")
   pos += copy(motd_body[pos],MOTD_LEN-pos,"</style></head><body><table><tr class=^"header^"><td>Name</td><td>Version</td><td>Author</td></tr>")
 
@@ -449,17 +447,16 @@ public cmdModules(id,level,cid)
   }
   format(motd_body[pos],MOTD_LEN-pos,"</table>%d modules</body></html>",num)
   show_motd(id,motd_body,"Currently loaded modules:")
-#else
+*/
   new num = get_modulesnum()
   console_print(id,"Currently loaded modules:")
   console_print(id,"%-23.22s %-8.7s %-20.19s","name","version","author")
   for (new i=0;i<num;i++)
   {
     get_module(i,name,31,author,31,version,31)
-    console_print("%-23.22s %-8.7s %-20.19s",name,version,author)
+    console_print(id,"%-23.22s %-8.7s %-20.19s",name,version,author)
   }
   console_print(id,"%d modules",num)
-#endif
 
   return PLUGIN_HANDLED
 }

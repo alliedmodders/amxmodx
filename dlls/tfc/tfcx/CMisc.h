@@ -1,0 +1,186 @@
+
+
+#ifndef CMISC_H
+#define CMISC_H
+
+#include "amxxmodule.h"
+#include "CRank.h"
+
+#ifndef __linux__
+	#define LINUXOFFSET 0
+#else
+	#define LINUXOFFSET 5
+#endif
+
+#define TFCMAX_CUSTOMWPNS		5
+#define TFCMAX_WEAPONS		MAX_WEAPONS + TFCMAX_CUSTOMWPNS
+
+#define PD_SENTRY_OWNER		83	+ LINUXOFFSET
+#define PD_TIMER_OWNER		932	+ LINUXOFFSET
+
+#define MAX_TRACE	14 // +1 // timer 
+//#define NADE_OFFSET		24
+
+
+#define ACT_NADE_NONE		0
+#define ACT_NADE_SHOT		1<<0
+#define ACT_NADE_PUT		1<<1
+#define ACT_NADE_THROW		1<<2
+
+#define PD_AMMO_SHELLS		53	+ LINUXOFFSET
+#define PD_AMMO_BULLETS		55	+ LINUXOFFSET 
+#define PD_AMMO_CELLS		57	+ LINUXOFFSET 
+#define PD_AMMO_ROCKETS		59	+ LINUXOFFSET 
+#define PD_AMMO_NADE1		14	+ LINUXOFFSET 
+#define PD_AMMO_NADE2		15	+ LINUXOFFSET 
+
+enum {
+	TFC_AMMO_SHELLS = 0, 
+	TFC_AMMO_BULLETS, 
+	TFC_AMMO_CELLS, 
+	TFC_AMMO_ROCKETS, 
+	TFC_AMMO_NADE1, 
+	TFC_AMMO_NADE2, 
+};
+
+enum {
+	TFC_WPN_NONE = 0,
+	TFC_WPN_TIMER, // TFC_UNK_1,
+	TFC_WPN_SENTRYGUN, //TFC_WPN_UNK2,
+	TFC_WPN_MEDIKIT,
+	TFC_WPN_SPANNER,
+	TFC_WPN_AXE,
+	TFC_WPN_SNIPERRIFLE,
+	TFC_WPN_AUTORIFLE,
+	TFC_WPN_SHOTGUN,
+	TFC_WPN_SUPERSHOTGUN,
+	TFC_WPN_NG,
+	TFC_WPN_SUPERNG,
+	TFC_WPN_GL,
+	TFC_WPN_FLAMETHROWER,
+	TFC_WPN_RPG,
+	TFC_WPN_IC,
+	TFC_WPN_FLAMES,//TFC_WPN_UNK16,
+	TFC_WPN_AC,
+	TFC_WPN_UNK18,
+	TFC_WPN_UNK19,
+	TFC_WPN_TRANQ,
+	TFC_WPN_RAILGUN,
+	TFC_WPN_PL,
+	TFC_WPN_KNIFE,
+	TFC_WPN_CALTROP, // 24
+	TFC_WPN_CONCUSSIONGRENADE,
+	TFC_WPN_NORMALGRENADE,
+	TFC_WPN_NAILGRENADE,
+	TFC_WPN_MIRVGRENADE,
+	TFC_WPN_NAPALMGRENADE,
+	TFC_WPN_GASGRENADE,
+	TFC_WPN_EMPGRENADE,
+};
+
+enum {
+	TFC_PC_SCOUT = 1,
+	TFC_PC_SNIPER,
+	TFC_PC_SOLDIER,
+	TFC_PC_DEMOMAN,
+	TFC_PC_MEDIC,
+	TFC_PC_HWGUY,
+	TFC_PC_PYRO,
+	TFC_PC_SPY,
+	TFC_PC_ENGENEER,
+	TFC_PC_CIVILIAN,
+};
+
+struct weaponsVault {
+  char* name;
+  char fullName[32];
+  short int ammoSlot;
+  bool melee;
+};
+
+struct traceVault {
+	char * szName;
+	int iId;
+	int iAction;
+	float fDel;
+};
+
+
+
+// *****************************************************
+// class CPlayer
+// *****************************************************
+
+struct CPlayer {
+
+	edict_t* pEdict;
+	char ip[32];
+	int index;
+	int aiming;
+	int current;
+
+	bool ingame;
+	bool bot;
+	float clearStats;
+	RankSystem::RankStats*	rank;
+
+	struct PlayerWeapon : Stats {
+		const char* name;
+		int	ammo;
+		int	clip;
+	};
+
+	PlayerWeapon	weapons[MAX_WEAPONS];
+	PlayerWeapon	attackers[33];
+	PlayerWeapon	victims[33];
+	Stats			weaponsRnd[MAX_WEAPONS]; // DEC-Weapon (Round) stats
+	Stats			life;
+
+	int teamId;
+	int classId;
+
+	void Init(  int pi, edict_t* pe );
+	void Connect(const char* ip );
+	void PutInServer();
+	void Disconnect();
+	void saveKill(CPlayer* pVictim, int weapon, int hs, int tk);
+	void saveHit(CPlayer* pVictim, int weapon, int damage, int aiming);
+	void saveShot(int weapon);
+	void restartStats(bool all = true);
+	void killPlayer();
+	inline bool IsBot(){
+		const char* auth= (*g_engfuncs.pfnGetPlayerAuthId)(pEdict);
+		return ( auth && !strcmp( auth , "BOT" ) );
+	}
+	inline bool IsAlive(){
+		return ((pEdict->v.deadflag==DEAD_NO)&&(pEdict->v.health>0));
+	}
+};
+
+// *****************************************************
+// class Grenades
+// *****************************************************
+
+class Grenades
+{
+  struct Obj 
+  {
+    CPlayer* player;
+    edict_t* grenade;
+    float time;
+    int type;
+    Obj* next;
+    Obj* prev;
+  } *head;
+
+
+public:
+  Grenades() { head = 0; }
+  ~Grenades() { clear(); }
+  void put( edict_t* grenade, float time, int type, CPlayer* player  );
+  bool find( edict_t* enemy, CPlayer** p, int* type );
+  void clear();
+};
+
+#endif // CMISC_H
+

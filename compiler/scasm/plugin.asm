@@ -10,10 +10,10 @@
 	halt	0	;Return point for end
 
 .NATIVE
-	get_user_name
-	register_plugin
-	register_concmd
-	server_print
+	get_user_name	;id, buffer[], maxLen
+	register_plugin	;name[], version[], author[]
+	register_concmd	;cmd[], callback[], access, descr[]
+	server_print	;fmt[], ...
 
 .DATA
 Plugin	db	PLUGIN

@@ -6,8 +6,8 @@
 // Module info
 #define MODULE_NAME "MSSQL"
 #define MODULE_VERSION "1.0"
-#define MODULE_AUTHOR "BAILOPAN"
-#define MODULE_URL "http://www.bailopan.com/"
+#define MODULE_AUTHOR "AMX Mod X Dev Team"
+#define MODULE_URL "http://www.amxmodx.org/"
 #define MODULE_LOGTAG "MSSQL"
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line
 #define MODULE_RELOAD_ON_MAPCHANGE

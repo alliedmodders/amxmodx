@@ -90,7 +90,7 @@
 				Optimization="0"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;PGSQL_EXPORTS"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="0"
+				RuntimeLibrary="4"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\Debug/pgsql.pch"
 				AssemblerListingLocation=".\Debug/"

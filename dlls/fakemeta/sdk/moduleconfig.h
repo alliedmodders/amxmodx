@@ -5,7 +5,7 @@
 
 // Module info
 #define MODULE_NAME "FakeMeta"
-#define MODULE_VERSION "0.20"
+#define MODULE_VERSION "1.00"
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "http://www.amxmodx.org"
 #define MODULE_LOGTAG "FAKEMETA"

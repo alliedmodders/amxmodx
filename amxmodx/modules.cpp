@@ -54,14 +54,14 @@ void report_error( int code, char* fmt, ... )
 	string[255] = 0;
 	va_end (argptr);
 	if ( *string ) {
-		//File fp( "error_amx.log","a" );
-		//fp << string;
+		AMXXLOG_Log("Error:");
 		AMXXLOG_Log(string);
-		AMXXLOG_Log("[AMXX] Make sure that modules are compatible with AMX Mod X %s" , AMX_VERSION );
-		AMXXLOG_Log("[AMXX] Please fix the problem then start the server again" );
 	}
-	sleep( 5 );
-	exit( code );
+	else
+	{
+		AMXXLOG_Log("!!! There was an unexpected module error.");
+		AMXXLOG_Log("The server may not work correctly.");
+	}
 }
 
 void print_srvconsole( char *fmt, ... )
@@ -409,7 +409,7 @@ int loadModules(const char* filename)
 	return loaded;
 }
 
-void detachModules()
+void dettachModules()
 {
 	CList<CModule>::iterator  a  = g_modules.begin();
 
@@ -420,7 +420,7 @@ void detachModules()
 	}
 }
 
-void detachReloadModules()
+void dettachReloadModules()
 {
 	CList<CModule>::iterator  a  = g_modules.begin();
 

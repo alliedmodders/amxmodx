@@ -92,13 +92,14 @@ int RegEx::Match(const char *str)
 
 const char *RegEx::GetSubstring(int s, char buffer[], int max)
 {
+	int i = 0;
 	if (s >= mSubStrings || s < 0)
 		return NULL;
 
 	char *substr_a = subject + ovector[2*s];
 	int substr_l = ovector[2*s+1] - ovector[2*s];
 
-	for (int i = 0; i<substr_l; i++)
+	for (i = 0; i<substr_l; i++)
 	{
 		if (i >= max)
 			break;

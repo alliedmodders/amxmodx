@@ -2578,6 +2578,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("GetPlayerPlayTime", g_fn_GetPlayerPlayTime, PFN_GET_PLAYER_PLAYTIME);
 	REQFUNC("GetPlayerCurweapon", g_fn_GetPlayerCurweapon, PFN_GET_PLAYER_CURWEAPON);
 	REQFUNC("GetPlayerTeamID", g_fn_GetPlayerTeamID, PFN_GET_PLAYER_TEAMID);
+	REQFUNC("GetPlayerTeam",g_fn_GetPlayerTeam, PFN_GET_PLAYER_TEAM);
 	REQFUNC("GetPlayerDeaths", g_fn_GetPlayerDeaths, PFN_GET_PLAYER_DEATHS);
 	REQFUNC("GetPlayerMenu", g_fn_GetPlayerMenu, PFN_GET_PLAYER_MENU);
 	REQFUNC("GetPlayerKeys", g_fn_GetPlayerKeys, PFN_GET_PLAYER_KEYS);

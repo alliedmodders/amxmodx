@@ -89,7 +89,7 @@ pfnmodule_engine_g* g_engModuleFunc;
 	// "player" entities
 	#define OFFSET_TEAM					114 + EXTRAOFFSET // same as STEAM
 	#define OFFSET_CSMONEY				115 + EXTRAOFFSET // same as STEAM
-	//#define OFFSET_INTERNALMODEL		126 + EXTRAOFFSET // unconfirmed with WON!
+	#define OFFSET_INTERNALMODEL		126 + EXTRAOFFSET // same as STEAM
 	#define OFFSET_NVGOGGLES			129 + EXTRAOFFSET // same as STEAM
 	#define OFFSET_DEFUSE_PLANT			193 + EXTRAOFFSET // same as STEAM
 	#define OFFSET_VIP					215 + EXTRAOFFSET // same as STEAM

@@ -1,45 +1,39 @@
-/* AMX Mod X
-*   Counter-Strike Module
-*
-* by the AMX Mod X Development Team
-*
-* This file is part of AMX Mod X.
-*
-*
-*  This program is free software; you can redistribute it and/or modify it
-*  under the terms of the GNU General Public License as published by the
-*  Free Software Foundation; either version 2 of the License, or (at
-*  your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful, but
-*  WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-*  General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software Foundation,
-*  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-*
-*  In addition, as a special exception, the author gives permission to
-*  link the code of this program with the Half-Life Game Engine ("HL
-*  Engine") and Modified Game Libraries ("MODs") developed by Valve,
-*  L.L.C ("Valve"). You must obey the GNU General Public License in all
-*  respects for all of the code used other than the HL Engine and MODs
-*  from Valve. If you modify this file, you may extend this exception
-*  to your version of the file, but you are not obligated to do so. If
-*  you do not wish to do so, delete this exception statement from your
-*  version.
-*/
-
 #include "cstrike.h"
 
-/*
+/* AMX Mod X 
+   *   Counter-Strike Module 
+   * 
+   * by the AMX Mod X Development Team 
+   * 
+   * This file is part of AMX Mod X. 
+   * 
+   * 
+   *  This program is free software; you can redistribute it and/or modify it 
+   *  under the terms of the GNU General Public License as published by the 
+   *  Free Software Foundation; either version 2 of the License, or (at 
+   *  your option) any later version. 
+   * 
+   *  This program is distributed in the hope that it will be useful, but 
+   *  WITHOUT ANY WARRANTY; without even the implied warranty of 
+   *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+   *  General Public License for more details. 
+   * 
+   *  You should have received a copy of the GNU General Public License 
+   *  along with this program; if not, write to the Free Software Foundation, 
+   *  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
+   * 
+   *  In addition, as a special exception, the author gives permission to 
+   *  link the code of this program with the Half-Life Game Engine ("HL 
+   *  Engine") and Modified Game Libraries ("MODs") developed by Valve, 
+   *  L.L.C ("Valve"). You must obey the GNU General Public License in all 
+   *  respects for all of the code used other than the HL Engine and MODs 
+   *  from Valve. If you modify this file, you may extend this exception 
+   *  to your version of the file, but you are not obligated to do so. If 
+   *  you do not wish to do so, delete this exception statement from your 
+   *  version. 
+   */ 
 
-*/
-
-/*
-	Utils first
-*/
+// Utils first
 
 bool isplayer(AMX* amx, edict_t* pPlayer) {
 	bool player = false;
@@ -54,6 +48,7 @@ bool isplayer(AMX* amx, edict_t* pPlayer) {
 	return player;
 }
 
+// Then natives
 
 static cell AMX_NATIVE_CALL cs_set_user_money(AMX *amx, cell *params) // cs_set_user_money(index, money, flash = 1); = 3 arguments
 {
@@ -710,6 +705,190 @@ static cell AMX_NATIVE_CALL cs_set_user_defusekit(AMX *amx, cell *params) // cs_
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL cs_get_user_backpackammo(AMX *amx, cell *params) // cs_get_user_backpackammo(index, weapon); = 2 params
+{
+	// Get amount of ammo in a user's backpack for a specific weapon type.
+	// params[1] = user index
+	// params[2] = weapon, as in CSW_*
+
+	// Valid entity should be within range
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	{
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// Make into edict pointer
+	edict_t *pPlayer = INDEXENT(params[1]);
+
+	// Check entity validity
+	if (FNullEnt(pPlayer)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	int offset;
+
+	switch (params[2]) {
+		case CSW_AWP:
+			offset = OFFSET_AWM_AMMO;
+			break;
+		case CSW_SCOUT:
+		case CSW_AK47:
+		case CSW_G3SG1:
+			offset = OFFSET_SCOUT_AMMO;
+			break;
+		case CSW_M249:
+			offset = OFFSET_PARA_AMMO;
+			break;
+		case CSW_FAMAS:
+		case CSW_M4A1:
+		case CSW_AUG:
+		case CSW_SG550:
+		case CSW_GALI:
+		case CSW_SG552:
+			offset = OFFSET_FAMAS_AMMO;
+			break;
+		case CSW_M3:
+		case CSW_XM1014:
+			offset = OFFSET_M3_AMMO;
+			break;
+		case CSW_USP:
+		case CSW_UMP45:
+		case CSW_MAC10:
+			offset = OFFSET_USP_AMMO;
+			break;
+		case CSW_FIVESEVEN:
+		case CSW_P90:
+			offset = OFFSET_FIVESEVEN_AMMO;
+			break;
+		case CSW_DEAGLE:
+			offset = OFFSET_DEAGLE_AMMO;
+			break;
+		case CSW_P228:
+			offset = OFFSET_P228_AMMO;
+			break;
+		case CSW_GLOCK18:
+		case CSW_MP5NAVY:
+		case CSW_TMP:
+		case CSW_ELITE:
+			offset = OFFSET_GLOCK_AMMO;
+			break;
+		case CSW_FLASHBANG:
+			offset = OFFSET_FLASH_AMMO;
+			break;
+		case CSW_HEGRENADE:
+			offset = OFFSET_HE_AMMO;
+			break;
+		case CSW_SMOKEGRENADE:
+			offset = OFFSET_SMOKE_AMMO;
+			break;
+		case CSW_C4:
+			offset = OFFSET_C4_AMMO;
+			break;
+		default:
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
+	}
+
+	return (int)*((int *)pPlayer->pvPrivateData + offset);
+	
+	return 0;
+}
+
+static cell AMX_NATIVE_CALL cs_set_user_backpackammo(AMX *amx, cell *params) // cs_set_user_backpackammo(index, weapon, amount); = 3 params
+{
+	// Set amount of ammo in a user's backpack for a specific weapon type.
+	// params[1] = user index
+	// params[2] = weapon, as in CSW_*
+	// params[3] = new amount
+
+	// Valid entity should be within range
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	{
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// Make into edict pointer
+	edict_t *pPlayer = INDEXENT(params[1]);
+
+	// Check entity validity
+	if (FNullEnt(pPlayer)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	int offset;
+
+	switch (params[2]) {
+		case CSW_AWP:
+			offset = OFFSET_AWM_AMMO;
+			break;
+		case CSW_SCOUT:
+		case CSW_AK47:
+		case CSW_G3SG1:
+			offset = OFFSET_SCOUT_AMMO;
+			break;
+		case CSW_M249:
+			offset = OFFSET_PARA_AMMO;
+			break;
+		case CSW_FAMAS:
+		case CSW_M4A1:
+		case CSW_AUG:
+		case CSW_SG550:
+		case CSW_GALI:
+		case CSW_SG552:
+			offset = OFFSET_FAMAS_AMMO;
+			break;
+		case CSW_M3:
+		case CSW_XM1014:
+			offset = OFFSET_M3_AMMO;
+			break;
+		case CSW_USP:
+		case CSW_UMP45:
+		case CSW_MAC10:
+			offset = OFFSET_USP_AMMO;
+			break;
+		case CSW_FIVESEVEN:
+		case CSW_P90:
+			offset = OFFSET_FIVESEVEN_AMMO;
+			break;
+		case CSW_DEAGLE:
+			offset = OFFSET_DEAGLE_AMMO;
+			break;
+		case CSW_P228:
+			offset = OFFSET_P228_AMMO;
+			break;
+		case CSW_GLOCK18:
+		case CSW_MP5NAVY:
+		case CSW_TMP:
+		case CSW_ELITE:
+			offset = OFFSET_GLOCK_AMMO;
+			break;
+		case CSW_FLASHBANG:
+			offset = OFFSET_FLASH_AMMO;
+			break;
+		case CSW_HEGRENADE:
+			offset = OFFSET_HE_AMMO;
+			break;
+		case CSW_SMOKEGRENADE:
+			offset = OFFSET_SMOKE_AMMO;
+			break;
+		case CSW_C4:
+			offset = OFFSET_C4_AMMO;
+			break;
+		default:
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
+	}
+
+	(int)*((int *)pPlayer->pvPrivateData + offset) = params[3];
+	
+	return 1;
+}
+
+
 AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_user_money",			cs_set_user_money},
 	{"cs_get_user_money",			cs_get_user_money},
@@ -728,6 +907,8 @@ AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_user_plant",			cs_set_user_plant},
 	{"cs_get_user_defusekit",		cs_get_user_defusekit},
 	{"cs_set_user_defusekit",		cs_set_user_defusekit},
+	{"cs_get_user_backpackammo",	cs_get_user_backpackammo},
+	{"cs_set_user_backpackammo",	cs_set_user_backpackammo},
 	{NULL,							NULL}
 };
 
@@ -758,6 +939,11 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 	memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
 	gpGamedllFuncs = pGamedllFuncs;
+
+	// Init stuff here
+	//g_msgMoney = GET_USER_MSG_ID(PLID, "Money", NULL);
+	//g_msgTextMsg = GET_USER_MSG_ID(PLID, "TextMsg", NULL);
+	//g_msgStatusIcon = GET_USER_MSG_ID(PLID, "StatusIcon", NULL);
 
 	return(TRUE);
 }

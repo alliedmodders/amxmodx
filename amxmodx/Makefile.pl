@@ -75,14 +75,14 @@ while ($cmd = shift)
 $gcc = `$gccf --version`;
 if ($gcc =~ /2\.9/)
 {
-	if ($OPTIONS{"jit"})
-	{
-		push(@CPP_SOURCE_FILES, "amx.cpp");
-		$OPT{"opt"} .= " -malign-loops=2 -malign-jumps=2 -malign-functions=2";
-	} else {
+	#if ($OPTIONS{"jit"})
+	#{
+#		push(@CPP_SOURCE_FILES, "amx.cpp");
+#		$OPT{"opt"} .= " -malign-loops=2 -malign-jumps=2 -malign-functions=2";
+#	} else {
 		`ln -s amx.cpp amx.c`;
 		push(@C_SOURCE_FILES, "amx.c");
-	}
+#	}
 } else {
 	if ($OPTIONS{"amd64"})
 	{

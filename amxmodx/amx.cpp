@@ -480,8 +480,12 @@ int AMXAPI amx_Debug(AMX *amx)
 }
 
 #if defined JIT
+#if defined WIN32 || __cplusplus
   extern "C" int AMXAPI getMaxCodeSize(void);
   extern "C" int AMXAPI asm_runJIT(void *sourceAMXbase, void *jumparray, void *compiledAMXbase);
+#else
+  extern int AMXAPI getMaxCodeSize(void);
+  extern int AMXAPI asm_runJIT(void *sourceAMXbase, void *jumparray, void *compiledAMXbase);
 #endif
 
 #if SMALL_CELL_SIZE==16
@@ -2728,16 +2732,25 @@ static void *amx_opcodelist_nodebug[] = {
     #endif
   #elif defined __GNUC__
     /* force "cdecl" by adding an "attribute" to the declaration */
+	#if defined __cplusplus
+    extern "C" cell amx_exec_asm(cell *regs,cell *retval,cell stp,cell hea) __attribute__((cdecl));
+	#else
     extern cell amx_exec_asm(cell *regs,cell *retval,cell stp,cell hea) __attribute__((cdecl));
+	#endif
   #else
     /* force "cdecl" by specifying it as a "function class" with the "__cdecl" keyword */
-    extern cell __cdecl amx_exec_asm(cell *regs,cell *retval,cell stp,cell hea);
+    extern "C" cell __cdecl amx_exec_asm(cell *regs,cell *retval,cell stp,cell hea);
   #endif
 #endif
 
 #if defined ASM32 || defined JIT
+#if defined WIN32 || defined __cplusplus
+	extern "C" void *amx_opcodelist[];
+    extern "C" void *amx_opcodelist_nodebug[];
+#else
 	extern void *amx_opcodelist[];
     extern void *amx_opcodelist_nodebug[];
+#endif
 #endif
 
 int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)

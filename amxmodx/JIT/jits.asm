@@ -108,7 +108,7 @@
 ;
 ; GWMV: to generate LINE opcode, %define ALLOWOPLINE
 ;
-%undef ALLOWOPLINE
+%define ALLOWOPLINE
 
 ;
 ; If this is set to 1 the JIT generates relocatable code for case tables, too.
@@ -164,8 +164,9 @@ _alt:        resd 1
 _reset_stk:  resd 1
 _reset_hea:  resd 1
 _syscall_d:  resd 1
-; the two fields below are for the JIT; they do not exist in
-; the non-JIT version of the abstract machine
+; the two fields below are for the JIT
+; they are included in the non-JIT version for AMX Mod X
+;  this is to make sure that the structs match universally!
 _reloc_size: resd 1          ; memory block for relocations
 _code_size:  resd 1          ; memory size of the native code
 	endstruc

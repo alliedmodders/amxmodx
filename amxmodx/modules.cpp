@@ -409,7 +409,7 @@ int loadModules(const char* filename)
 	return loaded;
 }
 
-void dettachModules()
+void detachModules()
 {
 	CList<CModule>::iterator  a  = g_modules.begin();
 
@@ -420,7 +420,7 @@ void dettachModules()
 	}
 }
 
-void dettachReloadModules()
+void detachReloadModules()
 {
 	CList<CModule>::iterator  a  = g_modules.begin();
 

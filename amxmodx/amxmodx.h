@@ -217,8 +217,8 @@ const char* stristr(const char* a,const char* b);
 char *strptime(const char *buf, const char *fmt, struct tm *tm, short addthem);
 
 int loadModules(const char* filename);
-void dettachModules();
-void dettachReloadModules();
+void detachModules();
+void detachReloadModules();
 void attachModules();
 void attachMetaModModules(PLUG_LOADTIME now, const char* filename);
 

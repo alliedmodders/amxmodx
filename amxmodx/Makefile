@@ -15,7 +15,7 @@ EXTRA_INCLUDEDIRS = -Iextra/include
 EXTRA_FLAGS = -Dstrcmpi=strcasecmp
 
 SDKTOP=../hlsdk
-METADIR=../metamod/metamod
+METADIR=../metamod
 
 
 SDKSRC=$(SDKTOP)/SourceCode
@@ -29,7 +29,7 @@ else
 	OS=LINUX
 endif
 
-CC_LINUX=gcc
+CC_LINUX=gcc-2.95
 ifeq "$(OS)" "WIN32"
 	CC_WIN32=gcc
 	LD_WINDLL=dllwrap

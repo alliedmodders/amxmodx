@@ -283,7 +283,11 @@ void UTIL_MakeNewLogFile()
 	tm *curTime = localtime(&td);
 
 	// create dir if not existing
+#ifdef __linux
+	mkdir(build_pathname("%s", g_log_dir.str()), 0700);
+#else
 	mkdir(build_pathname("%s", g_log_dir.str()));
+#endif
 
 	int i = 0;
 	while (true)

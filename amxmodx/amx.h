@@ -12,6 +12,7 @@
  *
  *  PM: Whole file changed
  */
+#define LINUX
 #if defined LINUX
   #include <sclinux.h>
 #endif

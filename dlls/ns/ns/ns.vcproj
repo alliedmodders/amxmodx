@@ -23,12 +23,12 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="&quot;c:\Documents and Settings\Steve\My Documents\include\metamod&quot;;&quot;c:\Documents and Settings\Steve\My Documents\include\HLSDKMP\common&quot;;&quot;c:\Documents and Settings\Steve\My Documents\include\HLSDKMP\engine&quot;;&quot;c:\Documents and Settings\Steve\My Documents\include\HLSDKMP\dlls&quot;;&quot;c:\Documents and Settings\Steve\My Documents\include\HLSDKMP\pm_shared&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;mm_ns2amx_EXPORTS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;ns_amxx_EXPORTS"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Release/mm_ns2amx.pch"
+				PrecompiledHeaderFile=".\Release/ns_amxx.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -39,12 +39,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="./Release/mm_ns2amx.dll"
+				OutputFile="./Release/ns_amxx.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				ModuleDefinitionFile=".\plugin_exports.def"
-				ProgramDatabaseFile=".\Release/mm_ns2amx.pdb"
-				ImportLibrary=".\Release/mm_ns2amx.lib"
+				ProgramDatabaseFile=".\Release/ns_amxx.pdb"
+				ImportLibrary=".\Release/ns_amxx.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -52,7 +51,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/mm_ns2amx.tlb"
+				TypeLibraryName=".\Release/ns_amxx.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -88,11 +87,11 @@
 				AdditionalOptions="/I "
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;c:\Documents and Settings\Steve\My Documents\include\metamod&quot;;&quot;c:\Documents and Settings\Steve\My Documents\include\HLSDKMP\common&quot;;&quot;c:\Documents and Settings\Steve\My Documents\include\HLSDKMP\engine&quot;;&quot;c:\Documents and Settings\Steve\My Documents\include\HLSDKMP\dlls&quot;;&quot;c:\Documents and Settings\Steve\My Documents\include\HLSDKMP\pm_shared&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;mm_ns2amx_EXPORTS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;ns_amxx_EXPORTS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Debug/mm_ns2amx.pch"
+				PrecompiledHeaderFile=".\Debug/ns_amxx.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -104,13 +103,12 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="c:\Sierra\Half-Life\ns\addons\mm_ns2amx.dll"
+				OutputFile=".\Debug/ns_amxx.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				ModuleDefinitionFile=".\plugin_exports.def"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/mm_ns2amx.pdb"
-				ImportLibrary=".\Debug/mm_ns2amx.lib"
+				ProgramDatabaseFile=".\Debug/ns_amxx.pdb"
+				ImportLibrary=".\Debug/ns_amxx.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -118,7 +116,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/mm_ns2amx.tlb"
+				TypeLibraryName=".\Debug/ns_amxx.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -165,7 +163,7 @@
 						Name="VCCLCompilerTool"
 						Optimization="2"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;mm_ns2amx_EXPORTS;$(NoInherit)"/>
+						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;ns_amxx_EXPORTS;$(NoInherit)"/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -173,7 +171,7 @@
 						Name="VCCLCompilerTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;mm_ns2amx_EXPORTS;$(NoInherit)"
+						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;ns_amxx_EXPORTS;$(NoInherit)"
 						BasicRuntimeChecks="3"/>
 				</FileConfiguration>
 			</File>

@@ -32,6 +32,8 @@
 *  Description: AMX Mod X Module Interface Functions
 */
 
+
+
 #include <string.h>
 #include <new>
 #include <stdarg.h>
@@ -44,6 +46,13 @@
 
 enginefuncs_t g_engfuncs;
 globalvars_t  *gpGlobals;
+
+
+
+DLL_FUNCTIONS *g_pFunctionTable;
+DLL_FUNCTIONS *g_pFunctionTable_Post;
+enginefuncs_t *g_pengfuncsTable;
+enginefuncs_t *g_pengfuncsTable_Post;
 
 // GetEntityAPI2 functions
 static DLL_FUNCTIONS g_EntityAPI_Table = 
@@ -2114,6 +2123,7 @@ C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersi
 		return(FALSE);
 	}
 	memcpy(pFunctionTable, &g_EntityAPI_Table, sizeof(DLL_FUNCTIONS));
+	g_pFunctionTable=pFunctionTable;
 	return(TRUE);
 }
 
@@ -2131,7 +2141,7 @@ C_DLLEXPORT int GetEntityAPI2_Post(DLL_FUNCTIONS *pFunctionTable, int *interface
 		return(FALSE);
 	}
 	memcpy( pFunctionTable, &g_EntityAPI_Post_Table, sizeof( DLL_FUNCTIONS ) );
-
+	g_pFunctionTable_Post=pFunctionTable;
 	return(TRUE);
 }
 
@@ -2154,6 +2164,7 @@ C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
 		return(FALSE);
 	}
 	memcpy(pengfuncsFromEngine, &g_EngineFuncs_Table, sizeof(enginefuncs_t));
+	g_pengfuncsTable=pengfuncsFromEngine;
 	return TRUE;
 }
 
@@ -2171,6 +2182,7 @@ C_DLLEXPORT int GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine, int 
 		return(FALSE);
 	}
 	memcpy(pengfuncsFromEngine, &g_EngineFuncs_Post_Table, sizeof(enginefuncs_t));
+	g_pengfuncsTable_Post=pengfuncsFromEngine;
 	return TRUE;
 
 }

@@ -19,6 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="&quot;c:\Documents and Settings\Steve\My Documents\include\metamod&quot;;&quot;c:\Documents and Settings\Steve\My Documents\include\HLSDKMP\common&quot;;&quot;c:\Documents and Settings\Steve\My Documents\include\HLSDKMP\engine&quot;;&quot;c:\Documents and Settings\Steve\My Documents\include\HLSDKMP\dlls&quot;;&quot;c:\Documents and Settings\Steve\My Documents\include\HLSDKMP\pm_shared&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;ENGINE_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"

@@ -54,12 +54,12 @@
 // (wd) are Will Day's notes
 // - GetEntityAPI2 functions
 // #define FN_GameDLLInit				GameDLLInit					/* pfnGameInit() */
-#define FN_DispatchSpawn				DispatchSpawn				/* pfnSpawn() */
-//#define FN_DispatchThink				DispatchThink				/* pfnThink() */
-#define FN_DispatchUse					DispatchUse					/* pfnUse() */
-#define FN_DispatchTouch				DispatchTouch				/* pfnTouch() */
+#define FN_DispatchSpawn				Spawn				/* pfnSpawn() */
+#define FN_DispatchThink				Think				/* pfnThink() */
+// #define FN_DispatchUse					Use					/* pfnUse() */
+#define FN_DispatchTouch				pfnTouch				/* pfnTouch() */
 // #define FN_DispatchBlocked			DispatchBlocked				/* pfnBlocked() */
-//#define FN_DispatchKeyValue			KeyValue			/* pfnKeyValue() */
+#define FN_DispatchKeyValue			KeyValue			/* pfnKeyValue() */
 // #define FN_DispatchSave				DispatchSave				/* pfnSave() */
 // #define FN_DispatchRestore			DispatchRestore				/* pfnRestore() */
 // #define FN_DispatchObjectCollsionBox	DispatchObjectCollsionBox	/* pfnSetAbsBox() */
@@ -76,9 +76,9 @@
 // #define FN_ClientUserInfoChanged		ClientUserInfoChanged		/* pfnClientUserInfoChanged()	(wd) Client has updated their setinfo structure */
 #define FN_ServerActivate			ServerActivate				/* pfnServerActivate()			(wd) Server is starting a new map */
 #define FN_ServerDeactivate			ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
-//#define FN_PlayerPreThink			PlayerPreThink				/* pfnPlayerPreThink() */
-//#define FN_PlayerPostThink			PlayerPostThink				/* pfnPlayerPostThink() */
-//#define FN_StartFrame				StartFrame					/* pfnStartFrame() */
+#define FN_PlayerPreThink			PlayerPreThink				/* pfnPlayerPreThink() */
+// #define FN_PlayerPostThink			PlayerPostThink				/* pfnPlayerPostThink() */
+#define FN_StartFrame				StartFrame					/* pfnStartFrame() */
 // #define FN_ParmsNewLevel				ParmsNewLevel				/* pfnParmsNewLevel() */
 // #define FN_ParmsChangeLevel			ParmsChangeLevel			/* pfnParmsChangeLevel() */
 // #define FN_GetGameDescription		GetGameDescription			/* pfnGetGameDescription()		Returns string describing current .dll.  E.g. "TeamFotrress 2" "Half-Life" */
@@ -107,7 +107,7 @@
 // - GetEntityAPI2_Post functions
 // #define FN_GameDLLInit_Post					GameDLLInit_Post
 // #define FN_DispatchSpawn_Post				DispatchSpawn_Post
-#define FN_DispatchThink_Post				DispatchThink_Post
+// #define FN_DispatchThink_Post				DispatchThink_Post
 // #define FN_DispatchUse_Post					DispatchUse_Post
 // #define FN_DispatchTouch_Post				DispatchTouch_Post
 // #define FN_DispatchBlocked_Post				DispatchBlocked_Post
@@ -128,9 +128,9 @@
 // #define FN_ClientUserInfoChanged_Post		ClientUserInfoChanged_Post
 // #define FN_ServerActivate_Post				ServerActivate_Post
 // #define FN_ServerDeactivate_Post				ServerDeactivate_Post
-#define FN_PlayerPreThink_Post				PlayerPreThink_Post
+// #define FN_PlayerPreThink_Post				PlayerPreThink_Post
 #define FN_PlayerPostThink_Post				PlayerPostThink_Post
-#define FN_StartFrame_Post					StartFrame_Post
+// #define FN_StartFrame_Post					StartFrame_Post
 // #define FN_ParmsNewLevel_Post				ParmsNewLevel_Post
 // #define FN_ParmsChangeLevel_Post				ParmsChangeLevel_Post
 // #define FN_GetGameDescription_Post			GetGameDescription_Post
@@ -163,7 +163,7 @@
 // #define FN_ModelIndex						ModelIndex
 // #define FN_ModelFrames						ModelFrames
 // #define FN_SetSize							SetSize
-#define FN_ChangeLevel						ChangeLevel
+// #define FN_ChangeLevel						ChangeLevel
 // #define FN_GetSpawnParms						GetSpawnParms
 // #define FN_SaveSpawnParms					SaveSpawnParms
 // #define FN_VecToYaw							VecToYaw

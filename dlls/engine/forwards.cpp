@@ -17,7 +17,6 @@ int VexdTouchForward = 0;
 int VexdServerForward = 0;
 CVector<Impulse *> Impulses;
 CVector<EntClass *> Thinks;
-CVector<EntClass *> Uses;
 CVector<Touch *> Touches;
 KeyValueData *g_pkvd;
 bool g_inKeyValue=false;
@@ -37,20 +36,7 @@ int fstrcmp(const char *s1, const char *s2)
 	return 1;
 }
 
-void DispatchUse(edict_t *pentUsed, edict_t *pentOther)
-{
-	if (DispatchUseForward) {
-		int retVal = 0;
-		int used = ENTINDEX(pentUsed);
-		int user = ENTINDEX(pentOther);
-		retVal = MF_ExecuteForward(DispatchUseForward, user, used);
-		if (retVal)
-			RETURN_META(MRES_SUPERCEDE);
-	}
-	RETURN_META(MRES_IGNORED);
-}
-
-int DispatchSpawn(edict_t *pEntity) {
+int Spawn(edict_t *pEntity) {
 	if (SpawnForward) {
 		int retVal = 0;
 		int id = ENTINDEX(pEntity);
@@ -116,7 +102,7 @@ void KeyValue(edict_t *pEntity, KeyValueData *pkvd)
 	RETURN_META(MRES_HANDLED);
 }
 
-void StartFrame_Post()
+void StartFrame()
 {
 	if (glinfo.bCheckLights) {
 		if (!FStrEq((const char*)glinfo.szLastLights, "")) {
@@ -176,13 +162,11 @@ void ClientKill(edict_t *pEntity)
 	RETURN_META(MRES_IGNORED);
 }
 
-void PlayerPreThink_Post(edict_t *pEntity)
+void PlayerPreThink(edict_t *pEntity)
 {
 	MF_ExecuteForward(PlayerPreThinkForward, ENTINDEX(pEntity));
-
 	RETURN_META(MRES_IGNORED);
 }
-
 void PlayerPostThink_Post(edict_t *pEntity)
 {
 	if(plinfo[ENTINDEX(pEntity)].pViewEnt) {
@@ -222,12 +206,16 @@ void PlayerPostThink_Post(edict_t *pEntity)
 		}
 	}
 
-	MF_ExecuteForward(PlayerPostThinkForward, ENTINDEX(pEntity));
+	if (PlayerPostThinkForward)
+	{
+		if (MF_ExecuteForward(PlayerPostThinkForward, ENTINDEX(pEntity)))
+			RETURN_META(MRES_SUPERCEDE);
+	}
 
 	RETURN_META(MRES_IGNORED);
 }
 
-void DispatchTouch(edict_t *pToucher, edict_t *pTouched)
+void pfnTouch(edict_t *pToucher, edict_t *pTouched)
 {
 	unsigned int i = 0;
 	int retVal = 0;
@@ -282,7 +270,7 @@ void DispatchTouch(edict_t *pToucher, edict_t *pTouched)
 	RETURN_META(MRES_IGNORED);
 }
 
-void DispatchThink_Post(edict_t *pent)
+void Think(edict_t *pent)
 {
 	unsigned int i = 0;
 	const char *cls = STRING(pent->v.classname);

@@ -7,7 +7,7 @@
 #endif
 #define _dbi_included
 
-native dbi_connect(host[], user[], pass[], dbname[], error[]="", maxlength=1);
+native dbi_connect(host[], user[], pass[], dbname[], error[], maxlength);
 
 native dbi_query(sql, query[], {Float,_}:...);
 
@@ -17,4 +17,4 @@ native dbi_getfield(sql, fieldnum, dest[], maxlen);
 
 native dbi_close(sql);
 
-native dbi_error(sql);
+native dbi_error(sql, error[], len);

@@ -1,5 +1,5 @@
 /* AMX Mod X
-*   Admin Base for MySQL Plugin
+*   Admin Base for SQL Plugin
 *
 * by the AMX Mod X Development Team
 *  originally developed by OLO
@@ -34,7 +34,7 @@
 
 #include <amxmodx>
 #include <amxmisc>
-#include <mysql>
+#include <dbi>
 
 #define MAX_ADMINS 64
 
@@ -49,16 +49,16 @@ new g_cmdLoopback[16]
 
 public plugin_init()
 {
-  register_plugin("Admin Base for MySQL","0.16","AMXX Dev Team")
+  register_plugin("Admin Base(SQL)","0.2","AMXX Dev Team")
 
   register_cvar("amx_mode","1")
   register_cvar("amx_password_field","_pw")
   register_cvar("amx_default_access","")
   register_srvcmd("amx_sqladmins","adminSql")
-  register_cvar("amx_mysql_host","127.0.0.1")
-  register_cvar("amx_mysql_user","root")
-  register_cvar("amx_mysql_pass","")
-  register_cvar("amx_mysql_db","amx") 
+  register_cvar("amx_sql_host","127.0.0.1")
+  register_cvar("amx_sql_user","root")
+  register_cvar("amx_sql_pass","")
+  register_cvar("amx_sql_db","amx") 
 
   register_cvar("amx_vote_ratio","0.02")
   register_cvar("amx_votekick_ratio","0.40")
@@ -84,38 +84,38 @@ public plugin_init()
   new configsDir[128]
   get_configsdir(configsDir, 127)
   server_cmd("exec %s/amxx.cfg", configsDir) // Execute main configuration file
-  server_cmd("exec %s/mysql.cfg;amx_sqladmins", configsDir)
+  server_cmd("exec %s/sql.cfg;amx_sqladmins", configsDir)
 }
 
 public adminSql() {
   new host[64],user[32],pass[32],db[32],error[128]
-  get_cvar_string("amx_mysql_host",host,63)
-  get_cvar_string("amx_mysql_user",user,31)
-  get_cvar_string("amx_mysql_pass",pass,31)
-  get_cvar_string("amx_mysql_db",db,31)
+  get_cvar_string("amx_sql_host",host,63)
+  get_cvar_string("amx_sql_user",user,31)
+  get_cvar_string("amx_sql_pass",pass,31)
+  get_cvar_string("amx_sql_db",db,31)
   
-  new mysql = mysql_connect(host,user,pass,db,error,127)
-  if(mysql < 1){
-    server_print("[AMXX] MySQL error: can't connect: '%s'",error)
+  new sql = dbi_connect(host,user,pass,db,error,127)
+  if(sql < 1){
+    server_print("[AMXX] SQL error: can't connect: '%s'",error)
     return PLUGIN_HANDLED 
   }
 
-  mysql_query(mysql,"CREATE TABLE IF NOT EXISTS admins ( auth varchar(32) NOT NULL default '', password varchar(32) NOT NULL default '', access varchar(32) NOT NULL default '', flags varchar(32) NOT NULL default '' ) TYPE=MyISAM")
+  dbi_query(sql,"CREATE TABLE IF NOT EXISTS admins ( auth varchar(32) NOT NULL default '', password varchar(32) NOT NULL default '', access varchar(32) NOT NULL default '', flags varchar(32) NOT NULL default '' ) TYPE=MyISAM")
 
-  if(mysql_query(mysql,"SELECT auth,password,access,flags FROM admins") < 1)  {
-    mysql_error(mysql,error,127)
-    server_print("[AMXX] MySQL error: can't load admins: '%s'",error)
+  if(dbi_query(sql,"SELECT auth,password,access,flags FROM admins") < 1)  {
+    dbi_error(sql,error,127)
+    server_print("[AMXX] SQL error: can't load admins: '%s'",error)
     return PLUGIN_HANDLED
   }
 
   new szFlags[32],szAccess[32]
   g_aNum = 0
-  while( mysql_nextrow(mysql) > 0 )
+  while( dbi_nextrow(sql) > 0 )
   {
-    mysql_getfield(mysql, 1, g_aName[ g_aNum ] ,31)
-    mysql_getfield(mysql, 2, g_aPassword[ g_aNum ] ,31)
-    mysql_getfield(mysql, 3, szAccess,31)
-    mysql_getfield(mysql, 4, szFlags,31)
+    dbi_getfield(sql, 1, g_aName[ g_aNum ] ,31)
+    dbi_getfield(sql, 2, g_aPassword[ g_aNum ] ,31)
+    dbi_getfield(sql, 3, szAccess,31)
+    dbi_getfield(sql, 4, szFlags,31)
 
     if ( (containi(szAccess,"z")==-1) && (containi(szAccess,"y")==-1) )
       szAccess[strlen(szAccess)] = 'y'
@@ -129,7 +129,7 @@ public adminSql() {
   }
 
   server_print("[AMXX] Loaded %d admin%s from database",g_aNum, (g_aNum == 1) ? "" : "s" )
-  mysql_close(mysql)
+  dbi_close(sql)
   return PLUGIN_HANDLED
 }
 

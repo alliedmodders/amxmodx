@@ -43,8 +43,7 @@ public plugin_init()
   get_basedir( filename , 31 )
   server_cmd("exec %s/amx.cfg" , filename ) // Execute main configuration file
   format( filename, 63 , "%s/users.ini" , filename )
-  loadSettings(  filename ) // Load admins accounts
-  
+  loadSettings( filename ) // Load admins accounts
 }
 
 loadSettings(szFilename[])
@@ -138,6 +137,8 @@ getAccess(id,name[],authid[],ip[], password[])
   else {
     new defaccess[32]
     get_cvar_string("amx_default_access",defaccess,31)
+    if (containi(defaccess,"z")==-1)
+      format(defaccess,31,"%sz",defaccess)
     new idefaccess = read_flags(defaccess)
     if (idefaccess){
       result |= 8

@@ -179,7 +179,6 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 
 	if ( (err = amx_InitJIT(amx, rt, np)) == AMX_ERR_NONE ) 
 	{
-		void *blk;
 		//amx->base = (unsigned char FAR *)realloc( np, amx->code_size );
 #ifndef __linux__
 		amx->base = new unsigned char[ amx->code_size ];

@@ -33,10 +33,10 @@ bool msdb::Kill()
 	user.clear();
 	free = true;
 	try {
-		if (res)
-			res->Close();
 		cn->Close();
 		cn = NULL;
+		if (res)
+			res->Close();
 		res = NULL;
 	} catch(_com_error &e) {
 		_bstr_t bstrSource(e.Description());
@@ -82,7 +82,8 @@ int sql_exists(char *user, char *pass, char *db, char *host)
 		if (((*i)->user.compare(user) == 0) &&
 			((*i)->pass.compare(pass) == 0) &&
 			((*i)->dbname.compare(db) == 0) &&
-			((*i)->host.compare(host) == 0)) {
+			((*i)->host.compare(host) == 0) &&
+			(!(*i)->free)) {
 
 			return id;
 		}
@@ -146,13 +147,12 @@ static cell AMX_NATIVE_CALL mssql_close(AMX *amx, cell *params)
 	unsigned int id = params[1] - 1;
 	
 	if (id >= DBList.size() || id < 0 || DBList.at(id)->free) {
+		error.assign("Invalid handle.");
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
-	DBList.at(id)->Kill();
-
-	return true;
+	return DBList.at(id)->Kill();
 }
 
 static cell AMX_NATIVE_CALL mssql_query(AMX *amx, cell *params)
@@ -160,6 +160,7 @@ static cell AMX_NATIVE_CALL mssql_query(AMX *amx, cell *params)
 	unsigned int id = params[1] - 1;
 	
 	if (id >= DBList.size() || id < 0 || DBList.at(id)->free) {
+		error.assign("Invalid handle.");
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -209,6 +210,7 @@ static cell AMX_NATIVE_CALL mssql_nextrow(AMX *amx, cell *params)
 	unsigned int id = params[1] - 1;
 	
 	if (id >= DBList.size() || id < 0 || DBList.at(id)->free) {
+		error.assign("Invalid handle.");
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -241,6 +243,7 @@ static cell AMX_NATIVE_CALL mssql_getfield(AMX *amx, cell *params)
 	unsigned int id = params[1] - 1;
 	
 	if (id >= DBList.size() || id < 0 || DBList.at(id)->free) {
+		error.assign("Invalid handle.");
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -289,6 +292,7 @@ static cell AMX_NATIVE_CALL mssql_getfield(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL mssql_error(AMX *amx, cell *params)
 {
+	error.assign("Invalid handle.");
 	MF_SetAmxString(amx, params[2], error.c_str(), params[3]);
 	return lastError;
 }

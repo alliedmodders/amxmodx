@@ -53,11 +53,11 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386 /def:".\amxmodx_mm.def" /out:"release/amxxmm.dll" /libpath:"..\extra\lib_win32"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386 /def:".\amxmodx_mm.def" /out:"release/amxx_mm.dll" /libpath:"..\extra\lib_win32"
 # Begin Custom Build
-TargetPath=.\release\amxxmm.dll
-TargetName=amxxmm
-InputPath=.\release\amxxmm.dll
+TargetPath=.\release\amxx_mm.dll
+TargetName=amxx_mm
+InputPath=.\release\amxx_mm.dll
 SOURCE="$(InputPath)"
 
 "$(TargetName)" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -89,12 +89,12 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /def:".\amxmodx_mm.def" /out:"debug/amxxmm.dll" /pdbtype:sept /libpath:"..\extra\lib_win32"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /def:".\amxmodx_mm.def" /out:"debug/amxx_mm.dll" /pdbtype:sept /libpath:"..\extra\lib_win32"
 # SUBTRACT LINK32 /incremental:no /nodefaultlib
 # Begin Custom Build
-TargetPath=.\debug\amxxmm.dll
-TargetName=amxxmm
-InputPath=.\debug\amxxmm.dll
+TargetPath=.\debug\amxx_mm.dll
+TargetName=amxx_mm
+InputPath=.\debug\amxx_mm.dll
 SOURCE="$(InputPath)"
 
 "$(TargetName)" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -126,6 +126,10 @@ SOURCE=..\amxmodx.cpp
 # Begin Source File
 
 SOURCE=..\amxtime.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\amxxlog.cpp
 # End Source File
 # Begin Source File
 

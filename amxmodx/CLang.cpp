@@ -189,6 +189,16 @@ uint32_t CLangMngr::CLang::LangEntry::GetDefHash()
 	return m_DefHash;
 }
 
+void CLangMngr::CLang::LangEntry::SetCache(bool c)
+{
+	m_isCache = c;
+}
+
+bool CLangMngr::CLang::LangEntry::GetCache()
+{
+	return m_isCache;
+}
+
 const char *CLangMngr::CLang::LangEntry::GetDef()
 {
 	return m_pDef.c_str();
@@ -268,9 +278,11 @@ CLangMngr::CLang::CLang(const char *lang)
 	m_LanguageName[2]=0;
 }
 
-CLangMngr::CLang::LangEntry *CLangMngr::CLang::AddEntry(int pKey, uint32_t defHash, const char *def)
+CLangMngr::CLang::LangEntry *CLangMngr::CLang::AddEntry(int pKey, uint32_t defHash, const char *def, bool cache)
 {
 	LangEntry *p = new LangEntry(pKey, defHash, def);
+
+	p->SetCache(cache);
 
 	m_LookUpTable.push_back(p);
 
@@ -306,6 +318,7 @@ CLangMngr::CLang::LangEntry * CLangMngr::CLang::GetEntry(int pkey)
 
 	LangEntry *e = new LangEntry(pkey);
 	e->SetKey(pkey);
+	e->SetCache(true);
 	m_LookUpTable.push_back(e);
 
 	return e;
@@ -322,8 +335,14 @@ void CLangMngr::CLang::MergeDefinitions(CQueue<sKeyDef*> &vec)
 		LangEntry *entry = GetEntry(key);
 		if (entry->GetDefHash() != MakeHash(def))
 		{
-			entry->SetDef(def);
-			entry->SetKey(key);
+			if (entry->GetCache())
+			{
+				entry->SetDef(def);
+				entry->SetKey(key);
+				entry->SetCache(false);
+			} else {
+				AMXXLOG_Log("[AMXX] Language key %s[%s] defined twice", m_LMan->GetKey(key), m_LanguageName);
+			}
 		}
 		delete vec.front();
 		vec.pop();
@@ -1184,7 +1203,7 @@ bool CLangMngr::Load(const char *filename)
 			char *data = new char[deflen+1];
 			fread(data, sizeof(char), deflen, fp);
 			data[deflen] = 0;
-			m_Languages[i]->AddEntry(keynum, defhash, data);
+			m_Languages[i]->AddEntry(keynum, defhash, data, true);
 			delete [] data;
 			fseek(fp, save, SEEK_SET);	//bring back to next entry
 		}

@@ -102,15 +102,19 @@ class CLangMngr
 			int key;
 			// the definition
 			String m_pDef;
+			// is this from the cache or not?
+			bool m_isCache;
 		public:
 			// Set
 			void SetKey(int key);
 			void SetDef(const char *pDef);
+			void SetCache(bool c);
 			// Get
 			uint32_t GetDefHash();
 			int GetKey();
 			const char *GetDef();
 			int GetDefLength();
+			bool GetCache();
 
 			// Constructors / destructors
 			LangEntry();
@@ -135,7 +139,7 @@ class CLangMngr
 		LookUpVec m_LookUpTable;
 		CLangMngr *m_LMan;
 	public:
-		LangEntry *AddEntry(int pKey, uint32_t defHash, const char *def);
+		LangEntry *AddEntry(int pKey, uint32_t defHash, const char *def, bool cache);
 	};
 
 	// Merge definitions into a language

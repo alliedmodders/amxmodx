@@ -1,5 +1,7 @@
 #define VERSION "0.79"
 
+using namespace std;
+
 plugin_info_t Plugin_info = {
 
 	META_INTERFACE_VERSION, // ifvers
@@ -303,7 +305,6 @@ public:
 		writelong = (long)0;
 		writeangle = 0.0;
 		writecoord = 0.0;
-		writestring = '\0';
 		writeentity = 0;
 	}
 
@@ -363,9 +364,7 @@ public:
 		switch (argtype)
 		{
 		case arg_string:
-			delete[] writestring;
-			writestring = new char[strlen(sz)+1];
-			strcpy(writestring, sz);
+			writestring.append((char *)sz);
 			break;
 		}
 	}
@@ -393,7 +392,7 @@ public:
 			WRITE_COORD(writecoord);
 			break;
 		case arg_string:
-			WRITE_STRING(writestring);
+			WRITE_STRING(writestring.c_str());
 			break;
 		case arg_entity:
 			WRITE_ENTITY(writeentity);
@@ -436,7 +435,6 @@ public:
 			return writecoord;
 			break;
 		}
-		
 		return 0.0;
 	}
 
@@ -445,18 +443,18 @@ public:
 		switch (argtype)
 		{
 		case arg_string:
-			return (strlen(writestring));
+			return (writestring.length());
 			break;
 		}
 		return 0;
 	}
 
-	char *getarg_string(int arg_type)
+	const char *getarg_string(int arg_type)
 	{
 		switch (argtype)
 		{
 		case arg_string:
-			return (strlen(writestring)?writestring:'\0');
+			return writestring.c_str();
 			break;
 		}
 
@@ -658,7 +656,7 @@ private:
 	int writelong;
 	float writeangle;
 	float writecoord;
-	char *writestring;
+	string writestring;
 	int writeentity;
 	argStack *next;
 };
@@ -861,7 +859,7 @@ public:
 		return 0;
 	}
 
-	char* RetArg_String(int n)
+	const char* RetArg_String(int n)
 	{
 		argStack *p;
 		int i=0;

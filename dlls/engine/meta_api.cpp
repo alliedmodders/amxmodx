@@ -37,6 +37,7 @@
 #include <modules.h>
 #include <vector>
 #include <limits.h>
+#include <iostream>
 #include "engine.h"
 
 extern "C" void destroy(MessageInfo* p) {
@@ -211,6 +212,24 @@ static cell AMX_NATIVE_CALL get_msg_arg_float(AMX *amx, cell *params)
 			return 0;
 		}
 	}
+
+	return 1;
+}
+
+//(JGHG(
+static cell AMX_NATIVE_CALL spawn_user(AMX *amx, cell *params) // spawn(id) = 1 param
+{
+	// Spawns an entity, this can be a user/player -> spawns at spawnpoints, or created entities seems to need this as a final "kick" into the game? :-)
+	// params[1] = entity to spawn
+
+    if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
+    {
+        AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+        return 0;
+    }
+	edict_t *pEnt = INDEXENT(params[1]);
+
+	MDLL_Spawn(pEnt);
 
 	return 1;
 }
@@ -485,6 +504,24 @@ static cell AMX_NATIVE_CALL get_offset_float(AMX *amx, cell *params)
 	return 1;
 }
 
+//is an entity valid?
+//(BAILOPAN)
+static cell AMX_NATIVE_CALL is_valid_ent(AMX *amx, cell *params) {
+	int iEnt = params[1];
+
+	if (iEnt < 1 || iEnt > gpGlobals->maxEntities) {
+		return 0;
+	}
+
+	edict_t *pEntity = INDEXENT(iEnt);
+
+	if (FNullEnt(pEntity)) {
+		return 0;
+	}
+
+	return 1;
+}
+
 // Get an integer from an entities entvars.
 // (vexd)
 static cell AMX_NATIVE_CALL entity_get_int(AMX *amx, cell *params) { 
@@ -494,7 +531,6 @@ static cell AMX_NATIVE_CALL entity_get_int(AMX *amx, cell *params) {
 
 	// Is it a valid entity?
 	if (iTargetEntity < 1 || iTargetEntity > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -771,7 +807,6 @@ static cell AMX_NATIVE_CALL entity_get_float(AMX *amx, cell *params) {
   
 	// Valid entity?
 	if (iTargetEntity < 1 || iTargetEntity > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1756,7 +1791,7 @@ static cell AMX_NATIVE_CALL find_entity(AMX *amx, cell *params) {
 	int iReturnEnt = ENTINDEX(FIND_ENTITY_BY_STRING(pStartEnt, "classname", szValue));
 
 	if(!iReturnEnt || FNullEnt(iReturnEnt)) {
-		return 0;
+		return -1;
 	}
 
 	return iReturnEnt;
@@ -2573,7 +2608,7 @@ void Touch(edict_t *pToucher, edict_t *pTouched) {
 	cell iResult;
 	META_RES result = MRES_IGNORED;
 	for (AmxCallList::AmxCall* i = pfnTouch.head; i; i = i->next) {
-		AMX_EXEC(i->amx, &iResult, i->iFunctionIdx, 2, pToucher, pTouched);
+		AMX_EXEC(i->amx, &iResult, i->iFunctionIdx, 2, ENTINDEX(pToucher), ENTINDEX(pTouched));
 		if (iResult & 2) {
 			RETURN_META(MRES_SUPERCEDE);
 		} else if (iResult & 1) {
@@ -2585,7 +2620,6 @@ void Touch(edict_t *pToucher, edict_t *pTouched) {
 }
 
 // ClientConnect, reinitialize player info here as well.
-// Also gives small message that its using the model.
 //(vexd)
 BOOL ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[128]) {
 	memset(PlInfo[ENTINDEX(pEntity)].szModel, 0x0, sizeof(PlInfo[ENTINDEX(pEntity)].szModel));
@@ -2596,8 +2630,6 @@ BOOL ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress
 	PlInfo[ENTINDEX(pEntity)].pViewEnt = NULL;
 	PlInfo[ENTINDEX(pEntity)].iRenderMode = 0;
 	PlInfo[ENTINDEX(pEntity)].fRenderAmt = 0;
-
-	//CLIENT_PRINTF(pEntity, print_console, "*** This server is using Vexd's Utility Module.\n");
 
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
@@ -3097,6 +3129,9 @@ AMX_NATIVE_INFO Engine_Natives[] = {
 	{"get_msg_arg_string",	get_msg_arg_string},
 	{"get_msg_args",		get_msg_args},
 	{"get_msg_argtype",		get_msg_argtype},
+
+	{"is_valid_ent",		is_valid_ent},
+	{"spawn_user",			spawn_user},
 
 	{ NULL, NULL }
 

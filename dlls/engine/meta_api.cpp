@@ -45,6 +45,7 @@
 GlobalInfo GlInfo;
 MessageInfo *msgd = NULL;
 bool isMsgHooked[MAX_MESSAGES];
+bool is_PlayerOn[33];
 int inHookProcess;
 edict_t *valid_ent(int ent);
 edict_t *valid_player(int ent);
@@ -448,6 +449,11 @@ static cell AMX_NATIVE_CALL get_offset_short(AMX *amx, cell *params)
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
+
+	if (!is_PlayerOn[index]) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
 	
 	edict_t *Player = INDEXENT(index);
 	
@@ -467,6 +473,11 @@ static cell AMX_NATIVE_CALL get_offset(AMX *amx, cell *params)
 	int off = params[2];
 	
 	if (index < 1 || index > gpGlobals->maxClients) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	if (!is_PlayerOn[index]) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -490,6 +501,11 @@ static cell AMX_NATIVE_CALL get_offset_float(AMX *amx, cell *params)
 	float retVal;
 	
 	if (index < 1 || index > gpGlobals->maxClients) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	if (!is_PlayerOn[index]) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -2887,6 +2903,11 @@ void ClientDisconnect(edict_t *pEntity) {
 	PlInfo[ENTINDEX(pEntity)].iRenderMode = 0;
 	PlInfo[ENTINDEX(pEntity)].fRenderAmt = 0;
 
+	int iPlayer = ENTINDEX(pEntity);
+	if (iPlayer > 0 && iPlayer < 33) {
+		is_PlayerOn[iPlayer] = false;
+	}
+
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -3133,6 +3154,10 @@ void ServerActivate( edict_t *pEdictList, int edictCount, int clientMax ){
 		isMsgHooked[i] = false;
 	}
 
+	for (i=0; i<33; i++) {
+		is_PlayerOn[i] = false;
+	}
+
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -3214,6 +3239,7 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 	gpMetaGlobals=pMGlobals;
 	gMetaFunctionTable.pfnGetEntityAPI2 = GetEntityAPI2;
+	gMetaFunctionTable.pfnGetEntityAPI2_Post = GetEntityAPI2_Post;
 	gMetaFunctionTable.pfnGetEngineFunctions = GetEngineFunctions;
 
 	memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
@@ -3251,6 +3277,13 @@ void WINAPI GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *p
 
 }
 
+void ClientPutInServer_Post( edict_t *pEntity ) {
+	int iPlayer = ENTINDEX(pEntity);
+	if (iPlayer > 0 && iPlayer < 33) {
+		is_PlayerOn[iPlayer] = true;
+	}
+	RETURN_META(MRES_IGNORED);
+}
 
 
 DLL_FUNCTIONS gFunctionTable;
@@ -3312,7 +3345,18 @@ C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
 
 }
 
+DLL_FUNCTIONS gFunctionTable_Post;
+C_DLLEXPORT int GetEntityAPI2_Post( DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion ) {
+  gFunctionTable_Post.pfnClientPutInServer = ClientPutInServer_Post;
 
+  if(*interfaceVersion!=INTERFACE_VERSION) {
+    LOG_ERROR(PLID, "GetEntityAPI2_Post version mismatch; requested=%d ours=%d", *interfaceVersion, INTERFACE_VERSION);
+    *interfaceVersion = INTERFACE_VERSION;
+    return(FALSE);
+  }
+  memcpy( pFunctionTable, &gFunctionTable_Post, sizeof( DLL_FUNCTIONS ) );
+  return(TRUE);
+}
 
 enginefuncs_t meta_engfuncs_post;
 
@@ -3338,8 +3382,6 @@ C_DLLEXPORT int AMX_Query(module_info_s** info) {
 	return 1;
 
 }
-
-
 
 C_DLLEXPORT int AMX_Attach(pfnamx_engine_g* amxeng,pfnmodule_engine_g* meng) {
 

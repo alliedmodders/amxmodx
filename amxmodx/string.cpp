@@ -448,6 +448,60 @@ char* format_arguments(AMX *amx, int parm,int& len)
   return *buffer;
 }
 
+//added by BAILOPAN for jtp10181
+//takes a string and breaks it into a 1st param and rest params
+//different from strbreak because it's more crafted for control
+static cell AMX_NATIVE_CALL amx_strtok(AMX *amx, cell *params)
+{
+	int left_pos = 0;
+	int right_pos = 0;
+	unsigned int i = 0;
+	bool done_flag = false;
+	int len = 0;
+
+	//string[]
+	char *string = get_amxstring(amx, params[1], 0, len);
+	//left[]
+	char *left = new char[len+1];
+	//right[]
+	char *right = new char[len+1];
+	int leftMax = params[3];
+	int rightMax = params[5];
+	//token
+	char token = params[6];
+	//trim
+	int trim = params[7];
+	for (i=0; i<len; i++)
+	{
+		if (trim && !done_flag)
+		{
+			if (isspace(string[i]))
+			{
+				while (isspace(string[++i]));
+				done_flag = true;
+			}
+		}
+		if (!done_flag && string[i] == token)
+		{
+			done_flag = true;
+			i++;
+		}
+		if (done_flag)
+		{
+			right[right_pos++] = string[i];
+		} else {
+			left[left_pos++] = string[i];
+		}
+	}
+	right[right_pos] = 0;
+	left[left_pos] = 0;
+	set_amxstring(amx, params[2], left, leftMax);
+	set_amxstring(amx, params[4], right, rightMax);
+	delete [] left;
+	delete [] right;
+	return 1;
+}
+
 //added by BAILOPAN
 //Takes a string and breaks it into a 1st param and rest params
 //strbreak(String[], First[], FirstLen, Rest[], RestLen)
@@ -467,7 +521,7 @@ static cell AMX_NATIVE_CALL strbreak(AMX *amx, cell *params)	/* 5 param */
 	int LeftMax = params[3];
 	int RightMax = params[5];
 
-	for (i=0; i<strlen(string); i++) {
+	for (i=0; i<l; i++) {
 		if (string[i] == '"' && !quote_flag) {
 			quote_flag = true;
 		} else if (string[i] == '"' && quote_flag) {
@@ -611,5 +665,6 @@ AMX_NATIVE_INFO string_Natives[] = {
   { "str_to_num", strtonum },
   { "trim", amx_trim },
   { "ucfirst", amx_ucfirst },
+  { "strtok", amx_strtok },
   { NULL, NULL }
 };

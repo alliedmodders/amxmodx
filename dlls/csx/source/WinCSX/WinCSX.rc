@@ -1,0 +1,211 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Swedish resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_SVE)
+#ifdef _WIN32
+LANGUAGE LANG_SWEDISH, SUBLANG_DEFAULT
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_WINCSX              ICON                    "WinCSX.ico"
+IDI_SMALL               ICON                    "small.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDC_WINCSX MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "WinCSX",                      IDM_WINCSX
+        MENUITEM "E&xit",                       IDM_EXIT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDC_WINCSX ACCELERATORS 
+BEGIN
+    "?",            IDM_ABOUT,              ASCII,  ALT
+    "/",            IDM_ABOUT,              ASCII,  ALT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_WINCSXBOX DIALOGEX 22, 17, 256, 203
+STYLE DS_ABSALIGN | DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "WinCSX"
+FONT 8, "System", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "Close",IDOK,157,168,88,26,WS_GROUP
+    LISTBOX         IDC_LIST,4,5,94,189,LBS_HASSTRINGS | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_EDIT_NAME,109,18,87,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_POSITION,206,18,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_AUTHID,109,48,87,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DAMAGE,206,48,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_FRAGS,109,78,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DEATHS,157,78,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_TKS,206,78,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_SHOTS,109,108,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_HITS,157,108,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_HS,206,108,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_PLANTS,109,138,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_EXPLOSIONS,157,137,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DEFUSIONS,206,137,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DEFUSED,109,168,40,12,ES_AUTOHSCROLL
+    LTEXT           "Name (last used)",IDC_STATIC,109,5,56,8
+    LTEXT           "Damage",IDC_STATIC,206,35,28,8
+    LTEXT           "Frags",IDC_STATIC,109,65,20,8
+    LTEXT           "Headshots",IDC_STATIC,206,95,36,8
+    LTEXT           "Team kills",IDC_STATIC,206,65,35,8
+    LTEXT           "Hits",IDC_STATIC,157,95,14,8
+    LTEXT           "Shots",IDC_STATIC,109,95,20,8
+    LTEXT           "Deaths",IDC_STATIC,157,65,24,8
+    LTEXT           "Authid",IDC_STATIC,109,35,21,8
+    LTEXT           "Position",IDC_STATIC,206,5,28,8
+    LTEXT           "Plants",IDC_STATIC,109,125,22,8
+    LTEXT           "Explosions",IDC_STATIC,157,125,38,8
+    LTEXT           "Defused",IDC_STATIC,109,155,28,8
+    LTEXT           "Defusions",IDC_STATIC,206,125,34,8
+    PUSHBUTTON      "About",IDC_ABOUT,109,184,40,10
+END
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 186, 95
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "About"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,109,68,50,14
+    LTEXT           "WinCSX 0.2",IDC_STATIC,18,20,66,8
+    LTEXT           "By JGHG",IDC_STATIC,18,28,66,8
+    LTEXT           "2005",IDC_STATIC,18,36,66,8
+    LTEXT           "http://www.amxmodx.org/",IDC_STATIC,18,44,88,8
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_WINCSXBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 251
+        VERTGUIDE, 98
+        VERTGUIDE, 109
+        VERTGUIDE, 157
+        VERTGUIDE, 196
+        VERTGUIDE, 206
+        VERTGUIDE, 245
+        TOPMARGIN, 5
+        BOTTOMMARGIN, 194
+        HORZGUIDE, 18
+        HORZGUIDE, 35
+        HORZGUIDE, 48
+        HORZGUIDE, 65
+        HORZGUIDE, 78
+        HORZGUIDE, 95
+        HORZGUIDE, 108
+        HORZGUIDE, 125
+        HORZGUIDE, 137
+        HORZGUIDE, 155
+        HORZGUIDE, 168
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_APP_TITLE           "WinCSX"
+    IDC_WINCSX              "WINCSX"
+END
+
+#endif    // Swedish resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

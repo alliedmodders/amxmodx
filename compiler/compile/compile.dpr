@@ -32,6 +32,7 @@
 program compile;
 
 {$APPTYPE CONSOLE}
+{$R version.res}
 {$R icon.res}
 
 uses

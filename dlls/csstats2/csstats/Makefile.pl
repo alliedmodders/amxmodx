@@ -46,11 +46,6 @@ while ($cmd = shift)
 	}
 }
 
-if ($OPTIONS{"amd64"})
-{
-	$gccf = "g++";
-}
-
 $gcc = `$gccf --version`;
 if ($gcc =~ /2\.9/)
 {

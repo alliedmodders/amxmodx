@@ -1955,7 +1955,7 @@ typedef int				(*PFN_AMX_EXECV)				(AMX* /*amx*/, cell* /*return val*/, int /*in
 typedef int				(*PFN_AMX_ALLOT)				(AMX* /*amx*/, int /*length*/, cell* /*amx_addr*/, cell** /*phys_addr*/);
 typedef int				(*PFN_AMX_FINDPUBLIC)			(AMX* /*amx*/, char* /*func name*/, int* /*index*/);
 typedef int				(*PFN_AMX_FINDNATIVE)			(AMX* /*amx*/, char* /*func name*/, int* /*index*/);
-typedef int				(*PFN_LOAD_AMXSCRIPT)			(AMX* /*amx*/, void** /*code*/, const char* /*path*/, char[64] /*error info*/);
+typedef int				(*PFN_LOAD_AMXSCRIPT)			(AMX* /*amx*/, void** /*code*/, const char* /*path*/, char[64] /*error info*/, int /* debug */);
 typedef int				(*PFN_UNLOAD_AMXSCRIPT)			(AMX* /*amx*/,void** /*code*/);
 typedef cell			(*PFN_REAL_TO_CELL)				(REAL /*x*/);
 typedef REAL			(*PFN_CELL_TO_REAL)				(cell /*x*/);

@@ -379,7 +379,7 @@ public showStatus(id) {
       get_weaponname(wpnid,wpnname,31) 
       set_hudmessage(color1,50,color2,-1.0,0.60,1, 0.01, 3.0, 0.01, 0.01, 4)
       show_hudmessage(id,"%s -- %d HP / %d AP / %s",name, 
-        get_user_health(pid),get_user_armor(pid),wpnname[7])
+        get_user_health(pid),get_user_armor(pid),wpnname)
     } 
     else { 
       set_hudmessage(color1,50,color2,-1.0,0.60,1, 0.01, 3.0, 0.01, 0.01, 4) 

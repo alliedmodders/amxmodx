@@ -117,7 +117,6 @@ pfnmodule_engine_g* g_engModuleFunc;
 	// "hostage_entity" entities
 	#define OFFSET_HOSTAGEFOLLOW		86 + EXTRAOFFSET // NOT YET CHECKED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! find out before build
 	#define OFFSET_HOSTAGEFOLLOW		86 + EXTRAOFFSET // same as STEAM
->>>>>>> 1.10
 	#define OFFSET_HOSTAGEID			487 + EXTRAOFFSET // same as STEAM
 #else // from here STEAM build looks for offsets
 	// "player" entities

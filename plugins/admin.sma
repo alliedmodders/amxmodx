@@ -97,7 +97,7 @@ public plugin_init()
   get_configsdir(configsDir, 63)
   server_cmd("exec %s/amxx.cfg", configsDir) // Execute main configuration file
 #if defined USING_SQL
-  server_cmd("exec %s/sql.cfg;amx_sqladmins")
+  server_cmd("exec %s/sql.cfg;amx_sqladmins", configsDir)
 #else
   format(configsDir, 63, "%s/users.ini", configsDir)
   loadSettings(configsDir) // Load admins accounts

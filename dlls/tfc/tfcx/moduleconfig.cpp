@@ -137,7 +137,7 @@ void PlayerPreThink_Post( edict_t *pEntity ) {
 
 	if (pPlayer->clearStats && pPlayer->clearStats < gpGlobals->time && pPlayer->ingame){
 
-		if ( !ignoreBots(pEntity) ){
+		if ( !ignoreBots(pEntity,NULL) ){
 			pPlayer->clearStats = 0.0f;
 			pPlayer->rank->updatePosition( &pPlayer->life );
 			pPlayer->restartStats(false);
@@ -290,8 +290,7 @@ void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 			CPlayer *pPlayer = GET_PLAYER_POINTER(e->v.owner);
 		
 			for ( int i=0;i<MAX_TRACE;i++){
-				if ( strcmp( traceData[i].szName,STRING(e->v.classname)) == 0 ){
-
+				if ( util_strncmp( traceData[i].szName,traceData[i].start ? STRING(e->v.classname)+traceData[i].start :  STRING(e->v.classname) ,traceData[i].stop) ){
 					if ( traceData[i].iAction & ACT_NADE_SHOT  ){
 						pPlayer->saveShot(traceData[i].iId);
 					}

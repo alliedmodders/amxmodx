@@ -18,7 +18,7 @@
 #define PD_SENTRY_OWNER		83	+ LINUXOFFSET
 #define PD_TIMER_OWNER		932	+ LINUXOFFSET
 
-#define MAX_TRACE	14 // +1 // timer 
+#define MAX_TRACE	13 
 //#define NADE_OFFSET		24
 
 
@@ -99,9 +99,12 @@ struct weaponsVault {
 
 struct traceVault {
 	char * szName;
+	char * szTa;
 	int iId;
 	int iAction;
 	float fDel;
+	int start;
+	int stop;
 };
 
 

@@ -33,21 +33,19 @@
 #include "tfcx.h"
 
 traceVault traceData[] = {
-	{ "tf_gl_grenade", TFC_WPN_GL, ACT_NADE_PUT, 2.0 },
-	{ "tf_gl_pipebomb", TFC_WPN_PL, ACT_NADE_PUT, 2.0 }, 
-	{ "tf_weapon_normalgrenade", TFC_WPN_NORMALGRENADE, ACT_NADE_SHOT|ACT_NADE_PUT, 2.0 },
-	{ "tf_weapon_nailgrenade", TFC_WPN_NAILGRENADE, ACT_NADE_SHOT|ACT_NADE_PUT, 2.0 },
-	{ "tf_weapon_mirvgrenade", TFC_WPN_MIRVGRENADE, ACT_NADE_SHOT|ACT_NADE_PUT, 2.0 },
-	{ "tf_weapon_napalmgrenade", TFC_WPN_NAPALMGRENADE, ACT_NADE_SHOT, 0.0 },
-	{ "tf_weapon_gasgrenade", TFC_WPN_GASGRENADE, ACT_NADE_SHOT, 0.0 },
-	{ "tf_weapon_empgrenade", TFC_WPN_EMPGRENADE, ACT_NADE_SHOT, 0.0 },
-	{ "tf_weapon_mirvbomblet", TFC_WPN_MIRVGRENADE,ACT_NADE_PUT, 2.0 },
-	{ "tf_rpg_rocket", TFC_WPN_RPG,ACT_NADE_PUT, 2.0 },
-	{ "caltrop", TFC_WPN_CALTROP, ACT_NADE_SHOT,0.0 },
-	{ "tf_weapon_concussiongrenade", TFC_WPN_CONCUSSIONGRENADE, ACT_NADE_NONE, 0.0 },
-
-	//	{ "timer", TFC_WPN_TIMER,ACT_NADE_NONE, 2.0 },
-
+	{ "timer","ti", TFC_WPN_TIMER,ACT_NADE_NONE, 2.0 , 0 , 2 },
+	{ "caltrop","ca", TFC_WPN_CALTROP, ACT_NADE_SHOT,0.0 , 0 , 2 },
+	{ "tf_rpg_rocket","roc", TFC_WPN_RPG,ACT_NADE_PUT, 2.0 , 7 , 3 },
+	{ "tf_gl_grenade","gl_g", TFC_WPN_GL, ACT_NADE_PUT, 2.0 , 3 , 4 },
+	{ "tf_gl_pipebomb","gl_p", TFC_WPN_PL, ACT_NADE_PUT, 2.0 , 3 , 4 }, 
+	{ "tf_weapon_gasgrenade","ga", TFC_WPN_GASGRENADE, ACT_NADE_SHOT, 0.0 , 10 , 2 },
+	{ "tf_weapon_empgrenade","em", TFC_WPN_EMPGRENADE, ACT_NADE_SHOT, 0.0 , 10 , 2 },
+	{ "tf_weapon_mirvbomblet","mirvb", TFC_WPN_MIRVGRENADE,ACT_NADE_PUT, 2.0 , 10 , 5 },
+	{ "tf_weapon_nailgrenade","nai", TFC_WPN_NAILGRENADE, ACT_NADE_SHOT|ACT_NADE_PUT, 2.0 , 10 , 3 },
+	{ "tf_weapon_mirvgrenade","mirvg", TFC_WPN_MIRVGRENADE, ACT_NADE_SHOT|ACT_NADE_PUT, 2.0 , 10 , 5 },
+	{ "tf_weapon_napalmgrenade","nap", TFC_WPN_NAPALMGRENADE, ACT_NADE_SHOT, 0.0 , 10 , 3 },
+	{ "tf_weapon_normalgrenade","no", TFC_WPN_NORMALGRENADE, ACT_NADE_SHOT|ACT_NADE_PUT, 2.0 , 10 , 2 },
+	{ "tf_weapon_concussiongrenade","co", TFC_WPN_CONCUSSIONGRENADE, ACT_NADE_NONE, 0.0 , 10 , 2 },
 };
 
 bool ignoreBots (edict_t *pEnt, edict_t *pOther){
@@ -60,6 +58,16 @@ bool isModuleActive(){
 	if ( !(int)CVAR_GET_FLOAT("tfcstats_pause") )
 		return true;
 	return false;
+}
+
+bool util_strncmp( const char *sz1, const char *sz2, int size){
+	int i = 0;
+	while( sz1[i] && i<=size){
+		if ( sz1[i] != sz2[i] )
+			return false;
+		i++;
+	}
+	return true;
 }
 
 /*

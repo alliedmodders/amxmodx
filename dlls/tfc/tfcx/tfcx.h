@@ -103,6 +103,7 @@ void Client_ResetHUD(void*);
 
 bool ignoreBots (edict_t *pEnt, edict_t *pOther = NULL );
 bool isModuleActive();
+bool util_strncmp( const char *sz1, const char *sz2, int size);
 
 #endif // TFCX_H
 

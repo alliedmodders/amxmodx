@@ -73,8 +73,18 @@ extern int AxisScore;
 extern int gmsgScoreShort;
 extern int gmsgPTeam;
 
+
+#ifdef FORWARD_OLD_SYSTEM
+
 extern Forward g_death_info;
 extern Forward g_damage_info;
+
+#else
+
+extern int iFDamage;
+extern int iFDeath;
+
+#endif
 
 extern cvar_t* dodstats_maxsize;
 extern cvar_t* dodstats_rank;

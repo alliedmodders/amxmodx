@@ -157,6 +157,8 @@ public:
 	void Init();
 };
 
+#ifdef FORWARD_OLD_SYSTEM
+
 // *****************************************************
 // class Forward
 // *****************************************************
@@ -178,5 +180,6 @@ public:
 	void exec(int p1,int p2,int p3,int p4,int p5);
 	void exec(int p1,int p2);
 };
+#endif
 
 #endif // CMISC_H

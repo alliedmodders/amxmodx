@@ -178,7 +178,29 @@ static cell AMX_NATIVE_CALL get_user_pronestate(AMX *amx, cell *params){
 	return 0;
 }
 
+static cell AMX_NATIVE_CALL get_user_weapon(AMX *amx, cell *params){
+	int index = params[1];
+	if (index<1||index>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	if (pPlayer->ingame){
+		int wpn = pPlayer->current;
+		cell *cpTemp = MF_GetAmxAddr(amx,params[2]);
+		*cpTemp = pPlayer->weapons[wpn].clip;
+		cpTemp = MF_GetAmxAddr(amx,params[3]);
+		*cpTemp = pPlayer->weapons[wpn].ammo;
+		return wpn;
+	}
+
+	return 0;
+}
+
 static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params){ // forward 
+
+#ifdef FORWARD_OLD_SYSTEM
+
 	int iFunctionIndex;
 	switch( params[1] ){
 	case 0:
@@ -199,6 +221,7 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params){ // forward
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
+#endif
 	return 1;
 }
 
@@ -214,6 +237,7 @@ AMX_NATIVE_INFO base_Natives[] = {
   { "dod_get_user_score", get_user_score },
   { "dod_get_user_class", get_user_class },
   { "dod_get_user_team", get_user_team },
+  { "dod_get_user_weapon", get_user_weapon },
 
   { "dod_get_map_info", get_map_info },
   { "dod_user_kill", user_kill },

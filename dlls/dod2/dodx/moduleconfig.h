@@ -21,6 +21,8 @@
 // metamod plugin?
 #define USE_METAMOD
 
+#define FORWARD_OLD_SYSTEM
+
 // - AMXX Init functions
 // Also consider using FN_META_*
 // AMXX query
@@ -32,7 +34,10 @@
 #define FN_AMXX_DETACH OnAmxxDetach
 // All plugins loaded
 //   Do forward functions init here (MF_RegisterForward)
-//#define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
+
+#ifndef FORWARD_OLD_SYSTEM
+  #define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
+#endif
 
 /**** METAMOD ****/
 // If your module doesn't use metamod, you may close the file now :)

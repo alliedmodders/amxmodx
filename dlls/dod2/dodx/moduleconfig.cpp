@@ -47,8 +47,17 @@ int mPlayerIndex;
 int AlliesScore;
 int AxisScore;
 
+#ifdef FORWARD_OLD_SYSTEM
+
 Forward g_death_info;
 Forward g_damage_info;
+
+#else
+
+int iFDamage;
+int iFDeath;
+
+#endif
 
 int gmsgCurWeapon;
 int gmsgHealth;
@@ -164,8 +173,12 @@ void ServerDeactivate() {
 	
 	g_rank.saveRank( MF_BuildPathname("%s",get_localinfo("dodstats") ) );
 
+#ifdef FORWARD_OLD_SYSTEM
+
 	g_damage_info.clear();
 	g_death_info.clear();
+
+#endif
 
 	// clear custom weapons info
 	for ( i=DODMAX_WEAPONS-DODMAX_CUSTOMWPNS;i<DODMAX_WEAPONS;i++)
@@ -373,3 +386,13 @@ void OnAmxxDetach() {
 	g_grenades.clear();
 	g_rank.unloadCalc();
 }
+
+#ifndef FORWARD_OLD_SYSTEM
+
+void OnPluginsLoaded(){
+	iFDeath = MF_RegisterForward("client_death",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
+	iFDamage = MF_RegisterForward("client_damage",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
+
+}
+
+#endif

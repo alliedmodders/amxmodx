@@ -383,13 +383,25 @@ static cell AMX_NATIVE_CALL cwpn_dmg(AMX *amx, cell *params){ // wid,att,vic,dmg
 	int TA = 0;
 	if ( (pVic->pEdict->v.team == pAtt->pEdict->v.team ) && ( pVic != pAtt) )
 		TA = 1;
+
+#ifdef FORWARD_OLD_SYSTEM
 	g_damage_info.exec( pAtt->index, pVic->index, dmg, weapon, aim, TA );
+#else
+	MF_ExecuteForward( iFDamage,pAtt->index, pVic->index, dmg, weapon, aim, TA );
+#endif
 	
 	if ( pVic->IsAlive() )
 		return 1;
 
 	pAtt->saveKill(pVic,weapon,( aim == 1 ) ? 1:0 ,TA);
+
+#ifdef FORWARD_OLD_SYSTEM
 	g_death_info.exec( pAtt->index, pVic->index, weapon, aim, TA );
+#else
+	MF_ExecuteForward( iFDeath,pAtt->index, pVic->index, weapon, aim, TA );
+#endif
+	
+
 
 	return 1;
 }

@@ -330,6 +330,8 @@ void CMapInfo::Init(){
 
 }
 
+#ifdef FORWARD_OLD_SYSTEM
+
 // *****************************************************
 // class Forward
 // *****************************************************
@@ -370,3 +372,5 @@ void Forward::exec(int p1,int p2){
 		a = a->next;
 	}
 }
+
+#endif

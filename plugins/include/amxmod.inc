@@ -1,10 +1,8 @@
-/* AMX Mod X functions
-*
-* by the AMX Mod X Development Team
-*  originally developed by OLO
-*
-* This file is provided as is (no warranties).
-*/
+/* AMX Mod functions
+ *
+ * (c) 2002-2003, OLO
+ * This file is provided as is (no warranties).
+ */
 
 #if defined _amxmod_included
   #endinput
@@ -16,8 +14,8 @@
 #include <amxconst>
 #include <string>
 #include <file>
-#include <vault>
 #include <fun>
+#include <vault>
 
 /* Function is called just after server activation.
 * Good place for configuration loading, commands and cvars registration. */
@@ -57,13 +55,6 @@ forward client_putinserver(id);
 
 /* Sets informations about plugin. */
 native register_plugin(const plugin_name[],const version[],const author[]);
-
-/* Gets info about plugin by given index.
-* Function returns -1 if plugin doesn't exist with given index. */
-native get_plugin(index,filename[],len1,name[],len2,version[],len3,author[],len4,status[],len5);
-
-/* Returns number of all loaded plugins. */
-native get_pluginsnum();
 
 /* Precache model. Can be used only in plugin_precache() function.*/
 native precache_model(const name[]);
@@ -121,7 +112,8 @@ native register_event(const event[],const function[],const flags[],cond[]="", ..
 * "1=say"
 * "3=Terrorists_Win"
 * "1=entered the game"
-* "0=Server cvar" */
+* "0=Server cvar"
+*/
 native register_logevent(const function[], argsnum,  ... );
 
 /* Sets format for hudmessage. */
@@ -451,8 +443,8 @@ native get_srvcmd(index,server_cmd[],len1,&flags, info[],len2, flag);
 native get_srvcmdsnum(flag);
 
 /* Gets info about console command. If id is set to 0,
-* then function returns only server cmds, if positive then
-* returns only client cmds. in other case returns all console commands. */
+then function returns only server cmds, if positive then
+returns only client cmds. in other case returns all console commands. */
 native get_concmd(index,cmd[],len1,&flags, info[],len2, flag, id = -1);
 
 /* Returns number of registered console commands. */
@@ -489,27 +481,7 @@ native Float:random_float(Float:a,Float:b);
 /* Generates random integer from a to b. */
 native random_num(a,b);
 
-/* Pauses function or plugin so it won't be executed.
-* In most cases param1 is name of function and
-* param2 name of plugin (all depends on flags).
-* Flags:
-* "a" - pause whole plugin.
-* "b" - pause function.
-* "c" - look outside the plugin (by given plugin name).
-* "d" - set "stopped" status when pausing whole plugin.
-* "e" - set "locked" status when pausing whole plugin.
-*       In this status plugin is unpauseable.
-* Example: pause("ac","myplugin.amx") 
-*          pause("bc","myfunc","myplugin.amx") */
-native pause(flag[], const param1[]="",const param2[]="");
-
-/* Unpauses function or plugin.
-* Flags:
-* "a" - unpause whole plugin.
-* "b" - unpause function.
-* "c" - look outside the plugin (by given plugin name). */
-native unpause(flag[], const param1[]="",const param2[]="");
-
+/******************** Client messages; will be removed ********************/
 /* Returns id of client message.
 * Example: get_user_msgid("TextMsg"). */
 native get_user_msgid(const name[]);
@@ -529,14 +501,7 @@ native write_angle( x );
 native write_coord( x );
 native write_string( x[] );
 
-/* Called on inconsistent file. You can put any text
-* into reason to change an original message. */
-forward inconsistent_file(id,const filename[], reason[64] );
-
-/* Forces the client and server to be running with the same
-* version of the specified file ( e.g., a player model ). */
-native force_unmodified(force_type, mins[3] , maxs[3], const filename[]);
-
+/******************** XVARS ********************/
 /* Checks if public variable with given name exists in loaded plugins. */
 native xvar_exists( const name[] );
 
@@ -560,15 +525,104 @@ native set_xvar_num( id, value = 0 );
 * returned by get_xvar_id(...) native. */
 native set_xvar_float( id, Float:value = 0.0 );
 
-/* Checks whether a module is loaded. If it is, its index is returned. If not, the return value is < 0. */
+/******************** PLUGIN / MODULE SUPPORT ********************/
+/* Checks whether a module is loaded. If it is not, the return value is 0, otherwise
+* the return value is non-zero. The function is case insensitive. */
 native is_module_loaded(const name[]);
 
-/* Checks whether a plugin is loaded. If it is, its index is returned. If not, the return value is < 0. */
+/* Checks whether a plugin is loaded. If it is not, the return value is 0, otherwise
+* the return value is non-zero. The function is case insensitive. */
 native is_plugin_loaded(const name[]);
 
-/* Returns the number of currently loaded modules */
+/* Gets info about plugin by given index.
+* Function returns -1 if plugin doesn't exist with given index. */
+native get_plugin(index,filename[],len1,name[],len2,version[],len3,author[],len4,status[],len5);
+
+/* Returns number of all loaded plugins. */
+native get_pluginsnum();
+
+/* Returns number of currently registered modules */
 native get_modulesnum();
 
-/* Gets info about a module. 
-   Return value: -1 on error, id otherwise */
+/* Gets info about a module.
+   Parameters:
+     id          - the id of the module
+     name[]      - The name of the module will be stored here
+     nameLen     - maximal length of the name
+     author[]    - the author will be stored here
+     authorLen   - maximal length of the author
+     version[]   - the version of the module will be stored here
+     versionLen  - maximal length of the version
+   Return value:
+     id          - success
+     -1          - module not found
+*/
+
 native get_module(id, name[], nameLen, author[], authorLen, version[], versionLen);
+
+
+/* Pauses function or plugin so it won't be executed.
+* In most cases param1 is name of function and
+* param2 name of plugin (all depends on flags).
+* Flags:
+* "a" - pause whole plugin.
+* "b" - pause function.
+* "c" - look outside the plugin (by given plugin name).
+* "d" - set "stopped" status when pausing whole plugin.
+* "e" - set "locked" status when pausing whole plugin.
+*       In this status plugin is unpauseable.
+* Example: pause("ac","myplugin.amx") 
+*          pause("bc","myfunc","myplugin.amx") */
+native pause(flag[], const param1[]="",const param2[]="");
+
+/* Unpauses function or plugin.
+* Flags:
+* "a" - unpause whole plugin.
+* "b" - unpause function.
+* "c" - look outside the plugin (by given plugin name). */
+native unpause(flag[], const param1[]="",const param2[]="");
+
+/********************  CALLFUNC ********************/
+/* Call a function in this / an another plugin by name.
+   Parameters:
+     plugin   - plugin name; if "", the caller plugin is used.
+                If specified, it has to be the exact name (for example stats.amx)
+     func     - function name
+   Return value:
+     1        - Success
+     0        - Runtime error
+    -1        - Plugin not found
+    -2        - Function not found
+*/
+native callfunc_begin(const plugin[], const func[]);
+
+/* Make the actual call.
+   Return value:
+     Return value of the function called.
+*/
+native callfunc_end();
+
+/* Push a parameter (integer, string, float) */
+native callfunc_push_int(value);
+native callfunc_push_str(value[]);
+native callfunc_push_float(Float: value);
+native callfunc_push_intrf(&value);
+// native callfunc_push_floatrf(Float& : value);
+
+/******************** UTILS / OTHERS ********************/
+/* Logs something into the current amx logfile
+   Parameters:
+     string[] - format string
+     ...      - optional parameters
+   Return value:
+     always 0
+*/
+native log_amx(const string[], {Float,_}:...);
+
+/* Called on inconsistent file. You can put any text
+* into reason to change an original message. */
+forward inconsistent_file(id,const filename[], reason[64] );
+
+/* Forces the client and server to be running with the same
+* version of the specified file ( e.g., a player model ). */
+native force_unmodified(force_type, mins[3] , maxs[3], const filename[]);

@@ -162,7 +162,6 @@ int	C_InconsistentFile( const	edict_t	*player, const char	*filename, char	*disco
 
 	if ( MDLL_InconsistentFile(player,filename,disconnect_message) )
 	{
-		cell ret = 0;
 		CPlayer	*pPlayer = GET_PLAYER_POINTER((edict_t *)player);
 
 #ifdef ENABLEEXEPTIONS
@@ -677,12 +676,22 @@ void C_StartFrame_Post( void ) {
 			time(&td);
 			tm *curTime = localtime(&td);
 			int i = 0;
+#ifdef __linux__
+			mkdir(build_pathname("%s/memreports", get_localinfo("amxx_basedir", "addons/amxx")), 0700);
+#else
 			mkdir(build_pathname("%s/memreports", get_localinfo("amxx_basedir", "addons/amxx")));
+#endif
 			while (true)
 			{
 				char buffer[256];
 				sprintf(buffer, "%s/memreports/D%02d%02d%03d", get_localinfo("amxx_basedir", "addons/amxx"), curTime->tm_mon + 1, curTime->tm_mday, i);
+#ifdef __linux__
+				mkdir(build_pathname("%s", g_log_dir.str()), 0700);
+				if (mkdir(build_pathname(buffer), 0700) < 0)
+#else
+				mkdir(build_pathname("%s", g_log_dir.str()));
 				if (mkdir(build_pathname(buffer)) < 0)
+#endif
 				{
 					if (errno == EEXIST)
 					{

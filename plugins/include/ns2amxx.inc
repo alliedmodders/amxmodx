@@ -6,14 +6,14 @@
  	#endinput
 #endif
 #define __ns2amxx__ 02
-#include <ns2amxxdefines>
+#include <ns2amxx_const>
 
 /* Returns the number of specified entities in map if value is 0
    otherwise it returns the index of the #th entity of that class. */
 native ns_get_ent(classname[],Value);
 
 /* Same as get_ent, but only returns fully built structures (if Value > 0) */
-native ns_get_build(classname[],Value,Number=0,NSVersion=NS_VERSION);
+native ns_get_build(classname[],Value,Number=0);
 
 /* Get's spawn point for specified team (type). */
 native ns_get_spawn(type,number=0,Float:ret[3]);
@@ -47,4 +47,49 @@ native ns_set_player_model(id,szModel[]="")
 native ns_set_player_skin(id,skin=-1)
 native ns_set_player_body(id,body=-1)
 
-#include <ns2amxxhelpers>
+native ns_getammo(id,Weapon); 
+
+native ns_setammo(id,Weapon,Value);
+
+native ns_giveitem(id,svClassname[]);
+
+
+native ns_moveto(idMoved,idDest)
+
+native ns_isdigesting(id);
+
+native ns_nspopup(id,svMessage[190]);
+
+native ns_setres(id,value);
+
+native ns_getenergy(id);
+
+native ns_setenergy(id,energy);
+
+native ns_getjpfuel(id);
+
+native ns_setjpfuel(id,fuel);
+
+native ns_get_mask(id,mask);
+
+native ns_set_mask(id,mask,value);
+
+native ns_get_special(id,mask);
+
+native ns_get_res(id);
+
+native ns_get_class(id);
+
+stock ns_gethives()
+{
+	return ns_get_build("team_hive",1)
+}
+
+stock ns_inrange(ida,idb,range)
+{
+	if (entity_get_range(ida,idb) <= range)
+	{
+		return 1
+	}
+	return 0
+}

@@ -279,6 +279,7 @@ void MessageEnd(void)
 	} else if (inhook) {
 		mres = MF_ExecuteForward(msgHooks[msgType], msgType, msgDest, ENTINDEX(msgpEntity));
 		inhook = false;
+		msgCount = 0;
 		if (mres & 1)
 			RETURN_META(MRES_SUPERCEDE);
 		MESSAGE_BEGIN(msgDest, msgType, msgOrigin, msgpEntity);
@@ -347,7 +348,7 @@ static cell AMX_NATIVE_CALL get_msg_argtype(AMX *amx, cell *params)
 		return 0;
 	}
 
-	return Msg[argn]->Type();
+	return Msg[argn]->type;
 }
 
 static cell AMX_NATIVE_CALL get_msg_arg_int(AMX *amx, cell *params)

@@ -94,7 +94,7 @@ void RankSystem::saveRankSql()
 	// Query
 	char query[2048];
 
-	snprintf(query, 2047, "CREATE TABLE IF NOT EXISTS `%s` (`timestamp` int(11) NOT NULL default '0', `stats_authid` varchar(100) NOT NULL default '', `stats_name` varchar(100) NOT NULL default '', `stats_tks` int(11) NOT NULL default '0', `stats_damage` int(11) NOT NULL default '0', `stats_deaths` int(11) NOT NULL default '0', `stats_frags` int(11) NOT NULL default '0', `stats_shots` int(11) NOT NULL default '0', `stats_hits` int(11) NOT NULL default '0', `stats_hs` int(11) NOT NULL default '0', `stats_defusions` int(11) NOT NULL default '0', `stats_defused` int(11) NOT NULL default '0', `stats_plants` int(11) NOT NULL default '0', `stats_explosions` int(11) NOT NULL default '0', `stats_bodyhits0` int(11) NOT NULL default '0', `stats_bodyhits1` int(11) NOT NULL default '0', `stats_bodyhits2` int(11) NOT NULL default '0', `stats_bodyhits3` int(11) NOT NULL default '0', `stats_bodyhits4` int(11) NOT NULL default '0', `stats_bodyhits5` int(11) NOT NULL default '0', `stats_bodyhits6` int(11) NOT NULL default '0', `stats_bodyhits7` int(11) NOT NULL default '0', `stats_bodyhits8` int(11) NOT NULL default '0') TYPE=MyISAM",
+	snprintf(query, 2047, "CREATE TABLE IF NOT EXISTS `%s` (`timestamp` int(11) NOT NULL default '0', `stats_authid` varchar(100) NOT NULL default '', `stats_name` varchar(100) NOT NULL default '', `stats_tks` int(11) NOT NULL default '0', `stats_damage` int(11) NOT NULL default '0', `stats_deaths` int(11) NOT NULL default '0', `stats_frags` int(11) NOT NULL default '0', `stats_shots` int(11) NOT NULL default '0', `stats_hits` int(11) NOT NULL default '0', `stats_hs` int(11) NOT NULL default '0', `stats_defusions` int(11) NOT NULL default '0', `stats_defused` int(11) NOT NULL default '0', `stats_plants` int(11) NOT NULL default '0', `stats_explosions` int(11) NOT NULL default '0', `stats_bodyhits0` int(11) NOT NULL default '0', `stats_bodyhits1` int(11) NOT NULL default '0', `stats_bodyhits2` int(11) NOT NULL default '0', `stats_bodyhits3` int(11) NOT NULL default '0', `stats_bodyhits4` int(11) NOT NULL default '0', `stats_bodyhits5` int(11) NOT NULL default '0', `stats_bodyhits6` int(11) NOT NULL default '0', `stats_bodyhits7` int(11) NOT NULL default '0', `stats_bodyhits8` int(11) NOT NULL default '0', `stats_score` int(11) NOT NULL default '0') TYPE=MyISAM",
 		csx_sqlstats_table->string);
 	int queryResult = mysql_query(mysql, query);
 	if (queryResult != MYSQL_QUERY_IS_A_OKAY)
@@ -110,7 +110,7 @@ void RankSystem::saveRankSql()
 	RankSystem::iterator a = front();
 
 	char *authid, *name;
-	int tks, damage, deaths, kills, shots, hits, hs, defusions, defused, plants, explosions, *bodyHits;
+	int tks, damage, deaths, kills, shots, hits, hs, defusions, defused, plants, explosions, *bodyHits, score;
 	time_t now = time(NULL);
 
 	while ( a )
@@ -137,8 +137,9 @@ void RankSystem::saveRankSql()
 			plants = (*a).bPlants;
 			explosions = (*a).bExplosions;
 			bodyHits = ((*a).bodyHits);
+			score = (*a).score;
 
-			_snprintf(query, 2047, "UPDATE `%s` SET `timestamp` = %d, `stats_name` = \"%s\", `stats_tks` = \"%d\", `stats_damage` = \"%d\", `stats_deaths` = \"%d\", `stats_frags` = \"%d\", `stats_shots` = \"%d\", `stats_hits` = \"%d\", `stats_hs` = \"%d\", `stats_defusions` = \"%d\", `stats_defused` = \"%d\", `stats_plants` = \"%d\", `stats_explosions` = \"%d\", `stats_bodyhits0` = \"%d\", `stats_bodyhits1` = \"%d\", `stats_bodyhits2` = \"%d\", `stats_bodyhits3` = \"%d\", `stats_bodyhits4` = \"%d\", `stats_bodyhits5` = \"%d\", `stats_bodyhits6` = \"%d\", `stats_bodyhits7` = \"%d\", `stats_bodyhits8` = \"%d\" WHERE `stats_authid` = \"%s\" LIMIT 1",
+			_snprintf(query, 2047, "UPDATE `%s` SET `timestamp` = %d, `stats_name` = \"%s\", `stats_tks` = \"%d\", `stats_damage` = \"%d\", `stats_deaths` = \"%d\", `stats_frags` = \"%d\", `stats_shots` = \"%d\", `stats_hits` = \"%d\", `stats_hs` = \"%d\", `stats_defusions` = \"%d\", `stats_defused` = \"%d\", `stats_plants` = \"%d\", `stats_explosions` = \"%d\", `stats_bodyhits0` = \"%d\", `stats_bodyhits1` = \"%d\", `stats_bodyhits2` = \"%d\", `stats_bodyhits3` = \"%d\", `stats_bodyhits4` = \"%d\", `stats_bodyhits5` = \"%d\", `stats_bodyhits6` = \"%d\", `stats_bodyhits7` = \"%d\", `stats_bodyhits8` = \"%d\", `stats_score` = \"%d\" WHERE `stats_authid` = \"%s\" LIMIT 1",
 								   csx_sqlstats_table->string,
 								   now,
 								   name,
@@ -162,6 +163,7 @@ void RankSystem::saveRankSql()
 								   bodyHits[6],
 								   bodyHits[7],
 								   bodyHits[8],
+								   score,
 								   authid);
 									//
 
@@ -176,7 +178,7 @@ void RankSystem::saveRankSql()
 
 			if (mysql_affected_rows(mysql) == 0) {
 				// New player, do insert
-				_snprintf(query, 2047, "INSERT INTO `%s` (`timestamp`, `stats_authid`, `stats_name`, `stats_tks`, `stats_damage`, `stats_deaths`, `stats_frags`, `stats_shots`, `stats_hits`, `stats_hs`, `stats_defusions`, `stats_defused`, `stats_plants`, `stats_explosions`, `stats_bodyhits0`, `stats_bodyhits1`, `stats_bodyhits2`, `stats_bodyhits3`, `stats_bodyhits4`, `stats_bodyhits5`, `stats_bodyhits6`, `stats_bodyhits7`, `stats_bodyhits8`) VALUES (\"%d\", \"%s\", \"%s\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\")",
+				_snprintf(query, 2047, "INSERT INTO `%s` (`timestamp`, `stats_authid`, `stats_name`, `stats_tks`, `stats_damage`, `stats_deaths`, `stats_frags`, `stats_shots`, `stats_hits`, `stats_hs`, `stats_defusions`, `stats_defused`, `stats_plants`, `stats_explosions`, `stats_bodyhits0`, `stats_bodyhits1`, `stats_bodyhits2`, `stats_bodyhits3`, `stats_bodyhits4`, `stats_bodyhits5`, `stats_bodyhits6`, `stats_bodyhits7`, `stats_bodyhits8`, `stats_score`) VALUES (\"%d\", \"%s\", \"%s\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\")",
 					csx_sqlstats_table->string,
 					now,
 
@@ -205,7 +207,9 @@ void RankSystem::saveRankSql()
 					bodyHits[5],
 					bodyHits[6],
 					bodyHits[7],
-					bodyHits[8]
+					bodyHits[8],
+
+					score
 					);
 
 				int queryResult = mysql_query(mysql, query);
@@ -226,5 +230,5 @@ void RankSystem::saveRankSql()
 	mysql_close(mysql);
 	
 	clock_t stopTime = clock();
-	MF_PrintSrvConsole("...done! (exported %d records in %.2f seconds)\n", exportedRecords, (double)(stopTime - startTime) / (double)CLOCKS_PER_SEC, stopTime, startTime);
+	MF_PrintSrvConsole("...done! (exported %d records in %.2f seconds)\n", exportedRecords, (double)(stopTime - startTime) / (double)CLOCKS_PER_SEC);
 }

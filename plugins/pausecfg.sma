@@ -1,18 +1,10 @@
-/* AMX Mod script.
- *
- * (c) 2003, OLO
- * This file is provided as is (no warranties).
- *
- * Admin commads:
- * amx_pausecfgmenu - displays menu by which you can pause, unpause and stop plugins
- * amx_pausecfg - list commands for pause/unpause managment
- *
- * WARNING: Stopped plugins won't work properly after activation 
- * (without mapchange) due to unactive status during players connections. 
- * For proper activation clear the file with stopped plugins
- * (option #7 in menu) or unstop selected one, save configuration,
- * then change your map.
- */
+/* AMX Mod X script.
+*
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*
+* This file is provided as is (no warranties).
+*/
 
 #include <amxmod>
 #include <amxmisc>
@@ -20,7 +12,7 @@
 // Uncomment if you want to have two new commands
 // amx_off - pause plugins not marked as unpauseable
 // amx_on - enable plugins not marked as unpauseable
-//#define DIRECT_ONOFF
+#define DIRECT_ONOFF
 
 #define MAX_SYSTEM 32
  
@@ -35,7 +27,7 @@ new g_system[MAX_SYSTEM]
 new g_systemNum
 
 public plugin_init(){
-  register_plugin("Pause Plugins","0.9","default")
+  register_plugin("Pause Plugins","0.1","default")
   register_concmd("amx_pausecfg","cmdPlugin",ADMIN_CFG,"- list commands for pause/unpause managment")
   register_clcmd("amx_pausecfgmenu","cmdMenu",ADMIN_CFG,"- pause/unpause plugins with menu")
 #if defined DIRECT_ONOFF

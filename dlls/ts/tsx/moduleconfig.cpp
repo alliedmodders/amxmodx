@@ -273,7 +273,7 @@ void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 	RETURN_META(MRES_IGNORED);
 }
 
-void FN_META_ATTACH() {
+void OnMetaAttach() {
 	
 	CVAR_REGISTER (&init_tsstats_maxsize);
 	CVAR_REGISTER (&init_tsstats_reset);
@@ -289,7 +289,7 @@ void FN_META_ATTACH() {
 
 }
 
-void FN_AMXX_ATTACH() {
+void OnAmxxAttach() {
 
 	gKnifeOffset = TSKNIFE_OFFSET;
 
@@ -308,7 +308,7 @@ void FN_AMXX_ATTACH() {
 	}
 }
 
-void FN_AMXX_Detach() {
+void OnAmxxDetach() {
 	g_rank.clear();
 	g_rank.unloadCalc();
 	g_damage_info.clear();

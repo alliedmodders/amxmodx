@@ -1,4 +1,36 @@
-
+/* AMX Mod X
+*
+* by the AMX Mod X Development Team
+*  originally developed by OLO
+*
+* Parts Copyright (C) 2001-2003 Will Day <willday@hpgx.net>
+*
+*  This program is free software; you can redistribute it and/or modify it
+*  under the terms of the GNU General Public License as published by the
+*  Free Software Foundation; either version 2 of the License, or (at
+*  your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful, but
+*  WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+*  General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with this program; if not, write to the Free Software Foundation,
+*  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+*
+*  In addition, as a special exception, the author gives permission to
+*  link the code of this program with the Half-Life Game Engine ("HL
+*  Engine") and Modified Game Libraries ("MODs") developed by Valve,
+*  L.L.C ("Valve"). You must obey the GNU General Public License in all
+*  respects for all of the code used other than the HL Engine and MODs
+*  from Valve. If you modify this file, you may extend this exception
+*  to your version of the file, but you are not obligated to do so. If
+*  you do not wish to do so, delete this exception statement from your
+*  version.
+*
+*  Description: AMX Mod X Module Interface Functions
+*/
 
 #include <string.h>
 #include <new>
@@ -2442,6 +2474,9 @@ PFN_LOAD_AMXSCRIPT			g_fn_LoadAmxScript;
 PFN_UNLOAD_AMXSCRIPT		g_fn_UnloadAmxScript;
 PFN_REAL_TO_CELL			g_fn_RealToCell;
 PFN_CELL_TO_REAL			g_fn_CellToReal;
+PFN_REGISTER_SPFORWARD		g_fn_RegisterSPForward;
+PFN_REGISTER_SPFORWARD_BYNAME	g_fn_RegisterSPForwardByName;
+PFN_UNREGISTER_SPFORWARD	g_fn_UnregisterSPForward;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2510,6 +2545,9 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("AddNatives", g_fn_AddNatives, PFN_ADD_NATIVES);
 	REQFUNC("RaiseAmxError", g_fn_RaiseAmxError, PFN_RAISE_AMXERROR);
 	REQFUNC("RegisterForward", g_fn_RegisterForward, PFN_REGISTER_FORWARD);
+	REQFUNC("RegisterSPForward", g_fn_RegisterSPForward, PFN_REGISTER_SPFORWARD);
+	REQFUNC("RegisterSPForwardByName", g_fn_RegisterSPForwardByName, PFN_REGISTER_SPFORWARD_BYNAME);
+	REQFUNC("UnregisterSPForward", g_fn_UnregisterSPForward, PFN_UNREGISTER_SPFORWARD);
 	REQFUNC("ExecuteForward", g_fn_ExecuteForward, PFN_EXECUTE_FORWARD);
 	REQFUNC("PrepareCellArray", g_fn_PrepareCellArray, PFN_PREPARE_CELLARRAY);
 	REQFUNC("PrepareCharArray", g_fn_PrepareCharArray, PFN_PREPARE_CHARARRAY);
@@ -2584,7 +2622,7 @@ void MF_Log(const char *fmt, ...)
 #ifdef _DEBUG
 // validate macros
 // Makes sure compiler reports errors when macros are invalid
-void ValidateMacros()
+void ValidateMacros_DontCallThis_Smiley()
 {
 	MF_BuildPathname("str", "str", 0);
 	MF_FormatAmxString(NULL, 0, 0, NULL);
@@ -2630,6 +2668,9 @@ void ValidateMacros()
 	MF_AmxAllot(0, 0, 0, 0);
 	MF_LoadAmxScript(0, 0, 0, 0);
 	MF_UnloadAmxScript(0, 0);
+	MF_RegisterSPForward(0, 0, 0, 0, 0, 0);
+	MF_RegisterSPForwardByName(0, 0, 0, 0, 0, 0);
+	MF_UnregisterSPForward(0);
 }
 #endif
 

@@ -305,7 +305,7 @@ void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 	RETURN_META(MRES_IGNORED);
 }
 
-void FN_META_ATTACH() {
+void OnMetaAttach() {
 	
 	CVAR_REGISTER (&init_tfcstats_maxsize);
 	CVAR_REGISTER (&init_tfcstats_reset);
@@ -321,7 +321,7 @@ void FN_META_ATTACH() {
 
 }
 
-void FN_AMXX_ATTACH() {
+void OnAmxxAttach() {
 
 	MF_AddNatives( stats_Natives );
 	MF_AddNatives( base_Natives );
@@ -349,7 +349,7 @@ void FN_AMXX_ATTACH() {
 	
 }
 
-void FN_AMXX_Detach() {
+void OnAmxxDetach() {
 	g_grenades.clear();
 	g_rank.clear();
 	g_rank.unloadCalc();

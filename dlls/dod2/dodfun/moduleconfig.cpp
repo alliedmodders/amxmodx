@@ -239,16 +239,16 @@ void SetModel_Post(edict_t *e, const char *m){
 	RETURN_META(MRES_IGNORED);
 }
 
-void FN_META_ATTACH() {
+void OnMetaAttach() {
 	CVAR_REGISTER (&init_dodfun_steam);
 	dodfun_steam = CVAR_GET_POINTER(init_dodfun_steam.name);
 }
 
-void FN_AMXX_ATTACH() {
+void OnAmxxAttach() {
 	MF_AddNatives( base_Natives );
 	MF_AddNatives( pd_Natives );
 }
 
-void FN_AMXX_PLUGINSLOADED(){
+void OnPluginsLoaded(){
 	iFGrenade = MF_RegisterForward("grenade_throw",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
 }

@@ -289,7 +289,7 @@ void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 	RETURN_META(MRES_IGNORED);
 }
 
-void FN_META_ATTACH() {
+void OnMetaAttach() {
 
 	CVAR_REGISTER (&init_csstats_maxsize);
 	CVAR_REGISTER (&init_csstats_reset);
@@ -304,7 +304,7 @@ void FN_META_ATTACH() {
 	csstats_pause = CVAR_GET_POINTER(init_csstats_pause.name);
 }
 
-void FN_AMXX_ATTACH(){
+void OnAmxxAttach(){
 	MF_AddNatives(stats_Natives);
 	const char* path =  get_localinfo("csstats_score");
 	if ( path && *path ) 
@@ -320,13 +320,13 @@ void FN_AMXX_ATTACH(){
 	}
 }
 
-void FN_AMXX_Detach() {
+void OnAmxxDetach() {
 	g_grenades.clear();
 	g_rank.clear();
 	g_rank.unloadCalc();
 }
 
-void FN_AMXX_PLUGINSLOADED(){
+void OnPluginsLoaded(){
 	iFDamage = MF_RegisterForward("client_damage",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
 	iFDeath = MF_RegisterForward("client_death",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
 	iFGrenade = MF_RegisterForward("grenade_throw",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_DONE);

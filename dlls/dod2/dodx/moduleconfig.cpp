@@ -334,7 +334,7 @@ void DispatchKeyValue_Post( edict_t *pentKeyvalue, KeyValueData *pkvd ){
 	RETURN_META(MRES_IGNORED);
 }
 
-void FN_META_ATTACH() {
+void OnMetaAttach() {
 	
 	CVAR_REGISTER (&init_dodstats_maxsize);
 	CVAR_REGISTER (&init_dodstats_reset);
@@ -352,7 +352,7 @@ void FN_META_ATTACH() {
 
 }
 
-void FN_AMXX_ATTACH() {
+void OnAmxxAttach() {
 
 	MF_AddNatives( stats_Natives );
 	MF_AddNatives( base_Natives );
@@ -372,7 +372,7 @@ void FN_AMXX_ATTACH() {
 	
 }
 
-void FN_AMXX_Detach() {
+void OnAmxxDetach() {
 	g_rank.clear();
 	g_grenades.clear();
 	g_rank.unloadCalc();

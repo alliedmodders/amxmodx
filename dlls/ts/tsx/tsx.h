@@ -108,6 +108,42 @@ extern weapon_t weaponData[TSMAX_WEAPONS];
 bool isModuleActive();
 bool ignoreBots (edict_t *pEnt, edict_t *pOther = NULL);
 
+#define CHECK_ENTITY(x) \
+	if (x <= 0 || x > gpGlobals->maxEntities) { \
+		MF_LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", x); \
+	} else { \
+		if (x <= gpGlobals->maxClients) { \
+			if (!MF_IsPlayerIngame(x)) { \
+				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d (not in-game)", x); \
+			} \
+		} else { \
+			if (FNullEnt(INDEXENT(x))) { \
+				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", x); \
+			} \
+		} \
+	}
+
+#define CHECK_PLAYER(x) \
+	if (x < 1 || x > gpGlobals->maxClients) { \
+		MF_LogError(amx, AMX_ERR_NATIVE, "Player out of range (%d)", x); \
+	} else { \
+		if (!MF_IsPlayerIngame(x) || FNullEnt(MF_GetPlayerEdict(x))) { \
+			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", x); \
+		} \
+	}
+
+#define CHECK_NONPLAYER(x) \
+	if (x < 1 || x <= gpGlobals->maxClients || x > gpGlobals->maxEntities) { \
+		MF_LogError(amx, AMX_ERR_NATIVE, "Non-player entity %d out of range", x); \
+	} else { \
+		if (FNullEnt(INDEXENT(x))) { \
+			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid non-player entity %d", x); \
+		} \
+	}
+
+#define GETEDICT(n) \
+	((n >= 1 && n <= gpGlobals->maxClients) ? MF_GetPlayerEdict(n) : INDEXENT(n))
+
 #endif //TSX_H
 
 

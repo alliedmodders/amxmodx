@@ -639,8 +639,7 @@ void C_ClientCommand(	edict_t	*pEntity ) {
 	  {
 
 		if ((err =amx_Exec((*aa).getPlugin()->getAMX(),	&ret , (*aa).getFunction()	 , 3, pPlayer->index, (*aa).getFlags(),(*aa).getId()  )) !=	AMX_ERR_NONE)
-		  AMXXLOG_Log("[AMXX] Run time error %d on line	%ld (plugin \"%s\")",
-		  err,(*aa).getPlugin()->getAMX()->curline,(*aa).getPlugin()->getName());
+			LogError((*aa).getPlugin()->getAMX(), err, "");
 
 		if ( ret & 2 )	result = MRES_SUPERCEDE;
 		if ( ret & 1 )	RETURN_META(MRES_SUPERCEDE);
@@ -679,8 +678,7 @@ void C_ClientCommand(	edict_t	*pEntity ) {
 		  {
 
 			if ( ( err = amx_Exec((*a).getPlugin()->getAMX(), &ret ,(*a).getFunction() , 2,	pPlayer->index,pressed_key)) !=	AMX_ERR_NONE)
-			  AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",
-			  err,(*a).getPlugin()->getAMX()->curline,(*a).getPlugin()->getName());
+				LogError((*a).getPlugin()->getAMX(), err, "");
 
 			if ( ret & 2 ) result =	MRES_SUPERCEDE;
 			if ( ret & 1 ) RETURN_META(MRES_SUPERCEDE);
@@ -885,7 +883,7 @@ void C_MessageEnd_Post(void) {
 	{
 
 	  if ((err = amx_Exec((*a).getPlugin()->getAMX(), NULL ,  (*a).getFunction() , 1, mPlayerIndex	/*g_events.getArgInteger(0)*/ )) !=	AMX_ERR_NONE)
-		AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",err,(*a).getPlugin()->getAMX()->curline,(*a).getPlugin()->getName());
+		LogError((*a).getPlugin()->getAMX(), err, "");
 
 
 	  ++a;

@@ -173,8 +173,7 @@ void LogEventsMngr::executeLogEvents()
 			
 			if (valid){
 				if ((err = amx_Exec(a->plugin->getAMX(), NULL , a->func , 0)) != AMX_ERR_NONE)
-					AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",
-						err,a->plugin->getAMX()->curline,a->plugin->getName());
+					LogError(a->plugin->getAMX(), err, "");
 			}
 			
 #ifdef ENABLEEXEPTIONS

@@ -2442,7 +2442,7 @@ static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 	// actual call
 	if ((err = amx_Execv(plugin->getAMX(), &retVal, func, curParam, gparams)) != AMX_ERR_NONE)
 	{
-		AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")", err, curPlugin->getAMX()->curline, curPlugin->getName());
+		LogError(amx, err, "");
 		return 0;
 	}
 

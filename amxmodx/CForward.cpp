@@ -111,7 +111,6 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 			// log runtime error, if any
 			if (err != AMX_ERR_NONE)
 				LogError(iter->pPlugin->getAMX(), err, "");
-//				AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")", err, iter->pPlugin->getAMX()->curline, iter->pPlugin->getName());
 
 			// cleanup strings & arrays
 			for (i = 0; i < m_NumParams; ++i)

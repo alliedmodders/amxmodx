@@ -105,18 +105,25 @@ stock show_activity( id, const name[], {Float,_}: ... ) {
   }
 }
 
-stock is_running(const mod[]) {
-  new mod_name[32]
-  get_modname(mod_name,31)
-
-  return equal(mod_name,mod)
-}
-
 stock colored_menus() {
   new mod_name[32]
   get_modname(mod_name,31)
 
   return ( equal(mod_name,"cstrike") || equal(mod_name,"czero") || equal(mod_name,"dod") )
+}
+
+stock cstrike_running() {
+  new mod_name[32]
+  get_modname(mod_name,31)
+
+  return ( equal(mod_name,"cstrike") || equal(mod_name,"czero") || equal(mod_name,"csv15") )
+}
+
+stock is_running(const mod[]) {
+  new mod_name[32]
+  get_modname(mod_name,31)
+
+  return equal(mod_name,mod)
 }
 
 stock get_basedir(name[],len)

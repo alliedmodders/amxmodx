@@ -17,10 +17,10 @@ native cs_get_user_deaths(index);
 native cs_set_user_deaths(index, newdeaths);
 
 /* Returns index of entity (does not have to be a player) which hostage is following. 0 is hostage doesn't follow anything. */
-native cs_get_hostage_follow(index);
+native cs_get_hostage_foll(index);
 
 /* Set hostage to follow entity specified in followedindex. Does not have to be a player. If followedindex is 0 the hostage will stop following. */
-native cs_set_hostage_follow(index, followedindex = 0);
+native cs_set_hostage_foll(index, followedindex = 0);
 
 /* Get unique hostage id. */
 native cs_get_hostage_id(index);
@@ -41,21 +41,21 @@ native cs_get_hostage_id(index);
 * flash
 * he
 * smoke */
-native cs_get_user_backpackammo(index, weapon);
+native cs_get_user_bpammo(index, weapon);
 
 /* Restock/remove ammo in a user's backpack. */
-native cs_set_user_backpackammo(index, weapon, amount);
+native cs_set_user_bpammo(index, weapon, amount);
 
 /* Returns 1 if user has a defuse kit. */
-native cs_get_user_defusekit(index);
+native cs_get_user_defuse(index);
 
 /* If defusekit is 1, the user will have a defuse kit.
 * You can specify a different colour for the defuse kit icon showing on hud. Default is the normal green.
 * You can specify an icon. Default is "defuser". Set flash to 1 if you want the icon to flash red. */
-native cs_set_user_defusekit(index, defusekit = 1, r = 0, g = 160, b = 0, icon[] = "defuser", flash = 0);
+native cs_set_user_defuse(index, defusekit = 1, r = 0, g = 160, b = 0, icon[] = "defuser", flash = 0);
 
 /* Is user in buyzone? Returns 1 when true, 0 when false. */
-native cs_get_user_inside_buyzone(index);
+native cs_get_user_buyzone(index);
 
 /* Get user model. */
 native cs_get_user_model(index, model[], len);
@@ -104,14 +104,14 @@ native cs_get_user_vip(index);
 native cs_set_user_vip(index, vip = 1);
 
 /* Returns 1 if specified weapon is in burst mode. */
-native cs_get_weapon_burstmode(index);
+native cs_get_weapon_burst(index);
 
 /* If burstmode = 1, weapon will be changed to burst mode, 0 and non-burst mode (semiautomatic/automatic) will be activated.
 * Only GLOCK and FAMAS can enter/leave burst mode. */
-native cs_set_weapon_burstmode(index, burstmode = 1);
+native cs_set_weapon_burst(index, burstmode = 1);
 
 /* Returns 1 if weapon is silenced, else 0. */
-native cs_get_weapon_silenced(index);
+native cs_get_weapon_silen(index);
 
 /* If silence = 1, weapon will be silenced, 0 and silencer will be removed. Only USP and M4A1 can be silenced. */
-native cs_set_weapon_silenced(index, silence = 1);
+native cs_set_weapon_silen(index, silence = 1);

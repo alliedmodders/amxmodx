@@ -51,11 +51,13 @@ native set_msg_arg_string(argn, szString[]);
 native get_offset(id, offset);
 native Float:get_offset_float(id, offset);
 native get_offset_short(id, offset);
+native get_offset_char(id, offset);
 
 /* sets pvPrivateData offset. */
 native set_offset(id, offset, value);
 native set_offset_float(id, offset, Float:value);
-native set_offset_short(id, offset);
+native set_offset_short(id, offset, value);
+native set_offset_char(id, offset, value);
 
 /* Precaches any file. */
 native precache_generic(szFile[]);

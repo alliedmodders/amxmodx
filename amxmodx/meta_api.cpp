@@ -235,6 +235,9 @@ int Spawn( edict_t *pent ) {
   get_localinfo("amxx_basedir", "addons/amxx");
   get_localinfo("amxx_pluginsdir", "addons/amxx/plugins");
   get_localinfo("amxx_modulesdir", "addons/amxx/modules");
+  get_localinfo("amxx_configsdir", "addons/amxx/configs");
+  get_localinfo("amxx_customdir", "addons/amxx/custom");
+
   //  ###### Load modules
   loadModules(get_localinfo("amxx_modules", "addons/amxx/modules.ini"));
   attachModules();

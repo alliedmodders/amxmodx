@@ -3,6 +3,7 @@ ADMIN_CANC_VOTE_1 = %s: cancel vote
 ADMIN_CANC_VOTE_2 = %s %s: cancel vote
 VOTING_CANC = Voting canceled
 NO_VOTE_CANC = There is no voting to cancel or the vote session can't be canceled with that command
+RES_REF = Result refused
 RES_ACCEPTED = Result accepted
 VOTING_FAILED = Voting failed
 VOTING_RES_1 = %s (yes "%d") (no "%d") (needed "%d")

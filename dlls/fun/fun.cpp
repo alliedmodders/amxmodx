@@ -67,6 +67,18 @@
 	}
 */
 
+// ######## Utils:
+void FUNUTIL_ResetPlayer(int index)
+{
+	// Reset silent slippers
+	g_silent[index] = false;
+
+	// Reset hitzones
+	g_zones_toHit[index] = (1<<HITGROUP_GENERIC) | (1<<HITGROUP_HEAD) | (1<<HITGROUP_CHEST) | (1<<HITGROUP_STOMACH) | (1<<HITGROUP_LEFTARM) | (1<<HITGROUP_RIGHTARM)| (1<<HITGROUP_LEFTLEG) | (1<<HITGROUP_RIGHTLEG);
+	g_zones_getHit[index] = (1<<HITGROUP_GENERIC) | (1<<HITGROUP_HEAD) | (1<<HITGROUP_CHEST) | (1<<HITGROUP_STOMACH) | (1<<HITGROUP_LEFTARM) | (1<<HITGROUP_RIGHTARM)| (1<<HITGROUP_LEFTLEG) | (1<<HITGROUP_RIGHTLEG);
+}
+
+// ######## Natives:
 static cell AMX_NATIVE_CALL get_client_listening(AMX *amx, cell *params) // get_client_listening(receiver, sender); = 2 params
 {
 	// Gets who can listen to who.
@@ -484,21 +496,62 @@ static cell AMX_NATIVE_CALL get_user_gravity(AMX *amx, cell *params) // Float:ge
 	return *(cell*)((void *)&(pPlayer->v.gravity)); // The way to return floats... (sigh)
 }
 
-static cell AMX_NATIVE_CALL set_hitzones(AMX *amx, cell *params) // set_hitzones(body = 255) = 1 argument
+/*static cell AMX_NATIVE_CALL set_hitzones(AMX *amx, cell *params) // set_hitzones(body = 255) = 1 argument
 {
-	// Gets user gravity.
+	// Sets "hitable" zones.
 	// params[1] = body hitzones
 
-	// Fetch player pointer
+	//native set_user_hitzones(index=0,target=0,body=255);
+	//set_user_hitzones(id, 0, 0) // Makes ID not able to shoot EVERYONE - id can shoot on 0 (all) at 0
+	//set_user_hitzones(0, id, 0) // Makes EVERYONE not able to shoot ID - 0 (all) can shoot id at 0
+
 	g_body = params[1];
 
 	return 1;
-}
+}*/
 
-static cell AMX_NATIVE_CALL get_hitzones(AMX *amx, cell *params) // get_hitzones() = 0 arguments
+/*static cell AMX_NATIVE_CALL get_hitzones(AMX *amx, cell *params) // get_hitzones() = 0 arguments
 {
 	// Gets hitzones.
 	return g_body;
+}*/
+
+static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params) // set_user_hitzones(index = 0, target = 0, body = 255); = 3 arguments
+{
+	// Gets user gravity.
+	// params[1] = the one(s) who shoot(s), shooter
+	int shooter = params[1];
+	// params[2] = the one getting hit
+	int gettingHit = params[2];
+	// params[3] = specified hit zones
+	int hitzones = params[3];
+
+	//set_user_hitzones(id, 0, 0) // Makes ID not able to shoot EVERYONE - id can shoot on 0 (all) at 0
+	//set_user_hitzones(0, id, 0) // Makes EVERYONE not able to shoot ID - 0 (all) can shoot id at 0
+	if (shooter == 0 && gettingHit == 0) {
+		// set hitzones for ALL, both where people can hit and where they can _get_ hit.
+		for (int i = 1; i <= 32; i++) {
+			g_zones_toHit[i] = hitzones;
+			g_zones_getHit[i] = hitzones;
+		}
+	}
+	else {
+		if (shooter == 0) {
+			// "All" shooters, target (gettingHit) should be existing player id
+			if (gettingHit < 1 || gettingHit > gpGlobals->maxClients) {
+				AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+				return 0;
+			}
+			// Where can gettingHit get hit by all?
+			g_zones_getHit[gettingHit] = hitzones;
+		}
+		else {
+			// "shooter" will now only be able to hit other people in "hitzones". (target should be 0 here)
+			g_zones_toHit[shooter] = hitzones;
+		}
+	}
+
+	return 1;
 }
 
 static cell AMX_NATIVE_CALL set_user_noclip(AMX *amx, cell *params) // set_user_noclip(index, noclip = 0); = 2 arguments
@@ -581,11 +634,11 @@ static cell AMX_NATIVE_CALL set_user_footsteps(AMX *amx, cell *params) // set_us
 	
 	if (params[2]) {                
 		pPlayer->v.flTimeStepSound = 999;
-		silent[params[1]] = true;
+		g_silent[params[1]] = true;
 	}
 	else {
 		pPlayer->v.flTimeStepSound = STANDARDTIMESTEPSOUND;
-		silent[params[1]] = false;
+		g_silent[params[1]] = false;
 	}
 
 	return 1;
@@ -607,8 +660,8 @@ AMX_NATIVE_INFO fun_Exports[] = {
 	{"get_user_maxspeed",		get_user_maxspeed},
 	{"set_user_gravity",		set_user_gravity},
 	{"get_user_gravity",		get_user_gravity},
-	{"set_hitzones",			set_hitzones},
-	{"get_hitzones",			get_hitzones},
+	{"set_user_hitzones",		set_user_hitzones},
+	//{"get_hitzones",			get_hitzones},
 	{"set_user_noclip",			set_user_noclip},
 	{"get_user_noclip",			get_user_noclip},
 	{"set_user_footsteps",		set_user_footsteps},
@@ -619,7 +672,7 @@ AMX_NATIVE_INFO fun_Exports[] = {
 /******************************************************************************************/
 void PlayerPreThink(edict_t *pEntity)
 {
-	if (silent[ENTINDEX(pEntity)]) {
+	if (g_silent[ENTINDEX(pEntity)]) {
 		pEntity->v.flTimeStepSound = 999; 
 		RETURN_META(MRES_HANDLED);
 	}
@@ -627,14 +680,45 @@ void PlayerPreThink(edict_t *pEntity)
 	RETURN_META(MRES_IGNORED);
 }
 
-void ClientDisconnect( edict_t *pEntity)
+int ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress, char szRejectReason[128])
+{
+	int index = ENTINDEX(pPlayer);
+
+	if (index < 1 || index > gpGlobals->maxClients) // This is probably not really necessary... but just in case to not cause out of bounds errors below.
+		return 1;
+	
+	// Find out if user is bot (this doesn't seem to be ever called when bot connects though, but leave it here)
+	const char* auth = GETPLAYERAUTHID(pPlayer);
+	LOG_CONSOLE(PLID, "Fun debug: ClientConnect: Player's auth is: %s", auth);
+
+	if (strcmp(auth, "BOT") == 0)
+		g_bot[index] = true;
+	else
+		g_bot[index] = false;
+
+	// Reset stuff:
+	FUNUTIL_ResetPlayer(index);
+
+	return 1;
+}
+
+void ClientDisconnect(edict_t *pEntity)
 {
 	int index = ENTINDEX(pEntity);
-	silent[index] = false;
+
+	if (index < 1 || index > gpGlobals->maxClients) // This is probably not really necessary... but just in case to not cause out of bounds errors below.
+		RETURN_META(MRES_IGNORED);
+	
+	// Reset stuff:
+	FUNUTIL_ResetPlayer(index);
+
+	// Set to be bot until proven not in ClientConnect
+	g_bot[index] = true;
+
 	RETURN_META(MRES_IGNORED);
 }
 
-DLL_FUNCTIONS gFunctionTable = {
+DLL_FUNCTIONS gFunctionTable; /* = {
 	NULL,					// pfnGameInit
 	NULL,					// pfnSpawn
 	NULL,					// pfnThink
@@ -653,7 +737,7 @@ DLL_FUNCTIONS gFunctionTable = {
 	NULL,					// pfnRestoreGlobalState
 	NULL,					// pfnResetGlobalState
 
-	NULL,					// pfnClientConnect
+	ClientConnect,			// pfnClientConnect
 	ClientDisconnect,		// pfnClientDisconnect
 	NULL,					// pfnClientKill
 	NULL,					// pfnClientPutInServer
@@ -695,8 +779,7 @@ DLL_FUNCTIONS gFunctionTable = {
 	NULL,					// pfnCreateInstancedBaselines
 	NULL,					// pfnInconsistentFile
 	NULL,					// pfnAllowLagCompensation
-};
-
+};*/
 C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion)
 {
 	if(!pFunctionTable) {
@@ -709,13 +792,20 @@ C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersi
 		*interfaceVersion = INTERFACE_VERSION;
 		return(FALSE);
 	}
+
+	gFunctionTable.pfnClientConnect = ClientConnect;
+	gFunctionTable.pfnClientDisconnect = ClientDisconnect;
+	//gFunctionTable.pfnClientPutInServer = ClientPutInServer;
+	gFunctionTable.pfnPlayerPreThink = PlayerPreThink;
+
 	memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
+
 	return(TRUE);
 }
 
 /********/
 
-void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr)
+/*void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr)
 {
 	if (g_body == 255) {
 		RETURN_META(MRES_IGNORED);
@@ -730,6 +820,49 @@ void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *pentT
 
 		RETURN_META(MRES_SUPERCEDE);
 	}
+}*/
+
+void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr)
+{
+	/* from eiface.h:
+	// Returned by TraceLine
+	typedef struct
+		{
+		int		fAllSolid;			// if true, plane is not valid
+		int		fStartSolid;		// if true, the initial point was in a solid area
+		int		fInOpen;
+		int		fInWater;
+		float	flFraction;			// time completed, 1.0 = didn't hit anything
+		vec3_t	vecEndPos;			// final position
+		float	flPlaneDist;
+		vec3_t	vecPlaneNormal;		// surface normal at impact
+		edict_t	*pHit;				// entity the surface is on
+		int		iHitgroup;			// 0 == generic, non zero is specific body part
+		} TraceResult;
+	*/
+
+	if (g_bot[ENTINDEX(pentToSkip)])
+		RETURN_META(MRES_IGNORED);
+
+	TRACE_LINE(v1, v2, fNoMonsters, pentToSkip, ptr); // pentToSkip gotta be the one that is shooting, so filter it
+
+	if ( !(
+		g_zones_getHit[ENTINDEX(ptr->pHit)] & (1 << ptr->iHitgroup) // can ptr->pHit get hit in ptr->iHitgroup at all?
+	&&	g_zones_toHit[ENTINDEX(pentToSkip)] & (1 << ptr->iHitgroup) ) // can pentToSkip hit other people in that hit zone?
+	) {
+		ptr->flFraction = 1.0;	// set to not hit anything (1.0 = shot doesn't hit anything)
+	}
+
+	RETURN_META(MRES_SUPERCEDE);
+
+	/*
+	MRES_IGNORED,		// plugin didn't take any action
+	MRES_HANDLED,		// plugin did something, but real function should still be called
+	MRES_OVERRIDE,		// call real function, but use my return value
+	MRES_SUPERCEDE,		// skip real function; use my return value
+	*/
+
+	//RETURN_META(MRES_IGNORED);
 }
 
 enginefuncs_t meta_engfuncs;
@@ -766,22 +899,29 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 
 	// JGHG added stuff below (initing stuff here)
-	g_body = (1<<HITGROUP_GENERIC) | (1<<HITGROUP_HEAD) | (1<<HITGROUP_CHEST) | (1<<HITGROUP_STOMACH) | (1<<HITGROUP_LEFTARM) | (1<<HITGROUP_RIGHTARM)| (1<<HITGROUP_LEFTLEG) | (1<<HITGROUP_RIGHTLEG); // init hs_body
+	//g_body = (1<<HITGROUP_GENERIC) | (1<<HITGROUP_HEAD) | (1<<HITGROUP_CHEST) | (1<<HITGROUP_STOMACH) | (1<<HITGROUP_LEFTARM) | (1<<HITGROUP_RIGHTARM)| (1<<HITGROUP_LEFTLEG) | (1<<HITGROUP_RIGHTLEG); // init hs_body
 	CVAR_REGISTER(&fun_version);
 	// generic is needed or bots go crazy... don't know what its for otherwise. You can still kill people.
 	// these hitzones never affect CS knife? ie you can always hit with knife no matter what you set here
 	//hs_body = (1<<HITGROUP_GENERIC) | (1<<HITGROUP_LEFTLEG) | (1<<HITGROUP_LEFTARM); // init hs_body
+	// Set default zones for people to hit and get hit.
+	for (int i = 1; i <= 32; i++) {
+		g_zones_toHit[i] = (1<<HITGROUP_GENERIC) | (1<<HITGROUP_HEAD) | (1<<HITGROUP_CHEST) | (1<<HITGROUP_STOMACH) | (1<<HITGROUP_LEFTARM) | (1<<HITGROUP_RIGHTARM)| (1<<HITGROUP_LEFTLEG) | (1<<HITGROUP_RIGHTLEG);
+		g_zones_getHit[i] = (1<<HITGROUP_GENERIC) | (1<<HITGROUP_HEAD) | (1<<HITGROUP_CHEST) | (1<<HITGROUP_STOMACH) | (1<<HITGROUP_LEFTARM) | (1<<HITGROUP_RIGHTARM)| (1<<HITGROUP_LEFTLEG) | (1<<HITGROUP_RIGHTLEG);
+		// Also set to be bot until proven not in ClientDisconnect (that seems to be only called by real players...)
+		g_bot[i] = true;
+	}
 	// JGHG added stuff above
 
 	/*
-	#define HITGROUP_GENERIC	0 // none
-	#define HITGROUP_HEAD		1
-	#define HITGROUP_CHEST		2
-	#define HITGROUP_STOMACH	3
-	#define HITGROUP_LEFTARM	4
-	#define HITGROUP_RIGHTARM	5
-	#define HITGROUP_LEFTLEG	6
-	#define HITGROUP_RIGHTLEG	7
+	#define HITGROUP_GENERIC	0 // none == 1
+	#define HITGROUP_HEAD		1 = 2
+	#define HITGROUP_CHEST		2 = 4
+	#define HITGROUP_STOMACH	3 = 8
+	#define HITGROUP_LEFTARM	4 = 16
+	#define HITGROUP_RIGHTARM	5 = 32
+	#define HITGROUP_LEFTLEG	6 = 64
+	#define HITGROUP_RIGHTLEG	7 = 128
 	*/
 
 	return(TRUE);

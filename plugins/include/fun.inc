@@ -46,10 +46,11 @@ native give_item(index, const item[]);
 * 32  - right arm
 * 64  - left leg
 * 128 - right leg */
-native set_hitzones(body = 255);
+//native set_hitzones(body = 255);
+native set_user_hitzones(index = 0, target = 0, body = 255);
 
 /* Get current hitzones. */
-native get_hitzones();
+//native get_hitzones();
 
 /* Sets users max. speed. */
 native set_user_maxspeed(index, Float:speed = -1.0);

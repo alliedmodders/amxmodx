@@ -69,17 +69,18 @@ pfnmodule_engine_g* g_engModuleFunc;		// These seem to be meta/amxmod related
 #define GETCLIENTLISTENING		(*g_engfuncs.pfnVoice_GetClientListening)
 #define SETCLIENTLISTENING		(*g_engfuncs.pfnVoice_SetClientListening)
 #define SETCLIENTMAXSPEED		(*g_engfuncs.pfnSetClientMaxspeed)
+#define GETPLAYERAUTHID			(*g_engfuncs.pfnGetPlayerAuthId)
 #define	SF_NORESPAWN			(1 << 30)// !!!set this bit on guns and stuff that should never respawn.
 #define STANDARDTIMESTEPSOUND	400
 
 #define HITGROUP_GENERIC		0 // none
-#define HITGROUP_HEAD			1
-#define HITGROUP_CHEST			2
-#define HITGROUP_STOMACH		3
-#define HITGROUP_LEFTARM		4
-#define HITGROUP_RIGHTARM		5
-#define HITGROUP_LEFTLEG		6
-#define HITGROUP_RIGHTLEG		7
+#define HITGROUP_HEAD			1 // 1 << 1 = 2
+#define HITGROUP_CHEST			2 // 1 << 2 = 4
+#define HITGROUP_STOMACH		3 // 8
+#define HITGROUP_LEFTARM		4 // 16
+#define HITGROUP_RIGHTARM		5 // 32
+#define HITGROUP_LEFTLEG		6 // 64
+#define HITGROUP_RIGHTLEG		7 // 128
 // Fun-specific defines above
 
 // Globals below
@@ -102,6 +103,10 @@ module_info_s module_info = {
   RELOAD_MODULE,
 };
 cvar_t fun_version = {"fun_version", "0.1", FCVAR_EXTDLL};
-int g_body = 0;				// bits of parts of body to hit
-bool silent[33];			// used for set_user_footsteps()
+
+// The stuff below might end up in a class soon
+int g_zones_toHit[33];		// where can people hit other people?
+int g_zones_getHit[33];		// where can people get hit by other people?
+bool g_silent[33];			// used for set_user_footsteps()
+bool g_bot[33];				// is user bot?
 // Globals above

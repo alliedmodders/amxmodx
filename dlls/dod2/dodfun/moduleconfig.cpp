@@ -103,6 +103,7 @@ void PlayerPreThink_Post( edict_t *pEntity ) {
 		else if ( pEntity->v.iuser4 < pPlayer->staminaMin )
 			pEntity->v.iuser4 = pPlayer->staminaMin;
 	}
+
 	RETURN_META(MRES_IGNORED);
 }
 

@@ -75,7 +75,7 @@ static cell AMX_NATIVE_CALL set_user_team(AMX *amx, cell *params){
 		return 0;
 	}
 	int iTeam = params[2];
-	if ( iTeam<1 || iTeam>2 ){
+	if ( iTeam<1 || iTeam>3 ){
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -87,15 +87,14 @@ static cell AMX_NATIVE_CALL set_user_team(AMX *amx, cell *params){
 		pPlayer->killPlayer();
 		pPlayer->pEdict->v.team = iTeam;
 
-		char szTeamName[16];
 		switch( iTeam ){
-		case 1:	strcpy(szTeamName,"Allies");
+		case 1:	pPlayer->setTeamName("Allies");
 			break;
-		case 2:	strcpy(szTeamName,"Axis");
+		case 2:	pPlayer->setTeamName("Axis");
+			break;
+		case 3: pPlayer->setTeamName("Spectators");
 			break;
 		}
-
-		pPlayer->setTeamName(szTeamName);
 
 		if ( bSteam )
 			*( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_RCLASS) = 1; // set random class
@@ -246,6 +245,27 @@ static cell AMX_NATIVE_CALL set_user_teamname(AMX *amx, cell *params){
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL get_user_teamname(AMX *amx, cell *params){
+	int index = params[1];
+	if (index<1||index>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+
+	if ( pPlayer->ingame ){
+		
+		char szTeamName[16];
+		pPlayer->getTeamName(szTeamName);
+
+		return MF_SetAmxString(amx, params[2],szTeamName,params[3]);
+	
+	}
+
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL is_weapon_deployed(AMX *amx, cell *params){
 	int index = params[1];
 	if (index<1||index>gpGlobals->maxClients){
@@ -304,7 +324,7 @@ AMX_NATIVE_INFO pd_Natives[] = {
   { "dod_set_pl_deaths", set_user_deaths },
   { "dod_set_user_score", set_user_score },
   { "dod_set_pl_teamname", set_user_teamname },
-  
+  { "dod_get_pl_teamname", get_user_teamname },  
   { "dod_is_deployed", is_weapon_deployed },
 
   { "dod_test_pd", test_pd },

@@ -83,6 +83,7 @@ public:
 	void Disconnect();
 	void killPlayer();
 	void setTeamName( char *szName );
+	void getTeamName( char *szName );
 
 	inline bool IsBot(){
 		const char* auth= (*g_engfuncs.pfnGetPlayerAuthId)(pEdict);

@@ -4,7 +4,7 @@
    *   Counter-Strike Module 
    * 
    * by the AMX Mod X Development Team 
-   * 
+   *
    * This file is part of AMX Mod X. 
    * 
    * 
@@ -1315,7 +1315,11 @@ C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason) {
 	}
 }
 
+#ifdef LINUX
+C_DLLEXPORT void GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals ) {
+#else
 void WINAPI GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals ) {
+#endif
 	memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
 	gpGlobals = pGlobals;
 }

@@ -1,11 +1,4 @@
-#ifdef __linux__
-#include <malloc.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <signal.h>
-#include <sched.h>
-#endif
-#define VERSION "0.75"
+#define VERSION "0.79"
 
 plugin_info_t Plugin_info = {
 
@@ -47,7 +40,6 @@ class AmxCallList {
   public:
 struct AmxCall {
   AMX *amx;
-  //void* code;
   int iFunctionIdx;
    AmxCall* next;
    AmxCall( AMX *a , int i, AmxCall* n  ) : amx(a), iFunctionIdx(i), next(n) {}
@@ -311,7 +303,7 @@ public:
 		writelong = (long)0;
 		writeangle = 0.0;
 		writecoord = 0.0;
-		writestring = NULL;
+		writestring = '\0';
 		writeentity = 0;
 	}
 
@@ -365,13 +357,15 @@ public:
 		}
 	}
 
-	void put(int arg_type, char *sz)
+	void put_string(int arg_type, const char *sz)
 	{
 		argtype = arg_type;
 		switch (argtype)
 		{
 		case arg_string:
-			writestring = sz;
+			delete[] writestring;
+			writestring = new char[strlen(sz)+1];
+			strcpy(writestring, sz);
 			break;
 		}
 	}
@@ -446,16 +440,27 @@ public:
 		return 0.0;
 	}
 
+	int getarg_strlen(int arg_type)
+	{
+		switch (argtype)
+		{
+		case arg_string:
+			return (strlen(writestring));
+			break;
+		}
+		return 0;
+	}
+
 	char *getarg_string(int arg_type)
 	{
 		switch (argtype)
 		{
 		case arg_string:
-			return writestring;
+			return (strlen(writestring)?writestring:'\0');
 			break;
 		}
 
-		return NULL;
+		return '\0';
 	}
 
 	int get_argtype()
@@ -717,7 +722,7 @@ public:
 		argcount++;
 	}
 
-	void AddArg(int i, char *sz)
+	void AddArgString(int i, const char *sz)
 	{
 		argStack *p;
 		if (CTailArg == NULL) {
@@ -727,7 +732,7 @@ public:
 			p = CTailArg->arg();
 			CTailArg = p;
 		}
-		CTailArg->put(i,sz);
+		CTailArg->put_string(i,sz);
 		argcount++;
 	}
 
@@ -793,7 +798,7 @@ public:
 			for (p=CHeadArg->link(); p!=NULL; p=p->link()) {
 				i++;
 				if (i==n) {
-					p->put(arg_type, data);
+					p->put_string(arg_type, (const char*)data);
 					return true;
 				}
 			}
@@ -838,12 +843,30 @@ public:
 		return 0.0;
 	}
 
+	int RetArg_Strlen(int n)
+	{
+		argStack *p;
+		int i=0;
+		if (n>argcount) {
+			return 0;
+		} else {
+			for (p=CHeadArg->link(); p!=NULL; p=p->link()) {
+				i++;
+				if (i==n) {
+					return p->getarg_strlen(arg_string);
+				}
+			}
+		}
+
+		return 0;
+	}
+
 	char* RetArg_String(int n)
 	{
 		argStack *p;
 		int i=0;
 		if (n>argcount) {
-			return NULL;
+			return '\0';
 		} else {
 			for (p=CHeadArg->link(); p!=NULL; p=p->link()) {
 				i++;
@@ -853,7 +876,7 @@ public:
 			}
 		}
 
-		return NULL;
+		return '\0';
 	}
 
 	int ArgType(int n)
@@ -897,13 +920,3 @@ struct MsgSets
 	MessageInfo *msg;
 	AmxCallList msgCalls;
 };
-
-#ifdef __linux__
-int thread_fork(void *arg)
-{
-	char *szCmd;
-	szCmd = (char*)arg;
-	system(szCmd);
-	return 0;
-}
-#endif

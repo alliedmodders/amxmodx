@@ -216,12 +216,13 @@ static cell AMX_NATIVE_CALL get_msg_arg_float(AMX *amx, cell *params)
 }
 
 //(BAILOPAN)
-//gets a message argument as an string
+//gets a message argument as a string
 static cell AMX_NATIVE_CALL get_msg_arg_string(AMX *amx, cell *params)
 {
 	int msg_type = params[1];
 	int argn = params[2];
-	char *szValue;
+	int iLen = 0;
+	char *szValue = '\0';
 	
 	if (msg_type < 0 || msg_type > MAX_MESSAGES) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
@@ -229,8 +230,14 @@ static cell AMX_NATIVE_CALL get_msg_arg_string(AMX *amx, cell *params)
 	} else {
 		if (Msg[msg_type].isHooked && Msg[msg_type].msg!=NULL) {
 			if (argn < Msg[msg_type].msg->args() && argn > 0) {
-				szValue = Msg[msg_type].msg->RetArg_String(argn);
-				return SET_AMXSTRING(amx, params[3], szValue, params[4]);
+				iLen = Msg[msg_type].msg->RetArg_Strlen(argn);
+				szValue = new char[iLen+1];
+				strcpy(szValue, Msg[msg_type].msg->RetArg_String(argn));
+				if (strlen(szValue)) {
+					return SET_AMXSTRING(amx, params[3], szValue, params[4]);
+				} else {
+					return SET_AMXSTRING(amx, params[3], "", params[4]);
+				}
 			} else {
 				AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 				return 0;
@@ -478,82 +485,6 @@ static cell AMX_NATIVE_CALL get_offset_float(AMX *amx, cell *params)
 	return 1;
 }
 
-//(BAILOPAN)
-//return operating system
-static cell AMX_NATIVE_CALL get_system_os(AMX *amx, cell *params)
-{
-	int iLen = params[2];
-#ifndef __linux__
-	char *szOS = "win32";
-#else
-	char *szOS = "linux";
-#endif
-	return SET_AMXSTRING(amx, params[1], szOS, iLen);
-}
-
-//(BAILOPAN)
-//Allows you to issue a command to the operating system.
-static cell AMX_NATIVE_CALL system_cmd(AMX  *amx, cell *params)
-{
-	int i_apptype = params[1];
-	int iLen, retVal, iLen2;
-	char *szCommand = AMX_GET_STRING(amx, params[2], iLen);
-	char *szDirectory = AMX_GET_STRING(amx, params[3], iLen2);
-	if (!iLen2) {
-		szDirectory = NULL;
-	}
-#ifndef __linux__
-	STARTUPINFO si;
-	PROCESS_INFORMATION pi;
-
-	ZeroMemory(&si, sizeof(si));
-	if (i_apptype & 2) {
-		si.dwFlags = STARTF_USESHOWWINDOW;
-		si.wShowWindow = SW_HIDE;
-	}
-	si.cb = sizeof(si);
-	ZeroMemory(&pi, sizeof(pi));
-
-	if (!i_apptype & 1) {
-		if (!CreateProcess(NULL, (LPTSTR)szCommand, NULL, NULL, FALSE, 0, NULL, (LPCTSTR)szDirectory, &si, &pi)) {
-			return 0;
-		} else {
-			retVal = 1;
-		}
-	} else {
-		if (!CreateProcess((LPCTSTR)szCommand, NULL, NULL, NULL, FALSE, 0, NULL, (LPCTSTR)szDirectory, &si, &pi)) {
-			return 0;
-		} else {
-			retVal = 1;
-		}
-	}
-#else
-	void *stack;
-	pid_t pid;
-	
-	if (!app_type) {
-		app_type = 64;
-	}
-
-	stack = malloc(app_type * 1024);
-	if (stack == 0) {
-		return -1;
-	}
-
-	pid = clone(&thread_fork, (char *)stack + app_type*1024, 0, szCommand);
-	if (pid == -1) {
-		return -1;
-	}
-	pid = waitpid(pid, 0, 0);
-	if (pid == -1) {
-		return -1;
-	}
-	free(stack);
-	retval = 1;
-#endif
-	return retVal;
-}
-
 // Get an integer from an entities entvars.
 // (vexd)
 static cell AMX_NATIVE_CALL entity_get_int(AMX *amx, cell *params) { 
@@ -572,7 +503,6 @@ static cell AMX_NATIVE_CALL entity_get_int(AMX *amx, cell *params) {
 
 	// Is it a real entity?
 	if(FNullEnt(pEntity)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -689,7 +619,6 @@ static cell AMX_NATIVE_CALL entity_get_int(AMX *amx, cell *params) {
 			iRetValue = pEntity->v.deadflag;
 			break;
 		default:
-			AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 			return 0;
 			break;
 	}
@@ -704,14 +633,12 @@ static cell AMX_NATIVE_CALL entity_set_int(AMX *amx, cell *params) {
 	int iNewValue = params[3];
   
 	if (iTargetEntity < 1 || iTargetEntity > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	edict_t* pEntity = INDEXENT(iTargetEntity);
 
 	if(FNullEnt(pEntity)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -828,7 +755,6 @@ static cell AMX_NATIVE_CALL entity_set_int(AMX *amx, cell *params) {
 			pEntity->v.deadflag = iNewValue;
 			break;
 		default:
-			AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 			return 0;
 			break;
 	}
@@ -854,7 +780,6 @@ static cell AMX_NATIVE_CALL entity_get_float(AMX *amx, cell *params) {
 
 	// is it a valid entity?
 	if(FNullEnt(pEntity)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -971,7 +896,6 @@ static cell AMX_NATIVE_CALL entity_get_float(AMX *amx, cell *params) {
 			fRetValue = pEntity->v.fuser4;
 			break;
 		default:
-			AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 			return 0;
 			break;
 	}
@@ -986,14 +910,12 @@ static cell AMX_NATIVE_CALL entity_set_float(AMX *amx, cell *params) {
 	float fNewValue = *(float *)((void *)&params[3]);
   
 	if (iTargetEntity < 1 || iTargetEntity > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	edict_t* pEntity = INDEXENT(iTargetEntity);
 
 	if(FNullEnt(pEntity)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1110,7 +1032,6 @@ static cell AMX_NATIVE_CALL entity_set_float(AMX *amx, cell *params) {
 			pEntity->v.fuser4 = fNewValue;
 			break;
 		default:
-			AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 			return 0;
 			break;
 	}
@@ -1132,14 +1053,12 @@ static cell AMX_NATIVE_CALL entity_get_vector(AMX *amx, cell *params) {
 	Vector vRetValue = Vector(0, 0, 0);
   
 	if (iTargetEntity < 1 || iTargetEntity > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	edict_t* pEntity = INDEXENT(iTargetEntity);
 
 	if(FNullEnt(pEntity)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1214,7 +1133,6 @@ static cell AMX_NATIVE_CALL entity_get_vector(AMX *amx, cell *params) {
 			vRetValue = pEntity->v.vuser4;
 			break;
 		default:
-			AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 			return 0;
 			break;
 	}
@@ -1240,14 +1158,12 @@ static cell AMX_NATIVE_CALL entity_set_vector(AMX *amx, cell *params) {
 	Vector vNewValue = Vector(fNewX, fNewY, fNewZ);
   
 	if (iTargetEntity < 1 || iTargetEntity > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	edict_t* pEntity = INDEXENT(iTargetEntity);
 
 	if(FNullEnt(pEntity)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1322,7 +1238,6 @@ static cell AMX_NATIVE_CALL entity_set_vector(AMX *amx, cell *params) {
 			pEntity->v.vuser4 = vNewValue;
 			break;
 		default:
-			AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 			return 0;
 			break;
 	}
@@ -1341,7 +1256,6 @@ static cell AMX_NATIVE_CALL entity_get_edict(AMX *amx, cell *params) {
   
 	// Valid entity?
 	if (iTargetEntity < 1 || iTargetEntity > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1350,7 +1264,6 @@ static cell AMX_NATIVE_CALL entity_get_edict(AMX *amx, cell *params) {
 
 	// is it valid?
 	if(FNullEnt(pEntity)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1389,7 +1302,6 @@ static cell AMX_NATIVE_CALL entity_get_edict(AMX *amx, cell *params) {
 			pRetValue = pEntity->v.euser4;
 			break;
 		default:
-			AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 			return 0;
 			break;
 	}
@@ -1409,19 +1321,16 @@ static cell AMX_NATIVE_CALL entity_set_edict(AMX *amx, cell *params) {
 	edict_t *pNewValue = INDEXENT(params[3]);
   
 	if (iTargetEntity < 1 || iTargetEntity > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	edict_t* pEntity = INDEXENT(iTargetEntity);
 
 	if(FNullEnt(pEntity)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	if(FNullEnt(pNewValue)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1460,7 +1369,6 @@ static cell AMX_NATIVE_CALL entity_set_edict(AMX *amx, cell *params) {
 			pEntity->v.euser4 = pNewValue;
 			break;
 		default:
-			AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 			return 0;
 			break;
 	}
@@ -1479,7 +1387,6 @@ static cell AMX_NATIVE_CALL entity_get_string(AMX *amx, cell *params) {
   
 	// Valid entity?
 	if (iTargetEntity < 1 || iTargetEntity > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1488,7 +1395,6 @@ static cell AMX_NATIVE_CALL entity_get_string(AMX *amx, cell *params) {
 
 	// Is entity valid again?
 	if(FNullEnt(pEntity)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1533,7 +1439,6 @@ static cell AMX_NATIVE_CALL entity_get_string(AMX *amx, cell *params) {
 			iszRetValue = pEntity->v.weaponmodel;
 			break;
 		default:
-			AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 			return 0;
 			break;
 	}
@@ -1550,14 +1455,12 @@ static cell AMX_NATIVE_CALL entity_set_string(AMX *amx, cell *params) {
 	int iszNewValue = AMX_MAKE_STRING(amx, params[3], iLength);
 
 	if (iTargetEntity < 1 || iTargetEntity > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	edict_t* pEntity = INDEXENT(iTargetEntity);
 
 	if(FNullEnt(pEntity)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1602,7 +1505,6 @@ static cell AMX_NATIVE_CALL entity_set_string(AMX *amx, cell *params) {
 			pEntity->v.weaponmodel = iszNewValue;
 			break;
 		default:
-			AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 			return 0;
 			break;
 	}
@@ -1620,14 +1522,12 @@ static cell AMX_NATIVE_CALL entity_get_byte(AMX *amx, cell *params) {
 	int iRetValue = 0;
 
 	if (iTargetEntity < 1 || iTargetEntity > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	edict_t* pEntity = INDEXENT(iTargetEntity);
 
 	if(FNullEnt(pEntity)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1651,7 +1551,6 @@ static cell AMX_NATIVE_CALL entity_get_byte(AMX *amx, cell *params) {
 			iRetValue = pEntity->v.blending[2];
 			break;
 		default:
-			AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 			return 0;
 			break;
 	}
@@ -1667,14 +1566,12 @@ static cell AMX_NATIVE_CALL entity_set_byte(AMX *amx, cell *params) {
 	int iNewValue = params[3];
 
 	if (iTargetEntity < 1 || iTargetEntity > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	edict_t* pEntity = INDEXENT(iTargetEntity);
 
 	if(FNullEnt(pEntity)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1701,7 +1598,6 @@ static cell AMX_NATIVE_CALL entity_set_byte(AMX *amx, cell *params) {
 			pEntity->v.blending[2] = iNewValue;
 			break;
 		default:
-			AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 			return 0;
 			break;
 	}
@@ -1720,14 +1616,12 @@ static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params) {
 	Vector vRetValue = Vector(0, 0, 0);
   
 	if (iTargetEntity < 1 || iTargetEntity > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	edict_t* pEntity = INDEXENT(iTargetEntity);
 
 	if(FNullEnt(pEntity)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1832,14 +1726,13 @@ static cell AMX_NATIVE_CALL create_entity(AMX *amx, cell *params) {
 	edict_t* pNewEntity = CREATE_NAMED_ENTITY(iszNewClassName);
 
 	if(FNullEnt(pNewEntity)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	return ENTINDEX(pNewEntity);
 }
 
-// FindEntity, use this in a while loop. will return -1 when theres no entities left.
+// FindEntity, use this in a while loop. will return 0 when theres no entities left.
 // It searches by classname.
 //(vexd)
 static cell AMX_NATIVE_CALL find_entity(AMX *amx, cell *params) {
@@ -1856,14 +1749,14 @@ static cell AMX_NATIVE_CALL find_entity(AMX *amx, cell *params) {
 		pStartEnt = INDEXENT(iStartEnt);
 
 		if(FNullEnt(pStartEnt)) {
-			return -1;
+			return 0;
 		}
 	}
 
 	int iReturnEnt = ENTINDEX(FIND_ENTITY_BY_STRING(pStartEnt, "classname", szValue));
 
 	if(!iReturnEnt || FNullEnt(iReturnEnt)) {
-		return -1;
+		return 0;
 	}
 
 	return iReturnEnt;
@@ -1881,7 +1774,6 @@ static cell AMX_NATIVE_CALL DispatchKeyValue(AMX *amx, cell *params) {
 
 
 	if(FNullEnt(pTarget)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1902,7 +1794,6 @@ static cell AMX_NATIVE_CALL DispatchSpawn(AMX *amx, cell *params) {
 	edict_t* pTarget = INDEXENT(params[1]);
 
 	if(FNullEnt(pTarget)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1925,14 +1816,12 @@ static cell AMX_NATIVE_CALL entity_set_origin(AMX *amx, cell *params) {
 	Vector vNewValue = Vector(fNewX, fNewY, fNewZ);
 
 	if (iTargetEntity < 1 || iTargetEntity > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	edict_t* pTarget = INDEXENT(iTargetEntity);
 
 	if(FNullEnt(pTarget)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1953,7 +1842,6 @@ static cell AMX_NATIVE_CALL entity_set_model(AMX *amx, cell *params) {
 	char *szNewValue = AMX_GET_STRING(amx, params[2], iLength);
 
 	if(FNullEnt(pTarget)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -1977,14 +1865,14 @@ static cell AMX_NATIVE_CALL find_ent_by_target(AMX *amx, cell *params)
 	} else {
 		pStart = INDEXENT(iStart);
 		if (FNullEnt(pStart)) {
-			return -1;
+			return 0;
 		}
 	}
 
 	int iReturnEnt = ENTINDEX(FIND_ENTITY_BY_TARGET(pStart, szValue));
 
 	if (!iReturnEnt || FNullEnt(iReturnEnt)) {
-		return -1;
+		return 0;
 	}
 
 	return iReturnEnt;
@@ -2006,7 +1894,7 @@ static cell AMX_NATIVE_CALL find_ent_by_model(AMX *amx, cell *params) {
 	} else {
 		pStart = INDEXENT(iStart);
 		if (FNullEnt(pStart)) {
-			return -1;
+			return 0;
 		}
 	}
 
@@ -2024,7 +1912,7 @@ static cell AMX_NATIVE_CALL find_ent_by_model(AMX *amx, cell *params) {
 	}
 
 	if(!checkEnt || FNullEnt(checkEnt)) {
-		return -1;
+		return 0;
 	}
 
 	return checkEnt;
@@ -2044,14 +1932,14 @@ static cell AMX_NATIVE_CALL find_ent_by_tname(AMX *amx, cell *params) {
 	} else {
 		pStart = INDEXENT(iStart);
 		if (FNullEnt(pStart)) {
-			return -1;
+			return 0;
 		}
 	}
 
 	int iReturnEnt = ENTINDEX(FIND_ENTITY_BY_TARGETNAME(pStart, szValue));
 
 	if (!iReturnEnt || FNullEnt(iReturnEnt)) {
-		return -1;
+		return 0;
 	}
 
 	return iReturnEnt;
@@ -2074,7 +1962,7 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params) {
 		pStartEnt = INDEXENT(iStartEnt);
 
 		if(FNullEnt(pStartEnt)) {
-			return -1;
+			return 0;
 		}
 	}
 
@@ -2092,7 +1980,7 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params) {
 	}
 
 	if(!checkEnt || FNullEnt(checkEnt) || (iOwner == -1)) {
-		return -1;
+		return 0;
 	}
 
 	return checkEnt;
@@ -2113,7 +2001,6 @@ static cell AMX_NATIVE_CALL remove_entity(AMX *amx, cell *params) {
 	edict_t* pTarget = INDEXENT(iTarget);
 
 	if(FNullEnt(pTarget)) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -2254,7 +2141,7 @@ static cell AMX_NATIVE_CALL trace_line(AMX *amx, cell *params) {
 	vReturnTo[2] = *(cell*)((void *)&tr.vecEndPos.z); 
 
 	if(FNullEnt(pHit)) {
-		return -1;
+		return 0;
 	}
 
 	return ENTINDEX(pHit);
@@ -2294,7 +2181,6 @@ static cell AMX_NATIVE_CALL get_grenade_id(AMX *amx, cell *params)  /* 4 param *
 
 	if (index<1||index>gpGlobals->maxClients)
 	{
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE); 
 		return 0; 
 	}
 
@@ -2323,7 +2209,6 @@ static cell AMX_NATIVE_CALL set_msg_block(AMX *amx, cell *params) {
 	int iMessageFlags = params[2];
 
 	if (iMessage < 1 || iMessage > MAX_MESSAGES) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -2787,9 +2672,9 @@ void MessageEnd(void) {
 		Msg[msg_type].isCalled = false;
 		if (result != MRES_SUPERCEDE) {	//supercede the message ANYWAY
 			Msg[msg_type].msg->SendMsg();
-			result = MRES_SUPERCEDE;
+			RETURN_META(MRES_SUPERCEDE);
 		}
-		//destroy(Msg[msg_type].msg);
+		destroy(Msg[msg_type].msg);
 	}
 
 	RETURN_META(result);
@@ -2873,7 +2758,7 @@ void WriteString(const char *sz) {
 	}
 	int msg_type = LastMessage;
 	if (msg_type && Msg[msg_type].isCalled && Msg[msg_type].isHooked) {
-		Msg[msg_type].msg->AddArg(arg_string, (char*)sz);
+		Msg[msg_type].msg->AddArgString(arg_string, sz);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 	RETURN_META(MRES_IGNORED);
@@ -3212,9 +3097,6 @@ AMX_NATIVE_INFO Engine_Natives[] = {
 	{"get_msg_arg_string",	get_msg_arg_string},
 	{"get_msg_args",		get_msg_args},
 	{"get_msg_argtype",		get_msg_argtype},
-
-	{"get_system_os",		get_system_os},
-	{"system_cmd",			system_cmd},
 
 	{ NULL, NULL }
 

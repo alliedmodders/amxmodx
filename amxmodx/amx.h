@@ -25,9 +25,6 @@
   #include <sclinux.h>
 #endif
 
-#define SMALL_CELL_SIZE 64
-#undef JIT
-
 #ifndef AMX_H_INCLUDED
 #define AMX_H_INCLUDED
 

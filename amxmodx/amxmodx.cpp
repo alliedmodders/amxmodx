@@ -1940,34 +1940,21 @@ static cell AMX_NATIVE_CALL get_user_aiming(AMX *amx, cell *params) /* 4 param *
   CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
   cell *cpId = get_amxaddr(amx,params[2]);
   cell *cpBody = get_amxaddr(amx,params[3]);
-    cell fCell;
-    REAL pFloat = amx_ctof(fCell);
-  pFloat = 0.0;
+  cell fCell;
+  REAL *pFloat = (REAL *)((void *)&fCell);
+  *pFloat = 0.0;
   if (pPlayer->ingame) {
     edict_t* edict = pPlayer->pEdict;
     Vector v_forward;
     Vector v_src = edict->v.origin + edict->v.view_ofs;
-    Vector vang = edict->v.v_angle;
-    float fang[3];
-    fang[0] = vang.x;
-    fang[1] = vang.y;
-    fang[2] = vang.z;
-    ANGLEVECTORS( fang , v_forward, NULL, NULL );
+    ANGLEVECTORS( edict->v.v_angle , v_forward, NULL, NULL );
     TraceResult trEnd;
     Vector v_dest = v_src + v_forward * params[4];
-    float fsrc[3];
-    fsrc[0] = v_src.x;
-    fsrc[1] = v_src.y;
-    fsrc[2] = v_src.z;
-    float fdst[3];
-    fdst[0] = v_dest.x;
-    fdst[1] = v_dest.y;
-    fdst[2] = v_dest.z;
-    TRACE_LINE( fsrc , fdst,  0 , edict, &trEnd );
+    TRACE_LINE( v_src , v_dest,  0 , edict, &trEnd );
     *cpId = FNullEnt(trEnd.pHit) ? 0 : ENTINDEX(trEnd.pHit);
     *cpBody = trEnd.iHitgroup;
     if (trEnd.flFraction < 1.0) {
-      pFloat = (trEnd.vecEndPos - v_src).Length();
+      *pFloat = (trEnd.vecEndPos - v_src).Length();
       return fCell;
     }
     else {
@@ -1977,6 +1964,7 @@ static cell AMX_NATIVE_CALL get_user_aiming(AMX *amx, cell *params) /* 4 param *
   *cpId = 0;
   *cpBody = 0;
   return fCell;
+
 }
 
 static cell AMX_NATIVE_CALL remove_cvar_flags(AMX *amx, cell *params)

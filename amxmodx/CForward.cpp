@@ -71,7 +71,6 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 		if (iter->pPlugin->isExecutable(iter->func))
 		{
 			// handle strings & arrays
-			AMXXLOG_Log("String handling");
 			int i;
 			for (i = 0; i < m_NumParams; ++i)
 			{
@@ -106,16 +105,13 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 					realParams[i] = params[i];
 				}
 			}
-			AMXXLOG_Log("Exec");
 			// exec
 			cell retVal;
-			AMXXLOG_Log("Entering exec");
 			int err = amx_Execv(iter->pPlugin->getAMX(), &retVal, iter->func, m_NumParams, realParams);
 			// log runtime error, if any
 			if (err != AMX_ERR_NONE)
 				AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")", err, iter->pPlugin->getAMX()->curline, iter->pPlugin->getName());
 
-			AMXXLOG_Log("Cleanup strings");
 			// cleanup strings & arrays
 			for (i = 0; i < m_NumParams; ++i)
 			{
@@ -240,7 +236,6 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 
 	// exec
 	cell retVal;
-	AMXXLOG_Log("Entering exec2");
 	amx_Execv(m_Amx, &retVal, m_Func, m_NumParams, realParams);
 
 	// cleanup strings & arrays

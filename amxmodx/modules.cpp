@@ -941,15 +941,3 @@ void *Module_ReqFnptr(const char *funcName)
 	}
 	return NULL;
 }
-
-// :TODO: REMOVE!!!!!
-extern "C" void amxx_print(const char * fmt, ...)
-{
- 	static char string[256];
-
-	va_list argptr;
-	va_start (argptr, fmt);
-	vsnprintf (string, 255, fmt, argptr);
-	va_end (argptr);
-	print_srvconsole(string);
-}

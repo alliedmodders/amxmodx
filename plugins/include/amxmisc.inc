@@ -157,8 +157,8 @@ stock AddMenuItem(const MENU_TEXT[], const MENU_CMD[], const MENU_ACCESS, const 
 		return // Menus Front-End doesn't exist, return.
 	}
 
-	new filename[64], b[1], c[1], d[1], e[1]
-	get_plugin(pluginid, filename, 63, b, 0, c, 0, d, 0, e, 0)
+	new filename[64], b[1]
+	get_plugin(pluginid, filename, 63, b, 0, b, 0, b, 0, b, 0)
 
 	new status = callfunc_begin("AddMenu", filename)
 	new bool:failed = true

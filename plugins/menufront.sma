@@ -129,7 +129,7 @@ public plugin_init()
   register_clcmd("amxmodmenu","cmdMenu",ADMIN_MENU,"- displays menus")    
 
   g_coloredMenus = colored_menus()
-  g_cstrikeRunning = ( is_running("cstrike") || is_running("czero") )
+  g_cstrikeRunning = cstrike_running()
   g_funModule = is_module_loaded("Fun")
 }
 

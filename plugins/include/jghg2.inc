@@ -88,7 +88,7 @@ stock get_owner(id)
 
 stock get_pdata(entity, offset)
 {
-	return get_offset(entity, offset)
+	return get_offset_int(entity, offset)
 }
 stock Float:get_pdata_float(entity, offset)
 {
@@ -104,7 +104,7 @@ stock get_pdata_short(entity, offset)
 }
 stock set_pdata(entity, offset, value)
 {
-	return set_offset(entity, offset, value)
+	return set_offset_int(entity, offset, value)
 }
 stock set_pdata_float(entity, offset, Float:value)
 {

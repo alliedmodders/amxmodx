@@ -59,8 +59,8 @@ void report_error( int code, char* fmt, ... )
 		//File fp( "error_amx.log","a" );
 		//fp << string;
 		print_srvconsole( string );
-		UTIL_Log("[AMXX] Make sure that modules are compatible with AMX Mod X %s" , AMX_VERSION );
-		UTIL_Log("[AMXX] Please fix the problem then start the server again" );
+		AMXXLOG_Log("[AMXX] Make sure that modules are compatible with AMX Mod X %s" , AMX_VERSION );
+		AMXXLOG_Log("[AMXX] Please fix the problem then start the server again" );
 	}
 	sleep( 5 );
 	exit( code );
@@ -348,7 +348,7 @@ int loadModules(const char* filename)
 
   if ( !fp )
   {
-    UTIL_Log( "[AMXX] Modules list not found (file \"%s\")",filename);
+    AMXXLOG_Log( "[AMXX] Modules list not found (file \"%s\")",filename);
     return 0;
   }
 
@@ -461,7 +461,7 @@ void dettachMetaModModules( const char* filename )
 
   if ( !fp )
   {
-    UTIL_Log( "[AMXX] Modules list not found (file \"%s\")",filename);
+    AMXXLOG_Log( "[AMXX] Modules list not found (file \"%s\")",filename);
     return;
   }
 
@@ -503,7 +503,7 @@ void attachMetaModModules( const char* filename )
 
   if ( !fp )
   {
-    UTIL_Log( "[AMXX] Modules list not found (file \"%s\")",filename);
+    AMXXLOG_Log( "[AMXX] Modules list not found (file \"%s\")",filename);
     return;
   }
 
@@ -550,3 +550,37 @@ void attachMetaModModules( const char* filename )
   }
 }
 
+
+
+// Get the number of running modules
+int countModules(CountModulesMode mode)
+{
+	CList<CModule>::iterator iter;
+	int num;
+	switch (mode)
+	{
+	case CountModules_All:
+		return g_modules.size();
+	case CountModules_Running:
+		iter = g_modules.begin();
+		num = 0;
+		while (iter)
+		{
+			if ((*iter).getStatusValue() == MODULE_LOADED)
+				++num;
+			++iter;
+		}
+		return num;
+	case CountModules_Stopped:
+		iter = g_modules.begin();
+		num = 0;
+		while (iter)
+		{
+			if ((*iter).getStatusValue() != MODULE_LOADED)
+				++num;
+			++iter;
+		}
+		return num;
+	}
+	return 0;
+}

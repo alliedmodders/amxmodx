@@ -123,12 +123,6 @@ EventsMngr::EventsMngr()
 EventsMngr::~EventsMngr()
 {
 	clearEvents();
-	// delete parsevault
-	if (m_ParseVault)
-	{
-		delete [] m_ParseVault;
-		m_ParseVault = NULL;
-	}
 }
 
 
@@ -255,8 +249,8 @@ void EventsMngr::parserInit(int msg_type, float* timer, CPlayer* pPlayer, int in
 	{
 		m_ParsePos = 0;
 		NextParam();
-		m_ParseVault[m_ParsePos].type = MSG_INTEGER;
-		m_ParseVault[m_ParsePos].iValue = index;
+		m_ParseVault[0].type = MSG_INTEGER;
+		m_ParseVault[0].iValue = index;
 	}
 	m_ParseFun = &m_Events[msg_type];
 }
@@ -283,12 +277,13 @@ void EventsMngr::parseValue(int iValue)
 			continue;		// already skipped; don't bother with parsing
 
 		// loop through conditions
-		bool execute;
+		bool execute = false;
+		bool anyConditions = false;
 		for (ClEvent::cond_t *condIter = (*iter).m_Conditions; condIter; condIter = condIter->next)
 		{
 			if (condIter->paramId == m_ParsePos)
 			{
-				execute = false;
+				anyConditions = true;
 				switch(condIter->type)
 				{
 				case '=': if (condIter->iValue == iValue) execute=true; break;
@@ -298,11 +293,11 @@ void EventsMngr::parseValue(int iValue)
 				case '>': if (iValue > condIter->iValue) execute=true; break;
 				}
 				if (execute)
-					continue;
-				(*iter).m_Done = true;		// don't execute
-				break;
+					break;
 			}
 		}
+		if (anyConditions && !execute)
+			(*iter).m_Done = true;		// don't execute
 	}
 }
 
@@ -328,11 +323,13 @@ void EventsMngr::parseValue(float fValue)
 			continue;		// already skipped; don't bother with parsing
 
 		// loop through conditions
+		bool execute = false;
+		bool anyConditions = false;
 		for (ClEvent::cond_t *condIter = (*iter).m_Conditions; condIter; condIter = condIter->next)
 		{
 			if (condIter->paramId == m_ParsePos)
 			{
-				bool execute = false;
+				anyConditions = true;
 				switch(condIter->type)
 				{
 				case '=': if (condIter->fValue == fValue) execute=true; break;
@@ -341,11 +338,11 @@ void EventsMngr::parseValue(float fValue)
 				case '>': if (fValue > condIter->fValue) execute=true; break;
 				}
 				if (execute)
-					continue;
-				(*iter).m_Done = true;		// don't execute
-				break;
+					break;
 			}
 		}
+		if (anyConditions && !execute)
+			(*iter).m_Done = true;		// don't execute
 	}
 }
 
@@ -370,11 +367,13 @@ void EventsMngr::parseValue(const char *sz)
 			continue;		// already skipped; don't bother with parsing
 
 		// loop through conditions
+		bool execute = false;
+		bool anyConditions = false;
 		for (ClEvent::cond_t *condIter = (*iter).m_Conditions; condIter; condIter = condIter->next)
 		{
 			if (condIter->paramId == m_ParsePos)
 			{
-				bool execute = false;
+				anyConditions = true;
 				switch(condIter->type)
 				{
 				case '=': if (!strcmp(sz, condIter->sValue.str())) execute=true; break;
@@ -382,11 +381,11 @@ void EventsMngr::parseValue(const char *sz)
 				case '&': if (strstr(sz, condIter->sValue.str())) execute=true; break;
 				}
 				if (execute)
-					continue;
-				(*iter).m_Done = true;		// don't execute
-				break;
+					break;
 			}
 		}
+		if (anyConditions && !execute)
+			(*iter).m_Done = true;		// don't execute
 	}
 }
 
@@ -413,7 +412,7 @@ void EventsMngr::executeEvents()
 
 			(*iter).m_Stamp = (float)*m_Timer;
 
-			if ((err = amx_Exec((*iter).m_Plugin->getAMX(), NULL, (*iter).m_Func, 1, m_ParseVaultSize ? m_ParseVault[0].iValue : 0)) != AMX_ERR_NONE)
+			if ((err = amx_Exec((*iter).m_Plugin->getAMX(), NULL, (*iter).m_Func, 1, m_ParseVault ? m_ParseVault[0].iValue : 0)) != AMX_ERR_NONE)
 			{
 				UTIL_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")", err, 
 					(*iter).m_Plugin->getAMX()->curline, (*iter).m_Plugin->getName());
@@ -493,6 +492,13 @@ void EventsMngr::clearEvents(void)
 	for (int i = 0; i < MAX_AMX_REG_MSG; ++i)
 	{
 		m_Events[i].clear();
+	}
+	// delete parsevault
+	if (m_ParseVault)
+	{
+		delete [] m_ParseVault;
+		m_ParseVault = NULL;
+		m_ParseVaultSize = 0;
 	}
 }
 

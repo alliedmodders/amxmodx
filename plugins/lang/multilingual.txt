@@ -52,8 +52,8 @@ PERSO_LANG = Langue personnelle
 LANG_MENU = Menu Langue
 SERVER_LANG = Langue du serveur
 SAVE_LANG = Sauver la langue
-SET_LANG_SERVER = La langue du serveur a ete configuree en "%s"
-SET_LANG_USER = Ta langue a ete configuree en "%s"
+SET_LANG_SERVER = Langue du serveur : "%s"
+SET_LANG_USER = Langue personnelle : "%s"
 TYPE_LANGMENU = Tape 'amx_langmenu' dans la console pour afficher un menu ou tu pourras choisir ta langue
 
 [nl]

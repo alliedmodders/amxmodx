@@ -14,7 +14,7 @@ DROPPED_RES = Dieser Slot ist reserviert
 DROPPED_RES = Desconectado por reserva de slot
 
 [fr]
-DROPPED_RES = Desole, un admin a pris son emplacement reserve (tu a ete jete(e) du serveur)
+DROPPED_RES = Desole, un admin vient de prendre sa place reservee, tu as ete ejecte du serveur.
 
 [nl]
 DROPPED_RES = Verwijderd vanwege plaats reservering

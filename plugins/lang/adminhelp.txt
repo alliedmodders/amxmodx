@@ -44,7 +44,7 @@ TIME_INFO_1 = Tiempo Restante: %d:%02d min. Siguiente Mapa: %s
 TIME_INFO_2 = Sin limite de tiempo. Siguiente Mapa: %s
 
 [fr]
-HELP_COMS = AMX Mod X Aide: Commandes
+HELP_COMS = Aide AMX Mod X: Commandes
 HELP_ENTRIES = Entrees %d - %d sur %d
 HELP_USE_MORE = Utilise 'amx_help %d' pour la suite
 HELP_USE_BEGIN = Utilise 'amx_help 1'  pour le debut

@@ -400,26 +400,6 @@ public cmdPlugins(id,level,cid) {
   format(lFile,31,"%L",id,"FILE")
   format(lStatus,31,"%L",id,"STATUS")
 
-/*
-  new motd_body[MOTD_LEN],state[4]
-  new num = get_pluginsnum()
-  new running = 0
-  new pos = copy(motd_body,MOTD_LEN,"<html><head><body><style type=^"text/css^">")
-  pos += copy(motd_body[pos],MOTD_LEN-pos,"body{font-family:Arial,sans-serif;font-size:12px;color:#FFCC99;background-color:#000000;margin-left:8px;margin-top:3px}.header{background-color:#9C0000;}.one{background-color:#310000;}.two{background-color:#630000;}")
-  pos += copy(motd_body[pos],MOTD_LEN-pos,"</style></head><body><table><tr class=^"header^"><td>Name</td><td>Version</td><td>Author</td><td>Filename</td><td>status</td></tr>")
-
-  for (new i=0;i<num;i++)
-  {
-    if (equal(state,"one")) copy(state,3,"two")
-    else copy(state,3,"one")
-    get_plugin(i,filename,31,name,31,version,31,author,31,status,31)
-    pos += format(motd_body[pos],MOTD_LEN-pos,"<tr class=^"%s^"><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",state,name,version,author,filename,status)
-    if (equal(status,"running"))
-      running++
-  }
-  format(motd_body[pos],MOTD_LEN-pos,"</table>%d plugins, %d running</body></html>",num,running)
-  show_motd(id,motd_body,"Currently loaded plugins:")
-*/
   new num = get_pluginsnum()
   new running = 0
   console_print(id,"%L:",id,"LOADED_PLUGINS")
@@ -447,23 +427,6 @@ public cmdModules(id,level,cid) {
   format(lVersion,31,"%L",id,"VERSION")
   format(lAuthor,31,"%L",id,"AUTHOR")
 
-/*
-  new motd_body[MOTD_LEN],state[4]
-  new num = get_modulesnum()
-  new pos = copy(motd_body,MOTD_LEN,"<html><head><body><style type=^"text/css^">")
-  pos += copy(motd_body[pos],MOTD_LEN-pos,"body{font-family:Arial,sans-serif;font-size:12px;color:#FFCC99;background-color:#000000;margin-left:8px;margin-top:3px}.header{background-color:#9C0000;}.one{background-color:#310000;}.two{background-color:#630000;}")
-  pos += copy(motd_body[pos],MOTD_LEN-pos,"</style></head><body><table><tr class=^"header^"><td>Name</td><td>Version</td><td>Author</td></tr>")
-
-  for (new i=0;i<num;i++)
-  {
-    if (equal(state,"one")) copy(state,3,"two")
-    else copy(state,3,"one")
-    get_module(i,name,31,author,31,version,31)
-    pos += format(motd_body[pos],MOTD_LEN-pos,"<tr class=^"%s^"><td>%s</td><td>%s</td><td>%s</td></tr>",state,name,version,author)
-  }
-  format(motd_body[pos],MOTD_LEN-pos,"</table>%d modules</body></html>",num)
-  show_motd(id,motd_body,"Currently loaded modules:")
-*/
   new num = get_modulesnum()
   console_print(id,"%L:",id,"LOADED_MODULES")
   console_print(id,"%-23.22s %-8.7s %-20.19s",lName,lVersion,lAuthor)

@@ -46,6 +46,8 @@ CForward::CForward(const char *name, ForwardExecType et, int numParams, const Fo
 		if (amx_FindPublic((*iter).getAMX(), name, &func) == AMX_ERR_NONE)
 		{
 			tmp = new AMXForward;
+			if (!tmp)
+				return;			// :TODO: Better error report!!!
 			tmp->pPlugin = &(*iter);
 			tmp->func = func;
 			m_Funcs.put(tmp);
@@ -267,7 +269,10 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 int CForwardMngr::registerForward(const char *funcName, ForwardExecType et, int numParams, const ForwardParam * paramTypes)
 {
 	int retVal = m_Forwards.size() << 1;
-	m_Forwards.push_back(new CForward(funcName, et, numParams, paramTypes));
+	CForward *tmp = new CForward(funcName, et, numParams, paramTypes);
+	if (!tmp)
+		return -1;				// should be invalid
+	m_Forwards.push_back(tmp);
 	return retVal;
 }
 

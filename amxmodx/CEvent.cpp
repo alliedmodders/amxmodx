@@ -86,6 +86,10 @@ void EventsMngr::NextParam()
 	{
 		// copy to tmp
 		tmp = new MsgDataEntry[m_ParseVaultSize];
+		if (!tmp)
+		{
+			return;		// :TODO: Error report !!
+		}
 		memcpy(tmp, m_ParseVault, m_ParseVaultSize * sizeof(MsgDataEntry));
 		tmpSize = m_ParseVaultSize;
 		delete [] m_ParseVault;

@@ -170,6 +170,7 @@ void PlayerPreThink(edict_t *pEntity)
 	MF_ExecuteForward(PlayerPreThinkForward, ENTINDEX(pEntity));
 	RETURN_META(MRES_IGNORED);
 }
+
 void PlayerPostThink_Post(edict_t *pEntity)
 {
 	if(plinfo[ENTINDEX(pEntity)].pViewEnt) {

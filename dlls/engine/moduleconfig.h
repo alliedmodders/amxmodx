@@ -54,12 +54,12 @@
 // (wd) are Will Day's notes
 // - GetEntityAPI2 functions
 // #define FN_GameDLLInit				GameDLLInit					/* pfnGameInit() */
-#define FN_DispatchSpawn				Spawn				/* pfnSpawn() */
-#define FN_DispatchThink				Think				/* pfnThink() */
+//#define FN_DispatchSpawn				Spawn				/* pfnSpawn() */
+//#define FN_DispatchThink				Think				/* pfnThink() */
 // #define FN_DispatchUse					Use					/* pfnUse() */
-#define FN_DispatchTouch				pfnTouch				/* pfnTouch() */
+//#define FN_DispatchTouch				pfnTouch				/* pfnTouch() */
 // #define FN_DispatchBlocked			DispatchBlocked				/* pfnBlocked() */
-#define FN_DispatchKeyValue			KeyValue			/* pfnKeyValue() */
+//#define FN_DispatchKeyValue			KeyValue			/* pfnKeyValue() */
 // #define FN_DispatchSave				DispatchSave				/* pfnSave() */
 // #define FN_DispatchRestore			DispatchRestore				/* pfnRestore() */
 // #define FN_DispatchObjectCollsionBox	DispatchObjectCollsionBox	/* pfnSetAbsBox() */
@@ -70,15 +70,15 @@
 // #define FN_ResetGlobalState			ResetGlobalState			/* pfnResetGlobalState() */
 #define FN_ClientConnect				ClientConnect				/* pfnClientConnect()			(wd) Client has connected */
 #define FN_ClientDisconnect			ClientDisconnect			/* pfnClientDisconnect()		(wd) Player has left the game */
-#define FN_ClientKill				ClientKill					/* pfnClientKill()				(wd) Player has typed "kill" */
+//#define FN_ClientKill				ClientKill					/* pfnClientKill()				(wd) Player has typed "kill" */
 // #define FN_ClientPutInServer			ClientPutInServer			/* pfnClientPutInServer()		(wd) Client is entering the game */
 // #define FN_ClientCommand				ClientCommand				/* pfnClientCommand()			(wd) Player has sent a command (typed or from a bind) */
 // #define FN_ClientUserInfoChanged		ClientUserInfoChanged		/* pfnClientUserInfoChanged()	(wd) Client has updated their setinfo structure */
 #define FN_ServerActivate			ServerActivate				/* pfnServerActivate()			(wd) Server is starting a new map */
 #define FN_ServerDeactivate			ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
-#define FN_PlayerPreThink			PlayerPreThink				/* pfnPlayerPreThink() */
+//#define FN_PlayerPreThink			PlayerPreThink				/* pfnPlayerPreThink() */
 // #define FN_PlayerPostThink			PlayerPostThink				/* pfnPlayerPostThink() */
-#define FN_StartFrame				StartFrame					/* pfnStartFrame() */
+//#define FN_StartFrame				StartFrame					/* pfnStartFrame() */
 // #define FN_ParmsNewLevel				ParmsNewLevel				/* pfnParmsNewLevel() */
 // #define FN_ParmsChangeLevel			ParmsChangeLevel			/* pfnParmsChangeLevel() */
 // #define FN_GetGameDescription		GetGameDescription			/* pfnGetGameDescription()		Returns string describing current .dll.  E.g. "TeamFotrress 2" "Half-Life" */
@@ -96,7 +96,7 @@
 // #define FN_CreateBaseline			CreateBaseline				/* pfnCreateBaseline()			Tweak entity baseline for network encoding allows setup of player baselines too.; (wd) SDK2 */
 // #define FN_RegisterEncoders			RegisterEncoders			/* pfnRegisterEncoders()		Callbacks for network encoding; (wd) SDK2 */
 // #define FN_GetWeaponData				GetWeaponData				/* pfnGetWeaponData()			(wd) SDK2 */
-#define FN_CmdStart					CmdStart					/* pfnCmdStart()				(wd) SDK2 */
+//#define FN_CmdStart					CmdStart					/* pfnCmdStart()				(wd) SDK2 */
 // #define FN_CmdEnd					CmdEnd						/* pfnCmdEnd()					(wd) SDK2 */
 // #define FN_ConnectionlessPacket		ConnectionlessPacket		/* pfnConnectionlessPacket()	(wd) SDK2 */
 // #define FN_GetHullBounds				GetHullBounds				/* pfnGetHullBounds()			(wd) SDK2 */
@@ -129,7 +129,7 @@
 // #define FN_ServerActivate_Post				ServerActivate_Post
 // #define FN_ServerDeactivate_Post				ServerDeactivate_Post
 // #define FN_PlayerPreThink_Post				PlayerPreThink_Post
-#define FN_PlayerPostThink_Post				PlayerPostThink_Post
+//#define FN_PlayerPostThink_Post				PlayerPostThink_Post
 // #define FN_StartFrame_Post					StartFrame_Post
 // #define FN_ParmsNewLevel_Post				ParmsNewLevel_Post
 // #define FN_ParmsChangeLevel_Post				ParmsChangeLevel_Post
@@ -280,7 +280,7 @@
 // #define FN_SetPhysicsKeyValue				SetPhysicsKeyValue
 // #define FN_GetPhysicsInfoString				GetPhysicsInfoString
 // #define FN_PrecacheEvent						PrecacheEvent
-#define FN_PlaybackEvent						PlaybackEvent
+//#define FN_PlaybackEvent						PlaybackEvent
 // #define FN_SetFatPVS							SetFatPVS
 // #define FN_SetFatPAS							SetFatPAS
 // #define FN_CheckVisibility					CheckVisibility

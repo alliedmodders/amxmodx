@@ -175,6 +175,18 @@ inline edict_t* INDEXENT2( int iEdictNum )
 
 void EngineError(AMX *amx, char *fmt, ...);
 
+int Spawn(edict_t *pEntity);
+void ChangeLevel(char* s1, char* s2);
+void PlaybackEvent(int flags, const edict_t *pInvoker, unsigned short eventindex, float delay, float *origin, float *angles, float fparam1, float fparam2, int iparam1, int iparam2, int bparam1, int bparam2);
+void KeyValue(edict_t *pEntity, KeyValueData *pkvd);
+void StartFrame();
+void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int random_seed);
+void ClientKill(edict_t *pEntity);
+void PlayerPreThink(edict_t *pEntity);
+void PlayerPostThink_Post(edict_t *pEntity);
+void pfnTouch(edict_t *pToucher, edict_t *pTouched);
+void Think(edict_t *pent);
+
 #define CHECK_ENTITY(x) if (x != 0 && (FNullEnt(INDEXENT2(x)) || x < 0 || x > gpGlobals->maxEntities)) { EngineError(amx, "Invalid entity %d", x); return 0; }
 
 extern bool g_inKeyValue;

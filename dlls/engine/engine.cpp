@@ -369,7 +369,7 @@ static cell AMX_NATIVE_CALL get_info_keybuffer(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
 	
-	if (!is_ent_valid(iEnt)) {
+	if (FNullEnt(iEnt) || iEnt < 1 || iEnt > gpGlobals->maxClients) {
 		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}

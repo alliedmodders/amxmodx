@@ -131,7 +131,10 @@ void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int 
 		{
 			retVal = MF_ExecuteForward(Impulses[i]->Forward, ENTINDEX(pEntity));
 			if (retVal)
+			{
+				g_cmd->impulse=0;
 				RETURN_META(MRES_SUPERCEDE);
+			}
 			else
 				RETURN_META(MRES_IGNORED);
 		}

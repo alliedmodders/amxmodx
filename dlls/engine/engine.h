@@ -6,6 +6,7 @@
 #include <meta_api.h>
 #include <sdk_util.h>
 #include "CVector.h"
+#include "CString.h"
 #ifndef CBASEPLAYER_H
 #define CBASEPLAYER_H
 #include <cbase.h>

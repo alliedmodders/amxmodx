@@ -20,11 +20,7 @@ void argMsg::Reset()
 {
 	iData = 0;
 	fData = 0.0;
-	if (cData)
-	{
-		delete [] cData;
-		cData = NULL;
-	}
+	cData.clear();
 	type = 0;
 }
 
@@ -51,7 +47,7 @@ void argMsg::Send()
 		WRITE_COORD(fData);
 		break;
 	case arg_string:
-		WRITE_STRING(cData);
+		WRITE_STRING(cData.c_str());
 		break;
 	case arg_entity:
 		WRITE_ENTITY(iData);
@@ -238,15 +234,11 @@ void WriteString(const char *sz)
 	} else if (inhook) {
 		if (++msgCount > Msg.size()) {
 			argMsg *p = new argMsg();
-			p->cData = new char[strlen(sz)+1];
-			strcpy(p->cData, sz);
-			p->cData[strlen(sz)] = 0;
+			p->cData.assign(sz);
 			p->type = arg_string;
 			Msg.push_back(p);
 		} else {
-			Msg[msgCount-1]->cData = new char[strlen(sz)+1];
-			strcpy(Msg[msgCount-1]->cData, sz);
-			Msg[msgCount-1]->cData[strlen(sz)] = 0;
+			Msg[msgCount-1]->cData.assign(sz);
 			Msg[msgCount-1]->type = arg_string;
 		}
 		RETURN_META(MRES_SUPERCEDE);
@@ -423,7 +415,7 @@ static cell AMX_NATIVE_CALL get_msg_arg_string(AMX *amx, cell *params)
 		return 0;
 	}
 
-	const char *szVal = Msg[argn]->cData;
+	const char *szVal = Msg[argn]->cData.c_str();
 
 	return MF_SetAmxString(amx, params[2], szVal?szVal:"", params[3]);
 }
@@ -440,11 +432,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_string(AMX *amx, cell *params)
 
 	char *szVal = MF_GetAmxString(amx, params[2], 0, &iLen);
 
-	if (Msg[argn]->cData)
-		delete [] Msg[argn]->cData;
-	Msg[argn]->cData = new char[strlen(szVal)+1];
-	strcpy(Msg[argn]->cData, szVal);
-	Msg[argn]->cData[strlen(szVal)] = 0;
+	Msg[argn]->cData.assign(szVal);
 
 	return 1;
 }

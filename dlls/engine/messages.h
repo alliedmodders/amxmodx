@@ -36,7 +36,7 @@ public:
 
 	int type;
 	REAL fData;
-	char *cData;
+	CString cData;
 	int iData;
 };
 

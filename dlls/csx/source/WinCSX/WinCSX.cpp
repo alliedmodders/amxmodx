@@ -219,7 +219,9 @@ void ListboxItemSelected(HWND hDlg) {
 	// Retrieve complete stats record of this position. Position in listbox should be same as rank in our records!
 	RankSystem::RankStats* stats = g_rank.findEntryInRankByPos((int)nItem + 1);
 	if (stats == NULL) {
-		MessageBox(hDlg, "Error: Couldn't find the record by position!", "Oh fiddlesticks!", MB_OK);
+		char msg[] = "Error: Couldn't find the record by position! (nItem = %d)";
+		sprintf(msg, msg, nItem);
+		MessageBox(hDlg, msg, "Oh fiddlesticks!", MB_OK);
 		ClearStatsfields(hDlg);
 		return;
 	}
@@ -345,6 +347,50 @@ void ClearStats(HWND hDlg) {
 	ListboxItemSelected(hDlg);
 }
 
+void DeleteRecord(HWND hDlg) {
+	if (MessageBox(hDlg, "Are you sure?", "Omg!", MB_OKCANCEL | MB_DEFBUTTON2 | MB_ICONWARNING) != IDOK)
+		return;
+
+	BOOL success;
+	int position = GetDlgItemInt(hDlg, IDC_EDIT_POSITION, &success, false);
+	if (!success)
+		goto BadEnd;
+	
+	char authid[32]; // "primary key"
+	GetDlgItemText(hDlg, IDC_EDIT_AUTHID, authid, sizeof(authid));
+	RankSystem::RankStats* entry = g_rank.findEntryInRankByUnique(authid);
+	if (!entry) {
+		char buffer[256];
+		sprintf(buffer, "Authid %s not found!", authid);
+		MessageBox(hDlg, buffer, "Update failed", MB_OK);
+		return;
+	}
+
+	// Mark this record to delete it.
+	entry->MarkToDelete();
+
+	// Save ranks from memory to disk.
+	g_rank.saveRank(STATS_FILENAME); // Save changes to file
+
+	// Clear memory.
+	g_rank.clear();
+
+	// Reload from disk into memory.
+	LoadRankFromFile(hDlg);
+
+	// Update list box.
+	UpdateListBox(hDlg);
+
+	MessageBox(hDlg, "Deleted record", "Delete succeeded", MB_OK);
+
+	return;
+
+BadEnd:
+	MessageBox(hDlg, "Delete failed", "Oh fiddlesticks!", MB_OK);
+
+	return;
+}
+
 // Message handler for WinCSXBox.
 LRESULT CALLBACK WinCSXBox(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -381,6 +427,10 @@ LRESULT CALLBACK WinCSXBox(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 			case IDC_BUTTON_CLEARSTATS:
 				ClearStats(hDlg);
 				break;
+			case IDC_BUTTON_DELETE:
+				DeleteRecord(hDlg);
+				//DialogBox(hInst, (LPCTSTR)IDD_DELETEBOX, hDlg, (DLGPROC)DeleteBox);
+				break;
 		}
 		break;
 	}
@@ -407,5 +457,4 @@ LRESULT CALLBACK AboutBox(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 	return FALSE;
 }
-
 

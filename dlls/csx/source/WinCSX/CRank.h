@@ -70,6 +70,9 @@ public:
 		inline int updatePosition( Stats* points ) {
 			return parent->updatePos( this , points );
 		}
+		inline void MarkToDelete() {
+			this->score = (1<<31);
+		}
 	};
 
 private:

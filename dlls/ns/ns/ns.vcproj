@@ -214,10 +214,13 @@
 			Name="Miscellaneous"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
 			<File
-				RelativePath=".\include\ns.inc">
+				RelativePath="..\..\plugins\include\ns.inc">
 			</File>
 			<File
-				RelativePath=".\include\ns_const.inc">
+				RelativePath="..\..\plugins\include\ns2amx.inc">
+			</File>
+			<File
+				RelativePath="..\..\plugins\include\ns_const.inc">
 			</File>
 		</Filter>
 	</Files>

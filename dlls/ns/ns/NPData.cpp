@@ -3,33 +3,33 @@
 int get_private(edict_t *pEntity, int woffset,int loffset)
 {
 #ifdef __linux__
-	return *((int *)pEntity->pvPrivateData + loffset);
+	return *(int*)((char*)(pEntity->pvPrivateData)+loffset);
 #else
-	return *((int *)pEntity->pvPrivateData + woffset);
+	return *(int*)((char*)(pEntity->pvPrivateData)+woffset);
 #endif
 }
 REAL get_private_f(edict_t *pEntity, int woffset, int loffset)
 {
 #ifdef __linux__
-	return *((REAL *)pEntity->pvPrivateData + loffset);
+	return *(REAL*)((char*)(pEntity->pvPrivateData)+loffset);
 #else
-	return *((REAL *)pEntity->pvPrivateData + woffset);
+	return *(REAL*)((char*)(pEntity->pvPrivateData)+woffset);
 #endif
 }
 void set_private(edict_t *pEntity, int woffset, int loffset, int value)
 {
 #ifdef __linux__
-	*((int *)pEntity->pvPrivateData + loffset) = value;
+	*(int*)((char*)(pEntity->pvPrivateData)+loffset) = value;
 #else
-	*((int *)pEntity->pvPrivateData + woffset) = value;
+	*(int*)((char*)(pEntity->pvPrivateData)+woffset) = value;
 #endif
 }
 void set_private(edict_t *pEntity, int woffset, int loffset, REAL value)
 {
 #ifdef __linux__
-	*((REAL *)pEntity->pvPrivateData + loffset) = value;
+	*(REAL*)((char*)(pEntity->pvPrivateData)+loffset) = value;
 #else
-	*((REAL *)pEntity->pvPrivateData + woffset) = value;
+	*(REAL*)((char*)(pEntity->pvPrivateData)+woffset) = value;
 #endif
 }
 
@@ -317,6 +317,35 @@ static cell AMX_NATIVE_CALL ns_set_icon(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL ns_get_struct_owner(AMX *amx, cell *params)
+{
+	int id = params[1];
+	if (id <= gpGlobals->maxClients || id <= gpGlobals->maxEntities)
+		return 0;
+	edict_t *pEntity = INDEXENT2(id);
+	if (!pEntity)
+		return 0;
+	if (pEntity->pvPrivateData == NULL)
+		return 0;
+	return get_private(pEntity,OFFSET_WIN_STRUCTOWNER,OFFSET_LIN_STRUCTOWNER);
+}
+static cell AMX_NATIVE_CALL ns_set_struct_owner(AMX *amx, cell *params)
+{
+	int id = params[1];
+	int ido = params[2];
+	if (id <= gpGlobals->maxClients || id <= gpGlobals->maxEntities)
+		return 0;
+	if (ido > gpGlobals->maxClients || ido < -1)
+		return 0;
+	edict_t *pEntity = INDEXENT2(id);
+	if (!pEntity)
+		return 0;
+	if (pEntity->pvPrivateData == NULL)
+		return 0;
+	set_private(pEntity,OFFSET_WIN_STRUCTOWNER,OFFSET_LIN_STRUCTOWNER,ido);
+	return 1;
+}
+
 AMX_NATIVE_INFO ns_pdata_natives[] = {
 	   /*****************/
 	{ "ns_get_res",				ns_get_res },
@@ -351,6 +380,9 @@ AMX_NATIVE_INFO ns_pdata_natives[] = {
 
 	{ "ns_get_hive_trait",		ns_get_hive_trait },
 	{ "ns_set_hive_trait",		ns_set_hive_trait },
+
+	{ "ns_get_struct_owner",	ns_get_struct_owner },
+	{ "ns_set_struct_owner",	ns_set_struct_owner },
 
 	{ NULL, NULL }
 };

@@ -140,7 +140,7 @@ native call_think(entity)
 
 /* Mirrors CBaseEntity->TakeDamage() - Forces an entity to take damage.
    Potential for crash.  If you have problems with this, I suggest using fakedamage(). */
-native takedamage(idVictim,idInflictor,idAttacker,Float:takedmgdamage,damagetype);
+native take_damage(idVictim,idInflictor,idAttacker,Float:takedmgdamage,damagetype);
 
 /* Is entity valid? */
 native is_valid_ent(iIndex);
@@ -173,13 +173,13 @@ native copy_keyvalue(szClassName[],sizea,szKeyName[],sizeb,szValue[],sizec);
 native DispatchSpawn(iIndex);
 
 /* Hurts/Kills players in a sphere, like an explosion, Multiplier determines damage. */
-native RadiusDamage(Float:fExplodeAt[3], iDamageMultiplier, iRadiusMultiplier);
+native radius_damage(Float:fExplodeAt[3], iDamageMultiplier, iRadiusMultiplier);
 
 /* Gives you a velocity in the direction a player is looking, iVelocity is the multiplier. */
-native VelocityByAim(iIndex, iVelocity, Float:vRetValue[3]);
+native velocity_by_aim(iIndex, iVelocity, Float:vRetValue[3]);
 
 /* Will return the contents of a point (inside map? in sky? outside map? etc.). */
-native PointContents(Float:fCheckAt[3]);
+native point_contents(Float:fCheckAt[3]);
 
 /* Trace a line from Start(X, Y, Z) to End(X, Y, Z), will return the point hit in vReturn[3]
  * and an entity index if an entity is hit. */
@@ -273,4 +273,21 @@ forward pfn_use(user, used);
  */
 native find_sphere_class(aroundent, _lookforclassname[], Float:radius, entlist[], maxents, Float:origin[3] = {0.0, 0.0, 0.0});
 
+/* Backwards compatible */
+/* Hurts/Kills players in a sphere, like an explosion, Multiplier determines damage. */
+stock RadiusDamage(Float:fExplodeAt[3], iDamageMultiplier, iRadiusMultiplier) {
+  return radius_damage(fExplodeAt[3], iDamageMultiplier, iRadiusMultiplier)
+}
+/* Gives you a velocity in the direction a player is looking, iVelocity is the multiplier. */
+stock VelocityByAim(iIndex,iVelocity, Float:vRetValue[3]) {
+  return velocity_by_aim(iIndex,iVelocity,vRetValue)
+}
+/* Will return the contents of a point (inside map? in sky? outside map? etc.). */
+stock PointContents(Float:fCheckAt[3]) {
+  return point_contents(fCheckAt[3]);
+}
+
+stock set_size(index, Float:mins[3], Float:maxs[3]) {
+  return entity_set_size(index,mins,maxs)
+}
 #include <engine_stocks>

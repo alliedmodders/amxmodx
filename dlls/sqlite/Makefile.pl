@@ -12,13 +12,13 @@
 # proc=ix86 - assumed not amd64
 # clean - clean the specifications above
 
-$PROJECT = "pgsql_amxx";
-$sdk = "../hlsdk/SourceCode";
-$mm = "../metamod/metamod";
-$pg = "extra/src";
+$PROJECT = "sqlite_amxx";
+$sdk = "../../../hlmultisource";
+$mm = "../../../metamodsrc/metamod";
+$sqlite = "sqlite-source-3_1_2";
 $gccf = "gcc";
 
-@CPP_SOURCE_FILES = ("pgsql.cpp", "pgsql_amx.cpp", "amxxmodule.cpp");
+@CPP_SOURCE_FILES = ("sqlite.cpp", "sqlite_amx.cpp", "amxxmodule.cpp");
 
 @C_SOURCE_FILES = ();
 my %OPTIONS, %OPT;
@@ -26,7 +26,7 @@ my %OPTIONS, %OPT;
 $OPT{"debug"} = "-g -ggdb";
 $OPT{"opt"} = "-O2 -ffast-math -funroll-loops -fomit-frame-pointer -s -DNDEBUG -Wall -Wno-unknown-pragmas -DOPT_TYPE=\"optimized\" -fno-exceptions -fno-rtti";
 
-$OPTIONS{"include"} = "-I$sdk -I. -I$mm -I$sdk/engine -I$sdk/common -I$sdk/pm_shared -I$sdk/dlls -I$pg/include -I$pg/interfaces/libpq -L./lib";
+$OPTIONS{"include"} = "-I$sdk -I. -I$mm -I$sdk/engine -I$sdk/common -I$sdk/pm_shared -I$sdk/dlls -I$sqlite";
 
 while ($cmd = shift)
 {
@@ -174,6 +174,6 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	}
 }
 
-$gcc = "$gccf $cflags $inc -shared -ldl -lm @LINK -lpq -lz -lcrypt -o $outdir/$bin";
+$gcc = "$gccf $cflags $inc -shared -ldl -lm @LINK -lz -lcrypt -o $outdir/$bin";
 print "$gcc\n";
 `$gcc`;

@@ -1,12 +1,7 @@
 MODNAME = sqlite_amxx
 SRCFILES = sqlite_amx.cpp sqlite.cpp amxxmodule.cpp
 
-EXTRA_LIBS_LINUX = lib/libpq.a -lpq -lz -lcrypt
-EXTRA_LIBS_WIN32 = libpq.a -lws2_32 -lwsock32
-EXTRA_LIBDIRS_LINUX = -Llib
-EXTRA_LIBDIRS_WIN32 = -L
-
-EXTRA_INCLUDEDIRS = -Iextra/include -I../../amxmodx -Isqlite-source-3_1_2
+EXTRA_INCLUDEDIRS = -I../../amxmodx -Isqlite-source-3_1_2
 
 EXTRA_FLAGS = -Dstrcmpi=strcasecmp
 

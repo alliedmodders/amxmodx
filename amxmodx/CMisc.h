@@ -33,7 +33,6 @@
 #define CMISC_H
 
 #include "CList.h"
-#include "string.h"
 
 // *****************************************************
 // class CCVar

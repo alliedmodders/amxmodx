@@ -23,8 +23,8 @@ new Float:g_Pos[4][] = {{0.0,0.0},{0.05,0.55},{-1.0,0.2},{-1.0,0.7}}
 
 public plugin_init(){
   register_plugin("Admin Chat","0.1","default")
-  register_clcmd("say_team","cmdSayAdmin",0,"@<text> - displays message to admins")
   register_clcmd("say","cmdSayChat",ADMIN_CHAT,"@[@|@|@][w|r|g|b|y|m|c]<text> - displays hud message")
+  register_clcmd("say_team","cmdSayAdmin",0,"@<text> - displays message to admins")
   register_concmd("amx_say","cmdSay",ADMIN_CHAT,"<message> - sends message to all players")
   register_concmd("amx_chat","cmdChat",ADMIN_CHAT,"<message> - sends message to admins")
   register_concmd("amx_psay","cmdPsay",ADMIN_CHAT,"<name or #userid> <message> - sends private message")
@@ -36,12 +36,12 @@ public plugin_init(){
 public cmdSayChat(id) { 
   if (!(get_user_flags(id)&ADMIN_CHAT)) return PLUGIN_CONTINUE 
   new said[6], i=0  
-  read_argv(1,said,5) 
-  while (said[i]=='@') 
+  read_argv(1,said,5)
+  while (said[i]=='@')
     i++ 
   if ( !i || i > 3 ) return PLUGIN_CONTINUE 
   new message[192], a = 0
-  read_argv(1,message,191)
+  read_args(message,191)
   switch(said[i]){ 
     case 'r': a = 1 
     case 'g': a = 2 
@@ -80,7 +80,7 @@ public cmdSayAdmin(id) {
   if (said[0]!='@') return PLUGIN_CONTINUE 
   new message[192], name[32],authid[32], userid
   new players[32], inum  
-  read_argv(1,message,191)
+  read_args(message,191)
   get_user_authid(id,authid,31)
   get_user_name(id,name,31)
   userid = get_user_userid(id)  

@@ -1,0 +1,4 @@
+[english]
+BACK = Back
+EXIT = Exit
+MORE = More

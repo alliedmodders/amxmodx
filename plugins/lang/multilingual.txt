@@ -1,0 +1,8 @@
+[english]
+LANG_NOT_EXISTS = The language does not exist
+PERSO_LANG = Personal Language
+LANG_MENU = Language Menu
+SERVER_LANG = Server Language
+SAVE_LANG = Save Language
+SET_LANG_USER = The server language has been set to "%s"
+SET_LANG_USER = Your language has been set to "%s"

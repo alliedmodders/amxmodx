@@ -43,6 +43,7 @@ ModuleCallReason g_ModuleCallReason;
 
 extern const char* no_function; // stupid work around
 
+
 void report_error( int code, char* fmt, ... )
 {
 	va_list argptr;
@@ -88,7 +89,6 @@ void free_amxmemory(void **ptr)
 
 int load_amxscript(AMX *amx, void **program, const char *filename, char error[64]){
 
-	AMX_HEADER hdr; 
 	int err; 
 	FILE *fp;
 
@@ -115,10 +115,11 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 	amx_Align32((uint32_t *)&hdr.stp);
 	amx_Align32((uint32_t *)&hdr.size);
 
-	if ( (*program  = new unsigned char[ (int)hdr.stp ]) == 0 )
-		//if ( (*program = malloc( (int)hdr.stp )) == 0 )
+	if ( (*program = new unsigned char[ (int)hdr.stp ]) == 0 )
+			//if ( (*program = malloc( (int)hdr.stp )) == 0 )
 	{
 		strcpy(error,"Failed to allocate memory");
+		fclose(fp);
 		return (amx->error = AMX_ERR_MEMORY);
 	}
 
@@ -681,82 +682,118 @@ void MNF_CopyAmxMemory(cell * dest, const cell * src, int len)
 
 int MNF_IsPlayerValid(int id)
 {
-	if (id < 0 || id > gpGlobals->maxClients)
+	if (id < 1 || id > gpGlobals->maxClients)
 		return 0;
 	CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
 	return (pPlayer->initialized) ? 1 : 0;
 }
 const char * MNF_GetPlayerName(int id)
 {
+	if (id < 1 || id > gpGlobals->maxClients)
+		return NULL;
 	return GET_PLAYER_POINTER_I(id)->name.str();
 }
 const char * MNF_GetPlayerIP(int id)
 {
+	if (id < 1 || id > gpGlobals->maxClients)
+		return NULL;
 	return GET_PLAYER_POINTER_I(id)->ip.str();
 }
 int MNF_IsPlayerInGame(int id)
 {
+	if (id < 1 || id > gpGlobals->maxClients)
+		return 0;
 	return GET_PLAYER_POINTER_I(id)->ingame ? 1 : 0;
 }
 int MNF_IsPlayerBot(int id)
 {
+	if (id < 1 || id > gpGlobals->maxClients)
+		return 0;
 	return GET_PLAYER_POINTER_I(id)->IsBot() ? 1 : 0;
 }
 int MNF_IsPlayerAuthorized(int id)
 {
+	if (id < 1 || id > gpGlobals->maxClients)
+		return 0;
 	return GET_PLAYER_POINTER_I(id)->authorized ? 1 : 0;
 }
 float MNF_GetPlayerTime(int id)
 {
+	if (id < 1 || id > gpGlobals->maxClients)
+		return 0.0f;
 	return GET_PLAYER_POINTER_I(id)->time;
 }
 float MNF_GetPlayerPlayTime(int id)
 {
+	if (id < 1 || id > gpGlobals->maxClients)
+		return 0.0f;
 	return GET_PLAYER_POINTER_I(id)->playtime;
 }
 int MNF_GetPlayerCurweapon(int id)
 {
+	if (id < 1 || id > gpGlobals->maxClients)
+		return 0;
 	return GET_PLAYER_POINTER_I(id)->current;
 }
 int MNF_GetPlayerTeamID(int id)
 {
+	if (id < 1 || id > gpGlobals->maxClients)
+		return 0;
 	return GET_PLAYER_POINTER_I(id)->teamId;
 }
 int MNF_GetPlayerDeaths(int id)
 {
+	if (id < 1 || id > gpGlobals->maxClients)
+		return 0;
 	return GET_PLAYER_POINTER_I(id)->deaths;
 }
 int MNF_GetPlayerMenu(int id)
 {
+	if (id < 1 || id > gpGlobals->maxClients)
+		return 0;
 	return GET_PLAYER_POINTER_I(id)->menu;
 }
 int MNF_GetPlayerKeys(int id)
 {
+	if (id < 1 || id > gpGlobals->maxClients)
+		return 0;
 	return GET_PLAYER_POINTER_I(id)->keys;
 }
 int MNF_IsPlayerAlive(int id)
 {
+	if (id < 1 || id > gpGlobals->maxClients)
+		return 0;
 	return GET_PLAYER_POINTER_I(id)->IsAlive() ? 1 : 0;
 }
 float MNF_GetPlayerFrags(int id)
 {
+	if (id < 1 || id > gpGlobals->maxClients)
+		return 0.0f;
 	return GET_PLAYER_POINTER_I(id)->pEdict->v.frags;
 }
 int MNF_IsPlayerConnecting(int id)
 {
+	if (id < 1 || id > gpGlobals->maxClients)
+		return 0;
 	CPlayer * pPlayer = GET_PLAYER_POINTER_I(id);
 	return (!pPlayer->ingame && pPlayer->initialized && (GETPLAYERUSERID(pPlayer->pEdict) > 0)) ? 1 : 0;
 }
 int MNF_IsPlayerHLTV(int id)
 {
+	if (id < 1 || id > gpGlobals->maxClients)
+		return 0;
 	return (GET_PLAYER_POINTER_I(id)->pEdict->v.flags & FL_PROXY) ? 1 : 0;
 }
 float MNF_GetPlayerArmor(int id)
 {
+	if (id < 1 || id > gpGlobals->maxClients)
+		return 0.0f;
 	return (GET_PLAYER_POINTER_I(id)->pEdict->v.armorvalue);
 }
 float MNF_GetPlayerHealth(int id)
 {
+	if (id < 1 || id > gpGlobals->maxClients)
+		return 0;
 	return (GET_PLAYER_POINTER_I(id)->pEdict->v.health);
 }
 

@@ -1919,6 +1919,7 @@ typedef int				(*PFN_GET_AMXSTRINGLEN)			(const cell *ptr);
 typedef char *			(*PFN_FORMAT_AMXSTRING)			(AMX * /*amx*/, cell * /*params*/, int /*startParam*/, int * /*pLen*/);
 typedef void			(*PFN_COPY_AMXMEMORY)			(cell * /*dest*/, const cell * /*src*/, int /*len*/);
 typedef void			(*PFN_LOG)						(const char * /*fmt*/, ...);
+typedef void			(*PFN_LOG_ERROR)				(AMX * /*amx*/, int /*err*/, const char * /*fmt*/, ...);
 typedef int				(*PFN_RAISE_AMXERROR)			(AMX * /*amx*/, int /*error*/);
 typedef int				(*PFN_REGISTER_FORWARD)			(const char * /*funcname*/, ForwardExecType /*exectype*/, ... /*paramtypes terminated by PF_DONE*/);
 typedef int				(*PFN_EXECUTE_FORWARD)			(int /*id*/, ... /*params*/);
@@ -1934,7 +1935,7 @@ typedef float			(*PFN_GET_PLAYER_TIME)			(int /*id*/);
 typedef float			(*PFN_GET_PLAYER_PLAYTIME)		(int /*id*/);
 typedef int				(*PFN_GETPLAYERFLAGS) 			(int /* id*/);
 typedef int				(*PFN_GET_PLAYER_CURWEAPON)		(int /*id*/);
-typedef const char *    (*PFN_GET_PLAYER_TEAM)			(int /*id*/)
+typedef const char *    (*PFN_GET_PLAYER_TEAM)			(int /*id*/);
 typedef int				(*PFN_GET_PLAYER_TEAMID)		(int /*id*/);
 typedef int				(*PFN_GET_PLAYER_DEATHS)		(int /*id*/);
 typedef int				(*PFN_GET_PLAYER_MENU)			(int /*id*/);
@@ -1987,6 +1988,7 @@ extern PFN_GET_AMXSTRINGLEN			g_fn_GetAmxStringLen;
 extern PFN_FORMAT_AMXSTRING			g_fn_FormatAmxString;
 extern PFN_COPY_AMXMEMORY			g_fn_CopyAmxMemory;
 extern PFN_LOG						g_fn_Log;
+extern PFN_LOG_ERROR				g_fn_LogError;
 extern PFN_RAISE_AMXERROR			g_fn_RaiseAmxError;
 extern PFN_REGISTER_FORWARD			g_fn_RegisterForward;
 extern PFN_EXECUTE_FORWARD			g_fn_ExecuteForward;
@@ -2047,6 +2049,7 @@ int				MF_GetAmxStringLen			(const cell *ptr) { }
 char *			MF_FormatAmxString			(AMX * amx, cell * params, int startParam, int * pLen) { }
 void			MF_CopyAmxMemory			(cell * dest, const cell * src, int len) { }
 void			MF_Log						(const char * fmt, ...) { }
+void			MF_LogError					(AMX * amx, int err, const char *fmt, ...) { }
 int				MF_RaiseAmxError			(AMX * amx, int error) { }
 int				MF_RegisterForward			(const char * funcname, ForwardExecType exectype, ...) { }
 int				MF_ExecuteForward			(int id, ...) { }
@@ -2097,6 +2100,7 @@ const char *	MF_Format					(const char *fmt, ...) { }
 #define MF_GetAmxStringLen g_fn_GetAmxStringLen
 #define MF_CopyAmxMemory g_fn_CopyAmxMemory
 void MF_Log(const char *fmt, ...);
+#define	MF_LogError g_fn_LogError
 #define MF_RaiseAmxError g_fn_RaiseAmxError
 #define MF_RegisterForward g_fn_RegisterForward
 #define MF_ExecuteForward g_fn_ExecuteForward

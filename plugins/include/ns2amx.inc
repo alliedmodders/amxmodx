@@ -18,7 +18,7 @@ stock is_entity(id)
 	return is_valid_ent(id)
 }
 
-stock get_build(classname[], value, number=0, NS_Version=NS_VERSION)
+stock get_build(classname[], value, number=0, NS_Version)
 {
 	return ns_get_build(classname, value, number, NS_Version)
 }
@@ -185,9 +185,9 @@ stock get_filename(szFile[], len=-1)
 	return res
 }
 
-stock get_speedchange(id)
+stock get_speedchange(id, speed)
 {
-	return ns_get_speedchange(id)
+	return ns_get_speedchange(id, speed)
 }
 
 stock set_speedchange(id, speed)
@@ -311,6 +311,7 @@ stock get_res(id)
 stock get_class(id)
 {
   return ns_get_class(id)
+}
 
 
 

@@ -81,8 +81,8 @@ enum {
 	FM_GetCurrentPlayer,			//)		( void );
 	FM_CanSkipPlayer,			//)			( const edict_t *player );
 	FM_SetGroupMask,				//)			( int mask, int op );
-	FM_GetClientListening,	// bool (int iReceiver, int iSender)
-	FM_SetClientListening,	// bool (int iReceiver, int iSender, bool Listen)
+	FM_Voice_GetClientListening,	// bool (int iReceiver, int iSender)
+	FM_Voice_SetClientListening,	// bool (int iReceiver, int iSender, bool Listen)
 	FM_MessageBegin,	// void (int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
 	FM_WriteCoord,		// void (float)
 	FM_WriteAngle,		// void (float)
@@ -135,7 +135,7 @@ enum {
 
 	// Create baselines for certain "unplaced" items.
 	FM_CreateInstancedBaselines,	// void ) ( void );
-	FM_pfnAllowLagCompensation,	// int )( void );
+	FM_AllowLagCompensation,	// int )( void );
 };
 
 extern CVector<int> Engine[];

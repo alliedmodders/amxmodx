@@ -17,13 +17,23 @@ int lastFmRes = FMRES_IGNORED;
 	{ \
 		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i), s)); \
 		RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult); \
-	}
+	} \
+	int call##_post (char *s) \
+	{ \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i), s)); \
+		RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult); \
+	} 
 
 #define SIMPLE_INT_HOOK_CONSTSTRING(call) \
 	int call (const char *s) \
 	{ \
 		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i), s)); \
 		RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult); \
+	} \
+	int call##_post (const char *s) \
+	{ \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i), s)); \
+		RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult); \
 	}
 
 
@@ -32,6 +42,11 @@ int lastFmRes = FMRES_IGNORED;
 	{ \
 		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  ENTINDEX(ent))); \
 		RETURN_META(mswi(lastFmRes)); \
+	} \
+	void call##_post (edict_t *ent) \
+	{ \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  ENTINDEX(ent))); \
+		RETURN_META(MRES_IGNORED); \
 	} 
 
 #define SIMPLE_VOID_HOOK_EDICT_EDICT(call) \
@@ -39,13 +54,23 @@ int lastFmRes = FMRES_IGNORED;
 	{ \
 		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  ENTINDEX(ent), ENTINDEX(entb))); \
 		RETURN_META(mswi(lastFmRes)); \
+	} \
+	void call##_post (edict_t *ent,edict_t *entb) \
+	{ \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  ENTINDEX(ent), ENTINDEX(entb))); \
+		RETURN_META(MRES_IGNORED); \
 	} 
 
 #define SIMPLE_VOID_HOOK_VOID(call) \
-	void call () \
+	void call (void) \
 	{ \
 		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i))); \
 		RETURN_META(mswi(lastFmRes)); \
+	} \
+	void call##_post (void) \
+	{ \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i))); \
+		RETURN_META(MRES_IGNORED); \
 	} 
 
 #define SIMPLE_INT_HOOK_EDICT(call) \
@@ -53,6 +78,11 @@ int lastFmRes = FMRES_IGNORED;
 	{ \
 		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  ENTINDEX(pent))); \
 		RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult); \
+	} \
+	int call##_post (edict_t *pent) \
+	{ \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  ENTINDEX(pent))); \
+		RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult); \
 	}
 
 #define SIMPLE_INT_HOOK_INT(call) \
@@ -60,6 +90,11 @@ int lastFmRes = FMRES_IGNORED;
 	{ \
 		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  v)); \
 		RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult); \
+	} \
+	int call##_post (int v) \
+	{ \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  v)); \
+		RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult); \
 	}
 
 #define SIMPLE_INT_HOOK_VOID(call) \
@@ -67,22 +102,60 @@ int lastFmRes = FMRES_IGNORED;
 	{ \
 		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i))); \
 		RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult); \
+	} \
+	int call##_post () \
+	{ \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i))); \
+		RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult); \
 	}
 
 
 #define ENGHOOK(pfnCall) \
-	if (engtable->pfn##pfnCall == NULL) \
-		engtable->pfn##pfnCall = pfnCall
+	if (post) \
+	{ \
+		if (engtable->pfn##pfnCall == NULL) \
+			engtable->pfn##pfnCall = pfnCall##_post; \
+	} \
+	else \
+	{ \
+		if (engtable->pfn##pfnCall == NULL) \
+			engtable->pfn##pfnCall = pfnCall; \
+	} 
 
 #define DLLHOOK(pfnCall) \
-	if (dlltable->pfn##pfnCall == NULL) \
-		dlltable->pfn##pfnCall = pfnCall
+	if (post) \
+	{ \
+		if (dlltable->pfn##pfnCall == NULL) \
+			dlltable->pfn##pfnCall = pfnCall##_post; \
+	} \
+	else \
+	{ \
+		if (dlltable->pfn##pfnCall == NULL) \
+			dlltable->pfn##pfnCall = pfnCall; \
+	} 
 
 #define FM_ENG_HANDLE(pfnCall, pfnArgs) \
 	register unsigned int i = 0; \
 	clfm(); \
 	int fmres = FMRES_IGNORED; \
 	for (i=0; i<Engine[pfnCall].size(); i++) \
+	{ \
+		fmres = MF_ExecuteForward pfnArgs; \
+		if (fmres >= lastFmRes) { \
+			if (retType == FMV_STRING) \
+				mlStringResult = mStringResult; \
+			else if (retType == FMV_CELL) \
+				mlCellResult = mCellResult; \
+			else if (retType == FMV_FLOAT) \
+				mlFloatResult = mFloatResult; \
+			lastFmRes = fmres; \
+		} \
+	}
+#define FM_ENG_HANDLE_POST(pfnCall, pfnArgs) \
+	register unsigned int i = 0; \
+	clfm(); \
+	int fmres = FMRES_IGNORED; \
+	for (i=0; i<EnginePost[pfnCall].size(); i++) \
 	{ \
 		fmres = MF_ExecuteForward pfnArgs; \
 		if (fmres >= lastFmRes) { \
@@ -164,6 +237,11 @@ void SetModel(edict_t *e, const char *m)
 	FM_ENG_HANDLE(FM_SetModel, (Engine[FM_SetModel].at(i), ENTINDEX(e), m));
 	RETURN_META(mswi(lastFmRes));
 }
+void SetModel_post(edict_t *e, const char *m)
+{
+	FM_ENG_HANDLE(FM_SetModel, (Engine[FM_SetModel].at(i), ENTINDEX(e), m));
+	RETURN_META(MRES_IGNORED);
+}
 
 // pfnModelIndex
 SIMPLE_INT_HOOK_CONSTSTRING(ModelIndex);
@@ -180,11 +258,25 @@ void SetSize(edict_t *e, const float *rgflMin, const float *rgflMax)
 	FM_ENG_HANDLE(FM_SetSize, (Engine[FM_SetSize].at(i), ENTINDEX(e), retvec1, retvec2));
 	RETURN_META(mswi(lastFmRes));
 }
+void SetSize_post(edict_t *e, const float *rgflMin, const float *rgflMax)
+{
+	cell vec1[3] = {amx_ftoc(rgflMin[0]), amx_ftoc(rgflMin[1]), amx_ftoc(rgflMin[2])};
+	cell vec2[3] = {amx_ftoc(rgflMax[0]), amx_ftoc(rgflMax[1]), amx_ftoc(rgflMax[2])};;
+	cell retvec1 = MF_PrepareCellArray(vec1, 3);
+	cell retvec2 = MF_PrepareCellArray(vec2, 3);
+	FM_ENG_HANDLE(FM_SetSize, (Engine[FM_SetSize].at(i), ENTINDEX(e), retvec1, retvec2));
+	RETURN_META(MRES_IGNORED);
+}
 
 void ChangeLevel(char *s1, char *s2)
 {
 	FM_ENG_HANDLE(FM_ChangeLevel, (Engine[FM_ChangeLevel].at(i), s1, s2));
 	RETURN_META(mswi(lastFmRes));
+}
+void ChangeLevel_post(char *s1, char *s2)
+{
+	FM_ENG_HANDLE(FM_ChangeLevel, (Engine[FM_ChangeLevel].at(i), s1, s2));
+	RETURN_META(MRES_IGNORED);
 }
 
 float VecToYaw(const float *rgflVector)
@@ -193,6 +285,13 @@ float VecToYaw(const float *rgflVector)
 	cell retvec = MF_PrepareCellArray(vec, 3);
 	FM_ENG_HANDLE(FM_VecToYaw, (Engine[FM_VecToYaw].at(i), retvec));
 	RETURN_META_VALUE(mswi(lastFmRes), mlFloatResult);
+}
+float VecToYaw_post(const float *rgflVector)
+{
+	cell vec[3] = {amx_ftoc(rgflVector[0]), amx_ftoc(rgflVector[1]), amx_ftoc(rgflVector[2])};
+	cell retvec = MF_PrepareCellArray(vec, 3);
+	FM_ENG_HANDLE(FM_VecToYaw, (Engine[FM_VecToYaw].at(i), retvec));
+	RETURN_META_VALUE(MRES_IGNORED, mlFloatResult);
 }
 
 void VecToAngles(const float *rgflVectorIn, float *rgflVectorOut)
@@ -204,6 +303,15 @@ void VecToAngles(const float *rgflVectorIn, float *rgflVectorOut)
 	FM_ENG_HANDLE(FM_VecToAngles, (Engine[FM_VecToAngles].at(i),  retvec1, retvec2));
 	RETURN_META(mswi(lastFmRes));
 }
+void VecToAngles_post(const float *rgflVectorIn, float *rgflVectorOut)
+{
+	cell vec1[3] = {amx_ftoc(rgflVectorIn[0]), amx_ftoc(rgflVectorIn[1]), amx_ftoc(rgflVectorIn[2])};
+	cell vec2[3] = {amx_ftoc(rgflVectorOut[0]), amx_ftoc(rgflVectorOut[1]), amx_ftoc(rgflVectorOut[2])};;
+	cell retvec1 = MF_PrepareCellArray(vec1, 3);
+	cell retvec2 = MF_PrepareCellArray(vec2, 3);
+	FM_ENG_HANDLE(FM_VecToAngles, (Engine[FM_VecToAngles].at(i),  retvec1, retvec2));
+	RETURN_META(MRES_IGNORED);
+}
 
 void MoveToOrigin(edict_t *ent, const float *pflGoal, float dist, int iMoveType)
 {
@@ -212,11 +320,23 @@ void MoveToOrigin(edict_t *ent, const float *pflGoal, float dist, int iMoveType)
 	FM_ENG_HANDLE(FM_MoveToOrigin, (Engine[FM_MoveToOrigin].at(i),  ENTINDEX(ent), retvec, dist, iMoveType));
 	RETURN_META(mswi(lastFmRes));
 }
+void MoveToOrigin_post(edict_t *ent, const float *pflGoal, float dist, int iMoveType)
+{
+	cell vec[3] = {amx_ftoc(pflGoal[0]), amx_ftoc(pflGoal[1]), amx_ftoc(pflGoal[2])};
+	cell retvec = MF_PrepareCellArray(vec, 3);
+	FM_ENG_HANDLE(FM_MoveToOrigin, (Engine[FM_MoveToOrigin].at(i),  ENTINDEX(ent), retvec, dist, iMoveType));
+	RETURN_META(MRES_IGNORED);
+}
 
 edict_t *FindEntityByString(edict_t *pEdictStartSearchAfter, const char *pszField, const char *pszValue)
 {
 	FM_ENG_HANDLE(FM_FindEntityByString, (Engine[FM_FindEntityByString].at(i),  ENTINDEX(pEdictStartSearchAfter), pszField, pszValue));
 	RETURN_META_VALUE(mswi(lastFmRes), INDEXENT2((int)mlCellResult));
+}
+edict_t *FindEntityByString_post(edict_t *pEdictStartSearchAfter, const char *pszField, const char *pszValue)
+{
+	FM_ENG_HANDLE(FM_FindEntityByString, (Engine[FM_FindEntityByString].at(i),  ENTINDEX(pEdictStartSearchAfter), pszField, pszValue));
+	RETURN_META_VALUE(MRES_IGNORED, INDEXENT2((int)mlCellResult));
 }
 // pfnGetEntityIllum
 SIMPLE_INT_HOOK_EDICT(GetEntityIllum);
@@ -305,6 +425,11 @@ SIMPLE_VOID_HOOK_EDICT(SpectatorDisconnect);
 // pfnSpectatorThink
 SIMPLE_VOID_HOOK_EDICT(SpectatorThink);
 
+// pfnCreateInstancedBaselines
+SIMPLE_VOID_HOOK_VOID(CreateInstancedBaselines);
+
+// pfnAllowLagCompensation
+SIMPLE_INT_HOOK_VOID(AllowLagCompensation);
 static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 {
 	int func = params[1];
@@ -318,7 +443,7 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 
 	int len, fId=0;
 	const char *funcname = MF_GetAmxString(amx, params[2], 0, &len);
-
+	LOG_CONSOLE(PLID,"Registering: Function: %s Post: %i Type: %i",funcname,params[3],params[1]);
 	enginefuncs_t *engtable;
 
 	DLL_FUNCTIONS *dlltable;
@@ -564,11 +689,11 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
 		break;
 	//EngFunc_GetClientListening,	// bool (int iReceiver, int iSender)
-	case FM_GetClientListening:
+	case FM_Voice_GetClientListening:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
 		break;
 	//EngFunc_SetClientListening,	// bool (int iReceiver, int iSender, bool Listen)
-	case FM_SetClientListening:
+	case FM_Voice_SetClientListening:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_CELL, FP_DONE); // TODO: bool as cell 3rd arg?
 		break;
 	//EngFunc_MessageBegin,	// void (int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
@@ -747,10 +872,12 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	//DLLFunc_CreateInstancedBaselines,	// void ) ( void );
 	case FM_CreateInstancedBaselines:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
+		DLLHOOK(CreateInstancedBaselines);
 		break;
 	//DLLFunc_pfnAllowLagCompensation,	// int )( void );
-	case FM_pfnAllowLagCompensation:
+	case FM_AllowLagCompensation:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
+		DLLHOOK(AllowLagCompensation);
 		break;
 #if 0
 

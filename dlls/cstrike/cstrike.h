@@ -1,4 +1,4 @@
-#define __cswonbuild__ // comment when compiling for STEAM
+//#define __cswonbuild__ // comment when compiling for STEAM
 #define CS_WON_BUILD
 
  /* AMX Mod X 
@@ -113,9 +113,9 @@ pfnmodule_engine_g* g_engModuleFunc;
 	#define OFFSET_CSDEATHS				448 + EXTRAOFFSET // differs -1 from STEAM
 	// "weapon_*" entities
 	#define OFFSET_WEAPONTYPE			43 + EXTRAOFFSET // same as STEAM
+	//#define OFFSET_CLIPAMMO				51 + EXTRAOFFSET // not tested under WON!!!!!!!!!!!!!!!!!!
 	#define OFFSET_SILENCER_FIREMODE	70 + EXTRAOFFSET // differs -4 from STEAM
 	// "hostage_entity" entities
-	#define OFFSET_HOSTAGEFOLLOW		86 + EXTRAOFFSET // NOT YET CHECKED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! find out before build
 	#define OFFSET_HOSTAGEFOLLOW		86 + EXTRAOFFSET // same as STEAM
 	#define OFFSET_HOSTAGEID			487 + EXTRAOFFSET // same as STEAM
 #else // from here STEAM build looks for offsets
@@ -145,6 +145,7 @@ pfnmodule_engine_g* g_engModuleFunc;
 	#define OFFSET_CSDEATHS				449 + EXTRAOFFSET
 	// "weapon_*" entities
 	#define OFFSET_WEAPONTYPE			43 + EXTRAOFFSET
+	#define OFFSET_CLIPAMMO				51 + EXTRAOFFSET
 	#define OFFSET_SILENCER_FIREMODE	74 + EXTRAOFFSET
 	// "hostage_entity" entities
 	#define OFFSET_HOSTAGEFOLLOW		86 + EXTRAOFFSET

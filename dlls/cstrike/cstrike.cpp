@@ -1185,6 +1185,57 @@ static cell AMX_NATIVE_CALL cs_set_hostage_follow(AMX *amx, cell *params) // cs_
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL cs_get_weapon_ammo(AMX *amx, cell *params) // cs_get_weapon_ammo(index); = 1 param
+{
+	// Get amount of ammo in weapon's clip
+	// params[1] = weapon index
+
+	// Valid entity should be within range
+	if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
+	{
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// Make into edict pointer
+	edict_t *pWeapon = INDEXENT(params[1]);
+
+	// Check entity validity
+	if (FNullEnt(pWeapon)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	return *(int *)pWeapon->pvPrivateData + OFFSET_CLIPAMMO;
+}
+
+static cell AMX_NATIVE_CALL cs_set_weapon_ammo(AMX *amx, cell *params) // cs_set_weapon_ammo(index, newammo); = 2 params
+{
+	// Set amount of ammo in weapon's clip
+	// params[1] = weapon index
+	// params[2] = newammo
+
+	// Valid entity should be within range
+	if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
+	{
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// Make into edict pointer
+	edict_t *pWeapon = INDEXENT(params[1]);
+
+	// Check entity validity
+	if (FNullEnt(pWeapon)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	*((int *)pWeapon->pvPrivateData + OFFSET_CLIPAMMO) = params[2];
+
+	return 1;
+}
+
 AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_user_money",			cs_set_user_money},
 	{"cs_get_user_money",			cs_get_user_money},
@@ -1213,6 +1264,8 @@ AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_get_user_model",			cs_get_user_model},
 	{"cs_set_user_model",			cs_set_user_model},
 	{"cs_reset_user_model",			cs_reset_user_model},
+	{"cs_set_weapon_ammo",			cs_set_weapon_ammo},
+	{"cs_get_weapon_ammo",			cs_get_weapon_ammo},
 	//------------------- <-- max 19 characters!
 	{NULL,							NULL}
 };

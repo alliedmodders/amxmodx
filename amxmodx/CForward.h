@@ -46,7 +46,7 @@
 #ifndef FORWARD_H
 #define FORWARD_H
 
-const int FORWARD_MAX_PARAMS = 16;
+const int FORWARD_MAX_PARAMS = 32;
 
 enum ForwardExecType
 {

@@ -616,7 +616,11 @@ int loadModules(const char* filename)
 
 		CModule* cc = new CModule( path.c_str() );
 
-		if ( cc == 0 ) return loaded;
+		if ( cc == 0 )
+		{
+			fclose(fp);
+			return loaded;
+		}
 
 		cc->queryModule();
 

@@ -11,8 +11,7 @@
 
 CCstrikePlayer::CCstrikePlayer()
 {
-	SetModelled(false);
-	SetInspectModel(false);
+	Initialize();
 }
 
 bool CCstrikePlayer::GetModelled()
@@ -46,4 +45,21 @@ bool CCstrikePlayer::GetInspectModel()
 void CCstrikePlayer::SetInspectModel(bool inspectModelIn)
 {
 	inspectModel = inspectModelIn;
+}
+
+bool CCstrikePlayer::GetOnline()
+{
+	return online;
+}
+
+void CCstrikePlayer::SetOnline(bool onlineIn)
+{
+	online = onlineIn;
+}
+
+void CCstrikePlayer::Initialize()
+{
+	SetModelled(false);
+	SetInspectModel(false);
+	SetOnline(false);
 }

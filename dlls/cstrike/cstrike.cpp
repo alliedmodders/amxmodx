@@ -74,7 +74,7 @@ static cell AMX_NATIVE_CALL cs_set_user_money(AMX *amx, cell *params) // cs_set_
 	// params[3] = flash money?
 
 	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -107,7 +107,7 @@ static cell AMX_NATIVE_CALL cs_get_user_money(AMX *amx, cell *params) // cs_get_
 	// params[1] = user
 
 	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -132,7 +132,7 @@ static cell AMX_NATIVE_CALL cs_get_user_deaths(AMX *amx, cell *params) // cs_get
 	// params[1] = user
 
 	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -157,7 +157,7 @@ static cell AMX_NATIVE_CALL cs_set_user_deaths(AMX *amx, cell *params) // cs_set
 	// params[2] = new deaths
 
 	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -432,7 +432,7 @@ static cell AMX_NATIVE_CALL cs_get_user_vip(AMX *amx, cell *params) // cs_get_us
 	// params[1] = user index
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -460,7 +460,7 @@ static cell AMX_NATIVE_CALL cs_set_user_vip(AMX *amx, cell *params) // cs_set_us
 	// params[2] = if 1, activate vip, else deactivate vip.
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -489,7 +489,7 @@ static cell AMX_NATIVE_CALL cs_get_user_team(AMX *amx, cell *params) // cs_get_u
 	// params[1] = user index
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -514,7 +514,7 @@ static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params) // cs_set_u
 	// params[2] = team
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -553,7 +553,7 @@ static cell AMX_NATIVE_CALL cs_get_user_inside_buyzone(AMX *amx, cell *params) /
 	// params[1] = user index
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -577,7 +577,7 @@ static cell AMX_NATIVE_CALL cs_get_user_plant(AMX *amx, cell *params) // cs_get_
 	// params[1] = user index
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -606,7 +606,7 @@ static cell AMX_NATIVE_CALL cs_set_user_plant(AMX *amx, cell *params) // cs_set_
 	// params[3] = show bomb icon?
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -662,7 +662,7 @@ static cell AMX_NATIVE_CALL cs_get_user_defusekit(AMX *amx, cell *params) // cs_
 	// params[1] = user index
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -695,7 +695,7 @@ static cell AMX_NATIVE_CALL cs_set_user_defusekit(AMX *amx, cell *params) // cs_
 	// params[7] = flash = 0
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -770,7 +770,7 @@ static cell AMX_NATIVE_CALL cs_get_user_backpackammo(AMX *amx, cell *params) // 
 	// params[2] = weapon, as in CSW_*
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -862,7 +862,7 @@ static cell AMX_NATIVE_CALL cs_set_user_backpackammo(AMX *amx, cell *params) // 
 	// params[3] = new amount
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -952,7 +952,7 @@ static cell AMX_NATIVE_CALL cs_get_user_nvg(AMX *amx, cell *params) // cs_get_us
 	// params[1] = user index
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -980,7 +980,7 @@ static cell AMX_NATIVE_CALL cs_set_user_nvg(AMX *amx, cell *params) // cs_set_us
 	// params[2] = 1 = give, 0 = remove
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -1021,7 +1021,7 @@ static cell AMX_NATIVE_CALL cs_get_user_model(AMX *amx, cell *params) // cs_get_
 	// params[3] = max length to set
 
 	// Valid player index should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -1046,7 +1046,7 @@ static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params) // cs_set_
 	// params[2] = model
 
 	// Valid player index should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -1085,7 +1085,7 @@ static cell AMX_NATIVE_CALL cs_reset_user_model(AMX *amx, cell *params) // cs_re
 	// params[1] = user index
 
 	// Valid player index should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -1320,13 +1320,19 @@ C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
 
 /***GetEntityAPI2******************/
 void ClientDisconnect(edict_t *pEntity) {
-	g_players[ENTINDEX(pEntity)].SetModelled(false);
+	int index = ENTINDEX(pEntity);
+	g_players[index].SetModelled(false);
+	g_players[index].SetOnline(false);
 
 	RETURN_META(MRES_IGNORED);
 }
 
 void ClientUserInfoChanged(edict_t *pEntity, char *infobuffer) {
-	if(g_players[ENTINDEX(pEntity)].GetModelled() && pEntity->v.deadflag == DEAD_NO) {
+	int index = ENTINDEX(pEntity);
+	if (!g_players[index].GetOnline())
+		g_players[index].SetOnline(true);
+
+	if(g_players[index].GetModelled() && pEntity->v.deadflag == DEAD_NO) {
 		RETURN_META(MRES_SUPERCEDE);
 	} else {
 		RETURN_META(MRES_IGNORED);

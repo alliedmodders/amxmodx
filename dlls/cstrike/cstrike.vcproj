@@ -152,9 +152,6 @@ copy cstrike_amx.inc K:\S\cstrike\addons\amx\examples\include
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath=".\amxxmodule.cpp">
-			</File>
-			<File
 				RelativePath="cstrike.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -199,21 +196,28 @@ copy cstrike_amx.inc K:\S\cstrike\addons\amx\examples\include
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
-				RelativePath=".\amxxmodule.h">
-			</File>
-			<File
 				RelativePath="cstrike.h">
 			</File>
 			<File
 				RelativePath="CstrikePlayer.h">
 			</File>
-			<File
-				RelativePath=".\moduleconfig.h">
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+		</Filter>
+		<Filter
+			Name="AMXX module"
+			Filter="">
+			<File
+				RelativePath=".\amxxmodule.cpp">
+			</File>
+			<File
+				RelativePath=".\amxxmodule.h">
+			</File>
+			<File
+				RelativePath=".\moduleconfig.h">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

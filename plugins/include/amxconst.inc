@@ -37,6 +37,7 @@
 #define ADMIN_LEVEL_G		(1<<18)	/* flag "s" */
 #define ADMIN_LEVEL_H		(1<<19)	/* flag "t" */
 #define ADMIN_MENU		(1<<20)	/* flag "u" */
+#define ADMIN_ADMIN		(1<<24)	/* flag "y" */
 #define ADMIN_USER		(1<<25)	/* flag "z" */
 
 #define FLAG_KICK		(1<<0)	/* flag "a" */

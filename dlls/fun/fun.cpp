@@ -413,16 +413,12 @@ static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params) // set_use
 	// Sets user hitzones.
 	// params[1] = the one(s) who shoot(s), shooter
 	int shooter = params[1];
-	if (shooter == -1)
-		shooter = 0;
+
 	// params[2] = the one getting hit
 	int gettingHit = params[2];
-	if (gettingHit == -1)
-		gettingHit = 0;
+
 	// params[3] = specified hit zones
 	int hitzones = params[3];
-	if (hitzones == -1)
-		hitzones = 255;
 
 	//set_user_hitzones(id, 0, 0) // Makes ID not able to shoot EVERYONE - id can shoot on 0 (all) at 0
 	//set_user_hitzones(0, id, 0) // Makes EVERYONE not able to shoot ID - 0 (all) can shoot id at 0
@@ -458,7 +454,11 @@ static cell AMX_NATIVE_CALL get_user_hitzones(AMX *amx, cell *params) // get_use
 	int gettingHit = params[2];
 
 	if (shooter) {
-		CHECK_PLAYER(shooter);
+		if (shooter < 1 || shooter > gpGlobals->maxClients) {
+			MF_LogError(amx, AMX_ERR_NATIVE, "Player out of range (%d)", shooter);
+			return 0;
+		}
+
 		return g_zones_toHit[shooter];
 	}
 	else {

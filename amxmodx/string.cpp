@@ -527,7 +527,7 @@ static cell AMX_NATIVE_CALL strbreak(AMX *amx, cell *params)	/* 5 param */
 		} else if (string[i] == '"' && quote_flag) {
 			quote_flag = false;
 		}
-		if ((string[i] == ' ') && !quote_flag && !done_flag) {
+		if (isspace(string[i]) && !quote_flag && !done_flag) {
 			done_flag = true;
 			i++;
 		}

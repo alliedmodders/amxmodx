@@ -491,8 +491,6 @@ void attachMetaModModules(PLUG_LOADTIME now, const char* filename)
 	char line[256], moduleName[256];
 	DLHANDLE module;
 
-	int loaded = 0;
-
 	while ( fp.getline( line ,  255  ) )
 	{
 		*moduleName = 0;
@@ -558,9 +556,11 @@ int countModules(CountModulesMode mode)
 // Call all modules' AMXX_PluginsLoaded functions
 void modules_callPluginsLoaded()
 {
-	for (CList<CModule>::iterator iter = g_modules.begin(); iter; ++iter)
+	CList<CModule>::iterator iter = g_modules.begin();
+	while (iter)
 	{
 		(*iter).CallPluginsLoaded();
+		++iter;
 	}
 }
 
@@ -856,13 +856,17 @@ void *Module_ReqFnptr(const char *funcName)
 	};
 
 	// code
+	if (!g_CurrentlyCalledModule || g_ModuleCallReason != ModuleCall_Attach)
+	{
+		return NULL;
+	}
+
 	g_LastRequestedFunc = funcName;
 	for (unsigned int i = 0; i < (sizeof(functions) / sizeof(Func_s)); ++i)
 	{
 		if (strcmp(funcName, functions[i].name) == 0)
 			return functions[i].ptr;
 	}
-
 	return NULL;
 }
 

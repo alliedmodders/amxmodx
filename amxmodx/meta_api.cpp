@@ -56,6 +56,7 @@ funEventCall modMsgs[MAX_REG_MSGS];
 void (*function)(void*);
 void (*endfunction)(void*);
 
+CLog g_log;
 CForwardMngr  g_forwards;
 CList<CPlayer*> g_auth;
 CList<CCVar> g_cvars;
@@ -208,13 +209,8 @@ int	C_Spawn( edict_t *pent ) {
   hostname = CVAR_GET_POINTER("hostname");
   mp_timelimit = CVAR_GET_POINTER("mp_timelimit");
 
-  // we	need to	initialize logging in Meta_Attach, but we have to create a new logfile each	map,
-  // so	we clear g_log_dir in ServerDeactivate_Post	to know	we should create one...
-  if (g_log_dir.empty())
-  {
-	g_log_dir.set(get_localinfo("amxx_logs", "addons/amxx/logs"));
-	AMXXLOG_MapChange();
-  }
+
+  g_log.MapChange();
 
   // ######	Initialize task	manager
   g_tasksMngr.registerTimers( &gpGlobals->time,	&mp_timelimit->value,  &g_game_timeleft		);
@@ -502,9 +498,6 @@ void C_ServerDeactivate_Post() {
 		g_memreport_count++;
 	}
 #endif // MEMORY_TEST
-
-  g_log_dir.clear();
-  AMXXLOG_Log("Log file	closed.");
 
   RETURN_META(MRES_IGNORED);
 }
@@ -1076,9 +1069,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
   }
 
   // ######	Initialize logging here
-  AMXXLOG_Init();
   g_log_dir.set(get_localinfo("amxx_logs", "addons/amxx/logs"));
-  AMXXLOG_MapChange();
 
   //  ###### Now attach	metamod	modules
   // This will also call modules Meta_Query and Meta_Attach functions
@@ -1113,6 +1104,8 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)	{
   //  ###### Now detach metamod modules
   g_FakeMeta.Meta_Detach(now, reason);
   g_FakeMeta.ReleasePlugins();
+
+  g_log.CloseFile();
 
   return(TRUE);
 }
@@ -1269,6 +1262,28 @@ C_DLLEXPORT	int	GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine,	int	
   meta_engfuncs_post.pfnRegUserMsg = C_RegUserMsg_Post;
 
 
+  CList<int, int> list;
+  list.put(new int (8));
+  list.put_back(new int(10));
+  list.put_front(new int(6));
+  list.put(new int (12));
+  CList<int,int>::iterator iter;
+  iter = list.begin();
+  while (iter)
+  {
+	  if (*iter == 10)
+		  iter.remove();
+	  else if (*iter == 8)
+		  iter.put(new int (9));
+	  else
+		++iter;
+  }
+  iter = list.begin();
+  while (iter)
+  {
+	  AMXXLOG_Log("%d", *iter);
+	  ++iter;
+  }
   return g_FakeMeta.GetEngineFunctions_Post(pengfuncsFromEngine, interfaceVersion, &meta_engfuncs_post);
   /*
   if(*interfaceVersion!=ENGINE_INTERFACE_VERSION) {

@@ -814,6 +814,16 @@ REAL MNF_CellToReal(cell x)
 	return *(REAL*)&x;
 }
 
+void MNF_Log(const char *fmt, ...)
+{
+	// :TODO: Overflow possible here
+	char msg[3072];
+	va_list arglst;
+	va_start(arglst, fmt);
+	vsprintf(msg, fmt, arglst);
+	va_end(arglst);
+	AMXXLOG_Log("%s", msg);
+}
 // Fnptr Request function for the new interface
 const char *g_LastRequestedFunc = NULL;
 #define REGISTER_FUNC(name, func) { name, (void*)func },
@@ -830,7 +840,7 @@ void *Module_ReqFnptr(const char *funcName)
 		REGISTER_FUNC("BuildPathname", build_pathname)
 			REGISTER_FUNC("PrintSrvConsole", print_srvconsole)
 			REGISTER_FUNC("GetModname", MNF_GetModname)
-			REGISTER_FUNC("Log", AMXXLOG_Log)
+			REGISTER_FUNC("Log", MNF_Log)
 
 			// Amx scripts loading / unloading / managing
 			REGISTER_FUNC("GetAmxScript", MNF_GetAmxScript)

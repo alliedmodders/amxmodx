@@ -56,7 +56,9 @@
 #include "CMenu.h"
 #include "CEvent.h"
 #include "fakemeta.h"
+#include "amxxlog.h"
 
+#define AMXXLOG_Log g_log.Log
 #define AMX_VERSION     "0.2"
 
 extern AMX_NATIVE_INFO  core_Natives[];
@@ -106,10 +108,6 @@ void UTIL_IntToString(int value, char *output);
 void UTIL_ShowMOTD( edict_t *client , char *motd, int mlen, const char *name);
 void UTIL_ShowMenu( edict_t* pEntity, int slots, int time, char *menu, int mlen );
 
-// Logging
-void AMXXLOG_Init();
-void AMXXLOG_MapChange();
-void AMXXLOG_Log(const char *fmt, ...);
 
 #define GET_PLAYER_POINTER(e)   (&g_players[ENTINDEX(e)])
 //#define GET_PLAYER_POINTER(e)   (&g_players[(((int)e-g_edict_point)/sizeof(edict_t ))])
@@ -129,7 +127,7 @@ struct fakecmd_t {
   bool fake;
 };
 
-
+extern CLog g_log;
 extern CPluginMngr g_plugins;
 extern CTaskMngr g_tasksMngr;
 extern CPlayer g_players[33];

@@ -477,8 +477,8 @@ int AMXAPI amx_Debug(AMX *amx)
 }
 
 #if defined JIT
-  extern int AMXAPI getMaxCodeSize(void);
-  extern int AMXAPI asm_runJIT(void *sourceAMXbase, void *jumparray, void *compiledAMXbase);
+  extern "C" int AMXAPI getMaxCodeSize(void);
+  extern "C" int AMXAPI asm_runJIT(void *sourceAMXbase, void *jumparray, void *compiledAMXbase);
 #endif
 
 #if SMALL_CELL_SIZE==16
@@ -1048,17 +1048,30 @@ int AMXAPI amx_Init(AMX *amx,void *program)
   #else /* #if defined __WIN32 __ */
 
     // TODO: Add cases for Linux, Unix, OS/2, ...
+	#if defined __linux__
+		int memoryFullAccess(void* addr, int len)
+		{
+			int oldProt = get_page_prot(addr);
+			sys_mprotect(addr, len, PROT_READ | PROT_WRITE | PROT_EXEC);
+			return oldProt;
+		}
 
-    // DOS32 has no imposed limits on its segments.
-    #if defined __BORLANDC__ || defined __WATCOMC__
-      #pragma argsused
-    #endif
-    int memoryFullAccess( void* addr, int len ) { return 1; }
+		int memorySetAccess(void* addr, int len, int access)
+		{
+			sys_mprotect(addr, len, access);
+		}
+	#else
+		// DOS32 has no imposed limits on its segments.
+		#if defined __BORLANDC__ || defined __WATCOMC__
+			#pragma argsused
+		#endif
+		int memoryFullAccess( void* addr, int len ) { return 1; }
 
-    #if defined __BORLANDC__ || defined __WATCOMC__
-      #pragma argsused
-    #endif
-    int memorySetAccess( void* addr, int len, int access ) { return 1; }
+		#if defined __BORLANDC__ || defined __WATCOMC__
+			#pragma argsused
+		#endif
+		int memorySetAccess( void* addr, int len, int access ) { return 1; }
+	#endif
 
   #endif /* #if defined __WIN32 __ */
 
@@ -2731,8 +2744,13 @@ static void *amx_opcodelist_nodebug[] = {
     extern cell amx_exec_asm(cell *regs,cell *retval,cell stp,cell hea) __attribute__((cdecl));
   #else
     /* force "cdecl" by specifying it as a "function class" with the "__cdecl" keyword */
-    extern cell __cdecl amx_exec_asm(cell *regs,cell *retval,cell stp,cell hea);
+    extern "C" cell __cdecl amx_exec_asm(cell *regs,cell *retval,cell stp,cell hea);
   #endif
+#endif
+
+#if defined ASM32 || defined JIT
+	extern "C" void *amx_opcodelist[];
+    extern "C" void *amx_opcodelist_nodebug[];
 #endif
 
 int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
@@ -2747,8 +2765,6 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
   va_list ap;
   int debug;
   #if defined ASM32 || defined JIT
-    extern void *amx_opcodelist[];
-    extern void *amx_opcodelist_nodebug[];
       #ifdef __WATCOMC__
         #pragma aux amx_opcodelist "_*"
         #pragma aux amx_opcodelist_nodebug "_*"

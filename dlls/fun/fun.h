@@ -87,7 +87,6 @@ pfnmodule_engine_g* g_engModuleFunc;		// These seem to be meta/amxmod related
 #define HITGROUP_RIGHTARM		5
 #define HITGROUP_LEFTLEG		6
 #define HITGROUP_RIGHTLEG		7
-
 // Fun-specific defines above
 
 // Globals below

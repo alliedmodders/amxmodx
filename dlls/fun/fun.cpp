@@ -616,11 +616,9 @@ AMX_NATIVE_INFO fun_Exports[] = {
 };
 
 /******************************************************************************************/
-void PlayerPreThink( edict_t *pEntity)
+void PlayerPreThink(edict_t *pEntity)
 {
-	int index = ENTINDEX(pEntity);
-
-	if (silent[index]) {
+	if (silent[ENTINDEX(pEntity)]) {
 		pEntity->v.flTimeStepSound = 999; 
 		RETURN_META(MRES_HANDLED);
 	}

@@ -525,72 +525,6 @@ static cell AMX_NATIVE_CALL get_user_gravity(AMX *amx, cell *params) // Float:ge
 	return amx_ftoc(pPlayer->v.gravity); 
 }
 
-/*static cell AMX_NATIVE_CALL set_hitzones(AMX *amx, cell *params) // set_hitzones(body = 255) = 1 argument
-{
-	// Sets "hitable" zones.
-	// params[1] = body hitzones
-
-	//native set_user_hitzones(index=0,target=0,body=255);
-	//set_user_hitzones(id, 0, 0) // Makes ID not able to shoot EVERYONE - id can shoot on 0 (all) at 0
-	//set_user_hitzones(0, id, 0) // Makes EVERYONE not able to shoot ID - 0 (all) can shoot id at 0
-
-	g_body = params[1];
-
-	return 1;
-}*/
-
-/*static cell AMX_NATIVE_CALL get_hitzones(AMX *amx, cell *params) // get_hitzones() = 0 arguments
-{
-	// Gets hitzones.
-	return g_body;
-}*/
-
-/*
-static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params) // set_user_hitzones(index = 0, target = 0, body = 255); = 3 arguments
-{
-	// Sets user hitzones.
-	// params[1] = the one(s) who shoot(s), shooter
-	int shooter = params[1];
-	if (shooter == -1)
-		shooter = 0;
-	// params[2] = the one getting hit
-	int gettingHit = params[2];
-	if (gettingHit == -1)
-		gettingHit = 0;
-	// params[3] = specified hit zones
-	int hitzones = params[3];
-	if (hitzones == -1)
-		hitzones = 255;
-
-	//set_user_hitzones(id, 0, 0) // Makes ID not able to shoot EVERYONE - id can shoot on 0 (all) at 0
-	//set_user_hitzones(0, id, 0) // Makes EVERYONE not able to shoot ID - 0 (all) can shoot id at 0
-	if (shooter == 0 && gettingHit == 0) {
-		// set hitzones for ALL, both where people can hit and where they can _get_ hit.
-		for (int i = 1; i <= 32; i++) {
-			g_zones_toHit[i] = hitzones;
-			g_zones_getHit[i] = hitzones;
-		}
-	}
-	else {
-		if (shooter == 0) {
-			// "All" shooters, target (gettingHit) should be existing player id
-			if (gettingHit < 1 || gettingHit > gpGlobals->maxClients) {
-				MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-				return 0;
-			}
-			// Where can gettingHit get hit by all?
-			g_zones_getHit[gettingHit] = hitzones;
-		}
-		else {
-			// "shooter" will now only be able to hit other people in "hitzones". (target should be 0 here)
-			g_zones_toHit[shooter] = hitzones;
-		}
-	}
-
-	return 1;
-}
-*/
-
 static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params) // set_user_hitzones(index = 0, target = 0, body = 255); = 3 arguments
 {
 	int index = params[1];
@@ -607,11 +541,7 @@ static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params) // set_use
 	int bodyhits = params[3];
 
 	if (index) {
-		//player_t* pPlayer = GET_PLAYER_POINTER_I(index);
-
-		if (true) { // pPlayer->ingame (we have no in-game check yet)
-			//pPlayer->CountCheat(FUN_HITZONE);
-
+		if (MF_IsPlayerIngame(index)) {
 			if (target) {
 				g_bodyhits[index][target] = bodyhits; // pPlayer->bodyhits[target] = bodyhits;
 			}
@@ -624,14 +554,8 @@ static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params) // set_use
 		return 0;
 	}
 	else {
-		//player_t* pPlayer;
-
 		for(int i = 1; i <= gpGlobals->maxClients; ++i){
-			//pPlayer = GET_PLAYER_POINTER_I(i);
-			//pPlayer->CountCheat(FUN_HITZONE);
-
 			if (target) {
-				//pPlayer->bodyhits[target] = bodyhits;
 				g_bodyhits[index][target] = bodyhits;
 			}
 			else {
@@ -658,41 +582,6 @@ static cell AMX_NATIVE_CALL get_user_hitzones(AMX *amx, cell *params) // get_use
 	//return GET_PLAYER_POINTER_I(index)->bodyhits[target];
 	return g_bodyhits[index][target];
 }
-
-/*
-static cell AMX_NATIVE_CALL get_user_hitzones(AMX *amx, cell *params) // get_user_hitzones(index, target); = 2 arguments
-{
-	// Gets user hitzones.
-	// params[1] = if this is not 0, return what zones this player can hit
-	int shooter = params[1];
-	// params[2] = if shooter was 0, and if this is a player, return what zones this player can get hit in, else... make runtime error?
-	int gettingHit = params[2];
-
-	if (shooter) {
-		if (FNullEnt(shooter)) {
-			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-			return 0;
-		}
-
-		return g_zones_toHit[shooter];
-	}
-	else {
-		if (!gettingHit) {
-			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-			return 0;
-		}
-		else {
-			if (FNullEnt(gettingHit)) {
-				MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-				return 0;
-			}
-			else {
-				return g_zones_getHit[gettingHit];
-			}
-		}
-	}
-}
-*/
 
 static cell AMX_NATIVE_CALL set_user_noclip(AMX *amx, cell *params) // set_user_noclip(index, noclip = 0); = 2 arguments
 {
@@ -871,7 +760,7 @@ void PlayerPreThink(edict_t *pEntity)
 	RETURN_META(MRES_IGNORED);
 }
 
-int FN_ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress, char szRejectReason[128])
+int ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress, char szRejectReason[128])
 {
 	// Reset stuff:
 	FUNUTIL_ResetPlayer(ENTINDEX(pPlayer));
@@ -879,20 +768,18 @@ int FN_ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddre
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
-void FN_TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *e, TraceResult *ptr) {
+void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *e, TraceResult *ptr) {
 	TRACE_LINE(v1, v2, fNoMonsters, e, ptr);
 
 	if (ptr->pHit&&(ptr->pHit->v.flags& (FL_CLIENT | FL_FAKECLIENT) )&&e&&(e->v.flags & (FL_CLIENT | FL_FAKECLIENT) )) {
-		//player_t* pPlayer = GET_PLAYER_POINTER(e);
-
-		if ( !(g_bodyhits[ENTINDEX(e)][ENTINDEX(ptr->pHit)]&(1<<ptr->iHitgroup)) ) // if ( !(pPlayer->bodyhits[ENTINDEX(ptr->pHit)]&(1<<ptr->iHitgroup)) )
+		if (!(g_bodyhits[ENTINDEX(e)][ENTINDEX(ptr->pHit)]&(1<<ptr->iHitgroup)))
 			ptr->flFraction = 1.0;
 	}
 
 	RETURN_META(MRES_SUPERCEDE);
 }
 
-void FN_AMXX_ATTACH()
+void OnAmxxAttach()
 {
 	MF_AddNatives(fun_Exports);
 

@@ -88,10 +88,10 @@ void SQL::Disconnect()
 	if (isFree)
 		return;
 
-	Host.clear();
-	Username.clear();
-	Password.clear();
-	Database.clear();
+	Host.assign("");
+	Username.assign("");
+	Password.assign("");
+	Database.assign("");
 
 	PQfinish(cn);
 

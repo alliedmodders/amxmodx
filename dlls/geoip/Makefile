@@ -3,10 +3,10 @@ SRCFILES = GeoIP.c amxxmodule.cpp geoip_amxx.cpp
 
 EXTRA_LIBS_LINUX =
 EXTRA_LIBS_WIN32 =
-EXTRA_LIBDIRS_LINUX = -Lextra/lib_linux
+EXTRA_LIBDIRS_LINUX = -Llib
 EXTRA_LIBDIRS_WIN32 = -Lextra/lib_win32
 
-EXTRA_INCLUDEDIRS = -Iextra/include -I../amxmodx
+EXTRA_INCLUDEDIRS = -Iextra/include -I../amxmodx -Igeolib/libGeoIP
 
 EXTRA_FLAGS = -Dstrcmpi=strcasecmp
 
@@ -65,7 +65,7 @@ CFLAGS:=$(CCOPT) $(CFLAGS) $(ODEF) $(EXTRA_FLAGS)
 
 DO_CC_LINUX=$(CC_LINUX) $(CFLAGS) -fPIC $(INCLUDEDIRS) -o $@ -c $<
 DO_CC_WIN32=$(CC_WIN32) $(CFLAGS) $(INCLUDEDIRS) -o $@ -c $<
-LINK_LINUX=$(CC_LINUX) $(CFLAGS) -shared -lstdc++ -ldl -lm $(OBJ_LINUX) $(EXTRA_LIBDIRS_LINUX) $(EXTRA_LIBS_LINUX) -o $@
+LINK_LINUX=$(CC_LINUX) $(CFLAGS) -shared -ldl -lm $(OBJ_LINUX) $(EXTRA_LIBDIRS_LINUX) $(EXTRA_LIBS_LINUX) -o $@
 LINK_WIN32=$(LD_WINDLL) -mwindows --def $(MODNAME).def --add-stdcall-alias $(OBJ_WIN32) $(EXTRA_LIBDIRS_WIN32) $(EXTRA_LIBS_WIN32) -o $@
 
 $(OBJDIR_LINUX)/%.o: $(SRCDIR)/%.cpp

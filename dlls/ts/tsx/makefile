@@ -10,8 +10,8 @@ EXTRA_INCLUDEDIRS = -Iextra/include
 
 EXTRA_FLAGS = -Dstrcmpi=strcasecmp
 
-SDKSRC=../sdk
-METADIR=../metamod
+SDKSRC=../../../hlsdk/SourceCode
+METADIR=../../../metamod/metamod
 
 OBJDIR_LINUX=obj.linux
 OBJDIR_WIN32=obj.win32
@@ -51,9 +51,8 @@ endif
 OBJ_LINUX := $(SRCFILES:%.cpp=$(OBJDIR_LINUX)/%.o)
 OBJ_WIN32 := $(SRCFILES:%.cpp=$(OBJDIR_WIN32)/%.o)
 
-CCOPT = -march=i586 -O6 -ffast-math -funroll-loops \
-	-fomit-frame-pointer -fexpensive-optimizations -malign-loops=2 \
-	-malign-jumps=2 -malign-functions=2 -s -DNDEBUG
+CCOPT = -march=i386 -O2 -ffast-math -funroll-loops \
+	-s -DNDEBUG
 
 INCLUDEDIRS=-I../curl/include -I$(SRCDIR) -I$(METADIR) -I$(SDKSRC)/engine -I$(SDKSRC)/common -I$(SDKSRC)/dlls -I$(SDKSRC) $(EXTRA_INCLUDEDIRS)
 CFLAGS=-Wall -Wno-unknown-pragmas

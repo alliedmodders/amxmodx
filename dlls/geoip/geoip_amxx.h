@@ -1,6 +1,8 @@
 #ifndef _INCLUDE_GEOIPAMXX_H
 #define _INCLUDE_GEOIPAMXX_H
 
+#define GEOIPDATADIR ""
+
 #include <GeoIP.h>
 #include "amxxmodule.h"
 

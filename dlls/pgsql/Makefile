@@ -1,17 +1,17 @@
-MODNAME = pgsql_amx
-SRCFILES = pgsql_amx.cpp
+MODNAME = pgsql_amxx
+SRCFILES = pgsql_amx.cpp pgsql.cpp amxxmodule.cpp
 
-EXTRA_LIBS_LINUX = lib/libpq.a -lpq libz.a -lz -lcrypt
+EXTRA_LIBS_LINUX = lib/libpq.a -lpq -lz -lcrypt
 EXTRA_LIBS_WIN32 = libpq.a -lws2_32 -lwsock32
 EXTRA_LIBDIRS_LINUX = -Llib
 EXTRA_LIBDIRS_WIN32 = -L
 
-EXTRA_INCLUDEDIRS = -Iextra/include -I../../amxmodx -Ipostgresql-7.4.2/src/include -Ipostgresql-7.4.2/src/interfaces/libpq
+EXTRA_INCLUDEDIRS = -Iextra/include -I../../amxmodx -Ipostgresql-7.4.3/src/include -Ipostgresql-7.4.3/src/interfaces/libpq
 
 EXTRA_FLAGS = -Dstrcmpi=strcasecmp
 
 SDKTOP=../../hlsdk
-METADIR=../../metamodx/
+METADIR=../../metamod/metamod
 
 SDKSRC=$(SDKTOP)/SourceCode
 OBJDIR_LINUX=obj.linux
@@ -53,7 +53,7 @@ endif
 OBJ_LINUX := $(SRCFILES:%.cpp=$(OBJDIR_LINUX)/%.o)
 OBJ_WIN32 := $(SRCFILES:%.cpp=$(OBJDIR_WIN32)/%.o)
 
-#CCOPT = -funroll-loops \
+CCOPT = -march=i386 -O2 -s -DNDEBUG
 
 INCLUDEDIRS=-I../curl/include -I$(SRCDIR) -I$(METADIR) -I$(SDKSRC)/engine -I$(SDKSRC)/common -I$(SDKSRC)/pm_shared -I$(SDKSRC)/dlls -I$(SDKSRC) $(EXTRA_INCLUDEDIRS)
 CFLAGS=-Wall -Wno-unknown-pragmas -march=i386

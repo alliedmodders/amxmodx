@@ -123,7 +123,7 @@ public cmdUnban(id,level,cid) {
     console_print(id,"[AMXX] %L", id, "IP_REMOVED", arg )
   }
   else {
-    server_cmd("removeid ^"%s^";writeid",arg)
+    server_cmd("removeid %s;writeid",arg)
     console_print(id,"[AMXX] %L", id, "AUTHID_REMOVED", arg )
   }
   get_user_name(id,name,31)  

@@ -40,8 +40,8 @@ stock cmd_access(id,level,cid,num) {
 stock access(id,level) {
   if ( level==ADMIN_ADMIN )
     return is_user_admin(id)
-  else
-    return (get_user_flags(id) & level)
+
+  return (get_user_flags(id) & level)
 }
 
 stock is_user_admin(id) {
@@ -134,6 +134,9 @@ stock get_configsdir(name[],len)
 
 stock get_datadir(name[],len)
   return get_localinfo("amxx_datadir",name,len)
+
+stock register_menu(title[],keys,function[],outside=0)
+  register_menucmd(register_menuid(title,outside),keys,function)
 
 /* Backwards Compatibility
 * don't use it! */

@@ -33,7 +33,7 @@
 
 #include <extdll.h>
 #include <meta_api.h>
-#include "amx/modules.h"
+#include <modules.h>
 
 // Check later if all of these really are needed!
 meta_globals_t *gpMetaGlobals;		// Variables provided to plugins.

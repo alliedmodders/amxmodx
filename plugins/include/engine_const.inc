@@ -395,3 +395,9 @@ enum
 	TR_Hit,				// (entity) entity the surface is on
 	TR_Hitgroup			// (int) 0 == generic, non zero is specific body part
 };
+// used for tracehull
+#define HULL_POINT 0
+#define HULL_HUMAN 1
+#define HULL_LARGE 2
+#define HULL_HEAD 3
+

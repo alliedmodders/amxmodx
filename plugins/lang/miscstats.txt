@@ -177,6 +177,8 @@ CTS = CTS
 TERRORIST = TERORIST
 TERRORISTS = TERORISLER 
 REMAINING = %d %s Geriye kaldi... 
+KILLS = oldurulen
+HS = hs
 
 [fr]
 WITH = avec

@@ -8,7 +8,7 @@ EXTED_MAP = Extend map %s
 TIME_CHOOSE = It's time to choose the nextmap...
 
 [de]
-CHO_FIN_EXT = Auswahl beedent. Laufende Map wird um %.0f Minuten verlaengert. 
+CHO_FIN_EXT = Auswahl beendet. Laufende Map wird um %.0f Minuten verlaengert.
 CHO_FIN_NEXT = Auswahl beendet. Naechste Map ist %s 
 CHOSE_EXT = %s waehlten Map-Verlaengerung 
 X_CHOSE_X = %s waehlten %s 

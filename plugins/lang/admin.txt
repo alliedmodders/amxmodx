@@ -20,7 +20,7 @@ NO_ADMINS = Keine Admins gefunden.
 SQL_LOADED_ADMIN = 1 Admin aus der Datenbank geladen
 SQL_LOADED_ADMINS = %d Admins aus der Datenbank geladen
 INV_PAS = Passwort falsch!
-PAS_ACC = Password akzeptiert
+PAS_ACC = Passwort akzeptiert
 PRIV_SET = Rechte gesetzt
 NO_ENTRY = Du hast keinen Zugang zu diesem Server...
 

@@ -14,7 +14,7 @@ USE_MORE = Nutze 'amx_help %d' fuer die naechste Seite
 USE_BEGIN = Nutze 'amx_help 1' um zum Anfang zu gelangen 
 TYPE_HELP = Schreibe 'amx_help' in die Konsole um die verfuegbaren Befehle zu sehen. 
 TIME_INFO_1 = Verbleibende Zeit: %d:%02d Minuten, naechste Map: %s 
-TIME_INFO_2 = Kein Zeit-Limit. Naechste Map waehre: %s 
+TIME_INFO_2 = KKein Zeitlimit. Naechste Map ist: %s
 
 [sr]
 HELP_COMS = AMX Mod X Pomoc: Komande

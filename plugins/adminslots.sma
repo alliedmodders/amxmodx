@@ -38,31 +38,23 @@
 // Comment if you don't want to hide not used reserved slots
 #define HIDE_RESERVED_SLOTS
 
-#if !defined NO_STEAM
 new g_cmdLoopback[16]
-#endif
 
 public plugin_init()
 {
   register_plugin("Slots Reservation","0.20","AMXX Dev Team")
   register_cvar("amx_reservation","1")
 
-#if !defined NO_STEAM
   format( g_cmdLoopback, 15, "amxres%c%c%c%c" , 
     random_num('A','Z') , random_num('A','Z') ,random_num('A','Z'),random_num('A','Z')  )
 
   register_clcmd( g_cmdLoopback, "ackSignal" )
-#endif
 }
 
-#if !defined NO_STEAM
 public ackSignal(id)
   server_cmd("kick #%d ^"Dropped due to slot reservation^"", get_user_userid(id)  )
 
 public client_authorized(id)
-#else
-public client_connect(id)
-#endif
 {
   new maxplayers = get_maxplayers()
   new players = get_playersnum( 1 )
@@ -76,14 +68,7 @@ public client_connect(id)
     return PLUGIN_CONTINUE
   }
 
-#if !defined NO_STEAM
   client_cmd(id,g_cmdLoopback)
-#else
-  if ( is_user_bot(id) )
-    server_cmd("kick #%d", get_user_userid(id)  )
-  else 
-    client_cmd(id,"echo ^"Dropped due to slot reservation^";disconnect")
-#endif  
 
   return PLUGIN_HANDLED
 }
@@ -105,7 +90,7 @@ setVisibleSlots( players , maxplayers , limit )
     num = maxplayers
   else if ( players < limit )
     num = limit
-		
+	
   set_cvar_num( "sv_visiblemaxplayers" , num )
 }
 #endif

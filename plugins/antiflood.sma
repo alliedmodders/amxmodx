@@ -34,7 +34,7 @@
 
 #include <amxmodx>
 
-new Float:g_Flooding[33] = {0, ...}
+new Float:g_Flooding[33] = {0.0, ...}
 new g_Flood[33] = {0, ...}
 
 public plugin_init()

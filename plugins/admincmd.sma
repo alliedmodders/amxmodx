@@ -100,17 +100,10 @@ public cmdKick(id,level,cid){
     server_cmd("kick #%d",userid2)
   else
   {
-#if !defined NO_STEAM
     if (reason[0])
       server_cmd("kick #%d ^"%s^"",userid2,reason)
     else
       server_cmd("kick #%d",userid2)
-#else
-    if (reason[0])
-      client_cmd(player,"echo ^"Kicked: Reason: %s^";disconnect",reason)
-    else
-      client_cmd(player,"echo ^"Kicked^";disconnect",reason)
-#endif
   }
   console_print(id,"[AMXX] Client ^"%s^" kicked",name2)
   return PLUGIN_HANDLED
@@ -203,33 +196,18 @@ public cmdBan(id,level,cid){
   if ( equal(mode,"ip") ){
     new address[32]
     get_user_ip(player,address,31,1)
-#if !defined NO_STEAM
+
     if (reason[0])
       server_cmd("kick #%d ^"%s (banned %s)^";wait;addip ^"%s^" ^"%s^";wait;writeip",userid2,reason,temp,minutes,address)
     else
       server_cmd("kick #%d ^"banned %s^";wait;addip ^"%s^" ^"%s^";wait;writeip",userid2,temp,minutes,address)
-#else
-    if (reason[0])
-      client_cmd(player,"echo ^"%s (banned %s)^";disconnect",reason,temp)
-    else
-      client_cmd(player,"echo ^"banned %s^";disconnect",temp)
-    server_cmd("addip ^"%s^" ^"%s^";wait;writeip",minutes,address)
-#endif
   }
   else
   {
-#if !defined NO_STEAM
     if (reason[0])
       server_cmd("kick #%d ^"%s (banned %s)^";wait;banid ^"%s^" ^"%s^";wait;writeid",userid2,reason,temp,minutes,authid2)
     else
       server_cmd("kick #%d ^"banned %s^";wait;banid ^"%s^" ^"%s^";wait;writeid",userid2,temp,minutes,authid2)
-#else
-    if (reason[0])
-      client_cmd(player,"echo ^"%s (banned %s)^";disconnect",reason,temp)
-    else
-      client_cmd(player,"echo ^"banned %s^";disconnect",temp)
-    server_cmd("banid ^"%s^" ^"%s^";wait;writeip",minutes,authid2)
-#endif
   }
     
   new activity = get_cvar_num("amx_show_activity")
@@ -606,11 +584,7 @@ public cmdLeave(id,level,cid){
       server_cmd("kick #%d",get_user_userid(b))
     else
     {
-#if !defined NO_STEAM
       server_cmd("kick #%d ^"You have been dropped because admin has left only specified group of clients^"",get_user_userid(b))
-#else
-      client_cmd(b,"echo * You have been dropped because admin has left only specified group of clients;disconnect")
-#endif
     }
     count++
   }

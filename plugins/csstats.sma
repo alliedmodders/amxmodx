@@ -32,7 +32,7 @@
 *  version.
 */
 
-/* File location: $moddir/addons/amxx/plugins/csstats.amx */
+/* File location: $moddir/addons/amxx/data/csstats.amx */
 
 #include <amxmodx>
 

@@ -38,11 +38,7 @@
 #include <amxmodx>
 #include <amxmisc>
 
-#if !defined NO_STEAM
 #define MAXMENUPOS 34
-#else
-#define MAXMENUPOS 31
-#endif
 
 new g_Position[33]
 new g_Modified
@@ -50,41 +46,35 @@ new g_blockPos[112]
 new g_saveFile[64]
 new g_Restricted[] = "* This item is restricted *"
 new g_menusNames[7][] = {
-"pistol",
-"shotgun",
-"sub",
-"rifle",
-"machine",
-"equip",
-"ammo"
+  "pistol",
+  "shotgun",
+  "sub",
+  "rifle",
+  "machine",
+  "equip",
+  "ammo"
 }
 new g_MenuTitle[7][] = {
-"Handguns",
-"Shotguns",
-"Sub-Machine Guns",
-"Assault & Sniper Rifles",
-"Machine Guns",
-"Equipment",
-"Ammunition"
+  "Handguns",
+  "Shotguns",
+  "Sub-Machine Guns",
+  "Assault & Sniper Rifles",
+  "Machine Guns",
+  "Equipment",
+  "Ammunition"
 }
 new g_menusSets[7][2] = {
-#if !defined NO_STEAM
-{0,6},{6,8},{8,13},{13,23},{23,24},{24,32},{32,34}
-#else
-{0,6},{6,8},{8,13},{13,21},{21,22},{22,29},{29,31}
-#endif
+  {0,6},{6,8},{8,13},{13,23},{23,24},{24,32},{32,34}
 }
-#if !defined NO_STEAM
+
 new g_AliasBlockNum
 new g_AliasBlock[MAXMENUPOS]
-#endif
 
 // First position is a position of menu (0 for ammo, 1 for pistols, 6 for equipment etc.)
 // Second is a key for TERRORIST (all is key are minus one, 1 is 0, 2 is 1 etc.)
 // Third is a key for CT
 // Position with -1 doesn't exist
 new g_Keys[MAXMENUPOS][3] = {
-#if !defined NO_STEAM
   {1,1,1}, // H&K USP .45 Tactical
   {1,0,0}, // Glock18 Select Fire
   {1,3,3}, // Desert Eagle .50AE
@@ -119,39 +109,6 @@ new g_Keys[MAXMENUPOS][3] = {
   {6,-1,7}, // Tactical Shield
   {0,5,5}, // Primary weapon ammo
   {0,6,6} // Secondary weapon ammo
-#else
-  {1,0,0}, // H&K USP .45 Tactical
-  {1,1,1}, // Glock18 Select Fire
-  {1,2,2}, // Desert Eagle .50AE
-  {1,3,3}, // SIG P228
-  {1,4,-1}, // Dual Beretta 96G Elite
-  {1,-1,5}, // FN Five-Seven
-  {2,0,0}, // Benelli M3 Super90
-  {2,1,1}, // Benelli XM1014
-  {3,0,0}, // H&K MP5-Navy
-  {3,-1,1}, // Steyr Tactical Machine Pistol
-  {3,2,2}, // FN P90
-  {3,3,-1}, // Ingram MAC-10
-  {3,4,4}, // H&K UMP45
-  {4,0,-1}, // AK-47
-  {4,1,-1}, // Sig SG-552 Commando
-  {4,-1,2}, // Colt M4A1 Carbine
-  {4,-1,3}, // Steyr Aug
-  {4,4,4}, // Steyr Scout
-  {4,5,5}, // AI Arctic Warfare/Magnum
-  {4,6,-1}, // H&K G3/SG-1 Sniper Rifle
-  {4,-1,7}, // Sig SG-550 Sniper
-  {5,0,0},  // FN M249 Para
-  {6,0,0}, // Kevlar Vest
-  {6,1,1}, // Kevlar Vest & Helmet
-  {6,2,2}, // Flashbang
-  {6,3,3}, // HE Grenade
-  {6,4,4}, // Smoke Grenade
-  {6,-1,5}, // Defuse Kit
-  {6,6,6}, // NightVision Goggles
-  {0,5,5}, // Primary weapon ammo
-  {0,6,6} // Secondary weapon ammo
-#endif
 }
 
 new g_WeaponNames[MAXMENUPOS][] = {
@@ -169,10 +126,8 @@ new g_WeaponNames[MAXMENUPOS][] = {
   "Ingram MAC-10",
   "H&K UMP45",
   "AK-47",
-#if !defined NO_STEAM
   "Gali",
   "Famas",
-#endif
   "Sig SG-552 Commando",
   "Colt M4A1 Carbine",
   "Steyr Aug",
@@ -188,9 +143,7 @@ new g_WeaponNames[MAXMENUPOS][] = {
   "Smoke Grenade",
   "Defuse Kit",
   "NightVision Goggles",
-#if !defined NO_STEAM
   "Tactical Shield",
-#endif
   "Primary weapon ammo",
   "Secondary weapon ammo"
 }
@@ -213,10 +166,8 @@ new g_MenuItem[MAXMENUPOS][] = {
   "%d. %s\y\R%s^n\w^n",
 
   "\yAssault Rifles^n\w^n%d. %s\y\R%s^n\w",
-#if !defined NO_STEAM
   "%d. %s\y\R%s^n\w",
   "%d. %s\y\R%s^n\w",
-#endif
   "%d. %s\y\R%s^n\w",
   "%d. %s\y\R%s^n\w",
   "%d. %s\y\R%s^n\w^n",
@@ -234,111 +185,101 @@ new g_MenuItem[MAXMENUPOS][] = {
   "%d. %s\y\R%s^n\w",
   "%d. %s\y\R%s^n\w",
   "%d. %s\y\R%s^n\w",
-#if !defined NO_STEAM
   "%d. %s\y\R%s^n\w",
   "%d. %s\y\R%s^n\w^n",
-#else
-  "%d. %s\y\R%s^n\w^n",
-#endif
 
   "\yAmmunition^n\w^n%d. %s\y\R%s^n\w",
   "%d. %s\y\R%s^n\w"
 }
 
 new g_Aliases[MAXMENUPOS][] = {
-"usp",//Pistols
-"glock",
-"deagle",
-"p228",
-"elites",
-"fn57",
+  "usp", //Pistols
+  "glock",
+  "deagle",
+  "p228",
+  "elites",
+  "fn57",
 
-"m3",//Shotguns
-"xm1014",
+  "m3", //Shotguns
+  "xm1014",
 
-"mp5",//SMG
-"tmp",
-"p90",
-"mac10",
-"ump45",
+  "mp5", //SMG
+  "tmp",
+  "p90",
+  "mac10",
+  "ump45",
 
-"ak47",//Rifles
-#if !defined NO_STEAM
-"galil",
-"famas",
-#endif
-"sg552",
-"m4a1",
-"aug",
-"scout",
-"awp",
-"g3sg1",
-"sg550",
+  "ak47", //Rifles
+  "galil",
+  "famas",
+  "sg552",
+  "m4a1",
+  "aug",
+  "scout",
+  "awp",
+  "g3sg1",
+  "sg550",
 
-"m249", //Machine Gun
+  "m249", //Machine Gun
 
-"vest",//Equipment
-"vesthelm",
-"flash",
-"hegren",
-"sgren",
-"defuser",
-"nvgs",
-#if !defined NO_STEAM
-"shield",
-#endif
-"primammo",//Ammo
-"secammo"
+  "vest", //Equipment
+  "vesthelm",
+  "flash",
+  "hegren",
+  "sgren",
+  "defuser",
+  "nvgs",
+  "shield",
+
+  "primammo", //Ammo
+  "secammo"
 }
 
-#if !defined NO_STEAM
 new g_Aliases2[MAXMENUPOS][] = {
-"km45",//Pistols
-"9x19mm",
-"nighthawk",
-"228compact",
-"elites",
-"fiveseven",
+  "km45", //Pistols
+  "9x19mm",
+  "nighthawk",
+  "228compact",
+  "elites",
+  "fiveseven",
 
-"12gauge",//Shotguns
-"autoshotgun",
+  "12gauge", //Shotguns
+  "autoshotgun",
 
-"smg",//SMG
-"mp",
-"c90",
-"mac10",
-"ump45",
+  "smg", //SMG
+  "mp",
+  "c90",
+  "mac10",
+  "ump45",
 
-"cv47",//Rifles
-"defender",
-"clarion",
-"krieg552",
-"m4a1",
-"bullpup",
-"scout",
-"magnum",
-"d3au1",
-"krieg550",
+  "cv47", //Rifles
+  "defender",
+  "clarion",
+  "krieg552",
+  "m4a1",
+  "bullpup",
+  "scout",
+  "magnum",
+  "d3au1",
+  "krieg550",
 
-"m249", //Machine Gun
+  "m249", //Machine Gun
 
-"vest",//Equipment
-"vesthelm",
-"flash",
-"hegren",
-"sgren",
-"defuser",
-"nvgs",
-"shield",
-"primammo",//Ammo
-"secammo"
+  "vest", //Equipment
+  "vesthelm",
+  "flash",
+  "hegren",
+  "sgren",
+  "defuser",
+  "nvgs",
+  "shield",
+  "primammo", //Ammo
+  "secammo"
 }
-#endif
-#if !defined NO_STEAM
+
 #define AUTOBUYLENGTH 511
 new g_Autobuy[33][AUTOBUYLENGTH + 1]
 //new g_Rebuy[33][AUTOBUYLENGTH + 1]
-#endif
 
 setWeapon( a , action  ){
   new b, m = g_Keys[a][0] * 8
@@ -356,7 +297,7 @@ setWeapon( a , action  ){
     else
       g_blockPos[ b ] = action
   }
-#if !defined NO_STEAM
+
   for(new i = 0; i < g_AliasBlockNum; ++i)
     if ( g_AliasBlock[ i ] == a ){
       if ( !action || action == 2 ) {
@@ -368,7 +309,6 @@ setWeapon( a , action  ){
     }
   if ( action && g_AliasBlockNum < MAXMENUPOS )
     g_AliasBlock[ g_AliasBlockNum++ ] = a
-#endif
 }
 
 findMenuId( name[] ){
@@ -532,7 +472,6 @@ public actionMenu(id,key){
    return PLUGIN_HANDLED
 }
 
-#if !defined NO_STEAM
 public client_command( id ){
 	if ( g_AliasBlockNum  ) {
 		new arg[13]
@@ -569,14 +508,11 @@ stock WeaponIsBlocked(weapon[]) {
 
 	return false // not blocked
 }
-#endif
 
-#if !defined NO_STEAM
 public blockcommand(id) {
     client_print(id,print_center, g_Restricted )
     return PLUGIN_HANDLED
 }
-#endif
 
 public cmdMenu(id,level,cid){
   if (cmd_access(id,level,cid,1))
@@ -632,7 +568,6 @@ loadSettings(filename[]){
   return 1
 }
 
-#if !defined NO_STEAM
 // JGHG
 public fn_setautobuy(id) {
 	// Don't do anything if no items are blocked.
@@ -751,18 +686,15 @@ public fn_setrebuy(id) {
 public fn_rebuy(id) {
 }
 */
-#endif // !NO_STEAM
 
 public plugin_init() {
   register_plugin("Restrict Weapons","0.20","AMXX Dev Team")
   register_clcmd("buyammo1","ammoRest1")
   register_clcmd("buyammo2","ammoRest2")
-#if !defined NO_STEAM
   register_clcmd("cl_setautobuy", "fn_setautobuy")
   register_clcmd("cl_autobuy", "fn_autobuy")
   //register_clcmd("cl_setrebuy", "fn_setrebuy")
   //register_clcmd("cl_rebuy", "fn_rebuy")
-#endif
   register_clcmd("amx_restmenu","cmdMenu",ADMIN_CFG,"- displays weapons restriction menu")
   register_menucmd(register_menuid("#Buy", 1 ),511,"menuBuy")
   register_menucmd(register_menuid("\yRestrict Weapons"),1023,"actionMenu")

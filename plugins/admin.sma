@@ -47,9 +47,7 @@ new g_aName[MAX_ADMINS][32]
 new g_aFlags[MAX_ADMINS]
 new g_aAccess[MAX_ADMINS]
 new g_aNum = 0
-#if !defined NO_STEAM
 new g_cmdLoopback[16]
-#endif
 
 public plugin_init()
 {
@@ -84,12 +82,10 @@ public plugin_init()
 
   register_concmd("amx_reloadadmins","cmdReload",ADMIN_ADMIN)
 
-#if !defined NO_STEAM
   format( g_cmdLoopback, 15, "amxauth%c%c%c%c" , 
   	random_num('A','Z') , random_num('A','Z') ,random_num('A','Z'),random_num('A','Z')  )
   	
   register_clcmd( g_cmdLoopback, "ackSignal" )
-#endif
 
   remove_user_flags(0,read_flags("z")) // Remove 'user' flag from server rights
   
@@ -149,32 +145,32 @@ public adminSql() {
   get_cvar_string("amx_sql_pass",pass,31)
   get_cvar_string("amx_sql_db",db,31)
   
-  new sql = dbi_connect(host,user,pass,db,error,127)
-  if(sql < 1){
+  new Sql:sql = dbi_connect(host,user,pass,db,error,127)
+  if (sql <= SQL_FAILED) {
     server_print("[AMXX] SQL error: can't connect: '%s'",error)
     return PLUGIN_HANDLED 
   }
 
   dbi_query(sql,"CREATE TABLE IF NOT EXISTS admins ( auth varchar(32) NOT NULL default '', password varchar(32) NOT NULL default '', access varchar(32) NOT NULL default '', flags varchar(32) NOT NULL default '' )")
   
-  new Result = dbi_query(sql,"SELECT auth,password,access,flags FROM admins")
+  new Result:Res = dbi_query(sql,"SELECT auth,password,access,flags FROM admins")
 
-  if(Result < 0)  {
+  if (rescode(Res) < 0)  {
     dbi_error(sql,error,127)
     server_print("[AMXX] SQL error: can't load admins: '%s'",error)
     return PLUGIN_HANDLED
-  } else if (Result == 0) {
-	server_print("[AMXX] No admins found.")
+  } else if (rescode(Res) == 0) {
+	  server_print("[AMXX] No admins found.")
   }
 
   new szFlags[32],szAccess[32]
   g_aNum = 0
-  while( dbi_nextrow(sql) > 0 )
+  while( dbi_nextrow(Res) > 0 )
   {
-    dbi_result(Result, "auth", g_aName[ g_aNum ] ,31)
-    dbi_result(Result, "password", g_aPassword[ g_aNum ] ,31)
-    dbi_result(Result, "access", szAccess,31)
-    dbi_result(Result, "flags", szFlags,31)
+    dbi_result(Res, "auth", g_aName[ g_aNum ] ,31)
+    dbi_result(Res, "password", g_aPassword[ g_aNum ] ,31)
+    dbi_result(Res, "access", szAccess,31)
+    dbi_result(Res, "flags", szFlags,31)
 
     if ( (containi(szAccess,"z")==-1) && (containi(szAccess,"y")==-1) )
       szAccess[strlen(szAccess)] = 'y'
@@ -188,7 +184,7 @@ public adminSql() {
   }
 
   server_print("[AMXX] Loaded %d admin%s from database",g_aNum, (g_aNum == 1) ? "" : "s" )
-  dbi_free_result(Result)
+  dbi_free_result(Res)
   dbi_close(sql)
   return PLUGIN_HANDLED
 }
@@ -307,13 +303,7 @@ accessUser( id, name[] = "" )
   new result = getAccess(id,username,userauthid,userip,password) 
   if (result & 1) client_cmd(id,"echo ^"* Invalid Password!^"")
   if (result & 2) {
-  
-#if !defined NO_STEAM
-	client_cmd(id,g_cmdLoopback)
-#else
-    client_cmd(id,"echo ^"* You have no entry to the server...^";disconnect") 
-#endif    
-    
+    client_cmd(id,g_cmdLoopback)
     return PLUGIN_HANDLED
   }
   if (result & 4) client_cmd(id,"echo ^"* Password accepted^"")
@@ -336,13 +326,8 @@ public client_infochanged(id)
   return PLUGIN_CONTINUE
 }
 
-#if !defined NO_STEAM
-
 public ackSignal(id)
 	server_cmd("kick #%d ^"You have no entry to the server...^"", get_user_userid(id)  )
 
 public client_authorized(id)
-#else
-public client_connect(id)
-#endif
   return get_cvar_num( "amx_mode" ) ? accessUser( id ) : PLUGIN_CONTINUE

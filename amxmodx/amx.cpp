@@ -60,6 +60,9 @@
   #include <windows.h>
 #endif
 
+extern int errno;
+int errno;
+
 // this file does not include amxmodx.h, so we have to include the memory manager here
 #ifdef MEMORY_TEST
 #include "mmgr/mmgr.h"
@@ -1114,12 +1117,18 @@ int AMXAPI amx_Init(AMX *amx,void *program)
 	#if defined __BORLANDC__ || defined __WATCOMC__
 		#pragma argsused
 	#endif
-	int memoryFullAccess( void* addr, int len ) { return 1; }
+	int memoryFullAccess( void* addr, int len ) 
+	{
+		return mprotect(addr, len, PROT_READ|PROT_WRITE|PROT_EXEC);
+	}
 
 	#if defined __BORLANDC__ || defined __WATCOMC__
 		#pragma argsused
 	#endif
-	int memorySetAccess( void* addr, int len, int access ) { return 1; }
+	int memorySetAccess( void* addr, int len, int access )
+	{
+		return mprotect(addr, len, PROT_READ|PROT_EXEC);
+	}
 
   #endif /* #if defined __WIN32 __ */
 
@@ -1128,8 +1137,12 @@ int AMXAPI amx_InitJIT(AMX *amx, void *reloc_table, void *native_code)
   int mac, res;
   AMX_HEADER *hdr;
 
-  mac = memoryFullAccess( (void*)asm_runJIT, 20000 );
-  if ( ! mac )
+  mac = memoryFullAccess( (void *)((int)((void*)asm_runJIT)-(int)((void*)asm_runJIT)%sysconf(_SC_PAGESIZE)), 20000 );
+#ifdef __linux__
+  if ( mac )
+#else
+  if ( !mac )
+#endif
     return AMX_ERR_INIT_JIT;
 
   /* copy the prefix */
@@ -3408,7 +3421,6 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
       if (alt==0)
         ABORT(amx,AMX_ERR_DIVIDE);
       /* divide must always round down; this is a bit
-       * involved to do in a machine-independent way.
        */
       offs=(pri % alt + alt) % alt;     /* true modulus */
       pri=(pri - offs) / alt;           /* division result */

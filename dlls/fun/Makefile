@@ -1,5 +1,5 @@
-MODNAME = fun_amx
-SRCFILES = fun.cpp
+MODNAME = fun_amxx
+SRCFILES = fun.cpp amxxmodule.cpp
 
 EXTRA_LIBS_LINUX =
 EXTRA_LIBS_WIN32 =

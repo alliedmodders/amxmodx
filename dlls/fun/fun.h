@@ -33,36 +33,7 @@
 
 #include <extdll.h>
 #include <meta_api.h>
-#include <modules.h>
-
-// Check later if all of these really are needed!
-meta_globals_t *gpMetaGlobals;		// Variables provided to plugins.
-gamedll_funcs_t *gpGamedllFuncs;	// Pair of function tables provided by game DLL.
-mutil_funcs_t *gpMetaUtilFuncs;		// Meta Utility Function table type.
-enginefuncs_t g_engfuncs;			// Engine hands this to DLLs for functionality callbacks
-globalvars_t  *gpGlobals;			// JGHG says: contains info on server, like maxclients, (time?) etc, stringbase is here :-) seems to be used with entity classnames...
-
-// Must provide at least one of these...
-static META_FUNCTIONS gMetaFunctionTable = {
-	NULL,						// pfnGetEntityAPI				HL SDK; called before game DLL
-	NULL,						// pfnGetEntityAPI_Post			META; called after game DLL
-	GetEntityAPI2,				// pfnGetEntityAPI2				HL SDK2; called before game DLL
-	NULL,						// pfnGetEntityAPI2_Post		META; called after game DLL
-	NULL,						// pfnGetNewDLLFunctions		HL SDK2; called before game DLL
-	NULL,						// pfnGetNewDLLFunctions_Post	META; called after game DLL
-	GetEngineFunctions,			// pfnGetEngineFunctions		META; called before HL engine
-	NULL						// pfnGetEngineFunctions_Post	META; called after HL engine
-};
-
-pfnamx_engine_g* g_engAmxFunc;				// These seem to be meta/amxmod related
-pfnmodule_engine_g* g_engModuleFunc;		// These seem to be meta/amxmod related
-
-#define NAME "Fun"
-#define AUTHOR "AMX Mod X Dev Team"
-#define VERSION "0.16"
-#define URL "http://www.amxmodx.org"
-#define LOGTAG "FUN"
-#define DATE __DATE__
+#include "amxxmodule.h"
 
 // Fun-specific defines below
 #define GETCLIENTLISTENING		(*g_engfuncs.pfnVoice_GetClientListening)
@@ -81,26 +52,6 @@ pfnmodule_engine_g* g_engModuleFunc;		// These seem to be meta/amxmod related
 #define HITGROUP_LEFTLEG		6 // 64
 #define HITGROUP_RIGHTLEG		7 // 128
 // Fun-specific defines above
-
-// Globals below
-plugin_info_t Plugin_info = {
-  META_INTERFACE_VERSION,
-  NAME,
-  VERSION,
-  DATE,
-  AUTHOR,
-  URL,
-  LOGTAG,
-  PT_ANYTIME,
-  PT_ANYTIME,
-};
-module_info_s module_info = {
-  NAME,
-  AUTHOR,
-  VERSION,
-  AMX_INTERFACE_VERSION,
-  RELOAD_MODULE,
-};
 
 // The stuff below might end up in a class soon
 //int g_zones_toHit[33];		// where can people hit other people?

@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386 /out:"Release/fun_amxx.dll"
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
 PostBuild_Cmds=echo Copying dll...	copy Release\fun.dll K:\S\cstrike\addons\amxx\modules\fun_amx.dll	echo Copying inc...	copy ..\plugins\include\fun.inc K:\S\cstrike\addons\amxx\scripting\include
@@ -83,7 +83,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /out:"Debug/fun_debug.dll" /pdbtype:sept
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /out:"Debug/fun_amxx_debug.dll" /pdbtype:sept
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
 PostBuild_Cmds=copy debug\fun_debug.dll K:S\cstrike\addons\amxx\modules\fun_amx.dll	copy ..\plugins\include\fun.inc K:\S\cstrike\addons\amxx\scripting\include\fun.inc
@@ -100,11 +100,11 @@ PostBuild_Cmds=copy debug\fun_debug.dll K:S\cstrike\addons\amxx\modules\fun_amx.
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\fun.cpp
+SOURCE=.\amxxmodule.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\fun_amx.def
+SOURCE=.\fun.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -112,7 +112,15 @@ SOURCE=.\fun_amx.def
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=.\amxxmodule.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\fun.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\moduleconfig.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

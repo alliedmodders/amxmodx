@@ -1,4 +1,4 @@
-MODNAME = cstrike_amx
+MODNAME = cstrike_amxx
 SRCFILES = CstrikePlayer.cpp cstrike.cpp amxxmodule.cpp
 
 EXTRA_LIBS_LINUX =

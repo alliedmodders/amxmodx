@@ -50,7 +50,7 @@
 		if (params[1] < 1 || params[1] > gpGlobals->maxClients
 		|| params[2] < 1 || params[2] > gpGlobals->maxClients)
 		{
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);				<--- Call this, it will end up as RUN TIME ERROR 10 in server console.
+			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);				<--- Call this, it will end up as RUN TIME ERROR 10 in server console.
 			return 0;											<--- Standard return 0 with run time errors? (note in small only 0 returns false, everything else returns true)
 		}
 
@@ -58,7 +58,7 @@
 		edict_t *pPlayer = INDEXENT(params[1]);
 
 		if (FNullEnt(pPlayer)) {								<--- Test this pointer this way, return 0...
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;
 		}
 
@@ -88,7 +88,7 @@ static cell AMX_NATIVE_CALL get_client_listening(AMX *amx, cell *params) // get_
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients
 	|| params[2] < 1 || params[2] > gpGlobals->maxClients)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -107,7 +107,7 @@ static cell AMX_NATIVE_CALL set_client_listening(AMX *amx, cell *params) // set_
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients
 	|| params[2] < 1 || params[2] > gpGlobals->maxClients)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -127,7 +127,7 @@ static cell AMX_NATIVE_CALL set_user_godmode(AMX *amx, cell *params) // set_user
 	// Check index.
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -135,7 +135,7 @@ static cell AMX_NATIVE_CALL set_user_godmode(AMX *amx, cell *params) // set_user
 	edict_t *pPlayer = INDEXENT(params[1]);
 
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -159,7 +159,7 @@ static cell AMX_NATIVE_CALL get_user_godmode(AMX *amx, cell *params) // get_user
 	// Check index.
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -167,7 +167,7 @@ static cell AMX_NATIVE_CALL get_user_godmode(AMX *amx, cell *params) // get_user
 	edict_t *pPlayer = INDEXENT(params[1]);
 
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -192,7 +192,7 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params) // native give_ite
 	// Check index.
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -201,7 +201,7 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params) // native give_ite
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -210,7 +210,7 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params) // native give_ite
 
 	// Make an "intstring" out of 2nd parameter
 	int length;
-	const char *szItem = GET_AMXSTRING(amx, params[2], 1, length);
+	const char *szItem = MF_GetAmxString(amx, params[2], 1, &length);
 
 	//check for valid item
 	if (strncmp(szItem, "weapon_", 7) && 
@@ -261,14 +261,14 @@ static cell AMX_NATIVE_CALL spawn(AMX *amx, cell *params) // spawn(id) = 1 param
 
     if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
     {
-        AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+        MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
         return 0;
     }
 	edict_t *pEnt = INDEXENT(params[1]);
 
 	// Check entity validity
 	if (FNullEnt(pEnt)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -286,7 +286,7 @@ static cell AMX_NATIVE_CALL set_user_health(AMX *amx, cell *params) // set_user_
 	// Check index
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -294,7 +294,7 @@ static cell AMX_NATIVE_CALL set_user_health(AMX *amx, cell *params) // set_user_
 	edict_t *pPlayer = INDEXENT(params[1]);
 
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -316,7 +316,7 @@ static cell AMX_NATIVE_CALL set_user_frags(AMX *amx, cell *params) // set_user_f
 	// Check index
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -324,7 +324,7 @@ static cell AMX_NATIVE_CALL set_user_frags(AMX *amx, cell *params) // set_user_f
 	edict_t *pPlayer = INDEXENT(params[1]);
 
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -342,7 +342,7 @@ static cell AMX_NATIVE_CALL set_user_armor(AMX *amx, cell *params) // set_user_a
 	// Check index
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -350,7 +350,7 @@ static cell AMX_NATIVE_CALL set_user_armor(AMX *amx, cell *params) // set_user_a
 	edict_t *pPlayer = INDEXENT(params[1]);
 
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -368,7 +368,7 @@ static cell AMX_NATIVE_CALL set_user_origin(AMX *amx, cell *params) // set_user_
 	// Check index
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -376,11 +376,11 @@ static cell AMX_NATIVE_CALL set_user_origin(AMX *amx, cell *params) // set_user_
 	edict_t *pPlayer = INDEXENT(params[1]);
 
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
-	cell *newVectorCell = GET_AMXADDR(amx, params[2]);
+	cell *newVectorCell = MF_GetAmxAddr(amx, params[2]);
 
 	SET_SIZE(pPlayer, pPlayer->v.mins, pPlayer->v.maxs);
 	SET_ORIGIN(pPlayer, Vector((float)newVectorCell[0], (float)newVectorCell[1], (float)newVectorCell[2]));
@@ -402,7 +402,7 @@ static cell AMX_NATIVE_CALL set_user_rendering(AMX *amx, cell *params) // set_us
 	// Check index
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -410,7 +410,7 @@ static cell AMX_NATIVE_CALL set_user_rendering(AMX *amx, cell *params) // set_us
 	edict_t *pPlayer = INDEXENT(params[1]);
 
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -435,7 +435,7 @@ static cell AMX_NATIVE_CALL set_user_maxspeed(AMX *amx, cell *params) // set_use
 	// Check index
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -443,7 +443,7 @@ static cell AMX_NATIVE_CALL set_user_maxspeed(AMX *amx, cell *params) // set_use
 	edict_t *pPlayer = INDEXENT(params[1]);
 
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -462,7 +462,7 @@ static cell AMX_NATIVE_CALL get_user_maxspeed(AMX *amx, cell *params) // Float:g
 	// Check index
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -470,7 +470,7 @@ static cell AMX_NATIVE_CALL get_user_maxspeed(AMX *amx, cell *params) // Float:g
 	edict_t *pPlayer = INDEXENT(params[1]);
 
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -485,7 +485,7 @@ static cell AMX_NATIVE_CALL set_user_gravity(AMX *amx, cell *params) // set_user
 	// Check index
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -493,7 +493,7 @@ static cell AMX_NATIVE_CALL set_user_gravity(AMX *amx, cell *params) // set_user
 	edict_t *pPlayer = INDEXENT(params[1]);
 
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -510,7 +510,7 @@ static cell AMX_NATIVE_CALL get_user_gravity(AMX *amx, cell *params) // Float:ge
 	// Check index
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -518,7 +518,7 @@ static cell AMX_NATIVE_CALL get_user_gravity(AMX *amx, cell *params) // Float:ge
 	edict_t *pPlayer = INDEXENT(params[1]);
 
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -575,7 +575,7 @@ static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params) // set_use
 		if (shooter == 0) {
 			// "All" shooters, target (gettingHit) should be existing player id
 			if (gettingHit < 1 || gettingHit > gpGlobals->maxClients) {
-				AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+				MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 				return 0;
 			}
 			// Where can gettingHit get hit by all?
@@ -595,13 +595,13 @@ static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params) // set_use
 {
 	int index = params[1];
 	if (index < 0 || index > gpGlobals->maxClients){
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 	int target = params[2];
 
 	if (target < 0 || target > gpGlobals->maxClients){
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 	int bodyhits = params[3];
@@ -647,12 +647,12 @@ static cell AMX_NATIVE_CALL get_user_hitzones(AMX *amx, cell *params) // get_use
 {
 	int index = params[1];
 	if (index < 1 || index > gpGlobals->maxClients) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 	int target = params[2];
 	if (target < 1 || target > gpGlobals->maxClients) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 	//return GET_PLAYER_POINTER_I(index)->bodyhits[target];
@@ -670,7 +670,7 @@ static cell AMX_NATIVE_CALL get_user_hitzones(AMX *amx, cell *params) // get_use
 
 	if (shooter) {
 		if (FNullEnt(shooter)) {
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;
 		}
 
@@ -678,12 +678,12 @@ static cell AMX_NATIVE_CALL get_user_hitzones(AMX *amx, cell *params) // get_use
 	}
 	else {
 		if (!gettingHit) {
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;
 		}
 		else {
 			if (FNullEnt(gettingHit)) {
-				AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+				MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 				return 0;
 			}
 			else {
@@ -703,7 +703,7 @@ static cell AMX_NATIVE_CALL set_user_noclip(AMX *amx, cell *params) // set_user_
 	// Check index
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -712,7 +712,7 @@ static cell AMX_NATIVE_CALL set_user_noclip(AMX *amx, cell *params) // set_user_
 
 	// Check validity.
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -732,7 +732,7 @@ static cell AMX_NATIVE_CALL get_user_noclip(AMX *amx, cell *params) // get_user_
 	// Check index
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -741,7 +741,7 @@ static cell AMX_NATIVE_CALL get_user_noclip(AMX *amx, cell *params) // get_user_
 
 	// Check validity.
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -759,7 +759,7 @@ static cell AMX_NATIVE_CALL set_user_footsteps(AMX *amx, cell *params) // set_us
 	// Check index
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -768,7 +768,7 @@ static cell AMX_NATIVE_CALL set_user_footsteps(AMX *amx, cell *params) // set_us
 
 	// Check validity.
 	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 	
@@ -828,92 +828,6 @@ int ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress,
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
-DLL_FUNCTIONS gFunctionTable; /* = {
-	NULL,					// pfnGameInit
-	NULL,					// pfnSpawn
-	NULL,					// pfnThink
-	NULL,					// pfnUse
-	NULL,					// pfnTouch
-	NULL,					// pfnBlocked
-	NULL,					// pfnKeyValue
-	NULL,					// pfnSave
-	NULL,					// pfnRestore
-	NULL,					// pfnSetAbsBox
-
-	NULL,					// pfnSaveWriteFields
-	NULL,					// pfnSaveReadFields
-
-	NULL,					// pfnSaveGlobalState
-	NULL,					// pfnRestoreGlobalState
-	NULL,					// pfnResetGlobalState
-
-	ClientConnect,			// pfnClientConnect
-	ClientDisconnect,		// pfnClientDisconnect
-	NULL,					// pfnClientKill
-	NULL,					// pfnClientPutInServer
-	NULL,					// pfnClientCommand
-	NULL,					// pfnClientUserInfoChanged
-	NULL,					// pfnServerActivate
-	NULL,					// pfnServerDeactivate
-
-	PlayerPreThink,			// pfnPlayerPreThink
-	NULL,					// pfnPlayerPostThink
-
-	NULL,					// pfnStartFrame
-	NULL,					// pfnParmsNewLevel
-	NULL,					// pfnParmsChangeLevel
-
-	NULL,					// pfnGetGameDescription
-	NULL,					// pfnPlayerCustomization
-
-	NULL,					// pfnSpectatorConnect
-	NULL,					// pfnSpectatorDisconnect
-	NULL,					// pfnSpectatorThink
-	
-	NULL,					// pfnSys_Error
-
-	NULL,					// pfnPM_Move
-	NULL,					// pfnPM_Init
-	NULL,					// pfnPM_FindTextureType
-	
-	NULL,					// pfnSetupVisibility
-	NULL,					// pfnUpdateClientData
-	NULL,					// pfnAddToFullPack
-	NULL,					// pfnCreateBaseline
-	NULL,					// pfnRegisterEncoders
-	NULL,					// pfnGetWeaponData
-	NULL,					// pfnCmdStart
-	NULL,					// pfnCmdEnd
-	NULL,					// pfnConnectionlessPacket
-	NULL,					// pfnGetHullBounds
-	NULL,					// pfnCreateInstancedBaselines
-	NULL,					// pfnInconsistentFile
-	NULL,					// pfnAllowLagCompensation
-};*/
-
-C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion)
-{
-	gFunctionTable.pfnClientConnect = ClientConnect;
-	gFunctionTable.pfnPlayerPreThink = PlayerPreThink;
-
-	if(!pFunctionTable) {
-		LOG_ERROR(PLID, "GetEntityAPI2 called with null pFunctionTable");
-		return(FALSE);
-	}
-	else if(*interfaceVersion != INTERFACE_VERSION) {
-		LOG_ERROR(PLID, "GetEntityAPI2 version mismatch; requested=%d ours=%d", *interfaceVersion, INTERFACE_VERSION);
-		//! Tell metamod what version we had, so it can figure out who is out of date.
-		*interfaceVersion = INTERFACE_VERSION;
-		return(FALSE);
-	}
-
-	memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
-
-	return(TRUE);
-}
-
-/******************************************************************************************/
-
 void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *e, TraceResult *ptr) {
 	TRACE_LINE(v1, v2, fNoMonsters, e, ptr);
 
@@ -927,78 +841,7 @@ void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *e, Tr
 	RETURN_META(MRES_SUPERCEDE);
 }
 
-enginefuncs_t meta_engfuncs;
-C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion ) {
-	meta_engfuncs.pfnTraceLine = TraceLine;
-	memcpy(pengfuncsFromEngine, &meta_engfuncs, sizeof(enginefuncs_t));
-	return(TRUE);
-}
-
-/******************************************************************************************/
-
-C_DLLEXPORT int Meta_Query(char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_t *pMetaUtilFuncs) {
-	*pPlugInfo = &Plugin_info;
-	gpMetaUtilFuncs = pMetaUtilFuncs;
-
-	return(TRUE);
-}
-
-C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, meta_globals_t *pMGlobals, gamedll_funcs_t *pGamedllFuncs) {
-	if(!pMGlobals) {
-		LOG_ERROR(PLID, "Meta_Attach called with null pMGlobals");
-		return(FALSE);
-	}
-
-	gpMetaGlobals = pMGlobals;
-
-	if(!pFunctionTable) {
-		LOG_ERROR(PLID, "Meta_Attach called with null pFunctionTable");
-		return(FALSE);
-	}
-
-	memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
-	gpGamedllFuncs = pGamedllFuncs;
-
-	for (int index = 1; index < 33; index++)
-		memset(g_bodyhits[index], 0xFF, sizeof(char)*33);
-
-	return(TRUE);
-}
-
-C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason) {
-	if (now && reason) {
-		return(TRUE);
-	} else {
-		return(FALSE);
-	}
-}
-
-#ifdef __linux__
-C_DLLEXPORT void GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals ) {
-#else
-void WINAPI GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals ) {
-#endif
-	memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
-	gpGlobals = pGlobals;
-}
-
-C_DLLEXPORT int AMX_Query(module_info_s** info) {
-	*info = &module_info;
-
-	return 1;
-}
-
-C_DLLEXPORT int AMX_Attach(pfnamx_engine_g* amxeng,pfnmodule_engine_g* meng) {
-	g_engAmxFunc = amxeng;
-	g_engModuleFunc = meng;
-
-	if(!gpMetaGlobals) REPORT_ERROR(1, "[AMX] Fun module is not attached to metamod (module \"%s\")\n", LOGTAG);
-
-	ADD_AMXNATIVES(&module_info, fun_Exports);
-
-	return(1);
-}
-
-C_DLLEXPORT int AMX_Detach() {
-	return(1);
+void OnAmxxAttach()
+{
+	MF_AddNatives(fun_Exports);
 }

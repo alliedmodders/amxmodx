@@ -957,7 +957,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 		return 0;
 	}
 	MD5 md5;
-	md5.update(fp);
+	md5.update(fp);		// closes for us
 	md5.finalize();
 	char md5buffer[33];
 	md5.hex_digest(md5buffer);

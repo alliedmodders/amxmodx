@@ -121,6 +121,8 @@ static cell AMX_NATIVE_CALL pgsql_connect(AMX  *amx, cell *params)
 	PGconn *cn = make_connection(host, user, pass, name);
 
 	if (PQstatus(cn) != CONNECTION_OK) {
+		char *error = PQerrorMessage(cn);
+		SET_AMXSTRING(amx, params[5], (error?error:""), params[6]);
 		return 0;
 	}
 
@@ -162,8 +164,16 @@ static cell AMX_NATIVE_CALL pgsql_query(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL pgsql_nextrow(AMX *amx, cell *params)
 {
 	pgs *p = get_conn_i(params[1]);
+
 	if (p == NULL) {
 		return 0;
+	}
+
+	if (p->v.cn == NULL) {
+		return -1;
+	}
+	if (PQstatus(p->v.cn)!= CONNECTION_OK) {
+		return -1;
 	}
 
 	if (p->v.row > PQntuples(p->v.res)) {
@@ -182,6 +192,14 @@ static cell AMX_NATIVE_CALL pgsql_getfield(AMX *amx, cell *params)
 	if (p == NULL) {
 		return 0;
 	}
+
+	if (p->v.cn == NULL) {
+		return -1;
+	}
+	if (PQstatus(p->v.cn)!= CONNECTION_OK) {
+		return -1;
+	}
+
 	if (col-1 > PQnfields(p->v.res)) {
 		return 0;
 	}

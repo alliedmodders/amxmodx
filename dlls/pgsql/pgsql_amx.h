@@ -112,8 +112,6 @@ public:
 		destroy(v.user);
 		destroy(v.pass);
 		destroy(v.name);
-		destroy(v.cn);
-		destroy(v.res);
 		v.row = 0;
 		free = true;
 	}
@@ -133,8 +131,9 @@ public:
 		close();
 	}
 
+	bool free;
+
 private:
 	pgs *next;
-	bool free;
 	int id;
 };

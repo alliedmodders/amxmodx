@@ -53,7 +53,7 @@ public plugin_init() {
   new szMapName[4]
   get_mapname(szMapName, 3)
   if (equal(szMapName, "co_")) {
-    register_event("PlayHUDNot", "roundChange", "bc", "1=0", "2>56", "2<58")
+    register_event("PlayHUDNot", "roundChange", "bc", "1=0", "2>56", "2<59")
     is_combat = true
   }
 }

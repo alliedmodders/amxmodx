@@ -14,9 +14,9 @@
 #include <engine_const>
 
 
-native engfunc(type,{Float,_}:...)
-native dllfunc(type,{Float,_}:...)
-native traceresult(type,{Float,_}:...)
+native engfunc(type,{Float,_}:...);
+native dllfunc(type,{Float,_}:...);
+native traceresult(type,{Float,_}:...);
 
 /* Registers a client impulse to a function.  Function is passed the ID of the user. */
 native register_impulse(impulse, function[]);
@@ -82,11 +82,11 @@ native precache_generic(szFile[]);
 /* Precaches an event. */
 native precache_event(type, Name[], {float,_}:...);
 
-//set/get a user's speak flags
+/* set/get a user's speak flags */
 native set_speak(iIndex, iSpeakFlags)
 native get_speak(iIndex)
 
-//Drops an entity to the floor (work?)
+/* Drops an entity to the floor (work?) */
 native drop_to_floor(entity)
 
 /* Get whole buffer containing keys and their data. */
@@ -215,7 +215,7 @@ native Float:halflife_time();
 /* Sets map lighting, #OFF to disable. */
 native set_lights(const Lighting[]);
 
-// Sets/Gets what engine messages are blocked. */
+/* Sets/Gets what engine messages are blocked. */
 native set_msg_block(iMessage, iMessageFlags);
 native get_msg_block(iMessage);
 
@@ -255,8 +255,6 @@ forward client_PostThink(id);
 
 /* Forward for impulses. */
 forward client_impulse(id, impulse);
-
-forward server_changelevel(map[]);
 
 /* Called when an entity "thinks" (DispatchThink) */
 forward pfn_think(entid);

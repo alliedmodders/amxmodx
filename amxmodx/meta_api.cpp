@@ -229,7 +229,7 @@ int Spawn( edict_t *pent ) {
   Vault amx_config;
   // ###### Load custom path configuration
   amx_config.setSource( build_pathname("%s",
-    get_localinfo("amxx_cfg" , "addons/amxx/config/core.ini")) );
+    get_localinfo("amxx_cfg" , "addons/amxx/configs/core.ini")) );
 
   if ( amx_config.loadVault() ){
     Vault::iterator a = amx_config.begin();
@@ -261,7 +261,7 @@ int Spawn( edict_t *pent ) {
 
   //  ######  Load Vault
   g_vault.setSource( build_pathname("%s",
-    get_localinfo("amxx_vault" , "addons/amxx/config/vault.ini" ) ) );
+    get_localinfo("amxx_vault" , "addons/amxx/configs/vault.ini" ) ) );
   g_vault.loadVault( );
 
 

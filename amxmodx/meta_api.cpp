@@ -611,7 +611,23 @@ void C_ClientCommand(	edict_t	*pEntity ) {
     if (cmd && stricmp(cmd, "amxx")==0)
     {
       // Print version
-      CLIENT_PRINT(pEntity, print_console, AMX_VERSION);
+	  static char buf[1024];
+	  sprintf(buf, "%s %s\n", Plugin_info.name, Plugin_info.version);
+      CLIENT_PRINT(pEntity, print_console, buf);
+	  sprintf(buf, "Authors: %s  (%s)\n", "Felix \"SniperBeamer\" Geyer, David \"BAILOPAN\" Anderson, Pavol \"PM OnoTo\" Marko, Jonny \"Got His Gun\" Bergstrom, and Lukasz \"SidLuke\" Wlasinski.",  Plugin_info.url);
+	  CLIENT_PRINT(pEntity, print_console, buf);
+	  sprintf(buf, "Compiled: %s\n", __DATE__ ", " __TIME__);
+      CLIENT_PRINT(pEntity, print_console, buf);
+#ifdef JIT
+	  sprintf(buf, "Core mode: JIT\n");
+#else
+#ifdef ASM32
+      sprintf(buf, "Core mode: ASM\n");
+#else
+	  sprintf(buf, "Core mode: Normal\n");
+#endif
+#endif
+	  CLIENT_PRINT(pEntity, print_console, buf);
       RETURN_META(MRES_SUPERCEDE);
     }
   }

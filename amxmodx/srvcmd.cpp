@@ -148,8 +148,8 @@ void amx_command(){
 		{
 
 				print_srvconsole( "%s %s\n", Plugin_info.name, Plugin_info.version);
-				print_srvconsole(   "author: %s (%s)\n", Plugin_info.author, Plugin_info.url);
-				print_srvconsole(   "compiled: %s\n", __DATE__ ", " __TIME__);
+				print_srvconsole(   "Authors: %s  (%s)\n", "Felix \"SniperBeamer\" Geyer, David \"BAILOPAN\" Anderson, Pavol \"PM OnoTo\" Marko, Jonny \"Got His Gun\" Bergstrom, and Lukasz \"SidLuke\" Wlasinski.",  Plugin_info.url);
+				print_srvconsole(   "Compiled: %s\n", __DATE__ ", " __TIME__);
 #ifdef JIT
 				print_srvconsole(   "Core mode: JIT\n");
 #else

@@ -2,7 +2,7 @@
 
 using namespace std;
 
-std::vector<argMsg*> Msg;
+CVector<argMsg*> Msg;
 int msgHooks[256] = {0};
 int msgBlocks[256] = {0};
 int msgDest;

@@ -1,12 +1,12 @@
 #ifndef _ENGINE_INCLUDE_H
 #define _ENGINE_INCLUDE_H
 
-#include <vector>
 #include <string>
 #include <extdll.h>	
 #include <string.h> 
 #include <meta_api.h>
 #include <sdk_util.h>
+#include "CVector.h"
 #ifndef CBASEPLAYER_H
 #define CBASEPLAYER_H
 #include <cbase.h>
@@ -296,9 +296,9 @@ extern struct usercmd_s *g_cmd;
 extern struct PlayerInfo plinfo[33];
 extern struct GlobalInfo glinfo;
 extern AMX_NATIVE_INFO engine_Natives[];
-extern std::vector<Impulse *> Impulses;
-extern std::vector<EntClass *> Thinks;
-extern std::vector<EntClass *> Uses;
-extern std::vector<Touch *> Touches;
+extern CVector<Impulse *> Impulses;
+extern CVector<EntClass *> Thinks;
+extern CVector<EntClass *> Uses;
+extern CVector<Touch *> Touches;
 
 #endif //_ENGINE_INCLUDE_H

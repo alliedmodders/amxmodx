@@ -15,10 +15,10 @@ int CmdStartForward = 0;
 int StartFrameForward = 0;
 int VexdTouchForward = 0;
 int VexdServerForward = 0;
-std::vector<Impulse *> Impulses;
-std::vector<EntClass *> Thinks;
-std::vector<EntClass *> Uses;
-std::vector<Touch *> Touches;
+CVector<Impulse *> Impulses;
+CVector<EntClass *> Thinks;
+CVector<EntClass *> Uses;
+CVector<Touch *> Touches;
 KeyValueData *g_pkvd;
 bool g_inKeyValue=false;
 

@@ -22,8 +22,10 @@
 * Good place for configuration loading, commands and cvars registration. */
 forward plugin_init();
 
+/* Called when the plugin is paused. */
 forward plugin_pause();
 
+/* Called when the plugin is unpaused. */
 forward plugin_unpause();
 
 /* Function is called when all plugin_init from plugins

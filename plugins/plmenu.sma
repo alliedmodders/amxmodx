@@ -1,9 +1,35 @@
-/* AMX Mod X script.
+/* AMX Mod X
+*   Players Menu Plugin
 *
-* (c) 2002-2004, OLO
-*  modified by the AMX Mod X Development Team
+* by the AMX Mod X Development Team
+*  originally developed by OLO
 *
-* This file is provided as is (no warranties).
+* This file is part of AMX Mod X.
+*
+*
+*  This program is free software; you can redistribute it and/or modify it
+*  under the terms of the GNU General Public License as published by the
+*  Free Software Foundation; either version 2 of the License, or (at
+*  your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful, but
+*  WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+*  General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with this program; if not, write to the Free Software Foundation,
+*  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+*
+*  In addition, as a special exception, the author gives permission to
+*  link the code of this program with the Half-Life Game Engine ("HL
+*  Engine") and Modified Game Libraries ("MODs") developed by Valve,
+*  L.L.C ("Valve"). You must obey the GNU General Public License in all
+*  respects for all of the code used other than the HL Engine and MODs
+*  from Valve. If you modify this file, you may extend this exception
+*  to your version of the file, but you are not obligated to do so. If
+*  you do not wish to do so, delete this exception statement from your
+*  version.
 */
 
 #include <amxmod> 
@@ -31,7 +57,7 @@ new g_cstrikeRunning
 
 public plugin_init()
 {
-  register_plugin("Players Menu","0.1","default")
+  register_plugin("Players Menu",AMX_VERSION_STR,"AMXX Dev Team")
   register_clcmd("amx_kickmenu","cmdKickMenu",ADMIN_KICK,"- displays kick menu")
   register_clcmd("amx_banmenu","cmdBanMenu",ADMIN_BAN,"- displays ban menu")
   register_clcmd("amx_slapmenu","cmdSlapMenu",ADMIN_SLAY,"- displays slap/slay menu")   

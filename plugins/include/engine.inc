@@ -62,6 +62,10 @@ native precache_generic(szFile[]);
 /* Precaches an event. */
 native precache_event(type, Name[], {float,_}:...);
 
+//set/get a user's speak flags
+native set_speak(iIndex, iSpeakFlags)
+native get_speak(iIndex)
+
 //Drops an entity to the floor (work?)
 native drop_to_floor(entity)
 

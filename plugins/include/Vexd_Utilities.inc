@@ -96,6 +96,9 @@ stock AttachView(iIndex, iTargetIndex)
 stock SetView(iIndex, ViewType)
 	return set_view(iIndex, ViewType)
 
+stock SetSpeak(iIndex, iSpeakFlags)
+	return set_speak(iIndex, iSpeakFlags)
+
 forward vexd_pfntouch(pToucher, pTouched)
 
 forward ServerFrame()

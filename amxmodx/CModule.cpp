@@ -33,19 +33,22 @@
 #include <meta_api.h>
 #include "amxmodx.h"
 
-#ifndef FAR			// PM: Test: FAR
+#ifndef FAR
 #define FAR
 #endif
 
+// Old
 typedef int (FAR *QUERYMOD)(module_info_s**);
 typedef int (FAR *ATTACHMOD)(pfnamx_engine_g*,pfnmodule_engine_g*);
 typedef int (FAR *DETACHMOD)(void);
 
-QUERYMOD QueryModule;
-ATTACHMOD AttachModule;
-DETACHMOD DetachModule;
+// New
+typedef void* (*PFN_REQ_FNPTR)(const char * /*name*/);
+typedef int (FAR *QUERYMOD_NEW)(int * /*ifvers*/, amxx_module_info_s * /*modInfo*/);
+typedef int (FAR *ATTACHMOD_NEW)(PFN_REQ_FNPTR /*reqFnptrFunc*/);
+typedef int (FAR *DETACHMOD_NEW)(void);
 
-
+// Old
 // These functions are needed since Small Abstract Machine 2.5.0
 int wamx_FindPublic(AMX *amx, char *name, int *index)
 { return amx_FindPublic(amx, name, index); }
@@ -124,84 +127,216 @@ pfnmodule_engine_g engModuleFunc = {
 // class CModule
 // *****************************************************
 
-CModule::CModule(const char* fname) : filename(fname)
+CModule::CModule(const char* fname) : m_Filename(fname)
 {
-	metamod = false;
-	info = 0;
-	module = 0;
-	status = MODULE_NONE;
+	clear(false);
 }
+
 CModule::~CModule()
 {
-	if ( module ) DLFREE(module);
-	natives.clear();
+	// old & new
+	if ( m_Handle )
+		DLFREE(m_Handle);
+
+	clear();
 }
+
+void CModule::clear(bool clearFilename)
+{
+	// old & new
+	m_Metamod = false;
+	m_Handle = NULL;
+	m_Status = MODULE_NONE;
+	if (clearFilename)
+		m_Filename.set("unknown");
+
+	// old
+	m_InfoOld = NULL;
+	// new
+	m_Amxx = false;
+	m_InfoNew.author = "unknown";
+	m_InfoNew.name = "unknown";
+	m_InfoNew.version = "unknown";
+	m_InfoNew.reload = 0;
+	m_MissingFunc = NULL;
+
+	m_Natives.clear();
+}
+
 bool CModule::attachModule()
 {
-	if ( status != MODULE_QUERY )
+	// old & new
+	if (m_Status != MODULE_QUERY || !m_Handle)
 		return false;
-	AttachModule = (ATTACHMOD)DLPROC(module,"AMX_Attach");
-	if ( AttachModule )	(*AttachModule)(&engAmxFunc,&engModuleFunc);
-	status = MODULE_LOADED;
-	return true;
+
+	if (m_Amxx)
+	{
+		// new
+		ATTACHMOD_NEW AttachFunc_New = (ATTACHMOD_NEW)DLPROC(m_Handle, "AMXX_Attach");
+
+		if (!AttachFunc_New)
+			return false;
+		g_CurrentlyAttachedModule = this;
+		int retVal = (*AttachFunc_New)(Module_ReqFnptr);
+		g_CurrentlyAttachedModule = NULL;
+
+		switch (retVal)
+		{
+		case AMXX_OK:
+			m_Status = MODULE_LOADED;
+			return true;
+		case AMXX_PARAM:
+			AMXXLOG_Log("[AMXX] Internal Error: Module \"%s\" (version \"%s\") retured \"Invalid parameter\" from Attach func.", m_Filename.str(), getVersion());
+			m_Status = MODULE_INTERROR;
+			return false;
+		case AMXX_FUNC_NOT_PRESENT:
+			m_Status = MODULE_FUNCNOTPRESENT;
+			m_MissingFunc = g_LastRequestedFunc;
+			return false;
+		default:
+			AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.",  m_Filename.str(), getVersion());
+			m_Status = MODULE_BADLOAD;
+			return false;
+		}
+	}
+	else
+	{
+		// old
+		ATTACHMOD AttachFunc = (ATTACHMOD)DLPROC(m_Handle, "AMX_Attach");
+
+		if (AttachFunc)
+			(*AttachFunc)(&engAmxFunc,&engModuleFunc);
+		m_Status = MODULE_LOADED;
+		return true;
+	}
 }
+
 bool CModule::queryModule()
 {
-	if ( status != MODULE_NONE ) // don't check if already quried
+	if (m_Status != MODULE_NONE)			// don't check if already queried
 		return false;
-	module = DLLOAD( filename.str() ); // link dll
-	if ( !module ){
-		status = MODULE_BADLOAD;
-		return false;
-	}
-	int meta = (int)DLPROC(module,"Meta_Attach"); // check if also MM
-	if ( meta ) metamod = true;
 
-	QueryModule = (QUERYMOD)DLPROC(module,"AMX_Query"); // check what version
-	if (QueryModule == 0) {
-		status = MODULE_NOQUERY;
+	m_Handle = DLLOAD(m_Filename.str());		// load file
+	if (!m_Handle)
+	{
+		m_Status = MODULE_BADLOAD;
 		return false;
 	}
-	(*QueryModule)( &info );
-	if ( info == 0 ){
-		status = MODULE_NOINFO;
-		return false;
+
+	// Check whether the module uses metamod (for auto attach)
+	if (DLPROC(m_Handle, "Meta_Attach"))
+		m_Metamod = true;
+
+	// Try new interface first
+	QUERYMOD_NEW queryFunc_New = (QUERYMOD_NEW)DLPROC(m_Handle, "AMXX_Query");
+	if (queryFunc_New)
+	{
+		m_Amxx = true;
+		int ifVers = AMXX_INTERFACE_VERSION;
+		switch ((*queryFunc_New)(&ifVers, &m_InfoNew))
+		{
+		case AMXX_PARAM:
+			AMXXLOG_Log("[AMXX] Internal Error: Module \"%s\" (version \"%s\") retured \"Invalid parameter\" from Attach func.", m_Filename.str(), getVersion());
+			m_Status = MODULE_INTERROR;
+			return false;
+		case AMXX_IFVERS:
+			if (ifVers < AMXX_INTERFACE_VERSION)
+				m_Status = MODULE_OLD;
+			else
+				m_Status = MODULE_NEWER;
+			return false;
+		case AMXX_OK:
+			break;
+		default:
+			AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.",  m_Filename.str(), getVersion());
+			m_Status = MODULE_BADLOAD;
+			return false;
+		}
+
+		// Check for attach
+		if (!DLPROC(m_Handle, "AMXX_Attach"))
+		{
+			m_Status = MODULE_NOATTACH;
+			return false;
+		}
+
+		m_Status = MODULE_QUERY;
+		return true;
 	}
-	if ( info->ivers != AMX_INTERFACE_VERSION )	{
-		status = MODULE_OLD;
-		return false;
+	else
+	{
+		// Try old interface
+		QUERYMOD queryFunc_Old = (QUERYMOD)DLPROC(m_Handle,"AMX_Query"); // check what version
+		if (!queryFunc_Old)
+		{
+			m_Status = MODULE_NOQUERY;
+			return false;
+		}
+
+		(*queryFunc_Old)(&m_InfoOld);
+
+		if (!m_InfoOld)
+		{
+			m_Status = MODULE_NOINFO;
+			return false;
+		}
+
+		if (m_InfoOld->ivers != AMX_INTERFACE_VERSION)
+		{
+			m_Status = MODULE_OLD;
+			return false;
+		}
+
+		// Check for attach
+		if (!DLPROC(m_Handle, "AMX_Attach"))
+		{
+			m_Status = MODULE_NOATTACH;
+			return false;
+		}
+
+		m_InfoOld->serial = (long int)this;
+		m_Status = MODULE_QUERY;
+		return true;
 	}
-	AttachModule = (ATTACHMOD)DLPROC(module,"AMX_Attach"); // check for attach
-	if ( AttachModule == 0)	{
-		status = MODULE_NOATTACH;
-		return false;
-	}
-	info->serial = (long int)this;
-	status = MODULE_QUERY;
-	return true;
 }
+
 bool CModule::detachModule()
 {
-	if ( status != MODULE_LOADED )
+	if (m_Status != MODULE_LOADED)
 		return false;
-	DetachModule = (DETACHMOD)DLPROC(module,"AMX_Detach");
-	if (DetachModule) (*DetachModule)();
-	DLFREE(module);
-	module = 0;
-	natives.clear();
-	status = MODULE_NONE;
+
+	if (m_Amxx)
+	{
+		DETACHMOD_NEW detachFunc_New = (DETACHMOD_NEW)DLPROC(m_Handle, "AMXX_Detach");
+		if (detachFunc_New)
+			(*detachFunc_New)();
+	}
+	else
+	{
+		DETACHMOD detachFunc_Old = (DETACHMOD)DLPROC(m_Handle, "AMX_Detach");
+		if (detachFunc_Old)
+			(*detachFunc_Old)();
+	}
+	DLFREE(m_Handle);
+	clear();
 	return true;
 }
-const char* CModule::getStatus() const {
-	switch(status){
-	case MODULE_NONE: return "error";
-	case MODULE_QUERY: return "pending";
-	case MODULE_BADLOAD:return "bad load";
-	case MODULE_LOADED:return "running";
-	case MODULE_NOINFO:return "no info";
-	case MODULE_NOQUERY:return "no query";
-	case MODULE_NOATTACH:return "no attach";
-	case MODULE_OLD:return "old";
+
+const char* CModule::getStatus() const
+{
+	switch(m_Status)
+	{
+	case MODULE_NONE:		return "error";
+	case MODULE_QUERY:		return "pending";
+	case MODULE_BADLOAD:	return "bad load";
+	case MODULE_LOADED:		return "running";
+	case MODULE_NOINFO:		return "no info";
+	case MODULE_NOQUERY:	return "no query";
+	case MODULE_NOATTACH:	return "no attach";
+	case MODULE_OLD:		return "old";
+	case MODULE_FUNCNOTPRESENT:
+	case MODULE_NEWER:		return "newer";
+	case MODULE_INTERROR:	return "internal err";
 	}
 	return "unknown";
 }

@@ -98,10 +98,10 @@ if ($OPTIONS{"amd64"})
 	}
 }
 
+unlink("$outdir/$bin");
 if ($OPTIONS{"clean"})
 {
 	`rm $outdir/*.o`;
-	`rm $outdir/$bin`;
 	die("Project cleaned.\n");
 }
 
@@ -173,4 +173,5 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 }
 
 $gcc = "g++ $cflags -shared -ldl -lm @LINK -o $outdir/$bin";
+print "$gcc\n";
 `$gcc`;

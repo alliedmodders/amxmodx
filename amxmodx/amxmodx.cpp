@@ -1676,7 +1676,14 @@ static cell AMX_NATIVE_CALL set_task(AMX *amx, cell *params) /* 2 param */
 
   char* stemp = get_amxstring(amx,params[2],1, a );
 
-  if (amx_FindPublic(amx, stemp , &iFunc) != AMX_ERR_NONE){
+  if (params[5])
+  {
+	iFunc = registerSPForwardByName(amx, stemp, FP_ARRAY, FP_CELL, FP_DONE);
+  } else {
+    iFunc = registerSPForwardByName(amx, stemp, FP_CELL, FP_DONE);
+  }
+  if (!iFunc)
+  {
     AMXXLOG_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")",stemp,plugin->getName() );
     amx_RaiseError(amx,AMX_ERR_NATIVE);
     return 0;
@@ -1689,10 +1696,7 @@ static cell AMX_NATIVE_CALL set_task(AMX *amx, cell *params) /* 2 param */
 
   char* temp = get_amxstring(amx,params[6],0,a);
 
-  g_tasksMngr.registerTask( plugin ,
-    iFunc , UTIL_ReadFlags(temp), params[3], base ,
-    params[5] ,
-    get_amxaddr(amx,params[4]) , params[7] );
+  g_tasksMngr.registerTask( plugin , iFunc , UTIL_ReadFlags(temp), params[3], base ,  params[5] ,  get_amxaddr(amx,params[4]) , params[7] );
 
   return 1;
 }

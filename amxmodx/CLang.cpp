@@ -350,7 +350,7 @@ void CLangMngr::CLang::MergeDefinitions(CQueue<sKeyDef*> &vec)
 				entry->SetKey(key);
 				entry->SetCache(false);
 			} else {
-				AMXXLOG_Log("[AMXX] Language key %s[%s] defined twice", m_LMan->GetKey(key), m_LanguageName);
+				//AMXXLOG_Log("[AMXX] Language key %s[%s] defined twice", m_LMan->GetKey(key), m_LanguageName);
 			}
 		}
 		delete vec.front();

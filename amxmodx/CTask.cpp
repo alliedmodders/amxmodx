@@ -61,14 +61,11 @@ void CTaskMngr::CTask::set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags,
 
 	if (iParamsLen)
 	{
-		// also add a cell to the back with the value 0
 		m_iParamLen = iParamsLen + 1;
 		m_pParams = new cell[m_iParamLen];
 		memcpy(m_pParams, pParams, sizeof(cell)*iParamsLen);
 		m_pParams[iParamsLen] = 0;
-	}
-	else
-	{
+	} else {
 		m_iParamLen = 0;
 		m_pParams = NULL;
 	}
@@ -114,28 +111,12 @@ void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, f
 
 	if (execute)
 	{
-		if (m_pPlugin->isExecutable(m_iFunc))
+		if (m_iParamLen)	// call with parameters
 		{
-			int err;
-			if (m_iParamLen)	// call with parameters
-			{
-				cell amx_addr, *phys_addr;
-				if (amx_Allot(m_pPlugin->getAMX(), m_iParamLen, &amx_addr, &phys_addr) != AMX_ERR_NONE)
-					AMXXLOG_Log("[AMXX] Failed to allocate AMX memory (task \"%d\") (plugin \"%s\")", m_iId, m_pPlugin->getName());
-				else
-				{
-					copy_amxmemory(phys_addr, m_pParams, m_iParamLen);
-					if ((err = amx_Exec(m_pPlugin->getAMX(), NULL, m_iFunc, 2, amx_addr, m_iId)) != AMX_ERR_NONE)
-						AMXXLOG_Log("[AMXX] Run time error %d on line %ld (task \"%d\") (plugin \"%s\")", err, m_pPlugin->getAMX()->curline, m_iId, m_pPlugin->getName());
-
-					amx_Release(m_pPlugin->getAMX(), amx_addr);
-				}
-			}
-			else
-			{
-				if ((err = amx_Exec(m_pPlugin->getAMX(), NULL, m_iFunc, 1, m_iId)) != AMX_ERR_NONE)
-					AMXXLOG_Log("[AMXX] Run time error %d on line %ld (task \"%d\") (plugin \"%s\")", err, m_pPlugin->getAMX()->curline, m_iId, m_pPlugin->getName());
-			}
+			cell arr = prepareCellArray(m_pParams, m_iParamLen);
+			executeForwards(m_iFunc, arr, m_iId);
+		} else {
+			executeForwards(m_iFunc, m_iId);
 		}
 
 		// set new exec time OR remove the task if needed
@@ -145,6 +126,8 @@ void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, f
 		}
 		else
 		{
+			unregisterSPForward(m_iFunc);
+			m_iFunc = 0;
 			m_bFree = true;
 		}
 	}

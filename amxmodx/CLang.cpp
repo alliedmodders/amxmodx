@@ -787,7 +787,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 				char *ptr = format+1;
 				if (*src != '%')
 				{
-					while (!isalpha(*ptr++ = *src++))
+					while (*src != 0 && !isalpha(*ptr++ = *src++))
 						/*nothing*/;
 					--src;
 					*ptr = 0;

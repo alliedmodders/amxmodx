@@ -105,7 +105,11 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 			}
 			// exec
 			cell retVal;
-			amx_Execv((*iter).pPlugin->getAMX(), &retVal, (*iter).func, m_NumParams, realParams);
+			int err = amx_Execv((*iter).pPlugin->getAMX(), &retVal, (*iter).func, m_NumParams, realParams);
+			// log runtime error, if any
+			if (err != AMX_ERR_NONE)
+				AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")", err, (*iter).pPlugin->getAMX()->curline, (*iter).pPlugin->getName());
+
 			// cleanup strings & arrays
 			for (i = 0; i < m_NumParams; ++i)
 			{

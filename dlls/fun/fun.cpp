@@ -518,13 +518,19 @@ static cell AMX_NATIVE_CALL get_user_gravity(AMX *amx, cell *params) // Float:ge
 
 static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params) // set_user_hitzones(index = 0, target = 0, body = 255); = 3 arguments
 {
-	// Gets user gravity.
+	// Sets user hitzones.
 	// params[1] = the one(s) who shoot(s), shooter
 	int shooter = params[1];
+	if (shooter == -1)
+		shooter = 0;
 	// params[2] = the one getting hit
 	int gettingHit = params[2];
+	if (gettingHit == -1)
+		gettingHit = 0;
 	// params[3] = specified hit zones
 	int hitzones = params[3];
+	if (hitzones == -1)
+		hitzones = 255;
 
 	//set_user_hitzones(id, 0, 0) // Makes ID not able to shoot EVERYONE - id can shoot on 0 (all) at 0
 	//set_user_hitzones(0, id, 0) // Makes EVERYONE not able to shoot ID - 0 (all) can shoot id at 0
@@ -552,6 +558,39 @@ static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params) // set_use
 	}
 
 	return 1;
+}
+
+static cell AMX_NATIVE_CALL get_user_hitzones(AMX *amx, cell *params) // get_user_hitzones(index, target); = 2 arguments
+{
+	// Gets user hitzones.
+	// params[1] = if this is not 0, return what zones this player can hit
+	int shooter = params[1];
+	// params[2] = if shooter was 0, and if this is a player, return what zones this player can get hit in, else... make runtime error?
+	int gettingHit = params[2];
+
+	if (shooter) {
+		if (FNullEnt(shooter)) {
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
+		}
+
+		return g_zones_toHit[shooter];
+	}
+	else {
+		if (!gettingHit) {
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
+		}
+		else {
+			if (FNullEnt(gettingHit)) {
+				AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+				return 0;
+			}
+			else {
+				return g_zones_getHit[gettingHit];
+			}
+		}
+	}
 }
 
 static cell AMX_NATIVE_CALL set_user_noclip(AMX *amx, cell *params) // set_user_noclip(index, noclip = 0); = 2 arguments
@@ -661,7 +700,7 @@ AMX_NATIVE_INFO fun_Exports[] = {
 	{"set_user_gravity",		set_user_gravity},
 	{"get_user_gravity",		get_user_gravity},
 	{"set_user_hitzones",		set_user_hitzones},
-	//{"get_hitzones",			get_hitzones},
+	{"get_user_hitzones",		get_user_hitzones},
 	{"set_user_noclip",			set_user_noclip},
 	{"get_user_noclip",			get_user_noclip},
 	{"set_user_footsteps",		set_user_footsteps},

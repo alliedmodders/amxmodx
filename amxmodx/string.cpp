@@ -577,7 +577,7 @@ static cell AMX_NATIVE_CALL amx_trim(AMX *amx, cell *params)
 	char *asdf = get_amxstring(amx, params[1], 0, len);
 	int flag = 0, incr = 0;
 	register int i = 0;
-	for (i=strlen(asdf); i>=0; i--)
+	for (i=strlen(asdf)-1; i>=0; i--)
 	{
 		if (!isspace(asdf[i]))
 		{

@@ -48,7 +48,7 @@ new g_motdFile[] = "addons/amxx/configs/conmotd.txt"
 
 public plugin_init()
 {
-  register_plugin("Welcome Message","0.15","AMXX Dev Team")
+  register_plugin("Welcome Message","0.16","AMXX Dev Team")
   g_cstrikeRunning = is_running("cstrike")
 }
 

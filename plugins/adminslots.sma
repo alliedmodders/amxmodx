@@ -42,7 +42,7 @@ new g_cmdLoopback[16]
 
 public plugin_init()
 {
-	register_plugin("Slots Reservation","0.15","AMXX Dev Team")
+	register_plugin("Slots Reservation","0.16","AMXX Dev Team")
 	register_cvar("amx_reservation","1")
 	
   	format( g_cmdLoopback, 15, "amxres%c%c%c%c" , 

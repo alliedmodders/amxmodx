@@ -53,7 +53,7 @@ new g_system[MAX_SYSTEM]
 new g_systemNum
 
 public plugin_init(){
-  register_plugin("Pause Plugins","0.15","AMXX Dev Team")
+  register_plugin("Pause Plugins","0.16","AMXX Dev Team")
   register_concmd("amx_pausecfg","cmdPlugin",ADMIN_CFG,"- list commands for pause/unpause managment")
   register_clcmd("amx_pausecfgmenu","cmdMenu",ADMIN_CFG,"- pause/unpause plugins with menu")
 #if defined DIRECT_ONOFF

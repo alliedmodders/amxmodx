@@ -51,7 +51,7 @@ public plugin_precache(){
 }
 
 public plugin_init() {
-  register_plugin("Stats Configuration","0.15","AMXX Dev Team")
+  register_plugin("Stats Configuration","0.16","AMXX Dev Team")
   register_menucmd(register_menuid("\yStats Configuration"),1023,"actionCfgMenu")
   loadSettings(g_fileToSave)
 }

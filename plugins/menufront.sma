@@ -122,7 +122,7 @@ new g_funModule
 
 public plugin_init()
 {
-  register_plugin("Menus Front-End","0.15","AMXX Dev Team")  
+  register_plugin("Menus Front-End","0.16","AMXX Dev Team")  
 
   register_menucmd(register_menuid("AMX Mod X Menu"),1023,"actionMenu") 
   register_clcmd("amxmodmenu","cmdMenu",ADMIN_MENU,"- displays menus")    

@@ -148,13 +148,13 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 		return (amx->error = AMX_ERR_FORMAT);
 	}
 
-#ifdef JIT
-	if ( ((int)CVAR_GET_FLOAT("amx_debug") == 2 || (debug && (int)CVAR_GET_FLOAT("amx_debug"))) )
+	if ( ((int)CVAR_GET_FLOAT("amx_debug") >= 2 || (debug && (int)CVAR_GET_FLOAT("amx_debug"))) )
 	{
 		//automatic debug mode
 		hdr->flags |= AMX_FLAG_LINEOPS;
+		hdr->flags |= AMX_FLAG_DEBUG;
+		printf("init flags:= %d\n", hdr->flags);
 	}
-#endif
 
 	int err;
 	memset(amx, 0, sizeof(*amx));

@@ -1,10 +1,8 @@
 /* Strings manipulation
-*
-* by the AMX Mod X Development Team
-*  originally developed by OLO
-*
-* This file is provided as is (no warranties).
-*/
+ *
+ * (c) 2002-2003, OLO
+ * This file is provided as is (no warranties).
+ */
 
 #if defined _string_included
   #endinput
@@ -36,11 +34,9 @@ native format_args(output[] ,len ,pos = 0);
 
 /* Converts number to string. */
 native num_to_str(num,string[],len);
-native numtostr(num,string[],len);
 
 /* Returns converted string to number. */
 native str_to_num(const string[]);
-native strtonum(const string[]);
 
 /* Checks if two strings equal. If len var is set
 * then there are only c chars comapred. */

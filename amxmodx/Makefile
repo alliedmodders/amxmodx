@@ -15,7 +15,7 @@ EXTRA_INCLUDEDIRS = -Iextra/include
 EXTRA_FLAGS = -Dstrcmpi=strcasecmp
 
 SDKTOP=../hlsdk
-METADIR=../metamod
+METADIR=../metamodx
 
 
 SDKSRC=$(SDKTOP)/SourceCode
@@ -29,7 +29,7 @@ else
 	OS=LINUX
 endif
 
-CC_LINUX=gcc-2.95
+CC_LINUX=gcc
 ifeq "$(OS)" "WIN32"
 	CC_WIN32=gcc
 	LD_WINDLL=dllwrap
@@ -72,7 +72,7 @@ CFLAGS:=$(CCOPT) $(CFLAGS) $(ODEF) $(EXTRA_FLAGS)
 
 DO_CC_LINUX=$(CC_LINUX) $(CFLAGS) -fPIC $(INCLUDEDIRS) -o $@ -c $<
 DO_CC_WIN32=$(CC_WIN32) $(CFLAGS) $(INCLUDEDIRS) -o $@ -c $<
-LINK_LINUX=$(CC_LINUX) $(CFLAGS) -shared -ldl -lm $(OBJ_LINUX) $(OBJC_LINUX) $(EXTRA_LIBDIRS_LINUX) $(EXTRA_LIBS_LINUX) -o $@
+LINK_LINUX=$(CC_LINUX) $(CFLAGS) -lstdc++ -shared -ldl -lm $(OBJ_LINUX) $(OBJC_LINUX) $(EXTRA_LIBDIRS_LINUX) $(EXTRA_LIBS_LINUX) -o $@
 LINK_WIN32=$(LD_WINDLL) -mwindows --def $(MODNAME).def --add-stdcall-alias $(OBJ_WIN32) $(OBJC_WIN32) $(EXTRA_LIBDIRS_WIN32) $(EXTRA_LIBS_WIN32) -o $@
 
 $(OBJDIR_LINUX)/%.o: $(SRCDIR)/%.c

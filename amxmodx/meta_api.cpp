@@ -252,7 +252,11 @@ int	C_Spawn( edict_t *pent ) {
   //  ######  Load Vault
   g_vault.setSource( build_pathname("%s", get_localinfo("amxx_vault", "addons/amxx/configs/vault.ini"))	);
   g_vault.loadVault( );
-
+  if (strlen(g_vault.get("server_language")) < 1)
+  {
+     g_vault.put("server_language", "en");
+	 g_vault.saveVault();
+  }
 
   //  ###### Init time and freeze tasks
   g_game_timeleft =	g_bmod_dod ? 1 : 0;

@@ -528,11 +528,13 @@ const char *CLangMngr::Format(const char *src, ...)
 					if ((int)langName == -1)
 						cpLangName = g_vault.get("server_language");
 					else if ((int)langName >= 1 && (int)langName <= 32)
-						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I((int)langName)->pEdict, "_language");
+						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I((int)langName)->pEdict, "lang");
 					else
 					{
 						cpLangName = langName;
 					}
+					if (!cpLangName || strlen(cpLangName) < 1)
+						cpLangName = "en";
 					char *key = va_arg(argptr, char*);
 					const char *def = GetDef(cpLangName, key);
 					while (*def)
@@ -557,7 +559,6 @@ const char *CLangMngr::Format(const char *src, ...)
 								double tmpArg = va_arg(argptr, double);
 								sprintf(outptr, "%f", tmpArg);
 								outptr += strlen(outptr);
-								break;
 								break;
 							}
 						case INSERT_NEWLINE:
@@ -648,12 +649,14 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 					if (*pLangName == -1)
 						cpLangName = g_vault.get("server_language");
 					else if (*pLangName >= 1 && *pLangName <= 32)
-						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(*pLangName)->pEdict, "_language");
+						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(*pLangName)->pEdict, "lang");
 					else
 					{
 						int len = 0;
 						cpLangName = get_amxstring(amx, langName, 2, len);
 					}
+					if (!cpLangName || strlen(cpLangName) < 1)
+						cpLangName = "en";
 					int len;
 					char *key = get_amxstring(amx, params[parm++], 1, len);
 					const char *def = GetDef(cpLangName, key);

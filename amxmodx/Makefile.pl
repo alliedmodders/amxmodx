@@ -21,6 +21,7 @@ $sdk = "../hlsdk/SourceCode";
 $mm = "../metamod/metamod";
 $gccf = "gcc";
 $ccf = "cc";
+$amd64_lstdc = "-lstdc++";
 
 @CPP_SOURCE_FILES = ("meta_api.cpp", "CFile.cpp", "CVault.cpp", "vault.cpp", "float.cpp", "file.cpp", "modules.cpp", "CMisc.cpp", "CTask.cpp", "string.cpp", "amxmodx.cpp", "CEvent.cpp", "CCmd.cpp", "CLogEvent.cpp", "srvcmd.cpp", "strptime.cpp", "amxcore.cpp", "amxtime.cpp", "power.cpp", "amxxlog.cpp", "fakemeta.cpp", "amxxfile.cpp", "CLang.cpp", "md5.cpp", "emsg.cpp", "CForward.cpp", "CPlugin.cpp", "CModule.cpp", "CMenu.cpp", "util.cpp");
 
@@ -185,6 +186,7 @@ if ($OPTIONS{"jit"})
 if ($OPTIONS{"amd64"})
 {
 	push(@LINK, "zlib/libz64.a");
+	push(@LINK, $amd64_lstdc);
 } else {
 	push(@LINK, "zlib/libz.a");
 }

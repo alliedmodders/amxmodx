@@ -207,6 +207,7 @@ int	C_Spawn( edict_t *pent ) {
   hostname = CVAR_GET_POINTER("hostname");
   mp_timelimit = CVAR_GET_POINTER("mp_timelimit");
 
+  g_forwards.clear();
 
   g_log.MapChange();
 
@@ -441,6 +442,7 @@ void C_ServerDeactivate_Post() {
 
   // HACKHACK:
   //  Make sure the spawn function will be called again
+  // pft that's not really a hack
   g_FakeMeta.m_Plugins.begin()->GetDllFuncTable().pfnSpawn = C_Spawn;
 
   detachReloadModules();
@@ -1228,15 +1230,6 @@ C_DLLEXPORT	int	GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
   meta_engfuncs.pfnChangeLevel = C_ChangeLevel;
 
   return g_FakeMeta.GetEngineFunctions(pengfuncsFromEngine, interfaceVersion, &meta_engfuncs);
-  /*
-  if(*interfaceVersion!=ENGINE_INTERFACE_VERSION) {
-	LOG_ERROR(PLID,	"GetEngineFunctions	version	mismatch; requested=%d ours=%d", *interfaceVersion,	ENGINE_INTERFACE_VERSION);
-	*interfaceVersion =	ENGINE_INTERFACE_VERSION;
-	return(FALSE);
-  }
-  memcpy(pengfuncsFromEngine, &meta_engfuncs, sizeof(enginefuncs_t));
-  return(TRUE);
-  */
 }
 
 enginefuncs_t meta_engfuncs_post;
@@ -1279,15 +1272,6 @@ C_DLLEXPORT	int	GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine,	int	
 	  ++iter;
   }
   return g_FakeMeta.GetEngineFunctions_Post(pengfuncsFromEngine, interfaceVersion, &meta_engfuncs_post);
-  /*
-  if(*interfaceVersion!=ENGINE_INTERFACE_VERSION) {
-	LOG_ERROR(PLID,	"GetEngineFunctions_Post version mismatch; requested=%d	ours=%d", *interfaceVersion, ENGINE_INTERFACE_VERSION);
-	*interfaceVersion =	ENGINE_INTERFACE_VERSION;
-	return(FALSE);
-  }
-  memcpy(pengfuncsFromEngine, &meta_engfuncs_post, sizeof(enginefuncs_t));
-  return(TRUE);
-  */
 }
 
 NEW_DLL_FUNCTIONS gNewDLLFunctionTable;

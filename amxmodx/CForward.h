@@ -126,6 +126,8 @@ class CSPForward
 	int m_Func;
 	bool m_HasFunc;
 public:
+	bool isFree;
+public:
 	CSPForward() { m_HasFunc = false; }
 	void Set(const char *funcName, AMX *amx, int numParams, const ForwardParam * paramTypes);
 	void Set(int func, AMX *amx, int numParams, const ForwardParam * paramTypes);
@@ -151,7 +153,7 @@ class CForwardMngr
 {
 	typedef CVector<CForward*> ForwardVec;
 	typedef CVector<CSPForward*> SPForwardVec;
-	typedef CVector<int> FreeSPVec;					// Free SP Forwards
+	typedef CQueue<int> FreeSPVec;					// Free SP Forwards
 
 	ForwardVec m_Forwards;
 

@@ -174,6 +174,7 @@ void CSPForward::Set(int func, AMX *amx, int numParams, const ForwardParam *para
 	m_NumParams = numParams;
 	memcpy((void *)m_ParamTypes, paramTypes, numParams * sizeof(ForwardParam));
 	m_HasFunc = true;
+	isFree = false;
 }
 
 void CSPForward::Set(const char *funcName, AMX *amx, int numParams, const ForwardParam *paramTypes)
@@ -182,10 +183,13 @@ void CSPForward::Set(const char *funcName, AMX *amx, int numParams, const Forwar
 	m_NumParams = numParams;
 	memcpy((void *)m_ParamTypes, paramTypes, numParams * sizeof(ForwardParam));
 	m_HasFunc = (amx_FindPublic(amx, funcName, &m_Func) == AMX_ERR_NONE);
+	isFree = false;
 }
 
 cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 {
+	if (isFree)
+		return 0;
 	const int STRINGEX_MAXLENGTH = 128;
 
 	cell realParams[FORWARD_MAX_PARAMS];
@@ -286,10 +290,10 @@ int CForwardMngr::registerSPForward(int func, AMX *amx, int numParams, const For
 {
 	int retVal = (m_SPForwards.size() << 1) | 1;
 	CSPForward *pForward;
-	if (m_FreeSPForwards.size())
+	if (!m_FreeSPForwards.empty())
 	{
-		 pForward = m_SPForwards[m_FreeSPForwards.back()];
-		 m_FreeSPForwards.pop_back();
+		 pForward = m_SPForwards[m_FreeSPForwards.front() >> 1];
+		 m_FreeSPForwards.pop();
 		 pForward->Set(func, amx, numParams, paramTypes);
 	}
 	else
@@ -312,22 +316,12 @@ int CForwardMngr::registerSPForward(const char *funcName, AMX *amx, int numParam
 {
 	int retVal = (m_SPForwards.size() << 1) | 1;
 	CSPForward *pForward;
-	if (m_FreeSPForwards.size())
+	if (!m_FreeSPForwards.empty())
 	{
-		if (m_SPForwards.size())
-		{
-			retVal = m_FreeSPForwards.back();
-			m_FreeSPForwards.pop_back();
-			pForward = m_SPForwards[retVal>>1];		// >>1 because unregisterSPForward pushes the id which contains the sp flag
-			pForward->Set(funcName, amx, numParams, paramTypes);
-		} else {
-			m_SPForwards.clear();
-			pForward = new CSPForward();
-			if (!pForward)
-				return -1;
-			pForward->Set(funcName, amx, numParams, paramTypes);
-			m_SPForwards.push_back(pForward);
-		}
+		retVal = m_FreeSPForwards.front();
+		m_FreeSPForwards.pop();
+		pForward = m_SPForwards[retVal>>1];		// >>1 because unregisterSPForward pushes the id which contains the sp flag
+		pForward->Set(funcName, amx, numParams, paramTypes);
 	}
 	else
 	{
@@ -381,7 +375,8 @@ void CForwardMngr::clear()
 
 	m_Forwards.clear();
 	m_SPForwards.clear();
-	m_FreeSPForwards.clear();
+	while (!m_FreeSPForwards.empty())
+		m_FreeSPForwards.pop();
 	m_TmpArraysNum = 0;
 }
 
@@ -392,7 +387,15 @@ bool CForwardMngr::isSPForward(int id) const
 
 void CForwardMngr::unregisterSPForward(int id)
 {
-	m_FreeSPForwards.push_back(id);
+	unsigned int i = 0;
+
+	//make sure the id is valid
+	if ( !isIdValid(id) || m_SPForwards.at(i >> 1)->isFree )
+		return;
+
+	m_SPForwards.at(i >> 1)->isFree = true;
+
+	m_FreeSPForwards.push(id);
 }
 
 int registerForward(const char *funcName, ForwardExecType et, ...)

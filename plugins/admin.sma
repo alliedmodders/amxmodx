@@ -40,7 +40,7 @@ new g_aPassword[MAX_ADMINS][32]
 new g_aName[MAX_ADMINS][32]
 new g_aFlags[MAX_ADMINS]
 new g_aAccess[MAX_ADMINS]
-new g_aNum
+new g_aNum = 0
 #if !defined NO_STEAM
 new g_cmdLoopback[16]
 #endif
@@ -52,12 +52,14 @@ public plugin_init()
   register_cvar("amx_password_field","_pw")
   register_cvar("amx_default_access","")
 
-  register_cvar("amx_vote_ratio","0.02") 
-  register_cvar("amx_vote_time","10") 
-  register_cvar("amx_vote_answers","1") 
+  register_cvar("amx_vote_ratio","0.02")
+  register_cvar("amx_vote_time","10")
+  register_cvar("amx_vote_answers","1")
   register_cvar("amx_vote_delay","60")
   register_cvar("amx_last_voting","0")
   set_cvar_float("amx_last_voting",0.0)
+
+  register_concmd("amx_reloadadmins","cmdReload",ADMIN_ADMIN)
 
 #if !defined NO_STEAM
   format( g_cmdLoopback, 15, "amxauth%c%c%c%c" , 
@@ -96,8 +98,23 @@ loadSettings(szFilename[])
     g_aFlags[ g_aNum ] = read_flags( szFlags )  
     ++g_aNum
   }
-  
+  server_print("Loaded %d admin%s from file",g_aNum, (g_aNum == 1) ? "" : "s" )
   return 1
+}
+
+public cmdReload(id,level,cid)
+{
+  if (!cmd_access(id,level,cid,1))
+    return PLUGIN_HANDLED
+
+  new filename[64]
+  get_basedir(filename,31)
+  format(filename,63,"%s/configs/users.ini",filename)
+
+  g_aNum = 0
+  loadSettings(filename) // Re-Load admins accounts
+
+  return PLUGIN_HANDLED
 }
 
 getAccess(id,name[],authid[],ip[], password[])

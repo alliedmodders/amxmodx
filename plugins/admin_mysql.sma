@@ -40,7 +40,7 @@ new g_aPassword[MAX_ADMINS][32]
 new g_aName[MAX_ADMINS][32]
 new g_aFlags[MAX_ADMINS]
 new g_aAccess[MAX_ADMINS]
-new g_aNum
+new g_aNum = 0
 #if !defined NO_STEAM
 new g_cmdLoopback[16]
 #endif
@@ -67,6 +67,8 @@ public plugin_init()
   register_cvar("amx_vote_delay","60")
   register_cvar("amx_last_voting","0")
   set_cvar_float("amx_last_voting",0.0)
+  
+  register_concmd("amx_reloadadmins","cmdReload",ADMIN_ADMIN)
 
 #if !defined NO_STEAM   
   format( g_cmdLoopback, 15, "amxauth%c%c%c%c" , 
@@ -82,7 +84,7 @@ public plugin_init()
   server_cmd("exec %s/configs/mysql.cfg;amx_sqladmins" , filename)
 }
 
-public adminSql(){
+public adminSql() {
   new host[64],user[32],pass[32],db[32],error[128]
   get_cvar_string("amx_mysql_host",host,63)
   get_cvar_string("amx_mysql_user",user,31)
@@ -104,7 +106,6 @@ public adminSql(){
   }
 
   new szFlags[32],szAccess[32]
-  g_aNum = 0 /* reset admins settings */
   while( mysql_nextrow(mysql) > 0 )
   {
     mysql_getfield(mysql, 1, g_aName[ g_aNum ] ,31)
@@ -122,6 +123,17 @@ public adminSql(){
 
   server_print("Loaded %d admin%s from database",g_aNum, (g_aNum == 1) ? "" : "s" )
   mysql_close(mysql)
+  return PLUGIN_HANDLED
+}
+
+public cmdReload(id,level,cid)
+{
+  if (!cmd_access(id,level,cid,1))
+    return PLUGIN_HANDLED
+
+  g_aNum = 0
+  adminSql() // Re-Load admins accounts
+
   return PLUGIN_HANDLED
 }
 

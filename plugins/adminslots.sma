@@ -50,10 +50,13 @@ public plugin_init() {
     random_num('A','Z') , random_num('A','Z') ,random_num('A','Z'),random_num('A','Z')  )
 
   register_clcmd( g_cmdLoopback, "ackSignal" )
+
+#if defined HIDE_RESERVED_SLOTS
   new maxplayers = get_maxplayers()
   new players = get_playersnum(1)
   new limit = maxplayers - get_cvar_num("amx_reservation")
   setVisibleSlots(players, maxplayers, limit)
+#endif
 }
 
 public ackSignal(id) {

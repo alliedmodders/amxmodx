@@ -2,6 +2,8 @@
 
 BOOL CheckForPublic(const char *publicname);
 
+edict_t *g_player_edicts[33];
+
 int AmxStringToEngine(AMX *amx, cell param, int &len)
 {
 	char *szString = MF_GetAmxString(amx, param, 0, &len);
@@ -149,8 +151,8 @@ void ClientDisconnect(edict_t *pEntity)
 		g_CameraCount--;
 		if (g_CameraCount < 0)
 			g_CameraCount=0;
-		if (g_CameraCount==0)
-			g_pFunctionTable->pfnAddToFullPack=AddToFullPack;
+		if (g_CameraCount==0) // Reset the AddToFullPack pointer if there's no more cameras in use...
+			g_pFunctionTable->pfnAddToFullPack=NULL;
 	}
 
 	plinfo[id].iSpeakFlags = SPEAK_NORMAL;
@@ -190,12 +192,27 @@ void ServerDeactivate()
 	Touches.clear();
 	Impulses.clear();
 	Thinks.clear();
+	
+	// Reset all forwarding function tables (so that forwards won't be called before plugins are initialized)
+	g_pFunctionTable->pfnAddToFullPack=NULL;
+	g_pFunctionTable->pfnKeyValue=NULL;
+	g_pengfuncsTable->pfnPlaybackEvent=NULL; // "pfn_playbackevent"
+	g_pFunctionTable->pfnPlayerPreThink=NULL; // "client_PreThink"
+	g_pFunctionTable->pfnPlayerPostThink=NULL; // "client_PostThink"
+	g_pFunctionTable->pfnSpawn=NULL; // "pfn_spawn"
+	g_pFunctionTable->pfnClientKill=NULL; // "client_kill"
+	g_pFunctionTable->pfnCmdStart=NULL; // "client_impulse","register_impulse"
+	g_pFunctionTable->pfnThink=NULL; // "pfn_think", "register_think"
+	g_pFunctionTable->pfnStartFrame=NULL; // "server_frame","ServerFrame"
+	g_pFunctionTable->pfnTouch=NULL; // "pfn_touch","vexd_pfntouch"
 
 	RETURN_META(MRES_IGNORED);
 }
 
 void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 {
+	for(int f = 1; f <= gpGlobals->maxClients;f++) 
+		g_player_edicts[f]=pEdictList + f;
 	Msg.clear();
 	register int i = 0;
 	for (i=0; i<256; i++) {

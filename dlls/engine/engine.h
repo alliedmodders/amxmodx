@@ -18,7 +18,7 @@
 #include "entity.h"
 #include "gpglobals.h"
 
-#define CHECK_ENTITY(x) if (x != 0 && (FNullEnt(INDEXENT(x)) || x < 0 || x > gpGlobals->maxEntities)) { MF_RaiseAmxError(amx,AMX_ERR_NATIVE); return 0; }
+//#define CHECK_ENTITY(x) if (x != 0 && (FNullEnt(INDEXENT2(x)) || x < 0 || x > gpGlobals->maxEntities)) { MF_RaiseAmxError(amx,AMX_ERR_NATIVE); return 0; }
 
 extern DLL_FUNCTIONS *g_pFunctionTable;
 extern DLL_FUNCTIONS *g_pFunctionTable_Post;
@@ -167,6 +167,17 @@ int AmxStringToEngine(AMX *amx, cell param, int &len);
 edict_t *UTIL_FindEntityInSphere(edict_t *pStart, const Vector &vecCenter, float flRadius);
 
 extern int g_CameraCount;
+extern edict_t *g_player_edicts[33];
+
+inline edict_t* INDEXENT2( int iEdictNum )
+{ 
+	if (iEdictNum >= 1 && iEdictNum <= gpGlobals->maxClients)
+		return g_player_edicts[iEdictNum];
+
+	else
+		return (*g_engfuncs.pfnPEntityOfEntIndex)(iEdictNum); 
+}
+#define CHECK_ENTITY(x) if (x != 0 && (FNullEnt(INDEXENT2(x)) || x < 0 || x > gpGlobals->maxEntities)) { MF_RaiseAmxError(amx,AMX_ERR_NATIVE); return 0; }
 
 extern bool g_inKeyValue;
 extern KeyValueData *g_pkvd;

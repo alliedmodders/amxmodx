@@ -9,7 +9,7 @@ int is_ent_valid(int iEnt)
 		if (!MF_IsPlayerIngame(iEnt))
 			return 0;
 
-	edict_t *pEnt = INDEXENT(iEnt);
+	edict_t *pEnt = INDEXENT2(iEnt);
 
 	if (FNullEnt(pEnt))
 		return 0;
@@ -31,8 +31,8 @@ static cell AMX_NATIVE_CALL entity_range(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEntA = INDEXENT(idxa);
-	edict_t *pEntB = INDEXENT(idxb);
+	edict_t *pEntA = INDEXENT2(idxa);
+	edict_t *pEntB = INDEXENT2(idxb);
 
 	REAL fRet = (pEntA->v.origin - pEntB->v.origin).Length();
 
@@ -52,7 +52,7 @@ static cell AMX_NATIVE_CALL call_think(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(iEnt);
+	edict_t *pEnt = INDEXENT2(iEnt);
 
 	MDLL_Think(pEnt);
 
@@ -70,8 +70,8 @@ static cell AMX_NATIVE_CALL fake_touch(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pToucher = INDEXENT(iPtr);
-	edict_t *pTouched = INDEXENT(iPtd);
+	edict_t *pToucher = INDEXENT2(iPtr);
+	edict_t *pTouched = INDEXENT2(iPtd);
 
 	MDLL_Touch(pToucher, pTouched);
 
@@ -88,8 +88,8 @@ static cell AMX_NATIVE_CALL force_use(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pUser = INDEXENT(iPtr);
-	edict_t *pUsed = INDEXENT(iPtd);
+	edict_t *pUser = INDEXENT2(iPtr);
+	edict_t *pUsed = INDEXENT2(iPtd);
 
 	MDLL_Use(pUsed, pUser);
 
@@ -112,7 +112,7 @@ static cell AMX_NATIVE_CALL create_entity(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL remove_entity(AMX *amx, cell *params)
 {
 	int id = params[1];
-	edict_t *pEnt = INDEXENT(id);
+	edict_t *pEnt = INDEXENT2(id);
 
 	if (FNullEnt(pEnt))
 		return 0;
@@ -142,7 +142,7 @@ static cell AMX_NATIVE_CALL DispatchKeyValue(AMX *amx, cell *params)
 			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;
 		}
-		edict_t *pEntity = INDEXENT(iValue);
+		edict_t *pEntity = INDEXENT2(iValue);
 		KeyValueData kvd;
 		int iLength=0;
 		char *char1 = MF_GetAmxString(amx, params[2], 0, &iLength);
@@ -175,7 +175,7 @@ static cell AMX_NATIVE_CALL get_keyvalue(AMX *amx, cell *params)
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
-	edict_t *pEntity = INDEXENT(idx);
+	edict_t *pEntity = INDEXENT2(idx);
 	char *test = INFO_KEY_BUFFER(pEntity);
 	int iLength=0;
 	char *char1 = MF_GetAmxString(amx, params[2], 1, &iLength);
@@ -206,7 +206,7 @@ static cell AMX_NATIVE_CALL DispatchSpawn(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(iEnt);
+	edict_t *pEnt = INDEXENT2(iEnt);
 	
 	MDLL_Spawn(pEnt);
 
@@ -228,7 +228,7 @@ static cell AMX_NATIVE_CALL entity_get_float(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(iEnt);
+	edict_t *pEnt = INDEXENT2(iEnt);
 
 	switch (idx)
 	{
@@ -362,7 +362,7 @@ static cell AMX_NATIVE_CALL entity_set_float(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(iEnt);
+	edict_t *pEnt = INDEXENT2(iEnt);
 
 	switch (idx)
 	{
@@ -496,7 +496,7 @@ static cell AMX_NATIVE_CALL entity_get_int(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(iEnt);
+	edict_t *pEnt = INDEXENT2(iEnt);
 
 	switch (idx)
 	{
@@ -631,7 +631,7 @@ static cell AMX_NATIVE_CALL entity_set_int(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(iEnt);
+	edict_t *pEnt = INDEXENT2(iEnt);
 
 	switch (idx)
 	{
@@ -766,7 +766,7 @@ static cell AMX_NATIVE_CALL entity_get_vector(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(iEnt);
+	edict_t *pEnt = INDEXENT2(iEnt);
 
 	switch (idx)
 	{
@@ -866,7 +866,7 @@ static cell AMX_NATIVE_CALL entity_set_vector(AMX *amx, cell *params)
 	REAL fY = amx_ctof(vAmx[1]);
 	REAL fZ = amx_ctof(vAmx[2]);
 	Vector vSet = Vector(fX, fY, fZ);
-	edict_t *pEnt = INDEXENT(iEnt);
+	edict_t *pEnt = INDEXENT2(iEnt);
 
 	switch (idx)
 	{
@@ -959,7 +959,7 @@ static cell AMX_NATIVE_CALL entity_get_string(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(iEnt);
+	edict_t *pEnt = INDEXENT2(iEnt);
 
 	switch (idx)
 	{
@@ -1024,7 +1024,7 @@ static cell AMX_NATIVE_CALL entity_set_string(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(iEnt);
+	edict_t *pEnt = INDEXENT2(iEnt);
 	
 	switch (idx)
 	{
@@ -1086,7 +1086,7 @@ static cell AMX_NATIVE_CALL entity_get_edict(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(iEnt);
+	edict_t *pEnt = INDEXENT2(iEnt);
 
 	switch (idx)
 	{
@@ -1145,8 +1145,8 @@ static cell AMX_NATIVE_CALL entity_set_edict(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(iEnt);
-	edict_t *pSetEnt = INDEXENT(iSetEnt);
+	edict_t *pEnt = INDEXENT2(iEnt);
+	edict_t *pSetEnt = INDEXENT2(iSetEnt);
 
 	switch (idx)
 	{
@@ -1202,7 +1202,7 @@ static cell AMX_NATIVE_CALL entity_get_byte(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(iEnt);
+	edict_t *pEnt = INDEXENT2(iEnt);
 
 	switch (idx)
 	{
@@ -1248,7 +1248,7 @@ static cell AMX_NATIVE_CALL entity_set_byte(AMX *amx, cell *params)
 	if(iNewValue < 0)
 			iNewValue = 0;
 
-	edict_t *pEnt = INDEXENT(iEnt);
+	edict_t *pEnt = INDEXENT2(iEnt);
 
 	switch (idx)
 	{
@@ -1287,7 +1287,7 @@ static cell AMX_NATIVE_CALL entity_set_origin(AMX *amx, cell *params)
 		return 0;
 	}
 	
-	edict_t *pEnt = INDEXENT(iEnt);
+	edict_t *pEnt = INDEXENT2(iEnt);
 	cell *vVector = MF_GetAmxAddr(amx, params[2]);
 	REAL fX = amx_ctof(vVector[0]);
 	REAL fY = amx_ctof(vVector[1]);
@@ -1309,7 +1309,7 @@ static cell AMX_NATIVE_CALL entity_set_model(AMX *amx, cell *params)
 		return 0;
 	}
 	
-	edict_t *pEnt = INDEXENT(iEnt);
+	edict_t *pEnt = INDEXENT2(iEnt);
 	int iLen;
 	char *szModel = MF_GetAmxString(amx, params[2], 0, &iLen);
 	char *szStatic = new char[iLen+1];
@@ -1331,7 +1331,7 @@ static cell AMX_NATIVE_CALL entity_set_size(AMX *amx, cell *params)
 		return 0;
 	}
 	
-	edict_t *pEnt = INDEXENT(iEnt);
+	edict_t *pEnt = INDEXENT2(iEnt);
 
 	cell *cMin = MF_GetAmxAddr(amx, params[2]);
 	REAL x1 = amx_ctof(cMin[0]);
@@ -1364,7 +1364,7 @@ static cell AMX_NATIVE_CALL get_offset_short(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(idx);
+	edict_t *pEnt = INDEXENT2(idx);
 #ifdef __linux__
 	off += params[3];
 #endif
@@ -1382,7 +1382,7 @@ static cell AMX_NATIVE_CALL set_offset_short(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(idx);
+	edict_t *pEnt = INDEXENT2(idx);
 #ifdef __linux__
 	off += params[3];
 #endif
@@ -1402,7 +1402,7 @@ static cell AMX_NATIVE_CALL get_offset_char(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(idx);
+	edict_t *pEnt = INDEXENT2(idx);
 #ifdef __linux__
 	off += params[3];
 #endif
@@ -1421,7 +1421,7 @@ static cell AMX_NATIVE_CALL set_offset_char(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(idx);
+	edict_t *pEnt = INDEXENT2(idx);
 #ifdef __linux__
 	off += params[3];
 #endif
@@ -1442,7 +1442,7 @@ static cell AMX_NATIVE_CALL get_offset_int(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(idx);
+	edict_t *pEnt = INDEXENT2(idx);
 #ifdef __linux__
 	off += params[3];
 #endif
@@ -1460,7 +1460,7 @@ static cell AMX_NATIVE_CALL set_offset_int(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(idx);
+	edict_t *pEnt = INDEXENT2(idx);
 #ifdef __linux__
 	off += params[3];
 #endif
@@ -1480,7 +1480,7 @@ static cell AMX_NATIVE_CALL get_offset_float(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(idx);
+	edict_t *pEnt = INDEXENT2(idx);
 #ifdef __linux__
 	off += params[3];
 #endif
@@ -1500,7 +1500,7 @@ static cell AMX_NATIVE_CALL set_offset_float(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(idx);
+	edict_t *pEnt = INDEXENT2(idx);
 #ifdef __linux__
 	off += params[3];
 #endif
@@ -1529,7 +1529,7 @@ static cell AMX_NATIVE_CALL find_ent_in_sphere(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(idx);
+	edict_t *pEnt = INDEXENT2(idx);
 	cell *cAddr = MF_GetAmxAddr(amx, params[2]);
 	REAL origin[3] = {
 		amx_ctof(cAddr[0]),
@@ -1548,7 +1548,7 @@ static cell AMX_NATIVE_CALL find_ent_in_sphere(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL find_ent_by_class(AMX *amx, cell *params) /* 3 param */
 {
-	edict_t *pEnt = INDEXENT(params[1]);
+	edict_t *pEnt = INDEXENT2(params[1]);
 
 	int len;
 	char* sValue = MF_GetAmxString(amx, params[2], 0, &len);
@@ -1581,7 +1581,7 @@ static cell AMX_NATIVE_CALL find_sphere_class(AMX *amx, cell *params) // find_sp
 			return 0;
 		}
 
-		edict_t* pEntity = INDEXENT(params[1]);
+		edict_t* pEntity = INDEXENT2(params[1]);
 		vecOrigin = pEntity->v.origin;
 	} else {
 		cell *cAddr = MF_GetAmxAddr(amx, params[6]);
@@ -1589,7 +1589,7 @@ static cell AMX_NATIVE_CALL find_sphere_class(AMX *amx, cell *params) // find_sp
 	}
 	
 	int entsFound = 0;
-	edict_t* pSearchEnt = INDEXENT(0);
+	edict_t* pSearchEnt = INDEXENT2(0);
 
 	while (entsFound < params[5]) {
 		pSearchEnt = FIND_ENTITY_IN_SPHERE(pSearchEnt, vecOrigin, radius); // takes const float origin
@@ -1620,7 +1620,7 @@ static cell AMX_NATIVE_CALL find_ent_by_target(AMX *amx, cell *params)
 		if (!is_ent_valid(iStart))
 			pStart = NULL;
 		else
-			pStart = INDEXENT(iStart);
+			pStart = INDEXENT2(iStart);
 	}
 
 	int iReturnEnt = ENTINDEX(FIND_ENTITY_BY_TARGET(pStart, szValue));
@@ -1642,7 +1642,7 @@ static cell AMX_NATIVE_CALL find_ent_by_model(AMX *amx, cell *params) {
 		if (!is_ent_valid(iStart))
 			pStart = NULL;
 		else
-			pStart = INDEXENT(iStart);
+			pStart = INDEXENT2(iStart);
 	}
 
 	int checkEnt = ENTINDEX(FIND_ENTITY_BY_STRING(pStart, "classname", szClass));
@@ -1653,7 +1653,7 @@ static cell AMX_NATIVE_CALL find_ent_by_model(AMX *amx, cell *params) {
 		if (strcmp(CheckModel, szModel)==0) {
 			return checkEnt;
 		} else {
-			pStart = INDEXENT(checkEnt);
+			pStart = INDEXENT2(checkEnt);
 			checkEnt = ENTINDEX(FIND_ENTITY_BY_STRING(pStart, "classname", szClass));
 		}
 	}
@@ -1674,7 +1674,7 @@ static cell AMX_NATIVE_CALL find_ent_by_tname(AMX *amx, cell *params) {
 		if (!is_ent_valid(iStart))
 			pStart = NULL;
 		else
-			pStart = INDEXENT(iStart);
+			pStart = INDEXENT2(iStart);
 	}
 
 	int iReturnEnt = ENTINDEX(FIND_ENTITY_BY_TARGETNAME(pStart, szValue));
@@ -1692,8 +1692,8 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(iEnt);
-	edict_t *entOwner = INDEXENT(oEnt);
+	edict_t *pEnt = INDEXENT2(iEnt);
+	edict_t *entOwner = INDEXENT2(oEnt);
 
 	//optional fourth parameter is for jghg2 compatibility
 	char* sCategory = NULL; 
@@ -1730,8 +1730,8 @@ static cell AMX_NATIVE_CALL get_grenade_id(AMX *amx, cell *params)  /* 4 param *
 		return 0; 
 	}
 
-	edict_t* pentFind = INDEXENT(params[4]);
-	edict_t* pentOwner = INDEXENT(index);
+	edict_t* pentFind = INDEXENT2(params[4]);
+	edict_t* pentOwner = INDEXENT2(index);
 
 	pentFind = FIND_ENTITY_BY_CLASSNAME( pentFind, "grenade" );
 	while (!FNullEnt(pentFind)) {

@@ -104,7 +104,7 @@ static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *pEnt = INDEXENT(iEnt);
+	edict_t *pEnt = INDEXENT2(iEnt);
 
 	MAKE_VECTORS(pEnt->v.v_angle);
 	vVector = gpGlobals->v_forward * iVelocity;
@@ -270,7 +270,7 @@ static cell AMX_NATIVE_CALL trace_normal(AMX *amx, cell *params)
 	Vector vEnd = Vector(fEndX, fEndY, fEndZ);
 
 	TraceResult tr;
-	TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT(iEnt), &tr);
+	TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT2(iEnt), &tr);
 
 	vRet[0] = amx_ftoc(tr.vecPlaneNormal.x);
 	vRet[1] = amx_ftoc(tr.vecPlaneNormal.y);
@@ -305,7 +305,7 @@ static cell AMX_NATIVE_CALL trace_line(AMX *amx, cell *params)
 	if (iEnt == -1)
 		TRACE_LINE(vStart, vEnd, ignore_monsters, NULL, &tr);
 	else
-		TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT(iEnt), &tr);
+		TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT2(iEnt), &tr);
 
 	edict_t *pHit = tr.pHit;
 
@@ -368,7 +368,7 @@ static cell AMX_NATIVE_CALL get_info_keybuffer(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *e = INDEXENT(iEnt);
+	edict_t *e = INDEXENT2(iEnt);
 
 	char *info = GETINFOKEYBUFFER(e);
 	
@@ -386,7 +386,7 @@ static cell AMX_NATIVE_CALL drop_to_floor(AMX *amx, cell *params)
 		return 0;
 	}
 
-	edict_t *e = INDEXENT(iEnt);
+	edict_t *e = INDEXENT2(iEnt);
 
 	return DROP_TO_FLOOR(e);
 }
@@ -417,7 +417,7 @@ static cell AMX_NATIVE_CALL attach_view(AMX *amx, cell *params)
 		return 0;
 	}
 
-	SET_VIEW(INDEXENT(iIndex), INDEXENT(iTargetIndex));
+	SET_VIEW(INDEXENT2(iIndex), INDEXENT2(iTargetIndex));
 
 	return 1;
 }
@@ -434,7 +434,7 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 		return 0;
 	}
 
-	edict_t *pPlayer = INDEXENT(iIndex);
+	edict_t *pPlayer = INDEXENT2(iIndex);
 	edict_t *pNewCamera;
 
 	switch(iCameraType)
@@ -612,7 +612,7 @@ static cell AMX_NATIVE_CALL trace_hull(AMX *amx,cell *params)
 	vPos.y = amx_ctof(vCell[1]);
 	vPos.z = amx_ctof(vCell[2]);
 
-	TRACE_HULL(vPos,vPos, params[4], params[2], params[3] > 0 ? INDEXENT(params[3]) : 0 , &tr);
+	TRACE_HULL(vPos,vPos, params[4], params[2], params[3] > 0 ? INDEXENT2(params[3]) : 0 , &tr);
 
 	if (tr.fStartSolid) {
 		iResult += 1;
@@ -646,7 +646,7 @@ static cell AMX_NATIVE_CALL playback_event(AMX *amx, cell *params)
 	int bparam1;
 	int bparam2;
 	flags = params[1];
-	pInvoker=INDEXENT(params[2]);
+	pInvoker=INDEXENT2(params[2]);
 	eventindex=params[3];
 	delay=amx_ctof(params[4]);
 	cell *cOrigin=MF_GetAmxAddr(amx, params[5]);
@@ -908,11 +908,11 @@ static cell AMX_NATIVE_CALL take_damage(AMX *amx, cell *params)
 	}
 	REAL fnDamage = amx_ctof(params[4]);
 	int inType = params[5];
-	edict_t* pEntitya = INDEXENT(indexa);
-	edict_t* pEntityb = INDEXENT(indexb);
-	edict_t* pEntityc = INDEXENT(indexc);
+	edict_t* pEntitya = INDEXENT2(indexa);
+	edict_t* pEntityb = INDEXENT2(indexb);
+	edict_t* pEntityc = INDEXENT2(indexc);
 	CBaseEntity *pCEntity = NULL;
-	pCEntity = CBaseEntity::Instance(INDEXENT(indexa));
+	pCEntity = CBaseEntity::Instance(INDEXENT2(indexa));
 	pCEntity->TakeDamage(VARS(pEntityb),VARS(pEntityc),fnDamage,inType);
 	return 1;
 }

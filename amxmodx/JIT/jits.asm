@@ -42,6 +42,12 @@
 
 ; Revision History
 ;------------------
+; 16 September 2004 by David "BAILOPAN" Anderson
+;     Implemented a compile time toggleable debug hook on OP_CALL and OP_RET.
+;     NOTE: JIT has not had debug hooks since 1999.
+;  8 September 2004 by David "BAILOPAN" Anderson
+;     Changed OP_LINE call to be compile-time toggle-able between compiling
+;	  line ops or not.
 ; 29 June 2004  by G.W.M. Vissers
 ;	Translated the thing into NASM. The actual generation of the code is 
 ;	put into the data section because the code modifies itself whereas the 
@@ -147,8 +153,14 @@ _dbgcode:    resd 1
 _dbgaddr:    resd 1
 _dbgparam:   resd 1
 _dbgname:    resd 1
-_usertags:   resd 4	; 4 = AMX_USERNUM (#define'd in amx.h)
-_userdata:   resd 4	; 4 = AMX_USERNUM (#define'd in amx.h)
+_usertags1:  resd 1	; 4 = AMX_USERNUM (#define'd in amx.h)
+_usertags2:  resd 1	; 4 = AMX_USERNUM (#define'd in amx.h)
+_usertags3:  resd 1	; 4 = AMX_USERNUM (#define'd in amx.h)
+_usertags4:  resd 1	; 4 = AMX_USERNUM (#define'd in amx.h)
+_userdata1:  resd 1	; 4 = AMX_USERNUM (#define'd in amx.h)
+_userdata2:  resd 1	; 4 = AMX_USERNUM (#define'd in amx.h)
+_userdata3:  resd 1	; 4 = AMX_USERNUM (#define'd in amx.h)
+_userdata4:  resd 1	; 4 = AMX_USERNUM (#define'd in amx.h)
 _error:      resd 1
 _pri:        resd 1
 _alt:        resd 1
@@ -1049,13 +1061,64 @@ OP_RETN:
 ;good
 OP_CALL:
 ;nop;
-        RELOC   1
-        GO_ON   j_call, OP_CALL_I, 8
+        ;save registers
+        push    eax
+        push    ebp
+        ;get .amx flags
+        mov     ebp,[amxhead]
+        mov	    eax,[ebp+_h_flags]
+        ;check to see if the flag has line ops 
+        and     eax,AMX_FLAG_DEBUG
+        cmp     eax,AMX_FLAG_DEBUG
+        ;restore registers
+        pop     ebp
+        pop     eax
+        ;if so, skip down to debug compiler
+        jmp     _go_jit_debug
 
-        j_call:
-        ;call   12345678h ; tasm chokes on this out of a sudden
-        db      0e8h, 0, 0, 0, 0
-	CHECKCODESIZE j_call
+_go_jit_nodebug:
+		RELOC 1
+		GO_ON	j_call_nodebug, _j_call_go_on, 8
+		j_call_nodebug:
+		call	12345678h
+		CHECKCODESIZE j_call_nodebug
+
+_j_call_go_on:
+		jmp _opcall_end
+
+_go_jit_debug:
+		;thanks to Julien "dJeyL" Laurent for code relocation explanation
+		RELOC   _go_jit_reloc-j_call+1
+		GO_ON	j_call, OP_CALL_I, 8
+		j_call:
+		; save some registers
+		push	ebp
+		push	eax
+		push	edx
+		; get AMX
+		mov		ebp,amx
+		; get debug call pointer
+		mov		eax,[ebp+_userdata2]
+		; check to see if it's valid
+		mov		edx, dword 0
+		cmp		eax,edx		
+		je		_go_jit_skip_call
+		xchg	esp,esi		;switch to caller stack
+		push	2			;param mode=2, push
+		push	ebp			;param amx
+		call	eax			;indirect call
+		add		esp, 8		;restore stack
+		xchg	esp,esi		;return to AMX stack
+		mov		ebp,amx		;restore AMX [necessary?]
+	_go_jit_skip_call:
+		;restore original registers
+		pop		edx
+		pop		eax
+		pop		ebp
+	_go_jit_reloc:
+		call	12345678h
+		CHECKCODESIZE j_call
+_opcall_end:
 
 OP_CALL_I:
 ;nop;
@@ -2223,7 +2286,6 @@ JIT_OP_LINE:
         pop     eax
         jmp     ecx                     ; jump back
 
-
 JIT_OP_SWITCH:
         pop     ebp             ; pop return address = table address
         mov     ecx,[ebp]       ; ECX = number of records
@@ -2240,6 +2302,12 @@ JIT_OP_SWITCH:
         add     ebp,[ebp-4]     ; add offset to make absolute adddress
         jmp     ebp
 %endif
+
+JIT_DEBUG:
+		push	eax
+		pop		eax
+		ret
+		
 
 
 ; The caller of asm_runJIT() can determine the maximum size of the compiled
@@ -2288,6 +2356,7 @@ jit_sysreq      DD      JIT_OP_SYSREQ
 jit_sysreq_d    DD      JIT_OP_SYSREQ_D
 jit_line        DD      JIT_OP_LINE
 jit_switch      DD      JIT_OP_SWITCH
+jit_debug		DD		JIT_DEBUG
 
 ;
 ; The table for the browser/relocator function.

@@ -313,14 +313,14 @@ setWeapon( a , action  ) {
 
 findMenuId( name[] ) {
   for(new i = 0; i < 7 ; ++i)
-    if( equal( name , g_menusNames[i] ) )
+    if( equali( name , g_menusNames[i] ) )
       return i
   return -1
 }
 
 findAliasId( name[] ) {
   for(new i = 0; i < MAXMENUPOS ; ++i)
-    if( equal( name , g_Aliases[i] ) )
+    if( equali( name , g_Aliases[i] ) )
       return i
   return -1
 }
@@ -486,8 +486,8 @@ public client_command( id ) {
     new a = 0
 
     do {
-      if ( equal( g_Aliases[g_AliasBlock[ a ]] , arg  ) ||
-           equal( g_Aliases2[g_AliasBlock[ a ]] , arg  ) )
+      if ( equali( g_Aliases[g_AliasBlock[ a ]] , arg  ) ||
+           equali( g_Aliases2[g_AliasBlock[ a ]] , arg  ) )
       {
         client_print(id,print_center,g_Restricted )
         return PLUGIN_HANDLED

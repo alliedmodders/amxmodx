@@ -676,3 +676,5 @@ native plugin_flags();
 forward plugin_modules();
 
 native require_module(const module[]);
+
+native is_amd64_server();

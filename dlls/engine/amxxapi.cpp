@@ -3,12 +3,8 @@
 int AmxStringToEngine(AMX *amx, cell param, int &len)
 {
 	char *szString = MF_GetAmxString(amx, param, 0, &len);
-	char *szCopy = new char[len+1];
 
-	memset(szCopy, 0, len+1);
-	strcpy(szCopy, szString);
-
-	return MAKE_STRING(szCopy);
+	return ALLOC_STRING(szString);
 }
 
 void OnAmxxAttach()

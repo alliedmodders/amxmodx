@@ -5,7 +5,7 @@ int is_ent_valid(int iEnt)
 	if (iEnt < 1 || iEnt > gpGlobals->maxEntities) 
 		return 0;
 
-	if (iEnt >= 1 || iEnt <= 32)
+	if (iEnt >= 1 && iEnt <= 32)
 		if (!MF_IsPlayerIngame(iEnt))
 			return 0;
 
@@ -91,7 +91,7 @@ static cell AMX_NATIVE_CALL force_use(AMX *amx, cell *params)
 	edict_t *pUser = INDEXENT(iPtr);
 	edict_t *pUsed = INDEXENT(iPtd);
 
-	MDLL_Touch(pUsed, pUser);
+	MDLL_Use(pUsed, pUser);
 
 	return 1;
 }

@@ -100,7 +100,7 @@ public plugin_init()
 
   register_menucmd(register_menuid("AMX Mod Menu"),1023,"actionMenu") 
   register_clcmd("amxmodmenu","cmdMenu",ADMIN_MENU,"- displays menus")    
-  
+
   g_cstrikeRunning = is_running("cstrike")
   g_funModule = cvar_exists( "fun_version" )
 }

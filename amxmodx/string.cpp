@@ -514,7 +514,7 @@ static cell AMX_NATIVE_CALL strbreak(AMX *amx, cell *params)	/* 5 param */
 		if (!done_flag && string[i]!='"') {
 			if (left_pos < LeftMax) {
 				left[left_pos] = string[i];
-				if (left[left_pos] = '\'') {
+				if (left[left_pos] == '\'') {
 					left[left_pos] = hold;
 				}
 				left_pos++;

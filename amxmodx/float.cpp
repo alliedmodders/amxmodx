@@ -349,6 +349,72 @@ static cell AMX_NATIVE_CALL n_floattan(AMX *amx,cell *params)
 #if defined __BORLANDC__ || defined __WATCOMC__
   #pragma argsused
 #endif
+/* Added by BAILOPAN */
+static cell AMX_NATIVE_CALL n_floatatan(AMX *amx, cell *params)
+{
+	/*
+	 * params[1] = angle
+	 * params[2] = radix
+	 */
+	REAL fA = amx_ctof(params[1]);
+	fA = ToRadians(fA, params[2]);
+	fA = atan(fA);
+	return amx_ftoc(fA);
+}
+
+#if defined __BORLANDC__ || defined __WATCOMC__
+  #pragma argsused
+#endif
+/* Added by BAILOPAN */
+static cell AMX_NATIVE_CALL n_floatacos(AMX *amx, cell *params)
+{
+	/*
+	 * params[1] = angle
+	 * params[2] = radix
+	 */
+	REAL fA = amx_ctof(params[1]);
+	fA = ToRadians(fA, params[2]);
+	fA = acos(fA);
+	return amx_ftoc(fA);
+}
+
+#if defined __BORLANDC__ || defined __WATCOMC__
+  #pragma argsused
+#endif
+/* Added by BAILOPAN */
+static cell AMX_NATIVE_CALL n_floatasin(AMX *amx, cell *params)
+{
+	/*
+	 * params[1] = angle
+	 * params[2] = radix
+	 */
+	REAL fA = amx_ctof(params[1]);
+	fA = ToRadians(fA, params[2]);
+	fA = asin(fA);
+	return amx_ftoc(fA);
+}
+
+#if defined __BORLANDC__ || defined __WATCOMC__
+  #pragma argsused
+#endif
+/* Added by BAILOPAN */
+static cell AMX_NATIVE_CALL n_floatatan2(AMX *amx, cell *params)
+{
+	/*
+	 * params[1] = x
+	 * params[2] = y
+	 * params[3] = radix
+	 */
+	REAL fA = amx_ctof(params[1]);
+	REAL fB = amx_ctof(params[2]);
+	REAL fC;
+	fC = atan2(fA, fB);
+	return amx_ftoc(fC);
+}
+
+#if defined __BORLANDC__ || defined __WATCOMC__
+  #pragma argsused
+#endif
 /******************************************************************/
 static cell AMX_NATIVE_CALL n_floatabs(AMX *amx,cell *params)
 {
@@ -374,6 +440,10 @@ AMX_NATIVE_INFO float_Natives[] = {
   { "floatcos",    n_floatcos   },
   { "floattan",    n_floattan   },
   { "floatabs",    n_floatabs   },
+  { "floatasin",   n_floatasin  },
+  { "floatacos",   n_floatacos  },
+  { "floatatan",   n_floatatan  },
+  { "floatatan2",  n_floatatan2 },
   { NULL, NULL }        /* terminator */
 };
 

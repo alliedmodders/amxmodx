@@ -256,7 +256,7 @@ int	Spawn( edict_t *pent ) {
   // :TODO:	Remove modules num from	amxmodx_version, make amxmodx_modules cvar
   CVAR_SET_STRING(init_amxmodx_version.name, AMX_VERSION);
   char buffer[32];
-  CVAR_SET_STRING(init_amxmodx_modules.name, itoa(loaded, buffer, 10));
+//  CVAR_SET_STRING(init_amxmodx_modules.name, itoa(loaded, buffer, 10));
 
   //  ######  Load Vault
   g_vault.setSource( build_pathname("%s", get_localinfo("amxx_vault", "addons/amxx/configs/vault.ini"))	);

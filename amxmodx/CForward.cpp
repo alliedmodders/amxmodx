@@ -60,7 +60,7 @@ int CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 	cell realParams[FORWARD_MAX_PARAMS];
 	cell *physAddrs[FORWARD_MAX_PARAMS];
 
-	const STRINGEX_MAXLENGTH = 128;
+	const int STRINGEX_MAXLENGTH = 128;
 
 	int globRetVal = 0;
 

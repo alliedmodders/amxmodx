@@ -63,7 +63,7 @@ std::vector<AmxCall> vPostThinkList;
 
 #define NAME "Engine Module"
 #define AUTHOR "BAILOPAN"
-#define VERSION "0.2"
+#define VERSION "0.3"
 #define URL "No Website"
 #define LOGTAG "AMXXE"
 #define DATE __DATE__
@@ -2488,6 +2488,7 @@ void ClientUserInfoChanged(edict_t *pEntity, char *infobuffer) {
 }
 
 //(BAILOPAN) - forward this
+/*
 void PlayerPreThink(edict_t *pEntity) {
 	if (!vPreThinkList.empty()) {
 		for(std::vector<AmxCall>::iterator i = vPreThinkList.begin(); i != vPreThinkList.end(); i++) {
@@ -2498,7 +2499,7 @@ void PlayerPreThink(edict_t *pEntity) {
 	
 	RETURN_META(MRES_IGNORED);
 }
-
+*/
 // This code is to set the model at a specified time. the second part of the code updates the
 // SetView camera.
 //(BAILOPAN) - now a forward
@@ -2586,7 +2587,7 @@ void Touch(edict_t *pToucher, edict_t *pTouched) {
 }
 
 //Added by BAILOPAN.  ClientKill() forward.
-void ClientKill(edict_t *pEntity)
+/*void ClientKill(edict_t *pEntity)
 {
 	cell iRetVal = 0;
 	META_RES result = MRES_IGNORED;
@@ -2602,7 +2603,7 @@ void ClientKill(edict_t *pEntity)
 	}
 
 	RETURN_META(result);
-}
+}*/
 
 // ClientDisconnect. Reinitialize the PlayerInfo struct for that player.
 void ClientDisconnect(edict_t *pEntity) {
@@ -2673,7 +2674,7 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax) {
 
 		iFunctionIndex = 0;
 		
-		if(AMX_FINDPUBLIC(&pCurrent->amx, "pfntouch", &iFunctionIndex) == AMX_ERR_NONE) {
+		/*if(AMX_FINDPUBLIC(&pCurrent->amx, "pfntouch", &iFunctionIndex) == AMX_ERR_NONE) {
 			AmxCall sNewCall;
 			sNewCall.pPlugin = pCurrent;
 			sNewCall.iFunctionIdx = iFunctionIndex;
@@ -2681,7 +2682,7 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax) {
 		}
 
 		iFunctionIndex = 0;
-
+*/
 		if(AMX_FINDPUBLIC(&pCurrent->amx, "ServerFrame", &iFunctionIndex) == AMX_ERR_NONE) {
 			AmxCall sNewCall;
 			sNewCall.pPlugin = pCurrent;
@@ -2689,7 +2690,7 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax) {
 			vServerFrameCallList.push_back(sNewCall);
 		}
 
-		iFunctionIndex = 0;
+		/*iFunctionIndex = 0;
 		
 		if (AMX_FINDPUBLIC(&pCurrent->amx, "client_kill", &iFunctionIndex) == AMX_ERR_NONE) {
 			AmxCall sNewCall;
@@ -2715,7 +2716,7 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax) {
 			sNewCall.iFunctionIdx = iFunctionIndex;
 			vPostThinkList.push_back(sNewCall);
 		}
-		
+		*/
 		iFunctionIndex = 0;
 		pCurrent = pCurrent->next;
 	}
@@ -2967,8 +2968,8 @@ C_DLLEXPORT int GetEntityAPI2( DLL_FUNCTIONS *pFunctionTable, int *interfaceVers
 	gFunctionTable.pfnAddToFullPack = AddToFullPack;
 	gFunctionTable.pfnServerActivate = ServerActivate;
 	gFunctionTable.pfnServerDeactivate = ServerDeactivate;
-	gFunctionTable.pfnClientKill = ClientKill;
-	gFunctionTable.pfnPlayerPreThink = PlayerPreThink;
+	//gFunctionTable.pfnClientKill = ClientKill;
+	//gFunctionTable.pfnPlayerPreThink = PlayerPreThink;
 
 	memcpy( pFunctionTable, &gFunctionTable, sizeof( DLL_FUNCTIONS ) );
 

@@ -1134,10 +1134,11 @@ int AMXAPI amx_InitJIT(AMX *amx, void *reloc_table, void *native_code)
   int mac, res;
   AMX_HEADER *hdr;
 
-  mac = memoryFullAccess( (void *)((int)((void*)asm_runJIT)-(int)((void*)asm_runJIT)%sysconf(_SC_PAGESIZE)), 20000 );
 #ifdef __linux__
+  mac = memoryFullAccess( (void *)((int)((void*)asm_runJIT)-(int)((void*)asm_runJIT)%sysconf(_SC_PAGESIZE)), 20000 );
   if ( mac )
 #else
+  mac = memoryFullAccess((void *)asm_runJIT, 20000);
   if ( !mac )
 #endif
     return AMX_ERR_INIT_JIT;

@@ -29,8 +29,6 @@
 *  version.
 */
 
-#include <extdll.h>
-#include <meta_api.h>
 #include "amxmodx.h"
 
 
@@ -206,7 +204,7 @@ int registerForward(const char *funcName, ForwardExecType et, ...)
 	{
 		if (curParam == FORWARD_MAX_PARAMS)
 			break;
-		tmp = va_arg(argptr, ForwardParam);
+		tmp = (ForwardParam)va_arg(argptr, int);
 		if (tmp == FP_DONE)
 			break;
 		params[curParam] = tmp;
@@ -227,7 +225,12 @@ int executeForwards(int id, ...)
 	va_start(argptr, id);
 	for (int i = 0; i < paramsNum && i < FORWARD_MAX_PARAMS; ++i)
 	{
-		params[i] = va_arg(argptr, cell);
+		if (params[i] == FP_FLOAT)
+		{
+			REAL tmp = (REAL)va_arg(argptr, double);			// floats get converted to doubles
+			params[i] = *(cell*)&tmp;
+		}
+		params[i] = (cell)va_arg(argptr, cell);
 	}
 	va_end(argptr);
 	return g_forwards.executeForwards(id, params);

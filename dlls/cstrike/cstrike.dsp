@@ -86,7 +86,7 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /out:"Debug/cstrike_amx.dll" /pdbtype:sept
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PostBuild_Cmds=copy  Debug/cstrike_amx.dll  k:\s\cstrike\addons\amxx\modules\ 	copy  ..\plugins\include\cstrike.inc  k:\s\cstrike\addons\amxx\scripting\include\ 
+PostBuild_Cmds=copy  Debug\cstrike_amx.dll  k:\s\cstrike\addons\amxx\modules\ 	copy  ..\plugins\include\cstrike.inc  k:\s\cstrike\addons\amxx\scripting\include\ 
 # End Special Build Tool
 
 !ENDIF 

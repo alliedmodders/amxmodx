@@ -1,3 +1,10 @@
+/* NS module constants
+ * -
+ * (c) 2004, Steve Dudenhoeffer
+ * This file is provided as is (no warranties).
+ */
+
+
 #if defined NS_CONST_INC
 	#endinput
 #endif

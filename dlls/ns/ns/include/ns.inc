@@ -1,6 +1,7 @@
-/* NS.INC
+/* NS module functions
  * -
- * Provides natives specific to Natural-Selection.
+ * (c) 2004, Steve Dudenhoeffer
+ * This file is provided as is (no warranties).
  */
 
 #if defined NS_INC

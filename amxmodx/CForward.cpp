@@ -300,6 +300,11 @@ int CForwardMngr::registerSPForward(int func, AMX *amx, int numParams, const For
 		pForward->Set(func, amx, numParams, paramTypes);
 		m_SPForwards.push_back(pForward);
 	}
+	if (pForward->getFuncsNum() == 0)
+	{
+		unregisterSPForward(retVal);
+		return -1;
+	}
 	return retVal;
 }
 

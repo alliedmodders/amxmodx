@@ -578,7 +578,7 @@ public cmdWho(id,level,cid) {
   format(lRes,15,"%L",id,"RESERV")
   format(lAccess,15,"%L",id,"ACCESS")
   format(lYes,15,"%L",id,"YES")
-  format(lNo,15,"%L",id,"YES")
+  format(lNo,15,"%L",id,"NO")
   get_players(players,inum)
   format(cl_on_server,63,"%L",id,"CLIENTS_ON_SERVER")
   console_print(id,"^n%s:^n #  %-16.15s %-12s %-8s %-4.3s %-4.3s %s",

@@ -1,4 +1,4 @@
-a/* AMX Mod X script.
+/* AMX Mod X script.
 *   Admin Base Plugin
 *
 * by the AMX Mod X Development Team

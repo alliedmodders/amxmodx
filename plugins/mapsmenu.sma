@@ -34,12 +34,10 @@
 
 #include <amxmodx>
 #include <amxmisc>
-#include <engine>
 
 #define MAX_MAPS 64
 
 new g_mapName[MAX_MAPS][32]
-new g_mapDesc[MAX_MAPS][32]
 new g_mapNums
 new g_menuPosition[33]
 
@@ -184,14 +182,14 @@ displayVoteMapsMenu(id,pos)
     {
       ++b   
       if ( g_cstrikeRunning) 
-        len += format(menuBody[len],511-len,"\d%d. %s^n\w",  b ,g_mapDesc[ a ])
+        len += format(menuBody[len],511-len,"\d%d. %s^n\w",  b ,g_mapName[ a ])
       else
-        len += format(menuBody[len],511-len,"#. %s^n",  g_mapDesc[ a ])
+        len += format(menuBody[len],511-len,"#. %s^n",  g_mapName[ a ])
     }
     else
     {
       keys |= (1<<b)
-      len += format(menuBody[len],511-len,"%d. %s^n",  ++b ,g_mapDesc[ a ])
+      len += format(menuBody[len],511-len,"%d. %s^n",  ++b ,g_mapName[ a ])
     }
   }
   
@@ -218,7 +216,7 @@ displayVoteMapsMenu(id,pos)
   for(new c = 0; c < 4; c++)
   {
     if ( c < g_voteSelectedNum[id] )
-      len += format(menuBody[len],511-len,"%s^n", g_mapDesc[  g_voteSelected[id][ c ]  ] )
+      len += format(menuBody[len],511-len,"%s^n", g_mapName[  g_voteSelected[id][ c ]  ] )
     else
       len += format(menuBody[len],511-len,"^n" )
   }
@@ -310,7 +308,7 @@ public actionVoteMapMenu(id,key)
           "\yWhich map do you want?^n\w^n" : "Which map do you want?^n^n")  
         for(new c = 0; c < g_voteSelectedNum[id] ; ++c)
         {
-          len += format(menuBody[len],511,"%d. %s^n", c + 1 , g_mapDesc[  g_voteSelected[id][ c ]  ] )
+          len += format(menuBody[len],511,"%d. %s^n", c + 1 , g_mapName[  g_voteSelected[id][ c ]  ] )
           keys |= (1<<c)
         }
         keys |= (1<<8)
@@ -319,7 +317,7 @@ public actionVoteMapMenu(id,key)
       else
       {
         len = format(menuBody,511, g_cstrikeRunning ? "\yChange map to^n%s?^n\w^n1. Yes^n2. No^n"
-          : "Change map to^n%s?^n^n1. Yes^n2. No^n" , g_mapDesc[  g_voteSelected[id][ 0 ]  ] )
+          : "Change map to^n%s?^n^n1. Yes^n2. No^n" , g_mapName[  g_voteSelected[id][ 0 ]  ] )
         keys = (1<<0) | (1<<1)
       }
       
@@ -418,7 +416,7 @@ displayMapsMenu(id,pos)
   for(new a = start; a < end; ++a)
   {   
     keys |= (1<<b)
-    len += format(menuBody[len],511-len,"%d. %s^n",++b,g_mapDesc[ a ])
+    len += format(menuBody[len],511-len,"%d. %s^n",++b,g_mapName[ a ])
   }
   
   if (end != g_mapNums)
@@ -436,25 +434,17 @@ load_settings(filename[])
   if (!file_exists(filename)) 
     return 0
     
-  new text[256], szDesc[48]
+  new text[256]
   new a , pos = 0
   
   while ( g_mapNums < MAX_MAPS && read_file(filename,pos++,text,255,a) )
   {
     if ( text[0] == ';' ) continue
       
-    if ( parse(text, g_mapName[g_mapNums] ,31, szDesc ,47) < 2 ) continue
+    if ( parse(text,g_mapName[g_mapNums],31) < 1 ) continue
     
     if ( !is_map_valid( g_mapName[g_mapNums] ) ) continue
           
-    if ( strlen( szDesc ) > 31 )
-    {
-      copy(g_mapDesc[g_mapNums],28, szDesc )
-      g_mapDesc[g_mapNums][28] = g_mapDesc[g_mapNums][29] = g_mapDesc[g_mapNums][30] = '.'
-      g_mapDesc[g_mapNums][31] = 0
-    }
-    else copy(g_mapDesc[g_mapNums],31, szDesc )
-            
     g_mapNums++
   }
   

@@ -99,7 +99,7 @@
 	#define OFFSET_NVGOGGLES			155 + EXTRAOFFSET // +26
 	#define OFFSET_DEFUSE_PLANT			219 + EXTRAOFFSET // +26
 	#define OFFSET_VIP					242 + EXTRAOFFSET // +27
-	#define OFFSET_TK					å // <-- this needs to be researched for amd64 ;-) (likely +27 though!)
+	#define OFFSET_TK					249 + EXTRAOFFSET // +33 040927
 	#define OFFSET_BUYZONE				268 + EXTRAOFFSET // +27
 	#define OFFSET_ISDRIVING			386 + EXTRAOFFSET // 040927
 	#define OFFSET_STATIONARY			400 + EXTRAOFFSET // 040927 (401 works also)

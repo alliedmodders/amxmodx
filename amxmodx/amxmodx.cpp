@@ -1749,7 +1749,11 @@ static cell AMX_NATIVE_CALL register_cvar(AMX *amx, cell *params) /* 3 param */
   g_cvars.put( cvar );
 
   if ( CVAR_GET_POINTER(temp) == 0 )
-    CVAR_REGISTER( cvar->getCvar() );
+  {
+	  static cvar_t cvar_reg_helper;
+	  cvar_reg_helper = *(cvar->getCvar());
+	  CVAR_REGISTER( &cvar_reg_helper );
+  }
 
   CVAR_SET_STRING( temp ,get_amxstring(amx,params[2],1,i));
   return 1;

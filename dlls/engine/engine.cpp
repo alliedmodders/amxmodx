@@ -46,7 +46,7 @@ static cell AMX_NATIVE_CALL register_impulse(AMX *amx, cell *params)
 	Impulse *p = new Impulse;
 	p->Check = params[1];
 
-	p->Forward = MF_RegisterSPForwardByName(amx, MF_GetAmxString(amx, params[2], 0, &len), FP_CELL, FP_DONE);
+	p->Forward = MF_RegisterSPForwardByName(amx, MF_GetAmxString(amx, params[2], 0, &len), FP_CELL, FP_CELL, FP_DONE);
 
 	Impulses.push_back(p);
 

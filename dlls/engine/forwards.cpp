@@ -129,7 +129,7 @@ void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int 
 	{
 		if (Impulses[i]->Check == g_cmd->impulse)
 		{
-			retVal = MF_ExecuteForward(Impulses[i]->Forward, ENTINDEX(pEntity));
+			retVal = MF_ExecuteForward(Impulses[i]->Forward, ENTINDEX(pEntity),origImpulse);
 			if (retVal & 2 /*PLUGIN_HANDLED_MAIN*/)
 			{
 				g_cmd->impulse=0;

@@ -76,7 +76,7 @@ template <class T> class CVector
 			delete [] m_Data;
 		}
 		if (m_Size < size)
-			m_CurrentUsedSize = size;
+			m_CurrentSize = size;
 		m_Data = newData;
 		m_Size = size;
 		return true;
@@ -90,6 +90,7 @@ protected:
 	T *m_Data;
 	size_t m_Size;
 	size_t m_CurrentUsedSize;
+	size_t m_CurrentSize;
 public:
 	class iterator
 	{
@@ -397,7 +398,7 @@ public:
 		if (where != m_Data)
 			--where;
 		// validate iter
-		if (where < m_Data || where >= (m_Data + m_CurrentSize))
+		if (where < m_Data || where >= (m_Data + m_CurrentUsedSize))
 			return false;
 
 		++m_CurrentUsedSize;
@@ -415,7 +416,7 @@ public:
 	void erase(iterator where)
 	{
 		// validate iter
-		if (where < m_Data || where >= (m_Data + m_CurrentSize))
+		if (where < m_Data || where >= (m_Data + m_CurrentUsedSize))
 			return false;
 
 		if (m_CurrentUsedSize > 1)
@@ -438,3 +439,4 @@ public:
 };
 
 #endif // __CVECTOR_H__
+

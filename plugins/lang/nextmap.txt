@@ -1,0 +1,2 @@
+[en]
+NEXT_MAP = Next Map:

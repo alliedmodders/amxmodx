@@ -212,8 +212,8 @@ int Spawn( edict_t *pent ) {
   hostname = CVAR_GET_POINTER("hostname");
   mp_timelimit = CVAR_GET_POINTER("mp_timelimit");
 
-  // ###### Initialize logging]
-  g_log_dir.set( get_localinfo("amx_logdir" , "addons/amx/logs" ) );
+  // ###### Initialize logging
+  g_log_dir.set( get_localinfo("amx_logdir" , "addons/amxx/logs" ) );
   UTIL_MakeNewLogFile();
 
   // ###### Initialize task manager
@@ -229,7 +229,7 @@ int Spawn( edict_t *pent ) {
   Vault amx_config;
   // ###### Load custom path configuration
   amx_config.setSource( build_pathname("%s",
-    get_localinfo("amx_cfg" , "addons/amx/config.ini")) );
+    get_localinfo("amx_cfg" , "addons/amxx/config/core.ini")) );
 
   if ( amx_config.loadVault() ){
     Vault::iterator a = amx_config.begin();
@@ -241,10 +241,10 @@ int Spawn( edict_t *pent ) {
   }
 
   //  ###### Make sure basedir is set
-  get_localinfo("amx_basedir" , "addons/amx" );
+  get_localinfo("amx_basedir" , "addons/amxx" );
 
   //  ###### Load modules
-  int loaded = loadModules( get_localinfo("amx_modules" , "addons/amx/modules.ini" ) );
+  int loaded = loadModules( get_localinfo("amx_modules" , "addons/amxx/config/modules.ini" ) );
   attachModules();
   // Set some info about amx version and modules
   if ( loaded ){
@@ -261,7 +261,7 @@ int Spawn( edict_t *pent ) {
 
   //  ######  Load Vault
   g_vault.setSource( build_pathname("%s",
-    get_localinfo("amx_vault" , "addons/amx/vault.ini" ) ) );
+    get_localinfo("amx_vault" , "addons/amxx/config/vault.ini" ) ) );
   g_vault.loadVault( );
 
 
@@ -276,7 +276,7 @@ int Spawn( edict_t *pent ) {
 
   //  ###### Load AMX scripts
   g_plugins.loadPluginsFromFile(
-    get_localinfo("amx_plugins" , "addons/amx/plugins/plugins.ini" )  );
+    get_localinfo("amx_plugins" , "addons/amxx/config/plugins.ini" )  );
 
   //  ###### Call precache forward function
   g_dontprecache = false;
@@ -962,7 +962,7 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
   CVAR_REGISTER (&init_amxmodx_version);
   amx_version = CVAR_GET_POINTER(init_amx_version.name  );
   amxmodx_version = CVAR_GET_POINTER(init_amxmodx_version.name);
-  REG_SVR_COMMAND("amx",amx_command);
+  REG_SVR_COMMAND("amxx",amx_command);
 
   char gameDir[512];
   GET_GAME_DIR(gameDir);
@@ -975,7 +975,7 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
   //  ###### Now attach metamod modules
   attachMetaModModules( get_localinfo("amx_modules" ,
-    "addons/amx/modules.ini" ) );
+    "addons/amxx/config/modules.ini" ) );
 
   return(TRUE);
 }
@@ -1005,7 +1005,7 @@ C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason) {
 
   //  ###### Now dettach metamod modules
   dettachMetaModModules( get_localinfo("amx_modules" ,
-    "addons/amx/modules.ini" ) );
+    "addons/amxx/config/modules.ini" ) );
 
   return(TRUE);
 }

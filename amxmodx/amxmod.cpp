@@ -2056,7 +2056,7 @@ int g_CallFunc_CurParam = 0;										// Current param id
 #define CALLFUNC_FLAG_BYREF		1									/* Byref flag so that mem is released */
 
 
-// native callfunc_begin(const plugin[], const func[]);
+// native callfunc_begin(const func[], const plugin[]="");
 static cell AMX_NATIVE_CALL callfunc_begin(AMX *amx, cell *params)
 {
 	CPluginMngr::CPlugin *curPlugin = g_plugins.findPluginFast(amx);
@@ -2070,8 +2070,8 @@ static cell AMX_NATIVE_CALL callfunc_begin(AMX *amx, cell *params)
 
 	int numparams = *params / sizeof(cell);
 	int len;
-	char *pluginStr = get_amxstring(amx, params[1], 0, len);
-	char *funcStr = get_amxstring(amx, params[2], 1, len);
+	char *pluginStr = get_amxstring(amx, params[2], 0, len);
+	char *funcStr = get_amxstring(amx, params[1], 1, len);
 	CPluginMngr::CPlugin *plugin = NULL;
 	if (!pluginStr || !*pluginStr)
 		plugin = curPlugin;

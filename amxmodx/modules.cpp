@@ -282,6 +282,32 @@ char* build_pathname(char *fmt, ... )
 	return string;
 }
 
+
+// build pathname based on addons dir
+char* build_pathname_addons(char *fmt, ... )
+{
+	static char string[256];
+	
+	va_list argptr;
+	va_start (argptr, fmt);
+	vsnprintf (string, 255, fmt, argptr);
+	va_end (argptr);
+	
+	char* path = string;
+	
+	while (*path) 
+	{
+#ifndef __linux__
+		if (*path == '/') *path = '\\';
+#else
+		if (*path == '\\') *path = '/';
+#endif
+		++path;
+	}
+	
+	return string;
+}
+
 int add_amxnatives(module_info_s* info,AMX_NATIVE_INFO*natives)
 {
 	CList<CModule>::iterator  a  = g_modules.begin();
@@ -333,11 +359,10 @@ int loadModules(const char* filename)
   {
 	  *moduleName = 0;
 	  sscanf(line,"%s",moduleName);
-	  
 	  if (!isalnum(*moduleName) || !validFile(moduleName) )  
 		  continue;
 	  
-	  char* pathname = build_pathname("%s",moduleName);
+	  char* pathname = build_pathname("addons/amxx/modules/%s", line);
 
 	  CList<CModule>::iterator a = g_modules.find(  pathname  );
 
@@ -451,7 +476,8 @@ void dettachMetaModModules( const char* filename )
 	  if (!isalnum(*moduleName) || !validFile(moduleName) )  
 		  continue;
 	  
-	  char* pathname = build_pathname("%s",moduleName);
+	  char* pathname = build_pathname_addons("addons/amxx/modules/%s", line);
+	  char* mmpathname = build_pathname_addons("addons/amxx/modules/%s", line);
 
 	  module = DLLOAD( pathname ); // link dll
 
@@ -461,7 +487,7 @@ void dettachMetaModModules( const char* filename )
 
 		if ( a )
 		{
-			snprintf(cmdline,255, "meta unload %s\n", strip_name(moduleName) );
+			snprintf(cmdline,255, "meta unload %s\n", strip_name(mmpathname) );
 			cmdline[255] = 0;
 			SERVER_COMMAND( cmdline );
 		}
@@ -494,8 +520,8 @@ void attachMetaModModules( const char* filename )
 	  if (!isalnum(*moduleName) || !validFile(moduleName) )  
 		  continue;
 	  
-	  char* pathname = build_pathname("%s",moduleName);
-
+	  char* pathname = build_pathname("addons/amxx/modules/%s", line);
+	  char* mmpathname = build_pathname_addons("addons/amxx/modules/%s", line);
 	  module = DLLOAD( pathname ); // link dll
 
 	  if ( module )
@@ -504,7 +530,7 @@ void attachMetaModModules( const char* filename )
 
 		if ( a )
 		{
-			snprintf(cmdline,255, "meta load %s\n", moduleName );
+			snprintf(cmdline,255, "meta load %s\n", mmpathname );
 			cmdline[255] = 0;
 			SERVER_COMMAND( cmdline );
 			++loaded;

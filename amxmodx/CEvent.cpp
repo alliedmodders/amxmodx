@@ -345,6 +345,11 @@ void EventsMngr::executeEvents()
 {
 	int err;
 
+	if (!m_ParseFun)
+	{
+		return;
+	}
+
 #ifdef ENABLEEXEPTIONS
 	try
 	{

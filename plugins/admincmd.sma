@@ -61,7 +61,7 @@ public plugin_init() {
   register_concmd("amx_plugins","cmdPlugins",ADMIN_ADMIN)
   register_concmd("amx_modules","cmdModules",ADMIN_ADMIN)
   register_concmd("amx_map","cmdMap",ADMIN_MAP,"<mapname>")
-  register_concmd("amx_cfg","cmdCfg",ADMIN_CFG,"<fliename>")
+  register_concmd("amx_cfg","cmdCfg",ADMIN_CFG,"<filename>")
   register_concmd("amx_nick","cmdNick",ADMIN_SLAY,"<name or #userid> <new nick>")
   register_clcmd("amx_rcon","cmdRcon",ADMIN_RCON,"<command line>")
   register_clcmd("pauseAck","cmdLBack")

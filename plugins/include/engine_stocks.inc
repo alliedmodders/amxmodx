@@ -238,3 +238,21 @@ stock get_user_velocity(entity, Float:vec[3])
 {
 	return entity_get_vector(entity, EV_VEC_velocity, vec)
 }
+
+/* Backwards compatible */
+/* Hurts/Kills players in a sphere, like an explosion, Multiplier determines damage. */
+stock RadiusDamage(Float:fExplodeAt[3], iDamageMultiplier, iRadiusMultiplier) {
+  return radius_damage(fExplodeAt[3], iDamageMultiplier, iRadiusMultiplier)
+}
+/* Gives you a velocity in the direction a player is looking, iVelocity is the multiplier. */
+stock VelocityByAim(iIndex,iVelocity, Float:vRetValue[3]) {
+  return velocity_by_aim(iIndex,iVelocity,vRetValue)
+}
+/* Will return the contents of a point (inside map? in sky? outside map? etc.). */
+stock PointContents(Float:fCheckAt[3]) {
+  return point_contents(fCheckAt);
+}
+
+stock set_size(index, Float:mins[3], Float:maxs[3]) {
+  return entity_set_size(index,mins,maxs)
+}

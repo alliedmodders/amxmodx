@@ -245,7 +245,11 @@ stock set_mask(id,mask,value)
   return ns_set_mask(id,mask,value)
 
 stock get_special(id,mask)
-	return ns_get_special(id,mask)
+{
+  if (pev(id,pev_iuser4) & mask)
+     return 1
+  return 0
+}
 
 stock get_res(id)
 	return floatround(ns_get_res(id))

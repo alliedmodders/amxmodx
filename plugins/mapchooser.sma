@@ -63,7 +63,10 @@ public plugin_init()
   get_localinfo("lastMap",g_lastMap,31)
   set_localinfo("lastMap","")
 
-  if ( loadSettings("addons/amxx/configs/maps.ini") )
+  new maps_ini_file[64];
+  get_configsdir(maps_ini_file, 63);
+  format(maps_ini_file, 63, "%s/maps.ini", maps_ini_file);
+  if ( loadSettings(maps_ini_file) )
     set_task(15.0,"voteNextmap",987456,"",0,"b")
 }
 

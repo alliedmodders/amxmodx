@@ -62,7 +62,10 @@ public plugin_init()
   register_menucmd(register_menuid("Votemap Menu"),1023,"actionVoteMapMenu")
   register_menucmd(register_menuid("The winner: ") ,3,"actionResult")
 
-  load_settings("addons/amxx/configs/maps.ini")
+  new maps_ini_file[64];
+  get_configsdir(maps_ini_file, 63);
+  format(maps_ini_file, 63, "%s/maps.ini", maps_ini_file);
+  load_settings(maps_ini_file)
 
   g_cstrikeRunning = is_running("cstrike")
 }

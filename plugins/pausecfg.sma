@@ -43,7 +43,7 @@
 #define MAX_SYSTEM 32
  
 new g_menuPos[33]
-new g_fileToSave[] = "addons/amxx/configs/pausecfg.ini"
+new g_fileToSave[64];
 new g_cstrikeRunning
 new g_Modified
 new g_couldntFind[] = "Couldn't find a plugin matching ^"%s^""
@@ -62,6 +62,9 @@ public plugin_init(){
 #endif
   register_menucmd(register_menuid("Pause/Unpause Plugins"),1023,"actionMenu")
   g_cstrikeRunning = is_running("cstrike")
+  get_configsdir(g_fileToSave, 63);
+  format(g_fileToSave, 63, "%s/pausecfg.ini", g_fileToSave);
+  
   return PLUGIN_CONTINUE
 }
 

@@ -45,13 +45,15 @@
 new g_cstrikeRunning
 
 #if defined READ_FROM_FILE
-new g_motdFile[] = "addons/amxx/configs/conmotd.txt"
+new g_motdFile[64]
 #endif
 
 public plugin_init()
 {
   register_plugin("Welcome Message","0.16","AMXX Dev Team")
   g_cstrikeRunning = is_running("cstrike")
+  get_configsdir(g_motdFile, 63);
+  format(g_motdFile, 63, "%s/conmotd.txt", g_motdFile);
 }
 
 public plugin_cfg()

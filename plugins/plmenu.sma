@@ -70,7 +70,10 @@ public plugin_init()
 
   g_cstrikeRunning = is_running("cstrike")
 
-  load_settings("addons/amxx/configs/clcmds.ini")
+  new clcmds_ini_file[64];
+  get_configsdir(clcmds_ini_file, 63);
+  format(clcmds_ini_file, 63, "%s/clcmds.ini", clcmds_ini_file);
+  load_settings(clcmds_ini_file)
 }
 
 /* Ban menu */

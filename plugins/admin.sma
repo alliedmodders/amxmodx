@@ -72,7 +72,11 @@ public plugin_init()
 
   remove_user_flags(0,read_flags("z")) // Remove 'user' flag from server rights
   
-  server_cmd("exec addons/amxx/amxx.cfg") // Execute main configuration file
+  new configsDir[128]
+  get_configsdir(configsDir, 127)
+  server_cmd("exec %s/amxx.cfg", configsDir) // Execute main configuration file
+  new users_ini_file[128]
+  format(users_ini_file, 127, "%s/users.ini", configsDir)
   loadSettings("addons/amxx/configs/users.ini") // Load admins accounts
 }
 
@@ -109,9 +113,9 @@ public cmdReload(id,level,cid)
   if (!cmd_access(id,level,cid,1))
     return PLUGIN_HANDLED
 
-  new filename[64]
-  get_basedir(filename,31)
-  format(filename,63,"%s/configs/users.ini",filename)
+  new filename[128]
+  get_configsdir(filename,127)
+  format(filename,63,"%s/users.ini", filename)
 
   g_aNum = 0
   loadSettings(filename) // Re-Load admins accounts

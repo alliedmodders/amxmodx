@@ -363,12 +363,14 @@ public plugin_init(){
   register_menucmd(-34,511,"menuItem")
   register_concmd("amx_restrict","cmdRest",ADMIN_CFG,"- displays help for weapons restriction")
 
+  new configsDir[64];
+  get_configsdir(configsDir, 63);
 #if defined MAPSETTINGS
   new mapname[32]
   get_mapname(mapname,31)
-  build_path(g_saveFile,63,"addons/amxx/configs/weaprest_%s.ini",mapname)
+  format(g_saveFile,63,"%s/weaprest_%s.ini",configsDir,mapname)
 #else
-  build_path(g_saveFile,63,"addons/amxx/configs/weaprest.ini")
+  format(g_saveFile,63,"%s/weaprest.ini",configsDir)
 #endif  
   loadSettings(g_saveFile)
 }
@@ -495,8 +497,12 @@ public cmdRest(id,level,cid){
   else if ( equali( "load" , cmd ) ) {
     setc( g_blockPos, 112, 0 ) // Clear current settings
     new arg1[64]
-    if ( read_argv(2, arg1 , 63 ) ) build_path( arg1 , 63, "$basedir/%s", arg1 )
-    else copy( arg1, 63,  g_saveFile )
+    if ( read_argv(2, arg1 , 63 ) ) 
+    { 
+      new configsdir[32] 
+      get_configsdir(configsdir,31) 
+      format(arg1,63,"%s/%s",configsdir,arg1) 
+    } 
     if ( loadSettings( arg1 ) ){
       console_print( id , "Configuration has been loaded (file ^"%s^")" , arg1 )
       g_Modified = true

@@ -2524,6 +2524,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("GetModname", g_fn_GetModname, PFN_GET_MODNAME);
 	REQFUNC("Log", g_fn_Log, PFN_LOG);
 	REQFUNC("MergeDefinitionFile", g_fn_MergeDefinition_File, PFN_MERGEDEFINITION_FILE);
+	REQFUNC("Format", g_fn_Format, PFN_FORMAT);
 
 	// Amx scripts
 	REQFUNC("GetAmxScript", g_fn_GetAmxScript, PFN_GET_AMXSCRIPT);
@@ -2579,6 +2580,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("GetPlayerArmor", g_fn_GetPlayerArmor, PFN_GET_PLAYER_ARMOR);
 	REQFUNC("GetPlayerHealth", g_fn_GetPlayerHealth, PFN_GET_PLAYER_HEALTH);
 	REQFUNC("GetPlayerFlags", g_fn_GetPlayerFlags, PFN_GETPLAYERFLAGS);
+	REQFUNC("GetPlayerEdict", g_fn_GetPlayerEdict, PFN_GET_PLAYER_EDICT);
 
 	// Memory
 	REQFUNC_OPT("Allocator", g_fn_Allocator, PFN_ALLOCATOR);
@@ -2673,11 +2675,14 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_AmxExecv(0, 0, 0, 0, 0);
 	MF_AmxFindPublic(0, 0, 0);
 	MF_AmxAllot(0, 0, 0, 0);
-	MF_LoadAmxScript(0, 0, 0, 0);
+	MF_LoadAmxScript(0, 0, 0, 0, 0);
 	MF_UnloadAmxScript(0, 0);
 	MF_RegisterSPForward(0, 0, 0, 0, 0, 0);
 	MF_RegisterSPForwardByName(0, 0, 0, 0, 0, 0);
 	MF_UnregisterSPForward(0);
+	MF_GetPlayerFrags(0);
+	MF_GetPlayerEdict(0);
+	MF_Format("", 4, "str");
 }
 #endif
 

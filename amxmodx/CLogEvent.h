@@ -96,23 +96,22 @@ public:
 		LogCondEle(CLogCmp *c, LogCondEle *n): cmp(c) , next(n) { }
 	};
 	struct LogCond {
-		LogCondEle *list;
 		int argnum;
+		LogCondEle *list;
 		LogCond *next;
 		LogCond( int a , LogCondEle* ee , LogCond* n ) : argnum(a) , list(ee), next(n)  {}
 		~LogCond();
 	};
     CPluginMngr::CPlugin *plugin;
     int func;
-	LogEventsMngr* parent;
     LogCond *filters;
+    LogEventsMngr* parent;
     CLogEvent *next;
     CLogEvent(CPluginMngr::CPlugin *p,int f, LogEventsMngr* ppp) : plugin(p),func(f), filters(0),parent(ppp) ,next(0) { }
     ~CLogEvent();
   public:
-
-	void registerFilter( char* filter );
 	inline CPluginMngr::CPlugin *getPlugin() { return plugin; }
+	void registerFilter( char* filter );
 	inline int getFunction() { return func; }
   };
 
@@ -144,8 +143,8 @@ public:
 
 
   class iterator {
-	  LogEventsMngr* b;
 	  CLogEvent* a;
+	  LogEventsMngr* b;
   public:
 	  inline iterator(CLogEvent*aa,LogEventsMngr* bb) : a(aa), b(bb) {}
 	  inline iterator& operator++() {

@@ -123,7 +123,7 @@ char* get_amxstring(AMX *amx,cell amx_addr,int id, int& len)
   register cell* source = (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
   register char* dest = buffor[id];
   char* start = dest;
-  while (*dest++=(char)*source++)
+  while ((*dest++=(char)(*source++)))
     ;
   len = --dest - start;
   return start;

@@ -720,7 +720,7 @@ void MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict_t
 #else
       int *z = (int*)ptr + 0x16C;
 #endif
-      int stop = ed->v.armorvalue;
+      int stop = (int)ed->v.armorvalue;
       *z = stop;
       ed->v.armorvalue = stop;
     }

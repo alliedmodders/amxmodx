@@ -151,11 +151,11 @@ public:
 // class ForceObject
 // *****************************************************
 class ForceObject {
-    AMX* amx;
     String filename;
     FORCE_TYPE type;
     Vector mins;
     Vector maxs;
+    AMX* amx;
 public:
     ForceObject(const char* n, FORCE_TYPE c,Vector& mi, Vector& ma, AMX* a) :
     filename(n) , type(c), mins(mi), maxs(ma), amx(a) {}

@@ -169,7 +169,7 @@ char* UTIL_SplitHudMessage(const char *src)
 
 unsigned short FixedUnsigned16( float value, float scale )
 {
-  int output = value * scale;
+  int output = (int)(value * scale);
 
   if ( output < 0 )
     output = 0;
@@ -181,7 +181,7 @@ unsigned short FixedUnsigned16( float value, float scale )
 
 short FixedSigned16( float value, float scale )
 {
-  int output = value * scale;
+  int output = (int)(value * scale);
 
   if ( output > 32767 )
     output = 32767;

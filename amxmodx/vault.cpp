@@ -83,3 +83,5 @@ AMX_NATIVE_INFO vault_Natives[] = {
   { "vaultdata_exists", vaultdata_exists  },
   { 0, 0 }
 };
+
+

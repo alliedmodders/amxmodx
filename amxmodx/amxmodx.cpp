@@ -29,11 +29,11 @@
 *  version.
 */
 
+#include <string>
 #include <extdll.h>
 #include <meta_api.h>
 #include <time.h>
 #include "amxmodx.h"
-#include <string>
 
 static cell AMX_NATIVE_CALL get_xvar_id(AMX *amx, cell *params)
 {
@@ -201,7 +201,7 @@ static cell AMX_NATIVE_CALL show_motd(AMX *amx, cell *params)  /* 2 param */
   if ( !ilen ) szHead = hostname->string;
   char* szBody = get_amxstring(amx,params[2],1,ilen);
   int iFile = 0;
-  char* sToShow;// = szBody;
+  char* sToShow = NULL;// = szBody;
   if (ilen<128) sToShow = (char*)LOAD_FILE_FOR_ME( szBody , &iFile );
   if (!iFile)
     sToShow = szBody;
@@ -475,11 +475,24 @@ static cell AMX_NATIVE_CALL get_user_origin(AMX *amx, cell *params) /* 3 param *
     if (mode && mode!=2)
       pos = pos + edict->v.view_ofs;
     if (mode > 1) {
-      Vector v_forward;
-      ANGLEVECTORS( edict->v.v_angle , v_forward, NULL, NULL );
+      Vector vec;
+      Vector v_angle = edict->v.v_angle;
+      float v_vec[3];
+      v_vec[0] = v_angle.x;
+      v_vec[1] = v_angle.y;
+      v_vec[2] = v_angle.z;
+      ANGLEVECTORS( v_vec, vec, NULL, NULL);
       TraceResult trEnd;
-      Vector v_dest = pos + v_forward * 9999;
-      TRACE_LINE( pos , v_dest,  0 , edict, &trEnd );
+      Vector v_dest = pos+vec  * 9999;
+      float f_pos[3];
+      f_pos[0] = pos.x;
+      f_pos[1] = pos.y;
+      f_pos[2] = pos.z;
+      float f_dest[3];
+      f_dest[0] = v_dest.x;
+      f_dest[1] = v_dest.y;
+      f_dest[2] = v_dest.z;
+      TRACE_LINE( f_pos , f_dest,  0 , edict, &trEnd );
       pos = (trEnd.flFraction < 1.0) ? trEnd.vecEndPos : Vector(0,0,0);
     }
     cpOrigin[0] = (long int)pos.x;
@@ -740,7 +753,7 @@ static cell AMX_NATIVE_CALL register_srvcmd(AMX *amx, cell *params) /* 2 param *
   if(amx_FindPublic(amx, temp ,&idx)!=AMX_ERR_NONE) {
     AMXXLOG_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")",temp,plugin->getName() );
     amx_RaiseError(amx,AMX_ERR_NATIVE);
-    return NULL;
+    return 0;
   }
   temp = get_amxstring(amx,params[1],0, i );
   char* info = get_amxstring(amx,params[4],1, i );
@@ -870,7 +883,7 @@ static cell AMX_NATIVE_CALL user_kill(AMX *amx, cell *params) /* 2 param */
     return 0;
   CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
   if (pPlayer->ingame && pPlayer->IsAlive()){
-  int bef = pPlayer->pEdict->v.frags;
+  float bef = pPlayer->pEdict->v.frags;
     MDLL_ClientKill(pPlayer->pEdict);
     if (params[2]) pPlayer->pEdict->v.frags = bef;
     return 1;
@@ -888,7 +901,7 @@ static cell AMX_NATIVE_CALL user_slap(AMX *amx, cell *params) /* 2 param */
   CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
   if (pPlayer->ingame && pPlayer->IsAlive()){
     if (pPlayer->pEdict->v.health <= power) {
-      int bef = pPlayer->pEdict->v.frags;
+      float bef = pPlayer->pEdict->v.frags;
       MDLL_ClientKill(pPlayer->pEdict);
       pPlayer->pEdict->v.frags = bef;
     }
@@ -902,7 +915,12 @@ static cell AMX_NATIVE_CALL user_slap(AMX *amx, cell *params) /* 2 param */
       }
       else {
         Vector v_forward, v_right;
-        ANGLEVECTORS( pEdict->v.angles, v_forward, v_right, NULL );
+	Vector vang = pEdict->v.angles;
+	float fang[3];
+	fang[0] = vang.x;
+	fang[1] = vang.y;
+	fang[2] = vang.z;
+        ANGLEVECTORS( fang, v_forward, v_right, NULL );
         pEdict->v.velocity = pEdict->v.velocity + v_forward * 220 + Vector(0,0,200);
       }
       pEdict->v.punchangle.x = RANDOM_LONG(-10,10);
@@ -1018,7 +1036,7 @@ static cell AMX_NATIVE_CALL set_cvar_string(AMX *amx, cell *params) /* 2 param *
 static cell AMX_NATIVE_CALL message_begin(AMX *amx, cell *params) /* 4 param */
 {
 	int numparam = *params/sizeof(cell);
-	Vector vecOrigin;
+	float vecOrigin[3];
 	cell *cpOrigin;
 	switch (params[1]){
   case MSG_BROADCAST:
@@ -1032,9 +1050,9 @@ static cell AMX_NATIVE_CALL message_begin(AMX *amx, cell *params) /* 4 param */
 		  return 0;
 	  }
 	  cpOrigin = get_amxaddr(amx,params[3]);
-	  vecOrigin.x = *cpOrigin;
-	  vecOrigin.y = *(cpOrigin+1);
-	  vecOrigin.z = *(cpOrigin+2);
+	  vecOrigin[0] = *cpOrigin;
+	  vecOrigin[1] = *(cpOrigin+1);
+	  vecOrigin[2] = *(cpOrigin+2);
 	  MESSAGE_BEGIN( params[1], params[2] , vecOrigin );
 	  break;
   case MSG_ONE:
@@ -1284,7 +1302,7 @@ static cell AMX_NATIVE_CALL get_players(AMX *amx, cell *params) /* 4 param */
   cell *aPlayers = get_amxaddr(amx,params[1]);
   cell *iMax = get_amxaddr(amx,params[2]);
 
-  int team;
+  int team = 0;
 
   if (flags & 48) {
     sptemp = get_amxstring(amx,params[4],0,ilen);
@@ -1872,10 +1890,23 @@ static cell AMX_NATIVE_CALL get_user_aiming(AMX *amx, cell *params) /* 4 param *
     edict_t* edict = pPlayer->pEdict;
     Vector v_forward;
     Vector v_src = edict->v.origin + edict->v.view_ofs;
-    ANGLEVECTORS( edict->v.v_angle , v_forward, NULL, NULL );
+    Vector vang = edict->v.v_angle;
+    float fang[3];
+    fang[0] = vang.x;
+    fang[1] = vang.y;
+    fang[2] = vang.z;
+    ANGLEVECTORS( fang , v_forward, NULL, NULL );
     TraceResult trEnd;
     Vector v_dest = v_src + v_forward * params[4];
-    TRACE_LINE( v_src , v_dest,  0 , edict, &trEnd );
+    float fsrc[3];
+    fsrc[0] = v_src.x;
+    fsrc[1] = v_src.y;
+    fsrc[2] = v_src.z;
+    float fdst[3];
+    fdst[0] = v_dest.x;
+    fdst[1] = v_dest.y;
+    fdst[2] = v_dest.z;
+    TRACE_LINE( fsrc , fdst,  0 , edict, &trEnd );
     *cpId = FNullEnt(trEnd.pHit) ? 0 : ENTINDEX(trEnd.pHit);
     *cpBody = trEnd.iHitgroup;
     if (trEnd.flFraction < 1.0) {
@@ -2159,7 +2190,7 @@ struct CallFunc_ParamInfo
 
 #define CALLFUNC_MAXPARAMS 64										/* Maximal params number */
 cell g_CallFunc_Params[CALLFUNC_MAXPARAMS] = {0};					// Params
-CallFunc_ParamInfo g_CallFunc_ParamInfo[CALLFUNC_MAXPARAMS] = {0};	// Flags
+CallFunc_ParamInfo g_CallFunc_ParamInfo[CALLFUNC_MAXPARAMS] = {{0}};	// Flags
 int g_CallFunc_CurParam = 0;										// Current param id
 
 #define CALLFUNC_FLAG_BYREF			1								/* Byref flag so that mem is released */

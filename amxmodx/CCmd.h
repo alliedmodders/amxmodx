@@ -100,8 +100,8 @@ private:
 	CmdLink* clcmdlist;
 
 	struct CmdPrefix {
-		CmdMngr* parent;
 		String name;
+		CmdMngr* parent;
 		CmdLink* list;
 		CmdPrefix* next;
 		CmdPrefix( const char* nn , CmdMngr* pp) : 	name(nn),parent(pp),list(0),next(0){}

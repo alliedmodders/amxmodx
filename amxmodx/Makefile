@@ -44,7 +44,7 @@ endif
 
 
 
-LIBFILE_LINUX = $(MODNAME)_i386.so
+LIBFILE_LINUX = $(MODNAME)_i686.so
 LIBFILE_WIN32 = $(MODNAME).dll
 TARGET_LINUX = $(OBJDIR_LINUX)/$(LIBFILE_LINUX)
 TARGET_WIN32 = $(OBJDIR_WIN32)/$(LIBFILE_WIN32)
@@ -61,7 +61,7 @@ OBJ_WIN32 := $(SRCFILES:%.cpp=$(OBJDIR_WIN32)/%.o)
 OBJC_WIN32 := $(CSRCFILES:%.c=$(OBJDIR_WIN32)/%.o)
 
 
-CCOPT = -O2 -march=i586 -ffast-math -funroll-loops \
+CCOPT = -O6 -march=i686 -ffast-math -funroll-loops \
 	-fomit-frame-pointer -fexpensive-optimizations -malign-loops=2 \
 	-malign-jumps=2 -malign-functions=2 -s	-DNDEBUG
 

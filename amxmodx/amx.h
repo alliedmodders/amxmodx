@@ -21,6 +21,7 @@
  *  Version: $Id$
  */
 
+#define LINUX
 #if defined __linux__
   #include <sclinux.h>
 #endif

@@ -183,7 +183,7 @@ static cell AMX_NATIVE_CALL setarg(AMX *amx, cell *params)
   /* adjust the address in "value" in case of an array access */
   value+=params[2]*sizeof(cell);
   /* verify the address */
-  if (value<0 || value>=amx->hea && value<amx->stk)
+  if (value<0 || (value>=amx->hea && value<amx->stk))
     return 0;
   /* set the value indirectly */
   * (cell *)(data+(int)value) = params[3];

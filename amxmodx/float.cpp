@@ -81,7 +81,7 @@ static cell AMX_NATIVE_CALL n_floatstr(AMX *amx,cell *params)
 
     /* Find out how long the string is in characters. */
     amx_StrLen(pString, &nLen);
-    if (nLen == 0 || nLen >= sizeof szSource)
+    if (nLen == 0 || (unsigned int)nLen >= sizeof szSource)
         return 0;
 
     /* Now convert the Small String into a C type null terminated string */

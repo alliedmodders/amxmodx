@@ -107,8 +107,8 @@ public:
 	void clear();
 
 	class iterator {
-		CTaskMngr* b;
 		CTask* a;
+		CTaskMngr* b;
 	public:
 		iterator(CTask*aa,CTaskMngr* bb) : a(aa), b(bb) {}
 		iterator& operator++() {

@@ -72,12 +72,11 @@ public plugin_init()
 
   remove_user_flags(0,read_flags("z")) // Remove 'user' flag from server rights
   
-  new configsDir[128]
-  get_configsdir(configsDir, 127)
+  new configsDir[64]
+  get_configsdir(configsDir, 63)
   server_cmd("exec %s/amxx.cfg", configsDir) // Execute main configuration file
-  new users_ini_file[128]
-  format(users_ini_file, 127, "%s/users.ini", configsDir)
-  loadSettings("addons/amxx/configs/users.ini") // Load admins accounts
+  format(configsDir, 63, "%s/users.ini", configsDir)
+  loadSettings(configsDir) // Load admins accounts
 }
 
 loadSettings(szFilename[])

@@ -108,7 +108,7 @@ void AMXXLOG_Log(const char *fmt, ...)
 		{
 			if (s_inCreatingLogFile)
 			{
-				ALERT(at_logged, "[AMXX] Unexpected fatal logging error. AMXX Logging disabled.");
+				ALERT(at_logged, "[AMXX] Unexpected fatal logging error. AMXX Logging disabled.\n");
 				CVAR_SET_FLOAT(init_amx_logging.name, 0.0f);
 				return;
 			}
@@ -132,11 +132,11 @@ void AMXXLOG_Log(const char *fmt, ...)
 		va_start(arglst, fmt);
 		vsprintf(msg, fmt, arglst);
 		va_end(arglst);
-		ALERT(at_logged, msg);
+		ALERT(at_logged, "%s\n", msg);
 	}
 	else
 	{
-		ALERT(at_logged, "[AMXX] Invalid %s value. Setting to 0", init_amx_logging.name);
+		ALERT(at_logged, "[AMXX] Invalid %s value. Setting to 0\n", init_amx_logging.name);
 		CVAR_SET_FLOAT(init_amx_logging.name, 0.0f);
 	}
 }

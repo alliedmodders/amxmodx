@@ -143,7 +143,7 @@ enum
 	DLLFunc_GetHullBounds,	// int)	( int hullnumber, float *mins, float *maxs );
 
 	// Create baselines for certain "unplaced" items.
-	DLLFunc_CreateInstancedBaselines,	// void ) ( void );
+	DLLFunc_CreateInstancedBaseline,	// void ) ( void );
 	DLLFunc_pfnAllowLagCompensation,	// int )( void );
 	// I know this does not fit with DLLFUNC(), but I dont want another native just for it.
 	MetaFunc_CallGameEntity	// bool	(plid_t plid, const char *entStr,entvars_t *pev);
@@ -424,6 +424,6 @@ enum {
 	// Enumerates player hulls.  Returns 0 if the hull number doesn't exist, 1 otherwise
 
 	// Create baselines for certain "unplaced" items.
-	FM_CreateInstancedBaselines,	// done 
+	FM_CreateInstancedBaseline,	// done 
 	FM_AllowLagCompensation,	// done
 };

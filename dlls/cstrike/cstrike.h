@@ -65,7 +65,6 @@
 // "player" entities
 #if !defined __amd64__
 	// 32 bit offsets here
-	#define OFFSET_SHIELD   510 + EXTRAOFFSET
 	#define OFFSET_ARMORTYPE			112 + EXTRAOFFSET
 	#define OFFSET_TEAM					114 + EXTRAOFFSET
 	#define OFFSET_CSMONEY				115 + EXTRAOFFSET
@@ -95,6 +94,7 @@
 	#define OFFSET_C4_AMMO				390	+ EXTRAOFFSET
 
 	#define OFFSET_CSDEATHS				444 + EXTRAOFFSET // 040926
+	#define OFFSET_SHIELD				510 + EXTRAOFFSET
 	// "weapon_*" entities
 	#define OFFSET_WEAPONTYPE			43 + EXTRAOFFSET_WEAPONS
 	#define OFFSET_CLIPAMMO				51 + EXTRAOFFSET_WEAPONS
@@ -104,7 +104,6 @@
 	#define OFFSET_HOSTAGEID			487 + EXTRAOFFSET
 #else
 	// Amd64 offsets here
-	#define OFFSET_SHIELD				559 + EXTRAOFFSET
 	#define OFFSET_ARMORTYPE			137 + EXTRAOFFSET
 	#define OFFSET_TEAM					139 + EXTRAOFFSET // +25
 	#define OFFSET_CSMONEY				140 + EXTRAOFFSET // +25
@@ -134,6 +133,7 @@
 	#define OFFSET_C4_AMMO				439	+ EXTRAOFFSET // +44
 
 	#define OFFSET_CSDEATHS				493 + EXTRAOFFSET // +49
+	#define OFFSET_SHIELD				559 + EXTRAOFFSET
 	// "weapon_*" entities
 	#define OFFSET_WEAPONTYPE			57 + EXTRAOFFSET // +14
 	#define OFFSET_CLIPAMMO				65 + EXTRAOFFSET // +14

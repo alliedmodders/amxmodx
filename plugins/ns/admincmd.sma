@@ -164,7 +164,7 @@ public cmdAddBan(id,level,cid) {
 }
     
 public cmdBan(id,level,cid) {
-  if (!cmd_access(id,level,cid,4))
+  if (!cmd_access(id,level,cid,3))
     return PLUGIN_HANDLED
   new target[32],minutes[8],reason[64]
   read_argv(1,target,31)
@@ -221,7 +221,7 @@ public cmdBan(id,level,cid) {
 }
     
 public cmdBanIP(id,level,cid) {
-  if (!cmd_access(id,level,cid,4))
+  if (!cmd_access(id,level,cid,3))
     return PLUGIN_HANDLED
   new target[32],minutes[8],reason[64]
   read_argv(1,target,31)

@@ -66,11 +66,23 @@ native setc(src[],len,ch);
 * Function returns number of parsed parameters. */
 native parse(const text[], ... );
 
+/* Breaks a string into two halves, by token.
+   See strbreak() for doing this with parameters.
+   Example:
+   str1[] = This *is*some text
+   strtok(str1, left, 24, right, 24, '*')
+   left will be "This "
+   Right will be "is*some text"
+   If you use trimSpaces, all spaces are trimmed from Left.
+*/
+native strtok(const text[], Left[], leftLen, Right[], rightLen, token=' ', trimSpaces=0);
+   
+
 /* Gets parameters from text one at a time
    It breaks a string into the first parameter and the rest of the parameters
    (A left side and right side of the string)
    Example: to split text: "^"This is^" the best year",
-   split(text, arg1, len1, arg2, len2)
+   strbreak(text, arg1, len1, arg2, len2)
    arg1="This is", arg2=the best year
    This is more useful than parse() because you can keep breaking
    any number of arguments */

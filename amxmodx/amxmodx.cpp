@@ -1447,17 +1447,17 @@ static cell AMX_NATIVE_CALL read_data(AMX *amx, cell *params) /* 3 param */
 	{
 		return g_events.getCurrentMsgType();
 	}
-  switch( *params/sizeof(cell) ) {
-  case 1:
-  return g_events.getArgInteger( params[1] );
-  case 3:
-  return set_amxstring(amx,params[2], g_events.getArgString( params[1] ),*get_amxaddr(amx,params[3]));
-  default:
-  cell *fCell = get_amxaddr(amx,params[2]);
-  REAL pFloat = amx_ctof(fCell);
-  pFloat = g_events.getArgFloat( params[1] );
-  return (int)(pFloat);
-  }
+	switch( *params/sizeof(cell) ) {
+		case 1:
+			return g_events.getArgInteger( params[1] );
+		case 3:
+			return set_amxstring(amx,params[2], g_events.getArgString( params[1] ),*get_amxaddr(amx,params[3]));
+		default:
+			cell *fCell = get_amxaddr(amx, params[2]);
+			float fparam = g_events.getArgFloat(params[1]);
+			fCell[0] = amx_ftoc(fparam);
+			return (int)fparam;
+	}
 }
 
 static cell AMX_NATIVE_CALL get_playersnum(AMX *amx, cell *params)

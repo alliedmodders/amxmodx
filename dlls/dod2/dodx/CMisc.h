@@ -74,11 +74,14 @@ public:
 	int current;
 	int wpnModel;
 
-	int savedScore;
+	float savedScore;
+	int lastScore;
+	int sendScore;
 
 	bool ingame;
 	bool bot;
 	float clearStats;
+	float clearRound;
 
 	struct PlayerWeapon : public Stats {
 		char*		name;
@@ -178,6 +181,7 @@ public:
 	void put( AMX *a , int i );
 	void exec(int p1,int p2,int p3,int p4,int p5,int p6);
 	void exec(int p1,int p2,int p3,int p4,int p5);
+	void exec(int p1,int p2,int p3);
 	void exec(int p1,int p2);
 };
 #endif

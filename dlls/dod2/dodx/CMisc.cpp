@@ -367,6 +367,14 @@ void Forward::exec(int p1,int p2,int p3,int p4,int p5){
 	}
 }
 
+void Forward::exec(int p1,int p2,int p3){
+	AmxCall* a = head;
+	while ( a ){
+		MF_AmxExec(a->amx, NULL, a->iFunctionIdx, 3,p1, p2, p3);
+		a = a->next;
+	}
+}
+
 void Forward::exec(int p1,int p2){
 	AmxCall* a = head;
 	while ( a ){

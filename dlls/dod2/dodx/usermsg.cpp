@@ -42,8 +42,7 @@ void Client_RoundState(void* mValue){
 		for (int i=1;i<=gpGlobals->maxClients;i++){
 			CPlayer *pPlayer = GET_PLAYER_POINTER_I(i);
 			if (pPlayer->ingame) {
-				memset(&pPlayer->round,0,sizeof(pPlayer->round));
-				memset(pPlayer->weaponsRnd,0,sizeof(pPlayer->weaponsRnd));
+				pPlayer->clearRound = gpGlobals->time + 0.25f;
 			}
 		}
 	}
@@ -70,18 +69,18 @@ void Client_TeamScore(void* mValue){
 
 void Client_ObjScore(void* mValue){
 	static CPlayer *pPlayer;
-	static int TMScore; //total map score :-)
+	static int score;
 	switch(mState++){
 	case 0:
 		pPlayer = GET_PLAYER_POINTER_I(*(int*)mValue);
 		break;
 	case 1:
-		TMScore = *(int*)mValue;
-		int score = TMScore - pPlayer->savedScore;
-		if ( score && isModuleActive() ){
-			pPlayer->updateScore(pPlayer->current,score);
+		score = *(int*)mValue;
+		if ( (pPlayer->lastScore = score - pPlayer->savedScore) && isModuleActive() ){
+			pPlayer->updateScore(pPlayer->current,pPlayer->lastScore);
+			pPlayer->sendScore = gpGlobals->time + 0.25f;
 		}
-		pPlayer->savedScore = TMScore;
+		pPlayer->savedScore = score;
 		break;
 	}
 }

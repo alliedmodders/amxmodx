@@ -205,11 +205,19 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params){ // forward
 			MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 			return 0;
 		break;
+	case 2:
+		if( MF_AmxFindPublic(amx, "client_score", &iFunctionIndex) == AMX_ERR_NONE )
+			g_score_info.put( amx , iFunctionIndex );
+		else
+			MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+			return 0;
+		break;
 	default:
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 #endif
+
 	return 1;
 }
 

@@ -81,11 +81,13 @@ extern int gmsgPTeam;
 
 extern Forward g_death_info;
 extern Forward g_damage_info;
+extern Forward g_score_info;
 
 #else
 
 extern int iFDamage;
 extern int iFDeath;
+extern int iFScore;
 
 #endif
 

@@ -51,11 +51,13 @@ int AxisScore;
 
 Forward g_death_info;
 Forward g_damage_info;
+Forward g_score_info;
 
 #else
 
 int iFDamage;
 int iFDeath;
+int iFScore;
 
 #endif
 
@@ -152,16 +154,32 @@ void PlayerPreThink_Post( edict_t *pEntity ) {
 		return;
 
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
+	if ( !pPlayer->ingame )
+		return;
 
-	if (pPlayer->clearStats && pPlayer->clearStats < gpGlobals->time && pPlayer->ingame){
-
-	if ( !ignoreBots(pEntity) ){
-		pPlayer->clearStats = 0.0f;
-		pPlayer->rank->updatePosition( &pPlayer->life );
-		pPlayer->restartStats(false);
+	if (pPlayer->clearStats && pPlayer->clearStats < gpGlobals->time){
+		if ( !ignoreBots(pEntity) ){
+			pPlayer->clearStats = 0.0f;
+			pPlayer->rank->updatePosition( &pPlayer->life );
+			pPlayer->restartStats(false);
+		}
 	}
 
+	if (pPlayer->clearRound && pPlayer->clearRound < gpGlobals->time){
+		pPlayer->clearRound = 0.0f;
+		memset(&pPlayer->round,0,sizeof(pPlayer->round));
+		memset(pPlayer->weaponsRnd,0,sizeof(pPlayer->weaponsRnd));
 	}
+
+	if (pPlayer->sendScore && pPlayer->sendScore < gpGlobals->time){
+		pPlayer->sendScore = 0.0f;
+#ifdef FORWARD_OLD_SYSTEM
+		g_score_info.exec( pPlayer->index, pPlayer->lastScore, pPlayer->savedScore );
+#else
+		MF_ExecuteForward( iFScore,pPlayer->index, pPlayer->lastScore, pPlayer->savedScore );
+#endif
+	}
+
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -183,6 +201,7 @@ void ServerDeactivate() {
 
 	g_damage_info.clear();
 	g_death_info.clear();
+	g_score_info.clear();
 
 #endif
 
@@ -398,7 +417,7 @@ void OnAmxxDetach() {
 void OnPluginsLoaded(){
 	iFDeath = MF_RegisterForward("client_death",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
 	iFDamage = MF_RegisterForward("client_damage",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
-
+	iFScore = MF_RegisterForward("client_score",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
 }
 
 #endif

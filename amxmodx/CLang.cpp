@@ -617,143 +617,124 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 			curState = S_PercentSign;
 		else if (curState == S_PercentSign)
 		{
-			switch (*src)
+			if (*src=='L')
 			{
-			case 's':
+				cell langName = params[parm];		// "en" case (langName contains the address to the string)
+				cell *pAmxLangName = get_amxaddr(amx, params[parm++]);	// other cases
+				const char *cpLangName=NULL;
+				// Handle player ids (1-32) and server language
+				if (*pAmxLangName == LANG_PLAYER)	// LANG_PLAYER
+					cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(m_CurGlobId)->pEdict, "lang");
+				else if (*pAmxLangName == LANG_SERVER)	// LANG_SERVER
+					cpLangName = g_vault.get("server_language");
+				else if (*pAmxLangName >= 1 && *pAmxLangName <= 32)	// Direct Client Id
+					cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(*pAmxLangName)->pEdict, "lang");
+				else		// Language Name
 				{
-					cell *tmpArg = get_amxaddr(amx, params[parm++]);;
-					while (*tmpArg)
-						*outptr++ = *tmpArg++;
-					break;
+					int len = 0;
+					cpLangName = get_amxstring(amx, langName, 2, len);
 				}
-			case 'f':
-			case 'g':
+				if (!cpLangName || strlen(cpLangName) < 1)
+					cpLangName = "en";
+				int len = 0;
+				char *key = get_amxstring(amx, params[parm++], 1, len);
+				const char *def = GetDef(cpLangName, key);
+				if (def == NULL)
 				{
-					char format[16];
-					format[0] = '%';
-					char *ptr = format+1;
-					while (!isalpha(*ptr++ = *src++))
-						/*nothing*/;
-					--src;
-					*ptr = 0;
-					sprintf(outptr, format, *(REAL*)get_amxaddr(amx, params[parm++]));
-					outptr += strlen(outptr);
-					break;
+					if (*pAmxLangName != LANG_SERVER)
+					{
+						def = GetDef(g_vault.get("server_language"), key);
+					}
+					if (strcmp(cpLangName, "en")!=0 && strcmp(g_vault.get("server_language"), "en")!=0)
+					{
+						def = GetDef("en", key);
+					}
+					if (!def)
+					{
+						static char buf[255];
+						sprintf(buf, "ML_LNOTFOUND: %s", key);
+						def = buf;
+					}
 				}
-			case 'L':
+				while (*def)
 				{
-					cell langName = params[parm];		// "en" case (langName contains the address to the string)
-					cell *pAmxLangName = get_amxaddr(amx, params[parm++]);	// other cases
-					const char *cpLangName=NULL;
-					// Handle player ids (1-32) and server language
-					if (*pAmxLangName == LANG_PLAYER)	// LANG_PLAYER
-						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(m_CurGlobId)->pEdict, "lang");
-					else if (*pAmxLangName == LANG_SERVER)	// LANG_SERVER
-						cpLangName = g_vault.get("server_language");
-					else if (*pAmxLangName >= 1 && *pAmxLangName <= 32)	// Direct Client Id
-						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(*pAmxLangName)->pEdict, "lang");
-					else		// Language Name
+					if (*def == '%')
 					{
-						int len = 0;
-						cpLangName = get_amxstring(amx, langName, 2, len);
-					}
-					if (!cpLangName || strlen(cpLangName) < 1)
-						cpLangName = "en";
-					int len;
-					char *key = get_amxstring(amx, params[parm++], 1, len);
-					const char *def = GetDef(cpLangName, key);
-					if (def == NULL)
-					{
-						if (*pAmxLangName != LANG_SERVER)
-						{
-							def = GetDef(g_vault.get("server_language"), key);
-						}
-						if (strcmp(cpLangName, "en")!=0 && strcmp(g_vault.get("server_language"), "en")!=0)
-						{
-							def = GetDef("en", key);
-						}
-						if (!def)
-						{
-							static char buf[255];
-							sprintf(buf, "ML_LNOTFOUND: %s", key);
-							def = buf;
-						}
-					}
-					while (*def)
-					{
-						switch (*def)
-						{
-						case INSERT_NUMBER:
-							{
-								sprintf(outptr, "%d", *get_amxaddr(amx, params[parm++]));
-								outptr += strlen(outptr);
-								break;
-							}
-						case INSERT_STRING:
-							{
-								cell *tmpArg = get_amxaddr(amx, params[parm++]);;
-								while (*tmpArg)
-									*outptr++ = *tmpArg++;
-								break;
-							}
-						case INSERT_FLOAT:
-							{
-								sprintf(outptr, "%f", *(REAL*)get_amxaddr(amx, params[parm++]));
-								outptr += strlen(outptr);
-								break;
-							}
-						case INSERT_NEWLINE:
-							*outptr++ = '\n';
-							break;
-						default:
-							*outptr++ = *def;
-						}
 						++def;
+						char format[16];
+						format[0] = '%';
+						char *ptr = format+1;
+						while (!isalpha(*ptr++ = *def++))
+							/*nothing*/;
+						*ptr = 0;
+						switch ( *(ptr-1) )
+						{
+						case 's':
+							{
+								char tmpString[256];
+								char *tmpPtr = tmpString;
+								cell *tmpCell = get_amxaddr(amx, params[parm++]);
+								while (*tmpCell)
+									*tmpPtr++ = *tmpCell++;
+								*tmpPtr = 0;
+								sprintf(outptr, format, tmpString);
+								break;
+							}
+						case 'g':
+						case 'f':
+							{
+								sprintf(outptr, format, *(REAL*)get_amxaddr(amx, params[parm++]));
+								break;
+							}
+						case 'i':
+						case 'd':
+							{
+								sprintf(outptr, format, (int)*get_amxaddr(amx, params[parm++]));
+								break;
+							}
+						}
+						outptr += strlen(outptr);
 					}
-					break;
+					*outptr++ = *def++;
 				}
-			default:
+			}
+			else
+			{
+				char tmpString[256];
+				char *tmpPtr = tmpString;
+				int tmpLen =0;
+				char format[16];
+				format[0] = '%';
+				char *ptr = format+1;
+				while (!isalpha(*ptr++ = *src++))
+					/*nothing*/;
+				--src;
+				*ptr = 0;
+				switch ( *(ptr-1) )
 				{
-					char tmpString[256];
-					char *tmpPtr = tmpString;
-					int tmpLen =0;
-					char format[16];
-					format[0] = '%';
-					char *ptr = format+1;
-					while (!isalpha(*ptr++ = *src++))
-						/*nothing*/;
-					--src;
-					*ptr = 0;
-					switch ( *(ptr-1) )
+				case 's':
 					{
-					case 's':
-						{
-							cell *tmpCell = get_amxaddr(amx, params[parm++]);
-							while (*tmpCell)
-								*tmpPtr++ = *tmpCell++;
-							*tmpPtr = 0;
-							sprintf(outptr, format, tmpString);
-							break;
-						}
-					case 'f':
-						{
-							sprintf(outptr, format, *(REAL*)get_amxaddr(amx, params[parm++]));
-							break;
-						}
-					case 'd':
-						{
-							sprintf(outptr, format, (int)*get_amxaddr(amx, params[parm++]));
-							break;
-						}
-					case 'i':
-						{
-							sprintf(outptr, format, (int)*get_amxaddr(amx, params[parm++]));
-							break;
-						}
+						cell *tmpCell = get_amxaddr(amx, params[parm++]);
+						while (*tmpCell)
+							*tmpPtr++ = *tmpCell++;
+						*tmpPtr = 0;
+						sprintf(outptr, format, tmpString);
+						break;
 					}
-					outptr += strlen(outptr);
-					break;
+				case 'g':
+				case 'f':
+					{
+						sprintf(outptr, format, *(REAL*)get_amxaddr(amx, params[parm++]));
+						break;
+					}
+				case 'i':
+				case 'd':
+					{
+						sprintf(outptr, format, (int)*get_amxaddr(amx, params[parm++]));
+						break;
+					}
 				}
+				outptr += strlen(outptr);
 			}
 			curState = S_Normal;
 		}
@@ -781,7 +762,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 	if (!fp)
 	{
 		CVector<md5Pair *>::iterator iter;
-		for (iter=FileList.begin(); iter!=FileList.end(); iter++)
+		for (iter=FileList.begin(); iter!=FileList.end(); ++iter)
 		{
 			if ( (*iter)->file.compare(file) == 0 )
 			{
@@ -801,7 +782,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 	bool foundFlag = false;
 	
 	CVector<md5Pair *>::iterator iter;
-	for (iter=FileList.begin(); iter!=FileList.end(); iter++)
+	for (iter=FileList.begin(); iter!=FileList.end(); ++iter)
 	{
 		if ( (*iter)->file.compare(file) == 0 )
 		{
@@ -880,30 +861,6 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 					tmpEntry->def = new String;
 					tmpEntry->def->assign(def.c_str());
 					tmpEntry->def->trim();
-					int pos = tmpEntry->def->find('%');
-					char r = 0, c = 0;
-					while (pos!=String::npos)
-					{
-						c = tmpEntry->def->at(pos+1);
-						if (c == 'd' || c == 'i')
-						{
-							r = INSERT_NUMBER;
-						} else if (c == 'f') {
-							r = INSERT_FLOAT;
-						} else if (c == 's') {
-							r = INSERT_STRING;
-						} else if (c == 'n') {
-							r = '\n';
-						} else {
-							r = 0;
-						}
-						if (r)
-						{
-							tmpEntry->def->at(pos+1, r);
-							tmpEntry->def->erase(pos, 1);
-						}
-						pos = tmpEntry->def->find('%', pos+1);
-					}
 					Defq.push(tmpEntry);
 					tmpEntry = 0;
 				} else {
@@ -949,7 +906,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 CLangMngr::CLang * CLangMngr::GetLang(const char *name)
 {
 	LangVecIter iter;
-	for (iter=m_Languages.begin(); iter!=m_Languages.end(); iter++)
+	for (iter=m_Languages.begin(); iter!=m_Languages.end(); ++iter)
 	{
 		if ( strcmp((*iter)->GetName(), name)==0 )
 			return (*iter);
@@ -1246,7 +1203,7 @@ const char *CLangMngr::GetLangName(int langId)
 {
 	int i = 0;
 	LangVecIter iter;
-	for (iter=m_Languages.begin(); iter!=m_Languages.end(); iter++)
+	for (iter=m_Languages.begin(); iter!=m_Languages.end(); ++iter)
 	{
 		if (i == langId)
 		{
@@ -1268,11 +1225,10 @@ bool CLangMngr::LangExists(const char *langName)
 	}
 	
 	LangVecIter iter;
-	for (iter=m_Languages.begin(); iter!=m_Languages.end(); iter++)
+	for (iter=m_Languages.begin(); iter!=m_Languages.end(); ++iter)
 	{
-		if ( strcmp((*iter)->GetName(), langName)==0 )
+		if ( strcmp((*iter)->GetName(), buf)==0 )
 			return true;
-		iter++;
 	}
 	return false;
 }

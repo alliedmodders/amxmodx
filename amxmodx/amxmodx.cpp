@@ -286,7 +286,7 @@ static cell AMX_NATIVE_CALL set_hudmessage(AMX *amx, cell *params)  /* 11 param 
 
 static cell AMX_NATIVE_CALL show_hudmessage(AMX *amx, cell *params)  /* 2 param */
 {
-	int len;
+	int len=0;
 	g_langMngr.SetDefLang(params[1]);
 	char* message = NULL;
 	if (params[1] == 0)
@@ -2638,7 +2638,7 @@ static cell register_dictionary(AMX *amx, cell *params)
 // lang_exists(const name[]);
 static cell lang_exists(AMX *amx, cell *params)
 {
-	int len;
+	int len = 0;
 	return g_langMngr.LangExists(get_amxstring(amx, params[1], 1, len)) ? 1 : 0;
 }
 

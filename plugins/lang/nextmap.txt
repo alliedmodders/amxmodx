@@ -1,2 +1,20 @@
 [en]
 NEXT_MAP = Next Map:
+
+[da]
+NEXT_MAP = Naeste bane:
+
+[de]
+NEXT_MAP = Naechste Map:
+
+[fr]
+NEXT_MAP = Prochaine Carte:
+
+[pt]
+NEXT_MAP = Proximo mapa:
+
+[sr]
+NEXT_MAP = Sledeca Mapa:
+
+[sv]
+NEXT_MAP = Kommande karta:

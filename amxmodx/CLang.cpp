@@ -506,136 +506,6 @@ int CLangMngr::GetKeyEntry(String &key)
 	return -1;
 }
 
-/*
-const char *CLangMngr::Format(const char *src, ...)
-{
-	va_list argptr;
-	va_start(argptr, src);
-	static char outbuf[4096];
-	char *outptr = outbuf;
-	enum State
-	{
-		S_Normal,
-		S_PercentSign,
-	};
-
-	State curState = S_Normal;
-	while (*src)
-	{
-		if (*src == '%' && curState == S_Normal)
-			curState = S_PercentSign;
-		else if (curState == S_PercentSign)
-		{
-			switch (*src)
-			{
-			case 's':
-				{
-					char *tmpArg = va_arg(argptr, char*);
-					while (*tmpArg)
-						*outptr++ = *tmpArg++;
-					break;
-				}
-			case 'f':
-			case 'g':
-				{
-					char format[16];
-					format[0] = '%';
-					char *ptr = format+1;
-					while (!isalpha(*ptr++ = *src++))
-						;
-					--src;
-					*ptr = 0;
-					sprintf(outptr, format, va_arg(argptr, double));
-					outptr += strlen(outptr);
-					break;
-				}
-			case 'L':
-				{
-					char *langName = va_arg(argptr, char*);
-					const char *cpLangName=NULL;
-					// Handle player ids (1-32) and server language
-					if ((int)langName == LANG_PLAYER)
-					{
-						langName = (char*)m_CurGlobId;
-					}
-					if ((int)langName == LANG_SERVER)
-					{
-						cpLangName = g_vault.get("server_language");
-					} else if ((int)langName >= 1 && (int)langName <= 32) {
-						if ((int)CVAR_GET_FLOAT("amx_client_languages"))
-						{
-							cpLangName = g_vault.get("server_language");
-						} else {
-							cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I((int)langName)->pEdict, "lang");
-						}
-					} else {
-						cpLangName = langName;
-					}
-					if (!cpLangName || strlen(cpLangName) < 1)
-						cpLangName = "en";
-					char *key = va_arg(argptr, char*);
-					const char *def = GetDef(cpLangName, key);
-					while (*def)
-					{
-						switch (*def)
-						{
-						case INSERT_NUMBER:
-							{
-								sprintf(outptr, "%d", va_arg(argptr, int));
-								outptr += strlen(outptr);
-								break;
-							}
-						case INSERT_STRING:
-							{
-								char *tmpArg = va_arg(argptr, char*);
-								while (*tmpArg)
-									*outptr++ = *tmpArg++;
-								break;
-							}
-						case INSERT_FLOAT:
-							{
-								double tmpArg = va_arg(argptr, double);
-								sprintf(outptr, "%f", tmpArg);
-								outptr += strlen(outptr);
-								break;
-							}
-						case INSERT_NEWLINE:
-							*outptr++ = '\n';
-							break;
-						default:
-							*outptr++ = *def;
-						}
-					}
-					break;
-				}
-			case 'd':
-				{
-					char format[16];
-					format[0] = '%';
-					char *ptr = format+1;
-					while (!isalpha(*ptr++ = *src++))
-						;
-					--src;
-					*ptr = 0;
-					sprintf(outptr, format, va_arg(argptr, int));
-					outptr += strlen(outptr);
-					break;
-				}
-			default:
-				*outptr++ = '%';
-				*outptr++ = *src;
-			}
-			curState = S_Normal;
-		}
-		else
-			*outptr++ = *src;
-		++src;
-	}
-	*outptr++ = 0;
-	return outbuf;
-}
- PM: Commented out so anyone using it will get a linker error*/
-
 #define CHECK_PTR(ptr, start, bufsize) if ((ptr) - (start) >= (bufsize)) { \
 	AMXXLOG_Log("[AMXX] Buffer overflow in formatting (line %d, \"%s\")", amx->curline, g_plugins.findPluginFast(amx)->getName()); \
 	outbuf[0] = 0; \
@@ -712,7 +582,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 					if (!def)
 					{
 						static char buf[512];
-						CHECK_PTR((char*)buf+17+strlen(key), buf, sizeof(buf));
+						CHECK_PTR((char*)(buf+17+strlen(key)), buf, sizeof(buf));
 						sprintf(buf, "ML_LNOTFOUND: %s", key);
 						def = buf;
 					}
@@ -741,10 +611,10 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 								while (tmpPtr-tmpString < sizeof(tmpString) && *tmpCell)
 									*tmpPtr++ = *tmpCell++;
 
-								tmpString[sizeof(tmpString)-1] = 0;
+								ZEROTERM(tmpString);
 
 								*tmpPtr = 0;
-								_snprintf(outptr, outptr-outbuf, format, tmpString);
+								sprintf(outptr, format, tmpString);
 								ZEROTERM(outbuf);
 								break;
 							}
@@ -752,7 +622,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 						case 'f':
 							{
 								NEXT_PARAM();
-								_snprintf(outptr, outptr-outbuf, format, *(REAL*)get_amxaddr(amx, params[parm++]));
+								sprintf(outptr, format, *(REAL*)get_amxaddr(amx, params[parm++]));
 								ZEROTERM(outbuf);
 								break;
 							}
@@ -760,7 +630,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 						case 'd':
 							{
 								NEXT_PARAM();
-								_snprintf(outptr, outptr-outbuf, format, (int)*get_amxaddr(amx, params[parm++]));
+								sprintf(outptr, format, (int)*get_amxaddr(amx, params[parm++]));
 								ZEROTERM(outbuf);
 								break;
 							}
@@ -829,7 +699,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 							while (tmpPtr-tmpString<sizeof(tmpString) && *tmpCell)
 								*tmpPtr++ = *tmpCell++;
 							*tmpPtr = 0;
-							_snprintf(outptr, outptr-outbuf, format, tmpString);
+							sprintf(outptr, format, tmpString);
 							ZEROTERM(outbuf);
 							break;
 						}
@@ -837,14 +707,14 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 					case 'f':
 						{
 							NEXT_PARAM();
-							_snprintf(outptr, outptr-outbuf, format, *(REAL*)get_amxaddr(amx, params[parm++]));
+							sprintf(outptr, format, *(REAL*)get_amxaddr(amx, params[parm++]));
 							break;
 						}
 					case 'i':
 					case 'd':
 						{
 							NEXT_PARAM();
-							_snprintf(outptr, outptr-outbuf, format, (int)*get_amxaddr(amx, params[parm++]));
+							sprintf(outptr, format, (int)*get_amxaddr(amx, params[parm++]));
 							break;
 						}
 					default:

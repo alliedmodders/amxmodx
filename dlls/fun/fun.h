@@ -29,7 +29,7 @@ pfnmodule_engine_g* g_engModuleFunc;		// These seem to be meta/amxmod related
 
 #define NAME "fun"
 #define AUTHOR "JGHG"
-#define VERSION "0.2"
+#define VERSION "0.3"
 #define URL "http://?"
 #define LOGTAG "fun"
 #define DATE __DATE__

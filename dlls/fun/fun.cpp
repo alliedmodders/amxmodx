@@ -195,7 +195,7 @@ static cell AMX_NATIVE_CALL set_user_money(AMX *amx, cell *params) // set_user_m
 	// Give money to user
 	// params[1] = user
 	// params[2] = money
-	// params[3] = flash money? (NYI)
+	// params[3] = flash money?
 
 	// Check index
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
@@ -209,6 +209,12 @@ static cell AMX_NATIVE_CALL set_user_money(AMX *amx, cell *params) // set_user_m
 
 	// Give money
 	(int)*((int *)pPlayer->pvPrivateData + CSMONEYOFFSET) = params[2];
+
+	// Update display
+	MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "Money", NULL), NULL, pPlayer);
+	WRITE_LONG(params[2]);
+	WRITE_BYTE(params[3] ? 1 : 0); // if params[3] is 0, there will be no +/- flash of money in display...
+	MESSAGE_END();
 
 	return 1;
 }
@@ -531,7 +537,7 @@ AMX_NATIVE_INFO fun_Exports[] = {
 	{"set_user_health",			set_user_health},
 	{"give_item",				give_item},
 	{"spawn",					spawn},
-	{"user_spawn",				spawn}, // No, it's not a typo! Uses the same as "spawn", because they do the same stuff! This is made only to maintain comp. with old plugins!
+	//{"user_spawn",				spawn}, // No, it's not a typo! Uses the same as "spawn", because they do the same stuff! This is made only to maintain comp. with old plugins!
 	{"set_user_money",			set_user_money},
 	{"get_user_money",			get_user_money},
 	{"set_user_deaths_cs",		set_user_deaths_cs},

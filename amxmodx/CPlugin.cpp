@@ -73,40 +73,8 @@ int  CPluginMngr::loadPluginsFromFile( const char* filename )
 				
 		CPlugin* plugin = loadPlugin( pluginsDir , pluginName  , error  );
 		
-		if ( plugin != 0 ) // load_amxscript fills it with info in case of error
-		{
-			AMX* amx = plugin->getAMX();
-			int iFunc;
-
-			if(amx_FindPublic(amx, "client_command" , &iFunc) == AMX_ERR_NONE)
-				g_forwards.registerForward(  plugin , iFunc , FF_ClientCommand);
-			if(amx_FindPublic(amx, "client_connect" , &iFunc) == AMX_ERR_NONE)
-				g_forwards.registerForward(  plugin , iFunc , FF_ClientConnect);
-			if(amx_FindPublic(amx, "client_disconnect" , &iFunc) == AMX_ERR_NONE)
-				g_forwards.registerForward(  plugin , iFunc , FF_ClientDisconnect);
-			if(amx_FindPublic(amx, "client_infochanged" , &iFunc) == AMX_ERR_NONE)
-				g_forwards.registerForward(  plugin , iFunc , FF_ClientInfoChanged);
-			if(amx_FindPublic(amx, "client_putinserver" , &iFunc) == AMX_ERR_NONE)
-				g_forwards.registerForward(  plugin , iFunc , FF_ClientPutInServer);
-			if(amx_FindPublic(amx, "plugin_init" , &iFunc) == AMX_ERR_NONE)
-				g_forwards.registerForward(  plugin , iFunc , FF_PluginInit);
-			if(amx_FindPublic(amx, "plugin_cfg" , &iFunc) == AMX_ERR_NONE)
-				g_forwards.registerForward(  plugin , iFunc , FF_PluginCfg);
-			if(amx_FindPublic(amx, "plugin_precache" , &iFunc) == AMX_ERR_NONE)
-				g_forwards.registerForward(  plugin , iFunc , FF_PluginPrecache);
-			if(amx_FindPublic(amx, "plugin_log" , &iFunc) == AMX_ERR_NONE)
-				g_forwards.registerForward(  plugin , iFunc , FF_PluginLog);
-			if(amx_FindPublic(amx, "plugin_end" , &iFunc) == AMX_ERR_NONE)
-				g_forwards.registerForward(  plugin , iFunc , FF_PluginEnd);
-			if(amx_FindPublic(amx, "inconsistent_file" , &iFunc) == AMX_ERR_NONE)
-				g_forwards.registerForward(  plugin , iFunc , FF_InconsistentFile);
-			if(amx_FindPublic(amx, "client_authorized" , &iFunc) == AMX_ERR_NONE)
-				g_forwards.registerForward(  plugin , iFunc , FF_ClientAuthorized);
-		}
-		else
-		{
+		if (!plugin)
 			AMXXLOG_Log("[AMXX] %s (plugin \"%s\")", error, pluginName );
-		}
 	}
 
 	return pCounter;

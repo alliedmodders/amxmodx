@@ -166,9 +166,10 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params) // native give_ite
 
 	// Make an "intstring" out of 2nd parameter
 	int length;
-	char *szItem = GET_AMXSTRING(amx, params[2], 1, length);
+	const char *szItem = GET_AMXSTRING(amx, params[2], 1, length);
 
-	int item = MAKE_STRING(szItem);
+	//string_t item = MAKE_STRING(szItem);
+	string_t item = ALLOC_STRING(szItem); // Using MAKE_STRING makes "item" contents get lost when we leave this scope! ALLOC_STRING seems to allocate properly...
 
 	// Create the entity, returns to pointer
 	pItemEntity = CREATE_NAMED_ENTITY(item);
@@ -177,9 +178,7 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params) // native give_ite
 	pItemEntity->v.spawnflags |= SF_NORESPAWN;
 
 	MDLL_Spawn(pItemEntity);
-	MDLL_Touch(pItemEntity, ENT(pPlayer)); // unnecessary to do ENT(pPlayer) maybe, could've just used params[1] perhaps???
-
-	// HERE: ADD PROPER CHECKING OF pPlayer LATER
+	MDLL_Touch(pItemEntity, ENT(pPlayer));
 
 	return 1;
 }
@@ -231,7 +230,7 @@ static cell AMX_NATIVE_CALL set_user_money(AMX *amx, cell *params) // set_user_m
 	}
 
 	// Give money
-	(int)*((int *)pPlayer->pvPrivateData + CSMONEYOFFSET) = params[2];
+	(int)*((int *)pPlayer->pvPrivateData + OFFSET_CSMONEY) = params[2];
 
 	// Update display
 	MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "Money", NULL), NULL, pPlayer);
@@ -264,7 +263,7 @@ static cell AMX_NATIVE_CALL get_user_money(AMX *amx, cell *params) // get_user_m
 	}
 
 	// Return money
-	return (int)*((int *)pPlayer->pvPrivateData + CSMONEYOFFSET);
+	return (int)*((int *)pPlayer->pvPrivateData + OFFSET_CSMONEY);
 }
 
 static cell AMX_NATIVE_CALL set_user_deaths_cs(AMX *amx, cell *params) // set_user_deaths_cs(index, newdeaths); = 2 arguments
@@ -290,7 +289,7 @@ static cell AMX_NATIVE_CALL set_user_deaths_cs(AMX *amx, cell *params) // set_us
 	}
 
 	// Set deaths
-	(int)*((int *)pPlayer->pvPrivateData + CSDEATHSOFFSET) = params[2];
+	(int)*((int *)pPlayer->pvPrivateData + OFFSET_CSDEATHS) = params[2];
 
 	return 1;
 }

@@ -1255,7 +1255,7 @@ int AMXAPI amx_NameLength(AMX *amx, int *length)
     *length=*namelength;
     assert(hdr->file_version>=7); /* name table exists only for file version 7+ */
   } else {
-    *length=hdr->defsize - sizeof(uint32_t);
+    *length=hdr->defsize - sizeof(cell);
   } /* if */
   return AMX_ERR_NONE;
 }

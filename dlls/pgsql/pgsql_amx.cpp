@@ -1,53 +1,6 @@
-/* AMX Mod X
-*   PostgreSQL Module
-*
-* by David "BAILOPAN" Anderson
-*
-*  This program is free software; you can redistribute it and/or modify it
-*  under the terms of the GNU General Public License as published by the
-*  Free Software Foundation; either version 2 of the License, or (at
-*  your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful, but
-*  WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-*  General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software Foundation,
-*  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-*
-*  In addition, as a special exception, the author gives permission to
-*  link the code of this program with the Half-Life Game Engine ("HL
-*  Engine") and Modified Game Libraries ("MODs") developed by Valve,
-*  L.L.C ("Valve"). You must obey the GNU General Public License in all
-*  respects for all of the code used other than the HL Engine and MODs
-*  from Valve. If you modify this file, you may extend this exception
-*  to your version of the file, but you are not obligated to do so. If
-*  you do not wish to do so, delete this exception statement from your
-*  version.
-*/
-
 #include "pgsql_amx.h"
 
-std::string error;
-std::vector<pgdb*> dblist;
-
-int sql_exists(const char* host,const char* user,const char* pass,const char* dbase) {
-	std::vector<pgdb*>::iterator i;
-	int id = 0;
-	for (i=dblist.begin(); i!=dblist.end(); i++) {
-		id++;
-		if (((*i)->host.compare(host) == 0) &&
-			((*i)->user.compare(user) == 0) &&
-			((*i)->pass.compare(pass) == 0) &&
-			((*i)->name.compare(dbase) == 0) &&
-			(!(*i)->free)) {
-				return id;
-		}
-	}
-	return -1;
-}
+using namespace std;
 
 bool is_ipaddr(const char *IP)
 {
@@ -60,220 +13,225 @@ bool is_ipaddr(const char *IP)
 	return true;
 }
 
-void pgdb::Kill()
+SQL::SQL()
 {
-	if (free)
-		return;
-	PQfinish(cn);
-	host.clear();
-	user.clear();
-	pass.clear();
-	name.clear();
-	row = 0;
-	free = true;
+	isFree = true;
 }
 
-int pgdb::Connect(const char *hh, const char *uu, const char *pp, const char *dd)
+SQL::~SQL()
 {
-	host.assign(hh);
-	user.assign(uu);
-	pass.assign(pp);
-	name.assign(dd);
+	if (!isFree)
+		Disconnect();
+}
 
-	if (is_ipaddr(host.c_str())) {
+SQLResult::SQLResult()
+{
+	isFree = true;
+	RowCount = 0;
+}
+
+SQLResult::~SQLResult()
+{
+	if (!isFree)
+		FreeResult();
+}
+
+int SQL::Error(int code)
+{
+	if (isFree)
+		return 0;
+
+	ErrorStr.assign(PQerrorMessage(cn));
+	ErrorCode = code;
+	return code;
+}
+
+int SQL::Connect(const char *host, const char *user, const char *pass, const char *base)
+{
+	Username.assign(user);
+	Password.assign(pass);
+	Database.assign(base);
+	Host.assign(host);
+
+	isFree = false;
+	int err = 0;
+
+	if (is_ipaddr(Host.c_str())) {
 		cstr.assign("hostaddr = '");
 	} else {
 		cstr.assign("host = '");
 	}
 	
-	cstr.append(host);
+	cstr.append(Host);
 	cstr.append("' user = '");
-	cstr.append(user);
+	cstr.append(Username);
 	cstr.append("' pass = '");
-	cstr.append(pass);
+	cstr.append(Password);
 	cstr.append("' name = '");
-	cstr.append(name);
+	cstr.append(Database);
 	cstr.append("'");
 
 	cn = PQconnectdb(cstr.c_str());
 
 	if (PQstatus(cn) != CONNECTION_OK) {
-		err.assign(PQerrorMessage(cn));
-		free = true;
-		lastError = PQstatus(cn);
+		Error(PQstatus(cn));
+		PQfinish(cn);
+		isFree = true;
 		return 0;
 	}
 
-	free = false;
-	return true;
+	isFree = false;
+
+	return 1;
 }
 
-static cell AMX_NATIVE_CALL pgsql_connect(AMX  *amx, cell *params)
+void SQL::Disconnect()
 {
-	int len;
-	unsigned int i;
-	pgdb *c = NULL;
+	if (isFree)
+		return;
 
-	const char *host = MF_GetAmxString(amx,params[1],0,&len);
-	const char *user = MF_GetAmxString(amx,params[2],1,&len);
-	const char *pass = MF_GetAmxString(amx,params[3],2,&len);
-	const char *name = MF_GetAmxString(amx,params[4],3,&len);
+	Host.clear();
+	Username.clear();
+	Password.clear();
+	Database.clear();
 
-	int id = sql_exists(host, user, pass, name);
-	
-	if (id >= 0)
-		return id;
-	
-	id = -1;
-	for (i=0; i<dblist.size(); i++) {
-		if (dblist[i]->free) {
+	PQfinish(cn);
+
+	isFree = true;
+}
+
+int SQL::Query(const char *query)
+{
+	if (isFree)
+	{
+		ErrorCode = -1;
+		return -1;
+	}
+
+	SQLResult *p = new SQLResult;
+	int ret = p->Query(this, query);
+
+	if (ret < 1)
+	{
+		delete p;
+		return ret;
+	}
+
+	unsigned int i = 0;
+	int id = -1;
+	for (i=0; i < Results.size(); i++)
+	{
+		if (Results[i]->isFree) {
 			id = i;
 			break;
 		}
 	}
 
 	if (id < 0) {
-		c = new pgdb;
-		dblist.push_back(c);
-		id = dblist.size() - 1;
+		Results.push_back(p);
+		return Results.size();
 	} else {
-		c = dblist[id];
+		SQLResult *r = Results[id];
+		Results[id] = p;
+		delete r;
+		return (id + 1);
 	}
-
-	if (!c->Connect(host, user, pass, name)) {
-		MF_SetAmxString(amx, params[5], c->err.c_str(), params[6]);
-		return 0;
-	}
-
-	return id+1;
 }
 
-
-static cell AMX_NATIVE_CALL pgsql_error(AMX *amx, cell *params)
+SQLResult::Query(SQL *cn, const char *query)
 {
-	unsigned int id = params[1] - 1;
+	res = PQexec(cn->cn, query);
+	row = -1;
 
-	if (id >= dblist.size() || dblist[id]->free) {
-		error.assign("Invalid handle.");
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	sql = cn;
 
-	dblist[id]->err.assign(PQerrorMessage(dblist[id]->cn));
-	MF_SetAmxString(amx, params[2], dblist[id]->err.c_str(), params[3]);
-	return dblist[id]->lastError;
-}
+	int queryResult = PQresultStatus(res);
 
-static cell AMX_NATIVE_CALL pgsql_query(AMX *amx, cell *params)
-{
-	unsigned int id = params[1] - 1;
-
-	if (id >= dblist.size() || dblist[id]->free) {
-		error.assign("Invalid handle.");
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
-
-	pgdb *c = dblist[id];
-
-	if (c->res)
-		c->reset();
-
-	int i;
-	const char *query = MF_FormatAmxString(amx, params, 2, &i);
-
-	c->res = PQexec(c->cn, query);
-	c->row = 0;
-	
-	if (PQresultStatus(c->res) != PGRES_COMMAND_OK) {
-		c->lastError = PQresultStatus(c->res);
+	if (queryResult != PGRES_COMMAND_OK)
+	{
+		cn->Error(queryResult);
 		return -1;
 	}
 
-	return PQntuples(c->res);
-}
+	RowCount = PQntuples(res);
 
-static cell AMX_NATIVE_CALL pgsql_nextrow(AMX *amx, cell *params)
-{
-	unsigned int id = params[1] - 1;
-
-	if (id >= dblist.size() || dblist[id]->free) {
-		error.assign("Invalid handle.");
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+	if (RowCount < 1)
 		return 0;
+
+	int i = 0;
+	const char *fld;
+	for (i=0; i < PQnfields(res); i++)
+	{
+		fld = PQfname(res, i);
+		Fields.push_back(fld);
 	}
-
-	pgdb *c = dblist[id];
-
-	if (c->row > PQntuples(c->res))
-		return 0;
-	
-	c->row++;
 
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL pgsql_getfield(AMX *amx, cell *params)
+bool SQLResult::Nextrow()
 {
-	unsigned int id = params[1] - 1;
-	int col = params[2];
+	if (isFree)
+		return false;
 
-	if (id >= dblist.size() || dblist[id]->free) {
-		error.assign("Invalid handle.");
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+	if (row >= RowCount)
+	{
+		return false;
+	}
+
+	row++;
+
+	return true;
+}
+
+void SQLResult::FreeResult()
+{
+	if (isFree)
+		return;
+
+	PQclear(res);
+	Fields.clear();
+}
+
+const char *SQLResult::GetField(unsigned int field)
+{
+	if (field > (unsigned int)PQnfields(res))
+	{
+		sql->Error(-1);
+		sql->ErrorStr.assign("Invalid field.");
 		return 0;
 	}
 
-	pgdb *c = dblist[id];
-
-	if (col-1 > PQnfields(c->res))
-		return 0;
-
-	char *field = PQgetvalue(c->res, c->row, col);
-	return MF_SetAmxString(amx, params[3], field?field:"", params[4]);
+	return PQgetvalue(res, row, field);
 }
 
-static cell AMX_NATIVE_CALL pgsql_close(AMX *amx, cell *params)
+const char *SQLResult::GetField(const char *field)
 {
-	unsigned int id = params[1] - 1;
+	unsigned int fld;
+	int id = -1;
+	for (fld = 0; fld < Fields.size(); fld++)
+	{
+		if (strcmp(Fields[fld], field)==0)
+		{
+			id = fld;
+			break;
+		}
+	}
 
-	if (id >= dblist.size() || dblist[id]->free) {
-		error.assign("Invalid handle.");
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+	if (id == -1)
+	{
+		sql->Error(-1);
+		sql->ErrorStr.assign("Invalid field.");
 		return 0;
 	}
 
-	pgdb *c = dblist[id];
-
-	c->Kill();
-
-	return 1;
+	return PQgetvalue(res, row, id);
 }
 
-static cell AMX_NATIVE_CALL dbi_type(AMX *amx, cell *params)
+unsigned int SQLResult::NumRows()
 {
-	return MF_SetAmxString(amx, params[1], "pgsql", params[2]);
+	if (isFree)
+		return 0;
+
+	return RowCount;
 }
-
-void OnAmxxAttach()
-{
-	MF_AddNatives(pgsql_exports);
-}
-
-AMX_NATIVE_INFO pgsql_exports[] = {
-	{"dbi_connect",		pgsql_connect},
-	{"dbi_error",		pgsql_error},
-	{"dbi_query",		pgsql_query},
-	{"dbi_nextrow",		pgsql_nextrow},
-	{"dbi_close",		pgsql_close},
-	{"dbi_getfield",	pgsql_getfield},
-	{"dbi_type",		dbi_type},
-	{"pgsql_connect",	pgsql_connect},
-	{"pgsql_error",		pgsql_error},
-	{"pgsql_query",		pgsql_query},
-	{"pgsql_nextrow",	pgsql_nextrow},
-	{"pgsql_close",		pgsql_close},
-	{"pgsql_getfield",	pgsql_getfield},
-
-	{NULL,			NULL},
-};

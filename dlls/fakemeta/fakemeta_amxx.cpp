@@ -103,14 +103,10 @@ void OnPluginsLoaded()
 	RESETE(SetGroupMask);
 	RESETE(Voice_GetClientListening);
 	RESETE(Voice_SetClientListening);
-	RESETE(MessageBegin);
-	RESETE(WriteCoord);
-	RESETE(WriteAngle);
 	RESETE(InfoKeyValue);
 	RESETE(SetKeyValue);
 	RESETE(SetClientKeyValue);
 
-	RESETD(GameInit);
 	RESETD(Spawn);
 	RESETD(Think);
 	RESETD(Use);

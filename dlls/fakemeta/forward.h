@@ -13,31 +13,31 @@
 #define FMRES_OVERRIDE	3
 
 enum {
-	FM_PrecacheModel = 1,	// int  )			(char* s);
-	FM_PrecacheSound,	// int  )			(char* s);
-	FM_SetModel,		// void )				(edict_t *e, const char *m);
-	FM_ModelIndex,		// int  )			(const char *m);
-	FM_ModelFrames,	// int	)			(int modelIndex);
-	FM_SetSize,		// void )				(edict_t *e, const float *rgflMin, const float *rgflMax);
-	FM_ChangeLevel,			// void )			(char* s1, char* s2);
-	FM_VecToYaw,			// float)				(const float *rgflVector);
-	FM_VecToAngles,			// void )			(const float *rgflVectorIn, float *rgflVectorOut);
-	FM_MoveToOrigin,		// void )			(edict_t *ent, const float *pflGoal, float dist, int iMoveType);
-	FM_ChangeYaw,			// void )				(edict_t* ent);
-	FM_ChangePitch,			// void )			(edict_t* ent);
-	FM_FindEntityByString,	// edict)	(edict_t *pEdictStartSearchAfter, const char *pszField, const char *pszValue);
-	FM_GetEntityIllum,		// int	)		(edict_t* pEnt);
+	FM_PrecacheModel = 1,	// done
+	FM_PrecacheSound,	// done
+	FM_SetModel,		// done
+	FM_ModelIndex,		// done
+	FM_ModelFrames,	// done
+	FM_SetSize,		// done
+	FM_ChangeLevel,			// done
+	FM_VecToYaw,			// done
+	FM_VecToAngles,			// done
+	FM_MoveToOrigin,		// done
+	FM_ChangeYaw,			// done
+	FM_ChangePitch,			// done
+	FM_FindEntityByString,	// done
+	FM_GetEntityIllum,		// done
 	FM_FindEntityInSphere,	// edict)	(edict_t *pEdictStartSearchAfter, const float *org, float rad);
 	FM_FindClientInPVS,		// edict)		(edict_t *pEdict);
 	FM_EntitiesInPVS,		// edict)			(edict_t *pplayer);
 	FM_MakeVectors,			// void )			(const float *rgflVector);
 	FM_AngleVectors,		// void )			(const float *rgflVector, float *forward, float *right, float *up);
-	FM_CreateEntity,		// edict)			(void);
-	FM_RemoveEntity,		// void )			(edict_t* e);
-	FM_CreateNamedEntity,	// edict)		(int className);
-	FM_MakeStatic,			// void )			(edict_t *ent);
-	FM_EntIsOnFloor,		// int  )			(edict_t *e);
-	FM_DropToFloor,			// int  )			(edict_t* e);
+	FM_CreateEntity,		// done
+	FM_RemoveEntity,		// done
+	FM_CreateNamedEntity,	// done
+	FM_MakeStatic,			// done
+	FM_EntIsOnFloor,		// done
+	FM_DropToFloor,			// done
 	FM_WalkMove,			// int  )				(edict_t *ent, float yaw, float dist, int iMode);
 	FM_SetOrigin,			// void )				(edict_t *e, const float *rgflOrigin);
 	FM_EmitSound,			// void )				(edict_t *entity, int channel, const char *sample, /*int*/float volume, float attenuation, int fFlags, int pitch);
@@ -52,11 +52,11 @@ enum {
 	FM_GetAimVector,		// void )			(edict_t* ent, float speed, float *rgflReturn);
 	FM_ParticleEffect,		// void )		(const float *org, const float *dir, float color, float count);
 	FM_LightStyle,			// void )			(int style, char* val);
-	FM_DecalIndex,			// int  )			(const char *name);
+	FM_DecalIndex,			// done
 	FM_PointContents,		// int )			(const float *rgflVector);
-	FM_FreeEntPrivateData,	// void )	(edict_t *pEdict);
+	FM_FreeEntPrivateData,	// done
 	FM_SzFromIndex,			// const char * )			(int iString);
-	FM_AllocString,			// int )			(const char *szValue);
+	FM_AllocString,			// done
 	FM_RegUserMsg,			// int	)			(const char *pszName, int iSize);
 	FM_AnimationAutomove,	// void )		(const edict_t* pEdict, float flTime);
 	FM_GetBonePosition,		// void )		(const edict_t* pEdict, int iBone, float *rgflOrigin, float *rgflAngles );
@@ -68,9 +68,9 @@ enum {
 	FM_SetClientMaxspeed,	// void )     (const edict_t *pEdict, float fNewMaxspeed);
 	FM_CreateFakeClient,	// edict)		(const char *netname);	// returns NULL if fake client can't be created
 	FM_RunPlayerMove,		// void )			(edict_t *fakeclient, const float *viewangles, float forwardmove, float sidemove, float upmove, unsigned short buttons, byte impulse, byte msec );
-	FM_NumberOfEntities,	// int  )		(void);
+	FM_NumberOfEntities,	// done
 	FM_StaticDecal,			// void )			( const float *origin, int decalIndex, int entityIndex, int modelIndex );
-	FM_PrecacheGeneric,		// int  )		(char* s);
+	FM_PrecacheGeneric,		// done
 	FM_BuildSoundMsg,		// void )			(edict_t *entity, int channel, const char *sample, /*int*/float volume, float attenuation, int fFlags, int pitch, int msg_dest, int msg_type, const float *pOrigin, edict_t *ed);
 	FM_GetPhysicsKeyValue,	// const char* )	( const edict_t *pClient, const char *key );
 	FM_SetPhysicsKeyValue,	// void )	( const edict_t *pClient, const char *key, const char *value );
@@ -83,59 +83,56 @@ enum {
 	FM_SetGroupMask,				//)			( int mask, int op );
 	FM_Voice_GetClientListening,	// bool (int iReceiver, int iSender)
 	FM_Voice_SetClientListening,	// bool (int iReceiver, int iSender, bool Listen)
-	FM_MessageBegin,	// void (int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
-	FM_WriteCoord,		// void (float)
-	FM_WriteAngle,		// void (float)
 	FM_InfoKeyValue,	// char*	)			(char *infobuffer, char *key);
 	FM_SetKeyValue,	// void )			(char *infobuffer, char *key, char *value);
 	FM_SetClientKeyValue,	 // void )		(int clientIndex, char *infobuffer, char *key, char *value);
 
 
 
-	FM_GameInit,	// void)			( void );				
-	FM_Spawn,	// int )				( edict_t *pent );
-	FM_Think,	// void )				( edict_t *pent );
-	FM_Use,	// void )				( edict_t *pentUsed, edict_t *pentOther );
-	FM_Touch,	// void )				( edict_t *pentTouched, edict_t *pentOther );
-	FM_Blocked,	// void )			( edict_t *pentBlocked, edict_t *pentOther );
+	// FM_GameInit,	// Removed -- it will *never* be called after plugins are loaded
+	FM_Spawn,	// done
+	FM_Think,	// done
+	FM_Use,	// done
+	FM_Touch,	// done
+	FM_Blocked,	// done
 	FM_KeyValue,	// void )			( edict_t *pentKeyvalue, KeyValueData *pkvd );
-	FM_SetAbsBox,			// void )			( edict_t *pent );
+	FM_SetAbsBox,			// done
 	FM_ClientConnect,		// bool)		( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ] );
 	
-	FM_ClientDisconnect,	// void )	( edict_t *pEntity );
-	FM_ClientKill,		// void )		( edict_t *pEntity );
-	FM_ClientPutInServer,	// void )	( edict_t *pEntity );
-	FM_ClientCommand,		// void )		( edict_t *pEntity );
+	FM_ClientDisconnect,	// done
+	FM_ClientKill,		// done
+	FM_ClientPutInServer,	// done
+	FM_ClientCommand,		// done
 
-	FM_ServerDeactivate,	// void)	( void );
+	FM_ServerDeactivate,	// done
 
-	FM_PlayerPreThink,		// void )	( edict_t *pEntity );
-	FM_PlayerPostThink,		// void )	( edict_t *pEntity );
+	FM_PlayerPreThink,		// done
+	FM_PlayerPostThink,		// done
 
-	FM_StartFrame,		// void )		( void );
-	FM_ParmsNewLevel,		// void )		( void );
-	FM_ParmsChangeLevel,	// void )	( void );
+	FM_StartFrame,		// done
+	FM_ParmsNewLevel,		// done
+	FM_ParmsChangeLevel,	// done
 
 	 // Returns string describing current .dll.  E.g., TeamFotrress 2, Half-Life
 	FM_GetGameDescription,	 // const char * )( void );     
 
 	// Spectator funcs
-	FM_SpectatorConnect,	// void)		( edict_t *pEntity );
-	FM_SpectatorDisconnect,	// void )	( edict_t *pEntity );
-	FM_SpectatorThink,		// void )		( edict_t *pEntity );
+	FM_SpectatorConnect,	// done
+	FM_SpectatorDisconnect,	// done
+	FM_SpectatorThink,		// done
 
 	// Notify game .dll that engine is going to shut down.  Allows mod authors to set a breakpoint.
-	FM_Sys_Error,		// void )			( const char *error_string );
+	FM_Sys_Error,		// done
 
-	FM_PM_FindTextureType,	// char )( char *name );
-	FM_RegisterEncoders,	// void )	( void );
+	FM_PM_FindTextureType,	// done
+	FM_RegisterEncoders,	// done
 
 	// Enumerates player hulls.  Returns 0 if the hull number doesn't exist, 1 otherwise
 	FM_GetHullBounds,	// int)	( int hullnumber, float *mins, float *maxs );
 
 	// Create baselines for certain "unplaced" items.
-	FM_CreateInstancedBaselines,	// void ) ( void );
-	FM_AllowLagCompensation,	// int )( void );
+	FM_CreateInstancedBaselines,	// done 
+	FM_AllowLagCompensation,	// done
 };
 
 extern CVector<int> Engine[];

@@ -494,7 +494,8 @@ cell executeForwards(int id, ...)
 			REAL tmp = (REAL)va_arg(argptr, double);			// floats get converted to doubles
 			params[i] = *(cell*)&tmp;
 		}
-		params[i] = (cell)va_arg(argptr, cell);
+		else
+			params[i] = (cell)va_arg(argptr, cell);
 	}
 	va_end(argptr);
 	return g_forwards.executeForwards(id, params);

@@ -126,8 +126,8 @@ new g_HeMessages[4][] = {
 }
 new g_SHeMessages[4][] = { 
   "%s detonated himself with a grenade",   
-  "%s trys the effect of a HE Grenade",   
-  "%s kicked a grenade into his own ass",   
+  "%s trys the effect of an HE Grenade",   
+  "%s swallows grenades whole!,   
   "%s explodes!"
 }
 new g_HeadShots[7][] = { 

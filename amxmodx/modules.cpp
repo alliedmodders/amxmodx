@@ -134,8 +134,8 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 
 
 #ifdef JIT
-  void *np = new unsigned char[ amx->code_size ];
-  void *rt = new unsigned char[ amx->reloc_size ];
+  void *np = new char[ amx->code_size ];
+  void *rt = new char[ amx->reloc_size ];
   if ( !np || (!rt && amx->reloc_size > 0) )
   {
     delete[] np;
@@ -147,7 +147,7 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
   if (amx_InitJIT(amx, rt, np) == AMX_ERR_NONE) 
   {
     //amx->base = (unsigned char FAR *)realloc( np, amx->code_size );
-	amx->base = new unsigned char FAR[ amx->code_size ];
+	amx->base = new unsigned char[ amx->code_size ];
 	if ( amx->base )
 		memcpy( amx->base , np , amx->code_size );
 	delete[] np;
@@ -758,6 +758,11 @@ float MNF_GetPlayerHealth(int id)
 	return (GET_PLAYER_POINTER_I(id)->pEdict->v.health);
 }
 
+void MNF_HiddenStuff()
+{
+	// :TODO:
+}
+
 // Fnptr Request function for the new interface
 const char *g_LastRequestedFunc = NULL;
 #define REGISTER_FUNC(name, func) { name, (void*)func },
@@ -791,6 +796,12 @@ void *Module_ReqFnptr(const char *funcName)
 		REGISTER_FUNC("FormatAmxString", MNF_FormatAmxString)
 		REGISTER_FUNC("CopyAmxMemory", MNF_CopyAmxMemory)
 		REGISTER_FUNC("GetAmxAddr", get_amxaddr)
+
+		// other amx stuff
+		REGISTER_FUNC("amx_Exec", amx_Exec)
+		REGISTER_FUNC("amx_Execv", amx_Execv)
+		REGISTER_FUNC("amx_Allot", amx_Allot)
+		REGISTER_FUNC("amx_FindPublic", amx_FindPublic)
 
 		// Natives / Forwards
 		REGISTER_FUNC("AddNatives", MNF_AddNatives)
@@ -826,6 +837,8 @@ void *Module_ReqFnptr(const char *funcName)
 		REGISTER_FUNC("Deallocator", m_deallocator)
 		REGISTER_FUNC("Reallocator", m_reallocator)
 #endif // MEMORY_TEST
+
+		REGISTER_FUNC("Haha_HiddenStuff", MNF_HiddenStuff)
 	};
 
 	// code

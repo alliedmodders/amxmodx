@@ -55,7 +55,7 @@
 #include "CCmd.h"
 #include "CMenu.h"
 #include "CEvent.h"
-#include "FakeMeta.h"
+#include "fakemeta.h"
 
 #define AMX_VERSION     "0.2"
 
@@ -281,7 +281,7 @@ extern int FF_PluginPrecache;
 extern int FF_PluginLog;
 extern int FF_PluginEnd;
 extern int FF_InconsistentFile;
-extern int FF_ClientAuthorized;	
+extern int FF_ClientAuthorized;
 
 extern CFakeMeta g_FakeMeta;
 #endif // AMXMODX_H

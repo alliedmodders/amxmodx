@@ -35,8 +35,9 @@
 #include "amxxmodule.h"
 #include "CRank.h"
 
-#define TSMAX_WEAPONS			40
 #define TSMAX_CUSTOMWPNS		5
+#define TSMAX_WEAPONS			39 + TSMAX_CUSTOMWPNS
+
 
 #ifndef __linux__
 #define TSKNIFE_OFFSET			31 // owner offset in knife entity

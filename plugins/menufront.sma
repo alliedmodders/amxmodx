@@ -37,58 +37,59 @@
 
 new g_menuPosition[33]
 
-#define MENUS_NUMBER 15
+#define MENUS_NUMBER 16
 
 new g_menuBody[MENUS_NUMBER][] = {
-"Kick Player",
-"Ban Player",
-"Slap/Slay Player",
-"Team Player^n",
+  "KICK_PLAYER",
+  "BAN_PLAYER",
+  "SLAP_SLAY",
+  "TEAM_PLAYER",
 
-"Changelevel",
-"Vote for maps^n",
+  "CHANGEL",
+  "VOTE_MAPS",
 
-"Speech Stuff",
-"Client Commands",
+  "SPECH_STUFF",
+  "CLIENT_COM",
 
-// Next Page
+  // Next Page
 
-"Server Commands",
-"Cvars Settings",
-"Configuration",
-"Stats Settings^n",
+  "SERVER_COM",
+  "CVARS_SET",
+  "CONFIG",
+  "LANG_SET",
+  "STATS_SET",
 
-"Pause Plugins",
-"Restrict Weapons",
+  "PAUSE_PLUG",
+  "RES_WEAP",
 
-"Teleport Player" /* Last is Teleport menu - if you want to move 
-  it change also code in displayMenu (look for fun module check) */
-
+  "TELE_PLAYER" /* Last is Teleport menu - if you want to move it
+                       change also code in displayMenu (look for fun module check) */
 }
 
 new g_menuCmd[MENUS_NUMBER][] = {
-"amx_kickmenu",
-"amx_banmenu",
-"amx_slapmenu",
-"amx_teammenu",
+  "amx_kickmenu",
+  "amx_banmenu",
+  "amx_slapmenu",
+  "amx_teammenu",
 
-"amx_mapmenu",
-"amx_votemapmenu",
+  "amx_mapmenu",
+  "amx_votemapmenu",
 
-"amx_speechmenu",
-"amx_clcmdmenu",
+  "amx_speechmenu",
+  "amx_clcmdmenu",
 
-// Next Page
+  // Next Page
 
-"amx_cmdmenu",
-"amx_cvarmenu",
-"amx_cfgmenu",
-"amx_statscfgmenu",
+  "amx_cmdmenu",
+  "amx_cvarmenu",
+  "amx_cfgmenu",
+  "amx_setlangmenu",
+  "amx_statscfgmenu",
 
-"amx_pausecfgmenu",
-"amx_restmenu",
+  "amx_pausecfgmenu",
+  "amx_restmenu",
 
-"amx_teleportmenu"
+  "amx_teleportmenu"
 }
 
 // Second value sets if menu is only for CS...
@@ -104,11 +105,12 @@ new g_menuAccess[MENUS_NUMBER][2] = {
   {ADMIN_MENU,0},
   {ADMIN_LEVEL_A,0},
 
-// Next Page
+  // Next Page
 
   {ADMIN_MENU,0},
   {ADMIN_CVAR,0},
   {ADMIN_MENU,0},
+  {ADMIN_CFG,0},
   {ADMIN_CFG,1},
 
   {ADMIN_CFG,0},
@@ -121,9 +123,11 @@ new g_coloredMenus
 new g_cstrikeRunning
 new g_funModule
 
-public plugin_init()
-{
+public plugin_init() {
   register_plugin("Menus Front-End",AMXX_VERSION_STR,"AMXX Dev Team")  
+
+  register_dictionary("menufront.txt")
+  register_dictionary("common.txt")
 
   register_menucmd(register_menuid("AMX Mod X Menu"),1023,"actionMenu") 
   register_clcmd("amxmodmenu","cmdMenu",ADMIN_MENU,"- displays menus")    
@@ -133,9 +137,8 @@ public plugin_init()
   g_funModule = is_module_loaded("Fun")
 }
 
-public actionMenu(id,key)
-{
-  switch(key){
+public actionMenu(id,key) {
+  switch (key) {
     case 8: displayMenu(id,++g_menuPosition[id])
     case 9: displayMenu(id,--g_menuPosition[id])
     default: client_cmd(id, g_menuCmd[ g_menuPosition[id] * 8 + key ] )
@@ -143,8 +146,7 @@ public actionMenu(id,key)
   return PLUGIN_HANDLED
 }
 
-displayMenu(id,pos){
-
+displayMenu(id,pos) {
   if (pos < 0)  return
     
   new menuBody[512]
@@ -165,39 +167,34 @@ displayMenu(id,pos){
     
   new flags = get_user_flags(id)
     
-  for(new a = start; a < end; ++a)
-  {
+  for (new a = start; a < end; ++a) {
       if ( a == MENUS_NUMBER - 1 && !g_funModule ) 
         continue // checks if there is fun module for teleport menu
   
-      if ( (flags & g_menuAccess[a][0]) && ( g_menuAccess[a][1] ? g_cstrikeRunning : 1 ) )
-      {
+      if ( (flags & g_menuAccess[a][0]) && ( g_menuAccess[a][1] ? g_cstrikeRunning : 1 ) ) {
         keys |= (1<<b)
-        len += format(menuBody[len],511-len,"%d. %s^n",++b, g_menuBody[ a ] )
+        len += format(menuBody[len],511-len,"%d. %L^n",++b, id, g_menuBody[ a ] )
       }
-      else
-      {
+      else {
         ++b     
         if ( g_coloredMenus )
-          len += format(menuBody[len],511-len, "\d%d. %s^n\w",b, g_menuBody[ a ] )
+          len += format(menuBody[len],511-len, "\d%d. %L^n\w",b, id, g_menuBody[ a ] )
         else
-          len += format(menuBody[len],511-len, "#. %s^n",g_menuBody[ a ] )
+          len += format(menuBody[len],511-len, "#. %L^n", id, g_menuBody[ a ] )
 
       }
   }
       
-  if (end != MENUS_NUMBER )
-  {
-    format(menuBody[len],511-len,"^n9. More...^n0. %s", pos ? "Back" : "Exit")
+  if (end != MENUS_NUMBER ) {
+    format(menuBody[len],511-len,"^n9. %L...^n0. %s", id, "MORE", id, pos ? "BACK" : "EXIT")
     keys |= MENU_KEY_9
   }
-  else format(menuBody[len],511-len,"^n0. %s", pos ? "Back" : "Exit")
+  else format(menuBody[len],511-len,"^n0. %s", id, pos ? "BACK" : "EXIT")
  
   show_menu(id,keys,menuBody)
 }
 
-public cmdMenu(id,level,cid)
-{
+public cmdMenu(id,level,cid) {
   if (cmd_access(id,level,cid,1))
     displayMenu(id,g_menuPosition[id] = 0)
   return PLUGIN_HANDLED

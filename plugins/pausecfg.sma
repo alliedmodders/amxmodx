@@ -46,14 +46,15 @@ new g_menuPos[33]
 new g_fileToSave[64]
 new g_coloredMenus
 new g_Modified
-new g_couldntFind[] = "Couldn't find a plugin matching ^"%s^""
-new g_pluginMatch[] = "Plugin matching ^"%s^" %s"
+new g_pluginMatch[] = ""
 new g_addCmd[] = "amx_pausecfg add ^"%s^""
 new g_system[MAX_SYSTEM]
 new g_systemNum
 
 public plugin_init() {
   register_plugin("Pause Plugins",AMXX_VERSION_STR,"AMXX Dev Team")
+  register_dictionary("pausecfg.txt")
+  register_dictionary("common.txt")
   register_concmd("amx_pausecfg","cmdPlugin",ADMIN_CFG,"- list commands for pause/unpause managment")
   register_clcmd("amx_pausecfgmenu","cmdMenu",ADMIN_CFG,"- pause/unpause plugins with menu")
 #if defined DIRECT_ONOFF
@@ -64,7 +65,7 @@ public plugin_init() {
   g_coloredMenus = colored_menus()
   get_configsdir(g_fileToSave, 63);
   format(g_fileToSave, 63, "%s/pausecfg.ini", g_fileToSave);
-  
+
   return PLUGIN_CONTINUE
 }
 
@@ -95,40 +96,40 @@ public plugin_cfg() {
   server_cmd(g_addCmd, "NextMap" )
   server_cmd(g_addCmd, "Admin Help" )
   server_cmd(g_addCmd, "Admin Base" )
-  server_cmd(g_addCmd, "Admin Votes" )  
+  server_cmd(g_addCmd, "Admin Votes" )
   server_cmd(g_addCmd, "Welcome Message" )
   server_cmd(g_addCmd, "Stats Configuration" )
   server_cmd(g_addCmd, "Commands Menu" )
   server_cmd(g_addCmd, "Maps Menu" )
   server_cmd(g_addCmd, "Menus Front-End" )
-  server_cmd(g_addCmd, "Admin Base for MySQL" )
+  server_cmd(g_addCmd, "Admin Base (SQL)" )
   server_cmd(g_addCmd, "Players Menu" )
   server_cmd(g_addCmd, "Teleport Menu" )
 }
 
 public actionMenu(id,key) {
-  switch(key){
-  case 6:{
+  switch (key) {
+    case 6: {
       if (file_exists(g_fileToSave)){
         delete_file(g_fileToSave)
-        client_print(id,print_chat,"* Configuration file cleared. Reload the map if needed")
+        client_print(id,print_chat,"* %L",id,"CONF_CLEARED")
       }
       else
-        client_print(id,print_chat,"* Configuration was already cleared!")
-      displayMenu(id,g_menuPos[id])
-  }
-  case 7:{
-      if (saveSettings(g_fileToSave)){
-        g_Modified = 0
-        client_print(id,print_chat,"* Configuration saved successfully")
-      }
-      else
-        client_print(id,print_chat,"* Configuration saving failed!!!")
+        client_print(id,print_chat,"* %L",id,"ALR_CLEARED")
       displayMenu(id,g_menuPos[id])
     }
-  case 8: displayMenu(id,++g_menuPos[id])
-  case 9: displayMenu(id,--g_menuPos[id])
-  default:{
+    case 7: {
+      if (saveSettings(g_fileToSave)){
+        g_Modified = 0
+        client_print(id,print_chat,"* %L",id,"CONF_SAVED")
+      }
+      else
+        client_print(id,print_chat,"* %L",id,"SAVE_FAILED")
+      displayMenu(id,g_menuPos[id])
+    }
+    case 8: displayMenu(id,++g_menuPos[id])
+    case 9: displayMenu(id,--g_menuPos[id])
+    default:{
       new option = g_menuPos[id] * 6 + key
       new file[32],status[2]
       get_plugin(option,file,31,status,0,status,0,status,0,status,1)
@@ -149,13 +150,13 @@ public actionMenu(id,key) {
   return PLUGIN_HANDLED
 }
 
-getStatus( code, arg[], iarg ) {
-  switch(code){
-    case 'r': copy( arg, iarg , "ON" )
-    case 's': copy( arg, iarg , "STOPPED" )
-    case 'p': copy( arg, iarg , "OFF" )
-    case 'b': copy( arg, iarg , "ERROR" )
-    default: copy( arg, iarg , "LOCKED" )
+getStatus( id, code, arg[], iarg ) {
+  switch (code) {
+    case 'r': format( arg, iarg, "%L", id, "ON" )
+    case 's': format( arg, iarg, "%L", id, "STOPPED" )
+    case 'p': format( arg, iarg, "%L", id, "OFF" )
+    case 'b': format( arg, iarg, "%L", id, "ERROR" )
+    default:  format( arg, iarg, "%L", id, "LOCKED" )
   }
 }
 
@@ -173,13 +174,13 @@ displayMenu(id, pos) {
   new menu_body[512], start = pos * 6, k = 0
   if (start >= datanum) start = pos = g_menuPos[id] = 0
   new len = format(menu_body,511,
-    g_coloredMenus ? "\yPause/Unpause Plugins\R%d/%d^n\w^n" : "Pause/Unpause Plugins %d/%d^n^n" ,
-      pos + 1,((datanum/6)+((datanum%6)?1:0)))
+    g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n" ,
+      id,"PAUSE_UNPAUSE"pos + 1,((datanum/6)+((datanum%6)?1:0)))
   new end = start + 6, keys = MENU_KEY_0|MENU_KEY_8|MENU_KEY_7
   if (end > datanum) end = datanum
-  for(new a = start; a < end; ++a){
+  for (new a = start; a < end; ++a) {
     get_plugin(a,filename,31,title,31,status,0,status,0,status,1)
-    getStatus( status[0] , status , 7  )
+    getStatus( id, status[0] , status , 7  )
     if ( isSystem( a ) || (status[0]!='O'&&status[0]!='S')) {
       if ( g_coloredMenus ) {
         len += format(menu_body[len],511-len, "\d%d. %s\R%s^n\w",++k, title, status )     
@@ -194,24 +195,24 @@ displayMenu(id, pos) {
       len += format(menu_body[len],511-len,g_coloredMenus ? "%d. %s\y\R%s^n\w" : "%d. %s %s^n",++k,title, status )
     }
   }
-  len += format(menu_body[len],511-len,"^n7. Clear file with stopped^n")  
-  len += format(menu_body[len],511-len,g_coloredMenus ? "8. Save stopped \y\R%s^n\w"
-    : "8. Save stopped %s^n" ,g_Modified ? "*" : "")
+  len += format(menu_body[len],511-len,"^n7. %L^n",id,"CLEAR_STOPPED")  
+  len += format(menu_body[len],511-len,g_coloredMenus ? "8. %L \y\R%s^n\w"
+    : "8. %L %s^n", id, "SAVE_STOPPED", g_Modified ? "*" : "")
   if (end != datanum){
-    format(menu_body[len],511-len,"^n9. More...^n0. %s", pos ? "Back" : "Exit")
+    format(menu_body[len],511-len,"^n9. %L...^n0. %s", id, "MORE", id, pos ? "BACK" : "EXIT")
     keys |= MENU_KEY_9
   }
-  else format(menu_body[len],511-len,"^n0. %s", pos ? "Back" : "Exit")
-  show_menu(id,keys,menu_body)
+  else format(menu_body[len],511-len,"^n0. %s", id, pos ? "BACK" : "EXIT")
+  show_menu(id,keys,menu_body,-1,"Pause/Unpause Plugins")
 }
 
-public cmdMenu(id,level,cid){
+public cmdMenu(id,level,cid) {
   if (cmd_access(id,level,cid,1))
     displayMenu(id,g_menuPos[id] = 0)
   return PLUGIN_HANDLED
 }
 
-pausePlugins(id){
+pausePlugins(id) {
   new filename[32],title[32],status[2]
   new count = 0, imax = get_pluginsnum()
   for (new a=0;a<imax;++a){
@@ -221,10 +222,10 @@ pausePlugins(id){
       ++count
     }
   }
-  console_print(id,"Paused %d plugin%s",count,(count==1)?"":"s")
+  console_print(id,"%L",id,(count==1)?"PAUSED_PLUGIN":"PAUSED_PLUGINS",count)
 }
 
-unpausePlugins(id){
+unpausePlugins(id) {
   new filename[32],title[32],status[2]
   new count = 0, imax = get_pluginsnum()
   for (new a=0;a<imax;++a){
@@ -234,10 +235,10 @@ unpausePlugins(id){
       ++count
     }
   }
-  console_print(id,"Unpaused %d plugin%s",count,(count==1)?"":"s")
+  console_print(id,"%L",id,(count==1)?"UNPAUSED_PLUGIN":"UNPAUSED_PLUGINS",count)
 }
 
-findPluginByFile(arg[32],&len){
+findPluginByFile(arg[32],&len) {
   new name[32],title[32],status[2]
   new inum  = get_pluginsnum()
   for(new a = 0; a < inum; ++a){
@@ -250,10 +251,10 @@ findPluginByFile(arg[32],&len){
   return -1
 }
 
-findPluginByTitle(name[],file[],len){
+findPluginByTitle(name[],file[],len) {
   new title[32],status[2]
   new inum  = get_pluginsnum()  
-  for(new a = 0; a < inum; ++a){
+  for (new a = 0; a < inum; ++a) {
     get_plugin(a,file,len,title,31,status,0,status,0,status,1)
     if ( equali( title , name ) )
       return a
@@ -261,7 +262,7 @@ findPluginByTitle(name[],file[],len){
   return -1
 }
 
-public cmdPlugin(id,level,cid){
+public cmdPlugin(id,level,cid) {
   if (!cmd_access(id,level,cid,1))
     return PLUGIN_HANDLED
   new cmds[32]
@@ -273,98 +274,103 @@ public cmdPlugin(id,level,cid){
       if ( g_systemNum < MAX_SYSTEM )
         g_systemNum++
       else
-        console_print( id , "Can't mark more plugins as unpauseable!" )
+        console_print( id, "%L", id, "CANT_MARK_MORE" )
     }
   }
-  else if ( equal(cmds, "off" ) ){
+  else if ( equal(cmds, "off" ) ) {
     pausePlugins(id)
   }
-  else if ( equal(cmds, "on" ) ){
+  else if ( equal(cmds, "on" ) ) {
     unpausePlugins(id)
   }
-  else if ( equal(cmds, "save" ) ){
-    if (saveSettings(g_fileToSave)){
+  else if ( equal(cmds, "save" ) ) {
+    if (saveSettings(g_fileToSave)) {
       g_Modified = 0
-      console_print(id,"Configuration saved successfully")
+      console_print(id,"%L",id,"CONF_SAVED")
     }
     else
-      console_print(id,"Configuration saving failed!!!")
+      console_print(id,"%L",id,"SAVE_FAILED")
   }
   else if ( equal(cmds, "clear" ) ) {
     if (file_exists(g_fileToSave)){
       delete_file(g_fileToSave)
-      console_print(id,"Configuration file cleared. Reload the map if needed")
+      console_print(id,"%L",id,"CONF_CLEARED")
     }
     else
-      console_print(id,"Configuration was already cleared!")
+      console_print(id,"%L",id,"ALR_CLEARED")
   }
-  else if ( equal(cmds, "pause" )  )  {
+  else if ( equal(cmds, "pause" )  ) {
     new arg[32], a ,len = read_argv(2,arg,31)
     if ( len && ((a = findPluginByFile(arg,len)) != -1) && !isSystem( a ) && pause("ac",arg) )
-      console_print(id,g_pluginMatch,arg , "paused")
-    else console_print(id,g_couldntFind,arg)
+      console_print(id,"%L",id,"PLUGIN_MATCH",arg,id,"PAUSED")
+    else console_print(id,"%L",id,"COULDNT_FIND",arg)
   }
   else if ( equal(cmds, "enable" )  ) {
     new arg[32], a , len = read_argv(2,arg,31)
     if ( len && (a = findPluginByFile(arg,len)) != -1 && !isSystem( a ) && unpause("ac",arg) )
-      console_print(id,g_pluginMatch,arg , "unpaused")
-    else console_print(id,g_couldntFind,arg)
+      console_print(id,"%L",id,"PLUGIN_MATCH",arg,id,"UNPAUSED")
+    else console_print(id,"%L",id,"COULDNT_FIND",arg)
   }
-  else if ( equal(cmds, "stop" )  ) {
+  else if ( equal(cmds, "stop" ) ) {
     new arg[32], a, len = read_argv(2,arg,31)
     if ( len && (a = findPluginByFile(arg,len)) != -1 && !isSystem( a ) && pause("dc",arg)){
       g_Modified = 1
-      console_print(id,g_pluginMatch,arg , "stopped")
+      console_print(id,"%L",id,"PLUGIN_MATCH",arg,id,"STOPPED")
     }
-    else console_print(id,g_couldntFind,arg)
+    else console_print(id,"%L",id,"COULDNT_FIND",arg)
   }
-  else if ( equal(cmds, "list" )  ) {
-  	new arg1[8], running = 0
-  	new start = read_argv(2,arg1,7) ? str_to_num(arg1) : 1
-  	if (--start < 0) start = 0
-  	new plgnum = get_pluginsnum()
-  	if (start >= plgnum) start = plgnum - 1
-  	console_print(id,"^n----- Pause Plugins: Loaded plugins -----")
-  	console_print(id, "       %-18.17s %-8.7s %-17.16s %-16.15s %-9.8s","name","version","author","file","status")  	
-  	new plugin[32],title[32],version[16],author[32],status[16]
-  	new end = start + 10
-  	if (end > plgnum) end = plgnum
-  	for (new a = start; a < end; ++a){
-    	get_plugin(a,plugin,31,title,31,version,15,author,31,status,15)
-    	if (status[0] == 'r') ++running
-    	console_print(id, " [%3d] %-18.17s %-8.7s %-17.16s %-16.15s %-9.8s",a+1,title,version,author,plugin, status )
-  	
-  	}
-  	console_print(id,"----- Entries %d - %d of %d (%d running) -----",start+1,end,plgnum,running)
-  	if (end < plgnum)
-     	console_print(id,"----- Use 'amx_pausecfg list %d' for more -----",end+1)
-  	else
-     	console_print(id,"----- Use 'amx_pausecfg list 1' for begin -----")
+  else if ( equal(cmds, "list" ) ) {
+    new lName[32],lVersion[32],lAuthor[32],lFile[32],lStatus[32]
+    format(lName,31,"%L",id,"NAME")
+    format(lVersion,31,"%L",id,"VERSION")
+    format(lAuthor,31,"%L",id,"AUTHOR")
+    format(lFile,31,"%L",id,"FILE")
+    format(lStatus,31,"%L",id,"STATUS")
+    new arg1[8], running = 0
+    new start = read_argv(2,arg1,7) ? str_to_num(arg1) : 1
+    if (--start < 0) start = 0
+    new plgnum = get_pluginsnum()
+    if (start >= plgnum) start = plgnum - 1
+    console_print(id,"^n----- %L -----",id,"PAUSE_LOADED")
+    console_print(id, "       %-18.17s %-8.7s %-17.16s %-16.15s %-9.8s",lName,lVersion,lAuthor,lFile,lStatus)  	
+    new plugin[32],title[32],version[16],author[32],status[16]
+    new end = start + 10
+    if (end > plgnum) end = plgnum
+    for (new a = start; a < end; ++a) {
+      get_plugin(a,plugin,31,title,31,version,15,author,31,status,15)
+      if (status[0] == 'r') ++running
+      console_print(id, " [%3d] %-18.17s %-8.7s %-17.16s %-16.15s %-9.8s",a+1,title,version,author,plugin, status )
+    }
+    console_print(id,"----- %L -----",id,"ENTRIES",start+1,end,plgnum,running)
+    if (end < plgnum)
+     	console_print(id,"----- %L -----",id,"USE_MORE",end+1)
+    else
+      console_print(id,"----- %L -----",id,"USE_BEGIN")
   }
   else {
-    console_print(id,"Usage:  amx_pausecfg <command> [name]")
-    console_print(id,"Commands:")
-    console_print(id,"^toff - pauses all plugins not in the list")   
-    console_print(id,"^ton - unpauses all plugins")
-    console_print(id,"^tstop <file> - stops a plugin")
-    console_print(id,"^tpause <file> - pauses a plugin")
-    console_print(id,"^tenable <file> - enables a plugin")
-    console_print(id,"^tsave - saves a list of stopped plugins")     
-    console_print(id,"^tclear - clears a list of stopped plugins")
-    console_print(id,"^tlist [id] - lists plugins")
-    console_print(id,"^tadd <title> - marks a plugin as unpauseable")
+    console_print(id,"%L",id,"USAGE")
+    console_print(id,"%L:",id,"COMMANDS")
+    console_print(id,"%L",id,"COM_TOFF")   
+    console_print(id,"%L",id,"COM_TON")
+    console_print(id,"%L",id,"COM_TSTOP")
+    console_print(id,"%L",id,"COM_TPAUSE")
+    console_print(id,"%L",id,"COM_TENABLE")
+    console_print(id,"%L",id,"COM_TSAVE")
+    console_print(id,"%L",id,"COM_TCLEAR")
+    console_print(id,"%L",id,"COM_TLIST")
+    console_print(id,"%L",id,"COM_TADD")
   }
   return PLUGIN_HANDLED
 }
 
-saveSettings(filename[]){
+saveSettings(filename[]) {
   if (file_exists(filename))
     delete_file(filename)
   new text[256], file[32],title[32],status[2]
   new inum  = get_pluginsnum()
   if (!write_file(filename,";Generated by Pause Plugins Plugin. Do not modify!^n;Title Filename"))
     return 0
-  for(new a = 0; a < inum; ++a){
+  for (new a = 0; a < inum; ++a) {
     get_plugin(a,file,31,title,31,status,0,status,0,status,1)
     if ( status[0] == 's' ){
       format(text,255,"^"%s^" ;%s",title,file)
@@ -374,7 +380,7 @@ saveSettings(filename[]){
   return 1
 }
 
-loadSettings(filename[]){
+loadSettings(filename[]) {
   if (!file_exists(filename)) return 0
   new name[256], file[32], i, pos = 0
   while (read_file(filename,pos++,name,255,i)){

@@ -35,18 +35,19 @@
 #include <amxmodx>
 #include <amxmisc>
 
-#define MAX_MESSAGES	6
-#define X_POS		-1.0
-#define Y_POS		0.30
-#define HOLD_TIME	12.0
+#define MAX_MESSAGES  6
+#define X_POS         -1.0
+#define Y_POS         0.30
+#define HOLD_TIME     12.0
 
 new g_Values[MAX_MESSAGES][3]
 new g_Messages[MAX_MESSAGES][384]
 new g_MessagesNum
 new g_Current
 
-public plugin_init(){
+public plugin_init() {
   register_plugin("Info. Messages",AMXX_VERSION_STR,"AMXX Dev Team")
+  register_dictionary("imessage.txt")
   register_srvcmd("amx_imessage","setMessage")
   register_cvar("amx_freq_imessage","10")
   new lastinfo[8]
@@ -55,7 +56,7 @@ public plugin_init(){
   set_localinfo("lastinfomsg","")
 }
 
-public infoMessage(){
+public infoMessage() {
   if (g_Current >= g_MessagesNum)
     g_Current = 0
   set_hudmessage(g_Values[g_Current][0], g_Values[g_Current][1], g_Values[g_Current][2], 
@@ -67,11 +68,9 @@ public infoMessage(){
   if ( freq_im > 0.0 ) set_task( freq_im ,"infoMessage",12345)
 }
 
-public setMessage(id,level,cid) {
-  if (!cmd_access(id,level,cid,3))
-    return PLUGIN_HANDLED
-  if (g_MessagesNum >= MAX_MESSAGES)  {
-    console_print(id,"Information Messages limit reached!")
+public setMessage() {
+  if (g_MessagesNum >= MAX_MESSAGES) {
+    server_print("%L",LANG_SERVER,"INF_REACH")
     return PLUGIN_HANDLED
   }
   remove_task(12345)
@@ -93,7 +92,7 @@ public setMessage(id,level,cid) {
   return PLUGIN_HANDLED
 }
 
-public plugin_end(){
+public plugin_end() {
   new lastinfo[8]
   num_to_str(g_Current,lastinfo,7)
   set_localinfo("lastinfomsg",lastinfo)

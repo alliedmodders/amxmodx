@@ -67,7 +67,7 @@ enum {
 
 stock jghg_find_ent_owner(start_from_ent, jghg_category, value[], owner_index)
 {
-	find_ent_by_owner(start_from_ent, value[], owner_index, jghg_category)
+	find_ent_by_owner(start_from_ent, value, owner_index, jghg_category)
 }
 
 stock find_ent_sphere(start_from_ent, Float:origin[3], Float:radius)

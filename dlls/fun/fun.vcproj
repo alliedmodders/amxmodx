@@ -3,6 +3,7 @@
 	ProjectType="Visual C++"
 	Version="7.10"
 	Name="fun_amx"
+	ProjectGUID="{43B95C78-8D1A-4D12-B668-2520B38E1DA3}"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -191,10 +192,10 @@ copy fun.inc K:\S\cstrike\addons\amx\plugins\include
 		<Filter
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+			<File
+				RelativePath="..\plugins\include\fun.inc">
+			</File>
 		</Filter>
-		<File
-			RelativePath="fun.inc">
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

@@ -20,7 +20,14 @@
 
 #include <amxmodx>
 
-public get_score(stats[9],body[8])
-{
-	return stats[0] - stats[1] - stats[3] /* kills - deaths - TKs */
+#define KILLS	stats[0]
+#define DEATHS	stats[1]
+#define TK		stats[3]
+#define SCORE	stats[7]
+
+public get_score(stats[9],body[8]){
+	if (!DEATHS)
+		DEATHS = 1
+
+	return (KILLS-DEATHS-TK)*KILLS/DEATHS 
 }

@@ -544,7 +544,7 @@ public cmdPause(id,level,cid) {
       if (activity==1)
         len += copy(msg[len],127-len,":")
       else
-        len += format(msg[len],127-len," %s:",name)
+        len += format(msg[len],127-len," %s: ",name)
       format(msg[len],127-len,"%L",players[i],g_Paused ? "UNPAUSE" : "PAUSE" )
       client_print(players[i],print_chat,"%s server",msg)
     }

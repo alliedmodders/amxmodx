@@ -76,12 +76,14 @@ public client_infochanged(id) {
   new lang[3]
   get_user_info(id,"lang",lang,2)
 
-  if ( lang_exists(lang) )
-    copy(g_userLang[id],2,lang)
-  else if ( g_userLang[id][0] )
-    set_user_info(id,"lang",g_userLang[id])
-  else
-    set_user_info(id,"lang","en")
+  if ( strlen(lang)>0 ) {
+    if ( lang_exists(lang) )
+      copy(g_userLang[id],2,lang)
+    else if ( g_userLang[id][0] )
+      set_user_info(id,"lang",g_userLang[id])
+    else
+      set_user_info(id,"lang","en")
+  }
 }
 
 #if defined DISPLAY_MSG
@@ -129,7 +131,7 @@ showMenu(id) {
 
   if ( access(id,ADMIN_CFG) ) {
     new server_lang[64],sLang[3]
-    format(perso_lang,63,"%L",id,"SERVER_LANG")
+    format(server_lang,63,"%L",id,"SERVER_LANG")
     get_lang(g_menuLang[id][1],sLang)
     len += format( menuBody[len],511-len,(g_coloredMenus ? "2. %s\R\r%s\w^n^n" : "2. %s %s^n^n"),server_lang,sLang )
     len += format( menuBody[len],511-len,"3. %L",id,"SAVE_LANG" )

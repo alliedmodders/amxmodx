@@ -198,10 +198,10 @@ displayMenu(id, pos) {
   len += format(menu_body[len],511-len,g_coloredMenus ? "8. %L \y\R%s^n\w"
     : "8. %L %s^n", id, "SAVE_STOPPED", g_Modified ? "*" : "")
   if (end != datanum){
-    format(menu_body[len],511-len,"^n9. %L...^n0. %s", id, "MORE", id, pos ? "BACK" : "EXIT")
+    format(menu_body[len],511-len,"^n9. %L...^n0. %L", id, "MORE", id, pos ? "BACK" : "EXIT")
     keys |= MENU_KEY_9
   }
-  else format(menu_body[len],511-len,"^n0. %s", id, pos ? "BACK" : "EXIT")
+  else format(menu_body[len],511-len,"^n0. %L", id, pos ? "BACK" : "EXIT")
   show_menu(id,keys,menu_body,-1,"Pause/Unpause Plugins")
 }
 

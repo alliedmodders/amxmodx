@@ -403,10 +403,10 @@ displayMapsMenu(id,pos) {
   }
 
   if (end != g_mapNums) {
-    format(menuBody[len],511-len,"^n9. %L...^n0. %s", id, "MORE", id, pos ? "BACK" : "EXIT")
+    format(menuBody[len],511-len,"^n9. %L...^n0. %L", id, "MORE", id, pos ? "BACK" : "EXIT")
     keys |= MENU_KEY_9
   }
-  else format(menuBody[len],511-len,"^n0. %s", id, pos ? "BACK" : "EXIT")
+  else format(menuBody[len],511-len,"^n0. %L", id, pos ? "BACK" : "EXIT")
 
   new menuName[64]
   format(menuName,63,"%L","en","CHANGLE_MENU")

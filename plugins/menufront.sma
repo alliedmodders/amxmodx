@@ -83,7 +83,7 @@ new g_menuCmd[MENUS_NUMBER][] = {
   "amx_cmdmenu",
   "amx_cvarmenu",
   "amx_cfgmenu",
-  "amx_setlangmenu",
+  "amx_langmenu",
   "amx_statscfgmenu",
 
   "amx_pausecfgmenu",
@@ -186,10 +186,10 @@ displayMenu(id,pos) {
   }
       
   if (end != MENUS_NUMBER ) {
-    format(menuBody[len],511-len,"^n9. %L...^n0. %s", id, "MORE", id, pos ? "BACK" : "EXIT")
+    format(menuBody[len],511-len,"^n9. %L...^n0. %L", id, "MORE", id, pos ? "BACK" : "EXIT")
     keys |= MENU_KEY_9
   }
-  else format(menuBody[len],511-len,"^n0. %s", id, pos ? "BACK" : "EXIT")
+  else format(menuBody[len],511-len,"^n0. %L", id, pos ? "BACK" : "EXIT")
  
   show_menu(id,keys,menuBody)
 }

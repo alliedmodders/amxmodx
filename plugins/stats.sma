@@ -372,14 +372,14 @@ public displayStats(id,dest) {
   pos += copy(g_Buffer[pos],2047-pos,"body{font-family:Arial,sans-serif;font-size:12px;color:#FFCC99;background-color:#000000;margin-left:8px;margin-top:3px}.header{background-color:#9C0000;}.one{background-color:#310000;}.two{background-color:#630000;}")
   pos += format(g_Buffer[pos],2047-pos,"</style></head><body><table><tr class=^"one^"><td>Kills:</td><td>%d</td></tr><tr class=^"two^"><td>Deaths:</td><td>%d</td></tr><tr class=^"one^"><td>Damage:</td><td>%d</td></tr><tr class=^"two^"><td>Hits:</td><td>%d</td></tr><tr class=^"one^"><td>Shots:</td><td>%d</td></tr></table><br><br>",
     stats[0],stats[1],stats[6],stats[5],stats[4])
-  pos += copy(g_Buffer[pos],2047-pos,"<table><tr class^"header^"><td>Weapon</td><td>Shots</td><td>Hits</td><td>Damage</td><td>Kills</td><td>deaths</td></tr>")
+  pos += copy(g_Buffer[pos],2047-pos,"<table><tr class=^"header^"><td>Weapon</td><td>Shots</td><td>Hits</td><td>Damage</td><td>Kills</td><td>Deaths</td></tr>")
   for(new a = 1; a < 31; ++a) {
     if (get_user_wstats(id,a,stats,body)) {
       if (equal(state,"one")) copy(state,3,"two")
       else copy(state,3,"one")
       get_weaponname(a,name,31)
       pos += format(g_Buffer[pos],2047-pos,"<tr class=^"%s^"><td>%s</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td></tr>",
-        name[7],stats[4],stats[5],stats[6],stats[0],stats[1])
+        state,name[7],stats[4],stats[5],stats[6],stats[0],stats[1])
     }
   }
   copy(g_Buffer[pos],2047-pos,"</table></body></html>")
@@ -419,10 +419,10 @@ displayRank(id,dest) {
   pos += format(g_Buffer[pos],2047-pos,"</style></head><body><table><tr><td colspan=2>%s rank is %d of %d</td></tr>",(id==dest)?"Your":"His", rank_pos,get_statsnum())
   pos += format(g_Buffer[pos],2047-pos,"<tr class=^"one^"><td>Kills:</td><td>%d</td></tr><tr class=^"two^"><td>Deaths:</td><td>%d</td></tr><tr class=^"one^"><td>Damage:</td><td>%d</td></tr><tr class=^"two^"><td>Hits:</td><td>%d</td></tr><tr class=^"one^"><td>Shots:</td><td>%d</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr>",
     stats[0],stats[1],stats[6],stats[5],stats[4])
-  pos += format(g_Buffer[pos],2047-pos,"<tr class=^"header^"><td colspan=2>Hits</td></tr><tr class^"one^"><td>%s:</td><td>%d</td></tr><tr class^"two^"><td>%s:</td><td>%d</td></tr><tr class^"one^"><td>%s:</td><td>%d</td></tr><tr class^"two^"><td>%s:</td><td>%d</td></tr><tr class^"one^"><td>%s:</td><td>%d</td></tr><tr class^"two^"><td>%s:</td><td>%d</td></tr><tr class^"one^"><td>%s:</td><td>%d</td></tr>",
+  pos += format(g_Buffer[pos],2047-pos,"<tr class=^"header^"><td colspan=2>Hits</td></tr><tr class=^"one^"><td>%s:</td><td>%d</td></tr><tr class=^"two^"><td>%s:</td><td>%d</td></tr><tr class=^"one^"><td>%s:</td><td>%d</td></tr><tr class=^"two^"><td>%s:</td><td>%d</td></tr><tr class=^"one^"><td>%s:</td><td>%d</td></tr><tr class=^"two^"><td>%s:</td><td>%d</td></tr><tr class=^"one^"><td>%s:</td><td>%d</td></tr>",
     g_bodyParts[1],body[1],g_bodyParts[2],body[2],g_bodyParts[3],body[3], g_bodyParts[4],body[4],
     g_bodyParts[5],body[5],g_bodyParts[6],body[6],g_bodyParts[7],body[7])
-  copy(g_Buffer,2047,"</table></body></html>")
+  copy(g_Buffer[pos],2047-pos,"</table></body></html>")
 #else
   pos = format(g_Buffer,2047,"%s rank is %d of %d^n^n",(id==dest)?"Your":"His", rank_pos,get_statsnum())
   pos += format(g_Buffer[pos],2047-pos,"%10s: %d^n%10s: %d^n%10s: %d^n%10s: %d^n%10s: %d^n^n",

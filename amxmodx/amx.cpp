@@ -22,6 +22,7 @@
  */
 
 // not used
+#include <stdio.h>
 #define AMX_NODYNALOAD
 
 // bad bad workaround but we have to prevent a compiler crash :/
@@ -274,8 +275,8 @@ typedef enum {
 } OPCODE;
 
 typedef struct tagFUNCSTUBNT {
-  uint32_t address PACKED;
-  uint32_t nameofs PACKED;
+  ucell address    PACKED;
+  ucell nameofs    PACKED;
 } FUNCSTUBNT       PACKED;
 
 #define USENAMETABLE(hdr) \
@@ -373,7 +374,7 @@ uint16_t *amx_Align16(uint16_t *v)
 
 uint32_t *amx_Align32(uint32_t *v)
 {
-  assert(sizeof(cell)==4);
+  assert(sizeof(*v)==4);
   init_little_endian();
   if (!amx_LittleEndian)
     swap32(v);
@@ -383,7 +384,7 @@ uint32_t *amx_Align32(uint32_t *v)
 #if defined _I64_MAX || defined HAVE_I64
 uint64_t *amx_Align64(uint64_t *v)
 {
-	assert(sizeof(cell)==8);
+	assert(sizeof(*v)==8);
 	init_little_endian();
 	if (!amx_LittleEndian)
 		swap64(v);
@@ -436,7 +437,6 @@ int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
   func=GETENTRY(hdr,natives,index);
   f=(AMX_NATIVE)func->address;
   assert(f!=NULL);
-
   /* now that we have found the function, patch the program so that any
    * subsequent call will call the function directly (bypassing this
    * callback)
@@ -466,8 +466,9 @@ int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
    *   etc.
    */
 
-  amx->error=AMX_ERR_NONE;
-  *result = f(amx,params);
+  amx->error=AMX_ERR_NONE; 
+  *result= f(amx,params);
+ 
   return amx->error;
 }
 
@@ -949,9 +950,9 @@ int AMXAPI amx_Init(AMX *amx,void *program)
     assert(hdr->publics<=hdr->natives);
     num=NUMENTRIES(hdr,publics,natives);
     for (i=0; i<num; i++) {
-      amx_Align32(&fs->address);
+      amx_AlignCell(&fs->address);
       if (USENAMETABLE(hdr))
-        amx_Align32(&((FUNCSTUBNT*)fs)->nameofs);
+        amx_AlignCell(&((FUNCSTUBNT*)fs)->nameofs);
       fs=(AMX_FUNCSTUB*)((unsigned char *)fs+hdr->defsize);
     } /* for */
 
@@ -959,9 +960,9 @@ int AMXAPI amx_Init(AMX *amx,void *program)
     assert(hdr->pubvars<=hdr->tags);
     num=NUMENTRIES(hdr,pubvars,tags);
     for (i=0; i<num; i++) {
-      amx_Align32(&fs->address);
+      amx_AlignCell(&fs->address);
       if (USENAMETABLE(hdr))
-        amx_Align32(&((FUNCSTUBNT*)fs)->nameofs);
+        amx_AlignCell(&((FUNCSTUBNT*)fs)->nameofs);
       fs=(AMX_FUNCSTUB*)((unsigned char *)fs+hdr->defsize);
     } /* for */
 
@@ -974,9 +975,9 @@ int AMXAPI amx_Init(AMX *amx,void *program)
       num=NUMENTRIES(hdr,tags,nametable);
     } /* if */
     for (i=0; i<num; i++) {
-      amx_Align32(&fs->address);
+      amx_AlignCell(&fs->address);
       if (USENAMETABLE(hdr))
-        amx_Align32(&((FUNCSTUBNT*)fs)->nameofs);
+        amx_AlignCell(&((FUNCSTUBNT*)fs)->nameofs);
       fs=(AMX_FUNCSTUB*)((unsigned char *)fs+hdr->defsize);
     } /* for */
   } /* if */
@@ -1591,7 +1592,7 @@ int AMXAPI amx_Register(AMX *amx, AMX_NATIVE_INFO *list, int number)
       /* this function is not yet located */
       funcptr=(list!=NULL) ? findfunction(GETENTRYNAME(hdr,func),list,number) : NULL;
       if (funcptr!=NULL)
-        func->address=(uint32_t)funcptr;
+        func->address=(ucell)funcptr;
       else
       {
         no_function = GETENTRYNAME(hdr,func);
@@ -1788,6 +1789,7 @@ static void *amx_opcodelist_nodebug[] = {
     amx->debug(amx);
   } /* if */
 
+  
   /* sanity checks */
   assert(OP_PUSH_PRI==36);
   assert(OP_PROC==46);
@@ -1830,6 +1832,7 @@ static void *amx_opcodelist_nodebug[] = {
   /* check stack/heap before starting to run */
   CHKMARGIN();
 
+  
   /* start running */
   NEXT(cip);
 

@@ -226,3 +226,4 @@ public:
 extern CFakeMeta g_FakeMeta;
 
 #endif // #ifndef __FAKEMETA_H__
+

@@ -1322,9 +1322,9 @@ static cell AMX_NATIVE_CALL read_data(AMX *amx, cell *params) /* 3 param */
   return set_amxstring(amx,params[2], g_events.getArgString( params[1] ),*get_amxaddr(amx,params[3]));
   default:
   cell *fCell = get_amxaddr(amx,params[2]);
-  float *pFloat = (REAL *)((void *)fCell);
-  *pFloat = g_events.getArgFloat( params[1] );
-  return (int)(*pFloat);
+  REAL pFloat = amx_ctof(fCell);
+  pFloat = g_events.getArgFloat( params[1] );
+  return (int)(pFloat);
   }
 }
 
@@ -1941,8 +1941,8 @@ static cell AMX_NATIVE_CALL get_user_aiming(AMX *amx, cell *params) /* 4 param *
   cell *cpId = get_amxaddr(amx,params[2]);
   cell *cpBody = get_amxaddr(amx,params[3]);
     cell fCell;
-    float *pFloat = (REAL *)((void *)&fCell);
-  *pFloat = 0.0;
+    REAL pFloat = amx_ctof(fCell);
+  pFloat = 0.0;
   if (pPlayer->ingame) {
     edict_t* edict = pPlayer->pEdict;
     Vector v_forward;
@@ -1967,7 +1967,7 @@ static cell AMX_NATIVE_CALL get_user_aiming(AMX *amx, cell *params) /* 4 param *
     *cpId = FNullEnt(trEnd.pHit) ? 0 : ENTINDEX(trEnd.pHit);
     *cpBody = trEnd.iHitgroup;
     if (trEnd.flFraction < 1.0) {
-      *pFloat = (trEnd.vecEndPos - v_src).Length();
+      pFloat = (trEnd.vecEndPos - v_src).Length();
       return fCell;
     }
     else {

@@ -390,8 +390,11 @@ void C_ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax )
 	pPlayer->Init( pEdictList +	i ,	i );
   }
 
+  AMXXLOG_Log("BLABLA0");
   executeForwards(FF_PluginInit);
+  AMXXLOG_Log("BLABLA1");
   executeForwards(FF_PluginCfg);
+  AMXXLOG_Log("BLABLA2");
 
   // Correct time in Counter-Strike	and	other mods (except DOD)
   if ( !g_bmod_dod)	 g_game_timeleft = 0;

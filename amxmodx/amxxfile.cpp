@@ -51,11 +51,15 @@
   #endif
 #endif
 
+typedef lzo_byte	mint8_t;
+typedef int16_t		mint16_t;
+typedef int32_t		mint32_t;
+
 struct TableEntry
 {
-	CAmxxReader::mint8_t cellSize PACKED;
-	CAmxxReader::mint32_t origSize PACKED;			// contains AMX_HEADER->stp
-	CAmxxReader::mint32_t offset PACKED;
+	mint8_t cellSize PACKED;
+	mint32_t origSize PACKED;			// contains AMX_HEADER->stp
+	mint32_t offset PACKED;
 };
 
 #define DATAREAD(addr, itemsize, itemcount) \
@@ -136,7 +140,8 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 	TableEntry entry;
 
 	m_SectionHdrOffset = 0;
-	for (int i = 0; i < static_cast<int>(numOfPlugins); ++i)
+	int i = 0;
+	for (i = 0; i < static_cast<int>(numOfPlugins); ++i)
 	{
 		DATAREAD(&entry, sizeof(entry), 1);
 		if (entry.cellSize == m_CellSize)
@@ -154,7 +159,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 	}
 
 	// compute section length
-	if (i < static_cast<int>(numOfPlugins))
+	if ((i+1) < static_cast<int>(numOfPlugins))
 	{
 		// there is a next section
 		TableEntry nextEntry;
@@ -164,7 +169,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 	else
 	{
 		fseek(m_pFile, 0, SEEK_END);
-		m_SectionLength = ftell(m_pFile) - entry.offset;
+		m_SectionLength = ftell(m_pFile) - (long)entry.offset;
 	}
 }
 

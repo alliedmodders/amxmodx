@@ -35,7 +35,9 @@
 //  3 = HL Logs
 
 #include <time.h>
+#ifndef __linux__
 #include <io.h>
+#endif
 #include "amxmodx.h"
 
 CLog::CLog()

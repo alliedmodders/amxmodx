@@ -25,6 +25,9 @@
   #include <sclinux.h>
 #endif
 
+#define SMALL_CELL_SIZE 64
+#undef JIT
+
 #ifndef AMX_H_INCLUDED
 #define AMX_H_INCLUDED
 
@@ -179,7 +182,7 @@ typedef struct {
 #define sNAMEMAX        31      /* maximum name length of symbol name */
 
 typedef struct tagAMX_FUNCSTUB {
-  uint32_t address           PACKED;
+  ucell address           PACKED;
   const char name[sEXPMAX+1] PACKED;
 } AMX_FUNCSTUB;
 
@@ -334,6 +337,13 @@ uint16_t * AMXAPI amx_Align16(uint16_t *v);
 uint32_t * AMXAPI amx_Align32(uint32_t *v);
 #if defined _I64_MAX || defined HAVE_I64
   uint64_t * AMXAPI amx_Align64(uint64_t *v);
+#endif
+#if SMALL_CELL_SIZE==32
+#define amx_AlignCell amx_Align32
+#elif SMALL_CELL_SIZE==64
+#define amx_AlignCell amx_Align64
+#else
+#error Unsupported cell size
 #endif
 int AMXAPI amx_Allot(AMX *amx, int cells, cell *amx_addr, cell **phys_addr);
 int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params);

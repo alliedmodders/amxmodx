@@ -90,47 +90,6 @@ void free_amxmemory(void **ptr)
 
 int load_amxscript(AMX *amx, void **program, const char *filename, char error[64])
 {
-	/* :TODO: REMOVE
-	FILE *fp;
-
-	AMX_HEADER hdr;
-
-	memset(amx, 0, sizeof(*amx));
-	*program = 0;
-	*error = 0;
-
-	if ( (fp = fopen( filename, "rb" )) == NULL)
-	{
-		strcpy(error,"Plugin file open error");
-		return (amx->error = AMX_ERR_NOTFOUND);
-	}
-
-	fread(&hdr, sizeof(hdr), 1, fp);
-
-	amx_Align16(&hdr.magic);
-
-	if (hdr.magic!=AMX_MAGIC) 
-	{
-		strcpy(error,"Invalid plugin");
-		return (amx->error = AMX_ERR_FORMAT);
-	}
-
-	amx_Align32((uint32_t *)&hdr.stp);
-	amx_Align32((uint32_t *)&hdr.size);
-
-	if ( (*program = new unsigned char[ (int)hdr.stp ]) == 0 )
-			//if ( (*program = malloc( (int)hdr.stp )) == 0 )
-	{
-		strcpy(error,"Failed to allocate memory");
-		fclose(fp);
-		return (amx->error = AMX_ERR_MEMORY);
-	}
-
-	rewind(fp);
-	fread(*program, 1, (size_t)hdr.size, fp);
-	fclose(fp);
-	*/
-
 	*error = 0;
 	CAmxxReader reader(filename, SMALL_CELL_SIZE / 8);
 	if (reader.GetStatus() == CAmxxReader::Err_None)
@@ -242,6 +201,7 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 	}
 
 	g_loadedscripts.put( aa );
+	amx->sysreq_d = 0;
 	return set_amxnatives(amx,error);
 }
 
@@ -277,7 +237,6 @@ int unload_amxscript(AMX* amx, void** program)
 	CList<CScript,AMX*>::iterator a = g_loadedscripts.find( amx  );
 	if ( a ) a.remove();
 	delete[] *program;
-	//free( *program );
 	*program = 0;
 	return AMX_ERR_NONE;
 }
@@ -983,3 +942,14 @@ void *Module_ReqFnptr(const char *funcName)
 	return NULL;
 }
 
+// :TODO: REMOVE!!!!!
+extern "C" void amxx_print(const char * fmt, ...)
+{
+ 	static char string[256];
+
+	va_list argptr;
+	va_start (argptr, fmt);
+	vsnprintf (string, 255, fmt, argptr);
+	va_end (argptr);
+	print_srvconsole(string);
+}

@@ -47,10 +47,6 @@ public:
 		Err_Decompress
 	};
 
-	typedef char		mint8_t;
-	typedef short		mint16_t;
-	typedef long		mint32_t;
-
 private:
 	Error m_Status;
 	FILE *m_pFile;
@@ -71,3 +67,4 @@ public:
 
 
 #endif // __AMXXFILE_H__
+

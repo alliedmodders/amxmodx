@@ -49,3 +49,4 @@ public:
 };
 
 #endif // __AMXXLOG_H__
+

@@ -65,7 +65,6 @@ pfnmodule_engine_g* g_engModuleFunc;		// These seem to be meta/amxmod related
 #define DATE __DATE__
 
 // Fun-specific defines below
-#define CVAR_FUN_VERSION		"fun_version"
 #define GETCLIENTLISTENING		(*g_engfuncs.pfnVoice_GetClientListening)
 #define SETCLIENTLISTENING		(*g_engfuncs.pfnVoice_SetClientListening)
 #define SETCLIENTMAXSPEED		(*g_engfuncs.pfnSetClientMaxspeed)
@@ -102,7 +101,6 @@ module_info_s module_info = {
   AMX_INTERFACE_VERSION,
   RELOAD_MODULE,
 };
-cvar_t fun_version = {"fun_version", "0.1", FCVAR_EXTDLL};
 
 // The stuff below might end up in a class soon
 int g_zones_toHit[33];		// where can people hit other people?

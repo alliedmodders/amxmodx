@@ -949,7 +949,7 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 	// JGHG added stuff below (initing stuff here)
 	//g_body = (1<<HITGROUP_GENERIC) | (1<<HITGROUP_HEAD) | (1<<HITGROUP_CHEST) | (1<<HITGROUP_STOMACH) | (1<<HITGROUP_LEFTARM) | (1<<HITGROUP_RIGHTARM)| (1<<HITGROUP_LEFTLEG) | (1<<HITGROUP_RIGHTLEG); // init hs_body
-	CVAR_REGISTER(&fun_version);
+
 	// generic is needed or bots go crazy... don't know what its for otherwise. You can still kill people.
 	// these hitzones never affect CS knife? ie you can always hit with knife no matter what you set here
 	//hs_body = (1<<HITGROUP_GENERIC) | (1<<HITGROUP_LEFTLEG) | (1<<HITGROUP_LEFTARM); // init hs_body

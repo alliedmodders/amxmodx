@@ -58,8 +58,6 @@ class EventsMngr
 		MSG_STRING,
 	};
 
-public:
-
 	enum CS_EventsIds
 	{
 		CS_Null = 0, 
@@ -68,6 +66,8 @@ public:
 //		CS_RoundStart,
 //		CS_Restart,
 	};
+
+public:
 
 	class ClEvent
 	{

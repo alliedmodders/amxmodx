@@ -1,33 +1,33 @@
-/* AMX Mod X
-*
-* by the AMX Mod X Development Team
-*  originally developed by OLO
-*
-*
-*  This program is free software; you can redistribute it and/or modify it
-*  under the terms of the GNU General Public License as published by the
-*  Free Software Foundation; either version 2 of the License, or (at
-*  your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful, but
-*  WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-*  General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software Foundation,
-*  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-*
-*  In addition, as a special exception, the author gives permission to
-*  link the code of this program with the Half-Life Game Engine ("HL
-*  Engine") and Modified Game Libraries ("MODs") developed by Valve,
-*  L.L.C ("Valve"). You must obey the GNU General Public License in all
-*  respects for all of the code used other than the HL Engine and MODs
-*  from Valve. If you modify this file, you may extend this exception
-*  to your version of the file, but you are not obligated to do so. If
-*  you do not wish to do so, delete this exception statement from your
-*  version.
-*/
+/*
+ * Copyright (c) 2002-2003 Aleksander Naszko
+ *
+ *    This file is part of AMX Mod.
+ *
+ *    AMX Mod is free software; you can redistribute it and/or modify it
+ *    under the terms of the GNU General Public License as published by the
+ *    Free Software Foundation; either version 2 of the License, or (at
+ *    your option) any later version.
+ *
+ *    AMX Mod is distributed in the hope that it will be useful, but
+ *    WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *    General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with AMX Mod; if not, write to the Free Software Foundation,
+ *    Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *    In addition, as a special exception, the author gives permission to
+ *    link the code of this program with the Half-Life Game Engine ("HL
+ *    Engine") and Modified Game Libraries ("MODs") developed by Valve,
+ *    L.L.C ("Valve").  You must obey the GNU General Public License in all
+ *    respects for all of the code used other than the HL Engine and MODs
+ *    from Valve.  If you modify this file, you may extend this exception
+ *    to your version of the file, but you are not obligated to do so.  If
+ *    you do not wish to do so, delete this exception statement from your
+ *    version.
+ *
+ */
 
 #include <extdll.h>
 #include <meta_api.h>
@@ -59,8 +59,8 @@ void report_error( int code, char* fmt, ... )
 		//File fp( "error_amx.log","a" );
 		//fp << string;
 		print_srvconsole( string );
-		print_srvconsole("[AMX] Make sure that modules are compatible with AMX Mod X %s\n" , AMX_VERSION );
-		print_srvconsole("[AMX] Please fix the problem then start the server again\n" );
+		UTIL_Log("[AMXX] Make sure that modules are compatible with AMX Mod X %s" , AMX_VERSION );
+		UTIL_Log("[AMXX] Please fix the problem then start the server again" );
 	}
 	sleep( 5 );
 	exit( code );
@@ -322,7 +322,7 @@ int loadModules(const char* filename)
 
   if ( !fp )
   {
-    print_srvconsole( "[AMX] Modules list not found (file \"%s\")\n",filename);
+    UTIL_Log( "[AMXX] Modules list not found (file \"%s\")",filename);
     return 0;
   }
 
@@ -351,19 +351,19 @@ int loadModules(const char* filename)
 
 	  switch(  cc->getStatusValue()  )  {
 	  case MODULE_BADLOAD:
-        report_error( 1 , "[AMX] Module is not a valid library (file \"%s\")\n",pathname );
+        report_error( 1 , "[AMXX] Module is not a valid library (file \"%s\")",pathname );
 		break;
 	  case MODULE_NOINFO:
-        report_error( 1 ,"[AMX] Couldn't find info. about module (file \"%s\")\n",pathname );
+        report_error( 1 ,"[AMXX] Couldn't find info. about module (file \"%s\")",pathname );
 		break;
 	  case MODULE_NOQUERY:
-		report_error( 1 , "[AMX] Couldn't find \"AMX_Query\" (file \"%s\")\n",  pathname );
+		report_error( 1 , "[AMXX] Couldn't find \"AMX_Query\" (file \"%s\")",  pathname );
 		break;
 	  case MODULE_NOATTACH:
-		report_error( 1 , "[AMX] Couldn't find \"AMX_Attach\" (file \"%s\")\n",  pathname );
+		report_error( 1 , "[AMXX] Couldn't find \"AMX_Attach\" (file \"%s\")",  pathname );
 		break;
 	  case MODULE_OLD:
-        report_error( 1 , "[AMX] Module has a different interface version (file \"%s\")\n",pathname );
+        report_error( 1 , "[AMXX] Module has a different interface version (file \"%s\")",pathname );
 		break;
 	  default:
 		++loaded; 
@@ -436,7 +436,7 @@ void dettachMetaModModules( const char* filename )
 
   if ( !fp )
   {
-    print_srvconsole( "[AMX] Modules list not found (file \"%s\")\n",filename);
+    UTIL_Log( "[AMXX] Modules list not found (file \"%s\")",filename);
     return;
   }
 
@@ -477,7 +477,7 @@ void attachMetaModModules( const char* filename )
 
   if ( !fp )
   {
-    print_srvconsole( "[AMX] Modules list not found (file \"%s\")\n",filename);
+    UTIL_Log( "[AMXX] Modules list not found (file \"%s\")",filename);
     return;
   }
 

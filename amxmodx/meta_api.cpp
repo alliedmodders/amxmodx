@@ -1,32 +1,32 @@
-/* AMX Mod X
+/*
+* Copyright (c) 2002-2003 Aleksander Naszko
 *
-* by the AMX Mod X Development Team
-*  originally developed by OLO
+*    This file is part of AMX Mod.
 *
+*    AMX Mod is free software; you can redistribute it and/or modify it
+*    under the terms of the GNU General Public License as published by the
+*    Free Software Foundation; either version 2 of the License, or (at
+*    your option) any later version.
 *
-*  This program is free software; you can redistribute it and/or modify it
-*  under the terms of the GNU General Public License as published by the
-*  Free Software Foundation; either version 2 of the License, or (at
-*  your option) any later version.
+*    AMX Mod is distributed in the hope that it will be useful, but
+*    WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+*    General Public License for more details.
 *
-*  This program is distributed in the hope that it will be useful, but
-*  WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-*  General Public License for more details.
+*    You should have received a copy of the GNU General Public License
+*    along with AMX Mod; if not, write to the Free Software Foundation,
+*    Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 *
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software Foundation,
-*  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+*    In addition, as a special exception, the author gives permission to
+*    link the code of this program with the Half-Life Game Engine ("HL
+*    Engine") and Modified Game Libraries ("MODs") developed by Valve,
+*    L.L.C ("Valve").  You must obey the GNU General Public License in all
+*    respects for all of the code used other than the HL Engine and MODs
+*    from Valve.  If you modify this file, you may extend this exception
+*    to your version of the file, but you are not obligated to do so.  If
+*    you do not wish to do so, delete this exception statement from your
+*    version.
 *
-*  In addition, as a special exception, the author gives permission to
-*  link the code of this program with the Half-Life Game Engine ("HL
-*  Engine") and Modified Game Libraries ("MODs") developed by Valve,
-*  L.L.C ("Valve"). You must obey the GNU General Public License in all
-*  respects for all of the code used other than the HL Engine and MODs
-*  from Valve. If you modify this file, you may extend this exception
-*  to your version of the file, but you are not obligated to do so. If
-*  you do not wish to do so, delete this exception statement from your
-*  version.
 */
 
 #include <extdll.h>
@@ -39,8 +39,8 @@ plugin_info_t Plugin_info = {
   AMX_VERSION,  // version
   __DATE__, // date
   "AMX Mod X Dev Team", // author
-  "http://www.amxmodx.org",  // url
-  "AMXX",  // logtag
+  "http://www.amxmod.info",  // url
+  "AMX",  // logtag
   PT_ANYTIME,// (when) loadable
   PT_ANYTIME,// (when) unloadable
 };
@@ -154,14 +154,14 @@ int InconsistentFile( const edict_t *player, const char *filename, char *disconn
           cell amx_addr2, *phys_addr2;
           if ((amx_Allot(c, 64 , &amx_addr1, &phys_addr1) != AMX_ERR_NONE) ||
             (amx_Allot(c, 64 , &amx_addr2, &phys_addr2) != AMX_ERR_NONE) ){
-            print_srvconsole("[AMX] Failed to allocate AMX memory (plugin \"%s\")\n",(*a).getPlugin()->getName());
+            UTIL_Log("[AMXX] Failed to allocate AMX memory (plugin \"%s\")",(*a).getPlugin()->getName());
           }
           else {
             int err;
             set_amxstring(c,amx_addr1,filename,63);
             set_amxstring(c,amx_addr2,disconnect_message,63);
             if ((err = amx_Exec(c,&ret, (*a).getFunction() , 3, pPlayer->index, amx_addr1, amx_addr2)) != AMX_ERR_NONE)
-              print_srvconsole("[AMX] Run time error %d on line %ld (plugin \"%s\")\n",
+              UTIL_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",
               err,c->curline,(*a).getPlugin()->getName());
             int len;
             strcpy(disconnect_message,get_amxstring(c,amx_addr2,0,len));
@@ -177,7 +177,7 @@ int InconsistentFile( const edict_t *player, const char *filename, char *disconn
 #ifdef ENABLEEXEPTIONS
     }catch( ... )
     {
-      print_srvconsole( "[AMX] fatal error at inconsistent file forward execution\n");
+      UTIL_Log( "[AMXX] fatal error at inconsistent file forward execution");
     }
 #endif
 
@@ -211,6 +211,10 @@ int Spawn( edict_t *pent ) {
 
   hostname = CVAR_GET_POINTER("hostname");
   mp_timelimit = CVAR_GET_POINTER("mp_timelimit");
+
+  // ###### Initialize logging]
+  g_log_dir.set( get_localinfo("amx_logdir" , "addons/amx/logs" ) );
+  UTIL_MakeNewLogFile();
 
   // ###### Initialize task manager
   g_tasksMngr.registerTimers( &gpGlobals->time, &mp_timelimit->value,  &g_game_timeleft     );
@@ -254,9 +258,6 @@ int Spawn( edict_t *pent ) {
     CVAR_SET_STRING( "amx_version", AMX_VERSION );
 	CVAR_SET_STRING( "amxmodx_version", AMX_VERSION );
   }
-
-  //  ######  Save log dir
-  g_log_dir.set( get_localinfo("amx_logdir" , "addons/amx/logs" ) );
 
   //  ######  Load Vault
   g_vault.setSource( build_pathname("%s",
@@ -439,6 +440,8 @@ void ServerDeactivate_Post() {
   g_xvars.clear();
   g_plugins.clear();
 
+  UTIL_Log("Log file closed.");
+
   RETURN_META(MRES_IGNORED);
 }
 
@@ -537,7 +540,7 @@ void ClientCommand( edict_t *pEntity ) {
       {
 
         if ((err = amx_Exec((*a).getPlugin()->getAMX(), &ret , (*a).getFunction(), 1, pPlayer->index)) != AMX_ERR_NONE)
-          print_srvconsole("[AMX] Run time error %d on line %ld (plugin \"%s\")\n",
+          UTIL_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",
           err,(*a).getPlugin()->getAMX()->curline,(*a).getPlugin()->getName() );
 
         if ( ret & 2 ) result = MRES_SUPERCEDE;
@@ -552,7 +555,7 @@ void ClientCommand( edict_t *pEntity ) {
 #ifdef ENABLEEXEPTIONS
   }catch( ... )
   {
-    print_srvconsole( "[AMX] fatal error at commmand forward execution\n");
+    UTIL_Log( "[AMXX] fatal error at commmand forward execution");
   }
 #endif
 
@@ -575,7 +578,7 @@ void ClientCommand( edict_t *pEntity ) {
       {
 
         if ((err =amx_Exec((*aa).getPlugin()->getAMX(), &ret , (*aa).getFunction()   , 3, pPlayer->index, (*aa).getFlags(),(*aa).getId()  )) != AMX_ERR_NONE)
-          print_srvconsole("[AMX] Run time error %d on line %ld (plugin \"%s\")\n",
+          UTIL_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",
           err,(*aa).getPlugin()->getAMX()->curline,(*aa).getPlugin()->getName());
 
         if ( ret & 2 )  result = MRES_SUPERCEDE;
@@ -588,7 +591,7 @@ void ClientCommand( edict_t *pEntity ) {
 #ifdef ENABLEEXEPTIONS
   }catch( ... )
   {
-    print_srvconsole( "[AMX] fatal error at client commmand execution\n");
+    UTIL_Log( "[AMXX] fatal error at client commmand execution");
   }
 #endif
   /* check menu commands */
@@ -615,7 +618,7 @@ void ClientCommand( edict_t *pEntity ) {
           {
 
             if ( ( err = amx_Exec((*a).getPlugin()->getAMX(), &ret ,(*a).getFunction() , 2, pPlayer->index,pressed_key)) != AMX_ERR_NONE)
-              print_srvconsole("[AMX] Run time error %d on line %ld (plugin \"%s\")\n",
+              UTIL_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",
               err,(*a).getPlugin()->getAMX()->curline,(*a).getPlugin()->getName());
 
             if ( ret & 2 ) result = MRES_SUPERCEDE;
@@ -629,7 +632,7 @@ void ClientCommand( edict_t *pEntity ) {
       }
       catch( ... )
       {
-        print_srvconsole( "[AMX] fatal error at menu commmand execution\n");
+        UTIL_Log( "[AMXX] fatal error at menu commmand execution");
       }
 #endif
     }
@@ -690,14 +693,14 @@ void StartFrame_Post( void ) {
 
         if (amx_Allot(plugin->getAMX(), task.getParamLen() , &amx_addr, &phys_addr) != AMX_ERR_NONE)
         {
-          print_srvconsole("[AMX] Failed to allocate AMX memory (task \"%d\") (plugin \"%s\")\n", task.getTaskId(),plugin->getName());
+          UTIL_Log("[AMXX] Failed to allocate AMX memory (task \"%d\") (plugin \"%s\")", task.getTaskId(),plugin->getName());
         }
         else
         {
           copy_amxmemory(phys_addr, task.getParam() , task.getParamLen() );
 
           if ((err = amx_Exec(plugin->getAMX(),NULL, task.getFunction() , 2, amx_addr, task.getTaskId() )) != AMX_ERR_NONE)
-            print_srvconsole("[AMX] Run time error %d on line %ld (task \"%d\") (plugin \"%s\")\n", err,plugin->getAMX()->curline,task.getTaskId(),plugin->getName());
+            UTIL_Log("[AMXX] Run time error %d on line %ld (task \"%d\") (plugin \"%s\")", err,plugin->getAMX()->curline,task.getTaskId(),plugin->getName());
 
           amx_Release(plugin->getAMX(), amx_addr);
         }
@@ -705,7 +708,7 @@ void StartFrame_Post( void ) {
       else // call without arguments
       {
         if ((err = amx_Exec(plugin->getAMX(),NULL, task.getFunction() ,1, task.getTaskId() )) != AMX_ERR_NONE)
-          print_srvconsole("[AMX] Run time error %d on line %ld (task \"%d\") (plugin \"%s\")\n", err,plugin->getAMX()->curline,task.getTaskId(),plugin->getName());
+          UTIL_Log("[AMXX] Run time error %d on line %ld (task \"%d\") (plugin \"%s\")", err,plugin->getAMX()->curline,task.getTaskId(),plugin->getName());
       }
     }
   }
@@ -802,7 +805,7 @@ void MessageEnd_Post(void) {
     {
 
       if ((err = amx_Exec((*a).getPlugin()->getAMX(), NULL ,  (*a).getFunction() , 1, mPlayerIndex  /*g_events.getArgInteger(0)*/ )) != AMX_ERR_NONE)
-        print_srvconsole("[AMX] Run time error %d on line %ld (plugin \"%s\")\n",err,(*a).getPlugin()->getAMX()->curline,(*a).getPlugin()->getName());
+        UTIL_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",err,(*a).getPlugin()->getAMX()->curline,(*a).getPlugin()->getName());
 
 
       ++a;
@@ -813,7 +816,7 @@ void MessageEnd_Post(void) {
   }
   catch( ... )
   {
-    print_srvconsole( "[AMX] fatal error at event execution\n");
+    UTIL_Log( "[AMXX] fatal error at event execution");
   }
 #endif
 #endif
@@ -889,7 +892,7 @@ void AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...) {
       while ( a )
       {
         if ((err = amx_Exec((*a).getPlugin()->getAMX(), NULL , (*a).getFunction() , 1,mPlayerIndex)) != AMX_ERR_NONE)
-          print_srvconsole("[AMX] Run time error %d on line %ld (plugin \"%s\")\n",err,(*a).getPlugin()->getAMX()->curline,(*a).getPlugin()->getName());
+          UTIL_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",err,(*a).getPlugin()->getAMX()->curline,(*a).getPlugin()->getName());
 
         ++a;
 
@@ -899,7 +902,7 @@ void AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...) {
     }
     catch( ... )
     {
-      print_srvconsole( "[AMX] fatal error at log event execution\n");
+      UTIL_Log( "[AMXX] fatal error at log event execution");
     }
 #endif
 #endif

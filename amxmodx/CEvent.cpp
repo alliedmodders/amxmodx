@@ -328,7 +328,7 @@ void EventsMngr::parseValue(const char *sz)
 			switch(condIter->second.type)
 			{
 			case '=': if (!strcmp(sz, condIter->second.sValue.c_str())) skip=true; break;
-			case '!': if (strcmp(sz, condIter->second.sValue.c_str())) skip=true; break;
+			case '!': if (!strstr(sz, condIter->second.sValue.c_str())) skip=true; break;
 			case '&': if (strstr(sz, condIter->second.sValue.c_str())) skip=true; break;
 			}
 			if (skip)
@@ -361,7 +361,7 @@ void EventsMngr::executeEvents()
 
 			if ((err = amx_Exec((*iter)->m_Plugin->getAMX(), NULL, (*iter)->m_Func, 1, m_ParseVault.size() ? m_ParseVault[0].iValue : 0)) != AMX_ERR_NONE)
 			{
-				print_srvconsole("[AMX] Run time error %d on line %ld (plugin \"%s\")\n", err, 
+				UTIL_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")", err, 
 					(*iter)->m_Plugin->getAMX()->curline, (*iter)->m_Plugin->getName());
 			}
 		}
@@ -370,7 +370,7 @@ void EventsMngr::executeEvents()
 	}
 	catch( ... )
 	{
-		print_srvconsole( "[AMX] fatal error at event execution\n");
+		UTIL_Log( "[AMXX] fatal error at event execution");
 	}
 #endif		// #ifdef ENABLEEXEPTIONS
 }
@@ -447,6 +447,7 @@ void EventsMngr::clearEvents(void)
 
 int EventsMngr::getEventId(const char* msg)
 {
+	// :TODO: Remove this somehow!!! :)
 	const struct CS_Events
 	{
 		const char* name;
@@ -459,6 +460,7 @@ int EventsMngr::getEventId(const char* msg)
 			//		{ "CS_Restart" ,	CS_Restart  },
 		{ "" ,				CS_Null  }
 	};
+
 	// if msg is a number, return it
 	int pos = atoi(msg);
 	if (pos != 0)
@@ -469,6 +471,6 @@ int EventsMngr::getEventId(const char* msg)
 		if ( !strcmp( table[ pos ].name , msg ) )
 			return table[ pos ].id;
 
-	// not found
+	// find the id of the message
 	return pos = GET_USER_MSG_ID(PLID, msg , 0 );
 }

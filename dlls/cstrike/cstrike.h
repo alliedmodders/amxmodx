@@ -115,7 +115,7 @@
 	#define OFFSET_CLIPAMMO				65 + EXTRAOFFSET // +14
 	#define OFFSET_SILENCER_FIREMODE	88 + EXTRAOFFSET // +14
 	// "hostage_entity" entities
-	#define OFFSET_HOSTAGEFOLLOW		107 + EXTRAOFFSET // +21
+	#define OFFSET_HOSTAGEFOLLOW		51 + EXTRAOFFSET // +21, long=51, int=107! (must use the long* offset becuase pointers on amd64 are stored the size of longs, 8 bytes, instead of the usual int 4 bytes.)
 	#define OFFSET_HOSTAGEID			516 + EXTRAOFFSET // +29
 #endif
 

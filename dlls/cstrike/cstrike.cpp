@@ -1235,7 +1235,12 @@ static cell AMX_NATIVE_CALL cs_set_hostage_follow(AMX *amx, cell *params) // cs_
 
 	// Set to not follow anything?
 	if (params[2] == 0) {
+#if !defined __amd64__
 		*((int *)pHostage->pvPrivateData + OFFSET_HOSTAGEFOLLOW) = 0;
+#else
+		*((long *)pHostage->pvPrivateData + OFFSET_HOSTAGEFOLLOW) = 0;
+#endif
+
 		return 1;
 	}
 

@@ -271,6 +271,11 @@ bool CModule::queryModule()
 	}
 	else
 	{
+		// old interface not 64 bit compatible
+#if SMALL_CELL_SIZE == 64
+		m_Status = MODULE_NOT64BIT;
+		return false;
+#else
 		// Try old interface
 		QUERYMOD queryFunc_Old = (QUERYMOD)DLPROC(m_Handle,"AMX_Query"); // check what version
 		if (!queryFunc_Old)
@@ -303,6 +308,7 @@ bool CModule::queryModule()
 		m_InfoOld->serial = (long int)this;
 		m_Status = MODULE_QUERY;
 		return true;
+#endif
 	}
 }
 

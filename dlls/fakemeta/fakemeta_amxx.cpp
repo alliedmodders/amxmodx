@@ -9,6 +9,7 @@ void OnAmxxAttach()
 	MF_AddNatives(pev_natives);
 	MF_AddNatives(forward_natives);
 	MF_AddNatives(pdata_natives);
+	MF_AddNatives(tr_Natives);
 }
 int GetHullBounds(int hullnumber, float *mins, float *maxs);
 // sawce:  Do not null out the forward for ServerActivate.  It's required for the INDEXENT() fix. (I don't think ServerActivate is planned on being forwarded anyway)

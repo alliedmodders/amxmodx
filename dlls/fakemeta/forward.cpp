@@ -97,7 +97,7 @@ void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *pentT
 	cell vec2[3] = {amx_ftoc(v2[0]), amx_ftoc(v2[1]), amx_ftoc(v2[2])};
 	cell retvec1 = MF_PrepareCellArray(vec1, 3);
 	cell retvec2 = MF_PrepareCellArray(vec2, 3);
-	FM_ENG_HANDLE(FM_TraceLine, (Engine[FM_TraceLine].at(i), vec1, vec2, fNoMonsters, ENTINDEX(pentToSkip), (cell)ptr));
+	FM_ENG_HANDLE(FM_TraceLine, (Engine[FM_TraceLine].at(i), retvec1, retvec2, fNoMonsters, ENTINDEX(pentToSkip), (cell)ptr));
 	RETURN_META(mswi(lastFmRes));
 }
 
@@ -107,7 +107,7 @@ void TraceLine_post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 	cell vec2[3] = {amx_ftoc(v2[0]), amx_ftoc(v2[1]), amx_ftoc(v2[2])};
 	cell retvec1 = MF_PrepareCellArray(vec1, 3);
 	cell retvec2 = MF_PrepareCellArray(vec2, 3);
-	FM_ENG_HANDLE(FM_TraceLine, (Engine[FM_TraceLine].at(i), vec1, vec2, fNoMonsters, ENTINDEX(pentToSkip), (cell)ptr));
+	FM_ENG_HANDLE(FM_TraceLine, (Engine[FM_TraceLine].at(i), retvec1, retvec2, fNoMonsters, ENTINDEX(pentToSkip), (cell)ptr));
 	RETURN_META(MRES_IGNORED);
 }
 

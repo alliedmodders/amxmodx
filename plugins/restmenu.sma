@@ -632,6 +632,7 @@ loadSettings(filename[]){
   return 1
 }
 
+#if !defined NO_STEAM
 // JGHG
 public fn_setautobuy(id) {
 	// Don't do anything if no items are blocked.
@@ -750,6 +751,7 @@ public fn_setrebuy(id) {
 public fn_rebuy(id) {
 }
 */
+#endif // !NO_STEAM
 
 public plugin_init() {
   register_plugin("Restrict Weapons","0.20","AMXX Dev Team")

@@ -357,3 +357,26 @@ enum {
     // Void (not supported)
     GL_pSaveData
 }
+
+enum
+{
+	usercmd_float_start,
+	usercmd_forwardmove,		// Float
+	usercmd_sidemove,			// Float
+	usercmd_upmove,				// Float
+	usercmd_float_end,
+	usercmd_int_start,
+	usercmd_lerp_msec,			// short
+	usercmd_msec,				// byte
+	usercmd_lightlevel,			// byte
+	usercmd_buttons,			// unsigned short
+	usercmd_impulse,			// byte
+	usercmd_weaponselect,		// byte
+	usercmd_impact_index,		// int
+	usercmd_int_end,
+	usercmd_vec_start,
+	usercmd_viewangles,			// Vector
+	usercmd_impact_position,	// vec
+	usercmd_vec_end
+
+};

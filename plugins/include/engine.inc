@@ -1,7 +1,7 @@
 /* Engine functions
 *
 * by the AMX Mod X Development Team
-*  thanks to Vexd
+*  thanks to Vexd and mahnsawce
 *
 * This file is provided as is (no warranties).
 */
@@ -18,7 +18,7 @@
  * or fully block it. Here is how it works:
  * If you hook a message, the message is stored but not sent. You have the opportunity to
  * not only execute code, but to get/set the contents of the message, before you choose to 
- * either block it or let it go on its way. The hooked function will be passed a msg_id. */
+ * either block it or let it go on its way. The hooked function will be passed a msg_id, msg_dest, and entity index. */
 native register_message(iMsgId, szFunction[]);
 
 /* The get/set _msg commands will utterly fail if used outside a hooked message scope.
@@ -43,18 +43,22 @@ native set_msg_arg_int(argn, argtype, iValue);
 native set_msg_arg_float(argn, argtype, Float:fValue);
 native set_msg_arg_string(argn, szString[]);
 
-/* Note, the offsets are passed as linux values, not windows values.
- * Although the engine module will automatically calculate the difference,
- * you must pass with the +5 linux offset (e.g. if 230 on windows, pass 235 no matter what) */
+/* Gets the origin of a message */
+native get_msg_origin(Float:_Origin[3]);
+
+/* NOTE: In old engine versions, this was not the case.  Values are now WINDOWS values.
+ * You must pass with the windows offset (e.g. if 230 on windows, pass 230 no matter what) 
+ * The module will automatically add +5 for Linux.
+ */
 
 /* Gets pvPrivateData offset. */
-native get_offset(id, offset);
+native get_offset_int(id, offset);
 native Float:get_offset_float(id, offset);
 native get_offset_short(id, offset);
 native get_offset_char(id, offset);
 
 /* sets pvPrivateData offset. */
-native set_offset(id, offset, value);
+native set_offset_int(id, offset, value);
 native set_offset_float(id, offset, Float:value);
 native set_offset_short(id, offset, value);
 native set_offset_char(id, offset, value);
@@ -88,11 +92,13 @@ native get_global_vector(variable, Float:vector[3]);
 native get_global_edict(variable);
 
 /* Set entity bounds. */
-native set_size(index, Float:mins[3], Float:maxs[3]);
+native entity_set_size(index, Float:mins[3], Float:maxs[3]);
 
 /* Get decal index */
 native get_decal_index(const szDecalName[]);
 
+/* Returns the distance between two entities. */
+native Float:entity_range(ida,idb);
 
 /* Sets/gets things in an entities Entvars Struct. */
 native entity_get_int(iIndex, iKey);
@@ -123,6 +129,10 @@ native find_ent_in_sphere(start_from_ent, Float:origin[3], Float:radius);
 
 //this will CBaseEntity::Think() or something from the entity
 native call_think(entity)
+
+/* Mirrors CBaseEntity->TakeDamage() - Forces an entity to take damage.
+   Potential for crash.  If you have problems with this, I suggest using fakedamage(). */
+native takedamage(idVictim,idInflictor,idAttacker,Float:takedmgdamage,damagetype);
 
 /* Is entity valid? */
 native is_valid_ent(iIndex);
@@ -161,12 +171,17 @@ native PointContents(Float:fCheckAt[3]);
  * and an entity index if an entity is hit. */
 native trace_line(iIgnoreEnt, Float:fStart[3], Float:fEnd[3], Float:vReturn[3]);
 
+/* Traces a hull. */
+native trace_hull(Float:origin[3],hull,ignoredent=0,ignoremonsters=0);
+
 /* Traces a line, and returns the normal to the plane hit in vReturn.
  * Returns 0 if theres no normal. */
 native trace_normal(iIgnoreEnt, Float:fStart[3], Float:fEnd[3], Float:vReturn[3]);
 
 /* Changes a Vector to an Angle vector. */
 native vector_to_angle(Float:fVector[3], Float:vReturn[3]);
+
+native anglevector(Float:vector[3],FRU,Float:ret[3])
 
 /* Gets the length of a vector (float[3]). */
 native Float:vector_length(Float:vVector[3]);
@@ -193,6 +208,21 @@ native attach_view(iIndex, iTargetIndex);
 /* Sets Player's View Mode. */
 native set_view(iIndex, ViewType);
 
+/* Direct copy of PLAYBACK_EVENT_FULL from Metamod/HLSDK.  If you don't know how that works, you probably shouldn't be using it. */
+native playback_event(flags,invoker,eventindex,Float:delay,Float:origin[3],Float:angles[3],Float:fparam1,Float:fparam2,iparam1,iparam2,bparam1,bparam2);
+
+/* Gets parameters sent from CmdStart.
+   Note that you will receive modified values if any other plugin have
+   changed them. */
+native get_usercmd(type,{Float,_}:...);
+
+/* Sets the parameters sent from CmdStart.
+   Note that your changes will be seen by any other plugin doing get_usercmd() */
+native set_usercmd(type,{Float,_}:...);
+
+/* FORWARDS 
+ **********/
+
 /* Called when 2 entities touch. */
 forward pfn_touch(ptr, ptd);
 
@@ -209,8 +239,22 @@ forward client_PostThink(id);
 /* Forward for impulses. */
 forward client_impulse(id, impulse);
 
+forward server_changelevel(map[]);
+
+/* Called when an entity "thinks" (DispatchThink) */
+forward pfn_think(entid);
+
+/* Called when an event is played */
+forward PlaybackEvent(flags, entid, eventid, Float:delay, Float:Origin[3], Float:Angles[3], Float:fparam1, Float:fparam2, iparam1, iparam2, bparam2);
+
+/* Called when an entity is spawned */
+forward pfn_spawn(entid);
+
+/* Called when an object uses another object */
+forward pfn_use(user, used);
+
 //from jghg2
-/* Returns number of ents stored in entlist. Use to find a specific type of entity classname (specify in _lookforclassname) around a
+/* As above, but returns number of ents stored in entlist. Use to find a specific type of entity classname (specify in _lookforclassname) around a
  * certain entity specified in aroundent. All matching ents are stored in entlist. Specify max amount of entities to find in maxents.
  * If aroundent is 0 its origin is not used, but origin in 6th parameter. Ie, do not specify 6th parameter (origin) if you specified an entity
  * in aroundent.

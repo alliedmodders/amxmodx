@@ -11,14 +11,38 @@
 #endif
 #define _engine_stocks_included
 
+stock fakedamage(idvictim,szClassname[],Float:takedmgdamage,damagetype)
+{
+	new entity = create_entity("trigger_hurt")
+	if (entity)
+	{
+		DispatchKeyValue(entity,"classname","trigger_hurt")
+		new szDamage[16]
+		// Takedamages only do half damage per attack (damage is damage per second, and it's triggered in 0.5 second intervals).
+		// Compensate for that.
+		format(szDamage,15,"%f",takedmgdamage * 2)
+		DispatchKeyValue(entity,"dmg",szDamage)
+		format(szDamage,15,"%i",damagetype)
+		DispatchKeyValue(entity,"damagetype",szDamage)
+		DispatchKeyValue(entity,"origin","8192 8192 8192")
+		spawn(entity)
+		entity_set_string(entity, EV_SZ_classname, szClassname)
+		fake_touch(entity,idvictim)
+		remove_entity(entity)
+		return 1
+	}
+	return 0
+}
+
 //wrapper for find_ent_by_class
 stock find_ent(iStart, szClassname[])
 {
 	return find_ent_by_class(iStart, szClassname)
 }
 
-/* Changes an integer vec to a floating vec */
-
+/* Changes an integer vec to a floating vec
+ * This is not a for loop because that's slower
+ */
 stock IVecFVec(IVec[3], Float:FVec[3])
 {
 	FVec[0] = float(IVec[0])
@@ -205,7 +229,12 @@ stock get_entity_visibility(entity) {
 	return (entity_get_int(entity, EV_INT_effects) & EF_NODRAW)
 }
 
-/* Returns true if entity is on ground, else false. */
-stock entity_is_on_ground(entity) {
-	return entity_get_int(entity, EV_INT_flags) & FL_ONGROUND
+stock set_user_velocity(entity, Float:vec[3])
+{
+	return entity_set_vector(entity, EV_SZ_velocity, vec)
+}
+
+stock get_user_velocity(entity, Flaot:vec[3])
+{
+	return entity_get_vector(entity, EV_SZ_velocity, vec)
 }

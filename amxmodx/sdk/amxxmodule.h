@@ -1944,7 +1944,11 @@ typedef int				(*PFN_IS_PLAYER_CONNECTING)		(int /*id*/);
 typedef int				(*PFN_IS_PLAYER_HLTV)			(int /*id*/);
 typedef int				(*PFN_GET_PLAYER_ARMOR)			(int /*id*/);
 typedef int				(*PFN_GET_PLAYER_HEALTH)		(int /*id*/);
+#ifdef USE_METAMOD
 typedef edict_t *		(*PFN_GET_PLAYER_EDICT)			(int /*id*/);
+#else
+typedef void *			(*PFN_GET_PLAYER_EDICT)			(int /*id*/);
+#endif
 
 typedef void *			(*PFN_ALLOCATOR)				(const char* /*filename*/, const unsigned int /*line*/, const char* /*func*/,
 														 const unsigned int /*type*/, const size_t /*size*/);

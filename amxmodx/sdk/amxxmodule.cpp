@@ -2479,7 +2479,9 @@ PFN_REGISTER_SPFORWARD_BYNAME	g_fn_RegisterSPForwardByName;
 PFN_UNREGISTER_SPFORWARD	g_fn_UnregisterSPForward;
 PFN_MERGEDEFINITION_FILE	g_fn_MergeDefinition_File;
 PFN_AMX_FINDNATIVE			g_fn_AmxFindNative;
-PFN_GETPLAYERFLAGS		g_fn_GetPlayerFlags;
+PFN_GETPLAYERFLAGS			g_fn_GetPlayerFlags;
+PFN_GET_PLAYER_EDICT		g_fn_GetPlayerEdict;
+PFN_FORMAT					g_fn_Format;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)

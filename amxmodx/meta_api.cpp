@@ -87,6 +87,7 @@ float g_game_restarting;
 float g_game_timeleft;
 float g_task_time;
 float g_auth_time;
+bool g_initialized = false;
 
 #ifdef MEMORY_TEST
 float g_next_memreport_time;
@@ -200,6 +201,9 @@ const char*	get_localinfo( const char* name	, const	char* def )
 // Initialize AMX stuff	and	load it's plugins from plugins.ini list
 // Call	precache forward function from plugins
 int	C_Spawn( edict_t *pent ) {
+  if (g_initialized)
+	  RETURN_META_VALUE(MRES_IGNORED, 0);
+  g_initialized = true;
   g_forcedmodules =	false;
   g_forcedsounds = false;
 
@@ -297,9 +301,6 @@ int	C_Spawn( edict_t *pent ) {
   }
 
 
-  // HACKHACK:
-  //  Make sure this function wont be called anymore
-  g_FakeMeta.m_Plugins.begin()->GetDllFuncTable().pfnSpawn = NULL;
   RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
@@ -441,11 +442,6 @@ void C_ServerDeactivate()	{
 // However leave AMX modules which are loaded only once
 void C_ServerDeactivate_Post() {
 
-  // HACKHACK:
-  //  Make sure the spawn function will be called again
-  // pft that's not really a hack
-  g_FakeMeta.m_Plugins.begin()->GetDllFuncTable().pfnSpawn = C_Spawn;
-
   detachReloadModules();
   g_auth.clear();
   g_forwards.clear();
@@ -524,6 +520,7 @@ void C_ServerDeactivate_Post() {
 	}
 #endif // MEMORY_TEST
 
+  g_initialized = false;
   RETURN_META(MRES_IGNORED);
 }
 

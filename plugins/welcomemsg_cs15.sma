@@ -51,7 +51,7 @@ public plugin_init()
   register_plugin("Welcome Message","0.1","AMXX Dev Team")
   g_cstrikeRunning = is_running("cstrike")
 #if defined READ_FROM_FILE
-  build_path( g_motdFile , 63 , "$basedir/conmotd.txt" )
+  build_path( g_motdFile , 63 , "$basedir/configs/conmotd.txt" )
 #endif  
 }
 

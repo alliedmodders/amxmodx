@@ -7,12 +7,14 @@ int damage;
 int TA;
 int weapon;
 int aim;
+bool ignore;
 CPlayer *pAttacker;
 
 
 void Client_ResetHUD(void* mValue){
-	if ( mPlayer ) 
+	if ( mPlayer ){ 
 		mPlayer->clearStats = gpGlobals->time + 0.25f;
+	}
 }
 
 void Client_WeaponList(void* mValue){
@@ -50,22 +52,29 @@ void Client_Damage(void* mValue){
   static int bits;
   switch (mState++) {
   case 1: 
+	ignore = false;
     damage = *(int*)mValue;
     break;
   case 2:
     bits = *(int*)mValue;
     break;
   case 3:
-    if (!mPlayer || !damage || !*(float*)mValue || bits)  break;
+	  if (!mPlayer || !damage || !*(float*)mValue || bits)  {
+	    ignore = true;
+		break;
+	  }
     edict_t *enemy;
 	enemy = mPlayer->pEdict->v.dmg_inflictor;
     
-	if ( FNullEnt( enemy ) )
+	if ( FNullEnt( enemy ) ){
+		ignore = true;
 		break;
+	}
+
 	aim = 0;
 	weapon = 0;
 	pAttacker = NULL;
-    
+
 	if (enemy->v.flags & (FL_CLIENT | FL_FAKECLIENT) ) {
 		pAttacker = GET_PLAYER_POINTER(enemy);
 		aim = pAttacker->aiming;
@@ -81,7 +90,7 @@ void Client_Damage(void* mValue){
 }
 
 void Client_Damage_End(void* mValue){
-	if ( !mPlayer || !damage )
+	if ( ignore )
 		return;
 
 	if ( !pAttacker ) pAttacker = mPlayer;
@@ -204,3 +213,4 @@ void Client_BarTime(void* mValue){
 		g_bombAnnounce = BOMB_DEFUSING;
 	}
 }
+

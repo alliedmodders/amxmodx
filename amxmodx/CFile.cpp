@@ -94,6 +94,7 @@ File& operator>>( File& f, char* n )
 int File::getline( char* buf, int sz )
 {
   int a = sz;
+  char *origBuf = buf;
   if ( *this )
   {
     int c;
@@ -101,6 +102,15 @@ int File::getline( char* buf, int sz )
       *buf++ = c;
     *buf = 0;
   }
+
+  // trim 0x0a and 0x0d characters at the end
+  while (buf != origBuf)
+  {
+    if (*buf == 0x0a || *buf == 0x0d)
+		*buf = 0;
+	--buf;
+  }
+
   return a - sz;
 }
 

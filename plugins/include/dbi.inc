@@ -48,7 +48,7 @@ native Result:dbi_query(Sql:_sql, _query[], {Float,_}:...);
 /* Returns 0 on failure or End of Results.
  * Advances result pointer by one row.
  */
-native dbi_nextrow(Result:_result=1);
+native dbi_nextrow(Result:_result);
 
 /* Gets a field by number.  Returns 0 on failure.
  * Although internally fields always start from 0, 

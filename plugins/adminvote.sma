@@ -65,16 +65,6 @@ public plugin_init() {
   register_concmd("amx_voteban","cmdVoteKickBan",ADMIN_VOTE,"<name or #userid>")
   register_concmd("amx_vote","cmdVote",ADMIN_VOTE,"<question> <answer#1> <answer#2>")
   register_concmd("amx_cancelvote","cmdCancelVote",ADMIN_VOTE,"- cancels last vote")
-  register_cvar("amx_votekick_ratio","0.40") 
-  register_cvar("amx_voteban_ratio","0.40") 
-  register_cvar("amx_votemap_ratio","0.40") 
-  register_cvar("amx_vote_ratio","0.02") 
-  register_cvar("amx_vote_time","10") 
-  register_cvar("amx_vote_answers","1") 
-  register_cvar("amx_vote_delay","60")
-  register_cvar("amx_last_voting","0")
-  set_cvar_float("amx_last_voting",0.0)
-  register_cvar("amx_show_activity","2")
   g_cstrikeRunning = is_running("cstrike")
 }
 

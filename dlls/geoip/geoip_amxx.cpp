@@ -39,6 +39,12 @@ void OnAmxxAttach()
 	MF_AddNatives(geoip_natives);
 }
 
+void OnAmxxDetach()
+{
+	GeoIP_delete(gi);
+	gi = NULL;
+}
+
 AMX_NATIVE_INFO geoip_natives[] = {
 	{"geoip_code2",		amx_geoip_code2},
 	{"geoip_code3",		amx_geoip_code3},

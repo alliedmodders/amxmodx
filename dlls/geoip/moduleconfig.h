@@ -10,7 +10,7 @@
 #define MODULE_URL "http://www.bailopan.com/"
 #define MODULE_LOGTAG "GEOIP"
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line
-#define MODULE_RELOAD_ON_MAPCHANGE
+//#define MODULE_RELOAD_ON_MAPCHANGE
 
 #ifdef __DATE__
 #define MODULE_DATE __DATE__
@@ -29,7 +29,7 @@
 //   Do native functions init here (MF_AddNatives)
 #define FN_AMXX_ATTACH OnAmxxAttach
 // AMXX dettach
-//#define FN_AMXX_DETTACH OnAmxxDettach
+#define FN_AMXX_DETTACH OnAmxxDettach
 // All plugins loaded
 //   Do forward functions init here (MF_RegisterForward)
 // #define FN_AMXX_PLUGINSLOADED OnPluginsLoaded

@@ -188,6 +188,9 @@ native is_dedicated_server();
 native is_linux_server();
 
 /* Returns 1 or 0. */
+native is_amd64_server();
+
+/* Returns 1 or 0. */
 native is_jit_enabled();
 
 /* If player is not attacked function returns 0, in other

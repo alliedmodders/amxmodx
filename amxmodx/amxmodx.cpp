@@ -351,6 +351,15 @@ static cell AMX_NATIVE_CALL is_linux_server(AMX *amx, cell *params)
 #endif
 }
 
+static cell AMX_NATIVE_CALL is_amd64_server(AMX *amx, cell *params)
+{
+#if SMALL_CELL_SIZE==64
+  return 1;
+#else
+  return 0;
+#endif
+}
+
 static cell AMX_NATIVE_CALL is_jit_enabled(AMX *amx, cell *params)		// PM: Useless ;P
 {
 #ifdef JIT
@@ -2731,6 +2740,7 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "get_xvar_num",     get_xvar_num },
   { "is_dedicated_server",is_dedicated_server },
   { "is_linux_server",    is_linux_server },
+  { "is_amd64_server",	is_amd64_server },
   { "is_jit_enabled",		is_jit_enabled },
   { "is_user_authorized", is_user_authorized },
   { "is_map_valid",     is_map_valid },

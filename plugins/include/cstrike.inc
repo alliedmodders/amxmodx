@@ -118,10 +118,8 @@ enum CsTeams {
 };
 native cs_get_user_team(index);
 
-/* Set user team without killing player (so you can move hostages, plant bomb etc as terrorist).
- * Note: Effect may vary between different versions of CS.
- * If model is anything other than 0, that will be set as player's model.
- * Model updates when player spawns.
+/* Set user team without killing player.
+ * If model is anything other than CS_DONTCHANGE, that will be set as player's model.
  */
 enum CsInternalModel {
 	CS_DONTCHANGE = 0,

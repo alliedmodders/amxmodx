@@ -537,17 +537,31 @@ static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params) // cs_set_u
 	if (model != 0)
 		*((int *)pPlayer->pvPrivateData + OFFSET_INTERNALMODEL) = model;
 	
-	/*switch (params[2]) {
+	// This makes the model get updated right away.
+	MDLL_ClientUserInfoChanged(pPlayer, GETINFOKEYBUFFER(pPlayer)); //  If this causes any problems for WON, do this line only in STEAM builds.
+
+	// And update scoreboard by sending TeamInfo msg.
+	char teaminfo[32];
+	switch (params[2]) {
+		case TEAM_UNASSIGNED:
+			strcpy(teaminfo, "UNASSIGNED");
+			break;
 		case TEAM_T:
+			strcpy(teaminfo, "TERRORIST");
+			break;
 		case TEAM_CT:
+			strcpy(teaminfo, "CT");
+			break;
 		case TEAM_SPECTATOR:
-			(int)*((int *)pPlayer->pvPrivateData + OFFSET_TEAM) = params[2];
+			strcpy(teaminfo, "SPECTATOR");
 			break;
 		default:
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-			return 0;
+			sprintf(teaminfo, "TEAM_%d", params[2]);
 	}
-	*/
+	MESSAGE_BEGIN(MSG_ALL, GET_USER_MSG_ID(PLID, "TeamInfo", NULL));
+	WRITE_BYTE(params[1]);
+	WRITE_STRING(teaminfo);
+	MESSAGE_END();
 
 	return 1;
 }

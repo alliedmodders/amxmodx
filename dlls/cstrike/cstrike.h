@@ -199,6 +199,7 @@ pfnmodule_engine_g* g_engModuleFunc;
 
 #define PLAYER_IS_VIP					(1<<8)
 
+#define TEAM_UNASSIGNED					0
 #define TEAM_T							1
 #define TEAM_CT							2
 #define TEAM_SPECTATOR					3

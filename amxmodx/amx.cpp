@@ -562,10 +562,7 @@ static int amx_BrowseRelocate(AMX *amx)
     } /* if */
     #if defined __GNUC__ || defined ASM32 || defined JIT
       /* relocate symbol */
-      #if defined JIT && defined __linux__
-      #else
       *(cell *)(code+(int)cip) = opcode_list[op];
-    #endif
     #endif
     #if defined JIT
       opcode_count++;
@@ -788,10 +785,6 @@ static int amx_BrowseRelocate(AMX *amx)
   } /* for */
 
   #if defined JIT
-    #if defined __linux__
-      // HACK: Determine maxcodesize
-      asm_runJIT(NULL, NULL, NULL);
-    #endif
     amx->code_size = getMaxCodeSize()*opcode_count + hdr->cod
                      + (hdr->stp - hdr->dat);
     amx->reloc_size = 2*sizeof(cell)*reloc_count;
@@ -1056,40 +1049,16 @@ int AMXAPI amx_Init(AMX *amx,void *program)
     }
 
   #else /* #if defined __WIN32 __ */
-
-    // TODO: Add cases for Linux, Unix, OS/2, ...
-	#if defined __linux__
-		int memoryFullAccess(void* addr, int len)
-		{
-			//int oldProt = get_page_prot(addr);
-			void* newAddr = (void*) ((int)addr - (int)addr % getpagesize());
-			len += (int)addr % getpagesize();
-			if (mprotect(newAddr, len, PROT_READ | PROT_WRITE | PROT_EXEC) != -1)
-				return PROT_READ | PROT_WRITE | PROT_EXEC;
-			else
-				return 0;
-		}
-
-		int memorySetAccess(void* addr, int len, int access)
-		{
-			//int oldProt = get_page_prot(addr);
-			void* newAddr = (void*) ((int)addr - (int)addr % getpagesize());
-			len += (int)addr % getpagesize();
-			mprotect(newAddr, len, access);
-			return 0;
-		}
-	#else
-		// DOS32 has no imposed limits on its segments.
-		#if defined __BORLANDC__ || defined __WATCOMC__
-			#pragma argsused
-		#endif
-		int memoryFullAccess( void* addr, int len ) { return 1; }
-
-		#if defined __BORLANDC__ || defined __WATCOMC__
-			#pragma argsused
-		#endif
-		int memorySetAccess( void* addr, int len, int access ) { return 1; }
+	// DOS32 has no imposed limits on its segments.
+	#if defined __BORLANDC__ || defined __WATCOMC__
+		#pragma argsused
 	#endif
+	int memoryFullAccess( void* addr, int len ) { return 1; }
+
+	#if defined __BORLANDC__ || defined __WATCOMC__
+		#pragma argsused
+	#endif
+	int memorySetAccess( void* addr, int len, int access ) { return 1; }
 
   #endif /* #if defined __WIN32 __ */
 

@@ -370,10 +370,93 @@ static cell AMX_NATIVE_CALL ns_user_kill(AMX *amx, cell *params)
 
   return 0;
 }
+#define ANGLEVECTORS        (*g_engfuncs.pfnAngleVectors)
+static cell AMX_NATIVE_CALL ns_user_slap(AMX *amx, cell *params) /* 2 param */
+{
+  int index = params[1];
+  if (index<1||index>gpGlobals->maxClients)
+    return 0;
+  int power = abs((int)params[2]);
+  edict_t *e=INDEXENT2(index);
+  if (e->v.iuser3 == 2 /* Commander class*/)
+    return 0;
+
+  if (MF_IsPlayerIngame(index) && MF_IsPlayerAlive(index)) {
+	  if (e->v.health <= power) {
+      float bef = e->v.frags;
+      /*MDLL_ClientKill(pPlayer->pEdict);*/
+      edict_t *pEntity = CREATE_NAMED_ENTITY(MAKE_STRING("trigger_hurt"));
+      if (pEntity)
+      {
+        KeyValueData kvd;
+        kvd.szClassName="trigger_hurt";
+        kvd.szKeyName="classname";
+        kvd.szValue="trigger_hurt";
+        kvd.fHandled=0;
+        MDLL_KeyValue(pEntity,&kvd);
+        kvd.szClassName="trigger_hurt";
+        kvd.szKeyName="dmg";
+        kvd.szValue="20000.0";
+        kvd.fHandled=0;
+        MDLL_KeyValue(pEntity,&kvd);
+        kvd.szClassName="trigger_hurt";
+        kvd.szKeyName="damagetype";
+        kvd.szValue="1";
+        kvd.fHandled=0;
+        MDLL_KeyValue(pEntity,&kvd);
+        kvd.szClassName="trigger_hurt";
+        kvd.szKeyName="origin";
+        kvd.szValue="8192 8192 8192";
+        kvd.fHandled=0;
+        MDLL_KeyValue(pEntity,&kvd);
+        MDLL_Spawn(pEntity);
+        pEntity->v.classname=MAKE_STRING("slap");
+        MDLL_Touch(pEntity,e);
+        REMOVE_ENTITY(pEntity);
+      }
+
+      e->v.frags = bef;
+    }
+    else {
+      edict_t *pEdict = e;
+      int numparam = *params/sizeof(cell);
+      if (numparam<3 || params[3]) {
+        pEdict->v.velocity.x += RANDOM_LONG(-600,600);
+        pEdict->v.velocity.y += RANDOM_LONG(-180,180);
+        pEdict->v.velocity.z += RANDOM_LONG(100,200);
+      }
+      else {
+        vec3_t v_forward, v_right;
+        vec3_t vang = pEdict->v.angles;
+        float fang[3];
+        fang[0] = vang.x;
+        fang[1] = vang.y;
+        fang[2] = vang.z;
+        ANGLEVECTORS( fang, v_forward, v_right, NULL );
+        pEdict->v.velocity = pEdict->v.velocity + v_forward * 220 + Vector(0,0,200);
+      }
+      pEdict->v.punchangle.x = RANDOM_LONG(-10,10);
+      pEdict->v.punchangle.y = RANDOM_LONG(-10,10);
+      pEdict->v.health -= power;
+      int armor = (int)pEdict->v.armorvalue;
+      armor -= power;
+      if (armor < 0) armor = 0;
+      pEdict->v.armorvalue = armor;
+      pEdict->v.dmg_inflictor = pEdict;
+      static const char *bit_sound[3] = {
+        "weapons/cbar_hitbod1.wav",
+        "weapons/cbar_hitbod2.wav",
+        "weapons/cbar_hitbod3.wav" };
+      EMIT_SOUND_DYN2(pEdict, CHAN_VOICE, bit_sound[RANDOM_LONG(0,2)], 1.0, ATTN_NORM, 0, PITCH_NORM);
+    }
+    return 1;
+  }
+  return 0;
+}
 AMX_NATIVE_INFO ns_misc_natives[] = {
 	   ///////////////////
 	{ "user_kill",				ns_user_kill },
-
+	{ "user_slap",				ns_user_slap },
 
 	{ "ns_get_build",			ns_get_build },
 

@@ -1,5 +1,4 @@
 // FUN MODULE TO DO HERE: http://www.amxmod.info/forums/viewtopic.php?t=37
-//#define FUN_LINUX // UNCOMMENT WHEN COMPILING FOR LINUX, OR PDATA OFFSETS WILL CRASH SERVER
 
 #include <extdll.h>
 #include <meta_api.h>
@@ -39,7 +38,7 @@ pfnmodule_engine_g* g_engModuleFunc;		// These seem to be meta/amxmod related
 #define SETCLIENTLISTENING	(*g_engfuncs.pfnVoice_SetClientListening)
 #define	SF_NORESPAWN		( 1 << 30 )// !!!set this bit on guns and stuff that should never respawn.
 
-#if defined FUN_LINUX
+#if defined __linux__
 	#define CSMONEYOFFSET	115 + 5
 	#define CSDEATHSOFFSET	449 + 5
 #else

@@ -192,7 +192,6 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params) // native give_ite
 	// Check index.
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
-		MF_Log("Failed at first check.  Param: %d", params[1]);
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -202,7 +201,6 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params) // native give_ite
 
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
-		MF_Log("Failed at second check.  Param: %p", pPlayer);
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}

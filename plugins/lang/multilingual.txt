@@ -94,7 +94,6 @@ SAVE_LANG = Spara sprak
 SET_LANG_SERVER = Serverspraket har satts till "%s"
 SET_LANG_USER = Ditt sprak har satts till "%s"
 TYPE_LANGMENU = Skriv 'amx_langmenu' i konsolen f'o'r att visa Sprakvalsmenyn
-TYPE_LANGMENU = Skriv 'amx_langmenu' i konsolen f'o'r att visa Sprakvalsmenyn
 
 [tr]
 LANG_NOT_EXISTS = Aradiginiz dil mevcud degildir

@@ -370,7 +370,7 @@ uint16_t * AMXAPI amx_Align16(uint16_t *v)
 
 uint32_t * AMXAPI amx_Align32(uint32_t *v)
 {
-  assert(sizeof(cell)==4);
+  assert(sizeof(*v)==4);
   init_little_endian();
   if (!amx_LittleEndian)
     swap32(v);
@@ -380,7 +380,7 @@ uint32_t * AMXAPI amx_Align32(uint32_t *v)
 #if defined _I64_MAX || defined HAVE_I64
 uint64_t * AMXAPI amx_Align64(uint64_t *v)
 {
-	assert(sizeof(cell)==8);
+	assert(sizeof(*v)==8);
 	init_little_endian();
 	if (!amx_LittleEndian)
 		swap64(v);

@@ -41,16 +41,6 @@ stock set_entity_origin(index, origin[3]) {
 	entity_set_vector(index, EV_VEC_origin, vector)
 }
 
-/* Gets the velocity of a player */
-stock get_user_velocity(index, velocity[3]) {
-	get_entity_velocity(index, velocity)
-}
-
-/* Sets the velocity of a player */
-stock set_user_velocity(index, velocity[3]) {
-	set_entity_velocity(index, velocity)
-}
-
 /* Get the index of the grenade belonging to index.
  * Model of grenade is returned in model[].
  * Specify the grenadeindex to start searching from,

@@ -406,11 +406,10 @@ static cell AMX_NATIVE_CALL amx_filesize(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amx_fgetl(AMX *amx, cell *params)
 {
 	FILE *fp = (FILE *)params[1];
-	long *t;
-	t = new long;
+	long t;
 	if (fp) {
-		fread(t, sizeof(long), 1, fp);
-		return *t;
+		fread(&t, sizeof(long), 1, fp);
+		return t;
 	}
 	return -1;
 }
@@ -418,11 +417,10 @@ static cell AMX_NATIVE_CALL amx_fgetl(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amx_fgeti(AMX *amx, cell *params)
 {
 	FILE *fp = (FILE *)params[1];
-	int *t;
-	t = new int;
+	int t;
 	if (fp) {
-		fread(t, sizeof(int), 1, fp);
-		return *t;
+		fread(&t, sizeof(int), 1, fp);
+		return t;
 	}
 	return -1;
 }
@@ -430,11 +428,10 @@ static cell AMX_NATIVE_CALL amx_fgeti(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amx_fgets(AMX *amx, cell *params)
 {
 	FILE *fp = (FILE *)params[1];
-	short *t;
-	t = new short;
+	short t;
 	if (fp) {
-		fread(t, sizeof(short), 1, fp);
-		return *t;
+		fread(&t, sizeof(short), 1, fp);
+		return t;
 	}
 	return -1;
 }
@@ -472,11 +469,10 @@ static cell AMX_NATIVE_CALL amx_fputi(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amx_fgetf(AMX *amx, cell *params)
 {
 	FILE *fp = (FILE *)params[1];
-	float *t;
-	t = new float;
+	float t;
 	if (fp) {
-		fread(t, sizeof(float), 1, fp);
-		return *(cell*)((void *)t);
+		fread(&t, sizeof(float), 1, fp);
+		return *(cell*)&t;
 	}
 	return -1;
 }

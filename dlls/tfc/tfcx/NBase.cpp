@@ -425,6 +425,14 @@ static cell AMX_NATIVE_CALL get_stats_size(AMX *amx, cell *params){
 	return 8;
 }
 
+static cell AMX_NATIVE_CALL is_custom(AMX *amx, cell *params){
+	int weapon = params[1];
+	if (  weapon < TFCMAX_WEAPONS-TFCMAX_CUSTOMWPNS ){
+		return 0;
+	}
+	return 1;
+}
+
 // Native list.
 AMX_NATIVE_INFO base_Natives[] = {
 	{"tfc_setmodel", TFC_SetModel},
@@ -439,6 +447,7 @@ AMX_NATIVE_INFO base_Natives[] = {
 	{"xmod_is_melee_wpn", TFC_IsMelee},
 	{"xmod_get_maxweapons", get_maxweapons},
 	{"xmod_get_stats_size", get_stats_size},
+	{"xmod_is_custom_wpn", is_custom},
 
 	{"tfc_userkill" , TFC_UserKill},
 	

@@ -382,6 +382,13 @@ static cell AMX_NATIVE_CALL get_stats_size(AMX *amx, cell *params){
 	return 8;
 }
 
+static cell AMX_NATIVE_CALL is_custom(AMX *amx, cell *params){
+	int weapon = params[1];
+	if (  weapon < TSMAX_WEAPONS-TSMAX_CUSTOMWPNS ){
+		return 0;
+	}
+	return 1;
+}
 
 AMX_NATIVE_INFO base_Natives[] = {
 
@@ -390,6 +397,7 @@ AMX_NATIVE_INFO base_Natives[] = {
 	{ "xmod_is_melee_wpn", is_melee },
 	{ "xmod_get_maxweapons", get_maxweapons },
 	{ "xmod_get_stats_size", get_stats_size },
+	{ "xmod_is_custom_wpn", is_custom },
 	
 	{ "ts_wpnlogtoname", wpnlog_to_name },
 	{ "ts_wpnlogtoid", wpnlog_to_id },

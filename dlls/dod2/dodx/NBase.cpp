@@ -213,6 +213,113 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params){ // forward
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL register_cwpn(AMX *amx, cell *params){ // name,logname,melee=0 
+	int i;
+	bool bFree = false;
+	for ( i=DODMAX_WEAPONS-DODMAX_CUSTOMWPNS;i<DODMAX_WEAPONS;i++){
+		if ( !weaponData[i].needcheck ){
+			bFree = true;
+			break;
+		}
+	}
+
+	if ( !bFree )
+		return 0;
+
+	int iLen;
+	char *szName = MF_GetAmxString(amx, params[1], 0, &iLen);
+	char *szLogName = MF_GetAmxString(amx, params[3], 0, &iLen);
+
+	strcpy(weaponData[i].name,szName);
+	strcpy(weaponData[i].logname,szLogName);
+	weaponData[i].needcheck = true;
+	weaponData[i].melee = params[2] ? true:false;
+	return i;
+}
+
+static cell AMX_NATIVE_CALL cwpn_dmg(AMX *amx, cell *params){ // wid,att,vic,dmg,hp=0
+	int weapon = params[1];
+	if (  weapon < DODMAX_WEAPONS-DODMAX_CUSTOMWPNS ){ // only for custom weapons
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	int att = params[2];
+	if (att<1||att>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	int vic = params[3];
+	if (vic<1||vic>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+	
+	int dmg = params[4];
+	if ( dmg<1 ){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+	
+	int aim = params[5];
+	if ( aim < 0 || aim > 7 ){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	CPlayer* pAtt = GET_PLAYER_POINTER_I(att);
+	CPlayer* pVic = GET_PLAYER_POINTER_I(vic);
+
+	pVic->pEdict->v.dmg_inflictor = NULL;
+	pAtt->saveHit( pVic , weapon , dmg, aim );
+
+	if ( !pAtt ) pAtt = pVic;
+	int TA = 0;
+	if ( (pVic->pEdict->v.team == pAtt->pEdict->v.team ) && ( pVic != pAtt) )
+		TA = 1;
+
+#ifdef FORWARD_OLD_SYSTEM
+	g_damage_info.exec( pAtt->index, pVic->index, dmg, weapon, aim, TA );
+#else
+	MF_ExecuteForward( iFDamage,pAtt->index, pVic->index, dmg, weapon, aim, TA );
+#endif
+	
+	if ( pVic->IsAlive() )
+		return 1;
+
+	pAtt->saveKill(pVic,weapon,( aim == 1 ) ? 1:0 ,TA);
+
+#ifdef FORWARD_OLD_SYSTEM
+	g_death_info.exec( pAtt->index, pVic->index, weapon, aim, TA );
+#else
+	MF_ExecuteForward( iFDeath,pAtt->index, pVic->index, weapon, aim, TA );
+#endif
+	
+
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL cwpn_shot(AMX *amx, cell *params){ // player,wid
+	int index = params[2];
+	if (index<1||index>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	int weapon = params[1];
+	if (  weapon < DODMAX_WEAPONS-DODMAX_CUSTOMWPNS ){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	pPlayer->saveShot(weapon);
+
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL get_maxweapons(AMX *amx, cell *params){
 	return DODMAX_WEAPONS;
 }
@@ -221,28 +328,42 @@ static cell AMX_NATIVE_CALL get_stats_size(AMX *amx, cell *params){
 	return 9;
 }
 
+static cell AMX_NATIVE_CALL is_custom(AMX *amx, cell *params){
+	int weapon = params[1];
+	if (  weapon < DODMAX_WEAPONS-DODMAX_CUSTOMWPNS ){
+		return 0;
+	}
+	return 1;
+}
+
 AMX_NATIVE_INFO base_Natives[] = {
 
-  { "dod_wpnlog_to_name", wpnlog_to_name },
-  { "dod_wpnlog_to_id", wpnlog_to_id },
+	{ "dod_wpnlog_to_name", wpnlog_to_name },
+	{ "dod_wpnlog_to_id", wpnlog_to_id },
 
-  { "dod_get_team_score", get_team_score },
-  { "dod_get_user_score", get_user_score },
-  { "dod_get_user_class", get_user_class },
-  { "dod_get_user_weapon", get_user_weapon },
+	{ "dod_get_team_score", get_team_score },
+	{ "dod_get_user_score", get_user_score },
+	{ "dod_get_user_class", get_user_class },
+	{ "dod_get_user_weapon", get_user_weapon },
 
-  { "dod_get_map_info", get_map_info },
-  { "dod_user_kill", user_kill },
-  { "dod_get_pronestate", get_user_pronestate },
+	{ "dod_get_map_info", get_map_info },
+	{ "dod_user_kill", user_kill },
+	{ "dod_get_pronestate", get_user_pronestate },
 
-  { "xmod_get_wpnname", get_weapon_name },
-  { "xmod_get_wpnlogname", get_weapon_logname },
-  { "xmod_is_melee_wpn", is_melee },
-  { "xmod_get_maxweapons", get_maxweapons },
-  { "xmod_get_stats_size", get_stats_size },
+	{ "xmod_get_wpnname", get_weapon_name },
+	{ "xmod_get_wpnlogname", get_weapon_logname },
+	{ "xmod_is_melee_wpn", is_melee },
+	{ "xmod_get_maxweapons", get_maxweapons },
+	{ "xmod_get_stats_size", get_stats_size },
+	{ "xmod_is_custom_wpn", is_custom },
   
-  {"register_statsfwd",register_forward },
+	{ "register_statsfwd",register_forward },
 
-  ///*******************
-  { NULL, NULL } 
+	// Custom Weapon Support
+	{ "custom_weapon_add", register_cwpn }, // name,melee,logname
+	{ "custom_weapon_dmg", cwpn_dmg },
+	{ "custom_weapon_shot", cwpn_shot },
+
+	///*******************
+	{ NULL, NULL } 
 };

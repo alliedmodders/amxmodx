@@ -162,3 +162,4 @@ extern int lastFmRes;
 extern int retType;
 
 #endif //_INCLUDE_FORWARD_H
+

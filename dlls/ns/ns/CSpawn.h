@@ -18,3 +18,4 @@ public:
 	vec3_t getpoint(int type, int num);
 };
 #endif
+

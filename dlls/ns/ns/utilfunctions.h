@@ -69,3 +69,4 @@ inline BOOL isValidEntity(int x)
 
 
 #endif // UTILFUNCTIONS_H
+

@@ -72,7 +72,7 @@ if ($OPTIONS{"debug"})
 
 if ($OPTIONS{"amd64"})
 {
-	$cflags .= "-m64 -DSMALL_CELLSIZE=64 $cflags";
+	$cflags .= " -m64 -DHAVE_I64 -DSMALL_CELL_SIZE=64 $cflags";
 }
 
 if ($OPTIONS{"debug"})
@@ -98,11 +98,11 @@ if ($OPTIONS{"amd64"})
 	}
 }
 
+unlink("$outdir/$bin");
 if ($OPTIONS{"clean"})
 {
 	`rm $outdir/*.o`;
 	`rm $outdir/sdk/*.o`;
-	`rm $outdir/$bin`;
 	die("Project cleaned.\n");
 }
 
@@ -178,4 +178,5 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 }
 
 $gcc = "g++ $cflags -shared -lstdc++ -ldl -lm @LINK -o $outdir/$bin";
+print "$gcc\n";
 `$gcc`;

@@ -12,11 +12,11 @@
 # proc=ix86 - assumed not amd64
 # clean - clean the specifications above
 
-$PROJECT = "ns_amxx";
+$PROJECT = "csstats_amxx";
 $sdk = "../../../hlsdk/SourceCode";
 $mm = "../../../metamod/metamod";
 
-@CPP_SOURCE_FILES = ("amxxmodule.cpp", "CPlayer.cpp", "CSpawn.cpp", "NMisc.cpp", "NPData.cpp", "hookedfunctions.cpp");
+@CPP_SOURCE_FILES = ("amxxmodule.cpp", "CMisc.cpp", "usermsg.cpp", "meta_api.cpp", "rank.cpp", "CRank.cpp");
 
 @C_SOURCE_FILES = ();
 my %OPTIONS, %OPT;
@@ -172,6 +172,6 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	}
 }
 
-$gcc = "g++ $cflags -shared -ldl -lm @LINK -o $outdir/$bin";
+$gcc = "g++ $cflags -shared -lstdc++ -ldl -lm @LINK -o $outdir/$bin";
 print "$gcc\n";
 `$gcc`;

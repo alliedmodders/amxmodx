@@ -116,7 +116,7 @@ static cell AMX_NATIVE_CALL ns_set_points(AMX *amx, cell *params)
 	CPlayer *player = GET_PLAYER_I(id);
 	if (!player->connected || player->edict->pvPrivateData == NULL)
 		return 0;
-	set_private(player->edict,OFFSET_WIN_POINTS,OFFSET_LIN_POINTS,params[2]);
+	set_private(player->edict,OFFSET_WIN_POINTS,OFFSET_LIN_POINTS,(int)params[2]);
 	return 1;
 }
 static cell AMX_NATIVE_CALL ns_set_weapon_dmg(AMX *amx, cell *params)
@@ -172,7 +172,7 @@ static cell AMX_NATIVE_CALL ns_set_weapon_ammo(AMX *amx, cell *params)
 	edict_t *pEntity = INDEXENT2(id);
 	if (pEntity->pvPrivateData == NULL)
 		return 0;
-	set_private(pEntity,OFFSET_WIN_WEAPCLIP,OFFSET_LIN_WEAPCLIP,params[2]);
+	set_private(pEntity,OFFSET_WIN_WEAPCLIP,OFFSET_LIN_WEAPCLIP,(int)params[2]);
 	return 1;
 }
 static cell AMX_NATIVE_CALL ns_get_weapon_ammo(AMX *amx, cell *params)
@@ -221,19 +221,19 @@ static cell AMX_NATIVE_CALL ns_set_weap_reserve(AMX *amx, cell *params)
 	switch (params[2])
 	{
 	case WEAPON_PISTOL:
-		set_private(player->edict,OFFSET_WIN_AMMO_PISTOL,OFFSET_LIN_AMMO_PISTOL,params[3]);
+		set_private(player->edict,OFFSET_WIN_AMMO_PISTOL,OFFSET_LIN_AMMO_PISTOL,(int)params[3]);
 		return 1;
 	case WEAPON_LMG:
-		set_private(player->edict,OFFSET_WIN_AMMO_LMG,OFFSET_LIN_AMMO_LMG,params[3]);
+		set_private(player->edict,OFFSET_WIN_AMMO_LMG,OFFSET_LIN_AMMO_LMG,(int)params[3]);
 		return 1;
 	case WEAPON_HMG:
-		set_private(player->edict,OFFSET_WIN_AMMO_HMG,OFFSET_LIN_AMMO_HMG,params[3]);
+		set_private(player->edict,OFFSET_WIN_AMMO_HMG,OFFSET_LIN_AMMO_HMG,(int)params[3]);
 		return 1;
 	case WEAPON_GRENADE_GUN:
-		set_private(player->edict,OFFSET_WIN_AMMO_GL,OFFSET_LIN_AMMO_GL,params[3]);
+		set_private(player->edict,OFFSET_WIN_AMMO_GL,OFFSET_LIN_AMMO_GL,(int)params[3]);
 		return 1;
 	case WEAPON_GRENADE:
-		set_private(player->edict,OFFSET_WIN_AMMO_HG,OFFSET_LIN_AMMO_HG,params[3]);
+		set_private(player->edict,OFFSET_WIN_AMMO_HG,OFFSET_LIN_AMMO_HG,(int)params[3]);
 		return 1;
 	default:
 		return 0;
@@ -258,7 +258,7 @@ static cell AMX_NATIVE_CALL ns_set_score(AMX *amx, cell *params)
 	CPlayer *player = GET_PLAYER_I(id);
 	if (!player->connected || player->edict->pvPrivateData == NULL)
 		return 0;
-	set_private(player->edict,OFFSET_WIN_SCORE,OFFSET_LIN_SCORE,params[2]);
+	set_private(player->edict,OFFSET_WIN_SCORE,OFFSET_LIN_SCORE,(int)params[2]);
 	return 1;
 }
 static cell AMX_NATIVE_CALL ns_set_hive_trait(AMX *amx, cell *params)
@@ -269,7 +269,7 @@ static cell AMX_NATIVE_CALL ns_set_hive_trait(AMX *amx, cell *params)
 	edict_t *pEntity = INDEXENT2(id);
 	if (pEntity->pvPrivateData == NULL)
 		return 0;
-	set_private(pEntity,OFFSET_WIN_HIVE_TRAIT,OFFSET_LIN_HIVE_TRAIT,params[2]);
+	set_private(pEntity,OFFSET_WIN_HIVE_TRAIT,OFFSET_LIN_HIVE_TRAIT,(int)params[2]);
 	return 1;
 }
 static cell AMX_NATIVE_CALL ns_get_hive_trait(AMX *amx, cell *params)
@@ -296,7 +296,7 @@ static cell AMX_NATIVE_CALL ns_set_deaths(AMX *amx, cell *params)
 	if (id < 1 || id > gpGlobals->maxClients)
 		return 0;
 	CPlayer *player = GET_PLAYER_I(id);
-	set_private(player->edict,OFFSET_WIN_DEATHS,OFFSET_LIN_DEATHS,params[2]);
+	set_private(player->edict,OFFSET_WIN_DEATHS,OFFSET_LIN_DEATHS,(int)params[2]);
 	return 1;
 }
 static cell AMX_NATIVE_CALL ns_get_icon(AMX *amx, cell *params)
@@ -313,7 +313,7 @@ static cell AMX_NATIVE_CALL ns_set_icon(AMX *amx, cell *params)
 	if (id < 1 || id > gpGlobals->maxClients)
 		return 0;
 	CPlayer *player = GET_PLAYER_I(id);
-	set_private(player->edict,OFFSET_WIN_ICON,OFFSET_LIN_ICON,params[2]);
+	set_private(player->edict,OFFSET_WIN_ICON,OFFSET_LIN_ICON,(int)params[2]);
 	return 1;
 }
 
@@ -354,3 +354,4 @@ AMX_NATIVE_INFO ns_pdata_natives[] = {
 
 	{ NULL, NULL }
 };
+

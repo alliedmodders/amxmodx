@@ -52,3 +52,4 @@ enum
 };
 
 #endif //_INCLUDE_DLLFUNC_H
+

@@ -306,3 +306,4 @@ void RankSystem::saveRank( const char* filename )
 	
 	fclose(bfp);
 }
+

@@ -97,6 +97,11 @@ public:
 		T *m_Ptr;
 	public:
 		// constructors / destructors
+		iterator()
+		{
+			m_Ptr = NULL;
+		}
+
 		iterator(T * ptr)
 		{
 			m_Ptr = ptr;
@@ -273,6 +278,13 @@ public:
 		return iterator(m_Data + m_CurrentUsedSize);
 	}
 
+	iterator iterAt(size_t pos)
+	{
+		if (pos > m_CurrentUsedSize)
+			ASSERT(0);
+		return iterator(m_Data + pos);
+	}
+
 	bool reserve(size_t newSize)
 	{
 		return ChangeSize(newSize);
@@ -296,6 +308,7 @@ public:
 		--m_CurrentUsedSize;
 		if (m_CurrentUsedSize < 0)
 			m_CurrentUsedSize = 0;
+		// :TODO: free memory sometimes
 	}
 
 	bool resize(size_t newSize)
@@ -410,7 +423,7 @@ public:
 		}
 
 		--m_CurrentUsedSize;
-		FreeMemIfPossible();
+		// :TODO: free memory sometimes
 	}
 
 	void clear()

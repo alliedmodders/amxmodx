@@ -184,7 +184,7 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	if (-e $ofile)
 	{
 		$file_time = (stat($file))[9];
-		$ofile_time = (stat($file))[9];
+		$ofile_time = (stat($ofile))[9];
 		if ($file_time > $ofile_time)
 		{
 			print "$gcc\n";
@@ -206,7 +206,7 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	if (-e $ofile)
 	{
 		$file_time = (stat($file))[9];
-		$ofile_time = (stat($file))[9];
+		$ofile_time = (stat($ofile))[9];
 		if ($file_time > $ofile_time)
 		{
 			print "$gcc\n";

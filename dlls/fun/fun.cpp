@@ -784,6 +784,56 @@ static cell AMX_NATIVE_CALL set_user_footsteps(AMX *amx, cell *params) // set_us
 	return 1;
 }
 
+// SidLuke
+static cell AMX_NATIVE_CALL strip_user_weapons(AMX *amx, cell *params) { // index 
+	if (!MF_IsPlayerIngame(params[1]))
+	{
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	edict_t* pPlayer = INDEXENT(params[1]);
+
+	string_t item = MAKE_STRING("trigger_once");
+	edict_t *pent = CREATE_NAMED_ENTITY( item );
+	if ( FNullEnt( pent ) ){
+		return 0;
+	}
+
+	KeyValueData pkvd;
+
+	pkvd.szClassName = (char *)STRING(pent->v.classname);
+	pkvd.szKeyName = "target"; // type
+	pkvd.szValue = "stripper";
+	pkvd.fHandled = false;
+	MDLL_KeyValue(pent, &pkvd);
+
+	MDLL_Spawn(pent);
+
+	item = MAKE_STRING("player_weaponstrip");
+	edict_t   *pent2 = CREATE_NAMED_ENTITY( item );
+	if ( FNullEnt( pent2 ) ) {
+		return 0;
+	}
+
+	pkvd.szClassName = (char *)STRING(pent->v.classname);
+	pkvd.szKeyName = "targetname"; // type
+	pkvd.szValue =  "stripper";
+	pkvd.fHandled = false;
+	MDLL_KeyValue(pent2, &pkvd);
+
+	MDLL_Spawn(pent2);
+
+	pent->v.origin = pPlayer->v.origin;
+
+	MDLL_Touch(pent, pPlayer);
+
+	REMOVE_ENTITY(pent);
+	REMOVE_ENTITY(pent2);
+
+	return 1; 
+}
+
 AMX_NATIVE_INFO fun_Exports[] = {
 	{"get_client_listen",		get_client_listening},
 	{"set_client_listen",		set_client_listening},
@@ -805,6 +855,7 @@ AMX_NATIVE_INFO fun_Exports[] = {
 	{"set_user_noclip",			set_user_noclip},
 	{"get_user_noclip",			get_user_noclip},
 	{"set_user_footsteps",		set_user_footsteps},
+	{"strip_user_weapons",		strip_user_weapons},
 	  /////////////////// <--- 19 chars max in current small version
 	{NULL,					NULL}
 };

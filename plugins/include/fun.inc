@@ -79,3 +79,6 @@ native get_user_noclip(index);
 /* Gives player silent footsteps.
 * if set = 0 it will return footsteps to normal */
 native set_user_footsteps(id, set = 1);
+
+/* Strips all weapons from user. */
+native strip_user_weapons(index);

@@ -59,6 +59,7 @@ void CPlayer::Disconnect() {
   ingame = false;
   initialized = false;
   authorized = false;
+  bot = 0;
 }
 void CPlayer::PutInServer() {
   playtime = gpGlobals->time;

@@ -37,32 +37,28 @@
 new Float:g_Flooding[33] = {0.0, ...}
 new g_Flood[33] = {0, ...}
 
-public plugin_init()
-{
+public plugin_init() {
   register_plugin("Anti Flood",AMXX_VERSION_STR,"AMXX Dev Team")
   register_clcmd("say","chkFlood")
   register_clcmd("say_team","chkFlood")
   register_cvar("amx_flood_time","0.75")
 }
 
-public chkFlood(id) 
-{
+public chkFlood(id) {
   new Float:maxChat = get_cvar_float("amx_flood_time")
 
-  if ( maxChat ) 
-  {
+  if ( maxChat ) {
     new Float:nexTime = get_gametime()
 
-    if ( g_Flooding[id] > nexTime )   
-    {
-	  if (g_Flood[id] >= 3)
-	  {
-        client_print( id , print_notify , "** Stop flooding the server!" )
+    if ( g_Flooding[id] > nexTime ) {
+	  if (g_Flood[id] >= 3) {
+        client_print( id , print_notify , "** %L **", id, "STOP_FLOODING" )
         g_Flooding[ id ] = nexTime + maxChat + 3.0
         return PLUGIN_HANDLED
       }
 	  g_Flood[id]++
-    } else {
+    }
+    else {
 	  if (g_Flood[id])
 	    g_Flood[id]--
     }

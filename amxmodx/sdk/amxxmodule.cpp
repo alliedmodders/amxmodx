@@ -2681,6 +2681,8 @@ void ValidateMacros_DontCallThis_Smiley()
 }
 #endif
 
+#ifdef MEMORY_TEST
+
 /************* MEMORY *************/
 // undef all defined macros
 #undef new
@@ -2851,6 +2853,8 @@ void	operator delete[](void *reportedAddress)
 
 	Mem_Deallocator(g_Mem_CurrentFilename, g_Mem_CurrentLine, g_Mem_CurrentFunc, m_alloc_delete_array, reportedAddress);
 }
+
+#endif //MEMORY_TEST
 
 /************* stuff from dlls/util.cpp *************/
 //				must come here because cbase.h declares it's own operator new

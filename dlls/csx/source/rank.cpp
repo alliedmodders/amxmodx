@@ -389,7 +389,7 @@ AMX_NATIVE_INFO stats_Natives[] = {
 	{ "xmod_get_stats_size", get_stats_size },
 
 	//***************************************
-	{ "get_weaponname", get_wpnname },
+	//{ "get_weaponname", get_wpnname },
 
 	///*******************
 	{ NULL, NULL }

@@ -110,6 +110,18 @@ const char* get_localinfo( const char* name , const char* def = 0 )
 	return b;
 }
 
+void ClientKill(edict_t *pEntity){
+	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
+	if ( !pPlayer->IsAlive())
+		RETURN_META(MRES_IGNORED);
+
+	MF_ExecuteForward( iFDamage,pPlayer->index , pPlayer->index , 0, 0, 0, 0 );
+	pPlayer->saveKill(pPlayer,0,0,0);
+	MF_ExecuteForward( iFDeath,pPlayer->index, pPlayer->index, 0, 0, 0 );
+
+	RETURN_META(MRES_IGNORED);
+}
+
 void ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax ){
 
 	rankBots = (int)csstats_rankbots->value ? true:false;

@@ -257,9 +257,9 @@ void FN_META_QUERY(void);
 void FN_META_ATTACH(void);
 #endif // FN_META_ATTACH
 
-#ifdef FN_META_DETTACH
-void FN_META_DETTACH(void);
-#endif // FN_META_DETTACH
+#ifdef FN_META_DETACH
+void FN_META_DETACH(void);
+#endif // FN_META_DETACH
 
 
 
@@ -1869,9 +1869,9 @@ void FN_AMXX_QUERY(void);
 void FN_AMXX_ATTACH(void);
 #endif // FN_AMXX_ATTACH
 
-#ifdef FN_AMXX_DETTACH
-void FN_AMXX_DETTACH(void);
-#endif // FN_AMXX_DETTACH
+#ifdef FN_AMXX_DETACH
+void FN_AMXX_DETACH(void);
+#endif // FN_AMXX_DETACH
 
 #ifdef FN_AMXX_PLUGINSLOADED
 void FN_AMXX_PLUGINSLOADED(void);

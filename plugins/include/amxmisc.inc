@@ -115,3 +115,8 @@ stock get_user_wonid(index)
   return str_to_num(authid)
 }
 #endif
+
+stock is_user_admin(userid)
+{
+  return (get_user_flags(id) & ADMIN_ADMIN)
+}

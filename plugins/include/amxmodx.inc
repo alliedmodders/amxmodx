@@ -35,6 +35,9 @@ forward plugin_cfg();
 /* Function called before plugin unloading (server deactivation) */
 forward plugin_end();
 
+/* Function called to handle changelevel */
+forward server_changelevel();
+
 /* Called on log message. */
 forward plugin_log();
 
@@ -429,6 +432,9 @@ native set_task(Float:time,const function[],id = 0,parameter[]="",len = 0,flags[
 * set then a task can be removed also when
 * was set in another plugin. */
 native remove_task(id = 0, outside = 0);
+
+/* Changes the time of a task */
+native change_task(id = 0, Float:newTime=1.0, outside = 0);
 
 /* Returns 1 if task under given id exists. */
 native task_exists(id = 0, outside = 0);

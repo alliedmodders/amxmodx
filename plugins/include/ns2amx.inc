@@ -217,8 +217,11 @@ stock ns2amx_inrange(ida,idb,range)
 	return 0
 }
 
-stock ns2amx_nspopup(id,svMessage[190])
-	return ns_popup(id, svMessage)
+stock ns2amx_nspopup(id,svMessage[190]) {
+  new szMessage[180]
+  copy(szMessage,179,svMessage)
+	return ns_popup(id, szMessage)
+}
 
 stock ns2amx_setres(id,value)
 	return ns_set_res(id, float(value))

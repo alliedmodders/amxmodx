@@ -251,7 +251,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK) {
     }
   }
   if ( EnemyRemaining ) {
-    new ppl[32], pplnum
+    new ppl[32], pplnum = 0
     new team = get_user_team( victim ) - 1
     if ( team >= 0 && team < 4 )
       get_players(ppl,pplnum,"e", g_teamsNames[1 - team] ) 

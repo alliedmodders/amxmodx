@@ -144,7 +144,7 @@ struct pfnmodule_engine_g {
   const char* (*pfnget_amxscriptname)(AMX* amx);                          // amx
   char*       (*pfnget_amxstring)(AMX*,cell,int, int&);                   // amx, src, buffer (0-3), len
   void        (*pfnget_modname)(char*);                                   // modname
-  int         (*pfnload_amxscript)(AMX*, void**, const char*, char[64]);  // amx, code, path, error info
+  int         (*pfnload_amxscript)(AMX*, void**, const char*, char[64], int);  // amx, code, path, error info
   void        (*pfnprint_console)(char*, ...);                            // format, ....
   void      (*pfnreport_error)(int code, char*, ... );
   int         (*pfnset_amxnatives)(AMX*,char[64]);                        // amx, error info

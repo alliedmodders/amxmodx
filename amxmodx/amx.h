@@ -293,6 +293,7 @@ enum {
 #define AMX_FLAG_COMPACT  0x04  /* compact encoding */
 #define AMX_FLAG_BIGENDIAN 0x08 /* big endian encoding */
 #define AMX_FLAG_NOCHECKS  0x10 /* no array bounds checking */
+#define AMX_FLAG_LINEOPS 0x20 /* line ops are parsed by the JIT [loadtime only flag] */
 #define AMX_FLAG_BROWSE 0x4000  /* browsing/relocating or executing */
 #define AMX_FLAG_RELOC  0x8000  /* jump/call addresses relocated */
 

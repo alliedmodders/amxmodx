@@ -67,7 +67,7 @@ public:
 		int status;
 		CPlugin* next;
 		int id;
-		CPlugin(int i , const char* p,const char* n, char* e);
+		CPlugin(int i , const char* p,const char* n, char* e, int d);
 		~CPlugin( );
 
 	public:
@@ -104,7 +104,7 @@ public:
 
 	// Interface
 
-	CPlugin* loadPlugin(const char* path, const char* name, char* error);
+	CPlugin* loadPlugin(const char* path, const char* name, char* error, int debug);
 	void unloadPlugin( CPlugin** a );
 	int loadPluginsFromFile( const char* filename );
 	CPlugin* findPluginFast(AMX *amx);

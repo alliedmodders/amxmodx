@@ -88,7 +88,7 @@ void free_amxmemory(void **ptr)
 	*ptr = 0;
 }
 
-int load_amxscript(AMX *amx, void **program, const char *filename, char error[64])
+int load_amxscript(AMX *amx, void **program, const char *filename, char error[64], int debug)
 {
 	*error = 0;
 	CAmxxReader reader(filename, SMALL_CELL_SIZE / 8);
@@ -149,6 +149,14 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 		return (amx->error = AMX_ERR_FORMAT);
 	}
 
+#ifdef JIT
+	if ( ((int)CVAR_GET_FLOAT("amx_debug") == 2 || (debug && (int)CVAR_GET_FLOAT("amx_debug"))) )
+	{
+		//automatic debug mode
+		hdr->flags |= AMX_FLAG_LINEOPS;
+	}
+#endif
+
 	int err;
 	memset(amx, 0, sizeof(*amx));
 	if ((err = amx_Init( amx, *program )) != AMX_ERR_NONE)
@@ -156,7 +164,6 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 		sprintf(error,"Load error %d (invalid file format or version)", err);
 		return (amx->error = AMX_ERR_INIT);
 	}
-
 
 #ifdef JIT
 	void *np = new char[ amx->code_size ];

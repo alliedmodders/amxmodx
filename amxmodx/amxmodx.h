@@ -242,7 +242,7 @@ AMX* get_amxscript(int, void**,const char**);
 const char* get_amxscriptname(AMX* amx);
 char* get_amxstring(AMX *amx,cell amx_addr,int id,int& len);
 int amxstring_len(cell* cstr);
-int load_amxscript(AMX* amx, void** program, const char* path, char error[64]);
+int load_amxscript(AMX* amx, void** program, const char* path, char error[64], int debug);
 int set_amxnatives(AMX* amx,char error[64]);
 int set_amxstring(AMX *amx,cell amx_addr,const char *source,int max);
 int unload_amxscript(AMX* amx,void** program);

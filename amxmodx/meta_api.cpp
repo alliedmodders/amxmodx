@@ -104,6 +104,7 @@ int g_srvindex;
 
 cvar_t init_amxmodx_version = {"amxmodx_version", "", FCVAR_SERVER | FCVAR_SPONLY};
 cvar_t init_amxmodx_modules = {"amxmodx_modules", "", FCVAR_SPONLY};
+cvar_t init_amxmodx_debug = {"amx_debug", "", FCVAR_SPONLY};
 cvar_t* amxmodx_version = NULL;
 cvar_t* amxmodx_modules = NULL;
 cvar_t* hostname = NULL;
@@ -1033,6 +1034,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
   gpGamedllFuncs=pGamedllFuncs;
   CVAR_REGISTER(&init_amxmodx_version);
   CVAR_REGISTER(&init_amxmodx_modules);
+  CVAR_REGISTER(&init_amxmodx_debug);
   amxmodx_version =	CVAR_GET_POINTER(init_amxmodx_version.name);
   REG_SVR_COMMAND("amxx",amx_command);
 

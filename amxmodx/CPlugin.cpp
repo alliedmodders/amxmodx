@@ -34,10 +34,10 @@
 #include "CForward.h"
 #include "CFile.h"
 
-CPluginMngr::CPlugin* CPluginMngr::loadPlugin(const char* path, const char* name, char* error) {	
+CPluginMngr::CPlugin* CPluginMngr::loadPlugin(const char* path, const char* name, char* error, int debug) {	
 	CPlugin** a = &head;
 	while( *a ) a = &(*a)->next;
-	*a = new CPlugin( pCounter++ ,path,name,error);
+	*a = new CPlugin( pCounter++ ,path,name,error, debug);
 	return *error ? 0 : *a;
 }
 
@@ -59,17 +59,27 @@ int  CPluginMngr::loadPluginsFromFile( const char* filename )
 	}
 	
 	// Find now folder
-	char pluginName[256], line[256], error[256];
+	char pluginName[256], line[256], error[256], debug[256];
+	int debugFlag = 0;
 	const char *pluginsDir = get_localinfo("amxx_pluginsdir", "addons/amxmodx/plugins");
 	
 	
 	while ( fp.getline(line , 255 ) ) 
 	{
 		*pluginName = 0;
-		sscanf(line,"%s",pluginName);
+		*debug = 0;
+		debugFlag = 0;
+		sscanf(line,"%s %s",pluginName, debug);
 		if (!isalnum(*pluginName))  continue;
+
+#ifdef JIT
+		if (isalnum(*debug) && strcmp(debug, "debug") == 0)
+		{
+			debugFlag = 1;
+		}
+#endif
 				
-		CPlugin* plugin = loadPlugin( pluginsDir , pluginName  , error  );
+		CPlugin* plugin = loadPlugin( pluginsDir , pluginName  , error,  debugFlag);
 		
 		if (!plugin)
 			AMXXLOG_Log("[AMXX] %s (plugin \"%s\")", error, pluginName );
@@ -128,14 +138,14 @@ const char* CPluginMngr::CPlugin::getStatus() const {
 	return "error";
 }
 
-CPluginMngr::CPlugin::CPlugin(int i, const char* p,const char* n, char* e) : name(n), title(n) {
+CPluginMngr::CPlugin::CPlugin(int i, const char* p,const char* n, char* e, int d) : name(n), title(n) {
 	const char* unk = "unknown";
 	title.assign(unk);
 	author.assign(unk);
 	version.assign(unk);
 	char* path = build_pathname("%s/%s",p,n);
 	code = 0;
-	int err = load_amxscript(&amx,&code,path,e );
+	int err = load_amxscript(&amx,&code,path,e, d);
 	if ( err == AMX_ERR_NONE ) status = ps_running;
 	else status = ps_bad_load;
 	amx.userdata[3] = this;

@@ -2,7 +2,6 @@
 
 // These are natives directly from NS2AMX
 
-
 static cell AMX_NATIVE_CALL ns_has_weapon(AMX *amx,cell *params)
 {
 	CHECK_ENTITY(params[1]);
@@ -43,7 +42,7 @@ static cell AMX_NATIVE_CALL ns_get_spawnpoints(AMX *amx, cell *params)
 	vec3_t vRet;
 	if (params[2] == 0)
 	{
-		return ns_spawnpoints.getnum(params[1]);
+		return (int)ns_spawnpoints.getnum(params[1]);
 	}
 	else
 	{

@@ -61,13 +61,11 @@ native get_statsnum();
 native get_user_stats2(index,stats[4]);
 native get_stats2(index,stats[4]);
 
-/*
-* Custom weapons support ( like: gasnades, lasers )
-*/
-native register_cwpn( name[] );
-native custom_wpn_dmg( wId,att,vic,dmg,hitplace=0 );
-native custom_wpn_shot( index,wid );
-native get_custom_wpnname( wId,name[],len );
+/* Custom weapons support ( like: gasnades, lasers ) */
+native reg_custom_weapon( wpnname[],melee = 0,logname[]="" ); 
+native custom_weapon_dmg( weapon, att, vic, damage, hitplace ); 
+native custom_weapon_shot( weapon,index ); // weapon id , player id
+native get_custom_wpnname( weapon,szName[],len );
 
 /*
 * Forwards

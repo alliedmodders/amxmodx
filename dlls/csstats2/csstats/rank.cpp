@@ -351,13 +351,13 @@ static cell AMX_NATIVE_CALL custom_wpn_dmg(AMX *amx, cell *params){ // wid,att,v
 }
 
 static cell AMX_NATIVE_CALL custom_wpn_shot(AMX *amx, cell *params){ // player,wid
-	int index = params[1];
+	int index = params[2];
 	if (index<1||index>gpGlobals->maxClients){
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
-	int weapon = params[2];
+	int weapon = params[1];
 	if (  weapon < MAX_WEAPONS  || weapon >= MAX_WEAPONS+MAX_CWEAPONS ||  !weaponData[weapon].ammoSlot ){
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		MF_PrintSrvConsole("Weapon ID Is Not Valid!\n");
@@ -419,9 +419,9 @@ AMX_NATIVE_INFO stats_Natives[] = {
 	{ "reset_user_wstats",  reset_user_wstats },
 
 	// Custom Weapon Support
-	{ "register_cwpn", register_cwpn },
-	{ "custom_wpn_dmg", custom_wpn_dmg },
-	{ "custom_wpn_shot", custom_wpn_shot },
+	{ "reg_custom_weapon", register_cwpn },
+	{ "custom_weapon_dmg", custom_wpn_dmg },
+	{ "custom_weapon_shot", custom_wpn_shot },
 	{ "get_custom_wpnname", get_custom_wpnname },
 
 	{"register_statsfwd",register_forward },

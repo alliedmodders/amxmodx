@@ -332,13 +332,13 @@ static cell AMX_NATIVE_CALL cwpn_dmg(AMX *amx, cell *params){ // wid,att,vic,dmg
 }
 
 static cell AMX_NATIVE_CALL cwpn_shot(AMX *amx, cell *params){ // player,wid
-	int index = params[1];
+	int index = params[2];
 	if (index<1||index>gpGlobals->maxClients){
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
-	int weapon = params[2];
+	int weapon = params[1];
 	if (  weapon < TFCMAX_WEAPONS-TFCMAX_CUSTOMWPNS ){
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
@@ -363,9 +363,9 @@ AMX_NATIVE_INFO stats_Natives[] = {
 	{ "reset_user_wstats",  reset_user_wstats },
 
 	// Custom Weapon Support
-	{ "reg_custom_wpn", register_cwpn },
-	{ "custom_wpn_dmg", cwpn_dmg },
-	{ "custom_wpn_shot", cwpn_shot },
+	{ "reg_custom_weapon", register_cwpn },
+	{ "custom_weapon_dmg", cwpn_dmg },
+	{ "custom_weapon_shot", cwpn_shot },
 
 	{ NULL, NULL }
 };

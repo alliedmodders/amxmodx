@@ -333,12 +333,12 @@ static cell AMX_NATIVE_CALL register_cwpn(AMX *amx, cell *params){ // name,logna
 
 	int iLen;
 	char *szName = MF_GetAmxString(amx, params[1], 0, &iLen);
-	char *szLogName = MF_GetAmxString(amx, params[2], 0, &iLen);
+	char *szLogName = MF_GetAmxString(amx, params[3], 0, &iLen);
 
 	strcpy(weaponData[i].name,szName);
 	strcpy(weaponData[i].logname,szLogName);
 	weaponData[i].needcheck = true;
-	weaponData[i].melee = params[3] ? true:false;
+	weaponData[i].melee = params[2] ? true:false;
 	return i;
 }
 
@@ -407,13 +407,13 @@ static cell AMX_NATIVE_CALL cwpn_dmg(AMX *amx, cell *params){ // wid,att,vic,dmg
 }
 
 static cell AMX_NATIVE_CALL cwpn_shot(AMX *amx, cell *params){ // player,wid
-	int index = params[1];
+	int index = params[2];
 	if (index<1||index>gpGlobals->maxClients){
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
-	int weapon = params[2];
+	int weapon = params[1];
 	if (  weapon < DODMAX_WEAPONS-DODMAX_CUSTOMWPNS ){
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
@@ -439,9 +439,9 @@ AMX_NATIVE_INFO stats_Natives[] = {
 	{ "reset_user_wstats",  reset_user_wstats },
 
 	// Custom Weapon Support
-	{ "reg_custom_wpn", register_cwpn },
-	{ "custom_wpn_dmg", cwpn_dmg },
-	{ "custom_wpn_shot", cwpn_shot },
+	{ "reg_custom_weapon", register_cwpn }, // name,melee,logname
+	{ "custom_weapon_dmg", cwpn_dmg },
+	{ "custom_weapon_shot", cwpn_shot },
 
 	{ NULL, NULL }
 };

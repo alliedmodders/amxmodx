@@ -155,8 +155,12 @@ stock make_deathmsg(killer,victim,headshot,weapon[])
 	message_begin(MSG_ALL,get_user_msgid("DeathMsg"),{0,0,0},0)
 	write_byte( killer )
 	write_byte( victim )
-	write_byte( headshot )
-	write_string( weapon[] )
+	
+	new mod_name[32]
+	get_modname(mod_name,31)
+	if (equal(mod_name,"cstrike") || equal(mod_name,"czero") || equal(mod_name,"csv15") || equal(mod_name,"cs13"))
+		write_byte( headshot )
+	write_string( weapon )
 	message_end()
 
 	return 1

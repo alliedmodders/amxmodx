@@ -135,13 +135,13 @@ stock msg_name()
 	return 0
 
 stock msg_set_s(number, value[])
-	return set_msg_arg_string(number, value)
+	return set_msg_arg_string(number, get_msg_argtype(number), value)
 
 stock msg_set_f(number, Float:value)
-	return set_msg_arg_float(number, value)
+	return set_msg_arg_float(number, get_msg_argtype(number), value)
 
 stock msg_set_i(number, value)
-	return set_msg_arg_int(number, value)
+	return set_msg_arg_int(number, get_msg_argtype(number), value)
 
 stock msg_data_type(value)
 	return get_msg_arg_type(value)

@@ -62,7 +62,7 @@ new g_cstrikeRunning
 
 public plugin_init()
 {
-  register_plugin("Commands Menu","0.9","default")
+  register_plugin("Commands Menu","0.1","default")
 
   new basedir[32], workdir[64]
   get_basedir( basedir , 31 )

@@ -18,7 +18,7 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 			return 0;
 		}
 	}
-	edict_t *pPlayer = INDEXENT(index);
+	edict_t *pPlayer = INDEXENT2(index);
 	int		returntype = *params/sizeof(cell);
 	int		valuetype=0;
 	int		iReturn=0;
@@ -430,6 +430,9 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 		case vuser4:
 			vReturn = pPlayer->v.vuser4;
 			break;
+		case punchangle:
+			vReturn = pPlayer->v.punchangle;
+			break;
 		default:
 			return 0;
 		}
@@ -609,3 +612,478 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 	}
 	return 0;
 }
+
+static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
+{
+	// index, pevdata
+	int index = params[1];
+	CHECK_ENTITY(index);
+	edict_t *pPlayer = INDEXENT2(index);
+	int iSwitch = params[2];
+	
+	cell *blah = MF_GetAmxAddr(amx,params[3]);
+	if (iSwitch > pev_int_start && iSwitch < pev_int_end)
+	{
+		// Grrr...
+		int iValue = blah[0];
+		switch(iSwitch)
+		{
+			case fixangle:
+				pPlayer->v.fixangle = iValue;
+				return 1;
+			case modelindex:
+				pPlayer->v.modelindex = iValue;
+				return 1;
+			case viewmodel:
+				pPlayer->v.viewmodel = iValue;
+				return 1;
+			case weaponmodel:
+				pPlayer->v.weaponmodel = iValue;
+				return 1;
+			case movetype:
+				pPlayer->v.movetype = iValue;
+				return 1;
+			case solid:
+				pPlayer->v.solid = iValue;
+				return 1;
+			case skin:
+				pPlayer->v.skin = iValue;
+				return 1;
+			case body:
+				pPlayer->v.body = iValue;
+				return 1;
+			case effects:
+				pPlayer->v.effects = iValue;
+				return 1;
+			case light_level:
+				pPlayer->v.light_level = iValue;
+				return 1;
+			case sequence:
+				pPlayer->v.sequence = iValue;
+				return 1;
+			case gaitsequence:
+				pPlayer->v.gaitsequence = iValue;
+				return 1;
+			case rendermode:
+				pPlayer->v.rendermode = iValue;
+				return 1;
+			case renderfx:
+				pPlayer->v.renderfx = iValue;
+				return 1;
+			case weapons:
+				pPlayer->v.weapons = iValue;
+				return 1;
+			case deadflag:
+				pPlayer->v.deadflag = iValue;
+				return 1;
+			case button:
+				pPlayer->v.button = iValue;
+				return 1;
+			case impulse:
+				pPlayer->v.impulse = iValue;
+				return 1;
+			case spawnflags:
+				pPlayer->v.spawnflags = iValue;
+				return 1;
+			case flags:
+				pPlayer->v.flags = iValue;
+				return 1;
+			case colormap:
+				pPlayer->v.colormap = iValue;
+				return 1;
+			case team:
+				pPlayer->v.team = iValue;
+				return 1;
+			case waterlevel:
+				pPlayer->v.waterlevel = iValue;
+				return 1;
+			case watertype:
+				pPlayer->v.watertype = iValue;
+				return 1;
+			case playerclass:
+				pPlayer->v.playerclass = iValue;
+				return 1;
+			case weaponanim:
+				pPlayer->v.weaponanim = iValue;
+				return 1;
+			case pushmsec:
+				pPlayer->v.pushmsec = iValue;
+				return 1;
+			case bInDuck:
+				pPlayer->v.bInDuck = iValue;
+				return 1;
+			case flTimeStepSound:
+				pPlayer->v.flTimeStepSound = iValue;
+				return 1;
+			case flSwimTime:
+				pPlayer->v.flSwimTime = iValue;
+				return 1;
+			case flDuckTime:
+				pPlayer->v.flDuckTime = iValue;
+				return 1;
+			case iStepLeft:
+				pPlayer->v.iStepLeft = iValue;
+				return 1;
+			case gamestate:
+				pPlayer->v.gamestate = iValue;
+				return 1;
+			case oldbuttons:
+				pPlayer->v.oldbuttons = iValue;
+				return 1;
+			case groupinfo:
+				pPlayer->v.groupinfo = iValue;
+				return 1;
+			case iuser1:
+				pPlayer->v.iuser1 = iValue;
+				return 1;
+			case iuser2:
+				pPlayer->v.iuser2 = iValue;
+				return 1;
+			case iuser3:
+				pPlayer->v.iuser3 = iValue;
+				return 1;
+			case iuser4:
+				pPlayer->v.iuser4 = iValue;
+				return 1;
+			default:
+				return 0;
+		}
+	}
+	else if (iSwitch > pev_float_start && iSwitch < pev_float_end)
+	{
+		float fValue = amx_ctof(blah[0]);
+
+		switch(iSwitch)
+		{
+			case impacttime:
+				pPlayer->v.impacttime = fValue;
+				return 1;
+			case starttime:
+				pPlayer->v.starttime = fValue;
+				return 1;
+			case idealpitch:
+				pPlayer->v.idealpitch = fValue;
+				return 1;
+			case pitch_speed:
+				pPlayer->v.pitch_speed = fValue;
+				return 1;
+			case yaw_speed:
+				pPlayer->v.yaw_speed = fValue;
+				return 1;
+			case ltime:
+				pPlayer->v.ltime = fValue;
+				return 1;
+			case nextthink:
+				pPlayer->v.nextthink = fValue;
+				return 1;
+			case gravity:
+				pPlayer->v.gravity = fValue;
+				return 1;
+			case friction:
+				pPlayer->v.friction = fValue;
+				return 1;
+			case frame:
+				pPlayer->v.frame = fValue;
+				return 1;
+			case animtime:
+				pPlayer->v.animtime = fValue;
+				return 1;
+			case framerate:
+				pPlayer->v.framerate = fValue;
+				return 1;
+			case scale:
+				pPlayer->v.scale = fValue;
+				return 1;
+			case renderamt:
+				pPlayer->v.renderamt = fValue;
+				return 1;
+			case health:
+				pPlayer->v.health = fValue;
+				return 1;
+			case frags:
+				pPlayer->v.frags = fValue;
+				return 1;
+			case takedamage:
+				pPlayer->v.takedamage = fValue;
+				return 1;
+			case max_health:
+				pPlayer->v.max_health = fValue;
+				return 1;
+			case teleport_time:
+				pPlayer->v.teleport_time = fValue;
+				return 1;
+			case armortype:
+				pPlayer->v.armortype = fValue;
+				return 1;
+			case armorvalue:
+				pPlayer->v.armorvalue = fValue;
+				return 1;
+			case dmg_take:
+				pPlayer->v.dmg_take = fValue;
+				return 1;
+			case dmg_save:
+				pPlayer->v.dmg_save = fValue;
+				return 1;
+			case dmg:
+				pPlayer->v.dmg = fValue;
+				return 1;
+			case dmgtime:
+				pPlayer->v.dmgtime = fValue;
+				return 1;
+			case speed:
+				pPlayer->v.speed = fValue;
+				return 1;
+			case air_finished:
+				pPlayer->v.air_finished = fValue;
+				return 1;
+			case pain_finished:
+				pPlayer->v.pain_finished = fValue;
+				return 1;
+			case radsuit_finished:
+				pPlayer->v.radsuit_finished = fValue;
+				return 1;
+			case maxspeed:
+				pPlayer->v.maxspeed = fValue;
+				return 1;
+			case fov:
+				pPlayer->v.fov = fValue;
+				return 1;
+			case flFallVelocity:
+				pPlayer->v.flFallVelocity = fValue;
+				return 1;
+			case fuser1:
+				pPlayer->v.fuser1 = fValue;
+				return 1;
+			case fuser2:
+				pPlayer->v.fuser2 = fValue;
+				return 1;
+			case fuser3:
+				pPlayer->v.fuser3 = fValue;
+				return 1;
+			case fuser4:
+				pPlayer->v.fuser4 = fValue;
+				return 1;
+			default:
+				return 0;
+		}
+	}
+	else if (iSwitch > pev_string_start && iSwitch < pev_string_end)
+	{
+
+		int iValue = blah[0];
+		switch (iSwitch)
+		{
+		case classname:
+			pPlayer->v.classname = iValue;
+			return 1;
+		case globalname:
+			pPlayer->v.globalname = iValue;
+			return 1;
+		case model:
+			pPlayer->v.model = iValue;
+			return 1;
+		case target:
+			pPlayer->v.target = iValue;
+			return 1;
+		case targetname:
+			pPlayer->v.targetname = iValue;
+			return 1;
+		case netname:
+			pPlayer->v.netname = iValue;
+			return 1;
+		case message:
+			pPlayer->v.message = iValue;
+			return 1;
+		case noise:
+			pPlayer->v.noise = iValue;
+			return 1;
+		case noise1:
+			pPlayer->v.noise1 = iValue;
+			return 1;
+		case noise2:
+			pPlayer->v.noise2 = iValue;
+			return 1;
+		case noise3:
+			pPlayer->v.noise3 = iValue;
+			return 1;
+		default:
+			return 0;
+		}
+
+	}
+	else if (iSwitch > pev_edict_start && iSwitch < pev_edict_end)
+	{
+		switch (iSwitch)
+		{
+		case chain:
+			pPlayer->v.chain = INDEXENT2(params[3]);
+			return 1;
+		case dmg_inflictor:
+			pPlayer->v.dmg_inflictor = INDEXENT2(params[3]);
+			return 1;
+		case enemy:
+			pPlayer->v.enemy = INDEXENT2(params[3]);
+			return 1;
+		case aiment:
+			pPlayer->v.aiment = INDEXENT2(params[3]);
+			return 1;
+		case owner:
+			pPlayer->v.owner = INDEXENT2(params[3]);
+			return 1;
+		case groundentity:
+			pPlayer->v.groundentity = INDEXENT2(params[3]);
+			return 1;
+		case euser1:
+			pPlayer->v.euser1 = INDEXENT2(params[3]);
+			return 1;
+		case euser2:
+			pPlayer->v.euser2 = INDEXENT2(params[3]);
+			return 1;
+		case euser3:
+			pPlayer->v.euser3 = INDEXENT2(params[3]);
+			return 1;
+		case euser4:
+			pPlayer->v.euser4 = INDEXENT2(params[3]);
+			return 1;
+		default:
+			return 0;
+		}
+	}
+	else if (iSwitch > pev_vecarray_start && iSwitch < pev_vecarray_end)
+	{
+		cell *vCell = MF_GetAmxAddr(amx,params[3]);
+		Vector vValue;
+		vValue.x = amx_ctof(vCell[0]);
+		vValue.y = amx_ctof(vCell[1]);
+		vValue.z = amx_ctof(vCell[2]);
+		switch(iSwitch)
+		{
+		case origin:
+			pPlayer->v.origin = vValue;
+			return 1;
+		case oldorigin:
+			pPlayer->v.oldorigin = vValue;
+			return 1;
+		case velocity:
+			pPlayer->v.velocity = vValue;
+			return 1;
+		case basevelocity:
+			pPlayer->v.basevelocity = vValue;
+			return 1;
+		case clbasevelocity:
+			pPlayer->v.clbasevelocity = vValue;
+			return 1;
+		case movedir:
+			pPlayer->v.movedir = vValue;
+			return 1;
+		case angles:
+			pPlayer->v.angles = vValue;
+			return 1;
+		case avelocity:
+			pPlayer->v.avelocity = vValue;
+			return 1;
+		case v_angle:
+			pPlayer->v.v_angle = vValue;
+			return 1;
+		case endpos:
+			pPlayer->v.endpos = vValue;
+			return 1;
+		case startpos:
+			pPlayer->v.startpos = vValue;
+			return 1;
+		case absmin:
+			pPlayer->v.absmin = vValue;
+			return 1;
+		case absmax:
+			pPlayer->v.absmax = vValue;
+			return 1;
+		case mins:
+			pPlayer->v.mins = vValue;
+			return 1;
+		case maxs:
+			pPlayer->v.maxs = vValue;
+			return 1;
+		case size:
+			pPlayer->v.size = vValue;
+			return 1;
+		case rendercolor:
+			pPlayer->v.rendercolor = vValue;
+			return 1;
+		case view_ofs:
+			pPlayer->v.view_ofs = vValue;
+			return 1;
+		case vuser1:
+			pPlayer->v.vuser1 = vValue;
+			return 1;
+		case vuser2:
+			pPlayer->v.vuser2 = vValue;
+			return 1;
+		case vuser3:
+			pPlayer->v.vuser3 = vValue;
+			return 1;
+		case vuser4:
+			pPlayer->v.vuser4 = vValue;
+			return 1;
+		case punchangle:
+			pPlayer->v.punchangle = vValue;
+			return 1;
+		default:
+			return 0;
+		}
+	}
+	else if (iSwitch > pev_byte_start && iSwitch < pev_byte_end)
+	{
+		cell *blah = MF_GetAmxAddr(amx,params[3]);
+		int iValue = blah[0];
+
+		switch(iSwitch)
+		{
+			case controller_0:
+				pPlayer->v.controller[0]=iValue;
+				return 1;
+			case controller_1:
+				pPlayer->v.controller[1]=iValue;
+				return 1;
+			case controller_2:
+				pPlayer->v.controller[2]=iValue;
+				return 1;
+			case controller_3:
+				pPlayer->v.controller[3]=iValue;
+				return 1;
+			case blending_0:
+				pPlayer->v.blending[0]=iValue;
+				return 1;
+			case blending_1:
+				pPlayer->v.blending[1]=iValue;
+				return 1;
+			default:
+				return 0;
+		}
+	}
+	else if (iSwitch > pev_bytearray_start && iSwitch < pev_bytearray_end)
+	{
+		cell *vCell = MF_GetAmxAddr(amx,params[3]);
+		switch(iSwitch)
+		{
+			case controller:
+				pPlayer->v.controller[0]=vCell[0];
+				pPlayer->v.controller[1]=vCell[1];
+				pPlayer->v.controller[2]=vCell[2];
+				pPlayer->v.controller[3]=vCell[3];
+				return 1;
+			case blending:
+				pPlayer->v.controller[0]=vCell[0];
+				pPlayer->v.controller[1]=vCell[1];
+				return 1;
+			default:
+				return 0;
+		}
+	}
+	return 0;
+}
+
+AMX_NATIVE_INFO pev_natives[] = {
+	{ "pev",			amx_pev },
+	{ "set_pev",		amx_set_pev },
+	{NULL,				NULL},
+};

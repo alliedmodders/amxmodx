@@ -1,5 +1,6 @@
 #include "fakemeta_amxx.h"
 
+
 CVector<int> Engine[ENGFUNC_NUM+10];
 CVector<int> EnginePost[ENGFUNC_NUM+10];
 cell mCellResult;
@@ -10,6 +11,8 @@ const char *mStringResult;
 const char *mlStringResult;
 int retType = 0;
 int lastFmRes = FMRES_IGNORED;
+
+
 
 #define ENGHOOK(pfnCall) \
 	if (engtable->pfn##pfnCall == NULL) \
@@ -88,6 +91,8 @@ static cell AMX_NATIVE_CALL fm_return(AMX *amx, cell *params)
 
 	return 1;
 }
+
+
 
 int PrecacheModel(char *s)
 {
@@ -176,7 +181,7 @@ void ChangePitch(edict_t *ent)
 edict_t *FindEntityByString(edict_t *pEdictStartSearchAfter, const char *pszField, const char *pszValue)
 {
 	FM_ENG_HANDLE(FM_FindEntityByString, (Engine[FM_FindEntityByString].at(i),  ENTINDEX(pEdictStartSearchAfter), pszField, pszValue));
-	RETURN_META_VALUE(mswi(lastFmRes), INDEXENT((int)mlCellResult));
+	RETURN_META_VALUE(mswi(lastFmRes), INDEXENT2((int)mlCellResult));
 }
 
 int GetEntityIllum(edict_t *pent)

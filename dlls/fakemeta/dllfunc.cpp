@@ -28,14 +28,14 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
 		CHECK_ENTITY(index);
-		return gpGamedllFuncs->dllapi_table->pfnSpawn(INDEXENT(index));
+		return gpGamedllFuncs->dllapi_table->pfnSpawn(INDEXENT2(index));
 
 		// pfnThink
 	case	DLLFunc_Think:	// void )				( edict_t *pent );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
 		CHECK_ENTITY(index);
-		gpGamedllFuncs->dllapi_table->pfnThink(INDEXENT(index));
+		gpGamedllFuncs->dllapi_table->pfnThink(INDEXENT2(index));
 		return 1;
 
 		// pfnUse
@@ -43,10 +43,10 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
 		CHECK_ENTITY(index);
-		cRet = MF_GetAmxAddr(amx,params[2]);
+		cRet = MF_GetAmxAddr(amx,params[3]);
 		indexb=cRet[0];
 		CHECK_ENTITY(indexb);
-		gpGamedllFuncs->dllapi_table->pfnUse(INDEXENT(index),INDEXENT(indexb));
+		gpGamedllFuncs->dllapi_table->pfnUse(INDEXENT2(index),INDEXENT2(indexb));
 		return 1;
 
 		// pfnTouch
@@ -57,7 +57,7 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		indexb=cRet[0];
 		CHECK_ENTITY(indexb);
-		gpGamedllFuncs->dllapi_table->pfnTouch(INDEXENT(index),INDEXENT(indexb));
+		gpGamedllFuncs->dllapi_table->pfnTouch(INDEXENT2(index),INDEXENT2(indexb));
 		return 1;
 
 	case	DLLFunc_Blocked:	// void )			( edict_t *pentBlocked, edict_t *pentOther );
@@ -67,7 +67,7 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		indexb=cRet[0];
 		CHECK_ENTITY(indexb);
-		gpGamedllFuncs->dllapi_table->pfnBlocked(INDEXENT(index),INDEXENT(indexb));
+		gpGamedllFuncs->dllapi_table->pfnBlocked(INDEXENT2(index),INDEXENT2(indexb));
 		return 1;
 
 		
@@ -75,7 +75,7 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
 		CHECK_ENTITY(index);
-		gpGamedllFuncs->dllapi_table->pfnSetAbsBox(INDEXENT(index));
+		gpGamedllFuncs->dllapi_table->pfnSetAbsBox(INDEXENT2(index));
 		return 1;
 
 	case	DLLFunc_ClientConnect:		// bool)		( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ] );
@@ -86,7 +86,7 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		temp = MF_GetAmxString(amx,params[3],0,&len);
 		temp2 = MF_GetAmxString(amx,params[4],1,&len);
 		//temp3 = GET_AMXSTRING(amx,params[5],2,len);
-		iparam1 = MDLL_ClientConnect(INDEXENT(index),STRING(ALLOC_STRING(temp)),STRING(ALLOC_STRING(temp2)),temp3);
+		iparam1 = MDLL_ClientConnect(INDEXENT2(index),STRING(ALLOC_STRING(temp)),STRING(ALLOC_STRING(temp2)),temp3);
 		cRet = MF_GetAmxAddr(amx,params[6]);
 		MF_SetAmxString(amx,params[5],temp3,cRet[0]);
 		return 1;
@@ -95,21 +95,21 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
 		CHECK_ENTITY(index);
-		gpGamedllFuncs->dllapi_table->pfnClientDisconnect(INDEXENT(index));
+		gpGamedllFuncs->dllapi_table->pfnClientDisconnect(INDEXENT2(index));
 		return 1;
 
 	case	DLLFunc_ClientKill:		// void )		( edict_t *pEntity );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
 		CHECK_ENTITY(index);
-		gpGamedllFuncs->dllapi_table->pfnClientKill(INDEXENT(index));
+		gpGamedllFuncs->dllapi_table->pfnClientKill(INDEXENT2(index));
 		return 1;
 
 	case	DLLFunc_ClientPutInServer:	// void )	( edict_t *pEntity );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
 		CHECK_ENTITY(index);
-		gpGamedllFuncs->dllapi_table->pfnClientPutInServer(INDEXENT(index));
+		gpGamedllFuncs->dllapi_table->pfnClientPutInServer(INDEXENT2(index));
 		return 1;
 
 	case	DLLFunc_ServerDeactivate:	// void)	( void );
@@ -120,14 +120,14 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
 		CHECK_ENTITY(index);
-		gpGamedllFuncs->dllapi_table->pfnPlayerPreThink(INDEXENT(index));
+		gpGamedllFuncs->dllapi_table->pfnPlayerPreThink(INDEXENT2(index));
 		return 1;
 
 	case	DLLFunc_PlayerPostThink:		// void )	( edict_t *pEntity );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
 		CHECK_ENTITY(index);
-		gpGamedllFuncs->dllapi_table->pfnPlayerPostThink(INDEXENT(index));
+		gpGamedllFuncs->dllapi_table->pfnPlayerPostThink(INDEXENT2(index));
 		return 1;
 
 	case	DLLFunc_StartFrame:		// void )		( void );
@@ -153,19 +153,19 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
 		CHECK_ENTITY(index);
-		gpGamedllFuncs->dllapi_table->pfnSpectatorConnect(INDEXENT(index));
+		gpGamedllFuncs->dllapi_table->pfnSpectatorConnect(INDEXENT2(index));
 		return 1;
 	case	DLLFunc_SpectatorDisconnect:	// void )	( edict_t *pEntity );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
 		CHECK_ENTITY(index);
-		gpGamedllFuncs->dllapi_table->pfnSpectatorDisconnect(INDEXENT(index));
+		gpGamedllFuncs->dllapi_table->pfnSpectatorDisconnect(INDEXENT2(index));
 		return 1;
 	case	DLLFunc_SpectatorThink:		// void )		( edict_t *pEntity );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
 		CHECK_ENTITY(index);
-		gpGamedllFuncs->dllapi_table->pfnSpectatorThink(INDEXENT(index));
+		gpGamedllFuncs->dllapi_table->pfnSpectatorThink(INDEXENT2(index));
 		return 1;
 
 	// Notify game .dll that engine is going to shut down.  Allows mod authors to set a breakpoint.
@@ -209,7 +209,7 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		index = cRet[0];
 		CHECK_ENTITY(index);
-		iparam1 = gpMetaUtilFuncs->pfnCallGameEntity(PLID,STRING(ALLOC_STRING(temp)),VARS(INDEXENT(index)));
+		iparam1 = gpMetaUtilFuncs->pfnCallGameEntity(PLID,STRING(ALLOC_STRING(temp)),VARS(INDEXENT2(index)));
 		return iparam1;
 	default:
 		MF_Log("Unknown dllfunc entry.");

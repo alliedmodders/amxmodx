@@ -21,8 +21,8 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 #define RESETD(tcall) \
 	g_pFunctionTable->pfn##tcall =0; \
 	g_pFunctionTable_Post->pfn##tcall =NULL; \
-	Engine[FM_##tcall##].clear(); \
-	EnginePost[FM_##tcall##].clear()
+	Engine[FM_##tcall].clear(); \
+	EnginePost[FM_##tcall].clear()
 
 #define RESETE(call) \
 	g_pengfuncsTable->pfn##call = NULL; \

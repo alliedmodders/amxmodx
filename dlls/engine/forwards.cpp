@@ -64,8 +64,7 @@ void ChangeLevel(char* s1, char* s2)
 	if (ChangelevelForward) {
 		int retVal = 0;
 		char *map = s1;
-		cell amxMap = MF_PrepareCharArray(map, strlen(map));
-		retVal = MF_ExecuteForward(ChangelevelForward, amxMap);
+		retVal = MF_ExecuteForward(ChangelevelForward, map);
 		if (retVal)
 			RETURN_META(MRES_SUPERCEDE);
 	}

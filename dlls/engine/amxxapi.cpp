@@ -38,8 +38,8 @@ void OnPluginsLoaded()
 	PlayerPostThinkForward = MF_RegisterForward("client_PostThink", ET_STOP, FP_CELL, FP_DONE);
 	ClientKillForward = MF_RegisterForward("client_kill", ET_STOP, FP_CELL, FP_DONE);
 	CmdStartForward = MF_RegisterForward("client_impulse", ET_STOP, FP_CELL, FP_CELL, FP_DONE);
-	StartFrameForward = MF_RegisterForward("ServerFrame", ET_IGNORE, FP_DONE);
-//	DispatchKeyForward = MF_RegisterForward("Dispatch_KeyVal", ET_STOP, FP_CELL, FP_DONE);
+	StartFrameForward = MF_RegisterForward("server_frame", ET_IGNORE, FP_DONE);
+	DispatchKeyForward = MF_RegisterForward("Dispatch_KeyVal", ET_STOP, FP_CELL, FP_DONE);
 	PlaybackForward = MF_RegisterForward("PlaybackEvent", ET_STOP, FP_CELL, FP_CELL, FP_CELL, FP_FLOAT, FP_ARRAY, FP_ARRAY, FP_FLOAT, FP_FLOAT, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 	ChangelevelForward = MF_RegisterForward("server_changelevel", ET_STOP, FP_STRING, FP_DONE);
 	SpawnForward = MF_RegisterForward("pfn_spawn", ET_IGNORE, FP_CELL, FP_DONE);

@@ -37,7 +37,6 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "ns.h"
 #include "amxxmodule.h"
 
 /************* METAMOD SUPPORT *************/
@@ -2478,6 +2477,9 @@ PFN_CELL_TO_REAL			g_fn_CellToReal;
 PFN_REGISTER_SPFORWARD		g_fn_RegisterSPForward;
 PFN_REGISTER_SPFORWARD_BYNAME	g_fn_RegisterSPForwardByName;
 PFN_UNREGISTER_SPFORWARD	g_fn_UnregisterSPForward;
+PFN_MERGEDEFINITION_FILE	g_fn_MergeDefinition_File;
+PFN_AMX_FINDNATIVE			g_fn_AmxFindNative;
+PFN_GETPLAYERFLAGS		g_fn_GetPlayerFlags;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2521,6 +2523,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("PrintSrvConsole", g_fn_PrintSrvConsole, PFN_PRINT_SRVCONSOLE);
 	REQFUNC("GetModname", g_fn_GetModname, PFN_GET_MODNAME);
 	REQFUNC("Log", g_fn_Log, PFN_LOG);
+	REQFUNC("MergeDefinitionFile", g_fn_MergeDefinition_File, PFN_MERGEDEFINITION_FILE);
 
 	// Amx scripts
 	REQFUNC("GetAmxScript", g_fn_GetAmxScript, PFN_GET_AMXSCRIPT);
@@ -2528,6 +2531,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("FindAmxScriptByName", g_fn_FindAmxScriptByName, PFN_FIND_AMXSCRIPT_BYNAME);
 	REQFUNC("LoadAmxScript", g_fn_LoadAmxScript, PFN_LOAD_AMXSCRIPT);
 	REQFUNC("UnloadAmxScript", g_fn_UnloadAmxScript, PFN_UNLOAD_AMXSCRIPT);
+    REQFUNC("GetAmxScriptName", g_fn_GetAmxScriptName, PFN_GET_AMXSCRIPTNAME);
 
 	// String / mem in amx scripts support
 	REQFUNC("SetAmxString", g_fn_SetAmxString, PFN_SET_AMXSTRING);
@@ -2541,6 +2545,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("amx_Execv", g_fn_AmxExecv, PFN_AMX_EXECV);
 	REQFUNC("amx_FindPublic", g_fn_AmxFindPublic, PFN_AMX_FINDPUBLIC);
 	REQFUNC("amx_Allot", g_fn_AmxAllot, PFN_AMX_ALLOT);
+	REQFUNC("amx_FindNative", g_fn_AmxFindNative, PFN_AMX_FINDNATIVE);
 
 	// Natives / Forwards
 	REQFUNC("AddNatives", g_fn_AddNatives, PFN_ADD_NATIVES);
@@ -2573,6 +2578,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("IsPlayerHLTV", g_fn_IsPlayerHLTV, PFN_IS_PLAYER_HLTV);
 	REQFUNC("GetPlayerArmor", g_fn_GetPlayerArmor, PFN_GET_PLAYER_ARMOR);
 	REQFUNC("GetPlayerHealth", g_fn_GetPlayerHealth, PFN_GET_PLAYER_HEALTH);
+	REQFUNC("GetPlayerFlags", g_fn_GetPlayerFlags, PFN_GETPLAYERFLAGS);
 
 	// Memory
 	REQFUNC_OPT("Allocator", g_fn_Allocator, PFN_ALLOCATOR);
@@ -2674,6 +2680,8 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_UnregisterSPForward(0);
 }
 #endif
+
+#ifdef MEMORY_TEST
 
 /************* MEMORY *************/
 // undef all defined macros
@@ -2846,6 +2854,8 @@ void	operator delete[](void *reportedAddress)
 	Mem_Deallocator(g_Mem_CurrentFilename, g_Mem_CurrentLine, g_Mem_CurrentFunc, m_alloc_delete_array, reportedAddress);
 }
 
+#endif //MEMORY_TEST
+
 /************* stuff from dlls/util.cpp *************/
 //				must come here because cbase.h declares it's own operator new
 
@@ -2879,6 +2889,8 @@ void	operator delete[](void *reportedAddress)
 
 #include <extdll.h>
 #include "sdk_util.h"
+#include <cbase.h>
+
 #include <string.h>			// for strncpy(), etc
 
 #include "osdep.h"			// win32 vsnprintf, etc
@@ -2906,56 +2918,64 @@ void UTIL_LogPrintf( char *fmt, ... )
 	static char		string[1024];
 	
 	va_start ( argptr, fmt );
-	vsprintf ( string, fmt, argptr );
+	vsnprintf ( string, sizeof(string), fmt, argptr );
 	va_end   ( argptr );
 
 	// Print to server console
 	ALERT( at_logged, "%s", string );
 }
-edict_t	*UTIL_PlayerByIndexE( int playerIndex )
-{
 
-	if ( playerIndex > 0 && playerIndex <= gpGlobals->maxClients )
-	{
-		edict_t *pPlayerEdict = INDEXENT2( playerIndex );
-		if ( pPlayerEdict && !pPlayerEdict->free )
+
+void UTIL_HudMessage(CBaseEntity *pEntity, const hudtextparms_t &textparms, 
+		const char *pMessage)
+{
+	if ( !pEntity )
+		return;
+
+	MESSAGE_BEGIN( MSG_ONE, SVC_TEMPENTITY, NULL, ENT(pEntity->pev) );
+		WRITE_BYTE( TE_TEXTMESSAGE );
+		WRITE_BYTE( textparms.channel & 0xFF );
+
+		WRITE_SHORT( FixedSigned16( textparms.x, 1<<13 ) );
+		WRITE_SHORT( FixedSigned16( textparms.y, 1<<13 ) );
+		WRITE_BYTE( textparms.effect );
+
+		WRITE_BYTE( textparms.r1 );
+		WRITE_BYTE( textparms.g1 );
+		WRITE_BYTE( textparms.b1 );
+		WRITE_BYTE( textparms.a1 );
+
+		WRITE_BYTE( textparms.r2 );
+		WRITE_BYTE( textparms.g2 );
+		WRITE_BYTE( textparms.b2 );
+		WRITE_BYTE( textparms.a2 );
+
+		WRITE_SHORT( FixedUnsigned16( textparms.fadeinTime, 1<<8 ) );
+		WRITE_SHORT( FixedUnsigned16( textparms.fadeoutTime, 1<<8 ) );
+		WRITE_SHORT( FixedUnsigned16( textparms.holdTime, 1<<8 ) );
+
+		if ( textparms.effect == 2 )
+			WRITE_SHORT( FixedUnsigned16( textparms.fxTime, 1<<8 ) );
+		
+		if ( strlen( pMessage ) < 512 )
 		{
-			return pPlayerEdict;
+			WRITE_STRING( pMessage );
 		}
-	}
-	
-	return NULL;
-}
-edict_t *UTIL_FindEntityByString(edict_t *pentStart, const char *szKeyword, const char *szValue)
-{
-	edict_t *pentEntity;
-	pentEntity=FIND_ENTITY_BY_STRING(pentStart, szKeyword, szValue);
-	if(!FNullEnt(pentEntity))
-		return pentEntity;
-	return NULL;
-}
-
-
-
-
-unsigned short FixedUnsigned16( float value, float scale )
-{
-	int output;
-
-	output = (int)(value * scale);
-	if ( output < 0 )
-		output = 0;
-	if ( output > 0xFFFF )
-		output = 0xFFFF;
-
-	return (unsigned short)output;
+		else
+		{
+			char tmp[512];
+			strncpy( tmp, pMessage, 511 );
+			tmp[511] = 0;
+			WRITE_STRING( tmp );
+		}
+	MESSAGE_END();
 }
 
 short FixedSigned16( float value, float scale )
 {
 	int output;
 
-	output = (int)(value * scale);
+	output = (int) (value * scale);
 
 	if ( output > 32767 )
 		output = 32767;
@@ -2965,77 +2985,17 @@ short FixedSigned16( float value, float scale )
 
 	return (short)output;
 }
-int LogToIndex(char logline[128])
+
+unsigned short FixedUnsigned16( float value, float scale )
 {
-	char *cname;
-	// Format of log line:
-	// name<CID><auth><team>
-	// We need to find their ID from their name...
-	int x,y=0;
-	char cindex[64];
-	// first we find the location of the start of the index
-	// Name can contain <>'s, so we go from the end up.
-	for (x=strlen(logline);x>=0;x--)
-	{
-		if (logline[x]=='<')
-		{
-			y++;
-			if (y==3)
-			{
-				y=x;
-				break;
-			}
-		}
-	}
-	// We found the end of the name, now copy the rest down.
-	y--;
-	x=0;
-	for (x;x<=y;x++)
-	{
-		cindex[x]=logline[x];
-	}
-	cindex[x]='\0';
-	// Now we have their name, now cycle through all players to find which index it is
-	x=1;
-	for (x;x<=gpGlobals->maxClients;x++)
-	{
-		cname=strdup(cindex);
-		if (!FNullEnt(INDEXENT2(x)))
-		{
-			if (FStrEq(cname,STRING(INDEXENT2(x)->v.netname)))
-			{
-				return x;
-			}
-		}
-	}
-	return 0;
-}
-int Find_Building_Hive(void)
-{
-	edict_t *pEntity=NULL;
-	while (pEntity = UTIL_FindEntityByString(pEntity,"classname","team_hive"))
-	{
-		if (pEntity->v.health > 0 && pEntity->v.solid > 0 && pEntity->v.fuser1 < 1000)
-		{
-			return ENTINDEX(pEntity);
-		}
-	}
-	return 0;
-}
+	int output;
 
+	output = (int) (value * scale);
+	if ( output < 0 )
+		output = 0;
+	if ( output > 0xFFFF )
+		output = 0xFFFF;
 
-
-
-int AMX_MAKE_STRING(AMX *oPlugin, cell tParam, int &iLength)
-{
-	char *szNewValue = MF_GetAmxString(oPlugin, tParam, 0, &iLength);
-	return ALLOC_STRING(szNewValue);
-}
-
-// Makes a char pointer out of an AMX cell.
-char *AMX_GET_STRING(AMX *oPlugin, cell tParam, int &iLength) 
-{
-	char *szNewValue = MF_GetAmxString(oPlugin, tParam, 0, &iLength);
-	return (char*)STRING(ALLOC_STRING(szNewValue));
+	return (unsigned short)output;
 }
 #endif // USE_METAMOD

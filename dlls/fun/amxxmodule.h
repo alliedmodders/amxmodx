@@ -1932,6 +1932,7 @@ typedef int				(*PFN_IS_PLAYER_BOT)			(int /*id*/);
 typedef int				(*PFN_IS_PLAYER_AUTHORIZED)		(int /*id*/);
 typedef float			(*PFN_GET_PLAYER_TIME)			(int /*id*/);
 typedef float			(*PFN_GET_PLAYER_PLAYTIME)		(int /*id*/);
+typedef int			(*PFN_GETPLAYERFLAGS) 			(int /* id*/);
 typedef int				(*PFN_GET_PLAYER_CURWEAPON)		(int /*id*/);
 typedef int				(*PFN_GET_PLAYER_TEAMID)		(int /*id*/);
 typedef int				(*PFN_GET_PLAYER_DEATHS)		(int /*id*/);
@@ -2015,6 +2016,7 @@ extern PFN_REGISTER_SPFORWARD_BYNAME	g_fn_RegisterSPForwardByName;
 extern PFN_UNREGISTER_SPFORWARD		g_fn_UnregisterSPForward;
 extern PFN_MERGEDEFINITION_FILE		g_fn_MergeDefinition_File;
 extern PFN_AMX_FINDNATIVE			g_fn_AmxFindNative;
+extern PFN_GETPLAYERFLAGS		g_fn_GetPlayerFlags;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2063,6 +2065,7 @@ cell			amx_ftoc					(float x) { }
 int				MF_RegisterSPForwardByName	(AMX * amx, const char *str, ...) { }
 int				MF_RegisterSPForward		(AMX * amx, int func, ...) { }
 void			MF_UnregisterSPForward		(int id) { }
+int				MF_GetPlayerFlags			(int id) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
@@ -2117,6 +2120,9 @@ void MF_Log(const char *fmt, ...);
 #define MF_RegisterSPForwardByName g_fn_RegisterSPForwardByName
 #define MF_RegisterSPForward g_fn_RegisterSPForward
 #define MF_UnregisterSPForward g_fn_UnregisterSPForward
+#define MF_GetPlayerFlags g_fn_GetPlayerFlags
+
+#ifdef MEMORY_TEST
 
 /*** Memory ***/
 void	*operator new(size_t reportedSize);
@@ -2161,5 +2167,6 @@ void	Mem_Deallocator(const char *sourceFile, const unsigned int sourceLine, cons
 #define	realloc(ptr,sz)	Mem_Reallocator(__FILE__,__LINE__,__FUNCTION__,m_alloc_realloc,sz,ptr)
 #define	free(ptr)	Mem_Deallocator(__FILE__,__LINE__,__FUNCTION__,m_alloc_free,ptr)
 
+#endif //MEMORY_TEST
 
 #endif // #ifndef __AMXXMODULE_H__

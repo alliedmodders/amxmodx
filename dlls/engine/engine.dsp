@@ -96,6 +96,10 @@ LINK32=link.exe
 
 SOURCE=.\meta_api.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\engine.h
+# End Source File
 # End Group
 # Begin Group "Resource Files"
 

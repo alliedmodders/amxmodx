@@ -36,286 +36,18 @@
 #include <modules.h>
 #include <vector>
 #include <limits.h>
+#include "engine.h"
 
-#define VERSION "0.5"
-
-plugin_info_t Plugin_info = {
-
-	META_INTERFACE_VERSION, // ifvers
-
-	"ENGINE", // name
-
-	VERSION,  // version
-
-	__DATE__, // date
-
-	"BAILOPAN",  // author
-
-	"http://www.amxmod.info/",  // url
-
-	"AMXXE", // logtag
-
-	PT_ANYTIME,// (when) loadable
-
-	PT_ANYTIME,// (when) unloadable
-
-};
-
-module_info_s module_info = {
-
-	"ENGINE", // name
-
-	"BAILOPAN", // author
-
-	VERSION, // version
-
-	AMX_INTERFACE_VERSION,
-
-	STATIC_MODULE,
-
-};
-
-class AmxCallList {
-  public:
-struct AmxCall {
-  AMX *amx;
-  //void* code;
-  int iFunctionIdx;
-   AmxCall* next;
-   AmxCall( AMX *a , int i, AmxCall* n  ) : amx(a), iFunctionIdx(i), next(n) {}
-} *head;
-
-  AmxCallList() { head = 0; }
-
-  ~AmxCallList() { clear(); }
-
-  void clear() {
-      while ( head )  {
-          AmxCall* a = head->next;
-          delete head;
-          head = a;
-      }
-  }
-
-  void put( AMX *a , int i )
-  {
-    head = new AmxCall( a, i , head  );
-  }
-
-};
-
-AmxCallList pfnTouch;
-AmxCallList serverFrame;
-AmxCallList preThink;
-AmxCallList postThink;
-AmxCallList clientKill;
-
-meta_globals_t *gpMetaGlobals;
-gamedll_funcs_t *gpGamedllFuncs;
-mutil_funcs_t *gpMetaUtilFuncs;
-enginefuncs_t g_engfuncs;
-globalvars_t  *gpGlobals;
-pfnamx_engine_g* g_engAmxFunc;
-pfnmodule_engine_g* g_engModuleFunc;
-
-extern AMX_NATIVE_INFO Engine_Natives[];
-
-void (*function)(void*);
-
-void (*endfunction)(void*);
-
-#define AMS_OFFSET 0.01
-
-#define SPEAK_NORMAL 0
-#define SPEAK_MUTED 1
-#define SPEAK_ALL 2
-#define SPEAK_LISTENALL 4
-
-#define CAMERA_NONE 0
-#define CAMERA_3RDPERSON 1
-#define CAMERA_UPLEFT 2
-#define CAMERA_TOPDOWN 3
-
-#define MAX_MESSAGES 255
-
-#define BLOCK_NOT 0
-#define BLOCK_ONCE 1
-#define BLOCK_SET 2
-
-enum {
-	gamestate,
-	oldbuttons,
-	groupinfo,
-	iuser1,
-	iuser2,
-	iuser3,
-	iuser4,
-	weaponanim,
-	pushmsec,
-	bInDuck,
-	flTimeStepSound,
-	flSwimTime,
-	flDuckTime,
-	iStepLeft,
-	movetype,
-	solid,
-	skin,			
-	body,
-	effects,
-	light_level,
-	sequence,
-	gaitsequence,
-	modelindex,
-	playerclass,
-	waterlevel,
-	watertype,
-	spawnflags,
-	flags,
-	colormap,
-	team,
-	fixangle,
-	weapons,
-	rendermode,
-	renderfx,
-	button,
-	impulse,
-	deadflag,
-};
-
-enum {
-	impacttime,
-	starttime,
-	idealpitch,
-	pitch_speed,
-	ideal_yaw,
-	yaw_speed,
-	ltime,
-	nextthink,
-	gravity,
-	friction,
-	frame,
-	animtime,
-	framerate,
-	health,
-	frags,
-	takedamage,
-	max_health,
-	teleport_time,
-	armortype,
-	armorvalue,
-	dmg_take,
-	dmg_save,
-	dmg,
-	dmgtime,
-	speed,
-	air_finished,
-	pain_finished,
-	radsuit_finished,
-	scale,
-	renderamt,
-	maxspeed,
-	fov,
-	flFallVelocity,
-	fuser1,
-	fuser2,
-	fuser3,
-	fuser4,
-};
-
-enum {
-	origin,
-	oldorigin,
-	velocity,
-	basevelocity,
-	clbasevelocity,
-	movedir,
-	angles,
-	avelocity,
-	punchangle,
-	v_angle,
-	endpos,
-	startpos,
-	absmin,
-	absmax,
-	mins,
-	maxs,
-	size,
-	rendercolor,
-	view_ofs,
-	vuser1,
-	vuser2,
-	vuser3,
-	vuser4,
-};
-
-enum {
-	chain,
-	dmg_inflictor,
-	enemy,
-	aiment,
-	owner,
-	groundentity,
-	pContainingEntity,
-	euser1,
-	euser2,
-	euser3,
-	euser4,
-};
-
-enum {
-	classname,
-	globalname,
-	model,
-	target,
-	targetname,
-	netname,
-	message,
-	noise,
-	noise1,
-	noise2,
-	noise3,
-	viewmodel,
-	weaponmodel,
-};
-
-enum {
-	controller1,
-	controller2,
-	controller3,
-	controller4,
-	blending1,
-	blending2,
-};
-
-struct PlayerInfo {
-	bool bModeled;
-	char szModel[32];
-	float fModelSet;
-
-	int iSpeakFlags;
-
-	edict_t *pViewEnt;
-	int iViewType;
-	int iRenderMode;
-	float fRenderAmt;
-};
-
-PlayerInfo PlInfo[33];
-
-struct GlobalInfo {
-	bool bLights;
-	float fNextLights;
-	char *szLastLights[128];
-	char *szRealLights[128];
-
-	int iMessageBlock[MAX_MESSAGES];
-	bool bBlocking;
-};
+extern "C" void destroy(MessageInfo* p) {
+    delete p;
+}
 
 GlobalInfo GlInfo;
+MsgSets Msg[MAX_MESSAGES];
+int LastMessage;
 
 cvar_t amxxe_version = {"amxxe_version", VERSION, FCVAR_SERVER, 0};
-
+ 
 /********************************************************
   vexd's utility funcs
   ******************************************************/
@@ -355,6 +87,254 @@ char *AMX_GET_STRING(AMX *oPlugin, cell tParam, int &iLength) {
 /********************************************************
   exported functions
   ******************************************************/
+
+//(BAILOPAN)
+//Hooks a register_message()
+static cell AMX_NATIVE_CALL register_message(AMX *amx, cell *params)
+{
+	int iLen;
+	int iFunctionIndex;
+	int iMessage = params[1];
+	char *szFunction = AMX_GET_STRING(amx, params[2], iLen);
+
+	if (iMessage > 0 && iMessage < MAX_MESSAGES) {
+		if (AMX_FINDPUBLIC(amx, szFunction, &iFunctionIndex) == AMX_ERR_NONE) {
+			Msg[iMessage].isHooked = true;
+			Msg[iMessage].type = iMessage;
+			Msg[iMessage].msgCalls.put(amx, iFunctionIndex);
+		} else {
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
+		}
+	} else {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	return 1;
+}
+
+//(BAILOPAN)
+//Gets the argument type of a message argument
+static cell AMX_NATIVE_CALL get_msg_argtype(AMX *amx, cell *params)
+{
+	int msg_type = params[1];
+	int argn = params[2];
+
+	if (msg_type < 0 || msg_type > MAX_MESSAGES) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	} else {
+		if ((Msg[msg_type].isHooked) && (Msg[msg_type].msg != NULL)) {
+			return Msg[msg_type].msg->ArgType(argn);
+		} else {
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
+//(BAILOPAN)
+//Gets the argument count for a message.
+static cell AMX_NATIVE_CALL get_msg_args(AMX *amx, cell *params)
+{
+	int msg_type = params[1];
+
+	if (msg_type < 0 || msg_type > MAX_MESSAGES) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	} else {
+		if ((Msg[msg_type].isHooked) && (Msg[msg_type].msg != NULL)) {
+			return Msg[msg_type].msg->args();
+		} else {
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
+		}
+	}
+}
+
+//(BAILOPAN)
+//gets a message argument as an integer
+static cell AMX_NATIVE_CALL get_msg_arg_int(AMX *amx, cell *params)
+{
+	int msg_type = params[1];
+	int argn = params[2];
+	
+	if (msg_type < 0 || msg_type > MAX_MESSAGES) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	} else {
+		if (Msg[msg_type].isHooked && Msg[msg_type].msg!=NULL) {
+			if (argn < Msg[msg_type].msg->args() && argn > 0) {
+				return Msg[msg_type].msg->RetArg_Int(argn);
+			} else {
+				AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+				return 0;
+			}
+		} else {
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
+//(BAILOPAN)
+//gets a message argument as a float
+static cell AMX_NATIVE_CALL get_msg_arg_float(AMX *amx, cell *params)
+{
+	int msg_type = params[1];
+	int argn = params[2];
+
+	float retVal;
+	
+	if (msg_type < 0 || msg_type > MAX_MESSAGES) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	} else {
+		if (Msg[msg_type].isHooked && Msg[msg_type].msg!=NULL) {
+			if (argn < Msg[msg_type].msg->args() && argn > 0) {
+				retVal = Msg[msg_type].msg->RetArg_Float(argn);
+				return *(cell*)((void *)&retVal);
+			} else {
+				AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+				return 0;
+			}
+		} else {
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
+//(BAILOPAN)
+//gets a message argument as an string
+static cell AMX_NATIVE_CALL get_msg_arg_string(AMX *amx, cell *params)
+{
+	int msg_type = params[1];
+	int argn = params[2];
+	char *szValue;
+	
+	if (msg_type < 0 || msg_type > MAX_MESSAGES) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	} else {
+		if (Msg[msg_type].isHooked && Msg[msg_type].msg!=NULL) {
+			if (argn < Msg[msg_type].msg->args() && argn > 0) {
+				szValue = Msg[msg_type].msg->RetArg_String(argn);
+				return SET_AMXSTRING(amx, params[3], szValue, params[4]);
+			} else {
+				AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+				return 0;
+			}
+		} else {
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
+//(BAILOPAN)
+static cell AMX_NATIVE_CALL set_msg_arg_string(AMX *amx, cell *params)
+{
+	int msg_type = params[1];
+	int argn = params[2];
+	int iLen;
+	char *szData = AMX_GET_STRING(amx, params[3], iLen);
+	
+	if (msg_type < 0 || msg_type > MAX_MESSAGES) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	} else {
+		if (Msg[msg_type].isHooked && Msg[msg_type].msg!=NULL) {
+			if (argn < Msg[msg_type].msg->args() && argn > 0) {
+				if (Msg[msg_type].msg->Set(argn, arg_string, szData)) {
+					return 1;
+				} else {
+					return 0;
+				}
+			} else {
+				AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+				return 0;
+			}
+		} else {
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
+//(BAILOPAN)
+static cell AMX_NATIVE_CALL set_msg_arg_float(AMX *amx, cell *params)
+{
+	int msg_type = params[1];
+	int argn = params[2];
+	int argtype = params[3];
+	
+	if (msg_type < 0 || msg_type > MAX_MESSAGES) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	} else {
+		if (Msg[msg_type].isHooked && Msg[msg_type].msg!=NULL) {
+			if (argn < Msg[msg_type].msg->args() && argn > 0) {
+				if (Msg[msg_type].msg->Set(argn, argtype, params[4])) {
+					return 1;
+				} else {
+					return 0;
+				}
+			} else {
+				AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+				return 0;
+			}
+		} else {
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
+//(BAILOPAN)
+static cell AMX_NATIVE_CALL set_msg_arg_int(AMX *amx, cell *params)
+{
+	int msg_type = params[1];
+	int argn = params[2];
+	int argtype = params[3];
+	int iData = params[4];
+	
+	if (msg_type < 0 || msg_type > MAX_MESSAGES) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	} else {
+		if (Msg[msg_type].isHooked && Msg[msg_type].msg!=NULL) {
+			if (argn < Msg[msg_type].msg->args() && argn > 0) {
+				if (Msg[msg_type].msg->Set(argn, argtype, iData)) {
+					return 1;
+				} else {
+					return 0;
+				}
+			} else {
+				AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+				return 0;
+			}
+		} else {
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
+		}
+	}
+
+	return 1;
+}
 
 //(BAILOPAN)
 //Sets a pvPrivateData offset for a player (player, offset, val, float=0)
@@ -2467,6 +2447,14 @@ static cell AMX_NATIVE_CALL attach_view(AMX *amx, cell *params) {
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL precache_generic(AMX *amx, cell *params)
+{
+	int len;
+	char* szPreCache = GET_AMXSTRING(amx,params[1],0,len);
+	PRECACHE_GENERIC((char*)STRING(ALLOC_STRING(szPreCache)));
+	return 1;
+}
+
 /********************************************
    METAMOD HOOKED FUNCTIONS
    *****************************************/
@@ -2619,12 +2607,18 @@ void ClientDisconnect(edict_t *pEntity) {
 
 // pfnTouch, this is a forward that is called whenever 2 entities collide.
 void Touch(edict_t *pToucher, edict_t *pTouched) {
-
+	cell iResult;
+	META_RES result = MRES_IGNORED;
 	for (AmxCallList::AmxCall* i = pfnTouch.head; i; i = i->next) {
-		AMX_EXEC(i->amx, NULL, i->iFunctionIdx, 2, pToucher, pTouched);
+		AMX_EXEC(i->amx, &iResult, i->iFunctionIdx, 2, pToucher, pTouched);
+		if (iResult & 2) {
+			RETURN_META(MRES_SUPERCEDE);
+		} else if (iResult & 1) {
+			result = MRES_SUPERCEDE;
+		}
 	}
 
-	RETURN_META(MRES_IGNORED);
+	RETURN_META(result);
 }
 
 // ClientConnect, reinitialize player info here as well.
@@ -2680,21 +2674,56 @@ void MessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
 		}
 
 		RETURN_META(MRES_SUPERCEDE);
+	} else {
+		if (Msg[msg_type].isHooked && !Msg[msg_type].isCalled) {
+			LastMessage = msg_type;
+			Msg[msg_type].msg = new MessageInfo(msg_dest, msg_type, pOrigin, ed);
+			Msg[msg_type].isCalled = true;
+			RETURN_META(MRES_SUPERCEDE);
+		}
 	}
 
 	RETURN_META(MRES_IGNORED);
 }
 
 void MessageEnd(void) {
+	cell iResult;
+	META_RES result = MRES_IGNORED;
+
 	if(GlInfo.bBlocking) {
 		GlInfo.bBlocking = false;
 		RETURN_META(MRES_SUPERCEDE);
 	}
-	RETURN_META(MRES_IGNORED);
+
+	int msg_type = LastMessage;
+
+	if (Msg[msg_type].isHooked && Msg[msg_type].isCalled) {
+		for (AmxCallList::AmxCall* i = Msg[msg_type].msgCalls.head; i; i = i->next) {
+			AMX_EXEC(i->amx, &iResult, i->iFunctionIdx, 1, msg_type);
+			if (iResult & 2) {
+				RETURN_META(MRES_SUPERCEDE);
+			} else if (iResult & 1) {
+				result = MRES_SUPERCEDE;
+			}
+		}
+		Msg[msg_type].isCalled = false;
+		if (result != MRES_SUPERCEDE) {	//supercede the message ANYWAY
+			Msg[msg_type].msg->SendMsg();
+			result = MRES_SUPERCEDE;
+		}
+		//destroy(Msg[msg_type].msg);
+	}
+
+	RETURN_META(result);
 }
 
 void WriteByte(int iValue) {
 	if(GlInfo.bBlocking) {
+		RETURN_META(MRES_SUPERCEDE);
+	}
+	int msg_type = LastMessage;
+	if (msg_type && Msg[msg_type].isCalled && Msg[msg_type].isHooked) {
+		Msg[msg_type].msg->AddArg(arg_byte, iValue);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 	RETURN_META(MRES_IGNORED);
@@ -2704,11 +2733,21 @@ void WriteChar(int iValue) {
 	if(GlInfo.bBlocking) {
 		RETURN_META(MRES_SUPERCEDE);
 	}
+	int msg_type = LastMessage;
+	if (msg_type && Msg[msg_type].isCalled && Msg[msg_type].isHooked) {
+		Msg[msg_type].msg->AddArg(arg_char, iValue);
+		RETURN_META(MRES_SUPERCEDE);
+	}
 	RETURN_META(MRES_IGNORED);
 }
 
 void WriteShort(int iValue) {
 	if(GlInfo.bBlocking) {
+		RETURN_META(MRES_SUPERCEDE);
+	}
+	int msg_type = LastMessage;
+	if (msg_type && Msg[msg_type].isCalled && Msg[msg_type].isHooked) {
+		Msg[msg_type].msg->AddArg(arg_short, iValue);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 	RETURN_META(MRES_IGNORED);
@@ -2718,11 +2757,21 @@ void WriteLong(int iValue) {
 	if(GlInfo.bBlocking) {
 		RETURN_META(MRES_SUPERCEDE);
 	}
+	int msg_type = LastMessage;
+	if (msg_type && Msg[msg_type].isCalled && Msg[msg_type].isHooked) {
+		Msg[msg_type].msg->AddArg(arg_long, iValue);
+		RETURN_META(MRES_SUPERCEDE);
+	}
 	RETURN_META(MRES_IGNORED);
 }
 
 void WriteAngle(float flValue) {
 	if(GlInfo.bBlocking) {
+		RETURN_META(MRES_SUPERCEDE);
+	}
+	int msg_type = LastMessage;
+	if (msg_type && Msg[msg_type].isCalled && Msg[msg_type].isHooked) {
+		Msg[msg_type].msg->AddArg(arg_angle, flValue);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 	RETURN_META(MRES_IGNORED);
@@ -2732,6 +2781,11 @@ void WriteCoord(float flValue) {
 	if(GlInfo.bBlocking) {
 		RETURN_META(MRES_SUPERCEDE);
 	}
+	int msg_type = LastMessage;
+	if (msg_type && Msg[msg_type].isCalled && Msg[msg_type].isHooked) {
+		Msg[msg_type].msg->AddArg(arg_coord, flValue);
+		RETURN_META(MRES_SUPERCEDE);
+	}
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -2739,11 +2793,21 @@ void WriteString(const char *sz) {
 	if(GlInfo.bBlocking) {
 		RETURN_META(MRES_SUPERCEDE);
 	}
+	int msg_type = LastMessage;
+	if (msg_type && Msg[msg_type].isCalled && Msg[msg_type].isHooked) {
+		Msg[msg_type].msg->AddArg(arg_string, (char*)sz);
+		RETURN_META(MRES_SUPERCEDE);
+	}
 	RETURN_META(MRES_IGNORED);
 }
 
 void WriteEntity(int iValue) {
 	if(GlInfo.bBlocking) {
+		RETURN_META(MRES_SUPERCEDE);
+	}
+	int msg_type = LastMessage;
+	if (msg_type && Msg[msg_type].isCalled && Msg[msg_type].isHooked) {
+		Msg[msg_type].msg->AddArg(arg_entity, iValue);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 	RETURN_META(MRES_IGNORED);
@@ -2779,6 +2843,13 @@ void ServerActivate( edict_t *pEdictList, int edictCount, int clientMax ){
 		}
 	}
 
+	for (i=0; i<MAX_MESSAGES; i++) {
+		Msg[i].isHooked = false;
+		Msg[i].isCalled = false;
+		Msg[i].msg = NULL;
+		Msg[i].type = 0;
+	}
+
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -2794,9 +2865,14 @@ void ServerDeactivate() {
 	preThink.clear();
 	clientKill.clear();
 
+	int i;
 	// Reset message blocks.
-	for(int i = 0; i < MAX_MESSAGES; i++) {
+	for(i = 0; i < MAX_MESSAGES; i++) {
 		GlInfo.iMessageBlock[i] = BLOCK_NOT;
+		if (Msg[i].msg != NULL) {
+			destroy(Msg[i].msg);
+			Msg[i].msgCalls.clear();
+		}
 	}
 
 	RETURN_META(MRES_IGNORED);
@@ -3047,6 +3123,17 @@ AMX_NATIVE_INFO Engine_Natives[] = {
 	{"set_lights",			set_lights},
 	{"set_view",			set_view},
 	{"attach_view",			attach_view},
+
+	{"precache_generic",	precache_generic},
+	{"register_message",	register_message},
+	{"set_msg_arg_float",	set_msg_arg_float},
+	{"set_msg_arg_int",		set_msg_arg_int},
+	{"set_msg_arg_string",	set_msg_arg_string},
+	{"get_msg_arg_float",	get_msg_arg_float},
+	{"get_msg_arg_int",		get_msg_arg_int},
+	{"get_msg_arg_string",	get_msg_arg_string},
+	{"get_msg_args",		get_msg_args},
+	{"get_msg_argtype",		get_msg_argtype},
 
 	{ NULL, NULL }
 

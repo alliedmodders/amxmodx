@@ -128,18 +128,21 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 				else if (m_ParamTypes[i] == FP_ARRAY)
 				{
 					// copy back
-					cell *tmp = physAddrs[i];
-					if (preparedArrays[params[i]].type == Type_Cell)
+					if (preparedArrays[params[i]].copyBack)
 					{
-						memcpy(preparedArrays[params[i]].ptr, tmp, preparedArrays[params[i]].size * sizeof(cell));
+						cell *tmp = physAddrs[i];
+						if (preparedArrays[params[i]].type == Type_Cell)
+						{
+							memcpy(preparedArrays[params[i]].ptr, tmp, preparedArrays[params[i]].size * sizeof(cell));
+						}
+						else
+						{
+							char *data = (char*)preparedArrays[params[i]].ptr;
+							for (unsigned int j = 0; j < preparedArrays[params[i]].size; ++j)
+								*data++ = static_cast<char>(*tmp++ & 0xFF);
+						}
+						amx_Release(iter->pPlugin->getAMX(), realParams[i]);
 					}
-					else
-					{
-						char *data = (char*)preparedArrays[params[i]].ptr;
-						for (unsigned int j = 0; j < preparedArrays[params[i]].size; ++j)
-							*data++ = static_cast<char>(*tmp++ & 0xFF);
-					}
-					amx_Release(iter->pPlugin->getAMX(), realParams[i]);
 				}
 			}
 
@@ -190,6 +193,7 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 {
 	if (isFree)
 		return 0;
+	
 	const int STRINGEX_MAXLENGTH = 128;
 
 	cell realParams[FORWARD_MAX_PARAMS];
@@ -258,18 +262,21 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 		else if (m_ParamTypes[i] == FP_ARRAY)
 		{
 			// copy back
-			cell *tmp = physAddrs[i];
-			if (preparedArrays[params[i]].type == Type_Cell)
+			if (preparedArrays[params[i]].copyBack)
 			{
-				memcpy(preparedArrays[params[i]].ptr, tmp, preparedArrays[params[i]].size * sizeof(cell));
+				cell *tmp = physAddrs[i];
+				if (preparedArrays[params[i]].type == Type_Cell)
+				{
+					memcpy(preparedArrays[params[i]].ptr, tmp, preparedArrays[params[i]].size * sizeof(cell));
+				}
+				else
+				{
+					char *data = (char*)preparedArrays[params[i]].ptr;
+					for (unsigned int j = 0; j < preparedArrays[params[i]].size; ++j)
+						*data++ = static_cast<char>(*tmp++ & 0xFF);
+				}
+				amx_Release(m_Amx, realParams[i]);
 			}
-			else
-			{
-				char *data = (char*)preparedArrays[params[i]].ptr;
-				for (unsigned int j = 0; j < preparedArrays[params[i]].size; ++j)
-					*data++ = static_cast<char>(*tmp++ & 0xFF);
-			}
-			amx_Release(m_Amx, realParams[i]);
 		}
 	}
 
@@ -288,18 +295,20 @@ int CForwardMngr::registerForward(const char *funcName, ForwardExecType et, int 
 
 int CForwardMngr::registerSPForward(int func, AMX *amx, int numParams, const ForwardParam *paramTypes)
 {
-	int retVal = (m_SPForwards.size() << 1) | 1;
+	int retVal = -1;
 	CSPForward *pForward;
 	if (!m_FreeSPForwards.empty())
 	{
-		 pForward = m_SPForwards[m_FreeSPForwards.front() >> 1];
-		 pForward->Set(func, amx, numParams, paramTypes);
-		 if (pForward->getFuncsNum() == 0)
+		retVal = m_FreeSPForwards.front();
+		pForward = m_SPForwards[retVal >> 1];
+		pForward->Set(func, amx, numParams, paramTypes);
+		if (pForward->getFuncsNum() == 0)
 			return -1;
-		 m_FreeSPForwards.pop();
+		m_FreeSPForwards.pop();
 	}
 	else
 	{
+		retVal = (m_SPForwards.size() << 1) | 1;
 		pForward = new CSPForward();
 		if (!pForward)
 			return -1;
@@ -491,22 +500,23 @@ cell executeForwards(int id, ...)
 	return g_forwards.executeForwards(id, params);
 }
 
-cell CForwardMngr::prepareArray(void *ptr, unsigned int size, ForwardArrayElemType type)
+cell CForwardMngr::prepareArray(void *ptr, unsigned int size, ForwardArrayElemType type, bool copyBack)
 {
 	m_TmpArrays[m_TmpArraysNum].ptr = ptr;
 	m_TmpArrays[m_TmpArraysNum].size = size;
 	m_TmpArrays[m_TmpArraysNum].type = type;
+	m_TmpArrays[m_TmpArraysNum].copyBack = copyBack;
 	return m_TmpArraysNum++;
 }
 
-cell prepareCellArray(cell *ptr, unsigned int size)
+cell prepareCellArray(cell *ptr, unsigned int size, bool copyBack)
 {
-	return g_forwards.prepareArray((void*)ptr, size, Type_Cell);
+	return g_forwards.prepareArray((void*)ptr, size, Type_Cell, copyBack);
 }
 
-cell prepareCharArray(char *ptr, unsigned int size)
+cell prepareCharArray(char *ptr, unsigned int size, bool copyBack)
 {
-	return g_forwards.prepareArray((void*)ptr, size, Type_Char);
+	return g_forwards.prepareArray((void*)ptr, size, Type_Char, copyBack);
 }
 
 void unregisterSPForward(int id)

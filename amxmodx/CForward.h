@@ -79,6 +79,7 @@ struct ForwardPreparedArray
 	void *ptr;
 	ForwardArrayElemType type;
 	unsigned int size;
+	bool copyBack;
 };
 
 // Normal forward
@@ -185,7 +186,8 @@ public:
 	int getParamsNum(int id) const;			// get num of params of a forward
 	int getFuncsNum(int id) const;			// get num of found functions of a forward
 	ForwardParam getParamType(int id, int paramId) const;
-	cell prepareArray(void *ptr, unsigned int size, ForwardArrayElemType type);		// prepare array
+	cell prepareArray(void *ptr, unsigned int size, ForwardArrayElemType type,
+		bool copyBack);		// prepare array
 };
 
 // (un)register forward
@@ -197,8 +199,8 @@ void unregisterSPForward(int id);
 // execute forwards
 cell executeForwards(int id, ...);
 // prepare array
-cell prepareCellArray(cell *ptr, unsigned int size);
-cell prepareCharArray(char *ptr, unsigned int size);
+cell prepareCellArray(cell *ptr, unsigned int size, bool copyBack = false);
+cell prepareCharArray(char *ptr, unsigned int size, bool copyBack = false);
 
 #endif
 

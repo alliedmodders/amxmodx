@@ -52,7 +52,7 @@ new bool:g_selected = false
 
 public plugin_init()
 {
-  register_plugin("Nextmap Chooser","0.20","AMXX Dev Team")
+  register_plugin("Nextmap Chooser",AMXX_VERSION_STR,"AMXX Dev Team")
   register_menucmd(register_menuid("AMX Choose nextmap:"),(-1^(-1<<(SELECTMAPS+2))),"countVote")
   register_cvar("amx_extendmap_max","90")
   register_cvar("amx_extendmap_step","15")

@@ -53,9 +53,9 @@ new g_cmdLoopback[16]
 public plugin_init()
 {
 #if defined USING_SQL
-  register_plugin("Admin Base (SQL)", "0.20", "AMXX Dev Team")
+  register_plugin("Admin Base (SQL)",AMXX_VERSION_STR,"AMXX Dev Team")
 #else
-  register_plugin("Admin Base","0.20","AMXX Dev Team")
+  register_plugin("Admin Base",AMXX_VERSION_STR,"AMXX Dev Team")
 #endif
   register_cvar("amx_mode","1")
   register_cvar("amx_password_field","_pw")

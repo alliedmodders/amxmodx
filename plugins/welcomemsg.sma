@@ -50,7 +50,7 @@ new g_motdFile[64]
 
 public plugin_init()
 {
-  register_plugin("Welcome Message","0.20","AMXX Dev Team")
+  register_plugin("Welcome Message",AMXX_VERSION_STR,"AMXX Dev Team")
   g_coloredMenus = colored_menus()
 #if defined READ_FROM_FILE
   get_configsdir(g_motdFile, 63)
@@ -64,13 +64,10 @@ public plugin_cfg()
 }
 
 public client_putinserver(id) {
-  new param[1]
-  param[0] = id
-  set_task(2.5,"alt_motd",0,param,1)
+  set_task(2.5,"alt_motd",id)
 }
 
-public alt_motd(param[]) {
-  new id = param[0]
+public alt_motd(id) {
   new motdBody[MOTD_LENGTH], name[32], hostname[64], nextmap[32], mapname[32]
 
   get_cvar_string("hostname",hostname,63) 

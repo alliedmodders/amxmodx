@@ -88,7 +88,7 @@ new g_coloredMenus
 
 public plugin_init()
 {
-  register_plugin("Commands Menu","0.20","AMXX Dev Team")
+  register_plugin("Commands Menu",AMXX_VERSION_STR,"AMXX Dev Team")
 
   new configsDir[64];
   get_configsdir(configsDir, 63);

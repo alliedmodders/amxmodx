@@ -680,21 +680,12 @@ public fn_autobuy(id) {
 	return PLUGIN_HANDLED
 }
 
-/*
-public fn_setrebuy(id) {
-}
-public fn_rebuy(id) {
-}
-*/
-
 public plugin_init() {
-  register_plugin("Restrict Weapons","0.20","AMXX Dev Team")
+  register_plugin("Restrict Weapons",AMXX_VERSION_STR,"AMXX Dev Team")
   register_clcmd("buyammo1","ammoRest1")
   register_clcmd("buyammo2","ammoRest2")
   register_clcmd("cl_setautobuy", "fn_setautobuy")
   register_clcmd("cl_autobuy", "fn_autobuy")
-  //register_clcmd("cl_setrebuy", "fn_setrebuy")
-  //register_clcmd("cl_rebuy", "fn_rebuy")
   register_clcmd("amx_restmenu","cmdMenu",ADMIN_CFG,"- displays weapons restriction menu")
   register_menucmd(register_menuid("#Buy", 1 ),511,"menuBuy")
   register_menucmd(register_menuid("\yRestrict Weapons"),1023,"actionMenu")

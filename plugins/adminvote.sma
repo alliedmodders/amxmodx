@@ -54,7 +54,7 @@ new bool:g_execResult
 new Float:g_voteRatio 
 
 public plugin_init() { 
-  register_plugin("Admin Votes","0.20","AMXX Dev Team")
+  register_plugin("Admin Votes",AMXX_VERSION_STR,"AMXX Dev Team")
   register_menucmd(register_menuid("Change map to ") ,MENU_KEY_1|MENU_KEY_2,"voteCount") 
   register_menucmd(register_menuid("Choose map: ") ,MENU_KEY_1|MENU_KEY_2|MENU_KEY_3|MENU_KEY_4,"voteCount") 
   register_menucmd(register_menuid("Kick ") ,MENU_KEY_1|MENU_KEY_2,"voteCount") 

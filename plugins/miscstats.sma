@@ -146,7 +146,7 @@ new g_teamsNames[2][] = {
 }
 
 public plugin_init(){
-  register_plugin("CS Misc. Stats","0.20","AMXX Dev Team") 
+  register_plugin("CS Misc. Stats",AMXX_VERSION_STR,"AMXX Dev Team") 
   register_event("DeathMsg","eDeathMsg","a")
   register_event("TextMsg","eRestart","a","2&#Game_C","2&#Game_w")
   register_event("SendAudio", "eEndRound", "a", "2&%!MRAD_terwin","2&%!MRAD_ctwin","2&%!MRAD_rounddraw") 

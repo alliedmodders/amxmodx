@@ -44,7 +44,7 @@ new bool:g_Paused
 new g_addCvar[] = "amx_cvar add %s"
 
 public plugin_init() {
-  register_plugin("Admin Commands","0.20","AMXX Dev Team")
+  register_plugin("Admin Commands",AMXX_VERSION_STR,"AMXX Dev Team")
   register_concmd("amx_kick","cmdKick",ADMIN_KICK,"<name or #userid> [reason]")
   register_concmd("amx_ban","cmdBan",ADMIN_BAN,"<name or #userid> <id/ip> <minutes> [reason]")
   register_concmd("amx_addban","cmdAddBan",ADMIN_BAN,"<authid or ip> <minutes> [reason]")

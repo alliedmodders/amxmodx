@@ -36,9 +36,9 @@
 #include <amxmisc>
 
 #define MAX_MESSAGES	6
-#define X_POS			-1.0
-#define Y_POS			0.30
-#define HOLD_TIME		12.0
+#define X_POS		-1.0
+#define Y_POS		0.30
+#define HOLD_TIME	12.0
 
 new g_Values[MAX_MESSAGES][3]
 new g_Messages[MAX_MESSAGES][384]
@@ -46,7 +46,7 @@ new g_MessagesNum
 new g_Current
 
 public plugin_init(){
-  register_plugin("Info. Messages","0.20","AMXX Dev Team")
+  register_plugin("Info. Messages",AMXX_VERSION_STR,"AMXX Dev Team")
   register_srvcmd("amx_imessage","setMessage")
   register_cvar("amx_freq_imessage","10")
   new lastinfo[8]

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <libpq-fe.h>
+#include "libpq-fe.h"
 #include "CVector.h"
 #include "CString.h"
 #include "amxxmodule.h"

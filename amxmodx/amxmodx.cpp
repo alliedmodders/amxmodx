@@ -2090,7 +2090,7 @@ static cell AMX_NATIVE_CALL is_plugin_loaded(AMX *amx, cell *params)
 // native get_modulesnum();
 static cell AMX_NATIVE_CALL get_modulesnum(AMX *amx, cell *params)
 {
-	return static_cast<cell>(g_modules.size());
+	return (cell)UTIL_GetModulesNum(UTIL_MODULES_ALL);
 }
 
 // native get_module(id, name[], nameLen, author[], authorLen, version[], versionLen, &status);

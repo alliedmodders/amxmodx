@@ -244,7 +244,11 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 
 	// exec
 	cell retVal;
-	amx_Execv(m_Amx, &retVal, m_Func, m_NumParams, realParams);
+	int err = amx_Execv(m_Amx, &retVal, m_Func, m_NumParams, realParams);
+
+	// log runtime error, if any
+	if (err != AMX_ERR_NONE)
+		LogError(m_Amx, err, "");
 
 	// cleanup strings & arrays
 	for (i = 0; i < m_NumParams; ++i)

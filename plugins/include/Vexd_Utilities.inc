@@ -49,7 +49,7 @@ stock Entvars_Set_Byte(iIndex, iVariable, iNewValue)
 	return entity_set_byte(iIndex, iVariable, iNewValue)
 
 stock CreateEntity(szClassname[])
-	return create_entity(szClassname[])
+	return create_entity(szClassname)
 
 stock ENT_SetModel(iIndex, szModel[])
 	return entity_set_model(iIndex, szModel)

@@ -780,6 +780,9 @@
 			<File
 				RelativePath="..\modules.h">
 			</File>
+			<File
+				RelativePath="..\resource.h">
+			</File>
 			<Filter
 				Name="mmgr"
 				Filter="">

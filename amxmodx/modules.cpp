@@ -59,7 +59,7 @@ void report_error( int code, char* fmt, ... )
 		//File fp( "error_amx.log","a" );
 		//fp << string;
 		print_srvconsole( string );
-		print_srvconsole("[AMX] Make sure that modules are compatible with AMX %s\n" , AMX_VERSION );
+		print_srvconsole("[AMX] Make sure that modules are compatible with AMX Mod X %s\n" , AMX_VERSION );
 		print_srvconsole("[AMX] Please fix the problem then start the server again\n" );
 	}
 	sleep( 5 );

@@ -205,7 +205,7 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 				msg = format_amxstring(amx, params, 3, len);
 				msg[len++] = '\n';
 				msg[len] = 0;
-				UTIL_ClientPrint(NULL, params[2], msg);
+				UTIL_ClientPrint(pPlayer->pEdict, params[2], msg);
 			}
 		}
 	}
@@ -286,23 +286,35 @@ static cell AMX_NATIVE_CALL set_hudmessage(AMX *amx, cell *params)  /* 11 param 
 
 static cell AMX_NATIVE_CALL show_hudmessage(AMX *amx, cell *params)  /* 2 param */
 {
-  int len;
-  g_langMngr.SetDefLang(params[1]);
-  char* message = UTIL_SplitHudMessage(  format_amxstring(amx,params,2,len) );
-  if (params[1] == 0) {
-    UTIL_HudMessage(NULL, g_hudset, message );
-  }
-  else {
-    int index = params[1];
-    if (index < 1 || index > gpGlobals->maxClients){
-      amx_RaiseError(amx,AMX_ERR_NATIVE);
-      return 0;
-    }
-    CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
-    if (pPlayer->ingame)
-      UTIL_HudMessage(pPlayer->pEdict, g_hudset, message );
-  }
-  return len;
+	int len;
+	g_langMngr.SetDefLang(params[1]);
+	char* message = NULL;
+	if (params[1] == 0)
+	{
+		for (int i = 1; i <= gpGlobals->maxClients; ++i)
+		{
+			CPlayer *pPlayer = GET_PLAYER_POINTER_I(i);
+			if (pPlayer->ingame)
+			{
+				g_langMngr.SetDefLang(i);
+				message = UTIL_SplitHudMessage(format_amxstring(amx, params, 2, len));
+				UTIL_HudMessage(pPlayer->pEdict, g_hudset, message);
+			}
+		}
+	}
+	else
+	{
+		message = UTIL_SplitHudMessage(format_amxstring(amx,params,2,len));
+		int index = params[1];
+		if (index < 1 || index > gpGlobals->maxClients){
+			amx_RaiseError(amx,AMX_ERR_NATIVE);
+			return 0;
+		}
+		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+		if (pPlayer->ingame)
+			UTIL_HudMessage(pPlayer->pEdict, g_hudset, message );
+	}
+	return len;
 }
 
 static cell AMX_NATIVE_CALL get_user_name(AMX *amx, cell *params)  /* 3 param */

@@ -87,7 +87,7 @@ public:
 	bool queryModule();
 	bool detachModule();
 	const char* getStatus() const;
-	inline const char* getType() const { return m_Amxx ? (m_Metamod ? "amxx&mm" : "amxx") : (m_Metamod ? "amx&mm" : "amx"); }
+	inline const char* getType() const { return m_Amxx ? "amxx" : (m_Metamod ? "amx&mm" : "amx"); }
 	inline const char* getAuthor() const { return m_Amxx ? (m_InfoNew.author) : (m_InfoOld ? m_InfoOld->author : "unknown"); }
 	inline const char* getVersion() const { return m_Amxx ? (m_InfoNew.version) : (m_InfoOld ? m_InfoOld->version : "unknown"); }
 	inline const char* getName() const { return m_Amxx ? (m_InfoNew.name) : (m_InfoOld ? m_InfoOld->name : "unknown"); }

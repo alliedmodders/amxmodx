@@ -29,8 +29,9 @@
 *  version.
 */
 
-#include "CFile.h"
 #include <ctype.h>
+#include "amxmodx.h"
+#include "CFile.h"
 
 // *****************************************************
 // class File

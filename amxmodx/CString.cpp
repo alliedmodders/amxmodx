@@ -29,8 +29,9 @@
 *  version.
 */
 
-#include "CString.h"
 #include "string.h"
+#include "amxmodx.h"
+#include "CString.h"
 #include "CFile.h"
 
 String::String()

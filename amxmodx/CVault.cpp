@@ -29,11 +29,12 @@
 *  version.
 */
 
-#include "CVault.h"
-#include "CFile.h"
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+#include "amxmodx.h"
+#include "CVault.h"
+#include "CFile.h"
 
 // *****************************************************
 // class Vault

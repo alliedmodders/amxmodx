@@ -29,8 +29,6 @@
 *  version.
 */
 
-#include <extdll.h>
-#include <meta_api.h>
 #include "amxmodx.h"
 #include "CMenu.h"
 

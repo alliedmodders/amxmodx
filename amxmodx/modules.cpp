@@ -950,6 +950,15 @@ edict_t* MNF_GetPlayerEdict(int id)
 	return (GET_PLAYER_POINTER_I(id)->pEdict);
 }
 
+const char *MNF_Format(const char *fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	const char *retVal = g_langMngr.FormatString(fmt, ap);
+	va_end(ap);
+	return retVal;
+}
+
 // Fnptr Request function for the new interface
 const char *g_LastRequestedFunc = NULL;
 #define REGISTER_FUNC(name, func) { name, (void*)func },
@@ -968,6 +977,7 @@ void *Module_ReqFnptr(const char *funcName)
 			REGISTER_FUNC("GetModname", MNF_GetModname)
 			REGISTER_FUNC("Log", MNF_Log)
 			REGISTER_FUNC("MergeDefinitionFile", MNF_MergeDefinitionFile)
+			REGISTER_FUNC("Format", MNF_Format)
 
 			// Amx scripts loading / unloading / managing
 			REGISTER_FUNC("GetAmxScript", MNF_GetAmxScript)

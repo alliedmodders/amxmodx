@@ -1,34 +1,33 @@
 /* AMX Mod X misc.
 *
 * (c) 2002-2004, OLO
-*  modified by BAILOPAN, Manip, PM, SniperBeamer
+*  modified by the AMX Mod X Development Team
 *
 * This file is provided as is (no warranties).
 */
 
-stock bool:cmd_access(id,level,cid,num) {
+stock cmd_access(id,level,cid,num) {
   if ( ((get_user_flags(id)&level)!=level) && (id!=(is_dedicated_server()?0:1)) ) {
     console_print(id,"You have no access to that command")
-    return false
+    return 0
   }
   if (read_argc() < num) {
     new hcmd[32], hinfo[128], hflag
     get_concmd(cid,hcmd,31,hflag,hinfo,127,level)
     console_print(id,"Usage:  %s %s",hcmd,hinfo)
-    return false
+    return 0
   }
-  return true
+  return 1
 }
 
 stock access(id,level)
   return (get_user_flags(id) & level)
 
 /* Flags:
-*  1 - obey immunity
-*  2 - allow yourself
-*  4 - must be alive
-*  8 - can't be bot
-*/
+ *  1 - obey immunity
+ *  2 - allow yourself
+ *  4 - must be alive
+ *  8 - can't be bot */
 stock cmd_target(id,const arg[],flags = 1) {
   new player = find_player("bl",arg)
   if (player) {

@@ -1,35 +1,27 @@
 /* Fun functions
-*
-* (c) 2002-2004, OLO
-*  modified by BAILOPAN, Manip, PM, SniperBeamer
-*
-* This file is provided as is (no warranties).
-*/
+ *
+ * (c) 2004, the AMX Mod X Development Team
+ *
+ * This file is provided as is (no warranties).
+ */
 
-/* Sets who can listen who. Function returns 0
-* if for some reasons this setting can't be done. */
-native set_user_listening(receiver,sender,listen);
+/* (untested) Returns 1 if receiver hears sender via voice communication. */
+native get_client_listen(receiver, sender);
 
-/* Returns 1 if receiver hears sender via voice communication. */
-native get_user_listening(receiver,sender);
+/* (untested) Sets who can listen who. Function returns 0 if for some reasons this setting can't be done. */
+native set_client_listen(receiver, sender, listen);
 
 /* Sets player godmode. If you want to disable godmode set only first parameter. */
-native set_user_godmode(index,godmode = 0);
+native set_user_godmode(index, godmode = 0);
 
-/* Returns 1 if godmode is set. */
+/* (untested) Returns 1 if godmode is set. */
 native get_user_godmode(index);
 
-/* Sets player noclip. If you want to disable noclip set only first parameter. */
-native set_user_noclip(index,noclip = 0);
-
-/* Returns 1 if noclip is set. */
-native get_user_noclip(index);
-
-/* Sets player frags. */
-native set_user_frags(index,frags);
+/* Sets player frags. Doesn't autoupdate scoreboard, as Olo's version didn't. Fix? */
+native set_user_frags(index, frags);
 
 /* Sets player armor. */
-native set_user_armor(index,armor);
+native set_user_armor(index, armor);
 
 /* Sets player health. */
 native set_user_health(index, health);
@@ -38,46 +30,61 @@ native set_user_health(index, health);
 native set_user_origin(index, origin[3]);
 
 /* Sets player rendering mode. */
-native set_user_rendering(index,fx = kRenderFxNone, r=255,g=255,b=255, render = kRenderNormal,amount=16);
+native set_user_rendering(index, fx = kRenderFxNone, r = 255, g = 255, b = 255, render = kRenderNormal, amount = 16);
 
 /* Gives item to player, name of item can start
-* with weapon_, ammo_ and item_. This event
-* is announced with proper message to all players. */
-native give_item(index,const item[]);
+ * with weapon_, ammo_ and item_. This event
+ * is announced with proper message to all players. */
+native give_item(index, const item[]);
 
-/* Sets hit zones for player. This event is announced
-* with proper message to all players.
-* Parts of body are as bits:
-* 2   - head
-* 4   - chest
-* 8   - stomach
-* 16  - left arm
-* 32  - right arm
-* 64  - left leg
-* 128 - right leg*/
-native set_user_hitzones(index=0,target=0,body=255);
+/* (not yet implemented, don't know how to use native)
+ * Sets hit zones for player. This event is announced
+ * with proper message to all players.
+ * Parts of body are as bits:
+ * 2   - head
+ * 4   - chest
+ * 8   - stomach
+ * 16  - left arm
+ * 32  - right arm
+ * 64  - left leg
+ * 128 - right leg */
+native set_hitzones(body = 255);
 
-/* Returns hit zones for player. */
-native get_user_hitzones(index,target);
+/* backwards compatibility */
+stock set_user_hitzones(index=0,target=0,body=255)
+  return set_hitzones(body)
 
-/* Makes that player spawns. This event is announced
-* with proper message to all players. */
-native user_spawn(index);
+/* Get current hitzones. */
+native get_hitzones();
+
+/* backwards compatibility */
+stock get_user_hitzones(index,target)
+  return get_hitzones()
 
 /* Sets users max. speed. */
-native set_user_maxspeed(index,Float:speed=-1.0);
+native set_user_maxspeed(index, Float:speed = -1.0);
 
 /* Returns users max. speed. */
 native Float:get_user_maxspeed(index);
 
 /* Sets users gravity. */
-native set_user_gravity(index,Float:gravity=1.0);
+native set_user_gravity(index, Float:gravity = 1.0);
 
 /* Returns users gravity. */
-native Float:get_user_gravity(index);
+native get_user_gravity(index);
 
 /* Gives money to user. */
-native set_user_money(index,money,flash=1);
+native set_user_money(index, money, flash = 1);
 
 /* Returns users money. */
 native get_user_money(index);
+
+/* Spawns entity. */
+native spawn(index);
+
+/* backwards compatibility */
+stock user_spawn(index)
+  return spawn(index)
+
+/* CS: Set deaths(should be removed to CS module later) (doesn't update info right away? fix later?) */
+native set_user_deaths_cs(index, newdeaths);

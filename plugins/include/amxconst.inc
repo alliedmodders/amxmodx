@@ -1,12 +1,12 @@
 /* AMX Mod X
 *
 * (c) 2002-2004, OLO
-*  modified by BAILOPAN, Manip, PM, SniperBeamer
+*  modified by the AMX Mod X Development Team
 *
 * This file is provided as is (no warranties).
 */
 
-// Uncomment if you are not using Steam
+/* Uncomment if you are not using Steam */
 //#define NO_STEAM
 
 #define ADMIN_IMMUNITY		(1<<0)	/* flag "a" */
@@ -32,11 +32,11 @@
 #define ADMIN_MENU		(1<<20)	/* flag "u" */
 #define ADMIN_USER		(1<<25)	/* flag "z" */
 
-#define FLAG_KICK		(1<<0) /* flag "a" */
-#define FLAG_TAG		(1<<1) /* flag "b" */
-#define FLAG_AUTHID		(1<<2) /* flag "c" */
-#define FLAG_IP			(1<<3) /* flag "d" */
-#define FLAG_NOPASS		(1<<4) /* flag "e" */
+#define FLAG_KICK		(1<<0)	/* flag "a" */
+#define FLAG_TAG		(1<<1)	/* flag "b" */
+#define FLAG_AUTHID		(1<<2)	/* flag "c" */
+#define FLAG_IP			(1<<3)	/* flag "d" */
+#define FLAG_NOPASS		(1<<4)	/* flag "e" */
 
 #define PLUGIN_CONTINUE		0	/* Results returned by public functions */
 #define PLUGIN_HANDLED		1	/* stop other plugins */
@@ -161,7 +161,7 @@ enum {
 
 /* Render for set_user_rendering() */
 enum {	
-	kRenderNormal,			/* src */
+	kRenderNormal = 0,		/* src */
 	kRenderTransColor,		/* c*a+dest*(1-a) */
 	kRenderTransTexture,		/* src*a+dest*(1-a) */
 	kRenderGlow,			/* src*a+dest -- No Z buffer checks */
@@ -194,6 +194,7 @@ enum {
 	kRenderFxClampMinScale,		/* Keep this sprite from getting very small (SPRITES only!) */
 }
 
+/* Type for force_unmodified() */
 enum {
 	force_exactfile = 0,		/* File on client must exactly match server's file */
 	force_model_samebounds,		/* For model files only, the geometry must fit in the same bbox */

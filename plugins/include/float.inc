@@ -47,8 +47,8 @@ native Float:floatfract(Float:value);
 native floatround(Float:value, floatround_method:method=floatround_round);
 
 /* Compare two integers. If the two elements are equal, return 0.
-* If the first argument is greater than the second argument, return 1,
-* If the first argument is less than the second argument, return -1. */
+ * If the first argument is greater than the second argument, return 1,
+ * If the first argument is less than the second argument, return -1. */
 native floatcmp(Float:fOne, Float:fTwo);
 
 /* Return the square root of the input value, same as floatpower(value, 0.5) */
@@ -61,7 +61,7 @@ native Float:floatpower(Float:value, Float:exponent);
 native Float:floatlog(Float:value, Float:base=10.0);
 
 /* Return the sine, cosine or tangent.
-* The input angle may be in radian, degrees or grades. */
+ * The input angle may be in radian, degrees or grades. */
 native Float:floatsin(Float:value, anglemode:mode=radian);
 native Float:floatcos(Float:value, anglemode:mode=radian);
 native Float:floattan(Float:value, anglemode:mode=radian);

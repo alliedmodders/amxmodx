@@ -2,6 +2,7 @@
 *   Engine Module
 *
 * by the AMX Mod X Development Team
+*  thanks to Vexd
 *
 * This file is part of AMX Mod X.
 *

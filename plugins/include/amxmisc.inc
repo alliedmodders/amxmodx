@@ -98,3 +98,10 @@ stock build_path( path[] , len , {Float,_}:... ) {
 
 stock get_basedir( name[], len )
   return copy(name,len,"addons/amxx")
+
+stock get_user_wonid(index)
+{
+  new authid[32]
+  get_user_authid(index,authid,31)
+  return str_to_num(authid)
+}

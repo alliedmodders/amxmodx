@@ -239,6 +239,11 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params) // native give_ite
 	// Create the entity, returns to pointer
 	pItemEntity = CREATE_NAMED_ENTITY(item);
 
+	if(FNullEnt(pItemEntity)) {
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
 	//VARS(pItemEntity)->origin = VARS(pPlayer)->origin; // nice to do VARS(ent)->origin instead of ent->v.origin? :-I
 	//I'm not sure, normally I use macros too =P
 	pItemEntity->v.origin = pPlayer->v.origin;

@@ -12,13 +12,13 @@
 # proc=ix86 - assumed not amd64
 # clean - clean the specifications above
 
-$PROJECT = "mysql_amxx";
+$PROJECT = "pgsql_amxx";
 $sdk = "../hlsdk/SourceCode";
 $mm = "../metamod/metamod";
+$pg = "extra/src";
 $gccf = "gcc";
-$mysql_link = "extra/lib_linux";
 
-@CPP_SOURCE_FILES = ("mysql.cpp", "mysql_amx.cpp", "amxxmodule.cpp");
+@CPP_SOURCE_FILES = ("pgsql.cpp", "pgsql_amx.cpp", "amxxmodule.cpp");
 
 @C_SOURCE_FILES = ();
 my %OPTIONS, %OPT;
@@ -26,7 +26,7 @@ my %OPTIONS, %OPT;
 $OPT{"debug"} = "-g -ggdb";
 $OPT{"opt"} = "-O2 -ffast-math -funroll-loops -fomit-frame-pointer -s -DNDEBUG -Wall -Wno-unknown-pragmas -DOPT_TYPE=\"optimized\" -fno-exceptions -fno-rtti";
 
-$OPTIONS{"include"} = "-I$sdk -I. -I$mm -I$sdk/engine -I$sdk/common -I$sdk/pm_shared -I$sdk/dlls -Iextra/include";
+$OPTIONS{"include"} = "-I$sdk -I. -I$mm -I$sdk/engine -I$sdk/common -I$sdk/pm_shared -I$sdk/dlls -I$pg/include -I$pg/interfaces/libpq -L./lib";
 
 while ($cmd = shift)
 {
@@ -74,7 +74,7 @@ if ($OPTIONS{"debug"})
 
 if ($OPTIONS{"amd64"})
 {
-	$cflags = " -m64 -DHAVE_I64 -DSMALL_CELL_SIZE=64 $cflags";
+	$cflags .= " -m64 -DHAVE_I64 -DSMALL_CELL_SIZE=64 $cflags";
 }
 
 if ($OPTIONS{"debug"})
@@ -88,7 +88,6 @@ if ($OPTIONS{"amd64"})
 {
 	$outdir .= ".amd64";
 	$bin = $PROJECT."_amd64.so";
-	$OPTIONS{"include"} .= " -L".$mysql_link."64";
 } else {
 	$proc = $OPTIONS{"proc"};
 	if ($proc)
@@ -99,7 +98,6 @@ if ($OPTIONS{"amd64"})
 		$outdir .= ".i386";
 		$bin = $PROJECT."_i386.so";
 	}
-	$OPTIONS{"include"} .= " -L".$mysql_link;
 }
 
 unlink("$outdir/$bin");
@@ -142,7 +140,7 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	if (-e $ofile)
 	{
 		$file_time = (stat($file))[9];
-		$ofile_time = (stat($ofile))[9];
+		$ofile_time = (stat($file))[9];
 		if ($file_time > $ofile_time)
 		{
 			print "$gcc\n";
@@ -164,7 +162,7 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	if (-e $ofile)
 	{
 		$file_time = (stat($file))[9];
-		$ofile_time = (stat($ofile))[9];
+		$ofile_time = (stat($file))[9];
 		if ($file_time > $ofile_time)
 		{
 			print "$gcc\n";
@@ -176,6 +174,6 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	}
 }
 
-$gcc = "$gccf $cflags $inc -shared -ldl -lm @LINK -lmysqlclient -lz -o $outdir/$bin";
+$gcc = "$gccf $cflags $inc -shared -ldl -lm @LINK -lpq -lz -lcrypt -o $outdir/$bin";
 print "$gcc\n";
 `$gcc`;

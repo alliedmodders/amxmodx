@@ -13,7 +13,7 @@ new g_pingSum[33]
 new g_pingCount[33]
 
 public plugin_init()
-  register_plugin("Stats Logging","0.20ts","SidLuke")
+  register_plugin("Stats Logging",AMXX_VERSION_STR,"AMXX Dev Team")
 
 public client_disconnect(id) {
   if ( is_user_bot( id ) ) return PLUGIN_CONTINUE

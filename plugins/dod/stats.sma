@@ -159,7 +159,7 @@ new g_addStast[] = "amx_statscfg add ^"%s^" %s"
 new g_disabledMsg[] = "DISABLED_MSG"
 
 public plugin_init() {
-  register_plugin("DoD Stats","0.20dod","SidLuke")
+  register_plugin("DoD Stats",AMXX_VERSION_STR,"AMXX Dev Team")
 
   register_dictionary("common.txt")
   register_dictionary("stats_dod.txt")

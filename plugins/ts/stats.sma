@@ -87,7 +87,7 @@ public plugin_precache(){
 new g_disabledMsg[] = "Server has disabled that option"
 
 public plugin_init() {
-  register_plugin("TS Stats","0.20ts","SidLuke")
+  register_plugin("TS Stats",AMXX_VERSION_STR,"AMXX Dev Team")
   register_event("30","eInterMission","a")
   register_event("ResetHUD","eResetHud","b") 
   register_clcmd("say /hp","cmdKiller",0,"- displays info. about your killer") 

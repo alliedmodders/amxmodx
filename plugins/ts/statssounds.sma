@@ -25,5 +25,5 @@ public plugin_precache(){
 }
 
 public plugin_init() {
-  register_plugin("TFC Sounds Precache","0.20ts","SidLuke")
+  register_plugin("TFC Sounds Precache",AMXX_VERSION_STR,"AMXX Dev Team")
 }

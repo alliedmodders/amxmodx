@@ -25,5 +25,5 @@ public plugin_precache(){
 }
 
 public plugin_init() {
-  register_plugin("DoD Sounds Precache","0.20dod","SidLuke")
+  register_plugin("DoD Sounds Precache",AMXX_VERSION_STR,"AMXX Dev Team")
 }

@@ -142,7 +142,7 @@ new g_DoubleKillSound[3][] = {
 }
 
 public plugin_init() {
-  register_plugin("TFC Stats","0.20tfc","SidLuke")
+  register_plugin("TFC Stats",AMXX_VERSION_STR,"AMXX Dev Team")
   register_event("30","eInterMission","a")
   register_event("ResetHUD","eResetHud","b") 
 

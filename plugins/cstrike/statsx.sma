@@ -69,8 +69,8 @@
 public KillerChat           = 0 // displays killer hp&ap to victim console 
                                 //  and screen
 
-public ShowAttackers        = 0 // shows attackers
-public ShowVictims          = 0 // shows victims
+public ShowAttackers        = 1 // shows attackers
+public ShowVictims          = 1 // shows victims
 public ShowKiller           = 0 // shows killer
 public ShowTeamScore        = 0 // shows team score at round end
 public ShowTotalStats       = 0 // shows round total stats
@@ -82,16 +82,16 @@ public EndTop15             = 0 // displays top15 at the end of map
 
 public SayHP                = 0 // displays information about user killer
 public SayStatsMe           = 0 // displays user's stats and rank
-public SayRankStats         = 0 // displays user's rank stats
+public SayRankStats         = 1 // displays user's rank stats
 public SayMe                = 0 // displays user's stats
-public SayRank              = 0 // displays user's rank
+public SayRank              = 1 // displays user's rank
 public SayReport            = 0 // report user's weapon status to team
 public SayScore             = 0 // displays team's map score
-public SayTop15             = 0 // displays first 15 players
+public SayTop15             = 1 // displays first 15 players
 public SayStatsAll          = 0 // displays all players stats and rank
 public SayMiscFunc          = 0 // displays timeleft, thetime, currentmap, ff
 
-public ShowStats            = 0 // set client HUD-stats switched off by default
+public ShowStats            = 1 // set client HUD-stats switched off by default
 public ShowDistHS           = 0 // show distance and HS in attackers and
                                 //  victims HUD lists
 public ShowFullStats        = 0 // show full HUD stats (more than 78 chars)

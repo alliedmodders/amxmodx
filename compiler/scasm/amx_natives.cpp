@@ -91,3 +91,4 @@ void NativeMngr::GetNatives(std::vector<NativeMngr::Native *> &nList)
 		nList.push_back( (*i) );
 	}
 }
+

@@ -104,3 +104,4 @@ int ProcMngr::GetCip(std::string &sym)
 
 	return p->ASM->cip;
 }
+

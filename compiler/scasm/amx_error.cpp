@@ -194,3 +194,4 @@ void ErrorMngr::SetLine(int ln)
 {
 	line = ln;
 }
+

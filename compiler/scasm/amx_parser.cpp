@@ -84,7 +84,6 @@ void StripComments(std::string &text)
 void StringBreak(std::string &Source, std::string &Left, std::string &Right)
 {
 	int done_flag = 0;
-	int l=0;
 	unsigned int i=0;
 
 	Left.clear();

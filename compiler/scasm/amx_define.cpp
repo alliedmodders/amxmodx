@@ -87,3 +87,4 @@ void DefineMngr::SearchAndReplace(std::string &text)
 		}
 	}
 }
+

@@ -223,8 +223,8 @@ int CExpr::Analyze()
 
 cExprType CExpr::Evaluate(int symNum)
 {
-	size_t i = 0, blk = 0;
-	char litc = 0, c = 0, csave = 0;
+	size_t i = 0;
+	char litc = 0, c = 0;
 	cExprType t = Val_None;
 	std::string num;
 

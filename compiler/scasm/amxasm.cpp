@@ -58,7 +58,6 @@ void get_options(int argc, char **argv, Compiler &Prog)
 	int i = 0;			/* index */
 	char opt_flag = 0;	/* flag for option detection */
 	char *option = 0;	/* option pointer */
-	char c = 0;			/* option marker */
 	for (i=1; i<argc; i++)
 	{
 		if (argv[i][0] == '-')

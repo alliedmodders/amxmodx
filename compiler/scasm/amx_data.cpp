@@ -127,3 +127,4 @@ void DataMngr::GetData(std::vector<DataMngr::Datum *> &dList)
 		dList.push_back( (*i) );
 	}
 }
+

@@ -77,7 +77,7 @@ std::string *MacroList::BeginReplacement(MacroList::Macro *macro)
 
 int MacroList::ReplaceArgument(MacroList::Macro *m, std::string *macro, std::string &arg, int pos = 0)
 {
-	int i = 0, bPos = 0;
+	int bPos = 0;
 
 	bPos = FindSymbol(*macro, *(*m->arg), pos);
 
@@ -170,3 +170,4 @@ void MacroList::SearchAndReplace(std::string &text)
 		}
 	}
 }
+

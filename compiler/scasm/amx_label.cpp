@@ -111,7 +111,7 @@ void LabelMngr::CompleteQueue(bool isLocal)
 				while (!stk->empty())
 				{
 					CError->SetLine(stk->top()->line);
-					CError->ErrorMsg(Err_Bad_Lbel);
+					CError->ErrorMsg(Err_Bad_Label);
 					stk->pop();
 				}
 			}
@@ -155,3 +155,4 @@ bool LabelMngr::EraseLabel(std::string &sym)
 
 	return false;
 }
+

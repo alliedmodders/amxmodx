@@ -199,13 +199,12 @@ bool Compiler::Compile(std::string &out)
 	dat = cod + CipCount();
 	hea = dat + DAT->GetSize();
 	stp = hea + stacksize;
-	int16_t cipHdr = 0x00;
 	cip = -1;
 	fileSize = hea;
 
 	std::string amxname;
 	amxname.assign(out);
-	int pos = (int)amxname.find(".asm");
+	size_t pos = amxname.find(".asm");
 	if (pos != std::string::npos)
 	{
 		amxname.replace(pos, 4, ".amx");
@@ -263,8 +262,6 @@ bool Compiler::Compile(std::string &out)
 		const char *s = Nametbl.at(offs).Name;
 		fwrite(s, sizeof(char), strlen(s)+1, fp);
 	}
-
-	//fwrite((void*)&cipHdr, sizeof(int16_t), 1, fp);
 
 	/* Write the code */
 
@@ -662,7 +659,7 @@ bool Compiler::Parse()
 					if (params.size() > 0)
 					{
 						FindArguments(params, paramList, argPos, true);
-						if (argPos != params.size()-1)
+						if (argPos != (int)(params.size()-1))
 						{
 							CError->ErrorMsg(Err_Unexpected_Char, params[argPos]);
 							continue;
@@ -1723,7 +1720,6 @@ int Compiler::FindArguments(std::string &text, std::vector<std::string*> &List, 
 	char c = 0, d = 0, l = 0, size = 0;
 	std::stack<char> Stack;
 	end = -1;
-	bool temp = false;
 
 	for (i=0; i<text.size(); i++)
 	{
@@ -1896,7 +1892,6 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 {
 	std::stack<rpn *> Stack;
 	std::string bpstr;
-	int litidx = 0;
 	int i = 0;
 	rpn *r = new rpn;
 	int pos = 0;
@@ -2036,7 +2031,6 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 CExpr Compiler::EvalRpn(rpn *r, SymbolType sym)
 {
 	int i = 0, j = 0;
-	char c = 0;
 	CExpr er, el;
 	std::vector<CExpr>::iterator Q;
 	std::vector<char>::iterator R;

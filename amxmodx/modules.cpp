@@ -213,6 +213,36 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 	return set_amxnatives(amx,error);
 }
 
+const char *StrCaseStr(const char *as, const char *bs)
+{
+	static char a[256];
+	static char b[256];
+	unsigned int i = 0;
+	unsigned int len = strlen(as);
+
+	if (len > 254)
+		len = 254;
+
+	for (i=0; i<len; i++)
+	{
+		a[i] = tolower(as[i]);
+	}
+	a[len] = 0;
+
+	len = strlen(bs);
+
+	if (len > 254)
+		len = 254;
+
+	for (i=0; i<len; i++)
+	{
+		b[i] = tolower(bs[i]);
+	}
+	b[len] = 0;
+
+	return strstr(a,b);
+}
+
 //BAILOPAN
 int CheckModules(AMX *amx, char error[64])
 {
@@ -237,7 +267,7 @@ int CheckModules(AMX *amx, char error[64])
 				{
 					if (strcmpi(CurModuleList.front().c_str(), "dbi") == 0)
 					{
-						if (strstr( (*pMod).getName(), "sql") || strstr( (*pMod).getName(), "dbi" ))
+						if (StrCaseStr( (*pMod).getName(), "sql") || strstr( (*pMod).getName(), "dbi" ))
 						{
 							// the module checks in
 							flag = 1;

@@ -239,94 +239,6 @@ static cell AMX_NATIVE_CALL spawn(AMX *amx, cell *params) // spawn(id) = 1 param
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL set_user_money(AMX *amx, cell *params) // set_user_money(index, money, flash = 1); = 3 arguments
-{
-	// Give money to user
-	// params[1] = user
-	// params[2] = money
-	// params[3] = flash money?
-
-	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
-	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
-
-	// Fetch player pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
-
-	// Give money
-	(int)*((int *)pPlayer->pvPrivateData + OFFSET_CSMONEY) = params[2];
-
-	// Update display
-	MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "Money", NULL), NULL, pPlayer);
-	WRITE_LONG(params[2]);
-	WRITE_BYTE(params[3] ? 1 : 0); // if params[3] is 0, there will be no +/- flash of money in display...
-	MESSAGE_END();
-
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL get_user_money(AMX *amx, cell *params) // get_user_money(index); = 1 argument
-{
-	// Give money to user
-	// params[1] = user
-
-	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
-	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
-
-	// Fetch player pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
-
-	// Return money
-	return (int)*((int *)pPlayer->pvPrivateData + OFFSET_CSMONEY);
-}
-
-static cell AMX_NATIVE_CALL set_user_deaths_cs(AMX *amx, cell *params) // set_user_deaths_cs(index, newdeaths); = 2 arguments
-{
-	// Sets user deaths in cs.
-	// params[1] = user
-	// params[2] = new deaths
-
-	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
-	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
-
-	// Fetch player pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
-
-	// Set deaths
-	(int)*((int *)pPlayer->pvPrivateData + OFFSET_CSDEATHS) = params[2];
-
-	return 1;
-}
-
 static cell AMX_NATIVE_CALL set_user_health(AMX *amx, cell *params) // set_user_health(index, health); = 2 arguments
 {
 	// Sets user health. If health is 0 and below, also kill...
@@ -686,9 +598,6 @@ AMX_NATIVE_INFO fun_Exports[] = {
 	{"set_user_health",			set_user_health},
 	{"give_item",				give_item},
 	{"spawn",					spawn},
-	{"set_user_money",			set_user_money},
-	{"get_user_money",			get_user_money},
-	{"set_user_deaths_cs",		set_user_deaths_cs},
 	{"set_user_frags",			set_user_frags},
 	{"set_user_armor",			set_user_armor},
 	{"set_user_origin",			set_user_origin},

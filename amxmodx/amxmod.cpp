@@ -2038,14 +2038,13 @@ struct CallFunc_ParamInfo
 	cell size;														// byref size
 };
 
-// :TODO: Overflow possible
 #define CALLFUNC_MAXPARAMS 64										/* Maximal params number */
 cell g_CallFunc_Params[CALLFUNC_MAXPARAMS] = {0};					// Params
 CallFunc_ParamInfo g_CallFunc_ParamInfo[CALLFUNC_MAXPARAMS] = {0};	// Flags
 int g_CallFunc_CurParam = 0;										// Current param id
 
-#define CALLFUNC_FLAG_BYREF		1									/* Byref flag so that mem is released */
-
+#define CALLFUNC_FLAG_BYREF			1								/* Byref flag so that mem is released */
+#define CALLFUNC_FLAG_BYREF_REUSED	2								/* Reused byref */
 
 // native callfunc_begin(const func[], const plugin[]="");
 static cell AMX_NATIVE_CALL callfunc_begin(AMX *amx, cell *params)
@@ -2059,7 +2058,6 @@ static cell AMX_NATIVE_CALL callfunc_begin(AMX *amx, cell *params)
 		return 0;
 	}
 
-	int numparams = *params / sizeof(cell);
 	int len;
 	char *pluginStr = get_amxstring(amx, params[2], 0, len);
 	char *funcStr = get_amxstring(amx, params[1], 1, len);
@@ -2125,7 +2123,7 @@ static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 		return 0;
 	}
 
-	// process byref params
+	// process byref params (not byref_reused)
 	for (int i = 0; i < curParam; ++i)
 	{
 		if (gparamInfo[i].flags & CALLFUNC_FLAG_BYREF)
@@ -2163,6 +2161,13 @@ static cell callfunc_push_byval(AMX *amx, cell *params)
 		return 0;
 	}
 
+	if (g_CallFunc_CurParam == CALLFUNC_MAXPARAMS)
+	{
+		UTIL_Log("[AMXX] callfunc_push_xxx: maximal parameters num: %d", CALLFUNC_MAXPARAMS);
+		amx_RaiseError(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
 	g_CallFunc_ParamInfo[g_CallFunc_CurParam].flags = 0;
 	g_CallFunc_Params[g_CallFunc_CurParam++] = params[1];
 
@@ -2182,6 +2187,30 @@ static cell callfunc_push_byref(AMX *amx, cell *params)
 		return 0;
 	}
 
+	if (g_CallFunc_CurParam == CALLFUNC_MAXPARAMS)
+	{
+		UTIL_Log("[AMXX] callfunc_push_xxx: maximal parameters num: %d", CALLFUNC_MAXPARAMS);
+		amx_RaiseError(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// search for the address; if it is found, dont create a new copy
+	for (int i = 0; i < g_CallFunc_CurParam; ++i)
+	{
+		if ((g_CallFunc_ParamInfo[i].flags & CALLFUNC_FLAG_BYREF) &&
+			(g_CallFunc_ParamInfo[i].byrefAddr == params[1]))
+		{
+			// the byrefAddr and size params should not be used; set them anyways...
+			g_CallFunc_ParamInfo[g_CallFunc_CurParam].flags = CALLFUNC_FLAG_BYREF_REUSED;
+			g_CallFunc_ParamInfo[g_CallFunc_CurParam].byrefAddr = params[1];
+			g_CallFunc_ParamInfo[g_CallFunc_CurParam].size = 1;
+			g_CallFunc_Params[g_CallFunc_CurParam++] = g_CallFunc_Params[i];
+			// we are done
+			return 0;
+		}
+	}
+
+	// not found; create an own copy
 	// allocate memory
 	cell *phys_addr;
 	cell amx_addr;
@@ -2216,6 +2245,30 @@ static cell callfunc_push_str(AMX *amx, cell *params)
 		return 0;
 	}
 
+	if (g_CallFunc_CurParam == CALLFUNC_MAXPARAMS)
+	{
+		UTIL_Log("[AMXX] callfunc_push_xxx: maximal parameters num: %d", CALLFUNC_MAXPARAMS);
+		amx_RaiseError(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// search for the address; if it is found, dont create a new copy
+	for (int i = 0; i < g_CallFunc_CurParam; ++i)
+	{
+		if ((g_CallFunc_ParamInfo[i].flags & CALLFUNC_FLAG_BYREF) &&
+			(g_CallFunc_ParamInfo[i].byrefAddr == params[1]))
+		{
+			// the byrefAddr and size params should not be used; set them anyways...
+			g_CallFunc_ParamInfo[g_CallFunc_CurParam].flags = CALLFUNC_FLAG_BYREF_REUSED;
+			g_CallFunc_ParamInfo[g_CallFunc_CurParam].byrefAddr = params[1];
+			g_CallFunc_ParamInfo[g_CallFunc_CurParam].size = 1;
+			g_CallFunc_Params[g_CallFunc_CurParam++] = g_CallFunc_Params[i];
+			// we are done
+			return 0;
+		}
+	}
+
+	// not found; create an own copy
 	// get the string and its length
 	int len;
 	char *str = get_amxstring(amx, params[1], 0, len);

@@ -213,7 +213,7 @@ native get_user_ip(index,ip[],len, without_port = 0);
 
 /* Returns if the player has the weapon or not in their pev->weapons field.
    set "setweapon" to 0 to turn the bit off, set to 1 to turn it on. */
-native has_weapon(index,weapon,setweapon=-1);
+native user_has_weapon(index,weapon,setweapon=-1);
 
 /* Returns id of currently carried weapon. Gets also 
 * ammount of ammo in clip and backpack. */

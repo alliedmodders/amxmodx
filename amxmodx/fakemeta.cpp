@@ -2703,7 +2703,7 @@ int CFakeMeta::GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pNewFunctionTable, int *int
 		*interfaceVersion =	NEW_DLL_FUNCTIONS_VERSION;
 		return(FALSE);
 	}
-	memcpy( pNewFunctionTable, &g_NewDllFunctionTable, sizeof( DLL_FUNCTIONS ) );
+	memcpy( pNewFunctionTable, &g_NewDllFunctionTable, sizeof( NEW_DLL_FUNCTIONS ) );
 
 	// Make sure there is a core plugin
 	AddCorePlugin();
@@ -2738,7 +2738,7 @@ int CFakeMeta::GetNewDLLFunctions_Post(NEW_DLL_FUNCTIONS *pNewFunctionTable, int
 		*interfaceVersion =	NEW_DLL_FUNCTIONS_VERSION;
 		return(FALSE);
 	}
-	memcpy( pNewFunctionTable, &g_NewDllFunctionTable_Post, sizeof( DLL_FUNCTIONS ) );
+	memcpy( pNewFunctionTable, &g_NewDllFunctionTable_Post, sizeof( NEW_DLL_FUNCTIONS ) );
 
 	// Make sure there is a core plugin
 	AddCorePlugin();

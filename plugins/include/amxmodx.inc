@@ -678,3 +678,6 @@ forward plugin_modules();
 native require_module(const module[]);
 
 native is_amd64_server();
+
+/* Returns 0 on success, like the POSIX specification */
+native mkdir(const dirname[]);

@@ -2771,6 +2771,18 @@ static cell AMX_NATIVE_CALL lang_phrase(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL amx_mkdir(AMX *amx, cell *params)
+{
+	int len = 0;
+	char *path = get_amxstring(amx, params[1], 0, len);
+
+#ifdef __linux__
+	return mkdir(path, 0700);
+#else
+	return mkdir(path);
+#endif
+}
+
 AMX_NATIVE_INFO amxmod_Natives[] = {
   { "client_cmd",       client_cmd },
   { "client_print",     client_print },
@@ -2934,5 +2946,6 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "md5_file",			amx_md5_file },
   { "plugin_flags",		plugin_flags},
   { "lang_phrase",		lang_phrase},
+  { "mkdir",			amx_mkdir},
   { NULL, NULL }
 };

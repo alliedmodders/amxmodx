@@ -11,17 +11,22 @@
 #endif
 #define _amxmisc_included
 
+stock is_user_admin(id)
+{
+  return ( get_user_flags(id)>0 && !(get_user_flags(id)&ADMIN_USER) )
+}
+
 stock cmd_access(id,level,cid,num) {
   new has_access = 0
   if ( id==(is_dedicated_server()?0:1) ) {
     has_access = 1
-  }
-  else if ( level==ADMIN_ADMIN ) {
+  } else if ( level==ADMIN_ADMIN ) {
     if ( is_user_admin(id) )
       has_access = 1
-  }
-  else if ( get_user_flags(id) & level ) {
+  } else if ( get_user_flags(id) & level ) {
     has_access = 1
+  } else if (level == ADMIN_ALL) {
+	has_access = 1
   }
 
   if ( has_access==0 ) {
@@ -42,10 +47,6 @@ stock access(id,level) {
     return is_user_admin(id)
 
   return (get_user_flags(id) & level)
-}
-
-stock is_user_admin(id) {
-  return ( get_user_flags(id)>0 && !(get_user_flags(id)&ADMIN_USER) )
 }
 
 /* Flags:

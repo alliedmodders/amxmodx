@@ -4,8 +4,10 @@ float.cpp file.cpp modules.cpp CMisc.cpp CTask.cpp string.cpp\
 amxmodx.cpp CEvent.cpp CCmd.cpp CLogEvent.cpp srvcmd.cpp strptime.cpp\
 CForward.cpp CPlugin.cpp CModule.cpp CMenu.cpp emsg.cpp util.cpp \
 amxcore.cpp amxtime.cpp power.cpp amxxlog.cpp fakemeta.cpp mmgr/mmgr.cpp \
-amxxfile.cpp CLang.cpp
-CSRCFILES = amx.c minilzo/minilzo.c
+amxxfile.cpp CLang.cpp md5.cpp amx.cpp
+#use this for amd64, remove the above amx.cpp, and rename amx.cpp to amx.c
+#CSRCFILES = amx.c minilzo/minilzo.c
+CSRCFILES = minilzo/minilzo.c
 
 EXTRA_LIBS_LINUX =
 EXTRA_LIBS_WIN32 =
@@ -45,8 +47,9 @@ else
 endif
 
 
-
-LIBFILE_LINUX = $(MODNAME)_amd64.so
+#use this for AMD64
+#LIBFILE_LINUX = $(MODNAME)_amd64.so
+LIBFILE_LINUX = $(MODNAME)_i386.so
 LIBFILE_WIN32 = $(MODNAME).dll
 TARGET_LINUX = $(OBJDIR_LINUX)/$(LIBFILE_LINUX)
 TARGET_WIN32 = $(OBJDIR_WIN32)/$(LIBFILE_WIN32)
@@ -62,8 +65,9 @@ OBJC_LINUX := $(CSRCFILES:%.c=$(OBJDIR_LINUX)/%.o)
 OBJ_WIN32 := $(SRCFILES:%.cpp=$(OBJDIR_WIN32)/%.o)
 OBJC_WIN32 := $(CSRCFILES:%.c=$(OBJDIR_WIN32)/%.o)
 
-
-CCOPT = -m64 -g -ggdb3 -DHAVE_I64 -DSMALL_CELL_SIZE=64
+#use this for amd64
+#CCOPT = -m64 -g -ggdb3 -DHAVE_I64 -DSMALL_CELL_SIZE=64
+CCOPT = -march=i386 -s -DNDEBUG -O2 -fomit-frame-pointer -fno-exceptions -fno-rtti -ffast math
 
 INCLUDEDIRS=-I../curl/include -I$(SRCDIR) -I$(METADIR) -I$(SDKSRC)/engine -I$(SDKSRC)/common -I$(SDKSRC)/pm_shared -I$(SDKSRC)/dlls -I$(SDKSRC) $(EXTRA_INCLUDEDIRS)
 CFLAGS=-Wall -Wno-unknown-pragmas

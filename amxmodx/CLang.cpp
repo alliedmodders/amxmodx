@@ -42,18 +42,6 @@
 #define INSERT_STRING		3
 #define INSERT_NEWLINE		4
 
-void qdbg(const char *s, ...)
-{
-	va_list argptr;
-	FILE *dbg = fopen("c:\\beta.txt", "at");
-	va_start(argptr, s);
-	char buf[2048];
-	vsprintf(buf, s, argptr);
-	va_end(argptr);
-	fprintf(dbg, "%s", buf);
-	fclose(dbg);
-}
-
 // dictionary format is Fast-Format-Hash-Lookup, v4
 #define MAGIC_HDR			0x4646484C
 #define FFHL_VERSION		4
@@ -384,7 +372,6 @@ bool CLangMngr::CLang::Save(FILE *fp, int &defOffset, uint32_t &curOffset)
 {
 	uint32_t keynum = 0;
 	uint32_t defhash = 0;
-	uint32_t defoff = defOffset;
 	uint32_t size = m_LookUpTable.size();
 
 	fwrite((void*)&size, sizeof(uint32_t), 1, fp);
@@ -398,7 +385,7 @@ bool CLangMngr::CLang::Save(FILE *fp, int &defOffset, uint32_t &curOffset)
 		curOffset += sizeof(uint32_t);
 		fwrite((void *)&defhash, sizeof(uint32_t), 1, fp);
 		curOffset += sizeof(uint32_t);
-		fwrite((void *)&defoff, sizeof(uint32_t), 1, fp);
+		fwrite((void *)&defOffset, sizeof(uint32_t), 1, fp);
 		curOffset += sizeof(uint32_t);
 		defOffset += sizeof(short);
 		defOffset += m_LookUpTable[i]->GetDefLength();
@@ -1122,6 +1109,7 @@ bool CLangMngr::Load(const char *filename)
 	if (version > FFHL_VERSION || version < FFHL_MIN_VERSION)
 		return false;
 
+	fread((void*)&keycount, sizeof(uint32_t), 1, fp);
 	fread((void*)&langCount, sizeof(uint32_t), 1, fp);
 
 	uint32_t *LangOffsets = new uint32_t[langCount];
@@ -1165,7 +1153,7 @@ bool CLangMngr::Load(const char *filename)
 	for (unsigned int i=0; i<langCount; i++)
 	{
 		fread((void*)&numentries, sizeof(uint32_t), 1, fp);
-		for (unsigned int j=0; i<numentries; j++)
+		for (unsigned int j=0; j<numentries; j++)
 		{
 			fread((void *)&keynum, sizeof(uint32_t), 1, fp);
 			fread((void *)&defhash, sizeof(uint32_t), 1, fp);
@@ -1183,6 +1171,8 @@ bool CLangMngr::Load(const char *filename)
 	}
 
 	fclose(fp);
+
+	delete [] LangOffsets;
 	
     //we're done!
 	return true;

@@ -219,7 +219,7 @@ int	C_Spawn( edict_t *pent ) {
 
   //  ###### Load lang
   g_langMngr.LoadCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxx/data")));
-//  g_langMngr.Load(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxx/data")));
+  g_langMngr.Load(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxx/data")));
   // ######	Initialize commands	prefixes
   g_commands.registerPrefix( "amx" );
   g_commands.registerPrefix( "amxx"	);
@@ -402,8 +402,8 @@ void C_ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax )
   executeForwards(FF_PluginCfg);
 
   //  ###### Save lang
-  g_langMngr.SaveCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxx/data")));
   g_langMngr.Save(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxx/data")));
+  g_langMngr.SaveCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxx/data")));
 
 // Correct time in Counter-Strike	and	other mods (except DOD)
   if ( !g_bmod_dod)	 g_game_timeleft = 0;
@@ -462,8 +462,8 @@ void C_ServerDeactivate_Post() {
   g_vault.clear();
   g_xvars.clear();
   g_plugins.clear();
-  g_langMngr.SaveCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxx/data")));
   g_langMngr.Save(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxx/data")));
+  g_langMngr.SaveCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxx/data")));
   g_langMngr.Clear();
   // last memreport
 #ifdef MEMORY_TEST
@@ -512,8 +512,8 @@ void C_ServerDeactivate_Post() {
 				break;
 			}
 		}
-		m_dumpMemoryReport(build_pathname("%s/r%03d", g_memreport_dir.c_str(), g_memreport_count));
-		AMXXLOG_Log("Memreport #%d created (file \"%s/r%03d\") (interval %f)", g_memreport_count + 1, g_memreport_dir.c_str(), g_memreport_count, MEMREPORT_INTERVAL);
+		m_dumpMemoryReport(build_pathname("%s/r%03d.txt", g_memreport_dir.c_str(), g_memreport_count));
+		AMXXLOG_Log("Memreport #%d created (file \"%s/r%03d.txt\") (interval %f)", g_memreport_count + 1, g_memreport_dir.c_str(), g_memreport_count, MEMREPORT_INTERVAL);
 		g_memreport_count++;
 	}
 #endif // MEMORY_TEST
@@ -777,8 +777,8 @@ void C_StartFrame_Post( void ) {
 				break;
 			}
 		}
-		m_dumpMemoryReport(build_pathname("%s/r%03d", g_memreport_dir.c_str(), g_memreport_count));
-		AMXXLOG_Log("Memreport #%d created (file \"%s/r%03d\") (interval %f)", g_memreport_count + 1, g_memreport_dir.c_str(), g_memreport_count, MEMREPORT_INTERVAL);
+		m_dumpMemoryReport(build_pathname("%s/r%03d.txt", g_memreport_dir.c_str(), g_memreport_count));
+		AMXXLOG_Log("Memreport #%d created (file \"%s/r%03d.txt\") (interval %f)", g_memreport_count + 1, g_memreport_dir.c_str(), g_memreport_count, MEMREPORT_INTERVAL);
 		g_memreport_count++;
 	}
 #endif // MEMORY_TEST

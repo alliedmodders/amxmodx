@@ -949,7 +949,6 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 
 	case	EngFunc_SetKeyValue:	// void )			(char *infobuffer, char *key, char *value);
 		temp3 = MF_GetAmxString(amx, params[2], 0, &len);
-		CHECK_ENTITY(index);
 		temp = MF_GetAmxString(amx, params[3], 1, &len);
 		temp2 = MF_GetAmxString(amx, params[4], 2, &len);
 		(*g_engfuncs.pfnSetKeyValue)(temp3, temp, temp2);

@@ -244,7 +244,7 @@ int Spawn( edict_t *pent ) {
   }
 
   //  ###### Load modules
-  int loaded = loadModules( "addons/amxx/configs/modules.ini" );
+  int loaded = loadModules( "addons/amxx/modules.ini" );
   attachModules();
   // Set some info about amx version and modules
   if ( loaded ){
@@ -977,7 +977,7 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
   UTIL_MakeNewLogFile();
 
   //  ###### Now attach metamod modules
-  attachMetaModModules( "addons/amxx/configs/modules.ini" );
+  attachMetaModModules( "addons/amxx/modules.ini" );
 
   return(TRUE);
 }
@@ -1006,7 +1006,7 @@ C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason) {
   dettachModules();
 
   //  ###### Now dettach metamod modules
-  dettachMetaModModules( "addons/amxx/configs/modules.ini" );
+  dettachMetaModModules( "addons/amxx/modules.ini" );
 
   return(TRUE);
 }

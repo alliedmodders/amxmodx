@@ -148,7 +148,8 @@ void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int 
 			RETURN_META(MRES_SUPERCEDE);
 		}
 	}
-
+	if (res == MRES_SUPERCEDE)
+		g_cmd->impulse=0;
 	RETURN_META(res);
 }
 

@@ -1,29 +1,36 @@
-Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "amxmodx_mm", "amxmodx_mm.vcproj", "{7A2555A6-CBA6-4BD0-96AE-72DA57B995DF}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
+Microsoft Visual Studio Solution File, Format Version 7.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "amxmodx_mm", "amxmodx_mm.vcproj", "{CDD792EF-ABC5-4C61-803F-616E209C03D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
-		Debug = Debug
-		JITDebug = JITDebug
-		JITRelease = JITRelease
-		MemtestDebug = MemtestDebug
-		MemtestRelease = MemtestRelease
-		Release = Release
+		ConfigName.0 = Debug
+		ConfigName.1 = JITDebug
+		ConfigName.2 = JITMemtestRelease
+		ConfigName.3 = JITRelease
+		ConfigName.4 = MaximalSpeed
+		ConfigName.5 = MemtestDebug
+		ConfigName.6 = MemtestRelease
+		ConfigName.7 = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
-		{7A2555A6-CBA6-4BD0-96AE-72DA57B995DF}.Debug.ActiveCfg = Debug|Win32
-		{7A2555A6-CBA6-4BD0-96AE-72DA57B995DF}.Debug.Build.0 = Debug|Win32
-		{7A2555A6-CBA6-4BD0-96AE-72DA57B995DF}.JITDebug.ActiveCfg = JITDebug|Win32
-		{7A2555A6-CBA6-4BD0-96AE-72DA57B995DF}.JITDebug.Build.0 = JITDebug|Win32
-		{7A2555A6-CBA6-4BD0-96AE-72DA57B995DF}.JITRelease.ActiveCfg = JITRelease|Win32
-		{7A2555A6-CBA6-4BD0-96AE-72DA57B995DF}.MemtestDebug.ActiveCfg = MemtestDebug|Win32
-		{7A2555A6-CBA6-4BD0-96AE-72DA57B995DF}.MemtestDebug.Build.0 = MemtestDebug|Win32
-		{7A2555A6-CBA6-4BD0-96AE-72DA57B995DF}.MemtestRelease.ActiveCfg = MemtestRelease|Win32
-		{7A2555A6-CBA6-4BD0-96AE-72DA57B995DF}.MemtestRelease.Build.0 = MemtestRelease|Win32
-		{7A2555A6-CBA6-4BD0-96AE-72DA57B995DF}.Release.ActiveCfg = Release|Win32
-		{7A2555A6-CBA6-4BD0-96AE-72DA57B995DF}.Release.Build.0 = Release|Win32
+		{CDD792EF-ABC5-4C61-803F-616E209C03D6}.Debug.ActiveCfg = Debug|Win32
+		{CDD792EF-ABC5-4C61-803F-616E209C03D6}.Debug.Build.0 = Debug|Win32
+		{CDD792EF-ABC5-4C61-803F-616E209C03D6}.JITDebug.ActiveCfg = JITDebug|Win32
+		{CDD792EF-ABC5-4C61-803F-616E209C03D6}.JITDebug.Build.0 = JITDebug|Win32
+		{CDD792EF-ABC5-4C61-803F-616E209C03D6}.JITMemtestRelease.ActiveCfg = JITMemtestRelease|Win32
+		{CDD792EF-ABC5-4C61-803F-616E209C03D6}.JITMemtestRelease.Build.0 = JITMemtestRelease|Win32
+		{CDD792EF-ABC5-4C61-803F-616E209C03D6}.JITRelease.ActiveCfg = JITRelease|Win32
+		{CDD792EF-ABC5-4C61-803F-616E209C03D6}.JITRelease.Build.0 = JITRelease|Win32
+		{CDD792EF-ABC5-4C61-803F-616E209C03D6}.MaximalSpeed.ActiveCfg = MaximalSpeed|Win32
+		{CDD792EF-ABC5-4C61-803F-616E209C03D6}.MaximalSpeed.Build.0 = MaximalSpeed|Win32
+		{CDD792EF-ABC5-4C61-803F-616E209C03D6}.MemtestDebug.ActiveCfg = MemtestDebug|Win32
+		{CDD792EF-ABC5-4C61-803F-616E209C03D6}.MemtestDebug.Build.0 = MemtestDebug|Win32
+		{CDD792EF-ABC5-4C61-803F-616E209C03D6}.MemtestRelease.ActiveCfg = MemtestRelease|Win32
+		{CDD792EF-ABC5-4C61-803F-616E209C03D6}.MemtestRelease.Build.0 = MemtestRelease|Win32
+		{CDD792EF-ABC5-4C61-803F-616E209C03D6}.Release.ActiveCfg = Release|Win32
+		{CDD792EF-ABC5-4C61-803F-616E209C03D6}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

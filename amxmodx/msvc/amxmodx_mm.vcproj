@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding = "Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="7.00"
 	Name="amxmodx_mm"
 	SccProjectName=""
 	SccLocalPath="">
@@ -74,13 +74,7 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
 				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -145,13 +139,7 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
 				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="MemtestDebug|Win32"
@@ -171,7 +159,7 @@
 				StructMemberAlignment="3"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="amxmodx.h"
-				PrecompiledHeaderFile=".\debug/amxmodx_mm.pch"
+				PrecompiledHeaderFile=".\memtestdebug/amxmodx_mm.pch"
 				AssemblerListingLocation=".\memtestdebug/"
 				ObjectFile=".\memtestdebug/"
 				ProgramDataBaseFileName=".\memtestdebug/"
@@ -195,8 +183,8 @@
 				AdditionalLibraryDirectories="..\extra\lib_win32"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\debug/amxx_mm.pdb"
-				ImportLibrary=".\debug/amxx_mm.lib"/>
+				ProgramDatabaseFile=".\memtestdebug/amxx_mm.pdb"
+				ImportLibrary=".\memtestdebug/amxx_mm.lib"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="_DEBUG"
@@ -217,13 +205,7 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
 				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="MemtestRelease|Win32"
@@ -245,7 +227,7 @@
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="amxmodx.h"
-				PrecompiledHeaderFile=".\release/amxmodx_mm.pch"
+				PrecompiledHeaderFile=".\memtestrelease/amxmodx_mm.pch"
 				AssemblerListingLocation=".\memtestrelease/"
 				ObjectFile=".\memtestrelease/"
 				ProgramDataBaseFileName=".\memtestrelease/"
@@ -260,14 +242,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib ..\jit\jits.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib"
 				OutputFile="memtestrelease/amxx_mm.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\extra\lib_win32"
 				ModuleDefinitionFile=""
-				ProgramDatabaseFile=".\release/amxx_mm.pdb"
-				ImportLibrary=".\release/amxx_mm.lib"/>
+				ProgramDatabaseFile=".\memtestrelease/amxx_mm.pdb"
+				ImportLibrary=".\memtestrelease/amxx_mm.lib"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG"
@@ -288,13 +270,7 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
 				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="JITDebug|Win32"
@@ -314,10 +290,10 @@
 				StructMemberAlignment="3"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="amxmodx.h"
-				PrecompiledHeaderFile=".\debug/amxmodx_mm.pch"
-				AssemblerListingLocation=".\debug/"
-				ObjectFile=".\debug/"
-				ProgramDataBaseFileName=".\debug/"
+				PrecompiledHeaderFile=".\jitdebug/amxmodx_mm.pch"
+				AssemblerListingLocation=".\jitdebug/"
+				ObjectFile=".\jitdebug/"
+				ProgramDataBaseFileName=".\jitdebug/"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="4"
@@ -331,15 +307,15 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="odbc32.lib odbccp32.lib ..\jit\jits.lib"
-				OutputFile="debug/amxx_mm.dll"
+				OutputFile="jitdebug/amxx_mm.dll"
 				Version="0.1"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\extra\lib_win32"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\debug/amxx_mm.pdb"
-				ImportLibrary=".\debug/amxx_mm.lib"/>
+				ProgramDatabaseFile=".\jitdebug/amxx_mm.pdb"
+				ImportLibrary=".\jitdebug/amxx_mm.lib"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="_DEBUG"
@@ -360,13 +336,7 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
 				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="JITRelease|Win32"
@@ -388,10 +358,10 @@
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="amxmodx.h"
-				PrecompiledHeaderFile=".\release/amxmodx_mm.pch"
-				AssemblerListingLocation=".\release/"
-				ObjectFile=".\release/"
-				ProgramDataBaseFileName=".\release/"
+				PrecompiledHeaderFile=".\jitrelease/amxmodx_mm.pch"
+				AssemblerListingLocation=".\jitrelease/"
+				ObjectFile=".\jitrelease/"
+				ProgramDataBaseFileName=".\jitrelease/"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
 				CompileAs="0"/>
@@ -404,13 +374,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="odbc32.lib odbccp32.lib ..\jit\jits.lib"
-				OutputFile="release/amxx_mm.dll"
+				OutputFile="jitrelease/amxx_mm.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\extra\lib_win32"
 				ModuleDefinitionFile=""
-				ProgramDatabaseFile=".\release/amxx_mm.pdb"
-				ImportLibrary=".\release/amxx_mm.lib"/>
+				ProgramDatabaseFile=".\jitrelease/amxx_mm.pdb"
+				ImportLibrary=".\jitrelease/amxx_mm.lib"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG"
@@ -431,36 +401,146 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCWebDeploymentTool"/>
+		</Configuration>
+		<Configuration
+			Name="JITMemtestRelease|Win32"
+			OutputDirectory="JITMemtestRelease"
+			IntermediateDirectory="JITMemtestRelease"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				GlobalOptimizations="TRUE"
+				InlineFunctionExpansion="1"
+				FavorSizeOrSpeed="1"
+				AdditionalIncludeDirectories="..\..\metamod\metamod,..\..\hlsdk\sourcecode\common,..\..\hlsdk\sourcecode\engine,..\..\hlsdk\sourcecode\dlls,..\..\hlsdk\sourcecode\pm_shared,..\extra\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;amxmodx_mm_EXPORTS;MEMORY_TEST;JIT"
+				StringPooling="TRUE"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="TRUE"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="amxmodx.h"
+				PrecompiledHeaderFile=".\jitmemtestrelease/amxmodx_mm.pch"
+				AssemblerListingLocation=".\jitmemtestrelease/"
+				ObjectFile=".\jitmemtestrelease/"
+				ProgramDataBaseFileName=".\jitmemtestrelease/"
+				WarningLevel="3"
+				SuppressStartupBanner="TRUE"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"
+				CommandLine="copy $(TargetPath) d:\Half-Life\cstrike\addons\amxx\dlls\amxx_mm.dll
+"
+				Outputs="$(TargetName)"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ..\jit\jits.lib"
+				OutputFile="jitmemtestrelease/amxx_mm.dll"
+				LinkIncremental="1"
+				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="..\extra\lib_win32"
+				ModuleDefinitionFile=""
+				ProgramDatabaseFile=".\jitmemtestrelease/amxx_mm.pdb"
+				ImportLibrary=".\jitmemtestrelease/amxx_mm.lib"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="TRUE"
+				SuppressStartupBanner="TRUE"
+				TargetEnvironment="1"
+				TypeLibraryName=".\release/amxmodx_mm.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
 				Name="VCWebDeploymentTool"/>
+		</Configuration>
+		<Configuration
+			Name="MaximalSpeed|Win32"
+			OutputDirectory="MaximalSpeed"
+			IntermediateDirectory="MaximalSpeed"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
 			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
+				Name="VCCLCompilerTool"
+				GlobalOptimizations="TRUE"
+				InlineFunctionExpansion="1"
+				EnableIntrinsicFunctions="TRUE"
+				FavorSizeOrSpeed="1"
+				OptimizeForProcessor="2"
+				OptimizeForWindowsApplication="TRUE"
+				AdditionalIncludeDirectories="..\..\metamod\metamod,..\..\hlsdk\sourcecode\common,..\..\hlsdk\sourcecode\engine,..\..\hlsdk\sourcecode\dlls,..\..\hlsdk\sourcecode\pm_shared,..\extra\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;amxmodx_mm_EXPORTS;JIT"
+				StringPooling="TRUE"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="TRUE"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="amxmodx.h"
+				PrecompiledHeaderFile=".\MaximalSpeed/amxmodx_mm.pch"
+				AssemblerListingLocation=".\MaximalSpeed/"
+				ObjectFile=".\MaximalSpeed/"
+				ProgramDataBaseFileName=".\MaximalSpeed/"
+				WarningLevel="3"
+				SuppressStartupBanner="TRUE"
+				CompileAs="0"/>
 			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCCustomBuildTool"
+				CommandLine="copy $(TargetPath) d:\Half-Life\cstrike\addons\amxx\dlls\amxx_mm.dll
+"
+				Outputs="$(TargetName)"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ..\jit\jits.lib"
+				OutputFile="MaximalSpeed/amxx_mm.dll"
+				LinkIncremental="1"
+				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="..\extra\lib_win32"
+				ModuleDefinitionFile=""
+				ProgramDatabaseFile=".\MaximalSpeede/amxx_mm.pdb"
+				ImportLibrary=".\jitrelease/amxx_mm.lib"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="TRUE"
+				SuppressStartupBanner="TRUE"
+				TargetEnvironment="1"
+				TypeLibraryName=".\release/amxmodx_mm.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
 		</Configuration>
 	</Configurations>
-	<References>
-	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
-			<File
-				RelativePath="..\amx.cpp">
-			</File>
-			<File
-				RelativePath="..\amxcore.cpp">
-			</File>
-			<File
-				RelativePath="..\amxmodx.cpp">
-			</File>
-			<File
-				RelativePath="..\amxtime.cpp">
-			</File>
-			<File
-				RelativePath="..\amxxlog.cpp">
-			</File>
 			<File
 				RelativePath="..\CCmd.cpp">
 			</File>
@@ -496,6 +576,21 @@
 			</File>
 			<File
 				RelativePath="..\CVault.cpp">
+			</File>
+			<File
+				RelativePath="..\amx.cpp">
+			</File>
+			<File
+				RelativePath="..\amxcore.cpp">
+			</File>
+			<File
+				RelativePath="..\amxmodx.cpp">
+			</File>
+			<File
+				RelativePath="..\amxtime.cpp">
+			</File>
+			<File
+				RelativePath="..\amxxlog.cpp">
 			</File>
 			<File
 				RelativePath="..\emsg.cpp">
@@ -568,18 +663,18 @@
 						<Tool
 							Name="VCCLCompilerTool"/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="MaximalSpeed|Win32"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCCLCompilerTool"/>
+					</FileConfiguration>
 				</File>
 			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
-			<File
-				RelativePath="..\amx.h">
-			</File>
-			<File
-				RelativePath="..\amxmodx.h">
-			</File>
 			<File
 				RelativePath="..\CCmd.h">
 			</File>
@@ -621,6 +716,15 @@
 			</File>
 			<File
 				RelativePath="..\CVector.h">
+			</File>
+			<File
+				RelativePath="..\amx.h">
+			</File>
+			<File
+				RelativePath="..\amxmodx.h">
+			</File>
+			<File
+				RelativePath="..\amxxfile.h">
 			</File>
 			<File
 				RelativePath="..\fakemeta.h">

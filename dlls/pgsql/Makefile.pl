@@ -46,7 +46,7 @@ while ($cmd = shift)
 	}
 }
 
-$gcc = `g++ --version`;
+$gcc = `gcc --version`;
 if ($gcc =~ /2\.9/)
 {
 	$OPT{"opt"} .= " -malign-loops=2 -malign-jumps=2 -malign-functions=2";
@@ -135,7 +135,7 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	$ofile = $file;
 	$ofile =~ s/\.cpp/\.o/;
 	$ofile = "$outdir/$ofile";
-	$gcc = "g++ $cflags -Dstrcmpi=strcasecmp -fPIC $inc -c $file -o $ofile";
+	$gcc = "gcc $cflags -Dstrcmpi=strcasecmp -fPIC $inc -c $file -o $ofile";
 	if (-e $ofile)
 	{
 		$file_time = (stat($file))[9];
@@ -173,6 +173,6 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	}
 }
 
-$gcc = "g++ $cflags $inc -shared -ldl -lm @LINK -lpq -lz -lcrypt -o $outdir/$bin";
+$gcc = "gcc $cflags $inc -shared -ldl -lm @LINK -lpq -lz -lcrypt -o $outdir/$bin";
 print "$gcc\n";
 `$gcc`;

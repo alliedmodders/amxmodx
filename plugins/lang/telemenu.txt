@@ -5,6 +5,13 @@ TELE_MENU = Teleport Menu
 CUR_LOC = Current Location
 SAVE_LOC = Save Location
 
+[bp]
+ADMIN_TELEPORT_1 = ADMIN: teletransportou %s
+ADMIN_TELEPORT_2 = ADMIN %s: teletransportou %s
+TELE_MENU = Menu de Teletransportar
+CUR_LOC = Localizacao Atual
+SAVE_LOC = Salvar Localizacao
+
 [da]
 ADMIN_TELEPORT_1 = ADMIN: teleport %s
 ADMIN_TELEPORT_2 = ADMIN %s: teleport %s
@@ -32,6 +39,13 @@ ADMIN_TELEPORT_2 = ADMIN %s: teleporte %s
 TELE_MENU = Menu Teleportation
 CUR_LOC = Emplacement Actuel
 SAVE_LOC = Sauver l'emplacement
+
+[nl]
+ADMIN_TELEPORT_1 = BEHEERDER: teleporteer %s
+ADMIN_TELEPORT_2 = BEHEERDER %s: teleporteer %s
+TELE_MENU = Teleporteer Menu
+CUR_LOC = Momentele Locatie
+SAVE_LOC = Locatie opslaan
 
 [pl]
 ADMIN_TELEPORT_1 = ADMIN: teleportowal %s

@@ -18,6 +18,26 @@ CLIENT_IMM = Client "%s" has immunity
 CANT_PERF_DEAD = That action can't be performed on dead client "%s"
 CANT_PERF_BOT = That action can't be performed on bot "%s"
 
+[bp]
+BACK = Voltar
+EXIT = Sair
+MORE = Mais
+NONE = Nenhum
+ADMIN = ADMIN
+PLAYER = JOGADOR
+ERROR = erro
+YES = Sim
+NO = Nao
+BAN = banir
+KICK = desconectar
+NO_ACC_COM = Voce nao tem acesso a esse comando
+USAGE = Uso
+MORE_CL_MATCHT = Existe mais de um cliente que confere com seu argumento
+CL_NOT_FOUND = Cliente com esse nome ou userid nao encontrado
+CLIENT_IMM = O cliente "%s" tem imunidade
+CANT_PERF_DEAD = Esta acao nao pode ser executada em um cliente morto "%s"
+CANT_PERF_BOT = Esta acao nao pode ser executada em um bot "%s"
+
 [da]
 BACK = Tilbage
 EXIT = Exit
@@ -98,6 +118,26 @@ CLIENT_IMM = Client "%s" est immunise
 CANT_PERF_DEAD = Cette action ne peut pas etre faite sur un joueur mort "%s"
 CANT_PERF_BOT = Cette action ne peut pas etre faite sur un BOT "%s"
 
+[nl]
+BACK = Terug
+EXIT = Sluiten
+MORE = Meer
+NONE = Geen
+ADMIN = BEHEERDER
+PLAYER = SPELER
+ERROR = fout
+YES = Ja
+NO = Nee
+BAN = ban
+KICK = kick
+NO_ACC_COM = Je hebt geen toegang tot dit commando
+USAGE = Gebruik
+MORE_CL_MATCHT = er zijn meer gebruikers die voldoen aan je argument
+CL_NOT_FOUND = Gebruiker met die naam of gebruikersid niet gevonden
+CLIENT_IMM = Gebruiker "%s" is immuun
+CANT_PERF_DEAD = Deze actie kan niet uitgevoerd worden op een dode gebruiker "%s"
+CANT_PERF_BOT = Deze actie kan niet uitgevoerd worden op een bot "%s"
+
 [pl]
 BACK = Wstecz
 EXIT = Wyjscie
@@ -153,7 +193,7 @@ KICK = sparka
 NO_ACC_COM = Du saknar befogenhet till det kommandot
 USAGE = Utnyttjande
 MORE_CL_MATCHT = mer klienter som passar argumentet
-CL_NOT_FOUND = Klient med det namnet eller userid’et kan inte hittas
+CL_NOT_FOUND = Klient med det namnet eller userid'et kan inte hittas
 CLIENT_IMM = Klient "%s" har immunitet
 CANT_PERF_DEAD = Handling kan inte utf'o'ras pa den likviderade klienten "%s"
 CANT_PERF_BOT = Den handlingen kan inte utf'o'ras pa bot "%s"

@@ -8,6 +8,16 @@ SET_LANG_SERVER = The server language has been set to "%s"
 SET_LANG_USER = Your language has been set to "%s"
 TYPE_LANGMENU = Type 'amx_langmenu' in the console to display a menu where you can choose your language
 
+[bp]
+LANG_NOT_EXISTS = A linguagem nao existe
+PERSO_LANG = Linguagem Pessoal
+LANG_MENU = Menu de Linguagem
+SERVER_LANG = Linguagem do Servidor
+SAVE_LANG = Salvar Linguagem
+SET_LANG_SERVER = A linguagem do servidor foi ajustada para "%s"
+SET_LANG_USER = Sua linguagem foi ajustada para "%s"
+TYPE_LANGMENU = Digite 'amx_langmenu' no console para mostrar um menu onde voce podera escolher sua linguagem
+
 [da]
 LANG_NOT_EXISTS = Sproget eksisterer ikke
 PERSO_LANG = Personligt sprog
@@ -25,6 +35,7 @@ SERVER_LANG = Server Sprache
 SAVE_LANG = Spracheinstellung speichern
 SET_LANG_SERVER = Die Sprache des Servers wurde auf "%s" geaendert
 SET_LANG_USER = Deine Sprache wurde auf "%s" geaendert
+TYPE_LANGMENU = Schreibe 'amx_langmenu' in die Konsole zum Anzeigen des Sprachauswahlmenus
 
 [es]
 LANG_NOT_EXISTS = El lenguaje no existe
@@ -43,6 +54,16 @@ SERVER_LANG = Langue du serveur
 SAVE_LANG = Sauver la langue
 SET_LANG_SERVER = La langue du serveur a ete configuree en "%s"
 SET_LANG_USER = Ta langue a ete configuree en "%s"
+TYPE_LANGMENU = Tape 'amx_langmenu' dans la console pour afficher un menu ou tu pourras choisir ta langue
+
+[nl]
+LANG_NOT_EXISTS = Deze taal bestaat niet
+PERSO_LANG = Persoonlijke taal
+LANG_MENU = Taal Menu
+SERVER_LANG = Server Taal
+SAVE_LANG = Sla taal op
+SET_LANG_SERVER = De server taal is veranderd naar "%s"
+SET_LANG_USER = Jouw taal is veranderd naar "%s"
 
 [pl]
 LANG_NOT_EXISTS = Ten jezyk nie istnieje
@@ -62,6 +83,7 @@ SERVER_LANG = Jezik Servera
 SAVE_LANG = Sacuvaj Jezik
 SET_LANG_SERVER = Jezik Servera je postavljen na "%s"
 SET_LANG_USER = Vas jezik je postavljen na "%s"
+TYPE_LANGMENU = Unesi 'amx_langmenu' u konzoli da bi otvorio meni za menjanje jezika
 
 [sv]
 LANG_NOT_EXISTS = Det spraket existerar inte
@@ -71,6 +93,7 @@ SERVER_LANG = Serversprak
 SAVE_LANG = Spara sprak
 SET_LANG_SERVER = Serverspraket har satts till "%s"
 SET_LANG_USER = Ditt sprak har satts till "%s"
+TYPE_LANGMENU = Skriv 'amx_langmenu' i konsolen f'o'r att visa Sprakvalsmenyn
 TYPE_LANGMENU = Skriv 'amx_langmenu' i konsolen f'o'r att visa Sprakvalsmenyn
 
 [tr]

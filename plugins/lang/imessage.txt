@@ -1,6 +1,9 @@
 [en]
 INF_REACH = Information Messages limit reached!
 
+[bp]
+INF_REACH = Limite das mensagens alcancado!
+
 [da]
 INF_REACH = Informations beskeder graense naaet!
 
@@ -12,6 +15,9 @@ INF_REACH = Limite de Mensajes de Informacion alcanzado!
 
 [fr]
 INF_REACH = Limite de Messages d'Information atteinte!
+
+[nl]
+INF_REACH = Limiet Informatie Berichten bereikt!
 
 [pl]
 INF_REACH = Osiagniety limit wiadomosci informacyjnych!

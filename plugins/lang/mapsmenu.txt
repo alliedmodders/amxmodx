@@ -22,6 +22,30 @@ ADMIN_CHANGEL_1 = ADMIN: changelevel %s
 ADMIN_CHANGEL_2 = ADMIN %s: changelevel %s
 CHANGLE_MENU = Changelevel Menu
 
+[bp]
+RESULT_REF = Resultado ignorado
+RESULT_ACC = Resultado aceito
+VOTE_SUCCESS = Votacao bem sucedida. O mapa sera mudado para
+VOTE_FAILED = A votacao falhou
+THE_WINNER = O vencedor
+WANT_CONT = Voce quer continuar?
+VOT_CANC = A votacao foi cancelada
+X_VOTED_FOR = %s votou na opcao #%d
+VOTEMAP_MENU = Menu de votacao de mapa
+START_VOT = Iniciar Votacao
+SEL_MAPS = Mapas Selecionados
+ALREADY_VOT = Ja existe uma votacao em progresso...
+NO_MAPS_MENU = Nao existem mapas no menu
+VOT_NOW_ALLOW = Votacao nao permitida agora
+WHICH_MAP = Que mapa voce quer?
+CHANGE_MAP_TO = Mudar mapa para
+CANC_VOTE = Cancelar votacao
+ADMIN_V_MAP_1 = ADMIN: votacao de mapa(s)
+ADMIN_V_MAP_2 = ADMIN %s:  votacao de mapa(s)
+ADMIN_CHANGEL_1 = ADMIN: mudando mapa para %s
+ADMIN_CHANGEL_2 = ADMIN %s: mudando mapa para %s
+CHANGLE_MENU = Menu de Troca de Mapa
+
 [da]
 RESULT_REF = Resultat afvist
 RESULT_ACC = Resultat accepteret
@@ -117,6 +141,30 @@ ADMIN_V_MAP_2 = ADMIN %s: vote carte(s)
 ADMIN_CHANGEL_1 = ADMIN: change la carte pour %s
 ADMIN_CHANGEL_2 = ADMIN %s: change la carte pour %s
 CHANGLE_MENU = Menu Changement de Carte
+
+[nl]
+RESULT_REF = Resultaat genegeerd
+RESULT_ACC = Resultaat geaccepteerd
+VOTE_SUCCESS = Stemmen succesvol. Map word veranderd naar
+VOTE_FAILED = Stemmen gefaald
+THE_WINNER = De winnaar
+WANT_CONT = Wil je doorgaan?
+VOT_CANC = Stemmen is onderbroken
+X_VOTED_FOR = %s stemt voor optie #%d
+VOTEMAP_MENU = Votemap Menu
+START_VOT = Start Stemmen
+SEL_MAPS = Geselecteerde Maps
+ALREADY_VOT = Er word al gestemd...
+NO_MAPS_MENU = Er staan geen maps op het menu
+VOT_NOW_ALLOW = Stemmen is niet toegestaan op dit moment
+WHICH_MAP = Welke map wil je?
+CHANGE_MAP_TO = Veranderd map naar
+CANC_VOTE = Onderbreek het stemmen
+ADMIN_V_MAP_1 = BEHEERDER: stem map(s)
+ADMIN_V_MAP_2 = BEHEERDER %s: stem map(s)
+ADMIN_CHANGEL_1 = BEHEERDER: changelevel %s
+ADMIN_CHANGEL_2 = BEHEERDER %s: changelevel %s
+CHANGLE_MENU = Changelevel Menu
 
 [pl]
 RESULT_REF = Rezultat odrzucony

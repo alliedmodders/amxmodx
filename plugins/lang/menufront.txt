@@ -16,6 +16,24 @@ PAUSE_PLUG = Pause Plugins
 RES_WEAP = Restrict Weapons
 TELE_PLAYER = Teleport Player
 
+[bp]
+KICK_PLAYER = Desconectar Jogador
+BAN_PLAYER = Banir Jogador
+SLAP_SLAY = Bater/Matar Jogador
+TEAM_PLAYER = Time do Jogador ^n
+CHANGEL = Mudar Mapa
+VOTE_MAPS = Votacao de Mapa ^n
+SPECH_STUFF = Menu de Vozes
+CLIENT_COM = Comandos no Cliente
+SERVER_COM = Comandos no Servidor
+CVARS_SET = Ajustes dos Cvars
+CONFIG = Configuracao
+LANG_SET = Ajustes da Linguagem
+STATS_SET = Ajustes do Stats ^n
+PAUSE_PLUG = Pausar Plugins
+RES_WEAP = Restringir Armas
+TELE_PLAYER = Teletransportar Jogador
+
 [da]
 KICK_PLAYER = Kick Spiller
 BAN_PLAYER = Ban Spiller
@@ -88,6 +106,24 @@ PAUSE_PLUG = Pause Plugins
 RES_WEAP = Restriction des Armes
 TELE_PLAYER = Teleporter Joueur
 
+[nl]
+KICK_PLAYER = Kick Speler
+BAN_PLAYER = Ban Speler
+SLAP_SLAY = Slap/Dood Speler
+TEAM_PLAYER = Team Speler ^n
+CHANGEL = Changelevel
+VOTE_MAPS = Stem voor maps ^n
+SPECH_STUFF = Spraak Stuff
+CLIENT_COM = Gebruikers Commandos
+SERVER_COM = Server Commandos
+CVARS_SET = Cvars Settings
+CONFIG = Configuratie
+LANG_SET = Taal Settings
+STATS_SET = Stats Settings ^n
+PAUSE_PLUG = Pauseer Plugins
+RES_WEAP = Verbied Wapens
+TELE_PLAYER = Teleporteer Speler
+
 [pl]
 KICK_PLAYER = Wywal gracza
 BAN_PLAYER = Zbanuj gracza
@@ -145,7 +181,7 @@ TELE_PLAYER = Teleportera spelare
 [tr]
 KICK_PLAYER = Oyuncuyu at
 BAN_PLAYER = Oyuncuyu banla
-SLAP_SLAY = Oyuncuyu tokatla/öldür
+SLAP_SLAY = Oyuncuyu tokatla/oldur
 TEAM_PLAYER = Takim oyuncusu ^n
 CHANGEL = Bolum degisdir
 VOTE_MAPS = Mapler icin oylama ^n

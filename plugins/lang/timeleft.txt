@@ -7,6 +7,14 @@ MINUTES = minutes
 SECOND = second
 SECONDS = seconds
 
+[bp]
+THE_TIME = O tempo
+TIME_LEFT = Tempo Restante
+NO_T_LIMIT = Sem Limite de Tempo
+MINUTE = minuto
+MINUTES = minutos
+SECOND = segundo
+SECONDS = segundos
 
 [da]
 THE_TIME = Tiden
@@ -15,7 +23,7 @@ NO_T_LIMIT = Ingen tidsbegraensning
 MINUTE = minut
 MINUTES = minutter
 SECOND = sekund
-SECONDs = sekunder
+SECONDS = sekunder
 
 [de]
 THE_TIME = Es ist
@@ -43,6 +51,15 @@ MINUTE = minute
 MINUTES = minutes
 SECOND = seconde
 SECONDS = secondes
+
+[nl]
+THE_TIME = De tijd
+TIME_LEFT = Tijd Resterend
+NO_T_LIMIT = Geen Tijd Resterend
+MINUTE = minuut
+MINUTES = minuten
+SECOND = seconde
+SECONDs = seconden
 
 [pl]
 THE_TIME = Czas

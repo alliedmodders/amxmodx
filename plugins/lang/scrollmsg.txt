@@ -3,6 +3,11 @@ MIN_FREQ = Minimal frequency for this message is %d seconds
 MSG_FREQ = Scrolling message displaying frequency: %d:%02d minutes
 MSG_DISABLED = Scrolling message disabled
 
+[bp]
+MIN_FREQ = Frequencia minima para essa mensagem e de %d segundos
+MSG_FREQ = Frequencia  da mensagem rotatoria: %d:%02d minutos
+MSG_DISABLED = Mensagem rotatoria desabilitada
+
 [da]
 MIN_FREQ = Minimum frekvens for denne besked er %d sekunder
 MSG_FREQ = Rullende besked visnings frekvens: %d:%02d minutter
@@ -22,6 +27,11 @@ MSG_DISABLED = Mensaje deshabilitado
 MIN_FREQ = La frequence minimale pour ce message est de %d secondes
 MSG_FREQ = La frequence d'affichage des messages deroulants est de: %d:%02d minutes
 MSG_DISABLED = Les messages deroulants sont desactives
+
+[nl]
+MIN_FREQ = Minimale frequentie voor dit bericht is %d seconden
+MSG_FREQ = Schuif berichten vertonings frequentie: %d:%02d minuten
+MSG_DISABLED = Schuif berichten uitgeschakeld
 
 [pl]
 MIN_FREQ = Minimalna czestotliwosc dla tej wiadomosci to %d sekund

@@ -21,6 +21,29 @@ TRANSF_TO = Transfer to %s
 CL_CMD_MENU = Client Cmds Menu
 NO_CMDS = No cmds available
 
+[bp]
+ADMIN_BAN_1 = ADMIN: baniu %s
+ADMIN_BAN_2 = ADMIN %s: baniu %s
+BAN_MENU = Menu de Banir
+BAN_FOR_MIN = Banir por %d minutos
+BAN_PERM = Banir permanentemente
+ADMIN_SLAP_1 = ADMIN: bateu em %s com %d de dano
+ADMIN_SLAP_2 = ADMIN %s: bateu em %s com %d de dano
+ADMIN_SLAY_1 = ADMIN: assassinou %s
+ADMIN_SLAY_2 = ADMIN %s: assassinou %s
+SLAP_SLAY_MENU = Menu de Bater/Matar
+SLAP_WITH_DMG = Bater com %d de dano
+SLAY = Matar
+ADMIN_KICK_1 = ADMIN: desconectou %s
+ADMIN_KICK_2 = ADMIN %s: desconectou %s
+KICK_MENU = Menu de Desconectar
+ADMIN_TRANSF_1 = ADMIN: transferiu %s para o time %s
+ADMIN_TRANSF_2 = ADMIN %s: transferiu %s para o time %s
+TEAM_MENU = Menu de Time
+TRANSF_TO = Transferir para %s
+CL_CMD_MENU = Menu de Comandos no Cliente
+NO_CMDS = Nenhum comando disponivel
+
 [da]
 ADMIN_BAN_1 = ADMIN: ban %s
 ADMIN_BAN_2 = ADMIN %s: ban %s
@@ -113,6 +136,29 @@ TRANSF_TO = Transferer en %s
 CL_CMD_MENU = Menu Cmds Client 
 NO_CMDS = Aucune commande disponible
 
+[nl]
+ADMIN_BAN_1 = BEHEERDER: verban %s
+ADMIN_BAN_2 = BEHEERDER %s: verban %s
+BAN_MENU = Verban Menu
+BAN_FOR_MIN = Verban voor %d minuten
+BAN_PERM = Verban permanent
+ADMIN_SLAP_1 = BEHEERDER: sla %s met %d schade
+ADMIN_SLAP_2 = BEHEERDER %s: sla %s met %d schade
+ADMIN_SLAY_1 = BEHEERDER: dood %s
+ADMIN_SLAY_2 = BEHEERDER %s: dood %s
+SLAP_SLAY_MENU = Sla/Dood Menu
+SLAP_WITH_DMG = Sla met %d schade
+SLAY = Sla
+ADMIN_KICK_1 = BEHEERDER: verwijder %s
+ADMIN_KICK_2 = BEHEERDER %s: verwijder %s
+KICK_MENU = Verwijder Menu
+ADMIN_TRANSF_1 = BEHEERDER: transfer %s to %s
+ADMIN_TRANSF_2 = BEHEERDER %s: transfer %s to %s
+TEAM_MENU = Team Menu
+TRANSF_TO = Transfer naar %s
+CL_CMD_MENU = Gebruikers Cmds Menu
+NO_CMDS = Geen cmds beschikbaar
+
 [pl]
 ADMIN_BAN_1 = ADMIN: ban %s
 ADMIN_BAN_2 = ADMIN %s: ban %s
@@ -194,7 +240,7 @@ ADMIN_SLAY_1 = ADMIN: oldurdu %s
 ADMIN_SLAY_2 = ADMIN %s: oldurdu %s 
 SLAP_SLAY_MENU = Tokatla/oldur menusu
 SLAP_WITH_DMG = Tokatla %d zarar ile
-SLAY = Öldür
+SLAY = Oldur
 ADMIN_KICK_1 = ADMIN: atdi %s
 ADMIN_KICK_2 = ADMIN %s: atdi %s
 KICK_MENU = Atma menusu

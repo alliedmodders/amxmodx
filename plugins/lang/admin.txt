@@ -11,6 +11,19 @@ PAS_ACC = Password accepted
 PRIV_SET = Privileges set
 NO_ENTRY = You have no entry to the server...
 
+[bp]
+LOADED_ADMIN = 1 administrador carregado do arquivo
+LOADED_ADMINS = %d administradores carregados do arquivo
+SQL_CANT_CON = SQL erro: Nao pode conectar: '%s'
+SQL_CANT_LOAD_ADMINS = SQL erro: Nao pode carregar os administradores: '%s'
+NO_ADMINS = Nenhum administrador encontrado.
+SQL_LOADED_ADMIN = 1 administrador carregado do banco de dados
+SQL_LOADED_ADMINS = %d administradores carregados do banco de dados
+INV_PAS = Senha Invalida!
+PAS_ACC = Senha Aceita
+PRIV_SET = Privilegios Adquiridos
+NO_ENTRY = Voce nao tem acesso garantido no servidor...
+
 [da]
 LOADED_ADMIN = Indlaest 1 admin fra fil
 LOADED_ADMINS = Indlaest %d adminer fra fil
@@ -62,6 +75,19 @@ INV_PAS = Mot de Passe Invalide!
 PAS_ACC = Mot de Passe Accepte
 PRIV_SET = Mise en place des Privileges
 NO_ENTRY = Tu n'as aucun droit acces sur ce serveur...
+
+[nl]
+LOADED_ADMIN = 1 Beheerder uit het bestand geladen
+LOADED_ADMINS = %d Beheerders uit het bestand geladen
+SQL_CANT_CON = SQL fout: kan geen verbinding maken: '%s'
+SQL_CANT_LOAD_ADMINS = SQL fout: kan geen beheerders laden: '%s'
+NO_ADMINS = Geen admins gevonden.
+SQL_LOADED_ADMIN = 1 Beheerder uit de database geladen
+SQL_LOADED_ADMINS = %d Beheerders uit de database geladen
+INV_PAS = Wachtwoord onjuist!
+PAS_ACC = Wachtwoord geacepteerd
+PRIV_SET = Speciale rechten geplaatst
+NO_ENTRY = U heeft geen toegang tot de server...
 
 [pl]
 LOADED_ADMIN = Zaladowano 1 admina z pliku

@@ -23,6 +23,31 @@ OFF = OFF
 NO_STATS = Stats plugins are not^ninstalled on this server^n
 SAVE_CONF = Save configuration
 
+[bp]
+TOTAL_NUM = Total %d
+NO_OPTION = Nao pude encontrar opcao(s) com essa variavel (nome "%s")
+CONF_SAVED = A configuracao do stats foi salva com sucesso
+CONF_FAILED = A configuracao do stats nao pode ser salva!!!
+CONF_LOADED = A configuracao do stats foi carregado com sucesso
+CONF_FAIL_LOAD = A configuracao do stats nao pode ser carregada!!!
+STATS_CONF = Configuracao do Stats
+ENTRIES_OF = Entradas %i - %i de %i
+USE_MORE = Use 'amx_statscfg list %i' para mais
+USE_BEGIN = Use 'amx_statscfg list 1' para voltar ao inicio
+CANT_ADD = Nao pode adicionar mais stats a lista, limite alcancado!
+COM_USAGE = Uso:  amx_statscfg <comando> [parametros] ...
+COM_COM = Comandos:
+COM_ON = ^ton <variavel> - habilita uma opcao especifica
+COM_OFF = ^toff <variable> -  desabilita uma opcao especifica
+COM_SAVE = ^tsave - salva a configuracao do stats
+COM_LOAD = ^tload - carrega a configuracao do stats
+COM_LIST = ^tlist [id] - lista o status do stats
+COM_ADD = ^tadd <nome> <variavel> - adiciona stats para a lista
+ON = LIGADO
+OFF = DESLIGADO
+NO_STATS = Plugins de Stats nao estao^ninstalados neste servidor^n
+SAVE_CONF = Salvar Configuracao
+
 [da]
 TOTAL_NUM = Total %d
 NO_OPTION = Kunne ikke finde mulighed(er)med en saadan variabel (name "%s")
@@ -57,7 +82,7 @@ CONF_LOADED = Statistik-Konfiguration erfolgreich geladen
 CONF_FAIL_LOAD = Fehler beim Laden der Statistik-Konfiguration!!!
 STATS_CONF = Statistik-Konfiguration
 ENTRIES_OF = Eintraege %i - %i von %i
-USE_MORE = Benutze 'amx_statscfg list %i' fuer mehr Info´s
+USE_MORE = Benutze 'amx_statscfg list %i' fuer mehr Infos
 USE_BEGIN = Benutze 'amx_statscfg list 1' um zum Anfang zu gelangen
 CANT_ADD = Kann keine Statistik mehr hinzufuegen, das Limit ist erreicht!
 COM_USAGE = Benutze: amx_statscfg <Befehl> [Parameter] ...
@@ -122,6 +147,31 @@ ON = ACTIF
 OFF = INACTIF
 NO_STATS = Les plugins de stats ne sont pas^ninstalles sur ce serveur^n
 SAVE_CONF = Sauver la configuration
+
+[nl]
+TOTAL_NUM = Totaal %d
+NO_OPTION = Kon optie(s) met deze variabel niet vinden (naam "%s")
+CONF_SAVED = opslaan van stats configuratie is gelukt
+CONF_FAILED = opslaan van stats configuratie is gefaald!!!
+CONF_LOADED = laden van stats configuratie is gelukt
+CONF_FAIL_LOAD = laden van stats configuratie is gefaald!!!
+STATS_CONF = Stats Configuratie
+ENTRIES_OF = Waarde %i - %i van %i
+USE_MORE = Gebruik 'amx_statscfg list %i' voor meer
+USE_BEGIN = Gebruik 'amx_statscfg list 1' voor het begin
+CANT_ADD = Kan niet meer stats toevoegen, de limiet is bereikt!
+COM_USAGE = Usage:  amx_statscfg <commando> [parameters] ...
+COM_COM = Commandos:
+COM_ON = ^ton <variable> - specifieke opties inschakelen
+COM_OFF = ^toff <variable> - specifieke opties uitschakelen
+COM_SAVE = ^tsave - stats configuratie opslaan
+COM_LOAD = ^tload - stats configuratie laden
+COM_LIST = ^tlist [id] - stats status weergeven
+COM_ADD = ^tadd <name> <variable> - stats toevoegen aan de lijst
+ON = AAN
+OFF = UIT
+NO_STATS = Stats plugins zijn niet^ngeinstalleerd op deze server^n
+SAVE_CONF = Configuratie opslaan
 
 [pl]
 TOTAL_NUM = Calkowite %d
@@ -189,7 +239,7 @@ COM_USAGE = Skriv:  amx_statscfg <kommando> [parametrar] ...
 COM_COM = Kommandon:
 COM_ON = ^ton <variabel> - aktivera markerat val
 COM_OFF = ^toff <variabel> - stoppa markerat val
-COM_SAVE = ^tsave – spara statistikinst'a'llningar
+COM_SAVE = ^tsave - spara statistikinst'a'llningar
 COM_LOAD = ^tload - ladda statistikinst'a'llningar
 COM_LIST = ^tlist [id] - lista statistikstatus
 COM_ADD = ^tadd <namn> <variabel> - addera statistik till listan

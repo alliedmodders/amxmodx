@@ -11,6 +11,19 @@ COL_OCEAN = ocean
 COL_MAROON = maroon
 PRINT_ALL = (ALL) %s :   %s
 
+[bp]
+COL_WHITE = branco
+COL_RED = vermelho
+COL_GREEN = verde
+COL_BLUE = azul
+COL_YELLOW = amarelo
+COL_MAGENTA = magenta
+COL_CYAN = ciano
+COL_ORANGE = laranja
+COL_OCEAN = oceano
+COL_MAROON = marrom
+PRINT_ALL = (Todos) %s :   %s
+
 [da]
 COL_WHITE = hvid
 COL_RED = roed
@@ -62,6 +75,19 @@ COL_ORANGE = orange
 COL_OCEAN = marine
 COL_MAROON = marron
 PRINT_ALL = (TOUS) %s :   %s
+
+[nl]
+COL_WHITE = wit
+COL_RED = rood
+COL_GREEN = groen
+COL_BLUE = blauw
+COL_YELLOW = geel
+COL_MAGENTA = magenta
+COL_CYAN = cyaan
+COL_ORANGE = oranje
+COL_OCEAN = oceaannlauw
+COL_MAROON = kastanjebruin
+PRINT_ALL = (IEDEREEN) %s :   %s
 
 [pl]
 COL_WHITE = bialy

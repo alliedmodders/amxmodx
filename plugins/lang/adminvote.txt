@@ -33,6 +33,41 @@ ACTION_PERFORMED = That action can't be performed on bot "%s"
 ADMIN_VOTE_FOR_1 = %s: vote %s for %s
 ADMIN_VOTE_FOR_2 = %s %s: vote %s for %s
 
+[bp]
+ADMIN_CANC_VOTE_1 = %s: cancelou a votacao
+ADMIN_CANC_VOTE_2 = %s %s: cancelou a votacao
+VOTING_CANC = Votacao cancelada
+NO_VOTE_CANC = Nao existe votacao a ser cancelada ou a votacao nao pode ser cancelada com esse comando
+RES_REF = Resultado ignorado
+RES_ACCEPTED = Resultado aceito
+VOTING_FAILED = A votacao falhou
+VOTING_RES_1 = %s (sim "%d") (nao "%d") (precisava de "%d")
+VOTING_RES_2 = %s (conseguiu "%d") (precisava de "%d")
+VOTING_SUCCESS = Votacao bem sucedida
+VOTING_RES_3 = %s (conseguiu "%d") (precisava de "%d"). O resultado: %s
+THE_RESULT = O resultado
+WANT_CONTINUE = Voce quer continuar?
+VOTED_FOR = %s votou a favor
+VOTED_AGAINST = %s votou contra
+VOTED_FOR_OPT = %s votou na opcao #%d
+ALREADY_VOTING = Ja existe uma votacao em progresso....
+VOTING_NOT_ALLOW = Votacao nao permitida agora
+GIVEN_NOT_VALID = Dado %s invalido
+MAP_IS = o mapa e
+MAPS_ARE = os mapas sao
+CHOOSE_MAP = Escolha o mapa
+CHANGE_MAP_TO = Mudar o mapa para
+ADMIN_VOTE_MAP_1 = %s: votacao de mapa(s)
+ADMIN_VOTE_MAP_2 = %s %s: votacao de mapa(s)
+VOTING_STARTED = Votacao iniciada...
+VOTING_FORBIDDEN = A votacao para esse item foi proibida
+ADMIN_VOTE_CUS_1 = %s: votacao personalizada
+ADMIN_VOTE_CUS_2 = %s %s: votacao personalizada
+VOTE = Voto
+ACTION_PERFORMED = Esta acao nao pode ser executada em um BOT "%s"
+ADMIN_VOTE_FOR_1 = %s: voto %s para %s
+ADMIN_VOTE_FOR_2 = %s %s: voto %s para %s
+
 [da]
 ADMIN_CANC_VOTE_1 = %s: annuller afstemning
 ADMIN_CANC_VOTE_2 = %s %s: annuller afstemning
@@ -172,6 +207,41 @@ VOTE = Vote
 ACTION_PERFORMED = Cette action ne peut etre effectuee sur les BOTs "%s"
 ADMIN_VOTE_FOR_1 = %s: vote %s pour %s
 ADMIN_VOTE_FOR_2 = %s %s: vote %s pour %s
+
+[nl]
+ADMIN_CANC_VOTE_1 = %s: onderbreek het stemmen
+ADMIN_CANC_VOTE_2 = %s %s: onderbreek het stemmen
+VOTING_CANC = Stemmen onderbroken
+NO_VOTE_CANC = There is no voting to cancel or the vote session can't be canceled with that command
+RES_REF = Resultaat genegeerd
+RES_ACCEPTED = Resultaat geacepteerd
+VOTING_FAILED = Stemmen gefaald
+VOTING_RES_1 = %s (ja "%d") (nee "%d") (benodigd "%d")
+VOTING_RES_2 = %s (heb "%d") (benodigd "%d")
+VOTING_SUCCESS = Stemmen succesvol
+VOTING_RES_3 = %s (heb "%d") (benodigd "%d"). Het resultaat: %s
+THE_RESULT = Het resultaat
+WANT_CONTINUE = Wil je doorgaan?
+VOTED_FOR = %s stemt voor
+VOTED_AGAINST = %s stemt tegen
+VOTED_FOR_OPT = %s stemt voor optie #%d
+ALREADY_VOTING = Er word al gestemd...
+VOTING_NOT_ALLOW = Stemmen is niet toegestaan op dit moment
+GIVEN_NOT_VALID = Gegeven %s onjuist
+MAP_IS = map is
+MAPS_ARE = maps zijn
+CHOOSE_MAP = Kies map
+CHANGE_MAP_TO = Verander map naar
+ADMIN_VOTE_MAP_1 = %s: stem map(s)
+ADMIN_VOTE_MAP_2 = %s %s: stem map(s)
+VOTING_STARTED = Stemmen is begonnen...
+VOTING_FORBIDDEN = Stemmen voor dat is verboden
+ADMIN_VOTE_CUS_1 = %s: stem custom
+ADMIN_VOTE_CUS_2 = %s %s: stem custom
+VOTE = Stem
+ACTION_PERFORMED = Deze actie kan niet worden gebruikt bij bots "%s"
+ADMIN_VOTE_FOR_1 = %s: stem %s voor %s
+ADMIN_VOTE_FOR_2 = %s %s: stem %s voor %s
 
 [pl]
 ADMIN_CANC_VOTE_1 = %s: anulowal glos

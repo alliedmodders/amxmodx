@@ -7,6 +7,15 @@ TYPE_HELP = Type 'amx_help' in the console to see available commands
 TIME_INFO_1 = Time Left: %d:%02d min. Next Map: %s
 TIME_INFO_2 = No Time Limit. Next Map: %s
 
+[bp]
+HELP_COMS = Ajuda do AMX Mod X : Comandos
+ENTRIES = Entradas %d - %d de %d
+USE_MORE = Use 'amx_help %d' para ver mais comandos
+USE_BEGIN = Use 'amx_help 1' para voltar ao inicio
+TYPE_HELP = Digite 'amx_help' no console para ver os comandos disponiveis
+TIME_INFO_1 = Tempo Restante: %d:%02d minutos. Proximo Mapa: %s
+TIME_INFO_2 = Sem Limite de Tempo. Proximo Mapa: %s
+
 [da]
 HELP_COMS = AMX Mod X Hjaelp: Kommandoer
 ENTRIES = Indskrivninger %d - %d of %d
@@ -42,6 +51,15 @@ USE_BEGIN = Utilise 'amx_help 1'  pour le debut
 TYPE_HELP = Tape 'amx_help' dans la console pour voir les commandes disponibles
 TIME_INFO_1 = Temps Restant: %d:%02d mn. Prochaine Carte: %s
 TIME_INFO_2 = Aucun Temps Limite. Prochaine Carte: %s
+
+[nl]
+HELP_COMS = AMX Mod X Help: Commandos
+ENTRIES = Waarden %d - %d van %d
+USE_MORE = Gebruik 'amx_help %d' voor meer
+USE_BEGIN = Gebruik 'amx_help 1' voor het begin
+TYPE_HELP = Type 'amx_help' in de console voor de beschikbare commandos
+TIME_INFO_1 = Tijd Over: %d:%02d min. Volgende Map: %s
+TIME_INFO_2 = Geen Tijd Over. Volgende Map: %s
 
 [pl]
 HELP_COMS = AMX Mod X pomoc: Komendy

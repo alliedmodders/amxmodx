@@ -19,7 +19,7 @@
 $PROJECT = "amxmodx_mm";
 $sdk = "../hlsdk/SourceCode";
 $mm = "../metamod/metamod";
-$gccf = "gcc";
+$gccf = "g++";
 $ccf = "cc";
 
 @CPP_SOURCE_FILES = ("meta_api.cpp", "CFile.cpp", "CVault.cpp", "vault.cpp", "float.cpp", "file.cpp", "modules.cpp", "CMisc.cpp", "CTask.cpp", "string.cpp", "amxmodx.cpp", "CEvent.cpp", "CCmd.cpp", "CLogEvent.cpp", "srvcmd.cpp", "strptime.cpp", "amxcore.cpp", "amxtime.cpp", "power.cpp", "amxxlog.cpp", "fakemeta.cpp", "amxxfile.cpp", "CLang.cpp", "md5.cpp", "emsg.cpp", "CForward.cpp", "CPlugin.cpp", "CModule.cpp", "CMenu.cpp", "util.cpp");
@@ -28,7 +28,7 @@ $ccf = "cc";
 my %OPTIONS, %OPT;
 
 $OPT{"debug"} = "-g -ggdb";
-$OPT{"opt"} = "-O2 -ffast-math -funroll-loops -fomit-frame-pointer -s -DNDEBUG -Wall -Wno-unknown-pragmas -DOPT_TYPE=\"optimized\"";
+$OPT{"opt"} = "-O2 -ffast-math -funroll-loops -fomit-frame-pointer -s -DNDEBUG -Wall -Wno-unknown-pragmas -DOPT_TYPE=\"optimized\" -fno-exceptions -fno-rtti";
 
 $OPTIONS{"include"} = "-I$sdk -I. -I$mm -I$sdk/engine -I$sdk/common -I$sdk/pm_shared -I$sdk/dlls";
 
@@ -116,7 +116,7 @@ if ($OPTIONS{"debug"})
 
 if ($OPTIONS{"amd64"})
 {
-	$cflags .= " -m64 -DSMALL_CELL_SIZE=64 -DHAVE_I64 $cflags";
+	$cflags = " -m64 -DSMALL_CELL_SIZE=64 -DHAVE_I64 $cflags";
 }
 
 if ($OPTIONS{"jit"})
@@ -155,8 +155,6 @@ if ($OPTIONS{"amd64"})
 if ($OPTIONS{"clean"})
 {
 	`rm $outdir/*.o`;
-	`rm $outdir/MMGR/*.o`;
-	`rm $outdir/minilzo/*.o`;
 	`rm $outdir/$bin`;
 	die("Project cleaned.\n");
 }
@@ -199,17 +197,9 @@ if (!(-d $outdir))
 {
 	mkdir($outdir);
 }
-if (!(-d "$outdir/MMGR"))
-{
-	mkdir("$outdir/MMGR");
-}
 if (!(-d "$outdir/JIT"))
 {
 	mkdir("$outdir/JIT");
-}
-if (!(-d "$outdir/minilzo"))
-{
-	mkdir("$outdir/minilzo");
 }
 
 $inc = $OPTIONS{"include"};

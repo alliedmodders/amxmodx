@@ -111,13 +111,8 @@ bool LoadRankFromFile(HWND hDlg) {
 	if ( !g_rank.begin() )
 	{		
 		if (!g_rank.loadRank(STATS_FILENAME)) {
-			HWND listbox = GetDlgItem(hDlg, IDC_LIST);
-			SendMessage(      // returns LRESULT in lResult
-				listbox,      // handle to destination control
-				LB_ADDSTRING,      // message ID
-				0,      // = (WPARAM) () wParam;
-				(LPARAM) "File load failed!"      // = (LPARAM) () lParam;
-			);  
+			MessageBox(hDlg, "File load failed! Make sure you have csstats.dat in the same directory as this executable. Exiting...", "Where IS that file of yours?", MB_OK);
+			PostQuitMessage(0);
 			return false;
 		}
 	}

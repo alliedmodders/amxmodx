@@ -22,22 +22,13 @@ stock mysql_connect(host[],user[],pass[],dbname[],error[],maxlength)
 }
 
 /* Uses an existing connection (sql) to perform a new query (query) (might close previous query if any). */
-stock mysql_query(sql,query[])
-{
-   dbi_query(sql, query)
-}
+native mysql_query(sql,query[]);
 
 /* Prepares next row of current query (sql) for read access ; returns the number of the row, 0 at end. */
-stock mysql_nextrow(sql)
-{
-   dbi_nextrow(sql)
-}
+native mysql_nextrow(sql);
 
 /* Stores specified column (fieldnum) of current query (sql) in (dest) with (maxlength) characters maximum. */
-stock mysql_getfield(sql,fieldnum,dest[],maxlength)
-{
-   dbi_getfield(sql, fieldnum, dest, maxlength)
-}
+native mysql_getfield(sql,fieldnum,dest[],maxlength);
 
 /* Clears query (sql) and closes connection (if any other plugin doesn't use it). */
 stock mysql_close(sql)

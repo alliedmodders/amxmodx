@@ -77,9 +77,3 @@ native dbi_error(_sql, _error[], _len);
  * "mysql", "pgsql", "mssql"
  */
 native dbi_type(_type[], _len);
-
-/* Backwards compatibility */
-stock dbi_getfield(_sql, _fieldnum, _dest[], _maxlen)
-{
-  return dbi_field(_sql, 1, _fieldnum, _dest, _maxlen)
-}

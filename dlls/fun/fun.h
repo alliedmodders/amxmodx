@@ -26,14 +26,15 @@ static META_FUNCTIONS gMetaFunctionTable = {
 pfnamx_engine_g* g_engAmxFunc;				// These seem to be meta/amxmod related
 pfnmodule_engine_g* g_engModuleFunc;		// These seem to be meta/amxmod related
 
-#define NAME "fun"
+#define NAME "Fun"
 #define AUTHOR "JGHG"
-#define VERSION "0.3"
+#define VERSION "0.1"
 #define URL "http://?"
 #define LOGTAG "fun"
 #define DATE __DATE__
 
 // Fun-specific defines below
+#define CVAR_FUN_VERSION "fun_version"
 #define GETCLIENTLISTENING	(*g_engfuncs.pfnVoice_GetClientListening)
 #define SETCLIENTLISTENING	(*g_engfuncs.pfnVoice_SetClientListening)
 #define	SF_NORESPAWN		( 1 << 30 )// !!!set this bit on guns and stuff that should never respawn.
@@ -44,7 +45,7 @@ pfnmodule_engine_g* g_engModuleFunc;		// These seem to be meta/amxmod related
 #else
 	#define CSMONEYOFFSET	115	// Note that linux offsets need to be 5 higher (120 in this case)
 	#define CSDEATHSOFFSET	449
-#endif // defined LINUX
+#endif // defined __linux__
 
 #define HITGROUP_GENERIC	0 // none
 #define HITGROUP_HEAD		1
@@ -76,4 +77,5 @@ module_info_s module_info = {
   RELOAD_MODULE,
 };
 int g_body = 0;				// bits of parts of body to hit
+cvar_t fun_version = {"fun_version", "0.1", FCVAR_EXTDLL};
 // Globals above

@@ -163,6 +163,9 @@
 #define MENU_KEY_9		(1<<8)
 #define MENU_KEY_0		(1<<9)
 
+#define LANG_PLAYER		0
+#define LANG_SERVER		-1
+
 /* Destination types for client_print() */
 enum {
 	print_notify = 1,

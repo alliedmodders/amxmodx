@@ -70,3 +70,12 @@ MINUTE = minuta
 MINUTES = minut 
 SECOND = sekunda 
 SECONDS = sekund 
+
+[nl]
+THE_TIME = De tijd
+TIME_LEFT = Tijd Over
+NO_T_LIMIT = Geen Tijd Limiet
+MINUTE = minuut
+MINUTES = minuten
+SECOND = seconde
+SECONDS = seconden

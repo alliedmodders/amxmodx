@@ -40,3 +40,9 @@ MSG_DISABLED = Rullende besked slaaet fra
 MIN_FREQ = Minimalna czestotliwosc dla tej wiadomosci to %d sekund 
 MSG_FREQ = Czestotliwosc wyswietlania wiadomosci: %d:%02d minut 
 MSG_DISABLED = Wiadomosci przesuwane wylaczone 
+
+
+[nl]
+MIN_FREQ = Minimale frequentie voor dit bericht is %d seconden
+MSG_FREQ = Scrollend bericht frequentie: %d:%02d minuten
+MSG_DISABLED = Scrollend bericht uitgeschakeld

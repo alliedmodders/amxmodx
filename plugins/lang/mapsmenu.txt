@@ -192,3 +192,28 @@ ADMIN_V_MAP_2 = ADMIN %s: vote map(s)
 ADMIN_CHANGEL_1 = ADMIN: zmiana mapy na %s 
 ADMIN_CHANGEL_2 = ADMIN %s: zmiana mapy na %s 
 CHANGLE_MENU = Menu zmiany mapy 
+
+
+[nl]
+RESULT_REF = Resultaat geweigerd
+RESULT_ACC = Resultaat geaccepteerd
+VOTE_SUCCESS = Stemmen geslaagd. Map zal veranderen naar
+VOTE_FAILED = Stemmen mislukt
+THE_WINNER = De winnaar
+WANT_CONT = Wil je verder gaan?
+VOT_CANC = Stemronde is geannuleerd
+X_VOTED_FOR = %s heeft voor optie #%d gestemd
+VOTEMAP_MENU = Map stemronde Menu
+START_VOT = Start stemronde
+SEL_MAPS = Geselecteerde Maps
+ALREADY_VOT = Er is al een stemronde bezig...
+NO_MAPS_MENU = Geen maps in menu
+VOT_NOW_ALLOW = Stemmen nu niet toegestaan
+WHICH_MAP = Welke map wil je?
+CHANGE_MAP_TO = Verander map naar
+CANC_VOTE = Annuleer stemronde
+ADMIN_V_MAP_1 = ADMIN: stem op map(pen)
+ADMIN_V_MAP_2 = ADMIN %s: stem op map(pen)
+ADMIN_CHANGEL_1 = ADMIN: verander map %s
+ADMIN_CHANGEL_2 = ADMIN %s: verander map %s
+CHANGLE_MENU = Verander Map Menu 

@@ -37,3 +37,8 @@ SPE_MENU = Tale Menu
 CMD_MENU = Menu komend 
 CONF_MENU = Menu konfiguracji 
 SPE_MENU = Menu rozmowy 
+
+[nl]
+CMD_MENU = Commando's Menu
+CONF_MENU = Configuratie's Menu
+SPE_MENU = Spraak Menu

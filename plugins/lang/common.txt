@@ -168,3 +168,25 @@ CL_NOT_FOUND = Nie znaleziono klienta z tym nickiem lub ID
 CLIENT_IMM = Klient "%s" ma immunitet 
 CANT_PERF_DEAD = Nie mozesz tego wykonac na martwym kliencie "%s" 
 CANT_PERF_BOT = Nie mozesz tego wykonac na bocie "%s"
+
+[nl]
+BACK = Terug
+EXIT = Verlaat
+MORE = Meer
+NONE = Geen
+ADMIN = ADMIN
+PLAYER = SPELER
+ERROR = fout
+YES = Ja
+NO = Nee
+BAN = verban
+KICK = verwijder
+NO_ACC_COM = Je hebt geen toegang tot dat commando.
+USAGE = Gebruik
+MORE_CL_MATCHT = Er zijn meer spelers die overeen komen met het gegeven patroon
+CL_NOT_FOUND = Speler met die naam of UserID niet gevonden.
+CLIENT_IMM = Speler "%s" is immuun
+CANT_PERF_DEAD = Die actie kan niet worden gebruikt op dode speler "%s"
+CANT_PERF_BOT = Die actie kan niet worden gebruikt op bot "%s" 
+ON = Aan
+OFF = Uit

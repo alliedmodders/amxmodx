@@ -23,3 +23,6 @@ NEXT_MAP = Naeste bane:
 
 [pl]
 NEXT_MAP = Nastepna Mapa:
+
+[nl]
+NEXT_MAP = Volgende Map:

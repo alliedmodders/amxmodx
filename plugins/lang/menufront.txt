@@ -143,3 +143,22 @@ STATS_SET = Ustawienia statystyk ^n
 PAUSE_PLUG = Zatrzymaj pluginy 
 RES_WEAP = Ogranicz bronie 
 TELE_PLAYER = Teleportuj gracza 
+
+
+[nl]
+KICK_PLAYER = Kick Speler
+BAN_PLAYER = Verban Speler
+SLAP_SLAY = Sla/Slacht Speler
+TEAM_PLAYER = Team Speler ^n
+CHANGEL = Verander Map
+VOTE_MAPS = Stem op maps ^n
+SPECH_STUFF = Spraak Dingen
+CLIENT_COM = Client Commando's
+SERVER_COM = Server Commando's
+CVARS_SET = Cvars Instellingen
+CONFIG = Configuratie
+LANG_SET = Taal Instellingen
+STATS_SET = Stats Settings ^n
+PAUSE_PLUG = Pauseer Plugins
+RES_WEAP = Verbied Wapens
+TELE_PLAYER = Teleporteer Speler

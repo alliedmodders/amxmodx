@@ -71,3 +71,12 @@ X_CHOSE_X = %s wybral %s
 CHOOSE_NEXTM = AMX wybral nastepna mape 
 EXTED_MAP = Rozszerz mape %s 
 TIME_CHOOSE = Nadszedl czas wyboru mapy... 
+
+[nl]
+CHO_FIN_EXT = Kiezen voltooid. Tijd huidige map zal worden verlengd met %.0f minuten
+CHO_FIN_NEXT = Kiezen voltooid. De volgende map zal %s zijn
+CHOSE_EXT = %s kies map verlenging
+X_CHOSE_X = %s kies %s
+CHOOSE_NEXTM = AMX Kies volgende map
+EXTED_MAP = Verleng map %s
+TIME_CHOOSE = Het is tijd om de volgende map te kiezen... 

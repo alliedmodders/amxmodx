@@ -22,3 +22,6 @@ INF_REACH = Informations beskeder graense naaet!
 
 [pl]
 INF_REACH = Osiagniety limit wiadomosci informacyjnych! 
+
+[nl]
+INF_REACH = Informatieve Berichten limiet bereikt! 

@@ -30,3 +30,7 @@ LANG_NAME_NATIVE = Dansk
 [pl]
 LANG_NAME = Polish
 LANG_NAME_NATIVE = Polski
+
+[nl]
+LANG_NAME = Dutch
+LANG_NAME_NATIVE = Nederlands

@@ -101,3 +101,17 @@ INV_PAS = Zle haslo!
 PAS_ACC = Haslo zaakceptowane 
 PRIV_SET = Przywileje ustawione 
 NO_ENTRY = Nie mozesz wejsc na ten serwer...
+
+
+[nl]
+LOADED_ADMIN = 1 admin ingeladen vanuit bestand
+LOADED_ADMINS = %d admins ingeladen vanuit bestand
+SQL_CANT_CON = SQL Fout: Kan geen verbinding maken: '%s'
+SQL_CANT_LOAD_ADMINS = SQL Fout: Kan admins niet inladen: '%s'
+NO_ADMINS = Geen admins gevonden.
+SQL_LOADED_ADMIN = 1 admin ingeladen vanuit databank
+SQL_LOADED_ADMINS = %d admins ingeladen vanuit databank
+INV_PAS = Ongeldig wachtwoord!
+PAS_ACC = Wachtwoord geaccepteerd
+PRIV_SET = Privileges ingesteld
+NO_ENTRY = Je hebt geen toegang tot deze server...

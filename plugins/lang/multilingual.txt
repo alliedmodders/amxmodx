@@ -84,3 +84,14 @@ SET_LANG_SERVER = Jezyk serwera zostal ustawiony na "%s"
 SET_LANG_USER = Twoj jezyk zostal ustawiony na "%s" 
 TYPE_LANGMENU = Wpisz 'amx_langmenu' w konsoli aby wyswietlic menu z wyborem jezyka 
 LANG_MENU_DISABLED = Menu jezykowe zostalo wylaczone.
+
+[nl]
+LANG_NOT_EXISTS = Deze taal bestaat niet
+PERSO_LANG = Persoonlijke Taal
+LANG_MENU = Taal Menu
+SERVER_LANG = Taal van de Server
+SAVE_LANG = Bewaar taal
+SET_LANG_SERVER = De server taal is veranderd naar "%s"
+SET_LANG_USER = Je taal is veranderd naar "%s"
+TYPE_LANGMENU = Type 'amx_langmenu' in de console voor een menu waar je je taal kunt veranderen
+LANG_MENU_DISABLED = Taal menu uitgeschakeld.

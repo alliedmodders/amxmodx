@@ -102,3 +102,16 @@ COL_ORANGE = pomaranczowy
 COL_OCEAN = blekitny 
 COL_MAROON = bordowy 
 PRINT_ALL = (WSZYSTKO) %s : %s 
+
+[nl]
+COL_WHITE = wit
+COL_RED = rood
+COL_GREEN = groen
+COL_BLUE = blauw
+COL_YELLOW = geel
+COL_MAGENTA = magenta
+COL_CYAN = cyaan
+COL_ORANGE = oranje
+COL_OCEAN = oceaan
+COL_MAROON = bruin
+PRINT_ALL = (Allemaal) %s : %s 

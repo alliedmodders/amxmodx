@@ -208,12 +208,13 @@ public client_death(killer,victim,wpnindex,hitplace,TK) {
   if ( wpnindex == CSW_C4 )
     return
 
+
   new headshot = ( hitplace == HIT_HEAD ) ? 1:0
   new selfkill = ( killer == victim ) ? 1:0
 
   if ( g_firstBlood ) {
   	g_firstBlood = 0
-  	if ( FirstBloodSound ) client_cmd(0,"spk misc/firstblood")
+  	if ( FirstBloodSound ) play_sound("misc/firstblood")
   }
   if ( (KillingStreak || KillingStreakSound) && !TK ) { 
     g_streakKills[ victim ][ 1 ]++
@@ -230,7 +231,11 @@ public client_death(killer,victim,wpnindex,hitplace,TK) {
           set_hudmessage(0, 100, 255, 0.05, 0.55, 2, 0.02, 6.0, 0.01, 0.1, 3)
           show_hudmessage(0,g_KillingMsg[ a ], name )        
         }
-        if (  KillingStreakSound )  client_cmd( 0, "spk misc/%s", g_Sounds[ a ] )
+        if (  KillingStreakSound ) {
+		new file[32]
+		format(file, 32, "misc/%s", g_Sounds[a])
+		play_sound(file)
+	}
       }
     }
   }
@@ -272,7 +277,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK) {
         get_user_name(ts[0],tname,31) 
         set_hudmessage(0, 255, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, 3) 
         show_hudmessage(0,"%s vs. %s",ctname,tname) 
-        client_cmd(0,"spk misc/maytheforce") 
+        play_sound("misc/maytheforce") 
     }
     else if ( !g_LastAnnounce  ) {
       new oposite = 0, team = 0
@@ -293,7 +298,8 @@ public client_death(killer,victim,wpnindex,hitplace,TK) {
         show_hudmessage(0,"%s (%d HP) vs. %d %s%s: %L",name, 
           get_user_health(g_LastAnnounce),oposite, 
           g_teamsNames[team],(oposite==1)?"":"S",LANG_PLAYER,g_LastMessages[ random_num(0,3) ] )     
-        client_cmd(g_LastAnnounce,"spk misc/oneandonly") 
+	if (!is_user_connecting(g_LastAnnounce))
+	        client_cmd(g_LastAnnounce,"spk misc/oneandonly") 
       }
     }
   }
@@ -306,7 +312,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK) {
       set_hudmessage(255, 100, 100, -1.0, 0.25, 1, 6.0, 6.0, 0.5, 0.15, 1) 
       show_hudmessage(0,"%L",LANG_PLAYER,g_KinfeMsg[ random_num(0,3) ],killer_name,victim_name) 
     }
-    if ( KnifeKillSound ) client_cmd(0,"spk misc/humiliation") 
+    if ( KnifeKillSound ) play_sound("spk misc/humiliation") 
   }
 
   if ( wpnindex == CSW_HEGRENADE && (GrenadeKill || GrenadeSuicide) ) {
@@ -350,7 +356,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK) {
         set_hudmessage(255, 0, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, 3)
         show_hudmessage(0,"%L",LANG_PLAYER,"DOUBLE_KILL",name )
       }
-      if ( DoubleKillSound ) client_cmd(0,"spk misc/doublekill") 
+      if ( DoubleKillSound ) play_sound("spk misc/doublekill") 
     }
     g_doubleKill = nowtime
     g_doubleKillId = killer
@@ -400,7 +406,7 @@ public eNewRound()
       set_hudmessage(200, 0, 0, -1.0, 0.30, 0, 6.0, 6.0, 0.5, 0.15, 1) 
       show_hudmessage(0,  "%L", LANG_PLAYER, "PREPARE_FIGHT", g_roundCount )
     }
-    if ( RoundCounterSound )  client_cmd( 0 , "spk misc/prepare" )
+    if ( RoundCounterSound )  play_sound("spk misc/prepare")
     if ( KillingStreak ) {
       new appl[32],ppl, i
       get_players(appl,ppl, "ac" )
@@ -440,7 +446,12 @@ public checkKills(param[]) {
         if ( a > 6 ) a = 6
         show_hudmessage(0,g_MultiKillMsg[a],name,LANG_PLAYER,"WITH",g_multiKills[id][0],LANG_PLAYER,"KILLS",g_multiKills[id][1],LANG_PLAYER,"HS")          
       }
-      if ( MultiKillSound ) client_cmd(0,"spk misc/%s",g_Sounds[a])
+      if ( MultiKillSound )
+      {
+      	new sound[24]
+	format(sound, 23, "misc/%s", g_Sounds[a])
+	play_sound(sound)
+      }
     }
     g_multiKills[id] = { 0,0 }
   }
@@ -478,14 +489,16 @@ public bombTimer() {
   if (--g_C4Timer > 0) { 
     if (BombCountVoice) { 
       if (g_C4Timer == 30 || g_C4Timer == 20) { 
-        new temp[48] 
-        num_to_word(g_C4Timer,temp,47) 
-        client_cmd(0,"spk ^"vox/%s seconds until explosion^"",temp) 
+        new temp[64] 
+        num_to_word(g_C4Timer,temp,63) 
+	format(temp, 63, "^"vox/%s seconds until explosion^"", temp)
+	play_sound(temp)
       } 
       else if (g_C4Timer < 11) { 
-        new temp[48] 
-        num_to_word(g_C4Timer,temp,47) 
-        client_cmd(0,"spk ^"vox/%s^"",temp) 
+        new temp[64] 
+        num_to_word(g_C4Timer,temp,63) 
+	format(temp, 63, "^"vox/%s^"", temp)
+	play_sound(temp)
       } 
     } 
     if (BombCountDef && g_Defusing) client_print(g_Defusing,print_center,"%d",g_C4Timer)
@@ -518,4 +531,17 @@ public bomb_explode(planter,defuser)
 public plugin_modules()
 {
 	require_module("csx")
+}
+
+public play_sound(sound[])
+{
+	new players[32], pnum
+	get_players(players, pnum, "c")
+	new i
+	for (i=0; i<pnum; i++)
+	{
+		if (is_user_connecting(players[i]))
+			continue
+		client_cmd(players[i], "spk %s", sound)
+	}
 }

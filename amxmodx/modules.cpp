@@ -864,6 +864,13 @@ void MNF_MergeDefinitionFile(const char *file)
 	g_langMngr.MergeDefinitionFile(file);
 }
 
+edict_t* MNF_GetPlayerEdict(int id)
+{
+	if (id < 1 || id > gpGlobals->maxClients)
+		return NULL;
+	return (GET_PLAYER_POINTER_I(id)->pEdict);
+}
+
 // Fnptr Request function for the new interface
 const char *g_LastRequestedFunc = NULL;
 #define REGISTER_FUNC(name, func) { name, (void*)func },
@@ -938,6 +945,7 @@ void *Module_ReqFnptr(const char *funcName)
 			REGISTER_FUNC("IsPlayerHLTV", MNF_IsPlayerHLTV)
 			REGISTER_FUNC("GetPlayerArmor", MNF_GetPlayerArmor)
 			REGISTER_FUNC("GetPlayerHealth", MNF_GetPlayerHealth)
+			REGISTER_FUNC("GetPlayerEdict", MNF_GetPlayerEdict)
 			REGISTER_FUNC("CellToReal", MNF_CellToReal)
 			REGISTER_FUNC("RealToCell", MNF_RealToCell)
 

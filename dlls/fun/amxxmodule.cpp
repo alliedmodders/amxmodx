@@ -2477,6 +2477,8 @@ PFN_CELL_TO_REAL			g_fn_CellToReal;
 PFN_REGISTER_SPFORWARD		g_fn_RegisterSPForward;
 PFN_REGISTER_SPFORWARD_BYNAME	g_fn_RegisterSPForwardByName;
 PFN_UNREGISTER_SPFORWARD	g_fn_UnregisterSPForward;
+PFN_MERGEDEFINITION_FILE	g_fn_MergeDefinition_File;
+PFN_AMX_FINDNATIVE			g_fn_AmxFindNative;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2520,6 +2522,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("PrintSrvConsole", g_fn_PrintSrvConsole, PFN_PRINT_SRVCONSOLE);
 	REQFUNC("GetModname", g_fn_GetModname, PFN_GET_MODNAME);
 	REQFUNC("Log", g_fn_Log, PFN_LOG);
+	REQFUNC("MergeDefinitionFile", g_fn_MergeDefinition_File, PFN_MERGEDEFINITION_FILE);
 
 	// Amx scripts
 	REQFUNC("GetAmxScript", g_fn_GetAmxScript, PFN_GET_AMXSCRIPT);
@@ -2540,6 +2543,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("amx_Execv", g_fn_AmxExecv, PFN_AMX_EXECV);
 	REQFUNC("amx_FindPublic", g_fn_AmxFindPublic, PFN_AMX_FINDPUBLIC);
 	REQFUNC("amx_Allot", g_fn_AmxAllot, PFN_AMX_ALLOT);
+	REQFUNC("amx_FindNative", g_fn_AmxFindNative, PFN_AMX_FINDNATIVE);
 
 	// Natives / Forwards
 	REQFUNC("AddNatives", g_fn_AddNatives, PFN_ADD_NATIVES);

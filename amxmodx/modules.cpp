@@ -132,6 +132,8 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 	case CAmxxReader::Err_Decompress:
 		strcpy(error, "Internal error: Decompress");
 		return (amx->error = AMX_ERR_NOTFOUND);
+	case CAmxxReader::Err_OldFile:
+		strcpy(error, "Plugin uses deprecated format.  Update compiler");
 	default:
 		strcpy(error, "Unknown error");
 		return (amx->error = AMX_ERR_NOTFOUND);
@@ -894,6 +896,7 @@ void *Module_ReqFnptr(const char *funcName)
 			REGISTER_FUNC("amx_Execv", amx_Execv)
 			REGISTER_FUNC("amx_Allot", amx_Allot)
 			REGISTER_FUNC("amx_FindPublic", amx_FindPublic)
+			REGISTER_FUNC("amx_FindNative", amx_FindNative)
 
 			// Natives / Forwards
 			REGISTER_FUNC("AddNatives", MNF_AddNatives)

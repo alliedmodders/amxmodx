@@ -44,7 +44,8 @@ public:
 		Err_FileInvalid,
 		Err_SectionNotFound,
 		Err_DecompressorInit,
-		Err_Decompress
+		Err_Decompress,
+		Err_OldFile,
 	};
 
 private:

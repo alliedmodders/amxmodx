@@ -124,45 +124,52 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 			m_pFile = NULL;
 			return;
 		}
-	}
-
-	// try to find the section
-	mint8_t numOfPlugins;
-	DATAREAD(&numOfPlugins, sizeof(numOfPlugins), 1);
-
-	TableEntry entry;
-
-	m_SectionHdrOffset = 0;
-	int i = 0;
-	for (i = 0; i < static_cast<int>(numOfPlugins); ++i)
-	{
-		DATAREAD(&entry, sizeof(entry), 1);
-		if (entry.cellSize == m_CellSize)
-		{
-			m_SectionHdrOffset = ftell(m_pFile) - sizeof(entry);
-			break;
-		}
-	}
-	if (!m_SectionHdrOffset)
-	{
-		m_Status = Err_SectionNotFound;
+	} else if ( magic == 0x524C4542 ) {
+		//we have an invalid, old, RLEB file
+		m_Status = Err_OldFile;
 		fclose(m_pFile);
 		m_pFile = NULL;
 		return;
-	}
+	} else {
 
-	// compute section length
-	if ((i+1) < static_cast<int>(numOfPlugins))
-	{
-		// there is a next section
-		TableEntry nextEntry;
-		DATAREAD(&nextEntry, sizeof(nextEntry), 1);
-		m_SectionLength = nextEntry.offset - entry.offset;
-	}
-	else
-	{
-		fseek(m_pFile, 0, SEEK_END);
-		m_SectionLength = ftell(m_pFile) - (long)entry.offset;
+		// try to find the section
+		mint8_t numOfPlugins;
+		DATAREAD(&numOfPlugins, sizeof(numOfPlugins), 1);
+	
+		TableEntry entry;
+	
+		m_SectionHdrOffset = 0;
+		int i = 0;
+		for (i = 0; i < static_cast<int>(numOfPlugins); ++i)
+		{
+			DATAREAD(&entry, sizeof(entry), 1);
+			if (entry.cellSize == m_CellSize)
+			{
+				m_SectionHdrOffset = ftell(m_pFile) - sizeof(entry);
+				break;
+			}
+		}
+		if (!m_SectionHdrOffset)
+		{
+			m_Status = Err_SectionNotFound;
+			fclose(m_pFile);
+			m_pFile = NULL;
+			return;
+		}
+
+		// compute section length
+		if ((i+1) < static_cast<int>(numOfPlugins))
+		{
+			// there is a next section
+			TableEntry nextEntry;
+			DATAREAD(&nextEntry, sizeof(nextEntry), 1);
+			m_SectionLength = nextEntry.offset - entry.offset;
+		}
+		else
+		{
+			fseek(m_pFile, 0, SEEK_END);
+			m_SectionLength = ftell(m_pFile) - (long)entry.offset;
+		}
 	}
 }
 

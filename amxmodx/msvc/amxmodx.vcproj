@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ..\zlib\zlib.lib"
 				OutputFile="debug/amxx_mm.dll"
 				Version="0.1"
 				LinkIncremental="1"

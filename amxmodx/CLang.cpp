@@ -47,6 +47,15 @@
 #define FFHL_VERSION		4
 #define FFHL_MIN_VERSION	4
 
+#define NEXT_PARAM()		\
+	if (parm > paramCount) \
+	{ \
+		strcpy(outbuf, ""); \
+		len = 0; \
+		AMXXLOG_Log("[AMXX] Plugin did not format a string correctly (parameter %d (total %d), line %d, \"%s\")", parm, paramCount, amx->curline, g_plugins.findPluginFast(amx)); \
+		return outbuf; \
+	} 
+
 /*version history:
 	* 1 (BAILOPAN) - Simplest form possible, no reverse
 	* 2 (BAILOPAN) - One language per file with full reverse
@@ -627,8 +636,9 @@ const char *CLangMngr::Format(const char *src, ...)
 
 char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 {
-	cell *src = get_amxaddr(amx, params[parm++]);
+	int paramCount = *params / sizeof(cell);
 	static char outbuf[4096];
+	cell *src = get_amxaddr(amx, params[parm++]);
 	char *outptr = outbuf;
 	enum State
 	{
@@ -646,6 +656,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 			if (*src=='L')
 			{
 				cell langName = params[parm];		// "en" case (langName contains the address to the string)
+				NEXT_PARAM();
 				cell *pAmxLangName = get_amxaddr(amx, params[parm++]);	// other cases
 				const char *cpLangName=NULL;
 				// Handle player ids (1-32) and server language
@@ -673,6 +684,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 				if (!cpLangName || strlen(cpLangName) < 1)
 					cpLangName = "en";
 				int len = 0;
+				NEXT_PARAM();
 				char *key = get_amxstring(amx, params[parm++], 1, len);
 				const char *def = GetDef(cpLangName, key);
 				if (def == NULL)
@@ -709,6 +721,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 							{
 								char tmpString[256];
 								char *tmpPtr = tmpString;
+								NEXT_PARAM();
 								cell *tmpCell = get_amxaddr(amx, params[parm++]);
 								while (*tmpCell)
 									*tmpPtr++ = *tmpCell++;
@@ -719,13 +732,21 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 						case 'g':
 						case 'f':
 							{
+								NEXT_PARAM();
 								sprintf(outptr, format, *(REAL*)get_amxaddr(amx, params[parm++]));
 								break;
 							}
 						case 'i':
 						case 'd':
 							{
+								NEXT_PARAM();
 								sprintf(outptr, format, (int)*get_amxaddr(amx, params[parm++]));
+								break;
+							}
+						default:
+							{
+								*outptr++ = '%';
+								*outptr++ = *(ptr-1);
 								break;
 							}
 						}
@@ -764,33 +785,49 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 				char format[16];
 				format[0] = '%';
 				char *ptr = format+1;
-				while (!isalpha(*ptr++ = *src++))
-					/*nothing*/;
-				--src;
-				*ptr = 0;
-				switch ( *(ptr-1) )
+				if (*src != '%')
 				{
-				case 's':
+					while (!isalpha(*ptr++ = *src++))
+						/*nothing*/;
+					--src;
+					*ptr = 0;
+					switch ( *(ptr-1) )
 					{
-						cell *tmpCell = get_amxaddr(amx, params[parm++]);
-						while (*tmpCell)
-							*tmpPtr++ = *tmpCell++;
-						*tmpPtr = 0;
-						sprintf(outptr, format, tmpString);
-						break;
+					case 's':
+						{
+							NEXT_PARAM();
+							cell *tmpCell = get_amxaddr(amx, params[parm++]);
+							while (*tmpCell)
+								*tmpPtr++ = *tmpCell++;
+							*tmpPtr = 0;
+							sprintf(outptr, format, tmpString);
+							break;
+						}
+					case 'g':
+					case 'f':
+						{
+							NEXT_PARAM();
+							sprintf(outptr, format, *(REAL*)get_amxaddr(amx, params[parm++]));
+							break;
+						}
+					case 'i':
+					case 'd':
+						{
+							NEXT_PARAM();
+							sprintf(outptr, format, (int)*get_amxaddr(amx, params[parm++]));
+							break;
+						}
+					default:
+						{
+							*outptr++ = '%';
+							*outptr++ = *(ptr-1);
+							break;
+						}
 					}
-				case 'g':
-				case 'f':
-					{
-						sprintf(outptr, format, *(REAL*)get_amxaddr(amx, params[parm++]));
-						break;
-					}
-				case 'i':
-				case 'd':
-					{
-						sprintf(outptr, format, (int)*get_amxaddr(amx, params[parm++]));
-						break;
-					}
+				} else {
+					*outptr++ = '%';
+					*outptr++ = '%';
+					src++;
 				}
 				outptr += strlen(outptr);
 			}

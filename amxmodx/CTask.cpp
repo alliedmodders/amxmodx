@@ -75,7 +75,10 @@ void CTaskMngr::CTask::clear()
 {
 	m_bFree = true;
 	if (m_pParams)
+	{
 		delete [] m_pParams;
+		m_pParams = NULL;
+	}
 }
 
 bool CTaskMngr::CTask::isFree() const

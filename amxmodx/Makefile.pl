@@ -13,7 +13,7 @@
 # proc=ix86 - assumed not amd64
 # clean - clean the specifications above
 
-$PROJECT = "amxx_mm";
+$PROJECT = "amxmodx_mm";
 $sdk = "../hlsdk/SourceCode";
 $mm = "../metamod/metamod";
 

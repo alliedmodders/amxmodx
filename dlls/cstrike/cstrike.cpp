@@ -74,7 +74,7 @@ static cell AMX_NATIVE_CALL cs_set_user_money(AMX *amx, cell *params) // cs_set_
 	// params[3] = flash money?
 
 	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -107,7 +107,7 @@ static cell AMX_NATIVE_CALL cs_get_user_money(AMX *amx, cell *params) // cs_get_
 	// params[1] = user
 
 	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -132,7 +132,7 @@ static cell AMX_NATIVE_CALL cs_get_user_deaths(AMX *amx, cell *params) // cs_get
 	// params[1] = user
 
 	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -157,7 +157,7 @@ static cell AMX_NATIVE_CALL cs_set_user_deaths(AMX *amx, cell *params) // cs_set
 	// params[2] = new deaths
 
 	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -193,7 +193,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_id(AMX *amx, cell *params) // cs_get_
 	// params[1] = hostage entity index
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -224,7 +224,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_silenced(AMX *amx, cell *params) // cs
 	// params[1] = weapon index
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -261,7 +261,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_silenced(AMX *amx, cell *params) // cs
 	// params[2] = 1, and we silence the gun, 0 and we unsilence gun.
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -325,7 +325,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_burstmode(AMX *amx, cell *params) // c
 	// params[1] = weapon index
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -362,7 +362,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_burstmode(AMX *amx, cell *params) // c
 	// params[2] = 1, and we set burstmode, 0 and we unset it.
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -432,7 +432,7 @@ static cell AMX_NATIVE_CALL cs_get_user_vip(AMX *amx, cell *params) // cs_get_us
 	// params[1] = user index
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -460,7 +460,7 @@ static cell AMX_NATIVE_CALL cs_set_user_vip(AMX *amx, cell *params) // cs_set_us
 	// params[2] = if 1, activate vip, else deactivate vip.
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -522,7 +522,7 @@ static cell AMX_NATIVE_CALL cs_get_user_team(AMX *amx, cell *params) // cs_get_u
 	// params[1] = user index
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -548,7 +548,7 @@ static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params) // cs_set_u
 	// params[3] = model = 0
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -605,7 +605,7 @@ static cell AMX_NATIVE_CALL cs_get_user_inside_buyzone(AMX *amx, cell *params) /
 	// params[1] = user index
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -629,7 +629,7 @@ static cell AMX_NATIVE_CALL cs_get_user_plant(AMX *amx, cell *params) // cs_get_
 	// params[1] = user index
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -658,7 +658,7 @@ static cell AMX_NATIVE_CALL cs_set_user_plant(AMX *amx, cell *params) // cs_set_
 	// params[3] = show bomb icon?
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -714,7 +714,7 @@ static cell AMX_NATIVE_CALL cs_get_user_defusekit(AMX *amx, cell *params) // cs_
 	// params[1] = user index
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -747,7 +747,7 @@ static cell AMX_NATIVE_CALL cs_set_user_defusekit(AMX *amx, cell *params) // cs_
 	// params[7] = flash = 0
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -822,7 +822,7 @@ static cell AMX_NATIVE_CALL cs_get_user_backpackammo(AMX *amx, cell *params) // 
 	// params[2] = weapon, as in CSW_*
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -914,7 +914,7 @@ static cell AMX_NATIVE_CALL cs_set_user_backpackammo(AMX *amx, cell *params) // 
 	// params[3] = new amount
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -1004,7 +1004,7 @@ static cell AMX_NATIVE_CALL cs_get_user_nvg(AMX *amx, cell *params) // cs_get_us
 	// params[1] = user index
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -1032,7 +1032,7 @@ static cell AMX_NATIVE_CALL cs_set_user_nvg(AMX *amx, cell *params) // cs_set_us
 	// params[2] = 1 = give, 0 = remove
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -1073,7 +1073,7 @@ static cell AMX_NATIVE_CALL cs_get_user_model(AMX *amx, cell *params) // cs_get_
 	// params[3] = max length to set
 
 	// Valid player index should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -1098,7 +1098,7 @@ static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params) // cs_set_
 	// params[2] = model
 
 	// Valid player index should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -1137,7 +1137,7 @@ static cell AMX_NATIVE_CALL cs_reset_user_model(AMX *amx, cell *params) // cs_re
 	// params[1] = user index
 
 	// Valid player index should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -1165,7 +1165,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_follow(AMX *amx, cell *params) // cs_
 	// params[1] = hostage index
 
 	// Valid index should be within range
-	if (params[1] < gpGlobals->maxClients + 1 || params[1] > gpGlobals->maxEntities) // highest player index on a 10 player server is 10 :-)!
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -1209,7 +1209,7 @@ static cell AMX_NATIVE_CALL cs_set_hostage_follow(AMX *amx, cell *params) // cs_
 	// params[2] = index to follow, if -1 then set hostage to not follow anything
 
 	// Valid index should be within range
-	if (params[1] < gpGlobals->maxClients + 1 || params[1] > gpGlobals->maxEntities) // highest player index on a 10 player server is 10 :-)!
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -1262,7 +1262,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_ammo(AMX *amx, cell *params) // cs_get
 	// params[1] = weapon index
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -1287,7 +1287,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_ammo(AMX *amx, cell *params) // cs_set
 	// params[2] = newammo
 
 	// Valid entity should be within range
-	if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
+	if (!MF_IsPlayerIngame(params[1]))
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -1359,7 +1359,6 @@ void MessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
 void ClientDisconnect(edict_t *pEntity) {
 	int index = ENTINDEX(pEntity);
 	g_players[index].SetModelled(false);
-	g_players[index].SetOnline(false);
 
 	RETURN_META(MRES_IGNORED);
 }
@@ -1384,31 +1383,6 @@ void PlayerPostThink(edict_t* pPlayer) {
 			g_players[entityIndex].SetInspectModel(false);
 		}
 	}
-	RETURN_META(MRES_IGNORED);
-}
-
-/****GetEntityAPI2_Post**********************************************************/
-void ClientUserInfoChanged_Post( edict_t *pEntity, char *infobuffer ) {
-	int index = ENTINDEX(pEntity);
-	// Only BOTs are set online here! Players must not, because then cs_user_* natives will crash in client_connect, possibly also other early forwards.
-	if (!g_players[index].GetOnline() && strcmp(GETPLAYERAUTHID(pEntity), "BOT") == 0) {
-		g_players[index].SetOnline(true);
-		//LOG_CONSOLE(PLID, "CSTRIKE MODULE: ClientUserInfoChanged_Post: %d was set to be online! (Auth: %s)", index, GETPLAYERAUTHID(pEntity));
-	}
-
-	RETURN_META(MRES_IGNORED);
-}
-
-void ClientPutInServer_Post( edict_t *pEntity ) {
-	int index = ENTINDEX(pEntity);
-	// At this place normal players will be set online. Bots (at least MM bots) don't normally ever get caught here so they can't be set online here.
-	// There might be other implementations of bots though that are caught by MM, so they will be set online here if they didn't already
-	// in ClientUserInfoChanged_Post above...
-	if (!g_players[index].GetOnline()) {
-		g_players[index].SetOnline(true);
-		//LOG_CONSOLE(PLID, "CSTRIKE MODULE: ClientPutInServer_Post: %d was set to be online! (Auth: %s)", index, GETPLAYERAUTHID(pEntity));
-	}
-
 	RETURN_META(MRES_IGNORED);
 }
 

@@ -60,3 +60,30 @@ bool g_ResetHUDbool;
 edict_t* g_edict;
 //bool g_bot[33];				// is user bot? <--- removed, only needed with akimbot
 // Globals above
+
+#define CHECK_ENTITY(x) \
+	if (x <= 0 || x > gpGlobals->maxEntities) { \
+		MF_LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", x); \
+	} else { \
+		if (x <= gpGlobals->maxClients) { \
+			if (!MF_IsPlayerIngame(x)) { \
+				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d (not in-game)", x); \
+			} \
+		} else { \
+			if (FNullEnt(INDEXENT(x))) { \
+				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", x); \
+			} \
+		} \
+	}
+
+#define CHECK_PLAYER(x) \
+	if (x < 1 || x > gpGlobals->maxClients) { \
+		MF_LogError(amx, AMX_ERR_NATIVE, "Player out of range (%d)", x); \
+	} else { \
+		if (!MF_IsPlayerIngame(x) || FNullEnt(MF_GetPlayerEdict(x))) { \
+			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", x); \
+		} \
+	}
+
+#define GETEDICT(n) \
+	((n >= 1 && n <= gpGlobals->maxClients) ? MF_GetPlayerEdict(n) : INDEXENT(n))

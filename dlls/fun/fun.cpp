@@ -47,20 +47,11 @@
 		// params[2] = argument2								<--- use the ones in params[n] directly, to save some time.
 
 		// Check receiver and sender validity.					<--- Check ents, maybe need to do this better and more proper later?
-		if (params[1] < 1 || params[1] > gpGlobals->maxClients
-		|| params[2] < 1 || params[2] > gpGlobals->maxClients)
-		{
-			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);				<--- Call this, it will end up as RUN TIME ERROR 10 in server console.
-			return 0;											<--- Standard return 0 with run time errors? (note in small only 0 returns false, everything else returns true)
-		}
+		CHECK_PLAYER(params[1])
+		CHECK_PLAYER(params[2])
 
 		// Get * pointer.
-		edict_t *pPlayer = INDEXENT(params[1]);
-
-		if (FNullEnt(pPlayer)) {								<--- Test this pointer this way, return 0...
-			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-			return 0;
-		}
+		edict_t *pPlayer = MF_GetPlayerEdict(params[1]);		<--- Players require a different function than INDEXENT because of an HLSDK bug
 
 		return 1												<--- If native succeeded, return 1, if the native isn't supposed to return a specific value.		
 																Note: Should be able to do: if (thenative()) and it should return false when it fails, and true when succeeds... is -1 treated as false, or is 0 a must?
@@ -98,12 +89,8 @@ static cell AMX_NATIVE_CALL get_client_listening(AMX *amx, cell *params) // get_
 	// params[2] = sender
 
 	// Check receiver and sender validity.
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients
-	|| params[2] < 1 || params[2] > gpGlobals->maxClients)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
+	CHECK_PLAYER(params[2]);
 
 	// GET- AND SETCLIENTLISTENING returns "qboolean", an int, probably 0 or 1...
 	return GETCLIENTLISTENING(params[1], params[2]);
@@ -117,12 +104,8 @@ static cell AMX_NATIVE_CALL set_client_listening(AMX *amx, cell *params) // set_
 	// params[3] = listen
 
 	// Check receiver and sender validity.
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients
-	|| params[2] < 1 || params[2] > gpGlobals->maxClients)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
+	CHECK_PLAYER(params[2]);
 
 	// Make a check on params[3] here later, and call run time error when it's wrong.
 	// To do: find out the possible values to set (0, 1?)
@@ -138,19 +121,10 @@ static cell AMX_NATIVE_CALL set_user_godmode(AMX *amx, cell *params) // set_user
 	// params[2] = godmode = 0
 
 	// Check index.
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Get player pointer.
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	if (params[2] == 1) {
 		// Enable godmode
@@ -170,19 +144,10 @@ static cell AMX_NATIVE_CALL get_user_godmode(AMX *amx, cell *params) // get_user
 	// params[1] = index
 
 	// Check index.
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Get player pointer.
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	int godmode = 0;
 
@@ -203,20 +168,10 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params) // native give_ite
 	// params[2] = item...
 
 	// Check index.
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Get player pointer.
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	// Create item entity pointer
 	edict_t	*pItemEntity;
@@ -239,8 +194,8 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params) // native give_ite
 	// Create the entity, returns to pointer
 	pItemEntity = CREATE_NAMED_ENTITY(item);
 
-	if(FNullEnt(pItemEntity)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+	if (FNullEnt(pItemEntity)) {
+		MF_LogError(amx, AMX_ERR_NATIVE, "Item \"%s\" failed to create", szItem);
 		return 0;
 	}
 
@@ -278,18 +233,9 @@ static cell AMX_NATIVE_CALL spawn(AMX *amx, cell *params) // spawn(id) = 1 param
 	// Spawns an entity, this can be a user/player -> spawns at spawnpoints, or created entities seems to need this as a final "kick" into the game? :-)
 	// params[1] = entity to spawn
 
-    if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
-    {
-        MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-        return 0;
-    }
-	edict_t *pEnt = INDEXENT(params[1]);
+    CHECK_ENTITY(params[1]);
 
-	// Check entity validity
-	if (FNullEnt(pEnt)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pEnt = GETEDICT(params[1]);
 
 	MDLL_Spawn(pEnt);
 
@@ -303,19 +249,10 @@ static cell AMX_NATIVE_CALL set_user_health(AMX *amx, cell *params) // set_user_
 	// params[2] = health
 
 	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	// Kill if health too low.
 	if (params[2] > 0)
@@ -333,19 +270,10 @@ static cell AMX_NATIVE_CALL set_user_frags(AMX *amx, cell *params) // set_user_f
 	// params[2] = frags
 
 	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	pPlayer->v.frags = params[2];
 
@@ -359,19 +287,10 @@ static cell AMX_NATIVE_CALL set_user_armor(AMX *amx, cell *params) // set_user_a
 	// params[2] = armor
 
 	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	pPlayer->v.armorvalue = params[2];
 
@@ -385,19 +304,10 @@ static cell AMX_NATIVE_CALL set_user_origin(AMX *amx, cell *params) // set_user_
 	// params[2] = origin
 
 	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	cell *newVectorCell = MF_GetAmxAddr(amx, params[2]);
 
@@ -419,19 +329,10 @@ static cell AMX_NATIVE_CALL set_user_rendering(AMX *amx, cell *params) // set_us
 	// params[7] = amount
 
 	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	pPlayer->v.renderfx = params[2];
 	Vector newVector = Vector(float(params[3]), float(params[4]), float(params[5]));
@@ -452,19 +353,10 @@ static cell AMX_NATIVE_CALL set_user_maxspeed(AMX *amx, cell *params) // set_use
 	REAL fNewSpeed = amx_ctof(params[2]);
 
 	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	SETCLIENTMAXSPEED(pPlayer, fNewSpeed);
 	pPlayer->v.maxspeed = fNewSpeed;
@@ -478,19 +370,10 @@ static cell AMX_NATIVE_CALL get_user_maxspeed(AMX *amx, cell *params) // Float:g
 	// params[1] = index
 
 	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	return amx_ftoc(pPlayer->v.maxspeed);
 }
@@ -501,19 +384,10 @@ static cell AMX_NATIVE_CALL set_user_gravity(AMX *amx, cell *params) // set_user
 	// params[1] = index
 	// params[2] = gravity (=-1.0)
 	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	pPlayer->v.gravity = amx_ctof(params[2]);
 
@@ -526,19 +400,10 @@ static cell AMX_NATIVE_CALL get_user_gravity(AMX *amx, cell *params) // Float:ge
 	// params[1] = index
 
 	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	return amx_ftoc(pPlayer->v.gravity); 
 }
@@ -571,10 +436,7 @@ static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params) // set_use
 	else {
 		if (shooter == 0) {
 			// "All" shooters, target (gettingHit) should be existing player id
-			if (gettingHit < 1 || gettingHit > gpGlobals->maxClients) {
-				MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-				return 0;
-			}
+			CHECK_PLAYER(gettingHit);
 			// Where can gettingHit get hit by all?
 			g_zones_getHit[gettingHit] = hitzones;
 		}
@@ -596,27 +458,12 @@ static cell AMX_NATIVE_CALL get_user_hitzones(AMX *amx, cell *params) // get_use
 	int gettingHit = params[2];
 
 	if (shooter) {
-		if (FNullEnt(shooter)) {
-			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-			return 0;
-		}
-
+		CHECK_PLAYER(shooter);
 		return g_zones_toHit[shooter];
 	}
 	else {
-		if (!gettingHit) {
-			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-			return 0;
-		}
-		else {
-			if (FNullEnt(gettingHit)) {
-				MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-				return 0;
-			}
-			else {
-				return g_zones_getHit[gettingHit];
-			}
-		}
+		CHECK_PLAYER(gettingHit);
+		return g_zones_getHit[gettingHit];
 	}
 }
 
@@ -627,20 +474,10 @@ static cell AMX_NATIVE_CALL set_user_noclip(AMX *amx, cell *params) // set_user_
 	// params[2] = no clip or not...
 
 	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check validity.
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	if (params[2] == 1)
 		pPlayer->v.movetype = MOVETYPE_NOCLIP;
@@ -656,20 +493,10 @@ static cell AMX_NATIVE_CALL get_user_noclip(AMX *amx, cell *params) // get_user_
 	// params[1] = index
 
 	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check validity.
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	return pPlayer->v.movetype == MOVETYPE_NOCLIP;
 }
@@ -683,20 +510,10 @@ static cell AMX_NATIVE_CALL set_user_footsteps(AMX *amx, cell *params) // set_us
 	// params[2] = 0 = normal footstep sound, 1 = silent slippers
 
 	// Check index
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check validity.
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 	
 	if (params[2]) {                
 		pPlayer->v.flTimeStepSound = 999;
@@ -712,13 +529,9 @@ static cell AMX_NATIVE_CALL set_user_footsteps(AMX *amx, cell *params) // set_us
 
 // SidLuke
 static cell AMX_NATIVE_CALL strip_user_weapons(AMX *amx, cell *params) { // index 
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
-	edict_t* pPlayer = INDEXENT(params[1]);
+	edict_t* pPlayer = MF_GetPlayerEdict(params[1]);
 
 	string_t item = MAKE_STRING("trigger_once");
 	edict_t *pent = CREATE_NAMED_ENTITY( item );

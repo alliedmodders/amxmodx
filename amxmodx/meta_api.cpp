@@ -92,7 +92,7 @@ float g_next_memreport_time;
 unsigned int g_memreport_count;
 String g_memreport_dir;
 bool g_memreport_enabled;
-#define MEMREPORT_INTERVAL 1200.0f	/* 20 mins */
+#define MEMREPORT_INTERVAL 300.0f	/* 5 mins */
 #endif // MEMORY_TEST
 
 hudtextparms_t g_hudset;
@@ -236,7 +236,11 @@ int	C_Spawn( edict_t *pent ) {
   attachModules();
   int loaded = countModules(CountModules_Running);	// Call	after attachModules	so all modules don't have pending stat
   // Set some info about amx version and modules
-  CVAR_SET_STRING(init_amxmodx_version.name, AMX_VERSION);
+  CVAR_SET_STRING(init_amxmodx_version.name, AMX_VERSION
+#ifdef JIT
+	  "J"
+#endif
+	  );
   char buffer[32];
   sprintf(buffer, "%d", loaded);
   CVAR_SET_STRING(init_amxmodx_modules.name, buffer);

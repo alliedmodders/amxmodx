@@ -59,11 +59,11 @@ stock cmd_target(id,const arg[],flags = 1) {
   if (player) {
     if ( player != find_player("blj",arg) ) {
       console_print(id,"%L",id,"MORE_CL_MATCHT")
-      return 0    
+      return 0
     }
   }
   else if ( ( player = find_player("c",arg) )==0 && arg[0]=='#' && arg[1] )
-    player = find_player("k",str_to_num(arg[1]))    
+    player = find_player("k",str_to_num(arg[1]))
   if (!player) {
     console_print(id,"%L",id,"CL_NOT_FOUND")
     return 0
@@ -79,7 +79,7 @@ stock cmd_target(id,const arg[],flags = 1) {
   if (flags & 4) {
     if (!is_user_alive(player)) {
       new imname[32]
-      get_user_name(player,imname,31) 
+      get_user_name(player,imname,31)
       console_print(id,"%L",id,"CANT_PERF_DEAD",imname)
       return 0
     }
@@ -87,10 +87,10 @@ stock cmd_target(id,const arg[],flags = 1) {
   if (flags & 8) {
     if (is_user_bot(player)) {
       new imname[32]
-      get_user_name(player,imname,31) 
+      get_user_name(player,imname,31)
       console_print(id,"%L",id,"CANT_PERF_BOT",imname)
       return 0
-    } 
+    }
   }
   return player
 }
@@ -144,13 +144,23 @@ stock register_menu(title[],keys,function[],outside=0)
 stock get_customdir(name[],len)
   return get_localinfo("amxx_configsdir",name,len)
 
-/* Add a menu item to Menus Front-End plugin:
+/* Add a menu item to Menus Front-End plugin ("amxmodmenu"):
 * MENU_TEXT: Text that will be shown for this item in menu
 * MENU_CMD: Command that should be executed to start menu
 * MENU_ACCESS: Access required for menu
-* MENU_PLUGIN: The exact case-insensitive name of plugin holding the menu command 
+* MENU_PLUGIN: The exact case-insensitive name of plugin holding the menu command
 */
 stock AddMenuItem(const MENU_TEXT[], const MENU_CMD[], const MENU_ACCESS, const MENU_PLUGIN[]) {
+	AddMenuItem_call(MENU_TEXT, MENU_CMD, MENU_ACCESS, MENU_PLUGIN, false)
+}
+/* Just like above, but add menu item to "amx_menu", that should also be accessible by non-admins.
+*/
+stock AddClientMenuItem(const MENU_TEXT[], const MENU_CMD[], const MENU_ACCESS, const MENU_PLUGIN[]) {
+	AddMenuItem_call(MENU_TEXT, MENU_CMD, MENU_ACCESS, MENU_PLUGIN, true)
+}
+
+// Internal function used by above stocks.
+stock AddMenuItem_call(const MENU_TEXT[], const MENU_CMD[], const MENU_ACCESS, const MENU_PLUGIN[], const bool:ADD_TO_CLIENT_MENU) {
 	new pluginid = is_plugin_loaded("Menus Front-End")
 	if (pluginid == -1) {
 		log_amx("Can't add menu item ^"%s^" from plugin ^"%s^" to menu set because the Menus Front-End plugin itself is not loaded!", MENU_TEXT, MENU_PLUGIN)
@@ -160,7 +170,7 @@ stock AddMenuItem(const MENU_TEXT[], const MENU_CMD[], const MENU_ACCESS, const 
 	new filename[64], b[1]
 	get_plugin(pluginid, filename, 63, b, 0, b, 0, b, 0, b, 0)
 
-	new status = callfunc_begin("AddMenu", filename)
+	new status = callfunc_begin(ADD_TO_CLIENT_MENU ? "AddClientMenu" : "AddMenu", filename)
 	new bool:failed = true
 	switch (status) {
 		case 1: failed = false
@@ -180,33 +190,4 @@ stock AddMenuItem(const MENU_TEXT[], const MENU_CMD[], const MENU_ACCESS, const 
 	callfunc_push_str(MENU_PLUGIN)
 
 	callfunc_end()
-}
-
-/* Find plugin by an attribute */
-stock find_plugin_byfile(pname[], bool:ignorecase=true)
-{
-	new num_of_plugins = get_pluginsnum();
-	new dummy[1];
-	new name[64];
-	for (new i = 0; i < num_of_plugins; ++i)
-	{
-		get_plugin(i, name, 0, dummy, 63, dummy, 0, dummy, 0, dummy, 0);
-		if (ignorecase ? equali(name, pname) : equal(name, pname))
-			return i;
-	}
-	return -1;
-}
-
-stock find_plugin_bydesc(pdesc[], bool:ignorecase=true)
-{
-	new num_of_plugins = get_pluginsnum();
-	new dummy[1];
-	new desc[64];
-	for (new i = 0; i < num_of_plugins; ++i)
-	{
-		get_plugin(i, dummy, 0, desc, 63, dummy, 0, dummy, 0, dummy, 0);
-		if (ignorecase ? equali(desc, pdesc) : equal(desc, pdesc))
-			return i;
-	}
-	return -1;
 }

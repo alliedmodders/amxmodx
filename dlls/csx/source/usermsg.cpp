@@ -9,8 +9,9 @@ int weapon;
 int aim;
 CPlayer *pAttacker;
 
+
 void Client_ResetHUD(void* mValue){
-	if ( mPlayer && mPlayer->IsAlive() ) 
+	if ( mPlayer ) 
 		mPlayer->clearStats = gpGlobals->time + 0.25f;
 }
 

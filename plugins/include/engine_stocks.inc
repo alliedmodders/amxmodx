@@ -147,7 +147,7 @@ stock user_silentkill(index)
 	return 1
 }
 
-/*  Set endering of an entity */
+/*  Set rendering of an entity */
 stock set_rendering(index,fx=kRenderFxNone, r=255,g=255,b=255, render=kRenderNormal,amount=16)
 {
 	entity_set_int(index,EV_INT_renderfx,fx)

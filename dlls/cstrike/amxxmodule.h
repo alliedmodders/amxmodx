@@ -1990,7 +1990,7 @@ extern PFN_GET_AMXSTRINGLEN			g_fn_GetAmxStringLen;
 extern PFN_FORMAT_AMXSTRING			g_fn_FormatAmxString;
 extern PFN_COPY_AMXMEMORY			g_fn_CopyAmxMemory;
 extern PFN_LOG						g_fn_Log;
-extern PFN_LOG_ERROR				g_fn_LogError;
+extern PFN_LOG_ERROR				g_fn_LogErrorFunc;
 extern PFN_RAISE_AMXERROR			g_fn_RaiseAmxError;
 extern PFN_REGISTER_FORWARD			g_fn_RegisterForward;
 extern PFN_EXECUTE_FORWARD			g_fn_ExecuteForward;
@@ -2106,7 +2106,7 @@ const char *	MF_Format					(const char *fmt, ...) { }
 #define MF_GetAmxStringLen g_fn_GetAmxStringLen
 #define MF_CopyAmxMemory g_fn_CopyAmxMemory
 void MF_Log(const char *fmt, ...);
-#define	MF_LogError g_fn_LogError
+void MF_LogError(AMX *amx, int err, const char *fmt, ...);
 #define MF_RaiseAmxError g_fn_RaiseAmxError
 #define MF_RegisterForward g_fn_RegisterForward
 #define MF_ExecuteForward g_fn_ExecuteForward

@@ -64,14 +64,17 @@ edict_t* g_edict;
 #define CHECK_ENTITY(x) \
 	if (x < 0 || x > gpGlobals->maxEntities) { \
 		MF_LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", x); \
+		return 0; \
 	} else { \
 		if (x <= gpGlobals->maxClients) { \
 			if (!MF_IsPlayerIngame(x)) { \
 				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d (not in-game)", x); \
+				return 0; \
 			} \
 		} else { \
 			if (x != 0 && FNullEnt(INDEXENT(x))) { \
 				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", x); \
+				return 0; \
 			} \
 		} \
 	}
@@ -79,9 +82,11 @@ edict_t* g_edict;
 #define CHECK_PLAYER(x) \
 	if (x < 1 || x > gpGlobals->maxClients) { \
 		MF_LogError(amx, AMX_ERR_NATIVE, "Player out of range (%d)", x); \
+		return 0; \
 	} else { \
 		if (!MF_IsPlayerIngame(x) || FNullEnt(MF_GetPlayerEdict(x))) { \
 			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", x); \
+			return 0; \
 		} \
 	}
 

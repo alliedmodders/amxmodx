@@ -45,6 +45,16 @@
 enginefuncs_t g_engfuncs;
 globalvars_t  *gpGlobals;
 
+
+
+DLL_FUNCTIONS *g_pFunctionTable;
+DLL_FUNCTIONS *g_pFunctionTable_Post;
+enginefuncs_t *g_pengfuncsTable;
+enginefuncs_t *g_pengfuncsTable_Post;
+NEW_DLL_FUNCTIONS *g_pNewFunctionsTable;
+NEW_DLL_FUNCTIONS *g_pNewFunctionsTable_Post;
+
+
 // GetEntityAPI2 functions
 static DLL_FUNCTIONS g_EntityAPI_Table = 
 {
@@ -2114,6 +2124,7 @@ C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersi
 		return(FALSE);
 	}
 	memcpy(pFunctionTable, &g_EntityAPI_Table, sizeof(DLL_FUNCTIONS));
+	g_pFunctionTable=pFunctionTable;
 	return(TRUE);
 }
 
@@ -2131,7 +2142,7 @@ C_DLLEXPORT int GetEntityAPI2_Post(DLL_FUNCTIONS *pFunctionTable, int *interface
 		return(FALSE);
 	}
 	memcpy( pFunctionTable, &g_EntityAPI_Post_Table, sizeof( DLL_FUNCTIONS ) );
-
+	g_pFunctionTable_Post=pFunctionTable;
 	return(TRUE);
 }
 
@@ -2154,6 +2165,7 @@ C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
 		return(FALSE);
 	}
 	memcpy(pengfuncsFromEngine, &g_EngineFuncs_Table, sizeof(enginefuncs_t));
+	g_pengfuncsTable=pengfuncsFromEngine;
 	return TRUE;
 }
 
@@ -2171,6 +2183,7 @@ C_DLLEXPORT int GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine, int 
 		return(FALSE);
 	}
 	memcpy(pengfuncsFromEngine, &g_EngineFuncs_Post_Table, sizeof(enginefuncs_t));
+	g_pengfuncsTable_Post=pengfuncsFromEngine;
 	return TRUE;
 
 }
@@ -2195,6 +2208,7 @@ C_DLLEXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pNewFunctionTable,
 		return(FALSE);
 	}
 	memcpy(pNewFunctionTable, &g_NewFuncs_Table, sizeof(NEW_DLL_FUNCTIONS));
+	g_pNewFunctionsTable=pNewFunctionTable;
 	return TRUE;
 }
 
@@ -2212,6 +2226,7 @@ C_DLLEXPORT int GetNewDLLFunctions_Post( NEW_DLL_FUNCTIONS *pNewFunctionTable, i
 		return(FALSE);
 	}
 	memcpy(pNewFunctionTable, &g_NewFuncs_Post_Table, sizeof(NEW_DLL_FUNCTIONS));
+	g_pNewFunctionsTable_Post=pNewFunctionTable;
 	return TRUE;
 }
 

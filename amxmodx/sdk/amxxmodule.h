@@ -55,7 +55,7 @@ struct amxx_module_info_s
 // The next section is copied from the amx.h file
 // Copyright (c) ITB CompuPhase, 1997-2004
 
-#if defined __LCC__ || defined __DMC__ || defined __linux__
+#if defined __LCC__ || defined __DMC__ || defined __linux__ || defined __GNUC__
   #include <stdint.h>
 #elif !defined __STDC_VERSION__ || __STDC_VERSION__ < 199901L
   /* The ISO C99 defines the int16_t and int_32t types. If the compiler got

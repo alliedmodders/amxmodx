@@ -99,8 +99,13 @@ stock get_basedir(name[],len)
 stock get_configsdir(name[],len)
   return get_localinfo("amxx_configsdir",name,len)
 
+stock get_datadir(name[],len)
+  return get_localinfo("amxx_datadir",name,len)
+
+/* Backwards Compatibility
+* don't use it! */
 stock get_customdir(name[],len)
-  return get_localinfo("amxx_customdir",name,len)
+  return get_localinfo("amxx_configsdir",name,len)
 
 #if defined NO_STEAM
 stock get_user_wonid(index)

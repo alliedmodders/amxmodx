@@ -169,31 +169,6 @@ int	C_InconsistentFile( const	edict_t	*player, const char	*filename, char	*disco
 		try
 		{
 #endif
-			/*
-			if ( (*a).getPlugin()->isExecutable( (*a).getFunction()	 ) )
-			{
-				AMX* c = (*a).getPlugin()->getAMX();
-				cell amx_addr1, *phys_addr1;
-				cell amx_addr2, *phys_addr2;
-				if ((amx_Allot(c,	64 , &amx_addr1, &phys_addr1) != AMX_ERR_NONE) ||
-				(amx_Allot(c, 64 , &amx_addr2, &phys_addr2)	!= AMX_ERR_NONE) ){
-				AMXXLOG_Log("[AMXX]	Failed to allocate AMX memory (plugin \"%s\")",(*a).getPlugin()->getName());
-				}
-				else {
-				int	err;
-				set_amxstring(c,amx_addr1,filename,63);
-				set_amxstring(c,amx_addr2,disconnect_message,63);
-				if ((err = amx_Exec(c,&ret,	(*a).getFunction() , 3,	pPlayer->index,	amx_addr1, amx_addr2)) != AMX_ERR_NONE)
-					AMXXLOG_Log("[AMXX] Run time error %d	on line	%ld	(plugin	\"%s\")",
-					err,c->curline,(*a).getPlugin()->getName());
-				int	len;
-				strcpy(disconnect_message,get_amxstring(c,amx_addr2,0,len));
-				amx_Release(c, amx_addr2);
-				amx_Release(c, amx_addr1);
-				}
-				if ( ret & 1 ) RETURN_META_VALUE(MRES_SUPERCEDE, FALSE);
-			}
-			*/
 			if (executeForwards(FF_InconsistentFile, pPlayer->index, filename, disconnect_message) == 1)
 				RETURN_META_VALUE(MRES_SUPERCEDE, FALSE);
 #ifdef ENABLEEXEPTIONS
@@ -268,7 +243,8 @@ int	C_Spawn( edict_t *pent ) {
   // :TODO:	Remove modules num from	amxmodx_version, make amxmodx_modules cvar
   CVAR_SET_STRING(init_amxmodx_version.name, AMX_VERSION);
   char buffer[32];
-//  CVAR_SET_STRING(init_amxmodx_modules.name, itoa(loaded, buffer, 10));
+  sprintf(buffer, "%d", loaded);
+  CVAR_SET_STRING(init_amxmodx_modules.name, buffer);
 
   //  ######  Load Vault
   g_vault.setSource( build_pathname("%s", get_localinfo("amxx_vault", "addons/amxx/configs/vault.ini"))	);
@@ -1200,7 +1176,7 @@ C_DLLEXPORT	int	GetEntityAPI2_Post(	DLL_FUNCTIONS *pFunctionTable, int *interfac
 enginefuncs_t meta_engfuncs;
 C_DLLEXPORT	int	GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion ) {
 
-  if ( stricmp(g_mod_name.str(),"cstrike") == 0 || stricmp(g_mod_name.str(),"czero")==0	)
+  if ( stricmp(g_mod_name.str(),"cstrike") == 0	|| stricmp(g_mod_name.str(),"czero")==0 )
   {
 	meta_engfuncs.pfnSetModel =	C_SetModel;
 	g_bmod_cstrike = true;

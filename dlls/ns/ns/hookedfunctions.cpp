@@ -16,21 +16,12 @@ int BuiltForward = 0;
 // Index of last entity hooked in CreateNamedEntity
 int iCreateEntityIndex;
 BOOL iscombat;
-int g_MsgInfo[10];
-int g_MsgLength;
 int gmsgScoreInfo=0;
-int hooked_msg=0;
-int hooked_dest=0;
-
-
-int gmsgShowMenu=0;
-int gmsgResetHUD=0;
 
 // Module is attaching to AMXX
 void OnAmxxAttach()
 {
 	MF_AddNatives(ns_misc_natives);
-	MF_AddNatives(ns_menu_natives);
 	MF_AddNatives(ns_pdata_natives);
 }
 
@@ -53,13 +44,6 @@ void OnPluginsLoaded()
 }
 
 
-void ClientCommand(edict_t *pEntity)
-{
-	CPlayer *player = GET_PLAYER_E(pEntity);
-	if (player->ClientCommand())
-		RETURN_META(MRES_SUPERCEDE);
-	RETURN_META(MRES_IGNORED);
-}
 
 int Spawn(edict_t *pEntity) 
 {
@@ -123,37 +107,6 @@ void PlayerPostThink_Post(edict_t *pEntity)
 {
 	CPlayer *player = GET_PLAYER_E(pEntity);
 	player->PostThink_Post();
-	RETURN_META(MRES_IGNORED);
-}
-
-
-void MessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
-{
-	if (gmsgShowMenu==0)
-		gmsgShowMenu=GET_USER_MSG_ID(&Plugin_info,"ShowMenu",NULL);
-	if (gmsgResetHUD==0)
-		gmsgResetHUD=GET_USER_MSG_ID(&Plugin_info,"ResetHUD",NULL);
-	if (msg_dest == MSG_ALL || msg_dest == MSG_BROADCAST)
-		hooked_dest = 0;
-	else
-		hooked_dest = ENTINDEX(ed);
-	hooked_msg = msg_type;
-	RETURN_META(MRES_IGNORED);
-}
-void MessageEnd_Post(void)
-{
-	if (hooked_msg == gmsgResetHUD && hooked_dest != 0)
-	{
-		CPlayer *player = GET_PLAYER_I(hooked_dest);
-		if (!player->connected && player->bot)
-			RETURN_META(MRES_IGNORED);
-		if (player->menucmd.inmenu == true && player->menucmd.time > gpGlobals->time)
-		{
-			// Reset the hold time, or the menu display and menu keys will become terribly out of sync.
-			player->menuhudtext.holdTime=player->menucmd.time - gpGlobals->time;
-			HudMessage(/* 0 */ hooked_dest,player->menuhudtext,player->menucmd.text);
-		}
-	}
 	RETURN_META(MRES_IGNORED);
 }
 

@@ -71,7 +71,7 @@
 #define FN_ClientDisconnect			ClientDisconnect			/* pfnClientDisconnect()		(wd) Player has left the game */
 // #define FN_ClientKill				ClientKill					/* pfnClientKill()				(wd) Player has typed "kill" */
 // #define FN_ClientPutInServer			ClientPutInServer			/* pfnClientPutInServer()		(wd) Client is entering the game */
-#define FN_ClientCommand				ClientCommand				/* pfnClientCommand()			(wd) Player has sent a command (typed or from a bind) */
+// #define FN_ClientCommand				ClientCommand				/* pfnClientCommand()			(wd) Player has sent a command (typed or from a bind) */
 // #define FN_ClientUserInfoChanged		ClientUserInfoChanged		/* pfnClientUserInfoChanged()	(wd) Client has updated their setinfo structure */
 #define FN_ServerActivate			ServerActivate				/* pfnServerActivate()			(wd) Server is starting a new map */
 #define FN_ServerDeactivate			ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
@@ -202,7 +202,7 @@
 // #define FN_LightStyle						LightStyle
 // #define FN_DecalIndex						DecalIndex
 // #define FN_PointContents						PointContents
-#define FN_MessageBegin						MessageBegin
+// #define FN_MessageBegin						MessageBegin
 // #define FN_MessageEnd						MessageEnd
 // #define FN_WriteByte						WriteByte
 // #define FN_WriteChar							WriteChar
@@ -349,7 +349,7 @@
 // #define FN_DecalIndex_Post					DecalIndex_Post
 // #define FN_PointContents_Post				PointContents_Post
 // #define FN_MessageBegin_Post					MessageBegin_Post
-#define FN_MessageEnd_Post					MessageEnd_Post
+// #define FN_MessageEnd_Post					MessageEnd_Post
 // #define FN_WriteByte_Post					WriteByte_Post
 // #define FN_WriteChar_Post					WriteChar_Post
 // #define FN_WriteShort_Post					WriteShort_Post

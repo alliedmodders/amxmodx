@@ -178,9 +178,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\NMenu.cpp">
-			</File>
-			<File
 				RelativePath=".\NMisc.cpp">
 			</File>
 			<File

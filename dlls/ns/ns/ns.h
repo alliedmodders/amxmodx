@@ -20,10 +20,7 @@ extern edict_t *player_edicts[33]; // Stupid INDEXENT() bug.
 extern int gmsgHudText2;
 
 
-extern int gmsgShowMenu;
-
 extern AMX_NATIVE_INFO ns_misc_natives[];
-extern AMX_NATIVE_INFO ns_menu_natives[];
 extern AMX_NATIVE_INFO ns_pdata_natives[];
 
 

@@ -90,45 +90,9 @@ void CPlayer::Reset()
 	this->customskin=false;
 	this->maxspeed=0;
 	this->speedchange=0;
-	this->menucmd.chan=0;
-	this->menucmd.channel1=0;
-	this->menucmd.channel2=0;
-	this->menucmd.iFunctionIndex=0;
-	this->menucmd.inmenu=false;
-	this->menucmd.keys=0;
-	this->menucmd.text[0]='\0';
-	this->menucmd.time=0.0;
 	this->model[0]='\0';
 	this->skin=0;
 	this->body=0;
 	this->fov=0.0;
 	this->foved=false;
-}
-BOOL CPlayer::ClientCommand()
-{
-	if (menucmd.inmenu)
-	{
-		if (FStrEq(CMD_ARGV(0),"menuselect"))
-		{
-			int key=0;
-			int key_mask=0;
-			menucmd.inmenu=false;
-			if (gpGlobals->time > menucmd.time)
-			{
-				menucmd.inmenu=0;
-				return false;
-			}
-			key=atoi(CMD_ARGV(1)) - 1;
-			key_mask=(1<<key);
-			if (key_mask & menucmd.keys)
-			{
-				ClearHudMessage(edict,menuhudtext," ");
-				int temp = this->menucmd.iFunctionIndex;
-				MF_ExecuteForward(this->menucmd.iFunctionIndex,this->index,key);
-				MF_UnregisterSPForward(temp);
-			}
-			return true;
-		}
-	}
-	return false;
 }

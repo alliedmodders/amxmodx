@@ -13,7 +13,6 @@ public:
 	void Disconnect();
 	void Reset();
 	void Die();
-	BOOL ClientCommand();
 	int GetClass();
 	bool bot;
 	// Basic engine stuff.
@@ -38,17 +37,5 @@ public:
 	int maxspeed;
 	
 	int iclass;
-	struct
-	{
-		int		iFunctionIndex;
-		bool	inmenu;
-		float	time;
-		int		keys;	
-		char	text[512];
-		int		chan;
-		int		channel1;
-		int		channel2;
-	} menucmd;
-	hudtextparms_t menuhudtext;
 };
 #endif

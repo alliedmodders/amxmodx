@@ -94,7 +94,7 @@ void MessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
 {
 	if (msgBlocks[msg_type]) {
 		inblock = true;
-		mstType = msg_type;
+		msgType = msg_type;
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (msgHooks[msg_type].size()) {
 		inhook = true;

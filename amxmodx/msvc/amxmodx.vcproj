@@ -386,7 +386,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib ..\jit\jits.lib ..\zlib\zlib.lib"
+				AdditionalDependencies="..\jit\jits.obj ..\zlib\zlib.lib"
 				OutputFile="jitrelease/amxmodx_mm.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"

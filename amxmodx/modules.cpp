@@ -502,6 +502,7 @@ void ConvertModuleName(const char *pathString, String &path)
 		}
 	}
 #else
+#ifdef __linux__
 	char *ptr = strstr(pathString, "amd64");
 	if (ptr) 
 	{
@@ -517,7 +518,7 @@ void ConvertModuleName(const char *pathString, String &path)
 			path.assign(pathString);
 			path.append("_i386.so");
 		} else {
-			//check to see if this file even has an extenti
+			//check to see if this file even has an extension
 			ptr = strstr(pathString, ".so");
 			if (ptr)
 			{
@@ -528,7 +529,47 @@ void ConvertModuleName(const char *pathString, String &path)
 			}
 		}
 	}
-#endif
+#else
+	char *ptr = strstr(pathString, ".dll");
+	if (ptr)
+	{
+		path.assign(pathString);
+	} else {
+		//prevent this from loading .so too
+		ptr = strstr(pathString, ".so");
+		if (ptr)
+		{
+			int i = 0, len = strlen(pathString), c = -1;
+			for (i=len-1; i>=0; i--)
+			{
+				//cut off at first _
+				if (pathString[i] == '_')
+				{
+					//make sure this is a valid _
+					if (i == len-1 || strncmp(&(pathString[i+1]), "amxx", 4) == 0)
+						break;
+					c = i;
+					break;
+				}
+			}
+			*ptr = 0;
+			if (c == -1)
+			{
+				path.assign(pathString);
+				path.append(".dll");
+			} else {
+				ptr = (char *)&(pathString[c]);
+				*ptr = 0;
+				path.assign(pathString);
+				path.append(".dll");
+			}
+		} else {
+			path.assign(pathString);
+			path.append(".dll");
+		}
+	}
+#endif //__linux__
+#endif //SMALL_CELL_SIZE==64
 }
 
 int loadModules(const char* filename)
@@ -717,6 +758,24 @@ void attachMetaModModules(PLUG_LOADTIME now, const char* filename)
 
 		ConvertModuleName(pathname, modPath);
 		ConvertModuleName(mmpathname, mmPath);
+
+		CList<CFakeMeta::CFakeMetaPlugin>::iterator iter = g_FakeMeta.m_Plugins.begin();
+
+		//prevent double loading
+		int foundFlag = 0;
+
+		while (iter)
+		{
+			if ( strcmp( (*iter).GetPath(), mmPath.c_str() ) == 0 )
+			{
+				foundFlag = 1;
+				break;
+			}
+			++iter;
+		}
+
+		if (foundFlag)
+			continue;
 		
 		module = DLLOAD( modPath.c_str() ); // link dll
 

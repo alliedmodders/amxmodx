@@ -17,6 +17,19 @@
 #endif
 #define _dbi_included
 
+enum Sql
+{
+	SQL_FAILED=0,
+	SQL_OK
+}
+
+enum Result
+{
+	RESULT_FAILED=-1,
+	RESULT_NONE,
+	RESULT_OK
+}
+
 /* This will return a number equal to or below 0 on failure.
  * If it does fail, the error will be mirrored in dbi_error()
  * The return value will otherwise be a resource handle, not an
@@ -78,7 +91,3 @@ native dbi_error(Sql:_sql, _error[], _len);
  */
 native dbi_type(_type[], _len);
 
-/* Wrapper for checking results 
- * to avoid tag mismatches
- */
-native rescode(Result:res);

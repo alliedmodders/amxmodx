@@ -11,7 +11,7 @@
 #endif
 #define _amxconst_included
 
-#define AMXX_VERSION 0.1
+#define AMXX_VERSION 0.16
 
 /* Uncomment if you are not using Steam */
 //#define NO_STEAM

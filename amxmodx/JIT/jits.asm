@@ -288,9 +288,9 @@ AMX_FLAG_RELOC		equ 8000h ; jump/call addresses relocated
 ; in the Masm implementation, since it only does two passes. This macro is
 ; called *after* the code for each Small instruction.
 %macro CHECKCODESIZE 1
-	%if MAXCODESIZE < $-%1
-        	%assign MAXCODESIZE $-%1
-        %endif
+;	%if MAXCODESIZE < $-%1
+;        	%assign MAXCODESIZE $-%1
+;        %endif
 %endmacro
 
 ;
@@ -1989,7 +1989,6 @@ err_stacklow:
 
 _CHKMARGIN_STACK:               ; some run-time check routines
         cmp     esp,stp
-        lea     ebp,[esp-STACKRESERVE]
         jg      err_stacklow
         sub     ebp,edi
         cmp     hea,ebp

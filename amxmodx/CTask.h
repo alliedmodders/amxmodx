@@ -54,19 +54,19 @@ private:
 		// execution
 		float m_fNextExecTime;
 	public:
-		inline void set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, int iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat, float fCurrentTime);
-		inline void clear();
-		inline bool isFree() const;
+		 void set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, int iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat, float fCurrentTime);
+		 void clear();
+		 bool isFree() const;
 
-		inline CPluginMngr::CPlugin *getPlugin() const;
-		inline int getTaskId() const;
+		 CPluginMngr::CPlugin *getPlugin() const;
+		 int getTaskId() const;
 
-		inline void executeIfRequired(float fCurrentTime, float fTimeLimit, float fTimeLeft);	// also removes the task if needed
+		 void executeIfRequired(float fCurrentTime, float fTimeLimit, float fTimeLeft);	// also removes the task if needed
 
-		inline void changeBase(float fNewBase);
-		inline void resetNextExecTime(float fCurrentTime);
+		 void changeBase(float fNewBase);
+		 void resetNextExecTime(float fCurrentTime);
 
-		inline bool shouldRepeat();
+		 bool shouldRepeat();
 
 		CTask();
 		~CTask();

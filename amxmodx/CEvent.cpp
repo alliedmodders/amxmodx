@@ -44,6 +44,9 @@ EventsMngr::ClEvent::ClEvent(CPluginMngr::CPlugin* plugin,  int func, int flags)
 	m_Func = func;
 
 	// flags
+	m_FlagAlive = true;
+	m_FlagDead = true;
+
 	m_FlagWorld = (flags & 1) ? true : false;						// flag a
 	m_FlagPlayer = (flags & 2) ? true : false;						// flag b
 	m_FlagOnce = (flags & 4) ? true : false;						// flag c

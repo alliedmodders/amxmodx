@@ -33,7 +33,7 @@
 */
 
 #include <amxmodx>
-#include <csstats>
+#include <csx>
 
 new g_pingSum[33]
 new g_pingCount[33]

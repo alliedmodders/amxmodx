@@ -1308,6 +1308,23 @@ void PlayerPostThink(edict_t* pPlayer) {
 	RETURN_META(MRES_IGNORED);
 }
 
+static cell AMX_NATIVE_CALL cs_user_has_shield(AMX *amx, cell *params)
+{
+	//Return 1 if user has a shield.
+	//params[1] = user id
+   
+	//Check player
+	CHECK_PLAYER(params[1]);
+   
+	// Make into edict pointer
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+   
+	if ((int)*((int *)pPlayer->pvPrivateData + OFFSET_SHIELD) & HAS_SHIELD)
+		return 1;
+
+	return 0;   
+} 
+
 void OnAmxxAttach()
 {
 	MF_AddNatives(cstrike_Exports);

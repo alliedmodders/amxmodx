@@ -60,9 +60,12 @@
 
 */
 
+#define HAS_SHIELD      (1<<24) //16777216 
+
 // "player" entities
 #if !defined __amd64__
 	// 32 bit offsets here
+	#define OFFSET_SHIELD   510 + EXTRAOFFSET
 	#define OFFSET_ARMORTYPE			112 + EXTRAOFFSET
 	#define OFFSET_TEAM					114 + EXTRAOFFSET
 	#define OFFSET_CSMONEY				115 + EXTRAOFFSET
@@ -101,7 +104,8 @@
 	#define OFFSET_HOSTAGEID			487 + EXTRAOFFSET
 #else
 	// Amd64 offsets here
-	//#define OFFSET_ARMORTYPE			??? + EXTRAOFFSET // need to find this one out! :-)
+	#define OFFSET_SHIELD				559 + EXTRAOFFSET
+	#define OFFSET_ARMORTYPE			137 + EXTRAOFFSET
 	#define OFFSET_TEAM					139 + EXTRAOFFSET // +25
 	#define OFFSET_CSMONEY				140 + EXTRAOFFSET // +25
 	#define OFFSET_PRIMARYWEAPON		141 + EXTRAOFFSET // +25

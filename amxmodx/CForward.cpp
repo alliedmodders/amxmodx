@@ -68,7 +68,7 @@ void CForwardMngr::executeForwards( int type , int num , int player  ) {
 		{
 			
 			if ((err = amx_Exec(a->getPlugin()->getAMX(), &ret, a->getFunction() , num, player)) != AMX_ERR_NONE)
-				UTIL_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",	err,a->getPlugin()->getAMX()->curline,a->getPlugin()->getName());
+				AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",	err,a->getPlugin()->getAMX()->curline,a->getPlugin()->getName());
 			
 			if ( ret )
 				break;

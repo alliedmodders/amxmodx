@@ -56,7 +56,7 @@ int  CPluginMngr::loadPluginsFromFile( const char* filename )
 
 	if ( !fp ) 
 	{
-		UTIL_Log( "[AMXX] Plugins list not found (file \"%s\")",filename);
+		AMXXLOG_Log( "[AMXX] Plugins list not found (file \"%s\")",filename);
 		return 1;
 	}
 	
@@ -105,7 +105,7 @@ int  CPluginMngr::loadPluginsFromFile( const char* filename )
 		}
 		else
 		{
-			UTIL_Log("[AMXX] %s (plugin \"%s\")", error, pluginName );
+			AMXXLOG_Log("[AMXX] %s (plugin \"%s\")", error, pluginName );
 		}
 	}
 

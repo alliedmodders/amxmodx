@@ -175,7 +175,7 @@ void LogEventsMngr::executeLogEvents()
 			
 			if (valid){
 				if ((err = amx_Exec(a->plugin->getAMX(), NULL , a->func , 0)) != AMX_ERR_NONE)
-					UTIL_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",
+					AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",
 						err,a->plugin->getAMX()->curline,a->plugin->getName());
 			}
 			
@@ -183,7 +183,7 @@ void LogEventsMngr::executeLogEvents()
 		}
 		catch( ... )
 		{
-			UTIL_Log( "[AMXX] fatal error at log forward function execution");
+			AMXXLOG_Log( "[AMXX] fatal error at log forward function execution");
 		}
 #endif
 		

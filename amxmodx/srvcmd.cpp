@@ -209,7 +209,7 @@ void plugin_srvcmd()
 				if ((err = amx_Exec( (*a).getPlugin()->getAMX(), &ret , (*a).getFunction() 
 					, 3 , g_srvindex , (*a).getFlags() , (*a).getId() )) != AMX_ERR_NONE)
 					
-					UTIL_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",
+					AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",
 					err,(*a).getPlugin()->getAMX()->curline,(*a).getPlugin()->getName());
 				
 				if ( ret ) break;
@@ -221,7 +221,7 @@ void plugin_srvcmd()
 #ifdef ENABLEEXEPTIONS
 	}catch( ... )
 	{
-		UTIL_Log( "[AMXX] fatal error at forward function execution");
+		AMXXLOG_Log( "[AMXX] fatal error at forward function execution");
 	}
 #endif
 	

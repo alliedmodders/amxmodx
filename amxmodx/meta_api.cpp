@@ -154,14 +154,14 @@ int InconsistentFile( const edict_t *player, const char *filename, char *disconn
           cell amx_addr2, *phys_addr2;
           if ((amx_Allot(c, 64 , &amx_addr1, &phys_addr1) != AMX_ERR_NONE) ||
             (amx_Allot(c, 64 , &amx_addr2, &phys_addr2) != AMX_ERR_NONE) ){
-            UTIL_Log("[AMXX] Failed to allocate AMX memory (plugin \"%s\")",(*a).getPlugin()->getName());
+            AMXXLOG_Log("[AMXX] Failed to allocate AMX memory (plugin \"%s\")",(*a).getPlugin()->getName());
           }
           else {
             int err;
             set_amxstring(c,amx_addr1,filename,63);
             set_amxstring(c,amx_addr2,disconnect_message,63);
             if ((err = amx_Exec(c,&ret, (*a).getFunction() , 3, pPlayer->index, amx_addr1, amx_addr2)) != AMX_ERR_NONE)
-              UTIL_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",
+              AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",
               err,c->curline,(*a).getPlugin()->getName());
             int len;
             strcpy(disconnect_message,get_amxstring(c,amx_addr2,0,len));
@@ -177,7 +177,7 @@ int InconsistentFile( const edict_t *player, const char *filename, char *disconn
 #ifdef ENABLEEXEPTIONS
     }catch( ... )
     {
-      UTIL_Log( "[AMXX] fatal error at inconsistent file forward execution");
+      AMXXLOG_Log( "[AMXX] fatal error at inconsistent file forward execution");
     }
 #endif
 
@@ -217,7 +217,7 @@ int Spawn( edict_t *pent ) {
   if (g_log_dir.empty())
   {
     g_log_dir.set(get_localinfo("amxx_logs", "addons/amxx/logs"));
-    UTIL_MakeNewLogFile();
+    AMXXLOG_MakeNewLogFile();
   }
 
   // ###### Initialize task manager
@@ -241,7 +241,7 @@ int Spawn( edict_t *pent ) {
   //  ###### Load modules
   loadModules(get_localinfo("amxx_modules", "addons/amxx/modules.ini"));
   attachModules();
-  int loaded = UTIL_GetModulesNum(UTIL_MODULES_RUNNING);	// Call after attachModules so all modules don't have pending stat
+  int loaded = countModules(CountModules_Running);	// Call after attachModules so all modules don't have pending stat
   // Set some info about amx version and modules
   if ( loaded ){
     char buffer[64];
@@ -435,7 +435,7 @@ void ServerDeactivate_Post() {
   g_plugins.clear();
 
   g_log_dir.clear();
-  UTIL_Log("Log file closed.");
+  AMXXLOG_Log("Log file closed.");
 
   RETURN_META(MRES_IGNORED);
 }
@@ -535,7 +535,7 @@ void ClientCommand( edict_t *pEntity ) {
       {
 
         if ((err = amx_Exec((*a).getPlugin()->getAMX(), &ret , (*a).getFunction(), 1, pPlayer->index)) != AMX_ERR_NONE)
-          UTIL_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",
+          AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",
           err,(*a).getPlugin()->getAMX()->curline,(*a).getPlugin()->getName() );
 
         if ( ret & 2 ) result = MRES_SUPERCEDE;
@@ -550,7 +550,7 @@ void ClientCommand( edict_t *pEntity ) {
 #ifdef ENABLEEXEPTIONS
   }catch( ... )
   {
-    UTIL_Log( "[AMXX] fatal error at commmand forward execution");
+    AMXXLOG_Log( "[AMXX] fatal error at commmand forward execution");
   }
 #endif
 
@@ -573,7 +573,7 @@ void ClientCommand( edict_t *pEntity ) {
       {
 
         if ((err =amx_Exec((*aa).getPlugin()->getAMX(), &ret , (*aa).getFunction()   , 3, pPlayer->index, (*aa).getFlags(),(*aa).getId()  )) != AMX_ERR_NONE)
-          UTIL_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",
+          AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",
           err,(*aa).getPlugin()->getAMX()->curline,(*aa).getPlugin()->getName());
 
         if ( ret & 2 )  result = MRES_SUPERCEDE;
@@ -586,7 +586,7 @@ void ClientCommand( edict_t *pEntity ) {
 #ifdef ENABLEEXEPTIONS
   }catch( ... )
   {
-    UTIL_Log( "[AMXX] fatal error at client commmand execution");
+    AMXXLOG_Log( "[AMXX] fatal error at client commmand execution");
   }
 #endif
   /* check menu commands */
@@ -613,7 +613,7 @@ void ClientCommand( edict_t *pEntity ) {
           {
 
             if ( ( err = amx_Exec((*a).getPlugin()->getAMX(), &ret ,(*a).getFunction() , 2, pPlayer->index,pressed_key)) != AMX_ERR_NONE)
-              UTIL_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",
+              AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",
               err,(*a).getPlugin()->getAMX()->curline,(*a).getPlugin()->getName());
 
             if ( ret & 2 ) result = MRES_SUPERCEDE;
@@ -627,7 +627,7 @@ void ClientCommand( edict_t *pEntity ) {
       }
       catch( ... )
       {
-        UTIL_Log( "[AMXX] fatal error at menu commmand execution");
+        AMXXLOG_Log( "[AMXX] fatal error at menu commmand execution");
       }
 #endif
     }
@@ -688,14 +688,14 @@ void StartFrame_Post( void ) {
 
         if (amx_Allot(plugin->getAMX(), task.getParamLen() , &amx_addr, &phys_addr) != AMX_ERR_NONE)
         {
-          UTIL_Log("[AMXX] Failed to allocate AMX memory (task \"%d\") (plugin \"%s\")", task.getTaskId(),plugin->getName());
+          AMXXLOG_Log("[AMXX] Failed to allocate AMX memory (task \"%d\") (plugin \"%s\")", task.getTaskId(),plugin->getName());
         }
         else
         {
           copy_amxmemory(phys_addr, task.getParam() , task.getParamLen() );
 
           if ((err = amx_Exec(plugin->getAMX(),NULL, task.getFunction() , 2, amx_addr, task.getTaskId() )) != AMX_ERR_NONE)
-            UTIL_Log("[AMXX] Run time error %d on line %ld (task \"%d\") (plugin \"%s\")", err,plugin->getAMX()->curline,task.getTaskId(),plugin->getName());
+            AMXXLOG_Log("[AMXX] Run time error %d on line %ld (task \"%d\") (plugin \"%s\")", err,plugin->getAMX()->curline,task.getTaskId(),plugin->getName());
 
           amx_Release(plugin->getAMX(), amx_addr);
         }
@@ -703,7 +703,7 @@ void StartFrame_Post( void ) {
       else // call without arguments
       {
         if ((err = amx_Exec(plugin->getAMX(),NULL, task.getFunction() ,1, task.getTaskId() )) != AMX_ERR_NONE)
-          UTIL_Log("[AMXX] Run time error %d on line %ld (task \"%d\") (plugin \"%s\")", err,plugin->getAMX()->curline,task.getTaskId(),plugin->getName());
+          AMXXLOG_Log("[AMXX] Run time error %d on line %ld (task \"%d\") (plugin \"%s\")", err,plugin->getAMX()->curline,task.getTaskId(),plugin->getName());
       }
     }
   }
@@ -800,7 +800,7 @@ void MessageEnd_Post(void) {
     {
 
       if ((err = amx_Exec((*a).getPlugin()->getAMX(), NULL ,  (*a).getFunction() , 1, mPlayerIndex  /*g_events.getArgInteger(0)*/ )) != AMX_ERR_NONE)
-        UTIL_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",err,(*a).getPlugin()->getAMX()->curline,(*a).getPlugin()->getName());
+        AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",err,(*a).getPlugin()->getAMX()->curline,(*a).getPlugin()->getName());
 
 
       ++a;
@@ -811,7 +811,7 @@ void MessageEnd_Post(void) {
   }
   catch( ... )
   {
-    UTIL_Log( "[AMXX] fatal error at event execution");
+    AMXXLOG_Log( "[AMXX] fatal error at event execution");
   }
 #endif
 #endif
@@ -887,7 +887,7 @@ void AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...) {
       while ( a )
       {
         if ((err = amx_Exec((*a).getPlugin()->getAMX(), NULL , (*a).getFunction() , 1,mPlayerIndex)) != AMX_ERR_NONE)
-          UTIL_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",err,(*a).getPlugin()->getAMX()->curline,(*a).getPlugin()->getName());
+          AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",err,(*a).getPlugin()->getAMX()->curline,(*a).getPlugin()->getName());
 
         ++a;
 
@@ -897,7 +897,7 @@ void AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...) {
     }
     catch( ... )
     {
-      UTIL_Log( "[AMXX] fatal error at log event execution");
+      AMXXLOG_Log( "[AMXX] fatal error at log event execution");
     }
 #endif
 #endif
@@ -982,8 +982,9 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
   }
 
   // ###### Initialize logging here
+  AMXXLOG_Init();
   g_log_dir.set(get_localinfo("amxx_logs", "addons/amxx/logs"));
-  UTIL_MakeNewLogFile();
+  AMXXLOG_MakeNewLogFile();
 
   //  ###### Now attach metamod modules
   attachMetaModModules( get_localinfo("amxx_modules", "addons/amxx/modules.ini") );

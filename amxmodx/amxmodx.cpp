@@ -642,7 +642,7 @@ static cell AMX_NATIVE_CALL register_menucmd(AMX *amx, cell *params) /* 3 param 
   char* sptemp = get_amxstring(amx,params[3],0,ilen);
 
   if(amx_FindPublic(amx, sptemp ,&idx)!=AMX_ERR_NONE) {
-    UTIL_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")",sptemp,plugin->getName() );
+    AMXXLOG_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")",sptemp,plugin->getName() );
     amx_RaiseError(amx,AMX_ERR_NATIVE);
     return 0;
   }
@@ -685,7 +685,7 @@ static cell AMX_NATIVE_CALL register_concmd(AMX *amx, cell *params) /* 4 param *
   int i, idx = 0;
   char* temp = get_amxstring(amx,params[2],0, i );
   if(amx_FindPublic(amx, temp ,&idx)!=AMX_ERR_NONE) {
-    UTIL_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")",temp,plugin->getName() );
+    AMXXLOG_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")",temp,plugin->getName() );
     amx_RaiseError(amx,AMX_ERR_NATIVE);
     return 0;
   }
@@ -712,7 +712,7 @@ static cell AMX_NATIVE_CALL register_clcmd(AMX *amx, cell *params) /* 4 param */
   int i, idx = 0;
   char* temp = get_amxstring(amx,params[2],0, i );
   if(amx_FindPublic(amx, temp ,&idx)!=AMX_ERR_NONE) {
-    UTIL_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")",temp,plugin->getName() );
+    AMXXLOG_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")",temp,plugin->getName() );
     amx_RaiseError(amx,AMX_ERR_NATIVE);
     return 0;
   }
@@ -737,7 +737,7 @@ static cell AMX_NATIVE_CALL register_srvcmd(AMX *amx, cell *params) /* 2 param *
   int i, idx = 0;
   char* temp = get_amxstring(amx,params[2],0, i );
   if(amx_FindPublic(amx, temp ,&idx)!=AMX_ERR_NONE) {
-    UTIL_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")",temp,plugin->getName() );
+    AMXXLOG_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")",temp,plugin->getName() );
     amx_RaiseError(amx,AMX_ERR_NATIVE);
     return NULL;
   }
@@ -831,7 +831,7 @@ static cell AMX_NATIVE_CALL register_event(AMX *amx, cell *params) /* 2 param */
   char* sTemp = get_amxstring(amx,params[1],0,len);
 
   if ( (pos = g_events.getEventId(  sTemp  )) == 0 ) {
-    UTIL_Log("[AMXX] Invalid event (name \"%s\") (plugin \"%s\")", sTemp , plugin->getName() );
+    AMXXLOG_Log("[AMXX] Invalid event (name \"%s\") (plugin \"%s\")", sTemp , plugin->getName() );
     amx_RaiseError(amx,AMX_ERR_NATIVE);
     return 0;
   }
@@ -839,7 +839,7 @@ static cell AMX_NATIVE_CALL register_event(AMX *amx, cell *params) /* 2 param */
   sTemp = get_amxstring(amx,params[2],0,len);
 
   if ( amx_FindPublic(amx, sTemp , &iFunction) != AMX_ERR_NONE){
-    UTIL_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")",sTemp,plugin->getName() );
+    AMXXLOG_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")",sTemp,plugin->getName() );
     amx_RaiseError(amx,AMX_ERR_NATIVE);
     return 0;
   }
@@ -1494,7 +1494,7 @@ static cell AMX_NATIVE_CALL set_task(AMX *amx, cell *params) /* 2 param */
   char* stemp = get_amxstring(amx,params[2],1, a );
 
   if (amx_FindPublic(amx, stemp , &iFunc) != AMX_ERR_NONE){
-    UTIL_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")",stemp,plugin->getName() );
+    AMXXLOG_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")",stemp,plugin->getName() );
     amx_RaiseError(amx,AMX_ERR_NATIVE);
     return 0;
   }
@@ -1639,7 +1639,7 @@ static cell AMX_NATIVE_CALL pause(AMX *amx, cell *params) /* 3 param */
   temp = get_amxstring(amx,params[2],0,ilen);
     int err, index;
     if ((err = amx_FindPublic( plugin->getAMX(), temp , &index) )!= AMX_ERR_NONE){
-      UTIL_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")", temp,plugin->getName() );
+      AMXXLOG_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")", temp,plugin->getName() );
       return 0;
     }
   plugin->pauseFunction( index );
@@ -1681,7 +1681,7 @@ static cell AMX_NATIVE_CALL unpause(AMX *amx, cell *params) /* 3 param */
     sptemp = get_amxstring(amx,params[2],0,ilen);
     int err, index;
     if ((err = amx_FindPublic(plugin->getAMX(), sptemp , &index) )!= AMX_ERR_NONE){
-      UTIL_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")", sptemp,plugin->getName() );
+      AMXXLOG_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")", sptemp,plugin->getName() );
       return 0;
     }
   plugin->unpauseFunction( index );
@@ -2037,7 +2037,7 @@ static cell AMX_NATIVE_CALL register_logevent(AMX *amx, cell *params)
   char* temp = get_amxstring(amx,params[1],0, a );
 
   if (amx_FindPublic(amx, temp , &iFunc) != AMX_ERR_NONE){
-    UTIL_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")",
+    AMXXLOG_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")",
     temp,plugin->getName() );
     amx_RaiseError(amx,AMX_ERR_NATIVE);
     return 0;
@@ -2090,7 +2090,7 @@ static cell AMX_NATIVE_CALL is_plugin_loaded(AMX *amx, cell *params)
 // native get_modulesnum();
 static cell AMX_NATIVE_CALL get_modulesnum(AMX *amx, cell *params)
 {
-	return (cell)UTIL_GetModulesNum(UTIL_MODULES_ALL);
+	return (cell)countModules(CountModules_All);
 }
 
 // native get_module(id, name[], nameLen, author[], authorLen, version[], versionLen, &status);
@@ -2117,7 +2117,7 @@ static cell AMX_NATIVE_CALL get_module(AMX *amx, cell *params)
 	if (numParams < 8)
 	{
 		CPluginMngr::CPlugin *curPlugin = g_plugins.findPluginFast(amx);
-		UTIL_Log("[AMXX] get_module: call to a previous version (plugin \"%s\", line %d)", curPlugin->getName(), amx->curline);
+		AMXXLOG_Log("[AMXX] get_module: call to a previous version (plugin \"%s\", line %d)", curPlugin->getName(), amx->curline);
 		amx_RaiseError(amx, AMX_ERR_NATIVE);
 	}
 
@@ -2126,7 +2126,7 @@ static cell AMX_NATIVE_CALL get_module(AMX *amx, cell *params)
 	if (amx_GetAddr(amx, params[8], &addr) != AMX_ERR_NONE)
 	{
 		CPluginMngr::CPlugin *curPlugin = g_plugins.findPluginFast(amx);
-		UTIL_Log("[AMXX] get_module: invalid reference (plugin \"%s\", line %d)", curPlugin->getName(), amx->curline);
+		AMXXLOG_Log("[AMXX] get_module: invalid reference (plugin \"%s\", line %d)", curPlugin->getName(), amx->curline);
 		amx_RaiseError(amx, AMX_ERR_NATIVE);
 	}
 
@@ -2141,7 +2141,7 @@ static cell AMX_NATIVE_CALL log_amx(AMX *amx, cell *params)
 	CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
 	int len;
 
-	UTIL_Log("[%s] %s", plugin->getName(), format_amxstring(amx, params, 1, len));
+	AMXXLOG_Log("[%s] %s", plugin->getName(), format_amxstring(amx, params, 1, len));
 	return 0;
 }
 
@@ -2171,7 +2171,7 @@ static cell AMX_NATIVE_CALL callfunc_begin(AMX *amx, cell *params)
 	if (g_CallFunc_Plugin)
 	{
 		// scripter's fault
-		UTIL_Log("[AMXX] callfunc_begin called without callfunc_end (plugin \"%s\", line %d)", curPlugin->getName(), amx->curline);
+		AMXXLOG_Log("[AMXX] callfunc_begin called without callfunc_end (plugin \"%s\", line %d)", curPlugin->getName(), amx->curline);
 		amx_RaiseError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -2210,7 +2210,7 @@ static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 	if (!g_CallFunc_Plugin)
 	{
 		// scripter's fault
-		UTIL_Log("[AMXX] callfunc_end called without callfunc_begin (plugin \"%s\", line %d)", curPlugin->getName(), amx->curline);
+		AMXXLOG_Log("[AMXX] callfunc_end called without callfunc_begin (plugin \"%s\", line %d)", curPlugin->getName(), amx->curline);
 		amx_RaiseError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -2237,7 +2237,7 @@ static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 	// actual call
 	if ((err = amx_Execv(plugin->getAMX(), &retVal, func, curParam, gparams)) != AMX_ERR_NONE)
 	{
-		UTIL_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")", err, curPlugin->getAMX()->curline, curPlugin->getName());
+		AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")", err, curPlugin->getAMX()->curline, curPlugin->getName());
 		return 0;
 	}
 
@@ -2274,14 +2274,14 @@ static cell callfunc_push_byval(AMX *amx, cell *params)
 	if (!g_CallFunc_Plugin)
 	{
 		// scripter's fault
-		UTIL_Log("[AMXX] callfunc_push_xxx called without callfunc_begin (plugin \"%s\", line %d)", curPlugin->getName(), amx->curline);
+		AMXXLOG_Log("[AMXX] callfunc_push_xxx called without callfunc_begin (plugin \"%s\", line %d)", curPlugin->getName(), amx->curline);
 		amx_RaiseError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	if (g_CallFunc_CurParam == CALLFUNC_MAXPARAMS)
 	{
-		UTIL_Log("[AMXX] callfunc_push_xxx: maximal parameters num: %d", CALLFUNC_MAXPARAMS);
+		AMXXLOG_Log("[AMXX] callfunc_push_xxx: maximal parameters num: %d", CALLFUNC_MAXPARAMS);
 		amx_RaiseError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -2300,14 +2300,14 @@ static cell callfunc_push_byref(AMX *amx, cell *params)
 	if (!g_CallFunc_Plugin)
 	{
 		// scripter's fault
-		UTIL_Log("[AMXX] callfunc_push_xxx called without callfunc_begin (plugin \"%s\", line %d)", curPlugin->getName(), amx->curline);
+		AMXXLOG_Log("[AMXX] callfunc_push_xxx called without callfunc_begin (plugin \"%s\", line %d)", curPlugin->getName(), amx->curline);
 		amx_RaiseError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	if (g_CallFunc_CurParam == CALLFUNC_MAXPARAMS)
 	{
-		UTIL_Log("[AMXX] callfunc_push_xxx: maximal parameters num: %d", CALLFUNC_MAXPARAMS);
+		AMXXLOG_Log("[AMXX] callfunc_push_xxx: maximal parameters num: %d", CALLFUNC_MAXPARAMS);
 		amx_RaiseError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -2358,14 +2358,14 @@ static cell callfunc_push_str(AMX *amx, cell *params)
 	if (!g_CallFunc_Plugin)
 	{
 		// scripter's fault
-		UTIL_Log("[AMXX] callfunc_push_xxx called without callfunc_begin (plugin \"%s\", line %d)", curPlugin->getName(), amx->curline);
+		AMXXLOG_Log("[AMXX] callfunc_push_xxx called without callfunc_begin (plugin \"%s\", line %d)", curPlugin->getName(), amx->curline);
 		amx_RaiseError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	if (g_CallFunc_CurParam == CALLFUNC_MAXPARAMS)
 	{
-		UTIL_Log("[AMXX] callfunc_push_xxx: maximal parameters num: %d", CALLFUNC_MAXPARAMS);
+		AMXXLOG_Log("[AMXX] callfunc_push_xxx: maximal parameters num: %d", CALLFUNC_MAXPARAMS);
 		amx_RaiseError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -2400,7 +2400,8 @@ static cell callfunc_push_str(AMX *amx, cell *params)
 
 	// copy it to the allocated memory
 	// we assume it's unpacked
-	amx_SetString(phys_addr, str, 0);
+	// :NOTE: 4th parameter use_wchar since Small Abstract Machine 2.5.0
+	amx_SetString(phys_addr, str, 0, 0);
 
 	// push the address and set the reference flag so that memory is released after function call.
 	g_CallFunc_ParamInfo[g_CallFunc_CurParam].flags = CALLFUNC_FLAG_BYREF;

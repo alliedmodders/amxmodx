@@ -414,7 +414,7 @@ void EventsMngr::executeEvents()
 
 			if ((err = amx_Exec((*iter).m_Plugin->getAMX(), NULL, (*iter).m_Func, 1, m_ParseVault ? m_ParseVault[0].iValue : 0)) != AMX_ERR_NONE)
 			{
-				UTIL_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")", err, 
+				AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")", err, 
 					(*iter).m_Plugin->getAMX()->curline, (*iter).m_Plugin->getName());
 			}
 		}
@@ -423,7 +423,7 @@ void EventsMngr::executeEvents()
 	}
 	catch( ... )
 	{
-		UTIL_Log( "[AMXX] fatal error at event execution");
+		AMXXLOG_Log( "[AMXX] fatal error at event execution");
 	}
 #endif		// #ifdef ENABLEEXEPTIONS
 

@@ -1283,6 +1283,7 @@ void *Module_ReqFnptr(const char *funcName)
 			REGISTER_FUNC("PrintSrvConsole", print_srvconsole)
 			REGISTER_FUNC("GetModname", MNF_GetModname)
 			REGISTER_FUNC("Log", MNF_Log)
+			REGISTER_FUNC("LogError", LogError)
 			REGISTER_FUNC("MergeDefinitionFile", MNF_MergeDefinitionFile)
 			REGISTER_FUNC("Format", MNF_Format)
 

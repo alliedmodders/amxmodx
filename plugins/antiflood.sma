@@ -32,7 +32,7 @@
 *  version.
 */
 
-#include <amxmod>
+#include <amxmodx>
 
 new Float:g_Flooding[33]
 

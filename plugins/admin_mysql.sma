@@ -32,9 +32,7 @@
 *  version.
 */
 
-#include <amxmod>
-#include <amxmisc>
-#include <mysql>
+#include <amxmodx>
 
 #define MAX_ADMINS 64
 

@@ -32,8 +32,7 @@
 *  version.
 */
 
-#include <amxmod>
-#include <amxmisc>
+#include <amxmodx>
 
 #define MAX_ADMINS  64
 

@@ -32,8 +32,7 @@
 *  version.
 */
 
-#include <amxmod>
-#include <amxmisc>
+#include <amxmodx>
 
 #define SPEED 0.3
 

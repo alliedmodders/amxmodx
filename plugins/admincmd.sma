@@ -32,9 +32,7 @@
 *  version.
 */
 
-#include <amxmod>
-#include <engine>
-#include <amxmisc>
+#include <amxmodx>
 
 #define MAXRCONCVARS 16
 new g_cvarRcon[ MAXRCONCVARS ][32]

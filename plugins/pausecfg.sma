@@ -32,8 +32,7 @@
 *  version.
 */
 
-#include <amxmod>
-#include <amxmisc>
+#include <amxmodx>
 
 // Uncomment if you want to have two new commands
 // amx_off - pause plugins not marked as unpauseable

@@ -32,9 +32,9 @@
 *  version.
 */
 
-/* File location: $moddir/addons/amx */
+/* File location: $moddir/addons/amxx/plugins/csstats.amx */
 
-#include <amxmod>
+#include <amxmodx>
 
 /* Function calculates position in rank.
 *

@@ -32,8 +32,7 @@
 *  version.
 */
 
-#include <amxmod>
-#include <csstats>
+#include <amxmodx>
 
 new g_pingSum[33]
 new g_pingCount[33]

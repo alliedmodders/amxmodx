@@ -32,8 +32,7 @@
 *  version.
 */
 
-#include <amxmod>
-#include <amxmisc>
+#include <amxmodx>
 
 #define MAX_MAPS    128
 #define SELECTMAPS  5

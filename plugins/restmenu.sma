@@ -35,8 +35,7 @@
 // Uncomment if you want to have seperate settings for each map
 //#define MAPSETTINGS
 
-#include <amxmod> 
-#include <amxmisc> 
+#include <amxmodx> 
 
 #if !defined NO_STEAM
 #define MAXMENUPOS 34

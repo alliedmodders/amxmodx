@@ -32,7 +32,7 @@
 *  version.
 */
 
-#include <amxmod>
+#include <amxmodx>
 
 new g_TimeSet[32][2]
 new g_LastTime

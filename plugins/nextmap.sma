@@ -32,7 +32,7 @@
 *  version.
 */
 
-#include <amxmod>
+#include <amxmodx>
 
 // WARNING: If you comment this line make sure
 // that in your mapcycle file maps don't repeat.

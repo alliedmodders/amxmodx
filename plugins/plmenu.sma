@@ -32,8 +32,7 @@
 *  version.
 */
 
-#include <amxmod> 
-#include <amxmisc> 
+#include <amxmodx> 
 
 new g_menuPosition[33]
 new g_menuPlayers[33][32]

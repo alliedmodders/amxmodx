@@ -32,7 +32,7 @@
 *  version.
 */
 
-#include <amxmod>
+#include <amxmodx>
 
 #define HELPAMOUNT 10 // Number of commands per page
 

@@ -32,9 +32,7 @@
 *  version.
 */
 
-#include <amxmod>
-#include <amxmisc>
-#include <csstats>
+#include <amxmodx>
 
 // You can also manualy enable these options by setting them to 1
 // For example:

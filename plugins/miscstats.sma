@@ -32,7 +32,7 @@
 *  version.
 */
 
-#include <amxmod> 
+#include <amxmodx> 
 
 public MultiKill
 public MultiKillSound

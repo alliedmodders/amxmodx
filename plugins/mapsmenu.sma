@@ -33,9 +33,7 @@
 */
 
 
-#include <amxmod>
-#include <engine>
-#include <amxmisc> 
+#include <amxmodx>
 
 #define MAX_MAPS 64
 

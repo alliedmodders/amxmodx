@@ -32,8 +32,7 @@
 *  version.
 */
 
-#include <amxmod>
-#include <amxmisc>
+#include <amxmodx>
 
 // Comment if you don't want to hide not used reserved slots
 #define HIDE_RESERVED_SLOTS

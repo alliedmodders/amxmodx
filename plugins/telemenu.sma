@@ -175,7 +175,7 @@ displayTelMenu(id,pos) {
   len += format(menuBody[len],511-len,"8. %L^n",id,"SAVE_LOC")
 
   if (end != g_menuPlayersNum[id]) {
-    format(menuBody[len],511-len,"^n9. %L...^n0. %s", id, "MORE", id, pos ? "BACK" : "EXIT")
+    format(menuBody[len],511-len,"^n9. %L...^n0. %L", id, "MORE", id, pos ? "BACK" : "EXIT")
     keys |= MENU_KEY_9
   }
   else

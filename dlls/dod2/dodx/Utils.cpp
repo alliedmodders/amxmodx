@@ -34,48 +34,48 @@
 
 /* Weapon names aren't send in WeaponList message in DoD */
 weapon_t weaponData[] = {
-	{ false,false,"mortar","mortar" },
-	{ true,true,"amerknife","knife" }, // aknife->bknife
-	{ false,true,"gerknife","knife" },
-	{ false,false,"colt","Colt" }, 
-	{ false,false,"luger","Luger" },
-	{ true,false,"garand","Garand" }, // Garand->Garand butt
-	{ false,false,"scopedkar","scoped K98" }, 
-	{ false,false,"thompson","Thompson" },
-	{ false,false,"mp44","STG44" },
-	{ false,false,"spring","Springfield" },  
-	{ true,false,"kar","K98" }, // KAR->KAR bayonet
-	{ false,false,"bar","BAR" },
-	{ false,false,"mp40","MP40" }, 
-	{ false,false,"grenade","handgrenade" },
-	{ false,false,"grenade2","stickgrenade" },
-	{ false,false,"stickgrenade_ex","stickgrenade_ex" },
-	{ false,false,"handgrenade_ex","handgrenade_ex" },
-	{ false,false,"mg42","MG42" },
-	{ false,false,"30cal",".30 cal" },
-	{ false,true,"spade","spade" },
-	{ true,false,"m1carbine","M1 Carbine" },  // M1 Carbine->Folding Carbine
-	{ false,false,"mg34","MG34" },
-	{ false,false,"greasegun","Greasegun" },
-	{ true,false,"fg42","FG42" }, // FG42 -> scoped FG42
-	{ true,false,"k43","K43" },
-	{ true,false,"enfield","Enfield" }, // Enfield->Scoped Enfield->Enfield bayonet
-	{ false,false,"sten","Sten" },
-	{ false,false,"bren","Bren" }, 
-	{ false,false,"webley","Webley" },
-	{ false,false,"bazooka","Bazooka" },
-	{ false,false,"pschreck","Panzerschrek" },
-	{ false,false,"piat","Piat" },
-	{ false,false,"scoped_fg42","scoped FG42" },
+	{ false,false,"mortar","mortar",0 },
+	{ true,true,"amerknife","knife",0 }, // aknife->bknife
+	{ false,true,"gerknife","knife",0 },
+	{ false,false,"colt","Colt",4 }, 
+	{ false,false,"luger","Luger",4 },
+	{ true,false,"garand","Garand",3 }, // Garand->Garand butt
+	{ false,false,"scopedkar","scoped K98",3 }, 
+	{ false,false,"thompson","Thompson",1 },
+	{ false,false,"mp44","STG44",6 },
+	{ false,false,"spring","Springfield",5 },  
+	{ true,false,"kar","K98",3 }, // KAR->KAR bayonet
+	{ false,false,"bar","BAR",6 },
+	{ false,false,"mp40","MP40",1 }, 
+	{ false,false,"grenade","handgrenade",9 },
+	{ false,false,"grenade2","stickgrenade",11 },
+	{ false,false,"stickgrenade_ex","stickgrenade_ex",11 },
+	{ false,false,"handgrenade_ex","handgrenade_ex",9 },
+	{ false,false,"mg42","MG42",7 },
+	{ false,false,"30cal",".30 cal",8 },
+	{ false,true,"spade","spade",0 },
+	{ true,false,"m1carbine","M1 Carbine",2 },  // M1 Carbine->Folding Carbine
+	{ false,false,"mg34","MG34",2 },
+	{ false,false,"greasegun","Greasegun",1 },
+	{ true,false,"fg42","FG42",6 }, // FG42 -> scoped FG42
+	{ true,false,"k43","K43",2 },
+	{ true,false,"enfield","Enfield",3 }, // Enfield->Scoped Enfield->Enfield bayonet
+	{ false,false,"sten","Sten",1 },
+	{ false,false,"bren","Bren",6 }, 
+	{ false,false,"webley","Webley",4 },
+	{ false,false,"bazooka","Bazooka",13 },
+	{ false,false,"pschreck","Panzerschrek",13 },
+	{ false,false,"piat","Piat",13 },
+	{ false,false,"scoped_fg42","scoped FG42",6 },
 	{ false,false,"fcarbine","Folding Carbine" },
-	{ false,true,"bayonet","K98 bayonet" }, // KAR bayonet
-	{ false,false,"scoped_enfield","scoped Enfield"},
-	{ false,false,"mills_bomb","mills bomb" },
-	{ false,true,"brit_knife","knife" }, 
-	{ false,true,"garandbutt","Garand butt" }, // Garand butt
-	{ false,true,"enf_bayonet","Enfield bayonet" },
-	{ false,false,"mortar","mortar" }, // mortar new id
-	{ false,true,"k43butt","K43 butt" },
+	{ false,true,"bayonet","K98 bayonet",0 }, // KAR bayonet
+	{ false,false,"scoped_enfield","scoped Enfield",3 },
+	{ false,false,"mills_bomb","mills bomb",9 },
+	{ false,true,"brit_knife","knife",0 }, 
+	{ false,true,"garandbutt","Garand butt",0 }, // Garand butt
+	{ false,true,"enf_bayonet","Enfield bayonet",0 },
+	{ false,false,"mortar","mortar",0 }, // mortar new id
+	{ false,true,"k43butt","K43 butt",0 },
 };
 
 /* Function will select correct id */

@@ -102,11 +102,13 @@ void Client_CurWeapon(void* mValue){
     if ( !iState || !isModuleActive() )
 		break;
 	int iClip = *(int*)mValue;
+	mPlayer->current = iId;
 
    	if ( weaponData[iId].needcheck ){
 		iId = get_weaponid(mPlayer);
 		mPlayer->current = iId;
 	}
+
 	if (iClip > -1) {
 		if ( mPlayer->current == 17 ){
 			if ( iClip+2 == mPlayer->weapons[iId].clip)
@@ -186,3 +188,30 @@ void Client_Health_End(void* mValue){
 	}
 }
 
+void Client_AmmoX(void* mValue){
+  static int iAmmo;
+  switch (mState++){
+  case 0:
+    iAmmo = *(int*)mValue;
+    break;
+  case 1:
+	if (!mPlayer ) break;
+    for(int i = 1; i < MAX_WEAPONS ; ++i) 
+      if (iAmmo == weaponData[i].ammoSlot)
+        mPlayer->weapons[i].ammo = *(int*)mValue;
+  }
+}
+
+void Client_AmmoShort(void* mValue){
+  static int iAmmo;
+  switch (mState++){
+  case 0:
+    iAmmo = *(int*)mValue;
+    break;
+  case 1:
+	if (!mPlayer ) break;
+    for(int i = 1; i < MAX_WEAPONS ; ++i) 
+      if (iAmmo == weaponData[i].ammoSlot)
+        mPlayer->weapons[i].ammo = *(int*)mValue;
+  }
+}

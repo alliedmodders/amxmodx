@@ -52,6 +52,7 @@ struct weapon_t {
 	bool melee;
 	char logname[16];
 	char name[32];
+	int ammoSlot;
 };
 
 extern bool rankBots;
@@ -64,6 +65,8 @@ void Client_ResetHUD_End(void*);
 void Client_ObjScore(void*);
 void Client_TeamScore(void*);
 void Client_RoundState(void*);
+void Client_AmmoX(void*);
+void Client_AmmoShort(void*);
 
 typedef void (*funEventCall)(void*);
 

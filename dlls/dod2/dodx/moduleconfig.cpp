@@ -69,6 +69,9 @@ int gmsgTeamScore;
 int gmsgScoreShort;
 int gmsgPTeam;
 
+int gmsgAmmoX;
+int gmsgAmmoShort;
+
 RankSystem g_rank;
 Grenades g_grenades;
 
@@ -99,6 +102,9 @@ struct sUserMsg {
 	{ "TeamScore",&gmsgTeamScore,Client_TeamScore,false },
 	{ "ScoreShort",&gmsgScoreShort,NULL,false },
 	{ "PTeam",&gmsgPTeam,NULL,false },
+
+	{ "AmmoX",&gmsgAmmoX,Client_AmmoX,false},
+	{ "AmmoShort",&gmsgAmmoShort,Client_AmmoShort,false},
 
 	{ 0,0,0,false }
 };

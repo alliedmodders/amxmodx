@@ -154,7 +154,7 @@ displayBanMenu(id,pos){
   }
   
   if ( g_menuSettings[id] )
-    len += format(menuBody[len],511-len,"^n8. Ban on %d minutes^n" , g_menuSettings[id] )
+    len += format(menuBody[len],511-len,"^n8. Ban for %d minutes^n" , g_menuSettings[id] )
   else
     len += format(menuBody[len],511-len,"^n8. Ban permanently^n" )
   

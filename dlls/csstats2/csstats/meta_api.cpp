@@ -26,7 +26,6 @@ bool rankBots;
 int gmsgCurWeapon;
 int gmsgDeathMsg;
 int gmsgDamage;
-int gmsgDamageEnd;
 int gmsgWeaponList;
 int gmsgResetHUD;
 int gmsgAmmoX;
@@ -57,7 +56,6 @@ struct sUserMsg {
 } g_user_msg[] = {
 	{ "CurWeapon" , &gmsgCurWeapon , Client_CurWeapon, false },
 	{ "Damage" , &gmsgDamage,Client_Damage, false  },	
-	{ "Damage" , &gmsgDamageEnd, Client_Damage_End, true },
 	{ "WeaponList" , &gmsgWeaponList, Client_WeaponList, false },
 	{ "ResetHUD" , &gmsgResetHUD,Client_ResetHUD, true },
 	{ "AmmoX" , &gmsgAmmoX, Client_AmmoX , false },
@@ -289,7 +287,7 @@ void OnMetaAttach() {
 
 void OnAmxxAttach(){
 	MF_AddNatives(stats_Natives);
-	const char* path =  get_localinfo("csstats_score","addons/amxmodx/data/csstats.amxx");
+	const char* path =  get_localinfo("csstats_score");
 	if ( path && *path ) 
 	{
 		char error[128];
@@ -299,7 +297,7 @@ void OnAmxxAttach(){
 	if ( !g_rank.begin() )
 	{		
 		g_rank.loadRank( MF_BuildPathname("%s",
-			get_localinfo("csstats","addons/amxmodx/data/csstats.dat") ) );
+			get_localinfo("csstats") ) );
 	}
 }
 

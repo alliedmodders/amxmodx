@@ -5,12 +5,6 @@
 
 weaponsVault weaponData[MAX_WEAPONS];
 
-int damage;
-int TK;
-int weapon;
-int aim;
-CPlayer *pAttacker;
-
 int g_Planter;
 int g_Defuser;
 
@@ -52,6 +46,12 @@ void Client_WeaponList(void* mValue){
 
 void Client_Damage(void* mValue){
   static int bits;
+  static int damage;
+  static int TK;
+  static int weapon;
+  static int aim;
+  static CPlayer *pAttacker;
+
   switch (mState++) {
   case 1: 
     damage = *(int*)mValue;
@@ -79,19 +79,16 @@ void Client_Damage(void* mValue){
 	}
 	if( g_grenades.find(enemy , &pAttacker , &weapon ) )
 		pAttacker->saveHit( mPlayer , weapon , damage, aim );
-  }
-}
-
-void Client_Damage_End(void* mValue){
-	if ( !mPlayer || !damage || mPlayer->IsAlive() )
-		return;
-	 
+	break;
+  case 4:
 	if ( !pAttacker )
-			pAttacker = mPlayer;
+		pAttacker = mPlayer;
 	TK = 0;
 	if ( (mPlayer->teamId == pAttacker->teamId) && (mPlayer != pAttacker) )
-			TK = 1;
+		TK = 1;
 	pAttacker->saveKill(mPlayer,weapon,( aim == 1 ) ? 1:0 ,TK);
+	break;
+  }
 }
 
 void Client_CurWeapon(void* mValue){

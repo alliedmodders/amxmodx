@@ -52,7 +52,6 @@ extern int mPlayerIndex;
 extern int mState;
 
 extern int gmsgCurWeapon;
-extern int gmsgDamageEnd;
 extern int gmsgDamage;
 extern int gmsgWeaponList;
 extern int gmsgResetHUD;
@@ -69,7 +68,6 @@ void Client_CurWeapon(void*);
 void Client_Damage(void*);
 void Client_WeaponList(void*);
 void Client_AmmoPickup(void*);
-void Client_Damage_End(void*);
 void Client_ScoreInfo(void*);
 void Client_ResetHUD(void*);
 

@@ -2648,7 +2648,7 @@ void MF_Log(const char *fmt, ...)
 	vsprintf(msg, fmt, arglst);
 	va_end(arglst);
 
-	g_fn_Log("[%s] %s", MODULE_NAME, msg);
+	g_fn_Log("[%s] %s", MODULE_LOGTAG, msg);
 }
 
 void MF_LogError(AMX *amx, int err, const char *fmt, ...)
@@ -2660,7 +2660,7 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...)
 	vsprintf(msg, fmt, arglst);
 	va_end(arglst);
 
-	g_fn_LogErrorFunc(amx, err, "[%s] %s", MODULE_NAME, msg);
+	g_fn_LogErrorFunc(amx, err, "[%s] %s", MODULE_LOGTAG, msg);
 }
 
 

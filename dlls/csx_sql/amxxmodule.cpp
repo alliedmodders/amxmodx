@@ -2296,11 +2296,6 @@ C_DLLEXPORT int Meta_Query(char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_
 
 C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, meta_globals_t *pMGlobals, gamedll_funcs_t *pGamedllFuncs)
 {
-	if ( gpGamedllFuncs ){
-		LOG_ERROR(PLID,"gpGamedllFuncs already set");
-		return(FALSE);
-	}
-
 	if(now > Plugin_info.loadable) {
 		LOG_ERROR(PLID, "Can't load module right now");
 		return(FALSE);
@@ -2653,7 +2648,7 @@ void MF_Log(const char *fmt, ...)
 	vsprintf(msg, fmt, arglst);
 	va_end(arglst);
 
-	g_fn_Log("[%s] %s", MODULE_NAME, msg);
+	g_fn_Log("[%s] %s", MODULE_LOGTAG, msg);
 }
 
 void MF_LogError(AMX *amx, int err, const char *fmt, ...)
@@ -2665,7 +2660,7 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...)
 	vsprintf(msg, fmt, arglst);
 	va_end(arglst);
 
-	g_fn_LogErrorFunc(amx, err, "[%s] %s", MODULE_NAME, msg);
+	g_fn_LogErrorFunc(amx, err, "[%s] %s", MODULE_LOGTAG, msg);
 }
 
 

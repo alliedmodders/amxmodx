@@ -8,6 +8,10 @@ int g_CameraCount;
 
 TraceResult g_tr;
 
+#define	BUFFERSIZE	1023
+char g_buffer[BUFFERSIZE + 1];
+
+
 void UTIL_SetSize(edict_t *pev, const Vector &vecMin, const Vector &vecMax)
 {
 	SET_SIZE(ENT(pev), vecMin, vecMax);
@@ -898,6 +902,13 @@ static cell AMX_NATIVE_CALL traceresult(AMX *amx, cell *params)
 	return 0;
 }
 
+// (jghg)
+static cell AMX_NATIVE_CALL get_string(AMX *amx, cell *params) // (string, returnstring[], length)
+{
+	snprintf(g_buffer, BUFFERSIZE, "%s", STRING(params[1]));
+	return MF_SetAmxString(amx, params[2], g_buffer, params[3]);
+}
+
 AMX_NATIVE_INFO engine_Natives[] = {
 	{"halflife_time",		halflife_time},
 
@@ -937,6 +948,8 @@ AMX_NATIVE_INFO engine_Natives[] = {
 	{"register_impulse",	register_impulse},
 	{"register_think",		register_think},
 	{"register_touch",		register_touch},
+
+	{"get_string",			get_string},
 
 	{NULL,					NULL},
 	 ///////////////////

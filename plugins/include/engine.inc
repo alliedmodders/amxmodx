@@ -222,6 +222,10 @@ native get_usercmd(type,{Float,Sql,Result,_}:...);
    Note that your changes will be seen by any other plugin doing get_usercmd() */
 native set_usercmd(type,{Float,Sql,Result,_}:...);
 
+/* Converts a string offset into a real string. Some of the forwards in fakemeta
+   uses string offsets. (FM_CreateNamedEntity) */
+native get_string(_string, _returnString[], _len);
+
 /* FORWARDS 
  **********/
 

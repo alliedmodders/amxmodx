@@ -2680,6 +2680,35 @@ cell AMX_NATIVE_CALL require_module(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL lang_phrase(AMX *amx, cell *params)
+{
+	int len = 0;
+	int iLang = params[1];
+
+	const char *cpLangName=NULL;
+	// Handle player ids (1-32) and server language
+	if (iLang == LANG_SERVER) {	// LANG_SERVER
+		cpLangName = g_vault.get("server_language");
+	} else if (iLang >= 1 && iLang <= 32) {	// Direct Client Id
+		if ((int)CVAR_GET_FLOAT("amx_client_languages") == 0)
+		{
+			cpLangName = g_vault.get("server_language");
+		} else {
+			cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(iLang)->pEdict, "lang");
+		}
+	}
+	if (!cpLangName || strlen(cpLangName) < 1)
+		cpLangName = "en";
+
+	const char *str = get_amxstring(amx, params[2], 0, len);
+
+	const char *dat = g_langMngr.GetDef(cpLangName, str);
+
+	set_amxstring(amx, params[3], dat?dat:"ML_LNOTFOUND", params[4]);
+
+	return 1;
+}
+
 AMX_NATIVE_INFO amxmod_Natives[] = {
   { "client_cmd",       client_cmd },
   { "client_print",     client_print },
@@ -2839,5 +2868,6 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "md5",				amx_md5 },
   { "md5_file",			amx_md5_file },
   { "plugin_flags",		plugin_flags},
+  { "lang_phrase",		lang_phrase},
   { NULL, NULL }
 };

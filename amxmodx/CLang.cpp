@@ -536,7 +536,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 				// Handle player ids (1-32) and server language
 				if (*pAmxLangName == LANG_PLAYER)	// LANG_PLAYER
 				{
-					if ((int)CVAR_GET_FLOAT("amx_client_languages"))
+					if ((int)CVAR_GET_FLOAT("amx_client_languages") == 0)
 					{
 						cpLangName = g_vault.get("server_language");
 					} else {
@@ -545,7 +545,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 				} else if (*pAmxLangName == LANG_SERVER) {	// LANG_SERVER
 					cpLangName = g_vault.get("server_language");
 				} else if (*pAmxLangName >= 1 && *pAmxLangName <= 32) {	// Direct Client Id
-					if ((int)CVAR_GET_FLOAT("amx_client_languages"))
+					if ((int)CVAR_GET_FLOAT("amx_client_languages") == 0)
 					{
 						cpLangName = g_vault.get("server_language");
 					} else {

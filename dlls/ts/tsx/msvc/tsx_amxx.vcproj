@@ -3,6 +3,7 @@
 	ProjectType="Visual C++"
 	Version="7.10"
 	Name="tsx_amxx"
+	ProjectGUID="{7F18E00C-6271-4CAB-B18A-746BE3EC68E7}"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>

@@ -102,20 +102,19 @@ public checkVotes( id ) {
   for (new i = 0; i < g_voteSelectedNum[id]; ++i)
     if ( g_voteCount[a] < g_voteCount[i] )
       a = i
-  if ( 100 * g_voteCount[a] / num >  50 )  {   
+  if ( 100 * g_voteCount[a] / num >  50 )  {
     g_choosed = g_voteSelected[id][a]
     client_print(0,print_chat, "%L %s", LANG_PLAYER, "VOTE_SUCCESS", g_mapName[ g_choosed  ]  )
     log_amx("Vote: %L %s", "en", "VOTE_SUCCESS", g_mapName[ g_choosed ] )
   }
-  if ( g_choosed != -1 ) {  
+  if ( g_choosed != -1 ) {
     if ( is_user_connected( id ) ) {
       new menuBody[512]
       new len = format(menuBody,511,g_coloredMenus ? "\y%L: \w%s^n^n" :  "%L: %s^n^n", id, "THE_WINNER", g_mapName[ g_choosed  ] )
       len += format( menuBody[len] ,511 - len, g_coloredMenus ? "\y%L^n\w" : "%L^n", id, "WANT_CONT" )
       format( menuBody[len], 511-len, "^n1. %L^n2. %L",id,"YES",id,"NO")
-      new menuName[64]
-      format(menuName,63,"%L","en","THE_WINNER")
-      show_menu( id, 0x03, menuBody, 10, menuName )
+
+      show_menu( id, 0x03, menuBody, 10, "The winner: ")
       set_task(10.0,"autoRefuse",4545454)
     }
     else {
@@ -159,12 +158,12 @@ displayVoteMapsMenu(id,pos) {
   if (pos < 0)
     return
 
-  new menuBody[512], b = 0 , start = pos * 7 
+  new menuBody[512], b = 0 , start = pos * 7
 
   if (start >= g_mapNums)
     start = pos = g_menuPosition[id] = 0
 
-  new len = format(menuBody,511, g_coloredMenus ? 
+  new len = format(menuBody,511, g_coloredMenus ?
     "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n",
     id,"VOTEMAP_MENU",pos+1,(  g_mapNums / 7 + (( g_mapNums % 7) ? 1 : 0 )) )
 
@@ -175,8 +174,8 @@ displayVoteMapsMenu(id,pos) {
 
   for (new a = start; a < end; ++a) {
     if ( g_voteSelectedNum[id]==4 || isMapSelected( id , pos * 7 + b ) ) {
-      ++b   
-      if ( g_coloredMenus) 
+      ++b
+      if ( g_coloredMenus)
         len += format(menuBody[len],511-len,"\d%d. %s^n\w",  b ,g_mapName[ a ])
       else
         len += format(menuBody[len],511-len,"#. %s^n",  g_mapName[ a ])
@@ -192,7 +191,7 @@ displayVoteMapsMenu(id,pos) {
     len += format(menuBody[len],511-len,"^n8. %L^n",id,"START_VOT")
   }
   else
-    len += format(menuBody[len],511-len, g_coloredMenus ? 
+    len += format(menuBody[len],511-len, g_coloredMenus ?
       "^n\d8. %L^n\w" : "^n#. %L^n",id,"START_VOT")
 
   if (end != g_mapNums) {
@@ -231,7 +230,7 @@ public cmdVoteMapMenu(id,level,cid) {
   }
 
   g_voteSelectedNum[id] = 0
-  
+
   if ( g_mapNums ) {
     displayVoteMapsMenu(id,g_menuPosition[id] = 0)
   }
@@ -246,7 +245,7 @@ public cmdVoteMapMenu(id,level,cid) {
 public cmdMapsMenu(id,level,cid) {
   if (!cmd_access(id,level,cid,1))
     return PLUGIN_HANDLED
-  
+
   if ( g_mapNums ) {
     displayMapsMenu(id,g_menuPosition[id] = 0)
   }
@@ -255,7 +254,7 @@ public cmdMapsMenu(id,level,cid) {
     client_print(id,print_chat,"%L",id,"NO_MAPS_MENU")
   }
 
-  return PLUGIN_HANDLED 
+  return PLUGIN_HANDLED
 }
 
 public delayedChange(mapname[])
@@ -266,10 +265,10 @@ public actionVoteMapMenu(id,key) {
   switch (key) {
     case 7: {
       new Float:voting = get_cvar_float("amx_last_voting")
-      if ( voting > get_gametime() ) { 
+      if ( voting > get_gametime() ) {
         client_print(id,print_chat,"%L",id,"ALREADY_VOT")
         return PLUGIN_HANDLED
-      } 
+      }
       if (voting && voting + get_cvar_float("amx_vote_delay") > get_gametime()) {
         client_print(id,print_chat,"%L",id,"VOT_NOW_ALLOW")
         return PLUGIN_HANDLED
@@ -277,8 +276,8 @@ public actionVoteMapMenu(id,key) {
 
       g_voteCount = { 0 , 0 , 0 , 0 , 0 }
 
-      new Float:vote_time = get_cvar_float("amx_vote_time") + 2.0 
-      set_cvar_float("amx_last_voting",  get_gametime() + vote_time )      
+      new Float:vote_time = get_cvar_float("amx_vote_time") + 2.0
+      set_cvar_float("amx_last_voting",  get_gametime() + vote_time )
       new iVoteTime = floatround( vote_time )
 
       set_task( vote_time , "checkVotes",34567 + id)
@@ -290,8 +289,8 @@ public actionVoteMapMenu(id,key) {
       get_players(players,pnum)
 
       if ( g_voteSelectedNum[id] > 1 ) {
-        len = format(menuBody,511,g_coloredMenus ? 
-          "\y%L^n\w^n" : "%L^n^n", id, "WHICH_MAP")  
+        len = format(menuBody,511,g_coloredMenus ?
+          "\y%L^n\w^n" : "%L^n^n", id, "WHICH_MAP")
         for (new c = 0; c < g_voteSelectedNum[id] ; ++c) {
           len += format(menuBody[len],511,"%d. %s^n", c + 1 , g_mapName[  g_voteSelected[id][ c ]  ] )
           keys |= (1<<c)
@@ -316,7 +315,7 @@ public actionVoteMapMenu(id,key) {
       format(menuBody[len],511,"^n0. %L",id,"CANC_VOTE")
       keys |= MENU_KEY_0
       show_menu(id,keys,menuBody, iVoteTime, menuName)
-      
+
       new authid[32],name[32]
       get_user_authid(id,authid,31)
       get_user_name(id,name,31)
@@ -325,7 +324,7 @@ public actionVoteMapMenu(id,key) {
         case 2: client_print(0,print_chat,"%L",LANG_PLAYER,"ADMIN_V_MAP_2",name)
         case 1: client_print(0,print_chat,"%L",LANG_PLAYER,"ADMIN_V_MAP_1")
       }
-      
+
       log_amx("Vote: ^"%s<%d><%s><>^" vote maps (map#1 ^"%s^") (map#2 ^"%s^") (map#3 ^"%s^") (map#4 ^"%s^")",
         name,get_user_userid(id),authid,
         g_voteSelectedNum[id] > 0 ? g_mapName[ g_voteSelected[id][ 0 ] ] : "" ,
@@ -349,10 +348,10 @@ public actionMapsMenu(id,key) {
   switch (key) {
     case 8: displayMapsMenu(id,++g_menuPosition[id])
     case 9: displayMapsMenu(id,--g_menuPosition[id])
-    default: 
+    default:
     {
       new a = g_menuPosition[id] * 8 + key
-      
+
       message_begin(MSG_ALL, SVC_INTERMISSION)
       message_end()
 
@@ -364,12 +363,12 @@ public actionMapsMenu(id,key) {
         case 2: client_print(0,print_chat,"%L",LANG_PLAYER,"ADMIN_CHANGEL_2",name,g_mapName[  a  ])
         case 1: client_print(0,print_chat,"%L",LANG_PLAYER,"ADMIN_CHANGEL_1",g_mapName[  a  ])
       }
-      
+
       log_amx("Cmd: ^"%s<%d><%s><>^" changelevel ^"%s^"",
-        name,get_user_userid(id),authid, g_mapName[  a  ] ) 
-            
+        name,get_user_userid(id),authid, g_mapName[  a  ] )
+
       set_task(2.0,"delayedChange",0, g_mapName[  a  ] , strlen(g_mapName[  a  ]) + 1 )
-      
+
       /* displayMapsMenu(id,g_menuPosition[id]) */
     }
   }
@@ -381,13 +380,13 @@ displayMapsMenu(id,pos) {
     return
 
   new menuBody[512]
-  new start = pos * 8 
+  new start = pos * 8
   new b = 0
 
   if (start >= g_mapNums)
     start = pos = g_menuPosition[id] = 0
 
-  new len = format(menuBody,511, g_coloredMenus ? 
+  new len = format(menuBody,511, g_coloredMenus ?
     "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n",
     id,"CHANGLE_MENU",pos+1,(  g_mapNums / 8 + (( g_mapNums % 8) ? 1 : 0 )) )
 
@@ -397,7 +396,7 @@ displayMapsMenu(id,pos) {
   if (end > g_mapNums)
     end = g_mapNums
 
-  for (new a = start; a < end; ++a) {   
+  for (new a = start; a < end; ++a) {
     keys |= (1<<b)
     len += format(menuBody[len],511-len,"%d. %s^n",++b,g_mapName[ a ])
   }
@@ -415,12 +414,12 @@ displayMapsMenu(id,pos) {
 }
 
 load_settings(filename[]) {
-  if (!file_exists(filename)) 
+  if (!file_exists(filename))
     return 0
 
   new text[256]
   new a , pos = 0
-  
+
   while ( g_mapNums < MAX_MAPS && read_file(filename,pos++,text,255,a) ) {
     if ( text[0] == ';' ) continue
 

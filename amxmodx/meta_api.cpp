@@ -272,7 +272,7 @@ int	C_Spawn( edict_t *pent ) {
 
   // Register forwards
   FF_PluginInit = registerForward("plugin_init", ET_IGNORE, FP_DONE);
-  FF_ClientCommand = registerForward("client_command", ET_IGNORE, FP_CELL, FP_DONE);
+  FF_ClientCommand = registerForward("client_command", ET_STOP, FP_CELL, FP_DONE);
   FF_ClientConnect = registerForward("client_connect", ET_IGNORE, FP_CELL, FP_DONE);
   FF_ClientDisconnect = registerForward("client_disconnect", ET_IGNORE, FP_CELL, FP_DONE);
   FF_ClientInfoChanged = registerForward("client_infochanged", ET_IGNORE, FP_CELL, FP_DONE);

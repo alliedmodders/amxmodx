@@ -77,7 +77,7 @@ enum {
 	EngFunc_WriteAngle,		// void (float)
 	EngFunc_InfoKeyValue,	// char*	)			(char *infobuffer, char *key);
 	EngFunc_SetKeyValue,	// void )			(char *infobuffer, char *key, char *value);
-	EngFunc_SetClientKeyValue	 // void )		(int clientIndex, char *infobuffer, char *key, char *value);
+	EngFunc_SetClientKeyValue,	 // void )		(int clientIndex, char *infobuffer, char *key, char *value);
 };
 
 #endif //_ENGFUNC_INCLUDE_H

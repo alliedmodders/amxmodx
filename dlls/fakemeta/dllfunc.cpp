@@ -211,6 +211,13 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		CHECK_ENTITY(index);
 		iparam1 = gpMetaUtilFuncs->pfnCallGameEntity(PLID,STRING(ALLOC_STRING(temp)),VARS(INDEXENT2(index)));
 		return iparam1;
+	case	DLLFunc_ClientUserInfoChanged: // void ) (edict_t *pEntity, char *infobuffer)
+		index = cRet[0];
+		CHECK_ENTITY(index);
+		gpGamedllFuncs->dllapi_table->pfnClientUserInfoChanged(INDEXENT2(index),(*g_engfuncs.pfnGetInfoKeyBuffer)(INDEXENT2(index)));
+		return 1;
+
+
 	default:
 		MF_Log("Unknown dllfunc entry.");
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);

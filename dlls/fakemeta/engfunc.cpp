@@ -962,7 +962,6 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		temp2 = MF_GetAmxString(amx,params[4],1,&len);
 		(*g_engfuncs.pfnSetClientKeyValue)(index,(*g_engfuncs.pfnGetInfoKeyBuffer)(INDEXENT2(index)),temp,temp2);
 		return 1;
-
 	default:
 		LOG_CONSOLE(PLID,"[NS2AMX] Unknown engfunc type provided.");
 		return 0;

@@ -48,7 +48,8 @@ enum
 	DLLFunc_CreateInstancedBaselines,	// void ) ( void );
 	DLLFunc_pfnAllowLagCompensation,	// int )( void );
 	// I know this does not fit with DLLFUNC(), but I dont want another native just for it.
-	MetaFunc_CallGameEntity	// bool	(plid_t plid, const char *entStr,entvars_t *pev);
+	MetaFunc_CallGameEntity,	// bool	(plid_t plid, const char *entStr,entvars_t *pev);
+	DLLFunc_ClientUserInfoChanged // void ) (edict_t *pEntity, char *infobuffer)
 };
 
 #endif //_INCLUDE_DLLFUNC_H

@@ -1350,8 +1350,8 @@ static cell AMX_NATIVE_CALL get_offset_short(AMX *amx, cell *params)
 	}
 
 	edict_t *pEnt = INDEXENT(idx);
-#ifndef __linux__
-	off -= 5;
+#ifdef __linux__
+	off += 5;
 #endif
 
 	return *((short *)pEnt->pvPrivateData + off);
@@ -1368,8 +1368,8 @@ static cell AMX_NATIVE_CALL set_offset_short(AMX *amx, cell *params)
 	}
 
 	edict_t *pEnt = INDEXENT(idx);
-#ifndef __linux__
-	off -= 5;
+#ifdef __linux__
+	off += 5;
 #endif
 	
 	*((short *)pEnt->pvPrivateData + off) = (short)params[3];
@@ -1388,8 +1388,8 @@ static cell AMX_NATIVE_CALL get_offset_char(AMX *amx, cell *params)
 	}
 
 	edict_t *pEnt = INDEXENT(idx);
-#ifndef __linux__
-	off -= 5;
+#ifdef __linux__
+	off += 5;
 #endif
 	
 	char r = *((char *)pEnt->pvPrivateData + off);
@@ -1407,8 +1407,8 @@ static cell AMX_NATIVE_CALL set_offset_char(AMX *amx, cell *params)
 	}
 
 	edict_t *pEnt = INDEXENT(idx);
-#ifndef __linux__
-	off -= 5;
+#ifdef __linux__
+	off += 5;
 #endif
 	
 	char data = params[3];
@@ -1428,8 +1428,8 @@ static cell AMX_NATIVE_CALL get_offset_int(AMX *amx, cell *params)
 	}
 
 	edict_t *pEnt = INDEXENT(idx);
-#ifndef __linux__
-	off -= 5;
+#ifdef __linux__
+	off += 5;
 #endif
 	
 	return *((int *)pEnt->pvPrivateData + off);
@@ -1446,8 +1446,8 @@ static cell AMX_NATIVE_CALL set_offset_int(AMX *amx, cell *params)
 	}
 
 	edict_t *pEnt = INDEXENT(idx);
-#ifndef __linux__
-	off -= 5;
+#ifdef __linux__
+	off += 5;
 #endif
 	
 	*((int *)pEnt->pvPrivateData + off) = params[3];
@@ -1466,8 +1466,8 @@ static cell AMX_NATIVE_CALL get_offset_float(AMX *amx, cell *params)
 	}
 
 	edict_t *pEnt = INDEXENT(idx);
-#ifndef __linux__
-	off -= 5;
+#ifdef __linux__
+	off += 5;
 #endif
 	
    REAL fRet = (REAL)(*((REAL*)pEnt->pvPrivateData + off));
@@ -1486,8 +1486,8 @@ static cell AMX_NATIVE_CALL set_offset_float(AMX *amx, cell *params)
 	}
 
 	edict_t *pEnt = INDEXENT(idx);
-#ifndef __linux__
-	off -= 5;
+#ifdef __linux__
+	off += 5;
 #endif
 	
 	REAL fVal = amx_ctof(params[3]);
@@ -1770,6 +1770,8 @@ AMX_NATIVE_INFO ent_Natives[] = {
 	{"set_offset_char",		set_offset_char},
 	{"get_offset",			get_offset_int},
 	{"set_offset",			set_offset_int},
+	{"get_offset_int",		get_offset_int},
+	{"set_offset_int",		set_offset_int},
 	{"get_offset_float",	get_offset_float},
 	{"set_offset_float",	set_offset_float},
 	{"get_entity_pointer",	get_entity_pointer},

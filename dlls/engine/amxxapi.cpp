@@ -1,4 +1,4 @@
-#include "engine.h"
+include "engine.h"
 
 int AmxStringToEngine(AMX *amx, cell param, int &len)
 {
@@ -33,19 +33,18 @@ void OnAmxxAttach()
 
 void OnPluginsLoaded()
 {
-	pfnThinkForward = MF_RegisterForward("pfnThink", ET_STOP, FP_CELL, FP_DONE);
+	pfnThinkForward = MF_RegisterForward("pfn_think", ET_STOP, FP_CELL, FP_DONE);
 	PlayerPreThinkForward = MF_RegisterForward("client_PreThink", ET_STOP, FP_CELL, FP_DONE);
 	PlayerPostThinkForward = MF_RegisterForward("client_PostThink", ET_STOP, FP_CELL, FP_DONE);
 	ClientKillForward = MF_RegisterForward("client_kill", ET_STOP, FP_CELL, FP_DONE);
 	CmdStartForward = MF_RegisterForward("client_impulse", ET_STOP, FP_CELL, FP_CELL, FP_DONE);
 	StartFrameForward = MF_RegisterForward("ServerFrame", ET_IGNORE, FP_DONE);
-	DispatchKeyForward = MF_RegisterForward("Dispatch_KeyVal", ET_STOP, FP_CELL, FP_DONE);
+//	DispatchKeyForward = MF_RegisterForward("Dispatch_KeyVal", ET_STOP, FP_CELL, FP_DONE);
 	PlaybackForward = MF_RegisterForward("PlaybackEvent", ET_STOP, FP_CELL, FP_CELL, FP_CELL, FP_FLOAT, FP_ARRAY, FP_ARRAY, FP_FLOAT, FP_FLOAT, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 	ChangelevelForward = MF_RegisterForward("server_changelevel", ET_STOP, FP_STRING, FP_DONE);
-	SpawnForward = MF_RegisterForward("pfnSpawn", ET_IGNORE, FP_CELL, FP_DONE);
-	DispatchUseForward = MF_RegisterForward("pfnUse", ET_STOP, FP_CELL, FP_CELL, FP_DONE);
-	pfnTouchForward = MF_RegisterForward("pfnTouch", ET_STOP, FP_CELL, FP_CELL, FP_DONE);
-	MF_Log("pfnTouch Forward: %d", pfnTouchForward);
+	SpawnForward = MF_RegisterForward("pfn_spawn", ET_IGNORE, FP_CELL, FP_DONE);
+	DispatchUseForward = MF_RegisterForward("pfn_use", ET_STOP, FP_CELL, FP_CELL, FP_DONE);
+	pfnTouchForward = MF_RegisterForward("pfn_touch", ET_STOP, FP_CELL, FP_CELL, FP_DONE);
 }
 
 qboolean Voice_SetClientListening(int iReceiver, int iSender, qboolean bListen)

@@ -59,13 +59,13 @@ public:
 		iterator a = begin();
 		while( a ) a.remove();
 	}
-	bool empty() {
+	bool empty() const{
 		return (head ? false : true);
 	}
 	void put( T* a ) {	
 		head = new CListEle( a , head ); 
 	}
-	int size() {
+	int size() const{
 		CListEle *p = head;
 		int i = 0;
 		while (p)

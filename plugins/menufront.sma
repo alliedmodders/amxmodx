@@ -55,6 +55,11 @@ new g_coloredMenus
 // menuAccess: Access required for menu
 // menuPlugin: The exact case-insensitive name of plugin holding the menu command
 public AddMenu(const menuBody[], const menuCmd[], const menuAccess, const menuPlugin[]) {
+	if (g_menusNumber + 1 == MAXMENUS) {
+		log_amx("Error: Plugin ^"%s^" tried to add a menu item to Menu Front-End plugin with maximum menu items reached!", menuPlugin)
+		return
+	}
+
 	copy(g_menuBody[g_menusNumber], STRINGLENGTH, menuBody)
 	g_menuBodyPhrase[g_menusNumber] = false
 	copy(g_menuCmd[g_menusNumber], STRINGLENGTH, menuCmd)
@@ -66,6 +71,11 @@ public AddMenu(const menuBody[], const menuCmd[], const menuAccess, const menuPl
 	server_print("Menu item added to Menus Front-End: ^"%s^" from plugin ^"%s^"", menuBody, menuPlugin)
 }
 public AddMenuLang(const menuBody[], const menuCmd[], const menuAccess, const menuPlugin[]) {
+	if (g_menusNumber + 1 == MAXMENUS) {
+		log_amx("Error: Plugin ^"%s^" tried to add a menu item to Menu Front-End plugin with maximum menu items reached!", menuPlugin)
+		return
+	}
+
 	copy(g_menuBody[g_menusNumber], STRINGLENGTH, menuBody)
 	g_menuBodyPhrase[g_menusNumber] = true
 	copy(g_menuCmd[g_menusNumber], STRINGLENGTH, menuCmd)

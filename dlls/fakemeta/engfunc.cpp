@@ -11,6 +11,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	int len;
 	char *temp;
 	char *temp2;
+	char *temp3;
 	cell *cRet;
 	vec3_t	Vec1;
 	vec3_t	Vec2;
@@ -947,13 +948,13 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		return 1;
 
 	case	EngFunc_SetKeyValue:	// void )			(char *infobuffer, char *key, char *value);
-		cRet = MF_GetAmxAddr(amx,params[2]);
-		index = cRet[0];
+		temp3 = MF_GetAmxString(amx, params[2], 0, &len);
 		CHECK_ENTITY(index);
-		temp = MF_GetAmxString(amx,params[3],0,&len);
-		temp2 = MF_GetAmxString(amx,params[4],1,&len);
-		(*g_engfuncs.pfnSetKeyValue)((*g_engfuncs.pfnGetInfoKeyBuffer)(INDEXENT2(index)),temp,temp2);
+		temp = MF_GetAmxString(amx, params[3], 1, &len);
+		temp2 = MF_GetAmxString(amx, params[4], 2, &len);
+		(*g_engfuncs.pfnSetKeyValue)(temp3, temp, temp2);
 		return 1;
+
 	case	EngFunc_SetClientKeyValue:	 // void )		(int clientIndex, char *infobuffer, char *key, char *value);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];

@@ -1,0 +1,8 @@
+[en]
+THE_TIME = The time
+TIME_LEFT = Time Left
+NO_T_LIMIT = No Time Limit
+MINUTE = minute
+MINUTES = minutes
+SECOND = second
+SECONDs = seconds

@@ -1,0 +1,6 @@
+[en]
+ADMIN_TELEPORT_1 = ADMIN: teleport %s
+ADMIN_TELEPORT_2 = ADMIN %s: teleport %s
+TELE_MENU = Teleport Menu
+CUR_LOC = Current Location
+SAVE_LOC = Save Location

@@ -1,0 +1,22 @@
+[en]
+ADMIN_BAN_1 = ADMIN: ban %s
+ADMIN_BAN_2 = ADMIN %s: ban %s
+BAN_MENU = Ban Menu
+BAN_FOR_MIN = Ban for %d minutes
+BAN_PERM = Ban permanently
+ADMIN_SLAP_1 = ADMIN: slap %s with %d damage
+ADMIN_SLAP_2 = ADMIN %s: slap %s with %d damage
+ADMIN_SLAY_1 = ADMIN: slay %s
+ADMIN_SLAY_2 = ADMIN %s: slay %s
+SLAP_SLAY_MENU = Slap/Slay Menu
+SLAP_WITH_DMG = Slap with %d damage
+SLAY = Slay
+ADMIN_KICK_1 = ADMIN: kick %s
+ADMIN_KICK_2 = ADMIN %s: kick %s
+KICK_MENU = Kick Menu
+ADMIN_TRANSF_1 = ADMIN: transfer %s to %s
+ADMIN_TRANSF_2 = ADMIN %s: transfer %s to %s
+TEAM_MENU = Team Menu
+TRANSF_TO = Transfer to %s
+CL_CMD_MENU = Client Cmds Menu
+NO_CMDS = No cmds available

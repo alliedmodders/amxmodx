@@ -1,0 +1,24 @@
+[en]
+TOTAL_NUM = Total %d
+NO_OPTION = Couldn't find option(s) with such variable (name "%s")
+CONF_SAVED = Stats configuration saved successfully
+CONF_FAILED = Failed to save stats configuration!!!
+CONF_LOADED = Stats configuration loaded successfully
+CONF_FAIL_LOAD = Failed to load stats configuration!!!
+STATS_CONF = Stats Configuration
+ENTRIES_OF = Entries %i - %i of %i
+USE_MORE = Use 'amx_statscfg list %i' for more
+USE_BEGIN = Use 'amx_statscfg list 1' for begin
+CANT_ADD = Can't add stats to the list, limit reached!
+COM_USAGE = Usage:  amx_statscfg <command> [parameters] ...
+COM_COM = Commands:
+COM_ON = ^ton <variable> - enable specified option
+COM_OFF = ^toff <variable> - disable specified option
+COM_SAVE = ^tsave - save stats configuration
+COM_LOAD = ^tload - load stats configuration
+COM_LIST = ^tlist [id] - list stats status
+COM_ADD = ^tadd <name> <variable> - add stats to the list
+ON = ON
+OFF = OFF
+NO_STATS = Stats plugins are not^ninstalled on this server^n
+SAVE_CONF = Save configuration

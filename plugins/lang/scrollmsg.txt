@@ -1,0 +1,4 @@
+[en]
+MIN_FREQ = Minimal frequency for this message is %d seconds
+MSG_FREQ = Scrolling message displaying frequency: %d:%02d minutes
+MSG_DISABLED = Scrolling message disabled

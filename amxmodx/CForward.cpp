@@ -504,7 +504,11 @@ cell CForwardMngr::prepareArray(void *ptr, unsigned int size, ForwardArrayElemTy
 {
 	if (m_TmpArraysNum >= FORWARD_MAX_PARAMS)
 	{
-		AMXXLOG_Log("[AMXX] Forwards with more than 32 parameters are not supported.");
+		#ifdef MEMORY_TEST
+		m_validateAllAllocUnits();
+		#endif // MEMORY_TEST
+		AMXXLOG_Log("[AMXX] Forwards with more than 32 parameters are not supported (tried to prepare array # %d).", m_TmpArraysNum + 1);
+		m_TmpArraysNum = 0;
 		return -1;
 	}
 	m_TmpArrays[m_TmpArraysNum].ptr = ptr;

@@ -58,7 +58,7 @@ stock ENT_SetOrigin(iIndex, Float:fNewOrigin[3])
 	return entity_set_origin(iIndex, fNewOrigin)
 
 stock FindEntity(iIndex, szValue[])
-	return find_entity_by_class(iIndex, szValue)
+	return find_ent_by_class(iIndex, szValue)
 
 stock RemoveEntity(iIndex)
 	return remove_entity(iIndex)

@@ -51,7 +51,7 @@ public:
 	};
 private:
 	CListEle *head;
-	size_t cur_size;
+	int cur_size;
 public:
 	CList<T,F>() { head = 0; cur_size = 0; }
 	~CList<T,F>() {	clear(); }
@@ -64,7 +64,7 @@ public:
 		head = new CListEle( a , head ); 
 		++cur_size;
 	}
-	size_t size() {
+	int size() {
 		return cur_size;
 	}
 	class iterator {

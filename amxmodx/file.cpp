@@ -52,26 +52,49 @@
 static cell AMX_NATIVE_CALL read_dir(AMX *amx, cell *params)
 {
 #ifdef __GNUC__
-  int a;
-  struct dirent *ep;
-  DIR *dp;
-  char* dirname = build_pathname("%s",get_amxstring(amx,params[1],0,a) );
-  a = params[2];
-  if ( (dp = opendir (dirname)) == NULL )
-    return 0;
-  seekdir( dp , a );
-  if ( (ep  = readdir (dp)) != NULL )  {
-    cell *length = get_amxaddr(amx,params[5]);
-    *length = set_amxstring(amx,params[3], ep->d_name ,params[4]);
-    a = telldir( dp );
-  }
-  else
-    a = 0;
-  closedir (dp);
-  return a;
+	int a;
+	struct dirent *ep;
+	DIR *dp;
+	char* dirname = build_pathname("%s",get_amxstring(amx,params[1],0,a) );
+	a = params[2];
+	if ( (dp = opendir (dirname)) == NULL )
+		return 0;
+	seekdir( dp , a );
+	if ( (ep  = readdir (dp)) != NULL )  {
+		cell *length = get_amxaddr(amx,params[5]);
+		*length = set_amxstring(amx,params[3], ep->d_name ,params[4]);
+		a = telldir( dp );
+	}
+	else
+		a = 0;
+	closedir (dp);
+	return a;
 #else
-  return 0;
-#endif
+	int tmp;
+	char *dirname = build_pathname("%s/*", get_amxstring(amx, params[1], 0, tmp));
+	tmp = params[2];
+
+	_finddata_t fd;
+	intptr_t handle = _findfirst(dirname, &fd);
+	if (handle < 0)
+		return 0;
+
+	++tmp;
+	for (int i = 0; i < tmp; ++i)
+	{
+		if (_findnext(handle, &fd) < 0)
+		{
+			tmp = 0;
+			break;
+		}
+	}
+	// current data in fd
+	cell *length = get_amxaddr(amx,params[5]);		// pointer to the outLen parameter
+	*length = set_amxstring(amx, params[3], fd.name, params[4]);	// set output and outLen parameters
+	_findclose(handle);
+
+	return tmp;
+#endif // __GNUC__
 }
 
 static cell AMX_NATIVE_CALL read_file(AMX *amx, cell *params) /* 5 param */

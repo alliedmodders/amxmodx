@@ -34,7 +34,10 @@
 
 #include <string.h>
 #include <new>
-#include <amxxmodule.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include "amxxmodule.h"
 
 /************* METAMOD SUPPORT *************/
 #ifdef USE_METAMOD
@@ -2469,6 +2472,9 @@ PFN_AMX_ALLOT				g_fn_AmxAllot;
 PFN_AMX_FINDPUBLIC			g_fn_AmxFindPublic;
 PFN_LOAD_AMXSCRIPT			g_fn_LoadAmxScript;
 PFN_UNLOAD_AMXSCRIPT		g_fn_UnloadAmxScript;
+PFN_REAL_TO_CELL			g_fn_RealToCell;
+PFN_CELL_TO_REAL			g_fn_CellToReal;
+
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
 {
@@ -2566,6 +2572,9 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC_OPT("Reallocator", g_fn_Reallocator, PFN_REALLOCATOR);
 	REQFUNC_OPT("Deallocator", g_fn_Deallocator, PFN_DEALLOCATOR);
 
+	REQFUNC("CellToReal", g_fn_CellToReal, PFN_CELL_TO_REAL);
+	REQFUNC("RealToCell", g_fn_RealToCell, PFN_REAL_TO_CELL);
+
 #ifdef FN_AMXX_ATTACH
 	FN_AMXX_ATTACH();
 #endif // FN_AMXX_ATACH
@@ -2593,8 +2602,6 @@ C_DLLEXPORT int AMXX_PluginsLoaded()
 // Advanced MF functions
 void MF_Log(const char *fmt, ...)
 {
-	ASSERT(g_fn_Log);
-	
 	// :TODO: Overflow possible here
 	char msg[3072];
 	va_list arglst;

@@ -106,21 +106,17 @@ struct amxx_module_info_s
 
 
 
-#if defined BIT16
-  #define SMALL_CELL_SIZE 16    /* for backward compatibility */
-#endif
 #if !defined SMALL_CELL_SIZE
   #define SMALL_CELL_SIZE 32    /* by default, use 32-bit cells */
 #endif
-#if SMALL_CELL_SIZE==16
-  typedef uint16_t  ucell;
-  typedef int16_t   cell;
-#elif SMALL_CELL_SIZE==32
+#if SMALL_CELL_SIZE==32
   typedef uint32_t  ucell;
   typedef int32_t   cell;
+  typedef float		REAL;
 #elif SMALL_CELL_SIZE==64
   typedef uint64_t  ucell;
   typedef int64_t   cell;
+  typedef double	REAL;
 #else
   #error Unsupported cell size (SMALL_CELL_SIZE)
 #endif
@@ -243,32 +239,6 @@ enum {
   AMX_ERR_PARAMS,       /* parameter error */
   AMX_ERR_DOMAIN,       /* domain error, expression result does not fit in range */
 };
-
-/* for native functions that use floating point parameters, the following
- * two macros are convenient for casting a "cell" into a "float" type _without_
- * changing the bit pattern
- */
-#if SMALL_CELL_SIZE==32
-  inline cell amx_ftoc(float f)
-  {
-	  return *(cell*)&f;
-  }
-  inline float amx_ctof(cell c)
-  {
-	  return *(float*)&c;
-  }
-#elif SMALL_CELL_SIZE==64
-  inline cell amx_ftoc(double f)
-  {
-	  return *(cell*)&f;
-  }
-  inline double amx_ctof(cell c)
-  {
-	  return *(double*)&c;
-  }
-#else
-  #error Unsupported cell size
-#endif
 
 
 // ***** declare functions *****
@@ -1979,6 +1949,8 @@ typedef int				(*PFN_AMX_ALLOT)				(AMX* /*amx*/, int /*length*/, cell* /*amx_ad
 typedef int				(*PFN_AMX_FINDPUBLIC)			(AMX* /*amx*/, char* /*func name*/, int* /*index*/);
 typedef int				(*PFN_LOAD_AMXSCRIPT)			(AMX* /*amx*/, void** /*code*/, const char* /*path*/, char[64] /*error info*/);
 typedef int				(*PFN_UNLOAD_AMXSCRIPT)			(AMX* /*amx*/,void** /*code*/);
+typedef cell			(*PFN_REAL_TO_CELL)				(REAL /*x*/);
+typedef REAL			(*PFN_CELL_TO_REAL)				(cell /*x*/);
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
 extern PFN_BUILD_PATHNAME			g_fn_BuildPathname;
@@ -2019,6 +1991,14 @@ extern PFN_IS_PLAYER_CONNECTING		g_fn_IsPlayerConnecting;
 extern PFN_IS_PLAYER_HLTV			g_fn_IsPlayerHLTV;
 extern PFN_GET_PLAYER_ARMOR			g_fn_GetPlayerArmor;
 extern PFN_GET_PLAYER_HEALTH		g_fn_GetPlayerHealth;
+extern PFN_AMX_EXEC					g_fn_AmxExec;
+extern PFN_AMX_EXECV				g_fn_AmxExecv;
+extern PFN_AMX_ALLOT				g_fn_AmxAllot;
+extern PFN_AMX_FINDPUBLIC			g_fn_AmxFindPublic;
+extern PFN_LOAD_AMXSCRIPT			g_fn_LoadAmxScript;
+extern PFN_UNLOAD_AMXSCRIPT			g_fn_UnloadAmxScript;
+extern PFN_REAL_TO_CELL				g_fn_RealToCell;
+extern PFN_CELL_TO_REAL				g_fn_CellToReal;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2062,6 +2042,8 @@ int				MF_IsPlayerConnecting		(int id) { }
 int				MF_IsPlayerHLTV				(int id) { }
 int				MF_GetPlayerArmor			(int id) { }
 int				MF_GetPlayerHealth			(int id) { }
+REAL			amx_ctof					(cell x) { }
+cell			amx_ftoc					(float x) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
@@ -2109,6 +2091,8 @@ void MF_Log(const char *fmt, ...);
 #define MF_AmxAllot g_fn_AmxAllot
 #define MF_LoadAmxScript g_fn_LoadAmxScript
 #define MF_UnloadAmxScript g_fn_UnloadAmxScript
+#define amx_ctof g_fn_CellToReal
+#define amx_ftoc g_fn_RealToCell
 
 /*** Memory ***/
 void	*operator new(size_t reportedSize);

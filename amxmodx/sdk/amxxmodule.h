@@ -1925,6 +1925,8 @@ typedef int				(*PFN_REGISTER_FORWARD)			(const char * /*funcname*/, ForwardExec
 typedef int				(*PFN_EXECUTE_FORWARD)			(int /*id*/, ... /*params*/);
 typedef cell			(*PFN_PREPARE_CELLARRAY)		(cell * /*ptr*/, unsigned int /*size*/);
 typedef cell			(*PFN_PREPARE_CHARARRAY)		(char * /*ptr*/, unsigned int /*size*/);
+typedef cell			(*PFN_PREPARE_CELLARRAY_A)		(cell * /*ptr*/, unsigned int /*size*/, bool /*copyBack*/);
+typedef cell			(*PFN_PREPARE_CHARARRAY_A)		(char * /*ptr*/, unsigned int /*size*/, bool /*copyBack*/);
 typedef int				(*PFN_IS_PLAYER_VALID)			(int /*id*/);
 typedef const char *	(*PFN_GET_PLAYER_NAME)			(int /*id*/);
 typedef const char *	(*PFN_GET_PLAYER_IP)			(int /*id*/);
@@ -1994,6 +1996,8 @@ extern PFN_REGISTER_FORWARD			g_fn_RegisterForward;
 extern PFN_EXECUTE_FORWARD			g_fn_ExecuteForward;
 extern PFN_PREPARE_CELLARRAY		g_fn_PrepareCellArray;
 extern PFN_PREPARE_CHARARRAY		g_fn_PrepareCharArray;
+extern PFN_PREPARE_CELLARRAY_A		g_fn_PrepareCellArrayA;
+extern PFN_PREPARE_CHARARRAY_A		g_fn_PrepareCharArrayA;
 extern PFN_IS_PLAYER_VALID			g_fn_IsPlayerValid;
 extern PFN_GET_PLAYER_NAME			g_fn_GetPlayerName;
 extern PFN_GET_PLAYER_IP			g_fn_GetPlayerIP;
@@ -2055,6 +2059,8 @@ int				MF_RegisterForward			(const char * funcname, ForwardExecType exectype, ..
 int				MF_ExecuteForward			(int id, ...) { }
 cell			MF_PrepareCellArray			(cell * ptr, unsigned int size) { }
 cell			MF_PrepareCharArray			(char * ptr, unsigned int size) { }
+cell			MF_PrepareCellArrayA			(cell * ptr, unsigned int size, bool copyBack) { }
+cell			MF_PrepareCharArrayA			(char * ptr, unsigned int size, bool copyBack) { }
 int				MF_IsPlayerValid			(int id) { }
 const char *	MF_GetPlayerName			(int id) { }
 const char *	MF_GetPlayerIP				(int id) { }
@@ -2106,6 +2112,8 @@ void MF_Log(const char *fmt, ...);
 #define MF_ExecuteForward g_fn_ExecuteForward
 #define MF_PrepareCellArray g_fn_PrepareCellArray
 #define MF_PrepareCharArray g_fn_PrepareCharArray
+#define MF_PrepareCellArrayA g_fn_PrepareCellArrayA
+#define MF_PrepareCharArrayA g_fn_PrepareCharArrayA
 #define MF_IsPlayerValid g_fn_IsPlayerValid
 #define MF_GetPlayerName g_fn_GetPlayerName
 #define MF_GetPlayerIP g_fn_GetPlayerIP

@@ -2445,6 +2445,8 @@ PFN_REGISTER_FORWARD		g_fn_RegisterForward;
 PFN_EXECUTE_FORWARD			g_fn_ExecuteForward;
 PFN_PREPARE_CELLARRAY		g_fn_PrepareCellArray;
 PFN_PREPARE_CHARARRAY		g_fn_PrepareCharArray;
+PFN_PREPARE_CELLARRAY_A		g_fn_PrepareCellArrayA;
+PFN_PREPARE_CHARARRAY_A		g_fn_PrepareCharArrayA;
 PFN_IS_PLAYER_VALID			g_fn_IsPlayerValid;
 PFN_GET_PLAYER_NAME			g_fn_GetPlayerName;
 PFN_GET_PLAYER_IP			g_fn_GetPlayerIP;
@@ -2563,7 +2565,8 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("ExecuteForward", g_fn_ExecuteForward, PFN_EXECUTE_FORWARD);
 	REQFUNC("PrepareCellArray", g_fn_PrepareCellArray, PFN_PREPARE_CELLARRAY);
 	REQFUNC("PrepareCharArray", g_fn_PrepareCharArray, PFN_PREPARE_CHARARRAY);
-
+	REQFUNC("PrepareCellArrayA", g_fn_PrepareCellArrayA, PFN_PREPARE_CELLARRAY_A);
+	REQFUNC("PrepareCharArrayA", g_fn_PrepareCharArrayA, PFN_PREPARE_CHARARRAY_A);
 	// Player
 	REQFUNC("IsPlayerValid", g_fn_IsPlayerValid, PFN_IS_PLAYER_VALID);
 	REQFUNC("GetPlayerName", g_fn_GetPlayerName, PFN_GET_PLAYER_NAME);
@@ -2658,6 +2661,8 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_ExecuteForward(0, 0, 0);
 	MF_PrepareCellArray(NULL, 0);
 	MF_PrepareCharArray(NULL, 0);
+	MF_PrepareCellArrayA(NULL, 0, true);
+	MF_PrepareCharArrayA(NULL, 0, true);
 	MF_IsPlayerValid(0);
 	MF_GetPlayerName(0);
 	MF_GetPlayerIP(0);

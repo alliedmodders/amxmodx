@@ -121,6 +121,9 @@ public adminSql() {
       szAccess[strlen(szAccess)] = 'y'
 
     g_aAccess[ g_aNum ] = read_flags( szAccess )
+    if (!(g_aAccess[g_aNum] & ADMIN_USER) && !(g_aAccess[g_aNum] & ADMIN_ADMIN))
+      g_aAccess[g_aNum] |= ADMIN_ADMIN
+
     g_aFlags[ g_aNum ] = read_flags( szFlags )
     ++g_aNum
   }

@@ -592,13 +592,13 @@ public cmdWho(id,level,cid) {
   console_print(id,"^n%s:^n #  %-16.15s %-20s %-8s %-4.3s %-4.3s %s",
     cl_on_server,"nick","authid","userid",lImm,lRes,lAccess)
   for (new a = 0; a < inum; ++a) {
-      get_user_authid(players[a],authid,31)
-      get_user_name(players[a],name,31)
-      flags = get_user_flags(players[a])
-      get_flags(flags,sflags,31)
-      console_print(id,"%2d  %-16.15s %-20s %-8d %-4.3s %-4.3s %s", players[a],name,authid,
-      get_user_userid(players[a]),(flags&ADMIN_IMMUNITY)?lYes:lNo,
-      (flags&ADMIN_RESERVATION)?lYes:lNo,sflags)
+    get_user_authid(players[a],authid,31)
+    get_user_name(players[a],name,31)
+    flags = get_user_flags(players[a])
+    get_flags(flags,sflags,31)
+    console_print(id,"%2d  %-16.15s %-20s %-8d %-6.5s %-6.5s %s", players[a],name,authid,
+    get_user_userid(players[a]),(flags&ADMIN_IMMUNITY)?lYes:lNo,
+    (flags&ADMIN_RESERVATION)?lYes:lNo,sflags)
   }
   console_print(id,"%L",id,"TOTAL_NUM",inum)
   get_user_authid(id,authid,31)

@@ -193,7 +193,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_id(AMX *amx, cell *params) // cs_get_
 	// params[1] = hostage entity index
 
 	// Valid entity should be within range
-	if (!MF_IsPlayerIngame(params[1]))
+	if (params[1] <= gpGlobals->maxClients || params[1] > gpGlobals->maxEntities)
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -224,7 +224,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_silenced(AMX *amx, cell *params) // cs
 	// params[1] = weapon index
 
 	// Valid entity should be within range
-	if (!MF_IsPlayerIngame(params[1]))
+	if (params[1] <= gpGlobals->maxClients || params[1] > gpGlobals->maxEntities)
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -261,7 +261,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_silenced(AMX *amx, cell *params) // cs
 	// params[2] = 1, and we silence the gun, 0 and we unsilence gun.
 
 	// Valid entity should be within range
-	if (!MF_IsPlayerIngame(params[1]))
+	if (params[1] <= gpGlobals->maxClients || params[1] > gpGlobals->maxEntities)
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -325,7 +325,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_burstmode(AMX *amx, cell *params) // c
 	// params[1] = weapon index
 
 	// Valid entity should be within range
-	if (!MF_IsPlayerIngame(params[1]))
+	if (params[1] <= gpGlobals->maxClients || params[1] > gpGlobals->maxEntities)
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -362,7 +362,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_burstmode(AMX *amx, cell *params) // c
 	// params[2] = 1, and we set burstmode, 0 and we unset it.
 
 	// Valid entity should be within range
-	if (!MF_IsPlayerIngame(params[1]))
+	if (params[1] <= gpGlobals->maxClients || params[1] > gpGlobals->maxEntities)
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -1165,7 +1165,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_follow(AMX *amx, cell *params) // cs_
 	// params[1] = hostage index
 
 	// Valid index should be within range
-	if (!MF_IsPlayerIngame(params[1]))
+	if (params[1] <= gpGlobals->maxClients || params[1] > gpGlobals->maxEntities)
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -1209,7 +1209,7 @@ static cell AMX_NATIVE_CALL cs_set_hostage_follow(AMX *amx, cell *params) // cs_
 	// params[2] = index to follow, if -1 then set hostage to not follow anything
 
 	// Valid index should be within range
-	if (!MF_IsPlayerIngame(params[1]))
+	if (params[1] <= gpGlobals->maxClients || params[1] > gpGlobals->maxEntities)
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -1262,7 +1262,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_ammo(AMX *amx, cell *params) // cs_get
 	// params[1] = weapon index
 
 	// Valid entity should be within range
-	if (!MF_IsPlayerIngame(params[1]))
+	if (params[1] <= gpGlobals->maxClients || params[1] > gpGlobals->maxEntities)
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
@@ -1287,7 +1287,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_ammo(AMX *amx, cell *params) // cs_set
 	// params[2] = newammo
 
 	// Valid entity should be within range
-	if (!MF_IsPlayerIngame(params[1]))
+	if (params[1] <= gpGlobals->maxClients || params[1] > gpGlobals->maxEntities)
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;

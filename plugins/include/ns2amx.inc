@@ -11,8 +11,7 @@
 #define _ns2amx_included
 
 #include <engine>
-#include <ns2amxx>
-#include <ns2amxx_const>
+#include <ns>
 
 stock is_entity(id)
 {

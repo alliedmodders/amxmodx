@@ -106,12 +106,20 @@ SOURCE=.\engine.h
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # Begin Source File
 
-SOURCE=.\engine.inc
-# End Source File
-# Begin Source File
-
 SOURCE=.\engine_amx.def
 # End Source File
 # End Group
+# Begin Source File
+
+SOURCE=..\plugins\include\engine.inc
+# End Source File
+# Begin Source File
+
+SOURCE=..\plugins\include\engine_const.inc
+# End Source File
+# Begin Source File
+
+SOURCE=..\plugins\include\engine_stocks.inc
+# End Source File
 # End Target
 # End Project

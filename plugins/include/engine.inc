@@ -210,7 +210,7 @@ forward client_PostThink(id);
 forward client_impulse(id, impulse);
 
 //from jghg2
-/* As above, but returns number of ents stored in entlist. Use to find a specific type of entity classname (specify in _lookforclassname) around a
+/* Returns number of ents stored in entlist. Use to find a specific type of entity classname (specify in _lookforclassname) around a
  * certain entity specified in aroundent. All matching ents are stored in entlist. Specify max amount of entities to find in maxents.
  * If aroundent is 0 its origin is not used, but origin in 6th parameter. Ie, do not specify 6th parameter (origin) if you specified an entity
  * in aroundent.

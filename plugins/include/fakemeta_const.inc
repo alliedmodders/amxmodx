@@ -1,10 +1,10 @@
 /* Fake meta constants
  * This file is provided as-is (no warrenties)
  */
-#if defined _fakemeta_included
+#if defined _fakemeta_const_included
   #endinput
 #endif
-#define _fakemeta_included
+#define _fakemeta_const_included
 
 // For forward_return
 #define	FMV_STRING		1

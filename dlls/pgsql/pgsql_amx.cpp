@@ -138,7 +138,7 @@ int SQL::Query(const char *query)
 	}
 }
 
-SQLResult::Query(SQL *cn, const char *query)
+int SQLResult::Query(SQL *cn, const char *query)
 {
 	res = PQexec(cn->cn, query);
 	row = -1;

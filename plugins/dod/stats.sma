@@ -461,7 +461,7 @@ public round_end(){
 
   if ( !EndRoundStats ) return PLUGIN_CONTINUE
 
-  new g_Buffer2[511], len, players[32], pnum, stats[9],bodyhits[8]
+  new g_Buffer2[1024], len, players[32], pnum, stats[9],bodyhits[8]
   get_players( players , pnum ) 
 
 
@@ -473,7 +473,6 @@ public round_end(){
      if ( stats[7] > score ){
         who1 = players[i]
         score = stats[7]
-
      }  
   }
   for(new i = 0; i < pnum; ++i){
@@ -506,11 +505,11 @@ public round_end(){
 
   get_players(players,pnum,"c")
   for (new i=0;i<pnum;i++) {
-     len += format(g_Buffer2[len] , 511 - len ,
+     len += format(g_Buffer2[len] , 1023 - len ,
      "%L: %s^n%d %L^n",players[i],"BEST_SCORE", name1 , score,players[i],"POINTS" )
-     len += format(g_Buffer2[len] , 511 - len ,
+     len += format(g_Buffer2[len] , 1023 - len ,
      "%L: %s^n%d %L / %d %L^n",players[i],"MOST_KILLS",name2,kills,players[i],(kills == 1) ? "KILL":"KILLS",hs,players[i],(hs == 1) ? "HEADSHOT":"HEADSHOTS" )
-     len += format(g_Buffer2[len] , 511 - len ,
+     len += format(g_Buffer2[len] , 1023 - len ,
      "%L: %s^n%d %L / %d %L^n",players[i],"MOST_DAMAGE",name3 , damage,players[i],"DAMAGE",hits,players[i],(hits == 1) ? "HIT": "HITS" )
      set_hudmessage(100,200,0,0.02,0.40,2, 0.01, 5.0, 0.01, 0.01, 3 )
      show_hudmessage( players[i] , g_Buffer2 )

@@ -323,8 +323,59 @@ static cell AMX_NATIVE_CALL ns_giveitem(AMX *amx, cell *params)
 
 	return 1;
 }
+static cell AMX_NATIVE_CALL ns_user_kill(AMX *amx, cell *params)
+{
+	int index = params[1];
+	if (index<1||index>gpGlobals->maxClients)
+		return 0;
+
+	edict_t *e=INDEXENT2(index);
+	if (e->v.iuser3 == 2 /* Commander class*/)
+		return 0;
+
+	if (MF_IsPlayerIngame(index) && MF_IsPlayerAlive(index))
+	{
+		float bef = e->v.frags;
+		edict_t *pEntity = CREATE_NAMED_ENTITY(MAKE_STRING("trigger_hurt"));
+		if (pEntity)
+		{
+			KeyValueData kvd;
+			kvd.szClassName="trigger_hurt";
+			kvd.szKeyName="classname";
+			kvd.szValue="trigger_hurt";
+			kvd.fHandled=0;
+			MDLL_KeyValue(pEntity,&kvd);
+			kvd.szClassName="trigger_hurt";
+			kvd.szKeyName="dmg";
+			kvd.szValue="20000.0";
+			kvd.fHandled=0;
+			MDLL_KeyValue(pEntity,&kvd);
+			kvd.szClassName="trigger_hurt";
+			kvd.szKeyName="damagetype";
+			kvd.szValue="1";
+			kvd.fHandled=0;
+			MDLL_KeyValue(pEntity,&kvd);
+			kvd.szClassName="trigger_hurt";
+			kvd.szKeyName="origin";
+			kvd.szValue="8192 8192 8192";
+			kvd.fHandled=0;
+			MDLL_KeyValue(pEntity,&kvd);
+			MDLL_Spawn(pEntity);
+			pEntity->v.classname=MAKE_STRING("slay");
+			MDLL_Touch(pEntity,e);
+			REMOVE_ENTITY(pEntity);
+		}
+		if (params[2]) e->v.frags = bef;
+		return 1;
+	}
+
+  return 0;
+}
 AMX_NATIVE_INFO ns_misc_natives[] = {
 	   ///////////////////
+	{ "user_kill",				ns_user_kill },
+
+
 	{ "ns_get_build",			ns_get_build },
 
 	{ "ns_set_player_model",	ns_set_player_model },

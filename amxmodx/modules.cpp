@@ -29,6 +29,9 @@
 *  version.
 */
 
+#ifdef __linux__
+#include <sys/mman.h>
+#endif
 #include "amxmodx.h"
 #include "osdep.h"			// sleep, etc
 #include "CFile.h"
@@ -174,10 +177,16 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 		return (amx->error = AMX_ERR_INIT);
 	}
 
-	if (amx_InitJIT(amx, rt, np) == AMX_ERR_NONE) 
+	if ( (err = amx_InitJIT(amx, rt, np)) == AMX_ERR_NONE ) 
 	{
+		void *blk;
 		//amx->base = (unsigned char FAR *)realloc( np, amx->code_size );
+#ifndef __linux__
 		amx->base = new unsigned char[ amx->code_size ];
+#else
+		posix_memalign((void **)&(amx->base), sysconf(_SC_PAGESIZE), amx->code_size);
+		mprotect((void *)amx->base, amx->code_size, PROT_READ|PROT_WRITE|PROT_EXEC);
+#endif
 		if ( amx->base )
 			memcpy( amx->base , np , amx->code_size );
 		delete[] np;
@@ -193,7 +202,7 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 	{
 		delete[] np;
 		delete[] rt;
-		strcpy(error,"Failed to initialize plugin");
+		sprintf(error, "Failed to initialize plugin (%d)", err);
 		return (amx->error = AMX_ERR_INIT_JIT);
 	}
 

@@ -85,7 +85,7 @@ public cmdCancelVote(id,level,cid) {
       }
     }
     console_print(id, "%L", id, "VOTING_CANC" )
-    client_print(0,print_chat,"%L",LANG_PALYER,"VOTING_CANC")
+    client_print(0,print_chat,"%L",LANG_PLAYER,"VOTING_CANC")
     remove_task( 99889988 , 1 )
     set_cvar_float( "amx_last_voting" , get_gametime()  )    
   }
@@ -99,8 +99,8 @@ public delayedExec(cmd[])
   server_cmd(cmd)
 
 public autoRefuse() {
-  log_amx("Vote: %s" , "Result refused")
-  client_print(0,print_chat,g_resultRef )
+  log_amx("Vote: %L","en","RES_REF")
+  client_print(0,print_chat,"%L",LANG_PLAYER,"RES_REF")
 }
 
 public actionResult(id,key) {
@@ -129,16 +129,17 @@ public checkVotes() {
   new players[32],pnum,i
   get_players(players,pnum,"c")
   if ( iResult < iRatio ) {
-    new lVotingFailed[32]
+    new lVotingFailed[64]
     for (i=0;i<pnum;i++) {
-      format(lVotingFailed,31,"%L",players[i],"VOTING_FAILED")
+      format(lVotingFailed,63,"%L",players[i],"VOTING_FAILED")
       if (g_yesNoVote)
         client_print(0,print_chat,"%L",players[i],"VOTING_RES_1",
           lVotingFailed,g_voteCount[0],g_voteCount[1],iRatio)
       else
         client_print(0,print_chat,"%L",players[i],"VOTING_RES_2",lVotingFailed,iResult,iRatio )
     }
-    log_amx("Vote: %s (got ^"%d^") (needed ^"%d^")",g_votingFailed,iResult,iRatio)  
+    format(lVotingFailed,63,"%L","en","VOTING_FAILED")
+    log_amx("Vote: %s (got ^"%d^") (needed ^"%d^")",lVotingFailed,iResult,iRatio)  
     return PLUGIN_CONTINUE
   }
   g_execLen = format(g_Execute,255,g_Answer,g_optionName[best]) + 1
@@ -152,7 +153,7 @@ public checkVotes() {
       ucfirst(lYes)
       ucfirst(lNo)
       new len = format(menuBody,511,g_coloredMenus ? "\y%s: \w%s^n^n" : "%s: %s^n^n", lTheResult, g_Execute )
-      len += copy( menuBody[len] ,511 - len, g_coloredMenus ? "\y%L^n\w" : "%L^n", g_voteCaller, "WANT_CONTINUE" )
+      len += format( menuBody[len] ,511 - len, g_coloredMenus ? "\y%L^n\w" : "%L^n", g_voteCaller, "WANT_CONTINUE" )
       format( menuBody[len] ,511 - len, "^n1. %s^n2. %s",lYes,lNo)
       show_menu( g_voteCaller ,0x03 ,menuBody, 10, "The result: " )
       set_task(10.0,"autoRefuse",4545454)
@@ -163,9 +164,10 @@ public checkVotes() {
   new lVotingSuccess[32]
   for (i=0;i<pnum;i++) {
     format(lVotingSuccess,31,"%L",players[i],"VOTING_SUCCESS")
-    ient_print(0,print_chat,"%L",players[i],"VOTING_RES_3",lVotingSuccess,iResult,iRatio,g_Execute) 
+    client_print(0,print_chat,"%L",players[i],"VOTING_RES_3",lVotingSuccess,iResult,iRatio,g_Execute) 
   }
-  log_amx("Vote: %s (got ^"%d^") (needed ^"%d^") (result ^"%s^")", g_votingSuccess, iResult , iRatio , g_Execute )
+  format(lVotingSuccess,31,"%L","en","VOTING_SUCCESS")
+  log_amx("Vote: %s (got ^"%d^") (needed ^"%d^") (result ^"%s^")", lVotingSuccess, iResult , iRatio , g_Execute )
   return PLUGIN_CONTINUE
 } 
 
@@ -216,7 +218,7 @@ public cmdVoteMap(id,level,cid) {
   new keys = 0  
   if (g_validMaps > 1) {
     keys = MENU_KEY_0
-    copy(menu_msg,255,g_coloredMenus ? "\y%L: \w^n^n" : "%L: ^n^n",LANG_SERVER,"CHOOSE_MAP") 
+    format(menu_msg,255,g_coloredMenus ? "\y%L: \w^n^n" : "%L: ^n^n",LANG_SERVER,"CHOOSE_MAP") 
     new temp[128] 
     for(new a = 0; a < g_validMaps; ++a){ 
       format(temp,127,"%d.  %s^n",a+1,g_optionName[a]) 
@@ -310,7 +312,7 @@ public cmdVote(id,level,cid) {
     new players[32],pnum,lTag[16]
     get_players(players,pnum,"c")
     for (new i=0;i<pnum;i++) {
-      format(lTag,"%L",players[i],is_user_admin(id)?"ADMIN":"PLAYER")
+      format(lTag,15,"%L",players[i],is_user_admin(id)?"ADMIN":"PLAYER")
       strtoupper(lTag)
       switch (activity) {
         case 2: client_print(players[i],print_chat,"%L","ADMIN_VOTE_CUS_2",lTag,name)
@@ -387,14 +389,14 @@ public cmdVoteKickBan(id,level,cid) {
   get_user_name(id,name,31) 
   log_amx("Vote: ^"%s<%d><%s><>^" vote %s (target ^"%s^")", 
     name,get_user_userid(id),authid,voteban ? "ban" : "kick",arg)
-  
+
   new activity = get_cvar_num("amx_show_activity")
   if (activity>0) {
     new players[32],pnum,lTag[16]
     get_players(players,pnum,"c")
     for (new i=0;i<pnum;i++) {
-      format(lTag,15,"%L",players[i],is_user_admin(id)?"ADMIN":"USER"
-      format(lKickBan,"%L",players[i],voteban?"BAN":"KICK")
+      format(lTag,15,"%L",players[i],is_user_admin(id)?"ADMIN":"USER")
+      format(lKickBan,15,"%L",players[i],voteban?"BAN":"KICK")
       switch (activity) {
         case 2: client_print(players[i],print_chat,"%L",
           players[i],"ADMIN_VOTE_FOR_2",lTag,name,lKickBan,arg)

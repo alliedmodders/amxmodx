@@ -482,6 +482,61 @@ char* format_arguments(AMX *amx, int parm,int& len)
   return *buffer;
 }
 
+//added by BAILOPAN
+//Takes a string and breaks it into a 1st param and rest params
+//strbreak(String[], First[], FirstLen, Rest[], RestLen)
+static cell AMX_NATIVE_CALL strbreak(AMX *amx, cell *params)	/* 5 param */
+{
+	bool quote_flag = false;
+	bool done_flag = false;
+	int left_pos = 0;
+	int right_pos = 0;
+	int l=0;
+	unsigned int i=0;
+	char hold = '"';
+
+	char *string = get_amxstring(amx, params[1], 0, l);
+	char *left = new char[strlen(string)+1];
+	char *right = new char[strlen(string)+1];
+	int LeftMax = params[3];
+	int RightMax = params[5];
+
+	for (i=0; i<strlen(string); i++) {
+		if (string[i] == '"') {
+			quote_flag = true;
+		} else if (string[i] == '"' && quote_flag) {
+			quote_flag = false;
+		}
+		if ((string[i] == ' ') && !quote_flag && !done_flag) {
+			done_flag = true;
+			i++;
+		}
+		if (!done_flag && string[i]!='"') {
+			if (left_pos < LeftMax) {
+				left[left_pos] = string[i];
+				if (left[left_pos] = '\'') {
+					left[left_pos] = hold;
+				}
+				left_pos++;
+			}
+		} else {
+			if (right_pos < RightMax && string[i]!='"') {
+				right[right_pos] = string[i];
+				if (right[right_pos] == '\'') {
+					right[right_pos] = hold;
+				}
+				right_pos++;
+			}
+		}
+	}
+	left[left_pos] = '\0';
+	right[right_pos] = '\0';
+	set_amxstring(amx, params[2], left, params[3]);
+	set_amxstring(amx, params[4], right, params[5]);
+
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL format_args(AMX *amx, cell *params)
 {
   int len;
@@ -532,6 +587,7 @@ AMX_NATIVE_INFO string_Natives[] = {
   { "parse",    parse },
   { "replace",  replace },
   { "setc",   setc },
+  { "strbreak", strbreak},
   { "strtolower", strtolower },
   { "strtoupper", strtoupper },
   { "str_to_num", strtonum },

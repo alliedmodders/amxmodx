@@ -66,6 +66,16 @@ native setc(src[],len,ch);
 * Function returns number of parsed parameters. */
 native parse(const text[], ... );
 
+/* Gets parameters from text one at a time
+   It breaks a string into the first parameter and the rest of the parameters
+   (A left side and right side of the string)
+   Example: to split text: "^"This is^" the best year",
+   split(text, arg1, len1, arg2, len2)
+   arg1="^"This is^"", arg2="the best year"
+   This more useful than parse() because you can keep breaking
+   any number of arguments */
+native strbreak(const text[], Left[], leftLen, Right[], rightLen);
+
 /* Converts all chars in string to lower case. */
 native strtolower(string[]);
 

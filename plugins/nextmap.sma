@@ -76,7 +76,7 @@ getNextMapName(szArg[],iMax) {
 public sayNextMap() {
   new name[32]
   getNextMapName(name,31)
-  client_print(0,print_chat,"Next Map:  %s",name)
+  client_print(0,print_chat,"%L %s",LANG_PLAYER,"NEXT_MAP",name)
 }
 
 public delayedChange( param[] ) {

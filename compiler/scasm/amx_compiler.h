@@ -43,6 +43,7 @@
 class rpn
 {
 public:
+	~rpn();
 	//TODO: use linked lists, but not std::list
 	std::vector<char> ops;
 	std::vector<CExpr> vals;
@@ -56,7 +57,7 @@ public:
 	Compiler(std::string &f);
 	void Load(std::string &f);
 	bool Parse();
-	bool Compile();
+	bool Compile(std::string &out);
 	int CurLine() { return curLine; }
 	ErrorMngr *ErrorHandler() { return CError; }
 	void PrintCodeList();

@@ -133,18 +133,10 @@ class Touch
 {
 public:
 	int Forward;
-	char *Toucher;
-	char *Touched;
+	String Toucher;
+	String Touched;
 	~Touch()
 	{
-		if (Toucher) {
-			delete [] Toucher;
-			Toucher = 0;
-		}
-		if (Touched) {
-			delete [] Touched;
-			Touched = 0;
-		}
 		if (Forward != -1)
 			MF_UnregisterSPForward(Forward);
 	}
@@ -154,13 +146,11 @@ class EntClass
 {
 public:
 	int Forward;
-	char *Class;
+	String Class;
 	~EntClass()
 	{
-		if (Class) {
-			delete [] Class;
-			Class = 0;
-		}
+		if (Forward != -1)
+			MF_UnregisterSPForward(Forward);
 	}
 };
 

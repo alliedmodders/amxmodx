@@ -229,31 +229,31 @@ void pfnTouch(edict_t *pToucher, edict_t *pTouched)
 	META_RES res=MRES_IGNORED;
 	for (i=0; i<Touches.size(); i++)
 	{
-		if (Touches[i]->Toucher == 0)
+		if (Touches[i]->Toucher.size() == 0)
 		{
-			if (Touches[i]->Touched == 0)
+			if (Touches[i]->Touched.size() == 0)
 			{
 				retVal = MF_ExecuteForward(Touches[i]->Forward, ENTINDEX(pToucher), ENTINDEX(pTouched));
 				if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
 					RETURN_META(MRES_SUPERCEDE);
 				else if (retVal)
 					res=MRES_SUPERCEDE;
-			} else if (fstrcmp(Touches[i]->Touched, ptdClass)) {
+			} else if (Touches[i]->Touched.compare(ptdClass)==0) {
 				retVal = MF_ExecuteForward(Touches[i]->Forward, ENTINDEX(pToucher), ENTINDEX(pTouched));
 				if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
 					RETURN_META(MRES_SUPERCEDE);
 				else if (retVal)
 					res=MRES_SUPERCEDE;
 			}
-		} else if (fstrcmp(Touches[i]->Toucher, ptrClass)) {
-			if (Touches[i]->Touched == 0)
+		} else if (Touches[i]->Toucher.compare(ptrClass)==0) {
+			if (Touches[i]->Touched.size() == 0)
 			{
 				retVal = MF_ExecuteForward(Touches[i]->Forward, ENTINDEX(pToucher), ENTINDEX(pTouched));
 				if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
 					RETURN_META(MRES_SUPERCEDE);
 				else if (retVal)
 					res=MRES_SUPERCEDE;
-			} else if (fstrcmp(Touches[i]->Touched, ptdClass)) {
+			} else if (Touches[i]->Touched.compare(ptdClass)==0) {
 				retVal = MF_ExecuteForward(Touches[i]->Forward, ENTINDEX(pToucher), ENTINDEX(pTouched));
 				if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
 					RETURN_META(MRES_SUPERCEDE);
@@ -285,7 +285,7 @@ void Think(edict_t *pent)
 	int retVal=0;
 	for (i=0; i<Thinks.size(); i++)
 	{
-		if (fstrcmp(cls, Thinks[i]->Class))
+		if (Thinks[i]->Class.compare(cls)==0)
 		{
 			retVal=MF_ExecuteForward(Thinks[i]->Forward, ENTINDEX(pent));
 			if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)

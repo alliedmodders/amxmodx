@@ -28,41 +28,40 @@ native dbi_connect(_host[], _user[], _pass[], _dbname[], _error[]="", _maxlength
  * If it fails, it will return a number BELOW ZERO (0)
  * If zero, it succeeded with NO RETURN RESULT.
  * If greater than zero, make sure to call dbi_free_result() on it!
+ *  The return is a handle to the result set
  */
 native dbi_query(_sql, _query[], {Float,_}:...);
 
 /* Returns 0 on failure or End of Results.
  * Advances result pointer by one row.
  */
-native dbi_nextrow(_sql, _result=1);
+native dbi_nextrow(_result=1);
 
 /* Gets a field by number.  Returns 0 on failure.
  * Although internally fields always start from 0, 
  * This function takes fieldnum starting from 1.
+ * No extra params: returns int
+ * One extra param: returns Float: byref
+ * Two extra param: Stores string with length
  */
-native dbi_field(_sql, _result, _fieldnum, _dest[], _maxlen);
+native dbi_field(_result, _fieldnum, {Float,_}:... );
 
-/* Returns a field by number, as a number.
- */
-native dbi_field_num(_sql, _result, _fieldnum);
-
-/* Gets a field by name.  Returns 0 on failure.
+/* Gets a field by number.  Returns 0 on failure.
  * Although internally fields always start from 0, 
  * This function takes fieldnum starting from 1.
+ * No extra params: returns int
+ * One extra param: returns Float: byref
+ * Two extra param: Stores string with length
  */
-native dbi_result(_sql, _result, _fieldnum, _dest[], _maxlen);
-
-/* Returns a field by name, as a number.
- */
-native dbi_result_num(_sql, _result, _fieldnum);
+native dbi_result(_result, _field[], {Float,_}:... );
 
 /* Returns the number of rows returned from a query
  */
-native dbi_num_rows(_sql, _result);
+native dbi_num_rows(_result);
 
 /* Frees memory used by a result handle.  Do this or get memory leaks.
  */
-native dbi_free_result(_sql, _result);
+native dbi_free_result(_result);
 
 /* Closes a database handle.  Internally, it will also 
  * mark the handle as free, so this particular handle may

@@ -827,8 +827,6 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 					outptr += strlen(outptr);
 				} else {
 					*outptr++ = '%';
-					*outptr++ = '%';
-					++src;
 				}
 			}
 			curState = S_Normal;

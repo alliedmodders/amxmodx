@@ -1832,21 +1832,18 @@ static cell AMX_NATIVE_CALL create_entity(AMX *amx, cell *params) {
 //ej ref'd by jghg
 static cell AMX_NATIVE_CALL find_entity(AMX *amx, cell *params) /* 3 param */
 {
-	edict_t *pSearch_after_ent = INDEXENT(params[1]);
-
-	char* sCatagory = NULL;
+	edict_t *pEnt = INDEXENT(params[1]);
 
 	int len;
-	char* sValue = GET_AMXSTRING(amx, params[3], 1, len);
+	char* sValue = GET_AMXSTRING(amx, params[2], 1, len);
 
-	edict_t *pEnt = FIND_ENTITY_BY_STRING(pSearch_after_ent, "classname", sValue);
-
+	pEnt = FIND_ENTITY_BY_STRING(pEnt, "classname", sValue);
 
 	if(pEnt) // This even needed?
 		return ENTINDEX(pEnt);
 	else
 		return 0;
-} 
+}
 
 
 // DispatchKeyValue, sets a key-value pair for a newly created entity.

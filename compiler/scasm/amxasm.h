@@ -220,5 +220,6 @@ void get_options(int argc, char **argv, Compiler &Prog);
 void InitOpcodes();
 void DestroyArgList(std::vector<std::string *> &List);
 void print_version();
+void print_options();
 
 #endif //_INCLUDE_AMXASM_H

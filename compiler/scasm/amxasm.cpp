@@ -23,6 +23,7 @@
 #include "amxasm.h"
 
 std::string filename;
+std::string output_name;
 
 int main(int argc, char **argv)
 {
@@ -33,13 +34,15 @@ int main(int argc, char **argv)
 	if (filename.size() < 1)
 	{
 		print_version();
+		print_options();
 		exit(0);
 	}
 
 	Program.Load(filename);
 	if (Program.Parse())
 	{
-		if (Program.Compile())
+
+		if (Program.Compile(output_name.size() ? output_name : filename))
 			printf("Done.\n");
 		else
 			printf("Compile build failed.\n");
@@ -53,8 +56,9 @@ int main(int argc, char **argv)
 void get_options(int argc, char **argv, Compiler &Prog)
 {
 	int i = 0;			/* index */
-	int opt_flag = 0;	/* flag for option detection */
+	char opt_flag = 0;	/* flag for option detection */
 	char *option = 0;	/* option pointer */
+	char c = 0;			/* option marker */
 	for (i=1; i<argc; i++)
 	{
 		if (argv[i][0] == '-')
@@ -63,10 +67,21 @@ void get_options(int argc, char **argv, Compiler &Prog)
 			option = argv[i];
 			switch (argv[i][1])
 			{
+			case 'o':
+				{
+					if (strlen(argv[i]) > 2)
+					{
+						output_name.assign(&(argv[i][2]));
+					} else {
+						opt_flag = 'o';
+					}
+					break;
+				}
 			case 'v':
 				{
 					opt_flag = 0;	/* no options expected */
 					print_version();
+					exit(0);
 					break;
 				} /* case */
 			case 'd':
@@ -81,7 +96,14 @@ void get_options(int argc, char **argv, Compiler &Prog)
 			{
 				filename.assign(argv[i]);
 			} else {
-				/* TODO */
+				switch (opt_flag)
+				{
+				case 'o':
+					{
+						output_name.assign(argv[i]);
+						break;
+					}
+				}
 			}
 		} /* if */
 	}
@@ -91,5 +113,13 @@ void print_version()
 {
 	printf("Small/AMX Assembler 1.00\n");
 	printf("(C)2004 David 'BAILOPAN' Anderson\n");
-	exit(0);
+}
+
+void print_options()
+{
+	printf("\nOptions:\n");
+	printf("\t-d\t\t- Add debug opcodes (will double file size)\n");
+	printf("\t-v\t\t- Output version and exit\n");
+	printf("\t-o\t\t- Specify file to write\n");
+	printf("\n");
 }

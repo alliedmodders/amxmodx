@@ -111,7 +111,7 @@ int Compiler::CipCount()
 	return cipc;
 }
 
-bool Compiler::Compile()
+bool Compiler::Compile(std::string &out)
 {
 	if (CodeList.size() < 1 || !CError || CError->GetStatus() >= Err_Error)
 	{
@@ -204,7 +204,7 @@ bool Compiler::Compile()
 	fileSize = hea;
 
 	std::string amxname;
-	amxname.assign(filename);
+	amxname.assign(out);
 	int pos = (int)amxname.find(".asm");
 	if (pos != std::string::npos)
 	{

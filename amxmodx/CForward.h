@@ -92,7 +92,7 @@ class CForward
 		CPluginMngr::CPlugin *pPlugin;
 		int func;
 	};
-	typedef CList<AMXForward> AMXForwardList;
+	typedef CVector<AMXForward*> AMXForwardList;
 	AMXForwardList m_Funcs;
 	ForwardParam m_ParamTypes[FORWARD_MAX_PARAMS];
 public:

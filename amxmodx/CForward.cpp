@@ -31,7 +31,6 @@
 
 #include "amxmodx.h"
 
-
 CForward::CForward(const char *name, ForwardExecType et, int numParams, const ForwardParam *paramTypes)
 {
 	m_FuncName = name;
@@ -41,6 +40,7 @@ CForward::CForward(const char *name, ForwardExecType et, int numParams, const Fo
 	// find funcs
 	int func;
 	AMXForward *tmp = NULL;
+	m_Funcs.clear();
 	for (CPluginMngr::iterator iter = g_plugins.begin(); iter; ++iter)
 	{
 		if ((*iter).isValid() && amx_FindPublic((*iter).getAMX(), name, &func) == AMX_ERR_NONE)
@@ -50,7 +50,7 @@ CForward::CForward(const char *name, ForwardExecType et, int numParams, const Fo
 				return;			// :TODO: Better error report!!!
 			tmp->pPlugin = &(*iter);
 			tmp->func = func;
-			m_Funcs.put(tmp);
+			m_Funcs.push_back(tmp);
 		}
 	}
 }
@@ -64,9 +64,13 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 
 	cell globRetVal = 0;
 
-	for (CList<AMXForward>::iterator iter = m_Funcs.begin(); iter; ++iter)
+	unsigned int id = 0;
+
+	CVector<AMXForward *>::iterator iter;
+
+	for (iter = m_Funcs.begin(); iter != m_Funcs.end(); iter++)
 	{
-		if ((*iter).pPlugin->isExecutable((*iter).func))
+		if ((*iter)->pPlugin->isExecutable((*iter)->func))
 		{
 			// handle strings & arrays
 			int i;
@@ -75,7 +79,7 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 				if (m_ParamTypes[i] == FP_STRING || m_ParamTypes[i] == FP_STRINGEX)
 				{
 					cell *tmp;
-					amx_Allot((*iter).pPlugin->getAMX(),
+					amx_Allot((*iter)->pPlugin->getAMX(),
 						(m_ParamTypes[i] == FP_STRING) ? strlen(reinterpret_cast<const char*>(params[i]))+1 : STRINGEX_MAXLENGTH,
 						&realParams[i], &tmp);
 					amx_SetString(tmp, (const char *)(params[i]), 0, 0);
@@ -84,7 +88,7 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 				else if (m_ParamTypes[i] == FP_ARRAY)
 				{
 					cell *tmp;
-					amx_Allot((*iter).pPlugin->getAMX(), preparedArrays[params[i]].size,
+					amx_Allot((*iter)->pPlugin->getAMX(), preparedArrays[params[i]].size,
 						&realParams[i], &tmp);
 					physAddrs[i] = tmp;
 					if (preparedArrays[params[i]].type == Type_Cell)
@@ -105,23 +109,23 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 			}
 			// exec
 			cell retVal;
-			int err = amx_Execv((*iter).pPlugin->getAMX(), &retVal, (*iter).func, m_NumParams, realParams);
+			int err = amx_Execv((*iter)->pPlugin->getAMX(), &retVal, (*iter)->func, m_NumParams, realParams);
 			// log runtime error, if any
 			if (err != AMX_ERR_NONE)
-				AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")", err, (*iter).pPlugin->getAMX()->curline, (*iter).pPlugin->getName());
+				AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")", err, (*iter)->pPlugin->getAMX()->curline, (*iter)->pPlugin->getName());
 
 			// cleanup strings & arrays
 			for (i = 0; i < m_NumParams; ++i)
 			{
 				if (m_ParamTypes[i] == FP_STRING)
 				{
-					amx_Release((*iter).pPlugin->getAMX(), realParams[i]);
+					amx_Release((*iter)->pPlugin->getAMX(), realParams[i]);
 				}
 				else if (m_ParamTypes[i] == FP_STRINGEX)
 				{
 					// copy back
 					amx_GetString(reinterpret_cast<char*>(params[i]), physAddrs[i], 0);
-					amx_Release((*iter).pPlugin->getAMX(), realParams[i]);
+					amx_Release((*iter)->pPlugin->getAMX(), realParams[i]);
 				}
 				else if (m_ParamTypes[i] == FP_ARRAY)
 				{
@@ -137,7 +141,7 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 						for (unsigned int j = 0; j < preparedArrays[params[i]].size; ++j)
 							*data++ = static_cast<char>(*tmp++ & 0xFF);
 					}
-					amx_Release((*iter).pPlugin->getAMX(), realParams[i]);
+					amx_Release((*iter)->pPlugin->getAMX(), realParams[i]);
 				}
 			}
 

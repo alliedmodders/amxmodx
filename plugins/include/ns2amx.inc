@@ -135,7 +135,7 @@ stock msg_name()
 	return 0
 
 stock msg_set_s(number, value[])
-	return set_msg_arg_string(number, get_msg_argtype(number), value)
+	return set_msg_arg_string(number, value)
 
 stock msg_set_f(number, Float:value)
 	return set_msg_arg_float(number, get_msg_argtype(number), value)
@@ -150,7 +150,9 @@ stock msg_strdata(value)
 	return 0
 
 stock msg_data(value, ...)
-	return 0
+{
+	return (0*value)
+}
 
 stock get_filename(szFile[], len=-1)
 {

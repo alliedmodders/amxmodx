@@ -32,6 +32,7 @@
 program compile;
 
 {$APPTYPE CONSOLE}
+{$R icon.res}
 
 uses
   SysUtils, Classes,

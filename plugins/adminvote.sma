@@ -211,18 +211,18 @@ public cmdVoteMap(id,level,cid) {
     console_print(id,"%L",id,"GIVEN_NOT_VALID",lMaps)
     return PLUGIN_HANDLED
   }
-  new menu_msg[256]
+  new menu_msg[256], len = 0
   new keys = 0
   if (g_validMaps > 1) {
     keys = MENU_KEY_0
-    format(menu_msg,255,g_coloredMenus ? "\y%L: \w^n^n" : "%L: ^n^n",LANG_SERVER,"CHOOSE_MAP")
+    len = format(menu_msg,255,g_coloredMenus ? "\y%L: \w^n^n" : "%L: ^n^n",LANG_SERVER,"CHOOSE_MAP")
     new temp[128]
-    for(new a = 0; a < g_validMaps; ++a) {
+    for (new a = 0; a < g_validMaps; ++a) {
       format(temp,127,"%d.  %s^n",a+1,g_optionName[a])
-      add(menu_msg,255,temp)
+      len += copy(menu_msg[len],255-len,temp)
       keys |= (1<<a)
     }
-    add(menu_msg,255,"^n0.  None")
+    format(menu_msg[len],255-len,"^n0.  %L",LANG_SERVER,"NONE")
     g_yesNoVote = 0
   }
   else {

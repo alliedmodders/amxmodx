@@ -37,10 +37,10 @@ void OnPluginsLoaded()
 	if ((mapname[0]=='c' || mapname[0]=='C') && (mapname[1]=='o' || mapname[0]=='O') && mapname[2]=='_')
 		iscombat=TRUE;
 
-	ChangeclassForward = MF_RegisterForward("client_changeclass", FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	ChangeclassForward = MF_RegisterForward("client_changeclass", ET_IGNORE, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 	// No sense in this if it's combat..
 	if (!iscombat)
-		BuiltForward = MF_RegisterForward("client_built", FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+		BuiltForward = MF_RegisterForward("client_built", ET_IGNORE, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 }
 
 

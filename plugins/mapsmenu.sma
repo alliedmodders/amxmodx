@@ -65,6 +65,8 @@ public plugin_init()
   new maps_ini_file[64];
   get_configsdir(maps_ini_file, 63);
   format(maps_ini_file, 63, "%s/maps.ini", maps_ini_file);
+  if (!file_exists(maps_ini_file))
+     format(maps_ini_file, 63, "mapcycle.txt")
   load_settings(maps_ini_file)
 
   g_cstrikeRunning = (is_running("cstrike") || is_running("czero"))

@@ -32,7 +32,7 @@ native set_pdata_float(_index,_Offset,Float:_Value,_linuxdiff=5);
 native register_forward(_forwardType,_function[],_post=0);
 
 /* Returns data for metamod */
-native forward_return(type,{Float:_}...);
+native forward_return(type,{Float,_}...);
 
 native engfunc(type,{Float,_}:...);
 native dllfunc(type,{Float,_}:...);

@@ -253,7 +253,8 @@ public client_death(killer,victim,wpnindex,hitplace,TK) {
   if ( EnemyRemaining ) {
     new ppl[32], pplnum
     new team = get_user_team( victim ) - 1
-    get_players(ppl,pplnum,"e", g_teamsNames[1 - team] ) 
+    if ( team >= 0 )
+      get_players(ppl,pplnum,"e", g_teamsNames[1 - team] ) 
     if (pplnum) {
       new eppl[32], epplnum 
       get_players(eppl,epplnum,"ae",g_teamsNames[team]) 
@@ -386,7 +387,8 @@ public showStatus(id) {
     if (g_friend[id]==1) { // friend
       new clip, ammo, wpnid = get_user_weapon(pid,clip,ammo) 
       new wpnname[32] 
-      xmod_get_wpnname(wpnid,wpnname,31) 
+      if ( wpnid )
+        xmod_get_wpnname(wpnid,wpnname,31) 
       set_hudmessage(color1,50,color2,-1.0,0.60,1, 0.01, 3.0, 0.01, 0.01, 4)
       show_hudmessage(id,"%s -- %d HP / %d AP / %s",name, 
         get_user_health(pid),get_user_armor(pid),wpnname)

@@ -871,7 +871,7 @@ void PlayerPreThink(edict_t *pEntity)
 	RETURN_META(MRES_IGNORED);
 }
 
-int ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress, char szRejectReason[128])
+int FN_ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress, char szRejectReason[128])
 {
 	// Reset stuff:
 	FUNUTIL_ResetPlayer(ENTINDEX(pPlayer));
@@ -879,7 +879,7 @@ int ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress,
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
-void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *e, TraceResult *ptr) {
+void FN_TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *e, TraceResult *ptr) {
 	TRACE_LINE(v1, v2, fNoMonsters, e, ptr);
 
 	if (ptr->pHit&&(ptr->pHit->v.flags& (FL_CLIENT | FL_FAKECLIENT) )&&e&&(e->v.flags & (FL_CLIENT | FL_FAKECLIENT) )) {
@@ -892,7 +892,24 @@ void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *e, Tr
 	RETURN_META(MRES_SUPERCEDE);
 }
 
-void OnAmxxAttach()
+void FN_AMXX_ATTACH()
 {
 	MF_AddNatives(fun_Exports);
+
+	// Reset stuff - hopefully this should
+	for (int i = 1; i <= 32; i++) {
+		// Reset all hitzones
+		memset(g_bodyhits[i], 0xFF, sizeof(char)*33);
+		// Reset all silent slippers
+		g_silent[i] = false;
+	}
 }
+
+/*
+void ClientConnectFakeBot(int index)
+{
+	FUNUTIL_ResetPlayer(index);
+	//MF_Log("A bot connects, forwarded to fun! The bot is %d!", index);
+	//CPlayer* player;
+}
+*/

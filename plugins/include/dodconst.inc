@@ -1,0 +1,85 @@
+/* DoDX functions
+ *
+ * (c) 2004, SidLuke
+ * This file is provided as is (no warranties).
+ */
+
+#if defined _dodconst_included
+  #endinput
+#endif
+#define _dodconst_included
+
+/* DoD teams */
+#define ALLIES			1
+#define AXIS 			2
+
+#define FT_NEW			1<<0
+#define FT_OLD			1<<1
+
+#define STAMINA_SET		0
+#define STAMINA_RESET		1
+
+#define FUSE_SET		0
+#define FUSE_RESET		1
+
+#define DODMAX_WEAPONS		46 // 5 slots for custom weapons
+
+enum { 
+	PS_NOPRONE =0,
+	PS_PRONE,
+	PS_PRONEDEPLOY,
+	PS_DEPLOY,
+}
+
+/* info types for dod_get_map_info native */
+enum {
+	MI_ALLIES_TEAM = 0,
+	MI_ALLIES_PARAS,
+	MI_AXIS_PARAS,
+}
+
+/* DoD weapons */
+enum {
+	DODW_AMERKNIFE = 1,
+	DODW_GERKNIFE,
+	DODW_COLT,
+	DODW_LUGER,
+	DODW_GARAND,
+	DODW_SCOPED_KAR,
+	DODW_THOMPSON,
+	DODW_STG44,
+	DODW_SPRINGFIELD,
+	DODW_KAR,
+	DODW_BAR,
+	DODW_MP40,
+	DODW_HANDGRENADE,
+	DODW_STICKGRENADE,
+	DODW_STICKGRENADE_EX,
+	DODW_HANDGRENADE_EX,
+	DODW_MG42,
+	DODW_30_CAL,
+	DODW_SPADE,
+	DODW_M1_CARBINE,
+	DODW_MG34,
+	DODW_GREASEGUN,
+	DODW_FG42,
+	DODW_K43,
+	DODW_ENFIELD,
+	DODW_STEN,
+	DODW_BREN,
+	DODW_WEBLEY,
+	DODW_BAZOOKA,
+	DODW_PANZERSCHRECK,
+	DODW_PIAT,
+	DODW_SCOPED_FG42,
+	DODW_FOLDING_CARBINE,
+	DODW_KAR_BAYONET,
+	DODW_SCOPED_ENFIELD,
+	DODW_MILLS_BOMB,
+	DODW_BRITKNIFE,
+	DODW_GARAND_BUTT,
+	DODW_ENFIELD_BAYONET,
+	DODW_MORTAR,
+	DODW_K43_BUTT,
+};
+

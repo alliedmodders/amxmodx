@@ -1,9 +1,13 @@
+/* TSXMod Stats functions
+ *
+ * (c) 2004, SidLuke
+ * This file is provided as is (no warranties).
+ */
 
-
-#if defined _csstats_included
+#if defined _tsstats_included
   #endinput
 #endif
-#define _csstats_included
+#define _tsstats_included
 
 /* Gets stats from given weapon index. If wpnindex is 0
 * then the stats are from all weapons. If weapon has not been used function
@@ -15,12 +19,14 @@
 * 4 - shots
 * 5 - hits
 * 6 - damage
-
 * For body hits fields see amxconst.inc. */
 native get_user_wstats(index,wpnindex,stats[8],bodyhits[8]);
 
 /* Gets round stats from given weapon index.*/
 native get_user_wrstats(index,wpnindex,stats[8],bodyhits[8]);
+
+/* Gets life (from spawn to spawn) stats from given weapon index.*/
+native get_user_wlstats(index,wpnindex,stats[8],bodyhits[8]);
 
 /* Gets overall stats which are stored in file on server
 * and updated on every respawn or user disconnect.
@@ -50,13 +56,3 @@ native get_stats(index,stats[8],bodyhits[8],name[],len);
 
 /* Returns number of all entries in stats. */
 native get_statsnum();
-
-/*
-* new stats:
-* 0 - total defusions
-* 1 - bomb defused
-* 2 - bomb plants
-* 3 - bomb explosions
-*/
-native get_user_stats2(index,stats[4]);
-native get_stats2(index,stats[4]);

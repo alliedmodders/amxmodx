@@ -24,6 +24,7 @@ LANG_NOT_EXISTS = Jezik ne postoji
 PERSO_LANG = Licni Jezik
 LANG_MENU = Meni Jezika
 SERVER_LANG = Jezik Servera
+
 SAVE_LANG = Sacuvaj Jezik
 SET_LANG_SERVER = Jezik Servera je postavljen na "%s"
 SET_LANG_USER = Vas jezik je postavljen na "%s"

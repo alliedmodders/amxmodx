@@ -72,12 +72,12 @@ CONF_SAV_FAIL = Speichern der Konfiguration fehlgeschlagen!!!
 [sr]
 EQ_WE_RES = Oprema i oruzje su zabranjeni
 EQ_WE_UNRES = Oprema i oruzje su oslobodjeni zabrane
-HAVE_BEEN = have been
-HAS_BEEN = has been
+HAVE_BEEN = je
+HAS_BEEN = je
 RESTRICTED = zabranjeno
 UNRESTRICTED = slobodno
 NO_EQ_WE = Nije moguce naci takvo opremu ili oruzje
-WEAP_RES = Zabrene oruzja
+WEAP_RES = Zabrane oruzja
 NAME = ime
 VALUE = vrednost
 STATUS = status

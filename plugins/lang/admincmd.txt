@@ -183,6 +183,7 @@ COM_SENT_SERVER = Komandna linija "%s" je poslata na konzolu servera
 CLIENTS_ON_SERVER = Klijenata na serveru
 IMMU = imm
 RESERV = res
+
 ACCESS = pristup
 TOTAL_NUM = Ukupno %d
 SKIP_MATCH = Preskacem: "%s" (Poklapajuce: "%s")

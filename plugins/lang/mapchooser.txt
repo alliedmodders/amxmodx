@@ -19,7 +19,7 @@ TIME_CHOOSE = Es ist an der Zeit, die neue Map zu waehlen...
 [sr]
 CHO_FIN_EXT = Biranje zavrseno. Sadasnja mapa ce biti produzena za %.0f minuta
 CHO_FIN_NEXT = Biranje zavrseno. Sledeca mapa ce biti %s
-CHOSE_EXT = %s bitaj mapu sa prodizivanjem
+CHOSE_EXT = %s biraj mapu sa produzivanjem
 X_CHOSE_X = %s izabrao %s
 CHOOSE_NEXTM = AMX izaberi sledecu mapu
 EXTED_MAP = Produzi mapu %s

@@ -79,12 +79,12 @@ COM_TADD = ^tadd <title> - markiert ein Plugin als nicht pausierbar
 
 
 [sr]
-COULDNT_FIND = Nije moguce naci plugin koji se poklapa sa "%s"
-PLUGIN_MATCH = Poklapajuci Plugin "%s"
-CONF_CLEARED = Konfiguracioni fajl ispraznjen. Ucitajte mapu ponovo ukoliko je potrebno
-ALR_CLEARED = Konfiguracioni fajl je vec ispraznjen!
-CONF_SAVED = Konfiguracija je sacuvana uspesno
-SAVE_FAILED = Konfiguracija je sacuvana neuspesno!!!
+PAUSE_COULDNT_FIND = Nije moguce naci plugin koji se poklapa sa "%s"
+PAUSE_PLUGIN_MATCH = Poklapajuci Plugin "%s"
+PAUSE_CONF_CLEARED = Konfiguracioni fajl ispraznjen. Ucitajte mapu ponovo ukoliko je potrebno
+PAUSE_ALR_CLEARED = Konfiguracioni fajl je vec ispraznjen!
+PAUSE_CONF_SAVED = Konfiguracija je sacuvana uspesno
+PAUSE_SAVE_FAILED = Konfiguracija je sacuvana neuspesno!!!
 ON = UKLJUCEN
 STOPPED = ZAUSTAVLJEN
 OFF = ISKLJUCEN
@@ -107,11 +107,11 @@ VERSION = verzija
 AUTHOR = autor
 FILE = fajl
 STATUS = status
-ENTRIES = Vrednosti %d - %d od %d (%d pokrenutih)
-USE_MORE = Koristi 'amx_pausecfg list %d' za jos
-USE_BEGIN = Koristi 'amx_pausecfg list 1' za pocetak
-USAGE = Koriscenje: amx_pausecfg <komanda> [ime]
-COMMANDS = Komande
+PAUSE_ENTRIES = Vrednosti %d - %d od %d (%d pokrenutih)
+PAUSE_USE_MORE = Koristi 'amx_pausecfg list %d' za jos
+PAUSE_USE_BEGIN = Koristi 'amx_pausecfg list 1' za pocetak
+PAUSE_USAGE = Koriscenje: amx_pausecfg <komanda> [ime]
+PAUSE_COMMANDS = Komande
 COM_PAUSE_OFF = ^toff - pauzira sve pluginove koji nisu u listi
 COM_PAUSE_ON = ^ton - pokrece sve pluginove
 COM_PAUSE_STOP = ^tstop <fajl> - zaustavlja plugin

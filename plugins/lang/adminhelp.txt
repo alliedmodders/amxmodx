@@ -1,0 +1,8 @@
+[en]
+HELP_COMS = AMX Mod X Help: Commands
+ENTRIES = Entries %d - %d of %d
+USE_MORE = Use 'amx_help %d' for more
+USE_BEGIN = Use 'amx_help 1' for begin
+TYPE_HELP = Type 'amx_help' in the console to see available commands
+TIME_INFO_1 = Time Left: %d:%02d min. Next Map: %s
+TIME_INFO_2 = No Time Limit. Next Map: %s

@@ -1,0 +1,12 @@
+[en]
+COL_WHITE = white
+COL_RED = red
+COL_GREEN = green
+COL_BLUE = blue
+COL_YELLOW = yellow
+COL_MAGENTA = magenta
+COL_CYAN = cyan
+COL_ORANGE = orange
+COL_OCEAN = ocean
+COL_MAROON = maroon
+PRINT_ALL = (ALL) %s :   %s

@@ -1,0 +1,2 @@
+[en]
+DROPPED_RES = Dropped due to slot reservation

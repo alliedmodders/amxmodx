@@ -1212,6 +1212,7 @@ static cell AMX_NATIVE_CALL message_begin(AMX *amx, cell *params) /* 4 param */
 	  MESSAGE_BEGIN( params[1], params[2],NULL );
 	  break;
   case MSG_PVS: case MSG_PAS:
+  case MSG_PVS_R: case MSG_PAS_R:
 	  if (numparam < 3) {
 		  amx_RaiseError(amx,AMX_ERR_NATIVE);
 		  return 0;

@@ -203,7 +203,7 @@ native cs_set_weapon_ammo(index, newammo);
 
 /* Get weapon type. Corresponds to CSW_* in amxconst.inc: 1 is CSW_P228, 2 is CSW_SCOUT and so on...
  */
-native cs_get_weapon_type(index);
+native cs_get_weapon_id(index);
 
 /* Returns 1 if no knives mode is enabled, else 0.
  */

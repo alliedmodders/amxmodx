@@ -190,7 +190,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_silenced(AMX *amx, cell *params) // cs
 	return 0;
 }
 
-static cell AMX_NATIVE_CALL cs_get_weapon_type(AMX *amx, cell *params) // cs_get_weapon_type(index); = 1 param
+static cell AMX_NATIVE_CALL cs_get_weapon_id(AMX *amx, cell *params) // cs_get_weapon_id(index); = 1 param
 {
 	// Get weapon type. Corresponds to CSW_*
 	// params[1] = weapon index
@@ -1188,7 +1188,7 @@ AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_get_user_hasprim",			cs_get_user_hasprimary},
 	{"cs_get_no_knives",			cs_get_no_knives},
 	{"cs_set_no_knives",			cs_set_no_knives},
-	{"cs_get_weapon_type",			cs_get_weapon_type},
+	{"cs_get_weapon_id",			cs_get_weapon_id},
 	{"cs_get_user_tked",			cs_get_user_tked},
 	{"cs_set_user_tked",			cs_set_user_tked},
 	{"cs_get_user_driving",			cs_get_user_driving},

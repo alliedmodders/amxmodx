@@ -1474,6 +1474,46 @@ static cell AMX_NATIVE_CALL cs_get_user_driving(AMX *amx, cell *params) // cs_ge
 	return *((int *)pPlayer->pvPrivateData + OFFSET_ISDRIVING); 
 }
 
+static cell AMX_NATIVE_CALL cs_get_user_stationary(AMX *amx, cell *params) // cs_get_user_stationary(index); = 1 param 
+{ 
+	// Returns 1 if client is using a stationary guns (maybe also other stuff)
+
+	// Check player 
+	if (!MF_IsPlayerIngame(params[1])) 
+	{ 
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE); 
+		return 0; 
+	} 
+
+	// Make into edict pointer 
+	edict_t *pPlayer = INDEXENT(params[1]); 
+
+	// Check entity validity 
+	if (FNullEnt(pPlayer)) { 
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE); 
+		return 0; 
+	} 
+
+	// If player driving, return 1, if not, return 0
+#if !defined __amd64__
+	return *((int *)pPlayer->pvPrivateData + OFFSET_STATIONARY); 
+#else
+	// The 32 bit server return 0 and 1 by itself from this offset, but the amd64 server has 2 and 3 respectively
+	// Doing a simple checking of these defined constants here, and mapping to 0 and 1, to keep our plugin authors sane.
+	// If an unexpected value is encountered, this will be logged.
+	if (AMD64_STATIONARY_NO == *((int *)pPlayer->pvPrivateData + OFFSET_STATIONARY))
+		return 0;
+	else if (AMD64_STATIONARY_YES == *((int *)pPlayer->pvPrivateData + OFFSET_STATIONARY))
+		return 1;
+	else {
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_Log("Unexpected value at offset. Please report this to development team @ www.amxmodx.org!");
+
+		return 0; 
+	}
+#endif
+}
+
 AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_user_money",			cs_set_user_money},
 	{"cs_get_user_money",			cs_get_user_money},
@@ -1511,6 +1551,7 @@ AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_get_user_tked",			cs_get_user_tked},
 	{"cs_set_user_tked",			cs_set_user_tked},
 	{"cs_get_user_driving",			cs_get_user_driving},
+	{"cs_get_user_stationary",		cs_get_user_stationary},
 	//------------------- <-- max 19 characters!
 	{NULL,							NULL}
 };

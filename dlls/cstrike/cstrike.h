@@ -34,6 +34,8 @@
 // cstrike MODULE TO DO HERE: http://www.amxmodx.org/forums/viewtopic.php?t=45
 // This implementation uses Vexd's way (lightly modified) of setting models on players.
 
+#define __amd64__
+
 #include <extdll.h>
 #include <meta_api.h>
 #include "amxxmodule.h"
@@ -63,6 +65,7 @@
 	#define OFFSET_TK					216 + EXTRAOFFSET // 040926
 	#define OFFSET_BUYZONE				235 + EXTRAOFFSET
 	#define OFFSET_ISDRIVING			350 + EXTRAOFFSET // 040926
+	#define OFFSET_STATIONARY			362 + EXTRAOFFSET // 040927 (363 works also!)
 
 	#define OFFSET_AWM_AMMO				382 + EXTRAOFFSET
 	#define OFFSET_SCOUT_AMMO			383 + EXTRAOFFSET
@@ -96,9 +99,10 @@
 	#define OFFSET_NVGOGGLES			155 + EXTRAOFFSET // +26
 	#define OFFSET_DEFUSE_PLANT			219 + EXTRAOFFSET // +26
 	#define OFFSET_VIP					242 + EXTRAOFFSET // +27
-	#define OFFSET_TK					å2äA;;#ÖAwä3ä2åa3ÖÄ2e;;åöA"Å! 1ö ÅÄ3åA"Ö  <-- this needs to be researched for amd64 ;-) (likely +27 though!)
+	#define OFFSET_TK					å // <-- this needs to be researched for amd64 ;-) (likely +27 though!)
 	#define OFFSET_BUYZONE				268 + EXTRAOFFSET // +27
-	#define OFFSET_ISDRIVING			å2äA#ÖAw;;ä3ä2åa3ÖÄ2eåöA;;"Å! 1ö ÅÄ3åA"Ö  <-- this needs to be researched for amd64 ;-)
+	#define OFFSET_ISDRIVING			386 + EXTRAOFFSET // 040927
+	#define OFFSET_STATIONARY			400 + EXTRAOFFSET // 040927 (401 works also)
 
 	#define OFFSET_AWM_AMMO				426 + EXTRAOFFSET // +44
 	#define OFFSET_SCOUT_AMMO			427 + EXTRAOFFSET // +44
@@ -121,7 +125,7 @@
 	#define OFFSET_CLIPAMMO				65 + EXTRAOFFSET // +14
 	#define OFFSET_SILENCER_FIREMODE	88 + EXTRAOFFSET // +14
 	// "hostage_entity" entities
-	#define OFFSET_HOSTAGEFOLLOW		51 + EXTRAOFFSET // +21, long=51, int=107! (must use the long* offset becuase pointers on amd64 are stored the size of longs, 8 bytes, instead of the usual int 4 bytes.)
+	#define OFFSET_HOSTAGEFOLLOW		51 + EXTRAOFFSET // +21, long=51, int=107! (must use the long* offset because pointers on amd64 are stored the size of longs, 8 bytes, instead of the usual int 4 bytes.)
 	#define OFFSET_HOSTAGEID			516 + EXTRAOFFSET // +29
 #endif
 
@@ -189,6 +193,9 @@
 #define SCOREATTRIB_DEAD				1
 #define SCOREATTRIB_BOMB				2 // t only
 #define SCOREATTRIB_VIP					4 // ct only
+
+#define AMD64_STATIONARY_NO				2
+#define AMD64_STATIONARY_YES			3
 
 enum CS_Internal_Models {
 	CS_DONTCHANGE = 0,

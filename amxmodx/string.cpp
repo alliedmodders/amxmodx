@@ -32,7 +32,7 @@
 #include <extdll.h>
 #include <meta_api.h>
 #include <ctype.h>
-#include "amxmod.h"
+#include "amxmodx.h"
 
 const char* stristr(const char* str,const char* substr)
 {

@@ -1,0 +1,11 @@
+; /usr/local/cross-tools/bin/i386-mingw32msvc-dlltool --base-file /tmp/cc4kB6s0.base --output-exp amx_mm.exp --dllname amx_mm.dll --output-def amx_mm.def --add-stdcall-alias --exclude-symbol=DllMainCRTStartup@12 --def /tmp/ccyI7I7K.def
+EXPORTS
+	GetEngineFunctions @ 1 ; 
+	GetEngineFunctions_Post @ 2 ; 
+	GetEntityAPI2 @ 3 ; 
+	GetEntityAPI2_Post @ 4 ; 
+	GiveFnptrsToDll = GiveFnptrsToDll@8 @ 5 ; 
+	GiveFnptrsToDll@8 @ 6 ; 
+	Meta_Attach @ 7 ; 
+	Meta_Detach @ 8 ; 
+	Meta_Query @ 9 ; 

@@ -33,7 +33,7 @@
 #include <meta_api.h>
 #include <time.h>
 
-#include "amxmod.h"
+#include "amxmodx.h"
 
 int UTIL_ReadFlags(const char* c) 
 {

@@ -37,7 +37,7 @@
 
 #include <extdll.h>
 #include <meta_api.h>
-#include "amxmod.h"
+#include "amxmodx.h"
 
 // header file for unlink()
 #ifdef __linux__

@@ -31,7 +31,7 @@
 
 #include <extdll.h>
 #include <meta_api.h>
-#include "amxmod.h"
+#include "amxmodx.h"
 
 plugin_info_t Plugin_info = {
   META_INTERFACE_VERSION, // ifvers

@@ -46,7 +46,7 @@
 #include "CMenu.h"
 #include "CEvent.h"
 
-#define AMX_VERSION     "0.16"
+#define AMX_VERSION     "2.0"
 
 #ifdef  __cplusplus
 extern "C" {
@@ -100,14 +100,11 @@ void UTIL_HudMessage(edict_t *pEntity, const hudtextparms_t &textparms, char *pM
 void UTIL_IntToString(int value, char *output);
 void UTIL_ShowMOTD( edict_t *client , char *motd, int mlen, const char *name);
 void UTIL_ShowMenu( edict_t* pEntity, int slots, int time, char *menu, int mlen );
-void UTIL_MakeNewLogFile();
-void UTIL_Log(const char *fmt, ...);
 
-#define UTIL_MODULES_RUNNING	0
-#define UTIL_MODULES_ALL		1
-#define UTIL_MODULES_STOPPED	2
-
-int UTIL_GetModulesNum(int mode);
+// Logging
+void AMXXLOG_Init();
+void AMXXLOG_MakeNewLogFile();
+void AMXXLOG_Log(const char *fmt, ...);
 
 #define GET_PLAYER_POINTER(e)   (&g_players[ENTINDEX(e)])
 //#define GET_PLAYER_POINTER(e)   (&g_players[(((int)e-g_edict_point)/sizeof(edict_t ))])
@@ -221,6 +218,16 @@ void dettachReloadModules();
 void attachModules();
 void attachMetaModModules( const char* filename );
 void dettachMetaModModules( const char* filename );
+
+// Count modules
+enum CountModulesMode
+{
+	CountModules_Running = 0,
+	CountModules_All,
+	CountModules_Stopped
+};
+
+int countModules(CountModulesMode mode);
 
 int add_amxnatives(module_info_s* info,AMX_NATIVE_INFO*natives);
 cell* get_amxaddr(AMX *amx,cell amx_addr);

@@ -219,7 +219,7 @@ AMX_NATIVE_INFO base_Natives[] = {
   { "dod_user_kill", user_kill },
   { "dod_get_pronestate", get_user_pronestate },
 
-  {"register_forward",register_forward },
+  {"register_statsfwd",register_forward },
 
   ///*******************
   { NULL, NULL } 

@@ -431,7 +431,7 @@ AMX_NATIVE_INFO base_Natives[] = {
 	
 	{"tfc_setpddata", TFC_SetPDdata },
 
-	{"register_forward",register_forward },
+	{"register_statsfwd",register_forward },
 	//******************* 19 :)
 	{NULL,			NULL} 
 };

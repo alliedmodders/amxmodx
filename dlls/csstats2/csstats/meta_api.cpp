@@ -21,8 +21,9 @@ RankSystem g_rank;
 
 Grenades g_grenades;
 
-int iFDeath;
-int iFDamage;
+Forward g_death_info;
+Forward g_damage_info;
+
 int iFGrenade;
 
 bool rankBots;
@@ -141,9 +142,14 @@ void ServerDeactivate() {
 		g_rank.clear(); // clear before save to file
 	}
 	g_rank.saveRank( MF_BuildPathname("%s",get_localinfo("csstats")) );	
+
+	g_damage_info.clear();
+	g_death_info.clear();
+
 	// clear custom weapons info
 	for ( i=MAX_WEAPONS;i<MAX_WEAPONS+MAX_CWEAPONS;i++)
 		weaponData[i].ammoSlot = 0;
+
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -327,7 +333,5 @@ void OnAmxxDetach() {
 }
 
 void OnPluginsLoaded(){
-	iFDamage = MF_RegisterForward("client_damage",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
-	iFDeath = MF_RegisterForward("client_death",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
 	iFGrenade = MF_RegisterForward("grenade_throw",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
 }

@@ -90,11 +90,12 @@ void Client_Damage_End(void* mValue){
 		TA = 0;
 	if ( (mPlayer->teamId == pAttacker->teamId) && (mPlayer != pAttacker) )
 		TA = 1;
-	MF_ExecuteForward( iFDamage, pAttacker->index, mPlayer->index, damage, weapon, aim, TA );
+
+	g_damage_info.exec( pAttacker->index , mPlayer->index , damage, weapon, aim, TA );
 	 
 	if ( !mPlayer->IsAlive() ){
 		pAttacker->saveKill(mPlayer,weapon,( aim == 1 ) ? 1:0 ,TA);
-		MF_ExecuteForward( iFDeath, pAttacker->index, mPlayer->index, weapon, aim, TA );
+		g_death_info.exec( pAttacker->index, mPlayer->index, weapon, aim, TA );
 	}
 }
 
@@ -147,7 +148,6 @@ void Client_AmmoPickup(void* mValue){
         mPlayer->weapons[i].ammo += *(int*)mValue;
   }
 }
-
 
 void Client_ScoreInfo(void* mValue){
   static int index;

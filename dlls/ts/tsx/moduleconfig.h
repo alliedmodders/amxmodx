@@ -5,9 +5,9 @@
 
 // Module info
 #define MODULE_NAME "TSX"
-#define MODULE_VERSION "0.1"
-#define MODULE_AUTHOR "SidLuke"
-#define MODULE_URL "www.amxmodx.org"
+#define MODULE_VERSION "0.2"
+#define MODULE_AUTHOR "AMXx Dev Team"
+#define MODULE_URL "http://www.amxmodx.org/"
 #define MODULE_LOGTAG "TSX"
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line
 #define MODULE_RELOAD_ON_MAPCHANGE

@@ -1,7 +1,10 @@
 #include <amxmodx>
+#include <csstats>
 
 public plugin_init() {
 	register_plugin("Stats Test","0.1","SidLuke")
+	register_statsfwd( CSF_DAMAGE )
+	register_statsfwd( CSF_DEATH )
 }
 
 public client_damage( attacker,victim,damage,wpnindex,hitplace,TA ){

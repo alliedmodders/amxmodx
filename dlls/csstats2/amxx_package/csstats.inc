@@ -70,8 +70,17 @@ native custom_wpn_shot( index,wid );
 native get_custom_wpnname( wId,name[],len );
 
 /*
-* Usefull forwards
+* Forwards
 */
+
+forward grenade_throw( index,greindex,wId );
+
+enum {
+	CSF_DAMAGE = 0,
+	CSF_DEATH,
+}
+
+/* You must register client_* forwards using register_statsfwd native */
+native register_statsfwd( ftype )
 forward client_damage( attacker,victim,damage,wpnindex,hitplace,TA );
 forward client_death( killer,victim,wpnindex,hitplace,TK );
-forward grenade_throw( index,greindex,wId );

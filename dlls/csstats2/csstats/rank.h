@@ -26,8 +26,9 @@ extern bool rankBots;
 extern cvar_t* csstats_rankbots;
 extern cvar_t* csstats_pause;
 
-extern int iFDeath;
-extern int iFDamage;
+extern Forward g_death_info;
+extern Forward g_damage_info;
+
 extern int iFGrenade;
 
 extern weaponsVault weaponData[MAX_WEAPONS+MAX_CWEAPONS];

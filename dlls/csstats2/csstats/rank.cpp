@@ -339,13 +339,13 @@ static cell AMX_NATIVE_CALL custom_wpn_dmg(AMX *amx, cell *params){ // wid,att,v
 	int TA = 0;
 	if ( (pVic->teamId == pAtt->teamId) && ( pVic != pAtt) )
 		TA = 1;
-	MF_ExecuteForward( iFDamage, pAtt->index, pVic->index, dmg, weapon, aim, TA );
+	g_damage_info.exec( pAtt->index, pVic->index, dmg, weapon, aim, TA );
 	
 	if ( pVic->IsAlive() )
 		return 1;
 
 	pAtt->saveKill(pVic,weapon,( aim == 1 ) ? 1:0 ,TA);
-	MF_ExecuteForward( iFDeath, pAtt->index, pVic->index, weapon, aim, TA );
+	g_death_info.exec( pAtt->index, pVic->index, weapon, aim, TA );
 
 	return 1;
 }
@@ -380,6 +380,30 @@ static cell AMX_NATIVE_CALL get_custom_wpnname(AMX *amx, cell *params){
 	return MF_SetAmxString(amx,params[2],weaponData[id].name,params[3]);
 }
 
+static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params){ // forward 
+	int iFunctionIndex;
+	switch( params[1] ){
+	case 0:
+		if( MF_AmxFindPublic(amx, "client_damage", &iFunctionIndex) == AMX_ERR_NONE )
+			g_damage_info.put( amx , iFunctionIndex );
+		else
+			MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+			return 0;
+		break;
+	case 1:
+		if( MF_AmxFindPublic(amx, "client_death", &iFunctionIndex) == AMX_ERR_NONE )
+			g_death_info.put( amx , iFunctionIndex );
+		else
+			MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+			return 0;
+		break;
+	default:
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+	return 1;
+}
+
 AMX_NATIVE_INFO stats_Natives[] = {
 	{ "get_stats",      get_stats},
 	{ "get_stats2",      get_stats2},
@@ -399,6 +423,8 @@ AMX_NATIVE_INFO stats_Natives[] = {
 	{ "custom_wpn_dmg", custom_wpn_dmg },
 	{ "custom_wpn_shot", custom_wpn_shot },
 	{ "get_custom_wpnname", get_custom_wpnname },
+
+	{"register_statsfwd",register_forward },
 
 	///*******************
 	{ NULL, NULL }

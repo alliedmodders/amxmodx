@@ -382,7 +382,7 @@ int AMXAPI amx_StrLen(cell *cstring, int *length);
 int AMXAPI amx_UTF8Get(const char *string, const char **endptr, cell *value);
 int AMXAPI amx_UTF8Put(char *string, char **endptr, int maxchars, cell value);
 int AMXAPI amx_UTF8Check(const char *string);
-
+void amx_NullNativeTable(AMX *amx);
 
 #if !defined AMX_NO_ALIGN
   #if defined __linux__

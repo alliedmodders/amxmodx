@@ -1576,6 +1576,7 @@ static AMX_NATIVE findfunction(const char *name, AMX_NATIVE_INFO *list, int numb
 }
 
 const char *no_function;			// PM: Nice hack ;)
+int no_module_test;
 int AMXAPI amx_Register(AMX *amx, AMX_NATIVE_INFO *list, int number)
 {
   AMX_FUNCSTUB *func;
@@ -1607,6 +1608,38 @@ int AMXAPI amx_Register(AMX *amx, AMX_NATIVE_INFO *list, int number)
   } /* for */
   return err;
 }
+
+static cell AMX_NATIVE_CALL null_native(AMX *amx, cell *params)
+{
+	return 0;
+}
+
+void amx_NullNativeTable(AMX *amx)
+{
+	AMX_FUNCSTUB *func;
+	AMX_HEADER *hdr;
+	int i, numnatives;
+
+	hdr=(AMX_HEADER *)amx->base;
+	if (hdr == NULL)
+		return;
+	if (hdr->magic!=AMX_MAGIC)
+		return;
+
+	numnatives = NUMENTRIES(hdr, natives, libraries);
+
+	func=GETENTRY(hdr, natives, 0);
+	
+	for (i=0; i<numnatives; i++)
+	{
+		if (func->address == 0)
+		{
+			func->address = (ucell)null_native;
+		}
+		func=(AMX_FUNCSTUB*)((unsigned char*)func+hdr->defsize);
+	}
+}
+
 #endif /* AMX_REGISTER || AMX_EXEC || AMX_INIT */
 
 #if defined AMX_NATIVEINFO
@@ -2800,7 +2833,9 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
   if (amx->callback==NULL)
     return AMX_ERR_CALLBACK;
   i=amx_Register(amx,NULL,0);   /* verify that all natives are registered */
-  if (i!=AMX_ERR_NONE)
+  //HACKHACK - still execute if doing a module test!
+  // this WILL cause a crash if bad natives are used....
+  if (i!=AMX_ERR_NONE && !no_module_test)
     return i;
 
   if ((amx->flags & AMX_FLAG_RELOC)==0)

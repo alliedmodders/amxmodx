@@ -266,7 +266,9 @@ int	C_Spawn( edict_t *pent ) {
   memset(g_players[0].flags,-1,sizeof(g_players[0].flags));
 
   //  ###### Load AMX scripts
+  no_module_test = 0;
   g_plugins.loadPluginsFromFile( get_localinfo("amxx_plugins", "addons/amxmodx/configs/plugins.ini") );
+  no_module_test = 0;
 
   // Register forwards
   FF_PluginInit = registerForward("plugin_init", ET_IGNORE, FP_DONE);
@@ -446,6 +448,7 @@ void C_ServerDeactivate_Post() {
   // pft that's not really a hack
   g_FakeMeta.m_Plugins.begin()->GetDllFuncTable().pfnSpawn = C_Spawn;
 
+  no_module_test = 0;
   detachReloadModules();
   g_auth.clear();
   g_forwards.clear();

@@ -2473,7 +2473,7 @@ static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 
 // native callfunc_push_int(value);
 // native callfunc_push_float(Float: value);
-static cell callfunc_push_byval(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL callfunc_push_byval(AMX *amx, cell *params)
 {
 	CPluginMngr::CPlugin *curPlugin = g_plugins.findPluginFast(amx);
 	if (!g_CallFunc_Plugin)
@@ -2499,7 +2499,7 @@ static cell callfunc_push_byval(AMX *amx, cell *params)
 
 // native callfunc_push_intref(&value);
 // native callfunc_push_floatref(Float: &value);
-static cell callfunc_push_byref(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL callfunc_push_byref(AMX *amx, cell *params)
 {
 	CPluginMngr::CPlugin *curPlugin = g_plugins.findPluginFast(amx);
 	if (!g_CallFunc_Plugin)
@@ -2557,7 +2557,7 @@ static cell callfunc_push_byref(AMX *amx, cell *params)
 }
 
 // native callfunc_push_str(value[]);
-static cell callfunc_push_str(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL callfunc_push_str(AMX *amx, cell *params)
 {
 	CPluginMngr::CPlugin *curPlugin = g_plugins.findPluginFast(amx);
 	if (!g_CallFunc_Plugin)
@@ -2618,20 +2618,20 @@ static cell callfunc_push_str(AMX *amx, cell *params)
 }
 
 // get_langsnum();
-static cell get_langsnum(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL get_langsnum(AMX *amx, cell *params)
 {
 	return g_langMngr.GetLangsNum();
 }
 
 // get_lang(id, name[(at least 3)]);
-static cell get_lang(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL get_lang(AMX *amx, cell *params)
 {
 	set_amxstring(amx, params[2], g_langMngr.GetLangName(params[1]), 2);
 	return 0;
 }
 
 // register_dictionary(const filename[]);
-static cell register_dictionary(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL register_dictionary(AMX *amx, cell *params)
 {
 	int len;
 	int result = g_langMngr.MergeDefinitionFile(build_pathname("%s/lang/%s",
@@ -2639,7 +2639,7 @@ static cell register_dictionary(AMX *amx, cell *params)
 	return result;
 }
 
-static cell plugin_flags(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL plugin_flags(AMX *amx, cell *params)
 {
 	AMX_HEADER *hdr;
 	hdr = (AMX_HEADER *)amx->base;
@@ -2647,13 +2647,13 @@ static cell plugin_flags(AMX *amx, cell *params)
 }
 
 // lang_exists(const name[]);
-static cell lang_exists(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL lang_exists(AMX *amx, cell *params)
 {
 	int len = 0;
 	return g_langMngr.LangExists(get_amxstring(amx, params[1], 1, len)) ? 1 : 0;
 }
 
-static cell register_module(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL register_module(AMX *amx, cell *params)
 {
 	int len = 0;
 	

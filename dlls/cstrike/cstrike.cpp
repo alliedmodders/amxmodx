@@ -1206,7 +1206,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_ammo(AMX *amx, cell *params) // cs_get
 		return 0;
 	}
 
-	return *(int *)pWeapon->pvPrivateData + OFFSET_CLIPAMMO;
+	return *((int *)pWeapon->pvPrivateData + OFFSET_CLIPAMMO);
 }
 
 static cell AMX_NATIVE_CALL cs_set_weapon_ammo(AMX *amx, cell *params) // cs_set_weapon_ammo(index, newammo); = 2 params

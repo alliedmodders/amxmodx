@@ -53,6 +53,11 @@ public plugin_init() {
   g_coloredMenus = colored_menus()
 }
 
+public plugin_modules()
+{
+   register_module("fun")
+}
+
 public actionTelMenu(id,key) {
   switch (key) {
     case 6: {

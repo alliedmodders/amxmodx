@@ -104,6 +104,13 @@ public plugin_init() {
 #endif
 }
 
+#if defined USING_SQL
+public plugin_modules()
+{
+   register_module("DBI")
+}
+#endif
+
 public plugin_cfg() {
   new configFile[64],curMap[32]
   get_configsdir(configFile,31)

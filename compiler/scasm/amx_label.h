@@ -43,7 +43,8 @@ public:
 	void Clear();
 	bool SetCip(std::string &sym, int cip);
 	void QueueLabel(std::string &sym, Asm *ASM);
-	void CompleteQueue();
+	void CompleteQueue(bool isLocal = false);
+	bool EraseLabel(std::string &sym);
 private:
 	std::vector<LabelMngr::Label *> List;
 	std::map<std::string, std::stack<Asm *> > LQ;

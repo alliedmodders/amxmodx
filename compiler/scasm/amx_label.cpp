@@ -91,7 +91,7 @@ void LabelMngr::QueueLabel(std::string &sym, Asm *ASM)
 	LQ[d].push(ASM);
 }
 
-void LabelMngr::CompleteQueue()
+void LabelMngr::CompleteQueue(bool isLocal)
 {
 	std::map<std::string,std::stack<Asm *> >::iterator i;
 	std::stack<Asm *> *stk = 0;
@@ -106,13 +106,22 @@ void LabelMngr::CompleteQueue()
 		stk = &((*i).second);
 		if (p == NULL || p->cip == LabelMngr::ncip)
 		{
-			CError->ErrorMsg(Err_Bad_Label);
-		}
-		while (!stk->empty())
-		{
-			ASM = stk->top();
-			ASM->params[0] = p->cip;
-			stk->pop();
+			if ((!isLocal || (isLocal && search[0]=='_')) && CError)
+			{
+				while (!stk->empty())
+				{
+					CError->SetLine(stk->top()->line);
+					CError->ErrorMsg(Err_Bad_Lbel);
+					stk->pop();
+				}
+			}
+		} else {
+			while (!stk->empty())
+			{
+				ASM = stk->top();
+				ASM->params[0] = p->cip;
+				stk->pop();
+			}
 		}
 	}
 
@@ -129,4 +138,20 @@ int LabelMngr::GetCip(std::string &sym)
 		return ncip;
 
 	return p->cip;
+}
+
+bool LabelMngr::EraseLabel(std::string &sym)
+{
+	std::vector<LabelMngr::Label *>::iterator i;
+
+	for (i=List.begin(); i!=List.end(); i++)
+	{
+		if ( (*i)->sym->IsEqual(sym) )
+		{
+			List.erase(i);
+			return true;
+		}
+	}
+
+	return false;
 }

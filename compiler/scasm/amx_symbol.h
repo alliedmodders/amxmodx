@@ -54,6 +54,7 @@ public:
 	SymbolList::Symbol* AddSymbol(std::string &sym, SymbolType type, int line);
 	SymbolList::Symbol* AddSymbol(const char *szSym, SymbolType type, int line);
 	SymbolList::Symbol* FindSymbol(std::string &sym);
+	bool EraseSymbol(std::string &sym);
 	void PrintTable();
 	void Clear();
 private:

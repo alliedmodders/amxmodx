@@ -67,9 +67,9 @@ bool ProcMngr::SetPublic(std::string &sym)
 
 void ProcMngr::GetPublics(std::vector<ProcMngr::AsmProc *> &pbList)
 {
-	std::vector<ProcMngr::AsmProc *>::iterator i;
+	std::vector<ProcMngr::AsmProc *>::reverse_iterator i;
 
-	for (i=List.begin(); i!=List.end(); i++)
+	for (i=List.rbegin(); i!=List.rend(); i++)
 	{
 		if ((*i)->pb == true)
 		{

@@ -60,6 +60,9 @@ typedef enum
 	Err_Unknown_Define,
 	Err_Misplaced_Directive,
 	Err_Bad_Label,
+	Err_Bad_Not,
+	Err_Invalid_Operator,
+	Err_Invalid_Pragma,
 	errors_end,
 
 	fatals_start,
@@ -87,6 +90,7 @@ private:
 	ErrorType HighestError;
 	void *Cmp;
 	int Totals[4];
+	int line;
 public:
 	ErrorMngr();
 	ErrorMngr(void *c);
@@ -96,6 +100,9 @@ public:
 	void PrintReport();
 	int CurLine();
 	int CurCip();
+	void SetLine(int ln);
+	int DerefSymbol(std::string &str, int sym = 0);
+	bool IsSymbol(std::string &str);
 };
 
 #endif //_INCLUDE_AMX_ERROR

@@ -29,6 +29,24 @@
 
 typedef enum
 {
+	Token_None,
+	Token_Or,
+	Token_Xor,
+	Token_And,
+	Token_Shr,
+	Token_Shl,
+	Token_Mod,
+	Token_Div,
+	Token_Mul,
+	Token_Sub,
+	Token_Add,
+	Token_Not,
+	/* End */
+	Tokens_Total,
+} OpToken;
+
+typedef enum
+{
 	Val_None,
 	Val_Error,
 	Val_String,
@@ -38,6 +56,7 @@ typedef enum
 	Val_Number,
 	Val_Block,
 	Val_Hex,
+	Val_Float,
 } cExprType;
 
 class CExpr
@@ -49,13 +68,17 @@ public:
 	void Set(std::string &text);
 	const char *GetString(int *d=NULL);
 	int Analyze();
-	cExprType Evaluate();
+	cExprType Evaluate(int symNum = 0);
 	cExprType GetType();
 	int GetNumber();
+	float GetFloat() { return fData; }
 	int Size();
 	void Clear();
+	void Not();
+	void Oper(OpToken op, CExpr &e);
 	~CExpr();
 private:
+	void Update();
 	char IsHex(char c);
 	char IsLiteral(char c);
 	int DeHex(std::string blk);
@@ -63,7 +86,9 @@ private:
 	char *block;
 	std::string data;
 	cExprType type;
+	float fData;
 	int numVal;
+	bool bDone;
 private:
 	ErrorMngr *CError;
 };

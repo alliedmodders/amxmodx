@@ -26,6 +26,7 @@ ErrorMngr::ErrorMngr()
 {
 	printf("Not instantiated with a compiler.");
 	Cmp = NULL;
+	line = -1;
 	assert(Cmp);
 }
 
@@ -56,6 +57,7 @@ ErrorMngr::ErrorMngr(void *c)
 	Totals[1] = 0;
 	Totals[2] = 0;
 	Totals[3] = 0;
+	line = -1;
 	HighestError = Err_None;
 }
 
@@ -95,6 +97,9 @@ void ErrorMngr::DefineErrors()
 	List.at(Err_Unknown_Define) = "Unknown define referenced";
 	List.at(Err_Misplaced_Directive) = "Misplaced preprocessor directive";
 	List.at(Err_Bad_Label) = "Label referenced without being created";
+	List.at(Err_Bad_Not) = "Wrong type argument to bit-complement";
+	List.at(Err_Invalid_Operator) = "Operator used on bad type";
+	List.at(Err_Invalid_Pragma) = "Invalid pragma";
 
 	List.at(Err_FileNone) = "No file specified";
 	List.at(Err_FileOpen) = "Could not open file \"%s\"";
@@ -131,13 +136,23 @@ void ErrorMngr::ErrorMsg(ErrorCode error, ...)
 	if (type == -1)
 		return;
 
+	int curLine = 0;
+
+	if (line == -1)
+	{
+		curLine = ((Compiler *)Cmp)->CurLine();
+	} else {
+		curLine = line;
+		line = -1;
+	}
+
 	va_list argptr;
 	va_start(argptr, error);
 	
 	if (((Compiler *)Cmp)->CurLine() == -1)
 		sprintf(errbuf, "%s(%d): %s\n", ErrorSwi[type], error, GetError(error));
 	else 
-		sprintf(errbuf, "%s(%d) on line %d: %s\n", ErrorSwi[type], error, ((Compiler *)Cmp)->CurLine(), GetError(error));
+		sprintf(errbuf, "%s(%d) on line %d: %s\n", ErrorSwi[type], error, curLine, GetError(error));
 	vprintf(errbuf, argptr);
 
 	va_end(argptr);
@@ -163,4 +178,19 @@ const char *ErrorMngr::GetError(ErrorCode id)
 	if (id < notices_start || id > fatals_end)
 		return NULL;
 	return List.at(id);
+}
+
+int ErrorMngr::DerefSymbol(std::string &str, int sym)
+{
+	return ((Compiler *)Cmp)->DerefSymbol(str, (SymbolType)sym);
+}
+
+bool ErrorMngr::IsSymbol(std::string &str)
+{
+	return ((Compiler *)Cmp)->IsSymbol(str);
+}
+
+void ErrorMngr::SetLine(int ln)
+{
+	line = ln;
 }

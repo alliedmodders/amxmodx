@@ -308,7 +308,7 @@ bool Compiler::Compile()
 			char c = (*dmi)->fill;
 			for (int iter=0; iter<=(*dmi)->e.GetNumber(); iter++)
 			{
-				fwrite((void*)&c, sizeof(char), 1, fp);
+				fwrite((void*)&c, sizeof(int32_t), 1, fp);
 			}
 		}
 	}
@@ -334,6 +334,7 @@ bool Compiler::Parse()
 	std::ifstream fp(filename.c_str());
 	char buffer[256] = {0};
 	std::stack<int> DefStack;
+	std::stack<std::string> LabelStack;
 	curLine = 0;
 	AsmSection sec = Asm_None;
 	lastCip = 0-cellsize;
@@ -347,7 +348,7 @@ bool Compiler::Parse()
 	while (!fp.eof())
 	{
 		fp.getline(buffer, 255);
-		curLine++;
+		curLine+=1;
 
 		/* Check for preprocessor directives */
 		if (buffer[0] == '#')
@@ -440,6 +441,14 @@ bool Compiler::Parse()
 				sec = Asm_Invalid;
 				CError->ErrorMsg(Err_Invalid_Section, buffer);
 			}
+			/* Update the labels */
+			CLabels->CompleteQueue(true);
+			while (!LabelStack.empty())
+			{
+				CLabels->EraseLabel(LabelStack.top());
+				CSymbols->EraseSymbol(LabelStack.top());
+				LabelStack.pop();
+			}
 		} else {
 			/* Do pre-processing */
 			CMacros->SearchAndReplace(line);
@@ -501,7 +510,7 @@ bool Compiler::Parse()
 						t.Evaluate();
 						e.Set(amt);
 						e.Evaluate();
-						DAT->Add(symbol, e, false, (char)t.GetNumber());
+						DAT->Add(symbol, e, false, t.GetNumber());
 					} else {
 						e.Set(data);
 						e.Evaluate();
@@ -570,6 +579,7 @@ bool Compiler::Parse()
 					Asm *ASM = new Asm;
 					ASM->cip = lastCip + cellsize;
 					ASM->op = OpCodes["proc"];
+					ASM->line = curLine;
 					lastCip += cellsize;
 					/* Add symbol */
 					S = CSymbols->AddSymbol(params, Sym_Proc, CurLine());
@@ -578,7 +588,16 @@ bool Compiler::Parse()
 					/* Add to PROC list */
 					PROC->AddProc(S, ASM);
 				} else if (code.compare("ENDP") == 0) {
-					/* This is, in theory, not needed */
+					/* This is, in theory, not needed
+					 * Nonetheless, we check labels here
+					 */
+					CLabels->CompleteQueue(true);
+					while (!LabelStack.empty())
+					{
+						CLabels->EraseLabel(LabelStack.top());
+						CSymbols->EraseSymbol(LabelStack.top());
+						LabelStack.pop();
+					}
 				} else if (params.size() < 1 && code[code.size()-1] == ':') {
 					/* Label! */
 					/* Check if symbol is valid */
@@ -604,6 +623,10 @@ bool Compiler::Parse()
 						}
 						continue;
 					}
+					if (code[0] == '_')
+					{
+						LabelStack.push(code);
+					}
 					S = CSymbols->AddSymbol(code, Sym_Label, CurLine());
 					CLabels->AddLabel(S, lastCip+cellsize);
 				} else {
@@ -623,6 +646,7 @@ bool Compiler::Parse()
 						ASM = new Asm;
 						ASM->cip = lastCip+cellsize;
 						ASM->op = OP_LINE;
+						ASM->line = curLine;
 						ASM->params.push_back(curLine);
 						ASM->params.push_back(0);
 						CodeList.push_back(ASM);
@@ -647,6 +671,7 @@ bool Compiler::Parse()
 
 					ASM->cip = (lastCip+cellsize);
 					ASM->op = op;
+					ASM->line = curLine;
 					lastCip += cellsize;
 
 					switch (op)
@@ -1801,7 +1826,7 @@ void Compiler::ProcessDirective(std::string &text)
 			SymbolList::Symbol *S;
 			if ((S = CSymbols->FindSymbol(symbol)) != NULL)
 			{
-				CError->ErrorMsg(Err_SymbolRedef, curLine, S->sym.c_str(), S->line);
+				CError->ErrorMsg(Err_SymbolRedef, S->sym.c_str(), S->line);
 			}
 			/* Store the argstring, which is the rest of the data */
 			std::string argstring;
@@ -1827,8 +1852,22 @@ void Compiler::ProcessDirective(std::string &text)
 			CSymbols->AddSymbol(symbol, Sym_Macro, curLine);
 			//TODO: ClearList(ArgList);
 		}
-	} else if (!directive.compare("stacksize")) {
-		
+	} else if (!directive.compare("pragma")) {
+		std::string pragma;
+		std::string entry;
+		StringBreak(definition, pragma, entry);
+		if (pragma.compare("stacksize") == 0)
+		{
+			int stksz = atoi(entry.c_str());
+			if (stksz < 100)
+			{
+				CError->ErrorMsg(Err_Invalid_Pragma);
+			} else {
+				stacksize = stksz;
+			}
+		} else {
+			CError->ErrorMsg(Err_Invalid_Pragma);
+		}
 	} else if (!directive.compare("define")) {
 		std::string symbol;
 		std::string def;
@@ -1859,8 +1898,6 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 	int i = 0;
 	rpn *r = new rpn;
 	int pos = 0;
-	int val = 0;
-	CExpr e;
 
 	Stack.push(r);
 
@@ -1890,18 +1927,10 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 			{
 				bpstr.assign(str.substr(pos, i-pos));
 				Strip(bpstr);
+				CExpr e(CError);
 				e.Set(bpstr);
-				val = 0;
-				if (!e.Analyze() && IsValidSymbol(bpstr))
-				{
-					val = DerefSymbol(bpstr, sym);
-				} else if (e.Analyze() && (e.Evaluate() == Val_Number)) {
-					val = e.GetNumber();
-				} else {
-					CError->ErrorMsg(Err_Invalid_Symbol);
-					return 0;
-				}
-				r->vals.push_back(val);
+				e.Evaluate(sym);
+				r->vals.push_back(e);
 			}
 			r->ops.push_back(str[i]);
 			if (str[i] == '>' || str[i] == '<')
@@ -1917,18 +1946,10 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 				{
 					bpstr.assign(str.substr(pos, i-pos));
 					Strip(bpstr);
+					CExpr e(CError);
 					e.Set(bpstr);
-					val = 0;
-					if (!e.Analyze() && IsValidSymbol(bpstr))
-					{
-						val = DerefSymbol(bpstr, sym);
-					} else if (e.Analyze() && (e.Evaluate() == Val_Number)) {
-						val = e.GetNumber();
-					} else {
-						CError->ErrorMsg(Err_Invalid_Symbol);
-						return 0;
-					}
-					r->vals.push_back(val);
+					e.Evaluate(sym);
+					r->vals.push_back(e);
 				}
 				r = new rpn;
 				Stack.push(r);
@@ -1939,20 +1960,13 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 				{
 					bpstr.assign(str.substr(pos, i-pos));
 					Strip(bpstr);
+					CExpr e(CError);
 					e.Set(bpstr);
-					val = 0;
-					if (!e.Analyze() && IsValidSymbol(bpstr))
-					{
-						val = DerefSymbol(bpstr, sym);
-					} else if (e.Analyze() && (e.Evaluate() == Val_Number)) {
-						val = e.GetNumber();
-					} else {
-						CError->ErrorMsg(Err_Invalid_Symbol);
-						return 0;
-					}
-					r->vals.push_back(val);
+					e.Evaluate(sym);
+					r->vals.push_back(e);
 				}
-				val = EvalRpn(r, sym);
+				CExpr t;
+				t = EvalRpn(r, sym);
 				delete r;
 				if (Stack.size() < 2)
 				{
@@ -1967,7 +1981,7 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 				}
 				Stack.pop();
 				r = Stack.top();
-				r->vals.push_back(val);
+				r->vals.push_back(t);
 				pos = i + 1;
 			} else if (i == (int)(str.size() - 1)) {
 				if (pos < i)
@@ -1979,18 +1993,10 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 				if (pos < i || pos == i)
 				{
 					Strip(bpstr);
+					CExpr e(CError);
 					e.Set(bpstr);
-					val = 0;
-					if (!e.Analyze() && IsValidSymbol(bpstr))
-					{
-						val = DerefSymbol(bpstr, sym);
-					} else if (e.Analyze() && (e.Evaluate() == Val_Number)) {
-						val = e.GetNumber();
-					} else {
-						CError->ErrorMsg(Err_Invalid_Symbol);
-						return 0;
-					}
-					r->vals.push_back(val);
+					e.Evaluate(sym);
+					r->vals.push_back(e);
 				}
 			}
 		}
@@ -2009,19 +2015,18 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 	
 	rpn *r2 = Stack.top();
 	Stack.pop();
-    val = EvalRpn(r, sym);
+	CExpr final;
+    final = EvalRpn(r, sym);
 
-	return val;
+	return final.GetNumber();
 }
 
-int Compiler::EvalRpn(rpn *r, SymbolType sym)
+CExpr Compiler::EvalRpn(rpn *r, SymbolType sym)
 {
 	int i = 0, j = 0;
 	char c = 0;
-	int lval = 0;
-	int rval = 0;
-	int nval = 0;
-	std::vector<int>::iterator Q;
+	CExpr er, el;
+	std::vector<CExpr>::iterator Q;
 	std::vector<char>::iterator R;
 
 	while (r->ops.size())
@@ -2035,77 +2040,17 @@ int Compiler::EvalRpn(rpn *r, SymbolType sym)
 				{
 					if ((int)r->vals.size() <= j)
 						assert(0);// Can't have more ops than values
-					lval = r->vals[j];
+					el = r->vals[j];
 					if (i != Token_Not)
 					{
 						if ((int)r->vals.size() <= j+1)
 						{
 							assert(0);
 						}
-						rval = r->vals[j+1];
-					}
-					switch (i)
-					{
-					case Token_Xor:
-						{
-							nval = lval ^ rval;
-							break;
-						}
-					case Token_Shr:
-						{
-							nval = lval >> rval;
-							break;
-						}
-					case Token_Sub:
-						{
-							nval = lval - rval;
-							break;
-						}
-					case Token_Mod:
-						{
-							nval = lval % rval;
-							break;
-						}
-					case Token_Mul:
-						{
-							nval = lval * rval;
-							break;
-						}
-					case Token_Div:
-						{
-							nval = (int)(lval / rval);
-							break;
-						}
-					case Token_Shl:
-						{
-							nval = lval << rval;
-							break;
-						}
-					case Token_And:
-						{
-							nval = lval & rval;
-							break;
-						}
-					case Token_Or:
-						{
-							nval = lval | rval;
-							break;
-						}
-					case Token_Add:
-						{
-							nval = lval + rval;
-							break;
-						}
-					case Token_Not:
-						{
-							nval = ~lval;
-							break;
-						}
-					default:
-						{
-							nval = 0;
-							break;
-						}
+						er = r->vals[j+1];
+						el.Oper((OpToken)i, er);
+					} else {
+						el.Not();
 					}
 					R = r->ops.begin();
 					Q = r->vals.begin();
@@ -2114,13 +2059,13 @@ int Compiler::EvalRpn(rpn *r, SymbolType sym)
 						R += j;
 						Q += j;
 						r->ops.erase(R);
-						r->vals[j+1] = nval;
+						r->vals[j+1] = el;
 						r->vals.erase(Q);
 						j--;
 					} else {
 						R += j;
 						r->ops.erase(R);
-						r->vals[j] = nval;
+						r->vals[j] = el;
 					}
 				}
 			}
@@ -2232,4 +2177,14 @@ int Compiler::DerefSymbol(std::string &str, SymbolType sym)
 	}
 
 	return val;
+}
+
+bool Compiler::IsSymbol(std::string &str)
+{
+	SymbolList::Symbol *S = 0;
+
+	if ( (S = CSymbols->FindSymbol(str)) == NULL )
+		return false;
+
+	return true;
 }

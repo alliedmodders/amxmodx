@@ -47,7 +47,7 @@ DataMngr::Datum::Datum()
 	fill = 0;
 }
 
-void DataMngr::Add(std::string &s, CExpr &expr, bool db, char fill)
+void DataMngr::Add(std::string &s, CExpr &expr, bool db, int fill)
 {
 	DataMngr::Datum *D = new DataMngr::Datum();
 
@@ -63,7 +63,7 @@ void DataMngr::Add(std::string &s, CExpr &expr, bool db, char fill)
 		size = ((D->e.GetType() == Val_Number) ?
 					cellsize : D->e.Size() * cellsize);
 	} else {
-		size = D->e.GetNumber();
+		size = (D->e.GetNumber() * cellsize);
 	}
 
 	if (List.size() == 0)
@@ -77,7 +77,7 @@ void DataMngr::Add(std::string &s, CExpr &expr, bool db, char fill)
 				((p->e.GetType() == Val_Number) ? 
 				cellsize : p->e.Size() * cellsize);
 		} else {
-			D->offset = p->offset + p->e.GetNumber();
+			D->offset = p->offset + (p->e.GetNumber() * cellsize);
 		}
 	}
 

@@ -118,3 +118,18 @@ void SymbolList::PrintTable()
 		printf("Symbol \"%s\" defined on line %d\n", (*i)->sym.c_str(), (*i)->line);
 	}
 }
+
+bool SymbolList::EraseSymbol(std::string &sym)
+{
+	std::vector<SymbolList::Symbol *>::iterator i;
+	for (i=List.begin(); i!=List.end(); i++)
+	{
+		if ( (*i)->IsEqual(sym) )
+		{
+			List.erase(i);
+			return true;
+		}
+	}
+
+	return false;
+}

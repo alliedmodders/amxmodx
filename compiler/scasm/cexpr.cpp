@@ -28,6 +28,7 @@ CExpr::CExpr()
 	numVal = 0;
 	type = Val_None;
 	block = 0;
+	bDone = false;
 	CError = NULL;
 }
 
@@ -36,6 +37,7 @@ CExpr::CExpr(ErrorMngr *e)
 	numVal = 0;
 	type = Val_None;
 	block = 0;
+	bDone = false;
 	CError = e;
 }
 
@@ -45,6 +47,7 @@ CExpr::CExpr(ErrorMngr *e, std::string &text)
 	type = Val_None;
 	block = 0;
 	CError = e;
+	bDone = false;
 	data.assign(text);
 }
 
@@ -59,7 +62,7 @@ void CExpr::Clear()
 
 CExpr::~CExpr()
 {
-	if (block)
+	if (block && type == Val_Block)
 		delete [] block;
 }
 
@@ -180,13 +183,17 @@ const char *CExpr::GetString(int *d)
 
 int CExpr::GetNumber()
 {
+	if (type == Val_Float)
+	{
+		memcpy((void*)&numVal, (void*)&fData, sizeof(float));
+	}
 	return numVal;
 }
 
 /* Returns true if the expr can be evaluated */
 int CExpr::Analyze()
 {
-	size_t pos = 0, xc = 0, xpos = 0;
+	size_t pos = 0, xc = 0, xpos = 0, fd = 0;
 	/* run through the characters */
 	if (data.compare("$") == 0)
 	{
@@ -194,10 +201,14 @@ int CExpr::Analyze()
 	}
 	for (pos = 0; pos < data.size(); pos++)
 	{
-		if (data[pos] == 'x')
+		if (data[pos] == '.')
 		{
+			fd++;
+			if (fd > 1 || xc)
+				return 0;
+		} else if (data[pos] == 'x') {
 			xc++;
-			if (xc > 1)
+			if (xc > 1 || fd)
 				return 0;
 			xpos = pos;
 		} else if (data[pos] != ' ' 
@@ -210,7 +221,7 @@ int CExpr::Analyze()
 	return 1;
 }
 
-cExprType CExpr::Evaluate()
+cExprType CExpr::Evaluate(int symNum)
 {
 	size_t i = 0, blk = 0;
 	char litc = 0, c = 0, csave = 0;
@@ -218,14 +229,22 @@ cExprType CExpr::Evaluate()
 	std::string num;
 
 	block = new char[2];
+	bDone = true;
 
 	if (data.compare("$") == 0)
 	{
-		t = Val_Number;
+		type = Val_Number;
 		numVal = CError->CurCip();
-		char buf[32];
-		sprintf(buf, "%d", numVal);
-		data.assign(buf);
+		Update();
+		return t;
+	} else {
+		if (CError->IsSymbol(data) || (IsValidSymbol(data) && symNum == Sym_Label))
+		{
+			type = Val_Number;
+			numVal = CError->DerefSymbol(data, symNum);
+			Update();
+			return t;
+		}
 	}
 
 	if (data.find('\'', 0) != std::string::npos || data.find('"', 0) != std::string::npos)
@@ -307,13 +326,20 @@ cExprType CExpr::Evaluate()
 			numVal++;
 		}
 	} else {
-		
-		/* Just get the number */
-		t = Val_Number;
-		numVal = DeHex(data);
-		char buf[32];
-		sprintf(buf, "%d", numVal);
-		data.assign(buf);
+		if (data.find('.', 0) != std::string::npos)
+		{
+			/* Get as a float */
+			fData = (float)atof(data.c_str());
+			t = Val_Float;
+			memcpy((void*)&numVal, (void*)&fData, sizeof(float));
+		} else {
+			/* Just get the number */
+			t = Val_Number;
+			numVal = DeHex(data);
+			char buf[32];
+			sprintf(buf, "%d", numVal);
+			data.assign(buf);
+		}
 	}
 
 	if (litc)
@@ -325,4 +351,184 @@ cExprType CExpr::Evaluate()
 	type = t;
 
 	return t;
+}
+
+void CExpr::Not()
+{
+	if (type != Val_Number)
+	{
+		if (CError)
+			CError->ErrorMsg(Err_Bad_Not);
+	}
+	numVal = ~numVal;
+}
+
+void CExpr::Oper(OpToken op, CExpr &e)
+{
+	switch (op)
+	{
+		case Token_Xor:
+		{
+			if (e.GetType() != Val_Number)
+			{
+				if (CError)
+					CError->ErrorMsg(Err_Invalid_Operator);
+			}
+			numVal = numVal ^ e.GetNumber();
+			break;
+		}
+		case Token_Shr:
+		{
+			if (e.GetType() != Val_Number)
+			{
+				if (CError)
+					CError->ErrorMsg(Err_Invalid_Operator);
+			}
+			numVal >>= e.GetNumber();
+			break;
+		}
+		case Token_Sub:
+		{
+			if (GetType() == Val_Number)
+			{
+				if (e.GetType() == Val_Number)
+				{
+					numVal -= e.GetNumber();
+				} else if (e.GetType() == Val_Float) {
+					numVal -= (int)e.GetFloat();
+				}
+			} else if (GetType() == Val_Float) {
+				if (e.GetType() == Val_Number)
+				{
+					fData -= (float)e.GetNumber();
+				} else if (e.GetType() == Val_Float) {
+					fData -= e.GetFloat();
+				}
+			}
+			break;
+		}
+		case Token_Mod:
+		{
+			if (e.GetType() != Val_Number)
+			{
+				if (CError)
+					CError->ErrorMsg(Err_Invalid_Operator);
+			}
+			numVal = numVal % e.GetNumber();
+			break;
+		}
+		case Token_Mul:
+		{
+			if (GetType() == Val_Number)
+			{
+				if (e.GetType() == Val_Number)
+				{
+					numVal *= e.GetNumber();
+				} else if (e.GetType() == Val_Float) {
+					numVal *= (int)e.GetFloat();
+				}
+			} else if (GetType() == Val_Float) {
+				if (e.GetType() == Val_Number)
+				{
+					fData *= (float)e.GetNumber();
+				} else if (e.GetType() == Val_Float) {
+					fData *= e.GetFloat();
+				}
+			}
+			break;
+		}
+		case Token_Div:
+		{
+			if (GetType() == Val_Number)
+			{
+				if (e.GetType() == Val_Number)
+				{
+					numVal /= e.GetNumber();
+				} else if (e.GetType() == Val_Float) {
+					numVal /= (int)e.GetFloat();
+				}
+			} else if (GetType() == Val_Float) {
+				if (e.GetType() == Val_Number)
+				{
+					fData /= (float)e.GetNumber();
+				} else if (e.GetType() == Val_Float) {
+					fData /= e.GetFloat();
+				}
+			}
+			break;
+		}
+		case Token_Shl:
+		{
+			if (e.GetType() != Val_Number)
+			{
+				if (CError)
+					CError->ErrorMsg(Err_Invalid_Operator);
+			}
+			numVal <<= e.GetNumber();
+			break;
+		}
+		case Token_And:
+		{
+			if (e.GetType() != Val_Number)
+			{
+				if (CError)
+					CError->ErrorMsg(Err_Invalid_Operator);
+			}
+			numVal &= e.GetNumber();
+			break;
+		}
+		case Token_Or:
+		{
+			if (e.GetType() != Val_Number)
+			{
+				if (CError)
+					CError->ErrorMsg(Err_Invalid_Operator);
+			}
+			numVal |= e.GetNumber();
+			break;
+		}
+		case Token_Add:
+		{
+			if (GetType() == Val_Number)
+			{
+				if (e.GetType() == Val_Number)
+				{
+					numVal += e.GetNumber();
+				} else if (e.GetType() == Val_Float) {
+					numVal += (int)e.GetFloat();
+				}
+			} else if (GetType() == Val_Float) {
+				if (e.GetType() == Val_Number)
+				{
+					fData += (float)e.GetNumber();
+				} else if (e.GetType() == Val_Float) {
+					fData += e.GetFloat();
+				}
+			}
+			break;
+		}
+		default:
+		{
+			numVal = 0;
+			break;
+		}
+	}
+
+	Update();
+}
+
+void CExpr::Update()
+{
+	if (type == Val_Float)
+	{
+		numVal = (int)fData;
+	} else if (type == Val_Number) {
+		fData = (float)numVal;
+	}
+	if (type != Val_String && type != Val_Block)
+	{
+		char buf[24];
+		sprintf(buf, "%d", numVal);
+		data.assign(buf);
+	}
 }

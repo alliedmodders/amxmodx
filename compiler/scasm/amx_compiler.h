@@ -40,30 +40,12 @@
 		lastCip+=cellsize; \
 	}
 
-typedef enum
-{
-	Token_None,
-	Token_Or,
-	Token_Xor,
-	Token_And,
-	Token_Shr,
-	Token_Shl,
-	Token_Mod,
-	Token_Div,
-	Token_Mul,
-	Token_Sub,
-	Token_Add,
-	Token_Not,
-	/* End */
-	Tokens_Total,
-} OpToken;
-
 class rpn
 {
 public:
 	//TODO: use linked lists, but not std::list
 	std::vector<char> ops;
-	std::vector<int> vals;
+	std::vector<CExpr> vals;
 };
 
 class Compiler
@@ -91,9 +73,10 @@ public:	//private
 	void Init();
 	void InitOpcodes();
 	int Eval(std::string &str, SymbolType sym = Sym_None);
-	int EvalRpn(rpn *r, SymbolType sym);
+	CExpr EvalRpn(rpn *r, SymbolType sym);
 	OpToken OperToken(char c);
 	char OperChar(OpToken c);
+	bool IsSymbol(std::string &str);
 private:
 	std::vector<Asm *> CodeList;
 	std::map<std::string,int> OpCodes;

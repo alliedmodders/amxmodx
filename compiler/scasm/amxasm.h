@@ -44,6 +44,7 @@ public:
 	int op;
 	std::vector<int> params;
 	int cip;
+	int line;
 };
 
 #include "amx.h"

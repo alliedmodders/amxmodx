@@ -50,7 +50,7 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\extra\lib_win32"
-				ModuleDefinitionFile=".\amxmodx_mm.def"
+				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\debug/amx_mm.pdb"
 				ImportLibrary=".\debug/amx_mm.lib"/>
@@ -114,7 +114,7 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\extra\lib_win32"
-				ModuleDefinitionFile=".\amxmodx_mm.def"
+				ModuleDefinitionFile=""
 				ProgramDatabaseFile=".\release/amx_mm.pdb"
 				ImportLibrary=".\release/amx_mm.lib"/>
 			<Tool
@@ -173,13 +173,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ..\jit\jits.lib"
 				OutputFile="memtestdebug/amx_mm.dll"
 				Version="0.1"
-				LinkIncremental="1"
+				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\extra\lib_win32"
-				ModuleDefinitionFile=".\amxmodx_mm.def"
+				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\debug/amx_mm.pdb"
 				ImportLibrary=".\debug/amx_mm.lib"/>
@@ -238,12 +238,141 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ..\jit\jits.lib"
 				OutputFile="memtestrelease/amx_mm.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\extra\lib_win32"
-				ModuleDefinitionFile=".\amxmodx_mm.def"
+				ModuleDefinitionFile=""
+				ProgramDatabaseFile=".\release/amx_mm.pdb"
+				ImportLibrary=".\release/amx_mm.lib"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="TRUE"
+				SuppressStartupBanner="TRUE"
+				TargetEnvironment="1"
+				TypeLibraryName=".\release/amxmodx_mm.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+		</Configuration>
+		<Configuration
+			Name="JITDebug|Win32"
+			OutputDirectory="JITDebug"
+			IntermediateDirectory="JITDebug"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="&quot;C:\Hry\Half-Life\SDK\Multiplayer Source\pm_shared&quot;;&quot;C:\Hry\Half-Life\SDK\Multiplayer Source\dlls&quot;;&quot;C:\Hry\Half-Life\SDK\Multiplayer Source\engine&quot;;&quot;C:\Hry\Half-Life\SDK\Multiplayer Source\common&quot;;C:\Files\Programming\metamod\metamod"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;amxmodx_mm_EXPORTS;JIT"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				StructMemberAlignment="3"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="amxmodx.h"
+				PrecompiledHeaderFile=".\debug/amxmodx_mm.pch"
+				AssemblerListingLocation=".\debug/"
+				ObjectFile=".\debug/"
+				ProgramDataBaseFileName=".\debug/"
+				WarningLevel="3"
+				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="4"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"
+				CommandLine="copy $(TargetPath) d:\Half-Life\cstrike\addons\amxx\dlls\amx_mm.dll
+"
+				Outputs="$(TargetName)"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ..\jit\jits.lib"
+				OutputFile="debug/amx_mm.dll"
+				Version="0.1"
+				LinkIncremental="1"
+				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="..\extra\lib_win32"
+				ModuleDefinitionFile=""
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile=".\debug/amx_mm.pdb"
+				ImportLibrary=".\debug/amx_mm.lib"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="TRUE"
+				SuppressStartupBanner="TRUE"
+				TargetEnvironment="1"
+				TypeLibraryName=".\debug/amxmodx_mm.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+		</Configuration>
+		<Configuration
+			Name="JITRelease|Win32"
+			OutputDirectory="JITRelease"
+			IntermediateDirectory="JITRelease"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="..\..\metamod\metamod,..\..\hlsdk\sourcecode\common,..\..\hlsdk\sourcecode\engine,..\..\hlsdk\sourcecode\dlls,..\..\hlsdk\sourcecode\pm_shared,..\extra\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;amxmodx_mm_EXPORTS;JIT"
+				StringPooling="TRUE"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="TRUE"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="amxmodx.h"
+				PrecompiledHeaderFile=".\release/amxmodx_mm.pch"
+				AssemblerListingLocation=".\release/"
+				ObjectFile=".\release/"
+				ProgramDataBaseFileName=".\release/"
+				WarningLevel="3"
+				SuppressStartupBanner="TRUE"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"
+				CommandLine="copy $(TargetPath) d:\Half-Life\cstrike\addons\amxx\dlls\amx_mm.dll
+"
+				Outputs="$(TargetName)"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ..\jit\jits.lib"
+				OutputFile="release/amx_mm.dll"
+				LinkIncremental="1"
+				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="..\extra\lib_win32"
+				ModuleDefinitionFile=""
 				ProgramDatabaseFile=".\release/amx_mm.pdb"
 				ImportLibrary=".\release/amx_mm.lib"/>
 			<Tool
@@ -379,6 +508,18 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Release|Win32"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCCLCompilerTool"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="JITDebug|Win32"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCCLCompilerTool"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="JITRelease|Win32"
 						ExcludedFromBuild="TRUE">
 						<Tool
 							Name="VCCLCompilerTool"/>

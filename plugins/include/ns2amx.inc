@@ -40,12 +40,12 @@ stock Float:set_private_f(index, offset, Float:value, linuxdiff=5)
 }
 
 stock make_string(value[])
-	return EngFunc(EngFunc_AllocString,value)
+	return engfunc(EngFunc_AllocString,value)
 
 stock string(value, ret[])
 {
   new szString[128] // gah...
-  EngFunc(EngFunc_SzFromIndex,value,szString,127)
+  engfunc(EngFunc_SzFromIndex,value,szString,127)
   copy(ret,szString,127)
 }
 

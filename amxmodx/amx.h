@@ -10,9 +10,8 @@
  *  including commercial applications, and to alter it and redistribute it
  *  freely, subject to the following restrictions:
  *
- *  PM: Whole file changed
  */
-#if defined LINUX
+#if defined __linux__
   #include <sclinux.h>
 #endif
 #ifndef __AMX_H
@@ -21,7 +20,7 @@
   /* The ISO C99 defines the int16_t and int_32t types. If the compiler got
    * here, these types are probably undefined.
    */
-  #if defined __LCC__ || defined LINUX
+  #if defined __LCC__ || defined __linux__
     #include <stdint.h>
   #else
     typedef short int           int16_t;
@@ -108,7 +107,7 @@ typedef int (AMXAPI *AMX_DEBUG)(struct tagAMX *amx);
   #define PACKED
 #endif
 #if !defined AMX_NO_ALIGN
-  #if defined LINUX
+  #if defined __linux__
     #pragma pack(1)         /* structures must be packed (byte-aligned) */
   #else
     #pragma pack(push)
@@ -297,7 +296,7 @@ int AMXAPI amx_SetUserData(AMX *amx, long tag, void *ptr);
 char * AMXAPI amx_StrError(int errnum);
 int AMXAPI amx_StrLen(cell *cstring, int *length);
 #if !defined AMX_NO_ALIGN
-  #if defined LINUX
+  #if defined __linux__
     #pragma pack()    /* reset default packing */
   #else
     #pragma pack(pop) /* reset previous packing */

@@ -1951,6 +1951,9 @@ typedef int				(*PFN_LOAD_AMXSCRIPT)			(AMX* /*amx*/, void** /*code*/, const cha
 typedef int				(*PFN_UNLOAD_AMXSCRIPT)			(AMX* /*amx*/,void** /*code*/);
 typedef cell			(*PFN_REAL_TO_CELL)				(REAL /*x*/);
 typedef REAL			(*PFN_CELL_TO_REAL)				(cell /*x*/);
+typedef int				(*PFN_REGISTER_SPFORWARD)		(AMX * /*amx*/, int /*func*/, ... /*params*/);
+typedef int				(*PFN_REGISTER_SPFORWARD_BYNAME)	(AMX * /*amx*/, const char * /*funcName*/, ... /*params*/);
+typedef void			(*PFN_UNREGISTER_SPFORWARD)		(int /*id*/);
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
 extern PFN_BUILD_PATHNAME			g_fn_BuildPathname;
@@ -1999,6 +2002,9 @@ extern PFN_LOAD_AMXSCRIPT			g_fn_LoadAmxScript;
 extern PFN_UNLOAD_AMXSCRIPT			g_fn_UnloadAmxScript;
 extern PFN_REAL_TO_CELL				g_fn_RealToCell;
 extern PFN_CELL_TO_REAL				g_fn_CellToReal;
+extern PFN_REGISTER_SPFORWARD		g_fn_RegisterSPForward;
+extern PFN_REGISTER_SPFORWARD_BYNAME	g_fn_RegisterSPForwardByName;
+extern PFN_UNREGISTER_SPFORWARD		g_fn_UnregisterSPForward;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2044,6 +2050,9 @@ int				MF_GetPlayerArmor			(int id) { }
 int				MF_GetPlayerHealth			(int id) { }
 REAL			amx_ctof					(cell x) { }
 cell			amx_ftoc					(float x) { }
+int				MF_RegisterSPForwardByName	(AMX * amx, const char *str, ...) { }
+int				MF_RegisterSPForward		(AMX * amx, int func, ...) { }
+void			MF_UnregisterSPForward		(int id) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
@@ -2093,6 +2102,9 @@ void MF_Log(const char *fmt, ...);
 #define MF_UnloadAmxScript g_fn_UnloadAmxScript
 #define amx_ctof g_fn_CellToReal
 #define amx_ftoc g_fn_RealToCell
+#define MF_RegisterSPForwardByName g_fn_RegisterSPForwardByName
+#define MF_RegisterSPForward g_fn_RegisterSPForward
+#define MF_UnregisterSPForward g_fn_UnregisterSPForward
 
 /*** Memory ***/
 void	*operator new(size_t reportedSize);

@@ -2474,6 +2474,9 @@ PFN_LOAD_AMXSCRIPT			g_fn_LoadAmxScript;
 PFN_UNLOAD_AMXSCRIPT		g_fn_UnloadAmxScript;
 PFN_REAL_TO_CELL			g_fn_RealToCell;
 PFN_CELL_TO_REAL			g_fn_CellToReal;
+PFN_REGISTER_SPFORWARD		g_fn_RegisterSPForward;
+PFN_REGISTER_SPFORWARD_BYNAME	g_fn_RegisterSPForwardByName;
+PFN_UNREGISTER_SPFORWARD	g_fn_UnregisterSPForward;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2542,6 +2545,9 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("AddNatives", g_fn_AddNatives, PFN_ADD_NATIVES);
 	REQFUNC("RaiseAmxError", g_fn_RaiseAmxError, PFN_RAISE_AMXERROR);
 	REQFUNC("RegisterForward", g_fn_RegisterForward, PFN_REGISTER_FORWARD);
+	REQFUNC("RegisterSPForward", g_fn_RegisterSPForward, PFN_REGISTER_SPFORWARD);
+	REQFUNC("RegisterSPForwardByName", g_fn_RegisterSPForwardByName, PFN_REGISTER_SPFORWARD_BYNAME);
+	REQFUNC("UnregisterSPForward", g_fn_UnregisterSPForward, PFN_UNREGISTER_SPFORWARD);
 	REQFUNC("ExecuteForward", g_fn_ExecuteForward, PFN_EXECUTE_FORWARD);
 	REQFUNC("PrepareCellArray", g_fn_PrepareCellArray, PFN_PREPARE_CELLARRAY);
 	REQFUNC("PrepareCharArray", g_fn_PrepareCharArray, PFN_PREPARE_CHARARRAY);
@@ -2616,7 +2622,7 @@ void MF_Log(const char *fmt, ...)
 #ifdef _DEBUG
 // validate macros
 // Makes sure compiler reports errors when macros are invalid
-void ValidateMacros()
+void ValidateMacros_DontCallThis_Smiley()
 {
 	MF_BuildPathname("str", "str", 0);
 	MF_FormatAmxString(NULL, 0, 0, NULL);
@@ -2662,6 +2668,9 @@ void ValidateMacros()
 	MF_AmxAllot(0, 0, 0, 0);
 	MF_LoadAmxScript(0, 0, 0, 0);
 	MF_UnloadAmxScript(0, 0);
+	MF_RegisterSPForward(0, 0, 0, 0, 0, 0);
+	MF_RegisterSPForwardByName(0, 0, 0, 0, 0, 0);
+	MF_UnregisterSPForward(0);
 }
 #endif
 

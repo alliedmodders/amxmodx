@@ -201,3 +201,4 @@ extern CVector<EntClass *> Thinks;
 extern CVector<Touch *> Touches;
 
 #endif //_ENGINE_INCLUDE_H
+

@@ -196,7 +196,7 @@ void ServerDeactivate()
 	Msg.clear();
 	register int i = 0;
 	for (i=0; i<256; i++) {
-		msgHooks[i] = 0;
+		msgHooks[i].clear();
 		msgBlocks[i] = 0;
 	}
 
@@ -227,7 +227,7 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 	Msg.clear();
 	register int i = 0;
 	for (i=0; i<256; i++) {
-		msgHooks[i] = 0;
+		msgHooks[i].clear();
 		msgBlocks[i] = 0;
 	}
 

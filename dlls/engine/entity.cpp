@@ -1806,3 +1806,4 @@ AMX_NATIVE_INFO ent_Natives[] = {
 	{NULL,					NULL},
 	 ///////////////////
 };
+

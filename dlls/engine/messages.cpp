@@ -1,7 +1,8 @@
 #include "engine.h"
 
 CVector<argMsg*> Msg;
-int msgHooks[256] = {0};
+CVector<int> msgHooks[256];
+//int msgHooks[256] = {0};
 int msgBlocks[256] = {0};
 int msgDest;
 int msgType;
@@ -94,7 +95,7 @@ void MessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
 	if (msgBlocks[msg_type]) {
 		inblock = true;
 		RETURN_META(MRES_SUPERCEDE);
-	} else if (msgHooks[msg_type]) {
+	} else if (msgHooks[msg_type].size()) {
 		inhook = true;
 		msgCount = 0;
 		msgDest = msg_dest;
@@ -269,7 +270,7 @@ void WriteEntity(int iValue)
 
 void MessageEnd(void)
 {
-	int mres = 0;
+	int mres = 0, mresB = 0;
 	unsigned int i = 0;
 	if (inblock) {
 		inblock = false;
@@ -277,7 +278,12 @@ void MessageEnd(void)
 			msgBlocks[msgType] = BLOCK_NOT;
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (inhook) {
-		mres = MF_ExecuteForward(msgHooks[msgType], msgType, msgDest, ENTINDEX(msgpEntity));
+		for (i=0; i<msgHooks[msgType].size(); i++)
+		{
+				mresB = MF_ExecuteForward(msgHooks[msgType].at(i), msgType, msgDest, ENTINDEX(msgpEntity));
+				if (mresB > mres)
+						mres = mresB;
+		}
 		inhook = false;
 		if (mres & 1)
 		{
@@ -305,7 +311,7 @@ static cell AMX_NATIVE_CALL register_message(AMX *amx, cell *params)
 //		MF_Log("Registering message %d with result %d", params[1], id);
 		if (id != -1)
 		{
-			msgHooks[params[1]] = id;
+			msgHooks[params[1]].push_back(id);
 			return id;
 		} else {
 			return -1;

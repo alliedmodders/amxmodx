@@ -507,11 +507,12 @@ static cell AMX_NATIVE_CALL cs_get_user_team(AMX *amx, cell *params) // cs_get_u
 	return (int)*((int *)pPlayer->pvPrivateData + OFFSET_TEAM);
 }
 
-static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params) // cs_set_user_team(index, team); = 2 params
+static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params) // cs_set_user_team(index, team, model = 0); = 3 params
 {
 	// Set user team
 	// params[1] = user index
 	// params[2] = team
+	// params[3] = model = 0
 
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients || !g_players[params[1]].GetOnline())
@@ -529,8 +530,12 @@ static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params) // cs_set_u
 		return 0;
 	}
 
+	int model = params[3];
+
 	// Just set team. Removed check of 1-2-3, because maybe scripters want to create new teams, 4, 5 etc?
 	*((int *)pPlayer->pvPrivateData + OFFSET_TEAM) = params[2];
+	if (model != 0)
+		*((int *)pPlayer->pvPrivateData + OFFSET_INTERNALMODEL) = model;
 	
 	/*switch (params[2]) {
 		case TEAM_T:

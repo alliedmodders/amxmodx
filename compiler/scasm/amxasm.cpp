@@ -126,7 +126,7 @@ void get_options(int argc, char **argv, Compiler &Prog)
 
 void print_version()
 {
-	printf("Small/AMX Assembler 1.01\n");
+	printf("Small/AMX Assembler 1.02\n");
 	printf("(C)2004 David 'BAILOPAN' Anderson\n");
 }
 

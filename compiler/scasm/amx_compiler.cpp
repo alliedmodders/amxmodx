@@ -1241,8 +1241,7 @@ Start:
 						}
 						case OP_SDIV_ALT:
 						{
-							CHK_PARAMS(1);
-							PUSH_PARAM(1, Sym_Dat);
+							CHK_PARAMS(0);
 							break;
 						}
 						case OP_UMUL:
@@ -1257,8 +1256,7 @@ Start:
 						}
 						case OP_UDIV_ALT:
 						{
-							CHK_PARAMS(1);
-							PUSH_PARAM(1, Sym_Dat);
+							CHK_PARAMS(0);
 							break;
 						}
 						case OP_ADD:
@@ -2310,12 +2308,15 @@ int Compiler::DerefSymbol(std::string &str, SymbolType sym)
 		{
 			ProcMngr::AsmProc *p = 0;
 			
-			if ( ((p = PROC->FindProc(str)) == NULL) || p->ASM == NULL)
+			if ( ((p = PROC->FindProc(str)) == NULL) )
 			{
 				/* Labels we handle differently. 
 				   Add it to the label queue
 			     */
 				p = PROC->AddProc(S, NULL);
+				PROC->QueueProc(str, CurAsm());
+				val = ProcMngr::ncip;
+			} else if (p->ASM == NULL) {
 				PROC->QueueProc(str, CurAsm());
 				val = ProcMngr::ncip;
 			} else {
@@ -2355,6 +2356,9 @@ int Compiler::DerefSymbol(std::string &str, SymbolType sym)
 				L = CLabels->AddLabel(S, LabelMngr::ncip);
 				CLabels->QueueLabel(str, CurAsm());
 				LabelStack.push(str);
+			} else if (L->cip == LabelMngr::ncip) {
+				//if we don't queue the label the jump won't be resolved!
+				CLabels->QueueLabel(str, CurAsm());
 			}
 
 			val = L->cip;

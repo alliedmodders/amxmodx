@@ -98,7 +98,7 @@ void CExpr::Set(std::string &text)
 
 int CExpr::DeHex(std::string blk)
 {
-	size_t pos = 0, xc = 0, xpos = 0;
+	size_t pos = 0, xc = 0, xpos = 0, ms = 0;
 	/* run through the characters */
 	for (pos = 0; pos < blk.size(); pos++)
 	{
@@ -108,6 +108,9 @@ int CExpr::DeHex(std::string blk)
 			if (xc > 1)
 				break;
 			xpos = pos;
+		} else if (blk[pos] == '-') {
+			if (pos != 0)
+				ms = 1;
 		} else if (blk[pos] != ' ' 
 			&& (blk[pos] < '0' || blk[pos] > '9')
 			&& (!xc || (xc && !IsHex(blk[pos])))) {
@@ -118,6 +121,11 @@ int CExpr::DeHex(std::string blk)
 	if (xc > 1)
 	{
 		CError->ErrorMsg(Err_Unexpected_Char, 'x');
+		return 0;
+	}
+	if (ms)
+	{
+		CError->ErrorMsg(Err_Unexpected_Char, '-');
 		return 0;
 	}
 	if (xc)
@@ -139,9 +147,10 @@ int CExpr::DeHex(std::string blk)
 				blk[pos] -= 32;
 			if (blk[pos] >= 16 || blk[pos] < 0)
 			{
-				assert(0);
 				if (CError)
+				{
 					CError->ErrorMsg(Err_Unexpected_Char, blk[pos]);
+				}
 				return 0;
 			}
 			j *= 16;

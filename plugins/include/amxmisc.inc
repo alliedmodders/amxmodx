@@ -25,13 +25,13 @@ stock cmd_access(id,level,cid,num) {
   }
 
   if ( has_access==0 ) {
-    console_print(id,"You have no access to that command")
+    console_print(id,"%L",id,"NO_ACC_COM")
     return 0
   }
   if (read_argc() < num) {
     new hcmd[32], hinfo[128], hflag
     get_concmd(cid,hcmd,31,hflag,hinfo,127,level)
-    console_print(id,"Usage:  %s %s",hcmd,hinfo)
+    console_print(id,"%L:  %s %s",id,"USAGE",hcmd,hinfo)
     return 0
   }
   return 1
@@ -57,21 +57,21 @@ stock cmd_target(id,const arg[],flags = 1) {
   new player = find_player("bl",arg)
   if (player) {
     if ( player != find_player("blj",arg) ) {
-      console_print(id,"There are more clients matching to your argument")
+      console_print(id,"%L",id,"MORE_CL_MATCHT")
       return 0    
     }
   }
   else if ( ( player = find_player("c",arg) )==0 && arg[0]=='#' && arg[1] )
     player = find_player("k",str_to_num(arg[1]))    
   if (!player) {
-    console_print(id,"Client with that name or userid not found")
+    console_print(id,"%L",id,"CL_NOT_FOUND")
     return 0
   }
   if (flags & 1) {
     if ((get_user_flags(player)&ADMIN_IMMUNITY) && ((flags&2)?(id!=player):true) ) {
       new imname[32]
       get_user_name(player,imname,31)
-      console_print(id,"Client ^"%s^" has immunity",imname)
+      console_print(id,"%L",id,"CLIENT_IMM",imname)
       return 0
     }
   }
@@ -79,7 +79,7 @@ stock cmd_target(id,const arg[],flags = 1) {
     if (!is_user_alive(player)) {
       new imname[32]
       get_user_name(player,imname,31) 
-      console_print(id,"That action can't be performed on dead client ^"%s^"",imname)
+      console_print(id,"%L",id,"CANT_PERF_DEAD",imname)
       return 0
     }
   }
@@ -87,7 +87,7 @@ stock cmd_target(id,const arg[],flags = 1) {
     if (is_user_bot(player)) {
       new imname[32]
       get_user_name(player,imname,31) 
-      console_print(id,"That action can't be performed on bot ^"%s^"",imname)
+      console_print(id,"%L",id,"CANT_PERF_BOT",imname)
       return 0
     } 
   }
@@ -98,10 +98,10 @@ stock show_activity( id, const name[], {Float,_}: ... ) {
   new buffer[128]
   format_args( buffer , 127 , 2 )
   switch(get_cvar_num("amx_show_activity")) {
-    case 2: client_print(0,print_chat,"%s %s: %s",
-      (get_user_flags(id) & ADMIN_USER) ? "PLAYER" : "ADMIN" , name , buffer )
-    case 1: client_print(0,print_chat,"%s: %s",
-      (get_user_flags(id) & ADMIN_USER) ? "PLAYER" : "ADMIN", buffer )
+    case 2: client_print(0,print_chat,"%L %s: %s",
+      id, is_user_admin(id) ? "ADMIN" : "PLAYER" , name , buffer )
+    case 1: client_print(0,print_chat,"%L: %s",
+      id, is_user_admin(id) ? "ADMIN" : "PLAYER", buffer )
   }
 }
 

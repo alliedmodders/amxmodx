@@ -270,6 +270,7 @@ CAmxxReader::Error CAmxxReader::GetSection(void *buffer)
 //	AMXXLOG_Log("|||| First Bytes: %d %d %d %d", tempBuffer[0], tempBuffer[1], tempBuffer[2], tempBuffer[3]);
 	int result = uncompress((Bytef *)buffer, &destLen,
 			(Bytef *)tempBuffer, m_SectionLength);
+	delete [] tempBuffer;
 //	AMXXLOG_Log("|||| Result: %d, m_SectionLength=%d, destLen=%d", result, m_SectionLength, destLen);
 	if (result != Z_OK)
 	{

@@ -191,3 +191,30 @@ stock AddMenuItem_call(const MENU_TEXT[], const MENU_CMD[], const MENU_ACCESS, c
 
 	callfunc_end()
 }
+
+// Send out MSG using client_print() to all clients having required access.
+stock admin_print(access, const DESTINATION, const MSG[]) {
+	new const MAXPLAYERS = get_maxplayers()
+
+	new bool:mustBeAdmin
+	if (access & ADMIN_ADMIN) {
+		mustBeAdmin = true
+		access &= ~ADMIN_ADMIN
+	}
+	else
+		mustBeAdmin = false
+
+	for (new i = 1; i <= MAXPLAYERS; i++) {
+		// No offliners, bots or people without the required access.
+		if (!is_user_connected(i) || is_user_bot(i))
+			continue
+
+		if (mustBeAdmin && !is_user_admin(i))
+			continue
+
+		if (access > 0 && !(get_user_flags(i) & access))
+			continue
+
+		client_print(i, DESTINATION, MSG)
+	}
+}

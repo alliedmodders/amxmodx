@@ -83,7 +83,7 @@ public plugin_init() {
   register_cvar("amx_sql_table","admins")
 #endif
 
-  register_concmd("amx_reloadadmins","cmdReload",ADMIN_ADMIN)
+  register_concmd("amx_reloadadmins","cmdReload",ADMIN_CFG)
 
   format( g_cmdLoopback, 15, "amxauth%c%c%c%c" , 
   	random_num('A','Z') , random_num('A','Z') ,random_num('A','Z'),random_num('A','Z')  )
@@ -127,9 +127,6 @@ loadSettings(szFilename[]) {
         continue
 
     g_aAccess[ g_aNum ] = read_flags(szAccess)
-    if (!(g_aAccess[g_aNum] & ADMIN_USER) && !(g_aAccess[g_aNum] & ADMIN_ADMIN))
-        g_aAccess[g_aNum] |= ADMIN_ADMIN
-
     g_aFlags[ g_aNum ] = read_flags( szFlags )  
     ++g_aNum
   }
@@ -214,6 +211,11 @@ public cmdReload(id,level,cid) {
   adminSql()
 #endif
 
+  if (g_aNum == 1)
+    console_print(id,"[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMIN" )
+  else
+    console_print(id,"[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMINS", g_aNum )
+
   return PLUGIN_HANDLED
 }
 
@@ -288,7 +290,7 @@ getAccess(id,name[],authid[],ip[], password[]) {
     if (!strlen(defaccess))
       copy(defaccess, 32, "z")
     new idefaccess = read_flags(defaccess)
-    if (idefaccess){
+    if (idefaccess) {
       result |= 8
       set_user_flags(id,idefaccess)
     }

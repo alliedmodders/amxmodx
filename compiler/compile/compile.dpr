@@ -41,6 +41,10 @@ var
   sr: TSearchRec;
   i: Word;
 begin
+  WriteLn('AMXXSC compile.exe');
+  WriteLn(' by the AMX Mod X Dev Team');
+  WriteLn;
+
   if not FileExists(ExtractFilePath(ParamStr(0))+'amxxsc.exe') then
   begin
     WriteLn('Could not find amxxsc.exe');

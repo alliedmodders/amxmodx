@@ -381,7 +381,7 @@ static cell AMX_NATIVE_CALL set_offset_short(AMX *amx, cell *params)
 		return 0;
 	}
 
-	if (!is_PlayerOn[index]) {
+	if ((index < gpGlobals->maxClients) && !is_PlayerOn[index]) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -409,7 +409,7 @@ static cell AMX_NATIVE_CALL set_offset(AMX *amx, cell *params)
 		return 0;
 	}
 
-	if (!is_PlayerOn[index]) {
+	if ((index < gpGlobals->maxClients) && !is_PlayerOn[index]) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -421,6 +421,36 @@ static cell AMX_NATIVE_CALL set_offset(AMX *amx, cell *params)
 #endif
 	
 	*((int *)pEnt->pvPrivateData + off) = params[3];
+	
+	return 1;
+}
+
+//(BAILOPAN)
+//Sets a pvPrivateData offset for a player (player, offset, val)
+static cell AMX_NATIVE_CALL set_offset_char(AMX *amx, cell *params)
+{
+	int index = params[1];
+	int off = params[2];
+	
+	if (index < 1 || index > gpGlobals->maxEntities) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	if ((index < gpGlobals->maxClients) && !is_PlayerOn[index]) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+	
+	edict_t *pEnt = INDEXENT(index);
+	
+#ifndef __linux__
+       off -= 5;
+#endif
+	
+
+	char data = params[3];
+	*((char *)pEnt->pvPrivateData + off) = data;
 	
 	return 1;
 }
@@ -439,7 +469,7 @@ static cell AMX_NATIVE_CALL set_offset_float(AMX *amx, cell *params)
 		return 0;
 	}
 
-	if (!is_PlayerOn[index]) {
+	if ((index < gpGlobals->maxClients) && !is_PlayerOn[index]) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -467,8 +497,7 @@ static cell AMX_NATIVE_CALL get_offset_short(AMX *amx, cell *params)
 		return 0;
 	}
 
-	//!!!1111 don't uncomment jghg or I will pull my hair out
-	if (!is_PlayerOn[index]) {
+	if ((index < gpGlobals->maxClients) && !is_PlayerOn[index]) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -479,7 +508,35 @@ static cell AMX_NATIVE_CALL get_offset_short(AMX *amx, cell *params)
 	off -= 5;
 #endif
 	
-	return (int)*((short *)pEnt->pvPrivateData + off);
+	return *((short *)pEnt->pvPrivateData + off);
+	
+}
+
+//(BAILOPAN)
+//Gets a pvPrivateData offset for a player (player, offset)
+static cell AMX_NATIVE_CALL get_offset_char(AMX *amx, cell *params)
+{
+	int index = params[1];
+	int off = params[2];
+	
+	if (index < 1 || index > gpGlobals->maxEntities) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	//!!!1111 don't uncomment jghg or I will pull my hair out
+	if ((index < gpGlobals->maxClients) && !is_PlayerOn[index]) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+	
+	edict_t *pEnt = INDEXENT(index);
+	
+#ifndef __linux__
+	off -= 5;
+#endif
+	
+	return *((char *)pEnt->pvPrivateData + off);
 	
 }
 
@@ -496,7 +553,7 @@ static cell AMX_NATIVE_CALL get_offset(AMX *amx, cell *params)
 	}
 
 	//jghg comment this out again and I bite you
-	if (!is_PlayerOn[index]) {
+	if ((index < gpGlobals->maxClients) && !is_PlayerOn[index]) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -524,7 +581,7 @@ static cell AMX_NATIVE_CALL get_offset_float(AMX *amx, cell *params)
 	}
 
 	//jghg comment this out again and I bite you
-	if (!is_PlayerOn[index]) {
+	if ((index < gpGlobals->maxClients) && !is_PlayerOn[index]) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -539,6 +596,33 @@ static cell AMX_NATIVE_CALL get_offset_float(AMX *amx, cell *params)
 	retVal = ((float)*((float *)pEnt->pvPrivateData + off));
 
 	return *(cell*)((void *)&retVal);
+}
+
+//jghg2
+static cell AMX_NATIVE_CALL get_entity_pointer(AMX *amx, cell *params) // get_entity_pointer(index, pointer[], len); = 3 params
+{
+	// Valid entity should be within range
+	if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
+	{
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// Make into class pointer
+	edict_t *pEdict = INDEXENT(params[1]);
+
+	if (FNullEnt(pEdict)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	char buffer[100];
+	sprintf(buffer, "%d", pEdict);
+
+	if (params[3] == -1)
+		return (cell)pEdict;
+
+	return SET_AMXSTRING(amx, params[2], buffer, params[3]);
 }
 
 //is an entity valid?
@@ -1804,6 +1888,31 @@ static cell AMX_NATIVE_CALL create_entity(AMX *amx, cell *params) {
 	return ENTINDEX(pNewEntity);
 }
 
+//from jghg2
+static cell AMX_NATIVE_CALL find_ent_in_sphere(AMX *amx, cell *params)
+{
+	if (params[1] < 0 || params[1] > gpGlobals->maxEntities) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	edict_t *pStartAfterEnt = INDEXENT(params[1]);
+
+	cell *originLong = GET_AMXADDR(amx, params[2]);
+	float origin[3] = {*(float *)((void *)&originLong[0]), *(float *)((void *)&originLong[1]), *(float *)((void *)&originLong[2])}; // float origin[3] = {originLong[0], originLong[1], originLong[2]};
+	
+	float radius = *(float *)((void *)&params[3]);
+
+	int returnEnt = ENTINDEX(FIND_ENTITY_IN_SPHERE(pStartAfterEnt, origin, radius));
+
+	if (FNullEnt(returnEnt)) {
+		return 0;
+	}
+
+	return returnEnt;
+}
+
+
 //ej ref'd by jghg
 static cell AMX_NATIVE_CALL find_ent_by_class(AMX *amx, cell *params) /* 3 param */
 {
@@ -1820,6 +1929,58 @@ static cell AMX_NATIVE_CALL find_ent_by_class(AMX *amx, cell *params) /* 3 param
 		return 0;
 }
 
+//from jghg2
+static cell AMX_NATIVE_CALL find_sphere_class(AMX *amx, cell *params) // find_sphere_class(aroundent, _lookforclassname[], Float:radius, entlist[], maxents, Float:origin[3] = {0.0, 0.0, 0.0}); // 6 params
+{
+	// params[1] = index to find around, if this is less than 1 then use around origin in last parameter.
+	// params[2] = classname to find
+	int len;
+	char* classToFind = GET_AMXSTRING(amx, params[2], 0, len);
+	// params[3] = radius, float...
+	float radius = *(float *)((void *)&params[3]);
+	// params[4] = store ents in this list
+	cell *entList = GET_AMXADDR(amx, params[4]);
+	// params[5] = maximum ents to store in entlist[] in params[4]
+	// params[6] = origin, use this if params[1] is less than 1
+
+	vec3_t vecOrigin;
+	if (params[1] > 0) {
+		if (params[1] > gpGlobals->maxEntities)
+		{
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
+		}
+
+		edict_t* pEntity = INDEXENT(params[1]);
+		if (FNullEnt(pEntity)) {
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
+		}
+
+		vecOrigin = pEntity->v.origin;
+	}
+	else {
+		cell *newVectorCell = GET_AMXADDR(amx, params[6]);
+		vecOrigin = Vector(*(float *)((void *)&newVectorCell[0]), *(float *)((void *)&newVectorCell[1]), *(float *)((void *)&newVectorCell[2]));
+	}
+	
+	int entsFound = 0;
+	edict_t* pSearchEnt = INDEXENT(0);
+
+	while (entsFound < params[5]) {
+		pSearchEnt = FIND_ENTITY_IN_SPHERE(pSearchEnt, vecOrigin, radius); // takes const float origin
+		if (FNullEnt(pSearchEnt))
+			break;
+		else {
+			if (strcmp(STRING(pSearchEnt->v.classname), classToFind) == 0) {
+				// Add to entlist (params[4])
+				entList[entsFound++] = ENTINDEX(pSearchEnt); // raise entsFound
+			}
+		}
+	}
+
+	return entsFound;
+}
 
 // DispatchKeyValue, sets a key-value pair for a newly created entity.
 // Use DispatchSpawn after doing ALL DispatchKeyValues on an entity.
@@ -2021,13 +2182,21 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native
 	edict_t *pEnt = INDEXENT(params[1]);
 	edict_t *entOwner = INDEXENT(params[3]);
 
+	//optional fourth parameter is for jghg2 compatibility
+	char* sCategory = NULL; 
+	switch(params[4]){ 
+		case 1: sCategory = "target"; break; 
+		case 2: sCategory = "targetname"; break; 
+		default: sCategory = "classname"; 
+	}
+
 	// No need to check if there is a real ent where entOwner points at since we don't access it anyway.
 
 	int len;
 	char* classname = GET_AMXSTRING(amx, params[2], 1, len);
 
 	while (true) {
-		pEnt = FIND_ENTITY_BY_STRING(pEnt, "classname", classname);
+		pEnt = FIND_ENTITY_BY_STRING(pEnt, sCategory, classname);
 		if (!pEnt || FNullEnt(pEnt)) // break and return 0 if bad
 			break;
 		else if (pEnt->v.owner == entOwner) // compare pointers
@@ -3396,10 +3565,13 @@ C_DLLEXPORT int AMX_Detach() {
 AMX_NATIVE_INFO Engine_Natives[] = {
 	{"set_offset_float",	set_offset_float},
 	{"set_offset_short",	set_offset_short},
+	{"set_offset_char",		set_offset_char},
 	{"set_offset",			set_offset},
 	{"get_offset_float",	get_offset_float},
 	{"get_offset_short",	get_offset_short},
+	{"get_offset_char",		get_offset_char},
 	{"get_offset",			get_offset},
+	{"get_entity_pointer",	get_entity_pointer},
 
 	{"entity_get_float",	entity_get_float},
 	{"entity_set_float",	entity_set_float},
@@ -3436,6 +3608,8 @@ AMX_NATIVE_INFO Engine_Natives[] = {
 	{"find_ent_by_target",	find_ent_by_target},
 	{"find_ent_by_tname",	find_ent_by_tname},
 	{"find_ent_by_model",	find_ent_by_model},
+	{"find_ent_in_sphere",	find_ent_in_sphere},
+	{"find_sphere_class",	find_sphere_class},
 	{"entity_count",		entity_count},
 	{"DispatchKeyValue",	DispatchKeyValue},
 	{"DispatchSpawn",		DispatchSpawn},

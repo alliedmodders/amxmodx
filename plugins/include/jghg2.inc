@@ -124,11 +124,6 @@ stock set_pdata_short(entity, offset, value)
 	return set_offset_short(entity, offset, value)
 }
 
-stock get_entity_pointer(index, pointer[] = 0, len = 0)
-{
-	return set_offset_pointer(
-}
-
 stock is_ent_valid(id)
 {
 	return is_valid_ent(id)

@@ -55,41 +55,6 @@ const char* stristr(const char* str,const char* substr)
 
 char* format_amxstring(AMX *amx, cell *params, int parm,int& len)
 {
-	/*
-  static char buffer[2][3072];
-  static char format[16];
-  char *ptr,*arg;
-  char *dest = *buffer;
-  cell *src = get_amxaddr(amx, params[parm++]);
-  int numparam = *params/sizeof(cell);
-  while(*src) {
-    if (*src=='%'&&*(src+1)) {
-      ptr = format;
-      *ptr++ = *src++;
-      if (*src=='%'){
-        *dest++=*src++;
-        continue;
-      }
-      while (!isalpha(*ptr++=*src++))
-        ;
-      *ptr=0;
-      if (numparam < parm) continue;
-      arg = buffer[1];
-      switch(*(ptr-1)){
-      case 's':  sprintf(arg,format,get_amxstring(amx, params[parm++],2,len)); break;
-      case 'f': case 'g': sprintf(arg,format,(float)*(REAL*)get_amxaddr(amx, params[parm++])); break;
-      default: sprintf(arg,format,(int)*get_amxaddr(amx, params[parm++]));
-      }
-      while(*arg) *dest++=*arg++;
-      continue;
-    }
-    *dest++=*src++;
-
-  }
-  *dest=0;
-  len = dest - *buffer;
-  return *buffer;
-  */
 	return g_langMngr.FormatAmxString(amx, params, parm, len);
 }
 
@@ -574,23 +539,34 @@ static cell AMX_NATIVE_CALL is_alpha(AMX *amx, cell *params)
   return isalpha( params[1] );
 }
 
+static cell AMX_NATIVE_CALL amx_ucfirst(AMX *amx, cell *params)
+{
+	int len = 0;
+	cell *str = get_amxaddr(amx, params[1]);
+	if (!isalpha((char)str[0]) || (str[0]&(1<<5)))
+		return 0;
+	str[0] |= (1<<5);
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL amx_trim(AMX *amx, cell *params)
 {
-	int len;
-	char *asdf = get_amxstring(amx, params[1], 0, len);
+	cell *asdf = get_amxaddr(amx, params[1]);
+	cell *cptr = asdf;
+	int len = 0;
+	while (*cptr++) len++;
 	int flag = 0, incr = 0;
 	register int i = 0;
-	for (i=strlen(asdf)-1; i>=0; i--)
+	for (i=len-1; i>=0; i--)
 	{
 		if (!isspace(asdf[i]))
 		{
 			break;
 		} else {
 			asdf[i] = 0;
+			len--;
 		}
 	}
-
-	len = strlen(asdf);
 	
 	for (i=0; i<len; i++)
 	{
@@ -634,5 +610,6 @@ AMX_NATIVE_INFO string_Natives[] = {
   { "strtoupper", strtoupper },
   { "str_to_num", strtonum },
   { "trim", amx_trim },
+  { "ucfirst", amx_ucfirst },
   { NULL, NULL }
 };

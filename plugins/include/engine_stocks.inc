@@ -259,7 +259,7 @@ stock get_user_velocity(entity, Float:vec[3])
 /* Backwards compatible */
 /* Hurts/Kills players in a sphere, like an explosion, Multiplier determines damage. */
 stock RadiusDamage(Float:fExplodeAt[3], iDamageMultiplier, iRadiusMultiplier) {
-  return radius_damage(fExplodeAt[3], iDamageMultiplier, iRadiusMultiplier)
+  return radius_damage(fExplodeAt, iDamageMultiplier, iRadiusMultiplier)
 }
 /* Gives you a velocity in the direction a player is looking, iVelocity is the multiplier. */
 stock VelocityByAim(iIndex,iVelocity, Float:vRetValue[3]) {

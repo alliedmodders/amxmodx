@@ -38,7 +38,7 @@ new Float:g_Flooding[33]
 
 public plugin_init()
 {
-  register_plugin("Anti Flood","0.16","AMXX Dev Team")
+  register_plugin("Anti Flood","0.20","AMXX Dev Team")
   register_clcmd("say","chkFlood")
   register_clcmd("say_team","chkFlood")
   register_cvar("amx_flood_time","0.75")

@@ -53,7 +53,7 @@ new g_system[MAX_SYSTEM]
 new g_systemNum
 
 public plugin_init(){
-  register_plugin("Pause Plugins","0.16","AMXX Dev Team")
+  register_plugin("Pause Plugins","0.20","AMXX Dev Team")
   register_concmd("amx_pausecfg","cmdPlugin",ADMIN_CFG,"- list commands for pause/unpause managment")
   register_clcmd("amx_pausecfgmenu","cmdMenu",ADMIN_CFG,"- pause/unpause plugins with menu")
 #if defined DIRECT_ONOFF
@@ -61,7 +61,7 @@ public plugin_init(){
   register_concmd("amx_on","cmdON",ADMIN_CFG,"- unpauses some plugins")
 #endif
   register_menucmd(register_menuid("Pause/Unpause Plugins"),1023,"actionMenu")
-  g_cstrikeRunning = is_running("cstrike")
+  g_cstrikeRunning = (is_running("cstrike") || is_running("czero"))
   get_configsdir(g_fileToSave, 63);
   format(g_fileToSave, 63, "%s/pausecfg.ini", g_fileToSave);
   

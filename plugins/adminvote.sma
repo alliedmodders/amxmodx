@@ -54,7 +54,7 @@ new bool:g_execResult
 new Float:g_voteRatio 
 
 public plugin_init() { 
-  register_plugin("Admin Votes","0.16","AMXX Dev Team")
+  register_plugin("Admin Votes","0.20","AMXX Dev Team")
   register_menucmd(register_menuid("Change map to ") ,(1<<0)|(1<<1),"voteCount") 
   register_menucmd(register_menuid("Choose map: ") ,(1<<0)|(1<<1)|(1<<2)|(1<<3),"voteCount") 
   register_menucmd(register_menuid("Kick ") ,(1<<0)|(1<<1),"voteCount") 
@@ -66,7 +66,7 @@ public plugin_init() {
   register_concmd("amx_voteban","cmdVoteKickBan",ADMIN_VOTE,"<name or #userid>")
   register_concmd("amx_vote","cmdVote",ADMIN_VOTE,"<question> <answer#1> <answer#2>")
   register_concmd("amx_cancelvote","cmdCancelVote",ADMIN_VOTE,"- cancels last vote")
-  g_cstrikeRunning = is_running("cstrike")
+  g_cstrikeRunning = (is_running("cstrike") || is_running("czero"))
 }
 
 public cmdCancelVote(id,level,cid){

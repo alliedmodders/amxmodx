@@ -55,7 +55,7 @@ new g_cstrikeRunning
 
 public plugin_init()
 {
-  register_plugin("Players Menu","0.16","AMXX Dev Team")
+  register_plugin("Players Menu","0.20","AMXX Dev Team")
   register_clcmd("amx_kickmenu","cmdKickMenu",ADMIN_KICK,"- displays kick menu")
   register_clcmd("amx_banmenu","cmdBanMenu",ADMIN_BAN,"- displays ban menu")
   register_clcmd("amx_slapmenu","cmdSlapMenu",ADMIN_SLAY,"- displays slap/slay menu")   
@@ -68,7 +68,7 @@ public plugin_init()
   register_menucmd(register_menuid("Team Menu"),1023,"actionTeamMenu")
   register_menucmd(register_menuid("Client Cmds Menu"),1023,"actionClcmdMenu")   
 
-  g_cstrikeRunning = is_running("cstrike")
+  g_cstrikeRunning = (is_running("cstrike") || is_running("czero"))
 
   new clcmds_ini_file[64];
   get_configsdir(clcmds_ini_file, 63);

@@ -88,7 +88,7 @@ new g_cstrikeRunning
 
 public plugin_init()
 {
-  register_plugin("Commands Menu","0.16","AMXX Dev Team")
+  register_plugin("Commands Menu","0.20","AMXX Dev Team")
 
   new configsDir[64];
   get_configsdir(configsDir, 63);
@@ -107,7 +107,7 @@ public plugin_init()
   format(cvars_ini_file, 63, "%s/%s", configsDir, "cvars.ini");
   loadCvarSettings(cvars_ini_file)
 
-  g_cstrikeRunning = is_running("cstrike")
+  g_cstrikeRunning = (is_running("cstrike") || is_running("czero"))
 }
 
 /* Commands menu */

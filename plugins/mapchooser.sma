@@ -52,12 +52,12 @@ new bool:g_selected = false
 
 public plugin_init()
 {
-  register_plugin("Nextmap Chooser","0.16","AMXX Dev Team")
+  register_plugin("Nextmap Chooser","0.20","AMXX Dev Team")
   register_menucmd(register_menuid("AMX Choose nextmap:"),(-1^(-1<<(SELECTMAPS+2))),"countVote")
   register_cvar("amx_extendmap_max","90")
   register_cvar("amx_extendmap_step","15")
 
-  if ( ( g_cstrikeRunning = is_running("cstrike") ) != 0 )  
+  if ( ( g_cstrikeRunning = (is_running("cstrike")||is_running("czero")) ) != 0 )
     register_event("TeamScore", "team_score", "a")
   
   get_localinfo("lastMap",g_lastMap,31)

@@ -514,11 +514,11 @@ void attachMetaModModules(PLUG_LOADTIME now, const char* filename)
 			if ( a )
 			{
 				g_FakeMeta.AddPlugin(mmpathname);
-				g_FakeMeta.Meta_Query(gpMetaUtilFuncs);
-				g_FakeMeta.Meta_Attach(now, gpMetaGlobals, gpGamedllFuncs);
 			}
 		}
 	}
+	g_FakeMeta.Meta_Query(gpMetaUtilFuncs);
+	g_FakeMeta.Meta_Attach(now, gpMetaGlobals, gpGamedllFuncs);
 }
 
 

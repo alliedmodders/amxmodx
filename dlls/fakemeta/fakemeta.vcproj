@@ -175,6 +175,9 @@
 			<File
 				RelativePath=".\forward.h">
 			</File>
+			<File
+				RelativePath=".\forwardmacros.h">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

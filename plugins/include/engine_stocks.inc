@@ -12,6 +12,7 @@
 #define _engine_stocks_included
 
 /* Changes an integer vec to a floating vec */
+
 stock IVecFVec(IVec[3], Float:FVec[3])
 {
 	FVec[0] = float(IVec[0])
@@ -143,14 +144,14 @@ stock user_silentkill(index)
 /*  Set endering of an entity */
 stock set_rendering(index,fx=kRenderFxNone, r=255,g=255,b=255, render=kRenderNormal,amount=16)
 {
-	Entvars_Set_Int(index,EV_INT_renderfx,fx)
+	entity_set_int(index,EV_INT_renderfx,fx)
 	new Float:RenderColor[3]
 	RenderColor[0] = float(r)
 	RenderColor[1] = float(g)
 	RenderColor[2] = float(b)
-	Entvars_Set_Vector(index,EV_VEC_rendercolor,RenderColor)
-	Entvars_Set_Int(index,EV_INT_rendermode,render)
-	Entvars_Set_Float(index,EV_FL_renderamt,float(amount))
+	entity_set_vector(index,EV_VEC_rendercolor,RenderColor)
+	entity_set_int(index,EV_INT_rendermode,render)
+	entity_set_float(index,EV_FL_renderamt,float(amount))
 
 	return 1
 }
@@ -158,15 +159,15 @@ stock set_rendering(index,fx=kRenderFxNone, r=255,g=255,b=255, render=kRenderNor
 /* Set flags on an entity */
 stock set_entity_flags(ent,flag,onoff)
 {
-	if ((Entvars_Get_Int(ent,EV_INT_flags)&flag) > 0)
+	if ((entity_get_int(ent,EV_INT_flags)&flag) > 0)
 	{
 		if (onoff == 1)
-		{		
+		{
 			return 2
 		}
 		else
 		{
-			Entvars_Set_Int(ent,EV_INT_flags,Entvars_Get_Int(ent,EV_INT_flags)-flag)
+			entity_set_int(ent,EV_INT_flags,entity_get_int(ent,EV_INT_flags)-flag)
 			return 1
 		}
 	}
@@ -178,7 +179,7 @@ stock set_entity_flags(ent,flag,onoff)
 		}
 		else
 		{
-			Entvars_Set_Int(ent,EV_INT_flags,Entvars_Get_Int(ent,EV_INT_flags)+flag)
+			entity_set_int(ent,EV_INT_flags,entity_get_int(ent,EV_INT_flags)+flag)
 			return 1
 		}
 	}

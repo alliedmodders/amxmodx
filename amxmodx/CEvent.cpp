@@ -328,7 +328,7 @@ void EventsMngr::parseValue(const char *sz)
 			switch(condIter->second.type)
 			{
 			case '=': if (!strcmp(sz, condIter->second.sValue.c_str())) skip=true; break;
-			case '!': if (!strstr(sz, condIter->second.sValue.c_str())) skip=true; break;
+			case '!': if (strcmp(sz, condIter->second.sValue.c_str())) skip=true; break;
 			case '&': if (strstr(sz, condIter->second.sValue.c_str())) skip=true; break;
 			}
 			if (skip)

@@ -88,5 +88,5 @@ public getPing(id) {
 
 public plugin_modules()
 {
-	require_module("csstats")
+	require_module("csx")
 }

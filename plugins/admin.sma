@@ -155,22 +155,28 @@ public adminSql() {
   
   new Result:Res = dbi_query(sql,"SELECT auth,password,access,flags FROM admins")
 
-  if (rescode(Res) < 0)  {
+  if (Res == RESULT_FAILED) {
     dbi_error(sql,error,127)
     server_print("[AMXX] SQL error: can't load admins: '%s'",error)
+    dbi_free_result(Res)
+    dbi_close(Sql)
     return PLUGIN_HANDLED
-  } else if (rescode(Res) == 0) {
-	  server_print("[AMXX] No admins found.")
+  }
+  else if (Res == RESULT_NONE) {
+    server_print("[AMXX] No admins found.")
+    dbi_free_result(Res)
+    dbi_close(Sql)
+    return PLUGIN_HANDLED
   }
 
   new szFlags[32],szAccess[32]
   g_aNum = 0
   while( dbi_nextrow(Res) > 0 )
   {
-    dbi_result(Res, "auth", g_aName[ g_aNum ] ,31)
-    dbi_result(Res, "password", g_aPassword[ g_aNum ] ,31)
-    dbi_result(Res, "access", szAccess,31)
-    dbi_result(Res, "flags", szFlags,31)
+    dbi_result(Res, "auth", g_aName[g_aNum], 31)
+    dbi_result(Res, "password", g_aPassword[g_aNum], 31)
+    dbi_result(Res, "access", szAccess, 31)
+    dbi_result(Res, "flags", szFlags, 31)
 
     if ( (containi(szAccess,"z")==-1) && (containi(szAccess,"y")==-1) )
       szAccess[strlen(szAccess)] = 'y'

@@ -40,18 +40,6 @@ native num_to_str(num,string[],len);
 /* Returns converted string to number. */
 native str_to_num(const string[]);
 
-stock int_to_str(num,string[],len)
-  return num_to_str(num,string,len)
-
-stock str_to_int(const string[])
-  return str_to_num(string)
-
-stock numtostr(num,string[],len)
-  return num_to_str(num,string,len)
-
-stock strtonum(const string[])
-  return str_to_num(string)
-
 /* Checks if two strings equal. If len var is set
 * then there are only c chars comapred. */
 native equal(const a[],const b[],c=0);

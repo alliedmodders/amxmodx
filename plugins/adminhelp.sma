@@ -43,7 +43,6 @@ new g_timeInfo2[] = "No Time Limit. Next Map: %s"
 public plugin_init() {
   register_plugin("Admin Help","0.20","AMXX Dev Team")
   register_concmd("amx_help","cmdHelp",0,"<page> [nr of cmds (only for server)] - displays this help")
-  setHelp(0)
 }
 
 public client_putinserver(id)
@@ -87,19 +86,16 @@ public cmdHelp(id,level,cid) {
 }
 
 public dispInfo(id){
-  if (id) client_print(id,print_chat, g_typeHelp )
-  else server_print( g_typeHelp )
+  client_print(id,print_chat, g_typeHelp )
   new nextmap[32]
   get_cvar_string("amx_nextmap",nextmap,31)
   if (get_cvar_float("mp_timelimit")){
     new timeleft = get_timeleft()
     if (timeleft > 0){
-      if (id) client_print(id,print_chat, g_timeInfo1 , timeleft / 60, timeleft % 60,nextmap)
-      else server_print( g_timeInfo1 , timeleft / 60, timeleft % 60,nextmap)
+      client_print(id,print_chat, g_timeInfo1 , timeleft / 60, timeleft % 60,nextmap)
     }
   }
-  else if (id) client_print(id,print_chat, g_timeInfo2 ,nextmap)
-  else server_print( g_timeInfo2 ,nextmap)
+  client_print(id,print_chat, g_timeInfo2 ,nextmap)
 }
 
 setHelp(id)

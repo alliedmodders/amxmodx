@@ -37,11 +37,7 @@
 
 bool UTIL_IsPlayer(AMX* amx, edict_t* pPlayer) {
 	bool player = false;
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+
 	if (strcmp(STRING(pPlayer->v.classname), "player") == 0)
 		player = true;
 
@@ -74,20 +70,10 @@ static cell AMX_NATIVE_CALL cs_set_user_money(AMX *amx, cell *params) // cs_set_
 	// params[3] = flash money?
 
 	// Check index
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	// Give money
 	*((int *)pPlayer->pvPrivateData + OFFSET_CSMONEY) = params[2];
@@ -107,20 +93,10 @@ static cell AMX_NATIVE_CALL cs_get_user_money(AMX *amx, cell *params) // cs_get_
 	// params[1] = user
 
 	// Check index
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	// Return money
 	return *((int *)pPlayer->pvPrivateData + OFFSET_CSMONEY);
@@ -132,20 +108,10 @@ static cell AMX_NATIVE_CALL cs_get_user_deaths(AMX *amx, cell *params) // cs_get
 	// params[1] = user
 
 	// Check index
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	return *((int *)pPlayer->pvPrivateData + OFFSET_CSDEATHS);
 }
@@ -157,20 +123,10 @@ static cell AMX_NATIVE_CALL cs_set_user_deaths(AMX *amx, cell *params) // cs_set
 	// params[2] = new deaths
 
 	// Check index
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	// Set deaths
 	*((int *)pPlayer->pvPrivateData + OFFSET_CSDEATHS) = params[2];
@@ -193,24 +149,14 @@ static cell AMX_NATIVE_CALL cs_get_hostage_id(AMX *amx, cell *params) // cs_get_
 	// params[1] = hostage entity index
 
 	// Valid entity should be within range
-	if (params[1] <= gpGlobals->maxClients || params[1] > gpGlobals->maxEntities)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_ENTITY(params[1]);
 
 	// Make into class pointer
-	edict_t *pEdict = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pEdict)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pEdict = GETEDICT(params[1]);
 
 	// Make sure this is a hostage.
 	if (strcmp(STRING(pEdict->v.classname), "hostage_entity") != 0) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d (\"%s\") is not a hostage", params[1], STRING(pEdict->v.classname));
 		return 0;
 	}
 
@@ -224,20 +170,10 @@ static cell AMX_NATIVE_CALL cs_get_weapon_silenced(AMX *amx, cell *params) // cs
 	// params[1] = weapon index
 
 	// Valid entity should be within range
-	if (params[1] <= gpGlobals->maxClients || params[1] > gpGlobals->maxEntities)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_NONPLAYER(params[1]);
 
 	// Make into edict pointer
 	edict_t *pWeapon = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pWeapon)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
 
 	int weapontype = (int)*((int *)pWeapon->pvPrivateData + OFFSET_WEAPONTYPE);
 	int *silencemode = ((int *)pWeapon->pvPrivateData + OFFSET_SILENCER_FIREMODE);
@@ -260,20 +196,10 @@ static cell AMX_NATIVE_CALL cs_get_weapon_type(AMX *amx, cell *params) // cs_get
 	// params[1] = weapon index
 
 	// Valid entity should be within range
-	if (params[1] <= gpGlobals->maxClients || params[1] > gpGlobals->maxEntities)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_NONPLAYER(params[1]);
 
 	// Make into edict pointer
 	edict_t *pWeapon = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pWeapon)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
 
 	return *((int *)pWeapon->pvPrivateData + OFFSET_WEAPONTYPE);
 }
@@ -285,20 +211,10 @@ static cell AMX_NATIVE_CALL cs_set_weapon_silenced(AMX *amx, cell *params) // cs
 	// params[2] = 1, and we silence the gun, 0 and we unsilence gun.
 
 	// Valid entity should be within range
-	if (params[1] <= gpGlobals->maxClients || params[1] > gpGlobals->maxEntities)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_NONPLAYER(params[1]);
 
 	// Make into edict pointer
 	edict_t *pWeapon = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pWeapon)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
 
 	int weapontype = (int)*((int *)pWeapon->pvPrivateData + OFFSET_WEAPONTYPE);
 	int *silencemode = ((int *)pWeapon->pvPrivateData + OFFSET_SILENCER_FIREMODE);
@@ -349,20 +265,10 @@ static cell AMX_NATIVE_CALL cs_get_weapon_burstmode(AMX *amx, cell *params) // c
 	// params[1] = weapon index
 
 	// Valid entity should be within range
-	if (params[1] <= gpGlobals->maxClients || params[1] > gpGlobals->maxEntities)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_NONPLAYER(params[1]);
 
 	// Make into edict pointer
 	edict_t *pWeapon = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pWeapon)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
 
 	int weapontype = (int)*((int *)pWeapon->pvPrivateData + OFFSET_WEAPONTYPE);
 	int* firemode = ((int *)pWeapon->pvPrivateData + OFFSET_SILENCER_FIREMODE);
@@ -386,20 +292,10 @@ static cell AMX_NATIVE_CALL cs_set_weapon_burstmode(AMX *amx, cell *params) // c
 	// params[2] = 1, and we set burstmode, 0 and we unset it.
 
 	// Valid entity should be within range
-	if (params[1] <= gpGlobals->maxClients || params[1] > gpGlobals->maxEntities)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_NONPLAYER(params[1]);
 
 	// Make into edict pointer
 	edict_t *pWeapon = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pWeapon)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
 
 	int weapontype = (int)*((int *)pWeapon->pvPrivateData + OFFSET_WEAPONTYPE);
 
@@ -456,20 +352,10 @@ static cell AMX_NATIVE_CALL cs_get_user_vip(AMX *amx, cell *params) // cs_get_us
 	// params[1] = user index
 
 	// Valid entity should be within range
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Make into edict pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	if ( *((int *)pPlayer->pvPrivateData + OFFSET_VIP) & PLAYER_IS_VIP )
 		return 1;
@@ -484,20 +370,10 @@ static cell AMX_NATIVE_CALL cs_set_user_vip(AMX *amx, cell *params) // cs_set_us
 	// params[2] = if 1, activate vip, else deactivate vip.
 
 	// Valid entity should be within range
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Make into edict pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	if (params[2] == 1) {
 		// Set to "be" vip.
@@ -546,20 +422,10 @@ static cell AMX_NATIVE_CALL cs_get_user_team(AMX *amx, cell *params) // cs_get_u
 	// params[1] = user index
 
 	// Valid entity should be within range
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Make into edict pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	return *((int *)pPlayer->pvPrivateData + OFFSET_TEAM);
 }
@@ -572,20 +438,10 @@ static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params) // cs_set_u
 	// params[3] = model = 0
 
 	// Valid entity should be within range
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Make into edict pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	int model = params[3];
 
@@ -630,20 +486,10 @@ static cell AMX_NATIVE_CALL cs_get_user_inside_buyzone(AMX *amx, cell *params) /
 	// params[1] = user index
 
 	// Valid entity should be within range
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Make into edict pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	return (int)*((int *)pPlayer->pvPrivateData + OFFSET_BUYZONE); // This offset is 0 when outside, 1 when inside.
 }
@@ -654,20 +500,10 @@ static cell AMX_NATIVE_CALL cs_get_user_plant(AMX *amx, cell *params) // cs_get_
 	// params[1] = user index
 
 	// Valid entity should be within range
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Make into edict pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	if ((int)*((int *)pPlayer->pvPrivateData + OFFSET_DEFUSE_PLANT) & CAN_PLANT_BOMB)
 		return 1;
@@ -683,20 +519,10 @@ static cell AMX_NATIVE_CALL cs_set_user_plant(AMX *amx, cell *params) // cs_set_
 	// params[3] = show bomb icon?
 
 	// Valid entity should be within range
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Make into edict pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 	
 	int* plantskill = ((int *)pPlayer->pvPrivateData + OFFSET_DEFUSE_PLANT);
 
@@ -739,20 +565,10 @@ static cell AMX_NATIVE_CALL cs_get_user_defusekit(AMX *amx, cell *params) // cs_
 	// params[1] = user index
 
 	// Valid entity should be within range
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Make into edict pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	if ((int)*((int *)pPlayer->pvPrivateData + OFFSET_DEFUSE_PLANT) & HAS_DEFUSE_KIT)
 		return 1;
@@ -772,20 +588,10 @@ static cell AMX_NATIVE_CALL cs_set_user_defusekit(AMX *amx, cell *params) // cs_
 	// params[7] = flash = 0
 
 	// Valid entity should be within range
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Make into edict pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 	
 	int* defusekit = ((int *)pPlayer->pvPrivateData + OFFSET_DEFUSE_PLANT);
 
@@ -847,20 +653,10 @@ static cell AMX_NATIVE_CALL cs_get_user_backpackammo(AMX *amx, cell *params) // 
 	// params[2] = weapon, as in CSW_*
 
 	// Valid entity should be within range
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Make into edict pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	int offset;
 
@@ -922,7 +718,7 @@ static cell AMX_NATIVE_CALL cs_get_user_backpackammo(AMX *amx, cell *params) // 
 			offset = OFFSET_C4_AMMO;
 			break;
 		default:
-			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", params[2]);
 			return 0;
 	}
 
@@ -939,20 +735,10 @@ static cell AMX_NATIVE_CALL cs_set_user_backpackammo(AMX *amx, cell *params) // 
 	// params[3] = new amount
 
 	// Valid entity should be within range
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Make into edict pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	int offset;
 
@@ -1014,7 +800,7 @@ static cell AMX_NATIVE_CALL cs_set_user_backpackammo(AMX *amx, cell *params) // 
 			offset = OFFSET_C4_AMMO;
 			break;
 		default:
-			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", params[2]);
 			return 0;
 	}
 
@@ -1029,20 +815,10 @@ static cell AMX_NATIVE_CALL cs_get_user_nvg(AMX *amx, cell *params) // cs_get_us
 	// params[1] = user index
 
 	// Valid entity should be within range
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Make into edict pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	if ((int)*((int *)pPlayer->pvPrivateData + OFFSET_NVGOGGLES) & HAS_NVGOGGLES)
 		return 1;
@@ -1057,20 +833,10 @@ static cell AMX_NATIVE_CALL cs_set_user_nvg(AMX *amx, cell *params) // cs_set_us
 	// params[2] = 1 = give, 0 = remove
 
 	// Valid entity should be within range
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Make into edict pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 	
 	int* defusekit = ((int *)pPlayer->pvPrivateData + OFFSET_NVGOGGLES);
 
@@ -1098,20 +864,9 @@ static cell AMX_NATIVE_CALL cs_get_user_model(AMX *amx, cell *params) // cs_get_
 	// params[3] = max length to set
 
 	// Valid player index should be within range
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
-
+	CHECK_PLAYER(params[1]);
 	// Make into edict pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	return MF_SetAmxString(amx, params[2], GETCLIENTKEYVALUE(GETINFOKEYBUFFER(pPlayer), "model"), params[3]);
 }
@@ -1123,23 +878,13 @@ static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params) // cs_set_
 	// params[2] = model
 
 	// Valid player index should be within range
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Make into edict pointer
-	edict_t* pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t* pPlayer = MF_GetPlayerEdict(params[1]);
 
 	if (params[2] == -1) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid model %d", params[2]);
 		return 0;
 	}
 
@@ -1162,20 +907,10 @@ static cell AMX_NATIVE_CALL cs_reset_user_model(AMX *amx, cell *params) // cs_re
 	// params[1] = user index
 
 	// Valid player index should be within range
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Make into edict pointer
-	edict_t* pPlayer = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pPlayer)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t* pPlayer = MF_GetPlayerEdict(params[1]);
 
 	g_players[params[1]].SetModelled(false);
 
@@ -1190,24 +925,14 @@ static cell AMX_NATIVE_CALL cs_get_hostage_follow(AMX *amx, cell *params) // cs_
 	// params[1] = hostage index
 
 	// Valid index should be within range
-	if (params[1] <= gpGlobals->maxClients || params[1] > gpGlobals->maxEntities)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_NONPLAYER(params[1]);
 
 	// Make into edict pointer
 	edict_t* pHostage = INDEXENT(params[1]);
 
-	// Check entity validity
-	if (FNullEnt(pHostage)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
-
 	// Make sure this is a hostage.
 	if (strcmp(STRING(pHostage->v.classname), "hostage_entity") != 0) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d (\"%s\") is not a hostage", params[1], STRING(pHostage->v.classname));
 		return 0;
 	}
 
@@ -1223,7 +948,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_follow(AMX *amx, cell *params) // cs_
 	edict_t* pEntity = (edict_t*)following;
 
 	if (FNullEnt(pEntity)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Unknown error finding hostage parameter");
 		return 0;
 	}
 
@@ -1237,24 +962,14 @@ static cell AMX_NATIVE_CALL cs_set_hostage_follow(AMX *amx, cell *params) // cs_
 	// params[2] = index to follow, if -1 then set hostage to not follow anything
 
 	// Valid index should be within range
-	if (params[1] <= gpGlobals->maxClients || params[1] > gpGlobals->maxEntities)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_NONPLAYER(params[1]);
 
 	// Make into edict pointer
 	edict_t* pHostage = INDEXENT(params[1]);
 
-	// Check entity validity
-	if (FNullEnt(pHostage)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
-
 	// Make sure this is a hostage.
 	if (strcmp(STRING(pHostage->v.classname), "hostage_entity") != 0) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d (\"%s\") is not a hostage", params[1], STRING(pHostage->v.classname));
 		return 0;
 	}
 
@@ -1270,20 +985,10 @@ static cell AMX_NATIVE_CALL cs_set_hostage_follow(AMX *amx, cell *params) // cs_
 	}
 
 	// Valid index should be within range
-	if (params[2] < 1 || params[2] > gpGlobals->maxEntities)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_ENTITY(params[2]);
 
 	// Make into edict pointer
-	edict_t* pEntity = INDEXENT(params[2]);
-
-	// Check entity validity
-	if (FNullEnt(pEntity)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	edict_t* pEntity = GETEDICT(params[2]);
 
 #if !defined __amd64__
 	*((int *)pHostage->pvPrivateData + OFFSET_HOSTAGEFOLLOW) = (int)pEntity;
@@ -1299,20 +1004,10 @@ static cell AMX_NATIVE_CALL cs_get_weapon_ammo(AMX *amx, cell *params) // cs_get
 	// params[1] = weapon index
 
 	// Valid entity should be within range
-	if (params[1] <= gpGlobals->maxClients || params[1] > gpGlobals->maxEntities)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_NONPLAYER(params[1]);
 
 	// Make into edict pointer
 	edict_t *pWeapon = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pWeapon)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
 
 	return *((int *)pWeapon->pvPrivateData + OFFSET_CLIPAMMO);
 }
@@ -1324,20 +1019,10 @@ static cell AMX_NATIVE_CALL cs_set_weapon_ammo(AMX *amx, cell *params) // cs_set
 	// params[2] = newammo
 
 	// Valid entity should be within range
-	if (params[1] <= gpGlobals->maxClients || params[1] > gpGlobals->maxEntities)
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_NONPLAYER(params[1]);
 
 	// Make into edict pointer
 	edict_t *pWeapon = INDEXENT(params[1]);
-
-	// Check entity validity
-	if (FNullEnt(pWeapon)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
 
 	*((int *)pWeapon->pvPrivateData + OFFSET_CLIPAMMO) = params[2];
 
@@ -1350,14 +1035,10 @@ static cell AMX_NATIVE_CALL cs_get_user_hasprimary(AMX *amx, cell *params) // cs
 	// params[1] = user index
 
 	// Check player
-	if (!MF_IsPlayerIngame(params[1]))
-	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[1]);
 
 	// Make into edict pointer
-	edict_t *pPlayer = INDEXENT(params[1]);
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	return *((int *)pPlayer->pvPrivateData + OFFSET_PRIMARYWEAPON);
 }
@@ -1383,20 +1064,10 @@ static cell AMX_NATIVE_CALL cs_get_user_tked(AMX *amx, cell *params) // cs_get_u
 	// params[1] = user index 
 
 	// Check player 
-	if (!MF_IsPlayerIngame(params[1])) 
-	{ 
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE); 
-		return 0; 
-	} 
+	CHECK_PLAYER(params[1]);
 
 	// Make into edict pointer 
-	edict_t *pPlayer = INDEXENT(params[1]); 
-
-	// Check entity validity 
-	if (FNullEnt(pPlayer)) { 
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE); 
-		return 0; 
-	} 
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]); 
 
 	return *((int *)pPlayer->pvPrivateData + OFFSET_TK); 
 }
@@ -1410,20 +1081,10 @@ static cell AMX_NATIVE_CALL cs_set_user_tked(AMX *amx, cell *params) // cs_set_u
 	// params[3] = number of frags to subtract 
 
 	// Check index 
-	if (!MF_IsPlayerIngame(params[1])) 
-	{ 
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE); 
-		return 0; 
-	} 
+	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer 
-	edict_t *pPlayer = INDEXENT(params[1]); 
-
-	// Check entity validity 
-	if (FNullEnt(pPlayer)) { 
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE); 
-		return 0; 
-	} 
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]); 
 
 	if (params[2]) { 
 		*((int *)pPlayer->pvPrivateData + OFFSET_TK) = 1; 
@@ -1456,20 +1117,10 @@ static cell AMX_NATIVE_CALL cs_get_user_driving(AMX *amx, cell *params) // cs_ge
 	// params[1] = user index 
 
 	// Check player 
-	if (!MF_IsPlayerIngame(params[1])) 
-	{ 
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE); 
-		return 0; 
-	} 
+	CHECK_PLAYER(params[1]);
 
 	// Make into edict pointer 
-	edict_t *pPlayer = INDEXENT(params[1]); 
-
-	// Check entity validity 
-	if (FNullEnt(pPlayer)) { 
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE); 
-		return 0; 
-	} 
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]); 
 
 	// If player driving, return 1, if not, return 0 
 	return *((int *)pPlayer->pvPrivateData + OFFSET_ISDRIVING); 
@@ -1480,20 +1131,10 @@ static cell AMX_NATIVE_CALL cs_get_user_stationary(AMX *amx, cell *params) // cs
 	// Returns 1 if client is using a stationary guns (maybe also other stuff)
 
 	// Check player 
-	if (!MF_IsPlayerIngame(params[1])) 
-	{ 
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE); 
-		return 0; 
-	} 
+	CHECK_PLAYER(params[1]);
 
 	// Make into edict pointer 
-	edict_t *pPlayer = INDEXENT(params[1]); 
-
-	// Check entity validity 
-	if (FNullEnt(pPlayer)) { 
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE); 
-		return 0; 
-	} 
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]); 
 
 	// If player driving, return 1, if not, return 0
 #if !defined __amd64__
@@ -1507,8 +1148,7 @@ static cell AMX_NATIVE_CALL cs_get_user_stationary(AMX *amx, cell *params) // cs
 	else if (AMD64_STATIONARY_YES == *((int *)pPlayer->pvPrivateData + OFFSET_STATIONARY))
 		return 1;
 	else {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		MF_Log("Unexpected value at offset. Please report this to development team @ www.amxmodx.org!");
+		MF_LogError(amx, AMX_ERR_NATIVE, "Unexpected value at offset. Please report this to development team @ www.amxmodx.org!");
 
 		return 0; 
 	}

@@ -609,7 +609,7 @@ native unpause(flag[], const param1[]="",const param2[]="");
 *   0     - Runtime error
 *  -1     - Plugin not found
 *  -2     - Function not found */
-native callfunc_begin(const plugin[]="", const func[]);
+native callfunc_begin(const func[], const plugin[]="");
 
 /* Push a parameter (integer, string, float) */
 native callfunc_push_int(value);

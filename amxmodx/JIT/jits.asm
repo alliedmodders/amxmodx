@@ -1728,15 +1728,20 @@ OP_FILE:                                ;opcode is simply ignored
 OP_LINE:
 ;nop;
 ;~dvander - opline is now variable on compile time :]
-		push	eax
-		push	ebp
-		mov 	ebp,[amxhead]
-		mov		eax,[ebp+_h_flags]
-		and		eax,AMX_FLAG_LINEOPS
-		cmp		eax,AMX_FLAG_LINEOPS
-		pop		ebp
-		pop		eax
-		je		_go_debug
+        ;save registers
+        push    eax
+        push    ebp
+        ;get .amx flags
+        mov     ebp,[amxhead]
+        mov	    eax,[ebp+_h_flags]
+        ;check to see if the flag has line ops 
+        and     eax,AMX_FLAG_LINEOPS
+        cmp     eax,AMX_FLAG_LINEOPS
+        ;restore registers
+        pop     ebp
+        pop     eax
+        ;if so, skip down to debug compiler
+        je      _go_debug
 
         mov     [ebx],edi               ; no line number support: ignore opcode
         add     ebx,12                  ; move on to next opcode

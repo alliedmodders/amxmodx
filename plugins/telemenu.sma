@@ -6,8 +6,9 @@
 * This file is provided as is (no warranties).
 */
 
-#include <amxmod> 
-#include <amxmisc> 
+#include <amxmod>
+#include <amxmisc>
+#include <fun>
 
 new g_menuPosition[33] 
 new g_menuPlayers[33][32] 

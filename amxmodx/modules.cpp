@@ -619,6 +619,8 @@ AMX *MNF_GetAmxScript(int id)
 	while (iter && id--)
 		++iter;
 
+	if ((*iter) == NULL)
+		return NULL;
 	return (*iter).getAMX();
 }
 

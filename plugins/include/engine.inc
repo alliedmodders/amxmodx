@@ -249,13 +249,13 @@ forward client_impulse(id, impulse);
 forward pfn_think(entid);
 
 /* Called when an event is played */
-forward PlaybackEvent(flags, entid, eventid, Float:delay, Float:Origin[3], Float:Angles[3], Float:fparam1, Float:fparam2, iparam1, iparam2, bparam2);
+forward pfn_playbackevent(flags, entid, eventid, Float:delay, Float:Origin[3], Float:Angles[3], Float:fparam1, Float:fparam2, iparam1, iparam2, bparam2);
+
+/* Called when an entity gets a keyvalue set on it from the engine (ie: map load)  Use copy_keyvalue to get the keyvalue information */
+forward pfn_keyvalue(entid);
 
 /* Called when an entity is spawned */
 forward pfn_spawn(entid);
-
-/* Called when an object uses another object */
-forward pfn_use(user, used);
 
 //from jghg2
 /* As above, but returns number of ents stored in entlist. Use to find a specific type of entity classname (specify in _lookforclassname) around a

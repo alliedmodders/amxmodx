@@ -1,0 +1,114 @@
+#!/bin/bash
+# This bash script will (hopefully), compile Linux based metamods (in i386 architecture)
+# that should hopefully work on any Linux machine.
+
+MODNAME=ns_amxx
+HLSDKDIR=/hlsdk/multiplayer
+HLSDK=${HLSDKDIR}
+METAMODDIR=~/mods/metamod
+SOURCEFILES="auto"
+OUTPUTDIRECTORY=./linux
+EXTRAFLAGS="-mcpu=i386"
+LIBRARIES="-ldl -lm"
+#LIBRARIES=""
+COMPILER="gcc296"
+# Put any extra compiling flags you want in the line above this one.
+
+# Do not edit below here.
+if [ "${SOURCEFILES}" = "auto" ]
+then
+echo -n "Auto detecting *.cpp files to compile..."
+SOURCEFILES=""
+for file in $PWD/*.cpp
+do
+SOURCEFILES="${SOURCEFILES} `basename $file`"
+done
+echo "finished."
+echo -n "Compiling the following: "
+echo ${SOURCEFILES}
+
+fi
+# No need to edit below here.
+
+# Check GCC version here.  2.95 is our ideal version
+if [ `${COMPILER} -dumpversion |tr "." " " |awk '{ print $1 }'` -gt 2 ]
+then
+echo "!!WARNING!! GCC > 2.95 detected! (version `gcc -dumpversion` detected)"
+echo "Unstable builds may result."
+elif [ `gcc -dumpversion |tr "." " " |awk '{ print $2 }'` -gt "95" ]
+then
+echo "!!WARNING!! GCC > 2.95 detected! (version `gcc -dumpversion` detected)"
+echo "Unstable builds may result."
+fi
+
+
+
+# Check for directory structure...
+echo -n "Checking for directory ${OUTPUTDIRECTORY}..."
+if [ -d ${OUTPUTDIRECTORY} ]
+then
+echo "exists."
+else
+echo "non-existant."
+echo -n "Creating directory ${OUTPUTDIRECTORY}..."
+if mkdir ${OUTPUTDIRECTORY}
+then
+ echo "successful."
+else
+ echo "failed."
+ exit 1
+fi
+fi
+
+# Do backups
+if [ -e ${OUTPUTDIRECTORY}/${MODNAME}_i386.so.backup ]
+then
+echo -n "Old backup found, removing..."
+if rm -f ${OUTPUTDIRECTORY}/${MODNAME}_i386.so.backup
+then 
+ echo "successful."
+else
+ echo "failed."
+ exit 1
+fi
+fi
+if [ -e ${OUTPUTDIRECTORY}/${MODNAME}_i386.so ]
+then
+echo -n "Old build found, backing up..."
+if mv ${OUTPUTDIRECTORY}/${MODNAME}_i386.so ${OUTPUTDIRECTORY}/${MODNAME}_i386.so.backup &> /dev/null
+then
+ echo "successful."
+else
+ echo "failed."
+ exit 1
+fi
+fi
+
+# Compile
+#echo ${COMPILER} -w -O3 -Wall -shared ${LIBRARIES} -o ${OUTPUTDIRECTORY}/${MODNAME}_i386.so ${SOURCEFILES} -I- -I . -I $METAMODDIR -I ${HLSDKDIR}/common -I ${HLSDKDIR}/dlls -I ${HLSDKDIR}/pm_shared -I ${HLSDKDIR}/engine ${EXTRAFLAGS}
+
+echo -n "Compiling..."
+if ${COMPILER} -w -O3 -Wall -shared ${LIBRARIES} -o ${OUTPUTDIRECTORY}/${MODNAME}_i386.so ${SOURCEFILES} -I- -I . -I $METAMODDIR -I ${HLSDKDIR}/common -I ${HLSDKDIR}/dlls -I ${HLSDKDIR}/pm_shared -I ${HLSDKDIR}/engine ${EXTRAFLAGS}
+then
+echo "successful."
+else
+echo "compiling failed."
+exit 1
+fi
+# Strip
+if [ -f ${OUTPUTDIRECTORY}/${MODNAME}_i386.so ]
+then
+echo -n "Stripping file..."
+else
+echo "Error stripping: File doesn't exist!?!"
+exit 1
+fi
+if strip linux/${MODNAME}_i386.so
+then
+echo "success."
+else
+echo "failed."
+exit 1
+fi
+echo "Finished with no apparent errors."
+exit 0

@@ -2688,8 +2688,6 @@ void ValidateMacros_DontCallThis_Smiley()
 }
 #endif
 
-#ifdef MEMORY_TEST
-
 /************* MEMORY *************/
 // undef all defined macros
 #undef new
@@ -2803,7 +2801,7 @@ void	*operator new(size_t reportedSize)
 		return ptr;
 
 	// allocation failed
-	throw std::bad_alloc();
+	return NULL;
 }
 
 void	*operator new[](size_t reportedSize)
@@ -2816,7 +2814,7 @@ void	*operator new[](size_t reportedSize)
 		return ptr;
 
 	// allocation failed
-	throw std::bad_alloc();
+	return NULL;
 }
 
 // Microsoft memory tracking operators
@@ -2830,7 +2828,7 @@ void	*operator new(size_t reportedSize, const char *sourceFile, int sourceLine)
 		return ptr;
 
 	// allocation failed
-	throw std::bad_alloc();
+	return NULL;
 }
 void	*operator new[](size_t reportedSize, const char *sourceFile, int sourceLine)
 {
@@ -2842,7 +2840,7 @@ void	*operator new[](size_t reportedSize, const char *sourceFile, int sourceLine
 		return ptr;
 
 	// allocation failed
-	throw std::bad_alloc();
+	return NULL;
 }
 
 void	operator delete(void *reportedAddress)
@@ -2860,8 +2858,6 @@ void	operator delete[](void *reportedAddress)
 
 	Mem_Deallocator(g_Mem_CurrentFilename, g_Mem_CurrentLine, g_Mem_CurrentFunc, m_alloc_delete_array, reportedAddress);
 }
-
-#endif //MEMORY_TEST
 
 /************* stuff from dlls/util.cpp *************/
 //				must come here because cbase.h declares it's own operator new

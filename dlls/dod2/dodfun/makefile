@@ -1,5 +1,5 @@
-MODNAME = dodx_amxx
-SRCFILES = amxxmodule.cpp CMisc.cpp CRank.cpp Utils.cpp moduleconfig.cpp NBase.cpp NRank.cpp NPD.cpp usermsg.cpp
+MODNAME = dodfun_amxx
+SRCFILES = amxxmodule.cpp CMisc.cpp Utils.cpp moduleconfig.cpp NBase.cpp NPD.cpp usermsg.cpp
 
 EXTRA_LIBS_LINUX =
 EXTRA_LIBS_WIN32 =

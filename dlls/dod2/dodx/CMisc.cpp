@@ -89,7 +89,7 @@ void Grenades::clear()
 // *****************************************************
 
 void CPlayer::Disconnect(){
-	ingame = staminaSet = fuseSet = false;
+	ingame = false;
 	savedScore = 0;
 
 	if ( ignoreBots(pEdict) || !isModuleActive() ) // ignore if he is bot and bots rank is disabled or module is paused
@@ -149,7 +149,7 @@ void CPlayer::Init( int pi, edict_t* pe )
     index = pi;
 	current = 0;
 	clearStats = 0.0f;
-	ingame =  staminaSet = false;
+	ingame =  false;
 	savedScore = 0;
 }
 

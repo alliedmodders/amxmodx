@@ -138,18 +138,10 @@ void ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax ){
 }
 
 void PlayerPreThink_Post( edict_t *pEntity ) {
+	if ( !isModuleActive() ) 
+		return;
 
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-
-	if ( pPlayer->staminaSet ) {
-		if ( pEntity->v.iuser4 > pPlayer->staminaMax )
-			pEntity->v.iuser4 = pPlayer->staminaMax;
-		else if ( pEntity->v.iuser4 < pPlayer->staminaMin )
-			pEntity->v.iuser4 = pPlayer->staminaMin;
-	}
-
-	if ( !isModuleActive() ) // stats only
-		return;
 
 	if (pPlayer->clearStats && pPlayer->clearStats < gpGlobals->time && pPlayer->ingame){
 

@@ -89,13 +89,6 @@ public:
 	int wpnModel;
 
 	int savedScore;
-	int staminaMin;
-	int staminaMax;
-	bool staminaSet;
-
-	bool fuseSet;
-	int fuseType; // 1<<0 - for new , 1<<1 - for catched
-	float nadeFuse;
 
 	bool ingame;
 	bool bot;

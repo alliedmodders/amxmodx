@@ -113,7 +113,7 @@
 // #define FN_DispatchBlocked_Post				DispatchBlocked_Post
 #define FN_DispatchKeyValue_Post				DispatchKeyValue_Post
 // #define FN_DispatchSave_Post					DispatchSave_Post
-// #define FN_DispatchRestore_Post				DispatchRestore_Post
+// #define FN_DispatchRestore_Post					DispatchRestore_Post
 // #define FN_DispatchObjectCollsionBox_Post	DispatchObjectCollsionBox_Post
 // #define FN_SaveWriteFields_Post				SaveWriteFields_Post
 // #define FN_SaveReadFields_Post				SaveReadFields_Post

@@ -100,7 +100,7 @@ loadSettings(szFilename[])
     g_aFlags[ g_aNum ] = read_flags( szFlags )  
     ++g_aNum
   }
-  server_print("Loaded %d admin%s from file",g_aNum, (g_aNum == 1) ? "" : "s" )
+  server_print("[AMXX] Loaded %d admin%s from file",g_aNum, (g_aNum == 1) ? "" : "s" )
   return 1
 }
 

@@ -1,23 +1,27 @@
 /*  Abstract Machine for the Small compiler
  *
- *  Copyright (c) ITB CompuPhase, 1997-2002
- *  This file may be freely used. No warranties of any kind.
+ *  Copyright (c) ITB CompuPhase, 1997-2003
  *
- *  Version: $Id$
+ *  This software is provided "as-is", without any express or implied warranty.
+ *  In no event will the authors be held liable for any damages arising from
+ *  the use of this software.
+ *
+ *  Permission is granted to anyone to use this software for any purpose,
+ *  including commercial applications, and to alter it and redistribute it
+ *  freely, subject to the following restrictions:
+ *
+ *  PM: Whole file changed
  */
-
-#if defined __linux__
+#if defined LINUX
   #include <sclinux.h>
 #endif
-
 #ifndef __AMX_H
 #define __AMX_H
-
 #if !defined __STDC_VERSION__ || __STDC_VERSION__ < 199901L
   /* The ISO C99 defines the int16_t and int_32t types. If the compiler got
    * here, these types are probably undefined.
    */
-  #if defined __LCC__ || defined __linux__
+  #if defined __LCC__ || defined LINUX
     #include <stdint.h>
   #else
     typedef short int           int16_t;
@@ -31,27 +35,31 @@
     #endif
   #endif
 #endif
-
-/* Some compilers do not support the #pragma align, which should be fine. Some
- * compilers give a warning on unknown #pragmas, which is not so fine...
- */
-#if defined SN_TARGET_PS2
-  #define AMX_NO_ALIGN
+#if defined __WIN32__ || defined _WIN32 || defined WIN32 || defined __MSDOS__
+  #if !defined alloca
+    #define alloca(n)   _alloca(n)
+  #endif
 #endif
-
 #ifdef  __cplusplus
 extern  "C" {
 #endif
-
 /* calling convention for native functions */
 #if !defined AMX_NATIVE_CALL
   #define AMX_NATIVE_CALL
 #endif
 /* calling convention for all interface functions and callback functions */
 #if !defined AMXAPI
-  #define AMXAPI
+  #if defined STDECL
+    #define AMXAPI      __stdcall
+  #elif defined CDECL
+    #define AMXAPI      __cdecl
+  #else
+    #define AMXAPI
+  #endif
 #endif
-
+#if !defined AMXEXPORT
+  #define AMXEXPORT
+#endif
 /* File format version                          Required AMX version
  *   0 (original version)                       0
  *   1 (opcodes JUMP.pri, SWITCH and CASETBL)   1
@@ -60,10 +68,11 @@ extern  "C" {
  *   4 (opcodes SWAP.pri/alt and PUSHADDR)      4
  *   5 (tagnames table)                         4
  *   6 (reformatted header)                     6
+ *   7 (name table, opcodes SYMTAG & SYSREQ.D)  7
  */
-#define MIN_FILE_VERSION  6     /* lowest file format version */
-#define CUR_FILE_VERSION  6     /* current AMX version (parallel with file version) */
-
+#define CUR_FILE_VERSION  7     /* current file version; also the current AMX version */
+#define MIN_FILE_VERSION  6     /* lowest supported file format version for the current AMX version */
+#define MIN_AMX_VERSION   7     /* minimum AMX version needed to support the current file format */
 #if !defined CELL_TYPE
   #define CELL_TYPE
   #if defined(BIT16)
@@ -74,23 +83,32 @@ extern  "C" {
     typedef int32_t   cell;
   #endif
 #endif
-
-struct __amx;
-typedef cell (AMX_NATIVE_CALL *AMX_NATIVE)(struct __amx *amx, cell *params);
-typedef int (AMXAPI *AMX_CALLBACK)(struct __amx *amx, cell index,
+struct tagAMX;
+typedef cell (AMX_NATIVE_CALL *AMX_NATIVE)(struct tagAMX *amx, cell *params);
+typedef int (AMXAPI *AMX_CALLBACK)(struct tagAMX *amx, cell index,
                                    cell *result, cell *params);
-typedef int (AMXAPI *AMX_DEBUG)(struct __amx *amx);
-#if !defined FAR
-  #define FAR
+typedef int (AMXAPI *AMX_DEBUG)(struct tagAMX *amx);
+#if !defined _FAR
+  #define _FAR
 #endif
-
 #if defined _MSC_VER
   #pragma warning(disable:4103)  /* disable warning message 4103 that complains
                                   * about pragma pack in a header file */
+  #pragma warning(disable:4100)  /* "'%$S' : unreferenced formal parameter" */
 #endif
-
+/* Some compilers do not support the #pragma align, which should be fine. Some
+ * compilers give a warning on unknown #pragmas, which is not so fine...
+ */
+#if defined SN_TARGET_PS2 || defined __GNUC__
+  #define AMX_NO_ALIGN
+#endif
+#if defined __GNUC__
+  #define PACKED        __attribute__((packed))
+#else
+  #define PACKED
+#endif
 #if !defined AMX_NO_ALIGN
-  #if defined __linux__
+  #if defined LINUX
     #pragma pack(1)         /* structures must be packed (byte-aligned) */
   #else
     #pragma pack(push)
@@ -100,74 +118,80 @@ typedef int (AMXAPI *AMX_DEBUG)(struct __amx *amx);
     #endif
   #endif
 #endif
-
 typedef struct {
-  char FAR *name;
-  AMX_NATIVE func;
-} AMX_NATIVE_INFO;
-
+  char _FAR *name       PACKED;
+  AMX_NATIVE func       PACKED;
+} AMX_NATIVE_INFO       PACKED;
 #define AMX_USERNUM     4
-#define sEXPMAX         19
-typedef struct {
-  uint32_t address;
-  char name[sEXPMAX+1];
-} AMX_FUNCSTUB;
-
+#define sEXPMAX         19      /* maximum name length for file version <= 6 */
+#define sNAMEMAX        31      /* maximum name length of symbol name */
+typedef struct tagAMX_FUNCSTUB {
+  uint32_t address      PACKED;
+  char name[sEXPMAX+1]  PACKED;
+} AMX_FUNCSTUB          PACKED;
 /* The AMX structure is the internal structure for many functions. Not all
  * fields are valid at all times; many fields are cached in local variables.
  */
-typedef struct __amx {
-  unsigned char FAR *base;      /* points to the AMX header ("amxhdr") plus the code, optionally also the data */
-  unsigned char FAR *data;      /* points to separate data+stack+heap, may be NULL */
-  AMX_CALLBACK callback;
-  AMX_DEBUG debug;
+typedef struct tagAMX {
+  unsigned char _FAR *base PACKED; /* points to the AMX header ("amxhdr") plus the code, optionally also the data */
+  unsigned char _FAR *data PACKED; /* points to separate data+stack+heap, may be NULL */
+  AMX_CALLBACK callback PACKED;
+  AMX_DEBUG debug       PACKED; /* debug callback */
   /* for external functions a few registers must be accessible from the outside */
-  cell cip;                     /* relative to base + amxhdr->cod */
-  cell frm;                     /* relative to base + amxhdr->dat */
-  cell hea, hlw, stk, stp;      /* all four are relative to base + amxhdr->dat */
-  int flags;                    /* current status, see amx_Flags() */
+  cell cip              PACKED; /* instruction pointer: relative to base + amxhdr->cod */
+  cell frm              PACKED; /* stack frame base: relative to base + amxhdr->dat */
+  cell hea              PACKED; /* top of the heap: relative to base + amxhdr->dat */
+  cell hlw              PACKED; /* bottom of the heap: relative to base + amxhdr->dat */
+  cell stk              PACKED; /* stack pointer: relative to base + amxhdr->dat */
+  cell stp              PACKED; /* top of the stack: relative to base + amxhdr->dat */
+  int flags             PACKED; /* current status, see amx_Flags() */
   /* for assertions and debug hook */
-  cell curline, curfile;
-  int dbgcode;
-  cell dbgaddr, dbgparam;
-  char FAR *dbgname;
+  cell curline          PACKED;
+  cell curfile          PACKED;
+  int dbgcode           PACKED;
+  cell dbgaddr          PACKED;
+  cell dbgparam         PACKED;
+  char _FAR *dbgname    PACKED;
   /* user data */
-  long usertags[AMX_USERNUM];
-  void FAR *userdata[AMX_USERNUM];
+  long usertags[AMX_USERNUM] PACKED;
+  void _FAR *userdata[AMX_USERNUM] PACKED;
   /* native functions can raise an error */
-  int error;
+  int error             PACKED;
   /* the sleep opcode needs to store the full AMX status */
-  cell pri, alt, reset_stk, reset_hea;
+  cell pri              PACKED;
+  cell alt              PACKED;
+  cell reset_stk        PACKED;
+  cell reset_hea        PACKED;
+  cell _FAR *syscall_d  PACKED; /* relocated value/address for the SYSCALL.D opcode */
   #if defined JIT
     /* support variables for the JIT */
-    int reloc_size;     /* required temporary buffer for relocations */
-    long code_size;     /* estimated memory footprint of the native code */
+    int reloc_size      PACKED; /* required temporary buffer for relocations */
+    long code_size      PACKED; /* estimated memory footprint of the native code */
   #endif
-} AMX;
-
+} AMX                   PACKED;
 /* The AMX_HEADER structure is both the memory format as the file format. The
  * structure is used internaly.
  */
-typedef struct __amx_header {
-  int32_t size;         /* size of the "file" */
-  uint16_t magic;       /* signature */
-  char    file_version; /* file format version */
-  char    amx_version;  /* required version of the AMX */
-  int16_t flags;
-  int16_t defsize;
-  int32_t cod;          /* initial value of COD - code block */
-  int32_t dat;          /* initial value of DAT - data block */
-  int32_t hea;          /* initial value of HEA - start of the heap */
-  int32_t stp;          /* initial value of STP - stack top */
-  int32_t cip;          /* initial value of CIP - the instruction pointer */
-  int32_t publics;      /* offset to the "public functions" table */
-  int32_t natives;      /* offset to the "native functions" table */
-  int32_t libraries;    /* offset to the table of libraries */
-  int32_t pubvars;      /* the "public variables" table */
-  int32_t tags;         /* the "public tagnames" table */
-} AMX_HEADER;
+typedef struct tagAMX_HEADER {
+  int32_t size          PACKED; /* size of the "file" */
+  uint16_t magic        PACKED; /* signature */
+  char    file_version  PACKED; /* file format version */
+  char    amx_version   PACKED; /* required version of the AMX */
+  int16_t flags         PACKED;
+  int16_t defsize       PACKED; /* size of a definition record */
+  int32_t cod           PACKED; /* initial value of COD - code block */
+  int32_t dat           PACKED; /* initial value of DAT - data block */
+  int32_t hea           PACKED; /* initial value of HEA - start of the heap */
+  int32_t stp           PACKED; /* initial value of STP - stack top */
+  int32_t cip           PACKED; /* initial value of CIP - the instruction pointer */
+  int32_t publics       PACKED; /* offset to the "public functions" table */
+  int32_t natives       PACKED; /* offset to the "native functions" table */
+  int32_t libraries     PACKED; /* offset to the table of libraries */
+  int32_t pubvars       PACKED; /* the "public variables" table */
+  int32_t tags          PACKED; /* the "public tagnames" table */
+  int32_t nametable     PACKED; /* name table, file version 7 only */
+} AMX_HEADER            PACKED;
 #define AMX_MAGIC       0xf1e0
-
 enum {
   AMX_ERR_NONE,
   /* reserve the first 15 error codes for exit codes of the abstract machine */
@@ -183,7 +207,6 @@ enum {
   AMX_ERR_NATIVE,       /* native function failed */
   AMX_ERR_DIVIDE,       /* divide by zero */
   AMX_ERR_SLEEP,        /* go into sleepmode - code can be restarted */
-
   AMX_ERR_MEMORY = 16,  /* out of memory */
   AMX_ERR_FORMAT,       /* invalid file format */
   AMX_ERR_VERSION,      /* file is for a newer version of the AMX */
@@ -194,8 +217,8 @@ enum {
   AMX_ERR_USERDATA,     /* unable to set user data field (table full) */
   AMX_ERR_INIT_JIT,     /* cannot initialize the JIT */
   AMX_ERR_PARAMS,       /* parameter error */
+  AMX_ERR_DOMAIN,       /* domain error, expression result does not fit in range */
 };
-
 enum {
   DBG_INIT,             /* query/initialize */
   DBG_FILE,             /* file number in curfile, filename in name */
@@ -206,33 +229,50 @@ enum {
   DBG_RETURN,           /* function returns */
   DBG_TERMINATE,        /* program ends, code address in dbgaddr, reason in dbgparam */
   DBG_SRANGE,           /* symbol size and dimensions (arrays); level in dbgaddr (!); length in dbgparam */
+  DBG_SYMTAG,           /* tag of the most recent symbol (if non-zero), tag in dbgparam */
 };
-
 #define AMX_FLAG_CHAR16   0x01  /* characters are 16-bit */
 #define AMX_FLAG_DEBUG    0x02  /* symbolic info. available */
 #define AMX_FLAG_COMPACT  0x04  /* compact encoding */
 #define AMX_FLAG_BIGENDIAN 0x08 /* big endian encoding */
-#define AMX_FLAG_BROWSE 0x4000
+#define AMX_FLAG_NOCHECKS  0x10 /* no array bounds checking */
+#define AMX_FLAG_BROWSE 0x4000  /* browsing/relocating or executing */
 #define AMX_FLAG_RELOC  0x8000  /* jump/call addresses relocated */
-
 #define AMX_EXEC_MAIN   -1      /* start at program entry point */
 #define AMX_EXEC_CONT   -2      /* continue from last address */
-
 #define AMX_USERTAG(a,b,c,d)    ((a) | ((b)<<8) | ((long)(c)<<16) | ((long)(d)<<24))
-
+#define AMX_EXPANDMARGIN  64
+/* for native functions that use floating point parameters, the following
+ * two macros are convenient for casting a "cell" into a "float" type _without_
+ * changing the bit pattern
+ */
+#define amx_ftoc(f)     ( * ((cell*)&f) )   /* float to cell */
+#define amx_ctof(c)     ( * ((float*)&c) )  /* cell to float */
+#define amx_StrParam(amx,param,result) {                             \
+            cell *amx_cstr_; int amx_length_;                        \
+            amx_GetAddr((amx), (param), &amx_cstr_);                 \
+            amx_StrLen(amx_cstr_, &amx_length_);                     \
+            if (amx_length_ > 0 &&                                   \
+                ((result) = (char*)alloca(amx_length_ + 1)) != NULL) \
+              amx_GetString((result), amx_cstr_);                    \
+            else (result) = NULL;                                    \
+}
 uint16_t * AMXAPI amx_Align16(uint16_t *v);
 uint32_t * AMXAPI amx_Align32(uint32_t *v);
 int AMXAPI amx_Allot(AMX *amx, int cells, cell *amx_addr, cell **phys_addr);
 int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params);
+int AMXAPI amx_Cleanup(AMX *amx);
 int AMXAPI amx_Clone(AMX *amxClone, AMX *amxSource, void *data);
 int AMXAPI amx_Debug(AMX *amx); /* default debug procedure, does nothing */
 int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...);
 int AMXAPI amx_Execv(AMX *amx, cell *retval, int index, int numparams, cell params[]);
+int AMXAPI amx_FindNative(AMX *amx, char *name, int *index);
 int AMXAPI amx_FindPublic(AMX *amx, char *funcname, int *index);
 int AMXAPI amx_FindPubVar(AMX *amx, char *varname, cell *amx_addr);
 int AMXAPI amx_FindTagId(AMX *amx, cell tag_id, char *tagname);
 int AMXAPI amx_Flags(AMX *amx,uint16_t *flags);
 int AMXAPI amx_GetAddr(AMX *amx,cell amx_addr,cell **phys_addr);
+int AMXAPI amx_GetNative(AMX *amx, int index, char *funcname);
 int AMXAPI amx_GetPublic(AMX *amx, int index, char *funcname);
 int AMXAPI amx_GetPubVar(AMX *amx, int index, char *varname, cell *amx_addr);
 int AMXAPI amx_GetString(char *dest,cell *source);
@@ -243,6 +283,7 @@ int AMXAPI amx_InitJIT(AMX *amx, void *reloc_table, void *native_code);
 int AMXAPI amx_MemInfo(AMX *amx, long *codesize, long *datasize, long *stackheap);
 int AMXAPI amx_NameLength(AMX *amx, int *length);
 AMX_NATIVE_INFO * AMXAPI amx_NativeInfo(char *name,AMX_NATIVE func);
+int AMXAPI amx_NumNatives(AMX *amx, int *number);
 int AMXAPI amx_NumPublics(AMX *amx, int *number);
 int AMXAPI amx_NumPubVars(AMX *amx, int *number);
 int AMXAPI amx_NumTags(AMX *amx, int *number);
@@ -253,19 +294,16 @@ int AMXAPI amx_SetCallback(AMX *amx, AMX_CALLBACK callback);
 int AMXAPI amx_SetDebugHook(AMX *amx, AMX_DEBUG debug);
 int AMXAPI amx_SetString(cell *dest, char *source, int pack);
 int AMXAPI amx_SetUserData(AMX *amx, long tag, void *ptr);
+char * AMXAPI amx_StrError(int errnum);
 int AMXAPI amx_StrLen(cell *cstring, int *length);
-
 #if !defined AMX_NO_ALIGN
-  #if defined __linux__
+  #if defined LINUX
     #pragma pack()    /* reset default packing */
   #else
     #pragma pack(pop) /* reset previous packing */
   #endif
 #endif
-
 #ifdef  __cplusplus
 }
 #endif
-
 #endif /* __AMX_H */
-

@@ -57,6 +57,23 @@
 
 CVector<FILE *> FileList;
 
+class AutoFilePtr
+{
+	FILE *m_FP;
+public:
+	AutoFilePtr(FILE *fp) : m_FP(fp)
+	{ }
+	~AutoFilePtr()
+	{
+		if (m_FP)
+			fclose(m_FP);
+	}
+	operator FILE* ()
+	{
+		return m_FP;
+	}
+};
+
 static cell AMX_NATIVE_CALL read_dir(AMX *amx, cell *params)
 {
 #ifdef __GNUC__
@@ -228,41 +245,44 @@ static cell AMX_NATIVE_CALL file_exists(AMX *amx, cell *params) /* 1 param */
 
 static cell AMX_NATIVE_CALL file_size(AMX *amx, cell *params) /* 1 param */
 {
-  int iLen;
-  char* sFile = get_amxstring(amx,params[1],0,iLen);
-  FILE* fp = fopen(build_pathname("%s",sFile),"r");
-  if ( fp != NULL) {
-  if ( params[0] < 2 || params[2] == 0 ){
-    fseek(fp,0,SEEK_END);
-    int size = ftell(fp);
-    fclose(fp);
-    return size;
-  }
-  else if ( params[2] == 1 ){
-    int a = 0,lines = 0;
-    while( a != EOF ){
-      ++lines;
-      while ( (a = fgetc(fp)) != '\n'  && a != EOF )
-        ;
-    }
-    //int a, b = '\n';
-    //while( (a = fgetc(fp)) != EOF ){
-    //  if ( a == '\n')
-    //    ++lines;
-    //  b = a;
-    //}
-    //if ( b != '\n' )
-    //  ++lines;
-    return lines;
-  }
-  else if ( params[2] == 2 ){
-    fseek(fp,-1,SEEK_END);
-    if ( fgetc(fp) == '\n' )
-      return 1;
-    return 0;
-  }
-  }
-  return -1;
+	int iLen;
+	char* sFile = get_amxstring(amx,params[1],0,iLen);
+	AutoFilePtr fp(fopen(build_pathname("%s",sFile),"r"));
+	if ( fp != NULL)
+	{
+		if ( params[0] < 2 || params[2] == 0 )
+		{
+			fseek(fp,0,SEEK_END);
+			int size = ftell(fp);
+			return size;
+		}
+		else if ( params[2] == 1 )
+		{
+			int a = 0,lines = 0;
+			while( a != EOF )
+			{
+				++lines;
+				while ( (a = fgetc(fp)) != '\n'  && a != EOF )
+					;
+			}
+			//int a, b = '\n';
+			//while( (a = fgetc(fp)) != EOF ){
+			//  if ( a == '\n')
+			//    ++lines;
+			//  b = a;
+			//}
+			//if ( b != '\n' )
+			//  ++lines;
+			return lines;
+		}
+		else if ( params[2] == 2 ){
+			fseek(fp,-1,SEEK_END);
+			if ( fgetc(fp) == '\n' )
+				return 1;
+			return 0;
+		}
+	}
+	return -1;
 }
 
 //ported from Sanji's file access module by BAILOPAN
@@ -454,7 +474,7 @@ static cell AMX_NATIVE_CALL amx_filesize(AMX *amx, cell *params)
 	int len;
 	char *file = build_pathname("%s", format_amxstring(amx, params, 1, len));
 	long size;
-	FILE *fp = fopen(file, "rb");
+	AutoFilePtr fp(fopen(file, "rb"));
 	if (fp) {
 		fseek(fp, 0, SEEK_END);
 		size = ftell(fp);

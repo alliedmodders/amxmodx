@@ -181,9 +181,18 @@ void CLog::Log(const char *fmt, ...)
 		{
 			pF = fopen(build_pathname("%s/L%02d%02d.log", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday), "a+");
 		}
-		fprintf(pF, "L %s: %s\n", date, msg);
+		if (pF)
+		{
+			fprintf(pF, "L %s: %s\n", date, msg);
+			fclose(pF);
+		}
+		else
+		{
+			ALERT(at_logged, "[AMXX] Unexpected fatal logging error (couldn't open %s for a+). AMXX Logging disabled for this map.\n", m_LogFile.c_str());
+			m_LogType = 0;
+			return;
+		}
 
-		fclose(pF);
 		// print on server console
 		print_srvconsole("L %s: %s\n", date, msg);
 	}

@@ -118,6 +118,9 @@
 			<File
 				RelativePath=".\mssql.cpp">
 			</File>
+			<File
+				RelativePath=".\mssql_amx.cpp">
+			</File>
 			<Filter
 				Name="SDK"
 				Filter="">
@@ -137,7 +140,7 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
-				RelativePath=".\mssql.h">
+				RelativePath=".\mssql_amx.h">
 			</File>
 		</Filter>
 		<Filter

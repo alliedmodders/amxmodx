@@ -228,14 +228,14 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 	return len;
 }
 
-static cell AMX_NATIVE_CALL show_motd(AMX *amx, cell *params)  /* 2 param */
+static cell AMX_NATIVE_CALL show_motd(AMX *amx, cell *params)  /* 3 param */
 {
   int ilen;
   const char* szHead = get_amxstring(amx,params[3],0,ilen);
   if ( !ilen ) szHead = hostname->string;
   char* szBody = get_amxstring(amx,params[2],1,ilen);
   int iFile = 0;
-  char* sToShow = NULL;// = szBody;
+  char* sToShow = NULL; // = szBody;
   if (ilen<128) sToShow = (char*)LOAD_FILE_FOR_ME( szBody , &iFile );
   if (!iFile)
     sToShow = szBody;
@@ -2271,7 +2271,7 @@ static cell AMX_NATIVE_CALL is_plugin_loaded(AMX *amx, cell *params)
 	int id = 0;
 	for (CPluginMngr::iterator iter = g_plugins.begin(); iter; ++iter)
 	{
-		if (stricmp((*iter).getName(), name) == 0)
+		if (stricmp((*iter).getTitle(), name) == 0)
 			return id;
 		++id;
 	}

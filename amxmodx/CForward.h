@@ -29,12 +29,22 @@
 *  version.
 */
 
+/*
+	CForward.h
+	forwards
+	1) normal forwards: called in all plugins
+	2) single plugin (sp) forwards: called in one plugin
+
+	The SP Forwards are handled differently because they are expected to be created / deleted
+	often, but the "normal" forwards are expected to be initialized at start up.
+
+	Note about forward ids:
+		for normal forwards:	<index to vector> << 1
+		for sp forwards:		(<index to vector> << 1) | 1
+*/
+
 #ifndef FORWARD_H
 #define FORWARD_H
-
-// *****************************************************
-// class CmdMngr
-// *****************************************************
 
 const int FORWARD_MAX_PARAMS = 16;
 
@@ -57,6 +67,7 @@ enum ForwardParam
 	FP_ARRAY,						// array; use the return value of prepareArray.
 };
 
+// for prepareArray
 enum ForwardArrayElemType
 {
 	Type_Cell = 0,
@@ -65,12 +76,12 @@ enum ForwardArrayElemType
 
 struct ForwardPreparedArray
 {
-	
 	void *ptr;
 	ForwardArrayElemType type;
 	unsigned int size;
 };
 
+// Normal forward
 class CForward
 {
 	const char *m_FuncName;
@@ -88,17 +99,53 @@ public:
 	CForward(const char *name, ForwardExecType et, int numParams, const ForwardParam * paramTypes);
 	CForward()
 	{ }			// leaves everything unitialized
-	int execute(cell *params, ForwardPreparedArray *preparedArrays);
+	cell execute(cell *params, ForwardPreparedArray *preparedArrays);
 	int getParamsNum() const
 	{
 		return m_NumParams;
+	}
+	int getFuncsNum() const
+	{
+		return m_Funcs.size();
+	}
+};
+
+// Single plugin forward
+class CSPForward
+{
+	const char *m_FuncName;
+	int m_NumParams;
+	ForwardParam m_ParamTypes[FORWARD_MAX_PARAMS];
+	AMX *m_Amx;
+	int m_Func;
+	bool m_HasFunc;
+public:
+	CSPForward() { m_HasFunc = false; }
+	void Set(const char *funcName, AMX *amx, int numParams, const ForwardParam * paramTypes);
+	void Set(int func, AMX *amx, int numParams, const ForwardParam * paramTypes);
+
+	cell execute(cell *params, ForwardPreparedArray *preparedArrays);
+	int getParamsNum() const
+	{
+		return m_NumParams;
+	}
+	int getFuncsNum() const
+	{
+		return (m_HasFunc) ? 1 : 0;
 	}
 };
 
 class CForwardMngr
 {
 	typedef CVector<CForward*> ForwardVec;
+	typedef CVector<CSPForward*> SPForwardVec;
+	typedef CVector<int> FreeSPVec;					// Free SP Forwards
+
 	ForwardVec m_Forwards;
+
+	SPForwardVec m_SPForwards;
+	FreeSPVec m_FreeSPForwards;								// so we don't have to free memory
+
 	ForwardPreparedArray m_TmpArrays[FORWARD_MAX_PARAMS];		// used by prepareArray
 	int m_TmpArraysNum;
 public:
@@ -109,18 +156,31 @@ public:
 	{ }
 
 	// Interface
+	// Register normal forward
 	int registerForward(const char *funcName, ForwardExecType et, int numParams, const ForwardParam *paramTypes);
-	int executeForwards(int id, cell *params);
+	// Register single plugin forward
+	int registerSPForward(const char *funcName, AMX *amx, int numParams, const ForwardParam * paramTypes);
+	int registerSPForward(int func, AMX *amx, int numParams, const ForwardParam * paramTypes);
+	// Unregister single plugin forward
+	void unregisterSPForward(int id);
+	// execute forward
+	cell executeForwards(int id, cell *params);
 	void clear();		// delete all forwards
-	bool isIdValid(int id) const;
-	int getParamsNum(int id) const;
-	cell prepareArray(void *ptr, unsigned int size, ForwardArrayElemType type);
+	bool isIdValid(int id) const;			// check whether forward id is valid
+	bool isSPForward(int id) const;			// check whether forward is single plugin
+	int getParamsNum(int id) const;			// get num of params of a forward
+	int getFuncsNum(int id) const;			// get num of found functions of a forward
+	cell prepareArray(void *ptr, unsigned int size, ForwardArrayElemType type);		// prepare array
 };
 
-// register forward
+// (un)register forward
 int registerForward(const char *funcName, ForwardExecType et, ...);
+int registerSPForwardByName(AMX *amx, const char *funcName, ...);
+int registerSPForward(AMX *amx, int func, ...);
+void unregisterSPForward(int id);
+
 // execute forwards
-int executeForwards(int id, ...);
+cell executeForwards(int id, ...);
 // prepare array
 cell prepareCellArray(cell *ptr, unsigned int size);
 cell prepareCharArray(char *ptr, unsigned int size);

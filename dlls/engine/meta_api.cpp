@@ -2691,10 +2691,59 @@ static cell AMX_NATIVE_CALL set_size(AMX *amx, cell *params)
 	return 1;
 }
 
+// SetSpeak, this sets who a player can speak to/who he can listen to.
+static cell AMX_NATIVE_CALL set_speak(AMX *amx, cell *params) { 
+	int iIndex = params[1];
+	int iNewSpeakFlags = params[2];
+
+	if (iIndex < 1 || iIndex > gpGlobals->maxClients) {
+		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	PlInfo[iIndex].iSpeakFlags = iNewSpeakFlags;
+
+	return 1;
+}
+
+//GetSpeak, this gets whether a player can speak to
+// (BAILOPAN)
+static cell AMX_NATIVE_CALL get_speak(AMX *amx, cell *params) {
+	int iIndex = params[1];
+
+	if (iIndex < 1 || iIndex > gpGlobals->maxClients)
+	{
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	return PlInfo[iIndex].iSpeakFlags;
+}
+
 /********************************************
    METAMOD HOOKED FUNCTIONS
    *****************************************/
 
+// This checks who can hear who through voice comm. this reads flags set,
+// and lets us choose who hears who based on the previously set flags.
+qboolean Voice_SetClientListening(int iReceiver, int iSender, qboolean bListen) {
+	if((PlInfo[iSender].iSpeakFlags & SPEAK_MUTED) != 0) {
+		(g_engfuncs.pfnVoice_SetClientListening)(iReceiver, iSender, false);
+		RETURN_META_VALUE(MRES_SUPERCEDE, false);
+	}
+
+	if((PlInfo[iSender].iSpeakFlags & SPEAK_ALL) != 0) {
+		(g_engfuncs.pfnVoice_SetClientListening)(iReceiver, iSender, true);
+		RETURN_META_VALUE(MRES_SUPERCEDE, true);
+	}
+
+	if((PlInfo[iReceiver].iSpeakFlags & SPEAK_LISTENALL) != 0) {
+		(g_engfuncs.pfnVoice_SetClientListening)(iReceiver, iSender, true);
+		RETURN_META_VALUE(MRES_SUPERCEDE, true);
+	}
+
+	RETURN_META_VALUE(MRES_IGNORED, bListen);
+}
 
 //Added by BAILOPAN.  ClientKill() forward.
 void ClientKill(edict_t *pEntity)
@@ -3249,6 +3298,7 @@ C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
 	meta_engfuncs.pfnWriteString = WriteString;
 	meta_engfuncs.pfnWriteEntity = WriteEntity;
 	meta_engfuncs.pfnLightStyle = LightStyle;
+	meta_engfuncs.pfnVoice_SetClientListening = Voice_SetClientListening;
 
 	if(*interfaceVersion!=ENGINE_INTERFACE_VERSION) {
 		LOG_ERROR(PLID, "GetEngineFunctions version mismatch; requested=%d ours=%d", *interfaceVersion, ENGINE_INTERFACE_VERSION);
@@ -3365,6 +3415,8 @@ AMX_NATIVE_INFO Engine_Natives[] = {
 	{"set_lights",			set_lights},
 	{"set_view",			set_view},
 	{"attach_view",			attach_view},
+	{"set_speak",			set_speak},
+	{"get_speak",			get_speak},
 
 	{"precache_generic",	precache_generic},
 	{"register_message",	register_message},

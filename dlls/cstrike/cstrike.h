@@ -1,4 +1,4 @@
-#define __cswonbuild__ // comment when compiling for STEAM
+//#define __cswonbuild__ // comment when compiling for STEAM
 
  /* AMX Mod X 
    *   Counter-Strike Module 
@@ -150,24 +150,6 @@ pfnmodule_engine_g* g_engModuleFunc;
 	#define OFFSET_HOSTAGEFOLLOW		86 + EXTRAOFFSET
 	#define OFFSET_HOSTAGEID			487 + EXTRAOFFSET
 #endif // defined __cswonbuild__
-
-// Offsets of ammo amount in player entities
-/*
-382	int	awm
-383	int	scout, ak, g3
-384	int	para
-385	int	famas, m4a1, aug, sg550, galil, sg552
-386	int	m3, xm
-387	int	usp, ump, mac
-388	int	fiveseven, p90
-389	int	deagle
-390	int	p228
-391	int	glock, mp5, tmp, elites
-392	int	flash
-393	int	he
-394	int	smoke
-395	int	c4
-*/
 
 // Ids of weapons in CS
 #define CSW_P228						1

@@ -1359,12 +1359,27 @@ C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersi
 
 	return(TRUE);
 }
-
 /****GetEntityAPI2_Post**********************************************************/
 void ClientUserInfoChanged_Post( edict_t *pEntity, char *infobuffer ) {
 	int index = ENTINDEX(pEntity);
-	if (!g_players[index].GetOnline())
+	// Only BOTs are set online here! Players must not, because then cs_user_* natives will crash in client_connect, possibly also other early forwards.
+	if (!g_players[index].GetOnline() && strcmp(GETPLAYERAUTHID(pEntity), "BOT") == 0) {
 		g_players[index].SetOnline(true);
+		//LOG_CONSOLE(PLID, "CSTRIKE MODULE: ClientUserInfoChanged_Post: %d was set to be online! (Auth: %s)", index, GETPLAYERAUTHID(pEntity));
+	}
+
+	RETURN_META(MRES_IGNORED);
+}
+
+void ClientPutInServer_Post( edict_t *pEntity ) {
+	int index = ENTINDEX(pEntity);
+	// At this place normal players will be set online. Bots (at least MM bots) don't normally ever get caught here so they can't be set online here.
+	// There might be other implementations of bots though that are caught by MM, so they will be set online here if they didn't already
+	// in ClientUserInfoChanged_Post above...
+	if (!g_players[index].GetOnline()) {
+		g_players[index].SetOnline(true);
+		//LOG_CONSOLE(PLID, "CSTRIKE MODULE: ClientPutInServer_Post: %d was set to be online! (Auth: %s)", index, GETPLAYERAUTHID(pEntity));
+	}
 
 	RETURN_META(MRES_IGNORED);
 }
@@ -1372,6 +1387,7 @@ void ClientUserInfoChanged_Post( edict_t *pEntity, char *infobuffer ) {
 DLL_FUNCTIONS gFunctionTable_Post;
 C_DLLEXPORT int GetEntityAPI2_Post( DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion ) {
 	gFunctionTable_Post.pfnClientUserInfoChanged = ClientUserInfoChanged_Post;
+	gFunctionTable_Post.pfnClientPutInServer = ClientPutInServer_Post;
 
 	if(*interfaceVersion!=INTERFACE_VERSION) {
 		LOG_ERROR(PLID, "GetEntityAPI2_Post version mismatch; requested=%d ours=%d", *interfaceVersion, INTERFACE_VERSION);

@@ -23,9 +23,18 @@ inline edict_t* INDEXENT2( int iEdictNum )
 extern AMX_NATIVE_INFO engfunc_natives[];
 extern AMX_NATIVE_INFO dllfunc_natives[];
 extern AMX_NATIVE_INFO pev_natives[];
+extern AMX_NATIVE_INFO forward_natives[];
 extern TraceResult g_tr;
 
+/* Wouldnt modifying the table AFTER it's memcpy'd be ... pointless?
 extern enginefuncs_t g_EngineFuncs_Table;
 extern enginefuncs_t g_EngineFuncs_Post_Table;
+*/
+// mark down pointers when the calls are made instead (this means amxxmodule.cpp needs to be changed slightly for this module)
+extern DLL_FUNCTIONS *g_pFunctionTable;
+extern DLL_FUNCTIONS *g_pFunctionTable_Post;
+extern enginefuncs_t *g_pengfuncsTable;
+extern enginefuncs_t *g_pengfuncsTable_Post;
+
 
 #endif //_FAKEMETA_INCLUDE_H

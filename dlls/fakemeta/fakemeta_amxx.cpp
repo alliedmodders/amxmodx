@@ -7,6 +7,7 @@ void OnAmxxAttach()
 	MF_AddNatives(engfunc_natives);
 	MF_AddNatives(dllfunc_natives);
 	MF_AddNatives(pev_natives);
+	MF_AddNatives(forward_natives);
 }
 
 // sawce:  Do not null out the forward for ServerActivate.  It's required for the INDEXENT() fix. (I don't think ServerActivate is planned on being forwarded anyway)

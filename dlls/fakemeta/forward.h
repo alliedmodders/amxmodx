@@ -89,6 +89,9 @@ enum {
 	FM_InfoKeyValue,	// char*	)			(char *infobuffer, char *key);
 	FM_SetKeyValue,	// void )			(char *infobuffer, char *key, char *value);
 	FM_SetClientKeyValue,	 // void )		(int clientIndex, char *infobuffer, char *key, char *value);
+
+
+
 	FM_GameInit,	// void)			( void );				
 	FM_Spawn,	// int )				( edict_t *pent );
 	FM_Think,	// void )				( edict_t *pent );

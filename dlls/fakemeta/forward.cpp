@@ -12,11 +12,71 @@ const char *mlStringResult;
 int retType = 0;
 int lastFmRes = FMRES_IGNORED;
 
+#define SIMPLE_INT_HOOK_STRING(call) \
+	int call (char *s) \
+	{ \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i), s)); \
+		RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult); \
+	}
+
+#define SIMPLE_INT_HOOK_CONSTSTRING(call) \
+	int call (const char *s) \
+	{ \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i), s)); \
+		RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult); \
+	}
+
+
+#define SIMPLE_VOID_HOOK_EDICT(call) \
+	void call (edict_t *ent) \
+	{ \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  ENTINDEX(ent))); \
+		RETURN_META(mswi(lastFmRes)); \
+	} 
+
+#define SIMPLE_VOID_HOOK_EDICT_EDICT(call) \
+	void call (edict_t *ent,edict_t *entb) \
+	{ \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  ENTINDEX(ent), ENTINDEX(entb))); \
+		RETURN_META(mswi(lastFmRes)); \
+	} 
+
+#define SIMPLE_VOID_HOOK_VOID(call) \
+	void call () \
+	{ \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i))); \
+		RETURN_META(mswi(lastFmRes)); \
+	} 
+
+#define SIMPLE_INT_HOOK_EDICT(call) \
+	int call (edict_t *pent) \
+	{ \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  ENTINDEX(pent))); \
+		RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult); \
+	}
+
+#define SIMPLE_INT_HOOK_INT(call) \
+	int call (int v) \
+	{ \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  v)); \
+		RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult); \
+	}
+
+#define SIMPLE_INT_HOOK_VOID(call) \
+	int call () \
+	{ \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i))); \
+		RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult); \
+	}
 
 
 #define ENGHOOK(pfnCall) \
 	if (engtable->pfn##pfnCall == NULL) \
 		engtable->pfn##pfnCall = pfnCall
+
+#define DLLHOOK(pfnCall) \
+	if (dlltable->pfn##pfnCall == NULL) \
+		dlltable->pfn##pfnCall = pfnCall
 
 #define FM_ENG_HANDLE(pfnCall, pfnArgs) \
 	register unsigned int i = 0; \
@@ -93,18 +153,11 @@ static cell AMX_NATIVE_CALL fm_return(AMX *amx, cell *params)
 }
 
 
+// pfnPrecacheModel
+SIMPLE_INT_HOOK_STRING(PrecacheModel);
 
-int PrecacheModel(char *s)
-{
-	FM_ENG_HANDLE(FM_PrecacheModel, (Engine[FM_PrecacheModel].at(i), s));
-	RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult);
-}
-
-int PrecacheSound(char *s)
-{
-	FM_ENG_HANDLE(FM_PrecacheSound, (Engine[FM_PrecacheSound].at(i), s));
-	RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult);
-}
+// pfnPrecacheSound
+SIMPLE_INT_HOOK_STRING(PrecacheSound);
 
 void SetModel(edict_t *e, const char *m)
 {
@@ -112,17 +165,11 @@ void SetModel(edict_t *e, const char *m)
 	RETURN_META(mswi(lastFmRes));
 }
 
-int ModelIndex(const char *m)
-{
-	FM_ENG_HANDLE(FM_ModelIndex, (Engine[FM_ModelIndex].at(i), m));
-	RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult);
-}
+// pfnModelIndex
+SIMPLE_INT_HOOK_CONSTSTRING(ModelIndex);
 
-int ModelFrames(int modelIndex)
-{
-	FM_ENG_HANDLE(FM_ModelIndex, (Engine[FM_ModelIndex].at(i), modelIndex));
-	RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult);
-}
+// pfnModelFrames
+SIMPLE_INT_HOOK_INT(ModelFrames);
 
 void SetSize(edict_t *e, const float *rgflMin, const float *rgflMax)
 {
@@ -166,34 +213,103 @@ void MoveToOrigin(edict_t *ent, const float *pflGoal, float dist, int iMoveType)
 	RETURN_META(mswi(lastFmRes));
 }
 
-void ChangeYaw(edict_t *ent)
-{
-	FM_ENG_HANDLE(FM_ChangeYaw, (Engine[FM_ChangeYaw].at(i),  ENTINDEX(ent)));
-	RETURN_META(mswi(lastFmRes));
-}
-
-void ChangePitch(edict_t *ent)
-{
-	FM_ENG_HANDLE(FM_ChangePitch, (Engine[FM_ChangePitch].at(i),  ENTINDEX(ent)));
-	RETURN_META(mswi(lastFmRes));
-}
-
 edict_t *FindEntityByString(edict_t *pEdictStartSearchAfter, const char *pszField, const char *pszValue)
 {
 	FM_ENG_HANDLE(FM_FindEntityByString, (Engine[FM_FindEntityByString].at(i),  ENTINDEX(pEdictStartSearchAfter), pszField, pszValue));
 	RETURN_META_VALUE(mswi(lastFmRes), INDEXENT2((int)mlCellResult));
 }
+// pfnGetEntityIllum
+SIMPLE_INT_HOOK_EDICT(GetEntityIllum);
 
-int GetEntityIllum(edict_t *pent)
-{
-	FM_ENG_HANDLE(FM_ChangePitch, (Engine[FM_ChangePitch].at(i),  ENTINDEX(pent)));
-	RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult);
-}
+// pfnChangeYaw
+SIMPLE_VOID_HOOK_EDICT(ChangeYaw);
+
+// pfnChangePitch
+SIMPLE_VOID_HOOK_EDICT(ChangePitch);
+
+// pfnRemoveEntity
+SIMPLE_VOID_HOOK_EDICT(RemoveEntity);
+
+// pfnMakeStatic
+SIMPLE_VOID_HOOK_EDICT(MakeStatic);
+
+// pfnEntIsOnFloor
+SIMPLE_INT_HOOK_EDICT(EntIsOnFloor);
+
+// pfnDropToFloor
+SIMPLE_INT_HOOK_EDICT(DropToFloor);
+
+// pfnNumberOfEntities
+SIMPLE_INT_HOOK_VOID(NumberOfEntities);
+
+
+
+/*
+ * Beginning of Game DLL hooks
+ */
+
+// pfnSpawn
+SIMPLE_INT_HOOK_EDICT(Spawn);
+
+// pfnThink
+SIMPLE_VOID_HOOK_EDICT(Think);
+
+// pfnUse
+SIMPLE_VOID_HOOK_EDICT_EDICT(Use);
+
+// pfnTouch
+SIMPLE_VOID_HOOK_EDICT_EDICT(Touch);
+
+// pfnBlocked
+SIMPLE_VOID_HOOK_EDICT_EDICT(Blocked);
+
+// pfnSetAbsBox
+SIMPLE_VOID_HOOK_EDICT(SetAbsBox);
+
+// pfnClientDisconnect
+SIMPLE_VOID_HOOK_EDICT(ClientDisconnect);
+
+// pfnClientPutInServer
+SIMPLE_VOID_HOOK_EDICT(ClientPutInServer);
+
+// pfnClientKill
+SIMPLE_VOID_HOOK_EDICT(ClientKill);
+
+// pfnClientCommand
+SIMPLE_VOID_HOOK_EDICT(ClientCommand);
+
+// pfnServerDeactivate
+SIMPLE_VOID_HOOK_VOID(ServerDeactivate);
+
+// pfnPlayerPreThink
+SIMPLE_VOID_HOOK_EDICT(PlayerPreThink);
+
+// pfnPlayerPostThink
+SIMPLE_VOID_HOOK_EDICT(PlayerPostThink);
+
+// pfnStartFrame
+SIMPLE_VOID_HOOK_VOID(StartFrame);
+
+// pfnParmsNewLevel
+SIMPLE_VOID_HOOK_VOID(ParmsNewLevel);
+
+// pfnParmsChangeLevel
+SIMPLE_VOID_HOOK_VOID(ParmsChangeLevel);
+
+// pfnSpectatorConnect
+SIMPLE_VOID_HOOK_EDICT(SpectatorConnect);
+
+// pfnSpectatorDisconnect
+SIMPLE_VOID_HOOK_EDICT(SpectatorDisconnect);
+
+// pfnSpectatorThink
+SIMPLE_VOID_HOOK_EDICT(SpectatorThink);
 
 static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 {
 	int func = params[1];
-	int post = params[2];
+	// You originally had both post coming from params[2] AND the function name.  I've moved post to 3.
+	int post = params[3];
 	if (func > ENGFUNC_NUM || func < 1)
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
@@ -205,10 +321,18 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 
 	enginefuncs_t *engtable;
 
+	DLL_FUNCTIONS *dlltable;
+
 	if (post)
-		engtable = &g_EngineFuncs_Table;
+	{
+		engtable = g_pengfuncsTable_Post;
+		dlltable = g_pFunctionTable_Post;
+	}
 	else
-		engtable = &g_EngineFuncs_Post_Table;
+	{
+		engtable = g_pengfuncsTable;
+		dlltable = g_pFunctionTable;
+	}
 	
 	switch (func)
 	{
@@ -288,18 +412,22 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 		break;
 	case FM_RemoveEntity:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		ENGHOOK(RemoveEntity);
 		break;
 	case FM_CreateNamedEntity:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_STRING, FP_DONE);
 		break;
 	case FM_MakeStatic:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		ENGHOOK(MakeStatic);
 		break;
 	case FM_EntIsOnFloor:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		ENGHOOK(EntIsOnFloor);
 		break;
 	case FM_DropToFloor:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		ENGHOOK(DropToFloor);
 		break;
 	case FM_WalkMove:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_FLOAT, FP_FLOAT, FP_CELL, FP_DONE);
@@ -393,6 +521,7 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 		break;
 	case FM_NumberOfEntities:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
+		ENGHOOK(NumberOfEntities);
 		break;
 	case FM_StaticDecal:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_ARRAY, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
@@ -466,6 +595,11 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	case FM_SetClientKeyValue:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_STRING, FP_STRING, FP_STRING, FP_DONE);
 		break;
+
+
+/*
+ * Begin of DLLFuncs 
+ */
 	//DLLFunc_GameInit,	// void)			( void );				
 	case FM_GameInit:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
@@ -473,22 +607,27 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	//DLLFunc_Spawn,	// int )				( edict_t *pent );
 	case FM_Spawn:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		DLLHOOK(Spawn);
 		break;
 	//DLLFunc_Think,	// void )				( edict_t *pent );
 	case FM_Think:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		DLLHOOK(Think);
 		break;
 	//DLLFunc_Use,	// void )				( edict_t *pentUsed, edict_t *pentOther );
 	case FM_Use:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
+		DLLHOOK(Use);
 		break;
 	//DLLFunc_Touch,	// void )				( edict_t *pentTouched, edict_t *pentOther );
 	case FM_Touch:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
+		DLLHOOK(Touch);
 		break;
 	//DLLFunc_Blocked,	// void )			( edict_t *pentBlocked, edict_t *pentOther );
 	case FM_Blocked:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
+		DLLHOOK(Blocked);
 		break;
 	//DLLFunc_KeyValue,	// void )			( edict_t *pentKeyvalue, KeyValueData *pkvd );
 	/*
@@ -499,6 +638,7 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	//DLLFunc_SetAbsBox,			// void )			( edict_t *pent );
 	case FM_SetAbsBox:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		DLLHOOK(SetAbsBox);
 		break;
 
 	//DLLFunc_ClientConnect,		// bool)		( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ] );
@@ -508,45 +648,55 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	//DLLFunc_ClientDisconnect,	// void )	( edict_t *pEntity );
 	case FM_ClientDisconnect:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		DLLHOOK(ClientDisconnect);
 		break;
 	//DLLFunc_ClientKill,		// void )		( edict_t *pEntity );
 	case FM_ClientKill:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		DLLHOOK(ClientKill);
 		break;
 	//DLLFunc_ClientPutInServer,	// void )	( edict_t *pEntity );
 	case FM_ClientPutInServer:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		DLLHOOK(ClientPutInServer);
 		break;
 	//DLLFunc_ClientCommand,		// void )		( edict_t *pEntity );
 	case FM_ClientCommand:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		DLLHOOK(ClientCommand);
 		break;
 
 	//DLLFunc_ServerDeactivate,	// void)	( void );
 	case FM_ServerDeactivate:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
+		DLLHOOK(ServerDeactivate);
 		break;
 
 	//DLLFunc_PlayerPreThink,		// void )	( edict_t *pEntity );
 	case FM_PlayerPreThink:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		DLLHOOK(PlayerPreThink);
 		break;
 	//DLLFunc_PlayerPostThink,		// void )	( edict_t *pEntity );
 	case FM_PlayerPostThink:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		DLLHOOK(PlayerPostThink);
 		break;
 
 	//DLLFunc_StartFrame,		// void )		( void );
 	case FM_StartFrame:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
+		DLLHOOK(StartFrame);
 		break;
 	//DLLFunc_ParmsNewLevel,		// void )		( void );
 	case FM_ParmsNewLevel:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
+		DLLHOOK(ParmsNewLevel);
 		break;
 	//DLLFunc_ParmsChangeLevel,	// void )	( void );
 	case FM_ParmsChangeLevel:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
+		DLLHOOK(ParmsChangeLevel);
 		break;
 
 	// Returns string describing current .dll.  E.g., TeamFotrress 2, Half-Life
@@ -559,14 +709,17 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	//DLLFunc_SpectatorConnect,	// void)		( edict_t *pEntity );
 	case FM_SpectatorConnect:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		DLLHOOK(SpectatorConnect);
 		break;
 	//DLLFunc_SpectatorDisconnect,	// void )	( edict_t *pEntity );
 	case FM_SpectatorDisconnect:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		DLLHOOK(SpectatorDisconnect);
 		break;
 	//DLLFunc_SpectatorThink,		// void )		( edict_t *pEntity );
 	case FM_SpectatorThink:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		DLLHOOK(SpectatorThink);
 		break;
 
 	// Notify game .dll that engine is going to shut down.  Allows mod authors to set a breakpoint.
@@ -622,3 +775,8 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 
 	return 1;
 }
+
+AMX_NATIVE_INFO forward_natives[] = {
+	{ "register_forward",	register_forward },
+	{ NULL,					NULL }
+};

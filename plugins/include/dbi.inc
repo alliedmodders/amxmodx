@@ -87,7 +87,26 @@ native dbi_close(&Sql:_sql);
 native dbi_error(Sql:_sql, _error[], _len);
 
 /* Returns the type of database being used.  So far:
- * "mysql", "pgsql", "mssql"
+ * "mysql", "pgsql", "mssql", "sqlite"
  */
 native dbi_type(_type[], _len);
 
+/* This function can be used to found out if a table in a Sqlite database exists.
+ */
+stock bool:sqlite_table_exists(Sql:sql, table[]) {
+	new bool:exists
+	new query[128]
+	format(query, 127, "SELECT name FROM sqlite_master WHERE type='table' AND name='%s' LIMIT 1;", table)
+
+	new Result:result = dbi_query(sql, query)
+
+	if (dbi_nextrow(result))
+		exists = true
+	else
+		exists = false
+
+	if (result > RESULT_NONE)
+		dbi_free_result(result)
+
+	return exists
+}

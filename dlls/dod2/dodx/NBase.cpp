@@ -336,6 +336,42 @@ static cell AMX_NATIVE_CALL is_custom(AMX *amx, cell *params){
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL dod_get_user_team(AMX *amx, cell *params){ // player,wid
+	int index = params[2];
+	if (index<1||index>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	return pPlayer->pEdict->v.team;
+
+}
+
+static cell AMX_NATIVE_CALL get_user_team(AMX *amx, cell *params){ // player,wid
+	int index = params[2];
+	if (index<1||index>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	int iTeam = pPlayer->pEdict->v.team; 
+	if ( params[3] ){ 
+		char *szTeam = ""; 
+		switch(iTeam){
+		case 1: 
+			szTeam = "Allies"; 
+			break; 
+		case 2: 
+			szTeam = "Axis"; 
+			break; 
+		} 
+		MF_SetAmxString(amx,params[2],szTeam,params[3]); 
+	} 
+	return iTeam; 
+} 
+
 AMX_NATIVE_INFO base_Natives[] = {
 
 	{ "dod_wpnlog_to_name", wpnlog_to_name },
@@ -363,6 +399,13 @@ AMX_NATIVE_INFO base_Natives[] = {
 	{ "custom_weapon_add", register_cwpn }, // name,melee,logname
 	{ "custom_weapon_dmg", cwpn_dmg },
 	{ "custom_weapon_shot", cwpn_shot },
+
+	//****************************************
+
+	{ "get_user_team", get_user_team },
+	{ "get_weaponname", get_weapon_name },
+	{ "get_user_weapon", get_user_weapon },
+	{ "dod_get_user_team", dod_get_user_team },
 
 	///*******************
 	{ NULL, NULL } 

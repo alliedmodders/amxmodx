@@ -84,7 +84,7 @@ static cell AMX_NATIVE_CALL is_melee(AMX *amx, cell *params){
 	return 0;
 }
 
-static cell AMX_NATIVE_CALL get_user_weapon(AMX *amx, cell *params){
+static cell AMX_NATIVE_CALL ts_get_user_weapon(AMX *amx, cell *params){
 	int id = params[1];
 	if ( id<1 || id>gpGlobals->maxClients ){ 
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
@@ -101,6 +101,24 @@ static cell AMX_NATIVE_CALL get_user_weapon(AMX *amx, cell *params){
 		*cpTemp = pPlayer->weapons[wpn].mode;
 		cpTemp = MF_GetAmxAddr(amx,params[5]);
 		*cpTemp = pPlayer->weapons[wpn].attach;
+		return wpn;
+	}
+	return 0;
+}
+
+static cell AMX_NATIVE_CALL get_user_weapon(AMX *amx, cell *params){
+	int id = params[1];
+	if ( id<1 || id>gpGlobals->maxClients ){ 
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+	CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
+	if ( pPlayer->ingame ){
+		int wpn = pPlayer->current;
+		cell *cpTemp = MF_GetAmxAddr(amx,params[2]);
+		*cpTemp = pPlayer->weapons[wpn].clip;
+		cpTemp = MF_GetAmxAddr(amx,params[3]);
+		*cpTemp = pPlayer->weapons[wpn].ammo;
 		return wpn;
 	}
 	return 0;
@@ -402,7 +420,7 @@ AMX_NATIVE_INFO base_Natives[] = {
 	{ "ts_wpnlogtoname", wpnlog_to_name },
 	{ "ts_wpnlogtoid", wpnlog_to_id },
 	
-	{ "ts_getuserwpn", get_user_weapon },
+	{ "ts_getuserwpn", ts_get_user_weapon },
 	{ "ts_getusercash", get_user_cash },
 	{ "ts_getuserspace", get_user_space },
 	{ "ts_getuserpwup",get_user_pwup },
@@ -418,6 +436,10 @@ AMX_NATIVE_INFO base_Natives[] = {
 	{ "ts_setpddata",ts_setup },
 
 	{ "register_statsfwd",register_forward },
+
+	//****************************************
+	{ "get_weaponname", get_weapon_name },
+	{ "get_user_weapon", get_user_weapon },
 
 	//"*******************"
 	{ NULL, NULL } 

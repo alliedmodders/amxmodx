@@ -1166,6 +1166,8 @@ void GenericError(AMX *amx, int err, int line, char buf[], const char *file)
 		{
 			sprintf(buf, "Run time error %d on line %d (%s \"%s\").", err, line, (file?"file":"plugin"), (file?file:g_plugins.findPluginFast(amx)->getName()));
 		} else {
+			if (err == AMX_ERR_NATIVE && amx->userdata[2])
+				geterr = (char *)(amx->userdata[2]);	
 			sprintf(buf, "Run time error %d (%s) on line %d (%s \"%s\").", err, geterr, line, (file?"file":"plugin"), (file?file:g_plugins.findPluginFast(amx)->getName()));
 		}
 	}

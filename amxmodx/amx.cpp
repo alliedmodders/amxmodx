@@ -428,6 +428,7 @@ int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
   AMX_HEADER *hdr;
   AMX_FUNCSTUB *func;
   AMX_NATIVE f;
+  int i =0;
 
   assert(amx!=NULL);
   hdr=(AMX_HEADER *)amx->base;
@@ -437,6 +438,7 @@ int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
   assert(index>=0 && index<(cell)NUMENTRIES(hdr,natives,libraries));
   func=GETENTRY(hdr,natives,index);
   f=(AMX_NATIVE)func->address;
+  amx->userdata[2] = (char *)GETENTRYNAME(hdr, func);
   assert(f!=NULL);
 
   /* now that we have found the function, patch the program so that any
@@ -606,6 +608,7 @@ static int amx_BrowseRelocate(AMX *amx)
   } else {
 	amx->userdata[0] = 0;
 	amx->userdata[1] = 0;
+	amx->userdata[2] = 0;
   }
 
   #if defined __GNUC__ || defined ASM32 || defined JIT && !defined __64BIT__

@@ -71,8 +71,12 @@ public plugin_init()
 
 #if defined DISPLAY_MSG
 public client_putinserver(id) {
-  if (get_cvar_num("amx_client_languages"))
+  if (get_cvar_num("amx_client_languages") && !is_user_bot(id))
     set_task(10.0,"dispInfo",id)
+}
+
+public client_disconnect(id) {
+	remove_task(id)
 }
 
 public dispInfo(id)
@@ -85,7 +89,7 @@ public dispInfo(id)
 public cmdLang(id,level,cid) {
   if (!cmd_access(id,level,cid,2))
     return PLUGIN_HANDLED
-    
+
   new arg[3]
   read_argv(1,arg,2)
 
@@ -104,13 +108,13 @@ public cmdLang(id,level,cid) {
 public cmdLangMenu(id,level,cid)
 {
   new buffer[3]
-  
+
   if (!get_cvar_num("amx_client_languages"))
   {
 	client_print(id, print_console, "[AMXX] %L", LANG_SERVER, "LANG_MENU_DISABLED")
   	return PLUGIN_HANDLED
   }
-  
+
   get_user_info(id,"lang",buffer,2)
 
   g_menuLang[id][0] = get_lang_id(buffer)
@@ -144,7 +148,7 @@ showMenu(id)
   format( menuBody[len],511-len,"^n^n0. %L",id,"EXIT" )
 
   show_menu(id,MENU_KEY_0|MENU_KEY_1|MENU_KEY_2|MENU_KEY_3,menuBody,-1,"Language Menu")
-  
+
   return 1
 }
 
@@ -189,7 +193,7 @@ public actionMenu(id,key) {
     format(lName,63,"%L",pLang,"LANG_NAME")
     client_print(id,print_chat,"%L",pLang,"SET_LANG_USER",lName)
   }
-  
+
   return 0
 }
 

@@ -188,7 +188,7 @@ static cell AMX_NATIVE_CALL get_msg_arg_int(AMX *amx, cell *params)
 	int argn = params[1];
 	
 	if (inHookProcess && msgd!=NULL) {
-		if (argn < msgd->args() && argn > 0) {
+		if (argn <= msgd->args() && argn > 0) {
 			return msgd->RetArg_Int(argn);
 		} else {
 			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
@@ -211,7 +211,7 @@ static cell AMX_NATIVE_CALL get_msg_arg_float(AMX *amx, cell *params)
 	float retVal;
 	
 	if (inHookProcess && msgd!=NULL) {
-		if (argn < msgd->args() && argn > 0) {
+		if (argn <= msgd->args() && argn > 0) {
 			retVal = msgd->RetArg_Float(argn);
 			return *(cell*)((void *)&retVal);
 		} else {
@@ -235,7 +235,7 @@ static cell AMX_NATIVE_CALL get_msg_arg_string(AMX *amx, cell *params)
 	char *szValue = '\0';
 	
 	if (inHookProcess && msgd!=NULL) {
-		if (argn < msgd->args() && argn > 0) {
+		if (argn <= msgd->args() && argn > 0) {
 			iLen = msgd->RetArg_Strlen(argn);
 			szValue = new char[iLen+1];
 			strcpy(szValue, msgd->RetArg_String(argn));
@@ -264,7 +264,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_string(AMX *amx, cell *params)
 	char *szData = AMX_GET_STRING(amx, params[2], iLen);
 	
 	if (inHookProcess && msgd!=NULL) {
-		if (argn < msgd->args() && argn > 0) {
+		if (argn <= msgd->args() && argn > 0) {
 			if (msgd->Set(argn, arg_string, szData)) {
 				return 1;
 			} else {
@@ -289,7 +289,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_float(AMX *amx, cell *params)
 	int argtype = params[2];
 	
 	if (inHookProcess && msgd!=NULL) {
-		if (argn < msgd->args() && argn > 0) {
+		if (argn <= msgd->args() && argn > 0) {
 			if (msgd->Set(argn, argtype, params[3])) {
 				return 1;
 			} else {
@@ -315,7 +315,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_int(AMX *amx, cell *params)
 	int iData = params[3];
 	
 	if (inHookProcess && msgd!=NULL) {
-		if (argn < msgd->args() && argn > 0) {
+		if (argn <= msgd->args() && argn > 0) {
 			if (msgd->Set(argn, argtype, iData)) {
 				return 1;
 			} else {
@@ -423,100 +423,6 @@ static cell AMX_NATIVE_CALL get_offset_short(AMX *amx, cell *params)
 	return (int)*((short *)Player->pvPrivateData + off);
 	
 }
-
-////////////////////////////////////////////
-//THESE ARE FROM amxmod.cpp!!!
-////////////////////////////////////////////
-static cell AMX_NATIVE_CALL message_begin(AMX *amx, cell *params) /* 4 param */
-{
-	int numparam = *params/sizeof(cell);
-	Vector vecOrigin;
-	cell *cpOrigin;
-	switch (params[1]){
-	case MSG_BROADCAST:
-	case MSG_ALL:
-	case MSG_SPEC:
-		MESSAGE_BEGIN( params[1], params[2],NULL );
-		break;
-	case MSG_PVS: case MSG_PAS:
-		if (numparam < 3) {
-			AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
-			return 0;
-		}
-		cpOrigin = get_amxaddr(amx,params[3]);
-		vecOrigin.x = *cpOrigin;
-		vecOrigin.y = *(cpOrigin+1);
-		vecOrigin.z = *(cpOrigin+2);
-		MESSAGE_BEGIN( params[1], params[2] , vecOrigin );
-		break;
-	case MSG_ONE:
-		if (numparam < 4) {
-			AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
-			return 0;
-		}
-		MESSAGE_BEGIN( MSG_ONE, params[2], NULL, INDEXENT(params[4]) );
-		break;
-	}
-
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL message_end(AMX *amx, cell *params)
-{
-	MESSAGE_END();
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL write_byte(AMX *amx, cell *params) /* 1 param */
-{
-	WRITE_BYTE( params[1] );
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL write_char(AMX *amx, cell *params) /* 1 param */
-{
-	WRITE_CHAR( params[1] );
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL write_short(AMX *amx, cell *params)	/* 1 param */
-{
-	WRITE_SHORT( params[1] );
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL write_long(AMX *amx, cell *params)	/* 1 param */
-{
-	WRITE_LONG( params[1] );
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL write_entity(AMX *amx, cell *params) /* 1 param */
-{
-	WRITE_ENTITY( params[1] );
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL write_angle(AMX *amx, cell *params) /* 1 param */
-{
-	WRITE_ANGLE( params[1] );
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL write_coord(AMX *amx, cell *params) /* 1 param */
-{
-	WRITE_COORD( params[1] );
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL write_string(AMX *amx, cell *params) /* 1 param */
-{
-	int a;
-	WRITE_STRING( get_amxstring(amx,params[1],3,a) );
-	return 1;
-}
-////////////////////////////////////////////
-////////////////////////////////////////////
 
 //(BAILOPAN)
 //Gets a pvPrivateData offset for a player (player, offset, float=0)
@@ -3186,16 +3092,6 @@ AMX_NATIVE_INFO Engine_Natives[] = {
 	{"get_msg_arg_string",	get_msg_arg_string},
 	{"get_msg_args",		get_msg_args},
 	{"get_msg_argtype",		get_msg_argtype},
-	{"message_begin",		message_begin},
-	{"message_end",			message_end},
-	{"write_angle",			write_angle},
-	{"write_byte",			write_byte},
-	{"write_char",		    write_char},
-	{"write_coord",		    write_coord},
-	{"write_entity",	    write_entity},
-	{"write_long",	   	    write_long},
-	{"write_short",		    write_short},
-	{"write_string",	    write_string},
 	{"is_valid_ent",		is_valid_ent},
 
 	{ NULL, NULL }

@@ -19,7 +19,7 @@ $mm = "../metamod/metamod";
 
 @CPP_SOURCE_FILES = ("meta_api.cpp", "CFile.cpp", "CVault.cpp", "vault.cpp", "float.cpp", "file.cpp", "modules.cpp", "CMisc.cpp", "CTask.cpp", "string.cpp", "amxmodx.cpp", "CEvent.cpp", "CCmd.cpp", "CLogEvent.cpp", "srvcmd.cpp", "strptime.cpp", "amxcore.cpp", "amxtime.cpp", "power.cpp", "amxxlog.cpp", "fakemeta.cpp", "MMGR/MMGR.cpp", "amxxfile.cpp", "CLang.cpp", "md5.cpp", "emsg.cpp", "CForward.cpp", "CPlugin.cpp", "CModule.cpp", "CMenu.cpp", "util.cpp");
 
-@C_SOURCE_FILES = ("minilzo/minilzo.c");
+@C_SOURCE_FILES = ();
 my %OPTIONS, %OPT;
 
 $OPT{"debug"} = "-g -ggdb";
@@ -218,5 +218,5 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	}
 }
 
-$gcc = "gcc $cflags -shared -ldl -lm @LINK -o $outdir/$bin";
+$gcc = "gcc $cflags -Lzlib/ -lz -shared -ldl -lm @LINK -o $outdir/$bin";
 `$gcc`;

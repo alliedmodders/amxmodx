@@ -240,6 +240,14 @@ enum {
   AMX_ERR_DOMAIN,       /* domain error, expression result does not fit in range */
 };
 
+#if !defined AMX_NO_ALIGN
+  #if defined __linux__
+    #pragma pack()    /* reset default packing */
+  #else
+    #pragma pack(pop) /* reset previous packing */
+  #endif
+#endif
+
 
 // ***** declare functions *****
 
@@ -1947,6 +1955,7 @@ typedef int				(*PFN_AMX_EXEC)					(AMX* /*amx*/, cell* /*return val*/, int /*in
 typedef int				(*PFN_AMX_EXECV)				(AMX* /*amx*/, cell* /*return val*/, int /*index*/, int /*numparams*/, cell[] /*params*/);
 typedef int				(*PFN_AMX_ALLOT)				(AMX* /*amx*/, int /*length*/, cell* /*amx_addr*/, cell** /*phys_addr*/);
 typedef int				(*PFN_AMX_FINDPUBLIC)			(AMX* /*amx*/, char* /*func name*/, int* /*index*/);
+typedef int				(*PFN_AMX_FINDNATIVE)			(AMX* /*amx*/, char* /*func name*/, int* /*index*/);
 typedef int				(*PFN_LOAD_AMXSCRIPT)			(AMX* /*amx*/, void** /*code*/, const char* /*path*/, char[64] /*error info*/);
 typedef int				(*PFN_UNLOAD_AMXSCRIPT)			(AMX* /*amx*/,void** /*code*/);
 typedef cell			(*PFN_REAL_TO_CELL)				(REAL /*x*/);
@@ -1954,6 +1963,7 @@ typedef REAL			(*PFN_CELL_TO_REAL)				(cell /*x*/);
 typedef int				(*PFN_REGISTER_SPFORWARD)		(AMX * /*amx*/, int /*func*/, ... /*params*/);
 typedef int				(*PFN_REGISTER_SPFORWARD_BYNAME)	(AMX * /*amx*/, const char * /*funcName*/, ... /*params*/);
 typedef void			(*PFN_UNREGISTER_SPFORWARD)		(int /*id*/);
+typedef	void			(*PFN_MERGEDEFINITION_FILE)		(const char * /*filename*/);
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
 extern PFN_BUILD_PATHNAME			g_fn_BuildPathname;
@@ -2005,6 +2015,8 @@ extern PFN_CELL_TO_REAL				g_fn_CellToReal;
 extern PFN_REGISTER_SPFORWARD		g_fn_RegisterSPForward;
 extern PFN_REGISTER_SPFORWARD_BYNAME	g_fn_RegisterSPForwardByName;
 extern PFN_UNREGISTER_SPFORWARD		g_fn_UnregisterSPForward;
+extern PFN_MERGEDEFINITION_FILE		g_fn_MergeDefinition_File;
+extern PFN_AMX_FINDNATIVE			g_fn_AmxFindNative;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2098,8 +2110,10 @@ void MF_Log(const char *fmt, ...);
 #define MF_AmxExecv g_fn_AmxExecv
 #define MF_AmxFindPublic g_fn_AmxFindPublic
 #define MF_AmxAllot g_fn_AmxAllot
+#define MF_AmxFindNative g_fn_AmxFindNative
 #define MF_LoadAmxScript g_fn_LoadAmxScript
 #define MF_UnloadAmxScript g_fn_UnloadAmxScript
+#define MF_MergeDefinitionFile g_fn_MergeDefinition_File
 #define amx_ctof g_fn_CellToReal
 #define amx_ftoc g_fn_RealToCell
 #define MF_RegisterSPForwardByName g_fn_RegisterSPForwardByName
@@ -2148,5 +2162,6 @@ void	Mem_Deallocator(const char *sourceFile, const unsigned int sourceLine, cons
 #define	calloc(sz)	Mem_Allocator  (__FILE__,__LINE__,__FUNCTION__,m_alloc_calloc,sz)
 #define	realloc(ptr,sz)	Mem_Reallocator(__FILE__,__LINE__,__FUNCTION__,m_alloc_realloc,sz,ptr)
 #define	free(ptr)	Mem_Deallocator(__FILE__,__LINE__,__FUNCTION__,m_alloc_free,ptr)
+
 
 #endif // #ifndef __AMXXMODULE_H__

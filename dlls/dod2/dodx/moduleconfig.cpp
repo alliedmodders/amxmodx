@@ -151,11 +151,11 @@ void ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax ){
 
 void PlayerPreThink_Post( edict_t *pEntity ) {
 	if ( !isModuleActive() ) 
-		return;
+		RETURN_META(MRES_IGNORED);
 
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
 	if ( !pPlayer->ingame )
-		return;
+		RETURN_META(MRES_IGNORED);
 
 	if (pPlayer->clearStats && pPlayer->clearStats < gpGlobals->time){
 		if ( !ignoreBots(pEntity) ){

@@ -630,7 +630,7 @@ void AlertMessage(ALERT_TYPE atype, char *szFmt, ...) {
 	FAKEMETA_ENGINE_HANDLE_void_varargs(AlertMessage, atype, szFmt);
 }
 
-#ifdef HLSDK_3_2_OLD_EIF
+#ifdef HLSDK_2_3_OLD_EIFACE
 void EngineFprintf(FILE *pfile, char *szFmt, ...) {
 #else
 void EngineFprintf(void *pfile, char *szFmt, ...) {
@@ -638,7 +638,7 @@ void EngineFprintf(void *pfile, char *szFmt, ...) {
 	FAKEMETA_ENGINE_HANDLE_void_varargs(EngineFprintf, pfile, szFmt);
 }
 
-#ifdef HLSDK_3_2_OLD_EIF
+#ifdef HLSDK_2_3_OLD_EIFACE
 void *PvAllocEntPrivateData(edict_t *pEdict, long cb) {
 #else
 void *PvAllocEntPrivateData(edict_t *pEdict, int cb) {
@@ -692,7 +692,7 @@ void GetBonePosition(const edict_t *pEdict, int iBone, float *rgflOrigin, float 
 	FAKEMETA_ENGINE_HANDLE_void(GetBonePosition, (pEdict, iBone, rgflOrigin, rgflAngles));
 }
 
-#ifdef HLSDK_3_2_OLD_EIF
+#ifdef HLSDK_2_3_OLD_EIFACE
 unsigned long FunctionFromName( const char *pName ) {
 	FAKEMETA_ENGINE_HANDLE(unsigned long, 0, FunctionFromName, (pName));
 #else
@@ -701,7 +701,7 @@ unsigned int FunctionFromName( const char *pName ) {
 #endif
 }
 
-#ifdef HLSDK_3_2_OLD_EIF
+#ifdef HLSDK_2_3_OLD_EIFACE
 const char *NameForFunction( unsigned long function ) {
 #else
 const char *NameForFunction( unsigned int function ) {
@@ -746,7 +746,7 @@ CRC32_t CRC32_Final(CRC32_t pulCRC) {
 	FAKEMETA_ENGINE_HANDLE(CRC32_t, 0, CRC32_Final, (pulCRC));
 }
 
-#ifdef HLSDK_3_2_OLD_EIF
+#ifdef HLSDK_2_3_OLD_EIFACE
 long RandomLong(long lLow, long lHigh) {
 	FAKEMETA_ENGINE_HANDLE(long, 0, RandomLong, (lLow, lHigh));
 #else
@@ -1140,7 +1140,7 @@ void AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...) {
 	FAKEMETA_ENGINE_HANLDE_POST_void_varargs(AlertMessage, atype, szFmt);
 }
 
-#ifdef HLSDK_3_2_OLD_EIF
+#ifdef HLSDK_2_3_OLD_EIFACE
 void EngineFprintf_Post(FILE *pfile, char *szFmt, ...) {
 #else
 void EngineFprintf_Post(void *pfile, char *szFmt, ...) {
@@ -1148,7 +1148,7 @@ void EngineFprintf_Post(void *pfile, char *szFmt, ...) {
 	FAKEMETA_ENGINE_HANLDE_POST_void_varargs(EngineFprintf, pfile, szFmt);
 }
 
-#ifdef HLSDK_3_2_OLD_EIF
+#ifdef HLSDK_2_3_OLD_EIFACE
 void *PvAllocEntPrivateData_Post(edict_t *pEdict, long cb) {
 #else
 void *PvAllocEntPrivateData_Post(edict_t *pEdict, int cb) {
@@ -1202,7 +1202,7 @@ void GetBonePosition_Post(const edict_t *pEdict, int iBone, float *rgflOrigin, f
 	FAKEMETA_ENGINE_HANDLE_POST_void(GetBonePosition, (pEdict, iBone, rgflOrigin, rgflAngles));
 }
 
-#ifdef HLSDK_3_2_OLD_EIF
+#ifdef HLSDK_2_3_OLD_EIFACE
 unsigned long FunctionFromName_Post( const char *pName ) {
 	FAKEMETA_ENGINE_HANDLE_POST(unsigned long, 0, FunctionFromName, (pName));
 #else
@@ -1211,7 +1211,7 @@ unsigned int FunctionFromName_Post( const char *pName ) {
 #endif
 }
 
-#ifdef HLSDK_3_2_OLD_EIF
+#ifdef HLSDK_2_3_OLD_EIFACE
 const char *NameForFunction_Post( unsigned long function ) {
 #else
 const char *NameForFunction_Post( unsigned int function ) {
@@ -1256,7 +1256,7 @@ CRC32_t CRC32_Final_Post(CRC32_t pulCRC) {
 	FAKEMETA_ENGINE_HANDLE_POST(CRC32_t, 0, CRC32_Final, (pulCRC));
 }
 
-#ifdef HLSDK_3_2_OLD_EIF
+#ifdef HLSDK_2_3_OLD_EIFACE
 long RandomLong_Post(long lLow, long lHigh) {
 	FAKEMETA_ENGINE_HANDLE_POST(long, 0, RandomLong, (lLow, lHigh));
 #else
@@ -1508,30 +1508,7 @@ void ClientPutInServer( edict_t *pEntity ) {
 	FAKEMETA_DLL_HANDLE_void(ClientPutInServer, (pEntity));
 }
 void ClientCommand( edict_t *pEntity ) {
-	META_RES mres = MRES_IGNORED, status = MRES_IGNORED, prev_mres = MRES_UNSET;
-	for (CList<CFakeMeta::CFakeMetaPlugin>::iterator iter = g_FakeMeta.m_Plugins.begin(); iter; ++iter)
-	{
-		if ((*iter).GetStatus() == PL_RUNNING && (*iter).GetDllFuncTable().pfnClientCommand)
-		{
-			/* Initialize meta globals */
-			gpMetaGlobals->mres = MRES_UNSET;
-			gpMetaGlobals->prev_mres = prev_mres;
-			gpMetaGlobals->status = status;
-			/* Actual call */
-			(*iter).GetDllFuncTable().pfnClientCommand(pEntity);
-			/* Process return value */
-			mres = gpMetaGlobals->mres;
-			if (mres > status)
-				status = mres;
-			prev_mres = mres;
-			if (mres == MRES_UNSET)
-				AMXXLOG_Log("[AMXX] Module \"%s\" (\"%s\") has not set meta result in \"%s\"",
-				(*iter).GetInfo()->name, (*iter).GetPath(), "ClientCommand");
-		}
-	}
-	/* Set meta result to the highest value */
-	RETURN_META(status);
-	//FAKEMETA_DLL_HANDLE_void(ClientCommand, (pEntity));
+	FAKEMETA_DLL_HANDLE_void(ClientCommand, (pEntity));
 }
 void ClientUserInfoChanged( edict_t *pEntity, char *infobuffer ) {
 	FAKEMETA_DLL_HANDLE_void(ClientUserInfoChanged, (pEntity,infobuffer));

@@ -213,7 +213,7 @@ int Spawn( edict_t *pent ) {
   mp_timelimit = CVAR_GET_POINTER("mp_timelimit");
 
   // ###### Initialize logging
-  g_log_dir.set( get_localinfo("amx_logdir" , "addons/amxx/logs" ) );
+  g_log_dir.set("addons/amxx/logs");			// :TODO: maybe not do this through String as an optimalization ( a #define or const char * ?)
   UTIL_MakeNewLogFile();
 
   // ###### Initialize task manager
@@ -228,8 +228,7 @@ int Spawn( edict_t *pent ) {
 
   Vault amx_config;
   // ###### Load custom path configuration
-  amx_config.setSource( build_pathname("%s",
-    get_localinfo("amxx_cfg" , "addons/amxx/configs/core.ini")) );
+  amx_config.setSource(build_pathname("%s", "addons/amxx/configs/core.ini"));
 
   if ( amx_config.loadVault() ){
     Vault::iterator a = amx_config.begin();
@@ -240,11 +239,8 @@ int Spawn( edict_t *pent ) {
     amx_config.clear();
   }
 
-  //  ###### Make sure basedir is set
-  get_localinfo("amxx_basedir" , "addons/amxx" );
-
   //  ###### Load modules
-  int loaded = loadModules( get_localinfo("amxx_modules" , "addons/amxx/modules.ini" ) );
+  int loaded = loadModules( "addons/amxx/modules.ini" );
   attachModules();
   // Set some info about amx version and modules
   if ( loaded ){
@@ -260,8 +256,7 @@ int Spawn( edict_t *pent ) {
   }
 
   //  ######  Load Vault
-  g_vault.setSource( build_pathname("%s",
-    get_localinfo("amxx_vault" , "addons/amxx/configs/vault.ini" ) ) );
+  g_vault.setSource( build_pathname("%s", "addons/amxx/configs/vault.ini" ) );
   g_vault.loadVault( );
 
 
@@ -275,8 +270,7 @@ int Spawn( edict_t *pent ) {
   memset(g_players[0].flags,-1,sizeof(g_players[0].flags));
 
   //  ###### Load AMX scripts
-  g_plugins.loadPluginsFromFile(
-    get_localinfo("amxx_plugins" , "addons/amxx/plugins.ini" )  );
+  g_plugins.loadPluginsFromFile( build_pathname("%s", "addons/amxx/plugins.ini" )  );
 
   //  ###### Call precache forward function
   g_dontprecache = false;
@@ -974,8 +968,7 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
   g_mod_name.set(a);
 
   //  ###### Now attach metamod modules
-  attachMetaModModules( get_localinfo("amxx_modules" ,
-    "addons/amxx/modules.ini" ) );
+  attachMetaModModules( "addons/amxx/modules.ini" );
 
   return(TRUE);
 }
@@ -1004,8 +997,7 @@ C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason) {
   dettachModules();
 
   //  ###### Now dettach metamod modules
-  dettachMetaModModules( get_localinfo("amxx_modules" ,
-    "addons/amxx/modules.ini" ) );
+  dettachMetaModModules( "addons/amxx/modules.ini" );
 
   return(TRUE);
 }

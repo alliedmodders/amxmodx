@@ -123,3 +123,4 @@ private:
 };
 
 #endif //_INCLUDE_CQUEUE_H
+

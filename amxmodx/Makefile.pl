@@ -95,7 +95,7 @@ if ($OPTIONS{"debug"})
 
 if ($OPTIONS{"amd64"})
 {
-	$cflags .= "-m64 -DSMALL_CELLSIZE=64 $cflags";
+	$cflags .= " -m64 -DSMALL_CELL_SIZE=64 -DHAVE_I64 $cflags";
 }
 
 if ($OPTIONS{"jit"})

@@ -457,14 +457,6 @@ int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
     } /* if */
   } /* if */
 
-  /* on 64-bit platforms, only the lower 32-bits were stored in the native
-   * function table; complete the address
-   */
-  #if defined __64BIT__
-    assert(sizeof(f)>sizeof(uint32_t));
-    f= (f & 0xffffffffL) | (amx_Callback & ~0xffffffffL);
-  #endif
-
   /* Note:
    *   params[0] == number of bytes for the additional parameters passed to the native function
    *   params[1] == first argument
@@ -1606,9 +1598,6 @@ int AMXAPI amx_Register(AMX *amx, AMX_NATIVE_INFO *list, int number)
        * can be stored; hopefully, all addresses can be assumed to have the
        * same value for the upper 32-bits
        */
-      #if defined __64BIT__
-        assert((funcptr & ~0xffffffffL)==(amx_Callback & ~0xffffffffL));
-      #endif
       if (funcptr!=NULL)
         func->address=(ucell)funcptr;
       else

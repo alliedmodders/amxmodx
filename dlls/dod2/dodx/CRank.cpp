@@ -147,7 +147,7 @@ void RankSystem::clear(){
 
 bool RankSystem::loadCalc(const char* filename, char* error)
 {
-	if ((MF_LoadAmxScript(&calc.amx,&calc.code,filename,error)!=AMX_ERR_NONE)||
+	if ((MF_LoadAmxScript(&calc.amx,&calc.code,filename,error,0)!=AMX_ERR_NONE)||
 		(MF_AmxAllot(&calc.amx, 8 , &calc.amxAddr1, &calc.physAddr1)!=AMX_ERR_NONE)||
 		(MF_AmxAllot(&calc.amx, 8 , &calc.amxAddr2, &calc.physAddr2)!=AMX_ERR_NONE)||
 		(MF_AmxFindPublic(&calc.amx,"get_score",&calc.func)!=AMX_ERR_NONE)){

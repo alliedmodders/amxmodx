@@ -14,7 +14,7 @@
 //wrapper for find_ent_by_class
 stock find_ent(iStart, szClassname[])
 {
-	return find_ent_by_classname(iStart, szClassname)
+	return find_ent_by_class(iStart, szClassname)
 }
 
 /* Changes an integer vec to a floating vec */
@@ -147,7 +147,7 @@ stock user_silentkill(index)
 	return 1
 }
 
-/*  Set rendering of an entity */
+/*  Set endering of an entity */
 stock set_rendering(index,fx=kRenderFxNone, r=255,g=255,b=255, render=kRenderNormal,amount=16)
 {
 	entity_set_int(index,EV_INT_renderfx,fx)
@@ -191,4 +191,22 @@ stock set_entity_flags(ent,flag,onoff)
 	}
 
 	return 0
+}
+
+/* If visible = 1, entity will be set to be visible, else invisible. */
+stock set_entity_visibility(entity, visible = 1) {
+	new effects = entity_get_int(entity, EV_INT_effects)
+	if (visible == 1)
+		effects &= ~EF_NODRAW
+	else
+		effects |= EF_NODRAW
+
+	entity_set_int(entity, EV_INT_effects, effects)
+
+	return 1
+}
+
+/* Returns 1 if entity is visible. */
+stock get_entity_visibility(entity) {
+	return (entity_get_int(entity, EV_INT_effects) & EF_NODRAW)
 }

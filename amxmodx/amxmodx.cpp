@@ -682,8 +682,27 @@ static cell AMX_NATIVE_CALL get_user_team(AMX *amx, cell *params) /* 3 param */
     return -1;
   CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
   if (pPlayer->ingame){
+    // SidLuke , DoD fix
+    if ( g_bmod_dod ){
+		int iTeam = pPlayer->pEdict->v.team;
+        if ( params[3] ){
+		  char *szTeam = "";
+		  switch(iTeam){
+		  case 1:
+			  szTeam = "Allies";
+			  break;
+		  case 2:
+			  szTeam = "Axis";
+			  break;
+		  }
+		  set_amxstring(amx,params[2],szTeam,params[3]);
+		}
+		return iTeam;
+	}
+	//
     if ( params[3] )
-    set_amxstring(amx,params[2],pPlayer->team.str(),params[3]);
+	  set_amxstring(amx,params[2],pPlayer->team.str(),params[3]);
+
     return pPlayer->teamId;
   }
   return -1;

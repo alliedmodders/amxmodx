@@ -38,7 +38,7 @@ new g_TimeSet[32][2]
 new g_LastTime
 new g_CountDown
 new g_Switch
-new Float:g_roundStartTime
+new Float:g_roundStartTime = 999999.9
 new bool:is_combat
 
 public plugin_init() {
@@ -53,7 +53,7 @@ public plugin_init() {
   new szMapName[4]
   get_mapname(szMapName, 3)
   if (equal(szMapName, "co_")) {
-    register_event("PlayHUDNot", "roundStart", "bc", "1=0", "2=56")
+    register_event("PlayHUDNot", "roundChange", "bc", "1=0", "2>56", "2<59")
     is_combat = true
   }
 }
@@ -232,8 +232,17 @@ public timeRemain(param[]){
   }
 }
 
-public roundStart() {
-  g_roundStartTime = get_gametime()
+public roundChange() {
+  switch ( read_data(2) ) {
+    case 56: g_roundStartTime = get_gametime()
+    case 57: {
+    	g_roundStartTime = 999999.9	// Stop the countdown when a team wins
+    	g_CountDown = 0
+    	g_Switch = 0
+    	remove_task(34543)
+    	set_task(0.8,"timeRemain",8648458,"",0,"b")
+    }
+  }
 }
 
 getCombatTimeLeft() {

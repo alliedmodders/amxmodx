@@ -46,7 +46,7 @@
 #include "CMenu.h"
 #include "CEvent.h"
 
-#define AMX_VERSION     "0.1"
+#define AMX_VERSION     "0.15"
 
 #ifdef  __cplusplus
 extern "C" {

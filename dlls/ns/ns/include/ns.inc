@@ -8,15 +8,6 @@
 #endif
 #define NS_INC	
 
-/* This is the only option to configure.
-   Set this to 2 if you're using an NS 2.01 server, and recompile your scripts.
-   Leave it at 3 if you're using an NS 3.0 beta server.
- */
-#if !defined NS_VERSION
-	#define NS_VERSION	3
-#endif
-
-
 
 #include <ns_const>
 
@@ -31,7 +22,7 @@ forward client_built(idPlayer,idStructure,type,impulse);
 native ns_is_combat();
 
 /* Sends a popup to a player.  Set target to 0 to send to everybody. Message length is 188 characters.  The last parameter, if set to 1, will only display when the player has cl_autohelp set to 1. */
-native ns_popup(target,szMsg[188],ah=0)
+native ns_popup(target,szMsg[180],ah=0)
 
 /* Sets a player model.  Omit the second parameter to return to default.
    Note: This does *not* change back on death, team switch, gestations, etc. */
@@ -72,7 +63,7 @@ native ns_set_mask(id,mask,value);
 		Number is any other value:
 			The index of the #th matching structure is returned.
 */
-native ns_get_build(classname[],builtOnly=1,Number=0,NSVersion=NS_VERSION);
+native ns_get_build(classname[],builtOnly=1,Number=0);
 
 /* Returns if the player has the weapon or not in their pev->weapons field.
    set "setweapon" to 0 to turn the bit off, set to 1 to turn it on. Or omit it to just return the value. */

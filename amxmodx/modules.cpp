@@ -38,10 +38,15 @@
 CList<CModule> g_modules;
 CList<CScript,AMX*> g_loadedscripts;
 
+CModule *g_CurrentlyAttachedModule = NULL;	// The module we are attaching at the moment; NULL otherwise
+											// also NULL for non-amxx modules
+											// This is needed so we know which module called a function
 #ifdef  __cplusplus
 extern "C" {
 #endif
+
 extern const char* no_function; // stupid work around
+
 #ifdef  __cplusplus
 }
 #endif
@@ -58,7 +63,7 @@ void report_error( int code, char* fmt, ... )
 	if ( *string ) {
 		//File fp( "error_amx.log","a" );
 		//fp << string;
-		print_srvconsole( string );
+		AMXXLOG_Log(string);
 		AMXXLOG_Log("[AMXX] Make sure that modules are compatible with AMX Mod X %s" , AMX_VERSION );
 		AMXXLOG_Log("[AMXX] Please fix the problem then start the server again" );
 	}
@@ -189,7 +194,7 @@ int set_amxnatives(AMX* amx,char error[64])
 	for ( CList<CModule>::iterator  a  = g_modules.begin(); a ; ++a )
 	{
 		for( CList<AMX_NATIVE_INFO*>::iterator cc = 
-			(*a).natives.begin(); cc; ++cc )
+			(*a).m_Natives.begin(); cc; ++cc )
 			amx_Register(amx, *cc , -1);
 	}
 		
@@ -318,7 +323,7 @@ int add_amxnatives(module_info_s* info,AMX_NATIVE_INFO*natives)
 		{
 			AMX_NATIVE_INFO** aa = new AMX_NATIVE_INFO*(natives);
 			if ( aa == 0 ) return AMX_ERR_NATIVE;
-			(*a).natives.put( aa  );
+			(*a).m_Natives.put( aa  );
 			return AMX_ERR_NONE;
 		}
 			
@@ -382,13 +387,19 @@ int loadModules(const char* filename)
         report_error( 1 ,"[AMXX] Couldn't find info. about module (file \"%s\")",pathname );
 		break;
 	  case MODULE_NOQUERY:
-		report_error( 1 , "[AMXX] Couldn't find \"AMX_Query\" (file \"%s\")",  pathname );
+		  report_error( 1 , "[AMXX] Couldn't find \"AMX_Query\" or \"AMXX_Query\" (file \"%s\")", pathname );
 		break;
 	  case MODULE_NOATTACH:
-		report_error( 1 , "[AMXX] Couldn't find \"AMX_Attach\" (file \"%s\")",  pathname );
+		report_error( 1 , "[AMXX] Couldn't find \"%s\" (file \"%s\")", cc->isAmxx() ? "AMXX_Attach" : "AMX_Attach", pathname );
 		break;
 	  case MODULE_OLD:
         report_error( 1 , "[AMXX] Module has a different interface version (file \"%s\")",pathname );
+		break;
+	  case MODULE_NEWER:
+		report_error(1, "[AMXX] Module has a newer interface version (file \"%s\"). Please download a new amxmodx.", pathname);
+		break;
+	  case MODULE_INTERROR:
+		report_error(1, "[AMXX] Internal error during module load (file \"%s\")", pathname);
 		break;
 	  default:
 		++loaded; 
@@ -436,7 +447,25 @@ void attachModules()
 	
 	while ( a )
 	{
-		(*a).attachModule();
+		bool retVal = (*a).attachModule();
+		if ((*a).isAmxx() && !retVal)
+		{
+			switch ((*a).getStatusValue())
+			{
+			case MODULE_FUNCNOTPRESENT:
+				report_error(1, "[AMXX] Module requested a not exisitng function (file \"%s\")%s%s%s", (*a).getFilename(), (*a).getMissingFunc() ? " (func \"" : "",
+					(*a).getMissingFunc() ? (*a).getMissingFunc() : "", (*a).getMissingFunc() ? "\")" : "");
+				break;
+			case MODULE_INTERROR:
+				report_error(1, "[AMXX] Internal error during module load (file \"%s\")", (*a).getFilename());
+				break;
+			case MODULE_BADLOAD:
+				report_error( 1 , "[AMXX] Module is not a valid library (file \"%s\")", (*a).getFilename());
+				break;
+			default:
+				break;
+			}
+		}
 
 		++a;
 	}
@@ -584,3 +613,47 @@ int countModules(CountModulesMode mode)
 	}
 	return 0;
 }
+
+// new functions
+// :TODO: Add functions
+
+int MNF_AddNatives(AMX_NATIVE_INFO* natives)
+{
+	CList<CModule>::iterator a = g_modules.begin();
+	
+	if (!g_CurrentlyAttachedModule)
+		return AMX_ERR_NATIVE;				// not possible tho ;]
+
+	// This is needed so that CList can free it ;]
+	AMX_NATIVE_INFO** pPtr = new AMX_NATIVE_INFO*(natives);
+	if (!pPtr)
+		return AMX_ERR_NONE;
+
+	g_CurrentlyAttachedModule->m_Natives.put(pPtr);
+	return AMX_ERR_NONE;
+}
+// Fnptr Request function for the new interface
+const char *g_LastRequestedFunc = NULL;
+void *Module_ReqFnptr(const char *funcName)
+{
+	// func table
+	struct Func_s
+	{
+		const char *name;
+		void *ptr;
+	};
+	static Func_s functions[] = {
+		{ "AddNatives", MNF_AddNatives },
+	};
+
+	// code
+	g_LastRequestedFunc = funcName;
+	for (int i = 0; i < (sizeof(functions) / sizeof(Func_s)); ++i)
+	{
+		if (strcmp(funcName, functions[i].name) == 0)
+			return functions[i].ptr;
+	}
+
+	return NULL;
+}
+

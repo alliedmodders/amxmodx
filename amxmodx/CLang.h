@@ -171,6 +171,7 @@ public:
 	const char *Format(const char *src, ...);
 	// Format a string for an AMX plugin
 	char *FormatAmxString(AMX *amx, cell *params, int parm, int &len);
+	char *FormatString(const char *fmt, va_list &ap);
 	// Save
 	bool Save(const char *filename);
 	// Load

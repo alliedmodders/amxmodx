@@ -47,15 +47,6 @@
 #define FFHL_VERSION		4
 #define FFHL_MIN_VERSION	4
 
-#define NEXT_PARAM()		\
-	if (parm > paramCount) \
-	{ \
-		strcpy(outbuf, ""); \
-		len = 0; \
-		AMXXLOG_Log("[AMXX] Plugin did not format a string correctly (parameter %d (total %d), line %d, \"%s\")", parm, paramCount, amx->curline, g_plugins.findPluginFast(amx)->getName()); \
-		return outbuf; \
-	} 
-
 /*version history:
 	* 1 (BAILOPAN) - Simplest form possible, no reverse
 	* 2 (BAILOPAN) - One language per file with full reverse
@@ -513,6 +504,15 @@ int CLangMngr::GetKeyEntry(String &key)
 	return outbuf; }
 #define CHECK_OUTPTR(offset) CHECK_PTR(outptr+offset, outbuf, sizeof(outbuf))
 #define ZEROTERM(buf) buf[(sizeof(buf)/sizeof(buf[0]))-1]=0;
+#define NEXT_PARAM()		\
+	if (parm > paramCount) \
+	{ \
+		strcpy(outbuf, ""); \
+		len = 0; \
+		AMXXLOG_Log("[AMXX] Plugin did not format a string correctly (parameter %d (total %d), line %d, \"%s\")", parm, paramCount, amx->curline, g_plugins.findPluginFast(amx)->getName()); \
+		return outbuf; \
+	} 
+
 char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 {
 	// number of parameters ( for NEXT_PARAM macro )
@@ -671,8 +671,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 				static char tmpString[4096];
 				char *tmpPtr = tmpString;
 				int tmpLen = 0;
-				char format[32];
-				format[0] = '%';
+				static char format[32] = {'%'};
 				char *ptr = format+1;
 				if (*src != '%')
 				{
@@ -736,6 +735,200 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 	return outbuf;
 }
 
+const char *CLangMngr::Format(const char *fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	const char *retVal = FormatString(fmt, ap);
+	va_end(ap);
+	return retVal;
+}
+
+#undef CHECK_PTR
+#undef CHECK_OUTPR
+#undef ZEROTERM
+#undef NEXT_PARAM
+
+#define CHECK_PTR(ptr, start, bufsize) if ((ptr) - (start) >= (bufsize)) { \
+	AMXXLOG_Log("[AMXX] Buffer overflow in formatting"); \
+	outbuf[0] = 0; \
+	return outbuf; }
+#define CHECK_OUTPTR(offset) CHECK_PTR(outptr+offset, outbuf, sizeof(outbuf))
+#define ZEROTERM(buf) buf[(sizeof(buf)/sizeof(buf[0]))-1]=0;
+#define NEXT_PARAM()
+
+char *CLangMngr::FormatString(const char *fmt, va_list &ap)
+{
+	// the output buffer
+	static char outbuf[4096];
+	char *outptr = outbuf;
+	const char *src = fmt;
+
+	while (*src)
+	{
+		if (*src == '%')
+		{
+			++src;
+			if (*src=='L')
+			{
+				NEXT_PARAM();
+				const char *pAmxLangName = va_arg(ap, const char*);
+				const char *cpLangName=NULL;
+				// Handle player ids (1-32) and server language
+				if (pAmxLangName == (const char *)LANG_PLAYER)	// LANG_PLAYER
+				{
+					if ((int)CVAR_GET_FLOAT("amx_client_languages"))
+					{
+						cpLangName = g_vault.get("server_language");
+					} else {
+						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(m_CurGlobId)->pEdict, "lang");
+					}
+				} else if (pAmxLangName == (const char *)LANG_SERVER) {	// LANG_SERVER
+					cpLangName = g_vault.get("server_language");
+				} else if (pAmxLangName >= (const char *)1 && pAmxLangName <= (const char *)32) {	// Direct Client Id
+					if ((int)CVAR_GET_FLOAT("amx_client_languages"))
+					{
+						cpLangName = g_vault.get("server_language");
+					} else {
+						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I((int)pAmxLangName)->pEdict, "lang");
+					}
+				} else {	// Language Name
+					int tmplen = 0;
+					cpLangName = pAmxLangName;
+				}
+				if (!cpLangName || strlen(cpLangName) < 1)
+					cpLangName = "en";
+				int tmplen = 0;
+				const char *key = va_arg(ap, const char *);
+				const char *def = GetDef(cpLangName, key);
+				if (def == NULL)
+				{
+					if (pAmxLangName != LANG_SERVER)
+					{
+						def = GetDef(g_vault.get("server_language"), key);
+					}
+					if (strcmp(cpLangName, "en")!=0 && strcmp(g_vault.get("server_language"), "en")!=0)
+					{
+						def = GetDef("en", key);
+					}
+					if (!def)
+					{
+						static char buf[512];
+						CHECK_PTR((char*)(buf+17+strlen(key)), buf, sizeof(buf));
+						sprintf(buf, "ML_LNOTFOUND: %s", key);
+						def = buf;
+					}
+				}
+				while (*def)
+				{
+					if (*def == '%')
+					{
+						++def;
+						static char format[32];
+						format[0] = '%';
+						char *ptr = format+1;
+						while (ptr-format<sizeof(format) && !isalpha(*ptr++ = *def++))
+							/*nothing*/;
+						ZEROTERM(format);
+
+						*ptr = 0;
+						vsprintf(outptr, format, ap);
+						// vsprintf doesnt alter the ap, increment here
+						switch (*(ptr-1))
+						{
+						case 'f':
+							va_arg(ap, double);
+							break;
+						case 's':
+							va_arg(ap, char *);
+							break;
+						case 'c':
+						case 'd':
+						case 'i':
+						default:		// default: assume int-like parameter
+							va_arg(ap, int);
+							break;
+						}
+						outptr += strlen(outptr);
+					}
+					else if (*def == '^')
+					{
+						++def;
+						switch (*def)
+						{
+						case 'n':
+							CHECK_OUTPTR(1);
+							*outptr++ = '\n';
+							break;
+						case 't':
+							CHECK_OUTPTR(1);
+							*outptr++ = '\t';
+							break;
+						case '^':
+							CHECK_OUTPTR(1);
+							*outptr++ = '^';
+							break;
+						default:
+							CHECK_OUTPTR(2);
+							*outptr++ = '^';
+							*outptr++ = *def;
+							break;
+						}
+						++def;
+					}
+					else
+					{
+						CHECK_OUTPTR(1);
+						*outptr++ = *def++;
+					}
+				}
+			}
+			else
+			{
+				static char format[32] = {'%'};
+				char *ptr = format+1;
+				if (*src != '%')
+				{
+					while (*src != 0 && ptr-format<sizeof(format) && !isalpha(*ptr++ = *src++))
+						/*nothing*/;
+					*ptr = 0;
+					ZEROTERM(format);
+					--src;
+					vsprintf(outptr, format, ap);
+					// vsprintf doesnt alter the ap, increment here
+					switch (*(ptr-1))
+					{
+					case 'f':
+						va_arg(ap, double);
+						break;
+					case 's':
+						va_arg(ap, char *);
+						break;
+					case 'c':
+					case 'd':
+					case 'i':
+					default:		// default: assume int-like parameter
+						va_arg(ap, int);
+						break;
+					}
+					outptr += strlen(outptr);
+				} else {
+					CHECK_OUTPTR(1);
+					*outptr++ = '%';
+				}
+			}
+		}
+		else
+		{
+			CHECK_OUTPTR(1);
+			*outptr++ = *src;
+		}
+		++src;
+	}
+	CHECK_OUTPTR(1);
+	*outptr++ = 0;
+	return outbuf;
+}
 void CLangMngr::MergeDefinitions(const char *lang, CQueue<sKeyDef*> &tmpVec)
 {
 	CLang * language = GetLang(lang);

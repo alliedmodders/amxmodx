@@ -57,7 +57,7 @@ public plugin_init()
   register_cvar("amx_extendmap_max","90")
   register_cvar("amx_extendmap_step","15")
 
-  if ( ( g_coloredMenus = colored_menus()
+  if ( g_coloredMenus = colored_menus() )
     register_event("TeamScore", "team_score", "a")
   
   get_localinfo("lastMap",g_lastMap,31)

@@ -1222,12 +1222,13 @@ static cell AMX_NATIVE_CALL message_begin(AMX *amx, cell *params) /* 4 param */
 	  vecOrigin[2] = *(cpOrigin+2);
 	  MESSAGE_BEGIN( params[1], params[2] , vecOrigin );
 	  break;
+  case MSG_ONE_UNRELIABLE:
   case MSG_ONE:
 	  if (numparam < 4) {
 		  amx_RaiseError(amx,AMX_ERR_NATIVE);
 		  return 0;
 	  }
-	  MESSAGE_BEGIN( MSG_ONE, params[2], NULL, INDEXENT(params[4]) );
+	  MESSAGE_BEGIN( params[1], params[2], NULL, INDEXENT(params[4]) );
 	  break;
 	}
 

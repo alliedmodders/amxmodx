@@ -18,7 +18,15 @@
 		|| params[2] < 1 || params[2] > gpGlobals->maxClients)
 		{
 			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);				<--- Call this, it will end up as RUN TIME ERROR 10 in server console.
-			return -1;											<--- Standard return -1 with run time errors?
+			return 0;											<--- Standard return 0 with run time errors? (note in small only 0 returns false, everything else returns true)
+		}
+
+		// Get * pointer.
+		edict_t *pPlayer = INDEXENT(params[1]);
+
+		if (FNullEnt(pPlayer)) {								<--- Test this pointer this way, return 0...
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
 		}
 
 		return 1												<--- If native succeeded, return 1, if the native isn't supposed to return a specific value.		
@@ -58,7 +66,7 @@ static cell AMX_NATIVE_CALL set_client_listening(AMX *amx, cell *params) // set_
 	|| params[2] < 1 || params[2] > gpGlobals->maxClients)
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	// Make a check on params[3] here later, and call run time error when it's wrong.
@@ -78,13 +86,16 @@ static cell AMX_NATIVE_CALL set_user_godmode(AMX *amx, cell *params) // set_user
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	// Get player pointer.
 	edict_t *pPlayer = INDEXENT(params[1]);
 
-	// HERE: ADD PROPER CHECKING OF pPlayer LATER
+	if (FNullEnt(pPlayer)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
 
 	if (params[2] == 1) {
 		// Enable godmode
@@ -107,13 +118,16 @@ static cell AMX_NATIVE_CALL get_user_godmode(AMX *amx, cell *params) // get_user
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	// Get player pointer.
 	edict_t *pPlayer = INDEXENT(params[1]);
 
-	// HERE: ADD PROPER CHECKING OF pPlayer LATER
+	if (FNullEnt(pPlayer)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
 
 	int godmode = 0;
 
@@ -137,11 +151,17 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params) // native give_ite
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	// Get player pointer.
 	edict_t *pPlayer = INDEXENT(params[1]);
+
+	// Check entity validity
+	if (FNullEnt(pPlayer)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
 
 	// Create item entity pointer
 	edict_t	*pItemEntity;
@@ -154,13 +174,6 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params) // native give_ite
 
 	// Create the entity, returns to pointer
 	pItemEntity = CREATE_NAMED_ENTITY(item);
-
-	// Check entity validity
-	if (FNullEnt(pItemEntity))
-	{
-		ALERT(at_console, "NULL Ent in GiveNamedItem!\n");
-		return -1;
-	}
 
 	VARS(pItemEntity)->origin = VARS(pPlayer)->origin; // nice to do VARS(ent)->origin instead of ent->v.origin? :-I
 	pItemEntity->v.spawnflags |= SF_NORESPAWN;
@@ -185,6 +198,12 @@ static cell AMX_NATIVE_CALL spawn(AMX *amx, cell *params) // spawn(id) = 1 param
     }
 	edict_t *pEnt = INDEXENT(params[1]);
 
+	// Check entity validity
+	if (FNullEnt(pEnt)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
 	MDLL_Spawn(pEnt);
 
 	return 1;
@@ -201,11 +220,17 @@ static cell AMX_NATIVE_CALL set_user_money(AMX *amx, cell *params) // set_user_m
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	// Fetch player pointer
 	edict_t *pPlayer = INDEXENT(params[1]);
+
+	// Check entity validity
+	if (FNullEnt(pPlayer)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
 
 	// Give money
 	(int)*((int *)pPlayer->pvPrivateData + CSMONEYOFFSET) = params[2];
@@ -228,11 +253,17 @@ static cell AMX_NATIVE_CALL get_user_money(AMX *amx, cell *params) // get_user_m
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	// Fetch player pointer
 	edict_t *pPlayer = INDEXENT(params[1]);
+
+	// Check entity validity
+	if (FNullEnt(pPlayer)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
 
 	// Return money
 	return (int)*((int *)pPlayer->pvPrivateData + CSMONEYOFFSET);
@@ -248,11 +279,17 @@ static cell AMX_NATIVE_CALL set_user_deaths_cs(AMX *amx, cell *params) // set_us
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	// Fetch player pointer
 	edict_t *pPlayer = INDEXENT(params[1]);
+
+	// Check entity validity
+	if (FNullEnt(pPlayer)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
 
 	// Set deaths
 	(int)*((int *)pPlayer->pvPrivateData + CSDEATHSOFFSET) = params[2];
@@ -270,16 +307,15 @@ static cell AMX_NATIVE_CALL set_user_health(AMX *amx, cell *params) // set_user_
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	// Fetch player pointer
 	edict_t *pPlayer = INDEXENT(params[1]);
 
-
 	if (FNullEnt(pPlayer)) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	// Kill if health too low.
@@ -301,7 +337,7 @@ static cell AMX_NATIVE_CALL set_user_frags(AMX *amx, cell *params) // set_user_f
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	// Fetch player pointer
@@ -309,7 +345,7 @@ static cell AMX_NATIVE_CALL set_user_frags(AMX *amx, cell *params) // set_user_f
 
 	if (FNullEnt(pPlayer)) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	pPlayer->v.frags = params[2];
@@ -327,7 +363,7 @@ static cell AMX_NATIVE_CALL set_user_armor(AMX *amx, cell *params) // set_user_a
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	// Fetch player pointer
@@ -335,7 +371,7 @@ static cell AMX_NATIVE_CALL set_user_armor(AMX *amx, cell *params) // set_user_a
 
 	if (FNullEnt(pPlayer)) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	pPlayer->v.armorvalue = params[2];
@@ -353,7 +389,7 @@ static cell AMX_NATIVE_CALL set_user_origin(AMX *amx, cell *params) // set_user_
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	// Fetch player pointer
@@ -361,7 +397,7 @@ static cell AMX_NATIVE_CALL set_user_origin(AMX *amx, cell *params) // set_user_
 
 	if (FNullEnt(pPlayer)) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	cell *newVectorCell = GET_AMXADDR(amx, params[3]);
@@ -393,7 +429,7 @@ static cell AMX_NATIVE_CALL set_user_rendering(AMX *amx, cell *params) // set_us
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	// Fetch player pointer
@@ -401,7 +437,7 @@ static cell AMX_NATIVE_CALL set_user_rendering(AMX *amx, cell *params) // set_us
 
 	if (FNullEnt(pPlayer)) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	pPlayer->v.renderfx = params[2];
@@ -424,7 +460,7 @@ static cell AMX_NATIVE_CALL set_user_maxspeed(AMX *amx, cell *params) // set_use
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	// Fetch player pointer
@@ -432,7 +468,7 @@ static cell AMX_NATIVE_CALL set_user_maxspeed(AMX *amx, cell *params) // set_use
 
 	if (FNullEnt(pPlayer)) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	pPlayer->v.maxspeed = *(float *)((void *)&params[2]); // JGHG: Gotta love the way to get floats from parameters :-P
@@ -449,7 +485,7 @@ static cell AMX_NATIVE_CALL get_user_maxspeed(AMX *amx, cell *params) // Float:g
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	// Fetch player pointer
@@ -457,7 +493,7 @@ static cell AMX_NATIVE_CALL get_user_maxspeed(AMX *amx, cell *params) // Float:g
 
 	if (FNullEnt(pPlayer)) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	return *(cell*)((void *)&(pPlayer->v.maxspeed)); // The way to return floats... (sigh)
@@ -472,7 +508,7 @@ static cell AMX_NATIVE_CALL set_user_gravity(AMX *amx, cell *params) // set_user
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	// Fetch player pointer
@@ -480,7 +516,7 @@ static cell AMX_NATIVE_CALL set_user_gravity(AMX *amx, cell *params) // set_user
 
 	if (FNullEnt(pPlayer)) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	pPlayer->v.gravity = *(float *)((void *)&params[2]); // JGHG: Gotta love the way to get floats from parameters :-P
@@ -497,7 +533,7 @@ static cell AMX_NATIVE_CALL get_user_gravity(AMX *amx, cell *params) // Float:ge
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	// Fetch player pointer
@@ -505,7 +541,7 @@ static cell AMX_NATIVE_CALL get_user_gravity(AMX *amx, cell *params) // Float:ge
 
 	if (FNullEnt(pPlayer)) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-		return -1;
+		return 0;
 	}
 
 	return *(cell*)((void *)&(pPlayer->v.gravity)); // The way to return floats... (sigh)

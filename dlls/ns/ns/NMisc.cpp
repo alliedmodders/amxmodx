@@ -318,7 +318,7 @@ static cell AMX_NATIVE_CALL ns_giveitem(AMX *amx, cell *params)
 	gpGamedllFuncs->dllapi_table->pfnSpawn(object);					// emulate spawn
 	object->v.flags |= FL_ONGROUND;									// make it think it's touched the ground
 	gpGamedllFuncs->dllapi_table->pfnThink(object);					// 
-	gpGamedllFuncs->dllapi_table->pfnTouch(player,object);			// give it to the player
+	gpGamedllFuncs->dllapi_table->pfnTouch(object,player);			// give it to the player
 
 	return 1;
 }

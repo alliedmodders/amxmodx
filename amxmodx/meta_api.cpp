@@ -177,7 +177,7 @@ int	C_InconsistentFile( const	edict_t	*player, const char	*filename, char	*disco
 		}
 		catch(	...	)
 		{
-			AMXXLOG_Log( "[AMXX] fatal error at inconsistent file	forward	execution");
+			AMXXLOG_Log( "[AMXX] Fatal error at inconsistent file forward execution");
 		}
 #endif
 		RETURN_META_VALUE(MRES_SUPERCEDE, TRUE );
@@ -611,7 +611,7 @@ void C_ClientCommand(	edict_t	*pEntity ) {
   }
   catch( ... )
   {
-	AMXXLOG_Log( "[AMXX] fatal error at	commmand forward execution");
+	AMXXLOG_Log( "[AMXX] Fatal error at commmand forward execution");
   }
 #endif
 
@@ -634,7 +634,7 @@ void C_ClientCommand(	edict_t	*pEntity ) {
 	  {
 
 		if ((err =amx_Exec((*aa).getPlugin()->getAMX(),	&ret , (*aa).getFunction()	 , 3, pPlayer->index, (*aa).getFlags(),(*aa).getId()  )) !=	AMX_ERR_NONE)
-		  AMXXLOG_Log("[AMXX] Run time error %d	on line	%ld	(plugin	\"%s\")",
+		  AMXXLOG_Log("[AMXX] Run time error %d on line	%ld (plugin \"%s\")",
 		  err,(*aa).getPlugin()->getAMX()->curline,(*aa).getPlugin()->getName());
 
 		if ( ret & 2 )	result = MRES_SUPERCEDE;
@@ -647,7 +647,7 @@ void C_ClientCommand(	edict_t	*pEntity ) {
 #ifdef ENABLEEXEPTIONS
   }catch( ... )
   {
-	AMXXLOG_Log( "[AMXX] fatal error at	client commmand	execution");
+	AMXXLOG_Log( "[AMXX] fatal error at client commmand execution");
   }
 #endif
   /* check menu	commands */
@@ -674,7 +674,7 @@ void C_ClientCommand(	edict_t	*pEntity ) {
 		  {
 
 			if ( ( err = amx_Exec((*a).getPlugin()->getAMX(), &ret ,(*a).getFunction() , 2,	pPlayer->index,pressed_key)) !=	AMX_ERR_NONE)
-			  AMXXLOG_Log("[AMXX] Run time error %d	on line	%ld	(plugin	\"%s\")",
+			  AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",
 			  err,(*a).getPlugin()->getAMX()->curline,(*a).getPlugin()->getName());
 
 			if ( ret & 2 ) result =	MRES_SUPERCEDE;
@@ -688,7 +688,7 @@ void C_ClientCommand(	edict_t	*pEntity ) {
 	  }
 	  catch( ... )
 	  {
-		AMXXLOG_Log( "[AMXX] fatal error at	menu commmand execution");
+		AMXXLOG_Log( "[AMXX] Fatal error at menu commmand execution");
 	  }
 #endif
 	}
@@ -880,7 +880,7 @@ void C_MessageEnd_Post(void) {
 	{
 
 	  if ((err = amx_Exec((*a).getPlugin()->getAMX(), NULL ,  (*a).getFunction() , 1, mPlayerIndex	/*g_events.getArgInteger(0)*/ )) !=	AMX_ERR_NONE)
-		AMXXLOG_Log("[AMXX]	Run	time error %d on line %ld (plugin \"%s\")",err,(*a).getPlugin()->getAMX()->curline,(*a).getPlugin()->getName());
+		AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",err,(*a).getPlugin()->getAMX()->curline,(*a).getPlugin()->getName());
 
 
 	  ++a;
@@ -891,7 +891,7 @@ void C_MessageEnd_Post(void) {
   }
   catch( ... )
   {
-	AMXXLOG_Log( "[AMXX] fatal error at	event execution");
+	AMXXLOG_Log( "[AMXX] Fatal error at event execution");
   }
 #endif
 #endif

@@ -126,7 +126,7 @@ void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, f
 				{
 					copy_amxmemory(phys_addr, m_pParams, m_iParamLen);
 					if ((err = amx_Exec(m_pPlugin->getAMX(), NULL, m_iFunc, 2, amx_addr, m_iId)) != AMX_ERR_NONE)
-						AMXXLOG_Log("[AMXX]	Run	time error %d on line %ld (task	\"%d\")	(plugin	\"%s\")", err, m_pPlugin->getAMX()->curline, m_iId, m_pPlugin->getName());
+						AMXXLOG_Log("[AMXX] Run time error %d on line %ld (task \"%d\") (plugin \"%s\")", err, m_pPlugin->getAMX()->curline, m_iId, m_pPlugin->getName());
 
 					amx_Release(m_pPlugin->getAMX(), amx_addr);
 				}
@@ -134,7 +134,7 @@ void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, f
 			else
 			{
 				if ((err = amx_Exec(m_pPlugin->getAMX(), NULL, m_iFunc, 1, m_iId)) != AMX_ERR_NONE)
-					AMXXLOG_Log("[AMXX]	Run	time error %d on line %ld (task	\"%d\")	(plugin	\"%s\")", err, m_pPlugin->getAMX()->curline, m_iId, m_pPlugin->getName());
+					AMXXLOG_Log("[AMXX] Run time error %d on line %ld (task \"%d\") (plugin \"%s\")", err, m_pPlugin->getAMX()->curline, m_iId, m_pPlugin->getName());
 			}
 		}
 

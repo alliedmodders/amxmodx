@@ -2,8 +2,8 @@ MODNAME = amxx_mm
 SRCFILES = meta_api.cpp CFile.cpp CString.cpp CVault.cpp vault.cpp\
 float.cpp file.cpp modules.cpp CMisc.cpp CTask.cpp string.cpp\
 amxmodx.cpp CEvent.cpp CCmd.cpp CLogEvent.cpp srvcmd.cpp strptime.cpp\
-CForward.cpp CPlugin.cpp CModule.cpp CMenu.cpp emsg.cpp util.cpp amxxlog.cpp\
-amx.cpp amxcore.cpp amxtime.cpp power.cpp
+CForward.cpp CPlugin.cpp CModule.cpp CMenu.cpp emsg.cpp util.cpp \
+amx.cpp amxcore.cpp amxtime.cpp power.cpp amxxlog.cpp fakemeta.cpp mmgr/mmgr.cpp
 
 EXTRA_LIBS_LINUX =
 EXTRA_LIBS_WIN32 =
@@ -15,7 +15,7 @@ EXTRA_INCLUDEDIRS = -Iextra/include
 EXTRA_FLAGS = -Dstrcmpi=strcasecmp
 
 SDKTOP=../hlsdk
-METADIR=../metamodx
+METADIR=../metamod/metamod
 
 
 SDKSRC=$(SDKTOP)/SourceCode
@@ -44,7 +44,7 @@ endif
 
 
 
-LIBFILE_LINUX = $(MODNAME)_i686.so
+LIBFILE_LINUX = $(MODNAME)_i386.so
 LIBFILE_WIN32 = $(MODNAME).dll
 TARGET_LINUX = $(OBJDIR_LINUX)/$(LIBFILE_LINUX)
 TARGET_WIN32 = $(OBJDIR_WIN32)/$(LIBFILE_WIN32)
@@ -61,8 +61,7 @@ OBJ_WIN32 := $(SRCFILES:%.cpp=$(OBJDIR_WIN32)/%.o)
 OBJC_WIN32 := $(CSRCFILES:%.c=$(OBJDIR_WIN32)/%.o)
 
 
-CCOPT = -march=i586 -mcpu=i686 -O2 -ffast-math \
-	-fomit-frame-pointer -fno-exceptions -fno-rtti -s 
+CCOPT = -g -ggdb3 -DMEMORY_TEST
 
 INCLUDEDIRS=-I../curl/include -I$(SRCDIR) -I$(METADIR) -I$(SDKSRC)/engine -I$(SDKSRC)/common -I$(SDKSRC)/pm_shared -I$(SDKSRC)/dlls -I$(SDKSRC) $(EXTRA_INCLUDEDIRS)
 CFLAGS=-Wall -Wno-unknown-pragmas
@@ -71,7 +70,7 @@ CFLAGS:=$(CCOPT) $(CFLAGS) $(ODEF) $(EXTRA_FLAGS)
 
 DO_CC_LINUX=$(CC_LINUX) $(CFLAGS) -fPIC $(INCLUDEDIRS) -o $@ -c $<
 DO_CC_WIN32=$(CC_WIN32) $(CFLAGS) $(INCLUDEDIRS) -o $@ -c $<
-LINK_LINUX=$(CC_LINUX) $(CFLAGS) -shared -ldl -lm $(OBJ_LINUX) $(OBJC_LINUX) $(EXTRA_LIBDIRS_LINUX) $(EXTRA_LIBS_LINUX) -o $@
+LINK_LINUX=$(CC_LINUX) $(CFLAGS) -shared -ldl -lm -lstdc++ $(OBJ_LINUX) $(OBJC_LINUX) $(EXTRA_LIBDIRS_LINUX) $(EXTRA_LIBS_LINUX) -o $@
 LINK_WIN32=$(LD_WINDLL) -mwindows --def $(MODNAME).def --add-stdcall-alias $(OBJ_WIN32) $(OBJC_WIN32) $(EXTRA_LIBDIRS_WIN32) $(EXTRA_LIBS_WIN32) -o $@
 
 $(OBJDIR_LINUX)/%.o: $(SRCDIR)/%.c
@@ -96,9 +95,11 @@ $(TARGET_WIN32): $(OBJDIR_WIN32) $(OBJ_WIN32) $(OBJC_WIN32)
 
 $(OBJDIR_LINUX):
 	mkdir $@
+	mkdir $@/mmgr
 
 $(OBJDIR_WIN32):
 	mkdir $@
+	mkdir $@/mmgr
 
 win32: $(TARGET_WIN32)
 
@@ -113,3 +114,4 @@ clean_both:
 clean_win32:
 	del /q $(OBJDIR_WIN32)
 
+ 

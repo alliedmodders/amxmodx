@@ -613,7 +613,8 @@ static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params) // cs_set_u
 			strcpy(teaminfo, "SPECTATOR");
 			break;
 		default:
-			sprintf(teaminfo, "TEAM_%d", params[2]);
+			int team_nr = (int)params[2];
+			sprintf(teaminfo, "TEAM_%i", team_nr);
 	}
 	MESSAGE_BEGIN(MSG_ALL, GET_USER_MSG_ID(PLID, "TeamInfo", NULL));
 	WRITE_BYTE(params[1]);

@@ -63,9 +63,6 @@ native set_offset_float(id, offset, Float:value);
 native set_offset_short(id, offset, value);
 native set_offset_char(id, offset, value);
 
-/* Get entity pointer into string pointer[]. If pointer/len is 0 pointer is returned as integer. */
-native get_entity_pointer(index, pointer[] = 0, len = 0);
-
 /* Precaches any file. */
 native precache_generic(szFile[]);
 /* Precaches an event. */

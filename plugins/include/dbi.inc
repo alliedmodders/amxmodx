@@ -46,10 +46,7 @@ native dbi_nextrow(_result=1);
  */
 native dbi_field(_result, _fieldnum, {Float,_}:... );
 
-/* Gets a field by number.  Returns 0 on failure.
- * Although internally fields always start from 0, 
- * This function takes fieldnum starting from 1.
- * No extra params: returns int
+/* Gets a field by name.  Returns 0 on failure.
  * One extra param: returns Float: byref
  * Two extra param: Stores string with length
  */

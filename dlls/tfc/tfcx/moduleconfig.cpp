@@ -290,7 +290,7 @@ void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 			CPlayer *pPlayer = GET_PLAYER_POINTER(e->v.owner);
 		
 			for ( int i=0;i<MAX_TRACE;i++){
-				if ( util_strncmp( traceData[i].szName,traceData[i].start ? STRING(e->v.classname)+traceData[i].start :  STRING(e->v.classname) ,traceData[i].stop) ){
+				if ( util_strncmp( traceData[i].szTa,traceData[i].start ? STRING(e->v.classname)+traceData[i].start :  STRING(e->v.classname) ,traceData[i].stop) ){
 					if ( traceData[i].iAction & ACT_NADE_SHOT  ){
 						pPlayer->saveShot(traceData[i].iId);
 					}

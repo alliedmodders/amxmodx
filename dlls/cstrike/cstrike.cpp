@@ -1387,7 +1387,7 @@ edict_s* FN_CreateNamedEntity(int classname) {
 		g_precachedknife = true;
 	}
 
-	RETURN_META_VALUE(MRES_IGNORED, CREATENAMEDENTITY(classname));
+	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
 void FN_ServerDeactivate() {

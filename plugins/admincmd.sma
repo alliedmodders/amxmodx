@@ -53,18 +53,14 @@ public plugin_init(){
   register_concmd("amx_slap","cmdSlap",ADMIN_SLAY,"<name or #userid> [power]")
   register_concmd("amx_leave","cmdLeave",ADMIN_KICK,"<tag> [tag] [tag] [tag]")
   register_concmd("amx_pause","cmdPause",ADMIN_CVAR,"- pause or unpause the game")  
-  register_concmd("amx_who","cmdWho",0,"- displays who is on server")  
-  register_concmd("amx_cvar","cmdCvar",ADMIN_CVAR,"<cvar> [value]")  
+  register_concmd("amx_who","cmdWho",ADMIN_ADMIN,"- displays who is on server")  
+  register_concmd("amx_cvar","cmdCvar",ADMIN_CVAR,"<cvar> [value]")
+  register_concmd("amx_plugins","cmdPlugins",ADMIN_ADMIN)
+  register_concmd("amx_modules","cmdModules",ADMIN_ADMIN)
   register_clcmd("amx_map","cmdMap",ADMIN_MAP,"<mapname>")
   register_clcmd("pauseAck","cmdLBack")
   register_clcmd("amx_cfg","cmdCfg",ADMIN_CFG,"<fliename>")
   register_clcmd("amx_rcon","cmdRcon",ADMIN_RCON,"<command line>")
-  register_cvar("amx_show_activity","2")
-  register_cvar("amx_vote_delay","")
-  register_cvar("amx_vote_time","")
-  register_cvar("amx_vote_answers","")
-  register_cvar("amx_vote_ratio","")
-  register_cvar("amx_show_activity","")  
 }
 
 public plugin_cfg(){
@@ -100,7 +96,16 @@ public cmdKick(id,level,cid){
   case 2: client_print(0,print_chat,"ADMIN %s: kick %s",name,name2)
   case 1: client_print(0,print_chat,"ADMIN: kick %s",name2)
   } 
-  server_cmd("kick #%d ^"%s^"",userid2,reason)
+  if ( is_user_bot(player) )
+    server_cmd("kick #%d",userid2)
+  else
+  {
+#if !defined NO_STEAM
+    server_cmd("kick #%d ^"%s^"",userid2,reason)
+#else
+    client_cmd(player,"echo ^"%s^";disconnect",reason)
+#endif
+  }
   console_print(id,"Client ^"%s^" kicked",name2)
   return PLUGIN_HANDLED
 }
@@ -184,10 +189,22 @@ public cmdBan(id,level,cid){
   if ( equal(cmd[7],"ip") || (!equal(cmd[7],"id") && get_cvar_num("sv_lan")) ){
     new address[32]
     get_user_ip(player,address,31,1)
+#if !defined NO_STEAM
     server_cmd("kick #%d ^"%s (banned %s)^";wait;addip ^"%s^" ^"%s^";wait;writeip",userid2,reason,temp,minutes,address)
+#else
+    client_cmd(player,"echo ^"%s (banned %s)^";disconnect",reason,temp)
+    server_cmd("addip ^"%s^" ^"%s^";wait;writeip",minutes,address)
+#endif
   }
   else
+  {
+#if !defined NO_STEAM
     server_cmd("kick #%d ^"%s (banned %s)^";wait;banid ^"%s^" ^"%s^";wait;writeid",userid2,reason,temp,minutes,authid2)
+#else
+    client_cmd(player,"echo ^"%s (banned %s)^";disconnect",reason,temp)
+    server_cmd("banid ^"%s^" ^"%s^";wait;writeip",minutes,authid2)
+#endif
+  }
     
   new activity = get_cvar_num("amx_show_activity")
   if (activity) {
@@ -334,10 +351,98 @@ public cmdCvar(id,level,cid){
       temp = "ADMIN:"
     else
       format(temp,63,"ADMIN %s:",name)
-    client_print(0,print_chat,"%s set cvar %s to ^"%s^"",temp,arg,equal(arg,"rcon_password") ? "*** PROTECTED ***" : arg2)
+    if (equal(arg,"rcon_password") || equal(arg,"sv_password"))
+      copy(arg2,63,"*** PROTECTED ***")
+    client_print(0,print_chat,"%s set cvar %s to ^"%s^"",temp,arg,arg2)
   } 
   
   console_print(id,"Cvar ^"%s^" changed to ^"%s^"",arg,arg2)
+  return PLUGIN_HANDLED
+}
+
+public cmdPlugins(id,level,cid)
+{
+  if (!cmd_access(id,level,cid,1))
+    return PLUGIN_HANDLED
+
+#if !defined NO_STEAM
+  #define MOTD_LEN 1024
+  new motd_body[MOTD_LEN],state[4]
+  new num = get_pluginsnum()
+  new running = 0
+  new pos = copy(motd_body,MOTD_LEN,"<html><head><body><style type=^"text/css^">")
+  pos += copy(motd_body[pos],MOTD_LEN-pos,"body{font-family:Arial,sans-serif;font-size:12px;color:#FFCC99;background-color:#000000;margin-left:8px;margin-top:3px}.header{background-color:#9C0000;}.one{background-color:#310000;}.two{background-color:#630000;}")
+  pos += copy(motd_body[pos],MOTD_LEN-pos,"</style></head><body><table><tr class=^"header^"><td>Name</td><td>Version</td><td>Author</td><td>Filename</td><td>status</td></tr>")
+
+  for (new i=0;i<num;i++)
+  {
+    if (equal(state,"one")) copy(state,3,"two")
+    else copy(state,3,"one")
+    new name[32],version[32],author[32],filename[32],status[32]
+    get_plugin(i,filename,31,name,31,version,31,author,31,status,31)
+    pos += format(motd_body[pos],MOTD_LEN-pos,"<tr class=^"%s^"><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",state,name,version,author,filename,status)
+    if (equal(status,"running"))
+      running++
+  }
+  format(motd_body[pos],MOTD_LEN-pos,"</table>%d plugins, %d running</body></html>",num,running)
+  show_motd(id,motd_body,"Currently loaded plugins:")
+#else
+  new num = get_pluginsnum()
+  new running = 0
+  console_print(id,"Currently loaded plugins:")
+  console_print(id,"%-18.17s %-8.7s %-17.16s %-16.15s %-9.8s","name","version","author","file","status")
+  for (new i=0;i<num;i++)
+  {
+    new name[32],version[32],author[32],filename[32],status[32]
+    get_plugin(i,filename,31,name,31,version,31,author,31,status,31)
+    console_print("%-18.17s %-8.7s %-17.16s %-16.15s %-9.8s",name,version,author,filename,status)
+    if (equal(status,"running"))
+      running++
+  }
+  console_print(id,"%d plugins, %d running",num,running)
+#endif
+
+  return PLUGIN_HANDLED
+}
+
+public cmdModules(id,level,cid)
+{
+  if (!cmd_access(id,level,cid,1))
+    return PLUGIN_HANDLED
+
+#if !defined NO_STEAM
+  #if !defined MOTD_LEN
+    #define MOTD_LEN 1024
+  #endif
+  new motd_body[MOTD_LEN],state[4]
+  new num = get_modulesnum()
+  new pos = copy(motd_body,MOTD_LEN,"<html><head><body><style type=^"text/css^">")
+  pos += copy(motd_body[pos],MOTD_LEN-pos,"body{font-family:Arial,sans-serif;font-size:12px;color:#FFCC99;background-color:#000000;margin-left:8px;margin-top:3px}.header{background-color:#9C0000;}.one{background-color:#310000;}.two{background-color:#630000;}")
+  pos += copy(motd_body[pos],MOTD_LEN-pos,"</style></head><body><table><tr class=^"header^"><td>Name</td><td>Version</td><td>Author</td></tr>")
+
+  for (new i=0;i<num;i++)
+  {
+    if (equal(state,"one")) copy(state,3,"two")
+    else copy(state,3,"one")
+    new name[32],version[32],author[32],filename[32],status[32]
+    get_plugin(i,filename,31,name,31,version,31,author,31,status,31)
+    pos += format(motd_body[pos],MOTD_LEN-pos,"<tr class=^"%s^"><td>%s</td><td>%s</td><td>%s</td></tr>",state,name,version,author)
+  }
+  format(motd_body[pos],MOTD_LEN-pos,"</table>%d modules</body></html>",num)
+  show_motd(id,motd_body,"Currently loaded modules:")
+#else
+  new num = get_modulesnum()
+  console_print(id,"Currently loaded modules:")
+  console_print(id,"%-23.22s %-8.7s %-20.19s","name","version","author")
+  for (new i=0;i<num;i++)
+  {
+    new name[32],version[32],author[32]
+    get_module(i,name,31,author,31,version,31)
+    console_print("%-23.22s %-8.7s %-20.19s",name,version,author)
+  }
+  console_print(id,"%d modules",num)
+#endif
+
   return PLUGIN_HANDLED
 }
 
@@ -416,10 +521,9 @@ public cmdRcon(id,level,cid){
 }
 
 public cmdWho(id,level,cid){
-  if (get_user_flags(id)&ADMIN_USER) {
-    console_print(id,"You have no access to that command")
+  if (!cmd_access(id,level,cid,1))
     return PLUGIN_HANDLED
-  }
+
   new players[32], inum, authid[32],name[32], flags, sflags[32]
   get_players(players,inum)
   console_print(id,"^nClients on server:^n #  %-16.15s %-12s %-8s %-4.3s %-4.3s %s",
@@ -476,7 +580,13 @@ public cmdLeave(id,level,cid){
     if (is_user_bot(b))
       server_cmd("kick #%d",get_user_userid(b))
     else
+    {
+#if !defined NO_STEAM
+      server_cmd("kick #%d ^"You have been dropped because admin has left only specified group of clients^"",get_user_userid(b))
+#else
       client_cmd(b,"echo * You have been dropped because admin has left only specified group of clients;disconnect")
+#endif
+    }
     count++
   }
   console_print(id,"Kicked %d clients",count)

@@ -61,13 +61,13 @@ stock get_entity_distance(ent1, ent2)
 /* Get grenade thrown by this user */
 stock get_grenade(id)
 {
-	new iGrenade = find_entity(-1, "grenade")
+	new iGrenade = find_ent_by_class(-1, "grenade")
 	while(iGrenade > 0)
 	{
 		if(entity_get_edict(iGrenade, EV_ENT_owner) == id)
 			return iGrenade
 
-		iGrenade = find_entity(iGrenade, "grenade")
+		iGrenade = find_ent_by_class(iGrenade, "grenade")
 	}
 
 	return 0
@@ -92,7 +92,7 @@ stock remove_entity_name(eName[])
 	while (iEntity > 0)
 	{
 		remove_entity(iEntity)
-		iEntity = find_entity(-1, eName)
+		iEntity = find_ent_by_class(-1, eName)
 	}
 
 	return 1

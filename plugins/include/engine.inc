@@ -93,7 +93,7 @@ native entity_set_byte(iIndex, iKey, iVal);
 native create_entity(szClassname[]);
 
 /* Finds an entity in the world, will return 0 if nothing is found */
-native find_entity(iIndex, szClass[]);
+native find_ent_by_class(iIndex, szClass[]);
 native find_ent_by_owner(iIndex, szClass[], iOwner);
 native find_ent_by_target(iIndex, szClass[]);
 native find_ent_by_tname(iIndex, szClass[]);

@@ -1830,7 +1830,7 @@ static cell AMX_NATIVE_CALL create_entity(AMX *amx, cell *params) {
 }
 
 //ej ref'd by jghg
-static cell AMX_NATIVE_CALL find_entity(AMX *amx, cell *params) /* 3 param */
+static cell AMX_NATIVE_CALL find_ent_by_class(AMX *amx, cell *params) /* 3 param */
 {
 	edict_t *pEnt = INDEXENT(params[1]);
 
@@ -3160,7 +3160,8 @@ AMX_NATIVE_INFO Engine_Natives[] = {
 
 	{"create_entity",		create_entity},
 	{"remove_entity",		remove_entity},
-	{"find_entity",			find_entity},
+	{"find_ent_by_class",	find_ent_by_class},
+	{"find_ent_by_classname",	find_ent_by_class}, // just in case anyone likes typing the whole thing
 	{"find_ent_by_owner",	find_ent_by_owner},
 	{"find_ent_by_target",	find_ent_by_target},
 	{"find_ent_by_tname",	find_ent_by_tname},

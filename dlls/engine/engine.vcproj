@@ -180,9 +180,6 @@
 			<File
 				RelativePath="engine.inc">
 			</File>
-			<File
-				RelativePath="engine_amx.def">
-			</File>
 		</Filter>
 		<Filter
 			Name="Source Files"

@@ -40,7 +40,7 @@ CVector<SQL*> DBList;
 int sql_exists(const char* host,const char* user,const char* pass,const char* dbase) {
 	unsigned int i = 0;
 	int id = 0;
-	for (i=0; i<=DBList.size(); i++) {
+	for (i=0; i<DBList.size(); i++) {
 		id++;
 		if ((DBList[i]->Host.compare(host) == 0) &&
 			(DBList[i]->Username.compare(user) == 0) &&

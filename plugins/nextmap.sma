@@ -101,7 +101,7 @@ readMapCycle(szFileName[], szNext[], iNext ) {
   new szBuffer[32], szFirst[32]
   if ( file_exists( szFileName ) ) {
     while( read_file( szFileName , i++ , szBuffer , 31 , b ) ) {
-      if ( !isalpha( szBuffer[0] ) || !is_map_valid( szBuffer ) ) continue
+      if ( !isalnum( szBuffer[0] ) || !is_map_valid( szBuffer ) ) continue
       if ( !iMaps ) copy( szFirst, 31, szBuffer )
       if ( ++iMaps > g_pos ) {
         copy( szNext , iNext , szBuffer )
@@ -128,7 +128,7 @@ readMapCycle(szFileName[], szNext[], iNext ) {
 
   if ( file_exists( szFileName ) ) {
     while( read_file( szFileName , i++ , szBuffer , 31 , b ) ) {
-      if ( !isalpha( szBuffer[0] ) || !is_map_valid( szBuffer ) ) continue
+      if ( !isalnum( szBuffer[0] ) || !is_map_valid( szBuffer ) ) continue
       if ( !iMaps ) {
         iMaps = 1
         copy( szFirst, 31, szBuffer )

@@ -82,8 +82,12 @@ public actionResult(id,key) {
   remove_task( 4545454 )
   switch (key){
     case 0: {
-      message_begin(MSG_ALL, SVC_INTERMISSION)
-      message_end()
+      new _modName[10]
+      get_modname(_modName,9)
+      if (!equal(_modName,"zp")) {
+        message_begin(MSG_ALL, SVC_INTERMISSION)
+        message_end()
+      }
       set_task(2.0,"delayedChange",0, g_mapName[ g_choosed ] , strlen(g_mapName[ g_choosed ]) + 1 )
       log_amx("Vote: %L" , "en", "RESULT_ACC")
       client_print(0,print_chat, "%L", LANG_PLAYER, "RESULT_ACC")
@@ -118,8 +122,12 @@ public checkVotes( id ) {
       set_task(10.0,"autoRefuse",4545454)
     }
     else {
-      message_begin(MSG_ALL, SVC_INTERMISSION)
-      message_end()
+      new _modName[10]
+      get_modname(_modName,9)
+      if (!equal(_modName,"zp")) {
+        message_begin(MSG_ALL, SVC_INTERMISSION)
+        message_end()
+      }
       set_task(2.0,"delayedChange",0, g_mapName[ g_choosed ] , strlen(g_mapName[ g_choosed ]) + 1 )
     }
   }
@@ -352,9 +360,12 @@ public actionMapsMenu(id,key) {
     {
       new a = g_menuPosition[id] * 8 + key
 
-      message_begin(MSG_ALL, SVC_INTERMISSION)
-      message_end()
-
+      new _modName[10]
+      get_modname(_modName,9)
+      if (!equal(_modName,"zp")) {
+        message_begin(MSG_ALL, SVC_INTERMISSION)
+        message_end()
+      }
       new authid[32],name[32]
       get_user_authid(id,authid,31)
       get_user_name(id,name,31)

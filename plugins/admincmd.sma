@@ -353,8 +353,12 @@ public cmdMap(id,level,cid) {
     case 1: client_print(0,print_chat,"%L",LANG_PLAYER,"ADMIN_MAP_1",arg)
   }
   log_amx("Cmd: ^"%s<%d><%s><>^" changelevel ^"%s^"", name,get_user_userid(id),authid, arg)
-  message_begin(MSG_ALL, SVC_INTERMISSION)
-  message_end()
+  new _modName[10]
+  get_modname(_modName,9)
+  if (!equal(_modName,"zp")) {
+    message_begin(MSG_ALL, SVC_INTERMISSION)
+    message_end()
+  }
   set_task(2.0,"chMap",0,arg,arglen+1)
   return PLUGIN_HANDLED
 }

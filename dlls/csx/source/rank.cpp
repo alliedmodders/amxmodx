@@ -188,7 +188,7 @@ static cell AMX_NATIVE_CALL get_user_stats2(AMX *amx, cell *params) /* 3 param *
 	return 0;
 }
 
-static cell AMX_NATIVE_CALL get_stats(AMX *amx, cell *params) /* 5 param */
+static cell AMX_NATIVE_CALL get_stats(AMX *amx, cell *params) /* 7 param */
 {
 	
 	int index = params[1] + 1;
@@ -209,7 +209,7 @@ static cell AMX_NATIVE_CALL get_stats(AMX *amx, cell *params) /* 5 param */
 
 			MF_SetAmxString(amx,params[4],(*a).getName(),params[5]);
 			if (params[6] > 0)
-				MF_SetAmxString(amx, params[5], (*a).getUnique(), params[6]);
+				MF_SetAmxString(amx, params[6], (*a).getUnique(), params[7]);
 			for(int i = 1; i < 8; ++i)
 				cpBodyHits[i] = (*a).bodyHits[i];
 			return --a ? index : 0;

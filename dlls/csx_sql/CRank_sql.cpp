@@ -139,7 +139,7 @@ void RankSystem::saveRankSql()
 			bodyHits = ((*a).bodyHits);
 			score = (*a).score;
 
-			_snprintf(query, 2047, "UPDATE `%s` SET `timestamp` = %d, `stats_name` = \"%s\", `stats_tks` = \"%d\", `stats_damage` = \"%d\", `stats_deaths` = \"%d\", `stats_frags` = \"%d\", `stats_shots` = \"%d\", `stats_hits` = \"%d\", `stats_hs` = \"%d\", `stats_defusions` = \"%d\", `stats_defused` = \"%d\", `stats_plants` = \"%d\", `stats_explosions` = \"%d\", `stats_bodyhits0` = \"%d\", `stats_bodyhits1` = \"%d\", `stats_bodyhits2` = \"%d\", `stats_bodyhits3` = \"%d\", `stats_bodyhits4` = \"%d\", `stats_bodyhits5` = \"%d\", `stats_bodyhits6` = \"%d\", `stats_bodyhits7` = \"%d\", `stats_bodyhits8` = \"%d\", `stats_score` = \"%d\" WHERE `stats_authid` = \"%s\" LIMIT 1",
+			snprintf(query, 2047, "UPDATE `%s` SET `timestamp` = %d, `stats_name` = \"%s\", `stats_tks` = \"%d\", `stats_damage` = \"%d\", `stats_deaths` = \"%d\", `stats_frags` = \"%d\", `stats_shots` = \"%d\", `stats_hits` = \"%d\", `stats_hs` = \"%d\", `stats_defusions` = \"%d\", `stats_defused` = \"%d\", `stats_plants` = \"%d\", `stats_explosions` = \"%d\", `stats_bodyhits0` = \"%d\", `stats_bodyhits1` = \"%d\", `stats_bodyhits2` = \"%d\", `stats_bodyhits3` = \"%d\", `stats_bodyhits4` = \"%d\", `stats_bodyhits5` = \"%d\", `stats_bodyhits6` = \"%d\", `stats_bodyhits7` = \"%d\", `stats_bodyhits8` = \"%d\", `stats_score` = \"%d\" WHERE `stats_authid` = \"%s\" LIMIT 1",
 								   csx_sqlstats_table->string,
 								   now,
 								   name,
@@ -178,7 +178,7 @@ void RankSystem::saveRankSql()
 
 			if (mysql_affected_rows(mysql) == 0) {
 				// New player, do insert
-				_snprintf(query, 2047, "INSERT INTO `%s` (`timestamp`, `stats_authid`, `stats_name`, `stats_tks`, `stats_damage`, `stats_deaths`, `stats_frags`, `stats_shots`, `stats_hits`, `stats_hs`, `stats_defusions`, `stats_defused`, `stats_plants`, `stats_explosions`, `stats_bodyhits0`, `stats_bodyhits1`, `stats_bodyhits2`, `stats_bodyhits3`, `stats_bodyhits4`, `stats_bodyhits5`, `stats_bodyhits6`, `stats_bodyhits7`, `stats_bodyhits8`, `stats_score`) VALUES (\"%d\", \"%s\", \"%s\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\")",
+				snprintf(query, 2047, "INSERT INTO `%s` (`timestamp`, `stats_authid`, `stats_name`, `stats_tks`, `stats_damage`, `stats_deaths`, `stats_frags`, `stats_shots`, `stats_hits`, `stats_hs`, `stats_defusions`, `stats_defused`, `stats_plants`, `stats_explosions`, `stats_bodyhits0`, `stats_bodyhits1`, `stats_bodyhits2`, `stats_bodyhits3`, `stats_bodyhits4`, `stats_bodyhits5`, `stats_bodyhits6`, `stats_bodyhits7`, `stats_bodyhits8`, `stats_score`) VALUES (\"%d\", \"%s\", \"%s\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\", \"%d\")",
 					csx_sqlstats_table->string,
 					now,
 

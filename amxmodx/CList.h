@@ -279,9 +279,10 @@ public:
 		iterator iter = begin();
 		while (iter) iter.remove();
 	}
-	iterator find(F desc)
+
+	iterator find(iterator startOn, const F &desc)
 	{
-		iterator iter = begin();
+		iterator iter = startOn;
 		while(iter)
 		{
 			if (*iter == desc)
@@ -289,6 +290,11 @@ public:
 			++iter;
 		}
 		return iter;
+	}
+
+	iterator find(const F &desc)
+	{
+		return find(begin(), desc);
 	}
 
 	int size()

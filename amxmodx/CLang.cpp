@@ -1084,6 +1084,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 	{
 		MergeDefinitions(language, Defq);
 	}
+	fclose(fp);
 	return 1;
 }
 

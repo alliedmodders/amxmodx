@@ -3,18 +3,14 @@
 //It includes the engine and cstrike modules automatically.
 //It is intended for AMX Mod X
 
-#if defined INCLUDED_JGHG
-  #endinput
-#endif
-#define INCLUDED_JGHG
+#if !defined INCLUDED_JGHG
+	#define INCLUDED_JGHG
 
 #include <engine>
 #include <cstrike>
 
-#if defined _jghg_enums
-  #endinput
-#endif
-#define _jghg_enums
+#if !defined _jghg_enums
+	#define _jghg_enums
 // Global member variables
 enum {
 	// Edict
@@ -62,11 +58,12 @@ enum {
 }
 
 // jghg_categories
-enum { 
-   jghg2_classname = 0, 
-   jghg2_target = 1, 
-   jghg2_targetname = 2 
+enum {
+   jghg2_classname = 0,
+   jghg2_target = 1,
+   jghg2_targetname = 2
 }
+#endif
 
 stock jghg_find_ent_owner(start_from_ent, jghg_category, value[], owner_index)
 {
@@ -75,9 +72,8 @@ stock jghg_find_ent_owner(start_from_ent, jghg_category, value[], owner_index)
 
 stock find_ent_sphere(start_from_ent, Float:origin[3], Float:radius)
 {
-	find_ent_in_sphere(start_from_ent, Float:origin[3], Float:radius)
+	return find_ent_in_sphere(start_from_ent, origin, radius)
 }
-
 
 stock get_hostage_id(hostage)
 {
@@ -92,7 +88,7 @@ stock get_owner(id)
 
 stock get_pdata(entity, offset)
 {
-	return get_offset_int(entity, offset)
+	return get_offset(entity, offset)
 }
 stock Float:get_pdata_float(entity, offset)
 {
@@ -102,11 +98,10 @@ stock get_pdata_char(entity, offset)
 {
 	return get_offset_char(entity, offset)
 }
-stock get_offset_short(entity, offset)
+stock get_pdata_short(entity, offset)
 {
 	return get_offset_short(entity, offset)
 }
-
 stock set_pdata(entity, offset, value)
 {
 	return set_offset(entity, offset, value)
@@ -141,23 +136,23 @@ stock use(used, user)
 
 stock Float:globals_get_float(variable)
 {
-	get_global_float(variable)
+	return get_global_float(variable)
 }
 stock globals_get_int(variable)
 {
-	get_global_int(variable)
+	return get_global_int(variable)
 }
 stock globals_get_string(variable, string[], maxlen)
 {
-	get_global_string(variable, string, maxlen)
+	return get_global_string(variable, string, maxlen)
 }
 stock globals_get_vector(variable, Float:vector[3])
 {
-	get_global_vector(variable, vector)
+	return get_global_vector(variable, vector)
 }
 stock globals_get_edict(variable)
 {
-	get_global_edict(variable)
+	return get_global_edict(variable)
 }
 
 stock get_max_entities() {

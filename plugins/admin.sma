@@ -136,6 +136,9 @@ public addadminfn(id, level, cid) {
 	AddAdmin(id, steamid, flags, password)
 	cmdReload(id, ADMIN_CFG, 0)
 
+	new name[32]
+	get_user_info(player, "name", name, 31)
+	accessUser(player, name)
 
 	return PLUGIN_HANDLED
 }

@@ -1678,11 +1678,11 @@ static cell AMX_NATIVE_CALL set_task(AMX *amx, cell *params) /* 2 param */
 
   if (params[5])
   {
-	iFunc = registerSPForwardByName(amx, stemp, FP_ARRAY, FP_CELL, FP_DONE);
+     iFunc = registerSPForwardByName(amx, stemp, FP_ARRAY, FP_CELL, FP_DONE);
   } else {
-    iFunc = registerSPForwardByName(amx, stemp, FP_CELL, FP_DONE);
+     iFunc = registerSPForwardByName(amx, stemp, FP_CELL, FP_DONE);
   }
-  if (!iFunc)
+  if (iFunc == -1)
   {
     AMXXLOG_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")",stemp,plugin->getName() );
     amx_RaiseError(amx,AMX_ERR_NATIVE);

@@ -1167,8 +1167,12 @@ void GenericError(AMX *amx, int err, int line, char buf[], const char *file)
 			sprintf(buf, "Run time error %d on line %d (%s \"%s\").", err, line, (file?"file":"plugin"), (file?file:g_plugins.findPluginFast(amx)->getName()));
 		} else {
 			if (err == AMX_ERR_NATIVE && amx->userdata[2])
+			{
 				geterr = (char *)(amx->userdata[2]);	
-			sprintf(buf, "Run time error %d (%s) on line %d (%s \"%s\").", err, geterr, line, (file?"file":"plugin"), (file?file:g_plugins.findPluginFast(amx)->getName()));
+				sprintf(buf, "Native error in \"%s\" on line %d (%s \"%s\").", geterr, line, (file?"file":"plugin"), (file?file:g_plugins.findPluginFast(amx)->getName()));
+			} else {
+				sprintf(buf, "Run time error %d (%s) on line %d (%s \"%s\").", err, geterr, line, (file?"file":"plugin"), (file?file:g_plugins.findPluginFast(amx)->getName()));
+			}
 		}
 	}
 }
@@ -1201,6 +1205,10 @@ void LogError(AMX *amx, int err, const char *fmt, ...)
 		if (*vbuf)
 		{
 			AMXXLOG_Log("%s", vbuf);
+		}
+		if (!dbg)
+		{
+			AMXXLOG_Log("[AMXX] To enable debug mode, add \" debug\" after the plugin name in plugins.ini (without quotes).");
 		}
 	} else {
 		AMX_TRACE *t = dbg->tail;

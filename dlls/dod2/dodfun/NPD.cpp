@@ -132,13 +132,13 @@ static cell AMX_NATIVE_CALL get_user_deaths(AMX *amx, cell *params){
 	int index = params[1];
 	if (index<1||index>gpGlobals->maxClients){
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
+		return -1;
 	}
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->ingame){
 		return *( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_DEATHS );
 	}
-	return 0;
+	return -1;
 }
 
 static cell AMX_NATIVE_CALL set_user_deaths(AMX *amx, cell *params){
@@ -188,6 +188,45 @@ static cell AMX_NATIVE_CALL set_user_score(AMX *amx, cell *params){
 	}
 
 	return 1;
+}
+
+static cell AMX_NATIVE_CALL set_user_frags(AMX *amx, cell *params){
+	int index = params[1];
+	if (index<1||index>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+
+	if (pPlayer->ingame){
+		pPlayer->pEdict->v.frags = (float)params[2];
+
+		if ( params[3]){
+			//ScoreShort message
+			MESSAGE_BEGIN(MSG_ALL,gmsgScoreShort);
+			WRITE_BYTE(pPlayer->index);
+			WRITE_SHORT( *( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_SCORE ) );
+			WRITE_SHORT((int)pPlayer->pEdict->v.frags);
+			WRITE_SHORT( *( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_DEATHS ) );
+			WRITE_BYTE(1);
+			MESSAGE_END();
+		}
+	}
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL get_user_frags(AMX *amx, cell *params){
+	int index = params[1];
+	if (index<1||index>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return -1;
+	}
+	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+
+	if (pPlayer->ingame)
+		return (int)pPlayer->pEdict->v.frags;
+
+	return -1;
 }
 
 static cell AMX_NATIVE_CALL set_user_teamname(AMX *amx, cell *params){
@@ -486,6 +525,9 @@ AMX_NATIVE_INFO pd_Natives[] = {
 
   { "dod_get_user_ammo", get_user_ammo },  
   { "dod_set_user_ammo", set_user_ammo },  
+
+  { "dod_get_user_kills", get_user_frags },
+  { "dod_set_user_kills", set_user_frags },
 
   { "dod_test_pd", test_pd },
   ///*******************

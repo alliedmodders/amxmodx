@@ -97,29 +97,9 @@ static cell AMX_NATIVE_CALL nade_set_fuse(AMX *amx, cell *params){ // id,(re)set
 	return 0;
 }
 
-static cell AMX_NATIVE_CALL dod_get_wpninfo(AMX *amx, cell *params){ // id
-	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
-	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
-
-	//weapon_data_t wdata;
-
-	//mm_DispatchThink(pPlayer->pEdict);
-	//mm_GetWeaponData(pPlayer->pEdict,&wdata);
-
-	//MF_PrintSrvConsole("%d \n",wdata.iuser1);
-
-	return 1;
-}
-
 AMX_NATIVE_INFO base_Natives[] = {
   { "dod_set_stamina", set_player_stamina },
   { "dod_set_fuse", nade_set_fuse },
-
-  { "dod_get_wpninfo", dod_get_wpninfo },
 
   ///*******************
   { NULL, NULL } 

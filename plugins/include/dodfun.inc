@@ -41,6 +41,12 @@ native dod_get_pl_deaths(index);
 /* Sets player deaths. */
 native dod_set_pl_deaths(index,value,refresh=1);
 
+/* Returns player deaths. */
+native dod_get_user_kills(index);
+
+/* Sets player kills. */
+native dod_set_user_kills(index,value,refresh=1);
+
 /* Sets player score. */
 native dod_set_user_score(index,value,refresh=1);
 

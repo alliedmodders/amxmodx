@@ -47,7 +47,7 @@ static cell AMX_NATIVE_CALL call_think(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
 
-	if (is_ent_valid(iEnt)) {
+	if (!is_ent_valid(iEnt)) {
 		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}

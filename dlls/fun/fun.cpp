@@ -615,6 +615,41 @@ static cell AMX_NATIVE_CALL get_user_noclip(AMX *amx, cell *params) // get_user_
 	return pPlayer->v.movetype == MOVETYPE_NOCLIP;
 }
 
+// JustinHoMi made this one originally
+static cell AMX_NATIVE_CALL set_user_footsteps(AMX *amx, cell *params) // set_user_footsteps(id, set = 1); = 2 params
+{
+	// Gives player silent footsteps.
+	// if set=0 it will return footsteps to normal
+	// params[1] = index of player
+	// params[2] = 0 = normal footstep sound, 1 = silent slippers
+
+	// Check index
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	{
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// Fetch player pointer
+	edict_t *pPlayer = INDEXENT(params[1]);
+
+	// Check validity.
+	if (FNullEnt(pPlayer)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+	
+	if (params[2]) {                
+		pPlayer->v.flTimeStepSound = 999;
+		silent[params[1]] = true;
+	}
+	else {
+		pPlayer->v.flTimeStepSound = STANDARDTIMESTEPSOUND;
+		silent[params[1]] = false;
+	}
+
+	return 1;
+}
 
 AMX_NATIVE_INFO fun_Exports[] = {
 	{"get_client_listen",		get_client_listening},
@@ -624,7 +659,6 @@ AMX_NATIVE_INFO fun_Exports[] = {
 	{"set_user_health",			set_user_health},
 	{"give_item",				give_item},
 	{"spawn",					spawn},
-	//{"user_spawn",				spawn}, // No, it's not a typo! Uses the same as "spawn", because they do the same stuff! This is made only to maintain comp. with old plugins!
 	{"set_user_money",			set_user_money},
 	{"get_user_money",			get_user_money},
 	{"set_user_deaths_cs",		set_user_deaths_cs},
@@ -640,11 +674,111 @@ AMX_NATIVE_INFO fun_Exports[] = {
 	{"get_hitzones",			get_hitzones},
 	{"set_user_noclip",			set_user_noclip},
 	{"get_user_noclip",			get_user_noclip},
+	{"set_user_footsteps",		set_user_footsteps},
 	  /////////////////// <--- 19 chars max in current small version
 	{NULL,					NULL}
 };
 
 /******************************************************************************************/
+void PlayerPreThink( edict_t *pEntity)
+{
+	int index = ENTINDEX(pEntity);
+
+	if (silent[index]) {
+		pEntity->v.flTimeStepSound = 999; 
+		RETURN_META(MRES_HANDLED);
+	}
+
+	RETURN_META(MRES_IGNORED);
+}
+
+void ClientDisconnect( edict_t *pEntity)
+{
+	int index = ENTINDEX(pEntity);
+	silent[index] = false;
+	RETURN_META(MRES_IGNORED);
+}
+
+DLL_FUNCTIONS gFunctionTable = {
+	NULL,					// pfnGameInit
+	NULL,					// pfnSpawn
+	NULL,					// pfnThink
+	NULL,					// pfnUse
+	NULL,					// pfnTouch
+	NULL,					// pfnBlocked
+	NULL,					// pfnKeyValue
+	NULL,					// pfnSave
+	NULL,					// pfnRestore
+	NULL,					// pfnSetAbsBox
+
+	NULL,					// pfnSaveWriteFields
+	NULL,					// pfnSaveReadFields
+
+	NULL,					// pfnSaveGlobalState
+	NULL,					// pfnRestoreGlobalState
+	NULL,					// pfnResetGlobalState
+
+	NULL,					// pfnClientConnect
+	ClientDisconnect,		// pfnClientDisconnect
+	NULL,					// pfnClientKill
+	NULL,					// pfnClientPutInServer
+	NULL,					// pfnClientCommand
+	NULL,					// pfnClientUserInfoChanged
+	NULL,					// pfnServerActivate
+	NULL,					// pfnServerDeactivate
+
+	PlayerPreThink,			// pfnPlayerPreThink
+	NULL,					// pfnPlayerPostThink
+
+	NULL,					// pfnStartFrame
+	NULL,					// pfnParmsNewLevel
+	NULL,					// pfnParmsChangeLevel
+
+	NULL,					// pfnGetGameDescription
+	NULL,					// pfnPlayerCustomization
+
+	NULL,					// pfnSpectatorConnect
+	NULL,					// pfnSpectatorDisconnect
+	NULL,					// pfnSpectatorThink
+	
+	NULL,					// pfnSys_Error
+
+	NULL,					// pfnPM_Move
+	NULL,					// pfnPM_Init
+	NULL,					// pfnPM_FindTextureType
+	
+	NULL,					// pfnSetupVisibility
+	NULL,					// pfnUpdateClientData
+	NULL,					// pfnAddToFullPack
+	NULL,					// pfnCreateBaseline
+	NULL,					// pfnRegisterEncoders
+	NULL,					// pfnGetWeaponData
+	NULL,					// pfnCmdStart
+	NULL,					// pfnCmdEnd
+	NULL,					// pfnConnectionlessPacket
+	NULL,					// pfnGetHullBounds
+	NULL,					// pfnCreateInstancedBaselines
+	NULL,					// pfnInconsistentFile
+	NULL,					// pfnAllowLagCompensation
+};
+
+C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion)
+{
+	if(!pFunctionTable) {
+		LOG_ERROR(PLID, "GetEntityAPI2 called with null pFunctionTable");
+		return(FALSE);
+	}
+	else if(*interfaceVersion != INTERFACE_VERSION) {
+		LOG_ERROR(PLID, "GetEntityAPI2 version mismatch; requested=%d ours=%d", *interfaceVersion, INTERFACE_VERSION);
+		//! Tell metamod what version we had, so it can figure out who is out of date.
+		*interfaceVersion = INTERFACE_VERSION;
+		return(FALSE);
+	}
+	memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
+	return(TRUE);
+}
+
+/********/
 
 void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr)
 {

@@ -15,7 +15,7 @@ globalvars_t  *gpGlobals;			// JGHG says: contains info on server, like maxclien
 static META_FUNCTIONS gMetaFunctionTable = {
 	NULL,						// pfnGetEntityAPI				HL SDK; called before game DLL
 	NULL,						// pfnGetEntityAPI_Post			META; called after game DLL
-	NULL,						// pfnGetEntityAPI2				HL SDK2; called before game DLL
+	GetEntityAPI2,				// pfnGetEntityAPI2				HL SDK2; called before game DLL
 	NULL,						// pfnGetEntityAPI2_Post		META; called after game DLL
 	NULL,						// pfnGetNewDLLFunctions		HL SDK2; called before game DLL
 	NULL,						// pfnGetNewDLLFunctions_Post	META; called after game DLL
@@ -34,10 +34,11 @@ pfnmodule_engine_g* g_engModuleFunc;		// These seem to be meta/amxmod related
 #define DATE __DATE__
 
 // Fun-specific defines below
-#define CVAR_FUN_VERSION "fun_version"
-#define GETCLIENTLISTENING	(*g_engfuncs.pfnVoice_GetClientListening)
-#define SETCLIENTLISTENING	(*g_engfuncs.pfnVoice_SetClientListening)
-#define	SF_NORESPAWN		( 1 << 30 )// !!!set this bit on guns and stuff that should never respawn.
+#define CVAR_FUN_VERSION		"fun_version"
+#define GETCLIENTLISTENING		(*g_engfuncs.pfnVoice_GetClientListening)
+#define SETCLIENTLISTENING		(*g_engfuncs.pfnVoice_SetClientListening)
+#define	SF_NORESPAWN			(1 << 30)// !!!set this bit on guns and stuff that should never respawn.
+#define STANDARDTIMESTEPSOUND	400
 
 #if defined __linux__
 	#define OFFSET_CSMONEY		115 + 5
@@ -47,14 +48,15 @@ pfnmodule_engine_g* g_engModuleFunc;		// These seem to be meta/amxmod related
 	#define OFFSET_CSDEATHS		449
 #endif // defined __linux__
 
-#define HITGROUP_GENERIC	0 // none
-#define HITGROUP_HEAD		1
-#define HITGROUP_CHEST		2
-#define HITGROUP_STOMACH	3
-#define HITGROUP_LEFTARM	4
-#define HITGROUP_RIGHTARM	5
-#define HITGROUP_LEFTLEG	6
-#define HITGROUP_RIGHTLEG	7
+#define HITGROUP_GENERIC		0 // none
+#define HITGROUP_HEAD			1
+#define HITGROUP_CHEST			2
+#define HITGROUP_STOMACH		3
+#define HITGROUP_LEFTARM		4
+#define HITGROUP_RIGHTARM		5
+#define HITGROUP_LEFTLEG		6
+#define HITGROUP_RIGHTLEG		7
+
 // Fun-specific defines above
 
 // Globals below
@@ -76,6 +78,7 @@ module_info_s module_info = {
   AMX_INTERFACE_VERSION,
   RELOAD_MODULE,
 };
-int g_body = 0;				// bits of parts of body to hit
 cvar_t fun_version = {"fun_version", "0.1", FCVAR_EXTDLL};
+int g_body = 0;				// bits of parts of body to hit
+bool silent[33];			// used for set_user_footsteps()
 // Globals above

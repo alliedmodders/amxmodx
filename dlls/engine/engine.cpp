@@ -912,7 +912,7 @@ static cell AMX_NATIVE_CALL take_damage(AMX *amx, cell *params)
 	edict_t* pEntityb = INDEXENT2(indexb);
 	edict_t* pEntityc = INDEXENT2(indexc);
 	CBaseEntity *pCEntity = NULL;
-	pCEntity = CBaseEntity::Instance(INDEXENT2(indexa));
+	pCEntity = (CBaseEntity*)((INDEXENT2(indexa))->pvPrivateData);
 	pCEntity->TakeDamage(VARS(pEntityb),VARS(pEntityc),fnDamage,inType);
 	return 1;
 }

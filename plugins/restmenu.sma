@@ -391,11 +391,11 @@ public cmdRest(id,level,cid) {
         g_WeaponNames[a], g_Aliases[a], lOnOff)
       }
     }
-    console_print(id,"----- %L -----",id,"ENTRIES_OF",start+1,end,MAXMENUPOS)
+    console_print(id,"----- %L -----",id,"REST_ENTRIES_OF",start+1,end,MAXMENUPOS)
     if (end < MAXMENUPOS)
-      console_print(id,"----- %L -----",id,"USE_MORE",end+1)
+      console_print(id,"----- %L -----",id,"REST_USE_MORE",end+1)
     else
-      console_print(id,"----- %L -----",id,"USE_BEGIN")
+      console_print(id,"----- %L -----",id,"REST_USE_BEGIN")
   }
   else if ( equali( "save" , cmd ) ) {
     if ( saveSettings( g_saveFile ) ){
@@ -419,17 +419,17 @@ public cmdRest(id,level,cid) {
     else console_print( id, "%L", id, "COULDNT_LOAD", arg1 )
   }
   else {
-    console_print(id,"%L",id,"COM_USAGE")
-    console_print(id,"%L",id,"COM_COMMANDS")
-    console_print(id,"%L",id,"COM_ON")
-    console_print(id,"%L",id,"COM_OFF")
-    console_print(id,"%L",id,"COM_ON")
-    console_print(id,"%L",id,"COM_OFF")
-    console_print(id,"%L",id,"COM_LIST")
-    console_print(id,"%L",id,"COM_SAVE")
-    console_print(id,"%L",id,"COM_LOAD")
-    console_print(id,"%L",id,"COM_VALUES")
-    console_print(id,"%L",id,"COM_TYPE")
+    console_print(id,"%L",id,"COM_REST_USAGE")
+    console_print(id,"%L",id,"COM_REST_COMMANDS")
+    console_print(id,"%L",id,"COM_REST_ON")
+    console_print(id,"%L",id,"COM_REST_OFF")
+    console_print(id,"%L",id,"COM_REST_ON")
+    console_print(id,"%L",id,"COM_REST_OFF")
+    console_print(id,"%L",id,"COM_REST_LIST")
+    console_print(id,"%L",id,"COM_REST_SAVE")
+    console_print(id,"%L",id,"COM_REST_LOAD")
+    console_print(id,"%L",id,"COM_REST_VALUES")
+    console_print(id,"%L",id,"COM_REST_TYPE")
   }
   return PLUGIN_HANDLED
 }

@@ -340,24 +340,24 @@ public cmdPlugin(id,level,cid) {
       if (status[0] == 'r') ++running
       console_print(id, " [%3d] %-18.17s %-8.7s %-17.16s %-16.15s %-9.8s",a+1,title,version,author,plugin, status )
     }
-    console_print(id,"----- %L -----",id,"ENTRIES",start+1,end,plgnum,running)
+    console_print(id,"----- %L -----",id,"PAUSE_ENTRIES",start+1,end,plgnum,running)
     if (end < plgnum)
-     	console_print(id,"----- %L -----",id,"USE_MORE",end+1)
+     	console_print(id,"----- %L -----",id,"PAUSE_USE_MORE",end+1)
     else
-      console_print(id,"----- %L -----",id,"USE_BEGIN")
+      console_print(id,"----- %L -----",id,"PAUSE_USE_BEGIN")
   }
   else {
-    console_print(id,"%L",id,"USAGE")
-    console_print(id,"%L:",id,"COMMANDS")
-    console_print(id,"%L",id,"COM_TOFF")   
-    console_print(id,"%L",id,"COM_TON")
-    console_print(id,"%L",id,"COM_TSTOP")
-    console_print(id,"%L",id,"COM_TPAUSE")
-    console_print(id,"%L",id,"COM_TENABLE")
-    console_print(id,"%L",id,"COM_TSAVE")
-    console_print(id,"%L",id,"COM_TCLEAR")
-    console_print(id,"%L",id,"COM_TLIST")
-    console_print(id,"%L",id,"COM_TADD")
+    console_print(id,"%L",id,"PAUSE_USAGE")
+    console_print(id,"%L:",id,"PAUSE_COMMANDS")
+    console_print(id,"%L",id,"COM_PAUSE_OFF")   
+    console_print(id,"%L",id,"COM_PAUSE_ON")
+    console_print(id,"%L",id,"COM_PAUSE_STOP")
+    console_print(id,"%L",id,"COM_PAUSE_PAUSE")
+    console_print(id,"%L",id,"COM_PAUSE_ENABLE")
+    console_print(id,"%L",id,"COM_PAUSE_SAVE")
+    console_print(id,"%L",id,"COM_PAUSE_CLEAR")
+    console_print(id,"%L",id,"COM_PAUSE_LIST")
+    console_print(id,"%L",id,"COM_PAUSE_ADD")
   }
   return PLUGIN_HANDLED
 }

@@ -76,12 +76,12 @@ public cmdHelp(id,level,cid) {
 		get_concmd(i,cmd,31,eflags,info,127,flags,id)
 		console_print(id,"%3d: %s %s",i+1,cmd,info)
 	}
-	console_print(id,"----- %L -----",id,"ENTRIES",start+1,end,clcmdsnum)
+	console_print(id,"----- %L -----",id,"HELP_ENTRIES",start+1,end,clcmdsnum)
 
 	if (end < clcmdsnum)
-		console_print(id,"----- %L -----",id,"USE_MORE",end+1)
+		console_print(id,"----- %L -----",id,"HELP_USE_MORE",end+1)
 	else
-		console_print(id,"----- %L -----",id,"USE_BEGIN")
+		console_print(id,"----- %L -----",id,"HELP_USE_BEGIN")
 
 	return PLUGIN_HANDLED
 }
@@ -96,7 +96,9 @@ public dispInfo(id) {
     if (timeleft > 0) {
       client_print(id,print_chat, "%L" , id, "TIME_INFO_1", timeleft / 60, timeleft % 60,nextmap)
     }
+    else {
+      client_print(id,print_chat,"%L",id,"TIME_INFO_2",nextmap)
+    }
   }
-  client_print(id,print_chat,"%L",id,"TIME_INFO_2",nextmap)
 }
 #endif

@@ -128,11 +128,11 @@ public cmdCfg( id,level,cid ) {
         g_menuData[a], g_menuDataVar[a], lOnOff)
       }
     }
-    console_print(id,"----- %L -----",id,"ENTRIES_OF",start+1,end,g_menuDataNum)    
+    console_print(id,"----- %L -----",id,"STATS_ENTRIES_OF",start+1,end,g_menuDataNum)    
     if (end < g_menuDataNum)
-      console_print(id,"----- %L -----",id,"USE_MORE",end+1)
+      console_print(id,"----- %L -----",id,"STATS_USE_MORE",end+1)
     else 
-      console_print(id,"----- %L -----",id,"USE_BEGIN")
+      console_print(id,"----- %L -----",id,"STATS_USE_BEGIN")
   }
   else if ( equali(cmds, "add" ) &&  read_argc() > 3 ) {
     if ( g_menuDataNum < MAX_MENU_DATA  ) {
@@ -141,17 +141,17 @@ public cmdCfg( id,level,cid ) {
       g_menuDataId[g_menuDataNum] = get_xvar_id( g_menuDataVar[g_menuDataNum] )
       ++g_menuDataNum
     }
-    else console_print(id, "%L",id,"CANT_ADD")
+    else console_print(id, "%L",id,"CANT_ADD_STATS")
   }  
   else {
-    console_print(id,"%L",id,"COM_USAGE")
-    console_print(id,"%L",id,"COM_COM")
-    console_print(id,"%L",id,"COM_ON")
-    console_print(id,"%L",id,"COM_OFF")
-    console_print(id,"%L",id,"COM_SAVE")
-    console_print(id,"%L",id,"COM_LOAD")
-    console_print(id,"%L",id,"COM_LIST")
-    console_print(id,"%L",id,"COM_ADD")
+    console_print(id,"%L",id,"COM_STATS_USAGE")
+    console_print(id,"%L",id,"COM_STATS_COM")
+    console_print(id,"%L",id,"COM_STATS_ON")
+    console_print(id,"%L",id,"COM_STATS_OFF")
+    console_print(id,"%L",id,"COM_STATS_SAVE")
+    console_print(id,"%L",id,"COM_STATS_LOAD")
+    console_print(id,"%L",id,"COM_STATS_LIST")
+    console_print(id,"%L",id,"COM_STATS_ADD")
   }
 
   return PLUGIN_HANDLED

@@ -1200,6 +1200,23 @@ static cell AMX_NATIVE_CALL cs_get_user_stationary(AMX *amx, cell *params) // cs
 #endif
 }
 
+static cell AMX_NATIVE_CALL cs_get_user_shield(AMX *amx, cell *params)
+{
+	//Return 1 if user has a shield.
+	//params[1] = user id
+   
+	//Check player
+	CHECK_PLAYER(params[1]);
+   
+	// Make into edict pointer
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+   
+	if ((int)*((int *)pPlayer->pvPrivateData + OFFSET_SHIELD) & HAS_SHIELD)
+		return 1;
+
+	return 0;   
+}
+
 AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_user_money",			cs_set_user_money},
 	{"cs_get_user_money",			cs_get_user_money},
@@ -1240,6 +1257,7 @@ AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_get_user_stationary",		cs_get_user_stationary},
 	{"cs_get_user_armor",			cs_get_user_armor},
 	{"cs_set_user_armor",			cs_set_user_armor},
+	{"cs_get_user_shield",			cs_get_user_shield},
 	//------------------- <-- max 19 characters!
 	{NULL,							NULL}
 };
@@ -1308,22 +1326,7 @@ void PlayerPostThink(edict_t* pPlayer) {
 	RETURN_META(MRES_IGNORED);
 }
 
-static cell AMX_NATIVE_CALL cs_user_has_shield(AMX *amx, cell *params)
-{
-	//Return 1 if user has a shield.
-	//params[1] = user id
-   
-	//Check player
-	CHECK_PLAYER(params[1]);
-   
-	// Make into edict pointer
-	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
-   
-	if ((int)*((int *)pPlayer->pvPrivateData + OFFSET_SHIELD) & HAS_SHIELD)
-		return 1;
 
-	return 0;   
-} 
 
 void OnAmxxAttach()
 {

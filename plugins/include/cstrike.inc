@@ -172,6 +172,10 @@ native cs_set_user_tked(index, tk = 1, subtract = 1);
  */
 native cs_get_user_driving(index);
 
+/* Returns 1 if user has a shield, else 0.
+ */
+native cs_get_user_shield(index);
+
 /* Returns 1 if user is using a stationary gun, else 0.
  */
 native cs_get_user_stationary(index);
@@ -228,3 +232,4 @@ native cs_get_no_knives();
  * You can still give knives (ie through fun's give_item).
  */
 native cs_set_no_knives(noknives = 0);
+

@@ -236,6 +236,7 @@ public cmdReload(id,level,cid) {
       console_print(id,"[AMXX] %L", LANG_SERVER, "LOADED_ADMINS", g_aNum )
   }
 #else
+  g_aNum = 0
   adminSql()
 
   if (id != 0) {

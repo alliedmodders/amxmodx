@@ -177,6 +177,12 @@ static cell AMX_NATIVE_CALL mssql_query(AMX *amx, cell *params)
 		return -1;
 	}
 
+	try {
+		c->res->MoveFirst();
+	} catch (_com_error &e) {
+		return 1;
+	}
+
 	return 1;
 }
 
@@ -195,15 +201,12 @@ static cell AMX_NATIVE_CALL mssql_nextrow(AMX *amx, cell *params)
 	if (c->res == NULL)
 		return 0;
 
-	if (c->resStart) {
-		c->res->MoveFirst();
-		c->resStart = false;
-	}
-
 	try {
 		if (c->res->ADOEOF)
 			return 0;
 		c->res->MoveNext();
+		if (c->res->ADOEOF)
+			return 0;
 		return 1;
 	} catch (_com_error &e) {
 		_bstr_t bstrSource(e.Description());

@@ -216,7 +216,7 @@ int Spawn( edict_t *pent ) {
   // so we clear g_log_dir in ServerDeactivate_Post to know we should create one...
   if (g_log_dir.empty())
   {
-    g_log_dir.set("addons/amxx/logs");			// :TODO: maybe not do this through String as an optimalization ( a #define or const char * ?)
+    g_log_dir.set(get_localinfo("amxx_logs", "addons/amxx/logs"));
     UTIL_MakeNewLogFile();
   }
 
@@ -231,22 +231,13 @@ int Spawn( edict_t *pent ) {
   g_commands.registerPrefix( "sm_" );
   g_commands.registerPrefix( "cm_" );
 
-  Vault amx_config;
-  // ###### Load custom path configuration
-  amx_config.setSource(build_pathname("%s", "addons/amxx/configs/core.ini"));
-
-  if ( amx_config.loadVault() ){
-    Vault::iterator a = amx_config.begin();
-    while ( a != amx_config.end() ) {
-      SET_LOCALINFO( (char*)a.key().str() , (char*)a.value().str() );
-      ++a;
-    }
-    amx_config.clear();
-  }
+  // make sure basedir is set
+  get_localinfo("amxx_basedir", "addons/amxx");
 
   //  ###### Load modules
-  int loaded = loadModules( "addons/amxx/modules.ini" );
+  loadModules(get_localinfo("amxx_modules", "addons/amxx/modules.ini"));
   attachModules();
+  int loaded = UTIL_GetModulesNum(UTIL_MODULES_RUNNING);	// Call after attachModules so all modules don't have pending stat
   // Set some info about amx version and modules
   if ( loaded ){
     char buffer[64];
@@ -261,7 +252,7 @@ int Spawn( edict_t *pent ) {
   }
 
   //  ######  Load Vault
-  g_vault.setSource( build_pathname("%s", "addons/amxx/configs/vault.ini" ) );
+  g_vault.setSource( build_pathname("%s", get_localinfo("amxx_vault", "addons/amxx/configs/vault.ini")) );
   g_vault.loadVault( );
 
 
@@ -275,7 +266,7 @@ int Spawn( edict_t *pent ) {
   memset(g_players[0].flags,-1,sizeof(g_players[0].flags));
 
   //  ###### Load AMX scripts
-  g_plugins.loadPluginsFromFile( "addons/amxx/plugins.ini" );	// :TODO: Where the hell should this be!?!?!
+  g_plugins.loadPluginsFromFile( get_localinfo("amxx_plugins", "addons/amxx/plugins.ini") );	// :TODO: Where the hell should this be!?!?!
 
   //  ###### Call precache forward function
   g_dontprecache = false;
@@ -973,12 +964,25 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
       a = &gameDir[i];
   g_mod_name.set(a);
 
+  // ###### Load custom path configuration
+  Vault amx_config;
+  amx_config.setSource(build_pathname("%s", get_localinfo("amxx_cfg", "addons/amxx/configs/core.ini")));
+
+  if ( amx_config.loadVault() ){
+    Vault::iterator a = amx_config.begin();
+    while ( a != amx_config.end() ) {
+      SET_LOCALINFO( (char*)a.key().str() , (char*)a.value().str() );
+      ++a;
+    }
+    amx_config.clear();
+  }
+
   // ###### Initialize logging here
-  g_log_dir.set("addons/amxx/logs");			// :TODO: maybe not do this through String as an optimalization ( a #define or const char * ?)
+  g_log_dir.set(get_localinfo("amxx_logs", "addons/amxx/logs"));
   UTIL_MakeNewLogFile();
 
   //  ###### Now attach metamod modules
-  attachMetaModModules( "addons/amxx/modules.ini" );
+  attachMetaModModules( get_localinfo("amxx_modules", "addons/amxx/modules.ini") );
 
   return(TRUE);
 }
@@ -1007,7 +1011,7 @@ C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason) {
   dettachModules();
 
   //  ###### Now dettach metamod modules
-  dettachMetaModModules( "addons/amxx/modules.ini" );
+  dettachMetaModModules( get_localinfo("amxx_modules", "addons/amxx/modules.ini") );
 
   return(TRUE);
 }

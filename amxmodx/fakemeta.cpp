@@ -34,12 +34,7 @@
 
 // for varargs
 #define MAX_STRBUF_LEN 512
-/*
-void FakeError()
-{
-	FDF;
-}
-*/
+
 
 // Engine normal
 #define FAKEMETA_ENGINE_HANDLE_void(pfnName, pfnArgs) \
@@ -83,12 +78,12 @@ void FakeError()
 			/* Actual call */ \
 			curRet = (*iter).GetEngineFuncTable().pfn##pfnName pfnArgs; \
 			/* Process return value */ \
+			mres = gpMetaGlobals->mres; \
 			if (mres >= MRES_OVERRIDE && mayOverride) \
 			{ \
 				mayOverride = false; \
 				returnValue = curRet; \
 			} \
-			mres = gpMetaGlobals->mres; \
 			if (mres > status) \
 				status = mres; \
 			prev_mres = mres; \
@@ -154,12 +149,12 @@ void FakeError()
 			/* Actual call */ \
 			curRet = (*iter).GetEngineFuncTable_Post().pfn##pfnName pfnArgs; \
 			/* Process return value */ \
+			mres = gpMetaGlobals->mres; \
 			if (mres >= MRES_OVERRIDE && mayOverride) \
 			{ \
 				mayOverride = false; \
 				returnValue = curRet; \
 			} \
-			mres = gpMetaGlobals->mres; \
 			if (mres > status) \
 				status = mres; \
 			prev_mres = mres; \
@@ -226,12 +221,12 @@ void FakeError()
 			/* Actual call */ \
 			curRet = (*iter).GetDllFuncTable().pfn##pfnName pfnArgs; \
 			/* Process return value */ \
+			mres = gpMetaGlobals->mres; \
 			if (mres >= MRES_OVERRIDE && mayOverride) \
 			{ \
 				mayOverride = false; \
 				returnValue = curRet; \
 			} \
-			mres = gpMetaGlobals->mres; \
 			if (mres > status) \
 				status = mres; \
 			prev_mres = mres; \
@@ -285,12 +280,12 @@ void FakeError()
 			/* Actual call */ \
 			curRet = (*iter).GetDllFuncTable_Post().pfn##pfnName pfnArgs; \
 			/* Process return value */ \
+			mres = gpMetaGlobals->mres; \
 			if (mres >= MRES_OVERRIDE && mayOverride) \
 			{ \
 				mayOverride = false; \
 				returnValue = curRet; \
 			} \
-			mres = gpMetaGlobals->mres; \
 			if (mres > status) \
 				status = mres; \
 			prev_mres = mres; \
@@ -347,12 +342,12 @@ void FakeError()
 			/* Actual call */ \
 			curRet = (*iter).GetNewDllFuncTable().pfn##pfnName pfnArgs; \
 			/* Process return value */ \
+			mres = gpMetaGlobals->mres; \
 			if (mres >= MRES_OVERRIDE && mayOverride) \
 			{ \
 				mayOverride = false; \
 				returnValue = curRet; \
 			} \
-			mres = gpMetaGlobals->mres; \
 			if (mres > status) \
 				status = mres; \
 			prev_mres = mres; \
@@ -406,12 +401,12 @@ void FakeError()
 			/* Actual call */ \
 			curRet = (*iter).GetNewDllFuncTable_Post().pfn##pfnName pfnArgs; \
 			/* Process return value */ \
+			mres = gpMetaGlobals->mres; \
 			if (mres >= MRES_OVERRIDE && mayOverride) \
 			{ \
 				mayOverride = false; \
 				returnValue = curRet; \
 			} \
-			mres = gpMetaGlobals->mres; \
 			if (mres > status) \
 				status = mres; \
 			prev_mres = mres; \
@@ -721,7 +716,8 @@ const char *Cmd_Args( void ) {
 	FAKEMETA_ENGINE_HANDLE(const char*, 0, Cmd_Args, ());
 }
 
-const char *Cmd_Argv( int argc ) {
+const char *Cmd_Argv( int argc )
+{
 	FAKEMETA_ENGINE_HANDLE(const char*, 0, Cmd_Argv, (argc));
 }
 

@@ -1,0 +1,2 @@
+[en]
+STOP_FLOOD = Stop flooding the server!

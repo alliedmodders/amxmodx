@@ -185,7 +185,7 @@ static cell AMX_NATIVE_CALL write_file(AMX *amx, cell *params) /* 3 param */
 
   // adding a new line in a middle of already existing file
   FILE* pTemp;
-  char buffor[1024];
+  char buffor[2048];
 
   if ( (pTemp = tmpfile()) == NULL ){
     amx_RaiseError(amx,AMX_ERR_NATIVE);
@@ -194,11 +194,11 @@ static cell AMX_NATIVE_CALL write_file(AMX *amx, cell *params) /* 3 param */
 
   for(i=0;;++i){
     if (  i == iLine ){
-      fgets(buffor,1023,pFile);
+      fgets(buffor,2047,pFile);
       fputs( sText , pTemp );
       fputc( '\n', pTemp );
     }
-    else if ( fgets(buffor,1023,pFile) ){
+    else if ( fgets(buffor,2047,pFile) ){
       fputs(buffor , pTemp );
     }
     else if ( i < iLine ) {
@@ -216,7 +216,7 @@ static cell AMX_NATIVE_CALL write_file(AMX *amx, cell *params) /* 3 param */
     return 0;
   }
 
-  while(fgets(buffor,1023,pTemp))
+  while(fgets(buffor,2047,pTemp))
     fputs(buffor,pFile );
 
   fclose(pTemp);

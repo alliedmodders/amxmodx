@@ -163,7 +163,7 @@ native cs_get_user_tked(index);
  */
 native cs_set_user_tked(index, tk = 1, subtract = 1);
 
-/* Returns different values depending on if user is driving a value - and if so at what speed.
+/* Returns different values depending on if user is driving a vehicle - and if so at what speed.
  * 0: no driving
  * 1: driving, but standing still
  * 2-4: driving, different positive speeds

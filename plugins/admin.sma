@@ -50,8 +50,7 @@ new g_aAccess[MAX_ADMINS]
 new g_aNum = 0
 new g_cmdLoopback[16]
 
-public plugin_init()
-{
+public plugin_init() {
 #if defined USING_SQL
   register_plugin("Admin Base (SQL)",AMXX_VERSION_STR,"AMXX Dev Team")
 #else
@@ -74,24 +73,25 @@ public plugin_init()
   register_cvar("amx_votemap_ratio","0.40")
 
   set_cvar_float("amx_last_voting",0.0)
-  
+
 #if defined USING_SQL
   register_srvcmd("amx_sqladmins","adminSql")
   register_cvar("amx_sql_host","127.0.0.1")
   register_cvar("amx_sql_user","root")
   register_cvar("amx_sql_pass","")
   register_cvar("amx_sql_db","amx")
+  register_cvar("amx_sql_table","admins")
 #endif
 
   register_concmd("amx_reloadadmins","cmdReload",ADMIN_ADMIN)
 
   format( g_cmdLoopback, 15, "amxauth%c%c%c%c" , 
   	random_num('A','Z') , random_num('A','Z') ,random_num('A','Z'),random_num('A','Z')  )
-  	
+
   register_clcmd( g_cmdLoopback, "ackSignal" )
 
   remove_user_flags(0,read_flags("z")) // Remove 'user' flag from server rights
-  
+
   new configsDir[64]
   get_configsdir(configsDir, 63)
   server_cmd("exec %s/amxx.cfg", configsDir) // Execute main configuration file
@@ -117,17 +117,17 @@ public plugin_cfg()
 loadSettings(szFilename[])
 {
   if (!file_exists(szFilename)) return 0
-    
+
   new szText[256], szFlags[32], szAccess[32]
   new a, pos = 0
-  
+
   while ( g_aNum < MAX_ADMINS && read_file(szFilename,pos++,szText,255,a) ) 
   {         
     if ( szText[0] == ';' ) continue
-    
+
     if ( parse(szText, g_aName[ g_aNum ] ,31, g_aPassword[ g_aNum ], 31, szAccess,31,szFlags,31 ) < 2 )
         continue
-	
+
     g_aAccess[ g_aNum ] = read_flags(szAccess)
     if (!(g_aAccess[g_aNum] & ADMIN_USER) && !(g_aAccess[g_aNum] & ADMIN_ADMIN))
         g_aAccess[g_aNum] |= ADMIN_ADMIN
@@ -146,11 +146,12 @@ loadSettings(szFilename[])
 
 #if defined USING_SQL
 public adminSql() {
-  new host[64],user[32],pass[32],db[32],error[128]
+  new host[64],user[32],pass[32],db[32],table[32],error[128]
   get_cvar_string("amx_sql_host",host,63)
   get_cvar_string("amx_sql_user",user,31)
   get_cvar_string("amx_sql_pass",pass,31)
   get_cvar_string("amx_sql_db",db,31)
+  get_cvar_string("amx_sql_table",table,31)
   
   new Sql:sql = dbi_connect(host,user,pass,db,error,127)
   if (sql <= SQL_FAILED) {
@@ -158,9 +159,9 @@ public adminSql() {
     return PLUGIN_HANDLED 
   }
 
-  dbi_query(sql,"CREATE TABLE IF NOT EXISTS admins ( auth varchar(32) NOT NULL default '', password varchar(32) NOT NULL default '', access varchar(32) NOT NULL default '', flags varchar(32) NOT NULL default '' )")
-  
-  new Result:Res = dbi_query(sql,"SELECT auth,password,access,flags FROM admins")
+  dbi_query(sql,"CREATE TABLE IF NOT EXISTS `%s` ( `auth` VARCHAR( 32 ) NOT NULL, `password` VARCHAR( 32 ) NOT NULL, `access` VARCHAR( 32 ) NOT NULL, `flags` VARCHAR( 32 ) NOT NULL ) COMMENT = 'AMX Mod X Admins'",table);
+
+  new Result:Res = dbi_query(sql,"SELECT `auth`,`password`,`access`,`flags` FROM `%s`",table)
 
   if (Res == RESULT_FAILED) {
     dbi_error(sql,error,127)
@@ -178,8 +179,7 @@ public adminSql() {
 
   new szFlags[32],szAccess[32]
   g_aNum = 0
-  while( dbi_nextrow(Res) > 0 )
-  {
+  while( dbi_nextrow(Res) > 0 ) {
     dbi_result(Res, "auth", g_aName[g_aNum], 31)
     dbi_result(Res, "password", g_aPassword[g_aNum], 31)
     dbi_result(Res, "access", szAccess, 31)
@@ -201,8 +201,7 @@ public adminSql() {
 }
 #endif
 
-public cmdReload(id,level,cid)
-{
+public cmdReload(id,level,cid) {
   if (!cmd_access(id,level,cid,1))
     return PLUGIN_HANDLED
 
@@ -220,8 +219,7 @@ public cmdReload(id,level,cid)
   return PLUGIN_HANDLED
 }
 
-getAccess(id,name[],authid[],ip[], password[])
-{
+getAccess(id,name[],authid[],ip[], password[]) {
   new index = -1
   new result = 0
   for(new i = 0; i < g_aNum; ++i) {
@@ -296,13 +294,12 @@ getAccess(id,name[],authid[],ip[], password[])
       result |= 8
       set_user_flags(id,idefaccess)
     }
-  }   
-  
+  }
+
   return result
 }
 
-accessUser( id, name[] = "" )
-{
+accessUser( id, name[] = "" ) {
   remove_user_flags(id)
   new userip[32],userauthid[32],password[32],passfield[32],username[32] 
   get_user_ip(id,userip,31,1) 
@@ -322,18 +319,17 @@ accessUser( id, name[] = "" )
   return PLUGIN_CONTINUE
 }
 
-public client_infochanged(id)
-{ 
+public client_infochanged(id) {
   if ( !is_user_connected(id) || !get_cvar_num("amx_mode") ) 
     return PLUGIN_CONTINUE
-  
+
   new newname[32], oldname[32]
   get_user_name(id,oldname,31) 
   get_user_info(id,"name",newname,31) 
-  
+
   if ( !equal(newname,oldname) )
     accessUser( id, newname )
-  
+
   return PLUGIN_CONTINUE
 }
 

@@ -32,6 +32,8 @@
 #ifndef __CVECTOR_H__
 #define __CVECTOR_H__
 
+#include <assert.h>
+
 // Vector
 template <class T> class CVector
 {
@@ -76,7 +78,7 @@ template <class T> class CVector
 			delete [] m_Data;
 		}
 		if (m_Size < size)
-			m_CurrentUsedSize = size;
+			m_CurrentSize = size;
 		m_Data = newData;
 		m_Size = size;
 		return true;
@@ -284,7 +286,7 @@ public:
 	iterator iterAt(size_t pos)
 	{
 		if (pos > m_CurrentUsedSize)
-			ASSERT(0);
+			assert(0);
 		return iterator(m_Data + pos);
 	}
 
@@ -331,7 +333,7 @@ public:
 	{
 		if (pos > m_CurrentUsedSize)
 		{
-			ASSERT(0);
+			assert(0);
 		}
 		return m_Data[pos];
 	}
@@ -340,7 +342,7 @@ public:
 	{
 		if (pos > m_CurrentUsedSize)
 		{
-			ASSERT(0);
+			assert(0);
 		}
 		return m_Data[pos];
 	}
@@ -359,7 +361,7 @@ public:
 	{
 		if (m_CurrentUsedSize < 1)
 		{
-			ASSERT(0);
+			assert(0);
 		}
 		return m_Data[0];
 	}
@@ -368,7 +370,7 @@ public:
 	{
 		if (m_CurrentUsedSize < 1)
 		{
-			ASSERT(0);
+			assert(0);
 		}
 		return m_Data[0];
 	}
@@ -377,7 +379,7 @@ public:
 	{
 		if (m_CurrentUsedSize < 1)
 		{
-			ASSERT(0);
+			assert(0);
 		}
 		return m_Data[m_CurrentUsedSize - 1];
 	}
@@ -386,7 +388,7 @@ public:
 	{
 		if (m_CurrentUsedSize < 1)
 		{
-			ASSERT(0);
+			assert(0);
 		}
 		return m_Data[m_CurrentUsedSize - 1];
 	}

@@ -206,6 +206,9 @@ forward client_kill(id);
 forward client_PreThink(id);
 forward client_PostThink(id);
 
+/* Forward for impulses. */
+forward client_impulse(id, impulse);
+
 //from jghg2
 /* As above, but returns number of ents stored in entlist. Use to find a specific type of entity classname (specify in _lookforclassname) around a
  * certain entity specified in aroundent. All matching ents are stored in entlist. Specify max amount of entities to find in maxents.

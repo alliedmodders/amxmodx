@@ -40,11 +40,11 @@ pfnmodule_engine_g* g_engModuleFunc;		// These seem to be meta/amxmod related
 #define	SF_NORESPAWN		( 1 << 30 )// !!!set this bit on guns and stuff that should never respawn.
 
 #if defined __linux__
-	#define CSMONEYOFFSET	115 + 5
-	#define CSDEATHSOFFSET	449 + 5
+	#define OFFSET_CSMONEY		115 + 5
+	#define OFFSET_CSDEATHS		449 + 5
 #else
-	#define CSMONEYOFFSET	115	// Note that linux offsets need to be 5 higher (120 in this case)
-	#define CSDEATHSOFFSET	449
+	#define OFFSET_CSMONEY		115	// Note that linux offsets need to be 5 higher (120 in this case)
+	#define OFFSET_CSDEATHS		449
 #endif // defined __linux__
 
 #define HITGROUP_GENERIC	0 // none

@@ -17,14 +17,13 @@
 
 stock set_user_hitzones(index=0,target=0,body=255)
   return set_hitzones(body)
-  
+
 stock get_user_hitzones(index,target)
   return get_hitzones()
   
 stock user_spawn(index)
   return spawn(index)
 
-/* use log_amx() instead */
 stock get_logfile( name[], len )
   return get_time("admin%m%d.log",name,len)
 
@@ -33,3 +32,9 @@ stock get_user_money(index)
 
 stock set_user_money(index,money,flash=1)
   return cs_set_user_money(index,money,flash)
+
+stock numtostr(num,string[],len)
+  return num_to_str(num,string,len)
+
+stock strtonum(const string[])
+  return str_to_num(string)

@@ -72,7 +72,7 @@ public plugin_init()
 
   remove_user_flags(0,read_flags("z")) // Remove 'user' flag from server rights
   
-  server_cmd("exec addons/amxx/amx.cfg") // Execute main configuration file
+  server_cmd("exec addons/amxx/amxx.cfg") // Execute main configuration file
   loadSettings("addons/amxx/configs/users.ini") // Load admins accounts
 }
 

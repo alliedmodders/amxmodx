@@ -123,6 +123,9 @@
 			<File
 				RelativePath=".\fakemeta_amxx.h">
 			</File>
+			<File
+				RelativePath=".\pdata.cpp">
+			</File>
 			<Filter
 				Name="AMXXSDK"
 				Filter="">

@@ -440,6 +440,7 @@ static cell AMX_NATIVE_CALL get_user_weapons(AMX *amx, cell *params) /* 3 param 
   if (pPlayer->ingame){
     cell *cpNum = get_amxaddr(amx,params[3]);
     cell *cpIds = get_amxaddr(amx,params[2]);
+	*cpIds = 0;
     int weapons = pPlayer->pEdict->v.weapons & ~(1<<31); // don't count last element
     for(int i = 1; i < MAX_WEAPONS; ++i){
       if (weapons & (1<<i)) {

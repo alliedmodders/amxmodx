@@ -118,7 +118,7 @@ showMenu(id) {
   if ( access(id,ADMIN_CFG) ) {
     new sLang[3]
     get_lang(g_menuLang[id][1],sLang)
-    len += format( menuBody[len],511-len,(g_coloredMenus ? "2. %L\R\r%s\w^n^n" : "2. %L %s^n^n"),id,"SERVER_LANG",sLang,"LANG_NAME" )
+    len += format( menuBody[len],511-len,(g_coloredMenus ? "2. %L\R\r%L\w^n^n" : "2. %L %L^n^n"),id,"SERVER_LANG",sLang,"LANG_NAME" )
     len += format( menuBody[len],511-len,"3. %L",id,"SAVE_LANG" )
   }
   else {

@@ -173,6 +173,6 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	}
 }
 
-$gcc = "g++ $cflags -shared -lstdc++ -ldl -lm @LINK -o $outdir/$bin";
+$gcc = "g++ $cflags -shared -ldl -lm @LINK -o $outdir/$bin";
 print "$gcc\n";
 `$gcc`;

@@ -178,7 +178,7 @@ static cell AMX_NATIVE_CALL cs_set_user_deaths(AMX *amx, cell *params) // cs_set
 	// Update scoreboard here..?
 	MESSAGE_BEGIN(MSG_ALL, GET_USER_MSG_ID(PLID, "ScoreInfo", NULL));
 	WRITE_BYTE(params[1]);
-	WRITE_SHORT(pPlayer->v.frags);
+	WRITE_SHORT((int)pPlayer->v.frags);
 	WRITE_SHORT(params[2]);
 	WRITE_SHORT(0); // dunno what this parameter is (doesn't seem to be vip)
 	WRITE_SHORT(*((int *)pPlayer->pvPrivateData + OFFSET_TEAM));

@@ -240,6 +240,8 @@ public:
 	// constructors / destructors
 	CVector<T>()
 	{
+		m_Size = 0;
+		m_CurrentUsedSize = 0;
 		m_Data = NULL;
 	}
 

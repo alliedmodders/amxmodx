@@ -240,6 +240,8 @@ public:
 	// constructors / destructors
 	CVector<T>()
 	{
+		m_Size = 0;
+		m_CurrentUsedSize = 0;
 		m_Data = NULL;
 	}
 
@@ -328,7 +330,7 @@ public:
 	{
 		if (pos > m_CurrentUsedSize)
 		{
-			//ASSERT(0);
+			ASSERT(0);
 		}
 		return m_Data[pos];
 	}
@@ -337,7 +339,7 @@ public:
 	{
 		if (pos > m_CurrentUsedSize)
 		{
-			//ASSERT(0);
+			ASSERT(0);
 		}
 		return m_Data[pos];
 	}

@@ -90,7 +90,31 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\amxxapi.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\amxxmodule.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\engine.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\entity.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\forwards.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\globals.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\messages.cpp
 # End Source File
 # Begin Source File
 
@@ -107,6 +131,18 @@ SOURCE=.\amxxmodule.h
 # Begin Source File
 
 SOURCE=.\engine.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\entity.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\gpglobals.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\messages.h
 # End Source File
 # Begin Source File
 

@@ -4,7 +4,7 @@
 #define __MODULECONFIG_H__
 
 // Module info
-#define MODULE_NAME "Engine"
+#define MODULE_NAME "ENGINE"
 #define MODULE_VERSION "0.20"
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "www.amxmodx.org"
@@ -32,7 +32,7 @@
 //#define FN_AMXX_DETTACH OnAmxxDettach
 // All plugins loaded
 //   Do forward functions init here (MF_RegisterForward)
-//#define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
+#define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
 
 /**** METAMOD ****/
 // If your module doesn't use metamod, you may close the file now :)
@@ -53,13 +53,13 @@
 
 // (wd) are Will Day's notes
 // - GetEntityAPI2 functions
-//#define FN_GameDLLInit				GameDLLInit					/* pfnGameInit() */
-// #define FN_DispatchSpawn				DispatchSpawn				/* pfnSpawn() */
-// #define FN_DispatchThink				DispatchThink				/* pfnThink() */
-// #define FN_DispatchUse				DispatchUse					/* pfnUse() */
+// #define FN_GameDLLInit				GameDLLInit					/* pfnGameInit() */
+#define FN_DispatchSpawn				DispatchSpawn				/* pfnSpawn() */
+#define FN_DispatchThink				DispatchThink				/* pfnThink() */
+#define FN_DispatchUse					DispatchUse					/* pfnUse() */
 #define FN_DispatchTouch				DispatchTouch				/* pfnTouch() */
 // #define FN_DispatchBlocked			DispatchBlocked				/* pfnBlocked() */
-// #define FN_DispatchKeyValue			DispatchKeyValue			/* pfnKeyValue() */
+//#define FN_DispatchKeyValue			KeyValue			/* pfnKeyValue() */
 // #define FN_DispatchSave				DispatchSave				/* pfnSave() */
 // #define FN_DispatchRestore			DispatchRestore				/* pfnRestore() */
 // #define FN_DispatchObjectCollsionBox	DispatchObjectCollsionBox	/* pfnSetAbsBox() */
@@ -73,8 +73,8 @@
 #define FN_ClientKill				ClientKill					/* pfnClientKill()				(wd) Player has typed "kill" */
 // #define FN_ClientPutInServer			ClientPutInServer			/* pfnClientPutInServer()		(wd) Client is entering the game */
 // #define FN_ClientCommand				ClientCommand				/* pfnClientCommand()			(wd) Player has sent a command (typed or from a bind) */
-#define FN_ClientUserInfoChanged		ClientUserInfoChanged		/* pfnClientUserInfoChanged()	(wd) Client has updated their setinfo structure */
-#define FN_ServerActivate			ServerActivate				/* pfnServerActivate()			(wd) Server is starting a new map */
+// #define FN_ClientUserInfoChanged		ClientUserInfoChanged		/* pfnClientUserInfoChanged()	(wd) Client has updated their setinfo structure */
+// #define FN_ServerActivate			ServerActivate				/* pfnServerActivate()			(wd) Server is starting a new map */
 #define FN_ServerDeactivate			ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
 #define FN_PlayerPreThink			PlayerPreThink				/* pfnPlayerPreThink() */
 #define FN_PlayerPostThink			PlayerPostThink				/* pfnPlayerPostThink() */
@@ -123,7 +123,7 @@
 // #define FN_ClientConnect_Post				ClientConnect_Post
 // #define FN_ClientDisconnect_Post				ClientDisconnect_Post
 // #define FN_ClientKill_Post					ClientKill_Post
-#define FN_ClientPutInServer_Post			ClientPutInServer_Post
+// #define FN_ClientPutInServer_Post			ClientPutInServer_Post
 // #define FN_ClientCommand_Post				ClientCommand_Post
 // #define FN_ClientUserInfoChanged_Post		ClientUserInfoChanged_Post
 // #define FN_ServerActivate_Post				ServerActivate_Post
@@ -163,7 +163,7 @@
 // #define FN_ModelIndex						ModelIndex
 // #define FN_ModelFrames						ModelFrames
 // #define FN_SetSize							SetSize
-// #define FN_ChangeLevel						ChangeLevel
+#define FN_ChangeLevel						ChangeLevel
 // #define FN_GetSpawnParms						GetSpawnParms
 // #define FN_SaveSpawnParms					SaveSpawnParms
 // #define FN_VecToYaw							VecToYaw
@@ -280,7 +280,7 @@
 // #define FN_SetPhysicsKeyValue				SetPhysicsKeyValue
 // #define FN_GetPhysicsInfoString				GetPhysicsInfoString
 // #define FN_PrecacheEvent						PrecacheEvent
-// #define FN_PlaybackEvent						PlaybackEvent
+#define FN_PlaybackEvent						PlaybackEvent
 // #define FN_SetFatPVS							SetFatPVS
 // #define FN_SetFatPAS							SetFatPAS
 // #define FN_CheckVisibility					CheckVisibility

@@ -2901,8 +2901,19 @@ static cell AMX_NATIVE_CALL get_speak(AMX *amx, cell *params) {
 	return PlInfo[iIndex].iSpeakFlags;
 }
 
-/********************************************
-   METAMOD HOOKED FUNCTIONS
+static cell AMX_NATIVE_CALL trace_hull(AMX *amx, cell *params)
+{
+	int res = 0;
+	TraceResult v;
+}
+
+/* *****************************************
+   *****************************************
+   *****************************************
+            METAMOD HOOKED FUNCTIONS
+   *****************************************
+   *****************************************
+   *****************************************
    *****************************************/
 
 // This checks who can hear who through voice comm. this reads flags set,
@@ -3423,6 +3434,7 @@ AMX_NATIVE_INFO Engine_Natives[] = {
 	{"halflife_time",		halflife_time},
 	{"fake_touch",			fake_touch},
 	{"get_grenade_id",		get_grenade_id},
+	{"trace_hull",			trace_hull},
 
 	{"create_entity",		create_entity},
 	{"remove_entity",		remove_entity},

@@ -52,7 +52,7 @@
 	{ \
 		strcpy(outbuf, ""); \
 		len = 0; \
-		AMXXLOG_Log("[AMXX] Plugin did not format a string correctly (parameter %d (total %d), line %d, \"%s\")", parm, paramCount, amx->curline, g_plugins.findPluginFast(amx)); \
+		AMXXLOG_Log("[AMXX] Plugin did not format a string correctly (parameter %d (total %d), line %d, \"%s\")", parm, paramCount, amx->curline, g_plugins.findPluginFast(amx)->getName()); \
 		return outbuf; \
 	} 
 
@@ -506,6 +506,7 @@ int CLangMngr::GetKeyEntry(String &key)
 	return -1;
 }
 
+/*
 const char *CLangMngr::Format(const char *src, ...)
 {
 	va_list argptr;
@@ -541,7 +542,7 @@ const char *CLangMngr::Format(const char *src, ...)
 					format[0] = '%';
 					char *ptr = format+1;
 					while (!isalpha(*ptr++ = *src++))
-						/*nothing*/;
+						;
 					--src;
 					*ptr = 0;
 					sprintf(outptr, format, va_arg(argptr, double));
@@ -613,7 +614,7 @@ const char *CLangMngr::Format(const char *src, ...)
 					format[0] = '%';
 					char *ptr = format+1;
 					while (!isalpha(*ptr++ = *src++))
-						/*nothing*/;
+						;
 					--src;
 					*ptr = 0;
 					sprintf(outptr, format, va_arg(argptr, int));
@@ -633,13 +634,24 @@ const char *CLangMngr::Format(const char *src, ...)
 	*outptr++ = 0;
 	return outbuf;
 }
+ PM: Commented out so anyone using it will get a linker error*/
 
+#define CHECK_PTR(ptr, start, bufsize) if ((ptr) - (start) >= (bufsize)) { \
+	AMXXLOG_Log("[AMXX] Buffer overflow in formatting (line %d, \"%s\")", amx->curline, g_plugins.findPluginFast(amx)->getName()); \
+	outbuf[0] = 0; \
+	len = 0; \
+	return outbuf; }
+#define CHECK_OUTPTR(offset) CHECK_PTR(outptr+offset, outbuf, sizeof(outbuf))
+#define ZEROTERM(buf) buf[(sizeof(buf)/sizeof(buf[0]))-1]=0;
 char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 {
+	// number of parameters ( for NEXT_PARAM macro )
 	int paramCount = *params / sizeof(cell);
+	// the output buffer
 	static char outbuf[4096];
-	cell *src = get_amxaddr(amx, params[parm++]);
 	char *outptr = outbuf;
+	cell *src = get_amxaddr(amx, params[parm++]);
+
 	enum State
 	{
 		S_Normal,
@@ -678,14 +690,14 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(*pAmxLangName)->pEdict, "lang");
 					}
 				} else {	// Language Name
-					int len = 0;
-					cpLangName = get_amxstring(amx, langName, 2, len);
+					int tmplen = 0;
+					cpLangName = get_amxstring(amx, langName, 2, tmplen);
 				}
 				if (!cpLangName || strlen(cpLangName) < 1)
 					cpLangName = "en";
-				int len = 0;
+				int tmplen = 0;
 				NEXT_PARAM();
-				char *key = get_amxstring(amx, params[parm++], 1, len);
+				char *key = get_amxstring(amx, params[parm++], 1, tmplen);
 				const char *def = GetDef(cpLangName, key);
 				if (def == NULL)
 				{
@@ -699,7 +711,8 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 					}
 					if (!def)
 					{
-						static char buf[255];
+						static char buf[512];
+						CHECK_PTR((char*)buf+17+strlen(key), buf, sizeof(buf));
 						sprintf(buf, "ML_LNOTFOUND: %s", key);
 						def = buf;
 					}
@@ -709,44 +722,52 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 					if (*def == '%')
 					{
 						++def;
-						char format[16];
+						char format[32];
 						format[0] = '%';
 						char *ptr = format+1;
-						while (!isalpha(*ptr++ = *def++))
+						while (ptr-format<sizeof(format) && !isalpha(*ptr++ = *def++))
 							/*nothing*/;
+						ZEROTERM(format);
+
 						*ptr = 0;
 						switch ( *(ptr-1) )
 						{
 						case 's':
 							{
-								char tmpString[256];
+								char tmpString[4096];
 								char *tmpPtr = tmpString;
 								NEXT_PARAM();
 								cell *tmpCell = get_amxaddr(amx, params[parm++]);
-								while (*tmpCell)
+								while (tmpPtr-tmpString < sizeof(tmpString) && *tmpCell)
 									*tmpPtr++ = *tmpCell++;
+
+								tmpString[sizeof(tmpString)-1] = 0;
+
 								*tmpPtr = 0;
-								sprintf(outptr, format, tmpString);
+								_snprintf(outptr, outptr-outbuf, format, tmpString);
+								ZEROTERM(outbuf);
 								break;
 							}
 						case 'g':
 						case 'f':
 							{
 								NEXT_PARAM();
-								sprintf(outptr, format, *(REAL*)get_amxaddr(amx, params[parm++]));
+								_snprintf(outptr, outptr-outbuf, format, *(REAL*)get_amxaddr(amx, params[parm++]));
+								ZEROTERM(outbuf);
 								break;
 							}
 						case 'i':
 						case 'd':
 							{
 								NEXT_PARAM();
-								sprintf(outptr, format, (int)*get_amxaddr(amx, params[parm++]));
+								_snprintf(outptr, outptr-outbuf, format, (int)*get_amxaddr(amx, params[parm++]));
+								ZEROTERM(outbuf);
 								break;
 							}
 						default:
 							{
-								*outptr++ = '%';
-								*outptr++ = *(ptr-1);
+								CHECK_OUTPTR(strlen(format)+1);
+								strcpy(outptr, format);
 								break;
 							}
 						}
@@ -758,15 +779,19 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 						switch (*def)
 						{
 						case 'n':
+							CHECK_OUTPTR(1);
 							*outptr++ = '\n';
 							break;
 						case 't':
+							CHECK_OUTPTR(1);
 							*outptr++ = '\t';
 							break;
 						case '^':
+							CHECK_OUTPTR(1);
 							*outptr++ = '^';
 							break;
 						default:
+							CHECK_OUTPTR(2);
 							*outptr++ = '^';
 							*outptr++ = *def;
 							break;
@@ -774,21 +799,25 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 						++def;
 					}
 					else
+					{
+						CHECK_OUTPTR(1);
 						*outptr++ = *def++;
+					}
 				}
 			}
 			else
 			{
-				char tmpString[256];
+				char tmpString[4096];
 				char *tmpPtr = tmpString;
-				int tmpLen =0;
-				char format[16];
+				int tmpLen = 0;
+				char format[32];
 				format[0] = '%';
 				char *ptr = format+1;
 				if (*src != '%')
 				{
-					while (*src != 0 && !isalpha(*ptr++ = *src++))
+					while (*src != 0 && ptr-format<sizeof(format) && !isalpha(*ptr++ = *src++))
 						/*nothing*/;
+					ZEROTERM(format);
 					--src;
 					*ptr = 0;
 					switch ( *(ptr-1) )
@@ -797,44 +826,51 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 						{
 							NEXT_PARAM();
 							cell *tmpCell = get_amxaddr(amx, params[parm++]);
-							while (*tmpCell)
+							while (tmpPtr-tmpString<sizeof(tmpString) && *tmpCell)
 								*tmpPtr++ = *tmpCell++;
 							*tmpPtr = 0;
-							sprintf(outptr, format, tmpString);
+							_snprintf(outptr, outptr-outbuf, format, tmpString);
+							ZEROTERM(outbuf);
 							break;
 						}
 					case 'g':
 					case 'f':
 						{
 							NEXT_PARAM();
-							sprintf(outptr, format, *(REAL*)get_amxaddr(amx, params[parm++]));
+							_snprintf(outptr, outptr-outbuf, format, *(REAL*)get_amxaddr(amx, params[parm++]));
 							break;
 						}
 					case 'i':
 					case 'd':
 						{
 							NEXT_PARAM();
-							sprintf(outptr, format, (int)*get_amxaddr(amx, params[parm++]));
+							_snprintf(outptr, outptr-outbuf, format, (int)*get_amxaddr(amx, params[parm++]));
 							break;
 						}
 					default:
 						{
+							CHECK_OUTPTR(strlen(format)+1);
 							strcpy(outptr, format);
 							break;
 						}
 					}
 					outptr += strlen(outptr);
 				} else {
+					CHECK_OUTPTR(1);
 					*outptr++ = '%';
 				}
 			}
 			curState = S_Normal;
 		}
 		else
+		{
+			CHECK_OUTPTR(1);
 			*outptr++ = *src;
+		}
 		++src;
 	}
 	len = outptr - outbuf;
+	CHECK_OUTPTR(1);
 	*outptr++ = 0;
 	return outbuf;
 }

@@ -32,7 +32,7 @@
 *  version.
 */
 
-#define VERSION "0.1"
+#define VERSION "0.15"
 
 #include <string>
 
@@ -41,7 +41,7 @@ using namespace std;
 plugin_info_t Plugin_info = {
 
 	META_INTERFACE_VERSION, // ifvers
-	"Engine", // name
+	"ENGINE", // name
 	VERSION,  // version
 	__DATE__, // date
 	"AMX Mod X Dev Team",  // author
@@ -53,7 +53,7 @@ plugin_info_t Plugin_info = {
 };
 
 module_info_s module_info = {
-	"Engine", // name
+	"ENGINE", // name
 	"AMX Mod X Dev Team", // author
 	VERSION, // version
 	AMX_INTERFACE_VERSION,
@@ -115,6 +115,8 @@ int thread_fork(void *arg);
 
 #define AMS_OFFSET 0.01
 
+#define GETINFOKEYBUFFER	(*g_engfuncs.pfnGetInfoKeyBuffer)
+
 #define SPEAK_NORMAL 0
 #define SPEAK_MUTED 1
 #define SPEAK_ALL 2
@@ -130,6 +132,52 @@ int thread_fork(void *arg);
 #define BLOCK_NOT 0
 #define BLOCK_ONCE 1
 #define BLOCK_SET 2
+
+//jghg
+enum globals {
+	// Edict
+	GL_trace_ent = 0,
+
+	// Float
+	GL_coop,
+	GL_deathmatch,
+	GL_force_retouch,
+	GL_found_secrets,
+	GL_frametime,
+	GL_serverflags,
+	GL_teamplay,
+	GL_time,
+	GL_trace_allsolid,
+	GL_trace_fraction,
+	GL_trace_inopen,
+	GL_trace_inwater,
+	GL_trace_plane_dist,
+	GL_trace_startsolid,
+
+	// Int
+	GL_cdAudioTrack,
+	GL_maxClients,
+	GL_maxEntities,
+	GL_msg_entity,
+	GL_trace_flags,
+	GL_trace_hitgroup,
+
+	// String
+	GL_pStringBase,
+	GL_mapname,
+	GL_startspot,
+
+	// Vector
+	GL_trace_endpos,
+	GL_trace_plane_normal,
+	GL_v_forward,
+	GL_v_right,
+	GL_v_up,
+	GL_vecLandmarkOffset,
+
+	// Void (not supported)
+	GL_pSaveData
+};
 
 enum {
 	gamestate,
@@ -312,6 +360,7 @@ enum {
 	arg_entity,
 };
 
+//by BAILOPAN
 class argStack {
 public:
 	argStack(argStack *p=NULL)	//initialize with link to previous

@@ -50,8 +50,43 @@ GlobalInfo GlInfo;
 MessageInfo *msgd;
 bool isMsgHooked[MAX_MESSAGES];
 int inHookProcess;
+edict_t *valid_ent(int ent);
+edict_t *valid_player(int ent);
 
-cvar_t amxxe_version = {"amxxe_version", VERSION, FCVAR_SERVER, 0};
+void UTIL_SetSize(edict_t *pev, const Vector &vecMin, const Vector &vecMax)
+{
+	SET_SIZE(ENT(pev), vecMin, vecMax);
+}
+
+edict_t *valid_player(int ent)
+{
+	if (ent < 1 || ent > gpGlobals->maxClients) {
+		return NULL;
+	}
+
+	edict_t *e = INDEXENT(ent);
+
+	if (FNullEnt(e)) {
+		return NULL;
+	}
+
+	return e;
+}
+
+edict_t *valid_ent(int ent)
+{
+	if (ent < 1 || ent > gpGlobals->maxEntities) {
+		return NULL;
+	}
+
+	edict_t *e = INDEXENT(ent);
+
+	if (FNullEnt(e)) {
+		return NULL;
+	}
+
+	return e;
+}
 
 //from OLO
 char* get_amxstring(AMX *amx,cell amx_addr,int id, int& len)
@@ -2408,6 +2443,252 @@ static cell AMX_NATIVE_CALL precache_generic(AMX *amx, cell *params)
 	return 1;
 }
 
+//ported from jghg2
+
+static cell AMX_NATIVE_CALL drop_to_floor(AMX *amx, cell *params)
+{
+	int iEnt = params[1];
+	edict_t* e = valid_ent(iEnt);
+
+	if (e!=NULL) {
+		return DROP_TO_FLOOR(e);
+	}
+
+	return -1;
+}
+
+static cell AMX_NATIVE_CALL get_info_keybuffer(AMX *amx, cell *params)
+{
+	int iEnt = params[1];
+	edict_t *e = valid_ent(iEnt);
+
+	if (e!=NULL) {
+		char *info = GETINFOKEYBUFFER(e);
+	
+		return SET_AMXSTRING(amx, params[2], info, params[3]);
+	} else {
+		return 0;
+	}
+}
+
+static cell AMX_NATIVE_CALL force_use(AMX *amx, cell *params)
+{
+	int pev = params[1];
+	int ent = params[2];
+	edict_t *pPlayer = valid_player(pev);
+	edict_t *pEntity = valid_ent(ent);
+
+	MDLL_Use(pEntity, pPlayer);
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL get_global_float(AMX *amx, cell *params)
+{
+	int global = params[1];
+
+	float returnValue;
+
+	switch (params[1]) {
+		case GL_coop:
+			returnValue = gpGlobals->coop;
+			break;
+		case GL_deathmatch:
+			returnValue = gpGlobals->deathmatch;
+			break;
+		case GL_force_retouch:
+			returnValue = gpGlobals->force_retouch;
+			break;
+		case GL_found_secrets:
+			returnValue = gpGlobals->found_secrets;
+			break;
+		case GL_frametime:
+			returnValue = gpGlobals->frametime;
+			break;
+		case GL_serverflags:
+			returnValue = gpGlobals->serverflags;
+			break;
+		case GL_teamplay:
+			returnValue = gpGlobals->teamplay;
+			break;
+		case GL_time:
+			returnValue = gpGlobals->time;
+			break;
+		case GL_trace_allsolid:
+			returnValue = gpGlobals->trace_allsolid;
+			break;
+		case GL_trace_fraction:
+			returnValue = gpGlobals->trace_fraction;
+			break;
+		case GL_trace_inopen:
+			returnValue = gpGlobals->trace_inopen;
+			break;
+		case GL_trace_inwater:
+			returnValue = gpGlobals->trace_inwater;
+			break;
+		case GL_trace_plane_dist:
+			returnValue = gpGlobals->trace_plane_dist;
+			break;
+		case GL_trace_startsolid:
+			returnValue = gpGlobals->trace_startsolid;
+			break;
+		default:
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
+	}
+
+	return *(cell*)((void *)&returnValue);
+}
+
+static cell AMX_NATIVE_CALL get_global_int(AMX *amx, cell *params)
+{
+	int returnValue = 0;
+
+	switch (params[1]) {
+		case GL_cdAudioTrack:
+			returnValue = gpGlobals->cdAudioTrack;
+			break;
+		case GL_maxClients:
+			returnValue = gpGlobals->maxClients;
+			break;
+		case GL_maxEntities:
+			returnValue = gpGlobals->maxEntities;
+			break;
+		case GL_msg_entity:
+			returnValue = gpGlobals->msg_entity;
+			break;
+		case GL_trace_flags:
+			returnValue = gpGlobals->trace_flags;
+			break;
+		case GL_trace_hitgroup:
+			returnValue = gpGlobals->trace_hitgroup;
+			break;
+		default:
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
+	}
+}
+
+static cell AMX_NATIVE_CALL get_global_string(AMX *amx, cell *params)
+{
+	string_t* returnValue;
+
+	switch(params[1]) {
+		case GL_pStringBase: // const char *, so no string_t
+			return SET_AMXSTRING(amx, params[2], gpGlobals->pStringBase, params[3]);
+		// The rest are string_t:s...
+		case GL_mapname:
+			returnValue = &(gpGlobals->mapname);
+			break;
+		case GL_startspot:
+			returnValue = &(gpGlobals->startspot);
+			break;
+		default:
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
+	}
+
+	return SET_AMXSTRING(amx, params[2], STRING(*returnValue), params[3]);
+}
+
+static cell AMX_NATIVE_CALL get_global_vector(AMX *amx, cell *params) // globals_get_vector(variable, Float:vector[3]); = 2 params
+{
+	cell *returnVector = GET_AMXADDR(amx, params[2]);
+	vec3_t fetchedVector;
+
+	switch (params[1]) {
+		case GL_trace_endpos:
+			fetchedVector = gpGlobals->trace_endpos;
+			break;
+		case GL_trace_plane_normal:
+			fetchedVector = gpGlobals->trace_plane_normal;
+			break;
+		case GL_v_forward:
+			fetchedVector = gpGlobals->v_forward;
+			break;
+		case GL_v_right:
+			fetchedVector = gpGlobals->v_right;
+			break;
+		case GL_v_up:
+			fetchedVector = gpGlobals->v_up;
+			break;
+		case GL_vecLandmarkOffset:
+			fetchedVector = gpGlobals->vecLandmarkOffset;
+			break;
+		default:
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
+	}
+
+	returnVector[0] = *(cell*)((void *)&fetchedVector.x); 
+	returnVector[1] = *(cell*)((void *)&fetchedVector.y); 
+	returnVector[2] = *(cell*)((void *)&fetchedVector.z); 
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL get_global_edict(AMX *amx, cell *params) // globals_get_edict(variable); = 1 param
+{
+	edict_t* pReturnEntity;
+
+	switch (params[1]) {
+		case GL_trace_ent:
+			pReturnEntity = gpGlobals->trace_ent;
+			break;
+		default:
+			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			return 0;
+	}
+
+	// Will crash if ENTINDEX() is called on bad pointer?
+	if(!FNullEnt(pReturnEntity))
+		return ENTINDEX(pReturnEntity);
+
+	return 0;
+}
+
+static cell AMX_NATIVE_CALL precache_event(AMX *amx, cell *params)
+{
+	int len;
+	char *szEvent = FORMAT_AMXSTRING(amx, params, 2, len);
+	PRECACHE_EVENT(params[1], (char *)STRING(ALLOC_STRING(szEvent)));
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL get_decal_index(AMX *amx, cell *params)
+{
+	int len;
+	char *szDecal = GET_AMXSTRING(amx, params[1], 0, len);
+	return DECAL_INDEX(szDecal);
+}
+
+static cell AMX_NATIVE_CALL set_size(AMX *amx, cell *params)
+{
+	int ent = params[1];
+	edict_t *e = valid_ent(ent);
+
+	if (e == NULL) {
+		return 0;
+	}
+
+	cell *cMin = GET_AMXADDR(amx, params[2]);
+	float x1 = *(float *)((void *)&cMin[0]);
+	float y1 = *(float *)((void *)&cMin[1]);
+	float z1 = *(float *)((void *)&cMin[2]);
+	Vector vMin = Vector(x1, y1, z1);
+
+	cell *cMax = GET_AMXADDR(amx, params[3]);
+	float x2 = *(float *)((void *)&cMax[0]);
+	float y2 = *(float *)((void *)&cMax[1]);
+	float z2 = *(float *)((void *)&cMax[2]);
+	Vector vMax = Vector(x2, y2, z2);
+
+	UTIL_SetSize(e, vMin, vMax);
+
+	return 1;
+}
+
 /********************************************
    METAMOD HOOKED FUNCTIONS
    *****************************************/
@@ -2592,7 +2873,7 @@ BOOL ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress
 
 //(vexd)
 void GameInit(void) {
-	CVAR_REGISTER(&amxxe_version);
+	
 }
 
 // make sure that if we currently have an edited light value, to use it.
@@ -3093,6 +3374,17 @@ AMX_NATIVE_INFO Engine_Natives[] = {
 	{"get_msg_args",		get_msg_args},
 	{"get_msg_argtype",		get_msg_argtype},
 	{"is_valid_ent",		is_valid_ent},
+	{"drop_to_floor",		drop_to_floor},
+	{"get_info_keybuffer",	get_info_keybuffer},
+	{"force_use",			force_use},
+	{"get_global_float",	get_global_float},
+	{"get_global_int",		get_global_int},
+	{"get_global_string",	get_global_string},
+	{"get_global_edict",	get_global_edict},
+	{"get_global_vector",	get_global_vector},
+	{"set_size",			set_size},
+	{"get_decal_index",		get_decal_index},
+	{"precache_event",		precache_event},
 
 	{ NULL, NULL }
 

@@ -11,6 +11,12 @@
 #endif
 #define _engine_stocks_included
 
+//wrapper for find_ent_by_class
+stock find_ent(iStart, szClassname[])
+{
+	return find_ent_by_classname(iStart, szClassname)
+}
+
 /* Changes an integer vec to a floating vec */
 
 stock IVecFVec(IVec[3], Float:FVec[3])

@@ -39,7 +39,7 @@ native register_message(iMsgId, szFunction[]);
 /* The get/set _msg commands will utterly fail if used outside a hooked message scope.
  * They should never, NEVER, EVER be used unless inside a registered message function.
  * There are eight different ways of sending a message, five are ints, two are floats, and one is string.
- * These are denoted by iArgType.  msg_tid is the message you are hooking.  argn is the number
+ * These are denoted by iArgType.  argn is the number
  * of the argument. Exceeding the bounds of 1 to get_msg_args() is a bad idea. */
 
 /* Gets number of arguments that were passed to this message */
@@ -74,6 +74,31 @@ native set_offset_short(id, offset);
 
 /* Precaches any file. */
 native precache_generic(szFile[]);
+/* Precaches an event. */
+native precache_event(type, Name[], {float,_}:...);
+
+//Drops an entity to the floor (work?)
+native drop_to_floor(entity)
+
+/* Get whole buffer containing keys and their data. */
+native get_info_keybuffer(id, buffer[], length);
+
+/* Use an entity with another entity. "used" could be a hostage, "user" a player. */
+native force_use(pPlayer, pEntity);
+
+/* Get globals from server. */
+native Float:get_global_float(variable);
+native get_global_int(variable);
+native get_global_string(variable, string[], maxlen);
+native get_global_vector(variable, Float:vector[3]);
+native get_global_edict(variable);
+
+/* Set entity bounds. */
+native set_size(index, Float:mins[3], Float:maxs[3]);
+
+/* Get decal index */
+native get_decal_index(const szDecalName[]);
+
 
 /* Sets/gets things in an entities Entvars Struct. */
 native entity_get_int(iIndex, iKey);

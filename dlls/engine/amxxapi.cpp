@@ -64,7 +64,7 @@ void OnPluginsLoaded()
 	if (CheckForPublic("client_PreThink"))
 		g_pFunctionTable->pfnPlayerPreThink=PlayerPreThink;
 
-	g_pFunctionTable->pfnPlayerPostThink=NULL; // "client_PostThink"
+	g_pFunctionTable_Post->pfnPlayerPostThink=NULL; // "client_PostThink"
 	if (CheckForPublic("client_PostThink"))
 		g_pFunctionTable->pfnPlayerPostThink=PlayerPostThink_Post;
 
@@ -198,7 +198,7 @@ void ServerDeactivate()
 	g_pFunctionTable->pfnKeyValue=NULL;
 	g_pengfuncsTable->pfnPlaybackEvent=NULL; // "pfn_playbackevent"
 	g_pFunctionTable->pfnPlayerPreThink=NULL; // "client_PreThink"
-	g_pFunctionTable->pfnPlayerPostThink=NULL; // "client_PostThink"
+	g_pFunctionTable_Post->pfnPlayerPostThink=NULL; // "client_PostThink"
 	g_pFunctionTable->pfnSpawn=NULL; // "pfn_spawn"
 	g_pFunctionTable->pfnClientKill=NULL; // "client_kill"
 	g_pFunctionTable->pfnCmdStart=NULL; // "client_impulse","register_impulse"

@@ -317,11 +317,16 @@ void CLangMngr::CLang::Dump()
 
 const char * CLangMngr::CLang::GetDef(const char *key)
 {
+	static char nfind[1024];
 	uint32_t hash = MakeHash(key, true);
 	for (LookUpVecIter iter = m_LookUpTable.begin(); iter != m_LookUpTable.end(); ++iter)
+	{
+		AMXXLOG_Log( "Lookup: %s", (*iter).GetKey() );
 		if (*iter == hash)
 			return iter->GetDef();
-	return "(not found)";
+	}
+	sprintf(nfind, "ML Lookup Failure: %s", key);
+	return nfind;
 }
 
 
@@ -687,6 +692,9 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 				}
 			default:
 				{
+					char tmpString[256];
+					char *tmpPtr = tmpString;
+					int tmpLen =0;
 					char format[16];
 					format[0] = '%';
 					char *ptr = format+1;
@@ -694,7 +702,33 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 						/*nothing*/;
 					--src;
 					*ptr = 0;
-					sprintf(outptr, format, *get_amxaddr(amx, params[parm++]));
+					switch ( *(ptr-1) )
+					{
+					case 's':
+						{
+							cell *tmpCell = get_amxaddr(amx, params[parm++]);
+							while (*tmpCell)
+								*tmpPtr++ = *tmpCell++;
+							*tmpPtr = 0;
+							sprintf(outptr, format, tmpString);
+							break;
+						}
+					case 'f':
+						{
+							sprintf(outptr, format, *(REAL*)get_amxaddr(amx, params[parm++]));
+							break;
+						}
+					case 'd':
+						{
+							sprintf(outptr, format, (int)*get_amxaddr(amx, params[parm++]));
+							break;
+						}
+					case 'i':
+						{
+							sprintf(outptr, format, (int)*get_amxaddr(amx, params[parm++]));
+							break;
+						}
+					}
 					outptr += strlen(outptr);
 					break;
 				}

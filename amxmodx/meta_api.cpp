@@ -236,7 +236,7 @@ int	C_Spawn( edict_t *pent ) {
   get_localinfo("amxx_customdir", "addons/amxx/custom");
 
   //  ###### Load modules
-  loadModules(get_localinfo("amxx_modules",	"addons/amxx/modules.ini"));
+  loadModules(get_localinfo("amxx_modules",	"addons/amxx/configs/modules.ini"));
   attachModules();
   int loaded = countModules(CountModules_Running);	// Call	after attachModules	so all modules don't have pending stat
   // Set some info about amx version and modules
@@ -268,7 +268,7 @@ int	C_Spawn( edict_t *pent ) {
   memset(g_players[0].flags,-1,sizeof(g_players[0].flags));
 
   //  ###### Load AMX scripts
-  g_plugins.loadPluginsFromFile( get_localinfo("amxx_plugins", "addons/amxx/plugins.ini") );
+  g_plugins.loadPluginsFromFile( get_localinfo("amxx_plugins", "addons/amxx/configs/plugins.ini") );
 
   // Register forwards
   FF_PluginInit = registerForward("plugin_init", ET_IGNORE, FP_DONE);
@@ -1064,7 +1064,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
   //  ###### Now attach	metamod	modules
   // This will also call modules Meta_Query and Meta_Attach functions
-  attachMetaModModules(now,	get_localinfo("amxx_modules", "addons/amxx/modules.ini") );
+  attachMetaModModules(now,	get_localinfo("amxx_modules", "addons/amxx/configs/modules.ini") );
 
   return(TRUE);
 }

@@ -272,7 +272,9 @@ static cell AMX_NATIVE_CALL cwpn_dmg(AMX *amx, cell *params){ // wid,att,vic,dmg
 	CPlayer* pVic = GET_PLAYER_POINTER_I(vic);
 
 	pVic->pEdict->v.dmg_inflictor = NULL;
-	pAtt->saveHit( pVic , weapon , dmg, aim );
+
+	if ( pAtt->index != pVic->index )
+		pAtt->saveHit( pVic , weapon , dmg, aim );
 
 	if ( !pAtt ) pAtt = pVic;
 	int TA = 0;
@@ -337,7 +339,7 @@ static cell AMX_NATIVE_CALL is_custom(AMX *amx, cell *params){
 }
 
 static cell AMX_NATIVE_CALL dod_get_user_team(AMX *amx, cell *params){ // player,wid
-	int index = params[2];
+	int index = params[1];
 	if (index<1||index>gpGlobals->maxClients){
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
@@ -349,7 +351,7 @@ static cell AMX_NATIVE_CALL dod_get_user_team(AMX *amx, cell *params){ // player
 }
 
 static cell AMX_NATIVE_CALL get_user_team(AMX *amx, cell *params){ // player,wid
-	int index = params[2];
+	int index = params[1];
 	if (index<1||index>gpGlobals->maxClients){
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
@@ -406,6 +408,9 @@ AMX_NATIVE_INFO base_Natives[] = {
 	{ "get_weaponname", get_weapon_name },
 	{ "get_user_weapon", get_user_weapon },
 	{ "dod_get_user_team", dod_get_user_team },
+	{ "dod_get_wpnname", get_weapon_name },
+	{ "dod_get_wpnlogname", get_weapon_logname },
+	{ "dod_is_melee", is_melee },
 
 	///*******************
 	{ NULL, NULL } 

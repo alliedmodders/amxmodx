@@ -113,7 +113,6 @@ public plugin_cfg() {
     server_cmd("exec %s",configFile)
 }
 
-#if !defined USING_SQL
 loadSettings(szFilename[]) {
   if (!file_exists(szFilename)) return 0
 
@@ -138,7 +137,6 @@ loadSettings(szFilename[]) {
 
   return 1
 }
-#endif
 
 #if defined USING_SQL
 public adminSql() {
@@ -152,6 +150,13 @@ public adminSql() {
   new Sql:sql = dbi_connect(host,user,pass,db,error,127)
   if (sql <= SQL_FAILED) {
     server_print("[AMXX] %L",LANG_SERVER,"SQL_CANT_CON",error)
+  	//backup to users.ini
+  	
+    new configsDir[64]
+    get_configsdir(configsDir, 63)
+    format(configsDir, 63, "%s/users.ini", configsDir)
+    loadSettings(configsDir) // Load admins accounts
+  	
     return PLUGIN_HANDLED 
   }
 

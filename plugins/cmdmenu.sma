@@ -84,7 +84,7 @@ new g_menuSelect[33][64]
 new g_menuSelectNum[33]
 new g_menuLayer[33]
 
-new g_cstrikeRunning
+new g_coloredMenus
 
 public plugin_init()
 {
@@ -107,7 +107,7 @@ public plugin_init()
   format(cvars_ini_file, 63, "%s/%s", configsDir, "cvars.ini");
   loadCvarSettings(cvars_ini_file)
 
-  g_cstrikeRunning = (is_running("cstrike") || is_running("czero"))
+  g_coloredMenus = colored_menus()
 }
 
 /* Commands menu */
@@ -144,7 +144,7 @@ displayCmdMenu(id,pos){
   if (start >= g_menuSelectNum[id])
     start = pos = g_menuPosition[id] = 0
     
-  new len = format(menuBody,511,g_cstrikeRunning ? 
+  new len = format(menuBody,511,g_coloredMenus ? 
   "\y%s\R%d/%d^n\w^n" : "%s %d/%d^n^n" , g_cmdMenuName[ g_menuLayer[id]  ], 
     pos+1,(  g_menuSelectNum[id] / 8 + ((g_menuSelectNum[id] % 8) ? 1 : 0 )) )
     
@@ -158,7 +158,7 @@ displayCmdMenu(id,pos){
   {
     if ( g_cmdCmd[ g_menuSelect[id][ a ] ][0] == '-' )
     {
-      if ( g_cstrikeRunning)
+      if ( g_coloredMenus )
         len += format(menuBody[len],511-len,"\d%s^n\w",g_cmdName[ g_menuSelect[id][ a ] ] )
       else
         len += format(menuBody[len],511-len,"%s^n",g_cmdName[ g_menuSelect[id][ a ] ] )
@@ -310,7 +310,7 @@ displayCvarMenu(id,pos){
   if (start >= g_menuSelectNum[id])
     start = pos = g_menuPosition[id] = 0
     
-  new len = format(menuBody,511, g_cstrikeRunning ? 
+  new len = format(menuBody,511, g_coloredMenus ? 
     "\yCvars Menu\R%d/%d^n\w^n" : "Cvars Menu %d/%d^n^n",
     pos+1,(  g_menuSelectNum[id] / 8 + ((g_menuSelectNum[id] % 8) ? 1 : 0 )) )
     
@@ -326,7 +326,7 @@ displayCvarMenu(id,pos){
     get_cvar_string( g_cvarNames[ g_menuSelect[id][ a ] ],szValue,31)
     keys |= (1<<b)
     ++b   
-    if ( g_cstrikeRunning )
+    if ( g_coloredMenus )
       len += format(menuBody[len],511-len,"%d. %s\R%s^n\w",   b, g_cvarNames[ g_menuSelect[id][ a ] ], szValue )
     else
       len += format(menuBody[len],511-len,"%d. %s    %s^n",   b, g_cvarNames[ g_menuSelect[id][ a ] ], szValue )

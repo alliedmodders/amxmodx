@@ -40,7 +40,7 @@ new g_optionName[4][32]
 new g_voteCount[4] 
 new g_validMaps
 new g_yesNoVote
-new g_cstrikeRunning
+new g_coloredMenus
 new g_voteCaller
 new g_Execute[256]
 new g_execLen
@@ -66,7 +66,7 @@ public plugin_init() {
   register_concmd("amx_voteban","cmdVoteKickBan",ADMIN_VOTE,"<name or #userid>")
   register_concmd("amx_vote","cmdVote",ADMIN_VOTE,"<question> <answer#1> <answer#2>")
   register_concmd("amx_cancelvote","cmdCancelVote",ADMIN_VOTE,"- cancels last vote")
-  g_cstrikeRunning = (is_running("cstrike") || is_running("czero"))
+  g_coloredMenus = colored_menus()
 }
 
 public cmdCancelVote(id,level,cid){
@@ -140,8 +140,8 @@ public checkVotes() {
     g_execResult = false
     if ( is_user_connected(g_voteCaller) )  {
       new menuBody[512]
-      new len = format(menuBody,511,g_cstrikeRunning ? "\yThe result: \w%s^n^n" :  "The result: %s^n^n", g_Execute )
-      len += copy( menuBody[len] ,511 - len, g_cstrikeRunning ? "\yDo you want to continue?^n\w" : "Do you want to continue?^n" )
+      new len = format(menuBody,511,g_coloredMenus ? "\yThe result: \w%s^n^n" :  "The result: %s^n^n", g_Execute )
+      len += copy( menuBody[len] ,511 - len, g_coloredMenus ? "\yDo you want to continue?^n\w" : "Do you want to continue?^n" )
       copy( menuBody[len] ,511 - len, "^n1. Yes^n2. No")
       show_menu( g_voteCaller ,0x03 ,menuBody, 10 )
       set_task(10.0,"autoRefuse",4545454)
@@ -199,7 +199,7 @@ public cmdVoteMap(id,level,cid) {
   new keys = 0  
   if (g_validMaps > 1){
     keys = (1<<9)
-    copy(menu_msg,255,g_cstrikeRunning ? "\yChoose map: \w^n^n" : "Choose map: ^n^n") 
+    copy(menu_msg,255,g_coloredMenus ? "\yChoose map: \w^n^n" : "Choose map: ^n^n") 
     new temp[128] 
     for(new a = 0; a < g_validMaps; ++a){ 
       format(temp,127,"%d.  %s^n",a+1,g_optionName[a]) 
@@ -210,7 +210,7 @@ public cmdVoteMap(id,level,cid) {
     g_yesNoVote = 0 
   }
   else{ 
-    format(menu_msg,255,g_cstrikeRunning ? "\yChange map to %s?\w^n^n1.  Yes^n2.  No"
+    format(menu_msg,255,g_coloredMenus ? "\yChange map to %s?\w^n^n1.  Yes^n2.  No"
         : "Change map to %s?^n^n1.  Yes^n2.  No",g_optionName[0]) 
     keys = (1<<0)|(1<<1)
     g_yesNoVote = 1
@@ -282,7 +282,7 @@ public cmdVote(id,level,cid) {
 
   new menu_msg[256] 
   new keys = (1<<0)|(1<<1) 
-  format(menu_msg,255, g_cstrikeRunning ? "\yVote: %s\w^n^n1.  %s^n2.  %s"
+  format(menu_msg,255, g_coloredMenus ? "\yVote: %s\w^n^n1.  %s^n2.  %s"
       : "Vote: %s^n^n1.  %s^n2.  %s",quest,g_optionName[0],g_optionName[1]) 
   g_execResult = false
   new Float:vote_time = get_cvar_float("amx_vote_time") + 2.0 
@@ -327,7 +327,7 @@ public cmdVoteKickBan(id,level,cid) {
   new keys = (1<<0)|(1<<1)
   new menu_msg[256]
   get_user_name(player,arg,31) 
-  format(menu_msg,255,g_cstrikeRunning ? "\y%s %s?\w^n^n1.  Yes^n2.  No"
+  format(menu_msg,255,g_coloredMenus ? "\y%s %s?\w^n^n1.  Yes^n2.  No"
     : "%s %s?^n^n1.  Yes^n2.  No", voteban ? "Ban" : "Kick", arg)
   g_yesNoVote = 1   
   if (voteban) 

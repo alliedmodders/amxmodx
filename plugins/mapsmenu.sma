@@ -46,7 +46,7 @@ new g_voteCount[5]
 new g_voteSelected[33][4]
 new g_voteSelectedNum[33]
 
-new g_cstrikeRunning
+new g_coloredMenus
 
 new g_choosed
 
@@ -69,7 +69,7 @@ public plugin_init()
      format(maps_ini_file, 63, "mapcycle.txt")
   load_settings(maps_ini_file)
 
-  g_cstrikeRunning = (is_running("cstrike") || is_running("czero"))
+  g_coloredMenus = colored_menus()
 }
 
 new g_resultAck[] = "Result accepted"
@@ -116,8 +116,8 @@ public checkVotes( id )
   if ( g_choosed != -1 ) {  
     if ( is_user_connected( id ) )  {
       new menuBody[512]
-      new len = format(menuBody,511,g_cstrikeRunning ? "\yThe winner: \w%s^n^n" :  "The winner: %s^n^n", g_mapName[ g_choosed  ] )
-      len += copy( menuBody[len] ,511 - len, g_cstrikeRunning ? "\yDo you want to continue?^n\w" : "Do you want to continue?^n" )
+      new len = format(menuBody,511,g_coloredMenus ? "\yThe winner: \w%s^n^n" :  "The winner: %s^n^n", g_mapName[ g_choosed  ] )
+      len += copy( menuBody[len] ,511 - len, g_coloredMenus ? "\yDo you want to continue?^n\w" : "Do you want to continue?^n" )
       copy( menuBody[len] ,511 - len, "^n1. Yes^n2. No")
       show_menu( id  ,0x03 ,menuBody, 10 )
       set_task(10.0,"autoRefuse",4545454)
@@ -172,7 +172,7 @@ displayVoteMapsMenu(id,pos)
   if (start >= g_mapNums)
     start = pos = g_menuPosition[id] = 0
     
-  new len = format(menuBody,511, g_cstrikeRunning ? 
+  new len = format(menuBody,511, g_coloredMenus ? 
     "\yVotemap Menu\R%d/%d^n\w^n" : "Votemap Menu %d/%d^n^n",
     pos+1,(  g_mapNums / 7 + (( g_mapNums % 7) ? 1 : 0 )) )
 
@@ -186,7 +186,7 @@ displayVoteMapsMenu(id,pos)
     if ( g_voteSelectedNum[id]==4 || isMapSelected( id , pos * 7 + b ) )
     {
       ++b   
-      if ( g_cstrikeRunning) 
+      if ( g_coloredMenus) 
         len += format(menuBody[len],511-len,"\d%d. %s^n\w",  b ,g_mapName[ a ])
       else
         len += format(menuBody[len],511-len,"#. %s^n",  g_mapName[ a ])
@@ -204,7 +204,7 @@ displayVoteMapsMenu(id,pos)
     len += format(menuBody[len],511-len,"^n8. Start Voting^n")
   }
   else
-    len += format(menuBody[len],511-len, g_cstrikeRunning ? 
+    len += format(menuBody[len],511-len, g_coloredMenus ? 
       "^n\d8. Start Voting^n\w" : "^n#. Start Voting^n")
   
   if (end != g_mapNums)
@@ -216,7 +216,7 @@ displayVoteMapsMenu(id,pos)
     len += format(menuBody[len],511-len,"^n0. %s^n", pos ? "Back" : "Exit")
   
   len += format(menuBody[len],511-len, g_voteSelectedNum[id] ? 
-    ( g_cstrikeRunning ? "^n\ySelected Maps:^n\w" : "^nSelected Maps:^n") : "^n^n")
+    ( g_coloredMenus ? "^n\ySelected Maps:^n\w" : "^nSelected Maps:^n") : "^n^n")
 
   for(new c = 0; c < 4; c++)
   {
@@ -309,7 +309,7 @@ public actionVoteMapMenu(id,key)
       
       if ( g_voteSelectedNum[id] > 1 )
       {
-        len = format(menuBody,511,g_cstrikeRunning ? 
+        len = format(menuBody,511,g_coloredMenus ? 
           "\yWhich map do you want?^n\w^n" : "Which map do you want?^n^n")  
         for(new c = 0; c < g_voteSelectedNum[id] ; ++c)
         {
@@ -321,7 +321,7 @@ public actionVoteMapMenu(id,key)
       }
       else
       {
-        len = format(menuBody,511, g_cstrikeRunning ? "\yChange map to^n%s?^n\w^n1. Yes^n2. No^n"
+        len = format(menuBody,511, g_coloredMenus ? "\yChange map to^n%s?^n\w^n1. Yes^n2. No^n"
           : "Change map to^n%s?^n^n1. Yes^n2. No^n" , g_mapName[  g_voteSelected[id][ 0 ]  ] )
         keys = (1<<0) | (1<<1)
       }
@@ -408,7 +408,7 @@ displayMapsMenu(id,pos)
   if (start >= g_mapNums)
     start = pos = g_menuPosition[id] = 0
     
-  new len = format(menuBody,511, g_cstrikeRunning ? 
+  new len = format(menuBody,511, g_coloredMenus ? 
     "\yChangelevel Menu\R%d/%d^n\w^n" : "Changelevel Menu %d/%d^n^n",
     pos+1,(  g_mapNums / 8 + (( g_mapNums % 8) ? 1 : 0 )) )
     

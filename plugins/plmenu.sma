@@ -51,7 +51,7 @@ new g_clcmdCmd[MAX_CLCMDS][64]
 new g_clcmdMisc[MAX_CLCMDS][2]
 new g_clcmdNum
 
-new g_cstrikeRunning
+new g_coloredMenus
 
 public plugin_init()
 {
@@ -68,7 +68,7 @@ public plugin_init()
   register_menucmd(register_menuid("Team Menu"),1023,"actionTeamMenu")
   register_menucmd(register_menuid("Client Cmds Menu"),1023,"actionClcmdMenu")   
 
-  g_cstrikeRunning = (is_running("cstrike") || is_running("czero"))
+  g_coloredMenus = colored_menus()
 
   new clcmds_ini_file[64];
   get_configsdir(clcmds_ini_file, 63);
@@ -145,7 +145,7 @@ displayBanMenu(id,pos){
   if (start >= g_menuPlayersNum[id])
     start = pos = g_menuPosition[id] = 0
     
-  new len = format(menuBody,511, g_cstrikeRunning ? 
+  new len = format(menuBody,511, g_coloredMenus ? 
     "\yBan Menu\R%d/%d^n\w^n" : "Ban Menu %d/%d^n^n",
     pos+1,(  g_menuPlayersNum[id] / 7 + ((g_menuPlayersNum[id] % 7) ? 1 : 0 )) )
     
@@ -163,7 +163,7 @@ displayBanMenu(id,pos){
     if ( is_user_bot(i) || (get_user_flags(i)&ADMIN_IMMUNITY) )
     {
       ++b   
-      if ( g_cstrikeRunning )
+      if ( g_coloredMenus )
         len += format(menuBody[len],511-len,"\d%d. %s^n\w",b,name)
       else
         len += format(menuBody[len],511-len,"#. %s^n",name)
@@ -282,7 +282,7 @@ displaySlapMenu(id,pos){
   if (start >= g_menuPlayersNum[id])
     start = pos = g_menuPosition[id] = 0
     
-  new len = format(menuBody,511, g_cstrikeRunning ? 
+  new len = format(menuBody,511, g_coloredMenus ? 
     "\ySlap/Slay Menu\R%d/%d^n\w^n" : "Slap/Slay Menu %d/%d^n^n" ,
     pos+1,(  g_menuPlayersNum[id] / 7 + ((g_menuPlayersNum[id] % 7) ? 1 : 0 )) )
     
@@ -301,7 +301,7 @@ displaySlapMenu(id,pos){
     if ( !is_user_alive(i) || (get_user_flags(i)&ADMIN_IMMUNITY) )
     {
       ++b   
-      if ( g_cstrikeRunning )
+      if ( g_coloredMenus )
         len += format(menuBody[len],511-len,"\d%d. %s\R%s^n\w", b,name,team)
       else
         len += format(menuBody[len],511-len,"#. %s   %s^n",name,team)
@@ -311,7 +311,7 @@ displaySlapMenu(id,pos){
     {
       keys |= (1<<b)
       
-      len += format(menuBody[len],511-len, g_cstrikeRunning ? 
+      len += format(menuBody[len],511-len, g_coloredMenus ? 
         "%d. %s\y\R%s^n\w" : "%d. %s   %s^n",++b,name,team)
     }
   }
@@ -393,7 +393,7 @@ displayKickMenu(id,pos){
   if (start >= g_menuPlayersNum[id])
     start = pos = g_menuPosition[id] = 0
     
-  new len = format(menuBody,511, g_cstrikeRunning ?
+  new len = format(menuBody,511, g_coloredMenus ?
     "\yKick Menu\R%d/%d^n\w^n" : "Kick Menu %d/%d^n^n",
     pos+1,(  g_menuPlayersNum[id] / 8 + ((g_menuPlayersNum[id] % 8) ? 1 : 0 )) )
     
@@ -411,7 +411,7 @@ displayKickMenu(id,pos){
     if ( get_user_flags(i) & ADMIN_IMMUNITY )
     {
       ++b   
-      if ( g_cstrikeRunning )
+      if ( g_coloredMenus )
         len += format(menuBody[len],511-len,"\d%d. %s^n\w",b,name)
       else
         len += format(menuBody[len],511-len,"#. %s^n",name)
@@ -500,7 +500,7 @@ displayTeamMenu(id,pos){
   if (start >= g_menuPlayersNum[id])
     start = pos = g_menuPosition[id] = 0
     
-  new len = format(menuBody,511, g_cstrikeRunning ? 
+  new len = format(menuBody,511, g_coloredMenus ? 
     "\yTeam Menu\R%d/%d^n\w^n" : "Team Menu %d/%d^n^n",
     pos+1,(  g_menuPlayersNum[id] / 7 + ((g_menuPlayersNum[id] % 7) ? 1 : 0 )) )
     
@@ -519,7 +519,7 @@ displayTeamMenu(id,pos){
     if ( (iteam == (g_menuOption[id] ? 1 : 2))  || (get_user_flags(i)&ADMIN_IMMUNITY) )
     {
       ++b   
-      if ( g_cstrikeRunning )
+      if ( g_coloredMenus )
         len += format(menuBody[len],511-len,"\d%d. %s\R%s^n\w",b,name,team)
       else
         len += format(menuBody[len],511-len,"#. %s   %s^n",name,team)
@@ -528,7 +528,7 @@ displayTeamMenu(id,pos){
     else
     {
       keys |= (1<<b)
-      len += format(menuBody[len],511-len, g_cstrikeRunning ? 
+      len += format(menuBody[len],511-len, g_coloredMenus ? 
         "%d. %s\y\R%s^n\w" : "%d. %s   %s^n",++b,name,team)
     }
   }
@@ -611,7 +611,7 @@ displayClcmdMenu(id,pos){
   if (start >= g_menuPlayersNum[id])
     start = pos = g_menuPosition[id] = 0
     
-  new len = format(menuBody,511, g_cstrikeRunning ? 
+  new len = format(menuBody,511, g_coloredMenus ? 
     "\yClient Cmds Menu\R%d/%d^n\w^n" : "Client Cmds Menu %d/%d^n^n",
     pos+1,(  g_menuPlayersNum[id] / 7 + ((g_menuPlayersNum[id] % 7) ? 1 : 0 )) )
     
@@ -629,7 +629,7 @@ displayClcmdMenu(id,pos){
     if ( !g_menuSelectNum[id] || get_user_flags(i)&ADMIN_IMMUNITY )
     {
       ++b   
-      if ( g_cstrikeRunning )
+      if ( g_coloredMenus )
         len += format(menuBody[len],511-len,"\d%d. %s^n\w",b,name)
       else
         len += format(menuBody[len],511-len,"#. %s^n",name)

@@ -42,7 +42,7 @@
 #define READ_FROM_FILE
 //#define SHOW_TIME_AND_IP
 
-new g_cstrikeRunning
+new g_coloredMenus
 
 #if defined READ_FROM_FILE
 new g_motdFile[64]
@@ -51,7 +51,7 @@ new g_motdFile[64]
 public plugin_init()
 {
   register_plugin("Welcome Message","0.20","AMXX Dev Team")
-  g_cstrikeRunning = (is_running("cstrike") || is_running("czero"))
+  g_coloredMenus = colored_menus()
 #if defined READ_FROM_FILE
   get_configsdir(g_motdFile, 63)
   format(g_motdFile, 63, "%s/conmotd.txt", g_motdFile)
@@ -108,7 +108,7 @@ public alt_motd(param[]) {
   }
 
   // C4 and FF
-  if ( g_cstrikeRunning ){
+  if ( g_coloredMenus ){
     len += format(motdBody[len],MOTD_LENGTH-len,"<li>Friendly fire is %s</li>",get_cvar_num("mp_friendlyfire") ? "ON" : "OFF")
     len += format(motdBody[len],MOTD_LENGTH-len,"<li>C4 timer is set to %.0f sec.</li>",get_cvar_float("mp_c4timer"))
   }

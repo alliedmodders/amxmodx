@@ -47,7 +47,7 @@ new g_mapVoteNum
 new g_teamScore[2]
 new g_lastMap[32]
 
-new g_cstrikeRunning
+new g_coloredMenus
 new bool:g_selected = false
 
 public plugin_init()
@@ -57,7 +57,7 @@ public plugin_init()
   register_cvar("amx_extendmap_max","90")
   register_cvar("amx_extendmap_step","15")
 
-  if ( ( g_cstrikeRunning = (is_running("cstrike")||is_running("czero")) ) != 0 )
+  if ( ( g_coloredMenus = colored_menus()
     register_event("TeamScore", "team_score", "a")
   
   get_localinfo("lastMap",g_lastMap,31)
@@ -142,7 +142,7 @@ public voteNextmap(){
     return
   g_selected = true
   new menu[512], a, mkeys = (1<<SELECTMAPS+1)
-  new pos = copy(menu,511,g_cstrikeRunning ? "\yAMX Choose nextmap:\w^n^n" : "AMX Choose nextmap:^n^n")
+  new pos = copy(menu,511,g_coloredMenus ? "\yAMX Choose nextmap:\w^n^n" : "AMX Choose nextmap:^n^n")
   new dmax = (g_mapNums > SELECTMAPS) ? SELECTMAPS : g_mapNums
   for(g_mapVoteNum = 0;g_mapVoteNum<dmax;++g_mapVoteNum){
     a=random_num(0,g_mapNums-1)

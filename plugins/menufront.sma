@@ -117,6 +117,7 @@ new g_menuAccess[MENUS_NUMBER][2] = {
   {ADMIN_LEVEL_A,0}
 }
 
+new g_coloredMenus
 new g_cstrikeRunning
 new g_funModule
 
@@ -127,7 +128,8 @@ public plugin_init()
   register_menucmd(register_menuid("AMX Mod X Menu"),1023,"actionMenu") 
   register_clcmd("amxmodmenu","cmdMenu",ADMIN_MENU,"- displays menus")    
 
-  g_cstrikeRunning = (is_running("cstrike") || is_running("czero"))
+  g_coloredMenus = colored_menus()
+  g_cstrikeRunning = ( is_running("cstrike") || is_running("czero") )
   g_funModule = is_module_loaded("Fun")
 }
 
@@ -153,7 +155,7 @@ displayMenu(id,pos){
     start = pos = g_menuPosition[id] = 0
       
   new len = format(menuBody,511,
-   g_cstrikeRunning ? "\yAMX Mod X Menu\R%d/%d^n\w^n" : "AMX Mod X Menu %d/%d^n^n" , pos+1, 2 )
+   g_coloredMenus ? "\yAMX Mod X Menu\R%d/%d^n\w^n" : "AMX Mod X Menu %d/%d^n^n" , pos+1, 2 )
     
   new end = start + 8
   new keys = (1<<9)
@@ -176,7 +178,7 @@ displayMenu(id,pos){
       else
       {
         ++b     
-        if ( g_cstrikeRunning )
+        if ( g_coloredMenus )
           len += format(menuBody[len],511-len, "\d%d. %s^n\w",b, g_menuBody[ a ] )
         else
           len += format(menuBody[len],511-len, "#. %s^n",g_menuBody[ a ] )

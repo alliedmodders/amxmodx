@@ -279,15 +279,18 @@ void MessageEnd(void)
 	} else if (inhook) {
 		mres = MF_ExecuteForward(msgHooks[msgType], msgType, msgDest, ENTINDEX(msgpEntity));
 		inhook = false;
-		msgCount = 0;
 		if (mres & 1)
+		{
+			msgCount = 0;
 			RETURN_META(MRES_SUPERCEDE);
+		}
 		MESSAGE_BEGIN(msgDest, msgType, msgOrigin, msgpEntity);
 		for (i=0; i<msgCount; i++) {
 			Msg[i]->Send();
 			Msg[i]->Reset();
 		}
 		MESSAGE_END();
+		msgCount = 0;
 		RETURN_META(MRES_SUPERCEDE);
 	}
 

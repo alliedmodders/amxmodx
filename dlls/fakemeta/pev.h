@@ -43,6 +43,7 @@ enum pev_pointers
 	impacttime,
 	starttime,
 	idealpitch,
+	ideal_yaw,
 	pitch_speed,
 	yaw_speed,
 	ltime,

@@ -184,6 +184,7 @@ enum {
 	pev_impacttime,
 	pev_starttime,
 	pev_idealpitch,
+	pev_ideal_yaw,
 	pev_pitch_speed,
 	pev_yaw_speed,
 	pev_ltime,

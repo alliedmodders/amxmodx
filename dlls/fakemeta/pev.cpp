@@ -176,6 +176,9 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 			case idealpitch:
 				fReturn = pPlayer->v.idealpitch;
 				break;
+			case ideal_yaw:
+				fReturn = pPlayer->v.ideal_yaw;
+				break;
 			case pitch_speed:
 				fReturn = pPlayer->v.pitch_speed;
 				break;
@@ -764,6 +767,8 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 			case idealpitch:
 				pPlayer->v.idealpitch = fValue;
 				return 1;
+			case ideal_yaw:
+				pPlayer->v.ideal_yaw = fValue;
 			case pitch_speed:
 				pPlayer->v.pitch_speed = fValue;
 				return 1;

@@ -78,7 +78,7 @@ static cell AMX_NATIVE_CALL get_user_wrstats(AMX *amx, cell *params) /* 4 param 
 		return 0;
 	}
 	int weapon = params[2];
-	if (weapon<0||weapon>=MAX_WEAPONS){
+	if (weapon<0||weapon>=MAX_WEAPONS+MAX_CWEAPONS){
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -109,7 +109,7 @@ static cell AMX_NATIVE_CALL get_user_wstats(AMX *amx, cell *params) /* 4 param *
 		return 0;
 	}
 	int weapon = params[2];
-	if (weapon<0||weapon>=MAX_WEAPONS){
+	if (weapon<0||weapon>=MAX_WEAPONS+MAX_CWEAPONS){
 		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
 	}

@@ -3,7 +3,7 @@
 #include "amxxmodule.h"
 #include "rank.h"
 
-weaponsVault weaponData[MAX_WEAPONS+MAX_CWEAPONS];
+weaponsVault weaponData[MAX_WEAPONS];
 
 int damage;
 int TA;
@@ -46,7 +46,6 @@ void Client_WeaponList(void* mValue){
 		weaponData[iId].name = wpnPrefix + 7;
 		if ( strcmp( weaponData[iId].name, "hegrenade" ) == 0 )
 			weaponData[iId].name += 2;
-		weaponData[iId].logname = weaponData[iId].name;
 	}
   } 
 }
@@ -91,12 +90,9 @@ void Client_Damage_End(void* mValue){
 		TA = 0;
 	if ( (mPlayer->teamId == pAttacker->teamId) && (mPlayer != pAttacker) )
 		TA = 1;
-
-	g_damage_info.exec( pAttacker->index , mPlayer->index , damage, weapon, aim, TA );
 	 
 	if ( !mPlayer->IsAlive() ){
 		pAttacker->saveKill(mPlayer,weapon,( aim == 1 ) ? 1:0 ,TA);
-		g_death_info.exec( pAttacker->index, mPlayer->index, weapon, aim, TA );
 	}
 }
 
@@ -134,7 +130,6 @@ void Client_AmmoX(void* mValue){
         mPlayer->weapons[i].ammo = *(int*)mValue;
   }
 }
-
 
 void Client_AmmoPickup(void* mValue){
   static int iSlot;

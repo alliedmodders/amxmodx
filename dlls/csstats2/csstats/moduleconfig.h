@@ -32,7 +32,7 @@
 #define FN_AMXX_DETACH OnAmxxDetach
 // All plugins loaded
 //   Do forward functions init here (MF_RegisterForward)
-#define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
+// #define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
 
 /**** METAMOD ****/
 // If your module doesn't use metamod, you may close the file now :)
@@ -455,7 +455,6 @@
 // #define FN_OnFreeEntPrivateData_Post			OnFreeEntPrivateData_Post
 // #define FN_GameShutdown_Post					GameShutdown_Post
 // #define FN_ShouldCollide_Post				ShouldCollide_Post
-
 
 #endif // USE_METAMOD
 

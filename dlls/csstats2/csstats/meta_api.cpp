@@ -21,11 +21,6 @@ RankSystem g_rank;
 
 Grenades g_grenades;
 
-Forward g_death_info;
-Forward g_damage_info;
-
-int iFGrenade;
-
 bool rankBots;
 
 int gmsgCurWeapon;
@@ -143,13 +138,6 @@ void ServerDeactivate() {
 	}
 	g_rank.saveRank( MF_BuildPathname("%s",get_localinfo("csstats")) );	
 
-	g_damage_info.clear();
-	g_death_info.clear();
-
-	// clear custom weapons info
-	for ( i=MAX_WEAPONS;i<MAX_WEAPONS+MAX_CWEAPONS;i++)
-		weaponData[i].ammoSlot = 0;
-
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -168,7 +156,6 @@ void ClientPutInServer_Post( edict_t *pEntity ) {
 	GET_PLAYER_POINTER(pEntity)->PutInServer();
 	RETURN_META(MRES_IGNORED);
 }
-
 
 void ClientUserInfoChanged_Post( edict_t *pEntity, char *infobuffer ) {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
@@ -261,21 +248,11 @@ void SetModel_Post(edict_t *e, const char *m){
 		CPlayer *pPlayer = GET_PLAYER_POINTER(e->v.owner);
 		switch(m[9]){
 		case 'h':
-			w_id = CSW_HEGRENADE;
-			g_grenades.put(e, 1.75, 4, pPlayer);
-			pPlayer->saveShot(4);
-			break;
-		case 'f':
-			if (m[10]=='l') w_id = CSW_FLASHBANG;
-			break;
-		case 's':
-			if (m[10]=='m') w_id = CSW_SMOKEGRENADE;
+			g_grenades.put(e, 1.75, CSW_HEGRENADE, pPlayer);
+			pPlayer->saveShot(CSW_HEGRENADE);
 			break;
 		}
-		if ( w_id )	
-			MF_ExecuteForward( iFGrenade, pPlayer->index, ENTINDEX(e) ,w_id );
 	}
-
 
 	RETURN_META(MRES_IGNORED);
 }
@@ -330,8 +307,4 @@ void OnAmxxDetach() {
 	g_grenades.clear();
 	g_rank.clear();
 	g_rank.unloadCalc();
-}
-
-void OnPluginsLoaded(){
-	iFGrenade = MF_RegisterForward("grenade_throw",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
 }

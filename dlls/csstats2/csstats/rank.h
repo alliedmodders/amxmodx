@@ -19,21 +19,14 @@ extern AMX_NATIVE_INFO stats_Natives[];
 
 struct weaponsVault {
   char* name;
-  char* logname;
   short int ammoSlot;
-  bool melee;
 };
 
 extern bool rankBots;
 extern cvar_t* csstats_rankbots;
 extern cvar_t* csstats_pause;
 
-extern Forward g_death_info;
-extern Forward g_damage_info;
-
-extern int iFGrenade;
-
-extern weaponsVault weaponData[MAX_WEAPONS+MAX_CWEAPONS];
+extern weaponsVault weaponData[MAX_WEAPONS];
 
 typedef void (*funEventCall)(void*);
 extern funEventCall modMsgsEnd[MAX_REG_MSGS];

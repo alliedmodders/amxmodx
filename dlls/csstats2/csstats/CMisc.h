@@ -6,7 +6,6 @@
 #include "amxxmodule.h"
 #include "CRank.h"
 
-#define MAX_CWEAPONS		6
 
 #define CSW_HEGRENADE      4
 #define CSW_SMOKEGRENADE   9
@@ -32,10 +31,10 @@ struct CPlayer {
 		int	clip;
 	};
 
-	PlayerWeapon	weapons[MAX_WEAPONS+MAX_CWEAPONS];
+	PlayerWeapon	weapons[MAX_WEAPONS];
 	PlayerWeapon	attackers[33];
 	PlayerWeapon	victims[33];
-	Stats			weaponsRnd[MAX_WEAPONS+MAX_CWEAPONS]; // DEC-Weapon (Round) stats
+	Stats			weaponsRnd[MAX_WEAPONS]; // DEC-Weapon (Round) stats
 	Stats			life;
 
 	int teamId;
@@ -85,28 +84,6 @@ public:
   void put( edict_t* grenade, float time, int type, CPlayer* player  );
   bool find( edict_t* enemy, CPlayer** p, int* type );
   void clear();
-};
-
-// *****************************************************
-// class Forward
-// *****************************************************
-
-class Forward
-{
-	struct AmxCall {
-		AMX *amx;
-		int iFunctionIdx;
-		AmxCall* next;
-		AmxCall( AMX *a , int i, AmxCall* n ): amx(a), iFunctionIdx(i), next(n) {}
-	} *head;
-public:
-	Forward() { head = 0; }
-	~Forward() { clear(); }
-	void clear();
-	void put( AMX *a , int i );
-	void exec(int p1,int p2,int p3,int p4,int p5,int p6);
-	void exec(int p1,int p2,int p3,int p4,int p5);
-	void exec(int p1,int p2);
 };
 
 #endif // CMISC_H

@@ -497,24 +497,6 @@ public client_command( id ) {
   return PLUGIN_CONTINUE
 }
 
-// JGHG: Send weapon string to this function and it returns true if weapon is blocked or false if not blocked...
-WeaponIsBlocked(weapon[]) {
-  for (new a = 0; a < g_AliasBlockNum; a++) {
-    server_print("%d", a)
-    server_print(weapon)
-    server_print(g_Aliases[g_AliasBlock[ a ]])
-    server_print(g_Aliases2[g_AliasBlock[ a ]])
-
-    if ( equal( g_Aliases[g_AliasBlock[ a ]] , weapon  ) ||
-         equal( g_Aliases2[g_AliasBlock[ a ]] , weapon  ) )
-    {
-      return true // blocked
-    }
-  }
-
-  return false // not blocked
-}
-
 public blockcommand(id) {
   client_print(id,print_center, g_Restricted )
   return PLUGIN_HANDLED
@@ -529,7 +511,6 @@ public cmdMenu(id,level,cid){
 checkRest(id,menu,key){
   if ( g_blockPos[ (menu * 8 + key) + (get_user_team(id) - 1) * 56 ] ){
     engclient_cmd(id,"menuselect","10")
-    //client_cmd(id,"slot10")
     client_print(id,print_center, g_Restricted )
     return PLUGIN_HANDLED
   }
@@ -561,7 +542,7 @@ saveSettings(filename[]) {
   return 1
 }
 
-loadSettings(filename[]){
+loadSettings(filename[]) {
   if (!file_exists(filename)) return 0
   new text[16]
   new a, pos = 0
@@ -605,19 +586,6 @@ public fn_setautobuy(id) {
   //server_print("Stripped items: ^"%s^"", strippedItems)
   engclient_cmd(id, "cl_setautobuy", strippedItems)
   return PLUGIN_HANDLED
-
-  /*
-  // Check g_Autobuy[id] for blocked items.
-  if (g_AliasBlockNum > 0) {
-    new blockedItem[AUTOBUYLENGTH + 1]
-    if (CheckBlockedItems(g_Autobuy[id], blockedItem)) {
-      client_print(id, print_center, "%c%s is blocked!", blockedItem[0] < 'a' || blockedItem[0] > 'z' ? blockedItem[0] : blockedItem[0] - 32, blockedItem[1]) // Tell what item is blocked (if first char is a letter it will be capital)
-      return PLUGIN_HANDLED
-    }
-  }
-  */
-
-  //return PLUGIN_CONTINUE
 }
 
 // Returns true if this strips any items, else false.
@@ -641,35 +609,6 @@ StripBlockedItems(inString[AUTOBUYLENGTH + 1], outString[AUTOBUYLENGTH + 1]) {
   return false // else end here, return false, no items were stripped
 }
 
-// Returns true if any of the items in items[] are blocked, else false.
-CheckBlockedItems(items[], blockedItem[AUTOBUYLENGTH + 1]) {
-  if (g_AliasBlockNum <= 0)
-    return false
-
-  new l_items[AUTOBUYLENGTH + 1]
-  format(l_items, AUTOBUYLENGTH, items)
-
-  new aValueWasParsed, parsedItem[128]
-  do {
-    aValueWasParsed = parse(l_items, parsedItem, 127)
-    if (strlen(parsedItem) == 0)
-      return false // no more items
-
-    if (aValueWasParsed) {
-      replace(l_items, AUTOBUYLENGTH, parsedItem, "") // Remove first parameter
-
-      if (WeaponIsBlocked(parsedItem)) {
-        format(blockedItem, AUTOBUYLENGTH, parsedItem)
-        return true // item is blocked, return true
-      }
-    }
-    else
-      break
-  } while (aValueWasParsed)
-
-  return false // no blocked items found
-}
-
 public fn_autobuy(id) {
   // Don't do anything if no items are blocked.
   if (!g_AliasBlockNum)
@@ -680,7 +619,6 @@ public fn_autobuy(id) {
   if (!StripBlockedItems(g_Autobuy[id], strippedItems))
     return PLUGIN_CONTINUE // don't touch anything if we didn't strip anything...
 
-  //server_print("Stripped items: ^"%s^"", strippedItems)
   engclient_cmd(id, "cl_setautobuy", strippedItems)
   return PLUGIN_HANDLED
 }

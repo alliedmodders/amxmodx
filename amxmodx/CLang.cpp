@@ -498,7 +498,7 @@ int CLangMngr::GetKeyEntry(String &key)
 }
 
 #define CHECK_PTR(ptr, start, bufsize) if ((ptr) - (start) >= (bufsize)) { \
-	AMXXLOG_Log("[AMXX] Buffer overflow in formatting (line %d, \"%s\")", amx->curline, g_plugins.findPluginFast(amx)->getName()); \
+	LogError(amx, AMX_ERR_STACKERR, "Buffer overflow in string formatting"); \
 	outbuf[0] = 0; \
 	len = 0; \
 	return outbuf; }
@@ -509,7 +509,7 @@ int CLangMngr::GetKeyEntry(String &key)
 	{ \
 		strcpy(outbuf, ""); \
 		len = 0; \
-		AMXXLOG_Log("[AMXX] Plugin did not format a string correctly (parameter %d (total %d), line %d, \"%s\")", parm, paramCount, amx->curline, g_plugins.findPluginFast(amx)->getName()); \
+		LogError(amx, AMX_ERR_PARAMS, "String formatted incorrectly - parameter %d (total %d)", parm, paramCount); \
 		return outbuf; \
 	} 
 

@@ -35,7 +35,7 @@
 static cell AMX_NATIVE_CALL get_weapon_name(AMX *amx, cell *params){ // from id to name 3 params id, name, len
 	int id = params[1];
 	if (id<0 || id>=DODMAX_WEAPONS){ 
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", id);
 		return 0;
 	}
 	return MF_SetAmxString(amx,params[2],weaponData[id].name,params[3]);
@@ -67,7 +67,7 @@ static cell AMX_NATIVE_CALL wpnlog_to_id(AMX *amx, cell *params){ // from log to
 static cell AMX_NATIVE_CALL get_weapon_logname(AMX *amx, cell *params){ // from id to log
 	int id = params[1];
 	if (id<0 || id>=DODMAX_WEAPONS){ 
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", id);
 		return 0;
 	}
 	return MF_SetAmxString(amx,params[2],weaponData[id].logname,params[3]);
@@ -76,7 +76,7 @@ static cell AMX_NATIVE_CALL get_weapon_logname(AMX *amx, cell *params){ // from 
 static cell AMX_NATIVE_CALL is_melee(AMX *amx, cell *params){
 	int id = params[1];
 	if (id<0 || id>=DODMAX_WEAPONS){ 
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", id);
 		return 0;
 	}
 	return weaponData[id].melee;
@@ -97,10 +97,7 @@ static cell AMX_NATIVE_CALL get_team_score(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL get_user_score(AMX *amx, cell *params){
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return -1; 
-	}
+	CHECK_PLAYER(index);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->ingame)
 		return pPlayer->savedScore; 
@@ -109,10 +106,7 @@ static cell AMX_NATIVE_CALL get_user_score(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL get_user_class(AMX *amx, cell *params){
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->ingame)
 		return pPlayer->pEdict->v.playerclass;
@@ -121,10 +115,7 @@ static cell AMX_NATIVE_CALL get_user_class(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL user_kill(AMX *amx, cell *params){
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if (pPlayer->ingame && pPlayer->IsAlive() ){
@@ -147,7 +138,7 @@ static cell AMX_NATIVE_CALL get_map_info(AMX *amx, cell *params){
 		return g_map.detect_axis_paras;
 		break;
 	default:
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid map info id %d", params[1]);
 		break;
 	}
 	return -1;
@@ -155,10 +146,7 @@ static cell AMX_NATIVE_CALL get_map_info(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL get_user_pronestate(AMX *amx, cell *params){
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->ingame)
 			return pPlayer->pEdict->v.iuser3;
@@ -168,10 +156,7 @@ static cell AMX_NATIVE_CALL get_user_pronestate(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL get_user_weapon(AMX *amx, cell *params){
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->ingame){
 		int wpn = pPlayer->current;
@@ -190,30 +175,31 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params){ // forward
 #ifdef FORWARD_OLD_SYSTEM
 
 	int iFunctionIndex;
+	int err;
 	switch( params[1] ){
 	case 0:
-		if( MF_AmxFindPublic(amx, "client_damage", &iFunctionIndex) == AMX_ERR_NONE )
+		if( (err=MF_AmxFindPublic(amx, "client_damage", &iFunctionIndex)) == AMX_ERR_NONE )
 			g_damage_info.put( amx , iFunctionIndex );
 		else
-			MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+			MF_LogError(amx, err, "client_damage not found");
 			return 0;
 		break;
 	case 1:
-		if( MF_AmxFindPublic(amx, "client_death", &iFunctionIndex) == AMX_ERR_NONE )
+		if( (err=MF_AmxFindPublic(amx, "client_death", &iFunctionIndex)) == AMX_ERR_NONE )
 			g_death_info.put( amx , iFunctionIndex );
 		else
-			MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+			MF_LogError(amx, err, "client_Death not found");
 			return 0;
 		break;
 	case 2:
-		if( MF_AmxFindPublic(amx, "client_score", &iFunctionIndex) == AMX_ERR_NONE )
+		if( (err=MF_AmxFindPublic(amx, "client_score", &iFunctionIndex)) == AMX_ERR_NONE )
 			g_score_info.put( amx , iFunctionIndex );
 		else
-			MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+			MF_LogError(amx, err, "client_score not found");
 			return 0;
 		break;
 	default:
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid forward id %d", params[2]);
 		return 0;
 	}
 #endif
@@ -248,31 +234,25 @@ static cell AMX_NATIVE_CALL register_cwpn(AMX *amx, cell *params){ // name,logna
 static cell AMX_NATIVE_CALL cwpn_dmg(AMX *amx, cell *params){ // wid,att,vic,dmg,hp=0
 	int weapon = params[1];
 	if (  weapon < DODMAX_WEAPONS-DODMAX_CUSTOMWPNS ){ // only for custom weapons
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid custom weapon id %d", weapon);
 		return 0;
 	}
 
 	int att = params[2];
-	if (att<1||att>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[2]);
 
 	int vic = params[3];
-	if (vic<1||vic>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(params[3]);
 	
 	int dmg = params[4];
 	if ( dmg<1 ){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid damage %d", dmg);
 		return 0;
 	}
 	
 	int aim = params[5];
 	if ( aim < 0 || aim > 7 ){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid aim %d", aim);
 		return 0;
 	}
 
@@ -305,22 +285,18 @@ static cell AMX_NATIVE_CALL cwpn_dmg(AMX *amx, cell *params){ // wid,att,vic,dmg
 #else
 	MF_ExecuteForward( iFDeath,pAtt->index, pVic->index, weapon, aim, TA );
 #endif
-	
-
 
 	return 1;
 }
 
 static cell AMX_NATIVE_CALL cwpn_shot(AMX *amx, cell *params){ // player,wid
 	int index = params[2];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+
+	CHECK_PLAYER(index);
 
 	int weapon = params[1];
 	if (  weapon < DODMAX_WEAPONS-DODMAX_CUSTOMWPNS ){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid custom weapon id %d", weapon);
 		return 0;
 	}
 
@@ -348,10 +324,7 @@ static cell AMX_NATIVE_CALL is_custom(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL dod_get_user_team(AMX *amx, cell *params){ // player,wid
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	return pPlayer->pEdict->v.team;
@@ -360,10 +333,7 @@ static cell AMX_NATIVE_CALL dod_get_user_team(AMX *amx, cell *params){ // player
 
 static cell AMX_NATIVE_CALL get_user_team(AMX *amx, cell *params){ // player,wid
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	int iTeam = pPlayer->pEdict->v.team; 

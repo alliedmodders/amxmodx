@@ -35,15 +35,9 @@
 static cell AMX_NATIVE_CALL get_user_astats(AMX *amx, cell *params) /* 6 param */
 {
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 	int attacker = params[2];
-	if (attacker<0||attacker>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(attacker);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->attackers[attacker].hits){
 		cell *cpStats = MF_GetAmxAddr(amx,params[3]);
@@ -68,15 +62,9 @@ static cell AMX_NATIVE_CALL get_user_astats(AMX *amx, cell *params) /* 6 param *
 static cell AMX_NATIVE_CALL get_user_vstats(AMX *amx, cell *params) /* 6 param */
 {
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 	int victim = params[2];
-	if (victim<0||victim>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(victim);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->victims[victim].hits){
 		cell *cpStats = MF_GetAmxAddr(amx,params[3]);
@@ -101,13 +89,10 @@ static cell AMX_NATIVE_CALL get_user_vstats(AMX *amx, cell *params) /* 6 param *
 static cell AMX_NATIVE_CALL get_user_wlstats(AMX *amx, cell *params) /* 4 param */ // DEC-Weapon (round) stats (end)
 {
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 	int weapon = params[2];
 	if (weapon<0||weapon>=DODMAX_WEAPONS){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", weapon);
 		return 0;
 	}
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
@@ -133,13 +118,10 @@ static cell AMX_NATIVE_CALL get_user_wlstats(AMX *amx, cell *params) /* 4 param 
 static cell AMX_NATIVE_CALL get_user_wrstats(AMX *amx, cell *params) /* 4 param */ // DEC-Weapon (round) stats (end)
 {
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index)
 	int weapon = params[2];
 	if (weapon<0||weapon>=DODMAX_WEAPONS){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", weapon);
 		return 0;
 	}
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
@@ -165,13 +147,10 @@ static cell AMX_NATIVE_CALL get_user_wrstats(AMX *amx, cell *params) /* 4 param 
 static cell AMX_NATIVE_CALL get_user_wstats(AMX *amx, cell *params) /* 4 param */
 {
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index)
 	int weapon = params[2];
 	if (weapon<0||weapon>=DODMAX_WEAPONS){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", weapon);
 		return 0;
 	}
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
@@ -197,10 +176,7 @@ static cell AMX_NATIVE_CALL get_user_wstats(AMX *amx, cell *params) /* 4 param *
 static cell AMX_NATIVE_CALL reset_user_wstats(AMX *amx, cell *params) /* 6 param */
 {
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	pPlayer->restartStats();
 	return 1;
@@ -209,10 +185,7 @@ static cell AMX_NATIVE_CALL reset_user_wstats(AMX *amx, cell *params) /* 6 param
 static cell AMX_NATIVE_CALL get_user_stats(AMX *amx, cell *params) /* 3 param */
 {
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if ( pPlayer->ingame ){
 		cell *cpStats = MF_GetAmxAddr(amx,params[2]);
@@ -237,10 +210,7 @@ static cell AMX_NATIVE_CALL get_user_stats(AMX *amx, cell *params) /* 3 param */
 static cell AMX_NATIVE_CALL get_user_lstats(AMX *amx, cell *params) /* 3 param */
 {
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->ingame){
 		cell *cpStats = MF_GetAmxAddr(amx,params[2]);
@@ -263,10 +233,7 @@ static cell AMX_NATIVE_CALL get_user_lstats(AMX *amx, cell *params) /* 3 param *
 static cell AMX_NATIVE_CALL get_user_rstats(AMX *amx, cell *params) /* 3 param */
 {
 	int index = params[1];
-	if (index<1||index>gpGlobals->maxClients){
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
-		return 0;
-	}
+	CHECK_PLAYER(index)
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->ingame){
 		cell *cpStats = MF_GetAmxAddr(amx,params[2]);

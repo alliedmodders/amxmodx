@@ -55,7 +55,7 @@ struct amxx_module_info_s
 // The next section is copied from the amx.h file
 // Copyright (c) ITB CompuPhase, 1997-2004
 
-#if defined __LCC__ || defined __DMC__ || defined __linux__
+#if defined __LCC__ || defined __DMC__ || defined __linux__ || defined __GNUC__
   #include <stdint.h>
 #elif !defined __STDC_VERSION__ || __STDC_VERSION__ < 199901L
   /* The ISO C99 defines the int16_t and int_32t types. If the compiler got
@@ -929,7 +929,7 @@ void FN_EngineFprintf(FILE *pfile, char *szFmt, ...);
 #endif // FN_EngineFprintf
 
 #ifdef FN_PvAllocEntPrivateData
-void *FN_PvAllocEntPrivateData(edict_t *pEdict, long cb);
+void *FN_PvAllocEntPrivateData(edict_t *pEdict, int32 cb);
 #endif // FN_PvAllocEntPrivateData
 
 #ifdef FN_PvEntPrivateData
@@ -1919,11 +1919,14 @@ typedef int				(*PFN_GET_AMXSTRINGLEN)			(const cell *ptr);
 typedef char *			(*PFN_FORMAT_AMXSTRING)			(AMX * /*amx*/, cell * /*params*/, int /*startParam*/, int * /*pLen*/);
 typedef void			(*PFN_COPY_AMXMEMORY)			(cell * /*dest*/, const cell * /*src*/, int /*len*/);
 typedef void			(*PFN_LOG)						(const char * /*fmt*/, ...);
+typedef void			(*PFN_LOG_ERROR)				(AMX * /*amx*/, int /*err*/, const char * /*fmt*/, ...);
 typedef int				(*PFN_RAISE_AMXERROR)			(AMX * /*amx*/, int /*error*/);
 typedef int				(*PFN_REGISTER_FORWARD)			(const char * /*funcname*/, ForwardExecType /*exectype*/, ... /*paramtypes terminated by PF_DONE*/);
 typedef int				(*PFN_EXECUTE_FORWARD)			(int /*id*/, ... /*params*/);
 typedef cell			(*PFN_PREPARE_CELLARRAY)		(cell * /*ptr*/, unsigned int /*size*/);
 typedef cell			(*PFN_PREPARE_CHARARRAY)		(char * /*ptr*/, unsigned int /*size*/);
+typedef cell			(*PFN_PREPARE_CELLARRAY_A)		(cell * /*ptr*/, unsigned int /*size*/, bool /*copyBack*/);
+typedef cell			(*PFN_PREPARE_CHARARRAY_A)		(char * /*ptr*/, unsigned int /*size*/, bool /*copyBack*/);
 typedef int				(*PFN_IS_PLAYER_VALID)			(int /*id*/);
 typedef const char *	(*PFN_GET_PLAYER_NAME)			(int /*id*/);
 typedef const char *	(*PFN_GET_PLAYER_IP)			(int /*id*/);
@@ -1932,8 +1935,9 @@ typedef int				(*PFN_IS_PLAYER_BOT)			(int /*id*/);
 typedef int				(*PFN_IS_PLAYER_AUTHORIZED)		(int /*id*/);
 typedef float			(*PFN_GET_PLAYER_TIME)			(int /*id*/);
 typedef float			(*PFN_GET_PLAYER_PLAYTIME)		(int /*id*/);
-typedef int			(*PFN_GETPLAYERFLAGS) 			(int /* id*/);
+typedef int				(*PFN_GETPLAYERFLAGS) 			(int /* id*/);
 typedef int				(*PFN_GET_PLAYER_CURWEAPON)		(int /*id*/);
+typedef const char *    (*PFN_GET_PLAYER_TEAM)			(int /*id*/);
 typedef int				(*PFN_GET_PLAYER_TEAMID)		(int /*id*/);
 typedef int				(*PFN_GET_PLAYER_DEATHS)		(int /*id*/);
 typedef int				(*PFN_GET_PLAYER_MENU)			(int /*id*/);
@@ -1986,11 +1990,14 @@ extern PFN_GET_AMXSTRINGLEN			g_fn_GetAmxStringLen;
 extern PFN_FORMAT_AMXSTRING			g_fn_FormatAmxString;
 extern PFN_COPY_AMXMEMORY			g_fn_CopyAmxMemory;
 extern PFN_LOG						g_fn_Log;
+extern PFN_LOG_ERROR				g_fn_LogError;
 extern PFN_RAISE_AMXERROR			g_fn_RaiseAmxError;
 extern PFN_REGISTER_FORWARD			g_fn_RegisterForward;
 extern PFN_EXECUTE_FORWARD			g_fn_ExecuteForward;
 extern PFN_PREPARE_CELLARRAY		g_fn_PrepareCellArray;
 extern PFN_PREPARE_CHARARRAY		g_fn_PrepareCharArray;
+extern PFN_PREPARE_CELLARRAY_A		g_fn_PrepareCellArrayA;
+extern PFN_PREPARE_CHARARRAY_A		g_fn_PrepareCharArrayA;
 extern PFN_IS_PLAYER_VALID			g_fn_IsPlayerValid;
 extern PFN_GET_PLAYER_NAME			g_fn_GetPlayerName;
 extern PFN_GET_PLAYER_IP			g_fn_GetPlayerIP;
@@ -2026,6 +2033,7 @@ extern PFN_AMX_FINDNATIVE			g_fn_AmxFindNative;
 extern PFN_GETPLAYERFLAGS		g_fn_GetPlayerFlags;
 extern PFN_GET_PLAYER_EDICT			g_fn_GetPlayerEdict;
 extern PFN_FORMAT					g_fn_Format;
+extern PFN_GET_PLAYER_TEAM			g_fn_GetPlayerTeam;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2045,11 +2053,14 @@ int				MF_GetAmxStringLen			(const cell *ptr) { }
 char *			MF_FormatAmxString			(AMX * amx, cell * params, int startParam, int * pLen) { }
 void			MF_CopyAmxMemory			(cell * dest, const cell * src, int len) { }
 void			MF_Log						(const char * fmt, ...) { }
+void			MF_LogError					(AMX * amx, int err, const char *fmt, ...) { }
 int				MF_RaiseAmxError			(AMX * amx, int error) { }
 int				MF_RegisterForward			(const char * funcname, ForwardExecType exectype, ...) { }
 int				MF_ExecuteForward			(int id, ...) { }
 cell			MF_PrepareCellArray			(cell * ptr, unsigned int size) { }
 cell			MF_PrepareCharArray			(char * ptr, unsigned int size) { }
+cell			MF_PrepareCellArrayA			(cell * ptr, unsigned int size, bool copyBack) { }
+cell			MF_PrepareCharArrayA			(char * ptr, unsigned int size, bool copyBack) { }
 int				MF_IsPlayerValid			(int id) { }
 const char *	MF_GetPlayerName			(int id) { }
 const char *	MF_GetPlayerIP				(int id) { }
@@ -2059,6 +2070,7 @@ int				MF_IsPlayerAuthorized		(int id) { }
 float			MF_GetPlayerTime			(int id) { }
 float			MF_GetPlayerPlayTime		(int id) { }
 int				MF_GetPlayerCurweapon		(int id) { }
+const char *	MF_GetPlayerTeam			(int id) { }
 int				MF_GetPlayerTeamID			(int id) { }
 int				MF_GetPlayerDeaths			(int id) { }
 int				MF_GetPlayerMenu			(int id) { }
@@ -2094,11 +2106,14 @@ const char *	MF_Format					(const char *fmt, ...) { }
 #define MF_GetAmxStringLen g_fn_GetAmxStringLen
 #define MF_CopyAmxMemory g_fn_CopyAmxMemory
 void MF_Log(const char *fmt, ...);
+#define	MF_LogError g_fn_LogError
 #define MF_RaiseAmxError g_fn_RaiseAmxError
 #define MF_RegisterForward g_fn_RegisterForward
 #define MF_ExecuteForward g_fn_ExecuteForward
 #define MF_PrepareCellArray g_fn_PrepareCellArray
 #define MF_PrepareCharArray g_fn_PrepareCharArray
+#define MF_PrepareCellArrayA g_fn_PrepareCellArrayA
+#define MF_PrepareCharArrayA g_fn_PrepareCharArrayA
 #define MF_IsPlayerValid g_fn_IsPlayerValid
 #define MF_GetPlayerName g_fn_GetPlayerName
 #define MF_GetPlayerIP g_fn_GetPlayerIP
@@ -2108,6 +2123,7 @@ void MF_Log(const char *fmt, ...);
 #define MF_GetPlayerTime g_fn_GetPlayerTime
 #define MF_GetPlayerPlayTime g_fn_GetPlayerPlayTime
 #define MF_GetPlayerCurweapon g_fn_GetPlayerCurweapon
+#define MF_GetPlayerTeam g_fn_GetPlayerTeam
 #define MF_GetPlayerTeamID g_fn_GetPlayerTeamID
 #define MF_GetPlayerDeaths g_fn_GetPlayerDeaths
 #define MF_GetPlayerMenu g_fn_GetPlayerMenu
@@ -2133,7 +2149,7 @@ void MF_Log(const char *fmt, ...);
 #define MF_UnregisterSPForward g_fn_UnregisterSPForward
 #define MF_GetPlayerFlags g_fn_GetPlayerFlags
 #define MF_GetPlayerEdict g_fn_GetPlayerEdict
-#define MF_Format g_fn_Format;
+#define MF_Format g_fn_Format
 
 /*** Memory ***/
 void	*operator new(size_t reportedSize);

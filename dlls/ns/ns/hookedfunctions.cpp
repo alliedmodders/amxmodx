@@ -9,6 +9,8 @@ CSpawn ns_spawnpoints;
 CPlayer g_player[33];
 edict_t *player_edicts[33];
 
+BOOL CheckForPublic(const char *publicname);
+
 int gmsgHudText2=0;
 int ChangeclassForward = -1;
 int BuiltForward = -1;
@@ -35,13 +37,25 @@ void OnPluginsLoaded()
 	iscombat=FALSE;
 	char mapname[255];
 	strcpy(mapname,STRING(gpGlobals->mapname));
-	if ((mapname[0]=='c' || mapname[0]=='C') && (mapname[1]=='o' || mapname[0]=='O') && mapname[2]=='_')
+	if ((mapname[0]=='c' || mapname[0]=='C') && (mapname[1]=='o' || mapname[1]=='O') && mapname[2]=='_')
 		iscombat=TRUE;
 
 	ChangeclassForward = MF_RegisterForward("client_changeclass", ET_IGNORE, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 	// No sense in this if it's combat..
-	if (!iscombat)
-		BuiltForward = MF_RegisterForward("client_built", ET_IGNORE, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	if (!iscombat) {
+		if (CheckForPublic("client_built")) {
+			BuiltForward = MF_RegisterForward("client_built", ET_IGNORE, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+			g_pengfuncsTable_Post->pfnAlertMessage=AlertMessage_Post;
+			g_pengfuncsTable->pfnCreateNamedEntity=CreateNamedEntity;
+		} else {
+			g_pengfuncsTable_Post->pfnAlertMessage=NULL;
+			g_pengfuncsTable->pfnCreateNamedEntity=NULL;
+		}
+	} else {
+		// no need for these hooks in co
+		g_pengfuncsTable_Post->pfnAlertMessage=NULL;
+		g_pengfuncsTable->pfnCreateNamedEntity=NULL;
+	}
 	SpawnForward = MF_RegisterForward("client_spawn",ET_IGNORE,FP_CELL/*id*/,FP_DONE);
 	TeamForward = MF_RegisterForward("client_changeteam",ET_IGNORE,FP_CELL/*id*/,FP_CELL/*new team*/,FP_CELL/*old team*/,FP_DONE);
 }
@@ -120,7 +134,7 @@ void PlayerPostThink_Post(edict_t *pEntity)
 // name<CID><AUTHID><TEAM> changed role to "class" -- client_changeclass
 void AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...)
 {
-	if (atype != at_logged || iscombat)
+	if (atype != at_logged)
 		RETURN_META(MRES_IGNORED);
 	va_list LogArg;
 	char *sz, *message;
@@ -275,8 +289,9 @@ void AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...)
 				iForward = 1;
 			}
 //			ns2amx_built.execute(index,iCreateEntityIndex,iForward,iType);
-			if (BuiltForward != -1)
-				MF_ExecuteForward(BuiltForward, index, iCreateEntityIndex, iForward, iType);
+			if (BuiltForward != -1) {
+				MF_ExecuteForward(BuiltForward, index, FStrEq((const char *)szParm[3],"type \"weapon_mine\"") ? 0 : iCreateEntityIndex, iForward, iType);
+			}
 			iCreateEntityIndex=0;
 		}
 	}
@@ -449,4 +464,25 @@ edict_t *UTIL_FindEntityByString(edict_t *pentStart, const char *szKeyword, cons
 	if(!FNullEnt(pentEntity))
 		return pentEntity;
 	return NULL;
+}
+
+BOOL CheckForPublic(const char *publicname)
+{
+	AMX* amx;
+	char blah[64];
+	strncpy(blah,publicname,63);
+	int iFunctionIndex;
+	int i=0;
+	// Loop through all running scripts
+	while((amx=MF_GetScriptAmx(i++))!=NULL)
+	{ 
+		// Scan for public
+		if (MF_AmxFindPublic(amx, blah, &iFunctionIndex) == AMX_ERR_NONE)
+		{
+			// Public was found.
+			return TRUE;
+		}
+	}
+
+	return FALSE; // no public found in any loaded script
 }

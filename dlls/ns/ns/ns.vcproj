@@ -150,6 +150,9 @@
 				RelativePath=".\amxxmodule.cpp">
 			</File>
 			<File
+				RelativePath=".\CMenu.cpp">
+			</File>
+			<File
 				RelativePath=".\CPlayer.cpp">
 			</File>
 			<File

@@ -10,6 +10,14 @@
 #include "CSpawn.h"
 #include "utilfunctions.h"
 
+extern DLL_FUNCTIONS *g_pFunctionTable;
+extern DLL_FUNCTIONS *g_pFunctionTable_Post;
+extern enginefuncs_t *g_pengfuncsTable;
+extern enginefuncs_t *g_pengfuncsTable_Post;
+extern NEW_DLL_FUNCTIONS *g_pNewFunctionsTable;
+extern NEW_DLL_FUNCTIONS *g_pNewFunctionsTable_Post;
+
+
 extern CSpawn ns_spawnpoints;
 
 

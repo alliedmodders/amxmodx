@@ -179,7 +179,7 @@
 // #define FN_AngleVectors						AngleVectors
 // #define FN_CreateEntity						CreateEntity
 // #define FN_RemoveEntity						RemoveEntity
-// #define FN_CreateNamedEntity					CreateNamedEntity
+#define FN_CreateNamedEntity					CreateNamedEntity
 // #define FN_MakeStatic						MakeStatic
 // #define FN_EntIsOnFloor						EntIsOnFloor
 // #define FN_DropToFloor						DropToFloor

@@ -58,6 +58,7 @@ public plugin_init()
   register_cvar("amx_vote_answers","1")
   register_cvar("amx_vote_delay","60")
   register_cvar("amx_last_voting","0")
+  register_cvar("amx_show_activity","2")
   set_cvar_float("amx_last_voting",0.0)
 
   register_concmd("amx_reloadadmins","cmdReload",ADMIN_ADMIN)

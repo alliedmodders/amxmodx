@@ -645,3 +645,6 @@ native md5(const szString[], md5buffer[34]);
 
 /* Calculates the md5 keysum of a file */
 native md5_file(const file[], md5buffer[34]);
+
+/* Returns the internal flags set on the called bytecode structure - Do not use */
+native plugin_flags();

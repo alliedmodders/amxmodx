@@ -252,3 +252,11 @@ enum {
 	module_noattach,
 	module_old,
 };
+
+#define AMX_FLAG_DEBUG		(1<<1)  /* symbolic info. available */
+#define AMX_FLAG_COMPACT  	(1<<2)  /* compact encoding */
+#define AMX_FLAG_BIGENDIAN	(1<<3) /* big endian encoding */
+#define AMX_FLAG_NOCHECKS	(1<<4) /* no array bounds checking */
+#define AMX_FLAG_LINEOPS	(1<<5)   /* line ops are parsed by the JIT [loadtime only flag] */
+#define AMX_FLAG_BROWSE		(1<<14)   /* browsing/relocating or executing */
+#define AMX_FLAG_RELOC		(1<<15)   /* jump/call addresses relocated */

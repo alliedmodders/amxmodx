@@ -2639,6 +2639,13 @@ static cell register_dictionary(AMX *amx, cell *params)
 	return result;
 }
 
+static cell plugin_flags(AMX *amx, cell *params)
+{
+	AMX_HEADER *hdr;
+	hdr = (AMX_HEADER *)amx->base;
+	return hdr->flags;
+}
+
 // lang_exists(const name[]);
 static cell lang_exists(AMX *amx, cell *params)
 {
@@ -2802,5 +2809,6 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "lang_exists",			lang_exists },
   { "md5",				amx_md5 },
   { "md5_file",			amx_md5_file },
+  { "plugin_flags",		plugin_flags},
   { NULL, NULL }
 };

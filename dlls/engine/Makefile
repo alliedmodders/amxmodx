@@ -56,7 +56,7 @@ OBJ_LINUX := $(SRCFILES:%.cpp=$(OBJDIR_LINUX)/%.o)
 OBJ_WIN32 := $(SRCFILES:%.cpp=$(OBJDIR_WIN32)/%.o)
 
 CCOPT = -march=i386 -O2 -ffast-math -funroll-loops \
-	-s -DNDEBUG
+	-fomit-frame-pointer -s -DNDEBUG
 
 INCLUDEDIRS=-I../curl/include -I$(SRCDIR) -I$(AMXDIR) -I$(METADIR) -I$(SDKSRC)/engine -I$(SDKSRC)/common -I$(SDKSRC)/pm_shared -I$(SDKSRC)/dlls -I$(SDKSRC) $(EXTRA_INCLUDEDIRS)
 CFLAGS=-Wall -Wno-unknown-pragmas

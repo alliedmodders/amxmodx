@@ -235,9 +235,9 @@ void DispatchTouch(edict_t *pToucher, edict_t *pTouched)
 	const char *ptdClass = STRING(pTouched->v.classname);
 	for (i=0; i<Touches.size(); i++)
 	{
-		if (Touches[i]->Toucher = 0)
+		if (Touches[i]->Toucher == 0)
 		{
-			if (Touches[i]->Touched = 0)
+			if (Touches[i]->Touched == 0)
 			{
 				retVal = MF_ExecuteForward(Touches[i]->Forward, ENTINDEX(pToucher), ENTINDEX(pTouched));
 				if (retVal)
@@ -252,7 +252,7 @@ void DispatchTouch(edict_t *pToucher, edict_t *pTouched)
 					RETURN_META(MRES_IGNORED);
 			}
 		} else if (fstrcmp(Touches[i]->Toucher, ptrClass)) {
-			if (Touches[i]->Touched = 0)
+			if (Touches[i]->Touched == 0)
 			{
 				retVal = MF_ExecuteForward(Touches[i]->Forward, ENTINDEX(pToucher), ENTINDEX(pTouched));
 				if (retVal)

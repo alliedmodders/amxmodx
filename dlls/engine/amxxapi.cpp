@@ -11,6 +11,17 @@ int AmxStringToEngine(AMX *amx, cell param, int &len)
 	return ALLOC_STRING(szString);
 }
 
+void EngineError(AMX *amx, char *fmt, ...)
+{
+	va_list p;
+	va_start(p, fmt);
+	char errbuf[512];
+	vsprintf(errbuf, fmt, p);
+	va_end(p);
+	MF_Log("%s (\"%s\", line %d)", errbuf, MF_GetScriptName(MF_FindScriptByAmx(amx)), amx->curline);
+	MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+}
+
 void OnAmxxAttach()
 {
 	pfnTouchForward = 0;

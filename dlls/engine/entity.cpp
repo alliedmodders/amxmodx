@@ -27,7 +27,7 @@ static cell AMX_NATIVE_CALL entity_range(AMX *amx, cell *params)
 	int idxb = params[2];
 
 	if (!is_ent_valid(idxa) || !is_ent_valid(idxb)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity");
 		return 0;
 	}
 
@@ -48,7 +48,7 @@ static cell AMX_NATIVE_CALL call_think(AMX *amx, cell *params)
 	int iEnt = params[1];
 
 	if (is_ent_valid(iEnt)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}
 
@@ -66,7 +66,7 @@ static cell AMX_NATIVE_CALL fake_touch(AMX *amx, cell *params)
 	int iPtd = params[2];
 
 	if (!is_ent_valid(iPtr) || !is_ent_valid(iPtd)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity");
 		return 0;
 	}
 
@@ -84,7 +84,7 @@ static cell AMX_NATIVE_CALL force_use(AMX *amx, cell *params)
 	int iPtd = params[2];
 
 	if (!is_ent_valid(iPtr) || !is_ent_valid(iPtd)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity");
 		return 0;
 	}
 
@@ -140,7 +140,7 @@ static cell AMX_NATIVE_CALL DispatchKeyValue(AMX *amx, cell *params)
 		cell *cVal = MF_GetAmxAddr(amx, params[1]);
 		int iValue = *cVal;
 		if (!is_ent_valid(iValue)) {
-			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+			EngineError(amx, "Invalid Entity %d", iValue);
 			return 0;
 		}
 		edict_t *pEntity = INDEXENT2(iValue);
@@ -173,7 +173,7 @@ static cell AMX_NATIVE_CALL get_keyvalue(AMX *amx, cell *params)
 {
 	int idx = params[1];
 	if (!is_ent_valid(idx)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", idx);
 		return 0;
 	}
 	edict_t *pEntity = INDEXENT2(idx);
@@ -203,7 +203,7 @@ static cell AMX_NATIVE_CALL DispatchSpawn(AMX *amx, cell *params)
 	int iEnt = params[1];
 
 	if (!is_ent_valid(iEnt)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}
 
@@ -225,7 +225,7 @@ static cell AMX_NATIVE_CALL entity_get_float(AMX *amx, cell *params)
 	REAL fVal = 0;
 
 	if (!is_ent_valid(iEnt)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}
 
@@ -359,7 +359,7 @@ static cell AMX_NATIVE_CALL entity_set_float(AMX *amx, cell *params)
 	REAL fVal = amx_ctof(params[3]);
 
 	if (!is_ent_valid(iEnt)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}
 
@@ -493,7 +493,7 @@ static cell AMX_NATIVE_CALL entity_get_int(AMX *amx, cell *params)
 	int iRetValue = 0;
 
 	if (!is_ent_valid(iEnt)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}
 
@@ -613,7 +613,7 @@ static cell AMX_NATIVE_CALL entity_get_int(AMX *amx, cell *params)
 			iRetValue = pEnt->v.deadflag;
 			break;
 		default:
-			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+			EngineError(amx, "Invalid property %d", iEnt);
 			return 0;
 			break;
 	}
@@ -628,7 +628,7 @@ static cell AMX_NATIVE_CALL entity_set_int(AMX *amx, cell *params)
 	int iNewValue = params[3];
 
 	if (!is_ent_valid(iEnt)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}
 
@@ -763,7 +763,7 @@ static cell AMX_NATIVE_CALL entity_get_vector(AMX *amx, cell *params)
 	Vector vRetValue = Vector(0, 0, 0);
 
 	if (!is_ent_valid(iEnt)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}
 
@@ -859,7 +859,7 @@ static cell AMX_NATIVE_CALL entity_set_vector(AMX *amx, cell *params)
 	cell *vAmx = MF_GetAmxAddr(amx, params[3]);
 
 	if (!is_ent_valid(iEnt)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}
 
@@ -956,7 +956,7 @@ static cell AMX_NATIVE_CALL entity_get_string(AMX *amx, cell *params)
 	const char *szRet = NULL;
 
 	if (!is_ent_valid(iEnt)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}
 
@@ -1021,7 +1021,7 @@ static cell AMX_NATIVE_CALL entity_set_string(AMX *amx, cell *params)
 	int iszString = AmxStringToEngine(amx, params[3], iLen);
 
 	if (!is_ent_valid(iEnt)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}
 
@@ -1083,7 +1083,7 @@ static cell AMX_NATIVE_CALL entity_get_edict(AMX *amx, cell *params)
 	edict_t *pRet;
 
 	if (!is_ent_valid(iEnt)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}
 
@@ -1142,7 +1142,7 @@ static cell AMX_NATIVE_CALL entity_set_edict(AMX *amx, cell *params)
 	int iSetEnt = params[3];
 
 	if (!is_ent_valid(iEnt) || !is_ent_valid(iSetEnt)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}
 
@@ -1199,7 +1199,7 @@ static cell AMX_NATIVE_CALL entity_get_byte(AMX *amx, cell *params)
 	int iRetValue = 0;
 
 	if (!is_ent_valid(iEnt)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}
 
@@ -1240,7 +1240,7 @@ static cell AMX_NATIVE_CALL entity_set_byte(AMX *amx, cell *params)
 	int iNewValue = params[3];
 
 	if (!is_ent_valid(iEnt)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}
 
@@ -1284,7 +1284,7 @@ static cell AMX_NATIVE_CALL entity_set_origin(AMX *amx, cell *params)
 	int iEnt = params[1];
 
 	if (!is_ent_valid(iEnt)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}
 	
@@ -1306,7 +1306,7 @@ static cell AMX_NATIVE_CALL entity_set_model(AMX *amx, cell *params)
 	int iEnt = params[1];
 
 	if (!is_ent_valid(iEnt)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}
 	
@@ -1328,7 +1328,7 @@ static cell AMX_NATIVE_CALL entity_set_size(AMX *amx, cell *params)
 	int iEnt = params[1];
 
 	if (!is_ent_valid(iEnt)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}
 	
@@ -1361,7 +1361,7 @@ static cell AMX_NATIVE_CALL get_offset_short(AMX *amx, cell *params)
 	int off = params[2];
 
 	if (!is_ent_valid(idx)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", idx);
 		return 0;
 	}
 
@@ -1379,7 +1379,7 @@ static cell AMX_NATIVE_CALL set_offset_short(AMX *amx, cell *params)
 	int off = params[2];
 
 	if (!is_ent_valid(idx)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", idx);
 		return 0;
 	}
 
@@ -1399,7 +1399,7 @@ static cell AMX_NATIVE_CALL get_offset_char(AMX *amx, cell *params)
 	int off = params[2];
 
 	if (!is_ent_valid(idx)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", idx);
 		return 0;
 	}
 
@@ -1418,7 +1418,7 @@ static cell AMX_NATIVE_CALL set_offset_char(AMX *amx, cell *params)
 	int off = params[2];
 
 	if (!is_ent_valid(idx)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", idx);
 		return 0;
 	}
 
@@ -1439,7 +1439,7 @@ static cell AMX_NATIVE_CALL get_offset_int(AMX *amx, cell *params)
 	int off = params[2];
 
 	if (!is_ent_valid(idx)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", idx);
 		return 0;
 	}
 
@@ -1457,7 +1457,7 @@ static cell AMX_NATIVE_CALL set_offset_int(AMX *amx, cell *params)
 	int off = params[2];
 
 	if (!is_ent_valid(idx)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", idx);
 		return 0;
 	}
 
@@ -1477,7 +1477,7 @@ static cell AMX_NATIVE_CALL get_offset_float(AMX *amx, cell *params)
 	int off = params[2];
 
 	if (!is_ent_valid(idx)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", idx);
 		return 0;
 	}
 
@@ -1497,7 +1497,7 @@ static cell AMX_NATIVE_CALL set_offset_float(AMX *amx, cell *params)
 	int off = params[2];
 
 	if (!is_ent_valid(idx)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", idx);
 		return 0;
 	}
 
@@ -1526,7 +1526,7 @@ static cell AMX_NATIVE_CALL find_ent_in_sphere(AMX *amx, cell *params)
 	int idx = params[1];
 
 	if (!is_ent_valid(idx)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", idx);
 		return 0;
 	}
 
@@ -1578,7 +1578,7 @@ static cell AMX_NATIVE_CALL find_sphere_class(AMX *amx, cell *params) // find_sp
 	vec3_t vecOrigin;
 	if (params[1] > 0) {
 		if (!is_ent_valid(params[1])) {
-			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+			EngineError(amx, "Invalid Entity %d", params[1]);
 			return 0;
 		}
 
@@ -1689,7 +1689,7 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native
 	int oEnt = params[3];
 	// Check index to start searching at, 0 must be possible.
 	if (!is_ent_valid(iEnt) || !is_ent_valid(oEnt)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity");
 		return 0;
 	}
 
@@ -1727,7 +1727,7 @@ static cell AMX_NATIVE_CALL get_grenade_id(AMX *amx, cell *params)  /* 4 param *
 	char* szModel;
 
 	if (!is_ent_valid(index)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE); 
+		EngineError(amx, "Invalid Entity %d", index);
 		return 0; 
 	}
 

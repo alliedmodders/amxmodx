@@ -37,7 +37,7 @@ int fstrcmp(const char *s1, const char *s2)
 }
 
 int Spawn(edict_t *pEntity) {
-	if (SpawnForward) {
+	if (SpawnForward != -1) {
 		int retVal = 0;
 		int id = ENTINDEX(pEntity);
 		retVal = MF_ExecuteForward(SpawnForward, id);
@@ -49,7 +49,7 @@ int Spawn(edict_t *pEntity) {
 
 void ChangeLevel(char* s1, char* s2)
 {
-	if (ChangelevelForward) {
+	if (ChangelevelForward != -1) {
 		int retVal = 0;
 		char *map = s1;
 		retVal = MF_ExecuteForward(ChangelevelForward, map);
@@ -61,7 +61,7 @@ void ChangeLevel(char* s1, char* s2)
 
 void PlaybackEvent(int flags, const edict_t *pInvoker, unsigned short eventindex, float delay, float *origin, float *angles, float fparam1, float fparam2, int iparam1, int iparam2, int bparam1, int bparam2)
 {
-	if (PlaybackForward) {
+	if (PlaybackForward != -1) {
 		edict_t *e = (edict_t *)pInvoker;
 		int retVal = 0;
 		static cell cOrigin[3];
@@ -90,7 +90,7 @@ void KeyValue(edict_t *pEntity, KeyValueData *pkvd)
 	g_inKeyValue=true;
 	g_pkvd=pkvd;
 	int index = ENTINDEX(pEntity);
-	if (DispatchKeyForward) {
+	if (DispatchKeyForward != -1) {
 		retVal = MF_ExecuteForward(DispatchKeyForward, index);
 		g_inKeyValue=false;
 		if (retVal > 0)
@@ -111,9 +111,9 @@ void StartFrame()
 		}
 	}
 
-	if (StartFrameForward)
+	if (StartFrameForward != -1)
 		MF_ExecuteForward(StartFrameForward);
-	else if (VexdServerForward)
+	else if (VexdServerForward != -1)
 		MF_ExecuteForward(VexdServerForward);
 
 	RETURN_META(MRES_IGNORED);
@@ -139,7 +139,7 @@ void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int 
 				RETURN_META(MRES_IGNORED);
 		}
 	}
-	if (CmdStartForward) {
+	if (CmdStartForward != -1) {
 		incmd = true;
 		retVal = MF_ExecuteForward(CmdStartForward, ENTINDEX(pEntity), g_cmd->impulse);
 		incmd = false;
@@ -156,7 +156,7 @@ void ClientKill(edict_t *pEntity)
 {
 	int retVal = 0;
 
-	if (ClientKillForward) {
+	if (ClientKillForward != -1) {
 		retVal = MF_ExecuteForward(ClientKillForward, ENTINDEX(pEntity));
 		if (retVal)
 			RETURN_META(MRES_SUPERCEDE);
@@ -209,7 +209,7 @@ void PlayerPostThink_Post(edict_t *pEntity)
 		}
 	}
 
-	if (PlayerPostThinkForward)
+	if (PlayerPostThinkForward != -1)
 	{
 		if (MF_ExecuteForward(PlayerPostThinkForward, ENTINDEX(pEntity)))
 			RETURN_META(MRES_SUPERCEDE);
@@ -260,11 +260,11 @@ void pfnTouch(edict_t *pToucher, edict_t *pTouched)
 		}
 	}
 	/* Execute pfnTouch forwards */
-	if (pfnTouchForward) {
+	if (pfnTouchForward != -1) {
 		retVal = MF_ExecuteForward(pfnTouchForward, ENTINDEX(pToucher), ENTINDEX(pTouched));
 		if (retVal)
 			RETURN_META(MRES_SUPERCEDE);
-	} else if (VexdTouchForward) {
+	} else if (VexdTouchForward != -1) {
 		retVal = MF_ExecuteForward(VexdTouchForward, ENTINDEX(pToucher), ENTINDEX(pTouched));
 		if (retVal)
 			RETURN_META(MRES_SUPERCEDE);

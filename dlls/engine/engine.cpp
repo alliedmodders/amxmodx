@@ -100,7 +100,7 @@ static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params)
 	Vector vVector = Vector(0, 0, 0);
 
 	if (!is_ent_valid(iEnt)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}
 
@@ -324,7 +324,7 @@ static cell AMX_NATIVE_CALL set_speak(AMX *amx, cell *params) {
 	int iNewSpeakFlags = params[2];
 
 	if (iIndex> 32 || !is_ent_valid(iIndex)) {
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid player %d", iIndex);
 		return 0;
 	}
 
@@ -337,7 +337,7 @@ static cell AMX_NATIVE_CALL get_speak(AMX *amx, cell *params) {
 	int iIndex = params[1];
 
 	if (!is_ent_valid(iIndex) || iIndex > 32) {
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid player %d", iIndex);
 		return 0;
 	}
 
@@ -364,7 +364,7 @@ static cell AMX_NATIVE_CALL get_info_keybuffer(AMX *amx, cell *params)
 	int iEnt = params[1];
 	
 	if (!is_ent_valid(iEnt)) {
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}
 
@@ -382,7 +382,7 @@ static cell AMX_NATIVE_CALL drop_to_floor(AMX *amx, cell *params)
 	int iEnt = params[1];
 
 	if (!is_ent_valid(iEnt)) {
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iEnt);
 		return 0;
 	}
 
@@ -408,12 +408,12 @@ static cell AMX_NATIVE_CALL attach_view(AMX *amx, cell *params)
 	int iTargetIndex = params[2];
 
 	if (iIndex > 32 || !is_ent_valid(iIndex)) {
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid player %d", iIndex);
 		return 0;
 	}
 
 	if (!is_ent_valid(iTargetIndex)) {
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid Entity %d", iIndex);
 		return 0;
 	}
 
@@ -430,7 +430,7 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 	int iCameraType = params[2];
 
 	if (iIndex > 32 || !is_ent_valid(iIndex)) {
-		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		EngineError(amx, "Invalid player %d", iIndex);
 		return 0;
 	}
 
@@ -896,28 +896,6 @@ static cell AMX_NATIVE_CALL traceresult(AMX *amx, cell *params)
 	return 0;
 }
 
-//(mahnsawce)
-static cell AMX_NATIVE_CALL take_damage(AMX *amx, cell *params)
-{
-	int indexa = params[1];
-	int indexb = params[2];
-	int indexc = params[3];
-	if (!is_ent_valid(indexa) || !is_ent_valid(indexb) || !is_ent_valid(indexc)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
-	REAL fnDamage = amx_ctof(params[4]);
-	int inType = params[5];
-	edict_t* pEntitya = INDEXENT2(indexa);
-	edict_t* pEntityb = INDEXENT2(indexb);
-	edict_t* pEntityc = INDEXENT2(indexc);
-	CBaseEntity *pCEntity = NULL;
-	pCEntity = (CBaseEntity*)((INDEXENT2(indexa))->pvPrivateData);
-	pCEntity->TakeDamage(VARS(pEntityb),VARS(pEntityc),fnDamage,inType);
-	return 1;
-}
-
-
 AMX_NATIVE_INFO engine_Natives[] = {
 	{"halflife_time",		halflife_time},
 
@@ -937,7 +915,6 @@ AMX_NATIVE_INFO engine_Natives[] = {
 	{"trace_line",			trace_line},
 	{"trace_hull",			trace_hull},
 	{"traceresult",			traceresult},
-	{"take_damage",			take_damage},
 
 	{"set_speak",			set_speak},
 	{"get_speak",			get_speak},

@@ -7,11 +7,6 @@
 #include <sdk_util.h>
 #include "CVector.h"
 #include "CString.h"
-#ifndef CBASEPLAYER_H
-#define CBASEPLAYER_H
-#include <cbase.h>
-#include <player.h>
-#endif
 #include "amxxmodule.h"
 #include <usercmd.h>
 #include "messages.h"
@@ -177,7 +172,10 @@ inline edict_t* INDEXENT2( int iEdictNum )
 	else
 		return (*g_engfuncs.pfnPEntityOfEntIndex)(iEdictNum); 
 }
-#define CHECK_ENTITY(x) if (x != 0 && (FNullEnt(INDEXENT2(x)) || x < 0 || x > gpGlobals->maxEntities)) { MF_RaiseAmxError(amx,AMX_ERR_NATIVE); return 0; }
+
+void EngineError(AMX *amx, char *fmt, ...);
+
+#define CHECK_ENTITY(x) if (x != 0 && (FNullEnt(INDEXENT2(x)) || x < 0 || x > gpGlobals->maxEntities)) { EngineError(amx, "Invalid entity %d", x); return 0; }
 
 extern bool g_inKeyValue;
 extern KeyValueData *g_pkvd;

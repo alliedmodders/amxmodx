@@ -508,7 +508,6 @@ static int amx_BrowseRelocate(AMX *amx)
   cell cip;
   long codesize;
   OPCODE op;
-  int debug;
   int last_sym_global = 0;
   #if defined __GNUC__ || defined ASM32 || defined JIT
     cell *opcode_list;
@@ -535,13 +534,7 @@ static int amx_BrowseRelocate(AMX *amx)
   assert(OP_MOVS==117);
   assert(OP_SYMBOL==126);
 
-  /* check the debug hook */
-  amx->dbgcode=DBG_INIT;
-  assert(amx->flags==0);
   amx->flags=AMX_FLAG_BROWSE;
-  debug= amx->debug(amx)==AMX_ERR_NONE;
-  if (debug)
-    amx->flags|=AMX_FLAG_DEBUG;
 
   #if defined __GNUC__ || defined ASM32 || defined JIT && !defined __64BIT__
     amx_Exec(amx, (cell*)&opcode_list, 0, 0);
@@ -722,21 +715,11 @@ static int amx_BrowseRelocate(AMX *amx)
       DBGPARAM(amx->curfile);
       amx->dbgname=(char *)(code+(int)cip);
       cip+=num - sizeof(cell);
-      if (debug) {
-        assert(amx->flags==(AMX_FLAG_DEBUG | AMX_FLAG_BROWSE));
-        amx->dbgcode=DBG_FILE;
-        amx->debug(amx);
-      } /* if */
       break;
     } /* case */
     case OP_LINE:
       DBGPARAM(amx->curline);
       DBGPARAM(amx->curfile);
-      if (debug) {
-        assert(amx->flags==(AMX_FLAG_DEBUG | AMX_FLAG_BROWSE));
-        amx->dbgcode=DBG_LINE;
-        amx->debug(amx);
-      } /* if */
       break;
     case OP_SYMBOL: {
       cell num;
@@ -746,29 +729,14 @@ static int amx_BrowseRelocate(AMX *amx)
       amx->dbgname=(char *)(code+(int)cip);
       cip+=num - 2*sizeof(cell);
       last_sym_global = (amx->dbgparam >> 8)==0;
-      if (debug && last_sym_global) { /* do global symbols only */
-        assert(amx->flags==(AMX_FLAG_DEBUG | AMX_FLAG_BROWSE));
-        amx->dbgcode=DBG_SYMBOL;
-        amx->debug(amx);
-      } /* if */
       break;
     } /* case */
     case OP_SRANGE:
       DBGPARAM(amx->dbgaddr);   /* dimension level */
       DBGPARAM(amx->dbgparam);  /* length */
-      if (debug && last_sym_global) { /* do global symbols only */
-        assert(amx->flags==(AMX_FLAG_DEBUG | AMX_FLAG_BROWSE));
-        amx->dbgcode=DBG_SRANGE;
-        amx->debug(amx);
-      } /* if */
       break;
     case OP_SYMTAG:
       DBGPARAM(amx->dbgparam);  /* tag id */
-      if (debug && last_sym_global) { /* do global symbols only */
-        assert(amx->flags==(AMX_FLAG_DEBUG | AMX_FLAG_BROWSE));
-        amx->dbgcode=DBG_SYMTAG;
-        amx->debug(amx);
-      } /* if */
       break;
     case OP_CASETBL: {
       cell num;
@@ -936,8 +904,6 @@ int AMXAPI amx_Init(AMX *amx,void *program)
   amx->stk=amx->stp;
   if (amx->callback==NULL)
     amx->callback=amx_Callback;
-  if (amx->debug==NULL)
-    amx->debug=amx_Debug;
   amx->curline=0;
   amx->curfile=0;
   amx->data=NULL;
@@ -1755,7 +1721,6 @@ static void *amx_opcodelist_nodebug[] = {
   ucell codesize;
   int num,i;
   va_list ap;
-  int debug;
 
   /* HACK: return label table (for amx_BrowseRelocate) if amx structure
    * has the AMX_FLAG_BROWSE flag set.
@@ -1763,7 +1728,7 @@ static void *amx_opcodelist_nodebug[] = {
   if ((amx->flags & AMX_FLAG_BROWSE)==AMX_FLAG_BROWSE) {
     assert(sizeof(cell)==sizeof(void *));
     assert(retval!=NULL);
-    *retval=(cell)((amx->flags & AMX_FLAG_DEBUG)==0 ? amx_opcodelist_nodebug : amx_opcodelist);
+    *retval=(cell)(amx_opcodelist_nodebug);
     return 0;
   } /* if */
 
@@ -1776,7 +1741,6 @@ static void *amx_opcodelist_nodebug[] = {
   if ((amx->flags & AMX_FLAG_RELOC)==0)
     return AMX_ERR_INIT;
   assert((amx->flags & AMX_FLAG_BROWSE)==0);
-  debug= (amx->flags & AMX_FLAG_DEBUG)!=0;
 
   /* set up the registers */
   hdr=(AMX_HEADER *)amx->base;
@@ -1817,15 +1781,6 @@ static void *amx_opcodelist_nodebug[] = {
   CHKSTACK();
   CHKHEAP();
   init_little_endian();
-
-  if (debug && index!=AMX_EXEC_CONT) {
-    /* set the entry point in the debugger by marking a "call" to the
-     * exported function
-     */
-    amx->dbgcode=DBG_CALL;
-    amx->dbgaddr=(ucell)((unsigned char*)cip-code);
-    amx->debug(amx);
-  } /* if */
 
   /* sanity checks */
   assert(OP_PUSH_PRI==36);
@@ -2132,12 +2087,6 @@ static void *amx_opcodelist_nodebug[] = {
     stk+=offs;
     CHKMARGIN();
     CHKSTACK();
-    if (debug && offs>0) {
-      amx->dbgcode=DBG_CLRSYM;
-      amx->stk=stk;
-      amx->hea=hea;
-      amx->debug(amx);
-    } /* if */
     NEXT(cip);
   op_stack_nodebug:
     GETPARAM(offs);
@@ -2165,13 +2114,6 @@ static void *amx_opcodelist_nodebug[] = {
     if ((ucell)offs>=codesize)
       ABORT(amx,AMX_ERR_MEMACCESS);
     cip=(cell *)(code+(int)offs);
-    if (debug) {
-      amx->stk=stk;
-      amx->hea=hea;
-      amx->dbgcode=DBG_RETURN;
-      amx->dbgparam=pri;    /* store "return value" */
-      amx->debug(amx);
-    } /* if */
     NEXT(cip);
   op_ret_nodebug:
     POP(frm);
@@ -2189,15 +2131,6 @@ static void *amx_opcodelist_nodebug[] = {
       ABORT(amx,AMX_ERR_MEMACCESS);
     cip=(cell *)(code+(int)offs);
     stk+= *(cell *)(data+(int)stk) + sizeof(cell); /* remove parameters from the stack */
-    if (debug) {
-      amx->stk=stk;
-      amx->hea=hea;
-      amx->dbgcode=DBG_RETURN;
-      amx->dbgparam=pri;    /* store "return value" */
-      amx->debug(amx);
-      amx->dbgcode=DBG_CLRSYM;
-      amx->debug(amx);
-    } /* if */
     NEXT(cip);
   op_retn_nodebug:
     POP(frm);
@@ -2211,11 +2144,6 @@ static void *amx_opcodelist_nodebug[] = {
   op_call:
     PUSH(((unsigned char *)cip-code)+sizeof(cell));/* push address behind instruction */
     cip=JUMPABS(code, cip);                     /* jump to the address */
-    if (debug) {
-      amx->dbgcode=DBG_CALL;
-      amx->dbgaddr=(ucell)((unsigned char*)cip-code);
-      amx->debug(amx);
-    } /* if */
     NEXT(cip);
   op_call_nodebug:
     PUSH(((unsigned char *)cip-code)+sizeof(cell));/* push address behind instruction */
@@ -2224,11 +2152,6 @@ static void *amx_opcodelist_nodebug[] = {
   op_call_pri:
     PUSH((unsigned char *)cip-code);
     cip=(cell *)(code+(int)pri);
-    if (debug) {
-      amx->dbgcode=DBG_CALL;
-      amx->dbgaddr=pri;
-      amx->debug(amx);
-    } /* if */
     NEXT(cip);
   op_call_pri_nodebug:
     PUSH((unsigned char *)cip-code);
@@ -2560,12 +2483,6 @@ static void *amx_opcodelist_nodebug[] = {
     amx->pri=pri;
     amx->alt=alt;
     amx->cip=(cell)((unsigned char*)cip-code);
-    if (debug) {
-      amx->dbgcode=DBG_TERMINATE;
-      amx->dbgaddr=(cell)((unsigned char *)cip-code);
-      amx->dbgparam=offs;
-      amx->debug(amx);
-    } /* if */
     if (offs==AMX_ERR_SLEEP) {
       amx->reset_stk=reset_stk;
       amx->reset_hea=reset_hea;
@@ -2642,23 +2559,6 @@ static void *amx_opcodelist_nodebug[] = {
     assert((amx->flags & AMX_FLAG_BROWSE)==0);
     GETPARAM(amx->curline);
     GETPARAM(amx->curfile);
-    if (debug) {
-      amx->frm=frm;
-      amx->stk=stk;
-      amx->hea=hea;
-      amx->dbgcode=DBG_LINE;
-      num=amx->debug(amx);
-      if (num!=AMX_ERR_NONE) {
-        if (num==AMX_ERR_SLEEP) {
-          amx->pri=pri;
-          amx->alt=alt;
-          amx->cip=(cell)((unsigned char*)cip-code);
-          amx->reset_stk=reset_stk;
-          amx->reset_hea=reset_hea;
-        } /* if */
-        ABORT(amx,num);
-      } /* if */
-    } /* if */
     NEXT(cip);
   op_line_nodebug:
     assert((amx->flags & AMX_FLAG_BROWSE)==0);
@@ -2674,10 +2574,6 @@ static void *amx_opcodelist_nodebug[] = {
     cip=(cell *)((unsigned char *)cip + (int)offs - 2*sizeof(cell));
     amx->dbgcode=DBG_SYMBOL;
     assert((amx->dbgparam >> 8)>0);         /* local symbols only */
-    if (debug) {
-      amx->frm=frm;     /* debugger needs this to relocate the symbols */
-      amx->debug(amx);
-    } /* if */
     NEXT(cip);
   op_symbol_nodebug:
     assert((amx->flags & AMX_FLAG_BROWSE)==0);
@@ -2689,10 +2585,6 @@ static void *amx_opcodelist_nodebug[] = {
     GETPARAM(amx->dbgaddr);     /* dimension level */
     GETPARAM(amx->dbgparam);    /* length */
     amx->dbgcode=DBG_SRANGE;
-    if (debug) {
-      amx->frm=frm;     /* debugger needs this to relocate the symbols */
-      amx->debug(amx);
-    } /* if */
     NEXT(cip);
   op_srange_nodebug:
     assert((amx->flags & AMX_FLAG_BROWSE)==0);
@@ -2702,10 +2594,6 @@ static void *amx_opcodelist_nodebug[] = {
     assert((amx->flags & AMX_FLAG_BROWSE)==0);
     GETPARAM(amx->dbgparam);  /* tag id */
     amx->dbgcode=DBG_SYMTAG;
-    if (debug) {
-      amx->frm=frm;   /* debugger needs this to relocate the symbols */
-      amx->debug(amx);
-    } /* if */
     NEXT(cip);
   op_symtag_nodebug:
     assert((amx->flags & AMX_FLAG_BROWSE)==0);
@@ -2798,7 +2686,6 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
   ucell codesize;
   int i;
   va_list ap;
-  int debug;
   #if defined ASM32 || defined JIT
       #ifdef __WATCOMC__
         #pragma aux amx_opcodelist "_*"
@@ -2825,7 +2712,7 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
          */
         *retval=(cell)amx_opcodelist;
       #else
-        *retval=(cell)((amx->flags & AMX_FLAG_DEBUG)==0 ? amx_opcodelist_nodebug : amx_opcodelist);
+        *retval=(cell)(amx_opcodelist_nodebug);
       #endif
       return 0;
     } /* if */
@@ -2840,8 +2727,6 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
   if ((amx->flags & AMX_FLAG_RELOC)==0)
     return AMX_ERR_INIT;
   assert((amx->flags & AMX_FLAG_BROWSE)==0);
-  debug= (amx->flags & AMX_FLAG_DEBUG)!=0;
-
   /* set up the registers */
   hdr=(AMX_HEADER *)amx->base;
   assert(hdr->magic==AMX_MAGIC);
@@ -2881,15 +2766,6 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
   CHKSTACK();
   CHKHEAP();
   init_little_endian();
-
-  if (debug && index!=AMX_EXEC_CONT) {
-    /* set the entry point in the debugger by marking a "call" to the
-     * exported function
-     */
-    amx->dbgcode=DBG_CALL;
-    amx->dbgaddr=(ucell)((unsigned char *)cip-code);
-    amx->debug(amx);
-  } /* if */
 
   /* sanity checks */
   assert(OP_PUSH_PRI==36);
@@ -3228,12 +3104,6 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
       stk+=offs;
       CHKMARGIN();
       CHKSTACK();
-      if (debug && offs>0) {
-        amx->dbgcode=DBG_CLRSYM;
-        amx->hea=hea;
-        amx->stk=stk;
-        amx->debug(amx);
-      } /* if */
       break;
     case OP_HEAP:
       GETPARAM(offs);
@@ -3254,13 +3124,6 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
       if ((ucell)offs>=codesize)
         ABORT(amx,AMX_ERR_MEMACCESS);
       cip=(cell *)(code+(int)offs);
-      if (debug) {
-        amx->stk=stk;
-        amx->hea=hea;
-        amx->dbgcode=DBG_RETURN;
-        amx->dbgparam=pri;  /* store "return value" */
-        amx->debug(amx);
-      } /* if */
       break;
     case OP_RETN:
       POP(frm);
@@ -3271,33 +3134,14 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
       cip=(cell *)(code+(int)offs);
       stk+= *(cell *)(data+(int)stk) + sizeof(cell); /* remove parameters from the stack */
       amx->stk=stk;
-      if (debug) {
-        amx->stk=stk;
-        amx->hea=hea;
-        amx->dbgcode=DBG_RETURN;
-        amx->dbgparam=pri;  /* store "return value" */
-        amx->debug(amx);
-        amx->dbgcode=DBG_CLRSYM;
-        amx->debug(amx);
-      } /* if */
       break;
     case OP_CALL:
       PUSH(((unsigned char *)cip-code)+sizeof(cell));/* skip address */
       cip=JUMPABS(code, cip);                   /* jump to the address */
-      if (debug) {
-        amx->dbgcode=DBG_CALL;
-        amx->dbgaddr=(ucell)((unsigned char *)cip-code);
-        amx->debug(amx);
-      } /* if */
       break;
     case OP_CALL_PRI:
       PUSH((unsigned char *)cip-code);
       cip=(cell *)(code+(int)pri);
-      if (debug) {
-        amx->dbgcode=DBG_CALL;
-        amx->dbgaddr=pri;
-        amx->debug(amx);
-      } /* if */
       break;
     case OP_JUMP:
       /* since the GETPARAM() macro modifies cip, you cannot
@@ -3625,12 +3469,6 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
       amx->pri=pri;
       amx->alt=alt;
       amx->cip=(cell)((unsigned char*)cip-code);
-      if (debug) {
-        amx->dbgcode=DBG_TERMINATE;
-        amx->dbgaddr=(cell)((unsigned char *)cip-code);
-        amx->dbgparam=offs;
-        amx->debug(amx);
-      } /* if */
       if (offs==AMX_ERR_SLEEP) {
         amx->reset_stk=reset_stk;
         amx->reset_hea=reset_hea;
@@ -3707,23 +3545,6 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
       assert((amx->flags & AMX_FLAG_BROWSE)==0);
       GETPARAM(amx->curline);
       GETPARAM(amx->curfile);
-      if (debug) {
-        amx->frm=frm;
-        amx->stk=stk;
-        amx->hea=hea;
-        amx->dbgcode=DBG_LINE;
-        num=amx->debug(amx);
-        if (num!=AMX_ERR_NONE) {
-          if (num==AMX_ERR_SLEEP) {
-            amx->pri=pri;
-            amx->alt=alt;
-            amx->cip=(cell)((unsigned char*)cip-code);
-            amx->reset_stk=reset_stk;
-            amx->reset_hea=reset_hea;
-          } /* if */
-          ABORT(amx,num);
-        } /* if */
-      } /* if */
       break;
     case OP_SYMBOL:
       assert((amx->flags & AMX_FLAG_BROWSE)==0);
@@ -3733,30 +3554,15 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
       amx->dbgname=(char *)cip;
       cip=(cell *)((unsigned char *)cip + (int)offs - 2*sizeof(cell));
       assert((amx->dbgparam >> 8)>0);         /* local symbols only */
-      if (debug) {
-        amx->frm=frm;   /* debugger needs this to relocate the symbols */
-        amx->dbgcode=DBG_SYMBOL;
-        amx->debug(amx);
-      } /* if */
       break;
     case OP_SRANGE:
       assert((amx->flags & AMX_FLAG_BROWSE)==0);
       GETPARAM(amx->dbgaddr);   /* dimension level */
       GETPARAM(amx->dbgparam);  /* length */
-      if (debug) {
-        amx->frm=frm;   /* debugger needs this to relocate the symbols */
-        amx->dbgcode=DBG_SRANGE;
-        amx->debug(amx);
-      } /* if */
       break;
     case OP_SYMTAG:
       assert((amx->flags & AMX_FLAG_BROWSE)==0);
       GETPARAM(amx->dbgparam);  /* tag id */
-      if (debug) {
-        amx->frm=frm;   /* debugger needs this to relocate the symbols */
-        amx->dbgcode=DBG_SYMTAG;
-        amx->debug(amx);
-      } /* if */
       break;
     case OP_JUMP_PRI:
       cip=(cell *)(code+(int)pri);

@@ -65,59 +65,29 @@ static cell AMX_NATIVE_CALL ns_get_build(AMX *amx, cell *params)
 	int iNumber = params[3];
 	edict_t* pBuild = NULL;
 	int iCount=0;
-	int nsversion=params[4];
 
 	while ((pBuild = UTIL_FindEntityByString(pBuild,"classname",buildtype)) != NULL)
 	{
-		if (nsversion == 3)
+		if (iBuiltOnly > 0)
 		{
-			if (iBuiltOnly > 0)
+			if (FStrEq("team_advarmory",buildtype) || FStrEq("team_advturretfactory",buildtype))
 			{
-				if (FStrEq("team_advarmory",buildtype) || FStrEq("team_advturretfactory",buildtype))
+				iCount++;
+			}
+			else
+			{
+				if (pBuild->v.fuser1 >= 1000 || pBuild->v.iuser4 & MASK_ELECTRICITY)
 				{
 					iCount++;
 				}
-				else
-				{
-					if (pBuild->v.fuser1 >= 1000 || pBuild->v.iuser4 & MASK_ELECTRICITY)
-					{
-						iCount++;
-					}
-				}
 			}
-			else
-			{
-				iCount++;
-			}
-			if (iNumber > 0 && iCount == iNumber)
-				return ENTINDEX(pBuild);
 		}
-		else if (nsversion == 2)
+		else
 		{
-			if (iBuiltOnly > 0)
-			{
-				if (FStrEq("team_hive",buildtype))
-				{
-					if (pBuild->v.fuser1 >= 1000)
-					{
-						iCount++;
-					}
-				}
-				else
-				{
-					if (pBuild->v.fuser1 >= 1000 || pBuild->v.iuser4 & MASK_ELECTRICITY)
-					{
-						iCount++;
-					}
-				}
-			}
-			else
-			{
-				iCount++;
-			}
-			if (iNumber > 0 && iCount == iNumber)
-				return ENTINDEX(pBuild);
+			iCount++;
 		}
+		if (iNumber > 0 && iCount == iNumber)
+			return ENTINDEX(pBuild);
 	}
 	return iCount++;
 }

@@ -1,7 +1,7 @@
-MODNAME = amx_mm
+MODNAME = amxx_mm
 SRCFILES = meta_api.cpp CFile.cpp CString.cpp CVault.cpp vault.cpp\
 float.cpp file.cpp modules.cpp CMisc.cpp CTask.cpp string.cpp\
-amxmod.cpp CEvent.cpp CCmd.cpp CLogEvent.cpp srvcmd.cpp strptime.cpp\
+amxmodx.cpp CEvent.cpp CCmd.cpp CLogEvent.cpp srvcmd.cpp strptime.cpp\
 CForward.cpp CPlugin.cpp CModule.cpp CMenu.cpp emsg.cpp util.cpp
 CSRCFILES = amx.c amxcore.c amxtime.c power.c
 
@@ -61,7 +61,7 @@ OBJ_WIN32 := $(SRCFILES:%.cpp=$(OBJDIR_WIN32)/%.o)
 OBJC_WIN32 := $(CSRCFILES:%.c=$(OBJDIR_WIN32)/%.o)
 
 
-CCOPT = -O2 -march=i686 -ffast-math -funroll-loops \
+CCOPT = -O2 -march=i586 -ffast-math -funroll-loops \
 	-fomit-frame-pointer -fexpensive-optimizations -malign-loops=2 \
 	-malign-jumps=2 -malign-functions=2 -s	-DNDEBUG
 

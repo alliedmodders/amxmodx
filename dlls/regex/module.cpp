@@ -36,7 +36,7 @@ static cell AMX_NATIVE_CALL regex_match(AMX *amx, cell *params)
 		const char *err = x->mError;
 		*eOff = x->mErrorOffset;
 		MF_SetAmxString(amx, params[4], err?err:"unknown", params[5]);
-		return 0;
+		return -1;
 	}
 
 	int e = x->Match(str);
@@ -46,7 +46,11 @@ static cell AMX_NATIVE_CALL regex_match(AMX *amx, cell *params)
 		cell *res = MF_GetAmxAddr(amx, params[3]);
 		*res = x->mErrorOffset;
 		x->Clear();
-		return -1;
+		return -2;
+	} else if (e == 0) {
+		*res = 0;
+		x->Clear();
+		return 0;
 	} else {
 		cell *res = MF_GetAmxAddr(amx, params[3]);
 		*res = x->mSubStrings;
@@ -78,9 +82,27 @@ static cell AMX_NATIVE_CALL regex_substr(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL regex_free(AMX *amx, cell *params)
+{
+	cell *c = MF_GetAmxAddr(amx, params[1]);
+	int id = *c;
+	*c = 0;
+	if (id >= (int)PEL.size() || id < 0 || PEL[id]->isFree())
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid regex handle %d", id);
+		return 0;
+	}
+
+	RegEx *x = PEL[id];
+	x->Clear();
+
+	return 1;
+}
+
 AMX_NATIVE_INFO regex_Natives[] = {
 	{"regex_match",				regex_match},
 	{"regex_substr",			regex_substr},
+	{"regex_free",				regex_free},
 	{NULL,						NULL},
 };
 

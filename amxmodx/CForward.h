@@ -36,80 +36,94 @@
 // class CmdMngr
 // *****************************************************
 
-#define FORWARD_NUM 12
+const int FORWARD_MAX_PARAMS = 16;
 
-enum {
-	FF_ClientCommand,
-	FF_ClientConnect,
-	FF_ClientDisconnect,
-	FF_ClientInfoChanged,
-	FF_ClientPutInServer,
-	FF_PluginInit,
-	FF_PluginCfg,
-	FF_PluginPrecache,
-	FF_PluginLog,
-	FF_PluginEnd,
-	FF_InconsistentFile,
-	FF_ClientAuthorized,	
+enum ForwardExecType
+{
+	ET_IGNORE = 0,					// Ignore return vaue
+	ET_STOP,						// Stop on PLUGIN_HANDLED
+	ET_STOP2,						// Stop on PLUGIN_HANDLED, continue on other values, return biggest return value
+	ET_CONTINUE,					// Continue; return biggest return value
 };
 
-class CForwardMngr 
+enum ForwardParam
 {
-public:
-	
-	class iterator;
+	FP_DONE = -1,					// specify this as the last argument
+									// only tells the function that there are no more arguments
+	FP_CELL,						// normal cell
+	FP_FLOAT,						// float; used as normal cell though
+	FP_STRING,						// string
+	FP_STRINGEX,					// string; will be updated to the last function's value
+	FP_ARRAY,						// array; use the return value of prepareArray.
+};
 
-	class CForward
+enum ForwardArrayElemType
+{
+	Type_Cell = 0,
+	Type_Char
+};
+
+struct ForwardPreparedArray
+{
+	
+	void *ptr;
+	ForwardArrayElemType type;
+	unsigned int size;
+};
+
+class CForward
+{
+	const char *m_FuncName;
+	ForwardExecType m_ExecType;
+	int m_NumParams;
+	struct AMXForward
 	{
-
-		friend class iterator;
-		friend class CForwardMngr;
-
-		CPluginMngr::CPlugin* plugin;
-		int function;
-		CForward* next;
-		CForward( CPluginMngr::CPlugin* p, int func  ) : plugin(p) , function(func) {next=0;}
-
-	public:
-		inline CPluginMngr::CPlugin* getPlugin() { return plugin; }
-		inline int getFunction() { return function; }
-
-
-
+		CPluginMngr::CPlugin *pPlugin;
+		int func;
 	};
-	
-
-
-private:
-	CForward *head[ FORWARD_NUM ];
-	void clearForwards( CForward** a );
-
+	typedef CList<AMXForward> AMXForwardList;
+	AMXForwardList m_Funcs;
+	ForwardParam m_ParamTypes[FORWARD_MAX_PARAMS];
 public:
-	CForwardMngr() {memset( head, 0, sizeof(head));}
-	~CForwardMngr() { clear(); }
+	CForward(const char *name, ForwardExecType et, int numParams, const ForwardParam * paramTypes);
+	CForward()
+	{ }			// leaves everything unitialized
+	int execute(cell *params, ForwardPreparedArray *preparedArrays);
+	int getParamsNum() const
+	{
+		return m_NumParams;
+	}
+};
+
+class CForwardMngr
+{
+	typedef CVector<CForward*> ForwardVec;
+	ForwardVec m_Forwards;
+	ForwardPreparedArray m_TmpArrays[FORWARD_MAX_PARAMS];		// used by prepareArray
+	int m_TmpArraysNum;
+public:
+
+	CForwardMngr()
+	{ m_TmpArraysNum = 0; }
+	~CForwardMngr()
+	{ }
 
 	// Interface
-
-	void registerForward(  CPluginMngr::CPlugin* p, int func , int type  );
-	void executeForwards( int type , int num = 0, int player = 0 );
-	void clear();	
-
-
-	class iterator {
-		CForward *a;
-	public:
-		iterator(CForward*aa) : a(aa) {}
-		iterator& operator++() { a = a->next; return *this; }
-		bool operator==(const iterator& b) const { return a == b.a; }
-		bool operator!=(const iterator& b) const { return !operator==(b); }
-		operator bool () const { return a ? true : false; }
-		CForward& operator*() { return *a; }
-	};
-	inline iterator begin( int type ) const { return iterator(head[(int)type]); }
-	inline iterator end() const { return iterator(0); }
-	inline bool forwardsExist( int type ) {return head[(int)type]?true:false;}
+	int registerForward(const char *funcName, ForwardExecType et, int numParams, const ForwardParam *paramTypes);
+	int executeForwards(int id, cell *params);
+	void clear();		// delete all forwards
+	bool isIdValid(int id) const;
+	int getParamsNum(int id) const;
+	cell prepareArray(void *ptr, unsigned int size, ForwardArrayElemType type);
 };
 
+// register forward
+int registerForward(const char *funcName, ForwardExecType et, ...);
+// execute forwards
+int executeForwards(int id, ...);
+// prepare array
+cell prepareCellArray(cell *ptr, unsigned int size);
+cell prepareCharArray(char *ptr, unsigned int size);
 
 #endif
 

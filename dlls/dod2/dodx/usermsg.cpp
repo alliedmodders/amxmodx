@@ -132,18 +132,14 @@ void Client_Health_End(void* mValue){
 	edict_t *enemy = mPlayer->pEdict->v.dmg_inflictor;
 	int damage = (int)mPlayer->pEdict->v.dmg_take;
 
-	if ( !damage || !enemy )
+	if ( !mPlayer || !damage || !enemy )
 		return;
 	
 	int weapon = 0;
 	int aim = 0;
 		
 	mPlayer->pEdict->v.dmg_take = 0.0; 
-	/* 
-	czasami przy drugim trafieniu liczby sa dodawane
-	i zamiast np. 30+30 jest 30+60 
-	dlatego dmg_take jest tu "czyszczone"
-	*/
+
 	
 	CPlayer* pAttacker = NULL;
 
@@ -159,12 +155,16 @@ void Client_Health_End(void* mValue){
 	else 
 		g_grenades.find( enemy , &pAttacker , weapon );
 
-	if ( !pAttacker ) pAttacker = mPlayer;
-	pAttacker->saveHit( mPlayer , weapon , damage, aim );
-
 	int TA = 0;
-	if ( (mPlayer->pEdict->v.team == pAttacker->pEdict->v.team) && (mPlayer->index != pAttacker->index) )
-		TA = 1;
+	
+	if ( !pAttacker ){
+		pAttacker = mPlayer;
+	}
+	else{ 
+		pAttacker->saveHit( mPlayer , weapon , damage, aim );
+		if ( mPlayer->pEdict->v.team == pAttacker->pEdict->v.team )
+			TA = 1;
+	}
 
 	g_damage_info.exec( pAttacker->index, mPlayer->index, damage, weapon, aim, TA );
 	

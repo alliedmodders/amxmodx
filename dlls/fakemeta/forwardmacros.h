@@ -241,7 +241,6 @@
 #define SIMPLE_USHORT_HOOK_INT_CONSTSTRING(call) \
 	unsigned short call (int v, const char *s) \
 	{ \
-	printf("Addr: %d\n",s); \
 		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i), v, s)); \
 		RETURN_META_VALUE(mswi(lastFmRes),(unsigned short)mlCellResult); \
 	} \
@@ -279,10 +278,8 @@
 	void call (float v) \
 	{ \
 		PREPARE_FLOAT(v); \
-		printf("[before] v is now: %f\n",v); \
 		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i), c_v)); \
 		BYREF_FLOAT(v); \
-		printf("[after] v is now: %f\n",v); \
 		RETURN_META(mswi(lastFmRes)); \
 	} \
 	void call##_post (float v) \

@@ -236,7 +236,6 @@ int	C_Spawn( edict_t *pent ) {
   attachModules();
   int loaded = countModules(CountModules_Running);	// Call	after attachModules	so all modules don't have pending stat
   // Set some info about amx version and modules
-  // :TODO:	Remove modules num from	amxmodx_version, make amxmodx_modules cvar
   CVAR_SET_STRING(init_amxmodx_version.name, AMX_VERSION);
   char buffer[32];
   sprintf(buffer, "%d", loaded);
@@ -771,39 +770,7 @@ void C_StartFrame_Post( void ) {
 
   g_task_time =	gpGlobals->time	+ 0.1;
 
-  for(CTaskMngr::iterator a	= g_tasksMngr.begin(); a ; ++a)
-  {
-	CTaskMngr::CTask& task = *a;
-	CPluginMngr::CPlugin* plugin = task.getPlugin();
-	int	err;
-
-	if ( plugin->isExecutable( task.getFunction() )	)
-	{
-	  if ( task.getParamLen() )	// call	with arguments
-	  {
-		cell amx_addr, *phys_addr;
-
-		if (amx_Allot(plugin->getAMX(),	task.getParamLen() , &amx_addr,	&phys_addr)	!= AMX_ERR_NONE)
-		{
-		  AMXXLOG_Log("[AMXX] Failed to	allocate AMX memory	(task \"%d\") (plugin \"%s\")",	task.getTaskId(),plugin->getName());
-		}
-		else
-		{
-		  copy_amxmemory(phys_addr,	task.getParam()	, task.getParamLen() );
-
-		  if ((err = amx_Exec(plugin->getAMX(),NULL, task.getFunction()	, 2, amx_addr, task.getTaskId()	)) != AMX_ERR_NONE)
-			AMXXLOG_Log("[AMXX]	Run	time error %d on line %ld (task	\"%d\")	(plugin	\"%s\")", err,plugin->getAMX()->curline,task.getTaskId(),plugin->getName());
-
-		  amx_Release(plugin->getAMX(),	amx_addr);
-		}
-	  }
-	  else // call without arguments
-	  {
-		if ((err = amx_Exec(plugin->getAMX(),NULL, task.getFunction() ,1, task.getTaskId() )) != AMX_ERR_NONE)
-		  AMXXLOG_Log("[AMXX] Run time error %d	on line	%ld	(task \"%d\") (plugin \"%s\")",	err,plugin->getAMX()->curline,task.getTaskId(),plugin->getName());
-	  }
-	}
-  }
+  g_tasksMngr.startFrame();
 
   RETURN_META(MRES_IGNORED);
 }

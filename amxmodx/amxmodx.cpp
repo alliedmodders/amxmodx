@@ -1569,7 +1569,7 @@ static cell AMX_NATIVE_CALL set_task(AMX *amx, cell *params) /* 2 param */
 
   g_tasksMngr.registerTask( plugin ,
     iFunc , UTIL_ReadFlags(temp), params[3], base ,
-    gpGlobals->time + base , params[5] ,
+    params[5] ,
     get_amxaddr(amx,params[4]) , params[7] );
 
   return 1;
@@ -1583,7 +1583,7 @@ static cell AMX_NATIVE_CALL remove_task(AMX *amx, cell *params) /* 1 param */
 static cell AMX_NATIVE_CALL change_task(AMX *amx, cell *params)
 {
   REAL flNewTime = amx_ctof(params[2]);
-  return g_tasksMngr.changeTask(params[1], params[3] ? 0 : amx, flNewTime);
+  return g_tasksMngr.changeTasks(params[1], params[3] ? 0 : amx, flNewTime);
 }
 
 static cell AMX_NATIVE_CALL task_exists(AMX *amx, cell *params) /* 1 param */

@@ -35,12 +35,12 @@
 
 plugin_info_t Plugin_info = {
   META_INTERFACE_VERSION, // ifvers
-  "AMX",  // name
+  "AMX Mod X",  // name
   AMX_VERSION,  // version
   __DATE__, // date
-  "OLO", // author
-  "http://www.amxmod.net",  // url
-  "AMX",  // logtag
+  "AMX Mod X Dev Team", // author
+  "http://www.amxmod.info",  // url
+  "AMXX",  // logtag
   PT_ANYTIME,// (when) loadable
   PT_ANYTIME,// (when) unloadable
 };

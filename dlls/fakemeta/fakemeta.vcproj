@@ -167,9 +167,21 @@
 			Filter="">
 			<File
 				RelativePath=".\pev.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\pev.h">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCustomBuildTool"/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -184,6 +196,10 @@
 			<File
 				RelativePath=".\forwardmacros.h">
 			</File>
+		</Filter>
+		<Filter
+			Name="hlsdk"
+			Filter="">
 		</Filter>
 	</Files>
 	<Globals>

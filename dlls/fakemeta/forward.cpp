@@ -111,6 +111,27 @@ void TraceLine_post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 	RETURN_META(MRES_IGNORED);
 }
 
+
+/*
+// Passed to pfnKeyValue
+typedef struct KeyValueData_s
+{
+	char	*szClassName;	// in: entity classname
+	char	*szKeyName;		// in: name of key
+	char	*szValue;		// in: value of key
+	int32	fHandled;		// out: DLL sets to true if key-value pair was understood
+} KeyValueData;
+*/
+void KeyValue(edict_t* entity, KeyValueData* data) {
+	g_fm_keyValueData = data;
+	FM_ENG_HANDLE(FM_KeyValue, (Engine[FM_KeyValue].at(i), ENTINDEX(entity)));
+	RETURN_META(mswi(lastFmRes));
+}
+void KeyValue_post(edict_t* entity, KeyValueData* data) {
+	FM_ENG_HANDLE_POST(FM_KeyValue, (Engine[FM_KeyValue].at(i), ENTINDEX(entity)));
+	RETURN_META(MRES_IGNORED);
+}
+
 void AlertMessage(ALERT_TYPE atype, char *szFmt, ...)
 {
 	static char buf[2048];
@@ -927,15 +948,14 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
 		DLLHOOK(Blocked);
 		break;
-	/*
-
-	TODO: Expand the structure (simple: just a bunch of strings and a float.)
+	//TODO: Expand the structure (simple: just a bunch of strings and a float.)
 
 	//DLLFunc_KeyValue,	// void )			( edict_t *pentKeyvalue, KeyValueData *pkvd );
 	case FM_KeyValue:
-		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_????, FP_DONE);
+		//fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_STRING, FP_STRING, FP_STRING, FP_CELL, FP_DONE);
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		DLLHOOK(KeyValue);
 		break;
-	*/
 	//DLLFunc_SetAbsBox,			// void )			( edict_t *pent );
 	case FM_SetAbsBox:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);

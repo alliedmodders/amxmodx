@@ -52,8 +52,10 @@ public plugin_init()
 {
   register_plugin("Welcome Message","0.16","AMXX Dev Team")
   g_cstrikeRunning = is_running("cstrike")
-  get_configsdir(g_motdFile, 63);
-  format(g_motdFile, 63, "%s/conmotd.txt", g_motdFile);
+#if defined READ_FROM_FILE
+  get_configsdir(g_motdFile, 63)
+  format(g_motdFile, 63, "%s/conmotd.txt", g_motdFile)
+#endif
 }
 
 public plugin_cfg()
@@ -78,7 +80,7 @@ public alt_motd(param[]) {
   get_cvar_string("amx_nextmap",nextmap,31)
 
   new len = copy(motdBody,MOTD_LENGTH,"<html><head><style type=^"text/css^">body{background:#000000;color:#FFB000;margin-left:8px;margin-top:8px;}")
-  len += copy(motdBody[len],MOTD_LENGTH,"hr{color:#FFB000;border:0px;}ul{margin-top:2px;margin-bottom:2px;}hr{margin-top:8px;margin-bottom:8px;}</style></head><body>")
+  len += copy(motdBody[len],MOTD_LENGTH-len,"hr{color:#FFB000;border:0px;}ul{margin-top:2px;margin-bottom:2px;}hr{margin-top:8px;margin-bottom:8px;}</style></head><body>")
   len += format(motdBody[len],MOTD_LENGTH-len,"Hello %s, welcome to %s<ul>",name,hostname)
   
 #if defined SHOW_TIME_AND_IP  

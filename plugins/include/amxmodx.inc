@@ -254,9 +254,6 @@ native get_user_name(index,name[],len);
 /* Gets player authid. */
 native get_user_authid(index, authid[] ,len);
 
-/* Returns player wonid. */
-native get_user_wonid(index);
-
 /* Returns player userid. */
 native get_user_userid(index);
 

@@ -571,6 +571,43 @@ static cell AMX_NATIVE_CALL is_alpha(AMX *amx, cell *params)
   return isalpha( params[1] );
 }
 
+static cell AMX_NATIVE_CALL amx_trim(AMX *amx, cell *params)
+{
+	int len;
+	char *asdf = get_amxstring(amx, params[1], 0, len);
+	int flag = 0, incr = 0;
+	register int i = 0;
+	for (i=strlen(asdf); i>=0; i--)
+	{
+		if (!isspace(asdf[i]))
+		{
+			break;
+		} else {
+			asdf[i] = 0;
+		}
+	}
+
+	len = strlen(asdf);
+	
+	for (i=0; i<len; i++)
+	{
+		if (isspace(asdf[i]) && !flag)
+		{
+			incr++;
+			if (incr+i<len)
+				asdf[i] = asdf[incr+i];
+		} else {
+			if (!flag)
+				flag = 1;
+			if (incr)
+				asdf[i] = asdf[incr+i];
+		}
+	}
+	asdf[len] = 0;
+
+	return incr;
+}
+
 AMX_NATIVE_INFO string_Natives[] = {
   { "add",    add },
   { "contain",  contain },
@@ -593,5 +630,6 @@ AMX_NATIVE_INFO string_Natives[] = {
   { "strtolower", strtolower },
   { "strtoupper", strtoupper },
   { "str_to_num", strtonum },
+  { "trim", amx_trim },
   { NULL, NULL }
 };

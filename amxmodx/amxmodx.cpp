@@ -1264,6 +1264,10 @@ static cell AMX_NATIVE_CALL read_datanum(AMX *amx, cell *params) /* 0 param */
 
 static cell AMX_NATIVE_CALL read_data(AMX *amx, cell *params) /* 3 param */
 {
+	if (params[0] == 0)
+	{
+		return g_events.getCurrentMsgType();
+	}
   switch( *params/sizeof(cell) ) {
   case 1:
   return g_events.getArgInteger( params[1] );

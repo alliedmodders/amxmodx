@@ -798,12 +798,12 @@ format_stats( id, sBuffer[MAX_BUFFER_LENGTH+1] ) {
   iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
                   "%-12.12s  %6s  %6s  %6s  %6s  %6s  %4s^n",
                   lWeapon, lKills, lDeaths, lHits, lShots, lDamage, lAcc )
-  for ( iWeapon = 1; iWeapon < 31 && MAX_BUFFER_LENGTH - iLen > 0 ; iWeapon++ ) {
+  for ( iWeapon = 1; iWeapon < xmod_get_maxweapons() && MAX_BUFFER_LENGTH - iLen > 0 ; iWeapon++ ) {
     if ( get_user_wstats( id, iWeapon, izStats, izBody ) ) {
       get_weaponname( iWeapon, t_sWpn, MAX_WEAPON_LENGTH )
       iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
                       "%-12.12s  %6d  %6d  %6d  %6d  %6d  %3.0f%%^n",
-                      t_sWpn[7], izStats[STATS_KILLS], izStats[STATS_DEATHS], 
+                      t_sWpn, izStats[STATS_KILLS], izStats[STATS_DEATHS], 
                       izStats[STATS_HITS], izStats[STATS_SHOTS], 
                       izStats[STATS_DAMAGE], accuracy( izStats ) )
     }
@@ -1008,7 +1008,7 @@ public cmdReport( id ) {
   if ( iClip >= 0 ) {
     format( g_sBuffer, MAX_BUFFER_LENGTH,
             "%s: %s, %L: %d/%d, %L: %d, %L: %d", 
-            lWeapon, t_sWpn[7], LANG_SERVER, "AMMO", iClip, iAmmo,
+            lWeapon, t_sWpn, LANG_SERVER, "AMMO", iClip, iAmmo,
             LANG_SERVER, "HEALTH", iHealth, LANG_SERVER, "ARMOR", iArmor ) 
   }
   else

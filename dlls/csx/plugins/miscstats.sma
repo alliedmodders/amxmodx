@@ -78,13 +78,13 @@ new g_friend[33]
 new g_firstBlood
 
 new g_MultiKillMsg[7][] = {
-  "Multi-Kill! %s^n%L %d kills (%d hs)",
-  "Ultra-Kill!!! %s^n%L %d kills (%d hs)",
-  "%s IS ON A KILLING SPREE!!!^n%L %d kills (%d hs)",
-  "RAMPAGE!!! %s^n%L %d kills (%d hs)" ,
-  "%s IS UNSTOPPABLE!!!^n%L %d kills (%d hs)",
-  "%s IS A MONSTER!^n%L %d kills (%d hs)",
-  "%s IS GODLIKE!!!!^n%L %d kills (%d hs)"
+  "Multi-Kill! %s^n%L %d %L (%d %L)",
+  "Ultra-Kill!!! %s^n%L %d %L (%d %L)",
+  "%s IS ON A KILLING SPREE!!!^n%L %d %L (%d %L)",
+  "RAMPAGE!!! %s^n%L %d %L (%d hs)" ,
+  "%s IS UNSTOPPABLE!!!^n%L %d %L (%d %L)",
+  "%s IS A MONSTER!^n%L %d %L (%d %L)",
+  "%s IS GODLIKE!!!!^n%L %d %L (%d %L)"
 }
 new g_Sounds[7][] = {
   "multikill",
@@ -432,7 +432,7 @@ public checkKills(param[]) {
         get_user_name(id,name,31)
         set_hudmessage(255, 0, 100, 0.05, 0.65, 2, 0.02, 6.0, 0.01, 0.1, 2)
         if ( a > 6 ) a = 6
-        show_hudmessage(0,g_MultiKillMsg[a],name,LANG_PLAYER,"WITH",g_multiKills[id][0],g_multiKills[id][1])          
+        show_hudmessage(0,g_MultiKillMsg[a],name,LANG_PLAYER,"WITH",g_multiKills[id][0],LANG_PLAYER,"KILLS",g_multiKills[id][1],LANG_PLAYER,"HS")          
       }
       if ( MultiKillSound ) client_cmd(0,"spk misc/%s",g_Sounds[a])
     }

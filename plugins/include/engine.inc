@@ -17,6 +17,7 @@
 * You may generate menu, smoke, shockwaves, thunderlights,
 * intermission and many many others messages.
 * See HL SDK for more examples. */
+/* REMOVED (remove this comment section later when moving this back to amxx) /jghg
 native message_begin( dest, msg_type, origin[3]={0,0,0},player=0);
 native message_end();
 native write_byte( x );
@@ -27,6 +28,7 @@ native write_entity( x );
 native write_angle( x );
 native write_coord( x );
 native write_string( x[] );
+*/
 
 /* This is a highly experimental command that will directly hook a message in the engine!
  * You can overwrite the message before anything happens and either let the message continue

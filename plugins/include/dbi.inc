@@ -71,13 +71,13 @@ native dbi_num_rows(Result:_result);
 
 /* Frees memory used by a result handle.  Do this or get memory leaks.
  */
-native dbi_free_result(Result:_result);
+native dbi_free_result(&Result:result);
 
 /* Closes a database handle.  Internally, it will also 
  * mark the handle as free, so this particular handle may
  * be re-used in the future to save time.
  */
-native dbi_close(Sql:_sql);
+native dbi_close(&Sql:sql);
 
 /* Returns an error message set.  For PGSQL and MySQL,
  * this is a direct error return from the database handle/API.

@@ -18,7 +18,7 @@ stock is_entity(id)
 	return is_valid_ent(id)
 
 /* The end of the native is buffered incase the plugin is including an NS_VERSION (no longer supported), ignore it */
-stock get_build(classname[], value, number=0,{Float,_}:...)
+stock get_build(classname[], value, number=0,{Float,Sql,Result,_}:...)
 	return ns_get_build(classname, value, number)
 
 stock get_private_i(index, offset, linuxdiff=5)

@@ -48,7 +48,7 @@ native fclose(file);
 //Read a file for ret_size length
 native fread(file,ret[],ret_size);
 //Write a file
-native fwrite(file,const str[],{Float,_}:...);
+native fwrite(file,const str[],{Float,Sql,Result,_}:...);
 //Check if at the end of a file
 native feof(file);
 //Seek a file
@@ -58,13 +58,13 @@ native rewind(file);
 //Flush a file
 native fflush(file);
 //Scan a file by a format
-native fscanf(file,const str[],{Float,_}:...);
+native fscanf(file,const str[],{Float,Sql,Result,_}:...);
 //Returns the current file position pointer
 native ftell(file);
 //Return the size of a file
-native filesize(const filename[],{Float,_}:...);
+native filesize(const filename[],{Float,Sql,Result,_}:...);
 //Delete a file (delete_file macro)
-native unlink(const filename[],{Float,_}:...);
+native unlink(const filename[],{Float,Sql,Result,_}:...);
 
 //These are type specific file getting and writing commands:
 //c=char, s=short, l=long, i=int, f=float

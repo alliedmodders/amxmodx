@@ -13,7 +13,7 @@
 
 #include <engine_const>
 
-native traceresult(type,{Float,_}:...);
+native traceresult(type,{Float,Sql,Result,_}:...);
 
 /* Registers a client impulse to a function.  Function is passed the ID of the user. */
 native register_impulse(impulse, function[]);
@@ -65,7 +65,7 @@ native get_msg_origin(Float:_Origin[3]);
 /* Precaches any file. */
 native precache_generic(szFile[]);
 /* Precaches an event. */
-native precache_event(type, Name[], {float,_}:...);
+native precache_event(type, Name[], {Float,Sql,Result,_}:...);
 
 /* set/get a user's speak flags */
 native set_speak(iIndex, iSpeakFlags)
@@ -216,11 +216,11 @@ native playback_event(flags,invoker,eventindex,Float:delay,Float:origin[3],Float
 /* Gets parameters sent from CmdStart.
    Note that you will receive modified values if any other plugin have
    changed them. */
-native get_usercmd(type,{Float,_}:...);
+native get_usercmd(type,{Float,Sql,Result,_}:...);
 
 /* Sets the parameters sent from CmdStart.
    Note that your changes will be seen by any other plugin doing get_usercmd() */
-native set_usercmd(type,{Float,_}:...);
+native set_usercmd(type,{Float,Sql,Result,_}:...);
 
 /* FORWARDS 
  **********/

@@ -29,7 +29,7 @@ native add(dest[],len,const src[],max=0);
 /* Fills string with given format and parameters.
 * Function returns number of copied chars.
 * Example: format(dest,"Hello %s. You are %d years old","Tom",17). */
-native format(output[] ,len ,const format[] , {Float,_}:...);
+native format(output[] ,len ,const format[] , {Float,Sql,Result,_}:...);
 
 /* Gets parameters from function as formated string. */
 native format_args(output[] ,len ,pos = 0);

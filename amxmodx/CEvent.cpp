@@ -430,12 +430,12 @@ void EventsMngr::executeEvents()
 	m_ParseFun = NULL;
 }
 
-int EventsMngr::getArgNum()
+int EventsMngr::getArgNum() const
 {
 	return m_ParsePos + 1;
 }
 
-const char* EventsMngr::getArgString(int a)
+const char* EventsMngr::getArgString(int a) const
 {
 	if ( a < 0 || a > m_ParsePos )
 		return "";
@@ -455,7 +455,7 @@ const char* EventsMngr::getArgString(int a)
 	}
 }
 
-int EventsMngr::getArgInteger(int a)
+int EventsMngr::getArgInteger(int a) const
 {
 	if ( a < 0 || a > m_ParsePos )
 		return 0;
@@ -471,7 +471,7 @@ int EventsMngr::getArgInteger(int a)
 	}
 }
 
-float EventsMngr::getArgFloat(int a)
+float EventsMngr::getArgFloat(int a) const
 {
 	if ( a < 0 || a > m_ParsePos )
 		return 0.0f;

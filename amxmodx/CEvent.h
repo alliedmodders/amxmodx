@@ -144,10 +144,10 @@ public:
 	void parseValue(float fValue);
 	void parseValue(const char *sz);
 	void executeEvents();
-	int getArgNum(); //{ return (parsePos+1); }
-	const char* getArgString(int a);
-	int getArgInteger(int a);
-	float getArgFloat(int a);
+	int getArgNum() const; //{ return (parsePos+1); }
+	const char* getArgString(int a) const;
+	int getArgInteger(int a) const;
+	float getArgFloat(int a) const;
 	void clearEvents(void);
 	static int getEventId( const char* msg );
 };

@@ -27,8 +27,14 @@ stock user_spawn(index)
 stock get_logfile( name[], len )
   return get_time("admin%m%d.log",name,len)
 
+stock get_user_wonid(index)
+  return 0
+
 stock get_user_money(index)
   return cs_get_user_money(index)
+
+stock set_user_money(index,money,flash=1)
+  return cs_set_user_money(index,money,flash)
 
 stock set_user_money(index,money,flash=1)
   return cs_set_user_money(index,money,flash)

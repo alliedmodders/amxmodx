@@ -314,10 +314,20 @@ int CForwardMngr::registerSPForward(const char *funcName, AMX *amx, int numParam
 	CSPForward *pForward;
 	if (m_FreeSPForwards.size())
 	{
-		retVal = m_FreeSPForwards.back();
-		m_FreeSPForwards.pop_back();
-		pForward = m_SPForwards[retVal>>1];		// >>1 because unregisterSPForward pushes the id which contains the sp flag
-		pForward->Set(funcName, amx, numParams, paramTypes);
+		if (m_SPForwards.size())
+		{
+			retVal = m_FreeSPForwards.back();
+			m_FreeSPForwards.pop_back();
+			pForward = m_SPForwards[retVal>>1];		// >>1 because unregisterSPForward pushes the id which contains the sp flag
+			pForward->Set(funcName, amx, numParams, paramTypes);
+		} else {
+			m_SPForwards.clear();
+			pForward = new CSPForward();
+			if (!pForward)
+				return -1;
+			pForward->Set(funcName, amx, numParams, paramTypes);
+			m_SPForwards.push_back(pForward);
+		}
 	}
 	else
 	{

@@ -14,6 +14,7 @@
 # clean - clean the specifications above
 # asm - for ASM implementation
 # !! TODO - add memory mananger support
+# lineop - for JIT only, uses slow version
 
 $PROJECT = "amxmodx_mm";
 $sdk = "../hlsdk/SourceCode";
@@ -69,6 +70,8 @@ while ($cmd = shift)
 		}
 	} elsif ($cmd =~ /clean/) {
 		$OPTIONS{"clean"} = 1;		
+	} elsif ($cmd =~ /lineop/) {
+		$OPTIONS{"lineop"} = 1;
 	}
 }
 
@@ -175,7 +178,11 @@ for ($i=0; $i<=$#C_SOURCE_FILES; $i++)
 }
 if ($OPTIONS{"jit"})
 {
-	push(@LINK, "JIT/jits.o");
+	if ($OPTIONS{"lineop"}) {
+		push(@LINK, "JIT/jits-lineop.o");
+	} else {
+		push(@LINK, "JIT/jits.o");
+	}	 
 }
 
 if ($OPTIONS{"asm"})

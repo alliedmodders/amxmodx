@@ -108,7 +108,7 @@
 ;
 ; GWMV: to generate LINE opcode, %define ALLOWOPLINE
 ;
-%define ALLOWOPLINE
+%undef ALLOWOPLINE
 
 ;
 ; If this is set to 1 the JIT generates relocatable code for case tables, too.

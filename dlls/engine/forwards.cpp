@@ -20,6 +20,7 @@ CVector<EntClass *> Thinks;
 CVector<Touch *> Touches;
 KeyValueData *g_pkvd;
 bool g_inKeyValue=false;
+bool g_precachedStuff = false;
 
 int fstrcmp(const char *s1, const char *s2)
 {
@@ -37,6 +38,11 @@ int fstrcmp(const char *s1, const char *s2)
 }
 
 int Spawn(edict_t *pEntity) {
+	if (!g_precachedStuff) {
+		// Used for SetView, added by JGHG
+		int returnValue = PRECACHE_MODEL("models/rpgrocket.mdl");
+		g_precachedStuff = true;
+	}
 	if (SpawnForward != -1) {
 		int retVal = 0;
 		int id = ENTINDEX(pEntity);

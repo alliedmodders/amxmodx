@@ -90,8 +90,8 @@ void OnPluginsLoaded()
 		g_pFunctionTable->pfnPlayerPostThink=PlayerPostThink_Post;
 
 	g_pFunctionTable->pfnSpawn=NULL; // "pfn_spawn"
-	if (CheckForPublic("pfn_spawn"))
-		g_pFunctionTable->pfnSpawn=Spawn;
+	//if (CheckForPublic("pfn_spawn")) // JGHG: I commented this if out because we always need the Spawn to precache the rocket mdl used with SetView native
+	g_pFunctionTable->pfnSpawn=Spawn;
 
 	g_pFunctionTable->pfnClientKill=NULL; // "client_kill"
 	if (CheckForPublic("client_kill"))

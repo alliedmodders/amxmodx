@@ -84,9 +84,10 @@ public delayedChange( param[] )
 
 public changeMap(){
   new string[32]
-  set_cvar_float( "mp_chattime" , 3.0 ) // make sure mp_chattime is long
+  new Float:chattime = get_cvar_float("mp_chattime")
+  set_cvar_float( "mp_chattime" , chattime + 2.0 ) // make sure mp_chattime is long
   new len = getNextMapName(string, 31) + 1
-  set_task( 1.5 , "delayedChange" , 0 , string , len ) // change with 1.5 sec. delay
+  set_task( chattime , "delayedChange" , 0 , string , len ) // change with 1.5 sec. delay
 }
 
 new g_warning[] = "WARNING: Couldn't find a valid map or the file doesn't exist (file ^"%s^")"

@@ -243,6 +243,9 @@ int Spawn( edict_t *pent ) {
     amx_config.clear();
   }
 
+  //  ###### Make sure basedir is set
+  get_localinfo("amxx_basedir" , "addons/amxx" );
+
   //  ###### Load modules
   int loaded = loadModules( "addons/amxx/modules.ini" );
   attachModules();

@@ -5,14 +5,18 @@ int is_ent_valid(int iEnt)
 	if (iEnt < 1 || iEnt > gpGlobals->maxEntities) 
 		return 0;
 
-	if (iEnt >= 1 && iEnt <= gpGlobals->maxClients)
+	if (iEnt <= gpGlobals->maxClients)
+	{
 		if (!MF_IsPlayerIngame(iEnt))
+		{
 			return 0;
-
-	edict_t *pEnt = INDEXENT2(iEnt);
-
-	if (FNullEnt(pEnt))
-		return 0;
+		}
+	} else {
+		if (FNullEnt(INDEXENT(iEnt)))
+		{
+			return 0;
+		}
+	}
 
 	return 1;
 }

@@ -140,16 +140,27 @@
 #define ATTN_NONE		0.00
 #define	ATTN_NORM		0.80
 #define ATTN_IDLE		2.00
-#define ATTN_STATIC		1.25 
+#define ATTN_STATIC		1.25
 
 /* Pitch values */
 #define	PITCH_NORM		100	/* non-pitch shifted */
 #define PITCH_LOW		95	/* other values are possible - 0-255, where 255 is very high */
 #define PITCH_HIGH		120
 
-
 /* Volume values */
-#define VOL_NORM		1.0	  
+#define VOL_NORM		1.0
+
+/* Menu keys */
+#define MENU_KEY_1		(1<<0)
+#define MENU_KEY_2		(1<<1)
+#define MENU_KEY_3		(1<<2)
+#define MENU_KEY_4		(1<<3)
+#define MENU_KEY_5		(1<<4)
+#define MENU_KEY_6		(1<<5)
+#define MENU_KEY_7		(1<<6)
+#define MENU_KEY_8		(1<<7)
+#define MENU_KEY_9		(1<<8)
+#define MENU_KEY_0		(1<<9)
 
 /* Destination types for client_print() */
 enum {

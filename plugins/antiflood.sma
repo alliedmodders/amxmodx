@@ -39,6 +39,7 @@ new g_Flood[33] = {0, ...}
 
 public plugin_init() {
   register_plugin("Anti Flood",AMXX_VERSION_STR,"AMXX Dev Team")
+  register_dictionary("antiflood.txt")
   register_clcmd("say","chkFlood")
   register_clcmd("say_team","chkFlood")
   register_cvar("amx_flood_time","0.75")

@@ -929,7 +929,7 @@ void FN_EngineFprintf(FILE *pfile, char *szFmt, ...);
 #endif // FN_EngineFprintf
 
 #ifdef FN_PvAllocEntPrivateData
-void *FN_PvAllocEntPrivateData(edict_t *pEdict, long cb);
+void *FN_PvAllocEntPrivateData(edict_t *pEdict, int32 cb);
 #endif // FN_PvAllocEntPrivateData
 
 #ifdef FN_PvEntPrivateData

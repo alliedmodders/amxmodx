@@ -516,7 +516,6 @@ static cell AMX_NATIVE_CALL set_hitzones(AMX *amx, cell *params) // set_hitzones
 	// Gets user gravity.
 	// params[1] = body hitzones
 
-	LOG_CONSOLE(PLID, "body is %d", params[1]);
 	// Fetch player pointer
 	g_body = params[1];
 
@@ -625,8 +624,6 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	#define HITGROUP_RIGHTLEG	7
 	*/
 
-	LOG_CONSOLE(PLID, "!!!!!!!!!!!!!!!!g_body is originally %d", g_body);
-
 	return(TRUE);
 }
 
@@ -652,7 +649,7 @@ C_DLLEXPORT int AMX_Attach(pfnamx_engine_g* amxeng,pfnmodule_engine_g* meng) {
 	g_engAmxFunc = amxeng;
 	g_engModuleFunc = meng;
 
-	if(!gpMetaGlobals) REPORT_ERROR(1, "[AMX] fun is not attached to metamod (module \"%s\")\n", LOGTAG);
+	if(!gpMetaGlobals) REPORT_ERROR(1, "[AMX] Fun module is not attached to metamod (module \"%s\")\n", LOGTAG);
 
 	ADD_AMXNATIVES(&module_info, fun_Exports);
 

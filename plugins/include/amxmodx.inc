@@ -626,7 +626,7 @@ native callfunc_begin(const func[], const plugin[]="");
 
 /* Push a parameter (integer, string, float) */
 native callfunc_push_int(value);
-native callfunc_push_str(value[]);
+native callfunc_push_str(const VALUE[]);
 native callfunc_push_float(Float: value);
 native callfunc_push_intrf(&value);
 native callfunc_push_floatrf(& Float: value);

@@ -2029,7 +2029,7 @@ extern PFN_AMX_FINDNATIVE			g_fn_AmxFindNative;
 extern PFN_GETPLAYERFLAGS		g_fn_GetPlayerFlags;
 extern PFN_GET_PLAYER_EDICT			g_fn_GetPlayerEdict;
 extern PFN_FORMAT					g_fn_Format;
-extern PFN_GET_PLAYER_TEAM			g_fn_GetPlayerTeam
+extern PFN_GET_PLAYER_TEAM			g_fn_GetPlayerTeam;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2141,7 +2141,7 @@ void MF_Log(const char *fmt, ...);
 #define MF_UnregisterSPForward g_fn_UnregisterSPForward
 #define MF_GetPlayerFlags g_fn_GetPlayerFlags
 #define MF_GetPlayerEdict g_fn_GetPlayerEdict
-#define MF_Format g_fn_Format;
+#define MF_Format g_fn_Format
 
 /*** Memory ***/
 void	*operator new(size_t reportedSize);

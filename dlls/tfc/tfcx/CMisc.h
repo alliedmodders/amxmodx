@@ -25,7 +25,6 @@
 #define ACT_NADE_NONE		0
 #define ACT_NADE_SHOT		1<<0
 #define ACT_NADE_PUT		1<<1
-#define ACT_NADE_THROW		1<<2
 
 #define PD_AMMO_SHELLS		53	+ LINUXOFFSET
 #define PD_AMMO_BULLETS		55	+ LINUXOFFSET 

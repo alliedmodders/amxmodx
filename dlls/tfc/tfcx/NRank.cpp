@@ -256,6 +256,100 @@ static cell AMX_NATIVE_CALL get_statsnum(AMX *amx, cell *params)
 	return g_rank.getRankNum();
 }
 
+
+static cell AMX_NATIVE_CALL register_cwpn(AMX *amx, cell *params){ // name,logname,melee=0 
+	int i;
+	bool bFree = false;
+	for ( i=TFCMAX_WEAPONS-TFCMAX_CUSTOMWPNS;i<TFCMAX_WEAPONS;i++){
+		if ( !weaponData[i].ammoSlot ){
+			bFree = true;
+			break;
+		}
+	}
+
+	if ( !bFree )
+		return 0;
+
+	int iLen;
+	char *szName = MF_GetAmxString(amx, params[1], 0, &iLen);
+
+	strcpy(weaponData[i].name,szName);
+	weaponData[i].ammoSlot = true;
+	weaponData[i].melee = params[2] ? true:false;
+	return i;
+}
+
+static cell AMX_NATIVE_CALL cwpn_dmg(AMX *amx, cell *params){ // wid,att,vic,dmg,hp=0
+	int weapon = params[1];
+	if (  weapon < TFCMAX_WEAPONS-TFCMAX_CUSTOMWPNS ){ // only for custom weapons
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	int att = params[2];
+	if (att<1||att>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	int vic = params[3];
+	if (vic<1||vic>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+	
+	int dmg = params[4];
+	if ( dmg<1 ){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+	
+	int aim = params[5];
+	if ( aim < 0 || aim > 7 ){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	CPlayer* pAtt = GET_PLAYER_POINTER_I(att);
+	CPlayer* pVic = GET_PLAYER_POINTER_I(vic);
+
+	pVic->pEdict->v.dmg_inflictor = NULL;
+	pAtt->saveHit( pVic , weapon , dmg, aim );
+
+	if ( !pAtt ) pAtt = pVic;
+	int TA = 0;
+	if ( (pVic->pEdict->v.team == pAtt->pEdict->v.team ) && ( pVic != pAtt) )
+		TA = 1;
+	MF_ExecuteForward ( iFDamage, pAtt->index, pVic->index, dmg, weapon, aim, TA );
+	
+	if ( pVic->IsAlive() )
+		return 1;
+
+	pAtt->saveKill(pVic,weapon,( aim == 1 ) ? 1:0 ,TA);
+	MF_ExecuteForward ( iFDeath, pAtt->index, pVic->index, weapon, aim, TA );
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL cwpn_shot(AMX *amx, cell *params){ // player,wid
+	int index = params[1];
+	if (index<1||index>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	int weapon = params[2];
+	if (  weapon < TFCMAX_WEAPONS-TFCMAX_CUSTOMWPNS ){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	pPlayer->saveShot(weapon);
+
+	return 1;
+}
+
 AMX_NATIVE_INFO stats_Natives[] = {
 	{ "get_stats",      get_stats},
 	{ "get_statsnum",   get_statsnum},
@@ -267,6 +361,12 @@ AMX_NATIVE_INFO stats_Natives[] = {
 	{ "get_user_wrstats",  get_user_wrstats},             // DEC-Weapon(Round) Stats
 	{ "get_user_wstats",  get_user_wstats},
 	{ "reset_user_wstats",  reset_user_wstats },
+
+	// Custom Weapon Support
+	{ "reg_custom_wpn", register_cwpn },
+	{ "custom_wpn_dmg", cwpn_dmg },
+	{ "custom_wpn_shot", cwpn_shot },
+
 	{ NULL, NULL }
 };
 

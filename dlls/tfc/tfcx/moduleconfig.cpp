@@ -57,7 +57,6 @@ int mPlayerIndex;
 
 int iFDamage;
 int iFDeath;
-int iFGrenade;
 
 RankSystem g_rank;
 Grenades g_grenades;
@@ -295,9 +294,6 @@ void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 				if ( traceData[i].iAction & ACT_NADE_PUT ){
 					g_grenades.put(e,traceData[i].fDel,traceData[i].iId,GET_PLAYER_POINTER(e->v.owner));
 				}
-				if ( traceData[i].iAction & ACT_NADE_THROW ){
-					MF_ExecuteForward ( iFGrenade, pPlayer->index,ENTINDEX(e),traceData[i].iId );
-				}
 				break;
 			}
 		}
@@ -359,5 +355,4 @@ void FN_AMXX_Detach() {
 void FN_AMXX_PLUGINSLOADED(){
 	iFDeath = MF_RegisterForward("client_death",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
 	iFDamage = MF_RegisterForward("client_damage",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
-	iFGrenade = MF_RegisterForward("grenade_throw",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
 }

@@ -83,7 +83,6 @@ extern int mState;
 
 extern int iFDamage;
 extern int iFDeath;
-extern int iFGrenade;
 
 //extern int gmsgCurWeapon;
 //extern int gmsgDamage;

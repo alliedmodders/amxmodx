@@ -22,6 +22,9 @@ STOP_FLOOD = Stop met het overspoelen van de server!
 [pl]
 STOP_FLOOD = Przestan zapychac serwer!
 
+[pt]
+STOP_FLOOD = Pare de enxer o servidor com texto!
+
 [sr]
 STOP_FLOOD = Prestani da opterecujes server porukama!
 

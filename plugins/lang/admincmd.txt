@@ -526,6 +526,72 @@ ADMIN_NICK_1 = ADMIN: zmien nick %s na "%s"
 ADMIN_NICK_2 = ADMIN %s: zmien nick %s na "%s"
 CHANGED_NICK = Zmieniono nick %s na "%s"
 
+[pt]
+ADMIN_KICK_1 = ADMIN: Kickou %s
+ADMIN_KICK_2 = ADMIN %s: Kickou %s
+IP_REMOVED = Ip "%s" retirado da lista de banidos
+AUTHID_REMOVED = Authid "%s" retirado da lista de banidos
+ADMIN_UNBAN_1 = ADMIN: desbaniu %s
+ADMIN_UNBAN_2 = ADMIN %s: desbaniu %s
+ADMIN_ADDBAN_1 = ADMIN: baniu %s
+ADMIN_ADDBAN_2 = ADMIN %s: baniu %s
+BANNED = banido
+FOR_MIN = por %s min
+PERM = permanentemente 
+CLIENT_BANNED = Utilizador "%s" banido
+ADMIN_SLAY_1 = ADMIN: matou %s
+ADMIN_SLAY_2 = ADMIN %s: matou %s
+CLIENT_SLAYED = Utilizador "%s" foi morto
+ADMIN_SLAP_1 = ADMIN: espancou %s com %d de dano
+ADMIN_SLAP_2 = ADMIN %s: espancou %s com %d de dano
+CLIENT_SLAPED = Utilizador "%s" espancado com %d de dano
+MAP_NOT_FOUND = Mapa com esse nome nao foi encontrado ou o mapa e' invalido
+ADMIN_MAP_1 = ADMIN: mudou o mapa para %s
+ADMIN_MAP_2 = ADMIN %s: mudou o mapa para %s
+NO_MORE_CVARS = Nao consegue adicionar mais [color=red]comandos/variaveis [/color]para o acesso da rcon!
+UNKNOWN_CVAR = [color=red]Comando/Variavel [/color]desconhecida: %s
+CVAR_NO_ACC = Nao tem acesso a esse/a [color=red]comando/variavel[/color]
+CVAR_IS = [color=red]Comando/Variavel [/color]"%s" e' "%s"
+PROTECTED = PROTEGIDO
+SET_CVAR_TO = %s alterar comando/variavel %s para"%s"
+CVAR_CHANGED = comando/variavel "%s" alterada para "%s"
+LOADED_PLUGINS = Plugins/Extras carregados
+NAME = nome
+VERSION = versao
+AUTHOR = autor
+FILE = ficheiro
+STATUS = estado
+PLUGINS_RUN = %d extras, %d a funcionar
+LOADED_MODULES = Modulos carregados
+NUM_MODULES = %d modulos
+FILE_NOT_FOUND = Ficheiro "%s" nao encontrado
+ADMIN_CONF_1 = ADMIN: executou a config %s
+ADMIN_CONF_2 = ADMIN %s: executou a config %s
+PAUSED = parado
+UNPAUSED = continua
+UNABLE_PAUSE = Servidor foi incapaz de parar o jogo. Jogadores reais sao necessarios no servidor.
+SERVER_PROC = Servidor continua %s
+PAUSING = parando
+UNPAUSING = continuando
+PAUSE = parar
+UNPAUSE = continuar
+COM_SENT_SERVER = Linha de comando "%s" enviada para a consola do servidor
+CLIENTS_ON_SERVER = Utilizadores no servidor
+IMMU = imune
+RESERV = reservado
+ACCESS = acesso
+TOTAL_NUM = Total %d
+SKIP_MATCH = Ignorando "%s" (conferindo "%s")
+SKIP_IMM = Ignorando "%s" (imunidade)
+KICK_PL = A kickar "%s"
+YOU_DROPPED = Foi desligado porque o admin deixou apenas um grupo especifico de utilizadores
+KICKED_CLIENTS = Kickou %d utilizadores
+ADMIN_LEAVE_1 = ADMIN: deixou %s %s %s %s
+ADMIN_LEAVE_2 = ADMIN %s: deixou %s %s %s %s
+ADMIN_NICK_1 = ADMIN: mudou o nick do %s para "%s"
+ADMIN_NICK_2 = ADMIN %s: mudou o nick do %s para "%s"
+CHANGED_NICK = Nick do %s foi mudado para "%s"
+
 [sr]
 ADMIN_KICK_1 = ADMIN: kick %s
 ADMIN_KICK_2 = ADMIN %s: kick %s

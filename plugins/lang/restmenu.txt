@@ -262,6 +262,39 @@ SAVE_SET = Zapisz ustawienia
 CONF_SAV_SUC = Konfiguracja zapisana z powodzeniem
 CONF_SAV_FAIL = Blad podczas zapisu konfiguracji
 
+[pt]
+EQ_WE_RES = Armas e equipamento foram proibidos
+EQ_WE_UNRES = Armas e equipamento foram autorizados
+HAVE_BEEN = foram
+HAS_BEEN = foi
+RESTRICTED = proibido
+UNRESTRICTED = autirizado
+NO_EQ_WE = Arma ou equipamento nao encontrado
+WEAP_RES = Proibir armas
+VALUE = valor
+REST_ENTRIES_OF = Entradas %i - %i de %i
+REST_USE_MORE = Use 'amx_restrict list %i' para mais
+REST_USE_BEGIN = Use 'amx_restrict list 1' para iniciar
+REST_CONF_SAVED = Configuracao foi gravada (ficheiro "%s")
+REST_COULDNT_SAVE = Nao foi possivel gravar a configuracao (ficheiro "%s")
+REST_CONF_LOADED = Configuracao foi iniciada (ficheiro "%s")
+REST_COULDNT_LOAD = Nao foi possivel iniciar configuracao (ficheiro "%s")
+COM_REST_USAGE = Uso:  amx_restrict <comando> [valor]
+COM_REST_COMMANDS = Comandos:
+COM_REST_ON = ^ton - Proibir todo o equipamento
+COM_REST_OFF = ^toff - Remover proibicao em todo o equipamento
+COM_REST_ON = ^ton <valor> [...] - adiciona uma proibicao especifica
+COM_REST_OFF = ^toff <value> [...] - remove uma proibicao especifica
+COM_REST_LIST = ^tlist - Lista de armas e equipamento disponiveis
+COM_REST_SAVE = ^tsave - Grava proibicao
+COM_REST_LOAD = ^tload [ficheiro] - Carregar proibicao [de um ficheiro]
+COM_REST_VALUES = Valores disponiveis para restringir:^nammo, equip, pistol, shotgun, sub, rifle, machine
+COM_REST_TYPE = Escreva 'amx_restrict list' para valores mais especificos
+REST_WEAP = Proibir armas
+SAVE_SET = Gravar configuracao
+CONF_SAV_SUC = Configuracao gravada com sucesso
+CONF_SAV_FAIL = Gravacao de configuracao falhou!!!
+
 [sr]
 EQ_WE_RES = Oprema i oruzje su zabranjeni
 EQ_WE_UNRES = Oprema i oruzje su oslobodjeni zabrane

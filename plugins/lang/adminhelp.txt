@@ -70,6 +70,15 @@ TYPE_HELP = Wpisz 'amx_help' w konsoli aby uzyskac liste komend
 TIME_INFO_1 = Pozostaly czas: %d:%02d min. Nastepna mapa: %s
 TIME_INFO_2 = Bez limitu czasu. Nastepna mapa: %s
 
+[pt]
+HELP_COMS = AMX Mod X Ajuda: Comandos
+HELP_ENTRIES = Entradas %d - %d de %d
+HELP_USE_MORE = Use 'amx_help %d' para mais
+HELP_USE_BEGIN = Use 'amx_help 1' para comecar
+TYPE_HELP = Escreva 'amx_help' na cosola para ver os comandos disponiveis
+TIME_INFO_1 = Tempo restante: %d:%02d min. Proximo mapa: %s
+TIME_INFO_2 = Sem limite de tempo. Proximo mapa: %s
+
 [sr]
 HELP_COMS = AMX Mod X Pomoc: Komande
 HELP_ENTRIES = Vrednosti %d - %d od %d

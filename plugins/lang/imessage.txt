@@ -22,6 +22,9 @@ INF_REACH = Limiet Informatie Berichten bereikt!
 [pl]
 INF_REACH = Osiagniety limit wiadomosci informacyjnych!
 
+[pt]
+INF_REACH = Limite maximo de info-mensagens atingido!
+
 [sr]
 INF_REACH = Dostignut limit Informacione Poruke!
 

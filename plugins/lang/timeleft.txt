@@ -70,6 +70,15 @@ MINUTES = minut
 SECOND = sekunda
 SECONDS = sekund
 
+[pt]
+THE_TIME = As horas
+TIME_LEFT = Tempo restante
+NO_T_LIMIT = Sem limite de tempo
+MINUTE = minuto
+MINUTES = minutos
+SECOND = segundo
+SECONDS = segundos
+
 [sr]
 THE_TIME = Vreme
 TIME_LEFT = Preostalo Vreme

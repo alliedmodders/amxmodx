@@ -190,6 +190,30 @@ ADMIN_CHANGEL_1 = ADMIN: changelevel %s
 ADMIN_CHANGEL_2 = ADMIN %s: changelevel %s
 CHANGLE_MENU = Menu zmiany lewelu
 
+[pt]
+RESULT_REF = Resultad recusado
+RESULT_ACC = Resultado aceite
+VOTE_SUCCESS = Votacao sucedida. O mapa vai ser mudado para
+VOTE_FAILED = Votacao falhou
+THE_WINNER = O vencedor
+WANT_CONT = Quer continuar?
+VOT_CANC = Votacao foi cancelada.
+X_VOTED_FOR = %s votou na opcao #%d
+VOTEMAP_MENU = Menu para votar mapas
+START_VOT = Iniciar votacao
+SEL_MAPS = Mapas selecionados
+ALREADY_VOT = Ja' esta' a decorrer uma votacao...
+NO_MAPS_MENU = Nao existem mapas no menu
+VOT_NOW_ALLOW = Votacao nao permitida neste momento
+WHICH_MAP = Que mapa quer escolher?
+CHANGE_MAP_TO = Mudar o mapa para
+CANC_VOTE = Cancelar votacao
+ADMIN_V_MAP_1 = ADMIN: votar mapa(s)
+ADMIN_V_MAP_2 = ADMIN %s: votar mapa(s)
+ADMIN_CHANGEL_1 = ADMIN: mudou de mapa %s
+ADMIN_CHANGEL_2 = ADMIN %s: mudou de mapa %s
+CHANGLE_MENU = Mudar de mapa
+
 [sr]
 RESULT_REF = Rezultat odbijen
 RESULT_ACC = Rezultat prihvacen

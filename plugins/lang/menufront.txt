@@ -142,6 +142,24 @@ PAUSE_PLUG = Zatrzymaj pluginy
 RES_WEAP = Ogranicz bronie
 TELE_PLAYER = Teleportuj gracza
 
+[pt]
+KICK_PLAYER = Kickar jogador
+BAN_PLAYER = Banir jogador
+SLAP_SLAY = Espancar/Matar jogador
+TEAM_PLAYER = Equipa Jogador ^n
+CHANGEL = Mudar de mapa
+VOTE_MAPS = Votar mapas ^n
+SPECH_STUFF = Menu de vozes
+CLIENT_COM = Comandos do utilizador
+SERVER_COM = Comandos do servidor
+CVARS_SET = Valores de Comandos/Variaveis
+CONFIG = Configuracoes predefinidas
+LANG_SET = Opcoes de linguagem
+STATS_SET = Opcoes de estatisticas ^n
+PAUSE_PLUG = Pausar Plugins/Extras
+RES_WEAP = Restringir armas
+TELE_PLAYER = Teleportar jogador
+
 [sr]
 KICK_PLAYER = Kick Igraca
 BAN_PLAYER = Ban Igraca

@@ -278,6 +278,41 @@ COM_PAUSE_CLEAR = ^tclear - czysci liste wylaczonych pluginow
 COM_PAUSE_LIST = ^tlist [id] - wyswietla liste pluginow
 COM_PAUSE_ADD = ^tadd <title> - oznacza plugin jako niewzawialny
 
+[pt]
+PAUSE_COULDNT_FIND = Nao foi achado um plugin/extra que coincida com "%s"
+PAUSE_PLUGIN_MATCH = Plugin/extra coincidente "%s"
+PAUSE_CONF_CLEARED = Ficheiro de configuracao limpo. Reinicie de novo o mapa se necessario
+PAUSE_ALR_CLEARED = Configuracao ja' foi limpa!
+PAUSE_CONF_SAVED = Configuracao guardada com sucesso
+PAUSE_SAVE_FAILED = Falhou o guardar da configuracao!!!
+LOCKED = Bloqueado
+PAUSE_UNPAUSE = Parar/iniciar Plugins/extras
+CLEAR_STOPPED = Limpar do ficheiro os parados
+SAVE_STOPPED = Guardar os parados
+PAUSED_PLUGIN = Pausou %d plugin/extra
+PAUSED_PLUGINS = Pausou %d plugins/estras
+UNPAUSED_PLUGIN = Iniciou %d plugin/extra
+UNPAUSED_PLUGINS = Iniciou %d plugins/estras
+CANT_MARK_MORE = Nao pode marcar mais plugins/extras como nao pausavel!
+PAUSE_LOADED = Pausar Plugins/extras: Plugins/extras a funcionar
+STOPPED = Parado
+VERSION = Versao
+FILE = Ficheiro
+PAUSE_ENTRIES = Entradas %d - %d of %d (%d a funcionar)
+PAUSE_USE_MORE = Use 'amx_pausecfg list %d' para mais opcoes
+PAUSE_USE_BEGIN = Use 'amx_pausecfg list 1' para iniciar
+PAUSE_USAGE = Uso:  amx_pausecfg <comando> [nome]
+PAUSE_COMMANDS = Comandos
+COM_PAUSE_TOFF = ^toff - pausa todos os plugins/extras que não estejam na lista
+COM_PAUSE_TON = ^ton - inicia todos os plugins/extras
+COM_PAUSE_TSTOP = ^tstop <ficheiro> - para um plugin/extra
+COM_PAUSE_TPAUSE = ^tpause <ficheiro> - pausa um plugin/extra
+COM_PAUSE_TENABLE = ^tenable <ficheiro> - activa um plugin/extra
+COM_PAUSE_TSAVE = ^tsave - guarda a lista de plugins/extras parados
+COM_PAUSE_TCLEAR = ^tclear - limpa a lista de plugins/extras parados
+COM_PAUSE_TLIST = ^tlist [id] - lista os plugins/extras
+COM_PAUSE_TADD = ^tadd <titulo> - marca plugin/extra como nao pausavel
+
 [sr]
 PAUSE_COULDNT_FIND = Nije moguce naci plugin koji se poklapa sa "%s"
 PAUSE_PLUGIN_MATCH = Poklapajuci Plugin "%s"

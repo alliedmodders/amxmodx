@@ -134,6 +134,23 @@ TRANSF_TO = Przejdz do %s
 CL_CMD_MENU = menu komend klienta
 NO_CMDS = Nie ma zadnych komend
 
+[pt]
+ADMIN_BAN_1 = ADMIN: baniu %s
+ADMIN_BAN_2 = ADMIN %s: baniu %s
+BAN_MENU = Menu de bans
+BAN_FOR_MIN = Banir por %d minutos
+BAN_PERM = Banir parmanentemente
+SLAP_SLAY_MENU = Menu de Espancar/Matar
+SLAP_WITH_DMG = espancou com %d de dano
+SLAY = Matou
+KICK_MENU = Menu de kicks
+ADMIN_TRANSF_1 = ADMIN: passou %s para %s
+ADMIN_TRANSF_2 = ADMIN %s: passou %s para %s
+TEAM_MENU = Menu de equipas
+TRANSF_TO = Passar para %s
+CL_CMD_MENU = Menu de comandos do utilizador
+NO_CMDS = Sem comandos disponiveis
+
 [sr]
 ADMIN_BAN_1 = ADMIN: ban %s
 ADMIN_BAN_2 = ADMIN %s: ban %s

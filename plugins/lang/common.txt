@@ -174,6 +174,28 @@ CANT_PERF_BOT = Nie mozesz tego wykonac na bocie "%s"
 ON = Wl
 OFF = Wyl
 
+[pt]
+BACK = Anterior
+EXIT = Sair
+MORE = Seguinte
+NONE = Nenhum
+ADMIN = ADMIN
+PLAYER = JOGADOR
+ERROR = erro
+YES = Sim
+NO = Nao
+BAN = banir
+KICK = kickar
+NO_ACC_COM = Nao tem acesso a esse comando
+USAGE = Uso
+MORE_CL_MATCHT = Varios utilizadores correspondem a sua escolha
+CL_NOT_FOUND = Utilizador com esse nome ou userid nao encontrado
+CLIENT_IMM = O utilizador "%s" tem imunidade
+CANT_PERF_DEAD = Esse accao n pode ser executada num utilizador morto "%s"
+CANT_PERF_BOT = Essa accao nao pode ser executada num bot "%s"
+ON = Ligado
+OFF = Desligado
+
 [sr]
 BACK = Nazad
 EXIT = Izlaz

@@ -174,6 +174,28 @@ COM_STATS_ADD = ^tadd <name> <zmienna> - dodaj statystyki do listy
 NO_STATS = Pluginy statystyk nie^nistnieja na serwerze^n
 SAVE_CONF = Zapisz konfiguracje
 
+[pt]
+NO_OPTION = Nao foi achada nenhuma opcao(s) com essa variavel (nome "%s")
+STATS_CONF_SAVED = Configuracao das estatisticas gravada com sucesso
+STATS_CONF_FAILED = Falhou a gravacao da configuracao das estatisticas!!!
+STATS_CONF_LOADED = Configuracao das estatisticas iniciada com sucesso
+STATS_CONF_FAIL_LOAD = Falhou iniciacao da configuracao das estatisticas!!!
+STATS_CONF = Configuracao das estatisticas
+STATS_ENTRIES_OF = Entradas %i - %i de %i
+STATS_USE_MORE = Use 'amx_statscfg list %i' para mais
+STATS_USE_BEGIN = Use 'amx_statscfg list 1' para iniciar
+CANT_ADD_STATS = Impossivel adicionar mais estatisticas 'a lista, limite atingido!
+COM_STATS_USAGE = Uso:  amx_statscfg <comando> [parametros] ...
+COM_STATS_COM = Comandos:
+COM_STATS_ON = ^ton <variavel> - activa opcao escolhida
+COM_STATS_OFF = ^toff <variable> - desliga opcao escolhida
+COM_STATS_SAVE = ^tsave - Grava configuracao das estatisticas
+COM_STATS_LOAD = ^tload - Inicia configuracao das estatisticas
+COM_STATS_LIST = ^tlist [id] - mostra o estado das estatisticas
+COM_STATS_ADD = ^tadd <nome> <variavel> - adiciona estatistica 'a lista
+NO_STATS = Extra/plugon de estatisticas nao estao ^ninstalados neste srvidor^n
+SAVE_CONF = Guardar configuracao
+
 [sr]
 NO_OPTION = Nepostoji optcija(e) sa tom promenljivom (ime "%s")
 STATS_CONF_SAVED = Podesavanja Statistike su uspesno snimljena

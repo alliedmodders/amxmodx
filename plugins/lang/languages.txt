@@ -4,11 +4,11 @@ LANG_NAME_NATIVE = English
 
 [bp]
 LANG_NAME = Brazil Portuguese
-LANG_NAME_NATIVE = 
+LANG_NAME_NATIVE = XBrazil PortugueseX
 
 [da]
 LANG_NAME = Danish
-LANG_NAME_NATIVE = 
+LANG_NAME_NATIVE = XDanishX
 
 [de]
 LANG_NAME = German
@@ -16,28 +16,32 @@ LANG_NAME_NATIVE = Deutsch
 
 [es]
 LANG_NAME = Spanish
-LANG_NAME_NATIVE = 
+LANG_NAME_NATIVE = Espanol
 
 [fr]
 LANG_NAME = French
-LANG_NAME_NATIVE = 
+LANG_NAME_NATIVE = Francais
 
 [nl]
 LANG_NAME = Dutch
-LANG_NAME_NATIVE = 
+LANG_NAME_NATIVE = Nederlands
 
 [pl]
 LANG_NAME = Polish
-LANG_NAME_NATIVE = 
+LANG_NAME_NATIVE = Polski
+
+[pt]
+LANG_NAME = Portuguese
+LANG_NAME_NATIVE = Portugues
 
 [sr]
 LANG_NAME = Serbian
-LANG_NAME_NATIVE = 
+LANG_NAME_NATIVE = Srpski
 
 [sv]
 LANG_NAME = Swedish
-LANG_NAME_NATIVE = 
+LANG_NAME_NATIVE = Svenska
 
 [tr]
 LANG_NAME = Turkish
-LANG_NAME_NATIVE = 
+LANG_NAME_NATIVE = Turkce

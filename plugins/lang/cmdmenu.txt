@@ -38,6 +38,11 @@ CMD_MENU = Menu komend
 CONF_MENU = Menu konfiguracji
 SPE_MENU = Menu rozmowy
 
+[pt]
+CMD_MENU = Menu de comandos
+CONF_MENU = Menu de configuracoes
+SPE_MENU = Menu de vozes
+
 [sr]
 CMD_MENU = Komandne
 CONF_MENU = Podesavanja

@@ -70,6 +70,15 @@ CHOOSE_NEXTM = AMX wybral nastepna mape
 EXTED_MAP = Rozszerz mape %s
 TIME_CHOOSE = Nadszedl czas wyboru mapy...
 
+[pt]
+CHO_FIN_EXT = Escolha terminou. O mapa actual vai ser continuado por mais %.0f minutos
+CHO_FIN_NEXT = Escolha terminou. O proximo mapa vai ser %s
+CHOSE_EXT = %s escolheu continuar o mapa
+X_CHOSE_X = %s escolheu %s
+CHOOSE_NEXTM = AMX escolha o proximo mapa
+EXTED_MAP = Continuar o mapa %s
+TIME_CHOOSE = E' altura de escolher o proximo mapa...
+
 [sr]
 CHO_FIN_EXT = Biranje zavrseno. Sadasnja mapa ce biti produzena za %.0f minuta
 CHO_FIN_NEXT = Biranje zavrseno. Sledeca mapa ce biti %s

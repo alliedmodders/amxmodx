@@ -75,6 +75,16 @@ SET_LANG_SERVER = Jezyk serwera zostal ustawiony na "%s"
 SET_LANG_USER = Twoj jezyk zostal ustawiony na "%s"
 TYPE_LANGMENU = Wpisz 'amx_langmenu' w konsoli aby wyswietlic menu z wyborem jezyka
 
+[pt]
+LANG_NOT_EXISTS = Esse idioma nao existe
+PERSO_LANG = Idioma pessoal
+LANG_MENU = Menu de Idiomas
+SERVER_LANG = Idioma do servidor
+SAVE_LANG = Guardar idioma
+SET_LANG_SERVER = O idioma do servidor foi alterado para "%s"
+SET_LANG_USER = O seu idioma foi alterado para "%s"
+TYPE_LANGMENU = Escreva 'amx_langmenu' na consola para mostrar um menu onde pode escolher o seu idioma
+
 [sr]
 LANG_NOT_EXISTS = Jezik ne postoji
 PERSO_LANG = Licni Jezik

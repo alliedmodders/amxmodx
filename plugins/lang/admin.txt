@@ -102,6 +102,19 @@ PAS_ACC = Haslo zaakceptowane
 PRIV_SET = Przywileje ustawione
 NO_ENTRY = Nie mozesz wejsc na ten serwer...
 
+[pt]
+LOADED_ADMIN = 1 admin carregado do ficheiro
+LOADED_ADMINS = %d admins do ficheiro
+SQL_CANT_CON = erro SQL: nao consegue ligar: '%s'
+SQL_CANT_LOAD_ADMINS = erro SQL: nao consegue carregar admins: '%s'
+NO_ADMINS = Nenhum admin encontrado.
+SQL_LOADED_ADMIN = 1 admin carregado da base de dados
+SQL_LOADED_ADMINS = %d admins carregados da base de dados
+INV_PAS = Password invalida!
+PAS_ACC = Password aceite
+PRIV_SET = Privilegios obtidos
+NO_ENTRY = Nao tem acesso ao servidor...
+
 [sr]
 LOADED_ADMIN = Ucitan 1 administrator iz fajla
 LOADED_ADMINS = Ucitano %d administratora iz fajla

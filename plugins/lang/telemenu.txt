@@ -54,6 +54,13 @@ TELE_MENU = Menu teleportu
 CUR_LOC = Aktualna pozycja
 SAVE_LOC = Zapisz pozycje
 
+[pt]
+ADMIN_TELEPORT_1 = ADMIN: teleportou %s
+ADMIN_TELEPORT_2 = ADMIN %s: teleportou %s
+TELE_MENU = Menu de teleporte
+CUR_LOC = Localizacao actual
+SAVE_LOC = Gravar localizacao
+
 [sr]
 ADMIN_TELEPORT_1 = ADMIN: teleportuj %s
 ADMIN_TELEPORT_2 = ADMIN %s: teleportuj %s

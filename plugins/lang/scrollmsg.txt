@@ -38,6 +38,11 @@ MIN_FREQ = Minimalna czestotliwosc dla tej wiadomosci to %d sekund
 MSG_FREQ = Czestotliwosc wyswietlania wiadomosci: %d:%02d minut
 MSG_DISABLED = Wiadomosci przesuwane wylaczone
 
+[pt]
+MIN_FREQ = Frequencia minima para esta mensagem e' %d segundos
+MSG_FREQ = Frequencia para mensagem rotativa: %d:%02d minutos
+MSG_DISABLED = Mensagem rotativa desligada
+
 [sr]
 MIN_FREQ = Minimalno vreme prikazivanja za ovu poruku je %d sekundi
 MSG_FREQ = Vreme prikazivanja prolazece poruke: %d:%02d minut(a)

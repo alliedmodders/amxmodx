@@ -318,6 +318,46 @@ FAILED_DEFU = %s nie rozbroil bomby...
 PICKED_BOMB = %s podniosl bombe...
 DROPPED_BOMB = %s upuscil bombe!!!
 
+[pt]
+WITH = com
+KNIFE_MSG_1 = %s cortou 'as fatias %s
+KNIFE_MSG_2 = %s sacou da faca e degulou %s
+KNIFE_MSG_3 = %s esgueirou-se devagarinho e espetou %s
+KNIFE_MSG_4 = %s esfaqueou %s
+LAST_MSG_1 = Agora tudo depende de ti!
+LAST_MSG_2 = Espero que tenhas um kit de primeiros-socorros.
+LAST_MSG_3 = Todos os teus colegas de equipa morreram. Boa sorte!
+LAST_MSG_4 = Estas sozinho. Diverte-te!
+HE_MSG_1 = %s envia uma pequena lembranca %s
+HE_MSG_2 = %s atira um presente a %s
+HE_MSG_3 = %s fez um lancamento de precisao ao %s
+HE_MSG_4 = %s tem um grande bang para %s
+SHE_MSG_1 = %s estoirou-se com uma granada
+SHE_MSG_2 = %s testou os efeitos de uma granada
+SHE_MSG_3 = %s engole granadas!
+SHE_MSG_4 = %s explodiu!
+HS_MSG_1 = $kn matou $vn com um excelente tiro na cabeca!
+HS_MSG_2 = $kn tirou fora a cabeca do $vn com uma $wn
+HS_MSG_3 = $kn fez a cabeca do $vn em pudim com uma $wn
+HS_MSG_4 = $vn foi ownado pelo $kn
+HS_MSG_5 = O $vn ficou sem cabeca
+HS_MSG_6 = $kn tem um excelente aim com $wn, como o $vn bem sabe.
+HS_MSG_7 = O $vn deixou a cabeca na mira do $kn por um segundo a mais...
+DOUBLE_KILL = Wow! %s fez um double kill!!!
+PREPARE_FIGHT = Preparem-se para jogar!^nRound %d
+KILLED_ROW = Matou %d seguidos
+DIED_ROUNDS = Cuidado! Morreu %d vidas seguidas...
+KILLED_CHICKEN = Alguem matou uma galinha!!!
+BLEW_RADIO = Alguem estoirou o radio!!!
+REACHED_TARGET = Jazus! %s chegou ao alvo!
+PLANT_BOMB = %s esta' a colocar a bomba!
+DEFUSING_BOMB = %s esta' a desactivar a bomba...
+SET_UP_BOMB = %s colocou a bomba!!!
+DEFUSED_BOMB = %s desactivou a bomba!
+FAILED_DEFU = %s nao conseguiu desactivar a bomba...
+PICKED_BOMB = %s apanhou a bomba...
+DROPPED_BOMB = %s largou a bomba!!!
+
 [sr]
 WITH = sa
 KNIFE_MSG_1 = %s je zaklao %s

@@ -22,6 +22,9 @@ DROPPED_RES = Verwijderd vanwege plaats reservering
 [pl]
 DROPPED_RES = Wyrzucony z powodu rezerwacji slotow
 
+[pt]
+DROPPED_RES = Desligado devido 'a reserva de lugar
+
 [sr]
 DROPPED_RES = Izbaceni ste zbog rezervacije mesta
 

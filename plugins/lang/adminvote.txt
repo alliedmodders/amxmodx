@@ -270,6 +270,40 @@ ACTION_PERFORMED = Nie mozesz tego wykonac na bocie "%s"
 ADMIN_VOTE_FOR_1 = %s: zaglosuj %s na %s
 ADMIN_VOTE_FOR_2 = %s %s: zaglosuj %s na %s
 
+[pt]
+ADMIN_CANC_VOTE_1 = %s: cancelou votacao
+ADMIN_CANC_VOTE_2 = %s %s: cancelou votacao
+VOTING_CANC = Votacao cancelada
+NO_VOTE_CANC = Nao ha' votacao para cancelar ou a votacao nao pode ser cancelada com esse comando
+RES_REF = Resultado recusado
+RES_ACCEPTED = Resultado aceite
+VOTING_FAILED = Votacao falhou
+VOTING_RES_1 = %s (sim "%d") (nao "%d") (era preciso "%d")
+VOTING_RES_2 = %s (teve "%d") (era preciso "%d")
+VOTING_SUCCESS = Votacao bem sucedida
+VOTING_RES_3 = %s (teve "%d") (era preciso "%d"). O resultado e': %s
+THE_RESULT = O resultado e'
+WANT_CONTINUE = Quer continuar?
+VOTED_FOR = %s votou a favor
+VOTED_AGAINST = %s votou contra
+VOTED_FOR_OPT = %s votou na opcao #%d
+ALREADY_VOTING = Ja' de esta' a votar...
+VOTING_NOT_ALLOW = Votacao nao e' permitida neste momento
+GIVEN_NOT_VALID = Dado %s nao valido
+MAP_IS = mapa e'
+MAPS_ARE = mapas sao
+CHOOSE_MAP = Escolha o mapa
+ADMIN_VOTE_MAP_1 = %s: votar mapa(s)
+ADMIN_VOTE_MAP_2 = %s %s: votar mapa(s)
+VOTING_STARTED = Votacao comecou...
+VOTING_FORBIDDEN = Votacao para esse comando foi proibida
+ADMIN_VOTE_CUS_1 = %s: votacao personalizada
+ADMIN_VOTE_CUS_2 = %s %s: votacao personalizada
+VOTE = Voto
+ACTION_PERFORMED = Essa accao nao pode ser executada num bot "%s"
+ADMIN_VOTE_FOR_1 = %s: votou %s para %s
+ADMIN_VOTE_FOR_2 = %s %s: votou %s para %s
+
 [sr]
 ADMIN_CANC_VOTE_1 = %s: otkazi glasanje
 ADMIN_CANC_VOTE_2 = %s %s: otkazi glasanje

@@ -10,6 +10,12 @@ NEXT_MAP = Naechste Map:
 [fr]
 NEXT_MAP = Prochaine Carte:
 
+[nl]
+NEXT_MAP = Volgende map:
+
+[pl]
+NEXT_MAP = Nastepna mapa:
+
 [pt]
 NEXT_MAP = Proximo mapa:
 
@@ -18,3 +24,6 @@ NEXT_MAP = Sledeca Mapa:
 
 [sv]
 NEXT_MAP = Kommande karta:
+
+[tr]
+NEXT_MAP = Diger Map:

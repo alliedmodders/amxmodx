@@ -28,8 +28,6 @@ int main(int argc, char **argv)
 {
 	Compiler Program;
 
-	getchar();
-
 	get_options(argc, argv, Program);
 
 	if (filename.size() < 1)
@@ -41,15 +39,13 @@ int main(int argc, char **argv)
 	Program.Load(filename);
 	if (Program.Parse())
 	{
-		//Program.PrintCodeList();
 		if (Program.Compile())
 			printf("Done.\n");
+		else
+			printf("Compile build failed.\n");
+	} else {
+		printf("Compile failed.\n");
 	}
-	/*ErrorMngr CError(&Program);
-	std::string f("232+4*4");
-	int val = Program.Eval(f);
-
-	printf("Evaluation: %d\n", val);*/
 
 	exit(0);
 }

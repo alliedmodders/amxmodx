@@ -205,7 +205,7 @@ bool Compiler::Compile()
 
 	std::string amxname;
 	amxname.assign(filename);
-	int pos = amxname.find(".asm");
+	int pos = (int)amxname.find(".asm");
 	if (pos != std::string::npos)
 	{
 		amxname.replace(pos, 4, ".amx");
@@ -1461,6 +1461,8 @@ bool Compiler::Parse()
 	CLabels->CompleteQueue();
 
 	CError->PrintReport();
+	if (CError->GetStatus() >= Err_Error)
+		return false;
 
 	return true;
 }
@@ -1932,7 +1934,7 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 				e.Evaluate(sym);
 				r->vals.push_back(e);
 			}
-			r->ops.push_back(str[i]);
+			r->ops.push_back((char)str[i]);
 			if (str[i] == '>' || str[i] == '<')
 			{
 				i++;
@@ -1965,24 +1967,28 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 					e.Evaluate(sym);
 					r->vals.push_back(e);
 				}
-				CExpr t;
-				t = EvalRpn(r, sym);
-				delete r;
 				if (Stack.size() < 2)
 				{
-					while (Stack.size())
+					while (!Stack.empty())
 					{
-						if (Stack.top())
-							delete Stack.top();
+						rpn *t = Stack.top();
+						if (t)
+							delete t;
+						t = 0;
 						Stack.pop();
 					}
 					CError->ErrorMsg(Err_Unmatched_Token, str[i]);
 					return 0;
+				} else {
+					CExpr t;
+					t = EvalRpn(r, sym);
+					delete r;
+					r = 0;
+					Stack.pop();
+					r = Stack.top();
+					r->vals.push_back(t);
+					pos = i + 1;
 				}
-				Stack.pop();
-				r = Stack.top();
-				r->vals.push_back(t);
-				pos = i + 1;
 			} else if (i == (int)(str.size() - 1)) {
 				if (pos < i)
 				{
@@ -2004,19 +2010,25 @@ int Compiler::Eval(std::string &str, SymbolType sym)
 
 	if (Stack.size() != 1)
 	{
+		rpn *t = 0;
 		while (!Stack.empty())
 		{
-			delete Stack.top();
+			t = Stack.top();
+			if (t)
+				delete t;
+			t = 0;
 			Stack.pop();
 		}
 		CError->ErrorMsg(Err_Unmatched_Token, '(');
 		return 0;
 	}
 	
-	rpn *r2 = Stack.top();
 	Stack.pop();
 	CExpr final;
     final = EvalRpn(r, sym);
+
+	delete r;
+	r = 0;
 
 	return final.GetNumber();
 }
@@ -2187,4 +2199,10 @@ bool Compiler::IsSymbol(std::string &str)
 		return false;
 
 	return true;
+}
+
+rpn::~rpn()
+{
+//	ops.clear();
+//	vals.clear();
 }

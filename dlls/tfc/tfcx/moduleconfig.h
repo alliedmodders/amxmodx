@@ -29,7 +29,7 @@
 //   Do native functions init here (MF_AddNatives)
 #define FN_AMXX_ATTACH OnAmxxAttach
 // AMXX dettach
-#define FN_AMXX_DETTACH OnAmxxDettach
+//#define FN_AMXX_DETTACH OnAmxxDettach
 // All plugins loaded
 //   Do forward functions init here (MF_RegisterForward)
 //#define FN_AMXX_PLUGINSLOADED OnPluginsLoaded

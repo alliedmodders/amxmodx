@@ -32,7 +32,8 @@ public:
 			return;
 		}
 		Grow(strlen(d));
-		strcpy(v, d);
+		if (v)
+			strcpy(v, d);
 	}
 
 	void clear()
@@ -70,6 +71,8 @@ public:
 private:
 	void Grow(int d)
 	{
+		if (d<1)
+			return;
 		if (d > mSize)
 		{
 			char *t = new char[d+1];

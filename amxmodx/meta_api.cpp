@@ -1065,7 +1065,7 @@ C_DLLEXPORT	int	GetEntityAPI2_Post(	DLL_FUNCTIONS *pFunctionTable, int *interfac
 enginefuncs_t meta_engfuncs;
 C_DLLEXPORT	int	GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion ) {
 
-  if ( stricmp(g_mod_name.str(),"cstrike") == 0	)
+  if ( stricmp(g_mod_name.str(),"cstrike") == 0 || stricmp(g_mod_name.str(),"czero")==0	)
   {
 	meta_engfuncs.pfnSetModel =	SetModel;
 	g_bmod_cstrike = true;

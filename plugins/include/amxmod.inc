@@ -40,12 +40,6 @@ stock user_spawn(index)
 stock get_logfile( name[], len )
   return get_time("admin%m%d.log",name,len)
 
-stock get_user_deaths(index)
-  return cs_get_user_deaths(index)
-
-stock set_user_deaths(index,newdeaths)
-  return cs_set_user_deaths(index,newdeaths)
-
 stock get_user_money(index)
   return cs_get_user_money(index)
 

@@ -266,6 +266,7 @@ enum ModuleCallReason
 extern ModuleCallReason g_ModuleCallReason;		// modules.cpp
 extern CModule *g_CurrentlyCalledModule;		// modules.cpp
 extern const char *g_LastRequestedFunc;			// modules.cpp
+extern CQueue<String> CurModuleList;
 
 void *Module_ReqFnptr(const char *funcName);	// modules.cpp
 

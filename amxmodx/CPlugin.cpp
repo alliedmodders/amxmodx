@@ -78,7 +78,7 @@ int  CPluginMngr::loadPluginsFromFile( const char* filename )
 			debugFlag = 1;
 		}
 #endif
-				
+
 		CPlugin* plugin = loadPlugin( pluginsDir , pluginName  , error,  debugFlag);
 		
 		if (!plugin)

@@ -2653,6 +2653,19 @@ static cell lang_exists(AMX *amx, cell *params)
 	return g_langMngr.LangExists(get_amxstring(amx, params[1], 1, len)) ? 1 : 0;
 }
 
+static cell register_module(AMX *amx, cell *params)
+{
+	int len = 0;
+	
+	String s;
+
+	s.assign(get_amxstring(amx, params[1], 0, len));
+
+	CurModuleList.push(s);
+
+	return 1;
+}
+
 AMX_NATIVE_INFO amxmod_Natives[] = {
   { "client_cmd",       client_cmd },
   { "client_print",     client_print },
@@ -2752,6 +2765,7 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "register_logevent",register_logevent},
   { "register_menucmd", register_menucmd },
   { "register_menuid",  register_menuid },
+  { "register_module",	register_module },
   { "register_plugin",  register_plugin },
   { "register_srvcmd",  register_srvcmd },
   { "remove_cvar_flags",    remove_cvar_flags },

@@ -214,6 +214,63 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 	return set_amxnatives(amx,error);
 }
 
+//BAILOPAN
+int CheckModules(AMX *amx, char error[64])
+{
+	int idx = 0, flag = 1;
+	if (amx_FindPublic(amx, "plugin_modules", &idx) == AMX_ERR_NONE)
+	{
+		cell retVal = 0;
+		int err = 0;
+		if ( (err = amx_Exec(amx, &retVal, idx, 0)) == AMX_ERR_NONE )
+		{
+			unsigned int i = 0;
+			while (!CurModuleList.empty())
+			{
+				if (!flag)
+				{
+					CurModuleList.pop();
+					continue;
+				}
+				//assume module is not found
+				flag = 0;
+				for (CList<CModule>::iterator pMod = g_modules.begin(); pMod; ++pMod)
+				{
+					if (strcmpi(CurModuleList.front().c_str(), "dbi") == 0)
+					{
+						if (strstr( (*pMod).getName(), "sql") || strstr( (*pMod).getName(), "dbi" ))
+						{
+							// the module checks in
+							flag = 1;
+							break;
+						}
+					} else {
+						if (strcmpi( (*pMod).getName(), CurModuleList.front().c_str() ) == 0)
+						{
+							flag = 1;
+							break;
+						}
+					}
+				}
+				//module was not found
+				if (!flag)
+				{
+					sprintf(error, "Module \"%s\" required for plugin.  Check modules.ini.", CurModuleList.front().c_str());
+				}
+				CurModuleList.pop();
+			}
+		} else {
+			AMXXLOG_Log("[AMXX] Run time error %d on line %ld during module check.", err, amx->curline);
+			//could not execute
+			return -1;	//bad! very bad!
+		}
+	} else {
+		return -1;
+	}
+
+	return flag;
+}
+
 int set_amxnatives(AMX* amx,char error[64])
 {
 	for ( CList<CModule>::iterator  a  = g_modules.begin(); a ; ++a )
@@ -233,13 +290,18 @@ int set_amxnatives(AMX* amx,char error[64])
 
 	if ( amx_Register(amx, core_Natives, -1) != AMX_ERR_NONE )
 	{
-		sprintf(error,"Function not found (name \"%s\")",no_function);
+		if (CheckModules(amx, error) == -1)
+		{
+			//HACKHACK
+			sprintf(error,"Plugin uses an unknown function (name \"%s\") - check your modules.ini.",no_function);
+		}
 		return (amx->error = AMX_ERR_NATIVE);
 	}
 
+	CheckModules(amx, error);
+
 	return AMX_ERR_NONE;
 }
-
 
 int unload_amxscript(AMX* amx, void** program)
 {

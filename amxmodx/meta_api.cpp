@@ -57,6 +57,7 @@ void (*function)(void*);
 void (*endfunction)(void*);
 
 CLog g_log;
+CQueue<String> CurModuleList;
 CForwardMngr  g_forwards;
 CList<CPlayer*> g_auth;
 CList<CCVar> g_cvars;
@@ -199,7 +200,6 @@ const char*	get_localinfo( const char* name	, const	char* def )
 // Initialize AMX stuff	and	load it's plugins from plugins.ini list
 // Call	precache forward function from plugins
 int	C_Spawn( edict_t *pent ) {
-
   g_forcedmodules =	false;
   g_forcedsounds = false;
 
@@ -447,7 +447,6 @@ void C_ServerDeactivate_Post() {
   g_FakeMeta.m_Plugins.begin()->GetDllFuncTable().pfnSpawn = C_Spawn;
 
   detachReloadModules();
-
   g_auth.clear();
   g_forwards.clear();
   g_commands.clear();
@@ -465,6 +464,13 @@ void C_ServerDeactivate_Post() {
   g_langMngr.Save(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
   g_langMngr.SaveCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
   g_langMngr.Clear();
+
+  //clear module name cache
+  while (!CurModuleList.empty())
+  {
+	  CurModuleList.pop();
+  }
+
   // last memreport
 #ifdef MEMORY_TEST
 	if (g_memreport_enabled)

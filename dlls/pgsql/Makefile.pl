@@ -15,7 +15,7 @@
 $PROJECT = "pgsql_amxx";
 $sdk = "../hlsdk/SourceCode";
 $mm = "../metamod/metamod";
-$pg = "postgresql-7.4.3/src";
+$pg = "extra/src";
 $gccf = "gcc";
 
 @CPP_SOURCE_FILES = ("pgsql.cpp", "pgsql_amx.cpp", "amxxmodule.cpp");

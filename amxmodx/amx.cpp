@@ -51,7 +51,7 @@
     #include <dlfcn.h>
   #endif
 #endif
-#if defined __LCC__
+#if defined __LCC__ || defined __linux__
   #include <wchar.h>    /* for wcslen() */
 #endif
 

@@ -359,7 +359,7 @@ public:
 
 	int at(int a)
 	{
-		if (at < 0 || at >= (int)cSize)
+		if (a < 0 || a >= (int)cSize)
 			return -1;
 
 		return v[a];

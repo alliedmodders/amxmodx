@@ -891,8 +891,10 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 				if (pos > String::npos)
 				{
 					tmpEntry = new sKeyDef;
-					String key = buf.substr(0, pos);
-					String def = buf.substr(pos+1);
+					String key;
+					key.assign(buf.substr(0, pos).c_str());
+					String def;
+					def.assign(buf.substr(pos+1).c_str());
 					key.trim();
 					key.toLower();
 					int iKey = GetKeyEntry(key);
@@ -909,7 +911,8 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 					if (pos > String::npos)
 					{
 						tmpEntry = new sKeyDef;
-						String key = buf.substr(0, pos);
+						String key;
+						key.assign(buf.substr(0, pos).c_str());;
 						key.trim();
 						key.toLower();
 						int iKey = GetKeyEntry(key);

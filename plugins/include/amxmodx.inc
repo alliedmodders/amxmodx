@@ -536,10 +536,11 @@ native is_module_loaded(const name[]);
 *  authorLen  - maximal length of the author
 *  version[]  - the version of the module will be stored here
 *  versionLen - maximal length of the version
+*  status - the status of the module will be stored here
 * Return value:
 *  id         - success
 *  -1         - module not found */
-native get_module(id, name[], nameLen, author[], authorLen, version[], versionLen);
+native get_module(id, name[], nameLen, author[], authorLen, version[], versionLen, &status);
 
 /* Returns number of currently registered modules */
 native get_modulesnum();

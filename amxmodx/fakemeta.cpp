@@ -2528,7 +2528,7 @@ bool CFakeMeta::AddCorePlugin()
 	CFakeMetaPlugin *pPlugin = new CFakeMetaPlugin("[AMXX Core]");
 	if (!pPlugin)
 		return false;
-	m_Plugins.put(pPlugin);
+	m_Plugins.put_front(pPlugin);
 	// Set its status to running so functions are called in it
 	pPlugin->SetStatus(PL_RUNNING);
 	return true;

@@ -225,6 +225,7 @@ int Spawn( edict_t *pent ) {
 
   // ###### Initialize commands prefixes
   g_commands.registerPrefix( "amx" );
+  g_commands.registerPrefix( "amxx" );
   g_commands.registerPrefix( "say" );
   g_commands.registerPrefix( "admin_" );
   g_commands.registerPrefix( "sm_" );
@@ -242,9 +243,6 @@ int Spawn( edict_t *pent ) {
     }
     amx_config.clear();
   }
-
-  //  ###### Make sure basedir is set
-  get_localinfo("amxx_basedir" , "addons/amxx" );
 
   //  ###### Load modules
   int loaded = loadModules( "addons/amxx/modules.ini" );
@@ -277,7 +275,7 @@ int Spawn( edict_t *pent ) {
   memset(g_players[0].flags,-1,sizeof(g_players[0].flags));
 
   //  ###### Load AMX scripts
-  g_plugins.loadPluginsFromFile( "addons/amxx/plugins.ini" );
+  g_plugins.loadPluginsFromFile( "addons/amxx/plugins.ini" );	// :TODO: Where the hell should this be!?!?!
 
   //  ###### Call precache forward function
   g_dontprecache = false;

@@ -56,7 +56,7 @@ public plugin_init()
 #if defined USING_SQL
   register_plugin("Admin Base","0.20","AMXX Dev Team")
 #else
-  register_plugin("Admin Base(SQL)", "0.20", "AMXX Dev Team")
+  register_plugin("Admin Base (SQL)", "0.20", "AMXX Dev Team")
 #endif
   register_cvar("amx_mode","1")
   register_cvar("amx_password_field","_pw")
@@ -102,6 +102,16 @@ public plugin_init()
   format(configsDir, 63, "%s/users.ini", configsDir)
   loadSettings(configsDir) // Load admins accounts
 #endif
+}
+
+public plugin_cfg()
+{
+  new configFile[64],curMap[32]
+  get_configsdir(configFile,31)
+  get_mapname(curMap,31)
+  format(configFile,63,"%s/maps/%s.cfg",configFile,curMap)
+  if ( file_exists(configFile) )
+    server_cmd("exec %s",configFile)
 }
 
 #if !defined USING_SQL

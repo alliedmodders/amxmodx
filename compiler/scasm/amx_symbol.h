@@ -58,7 +58,7 @@ public:
 	void PrintTable();
 	void Clear();
 private:
-	std::vector<Symbol*> List;
+	std::list<Symbol*> List;
 };
 
 

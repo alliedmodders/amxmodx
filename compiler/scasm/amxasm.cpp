@@ -27,7 +27,7 @@ std::string output_name;
 Compiler Program;
 
 int main(int argc, char **argv)
-{	
+{
 	get_options(argc, argv, Program);
 
 	if (filename.size() < 1)
@@ -40,7 +40,6 @@ int main(int argc, char **argv)
 	Program.Load(filename);
 	if (Program.Parse())
 	{
-
 		if (Program.Compile(output_name.size() ? output_name : filename))
 			printf("Done.\n");
 		else

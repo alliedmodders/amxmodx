@@ -53,7 +53,7 @@ bool IsValidSymbol(std::string &text)
 
 void SymbolList::Clear()
 {
-	std::vector<SymbolList::Symbol *>::iterator i;
+	std::list<SymbolList::Symbol *>::iterator i;
 
 	for (i=List.begin(); i!=List.end(); i++)
 	{
@@ -100,7 +100,7 @@ SymbolList::Symbol *SymbolList::AddSymbol(std::string &sym, SymbolType type, int
 
 SymbolList::Symbol* SymbolList::FindSymbol(std::string &sym)
 {
-	std::vector<Symbol*>::iterator i;
+	std::list<Symbol*>::iterator i;
 	for (i=List.begin(); i!=List.end(); i++)
 	{
 		if ((*i)->IsEqual(sym))
@@ -112,7 +112,7 @@ SymbolList::Symbol* SymbolList::FindSymbol(std::string &sym)
 
 void SymbolList::PrintTable()
 {
-	std::vector<Symbol*>::iterator i;
+	std::list<Symbol*>::iterator i;
 	for (i=List.begin(); i!=List.end(); i++)
 	{
 		printf("Symbol \"%s\" defined on line %d\n", (*i)->sym.c_str(), (*i)->line);
@@ -121,12 +121,17 @@ void SymbolList::PrintTable()
 
 bool SymbolList::EraseSymbol(std::string &sym)
 {
-	std::vector<SymbolList::Symbol *>::iterator i;
+	std::list<SymbolList::Symbol *>::iterator i;
+	SymbolList::Symbol *S = 0;
+
 	for (i=List.begin(); i!=List.end(); i++)
 	{
-		if ( (*i)->IsEqual(sym) )
+		S = (*i);
+		if ( S && S->IsEqual(sym) )
 		{
-			List.erase(i);
+			delete S;
+			i = List.erase(i);
+			S = 0;
 			return true;
 		}
 	}

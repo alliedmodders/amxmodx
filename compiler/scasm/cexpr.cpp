@@ -139,6 +139,7 @@ int CExpr::DeHex(std::string blk)
 				blk[pos] -= 32;
 			if (blk[pos] >= 16 || blk[pos] < 0)
 			{
+				assert(0);
 				if (CError)
 					CError->ErrorMsg(Err_Unexpected_Char, blk[pos]);
 				return 0;
@@ -238,7 +239,8 @@ cExprType CExpr::Evaluate(int symNum)
 		Update();
 		return t;
 	} else {
-		if (CError->IsSymbol(data) || (IsValidSymbol(data) && symNum == Sym_Label))
+		if (CError->IsSymbol(data) 
+			|| (IsValidSymbol(data) && symNum == Sym_Label || symNum == Sym_Proc))
 		{
 			type = Val_Number;
 			numVal = CError->DerefSymbol(data, symNum);

@@ -85,6 +85,7 @@ private:
 private:
 	std::vector<Asm *> CodeList;
 	std::map<std::string,int> OpCodes;
+	std::stack<std::string> LabelStack;
 	char *Output;
 	ErrorMngr *CError;
 	SymbolList *CSymbols;

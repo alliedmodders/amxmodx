@@ -100,6 +100,7 @@ void ErrorMngr::DefineErrors()
 	List.at(Err_Bad_Not) = "Wrong type argument to bit-complement";
 	List.at(Err_Invalid_Operator) = "Operator used on bad type";
 	List.at(Err_Invalid_Pragma) = "Invalid pragma";
+	List.at(Err_Invalid_Proc) = "Procedure referenced that does not exist";
 
 	List.at(Err_FileNone) = "No file specified";
 	List.at(Err_FileOpen) = "Could not open file \"%s\"";

@@ -35,14 +35,20 @@ public:
 	};
 public:
 	~ProcMngr();
-	void AddProc(SymbolList::Symbol *Symbol, Asm *ASM);
+	ProcMngr();
+	ProcMngr(ErrorMngr *e);
+	ProcMngr::AsmProc *AddProc(SymbolList::Symbol *Symbol, Asm *ASM);
 	ProcMngr::AsmProc *FindProc(std::string &sym);
 	int GetCip(std::string &sym);
 	bool SetPublic(std::string &sym);
 	void GetPublics(std::vector<ProcMngr::AsmProc *> &pbList);
+	void QueueProc(std::string &sym, Asm *ASM);
+	void CompleteQueue();
 	void Clear();
 private:
 	std::vector<ProcMngr::AsmProc *> List;
+	std::map<std::string, std::stack<Asm *> > PQ;
+	ErrorMngr *CError;
 public:
 	static const int ncip = -1;
 };

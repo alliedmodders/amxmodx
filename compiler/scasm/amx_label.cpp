@@ -35,7 +35,7 @@ LabelMngr::Label::Label()
 
 void LabelMngr::Clear()
 {	
-	std::vector<LabelMngr::Label *>::iterator i;
+	std::list<LabelMngr::Label *>::iterator i;
 
 	for (i=List.begin(); i!=List.end(); i++)
 	{
@@ -46,7 +46,7 @@ void LabelMngr::Clear()
 	List.clear();
 }
 
-void LabelMngr::AddLabel(SymbolList::Symbol *sym, int cip)
+LabelMngr::Label *LabelMngr::AddLabel(SymbolList::Symbol *sym, int cip)
 {
 	LabelMngr::Label *p = new LabelMngr::Label;
 
@@ -54,11 +54,13 @@ void LabelMngr::AddLabel(SymbolList::Symbol *sym, int cip)
 	p->cip = cip;
 
 	List.push_back(p);
+
+	return p;
 }
 
 LabelMngr::Label *LabelMngr::FindLabel(std::string &sym)
 {
-	std::vector<LabelMngr::Label *>::iterator i;
+	std::list<LabelMngr::Label *>::iterator i;
 
 	for (i=List.begin(); i!=List.end(); i++)
 	{
@@ -95,6 +97,7 @@ void LabelMngr::CompleteQueue(bool isLocal)
 {
 	std::map<std::string,std::stack<Asm *> >::iterator i;
 	std::stack<Asm *> *stk = 0;
+	std::stack<std::map<std::string,std::stack<Asm *> >::iterator> DeleteStack;
 	std::string search;
 	Asm *ASM = 0;
 	LabelMngr::Label *p = 0;
@@ -114,6 +117,7 @@ void LabelMngr::CompleteQueue(bool isLocal)
 					CError->ErrorMsg(Err_Bad_Label);
 					stk->pop();
 				}
+				DeleteStack.push( i );
 			}
 		} else {
 			while (!stk->empty())
@@ -122,10 +126,15 @@ void LabelMngr::CompleteQueue(bool isLocal)
 				ASM->params[0] = p->cip;
 				stk->pop();
 			}
+			DeleteStack.push( i );
 		}
 	}
 
-	LQ.clear();
+	while (!DeleteStack.empty())
+	{
+		LQ.erase(DeleteStack.top());
+		DeleteStack.pop();
+	}
 }
 
 int LabelMngr::GetCip(std::string &sym)
@@ -142,13 +151,18 @@ int LabelMngr::GetCip(std::string &sym)
 
 bool LabelMngr::EraseLabel(std::string &sym)
 {
-	std::vector<LabelMngr::Label *>::iterator i;
+	std::list<LabelMngr::Label *>::iterator i;
+	LabelMngr::Label *L = 0;
 
 	for (i=List.begin(); i!=List.end(); i++)
 	{
-		if ( (*i)->sym->IsEqual(sym) )
+		L = (*i);
+		if ( L->sym->IsEqual(sym) )
 		{
-			List.erase(i);
+			i = List.erase(i);
+			L->sym = 0;
+			delete L;
+			L = 0;
 			return true;
 		}
 	}
@@ -156,3 +170,12 @@ bool LabelMngr::EraseLabel(std::string &sym)
 	return false;
 }
 
+void LabelMngr::PrintList()
+{
+	std::list<LabelMngr::Label *>::iterator i;
+
+	for (i=List.begin(); i!=List.end(); i++)
+	{
+		printf("Label:\t%s\t%d\t%d\n", (*i)->sym->sym.c_str(), (*i)->cip, (*i)->sym->line);
+	}
+}

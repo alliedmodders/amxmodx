@@ -22,6 +22,18 @@
 
 #include "amxasm.h"
 
+ProcMngr::ProcMngr()
+{
+	CError = 0;
+	printf("Instantiated without a compiler!\n");
+	assert(CError);
+}
+
+ProcMngr::ProcMngr(ErrorMngr *e)
+{
+	CError = e;
+}
+
 ProcMngr::~ProcMngr()
 {
 	Clear();
@@ -40,7 +52,7 @@ void ProcMngr::Clear()
 	List.clear();
 }
 
-void ProcMngr::AddProc(SymbolList::Symbol *Symbol, Asm *ASM)
+ProcMngr::AsmProc *ProcMngr::AddProc(SymbolList::Symbol *Symbol, Asm *ASM)
 {
 	ProcMngr::AsmProc *a = new ProcMngr::AsmProc;
 
@@ -49,6 +61,8 @@ void ProcMngr::AddProc(SymbolList::Symbol *Symbol, Asm *ASM)
 	a->pb = false;
 
 	List.push_back(a);
+
+	return a;
 }
 
 bool ProcMngr::SetPublic(std::string &sym)
@@ -99,9 +113,46 @@ int ProcMngr::GetCip(std::string &sym)
 
 	p = FindProc(sym);
 	
-	if (p == NULL)
+	if (p == NULL || p->ASM == NULL)
 		return ncip;
 
 	return p->ASM->cip;
 }
 
+void ProcMngr::QueueProc(std::string &sym, Asm *ASM)
+{
+	std::string d(sym);
+	PQ[d].push(ASM);
+}
+
+void ProcMngr::CompleteQueue()
+{
+	std::map<std::string,std::stack<Asm *> >::iterator i;
+	std::string search;
+	ProcMngr::AsmProc *p = 0;
+	std::stack<Asm *> *stk = 0;
+
+	for (i=PQ.begin(); i!=PQ.end(); i++)
+	{
+		search.assign( (*i).first );
+		p = FindProc(search);
+		stk = &((*i).second);
+
+		if (p == NULL || p->ASM == NULL)
+		{
+			while (!stk->empty())
+			{
+				CError->SetLine(stk->top()->line);
+				CError->ErrorMsg(Err_Invalid_Proc);
+				stk->pop();
+			}
+		} else {
+			while (!stk->empty())
+			{
+				stk->top()->cip = p->ASM->cip;
+				stk->top()->params[0] = p->ASM->cip;
+				stk->pop();
+			}
+		}
+	}
+}

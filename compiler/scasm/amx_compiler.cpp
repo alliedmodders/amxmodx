@@ -106,7 +106,7 @@ void Compiler::Init()
 	/* Load DAT management */
 	DAT = new DataMngr(cellsize);
 	/* Load Proc management */
-	PROC = new ProcMngr;
+	PROC = new ProcMngr(CError);
 	/* Load Label management */
 	CLabels = new LabelMngr(CError);
 	/* Load Native management */
@@ -419,12 +419,10 @@ bool Compiler::Parse()
 	FILE *fp = 0;
 	char buffer[256] = {0};
 	std::stack<int> DefStack;
-	std::stack<std::string> LabelStack;
 	curLine = 0;
 	AsmSection sec = Asm_None;
 	lastCip = 0-cellsize;
 	int pass = 0;
-
 Start:
 	fp = fopen(filename.c_str(), "rt");
 	curLine = 0;
@@ -698,8 +696,11 @@ Start:
 					/* Check if the symbol is already used */
 					if ( (S = CSymbols->FindSymbol(params)) != NULL)
 					{
-						CError->ErrorMsg(Err_Invalid_Symbol, params.c_str(), S->line);
-						continue;
+						if (S->type != Sym_Proc)
+						{
+							CError->ErrorMsg(Err_Symbol_Reuse, params.c_str(), S->line);	
+							continue;
+						}
 					}
 					/* Create instruction */
 					Asm *ASM = new Asm;
@@ -707,12 +708,26 @@ Start:
 					ASM->op = OpCodes["proc"];
 					ASM->line = curLine;
 					lastCip += cellsize;
-					/* Add symbol */
-					S = CSymbols->AddSymbol(params, Sym_Proc, CurLine());
+					if (S == NULL)
+					{
+						/* Add symbol */
+						S = CSymbols->AddSymbol(params, Sym_Proc, CurLine());
+						/* Add to PROC list */
+						PROC->AddProc(S, ASM);
+					} else {
+						ProcMngr::AsmProc *p = 0;
+						p = PROC->FindProc(params);
+
+						if (p == NULL || p->ASM != NULL)
+						{
+							CError->ErrorMsg(Err_Symbol_Reuse, params.c_str(), S->line);
+							continue;
+						} else {
+							p->ASM = ASM;
+						}
+					}
 					/* Add to code list */
 					CodeList.push_back(ASM);
-					/* Add to PROC list */
-					PROC->AddProc(S, ASM);
 				} else if (code.compare("ENDP") == 0) {
 					/* This is, in theory, not needed
 					 * Nonetheless, we check labels here
@@ -740,21 +755,24 @@ Start:
 						{
 							LabelMngr::Label *p = CLabels->FindLabel(code);
 							if (p == NULL)
+							{
 								CError->ErrorMsg(Err_Invalid_Symbol);
-							else
+							} else {
 								p->cip = lastCip+cellsize;
-							continue;
+								p->sym->line = CurLine();
+							}
 						} else {
 							CError->ErrorMsg(Err_Symbol_Reuse, code.c_str(), S->line);
 						}
 						continue;
+					} else {
+						if (code[0] == '_')
+						{
+							LabelStack.push(code);
+						}
+						S = CSymbols->AddSymbol(code, Sym_Label, CurLine());
+						CLabels->AddLabel(S, lastCip+cellsize);
 					}
-					if (code[0] == '_')
-					{
-						LabelStack.push(code);
-					}
-					S = CSymbols->AddSymbol(code, Sym_Label, CurLine());
-					CLabels->AddLabel(S, lastCip+cellsize);
 				} else {
 					/* Check if there is a valid opcode */
 					int op = OpCodes[code];
@@ -790,6 +808,7 @@ Start:
 						FindArguments(params, paramList, argPos, true);
 						if (argPos != (int)(params.size()-1))
 						{
+							assert(0);
 							CError->ErrorMsg(Err_Unexpected_Char, params[argPos]);
 							continue;
 						}
@@ -1595,6 +1614,9 @@ Start:
 
 	/* We're not done! Check the label Queue */
 	CLabels->CompleteQueue();
+	
+	/* and the procedure queue ... */
+	PROC->CompleteQueue();
 
 	CError->PrintReport();
 
@@ -2270,6 +2292,8 @@ int Compiler::DerefSymbol(std::string &str, SymbolType sym)
 		if (sym == Sym_Label)
 		{
 			S = CSymbols->AddSymbol(str, Sym_Label, -1);
+		} else if (sym == Sym_Proc) {
+			S = CSymbols->AddSymbol(str, Sym_Proc, -1);
 		} else {
 			CError->ErrorMsg(Err_Unknown_Symbol, str.c_str());
 			return 0;
@@ -2284,14 +2308,21 @@ int Compiler::DerefSymbol(std::string &str, SymbolType sym)
 	{
 	case Sym_Proc:
 		{
-			val = PROC->GetCip(str);
-			if (val == ProcMngr::ncip)
+			ProcMngr::AsmProc *p = 0;
+			
+			if ( ((p = PROC->FindProc(str)) == NULL) || p->ASM == NULL)
 			{
-				CError->ErrorMsg(Err_Invalid_Symbol);
-				return 0;
+				/* Labels we handle differently. 
+				   Add it to the label queue
+			     */
+				p = PROC->AddProc(S, NULL);
+				PROC->QueueProc(str, CurAsm());
+				val = ProcMngr::ncip;
+			} else {
+				val = p->ASM->cip;
 			}
 			break;
-			}
+		}
 	case Sym_Native:
 		{
 			val = CNatives->GetNativeId(str);
@@ -2299,7 +2330,7 @@ int Compiler::DerefSymbol(std::string &str, SymbolType sym)
 			{
 				CError->ErrorMsg(Err_Invalid_Symbol);
 				return 0;
-				}
+			}
 			break;
 		}
 	case Sym_Dat:
@@ -2309,20 +2340,24 @@ int Compiler::DerefSymbol(std::string &str, SymbolType sym)
 			{
 				CError->ErrorMsg(Err_Invalid_Symbol);
 				return 0;
-				}
+			}
 			break;
 		}
 	case Sym_Label:
 		{
-			val = CLabels->GetCip(str);
-			if (val == LabelMngr::ncip)
+			LabelMngr::Label *L = 0;
+			
+			if ( (L = CLabels->FindLabel(str)) == NULL )
 			{
 				/* Labels we handle differently. 
 				   Add it to the label queue
 			     */
-				CLabels->AddLabel(S, LabelMngr::ncip);
+				L = CLabels->AddLabel(S, LabelMngr::ncip);
 				CLabels->QueueLabel(str, CurAsm());
+				LabelStack.push(str);
 			}
+
+			val = L->cip;
 			break;
 		}
 	default:

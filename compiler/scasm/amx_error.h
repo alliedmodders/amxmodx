@@ -63,6 +63,7 @@ typedef enum
 	Err_Bad_Not,
 	Err_Invalid_Operator,
 	Err_Invalid_Pragma,
+	Err_Invalid_Proc,
 	errors_end,
 
 	fatals_start,

@@ -37,7 +37,7 @@ public:
 	~LabelMngr();
 	LabelMngr() { CError = NULL; assert(CError!=NULL); }
 	LabelMngr(ErrorMngr *e) { CError = e; }
-	void AddLabel(SymbolList::Symbol *sym, int cip);
+	LabelMngr::Label *AddLabel(SymbolList::Symbol *sym, int cip);
 	LabelMngr::Label *FindLabel(std::string &sym);
 	int GetCip(std::string &sym);
 	void Clear();
@@ -45,8 +45,9 @@ public:
 	void QueueLabel(std::string &sym, Asm *ASM);
 	void CompleteQueue(bool isLocal = false);
 	bool EraseLabel(std::string &sym);
+	void PrintList();
 private:
-	std::vector<LabelMngr::Label *> List;
+	std::list<LabelMngr::Label *> List;
 	std::map<std::string, std::stack<Asm *> > LQ;
 	ErrorMngr *CError;
 public:

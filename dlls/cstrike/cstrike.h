@@ -202,10 +202,12 @@ pfnmodule_engine_g* g_engModuleFunc;
 //#define CSW_KNIFE						29
 #define CSW_P90							30
 
-#define M4A1_UNSILENCED					0
-#define M4A1_SILENCED					4
-#define USP_UNSILENCED					0
-#define USP_SILENCED					1
+#define M4A1_SILENCED					(1<<2)
+#define M4A1_ATTACHSILENCEANIM			6
+#define M4A1_DETACHSILENCEANIM			13
+#define USP_SILENCED					(1<<0)
+#define USP_ATTACHSILENCEANIM			7
+#define USP_DETACHSILENCEANIM			15
 
 #define GLOCK_SEMIAUTOMATIC				0
 #define GLOCK_BURSTMODE					2

@@ -243,10 +243,10 @@ static cell AMX_NATIVE_CALL cs_get_weapon_silenced(AMX *amx, cell *params) // cs
 	int *silencemode = ((int *)pWeapon->pvPrivateData + OFFSET_SILENCER_FIREMODE);
 	switch (weapontype) {
 		case CSW_M4A1:
-			if (*silencemode == M4A1_SILENCED)
+			if (*silencemode & M4A1_SILENCED)
 				return 1;
 		case CSW_USP:
-			if (*silencemode == USP_SILENCED)
+			if (*silencemode & USP_SILENCED)
 				return 1;
 	}
 
@@ -258,7 +258,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_silenced(AMX *amx, cell *params) // cs
 {
 	// Silence/unsilence gun. Does only work on M4A1 and USP.
 	// params[1] = weapon index
-	// params[2] = 1, and we silence the gun, 0 and we unsilence gun-
+	// params[2] = 1, and we silence the gun, 0 and we unsilence gun.
 
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
@@ -281,21 +281,40 @@ static cell AMX_NATIVE_CALL cs_set_weapon_silenced(AMX *amx, cell *params) // cs
 
 	switch (weapontype) {
 		case CSW_M4A1:
-			if (params[2])
-				*silencemode = M4A1_SILENCED;
-			else
-				*silencemode = M4A1_UNSILENCED;
+			if (params[2] == 1) {
+				if (!(*silencemode & M4A1_SILENCED)) { // want to silence - can't already be silenced
+					*silencemode |= M4A1_SILENCED;
+					// If this weapon has an owner that is a player, play animation for that player.
+					if (UTIL_IsPlayer(amx, pWeapon->v.owner))
+						pWeapon->v.owner->v.weaponanim = M4A1_ATTACHSILENCEANIM;
+				}
+			}
+			else if (*silencemode & M4A1_SILENCED) { // want to unsilence - can't already be unsilenced
+				*silencemode &= ~M4A1_SILENCED;
+				// If this weapon has an owner that is a player, play animation for that player.
+				if (UTIL_IsPlayer(amx, pWeapon->v.owner))
+					pWeapon->v.owner->v.weaponanim = M4A1_DETACHSILENCEANIM;
+			}
 			break;
 		case CSW_USP:
-			if (params[2])
-				*silencemode = USP_SILENCED;
-			else
-				*silencemode = USP_UNSILENCED;
-				break;
+			if (params[2] == 1) {
+				if (!(*silencemode & USP_SILENCED)) { // want to silence - can't already be silenced
+					*silencemode |= USP_SILENCED;
+					// If this weapon has an owner that is a player, play animation for that player.
+					if (UTIL_IsPlayer(amx, pWeapon->v.owner))
+						pWeapon->v.owner->v.weaponanim = USP_ATTACHSILENCEANIM;
+				}
+			}
+			else if (*silencemode & USP_SILENCED) { // want to unsilence - can't already be unsilenced
+				*silencemode &= ~USP_SILENCED;
+				// If this weapon has an owner that is a player, play animation for that player.
+				if (UTIL_IsPlayer(amx, pWeapon->v.owner))
+					pWeapon->v.owner->v.weaponanim = USP_DETACHSILENCEANIM;
+			}
+			break;
 		default:
 			return 0;
 	}
-
 
 	return 1;
 }

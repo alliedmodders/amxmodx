@@ -407,7 +407,8 @@ static cell AMX_NATIVE_CALL set_user_maxspeed(AMX *amx, cell *params) // set_use
 		return 0;
 	}
 
-	pPlayer->v.maxspeed = *(float *)((void *)&params[2]); // JGHG: Gotta love the way to get floats from parameters :-P
+	//pPlayer->v.maxspeed = ; // JGHG: Gotta love the way to get floats from parameters :-P
+	SETCLIENTMAXSPEED(pPlayer, *(float *)((void *)&params[2]));
 
 	return 1;
 }

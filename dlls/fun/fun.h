@@ -68,16 +68,9 @@ pfnmodule_engine_g* g_engModuleFunc;		// These seem to be meta/amxmod related
 #define CVAR_FUN_VERSION		"fun_version"
 #define GETCLIENTLISTENING		(*g_engfuncs.pfnVoice_GetClientListening)
 #define SETCLIENTLISTENING		(*g_engfuncs.pfnVoice_SetClientListening)
+#define SETCLIENTMAXSPEED		(*g_engfuncs.pfnSetClientMaxspeed)
 #define	SF_NORESPAWN			(1 << 30)// !!!set this bit on guns and stuff that should never respawn.
 #define STANDARDTIMESTEPSOUND	400
-
-#if defined __linux__
-	#define OFFSET_CSMONEY		115 + 5
-	#define OFFSET_CSDEATHS		449 + 5
-#else
-	#define OFFSET_CSMONEY		115	// Note that linux offsets need to be 5 higher (120 in this case)
-	#define OFFSET_CSDEATHS		449
-#endif // defined __linux__
 
 #define HITGROUP_GENERIC		0 // none
 #define HITGROUP_HEAD			1

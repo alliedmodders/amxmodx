@@ -271,6 +271,34 @@ static cell AMX_NATIVE_CALL ns_popup(AMX *amx, cell *params)
 	MESSAGE_END();
 	return 1;
 }
+static cell AMX_NATIVE_CALL ns_set_fov(AMX *amx, cell *params)
+{
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+		return 0;
+	CPlayer *player = GET_PLAYER_I(params[1]);
+	REAL fov = CELL_TO_FLOAT(params[2]);
+	LOG_CONSOLE(PLID,"Got fov.  fov=%f",fov);
+	int gmsgSetFov = GET_USER_MSG_ID(PLID, "SetFOV", NULL);
+	if (fov == 0.0)
+	{
+		player->foved=false;
+		player->fov=0.0;
+		MESSAGE_BEGIN(MSG_ONE,gmsgSetFov,NULL,player->edict);
+		WRITE_BYTE(0);
+		MESSAGE_END();
+		return 1;
+	}
+	if (fov > 0)
+	{
+		player->foved=true;
+		player->fov=fov;
+		MESSAGE_BEGIN(MSG_ONE,gmsgSetFov,NULL,player->edict);
+		WRITE_BYTE((int)fov);
+		MESSAGE_END();
+		return 1;
+	}
+	return 0;
+}
 AMX_NATIVE_INFO ns_misc_natives[] = {
 	   ///////////////////
 	{ "ns_get_build",			ns_get_build },
@@ -300,6 +328,8 @@ AMX_NATIVE_INFO ns_misc_natives[] = {
 	{ "ns_set_mask",			ns_set_mask },
 
 	{ "ns_popup",				ns_popup },
+
+	{ "ns_set_fov",				ns_set_fov },
 
 	   ///////////////////
 

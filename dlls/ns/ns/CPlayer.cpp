@@ -101,12 +101,15 @@ void CPlayer::Reset()
 	this->model[0]='\0';
 	this->skin=0;
 	this->body=0;
+	this->fov=0.0;
+	this->foved=false;
 }
 BOOL CPlayer::ClientCommand()
 {
 	// As of now, all that needs to be checked is the "menuselect" command.
 	if (menucmd.inmenu)
 	{
+		LOG_CONSOLE(PLID,"Checking menuselect...");
 		if (FStrEq(CMD_ARGV(0),"menuselect"))
 		{
 			int key=0;
@@ -122,6 +125,13 @@ BOOL CPlayer::ClientCommand()
 			if (key_mask & menucmd.keys)
 			{
 				ClearHudMessage(edict,menuhudtext," ");
+				LOG_CONSOLE(PLID,"Clearing hud text...");
+				LOG_CONSOLE(PLID,"this->menucmd.iFunctionIndex: %i, this->index: %i key: %i",this->menucmd.iFunctionIndex,this->index,key);
+				int temp = this->menucmd.iFunctionIndex;
+				MF_ExecuteForward(this->menucmd.iFunctionIndex,this->index,key);
+				MF_UnregisterSPForward(temp);
+
+				LOG_CONSOLE(PLID,"Executing...");
 //				AMX_EXEC(menucmd.amx,NULL,menucmd.iFunctionIndex,2,index,key);
 			}
 			return true;

@@ -53,14 +53,21 @@ static cell AMX_NATIVE_CALL ns_show_menu(AMX *amx,cell *params)
 		if (FNullEnt(INDEXENT2(params[1])))
 			return 0;
 	}
-	// First we set the command to be executed here...
 	int len;
-	// AMX publics have a limit of 19 characters.
+	int ifx;
 	char sTemp[20];
-	sprintf(sTemp,"%s",MF_GetAmxString(amx,params[2],0,&len));
 	char sText[512];
-	sprintf(sText,"%s",MF_GetAmxString(amx,params[3],1,&len));
-	iFunctionIndex = MF_RegisterSPForwardByName(amx, sTemp, ET_IGNORE, FP_CELL, FP_CELL);
+	strncpy(sTemp,MF_GetAmxString(amx,params[2],0,&len),19);
+	strncpy(sText,MF_GetAmxString(amx,params[3],1,&len),511);
+	sTemp[19]='\0';
+	sText[511]='\0';
+	if (MF_AmxFindPublic(amx,sTemp,&ifx) == AMX_ERR_NONE)
+		iFunctionIndex = MF_RegisterSPForward(amx,ifx,FP_CELL, FP_CELL,FP_DONE);
+	else
+	{
+		MF_Log("(ns_show_menu): Function not found: %s",sTemp);
+		return 0;
+	}
 	if (pEntity==NULL)
 	{
 		int i;

@@ -3,6 +3,7 @@
 
 #include <sdk_util.h> //useful almost everywhere
 #include <usercmd.h>
+#include <entity_state.h>
 
 CSpawn ns_spawnpoints;
 CPlayer g_player[33];
@@ -382,4 +383,17 @@ void ClientDisconnect(edict_t *pEntity)
 	CPlayer *player = GET_PLAYER_E(pEntity);
 	player->Disconnect();
 	RETURN_META(MRES_HANDLED);
+}
+
+// NS resets pev->fov every single frame, but this is called right before the data is sent to the client.
+// Reset FOV if we need to.
+void UpdateClientData( const struct edict_s *ent, int sendweapons, struct clientdata_s *cd )
+{
+	edict_t *pEntity = (edict_t*)ent;
+	CPlayer *player = GET_PLAYER_E(pEntity);
+	if (player->foved)
+		pEntity->v.fov = player->fov;
+
+	RETURN_META(MRES_HANDLED);
+
 }

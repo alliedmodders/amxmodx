@@ -8,7 +8,6 @@
 #include "ns_const.h"
 #include "CPlayer.h"
 #include "CSpawn.h"
-#include "CCallList.h"
 #include "utilfunctions.h"
 
 extern CSpawn ns_spawnpoints;

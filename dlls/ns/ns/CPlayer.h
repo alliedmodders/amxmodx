@@ -23,7 +23,8 @@ public:
 	int	index;
 
 	bool connected;
-
+	REAL fov;
+	bool foved;
 	// Custom model/body/skin
 	bool custommodel;
 	bool customskin;

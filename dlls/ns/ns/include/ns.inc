@@ -173,3 +173,4 @@ native ns_get_hive_trait(idHive);
 /* Sets the trait type tied to the hive.  Look at the hivetrait enum for the values. */
 native ns_set_hive_trait(idHive,trait);
 
+native ns_set_fov(idPlayer,Float:_fov=0.0);

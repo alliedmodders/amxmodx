@@ -55,6 +55,8 @@ struct AmxCall {
 std::vector<AmxCall> vTouchCallList;
 std::vector<AmxCall> vServerFrameCallList;
 std::vector<AmxCall> vCliKillList;
+std::vector<AmxCall> vPreThinkList;
+std::vector<AmxCall> vPostThinkList;
 
 //This was originally by VexD
 //Thank you for an excellent piece of work, VexD!
@@ -2478,8 +2480,21 @@ void ClientUserInfoChanged(edict_t *pEntity, char *infobuffer) {
 	}
 }
 
+//(BAILOPAN) - forward this
+void PlayerPreThink(edict_t *pEntity) {
+	if (!vPreThinkList.empty()) {
+		for(std::vector<AmxCall>::iterator i = vPreThinkList.begin(); i != vPreThinkList.end(); i++) {
+			cell iRetVal = 0;
+			AMX_EXEC(&i->pPlugin->amx, &iRetVal, i->iFunctionIdx, 1, ENTINDEX(pEntity));
+		}
+	}
+	
+	RETURN_META(MRES_IGNORED);
+}
+
 // This code is to set the model at a specified time. the second part of the code updates the
 // SetView camera.
+//(BAILOPAN) - now a forward
 void PlayerPostThink(edict_t *pEntity) {
 	if((PlInfo[ENTINDEX(pEntity)].bModeled) && (PlInfo[ENTINDEX(pEntity)].fModelSet != 0) && (PlInfo[ENTINDEX(pEntity)].fModelSet < gpGlobals->time)) {
 		(g_engfuncs.pfnSetClientKeyValue)(ENTINDEX(pEntity), (g_engfuncs.pfnGetInfoKeyBuffer)(pEntity), "model", PlInfo[ENTINDEX(pEntity)].szModel);
@@ -2519,6 +2534,13 @@ void PlayerPostThink(edict_t *pEntity) {
 				PlInfo[ENTINDEX(pEntity)].iViewType = CAMERA_NONE;
 				PlInfo[ENTINDEX(pEntity)].pViewEnt = NULL;
 				break;
+		}
+	}
+	
+	if (!vPostThinkList.empty()) {
+		for(std::vector<AmxCall>::iterator i = vPostThinkList.begin(); i != vPostThinkList.end(); i++) {
+			cell iRetVal = 0;
+			AMX_EXEC(&i->pPlugin->amx, &iRetVal, i->iFunctionIdx, 1, ENTINDEX(pEntity));
 		}
 	}
 
@@ -2592,7 +2614,7 @@ BOOL ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress
 	PlInfo[ENTINDEX(pEntity)].iRenderMode = 0;
 	PlInfo[ENTINDEX(pEntity)].fRenderAmt = 0;
 
-	CLIENT_PRINTF(pEntity, print_console, "*** This server is using Vexd's Utility Module.\n");
+	//CLIENT_PRINTF(pEntity, print_console, "*** This server is using Vexd's Utility Module.\n");
 
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
@@ -2659,6 +2681,24 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax) {
 			sNewCall.pPlugin = pCurrent;
 			sNewCall.iFunctionIdx = iFunctionIndex;
 			vCliKillList.push_back(sNewCall);
+		}
+		
+		iFunctionIndex = 0;
+		
+		if (AMX_FINDPUBLIC(&pCurrent->amx, "PlayerPreThink", &iFunctionIndex) == AMX_ERR_NONE) {
+			AmxCall sNewCall;
+			sNewCall.pPlugin = pCurrent;
+			sNewCall.iFunctionIdx = iFunctionIndex;
+			vPreThinkList.push_back(sNewCall);
+		}
+		
+		iFunctionIndex = 0;
+		
+		if (AMX_FINDPUBLIC(&pCurrent->amx, "PlayerPostThink", &iFunctionIndex) == AMX_ERR_NONE) {
+			AmxCall sNewCall;
+			sNewCall.pPlugin = pCurrent;
+			sNewCall.iFunctionIdx = iFunctionIndex;
+			vPostThinkList.push_back(sNewCall);
 		}
 		
 		iFunctionIndex = 0;
@@ -2912,6 +2952,8 @@ C_DLLEXPORT int GetEntityAPI2( DLL_FUNCTIONS *pFunctionTable, int *interfaceVers
 	gFunctionTable.pfnAddToFullPack = AddToFullPack;
 	gFunctionTable.pfnServerActivate = ServerActivate;
 	gFunctionTable.pfnServerDeactivate = ServerDeactivate;
+	gFunctionTable.pfnClientKill = ClientKill;
+	gFunctionTable.pfnPlayerPreThink = PlayerPreThink;
 
 	memcpy( pFunctionTable, &gFunctionTable, sizeof( DLL_FUNCTIONS ) );
 

@@ -369,6 +369,8 @@ const char* CModule::getStatus() const
 	case MODULE_FUNCNOTPRESENT:
 	case MODULE_NEWER:		return "newer";
 	case MODULE_INTERROR:	return "internal err";
+	case MODULE_NOT64BIT:	return "not 64bit";
+	default:		break;
 	}
 	return "unknown";
 }

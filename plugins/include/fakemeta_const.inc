@@ -12,14 +12,17 @@
 #define FMV_CELL		3
 
 
-// The actual return value of the function
+/* The actual return value of the function, use these instead of PLUGIN_HANDLED etc when
+ * returning from registered forwards.
+ */
 #define FMRES_HANDLED	2
 #define FMRES_SUPERCEDE	4
 #define FMRES_IGNORED	1
 #define FMRES_OVERRIDE	3
 
 
-
+/* Used with engfunc()
+ */
 enum {
 	EngFunc_PrecacheModel,	// int  )			(char* s);
 	EngFunc_PrecacheSound,	// int  )			(char* s);
@@ -99,6 +102,8 @@ enum {
 	EngFunc_SetClientKeyValue	 // void )		(int clientIndex, char *infobuffer, char *key, char *value);
 };
 
+/* Used with dllfunc()
+ */
 enum
 {
 	DLLFunc_GameInit,	// void)			( void );				
@@ -291,6 +296,9 @@ enum {
 	pev_punchangle,
 	pev_vecarray_end
 };
+
+/* Used with register_forward()
+ */
 enum {
 	FM_PrecacheModel = 1,	// done
 	FM_PrecacheSound,	// done

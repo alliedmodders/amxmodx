@@ -59,7 +59,7 @@ extern CPlayer* mPlayer;
 edict_t *FindEntityByClassname(edict_t *pentStart, const char *szName);
 
 #define CHECK_ENTITY(x) \
-	if (x <= 0 || x > gpGlobals->maxEntities) { \
+	if (x < 0 || x > gpGlobals->maxEntities) { \
 		MF_LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", x); \
 	} else { \
 		if (x <= gpGlobals->maxClients) { \
@@ -67,7 +67,7 @@ edict_t *FindEntityByClassname(edict_t *pentStart, const char *szName);
 				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d (not in-game)", x); \
 			} \
 		} else { \
-			if (FNullEnt(INDEXENT(x))) { \
+			if (x != 0 && FNullEnt(INDEXENT(x))) { \
 				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", x); \
 			} \
 		} \

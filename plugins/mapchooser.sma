@@ -57,7 +57,7 @@ public plugin_init()
   register_cvar("amx_extendmap_max","90")
   register_cvar("amx_extendmap_step","15")
 
-  if ( g_coloredMenus = colored_menus() )
+  if ( cstrike_running() )
     register_event("TeamScore", "team_score", "a")
   
   get_localinfo("lastMap",g_lastMap,31)
@@ -70,6 +70,8 @@ public plugin_init()
     format(maps_ini_file, 63, "mapcycle.txt")
   if ( loadSettings(maps_ini_file) )
     set_task(15.0,"voteNextmap",987456,"",0,"b")
+
+  g_coloredMenus = colored_menus()
 }
 
 public checkVotes(){

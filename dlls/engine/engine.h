@@ -34,6 +34,8 @@
 
 #define VERSION "0.1"
 
+#include <string>
+
 using namespace std;
 
 plugin_info_t Plugin_info = {
@@ -677,7 +679,7 @@ private:
 	int writelong;
 	float writeangle;
 	float writecoord;
-	string writestring;
+	std::string writestring;
 	int writeentity;
 	argStack *next;
 };

@@ -173,8 +173,8 @@ displayMenu(id, pos) {
   new menu_body[512], start = pos * 6, k = 0
   if (start >= datanum) start = pos = g_menuPos[id] = 0
   new len = format(menu_body,511,
-    g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n" ,
-      id,"PAUSE_UNPAUSE"pos + 1,((datanum/6)+((datanum%6)?1:0)))
+    g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n",
+    id,"PAUSE_UNPAUSE",pos + 1,((datanum/6)+((datanum%6)?1:0)))
   new end = start + 6, keys = MENU_KEY_0|MENU_KEY_8|MENU_KEY_7
   if (end > datanum) end = datanum
   for (new a = start; a < end; ++a) {

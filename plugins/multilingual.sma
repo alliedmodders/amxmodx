@@ -66,14 +66,14 @@ public plugin_init() {
 
 public client_infochanged(id) {
   new lang[3]
-  get_user_info(id,"_language",lang,2)
+  get_user_info(id,"lang",lang,2)
 
   if ( lang_exists(lang) )
     copy(g_userLang[id],2,lang)
   else if ( g_userLang[id][0] )
-    set_user_info(id,"_language",g_userLang[id])
+    set_user_info(id,"lang",g_userLang[id])
   else
-    set_user_info(id,"_language","en")
+    set_user_info(id,"lang","en")
 }
 
 public cmdLang(id,level,cid) {
@@ -160,7 +160,7 @@ public actionMenu(id,key) {
     new pLang[3]
     get_lang(g_menuLang[id][0],pLang)
     copy(g_userLang[id],2,pLang)
-    set_user_info(id,"_language",pLang)
+    set_user_info(id,"lang",pLang)
     client_print(id,print_chat,"%L",id,"SET_LANG_USER",pLang)
     showMenu(id)
   }

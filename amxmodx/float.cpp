@@ -37,6 +37,19 @@
 
 #define PI  3.1415926535897932384626433832795
 
+static REAL FromRadians(REAL angle, int radix)
+{
+	switch (radix)
+	{
+		case 1:         /* degrees, sexagesimal system (technically: degrees/minutes/seconds) */
+			return (REAL)(angle / PI * 180.0);
+		case 2:         /* grades, centesimal system */
+			return (REAL)(angle / PI * 200.0);
+		default:        /* assume already radian */
+			return angle;
+	} /* switch */
+}
+
 #if defined __BORLANDC__ || defined __WATCOMC__
   #pragma argsused
 #endif
@@ -357,6 +370,7 @@ static cell AMX_NATIVE_CALL n_floatatan(AMX *amx, cell *params)
 	REAL fA = amx_ctof(params[1]);
 	fA = ToRadians(fA, params[2]);
 	fA = atan(fA);
+	fA = FromRadians(fA, params[2]);
 	return amx_ftoc(fA);
 }
 
@@ -373,6 +387,7 @@ static cell AMX_NATIVE_CALL n_floatacos(AMX *amx, cell *params)
 	REAL fA = amx_ctof(params[1]);
 	fA = ToRadians(fA, params[2]);
 	fA = acos(fA);
+	fA = FromRadians(fA, params[2]);
 	return amx_ftoc(fA);
 }
 
@@ -389,6 +404,7 @@ static cell AMX_NATIVE_CALL n_floatasin(AMX *amx, cell *params)
 	REAL fA = amx_ctof(params[1]);
 	fA = ToRadians(fA, params[2]);
 	fA = asin(fA);
+	fA = FromRadians(fA, params[2]);
 	return amx_ftoc(fA);
 }
 
@@ -407,6 +423,7 @@ static cell AMX_NATIVE_CALL n_floatatan2(AMX *amx, cell *params)
 	REAL fB = amx_ctof(params[2]);
 	REAL fC;
 	fC = atan2(fA, fB);
+	fC = FromRadians(fA, params[3]);
 	return amx_ftoc(fC);
 }
 

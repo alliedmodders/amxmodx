@@ -17,7 +17,7 @@
 native mysql_connect(host[],user[],pass[],dbname[],error[],maxlength);
 
 /* Uses an existing connection (sql) to perform a new query (query) (might close previous query if any). */
-native mysql_query(sql,query[]);
+native mysql_query(sql,query[], {Float,_}:...);
 
 /* Prepares next row of current query (sql) for read access ; returns the number of the row, 0 at end. */
 native mysql_nextrow(sql);

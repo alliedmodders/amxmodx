@@ -159,20 +159,20 @@ new g_MenuItem[MAXMENUPOS][] = {
   "\yShotguns^n\w^n%d. %s\y\R%L^n\w",
   "%d. %s\y\R%L^n\w^n",
 
-  "\ySub-Machine Guns^n\w^n%d. %s\y\R%s^n\w",
+  "\ySub-Machine Guns^n\w^n%d. %s\y\R%L^n\w",
   "%d. %s\y\R%L^n\w",
   "%d. %s\y\R%L^n\w",
   "%d. %s\y\R%L^n\w",
   "%d. %s\y\R%L^n\w^n",
 
-  "\yAssault Rifles^n\w^n%d. %s\y\R%s^n\w",
+  "\yAssault Rifles^n\w^n%d. %s\y\R%L^n\w",
   "%d. %s\y\R%L^n\w",
   "%d. %s\y\R%L^n\w",
   "%d. %s\y\R%L^n\w",
   "%d. %s\y\R%L^n\w",
   "%d. %s\y\R%L^n\w^n",
 
-  "\ySniper Rifles^n\w^n%d. %s\y\R%s^n\w",
+  "\ySniper Rifles^n\w^n%d. %s\y\R%L^n\w",
   "%d. %s\y\R%L^n\w",
   "%d. %s\y\R%L^n\w",
   "%d. %s\y\R%L^n\w^n",
@@ -438,13 +438,16 @@ displayMenu(id,pos) {
   if (pos < 0) return
   new menubody[512], start = pos * 7
   if (start >= MAXMENUPOS) start = pos = g_Position[id] = 0
-  new len = format(menubody,511,"\y%L\R%d/5^n\w^n",id,"REST_WEAP",pos+1)
+  new len = format(menubody,511,"\y%L\R%d/5^n^n\w",id,"REST_WEAP",pos+1)
   new end = start + 7, keys = MENU_KEY_0|MENU_KEY_8, k = 0
   if (end > MAXMENUPOS) end = MAXMENUPOS
+
   for (new a = start; a < end; ++a) {
     keys |= (1<<k)
-    len += format(menubody[len],511-len,g_MenuItem[a],++k,g_WeaponNames[a],
-      id, positionBlocked(a) ? "ON" : "OFF" )
+
+    len += format(menubody[len],511-len,g_MenuItem[a],++k,g_WeaponNames[a], id, positionBlocked(a) ? "ON" : "OFF")
+
+    server_print(menubody)
   }
   len += format(menubody[len],511-len,"^n8. %L \y\R%s^n\w",id,"SAVE_SET",g_Modified?"*":"")
   if (end != MAXMENUPOS) {

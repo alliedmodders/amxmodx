@@ -3208,6 +3208,7 @@ void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int 
 			result = MRES_SUPERCEDE;
 		}
 	}
+	RETURN_META(result);
 }
 
 void WriteByte(int iValue) {

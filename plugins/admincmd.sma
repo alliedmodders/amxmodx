@@ -103,9 +103,15 @@ public cmdKick(id,level,cid){
   else
   {
 #if !defined NO_STEAM
-    server_cmd("kick #%d ^"%s^"",userid2,reason)
+    if (reason[0])
+      server_cmd("kick #%d ^"%s^"",userid2,reason)
+    else
+      server_cmd("kick #%d",userid2)
 #else
-    client_cmd(player,"echo ^"%s^";disconnect",reason)
+    if (reason[0])
+      client_cmd(player,"echo ^"Kicked: Reason: %s^";disconnect",reason)
+    else
+      client_cmd(player,"echo ^"Kicked^";disconnect",reason)
 #endif
   }
   console_print(id,"Client ^"%s^" kicked",name2)
@@ -183,7 +189,7 @@ public cmdBan(id,level,cid){
     name,get_user_userid(id),authid, name2,userid2,authid2,minutes,reason)
 
   new temp[64]
-  if (str_to_int(minutes))
+  if (str_to_num(minutes))
     format(temp,63,"for %s min.",minutes)
   else
     temp = "permanently"
@@ -192,18 +198,30 @@ public cmdBan(id,level,cid){
     new address[32]
     get_user_ip(player,address,31,1)
 #if !defined NO_STEAM
-    server_cmd("kick #%d ^"%s (banned %s)^";wait;addip ^"%s^" ^"%s^";wait;writeip",userid2,reason,temp,minutes,address)
+    if (reason[0])
+      server_cmd("kick #%d ^"%s (banned %s)^";wait;addip ^"%s^" ^"%s^";wait;writeip",userid2,reason,temp,minutes,address)
+    else
+      server_cmd("kick #%d ^"banned %s^";wait;addip ^"%s^" ^"%s^";wait;writeip",userid2,temp,minutes,address)
 #else
-    client_cmd(player,"echo ^"%s (banned %s)^";disconnect",reason,temp)
+    if (reason[0])
+      client_cmd(player,"echo ^"%s (banned %s)^";disconnect",reason,temp)
+    else
+      client_cmd(player,"echo ^"banned %s^";disconnect",temp)
     server_cmd("addip ^"%s^" ^"%s^";wait;writeip",minutes,address)
 #endif
   }
   else
   {
 #if !defined NO_STEAM
-    server_cmd("kick #%d ^"%s (banned %s)^";wait;banid ^"%s^" ^"%s^";wait;writeid",userid2,reason,temp,minutes,authid2)
+    if (reason[0])
+      server_cmd("kick #%d ^"%s (banned %s)^";wait;banid ^"%s^" ^"%s^";wait;writeid",userid2,reason,temp,minutes,authid2)
+    else
+      server_cmd("kick #%d ^"banned %s^";wait;banid ^"%s^" ^"%s^";wait;writeid",userid2,temp,minutes,authid2)
 #else
-    client_cmd(player,"echo ^"%s (banned %s)^";disconnect",reason,temp)
+    if (reason[0])
+      client_cmd(player,"echo ^"%s (banned %s)^";disconnect",reason,temp)
+    else
+      client_cmd(player,"echo ^"banned %s^";disconnect",temp)
     server_cmd("banid ^"%s^" ^"%s^";wait;writeip",minutes,authid2)
 #endif
   }
@@ -256,7 +274,7 @@ public cmdSlap(id,level,cid){
   if (!player) return PLUGIN_HANDLED
   new spower[32],authid[32],name2[32],authid2[32],name[32]
   read_argv(2,spower,31)
-  new damage = str_to_int(spower)
+  new damage = str_to_num(spower)
   user_slap(player,damage)
   get_user_authid(id,authid,31)
   get_user_name(id,name,31)
@@ -368,8 +386,9 @@ public cmdPlugins(id,level,cid)
     return PLUGIN_HANDLED
 
 #if !defined NO_STEAM
-  #define MOTD_LEN 1024
+  #define MOTD_LEN 2048
   new motd_body[MOTD_LEN],state[4]
+  new name[32],version[32],author[32],filename[32],status[32]
   new num = get_pluginsnum()
   new running = 0
   new pos = copy(motd_body,MOTD_LEN,"<html><head><body><style type=^"text/css^">")
@@ -380,7 +399,6 @@ public cmdPlugins(id,level,cid)
   {
     if (equal(state,"one")) copy(state,3,"two")
     else copy(state,3,"one")
-    new name[32],version[32],author[32],filename[32],status[32]
     get_plugin(i,filename,31,name,31,version,31,author,31,status,31)
     pos += format(motd_body[pos],MOTD_LEN-pos,"<tr class=^"%s^"><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",state,name,version,author,filename,status)
     if (equal(status,"running"))
@@ -395,7 +413,6 @@ public cmdPlugins(id,level,cid)
   console_print(id,"%-18.17s %-8.7s %-17.16s %-16.15s %-9.8s","name","version","author","file","status")
   for (new i=0;i<num;i++)
   {
-    new name[32],version[32],author[32],filename[32],status[32]
     get_plugin(i,filename,31,name,31,version,31,author,31,status,31)
     console_print("%-18.17s %-8.7s %-17.16s %-16.15s %-9.8s",name,version,author,filename,status)
     if (equal(status,"running"))
@@ -414,11 +431,12 @@ public cmdModules(id,level,cid)
 
 #if !defined NO_STEAM
   #if !defined MOTD_LEN
-    #define MOTD_LEN 1024
+    #define MOTD_LEN 2048
   #endif
   new motd_body[MOTD_LEN],state[4]
   new num = get_modulesnum()
   new pos = copy(motd_body,MOTD_LEN,"<html><head><body><style type=^"text/css^">")
+  new name[32],version[32],author[32]
   pos += copy(motd_body[pos],MOTD_LEN-pos,"body{font-family:Arial,sans-serif;font-size:12px;color:#FFCC99;background-color:#000000;margin-left:8px;margin-top:3px}.header{background-color:#9C0000;}.one{background-color:#310000;}.two{background-color:#630000;}")
   pos += copy(motd_body[pos],MOTD_LEN-pos,"</style></head><body><table><tr class=^"header^"><td>Name</td><td>Version</td><td>Author</td></tr>")
 
@@ -426,8 +444,7 @@ public cmdModules(id,level,cid)
   {
     if (equal(state,"one")) copy(state,3,"two")
     else copy(state,3,"one")
-    new name[32],version[32],author[32],filename[32],status[32]
-    get_plugin(i,filename,31,name,31,version,31,author,31,status,31)
+    get_module(i,name,31,author,31,version,31)
     pos += format(motd_body[pos],MOTD_LEN-pos,"<tr class=^"%s^"><td>%s</td><td>%s</td><td>%s</td></tr>",state,name,version,author)
   }
   format(motd_body[pos],MOTD_LEN-pos,"</table>%d modules</body></html>",num)
@@ -438,7 +455,6 @@ public cmdModules(id,level,cid)
   console_print(id,"%-23.22s %-8.7s %-20.19s","name","version","author")
   for (new i=0;i<num;i++)
   {
-    new name[32],version[32],author[32]
     get_module(i,name,31,author,31,version,31)
     console_print("%-23.22s %-8.7s %-20.19s",name,version,author)
   }

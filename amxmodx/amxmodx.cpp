@@ -2478,7 +2478,7 @@ static cell AMX_NATIVE_CALL get_func_id(AMX *amx, cell *params)
 	const char *funcName = get_amxstring(amx, params[1], 0, len);
 	
 	int index;
-	if (amx_FindPublic(amx, funcName, &index) != AMX_ERR_NONE)
+	if (amx_FindPublic(plugin->getAMX(), funcName, &index) != AMX_ERR_NONE)
 		index = -1;
 
 	return index;

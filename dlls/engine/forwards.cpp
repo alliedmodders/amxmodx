@@ -28,13 +28,13 @@ void DispatchUse(edict_t *pentUsed, edict_t *pentOther)
 }
 
 int DispatchSpawn(edict_t *pEntity) {
-	if (SpawnForward) {
+/*	if (SpawnForward) {
 		int retVal = 0;
 		int id = ENTINDEX(pEntity);
 		retVal = MF_ExecuteForward(SpawnForward, id);
 		if (retVal)
 			RETURN_META_VALUE(MRES_SUPERCEDE, 0);
-	}
+	}*/
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 

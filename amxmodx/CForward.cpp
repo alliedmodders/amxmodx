@@ -43,7 +43,7 @@ CForward::CForward(const char *name, ForwardExecType et, int numParams, const Fo
 	AMXForward *tmp = NULL;
 	for (CPluginMngr::iterator iter = g_plugins.begin(); iter; ++iter)
 	{
-		if (amx_FindPublic((*iter).getAMX(), name, &func) == AMX_ERR_NONE)
+		if ((*iter).isValid() && amx_FindPublic((*iter).getAMX(), name, &func) == AMX_ERR_NONE)
 		{
 			tmp = new AMXForward;
 			if (!tmp)

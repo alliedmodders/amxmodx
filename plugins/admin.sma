@@ -32,7 +32,7 @@
 *  version.
 */
 
-//#define USING_SQL	1
+#define USING_SQL	1
 
 #include <amxmodx>
 #include <amxmisc>
@@ -171,10 +171,14 @@ public adminSql() {
   g_aNum = 0
   while( dbi_nextrow(sql) > 0 )
   {
-    dbi_field(Result, 1, g_aName[ g_aNum ] ,31)
-    dbi_field(Result, 2, g_aPassword[ g_aNum ] ,31)
-    dbi_field(Result, 3, szAccess,31)
-    dbi_field(Result, 4, szFlags,31)
+    dbi_result(Result, "auth", g_aName[ g_aNum ] ,31)
+    server_print(g_aName[g_aNum])
+    dbi_result(Result, "password", g_aPassword[ g_aNum ] ,31)
+    server_print(g_aPassword[ g_aNum ])
+    dbi_result(Result, "access", szAccess,31)
+    server_print(szAccess)
+    dbi_result(Result, "flags", szFlags,31)
+    server_print(szFlags)
 
     if ( (containi(szAccess,"z")==-1) && (containi(szAccess,"y")==-1) )
       szAccess[strlen(szAccess)] = 'y'

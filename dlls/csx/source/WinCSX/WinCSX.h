@@ -6,6 +6,7 @@
 // Constants
 #define MAX_LOADSTRING	100
 #define VERSION			"0.2"
+#define STATS_FILENAME	"csstats.dat"
 
 // Global Variables:
 HINSTANCE hInst;								// current instance

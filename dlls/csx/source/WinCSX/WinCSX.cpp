@@ -110,7 +110,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 bool LoadRankFromFile(HWND hDlg) {
 	if ( !g_rank.begin() )
 	{		
-		if (!g_rank.loadRank("csstats.dat")) {
+		if (!g_rank.loadRank(STATS_FILENAME)) {
 			HWND listbox = GetDlgItem(hDlg, IDC_LIST);
 			SendMessage(      // returns LRESULT in lResult
 				listbox,      // handle to destination control
@@ -156,15 +156,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-LRESULT InitWinCSXBox(HWND hDlg) {
-	// Load the stats
-	if (!LoadRankFromFile(hDlg))
-		return TRUE;
-
-	// This part copies the occurring authids into the lefthand listbox.
-	int index = 10, len = 0;
+void UpdateListBox(HWND hDlg) {
 	HWND listbox = GetDlgItem(hDlg, IDC_LIST);
 
+	// Clear first if there's anything in here already
+	SendMessage(listbox, LB_RESETCONTENT, NULL, NULL);
+
+	if (g_rank.front() == NULL) {
+		MessageBox(hDlg, "The stats file is empty", "Emptiness...", MB_OK);
+		return;
+	}
+	// This part copies the occurring authids into the lefthand listbox.
+	int index = 10, len = 0;
 	char tempbuffer[1024];
 
 	for (RankSystem::iterator b = g_rank.front(); b; --b) {
@@ -179,19 +182,52 @@ LRESULT InitWinCSXBox(HWND hDlg) {
 			0,      // = (WPARAM) () wParam;
 			(LPARAM) tempbuffer      // = (LPARAM) () lParam;
 		);  
-
 	}
+}
+
+LRESULT InitWinCSXBox(HWND hDlg) {
+	// Load the stats
+	if (!LoadRankFromFile(hDlg))
+		return TRUE;
+
+	UpdateListBox(hDlg);
 
 	return TRUE;
+}
+
+void ClearStatsfields(HWND hDlg) {
+	SetDlgItemText(hDlg, IDC_EDIT_POSITION, "");
+	SetDlgItemText(hDlg, IDC_EDIT_NAME, "");
+	SetDlgItemText(hDlg, IDC_EDIT_AUTHID, "");
+	SetDlgItemText(hDlg, IDC_EDIT_FRAGS, "");
+	SetDlgItemText(hDlg, IDC_EDIT_DEATHS, "");
+	SetDlgItemText(hDlg, IDC_EDIT_HS, "");
+	SetDlgItemText(hDlg, IDC_EDIT_TKS, "");
+	SetDlgItemText(hDlg, IDC_EDIT_SHOTS, "");
+	SetDlgItemText(hDlg, IDC_EDIT_HITS, "");
+	SetDlgItemText(hDlg, IDC_EDIT_DAMAGE, "");
+	SetDlgItemText(hDlg, IDC_EDIT_PLANTS, "");
+	SetDlgItemText(hDlg, IDC_EDIT_EXPLOSIONS, "");
+	SetDlgItemText(hDlg, IDC_EDIT_DEFUSIONS, "");
+	SetDlgItemText(hDlg, IDC_EDIT_DEFUSED, "");
 }
 
 void ListboxItemSelected(HWND hDlg) {
 	HWND hwndList = GetDlgItem(hDlg, IDC_LIST); // Get the handle of the listbox
 	LRESULT nItem = SendMessage(hwndList, LB_GETCURSEL, 0, 0);  // Get the item # that's selected. First item is prolly 0...
-
+	if (nItem == LB_ERR) {
+		// Error, reset the form items...
+		//MessageBox(hDlg, "Error: Couldn't find the selected record in the listbox!", "Oh fiddlesticks!", MB_OK);
+		ClearStatsfields(hDlg);
+		return;
+	}
 	// Retrieve complete stats record of this position. Position in listbox should be same as rank in our records!
 	RankSystem::RankStats* stats = g_rank.findEntryInRankByPos((int)nItem + 1);
-	
+	if (stats == NULL) {
+		MessageBox(hDlg, "Error: Couldn't find the record by position!", "Oh fiddlesticks!", MB_OK);
+		ClearStatsfields(hDlg);
+		return;
+	}
 	// Copy data into form
 	SetDlgItemInt(hDlg, IDC_EDIT_POSITION, stats->getPosition(), 0);
 	SetDlgItemText(hDlg, IDC_EDIT_NAME, stats->getName());
@@ -207,6 +243,111 @@ void ListboxItemSelected(HWND hDlg) {
 	SetDlgItemInt(hDlg, IDC_EDIT_EXPLOSIONS, stats->bExplosions, 0);
 	SetDlgItemInt(hDlg, IDC_EDIT_DEFUSIONS, stats->bDefusions, 0);
 	SetDlgItemInt(hDlg, IDC_EDIT_DEFUSED, stats->bDefused, 0);
+}
+
+void SaveChanges(HWND hDlg) {
+	BOOL success;
+	int position = GetDlgItemInt(hDlg, IDC_EDIT_POSITION, &success, false);
+	if (!success)
+		goto BadEnd;
+	
+	char authid[32]; // "primary key"
+	GetDlgItemText(hDlg, IDC_EDIT_AUTHID, authid, sizeof(authid));
+	RankSystem::RankStats* entry = g_rank.findEntryInRankByUnique(authid);
+	if (!entry) {
+		char buffer[256];
+		sprintf(buffer, "Authid %s not found!", authid);
+		MessageBox(hDlg, buffer, "Update failed", MB_OK);
+		return;
+	}
+
+	char name[32];
+	GetDlgItemText(hDlg, IDC_EDIT_NAME, name, sizeof(name));
+	int frags = GetDlgItemInt(hDlg, IDC_EDIT_FRAGS, &success, false);
+	if (!success)
+		goto BadEnd;
+	int deaths = GetDlgItemInt(hDlg, IDC_EDIT_DEATHS, &success, false);
+	if (!success)
+		goto BadEnd;
+	int hs = GetDlgItemInt(hDlg, IDC_EDIT_HS, &success, false);
+	if (!success)
+		goto BadEnd;
+	int tks = GetDlgItemInt(hDlg, IDC_EDIT_TKS, &success, false);
+	if (!success)
+		goto BadEnd;
+	int shots = GetDlgItemInt(hDlg, IDC_EDIT_SHOTS, &success, false);
+	if (!success)
+		goto BadEnd;
+	int hits = GetDlgItemInt(hDlg, IDC_EDIT_HITS, &success, false);
+	if (!success)
+		goto BadEnd;
+	int damage = GetDlgItemInt(hDlg, IDC_EDIT_DAMAGE, &success, false);
+	if (!success)
+		goto BadEnd;
+	int plants = GetDlgItemInt(hDlg, IDC_EDIT_PLANTS, &success, false);
+	if (!success)
+		goto BadEnd;
+	int explosions = GetDlgItemInt(hDlg, IDC_EDIT_EXPLOSIONS, &success, false);
+	if (!success)
+		goto BadEnd;
+	int defusions = GetDlgItemInt(hDlg, IDC_EDIT_DEFUSIONS, &success, false);
+	if (!success)
+		goto BadEnd;
+	int defused = GetDlgItemInt(hDlg, IDC_EDIT_DEFUSED, &success, false);
+	if (!success)
+		goto BadEnd;
+
+	// Update stats in memory
+	entry->setName(name);
+	entry->kills = frags;
+	entry->deaths = deaths;
+	entry->hs = hs;
+	entry->tks = tks;
+	entry->shots = shots;
+	entry->hits = hits;
+	entry->damage = damage;
+	entry->bPlants = plants;
+	entry->bExplosions = explosions;
+	entry->bDefusions = defusions;
+	entry->bDefused = defused;
+
+	int newPosition = entry->updatePosition(NULL); // Updates rank (prolly just calculates "frags - deaths" and moves up/down in rank)
+
+	g_rank.saveRank(STATS_FILENAME); // Save changes to file
+
+	// Now update our listbox
+	UpdateListBox(hDlg);
+
+	char buffer[256];
+	_snprintf(buffer, 255, "New rank of %s: %d", name, newPosition);
+	MessageBox(hDlg, buffer, "Update succeeded", MB_OK);
+
+	// In the listbox, we need to reselect the item we just updated. Use the new name.
+	HWND listbox = GetDlgItem(hDlg, IDC_LIST);
+	if (SendMessage(listbox, LB_SELECTSTRING, newPosition - 1, (LPARAM)name) == LB_ERR)
+		MessageBox(hDlg, "Error selecting item!", "Oh fiddlesticks!", MB_OK);
+	else {
+		// Update
+		ListboxItemSelected(hDlg);
+	}
+
+	return;
+
+BadEnd:
+	MessageBox(hDlg, "Update failed", "Oh fiddlesticks!", MB_OK);
+}
+
+void ClearStats(HWND hDlg) {
+	if (MessageBox(hDlg, "Are you sure? If you continue the whole csstats.dat will be wiped out!", "Omg!", MB_OKCANCEL | MB_DEFBUTTON2 | MB_ICONWARNING) != IDOK)
+		return;
+	g_rank.clear();
+	g_rank.saveRank(STATS_FILENAME);
+
+	// Now update our listbox
+	UpdateListBox(hDlg);
+
+	// Update
+	ListboxItemSelected(hDlg);
 }
 
 // Message handler for WinCSXBox.
@@ -238,6 +379,12 @@ LRESULT CALLBACK WinCSXBox(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 				break;
 			case IDC_ABOUT:
 				DialogBox(hInst, (LPCTSTR)IDD_ABOUTBOX, hDlg, (DLGPROC)AboutBox);
+				break;
+			case IDC_BUTTON_SAVECHANGES:
+				SaveChanges(hDlg);
+				break;
+			case IDC_BUTTON_CLEARSTATS:
+				ClearStats(hDlg);
 				break;
 		}
 		break;

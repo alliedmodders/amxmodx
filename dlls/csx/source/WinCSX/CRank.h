@@ -67,8 +67,8 @@ public:
 		inline const char* getName() const { return name ? name : ""; }
 		inline const char* getUnique() const { return unique ? unique : ""; }
 		inline int getPosition() const { return id; }
-		inline void updatePosition( Stats* points ) {
-			parent->updatePos( this , points );
+		inline int updatePosition( Stats* points ) {
+			return parent->updatePos( this , points );
 		}
 	};
 
@@ -90,7 +90,7 @@ private:
 	void put_before( RankStats* a, RankStats* ptr );
 	void put_after( RankStats* a, RankStats* ptr );
 	void unlink( RankStats* ptr );
-	void updatePos( RankStats* r ,  Stats* s );
+	int updatePos( RankStats* r ,  Stats* s );
 	
 public:
 
@@ -100,6 +100,7 @@ public:
 	void saveRank( const char* filename );
 	bool loadRank( const char* filename );
 	RankStats* findEntryInRank(const char* unique, const char* name );
+	RankStats* findEntryInRankByUnique(const char* unique);
 	RankStats* findEntryInRankByPos(int position);
 	//bool loadCalc(const char* filename, char* error);
 	inline int getRankNum( ) const { return rankNum; }

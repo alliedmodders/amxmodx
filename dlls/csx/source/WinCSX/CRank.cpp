@@ -153,15 +153,31 @@ RankSystem::RankStats* RankSystem::findEntryInRank(const char* unique, const cha
 	
 	while ( a )
 	{
-		if (  strcmp( a->getUnique() ,unique ) == 0 )
+		if (  strcmp( a->getUnique(), unique ) == 0 )
 			return a;
 
 		a = a->prev;
 	}
+
 	a = new RankStats( unique ,name,this );
 	if ( a == 0 ) return 0;
 	put_after( a  , 0 );
 	return a;
+}
+
+RankSystem::RankStats* RankSystem::findEntryInRankByUnique(const char* unique)
+{
+	RankStats* a = head;
+	
+	while ( a )
+	{
+		if (  strcmp( a->getUnique(), unique ) == 0 )
+			return a;
+
+		a = a->prev;
+	}
+
+	return NULL; // none found
 }
 RankSystem::RankStats* RankSystem::findEntryInRankByPos(int position)
 {
@@ -175,12 +191,14 @@ RankSystem::RankStats* RankSystem::findEntryInRankByPos(int position)
 		a = a->prev;
 	}
 
-	return a;
+	return NULL;
 }
 
-void RankSystem::updatePos(  RankStats* rr ,  Stats* s )
+int RankSystem::updatePos(  RankStats* rr ,  Stats* s )
 {
-	rr->addStats( s );
+	RankStats* rrFirst = rr;
+	if (s != NULL)
+		rr->addStats( s );
 	if ( calc.code ) {
 		calc.physAddr1[0] = rr->kills;
 		calc.physAddr1[1] = rr->deaths;
@@ -230,7 +248,7 @@ void RankSystem::updatePos(  RankStats* rr ,  Stats* s )
 			put_after( rr, aa );
 		}
 	}
-
+	return rrFirst->getPosition();
 }
 
 bool RankSystem::loadRank( const char* filename )

@@ -824,12 +824,12 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 							break;
 						}
 					}
+					outptr += strlen(outptr);
 				} else {
 					*outptr++ = '%';
 					*outptr++ = '%';
-					src++;
+					++src;
 				}
-				outptr += strlen(outptr);
 			}
 			curState = S_Normal;
 		}

@@ -1944,6 +1944,12 @@ typedef int				(*PFN_IS_PLAYER_CONNECTING)		(int /*id*/);
 typedef int				(*PFN_IS_PLAYER_HLTV)			(int /*id*/);
 typedef int				(*PFN_GET_PLAYER_ARMOR)			(int /*id*/);
 typedef int				(*PFN_GET_PLAYER_HEALTH)		(int /*id*/);
+#ifdef USE_METAMOD
+typedef edict_t *		(*PFN_GET_PLAYER_EDICT)			(int /*id*/);
+#else
+typedef void *			(*PFN_GET_PLAYER_EDICT)			(int /*id*/);
+#endif
+
 typedef void *			(*PFN_ALLOCATOR)				(const char* /*filename*/, const unsigned int /*line*/, const char* /*func*/,
 														 const unsigned int /*type*/, const size_t /*size*/);
 typedef void *			(*PFN_REALLOCATOR)				(const char* /*filename*/, const unsigned int /*line*/, const char* /*func*/,
@@ -1955,7 +1961,7 @@ typedef int				(*PFN_AMX_EXECV)				(AMX* /*amx*/, cell* /*return val*/, int /*in
 typedef int				(*PFN_AMX_ALLOT)				(AMX* /*amx*/, int /*length*/, cell* /*amx_addr*/, cell** /*phys_addr*/);
 typedef int				(*PFN_AMX_FINDPUBLIC)			(AMX* /*amx*/, char* /*func name*/, int* /*index*/);
 typedef int				(*PFN_AMX_FINDNATIVE)			(AMX* /*amx*/, char* /*func name*/, int* /*index*/);
-typedef int				(*PFN_LOAD_AMXSCRIPT)			(AMX* /*amx*/, void** /*code*/, const char* /*path*/, char[64] /*error info*/);
+typedef int				(*PFN_LOAD_AMXSCRIPT)			(AMX* /*amx*/, void** /*code*/, const char* /*path*/, char[64] /*error info*/, int /* debug */);
 typedef int				(*PFN_UNLOAD_AMXSCRIPT)			(AMX* /*amx*/,void** /*code*/);
 typedef cell			(*PFN_REAL_TO_CELL)				(REAL /*x*/);
 typedef REAL			(*PFN_CELL_TO_REAL)				(cell /*x*/);
@@ -1963,6 +1969,7 @@ typedef int				(*PFN_REGISTER_SPFORWARD)		(AMX * /*amx*/, int /*func*/, ... /*pa
 typedef int				(*PFN_REGISTER_SPFORWARD_BYNAME)	(AMX * /*amx*/, const char * /*funcName*/, ... /*params*/);
 typedef void			(*PFN_UNREGISTER_SPFORWARD)		(int /*id*/);
 typedef	void			(*PFN_MERGEDEFINITION_FILE)		(const char * /*filename*/);
+typedef const char *	(*PFN_FORMAT)					(const char * /*fmt*/, ... /*params*/);
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
 extern PFN_BUILD_PATHNAME			g_fn_BuildPathname;
@@ -2017,6 +2024,8 @@ extern PFN_UNREGISTER_SPFORWARD		g_fn_UnregisterSPForward;
 extern PFN_MERGEDEFINITION_FILE		g_fn_MergeDefinition_File;
 extern PFN_AMX_FINDNATIVE			g_fn_AmxFindNative;
 extern PFN_GETPLAYERFLAGS		g_fn_GetPlayerFlags;
+extern PFN_GET_PLAYER_EDICT			g_fn_GetPlayerEdict;
+extern PFN_FORMAT					g_fn_Format;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2066,6 +2075,8 @@ int				MF_RegisterSPForwardByName	(AMX * amx, const char *str, ...) { }
 int				MF_RegisterSPForward		(AMX * amx, int func, ...) { }
 void			MF_UnregisterSPForward		(int id) { }
 int				MF_GetPlayerFlags			(int id) { }
+edict_t*		MF_GetPlayerEdict			(int id) { }
+const char *	MF_Format					(const char *fmt, ...) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
@@ -2121,8 +2132,8 @@ void MF_Log(const char *fmt, ...);
 #define MF_RegisterSPForward g_fn_RegisterSPForward
 #define MF_UnregisterSPForward g_fn_UnregisterSPForward
 #define MF_GetPlayerFlags g_fn_GetPlayerFlags
-
-#ifdef MEMORY_TEST
+#define MF_GetPlayerEdict g_fn_GetPlayerEdict
+#define MF_Format g_fn_Format;
 
 /*** Memory ***/
 void	*operator new(size_t reportedSize);
@@ -2166,7 +2177,5 @@ void	Mem_Deallocator(const char *sourceFile, const unsigned int sourceLine, cons
 #define	calloc(sz)	Mem_Allocator  (__FILE__,__LINE__,__FUNCTION__,m_alloc_calloc,sz)
 #define	realloc(ptr,sz)	Mem_Reallocator(__FILE__,__LINE__,__FUNCTION__,m_alloc_realloc,sz,ptr)
 #define	free(ptr)	Mem_Deallocator(__FILE__,__LINE__,__FUNCTION__,m_alloc_free,ptr)
-
-#endif //MEMORY_TEST
 
 #endif // #ifndef __AMXXMODULE_H__

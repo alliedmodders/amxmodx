@@ -1366,7 +1366,7 @@ static cell AMX_NATIVE_CALL find_ent_in_sphere(AMX *amx, cell *params)
 
 	edict_t *pEnt = INDEXENT2(idx);
 	cell *cAddr = MF_GetAmxAddr(amx, params[2]);
-	REAL origin[3] = {
+	float origin[3] = {
 		amx_ctof(cAddr[0]),
 		amx_ctof(cAddr[1]),
 		amx_ctof(cAddr[2])

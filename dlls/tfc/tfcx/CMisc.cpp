@@ -93,6 +93,7 @@ void Grenades::clear()
 void CPlayer::Disconnect(){
 	
 	ingame = false;
+	bot = false;
 
 	if ( ignoreBots(pEdict) || !isModuleActive() ) // ignore if he is bot and bots rank is disabled or module is paused
 		return;
@@ -145,6 +146,8 @@ void CPlayer::Init( int pi, edict_t* pe )
 	current = 0;
 	clearStats = 0.0f;
 	rank = 0;
+	ingame = false;
+	bot = false;
 }
 
 void CPlayer::saveKill(CPlayer* pVictim, int wweapon, int hhs, int ttk){

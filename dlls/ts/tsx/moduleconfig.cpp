@@ -188,7 +188,7 @@ void ClientUserInfoChanged_Post( edict_t *pEntity, char *infobuffer ) {
 	const char* name = INFOKEY_VALUE(infobuffer,"name");
 	const char* oldname = STRING(pEntity->v.netname);
 
-	if ( pPlayer->ingame){
+	if ( pPlayer->ingame ){
 		if ( strcmp(oldname,name) ) {
 			if (!tsstats_rank->value)
 				pPlayer->rank = g_rank.findEntryInRank( name, name );
@@ -197,7 +197,6 @@ void ClientUserInfoChanged_Post( edict_t *pEntity, char *infobuffer ) {
 		}
 	}
 	else if ( pPlayer->IsBot() ) {
-		pPlayer->Connect( "127.0.0.1" );
 		pPlayer->PutInServer();
 	}
 

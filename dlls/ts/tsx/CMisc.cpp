@@ -75,7 +75,6 @@ void CPlayer::PutInServer(){
 		ingame = false;
 }
 void CPlayer::Connect( const char* ippp ){
-	bot = IsBot();
 	strcpy(ip,ippp);
 }
 

@@ -91,7 +91,6 @@ void CPlayer::PutInServer(){
 }
 
 void CPlayer::Connect(const char* address ){
-	bot = IsBot();
 	strcpy(ip,address);
 	rank = 0;
 	clearStats = 0.0f;

@@ -195,13 +195,13 @@ void ServerDeactivate() {
 
 BOOL ClientConnect_Post( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ]  ){
 	GET_PLAYER_POINTER(pEntity)->Connect(pszName,pszAddress);
-	
+
 	RETURN_META_VALUE(MRES_IGNORED, TRUE);
 }
 
 void ClientDisconnect( edict_t *pEntity ) {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-		
+
 	if (pPlayer->ingame)
 		pPlayer->Disconnect();
 

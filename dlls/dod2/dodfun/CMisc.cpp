@@ -38,7 +38,7 @@
 // *****************************************************
 
 void CPlayer::Disconnect(){
-	ingame = staminaSet = fuseSet = false;
+	ingame = staminaSet = fuseSet = bot = false;
 }
 
 void CPlayer::PutInServer(){
@@ -55,7 +55,7 @@ void CPlayer::Init( int pi, edict_t* pe )
     pEdict = pe;
     index = pi;
 	current = 0;
-	ingame =  staminaSet = false;
+	ingame =  staminaSet = fuseSet = bot = false;
 
 }
 

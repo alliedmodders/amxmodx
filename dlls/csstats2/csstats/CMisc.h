@@ -21,7 +21,6 @@ struct CPlayer {
 	int index;
 	int aiming;
 	int current;
-	bool bot;
 	float clearStats;
 	RankSystem::RankStats*	rank;
 

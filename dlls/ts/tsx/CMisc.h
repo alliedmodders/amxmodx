@@ -90,7 +90,6 @@ struct CPlayer {
 	int frags; // suma dla kontroli ostatniego fraga, to - v.frags = lastfrag
 
 	bool ingame;
-	bool bot;
 	float clearStats;
 	
 	struct PlayerWeapon : public Stats {
@@ -117,6 +116,7 @@ struct CPlayer {
 	void saveHit(CPlayer* pVictim, int weapon, int damage, int aiming);
 	void saveShot(int weapon);
 	void restartStats(bool all = true);
+
 	inline bool IsBot(){
 		const char* auth= (*g_engfuncs.pfnGetPlayerAuthId)(pEdict);
 		return ( auth && !strcmp( auth , "BOT" ) );

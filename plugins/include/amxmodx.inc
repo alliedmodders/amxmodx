@@ -623,10 +623,25 @@ native unpause(flag[], const param1[]="",const param2[]="");
 *  func   - function name
 * Return value:
 *   1     - Success
-*   0     - Runtime error
 *  -1     - Plugin not found
 *  -2     - Function not found */
 native callfunc_begin(const func[], const plugin[]="");
+
+/* Call a function in this / an another plugin by id.
+* Parameters:
+*  plugin - plugin id; the id you would pass to get_plugin
+*           If < 0, the current plugin is taken
+*  func   - function id
+* Return value:
+*   1     - Success
+*  -1     - Plugin not found
+*  -2     - Function not executable */
+native callfunc_begin_i(func, plugin = -1);
+
+/* Get a function id (for callfunc_begin_i)
+   To get the plugin id, use the find_plugin stock
+*/
+native get_func_id(const funcName[], pluginId = -1);
 
 /* Push a parameter (integer, string, float) */
 native callfunc_push_int(value);

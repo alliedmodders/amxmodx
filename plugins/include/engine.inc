@@ -183,7 +183,7 @@ native trace_normal(iIgnoreEnt, Float:fStart[3], Float:fEnd[3], Float:vReturn[3]
 /* Changes a Vector to an Angle vector. */
 native vector_to_angle(Float:fVector[3], Float:vReturn[3]);
 
-native anglevector(Float:vector[3],FRU,Float:ret[3])
+native angle_vector(Float:vector[3],FRU,Float:ret[3])
 
 /* Gets the length of a vector (float[3]). */
 native Float:vector_length(Float:vVector[3]);

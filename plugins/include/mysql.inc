@@ -18,7 +18,7 @@
 * Host can be plain ip or with port seperated with ':' char. */
 stock mysql_connect(host[],user[],pass[],dbname[],error[],maxlength)
 {
-   dbi_connect(host, user, pass, dbname, error, maxlength)
+  return dbi_connect(host, user, pass, dbname, error, maxlength)
 }
 
 /* Uses an existing connection (sql) to perform a new query (query) (might close previous query if any). */
@@ -33,11 +33,11 @@ native mysql_getfield(sql,fieldnum,dest[],maxlength);
 /* Clears query (sql) and closes connection (if any other plugin doesn't use it). */
 stock mysql_close(sql)
 {
-   dbi_close(sql)
+  return dbi_close(sql)
 }
 
 /* Stores last error of current query/connection (sql) in (dest) with (maxlength) characters maximum. */
 stock mysql_error(sql,dest[],maxlength)
 {
-   dbi_error(sql, dest, maxlength)
+  return dbi_error(sql, dest, maxlength)
 }

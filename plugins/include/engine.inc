@@ -104,7 +104,7 @@ native entity_set_vector(iIndex, iKey, Float:vNewVector[3]);
 native entity_get_edict(iIndex, iKey);
 native entity_set_edict(iIndex, iKey, iNewIndex);
 native entity_get_string(iIndex, iKey, szReturn[], iRetLen);
-native entity_set_string(iIndex, iKey, szNewVal[]);
+native entity_set_string(iIndex, iKey, const szNewVal[]);
 native entity_get_byte(iIndex, iKey);
 native entity_set_byte(iIndex, iKey, iVal);
 

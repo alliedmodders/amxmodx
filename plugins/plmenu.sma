@@ -518,7 +518,7 @@ displayTeamMenu(id,pos) {
   }
   else format(menuBody[len],511-len,"^n0. %L", id, pos ? "BACK" : "EXIT")
 
-  show_menu(id,keys,menuBody,-1,"TEAM_MENU")
+  show_menu(id,keys,menuBody,-1,"Team Menu")
 }
 
 public cmdTeamMenu(id,level,cid) {

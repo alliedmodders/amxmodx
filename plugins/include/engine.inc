@@ -62,18 +62,6 @@ native get_msg_origin(Float:_Origin[3]);
  * The module will automatically add +5 for Linux.
  */
 
-/* Gets pvPrivateData offset. */
-native get_offset_int(id, offset, linux=5);
-native Float:get_offset_float(id, offset, linux=5);
-native get_offset_short(id, offset, linux=5);
-native get_offset_char(id, offset, linux=5);
-
-/* sets pvPrivateData offset. */
-native set_offset_int(id, offset, value, linux=5);
-native set_offset_float(id, offset, Float:value, linux=5);
-native set_offset_short(id, offset, value, linux=5);
-native set_offset_char(id, offset, value, linux=5);
-
 /* Precaches any file. */
 native precache_generic(szFile[]);
 /* Precaches an event. */

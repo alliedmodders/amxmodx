@@ -17,7 +17,9 @@ $sdk = "../../hlsdk/SourceCode";
 $mm = "../../metamod/metamod";
 $gccf = "gcc";
 
-@CPP_SOURCE_FILES = ("dllfunc.cpp", "fakemeta_amxx.cpp", "forward.cpp", "pdata.cpp", "pev.cpp", "engfunc.cpp", "sdk/amxxmodule.cpp", "fm_tr.cpp");
+#@CPP_SOURCE_FILES = ("dllfunc.cpp", "fakemeta_amxx.cpp", "forward.cpp", "pdata.cpp", "pev.cpp", "engfunc.cpp", "sdk/amxxmodule.cpp", "fm_tr.cpp");
+# ^^ removed pev natives. Sorry. :-P
+@CPP_SOURCE_FILES = ("dllfunc.cpp", "fakemeta_amxx.cpp", "forward.cpp", "pdata.cpp", "engfunc.cpp", "sdk/amxxmodule.cpp", "fm_tr.cpp");
 
 @C_SOURCE_FILES = ();
 my %OPTIONS, %OPT;

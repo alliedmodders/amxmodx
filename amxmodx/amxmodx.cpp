@@ -2304,16 +2304,16 @@ static cell AMX_NATIVE_CALL get_module(AMX *amx, cell *params)
 	if ((*moduleIter).isAmxx()) 	 
 	{ 	 
 		const amxx_module_info_s *info = (*moduleIter).getInfoNew(); 	 
-		set_amxstring(amx, params[2], info->name, params[3]); 	 
-		set_amxstring(amx, params[4], info->author, params[5]); 	 
-		set_amxstring(amx, params[6], info->version, params[7]); 	 
+		set_amxstring(amx, params[2], info && info->name ? info->name : "unk", params[3]); 	 
+		set_amxstring(amx, params[4], info && info->author ? info->author : "unk", params[5]); 	 
+		set_amxstring(amx, params[6], info && info->version ? info->version : "unk", params[7]); 	 
 	} 	 
 	else 	 
 	{
 		module_info_s *info = (*moduleIter).getInfo();
-		set_amxstring(amx, params[2], info->name, params[3]);
-		set_amxstring(amx, params[4], info->author, params[5]);
-		set_amxstring(amx, params[6], info->version, params[7]);
+		set_amxstring(amx, params[2], info && info->name ? info->name : "unk", params[3]);
+		set_amxstring(amx, params[4], info && info->author ? info->author : "unk", params[5]);
+		set_amxstring(amx, params[6], info && info->version ? info->version : "unk", params[7]);
 	}
 
 	// compatibility problem possible

@@ -253,7 +253,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK) {
   if ( EnemyRemaining ) {
     new ppl[32], pplnum
     new team = get_user_team( victim ) - 1
-    if ( team >= 0 )
+    if ( team >= 0 && team < 4 )
       get_players(ppl,pplnum,"e", g_teamsNames[1 - team] ) 
     if (pplnum) {
       new eppl[32], epplnum 
@@ -328,7 +328,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK) {
     else if ( GrenadeSuicide ) show_hudmessage(0,"%L",LANG_PLAYER,g_SHeMessages[ random_num(0,3) ],victim_name) 
   }
   if ( headshot && (HeadShotKill || HeadShotKillSound) ) {
-    if ( HeadShotKill ) {
+    if ( HeadShotKill && wpnindex ) {
       new killer_name[32], victim_name[32], weapon_name[32], message[128], players[32], pnum
       xmod_get_wpnname(wpnindex,weapon_name,31)
       get_user_name(killer,killer_name,31) 

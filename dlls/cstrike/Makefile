@@ -6,12 +6,12 @@ EXTRA_LIBS_WIN32 =
 EXTRA_LIBDIRS_LINUX = -Lextra/lib_linux
 EXTRA_LIBDIRS_WIN32 = -Lextra/lib_win32
 
-EXTRA_INCLUDEDIRS = -Iextra/include
+EXTRA_INCLUDEDIRS = -Iextra/include -I../amxmodx
 
 EXTRA_FLAGS = -Dstrcmpi=strcasecmp
 
 SDKTOP=../hlsdk
-METADIR=../metamod/metamod
+METADIR=../metamodx
 
 
 SDKSRC=$(SDKTOP)/SourceCode

@@ -2370,13 +2370,6 @@ JIT_OP_SWITCH:
         jmp     ebp
 %endif
 
-JIT_DEBUG:
-		push	eax
-		pop		eax
-		ret
-		
-
-
 ; The caller of asm_runJIT() can determine the maximum size of the compiled
 ; code by multiplying the result of this function by the number of opcodes in
 ; Small module.
@@ -2423,7 +2416,6 @@ jit_sysreq      DD      JIT_OP_SYSREQ
 jit_sysreq_d    DD      JIT_OP_SYSREQ_D
 jit_line        DD      JIT_OP_LINE
 jit_switch      DD      JIT_OP_SWITCH
-jit_debug		DD		JIT_DEBUG
 
 ;
 ; The table for the browser/relocator function.

@@ -868,19 +868,32 @@ void C_MessageEnd_Post(void) {
   if (endfunction) (*endfunction)(NULL);
   RETURN_META(MRES_IGNORED);
 }
-const char *C_Cmd_Args( void ) {
-  if (g_fakecmd.fake) RETURN_META_VALUE(MRES_SUPERCEDE,	(g_fakecmd.argc>1)?g_fakecmd.args:NULL);
-  RETURN_META_VALUE(MRES_IGNORED, NULL);
+
+const char *C_Cmd_Args( void )
+{
+	// if the global "fake" flag is set, which means that engclient_cmd was used, supercede the function
+	if (g_fakecmd.fake)
+		RETURN_META_VALUE(MRES_SUPERCEDE, (g_fakecmd.argc > 1) ? g_fakecmd.args : NULL);
+	// otherwise ignore it
+	RETURN_META_VALUE(MRES_IGNORED, NULL);
 }
 
-const char *C_Cmd_Argv( int argc ) {
-  if (g_fakecmd.fake) RETURN_META_VALUE(MRES_SUPERCEDE,	(argc<3)?g_fakecmd.argv[argc]:"");
-  RETURN_META_VALUE(MRES_IGNORED, NULL);
+const char *C_Cmd_Argv(int argc)
+{
+	// if the global "fake" flag is set, which means that engclient_cmd was used, supercede the function
+	if (g_fakecmd.fake)
+		RETURN_META_VALUE(MRES_SUPERCEDE,	(argc < 3) ? g_fakecmd.argv[argc] : "");
+	// otherwise ignore it
+	RETURN_META_VALUE(MRES_IGNORED, NULL);
 }
 
-int	C_Cmd_Argc( void ) {
-  if (g_fakecmd.fake) RETURN_META_VALUE(MRES_SUPERCEDE,	g_fakecmd.argc );
-  RETURN_META_VALUE(MRES_IGNORED, 0);
+int	C_Cmd_Argc( void )
+{
+	// if the global "fake" flag is set, which means that engclient_cmd was used, supercede the function
+	if (g_fakecmd.fake)
+		RETURN_META_VALUE(MRES_SUPERCEDE, g_fakecmd.argc);
+	// otherwise ignore it
+	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
 // Grenade has been	thrown.
@@ -903,66 +916,34 @@ void C_TraceLine_Post(const float	*v1, const float *v2, int fNoMonsters, edict_t
   RETURN_META(MRES_IGNORED);
 }
 
-void C_AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...) {
+void C_AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...)
+{
+	if (atype != at_logged)
+		RETURN_META(MRES_IGNORED);
 
-  if ( atype !=	at_logged )	RETURN_META(MRES_IGNORED);
+	/*  There	are	also more messages but we want only	logs
+	at_notice,
+	at_console,		// same	as at_notice, but forces a ConPrintf, not a	message	box
+	at_aiconsole,	// same	as at_console, but only	shown if developer level is	2!
+	at_warning,
+	at_error,
+	at_logged		// Server print to console ( only in multiplayer games ).
+	*/
 
-  /*  There	are	also more messages but we want only	logs
-  at_notice,
-  at_console,	// same	as at_notice, but forces a ConPrintf, not a	message	box
-  at_aiconsole,	// same	as at_console, but only	shown if developer level is	2!
-  at_warning,
-  at_error,
-  at_logged	  // Server	print to console ( only	in multiplayer games ).
-  */
-
-  if ( g_logevents.logEventsExist()	)
-  {
-	va_list	logArgPtr;
-	va_start ( logArgPtr , szFmt );
-	g_logevents.setLogString( szFmt	, logArgPtr	);
-	va_end ( logArgPtr );
-	g_logevents.parseLogString(	);
-	g_logevents.executeLogEvents( );
-
-
-#if	0 // ######### this	is done	by call	above
-	LogEventsMngr::iterator	a =	g_logevents.begin();
-	int	err;
-#ifdef ENABLEEXEPTIONS
-	try
+	// execute logevents and plugin_log forward
+	if (g_logevents.logEventsExist() || FF_PluginLog >= 0)
 	{
-#endif
-	  while	( a	)
-	  {
-		if ((err = amx_Exec((*a).getPlugin()->getAMX(),	NULL , (*a).getFunction() ,	1,mPlayerIndex)) !=	AMX_ERR_NONE)
-		  AMXXLOG_Log("[AMXX] Run time error %d	on line	%ld	(plugin	\"%s\")",err,(*a).getPlugin()->getAMX()->curline,(*a).getPlugin()->getName());
-
-		++a;
-
-	  }
-
-#ifdef ENABLEEXEPTIONS
+		va_list	logArgPtr;
+		va_start ( logArgPtr , szFmt );
+		g_logevents.setLogString( szFmt	, logArgPtr	);
+		va_end ( logArgPtr );
+		g_logevents.parseLogString(	);
+		if (g_logevents.logEventsExist())
+			g_logevents.executeLogEvents( );
+		executeForwards(FF_PluginLog);
 	}
-	catch( ... )
-	{
-	  AMXXLOG_Log( "[AMXX] fatal error at log event	execution");
-	}
-#endif
-#endif
 
-	executeForwards(FF_PluginLog);
-  }
-  else if (FF_PluginLog >= 0)
-  {
-	va_list	logArgPtr;
-	va_start ( logArgPtr , szFmt );
-	g_logevents.setLogString( szFmt	, logArgPtr	);
-	va_end ( logArgPtr );
-	g_logevents.parseLogString(	);
-	executeForwards(FF_PluginLog);
-  }
-  RETURN_META(MRES_IGNORED);
+	RETURN_META(MRES_IGNORED);
 }
 
 C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_t *pMetaUtilFuncs) {

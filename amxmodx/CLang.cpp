@@ -350,7 +350,7 @@ void CLangMngr::CLang::MergeDefinitions(CQueue<sKeyDef*> &vec)
 				entry->SetKey(key);
 				entry->SetCache(false);
 			} else {
-				//AMXXLOG_Log("[AMXX] Language key %s[%s] defined twice", m_LMan->GetKey(key), m_LanguageName);
+				AMXXLOG_Log("[AMXX] Language key %s[%s] defined twice", m_LMan->GetKey(key), m_LanguageName);
 			}
 		}
 		delete vec.front();
@@ -938,7 +938,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 			language[0] = buf[1];
 			language[1] = buf[2];
 			language[2] = 0;
-		} else if (buf.size() > 4) {
+		} else {
 			if (!multiline)
 			{
 				pos = buf.find('=');

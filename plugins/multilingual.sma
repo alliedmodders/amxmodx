@@ -107,7 +107,7 @@ public cmdLangMenu(id,level,cid)
   
   if (!get_cvar_num("amx_client_languages"))
   {
-	client_print(id, print_console, "[AMXX] %L", "LANG_MENU_DISABLED")
+	client_print(id, print_console, "[AMXX] %L", LANG_SERVER, "LANG_MENU_DISABLED")
   	return PLUGIN_HANDLED
   }
   

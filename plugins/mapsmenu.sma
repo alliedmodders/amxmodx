@@ -362,7 +362,7 @@ public actionMapsMenu(id,key) {
 
       switch (get_cvar_num("amx_show_activity")) {
         case 2: client_print(0,print_chat,"%L",LANG_PLAYER,"ADMIN_CHANGEL_2",name,g_mapName[  a  ])
-        case 1: client_print(0,print_chat,"%L",LANG_PLAYER,"ADMIN_CHANGEL_2",g_mapName[  a  ])
+        case 1: client_print(0,print_chat,"%L",LANG_PLAYER,"ADMIN_CHANGEL_1",g_mapName[  a  ])
       }
       
       log_amx("Cmd: ^"%s<%d><%s><>^" changelevel ^"%s^"",

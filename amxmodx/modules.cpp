@@ -1189,7 +1189,12 @@ void LogError(AMX *amx, int err, const char *fmt, ...)
 
 	if (!dbg || !(dbg->tail))
 	{
-		GenericError(amx, err, amx->curline, buf, NULL);
+		if (dbg && amx->curfile < dbg->numFiles && amx->curfile >= 0)
+		{
+			GenericError(amx, err, amx->curline, buf, dbg->files[amx->curfile]);
+		} else {
+			GenericError(amx, err, amx->curline, buf, NULL);
+		}
 		AMXXLOG_Log("[AMXX] %s", buf);
 		AMXXLOG_Log("%s", vbuf);
 	} else {

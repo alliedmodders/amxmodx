@@ -69,6 +69,11 @@ native Float:floattan(Float:value, anglemode:mode=radian);
 /* Return the absolute value */
 native Float:floatabs(Float:value);
 
+native Float:floatatan(Float:angle, radix);
+native Float:floatacos(Float:angle, radix);
+native Float:floatasin(Float:angle, radix);
+native Float:floatatan2(Float:x, Float:y, radix);
+
 #pragma rational Float
 
 /* user defined operators */

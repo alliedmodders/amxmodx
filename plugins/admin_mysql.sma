@@ -42,7 +42,7 @@ new g_aPassword[MAX_ADMINS][32]
 new g_aName[MAX_ADMINS][32]
 new g_aFlags[MAX_ADMINS]
 new g_aAccess[MAX_ADMINS]
-new g_aNum = 0
+new g_aNum
 #if !defined NO_STEAM
 new g_cmdLoopback[16]
 #endif
@@ -109,6 +109,7 @@ public adminSql() {
   }
 
   new szFlags[32],szAccess[32]
+  g_aNum = 0
   while( mysql_nextrow(mysql) > 0 )
   {
     mysql_getfield(mysql, 1, g_aName[ g_aNum ] ,31)
@@ -134,7 +135,6 @@ public cmdReload(id,level,cid)
   if (!cmd_access(id,level,cid,1))
     return PLUGIN_HANDLED
 
-  g_aNum = 0
   adminSql() // Re-Load admins accounts
 
   return PLUGIN_HANDLED

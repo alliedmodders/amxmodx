@@ -30,6 +30,8 @@
 */
 
 #ifdef __linux__
+#include <malloc.h>
+#include <stdlib.h>
 #include <sys/mman.h>
 #endif
 #include "amxmodx.h"
@@ -183,7 +185,8 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 #ifndef __linux__
 		amx->base = new unsigned char[ amx->code_size ];
 #else
-		posix_memalign((void **)&(amx->base), sysconf(_SC_PAGESIZE), amx->code_size);
+		//posix_memalign((void **)&(amx->base), sysconf(_SC_PAGESIZE), amx->code_size);
+		amx->base = (unsigned char *)memalign(sysconf(_SC_PAGESIZE), amx->code_size);
 		mprotect((void *)amx->base, amx->code_size, PROT_READ|PROT_WRITE|PROT_EXEC);
 #endif
 		if ( amx->base )

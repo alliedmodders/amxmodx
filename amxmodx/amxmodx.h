@@ -35,6 +35,7 @@
 
 #ifdef __linux__
 #include <unistd.h>
+#include <stdlib.h>
 #endif
 #include "string.h"
 #include <extdll.h>
@@ -81,7 +82,6 @@ extern  AMX_NATIVE_INFO vault_Natives[];
 #define DLLOAD(path) (DLHANDLE)LoadLibrary(path)
 #define DLPROC(m,func) GetProcAddress(m,func)
 #define DLFREE(m) FreeLibrary(m)
-extern int errno;
 #else
 #define DLLOAD(path) (DLHANDLE)dlopen(path, RTLD_NOW)
 #define DLPROC(m,func) dlsym(m,func)

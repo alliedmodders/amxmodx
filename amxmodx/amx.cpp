@@ -60,9 +60,6 @@
   #include <windows.h>
 #endif
 
-extern int errno;
-int errno;
-
 // this file does not include amxmodx.h, so we have to include the memory manager here
 #ifdef MEMORY_TEST
 #include "mmgr/mmgr.h"

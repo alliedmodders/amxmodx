@@ -42,30 +42,16 @@ public:
 		Err_FileOpen,
 		Err_FileRead,
 		Err_FileInvalid,
-		Err_SectionNotFound
+		Err_SectionNotFound,
+		Err_DecompressorInit,
+		Err_Decompress
 	};
-private:
+
 	typedef char		mint8_t;
 	typedef short		mint16_t;
 	typedef long		mint32_t;
 
-	struct TableEntry
-	{
-		mint8_t cellSize;
-		mint32_t origSize;			// contains AMX_HEADER->stp
-		mint32_t offset;
-	};
-
-	// These functions don't access members
-	static void _RLE_WriteRep(unsigned char *out, unsigned int *outpos,
-		unsigned char marker, unsigned char symbol, unsigned int count);
-	static void _RLE_WriteNonRep(unsigned char *out, unsigned int *outpos,
-		unsigned char marker, unsigned char symbol);
-	static int RLE_Compress(unsigned char *in, unsigned char *out,
-		unsigned int insize);
-	static void RLE_Uncompress(unsigned char *in, unsigned char *out,
-		unsigned int insize);
-
+private:
 	Error m_Status;
 	FILE *m_pFile;
 

@@ -27,7 +27,7 @@
 #define		OFFSET_WIN_EXP				6352
 #define		OFFSET_LIN_EXP				6240
 
-#define		OFFSET_WIN_POINTS			6416
+#define		OFFSET_WIN_POINTS			6360
 #define		OFFSET_LIN_POINTS			6248
 
 #define		OFFSET_WIN_AMMO_LMG			912

@@ -45,7 +45,7 @@ new g_pos
 
 public plugin_init() 
 {
-  register_plugin("NextMap","0.1","AMXX Dev Team")
+  register_plugin("NextMap","0.15","AMXX Dev Team")
   register_event("30","changeMap","a")
   register_clcmd("say nextmap","sayNextMap",0,"- displays nextmap")
   register_cvar("amx_nextmap","",FCVAR_SERVER|FCVAR_EXTDLL|FCVAR_SPONLY)

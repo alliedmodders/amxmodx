@@ -88,7 +88,7 @@ new g_cstrikeRunning
 
 public plugin_init()
 {
-  register_plugin("Commands Menu","0.1","AMXX Dev Team")
+  register_plugin("Commands Menu","0.15","AMXX Dev Team")
 
   new config[64]
   for(new a = 0; a < MAX_CMDS_LAYERS; ++a)  {

@@ -211,7 +211,7 @@ public cmdVoteMap(id,level,cid) {
   if (g_validMaps == 0) { 
     new lMaps[16]
     format(lMaps,15,"%L",id,(argc==2)?"MAP_IS":"MAPS_ARE")
-    console_print(id,"%L",id,"GIVEN_NOT_VALID") 
+    console_print(id,"%L",id,"GIVEN_NOT_VALID",lMaps) 
     return PLUGIN_HANDLED 
   } 
   new menu_msg[256] 

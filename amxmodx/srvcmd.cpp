@@ -62,6 +62,18 @@ void amx_command(){
 						++a;
 				}
 
+				a = g_plugins.begin();
+
+				while (a)
+				{
+					if ( (*a).getStatusCode() == ps_bad_load )
+					{
+						//error
+						print_srvconsole("Load fails: %s\n", (*a).getError());
+					}
+					++a;
+				}
+
 				print_srvconsole( "%d plugins, %d running\n",plugins,running );
 
 		}

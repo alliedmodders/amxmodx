@@ -254,7 +254,7 @@ void* alloc_amxmemory(void**, int size);
 void free_amxmemory(void **ptr);
 // get_localinfo
 const char* get_localinfo( const char* name , const char* def );
-static cell AMX_NATIVE_CALL null_native(AMX *amx, cell *params);
+cell AMX_NATIVE_CALL require_module(AMX *amx, cell *params);
 
 enum ModuleCallReason
 {
@@ -268,7 +268,6 @@ extern ModuleCallReason g_ModuleCallReason;		// modules.cpp
 extern CModule *g_CurrentlyCalledModule;		// modules.cpp
 extern const char *g_LastRequestedFunc;			// modules.cpp
 extern CQueue<String> CurModuleList;
-extern int no_module_test;
 
 void *Module_ReqFnptr(const char *funcName);	// modules.cpp
 

@@ -38,7 +38,7 @@ CPluginMngr::CPlugin* CPluginMngr::loadPlugin(const char* path, const char* name
 	CPlugin** a = &head;
 	while( *a ) a = &(*a)->next;
 	*a = new CPlugin( pCounter++ ,path,name,error, debug);
-	return *error ? 0 : *a;
+	return (*a);
 }
 
 void CPluginMngr::unloadPlugin( CPlugin** a ) {
@@ -81,8 +81,13 @@ int  CPluginMngr::loadPluginsFromFile( const char* filename )
 
 		CPlugin* plugin = loadPlugin( pluginsDir , pluginName  , error,  debugFlag);
 		
-		if (!plugin)
-			AMXXLOG_Log("[AMXX] %s (plugin \"%s\")", error, pluginName );
+		if (plugin->getStatusCode() == ps_bad_load)
+		{
+			char errorMsg[255];
+			sprintf(errorMsg, "%s (plugin \"%s\")", error, pluginName);
+			plugin->setError(errorMsg);
+			AMXXLOG_Log("[AMXX] %s", plugin->getError());
+		}
 	}
 
 	return pCounter;
@@ -97,10 +102,6 @@ void CPluginMngr::clear() {
 CPluginMngr::CPlugin* CPluginMngr::findPluginFast(AMX *amx) 
 { 
 	return (CPlugin*)(amx->userdata[3]); 
-	/*CPlugin*a = head;
-	while ( a && &a->amx != amx )
-		a=a->next;
-	return a;*/
 }
 
 CPluginMngr::CPlugin* CPluginMngr::findPlugin(AMX *amx) {
@@ -146,8 +147,12 @@ CPluginMngr::CPlugin::CPlugin(int i, const char* p,const char* n, char* e, int d
 	char* path = build_pathname("%s/%s",p,n);
 	code = 0;
 	int err = load_amxscript(&amx,&code,path,e, d);
-	if ( err == AMX_ERR_NONE ) status = ps_running;
-	else status = ps_bad_load;
+	if ( err == AMX_ERR_NONE )
+	{
+		status = ps_running;
+	} else {
+		status = ps_bad_load;
+	}
 	amx.userdata[3] = this;
 	paused_fun = 0;
 	next = 0;

@@ -1576,7 +1576,6 @@ static AMX_NATIVE findfunction(const char *name, AMX_NATIVE_INFO *list, int numb
 }
 
 const char *no_function;			// PM: Nice hack ;)
-int no_module_test;
 int AMXAPI amx_Register(AMX *amx, AMX_NATIVE_INFO *list, int number)
 {
   AMX_FUNCSTUB *func;
@@ -1632,8 +1631,10 @@ void amx_NullNativeTable(AMX *amx)
 	
 	for (i=0; i<numnatives; i++)
 	{
-		if (func->address == 0)
+		if (strcmp(GETENTRYNAME(hdr,func), "require_module")==0)
 		{
+			func->address = NULL;
+		} else {
 			func->address = (ucell)null_native;
 		}
 		func=(AMX_FUNCSTUB*)((unsigned char*)func+hdr->defsize);
@@ -2833,9 +2834,7 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
   if (amx->callback==NULL)
     return AMX_ERR_CALLBACK;
   i=amx_Register(amx,NULL,0);   /* verify that all natives are registered */
-  //HACKHACK - still execute if doing a module test!
-  // this WILL cause a crash if bad natives are used....
-  if (i!=AMX_ERR_NONE && !no_module_test)
+  if (i!=AMX_ERR_NONE)
     return i;
 
   if ((amx->flags & AMX_FLAG_RELOC)==0)

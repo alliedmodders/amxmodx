@@ -63,6 +63,7 @@ public:
 		String version;
 		String title;
 		String author;
+		String errorMsg;
 		int paused_fun;
 		int status;
 		CPlugin* next;
@@ -76,11 +77,14 @@ public:
 		inline const char* getVersion() { return version.c_str();}
 		inline const char* getTitle() { return title.c_str();}
 		inline const char* getAuthor() { return author.c_str();}
+		inline const char* getError() { return errorMsg.c_str();}
+		inline int getStatusCode() { return status; }
 		inline int getId() const { return id; }
 		inline AMX* getAMX() { return &amx; }
 		inline void setTitle( const char* n ) { title.assign(n); }
 		inline void setAuthor( const char* n ) { author.assign(n); }
 		inline void setVersion( const char* n ) { version.assign(n); }
+		inline void setError( const char* n ) { errorMsg.assign(n); }
 		inline bool isValid() const { return ((status != ps_bad_load) && (status != ps_locked)); }
 		inline bool isPaused() const { return ( (status == ps_paused) || (status == ps_stopped)); }
 		inline bool isFunctionPaused( int id ) const { return (paused_fun & (1<<id)) ? true : false; 	}

@@ -217,12 +217,11 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 //BAILOPAN
 int CheckModules(AMX *amx, char error[64])
 {
-	int idx = 0, flag = 1;
+	int idx = 0, flag = -1;
 	if (amx_FindPublic(amx, "plugin_modules", &idx) == AMX_ERR_NONE)
 	{
 		cell retVal = 0;
 		int err = 0;
-		no_module_test = 1;
 		if ( (err = amx_Exec(amx, &retVal, idx, 0)) == AMX_ERR_NONE )
 		{
 			unsigned int i = 0;
@@ -262,11 +261,9 @@ int CheckModules(AMX *amx, char error[64])
 			}
 		} else {
 			AMXXLOG_Log("[AMXX] Run time error %d on line %ld during module check.", err, amx->curline);
-			no_module_test = 0;
 			//could not execute
 			return -1;	//bad! very bad!
 		}
-		no_module_test = 0;
 	} else {
 		return -1;
 	}
@@ -293,12 +290,20 @@ int set_amxnatives(AMX* amx,char error[64])
 
 	if ( amx_Register(amx, core_Natives, -1) != AMX_ERR_NONE )
 	{
+		//HACKHACK - if we get here, nullify the plugin's native table
+		//then reregister the one native we need
+		// - BAILOPAN
+		String save;
+		save.assign(no_function);
+		amx_NullNativeTable(amx);
+		AMX_NATIVE_INFO p[] = {
+			{ "require_module",	require_module },
+			{ NULL,				NULL },
+		};
+		amx_Register(amx, p, -1);
 		if (CheckModules(amx, error) == -1)
 		{
-			//HACKHACK - if we get here, nullify the plugin's native table
-			// - BAILOPAN
-			amx_NullNativeTable(amx);
-			sprintf(error,"Plugin uses an unknown function (name \"%s\") - check your modules.ini.",no_function);
+			sprintf(error,"Plugin uses an unknown function (name \"%s\") - check your modules.ini.",save.c_str());
 		}
 		return (amx->error = AMX_ERR_NATIVE);
 	}

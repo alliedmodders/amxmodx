@@ -1,20 +1,21 @@
 /* Fun functions
- *
- * (c) 2004, the AMX Mod X Development Team
- *
- * This file is provided as is (no warranties).
- */
+*
+* (c) 2004, the AMX Mod X Development Team
+*
+* This file is provided as is (no warranties).
+*/
 
-/* (untested) Returns 1 if receiver hears sender via voice communication. */
+/* Returns 1 if receiver hears sender via voice communication. */
 native get_client_listen(receiver, sender);
 
-/* (untested) Sets who can listen who. Function returns 0 if for some reasons this setting can't be done. */
+/* Sets who can listen who. Function returns 0
+* if for some reasons this setting can't be done. */
 native set_client_listen(receiver, sender, listen);
 
 /* Sets player godmode. If you want to disable godmode set only first parameter. */
 native set_user_godmode(index, godmode = 0);
 
-/* (untested) Returns 1 if godmode is set. */
+/* Returns 1 if godmode is set. */
 native get_user_godmode(index);
 
 /* Sets player frags. Doesn't autoupdate scoreboard, as Olo's version didn't. Fix? */
@@ -33,21 +34,21 @@ native set_user_origin(index, origin[3]);
 native set_user_rendering(index, fx = kRenderFxNone, r = 255, g = 255, b = 255, render = kRenderNormal, amount = 16);
 
 /* Gives item to player, name of item can start
- * with weapon_, ammo_ and item_. This event
- * is announced with proper message to all players. */
+* with weapon_, ammo_ and item_. This event
+* is announced with proper message to all players. */
 native give_item(index, const item[]);
 
 /* (not yet implemented, don't know how to use native)
- * Sets hit zones for player. This event is announced
- * with proper message to all players.
- * Parts of body are as bits:
- * 2   - head
- * 4   - chest
- * 8   - stomach
- * 16  - left arm
- * 32  - right arm
- * 64  - left leg
- * 128 - right leg */
+* Sets hit zones for player. This event is announced
+* with proper message to all players.
+* Parts of body are as bits:
+* 2   - head
+* 4   - chest
+* 8   - stomach
+* 16  - left arm
+* 32  - right arm
+* 64  - left leg
+* 128 - right leg */
 native set_hitzones(body = 255);
 
 /* backwards compatibility */
@@ -87,5 +88,5 @@ native set_user_noclip(index, noclip = 0);
 native get_user_noclip(index);
 
 /* Gives player silent footsteps.
- * if set = 0 it will return footsteps to normal */
+* if set = 0 it will return footsteps to normal */
 native set_user_footsteps(id, set = 1);

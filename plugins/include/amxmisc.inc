@@ -93,13 +93,14 @@ stock is_running(const arg[]) {
 
 stock build_path( path[] , len , {Float,_}:... ) {
   new basedir[32]
-  get_localinfo( "amx_basedir", basedir , 31 )
+  get_localinfo( "amxx_basedir", basedir , 31 )
   format_args( path , len , 2 )
   return replace( path , len , "$basedir", basedir  )
 }
 
 stock get_basedir( name[], len )
-  return get_localinfo( "amx_basedir", name , len )
+  return get_localinfo( "amxx_basedir", name , len )
 
+/* use log_amx() instead */
 stock get_logfile( name[], len )
   return get_time("admin%m%d.log",name,len)

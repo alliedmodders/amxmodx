@@ -20,39 +20,38 @@ native cs_set_hostage_follow(index, followedindex = 0);
 native cs_get_hostage_id(index);
 
 /* Get amount of ammo in backpack on a user for a specific weapon.
- * Look in amxconst.inc for weapon types: CSW_*.
- * Weapons on the same line uses the same ammo type:
- * awm
- * scout, ak, g3
- * para
- * famas, m4a1, aug, sg550, galil, sg552
- * m3, xm
- * usp, ump, mac
- * fiveseven, p90
- * deagle
- * p228
- * glock, mp5, tmp, elites
- * flash
- * he
- * smoke
- */
+* Look in amxconst.inc for weapon types: CSW_*.
+* Weapons on the same line uses the same ammo type:
+* awm
+* scout, ak, g3
+* para
+* famas, m4a1, aug, sg550, galil, sg552
+* m3, xm
+* usp, ump, mac
+* fiveseven, p90
+* deagle
+* p228
+* glock, mp5, tmp, elites
+* flash
+* he
+* smoke */
 native cs_get_user_backpackammo(index, weapon);
 
 /* Restock/remove ammo in a user's backpack. */
 native cs_set_user_backpackammo(index, weapon, amount);
 
-/* Get deaths. */
+/* Returns player deaths. */
 native cs_get_user_deaths(index);
 
-/* Set deaths. (Doesn't update scoreboard right away? fix later?) */
+/* Sets deaths. (Doesn't update scoreboard right away? fix later?) */
 native cs_set_user_deaths(index, newdeaths);
 
 /* Returns 1 if user has a defuse kit. */
 native cs_get_user_defusekit(index);
 
 /* If defusekit is 1, the user will have a defuse kit.
- * You can specify a different colour for the defuse kit icon showing on hud. Default is the normal green.
- * You can specify an icon. Default is "defuser". Set flash to 1 if you want the icon to flash red. */
+* You can specify a different colour for the defuse kit icon showing on hud. Default is the normal green.
+* You can specify an icon. Default is "defuser". Set flash to 1 if you want the icon to flash red. */
 native cs_set_user_defusekit(index, defusekit = 1, r = 0, g = 160, b = 0, icon[] = "defuser", flash = 0);
 
 /* Is user in buyzone? Returns 1 when true, 0 when false. */
@@ -83,15 +82,15 @@ native cs_set_user_nvgoggles(index, nvgoggles = 1);
 native cs_get_user_plant(index);
 
 /* If plant is 1, a user will be set to be able to plant bomb within the usual bomb target areas if having one.
- * You should use this if you give a player a weapon_c4, or he won't be able to plant it
- * without dropping it and picking it up again (only possible for terrorists).
- * If showbombicon is 1, the green C4 icon will be shown on user hud (if plant "skill" was enabled). */
+* You should use this if you give a player a weapon_c4, or he won't be able to plant it
+* without dropping it and picking it up again (only possible for terrorists).
+* If showbombicon is 1, the green C4 icon will be shown on user hud (if plant "skill" was enabled). */
 native cs_set_user_plant(index, plant = 1, showbombicon = 1);
 
 /* Get team directly from player's entity.
- * 1 = terrorist
- * 2 = counter-terrorist
- * 3 = spectator */
+* 1 = terrorist
+* 2 = counter-terrorist
+* 3 = spectator */
 native cs_get_user_team(index);
 
 /* Set user team without killing player (so you can move hostages, plant bomb etc as terrorist). */
@@ -101,14 +100,14 @@ native cs_set_user_team(index, team);
 native cs_get_user_vip(index);
 
 /* If vip = 1, user is set to vip. Note that this is useful to unset vips, so they can change teams properly.
- * This will not change the player's model to/from vip, or add/remove the "VIP" text in scoreboard. */
+* This will not change the player's model to/from vip, or add/remove the "VIP" text in scoreboard. */
 native cs_set_user_vip(index, vip = 1);
 
 /* Returns 1 if specified weapon is in burst mode. */
 native cs_get_weapon_burstmode(index);
 
 /* If burstmode = 1, weapon will be changed to burst mode, 0 and non-burst mode (semiautomatic/automatic) will be activated.
- * Only GLOCK and FAMAS can enter/leave burst mode. */
+* Only GLOCK and FAMAS can enter/leave burst mode. */
 native cs_set_weapon_burstmode(index, burstmode = 1);
 
 /* Returns 1 if weapon is silenced, else 0. */

@@ -54,7 +54,7 @@
 #if defined __LCC__ || defined __GNUC__
   #include <wchar.h>    /* for wcslen() */
 #endif
-#if (defined _Windows && !defined AMX_NODYNALOAD) || defined JIT
+#if (defined _Windows && !defined AMX_NODYNALOAD) || (defined JIT && !defined __linux__)
   #include <windows.h>
 #endif
 
@@ -68,6 +68,9 @@
 #ifdef JIT
 # ifdef __WIN32__
 #  include <windows.h>		// DWORD, VirtualProtect, ...
+# elif defined __linux__
+#  include <sys/mman.h>		// mprotect, PROT_*
+#  include <unistd.h>
 # else
    // :TODO:
 # endif
@@ -559,7 +562,10 @@ static int amx_BrowseRelocate(AMX *amx)
     } /* if */
     #if defined __GNUC__ || defined ASM32 || defined JIT
       /* relocate symbol */
+      #if defined JIT && defined __linux__
+      #else
       *(cell *)(code+(int)cip) = opcode_list[op];
+    #endif
     #endif
     #if defined JIT
       opcode_count++;
@@ -782,6 +788,10 @@ static int amx_BrowseRelocate(AMX *amx)
   } /* for */
 
   #if defined JIT
+    #if defined __linux__
+      // HACK: Determine maxcodesize
+      asm_runJIT(NULL, NULL, NULL);
+    #endif
     amx->code_size = getMaxCodeSize()*opcode_count + hdr->cod
                      + (hdr->stp - hdr->dat);
     amx->reloc_size = 2*sizeof(cell)*reloc_count;
@@ -1051,14 +1061,22 @@ int AMXAPI amx_Init(AMX *amx,void *program)
 	#if defined __linux__
 		int memoryFullAccess(void* addr, int len)
 		{
-			int oldProt = get_page_prot(addr);
-			sys_mprotect(addr, len, PROT_READ | PROT_WRITE | PROT_EXEC);
-			return oldProt;
+			//int oldProt = get_page_prot(addr);
+			void* newAddr = (void*) ((int)addr - (int)addr % getpagesize());
+			len += (int)addr % getpagesize();
+			if (mprotect(newAddr, len, PROT_READ | PROT_WRITE | PROT_EXEC) != -1)
+				return PROT_READ | PROT_WRITE | PROT_EXEC;
+			else
+				return 0;
 		}
 
 		int memorySetAccess(void* addr, int len, int access)
 		{
-			sys_mprotect(addr, len, access);
+			//int oldProt = get_page_prot(addr);
+			void* newAddr = (void*) ((int)addr - (int)addr % getpagesize());
+			len += (int)addr % getpagesize();
+			mprotect(newAddr, len, access);
+			return 0;
 		}
 	#else
 		// DOS32 has no imposed limits on its segments.
@@ -1080,7 +1098,7 @@ int AMXAPI amx_InitJIT(AMX *amx, void *reloc_table, void *native_code)
   int mac, res;
   AMX_HEADER *hdr;
 
-  mac = memoryFullAccess( asm_runJIT, 20000 );
+  mac = memoryFullAccess( (void*)asm_runJIT, 20000 );
   if ( ! mac )
     return AMX_ERR_INIT_JIT;
 
@@ -1093,7 +1111,7 @@ int AMXAPI amx_InitJIT(AMX *amx, void *reloc_table, void *native_code)
   res = asm_runJIT( amx->base, reloc_table, native_code );
   if ( res != 0 )
   {
-    memorySetAccess( asm_runJIT, 20000, mac );
+    memorySetAccess( (void*)asm_runJIT, 20000, mac );
     return AMX_ERR_INIT_JIT;
   }
 
@@ -1113,7 +1131,7 @@ int AMXAPI amx_InitJIT(AMX *amx, void *reloc_table, void *native_code)
   *(cell *)((char*)native_code + hdr->dat + hdr->stp - sizeof(cell)) = 0;
   amx->stk = amx->stp;
 
-  memorySetAccess( asm_runJIT, 20000, mac );
+  memorySetAccess( (void*)asm_runJIT, 20000, mac );
   return AMX_ERR_NONE;
 }
 
@@ -1639,7 +1657,7 @@ AMX_NATIVE_INFO * AMXAPI amx_NativeInfo(const char *name, AMX_NATIVE func)
 #define CHKSTACK()      if (stk>amx->stp) return AMX_ERR_STACKLOW
 #define CHKHEAP()       if (hea<amx->hlw) return AMX_ERR_HEAPLOW
 
-#if defined __GNUC__ && !defined ASM32
+#if defined __GNUC__ && !defined ASM32 && !defined JIT
     /* GNU C version uses the "labels as values" extension to create
      * fast "indirect threaded" interpreter.
      */
@@ -2741,7 +2759,7 @@ static void *amx_opcodelist_nodebug[] = {
     #endif
   #elif defined __GNUC__
     /* force "cdecl" by adding an "attribute" to the declaration */
-    extern cell amx_exec_asm(cell *regs,cell *retval,cell stp,cell hea) __attribute__((cdecl));
+    extern "C" cell amx_exec_asm(cell *regs,cell *retval,cell stp,cell hea) __attribute__((cdecl));
   #else
     /* force "cdecl" by specifying it as a "function class" with the "__cdecl" keyword */
     extern "C" cell __cdecl amx_exec_asm(cell *regs,cell *retval,cell stp,cell hea);

@@ -29,8 +29,6 @@
 *  version.
 */
 
-#include <extdll.h>
-#include <meta_api.h>
 #include <ctype.h>
 #include "amxmodx.h"
 
@@ -78,7 +76,7 @@ char* format_amxstring(AMX *amx, cell *params, int parm,int& len)
       arg = buffer[1];
       switch(*(ptr-1)){
       case 's':  sprintf(arg,format,get_amxstring(amx, params[parm++],2,len)); break;
-      case 'f': case 'g': sprintf(arg,format,*(float*)get_amxaddr(amx, params[parm++])); break;
+      case 'f': case 'g': sprintf(arg,format,(float)*(REAL*)get_amxaddr(amx, params[parm++])); break;
       default: sprintf(arg,format,(int)*get_amxaddr(amx, params[parm++]));
       }
       while(*arg) *dest++=*arg++;
@@ -427,7 +425,7 @@ float fo_getargfloat(AMX *amx, int pos)
   unsigned char *data =amx->base+(int)((AMX_HEADER *)amx->base)->dat;
   cell value = * (cell *)(data+(int)amx->frm+(pos+3)*sizeof(cell));
   cell number = *(cell *)(data+(int)value);
-  return *(float *)((void *)&number);
+  return *(REAL *)((void *)&number);
 }
 
 char* fo_getargstr(AMX *amx, int swap, int pos)

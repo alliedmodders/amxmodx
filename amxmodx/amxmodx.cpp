@@ -30,8 +30,6 @@
 */
 
 #include <string>
-#include <extdll.h>
-#include <meta_api.h>
 #include <time.h>
 #include "amxmodx.h"
 
@@ -73,8 +71,8 @@ static cell AMX_NATIVE_CALL emit_sound(AMX *amx, cell *params) /* 7 param */
 
   int len;
   char* szSample = get_amxstring(amx,params[3],0,len);
-  float vol = *(float *)((void *)&params[4]);
-  float att = *(float *)((void *)&params[5]);
+  float vol = *(REAL *)((void *)&params[4]);
+  float att = *(REAL *)((void *)&params[5]);
   int channel = params[2];
   int pitch = params[7];
   int flags = params[6];
@@ -239,13 +237,13 @@ static cell AMX_NATIVE_CALL set_hudmessage(AMX *amx, cell *params)  /* 11 param 
   g_hudset.r1 = params[1];
   g_hudset.g1 = params[2];
   g_hudset.b1 = params[3];
-  g_hudset.x = *(float *)((void *)&params[4]);
-  g_hudset.y = *(float *)((void *)&params[5]);
+  g_hudset.x = *(REAL *)((void *)&params[4]);
+  g_hudset.y = *(REAL *)((void *)&params[5]);
   g_hudset.effect = params[6];
-  g_hudset.fxTime = *(float *)((void *)&params[7]);
-  g_hudset.holdTime = *(float *)((void *)&params[8]);
-  g_hudset.fadeinTime = *(float *)((void *)&params[9]);
-  g_hudset.fadeoutTime = *(float *)((void *)&params[10]);
+  g_hudset.fxTime = *(REAL *)((void *)&params[7]);
+  g_hudset.holdTime = *(REAL *)((void *)&params[8]);
+  g_hudset.fadeinTime = *(REAL *)((void *)&params[9]);
+  g_hudset.fadeoutTime = *(REAL *)((void *)&params[10]);
   g_hudset.channel = params[11];
   return 1;
 }
@@ -1000,14 +998,14 @@ static cell AMX_NATIVE_CALL get_cvar_string(AMX *amx, cell *params) /* 3 param *
 static cell AMX_NATIVE_CALL get_cvar_float(AMX *amx, cell *params) /* 1 param */
 {
   int ilen;
-  float pFloat = CVAR_GET_FLOAT(get_amxstring(amx,params[1],0,ilen));
+  REAL pFloat = CVAR_GET_FLOAT(get_amxstring(amx,params[1],0,ilen));
   return *(cell*)((void *)&pFloat);
 }
 
 static cell AMX_NATIVE_CALL set_cvar_float(AMX *amx, cell *params) /* 2 param */
 {
   int ilen;
-  CVAR_SET_FLOAT(get_amxstring(amx,params[1],0,ilen),*(float *)((void *)&params[2]));
+  CVAR_SET_FLOAT(get_amxstring(amx,params[1],0,ilen),*(REAL *)((void *)&params[2]));
   return 1;
 }
 
@@ -1275,7 +1273,7 @@ static cell AMX_NATIVE_CALL read_data(AMX *amx, cell *params) /* 3 param */
   return set_amxstring(amx,params[2], g_events.getArgString( params[1] ),*get_amxaddr(amx,params[3]));
   default:
   cell *fCell = get_amxaddr(amx,params[2]);
-  float *pFloat = (float *)((void *)fCell);
+  float *pFloat = (REAL *)((void *)fCell);
   *pFloat = g_events.getArgFloat( params[1] );
   return (int)(*pFloat);
   }
@@ -1423,7 +1421,7 @@ static cell AMX_NATIVE_CALL get_maxplayers(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_gametime(AMX *amx, cell *params)
 {
-  float pFloat = gpGlobals->time;
+  REAL pFloat = gpGlobals->time;
   return *(cell*)((void *)&pFloat);
 }
 
@@ -1522,7 +1520,7 @@ static cell AMX_NATIVE_CALL set_task(AMX *amx, cell *params) /* 2 param */
     return 0;
   }
 
-  float base = *(float *)((void *)&params[1]);
+  float base = *(REAL *)((void *)&params[1]);
 
   if ( base < 0.1 )
     base = 0.1;
@@ -1562,7 +1560,7 @@ static cell AMX_NATIVE_CALL register_cvar(AMX *amx, cell *params) /* 3 param */
   {
   CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
   CCVar* cvar = new CCVar( temp , plugin->getName() , params[3] ,
-    *(float *)((void *)&params[4])  );
+    *(REAL *)((void *)&params[4])  );
 
   if ( cvar == 0 )
     return 0;
@@ -1845,9 +1843,9 @@ static cell AMX_NATIVE_CALL get_distance(AMX *amx, cell *params) /* 2 param */
 
 static cell AMX_NATIVE_CALL random_float(AMX *amx, cell *params) /* 2 param */
 {
-  float one = *(float *)((void *)&params[1]);
-  float two = *(float *)((void *)&params[2]);
-  float fRnd = RANDOM_FLOAT(one,two);
+  float one = *(REAL *)((void *)&params[1]);
+  float two = *(REAL *)((void *)&params[2]);
+  REAL fRnd = RANDOM_FLOAT(one,two);
   return *(cell*)((void *)&fRnd);
 }
 
@@ -1888,7 +1886,7 @@ static cell AMX_NATIVE_CALL get_user_aiming(AMX *amx, cell *params) /* 4 param *
   cell *cpId = get_amxaddr(amx,params[2]);
   cell *cpBody = get_amxaddr(amx,params[3]);
     cell fCell;
-    float *pFloat = (float *)((void *)&fCell);
+    float *pFloat = (REAL *)((void *)&fCell);
   *pFloat = 0.0;
   if (pPlayer->ingame) {
     edict_t* edict = pPlayer->pEdict;

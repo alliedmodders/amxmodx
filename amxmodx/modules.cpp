@@ -29,8 +29,6 @@
 *  version.
 */
 
-#include <extdll.h>
-#include <meta_api.h>
 #include "amxmodx.h"
 #include "osdep.h"			// sleep, etc
 #include "CFile.h"
@@ -43,15 +41,7 @@ CModule *g_CurrentlyCalledModule = NULL;	// The module we are in at the moment; 
 											// This is needed so we know which module called a function
 ModuleCallReason g_ModuleCallReason;
 
-#ifdef  __cplusplus
-extern "C" {
-#endif
-
 extern const char* no_function; // stupid work around
-
-#ifdef  __cplusplus
-}
-#endif
 
 void report_error( int code, char* fmt, ... )
 {
@@ -486,7 +476,7 @@ const char* strip_name( const char* a )
   return ret;
 }
 
-void dettachMetaModModules( const char* filename )
+void attachMetaModModules(PLUG_LOADTIME now, const char* filename)
 {
   File fp( build_pathname("%s",filename), "r"  );
 
@@ -496,53 +486,11 @@ void dettachMetaModModules( const char* filename )
     return;
   }
 
-  char line[256], moduleName[256], cmdline[256];
-  DLHANDLE module;
-  
-  while ( fp.getline( line ,  255  ) )
-  {
-	  *moduleName = 0;
-	  sscanf(line,"%s",moduleName);
-	  
-	  if (!isalnum(*moduleName) || !validFile(moduleName) )  
-		  continue;
-	  
-	  char* pathname = build_pathname("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxx/modules"), line);
-	  char* mmpathname = build_pathname_addons("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxx/modules"), line);
-
-	  module = DLLOAD( pathname ); // link dll
-
-	  if ( module )
-	  {
-		int a = (int)DLPROC(module,"Meta_Attach");
-
-		if ( a )
-		{
-			snprintf(cmdline,255, "meta unload %s\n", strip_name(mmpathname) );
-			cmdline[255] = 0;
-			SERVER_COMMAND( cmdline );
-		}
-
-		DLFREE(module);
-	  }
-  }
-}
-
-void attachMetaModModules( const char* filename )
-{
-  File fp( build_pathname("%s",filename), "r"  );
-
-  if ( !fp )
-  {
-    AMXXLOG_Log( "[AMXX] Modules list not found (file \"%s\")",filename);
-    return;
-  }
-
-  char line[256], moduleName[256], cmdline[256];
+  char line[256], moduleName[256];
   DLHANDLE module;
 
   int loaded = 0;
-  
+
   while ( fp.getline( line ,  255  ) )
   {
 	  *moduleName = 0;
@@ -558,26 +506,15 @@ void attachMetaModModules( const char* filename )
 	  if ( module )
 	  {
 		int a = (int)DLPROC(module,"Meta_Attach");
+		DLFREE(module);
 
 		if ( a )
 		{
-			snprintf(cmdline,255, "meta load %s\n", mmpathname );
-			cmdline[255] = 0;
-			SERVER_COMMAND( cmdline );
-			++loaded;
+			g_FakeMeta.AddPlugin(mmpathname);
+			g_FakeMeta.Meta_Query(gpMetaUtilFuncs);
+			g_FakeMeta.Meta_Attach(now, gpMetaGlobals, gpGamedllFuncs);
 		}
-
-		DLFREE(module);
 	  }
-  }
-
-  if ( loaded ) 
-  {
-	SERVER_COMMAND( "restart\n" );
-	/* must be or modules can cause crash
-	since they were not initialized with all routines (spawn, server active
-	players think, etc.) and metamod calls other routines
-    like nothing has never happened. */
   }
 }
 
@@ -740,6 +677,87 @@ void MNF_CopyAmxMemory(cell * dest, const cell * src, int len)
 	memcpy((void*)dest, (const void *)src, (size_t)len*sizeof(cell));
 }
 
+int MNF_IsPlayerValid(int id)
+{
+	if (id < 0 || id > gpGlobals->maxClients)
+		return 0;
+	CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
+	return (pPlayer->initialized) ? 1 : 0;
+}
+const char * MNF_GetPlayerName(int id)
+{
+	return GET_PLAYER_POINTER_I(id)->name.str();
+}
+const char * MNF_GetPlayerIP(int id)
+{
+	return GET_PLAYER_POINTER_I(id)->ip.str();
+}
+int MNF_IsPlayerInGame(int id)
+{
+	return GET_PLAYER_POINTER_I(id)->ingame ? 1 : 0;
+}
+int MNF_IsPlayerBot(int id)
+{
+	return GET_PLAYER_POINTER_I(id)->IsBot() ? 1 : 0;
+}
+int MNF_IsPlayerAuthorized(int id)
+{
+	return GET_PLAYER_POINTER_I(id)->authorized ? 1 : 0;
+}
+float MNF_GetPlayerTime(int id)
+{
+	return GET_PLAYER_POINTER_I(id)->time;
+}
+float MNF_GetPlayerPlayTime(int id)
+{
+	return GET_PLAYER_POINTER_I(id)->playtime;
+}
+int MNF_GetPlayerCurweapon(int id)
+{
+	return GET_PLAYER_POINTER_I(id)->current;
+}
+int MNF_GetPlayerTeamID(int id)
+{
+	return GET_PLAYER_POINTER_I(id)->teamId;
+}
+int MNF_GetPlayerDeaths(int id)
+{
+	return GET_PLAYER_POINTER_I(id)->deaths;
+}
+int MNF_GetPlayerMenu(int id)
+{
+	return GET_PLAYER_POINTER_I(id)->menu;
+}
+int MNF_GetPlayerKeys(int id)
+{
+	return GET_PLAYER_POINTER_I(id)->keys;
+}
+int MNF_IsPlayerAlive(int id)
+{
+	return GET_PLAYER_POINTER_I(id)->IsAlive() ? 1 : 0;
+}
+float MNF_GetPlayerFrags(int id)
+{
+	return GET_PLAYER_POINTER_I(id)->pEdict->v.frags;
+}
+int MNF_IsPlayerConnecting(int id)
+{
+	CPlayer * pPlayer = GET_PLAYER_POINTER_I(id);
+	return (!pPlayer->ingame && pPlayer->initialized && (GETPLAYERUSERID(pPlayer->pEdict) > 0)) ? 1 : 0;
+}
+int MNF_IsPlayerHLTV(int id)
+{
+	return (GET_PLAYER_POINTER_I(id)->pEdict->v.flags & FL_PROXY) ? 1 : 0;
+}
+float MNF_GetPlayerArmor(int id)
+{
+	return (GET_PLAYER_POINTER_I(id)->pEdict->v.armorvalue);
+}
+float MNF_GetPlayerHealth(int id)
+{
+	return (GET_PLAYER_POINTER_I(id)->pEdict->v.health);
+}
+
 // Fnptr Request function for the new interface
 const char *g_LastRequestedFunc = NULL;
 #define REGISTER_FUNC(name, func) { name, (void*)func },
@@ -781,11 +799,38 @@ void *Module_ReqFnptr(const char *funcName)
 		REGISTER_FUNC("ExecuteForward", executeForwards)
 		REGISTER_FUNC("PrepareCellArray", prepareCellArray)
 		REGISTER_FUNC("PrepareCharArray", prepareCharArray)
+
+		// Player
+		REGISTER_FUNC("IsPlayerValid", MNF_IsPlayerValid)
+		REGISTER_FUNC("GetPlayerName", MNF_GetPlayerName)
+		REGISTER_FUNC("GetPlayerIP", MNF_GetPlayerIP)
+		REGISTER_FUNC("IsPlayerInGame", MNF_IsPlayerInGame)
+		REGISTER_FUNC("IsPlayerBot", MNF_IsPlayerBot)
+		REGISTER_FUNC("IsPlayerAuthorized", MNF_IsPlayerAuthorized)
+		REGISTER_FUNC("GetPlayerTime", MNF_GetPlayerTime)
+		REGISTER_FUNC("GetPlayerPlayTime", MNF_GetPlayerPlayTime)
+		REGISTER_FUNC("GetPlayerCurweapon", MNF_GetPlayerCurweapon)
+		REGISTER_FUNC("GetPlayerTeamID", MNF_GetPlayerTeamID)
+		REGISTER_FUNC("GetPlayerDeaths", MNF_GetPlayerDeaths)
+		REGISTER_FUNC("GetPlayerFrags", MNF_GetPlayerFrags)
+		REGISTER_FUNC("GetPlayerMenu", MNF_GetPlayerMenu)
+		REGISTER_FUNC("GetPlayerKeys", MNF_GetPlayerKeys)
+		REGISTER_FUNC("IsPlayerAlive", MNF_IsPlayerAlive)
+		REGISTER_FUNC("IsPlayerConnecting", MNF_IsPlayerConnecting)
+		REGISTER_FUNC("IsPlayerHLTV", MNF_IsPlayerHLTV)
+		REGISTER_FUNC("GetPlayerArmor", MNF_GetPlayerArmor)
+		REGISTER_FUNC("GetPlayerHealth", MNF_GetPlayerHealth)
+
+#ifdef MEMORY_TEST
+		REGISTER_FUNC("Allocator", m_allocator)
+		REGISTER_FUNC("Deallocator", m_deallocator)
+		REGISTER_FUNC("Reallocator", m_reallocator)
+#endif // MEMORY_TEST
 	};
 
 	// code
 	g_LastRequestedFunc = funcName;
-	for (int i = 0; i < (sizeof(functions) / sizeof(Func_s)); ++i)
+	for (unsigned int i = 0; i < (sizeof(functions) / sizeof(Func_s)); ++i)
 	{
 		if (strcmp(funcName, functions[i].name) == 0)
 			return functions[i].ptr;

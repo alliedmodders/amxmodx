@@ -116,7 +116,7 @@ stock cstrike_running() {
   new mod_name[32]
   get_modname(mod_name,31)
 
-  return ( equal(mod_name,"cstrike") || equal(mod_name,"czero") || equal(mod_name,"csv15") )
+  return ( equal(mod_name,"cstrike") || equal(mod_name,"czero") || equal(mod_name,"csv15") || equal(mod_name,"cs13") )
 }
 
 stock is_running(const mod[]) {

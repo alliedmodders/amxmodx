@@ -151,7 +151,8 @@ enum
 	DLLFunc_CreateInstancedBaseline,	// void ) ( void );
 	DLLFunc_pfnAllowLagCompensation,	// int )( void );
 	// I know this does not fit with DLLFUNC(), but I dont want another native just for it.
-	MetaFunc_CallGameEntity	// bool	(plid_t plid, const char *entStr,entvars_t *pev);
+	MetaFunc_CallGameEntity,	// bool	(plid_t plid, const char *entStr,entvars_t *pev);
+	DLLFunc_ClientUserInfoChanged // void (idplayer)
 };
 enum {
 	pev_string_start = 0,

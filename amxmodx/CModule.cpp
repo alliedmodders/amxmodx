@@ -33,6 +33,10 @@
 #include <meta_api.h>
 #include "amxmod.h"
 
+#ifndef FAR			// PM: Test: FAR
+#define FAR
+#endif
+
 typedef int (FAR *QUERYMOD)(module_info_s**);
 typedef int (FAR *ATTACHMOD)(pfnamx_engine_g*,pfnmodule_engine_g*);
 typedef int (FAR *DETACHMOD)(void);

@@ -332,7 +332,7 @@ void CLangMngr::CLang::MergeDefinitions(CQueue<sKeyDef*> &vec)
 
 const char * CLangMngr::CLang::GetDef(const char *key)
 {
-	static char nfind[1024] = "ML_NOTFOUND";
+	static char nfind[1024] = "ML_NOTFOUND(KEY)";
 	int ikey = m_LMan->GetKeyEntry(key);
 	if (ikey == -1)
 	{
@@ -941,12 +941,25 @@ CLangMngr::CLang * CLangMngr::GetLang(const char *name)
 	return p;
 }
 
+// Find a CLang by name, if not found, return NULL
+CLangMngr::CLang * CLangMngr::GetLangR(const char *name)
+{
+	LangVecIter iter;
+	for (iter=m_Languages.begin(); iter!=m_Languages.end(); ++iter)
+	{
+		if ( strcmp((*iter)->GetName(), name)==0 )
+			return (*iter);
+	}
+
+	return NULL;
+}
+
 const char *CLangMngr::GetDef(const char *langName, const char *key)
 {
-	CLang *lang = GetLang(langName);
+	CLang *lang = GetLangR(langName);
 	if (lang)
 		return lang->GetDef(key);
-	return "";
+	return "ML_NOTFOUND(LANG)";
 }
 
 bool CLangMngr::Save(const char *filename)

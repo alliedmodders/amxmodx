@@ -154,6 +154,8 @@ class CLangMngr
 	// Get a lang object (construct if needed)
 	CLang * GetLang(const char *name);
 
+	CLang * GetLangR(const char *name);
+
 	// Current global client-id for functions like client_print with first parameter 0
 	int m_CurGlobId;
 public:

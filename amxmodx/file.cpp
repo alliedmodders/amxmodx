@@ -299,9 +299,10 @@ static cell AMX_NATIVE_CALL amx_fread(AMX *amx, cell *params)
 	FILE *fp = (FILE *)params[1];
 	char *buffer;
 	if (fp) {
-		buffer = new char[params[3]];
+		buffer = new char[params[3]];			// SLOW!!! :TODO: Find a better way (auto pointers?)
 		fread(buffer, sizeof(char), params[3], fp);
 		return set_amxstring(amx, params[2], buffer, params[3]);
+		delete [] buffer;
 	}
 	return -1;
 }

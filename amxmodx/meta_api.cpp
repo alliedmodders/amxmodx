@@ -433,7 +433,7 @@ void C_ServerDeactivate_Post() {
 
   g_initialized	= false;
 
-  dettachReloadModules();
+  detachReloadModules();
 
   g_auth.clear();
   g_forwards.clear();
@@ -1106,7 +1106,7 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)	{
   g_plugins.clear();
   g_cvars.clear();
 
-  dettachModules();
+  detachModules();
 
   //  ###### Now detach metamod modules
   g_FakeMeta.Meta_Detach(now, reason);

@@ -2,8 +2,8 @@ MODNAME = amxx_mm
 SRCFILES = meta_api.cpp CFile.cpp CString.cpp CVault.cpp vault.cpp\
 float.cpp file.cpp modules.cpp CMisc.cpp CTask.cpp string.cpp\
 amxmodx.cpp CEvent.cpp CCmd.cpp CLogEvent.cpp srvcmd.cpp strptime.cpp\
-CForward.cpp CPlugin.cpp CModule.cpp CMenu.cpp emsg.cpp util.cpp amxxlog.cpp
-CSRCFILES = amx.c amxcore.c amxtime.c power.c
+CForward.cpp CPlugin.cpp CModule.cpp CMenu.cpp emsg.cpp util.cpp amxxlog.cpp\
+amx.cpp amxcore.cpp amxtime.cpp power.cpp
 
 EXTRA_LIBS_LINUX =
 EXTRA_LIBS_WIN32 =
@@ -29,7 +29,7 @@ else
 	OS=LINUX
 endif
 
-CC_LINUX=gcc-2.95
+CC_LINUX=gcc
 ifeq "$(OS)" "WIN32"
 	CC_WIN32=gcc
 	LD_WINDLL=dllwrap
@@ -61,9 +61,8 @@ OBJ_WIN32 := $(SRCFILES:%.cpp=$(OBJDIR_WIN32)/%.o)
 OBJC_WIN32 := $(CSRCFILES:%.c=$(OBJDIR_WIN32)/%.o)
 
 
-CCOPT = -O6 -march=i686 -ffast-math -funroll-loops \
-	-fomit-frame-pointer -fexpensive-optimizations -malign-loops=2 \
-	-malign-jumps=2 -malign-functions=2 -s	-DNDEBUG
+CCOPT = -march=i586 -mcpu=i686 -O2 -ffast-math \
+	-fomit-frame-pointer -fno-exceptions -fno-rtti -s 
 
 INCLUDEDIRS=-I../curl/include -I$(SRCDIR) -I$(METADIR) -I$(SDKSRC)/engine -I$(SDKSRC)/common -I$(SDKSRC)/pm_shared -I$(SDKSRC)/dlls -I$(SDKSRC) $(EXTRA_INCLUDEDIRS)
 CFLAGS=-Wall -Wno-unknown-pragmas

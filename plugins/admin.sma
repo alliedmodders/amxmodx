@@ -96,6 +96,7 @@ public plugin_init() {
   get_configsdir(configsDir, 63)
   server_cmd("exec %s/amxx.cfg", configsDir) // Execute main configuration file
   server_cmd("exec %s/sql.cfg", configsDir)
+  server_exec()
 #if defined USING_SQL
   server_cmd("amx_sqladmins")
 #else

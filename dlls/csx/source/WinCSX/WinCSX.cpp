@@ -251,9 +251,6 @@ LRESULT CALLBACK AboutBox(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
-	case WM_INITDIALOG:
-		return InitWinCSXBox(hDlg); // load all data from file and fill the listbox with the shit
-
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
 		{

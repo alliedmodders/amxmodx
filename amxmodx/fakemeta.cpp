@@ -2606,7 +2606,13 @@ void CFakeMeta::Meta_Attach(PLUG_LOADTIME now, meta_globals_t *pMGlobals, gamedl
 
 	// Attach all plugins except core
 	CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin();
-	++iter;			// Skip core
+	// evilspy:
+	//  using metamod p-extensions?
+	if(!gpMetaPExtFuncs)
+	{
+		++iter;         // Skip core
+	}
+
 	for (; iter; ++iter)
 	{
 		(*iter).Attach(now, pMGlobals, pGamedllFuncs);
@@ -2618,7 +2624,12 @@ void CFakeMeta::Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason)
 {
 	// Detach all plugins except core
 	CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin();
-	++iter;			// Skip core
+	// evilspy:
+	//  using metamod p-extensions?
+	if(!gpMetaPExtFuncs)
+	{
+		++iter;         // Skip core
+	}
 	for (; iter; ++iter)
 	{
 		(*iter).Detach(now, reason);

@@ -134,6 +134,7 @@ typedef cell (AMX_NATIVE_CALL *AMX_NATIVE)(struct tagAMX *amx, cell *params);
 typedef int (AMXAPI *AMX_CALLBACK)(struct tagAMX *amx, cell index,
                                    cell *result, cell *params);
 typedef int (AMXAPI *AMX_DEBUG)(struct tagAMX *amx);
+typedef int (AMXAPI *AMX_DEBUGCALL)(struct tagAMX *amx, int mode);
 #if !defined _FAR
   #define _FAR
 #endif
@@ -246,6 +247,23 @@ typedef struct tagAMX_HEADER {
 } AMX_HEADER            PACKED;
 #define AMX_MAGIC       0xf1e0
 
+//double linked list for stack
+typedef struct tagAMX_TRACE
+{
+  cell					line	PACKED;
+  cell					file	PACKED;
+  struct tagAMX_TRACE	*next	PACKED;
+  struct tagAMX_TRACE	*prev	PACKED;
+} AMX_TRACE				PACKED;
+
+typedef struct tagAMX_DBG
+{
+  int32_t numFiles	PACKED;	/* number of chars in array */
+  char **files		PACKED; /* array of files */
+  AMX_TRACE *head		PACKED;	/* begin of link list */
+  AMX_TRACE *tail		PACKED; /* end of link list */
+} AMX_DBG				PACKED;
+
 enum {
   AMX_ERR_NONE,
   /* reserve the first 15 error codes for exit codes of the abstract machine */
@@ -294,6 +312,7 @@ enum {
 #define AMX_FLAG_BIGENDIAN 0x08 /* big endian encoding */
 #define AMX_FLAG_NOCHECKS  0x10 /* no array bounds checking */
 #define AMX_FLAG_LINEOPS 0x20 /* line ops are parsed by the JIT [loadtime only flag] */
+#define	AMX_FLAG_TRACED	0x40  /* the file has already been traced */
 #define AMX_FLAG_BROWSE 0x4000  /* browsing/relocating or executing */
 #define AMX_FLAG_RELOC  0x8000  /* jump/call addresses relocated */
 
@@ -348,6 +367,7 @@ int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params);
 int AMXAPI amx_Cleanup(AMX *amx);
 int AMXAPI amx_Clone(AMX *amxClone, AMX *amxSource, void *data);
 int AMXAPI amx_Debug(AMX *amx); /* default debug procedure, does nothing */
+int AMXAPI amx_DebugCall(AMX *amx, int mode);
 int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...);
 int AMXAPI amx_Execv(AMX *amx, cell *retval, int index, int numparams, cell params[]);
 int AMXAPI amx_FindNative(AMX *amx, const char *name, int *index);

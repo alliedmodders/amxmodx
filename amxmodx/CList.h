@@ -252,18 +252,20 @@ public:
 	}
 
 	// puts an element after where
-	// sets where to point to the new element
+	// alters where to point to the new element
 	// returns an iterator pointing to the new element
-	iterator put(T *pObj, iterator where)
+	iterator put(T *pObj, iterator &where)
 	{
 		CElement *pTmp = new CElement(pObj);
-		if (where.m_pNext)
-			where.m_pNext->m_pPrev = pTmp;
+		if (where.m_CurPos->GetNext())
+			where.m_CurPos->GetNext()->SetPrev(pTmp);
 		else		// where = tail
-			m_pTail = pObj;
-		where.m_pNext = pTmp;
+			m_pTail = pTmp;
+
 		pTmp->SetPrev(where.m_CurPos);
-		pTmp->SetNext(where.m_pNext->m_CurPos);
+		pTmp->SetNext(where.m_CurPos->GetNext());
+
+		where.m_CurPos->SetNext(pTmp);
 		return ++where;
 	}
 

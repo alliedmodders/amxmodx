@@ -36,3 +36,9 @@ native forward_return(type,{Float,Sql,Result,_}:...);
 
 native engfunc(type,{Float,Sql,Result,_}:...);
 native dllfunc(type,{Float,Sql,Result,_}:...);
+
+//only use this with functions that pass a Trace
+// get: zero extra params - return int, one extra param = byref float or vector
+// set: use anything
+native get_tr(Trace:tr, TraceResult:tr_member, {Float,_}:...);
+native set_tr(Trace:tr, TraceResult:tr_member, {Float,_}:...);

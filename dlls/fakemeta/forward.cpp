@@ -90,6 +90,26 @@ void SetModel_post(edict_t *e, const char *m)
 	RETURN_META(MRES_IGNORED);
 }
 
+void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr)
+{
+	cell vec1[3] = {amx_ftoc(v1[0]), amx_ftoc(v1[1]), amx_ftoc(v1[2])};
+	cell vec2[3] = {amx_ftoc(v2[0]), amx_ftoc(v2[1]), amx_ftoc(v2[2])};
+	cell retvec1 = MF_PrepareCellArray(vec1, 3);
+	cell retvec2 = MF_PrepareCellArray(vec2, 3);
+	FM_ENG_HANDLE(FM_TraceLine, (Engine[FM_TraceLine].at(i), vec1, vec2, fNoMonsters, ENTINDEX(pentToSkip), (cell)ptr));
+	RETURN_META(mswi(lastFmRes));
+}
+
+void TraceLine_post(const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr)
+{
+	cell vec1[3] = {amx_ftoc(v1[0]), amx_ftoc(v1[1]), amx_ftoc(v1[2])};
+	cell vec2[3] = {amx_ftoc(v2[0]), amx_ftoc(v2[1]), amx_ftoc(v2[2])};
+	cell retvec1 = MF_PrepareCellArray(vec1, 3);
+	cell retvec2 = MF_PrepareCellArray(vec2, 3);
+	FM_ENG_HANDLE(FM_TraceLine, (Engine[FM_TraceLine].at(i), vec1, vec2, fNoMonsters, ENTINDEX(pentToSkip), (cell)ptr));
+	RETURN_META(MRES_IGNORED);
+}
+
 // pfnModelIndex
 SIMPLE_INT_HOOK_CONSTSTRING(ModelIndex);
 
@@ -569,8 +589,8 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 		ENGHOOK(EmitAmbientSound);
 		break;
 	case FM_TraceLine:
-		fId = MF_RegisterSPForwardByName(amx, funcname, FP_ARRAY, FP_ARRAY, FP_CELL, FP_CELL, FP_DONE);
-//		ENGHOOK(TraceLine);
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_ARRAY, FP_ARRAY, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+		ENGHOOK(TraceLine);
 		break;
 	case FM_TraceToss:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);

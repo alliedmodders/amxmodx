@@ -7,6 +7,7 @@
 #include "dllfunc.h"
 #include "pev.h"
 #include "forward.h"
+#include "fm_tr.h"
 
 extern edict_t *g_player_edicts[33];
 
@@ -25,6 +26,7 @@ extern AMX_NATIVE_INFO dllfunc_natives[];
 extern AMX_NATIVE_INFO pev_natives[];
 extern AMX_NATIVE_INFO forward_natives[];
 extern AMX_NATIVE_INFO pdata_natives[];
+extern AMX_NATIVE_INFO tr_Natives[];
 extern TraceResult g_tr;
 
 /* Wouldnt modifying the table AFTER it's memcpy'd be ... pointless?

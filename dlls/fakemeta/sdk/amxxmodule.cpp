@@ -2681,7 +2681,7 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_AmxExecv(0, 0, 0, 0, 0);
 	MF_AmxFindPublic(0, 0, 0);
 	MF_AmxAllot(0, 0, 0, 0);
-	MF_LoadAmxScript(0, 0, 0, 0);
+	MF_LoadAmxScript(0, 0, 0, 0, 0);
 	MF_UnloadAmxScript(0, 0);
 	MF_RegisterSPForward(0, 0, 0, 0, 0, 0);
 	MF_RegisterSPForwardByName(0, 0, 0, 0, 0, 0);

@@ -124,6 +124,12 @@
 				RelativePath=".\fakemeta_amxx.h">
 			</File>
 			<File
+				RelativePath=".\fm_tr.cpp">
+			</File>
+			<File
+				RelativePath=".\fm_tr.h">
+			</File>
+			<File
 				RelativePath=".\pdata.cpp">
 			</File>
 			<Filter

@@ -437,3 +437,17 @@ enum {
 	FM_CreateInstancedBaseline,	// done 
 	FM_AllowLagCompensation,	// done
 };
+
+enum TraceResult
+{
+	TR_AllSolid,
+    TR_StartSolid,
+	TR_InOpen,
+	TR_InWater,
+	TR_flFraction,
+	TR_vecEndPos,
+	TR_flPlaneDist,
+	TR_vecPlaneNormal,
+	TR_pHit,
+	TR_iHitgroup,
+};

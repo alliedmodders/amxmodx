@@ -91,13 +91,14 @@ stock is_running(const arg[]) {
   return equal(mod_name,arg)
 }
 
-stock build_path( path[] , len , {Float,_}:... ) {
-  format_args( path , len , 2 )
-  return replace( path , len , "$basedir", "addons/amxx" )
-}
+stock get_basedir(name[],len)
+  return get_localinfo("amxx_basedir",name,len)
 
-stock get_basedir( name[], len )
-  return copy(name,len,"addons/amxx")
+stock get_configsdir(name[],len)
+  return get_localinfo("amxx_configsdir",name,len)
+
+stock get_customdir(name[],len)
+  return get_localinfo("amxx_customdir",name,len)
 
 stock get_user_wonid(index)
 {

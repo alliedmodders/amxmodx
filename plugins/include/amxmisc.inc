@@ -105,12 +105,18 @@ stock show_activity( id, const name[], {Float,_}: ... ) {
   }
 }
 
-stock is_running(const arg[]) {
+stock is_running(const mod[]) {
   new mod_name[32]
   get_modname(mod_name,31)
-  if (equal(arg,"cstrike"))
-    return (equal(mod_name,"cstrike")||equal(mod_name,"czero"))
-  return equal(mod_name,arg)
+
+  return equal(mod_name,mod)
+}
+
+stock colored_menus() {
+  new mod_name[32]
+  get_modname(mod_name,31)
+
+  return ( equal(mod_name,"cstrike") || equal(mod_name,"czero") || equal(mod_name,"dod") )
 }
 
 stock get_basedir(name[],len)

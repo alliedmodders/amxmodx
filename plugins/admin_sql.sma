@@ -101,21 +101,25 @@ public adminSql() {
   }
 
   dbi_query(sql,"CREATE TABLE IF NOT EXISTS admins ( auth varchar(32) NOT NULL default '', password varchar(32) NOT NULL default '', access varchar(32) NOT NULL default '', flags varchar(32) NOT NULL default '' )")
+  
+  new Result = dbi_query(sql,"SELECT auth,password,access,flags FROM admins")
 
-  if(dbi_query(sql,"SELECT auth,password,access,flags FROM admins") < 1)  {
+  if(Result < 0)  {
     dbi_error(sql,error,127)
     server_print("[AMXX] SQL error: can't load admins: '%s'",error)
     return PLUGIN_HANDLED
+  } else if (Result == 0) {
+	server_print("[AMXX] No admins found.")
   }
 
   new szFlags[32],szAccess[32]
   g_aNum = 0
   while( dbi_nextrow(sql) > 0 )
   {
-    dbi_getfield(sql, 1, g_aName[ g_aNum ] ,31)
-    dbi_getfield(sql, 2, g_aPassword[ g_aNum ] ,31)
-    dbi_getfield(sql, 3, szAccess,31)
-    dbi_getfield(sql, 4, szFlags,31)
+    dbi_field(Result, 1, g_aName[ g_aNum ] ,31)
+    dbi_field(Result, 2, g_aPassword[ g_aNum ] ,31)
+    dbi_field(Result, 3, szAccess,31)
+    dbi_field(Result, 4, szFlags,31)
 
     if ( (containi(szAccess,"z")==-1) && (containi(szAccess,"y")==-1) )
       szAccess[strlen(szAccess)] = 'y'
@@ -129,6 +133,7 @@ public adminSql() {
   }
 
   server_print("[AMXX] Loaded %d admin%s from database",g_aNum, (g_aNum == 1) ? "" : "s" )
+  dbi_free_result(Result)
   dbi_close(sql)
   return PLUGIN_HANDLED
 }

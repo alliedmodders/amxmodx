@@ -554,18 +554,21 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 		// Here is a string value that was requested.
 		// If the returned value is an integer or float, then sprintf() it to string.
 		// If the returned is a string, then string() it.
+
+		cell *cBlah = MF_GetAmxAddr(amx,params[4]);
+		int size = cBlah[0];
 		if (valuetype == VALUETYPE_INT || valuetype == VALUETYPE_STRING || valuetype == VALUETYPE_EDICT)
 		{
 			if (valuetype == VALUETYPE_STRING)
 			{
-				MF_SetAmxString(amx, params[3], STRING(iReturn), params[4]);
+				MF_SetAmxString(amx, params[3], STRING(iReturn), size);
 				return 1;
 			}
 			else
 			{
 				char blah[64];
 				sprintf(blah,"%i",iReturn);
-				MF_SetAmxString(amx, params[3], blah, params[4]);
+				MF_SetAmxString(amx, params[3], blah, size);
 				return 1;
 			}
 
@@ -574,14 +577,14 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 		{
 			char blah[64];
 			sprintf(blah,"%f",fReturn);
-			MF_SetAmxString(amx, params[3], blah, params[4]);
+			MF_SetAmxString(amx, params[3], blah, size);
 			return 1;
 		}
 		if (valuetype == VALUETYPE_VECTOR)
 		{
 			char blah[256];
 			sprintf(blah,"%f %f %f",vReturn.x,vReturn.y,vReturn.z);
-			MF_SetAmxString(amx, params[3], blah, params[4]);
+			MF_SetAmxString(amx, params[3], blah, size);
 			return 1;
 		}
 		if (valuetype == VALUETYPE_BYTE)
@@ -590,14 +593,14 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 			{
 				char blah[128];
 				sprintf(blah,"%i %i",bReturn[0],bReturn[1]);
-				MF_SetAmxString(amx,params[3],blah,params[4]);
+				MF_SetAmxString(amx,params[3],blah,size);
 				return 1;
 			}
 			else
 			{
 				char blah[256];
 				sprintf(blah,"%i %i %i %i",bReturn[0],bReturn[1],bReturn[2],bReturn[3]);
-				MF_SetAmxString(amx,params[3],blah,params[4]);
+				MF_SetAmxString(amx,params[3],blah,size);
 				return 1;
 			}
 		}

@@ -173,4 +173,5 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 }
 
 $gcc = "gcc $cflags -shared -ldl -lm @LINK -o $outdir/$bin";
+print "$gcc\n";
 `$gcc`;

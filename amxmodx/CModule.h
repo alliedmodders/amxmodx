@@ -99,6 +99,7 @@ public:
 	inline bool isAmxx() const { return m_Amxx; }
 	inline const char *getMissingFunc() const { return m_MissingFunc; }
 	inline const char *getFilename() const { return m_Filename.str(); }
+	void CModule::CallPluginsLoaded();
 
 	CList<AMX_NATIVE_INFO*> m_Natives;
 };

@@ -47,6 +47,7 @@ typedef void* (*PFN_REQ_FNPTR)(const char * /*name*/);
 typedef int (FAR *QUERYMOD_NEW)(int * /*ifvers*/, amxx_module_info_s * /*modInfo*/);
 typedef int (FAR *ATTACHMOD_NEW)(PFN_REQ_FNPTR /*reqFnptrFunc*/);
 typedef int (FAR *DETACHMOD_NEW)(void);
+typedef void (FAR *PLUGINSLOADED_NEW)(void);
 
 // Old
 // These functions are needed since Small Abstract Machine 2.5.0
@@ -176,9 +177,11 @@ bool CModule::attachModule()
 
 		if (!AttachFunc_New)
 			return false;
-		g_CurrentlyAttachedModule = this;
+		g_ModuleCallReason = ModuleCall_Attach;
+		g_CurrentlyCalledModule = this;
 		int retVal = (*AttachFunc_New)(Module_ReqFnptr);
-		g_CurrentlyAttachedModule = NULL;
+		g_CurrentlyCalledModule = NULL;
+		g_ModuleCallReason = ModuleCall_NotCalled;
 
 		switch (retVal)
 		{
@@ -233,7 +236,12 @@ bool CModule::queryModule()
 	{
 		m_Amxx = true;
 		int ifVers = AMXX_INTERFACE_VERSION;
-		switch ((*queryFunc_New)(&ifVers, &m_InfoNew))
+		g_ModuleCallReason = ModuleCall_Query;
+		g_CurrentlyCalledModule = this;
+		int retVal = (*queryFunc_New)(&ifVers, &m_InfoNew);
+		g_CurrentlyCalledModule = NULL;
+		g_ModuleCallReason = ModuleCall_NotCalled;
+		switch (retVal)
 		{
 		case AMXX_PARAM:
 			AMXXLOG_Log("[AMXX] Internal Error: Module \"%s\" (version \"%s\") retured \"Invalid parameter\" from Attach func.", m_Filename.str(), getVersion());
@@ -309,7 +317,13 @@ bool CModule::detachModule()
 	{
 		DETACHMOD_NEW detachFunc_New = (DETACHMOD_NEW)DLPROC(m_Handle, "AMXX_Detach");
 		if (detachFunc_New)
+		{
+			g_ModuleCallReason = ModuleCall_Detach;
+			g_CurrentlyCalledModule = this;
 			(*detachFunc_New)();
+			g_CurrentlyCalledModule = NULL;
+			g_ModuleCallReason = ModuleCall_NotCalled;
+		}
 	}
 	else
 	{
@@ -320,6 +334,20 @@ bool CModule::detachModule()
 	DLFREE(m_Handle);
 	clear();
 	return true;
+}
+
+void CModule::CallPluginsLoaded()
+{
+	if (m_Status != MODULE_LOADED)
+		return;
+
+	if (!m_Handle)
+		return;
+
+	PLUGINSLOADED_NEW func = (PLUGINSLOADED_NEW)DLPROC(m_Handle, "AMXX_PluginsLoaded");
+	if (!func)
+		return;
+	func();
 }
 
 const char* CModule::getStatus() const

@@ -38,9 +38,11 @@
 CList<CModule> g_modules;
 CList<CScript,AMX*> g_loadedscripts;
 
-CModule *g_CurrentlyAttachedModule = NULL;	// The module we are attaching at the moment; NULL otherwise
+CModule *g_CurrentlyCalledModule = NULL;	// The module we are in at the moment; NULL otherwise
 											// also NULL for non-amxx modules
 											// This is needed so we know which module called a function
+ModuleCallReason g_ModuleCallReason;
+
 #ifdef  __cplusplus
 extern "C" {
 #endif
@@ -614,26 +616,133 @@ int countModules(CountModulesMode mode)
 	return 0;
 }
 
+// Call all modules' AMXX_PluginsLoaded functions
+void modules_callPluginsLoaded()
+{
+	for (CList<CModule>::iterator iter = g_modules.begin(); iter; ++iter)
+	{
+		(*iter).CallPluginsLoaded();
+	}
+}
+
 // new functions
-// :TODO: Add functions
 
 int MNF_AddNatives(AMX_NATIVE_INFO* natives)
 {
 	CList<CModule>::iterator a = g_modules.begin();
 	
-	if (!g_CurrentlyAttachedModule)
-		return AMX_ERR_NATIVE;				// not possible tho ;]
+	if (!g_CurrentlyCalledModule || g_ModuleCallReason != ModuleCall_Attach)
+		return FALSE;				// may only be called from attach
 
 	// This is needed so that CList can free it ;]
 	AMX_NATIVE_INFO** pPtr = new AMX_NATIVE_INFO*(natives);
 	if (!pPtr)
-		return AMX_ERR_NONE;
+		return FALSE;
 
-	g_CurrentlyAttachedModule->m_Natives.put(pPtr);
-	return AMX_ERR_NONE;
+	g_CurrentlyCalledModule->m_Natives.put(pPtr);
+	return TRUE;
 }
+
+const char *MNF_GetModname(void)
+{
+	// :TODO: Do we have to do this??
+	static char buffer[64];
+	strcpy(buffer, g_mod_name.str());
+	return buffer;
+}
+
+AMX *MNF_GetAmxScript(int id)
+{
+	CList<CScript,AMX*>::iterator iter = g_loadedscripts.begin();
+	while (iter && id--)
+		++iter;
+
+	return (*iter).getAMX();
+}
+
+const char *MNF_GetAmxScriptName(int id)
+{
+	CList<CScript,AMX*>::iterator iter = g_loadedscripts.begin();
+	while (iter && id--)
+		++iter;
+
+	return (*iter).getName();
+}
+
+int MNF_FindAmxScriptByName(const char *name)
+{
+	CList<CScript,AMX*>::iterator iter = g_loadedscripts.begin();
+	bool found = false;
+	int i = 0;
+	while (iter)
+	{
+		if (stricmp((*iter).getName(), name) == 0)
+		{
+			found = true;
+			break;
+		}
+		++iter;
+		++i;
+	}
+	if (!found)
+		return -1;
+	return i;
+}
+
+int MNF_FindAmxScriptByAmx(const AMX *amx)
+{
+	CList<CScript,AMX*>::iterator iter = g_loadedscripts.begin();
+	bool found = false;
+	int i = 0;
+	while (iter)
+	{
+		if (amx == (*iter).getAMX())
+		{
+			found = true;
+			break;
+		}
+		++iter;
+		++i;
+	}
+	if (!found)
+		return -1;
+	return i;
+}
+
+char *MNF_GetAmxString(AMX *amx, cell amx_addr, int bufferId, int *pLen)
+{
+	int len;
+	char *retVal = get_amxstring(amx, amx_addr, bufferId, len);
+	if (pLen)
+		*pLen = len;
+	return retVal;
+}
+
+int MNF_GetAmxStringLen(const cell *ptr)
+{
+	register int c = 0;
+	while(ptr[c])
+		++c;
+	return c;
+}
+
+char *MNF_FormatAmxString(AMX *amx, cell *params, int startParam, int *pLen)
+{
+	int len;
+	char *retVal = format_amxstring(amx, params, startParam, len);
+	if (pLen)
+		*pLen = len;
+	return retVal;
+}
+
+void MNF_CopyAmxMemory(cell * dest, const cell * src, int len)
+{
+	memcpy((void*)dest, (const void *)src, (size_t)len*sizeof(cell));
+}
+
 // Fnptr Request function for the new interface
 const char *g_LastRequestedFunc = NULL;
+#define REGISTER_FUNC(name, func) { name, (void*)func },
 void *Module_ReqFnptr(const char *funcName)
 {
 	// func table
@@ -643,7 +752,35 @@ void *Module_ReqFnptr(const char *funcName)
 		void *ptr;
 	};
 	static Func_s functions[] = {
-		{ "AddNatives", MNF_AddNatives },
+		// Misc
+		REGISTER_FUNC("BuildPathname", build_pathname)
+		REGISTER_FUNC("PrintSrvConsole", print_srvconsole)
+		REGISTER_FUNC("GetModname", MNF_GetModname)
+		REGISTER_FUNC("Log", AMXXLOG_Log)
+		
+		// Amx scripts loading / unloading / managing
+		REGISTER_FUNC("GetAmxScript", MNF_GetAmxScript)
+		REGISTER_FUNC("GetAmxScriptName", MNF_GetAmxScriptName)
+		REGISTER_FUNC("FindAmxScriptByName", MNF_FindAmxScriptByName)
+		REGISTER_FUNC("FindAmxScriptByAmx", MNF_FindAmxScriptByAmx)
+		REGISTER_FUNC("LoadAmxScript", load_amxscript)
+		REGISTER_FUNC("UnloadAmxScript", unload_amxscript)
+
+		// String / mem in amx scripts support
+		REGISTER_FUNC("SetAmxString", set_amxstring)
+		REGISTER_FUNC("GetAmxString", MNF_GetAmxString)
+		REGISTER_FUNC("GetAmxStringLen", MNF_GetAmxStringLen)
+		REGISTER_FUNC("FormatAmxString", MNF_FormatAmxString)
+		REGISTER_FUNC("CopyAmxMemory", MNF_CopyAmxMemory)
+		REGISTER_FUNC("GetAmxAddr", get_amxaddr)
+
+		// Natives / Forwards
+		REGISTER_FUNC("AddNatives", MNF_AddNatives)
+		REGISTER_FUNC("RaiseAmxError", amx_RaiseError)
+		REGISTER_FUNC("RegisterForward", registerForward)
+		REGISTER_FUNC("ExecuteForward", executeForwards)
+		REGISTER_FUNC("PrepareCellArray", prepareCellArray)
+		REGISTER_FUNC("PrepareCharArray", prepareCharArray)
 	};
 
 	// code

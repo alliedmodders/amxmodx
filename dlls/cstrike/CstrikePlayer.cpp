@@ -11,7 +11,9 @@
 
 CCstrikePlayer::CCstrikePlayer()
 {
-	Initialize();
+	modelled = false;
+	inspectModel = false;
+	online = false;
 }
 
 bool CCstrikePlayer::GetModelled()

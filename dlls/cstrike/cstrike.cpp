@@ -123,7 +123,7 @@ static cell AMX_NATIVE_CALL cs_get_user_money(AMX *amx, cell *params) // cs_get_
 	}
 
 	// Return money
-	return (int)*((int *)pPlayer->pvPrivateData + OFFSET_CSMONEY);
+	return *((int *)pPlayer->pvPrivateData + OFFSET_CSMONEY);
 }
 
 static cell AMX_NATIVE_CALL cs_get_user_deaths(AMX *amx, cell *params) // cs_get_user_deaths(index); = 1 param
@@ -1329,8 +1329,6 @@ void ClientDisconnect(edict_t *pEntity) {
 
 void ClientUserInfoChanged(edict_t *pEntity, char *infobuffer) {
 	int index = ENTINDEX(pEntity);
-	if (!g_players[index].GetOnline())
-		g_players[index].SetOnline(true);
 
 	if(g_players[index].GetModelled() && pEntity->v.deadflag == DEAD_NO) {
 		RETURN_META(MRES_SUPERCEDE);
@@ -1362,6 +1360,27 @@ C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersi
 	return(TRUE);
 }
 
+/****GetEntityAPI2_Post**********************************************************/
+void ClientUserInfoChanged_Post( edict_t *pEntity, char *infobuffer ) {
+	int index = ENTINDEX(pEntity);
+	if (!g_players[index].GetOnline())
+		g_players[index].SetOnline(true);
+
+	RETURN_META(MRES_IGNORED);
+}
+
+DLL_FUNCTIONS gFunctionTable_Post;
+C_DLLEXPORT int GetEntityAPI2_Post( DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion ) {
+	gFunctionTable_Post.pfnClientUserInfoChanged = ClientUserInfoChanged_Post;
+
+	if(*interfaceVersion!=INTERFACE_VERSION) {
+		LOG_ERROR(PLID, "GetEntityAPI2_Post version mismatch; requested=%d ours=%d", *interfaceVersion, INTERFACE_VERSION);
+		*interfaceVersion = INTERFACE_VERSION;
+		return(FALSE);
+	}
+	memcpy( pFunctionTable, &gFunctionTable_Post, sizeof( DLL_FUNCTIONS ) );
+	return(TRUE);
+}
 /******************************************************************************************/
 C_DLLEXPORT int Meta_Query(char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_t *pMetaUtilFuncs) {
 	*pPlugInfo = &Plugin_info;
@@ -1384,6 +1403,7 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	}
 
 	gMetaFunctionTable.pfnGetEntityAPI2 = GetEntityAPI2;
+	gMetaFunctionTable.pfnGetEntityAPI2_Post = GetEntityAPI2_Post;
 	gMetaFunctionTable.pfnGetEngineFunctions = GetEngineFunctions;
 
 	memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));

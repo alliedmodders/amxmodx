@@ -140,6 +140,13 @@ edict_t *FindEntityByClassname(edict_t *pentStart, const char *szName);
 		} \
 	}
 
+#define CHECK_PLAYERRANGE(x) \
+	if (x > gpGlobals->maxClients || x < 0) \
+	{ \
+		MF_LogError(amx, AMX_ERR_NATIVE, "Player out of range (%d)", x); \
+		return 0; \
+	}
+
 #define CHECK_NONPLAYER(x) \
 	if (x < 1 || x <= gpGlobals->maxClients || x > gpGlobals->maxEntities) { \
 		MF_LogError(amx, AMX_ERR_NATIVE, "Non-player entity %d out of range", x); \

@@ -148,6 +148,13 @@ bool ignoreBots (edict_t *pEnt, edict_t *pOther = NULL);
 		} \
 	}
 
+#define CHECK_PLAYERRANGE(x) \
+	if (x > gpGlobals->maxClients || x < 0) \
+	{ \
+		MF_LogError(amx, AMX_ERR_NATIVE, "Player out of range (%d)", x); \
+		return 0; \
+	}
+
 #define GETEDICT(n) \
 	((n >= 1 && n <= gpGlobals->maxClients) ? MF_GetPlayerEdict(n) : INDEXENT(n))
 

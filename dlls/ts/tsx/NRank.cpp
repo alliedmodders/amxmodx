@@ -38,7 +38,7 @@ static cell AMX_NATIVE_CALL get_user_astats(AMX *amx, cell *params) /* 6 param *
 	int index = params[1];
 	CHECK_PLAYER(index);
 	int attacker = params[2];
-	CHECK_PLAYER(attacker);
+	CHECK_PLAYERRANGE(attacker);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->attackers[attacker].hits){
 		cell *cpStats = MF_GetAmxAddr(amx,params[3]);
@@ -65,7 +65,7 @@ static cell AMX_NATIVE_CALL get_user_vstats(AMX *amx, cell *params) /* 6 param *
 	int index = params[1];
 	CHECK_PLAYER(index);
 	int victim = params[2];
-	CHECK_PLAYER(victim);
+	CHECK_PLAYERRANGE(victim);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->victims[victim].hits){
 		cell *cpStats = MF_GetAmxAddr(amx,params[3]);

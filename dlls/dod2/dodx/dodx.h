@@ -55,7 +55,6 @@ struct weapon_t {
 };
 
 extern bool rankBots;
-extern bool bSteam;
 extern int mState;
 extern int mPlayerIndex;
 
@@ -82,8 +81,6 @@ extern cvar_t* dodstats_rank;
 extern cvar_t* dodstats_reset;
 extern cvar_t* dodstats_rankbots;
 extern cvar_t* dodstats_pause;
-
-extern cvar_t* dodstats_steam;
 
 extern weapon_t weaponData[DODMAX_WEAPONS];
 extern traceVault traceData[MAX_TRACE];

@@ -41,9 +41,6 @@
 extern AMX_NATIVE_INFO base_Natives[];
 extern AMX_NATIVE_INFO pd_Natives[];
 
-extern cvar_t* dodfun_steam;
-
-extern bool bSteam;
 extern int mState;
 extern int mPlayerIndex;
 

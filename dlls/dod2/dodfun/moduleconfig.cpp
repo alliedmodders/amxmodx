@@ -39,7 +39,6 @@ void (*endfunction)(void*);
 CPlayer* mPlayer;
 CPlayer players[33];
 
-bool bSteam;
 int mState;
 int mPlayerIndex;
 
@@ -49,8 +48,6 @@ int gmsgCurWeapon;
 int gmsgScoreShort;
 int gmsgPTeam;
 
-cvar_t *dodfun_steam;
-cvar_t init_dodfun_steam = {"dodfun_steam","1"};
 
 struct sUserMsg {
 	const char* name;
@@ -85,7 +82,6 @@ int RegUserMsg_Post(const char *pszName, int iSize){
 }
 
 void ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax ){
-	bSteam = (int)dodfun_steam->value ? true:false;
 
 	for( int i = 1; i <= gpGlobals->maxClients; ++i )
 		GET_PLAYER_POINTER_I(i)->Init( i , pEdictList + i );
@@ -205,22 +201,30 @@ void WriteEntity_Post(int iValue) {
 }
 
 void SetModel_Post(edict_t *e, const char *m){
-	if ( !e->v.owner )
+	if ( !e->v.owner || !e->v.dmgtime )
 		RETURN_META(MRES_IGNORED);
 
 	int owner = ENTINDEX(e->v.owner);
 	if ( owner && owner<33 && m[7]=='w' && m[8]=='_' ){
+
 		int w_id = 0;
-		if ( m[9]=='g' && m[10]=='r' && m[11]=='e' && m[12]=='n' ) w_id = 13; // grenade
-		else if ( m[9]=='m' && m[10]=='i' ) w_id = 36; // mills
-		else if ( m[9]=='s' && m[10]=='t' && m[11]=='i') w_id = 14; // stick
+
+		CPlayer* pPlayer = GET_PLAYER_POINTER_I(owner);
+		bool newNade = ( pPlayer->current == 13 || pPlayer->current == 14 ) ? true:false;
+		
+		if ( m[9]=='g' && m[10]=='r' && m[11]=='e' && m[12]=='n' )
+			newNade ? w_id = 13 : w_id = 16; // grenade
+		else if ( m[9]=='m' && m[10]=='i' )
+			newNade ? w_id = 36 : w_id = 16 ; // mills ; should I add mills_grenade_ex weapon ?
+		else if ( m[9]=='s' && m[10]=='t' && m[11]=='i')
+			newNade ? w_id = 14 : w_id = 15; // stick
+
 		if ( !w_id )
 			RETURN_META(MRES_IGNORED);
-		CPlayer* pPlayer = GET_PLAYER_POINTER_I(owner);
+
 		MF_ExecuteForward( iFGrenade, pPlayer->index, ENTINDEX(e) ,w_id );
 		/* fuse start */
 		if ( pPlayer->fuseSet ){
-			bool newNade = ( pPlayer->current == 13 || pPlayer->current == 14 ) ? true:false;
 			if ( newNade ){
 				if ( pPlayer->fuseType & 1<<0 ){
 					e->v.dmgtime += pPlayer->nadeFuse - 5.0;
@@ -237,11 +241,6 @@ void SetModel_Post(edict_t *e, const char *m){
 		/* fuse end */
 	}
 	RETURN_META(MRES_IGNORED);
-}
-
-void OnMetaAttach() {
-	CVAR_REGISTER (&init_dodfun_steam);
-	dodfun_steam = CVAR_GET_POINTER(init_dodfun_steam.name);
 }
 
 void OnAmxxAttach() {

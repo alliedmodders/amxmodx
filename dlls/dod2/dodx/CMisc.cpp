@@ -315,16 +315,6 @@ void CPlayer::killPlayer(){
 	pEdict->v.weapons = 0;
 }
 
-void CPlayer::setTeamName( char *szName ){
-	
-	for (int i=0;i<16;i++){
-		if ( bSteam )
-			*( (char*)pEdict->pvPrivateData + STEAM_PDOFFSET_TEAMNAME + i ) = szName[i];
-		else
-			*( (char*)pEdict->pvPrivateData + WON_PDOFFSET_TEAMNAME + i ) = szName[i];
-	}
-}
-
 // *****************************************************
 // class CMapInfo
 // *****************************************************

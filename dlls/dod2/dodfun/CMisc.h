@@ -47,13 +47,6 @@
 #define STEAM_PDOFFSET_DEATHS		476  + LINUXOFFSET // deaths
 #define STEAM_PDOFFSET_TEAMNAME	1396 + LINUXOFFSET // team name
 
-#define WON_PDOFFSET_DEATHS		456  + LINUXOFFSET // deaths
-#define WON_PDOFFSET_CLASS		511  + LINUXOFFSET // player class
-#define WON_PDOFFSET_RCLASS		512  + LINUXOFFSET // random class
-#define WON_PDOFFSET_WDEPLOY	605	 + LINUXOFFSET // weapon deploy
-#define WON_PDOFFSET_SCORE		626	 + LINUXOFFSET // score
-#define WON_PDOFFSET_TEAMNAME	1896 + LINUXOFFSET // team name
-
 /* DoD weapons */
 enum {
 	DODW_AMERKNIFE = 1,

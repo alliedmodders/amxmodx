@@ -108,7 +108,7 @@ void Client_CurWeapon(void* mValue){
 		iId = get_weaponid(mPlayer);
 	}
 	if (iClip > -1) {
-		if ( mPlayer->current == 17 && bSteam ){
+		if ( mPlayer->current == 17 ){
 			if ( iClip+2 == mPlayer->weapons[iId].clip)
 				mPlayer->saveShot(iId);
 		}

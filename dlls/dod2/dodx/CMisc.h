@@ -45,20 +45,6 @@
 
 #define DOD_VERSION "0.1"
 
-#define STEAM_PDOFFSET_WDEPLOY	229	 + LINUXOFFSET // weapon deploy
-#define STEAM_PDOFFSET_CLASS		366  + LINUXOFFSET // player class
-#define STEAM_PDOFFSET_RCLASS		367  + LINUXOFFSET // random class  
-#define STEAM_PDOFFSET_SCORE		475  + LINUXOFFSET // score
-#define STEAM_PDOFFSET_DEATHS		476  + LINUXOFFSET // deaths
-#define STEAM_PDOFFSET_TEAMNAME	1396 + LINUXOFFSET // team name
-
-#define WON_PDOFFSET_DEATHS		456  + LINUXOFFSET // deaths
-#define WON_PDOFFSET_CLASS		511  + LINUXOFFSET // player class
-#define WON_PDOFFSET_RCLASS		512  + LINUXOFFSET // random class
-#define WON_PDOFFSET_WDEPLOY	605	 + LINUXOFFSET // weapon deploy
-#define WON_PDOFFSET_SCORE		626	 + LINUXOFFSET // score
-#define WON_PDOFFSET_TEAMNAME	1896 + LINUXOFFSET // team name
-
 #define MAX_TRACE	6
 
 struct traceVault {
@@ -120,7 +106,6 @@ public:
 	void updateScore(int weapon, int score);
 	void restartStats(bool all = true);
 	void killPlayer();
-	void setTeamName( char *szName );
 
 	inline bool IsBot(){
 		const char* auth= (*g_engfuncs.pfnGetPlayerAuthId)(pEdict);

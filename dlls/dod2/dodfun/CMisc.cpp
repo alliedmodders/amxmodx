@@ -70,18 +70,12 @@ void CPlayer::killPlayer(){
 void CPlayer::setTeamName( char *szName ){
 	
 	for (int i=0;i<16;i++){
-		if ( bSteam )
-			*( (char*)pEdict->pvPrivateData + STEAM_PDOFFSET_TEAMNAME + i ) = szName[i];
-		else
-			*( (char*)pEdict->pvPrivateData + WON_PDOFFSET_TEAMNAME + i ) = szName[i];
+		*( (char*)pEdict->pvPrivateData + STEAM_PDOFFSET_TEAMNAME + i ) = szName[i];
 	}
 }
 
 void CPlayer::getTeamName(char * szName ){
 	for (int i=0;i<16;i++){
-		if ( bSteam )
-			szName[i] = *( (char*)pEdict->pvPrivateData + STEAM_PDOFFSET_TEAMNAME + i );
-		else
-			szName[i] = *( (char*)pEdict->pvPrivateData + WON_PDOFFSET_TEAMNAME + i );
+		szName[i] = *( (char*)pEdict->pvPrivateData + STEAM_PDOFFSET_TEAMNAME + i );
 	}
 }

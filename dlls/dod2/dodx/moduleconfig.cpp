@@ -41,7 +41,6 @@ CPlayer players[33];
 CMapInfo g_map;
 
 bool rankBots;
-bool bSteam;
 int mState;
 int mPlayerIndex;
 
@@ -75,9 +74,6 @@ cvar_t *dodstats_reset;
 cvar_t *dodstats_rank;
 cvar_t *dodstats_rankbots;
 cvar_t *dodstats_pause;
-
-cvar_t *dodstats_steam;
-cvar_t init_dodstats_steam = {"dodstats_steam","1"};
 
 struct sUserMsg {
 	const char *name;
@@ -128,7 +124,6 @@ int RegUserMsg_Post(const char *pszName, int iSize){
 void ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax ){
 	
 	rankBots = (int)dodstats_rankbots->value ? true:false;
-	bSteam = (int)dodstats_steam->value ? true:false;
 
 	for( int i = 1; i <= gpGlobals->maxClients; ++i )
 		GET_PLAYER_POINTER_I(i)->Init( i , pEdictList + i );
@@ -181,23 +176,28 @@ void ServerDeactivate() {
 
 BOOL ClientConnect_Post( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ]  ){
 	GET_PLAYER_POINTER(pEntity)->Connect(pszName,pszAddress);
+	
 	RETURN_META_VALUE(MRES_IGNORED, TRUE);
 }
 
 void ClientDisconnect( edict_t *pEntity ) {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-	if (pPlayer->ingame) 
+		
+	if (pPlayer->ingame)
 		pPlayer->Disconnect();
+
 	RETURN_META(MRES_IGNORED);
 }
 
 void ClientPutInServer_Post( edict_t *pEntity ) {
 	GET_PLAYER_POINTER(pEntity)->PutInServer();
+
 	RETURN_META(MRES_IGNORED);
 }
 
 void ClientUserInfoChanged_Post( edict_t *pEntity, char *infobuffer ) {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
+
 	const char* name = INFOKEY_VALUE(infobuffer,"name");
 	const char* oldname = STRING(pEntity->v.netname);
 
@@ -346,10 +346,6 @@ void OnMetaAttach() {
 	dodstats_rank=CVAR_GET_POINTER(init_dodstats_rank.name);
 	dodstats_rankbots = CVAR_GET_POINTER(init_dodstats_rankbots.name);
 	dodstats_pause = CVAR_GET_POINTER(init_dodstats_pause.name);
-
-	CVAR_REGISTER (&init_dodstats_steam);
-	dodstats_steam = CVAR_GET_POINTER(init_dodstats_steam.name);
-
 }
 
 void OnAmxxAttach() {

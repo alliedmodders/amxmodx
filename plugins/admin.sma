@@ -207,14 +207,23 @@ public cmdReload(id,level,cid) {
 
   g_aNum = 0
   loadSettings(filename) // Re-Load admins accounts
+
+  if (id != 0) {
+    if (g_aNum == 1)
+      console_print(id,"[AMXX] %L", LANG_SERVER, "LOADED_ADMIN" )
+    else
+      console_print(id,"[AMXX] %L", LANG_SERVER, "LOADED_ADMINS", g_aNum )
+  }
 #else
   adminSql()
-#endif
 
-  if (g_aNum == 1)
-    console_print(id,"[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMIN" )
-  else
-    console_print(id,"[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMINS", g_aNum )
+  if (id != 0) {
+    if (g_aNum == 1)
+      console_print(id,"[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMIN" )
+    else
+      console_print(id,"[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMINS", g_aNum )
+  }
+#endif
 
   return PLUGIN_HANDLED
 }

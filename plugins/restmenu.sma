@@ -435,7 +435,7 @@ displayMenu(id,pos){
    new menubody[512], start = pos * 7
    if (start >= MAXMENUPOS) start = pos = g_Position[id] = 0
    new len = format(menubody,511,"\yRestrict Weapons\R%d/5^n\w^n",pos+1)
-   new end = start + 7, keys = (1<<9)|(1<<7), k = 0
+   new end = start + 7, keys = MENU_KEY_0|MENU_KEY_8, k = 0
    if (end > MAXMENUPOS) end = MAXMENUPOS
    for(new a = start; a < end; ++a){
       keys |= (1<<k)
@@ -445,7 +445,7 @@ displayMenu(id,pos){
    len += format(menubody[len],511-len,"^n8. Save settings \y\R%s^n\w",g_Modified?"*":"")
    if (end != MAXMENUPOS){
       format(menubody[len],511-len,"^n9. More...^n0. %s", pos ? "Back" : "Exit")
-      keys |= (1<<8)
+      keys |= MENU_KEY_9
    }
    else format(menubody[len],511-len,"^n0. %s", pos ? "Back" : "Exit")
    show_menu(id,keys,menubody)

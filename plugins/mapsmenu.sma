@@ -176,7 +176,7 @@ displayVoteMapsMenu(id,pos)
     "\yVotemap Menu\R%d/%d^n\w^n" : "Votemap Menu %d/%d^n^n",
     pos+1,(  g_mapNums / 7 + (( g_mapNums % 7) ? 1 : 0 )) )
 
-  new end = start + 7, keys = (1<<9)
+  new end = start + 7, keys = MENU_KEY_0
 
   if (end > g_mapNums)
     end = g_mapNums
@@ -200,7 +200,7 @@ displayVoteMapsMenu(id,pos)
   
   if ( g_voteSelectedNum[id] )
   {
-    keys |= (1<<7)
+    keys |= MENU_KEY_8
     len += format(menuBody[len],511-len,"^n8. Start Voting^n")
   }
   else
@@ -210,7 +210,7 @@ displayVoteMapsMenu(id,pos)
   if (end != g_mapNums)
   {
     len += format(menuBody[len],511-len,"^n9. More...^n0. %s^n", pos ? "Back" : "Exit")
-    keys |= (1<<8)
+    keys |= MENU_KEY_9
   }
   else
     len += format(menuBody[len],511-len,"^n0. %s^n", pos ? "Back" : "Exit")
@@ -323,7 +323,7 @@ public actionVoteMapMenu(id,key)
       {
         len = format(menuBody,511, g_coloredMenus ? "\yChange map to^n%s?^n\w^n1. Yes^n2. No^n"
           : "Change map to^n%s?^n^n1. Yes^n2. No^n" , g_mapName[  g_voteSelected[id][ 0 ]  ] )
-        keys = (1<<0) | (1<<1)
+        keys = MENU_KEY_1|MENU_KEY_2
       }
       
       for(new b = 0; b < pnum; ++b)
@@ -331,7 +331,7 @@ public actionVoteMapMenu(id,key)
             show_menu(players[b],keys,menuBody, iVoteTime)
               
       format(menuBody[len],511,"^n0. Cancel Vote")
-      keys |= (1<<9)
+      keys |= MENU_KEY_0
       show_menu(id,keys,menuBody, iVoteTime)
       
       new authid[32],name[32]
@@ -413,7 +413,7 @@ displayMapsMenu(id,pos)
     pos+1,(  g_mapNums / 8 + (( g_mapNums % 8) ? 1 : 0 )) )
     
   new end = start + 8
-  new keys = (1<<9)
+  new keys = MENU_KEY_0
   
   if (end > g_mapNums)
     end = g_mapNums
@@ -427,7 +427,7 @@ displayMapsMenu(id,pos)
   if (end != g_mapNums)
   {
     format(menuBody[len],511-len,"^n9. More...^n0. %s", pos ? "Back" : "Exit")
-    keys |= (1<<8)
+    keys |= MENU_KEY_9
   }
   else format(menuBody[len],511-len,"^n0. %s", pos ? "Back" : "Exit")
  

@@ -150,7 +150,7 @@ displayBanMenu(id,pos){
     pos+1,(  g_menuPlayersNum[id] / 7 + ((g_menuPlayersNum[id] % 7) ? 1 : 0 )) )
     
   new end = start + 7
-  new keys = (1<<9)|(1<<7)
+  new keys = MENU_KEY_0|MENU_KEY_8
   
   if (end > g_menuPlayersNum[id])
     end = g_menuPlayersNum[id]
@@ -184,7 +184,7 @@ displayBanMenu(id,pos){
   if (end != g_menuPlayersNum[id])
   {
     format(menuBody[len],511-len,"^n9. More...^n0. %s", pos ? "Back" : "Exit")
-    keys |= (1<<8)
+    keys |= MENU_KEY_9
   }
   else format(menuBody[len],511-len,"^n0. %s", pos ? "Back" : "Exit")
   
@@ -287,7 +287,7 @@ displaySlapMenu(id,pos){
     pos+1,(  g_menuPlayersNum[id] / 7 + ((g_menuPlayersNum[id] % 7) ? 1 : 0 )) )
     
   new end = start + 7
-  new keys = (1<<9)|(1<<7)
+  new keys = MENU_KEY_0|MENU_KEY_8
   
   if (end > g_menuPlayersNum[id])
     end = g_menuPlayersNum[id]
@@ -324,7 +324,7 @@ displaySlapMenu(id,pos){
   if (end != g_menuPlayersNum[id])
   {
     format(menuBody[len],511-len,"^n9. More...^n0. %s", pos ? "Back" : "Exit")
-    keys |= (1<<8)
+    keys |= MENU_KEY_9
   }
   else format(menuBody[len],511-len,"^n0. %s", pos ? "Back" : "Exit")
   
@@ -398,7 +398,7 @@ displayKickMenu(id,pos){
     pos+1,(  g_menuPlayersNum[id] / 8 + ((g_menuPlayersNum[id] % 8) ? 1 : 0 )) )
     
   new end = start + 8
-  new keys = (1<<9)
+  new keys = MENU_KEY_0
   
   if (end > g_menuPlayersNum[id])
     end = g_menuPlayersNum[id]
@@ -427,7 +427,7 @@ displayKickMenu(id,pos){
   if (end != g_menuPlayersNum[id])
   {
     format(menuBody[len],511-len,"^n9. More...^n0. %s", pos ? "Back" : "Exit")
-    keys |= (1<<8)
+    keys |= MENU_KEY_9
   }
   else  format(menuBody[len],511-len,"^n0. %s", pos ? "Back" : "Exit")
   
@@ -505,7 +505,7 @@ displayTeamMenu(id,pos){
     pos+1,(  g_menuPlayersNum[id] / 7 + ((g_menuPlayersNum[id] % 7) ? 1 : 0 )) )
     
   new end = start + 7
-  new keys = (1<<9)|(1<<7)
+  new keys = MENU_KEY_0|MENU_KEY_8
   
   if (end > g_menuPlayersNum[id])
     end = g_menuPlayersNum[id]
@@ -538,7 +538,7 @@ displayTeamMenu(id,pos){
   if (end != g_menuPlayersNum[id])
   {
     format(menuBody[len],511-len,"^n9. More...^n0. %s", pos ? "Back" : "Exit")
-    keys |= (1<<8)
+    keys |= MENU_KEY_9
   }
   else format(menuBody[len],511-len,"^n0. %s", pos ? "Back" : "Exit")
   
@@ -616,7 +616,7 @@ displayClcmdMenu(id,pos){
     pos+1,(  g_menuPlayersNum[id] / 7 + ((g_menuPlayersNum[id] % 7) ? 1 : 0 )) )
     
   new end = start + 7
-  new keys = (1<<9)|(1<<7)
+  new keys = MENU_KEY_0|MENU_KEY_8
   
   if (end > g_menuPlayersNum[id])
     end = g_menuPlayersNum[id]
@@ -650,7 +650,7 @@ displayClcmdMenu(id,pos){
   if (end != g_menuPlayersNum[id])
   {
     format(menuBody[len],511-len,"^n9. More...^n0. %s", pos ? "Back" : "Exit")
-    keys |= (1<<8)
+    keys |= MENU_KEY_9
   }
   else format(menuBody[len],511-len,"^n0. %s", pos ? "Back" : "Exit")
   

@@ -158,7 +158,7 @@ displayMenu(id,pos){
    g_coloredMenus ? "\yAMX Mod X Menu\R%d/%d^n\w^n" : "AMX Mod X Menu %d/%d^n^n" , pos+1, 2 )
     
   new end = start + 8
-  new keys = (1<<9)
+  new keys = MENU_KEY_0
   
   if (end > MENUS_NUMBER )
     end = MENUS_NUMBER
@@ -189,7 +189,7 @@ displayMenu(id,pos){
   if (end != MENUS_NUMBER )
   {
     format(menuBody[len],511-len,"^n9. More...^n0. %s", pos ? "Back" : "Exit")
-    keys |= (1<<8)
+    keys |= MENU_KEY_9
   }
   else format(menuBody[len],511-len,"^n0. %s", pos ? "Back" : "Exit")
  

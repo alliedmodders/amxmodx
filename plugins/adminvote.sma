@@ -55,12 +55,12 @@ new Float:g_voteRatio
 
 public plugin_init() { 
   register_plugin("Admin Votes","0.20","AMXX Dev Team")
-  register_menucmd(register_menuid("Change map to ") ,(1<<0)|(1<<1),"voteCount") 
-  register_menucmd(register_menuid("Choose map: ") ,(1<<0)|(1<<1)|(1<<2)|(1<<3),"voteCount") 
-  register_menucmd(register_menuid("Kick ") ,(1<<0)|(1<<1),"voteCount") 
-  register_menucmd(register_menuid("Ban ") ,(1<<0)|(1<<1),"voteCount") 
-  register_menucmd(register_menuid("Vote: ") ,(1<<0)|(1<<1),"voteCount") 
-  register_menucmd(register_menuid("The result: ") ,(1<<0)|(1<<1),"actionResult")
+  register_menucmd(register_menuid("Change map to ") ,MENU_KEY_1|MENU_KEY_2,"voteCount") 
+  register_menucmd(register_menuid("Choose map: ") ,MENU_KEY_1|MENU_KEY_2|MENU_KEY_3|MENU_KEY_4,"voteCount") 
+  register_menucmd(register_menuid("Kick ") ,MENU_KEY_1|MENU_KEY_2,"voteCount") 
+  register_menucmd(register_menuid("Ban ") ,MENU_KEY_1|MENU_KEY_2,"voteCount") 
+  register_menucmd(register_menuid("Vote: ") ,MENU_KEY_1|MENU_KEY_2,"voteCount") 
+  register_menucmd(register_menuid("The result: ") ,MENU_KEY_1|MENU_KEY_2,"actionResult")
   register_concmd("amx_votemap","cmdVoteMap",ADMIN_VOTE,"<map> [map] [map] [map]")
   register_concmd("amx_votekick","cmdVoteKickBan",ADMIN_VOTE,"<name or #userid>")
   register_concmd("amx_voteban","cmdVoteKickBan",ADMIN_VOTE,"<name or #userid>")
@@ -198,7 +198,7 @@ public cmdVoteMap(id,level,cid) {
   new menu_msg[256] 
   new keys = 0  
   if (g_validMaps > 1){
-    keys = (1<<9)
+    keys = MENU_KEY_0
     copy(menu_msg,255,g_coloredMenus ? "\yChoose map: \w^n^n" : "Choose map: ^n^n") 
     new temp[128] 
     for(new a = 0; a < g_validMaps; ++a){ 
@@ -212,7 +212,7 @@ public cmdVoteMap(id,level,cid) {
   else{ 
     format(menu_msg,255,g_coloredMenus ? "\yChange map to %s?\w^n^n1.  Yes^n2.  No"
         : "Change map to %s?^n^n1.  Yes^n2.  No",g_optionName[0]) 
-    keys = (1<<0)|(1<<1)
+    keys = MENU_KEY_1|MENU_KEY_2
     g_yesNoVote = 1
   }
   new authid[32],name[32] 
@@ -281,7 +281,7 @@ public cmdVote(id,level,cid) {
   }
 
   new menu_msg[256] 
-  new keys = (1<<0)|(1<<1) 
+  new keys = MENU_KEY_1|MENU_KEY_2
   format(menu_msg,255, g_coloredMenus ? "\yVote: %s\w^n^n1.  %s^n2.  %s"
       : "Vote: %s^n^n1.  %s^n2.  %s",quest,g_optionName[0],g_optionName[1]) 
   g_execResult = false
@@ -324,7 +324,7 @@ public cmdVoteKickBan(id,level,cid) {
     return PLUGIN_HANDLED
   }
 
-  new keys = (1<<0)|(1<<1)
+  new keys = MENU_KEY_1|MENU_KEY_2
   new menu_msg[256]
   get_user_name(player,arg,31) 
   format(menu_msg,255,g_coloredMenus ? "\y%s %s?\w^n^n1.  Yes^n2.  No"

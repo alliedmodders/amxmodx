@@ -175,7 +175,7 @@ displayMenu(id, pos) {
   new len = format(menu_body,511,
     g_coloredMenus ? "\yPause/Unpause Plugins\R%d/%d^n\w^n" : "Pause/Unpause Plugins %d/%d^n^n" ,
       pos + 1,((datanum/6)+((datanum%6)?1:0)))
-  new end = start + 6, keys = (1<<9)|(1<<7)|(1<<6)
+  new end = start + 6, keys = MENU_KEY_0|MENU_KEY_8|MENU_KEY_7
   if (end > datanum) end = datanum
   for(new a = start; a < end; ++a){
     get_plugin(a,filename,31,title,31,status,0,status,0,status,1)
@@ -199,7 +199,7 @@ displayMenu(id, pos) {
     : "8. Save stopped %s^n" ,g_Modified ? "*" : "")
   if (end != datanum){
     format(menu_body[len],511-len,"^n9. More...^n0. %s", pos ? "Back" : "Exit")
-    keys |= (1<<8)
+    keys |= MENU_KEY_9
   }
   else format(menu_body[len],511-len,"^n0. %s", pos ? "Back" : "Exit")
   show_menu(id,keys,menu_body)

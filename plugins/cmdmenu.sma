@@ -149,7 +149,7 @@ displayCmdMenu(id,pos){
     pos+1,(  g_menuSelectNum[id] / 8 + ((g_menuSelectNum[id] % 8) ? 1 : 0 )) )
     
   new end = start + 8
-  new keys = (1<<9)
+  new keys = MENU_KEY_0
   
   if (end > g_menuSelectNum[id])
     end = g_menuSelectNum[id]
@@ -173,7 +173,7 @@ displayCmdMenu(id,pos){
       
   if (end != g_menuSelectNum[id]) {
     format(menuBody[len],511-len,"^n9. More...^n0. %s", pos ? "Back" : "Exit")
-    keys |= (1<<8)
+    keys |= MENU_KEY_9
   }
   else format(menuBody[len],511-len,"^n0. %s", pos ? "Back" : "Exit" )
   show_menu(id,keys,menuBody)
@@ -315,7 +315,7 @@ displayCvarMenu(id,pos){
     pos+1,(  g_menuSelectNum[id] / 8 + ((g_menuSelectNum[id] % 8) ? 1 : 0 )) )
     
   new end = start + 8
-  new keys = (1<<9)
+  new keys = MENU_KEY_0
   new szValue[64]
   
   if (end > g_menuSelectNum[id])
@@ -334,7 +334,7 @@ displayCvarMenu(id,pos){
       
   if (end != g_menuSelectNum[id]) {
     format(menuBody[len],511-len,"^n9. More...^n0. %s", pos ? "Back" : "Exit")
-    keys |= (1<<8)
+    keys |= MENU_KEY_9
   }
   else format(menuBody[len],511-len,"^n0. %s", pos ? "Back" : "Exit")
   show_menu(id,keys,menuBody)

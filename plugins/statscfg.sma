@@ -160,7 +160,7 @@ displayCfgMenu(id,pos){
   if (start >= g_menuDataNum) start = pos = g_menuPosition[id] = 0
   new len = format(menu_body,511,"\yStats Configuration\R%d/%d^n\w^n",
     pos + 1,((g_menuDataNum/7)+((g_menuDataNum%7)?1:0)))
-  new end = start + 7, keys = (1<<9)|(1<<7), k = 0
+  new end = start + 7, keys = MENU_KEY_0|MENU_KEY_8, k = 0
   if (end > g_menuDataNum) end = g_menuDataNum
   for(new a = start; a < end; ++a){
     keys |= (1<<k)
@@ -172,7 +172,7 @@ displayCfgMenu(id,pos){
   len += format(menu_body[len],511-len,"^n8. Save configuration\y\R%s^n\w",g_modified ? "*" : "")
   if (end != g_menuDataNum){
     format(menu_body[len],511-len,"^n9. More...^n0. %s", pos ? "Back" : "Exit")
-    keys |= (1<<8)
+    keys |= MENU_KEY_9
   }
   else format(menu_body[len],511-len,"^n0. %s", pos ? "Back" : "Exit")
   show_menu(id,keys,menu_body)

@@ -1391,12 +1391,12 @@ showStatsMenu( id, iMenuPos ) {
 		iLen += format( g_sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
 		                "%d. %s^n\w", iMenuOption + 1, t_sName );
 	}
-	iKeyMask |= (1<<7)|(1<<9);
+	iKeyMask |= MENU_KEY_8|MENU_KEY_0;
 	iLen += format( g_sBuffer[iLen], MAX_BUFFER_LENGTH - iLen, "^n8. %s^n\w",
 	                g_izUserMenuActionText[ g_izUserMenuAction[id] ] );
 	if( iPlayers > iUserIndex ) {
 		iLen += copy( g_sBuffer[iLen], MAX_BUFFER_LENGTH - iLen, "^n9. More..." );
-		iKeyMask |= (1<<8);
+		iKeyMask |= MENU_KEY_9;
 	}
 	if( iMenuPos > 0 )
 		iLen += copy( g_sBuffer[iLen], MAX_BUFFER_LENGTH - iLen, "^n0. Back" );

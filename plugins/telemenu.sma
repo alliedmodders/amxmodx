@@ -127,7 +127,7 @@ displayTelMenu(id,pos) {
       pos+1,(  g_menuPlayersNum[id] / 6 + ((g_menuPlayersNum[id] % 6) ? 1 : 0 )) )
 
   new end = start + 6
-  new keys = (1<<9)|(1<<7)
+  new keys = MENU_KEY_0|MENU_KEY_8
 
   if (end > g_menuPlayersNum[id])
     end = g_menuPlayersNum[id]
@@ -150,7 +150,7 @@ displayTelMenu(id,pos) {
   }
 
   if ( g_menuOption[id] > 0 ) { // 1
-    keys |= (1<<6)
+    keys |= MENU_KEY_7
     len += format(menuBody[len],511-len,"^n7. To location: %d %d %d^n",
       g_menuOrgin[id][0],g_menuOrgin[id][1] ,g_menuOrgin[id][2])
   }
@@ -161,7 +161,7 @@ displayTelMenu(id,pos) {
       len += format(menuBody[len],511-len,"^n#. Current Location^n")
   }
   else { // 0
-    keys |= (1<<6)
+    keys |= MENU_KEY_7
     len += format(menuBody[len],511-len,"^n7. Current Location^n")
   }
 
@@ -169,7 +169,7 @@ displayTelMenu(id,pos) {
 
   if (end != g_menuPlayersNum[id]) {
     format(menuBody[len],511-len,"^n9. More...^n0. %s", pos ? "Back" : "Exit")
-    keys |= (1<<8)
+    keys |= MENU_KEY_9
   }
   else
     format(menuBody[len],511-len,"^n0. %s", pos ? "Back" : "Exit")

@@ -17,8 +17,6 @@ COM_STATS_SAVE = ^tsave - save stats configuration
 COM_STATS_LOAD = ^tload - load stats configuration
 COM_STATS_LIST = ^tlist [id] - list stats status
 COM_STATS_ADD = ^tadd <name> <variable> - add stats to the list
-ON = ON
-OFF = OFF
 NO_STATS = Stats plugins are not^ninstalled on this server^n
 SAVE_CONF = Save configuration
 
@@ -41,8 +39,6 @@ COM_STATS_SAVE = ^tsave - salva a configuracao do stats
 COM_STATS_LOAD = ^tload - carrega a configuracao do stats
 COM_STATS_LIST = ^tlist [id] - lista o status do stats
 COM_STATS_ADD = ^tadd <nome> <variavel> - adiciona stats para a lista
-ON = LIGADO
-OFF = DESLIGADO
 NO_STATS = Plugins de Stats nao estao^ninstalados neste servidor^n
 SAVE_CONF = Salvar Configuracao
 
@@ -65,8 +61,6 @@ COM_STATS_SAVE = ^tsave - Gem statestik konfiguration
 COM_STATS_LOAD = ^tload - Indlaes Statestik konfiguration
 COM_STATS_LIST = ^tlist [id] - Lister statestik status
 COM_STATS_ADD = ^tadd <navn> <variable> - Tilfoejer statestik til listen
-ON = ON
-OFF = OFF
 NO_STATS = Statestik plugins er ikke ^ninstalleret paa denne server^n
 SAVE_CONF = Gem Konfiguration
 
@@ -89,8 +83,6 @@ COM_STATS_SAVE = ^tsave - speichert Statistik-Konfiguration
 COM_STATS_LOAD = ^tload - laedt Statistik-Konfiguration
 COM_STATS_LIST = ^tlist [id] - Statistik-Status anzeigen
 COM_STATS_ADD = ^tadd <name> <variable> - fuegt eine Statistik zur Liste hinzu
-ON = AN
-OFF = AUS
 NO_STATS = Statistik-Plugin ist nicht^nauf diesem Server installiert^n
 SAVE_CONF = Konfiguration speichern
 
@@ -113,8 +105,6 @@ COM_STATS_SAVE = ^tsave - grava la configuracion de stats
 COM_STATS_LOAD = ^tload - carga la configuracion de stats
 COM_STATS_LIST = ^tlist [id] - lista el estado de Stats
 COM_STATS_ADD = ^tadd <nambre> <variable> - agrega estadisticas a la lista
-ON = ON
-OFF = OFF
 NO_STATS = El plugin Stats no esta^ninstalado en este servidor^n
 SAVE_CONF = Gravar configuracion
 
@@ -137,8 +127,6 @@ COM_STATS_SAVE = ^tsave - sauve la configuration des stats
 COM_STATS_LOAD = ^tload - charge la configuration des stats
 COM_STATS_LIST = ^tlist [id] - liste le status des stats
 COM_STATS_ADD = ^tadd <nom> <variable> - ajoute des stats a la liste
-ON = ACTIF
-OFF = INACTIF
 NO_STATS = Les plugins de stats ne sont pas^ninstalles sur ce serveur^n
 SAVE_CONF = Sauver la configuration
 
@@ -161,8 +149,6 @@ COM_STATS_SAVE = ^tsave - stats configuratie opslaan
 COM_STATS_LOAD = ^tload - stats configuratie laden
 COM_STATS_LIST = ^tlist [id] - stats status weergeven
 COM_STATS_ADD = ^tadd <name> <variable> - stats toevoegen aan de lijst
-ON = AAN
-OFF = UIT
 NO_STATS = Stats plugins zijn niet^ngeinstalleerd op deze server^n
 SAVE_CONF = Configuratie opslaan
 
@@ -185,8 +171,6 @@ COM_STATS_SAVE = ^tsave - zapisz konfiguracje statystyk
 COM_STATS_LOAD = ^tload - zaladuj konfiguracje statystyk
 COM_STATS_LIST = ^tlist [id] - pokaz status statystyk
 COM_STATS_ADD = ^tadd <name> <zmienna> - dodaj statystyki do listy
-ON = WL
-OFF = WYL
 NO_STATS = Pluginy statystyk nie^nistnieja na serwerze^n
 SAVE_CONF = Zapisz konfiguracje
 
@@ -209,8 +193,6 @@ COM_STATS_SAVE = ^tsave - sacuvaj podesavanja statistike
 COM_STATS_LOAD = ^tload - ucitaj podesavanja statistike
 COM_STATS_LIST = ^tlist [id] - prikazi status statistike
 COM_STATS_ADD = ^tadd <name> <variable> - dodaj statistiku na kraj liste
-ON = ON
-OFF = OFF
 NO_STATS = Plugin za statistiku^nnije instaliran na ovom serveru^n
 SAVE_CONF = Sacuvaj konfiguraciju
 
@@ -233,8 +215,6 @@ COM_STATS_SAVE = ^tsave - spara statistikinst'a'llningar
 COM_STATS_LOAD = ^tload - ladda statistikinst'a'llningar
 COM_STATS_LIST = ^tlist [id] - lista statistikstatus
 COM_STATS_ADD = ^tadd <namn> <variabel> - addera statistik till listan
-ON = AKTIV
-OFF = AV
 NO_STATS = Statistikplugins e inte installerade pa denna server^n
 SAVE_CONF = Spara inst'a'llningar
 
@@ -257,7 +237,5 @@ COM_STATS_SAVE = ^tsave - Statistik configini sakla
 COM_STATS_LOAD = ^tload - Statistik configini yukle
 COM_STATS_LIST = ^tlist [id] - Statistik durumunu listele
 COM_STATS_ADD = ^tadd <isim> <deger> - Listeye statistik ekleyin
-ON = ACIK
-OFF = KAPALI
 NO_STATS = Statistik plugini^nserverde mevcud degildir^n
 SAVE_CONF = Configleri sakla

@@ -461,9 +461,16 @@ static cell AMX_NATIVE_CALL get_msg_origin(AMX *amx, cell *params)
 	vec3_t vRet = (Vector)msgOrigin;
 	cell *cAddr = MF_GetAmxAddr(amx, params[1]);
 
-	cAddr[0] = amx_ftoc(vRet.x);
-	cAddr[1] = amx_ftoc(vRet.y);
-	cAddr[2] = amx_ftoc(vRet.z);
+	if (msgDest >= MSG_PVS && msgDest <= MSG_PAS_R)
+	{
+		cAddr[0] = amx_ftoc(vRet.x);
+		cAddr[1] = amx_ftoc(vRet.y);
+		cAddr[2] = amx_ftoc(vRet.z);
+	} else {
+		cAddr[0] = 0;
+		cAddr[1] = 0;
+		cAddr[2] = 0;
+	}
 
 	return 1;
 }

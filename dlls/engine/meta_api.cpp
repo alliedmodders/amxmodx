@@ -3250,7 +3250,6 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 	gpMetaGlobals=pMGlobals;
 	gMetaFunctionTable.pfnGetEntityAPI2 = GetEntityAPI2;
-	gMetaFunctionTable.pfnGetEntityAPI2_Post = GetEntityAPI2_Post;
 	gMetaFunctionTable.pfnGetEngineFunctions = GetEngineFunctions;
 
 	memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
@@ -3258,10 +3257,7 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	gpGamedllFuncs=pGamedllFuncs;
 
 	return(TRUE);
-
 }
-
-
 
 C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason) {
 
@@ -3274,8 +3270,6 @@ C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason) {
 	return(TRUE);
 
 }
-
-
 
 #ifdef __linux__
 C_DLLEXPORT void GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals ) {
@@ -3367,23 +3361,6 @@ C_DLLEXPORT int GetEntityAPI2_Post( DLL_FUNCTIONS *pFunctionTable, int *interfac
   }
   memcpy( pFunctionTable, &gFunctionTable_Post, sizeof( DLL_FUNCTIONS ) );
   return(TRUE);
-}
-
-enginefuncs_t meta_engfuncs_post;
-
-C_DLLEXPORT int GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion ) {
-
-
-	if(*interfaceVersion!=ENGINE_INTERFACE_VERSION) {
-		LOG_ERROR(PLID, "GetEngineFunctions_Post version mismatch; requested=%d ours=%d", *interfaceVersion, ENGINE_INTERFACE_VERSION);
-		*interfaceVersion = ENGINE_INTERFACE_VERSION;
-		return(FALSE);
-
-	}
-	memcpy(pengfuncsFromEngine, &meta_engfuncs_post, sizeof(enginefuncs_t));
-
-	return(TRUE);
-
 }
 
 C_DLLEXPORT int AMX_Query(module_info_s** info) {

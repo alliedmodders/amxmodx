@@ -142,6 +142,7 @@ EventsMngr::ClEvent* EventsMngr::registerEvent(CPluginMngr::CPlugin* plugin, int
 
 void EventsMngr::parserInit(int msg_type, float* timer, CPlayer* pPlayer, int index)
 {
+
 	if (msg_type < 0 || msg_type > MAX_AMX_REG_MSG)
 		return;
 
@@ -199,7 +200,9 @@ void EventsMngr::parserInit(int msg_type, float* timer, CPlayer* pPlayer, int in
 		m_ParseFun = &m_Events[msg_type];
 	}
 	else
+	{
 		m_ParseFun = NULL;
+	}
 }
 
 void EventsMngr::parseValue(int iValue)
@@ -246,6 +249,7 @@ void EventsMngr::parseValue(int iValue)
 
 		if (skip)
 			continue;
+
 		(*iter)->m_Done = true;
 	}
 }

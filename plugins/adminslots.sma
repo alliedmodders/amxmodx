@@ -28,7 +28,7 @@ public plugin_init()
 #if !defined NO_STEAM
 
 public ackSignal(id)
-	server_cmd("kick #%d", get_user_userid(id)  )
+	server_cmd("kick #%d ^"Dropped due to slot reservation^"", get_user_userid(id)  )
 
 public client_authorized(id)
 #else
@@ -48,7 +48,7 @@ public client_connect(id)
 	}
 
 #if !defined NO_STEAM
-	client_cmd(id,"echo ^"Dropped due to slot reservation^";%s" , g_cmdLoopback)
+	client_cmd(id,g_cmdLoopback)
 #else
 	if ( is_user_bot(id) ) 
 		server_cmd("kick #%d", get_user_userid(id)  )
@@ -80,4 +80,3 @@ setVisibleSlots( players , maxplayers , limit )
 	set_cvar_num( "sv_visiblemaxplayers" , num )
 }
 #endif
-

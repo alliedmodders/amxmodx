@@ -164,7 +164,7 @@ accessUser( id, name[] = "" )
   if (result & 2) {
   
 #if !defined NO_STEAM
-	client_cmd(id,"echo ^"* You have no entry to the server...^";%s",g_cmdLoopback)
+	client_cmd(id,g_cmdLoopback)
 	
 #else
     client_cmd(id,"echo ^"* You have no entry to the server...^";disconnect") 
@@ -195,11 +195,10 @@ public client_infochanged(id)
 #if !defined NO_STEAM
 
 public ackSignal(id)
-	server_cmd("kick #%d", get_user_userid(id)  )
+	server_cmd("kick #%d ^"You have no entry to the server...^"", get_user_userid(id)  )
 
 public client_authorized(id)
 #else
 public client_connect(id)
 #endif
-
   return get_cvar_num( "amx_mode" ) ? accessUser( id ) : PLUGIN_CONTINUE

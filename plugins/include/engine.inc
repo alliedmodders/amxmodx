@@ -131,7 +131,7 @@ native is_valid_ent(iIndex);
 native entity_set_origin(iIndex, Float:fNewOrigin[3]);
 
 /* Sets the model of an Entity. */
-native entity_set_model(iIndex, szModel[]);
+native entity_set_model(iIndex, const szModel[]);
 
 /* Remove an entity from the world. */
 native remove_entity(iIndex);

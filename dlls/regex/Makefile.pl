@@ -134,6 +134,8 @@ if (!(-d $outdir))
 
 $inc = $OPTIONS{"include"};
 
+$cflags .= " -fno-exceptions";
+
 for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 {
 	$file = $CPP_SOURCE_FILES[$i];

@@ -24,3 +24,4 @@ private:
 };
 
 #endif //_INCLUDE_CREGEX_H
+

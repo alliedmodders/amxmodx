@@ -1,6 +1,7 @@
 #include "pcre.h"
 #include "CRegEx.h"
 #include <string.h>
+#include "amxxmodule.h"
 
 RegEx::RegEx()
 {

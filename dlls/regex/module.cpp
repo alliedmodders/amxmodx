@@ -1,8 +1,8 @@
 #include <string.h>
 #include "pcre.h"
+#include "amxxmodule.h"
 #include "CVector.h"
 #include "CRegEx.h"
-#include "amxxmodule.h"
 #include "module.h"
 
 CVector<RegEx *> PEL;

@@ -97,6 +97,7 @@
 #define CSW_FIVESEVEN		11
 #define CSW_UMP45		12
 #define CSW_SG550		13
+#define CSW_GALI		14
 #define CSW_GALIL		14
 #define CSW_FAMAS		15
 #define CSW_USP			16

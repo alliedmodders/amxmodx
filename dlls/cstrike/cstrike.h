@@ -65,38 +65,43 @@ pfnmodule_engine_g* g_engModuleFunc;
 #define LOGTAG "AMXCS"
 #define DATE __DATE__
 
-// cstrike-specific defines below
 #if defined __linux__
-	#define OFFSET_WEAPONTYPE			43 + 5
-	#define OFFSET_SILENCER_FIREMODE	74 + 5
-	#define OFFSET_TEAM					114 + 5
-	#define OFFSET_CSMONEY				115 + 5
-	#define OFFSET_DEFUSE_PLANT			193 + 5
-	#define OFFSET_VIP					215 + 5
-	#define OFFSET_BUYZONE				241 + 5
+	#define LINUXOFFSET 5
+// "player" entities
+	#define OFFSET_TEAM					114 + LINUXOFFSET
+	#define OFFSET_CSMONEY				115 + LINUXOFFSET
+	#define OFFSET_NVGOGGLES			129 + LINUXOFFSET
+	#define OFFSET_DEFUSE_PLANT			193 + LINUXOFFSET
+	#define OFFSET_VIP					215 + LINUXOFFSET
+	#define OFFSET_BUYZONE				241 + LINUXOFFSET
 
-	#define OFFSET_AWM_AMMO				382 + 5
-	#define OFFSET_SCOUT_AMMO			383 + 5
-	#define OFFSET_PARA_AMMO			384 + 5
-	#define OFFSET_FAMAS_AMMO			385 + 5
-	#define OFFSET_M3_AMMO				386 + 5
-	#define OFFSET_USP_AMMO				387 + 5
-	#define OFFSET_FIVESEVEN_AMMO		388 + 5
-	#define OFFSET_DEAGLE_AMMO			389 + 5
-	#define OFFSET_P228_AMMO			390 + 5
-	#define OFFSET_GLOCK_AMMO			391 + 5
-	#define OFFSET_FLASH_AMMO			392 + 5
-	#define OFFSET_HE_AMMO				393 + 5
-	#define OFFSET_SMOKE_AMMO			394 + 5
-	#define OFFSET_C4_AMMO				395 + 5
+	#define OFFSET_AWM_AMMO				382 + LINUXOFFSET
+	#define OFFSET_SCOUT_AMMO			383 + LINUXOFFSET
+	#define OFFSET_PARA_AMMO			384 + LINUXOFFSET
+	#define OFFSET_FAMAS_AMMO			385 + LINUXOFFSET
+	#define OFFSET_M3_AMMO				386 + LINUXOFFSET
+	#define OFFSET_USP_AMMO				387 + LINUXOFFSET
+	#define OFFSET_FIVESEVEN_AMMO		388 + LINUXOFFSET
+	#define OFFSET_DEAGLE_AMMO			389 + LINUXOFFSET
+	#define OFFSET_P228_AMMO			390 + LINUXOFFSET
+	#define OFFSET_GLOCK_AMMO			391 + LINUXOFFSET
+	#define OFFSET_FLASH_AMMO			392 + LINUXOFFSET
+	#define OFFSET_HE_AMMO				393 + LINUXOFFSET
+	#define OFFSET_SMOKE_AMMO			394 + LINUXOFFSET
+	#define OFFSET_C4_AMMO				395	+ LINUXOFFSET
 
-	#define OFFSET_CSDEATHS				449 + 5
-	#define OFFSET_HOSTAGEID			487 + 5
+	#define OFFSET_CSDEATHS				449 + LINUXOFFSET
+// "weapon_*" entities
+	#define OFFSET_WEAPONTYPE			43 + LINUXOFFSET
+	#define OFFSET_SILENCER_FIREMODE	74 + LINUXOFFSET
+// "hostage_entity" entities
+	#define OFFSET_HOSTAGEID			487 + LINUXOFFSET
+
 #else
-	#define OFFSET_WEAPONTYPE			43
-	#define OFFSET_SILENCER_FIREMODE	74
+// "player" entities
 	#define OFFSET_TEAM					114
 	#define OFFSET_CSMONEY				115
+	#define OFFSET_NVGOGGLES			129
 	#define OFFSET_DEFUSE_PLANT			193
 	#define OFFSET_VIP					215
 	#define OFFSET_BUYZONE				241
@@ -117,6 +122,10 @@ pfnmodule_engine_g* g_engModuleFunc;
 	#define OFFSET_C4_AMMO				395	
 
 	#define OFFSET_CSDEATHS				449
+// "weapon_*" entities
+	#define OFFSET_WEAPONTYPE			43
+	#define OFFSET_SILENCER_FIREMODE	74
+// "hostage_entity" entities
 	#define OFFSET_HOSTAGEID			487
 #endif // defined __linux__
 
@@ -188,14 +197,14 @@ pfnmodule_engine_g* g_engModuleFunc;
 #define TEAM_CT							2
 #define TEAM_SPECTATOR					3
 
-#define NO_DEFUSE_OR_PLANTSKILL			0
-#define CAN_PLANT_BOMB					256
-#define HAS_DEFUSE_KIT					65536
+#define CAN_PLANT_BOMB					(1<<8) // 256
+#define HAS_DEFUSE_KIT					(1<<16) // 65536
 
 #define DEFUSER_COLOUR_R				0
 #define DEFUSER_COLOUR_G				160
 #define DEFUSER_COLOUR_B				0
 
+#define HAS_NVGOGGLES					(1<<0)
 // cstrike-specific defines above
 
 // Globals below

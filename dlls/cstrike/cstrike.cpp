@@ -35,7 +35,7 @@
 
 // Utils first
 
-bool isplayer(AMX* amx, edict_t* pPlayer) {
+bool UTIL_IsPlayer(AMX* amx, edict_t* pPlayer) {
 	bool player = false;
 	// Check entity validity
 	if (FNullEnt(pPlayer)) {
@@ -46,6 +46,22 @@ bool isplayer(AMX* amx, edict_t* pPlayer) {
 		player = true;
 
 	return player;
+}
+
+void UTIL_TextMsg_Generic(edict_t* pPlayer, char* message)
+{
+	MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "TextMsg", NULL), NULL, pPlayer);
+	WRITE_BYTE(HUD_PRINTCENTER); // 1 = console, 2 = console, 3 = chat, 4 = center
+	WRITE_STRING(message);
+	MESSAGE_END();
+	/*
+	The byte above seems to use these:
+	#define HUD_PRINTNOTIFY		1
+	#define HUD_PRINTCONSOLE	2
+	#define HUD_PRINTTALK		3
+	#define HUD_PRINTCENTER		4
+	However both 1 and 2 seems to go to console with Steam CS.
+	*/
 }
 
 // Then natives
@@ -108,6 +124,30 @@ static cell AMX_NATIVE_CALL cs_get_user_money(AMX *amx, cell *params) // cs_get_
 
 	// Return money
 	return (int)*((int *)pPlayer->pvPrivateData + OFFSET_CSMONEY);
+}
+
+static cell AMX_NATIVE_CALL cs_get_user_deaths(AMX *amx, cell *params) // cs_get_user_deaths(index); = 1 param
+{
+	// Gets user deaths in cs.
+	// params[1] = user
+
+	// Check index
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	{
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// Fetch player pointer
+	edict_t *pPlayer = INDEXENT(params[1]);
+
+	// Check entity validity
+	if (FNullEnt(pPlayer)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	return *((int *)pPlayer->pvPrivateData + OFFSET_CSDEATHS);
 }
 
 static cell AMX_NATIVE_CALL cs_set_user_deaths(AMX *amx, cell *params) // cs_set_user_deaths(index, newdeaths); = 2 arguments
@@ -315,24 +355,16 @@ static cell AMX_NATIVE_CALL cs_set_weapon_burstmode(AMX *amx, cell *params) // c
 					*firemode = GLOCK_BURSTMODE;
 
 					// Is this weapon's owner a player? If so send this message...
-					if (isplayer(amx, pWeapon->v.owner)) {
-						MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "TextMsg", NULL), NULL, pWeapon->v.owner);
-						WRITE_BYTE(4); // dunno really what this 4 is for :-)
-						WRITE_STRING("#Switch_To_BurstFire");
-						MESSAGE_END();
-					}
+					if (UTIL_IsPlayer(amx, pWeapon->v.owner))
+						UTIL_TextMsg_Generic(pWeapon->v.owner, "#Switch_To_BurstFire");
 				}
 			}
 			else if (previousMode != GLOCK_SEMIAUTOMATIC) {
 				*firemode = GLOCK_SEMIAUTOMATIC;
 
 				// Is this weapon's owner a player? If so send this message...
-				if (isplayer(amx, pWeapon->v.owner)) {
-					MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "TextMsg", NULL), NULL, pWeapon->v.owner);
-					WRITE_BYTE(4); // dunno really what this 4 is for :-)
-					WRITE_STRING("#Switch_To_SemiAuto");
-					MESSAGE_END();
-				}
+				if (UTIL_IsPlayer(amx, pWeapon->v.owner))
+					UTIL_TextMsg_Generic(pWeapon->v.owner, "#Switch_To_SemiAuto");
 			}
 			break;
 		case CSW_FAMAS:
@@ -341,24 +373,16 @@ static cell AMX_NATIVE_CALL cs_set_weapon_burstmode(AMX *amx, cell *params) // c
 					*firemode = FAMAS_BURSTMODE;
 
 					// Is this weapon's owner a player? If so send this message...
-					if (isplayer(amx, pWeapon->v.owner)) {
-						MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "TextMsg", NULL), NULL, pWeapon->v.owner);
-						WRITE_BYTE(4); // dunno really what this 4 is for :-)
-						WRITE_STRING("#Switch_To_BurstFire");
-						MESSAGE_END();
-					}
+					if (UTIL_IsPlayer(amx, pWeapon->v.owner))
+						UTIL_TextMsg_Generic(pWeapon->v.owner, "#Switch_To_BurstFire");
 				}
 			}
 			else if (previousMode != FAMAS_AUTOMATIC) {
 				*firemode = FAMAS_AUTOMATIC;
 
 				// Is this weapon's owner a player? If so send this message...
-				if (isplayer(amx, pWeapon->v.owner)) {
-					MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "TextMsg", NULL), NULL, pWeapon->v.owner);
-					WRITE_BYTE(4); // dunno really what this 4 is for :-)
-					WRITE_STRING("#Switch_To_FullAuto");
-					MESSAGE_END();
-				}
+				if (UTIL_IsPlayer(amx, pWeapon->v.owner))
+					UTIL_TextMsg_Generic(pWeapon->v.owner, "#Switch_To_FullAuto");
 			}
 			break;
 		default:
@@ -534,7 +558,7 @@ static cell AMX_NATIVE_CALL cs_get_user_plant(AMX *amx, cell *params) // cs_get_
 		return 0;
 	}
 
-	if ((int)*((int *)pPlayer->pvPrivateData + OFFSET_DEFUSE_PLANT) == CAN_PLANT_BOMB)
+	if ((int)*((int *)pPlayer->pvPrivateData + OFFSET_DEFUSE_PLANT) & CAN_PLANT_BOMB)
 		return 1;
 
 	return 0;
@@ -566,7 +590,7 @@ static cell AMX_NATIVE_CALL cs_set_user_plant(AMX *amx, cell *params) // cs_set_
 	int* plantskill = ((int *)pPlayer->pvPrivateData + OFFSET_DEFUSE_PLANT);
 
 	if (params[2]) {
-		*plantskill = CAN_PLANT_BOMB;
+		*plantskill |= CAN_PLANT_BOMB;
 		if (params[3]) {
 			MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "StatusIcon", NULL), NULL, pPlayer);
 			WRITE_BYTE(1); // show
@@ -578,7 +602,7 @@ static cell AMX_NATIVE_CALL cs_set_user_plant(AMX *amx, cell *params) // cs_set_
 		}
 	}
 	else {
-		*plantskill = NO_DEFUSE_OR_PLANTSKILL;
+		*plantskill &= ~CAN_PLANT_BOMB;
 		MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "StatusIcon", NULL), NULL, pPlayer);
 		WRITE_BYTE(0); // hide
 		WRITE_STRING("c4");
@@ -619,7 +643,7 @@ static cell AMX_NATIVE_CALL cs_get_user_defusekit(AMX *amx, cell *params) // cs_
 		return 0;
 	}
 
-	if ((int)*((int *)pPlayer->pvPrivateData + OFFSET_DEFUSE_PLANT) == HAS_DEFUSE_KIT)
+	if ((int)*((int *)pPlayer->pvPrivateData + OFFSET_DEFUSE_PLANT) & HAS_DEFUSE_KIT)
 		return 1;
 
 	return 0;
@@ -669,9 +693,9 @@ static cell AMX_NATIVE_CALL cs_set_user_defusekit(AMX *amx, cell *params) // cs_
 		else
 			icon = "defuser";
 
-		*defusekit = HAS_DEFUSE_KIT;
+		*defusekit |= HAS_DEFUSE_KIT;
 		MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "StatusIcon", NULL), NULL, pPlayer);
-		WRITE_BYTE(params[7] == 1 ? 2 : 1); // show
+		WRITE_BYTE(params[7] == 1 ? 2 : 1); // show (if params[7] == 1, then this should flash, so we should set two here, else just 1 to show normally)
 		WRITE_STRING(icon);
 		WRITE_BYTE(colour[0]);
 		WRITE_BYTE(colour[1]);
@@ -679,7 +703,7 @@ static cell AMX_NATIVE_CALL cs_set_user_defusekit(AMX *amx, cell *params) // cs_
 		MESSAGE_END();
 	}
 	else {
-		*defusekit = NO_DEFUSE_OR_PLANTSKILL;
+		*defusekit &= ~HAS_DEFUSE_KIT;
 		MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "StatusIcon", NULL), NULL, pPlayer);
 		WRITE_BYTE(0); // hide
 		WRITE_STRING("defuser");
@@ -888,10 +912,77 @@ static cell AMX_NATIVE_CALL cs_set_user_backpackammo(AMX *amx, cell *params) // 
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL cs_get_user_nvgoggles(AMX *amx, cell *params) // cs_get_user_nvgoggles(index); = 1 param
+{
+	// Does user have night vision goggles?
+	// params[1] = user index
+
+	// Valid entity should be within range
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	{
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// Make into edict pointer
+	edict_t *pPlayer = INDEXENT(params[1]);
+
+	// Check entity validity
+	if (FNullEnt(pPlayer)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	if ((int)*((int *)pPlayer->pvPrivateData + OFFSET_NVGOGGLES) & HAS_NVGOGGLES)
+		return 1;
+
+	return 0;
+}
+
+static cell AMX_NATIVE_CALL cs_set_user_nvgoggles(AMX *amx, cell *params) // cs_set_user_nvgoggles(index, nvgoggles = 1); = 2 params
+{
+	// Give/take nvgoggles..
+	// params[1] = user index
+	// params[2] = 1 = give, 0 = remove
+
+	// Valid entity should be within range
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	{
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// Make into edict pointer
+	edict_t *pPlayer = INDEXENT(params[1]);
+
+	// Check entity validity
+	if (FNullEnt(pPlayer)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+	
+	int* defusekit = ((int *)pPlayer->pvPrivateData + OFFSET_NVGOGGLES);
+
+	if (params[2]) {
+		if (*defusekit & HAS_NVGOGGLES)
+			UTIL_TextMsg_Generic(pPlayer, "#Already_Have_One");
+		else
+			*defusekit |= HAS_NVGOGGLES;
+	}
+	else
+		*defusekit &= ~HAS_NVGOGGLES;
+	/*L 02/27/2004 - 09:16:43: [JGHG Trace] {MessageBegin type=TextMsg(77), dest=MSG_ONE(1), classname=player netname=JGHG
+	L 02/27/2004 - 09:16:43: [JGHG Trace] WriteByte byte=4
+	L 02/27/2004 - 09:16:43: [JGHG Trace] WriteString string=#Already_Have_One
+	L 02/27/2004 - 09:16:43: [JGHG Trace] MessageEnd}*/
+
+	return 1;
+}
 
 AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_user_money",			cs_set_user_money},
 	{"cs_get_user_money",			cs_get_user_money},
+	{"cs_get_user_deaths",			cs_get_user_deaths},
 	{"cs_set_user_deaths",			cs_set_user_deaths},
 	{"cs_get_hostage_id",			cs_get_hostage_id},
 	{"cs_get_weapon_silenced",		cs_get_weapon_silenced},
@@ -909,6 +1000,8 @@ AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_user_defusekit",		cs_set_user_defusekit},
 	{"cs_get_user_backpackammo",	cs_get_user_backpackammo},
 	{"cs_set_user_backpackammo",	cs_set_user_backpackammo},
+	{"cs_get_user_nvgoggles",		cs_get_user_nvgoggles},
+	{"cs_set_user_nvgoggles",		cs_set_user_nvgoggles},
 	{NULL,							NULL}
 };
 

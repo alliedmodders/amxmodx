@@ -56,7 +56,7 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PostBuild_Cmds=echo Copying dll...	copy Release\fun.dll K:\S\cstrike\addons\amx\dlls	echo Copying inc...	copy fun.inc K:\S\cstrike\addons\amx\examples\include	copy fun.inc K:\S\cstrike\addons\amx\plugins\include
+PostBuild_Cmds=echo Copying dll...	copy Release\fun.dll K:\S\cstrike\addons\amxx\modules\	echo Copying inc...	copy ..\plugins\include\fun.inc K:\S\cstrike\addons\amxx\scripting\include
 # End Special Build Tool
 
 !ELSEIF  "$(CFG)" == "fun - Win32 Debug"
@@ -117,7 +117,7 @@ SOURCE=.\fun.h
 # End Group
 # Begin Source File
 
-SOURCE=.\fun.inc
+SOURCE=..\plugins\include\fun.inc
 # End Source File
 # End Target
 # End Project

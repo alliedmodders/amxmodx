@@ -80,19 +80,22 @@ loadSettings(szFilename[])
   if (!file_exists(szFilename)) return 0
     
   new szText[256], szFlags[32], szAccess[32]
-  new a, pos = 0
+  new a, pos = 0, iAccess
   
   while ( g_aNum < MAX_ADMINS && read_file(szFilename,pos++,szText,255,a) ) 
   {         
     if ( szText[0] == ';' ) continue
     
-    if ( parse(szText, g_aName[ g_aNum ] ,31, 
-      g_aPassword[ g_aNum ], 31, szAccess,31,szFlags,31 ) < 2 ) continue
-
-    if ( (containi(szAccess,"z")==-1) && (containi(szAccess,"y")==-1) )
-      szAccess[strlen(szAccess)] = 'y'
-
-    g_aAccess[ g_aNum ] = read_flags( szAccess )
+    if ( parse(szText, g_aName[ g_aNum ] ,31, g_aPassword[ g_aNum ], 31, szAccess,31,szFlags,31 ) < 2 )
+        continue
+	
+    iAccess = read_flags(szAccess)
+	
+    if (!(iAccess & ADMIN_USER) && !(iAccess & ADMIN_ADMIN)) {
+        iAccess |= ADMIN_ADMIN
+    }
+	
+    g_aAccess[ g_aNum ] = iAccess
     g_aFlags[ g_aNum ] = read_flags( szFlags )  
     ++g_aNum
   }
@@ -184,8 +187,8 @@ getAccess(id,name[],authid[],ip[], password[])
   else {
     new defaccess[32]
     get_cvar_string("amx_default_access",defaccess,31)
-    if (!defaccess[0])
-      defaccess[0] = 'z'
+    if (!strlen(defaccess))
+      copy(defaccess, 32, "z")
     new idefaccess = read_flags(defaccess)
     if (idefaccess){
       result |= 8
@@ -212,7 +215,6 @@ accessUser( id, name[] = "" )
   
 #if !defined NO_STEAM
 	client_cmd(id,g_cmdLoopback)
-	
 #else
     client_cmd(id,"echo ^"* You have no entry to the server...^";disconnect") 
 #endif    

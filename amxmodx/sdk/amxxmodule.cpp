@@ -2454,7 +2454,7 @@ PFN_GET_AMXSTRINGLEN		g_fn_GetAmxStringLen;
 PFN_FORMAT_AMXSTRING		g_fn_FormatAmxString;
 PFN_COPY_AMXMEMORY			g_fn_CopyAmxMemory;
 PFN_LOG						g_fn_Log;
-PFN_LOG_ERROR				g_fn_LogError;
+PFN_LOG_ERROR				g_fn_LogErrorFunc;
 PFN_RAISE_AMXERROR			g_fn_RaiseAmxError;
 PFN_REGISTER_FORWARD		g_fn_RegisterForward;
 PFN_EXECUTE_FORWARD			g_fn_ExecuteForward;
@@ -2544,7 +2544,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("PrintSrvConsole", g_fn_PrintSrvConsole, PFN_PRINT_SRVCONSOLE);
 	REQFUNC("GetModname", g_fn_GetModname, PFN_GET_MODNAME);
 	REQFUNC("Log", g_fn_Log, PFN_LOG);
-	REQFUNC("LogError", g_fn_LogError, PFN_LOG_ERROR);
+	REQFUNC("LogError", g_fn_LogErrorFunc, PFN_LOG_ERROR);
 	REQFUNC("MergeDefinitionFile", g_fn_MergeDefinition_File, PFN_MERGEDEFINITION_FILE);
 	REQFUNC("Format", g_fn_Format, PFN_FORMAT);
 
@@ -2649,6 +2649,18 @@ void MF_Log(const char *fmt, ...)
 	va_end(arglst);
 
 	g_fn_Log("[%s] %s", MODULE_NAME, msg);
+}
+
+void MF_LogError(AMX *amx, int err, const char *fmt, ...)
+{
+	// :TODO: Overflow possible here
+	char msg[3072];
+	va_list arglst;
+	va_start(arglst, fmt);
+	vsprintf(msg, fmt, arglst);
+	va_end(arglst);
+
+	g_fn_LogErrorFunc(amx, err, "[%s] %s", MODULE_NAME, msg);
 }
 
 

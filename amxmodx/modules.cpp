@@ -1190,7 +1190,8 @@ void LogError(AMX *amx, int err, const char *fmt, ...)
 	if (!dbg || !(dbg->tail))
 	{
 		GenericError(amx, err, amx->curline, buf, NULL);
-		AMXXLOG_Log("[AMXX] %s %s", buf, vbuf);
+		AMXXLOG_Log("[AMXX] %s", buf);
+		AMXXLOG_Log("%s", vbuf);
 	} else {
 		AMX_TRACE *t = dbg->tail;
 		AMX_DEBUGCALL tracer = (AMX_DEBUGCALL)(amx->userdata[1]);
@@ -1198,19 +1199,20 @@ void LogError(AMX *amx, int err, const char *fmt, ...)
 		cell line = amx->curline;
 		cell file = amx->curfile;
 		int i = 0;
-		if (file >= dbg->numFiles || file < 0)
-		{
-			GenericError(amx, err, line, buf, NULL);
-		} else {
-			GenericError(amx, err, line, buf, dbg->files[file]);
-		}
+		GenericError(amx, err, line, buf, NULL);
 		AMXXLOG_Log("[AMXX] %s", buf);
 		if (*vbuf)
 		{
-			AMXXLOG_Log("[AMXX] %s", vbuf);
+			AMXXLOG_Log("%s", vbuf);
 		}
 		AMXXLOG_Log("[AMXX] Debug Trace =>");
 		//log the error right away
+		if (file >= dbg->numFiles || file < 0)
+		{
+            AMXXLOG_Log("[AMXX]       [%d] Line %d, File \"%s\"", i++, line, g_plugins.findPluginFast(amx)->getName());
+		} else {
+			AMXXLOG_Log("[AMXX]       [%d] Line %d, File \"%s\"", i++, line, dbg->files[file]);
+		}
 		while (t != NULL)
 		{
 			line = t->line;

@@ -76,6 +76,7 @@ public:
 		v.row = 0;
 		next = NULL;
 		id = i;
+		free = false;
 	}
 
 	pgs* link()
@@ -111,6 +112,10 @@ public:
 		destroy(v.user);
 		destroy(v.pass);
 		destroy(v.name);
+		destroy(v.cn);
+		destroy(v.res);
+		v.row = 0;
+		free = true;
 	}
 
 	struct pgsql {
@@ -130,5 +135,6 @@ public:
 
 private:
 	pgs *next;
+	bool free;
 	int id;
 };

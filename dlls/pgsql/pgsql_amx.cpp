@@ -70,6 +70,16 @@ PGconn* make_connection(const char *h, const char *u, const char *ps, const char
 		}
 	}
 	char *c_info = make_connstring(h, u, ps, n);
+	/* now search for a free one */
+	p = cns;
+	while (p) {
+		if (p->free) {
+			p->set(h, u, ps, n, p->ii());
+			return p->v.cn;
+		} else {
+			p = p->link();
+		}
+	}
 	if (cns == NULL) {
 		cns = new pgs;
 		PGconn *cn = PQconnectdb(c_info);
@@ -190,12 +200,12 @@ static cell AMX_NATIVE_CALL pgsql_close(AMX *amx, cell *params)
 }
 
 AMX_NATIVE_INFO pgsql_exports[] = {
-	{"pgsql_connect",		pgsql_connect},
-	{"pgsql_error",			pgsql_error},
-	{"pgsql_query",			pgsql_query},
-	{"pgsql_nextrow",		pgsql_nextrow},
-	{"pgsql_close",			pgsql_close},
-	{"pgsql_getfield",		pgsql_getfield},
+	{"dbi_connect",		pgsql_connect},
+	{"dbi_error",		pgsql_error},
+	{"dbi_query",		pgsql_query},
+	{"dbi_nextrow",		pgsql_nextrow},
+	{"dbi_close",		pgsql_close},
+	{"dbi_getfield",	pgsql_getfield},
 
 	{NULL,			NULL},
 };

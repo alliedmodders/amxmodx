@@ -46,7 +46,6 @@ new g_menuPos[33]
 new g_fileToSave[64]
 new g_coloredMenus
 new g_Modified
-new g_pluginMatch[] = ""
 new g_addCmd[] = "amx_pausecfg add ^"%s^""
 new g_system[MAX_SYSTEM]
 new g_systemNum

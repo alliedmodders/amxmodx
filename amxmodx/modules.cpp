@@ -844,6 +844,12 @@ void MNF_Log(const char *fmt, ...)
 	va_end(arglst);
 	AMXXLOG_Log("%s", msg);
 }
+
+void MNF_MergeDefinitionFile(const char *file)
+{
+	g_langMngr.MergeDefinitionFile(file);
+}
+
 // Fnptr Request function for the new interface
 const char *g_LastRequestedFunc = NULL;
 #define REGISTER_FUNC(name, func) { name, (void*)func },
@@ -857,10 +863,11 @@ void *Module_ReqFnptr(const char *funcName)
 	};
 	static Func_s functions[] = {
 		// Misc
-		REGISTER_FUNC("BuildPathname", build_pathname)
+			REGISTER_FUNC("BuildPathname", build_pathname)
 			REGISTER_FUNC("PrintSrvConsole", print_srvconsole)
 			REGISTER_FUNC("GetModname", MNF_GetModname)
 			REGISTER_FUNC("Log", MNF_Log)
+			REGISTER_FUNC("MergeDefinitionFile", MNF_MergeDefinitionFile)
 
 			// Amx scripts loading / unloading / managing
 			REGISTER_FUNC("GetAmxScript", MNF_GetAmxScript)

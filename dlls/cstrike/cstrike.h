@@ -46,9 +46,19 @@
 
 #if defined __linux__
 	#define EXTRAOFFSET					5 // offsets 5 higher in Linux builds
+	#define EXTRAOFFSET_WEAPONS			4 // weapon offsets are obviously only 4 steps higher on Linux!
 #else
 	#define EXTRAOFFSET					0 // no change in Windows builds
+	#define EXTRAOFFSET_WEAPONS			0
 #endif // defined __linux__
+/*
+	Offset history:
+	041029:
+	Confirmed (pretty much) ALL offsets for 32 bit Windows, 32 bit Linux and amd64 (yes that's all of them).
+	Found out that weapon offsets are only +4 higher on Linux.
+	Also backpack ammo offsets were all obviously 5 steps too high since unknown time...
+
+*/
 
 // "player" entities
 #if !defined __amd64__
@@ -65,26 +75,26 @@
 	#define OFFSET_ISDRIVING			350 + EXTRAOFFSET // 040926
 	#define OFFSET_STATIONARY			362 + EXTRAOFFSET // 040927 (363 works also!)
 
-	#define OFFSET_AWM_AMMO				382 + EXTRAOFFSET
-	#define OFFSET_SCOUT_AMMO			383 + EXTRAOFFSET
-	#define OFFSET_PARA_AMMO			384 + EXTRAOFFSET
-	#define OFFSET_FAMAS_AMMO			385 + EXTRAOFFSET
-	#define OFFSET_M3_AMMO				386 + EXTRAOFFSET
-	#define OFFSET_USP_AMMO				387 + EXTRAOFFSET
-	#define OFFSET_FIVESEVEN_AMMO		388 + EXTRAOFFSET
-	#define OFFSET_DEAGLE_AMMO			389 + EXTRAOFFSET
-	#define OFFSET_P228_AMMO			390 + EXTRAOFFSET
-	#define OFFSET_GLOCK_AMMO			391 + EXTRAOFFSET
-	#define OFFSET_FLASH_AMMO			392 + EXTRAOFFSET
-	#define OFFSET_HE_AMMO				393 + EXTRAOFFSET
-	#define OFFSET_SMOKE_AMMO			394 + EXTRAOFFSET
-	#define OFFSET_C4_AMMO				395	+ EXTRAOFFSET
+	#define OFFSET_AWM_AMMO				377 + EXTRAOFFSET // 041029: All of these *_AMMO:s were changed -5
+	#define OFFSET_SCOUT_AMMO			378 + EXTRAOFFSET
+	#define OFFSET_PARA_AMMO			379 + EXTRAOFFSET
+	#define OFFSET_FAMAS_AMMO			380 + EXTRAOFFSET
+	#define OFFSET_M3_AMMO				381 + EXTRAOFFSET
+	#define OFFSET_USP_AMMO				382 + EXTRAOFFSET
+	#define OFFSET_FIVESEVEN_AMMO		383 + EXTRAOFFSET
+	#define OFFSET_DEAGLE_AMMO			384 + EXTRAOFFSET
+	#define OFFSET_P228_AMMO			385 + EXTRAOFFSET
+	#define OFFSET_GLOCK_AMMO			386 + EXTRAOFFSET
+	#define OFFSET_FLASH_AMMO			387 + EXTRAOFFSET
+	#define OFFSET_HE_AMMO				388 + EXTRAOFFSET
+	#define OFFSET_SMOKE_AMMO			389 + EXTRAOFFSET
+	#define OFFSET_C4_AMMO				390	+ EXTRAOFFSET
 
 	#define OFFSET_CSDEATHS				444 + EXTRAOFFSET // 040926
 	// "weapon_*" entities
-	#define OFFSET_WEAPONTYPE			43 + EXTRAOFFSET
-	#define OFFSET_CLIPAMMO				51 + EXTRAOFFSET
-	#define OFFSET_SILENCER_FIREMODE	74 + EXTRAOFFSET
+	#define OFFSET_WEAPONTYPE			43 + EXTRAOFFSET_WEAPONS
+	#define OFFSET_CLIPAMMO				51 + EXTRAOFFSET_WEAPONS
+	#define OFFSET_SILENCER_FIREMODE	74 + EXTRAOFFSET_WEAPONS
 	// "hostage_entity" entities
 	#define OFFSET_HOSTAGEFOLLOW		86 + EXTRAOFFSET
 	#define OFFSET_HOSTAGEID			487 + EXTRAOFFSET

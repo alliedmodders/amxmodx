@@ -132,7 +132,7 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 	*/
 
 	*error = 0;
-	CAmxxReader reader(filename, SMALL_CELL_SIZE);
+	CAmxxReader reader(filename, SMALL_CELL_SIZE / 8);
 	if (reader.GetStatus() == CAmxxReader::Err_None)
 	{
 		size_t bufSize = reader.GetBufferSize();
@@ -164,6 +164,15 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 	case CAmxxReader::Err_FileInvalid:
 		strcpy(error, "Invalid Plugin");
 		return (amx->error = AMX_ERR_FORMAT);
+	case CAmxxReader::Err_SectionNotFound:
+		strcpy(error, "Searched section not found (.amxx)");
+		return (amx->error = AMX_ERR_NOTFOUND);
+	case CAmxxReader::Err_DecompressorInit:
+		strcpy(error, "Decompressor initialization failed");
+		return (amx->error = AMX_ERR_INIT);
+	case CAmxxReader::Err_Decompress:
+		strcpy(error, "Internal error: Decompress");
+		return (amx->error = AMX_ERR_NOTFOUND);
 	default:
 		strcpy(error, "Unknown error");
 		return (amx->error = AMX_ERR_NOTFOUND);

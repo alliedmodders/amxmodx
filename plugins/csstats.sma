@@ -1,7 +1,7 @@
 /* AMX Mod X script.
 *
 * (c) 2002-2004, OLO
-*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*  modified by the AMX Mod X Development Team
 *
 * This file is provided as is (no warranties).
 *
@@ -21,6 +21,8 @@
 *
 * File location: $moddir/addons/amx
 */
+
+#include <amxmod>
 
 public get_score( stats[8] , body[8] )
   return stats[0] - stats[1] // kills - deaths

@@ -33,7 +33,7 @@
 #include <meta_api.h>
 #include <time.h>
 #include "amxmod.h"
-
+#include <string>
 
 static cell AMX_NATIVE_CALL get_xvar_id(AMX *amx, cell *params)
 {

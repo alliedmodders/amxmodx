@@ -480,12 +480,13 @@ int AMXAPI amx_Debug(AMX *amx)
 }
 
 #if defined JIT
-#if defined WIN32 || __cplusplus
+#if defined WIN32 || defined __cplusplus
   extern "C" int AMXAPI getMaxCodeSize(void);
   extern "C" int AMXAPI asm_runJIT(void *sourceAMXbase, void *jumparray, void *compiledAMXbase);
 #else
   extern int AMXAPI getMaxCodeSize(void);
   extern int AMXAPI asm_runJIT(void *sourceAMXbase, void *jumparray, void *compiledAMXbase);
+#endif
 #endif
 
 #if SMALL_CELL_SIZE==16

@@ -182,6 +182,21 @@ static cell AMX_NATIVE_CALL get_keyvalue(AMX *amx, cell *params)
 	return MF_SetAmxString(amx, params[3], INFO_KEY_VALUE(INFO_KEY_BUFFER(pEntity),char1), params[4]); 
 }
 
+static cell AMX_NATIVE_CALL copy_keyvalue(AMX *amx, cell *params)
+{
+	if (!g_inKeyValue)
+		return 0;
+	
+	if (g_pkvd->szClassName)
+		MF_SetAmxString(amx, params[1], g_pkvd->szClassName, params[2]);
+	if (g_pkvd->szKeyName)
+		MF_SetAmxString(amx, params[3], g_pkvd->szKeyName, params[4]);
+	if (g_pkvd->szValue)
+		MF_SetAmxString(amx, params[5], g_pkvd->szValue, params[6]);
+
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL DispatchSpawn(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
@@ -1784,6 +1799,8 @@ AMX_NATIVE_INFO ent_Natives[] = {
 	{"find_ent_by_tname",	find_ent_by_tname},
 	{"find_ent_by_owner",	find_ent_by_owner},
 	{"get_grenade_id",		get_grenade_id},
+
+	{"copy_keyvalue",		copy_keyvalue},
 
 	{NULL,					NULL},
 	 ///////////////////

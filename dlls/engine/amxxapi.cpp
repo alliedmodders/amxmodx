@@ -127,6 +127,10 @@ void ServerDeactivate()
 		msgBlocks[i] = 0;
 	}
 
+	Touches.clear();
+	Impulses.clear();
+	Thinks.clear();
+
 	RETURN_META(MRES_IGNORED);
 }
 

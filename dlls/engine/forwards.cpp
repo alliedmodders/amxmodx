@@ -13,6 +13,27 @@ int PlayerPostThinkForward = 0;
 int ClientKillForward = 0;
 int CmdStartForward = 0;
 int StartFrameForward = 0;
+std::vector<Impulse *> Impulses;
+std::vector<EntClass *> Thinks;
+std::vector<EntClass *> Uses;
+std::vector<Touch *> Touches;
+KeyValueData *g_pkvd;
+bool g_inKeyValue=false;
+
+int fstrcmp(const char *s1, const char *s2)
+{
+	int i=0;
+	int len1 = strlen(s1);
+	int len2 = strlen(s2);
+	if (len1 != len2)
+		return 0;
+	for (i=0; i<len1; i++)
+	{
+		if (s1[i] != s2[i])
+			return 0;
+	}
+	return 1;
+}
 
 void DispatchUse(edict_t *pentUsed, edict_t *pentOther)
 {
@@ -76,22 +97,23 @@ void PlaybackEvent(int flags, const edict_t *pInvoker, unsigned short eventindex
 
 }
 
-#if 0
 void KeyValue(edict_t *pEntity, KeyValueData *pkvd)
 {
+	int retVal = 0;
+	g_inKeyValue=true;
+	g_pkvd=pkvd;
+	int index = ENTINDEX(pEntity);
 	if (DispatchKeyForward) {
-		inKeyValue=true;
-		int retVal = 0;
-		g_pkvd=pkvd;
-		int index = ENTINDEX(pEntity);
 		retVal = MF_ExecuteForward(DispatchKeyForward, index);
-		inKeyValue=false;
-		if (retVal)
+		g_inKeyValue=false;
+		if (retVal > 0)
 			RETURN_META(MRES_SUPERCEDE);
+		else
+			RETURN_META(MRES_HANDLED);
 	}
+	g_inKeyValue=false;
 	RETURN_META(MRES_HANDLED);
 }
-#endif
 
 void StartFrame_Post()
 {
@@ -110,9 +132,21 @@ void StartFrame_Post()
 
 void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int random_seed)
 {
+	unsigned int i = 0;
 	int retVal = 0;
 	edict_t *pEntity = (edict_t *)player;
 	struct usercmd_s *g_cmd = (struct usercmd_s *)_cmd;
+	for (i=0; i<Impulses.size(); i++)
+	{
+		if (Impulses[i]->Check == g_cmd->impulse)
+		{
+			retVal = MF_ExecuteForward(Impulses[i]->Forward, ENTINDEX(pEntity));
+			if (retVal)
+				RETURN_META(MRES_SUPERCEDE);
+			else
+				RETURN_META(MRES_IGNORED);
+		}
+	}
 	if (CmdStartForward) {
 		incmd = true;
 		retVal = MF_ExecuteForward(CmdStartForward, ENTINDEX(pEntity), g_cmd->impulse);
@@ -192,7 +226,45 @@ void PlayerPostThink_Post(edict_t *pEntity)
 
 void DispatchTouch(edict_t *pToucher, edict_t *pTouched)
 {
+	unsigned int i = 0;
 	int retVal = 0;
+	const char *ptrClass = STRING(pToucher->v.classname);
+	const char *ptdClass = STRING(pTouched->v.classname);
+	for (i=0; i<Touches.size(); i++)
+	{
+		if (Touches[i]->Toucher = 0)
+		{
+			if (Touches[i]->Touched = 0)
+			{
+				retVal = MF_ExecuteForward(Touches[i]->Forward, ENTINDEX(pToucher), ENTINDEX(pTouched));
+				if (retVal)
+					RETURN_META(MRES_SUPERCEDE);
+				else
+					RETURN_META(MRES_IGNORED);
+			} else if (fstrcmp(Touches[i]->Touched, ptdClass)) {
+				retVal = MF_ExecuteForward(Touches[i]->Forward, ENTINDEX(pToucher), ENTINDEX(pTouched));
+				if (retVal)
+					RETURN_META(MRES_SUPERCEDE);
+				else
+					RETURN_META(MRES_IGNORED);
+			}
+		} else if (fstrcmp(Touches[i]->Toucher, ptrClass)) {
+			if (Touches[i]->Touched = 0)
+			{
+				retVal = MF_ExecuteForward(Touches[i]->Forward, ENTINDEX(pToucher), ENTINDEX(pTouched));
+				if (retVal)
+					RETURN_META(MRES_SUPERCEDE);
+				else
+					RETURN_META(MRES_IGNORED);
+			} else if (fstrcmp(Touches[i]->Touched, ptdClass)) {
+				retVal = MF_ExecuteForward(Touches[i]->Forward, ENTINDEX(pToucher), ENTINDEX(pTouched));
+				if (retVal)
+					RETURN_META(MRES_SUPERCEDE);
+				else
+					RETURN_META(MRES_IGNORED);
+			}
+		}
+	}
 	/* Execute pfnTouch forwards */
 	if (pfnTouchForward) {
 		retVal = MF_ExecuteForward(pfnTouchForward, ENTINDEX(pToucher), ENTINDEX(pTouched));
@@ -205,6 +277,16 @@ void DispatchTouch(edict_t *pToucher, edict_t *pTouched)
 
 void DispatchThink_Post(edict_t *pent)
 {
+	unsigned int i = 0;
+	const char *cls = STRING(pent->v.classname);
+	for (i=0; i<Thinks.size(); i++)
+	{
+		if (fstrcmp(cls, Thinks[i]->Class))
+		{
+			MF_ExecuteForward(Thinks[i]->Forward, ENTINDEX(pent));
+			RETURN_META(MRES_IGNORED);
+		}
+	}
 	MF_ExecuteForward(pfnThinkForward, ENTINDEX(pent));
 
 	RETURN_META(MRES_IGNORED);

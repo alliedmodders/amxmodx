@@ -40,9 +40,9 @@
 
 new g_cmdLoopback[16]
 
-public plugin_init()
-{
+public plugin_init() {
   register_plugin("Slots Reservation",AMXX_VERSION_STR,"AMXX Dev Team")
+  register_dictionary("adminslots.txt")
   register_cvar("amx_reservation","1")
 
   format( g_cmdLoopback, 15, "amxres%c%c%c%c" , 
@@ -51,16 +51,18 @@ public plugin_init()
   register_clcmd( g_cmdLoopback, "ackSignal" )
 }
 
-public ackSignal(id)
-  server_cmd("kick #%d ^"Dropped due to slot reservation^"", get_user_userid(id)  )
+public ackSignal(id) {
+  new lReason[64]
+  format(lReason,63,"%L",id,"DROPPED_RES")
+  server_cmd("kick #%d ^"%s^"", get_user_userid(id), lReason )
+}
 
-public client_authorized(id)
-{
+public client_authorized(id) {
   new maxplayers = get_maxplayers()
   new players = get_playersnum( 1 )
-  new limit = maxplayers - get_cvar_num( "amx_reservation" )
+  new limit = maxplayers - get_cvar_num("amx_reservation")
   
-  if ( (get_user_flags(id) & ADMIN_RESERVATION) || (players <= limit) )
+  if ( access(id,ADMIN_RESERVATION) || (players <= limit) )
   {
 #if defined HIDE_RESERVED_SLOTS
     setVisibleSlots( players , maxplayers, limit )
@@ -76,9 +78,9 @@ public client_authorized(id)
 #if defined HIDE_RESERVED_SLOTS
 public client_disconnect(id)
 {
-  new maxplayers = get_maxplayers( )
+  new maxplayers = get_maxplayers()
   setVisibleSlots( get_playersnum(1) - 1 , maxplayers , 
-    maxplayers - get_cvar_num( "amx_reservation" )  )
+    maxplayers - get_cvar_num("amx_reservation")  )
   return PLUGIN_CONTINUE
 }
 

@@ -57,6 +57,7 @@ public plugin_init()
 #else
   register_plugin("Admin Base",AMXX_VERSION_STR,"AMXX Dev Team")
 #endif
+  register_dictionary("admin.txt")
   register_cvar("amx_mode","1")
   register_cvar("amx_password_field","_pw")
   register_cvar("amx_default_access","")
@@ -133,7 +134,11 @@ loadSettings(szFilename[])
     g_aFlags[ g_aNum ] = read_flags( szFlags )  
     ++g_aNum
   }
-  server_print("[AMXX] Loaded %d admin%s from file",g_aNum, (g_aNum == 1) ? "" : "s" )
+  if (g_aNum == 1)
+    server_print("[AMXX] %L", LANG_SERVER, "LOADED_ADMIN" )
+  else
+    server_print("[AMXX] %L", LANG_SERVER, "LOADED_ADMINS", g_aNum )
+
   return 1
 }
 #endif
@@ -148,7 +153,7 @@ public adminSql() {
   
   new Sql:sql = dbi_connect(host,user,pass,db,error,127)
   if (sql <= SQL_FAILED) {
-    server_print("[AMXX] SQL error: can't connect: '%s'",error)
+    server_print("[AMXX] %L",LANG_SERVER,"SQL_CANT_CON",error)
     return PLUGIN_HANDLED 
   }
 
@@ -158,13 +163,13 @@ public adminSql() {
 
   if (Res == RESULT_FAILED) {
     dbi_error(sql,error,127)
-    server_print("[AMXX] SQL error: can't load admins: '%s'",error)
+    server_print("[AMXX] %L",LANG_SERVER,"SQL_CANT_LOAD_ADMINS",error)
     dbi_free_result(Res)
     dbi_close(Sql)
     return PLUGIN_HANDLED
   }
   else if (Res == RESULT_NONE) {
-    server_print("[AMXX] No admins found.")
+    server_print("[AMXX] %L",LANG_SERVER,"NO_ADMINS")
     dbi_free_result(Res)
     dbi_close(Sql)
     return PLUGIN_HANDLED
@@ -185,7 +190,10 @@ public adminSql() {
     ++g_aNum
   }
 
-  server_print("[AMXX] Loaded %d admin%s from database",g_aNum, (g_aNum == 1) ? "" : "s" )
+  if (g_aNum == 1)
+    server_print("[AMXX] %L", SERVER_LANG, "SQL_LOADED_ADMIN" )
+  else
+    server_print("[AMXX] %L", SERVER_LANG, "SQL_LOADED_ADMINS", g_aNum )
   dbi_free_result(Res)
   dbi_close(sql)
   return PLUGIN_HANDLED
@@ -303,13 +311,13 @@ accessUser( id, name[] = "" )
   get_cvar_string("amx_password_field",passfield,31) 
   get_user_info(id,passfield,password,31) 
   new result = getAccess(id,username,userauthid,userip,password) 
-  if (result & 1) client_cmd(id,"echo ^"* Invalid Password!^"")
+  if (result & 1) client_cmd(id,"echo ^"* %L^"",id,"INV_PAS")
   if (result & 2) {
     client_cmd(id,g_cmdLoopback)
     return PLUGIN_HANDLED
   }
-  if (result & 4) client_cmd(id,"echo ^"* Password accepted^"")
-  if (result & 8) client_cmd(id,"echo ^"* Privileges set^"")
+  if (result & 4) client_cmd(id,"echo ^"* %L^"",id,"PAS_ACC")
+  if (result & 8) client_cmd(id,"echo ^"* %L^"",id,"PRIV_SET")
   return PLUGIN_CONTINUE
 }
 
@@ -328,8 +336,11 @@ public client_infochanged(id)
   return PLUGIN_CONTINUE
 }
 
-public ackSignal(id)
-	server_cmd("kick #%d ^"You have no entry to the server...^"", get_user_userid(id)  )
+public ackSignal(id) {
+  new no_entry[64]
+  format(no_entry,63,"%L",id,"NO_ENTRY")
+  server_cmd("kick #%d ^"%L^"", get_user_userid(id), no_entry )
+}
 
 public client_authorized(id)
   return get_cvar_num( "amx_mode" ) ? accessUser( id ) : PLUGIN_CONTINUE

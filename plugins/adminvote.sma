@@ -44,23 +44,20 @@ new g_coloredMenus
 new g_voteCaller
 new g_Execute[256]
 new g_execLen
-new g_alredyVoting[]= "There is already one voting..."
-new g_notAllowed[] = "Voting not allowed at this time"
-new g_votingStarted[] = "Voting has started..."
-new g_playerTag[] = "PLAYER"
-new g_adminTag[] = "ADMIN"
 
 new bool:g_execResult
 new Float:g_voteRatio 
 
 public plugin_init() { 
   register_plugin("Admin Votes",AMXX_VERSION_STR,"AMXX Dev Team")
-  register_menucmd(register_menuid("Change map to ") ,MENU_KEY_1|MENU_KEY_2,"voteCount") 
-  register_menucmd(register_menuid("Choose map: ") ,MENU_KEY_1|MENU_KEY_2|MENU_KEY_3|MENU_KEY_4,"voteCount") 
-  register_menucmd(register_menuid("Kick ") ,MENU_KEY_1|MENU_KEY_2,"voteCount") 
-  register_menucmd(register_menuid("Ban ") ,MENU_KEY_1|MENU_KEY_2,"voteCount") 
-  register_menucmd(register_menuid("Vote: ") ,MENU_KEY_1|MENU_KEY_2,"voteCount") 
-  register_menucmd(register_menuid("The result: ") ,MENU_KEY_1|MENU_KEY_2,"actionResult")
+  register_dictionary("adminvote.txt")
+  register_dictionary("common.txt")
+  register_menucmd(register_menuid("Change map to "),MENU_KEY_1|MENU_KEY_2,"voteCount") 
+  register_menucmd(register_menuid("Choose map: "),MENU_KEY_1|MENU_KEY_2|MENU_KEY_3|MENU_KEY_4,"voteCount") 
+  register_menucmd(register_menuid("Kick "),MENU_KEY_1|MENU_KEY_2,"voteCount") 
+  register_menucmd(register_menuid("Ban "),MENU_KEY_1|MENU_KEY_2,"voteCount") 
+  register_menucmd(register_menuid("Vote: "),MENU_KEY_1|MENU_KEY_2,"voteCount") 
+  register_menucmd(register_menuid("The result: "),MENU_KEY_1|MENU_KEY_2,"actionResult")
   register_concmd("amx_votemap","cmdVoteMap",ADMIN_VOTE,"<map> [map] [map] [map]")
   register_concmd("amx_votekick","cmdVoteKickBan",ADMIN_VOTE,"<name or #userid>")
   register_concmd("amx_voteban","cmdVoteKickBan",ADMIN_VOTE,"<name or #userid>")
@@ -69,7 +66,7 @@ public plugin_init() {
   g_coloredMenus = colored_menus()
 }
 
-public cmdCancelVote(id,level,cid){
+public cmdCancelVote(id,level,cid) {
   if (!cmd_access(id,level,cid,0))
     return PLUGIN_HANDLED
   if ( task_exists( 99889988 , 1 ) ) {
@@ -77,40 +74,42 @@ public cmdCancelVote(id,level,cid){
     get_user_authid(id,authid,31)
     get_user_name(id,name,31)
     log_amx("Vote: ^"%s<%d><%s><>^" cancel vote session", name,get_user_userid(id),authid)
-    switch(get_cvar_num("amx_show_activity")) {
-    case 2: client_print(0,print_chat,"%s %s: cancel vote", (get_user_flags(id) & ADMIN_USER) ? g_playerTag : g_adminTag, name)
-    case 1: client_print(0,print_chat,"%s: cancel vote", (get_user_flags(id) & ADMIN_USER) ? g_playerTag : g_adminTag)
+    new players[32],pnum,lTag[16],activity = get_cvar_num("amx_show_activity")
+    get_players(players,pnum,"c")
+    for (new i=0;i<pnum;i++) {
+      format(lTag,15,"%L",players[i],is_user_admin(id) ? "ADMIN" : "PLAYER")
+      strtoupper(lTag)
+      switch (activity) {
+        case 2: client_print(players[i],print_chat,"%L", LANG_PLAYER, "ADMIN_CANC_VOTE_2", lTag, name)
+        case 1: client_print(players[i],print_chat,"%L", LANG_PLAYER, "ADMIN_CANC_VOTE_1", lTag)
+      }
     }
-    console_print(id, "Voting canceled" )
-    client_print(0,print_chat,"Voting canceled")
+    console_print(id, "%L", id, "VOTING_CANC" )
+    client_print(0,print_chat,"%L",LANG_PALYER,"VOTING_CANC")
     remove_task( 99889988 , 1 )
     set_cvar_float( "amx_last_voting" , get_gametime()  )    
   }
   else
-    console_print(id, "There is no voting to cancel or the vote session can't be canceled with that command" ) 
+    console_print(id, "%L", id, "NO_VOTE_CANC" ) 
+
   return PLUGIN_HANDLED
 }
     
 public delayedExec(cmd[]) 
   server_cmd(cmd)
 
-new g_resultRef[] = "Result refused"
-new g_resultAcpt[] = "Result accepted"
-new g_votingFailed[] = "Voting failed"
-new g_votingSuccess[] = "Voting successful"
-
-public autoRefuse(){
-  log_amx("Vote: %s" , g_resultRef)
+public autoRefuse() {
+  log_amx("Vote: %s" , "Result refused")
   client_print(0,print_chat,g_resultRef )
 }
 
 public actionResult(id,key) {
   remove_task( 4545454 )
-  switch(key){
+  switch (key){
     case 0: {
       set_task(2.0,"delayedExec",0,g_Execute,g_execLen)
-      log_amx("Vote: %s",g_resultAcpt)
-      client_print(0,print_chat,g_resultAcpt )
+      log_amx("Vote: %L","en","RES_ACCEPTED")
+      client_print(0,print_chat,"%L",LANG_PLAYER,"RES_ACCEPTED")
     }
     case 1: autoRefuse()
   }
@@ -120,63 +119,79 @@ public actionResult(id,key) {
 public checkVotes() {
   new best = 0
   if ( !g_yesNoVote ) {
-    for(new a = 0; a < 4; ++a)
+    for (new a = 0; a < 4; ++a)
       if (g_voteCount[a] > g_voteCount[best])
         best = a
   }
   new votesNum = g_voteCount[0] + g_voteCount[1] + g_voteCount[2]  + g_voteCount[3]
   new iRatio = votesNum ? floatround( g_voteRatio * float( votesNum ) ,floatround_ceil) : 1
   new iResult = g_voteCount[best]
-  if ( iResult < iRatio ){
-    if (g_yesNoVote)
-      client_print(0,print_chat,"%s (yes ^"%d^") (no ^"%d^") (needed ^"%d^")",g_votingFailed, g_voteCount[0], g_voteCount[1] , iRatio  )
-    else
-      client_print(0,print_chat,"%s (got ^"%d^") (needed ^"%d^")",g_votingFailed,iResult , iRatio )
-    log_amx("Vote: %s (got ^"%d^") (needed ^"%d^")",g_votingFailed,iResult , iRatio )  
+  new players[32],pnum,i
+  get_players(players,pnum,"c")
+  if ( iResult < iRatio ) {
+    new lVotingFailed[32]
+    for (i=0;i<pnum;i++) {
+      format(lVotingFailed,31,"%L",players[i],"VOTING_FAILED")
+      if (g_yesNoVote)
+        client_print(0,print_chat,"%L",players[i],"VOTING_RES_1",
+          lVotingFailed,g_voteCount[0],g_voteCount[1],iRatio)
+      else
+        client_print(0,print_chat,"%L",players[i],"VOTING_RES_2",lVotingFailed,iResult,iRatio )
+    }
+    log_amx("Vote: %s (got ^"%d^") (needed ^"%d^")",g_votingFailed,iResult,iRatio)  
     return PLUGIN_CONTINUE
   }
   g_execLen = format(g_Execute,255,g_Answer,g_optionName[best]) + 1
   if (g_execResult){
     g_execResult = false
     if ( is_user_connected(g_voteCaller) )  {
-      new menuBody[512]
-      new len = format(menuBody,511,g_coloredMenus ? "\yThe result: \w%s^n^n" :  "The result: %s^n^n", g_Execute )
-      len += copy( menuBody[len] ,511 - len, g_coloredMenus ? "\yDo you want to continue?^n\w" : "Do you want to continue?^n" )
-      copy( menuBody[len] ,511 - len, "^n1. Yes^n2. No")
-      show_menu( g_voteCaller ,0x03 ,menuBody, 10 )
+      new menuBody[512],lTheResult[32],lYes[16],lNo[16]
+      format(lTheResult,31,"%L",g_voteCaller,"THE_RESULT")
+      format(lYes,15,"%L",g_voteCaller,"YES")
+      format(lNo,15,"%L",g_voteCaller,"NO")
+      ucfirst(lYes)
+      ucfirst(lNo)
+      new len = format(menuBody,511,g_coloredMenus ? "\y%s: \w%s^n^n" : "%s: %s^n^n", lTheResult, g_Execute )
+      len += copy( menuBody[len] ,511 - len, g_coloredMenus ? "\y%L^n\w" : "%L^n", g_voteCaller, "WANT_CONTINUE" )
+      format( menuBody[len] ,511 - len, "^n1. %s^n2. %s",lYes,lNo)
+      show_menu( g_voteCaller ,0x03 ,menuBody, 10, "The result: " )
       set_task(10.0,"autoRefuse",4545454)
     }
     else
       set_task(2.0,"delayedExec",0,g_Execute,g_execLen)
   }
-  client_print(0,print_chat,"%s (got ^"%d^") (needed ^"%d^"). The result: %s", g_votingSuccess, iResult , iRatio , g_Execute ) 
+  new lVotingSuccess[32]
+  for (i=0;i<pnum;i++) {
+    format(lVotingSuccess,31,"%L",players[i],"VOTING_SUCCESS")
+    ient_print(0,print_chat,"%L",players[i],"VOTING_RES_3",lVotingSuccess,iResult,iRatio,g_Execute) 
+  }
   log_amx("Vote: %s (got ^"%d^") (needed ^"%d^") (result ^"%s^")", g_votingSuccess, iResult , iRatio , g_Execute )
   return PLUGIN_CONTINUE
 } 
 
-public voteCount(id,key){ 
+public voteCount(id,key) {
   if ( get_cvar_num("amx_vote_answers") ) { 
     new name[32]
     get_user_name(id,name,31)
     if (g_yesNoVote)
-      client_print(0,print_chat,"%s voted %s",name,key ? "against" : "for" )
+      client_print(0,print_chat,"%L",LANG_PLAYER,key ? "VOTED_AGAINST" : "VOTED_FOR",name)
     else
-      client_print(0,print_chat,"%s voted for option #%d",name,key+1)
+      client_print(0,print_chat,"%L",LANG_PLAYER,"VOTED_FOR_OPT",name,key+1)
   }
   ++g_voteCount[key]
   return PLUGIN_HANDLED 
 } 
 
-public cmdVoteMap(id,level,cid) { 
+public cmdVoteMap(id,level,cid) {
   if (!cmd_access(id,level,cid,2))
     return PLUGIN_HANDLED
   new Float:voting = get_cvar_float("amx_last_voting")
-  if (voting > get_gametime()){ 
-    console_print(id, g_alredyVoting ) 
+  if (voting > get_gametime()) {
+    console_print(id, "%L", id, "ALREADY_VOTING") 
     return PLUGIN_HANDLED 
   } 
   if (voting && voting + get_cvar_float("amx_vote_delay") > get_gametime()) { 
-    console_print(id, g_notAllowed ) 
+    console_print(id, "%L", id, "VOTING_NOT_ALLOW") 
     return PLUGIN_HANDLED 
   } 
   new argc = read_argc() 
@@ -186,20 +201,22 @@ public cmdVoteMap(id,level,cid) {
   g_optionName[1][0] = 0
   g_optionName[2][0] = 0
   g_optionName[3][0] = 0
-  for(new i = 1; i < argc; ++i){ 
+  for (new i = 1; i < argc; ++i) { 
     read_argv(i,g_optionName[g_validMaps],31) 
     if (is_map_valid(g_optionName[g_validMaps])) 
       g_validMaps++; 
   } 
   if (g_validMaps == 0) { 
-    console_print(id,"Given %s not valid",(argc==2)?"map is":"maps are") 
+    new lMaps[16]
+    format(lMaps,15,"%L",id,(argc==2)?"MAP_IS":"MAPS_ARE")
+    console_print(id,"%L",id,"GIVEN_NOT_VALID") 
     return PLUGIN_HANDLED 
   } 
   new menu_msg[256] 
   new keys = 0  
-  if (g_validMaps > 1){
+  if (g_validMaps > 1) {
     keys = MENU_KEY_0
-    copy(menu_msg,255,g_coloredMenus ? "\yChoose map: \w^n^n" : "Choose map: ^n^n") 
+    copy(menu_msg,255,g_coloredMenus ? "\y%L: \w^n^n" : "%L: ^n^n",LANG_SERVER,"CHOOSE_MAP") 
     new temp[128] 
     for(new a = 0; a < g_validMaps; ++a){ 
       format(temp,127,"%d.  %s^n",a+1,g_optionName[a]) 
@@ -209,9 +226,15 @@ public cmdVoteMap(id,level,cid) {
     add(menu_msg,255,"^n0.  None")
     g_yesNoVote = 0 
   }
-  else{ 
-    format(menu_msg,255,g_coloredMenus ? "\yChange map to %s?\w^n^n1.  Yes^n2.  No"
-        : "Change map to %s?^n^n1.  Yes^n2.  No",g_optionName[0]) 
+  else { 
+    new lChangeMap[32],lYes[16],lNo[16]
+    format(lChangeMap,31,"%L",LANG_SERVER,"CHANGE_MAP_TO")
+    format(lYes,15,"%L",LANG_SERVER,"YES")
+    format(lNo,15,"%L",LANG_SERVER,"NO")
+    ucfirst(lYes)
+    ucfirst(lNo)
+    format(menu_msg,255,g_coloredMenus ? "\y%s %s?\w^n^n1.  %s^n2.  %s"
+        : "%s %s?^n^n1.  %s^n2.  %s",lChangeMap,g_optionName[0],lYes,lNo) 
     keys = MENU_KEY_1|MENU_KEY_2
     g_yesNoVote = 1
   }
@@ -224,23 +247,32 @@ public cmdVoteMap(id,level,cid) {
   else
     log_amx("Vote: ^"%s<%d><%s><>^" vote maps (map#1 ^"%s^") (map#2 ^"%s^") (map#3 ^"%s^") (map#4 ^"%s^")",
       name,get_user_userid(id),authid,g_optionName[0],g_optionName[1],g_optionName[2],g_optionName[3])
-      
-  switch(get_cvar_num("amx_show_activity")) {
-  case 2: client_print(0,print_chat,"%s %s: vote map(s)",name,
-      (get_user_flags(id) & ADMIN_USER) ? g_playerTag : g_adminTag)
-  case 1: client_print(0,print_chat,"%s: vote map(s)",
-      (get_user_flags(id) & ADMIN_USER) ? g_playerTag : g_adminTag)
+
+  new lTag[16],activity = get_cvar_num("amx_show_activity")
+  if (activity>0) {
+    new players[32],pnum
+    get_players(players,pnum,"c")
+    for (new i=0;i<pnum;i++) {
+      format(lTag,15,"%L",players[i],is_user_admin(id)?"ADMIN":"PLAYER")
+      strtoupper(lTag)
+      switch (activity) {
+        case 2: client_print(players[i],print_chat,"%L",
+          players[i],"ADMIN_VOTE_MAP_2",lTag,name)
+        case 1: client_print(players[i],print_chat,"%L",
+          players[i],"ADMIN_VOTE_MAP_1",lTag)
+      }
+    }
   }
-      
+
   g_execResult = true
   new Float:vote_time = get_cvar_float("amx_vote_time") + 2.0 
   set_cvar_float("amx_last_voting",  get_gametime() + vote_time )
   g_voteRatio = get_cvar_float("amx_votemap_ratio") 
   g_Answer = "changelevel %s"
-  show_menu(0,keys,menu_msg,floatround(vote_time)) 
+  show_menu(0,keys,menu_msg,floatround(vote_time),(g_validMaps > 1)?"Choose map: ":"Change map to ") 
   set_task(vote_time,"checkVotes" , 99889988 )
   g_voteCaller = id
-  console_print(id, g_votingStarted ) 
+  console_print(id, "%L", id, "VOTING_STARTED") 
   g_voteCount = { 0,0, 0,0 }
   return PLUGIN_HANDLED 
 } 
@@ -250,18 +282,18 @@ public cmdVote(id,level,cid) {
     return PLUGIN_HANDLED
   new Float:voting = get_cvar_float("amx_last_voting")
   if (voting > get_gametime()){ 
-    console_print(id, g_alredyVoting ) 
+    console_print(id, "%L", id, "ALREADY_VOTING") 
     return PLUGIN_HANDLED 
   } 
   if (voting && voting + get_cvar_float("amx_vote_delay") > get_gametime()) { 
-    console_print(id, g_notAllowed ) 
+    console_print(id, "%L", id, "VOTING_NOT_ALLOW") 
     return PLUGIN_HANDLED 
   }
   new quest[48] 
   read_argv(1,quest,47) 
   if ((contain(quest,"sv_password")!=-1)||(contain(quest,"rcon_password")!=-1)||
     (contain(quest,"kick")!=-1)||(contain(quest,"addip")!=-1)||(contain(quest,"ban")!=-1)){ 
-    console_print(id,"Voting for that has been forbidden")
+    console_print(id,"%L",id,"VOTING_FORBIDDEN")
     return PLUGIN_HANDLED
   } 
   read_argv(2,g_optionName[0],31) 
@@ -273,41 +305,49 @@ public cmdVote(id,level,cid) {
   log_amx("Vote: ^"%s<%d><%s><>^" vote custom (question ^"%s^") (option#1 ^"%s^") (option#2 ^"%s^")", 
     name,get_user_userid(id),authid,quest,g_optionName[0],g_optionName[1]) 
 
-  switch(get_cvar_num("amx_show_activity")) {
-  case 2: client_print(0,print_chat,"%s %s: vote custom",
-    (get_user_flags(id) & ADMIN_USER) ? g_playerTag : g_adminTag,name )
-  case 1: client_print(0,print_chat,"%s: vote custom",
-    (get_user_flags(id) & ADMIN_USER) ? g_playerTag : g_adminTag)
+  new activity = get_cvar_num("amx_show_activity")
+  if (activity>0) {
+    new players[32],pnum,lTag[16]
+    get_players(players,pnum,"c")
+    for (new i=0;i<pnum;i++) {
+      format(lTag,"%L",players[i],is_user_admin(id)?"ADMIN":"PLAYER")
+      strtoupper(lTag)
+      switch (activity) {
+        case 2: client_print(players[i],print_chat,"%L","ADMIN_VOTE_CUS_2",lTag,name)
+        case 1: client_print(players[i],print_chat,"%L","ADMIN_VOTE_CUS_1",lTag)
+      }
+    }
   }
 
-  new menu_msg[256] 
+  new menu_msg[256],lVote[16]
+  format(lVote,15,"%L",LANG_SERVER,"VOTE")
   new keys = MENU_KEY_1|MENU_KEY_2
-  format(menu_msg,255, g_coloredMenus ? "\yVote: %s\w^n^n1.  %s^n2.  %s"
-      : "Vote: %s^n^n1.  %s^n2.  %s",quest,g_optionName[0],g_optionName[1]) 
+  format(menu_msg,255, g_coloredMenus ? "\y%s: %s\w^n^n1.  %s^n2.  %s"
+      : "%s: %s^n^n1.  %s^n2.  %s",lVote,quest,g_optionName[0],g_optionName[1])
   g_execResult = false
-  new Float:vote_time = get_cvar_float("amx_vote_time") + 2.0 
+  new Float:vote_time = get_cvar_float("amx_vote_time") + 2.0
   set_cvar_float("amx_last_voting",  get_gametime() + vote_time )
   g_voteRatio = get_cvar_float("amx_vote_ratio")
   format(g_Answer,127,"%s - %%s",quest)
-  show_menu(0,keys,menu_msg,floatround(vote_time)) 
-  set_task(vote_time,"checkVotes" , 99889988 ) 
+  show_menu(0,keys,menu_msg,floatround(vote_time),"Vote: ")
+  set_task(vote_time,"checkVotes" , 99889988 )
   g_voteCaller = id
-  console_print(id, g_votingStarted ) 
-  g_voteCount ={ 0,0,0,0}
-  g_yesNoVote = 0 
-  return PLUGIN_HANDLED 
-} 
+  console_print(id, "%L", id, "VOTING_STARTED")
+  g_voteCount = {0,0,0,0}
+  g_yesNoVote = 0
+  return PLUGIN_HANDLED
+}
 
 public cmdVoteKickBan(id,level,cid) { 
   if (!cmd_access(id,level,cid,2))
     return PLUGIN_HANDLED
   new Float:voting = get_cvar_float("amx_last_voting")
   if (voting > get_gametime()){ 
-    console_print(id, g_alredyVoting ) 
+    console_print(id, "%L", id, "ALREADY_VOTING") 
     return PLUGIN_HANDLED 
   } 
   if (voting && voting + get_cvar_float("amx_vote_delay") > get_gametime()) { 
-    console_print(id, g_notAllowed ) 
+    console_print(id, "%L", id, "VOTING_NOT_ALLOW") 
     return PLUGIN_HANDLED 
   } 
   new cmd[32] 
@@ -317,18 +357,26 @@ public cmdVoteKickBan(id,level,cid) {
   read_argv(1,arg,31)
   new player = cmd_target(id,arg,1)
   if (!player) return PLUGIN_HANDLED
-  if (voteban && is_user_bot(player))   { 
+  if (voteban && is_user_bot(player)) { 
     new imname[32]
     get_user_name(player,imname,31)
-    console_print(id,"That action can't be performed on bot ^"%s^"",imname)
+    console_print(id,"%L",id,"ACTION_PERFORMED",imname)
     return PLUGIN_HANDLED
   }
 
   new keys = MENU_KEY_1|MENU_KEY_2
-  new menu_msg[256]
+  new menu_msg[256],lYes[16],lNo[16],lKickBan[16]
+  format(lYes,15,"%L",LANG_SERVER,"YES")
+  format(lNo,15,"%L",LANG_SERVER,"NO")
+  format(lKickBan,15,"%L",LANG_SERVER,voteban?"BAN":"KICK")
+  ucfirst(lYes)
+  ucfirst(lNo)
+  ucfirst(lKickBan)
   get_user_name(player,arg,31) 
-  format(menu_msg,255,g_coloredMenus ? "\y%s %s?\w^n^n1.  Yes^n2.  No"
-    : "%s %s?^n^n1.  Yes^n2.  No", voteban ? "Ban" : "Kick", arg)
+  format(menu_msg,255,g_coloredMenus ?
+    "\y%s %s?\w^n^n1.  %s^n2.  %s" :
+    "%s %s?^n^n1.  %s^n2.  %s",
+    lKickBan, arg, lYes, lNo)
   g_yesNoVote = 1   
   if (voteban) 
     get_user_authid(player,g_optionName[0],31) 
@@ -340,22 +388,31 @@ public cmdVoteKickBan(id,level,cid) {
   log_amx("Vote: ^"%s<%d><%s><>^" vote %s (target ^"%s^")", 
     name,get_user_userid(id),authid,voteban ? "ban" : "kick",arg)
   
-  switch(get_cvar_num("amx_show_activity")) {
-  case 2: client_print(0,print_chat,"%s %s: vote %s for %s",
-    (get_user_flags(id) & ADMIN_USER) ? g_playerTag : g_adminTag,name,voteban ? "ban" : "kick",arg )
-  case 1: client_print(0,print_chat,"%s: vote %s for %s",
-    (get_user_flags(id) & ADMIN_USER) ? g_playerTag : g_adminTag,voteban ? "ban" : "kick",arg)
+  new activity = get_cvar_num("amx_show_activity")
+  if (activity>0) {
+    new players[32],pnum,lTag[16]
+    get_players(players,pnum,"c")
+    for (new i=0;i<pnum;i++) {
+      format(lTag,15,"%L",players[i],is_user_admin(id)?"ADMIN":"USER"
+      format(lKickBan,"%L",players[i],voteban?"BAN":"KICK")
+      switch (activity) {
+        case 2: client_print(players[i],print_chat,"%L",
+          players[i],"ADMIN_VOTE_FOR_2",lTag,name,lKickBan,arg)
+        case 1: client_print(players[i],print_chat,"%s: vote %s for %s",
+          players[i],"ADMIN_VOTE_FOR_1",lTag,lKickBan,arg)
+      }
+    }
   }
-  
+
   g_execResult = true
   new Float:vote_time = get_cvar_float("amx_vote_time") + 2.0 
   set_cvar_float("amx_last_voting",  get_gametime() + vote_time )
   g_voteRatio = get_cvar_float(voteban ? "amx_voteban_ratio" : "amx_votekick_ratio") 
   g_Answer = voteban ? "banid 30.0 %s kick" : "kick #%s"
-  show_menu(0,keys,menu_msg,floatround(vote_time)) 
+  show_menu(0,keys,menu_msg,floatround(vote_time),voteban?"Ban ":"Kick ") 
   set_task(vote_time,"checkVotes" , 99889988 )
   g_voteCaller = id
-  console_print(id, g_votingStarted ) 
+  console_print(id, "%L", id, "VOTING_STARTED") 
   g_voteCount = {0,0,0,0}
   return PLUGIN_HANDLED 
 } 

@@ -36,12 +36,9 @@
 
 #define HELPAMOUNT 10 // Number of commands per page
 
-new g_typeHelp[] = "Type 'amx_help' in the console to see available commands"
-new g_timeInfo1[] = "Time Left: %d:%02d min. Next Map: %s"
-new g_timeInfo2[] = "No Time Limit. Next Map: %s"
-
 public plugin_init() {
   register_plugin("Admin Help",AMXX_VERSION_STR,"AMXX Dev Team")
+  register_dictionary("adminhelp.txt")
   register_concmd("amx_help","cmdHelp",0,"<page> [nr of cmds (only for server)] - displays this help")
 }
 
@@ -64,7 +61,7 @@ public cmdHelp(id,level,cid) {
 	if (start >= clcmdsnum)
 		start = clcmdsnum - 1
 
-	console_print(id,"^n----- AMX Mod X Help: Commands -----")
+	console_print(id,"^n----- %L -----",id,"HELP_COMS")
 	new info[128], cmd[32], eflags
 	new end = start + lHelpAmount // HELPAMOUNT
 
@@ -75,27 +72,27 @@ public cmdHelp(id,level,cid) {
 		get_concmd(i,cmd,31,eflags,info,127,flags,id)
 		console_print(id,"%3d: %s %s",i+1,cmd,info)
 	}
-	console_print(id,"----- Entries %d - %d of %d -----",start+1,end,clcmdsnum)
+	console_print(id,"----- %L -----",id,"ENTRIES",start+1,end,clcmdsnum)
 
 	if (end < clcmdsnum)
-		console_print(id,"----- Use 'amx_help %d' for more -----",end+1)
+		console_print(id,"----- %L -----",id,"USE_MORE",end+1)
 	else
-		console_print(id,"----- Use 'amx_help 1' for begin -----")
+		console_print(id,"----- %L -----",id,"USE_BEGIN")
 
 	return PLUGIN_HANDLED
 }
 
-public dispInfo(id){
-  client_print(id,print_chat, g_typeHelp )
+public dispInfo(id) {
+  client_print(id,print_chat,"%L",id,"TYPE_HELP")
   new nextmap[32]
   get_cvar_string("amx_nextmap",nextmap,31)
   if (get_cvar_float("mp_timelimit")){
     new timeleft = get_timeleft()
     if (timeleft > 0){
-      client_print(id,print_chat, g_timeInfo1 , timeleft / 60, timeleft % 60,nextmap)
+      client_print(id,print_chat, "%L" , id, "TIME_INFO_1", timeleft / 60, timeleft % 60,nextmap)
     }
   }
-  client_print(id,print_chat, g_timeInfo2 ,nextmap)
+  client_print(id,print_chat,"%L",id,"TIME_INFO_2",nextmap)
 }
 
 setHelp(id)

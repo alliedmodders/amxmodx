@@ -73,9 +73,11 @@ class CLangMngr
 			return strcmp(left.m_LanguageName, right)==0 ? true : false;
 		}
 		const char *GetName() { return m_LanguageName; }
-		bool Save(FILE *fp);
+		bool Save(FILE *fp, int &defOffset, uint32_t &curOffset);
+		bool SaveDefinitions(FILE *fp, uint32_t &curOffset);
 		bool Load(FILE *fp);
 		void SetMngr(CLangMngr *l) { lman = l; }
+		int Entries() { return m_LookUpTable.size(); }
 	private:
 
 		static uint32_t MakeHash(const char *src, bool makeLower = false);
@@ -92,11 +94,13 @@ class CLangMngr
 
 			int GetKey();
 			const char *GetDef();
+			int GetDefLength();
 
 			LangEntry();
 			LangEntry(int key);
 			LangEntry(int key, const char *pDef);
 			LangEntry(const LangEntry &other);
+			LangEntry(int pKey, uint32_t defHash, const char *pDef);
 
 			void Clear();
 		};
@@ -109,6 +113,8 @@ class CLangMngr
 
 		LookUpVec m_LookUpTable;
 		CLangMngr *lman;
+	public:
+				LangEntry *AddEntry(int pKey, uint32_t defHash, const char *def);
 	};
 
 	void MergeDefinitions(const char *lang, CQueue <sKeyDef*> &tmpVec);

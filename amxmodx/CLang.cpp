@@ -57,29 +57,36 @@ void qdbg(const char *s, ...)
 // dictionary format is Fast-Format-Hash-Lookup, v4
 #define MAGIC_HDR			0x4646484C
 #define FFHL_VERSION		4
+#define FFHL_MIN_VERSION	4
 
-/*
+/*version history:
+	* 1 (BAILOPAN) - Simplest form possible, no reverse
+	* 2 (BAILOPAN) - One language per file with full reverse
+	* 3 (PM OnoTo) - 2^32 languages per file with full reverse
+	* 4 (BAILOPAN) - Optimized by separating and relocating tables (normalization)
 FORMAT:
-Magic				4bytes
-Version				1byte
+Magic					4bytes
+Version					1byte
+Number of Keys			4bytes
 Number of Languages		4bytes
 LANG INFO TABLE[]		
 	Language Name		2bytes
-	Offset			4bytes
+	Offset				4bytes
 KEY TABLE[]
-	Key Hash		4bytes
+	Key Hash			4bytes
 	Key Lookup Offset	4bytes
 LANGUAGES TABLE[]
 	Language[]
-		Key Hash #	4bytes (virtual # in hash table, 0 indexed)
-		Def Hash	4bytes
-		Def Offset	4bytes
+		Definitions		4bytes
+		Key Hash #		4bytes (virtual # in hash table, 0 indexed)
+		Def Hash		4bytes
+		Def Offset		4bytes
 KEY LOOKUP TABLE[]
-	Key length		1byte
-	Key string		variable
+	Key length			1byte
+	Key string			variable
 DEF LOOKUP TABLE[]
-	Def length		2bytes
-	Def string		variable
+	Def length			2bytes
+	Def string			variable
 	*/
 
 /******** CRC & Strip *********/
@@ -199,6 +206,11 @@ const char *CLangMngr::CLang::LangEntry::GetDef()
 	return m_pDef.c_str();
 }
 
+int CLangMngr::CLang::LangEntry::GetDefLength()
+{
+	return m_pDef.size();
+}
+
 int CLangMngr::CLang::LangEntry::GetKey()
 { 
 	return key;
@@ -227,6 +239,15 @@ CLangMngr::CLang::LangEntry::LangEntry(const LangEntry &other)
 	Clear();
 	SetKey(other.key);
 	SetDef(other.m_pDef.c_str());
+}
+
+CLangMngr::CLang::LangEntry::LangEntry(int pKey, uint32_t defHash, const char *pDef)
+{
+	Clear();
+	key = pKey;
+	this->
+	m_DefHash = defHash;
+	m_pDef.assign(pDef);
 }
 
 void CLangMngr::CLang::LangEntry::Clear()
@@ -258,6 +279,15 @@ CLangMngr::CLang::CLang(const char *lang)
 	m_LookUpTable.clear();
 	strncpy(m_LanguageName, lang, 2);
 	m_LanguageName[2]=0;
+}
+
+CLangMngr::CLang::LangEntry *CLangMngr::CLang::AddEntry(int pKey, uint32_t defHash, const char *def)
+{
+	LangEntry *p = new LangEntry(pKey, defHash, def);
+
+	m_LookUpTable.push_back(p);
+
+	return p;
 }
 
 CLangMngr::CLang::~CLang()
@@ -332,10 +362,49 @@ struct OffsetPair
 	uint32_t defOffset;
 	uint32_t keyOffset;
 };
+
 // Assumes fp is set to the right position
-bool CLangMngr::CLang::Save(FILE *fp)
+bool CLangMngr::CLang::SaveDefinitions(FILE *fp, uint32_t &curOffset)
 {
-	return false;
+	unsigned short defLen = 0;
+	for (unsigned int i = 0; i<m_LookUpTable.size(); i++)
+	{
+		defLen = m_LookUpTable[i]->GetDefLength();
+		fwrite((void *)&defLen, sizeof(unsigned short), 1, fp);
+		curOffset += sizeof(unsigned short);
+		fwrite(m_LookUpTable[i]->GetDef(), sizeof(char), defLen, fp);
+		curOffset += defLen;
+	}
+
+	return true;
+}
+
+// Assumes fp is set to the right position
+bool CLangMngr::CLang::Save(FILE *fp, int &defOffset, uint32_t &curOffset)
+{
+	uint32_t keynum = 0;
+	uint32_t defhash = 0;
+	uint32_t defoff = defOffset;
+	uint32_t size = m_LookUpTable.size();
+
+	fwrite((void*)&size, sizeof(uint32_t), 1, fp);
+	curOffset += sizeof(uint32_t);
+
+	for (unsigned int i = 0; i<m_LookUpTable.size(); i++)
+	{
+		keynum = m_LookUpTable[i]->GetKey();
+		defhash = m_LookUpTable[i]->GetDefHash();
+		fwrite((void *)&keynum, sizeof(uint32_t), 1, fp);
+		curOffset += sizeof(uint32_t);
+		fwrite((void *)&defhash, sizeof(uint32_t), 1, fp);
+		curOffset += sizeof(uint32_t);
+		fwrite((void *)&defoff, sizeof(uint32_t), 1, fp);
+		curOffset += sizeof(uint32_t);
+		defOffset += sizeof(short);
+		defOffset += m_LookUpTable[i]->GetDefLength();
+	}
+
+	return true;
 }
 
 // assumes fp is set to the right position
@@ -888,7 +957,7 @@ const char *CLangMngr::GetDef(const char *langName, const char *key)
 
 bool CLangMngr::Save(const char *filename)
 {
-	/*FILE *fp = fopen(filename, "wb");
+	FILE *fp = fopen(filename, "wb");
 
 	if (!fp)
 		return false;
@@ -897,19 +966,76 @@ bool CLangMngr::Save(const char *filename)
 	unsigned char version = FFHL_VERSION;
 	uint32_t langNum = m_Languages.size();
 	const char *langName = 0;
+	uint32_t curOffset = 0;
+	uint32_t keyNum = KeyList.size();
+	uint32_t ktbSize = KeyList.size() * (sizeof(uint32_t) + sizeof(uint32_t));
+	uint32_t ltbSize = m_Languages.size() * ((sizeof(char)*2) + sizeof(uint32_t));
 
 	fwrite((void *)&magic, sizeof(uint32_t), 1, fp);
 	fwrite((void *)&version, sizeof(unsigned char), 1, fp);
+	fwrite((void *)&keyNum, sizeof(uint32_t), 1, fp);
 	fwrite((void *)&langNum, sizeof(uint32_t), 1, fp);
 
-	LangVecIter iter;
-	for (iter = m_Languages.begin(); iter!=m_Languages.end(); iter++)
-	{
-		langName = (*iter)->GetName();
-		fwrite(langName, sizeof(char), 2, fp);
+	curOffset += sizeof(uint32_t);
+	curOffset += sizeof(unsigned char);
+	curOffset += sizeof(uint32_t);
+	curOffset += sizeof(uint32_t);
 
-	}*/
-	return false;
+	uint32_t langOffset = curOffset + ktbSize + ltbSize;
+	for (unsigned int i = 0; i<m_Languages.size(); i++)
+	{
+		langName = m_Languages[i]->GetName();
+		fwrite(langName, sizeof(char), 2, fp);
+		curOffset += sizeof(char) * 2;
+		fwrite((void *)&langOffset, sizeof(uint32_t), 1, fp);
+		langOffset += sizeof(uint32_t) + (m_Languages[i]->Entries() * (sizeof(uint32_t) * 3));
+		curOffset += sizeof(uint32_t);
+	}
+	
+	//Note - langOffset now points to the start of key lookup table
+	uint32_t keyHash = 0;
+	uint32_t keyOffset = langOffset;
+	for (unsigned int i = 0; i<KeyList.size(); i++)
+	{
+		keyHash = KeyList[i]->hash;
+		fwrite((void*)&keyHash, sizeof(uint32_t), 1, fp);
+		curOffset += sizeof(uint32_t);
+		fwrite((void*)&keyOffset, sizeof(uint32_t), 1, fp);
+		curOffset += sizeof(uint32_t);
+		keyOffset += sizeof(char);
+		keyOffset += KeyList[i]->key.size();
+	}
+
+	//Note - now keyOffset points toward the start of the def table
+	int defOffset = keyOffset;
+	for (unsigned int i = 0; i<m_Languages.size(); i++)
+	{
+		m_Languages[i]->Save(fp, defOffset, curOffset);
+	}
+
+	//Now, defOffset points toward the END of the file
+	//curoffset should point toward the key table, so...
+	unsigned char keyLen = 0;
+	for (unsigned int i = 0; i<KeyList.size(); i++)
+	{
+		keyLen = KeyList[i]->key.size();
+		fwrite((void*)&keyLen, sizeof(unsigned char), 1, fp);
+		curOffset += sizeof(unsigned char);
+		fwrite(KeyList[i]->key.c_str(), sizeof(char), keyLen, fp);
+		curOffset += sizeof(char) * keyLen;
+	}
+
+	//Finally, write the def table
+	// It's assumed no orders changed...
+	for (unsigned int i = 0; i<m_Languages.size(); i++)
+	{
+		m_Languages[i]->SaveDefinitions(fp, curOffset);
+	}
+
+	fclose(fp);
+
+	//done!
+	return true;
 }
 
 bool CLangMngr::SaveCache(const char *filename)
@@ -978,6 +1104,87 @@ bool CLangMngr::Load(const char *filename)
 {
 	Clear();
 
+	FILE *fp = fopen(filename, "rb");
+	
+	if (!fp)
+		return false;
+
+	uint32_t magic = 0;
+	uint32_t langCount = 0;
+	uint32_t keycount = 0;
+	char version = 0;
+
+	fread((void*)&magic, sizeof(uint32_t), 1, fp);
+	if (magic != MAGIC_HDR)
+		return false;
+
+	fread((void*)&version, sizeof(char), 1, fp);
+	if (version > FFHL_VERSION || version < FFHL_MIN_VERSION)
+		return false;
+
+	fread((void*)&langCount, sizeof(uint32_t), 1, fp);
+
+	uint32_t *LangOffsets = new uint32_t[langCount];
+	char langname[3];
+	for (unsigned int i=0; i<langCount; i++)
+	{
+		fread(langname, sizeof(char), 2, fp);
+		langname[2] = 0;
+		GetLang(langname);	//this will initialize for us
+		fread((void *)&(LangOffsets[i]), sizeof(uint32_t), 1, fp);
+	}
+
+	//we should now be at the key table
+	int ktbOffset = ftell(fp);
+	keyEntry *e = 0;
+	unsigned char keylen;
+	uint32_t keyoffset, save;
+	for (unsigned i=0; i<keycount; i++)
+	{
+		e = new keyEntry;
+		fread((void*)&(e->hash), sizeof(uint32_t), 1, fp);
+		fread((void*)&keyoffset, sizeof(uint32_t), 1, fp);
+		save = ftell(fp);
+		fseek(fp, keyoffset, SEEK_SET);
+		fread((void*)&keylen, sizeof(char), 1, fp);
+		char *data = new char[keylen+1];
+		fread(data, sizeof(char), keylen, fp);
+		data[keylen] = 0;
+		e->key.assign(data);
+		delete [] data;
+		KeyList.push_back(e);
+		fseek(fp, save, SEEK_SET);		//bring back to next key
+	}
+
+	//we should now be at the languages table
+	uint32_t numentries;
+	uint32_t keynum;
+	uint32_t defhash;
+	uint32_t defoffset;
+	unsigned short deflen;
+	for (unsigned int i=0; i<langCount; i++)
+	{
+		fread((void*)&numentries, sizeof(uint32_t), 1, fp);
+		for (unsigned int j=0; i<numentries; j++)
+		{
+			fread((void *)&keynum, sizeof(uint32_t), 1, fp);
+			fread((void *)&defhash, sizeof(uint32_t), 1, fp);
+			fread((void *)&defoffset, sizeof(uint32_t), 1, fp);
+			save = ftell(fp);
+			fseek(fp, defoffset, SEEK_SET);
+			fread((void *)&deflen, sizeof(unsigned short), 1, fp);
+			char *data = new char[deflen+1];
+			fread(data, sizeof(char), deflen, fp);
+			data[deflen] = 0;
+			m_Languages[i]->AddEntry(keynum, defhash, data);
+			delete [] data;
+			fseek(fp, save, SEEK_SET);	//bring back to next entry
+		}
+	}
+
+	fclose(fp);
+	
+    //we're done!
 	return true;
 }
 

@@ -21,8 +21,6 @@
  *  Version: $Id$
  */
 
-// JIT used
-//#define JIT
 #if defined __linux__
   #include <sclinux.h>
 #endif

@@ -115,6 +115,24 @@
 #define CSW_KNIFE		29
 #define CSW_P90			30
 
+#define HIW_BERETTA		1
+#define HIW_SPAS12		2
+#define HIW_M4A1		3
+#define HIW_MP5A4		4
+#define HIW_MP5SD5		5
+#define HIW_AK47		6
+#define HIW_AKS74U		7
+#define HIW_GLOCK		8
+#define HIW_M11			9
+#define HIW_M11SD		10
+#define HIW_PSG1		11
+#define HIW_ZASTAVA		12
+#define HIW_M16A2		13
+#define HIW_REMINGTON		14
+#define HIW_NATOGREN		15
+#define HIW_TANGOGREN		16
+#define HIW_FLASHBANG		17
+
 /* Parts of body for hits */
 #define HIT_GENERIC		0	/* none */
 #define HIT_HEAD		1

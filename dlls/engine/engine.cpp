@@ -1915,7 +1915,7 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
 		CHECK_ENTITY(index);
-		cRet = MF_GetAmxAddr(amx,params[2]);
+		cRet = MF_GetAmxAddr(amx,params[3]);
 		indexb=cRet[0];
 		CHECK_ENTITY(indexb);
 		gpGamedllFuncs->dllapi_table->pfnTouch(INDEXENT(index),INDEXENT(indexb));
@@ -1925,7 +1925,7 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
 		CHECK_ENTITY(index);
-		cRet = MF_GetAmxAddr(amx,params[2]);
+		cRet = MF_GetAmxAddr(amx,params[3]);
 		indexb=cRet[0];
 		CHECK_ENTITY(indexb);
 		gpGamedllFuncs->dllapi_table->pfnBlocked(INDEXENT(index),INDEXENT(indexb));

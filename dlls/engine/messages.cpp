@@ -274,6 +274,7 @@ void MessageEnd(void)
 	int mres = 0;
 	unsigned int i = 0;
 	if (inblock) {
+		inblock = false;
 		if (msgBlocks[msgType] == BLOCK_ONCE)
 			msgBlocks[msgType] = BLOCK_NOT;
 		RETURN_META(MRES_SUPERCEDE);

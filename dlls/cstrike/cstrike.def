@@ -1,0 +1,10 @@
+LIBRARY cstrike
+EXPORTS
+	GiveFnptrsToDll			@1
+	Meta_Attach				@2
+	Meta_Detach				@3
+	Meta_Query				@4
+	AMX_Attach				@5
+	AMX_Detach				@7
+SECTIONS
+	.data READ WRITE

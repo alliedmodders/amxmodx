@@ -33,7 +33,7 @@
 
 // Fake metamod api for modules
 
-#include <CList.h>
+#include "CList.h"
 
 // from mplugin.h (metamod)
 // Flags to indicate current "load" state of plugin.

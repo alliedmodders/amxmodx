@@ -55,7 +55,7 @@ public cmdHelp(id,level,cid){
   if (--start < 0) start = 0
   new clcmdsnum = get_concmdsnum(flags,id)
   if (start >= clcmdsnum) start = clcmdsnum - 1
-  console_print(id,"^n----- AMX Help: Commands -----")
+  console_print(id,"^n----- AMX Mod X Help: Commands -----")
   new info[128], cmd[32], eflags
   new end = start + HELPAMOUNT
   if (end > clcmdsnum) end = clcmdsnum

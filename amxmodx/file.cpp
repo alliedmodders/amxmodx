@@ -188,6 +188,7 @@ static cell AMX_NATIVE_CALL write_file(AMX *amx, cell *params) /* 3 param */
   // now rewrite because file can be now smaller...
   if ( (pFile = fopen(sFile,"w")) == NULL ){
     amx_RaiseError(amx,AMX_ERR_NATIVE);
+    fclose(pTemp);
     return 0;
   }
 

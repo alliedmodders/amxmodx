@@ -3,57 +3,30 @@ MIN_FREQ = Minimal frequency for this message is %d seconds
 MSG_FREQ = Scrolling message displaying frequency: %d:%02d minutes
 MSG_DISABLED = Scrolling message disabled
 
-[bp]
-MIN_FREQ = Frequencia minima para essa mensagem e de %d segundos
-MSG_FREQ = Frequencia  da mensagem rotatoria: %d:%02d minutos
-MSG_DISABLED = Mensagem rotatoria desabilitada
-
-[da]
-MIN_FREQ = Minimum frekvens for denne besked er %d sekunder
-MSG_FREQ = Rullende besked visnings frekvens: %d:%02d minutter
-MSG_DISABLED = Rullende besked slaaet fra
-
 [de]
-MIN_FREQ = Minimale Frequenz fuer diese Anzeige sind %d Sekunden
-MSG_FREQ = Scrollnachricht Anzeigefrequenz: %d:%02d Minuten
-MSG_DISABLED = Scrollnachrichten abgeschaltet
+MIN_FREQ = Minimale Frequenz fuer diese Anzeige sind %d Sekunden 
+MSG_FREQ = Scrollnachricht Anzeigefrequenz: %d:%02d Minuten 
+MSG_DISABLED = Scrollnachrichten abgeschaltet 
 
-[es]
-MIN_FREQ = La Frecuencia minima para este mensaje es de %d segundos
-MSG_FREQ = Frecuencia de display del mensaje: %d:%02d minutos
-MSG_DISABLED = Mensaje deshabilitado
-
-[fr]
-MIN_FREQ = La frequence minimale pour ce message est de %d secondes
-MSG_FREQ = La frequence d'affichage des messages deroulants est de: %d:%02d minutes
-MSG_DISABLED = Les messages deroulants sont desactives
-
-[nl]
-MIN_FREQ = Minimale frequentie voor dit bericht is %d seconden
-MSG_FREQ = Schuif berichten vertonings frequentie: %d:%02d minuten
-MSG_DISABLED = Schuif berichten uitgeschakeld
-
-[pl]
-MIN_FREQ = Minimalna czestotliwosc dla tej wiadomosci to %d sekund
-MSG_FREQ = Czestotliwosc wyswietlania wiadomosci: %d:%02d minut
-MSG_DISABLED = Wiadomosci przesuwane wylaczone
-
-[pt]
-MIN_FREQ = Frequencia minima para esta mensagem e' %d segundos
-MSG_FREQ = Frequencia para mensagem rotativa: %d:%02d minutos
-MSG_DISABLED = Mensagem rotativa desligada
 
 [sr]
 MIN_FREQ = Minimalno vreme prikazivanja za ovu poruku je %d sekundi
 MSG_FREQ = Vreme prikazivanja prolazece poruke: %d:%02d minut(a)
 MSG_DISABLED = Prolazeca poruka iskljucna
 
-[sv]
-MIN_FREQ = Minimefrekvens f'o'r detta meddelande e %d sekunder
-MSG_FREQ = Frekvens f'o'r rullande meddelanden: %d:%02d minuter
-MSG_DISABLED = Rullande meddelande avst'a'ngt
 
 [tr]
-MIN_FREQ = Bu mesajin en az frekansi %d saniyedir
-MSG_FREQ = Kaydirilan mesaj gosterme frekansi: %d:%02d dakika
-MSG_DISABLED = Kaydirilan mesaj kullanimda degil
+MIN_FREQ = Bu mesajin en az frekansi %d saniyedir 
+MSG_FREQ = Kaydirilan mesaj gosterme frekansi: %d:%02d dakika 
+MSG_DISABLED = Kaydirilan mesaj kullanimda degil 
+
+[fr]
+MIN_FREQ = La frequence minimale pour ce message est de %d secondes
+MSG_FREQ = La frequence d'affichage des messages deroulants est de: %d:%02d minutes
+MSG_DISABLED = Les messages deroulants sont desactives
+
+[da]
+[da] 
+MIN_FREQ = Minimum frekvens for denne besked er %d sekunder 
+MSG_FREQ = Rullende besked visnings frekvens: %d:%02d minutter 
+MSG_DISABLED = Rullende besked slaaet fra 

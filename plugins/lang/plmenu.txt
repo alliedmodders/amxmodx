@@ -15,73 +15,75 @@ TRANSF_TO = Transfer to %s
 CL_CMD_MENU = Client Cmds Menu
 NO_CMDS = No cmds available
 
-[bp]
-ADMIN_BAN_1 = ADMIN: baniu %s
-ADMIN_BAN_2 = ADMIN %s: baniu %s
-BAN_MENU = Menu de Banir
-BAN_FOR_MIN = Banir por %d minutos
-BAN_PERM = Banir permanentemente
-SLAP_SLAY_MENU = Menu de Bater/Matar
-SLAP_WITH_DMG = Bater com %d de dano
-SLAY = Matar
-KICK_MENU = Menu de Desconectar
-ADMIN_TRANSF_1 = ADMIN: transferiu %s para o time %s
-ADMIN_TRANSF_2 = ADMIN %s: transferiu %s para o time %s
-TEAM_MENU = Menu de Time
-TRANSF_TO = Transferir para %s
-CL_CMD_MENU = Menu de Comandos no Cliente
-NO_CMDS = Nenhum comando disponivel
+[de]
+ADMIN_BAN_1 = ADMIN: bannt %s 
+ADMIN_BAN_2 = ADMIN %s: bannt %s 
+BAN_MENU = Menu > bannen 
+BAN_FOR_MIN = Bann fuer %d Minuten 
+BAN_PERM = fuer immer bannen 
+ADMIN_SLAP_1 = ADMIN: schlaegt %s mit %d Schaden 
+ADMIN_SLAP_2 = ADMIN %s: schlaegt %s mit %d Schaden 
+ADMIN_SLAY_1 = ADMIN: toetet %s 
+ADMIN_SLAY_2 = ADMIN %s: toetet %s 
+SLAP_SLAY_MENU = Schagen/Toeten-Menu 
+SLAP_WITH_DMG = Schlaegt mit %d Schaden 
+SLAY = toeten 
+ADMIN_KICK_1 = ADMIN: kickt %s 
+ADMIN_KICK_2 = ADMIN %s: kickt %s 
+KICK_MENU = Menu >kicken 
+ADMIN_TRANSF_1 = ADMIN: scheibt %s zu den %s 
+ADMIN_TRANSF_2 = ADMIN %s: scheibt %s zu den %s 
+TEAM_MENU = Menu > Team 
+TRANSF_TO = zu den %s geschoben 
+CL_CMD_MENU = Menu > Spielerbefehle 
+NO_CMDS = keine Befehle verfuegbar 
 
-[da]
+
+[sr]
 ADMIN_BAN_1 = ADMIN: ban %s
 ADMIN_BAN_2 = ADMIN %s: ban %s
-BAN_MENU = Ban Menu
-BAN_FOR_MIN = Ban i %d minutter
-BAN_PERM = Ban permanent
-SLAP_SLAY_MENU = Klask/Draeb Menu
-SLAP_WITH_DMG = Klask med %d skade
-SLAY = Draeb
-KICK_MENU = Kick Menu
-ADMIN_TRANSF_1 = ADMIN: Overflyt %s to %s
-ADMIN_TRANSF_2 = ADMIN %s: Overflyt %s to %s
-TEAM_MENU = Hold Menu
-TRANSF_TO = Overflyt til %s
-CL_CMD_MENU = Klient Kommando Menu
-NO_CMDS = Ingen kommandoer til raadighed
+BAN_MENU = Ban Meni
+BAN_FOR_MIN = Ban na %d minuta
+BAN_PERM = Ban za stalno
+ADMIN_SLAP_1 = ADMIN: slap %s sa %d stete
+ADMIN_SLAP_2 = ADMIN %s: slap %s sa %d stete
+ADMIN_SLAY_1 = ADMIN: slay %s
+ADMIN_SLAY_2 = ADMIN %s: slay %s
+SLAP_SLAY_MENU = Slap/Slay Meni
+SLAP_WITH_DMG = Slap sa %d stete
+SLAY = Slay
+ADMIN_KICK_1 = ADMIN: kick %s
+ADMIN_KICK_2 = ADMIN %s: kick %s
+KICK_MENU = Kick Meni
+ADMIN_TRANSF_1 = ADMIN: transfer %s u %s
+ADMIN_TRANSF_2 = ADMIN %s: transfer %s u %s
+TEAM_MENU = Tim Meni
+TRANSF_TO = Transfer u %s
+CL_CMD_MENU = Klijent Komande Meni
+NO_CMDS = Nema dostupnih komandi 
 
-[de]
-ADMIN_BAN_1 = ADMIN: bannt %s
-ADMIN_BAN_2 = ADMIN %s: bannt %s
-BAN_MENU = Menu Bannen
-BAN_FOR_MIN = fuer %d Minuten bannen
-BAN_PERM = fuer immer bannen
-SLAP_SLAY_MENU = Schagen/Toeten-Menu
-SLAP_WITH_DMG = mit %d Schaden schlagen
-SLAY = toeten
-KICK_MENU = Menu Kicken
-ADMIN_TRANSF_1 = ADMIN: scheibt %s zu den %s
-ADMIN_TRANSF_2 = ADMIN %s: scheibt %s zu den %s
-TEAM_MENU = Menu Team
-TRANSF_TO = zu den %s transferieren
-CL_CMD_MENU = Menu Spielerbefehle
-NO_CMDS = keine Befehle verfuegbar
-
-[es]
-ADMIN_BAN_1 = ADMIN: prohibe a %s
-ADMIN_BAN_2 = ADMIN %s: prohibe a %s
-BAN_MENU = Menu de Prohibiciones
-BAN_FOR_MIN = prohibe por %d minutos
-BAN_PERM = Prohibe permanentemente
-SLAP_SLAY_MENU = Menu de Cacheteos/Asesinatos
-SLAP_WITH_DMG = Cacheteo con %d danio
-SLAY = asesinar
-KICK_MENU = Menu para echar
-ADMIN_TRANSF_1 = ADMIN: transfiere a %s a %s
-ADMIN_TRANSF_2 = ADMIN %s: transfiere a %s a %s
-TEAM_MENU = Menu Equipo
-TRANSF_TO = Transferir a %s
-CL_CMD_MENU = Menu de comandos de Cliente
-NO_CMDS = No hay comandos disponibles
+[tr]
+ADMIN_BAN_1 = ADMIN: ban %s 
+ADMIN_BAN_2 = ADMIN %s: ban %s 
+BAN_MENU = Ban Menusu 
+BAN_FOR_MIN = Ban %d dakika olarak 
+BAN_PERM = Ban suresiz 
+ADMIN_SLAP_1 = ADMIN: %s tokatla verilen zarar %d 
+ADMIN_SLAP_2 = ADMIN %s: %s tokatla verilen zarar %d 
+ADMIN_SLAY_1 = ADMIN: oldurdu %s 
+ADMIN_SLAY_2 = ADMIN %s: oldurdu %s 
+SLAP_SLAY_MENU = Tokatla/oldur menusu 
+SLAP_WITH_DMG = Tokatla %d zarar ile 
+SLAY = Öldür 
+ADMIN_KICK_1 = ADMIN: atdi %s 
+ADMIN_KICK_2 = ADMIN %s: atdi %s 
+KICK_MENU = Atma menusu 
+ADMIN_TRANSF_1 = ADMIN: takim %s goc %s 
+ADMIN_TRANSF_2 = ADMIN %s: takim %s goc %s 
+TEAM_MENU = Takim menu 
+TRANSF_TO = %s takima goc 
+CL_CMD_MENU = Oyuncu Emir Menusu 
+NO_CMDS = Emir mevcud degildir
 
 [fr]
 ADMIN_BAN_1 = ADMIN: banni %s
@@ -100,104 +102,27 @@ TRANSF_TO = Transferer en %s
 CL_CMD_MENU = Menu Cmds Client 
 NO_CMDS = Aucune commande disponible
 
-[nl]
-ADMIN_BAN_1 = BEHEERDER: verban %s
-ADMIN_BAN_2 = BEHEERDER %s: verban %s
-BAN_MENU = Verban Menu
-BAN_FOR_MIN = Verban voor %d minuten
-BAN_PERM = Verban permanent
-SLAP_SLAY_MENU = Sla/Dood Menu
-SLAP_WITH_DMG = Sla met %d schade
-SLAY = Sla
-KICK_MENU = Verwijder Menu
-ADMIN_TRANSF_1 = BEHEERDER: transfer %s to %s
-ADMIN_TRANSF_2 = BEHEERDER %s: transfer %s to %s
-TEAM_MENU = Team Menu
-TRANSF_TO = Transfer naar %s
-CL_CMD_MENU = Gebruikers Cmds Menu
-NO_CMDS = Geen cmds beschikbaar
 
-[pl]
-ADMIN_BAN_1 = ADMIN: ban %s
-ADMIN_BAN_2 = ADMIN %s: ban %s
-BAN_MENU = Menu Bana
-BAN_FOR_MIN = Ban na %d minut
-BAN_PERM = Kompletny Ban
-SLAP_SLAY_MENU = Menu udzerzen/zgladzen
-SLAP_WITH_DMG = Uderz zadajac %d obrazen
-SLAY = Zgladzenie
-KICK_MENU = Menu kicka
-ADMIN_TRANSF_1 = ADMIN: %s przeszedl do %s
-ADMIN_TRANSF_2 = ADMIN %s: %s przeszedl do %s
-TEAM_MENU = Menu druzyny
-TRANSF_TO = Przejdz do %s
-CL_CMD_MENU = menu komend klienta
-NO_CMDS = Nie ma zadnych komend
-
-[pt]
-ADMIN_BAN_1 = ADMIN: baniu %s
-ADMIN_BAN_2 = ADMIN %s: baniu %s
-BAN_MENU = Menu de bans
-BAN_FOR_MIN = Banir por %d minutos
-BAN_PERM = Banir parmanentemente
-SLAP_SLAY_MENU = Menu de Espancar/Matar
-SLAP_WITH_DMG = espancou com %d de dano
-SLAY = Matou
-KICK_MENU = Menu de kicks
-ADMIN_TRANSF_1 = ADMIN: passou %s para %s
-ADMIN_TRANSF_2 = ADMIN %s: passou %s para %s
-TEAM_MENU = Menu de equipas
-TRANSF_TO = Passar para %s
-CL_CMD_MENU = Menu de comandos do utilizador
-NO_CMDS = Sem comandos disponiveis
-
-[sr]
-ADMIN_BAN_1 = ADMIN: ban %s
-ADMIN_BAN_2 = ADMIN %s: ban %s
-BAN_MENU = Ban Meni
-BAN_FOR_MIN = Ban na %d minuta
-BAN_PERM = Ban za stalno
-SLAP_SLAY_MENU = Slap/Slay Meni
-SLAP_WITH_DMG = Slap sa %d stete
-SLAY = Slay
-KICK_MENU = Kick Meni
-ADMIN_TRANSF_1 = ADMIN: transfer %s u %s
-ADMIN_TRANSF_2 = ADMIN %s: transfer %s u %s
-TEAM_MENU = Tim Meni
-TRANSF_TO = Transfer u %s
-CL_CMD_MENU = Klijent Komande Meni
-NO_CMDS = Nema dostupnih komandi
-
-[sv]
-ADMIN_BAN_1 = ADMIN: bannlys %s
-ADMIN_BAN_2 = ADMIN %s: bannlys %s
-BAN_MENU = Bannlysnings Meny
-BAN_FOR_MIN = Bannlys i %d minuter
-BAN_PERM = Permanent bannlysning
-SLAP_SLAY_MENU = Smiska/Slakta Meny
-SLAP_WITH_DMG = Smiska med %d skada
-SLAY = Slakta
-KICK_MENU = Sparka Meny
-ADMIN_TRANSF_1 = ADMIN: skicka %s till %s
-ADMIN_TRANSF_2 = ADMIN %s: skicka %s till %s
-TEAM_MENU = Lagmeny
-TRANSF_TO = Skicka till %s
-CL_CMD_MENU = Klientkommandomeny
-NO_CMDS = Det finns inga kommandon
-
-[tr]
-ADMIN_BAN_1 = ADMIN: ban %s
-ADMIN_BAN_2 = ADMIN %s: ban %s
-BAN_MENU = Ban Menusu
-BAN_FOR_MIN = Ban %d dakika olarak
-BAN_PERM = Ban suresiz
-SLAP_SLAY_MENU = Tokatla/oldur menusu
-SLAP_WITH_DMG = Tokatla %d zarar ile
-SLAY = Oldur
-KICK_MENU = Atma menusu
-ADMIN_TRANSF_1 = ADMIN: takim %s goc %s
-ADMIN_TRANSF_2 = ADMIN %s: takim %s goc %s
-TEAM_MENU = Takim menu
-TRANSF_TO = %s takima goc
-CL_CMD_MENU = Oyuncu Emir Menusu
-NO_CMDS = Emir mevcud degildir
+[da]
+[da] 
+ADMIN_BAN_1 = ADMIN: ban %s 
+ADMIN_BAN_2 = ADMIN %s: ban %s 
+BAN_MENU = Ban Menu 
+BAN_FOR_MIN = Ban i %d minutter 
+BAN_PERM = Ban permanent 
+ADMIN_SLAP_1 = ADMIN: klask %s med %d skade 
+ADMIN_SLAP_2 = ADMIN %s: klask %s med %d skade 
+ADMIN_SLAY_1 = ADMIN: draeb %s 
+ADMIN_SLAY_2 = ADMIN %s: draeb %s 
+SLAP_SLAY_MENU = Klask/Draeb Menu 
+SLAP_WITH_DMG = Klask med %d skade 
+SLAY = Draeb 
+ADMIN_KICK_1 = ADMIN: kick %s 
+ADMIN_KICK_2 = ADMIN %s: kick %s 
+KICK_MENU = Kick Menu 
+ADMIN_TRANSF_1 = ADMIN: Overflyt %s to %s 
+ADMIN_TRANSF_2 = ADMIN %s: Overflyt %s to %s 
+TEAM_MENU = Hold Menu 
+TRANSF_TO = Overflyt til %s 
+CL_CMD_MENU = Klient Kommando Menu 
+NO_CMDS = Ingen kommandoer til raadighed 

@@ -11,57 +11,44 @@ COL_OCEAN = ocean
 COL_MAROON = maroon
 PRINT_ALL = (ALL) %s :   %s
 
-[bp]
-COL_WHITE = branco
-COL_RED = vermelho
-COL_GREEN = verde
-COL_BLUE = azul
-COL_YELLOW = amarelo
-COL_MAGENTA = magenta
-COL_CYAN = ciano
-COL_ORANGE = laranja
-COL_OCEAN = oceano
-COL_MAROON = marrom
-PRINT_ALL = (TODOS) %s :   %s
-
-[da]
-COL_WHITE = hvid
-COL_RED = roed
-COL_GREEN = groen
-COL_BLUE = blaa
-COL_YELLOW = gul
-COL_MAGENTA = magenta
-COL_CYAN = cyan
-COL_ORANGE = orange
-COL_OCEAN = ocean blaa
-COL_MAROON = brun
-PRINT_ALL = (ALLE) %s :   %s
-
 [de]
-COL_WHITE = weiss
-COL_RED = rot
-COL_GREEN = gruen
-COL_BLUE = blau
-COL_YELLOW = gelb
-COL_MAGENTA = magenta-rot
-COL_CYAN = cyan-blau
-COL_ORANGE = orange
-COL_OCEAN = ozean-blau
-COL_MAROON = braun
-PRINT_ALL = (ALLE) %s : %s
+COL_WHITE = weiss 
+COL_RED = rot 
+COL_GREEN = gruen 
+COL_BLUE = blau 
+COL_YELLOW = gelb 
+COL_MAGENTA = magenta-rot 
+COL_CYAN = cyan-blau 
+COL_ORANGE = orange 
+COL_OCEAN = ozean-blau 
+COL_MAROON = braun 
+PRINT_ALL = (ALLES) %s : %s 
 
-[es]
-COL_WHITE = blanco
-COL_RED = rojo
-COL_GREEN = verde
-COL_BLUE = azul
-COL_YELLOW = amarillo
-COL_MAGENTA = magenta
-COL_CYAN = cianico
-COL_ORANGE = naranja
-COL_OCEAN = oceano
-COL_MAROON = marron
-PRINT_ALL = (TODOS) %s :   %s
+[sr]
+COL_WHITE = bela
+COL_RED = crvena
+COL_GREEN = zelena
+COL_BLUE = plava
+COL_YELLOW = zuta
+COL_MAGENTA = ljubicasta
+COL_CYAN = tirkizna
+COL_ORANGE = narandzasta
+COL_OCEAN = okean
+COL_MAROON = modra
+PRINT_ALL = (SVE) %s : %s 
+
+[tr]
+COL_WHITE = beyaz 
+COL_RED = kirmizi 
+COL_GREEN = yesil 
+COL_BLUE = mavi 
+COL_YELLOW = sari 
+COL_MAGENTA = magenta 
+COL_CYAN = cian 
+COL_ORANGE = turuncu 
+COL_OCEAN = deniz 
+COL_MAROON = kahverengi 
+PRINT_ALL = (HEPSI) %s : %s
 
 [fr]
 COL_WHITE = blanc
@@ -76,58 +63,6 @@ COL_OCEAN = marine
 COL_MAROON = marron
 PRINT_ALL = (TOUS) %s :   %s
 
-[nl]
-COL_WHITE = wit
-COL_RED = rood
-COL_GREEN = groen
-COL_BLUE = blauw
-COL_YELLOW = geel
-COL_MAGENTA = magenta
-COL_CYAN = cyaan
-COL_ORANGE = oranje
-COL_OCEAN = oceaannlauw
-COL_MAROON = kastanjebruin
-PRINT_ALL = (IEDEREEN) %s :   %s
-
-[pl]
-COL_WHITE = bialy
-COL_RED = czerwony
-COL_GREEN = zielony
-COL_BLUE = niebieski
-COL_YELLOW = zolty
-COL_MAGENTA = ciemnorozowy
-COL_CYAN = turkusowy
-COL_ORANGE = pomaranczowy
-COL_OCEAN = blekitny
-COL_MAROON = bordowy
-PRINT_ALL = (WSZYSTKO) %s :   %s
-
-[pt]
-COL_WHITE = branco
-COL_RED = vermelho
-COL_GREEN = verde
-COL_BLUE = azul
-COL_YELLOW = amarelo
-COL_MAGENTA = magenta
-COL_CYAN = ciano
-COL_ORANGE = laranja
-COL_OCEAN = azul marinho
-COL_MAROON = maroon
-PRINT_ALL = (TODOS) %s :   %s
-
-[sr]
-COL_WHITE = bela
-COL_RED = crvena
-COL_GREEN = zelena
-COL_BLUE = plava
-COL_YELLOW = zuta
-COL_MAGENTA = ljubicasta
-COL_CYAN = tirkizna
-COL_ORANGE = narandzasta
-COL_OCEAN = okean
-COL_MAROON = modra
-PRINT_ALL = (SVE) %s :   %s
-
 [sv]
 COL_WHITE = vit
 COL_RED = r'o'd
@@ -139,17 +74,19 @@ COL_CYAN = cyan
 COL_ORANGE = orange
 COL_OCEAN = oceanbla
 COL_MAROON = brun
-PRINT_ALL = (ALLA) %s :   %s
+PRINT_ALL = (ALLA) %s : %s
 
-[tr]
-COL_WHITE = beyaz
-COL_RED = kirmizi
-COL_GREEN = yesil
-COL_BLUE = mavi
-COL_YELLOW = sari
-COL_MAGENTA = magenta
-COL_CYAN = cian
-COL_ORANGE = turuncu
-COL_OCEAN = deniz
-COL_MAROON = kahverengi
-PRINT_ALL = (HEPSI) %s :   %s
+
+[da]
+[da] 
+COL_WHITE = hvid 
+COL_RED = roed 
+COL_GREEN = groen 
+COL_BLUE = blaa 
+COL_YELLOW = gul 
+COL_MAGENTA = magenta 
+COL_CYAN = cyan 
+COL_ORANGE = orange 
+COL_OCEAN = ocean blaa 
+COL_MAROON = brun 
+PRINT_ALL = (ALLE) %s : %s 

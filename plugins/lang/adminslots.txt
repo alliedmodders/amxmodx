@@ -1,35 +1,23 @@
 [en]
 DROPPED_RES = Dropped due to slot reservation
 
-[bp]
-DROPPED_RES = Desconectado por vaga reservada
-
-[da]
-DROPPED_RES =  Frakoblet pga. plads reservation
-
 [de]
-DROPPED_RES = Dieser Slot ist reserviert
+DROPPED_RES = Sorry, dieser Slot ist reserviert. 
 
-[es]
-DROPPED_RES = Desconectado por reserva de slot
+
+[sr]
+DROPPED_RES = Server je pun, nemate pristup rezervisanim mestima
+
+[tr]
+DROPPED_RES = Reservasyon nedeniyle atildiniz 
 
 [fr]
 DROPPED_RES = Desole, un admin vient de prendre sa place reservee, tu as ete ejecte du serveur.
 
-[nl]
-DROPPED_RES = Verwijderd vanwege plaats reservering
-
-[pl]
-DROPPED_RES = Wyrzucony z powodu rezerwacji slotow
-
-[pt]
-DROPPED_RES = Desligado devido 'a reserva de lugar
-
-[sr]
-DROPPED_RES = Izbaceni ste zbog rezervacije mesta
-
 [sv]
-DROPPED_RES = Nerkopplad pga. platsreservation
+DROPPED_RES = Nerkopplad pga platsreservation
 
-[tr]
-DROPPED_RES = Reservasyon nedeniyle atildiniz
+
+[da]
+[da] 
+DROPPED_RES = Frakoblet pga. plads reservation 

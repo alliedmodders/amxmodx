@@ -3,57 +3,33 @@ CMD_MENU = Commands Menu
 CONF_MENU = Configs Menu
 SPE_MENU = Speech Menu
 
-[bp]
-CMD_MENU = Menu de Comandos
-CONF_MENU = Menu de Configuracao
-SPE_MENU = Menu de Fala
-
-[da]
-CMD_MENU = Kommando Menu
-CONF_MENU = Konfigurations Menu
-SPE_MENU = Tale Menu
-
 [de]
-CMD_MENU = Menu Befehle
-CONF_MENU = Menu Konfiguration
-SPE_MENU = Menu Sprechen
+CMD_MENU = Menu > Befehle 
+CONF_MENU = Menu > Konfiguration 
+SPE_MENU = Menu > Sprechen 
 
-[es]
-CMD_MENU = Menu de Comandos
-CONF_MENU = Menu de Configuraciones
-SPE_MENU = Menu de Voz
+[sr]
+CMD_MENU = Komandne
+CONF_MENU = Podesavanja
+SPE_MENU = Govorne Komande 
+
+[tr]
+CMD_MENU = Emir Menusu 
+CONF_MENU = Configler Menusu 
+SPE_MENU = Konusma Menusu 
 
 [fr]
 CMD_MENU = Menu Commandes
 CONF_MENU = Menu Configurations 
 SPE_MENU = Menu Voix/Paroles
 
-[nl]
-CMD_MENU = Commandos Menu
-CONF_MENU = Configuraties Menu
-SPE_MENU = Spraak Menu
-
-[pl]
-CMD_MENU = Menu komend
-CONF_MENU = Menu konfiguracji
-SPE_MENU = Menu rozmowy
-
-[pt]
-CMD_MENU = Menu de comandos
-CONF_MENU = Menu de configuracoes
-SPE_MENU = Menu de vozes
-
-[sr]
-CMD_MENU = Komandne
-CONF_MENU = Podesavanja
-SPE_MENU = Govorne Komande
-
 [sv]
 CMD_MENU = Kommandomeny
 CONF_MENU = Konfigurationsmeny
 SPE_MENU = Talmeny
 
-[tr]
-CMD_MENU = Emir Menusu
-CONF_MENU = Configler Menusu
-SPE_MENU = Konusma Menusu
+[da]
+[da] 
+CMD_MENU = Kommando Menu 
+CONF_MENU = Konfigurations Menu 
+SPE_MENU = Tale Menu 

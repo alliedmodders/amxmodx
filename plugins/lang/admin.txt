@@ -11,31 +11,6 @@ PAS_ACC = Password accepted
 PRIV_SET = Privileges set
 NO_ENTRY = You have no entry to the server...
 
-[bp]
-LOADED_ADMIN = 1 administrador carregado do arquivo
-LOADED_ADMINS = %d administradores carregados do arquivo
-SQL_CANT_CON = SQL erro: Nao pode conectar: '%s'
-SQL_CANT_LOAD_ADMINS = SQL erro: Nao pode carregar os administradores: '%s'
-NO_ADMINS = Nenhum administrador encontrado.
-SQL_LOADED_ADMIN = 1 administrador carregado do banco de dados
-SQL_LOADED_ADMINS = %d administradores carregados do banco de dados
-INV_PAS = Senha Invalida!
-PAS_ACC = Senha Aceita
-PRIV_SET = Privilegios Adquiridos
-NO_ENTRY = Voce nao tem acesso garantido no servidor...
-
-[da]
-LOADED_ADMIN = Indlaest 1 admin fra fil
-LOADED_ADMINS = Indlaest %d adminer fra fil
-SQL_CANT_CON = SQL fejl: kan ikke opnaa forbindelse: '%s'
-SQL_CANT_LOAD_ADMINS = SQL fejl: kan ikke indlaese adminer: '%s'
-NO_ADMINS = Ingen adminer fundet.
-SQL_LOADED_ADMIN = Indlaest 1 admin fra database
-SQL_LOADED_ADMINS = Indlaest %d adminer fra database
-INV_PAS = Ugyldig adgangskode!
-PAS_ACC = Adgangskode accepteret
-PRIV_SET = Privilegier sat
-NO_ENTRY = Du er ikke registreret paa serveren...
 
 [de]
 LOADED_ADMIN = 1 Admin aus der Datei geladen
@@ -50,18 +25,31 @@ PAS_ACC = Password akzeptiert
 PRIV_SET = Rechte gesetzt
 NO_ENTRY = Du hast keinen Zugang zu diesem Server...
 
-[es]
-LOADED_ADMIN = 1 Administrador cargado desde el archivo
-LOADED_ADMINS = %d Administradores cargados desde el archivo
-SQL_CANT_CON = Error SQL: No se puede conectar: '%s'
-SQL_CANT_LOAD_ADMINS = Error SQL: No se pueden cargar los administradores: '%s'
-NO_ADMINS = No se encontraron administradores.
-SQL_LOADED_ADMIN = 1 Administrador cargado desde la base de datos
-SQL_LOADED_ADMINS = %d Administradores cargados desde la base de datos
-INV_PAS = Clave Invalida
-PAS_ACC = Clave Aceptada
-PRIV_SET = Privilegios establecidos
-NO_ENTRY = Usted no tiene acceso al servidor...
+[sr]
+LOADED_ADMIN = Ucitan 1 administrator iz fajla
+LOADED_ADMINS = Ucitano %d administratora iz fajla
+SQL_CANT_CON = SQL greska: nije moguce uspostaviti vezu sa: '%s'
+SQL_CANT_LOAD_ADMINS = SQL greska: nije moguce ucitati administratore: '%s'
+NO_ADMINS = Nema nadjenih administratora.
+SQL_LOADED_ADMIN = Ucitan 1 administrator iz baze podataka
+SQL_LOADED_ADMINS = Ucitano %d administratora iz baze podataka
+INV_PAS = Pogresna lozinka!
+PAS_ACC = Lozinka prihvacena
+PRIV_SET = Privilegije podesene
+NO_ENTRY = Nemate pristup serveru... 
+
+[tr]
+LOADED_ADMIN = 1 Admin yuklendi 
+LOADED_ADMINS =%d Admin dosyadan yuklendi 
+SQL_CANT_CON = SQL hatasi: baglanamiyor: '%s' 
+SQL_CANT_LOAD_ADMINS = SQL hatasi: admin yuklenemiyor: '%s' 
+NO_ADMINS = Hic admin bulunamadi. 
+SQL_LOADED_ADMIN = 1 Admin dosyadan yuklendi 
+SQL_LOADED_ADMINS =%d Admin ana hafizadan yuklendi 
+INV_PAS = Hatali kod! 
+PAS_ACC = Kod onaylandi 
+PRIV_SET = Haklar onaylandi 
+NO_ENTRY = Servere giris hakkiniz yok... 
 
 [fr]
 LOADED_ADMIN = 1 admin a ete charge depuis le fichier
@@ -76,58 +64,6 @@ PAS_ACC = Mot de Passe Accepte
 PRIV_SET = Mise en place des Privileges
 NO_ENTRY = Tu n'as aucun droit acces sur ce serveur...
 
-[nl]
-LOADED_ADMIN = 1 Beheerder uit het bestand geladen
-LOADED_ADMINS = %d Beheerders uit het bestand geladen
-SQL_CANT_CON = SQL fout: kan geen verbinding maken: '%s'
-SQL_CANT_LOAD_ADMINS = SQL fout: kan geen beheerders laden: '%s'
-NO_ADMINS = Geen admins gevonden.
-SQL_LOADED_ADMIN = 1 Beheerder uit de database geladen
-SQL_LOADED_ADMINS = %d Beheerders uit de database geladen
-INV_PAS = Wachtwoord onjuist!
-PAS_ACC = Wachtwoord geacepteerd
-PRIV_SET = Speciale rechten geplaatst
-NO_ENTRY = U heeft geen toegang tot de server...
-
-[pl]
-LOADED_ADMIN = Zaladowano 1 admina z pliku
-LOADED_ADMINS = Zaladowano %d adminow z pliku
-SQL_CANT_CON = Blad SQL: nie mozna polaczyc: '%s'
-SQL_CANT_LOAD_ADMINS = Blad SQL: nie mozna zalad. adminow: '%s'
-NO_ADMINS = Nie znaleziono adminow.
-SQL_LOADED_ADMIN = Zaladowano 1 admina z bazy danych
-SQL_LOADED_ADMINS = Zaladowano %d admino z bazy danych
-INV_PAS = Zle haslo!
-PAS_ACC = Haslo zaakceptowane
-PRIV_SET = Przywileje ustawione
-NO_ENTRY = Nie mozesz wejsc na ten serwer...
-
-[pt]
-LOADED_ADMIN = 1 admin carregado do ficheiro
-LOADED_ADMINS = %d admins do ficheiro
-SQL_CANT_CON = erro SQL: nao consegue ligar: '%s'
-SQL_CANT_LOAD_ADMINS = erro SQL: nao consegue carregar admins: '%s'
-NO_ADMINS = Nenhum admin encontrado.
-SQL_LOADED_ADMIN = 1 admin carregado da base de dados
-SQL_LOADED_ADMINS = %d admins carregados da base de dados
-INV_PAS = Password invalida!
-PAS_ACC = Password aceite
-PRIV_SET = Privilegios obtidos
-NO_ENTRY = Nao tem acesso ao servidor...
-
-[sr]
-LOADED_ADMIN = Ucitan 1 administrator iz fajla
-LOADED_ADMINS = Ucitano %d administratora iz fajla
-SQL_CANT_CON = SQL greska: nije moguce uspostaviti vezu sa: '%s'
-SQL_CANT_LOAD_ADMINS = SQL greska: nije moguce ucitati administratore: '%s'
-NO_ADMINS = Nema nadjenih administratora.
-SQL_LOADED_ADMIN = Ucitan 1 administrator iz baze podataka
-SQL_LOADED_ADMINS = Ucitano %d administratora iz baze podataka
-INV_PAS = Pogresna lozinka!
-PAS_ACC = Lozinka prihvacena
-PRIV_SET = Privilegije podesene
-NO_ENTRY = Nemate pristup serveru...
-
 [sv]
 LOADED_ADMIN = Laddade en administrat'o'r fran fil
 LOADED_ADMINS = Laddade %d administrat'o'rer fran fil
@@ -141,15 +77,16 @@ PAS_ACC = L'o'senord accepterat
 PRIV_SET = Befogenheter satta
 NO_ENTRY = Du har ingen tillgang till servern...
 
-[tr]
-LOADED_ADMIN = 1 Admin yuklendi
-LOADED_ADMINS =%d Admin dosyadan yuklendi
-SQL_CANT_CON = SQL hatasi: baglanamiyor: '%s'
-SQL_CANT_LOAD_ADMINS = SQL hatasi: admin yuklenemiyor: '%s'
-NO_ADMINS = Hic admin bulunamadi.
-SQL_LOADED_ADMIN = 1 Admin dosyadan yuklendi
-SQL_LOADED_ADMINS =%d Admin ana hafizadan yuklendi
-INV_PAS = Hatali kod!
-PAS_ACC = Kod onaylandi
-PRIV_SET = Haklar onaylandi
-NO_ENTRY = Servere giris hakkiniz yok...
+[da]
+[da] 
+LOADED_ADMIN = Indlaest 1 admin fra fil 
+LOADED_ADMINS = Indlaest %d adminer fra fil 
+SQL_CANT_CON = SQL fejl: kan ikke opnaa forbindelse: '%s' 
+SQL_CANT_LOAD_ADMINS = SQL fejl: kan ikke indlaese adminer: '%s' 
+NO_ADMINS = Ingen adminer fundet. 
+SQL_LOADED_ADMIN = Indlaest 1 admin fra database 
+SQL_LOADED_ADMINS = Indlaest %d adminer fra database 
+INV_PAS = Ugyldig adgangskode! 
+PAS_ACC = Adgangskode accepteret 
+PRIV_SET = Privilegier sat 
+NO_ENTRY = Du er ikke registreret paa serveren ... 

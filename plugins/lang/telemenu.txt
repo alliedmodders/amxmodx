@@ -5,33 +5,27 @@ TELE_MENU = Teleport Menu
 CUR_LOC = Current Location
 SAVE_LOC = Save Location
 
-[bp]
-ADMIN_TELEPORT_1 = ADMIN: teletransportou %s
-ADMIN_TELEPORT_2 = ADMIN %s: teletransportou %s
-TELE_MENU = Menu de Teletransportar
-CUR_LOC = Localizacao Atual
-SAVE_LOC = Salvar Localizacao
-
-[da]
-ADMIN_TELEPORT_1 = ADMIN: teleport %s
-ADMIN_TELEPORT_2 = ADMIN %s: teleport %s
-TELE_MENU = Teleport Menu
-CUR_LOC = Nuvaerende lokation
-SAVE_LOC = Gem Lokation
-
 [de]
-ADMIN_TELEPORT_1 = ADMIN: teleportiert %s
-ADMIN_TELEPORT_2 = ADMIN %s: teleportiert %s
-TELE_MENU = Menu > Teleport
-CUR_LOC = Gegenwaertige Position
-SAVE_LOC = Position speichern
+ADMIN_TELEPORT_1 = ADMIN: teleportiert %s 
+ADMIN_TELEPORT_2 = ADMIN %s: teleportiert %s 
+TELE_MENU = Menu > Teleport 
+CUR_LOC = Gegenwaertige Position 
+SAVE_LOC = Position speichern 
 
-[es]
-ADMIN_TELEPORT_1 = ADMIN: teleportar a %s
-ADMIN_TELEPORT_2 = ADMIN %s: teleportar a%s
-TELE_MENU = Menu teleportacion
-CUR_LOC = Ubicacion actual
-SAVE_LOC = Gravar ubicacion
+
+[sr]
+ADMIN_TELEPORT_1 = ADMIN: teleportuj %s
+ADMIN_TELEPORT_2 = ADMIN %s: teleportuj %s
+TELE_MENU = Teleport Meni
+CUR_LOC = Sadasnja Lokacija
+SAVE_LOC = Sacuvaj Lokaciju 
+
+[tr]
+ADMIN_TELEPORT_1 = ADMIN: teleportladi %s 
+ADMIN_TELEPORT_2 = ADMIN %s: teleportladi %s 
+TELE_MENU = Teleport Menusu 
+CUR_LOC = Oldugu su anki yer 
+SAVE_LOC = Oldugu yeri saklayin 
 
 [fr]
 ADMIN_TELEPORT_1 = ADMIN: teleporte %s
@@ -40,44 +34,10 @@ TELE_MENU = Menu Teleportation
 CUR_LOC = Emplacement Actuel
 SAVE_LOC = Sauver l'emplacement
 
-[nl]
-ADMIN_TELEPORT_1 = BEHEERDER: teleporteer %s
-ADMIN_TELEPORT_2 = BEHEERDER %s: teleporteer %s
-TELE_MENU = Teleporteer Menu
-CUR_LOC = Momentele Locatie
-SAVE_LOC = Locatie opslaan
-
-[pl]
-ADMIN_TELEPORT_1 = ADMIN: teleportowal %s
-ADMIN_TELEPORT_2 = ADMIN %s: teleportowal %s
-TELE_MENU = Menu teleportu
-CUR_LOC = Aktualna pozycja
-SAVE_LOC = Zapisz pozycje
-
-[pt]
-ADMIN_TELEPORT_1 = ADMIN: teleportou %s
-ADMIN_TELEPORT_2 = ADMIN %s: teleportou %s
-TELE_MENU = Menu de teleporte
-CUR_LOC = Localizacao actual
-SAVE_LOC = Gravar localizacao
-
-[sr]
-ADMIN_TELEPORT_1 = ADMIN: teleportuj %s
-ADMIN_TELEPORT_2 = ADMIN %s: teleportuj %s
-TELE_MENU = Teleport Meni
-CUR_LOC = Sadasnja Lokacija
-SAVE_LOC = Sacuvaj Lokaciju
-
-[sv]
-ADMIN_TELEPORT_1 = ADMIN: teleportera %s
-ADMIN_TELEPORT_2 = ADMIN %s: teleportera %s
-TELE_MENU = Teleportmeny
-CUR_LOC = Nuvarande position
-SAVE_LOC = Spara position
-
-[tr]
-ADMIN_TELEPORT_1 = ADMIN: teleportladi %s
-ADMIN_TELEPORT_2 = ADMIN %s: teleportladi %s
-TELE_MENU = Teleport Menusu
-CUR_LOC = Oldugu su anki yer
-SAVE_LOC = Oldugu yeri saklayin
+[da]
+[da] 
+ADMIN_TELEPORT_1 = ADMIN: teleport %s 
+ADMIN_TELEPORT_2 = ADMIN %s: teleport %s 
+TELE_MENU = Teleport Menu 
+CUR_LOC = Nuvaerende lokation 
+SAVE_LOC = Gem Lokation 

@@ -1270,6 +1270,18 @@ void MNF_Deallocator(const char *sourceFile, const unsigned int sourceLine, cons
 }
 #endif
 
+// 09/18/2004 : added these two funcs that default to copyBack=false so we don't break all modules
+cell MNF_PrepareCellArray(cell *ptr, unsigned int size)
+{
+	return prepareCellArray(ptr, size, false);
+}
+
+cell MNF_PrepareCharArray(char *ptr, unsigned int size)
+{
+	return prepareCharArray(ptr, size, false);
+}
+
+
 // Fnptr Request function for the new interface
 const char *g_LastRequestedFunc = NULL;
 #define REGISTER_FUNC(name, func) { name, (void*)func },
@@ -1322,8 +1334,10 @@ void *Module_ReqFnptr(const char *funcName)
 			REGISTER_FUNC("RegisterSPForwardByName", registerSPForwardByName)
 			REGISTER_FUNC("UnregisterSPForward", unregisterSPForward)
 			REGISTER_FUNC("ExecuteForward", executeForwards)
-			REGISTER_FUNC("PrepareCellArray", prepareCellArray)
-			REGISTER_FUNC("PrepareCharArray", prepareCharArray)
+			REGISTER_FUNC("PrepareCellArray", MNF_PrepareCellArray)
+			REGISTER_FUNC("PrepareCharArray", MNF_PrepareCharArray)
+			REGISTER_FUNC("PrepareCellArrayA", prepareCellArray)
+			REGISTER_FUNC("PrepareCharArrayA", prepareCharArray)
 
 			// Player
 			REGISTER_FUNC("GetPlayerFlags", MNF_GetPlayerFlags)

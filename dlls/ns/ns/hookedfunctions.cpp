@@ -10,9 +10,10 @@ CPlayer g_player[33];
 edict_t *player_edicts[33];
 
 int gmsgHudText2=0;
-int ChangeclassForward = 0;
-int BuiltForward = 0;
-
+int ChangeclassForward = -1;
+int BuiltForward = -1;
+int SpawnForward = -1;
+int TeamForward = -1;
 // Index of last entity hooked in CreateNamedEntity
 int iCreateEntityIndex;
 BOOL iscombat;
@@ -41,6 +42,8 @@ void OnPluginsLoaded()
 	// No sense in this if it's combat..
 	if (!iscombat)
 		BuiltForward = MF_RegisterForward("client_built", ET_IGNORE, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	SpawnForward = MF_RegisterForward("client_spawn",ET_IGNORE,FP_CELL/*id*/,FP_DONE);
+	TeamForward = MF_RegisterForward("client_changeteam",ET_IGNORE,FP_CELL/*id*/,FP_CELL/*new team*/,FP_CELL/*old team*/,FP_DONE);
 }
 
 
@@ -272,7 +275,8 @@ void AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...)
 				iForward = 1;
 			}
 //			ns2amx_built.execute(index,iCreateEntityIndex,iForward,iType);
-			MF_ExecuteForward(BuiltForward, index, iCreateEntityIndex, iForward, iType);
+			if (BuiltForward != -1)
+				MF_ExecuteForward(BuiltForward, index, iCreateEntityIndex, iForward, iType);
 			iCreateEntityIndex=0;
 		}
 	}

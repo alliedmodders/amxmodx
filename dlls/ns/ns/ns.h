@@ -23,7 +23,8 @@ extern int gmsgHudText2;
 extern AMX_NATIVE_INFO ns_misc_natives[];
 extern AMX_NATIVE_INFO ns_pdata_natives[];
 
-
+extern int SpawnForward;
+extern int TeamForward;
 
 extern int ChangeclassForward;
 extern int BuiltForward;

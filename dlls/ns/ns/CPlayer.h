@@ -19,6 +19,8 @@ public:
 	edict_t *edict;
 	entvars_t *pev;
 	int	oldimpulse; // Store the previous impulse.
+	int olddeadflag;
+	int oldteam;
 	int	index;
 
 	bool connected;

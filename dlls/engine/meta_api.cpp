@@ -1,15 +1,12 @@
-/* <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <>
- *  Project:Vexd Utility Module
- *		By: Vexd
+/****************************************************************************
+ *  Project: AMX Mod X
+ *		By:  BAILOPAN, JohnnyGotHisGun, Manip, PM, SniperBeamer
  *
- *	Purpose:This module provides more options for working with entities and other		
- *			things that are half-life related using amxmod scripts.
+ *	Purpose:Engine and entity related natives for AMXX scripting.
  *
- *	Notes:  This module is in 1 large file because it used to be multiple smaller
- *			modules. I never intended this module to have so many functions, but I kept
- *			adding things, never splitting into more files, so it ended up like this.
- *			You must have the Half-life software development kit, and the include directories
- *			properly set up to compile this module. You also may need the metamod source.
+ *	Notes:  Many core functions of this module were originally made by VexD.
+ *			VexD gets the credit for setting up the framework for this, as it was
+ *			Originally VexD Utilities
  *
  *	Licence:
  *			This program is free software; you can redistribute it and/or modify
@@ -28,7 +25,7 @@
  *
  *	Full licence can be found at:
  *			http://www.gnu.org/licenses/gpl.txt
- * <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> */
+ ***************************************************************************/
 
 #include <extdll.h>
 #include <meta_api.h>
@@ -59,10 +56,11 @@ std::vector<AmxCall> vTouchCallList;
 std::vector<AmxCall> vServerFrameCallList;
 
 //This was originally by VexD
+//Thank you for an excellent piece of work, VexD!
 
 #define NAME "Engine Module"
 #define AUTHOR "BAILOPAN"
-#define VERSION "0.1"
+#define VERSION "0.2"
 #define URL "No Website"
 #define LOGTAG "AMXXE"
 #define DATE __DATE__
@@ -257,7 +255,7 @@ struct GlobalInfo {
 
 GlobalInfo GlInfo;
 
-cvar_t vx_version = {"vx_version", VERSION, FCVAR_SERVER, 0};
+cvar_t amxxe_version = {"amxxe_version", VERSION, FCVAR_SERVER, 0};
 
 plugin_info_t Plugin_info = {
   META_INTERFACE_VERSION,
@@ -280,6 +278,101 @@ module_info_s AMXInfo = {
 };
 
 /********************* Begin Utility Functions ******************************/
+
+//(BAILOPAN)
+//Sets a pvPrivateData offset for a player (player, offset, val, float=0)
+static cell AMX_NATIVE_CALL set_offset(AMX *amx, cell *params)
+{
+	int index = params[1];
+	int off = params[2];
+	
+	if (index < 1 || index > gpGlobals->maxClients) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+	
+	edict_t *Player = INDEXENT(index);
+	
+#ifndef __linux__
+       off -= 5;
+#endif
+	
+	*((int *)Player->pvPrivateData + off) = params[3];
+	
+	return 1;
+}
+
+//(BAILOPAN)
+//Sets a pvPrivateData offset for a player (player, offset, Float:val)
+static cell AMX_NATIVE_CALL set_offset_float(AMX *amx, cell *params)
+{
+	int index = params[1];
+	int off = params[2];
+	
+	if (index < 1 || index > gpGlobals->maxClients) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+	
+	edict_t *Player = INDEXENT(index);
+	
+#ifndef __linux__
+       off -= 5;
+#endif
+	
+	*((float *)Player->pvPrivateData + off) = params[3];
+	
+	return 1;
+}
+
+//(BAILOPAN)
+//Gets a pvPrivateData offset for a player (player, offset, float=0)
+static cell AMX_NATIVE_CALL get_offset(AMX *amx, cell *params)
+{
+	int index = params[1];
+	int off = params[2];
+	
+	if (index < 1 || index > gpGlobals->maxClients) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+	
+	edict_t *Player = INDEXENT(index);
+	
+#ifndef __linux__
+       off -= 5;
+#endif
+	
+	return (int)*((int *)Player->pvPrivateData + off);
+	
+	return 1;
+}
+
+//(BAILOPAN)
+//Gets a pvPrivateData offset for a player (player, offset, float=0)
+static cell AMX_NATIVE_CALL get_offset_float(AMX *amx, cell *params)
+{
+	int index = params[1];
+	int off = params[2];
+	float retVal;
+	
+	if (index < 1 || index > gpGlobals->maxClients) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+	
+	edict_t *Player = INDEXENT(index);
+	
+#ifndef __linux__
+       off -= 5;
+#endif
+	
+	retVal = ((float)*((float *)Player->pvPrivateData + off));
+
+	return *(cell*)((void *)&retVal);
+	
+	return 1;
+}
 
 // Finds edict points that are in a sphere, used in RadiusDamage.
 edict_t *UTIL_FindEntityInSphere(edict_t *pStart, const Vector &vecCenter, float flRadius) {
@@ -2370,7 +2463,7 @@ static cell AMX_NATIVE_CALL FakeTouch(AMX *amx, cell *params) {
 
 // This is where we register any Console-variables we have.
 void GameInit(void) {
-	CVAR_REGISTER(&vx_version);
+	CVAR_REGISTER(&amxxe_version);
 }
 
 // Check if they are using a model, if so, don't let CS know.
@@ -2725,11 +2818,16 @@ AMX_NATIVE_INFO Engine_Exports[] = {
 	{"RemoveEntity",		RemoveEntity},
 	{"EntityCount",			EntityCount},
 
-	{ "get_user_velocity",	get_user_velocity },
-	{ "set_user_velocity",	set_user_velocity },
-	{ "get_grenade_id",		get_grenade_id },
-	{ "set_user_footsteps", set_user_footsteps },
-	{ "get_user_footsteps", set_user_footsteps },
+	{"get_user_velocity",	get_user_velocity },
+	{"set_user_velocity",	set_user_velocity },
+	{"get_grenade_id",		get_grenade_id },
+	{"set_user_footsteps",	set_user_footsteps },
+	{"get_user_footsteps",	set_user_footsteps },
+	
+	{"get_offset", 			get_offset},
+	{"get_offset_float",	get_offset_float},
+	{"set_offset",			set_offset},
+	{"set_offset_float",	set_offset_float},
 
 	{"TraceLn",				TraceLn},
 	{"TraceNormal",			TraceNormal},

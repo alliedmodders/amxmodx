@@ -65,7 +65,7 @@ stock get_grenade_index(index, model[], len, grenadeindex = 0) {
 	new entowner = index
 
 	for (;;) {
-		entfind = find_entity(entfind, "grenade")
+		entfind = find_entity_by_class(entfind, "grenade")
 
 		if (entfind && is_valid_ent(entfind)) {
 			if (entity_get_edict(entFind, EV_ENT_owner) == entowner) {

@@ -110,8 +110,7 @@ public:
 	bool Connect(const char* connectname,const char* ipaddress);
 
 	inline bool IsBot(){
-		const char* auth= (*g_engfuncs.pfnGetPlayerAuthId)(pEdict);
-		return ( auth && !strcmp( auth , "BOT" ) );
+		return ((pEdict->v.flags & FL_FAKECLIENT)?true:false);
 	}
 
 	inline bool IsAlive(){

@@ -628,6 +628,8 @@ const char *MNF_GetAmxScriptName(int id)
 	while (iter && id--)
 		++iter;
 
+	if ((*iter) == NULL)
+		return NULL;
 	return (*iter).getName();
 }
 

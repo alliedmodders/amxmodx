@@ -72,7 +72,7 @@ enum {
 new g_Class[33]; // stored info from the "ScoreInfo" message
 new g_Team[33];
 public plugin_init() {
-  register_plugin("NS Commands","1.0","sawce");
+  register_plugin("NS Commands",AMXX_VERSION_STR,"AMXX Dev Team");
   // create our semi-random acknowledgement commands
   format(g_TeamOneAck,11,"namx_a%c%c%c%c%c",random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'));
   format(g_TeamTwoAck,11,"namx_b%c%c%c%c%c",random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'));
@@ -281,7 +281,7 @@ public cmdTeamTwo(id,level,cid) {
     read_argv(1,arg,31)
     new player = cmd_target(id,arg,5)
     if (!player) return PLUGIN_HANDLED
-    if (g_Team[id]==2 || g_Team[id]==4 /*i think 4 is team 2 in ava..*/) {
+    if (g_Team[player]==2 || g_Team[player]==4 /*i think 4 is team 2 in ava..*/) {
       client_print(id,print_chat,"[AMXX] That user is already on team two.");
       return PLUGIN_HANDLED_MAIN;
     }
@@ -310,7 +310,7 @@ public cmdTeamOne(id,level,cid) {
     read_argv(1,arg,31)
     new player = cmd_target(id,arg,5)
     if (!player) return PLUGIN_HANDLED
-    if (g_Team[id]==1 || g_Team[id]==3 /*i think 3 is team 2 in mvm..*/) {
+    if (g_Team[player]==1 || g_Team[player]==3 /*i think 3 is team 2 in mvm..*/) {
       client_print(id,print_chat,"[AMXX] That user is already on team one.");
       return PLUGIN_HANDLED_MAIN;
     }

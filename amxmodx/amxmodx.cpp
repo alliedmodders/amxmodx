@@ -723,7 +723,7 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 {
   int ilen=0, ilen2=0;
   char *sMenu = get_amxstring(amx, params[3], 0, ilen);
-  char *lMenu = get_amxstring(amx, params[4], 1, ilen2);
+  char *lMenu = get_amxstring(amx, params[5], 1, ilen2);
   int menuid = 0;
   if (ilen2 && lMenu)
   {

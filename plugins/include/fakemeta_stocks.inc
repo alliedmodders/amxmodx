@@ -1,8 +1,3 @@
-/*
-To do:
-- all dllfuncs
-*/
-
 /* Fakemeta stocks
 *
 * by the AMX Mod X Development Team

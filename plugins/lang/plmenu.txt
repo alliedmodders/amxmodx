@@ -166,3 +166,20 @@ TEAM_MENU = Menu druzyny
 TRANSF_TO = Przejdz do %s 
 CL_CMD_MENU = menu komend klienta 
 NO_CMDS = Nie ma zadnych komend 
+
+[nl]
+ADMIN_BAN_1 = ADMIN: ban %s
+ADMIN_BAN_2 = ADMIN %s: ban %s
+BAN_MENU = Ban Menu
+BAN_FOR_MIN = Ban voor %d minuten
+BAN_PERM = Ban permanent
+SLAP_SLAY_MENU = Slap/Slacht Menu
+SLAP_WITH_DMG = Slap met %d schade
+SLAY = Slacht
+KICK_MENU = Kick Menu
+ADMIN_TRANSF_1 = ADMIN: zet %s over naar %s
+ADMIN_TRANSF_2 = ADMIN %s: zet %s over naar %s
+TEAM_MENU = Team Menu
+TRANSF_TO = Zet over naar %s
+CL_CMD_MENU = Client Cmds Menu
+NO_CMDS = Geen cmds beschikbaar

@@ -238,7 +238,7 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 	Msg.clear();
 	register int i = 0, j = 0;
 	for (i=0; i<256; i++) {
-		for (j=0; j<256; j++)
+		for (j=0; j<msgHooks[i].size(); j++)
 			if (msgHooks[i].at(j) != -1)
 				MF_UnregisterSPForward(msgHooks[i].at(j));
 		msgHooks[i].clear();

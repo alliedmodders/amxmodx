@@ -138,7 +138,15 @@ void amx_command(){
 				print_srvconsole( "%s %s\n", Plugin_info.name, Plugin_info.version);
 				print_srvconsole(   "author: %s (%s)\n", Plugin_info.author, Plugin_info.url);
 				print_srvconsole(   "compiled: %s\n", __DATE__ ", " __TIME__);
-		
+#ifdef JIT
+				print_srvconsole(   "Core mode: JIT\n");
+#else
+#ifdef ASM32
+				print_srvconsole(   "Core mode: ASM\n");
+#else
+				print_srvconsole(   "Core mode: Normal\n");
+#endif
+#endif
 		}
 		else if (!strcmp(cmd,"modules"))
 		{
@@ -165,12 +173,6 @@ void amx_command(){
 				}
 
 				print_srvconsole( "%d modules, %d correct\n",modules,running);
-		} else if (!strcmp(cmd, "jit")) {
-#ifdef JIT
-			print_srvconsole("Using the JIT.\n");
-#else
-			print_srvconsole("Not using the JIT.\n");
-#endif
 		} else if (!strcmp(cmd, "gpl"))
 		{
 			print_srvconsole("AMX Mod X\n");

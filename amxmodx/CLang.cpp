@@ -321,11 +321,9 @@ const char * CLangMngr::CLang::GetDef(const char *key)
 	uint32_t hash = MakeHash(key, true);
 	for (LookUpVecIter iter = m_LookUpTable.begin(); iter != m_LookUpTable.end(); ++iter)
 	{
-		AMXXLOG_Log( "Lookup: %s", (*iter).GetKey() );
 		if (*iter == hash)
 			return iter->GetDef();
 	}
-	sprintf(nfind, "ML Lookup Failure: %s", key);
 	return nfind;
 }
 

@@ -528,13 +528,11 @@ AMX_NATIVE_INFO string_Natives[] = {
   { "isalnum", is_alnum },
   { "isspace", is_space },
   { "isalpha", is_alpha },
-  { "numtostr", numtostr },
   { "num_to_str", numtostr },
   { "parse",    parse },
   { "replace",  replace },
   { "setc",   setc },
   { "strtolower", strtolower },
-  { "strtonum", strtonum },
   { "strtoupper", strtoupper },
   { "str_to_num", strtonum },
   { NULL, NULL }

@@ -108,6 +108,12 @@ public:
 	{
 		return m_Funcs.size();
 	}
+	ForwardParam getParamType(int paramId) const
+	{
+		if (paramId < 0 || paramId >= m_NumParams)
+			return FP_DONE;
+		return m_ParamTypes[paramId];
+	}
 };
 
 // Single plugin forward
@@ -132,6 +138,12 @@ public:
 	int getFuncsNum() const
 	{
 		return (m_HasFunc) ? 1 : 0;
+	}
+	ForwardParam getParamType(int paramId) const
+	{
+		if (paramId < 0 || paramId >= m_NumParams)
+			return FP_DONE;
+		return m_ParamTypes[paramId];
 	}
 };
 
@@ -170,6 +182,7 @@ public:
 	bool isSPForward(int id) const;			// check whether forward is single plugin
 	int getParamsNum(int id) const;			// get num of params of a forward
 	int getFuncsNum(int id) const;			// get num of found functions of a forward
+	ForwardParam getParamType(int id, int paramId) const;
 	cell prepareArray(void *ptr, unsigned int size, ForwardArrayElemType type);		// prepare array
 };
 

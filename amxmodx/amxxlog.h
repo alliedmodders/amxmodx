@@ -31,19 +31,11 @@
 #ifndef __AMXXLOG_H__
 #define __AMXXLOG_H__
 
-// Reopen file on log
-// 0: No, only flush
-// 1: Yes, complete reopen
-#define REOPEN_ON_LOG 0
-
 class CLog
 {
 private:
 	String m_LogFile;
 	int m_LogType;
-#if REOPEN_ON_LOG == 0
-	FILE *m_pFile;
-#endif
 
 	void GetLastFile(int &outMonth, int &outDay, String &outFilename);
 	void UseFile(const String &fileName);

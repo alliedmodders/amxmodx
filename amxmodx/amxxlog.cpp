@@ -72,13 +72,6 @@ void CLog::CloseFile()
 			fclose(fp);
 		}
 		m_LogFile.clear();
-#if REOPEN_ON_LOG == 0
-		if (m_pFile)
-		{
-			fclose(m_pFile);
-			m_pFile = NULL;
-		}
-#endif
 	}
 }
 
@@ -89,13 +82,6 @@ void CLog::CreateNewFile()
 	time_t td;
 	time(&td);
 	tm *curTime = localtime(&td);
-
-	// create dir if not existing
-#ifdef __linux
-	mkdir(build_pathname("%s", g_log_dir.str()), 0700);
-#else
-	mkdir(build_pathname("%s", g_log_dir.str()));
-#endif
 
 	int i = 0;
 	while (true)
@@ -115,73 +101,23 @@ void CLog::CreateNewFile()
 		SET_LOCALINFO("amxx_logging", "0");
 	}
 	fprintf(fp, "AMX Mod X log file started (file \"%s/L%02d%02d%03d.log\") (version \"%s\")\n", g_log_dir.str(), curTime->tm_mon + 1, curTime->tm_mday, i, AMX_VERSION);
-#if REOPEN_ON_LOG == 1
 	fclose(fp);
-#else
-	m_pFile = fp;
-#endif
-}
-
-void CLog::GetLastFile(int &outMonth, int &outDay, String &outFilename)
-{
-	_finddata_t dat;
-	outMonth = 0;
-	outDay = 0;
-
-	char filename[260];
-	intptr_t fh = _findfirst(build_pathname("%s/L*.log", g_log_dir.str()), &dat);
-	time_t tmpTime=0;
-	if (fh < 0)
-		return;
-	do
-	{
-		if (dat.time_write > tmpTime)
-		{
-			tmpTime = dat.time_write;
-			strcpy(filename, dat.name);
-		}
-	} while (_findnext(fh, &dat) == 0);
-
-	// get filename only (without path)
-	char *ptr = strrchr(filename, '\\');
-	char *sourceFile = NULL;
-	if (ptr)
-		sourceFile = ptr + 1;
-	else
-	{
-		ptr = strrchr(filename, '/');
-		if (ptr)
-			sourceFile = ptr + 1;
-		else
-			sourceFile = filename;
-	}
-
-	// store it
-	char *origSourceFile = sourceFile;
-
-	// parse and set output
-	if (sourceFile[0] != 'L')
-		return;
-	++sourceFile;
-	if (strlen(sourceFile) < 4)	// MMDD
-		return;
-
-	outMonth = (sourceFile[1]-'0') + 10*(sourceFile[0]-'0');
-	outDay = (sourceFile[3]-'0') + 10*(sourceFile[2]-'0');
-
-	outFilename.set(origSourceFile);
 }
 
 void CLog::UseFile(const String &fileName)
 {
 	m_LogFile.set(build_pathname("%s/%s", g_log_dir.str(), fileName.str()));
-#if REOPEN_ON_LOG == 0
-	m_pFile = fopen(m_LogFile.str(), "a+");
-#endif
 }
 
 void CLog::MapChange()
 {
+	// create dir if not existing
+#ifdef __linux
+	mkdir(build_pathname("%s", g_log_dir.str()), 0700);
+#else
+	mkdir(build_pathname("%s", g_log_dir.str()));
+#endif
+
 	m_LogType = atoi(get_localinfo("amxx_logging", "1"));
 	if (m_LogType < 0 || m_LogType > 3)
 	{
@@ -197,18 +133,6 @@ void CLog::MapChange()
 	}
 	else if (m_LogType == 1)
 	{
-		int fileMonth, fileDay;
-		String fileName;
-		// create new logfile if the last logfile is not from today, otherwise use the old logfile
-		GetLastFile(fileMonth, fileDay, fileName);
-		// get current timedate
-		time_t tmpTime;
-		time(&tmpTime);
-		tm *curTime = localtime(&tmpTime);
-		if (curTime->tm_mon+1 != fileMonth || curTime->tm_mday != fileDay)
-			CreateNewFile();
-		else
-			UseFile(fileName);
 		Log("-------- Mapchange --------");
 	}
 	else
@@ -227,27 +151,6 @@ void CLog::Log(const char *fmt, ...)
 		char date[32];
 		strftime(date, 31, "%m/%d/%Y - %H:%M:%S", curTime);
 
-#if REOPEN_ON_LOG == 1
-		FILE *pF = fopen(m_LogFile.str(), "a+");
-#else
-		FILE *pF = m_pFile;
-#endif
-		if (!pF)
-		{
-			CreateNewFile();
-#if REOPEN_ON_LOG == 1
-			pF = fopen(m_LogFile.str(), "a+");
-#else
-			pF = m_pFile;
-#endif
-			if (!pF)
-			{
-				ALERT(at_logged, "[AMXX] Unexpected fatal logging error (couldn't open %s for a+). AMXX Logging disabled for this map.\n", m_LogFile.str());
-				m_LogType = 0;
-				return;
-			}
-		}
-
 		// msg
 		char msg[3072];
 
@@ -256,13 +159,29 @@ void CLog::Log(const char *fmt, ...)
 		vsprintf(msg, fmt, arglst);
 		va_end(arglst);
 
+		FILE *pF;
+		if (m_LogType == 2)
+		{
+			pF = fopen(m_LogFile.str(), "a+");
+			if (!pF)
+			{
+				CreateNewFile();
+				pF = fopen(m_LogFile.str(), "a+");
+				if (!pF)
+				{
+					ALERT(at_logged, "[AMXX] Unexpected fatal logging error (couldn't open %s for a+). AMXX Logging disabled for this map.\n", m_LogFile.str());
+					m_LogType = 0;
+					return;
+				}
+			}
+		}
+		else
+		{
+			pF = fopen(build_pathname("%s/L%02d%02d.log", g_log_dir.str(), curTime->tm_mon + 1, curTime->tm_mday), "a+");
+		}
 		fprintf(pF, "L %s: %s\n", date, msg);
 
-#if REOPEN_ON_LOG == 1
 		fclose(pF);
-#else
-		fflush(pF);
-#endif
 		// print on server console
 		print_srvconsole("L %s: %s\n", date, msg);
 	}

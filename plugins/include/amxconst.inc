@@ -101,7 +101,7 @@
 #define CSW_USP			16
 #define CSW_GLOCK18		17
 #define CSW_AWP			18
-#define CSW_MP5NAV		19
+#define CSW_MP5NAVY		19
 #define CSW_M249		20
 #define CSW_M3			21
 #define CSW_M4A1		22

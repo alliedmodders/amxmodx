@@ -37,7 +37,7 @@ forward plugin_cfg();
 forward plugin_end();
 
 /* Function called to handle changelevel */
-forward server_changelevel(MapName[]);
+forward server_changelevel(map[]);
 
 /* Called on log message. */
 forward plugin_log();
@@ -91,16 +91,16 @@ native get_localinfo(const info[],output[],len);
 native show_motd(player,const message[],const header[]="");
 
 /* Sends message to player. Set index to 0 to send text globaly. */
-native client_print(index,type,const message[],{Float,Sql,Result,Regex,_}:...);
+native client_print(index,type,const message[],{Float,Sql,Result,_}:...);
 
 /* Sends message to player by engine. Set index to 0 to send text globaly. */
-native engclient_print(player,type,const message[],{Float,Sql,Result,Regex,_}:...);
+native engclient_print(player,type,const message[],{Float,Sql,Result,_}:...);
 
 /* Sends message to console. */
-native console_print(id,const message[],{Float,Sql,Result,Regex,_}:...);
+native console_print(id,const message[],{Float,Sql,Result,_}:...);
 
 /* Sends command to console. */
-native console_cmd(id,const cmd[],{Float,Sql,Result,Regex,_}:...);
+native console_cmd(id,const cmd[],{Float,Sql,Result,_}:...);
 
 /* Registers event on which a given function will be called
 * Flags:
@@ -131,7 +131,7 @@ native register_logevent(const function[], argsnum,  ... );
 native set_hudmessage(red=200, green=100, blue=0, Float:x=-1.0, Float:y=0.35, effects=0, Float:fxtime=6.0, Float:holdtime=12.0, Float:fadeintime=0.1, Float:fadeouttime=0.2,channel=4);
 
 /* Displays HUD message to given player. */
-native show_hudmessage(index,const message[],{Float,Sql,Result,Regex,_}:...);
+native show_hudmessage(index,const message[],{Float,Sql,Result,_}:...);
 
 /* Displays menu. Keys have bit values (key 1 is (1<<0), key 5 is (1<<4) etc.). */
 native show_menu(index,keys,const menu[], time = -1, title[] = "");
@@ -140,7 +140,7 @@ native show_menu(index,keys,const menu[], time = -1, title[] = "");
 * When you are asking for string the array and length is needed (read_data(2,name,len)).
 * Integer is returned by function (new me = read_data(3)).
 * Float is set in second parameter (read_data(3,value)). */
-native read_data(value, {Float,Sql,Result,Regex,_}:... );
+native read_data(value, {Float,Sql,Result,_}:... );
 
 /* Returns number of values in client message. */
 native read_datanum();
@@ -161,7 +161,7 @@ native parse_loguser(const text[], name[], nlen, &userid = -2, authid[] = "", al
 
 /* Prints message to server console.
 * You may use text formating (f.e. server_print("%-32s %.2f!","hello",7.345)) */
-native server_print(const message[], {Float,Sql,Result,Regex,_}:...);
+native server_print(const message[], {Float,Sql,Result,_}:...);
 
 /* Returns 1 or 0. */
 native is_map_valid(const mapname[]);
@@ -186,9 +186,6 @@ native is_dedicated_server();
 
 /* Returns 1 or 0. */
 native is_linux_server();
-
-/* Returns 1 or 0. */
-native is_amd64_server();
 
 /* Returns 1 or 0. */
 native is_jit_enabled();
@@ -289,13 +286,13 @@ native user_kill(index,flag=0);
 *  ...      - optional parameters
 * Return value:
 *  always 0 */
-native log_amx(const string[], {Float,Sql,Result,Regex,_}:...);
+native log_amx(const string[], {Float,Sql,Result,_}:...);
 
 /* Sends message to standard HL logs. */
-native log_message(const message[],{Float,Sql,Result,Regex,_}:...);
+native log_message(const message[],{Float,Sql,Result,_}:...);
 
 /* Sends log message to specified file. */
-native log_to_file(const file[],const message[],{Float,Sql,Result,Regex,_}:...);
+native log_to_file(const file[],const message[],{Float,Sql,Result,_}:...);
 
 /* Returns number of players put in server. 
 * If flag is set then also connecting are counted. */
@@ -350,7 +347,7 @@ native find_player(const flags[], ... );
 native remove_quotes(text[]);
 
 /* Executes command on player. */
-native client_cmd(index,const command[],{Float,Sql,Result,Regex,_}:...);
+native client_cmd(index,const command[],{Float,Sql,Result,_}:...);
 
 /* This is an emulation of a client command (commands aren't send to client!).
 * It allows to execute some commands on players and bots.
@@ -359,7 +356,7 @@ native client_cmd(index,const command[],{Float,Sql,Result,Regex,_}:...);
 native engclient_cmd(index,const command[],arg1[]="",arg2[]="");
 
 /* Executes command on a server console. */
-native server_cmd(const command[],{Float,Sql,Result,Regex,_}:...);
+native server_cmd(const command[],{Float,Sql,Result,_}:...);
 
 /* Sets a cvar to given value. */
 native set_cvar_string(const cvar[],const value[]);
@@ -623,25 +620,10 @@ native unpause(flag[], const param1[]="",const param2[]="");
 *  func   - function name
 * Return value:
 *   1     - Success
+*   0     - Runtime error
 *  -1     - Plugin not found
 *  -2     - Function not found */
 native callfunc_begin(const func[], const plugin[]="");
-
-/* Call a function in this / an another plugin by id.
-* Parameters:
-*  plugin - plugin id; the id you would pass to get_plugin
-*           If < 0, the current plugin is taken
-*  func   - function id
-* Return value:
-*   1     - Success
-*  -1     - Plugin not found
-*  -2     - Function not executable */
-native callfunc_begin_i(func, plugin = -1);
-
-/* Get a function id (for callfunc_begin_i)
-   To get the plugin id, use the find_plugin stock
-*/
-native get_func_id(const funcName[], pluginId = -1);
 
 /* Push a parameter (integer, string, float) */
 native callfunc_push_int(value);
@@ -671,8 +653,10 @@ native md5_file(const file[], md5buffer[34]);
 /* Returns the internal flags set on the called bytecode structure - Do not use */
 native plugin_flags();
 
+/* When using modules that aren't part of AMX Mod X base package, do
+* a require_module("modulename") for each of them within the plugin_modules()
+* forward. Module name is the one listed when doing "amxx modules" in server
+* console. */
 forward plugin_modules();
 
 native require_module(const module[]);
-
-native lang_phrase(lang_mode, const phrase[], buffer[], maxLen);

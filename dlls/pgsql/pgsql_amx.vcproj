@@ -25,7 +25,7 @@
 				InlineFunctionExpansion="1"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;PGSQL_EXPORTS"
 				StringPooling="TRUE"
-				RuntimeLibrary="4"
+				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\Release/pgsql.pch"
@@ -39,7 +39,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wsock32.lib libpq.lib"
+				AdditionalDependencies="wsock32.lib lib\libpq.lib"
 				OutputFile=".\Release/pgsql_amxx.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"

@@ -224,6 +224,10 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params) // native give_ite
 
 	MDLL_Spawn(pItemEntity);
 	MDLL_Touch(pItemEntity, ENT(pPlayer));
+	int iEnt = ENTINDEX(pItemEntity->v.owner);
+	if (iEnt > 32 || iEnt <1 ) {
+		MDLL_Think(pItemEntity);
+	}
 
 	return 1;
 }
@@ -404,6 +408,8 @@ static cell AMX_NATIVE_CALL set_user_maxspeed(AMX *amx, cell *params) // set_use
 	// params[1] = index
 	// params[2] = speed (should be -1.0 if not specified) (JGHG: unspecified parameters seems to always be -1.0!)
 
+	float fNewSpeed = *(float *)((void *)&params[2]);
+
 	// Check index
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
@@ -420,7 +426,8 @@ static cell AMX_NATIVE_CALL set_user_maxspeed(AMX *amx, cell *params) // set_use
 	}
 
 	//pPlayer->v.maxspeed = ; // JGHG: Gotta love the way to get floats from parameters :-P
-	SETCLIENTMAXSPEED(pPlayer, *(float *)((void *)&params[2]));
+	SETCLIENTMAXSPEED(pPlayer, fNewSpeed);
+	pPlayer->v.maxspeed = fNewSpeed;
 
 	return 1;
 }

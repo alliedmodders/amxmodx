@@ -45,7 +45,7 @@ native reset_user_wstats(index);
 /* Gets overall stats which stored in stats.dat file in amx folder
 * and updated on every mapchange or user disconnect.
 * Function returns next index of stats entry or 0 if no more exists. */
-native get_stats(index,stats[8],bodyhits[8],name[],len,authid[],authidlen = 0);
+native get_stats(index,stats[8],bodyhits[8],name[],len,authid[] = "",authidlen = 0);
 
 /* Returns number of all entries in stats. */
 native get_statsnum();
@@ -58,4 +58,4 @@ native get_statsnum();
 * 3 - bomb explosions
 */
 native get_user_stats2(index,stats[4]);
-native get_stats2(index,stats[4],authid[],authidlen = 0);
+native get_stats2(index,stats[4],authid[] = "",authidlen = 0);

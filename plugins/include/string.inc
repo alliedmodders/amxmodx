@@ -35,10 +35,10 @@ native format(output[] ,len ,const format[] , {Float,_}:...);
 native format_args(output[] ,len ,pos = 0);
 
 /* Converts number to string. */
-native int_to_str(num,string[],len);
+native numtostr(num,string[],len);
 
 /* Returns converted string to number. */
-native str_to_int(const string[]);
+native strtonum(string[]);
 
 /* Checks if two strings equal. If len var is set
 * then there are only c chars comapred. */

@@ -15,17 +15,9 @@
 #include <engine>
 #include <fun>
 
-stock num_to_str(num,string[],len)
-  return int_to_str(num,string,len)
+native numtostr(num,string[],len)
 
-stock numtostr(num,string[],len)
-  return int_to_str(num,string,len)
-
-stock str_to_num(const string[])
-  return str_to_int(string)
-
-stock strtonum(const string[])
-  return str_to_int(string)
+native strtonum(const string[])
 
 stock set_user_hitzones(index=0,target=0,body=255)
   return set_hitzones(body)

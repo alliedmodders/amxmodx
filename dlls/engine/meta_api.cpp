@@ -380,6 +380,11 @@ static cell AMX_NATIVE_CALL set_offset_short(AMX *amx, cell *params)
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
+
+	if (!is_PlayerOn[index]) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
 	
 	edict_t *pEnt = INDEXENT(index);
 	
@@ -400,6 +405,11 @@ static cell AMX_NATIVE_CALL set_offset(AMX *amx, cell *params)
 	int off = params[2];
 	
 	if (index < 1 || index > gpGlobals->maxEntities) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	if (!is_PlayerOn[index]) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
@@ -428,6 +438,11 @@ static cell AMX_NATIVE_CALL set_offset_float(AMX *amx, cell *params)
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
+
+	if (!is_PlayerOn[index]) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
 	
 	edict_t *pEnt = INDEXENT(index);
 	
@@ -435,7 +450,7 @@ static cell AMX_NATIVE_CALL set_offset_float(AMX *amx, cell *params)
        off -= 5;
 #endif
 
-	*((float *)Player->pvPrivateData + off) = fNewValue;
+	*((float *)pEnt->pvPrivateData + off) = fNewValue;
 	
 	return 1;
 }
@@ -501,7 +516,7 @@ static cell AMX_NATIVE_CALL get_offset_float(AMX *amx, cell *params)
 {
 	int index = params[1];
 	int off = params[2];
-	//float retVal;
+	float retVal;
 	
 	if (index < 1 || index > gpGlobals->maxEntities) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);

@@ -1,4 +1,4 @@
-//#define CS_WON_BUILD // comment when compiling for STEAM
+//#define __cswonbuild__ // comment when compiling for STEAM
 
  /* AMX Mod X 
    *   Counter-Strike Module 
@@ -34,16 +34,20 @@
    */ 
 
 // cstrike MODULE TO DO HERE: http://www.amxmodx.org/forums/viewtopic.php?t=45
+// This implementation uses Vexd's way (lightly modified) of setting models on players.
 
 #include <extdll.h>
 #include <meta_api.h>
 #include <modules.h>
+#include "CstrikePlayer.h"
 
 meta_globals_t *gpMetaGlobals;		// Variables provided to plugins.
 gamedll_funcs_t *gpGamedllFuncs;	// Pair of function tables provided by game DLL.
 mutil_funcs_t *gpMetaUtilFuncs;		// Meta Utility Function table type.
 enginefuncs_t g_engfuncs;			// Engine hands this to DLLs for functionality callbacks
-globalvars_t  *gpGlobals;			// JGHG says: contains info on server, like maxcliens, (time?) etc, stringbase is here :-) seems to be used with entity classnames...
+enginefuncs_t meta_engfuncs;
+globalvars_t  *gpGlobals;
+DLL_FUNCTIONS gFunctionTable;
 
 // Must provide at least one of these...
 static META_FUNCTIONS gMetaFunctionTable; /* = {
@@ -55,7 +59,7 @@ static META_FUNCTIONS gMetaFunctionTable; /* = {
 	NULL,						// pfnGetNewDLLFunctions_Post	META; called after game DLL
 	NULL,						// pfnGetEngineFunctions		META; called before HL engine
 	NULL						// pfnGetEngineFunctions_Post	META; called after HL engine
-}; */
+};*/
 
 pfnamx_engine_g* g_engAmxFunc;
 pfnmodule_engine_g* g_engModuleFunc;
@@ -71,135 +75,79 @@ pfnmodule_engine_g* g_engModuleFunc;
 #define LOGTAG "AMXCS"
 #define DATE __DATE__
 
+#define GETINFOKEYBUFFER				(*g_engfuncs.pfnGetInfoKeyBuffer)
+#define	SETCLIENTKEYVALUE				(*g_engfuncs.pfnSetClientKeyValue)
+#define GETCLIENTKEYVALUE				(*g_engfuncs.pfnInfoKeyValue)
 
-#if defined CS_WON_BUILD
 #if defined __linux__
-	#define LINUXOFFSET					5
-// "player" entities
-	#define OFFSET_TEAM					114 + LINUXOFFSET // same as STEAM
-	#define OFFSET_CSMONEY				115 + LINUXOFFSET // same as STEAM
-	#define OFFSET_NVGOGGLES			129 + LINUXOFFSET // same as STEAM
-	#define OFFSET_DEFUSE_PLANT			193 + LINUXOFFSET // same as STEAM
-	#define OFFSET_VIP					215 + LINUXOFFSET // same as STEAM
-	#define OFFSET_BUYZONE				239 + LINUXOFFSET // differs -2 from STEAM
-
-	#define OFFSET_AWM_AMMO				381 + LINUXOFFSET // differs -1 from STEAM
-	#define OFFSET_SCOUT_AMMO			382 + LINUXOFFSET // all of these probably differs by -1, didn't really test that yet though
-	#define OFFSET_PARA_AMMO			383 + LINUXOFFSET
-	#define OFFSET_FAMAS_AMMO			384 + LINUXOFFSET
-	#define OFFSET_M3_AMMO				385 + LINUXOFFSET
-	#define OFFSET_USP_AMMO				386 + LINUXOFFSET
-	#define OFFSET_FIVESEVEN_AMMO		387 + LINUXOFFSET
-	#define OFFSET_DEAGLE_AMMO			388 + LINUXOFFSET
-	#define OFFSET_P228_AMMO			389 + LINUXOFFSET
-	#define OFFSET_GLOCK_AMMO			390 + LINUXOFFSET
-	#define OFFSET_FLASH_AMMO			391 + LINUXOFFSET
-	#define OFFSET_HE_AMMO				392 + LINUXOFFSET
-	#define OFFSET_SMOKE_AMMO			393 + LINUXOFFSET
-	#define OFFSET_C4_AMMO				394	+ LINUXOFFSET // differs -1 from STEAM
-
-	#define OFFSET_CSDEATHS				448 + LINUXOFFSET // differs -1 from STEAM
-// "weapon_*" entities
-	#define OFFSET_WEAPONTYPE			43 + LINUXOFFSET // same as STEAM
-	#define OFFSET_SILENCER_FIREMODE	70 + LINUXOFFSET // differs -4 from STEAM
-// "hostage_entity" entities
-	#define OFFSET_HOSTAGEID			487 + LINUXOFFSET // same as STEAM
+	#define EXTRAOFFSET					5 // offsets 5 higher in Linux builds
 #else
-// "player" entities
-	#define OFFSET_TEAM					114
-	#define OFFSET_CSMONEY				115
-	#define OFFSET_NVGOGGLES			129
-	#define OFFSET_DEFUSE_PLANT			193
-	#define OFFSET_VIP					215
-	#define OFFSET_BUYZONE				239
-
-	#define OFFSET_AWM_AMMO				381
-	#define OFFSET_SCOUT_AMMO			382
-	#define OFFSET_PARA_AMMO			383
-	#define OFFSET_FAMAS_AMMO			384
-	#define OFFSET_M3_AMMO				385
-	#define OFFSET_USP_AMMO				386
-	#define OFFSET_FIVESEVEN_AMMO		387
-	#define OFFSET_DEAGLE_AMMO			388
-	#define OFFSET_P228_AMMO			389
-	#define OFFSET_GLOCK_AMMO			390
-	#define OFFSET_FLASH_AMMO			391
-	#define OFFSET_HE_AMMO				392
-	#define OFFSET_SMOKE_AMMO			393
-	#define OFFSET_C4_AMMO				394
-
-	#define OFFSET_CSDEATHS				448
-
-	#define OFFSET_WEAPONTYPE			43
-	#define OFFSET_SILENCER_FIREMODE	70
-// "hostage_entity" entities
-	#define OFFSET_HOSTAGEID			487
+	#define EXTRAOFFSET					0 // no change in Windows builds
 #endif // defined __linux__
+
+#if defined __cswonbuild__ // from here WON build looks for offsets
+	// "player" entities
+	#define OFFSET_TEAM					114 + EXTRAOFFSET // same as STEAM
+	#define OFFSET_CSMONEY				115 + EXTRAOFFSET // same as STEAM
+	#define OFFSET_NVGOGGLES			129 + EXTRAOFFSET // same as STEAM
+	#define OFFSET_DEFUSE_PLANT			193 + EXTRAOFFSET // same as STEAM
+	#define OFFSET_VIP					215 + EXTRAOFFSET // same as STEAM
+	#define OFFSET_BUYZONE				239 + EXTRAOFFSET // differs -2 from STEAM
+
+	#define OFFSET_AWM_AMMO				381 + EXTRAOFFSET // differs -1 from STEAM
+	#define OFFSET_SCOUT_AMMO			382 + EXTRAOFFSET // all of these probably differs by -1, didn't really test that yet though
+	#define OFFSET_PARA_AMMO			383 + EXTRAOFFSET
+	#define OFFSET_FAMAS_AMMO			384 + EXTRAOFFSET
+	#define OFFSET_M3_AMMO				385 + EXTRAOFFSET
+	#define OFFSET_USP_AMMO				386 + EXTRAOFFSET
+	#define OFFSET_FIVESEVEN_AMMO		387 + EXTRAOFFSET
+	#define OFFSET_DEAGLE_AMMO			388 + EXTRAOFFSET
+	#define OFFSET_P228_AMMO			389 + EXTRAOFFSET
+	#define OFFSET_GLOCK_AMMO			390 + EXTRAOFFSET
+	#define OFFSET_FLASH_AMMO			391 + EXTRAOFFSET
+	#define OFFSET_HE_AMMO				392 + EXTRAOFFSET
+	#define OFFSET_SMOKE_AMMO			393 + EXTRAOFFSET
+	#define OFFSET_C4_AMMO				394 + EXTRAOFFSET // differs -1 from STEAM
+
+	#define OFFSET_CSDEATHS				448 + EXTRAOFFSET // differs -1 from STEAM
+	// "weapon_*" entities
+	#define OFFSET_WEAPONTYPE			43 + EXTRAOFFSET // same as STEAM
+	#define OFFSET_SILENCER_FIREMODE	70 + EXTRAOFFSET // differs -4 from STEAM
+	// "hostage_entity" entities
+	//#define OFFSET_HOSTAGEFOLLOW		86 + EXTRAOFFSET // NOT YET CHECKED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! find out before build
+	#define OFFSET_HOSTAGEID			487 + EXTRAOFFSET // same as STEAM
 #else // from here STEAM build looks for offsets
-#if defined __linux__
-	#define LINUXOFFSET					5
-// "player" entities
-	#define OFFSET_TEAM					114 + LINUXOFFSET
-	#define OFFSET_CSMONEY				115 + LINUXOFFSET
-	#define OFFSET_NVGOGGLES			129 + LINUXOFFSET
-	#define OFFSET_DEFUSE_PLANT			193 + LINUXOFFSET
-	#define OFFSET_VIP					215 + LINUXOFFSET
-	#define OFFSET_BUYZONE				241 + LINUXOFFSET
+	// "player" entities
+	#define OFFSET_TEAM					114 + EXTRAOFFSET
+	#define OFFSET_CSMONEY				115 + EXTRAOFFSET
+	#define OFFSET_NVGOGGLES			129 + EXTRAOFFSET
+	#define OFFSET_DEFUSE_PLANT			193 + EXTRAOFFSET
+	#define OFFSET_VIP					215 + EXTRAOFFSET
+	#define OFFSET_BUYZONE				241 + EXTRAOFFSET
 
-	#define OFFSET_AWM_AMMO				382 + LINUXOFFSET
-	#define OFFSET_SCOUT_AMMO			383 + LINUXOFFSET
-	#define OFFSET_PARA_AMMO			384 + LINUXOFFSET
-	#define OFFSET_FAMAS_AMMO			385 + LINUXOFFSET
-	#define OFFSET_M3_AMMO				386 + LINUXOFFSET
-	#define OFFSET_USP_AMMO				387 + LINUXOFFSET
-	#define OFFSET_FIVESEVEN_AMMO		388 + LINUXOFFSET
-	#define OFFSET_DEAGLE_AMMO			389 + LINUXOFFSET
-	#define OFFSET_P228_AMMO			390 + LINUXOFFSET
-	#define OFFSET_GLOCK_AMMO			391 + LINUXOFFSET
-	#define OFFSET_FLASH_AMMO			392 + LINUXOFFSET
-	#define OFFSET_HE_AMMO				393 + LINUXOFFSET
-	#define OFFSET_SMOKE_AMMO			394 + LINUXOFFSET
-	#define OFFSET_C4_AMMO				395	+ LINUXOFFSET
+	#define OFFSET_AWM_AMMO				382 + EXTRAOFFSET
+	#define OFFSET_SCOUT_AMMO			383 + EXTRAOFFSET
+	#define OFFSET_PARA_AMMO			384 + EXTRAOFFSET
+	#define OFFSET_FAMAS_AMMO			385 + EXTRAOFFSET
+	#define OFFSET_M3_AMMO				386 + EXTRAOFFSET
+	#define OFFSET_USP_AMMO				387 + EXTRAOFFSET
+	#define OFFSET_FIVESEVEN_AMMO		388 + EXTRAOFFSET
+	#define OFFSET_DEAGLE_AMMO			389 + EXTRAOFFSET
+	#define OFFSET_P228_AMMO			390 + EXTRAOFFSET
+	#define OFFSET_GLOCK_AMMO			391 + EXTRAOFFSET
+	#define OFFSET_FLASH_AMMO			392 + EXTRAOFFSET
+	#define OFFSET_HE_AMMO				393 + EXTRAOFFSET
+	#define OFFSET_SMOKE_AMMO			394 + EXTRAOFFSET
+	#define OFFSET_C4_AMMO				395	+ EXTRAOFFSET
 
-	#define OFFSET_CSDEATHS				449 + LINUXOFFSET
-// "weapon_*" entities
-	#define OFFSET_WEAPONTYPE			43 + LINUXOFFSET
-	#define OFFSET_SILENCER_FIREMODE	74 + LINUXOFFSET
-// "hostage_entity" entities
-	#define OFFSET_HOSTAGEID			487 + LINUXOFFSET
-
-#else
-// "player" entities
-	#define OFFSET_TEAM					114
-	#define OFFSET_CSMONEY				115
-	#define OFFSET_NVGOGGLES			129
-	#define OFFSET_DEFUSE_PLANT			193
-	#define OFFSET_VIP					215
-	#define OFFSET_BUYZONE				241
-
-	#define OFFSET_AWM_AMMO				382
-	#define OFFSET_SCOUT_AMMO			383
-	#define OFFSET_PARA_AMMO			384
-	#define OFFSET_FAMAS_AMMO			385
-	#define OFFSET_M3_AMMO				386
-	#define OFFSET_USP_AMMO				387
-	#define OFFSET_FIVESEVEN_AMMO		388
-	#define OFFSET_DEAGLE_AMMO			389
-	#define OFFSET_P228_AMMO			390
-	#define OFFSET_GLOCK_AMMO			391
-	#define OFFSET_FLASH_AMMO			392
-	#define OFFSET_HE_AMMO				393
-	#define OFFSET_SMOKE_AMMO			394
-	#define OFFSET_C4_AMMO				395	
-
-	#define OFFSET_CSDEATHS				449
-// "weapon_*" entities
-	#define OFFSET_WEAPONTYPE			43
-	#define OFFSET_SILENCER_FIREMODE	74
-// "hostage_entity" entities
-	#define OFFSET_HOSTAGEID			487
-#endif // defined __linux__
-#endif // defined CS_WON_BUILD
+	#define OFFSET_CSDEATHS				449 + EXTRAOFFSET
+	// "weapon_*" entities
+	#define OFFSET_WEAPONTYPE			43 + EXTRAOFFSET
+	#define OFFSET_SILENCER_FIREMODE	74 + EXTRAOFFSET
+	// "hostage_entity" entities
+	#define OFFSET_HOSTAGEFOLLOW		86 + EXTRAOFFSET
+	#define OFFSET_HOSTAGEID			487 + EXTRAOFFSET
+#endif // defined __cswonbuild__
 
 // Offsets of ammo amount in player entities
 /*
@@ -276,6 +224,7 @@ pfnmodule_engine_g* g_engModuleFunc;
 #define DEFUSER_COLOUR_B				0
 
 #define HAS_NVGOGGLES					(1<<0)
+#define MODELRESETTIME					1.0
 // cstrike-specific defines above
 
 // Globals below
@@ -298,7 +247,6 @@ module_info_s module_info = {
   RELOAD_MODULE,
 };
 
-//int g_msgMoney;
-//int g_msgTextMsg;
-//int g_msgStatusIcon;
+CCstrikePlayer g_players[33];
+//bool g_initialized = false;
 // Globals above

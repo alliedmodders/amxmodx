@@ -199,6 +199,12 @@ static cell AMX_NATIVE_CALL cs_get_hostage_id(AMX *amx, cell *params) // cs_get_
 		return 0;
 	}
 
+	// Make sure this is a hostage.
+	if (strcmp(STRING(pEdict->v.classname), "hostage_entity") != 0) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
 	// Return value at offset
 	return (int)*((int *)pEdict->pvPrivateData + OFFSET_HOSTAGEID);
 }
@@ -979,6 +985,197 @@ static cell AMX_NATIVE_CALL cs_set_user_nvgoggles(AMX *amx, cell *params) // cs_
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL cs_get_user_model(AMX *amx, cell *params) // cs_get_user_model(index, model[], len); = 3 params
+{
+	// Get model a player has.
+	// params[1] = user index
+	// params[2] = model
+	// params[3] = max length to set
+
+	// Valid player index should be within range
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	{
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// Make into edict pointer
+	edict_t *pPlayer = INDEXENT(params[1]);
+
+	// Check entity validity
+	if (FNullEnt(pPlayer)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	return SET_AMXSTRING(amx, params[2], GETCLIENTKEYVALUE(GETINFOKEYBUFFER(pPlayer), "model"), params[3]);
+}
+
+static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params) // cs_set_user_model(index, const model[]); = 2 params
+{
+	// Set model on player.
+	// params[1] = user index
+	// params[2] = model
+
+	// Valid player index should be within range
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	{
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// Make into edict pointer
+	edict_t* pPlayer = INDEXENT(params[1]);
+
+	// Check entity validity
+	if (FNullEnt(pPlayer)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	if (params[2] == -1) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	char model[32];
+	int len;
+
+	strcpy(model, GET_AMXSTRING(amx, params[2], 0, len));
+	
+	g_players[params[1]].SetModel(model);
+	g_players[params[1]].SetModelled(true);
+
+	SETCLIENTKEYVALUE(params[1], GETINFOKEYBUFFER(pPlayer), "model", (char*)g_players[params[1]].GetModel());
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL cs_reset_user_model(AMX *amx, cell *params) // cs_reset_user_model(index); = 1 param
+{
+	// Reset model on player.
+	// params[1] = user index
+
+	// Valid player index should be within range
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	{
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// Make into edict pointer
+	edict_t* pPlayer = INDEXENT(params[1]);
+
+	// Check entity validity
+	if (FNullEnt(pPlayer)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	g_players[params[1]].SetModelled(false);
+
+	MDLL_ClientUserInfoChanged(pPlayer, GETINFOKEYBUFFER(pPlayer));
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL cs_get_hostage_follow(AMX *amx, cell *params) // cs_get_hostage_follow(index); = 1 param
+{
+	// What index is the hostage following? (this doesn't have to be a player)
+	// params[1] = hostage index
+
+	// Valid index should be within range
+	if (params[1] < gpGlobals->maxClients + 1 || params[1] > gpGlobals->maxEntities) // highest player index on a 10 player server is 10 :-)!
+	{
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// Make into edict pointer
+	edict_t* pHostage = INDEXENT(params[1]);
+
+	// Check entity validity
+	if (FNullEnt(pHostage)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// Make sure this is a hostage.
+	if (strcmp(STRING(pHostage->v.classname), "hostage_entity") != 0) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	int following = *((int *)pHostage->pvPrivateData + OFFSET_HOSTAGEFOLLOW);
+
+	if (following == 0)
+		return following;
+
+	// Else this is probably a pointer to an entity's edict.
+	edict_t* pEntity = (edict_t*)following;
+
+	if (FNullEnt(pEntity)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	return ENTINDEX(pEntity);
+}
+
+static cell AMX_NATIVE_CALL cs_set_hostage_follow(AMX *amx, cell *params) // cs_set_hostage_follow(index, followedindex = 0); = 2 params
+{
+	// What index should the hostage be following? (this doesn't have to be a player)
+	// params[1] = hostage index
+	// params[2] = index to follow, if -1 then set hostage to not follow anything
+
+	// Valid index should be within range
+	if (params[1] < gpGlobals->maxClients + 1 || params[1] > gpGlobals->maxEntities) // highest player index on a 10 player server is 10 :-)!
+	{
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// Make into edict pointer
+	edict_t* pHostage = INDEXENT(params[1]);
+
+	// Check entity validity
+	if (FNullEnt(pHostage)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// Make sure this is a hostage.
+	if (strcmp(STRING(pHostage->v.classname), "hostage_entity") != 0) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	if (params[2] == -1) {
+		*((int *)pHostage->pvPrivateData + OFFSET_HOSTAGEFOLLOW) = 0;
+		return 1;
+	}
+
+	// Valid index should be within range
+	if (params[2] < 1 || params[2] > gpGlobals->maxEntities)
+	{
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	// Make into edict pointer
+	edict_t* pEntity = INDEXENT(params[2]);
+
+	// Check entity validity
+	if (FNullEnt(pEntity)) {
+		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		return 0;
+	}
+
+	*((int *)pHostage->pvPrivateData + OFFSET_HOSTAGEFOLLOW) = (int)pEntity;
+
+	return 1;
+}
+
 AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_user_money",			cs_set_user_money},
 	{"cs_get_user_money",			cs_get_user_money},
@@ -1002,14 +1199,83 @@ AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_user_backpackammo",	cs_set_user_backpackammo},
 	{"cs_get_user_nvgoggles",		cs_get_user_nvgoggles},
 	{"cs_set_user_nvgoggles",		cs_set_user_nvgoggles},
+	{"cs_get_hostage_follow",		cs_get_hostage_follow},
+	{"cs_set_hostage_follow",		cs_set_hostage_follow},
+
+	{"cs_get_user_model",			cs_get_user_model},
+	{"cs_set_user_model",			cs_set_user_model},
+	{"cs_reset_user_model",			cs_reset_user_model},
 	{NULL,							NULL}
 };
 
+/***GetEngineFunctions******************/
+void MessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed) {
+	// Reset player model a short while (MODELRESETTIME) after this if they are using an edited model.
+	if(msg_type == GET_USER_MSG_ID(PLID, "ResetHUD", NULL)) {
+		int entityIndex = ENTINDEX(ed);
+		if(g_players[entityIndex].GetModelled())
+			g_players[entityIndex].SetInspectModel(true);
+			//g_players[ENTINDEX(ed)].SetTime(gpGlobals->time + MODELRESETTIME);
+	}
+
+	RETURN_META(MRES_IGNORED);
+}
+
+C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion) {
+	if(!pengfuncsFromEngine)
+		return(FALSE);
+	else if(*interfaceVersion != ENGINE_INTERFACE_VERSION) {
+		*interfaceVersion = ENGINE_INTERFACE_VERSION;
+		return(FALSE);
+	}
+
+	//meta_engfuncs.pfnSetModel = SetModel;
+	meta_engfuncs.pfnMessageBegin = MessageBegin;
+
+	memcpy(pengfuncsFromEngine, &meta_engfuncs, sizeof(enginefuncs_t));
+
+	return TRUE;
+}
+
+/***GetEntityAPI2******************/
+void ClientDisconnect(edict_t *pEntity) {
+	g_players[ENTINDEX(pEntity)].SetModelled(false);
+
+	RETURN_META(MRES_IGNORED);
+}
+
+void ClientUserInfoChanged(edict_t *pEntity, char *infobuffer) {
+	if(g_players[ENTINDEX(pEntity)].GetModelled() && pEntity->v.deadflag == DEAD_NO) {
+		RETURN_META(MRES_SUPERCEDE);
+	} else {
+		RETURN_META(MRES_IGNORED);
+	}
+}
+
+void PlayerPostThink(edict_t* pPlayer) {
+	int entityIndex = ENTINDEX(pPlayer);
+
+	if(g_players[entityIndex].GetModelled()) {
+		if (g_players[entityIndex].GetInspectModel() && strcmp(g_players[entityIndex].GetModel(), GETCLIENTKEYVALUE(GETINFOKEYBUFFER(pPlayer), "model")) != 0) {
+			LOG_CONSOLE(PLID, "%s should have model %s and currently has %s", STRING(pPlayer->v.netname), (char*)g_players[entityIndex].GetModel(), GETCLIENTKEYVALUE(GETINFOKEYBUFFER(pPlayer), "model"));
+			SETCLIENTKEYVALUE(entityIndex, GETINFOKEYBUFFER(pPlayer), "model", (char*)g_players[entityIndex].GetModel());
+			g_players[entityIndex].SetInspectModel(false);
+		}
+	}
+	RETURN_META(MRES_IGNORED);
+}
+
+C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion) {
+	gFunctionTable.pfnClientDisconnect = ClientDisconnect;
+	gFunctionTable.pfnClientUserInfoChanged = ClientUserInfoChanged;
+	gFunctionTable.pfnPlayerPostThink = PlayerPostThink;
+
+	memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
+
+	return(TRUE);
+}
+
 /******************************************************************************************/
-
-
-/******************************************************************************************/
-
 C_DLLEXPORT int Meta_Query(char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_t *pMetaUtilFuncs) {
 	*pPlugInfo = &Plugin_info;
 	gpMetaUtilFuncs = pMetaUtilFuncs;
@@ -1030,13 +1296,13 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 		return(FALSE);
 	}
 
+	gMetaFunctionTable.pfnGetEntityAPI2 = GetEntityAPI2;
+	gMetaFunctionTable.pfnGetEngineFunctions = GetEngineFunctions;
+
 	memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
 	gpGamedllFuncs = pGamedllFuncs;
 
 	// Init stuff here
-	//g_msgMoney = GET_USER_MSG_ID(PLID, "Money", NULL);
-	//g_msgTextMsg = GET_USER_MSG_ID(PLID, "TextMsg", NULL);
-	//g_msgStatusIcon = GET_USER_MSG_ID(PLID, "StatusIcon", NULL);
 
 	return(TRUE);
 }

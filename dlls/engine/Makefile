@@ -1,4 +1,4 @@
-MODNAME = engine_mm
+MODNAME = engine_amx
 SRCFILES = meta_api.cpp
 
 EXTRA_LIBS_LINUX =
@@ -6,12 +6,12 @@ EXTRA_LIBS_WIN32 =
 EXTRA_LIBDIRS_LINUX = -Lextra/lib_linux
 EXTRA_LIBDIRS_WIN32 = -Lextra/lib_win32
 
-EXTRA_INCLUDEDIRS = -Iextra/include
+EXTRA_INCLUDEDIRS = -Iextra/include -I../amxmodx
 
 EXTRA_FLAGS = -Dstrcmpi=strcasecmp
 
 SDKTOP=../hlsdk
-METADIR=../metamod/metamod
+METADIR=../metamodx
 
 
 SDKSRC=$(SDKTOP)/SourceCode
@@ -57,9 +57,9 @@ OBJ_WIN32 := $(SRCFILES:%.cpp=$(OBJDIR_WIN32)/%.o)
 OBJC_WIN32 := $(CSRCFILES:%.c=$(OBJDIR_WIN32)/%.o)
 
 
-CCOPT = -march=i586 -O6 -ffast-math -funroll-loops \
+CCOPT = -march=i386 -O2 -ffast-math -funroll-loops \
 	-fomit-frame-pointer -fexpensive-optimizations -malign-loops=2 \
-	-malign-jumps=2 -malign-functions=2 -s	-DNDEBUG -lstdc++
+	-malign-jumps=2 -malign-functions=2 -s	-DNDEBUG
 
 INCLUDEDIRS=-I../curl/include -I$(SRCDIR) -I$(METADIR) -I$(SDKSRC)/engine -I$(SDKSRC)/common -I$(SDKSRC)/pm_shared -I$(SDKSRC)/dlls -I$(SDKSRC) $(EXTRA_INCLUDEDIRS)
 CFLAGS=-Wall -Wno-unknown-pragmas

@@ -1,19 +1,12 @@
-/* AMX Mod script.
+/* AMX Mod X script.
 *
-* (c) 2003, dJeyL
+* (c) 2002-2004, dJeyL
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*
 * This file is provided as is (no warranties).
 *
 * This AMX plugin requires MySQL module.
 *
-* For this to work, you might create your MySQL admins table with this SQL query :
-
-  CREATE TABLE admins (
-    auth varchar(32) NOT NULL default '',
-    password varchar(32) NOT NULL default '',
-    access varchar(32) NOT NULL default '',
-    flags varchar(32) NOT NULL default ''
-  ) TYPE=MyISAM;
-
 * IMPORTANT:
 * o Check $moddir/addons/amx/mysql.cfg for MySQL access configuration
 * o Disable admin.amx plugin if you use admin_mysql.amx
@@ -24,7 +17,7 @@
 #include <amxmisc>
 #include <mysql>
 
-#define MAX_ADMINS  64
+#define MAX_ADMINS 64
 
 new g_aPassword[MAX_ADMINS][32]
 new g_aName[MAX_ADMINS][32]
@@ -38,8 +31,8 @@ new g_cmdLoopback[16]
 
 public plugin_init()
 {
-  register_plugin("Admin Base for MySQL","0.9","default")
-  
+  register_plugin("Admin Base for MySQL","0.1","default")
+
   register_cvar("amx_mode","2.0")
   register_cvar("amx_password_field","_pw")
   register_cvar("amx_default_access","")
@@ -48,18 +41,18 @@ public plugin_init()
   register_cvar("amx_mysql_user","root")
   register_cvar("amx_mysql_pass","")
   register_cvar("amx_mysql_db","amx")  
-  
+
 #if !defined NO_STEAM   
   format( g_cmdLoopback, 15, "amxauth%c%c%c%c" , 
   	random_num('A','Z') , random_num('A','Z') ,random_num('A','Z'),random_num('A','Z')  )
   register_clcmd( g_cmdLoopback, "ackSignal" )  
-#endif  
-  
-  
+#endif
+
+
   remove_user_flags(0,read_flags("z")) // remove 'user' flag from server rights
-  
+
   get_logfile(g_logFile,15)  
-  
+
   new filename[32]
   get_basedir( filename , 31 )
   server_cmd("exec %s/amx.cfg" , filename)
@@ -78,13 +71,15 @@ public adminSql(){
     server_print("MySQL error: can't connect: '%s'",error)
     return PLUGIN_HANDLED 
   }
-  
+
+  mysql_query(mysql,"CREATE TABLE IF NOT EXISTS admins ( auth varchar(32) NOT NULL default '', password varchar(32) NOT NULL default '', access varchar(32) NOT NULL default '', flags varchar(32) NOT NULL default '' ) TYPE=MyISAM")
+
   if(mysql_query(mysql,"SELECT auth,password,access,flags FROM admins") < 1)  {
     mysql_error(mysql,error,127)
     server_print("MySQL error: can't load admins: '%s'",error)
     return PLUGIN_HANDLED
   }
-  
+
   new szFlags[32], szAccess[32]
   g_aNum = 0 /* reset admins settings */
   while( mysql_nextrow(mysql) > 0 )
@@ -97,7 +92,7 @@ public adminSql(){
     g_aFlags[ g_aNum ] = read_flags( szFlags )
     ++g_aNum
   }
-  
+
   server_print("Loaded %d admin%s from database",g_aNum, (g_aNum == 1) ? "" : "s" )
   mysql_close(mysql)
   return PLUGIN_HANDLED
@@ -177,7 +172,7 @@ getAccess(id,name[],authid[],ip[], password[]){
       set_user_flags(id,idefaccess)
     }
   }   
-  
+
   return result
 }
 
@@ -210,14 +205,14 @@ public client_infochanged(id)
 { 
   if ( !is_user_connected(id) || !get_cvar_num("amx_mode") ) 
     return PLUGIN_CONTINUE
-  
+
   new newname[32], oldname[32]
   get_user_name(id,oldname,31) 
   get_user_info(id,"name",newname,31) 
-  
+
   if ( !equal(newname,oldname) )
     accessUser( id , newname )
-  
+
   return PLUGIN_CONTINUE
 }
 

@@ -59,6 +59,9 @@ native set_offset_float(id, offset, Float:value);
 native set_offset_short(id, offset, value);
 native set_offset_char(id, offset, value);
 
+/* Get entity pointer into string pointer[]. If pointer/len is 0 pointer is returned as integer. */
+native get_entity_pointer(index, pointer[] = 0, len = 0);
+
 /* Precaches any file. */
 native precache_generic(szFile[]);
 /* Precaches an event. */
@@ -110,10 +113,13 @@ native create_entity(szClassname[]);
 
 /* Finds an entity in the world, will return 0 if nothing is found */
 native find_ent_by_class(iIndex, szClass[]);
-native find_ent_by_owner(iIndex, szClass[], iOwner);
+//optionally you can set a jghg2 type
+// 1: target, 2:targetname, 0:classname (default)
+native find_ent_by_owner(iIndex, szClass[], iOwner, iJghgType=0);
 native find_ent_by_target(iIndex, szClass[]);
 native find_ent_by_tname(iIndex, szClass[]);
 native find_ent_by_model(iIndex, szClass[], szModel[]);
+native find_ent_in_sphere(start_from_ent, Float:origin[3], Float:radius);
 
 //this will CBaseEntity::Think() or something from the entity
 native call_think(entity)
@@ -199,5 +205,13 @@ forward client_kill(id);
 /* Forward for PreThink()/PostThink() on a player. */
 forward client_PreThink(id);
 forward client_PostThink(id);
+
+//from jghg2
+/* As above, but returns number of ents stored in entlist. Use to find a specific type of entity classname (specify in _lookforclassname) around a
+ * certain entity specified in aroundent. All matching ents are stored in entlist. Specify max amount of entities to find in maxents.
+ * If aroundent is 0 its origin is not used, but origin in 6th parameter. Ie, do not specify 6th parameter (origin) if you specified an entity
+ * in aroundent.
+ */
+native find_sphere_class(aroundent, _lookforclassname[], Float:radius, entlist[], maxents, Float:origin[3] = {0.0, 0.0, 0.0});
 
 #include <engine_stocks>

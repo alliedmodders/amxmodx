@@ -309,6 +309,10 @@ enum {
 #define EF_LIGHT		64		/* rocket flare glow sprite */
 #define EF_NODRAW		128		/* don't draw entity */
 
+#if defined _jghg_enums
+  #endinput
+#endif
+#define _jghg_enums
 enum {
     // Edict
     GL_trace_ent = 0,

@@ -299,6 +299,30 @@ static cell AMX_NATIVE_CALL ns_set_fov(AMX *amx, cell *params)
 	}
 	return 0;
 }
+static cell AMX_NATIVE_CALL ns_giveitem(AMX *amx, cell *params)
+{
+	int index=params[1];
+	int len;
+	char *classname = MF_GetAmxString(amx,params[2],0,&len);
+	if (index<1 || index>gpGlobals->maxClients)
+		return 0;
+	edict_t *player=INDEXENT2(index);
+	if (player->v.deadflag > 0)
+		return 0;
+	edict_t *object=CREATE_NAMED_ENTITY(ALLOC_STRING(classname));	//create
+	if (!object)
+	{
+		MF_Log("Error creating entity `%s`",classname);
+		return 0;
+	}
+	SET_ORIGIN(object,player->v.origin);							// move to player
+	gpGamedllFuncs->dllapi_table->pfnSpawn(object);					// emulate spawn
+	object->v.flags |= FL_ONGROUND;									// make it think it's touched the ground
+	gpGamedllFuncs->dllapi_table->pfnThink(object);					// 
+	gpGamedllFuncs->dllapi_table->pfnTouch(player,object);			// give it to the player
+
+	return 1;
+}
 AMX_NATIVE_INFO ns_misc_natives[] = {
 	   ///////////////////
 	{ "ns_get_build",			ns_get_build },
@@ -330,6 +354,8 @@ AMX_NATIVE_INFO ns_misc_natives[] = {
 	{ "ns_popup",				ns_popup },
 
 	{ "ns_set_fov",				ns_set_fov },
+
+	{ "ns_give_item",			ns_giveitem },
 
 	   ///////////////////
 

@@ -172,6 +172,10 @@ native cs_set_user_tked(index, tk = 1, subtract = 1);
  */
 native cs_get_user_driving(index);
 
+/* Returns 1 if user is using a stationary gun, else 0.
+ */
+native cs_get_user_stationary(index);
+
 /* Returns 1 if specified weapon is in burst mode.
  */
 native cs_get_weapon_burst(index);

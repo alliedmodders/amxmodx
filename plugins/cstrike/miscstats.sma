@@ -313,7 +313,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK) {
       set_hudmessage(255, 100, 100, -1.0, 0.25, 1, 6.0, 6.0, 0.5, 0.15, 1) 
       show_hudmessage(0,"%L",LANG_PLAYER,g_KinfeMsg[ random_num(0,3) ],killer_name,victim_name) 
     }
-    if ( KnifeKillSound ) play_sound("spk misc/humiliation") 
+    if ( KnifeKillSound ) play_sound("misc/humiliation") 
   }
 
   if ( wpnindex == CSW_HEGRENADE && (GrenadeKill || GrenadeSuicide) ) {
@@ -357,7 +357,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK) {
         set_hudmessage(255, 0, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, 3)
         show_hudmessage(0,"%L",LANG_PLAYER,"DOUBLE_KILL",name )
       }
-      if ( DoubleKillSound ) play_sound("spk misc/doublekill") 
+      if ( DoubleKillSound ) play_sound("misc/doublekill") 
     }
     g_doubleKill = nowtime
     g_doubleKillId = killer
@@ -407,7 +407,7 @@ public eNewRound()
       set_hudmessage(200, 0, 0, -1.0, 0.30, 0, 6.0, 6.0, 0.5, 0.15, 1) 
       show_hudmessage(0,  "%L", LANG_PLAYER, "PREPARE_FIGHT", g_roundCount )
     }
-    if ( RoundCounterSound )  play_sound("spk misc/prepare")
+    if ( RoundCounterSound )  play_sound("misc/prepare")
     if ( KillingStreak ) {
       new appl[32],ppl, i
       get_players(appl,ppl, "ac" )

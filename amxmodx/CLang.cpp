@@ -201,7 +201,7 @@ const char *CLangMngr::CLang::LangEntry::GetDef()
 
 int CLangMngr::CLang::LangEntry::GetKey()
 { 
-	return 0;
+	return key;
 }
 
 CLangMngr::CLang::LangEntry::LangEntry()
@@ -267,31 +267,30 @@ CLangMngr::CLang::~CLang()
 
 void CLangMngr::CLang::Clear()
 {
-	/*for (int i=0; i<m_LookUpTable.size(); i++)
+	for (unsigned int i=0; i<m_LookUpTable.size(); i++)
 	{
 		if (m_LookUpTable[i])
 			delete m_LookUpTable[i];
-	}*/
+	}
 	m_LookUpTable.clear();
 }
 
-CLangMngr::CLang::LangEntry * CLangMngr::CLang::GetEntry(int key)
+CLangMngr::CLang::LangEntry * CLangMngr::CLang::GetEntry(int pkey)
 {
-	LangEntry *e = 0;
 	unsigned int i = 0;
-	uint32_t hash = lman->GetKeyHash(key);
+	
 	for (i=0; i<m_LookUpTable.size(); i++)
 	{
-		e = m_LookUpTable.at(i);
-		if (lman->GetKeyHash(e->GetKey()) == hash)
-			break;
+		if (m_LookUpTable[i]->GetKey() == pkey)
+		{
+			return m_LookUpTable[i];
+		}
 	}
-	if (i < m_LookUpTable.size())
-		return m_LookUpTable.at(i);
-	
-	e = new LangEntry(key);
+
+	LangEntry *e = new LangEntry(pkey);
+	e->SetKey(pkey);
 	m_LookUpTable.push_back(e);
-	return m_LookUpTable.back();
+	return e;
 }
 
 void CLangMngr::CLang::MergeDefinitions(CQueue<sKeyDef*> &vec)
@@ -306,6 +305,7 @@ void CLangMngr::CLang::MergeDefinitions(CQueue<sKeyDef*> &vec)
 		if (entry->GetDefHash() != MakeHash(def))
 		{
 			entry->SetDef(def);
+			entry->SetKey(key);
 		}
 		delete vec.front();
 		vec.pop();
@@ -320,8 +320,6 @@ const char * CLangMngr::CLang::GetDef(const char *key)
 		return nfind;
 	for (unsigned int i = 0; i<m_LookUpTable.size(); i++)
 	{
-		qdbg("Key: %d\tLookup: %d\tString: %s\n", 
-			ikey, m_LookUpTable[i]->GetKey(), m_LookUpTable[i]->GetDef());
 		if (m_LookUpTable[i]->GetKey() == ikey)
 			return m_LookUpTable[i]->GetDef();
 	}
@@ -375,6 +373,11 @@ int CLangMngr::GetKeyEntry(const char *key)
 	uint32_t hKey = MakeHash(key, true);
 	uint32_t cmpKey = 0;
 	unsigned int i = 0;
+
+	if (hKey == 0)
+	{
+		return -1;
+	}
 
 	for (i = 0; i<KeyList.size(); i++)
 	{
@@ -720,7 +723,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 	md5.hex_digest(md5buffer);
 	bool foundFlag = false;
 	
-/*	CVector<md5Pair *>::iterator iter;
+	CVector<md5Pair *>::iterator iter;
 	for (iter=FileList.begin(); iter!=FileList.end(); iter++)
 	{
 		if ( (*iter)->file.compare(file) == 0 )
@@ -742,7 +745,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 		p->file.assign(file);
 		p->val.assign(md5buffer);
 		FileList.push_back(p);
-	}*/
+	}
 
 	fp = fopen(file, "rt");
 	if (!fp)
@@ -789,17 +792,38 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 				{
 					tmpEntry = new sKeyDef;
 					String key = buf.substr(0, pos);
-					String def = buf.substr(pos+1, def.size()-pos);
+					String def = buf.substr(pos+1);
 					key.trim();
 					key.toLower();
 					int iKey = GetKeyEntry(key);
 					if (iKey == -1)
 						iKey = AddKeyEntry(key);
-					qdbg("key=%d\n", iKey);
 					tmpEntry->key = iKey;
 					tmpEntry->def = new String;
 					tmpEntry->def->assign(def.c_str());
 					tmpEntry->def->trim();
+					int pos = tmpEntry->def->find('%');
+					char r = 0, c = 0;
+					while (pos!=String::npos)
+					{
+						c = tmpEntry->def->at(pos+1);
+						if (c == 'd' || c == 'i')
+						{
+							r = INSERT_NUMBER;
+						} else if (c == 'f') {
+							r = INSERT_FLOAT;
+						} else if (c == 's') {
+							r = INSERT_STRING;
+						} else {
+							r = 0;
+						}
+						if (r)
+						{
+							tmpEntry->def->at(pos+1, r);
+							tmpEntry->def->erase(pos, 1);
+						}
+						pos = tmpEntry->def->find('%', pos+1);
+					}
 					Defq.push(tmpEntry);
 					tmpEntry = 0;
 				} else {
@@ -964,7 +988,7 @@ CLangMngr::~CLangMngr()
 
 void CLangMngr::Clear()
 {
-	/*int i = 0;
+	unsigned int i = 0;
 	for (i=0; i<m_Languages.size(); i++)
 	{
 		if (m_Languages[i])
@@ -981,7 +1005,7 @@ void CLangMngr::Clear()
 	{
 		if (KeyList[i])
 			delete KeyList[i];
-	}*/
+	}
 
 	m_Languages.clear();
 	KeyList.clear();

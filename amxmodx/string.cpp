@@ -543,9 +543,9 @@ static cell AMX_NATIVE_CALL amx_ucfirst(AMX *amx, cell *params)
 {
 	int len = 0;
 	cell *str = get_amxaddr(amx, params[1]);
-	if (!isalpha((char)str[0]) || (str[0]&(1<<5)))
+	if (!isalpha((char)str[0]) || !(str[0]&(1<<5)))
 		return 0;
-	str[0] |= (1<<5);
+	str[0] &= ~(1<<5);
 	return 1;
 }
 

@@ -169,6 +169,8 @@ public:
 	{
 		if (!v)
 			return npos;
+		if (index >= (int)cSize || index < 0)
+			return npos;
 		unsigned int i = 0;
 		for (i=index; i<cSize; i++)
 		{
@@ -284,29 +286,30 @@ public:
 				}
 			}
 		}
-		v[i] = 0;
 		cSize -= num;
+		v[cSize] = 0;
 
 		return (*this);
 	}
 
 	String substr(unsigned int index, int num = npos)
 	{
-		unsigned int rnum = (unsigned int)((num<0)?(cSize):(num));
 		String ns;
 
 		if (index >= cSize || !v)
 			return ns;
-
-		if (index+rnum >= cSize)
+		
+		if (num == npos)
 		{
-			rnum = cSize - index+1;
+			num = cSize - index;
+		} else if (index+num >= cSize) {
+			num = cSize - index;
 		}
 
 		unsigned int i = 0, j=0;
 		char *s = new char[cSize+1];
 
-	        for (i=index; i<index+rnum; i++)
+		for (i=index; i<index+num; i++)
 		{
 			s[j++] = v[i];
 		}
@@ -352,6 +355,24 @@ public:
 		} else {
 			return v[index];
 		}
+	}
+
+	int at(int a)
+	{
+		if (at < 0 || at >= (int)cSize)
+			return -1;
+
+		return v[a];
+	}
+
+	bool at(int at, char c)
+	{
+		if (at < 0 || at >= (int)cSize)
+			return false;
+
+		v[at] = c;
+
+		return true;
 	}
 
 private:

@@ -195,13 +195,7 @@ stock set_entity_flags(ent,flag,onoff)
 
 /* If visible = 1, entity will be set to be visible, else invisible. */
 stock set_entity_visibility(entity, visible = 1) {
-	new effects = entity_get_int(entity, EV_INT_effects)
-	if (visible == 1)
-		effects &= ~EF_NODRAW
-	else
-		effects |= EF_NODRAW
-
-	entity_set_int(entity, EV_INT_effects, effects)
+	entity_set_int(entity, EV_INT_effects, visible == 1 ? entity_get_int(entity, EV_INT_effects) & ~EF_NODRAW : entity_get_int(entity, EV_INT_effects) | EF_NODRAW)
 
 	return 1
 }

@@ -53,7 +53,7 @@ stock gpgobals_time()
 	return halflife_time()
 
 stock get_range(ida, idb)
-	return entity_get_range(ida, idb)
+	return entity_range(ida, idb)
 
 stock supercede()
   return 0
@@ -210,7 +210,7 @@ stock ns2amx_gethives()
 /* Returns 1 if the two entities are within the given range. */
 stock ns2amx_inrange(ida,idb,range)
 {
-	if (entity_get_range(ida,idb) <= range)
+	if (entity_range(ida,idb) <= range)
 		return 1
 	return 0
 }

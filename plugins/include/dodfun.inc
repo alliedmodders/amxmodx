@@ -15,7 +15,7 @@
 /* Function is called after grenade throw */
 forward grenade_throw(index,greindex,wId);
 
-/* Example: for full stamina use set_player_stamina(1,STAMINA_SET,100,100) */
+/* Example: for full stamina use dod_player_stamina(1,STAMINA_SET,100,100) */
 /* value is from 0 - 100 */
 native dod_set_stamina(index,set=STAMINA_SET,minvalue=0,maxvalue=100);
 
@@ -53,7 +53,10 @@ native dod_get_pl_teamname(index,szName[],len);
 /* Returns 1 is player weapon is deployed (bar,mg..) */
 native dod_is_deployed(index);
 
+/*Sets the ammo of the specified weapon entity id */
 native dod_set_user_ammo(index,wid,value);
+
+/*Gets the ammo of the specified weapon entity id */
 native dod_get_user_ammo(index,wid);
 
 

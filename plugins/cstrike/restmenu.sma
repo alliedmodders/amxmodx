@@ -509,6 +509,9 @@ public cmdMenu(id,level,cid){
 }
 
 checkRest(id,menu,key){
+  new team = get_user_team(id)
+  if (team != 1 && team != 2)
+  	return PLUGIN_HANDLED
   if ( g_blockPos[ (menu * 8 + key) + (get_user_team(id) - 1) * 56 ] ){
     engclient_cmd(id,"menuselect","10")
     client_print(id,print_center, g_Restricted )

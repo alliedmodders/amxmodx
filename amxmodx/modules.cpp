@@ -330,7 +330,7 @@ int set_amxnatives(AMX* amx,char error[64])
 			{ NULL,				NULL },
 		};
 		amx_Register(amx, p, -1);
-		if (CheckModules(amx, error) == -1)
+		if (CheckModules(amx, error) == -1 || *error == 0)
 		{
 			sprintf(error,"Plugin uses an unknown function (name \"%s\") - check your modules.ini.",save.c_str());
 		}

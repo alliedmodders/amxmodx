@@ -153,9 +153,6 @@ copy fun.inc K:\S\cstrike\addons\amx\plugins\include
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath=".\amxxmodule.cpp">
-			</File>
-			<File
 				RelativePath="fun.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -180,13 +177,7 @@ copy fun.inc K:\S\cstrike\addons\amx\plugins\include
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
-				RelativePath=".\amxxmodule.h">
-			</File>
-			<File
 				RelativePath="fun.h">
-			</File>
-			<File
-				RelativePath=".\moduleconfig.h">
 			</File>
 		</Filter>
 		<Filter
@@ -194,6 +185,19 @@ copy fun.inc K:\S\cstrike\addons\amx\plugins\include
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
 			<File
 				RelativePath="..\plugins\include\fun.inc">
+			</File>
+		</Filter>
+		<Filter
+			Name="AMXX"
+			Filter="">
+			<File
+				RelativePath=".\amxxmodule.cpp">
+			</File>
+			<File
+				RelativePath=".\amxxmodule.h">
+			</File>
+			<File
+				RelativePath=".\moduleconfig.h">
 			</File>
 		</Filter>
 	</Files>

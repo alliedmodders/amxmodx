@@ -44,10 +44,6 @@ void FakeError()
 // Engine normal
 #define FAKEMETA_ENGINE_HANDLE_void(pfnName, pfnArgs) \
 	META_RES mres = MRES_IGNORED, status = MRES_IGNORED, prev_mres = MRES_UNSET; \
-	/* call the core function if provided */ \
-	if (g_FakeMeta.GetEngineFuncTable().pfn##pfnName) \
-		g_FakeMeta.GetEngineFuncTable().pfn##pfnName pfnArgs; \
-	prev_mres = gpMetaGlobals->mres; \
 	for (CList<CFakeMeta::CFakeMetaPlugin>::iterator iter = g_FakeMeta.m_Plugins.begin(); iter; ++iter) \
 	{ \
 		if ((*iter).GetStatus() == PL_RUNNING && (*iter).GetEngineFuncTable().pfn##pfnName) \
@@ -76,17 +72,6 @@ void FakeError()
 	ret_type returnValue = ret_init;  /* value that will be returned */ \
 	ret_type curRet = ret_init; /* current return value */ \
 	bool mayOverride = true; /* if this is false, overried will be ignored */ \
-	/* call the core function if provided */ \
-	if (g_FakeMeta.GetEngineFuncTable().pfn##pfnName) \
-	{ \
-		curRet = g_FakeMeta.GetEngineFuncTable().pfn##pfnName pfnArgs; \
-		if (gpMetaGlobals->mres >= MRES_OVERRIDE) \
-		{ \
-			mayOverride = false; \
-			returnValue = curRet; \
-		} \
-	} \
-	prev_mres = gpMetaGlobals->mres; \
 	for (CList<CFakeMeta::CFakeMetaPlugin>::iterator iter = g_FakeMeta.m_Plugins.begin(); iter; ++iter) \
 	{ \
 		if ((*iter).GetStatus() == PL_RUNNING && (*iter).GetEngineFuncTable().pfn##pfnName) \
@@ -126,10 +111,6 @@ void FakeError()
 // Engine post
 #define FAKEMETA_ENGINE_HANDLE_POST_void(pfnName, pfnArgs) \
 	META_RES mres = MRES_IGNORED, status = MRES_IGNORED, prev_mres = MRES_UNSET; \
-	/* call the core function if provided */ \
-	if (g_FakeMeta.GetEngineFuncTable_Post().pfn##pfnName) \
-		g_FakeMeta.GetEngineFuncTable_Post().pfn##pfnName pfnArgs; \
-	prev_mres = gpMetaGlobals->mres; \
 	for (CList<CFakeMeta::CFakeMetaPlugin>::iterator iter = g_FakeMeta.m_Plugins.begin(); iter; ++iter) \
 	{ \
 		if ((*iter).GetStatus() == PL_RUNNING && (*iter).GetEngineFuncTable_Post().pfn##pfnName) \
@@ -162,17 +143,6 @@ void FakeError()
 	ret_type returnValue = ret_init;  /* value that will be returned */ \
 	ret_type curRet = ret_init; /* current return value */ \
 	bool mayOverride = true; /* if this is false, overried will be ignored */ \
-	/* call the core function if provided */ \
-	if (g_FakeMeta.GetEngineFuncTable_Post().pfn##pfnName) \
-	{ \
-		curRet = g_FakeMeta.GetEngineFuncTable_Post().pfn##pfnName pfnArgs; \
-		if (gpMetaGlobals->mres >= MRES_OVERRIDE) \
-		{ \
-			mayOverride = false; \
-			returnValue = curRet; \
-		} \
-	} \
-	prev_mres = gpMetaGlobals->mres; \
 	for (CList<CFakeMeta::CFakeMetaPlugin>::iterator iter = g_FakeMeta.m_Plugins.begin(); iter; ++iter) \
 	{ \
 		if ((*iter).GetStatus() == PL_RUNNING && (*iter).GetEngineFuncTable_Post().pfn##pfnName) \
@@ -217,10 +187,6 @@ void FakeError()
 // Dll normal
 #define FAKEMETA_DLL_HANDLE_void(pfnName, pfnArgs) \
 	META_RES mres = MRES_IGNORED, status = MRES_IGNORED, prev_mres = MRES_UNSET; \
-	/* call the core function if provided */ \
-	if (g_FakeMeta.GetDllFuncTable().pfn##pfnName) \
-		g_FakeMeta.GetDllFuncTable().pfn##pfnName pfnArgs; \
-	prev_mres = gpMetaGlobals->mres; \
 	for (CList<CFakeMeta::CFakeMetaPlugin>::iterator iter = g_FakeMeta.m_Plugins.begin(); iter; ++iter) \
 	{ \
 		if ((*iter).GetStatus() == PL_RUNNING && (*iter).GetDllFuncTable().pfn##pfnName) \
@@ -249,17 +215,6 @@ void FakeError()
 	ret_type returnValue = ret_init;  /* value that will be returned */ \
 	ret_type curRet = ret_init; /* current return value */ \
 	bool mayOverride = true; /* if this is false, overried will be ignored */ \
-	/* call the core function if provided */ \
-	if (g_FakeMeta.GetDllFuncTable().pfn##pfnName) \
-	{ \
-		curRet = g_FakeMeta.GetDllFuncTable().pfn##pfnName pfnArgs; \
-		if (gpMetaGlobals->mres >= MRES_OVERRIDE) \
-		{ \
-			mayOverride = false; \
-			returnValue = curRet; \
-		} \
-	} \
-	prev_mres = gpMetaGlobals->mres; \
 	for (CList<CFakeMeta::CFakeMetaPlugin>::iterator iter = g_FakeMeta.m_Plugins.begin(); iter; ++iter) \
 	{ \
 		if ((*iter).GetStatus() == PL_RUNNING && (*iter).GetDllFuncTable().pfn##pfnName) \
@@ -291,10 +246,6 @@ void FakeError()
 // Dll post
 #define FAKEMETA_DLL_HANDLE_POST_void(pfnName, pfnArgs) \
 	META_RES mres = MRES_IGNORED, status = MRES_IGNORED, prev_mres = MRES_UNSET; \
-	/* call the core function if provided */ \
-	if (g_FakeMeta.GetDllFuncTable_Post().pfn##pfnName) \
-		g_FakeMeta.GetDllFuncTable_Post().pfn##pfnName pfnArgs; \
-	prev_mres = gpMetaGlobals->mres; \
 	for (CList<CFakeMeta::CFakeMetaPlugin>::iterator iter = g_FakeMeta.m_Plugins.begin(); iter; ++iter) \
 	{ \
 		if ((*iter).GetStatus() == PL_RUNNING && (*iter).GetDllFuncTable_Post().pfn##pfnName) \
@@ -323,17 +274,6 @@ void FakeError()
 	ret_type returnValue = ret_init;  /* value that will be returned */ \
 	ret_type curRet = ret_init; /* current return value */ \
 	bool mayOverride = true; /* if this is false, overried will be ignored */ \
-	/* call the core function if provided */ \
-	if (g_FakeMeta.GetDllFuncTable_Post().pfn##pfnName) \
-	{ \
-		curRet = g_FakeMeta.GetDllFuncTable_Post().pfn##pfnName pfnArgs; \
-		if (gpMetaGlobals->mres >= MRES_OVERRIDE) \
-		{ \
-			mayOverride = false; \
-			returnValue = curRet; \
-		} \
-	} \
-	prev_mres = gpMetaGlobals->mres; \
 	for (CList<CFakeMeta::CFakeMetaPlugin>::iterator iter = g_FakeMeta.m_Plugins.begin(); iter; ++iter) \
 	{ \
 		if ((*iter).GetStatus() == PL_RUNNING && (*iter).GetDllFuncTable_Post().pfn##pfnName) \
@@ -368,10 +308,6 @@ void FakeError()
 // New Dll normal
 #define FAKEMETA_NEWDLL_HANDLE_void(pfnName, pfnArgs) \
 	META_RES mres = MRES_IGNORED, status = MRES_IGNORED, prev_mres = MRES_UNSET; \
-	/* call the core function if provided */ \
-	if (g_FakeMeta.GetNewDllFuncTable().pfn##pfnName) \
-		g_FakeMeta.GetNewDllFuncTable().pfn##pfnName pfnArgs; \
-	prev_mres = gpMetaGlobals->mres; \
 	for (CList<CFakeMeta::CFakeMetaPlugin>::iterator iter = g_FakeMeta.m_Plugins.begin(); iter; ++iter) \
 	{ \
 		if ((*iter).GetStatus() == PL_RUNNING && (*iter).GetNewDllFuncTable().pfn##pfnName) \
@@ -400,17 +336,6 @@ void FakeError()
 	ret_type returnValue = ret_init;  /* value that will be returned */ \
 	ret_type curRet = ret_init; /* current return value */ \
 	bool mayOverride = true; /* if this is false, overried will be ignored */ \
-	/* call the core function if provided */ \
-	if (g_FakeMeta.GetNewDllFuncTable().pfn##pfnName) \
-	{ \
-		curRet = g_FakeMeta.GetNewDllFuncTable().pfn##pfnName pfnArgs; \
-		if (gpMetaGlobals->mres >= MRES_OVERRIDE) \
-		{ \
-			mayOverride = false; \
-			returnValue = curRet; \
-		} \
-	} \
-	prev_mres = gpMetaGlobals->mres; \
 	for (CList<CFakeMeta::CFakeMetaPlugin>::iterator iter = g_FakeMeta.m_Plugins.begin(); iter; ++iter) \
 	{ \
 		if ((*iter).GetStatus() == PL_RUNNING && (*iter).GetNewDllFuncTable().pfn##pfnName) \
@@ -442,10 +367,6 @@ void FakeError()
 // Dll post
 #define FAKEMETA_NEWDLL_HANDLE_POST_void(pfnName, pfnArgs) \
 	META_RES mres = MRES_IGNORED, status = MRES_IGNORED, prev_mres = MRES_UNSET; \
-	/* call the core function if provided */ \
-	if (g_FakeMeta.GetNewDllFuncTable_Post().pfn##pfnName) \
-		g_FakeMeta.GetNewDllFuncTable_Post().pfn##pfnName pfnArgs; \
-	prev_mres = gpMetaGlobals->mres; \
 	for (CList<CFakeMeta::CFakeMetaPlugin>::iterator iter = g_FakeMeta.m_Plugins.begin(); iter; ++iter) \
 	{ \
 		if ((*iter).GetStatus() == PL_RUNNING && (*iter).GetNewDllFuncTable_Post().pfn##pfnName) \
@@ -474,17 +395,6 @@ void FakeError()
 	ret_type returnValue = ret_init;  /* value that will be returned */ \
 	ret_type curRet = ret_init; /* current return value */ \
 	bool mayOverride = true; /* if this is false, overried will be ignored */ \
-	/* call the core function if provided */ \
-	if (g_FakeMeta.GetNewDllFuncTable_Post().pfn##pfnName) \
-	{ \
-		curRet = g_FakeMeta.GetNewDllFuncTable_Post().pfn##pfnName pfnArgs; \
-		if (gpMetaGlobals->mres >= MRES_OVERRIDE) \
-		{ \
-			mayOverride = false; \
-			returnValue = curRet; \
-		} \
-	} \
-	prev_mres = gpMetaGlobals->mres; \
 	for (CList<CFakeMeta::CFakeMetaPlugin>::iterator iter = g_FakeMeta.m_Plugins.begin(); iter; ++iter) \
 	{ \
 		if ((*iter).GetStatus() == PL_RUNNING && (*iter).GetNewDllFuncTable_Post().pfn##pfnName) \
@@ -1598,7 +1508,30 @@ void ClientPutInServer( edict_t *pEntity ) {
 	FAKEMETA_DLL_HANDLE_void(ClientPutInServer, (pEntity));
 }
 void ClientCommand( edict_t *pEntity ) {
-	FAKEMETA_DLL_HANDLE_void(ClientCommand, (pEntity));
+	META_RES mres = MRES_IGNORED, status = MRES_IGNORED, prev_mres = MRES_UNSET;
+	for (CList<CFakeMeta::CFakeMetaPlugin>::iterator iter = g_FakeMeta.m_Plugins.begin(); iter; ++iter)
+	{
+		if ((*iter).GetStatus() == PL_RUNNING && (*iter).GetDllFuncTable().pfnClientCommand)
+		{
+			/* Initialize meta globals */
+			gpMetaGlobals->mres = MRES_UNSET;
+			gpMetaGlobals->prev_mres = prev_mres;
+			gpMetaGlobals->status = status;
+			/* Actual call */
+			(*iter).GetDllFuncTable().pfnClientCommand(pEntity);
+			/* Process return value */
+			mres = gpMetaGlobals->mres;
+			if (mres > status)
+				status = mres;
+			prev_mres = mres;
+			if (mres == MRES_UNSET)
+				AMXXLOG_Log("[AMXX] Module \"%s\" (\"%s\") has not set meta result in \"%s\"",
+				(*iter).GetInfo()->name, (*iter).GetPath(), "ClientCommand");
+		}
+	}
+	/* Set meta result to the highest value */
+	RETURN_META(status);
+	//FAKEMETA_DLL_HANDLE_void(ClientCommand, (pEntity));
 }
 void ClientUserInfoChanged( edict_t *pEntity, char *infobuffer ) {
 	FAKEMETA_DLL_HANDLE_void(ClientUserInfoChanged, (pEntity,infobuffer));
@@ -2585,7 +2518,10 @@ int CFakeMeta::CFakeMetaPlugin::GetNewDLLFunctions_Post(int interfaceVersion)
 // ***** CFakeMeta
 
 CFakeMeta::CFakeMeta()
-{ }
+{
+	// We don't call AddCorePlugin here because CList adds the elements to the front...
+}
+
 CFakeMeta::~CFakeMeta()
 {
 	ReleasePlugins();
@@ -2604,11 +2540,30 @@ void CFakeMeta::ReleasePlugins()
 {
 	m_Plugins.clear();
 }
+
+bool CFakeMeta::AddCorePlugin()
+{
+	// Check whether there already is a core plugin
+	if (strcmp((*m_Plugins.begin()).GetPath(), "[AMXX Core]") == 0)
+		return true;
+
+	// make a fake plugin for the core
+	CFakeMetaPlugin *pPlugin = new CFakeMetaPlugin("[AMXX Core]");
+	if (!pPlugin)
+		return false;
+	m_Plugins.put(pPlugin);
+	// Set its status to running so functions are called in it
+	pPlugin->SetStatus(PL_RUNNING);
+	return true;
+}
+
 // Query all added plugins
 void CFakeMeta::Meta_Query(mutil_funcs_t *pMetaUtilFuncs)
 {
-	// Query all plugins
-	for (CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin(); iter; ++iter)
+	// Query all plugins except core
+	CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin();
+	++iter;			// Skip core
+	for (; iter; ++iter)
 	{
 		(*iter).Query(pMetaUtilFuncs);
 	}
@@ -2617,8 +2572,10 @@ void CFakeMeta::Meta_Query(mutil_funcs_t *pMetaUtilFuncs)
 // Attach all added plugins
 void CFakeMeta::Meta_Attach(PLUG_LOADTIME now, meta_globals_t *pMGlobals, gamedll_funcs_t *pGamedllFuncs)
 {
-	// Attach all plugins
-	for (CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin(); iter; ++iter)
+	// Attach all plugins except core
+	CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin();
+	++iter;			// Skip core
+	for (; iter; ++iter)
 	{
 		(*iter).Attach(now, pMGlobals, pGamedllFuncs);
 	}
@@ -2627,8 +2584,10 @@ void CFakeMeta::Meta_Attach(PLUG_LOADTIME now, meta_globals_t *pMGlobals, gamedl
 // Detach all added plugins
 void CFakeMeta::Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason)
 {
-	// Detach all plugins
-	for (CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin(); iter; ++iter)
+	// Detach all plugins except core
+	CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin();
+	++iter;			// Skip core
+	for (; iter; ++iter)
 	{
 		(*iter).Detach(now, reason);
 	}
@@ -2637,7 +2596,7 @@ void CFakeMeta::Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason)
 int CFakeMeta::GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable /*from metamod*/, int *interfaceVersion /*from metamod*/,
 	DLL_FUNCTIONS *pAMXXFunctionTable /*Functions amxx needs*/)
 {
-	if(*interfaceVersion!=INTERFACE_VERSION)
+ 	if(*interfaceVersion!=INTERFACE_VERSION)
 	{
 		LOG_ERROR(PLID,	"GetEntityAPI2 version mismatch; requested=%d ours=%d",	*interfaceVersion, INTERFACE_VERSION);
 		*interfaceVersion =	INTERFACE_VERSION;
@@ -2645,11 +2604,16 @@ int CFakeMeta::GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable /*from metamod*/, int
 	}
 	memcpy( pFunctionTable, &g_DllFunctionTable, sizeof( DLL_FUNCTIONS ) );
 
-	// Copy Core Function table
-	memcpy(&m_CoreDllFuncTable, pAMXXFunctionTable, sizeof(DLL_FUNCTIONS));
+	// Make sure there is a core plugin
+	AddCorePlugin();
 
-	// Call in all attached plugins
-	for (CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin(); iter; ++iter)
+	// Copy Core Function table
+	CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin();
+	memcpy(&((*iter).GetDllFuncTable()), pAMXXFunctionTable, sizeof(DLL_FUNCTIONS));
+
+	// Call in all attached plugins except core
+	++iter;			// Skip core
+	for (; iter; ++iter)
 	{
 		if ((*iter).GetStatus() == PL_RUNNING)
 			(*iter).GetEntityAPI2(*interfaceVersion);
@@ -2669,11 +2633,16 @@ int CFakeMeta::GetEntityAPI2_Post(DLL_FUNCTIONS *pFunctionTable /*from metamod*/
 	}
 	memcpy( pFunctionTable, &g_DllFunctionTable_Post, sizeof( DLL_FUNCTIONS ) );
 
-	// Copy Core Function table
-	memcpy(&m_CoreDllFuncTable_Post, pAMXXFunctionTable, sizeof(DLL_FUNCTIONS));
+	// Make sure there is a core plugin
+	AddCorePlugin();
 
-	// Call in all attached plugins
-	for (CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin(); iter; ++iter)
+	// Copy Core Function table
+	CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin();
+	memcpy(&((*iter).GetDllFuncTable_Post()), pAMXXFunctionTable, sizeof(DLL_FUNCTIONS));
+
+	// Call in all attached plugins excpet core
+	++iter;			// Skip core
+	for (; iter; ++iter)
 	{
 		if ((*iter).GetStatus() == PL_RUNNING)
 			(*iter).GetEntityAPI2_Post(*interfaceVersion);
@@ -2693,11 +2662,16 @@ int CFakeMeta::GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inter
 	}
 	memcpy( pengfuncsFromEngine, &g_EngineFunctionTable, sizeof( enginefuncs_t ) );
 
+	// Make sure there is a core plugin
+	AddCorePlugin();
+
 	// Copy Core Function table
-	memcpy(&m_CoreEngineFuncTable, pAMXXFunctionTable, sizeof(enginefuncs_t));
+	CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin();
+	memcpy(&((*iter).GetEngineFuncTable()), pAMXXFunctionTable, sizeof(enginefuncs_t));
 
 	// Call in all attached plugins
-	for (CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin(); iter; ++iter)
+	++iter;			// Skip core
+	for (; iter; ++iter)
 	{
 		if ((*iter).GetStatus() == PL_RUNNING)
 			(*iter).GetEngineFunctions(*interfaceVersion);
@@ -2716,11 +2690,16 @@ int CFakeMeta::GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine, int *
 	}
 	memcpy( pengfuncsFromEngine, &g_EngineFunctionTable_Post, sizeof( enginefuncs_t ) );
 
+	// Make sure there is a core plugin
+	AddCorePlugin();
+
 	// Copy Core Function table
-	memcpy(&m_CoreEngineFuncTable_Post, pAMXXFunctionTable, sizeof(enginefuncs_t));
+	CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin();
+	memcpy(&((*iter).GetEngineFuncTable_Post()), pAMXXFunctionTable, sizeof(enginefuncs_t));
 
 	// Call in all attached plugins
-	for (CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin(); iter; ++iter)
+	++iter;			// skip core
+	for (; iter; ++iter)
 	{
 		if ((*iter).GetStatus() == PL_RUNNING)
 			(*iter).GetEngineFunctions_Post(*interfaceVersion);
@@ -2746,11 +2725,16 @@ int CFakeMeta::GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pNewFunctionTable, int *int
 	}
 	memcpy( pNewFunctionTable, &g_NewDllFunctionTable, sizeof( DLL_FUNCTIONS ) );
 
+	// Make sure there is a core plugin
+	AddCorePlugin();
+
 	// Copy Core Function table
-	memcpy(&m_CoreNewDllFuncTable, pAMXXFunctionTable, sizeof(NEW_DLL_FUNCTIONS));
+	CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin();
+	memcpy(&((*iter).GetNewDllFuncTable()), pAMXXFunctionTable, sizeof(NEW_DLL_FUNCTIONS));
 
 	// Call in all attached plugins
-	for (CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin(); iter; ++iter)
+	++iter;			// Skip core
+	for (; iter; ++iter)
 	{
 		if ((*iter).GetStatus() == PL_RUNNING)
 			(*iter).GetNewDLLFunctions(*interfaceVersion);
@@ -2776,11 +2760,16 @@ int CFakeMeta::GetNewDLLFunctions_Post(NEW_DLL_FUNCTIONS *pNewFunctionTable, int
 	}
 	memcpy( pNewFunctionTable, &g_NewDllFunctionTable_Post, sizeof( DLL_FUNCTIONS ) );
 
+	// Make sure there is a core plugin
+	AddCorePlugin();
+
 	// Copy Core Function table
-	memcpy(&m_CoreNewDllFuncTable_Post, pAMXXFunctionTable, sizeof(NEW_DLL_FUNCTIONS));
+	CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin();
+	memcpy(&((*iter).GetNewDllFuncTable_Post()), pAMXXFunctionTable, sizeof(NEW_DLL_FUNCTIONS));
 
 	// Call in all attached plugins
-	for (CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin(); iter; ++iter)
+	++iter;			// Skip core
+	for (; iter; ++iter)
 	{
 		if ((*iter).GetStatus() == PL_RUNNING)
 			(*iter).GetNewDLLFunctions_Post(*interfaceVersion);

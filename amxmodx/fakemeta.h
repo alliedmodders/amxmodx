@@ -60,13 +60,15 @@ class CFakeMeta
 {
 private:
 	// Core tables
-	DLL_FUNCTIONS m_CoreDllFuncTable;
+	/* DLL_FUNCTIONS m_CoreDllFuncTable;
 	enginefuncs_t m_CoreEngineFuncTable;
 	NEW_DLL_FUNCTIONS m_CoreNewDllFuncTable;
 
 	DLL_FUNCTIONS m_CoreDllFuncTable_Post;
 	enginefuncs_t m_CoreEngineFuncTable_Post;
-	NEW_DLL_FUNCTIONS m_CoreNewDllFuncTable_Post;
+	NEW_DLL_FUNCTIONS m_CoreNewDllFuncTable_Post; */
+
+	bool AddCorePlugin();	// Adds the core plugin if needed
 public:
 	class CFakeMetaPlugin
 	{
@@ -162,6 +164,7 @@ public:
 	void ReleasePlugins();
 
 	// This is public because i don't want to declare all the functions as friends :)
+	// :NOTE: The core is now a special, first plugin!
 	CList<CFakeMetaPlugin> m_Plugins;
 
 	// ****** Meta functions ******
@@ -186,7 +189,7 @@ public:
 		NEW_DLL_FUNCTIONS *pAMXXFunctionTable);
 
 	// Get
-	inline DLL_FUNCTIONS &GetDllFuncTable()
+	/*inline DLL_FUNCTIONS &GetDllFuncTable()
 	{ return m_CoreDllFuncTable; }
 	inline enginefuncs_t &GetEngineFuncTable()
 	{ return m_CoreEngineFuncTable; }
@@ -215,7 +218,7 @@ public:
 	inline const enginefuncs_t &GetEngineFuncTable_Post() const
 	{ return m_CoreEngineFuncTable_Post; }
 	inline const NEW_DLL_FUNCTIONS &GetNewDllFuncTable_Post() const
-	{ return m_CoreNewDllFuncTable_Post; }
+	{ return m_CoreNewDllFuncTable_Post; } */
 };	// CFakeMeta
 
 // Fake Metamod

@@ -195,6 +195,7 @@ AMX_NATIVE_INFO pgsql_exports[] = {
 	{"pgsql_query",			pgsql_query},
 	{"pgsql_nextrow",		pgsql_nextrow},
 	{"pgsql_close",			pgsql_close},
+	{"pgsql_getfield",		pgsql_getfield},
 
 	{NULL,			NULL},
 };

@@ -39,7 +39,7 @@ endif
 
 
 
-LIBFILE_LINUX = $(MODNAME)_i686.so
+LIBFILE_LINUX = $(MODNAME)_i386.so
 LIBFILE_WIN32 = $(MODNAME).dll
 TARGET_LINUX = $(OBJDIR_LINUX)/$(LIBFILE_LINUX)
 TARGET_WIN32 = $(OBJDIR_WIN32)/$(LIBFILE_WIN32)
@@ -56,7 +56,7 @@ OBJ_WIN32 := $(SRCFILES:%.cpp=$(OBJDIR_WIN32)/%.o)
 #CCOPT = -funroll-loops \
 
 INCLUDEDIRS=-I../curl/include -I$(SRCDIR) -I$(METADIR) -I$(SDKSRC)/engine -I$(SDKSRC)/common -I$(SDKSRC)/pm_shared -I$(SDKSRC)/dlls -I$(SDKSRC) $(EXTRA_INCLUDEDIRS)
-CFLAGS=-Wall -Wno-unknown-pragmas -march=i686
+CFLAGS=-Wall -Wno-unknown-pragmas -march=i386
 ODEF = -DOPT_TYPE=\"optimized\"
 CFLAGS:=$(CCOPT) $(CFLAGS) $(ODEF) $(EXTRA_FLAGS)
 

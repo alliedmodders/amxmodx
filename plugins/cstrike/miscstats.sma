@@ -205,6 +205,9 @@ public client_putinserver(id)
 
 public client_death(killer,victim,wpnindex,hitplace,TK) {
 
+  if ( wpnindex == CSW_C4 )
+    return
+
   new headshot = ( hitplace == HIT_HEAD ) ? 1:0
   new selfkill = ( killer == victim ) ? 1:0
 

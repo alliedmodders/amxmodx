@@ -1402,13 +1402,16 @@ public eventEndRound() {
       g_izTeamScore[1]++
   }
   
+  set_task(0.3,"ERTask",997)
+  return PLUGIN_CONTINUE
+}
+
+public ERTask(){
   // Flag round end triggered.
   g_iRoundEndTriggered = 1
 
   // Display round end stats to all players.
   endround_stats()
-
-  return PLUGIN_CONTINUE
 }
 
 endround_stats() {
@@ -1420,15 +1423,6 @@ endround_stats() {
   new iaPlayers[32], iPlayer, iPlayers, id
 
   get_players( iaPlayers, iPlayers )
-
-  #if defined STATSX_OLD_DEATHMSG
-  // Bail out if not all killers got their damage event (ie last stats)
-  for ( iPlayer = 0; iPlayer < iPlayers; iPlayer++ ) {
-    id = iaPlayers[iPlayer]
-    if ( g_izKilled[id][KILLED_KILLER_ID] && !g_izKilled[id][KILLED_KILLER_STATSFIX] )
-      return
-  }
-  #endif
 
   // Display attacker & victim list for all living players.
   // This will also update all round and game stats for all players

@@ -46,6 +46,21 @@ ATTACHMOD AttachModule;
 DETACHMOD DetachModule;
 
 
+// These functions are needed since Small Abstract Machine 2.5.0
+int wamx_FindPublic(AMX *amx, char *name, int *index)
+{ return amx_FindPublic(amx, name, index); }
+
+int wamx_FindPubVar(AMX *amx, char *varname, cell *amx_addr)
+{ return amx_FindPubVar(amx, varname, amx_addr); }
+
+int wamx_GetString(char *dest, cell *source)
+{ return amx_GetString(dest, source, 0); }
+
+AMX_NATIVE_INFO *wamx_NativeInfo(char *name, AMX_NATIVE func)
+{ return amx_NativeInfo(name, func); }
+
+int wamx_SetString(cell *dest, char *source, int pack)
+{ return amx_SetString(dest, source, pack, 0); }
 
 pfnamx_engine_g engAmxFunc = {
   amx_Align16,
@@ -56,21 +71,21 @@ pfnamx_engine_g engAmxFunc = {
   amx_Debug,
   amx_Exec,
   amx_Execv,
-  amx_FindPublic,
-  amx_FindPubVar,
+  wamx_FindPublic,
+  wamx_FindPubVar,
   amx_FindTagId,
   amx_Flags,
   amx_GetAddr,
   amx_GetPublic,
   amx_GetPubVar,
-  amx_GetString,
+  wamx_GetString,
   amx_GetTag,
   amx_GetUserData,
   amx_Init,
   amx_InitJIT,
   amx_MemInfo,
   amx_NameLength,
-  amx_NativeInfo,
+  wamx_NativeInfo,
   amx_NumPublics,
   amx_NumPubVars,
   amx_NumTags,
@@ -79,7 +94,7 @@ pfnamx_engine_g engAmxFunc = {
   amx_Release,
   amx_SetCallback,
   amx_SetDebugHook,
-  amx_SetString,
+  wamx_SetString,
   amx_SetUserData,
   amx_StrLen,
 };

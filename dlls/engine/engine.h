@@ -1,7 +1,6 @@
 #ifndef _ENGINE_INCLUDE_H
 #define _ENGINE_INCLUDE_H
 
-#include <string>
 #include <extdll.h>	
 #include <string.h> 
 #include <meta_api.h>

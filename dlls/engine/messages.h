@@ -36,7 +36,7 @@ public:
 
 	int type;
 	REAL fData;
-	std::string cData;
+	char *cData;
 	int iData;
 };
 

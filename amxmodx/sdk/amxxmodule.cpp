@@ -2453,6 +2453,7 @@ PFN_IS_PLAYER_AUTHORIZED	g_fn_IsPlayerAuthorized;
 PFN_GET_PLAYER_TIME			g_fn_GetPlayerTime;
 PFN_GET_PLAYER_PLAYTIME		g_fn_GetPlayerPlayTime;
 PFN_GET_PLAYER_CURWEAPON	g_fn_GetPlayerCurweapon;
+PFN_GET_PLAYER_TEAM			g_fn_GetPlayerTeam;
 PFN_GET_PLAYER_TEAMID		g_fn_GetPlayerTeamID;
 PFN_GET_PLAYER_DEATHS		g_fn_GetPlayerDeaths;
 PFN_GET_PLAYER_MENU			g_fn_GetPlayerMenu;
@@ -2664,6 +2665,7 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_GetPlayerPlayTime(0);
 	MF_GetPlayerCurweapon(0);
 	MF_GetPlayerTeamID(0);
+	MF_GetPlayerTeam(0);
 	MF_GetPlayerDeaths(0);
 	MF_GetPlayerMenu(0);
 	MF_GetPlayerKeys(0);

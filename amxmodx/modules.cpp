@@ -1131,6 +1131,14 @@ const char *MNF_Format(const char *fmt, ...)
 	return retVal;
 }
 
+const char *MNF_GetPlayerTeam(int id)
+{
+	if (id < 1 || id > gpGlobals->maxClients)
+		return NULL;
+
+	return (GET_PLAYER_POINTER_I(id)->team.c_str());
+}
+
 #ifndef MEMORY_TEST
 void *MNF_Allocator(const char *sourceFile, const unsigned int sourceLine, const char *sourceFunc, const unsigned int allocationType, const size_t reportedSize)
 {
@@ -1214,6 +1222,7 @@ void *Module_ReqFnptr(const char *funcName)
 			REGISTER_FUNC("GetPlayerPlayTime", MNF_GetPlayerPlayTime)
 			REGISTER_FUNC("GetPlayerCurweapon", MNF_GetPlayerCurweapon)
 			REGISTER_FUNC("GetPlayerTeamID", MNF_GetPlayerTeamID)
+			REGISTER_FUNC("GetPlayerTeam", MNF_GetPlayerTeam)
 			REGISTER_FUNC("GetPlayerDeaths", MNF_GetPlayerDeaths)
 			REGISTER_FUNC("GetPlayerFrags", MNF_GetPlayerFrags)
 			REGISTER_FUNC("GetPlayerMenu", MNF_GetPlayerMenu)

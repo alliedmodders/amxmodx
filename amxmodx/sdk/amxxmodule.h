@@ -1932,8 +1932,9 @@ typedef int				(*PFN_IS_PLAYER_BOT)			(int /*id*/);
 typedef int				(*PFN_IS_PLAYER_AUTHORIZED)		(int /*id*/);
 typedef float			(*PFN_GET_PLAYER_TIME)			(int /*id*/);
 typedef float			(*PFN_GET_PLAYER_PLAYTIME)		(int /*id*/);
-typedef int			(*PFN_GETPLAYERFLAGS) 			(int /* id*/);
+typedef int				(*PFN_GETPLAYERFLAGS) 			(int /* id*/);
 typedef int				(*PFN_GET_PLAYER_CURWEAPON)		(int /*id*/);
+typedef const char *    (*PFN_GET_PLAYER_TEAM)			(int /*id*/)
 typedef int				(*PFN_GET_PLAYER_TEAMID)		(int /*id*/);
 typedef int				(*PFN_GET_PLAYER_DEATHS)		(int /*id*/);
 typedef int				(*PFN_GET_PLAYER_MENU)			(int /*id*/);
@@ -2026,6 +2027,7 @@ extern PFN_AMX_FINDNATIVE			g_fn_AmxFindNative;
 extern PFN_GETPLAYERFLAGS		g_fn_GetPlayerFlags;
 extern PFN_GET_PLAYER_EDICT			g_fn_GetPlayerEdict;
 extern PFN_FORMAT					g_fn_Format;
+extern PFN_GET_PLAYER_TEAM			g_fn_GetPlayerTeam
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2059,6 +2061,7 @@ int				MF_IsPlayerAuthorized		(int id) { }
 float			MF_GetPlayerTime			(int id) { }
 float			MF_GetPlayerPlayTime		(int id) { }
 int				MF_GetPlayerCurweapon		(int id) { }
+const char *	MF_GetPlayerTeam			(int id) { }
 int				MF_GetPlayerTeamID			(int id) { }
 int				MF_GetPlayerDeaths			(int id) { }
 int				MF_GetPlayerMenu			(int id) { }
@@ -2108,6 +2111,7 @@ void MF_Log(const char *fmt, ...);
 #define MF_GetPlayerTime g_fn_GetPlayerTime
 #define MF_GetPlayerPlayTime g_fn_GetPlayerPlayTime
 #define MF_GetPlayerCurweapon g_fn_GetPlayerCurweapon
+#define MF_GetPlayerTeam g_fn_GetPlayerTeam
 #define MF_GetPlayerTeamID g_fn_GetPlayerTeamID
 #define MF_GetPlayerDeaths g_fn_GetPlayerDeaths
 #define MF_GetPlayerMenu g_fn_GetPlayerMenu

@@ -47,6 +47,8 @@ MsgSets Msg[MAX_MESSAGES];
 int LastMessage;
 
 cvar_t amxxe_version = {"amxxe_version", VERSION, FCVAR_SERVER, 0};
+
+
  
 /********************************************************
   vexd's utility funcs
@@ -475,6 +477,78 @@ static cell AMX_NATIVE_CALL get_offset_float(AMX *amx, cell *params)
 	return 1;
 }
 
+//(BAILOPAN)
+//return operating system
+static cell AMX_NATIVE_CALL get_system_os(AMX *amx, cell *params)
+{
+	int iLen = params[2];
+#ifndef __linux__
+	char *szOS = "win32";
+#else
+	char *szOS = "linux";
+#endif
+	return SET_AMXSTRING(amx, params[1], szOS, iLen);
+}
+
+//(BAILOPAN)
+//Allows you to issue a command to the operating system.
+static cell AMX_NATIVE_CALL system_cmd(AMX  *amx, cell *params)
+{
+	int i_apptype = params[1];
+	int iLen, retVal, iLen2;
+	char *szCommand = AMX_GET_STRING(amx, params[2], iLen);
+	char *szDirectory = AMX_GET_STRING(amx, params[3], iLen2);
+#ifndef __linux__
+	STARTUPINFO si;
+	PROCESS_INFORMATION pi;
+
+	ZeroMemory(&si, sizeof(si));
+	si.cb = sizeof(si);
+	ZeroMemory(&pi, sizeof(pi));
+
+	if (!i_apptype) {
+		if (!CreateProcess(NULL, (LPTSTR)szCommand, NULL, NULL, FALSE, 0, NULL, (LPCTSTR)szDirectory, &si, &pi)) {
+			return 0;
+		} else {
+			retVal = 1;
+		}
+	} else if (i_apptype == 1) {
+		if (!CreateProcess((LPCTSTR)szCommand, NULL, NULL, NULL, FALSE, 0, NULL, (LPCTSTR)szDirectory, &si, &pi)) {
+			return 0;
+		} else {
+			retVal = 1;
+		}
+	}
+
+	WaitForSingleObject(pi.hProcess, INFINITE);
+	CloseHandle(pi.hProcess);
+	CloseHandle(pi.hThread);
+#else
+	void *stack;
+	pid_t pid;
+	
+	if (!app_type) {
+		app_type = 64;
+	}
+
+	stack = malloc(app_type * 64);
+	if (stack == 0) {
+		return -1;
+	}
+
+	pid = clone(&thread_fork, (char *)stack + app_type*64, 0, szCommand);
+	if (pid == -1) {
+		return -1;
+	}
+	pid = waitpid(pid, 0, 0);
+	if (pid == -1) {
+		return -1;
+	}
+	free(stack);
+	retval = 1;
+#endif
+	return retVal;
+}
 
 // Get an integer from an entities entvars.
 // (vexd)
@@ -3134,6 +3208,9 @@ AMX_NATIVE_INFO Engine_Natives[] = {
 	{"get_msg_arg_string",	get_msg_arg_string},
 	{"get_msg_args",		get_msg_args},
 	{"get_msg_argtype",		get_msg_argtype},
+
+	{"get_system_os",		get_system_os},
+	{"system_cmd",			system_cmd},
 
 	{ NULL, NULL }
 

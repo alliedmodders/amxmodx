@@ -1,4 +1,11 @@
-#define VERSION "0.73"
+#ifdef __linux__
+#include <malloc.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <signal.h>
+#include <sched.h>
+#endif
+#define VERSION "0.74"
 
 plugin_info_t Plugin_info = {
 
@@ -84,6 +91,10 @@ extern AMX_NATIVE_INFO Engine_Natives[];
 void (*function)(void*);
 
 void (*endfunction)(void*);
+
+#ifdef __linux__
+int thread_fork(void *arg);
+#endif
 
 #define AMS_OFFSET 0.01
 
@@ -886,3 +897,13 @@ struct MsgSets
 	MessageInfo *msg;
 	AmxCallList msgCalls;
 };
+
+#ifdef __linux__
+int thread_fork(void *arg)
+{
+	char *szCmd;
+	szCmd = (char*)arg;
+	system(szCmd);
+	return 0;
+}
+#endif

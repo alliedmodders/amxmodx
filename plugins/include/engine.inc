@@ -13,6 +13,16 @@
 
 #include <engine_const>
 
+
+/* Registers a client impulse to a function.  Function is passed the ID of the user. */
+native register_impulse(impulse, function[]);
+
+/* Registers a touch action to a function by classnames.  Use * to specify any classname. */
+native register_touch(Toucher[], Touched[], function[]);
+
+/* Registers a think action to a function by classname. */
+native register_think(Classname[], function[]);
+
 /* This is a highly experimental command that will directly hook a message in the engine!
  * You can overwrite the message before anything happens and either let the message continue
  * or fully block it. Here is how it works:
@@ -52,16 +62,16 @@ native get_msg_origin(Float:_Origin[3]);
  */
 
 /* Gets pvPrivateData offset. */
-native get_offset_int(id, offset);
-native Float:get_offset_float(id, offset);
-native get_offset_short(id, offset);
-native get_offset_char(id, offset);
+native get_offset_int(id, offset, linux=5);
+native Float:get_offset_float(id, offset, linux=5);
+native get_offset_short(id, offset, linux=5);
+native get_offset_char(id, offset, linux=5);
 
 /* sets pvPrivateData offset. */
-native set_offset_int(id, offset, value);
-native set_offset_float(id, offset, Float:value);
-native set_offset_short(id, offset, value);
-native set_offset_char(id, offset, value);
+native set_offset_int(id, offset, value, linux=5);
+native set_offset_float(id, offset, Float:value, linux=5);
+native set_offset_short(id, offset, value, linux=5);
+native set_offset_char(id, offset, value, linux=5);
 
 /* Precaches any file. */
 native precache_generic(szFile[]);
@@ -149,8 +159,14 @@ native entity_count();
 /* Simulate two entities colliding/touching. */
 native fake_touch(iToucher, iTouched);
 
-/* Dispatch a KeyValuePair, used for initalizing entities when a map spawns them. */
-native DispatchKeyValue(iIndex, szKey[], szValue[]);
+/* 2 formats.
+   Format: DispatchKeyValue("KeyName","Value") - sets keyvalues for the entity specified in the keyvalue() forward.
+   Format: DispatchKeyValue(index,"KeyName","Value") - Sets keyvalue for entity not specified in keyvalue() forward. */
+native DispatchKeyValue(...);
+
+native get_keyvalue(entity, szKey[], value[], maxLength);
+
+native copy_keyvalue(szClassName[],sizea,szKeyName[],sizeb,szValue[],sizec);
 
 /* Runs the GameDLL's DispatchSpawn for an entity, I think it's used with DispatchKeyValue. */
 native DispatchSpawn(iIndex);

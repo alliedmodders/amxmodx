@@ -250,6 +250,11 @@ static cell AMX_NATIVE_CALL pgsql_close(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL dbi_type(AMX *amx, cell *params)
+{
+	return MF_SetAmxString(amx, params[1], "pgsql", params[2]);
+}
+
 void OnAmxxAttach()
 {
 	MF_AddNatives(pgsql_exports);
@@ -262,6 +267,7 @@ AMX_NATIVE_INFO pgsql_exports[] = {
 	{"dbi_nextrow",		pgsql_nextrow},
 	{"dbi_close",		pgsql_close},
 	{"dbi_getfield",	pgsql_getfield},
+	{"dbi_type",		dbi_type},
 	{"pgsql_connect",	pgsql_connect},
 	{"pgsql_error",		pgsql_error},
 	{"pgsql_query",		pgsql_query},

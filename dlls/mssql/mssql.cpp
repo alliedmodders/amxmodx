@@ -296,6 +296,12 @@ static cell AMX_NATIVE_CALL mssql_error(AMX *amx, cell *params)
 	return lastError;
 }
 
+static cell AMX_NATIVE_CALL dbi_type(AMX *amx, cell *params)
+{
+	return MF_SetAmxString(amx, params[1], "mssql", params[2]);
+}
+
+
 void OnAmxxAttach()
 {
 	MF_AddNatives(mssql_Natives);
@@ -326,6 +332,7 @@ AMX_NATIVE_INFO mssql_Natives[] = {
 	{"dbi_nextrow",			mssql_nextrow},
 	{"mssql_error",			mssql_error},
 	{"dbi_error",			mssql_error},
+	{"dbi_type",			dbi_type},
 
 	{NULL,					NULL},
 	  ///////////////////	

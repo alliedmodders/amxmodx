@@ -17,7 +17,7 @@ CFG=engine - Win32 Debug
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "engine_mm - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "engine_amx - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "engine - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE 
 
@@ -29,7 +29,7 @@ CPP=cl.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "engine_mm - Win32 Release"
+!IF  "$(CFG)" == "engine_amx - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -52,7 +52,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386 /out:"release/engine_mm.dll"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386 /out:"release/engine_amx.dll"
 
 !ELSEIF  "$(CFG)" == "engine - Win32 Debug"
 
@@ -83,7 +83,7 @@ LINK32=link.exe
 
 # Begin Target
 
-# Name "engine_mm - Win32 Release"
+# Name "engine_amx - Win32 Release"
 # Name "engine - Win32 Debug"
 # Begin Group "Source Files"
 

@@ -3,7 +3,7 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
-Project: "engine_mm"=".\engine.dsp" - Package Owner=<4>
+Project: "engine_amx"=".\engine.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{

@@ -1,4 +1,4 @@
-LIBRARY engine_mm
+LIBRARY engine_amx
 EXPORTS
 	GiveFnptrsToDll			@1
 	Meta_Attach				@2

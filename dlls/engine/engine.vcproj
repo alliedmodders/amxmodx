@@ -39,12 +39,12 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="release/engine_mm.dll"
+				OutputFile="release/engine_amx.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				ModuleDefinitionFile=".\engine.def"
-				ProgramDatabaseFile=".\Release/engine_mm.pdb"
-				ImportLibrary=".\Release/engine_mm.lib"
+				ProgramDatabaseFile=".\Release/engine_amx.pdb"
+				ImportLibrary=".\Release/engine_amx.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"

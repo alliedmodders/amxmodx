@@ -32,7 +32,7 @@
 *  version.
 */
 
-#define VERSION "0.15"
+#define VERSION "0.16"
 
 plugin_info_t Plugin_info = {
 

@@ -3,6 +3,7 @@
 	ProjectType="Visual C++"
 	Version="7.10"
 	Name="cstrike"
+	ProjectGUID="{AB148B92-4F47-42E6-8268-AB4E588EC6A2}"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>

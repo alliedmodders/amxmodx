@@ -1,5 +1,5 @@
 //#define __cswonbuild__ // comment when compiling for STEAM
-#define CS_WON_BUILD
+//#define CS_WON_BUILD
 
  /* AMX Mod X 
    *   Counter-Strike Module 
@@ -113,7 +113,8 @@ pfnmodule_engine_g* g_engModuleFunc;
 	#define OFFSET_CSDEATHS				448 + EXTRAOFFSET // differs -1 from STEAM
 	// "weapon_*" entities
 	#define OFFSET_WEAPONTYPE			43 + EXTRAOFFSET // same as STEAM
-	//#define OFFSET_CLIPAMMO				51 + EXTRAOFFSET // not tested under WON!!!!!!!!!!!!!!!!!!
+	//jghg I uncommented this so it would compile
+	#define OFFSET_CLIPAMMO				51 + EXTRAOFFSET // not tested under WON!!!!!!!!!!!!!!!!!!
 	#define OFFSET_SILENCER_FIREMODE	70 + EXTRAOFFSET // differs -4 from STEAM
 	// "hostage_entity" entities
 	#define OFFSET_HOSTAGEFOLLOW		86 + EXTRAOFFSET // same as STEAM

@@ -1018,95 +1018,6 @@ static cell AMX_NATIVE_CALL set_cvar_string(AMX *amx, cell *params) /* 2 param *
   return 1;
 }
 
-static cell AMX_NATIVE_CALL message_begin(AMX *amx, cell *params) /* 4 param */
-{
-  int numparam = *params/sizeof(cell);
-  Vector vecOrigin;
-  cell *cpOrigin;
-  switch (params[1]){
-  case MSG_BROADCAST:
-  case MSG_ALL:
-  case MSG_SPEC:
-    MESSAGE_BEGIN( params[1], params[2],NULL );
-    break;
-  case MSG_PVS: case MSG_PAS:
-    if (numparam < 3) {
-      amx_RaiseError(amx,AMX_ERR_NATIVE);
-      return 0;
-    }
-    cpOrigin = get_amxaddr(amx,params[3]);
-    vecOrigin.x = *cpOrigin;
-    vecOrigin.y = *(cpOrigin+1);
-    vecOrigin.z = *(cpOrigin+2);
-    MESSAGE_BEGIN( params[1], params[2] , vecOrigin );
-    break;
-  case MSG_ONE:
-    if (numparam < 4) {
-      amx_RaiseError(amx,AMX_ERR_NATIVE);
-      return 0;
-    }
-    MESSAGE_BEGIN( MSG_ONE, params[2], NULL, INDEXENT(params[4]) );
-    break;
-  }
-
-  return 1;
-}
-
-static cell AMX_NATIVE_CALL message_end(AMX *amx, cell *params)
-{
-  MESSAGE_END();
-  return 1;
-}
-
-static cell AMX_NATIVE_CALL write_byte(AMX *amx, cell *params) /* 1 param */
-{
-  WRITE_BYTE( params[1] );
-  return 1;
-}
-
-static cell AMX_NATIVE_CALL write_char(AMX *amx, cell *params) /* 1 param */
-{
-  WRITE_CHAR( params[1] );
-  return 1;
-}
-
-static cell AMX_NATIVE_CALL write_short(AMX *amx, cell *params)  /* 1 param */
-{
-  WRITE_SHORT( params[1] );
-  return 1;
-}
-
-static cell AMX_NATIVE_CALL write_long(AMX *amx, cell *params)  /* 1 param */
-{
-  WRITE_LONG( params[1] );
-  return 1;
-}
-
-static cell AMX_NATIVE_CALL write_entity(AMX *amx, cell *params) /* 1 param */
-{
-  WRITE_ENTITY( params[1] );
-  return 1;
-}
-
-static cell AMX_NATIVE_CALL write_angle(AMX *amx, cell *params) /* 1 param */
-{
-  WRITE_ANGLE( params[1] );
-  return 1;
-}
-
-static cell AMX_NATIVE_CALL write_coord(AMX *amx, cell *params) /* 1 param */
-{
-  WRITE_COORD( params[1] );
-  return 1;
-}
-
-static cell AMX_NATIVE_CALL write_string(AMX *amx, cell *params) /* 1 param */
-{
-  int a;
-  WRITE_STRING( get_amxstring(amx,params[1],3,a) );
-  return 1;
-}
-
 static cell AMX_NATIVE_CALL log_message(AMX *amx, cell *params) /* 1 param */
 {
   int len;
@@ -2412,8 +2323,6 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "is_user_hltv",     is_user_hltv },
   { "log_message",      log_message },
   { "log_to_file",      log_to_file },
-  { "message_begin",    message_begin },
-  { "message_end",      message_end },
   { "num_to_word",      num_to_word },
   { "parse_loguser",    parse_loguser },
   { "parse_time",        parse_time },
@@ -2465,14 +2374,6 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "unpause",        unpause },
   { "user_kill",      user_kill },
   { "user_slap",      user_slap },
-  { "write_angle",    write_angle },
-  { "write_byte",     write_byte },
-  { "write_char",     write_char },
-  { "write_coord",    write_coord },
-  { "write_entity",   write_entity },
-  { "write_long",     write_long },
-  { "write_short",    write_short },
-  { "write_string",   write_string },
   { "xvar_exists",    xvar_exists },
   { "is_module_loaded", is_module_loaded },
   { "is_plugin_loaded", is_plugin_loaded },

@@ -481,25 +481,9 @@ native Float:random_float(Float:a,Float:b);
 /* Generates random integer from a to b. */
 native random_num(a,b);
 
-/******************** Client messages; will be removed ********************/
 /* Returns id of client message.
 * Example: get_user_msgid("TextMsg"). */
 native get_user_msgid(const name[]);
-
-/* These functinos are used to generate client messages.
-* You may generate menu, smoke, shockwaves, thunderlights,
-* intermission and many many others messages.
-* See HL SDK for more examples. */
-native message_begin( dest, msg_type, origin[3]={0,0,0},player=0);
-native message_end();
-native write_byte( x );
-native write_char( x );
-native write_short( x );
-native write_long( x );
-native write_entity( x );
-native write_angle( x );
-native write_coord( x );
-native write_string( x[] );
 
 /******************** XVARS ********************/
 /* Checks if public variable with given name exists in loaded plugins. */

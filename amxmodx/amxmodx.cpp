@@ -2765,7 +2765,7 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "register_logevent",register_logevent},
   { "register_menucmd", register_menucmd },
   { "register_menuid",  register_menuid },
-  { "register_module",	register_module },
+  { "require_module",	register_module },
   { "register_plugin",  register_plugin },
   { "register_srvcmd",  register_srvcmd },
   { "remove_cvar_flags",    remove_cvar_flags },

@@ -55,7 +55,7 @@ public plugin_init() {
 
 public plugin_modules()
 {
-   register_module("fun")
+   require_module("fun")
 }
 
 public actionTelMenu(id,key) {

@@ -107,7 +107,7 @@ public plugin_init() {
 #if defined USING_SQL
 public plugin_modules()
 {
-   register_module("DBI")
+   require_module("DBI")
 }
 #endif
 

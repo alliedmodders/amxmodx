@@ -651,4 +651,4 @@ native plugin_flags();
 
 forward plugin_modules();
 
-native register_module(const module[]);
+native require_module(const module[]);

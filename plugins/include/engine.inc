@@ -12,7 +12,6 @@
 #define _engine_included
 
 #include <engine_const>
-#include <engine_stocks>
 
 /* These functinos are used to generate client messages.
 * You may generate menu, smoke, shockwaves, thunderlights,
@@ -184,3 +183,5 @@ forward client_kill(id);
 /* Forward for PreThink()/PostThink() on a player. */
 forward client_PreThink(id);
 forward client_PostThink(id);
+
+#include <engine_stocks>

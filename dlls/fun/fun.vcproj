@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="fun"
+	Name="fun_amx"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -38,10 +38,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\Release/fun.dll"
+				OutputFile=".\Release/fun_amx.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				ModuleDefinitionFile=".\fun.def"
+				ModuleDefinitionFile=".\fun_amx.def"
 				ProgramDatabaseFile=".\Release/fun.pdb"
 				ImportLibrary=".\Release/fun.lib"
 				TargetMachine="1"/>
@@ -172,7 +172,7 @@ copy fun.inc K:\S\cstrike\addons\amx\plugins\include
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="fun.def">
+				RelativePath="fun_amx.def">
 			</File>
 		</Filter>
 		<Filter

@@ -1,4 +1,4 @@
-LIBRARY fun
+LIBRARY fun_amx
 EXPORTS
 	GiveFnptrsToDll			@1
 	Meta_Attach				@2

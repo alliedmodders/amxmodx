@@ -4,7 +4,7 @@
 
 # TARGTYPE "Win32 (x86) Dynamic-Link Library" 0x0102
 
-CFG=fun - Win32 Debug
+CFG=fun_amx - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
@@ -17,8 +17,8 @@ CFG=fun - Win32 Debug
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "fun - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "fun - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "fun_amx - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "fun_amx - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE 
 
 # Begin Project
@@ -29,7 +29,7 @@ CPP=cl.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "fun - Win32 Release"
+!IF  "$(CFG)" == "fun_amx - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -56,10 +56,10 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PostBuild_Cmds=echo Copying dll...	copy Release\fun.dll K:\S\cstrike\addons\amxx\modules\fun_amx.dll	echo Copying inc...	copy ..\plugins\include\fun.inc K:\S\cstrike\addons\amxx\scripting\include
+PostBuild_Cmds=echo Copying dll...	copy Release\fun_amx.dll K:\S\cstrike\addons\amxx\modules\fun_amx.dll	echo Copying inc...	copy ..\plugins\include\fun.inc K:\S\cstrike\addons\amxx\scripting\include
 # End Special Build Tool
 
-!ELSEIF  "$(CFG)" == "fun - Win32 Debug"
+!ELSEIF  "$(CFG)" == "fun_amx - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -89,8 +89,8 @@ LINK32=link.exe
 
 # Begin Target
 
-# Name "fun - Win32 Release"
-# Name "fun - Win32 Debug"
+# Name "fun_amx - Win32 Release"
+# Name "fun_amx - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
@@ -100,7 +100,7 @@ SOURCE=.\fun.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\fun.def
+SOURCE=.\fun_amx.def
 # End Source File
 # End Group
 # Begin Group "Header Files"

@@ -38,13 +38,13 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="Debug/cstrike_amxx_debug.dll"
+				OutputFile="Debug/cstrike_amx_debug.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				ModuleDefinitionFile=".\cstrike.def"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/cstrike_amxx_debug.pdb"
-				ImportLibrary=".\Debug/cstrike_amxx_debug.lib"
+				ProgramDatabaseFile=".\Debug/cstrike_amx_debug.pdb"
+				ImportLibrary=".\Debug/cstrike_amx_debug.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -103,12 +103,12 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="Release/cstrike_amxx.dll"
+				OutputFile="Release/cstrike_amx.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				ModuleDefinitionFile=".\cstrike.def"
-				ProgramDatabaseFile=".\Release/cstrike_amxx.pdb"
-				ImportLibrary=".\Release/cstrike_amxx.lib"
+				ProgramDatabaseFile=".\Release/cstrike_amx.pdb"
+				ImportLibrary=".\Release/cstrike_amx.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -121,9 +121,9 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				CommandLine="echo Copying dll...
-copy Release\cstrike_amxx.dll K:\S\cstrike\addons\amx\dlls
+copy Release\cstrike_amx.dll K:\S\cstrike\addons\amx\dlls
 echo Copying inc...
-copy cstrike_amxx.inc K:\S\cstrike\addons\amx\examples\include
+copy cstrike_amx.inc K:\S\cstrike\addons\amx\examples\include
 "/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
@@ -210,7 +210,7 @@ copy cstrike_amxx.inc K:\S\cstrike\addons\amx\examples\include
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
 		</Filter>
 		<File
-			RelativePath="cstrike_amxx.inc">
+			RelativePath="cstrike_amx.inc">
 		</File>
 	</Files>
 	<Globals>

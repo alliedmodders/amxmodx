@@ -110,7 +110,7 @@ SOURCE=.\engine.inc
 # End Source File
 # Begin Source File
 
-SOURCE=.\engine.def
+SOURCE=.\engine_amx.def
 # End Source File
 # End Group
 # End Target

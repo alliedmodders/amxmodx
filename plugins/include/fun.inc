@@ -5,6 +5,11 @@
 * This file is provided as is (no warranties).
 */
 
+#if defined _fun_included
+  #endinput
+#endif
+#define _fun_included
+
 /* Returns 1 if receiver hears sender via voice communication. */
 native get_client_listen(receiver, sender);
 

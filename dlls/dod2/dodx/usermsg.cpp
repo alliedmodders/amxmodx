@@ -160,7 +160,8 @@ void Client_Health_End(void* mValue){
 	if ( !pAttacker ){
 		pAttacker = mPlayer;
 	}
-	else{ 
+
+	if ( pAttacker->index != mPlayer->index ){ 
 		pAttacker->saveHit( mPlayer , weapon , damage, aim );
 		if ( mPlayer->pEdict->v.team == pAttacker->pEdict->v.team )
 			TA = 1;

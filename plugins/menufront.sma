@@ -68,7 +68,7 @@ public AddMenu(const menuBody[], const menuCmd[], const menuAccess, const menuPl
 
 	g_menusNumber++
 
-	server_print("Menu item added to Menus Front-End: ^"%s^" from plugin ^"%s^"", menuBody, menuPlugin)
+	server_print("Menu item %d added to Menus Front-End: ^"%s^" from plugin ^"%s^"", g_menusNumber, menuBody, menuPlugin)
 }
 public AddMenuLang(const menuBody[], const menuCmd[], const menuAccess, const menuPlugin[]) {
 	if (g_menusNumber + 1 == MAXMENUS) {
@@ -83,7 +83,7 @@ public AddMenuLang(const menuBody[], const menuCmd[], const menuAccess, const me
 	copy(g_menuPlugin[g_menusNumber], STRINGLENGTH, menuPlugin)
 	g_menusNumber++
 
-	//server_print("Menu item added to Menus Front-End: ^"%s^" (LANG) from plugin ^"%s^"", menuBody, menuPlugin)
+	//server_print("Menu item %d added to Menus Front-End: ^"%s^" (LANG) from plugin ^"%s^"", g_menusNumber, menuBody, menuPlugin)
 }
 
 AddDefaultMenus() {
@@ -179,6 +179,24 @@ public cmdMenu(id,level,cid) {
   return PLUGIN_HANDLED
 }
 
+public addmenuitem_cmd(id, level, cid) {
+	if (!cmd_access(id, level, cid, 5))
+		return PLUGIN_HANDLED
+
+	// AddMenu(const menuBody[], const menuCmd[], const menuAccess, const menuPlugin[])
+	new menuBody[STRINGSIZE], menuCmd[STRINGSIZE], flags[STRINGSIZE], menuAccess = 0, menuPlugin[STRINGSIZE]
+	read_argv(1, menuBody, STRINGLENGTH)
+	read_argv(2, menuCmd, STRINGLENGTH)
+	read_argv(3, flags, STRINGLENGTH)
+	menuAccess = read_flags(flags)
+	read_argv(4, menuPlugin, STRINGLENGTH)
+
+
+	AddMenu(menuBody, menuCmd, menuAccess, menuPlugin)
+
+	return PLUGIN_HANDLED
+}
+
 public plugin_init() {
   register_plugin("Menus Front-End",AMXX_VERSION_STR,"AMXX Dev Team")
 
@@ -187,6 +205,8 @@ public plugin_init() {
 
   register_menucmd(register_menuid("AMX Mod X Menu"),1023,"actionMenu")
   register_clcmd("amxmodmenu","cmdMenu",ADMIN_MENU,"- displays menus")
+
+  register_srvcmd("amx_addmenuitem", "addmenuitem_cmd", 0, "<menu text> <menu command> <access flags> <plugin name> - Add a menu item to Menus Front-End")
 
   g_coloredMenus = colored_menus()
 

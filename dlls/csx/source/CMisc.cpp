@@ -25,7 +25,7 @@ bool Grenades::find( edict_t* enemy, CPlayer** p, int* type )
   bool found = false;
   Obj* a = head;
   while ( a ){
-    if ( a->time > gpGlobals->time ) {
+    if ( a->time > gpGlobals->time && !found ) {
       if ( a->grenade == enemy ) {
         found = true;
         *p = a->player;
@@ -297,3 +297,4 @@ bool isModuleActive(){
 		return true;
 	return false;
 }
+

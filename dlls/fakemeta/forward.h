@@ -13,6 +13,7 @@
 #define FMRES_OVERRIDE	3
 
 enum {
+  FM_FIRST_DONT_USE_ME = 0,
 	FM_PrecacheModel = 1,	// done
 	FM_PrecacheSound,	// done
 	FM_SetModel,		// done
@@ -149,6 +150,7 @@ enum {
 	FM_CreateInstancedBaselines,	// done 
 	FM_AllowLagCompensation,	// done
 	FM_AlertMessage,
+	FM_LAST_DONT_USE_ME,
 };
 
 extern CVector<int> Engine[];

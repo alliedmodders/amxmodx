@@ -470,7 +470,7 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	int func = params[1];
 	// You originally had both post coming from params[2] AND the function name.  I've moved post to 3.
 	int post = params[3];
-	if (func > FM_AllowLagCompensation || func < 1)
+	if (func >= FM_LAST_DONT_USE_ME || func < 1)
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;

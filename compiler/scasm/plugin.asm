@@ -23,6 +23,31 @@ Cmd	db	"amx_asmtest"
 Callback db	"cmdCallback"
 Descr db "Test"
 
+.DATA
+HELLO	db	"Hello, %s!"
+
+.CODE
+PROC cmdCallback
+	stack -128*CELL
+	zero.pri
+	addr.alt -128*CELL
+	fill 128*CELL
+	push.c 127
+	pushaddr -128*CELL
+	push.s ARG(0)
+	push.c CELL*3
+	sysreq.c get_user_name
+	stack CELL*4
+	pushaddr -128*CELL
+	push.c HELLO
+	push.c CELL*2
+	sysreq.c server_print
+	stack CELL*3
+	stack 128*CELL
+	zero.pri
+	retn
+ENDP
+
 .CODE
 ;Technically PROC could simply be "proc"
 ; this is more for reasons of readability.
@@ -46,34 +71,10 @@ PROC plugin_init
 	push.c CELL*4			;push 4 arguments
 	sysreq.c register_concmd	;call register_concmd
 	stack CELL*5			;cleanup
+	zero.pri				;zero pri
 	retn					;return + cleanup
 ENDP
 
-.DATA
-HELLO	db	"Hello, %s!"
-
-.CODE
-PROC cmdCallback
-	stack -128*CELL		;new memory
-	zero.pri		;zero out pri
-	addr.alt -128		;alt points to new variable
-	fill -128*CELL		;zero out new variable
-	push.c 127		;push bytecount arg to get_user_name
-	push.alt		;push the value of alt (which is name)
-	push.s	ARG(1)		;push the first argument onto the stack
-	push.c 3*CELL		;push 3 arguments
-	sysreq.c get_user_name	;call get_user_name();
-	stack 4*CELL		;clean up stack
-	pushaddr -128		;push the name
-	push.c HELLO		;push the message
-	push.c 2*CELL		;push 2 arguments
-	sysreq.c server_print	;call server_print
-	stack 3*CELL		;clean up the stack
-	stack 128*CELL		;clean up the name variable
-	zero.pri		;zero out pri
-	retn
-ENDP
-
 .PUBLIC
-	cmdCallback
 	plugin_init
+	cmdCallback

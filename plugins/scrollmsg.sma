@@ -98,7 +98,7 @@ public setMessage() {
       server_print("%L",LANG_SERVER,"MIN_FREQ",minimal)
       g_Frequency = minimal
     }
-    server_print("%L",LANG_SERVER,"MSG_FREQ")
+    server_print("%L",LANG_SERVER,"MSG_FREQ",
       g_Frequency/60,g_Frequency%60)
     set_task(float(g_Frequency),"msgInit",123,"",0,"b")
   }

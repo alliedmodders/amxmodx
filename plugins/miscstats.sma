@@ -128,7 +128,7 @@ new g_SHeMessages[4][] = {
   "SHE_MSG_1",
   "SHE_MSG_2",
   "SHE_MSG_3",
-  "SHE_MSG_4",
+  "SHE_MSG_4"
 }
 new g_HeadShots[7][] = { 
   "HS_MSG_1",
@@ -327,7 +327,7 @@ public eDeathMsg() {
       read_data( 4 , weapon , 31  )  
       get_players(players,pnum,"c")
       for (new i=0;i<pnum;i++) {
-        fromat( message, 127, "%L",players[i],g_HeadShots[ random_num(0,6) ] )
+        format( message, 127, "%L",players[i],g_HeadShots[ random_num(0,6) ] )
         replace( message, 127 , "$vn", victim )
         replace( message, 127 , "$wn", weapon )    
         replace( message, 127 , "$kn", killer )

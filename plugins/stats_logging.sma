@@ -43,7 +43,9 @@ public plugin_init() {
 }
 
 public client_disconnect(id) {
-  if ( is_user_bot(id) ) return PLUGIN_CONTINUE
+  if ( is_user_bot(id) ) {
+    return
+  }
   remove_task(id)
   new szTeam[16],szName[32],szAuthid[32], iStats[8], iHits[8], szWeapon[24]
   new iUserid = get_user_userid( id )

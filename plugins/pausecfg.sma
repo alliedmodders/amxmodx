@@ -301,20 +301,20 @@ public cmdPlugin(id,level,cid) {
   else if ( equal(cmds, "pause" )  ) {
     new arg[32], a ,len = read_argv(2,arg,31)
     if ( len && ((a = findPluginByFile(arg,len)) != -1) && !isSystem( a ) && pause("ac",arg) )
-      console_print(id,"%L",id,"PLUGIN_MATCH",arg,id,"PAUSED")
+      console_print(id,"%L %L",id,"PLUGIN_MATCH",arg,id,"PAUSED")
     else console_print(id,"%L",id,"COULDNT_FIND",arg)
   }
   else if ( equal(cmds, "enable" )  ) {
     new arg[32], a , len = read_argv(2,arg,31)
     if ( len && (a = findPluginByFile(arg,len)) != -1 && !isSystem( a ) && unpause("ac",arg) )
-      console_print(id,"%L",id,"PLUGIN_MATCH",arg,id,"UNPAUSED")
+      console_print(id,"%L %L",id,"PLUGIN_MATCH",arg,id,"UNPAUSED")
     else console_print(id,"%L",id,"COULDNT_FIND",arg)
   }
   else if ( equal(cmds, "stop" ) ) {
     new arg[32], a, len = read_argv(2,arg,31)
     if ( len && (a = findPluginByFile(arg,len)) != -1 && !isSystem( a ) && pause("dc",arg)){
       g_Modified = 1
-      console_print(id,"%L",id,"PLUGIN_MATCH",arg,id,"STOPPED")
+      console_print(id,"%L %L",id,"PLUGIN_MATCH",arg,id,"STOPPED")
     }
     else console_print(id,"%L",id,"COULDNT_FIND",arg)
   }

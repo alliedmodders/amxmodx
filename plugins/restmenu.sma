@@ -378,15 +378,15 @@ public cmdRest(id,level,cid) {
     if (start >= MAXMENUPOS) start = MAXMENUPOS - 1
     new end = start + 10
     if (end > MAXMENUPOS) end = MAXMENUPOS
-    new lName[16],lValue[16],lStatus[16],lOnOf[16]
+    new lName[16],lValue[16],lStatus[16],lOnOff[16]
     format(lName,15,"%L",id,"NAME")
     format(lValue,15,"%L",id,"VALUE")
     format(lStatus,15,"%L",id,"STATUS")
-    format(lOnOff,15,"%L",id,positionBlocked(a) ? "ON" : "OFF")
     console_print(id, "^n----- %L: -----", id, "WEAP_RES")
     console_print(id, "     %-32.31s   %-10.9s   %-9.8s",lName,lValue,lStatus)
     if ( start != -1 ) {
       for (new a = start; a < end; ++a) {
+        format(lOnOff,15,"%L",id,positionBlocked(a) ? "ON" : "OFF")
         console_print(id, "%3d: %-32.31s   %-10.9s   %-9.8s",a + 1,
         g_WeaponNames[a], g_Aliases[a], lOnOff)
       }
@@ -590,11 +590,11 @@ public fn_setautobuy(id) {
   for (new i = 1; i < argCount; i++) { // Start at parameter 1; parameter 0 is just "cl_setautobuy"
     read_argv(i, arg, 127)
 
-  // Add this parameter to user's autobuy prefs
-  autobuyLen += format(g_Autobuy[id][autobuyLen], AUTOBUYLENGTH - autobuyLen, "%s", arg)
-  // If we detect more parameters, add a space
-  if (i + 1 < argCount)
-    autobuyLen += format(g_Autobuy[id][autobuyLen], AUTOBUYLENGTH - autobuyLen, " ")
+    // Add this parameter to user's autobuy prefs
+    autobuyLen += format(g_Autobuy[id][autobuyLen], AUTOBUYLENGTH - autobuyLen, "%s", arg)
+    // If we detect more parameters, add a space
+    if (i + 1 < argCount)
+      autobuyLen += format(g_Autobuy[id][autobuyLen], AUTOBUYLENGTH - autobuyLen, " ")
   }
 
   // Strip any blocked items

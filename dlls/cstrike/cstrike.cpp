@@ -74,7 +74,7 @@ static cell AMX_NATIVE_CALL cs_set_user_money(AMX *amx, cell *params) // cs_set_
 	}
 
 	// Give money
-	(int)*((int *)pPlayer->pvPrivateData + OFFSET_CSMONEY) = params[2];
+	*((int *)pPlayer->pvPrivateData + OFFSET_CSMONEY) = params[2];
 
 	// Update display
 	MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "Money", NULL), NULL, pPlayer);
@@ -133,7 +133,7 @@ static cell AMX_NATIVE_CALL cs_set_user_deaths(AMX *amx, cell *params) // cs_set
 	}
 
 	// Set deaths
-	(int)*((int *)pPlayer->pvPrivateData + OFFSET_CSDEATHS) = params[2];
+	*((int *)pPlayer->pvPrivateData + OFFSET_CSDEATHS) = params[2];
 
 	return 1;
 }
@@ -185,7 +185,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_silenced(AMX *amx, cell *params) // cs
 	}
 
 	int weapontype = (int)*((int *)pWeapon->pvPrivateData + OFFSET_WEAPONTYPE);
-	int *silencemode = &(int)*((int *)pWeapon->pvPrivateData + OFFSET_SILENCER_FIREMODE);
+	int *silencemode = ((int *)pWeapon->pvPrivateData + OFFSET_SILENCER_FIREMODE);
 	switch (weapontype) {
 		case CSW_M4A1:
 			if (*silencemode == M4A1_SILENCED)
@@ -222,7 +222,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_silenced(AMX *amx, cell *params) // cs
 	}
 
 	int weapontype = (int)*((int *)pWeapon->pvPrivateData + OFFSET_WEAPONTYPE);
-	int *silencemode = &(int)*((int *)pWeapon->pvPrivateData + OFFSET_SILENCER_FIREMODE);
+	int *silencemode = ((int *)pWeapon->pvPrivateData + OFFSET_SILENCER_FIREMODE);
 
 	switch (weapontype) {
 		case CSW_M4A1:
@@ -267,7 +267,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_burstmode(AMX *amx, cell *params) // c
 	}
 
 	int weapontype = (int)*((int *)pWeapon->pvPrivateData + OFFSET_WEAPONTYPE);
-	int* firemode = &(int)*((int *)pWeapon->pvPrivateData + OFFSET_SILENCER_FIREMODE);
+	int* firemode = ((int *)pWeapon->pvPrivateData + OFFSET_SILENCER_FIREMODE);
 	switch (weapontype) {
 		case CSW_GLOCK18:
 			if (*firemode == GLOCK_BURSTMODE)
@@ -305,7 +305,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_burstmode(AMX *amx, cell *params) // c
 
 	int weapontype = (int)*((int *)pWeapon->pvPrivateData + OFFSET_WEAPONTYPE);
 
-	int* firemode = &(int)*((int *)pWeapon->pvPrivateData + OFFSET_SILENCER_FIREMODE);
+	int* firemode = ((int *)pWeapon->pvPrivateData + OFFSET_SILENCER_FIREMODE);
 	int previousMode = *firemode;
 
 	switch (weapontype) {
@@ -389,7 +389,7 @@ static cell AMX_NATIVE_CALL cs_get_user_vip(AMX *amx, cell *params) // cs_get_us
 		return 0;
 	}
 
-	if ((int)*((int *)pPlayer->pvPrivateData + OFFSET_VIP) == PLAYER_IS_VIP)
+	if ((int)((int *)pPlayer->pvPrivateData + OFFSET_VIP) == PLAYER_IS_VIP)
 		return 1;
 
 	return 0;
@@ -418,9 +418,9 @@ static cell AMX_NATIVE_CALL cs_set_user_vip(AMX *amx, cell *params) // cs_set_us
 	}
 
 	if (params[2])
-		(int)*((int *)pPlayer->pvPrivateData + OFFSET_VIP) = PLAYER_IS_VIP;
+		*((int *)pPlayer->pvPrivateData + OFFSET_VIP) = PLAYER_IS_VIP;
 	else
-		(int)*((int *)pPlayer->pvPrivateData + OFFSET_VIP) = PLAYER_IS_NOT_VIP;
+		*((int *)pPlayer->pvPrivateData + OFFSET_VIP) = PLAYER_IS_NOT_VIP;
 
 	return 1;
 }
@@ -472,7 +472,7 @@ static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params) // cs_set_u
 	}
 
 	// Just set team. Removed check of 1-2-3, because maybe scripters want to create new teams, 4, 5 etc?
-	(int)*((int *)pPlayer->pvPrivateData + OFFSET_TEAM) = params[2];
+	*((int *)pPlayer->pvPrivateData + OFFSET_TEAM) = params[2];
 	
 	/*switch (params[2]) {
 		case TEAM_T:
@@ -563,7 +563,7 @@ static cell AMX_NATIVE_CALL cs_set_user_plant(AMX *amx, cell *params) // cs_set_
 		return 0;
 	}
 	
-	int* plantskill = &(int)*((int *)pPlayer->pvPrivateData + OFFSET_DEFUSE_PLANT);
+	int* plantskill = ((int *)pPlayer->pvPrivateData + OFFSET_DEFUSE_PLANT);
 
 	if (params[2]) {
 		*plantskill = CAN_PLANT_BOMB;
@@ -652,7 +652,7 @@ static cell AMX_NATIVE_CALL cs_set_user_defusekit(AMX *amx, cell *params) // cs_
 		return 0;
 	}
 	
-	int* defusekit = &(int)*((int *)pPlayer->pvPrivateData + OFFSET_DEFUSE_PLANT);
+	int* defusekit = ((int *)pPlayer->pvPrivateData + OFFSET_DEFUSE_PLANT);
 
 	if (params[2]) {
 		int colour[3] = {DEFUSER_COLOUR_R, DEFUSER_COLOUR_G, DEFUSER_COLOUR_B};
@@ -883,7 +883,7 @@ static cell AMX_NATIVE_CALL cs_set_user_backpackammo(AMX *amx, cell *params) // 
 			return 0;
 	}
 
-	(int)*((int *)pPlayer->pvPrivateData + offset) = params[3];
+	*((int *)pPlayer->pvPrivateData + offset) = params[3];
 	
 	return 1;
 }

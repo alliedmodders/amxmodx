@@ -11,7 +11,8 @@
 #endif
 #define _amxconst_included
 
-#define AMXX_VERSION 0.2
+#define AMXX_VERSION		0.2
+#define AMXX_VERSION_STR	"0.20"
 
 #define ADMIN_ALL		0	/* everyone */
 #define ADMIN_IMMUNITY		(1<<0)	/* flag "a" */

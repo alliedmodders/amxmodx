@@ -1,0 +1,43 @@
+[en]
+LANG_NAME = English
+LANG_NAME_NATIVE = English
+
+[bp]
+LANG_NAME = Brazil Portuguese
+LANG_NAME_NATIVE = 
+
+[da]
+LANG_NAME = Danish
+LANG_NAME_NATIVE = 
+
+[de]
+LANG_NAME = German
+LANG_NAME_NATIVE = Deutsch
+
+[es]
+LANG_NAME = Spanish
+LANG_NAME_NATIVE = 
+
+[fr]
+LANG_NAME = French
+LANG_NAME_NATIVE = 
+
+[nl]
+LANG_NAME = Dutch
+LANG_NAME_NATIVE = 
+
+[pl]
+LANG_NAME = Polish
+LANG_NAME_NATIVE = 
+
+[sr]
+LANG_NAME = Serbian
+LANG_NAME_NATIVE = 
+
+[sv]
+LANG_NAME = Swedish
+LANG_NAME_NATIVE = 
+
+[tr]
+LANG_NAME = Turkish
+LANG_NAME_NATIVE = 

@@ -143,3 +143,41 @@ stock register_menu(title[],keys,function[],outside=0)
 * don't use it! */
 stock get_customdir(name[],len)
   return get_localinfo("amxx_configsdir",name,len)
+
+/* Add a menu item to Menus Front-End plugin:
+* MENU_TEXT: Text that will be shown for this item in menu
+* MENU_CMD: Command that should be executed to start menu
+* MENU_ACCESS: Access required for menu
+* MENU_PLUGIN: The exact case-insensitive name of plugin holding the menu command 
+*/
+stock AddMenuItem(const MENU_TEXT[], const MENU_CMD[], const MENU_ACCESS, const MENU_PLUGIN[]) {
+	new pluginid = is_plugin_loaded("Menus Front-End")
+	if (pluginid == -1) {
+		log_amx("Can't add menu item ^"%s^" from plugin ^"%s^" to menu set because the Menus Front-End plugin itself is not loaded!", MENU_TEXT, MENU_PLUGIN)
+		return // Menus Front-End doesn't exist, return.
+	}
+
+	new filename[64], b[1], c[1], d[1], e[1]
+	get_plugin(pluginid, filename, 63, b, 0, c, 0, d, 0, e, 0)
+
+	new status = callfunc_begin("AddMenu", filename)
+	new bool:failed = true
+	switch (status) {
+		case 1: failed = false
+		case 0: log_amx("Run time error!")
+		case -2: log_amx("Function not found!")
+		case -1: log_amx("Plugin not found!")
+	}
+	if (failed)
+		return
+	// Body (identifier)
+	callfunc_push_str(MENU_TEXT)
+	// Cmd
+	callfunc_push_str(MENU_CMD)
+	// Access
+	callfunc_push_int(MENU_ACCESS)
+	// Description
+	callfunc_push_str(MENU_PLUGIN)
+
+	callfunc_end()
+}

@@ -1,4 +1,4 @@
- /* AMX Mod X 
+/* AMX Mod X 
    *   Counter-Strike Module 
    * 
    * by the AMX Mod X Development Team 

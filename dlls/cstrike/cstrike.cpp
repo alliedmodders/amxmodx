@@ -1186,8 +1186,11 @@ static cell AMX_NATIVE_CALL cs_get_hostage_follow(AMX *amx, cell *params) // cs_
 		return 0;
 	}
 
+#if !defined __amd64__
 	int following = *((int *)pHostage->pvPrivateData + OFFSET_HOSTAGEFOLLOW);
-
+#else
+	long following = *((long *)pHostage->pvPrivateData + OFFSET_HOSTAGEFOLLOW);
+#endif
 	if (following == 0)
 		return following;
 
@@ -1252,8 +1255,11 @@ static cell AMX_NATIVE_CALL cs_set_hostage_follow(AMX *amx, cell *params) // cs_
 		return 0;
 	}
 
+#if !defined __amd64__
 	*((int *)pHostage->pvPrivateData + OFFSET_HOSTAGEFOLLOW) = (int)pEntity;
-
+#else
+	*((long *)pHostage->pvPrivateData + OFFSET_HOSTAGEFOLLOW) = (long)pEntity;
+#endif
 	return 1;
 }
 

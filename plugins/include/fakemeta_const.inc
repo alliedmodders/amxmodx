@@ -106,7 +106,7 @@ enum {
  */
 enum
 {
-	DLLFunc_GameInit,	// void)			( void );				
+	DLLFunc_GameInit,	// void)			( void );
 	DLLFunc_Spawn,	// int )				( edict_t *pent );
 	DLLFunc_Think,	// void )				( edict_t *pent );
 	DLLFunc_Use,	// void )				( edict_t *pentUsed, edict_t *pentOther );
@@ -115,7 +115,7 @@ enum
 	DLLFunc_KeyValue,	// void )			( edict_t *pentKeyvalue, KeyValueData *pkvd );
 	DLLFunc_SetAbsBox,			// void )			( edict_t *pent );
 	DLLFunc_ClientConnect,		// bool)		( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ] );
-	
+
 	DLLFunc_ClientDisconnect,	// void )	( edict_t *pEntity );
 	DLLFunc_ClientKill,		// void )		( edict_t *pEntity );
 	DLLFunc_ClientPutInServer,	// void )	( edict_t *pEntity );
@@ -131,7 +131,7 @@ enum
 	DLLFunc_ParmsChangeLevel,	// void )	( void );
 
 	 // Returns string describing current .dll.  E.g., TeamFotrress 2, Half-Life
-	DLLFunc_GetGameDescription,	 // const char * )( void );     
+	DLLFunc_GetGameDescription,	 // const char * )( void );
 
 	// Spectator funcs
 	DLLFunc_SpectatorConnect,	// void)		( edict_t *pEntity );
@@ -153,150 +153,6 @@ enum
 	// I know this does not fit with DLLFUNC(), but I dont want another native just for it.
 	MetaFunc_CallGameEntity,	// bool	(plid_t plid, const char *entStr,entvars_t *pev);
 	DLLFunc_ClientUserInfoChanged // void (idplayer)
-};
-enum {
-	pev_string_start = 0,
-	pev_classname,
-	pev_globalname,
-	pev_model,
-	pev_target,
-	pev_targetname,
-	pev_netname,
-	pev_message,
-	pev_noise,
-	pev_noise1,
-	pev_noise2,
-	pev_noise3,
-	pev_string_end,
-	pev_edict_start,
-	pev_chain,
-	pev_dmg_inflictor,
-	pev_enemy,
-	pev_aiment,
-	pev_owner,
-	pev_groundentity,
-	pev_euser1,
-	pev_euser2,
-	pev_euser3,
-	pev_euser4,
-	pev_edict_end,
-	pev_float_start,
-	pev_impacttime,
-	pev_starttime,
-	pev_idealpitch,
-	pev_ideal_yaw,
-	pev_pitch_speed,
-	pev_yaw_speed,
-	pev_ltime,
-	pev_nextthink,
-	pev_gravity,
-	pev_friction,
-	pev_frame,
-	pev_animtime,
-	pev_framerate,
-	pev_scale,
-	pev_renderamt,
-	pev_health,
-	pev_frags,
-	pev_takedamage,
-	pev_max_health,
-	pev_teleport_time,
-	pev_armortype,
-	pev_armorvalue,
-	pev_dmg_take,
-	pev_dmg_save,
-	pev_dmg,
-	pev_dmgtime,
-	pev_speed,
-	pev_air_finished,
-	pev_pain_finished,
-	pev_radsuit_finished,
-	pev_maxspeed,
-	pev_fov,
-	pev_flFallVelocity,
-	pev_fuser1,
-	pev_fuser2,
-	pev_fuser3,
-	pev_fuser4,
-	pev_float_end,
-	pev_int_start,
-	pev_fixangle,
-	pev_modelindex,
-	pev_viewmodel,
-	pev_weaponmodel,
-	pev_movetype,
-	pev_solid,
-	pev_skin,
-	pev_body,
-	pev_effects,
-	pev_light_level,
-	pev_sequence,
-	pev_gaitsequence,
-	pev_rendermode,
-	pev_renderfx,
-	pev_weapons,
-	pev_deadflag,
-	pev_button,
-	pev_impulse,
-	pev_spawnflags,
-	pev_flags,
-	pev_colormap,
-	pev_team,
-	pev_waterlevel,
-	pev_watertype,
-	pev_playerclass,
-	pev_weaponanim,
-	pev_pushmsec,
-	pev_bInDuck,
-	pev_flTimeStepSound,
-	pev_flSwimTime,
-	pev_flDuckTime,
-	pev_iStepLeft,
-	pev_gamestate,
-	pev_oldbuttons,
-	pev_groupinfo,
-	pev_iuser1,
-	pev_iuser2,
-	pev_iuser3,
-	pev_iuser4,
-	pev_int_end,
-	pev_byte_start,
-	pev_controller_0,
-	pev_controller_1,
-	pev_controller_2,
-	pev_controller_3,
-	pev_blending_0,
-	pev_blending_1,
-	pev_byte_end,
-	pev_bytearray_start,
-	pev_controller,
-	pev_blending,
-	pev_bytearray_end,
-	pev_vecarray_start,
-	pev_origin,
-	pev_oldorigin,
-	pev_velocity,
-	pev_basevelocity,
-	pev_clbasevelocity,
-	pev_movedir,
-	pev_angles,
-	pev_avelocity,
-	pev_v_angle,
-	pev_endpos,
-	pev_startpos,
-	pev_absmin,
-	pev_absmax,
-	pev_mins,
-	pev_maxs,
-	pev_size,
-	pev_rendercolor,
-	pev_view_ofs,
-	pev_vuser1,
-	pev_vuser2,
-	pev_vuser3,
-	pev_vuser4,
-	pev_punchangle,
-	pev_vecarray_end
 };
 
 /* Used with register_forward()
@@ -402,7 +258,7 @@ enum {
 	FM_KeyValue,	// void )			( edict_t *pentKeyvalue, KeyValueData *pkvd ); -- does't work as of 0.20 RC2
 	FM_SetAbsBox,			// done
 	FM_ClientConnect,		// done
-	
+
 	FM_ClientDisconnect,	// done
 	FM_ClientKill,		// done
 	FM_ClientPutInServer,	// done
@@ -434,7 +290,7 @@ enum {
 	// Enumerates player hulls.  Returns 0 if the hull number doesn't exist, 1 otherwise
 
 	// Create baselines for certain "unplaced" items.
-	FM_CreateInstancedBaseline,	// done 
+	FM_CreateInstancedBaseline,	// done
 	FM_AllowLagCompensation,	// done
 	FM_AlertMessage, //done (at_type, message[])
 };

@@ -34,7 +34,6 @@
 
 #include <amxmodx>
 #include <amxmisc>
-#include <engine>
 
 #define MAXRCONCVARS 16
 new g_cvarRcon[ MAXRCONCVARS ][32]
@@ -47,9 +46,8 @@ new g_addCvar[] = "amx_cvar add %s"
 public plugin_init(){
   register_plugin("Admin Commands","0.15","AMXX Dev Team")
   register_concmd("amx_kick","cmdKick",ADMIN_KICK,"<name or #userid> [reason]")
-  register_concmd("amx_ban","cmdAddBan",ADMIN_BAN,"<authid or ip> <minutes> [reason]")
-  register_concmd("amx_banid","cmdBan",ADMIN_BAN,"<name or #userid> <minutes> [reason]")
-  register_concmd("amx_banip","cmdBan",ADMIN_BAN,"<name or #userid> <minutes> [reason]") 
+  register_concmd("amx_ban","cmdBan",ADMIN_BAN,"<name or #userid> <id/ip> <minutes> [reason]")
+  register_concmd("amx_addban","cmdAddBan",ADMIN_BAN,"<authid or ip> <minutes> [reason]")
   register_concmd("amx_unban","cmdUnban",ADMIN_BAN,"<authid or ip>")
   register_concmd("amx_slay","cmdSlay",ADMIN_SLAY,"<name or #userid>")
   register_concmd("amx_slap","cmdSlap",ADMIN_SLAY,"<name or #userid> [power]")
@@ -114,7 +112,7 @@ public cmdKick(id,level,cid){
       client_cmd(player,"echo ^"Kicked^";disconnect",reason)
 #endif
   }
-  console_print(id,"Client ^"%s^" kicked",name2)
+  console_print(id,"[AMXX] Client ^"%s^" kicked",name2)
   return PLUGIN_HANDLED
 }
 
@@ -125,11 +123,11 @@ public cmdUnban(id,level,cid){
   read_argv(1,arg,31)
   if (contain(arg,".")!=-1) {
     server_cmd("removeip ^"%s^";writeip",arg)
-    console_print(id,"Ip ^"%s^" removed from ban list", arg  )
+    console_print(id,"[AMXX] Ip ^"%s^" removed from ban list", arg  )
   }
   else {
     server_cmd("removeid ^"%s^";writeid",arg)
-    console_print(id,"Authid ^"%s^" removed from ban list", arg  )
+    console_print(id,"[AMXX] Authid ^"%s^" removed from ban list", arg  )
   }
   get_user_name(id,name,31)  
   switch(get_cvar_num("amx_show_activity")) {
@@ -151,11 +149,11 @@ public cmdAddBan(id,level,cid){
   read_argv(3,reason,31)
   if (contain(arg,".")!=-1) {
     server_cmd("addip ^"%s^" ^"%s^";wait;writeip",minutes,arg)
-    console_print(id,"Ip ^"%s^" added to ban list", arg )
+    console_print(id,"[AMXX] Ip ^"%s^" added to ban list", arg )
   }
   else {
     server_cmd("banid ^"%s^" ^"%s^";wait;writeid",minutes,arg)
-    console_print(id,"Authid ^"%s^" added to ban list", arg )
+    console_print(id,"[AMXX] Authid ^"%s^" added to ban list", arg )
   }
   get_user_name(id,name,31)  
   switch(get_cvar_num("amx_show_activity")) {
@@ -169,24 +167,32 @@ public cmdAddBan(id,level,cid){
 }
     
 public cmdBan(id,level,cid){
-  if (!cmd_access(id,level,cid,3))
+  if (!cmd_access(id,level,cid,4))
     return PLUGIN_HANDLED
-  new arg[32], cmd[32]
-  read_argv(0,cmd,31)
-  read_argv(1,arg,31)
-  new player = cmd_target(id,arg,9)
+  new target[32],mode[3],minutes[8],reason[32]
+  read_argv(1,target,31)
+  read_argv(2,mode,2)
+  strtolower(mode)
+  read_argv(3,minutes,7)
+  read_argv(4,reason,31)
+  if ( (!equal(mode,"id")) && (!equal(mode,"ip")) )
+  {
+    new hcmd[32],hinfo[128],hflag
+    get_concmd(cid,hcmd,31,hflag,hinfo,127,level)
+    console_print(id,"Usage:  %s %s",hcmd,hinfo)
+    return PLUGIN_HANDLED
+  }
+  new player = cmd_target(id,target,9)
   if (!player) return PLUGIN_HANDLED
-  new minutes[32],authid[32],name2[32],authid2[32],name[32],reason[32]
+  new authid[32],name2[32],authid2[32],name[32]
   new userid2 = get_user_userid(player)
-  read_argv(2,minutes,31)
   get_user_authid(player,authid2,31)
   get_user_authid(id,authid,31)
   get_user_name(player,name2,31)
   get_user_name(id,name,31)
   userid2 = get_user_userid(player)
-  read_argv(3,reason,31)
-  log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%s^") (reason ^"%s^")", 
-    name,get_user_userid(id),authid, name2,userid2,authid2,minutes,reason)
+  log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (mode ^"%s^") (minutes ^"%s^") (reason ^"%s^")", 
+    name,get_user_userid(id),authid, name2,userid2,authid2,mode,minutes,reason)
 
   new temp[64]
   if (str_to_num(minutes))
@@ -194,7 +200,7 @@ public cmdBan(id,level,cid){
   else
     temp = "permanently"
 
-  if ( equal(cmd[7],"ip") || (!equal(cmd[7],"id") && get_cvar_num("sv_lan")) ){
+  if ( equal(mode,"ip") ){
     new address[32]
     get_user_ip(player,address,31,1)
 #if !defined NO_STEAM
@@ -236,7 +242,7 @@ public cmdBan(id,level,cid){
     client_print(0,print_chat,"%s ban %s %s",temp2,name2,temp)
   } 
   
-  console_print(id,"Client ^"%s^" banned",name2)
+  console_print(id,"[AMXX] Client ^"%s^" banned",name2)
   return PLUGIN_HANDLED
 }
 
@@ -261,7 +267,7 @@ public cmdSlay(id,level,cid){
   case 1: client_print(0,print_chat,"ADMIN: slay %s",name2)
   }   
     
-  console_print(id,"Client ^"%s^" slayed",name2)
+  console_print(id,"[AMXX] Client ^"%s^" slayed",name2)
   return PLUGIN_HANDLED
 }
 
@@ -288,7 +294,7 @@ public cmdSlap(id,level,cid){
   case 1: client_print(0,print_chat,"ADMIN: slap %s with %d damage",name2,damage)
   }       
       
-  console_print(id,"Client ^"%s^" slaped with %d damage",name2,damage)  
+  console_print(id,"[AMXX] Client ^"%s^" slaped with %d damage",name2,damage)  
   return PLUGIN_HANDLED
 }
 
@@ -301,7 +307,7 @@ public cmdMap(id,level,cid){
   new arg[32]
   new arglen = read_argv(1,arg,31)
   if ( !is_map_valid(arg) ){
-    console_print(id,"Map with that name not found or map is invalid")
+    console_print(id,"[AMXX] Map with that name not found or map is invalid")
     return PLUGIN_HANDLED
   } 
   new authid[32],name[32]
@@ -336,25 +342,25 @@ public cmdCvar(id,level,cid){
       if ( g_cvarRconNum <  MAXRCONCVARS )
         copy( g_cvarRcon[ g_cvarRconNum++ ] , 31, arg2 )
       else
-        console_print(id,"Can't add more cvars for rcon access!")
+        console_print(id,"[AMXX] Can't add more cvars for rcon access!")
     }
     return PLUGIN_HANDLED
   }
   if (!cvar_exists(arg)){
-    console_print(id,"Unknown cvar: %s",arg)
+    console_print(id,"[AMXX] Unknown cvar: %s",arg)
     return PLUGIN_HANDLED
   }
   if ( onlyRcon(arg) && !(get_user_flags(id) & ADMIN_RCON)){
-    console_print(id,"You have no access to that cvar")
+    console_print(id,"[AMXX] You have no access to that cvar")
     return PLUGIN_HANDLED
   }
   else if (equal(arg,"sv_password") && !(get_user_flags(id) & ADMIN_PASSWORD)){
-    console_print(id,"You have no access to that cvar")
+    console_print(id,"[AMXX] You have no access to that cvar")
     return PLUGIN_HANDLED
   }
   if (read_argc() < 3){
     get_cvar_string(arg,arg2,63)
-    console_print(id,"Cvar ^"%s^" is ^"%s^"",arg,arg2)
+    console_print(id,"[AMXX] Cvar ^"%s^" is ^"%s^"",arg,arg2)
     return PLUGIN_HANDLED
   }
   new authid[32],name[32]
@@ -376,7 +382,7 @@ public cmdCvar(id,level,cid){
     client_print(0,print_chat,"%s set cvar %s to ^"%s^"",temp,arg,arg2)
   } 
   
-  console_print(id,"Cvar ^"%s^" changed to ^"%s^"",arg,arg2)
+  console_print(id,"[AMXX] Cvar ^"%s^" changed to ^"%s^"",arg,arg2)
   return PLUGIN_HANDLED
 }
 
@@ -471,7 +477,7 @@ public cmdCfg(id,level,cid){
   new arg[128]
   read_argv(1,arg,127)
   if (!file_exists(arg)){
-    console_print(id,"File ^"%s^" not found",arg)
+    console_print(id,"[AMXX] File ^"%s^" not found",arg)
     return PLUGIN_HANDLED 
   }
   new authid[32],name[32]
@@ -479,7 +485,7 @@ public cmdCfg(id,level,cid){
   get_user_name(id,name,31)
   log_amx("Cmd: ^"%s<%d><%s><>^" execute cfg (file ^"%s^")",
     name,get_user_userid(id),authid, arg)
-  console_print(id,"Executing file ^"%s^"",arg)
+  console_print(id,"[AMXX] Executing file ^"%s^"",arg)
   server_cmd("exec %s",arg)
   
   switch(get_cvar_num("amx_show_activity")) {
@@ -492,7 +498,7 @@ public cmdCfg(id,level,cid){
 
 public cmdLBack(){ 
   set_cvar_float("pausable",g_pausAble)
-  console_print(g_pauseCon,"Server %s", g_Paused ? "unpaused" : "paused") 
+  console_print(g_pauseCon,"[AMXX] Server %s", g_Paused ? "unpaused" : "paused") 
   if (g_Paused) g_Paused = false
   else g_Paused = true
   return PLUGIN_HANDLED
@@ -507,14 +513,14 @@ public cmdPause(id,level,cid){
   g_pausAble = get_cvar_float("pausable")
   if (!slayer) slayer = find_player("h") 
   if (!slayer){ 
-    console_print(id,"Server was unable to pause the game. Real players on server are needed") 
+    console_print(id,"[AMXX] Server was unable to pause the game. Real players on server are needed") 
     return PLUGIN_HANDLED  
   }
   set_cvar_float("pausable",1.0) 
   client_cmd(slayer,"pause;pauseAck")
   log_amx("Cmd: ^"%s<%d><%s><>^" %s server", 
     name,get_user_userid(id),authid, g_Paused ? "unpause" : "pause" )
-  console_print(id,"Server proceed %s", g_Paused ? "unpausing" : "pausing")
+  console_print(id,"[AMXX] Server proceed %s", g_Paused ? "unpausing" : "pausing")
   
   switch(get_cvar_num("amx_show_activity")) {
     case 2: client_print(0,print_chat,"ADMIN %s: %s server",name,g_Paused ? "unpause" : "pause")
@@ -534,7 +540,7 @@ public cmdRcon(id,level,cid){
   get_user_name(id,name,31)
   log_amx("Cmd: ^"%s<%d><%s><>^" server console (cmdline ^"%s^")",
     name,get_user_userid(id),authid, arg)
-  console_print(id,"Commmand line ^"%s^" sent to server console",arg)
+  console_print(id,"[AMXX] Commmand line ^"%s^" sent to server console",arg)
   server_cmd(arg)
   return PLUGIN_HANDLED
 }
@@ -588,14 +594,14 @@ public cmdLeave(id,level,cid){
     get_user_name(b,nick,31)
     ires = hasTag(nick,ltags,ltagsnum)
     if (ires!=-1){
-      console_print(id,"Skipping ^"%s^" (matching ^"%s^")",nick,ltags[ires])
+      console_print(id,"[AMXX] Skipping ^"%s^" (matching ^"%s^")",nick,ltags[ires])
       continue
     }
     if (get_user_flags(b)&ADMIN_IMMUNITY){
-      console_print(id,"Skipping ^"%s^" (immunity)",nick)      
+      console_print(id,"[AMXX] Skipping ^"%s^" (immunity)",nick)      
       continue
     }
-    console_print(id,"Kicking ^"%s^"",nick)
+    console_print(id,"[AMXX] Kicking ^"%s^"",nick)
     if (is_user_bot(b))
       server_cmd("kick #%d",get_user_userid(b))
     else
@@ -608,7 +614,7 @@ public cmdLeave(id,level,cid){
     }
     count++
   }
-  console_print(id,"Kicked %d clients",count)
+  console_print(id,"[AMXX] Kicked %d clients",count)
   new authid[32],name[32]
   get_user_authid(id,authid,31)
   get_user_name(id,name,31)

@@ -1364,11 +1364,6 @@ static cell AMX_NATIVE_CALL find_ent_in_sphere(AMX *amx, cell *params)
 {
 	int idx = params[1];
 
-	if (!is_ent_valid(idx)) {
-		EngineError(amx, "Invalid Entity %d", idx);
-		return 0;
-	}
-
 	edict_t *pEnt = INDEXENT2(idx);
 	cell *cAddr = MF_GetAmxAddr(amx, params[2]);
 	REAL origin[3] = {
@@ -1527,7 +1522,7 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native
 	int iEnt = params[1];
 	int oEnt = params[3];
 	// Check index to start searching at, 0 must be possible for iEnt.
-	if ((iEnt != 0 && !is_ent_valid(iEnt)) || !is_ent_valid(oEnt)) {
+	if (!is_ent_valid(oEnt)) {
 		EngineError(amx, "Invalid Entity");
 		return 0;
 	}

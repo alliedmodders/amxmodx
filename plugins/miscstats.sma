@@ -1,27 +1,9 @@
-/* AMX Mod script. 
+/* AMX Mod X script.
 *
-* This file is provided as is (no warranties). 
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
 *
-* This plugin contains:
-* o multikill announcement
-* o bomb events
-* o killing streak
-* o enemy remaining
-* o round counter
-* o italy bonus kill
-* o knife kill
-* o headshot kill
-* o greanade kill
-* o last man
-* o double kill
-* o player name
-* o first blood sound
-*
-* To use with AMX 0.9.6 (and higher) and Counter-Strike.
-* Stats can be enabled with amx_statscfg and amx_statscfgmenu commands.
-* NOTE: For pernament disable, comment file from plugins.ini
-* or use amx_pausecfg and amx_pausecfgmenu commands.
-* Rest of stats can be found in csstats plugin.
+* This file is provided as is (no warranties).
 */
 
 #include <amxmod> 
@@ -138,7 +120,7 @@ new g_teamsNames[2][] = {
 }
 
 public plugin_init(){
-  register_plugin("Misc. Stats","0.9","default") 
+  register_plugin("Misc. Stats","0.1","default") 
   register_event("DeathMsg","eDeathMsg","a")
   register_event("TextMsg","eRestart","a","2&#Game_C","2&#Game_w")
   register_event("SendAudio", "eEndRound", "a", "2&%!MRAD_terwin","2&%!MRAD_ctwin","2&%!MRAD_rounddraw") 

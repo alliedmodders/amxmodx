@@ -1,8 +1,9 @@
-/* AMX Mod script.
+/* AMX Mod X script.
 *
-* (c) 2003, OLO
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*
 * This file is provided as is (no warranties).
-*
 */
 
 #include <amxmod>
@@ -95,7 +96,7 @@ new g_funModule
 
 public plugin_init()
 {
-  register_plugin("Menus Front-End","0.9","default")  
+  register_plugin("Menus Front-End","0.1","default")  
 
   register_menucmd(register_menuid("AMX Mod Menu"),1023,"actionMenu") 
   register_clcmd("amxmodmenu","cmdMenu",ADMIN_MENU,"- displays menus")    

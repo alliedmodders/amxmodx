@@ -1,6 +1,8 @@
-/* AMX Mod script. 
+/* AMX Mod X script.
 *
-* (c) 2003, OLO 
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*
 * This file is provided as is (no warranties).
 */
 
@@ -20,7 +22,7 @@ new g_motdFile[64]
 
 public plugin_init()
 {
-  register_plugin("Welcome Message","0.9","default")
+  register_plugin("Welcome Message","0.1","default")
   g_cstrikeRunning = is_running("cstrike")
 #if defined READ_FROM_FILE
   build_path( g_motdFile , 63 , "$basedir/conmotd.txt" )

@@ -1,11 +1,9 @@
-/* AMX Mod script.
+/* AMX Mod X script.
 *
-* (c) 2003, OLO
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*
 * This file is provided as is (no warranties).
-*
-* Admin command:
-* amx_statscfgmenu - displays stats configuration menu
-* amx_statscfg - displays help for stats configuration commands
 */
 
 #include <amxmod>
@@ -27,7 +25,7 @@ public plugin_precache(){
 }
 
 public plugin_init() {
-  register_plugin("Stats Configuration","0.9","default")
+  register_plugin("Stats Configuration","0.1","default")
   register_menucmd(register_menuid("\yStats Configuration"),1023,"actionCfgMenu")
   build_path( g_fileToSave , 63 , "$basedir/stats.ini" )  
   loadSettings(g_fileToSave)

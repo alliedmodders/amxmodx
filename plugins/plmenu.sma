@@ -1,15 +1,9 @@
-/* AMX Mod script.
+/* AMX Mod X script.
 *
-* (c) 2003, OLO
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*
 * This file is provided as is (no warranties).
-* 
-* Admin commands:
-* amx_kickmenu - displays kick menu
-* amx_banmenu - displays ban menu
-* amx_slapmenu - displays slap/slay menu
-* amx_teammenu - displays team menu
-* amx_clcmdmenu - displays client commands menu
-*
 */
 
 #include <amxmod> 
@@ -24,7 +18,7 @@ new g_menuSettings[33]
 new g_menuSelect[33][64]
 new g_menuSelectNum[33]
 
-#define MAX_CLCMDS  24
+#define MAX_CLCMDS 24
 
 new g_clcmdName[MAX_CLCMDS][32]
 new g_clcmdCmd[MAX_CLCMDS][64]
@@ -37,7 +31,7 @@ new g_cstrikeRunning
 
 public plugin_init()
 {
-  register_plugin("Players Menu","0.9","default")
+  register_plugin("Players Menu","0.1","default")
   register_clcmd("amx_kickmenu","cmdKickMenu",ADMIN_KICK,"- displays kick menu")
   register_clcmd("amx_banmenu","cmdBanMenu",ADMIN_BAN,"- displays ban menu")
   register_clcmd("amx_slapmenu","cmdSlapMenu",ADMIN_SLAY,"- displays slap/slay menu")   

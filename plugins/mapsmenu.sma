@@ -1,41 +1,9 @@
-/* AMX Mod script.
+/* AMX Mod X script.
 *
-* (c) 2003, OLO
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*
 * This file is provided as is (no warranties).
-*
-* Content for configuation copied from ClanMod cfg. file.
-* 
-* Admin command:
-* amx_mapmenu - displays maps menu
-*
-* Example configuration in addons/amx/maps.ini
-
-as_oilrig   "OilRig - Assassination"
-as_tundra   "Tundra - Assassination"
-de_aztec    "Aztec - Bomb/Defuse"
-de_cbble    "Cobble - Bomb/Defuse"
-de_chateau    "Chateau - Bomb/Defuse"
-de_dust     "Dust - Bomb/Defuse"
-de_dust2    "Dust II - Bomb/Defuse"
-de_inferno    "Inferno - Bomb/Defuse"
-de_nuke     "Nuke - Bomb/Defuse"
-de_prodigy    "Prodigy - Bomb/Defuse"
-de_storm    "Storm - Bomb/Defuse"
-de_survivor   "Survivor - Bomb/Defuse"
-de_train    "Trainyard - Bomb/Defuse"
-de_torn     "Torn - Bomb/Defuse"
-de_vegas    "Vegas - Bomb/Defuse"
-de_vertigo    "Vertigo - Bomb/Defuse"
-cs_747      "747 Hijack - Hostage Rescue"
-cs_assault    "Assault - Hostage Rescue"
-cs_backalley  "Alleyway - Hostage Rescue"
-cs_estate   "Zaphod's Estate - Hostage Rescue"
-cs_havana   "Havana - Hostage Rescue"
-cs_italy    "Italy - Hostage Rescue"
-cs_militia    "Militia - Hostage Rescue"
-cs_office   "The Office Complex - Hostage Rescue"
-cs_siege    "Canyon Siege - Hostage Rescue"
-
 */
 
 
@@ -61,7 +29,7 @@ new g_choosed
 
 public plugin_init()
 {
-  register_plugin("Maps Menu","0.9","default")
+  register_plugin("Maps Menu","0.1","default")
   register_clcmd("amx_mapmenu","cmdMapsMenu",ADMIN_MAP,"- displays changelevel menu")
   register_clcmd("amx_votemapmenu","cmdVoteMapMenu",ADMIN_MAP,"- displays votemap menu")
 

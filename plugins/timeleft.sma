@@ -1,23 +1,9 @@
-/* AMX Mod script.
+/* AMX Mod X script.
 *
-* (c) 2003, OLO
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*
 * This file is provided as is (no warranties).
-*
-* Commands:
-* say timeleft - displays timeleft (available for all clients) 
-* amx_time_display < flags time > ... - sets time displaying
-* Flags:
-* "a" - display text
-* "b" - use voice
-* "c" - don't add "remaining" (only in voice)
-* "d" - don't add "hours/minutes/seconds" (only in voice)
-* "e" - show/speak if current time is less than this set
-* Example:
-* amx_time_display "ab 600" "ab 300" "ab 180" "ab 60" "bcde 11"
-*
-* Cvars:
-* amx_time_voice < 1|0 > - announces "say thetime"
-* and "say timeleft"  with voice when set to 1
 */
 
 #include <amxmod>
@@ -28,7 +14,7 @@ new g_CountDown
 new g_Switch
 
 public plugin_init() {
-  register_plugin("TimeLeft","0.9","default")
+  register_plugin("TimeLeft","0.1","default")
   register_cvar("amx_time_voice","1")
   register_srvcmd("amx_time_display","setDisplaying")
   register_cvar("amx_timeleft","00:00",FCVAR_SERVER|FCVAR_EXTDLL|FCVAR_UNLOGGED|FCVAR_SPONLY)

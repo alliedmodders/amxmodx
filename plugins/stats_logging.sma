@@ -1,9 +1,10 @@
-/* AMX Mod script. (Feb 4th, 2003)
- *
- * Stats Logging
- * by JustinHoMi
- *
- */
+/* AMX Mod X script.
+*
+* (c) 2002-2004, JustinHoMi
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*
+* This file is provided as is (no warranties).
+*/
 
 #include <amxmod>
 #include <csstats>
@@ -12,7 +13,7 @@ new g_pingSum[33]
 new g_pingCount[33]
 
 public plugin_init()
-  register_plugin("Stats Logging","0.9","JustinHoMi")
+  register_plugin("Stats Logging","0.1","JustinHoMi")
 
 public client_disconnect(id) {
   if ( is_user_bot( id ) ) return PLUGIN_CONTINUE

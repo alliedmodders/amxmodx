@@ -1,13 +1,10 @@
-/* AMX Mod script. 
-* 
-* (c) 2003, OLO 
-* This file is provided as is (no warranties). 
-* 
-* Fun Module is required! 
-* 
-* Admin command: 
-* amx_teleportmenu - displays teleport menu
-*/ 
+/* AMX Mod X script.
+*
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*
+* This file is provided as is (no warranties).
+*/
 
 #include <amxmod> 
 #include <amxmisc> 
@@ -22,7 +19,7 @@ new g_cstrikeRunning
 
 public plugin_init() 
 { 
-  register_plugin("Teleport Menu","0.9","default") 
+  register_plugin("Teleport Menu","0.1","default") 
   register_clcmd("amx_teleportmenu","cmdTelMenu",ADMIN_CFG,"- displays teleport menu") 
   register_menucmd(register_menuid("Teleport Menu"),1023,"actionTelMenu") 
   get_logfile(g_logFile,15) 

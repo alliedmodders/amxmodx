@@ -1,19 +1,9 @@
-/* AMX Mod script.
+/* AMX Mod X script.
 *
-* (c) 2003, OLO
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*
 * This file is provided as is (no warranties).
-* 
-* Plugin works with Stats Settings Plugin. Just run both of them.
-* By amx_statscfg command (from Stats Settings Plugin)
-* you will be able to set all settings and save them to a file.
-* 
-* Example of usage for some options:
-* amx_ststacfg on ShowAttackers
-* amx_ststacfg on SayHP
-* 
-* Accept able are also parts of name:
-* amx_statscfg off say
-* amx_statscfg on show
 */
 
 #include <amxmod>
@@ -55,7 +45,7 @@ new g_teamScore[2]
 new g_disabledMsg[] = "Server has disabled that option"
 
 public plugin_init() {
-  register_plugin("Stats","0.9","default")
+  register_plugin("Stats","0.1","default")
   register_event("CS_DeathMsg","eCSDeathMsg","a")
   register_event("ResetHUD","eResetHud","b")
   register_event("SendAudio","eRoundEnd","a","2=%!MRAD_terwin","2=%!MRAD_ctwin","2=%!MRAD_rounddraw") 

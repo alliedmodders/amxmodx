@@ -1,6 +1,8 @@
-/* AMX Mod script.
+/* AMX Mod X script.
 *
-* (c) 2003, OLO
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*
 * This file is provided as is (no warranties).
 */
 
@@ -20,7 +22,7 @@ new g_Values[MAX_CLR][] = {{255,255,255},{255,0,0},{0,255,0},{0,0,255},{255,255,
 new Float:g_Pos[4][] = {{0.0,0.0},{0.05,0.55},{-1.0,0.2},{-1.0,0.7}} 
 
 public plugin_init(){
-  register_plugin("Admin Chat","0.9","default")
+  register_plugin("Admin Chat","0.1","default")
   register_clcmd("say_team","cmdSayAdmin",0,"@<text> - displays message to admins")
   register_clcmd("say","cmdSayChat",ADMIN_CHAT,"@[@|@|@][w|r|g|b|y|m|c]<text> - displays hud message")
   register_concmd("amx_say","cmdSay",ADMIN_CHAT,"<message> - sends message to all players")
@@ -60,7 +62,7 @@ public cmdSayChat(id) {
   new Float:verpos = g_Pos[i][1] + float(g_msgChannel) / 35.0
   set_hudmessage(g_Values[a][0], g_Values[a][1], g_Values[a][2], 
     g_Pos[i][0], verpos , 0, 6.0, 6.0, 0.5, 0.15, g_msgChannel )  
-    
+
 #if defined SHOW_NAMES    
   show_hudmessage(0,"%s :   %s",name,message[i+1])  
   client_print(0,print_notify,"%s :   %s",name,message[i+1])
@@ -186,7 +188,7 @@ public cmdTsay(id,level,cid){
   get_user_name(id,name,31)
   userid = get_user_userid(id)
   set_hudmessage(g_Values[a][0], g_Values[a][1], g_Values[a][2], tsay ? 0.05 :  -1.0, verpos, 0, 6.0, 6.0, 0.5, 0.15, g_msgChannel)
-  
+
 #if defined SHOW_NAMES   
   show_hudmessage(0,"%s :   %s",name,message[length])
   client_print(0,print_notify,"%s :   %s",name,message[length])
@@ -196,7 +198,7 @@ public cmdTsay(id,level,cid){
   client_print(0,print_notify,message[length])
   console_print(id,message[length])
 #endif
-  
+
   log_to_file(g_logFile,"Chat: ^"%s<%d><%s><>^" %s ^"%s^"",name,userid,authid,cmd[4],message[length])
   log_message("^"%s<%d><%s><>^" triggered ^"%s^" (text ^"%s^") (color ^"%s^")",
     name,userid,authid,cmd,message[length],g_Colors[a])

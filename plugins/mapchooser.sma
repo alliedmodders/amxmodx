@@ -1,20 +1,9 @@
-/* AMX Mod script.
+/* AMX Mod X script.
 *
-* (c) 2002-2003, OLO
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*
 * This file is provided as is (no warranties).
-*
-* On two minutes before the timelimit plugin
-* displays menu with 5 random maps to select.
-* One of the options is also map extending.
-* Map with most votes becomes the nextmap.
-*
-* Maps to selected are in maps.ini file.
-*
-* Cvars:
-* amx_extendmap_max <time in mins.> - max. time for overall extending
-* amx_extendmap_step <time in mins.> - with what time the map will be extended
-*
-* NOTE: Nextmap plugin is required for proper working of this plugin.
 */
 
 #include <amxmod>
@@ -38,7 +27,7 @@ new g_logFile[16]
 
 public plugin_init()
 {
-  register_plugin("Nextmap chooser","0.9","default")
+  register_plugin("Nextmap chooser","0.1","default")
   register_menucmd(register_menuid("AMX Choose nextmap:"),(-1^(-1<<(SELECTMAPS+2))),"countVote")
   register_cvar("amx_extendmap_max","90")
   register_cvar("amx_extendmap_step","15")

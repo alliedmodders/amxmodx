@@ -1,9 +1,9 @@
-/* AMX Mod script.
+/* AMX Mod X script.
 *
-* (c) 2003, tcquest78
+* (c) 2002-2004, tcquest78
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*
 * This file is provided as is (no warranties).
-*
-* Provides help for admin commands with amx_help command
 */
 
 #include <amxmod>
@@ -15,7 +15,7 @@ new g_timeInfo1[] = "Time Left: %d:%02d min. Next Map: %s"
 new g_timeInfo2[] = "No Time Limit. Next Map: %s"
 
 public plugin_init() {
-  register_plugin("Admin Help","0.9","tcquest78") 
+  register_plugin("Admin Help","0.1","tcquest78") 
   register_concmd("amx_help","cmdHelp",0,"- displays this help")
   setHelp(0)
 }
@@ -63,4 +63,3 @@ public dispInfo(id){
 
 setHelp(id) 
   set_task(15.0,"dispInfo",id)
-

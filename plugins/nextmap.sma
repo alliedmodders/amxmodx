@@ -1,14 +1,9 @@
-/* AMX Mod script.
+/* AMX Mod X script.
 *
-* (c) 2003, OLO
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*
 * This file is provided as is (no warranties).
-*
-* Mapcycle is immune to manual map changes and map votes.
-*
-* Cvars:
-* amx_nextmap < mapname > - sets nextmap
-* Commands:
-* say nextmap - dispalys the nextmap (available for all clients)
 */
 
 #include <amxmod>
@@ -24,8 +19,8 @@ new g_pos
 
 public plugin_init() 
 {
-  register_plugin("NextMap","0.9","default")
-  register_event( "30" , "changeMap", "a" )
+  register_plugin("NextMap","0.1","default")
+  register_event("30","changeMap","a")
   register_clcmd("say nextmap","sayNextMap",0,"- displays nextmap")
   register_cvar("amx_nextmap","",FCVAR_SERVER|FCVAR_EXTDLL|FCVAR_SPONLY)
   

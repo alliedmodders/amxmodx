@@ -1,6 +1,8 @@
-/* AMX Mod script.
+/* AMX Mod X script.
 *
-* (c) 2003, OLO
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*
 * This file is provided as is (no warranties).
 */
 
@@ -21,7 +23,7 @@ new g_cmdLoopback[16]
 
 public plugin_init()
 {
-  register_plugin("Admin Base","0.9","default")
+  register_plugin("Admin Base","0.1","default")
   register_cvar("amx_mode","2.0")
   register_cvar("amx_password_field","_pw")
   register_cvar("amx_default_access","")

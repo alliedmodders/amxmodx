@@ -1,10 +1,9 @@
-/* AMX Mod script.
+/* AMX Mod X script.
 *
-* (c) 2003, OLO
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*
 * This file is provided as is (no warranties).
-*
-* Server command:
-* amx_scrollmsg <msg> <freq. in sec.>
 */
 
 #include <amxmod>
@@ -21,7 +20,7 @@ new g_Length
 new g_Frequency
 
 public plugin_init(){
-  register_plugin("Scrolling Message","0.9","default")
+  register_plugin("Scrolling Message","0.1","default")
   register_srvcmd("amx_scrollmsg","setMessage")
 }
 

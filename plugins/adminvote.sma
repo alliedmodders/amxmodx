@@ -1,35 +1,9 @@
-/* AMX Mod script. 
+/* AMX Mod X script. 
 * 
-* (c) 2003, OLO
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*
 * This file is provided as is (no warranties). 
-*
-* I. Vote for changing the level: 
-* amx_votemap < map > [ map ] [ map ] [ map ]
-*
-* Examples: 
-* amx_votemap "de_dust" 
-* amx_votemap "de_dust" "de_dust2" "cs_italy" 
-* 
-* II. Vote for kicking the player: 
-* amx_votekick <name or #userid>
-*
-* Examples: 
-* amx_votekick "Player"
-* 
-* III. Vote for banning and kicking the player for 30 minutes: 
-* amx_voteban <name or #userid>
-*
-* Examples: 
-* amx_voteban "Player" 
-* 
-* IV. Custom voting: 
-* amx_vote < question > < g_Answer1 > < g_Answer2 > 
-*
-* Examples: 
-* amx_vote "sv_restart" "5" "0" 
-* amx_vote "mp_timelimit" "20" "45" 
-* amx_vote "are you hungry?" "yes" "no" 
-*
 */
 
 #include <amxmod>
@@ -55,7 +29,7 @@ new bool:g_execResult
 new Float:g_voteRatio 
 
 public plugin_init() { 
-  register_plugin("Admin Votes","0.9","default")
+  register_plugin("Admin Votes","0.1","default")
   register_menucmd(register_menuid("Change map to ") ,(1<<0)|(1<<1),"voteCount") 
   register_menucmd(register_menuid("Choose map: ") ,(1<<0)|(1<<1)|(1<<2)|(1<<3),"voteCount") 
   register_menucmd(register_menuid("Kick ") ,(1<<0)|(1<<1),"voteCount") 

@@ -1,6 +1,8 @@
-/* AMX Mod script.
+/* AMX Mod X script.
 *
-* (c) 2003, OLO
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*
 * This file is provided as is (no warranties).
 */
 
@@ -17,7 +19,7 @@ new bool:g_Paused
 new g_addCvar[] = "amx_cvar add %s"
 
 public plugin_init(){
-  register_plugin("Admin Commands","0.9","default")
+  register_plugin("Admin Commands","0.1","default")
   register_concmd("amx_kick","cmdKick",ADMIN_KICK,"<name or #userid> [reason]")
   register_concmd("amx_ban","cmdAddBan",ADMIN_BAN,"<minutes> <authid or ip> [reason]")
   register_concmd("amx_banid","cmdBan",ADMIN_BAN,"<minutes> <name or #userid> [reason]")

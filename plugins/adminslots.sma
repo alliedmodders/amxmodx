@@ -1,15 +1,10 @@
 /* AMX Mod script.
- *
- * (c) 2003, OLO
- * This file is provided as is (no warranties).
- *
- * Kick a player without reservation who tries
- * to enter to one of the reservered slots set
- * by amx_reservation cvar.
- *
- * Cvar:
- * amx_reservation <value> - sets amount of reserved slots.
- */
+*
+* (c) 2002-2004, OLO
+*  modified by BAILOPAN,Manip,PM,SniperBeamer
+*
+* This file is provided as is (no warranties).
+*/
 
 #include <amxmod>
 #include <amxmisc>
@@ -21,7 +16,7 @@ new g_cmdLoopback[16]
 
 public plugin_init()
 {
-	register_plugin("Slots Reservation","0.9.7","default")
+	register_plugin("Slots Reservation","0.1","default")
 	register_cvar("amx_reservation","1")
 	
   	format( g_cmdLoopback, 15, "amxres%c%c%c%c" , 

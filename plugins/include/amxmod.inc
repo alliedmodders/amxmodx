@@ -36,9 +36,6 @@ stock get_user_money(index)
 stock set_user_money(index,money,flash=1)
   return cs_set_user_money(index,money,flash)
 
-stock set_user_money(index,money,flash=1)
-  return cs_set_user_money(index,money,flash)
-
 stock numtostr(num,string[],len)
   return num_to_str(num,string,len)
 

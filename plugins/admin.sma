@@ -1,4 +1,4 @@
-/* AMX Mod X script.
+a/* AMX Mod X script.
 *   Admin Base Plugin
 *
 * by the AMX Mod X Development Team
@@ -103,8 +103,7 @@ public plugin_init() {
 #endif
 }
 
-public plugin_cfg()
-{
+public plugin_cfg() {
   new configFile[64],curMap[32]
   get_configsdir(configFile,31)
   get_mapname(curMap,31)
@@ -114,8 +113,7 @@ public plugin_cfg()
 }
 
 #if !defined USING_SQL
-loadSettings(szFilename[])
-{
+loadSettings(szFilename[]) {
   if (!file_exists(szFilename)) return 0
 
   new szText[256], szFlags[32], szAccess[32]
@@ -159,7 +157,7 @@ public adminSql() {
     return PLUGIN_HANDLED 
   }
 
-  dbi_query(sql,"CREATE TABLE IF NOT EXISTS `%s` ( `auth` VARCHAR( 32 ) NOT NULL, `password` VARCHAR( 32 ) NOT NULL, `access` VARCHAR( 32 ) NOT NULL, `flags` VARCHAR( 32 ) NOT NULL ) COMMENT = 'AMX Mod X Admins'",table);
+  dbi_query(sql,"CREATE TABLE IF NOT EXISTS `%s` ( `auth` VARCHAR( 32 ) NOT NULL, `password` VARCHAR( 32 ) NOT NULL, `access` VARCHAR( 32 ) NOT NULL, `flags` VARCHAR( 32 ) NOT NULL ) COMMENT = 'AMX Mod X Admins'",table)
 
   new Result:Res = dbi_query(sql,"SELECT `auth`,`password`,`access`,`flags` FROM `%s`",table)
 
@@ -222,7 +220,7 @@ public cmdReload(id,level,cid) {
 getAccess(id,name[],authid[],ip[], password[]) {
   new index = -1
   new result = 0
-  for(new i = 0; i < g_aNum; ++i) {
+  for (new i = 0; i < g_aNum; ++i) {
     if (g_aFlags[i] & FLAG_AUTHID) {
       if (equal(authid,g_aName[i])) {
         index = i

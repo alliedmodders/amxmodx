@@ -392,7 +392,7 @@ public cmdVoteKickBan(id,level,cid) {
       switch (activity) {
         case 2: client_print(players[i],print_chat,"%L",
           players[i],"ADMIN_VOTE_FOR_2",lTag,name,lKickBan,arg)
-        case 1: client_print(players[i],print_chat,"%s: vote %s for %s",
+        case 1: client_print(players[i],print_chat,"%L",
           players[i],"ADMIN_VOTE_FOR_1",lTag,lKickBan,arg)
       }
     }

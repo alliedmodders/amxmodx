@@ -336,7 +336,7 @@ new g_Aliases2[MAXMENUPOS][] = {
 #endif
 
 public plugin_init(){ 
-  register_plugin("Restrict Weapons",AMX_VERSION_STR,"AMXX Dev Team")
+  register_plugin("Restrict Weapons","0.1","AMXX Dev Team")
   register_clcmd("buyammo1","ammoRest1")
   register_clcmd("buyammo2","ammoRest2")  
 #if !defined NO_STEAM

@@ -50,7 +50,7 @@ new g_cmdLoopback[16]
 
 public plugin_init()
 {
-  register_plugin("Admin Base for MySQL",AMX_VERSION_STR,"AMXX Dev Team")
+  register_plugin("Admin Base for MySQL","0.1","AMXX Dev Team")
 
   register_cvar("amx_mode","2.0")
   register_cvar("amx_password_field","_pw")

@@ -49,7 +49,7 @@ new g_cmdLoopback[16]
 
 public plugin_init()
 {
-  register_plugin("Admin Base",AMX_VERSION_STR,"AMXX Dev Team")
+  register_plugin("Admin Base","0.1","AMXX Dev Team")
   register_cvar("amx_mode","2.0")
   register_cvar("amx_password_field","_pw")
   register_cvar("amx_default_access","")

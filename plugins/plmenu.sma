@@ -57,7 +57,7 @@ new g_cstrikeRunning
 
 public plugin_init()
 {
-  register_plugin("Players Menu",AMX_VERSION_STR,"AMXX Dev Team")
+  register_plugin("Players Menu","0.1","AMXX Dev Team")
   register_clcmd("amx_kickmenu","cmdKickMenu",ADMIN_KICK,"- displays kick menu")
   register_clcmd("amx_banmenu","cmdBanMenu",ADMIN_BAN,"- displays ban menu")
   register_clcmd("amx_slapmenu","cmdSlapMenu",ADMIN_SLAY,"- displays slap/slay menu")   

@@ -51,7 +51,7 @@ public plugin_precache(){
 }
 
 public plugin_init() {
-  register_plugin("Stats Configuration",AMX_VERSION_STR,"AMXX Dev Team")
+  register_plugin("Stats Configuration","0.1","AMXX Dev Team")
   register_menucmd(register_menuid("\yStats Configuration"),1023,"actionCfgMenu")
   build_path( g_fileToSave , 63 , "$basedir/stats.ini" )  
   loadSettings(g_fileToSave)

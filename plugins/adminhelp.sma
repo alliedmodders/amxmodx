@@ -41,7 +41,7 @@ new g_timeInfo1[] = "Time Left: %d:%02d min. Next Map: %s"
 new g_timeInfo2[] = "No Time Limit. Next Map: %s"
 
 public plugin_init() {
-  register_plugin("Admin Help",AMX_VERSION_STR,"AMXX Dev Team") 
+  register_plugin("Admin Help","0.1","AMXX Dev Team") 
   register_concmd("amx_help","cmdHelp",0,"- displays this help")
   setHelp(0)
 }

@@ -71,7 +71,7 @@ new g_teamScore[2]
 new g_disabledMsg[] = "Server has disabled that option"
 
 public plugin_init() {
-  register_plugin("CS Stats",AMX_VERSION_STR,"AMXX Dev Team")
+  register_plugin("CS Stats","0.1","AMXX Dev Team")
   register_event("CS_DeathMsg","eCSDeathMsg","a")
   register_event("ResetHUD","eResetHud","b")
   register_event("SendAudio","eRoundEnd","a","2=%!MRAD_terwin","2=%!MRAD_ctwin","2=%!MRAD_rounddraw") 

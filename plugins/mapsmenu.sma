@@ -55,7 +55,7 @@ new g_choosed
 
 public plugin_init()
 {
-  register_plugin("Maps Menu",AMX_VERSION_STR,"AMXX Dev Team")
+  register_plugin("Maps Menu","0.1","AMXX Dev Team")
   register_clcmd("amx_mapmenu","cmdMapsMenu",ADMIN_MAP,"- displays changelevel menu")
   register_clcmd("amx_votemapmenu","cmdVoteMapMenu",ADMIN_MAP,"- displays votemap menu")
 

@@ -12,7 +12,6 @@
 #define _amxconst_included
 
 #define AMX_VERSION 0.1
-new AMX_VERSION_STR[] = "0.1"
 
 /* Uncomment if you are not using Steam */
 //#define NO_STEAM

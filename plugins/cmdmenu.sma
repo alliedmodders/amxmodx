@@ -88,7 +88,7 @@ new g_cstrikeRunning
 
 public plugin_init()
 {
-  register_plugin("Commands Menu",AMX_VERSION_STR,"AMXX Dev Team")
+  register_plugin("Commands Menu","0.1","AMXX Dev Team")
 
   new basedir[32], workdir[64]
   get_basedir( basedir , 31 )

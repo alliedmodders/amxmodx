@@ -45,7 +45,7 @@ new g_cstrikeRunning
 
 public plugin_init() 
 { 
-  register_plugin("Teleport Menu",AMX_VERSION_STR,"AMXX Dev Team") 
+  register_plugin("Teleport Menu","0.1","AMXX Dev Team") 
   register_clcmd("amx_teleportmenu","cmdTelMenu",ADMIN_CFG,"- displays teleport menu") 
   register_menucmd(register_menuid("Teleport Menu"),1023,"actionTelMenu") 
   get_logfile(g_logFile,15) 

@@ -135,7 +135,8 @@ showMenu(id) {
 
 public actionMenu(id,key) {
   if (!get_cvar_num("amx_client_languages"))
-    return 0
+    return
+
   new isAdmin = access(id,ADMIN_CFG)
 
   if ( key==0 ) {

@@ -2009,23 +2009,46 @@ static cell AMX_NATIVE_CALL get_modulesnum(AMX *amx, cell *params)
 	return static_cast<cell>(g_modules.size());
 }
 
-// native get_module(id, name[], nameLen, author[], authorLen, version[], versionLen);
+// native get_module(id, name[], nameLen, author[], authorLen, version[], versionLen, &status);
 static cell AMX_NATIVE_CALL get_module(AMX *amx, cell *params)
 {
 	CList<CModule>::iterator moduleIter;
 
+	// find the module
 	int i = params[1];
 	for (moduleIter = g_modules.begin(); moduleIter && i; ++moduleIter)
 		--i;
 
 	if (i != 0  ||  !moduleIter)
-		return -1;
+		return -1;						// not found
 
+	// set name, author, version
 	module_info_s *info = (*moduleIter).getInfo();
 	set_amxstring(amx, params[2], info->name, params[3]);
 	set_amxstring(amx, params[4], info->author, params[5]);
 	set_amxstring(amx, params[6], info->version, params[7]);
-    return params[1];
+
+	// compatibility problem possible
+	int numParams = params[0] / sizeof(cell);
+	if (numParams < 8)
+	{
+		CPluginMngr::CPlugin *curPlugin = g_plugins.findPluginFast(amx);
+		UTIL_Log("[AMXX] get_module: call to a previous version (plugin \"%s\", line %d)", curPlugin->getName(), amx->curline);
+		amx_RaiseError(amx, AMX_ERR_NATIVE);
+	}
+
+	// set status
+	cell *addr;
+	if (amx_GetAddr(amx, params[8], &addr) != AMX_ERR_NONE)
+	{
+		CPluginMngr::CPlugin *curPlugin = g_plugins.findPluginFast(amx);
+		UTIL_Log("[AMXX] get_module: invalid reference (plugin \"%s\", line %d)", curPlugin->getName(), amx->curline);
+		amx_RaiseError(amx, AMX_ERR_NATIVE);
+	}
+
+	*addr = (cell)(*moduleIter).getStatusValue();
+
+	return params[1];
 }
 
 // native log_amx(const msg[], ...);

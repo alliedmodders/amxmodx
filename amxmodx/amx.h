@@ -22,11 +22,13 @@
  */
 
 #if defined __linux__
-  #include <sclinux.h>
+  #include "sclinux.h"
 #endif
 
 #ifndef AMX_H_INCLUDED
 #define AMX_H_INCLUDED
+
+//#define JIT
 
 #if defined __LCC__ || defined __DMC__ || defined __linux__
   #include <stdint.h>

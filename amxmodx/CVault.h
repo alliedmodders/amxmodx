@@ -32,7 +32,7 @@
 #ifndef VAULT_CUSTOM_H
 #define VAULT_CUSTOM_H
 
-#include "String.h"
+#include "CString.h"
 #include "CList.h"
 
 // *****************************************************

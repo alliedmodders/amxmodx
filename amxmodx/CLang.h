@@ -89,9 +89,9 @@ class CLangMngr
 		void SetMngr(CLangMngr *l) { m_LMan = l; }
 		// Get number of entries
 		int Entries() { return m_LookUpTable.size(); }
-	protected:
 		// Make a hash from a string; convert to lowercase first if needed
 		static uint32_t MakeHash(const char *src, bool makeLower = false);
+	protected:
 
 		// An entry in the language
 		class LangEntry

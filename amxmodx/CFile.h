@@ -30,7 +30,7 @@
 */
 
 #include <stdio.h>
-#include "String.h"
+#include "CString.h"
 
 // *****************************************************
 // class File

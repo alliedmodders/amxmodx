@@ -96,7 +96,7 @@ weaponsVault weaponData[] = {
 	{ "ng", "nails", 3 },
 	{ "superng", "supernails", 3 },
 	{ "gl", "gl_grenade", 4 },
-	{ "flamethrower", "", 2 },
+	{ "flamethrower", "flamethrower", 2 },
 	{ "rpg", "rocket", 4 },
 	{ "ic", "ic", 4 },
 	{ "flames", "flames", -1 }, // 16

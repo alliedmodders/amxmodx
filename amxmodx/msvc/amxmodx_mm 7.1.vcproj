@@ -602,6 +602,9 @@
 				RelativePath="..\amxtime.cpp">
 			</File>
 			<File
+				RelativePath="..\amxxfile.cpp">
+			</File>
+			<File
 				RelativePath="..\amxxlog.cpp">
 			</File>
 			<File

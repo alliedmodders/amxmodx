@@ -421,6 +421,8 @@ static cell AMX_NATIVE_CALL set_offset_float(AMX *amx, cell *params)
 {
 	int index = params[1];
 	int off = params[2];
+
+	float fNewValue = *(float *)((void *)&params[3]);
 	
 	if (index < 1 || index > gpGlobals->maxEntities) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
@@ -432,8 +434,8 @@ static cell AMX_NATIVE_CALL set_offset_float(AMX *amx, cell *params)
 #ifndef __linux__
        off -= 5;
 #endif
-	
-	*((float *)pEnt->pvPrivateData + off) = *(float *)((void *)&params[3]);
+
+	*((float *)Player->pvPrivateData + off) = fNewValue;
 	
 	return 1;
 }
@@ -450,10 +452,11 @@ static cell AMX_NATIVE_CALL get_offset_short(AMX *amx, cell *params)
 		return 0;
 	}
 
-	/*if (!is_PlayerOn[index]) {
+	//!!!1111 don't uncomment jghg or I will pull my hair out
+	if (!is_PlayerOn[index]) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
-	}*/
+	}
 	
 	edict_t *pEnt = INDEXENT(index);
 	
@@ -477,10 +480,11 @@ static cell AMX_NATIVE_CALL get_offset(AMX *amx, cell *params)
 		return 0;
 	}
 
-	/*if (!is_PlayerOn[index]) {
+	//jghg comment this out again and I bite you
+	if (!is_PlayerOn[index]) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
-	}*/
+	}
 	
 	edict_t *pEnt = INDEXENT(index);
 	
@@ -504,10 +508,11 @@ static cell AMX_NATIVE_CALL get_offset_float(AMX *amx, cell *params)
 		return 0;
 	}
 
-	/*if (!is_PlayerOn[index]) {
+	//jghg comment this out again and I bite you
+	if (!is_PlayerOn[index]) {
 		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
 		return 0;
-	}*/
+	}
 	
 	edict_t *pEnt = INDEXENT(index);
 	
@@ -515,10 +520,10 @@ static cell AMX_NATIVE_CALL get_offset_float(AMX *amx, cell *params)
    off -= 5;
 #endif
 	
-	//retVal = ((float)*((float *)pEnt->pvPrivateData + off));
+	//no jghg this actually works!
+	retVal = ((float)*((float *)pEnt->pvPrivateData + off));
 
-	//return *(cell*)((void *)&retVal);
-	return *((float *)pEnt->pvPrivateData + off);
+	return *(cell*)((void *)&retVal);
 }
 
 //is an entity valid?
@@ -2017,47 +2022,6 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native
 	// If it comes here, the while loop ended because an ent failed (FNullEnt() == true)
 	return 0;
 }
-
-// FindEntityByOwner (BAILOPAN)
-// Works like FindEntity except only returns by owner.
-// Searches by classname.
-/*static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params) { 
-	int iStartEnt = params[1];
-	int iEntOwner = params[3];
-	int iLengthSearchStrn;
-	char *szValue = AMX_GET_STRING(amx, params[2], iLengthSearchStrn);
-
-	edict_t *pStartEnt;
-
-	if(iStartEnt == -1) {
-		pStartEnt = NULL;
-	} else {
-		pStartEnt = INDEXENT(iStartEnt);
-
-		if(FNullEnt(pStartEnt)) { // Impossible to have this line. Sending in starting ent of 0 must be possible if FIND_ENTITY_BY_STRING should work properly below...
-			return 0;
-		}
-	}
-
-	int checkEnt = ENTINDEX(FIND_ENTITY_BY_STRING(pStartEnt, "classname", szValue));
-	int iOwner = -1;
-
-	while ((checkEnt && FNullEnt(checkEnt)) && (iOwner!=-1)) { // Err..? iOwner != -1 ? you just inited it to -1??
-		iOwner = ENTINDEX(pStartEnt->v.owner);
-		if (iOwner == iEntOwner) {
-			return checkEnt;
-		} else {
-			pStartEnt = INDEXENT(checkEnt);
-			checkEnt = ENTINDEX(FIND_ENTITY_BY_STRING(pStartEnt, "classname", szValue));
-		}
-	}
-
-	if(!checkEnt || FNullEnt(checkEnt) || (iOwner == -1)) {
-		return 0;
-	}
-
-	return checkEnt;
-}*/
 
 //returns current number of entities in game (BAILOPAN)
 static cell AMX_NATIVE_CALL entity_count(AMX *amx, cell *params)

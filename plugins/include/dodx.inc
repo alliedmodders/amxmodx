@@ -18,6 +18,7 @@
 enum {
   XMF_DAMAGE = 0,
   XMF_DEATH,
+  XMF_SCORE,
 }
 
 /* Use this function to register forwards */
@@ -30,6 +31,9 @@ forward client_damage(attacker,victim,damage,wpnindex,hitplace,TA);
 /* Function is called after player death ,
 * if player was killed by teammate TK is set to 1 */
 forward client_death(killer,victim,wpnindex,hitplace,TK);
+
+/* Function is called if player scored  */
+forward client_score(index,score,total);
 
 /* Custom Weapon Support */
 /* function will return index of new weapon */

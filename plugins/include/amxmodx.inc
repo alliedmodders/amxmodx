@@ -601,8 +601,8 @@ native unpause(flag[], const param1[]="",const param2[]="");
 
 /* Call a function in this / an another plugin by name.
 * Parameters:
-*  plugin - plugin name; if "", the caller plugin is used.
-*           If specified, it has to be the exact name (for example stats.amx)
+*  plugin - plugin filename; if "", the caller plugin is used.
+*           If specified, it has to be the exact filename (for example stats.amx)
 *  func   - function name
 * Return value:
 *   1     - Success

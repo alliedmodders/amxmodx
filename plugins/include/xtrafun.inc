@@ -98,8 +98,8 @@ stock find_entity(start_from_ent, category, value[]) {
 	switch (category) {
 		case target: return find_entity_by_target(start_from_ent, value)
 		case targetname: return find_ent_by_tname(start_from_ent, value)
-		default: return find_entity_by_class(start_from_ent, value)
 	}
+	return find_entity_by_class(start_from_ent, value)
 }
 
 #endif // _xtrafun_included

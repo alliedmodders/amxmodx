@@ -350,3 +350,99 @@ void UpdateClientData( const struct edict_s *ent, int sendweapons, struct client
 	RETURN_META(MRES_HANDLED);
 
 }
+int LogToIndex(char logline[128])
+{
+	char *cname;
+	// Format of log line:
+	// name<CID><auth><team>
+	// We need to find their ID from their name...
+	int x,y=0;
+	char cindex[64];
+	// first we find the location of the start of the index
+	// Name can contain <>'s, so we go from the end up.
+	for (x=strlen(logline);x>=0;x--)
+	{
+		if (logline[x]=='<')
+		{
+			y++;
+			if (y==3)
+			{
+				y=x;
+				break;
+			}
+		}
+	}
+	// We found the end of the name, now copy the rest down.
+	y--;
+	x=0;
+	while (x<=y)
+	{
+		cindex[x]=logline[x];
+		x++;
+	}
+	cindex[x]='\0';
+	// Now we have their name, now cycle through all players to find which index it is
+	x=1;
+	for (x;x<=gpGlobals->maxClients;x++)
+	{
+		cname=strdup(cindex);
+		if (!FNullEnt(INDEXENT2(x)))
+		{
+			if (FStrEq(cname,STRING(INDEXENT2(x)->v.netname)))
+			{
+				return x;
+			}
+		}
+	}
+	return 0;
+}
+int Find_Building_Hive(void)
+{
+	edict_t *pEntity=NULL;
+	while (pEntity = UTIL_FindEntityByString(pEntity,"classname","team_hive"))
+	{
+		if (pEntity->v.health > 0 && pEntity->v.solid > 0 && pEntity->v.fuser1 < 1000)
+		{
+			return ENTINDEX(pEntity);
+		}
+	}
+	return 0;
+}
+
+
+
+
+int AMX_MAKE_STRING(AMX *oPlugin, cell tParam, int &iLength)
+{
+	char *szNewValue = MF_GetAmxString(oPlugin, tParam, 0, &iLength);
+	return ALLOC_STRING(szNewValue);
+}
+
+// Makes a char pointer out of an AMX cell.
+char *AMX_GET_STRING(AMX *oPlugin, cell tParam, int &iLength) 
+{
+	char *szNewValue = MF_GetAmxString(oPlugin, tParam, 0, &iLength);
+	return (char*)STRING(ALLOC_STRING(szNewValue));
+}
+edict_t	*UTIL_PlayerByIndexE( int playerIndex )
+{
+
+	if ( playerIndex > 0 && playerIndex <= gpGlobals->maxClients )
+	{
+		edict_t *pPlayerEdict = INDEXENT2( playerIndex );
+		if ( pPlayerEdict && !pPlayerEdict->free )
+		{
+			return pPlayerEdict;
+		}
+	}
+	
+	return NULL;
+}
+edict_t *UTIL_FindEntityByString(edict_t *pentStart, const char *szKeyword, const char *szValue)
+{
+	edict_t *pentEntity;
+	pentEntity=FIND_ENTITY_BY_STRING(pentStart, szKeyword, szValue);
+	if(!FNullEnt(pentEntity))
+		return pentEntity;
+	return NULL;
+}

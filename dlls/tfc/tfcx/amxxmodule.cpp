@@ -2296,6 +2296,11 @@ C_DLLEXPORT int Meta_Query(char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_
 
 C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, meta_globals_t *pMGlobals, gamedll_funcs_t *pGamedllFuncs)
 {
+	if ( gpGamedllFuncs ){
+		LOG_ERROR(PLID,"gpGamedllFuncs already set");
+		return(FALSE);
+	}
+
 	if(now > Plugin_info.loadable) {
 		LOG_ERROR(PLID, "Can't load module right now");
 		return(FALSE);

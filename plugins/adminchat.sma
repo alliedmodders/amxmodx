@@ -35,10 +35,6 @@
 #include <amxmodx>
 #include <amxmisc>
 
-// Uncomment if you want to display
-// names with hud messages
-//#define SHOW_NAMES
-
 new g_msgChannel
 
 #define MAX_CLR 10
@@ -91,13 +87,14 @@ public cmdSayChat(id) {
   set_hudmessage(g_Values[a][0], g_Values[a][1], g_Values[a][2],
     g_Pos[i][0], verpos , 0, 6.0, 6.0, 0.5, 0.15, g_msgChannel )
 
-#if defined SHOW_NAMES
-  show_hudmessage(0,"%s :   %s",name,message[i+1])
-  client_print(0,print_notify,"%s :   %s",name,message[i+1])
-#else
-  show_hudmessage(0,message[i+1])
-  client_print(0,print_notify,message[i+1])
-#endif
+  if ( get_cvar_num("amx_show_activity") == 2 ){
+    show_hudmessage(0,"%s :   %s",name,message[i+1])
+    client_print(0,print_notify,"%s :   %s",name,message[i+1])
+  }
+  else{
+    show_hudmessage(0,message[i+1])
+    client_print(0,print_notify,message[i+1])
+  }
 
   return PLUGIN_HANDLED
 }
@@ -227,16 +224,16 @@ public cmdTsay(id,level,cid) {
   userid = get_user_userid(id)
   set_hudmessage(g_Values[a][0], g_Values[a][1], g_Values[a][2], tsay ? 0.05 :  -1.0, verpos, 0, 6.0, 6.0, 0.5, 0.15, g_msgChannel)
 
-#if defined SHOW_NAMES   
-  show_hudmessage(0,"%s :   %s",name,message[length])
-  client_print(0,print_notify,"%s :   %s",name,message[length])
-  console_print(id,"%s :   %s",name,message[length])
-#else
-  show_hudmessage(0,message[length])
-  client_print(0,print_notify,message[length])
-  console_print(id,message[length])
-#endif
-
+  if ( get_cvar_num("amx_show_activity") == 2 ){
+    show_hudmessage(0,"%s :   %s",name,message[length])
+    client_print(0,print_notify,"%s :   %s",name,message[length])
+    console_print(id,"%s :   %s",name,message[length])
+  }
+  else{
+    show_hudmessage(0,message[length])
+    client_print(0,print_notify,message[length])
+    console_print(id,message[length])
+  }
   
   log_amx("Chat: ^"%s<%d><%s><>^" %s ^"%s^"",name,userid,authid,cmd[4],message[length])
   log_message("^"%s<%d><%s><>^" triggered ^"%s^" (text ^"%s^") (color ^"%s^")",

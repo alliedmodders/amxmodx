@@ -446,8 +446,6 @@ displayMenu(id,pos) {
     keys |= (1<<k)
 
     len += format(menubody[len],511-len,g_MenuItem[a],++k,g_WeaponNames[a], id, positionBlocked(a) ? "ON" : "OFF")
-
-    server_print(menubody)
   }
   len += format(menubody[len],511-len,"^n8. %L \y\R%s^n\w",id,"SAVE_SET",g_Modified?"*":"")
   if (end != MAXMENUPOS) {

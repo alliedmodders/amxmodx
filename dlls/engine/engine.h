@@ -34,28 +34,6 @@
 
 #define VERSION "0.16"
 
-plugin_info_t Plugin_info = {
-
-	META_INTERFACE_VERSION, // ifvers
-	"ENGINE", // name
-	VERSION,  // version
-	__DATE__, // date
-	"AMX Mod X Dev Team",  // author
-	"http://www.amxmodx.org",  // url
-	"ENGINE", // logtag
-	PT_ANYTIME,// (when) loadable
-	PT_ANYTIME,// (when) unloadable
-
-};
-
-module_info_s module_info = {
-	"ENGINE", // name
-	"AMX Mod X Dev Team", // author
-	VERSION, // version
-	AMX_INTERFACE_VERSION,
-	STATIC_MODULE,
-};
-
 class AmxCallList {
   public:
 struct AmxCall {
@@ -91,14 +69,6 @@ AmxCallList postThink;
 AmxCallList clientKill;
 AmxCallList Msgs;
 AmxCallList clientImpulse;
-
-meta_globals_t *gpMetaGlobals;
-gamedll_funcs_t *gpGamedllFuncs;
-mutil_funcs_t *gpMetaUtilFuncs;
-enginefuncs_t g_engfuncs;
-globalvars_t  *gpGlobals;
-pfnamx_engine_g* g_engAmxFunc;
-pfnmodule_engine_g* g_engModuleFunc;
 
 extern AMX_NATIVE_INFO Engine_Natives[];
 

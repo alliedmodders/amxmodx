@@ -90,6 +90,10 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\amxxmodule.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\meta_api.cpp
 # End Source File
 # End Group
@@ -98,28 +102,20 @@ SOURCE=.\meta_api.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=.\amxxmodule.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\engine.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\moduleconfig.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
-# Begin Source File
-
-SOURCE=.\engine_amx.def
-# End Source File
 # End Group
-# Begin Source File
-
-SOURCE=..\plugins\include\engine.inc
-# End Source File
-# Begin Source File
-
-SOURCE=..\plugins\include\engine_const.inc
-# End Source File
-# Begin Source File
-
-SOURCE=..\plugins\include\engine_stocks.inc
-# End Source File
 # End Target
 # End Project

@@ -101,7 +101,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\Debug/engine.dll"
+				OutputFile=".\Debug/engine_amxx.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				ModuleDefinitionFile=".\engine_amx.def"
@@ -146,6 +146,9 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
+				RelativePath=".\amxxmodule.h">
+			</File>
+			<File
 				RelativePath="engine.h">
 			</File>
 			<File
@@ -167,6 +170,9 @@
 						BasicRuntimeChecks="3"/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\moduleconfig.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -181,6 +187,9 @@
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
+			<File
+				RelativePath=".\amxxmodule.cpp">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

@@ -38,9 +38,9 @@
 #include <dllapi.h>
 #include "sdk_util.h"
 #include <h_export.h>
-#include <modules.h>
 #include <vector>
 #include <limits.h>
+#include "amxxmodule.h"
 #include "engine.h"
 
 GlobalInfo GlInfo;
@@ -86,11 +86,6 @@ edict_t *valid_ent(int ent)
 	return e;
 }
 
-cell* get_amxaddr(AMX *amx,cell amx_addr)
-{
-  return (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
-}
- 
 /********************************************************
   vexd's utility funcs
   ******************************************************/
@@ -107,7 +102,7 @@ edict_t *UTIL_FindEntityInSphere(edict_t *pStart, const Vector &vecCenter, float
 // Makes A Half-Life string (which is just an integer, an index of the string
 // half-life uses to refer to the string) out of an AMX cell.
 int AMX_MAKE_STRING(AMX *oPlugin, cell tParam, int &iLength) {
-	char *szNewValue = GET_AMXSTRING(oPlugin, tParam, 0, iLength);
+	char *szNewValue = MF_GetAmxString(oPlugin, tParam, 0, &iLength);
 
 	char* szCopyValue = new char[iLength + 1]; 
 	strncpy(szCopyValue , szNewValue, iLength); 
@@ -120,7 +115,7 @@ int AMX_MAKE_STRING(AMX *oPlugin, cell tParam, int &iLength) {
 //Note that this does not deallocate and should only be used
 // with hl engfuncs that store the pointers for secret eating
 char *AMX_GET_STRING(AMX *oPlugin, cell tParam, int &iLength) { 	 
-	char *szNewValue = GET_AMXSTRING(oPlugin, tParam, 0, iLength); 	 
+	char *szNewValue = MF_GetAmxString(oPlugin, tParam, 0, &iLength); 	 
  	 
 	char* szCopyValue = new char[iLength + 1]; 	 
 	strncpy(szCopyValue , szNewValue, iLength); 	 
@@ -155,20 +150,20 @@ static cell AMX_NATIVE_CALL call_think(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL register_message(AMX *amx, cell *params)
 {
 	int iLen;
-	int iFunctionIndex;
+//	int iFunctionIndex;
 	int iMessage = params[1];
-	char *szFunction = GET_AMXSTRING(amx, params[2], 0, iLen);
+	char *szFunction = MF_GetAmxString(amx, params[2], 0, &iLen);
 
 	if (iMessage > 0 && iMessage < MAX_MESSAGES) {
-		if (AMX_FINDPUBLIC(amx, szFunction, &iFunctionIndex) == AMX_ERR_NONE) {
-			isMsgHooked[iMessage] = true;
-			Msgs.put(amx, iFunctionIndex);
-		} else {
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
-			return 0;
-		}
+//		if (MF_AmxFindPublic(amx, szFunction, &iFunctionIndex) == AMX_ERR_NONE) {
+//			isMsgHooked[iMessage] = true;
+//			Msgs.put(amx, iFunctionIndex);
+//		} else {
+//			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+//			return 0;
+//		}
 	} else {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -184,7 +179,7 @@ static cell AMX_NATIVE_CALL get_msg_argtype(AMX *amx, cell *params)
 	if ((inHookProcess) && (msgd != NULL)) {
 		return msgd->ArgType(argn);
 	} else {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -198,7 +193,7 @@ static cell AMX_NATIVE_CALL get_msg_args(AMX *amx, cell *params)
 	if ((inHookProcess) && (msgd != NULL)) {
 		return msgd->args();
 	} else {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 }
@@ -213,11 +208,11 @@ static cell AMX_NATIVE_CALL get_msg_arg_int(AMX *amx, cell *params)
 		if (argn <= msgd->args() && argn > 0) {
 			return msgd->RetArg_Int(argn);
 		} else {
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;
 		}
 	} else {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -237,11 +232,11 @@ static cell AMX_NATIVE_CALL get_msg_arg_float(AMX *amx, cell *params)
 			retVal = msgd->RetArg_Float(argn);
 			return *(cell*)((void *)&retVal);
 		} else {
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;
 		}
 	} else {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -265,17 +260,17 @@ static cell AMX_NATIVE_CALL get_msg_arg_string(AMX *amx, cell *params)
 			if (szRetr != NULL) {
 				strcpy(szValue, szRetr);
 				if (strlen(szValue)) {
-					return SET_AMXSTRING(amx, params[2], szValue, params[3]);
+					return MF_SetAmxString(amx, params[2], szValue, params[3]);
 				} else {
-					return SET_AMXSTRING(amx, params[2], "", params[3]);
+					return MF_SetAmxString(amx, params[2], "", params[3]);
 				}
 			}
 		} else {
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;
 		}
 	} else {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -287,7 +282,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_string(AMX *amx, cell *params)
 {
 	int argn = params[1];
 	int iLen;
-	char *szData = GET_AMXSTRING(amx, params[2], 0, iLen);
+	char *szData = MF_GetAmxString(amx, params[2], 0, &iLen);
 	
 	if (inHookProcess && msgd!=NULL) {
 		if (argn <= msgd->args() && argn > 0) {
@@ -297,11 +292,11 @@ static cell AMX_NATIVE_CALL set_msg_arg_string(AMX *amx, cell *params)
 				return 0;
 			}
 		} else {
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;
 		}
 	} else {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -322,11 +317,11 @@ static cell AMX_NATIVE_CALL set_msg_arg_float(AMX *amx, cell *params)
 				return 0;
 			}
 		} else {
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;
 		}
 	} else {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -348,11 +343,11 @@ static cell AMX_NATIVE_CALL set_msg_arg_int(AMX *amx, cell *params)
 				return 0;
 			}
 		} else {
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;
 		}
 	} else {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -367,12 +362,12 @@ static cell AMX_NATIVE_CALL set_offset_short(AMX *amx, cell *params)
 	int off = params[2];
 	
 	if (index < 1 || index > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	if ((index <= gpGlobals->maxClients) && !is_PlayerOn[index]) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 	
@@ -395,12 +390,12 @@ static cell AMX_NATIVE_CALL set_offset(AMX *amx, cell *params)
 	int off = params[2];
 	
 	if (index < 1 || index > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	if ((index <= gpGlobals->maxClients) && !is_PlayerOn[index]) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 	
@@ -423,12 +418,12 @@ static cell AMX_NATIVE_CALL set_offset_char(AMX *amx, cell *params)
 	int off = params[2];
 	
 	if (index < 1 || index > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	if ((index <= gpGlobals->maxClients) && !is_PlayerOn[index]) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 	
@@ -455,12 +450,12 @@ static cell AMX_NATIVE_CALL set_offset_float(AMX *amx, cell *params)
 	float fNewValue = *(float *)((void *)&params[3]);
 	
 	if (index < 1 || index > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	if ((index <= gpGlobals->maxClients) && !is_PlayerOn[index]) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 	
@@ -483,12 +478,12 @@ static cell AMX_NATIVE_CALL get_offset_short(AMX *amx, cell *params)
 	int off = params[2];
 	
 	if (index < 1 || index > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	if ((index <= gpGlobals->maxClients) && !is_PlayerOn[index]) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 	
@@ -510,13 +505,13 @@ static cell AMX_NATIVE_CALL get_offset_char(AMX *amx, cell *params)
 	int off = params[2];
 	
 	if (index < 1 || index > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	//!!!1111 don't uncomment jghg or I will pull my hair out
 	if ((index <= gpGlobals->maxClients) && !is_PlayerOn[index]) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 	
@@ -538,13 +533,13 @@ static cell AMX_NATIVE_CALL get_offset(AMX *amx, cell *params)
 	int off = params[2];
 	
 	if (index < 1 || index > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	//jghg comment this out again and I bite you
 	if ((index <= gpGlobals->maxClients) && !is_PlayerOn[index]) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 	
@@ -566,13 +561,13 @@ static cell AMX_NATIVE_CALL get_offset_float(AMX *amx, cell *params)
 	float retVal;
 	
 	if (index < 1 || index > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	//jghg comment this out again and I bite you
 	if ((index <= gpGlobals->maxClients) && !is_PlayerOn[index]) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 	
@@ -594,7 +589,7 @@ static cell AMX_NATIVE_CALL get_entity_pointer(AMX *amx, cell *params) // get_en
 	// Valid entity should be within range
 	if (params[1] < 1 || params[1] > gpGlobals->maxEntities)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -602,7 +597,7 @@ static cell AMX_NATIVE_CALL get_entity_pointer(AMX *amx, cell *params) // get_en
 	edict_t *pEdict = INDEXENT(params[1]);
 
 	if (FNullEnt(pEdict)) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -612,7 +607,7 @@ static cell AMX_NATIVE_CALL get_entity_pointer(AMX *amx, cell *params) // get_en
 	if (params[3] == -1)
 		return (cell)pEdict;
 
-	return SET_AMXSTRING(amx, params[2], buffer, params[3]);
+	return MF_SetAmxString(amx, params[2], buffer, params[3]);
 }
 
 //is an entity valid?
@@ -1194,7 +1189,7 @@ static cell AMX_NATIVE_CALL entity_get_vector(AMX *amx, cell *params) {
 	int iTargetEntity = params[1];
 	int iValueSet = params[2];
 
-	cell *vReturnTo = GET_AMXADDR(amx,params[3]);
+	cell *vReturnTo = MF_GetAmxAddr(amx,params[3]);
 
 	Vector vRetValue = Vector(0, 0, 0);
   
@@ -1295,7 +1290,7 @@ static cell AMX_NATIVE_CALL entity_get_vector(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL entity_set_vector(AMX *amx, cell *params) { 
 	int iTargetEntity = params[1];
 	int iValueSet = params[2];
-	cell *vInput = GET_AMXADDR(amx,params[3]);
+	cell *vInput = MF_GetAmxAddr(amx,params[3]);
 
 	float fNewX = *(float *)((void *)&vInput[0]);
 	float fNewY = *(float *)((void *)&vInput[1]);
@@ -1589,7 +1584,7 @@ static cell AMX_NATIVE_CALL entity_get_string(AMX *amx, cell *params) {
 			break;
 	}
 
-	return SET_AMXSTRING(amx, params[3], STRING(iszRetValue), params[4]); 
+	return MF_SetAmxString(amx, params[3], STRING(iszRetValue), params[4]); 
 }
 
 // Almost the same as Get_String, look there for comments.
@@ -1757,7 +1752,7 @@ static cell AMX_NATIVE_CALL entity_set_byte(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params) { 
 	int iTargetEntity = params[1];
 	int iVelocity = params[2];
-	cell *vReturnTo = GET_AMXADDR(amx,params[3]);
+	cell *vReturnTo = MF_GetAmxAddr(amx,params[3]);
 
 	Vector vRetValue = Vector(0, 0, 0);
   
@@ -1786,7 +1781,7 @@ static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params) {
 // (the red arrow-like things on the screen).
 //(vexd)
 static cell AMX_NATIVE_CALL RadiusDamage(AMX *amx, cell *params) {
-	cell *vInput = GET_AMXADDR(amx,params[1]);
+	cell *vInput = MF_GetAmxAddr(amx,params[1]);
 
 	float fCurrentX = *(float *)((void *)&vInput[0]);
 	float fCurrentY = *(float *)((void *)&vInput[1]);
@@ -1851,7 +1846,7 @@ static cell AMX_NATIVE_CALL RadiusDamage(AMX *amx, cell *params) {
 // Gets the contents of a point. Return values for this are probably in const.h.
 //(vexd)
 static cell AMX_NATIVE_CALL PointContents(AMX *amx, cell *params) {
-	cell *vInput = GET_AMXADDR(amx,params[1]);
+	cell *vInput = MF_GetAmxAddr(amx,params[1]);
 
 	float fCurrentX = *(float *)((void *)&vInput[0]);
 	float fCurrentY = *(float *)((void *)&vInput[1]);
@@ -1882,13 +1877,13 @@ static cell AMX_NATIVE_CALL create_entity(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL find_ent_in_sphere(AMX *amx, cell *params)
 {
 	if (params[1] < 0 || params[1] > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	edict_t *pStartAfterEnt = INDEXENT(params[1]);
 
-	cell *originLong = GET_AMXADDR(amx, params[2]);
+	cell *originLong = MF_GetAmxAddr(amx, params[2]);
 	float origin[3] = {*(float *)((void *)&originLong[0]), *(float *)((void *)&originLong[1]), *(float *)((void *)&originLong[2])}; // float origin[3] = {originLong[0], originLong[1], originLong[2]};
 	
 	float radius = *(float *)((void *)&params[3]);
@@ -1909,7 +1904,7 @@ static cell AMX_NATIVE_CALL find_ent_by_class(AMX *amx, cell *params) /* 3 param
 	edict_t *pEnt = INDEXENT(params[1]);
 
 	int len;
-	char* sValue = GET_AMXSTRING(amx, params[2], 0, len);
+	char* sValue = MF_GetAmxString(amx, params[2], 0, &len);
 
 	pEnt = FIND_ENTITY_BY_STRING(pEnt, "classname", sValue);
 
@@ -1925,11 +1920,11 @@ static cell AMX_NATIVE_CALL find_sphere_class(AMX *amx, cell *params) // find_sp
 	// params[1] = index to find around, if this is less than 1 then use around origin in last parameter.
 	// params[2] = classname to find
 	int len;
-	char* classToFind = GET_AMXSTRING(amx, params[2], 0, len);
+	char* classToFind = MF_GetAmxString(amx, params[2], 0, &len);
 	// params[3] = radius, float...
 	float radius = *(float *)((void *)&params[3]);
 	// params[4] = store ents in this list
-	cell *entList = GET_AMXADDR(amx, params[4]);
+	cell *entList = MF_GetAmxAddr(amx, params[4]);
 	// params[5] = maximum ents to store in entlist[] in params[4]
 	// params[6] = origin, use this if params[1] is less than 1
 
@@ -1937,20 +1932,20 @@ static cell AMX_NATIVE_CALL find_sphere_class(AMX *amx, cell *params) // find_sp
 	if (params[1] > 0) {
 		if (params[1] > gpGlobals->maxEntities)
 		{
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;
 		}
 
 		edict_t* pEntity = INDEXENT(params[1]);
 		if (FNullEnt(pEntity)) {
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;
 		}
 
 		vecOrigin = pEntity->v.origin;
 	}
 	else {
-		cell *newVectorCell = GET_AMXADDR(amx, params[6]);
+		cell *newVectorCell = MF_GetAmxAddr(amx, params[6]);
 		vecOrigin = Vector(*(float *)((void *)&newVectorCell[0]), *(float *)((void *)&newVectorCell[1]), *(float *)((void *)&newVectorCell[2]));
 	}
 	
@@ -2017,7 +2012,7 @@ static cell AMX_NATIVE_CALL DispatchSpawn(AMX *amx, cell *params) {
 //(vexd)
 static cell AMX_NATIVE_CALL entity_set_origin(AMX *amx, cell *params) { 
 	int iTargetEntity = params[1];
-	cell *vInput = GET_AMXADDR(amx,params[2]);
+	cell *vInput = MF_GetAmxAddr(amx,params[2]);
 
 	float fNewX = *(float *)((void *)&vInput[0]);
 	float fNewY = *(float *)((void *)&vInput[1]);
@@ -2066,7 +2061,7 @@ static cell AMX_NATIVE_CALL find_ent_by_target(AMX *amx, cell *params)
 {
 	int iStart = params[1];
 	int iLength;
-	char *szValue = GET_AMXSTRING(amx, params[2], 0, iLength);
+	char *szValue = MF_GetAmxString(amx, params[2], 0, &iLength);
 
 	edict_t *pStart;
 
@@ -2093,8 +2088,8 @@ static cell AMX_NATIVE_CALL find_ent_by_target(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL find_ent_by_model(AMX *amx, cell *params) { 
 	int iStart = params[1];
 	int iLength, iLength2;
-	char *szClass = GET_AMXSTRING(amx, params[2], 0, iLength);
-	char *szModel = GET_AMXSTRING(amx, params[3], 1, iLength2);
+	char *szClass = MF_GetAmxString(amx, params[2], 0, &iLength);
+	char *szModel = MF_GetAmxString(amx, params[3], 1, &iLength2);
 	int iModel = MAKE_STRING(szModel);
 
 	edict_t *pStart;
@@ -2133,7 +2128,7 @@ static cell AMX_NATIVE_CALL find_ent_by_model(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL find_ent_by_tname(AMX *amx, cell *params) {
 	int iStart = params[1];
 	int iLength;
-	char *szValue = GET_AMXSTRING(amx, params[2], 0, iLength);
+	char *szValue = MF_GetAmxString(amx, params[2], 0, &iLength);
 
 	edict_t *pStart;
 
@@ -2159,13 +2154,13 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native
 {
 	// Check index to start searching at, 0 must be possible.
 	if (params[1] < 0 || params[1] > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	// Check index of owner
 	if (params[3] < 1 || params[3] > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -2183,7 +2178,7 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native
 	// No need to check if there is a real ent where entOwner points at since we don't access it anyway.
 
 	int len;
-	char* classname = GET_AMXSTRING(amx, params[2], 0, len);
+	char* classname = MF_GetAmxString(amx, params[2], 0, &len);
 
 	while (true) {
 		pEnt = FIND_ENTITY_BY_STRING(pEnt, sCategory, classname);
@@ -2224,7 +2219,7 @@ static cell AMX_NATIVE_CALL remove_entity(AMX *amx, cell *params) {
 // angles.
 //(vexd)
 static cell AMX_NATIVE_CALL vector_to_angle(AMX *amx, cell *params) { 
-	cell *vInput = GET_AMXADDR(amx,params[1]);
+	cell *vInput = MF_GetAmxAddr(amx,params[1]);
 	float fInX = *(float *)((void *)&vInput[0]);
 	float fInY = *(float *)((void *)&vInput[1]);
 	float fInZ = *(float *)((void *)&vInput[2]);
@@ -2233,7 +2228,7 @@ static cell AMX_NATIVE_CALL vector_to_angle(AMX *amx, cell *params) {
 	Vector vAngle = Vector(0, 0, 0);
 	VEC_TO_ANGLES(vVector, vAngle);
 
-	cell *vReturnTo = GET_AMXADDR(amx,params[2]);
+	cell *vReturnTo = MF_GetAmxAddr(amx,params[2]);
 	vReturnTo[0] = *(cell*)((void *)&vAngle.x);
 	vReturnTo[1] = *(cell*)((void *)&vAngle.y);
 	vReturnTo[2] = *(cell*)((void *)&vAngle.z);
@@ -2244,7 +2239,7 @@ static cell AMX_NATIVE_CALL vector_to_angle(AMX *amx, cell *params) {
 // VecLength, this gives you the length of a vector (float[3] type).
 //(vexd)
 static cell AMX_NATIVE_CALL vector_length(AMX *amx, cell *params) { 
-	cell *vInput = GET_AMXADDR(amx,params[1]);
+	cell *vInput = MF_GetAmxAddr(amx,params[1]);
 	float fInX = *(float *)((void *)&vInput[0]);
 	float fInY = *(float *)((void *)&vInput[1]);
 	float fInZ = *(float *)((void *)&vInput[2]);
@@ -2259,12 +2254,12 @@ static cell AMX_NATIVE_CALL vector_length(AMX *amx, cell *params) {
 // VecDist, this gives you the distance between 2 vectors (float[3] type).
 //(vexd)
 static cell AMX_NATIVE_CALL vector_distance(AMX *amx, cell *params) { 
-	cell *vInput = GET_AMXADDR(amx,params[1]);
+	cell *vInput = MF_GetAmxAddr(amx,params[1]);
 	float fInX = *(float *)((void *)&vInput[0]);
 	float fInY = *(float *)((void *)&vInput[1]);
 	float fInZ = *(float *)((void *)&vInput[2]);
 
-	cell *vInput2 = GET_AMXADDR(amx,params[2]);
+	cell *vInput2 = MF_GetAmxAddr(amx,params[2]);
 	float fInX2 = *(float *)((void *)&vInput2[0]);
 	float fInY2 = *(float *)((void *)&vInput2[1]);
 	float fInZ2 = *(float *)((void *)&vInput2[2]);
@@ -2285,18 +2280,18 @@ static cell AMX_NATIVE_CALL vector_distance(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL trace_normal(AMX *amx, cell *params) { 
 	int iIgnoreEnt = params[1];
 
-	cell *fpStart = GET_AMXADDR(amx,params[2]);
+	cell *fpStart = MF_GetAmxAddr(amx,params[2]);
 	float fStartX = *(float *)((void *)&fpStart[0]);
 	float fStartY = *(float *)((void *)&fpStart[1]);
 	float fStartZ = *(float *)((void *)&fpStart[2]);
 
-	cell *fpEnd = GET_AMXADDR(amx,params[3]);
+	cell *fpEnd = MF_GetAmxAddr(amx,params[3]);
 	float fEndX = *(float *)((void *)&fpEnd[0]);
 	float fEndY = *(float *)((void *)&fpEnd[1]);
 	float fEndZ = *(float *)((void *)&fpEnd[2]);
 
 
-	cell *vReturnTo = GET_AMXADDR(amx,params[4]);
+	cell *vReturnTo = MF_GetAmxAddr(amx,params[4]);
 
 	Vector vStart = Vector(fStartX, fStartY, fStartZ);
 	Vector vEnd = Vector(fEndX, fEndY, fEndZ);
@@ -2321,18 +2316,18 @@ static cell AMX_NATIVE_CALL trace_normal(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL trace_line(AMX *amx, cell *params) { 
 	int iIgnoreEnt = params[1];
 
-	cell *fpStart = GET_AMXADDR(amx,params[2]);
+	cell *fpStart = MF_GetAmxAddr(amx,params[2]);
 	float fStartX = *(float *)((void *)&fpStart[0]);
 	float fStartY = *(float *)((void *)&fpStart[1]);
 	float fStartZ = *(float *)((void *)&fpStart[2]);
 
-	cell *fpEnd = GET_AMXADDR(amx,params[3]);
+	cell *fpEnd = MF_GetAmxAddr(amx,params[3]);
 	float fEndX = *(float *)((void *)&fpEnd[0]);
 	float fEndY = *(float *)((void *)&fpEnd[1]);
 	float fEndZ = *(float *)((void *)&fpEnd[2]);
 
 
-	cell *vReturnTo = GET_AMXADDR(amx,params[4]);
+	cell *vReturnTo = MF_GetAmxAddr(amx,params[4]);
 
 	Vector vStart = Vector(fStartX, fStartY, fStartZ);
 	Vector vEnd = Vector(fEndX, fEndY, fEndZ);
@@ -2405,7 +2400,7 @@ static cell AMX_NATIVE_CALL get_grenade_id(AMX *amx, cell *params)  /* 4 param *
 		{
 			szModel = new char[params[3]];
 			szModel = (char*)STRING(pentFind->v.model);
-			SET_AMXSTRING(amx,params[2],szModel,params[3]);
+			MF_SetAmxString(amx,params[2],szModel,params[3]);
 			delete [] szModel;
 			return ENTINDEX(pentFind);
 		}
@@ -2433,7 +2428,7 @@ static cell AMX_NATIVE_CALL get_msg_block(AMX *amx, cell *params) {
 	int iMessage = params[1];
 
 	if (iMessage < 1 || iMessage > MAX_MESSAGES) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -2445,7 +2440,7 @@ static cell AMX_NATIVE_CALL get_msg_block(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL set_lights(AMX *amx, cell *params) { 
 	int iLength;
 
-	char *szLights = GET_AMXSTRING(amx, params[1], 0, iLength);
+	char *szLights = MF_GetAmxString(amx, params[1], 0, &iLength);
 
 	if(FStrEq(szLights, "#OFF")) {
 		GlInfo.bLights = false;
@@ -2481,7 +2476,7 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 	int iCameraType = params[2];
 
 	if (iIndex < 1 || iIndex > gpGlobals->maxClients) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -2607,12 +2602,12 @@ static cell AMX_NATIVE_CALL attach_view(AMX *amx, cell *params) {
 	int iTargetIndex = params[2];
 
 	if (iIndex < 1 || iIndex > gpGlobals->maxClients) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	if(iTargetIndex < 1 || iTargetIndex > gpGlobals->maxEntities) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -2624,7 +2619,7 @@ static cell AMX_NATIVE_CALL attach_view(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL precache_generic(AMX *amx, cell *params)
 {
 	int len;
-	char* szPreCache = GET_AMXSTRING(amx,params[1],0,len);
+	char* szPreCache = MF_GetAmxString(amx,params[1],0,&len);
 	PRECACHE_GENERIC((char*)STRING(ALLOC_STRING(szPreCache)));
 	return 1;
 }
@@ -2651,7 +2646,7 @@ static cell AMX_NATIVE_CALL get_info_keybuffer(AMX *amx, cell *params)
 	if (e!=NULL) {
 		char *info = GETINFOKEYBUFFER(e);
 	
-		return SET_AMXSTRING(amx, params[2], info, params[3]);
+		return MF_SetAmxString(amx, params[2], info, params[3]);
 	} else {
 		return 0;
 	}
@@ -2719,7 +2714,7 @@ static cell AMX_NATIVE_CALL get_global_float(AMX *amx, cell *params)
 			returnValue = gpGlobals->trace_startsolid;
 			break;
 		default:
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;
 	}
 
@@ -2750,7 +2745,7 @@ static cell AMX_NATIVE_CALL get_global_int(AMX *amx, cell *params)
 			returnValue = gpGlobals->trace_hitgroup;
 			break;
 		default:
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;
 	}
 
@@ -2763,7 +2758,7 @@ static cell AMX_NATIVE_CALL get_global_string(AMX *amx, cell *params)
 
 	switch(params[1]) {
 		case GL_pStringBase: // const char *, so no string_t
-			return SET_AMXSTRING(amx, params[2], gpGlobals->pStringBase, params[3]);
+			return MF_SetAmxString(amx, params[2], gpGlobals->pStringBase, params[3]);
 		// The rest are string_t:s...
 		case GL_mapname:
 			returnValue = &(gpGlobals->mapname);
@@ -2772,16 +2767,16 @@ static cell AMX_NATIVE_CALL get_global_string(AMX *amx, cell *params)
 			returnValue = &(gpGlobals->startspot);
 			break;
 		default:
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;
 	}
 
-	return SET_AMXSTRING(amx, params[2], STRING(*returnValue), params[3]);
+	return MF_SetAmxString(amx, params[2], STRING(*returnValue), params[3]);
 }
 
 static cell AMX_NATIVE_CALL get_global_vector(AMX *amx, cell *params) // globals_get_vector(variable, Float:vector[3]); = 2 params
 {
-	cell *returnVector = GET_AMXADDR(amx, params[2]);
+	cell *returnVector = MF_GetAmxAddr(amx, params[2]);
 	vec3_t fetchedVector;
 
 	switch (params[1]) {
@@ -2804,7 +2799,7 @@ static cell AMX_NATIVE_CALL get_global_vector(AMX *amx, cell *params) // globals
 			fetchedVector = gpGlobals->vecLandmarkOffset;
 			break;
 		default:
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;
 	}
 
@@ -2824,7 +2819,7 @@ static cell AMX_NATIVE_CALL get_global_edict(AMX *amx, cell *params) // globals_
 			pReturnEntity = gpGlobals->trace_ent;
 			break;
 		default:
-			AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 			return 0;
 	}
 
@@ -2838,7 +2833,7 @@ static cell AMX_NATIVE_CALL get_global_edict(AMX *amx, cell *params) // globals_
 static cell AMX_NATIVE_CALL precache_event(AMX *amx, cell *params)
 {
 	int len;
-	char *szEvent = FORMAT_AMXSTRING(amx, params, 2, len);
+	char *szEvent = MF_FormatAmxString(amx, params, 2, &len);
 	PRECACHE_EVENT(params[1], (char *)STRING(ALLOC_STRING(szEvent)));
 
 	return 1;
@@ -2847,7 +2842,7 @@ static cell AMX_NATIVE_CALL precache_event(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_decal_index(AMX *amx, cell *params)
 {
 	int len;
-	char *szDecal = GET_AMXSTRING(amx, params[1], 0, len);
+	char *szDecal = MF_GetAmxString(amx, params[1], 0, &len);
 	return DECAL_INDEX(szDecal);
 }
 
@@ -2860,13 +2855,13 @@ static cell AMX_NATIVE_CALL set_size(AMX *amx, cell *params)
 		return 0;
 	}
 
-	cell *cMin = GET_AMXADDR(amx, params[2]);
+	cell *cMin = MF_GetAmxAddr(amx, params[2]);
 	float x1 = *(float *)((void *)&cMin[0]);
 	float y1 = *(float *)((void *)&cMin[1]);
 	float z1 = *(float *)((void *)&cMin[2]);
 	Vector vMin = Vector(x1, y1, z1);
 
-	cell *cMax = GET_AMXADDR(amx, params[3]);
+	cell *cMax = MF_GetAmxAddr(amx, params[3]);
 	float x2 = *(float *)((void *)&cMax[0]);
 	float y2 = *(float *)((void *)&cMax[1]);
 	float z2 = *(float *)((void *)&cMax[2]);
@@ -2883,7 +2878,7 @@ static cell AMX_NATIVE_CALL set_speak(AMX *amx, cell *params) {
 	int iNewSpeakFlags = params[2];
 
 	if (iIndex < 1 || iIndex > gpGlobals->maxClients) {
-		AMX_RAISEERROR(amx,AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -2899,7 +2894,7 @@ static cell AMX_NATIVE_CALL get_speak(AMX *amx, cell *params) {
 
 	if (iIndex < 1 || iIndex > gpGlobals->maxClients)
 	{
-		AMX_RAISEERROR(amx, AMX_ERR_NATIVE);
+		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -2938,7 +2933,7 @@ void ClientKill(edict_t *pEntity)
 	META_RES result = MRES_IGNORED;
 	
 	for (AmxCallList::AmxCall* i = clientKill.head; i; i = i->next) {
-		AMX_EXEC(i->amx, &iRetVal, i->iFunctionIdx, 1, ENTINDEX(pEntity));
+		//MF_AmxExec(i->amx, &iRetVal, i->iFunctionIdx, 1, ENTINDEX(pEntity));
 		if (iRetVal & 2) {
 			RETURN_META(MRES_SUPERCEDE);
 		} else if (iRetVal & 1) {
@@ -3028,7 +3023,7 @@ void PlayerPostThink(edict_t *pEntity) {
 		}
 	}
 	for (AmxCallList::AmxCall* i = postThink.head; i; i = i->next) {
-		AMX_EXEC(i->amx, NULL, i->iFunctionIdx, 1, ENTINDEX(pEntity));
+		//MF_AmxExec(i->amx, NULL, i->iFunctionIdx, 1, ENTINDEX(pEntity));
 	}
 	
 	RETURN_META(MRES_IGNORED);
@@ -3047,7 +3042,7 @@ void StartFrame() {
 	}
 
 	for (AmxCallList::AmxCall* i = serverFrame.head; i; i = i->next) {
-		AMX_EXEC(i->amx, NULL, i->iFunctionIdx, 0);
+		//MF_AmxExec(i->amx, NULL, i->iFunctionIdx, 0);
 	}
 
 	RETURN_META(MRES_IGNORED);
@@ -3057,7 +3052,7 @@ void StartFrame() {
 
 void PlayerPreThink(edict_t *pEntity) {
 	for (AmxCallList::AmxCall* i = preThink.head; i; i = i->next) {
-		AMX_EXEC(i->amx, NULL, i->iFunctionIdx, 1, ENTINDEX(pEntity));
+		//MF_AmxExec(i->amx, NULL, i->iFunctionIdx, 1, ENTINDEX(pEntity));
 	}
 	RETURN_META(MRES_IGNORED);
 }
@@ -3083,11 +3078,11 @@ void ClientDisconnect(edict_t *pEntity) {
 
 
 // pfnTouch, this is a forward that is called whenever 2 entities collide.
-void Touch(edict_t *pToucher, edict_t *pTouched) {
-	cell iResult;
+void DispatchTouch(edict_t *pToucher, edict_t *pTouched) {
+	cell iResult = 0;
 	META_RES result = MRES_IGNORED;
 	for (AmxCallList::AmxCall* i = pfnTouch.head; i; i = i->next) {
-		AMX_EXEC(i->amx, &iResult, i->iFunctionIdx, 2, ENTINDEX(pToucher), ENTINDEX(pTouched));
+		//MF_AmxExec(i->amx, &iResult, i->iFunctionIdx, 2, ENTINDEX(pToucher), ENTINDEX(pTouched));
 		if (iResult & 2) {
 			RETURN_META(MRES_SUPERCEDE);
 		} else if (iResult & 1) {
@@ -3111,11 +3106,6 @@ BOOL ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress
 	PlInfo[ENTINDEX(pEntity)].fRenderAmt = 0;
 
 	RETURN_META_VALUE(MRES_IGNORED, 0);
-}
-
-//(vexd)
-void GameInit(void) {
-	
 }
 
 // make sure that if we currently have an edited light value, to use it.
@@ -3161,7 +3151,7 @@ void MessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
 }
 
 void MessageEnd(void) {
-	cell iResult;
+	cell iResult=0;
 	META_RES result = MRES_IGNORED;
 
 	if(GlInfo.bBlocking) {
@@ -3173,7 +3163,7 @@ void MessageEnd(void) {
 
 	if (inHookProcess) {
 		for (AmxCallList::AmxCall* i = Msgs.head; i; i = i->next) {
-			AMX_EXEC(i->amx, &iResult, i->iFunctionIdx, 3, msg_type, msgd->msg_dest, msgd->target);
+			//MF_AmxExec(i->amx, &iResult, i->iFunctionIdx, 3, msg_type, msgd->msg_dest, msgd->target);
 			if (iResult & 2) {
 				RETURN_META(MRES_SUPERCEDE);
 			} else if (iResult & 1) {
@@ -3198,10 +3188,10 @@ void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int 
 	edict_t *pEntity = (edict_t *)player;
 	struct usercmd_s *cmd = (struct usercmd_s *)_cmd;
 	META_RES result = MRES_IGNORED;
-	cell iResult;
+	cell iResult=0;
 
 	for (AmxCallList::AmxCall* i = clientImpulse.head; i; i = i->next) {
-		AMX_EXEC(i->amx, &iResult, i->iFunctionIdx, 2, ENTINDEX(pEntity), cmd->impulse);
+		//MF_AmxExec(i->amx, &iResult, i->iFunctionIdx, 2, ENTINDEX(pEntity), cmd->impulse);
 		if (iResult & 2) {
 			RETURN_META(MRES_SUPERCEDE);
 		} else if (iResult & 1) {
@@ -3309,12 +3299,12 @@ void WriteEntity(int iValue) {
 
 void ServerActivate( edict_t *pEdictList, int edictCount, int clientMax ){
 	PRECACHE_MODEL("models/rpgrocket.mdl");
- 	AMX* amx;
-	void* code;
-	const char* filename;
-	int iFunctionIndex;
+// 	AMX* amx;
+//	void* code;
+//	const char* filename;
+//	int iFunctionIndex;
 	int i=0;
-	while ((amx = GET_AMXSCRIPT(i++, &code, &filename)) != 0) {
+/*	while ((amx = GET_AMXSCRIPT(i++, &code, &filename)) != 0) {
 		if (AMX_FINDPUBLIC(amx, "vexd_pfntouch", &iFunctionIndex) == AMX_ERR_NONE) {
 			pfnTouch.put(amx, iFunctionIndex);
 		}
@@ -3339,7 +3329,7 @@ void ServerActivate( edict_t *pEdictList, int edictCount, int clientMax ){
 		if (AMX_FINDPUBLIC(amx, "client_impulse",&iFunctionIndex) == AMX_ERR_NONE) {
 			clientImpulse.put(amx, iFunctionIndex);
 		}
-	}
+	}*/
 
 	inHookProcess = 0;
 	for (i=0; i<MAX_MESSAGES; i++) {
@@ -3383,87 +3373,6 @@ void ServerDeactivate() {
 
 }
 
-C_DLLEXPORT int Meta_Query(char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_t *pMetaUtilFuncs) {
-
-	gpMetaUtilFuncs=pMetaUtilFuncs;
-	*pPlugInfo=&Plugin_info;
-
-	if(strcmp(ifvers, Plugin_info.ifvers)) {
-
-		int mmajor=0, mminor=0, pmajor=0, pminor=0;
-		LOG_MESSAGE(PLID, "WARNING: meta-interface version mismatch; requested=%s ours=%s", Plugin_info.logtag, ifvers);
-		sscanf(ifvers, "%d:%d", &mmajor, &mminor);
-		sscanf(META_INTERFACE_VERSION, "%d:%d", &pmajor, &pminor);
-
-		if(pmajor > mmajor || (pmajor==mmajor && pminor > mminor)) {
-			LOG_ERROR(PLID, "metamod version is too old for this plugin; update metamod");
-			return(FALSE);
-
-		}
-
-		else if(pmajor < mmajor) {
-			LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin");
-			return(FALSE);
-
-		}
-
-		else if(pmajor==mmajor && pminor < mminor)
-			LOG_MESSAGE(PLID, "WARNING: metamod version is newer than expected; consider finding a newer version of this plugin");
-		else
-			LOG_ERROR(PLID, "unexpected version comparison; metavers=%s, mmajor=%d, mminor=%d; plugvers=%s, pmajor=%d, pminor=%d", ifvers, mmajor, mminor, META_INTERFACE_VERSION, pmajor, pminor);
-
-	}
-
-	return(TRUE);
-
-}
-
-static META_FUNCTIONS gMetaFunctionTable;
-
-C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, meta_globals_t *pMGlobals, gamedll_funcs_t *pGamedllFuncs) {
-
-	if(now > Plugin_info.loadable) {
-
-		LOG_ERROR(PLID, "Can't load plugin right now");
-
-		return(FALSE);
-
-	}
-
-	gpMetaGlobals=pMGlobals;
-	gMetaFunctionTable.pfnGetEntityAPI2 = GetEntityAPI2;
-	gMetaFunctionTable.pfnGetEngineFunctions = GetEngineFunctions;
-
-	memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
-
-	gpGamedllFuncs=pGamedllFuncs;
-
-	return(TRUE);
-}
-
-C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason) {
-
-	if(now > Plugin_info.unloadable && reason != PNL_CMD_FORCED) {
-		LOG_ERROR(PLID, "Can't unload plugin right now");
-		return(FALSE);
-
-	}
-
-	return(TRUE);
-
-}
-
-#ifdef __linux__
-C_DLLEXPORT void GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals ) {
-#else
-void WINAPI GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals ) {
-#endif
-
-	memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
-	gpGlobals = pGlobals;
-
-}
-
 void ClientPutInServer_Post( edict_t *pEntity ) {
 	int iPlayer = ENTINDEX(pEntity);
 	if (iPlayer > 0 && iPlayer < 33) {
@@ -3472,107 +3381,9 @@ void ClientPutInServer_Post( edict_t *pEntity ) {
 	RETURN_META(MRES_IGNORED);
 }
 
-
-DLL_FUNCTIONS gFunctionTable;
-
-C_DLLEXPORT int GetEntityAPI2( DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion ){
-	gFunctionTable.pfnCmdStart = CmdStart;
-	gFunctionTable.pfnGameInit = GameInit;
-	gFunctionTable.pfnStartFrame = StartFrame;
-	gFunctionTable.pfnTouch = Touch;
-	gFunctionTable.pfnServerDeactivate = ServerDeactivate;
-	gFunctionTable.pfnClientDisconnect = ClientDisconnect;
-	gFunctionTable.pfnServerActivate = ServerActivate;
-	gFunctionTable.pfnClientConnect = ClientConnect;
-	gFunctionTable.pfnClientDisconnect = ClientDisconnect;
-	gFunctionTable.pfnPlayerPostThink = PlayerPostThink;
-	gFunctionTable.pfnPlayerPreThink = PlayerPreThink;
-	gFunctionTable.pfnClientUserInfoChanged = ClientUserInfoChanged;
-	gFunctionTable.pfnAddToFullPack = AddToFullPack;
-	gFunctionTable.pfnClientKill = ClientKill;
-
-	if(*interfaceVersion!=INTERFACE_VERSION) {
-		LOG_ERROR(PLID, "GetEntityAPI2 version mismatch; requested=%d ours=%d", *interfaceVersion, INTERFACE_VERSION);
-		*interfaceVersion = INTERFACE_VERSION;
-		return(FALSE);
-
-	}
-	memcpy( pFunctionTable, &gFunctionTable, sizeof( DLL_FUNCTIONS ) );
-
-	return(TRUE);
-
-}
-
-enginefuncs_t meta_engfuncs;
-
-C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion ) {
-
-	meta_engfuncs.pfnMessageBegin = MessageBegin;
-	meta_engfuncs.pfnMessageEnd = MessageEnd;
-	meta_engfuncs.pfnWriteByte = WriteByte;
-	meta_engfuncs.pfnWriteChar = WriteChar;
-	meta_engfuncs.pfnWriteShort = WriteShort;
-	meta_engfuncs.pfnWriteLong = WriteLong;
-	meta_engfuncs.pfnWriteAngle = WriteAngle;
-	meta_engfuncs.pfnWriteCoord = WriteCoord;
-	meta_engfuncs.pfnWriteString = WriteString;
-	meta_engfuncs.pfnWriteEntity = WriteEntity;
-	meta_engfuncs.pfnLightStyle = LightStyle;
-	meta_engfuncs.pfnVoice_SetClientListening = Voice_SetClientListening;
-
-	if(*interfaceVersion!=ENGINE_INTERFACE_VERSION) {
-		LOG_ERROR(PLID, "GetEngineFunctions version mismatch; requested=%d ours=%d", *interfaceVersion, ENGINE_INTERFACE_VERSION);
-		*interfaceVersion = ENGINE_INTERFACE_VERSION;
-		return(FALSE);
-
-	}
-	memcpy(pengfuncsFromEngine, &meta_engfuncs, sizeof(enginefuncs_t));
-
-	return(TRUE);
-
-}
-
-DLL_FUNCTIONS gFunctionTable_Post;
-C_DLLEXPORT int GetEntityAPI2_Post( DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion ) {
-  gFunctionTable_Post.pfnClientPutInServer = ClientPutInServer_Post;
-
-  if(*interfaceVersion!=INTERFACE_VERSION) {
-    LOG_ERROR(PLID, "GetEntityAPI2_Post version mismatch; requested=%d ours=%d", *interfaceVersion, INTERFACE_VERSION);
-    *interfaceVersion = INTERFACE_VERSION;
-    return(FALSE);
-  }
-  memcpy( pFunctionTable, &gFunctionTable_Post, sizeof( DLL_FUNCTIONS ) );
-  return(TRUE);
-}
-
-C_DLLEXPORT int AMX_Query(module_info_s** info) {
-
-	*info = &module_info;
-
-	return 1;
-
-}
-
-C_DLLEXPORT int AMX_Attach(pfnamx_engine_g* amxeng,pfnmodule_engine_g* meng) {
-
-	g_engAmxFunc = amxeng;
-	g_engModuleFunc = meng;
-
-	if (!gpMetaGlobals)
-		REPORT_ERROR( 1 , "[CS STATS] Module is not attached to MetaMod\n");
-
-	ADD_AMXNATIVES( &module_info , Engine_Natives);
-
-	return 1;
-
-}
-
-
-
-C_DLLEXPORT int AMX_Detach() {
-
-	return 1;
-
+void OnAmxxAttach()
+{
+	MF_AddNatives(Engine_Natives);
 }
 
 AMX_NATIVE_INFO Engine_Natives[] = {

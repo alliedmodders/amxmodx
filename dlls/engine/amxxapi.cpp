@@ -22,7 +22,7 @@ void EngineError(AMX *amx, char *fmt, ...)
 	MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 }
 
-void OnAmxxDetach()
+void ClearHooks()
 {
 	register unsigned int i = 0;
 	for (i=0; i<256; i++) {
@@ -227,6 +227,8 @@ void ServerDeactivate()
 	g_pFunctionTable->pfnThink=NULL; // "pfn_think", "register_think"
 	g_pFunctionTable->pfnStartFrame=NULL; // "server_frame","ServerFrame"
 	g_pFunctionTable->pfnTouch=NULL; // "pfn_touch","vexd_pfntouch"
+
+	ClearHooks();
 
 	RETURN_META(MRES_IGNORED);
 }

@@ -77,7 +77,7 @@ native ts_getuserlastfrag( index );
 native ts_giveweapon( index,weapon,clips,extra );
 
 /* Function will create pwup entity and return its index (pwupent) */
-native ts_createpwup( index,pwup );
+native ts_createpwup( pwup );
 
 native ts_givepwup( index,pwupent );
 

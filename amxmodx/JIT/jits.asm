@@ -153,6 +153,7 @@ _dbgcode:    resd 1
 _dbgaddr:    resd 1
 _dbgparam:   resd 1
 _dbgname:    resd 1
+;usertags and userdata are 16 bytes on AMX Mod X
 _usertags1:  resd 1	; 4 = AMX_USERNUM (#define'd in amx.h)
 _usertags2:  resd 1	; 4 = AMX_USERNUM (#define'd in amx.h)
 _usertags3:  resd 1	; 4 = AMX_USERNUM (#define'd in amx.h)
@@ -277,6 +278,14 @@ AMX_FLAG_RELOC		equ 8000h ; jump/call addresses relocated
 
 ;
 ; This is the work horse of the whole JIT: It actually copies the code.
+; Notes from ~dvander (with help of dJeyL)
+;  This takes a source and ending address pointer in the assembled JIT code.
+;  Then it subtracts them and copies the code in between.
+;  The last parameter is the number of bytes the opcode is so it can jump 
+;    to the next one.
+;  Also note that the "in between" code is NEVER executed during the compile 
+;    phase of the JIT.  It's only assembled in memory, and copied into the 
+;    final output bytecode by this function.
 %macro GO_ON 2-3 4
         mov     esi, %1         ;get source address of JIT code
         mov     ecx,%2-%1            ;get number of bytes to copy
@@ -292,6 +301,8 @@ AMX_FLAG_RELOC		equ 8000h ; jump/call addresses relocated
 ; Nasm can't handle the determination of the maximum code size as was done
 ; in the Masm implementation, since it only does two passes. This macro is
 ; called *after* the code for each Small instruction.
+; Notes by ~dvander: This just substracts a label's ip from the current ip.
+;  Therefore you get an instant size check - see RELOC
 %macro CHECKCODESIZE 1
 	%if MAXCODESIZE < $-%1
         	%assign MAXCODESIZE $-%1
@@ -302,6 +313,11 @@ AMX_FLAG_RELOC		equ 8000h ; jump/call addresses relocated
 ; Modify the argument of an x86 instruction with the Small opcode's parameter
 ; before copying the code.
 ;
+; Notes by ~dvander (thanks to dJeyL) - this will take an address and modify
+;   the dword at it.  Since the JIT copies already assembled code, you see
+;   things like "call   12345678h".  This is an arbitrary value as putval
+;   will modify it in memory and then GO_ON will add it to the program.
+;   It is important to get the putval address right - it's in bytes.
 %macro putval 1
         mov     eax,[ebx+4]
         mov     dword [%1],eax
@@ -310,7 +326,12 @@ AMX_FLAG_RELOC		equ 8000h ; jump/call addresses relocated
 ;
 ; Add an entry to the table of addresses which have to be relocated after the
 ; code compilation is done.
-;
+; Notes by ~dvander: This is sort of what amx_BrowseRelocate() does, although
+;   relocation is actually done after code generation (this just adds to a 
+;   table).  Like putval, this takes in an address and marks it to be 
+;   rewritten.  It is a good idea to just use labels to find relocation
+;   offsets (see OP_CALL and OP_RETN).  After code generation, this table
+;   is browsed and the correct threaded jumps are placed.
 %macro RELOC 1-2 ;   adr, dest
         mov     ebp,[reloc_num]
         %if %0 < 2

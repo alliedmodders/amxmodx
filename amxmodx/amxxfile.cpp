@@ -108,7 +108,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 		amx_Align16(&hdr.magic);
 		if (hdr.magic == AMX_MAGIC)
 		{
-			if (cellsize != 32)
+			if (cellsize != 4)
 			{
 				m_Status = Err_SectionNotFound;
 				fclose(m_pFile);
@@ -141,7 +141,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 		DATAREAD(&entry, sizeof(entry), 1);
 		if (entry.cellSize == m_CellSize)
 		{
-			m_SectionHdrOffset = entry.offset;
+			m_SectionHdrOffset = ftell(m_pFile) - sizeof(entry);
 			break;
 		}
 	}

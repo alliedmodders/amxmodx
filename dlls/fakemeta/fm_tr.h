@@ -1,6 +1,8 @@
 #ifndef _INCLUDE_TR_H
 #define _INCLUDE_TR_H
 
+extern TraceResult *gfm_tr;
+
 enum
 {
 	TR_AllSolid,

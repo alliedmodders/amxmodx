@@ -40,5 +40,5 @@ native dllfunc(type,{Float,Sql,Result,_}:...);
 //only use this with functions that pass a Trace
 // get: zero extra params - return int, one extra param = byref float or vector
 // set: use anything
-native get_tr(Trace:tr, TraceResult:tr_member, {Float,_}:...);
-native set_tr(Trace:tr, TraceResult:tr_member, {Float,_}:...);
+native get_tr(TraceResult:tr_member, {Float,_}:...);
+native set_tr(TraceResult:tr_member, {Float,_}:...);

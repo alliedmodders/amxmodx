@@ -10,6 +10,12 @@
 #endif
 #define _cstrike_included
 
+/* Returns player deaths. */
+native cs_get_user_deaths(index);
+
+/* Sets player deaths. */
+native cs_set_user_deaths(index, newdeaths);
+
 /* Returns index of entity (does not have to be a player) which hostage is following. 0 is hostage doesn't follow anything. */
 native cs_get_hostage_follow(index);
 

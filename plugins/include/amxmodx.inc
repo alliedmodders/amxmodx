@@ -535,6 +535,10 @@ native random_num(a,b);
 * Example: get_user_msgid("TextMsg"). */
 native get_user_msgid(const name[]);
 
+/* Gets name of client message index. Return value is number of
+* characters copied into name. Returns 0 on invalid msgid. */
+native get_user_msgname(msgid, name[], len);
+
 /* Checks if public variable with given name exists in loaded plugins. */
 native xvar_exists( const name[] );
 

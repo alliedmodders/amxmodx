@@ -1678,6 +1678,16 @@ static cell AMX_NATIVE_CALL get_user_msgid(AMX *amx, cell *params) /* 1 param */
   return GET_USER_MSG_ID(PLID, sptemp , NULL );
 }
 
+static cell AMX_NATIVE_CALL get_user_msgname(AMX *amx, cell *params) /* get_user_msgname(msg, str[], len) = 3 params */
+{
+	const char* STRING = GET_USER_MSG_NAME(PLID, params[1], NULL);
+	if (STRING)
+		return set_amxstring(amx, params[2], STRING, params[3]);
+
+	// Comes here if GET_USER_MSG_NAME failed (ie, invalid msg id)
+	return 0;
+}
+
 static cell AMX_NATIVE_CALL set_task(AMX *amx, cell *params) /* 2 param */
 {
 
@@ -2760,6 +2770,7 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "get_user_ip",      get_user_ip },
   { "get_user_menu",    get_user_menu},
   { "get_user_msgid",   get_user_msgid},
+  { "get_user_msgname",	get_user_msgname},
   { "get_user_name",    get_user_name },
   { "get_user_origin",  get_user_origin},
   { "get_user_ping",    get_user_ping },

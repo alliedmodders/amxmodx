@@ -1230,7 +1230,8 @@ static cell AMX_NATIVE_CALL cs_set_hostage_follow(AMX *amx, cell *params) // cs_
 		return 0;
 	}
 
-	if (params[2] == -1) {
+	// Set to not follow anything?
+	if (params[2] == 0) {
 		*((int *)pHostage->pvPrivateData + OFFSET_HOSTAGEFOLLOW) = 0;
 		return 1;
 	}

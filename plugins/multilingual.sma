@@ -47,6 +47,8 @@ public plugin_init() {
   register_dictionary("common.txt")
   register_dictionary("languages.txt")
   register_cvar("amx_language","en",FCVAR_SERVER|FCVAR_EXTDLL|FCVAR_SPONLY)
+  //Set to zero to disable client effects
+  register_cvar("amx_client_languages", "1")
   register_concmd("amx_setlang","cmdLang",ADMIN_CFG,"<language>")
   register_clcmd("amx_langmenu","cmdLangMenu",ADMIN_ALL)
   register_menu("Language Menu",1023,"actionMenu")
@@ -68,11 +70,13 @@ public plugin_init() {
 
 #if defined DISPLAY_MSG
 public client_putinserver(id) {
-  set_task(10.0,"dispInfo",id)
+  if (get_cvar_num("amx_client_languages"))
+    set_task(10.0,"dispInfo",id)
 }
 
 public dispInfo(id) {
-  client_print(id,print_chat,"%L",id,"TYPE_LANGMENU")
+  if (get_cvar_num("amx_client_languages"))
+    client_print(id,print_chat,"%L",id,"TYPE_LANGMENU")
 }
 #endif
 
@@ -130,6 +134,8 @@ showMenu(id) {
 }
 
 public actionMenu(id,key) {
+  if (!get_cvar_num("amx_client_languages"))
+    return 0
   new isAdmin = access(id,ADMIN_CFG)
 
   if ( key==0 ) {

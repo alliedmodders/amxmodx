@@ -390,6 +390,10 @@ public cmdRcon(id,level,cid){
 }
 
 public cmdWho(id,level,cid){
+  if (get_user_flags(id)&ADMIN_USER) {
+    console_print(id,"You have no access to that command")
+    return PLUGIN_HANDLED
+  }
   new players[32], inum, authid[32],name[32], flags, sflags[32]
   get_players(players,inum)
   console_print(id,"^nClients on server:^n #  %-16.15s %-12s %-8s %-4.3s %-4.3s %s",

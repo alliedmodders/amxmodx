@@ -76,6 +76,9 @@ native parse(const text[], ... );
    any number of arguments */
 native strbreak(const text[], Left[], leftLen, Right[], rightLen);
 
+/* Strips spaces from the beginning and end of a string. */
+native trim(text[]);
+
 /* Converts all chars in string to lower case. */
 native strtolower(string[]);
 

@@ -73,7 +73,7 @@ if ($OPTIONS{"debug"})
 
 if ($OPTIONS{"amd64"})
 {
-	$cflags .= " -m64 -DSMALL_CELL_SIZE=64 $cflags";
+	$cflags = " -m64 -DSMALL_CELL_SIZE=64 $cflags";
 }
 
 if ($OPTIONS{"debug"})
@@ -139,7 +139,7 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	if (-e $ofile)
 	{
 		$file_time = (stat($file))[9];
-		$ofile_time = (stat($file))[9];
+		$ofile_time = (stat($ofile))[9];
 		if ($file_time > $ofile_time)
 		{
 			print "$gcc\n";
@@ -161,7 +161,7 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	if (-e $ofile)
 	{
 		$file_time = (stat($file))[9];
-		$ofile_time = (stat($file))[9];
+		$ofile_time = (stat($ofile))[9];
 		if ($file_time > $ofile_time)
 		{
 			print "$gcc\n";

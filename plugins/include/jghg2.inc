@@ -8,6 +8,7 @@
 
 #include <engine>
 #include <cstrike>
+#include <fakemeta>
 
 #if !defined _jghg_enums
 	#define _jghg_enums
@@ -88,35 +89,27 @@ stock get_owner(id)
 
 stock get_pdata(entity, offset)
 {
-	return get_offset_int(entity, offset)
-}
-stock Float:get_pdata_float(entity, offset)
-{
-	return get_offset_float(entity, offset)
+	return get_pdata_int(entity, offset)
 }
 stock get_pdata_char(entity, offset)
 {
-	return get_offset_char(entity, offset)
+	return get_pdata_char(entity, offset)
 }
 stock get_pdata_short(entity, offset)
 {
-	return get_offset_short(entity, offset)
+	return get_pdata_short(entity, offset)
 }
 stock set_pdata(entity, offset, value)
 {
-	return set_offset_int(entity, offset, value)
-}
-stock set_pdata_float(entity, offset, Float:value)
-{
-	return set_offset_float(entity, offset, value)
+	return set_pdata_int(entity, offset, value)
 }
 stock set_pdata_char(entity, offset, value)
 {
-	return set_offset_char(entity, offset, value)
+	return set_pdata_char(entity, offset, value)
 }
 stock set_pdata_short(entity, offset, value)
 {
-	return set_offset_short(entity, offset, value)
+	return set_pdata_short(entity, offset, value)
 }
 
 stock is_ent_valid(id)

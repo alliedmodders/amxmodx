@@ -301,7 +301,7 @@ static cell AMX_NATIVE_CALL register_message(AMX *amx, cell *params)
 {
 	int len;
 	if (params[1]>0 && params[1] < 256) {
-		int id = MF_RegisterSPForwardByName(amx, MF_GetAmxString(amx, params[2], 0, &len), FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+		int id = MF_RegisterSPForwardByName(amx, MF_GetAmxString(amx, params[2], 0, &len), FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 //		MF_Log("Registering message %d with result %d", params[1], id);
 		msgHooks[params[1]] = id;
 		return id;

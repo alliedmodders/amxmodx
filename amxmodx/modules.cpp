@@ -92,6 +92,8 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 	int err; 
 	FILE *fp;
 
+	AMX_HEADER hdr;
+
 	memset(amx, 0, sizeof(*amx));
 	*program = 0;
 	*error = 0;

@@ -2433,6 +2433,49 @@ static cell AMX_NATIVE_CALL callfunc_begin(AMX *amx, cell *params)
 	return 1;		// success: 1
 }
 
+// native callfunc_begin_i(funcId, pluginId = -1)
+static cell AMX_NATIVE_CALL callfunc_begin_i(AMX *amx, cell *params)
+{
+	CPluginMngr::CPlugin *plugin;
+	if (params[2] < 0)
+		plugin = g_plugins.findPluginFast(amx);
+	else
+		plugin = g_plugins.findPlugin(params[2]);
+
+	if (!plugin)
+		return -1;
+	
+	if (!plugin->isExecutable(params[1]))
+		return -2;
+	
+	g_CallFunc_Plugin = plugin;
+	g_CallFunc_Func = params[1];
+
+	return 1;
+}
+
+// native get_func_id(funcName[], pluginId = -1)
+static cell AMX_NATIVE_CALL get_func_id(AMX *amx, cell *params)
+{
+	CPluginMngr::CPlugin *plugin;
+	if (params[2] < 0)
+		plugin = g_plugins.findPluginFast(amx);
+	else
+		plugin = g_plugins.findPlugin(params[2]);
+
+	if (!plugin)
+		return -1;
+	
+	int len;
+	const char *funcName = get_amxstring(amx, params[1], 0, len);
+	
+	int index;
+	if (amx_FindPublic(amx, funcName, &index) != AMX_ERR_NONE)
+		index = -1;
+
+	return index;
+}
+
 // native callfunc_end();
 static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 {
@@ -2856,7 +2899,9 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "get_modulesnum", get_modulesnum },
   { "get_module", get_module },
   { "log_amx", log_amx },
+  { "get_func_id", get_func_id },
   { "callfunc_begin", callfunc_begin },
+  { "callfunc_begin_i", callfunc_begin_i },
   { "callfunc_end", callfunc_end },
   { "callfunc_push_int", callfunc_push_byval },
   { "callfunc_push_str", callfunc_push_str },

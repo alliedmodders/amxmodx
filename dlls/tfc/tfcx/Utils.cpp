@@ -84,35 +84,35 @@ knife,iSlot:-1,iId:23
 */
 weaponsVault weaponData[] = {
 	{ "", "", -1 }, // 0
-	{ "timer", "", -1 }, // 1
-	{ "sentrygun", "", -1 }, // 2
-	{ "medikit", "", -1 , true},
-	{ "spanner", "", 2 , true },
-	{ "axe", "", -1 , true },
-	{ "sniperrifle", "", 1 },
-	{ "autorifle", "", 1 },
-	{ "shotgun", "", 1 },
-	{ "supershotgun", "", 1 },
-	{ "ng", "", 3 },
-	{ "superng", "", 3 },
-	{ "gl", "", 4 },
+	{ "timer", "infection", -1 }, // 1
+	{ "sentrygun", "sentrygun", -1 }, // 2
+	{ "medikit", "medikit", -1 , true},
+	{ "spanner", "spanner", 2 , true },
+	{ "axe", "axe", -1 , true },
+	{ "sniperrifle", "sniperrifle", 1 },
+	{ "autorifle", "autorifle", 1 },
+	{ "shotgun", "shotgun", 1 },
+	{ "supershotgun", "supershotgun", 1 },
+	{ "ng", "nails", 3 },
+	{ "superng", "supernails", 3 },
+	{ "gl", "gl_grenade", 4 },
 	{ "flamethrower", "", 2 },
-	{ "rpg", "", 4 },
-	{ "ic", "", 4 },
-	{ "flames", "", -1 }, // 16
-	{ "ac", "", 1 },
+	{ "rpg", "rocket", 4 },
+	{ "ic", "ic", 4 },
+	{ "flames", "flames", -1 }, // 16
+	{ "ac", "ac", 1 },
 	{ "", "", -1 }, // 18
 	{ "", "", -1 }, // 19
-	{ "tranq", "", 1 },
-	{ "railgun", "", 3 },
-	{ "pl", "", 4 },
-	{ "knife", "", -1 , true },
-	{ "caltrop", "", -1 }, // 24
-	{ "concussion", "", -1 },
-	{ "grenade", "", -1 },
-	{ "nailgrenade", "", -1 },
-	{ "mirvgrenade", "", -1 },
-	{ "napalm", "", -1 },
-	{ "gas", "", -1 },
-	{ "emp", "", -1 },
+	{ "tranq", "tranq", 1 },
+	{ "railgun", "railgun", 3 },
+	{ "pl", "pipebomb", 4 },
+	{ "knife", "knife", -1 , true },
+	{ "caltrop", "caltrop", -1 }, // 24
+	{ "concussion", "concussiongrenade", -1 },
+	{ "grenade", "normalgrenade", -1 },
+	{ "nailgrenade", "nailgrenade", -1 },
+	{ "mirvgrenade", "mirvgrenade", -1 },
+	{ "napalm", "napalmgrenade", -1 },
+	{ "gas", "gasgrenade", -1 },
+	{ "emp", "empgrenade", -1 },
 };

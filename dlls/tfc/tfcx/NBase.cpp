@@ -344,7 +344,15 @@ static cell AMX_NATIVE_CALL TFC_GetWpnName(AMX *amx, cell *params) {
 	}
 	return MF_SetAmxString(amx,params[2],weaponData[iIndex].name,params[3]);
 }
-  
+
+static cell AMX_NATIVE_CALL TFC_GetWpnLogName(AMX *amx, cell *params) { 
+	int iIndex = params[1];
+	if ( iIndex < 1 || iIndex > TFCMAX_WEAPONS ){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+	return MF_SetAmxString(amx,params[2],weaponData[iIndex].logName,params[3]);
+}
 
 static cell AMX_NATIVE_CALL TFC_SetPDdata(AMX *amx, cell *params) { 
 
@@ -392,6 +400,7 @@ AMX_NATIVE_INFO base_Natives[] = {
 	{"TFC_GetWeaponBAmmo", TFC_GetWeaponBAmmo},
 	{"TFC_SetWeaponBAmmo", TFC_SetWeaponBAmmo},
 	{"TFC_GetWpnName", TFC_GetWpnName},
+	{"TFC_GetWpnLogName", TFC_GetWpnLogName},
 
 	{"TFC_IsMelee", TFC_IsMelee},
 	{"TFC_UserKill" , TFC_UserKill},

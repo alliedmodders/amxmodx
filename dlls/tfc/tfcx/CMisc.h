@@ -92,7 +92,7 @@ enum {
 
 struct weaponsVault {
   char* name;
-  char fullName[32];
+  char* logName;
   short int ammoSlot;
   bool melee;
 };

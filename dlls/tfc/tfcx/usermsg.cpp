@@ -87,9 +87,14 @@ void Client_Damage(void* mValue){
 
   case 2:
 	edict_t* enemy;
+    if ( !mPlayer || !damage )  
+		break;
+
 	enemy = mPlayer->pEdict->v.dmg_inflictor;
-    if ( !mPlayer || !damage || FNullEnt( enemy ) )  break;
-  
+
+	if ( FNullEnt( enemy ) )
+		break;
+
 	if (enemy->v.flags & (FL_CLIENT | FL_FAKECLIENT) ) { // attacker is player and his active weapon
 
 		pAttacker = GET_PLAYER_POINTER(enemy);

@@ -278,27 +278,31 @@ void SetModel_Post(edict_t *e, const char *m){
 }
 
 void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *e, TraceResult *ptr) {
-	if (ptr->pHit&&(ptr->pHit->v.flags& (FL_CLIENT | FL_FAKECLIENT) )&&
-		e&&(e->v.flags& (FL_CLIENT | FL_FAKECLIENT) )){
-		GET_PLAYER_POINTER(e)->aiming = ptr->iHitgroup;
+	if ( !e )
 		RETURN_META(MRES_IGNORED);
-	}
 
-	if ( e->v.owner && e->v.owner->v.flags& (FL_CLIENT | FL_FAKECLIENT) ){
-		CPlayer *pPlayer = GET_PLAYER_POINTER(e->v.owner);
-		for ( int i=0;i<MAX_TRACE;i++){
-			if ( strcmp( traceData[i].szName,STRING(e->v.classname)) == 0 ){
-				if ( traceData[i].iAction & ACT_NADE_SHOT  ){
-					pPlayer->saveShot(traceData[i].iId);
+	if (ptr->pHit&&(ptr->pHit->v.flags& (FL_CLIENT | FL_FAKECLIENT) )&&
+		(e->v.flags& (FL_CLIENT | FL_FAKECLIENT) )){
+		GET_PLAYER_POINTER(e)->aiming = ptr->iHitgroup;
+	}
+	else{
+		if ( e->v.owner && e->v.owner->v.flags& (FL_CLIENT | FL_FAKECLIENT) ){
+			CPlayer *pPlayer = GET_PLAYER_POINTER(e->v.owner);
+		
+			for ( int i=0;i<MAX_TRACE;i++){
+				if ( strcmp( traceData[i].szName,STRING(e->v.classname)) == 0 ){
+
+					if ( traceData[i].iAction & ACT_NADE_SHOT  ){
+						pPlayer->saveShot(traceData[i].iId);
+					}
+					if ( traceData[i].iAction & ACT_NADE_PUT ){
+						g_grenades.put(e,traceData[i].fDel,traceData[i].iId,GET_PLAYER_POINTER(e->v.owner));
+					}
+					break;
 				}
-				if ( traceData[i].iAction & ACT_NADE_PUT ){
-					g_grenades.put(e,traceData[i].fDel,traceData[i].iId,GET_PLAYER_POINTER(e->v.owner));
-				}
-				break;
 			}
 		}
 	}
-
 	RETURN_META(MRES_IGNORED);
 }
 

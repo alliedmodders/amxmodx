@@ -85,13 +85,19 @@ public plugin_init() {
 public actionBanMenu(id,key) {
   switch (key) {
     case 7: {
+	    /* BEGIN OF CHANGES BY MISTAGEE
+	    	ADDED A FEW MORE OPTIONS */
       ++g_menuOption[id]
-      g_menuOption[id] %= 3
+      g_menuOption[id] %= 7
       
       switch(g_menuOption[id]){
       case 0: g_menuSettings[id] = 0
       case 1: g_menuSettings[id] = 5
-      case 2: g_menuSettings[id] = 60
+      case 2: g_menuSettings[id] = 10
+      case 3: g_menuSettings[id] = 15
+      case 4: g_menuSettings[id] = 30
+      case 5: g_menuSettings[id] = 45
+      case 6: g_menuSettings[id] = 60
       }     
       
       displayBanMenu(id,g_menuPosition[id])
@@ -115,8 +121,10 @@ public actionBanMenu(id,key) {
         case 2: client_print(0,print_chat,"%L",LANG_PLAYER,"ADMIN_BAN_2",name,name2)
         case 1: client_print(0,print_chat,"%L",LANG_PLAYER,"ADMIN_BAN_1",name2)
       }
-
-      if (equal("4294967295",authid2)) { /* lan */
+	
+      /* ---------- check for Steam ID added by MistaGee -------------------- 
+      		IF AUTHID == 4294967295 OR VALVE_ID_LAN OR HLTV, BAN PER IP TO NOT BAN EVERYONE */
+      if ( (equal("4294967295",authid2)) || (equal("HLTV",authid2)) || (equali("VALVE_ID_LAN",authid2))) { /* lan or HLTV!*/  /* END OF MODIFICATIONS BY MISTAGEE */
         new ipa[32]
         get_user_ip(player,ipa,31,1)
         server_cmd("addip %d %s;writeip",g_menuSettings[id],ipa)

@@ -901,9 +901,6 @@ AMX_NATIVE_INFO engine_Natives[] = {
 
 	//These are mostly from original VexD
 
-	// TODO: Backwards compatibility: VelocityByAim->velocity_by_aim
-	//                                RadiusDamage->radius_damage
-	//                                PointContents->point_contents
 	{"velocity_by_aim",		VelocityByAim},
 	{"radius_damage",		RadiusDamage},
 	{"point_contents",		PointContents},

@@ -93,13 +93,11 @@ void KeyValue(edict_t *pEntity, KeyValueData *pkvd)
 	if (DispatchKeyForward != -1) {
 		retVal = MF_ExecuteForward(DispatchKeyForward, index);
 		g_inKeyValue=false;
-		if (retVal > 0)
+		if (retVal)
 			RETURN_META(MRES_SUPERCEDE);
-		else
-			RETURN_META(MRES_HANDLED);
 	}
 	g_inKeyValue=false;
-	RETURN_META(MRES_HANDLED);
+	RETURN_META(MRES_IGNORED);
 }
 
 void StartFrame()
@@ -125,23 +123,25 @@ void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int 
 	int retVal = 0;
 	edict_t *pEntity = (edict_t *)player;
 	struct usercmd_s *g_cmd = (struct usercmd_s *)_cmd;
+	META_RES res = MRES_IGNORED;
+	int origImpulse = g_cmd->impulse; // incase a plugin alters it
 	for (i=0; i<Impulses.size(); i++)
 	{
 		if (Impulses[i]->Check == g_cmd->impulse)
 		{
 			retVal = MF_ExecuteForward(Impulses[i]->Forward, ENTINDEX(pEntity));
-			if (retVal)
+			if (retVal & 2 /*PLUGIN_HANDLED_MAIN*/)
 			{
 				g_cmd->impulse=0;
 				RETURN_META(MRES_SUPERCEDE);
 			}
-			else
-				RETURN_META(MRES_IGNORED);
+			else if (retVal)
+				res = MRES_SUPERCEDE;
 		}
 	}
 	if (CmdStartForward != -1) {
 		incmd = true;
-		retVal = MF_ExecuteForward(CmdStartForward, ENTINDEX(pEntity), g_cmd->impulse);
+		retVal = MF_ExecuteForward(CmdStartForward, ENTINDEX(pEntity), origImpulse);
 		incmd = false;
 		if (retVal) {
 			g_cmd->impulse = 0;
@@ -149,7 +149,7 @@ void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int 
 		}
 	}
 
-	RETURN_META(MRES_IGNORED);
+	RETURN_META(res);
 }
 
 void ClientKill(edict_t *pEntity)
@@ -225,6 +225,7 @@ void pfnTouch(edict_t *pToucher, edict_t *pTouched)
 	int retVal = 0;
 	const char *ptrClass = STRING(pToucher->v.classname);
 	const char *ptdClass = STRING(pTouched->v.classname);
+	META_RES res=MRES_IGNORED;
 	for (i=0; i<Touches.size(); i++)
 	{
 		if (Touches[i]->Toucher == 0)
@@ -232,31 +233,31 @@ void pfnTouch(edict_t *pToucher, edict_t *pTouched)
 			if (Touches[i]->Touched == 0)
 			{
 				retVal = MF_ExecuteForward(Touches[i]->Forward, ENTINDEX(pToucher), ENTINDEX(pTouched));
-				if (retVal)
+				if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
 					RETURN_META(MRES_SUPERCEDE);
-				else
-					RETURN_META(MRES_IGNORED);
+				else if (retVal)
+					res=MRES_SUPERCEDE;
 			} else if (fstrcmp(Touches[i]->Touched, ptdClass)) {
 				retVal = MF_ExecuteForward(Touches[i]->Forward, ENTINDEX(pToucher), ENTINDEX(pTouched));
-				if (retVal)
+				if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
 					RETURN_META(MRES_SUPERCEDE);
-				else
-					RETURN_META(MRES_IGNORED);
+				else if (retVal)
+					res=MRES_SUPERCEDE;
 			}
 		} else if (fstrcmp(Touches[i]->Toucher, ptrClass)) {
 			if (Touches[i]->Touched == 0)
 			{
 				retVal = MF_ExecuteForward(Touches[i]->Forward, ENTINDEX(pToucher), ENTINDEX(pTouched));
-				if (retVal)
+				if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
 					RETURN_META(MRES_SUPERCEDE);
-				else
-					RETURN_META(MRES_IGNORED);
+				else if (retVal)
+					res=MRES_SUPERCEDE;
 			} else if (fstrcmp(Touches[i]->Touched, ptdClass)) {
 				retVal = MF_ExecuteForward(Touches[i]->Forward, ENTINDEX(pToucher), ENTINDEX(pTouched));
-				if (retVal)
+				if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
 					RETURN_META(MRES_SUPERCEDE);
-				else
-					RETURN_META(MRES_IGNORED);
+				else if (retVal)
+					res=MRES_SUPERCEDE;
 			}
 		}
 	}
@@ -271,22 +272,29 @@ void pfnTouch(edict_t *pToucher, edict_t *pTouched)
 			RETURN_META(MRES_SUPERCEDE);
 	}
 
-	RETURN_META(MRES_IGNORED);
+	RETURN_META(res);
 }
 
 void Think(edict_t *pent)
 {
 	unsigned int i = 0;
 	const char *cls = STRING(pent->v.classname);
+	META_RES res=MRES_IGNORED;
+	int retVal=0;
 	for (i=0; i<Thinks.size(); i++)
 	{
 		if (fstrcmp(cls, Thinks[i]->Class))
 		{
-			MF_ExecuteForward(Thinks[i]->Forward, ENTINDEX(pent));
-			RETURN_META(MRES_IGNORED);
+			retVal=MF_ExecuteForward(Thinks[i]->Forward, ENTINDEX(pent));
+			if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
+				RETURN_META(MRES_SUPERCEDE);
+			else if (retVal)
+				res=MRES_SUPERCEDE;
 		}
 	}
-	MF_ExecuteForward(pfnThinkForward, ENTINDEX(pent));
+	retVal=MF_ExecuteForward(pfnThinkForward, ENTINDEX(pent));
+	if (retVal)
+		res=MRES_SUPERCEDE;
 
-	RETURN_META(MRES_IGNORED);
+	RETURN_META(res);
 }

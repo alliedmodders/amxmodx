@@ -8,6 +8,11 @@
 * This file is provided as is (no warranties).
 */
 
+#if defined _float_included
+  #endinput
+#endif
+#define _float_included
+
 /* Different methods of rounding */
 enum floatround_method {
 	floatround_round = 0,

@@ -90,6 +90,7 @@ AmxCallList preThink;
 AmxCallList postThink;
 AmxCallList clientKill;
 AmxCallList Msgs;
+AmxCallList clientImpulse;
 
 meta_globals_t *gpMetaGlobals;
 gamedll_funcs_t *gpGamedllFuncs;

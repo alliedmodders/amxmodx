@@ -33,6 +33,7 @@
 */
 
 #include <extdll.h>
+#include <usercmd.h>
 #include <meta_api.h>
 #include <dllapi.h>
 #include "sdk_util.h"
@@ -3202,6 +3203,23 @@ void MessageEnd(void) {
 	RETURN_META(result);
 }
 
+void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int random_seed)
+{
+	edict_t *pEntity = (edict_t *)player;
+	struct usercmd_s *cmd = (struct usercmd_s *)_cmd;
+	META_RES result = MRES_IGNORED;
+	cell iResult;
+
+	for (AmxCallList::AmxCall* i = clientImpulse.head; i; i = i->next) {
+		AMX_EXEC(i->amx, &iResult, i->iFunctionIdx, 2, ENTINDEX(pEntity), cmd->impulse);
+		if (iResult & 2) {
+			RETURN_META(MRES_SUPERCEDE);
+		} else if (iResult & 1) {
+			result = MRES_SUPERCEDE;
+		}
+	}
+}
+
 void WriteByte(int iValue) {
 	if(GlInfo.bBlocking) {
 		RETURN_META(MRES_SUPERCEDE);
@@ -3326,6 +3344,9 @@ void ServerActivate( edict_t *pEdictList, int edictCount, int clientMax ){
 		}
 		if (AMX_FINDPUBLIC(amx, "client_kill", &iFunctionIndex) == AMX_ERR_NONE) {
 			clientKill.put(amx, iFunctionIndex);
+		}
+		if (AMX_FINDPUBLIC(amx, "client_impulse",&iFunctionIndex) == AMX_ERR_NONE) {
+			clientImpulse.put(amx, iFunctionIndex);
 		}
 	}
 
@@ -3463,7 +3484,7 @@ void ClientPutInServer_Post( edict_t *pEntity ) {
 DLL_FUNCTIONS gFunctionTable;
 
 C_DLLEXPORT int GetEntityAPI2( DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion ){
-
+	gFunctionTable.pfnCmdStart = CmdStart;
 	gFunctionTable.pfnGameInit = GameInit;
 	gFunctionTable.pfnStartFrame = StartFrame;
 	gFunctionTable.pfnTouch = Touch;

@@ -31,7 +31,7 @@ static cell AMX_NATIVE_CALL register_think(AMX *amx, cell *params)
 	p->Class = new char[strlen(clsname)+1];
 	strcpy(p->Class, clsname);
 
-	p->Forward = MF_RegisterSPForwardByName(amx, MF_GetAmxString(amx, params[2], 0, &len), FP_CELL);
+	p->Forward = MF_RegisterSPForwardByName(amx, MF_GetAmxString(amx, params[2], 0, &len), FP_CELL, FP_DONE);
 
 	Thinks.push_back(p);
 
@@ -46,7 +46,7 @@ static cell AMX_NATIVE_CALL register_impulse(AMX *amx, cell *params)
 	Impulse *p = new Impulse;
 	p->Check = params[1];
 
-	p->Forward = MF_RegisterSPForwardByName(amx, MF_GetAmxString(amx, params[2], 0, &len), FP_CELL);
+	p->Forward = MF_RegisterSPForwardByName(amx, MF_GetAmxString(amx, params[2], 0, &len), FP_CELL, FP_DONE);
 
 	Impulses.push_back(p);
 
@@ -76,7 +76,7 @@ static cell AMX_NATIVE_CALL register_touch(AMX *amx, cell *params)
 		strcpy(p->Touched, Touched);
 	}
 
-	p->Forward = MF_RegisterSPForwardByName(amx, MF_GetAmxString(amx, params[3], 2, &len), FP_CELL, FP_CELL);
+	p->Forward = MF_RegisterSPForwardByName(amx, MF_GetAmxString(amx, params[3], 2, &len), FP_CELL, FP_CELL, FP_DONE);
 
 	Touches.push_back(p);
 
@@ -355,9 +355,8 @@ static cell AMX_NATIVE_CALL precache_event(AMX *amx, cell *params)
 {
 	int len;
 	char *szEvent = MF_FormatAmxString(amx, params, 2, &len);
-	PRECACHE_EVENT(params[1], (char *)STRING(ALLOC_STRING(szEvent)));
+	return PRECACHE_EVENT(params[1], (char *)STRING(ALLOC_STRING(szEvent)));
 
-	return 1;
 }
 
 static cell AMX_NATIVE_CALL get_info_keybuffer(AMX *amx, cell *params)
@@ -377,6 +376,7 @@ static cell AMX_NATIVE_CALL get_info_keybuffer(AMX *amx, cell *params)
 }
 
 //from jghg, who says it doesn't work
+// it works, it's just a picky engine call -sawce
 static cell AMX_NATIVE_CALL drop_to_floor(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
@@ -449,8 +449,8 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 				g_CameraCount--;
 				if (g_CameraCount < 0)
 					g_CameraCount=0;
-				if (g_CameraCount==0)
-					g_pFunctionTable->pfnAddToFullPack=AddToFullPack;
+				if (g_CameraCount==0) // Reset the AddToFullPack pointer if there's no more cameras in use...
+					g_pFunctionTable->pfnAddToFullPack=NULL;
 			}
 
 			plinfo[ENTINDEX(pPlayer)].iViewType = CAMERA_NONE;
@@ -471,6 +471,7 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 			}
 			g_CameraCount++;
 			g_pFunctionTable->pfnAddToFullPack=AddToFullPack;
+			g_pFunctionTable_Post->pfnPlayerPostThink=PlayerPostThink_Post;
 			plinfo[ENTINDEX(pPlayer)].iRenderMode = pPlayer->v.rendermode;
 			plinfo[ENTINDEX(pPlayer)].fRenderAmt = pPlayer->v.renderamt;
 
@@ -502,6 +503,7 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 
 			g_CameraCount++;
 			g_pFunctionTable->pfnAddToFullPack=AddToFullPack;
+			g_pFunctionTable_Post->pfnPlayerPostThink=PlayerPostThink_Post;
 			plinfo[ENTINDEX(pPlayer)].iRenderMode = pPlayer->v.rendermode;
 			plinfo[ENTINDEX(pPlayer)].fRenderAmt = pPlayer->v.renderamt;
 
@@ -533,6 +535,7 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 
 			g_CameraCount++;
 			g_pFunctionTable->pfnAddToFullPack=AddToFullPack;
+			g_pFunctionTable_Post->pfnPlayerPostThink=PlayerPostThink_Post;
 			plinfo[ENTINDEX(pPlayer)].iRenderMode = pPlayer->v.rendermode;
 			plinfo[ENTINDEX(pPlayer)].fRenderAmt = pPlayer->v.renderamt;
 

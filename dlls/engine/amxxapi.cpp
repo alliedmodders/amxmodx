@@ -120,7 +120,6 @@ qboolean Voice_SetClientListening(int iReceiver, int iSender, qboolean bListen)
 
 int AddToFullPack(struct entity_state_s *state, int e, edict_t *ent, edict_t *host, int hostflags, int player, unsigned char *pSet)
 {
-	sprintf("%s called\n",__FUNCTION__);
 	if(ent == host) {
 		if(FStrEq(STRING(ent->v.classname), "player")) {
 			if(plinfo[ENTINDEX(ent)].iViewType != CAMERA_NONE) {

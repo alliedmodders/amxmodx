@@ -184,7 +184,7 @@ if ($OPTIONS{"jit"})
 		push(@LINK, "JIT/jits.o");
 	}	 
 }
-
+push(@LINK, "zlib/libz.a");
 if ($OPTIONS{"asm"})
 {
 	push(@LINK, "amxexecn.o");
@@ -253,6 +253,6 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	}
 }
 
-$gcc = "$gccf $cflags -Lzlib/ -shared -ldl -lm -lz @LINK -o $outdir/$bin";
+$gcc = "$gccf $cflags -shared -ldl -lm @LINK -o $outdir/$bin";
 print "$gcc\n";
 `$gcc`;

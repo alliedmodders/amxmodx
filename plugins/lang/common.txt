@@ -1,4 +1,13 @@
-[english]
+[en]
 BACK = Back
 EXIT = Exit
 MORE = More
+ADMIN = admin
+ADMINS = admins
+PLAYER = player
+PLAYERS = players
+ERROR = error
+YES = yes
+NO = no
+BAN = ban
+KICK = kick

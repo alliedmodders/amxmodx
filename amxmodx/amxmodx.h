@@ -32,6 +32,15 @@
 #ifndef AMXMODX_H
 #define AMXMODX_H
 
+
+#include "string.h"
+#include <extdll.h>
+#include <meta_api.h>
+
+#ifdef MEMORY_TEST
+#include "mmgr/mmgr.h"
+#endif
+
 #include "CVector.h"
 #include "CList.h"
 #include "modules.h"
@@ -46,18 +55,13 @@
 #include "CCmd.h"
 #include "CMenu.h"
 #include "CEvent.h"
+#include "FakeMeta.h"
 
-#define AMX_VERSION     "2.0"
+#define AMX_VERSION     "0.2"
 
-#ifdef  __cplusplus
-extern "C" {
-#endif
-  extern AMX_NATIVE_INFO  core_Natives[];
-  extern AMX_NATIVE_INFO  time_Natives[];
-  extern AMX_NATIVE_INFO  power_Natives[];
-#ifdef  __cplusplus
-}
-#endif
+extern AMX_NATIVE_INFO  core_Natives[];
+extern AMX_NATIVE_INFO  time_Natives[];
+extern AMX_NATIVE_INFO  power_Natives[];
 extern  AMX_NATIVE_INFO amxmod_Natives[];
 extern  AMX_NATIVE_INFO file_Natives[];
 extern  AMX_NATIVE_INFO float_Natives[];
@@ -104,7 +108,7 @@ void UTIL_ShowMenu( edict_t* pEntity, int slots, int time, char *menu, int mlen 
 
 // Logging
 void AMXXLOG_Init();
-void AMXXLOG_MakeNewLogFile();
+void AMXXLOG_MapChange();
 void AMXXLOG_Log(const char *fmt, ...);
 
 #define GET_PLAYER_POINTER(e)   (&g_players[ENTINDEX(e)])
@@ -216,8 +220,7 @@ int loadModules(const char* filename);
 void dettachModules();
 void dettachReloadModules();
 void attachModules();
-void attachMetaModModules( const char* filename );
-void dettachMetaModModules( const char* filename );
+void attachMetaModModules(PLUG_LOADTIME now, const char* filename);
 
 // Count modules
 enum CountModulesMode
@@ -280,5 +283,6 @@ extern int FF_PluginEnd;
 extern int FF_InconsistentFile;
 extern int FF_ClientAuthorized;	
 
+extern CFakeMeta g_FakeMeta;
 #endif // AMXMODX_H
 

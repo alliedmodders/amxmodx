@@ -32,7 +32,7 @@ native Regex:regex_match(const string[], const pattern[], &ret, error[], maxLen)
  */
 native regex_substr(Regex:id, str_id, buffer[], maxLen);
 
-/* Frees the memory associated with a regex resuls and sets the handle to 0.
+/* Frees the memory associated with a regex results and sets the handle to 0.
  * You must do this if the handle >=1, once you're done.
  */
 native regex_free(&Regex:id);

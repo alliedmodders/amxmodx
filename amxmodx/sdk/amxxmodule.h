@@ -1947,6 +1947,7 @@ typedef int				(*PFN_AMX_EXEC)					(AMX* /*amx*/, cell* /*return val*/, int /*in
 typedef int				(*PFN_AMX_EXECV)				(AMX* /*amx*/, cell* /*return val*/, int /*index*/, int /*numparams*/, cell[] /*params*/);
 typedef int				(*PFN_AMX_ALLOT)				(AMX* /*amx*/, int /*length*/, cell* /*amx_addr*/, cell** /*phys_addr*/);
 typedef int				(*PFN_AMX_FINDPUBLIC)			(AMX* /*amx*/, char* /*func name*/, int* /*index*/);
+typedef int				(*PFN_AMX_FINDNATIVE)			(AMX* /*amx*/, char* /*func name*/, int* /*index*/);
 typedef int				(*PFN_LOAD_AMXSCRIPT)			(AMX* /*amx*/, void** /*code*/, const char* /*path*/, char[64] /*error info*/);
 typedef int				(*PFN_UNLOAD_AMXSCRIPT)			(AMX* /*amx*/,void** /*code*/);
 typedef cell			(*PFN_REAL_TO_CELL)				(REAL /*x*/);
@@ -2007,6 +2008,7 @@ extern PFN_REGISTER_SPFORWARD		g_fn_RegisterSPForward;
 extern PFN_REGISTER_SPFORWARD_BYNAME	g_fn_RegisterSPForwardByName;
 extern PFN_UNREGISTER_SPFORWARD		g_fn_UnregisterSPForward;
 extern PFN_MERGEDEFINITION_FILE		g_fn_MergeDefinition_File;
+extern PFN_AMX_FINDNATIVE			g_fn_AmxFindNative;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2100,8 +2102,10 @@ void MF_Log(const char *fmt, ...);
 #define MF_AmxExecv g_fn_AmxExecv
 #define MF_AmxFindPublic g_fn_AmxFindPublic
 #define MF_AmxAllot g_fn_AmxAllot
+#define MF_AmxFindNative g_fn_AmxFindNative
 #define MF_LoadAmxScript g_fn_LoadAmxScript
 #define MF_UnloadAmxScript g_fn_UnloadAmxScript
+#define MF_MergeDefinitionFile g_fn_MergeDefinition_File
 #define amx_ctof g_fn_CellToReal
 #define amx_ftoc g_fn_RealToCell
 #define MF_RegisterSPForwardByName g_fn_RegisterSPForwardByName

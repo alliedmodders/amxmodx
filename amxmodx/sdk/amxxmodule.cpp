@@ -2478,6 +2478,7 @@ PFN_REGISTER_SPFORWARD		g_fn_RegisterSPForward;
 PFN_REGISTER_SPFORWARD_BYNAME	g_fn_RegisterSPForwardByName;
 PFN_UNREGISTER_SPFORWARD	g_fn_UnregisterSPForward;
 PFN_MERGEDEFINITION_FILE	g_fn_MergeDefinition_File;
+PFN_AMX_FINDNATIVE			g_fn_AmxFindNative;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2542,6 +2543,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("amx_Execv", g_fn_AmxExecv, PFN_AMX_EXECV);
 	REQFUNC("amx_FindPublic", g_fn_AmxFindPublic, PFN_AMX_FINDPUBLIC);
 	REQFUNC("amx_Allot", g_fn_AmxAllot, PFN_AMX_ALLOT);
+	REQFUNC("amx_FindNative", g_fn_AmxFindNative, PFN_AMX_FINDNATIVE);
 
 	// Natives / Forwards
 	REQFUNC("AddNatives", g_fn_AddNatives, PFN_ADD_NATIVES);

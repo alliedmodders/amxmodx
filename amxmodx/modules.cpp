@@ -153,7 +153,6 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 		//automatic debug mode
 		hdr->flags |= AMX_FLAG_LINEOPS;
 		hdr->flags |= AMX_FLAG_DEBUG;
-		printf("init flags:= %d\n", hdr->flags);
 	}
 
 	int err;
@@ -1108,6 +1107,117 @@ void MNF_Log(const char *fmt, ...)
 	vsprintf(msg, fmt, arglst);
 	va_end(arglst);
 	AMXXLOG_Log("%s", msg);
+}
+
+//by BAILOPAN
+//  generic error printing routine
+void GenericError(AMX *amx, int err, int line, char buf[], const char *file)
+{
+	static const char *amx_errs[] =
+	{
+		NULL,
+		"forced exit",
+		"assertion failed",
+		"stack error",
+		"index out of bounds",
+		"memory access",
+		"invalid instruction",
+		"stack low",
+		"heap low",
+		"callback",
+		"native",
+		"divide",
+		"sleep",
+		NULL,
+		NULL,
+		NULL,
+		"out of memory", //16
+		"bad file format",
+		"bad file version",
+		"function not found",
+		"invalid entry point",
+		"debugger cannot run",
+		"plugin un or re-initialized",
+		"userdata table full",
+		"JIT failed to initialize",
+		"parameter error",
+		"domain error",
+	};
+	//does this plugin have line ops?
+	const char *geterr = NULL;
+	if (err > 26 || err < 0)
+		geterr = NULL;
+	else
+		geterr = amx_errs[err];
+	if (!(amx->flags & AMX_FLAG_LINEOPS))
+	{
+		if (geterr == NULL)
+		{
+			sprintf(buf, "Run time error %d (plugin \"%s\" - debug not enabled).", err, g_plugins.findPluginFast(amx)->getName());
+		} else {
+			sprintf(buf, "Run time error %d (%s) (plugin \"%s\") - debug not enabled.", err, geterr, g_plugins.findPluginFast(amx)->getName());
+		}
+	} else {
+		if (geterr == NULL)
+		{
+			sprintf(buf, "Run time error %d on line %d (%s \"%s\").", err, line, (file?"file":"plugin"), (file?file:g_plugins.findPluginFast(amx)->getName()));
+		} else {
+			sprintf(buf, "Run time error %d (%s) on line %d (%s \"%s\").", err, geterr, line, (file?"file":"plugin"), (file?file:g_plugins.findPluginFast(amx)->getName()));
+		}
+	}
+}
+
+//by BAILOPAN
+// debugger engine front end
+void LogError(AMX *amx, int err, const char *fmt, ...)
+{
+	//does this plugin have debug info?
+	va_list arg;
+	AMX_DBG *dbg = (AMX_DBG *)(amx->userdata[0]);
+	static char buf[1024];
+	static char vbuf[1024];
+	*buf = 0;
+	*vbuf = 0;
+
+	va_start(arg, fmt);
+	vsprintf(vbuf, fmt, arg);
+	va_end(arg);
+
+	if (!dbg || !(dbg->tail))
+	{
+		GenericError(amx, err, amx->curline, buf, NULL);
+		AMXXLOG_Log("[AMXX] %s %s", buf, vbuf);
+	} else {
+		AMX_TRACE *t = dbg->tail;
+		AMX_DEBUGCALL tracer = (AMX_DEBUGCALL)(amx->userdata[1]);
+		//actuall
+		cell line = amx->curline;
+		cell file = amx->curfile;
+		int i = 0;
+		if (file >= dbg->numFiles || file < 0)
+		{
+			GenericError(amx, err, line, buf, NULL);
+		} else {
+			GenericError(amx, err, line, buf, dbg->files[file]);
+		}
+		AMXXLOG_Log("[AMXX] %s %s", buf, vbuf);
+		AMXXLOG_Log("[AMXX] Debug Trace =>");
+		//log the error right away
+		while (t != NULL)
+		{
+			line = t->line;
+			file = t->file;
+			if (file >= dbg->numFiles)
+			{
+				AMXXLOG_Log("[AMXX]       [%d] Line %d, Plugin \"%s\"", i++, line, g_plugins.findPluginFast(amx)->getName());	
+			} else {
+				AMXXLOG_Log("[AMXX]       [%d] Line %d, Plugin \"%s\"", i++, line, dbg->files[file]);	
+			}
+			if (tracer)
+				(tracer)(amx, 1);		//pop	
+			t = dbg->tail;
+		}
+	}
 }
 
 void MNF_MergeDefinitionFile(const char *file)

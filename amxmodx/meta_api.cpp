@@ -106,7 +106,7 @@ int g_srvindex;
 
 cvar_t init_amxmodx_version = {"amxmodx_version", "", FCVAR_SERVER | FCVAR_SPONLY};
 cvar_t init_amxmodx_modules = {"amxmodx_modules", "", FCVAR_SPONLY};
-cvar_t init_amxmodx_debug = {"amx_debug", "", FCVAR_SPONLY};
+cvar_t init_amxmodx_debug = {"amx_debug", "1", FCVAR_SPONLY};
 cvar_t* amxmodx_version = NULL;
 cvar_t* amxmodx_modules = NULL;
 cvar_t* hostname = NULL;

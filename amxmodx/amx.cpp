@@ -39,11 +39,13 @@
 # endif
 #endif
 
+#include <stdio.h>
 #include <assert.h>
 #include <limits.h>
 #include <stdarg.h>
 #include <stddef.h>     /* for wchar_t */
 #include <string.h>
+#include <malloc.h>
 #include "osdefs.h"
 #if defined LINUX
   #include <sclinux.h>
@@ -479,6 +481,62 @@ int AMXAPI amx_Debug(AMX *amx)
   return AMX_ERR_DEBUG;
 }
 
+//Here is the actual debugger that AMX Mod X uses
+int AMXAPI amx_DebugCall(AMX *amx, int mode)
+{
+	//right away, check for debugging
+	AMX_HEADER *hdr;
+	AMX_DBG *p = 0;
+	AMX_TRACE *t = 0;
+	hdr = (AMX_HEADER *)amx->base;
+	if ( !(amx->flags & AMX_FLAG_DEBUG) || !(amx->flags & AMX_FLAG_LINEOPS))
+		return AMX_ERR_NONE;
+	p = (AMX_DBG *)(amx->userdata[0]);
+	if ( !p )
+		return AMX_ERR_NONE;
+	if (mode == 2)
+	{
+		//mode  - push onto the stack
+		t = (AMX_TRACE *)malloc(sizeof(AMX_TRACE));
+		memset(t, 0, sizeof(AMX_TRACE));
+		if (!p->head)
+		{
+			p->head = t;
+			t->prev = NULL;
+		} else {
+			t->prev = p->tail;
+			p->tail->next = t;
+		}
+		p->tail = t;
+		t->line = amx->curline;
+		t->file = amx->curfile;
+	} else if (mode == 1) {
+		//mode <0 - pop from the stack	
+		t = p->tail;
+		if (t)
+		{
+			p->tail = t->prev;
+			free(t);
+		}
+		if (p->tail == NULL)
+			p->head = NULL;
+	} else if (mode == 0) {
+		AMX_TRACE *m;
+		//mode == 0 - clear stack
+		t = p->head;
+		while (t)
+		{
+			m = t->next;
+			free(t);
+			t = m;
+		}
+		p->head = 0;
+		p->tail = 0;
+	}
+
+	return AMX_ERR_NONE;
+}
+
 #if defined JIT
 #if defined WIN32 || defined __cplusplus
   extern "C" int AMXAPI getMaxCodeSize(void);
@@ -535,6 +593,20 @@ static int amx_BrowseRelocate(AMX *amx)
   assert(OP_SYMBOL==126);
 
   amx->flags=AMX_FLAG_BROWSE;
+
+  /* check the debug hook */
+  if ((hdr->flags & AMX_FLAG_LINEOPS) && !(hdr->flags & AMX_FLAG_TRACED))
+  {
+    amx->userdata[0] = (AMX_DBG *)malloc(sizeof(AMX_DBG));
+	amx->userdata[1] = (void *)amx_DebugCall;
+	memset(amx->userdata[0], 0, sizeof(AMX_DBG));
+	amx->flags |= AMX_FLAG_LINEOPS;
+	amx->flags |= AMX_FLAG_TRACED;
+	amx->flags |= AMX_FLAG_DEBUG;
+  } else {
+	amx->userdata[0] = 0;
+	amx->userdata[1] = 0;
+  }
 
   #if defined __GNUC__ || defined ASM32 || defined JIT && !defined __64BIT__
     amx_Exec(amx, (cell*)&opcode_list, 0, 0);
@@ -715,6 +787,20 @@ static int amx_BrowseRelocate(AMX *amx)
       DBGPARAM(amx->curfile);
       amx->dbgname=(char *)(code+(int)cip);
       cip+=num - sizeof(cell);
+      if (!(hdr->flags & AMX_FLAG_TRACED) && amx->userdata[0] != NULL)
+      {
+        AMX_DBG *pDbg = (AMX_DBG *)(amx->userdata[0]);
+        if (pDbg->numFiles == 0)
+        {
+           pDbg->numFiles++;
+           pDbg->files = (char **)malloc(sizeof(char *) * 1);
+		} else {
+           pDbg->numFiles++;
+           pDbg->files = (char **)realloc(pDbg->files, pDbg->numFiles * sizeof(char*));
+        }
+        pDbg->files[pDbg->numFiles-1] = (char *)malloc((sizeof(char) * strlen(amx->dbgname)) + 1);
+        strcpy(pDbg->files[pDbg->numFiles-1], amx->dbgname);
+      } /* if */
       break;
     } /* case */
     case OP_LINE:
@@ -765,6 +851,7 @@ static int amx_BrowseRelocate(AMX *amx)
 
   amx->flags &= ~AMX_FLAG_BROWSE;
   amx->flags |= AMX_FLAG_RELOC;
+  amx->flags |= AMX_FLAG_TRACED;
   return AMX_ERR_NONE;
 }
 
@@ -1721,6 +1808,8 @@ static void *amx_opcodelist_nodebug[] = {
   ucell codesize;
   int num,i;
   va_list ap;
+  AMX_DEBUGCALL tracer = 0;
+  AMX_DBG *pdbg = 0;
 
   /* HACK: return label table (for amx_BrowseRelocate) if amx structure
    * has the AMX_FLAG_BROWSE flag set.
@@ -1823,6 +1912,20 @@ static void *amx_opcodelist_nodebug[] = {
   } /* if */
   /* check stack/heap before starting to run */
   CHKMARGIN();
+
+  if ((amx->flags & AMX_FLAG_DEBUG) && (amx->flags & AMX_FLAG_LINEOPS))
+  {
+	if (amx->userdata[0])
+	{
+		tracer = (AMX_DEBUGCALL)amx->userdata[1];
+		pdbg = (AMX_DBG *)(amx->userdata[0]);
+		if (tracer)
+		{
+			//as a precaution, clear the call stack
+			(tracer)(amx, 0);
+		}
+	}
+  }
 
   /* start running */
   NEXT(cip);
@@ -2108,6 +2211,10 @@ static void *amx_opcodelist_nodebug[] = {
     CHKMARGIN();
     NEXT(cip);
   op_ret:
+	if (tracer)
+	{
+        (tracer)(amx, 1);
+	}
     POP(frm);
     POP(offs);
     /* verify the return address */
@@ -2116,6 +2223,10 @@ static void *amx_opcodelist_nodebug[] = {
     cip=(cell *)(code+(int)offs);
     NEXT(cip);
   op_ret_nodebug:
+	if (tracer)
+	{
+        (tracer)(amx, 1);
+	}
     POP(frm);
     POP(offs);
     /* verify the return address */
@@ -2124,6 +2235,10 @@ static void *amx_opcodelist_nodebug[] = {
     cip=(cell *)(code+(int)offs);
     NEXT(cip);
   op_retn:
+	if (tracer)
+	{
+        (tracer)(amx, 1);
+	}
     POP(frm);
     POP(offs);
     /* verify the return address */
@@ -2133,6 +2248,10 @@ static void *amx_opcodelist_nodebug[] = {
     stk+= *(cell *)(data+(int)stk) + sizeof(cell); /* remove parameters from the stack */
     NEXT(cip);
   op_retn_nodebug:
+	if (tracer)
+	{
+        (tracer)(amx, 1);
+	}
     POP(frm);
     POP(offs);
     /* verify the return address */
@@ -2142,18 +2261,34 @@ static void *amx_opcodelist_nodebug[] = {
     stk+= *(cell *)(data+(int)stk) + sizeof(cell); /* remove parameters from the stack */
     NEXT(cip);
   op_call:
+	if (tracer)
+	{
+        (tracer)(amx, 2);
+	}
     PUSH(((unsigned char *)cip-code)+sizeof(cell));/* push address behind instruction */
     cip=JUMPABS(code, cip);                     /* jump to the address */
     NEXT(cip);
   op_call_nodebug:
+	if (tracer)
+	{
+        (tracer)(amx, 2);
+	}
     PUSH(((unsigned char *)cip-code)+sizeof(cell));/* push address behind instruction */
     cip=JUMPABS(code, cip);                     /* jump to the address */
     NEXT(cip);
   op_call_pri:
+	if (tracer)
+	{
+        (tracer)(amx, 2);
+	}
     PUSH((unsigned char *)cip-code);
     cip=(cell *)(code+(int)pri);
     NEXT(cip);
   op_call_pri_nodebug:
+	if (tracer)
+	{
+        (tracer)(amx, 2);
+	}
     PUSH((unsigned char *)cip-code);
     cip=(cell *)(code+(int)pri);
     NEXT(cip);
@@ -2697,6 +2832,8 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
     cell offs;
     int num;
   #endif
+  AMX_DEBUGCALL tracer = 0;
+  AMX_DBG *pdbg = 0;
 
   #if defined ASM32 || defined JIT
     /* HACK: return label table (for amx_BrowseRelocate) if amx structure
@@ -2717,6 +2854,16 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
       return 0;
     } /* if */
   #endif
+
+
+  if ((amx->flags & AMX_FLAG_DEBUG) && (amx->flags & AMX_FLAG_LINEOPS))
+  {
+	if (amx->userdata[0])
+	{
+		tracer = (AMX_DEBUGCALL)amx->userdata[1];
+		pdbg = (AMX_DBG *)(amx->userdata[0]);
+	}
+  }
 
   if (amx->callback==NULL)
     return AMX_ERR_CALLBACK;
@@ -3134,10 +3281,18 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
       cip=(cell *)(code+(int)offs);
       stk+= *(cell *)(data+(int)stk) + sizeof(cell); /* remove parameters from the stack */
       amx->stk=stk;
+	  if (tracer)
+	  {
+		  (tracer)(amx, 1);
+	  }
       break;
     case OP_CALL:
       PUSH(((unsigned char *)cip-code)+sizeof(cell));/* skip address */
       cip=JUMPABS(code, cip);                   /* jump to the address */
+	  if (tracer)
+	  {
+          (tracer)(amx, 2);
+	  }
       break;
     case OP_CALL_PRI:
       PUSH((unsigned char *)cip-code);

@@ -283,10 +283,9 @@ void plugin_srvcmd()
 								
 								if ((err = amx_Exec( (*a).getPlugin()->getAMX(), &ret , (*a).getFunction() 
 										, 3 , g_srvindex , (*a).getFlags() , (*a).getId() )) != AMX_ERR_NONE)
-										
-										AMXXLOG_Log("[AMXX] Run time error %d on line %ld (plugin \"%s\")",
-										err,(*a).getPlugin()->getAMX()->curline,(*a).getPlugin()->getName());
-								
+								{
+									LogError((*a).getPlugin()->getAMX(), err, "");
+								}
 								if ( ret ) break;
 						}
 						

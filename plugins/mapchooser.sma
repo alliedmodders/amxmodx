@@ -70,7 +70,7 @@ public plugin_init() {
   get_configsdir(maps_ini_file, 63);
   format(maps_ini_file, 63, "%s/maps.ini", maps_ini_file);
   if (!file_exists(maps_ini_file))
-    format(maps_ini_file, 63, "mapcycle.txt")
+  	get_cvar_string("mapcyclefile", maps_ini_file, 63)
   if ( loadSettings(maps_ini_file) )
     set_task(15.0,"voteNextmap",987456,"",0,"b")
 

@@ -76,12 +76,12 @@ public plugin_init() {
 
 #if defined USING_SQL
   register_srvcmd("amx_sqladmins","adminSql")
+  register_cvar("amx_sql_table","admins")
+#endif
   register_cvar("amx_sql_host","127.0.0.1")
   register_cvar("amx_sql_user","root")
   register_cvar("amx_sql_pass","")
   register_cvar("amx_sql_db","amx")
-  register_cvar("amx_sql_table","admins")
-#endif
 
   register_concmd("amx_reloadadmins","cmdReload",ADMIN_CFG)
 

@@ -4,13 +4,8 @@
 #define __MODULECONFIG_H__
 
 // Module info
-<<<<<<< moduleconfig.h
 #define MODULE_NAME "Sqlite"
 #define MODULE_VERSION "1.00"
-=======
-#define MODULE_NAME "MySQL"
-#define MODULE_VERSION "1.01"
->>>>>>> 1.7
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "http://www.amxmodx.org/"
 #define MODULE_LOGTAG "SQLITE"

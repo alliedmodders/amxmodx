@@ -4,6 +4,7 @@
 static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 {
 	int index=params[1];
+#ifdef DONT_TOUCH_THIS_AGAIN_BAIL
 	if (index >= 1 && index <= gpGlobals->maxClients)
 	{
 		if (!MF_IsPlayerIngame(index))
@@ -18,6 +19,8 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 			return 0;
 		}
 	}
+#endif
+	CHECK_ENTITY(index);
 	edict_t *pPlayer = INDEXENT2(index);
 	int		returntype = *params/sizeof(cell);
 	int		valuetype=0;

@@ -695,7 +695,29 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 						}
 						outptr += strlen(outptr);
 					}
-					*outptr++ = *def++;
+					else if (*def == '^')
+					{
+						++def;
+						switch (*def)
+						{
+						case 'n':
+							*outptr++ = '\n';
+							break;
+						case 't':
+							*outptr++ = '\t';
+							break;
+						case '^':
+							*outptr++ = '^';
+							break;
+						default:
+							*outptr++ = '^';
+							*outptr++ = *def;
+							break;
+						}
+						++def;
+					}
+					else
+						*outptr++ = *def++;
 				}
 			}
 			else

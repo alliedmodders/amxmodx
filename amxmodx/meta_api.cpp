@@ -422,9 +422,10 @@ void C_ServerDeactivate()	{
 
   for(int i	= 1; i <= gpGlobals->maxClients; ++i){
 	CPlayer	*pPlayer = GET_PLAYER_POINTER_I(i);
-	if (pPlayer->ingame){
+	if (pPlayer->initialized)
+		executeForwards(FF_ClientDisconnect, pPlayer->index);
 
-	  executeForwards(FF_ClientDisconnect, pPlayer->index);
+	if (pPlayer->ingame){
 
 	  pPlayer->Disconnect();
 	  --g_players_num;
@@ -546,8 +547,10 @@ BOOL C_ClientConnect_Post( edict_t *pEntity, const char *pszName,	const char *ps
 
 void C_ClientDisconnect( edict_t *pEntity	) {
   CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
+  if (pPlayer->initialized)
+	  executeForwards(FF_ClientDisconnect, pPlayer->index);
+
   if (pPlayer->ingame)	{
-	executeForwards(FF_ClientDisconnect, pPlayer->index);
 	--g_players_num;
   }
   pPlayer->Disconnect();

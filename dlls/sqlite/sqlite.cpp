@@ -43,7 +43,7 @@ CVector<SQL*> DBList;
 // Sqlite natives for AMX scripting
 // ///////////////////////////////
 
-// sql = mysql_connect(host[],user[],pass[],dbname[],error[],maxlength) :
+// Sql:dbi_connect(host[],user[],pass[],dbname[],error[],maxlength) :
 // - open connection
 // not used: host, user, pass
 static cell AMX_NATIVE_CALL sql_connect(AMX *amx, cell *params) //	6 param
@@ -95,7 +95,7 @@ static cell AMX_NATIVE_CALL sql_connect(AMX *amx, cell *params) //	6 param
 	return id+1;
 }
 
-// mysql_error(sql,dest[],maxlength)
+// dbi_error(Sql:sql,dest[],maxlength)
 // - store maxlength characters from mysql error in current row to dest
 static cell AMX_NATIVE_CALL sql_error(AMX *amx, cell *params) // 3 params
 {
@@ -124,10 +124,10 @@ static cell AMX_NATIVE_CALL sql_error(AMX *amx, cell *params) // 3 params
 	return 0;
 }
 
-// mysql_query(sql,query[]) - returns 0 on success, <0 on failure, >0 on result set
+// Result:dbi_query(Sql:sql,query[]) - returns 0 on success, <0 on failure, >0 on result set
 static cell AMX_NATIVE_CALL sql_query(AMX *amx, cell *params) //	2 params
 {
-	unsigned int id = params[1]-1;
+	unsigned int id = params[1] - 1;
 
 	if (id >= DBList.size() || DBList[id]->isFree) {
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid database handle %d", id);
@@ -144,27 +144,7 @@ static cell AMX_NATIVE_CALL sql_query(AMX *amx, cell *params) //	2 params
 	return sql->Query(query);	//Return the result set handle, if any
 }
 
-// the OLD mysql_query
-static cell AMX_NATIVE_CALL mysql_query(AMX *amx, cell *params)
-{
-	unsigned int id = params[1]-1;
-
-	if (id >= DBList.size() || DBList[id]->isFree) {
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid database handle %d", id);
-		return QUERY_FAILED;
-	}
-
-	lastDb = id;
-
-	int len = 0;
-	const char *query = MF_FormatAmxString(amx, params, 2, &len);
-
-	SQL *sql = DBList[id];
-
-	return sql->Query(query, 1);	//Return the result set handle, if any
-}
-
-// mysql_nextrow(sql) :
+// dbi_nextrow(Sql:sql) :
 // - read next row
 // - return :
 //	 . number of line
@@ -190,21 +170,7 @@ static cell AMX_NATIVE_CALL sql_nextrow(AMX *amx, cell *params) //	1 param
 	return Result->Nextrow();
 }
 
-// old version
-static cell AMX_NATIVE_CALL mysql_nextrow(AMX *amx, cell *params) //	1 param
-{
-	if (Results.size() < 1)
-	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid result");
-		return 0;
-	}
-
-	SQLResult *Result = Results[0];
-
-	return Result->Nextrow();
-}
-
-// mysql_close(sql) :
+// dbi_close(Sql:sql) :
 // - free result
 // - close connection
 static cell AMX_NATIVE_CALL sql_close(AMX *amx, cell *params) // 1 param
@@ -277,29 +243,6 @@ static cell AMX_NATIVE_CALL sql_getfield(AMX *amx, cell *params) // 2-4 params
 	return 0;
 }
 
-//Mysql version
-static cell AMX_NATIVE_CALL mysql_getfield(AMX *amx, cell *params) // 2-4 params
-{
-	unsigned int id = params[2];
-
-	if (Results.size() < 1)
-	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid result handle %d", id);
-		return 0;
-	}
-
-	SQLResult *Result = Results[0];
-	cell *fAddr = NULL;
-	const char *field = Result->GetField(id);
-	if (field == NULL)
-	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Unknown error");
-		return 0;
-	}
-
-	return MF_SetAmxString(amx, params[3], field?field:"", *(MF_GetAmxAddr(amx, params[4])));
-}
-
 //Returns a field from a query result handle.
 // 2 param - returns integer
 // 3 param - stores float in cell byref
@@ -369,7 +312,7 @@ static cell AMX_NATIVE_CALL sql_free_result(AMX *amx, cell *params)
 	*addr = 0;
 
 	if (Result->isFree) {
-		MF_PrintSrvConsole("***ERROR: Tried to free result %d, but the result was already free!\n", id + 1);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Tried to free result %d, but the result was already free!", id + 1);
 		return 0;
 	}
 
@@ -422,12 +365,6 @@ AMX_NATIVE_INFO mysql_Natives[] = {
 	{ "dbi_free_result",	sql_free_result },
 	{ "dbi_num_rows",		sql_num_rows },
 	{ "dbi_result",			sql_getresult },
-	{ "mysql_connect",		sql_connect },
-	{ "mysql_query",		mysql_query },	
-	{ "mysql_getfield",		mysql_getfield },	
-	{ "mysql_nextrow",		mysql_nextrow },	
-	{ "mysql_close",		sql_close },	
-	{ "mysql_error",		sql_error },
 	{ NULL, NULL }
 };
 

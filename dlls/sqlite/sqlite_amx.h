@@ -22,7 +22,7 @@ public:
 	SQL();
 	~SQL();
 	int Connect(/*const char *host, const char *user, const char *pass,*/ const char *base);
-	int Query(const char *query, int OLD=0);
+	int Query(const char *query);
 	void Disconnect();
 	int Error();
 

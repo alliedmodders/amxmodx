@@ -58,25 +58,12 @@ void SQL::Disconnect()
 	isFree = true;
 }
 
-int SQL::Query(const char *query, int OLD)
+int SQL::Query(const char *query)
 {
 	if (sqlite == NULL || isFree)
 	{
 		ErrorCode = -1;
 		return -1;
-	}
-
-	if (OLD)
-	{
-		if (Results.size() < 1)
-		{
-			SQLResult *t = new SQLResult;
-			Results.push_back(t);
-		} else {
-			if (!Results[0]->isFree)
-				Results[0]->FreeResult();
-		}
-		return (Results[0]->Query(this, query)==0);
 	}
 
 	unsigned int i = 0;

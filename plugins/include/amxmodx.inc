@@ -196,8 +196,14 @@ native get_user_armor(index);
 /* Returns player deaths. */
 native get_user_deaths(index);
 
+/* Sets player deaths. */
+native set_user_deaths(index, newdeaths);
+
 /* Returns player frags. */
 native get_user_frags(index);
+
+/* Sets player frags. */
+native set_user_frags(index, frags);
 
 /* Returns player health. */
 native get_user_health(index);

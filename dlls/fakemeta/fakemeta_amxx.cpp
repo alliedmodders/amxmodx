@@ -18,17 +18,17 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 		g_player_edicts[i]=pEdictList + i;
 	RETURN_META(MRES_IGNORED);
 }
-#define RESETD(call) \
-	g_pFunctionTable->pfn##call = NULL; \
-	g_pFunctionTable_Post->pfn##call = NULL; \
-	Engine[FM_##call].clear(); \
-	EnginePost[FM_##call].clear(); 
+#define RESETD(tcall) \
+	g_pFunctionTable->pfn##tcall =0; \
+	g_pFunctionTable_Post->pfn##tcall =NULL; \
+	Engine[FM_##tcall##].clear(); \
+	EnginePost[FM_##tcall##].clear()
 
 #define RESETE(call) \
 	g_pengfuncsTable->pfn##call = NULL; \
 	g_pengfuncsTable_Post->pfn##call = NULL; \
 	Engine[FM_##call].clear(); \
-	EnginePost[FM_##call].clear(); 
+	EnginePost[FM_##call].clear() 
 
 void OnPluginsLoaded()
 {

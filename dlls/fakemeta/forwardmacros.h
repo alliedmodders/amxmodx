@@ -1,6 +1,7 @@
 #ifndef FORWARDMACROS_H
 #define FORWARDMACROS_H
 
+
 #define SIMPLE_CONSTSTRING_HOOK_VOID(call) \
 	const char* call () \
 	{ \

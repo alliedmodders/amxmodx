@@ -215,7 +215,7 @@ static cell AMX_NATIVE_CALL sql_getfield(AMX *amx, cell *params) // 2-4 params
 	SQLResult *Result = Results[id];
 	int numParams = (*params)/sizeof(cell);
 	cell *fAddr = NULL;
-	const char *field = Result->GetField(id);
+	const char *field = Result->GetField(params[2]-1);
 	if (field == NULL)
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
@@ -262,7 +262,7 @@ static cell AMX_NATIVE_CALL sql_getresult(AMX *amx, cell *params) // 4 params
 	cell *fAddr = NULL;
 	int len = 0;
 	const char *column = MF_GetAmxString(amx, params[2], 0, &len);
-	const char *field = Result->GetField(id);
+	const char *field = Result->GetField(column);
 	if (field == NULL)
 	{
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);

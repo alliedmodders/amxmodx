@@ -41,7 +41,8 @@ new g_serverLang
 new g_langNum
 new g_coloredMenus
 
-public plugin_init() {
+public plugin_init()
+{
   register_plugin("Multi-Lingual System",AMXX_VERSION_STR,"AMXX Dev Team")
   register_dictionary("multilingual.txt")
   register_dictionary("common.txt")
@@ -74,7 +75,8 @@ public client_putinserver(id) {
     set_task(10.0,"dispInfo",id)
 }
 
-public dispInfo(id) {
+public dispInfo(id)
+{
   if (get_cvar_num("amx_client_languages"))
     client_print(id,print_chat,"%L",id,"TYPE_LANGMENU")
 }
@@ -83,7 +85,7 @@ public dispInfo(id) {
 public cmdLang(id,level,cid) {
   if (!cmd_access(id,level,cid,2))
     return PLUGIN_HANDLED
-
+    
   new arg[3]
   read_argv(1,arg,2)
 
@@ -99,8 +101,13 @@ public cmdLang(id,level,cid) {
   return PLUGIN_HANDLED
 }
 
-public cmdLangMenu(id,level,cid) {
+public cmdLangMenu(id,level,cid)
+{
   new buffer[3]
+  
+  if (!get_cvar_num("amx_client_languages"))
+  	return PLUGIN_HANDLED
+  
   get_user_info(id,"lang",buffer,2)
 
   g_menuLang[id][0] = get_lang_id(buffer)
@@ -111,7 +118,10 @@ public cmdLangMenu(id,level,cid) {
   return PLUGIN_HANDLED
 }
 
-showMenu(id) {
+showMenu(id)
+{
+  if (!get_cvar_num("amx_client_languages"))
+  	return PLUGIN_HANDLED
   new menuBody[512],pLang[3]
 
   get_lang(g_menuLang[id][0],pLang)
@@ -131,11 +141,13 @@ showMenu(id) {
   format( menuBody[len],511-len,"^n^n0. %L",id,"EXIT" )
 
   show_menu(id,MENU_KEY_0|MENU_KEY_1|MENU_KEY_2|MENU_KEY_3,menuBody,-1,"Language Menu")
+  
+  return 1
 }
 
 public actionMenu(id,key) {
   if (!get_cvar_num("amx_client_languages"))
-    return
+    return 0
 
   new isAdmin = access(id,ADMIN_CFG)
 
@@ -174,6 +186,8 @@ public actionMenu(id,key) {
     format(lName,63,"%L",pLang,"LANG_NAME")
     client_print(id,print_chat,"%L",pLang,"SET_LANG_USER",lName)
   }
+  
+  return 0
 }
 
 get_lang_id(lang[]) {

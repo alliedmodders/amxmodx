@@ -32,7 +32,8 @@
 *  version.
 */
 
-#define USING_SQL	1
+// comment for non-mysql version
+#define USING_SQL
 
 #include <amxmodx>
 #include <amxmisc>
@@ -40,7 +41,7 @@
 #include <dbi>
 #endif
 
-#define MAX_ADMINS  64
+#define MAX_ADMINS 64
 
 new g_aPassword[MAX_ADMINS][32]
 new g_aName[MAX_ADMINS][32]
@@ -178,12 +179,7 @@ public adminSql() {
     dbi_result(Res, "access", szAccess, 31)
     dbi_result(Res, "flags", szFlags, 31)
 
-    if ( (containi(szAccess,"z")==-1) && (containi(szAccess,"y")==-1) )
-      szAccess[strlen(szAccess)] = 'y'
-
     g_aAccess[ g_aNum ] = read_flags( szAccess )
-    if (!(g_aAccess[g_aNum] & ADMIN_USER) && !(g_aAccess[g_aNum] & ADMIN_ADMIN))
-      g_aAccess[g_aNum] |= ADMIN_ADMIN
 
     g_aFlags[ g_aNum ] = read_flags( szFlags )
     ++g_aNum

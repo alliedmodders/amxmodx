@@ -28,13 +28,13 @@ void DispatchUse(edict_t *pentUsed, edict_t *pentOther)
 }
 
 int DispatchSpawn(edict_t *pEntity) {
-/*	if (SpawnForward) {
+	if (SpawnForward) {
 		int retVal = 0;
 		int id = ENTINDEX(pEntity);
 		retVal = MF_ExecuteForward(SpawnForward, id);
 		if (retVal)
 			RETURN_META_VALUE(MRES_SUPERCEDE, 0);
-	}*/
+	}
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
@@ -93,7 +93,7 @@ void KeyValue(edict_t *pEntity, KeyValueData *pkvd)
 }
 #endif
 
-void StartFrame()
+void StartFrame_Post()
 {
 	if (glinfo.bCheckLights) {
 		if (!FStrEq((const char*)glinfo.szLastLights, "")) {
@@ -139,23 +139,15 @@ void ClientKill(edict_t *pEntity)
 	RETURN_META(MRES_IGNORED);
 }
 
-void PlayerPreThink(edict_t *pEntity)
+void PlayerPreThink_Post(edict_t *pEntity)
 {
-	int retVal = 0;
-
-	if (pfnTouchForward) {
-		retVal = MF_ExecuteForward(PlayerPreThinkForward, ENTINDEX(pEntity));
-		if (retVal)
-			RETURN_META(MRES_SUPERCEDE);
-	}
+	MF_ExecuteForward(PlayerPreThinkForward, ENTINDEX(pEntity));
 
 	RETURN_META(MRES_IGNORED);
 }
 
-void PlayerPostThink(edict_t *pEntity)
+void PlayerPostThink_Post(edict_t *pEntity)
 {
-	int retVal = 0;
-
 	if(plinfo[ENTINDEX(pEntity)].pViewEnt) {
 		edict_t *pCamEnt = plinfo[ENTINDEX(pEntity)].pViewEnt;
 
@@ -193,11 +185,7 @@ void PlayerPostThink(edict_t *pEntity)
 		}
 	}
 
-	if (pfnTouchForward) {
-		retVal = MF_ExecuteForward(PlayerPostThinkForward, ENTINDEX(pEntity));
-		if (retVal)
-			RETURN_META(MRES_SUPERCEDE);
-	}
+	MF_ExecuteForward(PlayerPostThinkForward, ENTINDEX(pEntity));
 
 	RETURN_META(MRES_IGNORED);
 }
@@ -215,15 +203,9 @@ void DispatchTouch(edict_t *pToucher, edict_t *pTouched)
 	RETURN_META(MRES_IGNORED);
 }
 
-void DispatchThink(edict_t *pent)
+void DispatchThink_Post(edict_t *pent)
 {
-	int retVal = 0;
-
-	if (pfnThinkForward) {
-		retVal = MF_ExecuteForward(pfnThinkForward, ENTINDEX(pent));
-		if (retVal)
-			RETURN_META(MRES_SUPERCEDE);
-	}
+	MF_ExecuteForward(pfnThinkForward, ENTINDEX(pent));
 
 	RETURN_META(MRES_IGNORED);
 }

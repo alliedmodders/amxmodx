@@ -1,14 +1,14 @@
-#include "messages.h"
+#include "engine.h"
 
 using namespace std;
 
 std::vector<argMsg*> Msg;
+int msgHooks[256] = {0};
+int msgBlocks[256] = {0};
 int msgDest;
 int msgType;
 float *msgOrigin;
 edict_t *msgpEntity;
-int msgHooks[256] = {0};
-int msgBlocks[256] = {0};
 bool inhook = false;
 bool inblock = false;
 unsigned int msgCount = 0;
@@ -278,9 +278,8 @@ void MessageEnd(void)
 			msgBlocks[msgType] = BLOCK_NOT;
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (inhook) {
-		inhook = false;
 		mres = MF_ExecuteForward(msgHooks[msgType], msgType, msgDest, ENTINDEX(msgpEntity));
-		MF_Log("Executing forward: %d with retval %d", msgHooks[msgType], mres);
+		inhook = false;
 		if (mres & 1)
 			RETURN_META(MRES_SUPERCEDE);
 		MESSAGE_BEGIN(msgDest, msgType, msgOrigin, msgpEntity);
@@ -300,7 +299,7 @@ static cell AMX_NATIVE_CALL register_message(AMX *amx, cell *params)
 	int len;
 	if (params[1]>0 && params[1] < 256) {
 		int id = MF_RegisterSPForwardByName(amx, MF_GetAmxString(amx, params[2], 0, &len), FP_CELL, FP_CELL, FP_CELL, FP_DONE);
-		MF_Log("Registering message %d with result %d", params[1], id);
+//		MF_Log("Registering message %d with result %d", params[1], id);
 		msgHooks[params[1]] = id;
 		return id;
 	}
@@ -342,59 +341,59 @@ static cell AMX_NATIVE_CALL get_msg_args(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_msg_argtype(AMX *amx, cell *params)
 {
-	unsigned int argn = params[1];
+	unsigned int argn = params[1]-1;
 
 	if (!inhook || argn >= Msg.size()) {
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
-	return Msg[argn-1]->Type();
+	return Msg[argn]->Type();
 }
 
 static cell AMX_NATIVE_CALL get_msg_arg_int(AMX *amx, cell *params)
 {
-	unsigned int argn = params[1];
+	unsigned int argn = params[1]-1;
 
 	if (!inhook || argn >= Msg.size()) {
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
-	int iVal = Msg[argn-1]->iData;
+	int iVal = Msg[argn]->iData;
 
 	return iVal;
 }
 
 static cell AMX_NATIVE_CALL set_msg_arg_int(AMX *amx, cell *params)
 {
-	unsigned int argn = params[1];
+	unsigned int argn = params[1]-1;
 
 	if (!inhook || argn >= Msg.size()) {
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
-	Msg[argn-1]->iData = params[2];
+	Msg[argn]->iData = params[2];
 
 	return 1;
 }
 
 static cell AMX_NATIVE_CALL get_msg_arg_float(AMX *amx, cell *params)
 {
-	unsigned int argn = params[1];
+	unsigned int argn = params[1]-1;
 
 	if (!inhook || argn >= Msg.size()) {
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
-	return amx_ftoc(Msg[argn-1]->fData);
+	return amx_ftoc(Msg[argn]->fData);
 }
 
 static cell AMX_NATIVE_CALL set_msg_arg_float(AMX *amx, cell *params)
 {
-	unsigned int argn = params[1];
+	unsigned int argn = params[1]-1;
 
 	if (!inhook || argn >= Msg.size()) {
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
@@ -403,28 +402,28 @@ static cell AMX_NATIVE_CALL set_msg_arg_float(AMX *amx, cell *params)
 
 	REAL fVal = amx_ctof(params[2]);
 
-	Msg[argn-1]->fData = fVal;
+	Msg[argn]->fData = fVal;
 
 	return 1;
 }
 
 static cell AMX_NATIVE_CALL get_msg_arg_string(AMX *amx, cell *params)
 {
-	unsigned int argn = params[1];
+	unsigned int argn = params[1]-1;
 
 	if (!inhook || argn >= Msg.size()) {
 		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
 
-	const char *szVal = Msg[argn-1]->cData.c_str();
+	const char *szVal = Msg[argn]->cData.c_str();
 
 	return MF_SetAmxString(amx, params[2], szVal, params[3]);
 }
 
 static cell AMX_NATIVE_CALL set_msg_arg_string(AMX *amx, cell *params)
 {
-	unsigned int argn = params[1];
+	unsigned int argn = params[1]-1;
 	int iLen;
 
 	if (!inhook || argn >= Msg.size()) {
@@ -434,7 +433,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_string(AMX *amx, cell *params)
 
 	char *szVal = MF_GetAmxString(amx, params[2], 0, &iLen);
 
-	Msg[argn-1]->cData.assign(szVal);
+	Msg[argn]->cData.assign(szVal);
 
 	return 1;
 }

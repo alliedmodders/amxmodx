@@ -1319,15 +1319,15 @@ static cell AMX_NATIVE_CALL entity_set_size(AMX *amx, cell *params)
 	edict_t *pEnt = INDEXENT(iEnt);
 
 	cell *cMin = MF_GetAmxAddr(amx, params[2]);
-	REAL x1 = amx_ftoc(cMin[0]);
-	REAL y1 = amx_ftoc(cMin[1]);
-	REAL z1 = amx_ftoc(cMin[2]);
+	REAL x1 = amx_ctof(cMin[0]);
+	REAL y1 = amx_ctof(cMin[1]);
+	REAL z1 = amx_ctof(cMin[2]);
 	Vector vMin = Vector(x1, y1, z1);
 
 	cell *cMax = MF_GetAmxAddr(amx, params[3]);
-	REAL x2 = amx_ftoc(cMax[0]);
-	REAL y2 = amx_ftoc(cMax[1]);
-	REAL z2 = amx_ftoc(cMax[2]);
+	REAL x2 = amx_ctof(cMax[0]);
+	REAL y2 = amx_ctof(cMax[1]);
+	REAL z2 = amx_ctof(cMax[2]);
 	Vector vMax = Vector(x2, y2, z2);
 
 	UTIL_SetSize(pEnt, vMin, vMax);

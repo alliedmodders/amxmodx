@@ -120,9 +120,24 @@ void ServerDeactivate()
 	memset(glinfo.szRealLights, 0x0, 128);
 	glinfo.bLights = false;
 	glinfo.fNextLights = 0;
+	Msg.clear();
+	register int i = 0;
+	for (i=0; i<256; i++) {
+		msgHooks[i] = 0;
+		msgBlocks[i] = 0;
+	}
 
 	RETURN_META(MRES_IGNORED);
+}
 
+void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
+{
+	Msg.clear();
+	register int i = 0;
+	for (i=0; i<256; i++) {
+		msgHooks[i] = 0;
+		msgBlocks[i] = 0;
+	}
 }
 
 void LightStyle(int style, char *val) {

@@ -619,7 +619,7 @@ AMX *MNF_GetAmxScript(int id)
 	while (iter && id--)
 		++iter;
 
-	if ((*iter) == NULL)
+	if (iter == NULL)
 		return NULL;
 	return (*iter).getAMX();
 }
@@ -630,7 +630,7 @@ const char *MNF_GetAmxScriptName(int id)
 	while (iter && id--)
 		++iter;
 
-	if ((*iter) == NULL)
+	if (iter == NULL)
 		return NULL;
 	return (*iter).getName();
 }

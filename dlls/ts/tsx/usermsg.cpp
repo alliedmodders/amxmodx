@@ -146,7 +146,7 @@ void Client_TSHealth_End(void* mValue){
 	if ( weaponData[weapon].melee ) 
 		pAttacker->saveShot(weapon);
 	
-	MF_ExecuteForward( iFDamage, pAttacker->index, mPlayer->index, damage, weapon, aim, TA );
+	g_damage_info.exec( pAttacker->index, mPlayer->index, damage, weapon, aim, TA );
 	
 	if ( mPlayer->IsAlive() )
 		return;
@@ -217,7 +217,7 @@ void Client_TSHealth_End(void* mValue){
 	}
 
 	pAttacker->saveKill(mPlayer,weapon,( aim == 1 ) ? 1:0 ,TA);
-	MF_ExecuteForward( iFDeath, pAttacker->index, mPlayer->index, weapon, aim, killFlags, TA );
+	g_death_info.exec( pAttacker->index, mPlayer->index, weapon, aim, killFlags, TA );
 
 }
 

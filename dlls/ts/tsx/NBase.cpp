@@ -337,6 +337,30 @@ static cell AMX_NATIVE_CALL ts_setup(AMX *amx, cell *params){ // index,pwupentin
 
 }
 
+static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params){ // forward 
+	int iFunctionIndex;
+	switch( params[1] ){
+	case 0:
+		if( MF_AmxFindPublic(amx, "client_damage", &iFunctionIndex) == AMX_ERR_NONE )
+			g_damage_info.put( amx , iFunctionIndex );
+		else
+			MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+			return 0;
+		break;
+	case 1:
+		if( MF_AmxFindPublic(amx, "client_death", &iFunctionIndex) == AMX_ERR_NONE )
+			g_death_info.put( amx , iFunctionIndex );
+		else
+			MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+			return 0;
+		break;
+	default:
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+	return 1;
+}
+
 AMX_NATIVE_INFO base_Natives[] = {
 	{ "ts_getwpnname", get_weapon_name },
 	{ "ts_getwpnlogname", get_weapon_logname },
@@ -356,6 +380,8 @@ AMX_NATIVE_INFO base_Natives[] = {
 	{ "ts_givepwup",give_pwup },
 
 	{ "ts_setpddata",ts_setup },
+
+	{ "register_forward",register_forward },
 
 	//"*******************"
 	{ NULL, NULL } 

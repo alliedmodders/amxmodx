@@ -90,8 +90,8 @@ extern int mState;
 extern bool is_theonemode;
 extern bool rankBots;
 
-extern int iFDeath;
-extern int iFDamage;
+extern Forward g_death_info;
+extern Forward g_damage_info;
 
 struct weapon_t {
 	bool melee; // 

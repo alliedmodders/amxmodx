@@ -320,7 +320,7 @@
 			prev_mres = mres; \
 			if (mres == MRES_UNSET) \
 				AMXXLOG_Log("[AMXX] Module \"%s\" (\"%s\") has not set meta result in \"%s\"", \
-				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnArgs); \
+				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnName); \
 		} \
 	} \
 	/* Set meta result to the highest value */ \
@@ -353,7 +353,7 @@
 			prev_mres = mres; \
 			if (mres == MRES_UNSET) \
 				AMXXLOG_Log("[AMXX] Module \"%s\" (\"%s\") has not set meta result in \"%s\"", \
-				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnArgs); \
+				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnName); \
 		} \
 	} \
 	/* Set meta result to the highest value */ \
@@ -379,7 +379,7 @@
 			prev_mres = mres; \
 			if (mres == MRES_UNSET) \
 				AMXXLOG_Log("[AMXX] Module \"%s\" (\"%s\") has not set meta result in \"%s\"", \
-				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnArgs); \
+				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnName); \
 		} \
 	} \
 	/* Set meta result to the highest value */ \
@@ -412,7 +412,10 @@
 			prev_mres = mres; \
 			if (mres == MRES_UNSET) \
 				AMXXLOG_Log("[AMXX] Module \"%s\" (\"%s\") has not set meta result in \"%s\"", \
-				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnArgs); \
+				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnName); \
+			if (mres == MRES_SUPERCEDE) \
+				AMXXLOG_Log("[AMXX] Module \"%s\" (\"%s\") has set meta result in \"%s\" to supercede", \
+				(*iter).GetInfo()->name, (*iter).GetPath(), #pfnName); \
 		} \
 	} \
 	/* Set meta result to the highest value */ \

@@ -69,7 +69,7 @@ pfnmodule_engine_g* g_engModuleFunc;
 #if defined __cswonbuild__
 #define VERSION "0.1 WON" // change both these versions
 #else
-#define VERSION "0.1" // change both these versions
+#define VERSION "0.1 STEAM" // change both these versions
 #endif // defined __cswonbuild__
 #define URL "http://www.amxmodx.org"
 #define LOGTAG "AMXCS"

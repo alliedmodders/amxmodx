@@ -2344,6 +2344,14 @@ CFakeMeta::CFakeMetaPlugin::~CFakeMetaPlugin()
 	}
 }
 
+// ghost_of_evilspy's "could not find memloc for cvar" fix
+void FakeMeta_New_CVarRegister(cvar_t *pCVar)
+{
+	static cvar_t tmpvar;
+	tmpvar = *pCVar;
+	CVAR_REGISTER(&tmpvar);
+}
+
 int CFakeMeta::CFakeMetaPlugin::Query(mutil_funcs_t *pMetaUtilFuncs)
 {
 	// Load the library
@@ -2390,7 +2398,13 @@ int CFakeMeta::CFakeMetaPlugin::Query(mutil_funcs_t *pMetaUtilFuncs)
 		m_Status = PL_BADFILE;
 		return 0;
 	}
-	giveEngFuncsFn(&g_engfuncs, gpGlobals);
+	
+	// ghost_of_evilspy's "Could not find memloc for cvar" fix
+	static enginefuncs_t fakemeta_engfuncs;
+	memcpy(&fakemeta_engfuncs, &g_engfuncs, sizeof(enginefuncs_t));
+	// Override cvar register to our own function
+	fakemeta_engfuncs.pfnCVarRegister = FakeMeta_New_CVarRegister;
+	giveEngFuncsFn(&fakemeta_engfuncs, gpGlobals);
 
 	if (queryFn(META_INTERFACE_VERSION, &m_Info, pMetaUtilFuncs) != 1)
 	{

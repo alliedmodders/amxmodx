@@ -10,10 +10,10 @@ void CPlayer::PreThink()
 		bot=true;
 	}
 	if (olddeadflag && pev->deadflag == 0 && SpawnForward != -1)
-		MF_ExecuteForward(SpawnForward,index);
+		MF_ExecuteForward(SpawnForward,index());
 
 	if (oldteam != pev->team && TeamForward != -1)
-		MF_ExecuteForward(TeamForward,index,pev->team,oldteam);
+		MF_ExecuteForward(TeamForward,index(),pev->team,oldteam);
 	
 	int tClass = GetClass();
 	if (tClass != iclass)
@@ -43,7 +43,7 @@ void CPlayer::PostThink_Post()
 void CPlayer::ChangeClass(int newclass)
 {
 	if (ChangeclassForward != -1)
-		MF_ExecuteForward(ChangeclassForward, index, newclass, iclass, oldimpulse);
+		MF_ExecuteForward(ChangeclassForward, index(), newclass, iclass, oldimpulse);
 	iclass=newclass;
 }
 

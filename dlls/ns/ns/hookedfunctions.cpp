@@ -86,7 +86,7 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 		player_edicts[i]=pEdictList + i;
 		CPlayer *player = GET_PLAYER_I(i);
 		player->edict=pEdictList + i;
-		player->index=i;
+		//player->index=i;
 		player->pev=&player->edict->v;
 		player->oldimpulse=0;
 		player->Reset();

@@ -21,7 +21,7 @@ public:
 	int	oldimpulse; // Store the previous impulse.
 	int olddeadflag;
 	int oldteam;
-	int	index;
+	int	index() { return ENTINDEX(pev->pContainingEntity); };
 
 	bool connected;
 	REAL fov;

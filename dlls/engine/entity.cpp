@@ -1625,6 +1625,8 @@ AMX_NATIVE_INFO ent_Natives[] = {
 	{"find_ent_by_owner",	find_ent_by_owner},
 	{"get_grenade_id",		get_grenade_id},
 
+	{"get_keyvalue",		get_keyvalue },
+
 	{"copy_keyvalue",		copy_keyvalue},
 
 	{NULL,					NULL},

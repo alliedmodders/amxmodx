@@ -2479,6 +2479,7 @@ PFN_REGISTER_SPFORWARD_BYNAME	g_fn_RegisterSPForwardByName;
 PFN_UNREGISTER_SPFORWARD	g_fn_UnregisterSPForward;
 PFN_MERGEDEFINITION_FILE	g_fn_MergeDefinition_File;
 PFN_AMX_FINDNATIVE			g_fn_AmxFindNative;
+PFN_GETPLAYERFLAGS		g_fn_GetPlayerFlags;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2577,6 +2578,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("IsPlayerHLTV", g_fn_IsPlayerHLTV, PFN_IS_PLAYER_HLTV);
 	REQFUNC("GetPlayerArmor", g_fn_GetPlayerArmor, PFN_GET_PLAYER_ARMOR);
 	REQFUNC("GetPlayerHealth", g_fn_GetPlayerHealth, PFN_GET_PLAYER_HEALTH);
+	REQFUNC("GetPlayerFlags", g_fn_GetPlayerFlags, PFN_GETPLAYERFLAGS);
 
 	// Memory
 	REQFUNC_OPT("Allocator", g_fn_Allocator, PFN_ALLOCATOR);

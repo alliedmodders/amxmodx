@@ -703,6 +703,14 @@ char *MNF_FormatAmxString(AMX *amx, cell *params, int startParam, int *pLen)
 	return retVal;
 }
 
+int MNF_GetPlayerFlags(int id)
+{
+	if (id < 1 || id > gpGlobals->maxClients)
+		return 0;
+	CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
+	return (pPlayer->flags[0]);
+}
+
 void MNF_CopyAmxMemory(cell * dest, const cell * src, int len)
 {
 	memcpy((void*)dest, (const void *)src, (size_t)len*sizeof(cell));
@@ -910,6 +918,7 @@ void *Module_ReqFnptr(const char *funcName)
 			REGISTER_FUNC("PrepareCharArray", prepareCharArray)
 
 			// Player
+			REGISTER_FUNC("GetPlayerFlags", MNF_GetPlayerFlags)
 			REGISTER_FUNC("IsPlayerValid", MNF_IsPlayerValid)
 			REGISTER_FUNC("GetPlayerName", MNF_GetPlayerName)
 			REGISTER_FUNC("GetPlayerIP", MNF_GetPlayerIP)

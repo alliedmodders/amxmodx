@@ -655,3 +655,5 @@ native plugin_flags();
 forward plugin_modules();
 
 native require_module(const module[]);
+
+lang_phrase(lang_mode, const phrase[], buffer[], maxLen);

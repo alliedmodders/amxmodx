@@ -44,6 +44,7 @@
 #define GETINFOKEYBUFFER				(*g_engfuncs.pfnGetInfoKeyBuffer)
 #define	SETCLIENTKEYVALUE				(*g_engfuncs.pfnSetClientKeyValue)
 #define GETCLIENTKEYVALUE				(*g_engfuncs.pfnInfoKeyValue)
+#define CREATENAMEDENTITY				(*g_engfuncs.pfnCreateNamedEntity)
 
 #if defined __linux__
 	#define EXTRAOFFSET					5 // offsets 5 higher in Linux builds
@@ -201,5 +202,6 @@ enum CS_Internal_Models {
 // cstrike-specific defines above
 
 CCstrikePlayer g_players[33];
-//bool g_initialized = false;
+bool g_precachedknife = false;
+bool g_noknives = false;
 // Globals above

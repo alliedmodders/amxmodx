@@ -176,3 +176,13 @@ native cs_get_weapon_ammo(index);
 /* Set amount of ammo in weapon's clip.
  */
 native cs_set_weapon_ammo(index, newammo);
+
+/* Returns 1 if no knives mode is enabled, else 0.
+ */
+native cs_get_no_knives();
+
+/* Enabled no knives mode by calling this with value 1. Disabled with 0.
+ * No knives mode means that player will not be given a knife when spawning.
+ * You can still give knives (ie through fun's give_item).
+ */
+native cs_set_no_knives(noknives = 0);

@@ -178,10 +178,10 @@ static cell AMX_NATIVE_CALL cs_set_user_deaths(AMX *amx, cell *params) // cs_set
 	// Update scoreboard here..?
 	MESSAGE_BEGIN(MSG_ALL, GET_USER_MSG_ID(PLID, "ScoreInfo", NULL));
 	WRITE_BYTE(params[1]);
-	WRITE_SHORT((int)pPlayer->v.frags);
-	WRITE_SHORT(params[2]);
-	WRITE_SHORT(0); // dunno what this parameter is (doesn't seem to be vip)
-	WRITE_SHORT(*((int *)pPlayer->pvPrivateData + OFFSET_TEAM));
+	WRITE_SHORT((int)pPlayer->v.frags); // should these be byte?
+	WRITE_SHORT(params[2]); // should these be byte?
+	WRITE_SHORT(0); // dunno what this parameter is (doesn't seem to be vip) // should these be byte?
+	WRITE_SHORT(*((int *)pPlayer->pvPrivateData + OFFSET_TEAM)); // should these be byte?
 	MESSAGE_END();
 
 	return 1;
@@ -1326,6 +1326,20 @@ static cell AMX_NATIVE_CALL cs_get_user_hasprimary(AMX *amx, cell *params) // cs
 	return *((int *)pPlayer->pvPrivateData + OFFSET_PRIMARYWEAPON);
 }
 
+static cell AMX_NATIVE_CALL cs_get_no_knives(AMX *amx, cell *params) // cs_get_no_knives(); = 0 params
+{
+	// Returns 1 when g_noknives is true, else 0
+	return g_noknives ? 1 : 0;
+}
+
+static cell AMX_NATIVE_CALL cs_set_no_knives(AMX *amx, cell *params) // cs_set_no_knives(noknives = 0); = 1 param
+{
+	// Sets noknives mode on/off. When params[1] is 1, g_noknives goes true and no weapon_knife:s will from there be created until switch off again.
+	g_noknives = params[1] == 0 ? false : true;
+
+	return 1;
+}
+
 AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_user_money",			cs_set_user_money},
 	{"cs_get_user_money",			cs_get_user_money},
@@ -1357,9 +1371,30 @@ AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_weapon_ammo",			cs_set_weapon_ammo},
 	{"cs_get_weapon_ammo",			cs_get_weapon_ammo},
 	{"cs_get_user_hasprim",			cs_get_user_hasprimary},
+	{"cs_get_no_knives",			cs_get_no_knives},
+	{"cs_set_no_knives",			cs_set_no_knives},
 	//------------------- <-- max 19 characters!
 	{NULL,							NULL}
 };
+
+edict_s* FN_CreateNamedEntity(int classname) {
+	if (g_noknives && !strcmp(STRING(classname), "weapon_knife")) {
+		if (g_precachedknife) {
+			// Knife is creating
+			RETURN_META_VALUE(MRES_SUPERCEDE, NULL);
+		}
+		// Let it create a knife first time; this seems to keep it precached properly in case anyone give_items a knife later.
+		g_precachedknife = true;
+	}
+
+	RETURN_META_VALUE(MRES_IGNORED, CREATENAMEDENTITY(classname));
+}
+
+void FN_ServerDeactivate() {
+	g_precachedknife = false;
+
+	RETURN_META(MRES_IGNORED);
+}
 
 /***GetEngineFunctions******************/
 void MessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed) {

@@ -75,7 +75,7 @@
 // #define FN_ClientCommand				ClientCommand				/* pfnClientCommand()			(wd) Player has sent a command (typed or from a bind) */
 #define FN_ClientUserInfoChanged		ClientUserInfoChanged		/* pfnClientUserInfoChanged()	(wd) Client has updated their setinfo structure */
 // #define FN_ServerActivate			ServerActivate				/* pfnServerActivate()			(wd) Server is starting a new map */
-// #define FN_ServerDeactivate			ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
+#define FN_ServerDeactivate			ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
 // #define FN_PlayerPreThink			PlayerPreThink				/* pfnPlayerPreThink() */
 #define FN_PlayerPostThink			PlayerPostThink				/* pfnPlayerPostThink() */
 // #define FN_StartFrame				StartFrame					/* pfnStartFrame() */
@@ -180,7 +180,7 @@
 // #define FN_AngleVectors						AngleVectors
 // #define FN_CreateEntity						CreateEntity
 // #define FN_RemoveEntity						RemoveEntity
-// #define FN_CreateNamedEntity					CreateNamedEntity
+#define FN_CreateNamedEntity					CreateNamedEntity
 // #define FN_MakeStatic						MakeStatic
 // #define FN_EntIsOnFloor						EntIsOnFloor
 // #define FN_DropToFloor						DropToFloor

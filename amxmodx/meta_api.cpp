@@ -128,8 +128,8 @@ int FF_ChangeLevel = -1;
 // fake metamod api
 CFakeMeta g_FakeMeta;
 
-// Precache	stuff from force consistency calls
-// or check	for	pointed	files won't	be done
+// Precache stuff from force consistency calls
+// or check for pointed	files won't be done
 int	C_PrecacheModel(char *s) {
   if ( !g_forcedmodules	){
 	g_forcedmodules	= true;
@@ -157,8 +157,8 @@ int	C_PrecacheSound(char *s) {
   RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
-// On InconsistentFile call	forward	function from plugins
-int	C_InconsistentFile( const	edict_t	*player, const char	*filename, char	*disconnect_message	)
+// On InconsistentFile call forward function from plugins
+int	C_InconsistentFile( const edict_t *player, const char *filename, char *disconnect_message )
 {
 	if (FF_InconsistentFile < 0)
 		RETURN_META_VALUE(MRES_IGNORED,	FALSE);
@@ -190,12 +190,12 @@ const char*	get_localinfo( const char* name	, const	char* def )
 {
   const	char* b	= LOCALINFO( (char*)name );
   if ( b ==	0 || *b	== 0 )
-	SET_LOCALINFO((char*)name,(char*)(b	= def) );
+	SET_LOCALINFO((char*)name,(char*)(b = def) );
   return b;
 }
 
-// Very	first point	at map load
-// Load	AMX	modules	for	new	native functions
+// Very	first point at map load
+// Load	AMX modules for	new native functions
 // Initialize AMX stuff	and	load it's plugins from plugins.ini list
 // Call	precache forward function from plugins
 int	C_Spawn( edict_t *pent ) {
@@ -214,15 +214,15 @@ int	C_Spawn( edict_t *pent ) {
 
   g_log.MapChange();
 
-  // ######	Initialize task	manager
-  g_tasksMngr.registerTimers( &gpGlobals->time,	&mp_timelimit->value,  &g_game_timeleft		);
+  // ###### Initialize task manager
+  g_tasksMngr.registerTimers( &gpGlobals->time,	&mp_timelimit->value,  &g_game_timeleft );
 
   //  ###### Load lang
   g_langMngr.LoadCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxx/data")));
   g_langMngr.Load(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxx/data")));
-  // ######	Initialize commands	prefixes
+  // ###### Initialize commands prefixes
   g_commands.registerPrefix( "amx" );
-  g_commands.registerPrefix( "amxx"	);
+  g_commands.registerPrefix( "amxx" );
   g_commands.registerPrefix( "say" );
   g_commands.registerPrefix( "admin_" );
   g_commands.registerPrefix( "sm_" );
@@ -236,15 +236,11 @@ int	C_Spawn( edict_t *pent ) {
   get_localinfo("amxx_customdir", "addons/amxx/custom");
 
   //  ###### Load modules
-  loadModules(get_localinfo("amxx_modules",	"addons/amxx/configs/modules.ini"));
+  loadModules(get_localinfo("amxx_modules", "addons/amxx/configs/modules.ini"));
   attachModules();
-  int loaded = countModules(CountModules_Running);	// Call	after attachModules	so all modules don't have pending stat
+  int loaded = countModules(CountModules_Running); // Call after attachModules so all modules don't have pending stat
   // Set some info about amx version and modules
-  CVAR_SET_STRING(init_amxmodx_version.name, AMX_VERSION
-#ifdef JIT
-	  "J"
-#endif
-	  );
+  CVAR_SET_STRING(init_amxmodx_version.name, AMX_VERSION);
   char buffer[32];
   sprintf(buffer, "%d", loaded);
   CVAR_SET_STRING(init_amxmodx_modules.name, buffer);
@@ -296,7 +292,7 @@ int	C_Spawn( edict_t *pent ) {
   executeForwards(FF_PluginPrecache);
   g_dontprecache = true;
 
-  for(CList<ForceObject>::iterator a =	g_forcegeneric.begin();	a ;	++a){
+  for(CList<ForceObject>::iterator a =	g_forcegeneric.begin();	a ; ++a){
 	  PRECACHE_GENERIC((char*)(*a).getFilename());
 	  ENGINE_FORCE_UNMODIFIED((*a).getForceType(),
 	  (*a).getMin(),(*a).getMax(),(*a).getFilename());
@@ -362,24 +358,24 @@ int	C_RegUserMsg_Post(const char *pszName, int iSize)
 }
 
 /*
-Much more later	after precache.	All	is precached, server
+Much more later	after precache.	All is precached, server
 will be	flaged as ready	to use so call
 plugin_init	forward	function from plugins
 */
-void C_ServerActivate( edict_t *pEdictList, int edictCount, int clientMax	){
+void C_ServerActivate( edict_t *pEdictList, int edictCount, int clientMax ){
 
   int id;
-  for (int i = 0; g_user_msg[ i	].name;	++i	)
+  for (int i = 0; g_user_msg[ i	].name;	++i )
   {
 	if ( (*g_user_msg[ i ].id == 0)	&&
-	  (id =	GET_USER_MSG_ID(PLID, g_user_msg[ i	].name , NULL ))!=0)
+	  (id =	GET_USER_MSG_ID(PLID, g_user_msg[ i ].name , NULL ))!=0)
 	{
 	  *g_user_msg[ i ].id =	id;
 
-	  if ( !g_user_msg[	i ].cstrike	|| g_bmod_cstrike  )
+	  if ( !g_user_msg[ i ].cstrike || g_bmod_cstrike )
 	  {
 		if ( g_user_msg[ i ].endmsg	)
-		  modMsgsEnd[ id  ]	= g_user_msg[ i	].func;
+		  modMsgsEnd[ id  ] = g_user_msg[ i	].func;
 		else
 		  modMsgs[ id  ] = g_user_msg[ i ].func;
 	  }
@@ -395,7 +391,7 @@ void C_ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax )
 
   for(int i	= 1; i <= gpGlobals->maxClients; ++i) {
 	CPlayer	*pPlayer = GET_PLAYER_POINTER_I(i);
-	pPlayer->Init( pEdictList +	i ,	i );
+	pPlayer->Init( pEdictList + i , i );
   }
 
   executeForwards(FF_PluginInit);
@@ -405,7 +401,7 @@ void C_ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax )
   g_langMngr.Save(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxx/data")));
   g_langMngr.SaveCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxx/data")));
 
-// Correct time in Counter-Strike	and	other mods (except DOD)
+// Correct time in Counter-Strike and other mods (except DOD)
   if ( !g_bmod_dod)	 g_game_timeleft = 0;
 
   g_task_time =	gpGlobals->time;
@@ -420,8 +416,8 @@ void C_ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax )
   RETURN_META(MRES_IGNORED);
 }
 
-// Call	plugin_end forward function	from plugins.
-void C_ServerDeactivate()	{
+// Call	plugin_end forward function from plugins.
+void C_ServerDeactivate() {
 
   for(int i	= 1; i <= gpGlobals->maxClients; ++i){
 	CPlayer	*pPlayer = GET_PLAYER_POINTER_I(i);
@@ -532,7 +528,7 @@ BOOL C_ClientConnect_Post( edict_t *pEntity, const char *pszName,	const char *ps
 	if ( a )
 	{
 	  CPlayer**	aa = new CPlayer*(pPlayer);
-	  if ( aa )	g_auth.put(	aa );
+	  if ( aa )	g_auth.put( aa );
 	}
 	else
 	{
@@ -1285,7 +1281,7 @@ C_DLLEXPORT	int	GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine,	int	
   /*
   if(*interfaceVersion!=ENGINE_INTERFACE_VERSION) {
 	LOG_ERROR(PLID,	"GetEngineFunctions_Post version mismatch; requested=%d	ours=%d", *interfaceVersion, ENGINE_INTERFACE_VERSION);
-	*interfaceVersion =	ENGINE_INTERFACE_VERSION;
+	*interfaceVersion = ENGINE_INTERFACE_VERSION;
 	return(FALSE);
   }
   memcpy(pengfuncsFromEngine, &meta_engfuncs_post, sizeof(enginefuncs_t));

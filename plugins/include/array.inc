@@ -258,3 +258,8 @@ stock list_pop_int(list_id) {
 stock list_pop_string(list_id) {
 	return list_pop(list_id, list_string)
 }
+
+//Check if an item is in a list
+native in_list_string(list_id, const str[]);
+native in_list_float(list_id, Float:num);
+native in_list_int(list_id, num);

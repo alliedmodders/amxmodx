@@ -7,7 +7,7 @@
  *   if (!dbi_query())
  * You should do:
  *   ret = dbi_query()
- *   if (ret <= 0)
+ *   if (ret < 0)
  * This is because DBI functions can and will return negative numbers
  * Negative numbers evaluate to "true" in AMX.
  */
@@ -25,20 +25,44 @@
 native dbi_connect(_host[], _user[], _pass[], _dbname[], _error[]="", _maxlength=0);
 
 /* This will do a simple query execution on the SQL server.
- * If it fails, it will return a number equal to or below 0
+ * If it fails, it will return a number BELOW ZERO (0)
+ * If zero, it succeeded with NO RETURN RESULT.
+ * If greater than zero, make sure to call dbi_free_result() on it!
  */
 native dbi_query(_sql, _query[], {Float,_}:...);
 
 /* Returns 0 on failure or End of Results.
  * Advances result pointer by one row.
  */
-native dbi_nextrow(_sql);
+native dbi_nextrow(_sql, _result=1);
 
 /* Gets a field by number.  Returns 0 on failure.
  * Although internally fields always start from 0, 
  * This function takes fieldnum starting from 1.
  */
-native dbi_getfield(_sql, _fieldnum, _dest[], _maxlen);
+native dbi_field(_sql, _result, _fieldnum, _dest[], _maxlen);
+
+/* Returns a field by number, as a number.
+ */
+native dbi_field_num(_sql, _result, _fieldnum);
+
+/* Gets a field by name.  Returns 0 on failure.
+ * Although internally fields always start from 0, 
+ * This function takes fieldnum starting from 1.
+ */
+native dbi_result(_sql, _result, _fieldnum, _dest[], _maxlen);
+
+/* Returns a field by name, as a number.
+ */
+native dbi_result_num(_sql, _result, _fieldnum);
+
+/* Returns the number of rows returned from a query
+ */
+native dbi_num_rows(_sql, _result);
+
+/* Frees memory used by a result handle.  Do this or get memory leaks.
+ */
+native dbi_free_result(_sql, _result);
 
 /* Closes a database handle.  Internally, it will also 
  * mark the handle as free, so this particular handle may
@@ -57,3 +81,9 @@ native dbi_error(_sql, _error[], _len);
  * "mysql", "pgsql", "mssql"
  */
 native dbi_type(_type[], _len);
+
+/* Backwards compatibility */
+stock dbi_getfield(_sql, _fieldnum, _dest[], _maxlen)
+{
+  return dbi_field(_sql, 1, _fieldnum, _dest, _maxlen)
+}

@@ -85,8 +85,8 @@ public:
 		inline bool isPaused() const { return ( (status == ps_paused) || (status == ps_stopped)); }
 		inline bool isFunctionPaused( int id ) const { return (paused_fun & (1<<id)) ? true : false; 	}
 		inline bool isExecutable(int id) const { 	return (isValid() && !isPaused() && !isFunctionPaused(id));	}
-		inline void pausePlugin( ) { if ( isValid() ) setStatus(ps_paused); }
-		inline void unpausePlugin( ) { if ( isValid() ) setStatus(ps_running); }
+		void pausePlugin();
+		void unpausePlugin();
 		void pauseFunction( int id );
 		void unpauseFunction( int id );
 		void setStatus( int a   );

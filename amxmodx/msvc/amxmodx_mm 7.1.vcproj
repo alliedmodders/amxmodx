@@ -620,6 +620,9 @@
 				RelativePath="..\CForward.cpp">
 			</File>
 			<File
+				RelativePath="..\CLang.cpp">
+			</File>
+			<File
 				RelativePath="..\CLogEvent.cpp">
 			</File>
 			<File
@@ -663,6 +666,9 @@
 			</File>
 			<File
 				RelativePath="..\meta_api.cpp">
+			</File>
+			<File
+				RelativePath="..\minilzo\minilzo.c">
 			</File>
 			<File
 				RelativePath="..\modules.cpp">
@@ -746,6 +752,9 @@
 			</File>
 			<File
 				RelativePath="..\CForward.h">
+			</File>
+			<File
+				RelativePath="..\CLang.h">
 			</File>
 			<File
 				RelativePath="..\CList.h">

@@ -21,10 +21,9 @@
  *  Version: $Id$
  */
 
-// not used
 #include <stdio.h>
 #define AMX_NODYNALOAD
-
+ 
 // bad bad workaround but we have to prevent a compiler crash :/
 #if (BUILD_PLATFORM== WINDOWS) && (BUILD_TYPE== RELEASE) && (BUILD_COMPILER== MSVC) && (SMALL_CELL_SIZE== 64)
   #pragma optimize("g",off)
@@ -52,30 +51,27 @@
     #include <dlfcn.h>
   #endif
 #endif
-#if defined __LCC__ || defined __GNUC__
+#if defined __LCC__
   #include <wchar.h>    /* for wcslen() */
 #endif
-#if (defined _Windows && !defined AMX_NODYNALOAD) || (defined JIT && !defined __linux__)
-  #include <windows.h>
-#endif
 
-// this file does not include amxmodx.h, so we have to include the memory manager here
+// this file does not include amxmodx.h so we have to include the mem mngr here
 #ifdef MEMORY_TEST
 #include "mmgr/mmgr.h"
-#endif // MEMORY_TEST
+#endif //MEMORY_TEST
 
 #include "amx.h"
 
 #ifdef JIT
 # ifdef __WIN32__
-#  include <windows.h>		// DWORD, VirtualProtect, ...
+#  include <windows.h>
 # elif defined __linux__
-#  include <sys/mman.h>		// mprotect, PROT_*
+#  include <sys/mman.h>
 #  include <unistd.h>
 # else
    // :TODO:
 # endif
-#endif // JIT
+#endif //JIT
 
 /* When one or more of the AMX_funcname macris are defined, we want
  * to compile only those functions. However, when none of these macros
@@ -275,8 +271,8 @@ typedef enum {
 } OPCODE;
 
 typedef struct tagFUNCSTUBNT {
-  ucell address    PACKED;
-  ucell nameofs    PACKED;
+  ucell address PACKED;
+  ucell nameofs PACKED;
 } FUNCSTUBNT       PACKED;
 
 #define USENAMETABLE(hdr) \
@@ -363,7 +359,7 @@ static void swap64(uint64_t *v)
 #endif
 
 #if defined AMX_ALIGN || defined AMX_INIT
-uint16_t *amx_Align16(uint16_t *v)
+uint16_t * AMXAPI amx_Align16(uint16_t *v)
 {
   assert(sizeof(*v)==2);
   init_little_endian();
@@ -372,9 +368,9 @@ uint16_t *amx_Align16(uint16_t *v)
   return v;
 }
 
-uint32_t *amx_Align32(uint32_t *v)
+uint32_t * AMXAPI amx_Align32(uint32_t *v)
 {
-  assert(sizeof(*v)==4);
+  assert(sizeof(cell)==4);
   init_little_endian();
   if (!amx_LittleEndian)
     swap32(v);
@@ -382,9 +378,9 @@ uint32_t *amx_Align32(uint32_t *v)
 }
 
 #if defined _I64_MAX || defined HAVE_I64
-uint64_t *amx_Align64(uint64_t *v)
+uint64_t * AMXAPI amx_Align64(uint64_t *v)
 {
-	assert(sizeof(*v)==8);
+	assert(sizeof(cell)==8);
 	init_little_endian();
 	if (!amx_LittleEndian)
 		swap64(v);
@@ -437,6 +433,7 @@ int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
   func=GETENTRY(hdr,natives,index);
   f=(AMX_NATIVE)func->address;
   assert(f!=NULL);
+
   /* now that we have found the function, patch the program so that any
    * subsequent call will call the function directly (bypassing this
    * callback)
@@ -452,13 +449,21 @@ int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
     if (*(cell*)code==index) {
 #else
     if (*(cell*)code!=OP_SYSREQ_PRI) {
-      assert(*(cell*)(code-4)==OP_SYSREQ_C);
+      assert(*(cell*)(code-sizeof(cell))==OP_SYSREQ_C);
       assert(*(cell*)code==index);
 #endif
-      *(cell*)(code-4)=amx->sysreq_d;
+      *(cell*)(code-sizeof(cell))=amx->sysreq_d;
       *(cell*)code=(cell)f;
     } /* if */
   } /* if */
+
+  /* on 64-bit platforms, only the lower 32-bits were stored in the native
+   * function table; complete the address
+   */
+  #if defined __64BIT__
+    assert(sizeof(f)>sizeof(uint32_t));
+    f= (f & 0xffffffffL) | (amx_Callback & ~0xffffffffL);
+  #endif
 
   /* Note:
    *   params[0] == number of bytes for the additional parameters passed to the native function
@@ -466,9 +471,8 @@ int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
    *   etc.
    */
 
-  amx->error=AMX_ERR_NONE; 
-  *result= f(amx,params);
- 
+  amx->error=AMX_ERR_NONE;
+  *result = f(amx,params);
   return amx->error;
 }
 
@@ -539,16 +543,19 @@ static int amx_BrowseRelocate(AMX *amx)
   if (debug)
     amx->flags|=AMX_FLAG_DEBUG;
 
-  #if defined __GNUC__ || defined ASM32 || defined JIT
+  #if (defined __GNUC__ || defined ASM32 || defined JIT) && !defined __64BIT__
     amx_Exec(amx, (cell*)&opcode_list, 0, 0);
     #if !defined JIT
-      amx->sysreq_d=opcode_list[OP_SYSREQ_D];
+      /* to use direct system requests, a function pointer must fit in a cell;
+       * because the native function's address will be stored as the parameter
+       * of SYSREQ.D
+       */
+      amx->sysreq_d= (sizeof(AMX_NATIVE)<=sizeof(cell)) ? opcode_list[OP_SYSREQ_D] : 0;
     #endif
   #else
     /* ANSI C
      * to use direct system requests, a function pointer must fit in a cell;
-     * because the native function's address will be stored as the parameter
-     * of SYSREQ.D
+     * see the comment above
      */
     amx->sysreq_d= (sizeof(AMX_NATIVE)<=sizeof(cell)) ? OP_SYSREQ_D : 0;
   #endif
@@ -856,7 +863,7 @@ int AMXAPI amx_Init(AMX *amx,void *program)
   #if (defined _Windows || defined LINUX) && !defined AMX_NODYNALOAD
     char libname[sNAMEMAX+8];  /* +1 for '\0', +3 for 'amx' prefix, +4 for extension */
     #if defined _Windows
-      typedef int WINAPI (_FAR *AMX_ENTRY)(AMX _FAR *amx);
+      typedef int (FAR WINAPI *AMX_ENTRY)(AMX _FAR *amx);
       HINSTANCE hlib;
     #elif defined LINUX
       typedef int (*AMX_ENTRY)(AMX *amx);
@@ -1050,16 +1057,19 @@ int AMXAPI amx_Init(AMX *amx,void *program)
     }
 
   #else /* #if defined __WIN32 __ */
-	// DOS32 has no imposed limits on its segments.
-	#if defined __BORLANDC__ || defined __WATCOMC__
-		#pragma argsused
-	#endif
-	int memoryFullAccess( void* addr, int len ) { return 1; }
 
-	#if defined __BORLANDC__ || defined __WATCOMC__
-		#pragma argsused
-	#endif
-	int memorySetAccess( void* addr, int len, int access ) { return 1; }
+    // TODO: Add cases for Linux, Unix, OS/2, ...
+
+    // DOS32 has no imposed limits on its segments.
+    #if defined __BORLANDC__ || defined __WATCOMC__
+      #pragma argsused
+    #endif
+    int memoryFullAccess( void* addr, int len ) { return 1; }
+
+    #if defined __BORLANDC__ || defined __WATCOMC__
+      #pragma argsused
+    #endif
+    int memorySetAccess( void* addr, int len, int access ) { return 1; }
 
   #endif /* #if defined __WIN32 __ */
 
@@ -1101,7 +1111,7 @@ int AMXAPI amx_InitJIT(AMX *amx, void *reloc_table, void *native_code)
   *(cell *)((char*)native_code + hdr->dat + hdr->stp - sizeof(cell)) = 0;
   amx->stk = amx->stp;
 
-  memorySetAccess( (void*)asm_runJIT, 20000, mac );
+  memorySetAccess( asm_runJIT, 20000, mac );
   return AMX_ERR_NONE;
 }
 
@@ -1571,7 +1581,8 @@ static AMX_NATIVE findfunction(const char *name, AMX_NATIVE_INFO *list, int numb
   return NULL;
 }
 
-const char *no_function;			// PM: Nice hack ;)
+const char *no_function;
+
 int AMXAPI amx_Register(AMX *amx, AMX_NATIVE_INFO *list, int number)
 {
   AMX_FUNCSTUB *func;
@@ -1591,11 +1602,18 @@ int AMXAPI amx_Register(AMX *amx, AMX_NATIVE_INFO *list, int number)
     if (func->address==0) {
       /* this function is not yet located */
       funcptr=(list!=NULL) ? findfunction(GETENTRYNAME(hdr,func),list,number) : NULL;
+      /* on 64-bit architectures with, only the lower 32-bits of the address
+       * can be stored; hopefully, all addresses can be assumed to have the
+       * same value for the upper 32-bits
+       */
+      #if defined __64BIT__
+        assert((funcptr & ~0xffffffffL)==(amx_Callback & ~0xffffffffL));
+      #endif
       if (funcptr!=NULL)
         func->address=(ucell)funcptr;
       else
       {
-        no_function = GETENTRYNAME(hdr,func);
+	    no_function = GETENTRYNAME(hdr,func);
         err=AMX_ERR_NOTFOUND;
       }
     } /* if */
@@ -1627,7 +1645,7 @@ AMX_NATIVE_INFO * AMXAPI amx_NativeInfo(const char *name, AMX_NATIVE func)
 #define CHKSTACK()      if (stk>amx->stp) return AMX_ERR_STACKLOW
 #define CHKHEAP()       if (hea<amx->hlw) return AMX_ERR_HEAPLOW
 
-#if defined __GNUC__ && !defined ASM32 && !defined JIT
+#if defined __GNUC__ && !defined ASM32
     /* GNU C version uses the "labels as values" extension to create
      * fast "indirect threaded" interpreter.
      */
@@ -1789,7 +1807,6 @@ static void *amx_opcodelist_nodebug[] = {
     amx->debug(amx);
   } /* if */
 
-  
   /* sanity checks */
   assert(OP_PUSH_PRI==36);
   assert(OP_PROC==46);
@@ -1832,7 +1849,6 @@ static void *amx_opcodelist_nodebug[] = {
   /* check stack/heap before starting to run */
   CHKMARGIN();
 
-  
   /* start running */
   NEXT(cip);
 
@@ -2740,7 +2756,7 @@ static void *amx_opcodelist_nodebug[] = {
 
 #if defined ASM32 || defined JIT
 	extern "C" void *amx_opcodelist[];
-    extern "C" void *amx_opcodelist_nodebug[];
+	extern "C" void *amx_opcodelist_nodebug[];
 #endif
 
 int AMXAPI amx_Exec(AMX *amx, cell *retval, int index, int numparams, ...)
@@ -4034,7 +4050,7 @@ static long utf8_lowmark[5] = { 0x80, 0x800, 0x10000, 0x200000, 0x4000000 };
      */
     if (result<utf8_lowmark[followup])
       goto error;
-    if ((result>=0xd800 && result<=0xdfff) || result==0xfffe || result==0xffff)
+    if (result>=0xd800 && result<=0xdfff || result==0xfffe || result==0xffff)
       goto error;
   } /* if */
 

@@ -134,7 +134,7 @@ native set_hudmessage(red=200, green=100, blue=0, Float:x=-1.0, Float:y=0.35, ef
 native show_hudmessage(index,const message[],{Float,_}:...);
 
 /* Displays menu. Keys have bit values (key 1 is (1<<0), key 5 is (1<<4) etc.). */
-native show_menu(index,keys,const menu[], time = -1);
+native show_menu(index,keys,const menu[], time = -1, title[] = "");
 
 /* Gets value from client messages.
 * When you are asking for string the array and length is needed (read_data(2,name,len)).

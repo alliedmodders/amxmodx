@@ -40,7 +40,6 @@ new g_optionName[4][32]
 new g_voteCount[4] 
 new g_validMaps
 new g_yesNoVote
-new g_logFile[16]
 new g_cstrikeRunning
 new g_voteCaller
 new g_Execute[256]
@@ -78,7 +77,6 @@ public plugin_init() {
   set_cvar_float("amx_last_voting",0.0)
   register_cvar("amx_show_activity","2")
   g_cstrikeRunning = is_running("cstrike")
-  get_logfile(g_logFile,15)
 }
 
 public cmdCancelVote(id,level,cid){
@@ -88,7 +86,7 @@ public cmdCancelVote(id,level,cid){
     new authid[32],name[32]
     get_user_authid(id,authid,31)
     get_user_name(id,name,31)
-    log_to_file(g_logFile,"Vote: ^"%s<%d><%s><>^" cancel vote session", name,get_user_userid(id),authid)
+    log_amx("Vote: ^"%s<%d><%s><>^" cancel vote session", name,get_user_userid(id),authid)
     switch(get_cvar_num("amx_show_activity")) {
     case 2: client_print(0,print_chat,"%s %s: cancel vote", (get_user_flags(id) & ADMIN_USER) ? g_playerTag : g_adminTag, name)
     case 1: client_print(0,print_chat,"%s: cancel vote", (get_user_flags(id) & ADMIN_USER) ? g_playerTag : g_adminTag)
@@ -112,7 +110,7 @@ new g_votingFailed[] = "Voting failed"
 new g_votingSuccess[] = "Voting successful"
 
 public autoRefuse(){
-  log_to_file(g_logFile,"Vote: %s" , g_resultRef)
+  log_amx("Vote: %s" , g_resultRef)
   client_print(0,print_chat,g_resultRef )
 }
 
@@ -121,7 +119,7 @@ public actionResult(id,key) {
   switch(key){
     case 0: {
       set_task(2.0,"delayedExec",0,g_Execute,g_execLen)
-      log_to_file(g_logFile,"Vote: %s",g_resultAcpt)
+      log_amx("Vote: %s",g_resultAcpt)
       client_print(0,print_chat,g_resultAcpt )
     }
     case 1: autoRefuse()
@@ -144,7 +142,7 @@ public checkVotes() {
       client_print(0,print_chat,"%s (yes ^"%d^") (no ^"%d^") (needed ^"%d^")",g_votingFailed, g_voteCount[0], g_voteCount[1] , iRatio  )
     else
       client_print(0,print_chat,"%s (got ^"%d^") (needed ^"%d^")",g_votingFailed,iResult , iRatio )
-    log_to_file(g_logFile,"Vote: %s (got ^"%d^") (needed ^"%d^")",g_votingFailed,iResult , iRatio )  
+    log_amx("Vote: %s (got ^"%d^") (needed ^"%d^")",g_votingFailed,iResult , iRatio )  
     return PLUGIN_CONTINUE
   }
   g_execLen = format(g_Execute,255,g_Answer,g_optionName[best]) + 1
@@ -162,7 +160,7 @@ public checkVotes() {
       set_task(2.0,"delayedExec",0,g_Execute,g_execLen)
   }
   client_print(0,print_chat,"%s (got ^"%d^") (needed ^"%d^"). The result: %s", g_votingSuccess, iResult , iRatio , g_Execute ) 
-  log_to_file(g_logFile,"Vote: %s (got ^"%d^") (needed ^"%d^") (result ^"%s^")", g_votingSuccess, iResult , iRatio , g_Execute )
+  log_amx("Vote: %s (got ^"%d^") (needed ^"%d^") (result ^"%s^")", g_votingSuccess, iResult , iRatio , g_Execute )
   return PLUGIN_CONTINUE
 } 
 
@@ -231,10 +229,10 @@ public cmdVoteMap(id,level,cid) {
   get_user_authid(id,authid,31) 
   get_user_name(id,name,31)
   if (argc==2)
-    log_to_file(g_logFile,"Vote: ^"%s<%d><%s><>^" vote map (map ^"%s^")",
+    log_amx("Vote: ^"%s<%d><%s><>^" vote map (map ^"%s^")",
       name,get_user_userid(id),authid,g_optionName[0])
   else
-    log_to_file(g_logFile,"Vote: ^"%s<%d><%s><>^" vote maps (map#1 ^"%s^") (map#2 ^"%s^") (map#3 ^"%s^") (map#4 ^"%s^")",
+    log_amx("Vote: ^"%s<%d><%s><>^" vote maps (map#1 ^"%s^") (map#2 ^"%s^") (map#3 ^"%s^") (map#4 ^"%s^")",
       name,get_user_userid(id),authid,g_optionName[0],g_optionName[1],g_optionName[2],g_optionName[3])
       
   switch(get_cvar_num("amx_show_activity")) {
@@ -282,7 +280,7 @@ public cmdVote(id,level,cid) {
   new authid[32],name[32] 
   get_user_authid(id,authid,31) 
   get_user_name(id,name,31) 
-  log_to_file(g_logFile,"Vote: ^"%s<%d><%s><>^" vote custom (question ^"%s^") (option#1 ^"%s^") (option#2 ^"%s^")", 
+  log_amx("Vote: ^"%s<%d><%s><>^" vote custom (question ^"%s^") (option#1 ^"%s^") (option#2 ^"%s^")", 
     name,get_user_userid(id),authid,quest,g_optionName[0],g_optionName[1]) 
 
   switch(get_cvar_num("amx_show_activity")) {
@@ -349,7 +347,7 @@ public cmdVoteKickBan(id,level,cid) {
   new authid[32],name[32]
   get_user_authid(id,authid,31) 
   get_user_name(id,name,31) 
-  log_to_file(g_logFile,"Vote: ^"%s<%d><%s><>^" vote %s (target ^"%s^")", 
+  log_amx("Vote: ^"%s<%d><%s><>^" vote %s (target ^"%s^")", 
     name,get_user_userid(id),authid,voteban ? "ban" : "kick",arg)
   
   switch(get_cvar_num("amx_show_activity")) {

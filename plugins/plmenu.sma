@@ -51,8 +51,6 @@ new g_clcmdCmd[MAX_CLCMDS][64]
 new g_clcmdMisc[MAX_CLCMDS][2]
 new g_clcmdNum
 
-new g_logFile[16]
-
 new g_cstrikeRunning
 
 public plugin_init()
@@ -73,10 +71,8 @@ public plugin_init()
   g_cstrikeRunning = is_running("cstrike")
 
   new filename[64]
-  build_path( filename , 63 , "$basedir/clcmds.ini" )  
+  build_path( filename , 63 , "$basedir/configs/clcmds.ini" )  
   load_settings( filename )
-
-  get_logfile(g_logFile,15)
 }
 
 /* Ban menu */
@@ -108,7 +104,7 @@ public actionBanMenu(id,key)
       get_user_name(id,name,31)
       new userid2 = get_user_userid(player)
           
-      log_to_file(g_logFile,"Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%d^")", 
+      log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%d^")", 
         name,get_user_userid(id),authid, name2,userid2,authid2, g_menuSettings[id] )
     
       switch(get_cvar_num("amx_show_activity")) {
@@ -242,7 +238,7 @@ public actionSlapMenu(id,key)
       get_user_name(id,name,31)
         
       if ( g_menuOption[id] ) {
-        log_to_file(g_logFile,"Cmd: ^"%s<%d><%s><>^" slap with %d damage ^"%s<%d><%s><>^"", 
+        log_amx("Cmd: ^"%s<%d><%s><>^" slap with %d damage ^"%s<%d><%s><>^"", 
           name,get_user_userid(id),authid, g_menuSettings[id], name2,get_user_userid(player),authid2 )
         switch(get_cvar_num("amx_show_activity")) {
         case 2: client_print(0,print_chat,"ADMIN %s: slap %s with %d damage",name,name2,g_menuSettings[id])
@@ -250,7 +246,7 @@ public actionSlapMenu(id,key)
         }     
       }
       else {
-        log_to_file(g_logFile,"Cmd: ^"%s<%d><%s><>^" slay ^"%s<%d><%s><>^"", 
+        log_amx("Cmd: ^"%s<%d><%s><>^" slay ^"%s<%d><%s><>^"", 
           name,get_user_userid(id),authid, name2,get_user_userid(player),authid2 )
         switch(get_cvar_num("amx_show_activity")) {
         case 2: client_print(0,print_chat,"ADMIN %s: slay %s",name,name2)
@@ -363,7 +359,7 @@ public actionKickMenu(id,key)
       get_user_name(player,name2,31)      
       new userid2 = get_user_userid(player)
         
-      log_to_file(g_logFile,"Kick: ^"%s<%d><%s><>^" kick ^"%s<%d><%s><>^"", 
+      log_amx("Kick: ^"%s<%d><%s><>^" kick ^"%s<%d><%s><>^"", 
           name,get_user_userid(id),authid, name2,userid2,authid2 )
           
       switch(get_cvar_num("amx_show_activity")) {
@@ -464,7 +460,7 @@ public actionTeamMenu(id,key)
       get_user_authid(player,authid2,31)
       get_user_name(id,name,31)
       
-      log_to_file(g_logFile,"Cmd: ^"%s<%d><%s><>^" transfer ^"%s<%d><%s><>^" (team ^"%s^")", 
+      log_amx("Cmd: ^"%s<%d><%s><>^" transfer ^"%s<%d><%s><>^" (team ^"%s^")", 
           name,get_user_userid(id),authid, name2,get_user_userid(player),authid2, g_menuOption[id] ? "TERRORIST" : "CT"  )
       
       switch(get_cvar_num("amx_show_activity")) {

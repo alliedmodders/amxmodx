@@ -39,7 +39,6 @@
 // names with hud messages
 //#define SHOW_NAMES
 
-new g_logFile[16]
 new g_msgChannel
 
 #define MAX_CLR 7
@@ -56,7 +55,6 @@ public plugin_init(){
   register_concmd("amx_psay","cmdPsay",ADMIN_CHAT,"<name or #userid> <message> - sends private message")
   register_concmd("amx_tsay","cmdTsay",ADMIN_CHAT,"<color> <message> - sends left side hud message to all players")
   register_concmd("amx_csay","cmdTsay",ADMIN_CHAT,"<color> <message> - sends center hud message to all players")
-  get_logfile(g_logFile,15)
 }
 
 public cmdSayChat(id) { 
@@ -81,7 +79,7 @@ public cmdSayChat(id) {
   get_user_authid(id,authid,31)
   get_user_name(id,name,31)
   userid = get_user_userid(id)
-  log_to_file(g_logFile,"Chat: ^"%s<%d><%s><>^" tsay ^"%s^"",name,userid,authid,message[i+1])
+  log_amx("Chat: ^"%s<%d><%s><>^" tsay ^"%s^"",name,userid,authid,message[i+1])
   log_message("^"%s<%d><%s><>^" triggered ^"amx_tsay^" (text ^"%s^") (color ^"%s^")",
     name,userid,authid,message[ i+1 ],g_Colors[a])
   if (++g_msgChannel>6||g_msgChannel<3)
@@ -112,7 +110,7 @@ public cmdSayAdmin(id) {
   get_user_authid(id,authid,31)
   get_user_name(id,name,31)
   userid = get_user_userid(id)  
-  log_to_file(g_logFile,"Chat: ^"%s<%d><%s><>^" chat ^"%s^"",name,userid,authid,message[1])
+  log_amx("Chat: ^"%s<%d><%s><>^" chat ^"%s^"",name,userid,authid,message[1])
   log_message("^"%s<%d><%s><>^" triggered ^"amx_chat^" (text ^"%s^")",name,userid,authid,message[1])
   format(message,191,"(ADMINS) %s :  %s",name,message[1])
   get_players(players,inum)     
@@ -134,7 +132,7 @@ public cmdChat(id,level,cid){
   get_user_name(id,name,31)
   userid = get_user_userid(id)
   get_players(players,inum)
-  log_to_file(g_logFile,"Chat: ^"%s<%d><%s><>^" chat ^"%s^"",name,userid,authid,message)
+  log_amx("Chat: ^"%s<%d><%s><>^" chat ^"%s^"",name,userid,authid,message)
   log_message("^"%s<%d><%s><>^" triggered ^"amx_chat^" (text ^"%s^")",name,userid,authid,message)
   format(message,191,"(ADMINS) %s :   %s",name,message)
   console_print(id,message)
@@ -156,7 +154,7 @@ public cmdSay(id,level,cid){
   userid = get_user_userid(id)
   client_print(0,print_chat,"(ALL) %s :   %s",name,message)
   console_print(id,"(ALL) %s :   %s",name,message)
-  log_to_file(g_logFile,"Chat: ^"%s<%d><%s><>^" say ^"%s^"",  name,userid,authid,message)
+  log_amx("Chat: ^"%s<%d><%s><>^" say ^"%s^"",  name,userid,authid,message)
   log_message("^"%s<%d><%s><>^" triggered ^"amx_say^" (text ^"%s^")",name,userid,authid,message)
   return PLUGIN_HANDLED
 }
@@ -186,7 +184,7 @@ public cmdPsay(id,level,cid){
   console_print(id,"(%s) %s :   %s",name,name2,message[length])
   get_user_authid(priv,authid2,31)
   userid2 = get_user_userid(priv)
-  log_to_file(g_logFile,"Chat: ^"%s<%d><%s><>^" psay ^"%s<%d><%s><>^" ^"%s^"",
+  log_amx("Chat: ^"%s<%d><%s><>^" psay ^"%s<%d><%s><>^" ^"%s^"",
       name2,userid,authid,name,userid2,authid2,message[length])
   log_message("^"%s<%d><%s><>^" triggered ^"amx_psay^" against ^"%s<%d><%s><>^" (text ^"%s^")",
     name2,userid,authid,name,userid2,authid2,message[length])
@@ -228,7 +226,7 @@ public cmdTsay(id,level,cid){
   console_print(id,message[length])
 #endif
 
-  log_to_file(g_logFile,"Chat: ^"%s<%d><%s><>^" %s ^"%s^"",name,userid,authid,cmd[4],message[length])
+  log_amx("Chat: ^"%s<%d><%s><>^" %s ^"%s^"",name,userid,authid,cmd[4],message[length])
   log_message("^"%s<%d><%s><>^" triggered ^"%s^" (text ^"%s^") (color ^"%s^")",
     name,userid,authid,cmd,message[length],g_Colors[a])
   return PLUGIN_HANDLED

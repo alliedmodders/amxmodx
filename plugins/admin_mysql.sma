@@ -43,7 +43,6 @@ new g_aName[MAX_ADMINS][32]
 new g_aFlags[MAX_ADMINS]
 new g_aAccess[MAX_ADMINS]
 new g_aNum
-new g_logFile[16]
 #if !defined NO_STEAM 
 new g_cmdLoopback[16]
 #endif
@@ -67,10 +66,7 @@ public plugin_init()
   register_clcmd( g_cmdLoopback, "ackSignal" )  
 #endif
 
-
   remove_user_flags(0,read_flags("z")) // remove 'user' flag from server rights
-
-  get_logfile(g_logFile,15)  
 
   new filename[32]
   get_basedir( filename , 31 )
@@ -159,7 +155,7 @@ getAccess(id,name[],authid[],ip[], password[]){
       new sflags[32]
       get_flags(g_aAccess[index],sflags,31)
       set_user_flags(id,g_aAccess[index])
-      log_to_file(g_logFile,"Login: ^"%s<%d><%s><>^" become an admin (account ^"%s^") (access ^"%s^") (address ^"%s^")",
+      log_amx("Login: ^"%s<%d><%s><>^" become an admin (account ^"%s^") (access ^"%s^") (address ^"%s^")",
         name,get_user_userid(id),authid,g_aName[index] ,sflags,ip)
     }
     else if (equal(password,g_aPassword[index])) {
@@ -167,14 +163,14 @@ getAccess(id,name[],authid[],ip[], password[]){
       set_user_flags(id,g_aAccess[index])
       new sflags[32]
       get_flags(g_aAccess[index],sflags,31)
-      log_to_file(g_logFile,"Login: ^"%s<%d><%s><>^" become an admin (account ^"%s^") (access ^"%s^") (address ^"%s^")",
+      log_amx("Login: ^"%s<%d><%s><>^" become an admin (account ^"%s^") (access ^"%s^") (address ^"%s^")",
         name,get_user_userid(id),authid,g_aName[index] ,sflags,ip)
     }
     else {
       result |= 1
       if (g_aFlags[index] & FLAG_KICK){
         result |= 2
-        log_to_file(g_logFile,"Login: ^"%s<%d><%s><>^" kicked due to invalid password (account ^"%s^") (address ^"%s^")",
+        log_amx("Login: ^"%s<%d><%s><>^" kicked due to invalid password (account ^"%s^") (address ^"%s^")",
           name,get_user_userid(id),authid,g_aName[index],ip)
       }
     }

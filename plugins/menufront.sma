@@ -124,19 +124,19 @@ public plugin_init()
 {
   register_plugin("Menus Front-End","0.1","AMXX Dev Team")  
 
-  register_menucmd(register_menuid("AMX Mod Menu"),1023,"actionMenu") 
+  register_menucmd(register_menuid("AMX Mod X Menu"),1023,"actionMenu") 
   register_clcmd("amxmodmenu","cmdMenu",ADMIN_MENU,"- displays menus")    
 
   g_cstrikeRunning = is_running("cstrike")
-  g_funModule = cvar_exists( "fun_version" )
+  g_funModule = is_module_loaded("Fun")
 }
 
 public actionMenu(id,key)
 {
   switch(key){
-  case 8: displayMenu(id,++g_menuPosition[id])
-  case 9: displayMenu(id,--g_menuPosition[id])
-  default: client_cmd(id, g_menuCmd[ g_menuPosition[id] * 8 + key ] )
+    case 8: displayMenu(id,++g_menuPosition[id])
+    case 9: displayMenu(id,--g_menuPosition[id])
+    default: client_cmd(id, g_menuCmd[ g_menuPosition[id] * 8 + key ] )
   }
   return PLUGIN_HANDLED
 }
@@ -153,7 +153,7 @@ displayMenu(id,pos){
     start = pos = g_menuPosition[id] = 0
       
   new len = format(menuBody,511,
-   g_cstrikeRunning ? "\yAMX Mod Menu\R%d/%d^n\w^n" : "AMX Mod Menu %d/%d^n^n" , pos+1, 2 )
+   g_cstrikeRunning ? "\yAMX Mod X Menu\R%d/%d^n\w^n" : "AMX Mod X Menu %d/%d^n^n" , pos+1, 2 )
     
   new end = start + 8
   new keys = (1<<9)

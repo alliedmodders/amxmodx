@@ -82,7 +82,7 @@ public cmdON(id,level,cid){
 #endif
 
 public plugin_cfg() {
-  build_path( g_fileToSave , 63 , "$basedir/pausecfg.ini" )  
+  build_path( g_fileToSave , 63 , "$basedir/configs/pausecfg.ini" )  
   loadSettings(g_fileToSave)
   // Put here titles of plugins which you don't want to pause
   server_cmd(g_addCmd , "Pause Plugins" )

@@ -49,7 +49,6 @@ new g_lastMap[32]
 
 new g_cstrikeRunning
 new bool:g_selected = false
-new g_logFile[16]
 
 public plugin_init()
 {
@@ -63,10 +62,9 @@ public plugin_init()
   
   get_localinfo("lastMap",g_lastMap,31)
   set_localinfo("lastMap","")
-  get_logfile(g_logFile,15)
-  
+
   new filename[64]
-  build_path( filename , 63 , "$basedir/maps.ini" )   
+  build_path( filename , 63 , "$basedir/configs/maps.ini" )   
   if ( loadSettings( filename ) )
     set_task(15.0,"voteNextmap",987456,"",0,"b")
 }
@@ -82,7 +80,7 @@ public checkVotes(){
       new Float:steptime = get_cvar_float("amx_extendmap_step")
       set_cvar_float("mp_timelimit", get_cvar_float("mp_timelimit") + steptime )
       client_print(0,print_chat,"Choosing finished. Current map will be extended to next %.0f minutes", steptime )
-      log_to_file(g_logFile,"Vote: Voting for the nextmap finished. Map %s will be extended to next %.0f minutes",
+      log_amx("Vote: Voting for the nextmap finished. Map %s will be extended to next %.0f minutes",
          mapname , steptime )
       return
    }
@@ -91,7 +89,7 @@ public checkVotes(){
    new smap[32]
    get_cvar_string("amx_nextmap",smap,31)
    client_print(0,print_chat,"Choosing finished. The nextmap will be %s", smap )
-   log_to_file(g_logFile,"Vote: Voting for the nextmap finished. The nextmap will be %s", smap)
+   log_amx("Vote: Voting for the nextmap finished. The nextmap will be %s", smap)
 }
 
 public countVote(id,key){
@@ -168,7 +166,7 @@ public voteNextmap(){
   set_task(15.0,"checkVotes")
   client_print(0,print_chat,"It's time to choose the nextmap...")
   client_cmd(0,"spk Gman/Gman_Choose2")
-  log_to_file(g_logFile,"Vote: Voting for the nextmap started")
+  log_amx("Vote: Voting for the nextmap started")
 }
 
 loadSettings(filename[])

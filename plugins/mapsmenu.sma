@@ -33,7 +33,8 @@
 */
 
 
-#include <amxmod> 
+#include <amxmod>
+#include <engine>
 #include <amxmisc> 
 
 #define MAX_MAPS 64
@@ -42,7 +43,6 @@ new g_mapName[MAX_MAPS][32]
 new g_mapDesc[MAX_MAPS][32]
 new g_mapNums
 new g_menuPosition[33]
-new g_logFile[16]
 
 new g_voteCount[5]
 
@@ -66,11 +66,9 @@ public plugin_init()
   register_menucmd(register_menuid("The winner: ") ,3,"actionResult")
   
   new filename[64]
-  build_path( filename , 63 , "$basedir/maps.ini" )  
+  build_path( filename , 63 , "$basedir/configs/maps.ini" )  
   load_settings( filename )
 
-  get_logfile(g_logFile,15)
-  
   g_cstrikeRunning = is_running("cstrike")
 }
 
@@ -78,7 +76,7 @@ new g_resultAck[] = "Result accepted"
 new g_resultRef[] = "Result refused"
 
 public autoRefuse(){
-  log_to_file(g_logFile,"Vote: %s" , g_resultRef)
+  log_amx("Vote: %s" , g_resultRef)
   client_print(0,print_chat, g_resultRef )
 }
 
@@ -89,7 +87,7 @@ public actionResult(id,key) {
       message_begin(MSG_ALL, SVC_INTERMISSION)
       message_end()
       set_task(2.0,"delayedChange",0, g_mapName[  g_choosed  ] , strlen(g_mapName[  g_choosed  ]) + 1 )
-      log_to_file(g_logFile,"Vote: %s" , g_resultAck )
+      log_amx("Vote: %s" , g_resultAck )
       client_print(0,print_chat, g_resultAck)
     }
     case 1: autoRefuse()
@@ -113,7 +111,7 @@ public checkVotes( id )
   if ( 100 * g_voteCount[a] / num >  50 )  {   
     g_choosed = g_voteSelected[id][a]
     client_print(0,print_chat, "%s %s" , g_voteSuccess , g_mapName[ g_choosed  ]  )
-    log_to_file(g_logFile,"Vote: %s %s" , g_voteSuccess , g_mapName[ g_choosed  ] )
+    log_amx("Vote: %s %s" , g_voteSuccess , g_mapName[ g_choosed  ] )
   }
   if ( g_choosed != -1 ) {  
     if ( is_user_connected( id ) )  {
@@ -132,7 +130,7 @@ public checkVotes( id )
   }
   else {
     client_print(0,print_chat, g_VoteFailed )
-    log_to_file(g_logFile,"Vote: %s" , g_VoteFailed)
+    log_amx("Vote: %s" , g_VoteFailed)
   }
   remove_task(34567 + id)
 }
@@ -143,7 +141,7 @@ public voteCount(id,key)
     client_print(0,print_chat,"Voting has been canceled")
     remove_task(34567 + id)
     set_cvar_float( "amx_last_voting" , get_gametime()  )
-    log_to_file(g_logFile,"Vote: Cancel vote session")
+    log_amx("Vote: Cancel vote session")
     return PLUGIN_HANDLED
   }
   if (get_cvar_float("amx_vote_answers")) {
@@ -345,7 +343,7 @@ public actionVoteMapMenu(id,key)
       case 1: client_print(0,print_chat,"ADMIN: vote map(s)")
       }
       
-      log_to_file(g_logFile,"Vote: ^"%s<%d><%s><>^" vote maps (map#1 ^"%s^") (map#2 ^"%s^") (map#3 ^"%s^") (map#4 ^"%s^")",
+      log_amx("Vote: ^"%s<%d><%s><>^" vote maps (map#1 ^"%s^") (map#2 ^"%s^") (map#3 ^"%s^") (map#4 ^"%s^")",
         name,get_user_userid(id),authid,
         g_voteSelectedNum[id] > 0 ? g_mapName[ g_voteSelected[id][ 0 ] ] : "" ,
         g_voteSelectedNum[id] > 1 ? g_mapName[ g_voteSelected[id][ 1 ] ] : "" ,
@@ -386,7 +384,7 @@ public actionMapsMenu(id,key)
       case 1: client_print(0,print_chat,"ADMIN: changelevel %s",g_mapName[  a  ])
       }
       
-      log_to_file(g_logFile,"Cmd: ^"%s<%d><%s><>^" changelevel ^"%s^"",
+      log_amx("Cmd: ^"%s<%d><%s><>^" changelevel ^"%s^"",
         name,get_user_userid(id),authid, g_mapName[  a  ] ) 
             
       set_task(2.0,"delayedChange",0, g_mapName[  a  ] , strlen(g_mapName[  a  ]) + 1 )

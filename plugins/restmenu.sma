@@ -366,9 +366,9 @@ public plugin_init(){
 #if defined MAPSETTINGS
   new mapname[32]
   get_mapname(mapname,31)
-  build_path( g_saveFile , 63 , "$basedir/weaprest_%s.ini" ,mapname )
+  build_path( g_saveFile , 63 , "$basedir/configs/weaprest_%s.ini" ,mapname )
 #else
-  build_path( g_saveFile , 63 , "$basedir/weaprest.ini" )
+  build_path( g_saveFile , 63 , "$basedir/configs/weaprest.ini" )
 #endif  
   loadSettings(g_saveFile)
 }

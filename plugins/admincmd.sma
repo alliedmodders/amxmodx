@@ -33,12 +33,12 @@
 */
 
 #include <amxmod>
+#include <engine>
 #include <amxmisc>
 
 #define MAXRCONCVARS 16
 new g_cvarRcon[ MAXRCONCVARS ][32]
 new g_cvarRconNum
-new g_logFile[16]
 new g_pauseCon
 new Float:g_pausAble
 new bool:g_Paused
@@ -67,7 +67,6 @@ public plugin_init(){
   register_cvar("amx_vote_answers","")
   register_cvar("amx_vote_ratio","")
   register_cvar("amx_show_activity","")  
-  get_logfile(g_logFile,15)
 }
 
 public plugin_cfg(){
@@ -97,7 +96,7 @@ public cmdKick(id,level,cid){
   userid2 = get_user_userid(player)
   read_argv(2,reason,31)
   remove_quotes(reason)
-  log_to_file(g_logFile,"Kick: ^"%s<%d><%s><>^" kick ^"%s<%d><%s><>^" (reason ^"%s^")", 
+  log_amx("Kick: ^"%s<%d><%s><>^" kick ^"%s<%d><%s><>^" (reason ^"%s^")", 
     name,get_user_userid(id),authid,name2,userid2,authid2,reason)
   switch(get_cvar_num("amx_show_activity")) {
   case 2: client_print(0,print_chat,"ADMIN %s: kick %s",name,name2)
@@ -127,7 +126,7 @@ public cmdUnban(id,level,cid){
     case 1: client_print(0,print_chat,"ADMIN: unban %s",arg)
   }
   get_user_authid(id,authid,31)
-  log_to_file(g_logFile,"Cmd: ^"%s<%d><%s><>^" unban ^"%s^"", 
+  log_amx("Cmd: ^"%s<%d><%s><>^" unban ^"%s^"", 
     name,get_user_userid(id),authid, arg )
   return PLUGIN_HANDLED
 }
@@ -153,7 +152,7 @@ public cmdAddBan(id,level,cid){
     case 1: client_print(0,print_chat,"ADMIN: ban %s",arg)
   }
   get_user_authid(id,authid,31)
-  log_to_file(g_logFile,"Cmd: ^"%s<%d><%s><>^" ban ^"%s^" (minutes ^"%s^") (reason ^"%s^")", 
+  log_amx("Cmd: ^"%s<%d><%s><>^" ban ^"%s^" (minutes ^"%s^") (reason ^"%s^")", 
     name,get_user_userid(id),authid, arg, minutes, reason )
   return PLUGIN_HANDLED    
 }
@@ -175,7 +174,7 @@ public cmdBan(id,level,cid){
   get_user_name(id,name,31)
   userid2 = get_user_userid(player)
   read_argv(3,reason,31)
-  log_to_file(g_logFile,"Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%s^") (reason ^"%s^")", 
+  log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%s^") (reason ^"%s^")", 
     name,get_user_userid(id),authid, name2,userid2,authid2,minutes,reason)
 
   new temp[64]
@@ -219,7 +218,7 @@ public cmdSlay(id,level,cid){
   get_user_name(id,name,31)
   get_user_authid(player,authid2,31)
   get_user_name(player,name2,31)
-  log_to_file(g_logFile,"Cmd: ^"%s<%d><%s><>^" slay ^"%s<%d><%s><>^"",
+  log_amx("Cmd: ^"%s<%d><%s><>^" slay ^"%s<%d><%s><>^"",
     name,get_user_userid(id),authid, name2,get_user_userid(player),authid2 )
     
   switch(get_cvar_num("amx_show_activity")) {
@@ -246,7 +245,7 @@ public cmdSlap(id,level,cid){
   get_user_name(id,name,31)
   get_user_authid(player,authid2,31)
   get_user_name(player,name2,31)
-  log_to_file(g_logFile,"Cmd: ^"%s<%d><%s><>^" slap with %d damage ^"%s<%d><%s><>^"",
+  log_amx("Cmd: ^"%s<%d><%s><>^" slap with %d damage ^"%s<%d><%s><>^"",
     name,get_user_userid(id),authid, damage,name2,get_user_userid(player),authid2 )
     
   switch(get_cvar_num("amx_show_activity")) {
@@ -277,8 +276,10 @@ public cmdMap(id,level,cid){
     case 2: client_print(0,print_chat,"ADMIN %s: changelevel %s",name,arg)
     case 1: client_print(0,print_chat,"ADMIN: changelevel %s",arg)
   }
-  log_to_file(g_logFile,"Cmd: ^"%s<%d><%s><>^" changelevel ^"%s^"", name,get_user_userid(id),authid, arg)
-  set_task(1.0,"chMap",0,arg,arglen+1)
+  log_amx("Cmd: ^"%s<%d><%s><>^" changelevel ^"%s^"", name,get_user_userid(id),authid, arg)
+  message_begin(MSG_ALL, SVC_INTERMISSION)
+  message_end()
+  set_task(2.0,"chMap",0,arg,arglen+1)
   return PLUGIN_HANDLED
 }
 
@@ -324,7 +325,7 @@ public cmdCvar(id,level,cid){
   new authid[32],name[32]
   get_user_authid(id,authid,31)
   get_user_name(id,name,31)
-  log_to_file(g_logFile,"Cmd: ^"%s<%d><%s><>^" set cvar (name ^"%s^") (value ^"%s^")",
+  log_amx("Cmd: ^"%s<%d><%s><>^" set cvar (name ^"%s^") (value ^"%s^")",
     name,get_user_userid(id),authid, arg,arg2)
   set_cvar_string(arg,arg2)
   
@@ -354,7 +355,7 @@ public cmdCfg(id,level,cid){
   new authid[32],name[32]
   get_user_authid(id,authid,31)
   get_user_name(id,name,31)
-  log_to_file(g_logFile,"Cmd: ^"%s<%d><%s><>^" execute cfg (file ^"%s^")",
+  log_amx("Cmd: ^"%s<%d><%s><>^" execute cfg (file ^"%s^")",
     name,get_user_userid(id),authid, arg)
   console_print(id,"Executing file ^"%s^"",arg)
   server_cmd("exec %s",arg)
@@ -389,7 +390,7 @@ public cmdPause(id,level,cid){
   }
   set_cvar_float("pausable",1.0) 
   client_cmd(slayer,"pause;pauseAck")
-  log_to_file(g_logFile,"Cmd: ^"%s<%d><%s><>^" %s server", 
+  log_amx("Cmd: ^"%s<%d><%s><>^" %s server", 
     name,get_user_userid(id),authid, g_Paused ? "unpause" : "pause" )
   console_print(id,"Server proceed %s", g_Paused ? "unpausing" : "pausing")
   
@@ -409,7 +410,7 @@ public cmdRcon(id,level,cid){
   read_args(arg,127)
   get_user_authid(id,authid,31)
   get_user_name(id,name,31)
-  log_to_file(g_logFile,"Cmd: ^"%s<%d><%s><>^" server console (cmdline ^"%s^")",
+  log_amx("Cmd: ^"%s<%d><%s><>^" server console (cmdline ^"%s^")",
     name,get_user_userid(id),authid, arg)
   console_print(id,"Commmand line ^"%s^" sent to server console",arg)
   server_cmd(arg)
@@ -437,7 +438,7 @@ public cmdWho(id,level,cid){
   console_print(id,"Total %d",inum)
   get_user_authid(id,authid,31)
   get_user_name(id,name,31)
-  log_to_file(g_logFile,"Cmd: ^"%s<%d><%s><>^" ask for players list",name,get_user_userid(id),authid) 
+  log_amx("Cmd: ^"%s<%d><%s><>^" ask for players list",name,get_user_userid(id),authid) 
   return PLUGIN_HANDLED
 }
 
@@ -484,7 +485,7 @@ public cmdLeave(id,level,cid){
   new authid[32],name[32]
   get_user_authid(id,authid,31)
   get_user_name(id,name,31)
-  log_to_file(g_logFile,"Kick: ^"%s<%d><%s><>^" leave some group (tag1 ^"%s^") (tag2 ^"%s^") (tag3 ^"%s^") (tag4 ^"%s^")",
+  log_amx("Kick: ^"%s<%d><%s><>^" leave some group (tag1 ^"%s^") (tag2 ^"%s^") (tag3 ^"%s^") (tag4 ^"%s^")",
     name,get_user_userid(id),authid,ltags[0],ltags[1],ltags[2],ltags[3] )
     
   switch(get_cvar_num("amx_show_activity")) {

@@ -40,7 +40,6 @@ new g_menuPlayers[33][32]
 new g_menuPlayersNum[33] 
 new g_menuOption[33] = { -1 , ... } 
 new g_menuOrgin[33][3] 
-new g_logFile[16]
 new g_cstrikeRunning
 
 public plugin_init() 
@@ -48,7 +47,6 @@ public plugin_init()
   register_plugin("Teleport Menu","0.1","AMXX Dev Team") 
   register_clcmd("amx_teleportmenu","cmdTelMenu",ADMIN_CFG,"- displays teleport menu") 
   register_menucmd(register_menuid("Teleport Menu"),1023,"actionTelMenu") 
-  get_logfile(g_logFile,15) 
 
   g_cstrikeRunning = is_running("cstrike")
 } 
@@ -98,7 +96,7 @@ public actionTelMenu(id,key)
             get_user_authid(player,authid2,31) 
             get_user_name(id,name,31) 
                  
-            log_to_file(g_logFile,"Cmd: ^"%s<%d><%s><>^" teleport ^"%s<%d><%s><>^"", 
+            log_amx("Cmd: ^"%s<%d><%s><>^" teleport ^"%s<%d><%s><>^"", 
                 name,get_user_userid(id),authid, name2,get_user_userid(player),authid2 ) 
          
             switch(get_cvar_num("amx_show_activity"))    { 

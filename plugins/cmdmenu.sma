@@ -40,26 +40,26 @@
 #define MAX_CMDS_LAYERS 3
 
 new g_cmdMenuName[ MAX_CMDS_LAYERS ][ ] = {
-  "Commands Menu", 
-  "Configs Menu", 
+  "Commands Menu",
+  "Configs Menu",
   "Speech Menu"
 }
 
 new g_cmdMenuCmd[ MAX_CMDS_LAYERS ][ ] = {
-  "amx_cmdmenu", 
-  "amx_cfgmenu", 
+  "amx_cmdmenu",
+  "amx_cfgmenu",
   "amx_speechmenu"
 }
 
 new g_cmdMenuCfg[ MAX_CMDS_LAYERS ][ ] = {
   "cmds.ini",  
-  "configs.ini", 
+  "configs.ini",
   "speech.ini"
 }
 
 new g_cmdMenuHelp[ MAX_CMDS_LAYERS ][ ] = {
-  "- displays commands menu",  
-  "- displays configs menu", 
+  "- displays commands menu",
+  "- displays configs menu",
   "- displays speech menu"
 }
 
@@ -95,14 +95,14 @@ public plugin_init()
   for(new a = 0; a < MAX_CMDS_LAYERS; ++a)  {
     register_menucmd(register_menuid( g_cmdMenuName[ a ] ),1023,"actionCmdMenu")
     register_clcmd( g_cmdMenuCmd[ a ] ,"cmdCmdMenu",ADMIN_MENU, g_cmdMenuHelp[ a ] )
-    format( workdir, 63, "%s/%s" , basedir , g_cmdMenuCfg[ a ] )   
+    format( workdir, 63, "%s/configs/%s" , basedir , g_cmdMenuCfg[ a ] )   
     loadCmdSettings( workdir , a )  
   }
     
   register_menucmd(register_menuid("Cvars Menu"),1023,"actionCvarMenu")   
   register_clcmd("amx_cvarmenu","cmdCvarMenu",ADMIN_CVAR,"- displays cvars menu")
   
-  format( workdir, 63, "%s/cvars.ini" , basedir )   
+  format( workdir, 63, "%s/configs/cvars.ini" , basedir )   
   loadCvarSettings( workdir )
   
   g_cstrikeRunning = is_running("cstrike")

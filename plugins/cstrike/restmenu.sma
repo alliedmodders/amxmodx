@@ -341,7 +341,7 @@ switchCommand( id, action ) {
         c = g_menusSets[a][1]
         for (new i = g_menusSets[a][0]; i < c; ++i)
           setWeapon( i , action )
-        console_print( id , "%s %L %L", g_MenuTitle[a], id, (a<5) ? "HAVE_BEEN" : "HAS_BEEN" , action ? "RESTRICTED" : "UNRESTRICTED" )
+        console_print( id , "%s %L %L", g_MenuTitle[a], id, (a<5) ? "HAVE_BEEN" : "HAS_BEEN" , id, action ? "RESTRICTED" : "UNRESTRICTED" )
         g_Modified = found = true
       }
       else if ( (a = findAliasId( arg )) != -1  ) {

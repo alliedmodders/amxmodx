@@ -76,7 +76,7 @@ template <class T> class CVector
 			delete [] m_Data;
 		}
 		if (m_Size < size)
-			m_CurrentUsedSize = size;
+			m_CurrentSize = size;
 		m_Data = newData;
 		m_Size = size;
 		return true;

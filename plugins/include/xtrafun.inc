@@ -65,7 +65,7 @@ stock get_grenade_index(index, model[], len, grenadeindex = 0) {
 	new entowner = index
 
 	for (;;) {
-		entfind = find_entity_by_class(entfind, "grenade")
+		entfind = find_ent_by_class(entfind, "grenade")
 
 		if (entfind && is_valid_ent(entfind)) {
 			if (entity_get_edict(entFind, EV_ENT_owner) == entowner) {
@@ -96,7 +96,7 @@ enum {
  * "targetname", value is the name you are searching for */
 stock find_entity(start_from_ent, category, value[]) {
 	switch (category) {
-		case target: return find_entity_by_target(start_from_ent, value)
+		case target: return find_ent_by_target(start_from_ent, value)
 		case targetname: return find_ent_by_tname(start_from_ent, value)
 	}
 	return find_entity_by_class(start_from_ent, value)

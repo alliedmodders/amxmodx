@@ -214,6 +214,8 @@ public cmdReload(id,level,cid) {
   if (!cmd_access(id,level,cid,1))
     return PLUGIN_HANDLED
 
+  //strip original flags (patch submitted by mrhunt)
+  remove_user_flags(0,read_flags("z"))
 #if !defined USING_SQL
   new filename[128]
   get_configsdir(filename,127)

@@ -413,63 +413,189 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	case FM_PlaybackEvent:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_CELL, FP_FLOAT, FP_ARRAY, FP_ARRAY, FP_FLOAT, FP_FLOAT, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 		break;
-#if 0
-	EngFunc_CheckVisibility,			//)		( const edict_t *entity, unsigned char *pset );
-	EngFunc_GetCurrentPlayer,			//)		( void );
-	EngFunc_CanSkipPlayer,			//)			( const edict_t *player );
-	EngFunc_SetGroupMask,				//)			( int mask, int op );
-	EngFunc_GetClientListening,	// bool (int iReceiver, int iSender)
-	EngFunc_SetClientListening,	// bool (int iReceiver, int iSender, bool Listen)
-	EngFunc_MessageBegin,	// void (int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
-	EngFunc_WriteCoord,		// void (float)
-	EngFunc_WriteAngle,		// void (float)
-	EngFunc_InfoKeyValue,	// char*	)			(char *infobuffer, char *key);
-	EngFunc_SetKeyValue,	// void )			(char *infobuffer, char *key, char *value);
-	EngFunc_SetClientKeyValue	 // void )		(int clientIndex, char *infobuffer, char *key, char *value);
-	DLLFunc_GameInit,	// void)			( void );				
-	DLLFunc_Spawn,	// int )				( edict_t *pent );
-	DLLFunc_Think,	// void )				( edict_t *pent );
-	DLLFunc_Use,	// void )				( edict_t *pentUsed, edict_t *pentOther );
-	DLLFunc_Touch,	// void )				( edict_t *pentTouched, edict_t *pentOther );
-	DLLFunc_Blocked,	// void )			( edict_t *pentBlocked, edict_t *pentOther );
-	DLLFunc_KeyValue,	// void )			( edict_t *pentKeyvalue, KeyValueData *pkvd );
-	DLLFunc_SetAbsBox,			// void )			( edict_t *pent );
-	DLLFunc_ClientConnect,		// bool)		( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ] );
-	
-	DLLFunc_ClientDisconnect,	// void )	( edict_t *pEntity );
-	DLLFunc_ClientKill,		// void )		( edict_t *pEntity );
-	DLLFunc_ClientPutInServer,	// void )	( edict_t *pEntity );
-	DLLFunc_ClientCommand,		// void )		( edict_t *pEntity );
+	//EngFunc_CheckVisibility,			//)		( const edict_t *entity, unsigned char *pset );
+	case FM_CheckVisibility:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_STRING, FP_DONE);
+		break;
+	//EngFunc_GetCurrentPlayer,			//)		( void );
+	case FM_GetCurrentPlayer:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
+		break;
+	//EngFunc_CanSkipPlayer,			//)			( const edict_t *player );
+	case FM_CanSkipPlayer:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		break;
+	//EngFunc_SetGroupMask,				//)			( int mask, int op );
+	case FM_SetGroupMask:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
+		break;
+	//EngFunc_GetClientListening,	// bool (int iReceiver, int iSender)
+	case FM_GetClientListening:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
+		break;
+	//EngFunc_SetClientListening,	// bool (int iReceiver, int iSender, bool Listen)
+	case FM_SetClientListening:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_CELL, FP_DONE); // TODO: bool as cell 3rd arg?
+		break;
+	//EngFunc_MessageBegin,	// void (int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
+	case FM_MessageBegin:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_ARRAY, FP_CELL, FP_DONE);
+		break;
+	//EngFunc_WriteCoord,		// void (float)
+	case FM_WriteCoord:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_FLOAT, FP_DONE);
+		break;
+	//EngFunc_WriteAngle,		// void (float)
+	case FM_WriteAngle:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_FLOAT, FP_DONE);
+		break;
+	//EngFunc_InfoKeyValue,	// char*	)			(char *infobuffer, char *key);
+	case FM_InfoKeyValue:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_STRING, FP_STRING, FP_DONE);
+		break;
+	//EngFunc_SetKeyValue,	// void )			(char *infobuffer, char *key, char *value);
+	case FM_SetKeyValue:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_STRING, FP_STRING, FP_STRING, FP_DONE);
+		break;
+	//EngFunc_SetClientKeyValue	 // void )		(int clientIndex, char *infobuffer, char *key, char *value);
+	case FM_SetClientKeyValue:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_STRING, FP_STRING, FP_STRING, FP_DONE);
+		break;
+	//DLLFunc_GameInit,	// void)			( void );				
+	case FM_GameInit:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
+		break;
+	//DLLFunc_Spawn,	// int )				( edict_t *pent );
+	case FM_Spawn:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		break;
+	//DLLFunc_Think,	// void )				( edict_t *pent );
+	case FM_Think:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		break;
+	//DLLFunc_Use,	// void )				( edict_t *pentUsed, edict_t *pentOther );
+	case FM_Use:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
+		break;
+	//DLLFunc_Touch,	// void )				( edict_t *pentTouched, edict_t *pentOther );
+	case FM_Touch:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
+		break;
+	//DLLFunc_Blocked,	// void )			( edict_t *pentBlocked, edict_t *pentOther );
+	case FM_Blocked:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
+		break;
+	//DLLFunc_KeyValue,	// void )			( edict_t *pentKeyvalue, KeyValueData *pkvd );
+	/*
+	case FM_KeyValue:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_????, FP_DONE); // TODO: undefined structure?
+		break;
+	*/
+	//DLLFunc_SetAbsBox,			// void )			( edict_t *pent );
+	case FM_SetAbsBox:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		break;
 
-	DLLFunc_ServerDeactivate,	// void)	( void );
+	//DLLFunc_ClientConnect,		// bool)		( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ] );
+	case FM_ClientConnect:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_STRING, FP_STRING, FP_STRING, FP_DONE); // TODO: 4th arg must be of set size 128?
+		break;
+	//DLLFunc_ClientDisconnect,	// void )	( edict_t *pEntity );
+	case FM_ClientDisconnect:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		break;
+	//DLLFunc_ClientKill,		// void )		( edict_t *pEntity );
+	case FM_ClientKill:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		break;
+	//DLLFunc_ClientPutInServer,	// void )	( edict_t *pEntity );
+	case FM_ClientPutInServer:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		break;
+	//DLLFunc_ClientCommand,		// void )		( edict_t *pEntity );
+	case FM_ClientCommand:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		break;
 
-	DLLFunc_PlayerPreThink,		// void )	( edict_t *pEntity );
-	DLLFunc_PlayerPostThink,		// void )	( edict_t *pEntity );
+	//DLLFunc_ServerDeactivate,	// void)	( void );
+	case FM_ServerDeactivate:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
+		break;
 
-	DLLFunc_StartFrame,		// void )		( void );
-	DLLFunc_ParmsNewLevel,		// void )		( void );
-	DLLFunc_ParmsChangeLevel,	// void )	( void );
+	//DLLFunc_PlayerPreThink,		// void )	( edict_t *pEntity );
+	case FM_PlayerPreThink:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		break;
+	//DLLFunc_PlayerPostThink,		// void )	( edict_t *pEntity );
+	case FM_PlayerPostThink:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		break;
 
-	 // Returns string describing current .dll.  E.g., TeamFotrress 2, Half-Life
-	DLLFunc_GetGameDescription,	 // const char * )( void );     
+	//DLLFunc_StartFrame,		// void )		( void );
+	case FM_StartFrame:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
+		break;
+	//DLLFunc_ParmsNewLevel,		// void )		( void );
+	case FM_ParmsNewLevel:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
+		break;
+	//DLLFunc_ParmsChangeLevel,	// void )	( void );
+	case FM_ParmsChangeLevel:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
+		break;
+
+	// Returns string describing current .dll.  E.g., TeamFotrress 2, Half-Life
+	//DLLFunc_GetGameDescription,	 // const char * )( void );     
+	case FM_GetGameDescription:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
+		break;
 
 	// Spectator funcs
-	DLLFunc_SpectatorConnect,	// void)		( edict_t *pEntity );
-	DLLFunc_SpectatorDisconnect,	// void )	( edict_t *pEntity );
-	DLLFunc_SpectatorThink,		// void )		( edict_t *pEntity );
+	//DLLFunc_SpectatorConnect,	// void)		( edict_t *pEntity );
+	case FM_SpectatorConnect:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		break;
+	//DLLFunc_SpectatorDisconnect,	// void )	( edict_t *pEntity );
+	case FM_SpectatorDisconnect:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		break;
+	//DLLFunc_SpectatorThink,		// void )		( edict_t *pEntity );
+	case FM_SpectatorThink:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		break;
 
 	// Notify game .dll that engine is going to shut down.  Allows mod authors to set a breakpoint.
-	DLLFunc_Sys_Error,		// void )			( const char *error_string );
+	//DLLFunc_Sys_Error,		// void )			( const char *error_string );
+	case FM_Sys_Error:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_STRING, FP_DONE);
+		break;
 
-	DLLFunc_PM_FindTextureType,	// char )( char *name );
-	DLLFunc_RegisterEncoders,	// void )	( void );
+	//DLLFunc_PM_FindTextureType,	// char )( char *name );
+	case FM_PM_FindTextureType:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_STRING, FP_DONE);
+		break;
+	//DLLFunc_RegisterEncoders,	// void )	( void );
+	case FM_RegisterEncoders:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
+		break;
 
 	// Enumerates player hulls.  Returns 0 if the hull number doesn't exist, 1 otherwise
-	DLLFunc_GetHullBounds,	// int)	( int hullnumber, float *mins, float *maxs );
+	//DLLFunc_GetHullBounds,	// int)	( int hullnumber, float *mins, float *maxs );
+	case FM_GetHullBounds:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_ARRAY, FP_ARRAY, FP_DONE);
+		break;
 
 	// Create baselines for certain "unplaced" items.
-	DLLFunc_CreateInstancedBaselines,	// void ) ( void );
-	DLLFunc_pfnAllowLagCompensation,	// int )( void );
+	//DLLFunc_CreateInstancedBaselines,	// void ) ( void );
+	case FM_CreateInstancedBaselines:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
+		break;
+	//DLLFunc_pfnAllowLagCompensation,	// int )( void );
+	case FM_pfnAllowLagCompensation:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
+		break;
+#if 0
+
 	// I know this does not fit with DLLFUNC(), but I dont want another native just for it.
 	MetaFunc_CallGameEntity	// bool	(plid_t plid, const char *entStr,entvars_t *pev);
 #endif

@@ -1,4 +1,4 @@
-; JIT.ASM: Just-In-Time compiler for the Abstract Machine of the "Small" language
+; JIT.ASM: Just-In-Time compiler for the Abstract Machine of the "Small"language
 ; (C) 1999-2000, Marc Peter; beta version; provided AS IS WITHOUT ANY WARRANTIES
 
 ; I reached >155 million instr./sec on my AMD K6-2/366 with the Hanoi "bench"
@@ -42,6 +42,10 @@
 
 ; Revision History
 ;------------------
+; 29 June 2004  by G.W.M. Vissers
+;	Translated the thing into NASM. The actual generation of the code is 
+;	put into the data section because the code modifies itself whereas the 
+;	text section is usually read-only in the Unix ELF format. 
 ;  6 march 2004  by Thiadmer Riemersma
 ;       Corrected a bug in OP_FILL, where a cell preceding the array would
 ;       be overwritten (zero'ed out). This bug was brought to my attention
@@ -97,27 +101,23 @@
 ;         to compute the destination address: It searches backwards now.
 ; 1999/07/08    MP - initial revision
 
-.386
-.MODEL FLAT
 
-IFDEF @Version  ; for Microsoft MASM 6.x
-        OPTION OLDSTRUCTS
-        OPTION M510
-ENDIF
-
-;
 ; Controls generation of LINE op-codes: 0 - no,  all other values - yes
 ; Beware that, if set to 1, this makes the compiled code slower by a factor of
 ; up to 3!
 ;
-ALLOWOPLINE = 0
+; GWMV: to generate LINE opcode, %define ALLOWOPLINE
+;
+%undef ALLOWOPLINE
 
 ;
 ; If this is set to 1 the JIT generates relocatable code for case tables, too.
 ; If set to 0, a faster variant for switch (using absolute addresses) is
 ; generated. I consider setting it to 0 a bad idea.
 ;
-FORCERELOCATABLE = 1
+; GWMV: to use absolute addresses, %undef FORCERELOCATABLE
+;
+%define FORCERELOCATABLE
 
 ;
 ; Determines how much memory should be reserved for occurring interrupts.
@@ -126,193 +126,212 @@ FORCERELOCATABLE = 1
 ; This value _MUST_ be greater than 64 (for AMX needs) and should be at least
 ; 128 (to serve interrupts).
 ;
-STACKRESERVE = 512
+%define STACKRESERVE 256
 
 ;
 ; This variable controls the generation of memory range checks at run-time.
 ; You should set this to 0, only when you are sure that there are no range
 ; violations in your Small programs and you really need those 5% speed gain.
 ;
-DORUNTIMECHECKS = 1
+; GWMV: To disable runtime checks, %undef it, instread of setting it to zero
+;
+%define DORUNTIMECHECKS
 
 
-amx_s       STRUC
-    _base       DD ?
-    _dataseg    DD ?
-    _callback   DD ?
-    _debug      DD ?
-    _cip        DD ?
-    _frm        DD ?
-    _hea        DD ?
-    _hlw        DD ?
-    _stk        DD ?
-    _stp        DD ?
-    _flags      DD ?
-    _curline    DD ?
-    _curfile    DD ?
-    _dbgcode    DD ?
-    _dbgaddr    DD ?
-    _dbgparam   DD ?
-    _dbgname    DD ?
-    _usertags   DD 4 DUP (?)    ; 4 = AMX_USERNUM (#define'd in amx.h)
-    _userdata   DD 4 DUP (?)    ; 4 = AMX_USERNUM (#define'd in amx.h)
-    _error      DD ?
-    _pri        DD ?
-    _alt        DD ?
-    _reset_stk  DD ?
-    _reset_hea  DD ?
-    _syscall_d  DD ?
-    ; the two fields below are for the JIT; they do not exist in
-    ; the non-JIT version of the abstract machine
-    _reloc_size DD ?            ; memory block for relocations
-    _code_size  DD ?            ; memory size of the native code
-amx_s       ENDS
+	struc amx_s
+_base:       resd 1
+_dataseg:    resd 1
+_callback:   resd 1
+_debug:      resd 1
+_cip:        resd 1
+_frm:        resd 1
+_hea:        resd 1
+_hlw:        resd 1
+_stk:        resd 1
+_stp:        resd 1
+_flags:      resd 1
+_curline:    resd 1
+_curfile:    resd 1
+_dbgcode:    resd 1
+_dbgaddr:    resd 1
+_dbgparam:   resd 1
+_dbgname:    resd 1
+_usertags:   resd 4	; 4 = AMX_USERNUM (#define'd in amx.h)
+_userdata:   resd 4	; 4 = AMX_USERNUM (#define'd in amx.h)
+_error:      resd 1
+_pri:        resd 1
+_alt:        resd 1
+_reset_stk:  resd 1
+_reset_hea:  resd 1
+_syscall_d:  resd 1
+; the two fields below are for the JIT; they do not exist in
+; the non-JIT version of the abstract machine
+_reloc_size: resd 1          ; memory block for relocations
+_code_size:  resd 1          ; memory size of the native code
+	endstruc
 
 
-amxhead_s   STRUC
-    _size       DD ?  ; size of the "file"
-    _magic      DW ?  ; signature
-    _file_version DB ? ;file format version
-    _amx_version DB ? ; required version of the AMX
-    _h_flags    DW ?
-    _defsize    DW ?  ; size of one public/native function entry
-    _cod        DD ?  ; initial value of COD - code block
-    _dat        DD ?  ; initial value of DAT - data block
-    _h_hea      DD ?  ; initial value of HEA - start of the heap
-    _h_stp      DD ?  ; initial value of STP - stack top
-    _h_cip      DD ?  ; initial value of CIP - the instruction pointer
-    _publics    DD ?  ; offset to the "public functions" table
-    _natives    DD ?  ; offset to the "native functions" table
-    _libraries  DD ?  ; offset to the "library" table
-    _pubvars    DD ?  ; offset to the "public variables" table
-    _tags       DD ?  ; offset to the "public tagnames" table
-amxhead_s   ENDS
+	struc amxhead_s
+_size:       resd 1  ; size of the "file"
+_magic:      resw 1  ; signature
+_file_version: resb 1 ;file format version
+_amx_version: resb 1 ; required version of the AMX
+_h_flags:    resw 1
+_defsize:    resw 1  ; size of one public/native function entry
+_cod:        resd 1  ; initial value of COD - code block
+_dat:        resd 1  ; initial value of DAT - data block
+_h_hea:      resd 1  ; initial value of HEA - start of the heap
+_h_stp:      resd 1  ; initial value of STP - stack top
+_h_cip:      resd 1  ; initial value of CIP - the instruction pointer
+_publics:    resd 1  ; offset to the "public functions" table
+_natives:    resd 1  ; offset to the "native functions" table
+_libraries:  resd 1  ; offset to the "library" table
+_pubvars:    resd 1  ; offset to the "public variables" table
+_tags:       resd 1  ; offset to the "public tagnames" table
+	endstruc
 
 
-        AMX_ERR_NONE = 0
-        AMX_ERR_EXIT = 1
-        AMX_ERR_ASSERT = 2
-        AMX_ERR_STACKERR = 3
-        AMX_ERR_BOUNDS = 4
-        AMX_ERR_MEMACCESS = 5
-        AMX_ERR_INVINSTR = 6
-        AMX_ERR_STACKLOW = 7
-        AMX_ERR_HEAPLOW = 8
-        AMX_ERR_CALLBACK = 9
-        AMX_ERR_NATIVE = 10
-        AMX_ERR_DIVIDE = 11             ; MP: added for catching divide errors
-        AMX_ERR_SLEEP = 12          ; (TR) go into sleep mode
+AMX_ERR_NONE		equ 0
+AMX_ERR_EXIT		equ 1
+AMX_ERR_ASSERT		equ 2
+AMX_ERR_STACKERR	equ 3
+AMX_ERR_BOUNDS		equ 4
+AMX_ERR_MEMACCESS	equ 5
+AMX_ERR_INVINSTR	equ 6
+AMX_ERR_STACKLOW	equ 7
+AMX_ERR_HEAPLOW		equ 8
+AMX_ERR_CALLBACK	equ 9
+AMX_ERR_NATIVE		equ 10
+AMX_ERR_DIVIDE		equ 11	; MP: added for catching divide errors
+AMX_ERR_SLEEP		equ 12	; (TR) go into sleep mode
 
-        AMX_ERR_MEMORY = 16
-        AMX_ERR_FORMAT = 17
-        AMX_ERR_VERSION = 18
-        AMX_ERR_NOTFOUND = 19
-        AMX_ERR_INDEX = 20
-        AMX_ERR_DEBUG = 21
-        AMX_ERR_INIT = 22
-        AMX_ERR_USERDATA = 23
-        AMX_ERR_INIT_JIT = 24
-        AMX_ERR_PARAMS = 25
-        AMX_ERR_DOMAIN = 26
+AMX_ERR_MEMORY		equ 16
+AMX_ERR_FORMAT		equ 17
+AMX_ERR_VERSION		equ 18
+AMX_ERR_NOTFOUND	equ 19
+AMX_ERR_INDEX		equ 20
+AMX_ERR_DEBUG		equ 21
+AMX_ERR_INIT		equ 22
+AMX_ERR_USERDATA	equ 23
+AMX_ERR_INIT_JIT	equ 24
+AMX_ERR_PARAMS		equ 25
+AMX_ERR_DOMAIN		equ 26
 
-        DBG_INIT        = 0
-        DBG_FILE        = 1
-        DBG_LINE        = 2
-        DBG_SYMBOL      = 3
-        DBG_CLRSYM      = 4
-        DBG_CALL        = 5
-        DBG_RETURN      = 6
-        DBG_TERMINATE   = 7
-        DBG_SRANGE      = 8
-        DBG_SYMTAG      = 9
+DBG_INIT		equ 0
+DBG_FILE		equ 1
+DBG_LINE		equ 2
+DBG_SYMBOL		equ 3
+DBG_CLRSYM		equ 4
+DBG_CALL		equ 5
+DBG_RETURN		equ 6
+DBG_TERMINATE		equ 7
+DBG_SRANGE		equ 8
+DBG_SYMTAG		equ 9
 
-        AMX_FLAG_CHAR16 = 0001h ; characters are 16-bit
-        AMX_FLAG_DEBUG  = 0002h ; symbolic info. available
-        AMX_FLAG_BROWSE = 4000h
-        AMX_FLAG_RELOC  = 8000h ; jump/call addresses relocated
+AMX_FLAG_CHAR16		equ 0001h ; characters are 16-bit
+AMX_FLAG_DEBUG		equ 0002h ; symbolic info. available
+AMX_FLAG_BROWSE		equ 4000h
+AMX_FLAG_RELOC		equ 8000h ; jump/call addresses relocated
+
+; GWMV:
+; Nasm can't do the next as equivalence statements, since the value of 
+; esi is not determined at compile time
+%define stk     [esi+32]    ; define some aliases to registers that will
+%define alt     [esi+28]    ;   be stored on the stack when the code is
+%define pri     [esi+24]    ;   actually beeing executed
+%define code    [esi+20]
+%define amx     [esi+16]
+%define retval  [esi+12]
+%define stp     [esi+8]
+%define hea     [esi+4]
+%define frm     [esi]       ; FRM is NOT stored in ebp, FRM+DAT is being held
+                            ; in ebx instead.
 
 ;
 ; #define  PUSH(v)  ( stk-=sizeof(cell), *(cell *)(data+(int)stk)=v )
 ;
-_PUSH   MACRO   v
-        push    DWORD ptr v
-        ENDM
+%macro _PUSH 1
+	push	dword %1
+%endmacro
 
 ;
 ; #define  POP(v)   ( v=*(cell *)(data+(int)stk), stk+=sizeof(cell) )
 ;
-_POP    MACRO   v
-        pop     DWORD ptr v
-        ENDM
+%macro _POP 1
+	pop	dword %1
+%endmacro
+
 
 ;
 ; For determining the biggest native code section generated for ONE Small
 ; opcode. (See the following macro and the PUBLIC function getMaxCodeSize().)
 ;
-MAXCODESIZE     = 0
-
-; This is the work horse of the whole JIT: It actually copies the code.
+; GWMV: Do NOT see the following macro. See CHECKCODESIZE instead.
 ;
-GO_ON   MACRO   from, to, opsize        ;opsize may be 4, 8 or 12 (default=4)
-        mov     esi,OFFSET from         ;get source address of JIT code
-        CODESIZE = (to-from)
-        mov     ecx,CODESIZE            ;get number of bytes to copy
-        ;all the following could (should?) be in a sub-routine...
-        ;determining the maximum size of a single code snippet
-        IF MAXCODESIZE LT CODESIZE
-                MAXCODESIZE = CODESIZE
-        ENDIF
+%assign MAXCODESIZE      0
+
+;
+; This is the work horse of the whole JIT: It actually copies the code.
+%macro GO_ON 2-3 4
+        mov     esi, %1         ;get source address of JIT code
+        mov     ecx,%2-%1            ;get number of bytes to copy
         mov     [ebx],edi               ;store address for jump-correction
-        IFB     <opsize>                ;add operand size to the source ptr
-          add   ebx,4
-        ELSE
-          add   ebx,opsize
-        ENDIF
-        rep movsb
+        add	ebx,%3
+        rep	movsb
         cmp     ebx,[end_code]
         jae     code_gen_done
-        jmp     DWORD ptr [ebx]         ;go on with the next opcode
-        ENDM
+        jmp     dword [ebx]         ;go on with the next opcode
+%endmacro
+
+; GWMV:
+; Nasm can't handle the determination of the maximum code size as was done
+; in the Masm implementation, since it only does two passes. This macro is
+; called *after* the code for each Small instruction.
+%macro CHECKCODESIZE 1
+	%if MAXCODESIZE < $-%1
+        	%assign MAXCODESIZE $-%1
+        %endif
+%endmacro
 
 ;
 ; Modify the argument of an x86 instruction with the Small opcode's parameter
 ; before copying the code.
 ;
-putval  MACRO   where
+%macro putval 1
         mov     eax,[ebx+4]
-        mov     DWORD ptr [where],eax
-        ENDM
+        mov     dword [%1],eax
+%endmacro
 
 ;
 ; Add an entry to the table of addresses which have to be relocated after the
 ; code compilation is done.
 ;
-RELOC   MACRO   adr, dest
+%macro RELOC 1-2 ;   adr, dest
         mov     ebp,[reloc_num]
-        IFB     <dest>
-          mov   eax,[ebx+4]
-        ELSE
-          lea   eax,[dest]
-        ENDIF
+        %if %0 < 2
+          mov	eax,[ebx+4]
+        %else        
+          lea	eax,[%2]
+        %endif
         mov     [edx+ebp],eax           ; write absolute destination
-        lea     eax,[edi+adr]
+        lea     eax,[edi+%1]
         mov     [edx+ebp+4],eax         ; write address of jump operand
-        add     DWORD ptr [reloc_num],8
-        ENDM
+        add     dword [reloc_num],8
+%endmacro
 
-_DROPARGS MACRO n               ; (TR) remove function arguments from the stack
-    IFNDEF STDECL               ; (for __cdecl calling convention only)
-        add     esp,n
-    ENDIF
-    ENDM
-
-
-.CODE
+%macro _DROPARGS 1              ; (TR) remove function arguments from the stack
+    %ifndef STDECL               ; (for __cdecl calling convention only)
+        add     esp,%1
+    %endif
+%endmacro
 
 
-        PUBLIC  _asm_runJIT
-        PUBLIC  _amx_exec_asm
-        PUBLIC  _getMaxCodeSize
+section .text
+
+
+global  asm_runJIT, _asm_runJIT
+global  amx_exec_asm, _amx_exec_asm
+global  getMaxCodeSize, _getMaxCodeSize
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -326,7 +345,8 @@ _DROPARGS MACRO n               ; (TR) remove function arguments from the stack
 ; the dest memory block are large enough to hold all the data it has to write
 ; to them, as well as that the prefix (header) has already been copied to dest.
 
-_asm_runJIT     PROC
+asm_runJIT:
+_asm_runJIT:
         push    ebp
         push    ebx
         push    edi
@@ -335,7 +355,7 @@ _asm_runJIT     PROC
         mov     eax,[esp+20]            ; get amxh
         mov     edx,[esp+24]            ; get jumps array
         mov     ebx,[esp+28]            ; get destination
-
+	
         mov     [amxhead],eax           ; save pointer to AMX_HEADER struct
         mov     ecx,[eax+_cod]          ; get offset of start of code
         mov     eax,[eax+_dat]          ; offset of start of data = end of code
@@ -346,10 +366,10 @@ _asm_runJIT     PROC
         mov     [compiled_code],ebx
         mov     [end_code],eax          ; Store end-of-code address, so JIT
                                         ; compiler knows when to stop.
-        mov     DWORD ptr [reloc_num],0 ; init the index into the jumps array
+        mov     dword [reloc_num],0 ; init the index into the jumps array
 
         mov     ebx,ecx
-        jmp     DWORD ptr [ecx]         ; start compiling
+        jmp     dword [ecx]         ; start compiling
 
         ; The compiler will jump back here when code generation is complete.
 
@@ -359,8 +379,8 @@ code_gen_done:                          ; Now copy the data section.
         and     edi,0fffffffch          ; align it on a DWORD boundary
         push    edi                     ; save data start pointer
         mov     esi,[end_code]          ; get start of data segment
-        mov     ecx,[ebp]._h_hea
-        sub     ecx,[ebp]._dat          ; compute length of array to copy
+        mov     ecx,[ebp+_h_hea]
+        sub     ecx,[ebp+_dat]          ; compute length of array to copy
         rep movsb                       ; copy the data
 
         ; Now adjust the register values in the compiled AMX_HEADER.
@@ -369,7 +389,7 @@ code_gen_done:                          ; Now copy the data section.
         mov     ebx,[compiled_code]     ; get compiled AMX's header address
         pop     esi                     ; recall data start pointer
         sub     esi,ebx                 ; DAT = size of code + size of prefix
-        mov     [ebx]._dat,esi          ; write corrected DAT register
+        mov     [ebx+_dat],esi          ; write corrected DAT register
 
         ;HEA and STP are already relative to DAT, so we don't need to fix them.
 
@@ -382,7 +402,7 @@ code_gen_done:                          ; Now copy the data section.
         mov     edi,[edx+ecx+4] ; determine where to write the relocated value
         add     ecx,8           ; set pointer to next entry in relocation table
         add     edi,4           ; base address from where the offset is taken
-IF FORCERELOCATABLE EQ 0
+%ifndef FORCERELOCATABLE
         ;MP: hack to suport absolute addresses for the CASETBL instruction
         test    eax,80000000h   ; check whether it is an absolute address
         pushf
@@ -390,9 +410,9 @@ IF FORCERELOCATABLE EQ 0
         popf
         mov     eax,[eax]       ; translate into compiled absolute address
         jne     write_reloc     ; leave out the subtraction if absolute
-ELSE
+%else
         mov     eax,[eax]       ; translate into compiled absolute address
-ENDIF
+%endif
         sub     eax,edi         ; make a relative offset
       write_reloc:
         mov     [edi-4],eax     ; write the relocated address
@@ -401,18 +421,18 @@ ENDIF
 
 reloc_code_done:
         ; Relocate the addresses in the AMX_HEADER structure. (CIP and publics)
-        add     ebp,[ebp]._cod  ; make all addresses relative to COD, not base
-        mov     eax,[ebx]._h_cip
+        add     ebp,[ebp+_cod]  ; make all addresses relative to COD, not base
+        mov     eax,[ebx+_h_cip]
         add     eax,ebp         ; get absolute source CIP
         mov     eax,[eax]       ; translate CIP to compiled address
         sub     eax,ebx         ; make it relative to base
-        sub     eax,[ebx]._cod  ; and now relative to COD
-        mov     [ebx]._h_cip,eax; store relocated CIP
-        mov     edi,[ebx]._publics
+        sub     eax,[ebx+_cod]  ; and now relative to COD
+        mov     [ebx+_h_cip],eax; store relocated CIP
+        mov     edi,[ebx+_publics]
         sub     esi,esi
-        mov     ecx,[ebx]._natives
+        mov     ecx,[ebx+_natives]
         sub     ecx,edi         ; ECX = _natives - _publics = public table size
-        mov     si,[ebx]._defsize
+        mov     si,[ebx+_defsize]
         or      ecx,ecx
         jz      reloc_done      ; If there are no publics, we are done.
     reloc_publics_loop:
@@ -420,7 +440,7 @@ reloc_code_done:
         add     eax,ebp         ; make it a source address
         mov     eax,[eax]       ; translate to compiled address
         sub     eax,ebx         ; make it an offset relative to base
-        sub     eax,[ebx]._cod  ; and now relative to COD
+        sub     eax,[ebx+_cod]  ; and now relative to COD
         mov     [ebx+edi],eax   ; write corrected address back
         add     edi,esi         ; step to next public function entry
         sub     ecx,esi
@@ -434,6 +454,13 @@ reloc_done:
         pop     ebp
         ret
 
+; GWMV:
+; The code below modifies itself to store the arguments to the Small opcodes
+; in the compiled code. This is fine, but the .text section in an ELF executable
+; is usually marked read-only, that's why this code is in the .data section. 
+
+section .data exec
+
 OP_LOAD_PRI:
 ;nop;
         putval  j_load_pri+2
@@ -441,6 +468,7 @@ OP_LOAD_PRI:
 
         j_load_pri:
         mov     eax,[edi+12345678h]
+	CHECKCODESIZE j_load_pri
 
 OP_LOAD_ALT:
 ;nop;
@@ -449,6 +477,7 @@ OP_LOAD_ALT:
 
         j_load_alt:
         mov     edx,[edi+12345678h]
+	CHECKCODESIZE j_load_alt
 
 ;good
 OP_LOAD_S_PRI:
@@ -458,6 +487,7 @@ OP_LOAD_S_PRI:
 
         j_load_s_pri:
         mov     eax,[ebx+12345678h]
+	CHECKCODESIZE j_load_s_pri
 
 ;good
 OP_LOAD_S_ALT:
@@ -467,31 +497,34 @@ OP_LOAD_S_ALT:
 
         j_load_s_alt:
         mov     edx,[ebx+12345678h]
+	CHECKCODESIZE j_load_s_alt
 
 OP_LOAD_I:
 ;nop;
         GO_ON   j_load_i, OP_LODB_I
 
         j_load_i:
-IF DORUNTIMECHECKS NE 0
-        CALL  [verify_adr_eax]
-ENDIF
+%ifdef DORUNTIMECHECKS
+        call    [verify_adr_eax]
+%endif
         mov     eax,[edi+eax]
+	CHECKCODESIZE j_load_i
 
 OP_LODB_I:
 ;nop;
         mov     eax,[ebx+4]
-        mov     eax,DWORD ptr [(lodb_and-4)+eax*4]
-        mov     DWORD ptr [j_lodb_i_sm+1],eax   ;modify AND instruction
+        mov     eax,dword [(lodb_and-4)+eax*4]
+        mov     dword [j_lodb_i_sm+1],eax   ;modify AND instruction
         GO_ON   j_lodb_i, OP_LREF_PRI, 8
 
         j_lodb_i:
-IF DORUNTIMECHECKS NE 0
+%ifdef DORUNTIMECHECKS
         call    [verify_adr_eax]
-ENDIF
+%endif
         mov     eax,[edi+eax]           ;subject to misalignment stalls
         j_lodb_i_sm:
         and     eax,12345678h
+	CHECKCODESIZE j_lodb_i
 
 OP_LREF_PRI:
 ;nop;
@@ -501,6 +534,7 @@ OP_LREF_PRI:
         j_lref_pri:
         mov     eax,[edi+12345678h]
         mov     eax,[edi+eax]
+	CHECKCODESIZE j_lref_pri
 
 OP_LREF_ALT:
 ;nop;
@@ -510,6 +544,7 @@ OP_LREF_ALT:
         j_lref_alt:
         mov     edx,[edi+12345678h]
         mov     edx,[edi+edx]
+	CHECKCODESIZE j_lref_alt
 
 OP_LREF_S_PRI:
 ;nop;
@@ -519,6 +554,7 @@ OP_LREF_S_PRI:
         j_lref_s_pri:
         mov     eax,[ebx+12345678h]
         mov     eax,[edi+eax]
+	CHECKCODESIZE j_lref_s_pri
 
 OP_LREF_S_ALT:
 ;nop;
@@ -528,6 +564,7 @@ OP_LREF_S_ALT:
         j_lref_s_alt:
         mov     edx,[ebx+12345678h]
         mov     edx,[edi+edx]
+	CHECKCODESIZE j_lref_s_alt
 
 ;good
 OP_CONST_PRI:
@@ -537,6 +574,7 @@ OP_CONST_PRI:
 
         j_const_pri:
         mov     eax,12345678h
+	CHECKCODESIZE j_const_pri
 
 ;good
 OP_CONST_ALT:
@@ -546,6 +584,7 @@ OP_CONST_ALT:
 
         j_const_alt:
         mov     edx,12345678h
+	CHECKCODESIZE j_const_alt
 
 ;good
 OP_ADDR_PRI:
@@ -556,6 +595,7 @@ OP_ADDR_PRI:
         j_addr_pri:
         mov     eax,12345678h
         add     eax,frm
+	CHECKCODESIZE j_addr_pri
 
 ;good
 OP_ADDR_ALT:
@@ -566,6 +606,7 @@ OP_ADDR_ALT:
         j_addr_alt:
         mov     edx,12345678h
         add     edx,frm
+	CHECKCODESIZE j_addr_alt
 
 OP_STOR_PRI:
 ;nop;
@@ -574,6 +615,7 @@ OP_STOR_PRI:
 
         j_stor_pri:
         mov     [edi+12345678h],eax
+	CHECKCODESIZE j_stor_pri
 
 OP_STOR_ALT:
 ;nop;
@@ -582,6 +624,7 @@ OP_STOR_ALT:
 
         j_stor_alt:
         mov     [edi+12345678h],edx
+	CHECKCODESIZE j_stor_alt
 
 ;good
 OP_STOR_S_PRI:
@@ -591,6 +634,7 @@ OP_STOR_S_PRI:
 
         j_stor_s_pri:
         mov     [ebx+12345678h],eax
+	CHECKCODESIZE j_stor_s_pri
 
 ;good
 OP_STOR_S_ALT:
@@ -600,6 +644,7 @@ OP_STOR_S_ALT:
 
         j_stor_s_alt:
         mov     [ebx+12345678h],edx
+	CHECKCODESIZE j_stor_s_alt
 
 ;good
 OP_STOR_I:
@@ -607,10 +652,11 @@ OP_STOR_I:
         GO_ON   j_stor_i, OP_STRB_I
 
         j_stor_i:
-IF DORUNTIMECHECKS NE 0
+%ifdef DORUNTIMECHECKS
         call    [verify_adr_edx]
-ENDIF
+%endif
         mov     [edi+edx],eax
+	CHECKCODESIZE j_stor_i
 
 OP_STRB_I:
 ;nop;
@@ -619,28 +665,31 @@ OP_STRB_I:
         jne     strb_not1byte
         GO_ON   j_strb_i_1b, strb_not1byte, 8
         j_strb_i_1b:
-IF DORUNTIMECHECKS NE 0
+%ifdef DORUNTIMECHECKS
         call    [verify_adr_edx]
-ENDIF
+%endif
         mov     [edi+edx],al
+        CHECKCODESIZE j_strb_i_1b
 
     strb_not1byte:
         cmp     eax,4
         je      strb_4byte
         GO_ON   j_strb_i_2b, strb_4byte, 8
         j_strb_i_2b:
-IF DORUNTIMECHECKS NE 0
+%ifdef DORUNTIMECHECKS
         call    [verify_adr_edx]
-ENDIF
+%endif
         mov     [edi+edx],ax
+        CHECKCODESIZE j_strb_i_2b
 
     strb_4byte:
         GO_ON   j_strb_i_4b, OP_SREF_PRI, 8
         j_strb_i_4b:
-IF DORUNTIMECHECKS NE 0
+%ifdef DORUNTIMECHECKS
         call    [verify_adr_edx]
-ENDIF
+%endif
         mov     [edi+edx],eax
+	CHECKCODESIZE j_strb_i_4b
 
 OP_SREF_PRI:
 ;nop;
@@ -650,6 +699,7 @@ OP_SREF_PRI:
         j_sref_pri:
         mov     ebp,[edi+12345678h]
         mov     [edi+ebp],eax
+	CHECKCODESIZE j_sref_pri
 
 OP_SREF_ALT:
 ;nop;
@@ -659,6 +709,7 @@ OP_SREF_ALT:
         j_sref_alt:
         mov     ebp,[edi+12345678h]
         mov     [edi+ebp],edx
+	CHECKCODESIZE j_sref_alt
 
 OP_SREF_S_PRI:
 ;nop;
@@ -668,6 +719,7 @@ OP_SREF_S_PRI:
         j_sref_s_pri:
         mov     ebp,[ebx+12345678h]
         mov     [edi+ebp],eax
+	CHECKCODESIZE j_sref_s_pri
 
 OP_SREF_S_ALT:
 ;nop;
@@ -677,6 +729,7 @@ OP_SREF_S_ALT:
         j_sref_s_alt:
         mov     ebp,[ebx+12345678h]
         mov     [edi+ebp],edx
+	CHECKCODESIZE j_sref_s_alt
 
 ;good
 OP_LIDX:
@@ -685,24 +738,26 @@ OP_LIDX:
 
         j_lidx:
         lea     eax,[edx+4*eax]
-IF DORUNTIMECHECKS NE 0
+%ifdef DORUNTIMECHECKS
         call    [verify_adr_eax]
-ENDIF
+%endif
         mov     eax,[edi+eax]
+	CHECKCODESIZE j_lidx
 
 OP_LIDX_B:
 ;nop;
         mov     al,[ebx+4]
-        mov     BYTE ptr [j_lidx_b+2],al
+        mov     byte [j_lidx_b+2],al
         GO_ON   j_lidx_b, OP_IDXADDR, 8
 
         j_lidx_b:
         shl     eax,12h
         add     eax,edx
-IF DORUNTIMECHECKS NE 0
+%ifdef DORUNTIMECHECKS
         call    [verify_adr_eax]
-ENDIF
+%endif
         mov     eax,[edi+eax]
+	CHECKCODESIZE j_lidx_b
 
 ;good
 OP_IDXADDR:
@@ -711,36 +766,40 @@ OP_IDXADDR:
 
         j_idxaddr:
         lea     eax,[edx+4*eax]
+	CHECKCODESIZE j_idxaddr
 
 OP_IDXADDR_B:
 ;nop;
         mov     al,[ebx+4]
-        mov     BYTE ptr [j_idxaddr_b+2],al
+        mov     byte [j_idxaddr_b+2],al
         GO_ON   j_idxaddr_b, OP_ALIGN_PRI, 8
 
         j_idxaddr_b:
         shl     eax,12h
         add     eax,edx
+	CHECKCODESIZE j_idxaddr_b
 
 OP_ALIGN_PRI:
 ;nop;
         mov     eax,4
         sub     eax,[ebx+4]
-        mov     DWORD ptr [j_align_pri+1],eax
+        mov     dword [j_align_pri+1],eax
         GO_ON   j_align_pri, OP_ALIGN_ALT, 8
 
         j_align_pri:
         xor     eax,12345678h
+	CHECKCODESIZE j_align_pri
 
 OP_ALIGN_ALT:
 ;nop;
         mov     eax,4
         sub     eax,[ebx+4]
-        mov     DWORD ptr [j_align_alt+1],eax
+        mov     dword [j_align_alt+1],eax
         GO_ON   j_align_alt, OP_LCTRL, 8
 
         j_align_alt:
         xor     edx,12345678h
+	CHECKCODESIZE j_align_alt
 
 OP_LCTRL:
 ;nop;
@@ -750,18 +809,21 @@ OP_LCTRL:
         GO_ON   j_lctrl_0, lctrl_1, 8
         j_lctrl_0:
         mov     eax,code ; 1=COD
+    	CHECKCODESIZE j_lctrl_0
     lctrl_1:
         cmp     eax,1
         jne     lctrl_2
         GO_ON   j_lctrl_1, lctrl_2, 8
         j_lctrl_1:
         mov     eax,edi  ; 1=DAT
+    	CHECKCODESIZE j_lctrl_1
     lctrl_2:
         cmp     eax,2
         jne     lctrl_3
         GO_ON   j_lctrl_2, lctrl_3, 8
         j_lctrl_2:
         mov     eax,hea  ; 2=HEA
+    	CHECKCODESIZE j_lctrl_2
     lctrl_3:
         cmp     eax,3
         jne     lctrl_4
@@ -769,6 +831,7 @@ OP_LCTRL:
         j_lctrl_3:
         mov     ebp,amx
         mov     eax,[ebp+_stp]
+    	CHECKCODESIZE j_lctrl_3
     lctrl_4:
         cmp     eax,4
         jne     lctrl_5
@@ -776,17 +839,20 @@ OP_LCTRL:
         j_lctrl_4:
         mov     eax,esp         ; 4=STK
         sub     eax,edi
+    	CHECKCODESIZE j_lctrl_4
     lctrl_5:
         cmp     eax,5
         jne     lctrl_6
         GO_ON   j_lctrl_5, lctrl_6, 8
         j_lctrl_5:
         mov     eax,frm         ; 5=FRM
+    	CHECKCODESIZE j_lctrl_5
     lctrl_6:
-        mov     DWORD ptr [j_lctrl_6+1],edi
+        mov     dword [j_lctrl_6+1],edi
         GO_ON   j_lctrl_6, OP_SCTRL, 8
         j_lctrl_6:
         mov     eax,12345678h   ; 6=CIP
+	CHECKCODESIZE j_lctrl_6
 
 
 OP_SCTRL:
@@ -797,6 +863,7 @@ OP_SCTRL:
         GO_ON   j_sctrl_2, sctrl_4, 8
         j_sctrl_2:
         mov     hea,eax  ; 2=HEA
+    	CHECKCODESIZE j_sctrl_2
     sctrl_4:
         cmp     eax,4
         jne     sctrl_5
@@ -805,6 +872,7 @@ OP_SCTRL:
         ;mov     esp,eax  ; 4=STK
         ;add    esp,edi  ; relocate stack
         lea     esp,[eax+edi]
+    	CHECKCODESIZE j_sctrl_4
     sctrl_5:
         cmp     eax,5
         jne     sctrl_ignore
@@ -813,10 +881,11 @@ OP_SCTRL:
         mov     ebx,eax  ; 5=FRM
         mov     frm,eax
         add     ebx,edi  ; relocate frame
+    	CHECKCODESIZE j_sctrl_5
     sctrl_ignore:
         mov     [ebx],edi
         add     ebx,8
-        jmp     DWORD ptr [ebx]
+        jmp     dword [ebx]
 
 OP_MOVE_PRI:
 ;nop;
@@ -824,6 +893,7 @@ OP_MOVE_PRI:
 
         j_move_pri:
         mov     eax,edx
+	CHECKCODESIZE j_move_pri
 
 ;good
 OP_MOVE_ALT:
@@ -832,6 +902,7 @@ OP_MOVE_ALT:
 
         j_move_alt:
         mov     edx,eax
+	CHECKCODESIZE j_move_alt
 
 OP_XCHG:
 ;nop;
@@ -839,6 +910,7 @@ OP_XCHG:
 
         j_xchg:                 ;one might use pushes/pops for pre-586's
         xchg    eax,edx
+	CHECKCODESIZE j_xchg
 
 ;good
 OP_PUSH_PRI:
@@ -847,6 +919,7 @@ OP_PUSH_PRI:
 
         j_push_pri:
         _PUSH   eax
+	CHECKCODESIZE j_push_pri
 
 ;good
 OP_PUSH_ALT:
@@ -855,6 +928,7 @@ OP_PUSH_ALT:
 
         j_push_alt:
         _PUSH   edx
+	CHECKCODESIZE j_push_alt
 
 OP_PUSH_R_PRI:
 ;nop;
@@ -868,6 +942,7 @@ OP_PUSH_R_PRI:
         loop    j_push_loop
         ;dec     ecx
         ;jnz     j_push_loop
+	CHECKCODESIZE j_push_r_pri
 
 ;good
 OP_PUSH_C:
@@ -877,6 +952,7 @@ OP_PUSH_C:
 
     j_push_c:
         _PUSH   12345678h
+	CHECKCODESIZE j_push_c
 
 OP_PUSH:
 ;nop;
@@ -885,6 +961,7 @@ OP_PUSH:
 
     j_push:
         _PUSH   [edi+12345678h]
+	CHECKCODESIZE j_push
 
 ;good
 OP_PUSH_S:
@@ -894,6 +971,7 @@ OP_PUSH_S:
 
         j_push_s:
         _PUSH   [ebx+12345678h]
+	CHECKCODESIZE j_push_s
 
 OP_POP_PRI:
 ;nop;
@@ -901,6 +979,7 @@ OP_POP_PRI:
 
         j_pop_pri:
         _POP    eax
+	CHECKCODESIZE j_pop_pri
 
 ;good
 OP_POP_ALT:
@@ -909,6 +988,7 @@ OP_POP_ALT:
 
         j_pop_alt:
         _POP    edx
+	CHECKCODESIZE j_pop_alt
 
 ;good
 OP_STACK:
@@ -920,9 +1000,10 @@ OP_STACK:
         mov     edx,esp
         add     esp,12345678h
         sub     edx,edi
-IF DORUNTIMECHECKS NE 0
+%ifdef DORUNTIMECHECKS
         call    [chk_marginstack]
-ENDIF
+%endif
+	CHECKCODESIZE j_stack
 
 ;good
 OP_HEAP:
@@ -932,11 +1013,13 @@ OP_HEAP:
 
         j_heap:
         mov     edx,hea
-        add     DWORD ptr hea,12345678h
+        add     dword hea,12345678h
         j_heap_call:
-IF DORUNTIMECHECKS NE 0
+%ifdef DORUNTIMECHECKS
         call    [chk_marginheap]
-ENDIF
+%endif
+	CHECKCODESIZE j_heap
+        
 ;good
 OP_PROC:
 ;nop;
@@ -947,6 +1030,7 @@ OP_PROC:
         mov     frm,esp         ; get new frame
         mov     ebx,esp         ; already relocated
         sub     frm,edi         ; relocate frame
+	CHECKCODESIZE j_proc
 
 OP_RET:
 ;nop;
@@ -958,6 +1042,7 @@ OP_RET:
         add     ebx,edi
         ret
         ;call   [jit_ret]
+	CHECKCODESIZE j_ret
 
 ;good
 OP_RETN:
@@ -966,6 +1051,7 @@ OP_RETN:
 
         j_retn:
         jmp     [jit_retn]
+	CHECKCODESIZE j_retn
 
 ;good
 OP_CALL:
@@ -976,6 +1062,7 @@ OP_CALL:
         j_call:
         ;call   12345678h ; tasm chokes on this out of a sudden
         db      0e8h, 0, 0, 0, 0
+	CHECKCODESIZE j_call
 
 OP_CALL_I:
 ;nop;
@@ -983,6 +1070,7 @@ OP_CALL_I:
 
         j_call_i:
         call    eax
+	CHECKCODESIZE j_call_i
 
 ;good
 OP_JUMP:
@@ -993,12 +1081,14 @@ OP_JUMP:
         j_jump:
         DB      0e9h
         DD      12345678h
+	CHECKCODESIZE j_jump
 
 OP_JREL:
 ;nop;
         mov     eax,[ebx+4]
         ; create an absolute address from the relative one
         RELOC   1, eax+ebx+8
+        ; GWMV: is the next line really correct!?
         GO_ON   j_jump, OP_JREL, 8
 
 ;good
@@ -1010,6 +1100,7 @@ OP_JZER:
     j_jzer:
         or      eax,eax
         DB      0fh, 84h, 0, 0, 0, 0    ;jz NEAR 0      (tasm sucks a bit)
+	CHECKCODESIZE j_jzer
 
 ;good
 OP_JNZ:
@@ -1020,6 +1111,7 @@ OP_JNZ:
     j_jnz:
         or      eax,eax
         DB      0fh, 85h, 0, 0, 0, 0    ;jnz NEAR 0
+	CHECKCODESIZE j_jnz
 
 ;good
 OP_JEQ:
@@ -1030,6 +1122,7 @@ OP_JEQ:
     j_jeq:
         cmp     eax,edx
         DB      0fh, 84h, 0, 0, 0, 0    ;je NEAR 0      (tasm sucks a bit)
+	CHECKCODESIZE j_jeq
 
 OP_JNEQ:
 ;nop;
@@ -1039,6 +1132,7 @@ OP_JNEQ:
     j_jneq:
         cmp     eax,edx
         DB      0fh, 85h, 0, 0, 0, 0    ;jne NEAR 0     (tasm sucks a bit)
+	CHECKCODESIZE j_jneq
 
 OP_JLESS:
 ;nop;
@@ -1048,6 +1142,7 @@ OP_JLESS:
     j_jless:
         cmp     eax,edx
         DB      0fh, 82h, 0, 0, 0, 0    ;jb NEAR 0      (tasm sucks a bit)
+	CHECKCODESIZE j_jless
 
 OP_JLEQ:
 ;nop;
@@ -1057,6 +1152,7 @@ OP_JLEQ:
     j_jleq:
         cmp     eax,edx
         DB      0fh, 86h, 0, 0, 0, 0    ;jbe NEAR 0     (tasm sucks a bit)
+	CHECKCODESIZE j_jleq
 
 OP_JGRTR:
 ;nop;
@@ -1066,6 +1162,7 @@ OP_JGRTR:
     j_jgrtr:
         cmp     eax,edx
         DB      0fh, 87h, 0, 0, 0, 0    ;ja NEAR 0      (tasm sucks a bit)
+	CHECKCODESIZE j_jgrtr
 
 OP_JGEQ:
 ;nop;
@@ -1075,6 +1172,7 @@ OP_JGEQ:
     j_jgeq:
         cmp     eax,edx
         DB      0fh, 83h, 0, 0, 0, 0    ;jae NEAR 0 (unsigned comparison)
+	CHECKCODESIZE j_jgeq
 
 OP_JSLESS:
 ;nop;
@@ -1084,6 +1182,7 @@ OP_JSLESS:
     j_jsless:
         cmp     eax,edx
         DB      0fh, 8ch, 0, 0, 0, 0    ;jl NEAR 0
+	CHECKCODESIZE j_jsless
 
 ;good
 OP_JSLEQ:
@@ -1094,6 +1193,7 @@ OP_JSLEQ:
     j_jsleq:
         cmp     eax,edx
         DB      0fh, 8eh, 0, 0, 0, 0    ;jle NEAR 0
+	CHECKCODESIZE j_jsleq
 
 OP_JSGRTR:
 ;nop;
@@ -1103,6 +1203,7 @@ OP_JSGRTR:
     j_jsgrtr:
         cmp     eax,edx
         DB      0fh, 8Fh, 0, 0, 0, 0    ;jg NEAR 0
+	CHECKCODESIZE j_jsgrtr
 
 OP_JSGEQ:
 ;nop;
@@ -1112,6 +1213,7 @@ OP_JSGEQ:
     j_jsgeq:
         cmp     eax,edx
         DB      0fh, 8dh, 0, 0, 0, 0    ;jge NEAR 0
+	CHECKCODESIZE j_jsgeq
 
 OP_SHL:
 ;nop;
@@ -1119,6 +1221,7 @@ OP_SHL:
    j_shl:
         mov     ecx,edx         ; TODO: save ECX if used as special register
         shl     eax,cl
+	CHECKCODESIZE j_shl
 
 OP_SHR:
 ;nop;
@@ -1126,6 +1229,7 @@ OP_SHR:
    j_shr:
         mov     ecx,edx         ; TODO: save ECX if used as special register
         shr     eax,cl
+	CHECKCODESIZE j_shr
 
 OP_SSHR:
 ;nop;
@@ -1133,38 +1237,43 @@ OP_SSHR:
    j_sshr:
         mov     ecx,edx         ; TODO: save ECX if used as special register
         sar     eax,cl
+	CHECKCODESIZE j_sshr
 
 OP_SHL_C_PRI:
 ;nop;
         mov     al,[ebx+4]
-        mov     BYTE ptr [j_shl_c_pri+2],al
+        mov     byte [j_shl_c_pri+2],al
         GO_ON   j_shl_c_pri, OP_SHL_C_ALT, 8
     j_shl_c_pri:
         shl     eax,12h
+	CHECKCODESIZE j_shl_c_pri
 
 OP_SHL_C_ALT:
 ;nop;
         mov     al,[ebx+4]
-        mov     BYTE ptr [j_shl_c_alt+2],al
+        mov     byte [j_shl_c_alt+2],al
         GO_ON   j_shl_c_alt, OP_SHR_C_PRI, 8
     j_shl_c_alt:
         shl     edx,12h
+	CHECKCODESIZE j_shl_c_alt
 
 OP_SHR_C_PRI:
 ;nop;
         mov     al,[ebx+4]
-        mov     BYTE ptr [j_shr_c_pri+2],al
+        mov     byte [j_shr_c_pri+2],al
         GO_ON   j_shr_c_pri, OP_SHR_C_ALT, 8
     j_shr_c_pri:
         shr     eax,12h
+	CHECKCODESIZE j_shr_c_pri
 
 OP_SHR_C_ALT:
 ;nop;
         mov     al,[ebx+4]
-        mov     BYTE ptr [j_shr_c_alt+2],al
+        mov     byte [j_shr_c_alt+2],al
         GO_ON   j_shr_c_alt, OP_SMUL, 8
     j_shr_c_alt:
         shr     edx,12h
+	CHECKCODESIZE j_shr_c_alt
 
 OP_SMUL:
 ;nop;
@@ -1173,6 +1282,7 @@ OP_SMUL:
         push    edx
         imul    edx
         pop     edx
+	CHECKCODESIZE j_smul
 
 ;good
 OP_SDIV:
@@ -1180,6 +1290,7 @@ OP_SDIV:
         GO_ON   j_sdiv, OP_SDIV_ALT
     j_sdiv:
         call    [jit_sdiv]
+	CHECKCODESIZE j_sdiv
 
 OP_SDIV_ALT:
 ;nop;
@@ -1187,6 +1298,7 @@ OP_SDIV_ALT:
     j_sdiv_alt:
         xchg    eax,edx
         call    [jit_sdiv]
+	CHECKCODESIZE j_sdiv_alt
 
 OP_UMUL:
 ;nop;
@@ -1195,6 +1307,7 @@ OP_UMUL:
         push    edx
         mul     edx
         pop     edx
+	CHECKCODESIZE j_umul
 
 OP_UDIV:
 ;nop;
@@ -1204,6 +1317,7 @@ OP_UDIV:
         sub     edx,edx
         call    [chk_dividezero]
         div     ebp
+	CHECKCODESIZE j_udiv
 
 OP_UDIV_ALT:
 ;nop;
@@ -1214,6 +1328,7 @@ OP_UDIV_ALT:
         sub     edx,edx
         call    [chk_dividezero]
         div     ebp
+	CHECKCODESIZE j_udiv_alt
 
 ;good
 OP_ADD:
@@ -1221,6 +1336,7 @@ OP_ADD:
         GO_ON   j_add, OP_SUB
     j_add:
         add     eax,edx
+	CHECKCODESIZE j_add
 
 ;good
 OP_SUB:
@@ -1228,6 +1344,7 @@ OP_SUB:
         GO_ON   j_sub, OP_SUB_ALT
     j_sub:
         sub     eax,edx
+	CHECKCODESIZE j_sub
 
 ;good
 OP_SUB_ALT:
@@ -1236,24 +1353,28 @@ OP_SUB_ALT:
     j_sub_alt:
         neg     eax
         add     eax,edx
+	CHECKCODESIZE j_sub_alt
 
 OP_AND:
 ;nop;
         GO_ON   j_and, OP_OR
     j_and:
         and     eax,edx
+	CHECKCODESIZE j_and
 
 OP_OR:
 ;nop;
         GO_ON   j_or, OP_XOR
     j_or:
         or      eax,edx
+	CHECKCODESIZE j_or
 
 OP_XOR:
 ;nop;
         GO_ON   j_xor, OP_NOT
     j_xor:
         xor     eax,edx
+	CHECKCODESIZE j_xor
 
 OP_NOT:
 ;nop;
@@ -1262,18 +1383,21 @@ OP_NOT:
         neg     eax             ; sets CF iff EAX != 0
         sbb     eax,eax         ; EAX == -1 iff CF set (zero otherwise)
         inc     eax             ; -1 => 0 and 0 => 1
+	CHECKCODESIZE j_not
 
 OP_NEG:
 ;nop;
         GO_ON   j_neg, OP_INVERT
     j_neg:
         neg     eax
+	CHECKCODESIZE j_neg
 
 OP_INVERT:
 ;nop;
         GO_ON   j_invert, OP_ADD_C
     j_invert:
         not     eax
+	CHECKCODESIZE j_invert
 
 ;good
 OP_ADD_C:
@@ -1282,6 +1406,7 @@ OP_ADD_C:
         GO_ON   j_add_c, OP_SMUL_C, 8
     j_add_c:
         add     eax,12345678h
+	CHECKCODESIZE j_add_c
 
 ;good
 OP_SMUL_C:
@@ -1292,6 +1417,7 @@ OP_SMUL_C:
         push    edx
         imul    eax,12345678h
         pop     edx
+	CHECKCODESIZE j_smul_c
 
 ;good
 OP_ZERO_PRI:
@@ -1299,6 +1425,7 @@ OP_ZERO_PRI:
         GO_ON   j_zero_pri, OP_ZERO_ALT
     j_zero_pri:
         sub     eax,eax
+	CHECKCODESIZE j_zero_pri
 
 ;good
 OP_ZERO_ALT:
@@ -1306,20 +1433,23 @@ OP_ZERO_ALT:
         GO_ON   j_zero_alt, OP_ZERO
     j_zero_alt:
         sub     edx,edx
+	CHECKCODESIZE j_zero_alt
 
 OP_ZERO:
 ;nop;
         putval  j_zero+2
         GO_ON   j_zero, OP_ZERO_S, 8
     j_zero:
-        mov     DWORD ptr [edi+12345678h],0
+        mov     dword [edi+12345678h],0
+	CHECKCODESIZE j_zero
 
 OP_ZERO_S:
 ;nop;
         putval  j_zero_s+2
         GO_ON   j_zero_s, OP_SIGN_PRI, 8
     j_zero_s:
-        mov     DWORD ptr [ebx+12345678h],0
+        mov     dword [ebx+12345678h],0
+	CHECKCODESIZE j_zero_s
 
 OP_SIGN_PRI:
 ;nop;
@@ -1327,6 +1457,7 @@ OP_SIGN_PRI:
     j_sign_pri:
         shl     eax,24
         sar     eax,24
+	CHECKCODESIZE j_sign_pri
 
 OP_SIGN_ALT:
 ;nop;
@@ -1334,6 +1465,7 @@ OP_SIGN_ALT:
     j_sign_alt:
         shl     edx,24
         sar     edx,24
+	CHECKCODESIZE j_sign_alt
 
 OP_EQ:
 ;nop;
@@ -1342,6 +1474,7 @@ OP_EQ:
         cmp     eax,edx         ; PRI == ALT ?
         mov     eax,0
         sete    al
+	CHECKCODESIZE j_eq
 
 OP_NEQ:
 ;nop;
@@ -1350,6 +1483,7 @@ OP_NEQ:
         cmp     eax,edx         ; PRI != ALT ?
         mov     eax,0
         setne   al
+	CHECKCODESIZE j_neq
 
 OP_LESS:
 ;nop;
@@ -1358,6 +1492,7 @@ OP_LESS:
         cmp     eax,edx         ; PRI < ALT ? (unsigned)
         mov     eax,0
         setb    al
+	CHECKCODESIZE j_less
 
 OP_LEQ:
 ;nop;
@@ -1366,6 +1501,7 @@ OP_LEQ:
         cmp     eax,edx         ; PRI <= ALT ? (unsigned)
         mov     eax,0
         setbe   al
+	CHECKCODESIZE j_leq
 
 OP_GRTR:
 ;nop;
@@ -1374,6 +1510,7 @@ OP_GRTR:
         cmp     eax,edx         ; PRI > ALT ? (unsigned)
         mov     eax,0
         seta    al
+	CHECKCODESIZE j_grtr
 
 OP_GEQ:
 ;nop;
@@ -1382,6 +1519,7 @@ OP_GEQ:
         cmp     eax,edx         ; PRI >= ALT ? (unsigned)
         mov     eax,0
         setae   al
+	CHECKCODESIZE j_geq
 
 ;good
 OP_SLESS:
@@ -1391,6 +1529,7 @@ OP_SLESS:
         cmp     eax,edx         ; PRI < ALT ? (signed)
         mov     eax,0
         setl    al
+	CHECKCODESIZE j_sless
 
 OP_SLEQ:
 ;nop;
@@ -1399,6 +1538,7 @@ OP_SLEQ:
         cmp     eax,edx         ; PRI <= ALT ? (signed)
         mov     eax,0
         setle   al
+	CHECKCODESIZE j_sleq
 
 OP_SGRTR:
 ;nop;
@@ -1407,6 +1547,7 @@ OP_SGRTR:
         cmp     eax,edx         ; PRI > ALT ? (signed)
         mov     eax,0
         setg    al
+	CHECKCODESIZE j_sgrtr
 
 OP_SGEQ:
 ;nop;
@@ -1415,6 +1556,7 @@ OP_SGEQ:
         cmp     eax,edx         ; PRI >= ALT ? (signed)
         mov     eax,0
         setge   al
+	CHECKCODESIZE j_sgeq
 
 OP_EQ_C_PRI:
 ;nop;
@@ -1424,6 +1566,7 @@ OP_EQ_C_PRI:
         cmp     eax,12345678h   ; PRI == value ?
         mov     eax,0
         sete    al
+	CHECKCODESIZE j_eq_c_pri
 
 OP_EQ_C_ALT:
 ;nop;
@@ -1433,25 +1576,29 @@ OP_EQ_C_ALT:
         sub     eax,eax
         cmp     edx,12345678h   ; ALT == value ?
         sete    al
+	CHECKCODESIZE j_eq_c_alt
 
 OP_INC_PRI:
 ;nop;
         GO_ON   j_inc_pri, OP_INC_ALT
     j_inc_pri:
         inc     eax
+	CHECKCODESIZE j_inc_pri
 
 OP_INC_ALT:
 ;nop;
         GO_ON   j_inc_alt, OP_INC
     j_inc_alt:
         inc     edx
+	CHECKCODESIZE j_inc_alt
 
 OP_INC:
 ;nop;
         putval  j_inc+2
         GO_ON   j_inc, OP_INC_S, 8
     j_inc:
-        inc     DWORD ptr [edi+12345678h]
+        inc     dword [edi+12345678h]
+	CHECKCODESIZE j_inc
 
 ;good
 OP_INC_S:
@@ -1459,45 +1606,52 @@ OP_INC_S:
         putval  j_inc_s+2
         GO_ON   j_inc_s, OP_INC_I, 8
     j_inc_s:
-        inc     DWORD ptr [ebx+12345678h]
+        inc     dword [ebx+12345678h]
+	CHECKCODESIZE j_inc_s
 
 OP_INC_I:
 ;nop;
         GO_ON   j_inc_i, OP_DEC_PRI
     j_inc_i:
-        inc     DWORD ptr [edi+eax]
+        inc     dword [edi+eax]
+	CHECKCODESIZE j_inc_i
 
 OP_DEC_PRI:
 ;nop;
         GO_ON   j_dec_pri, OP_DEC_ALT
     j_dec_pri:
         dec     eax
+	CHECKCODESIZE j_dec_pri
 
 OP_DEC_ALT:
 ;nop;
         GO_ON   j_dec_alt, OP_DEC
     j_dec_alt:
         dec     edx
+	CHECKCODESIZE j_dec_alt
 
 OP_DEC:
 ;nop;
         putval  j_dec+2
         GO_ON   j_dec, OP_DEC_S, 8
     j_dec:
-        dec     DWORD ptr [edi+12345678h]
+        dec     dword [edi+12345678h]
+	CHECKCODESIZE j_dec
 
 OP_DEC_S:
 ;nop;
         putval  j_dec_s+2
         GO_ON   j_dec_s, OP_DEC_I, 8
     j_dec_s:
-        dec     DWORD ptr [ebx+12345678h]
+        dec     dword [ebx+12345678h]
+	CHECKCODESIZE j_dec_s
 
 OP_DEC_I:
 ;nop;
         GO_ON   j_dec_i, OP_MOVS
     j_dec_i:
-        dec     DWORD ptr [edi+eax]
+        dec     dword [edi+eax]
+	CHECKCODESIZE j_dec_i
 
 OP_MOVS:
 ;nop;
@@ -1506,6 +1660,7 @@ OP_MOVS:
     j_movs:
         mov     ecx,12345678h   ;TODO: save ECX if used as special register
         call    [jit_movs]
+	CHECKCODESIZE j_movs
 
 OP_CMPS:
 ;nop;
@@ -1514,6 +1669,7 @@ OP_CMPS:
     j_cmps:
         mov     ecx,12345678h   ;TODO: save ECX if used as special register
         call    [jit_cmps]
+	CHECKCODESIZE j_cmps
 
 OP_FILL:
 ;nop;
@@ -1522,6 +1678,7 @@ OP_FILL:
     j_fill:
         mov     ecx,12345678h   ;TODO: save ECX if used as special register
         call    [jit_fill]
+	CHECKCODESIZE j_fill
 
 ;good
 OP_HALT:
@@ -1529,7 +1686,7 @@ OP_HALT:
         putval  j_halt_sm+1
         GO_ON   j_halt, OP_BOUNDS, 8
     j_halt:
-        cmp     DWORD PTR retval,0
+        cmp     dword retval,0
         je      j_halt_no_value
         mov     ebp,retval
         mov     [ebp],eax
@@ -1537,6 +1694,7 @@ OP_HALT:
     j_halt_sm:
         mov     eax,12345678h
         jmp     [jit_return]
+	CHECKCODESIZE j_halt
 
 ;good
 OP_BOUNDS:
@@ -1546,6 +1704,7 @@ OP_BOUNDS:
     j_bounds:
         mov     ebp,12345678h
         call    [jit_bounds]
+	CHECKCODESIZE j_bounds
 
 ;good
 OP_SYSREQ_C:
@@ -1556,6 +1715,9 @@ OP_SYSREQ_C:
         mov     eax,12345678h   ; get function number
     j_sysreq:
         call    [jit_sysreq]
+	CHECKCODESIZE j_sysreq_c
+        ; GWMV: oh well, it may look stupid, but I don't want to miss anything
+        CHECKCODESIZE j_sysreq
 
 OP_SYSREQ_PRI:
 ;nop;
@@ -1566,19 +1728,19 @@ OP_FILE:                                ;opcode is simply ignored
         mov     eax,[ebx+4]             ;get size
         mov     [ebx],edi
         lea     ebx,[ebx+eax+8]         ;move on to next opcode
-        cmp     ebx,DWORD ptr [end_code]
+        cmp     ebx,dword [end_code]
         jae     code_gen_done
-        jmp     DWORD ptr [ebx]         ;go on with the next opcode
+        jmp     dword [ebx]         ;go on with the next opcode
 
 OP_LINE:
 ;nop;
-IF ALLOWOPLINE EQ 0
+%ifndef ALLOWOPLINE
         mov     [ebx],edi               ; no line number support: ignore opcode
         add     ebx,12                  ; move on to next opcode
         cmp     ebx,[end_code]
         jae     code_gen_done
-        jmp     DWORD ptr [ebx]         ; go on with the next opcode
-ELSE
+        jmp     dword [ebx]         ; go on with the next opcode
+%else
         putval  j_line+6
         mov     eax,[ebx+8]
         mov     [j_line_sm],eax
@@ -1587,7 +1749,8 @@ ELSE
         call    [jit_line]
                 DD      0               ; space for curline
 j_line_sm       DD      0               ; space for curfile
-ENDIF
+	CHECKCODESIZE j_line
+%endif
 
 OP_SYMBOL:                              ;ignored
         mov     [ebx],edi
@@ -1595,7 +1758,7 @@ OP_SYMBOL:                              ;ignored
         lea     ebx,[ebx+eax+8]         ; move on to next opcode
         cmp     ebx,[end_code]
         jae     code_gen_done
-        jmp     DWORD ptr [ebx]         ; go on with the next opcode
+        jmp     dword [ebx]         ; go on with the next opcode
 
 
 OP_SRANGE:                              ;ignored
@@ -1603,7 +1766,7 @@ OP_SRANGE:                              ;ignored
         add     ebx,12                  ; move on to next opcode
         cmp     ebx,[end_code]
         jae     code_gen_done
-        jmp     DWORD ptr [ebx]         ; go on with the next opcode
+        jmp     dword [ebx]         ; go on with the next opcode
 
 
 ;not tested
@@ -1613,6 +1776,7 @@ OP_JUMP_PRI:
     j_jump_pri:                 ; MP: This opcode makes sense only in con-
         jmp     [eax]           ; junction with a possibility to get the
                                 ; address of a code location...
+	CHECKCODESIZE j_jump_pri
 
 
 ;good
@@ -1624,7 +1788,7 @@ OP_SWITCH:
         mov     al,90h          ; 90h = opcode of x86 NOP instruction
         rep  stosb              ; Write the right number of NOPs.
         mov     [ebx],edi       ; store address of SWITCH for relocation step
-        mov     esi,OFFSET j_switch
+        mov     esi, j_switch
         mov     ecx,6
         rep  movsb              ; copy the call instruction
         mov     esi,[ebx+4]     ; get address of CASETBL instruction
@@ -1637,9 +1801,9 @@ OP_SWITCH:
         mov     eax,[esi]       ; get case value
         stosd                   ; write it
         mov     eax,[esi+4]     ; get destination address
-IF FORCERELOCATABLE EQ 0
+%ifndef FORCERELOCATABLE
         or      eax,80000000h   ; add flag for "absolute address"
-ENDIF
+%endif
         mov     [edx+ebp],eax   ; write dest. adr. into relocation table
         mov     eax,[esi+4]     ; get destination address (again)
         add     esi,8           ; set ESI to next case
@@ -1648,7 +1812,7 @@ ENDIF
         stosd                   ; write dest. adr.
         dec     ecx
         jnz     j_case_loop
-        mov     DWORD ptr [reloc_num],ebp       ; write back updated reloc_num
+        mov     dword [reloc_num],ebp       ; write back updated reloc_num
 
         jmp     [ebx]           ; GO_ON to next op-code
 
@@ -1669,6 +1833,7 @@ OP_SWAP_PRI:                    ; TR
         _POP    ebp
         _PUSH   eax
         mov     eax,ebp
+	CHECKCODESIZE j_swap_pri
 
 
 OP_SWAP_ALT:                    ; TR
@@ -1678,6 +1843,7 @@ OP_SWAP_ALT:                    ; TR
         _POP    ebp
         _PUSH   edx
         mov     edx,ebp
+	CHECKCODESIZE j_swap_alt
 
 
 OP_PUSHADDR:                    ; TR
@@ -1688,11 +1854,13 @@ OP_PUSHADDR:                    ; TR
         mov     ebp,12345678h   ;get address (offset from frame)
         add     ebp,frm
         _PUSH   ebp
+	CHECKCODESIZE j_pushaddr
 
 
 OP_NOP:                         ; TR
         GO_ON   j_nop, OP_SYSREQ_D
      j_nop:                     ; code alignment is ignored by the JIT
+	CHECKCODESIZE j_nop
 
 
 OP_SYSREQ_D:
@@ -1702,6 +1870,7 @@ OP_SYSREQ_D:
     j_sysreq_d:
         mov     ebx,12345678h   ; get function address
         call    [jit_sysreq_d]
+	CHECKCODESIZE j_sysreq_d
 
 
 OP_SYMTAG:                              ;ignored (TR)
@@ -1709,7 +1878,7 @@ OP_SYMTAG:                              ;ignored (TR)
         add     ebx,8                   ; move on to next opcode
         cmp     ebx,[end_code]
         jae     code_gen_done
-        jmp     DWORD ptr [ebx]         ; go on with the next opcode
+        jmp     dword [ebx]         ; go on with the next opcode
 
 
 OP_INVALID:                     ; break from the compiler with an error code
@@ -1721,8 +1890,7 @@ OP_INVALID:                     ; break from the compiler with an error code
         ret
 
 
-_asm_runJIT     ENDP
-
+section .text
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;                                                               ;
@@ -1730,8 +1898,8 @@ _asm_runJIT     ENDP
 ;                       eax         edx          ebx       ecx  ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-_amx_exec_asm   PROC
-
+amx_exec_asm:
+_amx_exec_asm:
         push    edi
         push    esi
         push    ebp
@@ -1745,23 +1913,12 @@ _amx_exec_asm   PROC
 
         sub     esp,4*3         ; place for PRI, ALT & STK at SYSREQs
 
-        push    DWORD ptr [eax+28] ; store pointer to code segment
-        push    DWORD ptr [eax+24] ; store pointer to AMX
+        push    dword [eax+28] ; store pointer to code segment
+        push    dword [eax+24] ; store pointer to AMX
         push    edx             ; store address of retval
         push    ebx             ; store STP
         push    ecx             ; store HEA
-        push    DWORD ptr[eax+20]; store FRM
-
-        stk     equ [esi+32]    ; define some aliases to registers that will
-        alt     equ [esi+28]    ;   be stored on the stack when the code is
-        pri     equ [esi+24]    ;   actually beeing executed
-        code    equ [esi+20]
-        amx     equ [esi+16]
-        retval  equ [esi+12]
-        stp     equ [esi+8]
-        hea     equ [esi+4]
-        frm     equ [esi]   ; FRM is NOT stored in ebp, FRM+DAT is being held
-                            ; in ebx instead.
+        push    dword [eax+20]; store FRM
 
         mov     edx,[eax+4]     ; get ALT
         mov     ecx,[eax+8]     ; get CIP
@@ -1781,7 +1938,7 @@ _amx_exec_asm   PROC
         call    ecx
 
 return_to_caller:
-        cmp     DWORD PTR retval,0
+        cmp     dword retval,0
         je      return_to_caller_no_value
         mov     ebp,retval
         mov     [ebp],eax       ; provide return value
@@ -1846,7 +2003,7 @@ err_heaplow:
 _CHKMARGIN_HEAP:
         cmp     esp,stp
         jg      err_stacklow
-        cmp     DWORD ptr hea,0
+        cmp     dword hea,0
         jl      err_heaplow
         ret
 
@@ -2033,7 +2190,7 @@ JIT_OP_SYSREQ_D:                ; (TR)
         _DROPARGS 8             ; remove args from stack
         xchg    esp,esi         ; switch back to AMX stack
         mov     ebp,amx         ; get amx into EBP
-        cmp     [ebp+_error],AMX_ERR_NONE
+        cmp     dword [ebp+_error],AMX_ERR_NONE
         jne     _return_popstack; return error code, if any
 
         ; return value is in eax (PRI)
@@ -2069,36 +2226,26 @@ JIT_OP_SWITCH:
         sub     ebp,8           ; position to preceding case
         loop    op_switch_loop  ; check next case, or fall through
     op_switch_jump:
-IF FORCERELOCATABLE EQ 0
+%ifndef FORCERELOCATABLE
         jmp     [ebp-4]         ; jump to the case instructions
-ELSE
+%else
         add     ebp,[ebp-4]     ; add offset to make absolute adddress
         jmp     ebp
-ENDIF
+%endif
 
-_amx_exec_asm   ENDP
 
-;
 ; The caller of asm_runJIT() can determine the maximum size of the compiled
 ; code by multiplying the result of this function by the number of opcodes in
 ; Small module.
 ;
 ; unsigned long getMaxCodeSize_();
 ;
-_getMaxCodeSize PROC
-
+getMaxCodeSize:
+_getMaxCodeSize:
         mov     eax,MAXCODESIZE
         ret
 
-_getMaxCodeSize ENDP
-
-
-IFNDEF @Version
-        ; Microsoft MASM 6.x gives the error message "Register assumed to
-        ; ERROR" when I put the code lables in the data segment. I cannot find
-        ; a proper way around it.
-.DATA
-ENDIF
+section .data
         ALIGN   4       ; This is essential to avoid misalignment stalls.
 
 end_code        DD  0   ; pointer to the end of the source code
@@ -2134,11 +2281,13 @@ jit_sysreq_d    DD      JIT_OP_SYSREQ_D
 jit_line        DD      JIT_OP_LINE
 jit_switch      DD      JIT_OP_SWITCH
 
-
 ;
 ; The table for the browser/relocator function.
 ;
-        PUBLIC  _amx_opcodelist
+
+global amx_opcodelist, _amx_opcodelist
+
+amx_opcodelist:
 _amx_opcodelist:
         DD      OP_INVALID
         DD      OP_LOAD_PRI
@@ -2277,5 +2426,3 @@ _amx_opcodelist:
         DD      OP_NOP          ; TR
         DD      OP_SYSREQ_D     ; TR
         DD      OP_SYMTAG       ; TR
-
-END

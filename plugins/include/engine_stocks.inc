@@ -11,6 +11,14 @@
 #endif
 #define _engine_stocks_included
 
+#if !defined _amxmodx_included
+  #include <amxmodx>
+#endif
+
+#if !defined _engine_included
+  #include <engine>
+#endif
+
 stock fakedamage(idvictim,szClassname[],Float:takedmgdamage,damagetype)
 {
 	new entity = create_entity("trigger_hurt")
@@ -118,7 +126,7 @@ stock get_brush_entity_origin(ent, Float:orig[3])
 /* Remove entity by name */
 stock remove_entity_name(eName[])
 {
-	new iEntity = FindEntity(-1, eName)
+	new iEntity = find_ent_by_class(-1, eName)
 	while (iEntity > 0)
 	{
 		remove_entity(iEntity)
@@ -155,7 +163,7 @@ stock make_deathmsg(killer,victim,headshot,weapon[])
 	message_begin(MSG_ALL,get_user_msgid("DeathMsg"),{0,0,0},0)
 	write_byte( killer )
 	write_byte( victim )
-	
+
 	new mod_name[32]
 	get_modname(mod_name,31)
 	if (equal(mod_name,"cstrike") || equal(mod_name,"czero") || equal(mod_name,"csv15") || equal(mod_name,"cs13"))
@@ -188,8 +196,8 @@ stock user_silentkill(index)
 	return 1
 }
 
-/*  Set endering of an entity */
-stock set_rendering(index,fx=kRenderFxNone, r=255,g=255,b=255, render=kRenderNormal,amount=16)
+/*  Set rendering of an entity */
+stock set_rendering(index, fx=kRenderFxNone, r=255, g=255, b=255, render=kRenderNormal, amount=16)
 {
 	entity_set_int(index,EV_INT_renderfx,fx)
 	new Float:RenderColor[3]

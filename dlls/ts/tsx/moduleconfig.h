@@ -4,7 +4,7 @@
 #define __MODULECONFIG_H__
 
 // Module info
-#define MODULE_NAME "The Specialists X"
+#define MODULE_NAME "TSX"
 #define MODULE_VERSION "0.2"
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "http://www.amxmodx.org"

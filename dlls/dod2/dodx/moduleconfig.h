@@ -4,7 +4,7 @@
 #define __MODULECONFIG_H__
 
 // Module info
-#define MODULE_NAME "Day of Defeat X"
+#define MODULE_NAME "DoDX"
 #define MODULE_VERSION "0.20"
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "http://www.amxmodx.org"

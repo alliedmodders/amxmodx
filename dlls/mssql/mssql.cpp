@@ -72,7 +72,7 @@ static cell AMX_NATIVE_CALL sql_connect(AMX *amx, cell *params) //	6 param
 	i = 0;
 
 	if (!strlen(host) || !strlen(user) || !strlen(dbname)) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid parameter supplied");
 		return -1;
 	}
 	
@@ -116,7 +116,7 @@ static cell AMX_NATIVE_CALL sql_error(AMX *amx, cell *params) // 3 params
 	unsigned int id = params[1]-1;
 	if (id >= DBList.size() || DBList[id]->isFree)
 	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid connection %d", id);
 		return 0;
 	}
 
@@ -146,8 +146,7 @@ static cell AMX_NATIVE_CALL sql_query(AMX *amx, cell *params) //	2 params
 	unsigned int id = params[1]-1;
 
 	if (id >= DBList.size() || DBList[id]->isFree) {
-		MF_Log("Invalid Database Handle %d", id);
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid Database Handle %d", id);
 		return -1;
 	}
 
@@ -170,8 +169,7 @@ static cell AMX_NATIVE_CALL sql_nextrow(AMX *amx, cell *params) //	1 param
 
 	if (id >= Results.size() || Results[id]->isFree)
 	{
-		MF_Log("Invalid result handle %d", id);
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid result handle %d", id);
 		return 0;
 	}
 
@@ -188,8 +186,7 @@ static cell AMX_NATIVE_CALL sql_close(AMX *amx, cell *params) // 1 param
 {
 	unsigned int id = params[1]-1;
 	if (id >= DBList.size() || DBList[id]->isFree) {
-		MF_Log("Invalid Database Handle %d", id);
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid Database Handle %d", id);
 		return 0;
 	}
 
@@ -210,8 +207,7 @@ static cell AMX_NATIVE_CALL sql_getfield(AMX *amx, cell *params) // 2-4 params
 
 	if (id >= Results.size() || Results[id]->isFree)
 	{
-		MF_Log("Invalid result handle %d", id);
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid result handle %d", id);
 		return 0;
 	}
 
@@ -221,7 +217,7 @@ static cell AMX_NATIVE_CALL sql_getfield(AMX *amx, cell *params) // 2-4 params
 	const char *field = Result->GetField(id);
 	if (field == NULL)
 	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid column %d", id);
 		return 0;
 	}
 
@@ -255,8 +251,7 @@ static cell AMX_NATIVE_CALL sql_getresult(AMX *amx, cell *params) // 4 params
 
 	if (id >= Results.size() || Results[id]->isFree)
 	{
-		MF_Log("Invalid result handle %d", id);
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid result handle %d", id);
 		return 0;
 	}
 
@@ -268,7 +263,7 @@ static cell AMX_NATIVE_CALL sql_getresult(AMX *amx, cell *params) // 4 params
 	const char *field = Result->GetField(id);
 	if (field == NULL)
 	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid column \"%s\"", column);
 		return 0;
 	}
 
@@ -298,8 +293,7 @@ static cell AMX_NATIVE_CALL sql_free_result(AMX *amx, cell *params)
 
 	if (id >= Results.size() || Results[id]->isFree)
 	{
-		MF_Log("Invalid result handle %d", id);
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid result handle %d", id);
 		return 0;
 	}
 
@@ -316,8 +310,7 @@ static cell AMX_NATIVE_CALL sql_num_rows(AMX *amx, cell *params)
 
 	if (id >= Results.size() || Results[id]->isFree)
 	{
-		MF_Log("Invalid result handle %d", id);
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid result handle %d", id);
 		return 0;
 	}
 

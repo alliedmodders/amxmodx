@@ -219,8 +219,7 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 
 
 	default:
-		MF_Log("Unknown dllfunc entry.");
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Unknown dllfunc entry %d", type);
 		return 0;
 	}
 }

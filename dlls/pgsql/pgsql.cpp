@@ -215,7 +215,7 @@ static cell AMX_NATIVE_CALL sql_getfield(AMX *amx, cell *params) // 2-4 params
 	const char *field = Result->GetField(params[2]-1);
 	if (field == NULL)
 	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid column %d", params[2]);
 		return 0;
 	}
 
@@ -261,7 +261,7 @@ static cell AMX_NATIVE_CALL sql_getresult(AMX *amx, cell *params) // 4 params
 	const char *field = Result->GetField(column);
 	if (field == NULL)
 	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid column \"%s\"", field);
 		return 0;
 	}
 
@@ -317,8 +317,7 @@ static cell AMX_NATIVE_CALL sql_num_rows(AMX *amx, cell *params)
 
 	if (id >= Results.size() || Results[id]->isFree)
 	{
-		MF_Log("Invalid result handle %d", id);
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid result handle %d", id);
 		return 0;
 	}
 

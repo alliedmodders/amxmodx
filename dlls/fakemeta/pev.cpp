@@ -8,13 +8,13 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 	{
 		if (!MF_IsPlayerIngame(index))
 		{
-			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+			MF_LogError(amx, AMX_ERR_NATIVE, "Player %d is not in game", index);
 			return 0;
 		}
 	} else {
 		if (index > gpGlobals->maxEntities || index < 1)
 		{
-			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", index);
 			return 0;
 		}
 	}
@@ -501,8 +501,7 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 		{
 			return (int)fReturn;
 		}
-		MF_Log("Invalid return valuetype for pev().");
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid return valuetype for pev().");
 		return 0;
 	}
 	else if (returntype == RETURNTYPE_FLOAT)
@@ -552,8 +551,7 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 				return 1;
 			}
 		}
-		MF_Log("Invalid return valuetype for pev().");
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid return valuetype for pev().");
 	}
 	else if (returntype == RETURNTYPE_STRING)
 	{
@@ -610,8 +608,7 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 				return 1;
 			}
 		}
-		MF_Log("Invalid return valuetype for pev().");
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid return valuetype for pev().");
 	}
 	return 0;
 }

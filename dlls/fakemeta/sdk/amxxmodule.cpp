@@ -39,19 +39,21 @@
 #include <stdio.h>
 #include "amxxmodule.h"
 
-DLL_FUNCTIONS *g_pFunctionTable;
-DLL_FUNCTIONS *g_pFunctionTable_Post;
-enginefuncs_t *g_pengfuncsTable;
-enginefuncs_t *g_pengfuncsTable_Post;
-
-
 /************* METAMOD SUPPORT *************/
 #ifdef USE_METAMOD
 
 enginefuncs_t g_engfuncs;
-DLL_FUNCTIONS *gameDLLFunc;
-
 globalvars_t  *gpGlobals;
+
+
+
+DLL_FUNCTIONS *g_pFunctionTable;
+DLL_FUNCTIONS *g_pFunctionTable_Post;
+enginefuncs_t *g_pengfuncsTable;
+enginefuncs_t *g_pengfuncsTable_Post;
+NEW_DLL_FUNCTIONS *g_pNewFunctionsTable;
+NEW_DLL_FUNCTIONS *g_pNewFunctionsTable_Post;
+
 
 // GetEntityAPI2 functions
 static DLL_FUNCTIONS g_EntityAPI_Table = 
@@ -2122,7 +2124,6 @@ C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersi
 		return(FALSE);
 	}
 	memcpy(pFunctionTable, &g_EntityAPI_Table, sizeof(DLL_FUNCTIONS));
-	// Mark down the pointer to this mod's function tables...
 	g_pFunctionTable=pFunctionTable;
 	return(TRUE);
 }
@@ -2141,7 +2142,6 @@ C_DLLEXPORT int GetEntityAPI2_Post(DLL_FUNCTIONS *pFunctionTable, int *interface
 		return(FALSE);
 	}
 	memcpy( pFunctionTable, &g_EntityAPI_Post_Table, sizeof( DLL_FUNCTIONS ) );
-	// Mark down the pointer to this mod's function tables...
 	g_pFunctionTable_Post=pFunctionTable;
 	return(TRUE);
 }
@@ -2165,7 +2165,6 @@ C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
 		return(FALSE);
 	}
 	memcpy(pengfuncsFromEngine, &g_EngineFuncs_Table, sizeof(enginefuncs_t));
-	// Mark down the pointer to this mod's function tables...
 	g_pengfuncsTable=pengfuncsFromEngine;
 	return TRUE;
 }
@@ -2184,7 +2183,6 @@ C_DLLEXPORT int GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine, int 
 		return(FALSE);
 	}
 	memcpy(pengfuncsFromEngine, &g_EngineFuncs_Post_Table, sizeof(enginefuncs_t));
-	// Mark down the pointer to this mod's function tables...
 	g_pengfuncsTable_Post=pengfuncsFromEngine;
 	return TRUE;
 
@@ -2210,6 +2208,7 @@ C_DLLEXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pNewFunctionTable,
 		return(FALSE);
 	}
 	memcpy(pNewFunctionTable, &g_NewFuncs_Table, sizeof(NEW_DLL_FUNCTIONS));
+	g_pNewFunctionsTable=pNewFunctionTable;
 	return TRUE;
 }
 
@@ -2227,6 +2226,7 @@ C_DLLEXPORT int GetNewDLLFunctions_Post( NEW_DLL_FUNCTIONS *pNewFunctionTable, i
 		return(FALSE);
 	}
 	memcpy(pNewFunctionTable, &g_NewFuncs_Post_Table, sizeof(NEW_DLL_FUNCTIONS));
+	g_pNewFunctionsTable_Post=pNewFunctionTable;
 	return TRUE;
 }
 
@@ -2454,11 +2454,14 @@ PFN_GET_AMXSTRINGLEN		g_fn_GetAmxStringLen;
 PFN_FORMAT_AMXSTRING		g_fn_FormatAmxString;
 PFN_COPY_AMXMEMORY			g_fn_CopyAmxMemory;
 PFN_LOG						g_fn_Log;
+PFN_LOG_ERROR				g_fn_LogErrorFunc;
 PFN_RAISE_AMXERROR			g_fn_RaiseAmxError;
 PFN_REGISTER_FORWARD		g_fn_RegisterForward;
 PFN_EXECUTE_FORWARD			g_fn_ExecuteForward;
 PFN_PREPARE_CELLARRAY		g_fn_PrepareCellArray;
 PFN_PREPARE_CHARARRAY		g_fn_PrepareCharArray;
+PFN_PREPARE_CELLARRAY_A		g_fn_PrepareCellArrayA;
+PFN_PREPARE_CHARARRAY_A		g_fn_PrepareCharArrayA;
 PFN_IS_PLAYER_VALID			g_fn_IsPlayerValid;
 PFN_GET_PLAYER_NAME			g_fn_GetPlayerName;
 PFN_GET_PLAYER_IP			g_fn_GetPlayerIP;
@@ -2468,6 +2471,7 @@ PFN_IS_PLAYER_AUTHORIZED	g_fn_IsPlayerAuthorized;
 PFN_GET_PLAYER_TIME			g_fn_GetPlayerTime;
 PFN_GET_PLAYER_PLAYTIME		g_fn_GetPlayerPlayTime;
 PFN_GET_PLAYER_CURWEAPON	g_fn_GetPlayerCurweapon;
+PFN_GET_PLAYER_TEAM			g_fn_GetPlayerTeam;
 PFN_GET_PLAYER_TEAMID		g_fn_GetPlayerTeamID;
 PFN_GET_PLAYER_DEATHS		g_fn_GetPlayerDeaths;
 PFN_GET_PLAYER_MENU			g_fn_GetPlayerMenu;
@@ -2492,6 +2496,11 @@ PFN_CELL_TO_REAL			g_fn_CellToReal;
 PFN_REGISTER_SPFORWARD		g_fn_RegisterSPForward;
 PFN_REGISTER_SPFORWARD_BYNAME	g_fn_RegisterSPForwardByName;
 PFN_UNREGISTER_SPFORWARD	g_fn_UnregisterSPForward;
+PFN_MERGEDEFINITION_FILE	g_fn_MergeDefinition_File;
+PFN_AMX_FINDNATIVE			g_fn_AmxFindNative;
+PFN_GETPLAYERFLAGS			g_fn_GetPlayerFlags;
+PFN_GET_PLAYER_EDICT		g_fn_GetPlayerEdict;
+PFN_FORMAT					g_fn_Format;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2535,6 +2544,9 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("PrintSrvConsole", g_fn_PrintSrvConsole, PFN_PRINT_SRVCONSOLE);
 	REQFUNC("GetModname", g_fn_GetModname, PFN_GET_MODNAME);
 	REQFUNC("Log", g_fn_Log, PFN_LOG);
+	REQFUNC("LogError", g_fn_LogErrorFunc, PFN_LOG_ERROR);
+	REQFUNC("MergeDefinitionFile", g_fn_MergeDefinition_File, PFN_MERGEDEFINITION_FILE);
+	REQFUNC("Format", g_fn_Format, PFN_FORMAT);
 
 	// Amx scripts
 	REQFUNC("GetAmxScript", g_fn_GetAmxScript, PFN_GET_AMXSCRIPT);
@@ -2542,6 +2554,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("FindAmxScriptByName", g_fn_FindAmxScriptByName, PFN_FIND_AMXSCRIPT_BYNAME);
 	REQFUNC("LoadAmxScript", g_fn_LoadAmxScript, PFN_LOAD_AMXSCRIPT);
 	REQFUNC("UnloadAmxScript", g_fn_UnloadAmxScript, PFN_UNLOAD_AMXSCRIPT);
+    REQFUNC("GetAmxScriptName", g_fn_GetAmxScriptName, PFN_GET_AMXSCRIPTNAME);
 
 	// String / mem in amx scripts support
 	REQFUNC("SetAmxString", g_fn_SetAmxString, PFN_SET_AMXSTRING);
@@ -2555,6 +2568,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("amx_Execv", g_fn_AmxExecv, PFN_AMX_EXECV);
 	REQFUNC("amx_FindPublic", g_fn_AmxFindPublic, PFN_AMX_FINDPUBLIC);
 	REQFUNC("amx_Allot", g_fn_AmxAllot, PFN_AMX_ALLOT);
+	REQFUNC("amx_FindNative", g_fn_AmxFindNative, PFN_AMX_FINDNATIVE);
 
 	// Natives / Forwards
 	REQFUNC("AddNatives", g_fn_AddNatives, PFN_ADD_NATIVES);
@@ -2566,7 +2580,8 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("ExecuteForward", g_fn_ExecuteForward, PFN_EXECUTE_FORWARD);
 	REQFUNC("PrepareCellArray", g_fn_PrepareCellArray, PFN_PREPARE_CELLARRAY);
 	REQFUNC("PrepareCharArray", g_fn_PrepareCharArray, PFN_PREPARE_CHARARRAY);
-
+	REQFUNC("PrepareCellArrayA", g_fn_PrepareCellArrayA, PFN_PREPARE_CELLARRAY_A);
+	REQFUNC("PrepareCharArrayA", g_fn_PrepareCharArrayA, PFN_PREPARE_CHARARRAY_A);
 	// Player
 	REQFUNC("IsPlayerValid", g_fn_IsPlayerValid, PFN_IS_PLAYER_VALID);
 	REQFUNC("GetPlayerName", g_fn_GetPlayerName, PFN_GET_PLAYER_NAME);
@@ -2578,6 +2593,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("GetPlayerPlayTime", g_fn_GetPlayerPlayTime, PFN_GET_PLAYER_PLAYTIME);
 	REQFUNC("GetPlayerCurweapon", g_fn_GetPlayerCurweapon, PFN_GET_PLAYER_CURWEAPON);
 	REQFUNC("GetPlayerTeamID", g_fn_GetPlayerTeamID, PFN_GET_PLAYER_TEAMID);
+	REQFUNC("GetPlayerTeam",g_fn_GetPlayerTeam, PFN_GET_PLAYER_TEAM);
 	REQFUNC("GetPlayerDeaths", g_fn_GetPlayerDeaths, PFN_GET_PLAYER_DEATHS);
 	REQFUNC("GetPlayerMenu", g_fn_GetPlayerMenu, PFN_GET_PLAYER_MENU);
 	REQFUNC("GetPlayerKeys", g_fn_GetPlayerKeys, PFN_GET_PLAYER_KEYS);
@@ -2587,6 +2603,8 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("IsPlayerHLTV", g_fn_IsPlayerHLTV, PFN_IS_PLAYER_HLTV);
 	REQFUNC("GetPlayerArmor", g_fn_GetPlayerArmor, PFN_GET_PLAYER_ARMOR);
 	REQFUNC("GetPlayerHealth", g_fn_GetPlayerHealth, PFN_GET_PLAYER_HEALTH);
+	REQFUNC("GetPlayerFlags", g_fn_GetPlayerFlags, PFN_GETPLAYERFLAGS);
+	REQFUNC("GetPlayerEdict", g_fn_GetPlayerEdict, PFN_GET_PLAYER_EDICT);
 
 	// Memory
 	REQFUNC_OPT("Allocator", g_fn_Allocator, PFN_ALLOCATOR);
@@ -2633,6 +2651,18 @@ void MF_Log(const char *fmt, ...)
 	g_fn_Log("[%s] %s", MODULE_NAME, msg);
 }
 
+void MF_LogError(AMX *amx, int err, const char *fmt, ...)
+{
+	// :TODO: Overflow possible here
+	char msg[3072];
+	va_list arglst;
+	va_start(arglst, fmt);
+	vsprintf(msg, fmt, arglst);
+	va_end(arglst);
+
+	g_fn_LogErrorFunc(amx, err, "[%s] %s", MODULE_NAME, msg);
+}
+
 
 #ifdef _DEBUG
 // validate macros
@@ -2653,11 +2683,14 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_GetAmxStringLen(NULL);
 	MF_CopyAmxMemory(NULL, NULL, 0);
 	MF_Log("str", "str", 0);
+	MF_LogError(NULL, 0, NULL);
 	MF_RaiseAmxError(NULL, 0);
 	MF_RegisterForward("str", (ForwardExecType)0, 0, 0, 0);
 	MF_ExecuteForward(0, 0, 0);
 	MF_PrepareCellArray(NULL, 0);
 	MF_PrepareCharArray(NULL, 0);
+	MF_PrepareCellArrayA(NULL, 0, true);
+	MF_PrepareCharArrayA(NULL, 0, true);
 	MF_IsPlayerValid(0);
 	MF_GetPlayerName(0);
 	MF_GetPlayerIP(0);
@@ -2668,6 +2701,7 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_GetPlayerPlayTime(0);
 	MF_GetPlayerCurweapon(0);
 	MF_GetPlayerTeamID(0);
+	MF_GetPlayerTeam(0);
 	MF_GetPlayerDeaths(0);
 	MF_GetPlayerMenu(0);
 	MF_GetPlayerKeys(0);
@@ -2686,6 +2720,9 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_RegisterSPForward(0, 0, 0, 0, 0, 0);
 	MF_RegisterSPForwardByName(0, 0, 0, 0, 0, 0);
 	MF_UnregisterSPForward(0);
+	MF_GetPlayerFrags(0);
+	MF_GetPlayerEdict(0);
+	MF_Format("", 4, "str");
 }
 #endif
 
@@ -2802,7 +2839,7 @@ void	*operator new(size_t reportedSize)
 		return ptr;
 
 	// allocation failed
-	
+	return NULL;
 }
 
 void	*operator new[](size_t reportedSize)
@@ -2815,7 +2852,7 @@ void	*operator new[](size_t reportedSize)
 		return ptr;
 
 	// allocation failed
-	
+	return NULL;
 }
 
 // Microsoft memory tracking operators
@@ -2829,7 +2866,7 @@ void	*operator new(size_t reportedSize, const char *sourceFile, int sourceLine)
 		return ptr;
 
 	// allocation failed
-	
+	return NULL;
 }
 void	*operator new[](size_t reportedSize, const char *sourceFile, int sourceLine)
 {
@@ -2841,7 +2878,7 @@ void	*operator new[](size_t reportedSize, const char *sourceFile, int sourceLine
 		return ptr;
 
 	// allocation failed
-	
+	return NULL;
 }
 
 void	operator delete(void *reportedAddress)
@@ -2893,6 +2930,7 @@ void	operator delete[](void *reportedAddress)
 
 #include <extdll.h>
 #include "sdk_util.h"
+#include <cbase.h>
 
 #include <string.h>			// for strncpy(), etc
 
@@ -2929,4 +2967,76 @@ void UTIL_LogPrintf( char *fmt, ... )
 }
 
 
+void UTIL_HudMessage(CBaseEntity *pEntity, const hudtextparms_t &textparms, 
+		const char *pMessage)
+{
+	if ( !pEntity )
+		return;
+
+	MESSAGE_BEGIN( MSG_ONE, SVC_TEMPENTITY, NULL, ENT(pEntity->pev) );
+		WRITE_BYTE( TE_TEXTMESSAGE );
+		WRITE_BYTE( textparms.channel & 0xFF );
+
+		WRITE_SHORT( FixedSigned16( textparms.x, 1<<13 ) );
+		WRITE_SHORT( FixedSigned16( textparms.y, 1<<13 ) );
+		WRITE_BYTE( textparms.effect );
+
+		WRITE_BYTE( textparms.r1 );
+		WRITE_BYTE( textparms.g1 );
+		WRITE_BYTE( textparms.b1 );
+		WRITE_BYTE( textparms.a1 );
+
+		WRITE_BYTE( textparms.r2 );
+		WRITE_BYTE( textparms.g2 );
+		WRITE_BYTE( textparms.b2 );
+		WRITE_BYTE( textparms.a2 );
+
+		WRITE_SHORT( FixedUnsigned16( textparms.fadeinTime, 1<<8 ) );
+		WRITE_SHORT( FixedUnsigned16( textparms.fadeoutTime, 1<<8 ) );
+		WRITE_SHORT( FixedUnsigned16( textparms.holdTime, 1<<8 ) );
+
+		if ( textparms.effect == 2 )
+			WRITE_SHORT( FixedUnsigned16( textparms.fxTime, 1<<8 ) );
+		
+		if ( strlen( pMessage ) < 512 )
+		{
+			WRITE_STRING( pMessage );
+		}
+		else
+		{
+			char tmp[512];
+			strncpy( tmp, pMessage, 511 );
+			tmp[511] = 0;
+			WRITE_STRING( tmp );
+		}
+	MESSAGE_END();
+}
+
+short FixedSigned16( float value, float scale )
+{
+	int output;
+
+	output = (int) (value * scale);
+
+	if ( output > 32767 )
+		output = 32767;
+
+	if ( output < -32768 )
+		output = -32768;
+
+	return (short)output;
+}
+
+unsigned short FixedUnsigned16( float value, float scale )
+{
+	int output;
+
+	output = (int) (value * scale);
+	if ( output < 0 )
+		output = 0;
+	if ( output > 0xFFFF )
+		output = 0xFFFF;
+
+	return (unsigned short)output;
+}
 #endif // USE_METAMOD

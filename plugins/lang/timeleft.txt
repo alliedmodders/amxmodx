@@ -5,4 +5,4 @@ NO_T_LIMIT = No Time Limit
 MINUTE = minute
 MINUTES = minutes
 SECOND = second
-SECONDs = seconds
+SECONDS = seconds

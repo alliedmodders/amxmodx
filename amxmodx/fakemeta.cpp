@@ -717,11 +717,20 @@ void CVarSetString(const char *szVarName, const char *szValue) {
 void AlertMessage(ALERT_TYPE atype, char *szFmt, ...) {
 	FAKEMETA_ENGINE_HANDLE_void_varargs(AlertMessage, atype, szFmt);
 }
+
+#ifdef HLSDK_3_2_OLD_EIF
 void EngineFprintf(FILE *pfile, char *szFmt, ...) {
+#else
+void EngineFprintf(void *pfile, char *szFmt, ...) {
+#endif
 	FAKEMETA_ENGINE_HANDLE_void_varargs(EngineFprintf, pfile, szFmt);
 }
 
+#ifdef HLSDK_3_2_OLD_EIF
 void *PvAllocEntPrivateData(edict_t *pEdict, long cb) {
+#else
+void *PvAllocEntPrivateData(edict_t *pEdict, int cb) {
+#endif
 	FAKEMETA_ENGINE_HANDLE(void*, 0, PvAllocEntPrivateData, (pEdict, cb));
 }
 void *PvEntPrivateData(edict_t *pEdict) {
@@ -771,10 +780,20 @@ void GetBonePosition(const edict_t *pEdict, int iBone, float *rgflOrigin, float 
 	FAKEMETA_ENGINE_HANDLE_void(GetBonePosition, (pEdict, iBone, rgflOrigin, rgflAngles));
 }
 
+#ifdef HLSDK_3_2_OLD_EIF
 unsigned long FunctionFromName( const char *pName ) {
 	FAKEMETA_ENGINE_HANDLE(unsigned long, 0, FunctionFromName, (pName));
+#else
+unsigned int FunctionFromName( const char *pName ) {
+	FAKEMETA_ENGINE_HANDLE(unsigned int, 0, FunctionFromName, (pName));
+#endif
 }
+
+#ifdef HLSDK_3_2_OLD_EIF
 const char *NameForFunction( unsigned long function ) {
+#else
+const char *NameForFunction( unsigned int function ) {
+#endif
 	FAKEMETA_ENGINE_HANDLE(const char*, 0, NameForFunction, (function));
 }
 
@@ -815,8 +834,13 @@ CRC32_t CRC32_Final(CRC32_t pulCRC) {
 	FAKEMETA_ENGINE_HANDLE(CRC32_t, 0, CRC32_Final, (pulCRC));
 }
 
+#ifdef HLSDK_3_2_OLD_EIF
 long RandomLong(long lLow, long lHigh) {
 	FAKEMETA_ENGINE_HANDLE(long, 0, RandomLong, (lLow, lHigh));
+#else
+int RandomLong(int lLow, int lHigh) {
+	FAKEMETA_ENGINE_HANDLE(int, 0, RandomLong, (lLow, lHigh));
+#endif
 }
 float RandomFloat(float flLow, float flHigh) {
 	FAKEMETA_ENGINE_HANDLE(float, 0, RandomFloat, (flLow, flHigh));
@@ -1203,11 +1227,20 @@ void CVarSetString_Post(const char *szVarName, const char *szValue) {
 void AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...) {
 	FAKEMETA_ENGINE_HANLDE_POST_void_varargs(AlertMessage, atype, szFmt);
 }
+
+#ifdef HLSDK_3_2_OLD_EIF
 void EngineFprintf_Post(FILE *pfile, char *szFmt, ...) {
+#else
+void EngineFprintf_Post(void *pfile, char *szFmt, ...) {
+#endif
 	FAKEMETA_ENGINE_HANLDE_POST_void_varargs(EngineFprintf, pfile, szFmt);
 }
 
+#ifdef HLSDK_3_2_OLD_EIF
 void *PvAllocEntPrivateData_Post(edict_t *pEdict, long cb) {
+#else
+void *PvAllocEntPrivateData_Post(edict_t *pEdict, int cb) {
+#endif
 	FAKEMETA_ENGINE_HANDLE_POST(void*, 0, PvAllocEntPrivateData, (pEdict, cb));
 }
 void *PvEntPrivateData_Post(edict_t *pEdict) {
@@ -1257,10 +1290,20 @@ void GetBonePosition_Post(const edict_t *pEdict, int iBone, float *rgflOrigin, f
 	FAKEMETA_ENGINE_HANDLE_POST_void(GetBonePosition, (pEdict, iBone, rgflOrigin, rgflAngles));
 }
 
+#ifdef HLSDK_3_2_OLD_EIF
 unsigned long FunctionFromName_Post( const char *pName ) {
 	FAKEMETA_ENGINE_HANDLE_POST(unsigned long, 0, FunctionFromName, (pName));
+#else
+unsigned int FunctionFromName_Post( const char *pName ) {
+	FAKEMETA_ENGINE_HANDLE_POST(unsigned int, 0, FunctionFromName, (pName));
+#endif
 }
+
+#ifdef HLSDK_3_2_OLD_EIF
 const char *NameForFunction_Post( unsigned long function ) {
+#else
+const char *NameForFunction_Post( unsigned int function ) {
+#endif
 	FAKEMETA_ENGINE_HANDLE_POST(const char*, 0, NameForFunction, (function));
 }
 
@@ -1301,8 +1344,13 @@ CRC32_t CRC32_Final_Post(CRC32_t pulCRC) {
 	FAKEMETA_ENGINE_HANDLE_POST(CRC32_t, 0, CRC32_Final, (pulCRC));
 }
 
+#ifdef HLSDK_3_2_OLD_EIF
 long RandomLong_Post(long lLow, long lHigh) {
 	FAKEMETA_ENGINE_HANDLE_POST(long, 0, RandomLong, (lLow, lHigh));
+#else
+int RandomLong_Post(int lLow, int lHigh) {
+	FAKEMETA_ENGINE_HANDLE_POST(int, 0, RandomLong, (lLow, lHigh));
+#endif
 }
 float RandomFloat_Post(float flLow, float flHigh) {
 	FAKEMETA_ENGINE_HANDLE_POST(float, 0, RandomFloat, (flLow, flHigh));

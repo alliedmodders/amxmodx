@@ -215,13 +215,14 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params) // native give_ite
 	//check for valid item
 	if (strncmp(szItem, "weapon_", 7) && 
 		strncmp(szItem, "ammo_", 5) && 
-		strncmp(szItem, "item_", 5)) {
+		strncmp(szItem, "item_", 5) &&
+		strncmp(szItem, "tf_weapon_", 10)
+	) {
 		return 0;
 	}
 
 	//string_t item = MAKE_STRING(szItem);
 	string_t item = ALLOC_STRING(szItem); // Using MAKE_STRING makes "item" contents get lost when we leave this scope! ALLOC_STRING seems to allocate properly...
-
 	// Create the entity, returns to pointer
 	pItemEntity = CREATE_NAMED_ENTITY(item);
 

@@ -34,7 +34,7 @@ stock Float:get_private_f(index, offset, linuxdiff=5)
 	return get_pdata_float(index, offset, linuxdiff)
 }
 
-stock Float:set_private_f(index, offset, Float:value, linuxdiff=5)
+stock set_private_f(index, offset, Float:value, linuxdiff=5)
 {
 	return set_pdata_float(index, offset, value, linuxdiff)
 }
@@ -73,7 +73,7 @@ stock register_msgedit(msgName[], cmd[])
 stock register_playback(event, cmd[])
 	return 0
 
-stock get_spwan(type, number=0, Float:ret[3])
+stock get_spawn(type, number=0, Float:ret[3])
 	return ns_get_spawn(type, number, ret)
 
 stock has_weapon(index, weapon, setweapon=-1)

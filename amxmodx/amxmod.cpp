@@ -2056,7 +2056,13 @@ static cell AMX_NATIVE_CALL log_amx(AMX *amx, cell *params)
 {
 	CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
 	int len;
-	UTIL_Log("[%s] %s", plugin->getName(), format_amxstring(amx, params, 1, len));
+	// remove extension (.amx for example)
+	std::string name = plugin->getName();
+	size_t pos = name.rfind('.');
+	if (pos != std::string::npos)
+		name.erase(pos);
+
+	UTIL_Log("[%s] %s", name.c_str(), format_amxstring(amx, params, 1, len));
 	return 0;
 }
 

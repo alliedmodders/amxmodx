@@ -117,6 +117,7 @@ EventsMngr::EventsMngr()
 {
 	m_ParseVault = NULL;
 	m_ParseVaultSize = 0;
+	m_CurrentMsgType = -1;
 	clearEvents();
 }
 
@@ -203,6 +204,8 @@ void EventsMngr::parserInit(int msg_type, float* timer, CPlayer* pPlayer, int in
 {
 	if (msg_type < 0 || msg_type > MAX_AMX_REG_MSG)
 		return;
+
+	m_CurrentMsgType = msg_type;
 
 	m_ParseNotDone = false;
 	m_Timer = timer;
@@ -427,6 +430,7 @@ void EventsMngr::executeEvents()
 	}
 #endif		// #ifdef ENABLEEXEPTIONS
 
+	m_CurrentMsgType = -1;
 	m_ParseFun = NULL;
 }
 
@@ -530,4 +534,9 @@ int EventsMngr::getEventId(const char* msg)
 
 	// find the id of the message
 	return pos = GET_USER_MSG_ID(PLID, msg , 0 );
+}
+
+int EventsMngr::getCurrentMsgType()
+{
+	return m_CurrentMsgType;
 }

@@ -107,9 +107,6 @@ public SpecRankInfo         = 0 // displays rank info when spectating
 #define MAX_TEXT_LENGTH         255
 #define MAX_BUFFER_LENGTH       2047
 
-// User messages.
-#define DISABLED_MSG "Server has disabled that option"
-
 // User stats parms id
 #define STATS_KILLS             0
 #define STATS_DEATHS            1
@@ -122,14 +119,14 @@ public SpecRankInfo         = 0 // displays rank info when spectating
 // Global player flags.
 
 new BODY_PART[8][] = { 
-  "wholebody",
-  "head",
-  "chest",
-  "stomach",
-  "leftarm",
-  "rightarm",
-  "leftleg",
-  "rightleg"
+  "WHOLEBODY",
+  "HEAD",
+  "CHEST",
+  "STOMACH",
+  "LEFTARM",
+  "RIGHTARM",
+  "LEFTLEG",
+  "RIGHTLEG"
 }
 
 // Killer information, save killer info at the time when player is killed.
@@ -251,37 +248,37 @@ public plugin_init() {
   save_team_chatscore()
 }
 
-new g_addStast[] = "amx_statscfg add ^"%s^" %s"
+public plugin_cfg() {
+  new addStast[] = "amx_statscfg add ^"%s^" %s"
 
-public plugin_cfg(){
-  server_cmd( g_addStast, "Show killer hp&ap","KillerChat" )
+  server_cmd( addStast, "Show killer hp&ap","KillerChat" )
 
-  server_cmd( g_addStast, "Show Attackers", "ShowAttackers" )
-  server_cmd( g_addStast, "Show Victims", "ShowVictims" )
-  server_cmd( g_addStast, "Show killer", "ShowKiller" )
-  server_cmd( g_addStast, "Show Team Score", "ShowTeamScore" )
-  server_cmd( g_addStast, "Show Total Stats", "ShowTotalStats" )
-  server_cmd( g_addStast, "Show Best Score", "ShowBestScore" )
-  server_cmd( g_addStast, "Show Most Disruptive", "ShowMostDisruptive" )
+  server_cmd( addStast, "Show Attackers", "ShowAttackers" )
+  server_cmd( addStast, "Show Victims", "ShowVictims" )
+  server_cmd( addStast, "Show killer", "ShowKiller" )
+  server_cmd( addStast, "Show Team Score", "ShowTeamScore" )
+  server_cmd( addStast, "Show Total Stats", "ShowTotalStats" )
+  server_cmd( addStast, "Show Best Score", "ShowBestScore" )
+  server_cmd( addStast, "Show Most Disruptive", "ShowMostDisruptive" )
 
-  server_cmd( g_addStast, "HUD-stats default", "ShowStats" )
-  server_cmd( g_addStast, "Dist&HS in HUD lists", "ShowDistHS" )
+  server_cmd( addStast, "HUD-stats default", "ShowStats" )
+  server_cmd( addStast, "Dist&HS in HUD lists", "ShowDistHS" )
   
-  server_cmd( g_addStast, "Stats at the end of map", "EndPlayer")
-  server_cmd( g_addStast, "Top15 at the end of map", "EndTop15" )
+  server_cmd( addStast, "Stats at the end of map", "EndPlayer")
+  server_cmd( addStast, "Top15 at the end of map", "EndTop15" )
 
-  server_cmd( g_addStast, "Say /hp", "SayHP" )
-  server_cmd( g_addStast, "Say /statsme", "SayStatsMe" )
-  server_cmd( g_addStast, "Say /rankstats", "SayRankStats" )
-  server_cmd( g_addStast, "Say /me", "SayMe" )
-  server_cmd( g_addStast, "Say /rank", "SayRank" )
-  server_cmd( g_addStast, "Say /report", "SayReport" )
-  server_cmd( g_addStast, "Say /score", "SayScore" )
-  server_cmd( g_addStast, "Say /top15", "SayTop15" )
-  server_cmd( g_addStast, "Say /stats", "SayStatsAll" )
-  server_cmd( g_addStast, "Misc say commands", "SayMiscFunc" )
+  server_cmd( addStast, "Say /hp", "SayHP" )
+  server_cmd( addStast, "Say /statsme", "SayStatsMe" )
+  server_cmd( addStast, "Say /rankstats", "SayRankStats" )
+  server_cmd( addStast, "Say /me", "SayMe" )
+  server_cmd( addStast, "Say /rank", "SayRank" )
+  server_cmd( addStast, "Say /report", "SayReport" )
+  server_cmd( addStast, "Say /score", "SayScore" )
+  server_cmd( addStast, "Say /top15", "SayTop15" )
+  server_cmd( addStast, "Say /stats", "SayStatsAll" )
+  server_cmd( addStast, "Misc say commands", "SayMiscFunc" )
   
-  server_cmd( g_addStast, "Spec. Rank Info", "SpecRankInfo" )
+  server_cmd( addStast, "Spec. Rank Info", "SpecRankInfo" )
 
   // Update local configuration vars with value in cvars.
   get_config_cvars()
@@ -332,7 +329,7 @@ set_plugin_mode( id, sFlags[] ) {
   if ( sFlags[0] )
     g_iPluginMode = read_flags( sFlags )
   get_flags( g_iPluginMode, t_sText, MAX_TEXT_LENGTH )
-  console_print( id, "^"amx_statsx_mode^" set to ^"%s^"", t_sText )
+  console_print( id, "%L", id, "MODE_SET_TO", t_sText )
   return g_iPluginMode
 }
 
@@ -349,7 +346,7 @@ get_config_cvars() {
 
 // Get and format attackers header and list.
 get_attackers( id, sBuffer[MAX_BUFFER_LENGTH+1] ) {
-  new izStats[8], izBody[8]
+  new izStats[8],izBody[8]
   new iAttacker
   new iFound, iLen
   new iMaxPlayer = get_maxplayers()
@@ -366,11 +363,11 @@ get_attackers( id, sBuffer[MAX_BUFFER_LENGTH+1] ) {
     get_user_astats( id, iAttacker, izStats, izBody )
   if ( izStats[STATS_SHOTS] && ShowFullStats ) {
     get_user_name( iAttacker, t_sName, MAX_NAME_LENGTH )
-    iLen = format( sBuffer, MAX_BUFFER_LENGTH, "Attackers -- %s -- %0.2f%%%% acc.:^n",
-                   t_sName, accuracy( izStats ) )
+    iLen = format( sBuffer, MAX_BUFFER_LENGTH, "%L -- %s -- %0.2f%%%% %L:^n",
+                   id, "ATTACKERS", t_sName, accuracy( izStats ), id, "ACC" )
   }
   else
-    iLen = format( sBuffer, MAX_BUFFER_LENGTH, "Attackers:^n" )
+    iLen = format( sBuffer, MAX_BUFFER_LENGTH, "%L:^n", id, "ATTACKERS" )
 
   // Get and format attacker list.
   for ( iAttacker = 1; iAttacker <= iMaxPlayer; iAttacker++ ) {
@@ -380,24 +377,24 @@ get_attackers( id, sBuffer[MAX_BUFFER_LENGTH+1] ) {
       if ( izStats[STATS_KILLS] ) {
         if ( !ShowDistHS )
           iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
-                          "%s -- %d hit(s) / %d dmg / %s^n",
-                          t_sName, izStats[STATS_HITS], izStats[STATS_DAMAGE], 
+                          "%s -- %d %L / %d %L / %s^n",
+                          t_sName, izStats[STATS_HITS], id, "HIT_S", izStats[STATS_DAMAGE], id, "DMG",
                           t_sWpn )
         else if ( izStats[STATS_HS] )
           iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
-                          "%s -- %d hit(s) / %d dmg / %s / %0.0f m / HS^n",
-                          t_sName, izStats[STATS_HITS], izStats[STATS_DAMAGE], 
+                          "%s -- %d %L / %d %L / %s / %0.0f m / HS^n",
+                          t_sName, izStats[STATS_HITS], id, "HIT_S", izStats[STATS_DAMAGE], id, "DMG",
                           t_sWpn, distance(g_izUserAttackerDistance[id]) )
         else
           iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
-                          "%s -- %d hit(s) / %d dmg / %s / %0.0f m^n",
-                          t_sName, izStats[STATS_HITS], izStats[STATS_DAMAGE], 
+                          "%s -- %d %L / %d %L / %s / %0.0f m^n",
+                          t_sName, izStats[STATS_HITS], id, "HIT_S", izStats[STATS_DAMAGE], id, "DMG",
                           t_sWpn, distance(g_izUserAttackerDistance[id]) )
       }
       else
         iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
-                        "%s -- %d hit(s) / %d dmg^n",
-                        t_sName, izStats[STATS_HITS], izStats[STATS_DAMAGE] )
+                        "%s -- %d %L / %d %L^n",
+                        t_sName, izStats[STATS_HITS], id, "HIT_S", izStats[STATS_DAMAGE], id, "DMG" )
     }
   }
   if ( !iFound )
@@ -422,10 +419,10 @@ get_victims( id, sBuffer[MAX_BUFFER_LENGTH+1] ) {
   izStats[STATS_SHOTS] = 0
   get_user_vstats( id, 0, izStats, izBody )
   if ( izStats[STATS_SHOTS] )
-    iLen = format( sBuffer, MAX_BUFFER_LENGTH, "Victims -- %0.2f%%%% acc.:^n",
-                   accuracy( izStats ) )
+    iLen = format( sBuffer, MAX_BUFFER_LENGTH, "%L -- %0.2f%%%% %L:^n",
+                   id, "VICTIMS", accuracy( izStats ), id, "ACC" )
   else
-    iLen = format( sBuffer, MAX_BUFFER_LENGTH, "Victims:^n" )
+    iLen = format( sBuffer, MAX_BUFFER_LENGTH, "%L:^n", id, "VICTIMS" )
 
   for ( iVictim = 1; iVictim <= iMaxPlayer; iVictim++ ) {
     if( get_user_vstats( id, iVictim, izStats, izBody, t_sWpn, MAX_WEAPON_LENGTH ) ) {
@@ -434,24 +431,24 @@ get_victims( id, sBuffer[MAX_BUFFER_LENGTH+1] ) {
       if ( izStats[STATS_DEATHS] ) {
         if ( !ShowDistHS )
           iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
-                          "%s -- %d hit(s) / %d dmg / %s^n",
-                          t_sName, izStats[STATS_HITS], izStats[STATS_DAMAGE], 
+                          "%s -- %d %L / %d %L / %s^n",
+                          t_sName, izStats[STATS_HITS], id, "HIT_S", izStats[STATS_DAMAGE], id, "DMG",
                           t_sWpn )
         else if ( izStats[STATS_HS] )
           iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
-                          "%s -- %d hit(s) / %d dmg / %s / %0.0f m / HS^n",
-                          t_sName, izStats[STATS_HITS], izStats[STATS_DAMAGE], 
+                          "%s -- %d %L / %d %L / %s / %0.0f m / HS^n",
+                          t_sName, izStats[STATS_HITS], id, "HIT_S", izStats[STATS_DAMAGE], id, "DMG",
                           t_sWpn, distance(g_izUserVictimDistance[id][iVictim]) )
         else
           iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
-                          "%s -- %d hit(s) / %d dmg / %s / %0.0f m^n",
-                          t_sName, izStats[STATS_HITS], izStats[STATS_DAMAGE], 
+                          "%s -- %d %L / %d %L / %s / %0.0f m^n",
+                          t_sName, izStats[STATS_HITS], id, "HIT_S", izStats[STATS_DAMAGE], id, "DMG",
                           t_sWpn, distance(g_izUserVictimDistance[id][iVictim]) )
       }
       else
         iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
-                        "%s -- %d hit(s) / %d dmg^n",
-                        t_sName, izStats[STATS_HITS], izStats[STATS_DAMAGE] )
+                        "%s -- %d %L / %d %L^n",
+                        t_sName, izStats[STATS_HITS], id, "HIT_S", izStats[STATS_DAMAGE], id, "DMG" )
     }
   }
   if ( !iFound )
@@ -484,14 +481,14 @@ get_kill_info( id, iKiller, sBuffer[MAX_BUFFER_LENGTH+1] ) {
     get_user_vstats( id, iKiller, izVStats, iaVBody )
 
     iLen  = format( sBuffer, MAX_BUFFER_LENGTH,
-                    "%s killed you with %s^nfrom distance of %0.2f meters.^n",
+                    "%L^n", id, "KILLED_YOU_DIST",
                     t_sName, t_sWpn, distance(g_izUserAttackerDistance[id]) )
     iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
-                    "He did %d damage to you with %d hit(s)^nand still has %dhp and %dap.^n",
+                    "%L^n", id, "DID_DMG_HITS",
                     izAStats[STATS_DAMAGE], izAStats[STATS_HITS],
                     g_izKilled[id][KILLED_KILLER_HEALTH], g_izKilled[id][KILLED_KILLER_ARMOUR] )
     iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
-                    "You did %d damage to him with %d hit(s).^n",
+                    "%L^n", id, "YOU_DID_DMG",
                     izVStats[STATS_DAMAGE], izVStats[STATS_HITS] )
   }
   return iFound
@@ -522,9 +519,9 @@ add_most_disruptive( sBuffer[MAX_BUFFER_LENGTH+1] ) {
     new Float:fGameEff = effec( g_izUserGameStats[id] )
     new Float:fRndAcc = accuracy( g_izUserRndStats[id] )
     format( t_sText, MAX_TEXT_LENGTH,
-            "Most damage done by: %s^n%d hit(s) / %d dmg -- %0.2f%%%% eff. / %0.2f%%%% acc.^n",
-            g_izUserRndName[id], g_izUserRndStats[id][STATS_HITS], 
-            iMaxDamage, fGameEff, fRndAcc )
+            "%L: %s^n%d %L / %d %L -- %0.2f%%%% %L / %0.2f%%%% %L^n",
+            LANG_SERVER, "MOST_DMG", g_izUserRndName[id], g_izUserRndStats[id][STATS_HITS], LANG_SERVER, "HIT_S",
+            iMaxDamage, LANG_SERVER, "DMG", fGameEff, LANG_SERVER, "EFF", fRndAcc, LANG_SERVER, "ACC" )
     add( sBuffer, MAX_BUFFER_LENGTH, t_sText )
   }
   return iMaxDamageId
@@ -554,8 +551,9 @@ add_best_score( sBuffer[MAX_BUFFER_LENGTH+1] ) {
     new Float:fGameEff = effec( g_izUserGameStats[id] )
     new Float:fRndAcc = accuracy( g_izUserRndStats[id] )
     format( t_sText, MAX_TEXT_LENGTH,
-            "Best score: %s^n%d kill(s) / %d hs -- %0.2f%%%% eff. / %0.2f%%%% acc.^n",
-            g_izUserRndName[id], iMaxKills, iMaxHeadShots, fGameEff, fRndAcc )
+            "%L: %s^n%d %L / %d hs -- %0.2f%%%% %L / %0.2f%%%% %L^n",
+            LANG_SERVER, "BEST_SCORE", g_izUserRndName[id], iMaxKills, LANG_SERVER, "KILL_S",
+            iMaxHeadShots, fGameEff, LANG_SERVER, "EFF", fRndAcc, LANG_SERVER, "ACC" )
     add( sBuffer, MAX_BUFFER_LENGTH, t_sText )
   }
   return iMaxKillsId
@@ -575,8 +573,9 @@ add_team_score( sBuffer[MAX_BUFFER_LENGTH+1] ) {
 
   // Format round team stats, MOTD
   format( t_sText, MAX_TEXT_LENGTH,
-          "TERRORIST %d / %0.2f%%%% eff. / %0.2f%%%% acc.^nCT %d / %0.2f%%%% eff. / %0.2f%%%% acc.^n",
-          g_izTeamScore[0], fzMapEff[0], fzRndAcc[0], g_izTeamScore[1], fzMapEff[1], fzRndAcc[1] )
+          "TERRORIST %d / %0.2f%%%% %L / %0.2f%%%% %L^nCT %d / %0.2f%%%% %L / %0.2f%%%% %L^n",
+          g_izTeamScore[0], fzMapEff[0], LANG_SERVER, "EFF", fzRndAcc[0], LANG_SERVER, "ACC",
+          g_izTeamScore[1], fzMapEff[1], LANG_SERVER, "EFF", fzRndAcc[1], LANG_SERVER, "ACC" )
   add( sBuffer, MAX_BUFFER_LENGTH, t_sText )
 }
 
@@ -594,17 +593,17 @@ save_team_chatscore() {
 
   // Format game team stats, chat
   format( g_sScore, MAX_BUFFER_LENGTH,
-          "TERRORIST %d / %0.2f%%%% eff. / %0.2f%%%% acc.  --  CT %d / %0.2f%%%% eff. / %0.2f%%%% acc.",
-          g_izTeamScore[0], fzMapEff[0], fzMapAcc[0], g_izTeamScore[1], fzMapEff[1], fzMapAcc[1] )
+          "TERRORIST %d / %0.2f%%%% %L / %0.2f%%%% %L  --  CT %d / %0.2f%%%% %L / %0.2f%%%% %L",
+          g_izTeamScore[0], fzMapEff[0], LANG_SERVER, "EFF", fzMapAcc[0], LANG_SERVER, "ACC",
+          g_izTeamScore[1], fzMapEff[1], LANG_SERVER, "EFF", fzMapAcc[1], LANG_SERVER, "ACC" )
 }
-
 
 // Get and format total stats.
 add_total_stats( sBuffer[MAX_BUFFER_LENGTH+1] ) {
   format( t_sText, MAX_TEXT_LENGTH,
-          "Total: %d kill(s) / %d hs -- %d hit(s) / %d shot(s)^n",
-          g_izUserRndStats[0][STATS_KILLS], g_izUserRndStats[0][STATS_HS],
-          g_izUserRndStats[0][STATS_HITS], g_izUserRndStats[0][STATS_SHOTS] )
+          "%L: %d %L / %d hs -- %d %L / %d %L^n",
+          LANG_SERVER, "TOTAL", g_izUserRndStats[0][STATS_KILLS], LANG_SERVER, "KILL_S", g_izUserRndStats[0][STATS_HS],
+          g_izUserRndStats[0][STATS_HITS], LANG_SERVER, "HITS", g_izUserRndStats[0][STATS_SHOTS], LANG_SERVER, "SHOT_S" )
   add( sBuffer, MAX_BUFFER_LENGTH, t_sText )
 }
 
@@ -623,11 +622,11 @@ add_attacker_hits( id, iAttacker, sBuffer[MAX_BUFFER_LENGTH+1] ) {
       iLen = strlen( sBuffer )
       get_user_name( iAttacker, t_sName, MAX_NAME_LENGTH )
       iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
-                      "%s hits you in:^n", t_sName )
+                      "%L:^n", id, "HITS_YOU_IN", t_sName )
       for ( new i = 1; i < 8; i++ ) {
         if ( !izBody[i] ) continue
         iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen, 
-                        "%s: %d^n", BODY_PART[i], izBody[i] )
+                        "%L: %d^n", id, BODY_PART[i], izBody[i] )
       }
     }
   }
@@ -648,7 +647,7 @@ format_kill_ainfo( id, iKiller, sBuffer[MAX_BUFFER_LENGTH+1] ) {
     get_user_astats( id, iKiller, izStats, izBody, t_sWpn, MAX_WEAPON_LENGTH )
 
     iLen = format( sBuffer, MAX_BUFFER_LENGTH,
-                   "Killed by %s with %s @ %0.0fm (%dhp, %dap) >>", t_sName, t_sWpn,
+                   "%L (%dhp, %dap) >>", id, "KILLED_BY_WITH", t_sName, t_sWpn,
                    distance(g_izUserAttackerDistance[id]),
                    g_izKilled[id][KILLED_KILLER_HEALTH], g_izKilled[id][KILLED_KILLER_ARMOUR] )
 
@@ -656,15 +655,15 @@ format_kill_ainfo( id, iKiller, sBuffer[MAX_BUFFER_LENGTH+1] ) {
       for ( new i = 1; i < 8; i++ ) {
         if ( !izBody[i] ) continue
         iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
-                        " %s: %d", BODY_PART[i], izBody[i] )
+                        " %L: %d", id, BODY_PART[i], izBody[i] )
       }
     }
     else
       iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
-                      " no hits" )
+                      " %L", id, "NO_HITS" )
   }
   else
-    copy( sBuffer, MAX_BUFFER_LENGTH, "You have no killer..." )
+    format( sBuffer, MAX_BUFFER_LENGTH, "%L", id, "YOU_NO_KILLER" )
   return iFound
 }
 
@@ -684,24 +683,24 @@ format_kill_vinfo( id, iKiller, sBuffer[MAX_BUFFER_LENGTH+1] ) {
     iFound = 1
     get_user_name( iKiller, t_sName, MAX_NAME_LENGTH )
     iLen = format( sBuffer, MAX_BUFFER_LENGTH,
-                   "You hit %s %d time(s), %d damage >>",
+                   "%L >>", id, "YOU_HIT",
                    t_sName, izStats[STATS_HITS], izStats[STATS_DAMAGE] )
   }
   else
     iLen = format( sBuffer, MAX_BUFFER_LENGTH,
-                   "Last result: %d hit(s), %d damage >>",
+                   "%L >>", id, "LAST_RES",
                    izStats[STATS_HITS], izStats[STATS_DAMAGE] )
 
   if ( izStats[STATS_HITS] ) {
     for ( new i = 1; i < 8; i++ ) {
       if ( !izBody[i] ) continue
       iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
-                      " %s: %d", BODY_PART[i], izBody[i] )
+                      " %L: %d", id, BODY_PART[i], izBody[i] )
     }
   }
   else
     iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
-                    " no hits" )
+                    " %L", id, "NO_HITS" )
   return iFound
 }
 
@@ -714,12 +713,22 @@ format_top15( sBuffer[MAX_BUFFER_LENGTH+1] ){
 
   if ( iMax > 15 )
     iMax = 15
-  
+
+  new lKills[16],lDeaths[16],lHits[16],lShots[16],lEff[16],lAcc[16]
+  format(lKills,15,"%L",LANG_SERVER,"KILLS")
+  format(lDeaths,15,"%L",LANG_SERVER,"DEATHS")
+  format(lHits,15,"%L",LANG_SERVER,"HITS")
+  format(lShots,15,"%L",LANG_SERVER,"SHOTS")
+  format(lEff,15,"%L",LANG_SERVER,"EFF")
+  format(lAcc,15,"%L",LANG_SERVER,"ACC")
+  ucfirst(lEff)
+  ucfirst(lAcc)
+
   iLen = format( sBuffer, MAX_BUFFER_LENGTH, 
                   "<body bgcolor=#000000><font color=#FFB000><pre>" )
   iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
                   "%2s %-22.22s %6s %6s %6s %6s %4s %4s %4s^n",
-                  "#", "Nick", "Kills", "Deaths", "Hits", "Shots", "HS", "Eff.", "Acc." )
+                  "#", "Nick", lKills, lDeaths, lHits, lShots, "HS", lEff, lAcc )
   for ( new i = 0; i < iMax && MAX_BUFFER_LENGTH - iLen > 0; i++ ) {
     get_stats( i, izStats, izBody, t_sName, MAX_NAME_LENGTH )
     iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
@@ -736,26 +745,37 @@ format_rankstats( id, sBuffer[MAX_BUFFER_LENGTH+1], iMyId=0 ) {
   new izStats[8] = { 0, ... }
   new izBody[8]
   new iRankPos, iLen
+  new lKills[16],lDeaths[16],lHits[16],lShots[16],lDamage[16],lEff[16],lAcc[16]
+  format(lKills,15,"%L",id,"KILLS")
+  format(lDeaths,15,"%L",id,"DEATHS")
+  format(lHits,15,"%L",id,"HITS")
+  format(lShots,15,"%L",id,"SHOTS")
+  format(lDamage,15,"%L",id,"DAMAGE")
+  format(lEff,15,"%L",id,"EFF")
+  format(lAcc,15,"%L",id,"ACC")
+  ucfirst(lEff)
+  ucfirst(lAcc)
   iRankPos = get_user_stats( id, izStats, izBody )
   iLen = format( sBuffer, MAX_BUFFER_LENGTH, 
                   "<body bgcolor=#000000><font color=#FFB000><pre>" )
   iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
-                  "%s rank is %d of %d^n^n", 
-                  (!iMyId||iMyId==id)?"Your":"Players", iRankPos, get_statsnum() )
-  iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
-                  "%s rank is %d of %d^n^n", 
-                  (!iMyId||iMyId==id)?"Your":"Players", iRankPos, get_statsnum() )
+                  "%L %L^n^n", id, (!iMyId||iMyId==id)?"YOUR":"PLAYERS",
+                  id, "RANK_IS", iRankPos, get_statsnum() )
   iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
                   "%6s: %d  (%d with hs)^n%6s: %d^n%6s: %d^n%6s: %d^n%6s: %d^n%6s: %0.2f%%^n%6s: %0.2f%%^n^n",
-                  "Kills", izStats[STATS_KILLS], izStats[STATS_HS], 
-                  "Deaths", izStats[STATS_DEATHS], "Hits", izStats[STATS_HITS], 
-                  "Shots", izStats[STATS_SHOTS], "Damage", izStats[STATS_DAMAGE], 
-                  "Eff.", effec( izStats ), "Acc.", accuracy( izStats ) )
+                  lKills, izStats[STATS_KILLS], izStats[STATS_HS], 
+                  lDeaths, izStats[STATS_DEATHS], lHits, izStats[STATS_HITS], 
+                  lShots, izStats[STATS_SHOTS], lDamage, izStats[STATS_DAMAGE], 
+                  lEff, effec( izStats ), lAcc, accuracy( izStats ) )
+  new L_BODY_PART[8][32]
+  for (new i=1; i<8; i++) {
+    format(L_BODY_PART[i],31,"%L",id,BODY_PART[i])
+  }
   iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
                   "%10s:^n%10s: %d^n%10s: %d^n%10s: %d^n%10s: %d^n%10s: %d^n%10s: %d^n%10s: %d",
-                  "HITS", BODY_PART[1], izBody[1], BODY_PART[2], izBody[2], 
-                  BODY_PART[3], izBody[3], BODY_PART[4], izBody[4], BODY_PART[5], izBody[5], 
-                  BODY_PART[6], izBody[6], BODY_PART[7], izBody[7])
+                  "HITS", L_BODY_PART[1], izBody[1], L_BODY_PART[2], izBody[2], 
+                  L_BODY_PART[3], izBody[3], L_BODY_PART[4], izBody[4], L_BODY_PART[5], izBody[5], 
+                  L_BODY_PART[6], izBody[6], L_BODY_PART[7], izBody[7])
 }
 
 
@@ -764,18 +784,29 @@ format_stats( id, sBuffer[MAX_BUFFER_LENGTH+1] ) {
   new izStats[8] = { 0, ... }
   new izBody[8]
   new iWeapon, iLen
+  new lKills[16],lDeaths[16],lHits[16],lShots[16],lDamage[16],lEff[16],lAcc[16],lWeapon[16]
+  format(lKills,15,"%L",id,"KILLS")
+  format(lDeaths,15,"%L",id,"DEATHS")
+  format(lHits,15,"%L",id,"HITS")
+  format(lShots,15,"%L",id,"SHOTS")
+  format(lDamage,15,"%L",id,"DAMAGE")
+  format(lEff,15,"%L",id,"EFF")
+  format(lAcc,15,"%L",id,"ACC")
+  format(lWeapon,15,"%L",id,"WEAPON")
+  ucfirst(lEff)
+  ucfirst(lAcc)
   get_user_wstats( id, 0, izStats, izBody )
   iLen = format( sBuffer, MAX_BUFFER_LENGTH, 
                   "<body bgcolor=#000000><font color=#FFB000><pre>" )
   iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
                   "%6s: %d  (%d with hs)^n%6s: %d^n%6s: %d^n%6s: %d^n%6s: %d^n%6s: %0.2f%%^n%6s: %0.2f%%^n^n",
-                  "Kills", izStats[STATS_KILLS], izStats[STATS_HS], 
-                  "Deaths", izStats[STATS_DEATHS], "Hits", izStats[STATS_HITS], 
-                  "Shots", izStats[STATS_SHOTS], "Damage", izStats[STATS_DAMAGE], 
-                  "Eff.", effec( izStats ), "Acc.", accuracy( izStats ) )
+                  lKills, izStats[STATS_KILLS], izStats[STATS_HS], 
+                  lDeaths, izStats[STATS_DEATHS], lHits, izStats[STATS_HITS], 
+                  lShots, izStats[STATS_SHOTS], lDamage, izStats[STATS_DAMAGE], 
+                  lEff, effec( izStats ), lAcc, accuracy( izStats ) )
   iLen += format( sBuffer[iLen], MAX_BUFFER_LENGTH - iLen,
                   "%-12.12s  %6s  %6s  %6s  %6s  %6s  %4s^n",
-                  "Weapon", "Kills", "Deaths", "Hits", "Shots", "Damage", "Acc." )
+                  lWeapon, lKills, lDeaths, lHits, lShots, lDamage, lAcc )
   for ( iWeapon = 1; iWeapon < 31 && MAX_BUFFER_LENGTH - iLen > 0 ; iWeapon++ ) {
     if ( get_user_wstats( id, iWeapon, izStats, izBody ) ) {
       get_weaponname( iWeapon, t_sWpn, MAX_WEAPON_LENGTH )
@@ -894,7 +925,7 @@ public cmdPluginMode( id, level, cid ) {
 // Display MOTD stats.
 public cmdStatsMe( id ) {
   if ( !SayStatsMe ) {
-    client_print( id, print_chat, DISABLED_MSG )
+    client_print( id, print_chat, "%L", id, "DISABLED_MSG" )
     return PLUGIN_HANDLED
   }
   format_stats( id, g_sBuffer )
@@ -906,7 +937,7 @@ public cmdStatsMe( id ) {
 // Display MOTD rank.
 public cmdRankStats( id ) {
   if ( !SayRankStats ) {
-    client_print( id, print_chat, DISABLED_MSG )
+    client_print( id, print_chat, "%L", id, "DISABLED_MSG" )
     return PLUGIN_HANDLED
   }
   format_rankstats( id, g_sBuffer )
@@ -918,7 +949,7 @@ public cmdRankStats( id ) {
 // Display MOTD top15 ranked.
 public cmdTop15( id ) {
   if ( !SayTop15 ) {
-    client_print( id, print_chat, DISABLED_MSG )
+    client_print( id, print_chat, "%L", id, "DISABLED_MSG" )
     return PLUGIN_HANDLED
   }
   format_top15( g_sBuffer )
@@ -929,7 +960,7 @@ public cmdTop15( id ) {
 // Display killer information.
 public cmdHp( id ) {
   if ( !SayHP ) {
-    client_print( id, print_chat, DISABLED_MSG )
+    client_print( id, print_chat, "%L", id, "DISABLED_MSG" )
     return PLUGIN_HANDLED
   }
   new iKiller = g_izKilled[id][KILLED_KILLER_ID]
@@ -941,7 +972,7 @@ public cmdHp( id ) {
 // Display user stats.
 public cmdMe( id ) {
   if ( !SayMe ) {
-    client_print( id, print_chat, DISABLED_MSG )
+    client_print( id, print_chat, "%L", id, "DISABLED_MSG" )
     return PLUGIN_HANDLED
   }
   format_kill_vinfo( id, 0, g_sBuffer )
@@ -952,7 +983,7 @@ public cmdMe( id ) {
 // Display user rank
 public cmdRank( id ) {
   if ( !SayRank ) {
-    client_print( id, print_chat, DISABLED_MSG )
+    client_print( id, print_chat, "%L", id, "DISABLED_MSG" )
     return PLUGIN_HANDLED
   }
   new izStats[8], izBody[8]
@@ -963,7 +994,7 @@ public cmdRank( id ) {
   fEff = effec( izStats )
   fAcc = accuracy( izStats )
   client_print( id, print_chat,
-                "* Your rank is %d of %d with %d kill(s), %d hit(s), %0.2f%%%% eff. and %0.2f%%%% acc.", 
+                "* %L", id, "YOUR_RANK_IS",
                 iRankPos, iRankMax, izStats[STATS_KILLS], izStats[STATS_HITS],
                 fEff, fAcc )
   return PLUGIN_CONTINUE
@@ -972,7 +1003,7 @@ public cmdRank( id ) {
 // Report user weapon status to team.
 public cmdReport( id ) { 
   if ( !SayReport ) {
-    client_print( id, print_chat, DISABLED_MSG )
+    client_print( id, print_chat, "%L", id, "DISABLED_MSG" )
     return PLUGIN_HANDLED
   }
   new iWeapon, iClip, iAmmo, iHealth, iArmor
@@ -980,14 +1011,19 @@ public cmdReport( id ) {
   get_weaponname( iWeapon, t_sWpn, MAX_WEAPON_LENGTH )
   iHealth = get_user_health( id ) 
   iArmor = get_user_armor( id )
-  if ( iClip >= 0 )
+  new lWeapon[16]
+  format(lWeapon,15,"%L",id,"WEAPON")
+  strtolower(lWeapon)
+  if ( iClip >= 0 ) {
     format( g_sBuffer, MAX_BUFFER_LENGTH,
-            "weapon: %s, ammo: %d/%d, health: %d, armor: %d", 
-            t_sWpn[7], iClip, iAmmo, iHealth, iArmor ) 
+            "%s: %s, %L: %d/%d, %L: %d, %L: %d", 
+            lWeapon, t_sWpn[7], LANG_SERVER, "AMMO", iClip, iAmmo,
+            LANG_SERVER, "HEALTH", iHealth, LANG_SERVER, "ARMOR", iArmor ) 
+  }
   else
     format( g_sBuffer, MAX_BUFFER_LENGTH,
-            "weapon: %s, health: %d, armor: %d", 
-            t_sWpn[7], iHealth, iArmor ) 
+            "%s: %s, %L: %d, %L: %d", 
+            lWeapon, t_sWpn[7], LANG_SERVER, "HEALTH", iHealth, LANG_SERVER, "ARMOR", iArmor ) 
   engclient_cmd( id, "say_team", g_sBuffer )
   return PLUGIN_CONTINUE
 } 
@@ -995,10 +1031,10 @@ public cmdReport( id ) {
 // Display team map score
 public cmdScore( id ) {
   if ( !SayScore ) {
-    client_print( id, print_chat, DISABLED_MSG )
+    client_print( id, print_chat, "%L", id, "DISABLED_MSG" )
     return PLUGIN_HANDLED
   }
-  client_print( id, print_chat, "Game score: %s", g_sScore )
+  client_print( id, print_chat, "%L: %s", id, "GAME_SCORE", g_sScore )
   return PLUGIN_CONTINUE
 }
 
@@ -1009,9 +1045,9 @@ public cmdTimeLeft( id ) {
   new iTimeLeft = get_timeleft()
   if ( iTimeLeft )
     client_print( 0, print_chat,
-                  "Time remaining:  %02d:%02d", iTimeLeft / 60, iTimeLeft % 60 )
+                  "%L:  %02d:%02d", id, "TIME_REM", iTimeLeft / 60, iTimeLeft % 60 )
   else
-    client_print( 0, print_chat, "* No Time Limit *" )
+    client_print( 0, print_chat, "* %L *", LANG_PLAYER, "NO_T_LIMIT" )
   return PLUGIN_CONTINUE
 }
 
@@ -1020,7 +1056,7 @@ public cmdTheTime( id ) {
   if ( !SayMiscFunc )
     return PLUGIN_CONTINUE
   get_time( "%H:%M:%S", g_sBuffer, MAX_BUFFER_LENGTH )
-  client_print( 0, print_chat, "The time:  %s", g_sBuffer )
+  client_print( 0, print_chat, "%L:  %s", LANG_PLAYER, "THE_TIME", g_sBuffer )
   return PLUGIN_CONTINUE
 }
 
@@ -1029,7 +1065,7 @@ public cmdCurrentMap( id ) {
   if ( !SayMiscFunc )
     return PLUGIN_CONTINUE
   get_mapname( g_sBuffer, MAX_BUFFER_LENGTH )
-  client_print( 0, print_chat, "Played map:  %s", g_sBuffer )
+  client_print( 0, print_chat, "%L:  %s", LANG_PLAYER, "PLAYED_MAP", g_sBuffer )
   return PLUGIN_CONTINUE
 }
 
@@ -1037,8 +1073,8 @@ public cmdCurrentMap( id ) {
 public cmdFf( id ) {
   if ( !SayMiscFunc )
     return PLUGIN_CONTINUE
-  client_print( 0, print_chat, "Friendly fire:  %s",
-                get_cvar_num( "mp_friendlyfire" ) ? "ON" : "OFF" )
+  client_print( 0, print_chat, "%L:  %L", LANG_PLAYER, "FRIEND_FIRE",
+                LANG_PLAYER, get_cvar_num( "mp_friendlyfire" ) ? "ON" : "OFF" )
   return PLUGIN_CONTINUE
 }
 
@@ -1047,15 +1083,16 @@ public cmdSwitch( id ) {
   g_izStatsSwitch[id] = ( g_izStatsSwitch[id] ) ? 0 : -1 
   num_to_str( g_izStatsSwitch[id], t_sText, MAX_TEXT_LENGTH )
   client_cmd( id, "setinfo _amxstatsx %s", t_sText )
-  client_print( id, print_chat, "* You have %s stats announcements",
-                g_izStatsSwitch[id] ? "enabled" : "disabled" )
+  new lEnDis[32]
+  format(lEnDis, 31, "%L", id, g_izStatsSwitch[id] ? "ENABLED" : "DISABLED")
+  client_print( id, print_chat, "* %L", id, "STATS_ANNOUNCE", lEnDis)
   return PLUGIN_CONTINUE
 }
 
 // Player stats menu.
 public cmdStats( id ) {
   if ( !SayStatsAll ){
-    client_print( id, print_chat, DISABLED_MSG )
+    client_print( id, print_chat, "%L", id, "DISABLED_MSG" )
     return PLUGIN_HANDLED
   }
   showStatsMenu( id, g_izUserMenuPosition[id]=0 )
@@ -1119,8 +1156,8 @@ showStatsMenu( id, iMenuPos ) {
   if ( iMenuPos >= iMenuPosMax )
     iMenuPos = iMenuPosMax - 1
   iUserIndex = iMenuPos * PPL_MENU_OPTIONS
-  iLen = format( g_sBuffer, MAX_BUFFER_LENGTH, "\yServer Stats\R%d/%d^n\w^n",
-                 iMenuPos + 1, iMenuPosMax )
+  iLen = format( g_sBuffer, MAX_BUFFER_LENGTH, "\y%L\R%d/%d^n\w^n",
+                 id, "SERVER_STATS", iMenuPos + 1, iMenuPosMax )
   iMenuOptionMax = iPlayers - iUserIndex
   if ( iMenuOptionMax > PPL_MENU_OPTIONS ) 
     iMenuOptionMax = PPL_MENU_OPTIONS
@@ -1134,14 +1171,14 @@ showStatsMenu( id, iMenuPos ) {
   iLen += format( g_sBuffer[iLen], MAX_BUFFER_LENGTH - iLen, "^n8. %s^n\w",
                   g_izUserMenuActionText[ g_izUserMenuAction[id] ] )
   if ( iPlayers > iUserIndex ) {
-    iLen += copy( g_sBuffer[iLen], MAX_BUFFER_LENGTH - iLen, "^n9. More..." )
+    iLen += format( g_sBuffer[iLen], MAX_BUFFER_LENGTH - iLen, "^n9. %L...", id, "MORE" )
     iKeyMask |= MENU_KEY_9
   }
   if ( iMenuPos > 0 )
-    iLen += copy( g_sBuffer[iLen], MAX_BUFFER_LENGTH - iLen, "^n0. Back" )
+    iLen += format( g_sBuffer[iLen], MAX_BUFFER_LENGTH - iLen, "^n0. %L", id, "BACK" )
   else
-    iLen += copy( g_sBuffer[iLen], MAX_BUFFER_LENGTH - iLen, "^n0. Exit" )
-  show_menu( id, iKeyMask, g_sBuffer )
+    iLen += format( g_sBuffer[iLen], MAX_BUFFER_LENGTH - iLen, "^n0. %L", id, "MORE" )
+  show_menu( id, iKeyMask, g_sBuffer, -1, "Server Stats" )
   return PLUGIN_HANDLED
 }
 
@@ -1494,7 +1531,7 @@ endround_stats() {
   
   g_sAwardAndScore[0] = 0
 
-  // Create round awards. 
+  // Create round awards.
   if ( ShowMostDisruptive )
     add_most_disruptive( g_sAwardAndScore )
   if ( ShowBestScore )
@@ -1502,7 +1539,7 @@ endround_stats() {
 
   // Create round score. 
   // Compensate HUD message if awards are disabled.
-  if ( ShowTeamScore || ShowTotalStats ) { 
+  if ( ShowTeamScore || ShowTotalStats ) {
     if ( ShowMostDisruptive && ShowBestScore )
       add( g_sAwardAndScore, MAX_BUFFER_LENGTH, "^n^n" )
     else if ( ShowMostDisruptive || ShowBestScore )
@@ -1583,7 +1620,7 @@ public eventShowRank( id ) {
       iRankPos = get_user_stats( iPlayer, izStats, izBody )
       iRankMax = get_statsnum()
       set_hudtype_specmode()
-      show_hudmessage( id, "%s's rank is %d of %d", t_sName, iRankPos, iRankMax )
+      show_hudmessage( id, "%L", id, "X_RANK_IS", t_sName, iRankPos, iRankMax )
     }
   }
   return PLUGIN_CONTINUE

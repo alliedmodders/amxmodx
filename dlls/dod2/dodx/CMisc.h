@@ -62,7 +62,7 @@
 #define MAX_TRACE	6
 
 struct traceVault {
-	char * szName;
+	char szName[16];
 	int iId;
 	int iAction;
 	float fDel;

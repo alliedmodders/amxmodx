@@ -80,7 +80,7 @@ cvar_t *dodstats_steam;
 cvar_t init_dodstats_steam = {"dodstats_steam","1"};
 
 struct sUserMsg {
-	const char* name;
+	const char *name;
 	int* id;
 	funEventCall func;
 	bool endmsg;
@@ -168,6 +168,9 @@ void ServerDeactivate() {
 	}
 	
 	g_rank.saveRank( MF_BuildPathname("%s",get_localinfo("dodstats") ) );
+
+	g_damage_info.clear();
+	g_death_info.clear();
 
 	// clear custom weapons info
 	for ( i=DODMAX_WEAPONS-DODMAX_CUSTOMWPNS;i<DODMAX_WEAPONS;i++)
@@ -277,7 +280,7 @@ void WriteEntity_Post(int iValue) {
 
 void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *e, TraceResult *ptr) {
 	if (ptr->pHit&&(ptr->pHit->v.flags& (FL_CLIENT | FL_FAKECLIENT) )&&
-		e&&(e->v.flags& (FL_CLIENT | FL_FAKECLIENT) )){
+		e && (e->v.flags&(FL_CLIENT | FL_FAKECLIENT) )){
 		GET_PLAYER_POINTER(e)->aiming = ptr->iHitgroup;
 		RETURN_META(MRES_IGNORED);
 	}
@@ -373,6 +376,4 @@ void FN_AMXX_Detach() {
 	g_rank.clear();
 	g_grenades.clear();
 	g_rank.unloadCalc();
-	g_damage_info.clear();
-	g_death_info.clear();
 }

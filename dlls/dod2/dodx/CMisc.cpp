@@ -227,8 +227,6 @@ void CPlayer::saveKill(CPlayer* pVictim, int wweapon, int hhs, int ttk){
 
 void CPlayer::saveHit(CPlayer* pVictim, int wweapon, int ddamage, int bbody){
 
-	if ( index == pVictim->index ) return;
-
 	if ( ignoreBots(pEdict,pVictim->pEdict) )
 		return;
 

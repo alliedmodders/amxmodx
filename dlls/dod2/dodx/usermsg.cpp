@@ -169,11 +169,9 @@ void Client_Health_End(void* mValue){
 
 	g_damage_info.exec( pAttacker->index, mPlayer->index, damage, weapon, aim, TA );
 	
-	if ( mPlayer->IsAlive() )
-		return;
-
-	pAttacker->saveKill(mPlayer,weapon,( aim == 1 ) ? 1:0 ,TA);
-	g_death_info.exec( pAttacker->index, mPlayer->index, weapon, aim, TA );
-
+	if ( !mPlayer->IsAlive() ){
+		pAttacker->saveKill(mPlayer,weapon,( aim == 1 ) ? 1:0 ,TA);
+		g_death_info.exec( pAttacker->index, mPlayer->index, weapon, aim, TA );
+	}
 }
 

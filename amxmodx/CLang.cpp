@@ -545,13 +545,20 @@ const char *CLangMngr::Format(const char *src, ...)
 					const char *cpLangName=NULL;
 					// Handle player ids (1-32) and server language
 					if ((int)langName == LANG_PLAYER)
-						langName = (char*)m_CurGlobId;
-					if ((int)langName == LANG_SERVER)
-						cpLangName = g_vault.get("server_language");
-					else if ((int)langName >= 1 && (int)langName <= 32)
-						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I((int)langName)->pEdict, "lang");
-					else
 					{
+						langName = (char*)m_CurGlobId;
+					}
+					if ((int)langName == LANG_SERVER)
+					{
+						cpLangName = g_vault.get("server_language");
+					} else if ((int)langName >= 1 && (int)langName <= 32) {
+						if ((int)CVAR_GET_FLOAT("amx_client_languages"))
+						{
+							cpLangName = g_vault.get("server_language");
+						} else {
+							cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I((int)langName)->pEdict, "lang");
+						}
+					} else {
 						cpLangName = langName;
 					}
 					if (!cpLangName || strlen(cpLangName) < 1)
@@ -643,13 +650,23 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 				const char *cpLangName=NULL;
 				// Handle player ids (1-32) and server language
 				if (*pAmxLangName == LANG_PLAYER)	// LANG_PLAYER
-					cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(m_CurGlobId)->pEdict, "lang");
-				else if (*pAmxLangName == LANG_SERVER)	// LANG_SERVER
-					cpLangName = g_vault.get("server_language");
-				else if (*pAmxLangName >= 1 && *pAmxLangName <= 32)	// Direct Client Id
-					cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(*pAmxLangName)->pEdict, "lang");
-				else		// Language Name
 				{
+					if ((int)CVAR_GET_FLOAT("amx_client_languages"))
+					{
+						cpLangName = g_vault.get("server_language");
+					} else {
+						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(m_CurGlobId)->pEdict, "lang");
+					}
+				} else if (*pAmxLangName == LANG_SERVER) {	// LANG_SERVER
+					cpLangName = g_vault.get("server_language");
+				} else if (*pAmxLangName >= 1 && *pAmxLangName <= 32) {	// Direct Client Id
+					if ((int)CVAR_GET_FLOAT("amx_client_languages"))
+					{
+						cpLangName = g_vault.get("server_language");
+					} else {
+						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(*pAmxLangName)->pEdict, "lang");
+					}
+				} else {	// Language Name
 					int len = 0;
 					cpLangName = get_amxstring(amx, langName, 2, len);
 				}

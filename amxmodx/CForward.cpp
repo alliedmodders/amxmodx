@@ -502,10 +502,16 @@ cell executeForwards(int id, ...)
 
 cell CForwardMngr::prepareArray(void *ptr, unsigned int size, ForwardArrayElemType type, bool copyBack)
 {
+	if (m_TmpArraysNum >= FORWARD_MAX_PARAMS)
+	{
+		AMXXLOG_Log("[AMXX] Forwards with more than 32 parameters are not supported.");
+		return -1;
+	}
 	m_TmpArrays[m_TmpArraysNum].ptr = ptr;
 	m_TmpArrays[m_TmpArraysNum].size = size;
 	m_TmpArrays[m_TmpArraysNum].type = type;
 	m_TmpArrays[m_TmpArraysNum].copyBack = copyBack;
+
 	return m_TmpArraysNum++;
 }
 

@@ -65,23 +65,28 @@ begin
   if (FilePath='') then
     FilePath := ExtractFilePath(ParamStr(0));
 
-  if FileExists(Compiled) and ( GetAgeFromDat(FileName)=FileAge(Name) ) then
-    Exit;
-
   WriteLn;
   WriteLn('//// '+ExtractFileName(FileName));
+
+  if FileExists(Compiled) and ( GetAgeFromDat(FileName)=FileAge(Name) ) then
+  begin
+    WriteLn('// Already compiled.');
+    WriteLn('// ----------------------------------------');
+    Exit;
+  end;
+
   Output := TStringList.Create;
 
   try
     cStart := GetTickCount;
     if not GetConsoleOutput(ExtractFilePath(ParamStr(0))+'amxxsc.exe "'+FilePath+FileName+'" "-o'+Compiled+'"',Output) then
     begin
-      WriteLn('Internal error.');
+      WriteLn('// Internal error.');
       AppExit;
     end;
     cEnd := GetTickCount;
 
-    for i := 2 to (Output.Count-1) do
+    for i := 3 to (Output.Count-1) do
     begin
       WriteLn('// '+Output.Strings[i]);
     end;
@@ -91,7 +96,7 @@ begin
     WriteLn('// ----------------------------------------');
     Output.Free;
   except
-    WriteLn('Internal error.');
+    WriteLn('// Internal error.');
     AppExit;
   end;
 
@@ -135,7 +140,7 @@ begin
 
   FillChar(SecurityAttr, SizeOf(TSecurityAttributes), 0);
   SecurityAttr.nLength := SizeOf(SecurityAttr);
-  SecurityAttr.bInheritHandle := true;
+  SecurityAttr.bInheritHandle := True;
   SecurityAttr.lpSecurityDescriptor := nil;
 
   CreatePipe(PipeOutputRead, PipeOutputWrite, @SecurityAttr, 0);
@@ -158,7 +163,7 @@ begin
 
     Stream := TMemoryStream.Create;
     try
-      while true do begin
+      while True do begin
         Succeed := ReadFile(PipeOutputRead, Buffer, 255, NumberOfBytesRead, nil);
         if not Succeed then Break;
         Stream.Write(Buffer, NumberOfBytesRead);

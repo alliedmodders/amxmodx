@@ -785,7 +785,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 				char format[16];
 				format[0] = '%';
 				char *ptr = format+1;
-				if (*src == 's' || *src == 'd' || *src == 'f' || *src == 'i' || *src == 'g')
+				if (*src != '%')
 				{
 					while (*src != 0 && !isalpha(*ptr++ = *src++))
 						/*nothing*/;
@@ -819,8 +819,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 						}
 					default:
 						{
-							*outptr++ = '%';
-							*outptr++ = *(ptr-1);
+							strcpy(outptr, format);
 							break;
 						}
 					}

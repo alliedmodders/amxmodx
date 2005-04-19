@@ -85,7 +85,7 @@ native set_localinfo(const info[],const value[]);
 /* Gets info from server. */
 native get_localinfo(const info[],output[],len);
 
-/* Shows text in MOTD window. When there is no header, the MOTD title 
+/* Shows text in MOTD window. When there is no header, the MOTD title
 * will be the name of server. If message is filename, then a contents
 * of this file will be displayed as MOTD. */
 native show_motd(player,const message[],const header[]="");
@@ -148,7 +148,7 @@ native read_datanum();
 /* Gets log message. Can be called only in plugin_log() forward function. */
 native read_logdata(output[],len);
 
-/* Returns number of log arguments. 
+/* Returns number of log arguments.
 * Can be called only in plugin_log() forward function. */
 native read_logargc();
 
@@ -212,9 +212,6 @@ native get_user_deaths(index);
 /* Sets player deaths. */
 native set_user_deaths(index, newdeaths);
 
-/* Sets player frags. */
-native set_user_frags(index, frags);
-
 /* Returns player health. */
 native get_user_health(index);
 
@@ -228,7 +225,7 @@ native get_user_ip(index,ip[],len, without_port = 0);
    set "setweapon" to 0 to turn the bit off, set to 1 to turn it on. */
 native user_has_weapon(index,weapon,setweapon=-1);
 
-/* Returns id of currently carried weapon. Gets also 
+/* Returns id of currently carried weapon. Gets also
 * ammount of ammo in clip and backpack. */
 native get_user_weapon(index,&clip,&ammo);
 
@@ -242,7 +239,7 @@ native num_to_word(num,output[],len);
 * then a name of team is set. */
 native get_user_team(index, team[]="", len = 0);
 
-/* Returns player playing time in seconds. 
+/* Returns player playing time in seconds.
 * If flag is set then result is without connection time. */
 native get_user_time(index, flag = 0);
 
@@ -254,7 +251,7 @@ native get_user_ping(index, &ping, &loss);
 * 0 - current position.
 * 1 - position from eyes (weapon aiming).
 * 2 - end position from player position.
-* 3 - end position from eyes (hit point for weapon). 
+* 3 - end position from eyes (hit point for weapon).
 * 4 - position of last bullet hit (only CS). */
 native get_user_origin(index, origin[3], mode = 0);
 
@@ -294,7 +291,7 @@ native log_message(const message[],{Float,Sql,Result,_}:...);
 /* Sends log message to specified file. */
 native log_to_file(const file[],const message[],{Float,Sql,Result,_}:...);
 
-/* Returns number of players put in server. 
+/* Returns number of players put in server.
 * If flag is set then also connecting are counted. */
 native get_playersnum(flag=0);
 
@@ -338,7 +335,7 @@ native get_flags(flags,output[],len);
 * "g" - don't look in alive players.
 * "h" - skip bots.
 * "i" - skip real players.
-* "j" - return index of last found player. 
+* "j" - return index of last found player.
 * "k" - with given userid.
 * "l" - ignore case sensitivity. */
 native find_player(const flags[], ... );
@@ -412,7 +409,7 @@ native get_time(const format[],output[],len);
 * Last parameter sets time to format. */
 native format_time(output[],len, const format[],time = -1);
 
-/* Returns system time in seconds elapsed since 00:00:00 on January 1, 1970. 
+/* Returns system time in seconds elapsed since 00:00:00 on January 1, 1970.
 * Offset is given in seconds.*/
 native get_systime(offset = 0);
 
@@ -432,7 +429,7 @@ native parse_time(const input[],const format[], time = -1);
 * "d" - do task on time before a map timelimit. */
 native set_task(Float:time,const function[],id = 0,parameter[]="",len = 0,flags[]="", repeat = 0);
 
-/* Removes all tasks with given id. If outside var is 
+/* Removes all tasks with given id. If outside var is
 * set then a task can be removed also when
 * was set in another plugin. */
 native remove_task(id = 0, outside = 0);
@@ -602,7 +599,7 @@ native get_pluginsnum();
 * "d" - set "stopped" status when pausing whole plugin.
 * "e" - set "locked" status when pausing whole plugin.
 *       In this status plugin is unpauseable.
-* Example: pause("ac","myplugin.amx") 
+* Example: pause("ac","myplugin.amx")
 *          pause("bc","myfunc","myplugin.amx") */
 native pause(flag[], const param1[]="",const param2[]="");
 

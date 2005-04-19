@@ -82,3 +82,6 @@ native set_user_footsteps(id, set = 1);
 
 /* Strips all weapons from user. */
 native strip_user_weapons(index);
+
+/* Sets player frags. */
+native set_user_frags(index, frags);

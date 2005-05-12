@@ -94,10 +94,10 @@ void PlayerPreThink_Post( edict_t *pEntity ) {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
 
 	if ( pPlayer->staminaSet ) {
-		if ( pEntity->v.iuser4 > pPlayer->staminaMax )
-			pEntity->v.iuser4 = pPlayer->staminaMax;
-		else if ( pEntity->v.iuser4 < pPlayer->staminaMin )
-			pEntity->v.iuser4 = pPlayer->staminaMin;
+		if ( (int)pEntity->v.fuser4 > pPlayer->staminaMax )
+			pEntity->v.fuser4 = (float)pPlayer->staminaMax;
+		else if ( (int)pEntity->v.fuser4 < pPlayer->staminaMin )
+			pEntity->v.fuser4 = (float)pPlayer->staminaMin;
 	}
 
 	RETURN_META(MRES_IGNORED);

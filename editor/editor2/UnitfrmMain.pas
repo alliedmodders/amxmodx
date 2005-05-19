@@ -430,11 +430,10 @@ begin
       eStr := Trim(sciEditor.Lines[sciEditor.GetCurrentLineNumber -1]);
       Delete(eStr, 1, Length(eStr) -1);
       if eStr = '{' then
-        sciEditor.SelText := '	';
-
-      if sciEditor.GetCurrentLineNumber <> 0 then begin // if we are on line 0 we would access line -1 otherwise
-        if (Trim(sciEditor.Lines[sciEditor.GetCurrentLineNumber]) <> '') and (Trim(sciEditor.Lines[sciEditor.GetCurrentLineNumber -1]) = '') and (frmSettings.chkAutoIndent.Checked) then // if the prevorious line isn't empty, the line contains only spaces and the auto-identer is enabled then...  
-          sciEditor.Lines[sciEditor.GetCurrentLineNumber] := Copy(sciEditor.Lines[sciEditor.GetCurrentLineNumber -1], 1, Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber -1]) -2); // remove the last char
+        sciEditor.SelText := '	'
+      else if (Trim(sciEditor.Lines[sciEditor.GetCurrentLineNumber -1]) = '') and (frmSettings.chkAutoIndent.Checked) then begin // if the prevorious line isn't empty, the line contains only spaces and the auto-identer is enabled then...
+        sciEditor.Lines[sciEditor.GetCurrentLineNumber] := Copy(sciEditor.Lines[sciEditor.GetCurrentLineNumber], 1, Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber]) -1); // remove last indent..
+        sciEditor.SelStart := sciEditor.SelStart + Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber]);                                                                      // and jump to last position
       end;
     end;
   end;
@@ -650,7 +649,14 @@ begin
   else if (Key = 9) and (not (ssCtrl in Shift)) then  // Tab
     SetModified
   else if (Key >= 65) and (Key <= 90) and (not (ssCtrl in Shift)) then // a..z
-    SetModified;
+    SetModified
+  else if Chr(Key) = '}' then begin
+    if sciEditor.GetCurrentLineNumber <> 0 then begin // if we are on line 0 we would access line -1 otherwise
+      if (Trim(sciEditor.Lines[sciEditor.GetCurrentLineNumber]) = '') and (frmSettings.chkAutoIndent.Checked) then // if the prevorious line isn't empty, the line contains only spaces and the auto-identer is enabled then...
+        sciEditor.Lines[sciEditor.GetCurrentLineNumber] := Copy(sciEditor.Lines[sciEditor.GetCurrentLineNumber], 1, Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber]) -1); // remove the last char
+    end;
+  end;
+
 
   if (sciEditor.GetCurrentLineNumber <> eCurrentLine) or (RemoveSpaces(sciEditor.Lines[sciEditor.GetCurrentLineNumber]) = '') then begin
     UpdateList(sciEditor.Lines.Text);

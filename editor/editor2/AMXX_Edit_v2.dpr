@@ -13,11 +13,14 @@ program AMXX_Edit_v2;
   GlyFX Icons: www.glyfx.com (using GlyFX Icon Pack of Delphi 2005 PE)
   Modified CorelButton (see CorelButton.pas, original by ConquerWare)
   Indy 9 Socket Components: www.indyproject.org
+  [JEDI component library, only necersarry for Exception Dialog (jvcl.sourceforge.net)]
 
   AMXX-Edit v2 is published under GNU General Public License and comes
   with ABSOLUTELY NO WARRANTY (see GPL.txt for more information)
 }
 
+
+//{$DEFINE EXCEPTION_DEBUG} // Remove comments only when you want to trace exceptions
 
 uses
   Forms,
@@ -38,7 +41,8 @@ uses
   UnitHowToMakePlayerMenu in 'UnitHowToMakePlayerMenu.pas' {frmHowToMakePlayerMenu},
   UnitfrmSockets in 'UnitfrmSockets.pas' {frmSocketTerminal},
   UnitReadThread in 'UnitReadThread.pas',
-  UnitfrmLoopGenerator in 'UnitfrmLoopGenerator.pas' {frmLoopGenerator};
+  UnitfrmLoopGenerator in 'UnitfrmLoopGenerator.pas' {frmLoopGenerator},
+  UnitfrmExceptionHandler in 'UnitfrmExceptionHandler.pas' {ExceptionDialog};
 
 {$R *.res}
 

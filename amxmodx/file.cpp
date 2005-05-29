@@ -293,7 +293,13 @@ static cell AMX_NATIVE_CALL amx_fopen(AMX *amx, cell *params)
 	int len, j=-1;
 	char *file = build_pathname("%s", get_amxstring(amx, params[1], 1, len));
 	char *flags = get_amxstring(amx, params[2], 0, len);
+
 	FILE *fp = fopen(file, flags);
+	if (fp == NULL) {
+		// Failed
+		return 0;
+	}
+
 	for (i=0; i<FileList.size(); i++)
 	{
 		if (FileList.at(i) == NULL)

@@ -42,7 +42,7 @@ native file_size(const file[], flag=0);
 // Code ported from Sanji's File module
 
 //Open a file
-native fopen(filename[],mode[]);
+native fopen(const filename[],const mode[]);
 //Close a file
 native fclose(file);
 //Read a file for ret_size length
@@ -79,3 +79,37 @@ native fputs(file,num);		//write short (size 2)
 native fputl(file,num);		//write long (size 4)
 native fputi(file,num);		//write int (size 4)
 native fputf(file,Float:num);	//write float (size 4)
+
+stock bool:file_copy(const SOURCE[], const TARGET[], error[], const ERRORLEN, const bool:REPLACE_TARGET = false) {
+	if (!file_exists(SOURCE)) {
+		format(error, ERRORLEN, "File copy error: Source ^"%s^" doesn't exist!", SOURCE)
+		return false
+	}
+	if (!REPLACE_TARGET && file_exists(TARGET)) {
+		format(error, ERRORLEN, "File copy error: Target ^"%s^" exists!", TARGET)
+		return false
+	}
+
+	new source = fopen(SOURCE, "rb")
+	if (!source) {
+		format(error, ERRORLEN, "File copy error: Opening source ^"%s^" failed!", SOURCE)
+		return false
+	}
+
+	new target = fopen(TARGET, "wb")
+	if (!target) {
+		format(error, ERRORLEN, "File copy error: Opening target ^"%s^" failed!", TARGET)
+		fclose(source)
+		return false
+	}
+
+	for (new buffer, eof = feof(source); !eof; !eof && fputc(target, buffer)) {
+		buffer = fgetc(source)
+		eof = feof(source)
+	}
+
+	fclose(source)
+	fclose(target)
+
+	return true
+}

@@ -507,6 +507,7 @@ public round_end(){
 
   get_players(players,pnum,"c")
   for (new i=0;i<pnum;i++) {
+     len = 0
      len += format(g_Buffer2[len] , 1023 - len ,
      "%L: %s^n%d %L^n",players[i],"BEST_SCORE", name1 , score,players[i],"POINTS" )
      len += format(g_Buffer2[len] , 1023 - len ,

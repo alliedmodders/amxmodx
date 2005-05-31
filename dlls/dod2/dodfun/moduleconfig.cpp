@@ -39,15 +39,20 @@ void (*endfunction)(void*);
 CPlayer* mPlayer;
 CPlayer players[33];
 
+CObjective mObjects;
+
 int mState;
+int mDest;
 int mPlayerIndex;
 
 int iFGrenade;
+int iFInitCP;
 
 int gmsgCurWeapon;
 int gmsgScoreShort;
 int gmsgPTeam;
-
+int gmsgInitObj;
+int gmsgSetObj;
 
 struct sUserMsg {
 	const char* name;
@@ -55,12 +60,14 @@ struct sUserMsg {
 	funEventCall func;
 	bool endmsg;
 } g_user_msg[] = {
+	{ "InitObj",&gmsgInitObj,Client_InitObj,false},
 	{ "CurWeapon",&gmsgCurWeapon,Client_CurWeapon,false },
 	{ "ScoreShort",&gmsgScoreShort,NULL,false },
 	{ "PTeam",&gmsgPTeam,NULL,false },
+	{ "SetObj",&gmsgSetObj,Client_SetObj,false },
+
 	{ 0,0,0,false }
 };
-
 
 int RegUserMsg_Post(const char *pszName, int iSize){
 	for (int i = 0; g_user_msg[ i ].name; ++i ){
@@ -148,6 +155,7 @@ void MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict_t
 		mPlayer = NULL;
 	}
 	mState = 0;
+	mDest = msg_dest;
 	if ( msg_type < 0 || msg_type >= MAX_REG_MSGS )
 		msg_type = 0;
 	function=modMsgs[msg_type];
@@ -230,7 +238,7 @@ void SetModel_Post(edict_t *e, const char *m){
 					e->v.dmgtime += pPlayer->nadeFuse - 5.0;
 				}
 			}
-			else{ // catched
+			else{ // cought
 				bool ownNade = ( (pPlayer->pEdict->v.team == 1 && pPlayer->current == 16) || (pPlayer->pEdict->v.team == 2 && pPlayer->current == 15) ) ? true:false;
 				if ( ownNade ){
 					float fExp = e->v.dmgtime - gpGlobals->time;
@@ -250,4 +258,5 @@ void OnAmxxAttach() {
 
 void OnPluginsLoaded(){
 	iFGrenade = MF_RegisterForward("grenade_throw",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
+	iFInitCP = MF_RegisterForward("controlpoints_init",ET_IGNORE,FP_DONE);
 }

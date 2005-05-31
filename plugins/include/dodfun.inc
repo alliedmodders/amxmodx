@@ -1,6 +1,6 @@
 /* DoDFun functions
  *
- * (c) 2004, SidLuke
+ * (c) 2004-2005, SidLuke
  * This file is provided as is (no warranties).
  */
 
@@ -65,4 +65,71 @@ native dod_set_user_ammo(index,wid,value);
 /*Gets the ammo of the specified weapon entity id */
 native dod_get_user_ammo(index,wid);
 
+/* called after first InitObj */
+forward controlpoints_init();
 
+enum CP_VALUE {
+	CP_edict = 1,		// read only
+	CP_area,			// read only
+	CP_index,			// read only
+	CP_owner,
+	CP_default_owner,
+	CP_visible,			// reinit after change
+	CP_icon_neutral,		// reinit after change
+	CP_icon_allies,		// reinit after change
+	CP_icon_axis,		// reinit after change
+	CP_origin_x,		// reinit after change
+	CP_origin_y,		// reinit after change
+	
+	CP_can_touch,
+	CP_pointvalue,
+
+	CP_points_for_cap,
+	CP_team_points,
+
+	CP_model_body_neutral,
+	CP_model_body_allies,
+	CP_model_body_axis,
+
+	// strings
+	CP_name,
+	CP_reset_capsound,
+	CP_allies_capsound,
+	CP_axis_capsound,
+	CP_targetname,
+
+	CP_model_neutral,
+	CP_model_allies,
+	CP_model_axis,
+};
+
+/* returns number of objectives */
+native objectives_get_num();
+
+/* use this function to update client(s) hud. You need to do this sometimes. Check CP_VALUE comments.
+   if player is 0 , all clients will get this message */
+native objectives_reinit( player=0 );
+
+/* use this function to get info about specified control point */
+native objective_get_data( index, CP_VALUE:key, szValue[]="", len=0 );
+
+/* use this function to change control point's data */
+native objective_set_data( index, CP_VALUE:key , iValue=-1, szValue[]="" );
+
+enum CA_VALUE {
+	CA_edict = 1,
+	CA_allies_numcap,
+	CA_axis_numcap,
+	CA_timetocap,
+	CA_can_cap,
+
+	// strings
+	CA_target,
+	CA_sprite,
+};
+
+/* use this function to get info about specified control point's area */
+native area_get_data( index, CP_VALUE:key, szValue[]="", len=0 );
+
+/* use this function to change control point's area data */
+native area_set_data( index, CP_VALUE:key , iValue=-1, szValue[]="" );

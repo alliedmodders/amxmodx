@@ -45,3 +45,4 @@ edict_t *FindEntityByClassname(edict_t *pentStart, const char *szName)
 {
 	return FindEntityByString(pentStart, "classname", szName);
 }
+

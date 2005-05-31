@@ -42,21 +42,30 @@ extern AMX_NATIVE_INFO base_Natives[];
 extern AMX_NATIVE_INFO pd_Natives[];
 
 extern int mState;
+extern int mDest;
 extern int mPlayerIndex;
 
 void Client_CurWeapon(void*);
+void Client_InitObj(void*);
+void Client_SetObj(void*);
 
 typedef void (*funEventCall)(void*);
 
 extern int gmsgScoreShort;
 extern int gmsgPTeam;
+extern int gmsgInitObj;
+extern int gmsgSetObj;
 
 extern int iFGrenade;
+extern int iFInitCP;
 
 extern CPlayer players[33];
 extern CPlayer* mPlayer;
 
+extern CObjective mObjects;
+
 edict_t *FindEntityByClassname(edict_t *pentStart, const char *szName);
+edict_t *FindEntityByString(edict_t *pentStart, const char *szKeyword, const char *szValue);
 
 #define CHECK_ENTITY(x) \
 	if (x < 0 || x > gpGlobals->maxEntities) { \
@@ -100,6 +109,20 @@ edict_t *FindEntityByClassname(edict_t *pentStart, const char *szName);
 
 #define GETEDICT(n) \
 	((n >= 1 && n <= gpGlobals->maxClients) ? MF_GetPlayerEdict(n) : INDEXENT(n))
+
+
+#define GET_CAPTURE_AREA(x) \
+	if ( mObjects.obj[x].areaflags == 0 ){\
+		if ( (mObjects.obj[x].pAreaEdict = FindEntityByString(0,"target",STRING(mObjects.obj[x].pEdict->v.targetname)))\
+			&& (strcmp( STRING(mObjects.obj[x].pAreaEdict->v.classname),"dod_capture_area" )==0) ){\
+			mObjects.obj[x].areaflags = 2;\
+		}\
+		else{\
+			mObjects.obj[x].areaflags = 1;\
+		}\
+	}\
+	if ( mObjects.obj[x].areaflags == 1 )\
+		return 0;
 
 #endif // DODFUN_H
 

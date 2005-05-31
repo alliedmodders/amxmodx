@@ -513,6 +513,9 @@ static cell AMX_NATIVE_CALL objective_set_data(AMX *amx, cell *params){ // index
 		case CP_name :
 			mObjects.obj[index].pEdict->v.netname = MAKE_STRING(szValue);
 			return 1;
+		case CP_cap_message :
+			strcpy(GET_CP_PD(mObjects.obj[index].pEdict).cap_message,szValue);
+			return 1;
 		case CP_reset_capsound :
 			mObjects.obj[index].pEdict->v.noise = MAKE_STRING(szValue);
 			return 1;
@@ -593,6 +596,11 @@ static cell AMX_NATIVE_CALL objective_get_data(AMX *amx, cell *params){ // flagi
 		case CP_name :
 			if ( len ){
 				MF_SetAmxString(amx,params[3],STRING(mObjects.obj[index].pEdict->v.netname),len);
+			}
+			return 1;
+		case CP_cap_message :
+			if ( len ){
+				MF_SetAmxString(amx,params[3],GET_CP_PD(mObjects.obj[index].pEdict).cap_message,len);
 			}
 			return 1;
 		case CP_reset_capsound :

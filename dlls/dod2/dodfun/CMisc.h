@@ -98,7 +98,7 @@ struct pd_dcp {
 	int points_for_team;
 	float funk_98; // always 1.0
 	float cap_time;
-	char win_string[256]; // 100 MAP_PLAYER_CAP , %p player , %n pointname , %t teamname
+	char cap_message[256]; // 100 MAP_PLAYER_CAP , %p player , %n pointname , %t teamname
 	int iunk_164;
 	int iunk_165;
 	char target_allies[256]; //  166
@@ -322,6 +322,7 @@ enum CP_VALUE {
 
 	// strings
 	CP_name,
+	CP_cap_message,
 	CP_reset_capsound,
 	CP_allies_capsound,
 	CP_axis_capsound,

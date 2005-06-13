@@ -925,7 +925,7 @@ displayStats_steam(id,dest) {
  copy(g_Buffer[pos],2047-pos,"</table></pre></body></html>")
 
  get_user_name(id,name,31)
- show_motd(id,g_Buffer,name)
+ show_motd(dest,g_Buffer,name)
 }
 
 public cmdRank(id){

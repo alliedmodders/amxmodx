@@ -33,6 +33,7 @@
 #include "CPlugin.h"
 #include "CForward.h"
 #include "CFile.h"
+#include "amx.h"
 
 CPluginMngr::CPlugin* CPluginMngr::loadPlugin(const char* path, const char* name, char* error, int debug) {	
 	CPlugin** a = &head;
@@ -170,7 +171,37 @@ CPluginMngr::CPlugin::CPlugin(int i, const char* p,const char* n, char* e, int d
 	next = 0;
 	id = i;
 }
-CPluginMngr::CPlugin::~CPlugin( ){
+
+CPluginMngr::CPlugin::~CPlugin( )
+{
+	AMX_DBG *pDbg = (AMX_DBG *)amx.userdata[0];
+	
+	if (pDbg)
+	{
+		if (pDbg->files)
+		{
+			for (int i=0; i<pDbg->numFiles; i++)
+			{
+				if (pDbg->files[i])
+				{
+					free(pDbg->files[i]);
+					pDbg->files[i] = NULL;
+				}
+			}
+			free(pDbg->files);
+		}
+		AMX_TRACE *pTrace = pDbg->head;
+		AMX_TRACE *pNext = NULL;
+		while (pTrace)
+		{
+			pNext = pTrace->next;
+			free(pTrace);
+			pTrace = pNext;
+		}
+		free(pDbg);
+		amx.userdata[0] = NULL;
+	}
+
 	unload_amxscript( &amx, &code );
 }
 

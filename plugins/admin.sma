@@ -119,7 +119,7 @@ public addadminfn(id, level, cid) {
 
 	new arg[33]
 	read_argv(1, arg, 32)
-	new player = cmd_target(id, arg, 2) // 2 = allow yourself (remove later?) 8 = no bots
+	new player = cmd_target(id, arg, 10) // 2 = allow yourself (remove later?) 8 = no bots
 	if (!player)
 		return PLUGIN_HANDLED
 
@@ -170,7 +170,6 @@ AddAdmin(id, steamid[], accessflags[], password[]) {
 			console_print(id, "[%s] %s already exists!", PLUGINNAME, steamid)
 			return
 		}
-		//console_print(id, "Found: %s, %s, %s, %s", line_steamid, line_password, line_accessflags, line_flags)
 	}
 
 	// If we came here, steamid doesn't exist in users.ini. Add it.

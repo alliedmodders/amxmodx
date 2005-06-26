@@ -585,6 +585,11 @@ begin
     exit;
   end;
 
+  for i := 0 to frmSaveDialog.lstFiles.Items.Count -1 do begin
+    if Pos('&', frmSaveDialog.lstFiles.Items[i]) = 1 then
+      frmSaveDialog.lstFiles.Items[i] := Copy(frmSaveDialog.lstFiles.Items[i], 2, Length(frmSaveDialog.lstFiles.Items[i]));
+  end;
+
   if frmSaveDialog.ShowModal = mrOk then begin
     for i := 0 to frmSaveDialog.lstFiles.Items.Count -1 do begin
       if frmSaveDialog.lstFiles.Checked[i] then begin

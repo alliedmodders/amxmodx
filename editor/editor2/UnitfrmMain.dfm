@@ -158,11 +158,12 @@ object frmMain: TfrmMain
       WordWrapVisualFlagsLocation = []
       LayoutCache = sciCacheCaret
       HideSelect = False
+      WordWrap = sciNoWrap
       EdgeMode = sciEdgeLine
       EdgeColumn = 90
       EdgeColor = clSilver
       WordChars = '_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-      ControlCharSymbol = #0
+      ControlCharSymbol = #1
       BraceHilite = False
       Folding = [foldFold, foldCompact, foldComment, foldAtElse]
       FoldMarkerType = sciMarkArrows
@@ -4956,6 +4957,8 @@ object frmMain: TfrmMain
     CompleteWordOnlyOne = True
     Editor = sciEditor
     WordCharacters = '_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    MaxWidth = 0
+    MaxHeight = 5
     Left = 794
     Top = 4
   end
@@ -5269,8 +5272,6 @@ object frmMain: TfrmMain
       'get_stats(player, stats[8], bodyhits[8], name[], len)'
       'get_stats(player, stats[9], bodyhits[8], name[], len)'
       'get_statsnum()'
-      'get_statsnum()'
-      'get_statsnum()'
       'get_systime(offset = 0)'
       'get_time(const format[],output[],len)'
       'get_timeleft()'
@@ -5310,18 +5311,13 @@ object frmMain: TfrmMain
       'get_user_origin(index, origin[3], [ mode ])'
       'get_user_ping(index, &ping, &loss)'
       'get_user_rstats(index, stats[8], bodyhits[8])'
-      'get_user_rstats(index, stats[8], bodyhits[8])'
       'get_user_rstats(player, stats[9], bodyhits[8])'
-      'get_user_stats(index, stats[8], bodyhits[8])'
       'get_user_stats(index, stats[8], bodyhits[8])'
       'get_user_stats(index, stats[9], bodyhits[8])'
       'get_user_team(index, [ team[], len ])'
       'get_user_time(index, [ flag ])'
       'get_user_userid(index)'
       'get_user_velocity(entity, Float:Vector[3])'
-      
-        'get_user_vstats(index, victim, stats[8], bodyhits[8], [ wpnname[' +
-        '] = "", len = 0 ])'
       
         'get_user_vstats(index, victim, stats[8], bodyhits[8], [ wpnname[' +
         '] = "", len = 0 ])'
@@ -5333,9 +5329,7 @@ object frmMain: TfrmMain
       'get_user_wlstats(index, wpnindex, stats[8], bodyhits[8])'
       'get_user_wlstats(player, wpnindex, stats[9], bodyhits[8])'
       'get_user_wrstats(index, wpnindex, stats[8], bodyhits[8])'
-      'get_user_wrstats(index, wpnindex, stats[8], bodyhits[8])'
       'get_user_wrstats(player, wpnindex, stats[9], bodyhits[8])'
-      'get_user_wstats(index, wpnindex, stats[8], bodyhits[8])'
       'get_user_wstats(index, wpnindex, stats[8], bodyhits[8])'
       'get_user_wstats(player, wpnindex, stats[9], bodyhits[8])'
       'get_usercmd(type, [ ... ])'
@@ -5581,7 +5575,6 @@ object frmMain: TfrmMain
       'remove_vaultdata(const key[])'
       'replace(text[], len, const what[], const with[])'
       'require_module(const name[])'
-      'reset_user_wstats(index)'
       'reset_user_wstats(index)'
       'reset_user_wstats(player)'
       'rewind(file)'

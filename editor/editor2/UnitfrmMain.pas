@@ -430,20 +430,20 @@ begin
       eStr := Trim(sciEditor.Lines[sciEditor.GetCurrentLineNumber -1]);
       Delete(eStr, 1, Length(eStr) -1);
       if eStr = '{' then
-        sciEditor.SelText := '	'
-      else if (Trim(sciEditor.Lines[sciEditor.GetCurrentLineNumber -1]) = '') and (frmSettings.chkAutoIndent.Checked) then begin // if the prevorious line isn't empty, the line contains only spaces and the auto-identer is enabled then...
-        sciEditor.Lines[sciEditor.GetCurrentLineNumber] := Copy(sciEditor.Lines[sciEditor.GetCurrentLineNumber], 1, Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber]) -1); // remove last indent..
-        sciEditor.SelStart := sciEditor.SelStart + Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber]);                                                                      // and jump to last position
-      end;
+        sciEditor.SelText := '	';
     end;
+  end;
+  if Key = '}' then begin // YES thats only for bail ;)
+    sciEditor.Lines[sciEditor.GetCurrentLineNumber] := Copy(sciEditor.Lines[sciEditor.GetCurrentLineNumber], 1, Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber]) -1); // remove last indent..
+    sciEditor.SelStart := sciEditor.SelStart + Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber]);                                                                      // and jump to last position
   end;
 end;
 
 procedure TfrmMain.FormActivate(Sender: TObject);
 begin
-  sciEditor.Font.Name := 'Courier New';
+  sciEditor.Font.Name := 'Courier New'; // otherwise the font MAY reset (don't know why)
   if eErrorLine <> -1 then
-    ShowErrorLine;
+    ShowErrorLine;                  
 end;
 
 procedure TfrmMain.acGoToExecute(Sender: TObject);

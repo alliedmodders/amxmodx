@@ -1077,6 +1077,9 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
   memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
   gpGamedllFuncs=pGamedllFuncs;
+
+  Module_CacheFunctions();
+
   CVAR_REGISTER(&init_amxmodx_version);
   CVAR_REGISTER(&init_amxmodx_modules);
   CVAR_REGISTER(&init_amxmodx_debug);

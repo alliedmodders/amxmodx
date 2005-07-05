@@ -1316,114 +1316,137 @@ cell MNF_PrepareCharArray(char *ptr, unsigned int size)
 	return prepareCharArray(ptr, size, false);
 }
 
+inline bool operator ==(func_s &arg1, const char *desc)
+{
+	if (strcmp(arg1.desc, desc) == 0)
+		return true;
+	return false;
+}
+
+CList<func_s, const char *> g_functions;
 
 // Fnptr Request function for the new interface
 const char *g_LastRequestedFunc = NULL;
-#define REGISTER_FUNC(name, func) { name, (void*)func },
-void *Module_ReqFnptr(const char *funcName)
+#define REGISTER_FUNC(name, func) \
+	{ \
+		pFunc = new func_s; \
+		pFunc->pfn = func; \
+		pFunc->desc = name; \
+		g_functions.put(pFunc); \
+	}
+
+void MNF_RegisterFunction(void *pfn, const char *description)
 {
-	// func table
-	struct Func_s
-	{
-		const char *name;
-		void *ptr;
-	};
-	static Func_s functions[] = {
-		// Misc
-			REGISTER_FUNC("BuildPathname", build_pathname)
-			REGISTER_FUNC("PrintSrvConsole", print_srvconsole)
-			REGISTER_FUNC("GetModname", MNF_GetModname)
-			REGISTER_FUNC("Log", MNF_Log)
-			REGISTER_FUNC("LogError", LogError)
-			REGISTER_FUNC("MergeDefinitionFile", MNF_MergeDefinitionFile)
-			REGISTER_FUNC("Format", MNF_Format)
+	func_s *pFunc;
 
-			// Amx scripts loading / unloading / managing
-			REGISTER_FUNC("GetAmxScript", MNF_GetAmxScript)
-			REGISTER_FUNC("GetAmxScriptName", MNF_GetAmxScriptName)
-			REGISTER_FUNC("FindAmxScriptByName", MNF_FindAmxScriptByName)
-			REGISTER_FUNC("FindAmxScriptByAmx", MNF_FindAmxScriptByAmx)
-			REGISTER_FUNC("LoadAmxScript", load_amxscript)
-			REGISTER_FUNC("UnloadAmxScript", unload_amxscript)
+	REGISTER_FUNC(description, pfn);
+}
 
-			// String / mem in amx scripts support
-			REGISTER_FUNC("SetAmxString", set_amxstring)
-			REGISTER_FUNC("GetAmxString", MNF_GetAmxString)
-			REGISTER_FUNC("GetAmxStringLen", MNF_GetAmxStringLen)
-			REGISTER_FUNC("FormatAmxString", MNF_FormatAmxString)
-			REGISTER_FUNC("CopyAmxMemory", MNF_CopyAmxMemory)
-			REGISTER_FUNC("GetAmxAddr", get_amxaddr)
+void Module_CacheFunctions()
+{
+	func_s *pFunc;
 
-			// other amx stuff
-			REGISTER_FUNC("amx_Exec", amx_Exec)
-			REGISTER_FUNC("amx_Execv", amx_Execv)
-			REGISTER_FUNC("amx_Allot", amx_Allot)
-			REGISTER_FUNC("amx_FindPublic", amx_FindPublic)
-			REGISTER_FUNC("amx_FindNative", amx_FindNative)
+	REGISTER_FUNC("BuildPathname", build_pathname)
+	REGISTER_FUNC("PrintSrvConsole", print_srvconsole)
+	REGISTER_FUNC("GetModname", MNF_GetModname)
+	REGISTER_FUNC("Log", MNF_Log)
+	REGISTER_FUNC("LogError", LogError)
+	REGISTER_FUNC("MergeDefinitionFile", MNF_MergeDefinitionFile)
+	REGISTER_FUNC("Format", MNF_Format)
+	REGISTER_FUNC("RegisterFunction", MNF_RegisterFunction);
 
-			// Natives / Forwards
-			REGISTER_FUNC("AddNatives", MNF_AddNatives)
-			REGISTER_FUNC("RaiseAmxError", amx_RaiseError)
-			REGISTER_FUNC("RegisterForward", registerForward)
-			REGISTER_FUNC("RegisterSPForward", registerSPForward)
-			REGISTER_FUNC("RegisterSPForwardByName", registerSPForwardByName)
-			REGISTER_FUNC("UnregisterSPForward", unregisterSPForward)
-			REGISTER_FUNC("ExecuteForward", executeForwards)
-			REGISTER_FUNC("PrepareCellArray", MNF_PrepareCellArray)
-			REGISTER_FUNC("PrepareCharArray", MNF_PrepareCharArray)
-			REGISTER_FUNC("PrepareCellArrayA", prepareCellArray)
-			REGISTER_FUNC("PrepareCharArrayA", prepareCharArray)
+	// Amx scripts loading / unloading / managing
+	REGISTER_FUNC("GetAmxScript", MNF_GetAmxScript)
+	REGISTER_FUNC("GetAmxScriptName", MNF_GetAmxScriptName)
+	REGISTER_FUNC("FindAmxScriptByName", MNF_FindAmxScriptByName)
+	REGISTER_FUNC("FindAmxScriptByAmx", MNF_FindAmxScriptByAmx)
+	REGISTER_FUNC("LoadAmxScript", load_amxscript)
+	REGISTER_FUNC("UnloadAmxScript", unload_amxscript)
 
-			// Player
-			REGISTER_FUNC("GetPlayerFlags", MNF_GetPlayerFlags)
-			REGISTER_FUNC("IsPlayerValid", MNF_IsPlayerValid)
-			REGISTER_FUNC("GetPlayerName", MNF_GetPlayerName)
-			REGISTER_FUNC("GetPlayerIP", MNF_GetPlayerIP)
-			REGISTER_FUNC("IsPlayerInGame", MNF_IsPlayerInGame)
-			REGISTER_FUNC("IsPlayerBot", MNF_IsPlayerBot)
-			REGISTER_FUNC("IsPlayerAuthorized", MNF_IsPlayerAuthorized)
-			REGISTER_FUNC("GetPlayerTime", MNF_GetPlayerTime)
-			REGISTER_FUNC("GetPlayerPlayTime", MNF_GetPlayerPlayTime)
-			REGISTER_FUNC("GetPlayerCurweapon", MNF_GetPlayerCurweapon)
-			REGISTER_FUNC("GetPlayerTeamID", MNF_GetPlayerTeamID)
-			REGISTER_FUNC("GetPlayerTeam", MNF_GetPlayerTeam)
-			REGISTER_FUNC("GetPlayerDeaths", MNF_GetPlayerDeaths)
-			REGISTER_FUNC("GetPlayerFrags", MNF_GetPlayerFrags)
-			REGISTER_FUNC("GetPlayerMenu", MNF_GetPlayerMenu)
-			REGISTER_FUNC("GetPlayerKeys", MNF_GetPlayerKeys)
-			REGISTER_FUNC("IsPlayerAlive", MNF_IsPlayerAlive)
-			REGISTER_FUNC("IsPlayerConnecting", MNF_IsPlayerConnecting)
-			REGISTER_FUNC("IsPlayerHLTV", MNF_IsPlayerHLTV)
-			REGISTER_FUNC("GetPlayerArmor", MNF_GetPlayerArmor)
-			REGISTER_FUNC("GetPlayerHealth", MNF_GetPlayerHealth)
-			REGISTER_FUNC("GetPlayerEdict", MNF_GetPlayerEdict)
-			REGISTER_FUNC("CellToReal", MNF_CellToReal)
-			REGISTER_FUNC("RealToCell", MNF_RealToCell)
+	// String / mem in amx scripts support
+	REGISTER_FUNC("SetAmxString", set_amxstring)
+	REGISTER_FUNC("GetAmxString", MNF_GetAmxString)
+	REGISTER_FUNC("GetAmxStringLen", MNF_GetAmxStringLen)
+	REGISTER_FUNC("FormatAmxString", MNF_FormatAmxString)
+	REGISTER_FUNC("CopyAmxMemory", MNF_CopyAmxMemory)
+	REGISTER_FUNC("GetAmxAddr", get_amxaddr)
+
+	// other amx stuff
+	REGISTER_FUNC("amx_Exec", amx_Exec)
+	REGISTER_FUNC("amx_Execv", amx_Execv)
+	REGISTER_FUNC("amx_Allot", amx_Allot)
+	REGISTER_FUNC("amx_FindPublic", amx_FindPublic)
+	REGISTER_FUNC("amx_FindNative", amx_FindNative)
+
+	// Natives / Forwards
+	REGISTER_FUNC("AddNatives", MNF_AddNatives)
+	REGISTER_FUNC("RaiseAmxError", amx_RaiseError)
+	REGISTER_FUNC("RegisterForward", registerForward)
+	REGISTER_FUNC("RegisterSPForward", registerSPForward)
+	REGISTER_FUNC("RegisterSPForwardByName", registerSPForwardByName)
+	REGISTER_FUNC("UnregisterSPForward", unregisterSPForward)
+	REGISTER_FUNC("ExecuteForward", executeForwards)
+	REGISTER_FUNC("PrepareCellArray", MNF_PrepareCellArray)
+	REGISTER_FUNC("PrepareCharArray", MNF_PrepareCharArray)
+	REGISTER_FUNC("PrepareCellArrayA", prepareCellArray)
+	REGISTER_FUNC("PrepareCharArrayA", prepareCharArray)
+
+	// Player
+	REGISTER_FUNC("GetPlayerFlags", MNF_GetPlayerFlags)
+	REGISTER_FUNC("IsPlayerValid", MNF_IsPlayerValid)
+	REGISTER_FUNC("GetPlayerName", MNF_GetPlayerName)
+	REGISTER_FUNC("GetPlayerIP", MNF_GetPlayerIP)
+	REGISTER_FUNC("IsPlayerInGame", MNF_IsPlayerInGame)
+	REGISTER_FUNC("IsPlayerBot", MNF_IsPlayerBot)
+	REGISTER_FUNC("IsPlayerAuthorized", MNF_IsPlayerAuthorized)
+	REGISTER_FUNC("GetPlayerTime", MNF_GetPlayerTime)
+	REGISTER_FUNC("GetPlayerPlayTime", MNF_GetPlayerPlayTime)
+	REGISTER_FUNC("GetPlayerCurweapon", MNF_GetPlayerCurweapon)
+	REGISTER_FUNC("GetPlayerTeamID", MNF_GetPlayerTeamID)
+	REGISTER_FUNC("GetPlayerTeam", MNF_GetPlayerTeam)
+	REGISTER_FUNC("GetPlayerDeaths", MNF_GetPlayerDeaths)
+	REGISTER_FUNC("GetPlayerFrags", MNF_GetPlayerFrags)
+	REGISTER_FUNC("GetPlayerMenu", MNF_GetPlayerMenu)
+	REGISTER_FUNC("GetPlayerKeys", MNF_GetPlayerKeys)
+	REGISTER_FUNC("IsPlayerAlive", MNF_IsPlayerAlive)
+	REGISTER_FUNC("IsPlayerConnecting", MNF_IsPlayerConnecting)
+	REGISTER_FUNC("IsPlayerHLTV", MNF_IsPlayerHLTV)
+	REGISTER_FUNC("GetPlayerArmor", MNF_GetPlayerArmor)
+	REGISTER_FUNC("GetPlayerHealth", MNF_GetPlayerHealth)
+	REGISTER_FUNC("GetPlayerEdict", MNF_GetPlayerEdict)
+	REGISTER_FUNC("CellToReal", MNF_CellToReal)
+	REGISTER_FUNC("RealToCell", MNF_RealToCell)
 
 #ifdef MEMORY_TEST
-			REGISTER_FUNC("Allocator", m_allocator)
-			REGISTER_FUNC("Deallocator", m_deallocator)
-			REGISTER_FUNC("Reallocator", m_reallocator)
+	REGISTER_FUNC("Allocator", m_allocator)
+	REGISTER_FUNC("Deallocator", m_deallocator)
+	REGISTER_FUNC("Reallocator", m_reallocator)
 #else
-			REGISTER_FUNC("Allocator", MNF_Allocator)
-			REGISTER_FUNC("Deallocator", MNF_Deallocator)
-			REGISTER_FUNC("Reallocator", MNF_Reallocator)
+	REGISTER_FUNC("Allocator", MNF_Allocator)
+	REGISTER_FUNC("Deallocator", MNF_Deallocator)
+	REGISTER_FUNC("Reallocator", MNF_Reallocator)
 #endif // MEMORY_TEST
 
-			REGISTER_FUNC("Haha_HiddenStuff", MNF_HiddenStuff)
-	};
+	REGISTER_FUNC("Haha_HiddenStuff", MNF_HiddenStuff)
+}
 
+void *Module_ReqFnptr(const char *funcName)
+{
 	// code
-	if (!g_CurrentlyCalledModule || g_ModuleCallReason != ModuleCall_Attach)
+	// ^---- really? wow!
+	if (!g_CurrentlyCalledModule)
 	{
 		return NULL;
 	}
 
 	g_LastRequestedFunc = funcName;
-	for (unsigned int i = 0; i < (sizeof(functions) / sizeof(Func_s)); ++i)
+
+	CList<func_s, const char *>::iterator iter;
+	for (iter = g_functions.begin(); iter; ++iter)
 	{
-		if (strcmp(funcName, functions[i].name) == 0)
-			return functions[i].ptr;
+		if (strcmp(funcName, iter->desc) == 0)
+			return iter->pfn;
 	}
+
 	return NULL;
 }

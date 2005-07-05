@@ -1974,6 +1974,7 @@ typedef int				(*PFN_REGISTER_SPFORWARD_BYNAME)	(AMX * /*amx*/, const char * /*f
 typedef void			(*PFN_UNREGISTER_SPFORWARD)		(int /*id*/);
 typedef	void			(*PFN_MERGEDEFINITION_FILE)		(const char * /*filename*/);
 typedef const char *	(*PFN_FORMAT)					(const char * /*fmt*/, ... /*params*/);
+typedef void			(*PFN_REGISTERFUNCTION)			(void * /*pfn*/, const char * /*desc*/);
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
 extern PFN_BUILD_PATHNAME			g_fn_BuildPathname;
@@ -2034,6 +2035,7 @@ extern PFN_GETPLAYERFLAGS		g_fn_GetPlayerFlags;
 extern PFN_GET_PLAYER_EDICT			g_fn_GetPlayerEdict;
 extern PFN_FORMAT					g_fn_Format;
 extern PFN_GET_PLAYER_TEAM			g_fn_GetPlayerTeam;
+extern PFN_REGISTERFUNCTION			g_fn_RegisterFunction;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2089,6 +2091,7 @@ void			MF_UnregisterSPForward		(int id) { }
 int				MF_GetPlayerFlags			(int id) { }
 edict_t*		MF_GetPlayerEdict			(int id) { }
 const char *	MF_Format					(const char *fmt, ...) { }
+void			MF_RegisterFunction			(void *pfn, const char *description) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
@@ -2150,6 +2153,7 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...);
 #define MF_GetPlayerFlags g_fn_GetPlayerFlags
 #define MF_GetPlayerEdict g_fn_GetPlayerEdict
 #define MF_Format g_fn_Format
+#define MF_RegisterFunction g_fn_RegisterFunction
 
 /*** Memory ***/
 void	*operator new(size_t reportedSize);

@@ -276,6 +276,7 @@ extern ModuleCallReason g_ModuleCallReason;		// modules.cpp
 extern CModule *g_CurrentlyCalledModule;		// modules.cpp
 extern const char *g_LastRequestedFunc;			// modules.cpp
 extern CQueue<String> CurModuleList;
+void Module_CacheFunctions();
 
 void *Module_ReqFnptr(const char *funcName);	// modules.cpp
 
@@ -295,5 +296,12 @@ extern int FF_InconsistentFile;
 extern int FF_ClientAuthorized;
 
 extern CFakeMeta g_FakeMeta;
+
+struct func_s
+{
+	void *pfn;
+	const char *desc;
+};
+
 #endif // AMXMODX_H
 

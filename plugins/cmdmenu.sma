@@ -361,7 +361,7 @@ loadCvarSettings( szFilename[] ) {
     inum -= 2
           
     if ( inum < 2 ) continue
-    
+
     g_cvarMisc[ g_cvarNum ][1] = g_cvarCmdNum
       
     for ( a = 0 ; a < inum && g_cvarCmdNum < cvar_values ; ++a ) {

@@ -572,7 +572,7 @@ public cmdRcon(id,level,cid) {
   log_amx("Cmd: ^"%s<%d><%s><>^" server console (cmdline ^"%s^")",
     name,get_user_userid(id),authid, arg)
   console_print(id,"[AMXX] %L",id,"COM_SENT_SERVER",arg)
-  server_cmd(arg)
+  server_cmd("%s", arg)
   return PLUGIN_HANDLED
 }
 

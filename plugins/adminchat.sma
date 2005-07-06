@@ -92,8 +92,8 @@ public cmdSayChat(id) {
     client_print(0,print_notify,"%s :   %s",name,message[i+1])
   }
   else{
-    show_hudmessage(0,message[i+1])
-    client_print(0,print_notify,message[i+1])
+    show_hudmessage(0,"%s", message[i+1])
+    client_print(0,print_notify,"%s", message[i+1])
   }
 
   return PLUGIN_HANDLED
@@ -116,9 +116,9 @@ public cmdSayAdmin(id) {
   get_players(players,inum)
   for (new i=0; i<inum; ++i){
     if (players[i] != id && get_user_flags(players[i]) & ADMIN_CHAT)
-      client_print(players[i],print_chat,message)
+      client_print(players[i],print_chat,"%s",message)
   }
-  client_print(id,print_chat,message)
+  client_print(id,print_chat,"%s",message)
   return PLUGIN_HANDLED
 }
 
@@ -135,10 +135,10 @@ public cmdChat(id,level,cid) {
   log_amx("Chat: ^"%s<%d><%s><>^" chat ^"%s^"",name,userid,authid,message)
   log_message("^"%s<%d><%s><>^" triggered ^"amx_chat^" (text ^"%s^")",name,userid,authid,message)
   format(message,191,"(ADMINS) %s :   %s",name,message)
-  console_print(id,message)
+  console_print(id,"%s",message)
   for (new i = 0; i < inum; ++i) {
     if ( access(players[i],ADMIN_CHAT) )
-      client_print(players[i],print_chat,message)
+      client_print(players[i],print_chat,"%s",message)
   }
   return PLUGIN_HANDLED
 }
@@ -230,9 +230,9 @@ public cmdTsay(id,level,cid) {
     console_print(id,"%s :   %s",name,message[length])
   }
   else{
-    show_hudmessage(0,message[length])
-    client_print(0,print_notify,message[length])
-    console_print(id,message[length])
+    show_hudmessage(0,"%s",message[length])
+    client_print(0,print_notify,"%s",message[length])
+    console_print(id,"%s",message[length])
   }
   
   log_amx("Chat: ^"%s<%d><%s><>^" %s ^"%s^"",name,userid,authid,cmd[4],message[length])

@@ -2421,9 +2421,6 @@ C_DLLEXPORT void __stdcall GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, 
 
 /************* AMXX Stuff *************/
 
-// *** Types ***
-typedef void* (*PFN_REQ_FNPTR)(const char * /*name*/);
-
 // *** Globals ***
 // Module info
 static amxx_module_info_s g_ModuleInfo = 
@@ -2502,6 +2499,7 @@ PFN_GETPLAYERFLAGS			g_fn_GetPlayerFlags;
 PFN_GET_PLAYER_EDICT		g_fn_GetPlayerEdict;
 PFN_FORMAT					g_fn_Format;
 PFN_REGISTERFUNCTION		g_fn_RegisterFunction;
+PFN_REQ_FNPTR				g_fn_RequestFunction;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2538,6 +2536,8 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	// Check pointer
 	if (!reqFnptrFunc)
 		return AMXX_PARAM;
+
+	g_fn_RequestFunction = reqFnptrFunc;
 
 	// Req all known functions
 	// Misc

@@ -1883,6 +1883,9 @@ void FN_AMXX_DETACH(void);
 void FN_AMXX_PLUGINSLOADED(void);
 #endif // FN_AMXX_PLUGINSLOADED
 
+// *** Types ***
+typedef void* (*PFN_REQ_FNPTR)(const char * /*name*/);
+
 // ***** Module funcs stuff *****
 enum ForwardExecType
 {
@@ -2036,6 +2039,7 @@ extern PFN_GET_PLAYER_EDICT			g_fn_GetPlayerEdict;
 extern PFN_FORMAT					g_fn_Format;
 extern PFN_GET_PLAYER_TEAM			g_fn_GetPlayerTeam;
 extern PFN_REGISTERFUNCTION			g_fn_RegisterFunction;
+extern PFN_REQ_FNPTR				g_fn_RequestFunction;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2092,6 +2096,7 @@ int				MF_GetPlayerFlags			(int id) { }
 edict_t*		MF_GetPlayerEdict			(int id) { }
 const char *	MF_Format					(const char *fmt, ...) { }
 void			MF_RegisterFunction			(void *pfn, const char *description) { }
+void *			MF_RequestFunction			(const char *description) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
@@ -2154,6 +2159,7 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...);
 #define MF_GetPlayerEdict g_fn_GetPlayerEdict
 #define MF_Format g_fn_Format
 #define MF_RegisterFunction g_fn_RegisterFunction
+#define MF_RequestFunction g_fn_RequestFunction;
 
 /*** Memory ***/
 void	*operator new(size_t reportedSize);

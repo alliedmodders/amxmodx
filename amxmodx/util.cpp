@@ -33,6 +33,22 @@
 
 #include "amxmodx.h"
 
+#ifdef __linux__
+#define _vsnprintf vsnprintf
+#endif
+
+const char *UTIL_VarArgs(const char *fmt, ...)
+{
+	va_list ap;
+	static char string[4096];
+
+	va_start(ap, fmt);
+	_vsnprintf(string, sizeof(string)-1, fmt, ap);
+	va_end(ap);
+
+	return string;
+}
+
 int UTIL_ReadFlags(const char* c) 
 {
 	int flags = 0;
@@ -260,17 +276,6 @@ void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1, 
 {
 	if (!cmd) 
 		return;                              // no command 
- /*
-	char clCmd[256]; 
-	snprintf(g_fakecmd.args, 255, "%s%s%s%s%s", cmd, 
-		arg1 ? " " : "", arg1 ? arg1 : "",  
-		arg2 ? " " : "", arg2 ? arg2 : ""); 
-	clCmd[255] = 0; 
-	CLIENT_COMMAND(pEdict, clCmd); 
-	return; 
-	*/
-	if (!cmd)
-		return;						// no command
 
 	// store command
 	g_fakecmd.argv[0] = cmd;

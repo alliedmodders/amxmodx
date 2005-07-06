@@ -612,7 +612,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 										*tmpPtr++ = *tmpCell++;
 
 									*tmpPtr = 0;
-									sprintf(outptr, format, tmpString);
+									_snprintf(outptr, sizeof(outbuf)-(outptr-outbuf)-1, format, tmpString);
 									ZEROTERM(outbuf);
 									break;
 								}
@@ -620,7 +620,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 							case 'f':
 								{
 									NEXT_PARAM();
-									sprintf(outptr, format, *(REAL*)get_amxaddr(amx, params[parm++]));
+									_snprintf(outptr, sizeof(outbuf)-(outptr-outbuf)-1, format, *(REAL*)get_amxaddr(amx, params[parm++]));
 									ZEROTERM(outbuf);
 									break;
 								}
@@ -629,7 +629,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 							case 'c':
 								{
 									NEXT_PARAM();
-									sprintf(outptr, format, (int)*get_amxaddr(amx, params[parm++]));
+									_snprintf(outptr, sizeof(outbuf)-(outptr-outbuf)-1, format, (int)*get_amxaddr(amx, params[parm++]));
 									ZEROTERM(outbuf);
 									break;
 								}
@@ -698,7 +698,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 							while (tmpPtr-tmpString<sizeof(tmpString) && *tmpCell)
 								*tmpPtr++ = *tmpCell++;
 							*tmpPtr = 0;
-							sprintf(outptr, format, tmpString);
+							_snprintf(outptr, sizeof(outbuf)-(outptr-outbuf)-1, format, tmpString);
 							ZEROTERM(outbuf);
 							break;
 						}
@@ -706,7 +706,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 					case 'f':
 						{
 							NEXT_PARAM();
-							sprintf(outptr, format, *(REAL*)get_amxaddr(amx, params[parm++]));
+							_snprintf(outptr, sizeof(outbuf)-(outptr-outbuf)-1, format, *(REAL*)get_amxaddr(amx, params[parm++]));
 							break;
 						}
 					case 'i':
@@ -714,7 +714,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 					case 'c':
 						{
 							NEXT_PARAM();
-							sprintf(outptr, format, (int)*get_amxaddr(amx, params[parm++]));
+							_snprintf(outptr, sizeof(outbuf)-(outptr-outbuf)-1, format, (int)*get_amxaddr(amx, params[parm++]));
 							break;
 						}
 					default:

@@ -116,7 +116,7 @@ void UTIL_HudMessage(edict_t *pEntity, const hudtextparms_t &textparms, char *pM
 void UTIL_IntToString(int value, char *output);
 void UTIL_ShowMOTD( edict_t *client , char *motd, int mlen, const char *name);
 void UTIL_ShowMenu( edict_t* pEntity, int slots, int time, char *menu, int mlen );
-const char *UTIL_VarArgs(const char *fmt, ...);
+char *UTIL_VarArgs(const char *fmt, ...);
 
 
 #define GET_PLAYER_POINTER(e)   (&g_players[ENTINDEX(e)])

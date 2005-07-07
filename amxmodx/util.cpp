@@ -37,7 +37,7 @@
 #define _vsnprintf vsnprintf
 #endif
 
-const char *UTIL_VarArgs(const char *fmt, ...)
+char *UTIL_VarArgs(const char *fmt, ...)
 {
 	va_list ap;
 	static char string[4096];

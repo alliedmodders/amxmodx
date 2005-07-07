@@ -36,18 +36,18 @@
 #endif
 
 #ifdef __GNUC__
-
-//#include <stddef.h>
 #include <stdio.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <dirent.h>
-
 #endif
 
 // header file for unlink()
 #ifdef __linux__
 #include <unistd.h>
 #else
+#define WINDOWS_LEAN_AND_MEAN
+#include <windows.h>
 #include <io.h>
 #endif
 
@@ -234,13 +234,45 @@ static cell AMX_NATIVE_CALL delete_file(AMX *amx, cell *params) /* 1 param */
 static cell AMX_NATIVE_CALL file_exists(AMX *amx, cell *params) /* 1 param */
 {
   int iLen;
-  char* sFile = get_amxstring(amx,params[1],0,iLen);
-  FILE* fp = fopen(build_pathname("%s",sFile),"r");
-  if ( fp != NULL) {
-    fclose(fp);
-    return 1;
-  }
+  char *sFile = get_amxstring(amx,params[1],0,iLen);
+  char *file = build_pathname("%s",sFile);
+#if defined WIN32 || defined _WIN32
+  DWORD attr = GetFileAttributes(file);
+  if (attr == INVALID_FILE_ATTRIBUTES)
+	  return 0;
+  if (attr == FILE_ATTRIBUTE_DIRECTORY)
+	  return 0;
+  return 1;
+#else
+  struct stat s;
+  if (stat(file, &s) != 0)
+	  return 0;
+  if (S_ISDIR(s.st_mode))
+	  return 0;
+  return 1;
+#endif
+}
+
+static cell AMX_NATIVE_CALL dir_exists(AMX *amx, cell *params) /* 1 param */
+{
+  int iLen;
+  char *sFile = get_amxstring(amx,params[1],0,iLen);
+  char *file = build_pathname("%s",sFile);
+#if defined WIN32 || defined _WIN32
+  DWORD attr = GetFileAttributes(file);
+  if (attr == INVALID_FILE_ATTRIBUTES)
+	  return 0;
+  if (attr == FILE_ATTRIBUTE_DIRECTORY)
+	  return 1;
   return 0;
+#else
+  struct stat s;
+  if (stat(file, &s) != 0)
+	  return 0;
+  if (S_ISDIR(s.st_mode))
+	  return 1;
+  return 0;
+#endif
 }
 
 static cell AMX_NATIVE_CALL file_size(AMX *amx, cell *params) /* 1 param */
@@ -643,6 +675,7 @@ AMX_NATIVE_INFO file_Natives[] = {
   { "fgetf",		amx_fgetf },
   { "fputf",		amx_fputf },
   { "build_pathname", amx_build_pathname},
+  { "dir_exists",	dir_exists },
   
   { NULL, NULL }
 };

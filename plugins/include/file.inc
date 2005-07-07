@@ -28,6 +28,9 @@ native delete_file(const file[]);
 /* Checks for file. If file exists function returns 1, in other case 0. */
 native file_exists(const file[]);
 
+/* Checks if a directory exists */
+native dir_exists(const dir[]);
+
 /* Returns a file size in bytes if flag is set to 0.
 * When flag is set to 1 returns number of lines in the file,
 * and when flags is 2, function returns 1 if the file ends

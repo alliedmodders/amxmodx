@@ -152,8 +152,8 @@ public cmdSay(id,level,cid) {
   get_user_authid(id,authid,31)
   get_user_name(id,name,31)
   userid = get_user_userid(id)
-  client_print(0,print_chat,"(ALL) %s :   %s",name,message)
-  console_print(id,"(ALL) %s :   %s",name,message)
+  client_print(0,print_chat,"%L",LANG_PLAYER, "PRINT_ALL",name,message)
+  console_print(id,"%L",LANG_PLAYER,"PRINT_ALL",name,message)
   log_amx("Chat: ^"%s<%d><%s><>^" say ^"%s^"", name,userid,authid,message)
   log_message("^"%s<%d><%s><>^" triggered ^"amx_say^" (text ^"%s^")",name,userid,authid,message)
   return PLUGIN_HANDLED

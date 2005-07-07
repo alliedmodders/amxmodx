@@ -11,8 +11,8 @@ LANG_NAME = Serbian
 LANG_NAME_NATIVE = Srpski
 
 [tr]
-LANG_NAME = Turkish 
-LANG_NAME_NATIVE = Turkce 
+LANG_NAME = Turkish
+LANG_NAME_NATIVE = Turkce
 
 [fr]
 LANG_NAME = French
@@ -22,10 +22,9 @@ LANG_NAME_NATIVE = Francais
 LANG_NAME = Swedish
 LANG_NAME_NATIVE = Svenska
 
-
 [da]
-LANG_NAME = Danish 
-LANG_NAME_NATIVE = Dansk 
+LANG_NAME = Danish
+LANG_NAME_NATIVE = Dansk
 
 [pl]
 LANG_NAME = Polish
@@ -34,3 +33,7 @@ LANG_NAME_NATIVE = Polski
 [nl]
 LANG_NAME = Dutch
 LANG_NAME_NATIVE = Nederlands
+
+[es]
+LANG_NAME = Spanish
+LANG_NAME_NATIVE = Espanyol

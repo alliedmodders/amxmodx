@@ -2,14 +2,13 @@
 NEXT_MAP = Next Map:
 
 [de]
-NEXT_MAP = Naechste Map: 
+NEXT_MAP = Naechste Map:
 
 [sr]
-NEXT_MAP = Sledeca Mapa: 
+NEXT_MAP = Sledeca Mapa:
 
 [tr]
-NEXT_MAP = Diger Map: 
-
+NEXT_MAP = Diger Map:
 
 [fr]
 NEXT_MAP = Prochaine Carte:
@@ -18,11 +17,13 @@ NEXT_MAP = Prochaine Carte:
 NEXT_MAP = N'a'sta karta:
 
 [da]
-NEXT_MAP = Naeste bane: 
-
+NEXT_MAP = Naeste bane:
 
 [pl]
 NEXT_MAP = Nastepna Mapa:
 
 [nl]
 NEXT_MAP = Volgende Map:
+
+[es]
+NEXT_MAP = Proximo Mapa:

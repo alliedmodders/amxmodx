@@ -17,23 +17,22 @@ RES_WEAP = Restrict Weapons
 TELE_PLAYER = Teleport Player
 
 [de]
-KICK_PLAYER = Kick Spieler 
-BAN_PLAYER = Ban Spieler 
-SLAP_SLAY = Schlage/Toete Spieler 
-TEAM_PLAYER = Team Spieler ^n 
-CHANGEL = Mapwechsel 
-VOTE_MAPS = Map Abstimmung ^n 
-SPECH_STUFF = Soundausgabe 
-CLIENT_COM = Client-Befehle 
-SERVER_COM = Server-Befehle 
-CVARS_SET = Server-Einstellungen 
-CONFIG = Konfiguration 
-LANG_SET = Spracheinstellung 
-STATS_SET = Statistik-Einstellungen ^n 
-PAUSE_PLUG = Plugins pausieren 
-RES_WEAP = Waffen verbieten 
-TELE_PLAYER = Teleport Spieler 
-
+KICK_PLAYER = Kick Spieler
+BAN_PLAYER = Ban Spiele
+SLAP_SLAY = Schlage/Toete Spieler
+TEAM_PLAYER = Team Spieler ^n
+CHANGEL = Mapwechsel
+VOTE_MAPS = Map Abstimmung ^n
+SPECH_STUFF = Soundausgabe
+CLIENT_COM = Client-Befehle
+SERVER_COM = Server-Befehle
+CVARS_SET = Server-Einstellungen
+CONFIG = Konfiguration
+LANG_SET = Spracheinstellung
+STATS_SET = Statistik-Einstellungen ^n
+PAUSE_PLUG = Plugins pausieren
+RES_WEAP = Waffen verbieten
+TELE_PLAYER = Teleport Spieler
 
 [sr]
 KICK_PLAYER = Kick Igraca
@@ -51,24 +50,24 @@ LANG_SET = Jezik
 STATS_SET = Podesavanje Statistike ^n
 PAUSE_PLUG = Pauza Pluginova
 RES_WEAP = Ogranici Oruzja
-TELE_PLAYER = Teleport Igraca 
+TELE_PLAYER = Teleport Igraca
 
 [tr]
-KICK_PLAYER = Oyuncuyu at 
-BAN_PLAYER = Oyuncuyu banla 
-SLAP_SLAY = Oyuncuyu tokatla/öldür 
-TEAM_PLAYER = Takim oyuncusu ^n 
-CHANGEL = Bolum degisdir 
-VOTE_MAPS = Mapler icin oylama ^n 
-SPECH_STUFF = Konusma cihazlari 
-CLIENT_COM = Oyuncu emirleri 
-SERVER_COM = Server emirleri 
-CVARS_SET = Cvars ayarlari 
-CONFIG = Config ayarlari 
-LANG_SET = Dil ayarlari 
-STATS_SET = Statistik ayarlari ^n 
-PAUSE_PLUG = Pluginleri durdurun 
-RES_WEAP = Yasakli silahlar 
+KICK_PLAYER = Oyuncuyu at
+BAN_PLAYER = Oyuncuyu banla
+SLAP_SLAY = Oyuncuyu tokatla/oldur
+TEAM_PLAYER = Takim oyuncusu ^n
+CHANGEL = Bolum degisdir
+VOTE_MAPS = Mapler icin oylama ^n
+SPECH_STUFF = Konusma cihazlari
+CLIENT_COM = Oyuncu emirleri
+SERVER_COM = Server emirleri
+CVARS_SET = Cvars ayarlari
+CONFIG = Config ayarlari
+LANG_SET = Dil ayarlari
+STATS_SET = Statistik ayarlari ^n
+PAUSE_PLUG = Pluginleri durdurun
+RES_WEAP = Yasakli silahlar
 TELE_PLAYER = Oyuncuyu teleport yapi
 
 [fr]
@@ -108,42 +107,40 @@ RES_WEAP = Definiera vapen
 TELE_PLAYER = Teleportera spelare
 
 [da]
-KICK_PLAYER = Kick Spiller 
-BAN_PLAYER = Ban Spiller 
-SLAP_SLAY = Klask/Draeb Spiller 
-TEAM_PLAYER = Hold Spiller ^n 
-CHANGEL = Skift Bane 
-VOTE_MAPS = Stem om bane ^n 
-SPECH_STUFF = Tale Menu 
-CLIENT_COM = Klient Kommandoer 
-SERVER_COM = Server Kommandoer 
-CVARS_SET = Cvars Instillinger 
-CONFIG = Konfiguration 
-LANG_SET = Sprog Indstillinger 
-STATS_SET = statistik indstillinger ^n 
-PAUSE_PLUG = Pause Plugins 
-RES_WEAP = Forbyd Vaaben 
-TELE_PLAYER = Teleport Spiller 
-
+KICK_PLAYER = Kick Spiller
+BAN_PLAYER = Ban Spiller
+SLAP_SLAY = Klask/Draeb Spiller
+TEAM_PLAYER = Hold Spiller ^n
+CHANGEL = Skift Bane
+VOTE_MAPS = Stem om bane ^n
+SPECH_STUFF = Tale Menu
+CLIENT_COM = Klient Kommandoer
+SERVER_COM = Server Kommandoer
+CVARS_SET = Cvars Instillinger
+CONFIG = Konfiguration
+LANG_SET = Sprog Indstillinger
+STATS_SET = statistik indstillinger ^n
+PAUSE_PLUG = Pause Plugins
+RES_WEAP = Forbyd Vaaben
+TELE_PLAYER = Teleport Spiller
 
 [pl]
-KICK_PLAYER = Wywal gracza 
-BAN_PLAYER = Zbanuj gracza 
-SLAP_SLAY = Uderz/zgladz gracza 
-TEAM_PLAYER = Gracz druzyny ^n 
-CHANGEL = Zmien mape 
-VOTE_MAPS = Glosuj na mapy ^n 
-SPECH_STUFF = Rzeczy zw. z rozmowa 
-CLIENT_COM = Komendy Klienta 
-SERVER_COM = Komendy Serwera 
-CVARS_SET = Ustawienia Cvar'ow 
-CONFIG = Konfiguracja 
-LANG_SET = Ustawienia jezyka 
-STATS_SET = Ustawienia statystyk ^n 
-PAUSE_PLUG = Zatrzymaj pluginy 
-RES_WEAP = Ogranicz bronie 
-TELE_PLAYER = Teleportuj gracza 
-
+KICK_PLAYER = Wywal gracza
+BAN_PLAYER = Zbanuj gracza
+SLAP_SLAY = Uderz/zgladz gracza
+TEAM_PLAYER = Gracz druzyny ^n
+CHANGEL = Zmien mape
+VOTE_MAPS = Glosuj na mapy ^n
+SPECH_STUFF = Rzeczy zw. z rozmowa
+CLIENT_COM = Komendy Klienta
+SERVER_COM = Komendy Serwera
+CVARS_SET = Ustawienia Cvar'ow
+CONFIG = Konfiguracja
+LANG_SET = Ustawienia jezyka
+STATS_SET = Ustawienia statystyk ^n
+PAUSE_PLUG = Zatrzymaj pluginy
+RES_WEAP = Ogranicz bronie
+TELE_PLAYER = Teleportuj gracza
 
 [nl]
 KICK_PLAYER = Kick Speler
@@ -162,3 +159,21 @@ STATS_SET = Stats Settings ^n
 PAUSE_PLUG = Pauseer Plugins
 RES_WEAP = Verbied Wapens
 TELE_PLAYER = Teleporteer Speler
+
+[es]
+KICK_PLAYER = Expulsar Jugador
+BAN_PLAYER = Banear Jugador
+SLAP_SLAY = Pegar/Matar Jugador
+TEAM_PLAYER = Equipo del Jugador ^n
+CHANGEL = Cambiar de mapa
+VOTE_MAPS = Votar mapas ^n
+SPECH_STUFF = Comandos de Voz
+CLIENT_COM = Comandos de Cliente
+SERVER_COM = Comandos del Servidor
+CVARS_SET = Configuracion de Cvars
+CONFIG = Configuracion
+LANG_SET = Configuracion de Idioma
+STATS_SET = Configuracion de las Estadisticas ^n
+PAUSE_PLUG = Pausar Plugins
+RES_WEAP = Restringir Armas
+TELE_PLAYER = Teletransportar Jugador

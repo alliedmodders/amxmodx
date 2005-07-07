@@ -2,10 +2,10 @@
 STOP_FLOOD = Stop flooding the server!
 
 [de]
-STOP_FLOOD = Bitte nicht zu viele Eingaben auf einmal! 
+STOP_FLOOD = Bitte nicht zu viele Eingaben auf einmal!
 
 [sr]
-STOP_FLOOD = Prestani da opterecujes server porukama! 
+STOP_FLOOD = Prestani da opterecujes server porukama!
 
 [tr]
 STOP_FLOOD = Serveri yazi ile doldurmayin!
@@ -13,15 +13,17 @@ STOP_FLOOD = Serveri yazi ile doldurmayin!
 [fr]
 STOP_FLOOD = Arrete de flooder le serveur!
 
-
 [sv]
 STOP_FLOOD = Sluta flooda servern!
 
 [da]
-STOP_FLOOD = Stop med at oversvoemme serveren! 
+STOP_FLOOD = Stop med at oversvoemme serveren!
 
 [pl]
-STOP_FLOOD = Przestan zapychac serwer! 
+STOP_FLOOD = Przestan zapychac serwer!
 
 [nl]
-STOP_FLOOD = Stop met het spammen van de server! 
+STOP_FLOOD = Stop met het spammen van de server!
+
+[es]
+STOP_FLOOD = Para de saturar el servidor!

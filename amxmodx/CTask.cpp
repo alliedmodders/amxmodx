@@ -131,7 +131,7 @@ void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, f
 			return;
 
 		// set new exec time OR remove the task if needed
-		if (m_bLoop || (--m_iRepeat > 0))
+		if (m_bLoop || (m_iRepeat-- > 0))
 		{
 			m_fNextExecTime += m_fBase;
 		}

@@ -236,7 +236,7 @@ VOTING_FORBIDDEN = Afstemning om det er blevet forbudt
 ADMIN_VOTE_CUS_1 = %s: afstemning speciel
 ADMIN_VOTE_CUS_2 = %s %s: afstemning speciel
 VOTE = Afstemning
-ACTION_PERFORMED = Denne handling kan ikke udfoeres paa bot "%s
+ACTION_PERFORMED = Denne handling kan ikke udfoeres paa bot "%s"
 ADMIN_VOTE_FOR_1 = %s: stemmer %s for %s
 ADMIN_VOTE_FOR_2 = %s %s: stemmer %s for %s
 

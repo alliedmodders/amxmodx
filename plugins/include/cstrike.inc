@@ -137,7 +137,7 @@ enum CsInternalModel {
 	CS_T_GUERILLA = 8,
 	CS_CT_VIP = 9
 };
-native cs_set_user_team(index, CsTeams:team, CsInternalModel:model = CS_DONTCHANGE);
+native cs_set_user_team(index, {CsTeams,_}:team, {CsInternalModel,_}:model = CS_DONTCHANGE);
 
 /* Is user vip? Returns 1 if true, 0 if false.
  */

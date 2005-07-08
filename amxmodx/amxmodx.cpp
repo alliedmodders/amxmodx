@@ -408,7 +408,15 @@ static cell AMX_NATIVE_CALL is_user_hltv(AMX *amx, cell *params) /* 1 param */
   int index = params[1];
   if (index<1||index>gpGlobals->maxClients)
     return 0;
-  return ((GET_PLAYER_POINTER_I(index)->pEdict->v.flags & FL_PROXY) ? 1 : 0);
+  CPlayer *pPlayer = GET_PLAYER_POINTER_I(index);
+  if (!pPlayer->initialized)
+    return 0;
+  if (pPlayer->pEdict->v.flags & FL_PROXY)
+	  return 1;
+  const char *authid = GETPLAYERAUTHID(pPlayer->pEdict);
+  if (authid && stricmp(authid, "HLTV") == 0)
+	  return 1;
+  return 0;
 }
 
 static cell AMX_NATIVE_CALL is_user_alive(AMX *amx, cell *params) /* 1 param */
@@ -1641,6 +1649,11 @@ static cell AMX_NATIVE_CALL get_user_info(AMX *amx, cell *params) /* 4 param */
     return 0;
   }
   CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+  if (!pPlayer->initialized)
+  {
+	  LogError(amx, AMX_ERR_NATIVE, "Player %d is not connected", index);
+	  return 0;
+  }
   int ilen;
   char* sptemp = get_amxstring(amx,params[2],0,ilen);
   return set_amxstring(amx,params[3],ENTITY_KEYVALUE(pPlayer->pEdict,sptemp ),params[4]);
@@ -1655,6 +1668,11 @@ static cell AMX_NATIVE_CALL set_user_info(AMX *amx, cell *params) /* 3 param */
     return 0;
   }
   CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+  if (!pPlayer->initialized)
+  {
+	  LogError(amx, AMX_ERR_NATIVE, "Player %d is not connected", index);
+	  return 0;
+  }
   int ilen;
   char* sptemp = get_amxstring(amx,params[2],0,ilen);
   char* szValue = get_amxstring(amx,params[3],1,ilen);
@@ -2756,7 +2774,11 @@ static cell AMX_NATIVE_CALL lang_phrase(AMX *amx, cell *params)
 		{
 			cpLangName = g_vault.get("server_language");
 		} else {
-			cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(iLang)->pEdict, "lang");
+			CPlayer *pPlayer = GET_PLAYER_POINTER_I(iLang);
+			if (pPlayer->ingame)
+				cpLangName = ENTITY_KEYVALUE(pPlayer->pEdict, "lang");
+			else
+				cpLangName = g_vault.get("server_language");
 		}
 	}
 	if (!cpLangName || strlen(cpLangName) < 1)

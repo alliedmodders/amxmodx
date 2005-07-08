@@ -147,7 +147,7 @@ public cmdRandom(id,level,cid) {
   if (read_argc()>1) { // person is specified..
     new arg[32]
     read_argv(1,arg,31)
-    new player = cmd_target(id,arg,5)
+    new player = cmd_target(id,arg,1)
     if (!player) return PLUGIN_HANDLED
     new name[32],name_targ[32];
     new auth[32],auth_targ[32];
@@ -215,7 +215,7 @@ public cmdReadyRoom(id,level,cid) {
   if (read_argc()>1) { // person is specified..
     new arg[32]
     read_argv(1,arg,31)
-    new player = cmd_target(id,arg,5)
+    new player = cmd_target(id,arg,1)
     if (!player) return PLUGIN_HANDLED
     new name[32],name_targ[32];
     new auth[32],auth_targ[32];
@@ -280,7 +280,7 @@ public cmdTeamTwo(id,level,cid) {
   if (read_argc()>1) { // person is specified..
     new arg[32]
     read_argv(1,arg,31)
-    new player = cmd_target(id,arg,5)
+    new player = cmd_target(id,arg,1)
     if (!player) return PLUGIN_HANDLED
     if (g_Team[player]==2 || g_Team[player]==4 /*i think 4 is team 2 in ava..*/) {
       client_print(id,print_chat,"[AMXX] That user is already on team two.");
@@ -309,7 +309,7 @@ public cmdTeamOne(id,level,cid) {
   if (read_argc()>1) { // person is specified..
     new arg[32]
     read_argv(1,arg,31)
-    new player = cmd_target(id,arg,5)
+    new player = cmd_target(id,arg,1)
     if (!player) return PLUGIN_HANDLED
     if (g_Team[player]==1 || g_Team[player]==3 /*i think 3 is team 2 in mvm..*/) {
       client_print(id,print_chat,"[AMXX] That user is already on team one.");
@@ -359,19 +359,23 @@ public cmdUnComm(id,level,cid) {
 }
 public ack_team_one(id) {
   engclient_cmd(id,"readyroom");
+  engclient_cmd(id,"readyroom");
   engclient_cmd(id,"jointeamone");
   return PLUGIN_HANDLED_MAIN;
 }
 public ack_team_two(id) {
+  engclient_cmd(id,"readyroom");
   engclient_cmd(id,"readyroom");
   engclient_cmd(id,"jointeamtwo");
   return PLUGIN_HANDLED_MAIN;
 }
 public ack_ready_room(id) {
   engclient_cmd(id,"readyroom");
+  engclient_cmd(id,"readyroom");
   return PLUGIN_HANDLED_MAIN;
 }
 public ack_auto_assign(id) {
+  engclient_cmd(id,"readyroom");
   engclient_cmd(id,"readyroom");
   engclient_cmd(id,"autoassign");
   return PLUGIN_HANDLED_MAIN;

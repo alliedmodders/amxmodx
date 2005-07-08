@@ -2783,6 +2783,32 @@ static cell AMX_NATIVE_CALL amx_mkdir(AMX *amx, cell *params)
 #endif
 }
 
+static cell AMX_NATIVE_CALL find_plugin_byfile(AMX *amx, cell *params)
+{
+	typedef int (*STRCOMPARE)(const char*, const char*);
+
+	STRCOMPARE func;
+
+	if (params[2])
+	{
+		func = stricmp;
+	} else {
+		func = strcmp;
+	}
+
+	int len, i=0;
+	char *file = get_amxstring(amx, params[1], 0, len);
+
+	for (CPluginMngr::iterator iter = g_plugins.begin(); iter; ++iter)
+	{
+		if ( (func)((*iter).getName(), file) == 0 )
+			return i;
+		i++;
+	}
+
+	return -1;
+}
+
 AMX_NATIVE_INFO amxmod_Natives[] = {
   { "client_cmd",       client_cmd },
   { "client_print",     client_print },
@@ -2793,6 +2819,7 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "engclient_cmd",    engclient_cmd },
   { "engclient_print",  engclient_print },
   { "find_player",      find_player },
+  { "find_plugin_byfile", find_plugin_byfile },
   { "force_unmodified", force_unmodified },
   { "format_time",      format_time},
   { "get_clcmd",        get_clcmd},

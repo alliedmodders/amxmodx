@@ -260,3 +260,5 @@ enum {
 #define AMX_FLAG_LINEOPS	(1<<5)   /* line ops are parsed by the JIT [loadtime only flag] */
 #define AMX_FLAG_BROWSE		(1<<14)   /* browsing/relocating or executing */
 #define AMX_FLAG_RELOC		(1<<15)   /* jump/call addresses relocated */
+
+#define INVALID_PLUGIN_ID	-1	

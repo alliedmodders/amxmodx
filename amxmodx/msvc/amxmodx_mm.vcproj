@@ -757,9 +757,6 @@
 				RelativePath="..\CQueue.h">
 			</File>
 			<File
-				RelativePath="..\CRList.h">
-			</File>
-			<File
 				RelativePath="..\CString.h">
 			</File>
 			<File

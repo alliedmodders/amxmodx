@@ -92,7 +92,7 @@ void CLog::CreateNewFile()
 	int i = 0;
 	while (true)
 	{
-		m_LogFile.assign(build_pathname("%s/L%02d%02d%03d.log", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday, i));
+		char file[256];
 		FILE *pTmpFile = fopen(m_LogFile.c_str(), "r");		// open for reading to check whether the file exists
 		if (!pTmpFile)
 			break;
@@ -115,16 +115,18 @@ void CLog::CreateNewFile()
 
 void CLog::UseFile(const String &fileName)
 {
-	m_LogFile.assign(build_pathname("%s/%s", g_log_dir.c_str(), fileName.c_str()));
+	static char file[256];
+	m_LogFile.assign(build_pathname_r(file, sizeof(file)-1, "%s/%s", g_log_dir.c_str(), fileName.c_str()));
 }
 
 void CLog::MapChange()
 {
 	// create dir if not existing
+	char file[256];
 #ifdef __linux
-	mkdir(build_pathname("%s", g_log_dir.c_str()), 0700);
+	mkdir(build_pathname_r(file, sizeof(file)-1,"%s", g_log_dir.c_str()), 0700);
 #else
-	mkdir(build_pathname("%s", g_log_dir.c_str()));
+	mkdir(build_pathname_r(file, sizeof(file)-1,"%s", g_log_dir.c_str()));
 #endif
 
 	m_LogType = atoi(get_localinfo("amxx_logging", "1"));
@@ -150,6 +152,7 @@ void CLog::MapChange()
 
 void CLog::Log(const char *fmt, ...)
 {
+	static char file[256];
 	if (m_LogType == 1 || m_LogType == 2)
 	{
 		// get time
@@ -161,14 +164,14 @@ void CLog::Log(const char *fmt, ...)
 		strftime(date, 31, "%m/%d/%Y - %H:%M:%S", curTime);
 
 		// msg
-		char msg[3072];
+		static char msg[3072];
 
 		va_list arglst;
 		va_start(arglst, fmt);
 		vsnprintf(msg, 3071, fmt, arglst);
 		va_end(arglst);
 
-		FILE *pF;
+		FILE *pF = NULL;
 		if (m_LogType == 2)
 		{
 			pF = fopen(m_LogFile.c_str(), "a+");
@@ -186,7 +189,8 @@ void CLog::Log(const char *fmt, ...)
 		}
 		else
 		{
-			pF = fopen(build_pathname("%s/L%02d%02d.log", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday), "a+");
+			build_pathname_r(file, sizeof(file)-1, "%s/L%02d%02d.log", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday);
+			pF = fopen(file, "a+");
 		}
 		if (pF)
 		{
@@ -195,7 +199,7 @@ void CLog::Log(const char *fmt, ...)
 		}
 		else
 		{
-			ALERT(at_logged, "[AMXX] Unexpected fatal logging error (couldn't open %s for a+). AMXX Logging disabled for this map.\n", m_LogFile.c_str());
+			ALERT(at_logged, "[AMXX] Unexpected fatal logging error (couldn't open %s for a+). AMXX Logging disabled for this map.\n", file);
 			m_LogType = 0;
 			return;
 		}
@@ -206,12 +210,11 @@ void CLog::Log(const char *fmt, ...)
 	else if (m_LogType == 3)
 	{
 		// build message
-		// :TODO: Overflow possible here
-		char msg[3072];
+		static char msg_[3072];
 		va_list arglst;
 		va_start(arglst, fmt);
-		vsnprintf(msg, 3071, fmt, arglst);
+		vsnprintf(msg_, 3071, fmt, arglst);
 		va_end(arglst);
-		ALERT(at_logged, "%s\n", msg);
+		ALERT(at_logged, "%s\n", msg_);
 	}
 }

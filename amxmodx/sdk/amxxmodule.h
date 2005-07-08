@@ -1909,6 +1909,7 @@ enum ForwardParam
 
 typedef int				(*PFN_ADD_NATIVES)				(const AMX_NATIVE_INFO * /*list*/);
 typedef char *			(*PFN_BUILD_PATHNAME)			(const char * /*format*/, ...);
+typedef char *			(*PFN_BUILD_PATHNAME_R)			(char * /*buffer*/, size_t /* maxlen */, const char * /* format */, ...);
 typedef cell *			(*PFN_GET_AMXADDR)				(AMX * /*amx*/, cell /*offset*/);
 typedef void			(*PFN_PRINT_SRVCONSOLE)			(char * /*format*/, ...);
 typedef const char *	(*PFN_GET_MODNAME)				(void);
@@ -1981,6 +1982,7 @@ typedef void			(*PFN_REGISTERFUNCTION)			(void * /*pfn*/, const char * /*desc*/)
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
 extern PFN_BUILD_PATHNAME			g_fn_BuildPathname;
+extern PFN_BUILD_PATHNAME_R			g_fn_BuildPathnameR;
 extern PFN_GET_AMXADDR				g_fn_GetAmxAddr;
 extern PFN_PRINT_SRVCONSOLE			g_fn_PrintSrvConsole;
 extern PFN_GET_MODNAME				g_fn_GetModname;
@@ -2046,6 +2048,7 @@ extern PFN_REQ_FNPTR				g_fn_RequestFunction;
 // They understand #if 0 so we use #ifdef MAY_NEVER_BE_DEFINED
 int				MF_AddNatives				(const AMX_NATIVE_INFO *list) { }
 char *			MF_BuildPathname			(const char * format, ...) { }
+char *			MF_BuildPathnameR			(char *buffer, size_t maxlen, const char *fmt, ...) { }
 cell *			MF_GetAmxAddr				(AMX * amx, cell offset) { }
 void			MF_PrintSrvConsole			(char * format, ...) { }
 const char *	MF_GetModname				(void) { }
@@ -2101,6 +2104,7 @@ void *			MF_RequestFunction			(const char *description) { }
 
 #define MF_AddNatives g_fn_AddNatives
 #define MF_BuildPathname g_fn_BuildPathname
+#define MF_BuildPathnameR g_fn_BuildPathnameR
 #define MF_FormatAmxString g_fn_FormatAmxString
 #define MF_GetAmxAddr g_fn_GetAmxAddr
 #define MF_PrintSrvConsole g_fn_PrintSrvConsole

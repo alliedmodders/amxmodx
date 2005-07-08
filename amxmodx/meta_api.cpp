@@ -221,8 +221,9 @@ int	C_Spawn( edict_t *pent ) {
   g_tasksMngr.registerTimers( &gpGlobals->time,	&mp_timelimit->value,  &g_game_timeleft		);
 
   //  ###### Load lang
-  g_langMngr.LoadCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
-  g_langMngr.Load(build_pathname("%s/languages.dat", get_localinfo("amxmodx_datadir", "addons/amxmodx/data")));
+  char file[256];
+  g_langMngr.LoadCache(build_pathname_r(file, sizeof(file)-1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
+  g_langMngr.Load(build_pathname_r(file, sizeof(file)-1, "%s/languages.dat", get_localinfo("amxmodx_datadir", "addons/amxmodx/data")));
   // ######	Initialize commands	prefixes
   g_commands.registerPrefix( "amx" );
   g_commands.registerPrefix( "amxx"	);
@@ -249,7 +250,7 @@ int	C_Spawn( edict_t *pent ) {
   CVAR_SET_STRING(init_amxmodx_modules.name, buffer);
 
   //  ######  Load Vault
-  g_vault.setSource( build_pathname("%s", get_localinfo("amxx_vault", "addons/amxmodx/configs/vault.ini"))	);
+  g_vault.setSource( build_pathname_r(file, sizeof(file)-1, "%s", get_localinfo("amxx_vault", "addons/amxmodx/configs/vault.ini"))	);
   g_vault.loadVault( );
   if (strlen(g_vault.get("server_language")) < 1)
   {
@@ -400,8 +401,9 @@ void C_ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax )
   executeForwards(FF_PluginCfg);
 
   //  ###### Save lang
-  g_langMngr.Save(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
-  g_langMngr.SaveCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
+  char file[256];
+  g_langMngr.Save(build_pathname_r(file, sizeof(file)-1, "%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
+  g_langMngr.SaveCache(build_pathname_r(file, sizeof(file)-1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
 
 // Correct time in Counter-Strike	and	other mods (except DOD)
   if ( !g_bmod_dod)	 g_game_timeleft = 0;
@@ -458,8 +460,9 @@ void C_ServerDeactivate_Post() {
   g_vault.clear();
   g_xvars.clear();
   g_plugins.clear();
-  g_langMngr.Save(build_pathname("%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
-  g_langMngr.SaveCache(build_pathname("%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
+  char file[256];
+  g_langMngr.Save(build_pathname_r(file, sizeof(file)-1, "%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
+  g_langMngr.SaveCache(build_pathname_r(file, sizeof(file)-1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
   g_langMngr.Clear();
   //clear module name cache
   while (!CurModuleList.empty())

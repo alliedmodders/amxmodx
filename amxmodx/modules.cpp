@@ -72,11 +72,11 @@ void report_error( int code, char* fmt, ... )
 void print_srvconsole( char *fmt, ... )
 {
 	va_list argptr;
-	char string[256];
-	va_start (argptr, fmt);
-	vsnprintf (string, 255, fmt,argptr);
-	string[255] = 0;
-	va_end (argptr);
+	static char string[384];
+	va_start(argptr, fmt);
+	vsnprintf(string, sizeof(string)-1, fmt, argptr);
+	string[sizeof(string)-1] = '\0';
+	va_end(argptr);
 	SERVER_PRINT(string);
 }
 
@@ -420,6 +420,38 @@ char* build_pathname(char *fmt, ... )
 	}
 
 	return string;
+}
+
+char *build_pathname_r(char *buffer, size_t maxlen, char *fmt, ...)
+{
+	snprintf(buffer, maxlen, 
+#ifdef __linux__
+		"%s/",
+#else
+		"%s\\",
+#endif
+		g_mod_name.c_str()
+		);
+
+	size_t len = strlen(buffer);
+	char *ptr = buffer + len;
+
+	va_list argptr;
+	va_start(argptr, fmt);
+	vsnprintf (ptr, maxlen-len, fmt, argptr);
+	va_end (argptr);
+
+	while (*ptr) 
+	{
+#ifndef __linux__
+		if (*ptr == '/') *ptr = '\\';
+#else
+		if (*ptr == '\\') *ptr = '/';
+#endif
+		++ptr;
+	}
+
+	return buffer;
 }
 
 
@@ -1347,6 +1379,7 @@ void Module_CacheFunctions()
 	func_s *pFunc;
 
 	REGISTER_FUNC("BuildPathname", build_pathname)
+	REGISTER_FUNC("BuildPathnameR", build_pathname_r)
 	REGISTER_FUNC("PrintSrvConsole", print_srvconsole)
 	REGISTER_FUNC("GetModname", MNF_GetModname)
 	REGISTER_FUNC("Log", MNF_Log)

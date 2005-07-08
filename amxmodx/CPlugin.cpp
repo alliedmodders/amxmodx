@@ -51,7 +51,8 @@ void CPluginMngr::unloadPlugin( CPlugin** a ) {
 
 int  CPluginMngr::loadPluginsFromFile( const char* filename )
 {
-	FILE *fp = fopen(build_pathname("%s",filename) , "rt");
+	char file[256];
+	FILE *fp = fopen(build_pathname_r(file, sizeof(file)-1, "%s",filename) , "rt");
 
 	if ( !fp ) 
 	{
@@ -157,7 +158,8 @@ CPluginMngr::CPlugin::CPlugin(int i, const char* p,const char* n, char* e, int d
 	title.assign(unk);
 	author.assign(unk);
 	version.assign(unk);
-	char* path = build_pathname("%s/%s",p,n);
+	char file[256];
+	char* path = build_pathname_r(file, sizeof(file)-1, "%s/%s",p,n);
 	code = 0;
 	int err = load_amxscript(&amx,&code,path,e, d);
 	if ( err == AMX_ERR_NONE )

@@ -1323,13 +1323,19 @@ static cell AMX_NATIVE_CALL log_to_file(AMX *amx, cell *params) /* 1 param */
   int ilen;
   char* szFile = get_amxstring(amx,params[1],0,ilen);
   FILE*fp;
-  const char* filename = build_pathname("%s/%s",g_log_dir.c_str(),szFile);
+  char file[256];
+  if (strchr(szFile, '/') || strchr(szFile, '\\'))
+  {
+	  build_pathname_r(file, sizeof(file)-1, "%s", szFile);
+  } else {
+	  build_pathname_r(file, sizeof(file)-1, "%s/%s", g_log_dir.c_str(), szFile);
+  }
   bool first_time = true;
-  if ((fp=fopen(filename,"r"))!=NULL){
+  if ((fp=fopen(file,"r"))!=NULL){
     first_time = false;
     fclose(fp);
   }
-  if ((fp=fopen(filename,"a")) == NULL){
+  if ((fp=fopen(file,"a")) == NULL){
     //amx_RaiseError(amx,AMX_ERR_NATIVE);
   //would cause too much troubles in old plugins
     return 0;
@@ -1343,13 +1349,10 @@ static cell AMX_NATIVE_CALL log_to_file(AMX *amx, cell *params) /* 1 param */
   message[len++]='\n';
   message[len]=0;
   if ( first_time ){
-    char game_dir[512];
-    GET_GAME_DIR(game_dir);
-    filename = build_pathname("%s/%s",g_log_dir.c_str(),szFile);
     fprintf(fp,"L %s: Log file started (file \"%s\") (game \"%s\") (amx \"%s\")\n",
-      date,filename,g_mod_name.c_str(),Plugin_info.version);
+      date,file,g_mod_name.c_str(),Plugin_info.version);
     print_srvconsole("L %s: Log file started (file \"%s\") (game \"%s\") (amx \"%s\")\n",
-      date,filename,g_mod_name.c_str(),Plugin_info.version);
+      date,file,g_mod_name.c_str(),Plugin_info.version);
   }
   fprintf(fp,"L %s: %s",date,message);
   print_srvconsole("L %s: %s",date,message);
@@ -2495,8 +2498,8 @@ static cell AMX_NATIVE_CALL get_func_id(AMX *amx, cell *params)
 	int len;
 	const char *funcName = get_amxstring(amx, params[1], 0, len);
 	
-	int index;
-	if (amx_FindPublic(plugin->getAMX(), funcName, &index) != AMX_ERR_NONE)
+	int index, err;
+	if ( (err = amx_FindPublic(plugin->getAMX(), funcName, &index)) != AMX_ERR_NONE)
 		index = -1;
 
 	return index;
@@ -2728,7 +2731,8 @@ static cell AMX_NATIVE_CALL get_lang(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL register_dictionary(AMX *amx, cell *params)
 {
 	int len;
-	int result = g_langMngr.MergeDefinitionFile(build_pathname("%s/lang/%s",
+	static char file[256];
+	int result = g_langMngr.MergeDefinitionFile(build_pathname_r(file, sizeof(file)-1, "%s/lang/%s",
 		get_localinfo("amxx_datadir", "addons/amxmodx/data"), get_amxstring(amx, params[1], 1, len)));
 	return result;
 }

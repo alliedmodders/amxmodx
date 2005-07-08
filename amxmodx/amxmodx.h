@@ -245,6 +245,7 @@ void modules_callPluginsLoaded();
 int add_amxnatives(module_info_s* info,AMX_NATIVE_INFO*natives);
 cell* get_amxaddr(AMX *amx,cell amx_addr);
 char* build_pathname(char *fmt, ... );
+char* build_pathname_r(char *buffer, size_t maxlen, char *fmt, ...);
 char* format_amxstring(AMX *amx, cell *params, int parm,int& len);
 AMX* get_amxscript(int, void**,const char**);
 const char* get_amxscriptname(AMX* amx);

@@ -199,6 +199,8 @@ static cell AMX_NATIVE_CALL ns_get_weap_reserve(AMX *amx, cell *params)
 		return get_private(player->edict,OFFSET_WIN_AMMO_PISTOL,OFFSET_LIN_AMMO_PISTOL);
 	case WEAPON_LMG:
 		return get_private(player->edict,OFFSET_WIN_AMMO_LMG,OFFSET_LIN_AMMO_LMG);
+	case WEAPON_SHOTGUN:
+		return get_private(player->edict,OFFSET_WIN_AMMO_SHOTGUN,OFFSET_LIN_AMMO_SHOTGUN);
 	case WEAPON_HMG:
 		return get_private(player->edict,OFFSET_WIN_AMMO_HMG,OFFSET_LIN_AMMO_HMG);
 	case WEAPON_GRENADE_GUN:

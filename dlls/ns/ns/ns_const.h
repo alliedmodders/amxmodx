@@ -4,7 +4,7 @@
 
 // Offsets (used in NPData.cpp)
 
-#define		OFFSET_WIN_RESOURCES		1604
+#define		OFFSET_WIN_RESOURCES		1808
 #define		OFFSET_LIN_RESOURCES		1624
 
 #define		OFFSET_WIN_WEAPDMG			404
@@ -22,10 +22,10 @@
 #define		OFFSET_WIN_SCORE			6636
 #define		OFFSET_LIN_SCORE			6308
 
-#define		OFFSET_WIN_EXP				6368
+#define		OFFSET_WIN_EXP				6572
 #define		OFFSET_LIN_EXP				6256
 
-#define		OFFSET_WIN_POINTS			1808
+#define		OFFSET_WIN_POINTS			6580
 #define		OFFSET_LIN_POINTS			6264
 
 #define		OFFSET_WIN_AMMO_LMG			1116

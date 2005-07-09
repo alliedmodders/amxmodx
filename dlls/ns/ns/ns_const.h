@@ -2,55 +2,66 @@
 #ifndef NS_CONST_H
 #define NS_CONST_H
 
+
+
 // Offsets (used in NPData.cpp)
 
-#define		OFFSET_WIN_RESOURCES		1808
-#define		OFFSET_LIN_RESOURCES		1624
+#define		OFFSET_WIN_RESOURCES		1808	//1604
+#define		OFFSET_LIN_RESOURCES		1828	//1624
 
-#define		OFFSET_WIN_WEAPDMG			404
-#define		OFFSET_LIN_WEAPDMG			216
+#define		OFFSET_WIN_WEAPDMG			404		//200
+#define		OFFSET_LIN_WEAPDMG			420		//216
 
-#define		OFFSET_WIN_WEAPRANGE		196
-#define		OFFSET_LIN_WEAPRANGE		212
+#define		OFFSET_WIN_WEAPRANGE		400		//196
+#define		OFFSET_LIN_WEAPRANGE		416		//212
 
-#define		OFFSET_WIN_WEAPCLIP			364
-#define		OFFSET_LIN_WEAPCLIP			176
+#define		OFFSET_WIN_WEAPCLIP			364		//160
+#define		OFFSET_LIN_WEAPCLIP			380		//176
 
-#define		OFFSET_WIN_HIVE_TRAIT		312
-#define		OFFSET_LIN_HIVE_TRAIT		296
+#define		OFFSET_WIN_HIVE_TRAIT		516		//312
+#define		OFFSET_LIN_HIVE_TRAIT		500		//296
 
-#define		OFFSET_WIN_SCORE			6636
-#define		OFFSET_LIN_SCORE			6308
+#define		OFFSET_WIN_SCORE			6636	//6432
+#define		OFFSET_LIN_SCORE			6510	//6308
 
-#define		OFFSET_WIN_EXP				6572
-#define		OFFSET_LIN_EXP				6256
+#define		OFFSET_WIN_EXP				6572	//6368
+#define		OFFSET_LIN_EXP				6460	//6256
 
-#define		OFFSET_WIN_POINTS			6580
-#define		OFFSET_LIN_POINTS			6264
+#define		OFFSET_WIN_POINTS			6580	//6376
+#define		OFFSET_LIN_POINTS			6468	//6264
 
-#define		OFFSET_WIN_AMMO_LMG			1116
-#define		OFFSET_LIN_AMMO_LMG			932
+#define		OFFSET_WIN_AMMO_LMG			1116	//912
+#define		OFFSET_LIN_AMMO_LMG			1136	//932
 
-#define		OFFSET_WIN_AMMO_PISTOL		1120
-#define		OFFSET_LIN_AMMO_PISTOL		936
+#define		OFFSET_WIN_AMMO_PISTOL		1120	//916
+#define		OFFSET_LIN_AMMO_PISTOL		1140	//936
 
-#define		OFFSET_WIN_AMMO_SHOTGUN		1124
-#define		OFFSET_LIN_AMMO_SHOTGUN		940
+#define		OFFSET_WIN_AMMO_SHOTGUN		1124	//920
+#define		OFFSET_LIN_AMMO_SHOTGUN		1144	//940
 
-#define		OFFSET_WIN_AMMO_HMG			1128
-#define		OFFSET_LIN_AMMO_HMG			944
 
-#define		OFFSET_WIN_AMMO_GL			1132
-#define		OFFSET_LIN_AMMO_GL			948
+#define		OFFSET_WIN_AMMO_HMG			1128	//924
+#define		OFFSET_LIN_AMMO_HMG			1148	//944
 
-#define		OFFSET_WIN_AMMO_HG			1136	// Couldn't find anything at this offset but other weapons haven't changed.
-#define		OFFSET_LIN_AMMO_HG			952		// Offset 880 is the only one to change when you get a grenade, but data in it makes no sense.
 
-#define		OFFSET_WIN_DEATHS			1380
-#define		OFFSET_LIN_DEATHS			1196
+#define		OFFSET_WIN_AMMO_GL			1132	//928
+#define		OFFSET_LIN_AMMO_GL			1152	//948
 
-#define		OFFSET_WIN_STRUCTOWNER		120
-#define		OFFSET_LIN_STRUCTOWNER		136
+#define		OFFSET_WIN_AMMO_HG			1136	//932	// Couldn't find anything at this offset but other weapons haven't changed.
+#define		OFFSET_LIN_AMMO_HG			1156	//952 // Offset 880 is the only one to change when you get a grenade, but data in it makes no sense.
+
+#define		OFFSET_WIN_DEATHS			1380	//1176
+#define		OFFSET_LIN_DEATHS			1400	//1196
+
+#define		OFFSET_WIN_STRUCTOWNER		324		//120
+#define		OFFSET_LIN_STRUCTOWNER		340		//136
+
+
+
+
+
+
+
 
 enum
 {

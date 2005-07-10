@@ -83,7 +83,7 @@ static cell AMX_NATIVE_CALL esf_set_swoopspeed(AMX *amx, cell *params)
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL esf_set_powerlevel(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL esf_set_health(AMX *amx, cell *params)
 {
 	int index = params[1];
 	CHECKPLAYER(index);
@@ -147,7 +147,7 @@ AMX_NATIVE_INFO g_BaseNatives[] = {
  {"esf_set_ki",			esf_set_ki},
  {"esf_get_swoopspeed",	esf_get_swoopspeed},
  {"esf_set_swoopspeed",	esf_set_swoopspeed},
- {"esf_set_powerlevel",	esf_set_powerlevel},
+ {"esf_set_health",		esf_set_health},
  {"esf_set_chargebar",	esf_set_chargebar},
  {NULL,					NULL},
 };

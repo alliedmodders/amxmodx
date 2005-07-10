@@ -61,7 +61,7 @@ static cell AMX_NATIVE_CALL esf_is_prepunch(AMX *amx, cell *params)
 	return 0;
 }
 
-static cell AMX_NATIVE_CALL esf_is_stance(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL esf_in_stance(AMX *amx, cell *params)
 {
 	int index = params[1];
 	CHECKPLAYER(index);
@@ -664,7 +664,7 @@ static cell AMX_NATIVE_CALL esf_is_beamjumping(AMX *amx, cell *params)
 AMX_NATIVE_INFO g_AnimationNatives[] = {
  {"esf_is_swooping",	esf_is_swooping},
  {"esf_is_prepunch",	esf_is_prepunch},
- {"esf_is_stance",		esf_is_stance},
+ {"esf_in_stance",		esf_in_stance},
  {"esf_is_stunned",		esf_is_stunned},
  {"esf_is_grappling",	esf_is_grappling},
  {"esf_is_crushed",		esf_is_crushed},

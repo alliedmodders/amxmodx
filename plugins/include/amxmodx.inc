@@ -516,6 +516,9 @@ native emit_sound(index, channel, sample[], Float:vol, Float:att,flags, pitch);
 /* Returns distance between two vectors. */
 native get_distance(origin1[3],origin2[3]);
 
+/* Floating point version */
+native Float:get_distance_f(Float:origin1[3], Float:origin2[3]);
+
 /* Registers new cvar for HL engine. */
 native register_cvar(const name[],const string[],flags = 0,Float:fvalue = 0.0);
 

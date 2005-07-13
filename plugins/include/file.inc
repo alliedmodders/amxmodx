@@ -69,6 +69,11 @@ native filesize(const filename[],{Float,Sql,Result,_}:...);
 //Delete a file (delete_file macro)
 native unlink(const filename[],{Float,Sql,Result,_}:...);
 
+//Returns a handle to a directory
+native open_dir(dir[], firstfile[], length);
+native next_file(dirh, buffer[], length);
+native close_dir(dirh);
+
 //These are type specific file getting and writing commands:
 //c=char, s=short, l=long, i=int, f=float
 native fgetc(file);		//read char (size 1)

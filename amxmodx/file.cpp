@@ -644,6 +644,47 @@ static cell AMX_NATIVE_CALL amx_build_pathname(AMX *amx, cell *params)
 	return set_amxstring(amx, params[2], build_pathname("%s", szPath), params[3]);
 }
 
+static cell AMX_NATIVE_CALL amx_open_dir(AMX *amx, cell *params)
+{
+	int len;
+	char *path = get_amxstring(amx, params[1], 0, len);
+	char *dirname = build_pathname("%s\\*", path);
+
+#if defined WIN32 || defined _WIN32
+	WIN32_FIND_DATA fd;
+	HANDLE hFile = FindFirstFile(dirname, &fd);
+	if (hFile == INVALID_HANDLE_VALUE)
+		return 0;
+	set_amxstring(amx, params[2], fd.cFileName, params[3]);
+	return (DWORD)hFile;
+#endif
+}
+
+static cell AMX_NATIVE_CALL amx_close_dir(AMX *amx, cell *params)
+{
+#if defined WIN32 || defined _WIN32
+	HANDLE hFile = (HANDLE)((DWORD)params[1]);
+	if (hFile == INVALID_HANDLE_VALUE || hFile == NULL)
+		return 0;
+	FindClose(hFile);
+	return 1;
+#endif
+}
+
+static cell AMX_NATIVE_CALL amx_get_dir(AMX *amx, cell *params)
+{
+#if defined WIN32 || defined _WIN32
+	HANDLE hFile = (HANDLE)((DWORD)params[1]);
+	if (hFile == INVALID_HANDLE_VALUE || hFile == NULL)
+		return 0;
+	WIN32_FIND_DATA fd;
+	if (!FindNextFile(hFile, &fd))
+        return 0;
+	set_amxstring(amx, params[2], fd.cFileName, params[3]);
+	return 1;
+#endif
+}
+
 AMX_NATIVE_INFO file_Natives[] = {
   { "delete_file",    delete_file },
   { "file_exists",    file_exists },
@@ -676,6 +717,9 @@ AMX_NATIVE_INFO file_Natives[] = {
   { "fputf",		amx_fputf },
   { "build_pathname", amx_build_pathname},
   { "dir_exists",	dir_exists },
+  { "open_dir",		amx_open_dir },
+  { "close_dir",	amx_close_dir },
+  { "next_file",	amx_get_dir },
   
   { NULL, NULL }
 };

@@ -930,7 +930,11 @@ void	*m_allocator(const char *sourceFile, const unsigned int sourceLine, const c
 
 			// Danger Will Robinson!
 
-			if (reservoir == NULL) throw "Unable to allocate RAM for internal memory tracking data";
+			if (reservoir == NULL) 
+			{
+				log("%s: Unable to allocate RAM for internal memory tracking data", ownerString(sourceFile, sourceLine, sourceFunc));
+				throw "Unable to allocate RAM for internal memory tracking data";
+			}
 
 			// Build a linked-list of the elements in our reservoir
 
@@ -998,6 +1002,7 @@ void	*m_allocator(const char *sourceFile, const unsigned int sourceLine, const c
 
 		if (au->actualAddress == NULL)
 		{
+			log("%s: Request for allocation failed. Out of memory.", ownerString(sourceFile, sourceLine, sourceFunc));
 			throw "Request for allocation failed. Out of memory.";
 		}
 
@@ -1108,7 +1113,11 @@ void	*m_reallocator(const char *sourceFile, const unsigned int sourceLine, const
 
 		// If you hit this assert, you tried to reallocate RAM that wasn't allocated by this memory manager.
 		m_assert(au != NULL);
-		if (au == NULL) throw "Request to reallocate RAM that was never allocated";
+		if (au == NULL)
+		{
+			log("%s: Request to reallocate RAM that was never allocated", ownerString(sourceFile, sourceLine, sourceFunc));
+			throw "Request to reallocate RAM that was never allocated";
+		}
 
 		// If you hit this assert, then the allocation unit that is about to be reallocated is damaged. But you probably
 		// already know that from a previous assert you should have seen in validateAllocUnit() :)
@@ -1162,7 +1171,11 @@ void	*m_reallocator(const char *sourceFile, const unsigned int sourceLine, const
 		m_assert(newActualAddress);
 		#endif
 
-		if (!newActualAddress) throw "Request for reallocation failed. Out of memory.";
+		if (!newActualAddress)
+		{
+			log("%s: Request for reallocation failed. Out of memory", ownerString(sourceFile, sourceLine, sourceFunc));
+			throw "Request for reallocation failed. Out of memory.";
+		}
 
 		// Remove this allocation from our stats (we'll add the new reallocation again later)
 
@@ -1291,7 +1304,11 @@ void	m_deallocator(const char *sourceFile, const unsigned int sourceLine, const 
 
 		// If you hit this assert, you tried to deallocate RAM that wasn't allocated by this memory manager.
 		m_assert(au != NULL);
-		if (au == NULL) throw "Request to deallocate RAM that was never allocated";
+		if (au == NULL)
+		{
+			log("%s: Request to deallocate RAM that was never allocated", ownerString(sourceFile, sourceLine, sourceFunc));
+			throw "Request to deallocate RAM that was never allocated";
+		}
 
 		// If you hit this assert, then the allocation unit that is about to be deallocated is damaged. But you probably
 		// already know that from a previous assert you should have seen in validateAllocUnit() :)

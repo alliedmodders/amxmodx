@@ -137,6 +137,7 @@ struct fakecmd_t {
   bool fake;
 };
 
+extern bool g_IsNewMM;
 extern pextension_funcs_t *gpMetaPExtFuncs;
 extern CLog g_log;
 extern CPluginMngr g_plugins;

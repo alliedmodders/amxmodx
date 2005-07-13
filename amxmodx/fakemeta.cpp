@@ -2355,7 +2355,7 @@ void FakeMeta_New_CVarRegister(cvar_t *pCVar)
 int CFakeMeta::CFakeMetaPlugin::Query(mutil_funcs_t *pMetaUtilFuncs)
 {
 	//using metamod p-extensions?
-	if(gpMetaPExtFuncs)
+	if(gpMetaPExtFuncs || g_IsNewMM)
 	{
 		//load plugins in meta_attach
 		m_Status = PL_OPENED;
@@ -2429,18 +2429,33 @@ int CFakeMeta::CFakeMetaPlugin::Attach(PLUG_LOADTIME now, meta_globals_t *pMGlob
 {
 	// evilspy's patch:
 	//using metamod p-extensions?
-	if(gpMetaPExtFuncs) {
-		if(PEXT_LOAD_PLUGIN_BY_NAME(PLID, m_Path.c_str(), now, (void**)&m_Handle) || !m_Handle) {
+	if (gpMetaPExtFuncs)
+	{
+		if(PEXT_LOAD_PLUGIN_BY_NAME(PLID, m_Path.c_str(), now, (void**)&m_Handle) || !m_Handle)
+		{
+			LOG_MESSAGE(PLID, "Can't Attach Module \"%s\".", m_Path.c_str());
 			m_Status = PL_FAILED;
 			return 0;
 		}
 		
 		m_Status = PL_RUNNING;
 		return 1;
+	} else if (g_IsNewMM) {
+		int err = 0;
+		if ( (err = LOAD_PLUGIN(PLID, m_Path.c_str(), now, (void **)&m_Handle)) || !m_Handle)
+		{
+			LOG_MESSAGE(PLID, "Can't Attach Module \"%s\".", m_Path.c_str());
+			m_Status = PL_FAILED;
+			return 0;
+		}
+
+		m_Status = PL_RUNNING;
+		return 1;
 	}
 	
 	if (!m_Handle)
 		return 0;
+
 	META_ATTACH_FN attachFn = (META_ATTACH_FN)DLSYM(m_Handle, "Meta_Attach");
 	if (!attachFn)
 	{
@@ -2450,7 +2465,7 @@ int CFakeMeta::CFakeMetaPlugin::Attach(PLUG_LOADTIME now, meta_globals_t *pMGlob
 	}
 	if (attachFn(now, &m_MetaFuncTable, pMGlobals, pGameDllFuncs) != 1)
 	{
-		AMXXLOG_Log("[AMXX] Can't Attach Module \"%s\" (\"%s\").", m_Info->name, m_Path.c_str());
+		LOG_MESSAGE(PLID, "Can't Attach Module \"%s\".", m_Path.c_str());
 		m_Status = PL_FAILED;
 		return 0;
 	}
@@ -2466,8 +2481,18 @@ int CFakeMeta::CFakeMetaPlugin::Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reaso
 
 	// evilspy's patch:
 	//using metamod p-extensions?
-	if (gpMetaPExtFuncs) {
+	if (gpMetaPExtFuncs)
+	{
 		if(PEXT_UNLOAD_PLUGIN_BY_HANDLE(PLID, (void*)m_Handle, now, reason)) {
+			m_Status = PL_FAILED;
+			return 0;
+		}
+		m_Status = PL_OPENED;
+		m_Handle = NULL;
+		return 1;
+	} else if (g_IsNewMM) {
+		if (UNLOAD_PLUGIN_BY_HANDLE(PLID, (void *)m_Handle, now, reason))
+		{
 			m_Status = PL_FAILED;
 			return 0;
 		}
@@ -2568,7 +2593,7 @@ bool CFakeMeta::AddCorePlugin()
 {
 	// evilspy:
 	// not needed when using metamod p-extensions
-	if(gpMetaPExtFuncs)
+	if(gpMetaPExtFuncs || g_IsNewMM)
 		return true;
 
 	// Check whether there already is a core plugin
@@ -2595,7 +2620,7 @@ void CFakeMeta::Meta_Query(mutil_funcs_t *pMetaUtilFuncs)
 
 	// evilspy:
 	//  using metamod p-extensions?
-	if(!gpMetaPExtFuncs)
+	if(!gpMetaPExtFuncs && !g_IsNewMM)
 		++iter;         // Skip core
 
 	for (; iter; ++iter)
@@ -2613,7 +2638,7 @@ void CFakeMeta::Meta_Attach(PLUG_LOADTIME now, meta_globals_t *pMGlobals, gamedl
 	CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin();
 	// evilspy:
 	//  using metamod p-extensions?
-	if(!gpMetaPExtFuncs)
+	if(!gpMetaPExtFuncs && !g_IsNewMM)
 		++iter;         // Skip core
 
 	for (; iter; ++iter)
@@ -2629,7 +2654,7 @@ void CFakeMeta::Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason)
 	CList<CFakeMetaPlugin>::iterator iter = m_Plugins.begin();
 	// evilspy:
 	//  using metamod p-extensions?
-	if(!gpMetaPExtFuncs)
+	if(!gpMetaPExtFuncs && !g_IsNewMM)
 		++iter;         // Skip core
 
 	for (; iter; ++iter)
@@ -2650,7 +2675,8 @@ int CFakeMeta::GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable /*from metamod*/, int
 
 	// evilspy:
 	//using metamod p-extensions?
-	if(gpMetaPExtFuncs) {
+	if(gpMetaPExtFuncs || g_IsNewMM)
+	{
 		memcpy( pFunctionTable, pAMXXFunctionTable, sizeof( DLL_FUNCTIONS ) );
 		return TRUE;
 	}
@@ -2687,7 +2713,8 @@ int CFakeMeta::GetEntityAPI2_Post(DLL_FUNCTIONS *pFunctionTable /*from metamod*/
 	
 	// evilspy
 	//using metamod p-extensions?
-	if(gpMetaPExtFuncs) {
+	if(gpMetaPExtFuncs || g_IsNewMM)
+	{
 		memcpy( pFunctionTable, pAMXXFunctionTable, sizeof( DLL_FUNCTIONS ) );
 		return TRUE;
 	}
@@ -2724,7 +2751,8 @@ int CFakeMeta::GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inter
 	
 	// evilspy:
 	//using metamod p-extensions?
-	if(gpMetaPExtFuncs) {
+	if(gpMetaPExtFuncs || g_IsNewMM)
+	{
 		memcpy( pengfuncsFromEngine, pAMXXFunctionTable, sizeof( enginefuncs_t ) );
 		return TRUE;
 	}
@@ -2760,7 +2788,8 @@ int CFakeMeta::GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine, int *
 	
 	// evilspy:
 	//using metamod p-extensions?
-	if(gpMetaPExtFuncs) {
+	if(gpMetaPExtFuncs || g_IsNewMM)
+	{
 		memcpy( pengfuncsFromEngine, pAMXXFunctionTable, sizeof( enginefuncs_t ) );
 		return TRUE;
 	}
@@ -2803,7 +2832,8 @@ int CFakeMeta::GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pNewFunctionTable, int *int
 	
 	// evilspy:
 	//using metamod p-extensions?
-	if(gpMetaPExtFuncs) {
+	if(gpMetaPExtFuncs || g_IsNewMM)
+	{
 		memcpy( pNewFunctionTable, pAMXXFunctionTable, sizeof( NEW_DLL_FUNCTIONS ) );
 		return TRUE;
 	}
@@ -2846,7 +2876,8 @@ int CFakeMeta::GetNewDLLFunctions_Post(NEW_DLL_FUNCTIONS *pNewFunctionTable, int
 	
 	// evilspy:
 	//using metamod p-extensions?
-	if(gpMetaPExtFuncs) {
+	if(gpMetaPExtFuncs || g_IsNewMM)
+	{
 		memcpy( pNewFunctionTable, pAMXXFunctionTable, sizeof( NEW_DLL_FUNCTIONS ) );
 		return TRUE;
 	}

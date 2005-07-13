@@ -92,7 +92,6 @@ void CLog::CreateNewFile()
 	int i = 0;
 	while (true)
 	{
-		char file[256];
 		FILE *pTmpFile = fopen(m_LogFile.c_str(), "r");		// open for reading to check whether the file exists
 		if (!pTmpFile)
 			break;

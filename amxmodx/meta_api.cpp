@@ -89,6 +89,7 @@ float g_game_timeleft;
 float g_task_time;
 float g_auth_time;
 bool g_initialized = false;
+bool g_IsNewMM = false;
 
 #ifdef MEMORY_TEST
 float g_next_memreport_time;
@@ -1025,26 +1026,44 @@ void C_AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...)
 	RETURN_META(MRES_IGNORED);
 }
 
-C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_t *pMetaUtilFuncs) {
+C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_t *pMetaUtilFuncs)
+{
   gpMetaUtilFuncs=pMetaUtilFuncs;
   *pPlugInfo=&Plugin_info;
-  if(strcmp(ifvers,	Plugin_info.ifvers)) {
+  if(strcmp(ifvers,	Plugin_info.ifvers))
+  {
 	int	mmajor=0, mminor=0,	pmajor=0, pminor=0;
 	LOG_MESSAGE(PLID, "WARNING:	meta-interface version mismatch; requested=%s ours=%s",	Plugin_info.logtag,	ifvers);
 	sscanf(ifvers, "%d:%d",	&mmajor, &mminor);
 	sscanf(META_INTERFACE_VERSION, "%d:%d",	&pmajor, &pminor);
-	if(pmajor >	mmajor || (pmajor==mmajor && pminor	> mminor)) {
+	if(pmajor >	mmajor)
+	{
 	  LOG_ERROR(PLID, "metamod version is too old for this plugin; update metamod");
 	  return(FALSE);
-	}
-	else if(pmajor < mmajor) {
+	} else if(pmajor < mmajor) {
 	  LOG_ERROR(PLID, "metamod version is incompatible with	this plugin; please	find a newer version of	this plugin");
 	  return(FALSE);
-	}
-	else if(pmajor==mmajor && pminor < mminor)
+	} else if (pmajor==mmajor) {
+		if (mminor == 10)
+		{
+			LOG_MESSAGE(PLID,	"WARNING: metamod version is older than	expected; consider finding a newer version");
+			g_IsNewMM = false;
+			//hack!
+			Plugin_info.ifvers = "5:10";
+		} else if (mminor == 11) {
+			g_IsNewMM = true;
+		} else if (pminor > mminor) {
+			LOG_ERROR(PLID, "metamod version is incompatible with	this plugin; please	find a newer version of	this plugin");
+			return FALSE;
+		} else if (pminor < mminor) {
+			LOG_MESSAGE(PLID,	"WARNING: metamod version is newer than	expected; consider finding a newer version of this plugin");
+		}
 	  LOG_MESSAGE(PLID,	"WARNING: metamod version is newer than	expected; consider finding a newer version of this plugin");
-	else
+	} else {
 	  LOG_ERROR(PLID, "unexpected version comparison; metavers=%s, mmajor=%d, mminor=%d; plugvers=%s, pmajor=%d, pminor=%d", ifvers, mmajor, mminor, META_INTERFACE_VERSION, pmajor, pminor);
+	}
+  } else {
+	  g_IsNewMM = true;
   }
 
   // We can set this to null here because Meta_PExtGiveFnptrs is called after this
@@ -1056,8 +1075,10 @@ C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_
 
 // evilspy's patch for mm-p ext support
 // this is called right after Meta_Query
-C_DLLEXPORT int Meta_PExtGiveFnptrs(int interfaceVersion, pextension_funcs_t *pMetaPExtFuncs) {
-	if(interfaceVersion<META_PEXT_VERSION) {
+C_DLLEXPORT int Meta_PExtGiveFnptrs(int interfaceVersion, pextension_funcs_t *pMetaPExtFuncs)
+{
+	if(interfaceVersion<META_PEXT_VERSION)
+	{
 		return(META_PEXT_VERSION);
 	}
 	gpMetaPExtFuncs = pMetaPExtFuncs;
@@ -1065,11 +1086,14 @@ C_DLLEXPORT int Meta_PExtGiveFnptrs(int interfaceVersion, pextension_funcs_t *pM
 }
 
 static META_FUNCTIONS gMetaFunctionTable;
-C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, meta_globals_t *pMGlobals, gamedll_funcs_t *pGamedllFuncs) {
-  if(now > Plugin_info.loadable) {
+C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, meta_globals_t *pMGlobals, gamedll_funcs_t *pGamedllFuncs)
+{
+  if(now > Plugin_info.loadable)
+  {
 	LOG_ERROR(PLID,	"Can't load	plugin right now");
 	return(FALSE);
   }
+  LOG_MESSAGE(PLID, "gpMetaPExtFuncs=%p, g_IsNewMM=%d", gpMetaPExtFuncs, g_IsNewMM);
   gpMetaGlobals=pMGlobals;
   gMetaFunctionTable.pfnGetEntityAPI2 =	GetEntityAPI2;
   gMetaFunctionTable.pfnGetEntityAPI2_Post = GetEntityAPI2_Post;

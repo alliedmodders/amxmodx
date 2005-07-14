@@ -2895,11 +2895,12 @@ static cell AMX_NATIVE_CALL amx_mkdir(AMX *amx, cell *params)
 {
 	int len = 0;
 	char *path = get_amxstring(amx, params[1], 0, len);
+	char *realpath = build_pathname("%s", path);
 
 #ifdef __linux__
-	return mkdir(path, 0700);
+	return mkdir(realpath, 0700);
 #else
-	return mkdir(path);
+	return mkdir(realpath);
 #endif
 }
 

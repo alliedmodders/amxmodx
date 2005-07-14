@@ -41,7 +41,7 @@ public:
 };
 
 extern AMX_NATIVE_INFO msg_Natives[];
-extern CVector<argMsg*> Msg;
+extern CVector<argMsg> Msg;
 extern CVector<int> msgHooks[256];
 extern int msgBlocks[256];
 

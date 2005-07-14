@@ -18,14 +18,14 @@ void ClearHooks()
 		msgHooks[i].clear();
 		msgBlocks[i] = 0;
 	}
-	for (i=0; i<Msg.size(); i++)
-		delete Msg[i];
+
 	for (i=0; i<Touches.size(); i++)
 		delete Touches[i];
 	for (i=0; i<Impulses.size(); i++)
 		delete Impulses[i];
 	for (i=0; i<Thinks.size(); i++)
 		delete Thinks[i];
+
 	Msg.clear();
 	Touches.clear();
 	Impulses.clear();

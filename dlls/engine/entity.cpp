@@ -151,12 +151,10 @@ static cell AMX_NATIVE_CALL DispatchKeyValue(AMX *amx, cell *params)
 		int iLength;
 		char *char1 = MF_GetAmxString(amx, params[1], 0, &iLength);
 		char *char2 = MF_GetAmxString(amx, params[2], 1, &iLength);
-		char *charA = new char[strlen(char1)+1];
-		char *charB = new char[strlen(char2)+1];
-		strcpy(charA, char1);
-		strcpy(charB, char2);
-		g_pkvd->szKeyName = charA;
-		g_pkvd->szValue = charB;
+		const char *charA = STRING(ALLOC_STRING(char1));
+		const char *charB = STRING(ALLOC_STRING(char2));
+		g_pkvd->szKeyName = const_cast<char *>(charA);
+		g_pkvd->szValue = const_cast<char *>(charB);
 	}
 	return 1;
 }
@@ -1259,10 +1257,7 @@ static cell AMX_NATIVE_CALL entity_set_model(AMX *amx, cell *params)
 	edict_t *pEnt = INDEXENT2(iEnt);
 	int iLen;
 	char *szModel = MF_GetAmxString(amx, params[2], 0, &iLen);
-	char *szStatic = new char[iLen+1];
-
-	memset(szStatic, 0, iLen+1);
-	strcpy(szStatic, szModel);
+	const char *szStatic = STRING(ALLOC_STRING(szModel));
 
 	SET_MODEL(pEnt, szStatic);
 
@@ -1495,7 +1490,7 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native
 static cell AMX_NATIVE_CALL get_grenade_id(AMX *amx, cell *params)  /* 4 param */ 
 {
 	int index = params[1];
-	char* szModel;
+	const char *szModel;
 
 	CHECK_ENTITY(index);
 
@@ -1506,10 +1501,8 @@ static cell AMX_NATIVE_CALL get_grenade_id(AMX *amx, cell *params)  /* 4 param *
 	while (!FNullEnt(pentFind)) {
 		if (pentFind->v.owner == pentOwner) {
 			if (params[3]>0) {
-				szModel = new char[params[3]];
 				szModel = (char*)STRING(pentFind->v.model);
 				MF_SetAmxString(amx, params[2], szModel, params[3]);
-				delete [] szModel;
 				return ENTINDEX(pentFind);
 			}
 		}

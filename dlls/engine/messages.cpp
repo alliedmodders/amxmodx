@@ -1,6 +1,6 @@
 #include "engine.h"
 
-CVector<argMsg*> Msg;
+CVector<argMsg> Msg;
 CVector<int> msgHooks[256];
 int msgBlocks[256] = {0};
 int msgDest;
@@ -114,13 +114,13 @@ void WriteByte(int iValue)
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (inhook) {
 		if (++msgCount > Msg.size()) {
-			argMsg *p = new argMsg();
-			p->iData = iValue;
-			p->type = arg_byte;
+			argMsg p;
+			p.iData = iValue;
+			p.type = arg_byte;
 			Msg.push_back(p);
 		} else {
-			Msg[msgCount-1]->iData = iValue;
-			Msg[msgCount-1]->type = arg_byte;
+			Msg[msgCount-1].iData = iValue;
+			Msg[msgCount-1].type = arg_byte;
 		}
 		RETURN_META(MRES_SUPERCEDE);
 	}
@@ -134,13 +134,13 @@ void WriteChar(int iValue)
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (inhook) {
 		if (++msgCount > Msg.size()) {
-			argMsg *p = new argMsg();
-			p->iData = iValue;
-			p->type = arg_char;
+			argMsg p;
+			p.iData = iValue;
+			p.type = arg_char;
 			Msg.push_back(p);
 		} else {
-			Msg[msgCount-1]->iData = iValue;
-			Msg[msgCount-1]->type = arg_char;
+			Msg[msgCount-1].iData = iValue;
+			Msg[msgCount-1].type = arg_char;
 		}
 		RETURN_META(MRES_SUPERCEDE);
 	}
@@ -154,13 +154,13 @@ void WriteShort(int iValue)
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (inhook) {
 		if (++msgCount > Msg.size()) {
-			argMsg *p = new argMsg();
-			p->iData = iValue;
-			p->type = arg_short;
+			argMsg p;
+			p.iData = iValue;
+			p.type = arg_short;
 			Msg.push_back(p);
 		} else {
-			Msg[msgCount-1]->iData = iValue;
-			Msg[msgCount-1]->type = arg_short;
+			Msg[msgCount-1].iData = iValue;
+			Msg[msgCount-1].type = arg_short;
 		}
 		RETURN_META(MRES_SUPERCEDE);
 	}
@@ -174,13 +174,13 @@ void WriteLong(int iValue)
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (inhook) {
 		if (++msgCount > Msg.size()) {
-			argMsg *p = new argMsg();
-			p->iData = iValue;
-			p->type = arg_long;
+			argMsg p;
+			p.iData = iValue;
+			p.type = arg_long;
 			Msg.push_back(p);
 		} else {
-			Msg[msgCount-1]->iData = iValue;
-			Msg[msgCount-1]->type = arg_long;
+			Msg[msgCount-1].iData = iValue;
+			Msg[msgCount-1].type = arg_long;
 		}
 		RETURN_META(MRES_SUPERCEDE);
 	}
@@ -194,13 +194,13 @@ void WriteAngle(float flValue)
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (inhook) {
 		if (++msgCount > Msg.size()) {
-			argMsg *p = new argMsg();
-			p->fData = flValue;
-			p->type = arg_angle;
+			argMsg p;
+			p.fData = flValue;
+			p.type = arg_angle;
 			Msg.push_back(p);
 		} else {
-			Msg[msgCount-1]->fData = flValue;
-			Msg[msgCount-1]->type = arg_angle;
+			Msg[msgCount-1].fData = flValue;
+			Msg[msgCount-1].type = arg_angle;
 		}
 		RETURN_META(MRES_SUPERCEDE);
 	}
@@ -214,13 +214,13 @@ void WriteCoord(float flValue)
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (inhook) {
 		if (++msgCount > Msg.size()) {
-			argMsg *p = new argMsg();
-			p->fData = flValue;
-			p->type = arg_coord;
+			argMsg p;
+			p.fData = flValue;
+			p.type = arg_coord;
 			Msg.push_back(p);
 		} else {
-			Msg[msgCount-1]->fData = flValue;
-			Msg[msgCount-1]->type = arg_coord;
+			Msg[msgCount-1].fData = flValue;
+			Msg[msgCount-1].type = arg_coord;
 		}
 		RETURN_META(MRES_SUPERCEDE);
 	}
@@ -234,13 +234,13 @@ void WriteString(const char *sz)
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (inhook) {
 		if (++msgCount > Msg.size()) {
-			argMsg *p = new argMsg();
-			p->cData.assign(sz);
-			p->type = arg_string;
+			argMsg p;
+			p.cData.assign(sz);
+			p.type = arg_string;
 			Msg.push_back(p);
 		} else {
-			Msg[msgCount-1]->cData.assign(sz);
-			Msg[msgCount-1]->type = arg_string;
+			Msg[msgCount-1].cData.assign(sz);
+			Msg[msgCount-1].type = arg_string;
 		}
 		RETURN_META(MRES_SUPERCEDE);
 	}
@@ -254,13 +254,13 @@ void WriteEntity(int iValue)
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (inhook) {
 		if (++msgCount > Msg.size()) {
-			argMsg *p = new argMsg();
-			p->iData = iValue;
-			p->type = arg_entity;
+			argMsg p;
+			p.iData = iValue;
+			p.type = arg_entity;
 			Msg.push_back(p);
 		} else {
-			Msg[msgCount-1]->iData = iValue;
-			Msg[msgCount-1]->type = arg_entity;
+			Msg[msgCount-1].iData = iValue;
+			Msg[msgCount-1].type = arg_entity;
 		}
 		RETURN_META(MRES_SUPERCEDE);
 	}
@@ -292,8 +292,8 @@ void MessageEnd(void)
 		}
 		MESSAGE_BEGIN(msgDest, msgType, msgOrigin, msgpEntity);
 		for (i=0; i<msgCount; i++) {
-			Msg[i]->Send();
-			Msg[i]->Reset();
+			Msg[i].Send();
+			Msg[i].Reset();
 		}
 		MESSAGE_END();
 		msgCount = 0;
@@ -361,7 +361,7 @@ static cell AMX_NATIVE_CALL get_msg_argtype(AMX *amx, cell *params)
 		return 0;
 	}
 
-	return Msg[argn]->type;
+	return Msg[argn].type;
 }
 
 static cell AMX_NATIVE_CALL get_msg_arg_int(AMX *amx, cell *params)
@@ -373,7 +373,7 @@ static cell AMX_NATIVE_CALL get_msg_arg_int(AMX *amx, cell *params)
 		return 0;
 	}
 
-	int iVal = Msg[argn]->iData;
+	int iVal = Msg[argn].iData;
 
 	return iVal;
 }
@@ -387,8 +387,8 @@ static cell AMX_NATIVE_CALL set_msg_arg_int(AMX *amx, cell *params)
 		return 0;
 	}
 
-	Msg[argn]->type = params[2];
-	Msg[argn]->iData = params[3];
+	Msg[argn].type = params[2];
+	Msg[argn].iData = params[3];
 
 	return 1;
 }
@@ -402,7 +402,7 @@ static cell AMX_NATIVE_CALL get_msg_arg_float(AMX *amx, cell *params)
 		return 0;
 	}
 
-	return amx_ftoc(Msg[argn]->fData);
+	return amx_ftoc(Msg[argn].fData);
 }
 
 static cell AMX_NATIVE_CALL set_msg_arg_float(AMX *amx, cell *params)
@@ -416,7 +416,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_float(AMX *amx, cell *params)
 
 	REAL fVal = amx_ctof(params[2]);
 
-	Msg[argn]->fData = fVal;
+	Msg[argn].fData = fVal;
 
 	return 1;
 }
@@ -430,7 +430,7 @@ static cell AMX_NATIVE_CALL get_msg_arg_string(AMX *amx, cell *params)
 		return 0;
 	}
 
-	const char *szVal = Msg[argn]->cData.c_str();
+	const char *szVal = Msg[argn].cData.c_str();
 
 	return MF_SetAmxString(amx, params[2], szVal?szVal:"", params[3]);
 }
@@ -447,7 +447,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_string(AMX *amx, cell *params)
 
 	char *szVal = MF_GetAmxString(amx, params[2], 0, &iLen);
 
-	Msg[argn]->cData.assign(szVal);
+	Msg[argn].cData.assign(szVal);
 
 	return 1;
 }

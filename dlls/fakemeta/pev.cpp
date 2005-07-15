@@ -4,22 +4,6 @@
 static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 {
 	int index=params[1];
-#ifdef DONT_TOUCH_THIS_AGAIN_BAIL
-	if (index >= 1 && index <= gpGlobals->maxClients)
-	{
-		if (!MF_IsPlayerIngame(index))
-		{
-			MF_LogError(amx, AMX_ERR_NATIVE, "Player %d is not in game", index);
-			return 0;
-		}
-	} else {
-		if (index > gpGlobals->maxEntities || index < 1)
-		{
-			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", index);
-			return 0;
-		}
-	}
-#endif
 	CHECK_ENTITY(index);
 	edict_t *pPlayer = INDEXENT2(index);
 	int		returntype = *params/sizeof(cell);
@@ -629,7 +613,9 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 	if (iSwitch > pev_int_start && iSwitch < pev_int_end)
 	{
 		// Grrr...
-		int iValue = blah[0];
+		int len;
+		char *string = MF_GetAmxString(amx, params[3], 0, &len);
+		int iValue = ALLOC_STRING(string);
 		switch(iSwitch)
 		{
 			case fixangle:

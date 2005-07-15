@@ -267,4 +267,10 @@ forward pfn_spawn(entid);
  */
 native find_sphere_class(aroundent, _lookforclassname[], Float:radius, entlist[], maxents, Float:origin[3] = {0.0, 0.0, 0.0});
 
+//SDK function - checks if an origin is in an entity's view cone
+native is_in_viewcone(entity, Float:origin[3]);
+
+//SDK function - checks if an origin is visible to an entity
+native is_visible(entity, Float:origin[3]);
+
 #include <engine_stocks>

@@ -833,6 +833,66 @@ static cell AMX_NATIVE_CALL set_usercmd(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL is_visible(AMX *amx, cell *params)
+{
+	int src = params[1];
+	CHECK_ENTITY(src);
+
+	edict_t *pEntity = INDEXENT(src);
+
+	TraceResult tr;
+	Vector vecLookerOrigin;
+	cell *addr = MF_GetAmxAddr(amx, params[2]);
+
+	Vector vecOrigin(amx_ctof(addr[0]), amx_ctof(addr[1]), amx_ctof(addr[2]));
+    	
+	vecLookerOrigin = pEntity->v.origin + pEntity->v.view_ofs;
+
+	TRACE_LINE(vecLookerOrigin, vecOrigin, ignore_monsters, pEntity, &tr);
+
+	if (tr.flFraction != 1.0)
+	{
+		return 0;
+	} else {
+		return 1;
+	}
+}
+
+//taken from dlls\combat.cpp
+static cell AMX_NATIVE_CALL in_view_cone(AMX *amx, cell *params)
+{
+	int src = params[1];
+	
+	CHECK_ENTITY(src);
+
+	Vector2D vec2LOS;
+	float flDot;
+
+	edict_t *pEdictSrc = INDEXENT(src);
+	cell *addr = MF_GetAmxAddr(amx, params[2]);
+	float vecOrigin[3];
+
+	vecOrigin[0] = amx_ctof(addr[0]);
+	vecOrigin[1] = amx_ctof(addr[1]);
+	vecOrigin[2] = amx_ctof(addr[2]);
+
+	Vector origin(vecOrigin[0], vecOrigin[1], vecOrigin[2]);
+
+	MAKE_VECTORS(pEdictSrc->v.angles);
+
+	vec2LOS = (pEdictSrc->v.origin - origin).Make2D();
+	vec2LOS = vec2LOS.Normalize();
+
+	flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
+
+	if (flDot > pEdictSrc->v.fov)
+	{
+		return 1;
+	} else{
+		return 0;
+	}
+}
+
 static cell AMX_NATIVE_CALL traceresult(AMX *amx, cell *params)
 {
 	int type = params[1];
@@ -938,6 +998,8 @@ AMX_NATIVE_INFO engine_Natives[] = {
 	{"register_touch",		register_touch},
 
 	{"get_string",			get_string},
+	{"in_view_cone",		in_view_cone},
+	{"is_visible",			is_visible},
 
 	{NULL,					NULL},
 	 ///////////////////

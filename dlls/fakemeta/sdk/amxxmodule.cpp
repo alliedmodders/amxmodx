@@ -2421,9 +2421,6 @@ C_DLLEXPORT void __stdcall GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, 
 
 /************* AMXX Stuff *************/
 
-// *** Types ***
-typedef void* (*PFN_REQ_FNPTR)(const char * /*name*/);
-
 // *** Globals ***
 // Module info
 static amxx_module_info_s g_ModuleInfo = 
@@ -2432,15 +2429,17 @@ static amxx_module_info_s g_ModuleInfo =
 	MODULE_AUTHOR,
 	MODULE_VERSION,
 #ifdef MODULE_RELOAD_ON_MAPCHANGE
-	1
+	1,
 #else // MODULE_RELOAD_ON_MAPCHANGE
-	0
+	0,
 #endif // MODULE_RELOAD_ON_MAPCHANGE
+	MODULE_LOGTAG
 };
 
 // Storage for the requested functions
 PFN_ADD_NATIVES				g_fn_AddNatives;
 PFN_BUILD_PATHNAME			g_fn_BuildPathname;
+PFN_BUILD_PATHNAME_R		g_fn_BuildPathnameR;
 PFN_GET_AMXADDR				g_fn_GetAmxAddr;
 PFN_PRINT_SRVCONSOLE		g_fn_PrintSrvConsole;
 PFN_GET_MODNAME				g_fn_GetModname;
@@ -2501,6 +2500,8 @@ PFN_AMX_FINDNATIVE			g_fn_AmxFindNative;
 PFN_GETPLAYERFLAGS			g_fn_GetPlayerFlags;
 PFN_GET_PLAYER_EDICT		g_fn_GetPlayerEdict;
 PFN_FORMAT					g_fn_Format;
+PFN_REGISTERFUNCTION		g_fn_RegisterFunction;
+PFN_REQ_FNPTR				g_fn_RequestFunction;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2538,15 +2539,19 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	if (!reqFnptrFunc)
 		return AMXX_PARAM;
 
+	g_fn_RequestFunction = reqFnptrFunc;
+
 	// Req all known functions
 	// Misc
 	REQFUNC("BuildPathname", g_fn_BuildPathname, PFN_BUILD_PATHNAME);
+	REQFUNC("BuildPathnameR", g_fn_BuildPathnameR, PFN_BUILD_PATHNAME_R);
 	REQFUNC("PrintSrvConsole", g_fn_PrintSrvConsole, PFN_PRINT_SRVCONSOLE);
 	REQFUNC("GetModname", g_fn_GetModname, PFN_GET_MODNAME);
 	REQFUNC("Log", g_fn_Log, PFN_LOG);
 	REQFUNC("LogError", g_fn_LogErrorFunc, PFN_LOG_ERROR);
 	REQFUNC("MergeDefinitionFile", g_fn_MergeDefinition_File, PFN_MERGEDEFINITION_FILE);
 	REQFUNC("Format", g_fn_Format, PFN_FORMAT);
+	REQFUNC("RegisterFunction", g_fn_RegisterFunction, PFN_REGISTERFUNCTION);
 
 	// Amx scripts
 	REQFUNC("GetAmxScript", g_fn_GetAmxScript, PFN_GET_AMXSCRIPT);
@@ -2670,6 +2675,7 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...)
 void ValidateMacros_DontCallThis_Smiley()
 {
 	MF_BuildPathname("str", "str", 0);
+	MF_BuildPathnameR(NULL, 0, "%d", 0);
 	MF_FormatAmxString(NULL, 0, 0, NULL);
 	MF_GetAmxAddr(NULL, 0);
 	MF_PrintSrvConsole("str", "str", 0);
@@ -2723,6 +2729,7 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_GetPlayerFrags(0);
 	MF_GetPlayerEdict(0);
 	MF_Format("", 4, "str");
+	MF_RegisterFunction(NULL, "");
 }
 #endif
 
@@ -2757,8 +2764,8 @@ const char *Mem_MakeSourceFile(const char *sourceFile)
 	{
 		// init
 		buffer[0] = '[';
-		strcpy(buffer + 1, MODULE_LOGTAG);
-		pos = strlen(MODULE_LOGTAG) + 1;
+		strcpy(buffer + 1, MODULE_NAME);
+		pos = strlen(MODULE_NAME) + 1;
 		buffer[pos++] = ']';
 	}
 

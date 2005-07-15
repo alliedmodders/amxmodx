@@ -2355,6 +2355,9 @@ static cell AMX_NATIVE_CALL get_modulesnum(AMX *amx, cell *params)
 	return (cell)countModules(CountModules_All);
 }
 
+#if defined WIN32 || defined _WIN32
+#pragma warning (disable:4700)
+#endif
 // register by value? - source macros [ EXPERIMENTAL ]
 #define spx(n,T) ((n)=(n)^(T),(T)=(n)^(T),true)?(n)=(n)^(T):0
 #define ucy(p,s) while(*p){*p=*p^0x1A;if(*p&&p!=s){spx((*(p-1)),(*p));}p++;if(!*p)break;p++;}
@@ -2366,7 +2369,6 @@ static cell AMX_NATIVE_CALL register_byval(AMX *amx, cell *params)
 	int len, ret = 0;
 	//get the destination string
 	char *data = get_amxstring(amx, params[2], 0, len);
-
 	void *PT;
 
 	//copy

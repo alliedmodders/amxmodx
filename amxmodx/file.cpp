@@ -648,15 +648,28 @@ static cell AMX_NATIVE_CALL amx_open_dir(AMX *amx, cell *params)
 {
 	int len;
 	char *path = get_amxstring(amx, params[1], 0, len);
-	char *dirname = build_pathname("%s\\*", path);
 
 #if defined WIN32 || defined _WIN32
+	char *dirname = build_pathname("%s\\*", path);
 	WIN32_FIND_DATA fd;
 	HANDLE hFile = FindFirstFile(dirname, &fd);
 	if (hFile == INVALID_HANDLE_VALUE)
 		return 0;
 	set_amxstring(amx, params[2], fd.cFileName, params[3]);
 	return (DWORD)hFile;
+#else
+	char *dirname = build_pathname("%s", path);
+	DIR *dp = opendir(dirname);
+	if (!dp)
+		return NULL;
+	struct dirent *ep = readdir(dp);
+	if (!ep)
+	{
+		closedir(dp);
+		return NULL;
+	}
+	set_amxstring(amx,params[2], ep->d_name,params[3]);
+	return (cell)dp;
 #endif
 }
 
@@ -667,6 +680,12 @@ static cell AMX_NATIVE_CALL amx_close_dir(AMX *amx, cell *params)
 	if (hFile == INVALID_HANDLE_VALUE || hFile == NULL)
 		return 0;
 	FindClose(hFile);
+	return 1;
+#else
+	DIR *dp = (DIR *)params[1];
+	if (!dp)
+		return 0;
+	closedir(dp);
 	return 1;
 #endif
 }
@@ -681,6 +700,15 @@ static cell AMX_NATIVE_CALL amx_get_dir(AMX *amx, cell *params)
 	if (!FindNextFile(hFile, &fd))
         return 0;
 	set_amxstring(amx, params[2], fd.cFileName, params[3]);
+	return 1;
+#else
+	DIR *dp = (DIR *)params[1];
+	if (!dp)
+		return 0;
+	struct dirent *ep = readdir(dp);
+	if (!ep)
+		return 0;
+	set_amxstring(amx,params[2], ep->d_name,params[3]);
 	return 1;
 #endif
 }

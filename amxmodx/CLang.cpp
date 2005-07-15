@@ -33,6 +33,10 @@
 #include "amxmodx.h"
 #include "CLang.h"
 
+#ifdef __linux__
+#define _snprintf snprintf
+#endif
+
 #define LITIDX_NONE			0
 #define LITIDX_BRACKET		1
 #define LITIDX_DEFINITION	2

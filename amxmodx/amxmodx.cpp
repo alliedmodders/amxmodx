@@ -2076,9 +2076,9 @@ static cell AMX_NATIVE_CALL get_distance_f(AMX *amx, cell *params)
 					   (float)amx_ctof(cpVec2[1]),
 					   (float)amx_ctof(cpVec2[2]));
 
-  float fDist = (float) (vec1-vec2).Length();
+  REAL fDist = (REAL) (vec1-vec2).Length();
 
-  return amx_ftoc((REAL)fDist);
+  return amx_ftoc(fDist);
 }
 
 static cell AMX_NATIVE_CALL random_float(AMX *amx, cell *params) /* 2 param */
@@ -2914,7 +2914,7 @@ static cell AMX_NATIVE_CALL find_plugin_byfile(AMX *amx, cell *params)
 
 	if (params[2])
 	{
-		func = stricmp;
+		func = strcmpi;
 	} else {
 		func = strcmp;
 	}

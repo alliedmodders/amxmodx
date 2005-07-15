@@ -9,6 +9,8 @@
 
 #include <fakemeta_const> 
 
+#pragma library fakemeta
+
 /* Returns entvar data from an entity   Use the pev_* enum to specify which form of data you want returned. */
 native pev(_index,_value,{Float,Sql,Result,_}:...)
 

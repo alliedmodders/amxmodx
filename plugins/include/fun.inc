@@ -10,6 +10,8 @@
 #endif
 #define _fun_included
 
+#pragma library fun
+
 /* Returns 1 if receiver hears sender via voice communication. */
 native get_client_listen(receiver, sender);
 

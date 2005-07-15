@@ -12,6 +12,8 @@
 #include <tsconst>
 #include <tsstats>
 
+#pragma library tsx
+
 /************* Shared Natives Start ********************************/
 
 /* Forward types */

@@ -20,6 +20,8 @@
 
 #include <esf_const>
 
+#pragma library esfmod
+
 /**************************
  * Main functions *********
  **************************/

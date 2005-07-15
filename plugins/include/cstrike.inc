@@ -10,6 +10,8 @@
 #endif
 #define _cstrike_included
 
+#pragma library cstrike
+
 /* Returns player deaths.
  */
 native cs_get_user_deaths(index);

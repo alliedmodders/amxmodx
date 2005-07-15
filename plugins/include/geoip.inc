@@ -8,6 +8,7 @@
 #endif
 #define _geoip_included
 
+#pragma library geoip
 
 //IP address can contain ports, the ports will be stripped out
 

@@ -12,6 +12,8 @@
 #include <dodconst>
 #include <dodstats>
 
+#pragma library dodx
+
 /************* Shared Natives Start ********************************/
 
 /* Forward types */

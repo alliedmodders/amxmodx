@@ -13,6 +13,8 @@
 
 #include <engine_const>
 
+#pragma library engine
+
 native traceresult(type,{Float,Sql,Result,_}:...);
 
 /* Registers a client impulse to a function.  Function is passed the ID of the user. */

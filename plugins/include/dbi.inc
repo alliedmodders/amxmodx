@@ -17,6 +17,8 @@
 #endif
 #define _dbi_included
 
+#pragma library dbi
+
 enum Sql
 {
 	SQL_FAILED=0,

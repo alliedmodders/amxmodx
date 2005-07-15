@@ -9,6 +9,8 @@
 #endif
 #define _regex_included
 
+#pragma library regex
+
 enum Regex
 {
 	REGEX_MATCH_FAIL = -2,

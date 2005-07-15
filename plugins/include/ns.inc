@@ -9,6 +9,8 @@
 #endif
 #define NS_INC	
 
+#pragma library ns
+
 
 #include <ns_const>
 

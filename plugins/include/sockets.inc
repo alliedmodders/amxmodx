@@ -13,6 +13,8 @@
 #endif
 #define _socket_included
 
+#pragma library socket
+
 // Use SOCKET_TCP for TCP Socket connections
 
 #define SOCKET_TCP 1

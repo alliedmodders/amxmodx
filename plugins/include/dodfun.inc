@@ -11,6 +11,8 @@
 
 #include <dodconst>
 
+#pragma library dodfun
+
 
 /* Function is called after grenade throw */
 forward grenade_throw(index,greindex,wId);

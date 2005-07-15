@@ -12,6 +12,7 @@
 #include <tfcconst>
 #include <tfcstats>
 
+#pragma library tfcx
 
 /************* Shared Natives Start ********************************/
 

@@ -2429,10 +2429,11 @@ static amxx_module_info_s g_ModuleInfo =
 	MODULE_AUTHOR,
 	MODULE_VERSION,
 #ifdef MODULE_RELOAD_ON_MAPCHANGE
-	1
+	1,
 #else // MODULE_RELOAD_ON_MAPCHANGE
-	0
+	0,
 #endif // MODULE_RELOAD_ON_MAPCHANGE
+	MODULE_LOGTAG
 };
 
 // Storage for the requested functions

@@ -32,7 +32,7 @@
 // ***** AMXX stuff *****
 
 // module interface version is 1
-#define AMXX_INTERFACE_VERSION 1
+#define AMXX_INTERFACE_VERSION 2
 
 // amxx module info
 struct amxx_module_info_s
@@ -41,6 +41,7 @@ struct amxx_module_info_s
 	const char *author;
 	const char *version;
 	int reload;				// reload on mapchange when nonzero
+	const char *logtag;		// added in version 2
 };
 
 

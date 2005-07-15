@@ -58,7 +58,6 @@ void (*function)(void*);
 void (*endfunction)(void*);
 
 CLog g_log;
-CQueue<String> CurModuleList;
 CForwardMngr  g_forwards;
 CList<CPlayer*> g_auth;
 CList<CCVar> g_cvars;
@@ -465,11 +464,6 @@ void C_ServerDeactivate_Post() {
   g_langMngr.Save(build_pathname_r(file, sizeof(file)-1, "%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
   g_langMngr.SaveCache(build_pathname_r(file, sizeof(file)-1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
   g_langMngr.Clear();
-  //clear module name cache
-  while (!CurModuleList.empty())
-  {
-	  CurModuleList.pop();
-  }
 
   // last memreport
 #ifdef MEMORY_TEST

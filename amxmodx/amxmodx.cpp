@@ -2849,14 +2849,6 @@ static cell AMX_NATIVE_CALL lang_exists(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL require_module(AMX *amx, cell *params)
 {
-	int len = 0;
-	
-	String s;
-
-	s.assign(get_amxstring(amx, params[1], 0, len));
-
-	CurModuleList.push(s);
-
 	return 1;
 }
 

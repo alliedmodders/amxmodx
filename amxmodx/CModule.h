@@ -57,6 +57,7 @@ struct amxx_module_info_s
 	const char *author;
 	const char *version;
 	int reload;				// reload on mapchange when nonzero
+	const char *logtag;		//added in version 2
 };
 
 
@@ -65,7 +66,7 @@ struct amxx_module_info_s
 #define AMXX_PARAM				2			/* Invalid parameter */
 #define AMXX_FUNC_NOT_PRESENT	3			/* Function not present */
 
-#define AMXX_INTERFACE_VERSION 1
+#define AMXX_INTERFACE_VERSION	2
 
 class CModule 
 {

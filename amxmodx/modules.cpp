@@ -253,64 +253,64 @@ const char *StrCaseStr(const char *as, const char *bs)
 	return strstr(a,b);
 }
 
-//BAILOPAN
-int CheckModules(AMX *amx, char error[64])
+//returns 0 for module not found, 1 for "everything's okay"
+int CheckModules(AMX *amx, char error[128])
 {
-	int idx = 0, flag = -1;
-	if (amx_FindPublic(amx, "plugin_modules", &idx) == AMX_ERR_NONE)
+	int numLibraries = amx_GetLibraries(amx);
+	char buffer[32];
+	bool found = false;
+	bool isdbi = false;
+	CList<CModule,const char *>::iterator a;
+	const amxx_module_info_s *info;
+    
+	for (int i=0; i<numLibraries; i++)
 	{
-		cell retVal = 0;
-		int err = 0;
-		if ( (err = amx_Exec(amx, &retVal, idx, 0)) == AMX_ERR_NONE )
+		amx_GetLibrary(amx, i, buffer, sizeof(buffer)-1);
+		found = false;
+		if (strcmpi(buffer, "float")==0)
+			continue;
+		isdbi = false;
+		if (strcmpi(buffer, "dbi")==0)
+			isdbi = true;
+		for (a=g_modules.begin(); a; ++a)
 		{
-			unsigned int i = 0;
-			while (!CurModuleList.empty())
+			if ( (*a).getStatusValue() == MODULE_LOADED )
 			{
-				if (!flag)
+				info = (*a).getInfoNew();
+				if (info)
 				{
-					CurModuleList.pop();
-					continue;
-				}
-				//assume module is not found
-				flag = 0;
-				for (CList<CModule,const char *>::iterator pMod = g_modules.begin(); pMod; ++pMod)
-				{
-					if (strcmpi(CurModuleList.front().c_str(), "dbi") == 0)
+					if (isdbi)
 					{
-						if (StrCaseStr( (*pMod).getName(), "sql") || strstr( (*pMod).getName(), "dbi" ))
+						if (info->logtag 
+							&& (StrCaseStr(info->logtag, "sql")
+								||
+								StrCaseStr(info->logtag, "dbi"))
+								)
 						{
-							// the module checks in
-							flag = 1;
+							found = true;
 							break;
 						}
 					} else {
-						if (strcmpi( (*pMod).getName(), CurModuleList.front().c_str() ) == 0)
+						if (info->logtag && (strcmpi(info->logtag, buffer) == 0))
 						{
-							flag = 1;
+							found = true;
 							break;
 						}
 					}
 				}
-				//module was not found
-				if (!flag)
-				{
-					sprintf(error, "Module \"%s\" required for plugin.  Check modules.ini.", CurModuleList.front().c_str());
-				}
-				CurModuleList.pop();
 			}
-		} else {
-			AMXXLOG_Log("[AMXX] Run time error %d on line %ld during module check.", err, amx->curline);
-			//could not execute
-			return -1;	//bad! very bad!
 		}
-	} else {
-		return -1;
+		if (!found)
+		{
+			sprintf(error, "Module \"%s\" required for plugin.  Check modules.ini.", buffer);
+			return 0;
+		}
 	}
 
-	return flag;
+	return 1;
 }
 
-int set_amxnatives(AMX* amx,char error[64])
+int set_amxnatives(AMX* amx,char error[128])
 {
 	for ( CList<CModule,const char *>::iterator  a  = g_modules.begin(); a ; ++a )
 	{
@@ -327,29 +327,17 @@ int set_amxnatives(AMX* amx,char error[64])
 	amx_Register(amx, time_Natives, -1);
 	amx_Register(amx, vault_Natives, -1);
 
-	if ( amx_Register(amx, core_Natives, -1) != AMX_ERR_NONE )
+	if (CheckModules(amx, error))
 	{
-		//HACKHACK - if we get here, nullify the plugin's native table
-		//then reregister the one native we need
-		// - BAILOPAN
-		String save;
-		save.assign(no_function);
-		amx_NullNativeTable(amx);
-		AMX_NATIVE_INFO p[] = {
-			{ "require_module",	require_module },
-			{ NULL,				NULL },
-		};
-		amx_Register(amx, p, -1);
-		if (CheckModules(amx, error) == -1 || *error == 0)
+		if ( amx_Register(amx, core_Natives, -1) != AMX_ERR_NONE )
 		{
-			sprintf(error,"Plugin uses an unknown function (name \"%s\") - check your modules.ini.",save.c_str());
+			sprintf(error, "Plugin uses an unknown function (name \"%s\") - check your modules.ini.", no_function);
 		}
-		return (amx->error = AMX_ERR_NATIVE);
+		
+		return AMX_ERR_NONE;
 	}
 
-	CheckModules(amx, error);
-
-	return AMX_ERR_NONE;
+	return (amx->error = AMX_ERR_NATIVE);
 }
 
 int unload_amxscript(AMX* amx, void** program)

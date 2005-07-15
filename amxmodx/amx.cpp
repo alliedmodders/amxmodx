@@ -40,6 +40,7 @@
 #endif
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include <limits.h>
 #include <stdarg.h>
@@ -4139,3 +4140,26 @@ int AMXAPI amx_UTF8Check(const char *string)
   return err;
 }
 #endif /* AMX_UTF8XXX */
+
+int AMXAPI amx_GetLibraries(AMX *amx)
+{
+	AMX_HEADER *hdr = (AMX_HEADER *)amx->base;
+	int numLibraries = NUMENTRIES(hdr, libraries, pubvars);
+
+	return numLibraries;
+}
+
+#ifdef __linux__
+#define _snprintf snprintf
+#endif
+
+const char *AMXAPI amx_GetLibrary(AMX *amx, int index, char *buffer, int len)
+{
+	AMX_HEADER *hdr = (AMX_HEADER *)amx->base;
+	AMX_FUNCSTUB *lib;
+
+	lib = GETENTRY(hdr, libraries, index);
+	_snprintf(buffer, len, "%s", GETENTRYNAME(hdr,lib));
+	
+	return buffer;
+}

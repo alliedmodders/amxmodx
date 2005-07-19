@@ -332,6 +332,7 @@ int set_amxnatives(AMX* amx,char error[128])
 		if ( amx_Register(amx, core_Natives, -1) != AMX_ERR_NONE )
 		{
 			sprintf(error, "Plugin uses an unknown function (name \"%s\") - check your modules.ini.", no_function);
+			return (amx->error = AMX_ERR_NATIVE);
 		}
 		
 		return AMX_ERR_NONE;

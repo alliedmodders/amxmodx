@@ -35,9 +35,12 @@ public:
 	int Type();
 
 	int type;
-	REAL fData;
+	union
+	{
+		REAL fData;
+		int iData;
+	} v;
 	String cData;
-	int iData;
 };
 
 extern AMX_NATIVE_INFO msg_Natives[];

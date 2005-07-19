@@ -18,8 +18,7 @@ argMsg::argMsg()
 
 void argMsg::Reset()
 {
-	iData = 0;
-	fData = 0.0;
+	memset(&v, 0, sizeof(v));
 	cData.clear();
 	type = 0;
 }
@@ -29,28 +28,28 @@ void argMsg::Send()
 	switch (type)
 	{
 	case arg_byte:
-		WRITE_BYTE(iData);
+		WRITE_BYTE(v.iData);
 		break;
 	case arg_char:
-		WRITE_CHAR(iData);
+		WRITE_CHAR(v.iData);
 		break;
 	case arg_short:
-		WRITE_SHORT(iData);
+		WRITE_SHORT(v.iData);
 		break;
 	case arg_long:
-		WRITE_LONG(iData);
+		WRITE_LONG(v.iData);
 		break;
 	case arg_angle:
-		WRITE_ANGLE(fData);
+		WRITE_ANGLE(v.fData);
 		break;
 	case arg_coord:
-		WRITE_COORD(fData);
+		WRITE_COORD(v.fData);
 		break;
 	case arg_string:
 		WRITE_STRING(cData.c_str());
 		break;
 	case arg_entity:
-		WRITE_ENTITY(iData);
+		WRITE_ENTITY(v.iData);
 		break;
 	}
 	Reset();
@@ -115,11 +114,11 @@ void WriteByte(int iValue)
 	} else if (inhook) {
 		if (++msgCount > Msg.size()) {
 			argMsg p;
-			p.iData = iValue;
+			p.v.iData = iValue;
 			p.type = arg_byte;
 			Msg.push_back(p);
 		} else {
-			Msg[msgCount-1].iData = iValue;
+			Msg[msgCount-1].v.iData = iValue;
 			Msg[msgCount-1].type = arg_byte;
 		}
 		RETURN_META(MRES_SUPERCEDE);
@@ -135,11 +134,11 @@ void WriteChar(int iValue)
 	} else if (inhook) {
 		if (++msgCount > Msg.size()) {
 			argMsg p;
-			p.iData = iValue;
+			p.v.iData = iValue;
 			p.type = arg_char;
 			Msg.push_back(p);
 		} else {
-			Msg[msgCount-1].iData = iValue;
+			Msg[msgCount-1].v.iData = iValue;
 			Msg[msgCount-1].type = arg_char;
 		}
 		RETURN_META(MRES_SUPERCEDE);
@@ -155,11 +154,11 @@ void WriteShort(int iValue)
 	} else if (inhook) {
 		if (++msgCount > Msg.size()) {
 			argMsg p;
-			p.iData = iValue;
+			p.v.iData = iValue;
 			p.type = arg_short;
 			Msg.push_back(p);
 		} else {
-			Msg[msgCount-1].iData = iValue;
+			Msg[msgCount-1].v.iData = iValue;
 			Msg[msgCount-1].type = arg_short;
 		}
 		RETURN_META(MRES_SUPERCEDE);
@@ -175,11 +174,11 @@ void WriteLong(int iValue)
 	} else if (inhook) {
 		if (++msgCount > Msg.size()) {
 			argMsg p;
-			p.iData = iValue;
+			p.v.iData = iValue;
 			p.type = arg_long;
 			Msg.push_back(p);
 		} else {
-			Msg[msgCount-1].iData = iValue;
+			Msg[msgCount-1].v.iData = iValue;
 			Msg[msgCount-1].type = arg_long;
 		}
 		RETURN_META(MRES_SUPERCEDE);
@@ -195,11 +194,11 @@ void WriteAngle(float flValue)
 	} else if (inhook) {
 		if (++msgCount > Msg.size()) {
 			argMsg p;
-			p.fData = flValue;
+			p.v.fData = flValue;
 			p.type = arg_angle;
 			Msg.push_back(p);
 		} else {
-			Msg[msgCount-1].fData = flValue;
+			Msg[msgCount-1].v.fData = flValue;
 			Msg[msgCount-1].type = arg_angle;
 		}
 		RETURN_META(MRES_SUPERCEDE);
@@ -215,11 +214,11 @@ void WriteCoord(float flValue)
 	} else if (inhook) {
 		if (++msgCount > Msg.size()) {
 			argMsg p;
-			p.fData = flValue;
+			p.v.fData = flValue;
 			p.type = arg_coord;
 			Msg.push_back(p);
 		} else {
-			Msg[msgCount-1].fData = flValue;
+			Msg[msgCount-1].v.fData = flValue;
 			Msg[msgCount-1].type = arg_coord;
 		}
 		RETURN_META(MRES_SUPERCEDE);
@@ -255,11 +254,11 @@ void WriteEntity(int iValue)
 	} else if (inhook) {
 		if (++msgCount > Msg.size()) {
 			argMsg p;
-			p.iData = iValue;
+			p.v.iData = iValue;
 			p.type = arg_entity;
 			Msg.push_back(p);
 		} else {
-			Msg[msgCount-1].iData = iValue;
+			Msg[msgCount-1].v.iData = iValue;
 			Msg[msgCount-1].type = arg_entity;
 		}
 		RETURN_META(MRES_SUPERCEDE);
@@ -306,13 +305,15 @@ void MessageEnd(void)
 static cell AMX_NATIVE_CALL register_message(AMX *amx, cell *params)
 {
 	int len;
+	char *name = MF_GetAmxString(amx, params[2], 0, &len);
 	if (params[1]>0 && params[1] < 256) {
-		int id = MF_RegisterSPForwardByName(amx, MF_GetAmxString(amx, params[2], 0, &len), FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+		int id = MF_RegisterSPForwardByName(amx, name, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 		if (id != -1)
 		{
 			msgHooks[params[1]].push_back(id);
 			return id;
 		} else {
+			MF_LogError(amx, AMX_ERR_NOTFOUND, "Could not find function \"%s\"", name);
 			return -1;
 		}
 	}
@@ -373,7 +374,7 @@ static cell AMX_NATIVE_CALL get_msg_arg_int(AMX *amx, cell *params)
 		return 0;
 	}
 
-	int iVal = Msg[argn].iData;
+	int iVal = Msg[argn].v.iData;
 
 	return iVal;
 }
@@ -388,7 +389,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_int(AMX *amx, cell *params)
 	}
 
 	Msg[argn].type = params[2];
-	Msg[argn].iData = params[3];
+	Msg[argn].v.iData = params[3];
 
 	return 1;
 }
@@ -402,7 +403,7 @@ static cell AMX_NATIVE_CALL get_msg_arg_float(AMX *amx, cell *params)
 		return 0;
 	}
 
-	return amx_ftoc(Msg[argn].fData);
+	return amx_ftoc(Msg[argn].v.fData);
 }
 
 static cell AMX_NATIVE_CALL set_msg_arg_float(AMX *amx, cell *params)
@@ -416,7 +417,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_float(AMX *amx, cell *params)
 
 	REAL fVal = amx_ctof(params[2]);
 
-	Msg[argn].fData = fVal;
+	Msg[argn].v.fData = fVal;
 
 	return 1;
 }

@@ -6,7 +6,7 @@ void OnAmxxAttach()
 {
 	MF_AddNatives(engfunc_natives);
 	MF_AddNatives(dllfunc_natives);
-	//MF_AddNatives(pev_natives);
+	MF_AddNatives(pev_natives);
 	MF_AddNatives(forward_natives);
 	MF_AddNatives(pdata_natives);
 	MF_AddNatives(tr_Natives);

@@ -46,6 +46,7 @@ extern AMX_NATIVE_INFO dllfunc_natives[];
 extern AMX_NATIVE_INFO forward_natives[];
 extern AMX_NATIVE_INFO pdata_natives[];
 extern AMX_NATIVE_INFO tr_Natives[];
+extern AMX_NATIVE_INFO pev_natives[];
 extern TraceResult g_tr;
 
 /* Wouldnt modifying the table AFTER it's memcpy'd be ... pointless?

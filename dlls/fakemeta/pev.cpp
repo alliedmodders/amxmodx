@@ -614,8 +614,7 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 	{
 		// Grrr...
 		int len;
-		char *string = MF_GetAmxString(amx, params[3], 0, &len);
-		int iValue = ALLOC_STRING(string);
+		int iValue = blah[0];
 		switch(iSwitch)
 		{
 			case fixangle:
@@ -742,7 +741,6 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 	else if (iSwitch > pev_float_start && iSwitch < pev_float_end)
 	{
 		float fValue = amx_ctof(blah[0]);
-
 		switch(iSwitch)
 		{
 			case impacttime:
@@ -861,8 +859,9 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 	}
 	else if (iSwitch > pev_string_start && iSwitch < pev_string_end)
 	{
-
-		int iValue = blah[0];
+		int len;
+		char *string = MF_GetAmxString(amx, params[3], 0, &len);
+		int iValue = ALLOC_STRING(string);
 		switch (iSwitch)
 		{
 		case classname:
@@ -944,11 +943,10 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 	}
 	else if (iSwitch > pev_vecarray_start && iSwitch < pev_vecarray_end)
 	{
-		cell *vCell = MF_GetAmxAddr(amx,params[3]);
 		Vector vValue;
-		vValue.x = amx_ctof(vCell[0]);
-		vValue.y = amx_ctof(vCell[1]);
-		vValue.z = amx_ctof(vCell[2]);
+		vValue.x = amx_ctof(blah[0]);
+		vValue.y = amx_ctof(blah[1]);
+		vValue.z = amx_ctof(blah[2]);
 		switch(iSwitch)
 		{
 		case origin:
@@ -1026,9 +1024,7 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 	}
 	else if (iSwitch > pev_byte_start && iSwitch < pev_byte_end)
 	{
-		cell *blah = MF_GetAmxAddr(amx,params[3]);
 		int iValue = blah[0];
-
 		switch(iSwitch)
 		{
 			case controller_0:
@@ -1055,18 +1051,17 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 	}
 	else if (iSwitch > pev_bytearray_start && iSwitch < pev_bytearray_end)
 	{
-		cell *vCell = MF_GetAmxAddr(amx,params[3]);
 		switch(iSwitch)
 		{
 			case controller:
-				pPlayer->v.controller[0]=vCell[0];
-				pPlayer->v.controller[1]=vCell[1];
-				pPlayer->v.controller[2]=vCell[2];
-				pPlayer->v.controller[3]=vCell[3];
+				pPlayer->v.controller[0]=blah[0];
+				pPlayer->v.controller[1]=blah[1];
+				pPlayer->v.controller[2]=blah[2];
+				pPlayer->v.controller[3]=blah[3];
 				return 1;
 			case blending:
-				pPlayer->v.controller[0]=vCell[0];
-				pPlayer->v.controller[1]=vCell[1];
+				pPlayer->v.controller[0]=blah[0];
+				pPlayer->v.controller[1]=blah[1];
 				return 1;
 			default:
 				return 0;

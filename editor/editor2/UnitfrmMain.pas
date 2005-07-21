@@ -433,7 +433,7 @@ begin
         sciEditor.SelText := '	';
     end;
   end;
-  if Key = '}' then begin // YES thats only for bail ;)
+  if (Key = '}') and (Trim(sciEditor.Lines[sciEditor.GetCurrentLineNumber]) = '') then begin // YES thats only for bail ;)
     sciEditor.Lines[sciEditor.GetCurrentLineNumber] := Copy(sciEditor.Lines[sciEditor.GetCurrentLineNumber], 1, Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber]) -1); // remove last indent..
     sciEditor.SelStart := sciEditor.SelStart + Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber]);                                                                      // and jump to last position
   end;

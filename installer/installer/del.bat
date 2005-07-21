@@ -1,0 +1,11 @@
+del .\*.~pas
+del .\*.dcu
+del .\*.~ddp
+del .\*.ddp
+del .\*.~dpr
+del .\*.~dfm
+del .\*.~dpr
+del .\*.map
+del .\*.drc
+del .\*.~xfm
+upx AMXInstaller.exe

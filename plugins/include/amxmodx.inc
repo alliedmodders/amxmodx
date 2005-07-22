@@ -684,3 +684,42 @@ native mkdir(const dirname[]);
 
 /* Returns plugin id searched by file/name.  Returns INVALID_PLUGIN_ID on failure. */
 native find_plugin_byfile(const filename[], ignoreCase=1);
+
+/** The new menu natives */
+//If you set ml to 1, everything will be preformatted
+// with the multi-lingual system.
+//NOTE: ml=1 currently is not enabled.
+native menu_create(title[], ml=0);
+
+//Creates a menu item callback handler.  
+//The callback handler is passed the playerid, menuid, and itemid.
+//It can return either ITEM_IGNORE, ITEM_ENABLED, or ITEM_DISABLED.
+native menu_makecallback(function[]);
+
+//Adds an item to a menu.  When displayed, the name will be shown.
+//If the player does not have the access it is disabled.
+//If you set callbac, the callback will be activated beforehand.
+native menu_additem(menu, const name[], const command[]="", paccess=0, callback=-1);
+
+//returns how many pages are in a menu
+native menu_pages(menu);
+
+//returns how many items are in a menu
+native menu_items(menu);
+
+//displays a menu to a player
+//page of the menu starts at 0.  there are 7 items to a page.
+//back/exit/next/more whatever are automatically added as needed.
+//you cannot use this to show a menu to everyone at once!
+native menu_display(id, menu, page);
+
+//Given a page on a menu and a keypress on that page, returns the item id selected.
+//if the item is less than 0, a special option was chosen (such as MENU_EXIT)
+native menu_find_id(menu, page, key);
+
+//Gets/sets info about a menu option
+native menu_item_getinfo(menu, item, &access, command[], cmdlen, name[]="", namelen=0, &callback);
+
+native menu_item_setname(menu, item, name[]);
+native menu_item_setcmd(menu, item, cmd[]);
+native menu_item_setcall(menu, item, callback=-1);

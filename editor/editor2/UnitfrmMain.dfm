@@ -1979,6 +1979,7 @@ object frmMain: TfrmMain
     Visible = False
     OnDblClick = lvDebugDblClick
     OnEnter = lvDebugEnter
+    OnMouseDown = lvDebugMouseDown
   end
   object ilMenu: TImageList
     Left = 826
@@ -5796,5 +5797,17 @@ object frmMain: TfrmMain
     ProxySettings.Port = 0
     Left = 698
     Top = 4
+  end
+  object ppmCopy: TPopupMenu
+    Left = 698
+    Top = 34
+    object mnuCopyItem: TMenuItem
+      Caption = 'Copy Item'
+      OnClick = mnuCopyItemClick
+    end
+    object mnuCopyAll: TMenuItem
+      Caption = 'Copy all'
+      OnClick = mnuCopyAllClick
+    end
   end
 end

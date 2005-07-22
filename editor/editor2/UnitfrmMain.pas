@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   ToolWin, ActnMan, ActnCtrls, ActnMenus, ActnList,
-  ImgList, ComCtrls, SciDocuments, SciLexer,
+  ImgList, ComCtrls, SciDocuments, SciLexer, ClipBrd,
   SciLexerMod, SciAutoComplete, SciCallTips, SciLexerOptionsDlg,
   SciSearchReplace, StdCtrls, Tabs, Menus, ShellAPI, ScintillaLanguageManager,
   SciLexerMemo, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
@@ -68,6 +68,9 @@ type
     acSelectAll: TAction;
     acUnidenter: TAction;
     acLoopGenerator: TAction;
+    ppmCopy: TPopupMenu;
+    mnuCopyItem: TMenuItem;
+    mnuCopyAll: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure acNewExecute(Sender: TObject);
     procedure acOpenExecute(Sender: TObject);
@@ -141,6 +144,10 @@ type
     procedure sciEditorModified(Sender: TObject; const position,
       modificationType: Integer; text: PAnsiChar; const length, linesAdded,
       line, foldLevelNow, foldLevelPrev: Integer);
+    procedure lvDebugMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure mnuCopyItemClick(Sender: TObject);
+    procedure mnuCopyAllClick(Sender: TObject);
   private
     eSelectedTab: Integer;
     eCurrentLine: Integer;
@@ -149,6 +156,7 @@ type
     StdAutoComplete: String; // Save this because we add special functions
     StdCallTips: String;     // etc. dynamically for each file
     FunctionType: TStringList;
+    CurrItem: TListItem;
     function StrLength(eStr: String): Integer;
     procedure OnExceptionHandler(Sender: TObject; E: Exception);
     procedure DeleteNode(Node: TTreeNode);
@@ -1171,6 +1179,30 @@ end;
 function TfrmMain.StrLength(eStr: String): Integer;
 begin
   Result := Length(eStr);
+end;
+
+procedure TfrmMain.lvDebugMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if (Button = mbRight) and (Assigned(lvDebug.GetItemAt(X, Y))) then begin
+    CurrItem := lvDebug.GetItemAt(X, Y);
+    ppmCopy.Popup(Mouse.CursorPos.X, Mouse.CursorPos.Y);
+  end;
+end;
+
+procedure TfrmMain.mnuCopyItemClick(Sender: TObject);
+begin
+  Clipboard.SetTextBuf(PChar(CurrItem.Caption));
+end;
+
+procedure TfrmMain.mnuCopyAllClick(Sender: TObject);
+var i: Integer;
+    eStr: String;
+begin
+  eStr := '';
+  for i := lvDebug.Items.Count -1 downto 0 do
+    eStr := lvDebug.Items[i].Caption + #13#10 + eStr;
+  Clipboard.SetTextBuf(PChar(eStr)); 
 end;
 
 end.

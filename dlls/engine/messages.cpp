@@ -1,6 +1,6 @@
 #include "engine.h"
 
-CVector<argMsg> Msg;
+Message Msg;
 CVector<int> msgHooks[256];
 int msgBlocks[256] = {0};
 int msgDest;
@@ -9,83 +9,162 @@ float *msgOrigin;
 edict_t *msgpEntity;
 bool inhook = false;
 bool inblock = false;
-unsigned int msgCount = 0;
 
-argMsg::argMsg()
+Message::Message()
 {
-	Reset();
+	msgparam *p = new msgparam;
+	m_Params.push_back(p);
+	m_CurParam = 0;
 }
 
-void argMsg::Reset()
+Message::~Message()
 {
-	memset(&v, 0, sizeof(v));
-	cData.clear();
-	type = 0;
+	for (size_t i=0; i<m_Params.size(); i++)
+		delete m_Params[i];
+	
+	m_Params.clear();
 }
 
-void argMsg::Send()
+msgparam *Message::AdvPtr()
 {
-	switch (type)
+	msgparam *pParam = NULL;
+
+	if (++m_CurParam >= m_Params.size())
 	{
-	case arg_byte:
-		WRITE_BYTE(v.iData);
-		break;
-	case arg_char:
-		WRITE_CHAR(v.iData);
-		break;
-	case arg_short:
-		WRITE_SHORT(v.iData);
-		break;
-	case arg_long:
-		WRITE_LONG(v.iData);
-		break;
-	case arg_angle:
-		WRITE_ANGLE(v.fData);
-		break;
-	case arg_coord:
-		WRITE_COORD(v.fData);
-		break;
-	case arg_string:
-		WRITE_STRING(cData.c_str());
-		break;
-	case arg_entity:
-		WRITE_ENTITY(v.iData);
-		break;
-	}
-	Reset();
-}
-
-int argMsg::Type()
-{
-	switch (type)
-	{
-	case arg_byte:
-		return type_int;
-		break;
-	case arg_char:
-		return type_int;
-		break;
-	case arg_short:
-		return type_int;
-		break;
-	case arg_long:
-		return type_int;
-		break;
-	case arg_angle:
-		return type_float;
-		break;
-	case arg_coord:
-		return type_float;
-		break;
-	case arg_string:
-		return type_string;
-		break;
-	case arg_entity:
-		return type_int;
-		break;
+		pParam = new msgparam;
+		m_Params.push_back(pParam);
+	} else {
+		pParam = m_Params[m_CurParam];
 	}
 
-	return 0;
+	return pParam;
+}
+
+void Message::AddParam(const char *data, msgtype type)
+{
+	msgparam *pParam = AdvPtr();
+
+	pParam->szData.assign(data);
+	pParam->type = type;
+}
+
+void Message::AddParam(int data, msgtype type)
+{
+	msgparam *pParam = AdvPtr();
+	
+	pParam->v.iData = data;
+	pParam->type = type;
+}
+
+void Message::AddParam(float data, msgtype type)
+{
+	msgparam *pParam = AdvPtr();
+
+	pParam->v.fData = data;
+	pParam->type = type;
+}
+
+msgtype Message::GetParamType(size_t index)
+{
+	if (index < 1 || index > m_CurParam)
+		return static_cast<msgtype>(0);
+
+	return m_Params[index]->type;
+}
+
+float Message::GetParamFloat(size_t index)
+{
+	if (index < 1 || index > m_CurParam)
+		return 0;
+
+	return m_Params[index]->v.fData;
+}
+
+const char *Message::GetParamString(size_t index)
+{
+	if (index < 1 || index > m_CurParam)
+		return 0;
+
+	return m_Params[index]->szData.c_str();
+}
+
+int Message::GetParamInt(size_t index)
+{
+	if (index < 1 || index > m_CurParam)
+		return 0;
+
+	return m_Params[index]->v.iData;
+}
+
+void Message::SetParam(size_t index, float data)
+{
+	if (index < 1 || index > m_CurParam)
+		return;
+
+	m_Params[index]->v.fData = data;
+}
+
+void Message::SetParam(size_t index, int data)
+{
+	if (index < 1 || index > m_CurParam)
+		return;
+
+	m_Params[index]->v.iData = data;
+}
+
+void Message::SetParam(size_t index, const char *data)
+{
+	if (index < 1 || index > m_CurParam)
+		return;
+
+	m_Params[index]->szData.assign(data);
+}
+
+void Message::Reset()
+{
+	m_CurParam = 0;
+}
+
+size_t Message::Params()
+{
+	return m_CurParam;
+}
+
+void Message::Send()
+{
+	msgparam *pParam = NULL;
+
+	for (size_t i=1; i<=m_CurParam; i++)
+	{
+		pParam = m_Params[i];
+		switch (pParam->type)
+		{
+		case arg_byte:
+			WRITE_BYTE(pParam->v.iData);
+			break;
+		case arg_char:
+			WRITE_CHAR(pParam->v.iData);
+			break;
+		case arg_short:
+			WRITE_SHORT(pParam->v.iData);
+			break;
+		case arg_long:
+			WRITE_LONG(pParam->v.iData);
+			break;
+		case arg_angle:
+			WRITE_ANGLE(pParam->v.fData);
+			break;
+		case arg_coord:
+			WRITE_COORD(pParam->v.fData);
+			break;
+		case arg_string:
+			WRITE_STRING(pParam->szData.c_str());
+			break;
+		case arg_entity:
+			WRITE_ENTITY(pParam->v.iData);
+			break;
+		}
+	}
 }
 
 void MessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
@@ -96,7 +175,6 @@ void MessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (msgHooks[msg_type].size()) {
 		inhook = true;
-		msgCount = 0;
 		msgDest = msg_dest;
 		msgType = msg_type;
 		msgOrigin = (float *)pOrigin;
@@ -112,15 +190,7 @@ void WriteByte(int iValue)
 	if (inblock) {
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (inhook) {
-		if (++msgCount > Msg.size()) {
-			argMsg p;
-			p.v.iData = iValue;
-			p.type = arg_byte;
-			Msg.push_back(p);
-		} else {
-			Msg[msgCount-1].v.iData = iValue;
-			Msg[msgCount-1].type = arg_byte;
-		}
+		Msg.AddParam(iValue, arg_byte);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 
@@ -132,15 +202,7 @@ void WriteChar(int iValue)
 	if (inblock) {
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (inhook) {
-		if (++msgCount > Msg.size()) {
-			argMsg p;
-			p.v.iData = iValue;
-			p.type = arg_char;
-			Msg.push_back(p);
-		} else {
-			Msg[msgCount-1].v.iData = iValue;
-			Msg[msgCount-1].type = arg_char;
-		}
+		Msg.AddParam(iValue, arg_char);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 
@@ -152,15 +214,7 @@ void WriteShort(int iValue)
 	if (inblock) {
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (inhook) {
-		if (++msgCount > Msg.size()) {
-			argMsg p;
-			p.v.iData = iValue;
-			p.type = arg_short;
-			Msg.push_back(p);
-		} else {
-			Msg[msgCount-1].v.iData = iValue;
-			Msg[msgCount-1].type = arg_short;
-		}
+		Msg.AddParam(iValue, arg_short);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 
@@ -172,15 +226,7 @@ void WriteLong(int iValue)
 	if (inblock) {
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (inhook) {
-		if (++msgCount > Msg.size()) {
-			argMsg p;
-			p.v.iData = iValue;
-			p.type = arg_long;
-			Msg.push_back(p);
-		} else {
-			Msg[msgCount-1].v.iData = iValue;
-			Msg[msgCount-1].type = arg_long;
-		}
+		Msg.AddParam(iValue, arg_long);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 
@@ -192,15 +238,7 @@ void WriteAngle(float flValue)
 	if (inblock) {
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (inhook) {
-		if (++msgCount > Msg.size()) {
-			argMsg p;
-			p.v.fData = flValue;
-			p.type = arg_angle;
-			Msg.push_back(p);
-		} else {
-			Msg[msgCount-1].v.fData = flValue;
-			Msg[msgCount-1].type = arg_angle;
-		}
+		Msg.AddParam(flValue, arg_angle);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 
@@ -212,15 +250,7 @@ void WriteCoord(float flValue)
 	if (inblock) {
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (inhook) {
-		if (++msgCount > Msg.size()) {
-			argMsg p;
-			p.v.fData = flValue;
-			p.type = arg_coord;
-			Msg.push_back(p);
-		} else {
-			Msg[msgCount-1].v.fData = flValue;
-			Msg[msgCount-1].type = arg_coord;
-		}
+		Msg.AddParam(flValue, arg_coord);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 
@@ -232,15 +262,7 @@ void WriteString(const char *sz)
 	if (inblock) {
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (inhook) {
-		if (++msgCount > Msg.size()) {
-			argMsg p;
-			p.cData.assign(sz);
-			p.type = arg_string;
-			Msg.push_back(p);
-		} else {
-			Msg[msgCount-1].cData.assign(sz);
-			Msg[msgCount-1].type = arg_string;
-		}
+		Msg.AddParam(sz, arg_string);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 
@@ -252,15 +274,7 @@ void WriteEntity(int iValue)
 	if (inblock) {
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (inhook) {
-		if (++msgCount > Msg.size()) {
-			argMsg p;
-			p.v.iData = iValue;
-			p.type = arg_entity;
-			Msg.push_back(p);
-		} else {
-			Msg[msgCount-1].v.iData = iValue;
-			Msg[msgCount-1].type = arg_entity;
-		}
+		Msg.AddParam(iValue, arg_entity);
 		RETURN_META(MRES_SUPERCEDE);
 	}
 
@@ -286,16 +300,13 @@ void MessageEnd(void)
 		inhook = false;
 		if (mres & 1)
 		{
-			msgCount = 0;
+			Msg.Reset();
 			RETURN_META(MRES_SUPERCEDE);
 		}
 		MESSAGE_BEGIN(msgDest, msgType, msgOrigin, msgpEntity);
-		for (i=0; i<msgCount; i++) {
-			Msg[i].Send();
-			Msg[i].Reset();
-		}
+			Msg.Send();
 		MESSAGE_END();
-		msgCount = 0;
+		Msg.Reset();
 		RETURN_META(MRES_SUPERCEDE);
 	}
 
@@ -350,105 +361,109 @@ static cell AMX_NATIVE_CALL get_msg_block(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_msg_args(AMX *amx, cell *params)
 {
-	return msgCount;
+	return Msg.Params();
 }
 
 static cell AMX_NATIVE_CALL get_msg_argtype(AMX *amx, cell *params)
 {
-	unsigned int argn = params[1]-1;
+	size_t argn = static_cast<size_t>(params[1]);
 
-	if (!inhook || argn >= Msg.size()) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+	if (!inhook || argn > Msg.Params())
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid message argument %d", argn);
 		return 0;
 	}
 
-	return Msg[argn].type;
+	return Msg.GetParamType(argn);
 }
 
 static cell AMX_NATIVE_CALL get_msg_arg_int(AMX *amx, cell *params)
 {
-	unsigned int argn = params[1]-1;
+	size_t argn = static_cast<size_t>(params[1]);
 
-	if (!inhook || argn >= Msg.size()) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+	if (!inhook || argn > Msg.Params())
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid message argument %d", argn);
 		return 0;
 	}
 
-	int iVal = Msg[argn].v.iData;
-
-	return iVal;
+	return Msg.GetParamInt(argn);
 }
 
 static cell AMX_NATIVE_CALL set_msg_arg_int(AMX *amx, cell *params)
 {
-	unsigned int argn = params[1]-1;
+	size_t argn = static_cast<size_t>(params[1]);
 
-	if (!inhook || argn >= Msg.size()) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+	if (!inhook || argn > Msg.Params())
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid message argument %d", argn);
 		return 0;
 	}
 
-	Msg[argn].type = params[2];
-	Msg[argn].v.iData = params[3];
+	Msg.SetParam(argn, params[2]);
 
 	return 1;
 }
 
 static cell AMX_NATIVE_CALL get_msg_arg_float(AMX *amx, cell *params)
 {
-	unsigned int argn = params[1]-1;
+	size_t argn = static_cast<size_t>(params[1]);
 
-	if (!inhook || argn >= Msg.size()) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+	if (!inhook || argn > Msg.Params())
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid message argument %d", argn);
 		return 0;
 	}
 
-	return amx_ftoc(Msg[argn].v.fData);
+	return amx_ftoc(Msg.GetParamFloat(argn));
 }
 
 static cell AMX_NATIVE_CALL set_msg_arg_float(AMX *amx, cell *params)
 {
-	unsigned int argn = params[1]-1;
+	size_t argn = static_cast<size_t>(params[1]);
 
-	if (!inhook || argn >= Msg.size()) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+	if (!inhook || argn > Msg.Params())
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid message argument %d", argn);
 		return 0;
 	}
 
 	REAL fVal = amx_ctof(params[2]);
 
-	Msg[argn].v.fData = fVal;
+	Msg.SetParam(argn, fVal);
 
 	return 1;
 }
 
 static cell AMX_NATIVE_CALL get_msg_arg_string(AMX *amx, cell *params)
 {
-	unsigned int argn = params[1]-1;
+	size_t argn = static_cast<size_t>(params[1]);
 
-	if (!inhook || argn >= Msg.size()) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+	if (!inhook || argn > Msg.Params())
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid message argument %d", argn);
 		return 0;
 	}
 
-	const char *szVal = Msg[argn].cData.c_str();
+	const char *szVal = Msg.GetParamString(argn);
 
-	return MF_SetAmxString(amx, params[2], szVal?szVal:"", params[3]);
+	return MF_SetAmxString(amx, params[2], szVal, params[3]);
 }
 
 static cell AMX_NATIVE_CALL set_msg_arg_string(AMX *amx, cell *params)
 {
-	unsigned int argn = params[1]-1;
+	size_t argn = static_cast<size_t>(params[1]);
 	int iLen;
 
-	if (!inhook || argn >= Msg.size()) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+	if (!inhook || argn > Msg.Params())
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid message argument %d", argn);
 		return 0;
 	}
 
 	char *szVal = MF_GetAmxString(amx, params[2], 0, &iLen);
 
-	Msg[argn].cData.assign(szVal);
+	Msg.SetParam(argn, szVal);
 
 	return 1;
 }

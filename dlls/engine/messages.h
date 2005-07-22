@@ -9,7 +9,8 @@
 #define BLOCK_ONCE 1
 #define BLOCK_SET 2
 
-enum {
+enum msgtype
+{
 	arg_byte = 1,
 	arg_char,
 	arg_short,
@@ -20,31 +21,43 @@ enum {
 	arg_entity,
 };
 
-enum {
-	type_int = 1,
-	type_float,
-	type_string,
-};
-
-class argMsg
+struct msgparam
 {
-public:
-	argMsg();
-	void Reset();
-	void Send();
-	int Type();
-
-	int type;
+	msgtype type;
 	union
 	{
 		REAL fData;
 		int iData;
 	} v;
-	String cData;
+	String szData;
+};
+
+class Message
+{
+public:
+	Message();
+	~Message();
+	void AddParam(float data, msgtype type);
+	void AddParam(int data, msgtype type);
+	void AddParam(const char *data, msgtype type);
+	void SetParam(size_t index, float data);
+	void SetParam(size_t index, int data);
+	void SetParam(size_t index, const char *data);
+	const char *GetParamString(size_t index);
+	float GetParamFloat(size_t index);
+	int GetParamInt(size_t index);
+	msgtype GetParamType(size_t index);
+	void Reset();
+	void Send();
+	size_t Params();
+private:
+	msgparam *AdvPtr();
+private:
+	CVector<msgparam *> m_Params;
+	size_t m_CurParam;
 };
 
 extern AMX_NATIVE_INFO msg_Natives[];
-extern CVector<argMsg> Msg;
 extern CVector<int> msgHooks[256];
 extern int msgBlocks[256];
 

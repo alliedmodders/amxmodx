@@ -215,6 +215,8 @@ begin
       TSciStyle(Items[4]).ForeColor := frmSettings.cboKeywords.Selected;
       TSciStyle(Items[5]).ForeColor := frmSettings.cboComments.Selected;
       TSciStyle(Items[6]).ForeColor := TSciStyle(Items[2]).ForeColor;
+      TSciStyle(Items[7]).ForeColor := frmSettings.cboComments.Selected;
+      TSciStyle(Items[8]).ForeColor := frmSettings.cboComments.Selected;
     end;
     frmMain.sciEditor.Caret.LineBackColor := frmSettings.cboActiveLine.Selected;
 

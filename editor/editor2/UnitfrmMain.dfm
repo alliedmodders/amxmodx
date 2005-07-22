@@ -1,6 +1,6 @@
 object frmMain: TfrmMain
-  Left = 222
-  Top = 277
+  Left = 224
+  Top = 333
   Width = 870
   Height = 640
   Color = clBtnFace
@@ -233,7 +233,7 @@ object frmMain: TfrmMain
               FontStyles = []
               ForeColor = clGreen
               CharCase = CASE_MIXED
-              Name = 'Line Comment'
+              Name = 'Comment 1'
               StyleNumber = 2
             end
             item
@@ -243,6 +243,20 @@ object frmMain: TfrmMain
               CharCase = CASE_MIXED
               Name = 'Brackets'
               StyleNumber = 34
+            end
+            item
+              FontSize = 0
+              FontStyles = []
+              CharCase = CASE_MIXED
+              Name = 'Comment 2'
+              StyleNumber = 1
+            end
+            item
+              FontSize = 0
+              FontStyles = []
+              CharCase = CASE_MIXED
+              Name = 'Comment 3'
+              StyleNumber = 3
             end>
           Keywords = <
             item
@@ -1555,7 +1569,7 @@ object frmMain: TfrmMain
           CommentStreamEnd = '*/'
           NumStyleBits = 5
         end>
-      LanguageManager.SelectedLanguage = 'null'
+      LanguageManager.SelectedLanguage = 'SMALL'
       FoldDrawFlags = [sciBelowIfNotExpanded]
       KeyCommands = <
         item

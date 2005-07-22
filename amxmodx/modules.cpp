@@ -603,7 +603,7 @@ void ConvertModuleName(const char *pathString, String &path)
 #endif //SMALL_CELL_SIZE==64
 }
 
-int loadModules(const char* filename)
+int loadModules(const char* filename, PLUG_LOADTIME now)
 {
 	FILE *fp = fopen(build_pathname("%s",filename), "rt");
 
@@ -637,7 +637,7 @@ int loadModules(const char* filename)
 
 		path.assign("");
 
-		ConvertModuleName(pathString, path);	
+		ConvertModuleName(pathString, path);
 
 		if (!validFile(path.c_str()))
 			continue;
@@ -687,6 +687,34 @@ int loadModules(const char* filename)
 
 		g_modules.put( cc );
 
+#ifndef FAKEMETA
+		if ( cc->IsMetamod())
+		{
+			char* mmpathname = build_pathname_addons("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"), line);
+			ConvertModuleName(mmpathname, path);
+			cc->attachMetamod(path.c_str(), now);
+		}
+
+		bool retVal = cc->attachModule();
+		if (cc->isAmxx() && !retVal)
+		{
+			switch (cc->getStatusValue())
+			{
+			case MODULE_FUNCNOTPRESENT:
+				report_error(1, "[AMXX] Module requested a not exisitng function (file \"%s\")%s%s%s", cc->getFilename(), cc->getMissingFunc() ? " (func \"" : "",
+					cc->getMissingFunc() ? cc->getMissingFunc() : "", cc->getMissingFunc() ? "\")" : "");
+				break;
+			case MODULE_INTERROR:
+				report_error(1, "[AMXX] Internal error during module load (file \"%s\")", cc->getFilename());
+				break;
+			case MODULE_BADLOAD:
+				report_error( 1 , "[AMXX] Module is not a valid library (file \"%s\")", cc->getFilename());
+				break;
+			default:
+				break;
+			}
+		}
+#endif
 	}
 
 	fclose(fp);
@@ -711,7 +739,11 @@ void detachReloadModules()
 
 	while ( a )
 	{
+#ifdef FAKEMETA
 		if ( (*a).isReloadable() )
+#else
+		if ( (*a).isReloadable() && !(*a).IsMetamod() )
+#endif
 		{
 			(*a).detachModule();
 			a.remove();
@@ -723,6 +755,7 @@ void detachReloadModules()
 
 }
 
+#ifdef FAKEMETA
 void attachModules()
 {
 	CList<CModule,const char *>::iterator  a  = g_modules.begin();
@@ -752,6 +785,7 @@ void attachModules()
 		++a;
 	}
 }
+#endif
 
 const char* strip_name( const char* a )
 {
@@ -766,6 +800,7 @@ const char* strip_name( const char* a )
 	return ret;
 }
 
+#ifdef FAKEMETA
 void attachMetaModModules(PLUG_LOADTIME now, const char* filename)
 {
 	File fp( build_pathname("%s",filename), "r"  );
@@ -828,7 +863,7 @@ void attachMetaModModules(PLUG_LOADTIME now, const char* filename)
 	g_FakeMeta.Meta_Query(gpMetaUtilFuncs);
 	g_FakeMeta.Meta_Attach(now, gpMetaGlobals, gpGamedllFuncs);
 }
-
+#endif
 
 
 // Get the number of running modules

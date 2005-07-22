@@ -89,6 +89,7 @@ float g_task_time;
 float g_auth_time;
 bool g_initialized = false;
 bool g_IsNewMM = false;
+bool g_NeedsP = false;
 
 #ifdef MEMORY_TEST
 float g_next_memreport_time;
@@ -129,7 +130,9 @@ int FF_ClientAuthorized = -1;
 int FF_ChangeLevel = -1;
 
 // fake metamod api
+#ifdef FAKEMETA
 CFakeMeta g_FakeMeta;
+#endif
 
 // Precache	stuff from force consistency calls
 // or check	for	pointed	files won't	be done
@@ -240,8 +243,7 @@ int	C_Spawn( edict_t *pent ) {
   get_localinfo("amxx_customdir", "addons/amxmodx/custom");
 
   //  ###### Load modules
-  loadModules(get_localinfo("amxx_modules",	"addons/amxmodx/configs/modules.ini"));
-  attachModules();
+  loadModules(get_localinfo("amxx_modules",	"addons/amxmodx/configs/modules.ini"), PT_ANYTIME);
   int loaded = countModules(CountModules_Running);	// Call	after attachModules	so all modules don't have pending stat
   // Set some info about amx version and modules
   CVAR_SET_STRING(init_amxmodx_version.name, AMX_VERSION);
@@ -1020,6 +1022,8 @@ void C_AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...)
 	RETURN_META(MRES_IGNORED);
 }
 
+bool m_NeedsP = false;
+
 C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_t *pMetaUtilFuncs)
 {
   gpMetaUtilFuncs=pMetaUtilFuncs;
@@ -1038,21 +1042,29 @@ C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_
 	  LOG_ERROR(PLID, "metamod version is incompatible with	this plugin; please	find a newer version of	this plugin");
 	  return(FALSE);
 	} else if (pmajor==mmajor) {
+#ifdef FAKEMETA
 		if (mminor == 10)
 		{
 			LOG_MESSAGE(PLID,	"WARNING: metamod version is older than	expected; consider finding a newer version");
 			g_IsNewMM = false;
 			//hack!
 			Plugin_info.ifvers = "5:10";
+#else
+		if (mminor < 11)
+		{
+			g_NeedsP = true;
+			
+#endif
 		} else if (mminor == 11) {
 			g_IsNewMM = true;
 		} else if (pminor > mminor) {
-			LOG_ERROR(PLID, "metamod version is incompatible with	this plugin; please	find a newer version of	this plugin");
+			LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please	find a newer version of	this plugin");
 			return FALSE;
 		} else if (pminor < mminor) {
 			LOG_MESSAGE(PLID,	"WARNING: metamod version is newer than	expected; consider finding a newer version of this plugin");
+			if (mminor > 11)
+				g_IsNewMM = true;
 		}
-	  LOG_MESSAGE(PLID,	"WARNING: metamod version is newer than	expected; consider finding a newer version of this plugin");
 	} else {
 	  LOG_ERROR(PLID, "unexpected version comparison; metavers=%s, mmajor=%d, mminor=%d; plugvers=%s, pmajor=%d, pminor=%d", ifvers, mmajor, mminor, META_INTERFACE_VERSION, pmajor, pminor);
 	}
@@ -1084,17 +1096,23 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 {
   if(now > Plugin_info.loadable)
   {
-	LOG_ERROR(PLID,	"Can't load	plugin right now");
+    LOG_ERROR(PLID,	"Can't load	plugin right now");
 	return(FALSE);
   }
-  LOG_MESSAGE(PLID, "gpMetaPExtFuncs=%p, g_IsNewMM=%d", gpMetaPExtFuncs, g_IsNewMM);
+  if (g_NeedsP && !gpMetaPExtFuncs)
+  {
+    LOG_ERROR(PLID, "You need Metamod-P or Metamod-1.18 to use AMX Mod X 1.1!");
+	return(FALSE);
+  }
   gpMetaGlobals=pMGlobals;
   gMetaFunctionTable.pfnGetEntityAPI2 =	GetEntityAPI2;
   gMetaFunctionTable.pfnGetEntityAPI2_Post = GetEntityAPI2_Post;
   gMetaFunctionTable.pfnGetEngineFunctions = GetEngineFunctions;
   gMetaFunctionTable.pfnGetEngineFunctions_Post	= GetEngineFunctions_Post;
+#ifdef FAKEMETA
   gMetaFunctionTable.pfnGetNewDLLFunctions = GetNewDLLFunctions;
   gMetaFunctionTable.pfnGetNewDLLFunctions_Post = GetNewDLLFunctions_Post;
+#endif
 
   memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
   gpGamedllFuncs=pGamedllFuncs;
@@ -1140,7 +1158,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
   //  ###### Now attach	metamod	modules
   // This will also call modules Meta_Query and Meta_Attach functions
-  attachMetaModModules(now,	get_localinfo("amxx_modules", "addons/amxmodx/configs/modules.ini") );
+  loadModules(get_localinfo("amxx_modules",	"addons/amxmodx/configs/modules.ini"), now);
 
   return(TRUE);
 }
@@ -1169,8 +1187,10 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)	{
   detachModules();
 
   //  ###### Now detach metamod modules
+#ifdef FAKEMETA
   g_FakeMeta.Meta_Detach(now, reason);
   g_FakeMeta.ReleasePlugins();
+#endif
 
   g_log.CloseFile();
 
@@ -1263,7 +1283,12 @@ C_DLLEXPORT	int	GetEntityAPI2( DLL_FUNCTIONS *pFunctionTable, int *interfaceVers
   gFunctionTable.pfnInconsistentFile = C_InconsistentFile;
   gFunctionTable.pfnServerActivate = C_ServerActivate;
 
+#ifdef FAKEMETA
   return g_FakeMeta.GetEntityAPI2(pFunctionTable, interfaceVersion, &gFunctionTable);
+#else
+  memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
+  return 1;
+#endif
 }
 
 DLL_FUNCTIONS gFunctionTable_Post;
@@ -1275,7 +1300,12 @@ C_DLLEXPORT	int	GetEntityAPI2_Post(	DLL_FUNCTIONS *pFunctionTable, int *interfac
   gFunctionTable_Post.pfnStartFrame	= C_StartFrame_Post;
   gFunctionTable_Post.pfnServerDeactivate =	C_ServerDeactivate_Post;
 
+#ifdef FAKEMETA
   return g_FakeMeta.GetEntityAPI2_Post(pFunctionTable, interfaceVersion, &gFunctionTable_Post);
+#else
+  memcpy(pFunctionTable, &gFunctionTable_Post, sizeof(DLL_FUNCTIONS));
+  return 1;
+#endif
 }
 
 enginefuncs_t meta_engfuncs;
@@ -1300,7 +1330,12 @@ C_DLLEXPORT	int	GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
   meta_engfuncs.pfnPrecacheSound = C_PrecacheSound;
   meta_engfuncs.pfnChangeLevel = C_ChangeLevel;
 
+#ifdef FAKEMETA
   return g_FakeMeta.GetEngineFunctions(pengfuncsFromEngine, interfaceVersion, &meta_engfuncs);
+#else
+  memcpy(pengfuncsFromEngine, &meta_engfuncs, sizeof(enginefuncs_t));
+  return 1;
+#endif
 }
 
 enginefuncs_t meta_engfuncs_post;
@@ -1319,32 +1354,15 @@ C_DLLEXPORT	int	GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine,	int	
   meta_engfuncs_post.pfnAlertMessage =	C_AlertMessage_Post;
   meta_engfuncs_post.pfnRegUserMsg = C_RegUserMsg_Post;
 
-
-  CList<int, int> list;
-  list.put(new int (8));
-  list.put_back(new int(10));
-  list.put_front(new int(6));
-  list.put(new int (12));
-  CList<int,int>::iterator iter;
-  iter = list.begin();
-  while (iter)
-  {
-	  if (*iter == 10)
-		  iter.remove();
-	  else if (*iter == 8)
-		  iter.put(new int (9));
-	  else
-		++iter;
-  }
-  iter = list.begin();
-  while (iter)
-  {
-	  AMXXLOG_Log("%d", *iter);
-	  ++iter;
-  }
+#ifdef FAKEMETA
   return g_FakeMeta.GetEngineFunctions_Post(pengfuncsFromEngine, interfaceVersion, &meta_engfuncs_post);
+#else
+  memcpy(pengfuncsFromEngine, &meta_engfuncs_post, sizeof(enginefuncs_t));
+  return 1;
+#endif
 }
 
+#ifdef FAKEMETA
 NEW_DLL_FUNCTIONS gNewDLLFunctionTable;
 C_DLLEXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pNewFunctionTable, int *interfaceVersion)
 {
@@ -1356,3 +1374,4 @@ C_DLLEXPORT int GetNewDLLFunctions_Post(NEW_DLL_FUNCTIONS *pNewFunctionTable, in
 {
 	return g_FakeMeta.GetNewDLLFunctions_Post(pNewFunctionTable, interfaceVersion, &gNewDLLFunctionTable_Post);
 }
+#endif

@@ -163,6 +163,26 @@ void CModule::clear(bool clearFilename)
 	m_Natives.clear();
 }
 
+bool CModule::attachMetamod(const char *mmfile, PLUG_LOADTIME now)
+{
+	void **handle;
+	void *dummy = NULL;
+
+	if (!m_Handle)
+		handle = &dummy;
+	else
+		handle = (void **)&m_Handle;
+
+	int res = LoadMetamodPlugin(mmfile, handle, now);
+
+	if (!res)
+	{
+		m_Metamod = false;
+	}
+
+	return true;
+}
+
 bool CModule::attachModule()
 {
 	// old & new
@@ -336,6 +356,12 @@ bool CModule::detachModule()
 		if (detachFunc_Old)
 			(*detachFunc_Old)();
 	}
+#ifndef FAKEMETA
+	if (IsMetamod())
+	{
+		UnloadMetamodPlugin(m_Handle);
+	}
+#endif
 	DLFREE(m_Handle);
 	clear();
 	return true;

@@ -226,11 +226,12 @@ void plugin_srvcmd();
 const char* stristr(const char* a,const char* b);
 char *strptime(const char *buf, const char *fmt, struct tm *tm, short addthem);
 
-int loadModules(const char* filename);
+int loadModules(const char* filename, PLUG_LOADTIME now);
 void detachModules();
 void detachReloadModules();
+#ifdef FAKEMETA
 void attachModules();
-void attachMetaModModules(PLUG_LOADTIME now, const char* filename);
+#endif
 
 // Count modules
 enum CountModulesMode
@@ -297,7 +298,9 @@ extern int FF_PluginEnd;
 extern int FF_InconsistentFile;
 extern int FF_ClientAuthorized;
 
+#ifdef FAKEMETA
 extern CFakeMeta g_FakeMeta;
+#endif
 
 struct func_s
 {

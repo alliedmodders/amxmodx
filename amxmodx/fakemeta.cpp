@@ -28,9 +28,52 @@
 *  version.
 */
 
-// Fake metamod api
 #include "amxmodx.h"
 #include "fakemeta.h"
+
+#ifndef FAKEMETA
+int LoadMetamodPlugin(const char *path, void **handle, PLUG_LOADTIME now)
+{
+	if (gpMetaPExtFuncs)
+	{
+		if(PEXT_LOAD_PLUGIN_BY_NAME(PLID, path, now, handle) || !*handle)
+		{
+			LOG_MESSAGE(PLID, "Can't Attach metamod-module \"%s\".", path);
+			return 0;
+		}
+		return 1;
+	} else if (g_IsNewMM) {
+		int err = 0;
+		if ( (err = LOAD_PLUGIN(PLID, path, now, handle)) || !*handle)
+		{
+			LOG_MESSAGE(PLID, "Can't Attach Module \"%s\".", path);
+			return 0;
+		}
+		return 1;
+	}
+	return 0;
+}
+int UnloadMetamodPlugin(void *handle)
+{
+	if (gpMetaPExtFuncs)
+	{
+		if(PEXT_UNLOAD_PLUGIN_BY_HANDLE(PLID, (void*)handle, PT_ANYTIME, PNL_PLUGIN)) {
+			return 0;
+		}
+		return 1;
+	} else if (g_IsNewMM) {
+		if (UNLOAD_PLUGIN_BY_HANDLE(PLID, (void *)handle, PT_ANYTIME, PNL_PLUGIN))
+		{
+			return 0;
+		}
+		return 1;
+	}
+
+	return 0;
+}
+#else
+
+// Fake metamod api
 
 // for varargs
 #define MAX_STRBUF_LEN 512
@@ -2901,3 +2944,5 @@ int CFakeMeta::GetNewDLLFunctions_Post(NEW_DLL_FUNCTIONS *pNewFunctionTable, int
 
 	return TRUE;
 }
+
+#endif //FAKEMETA

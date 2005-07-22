@@ -88,6 +88,9 @@ public:
 	bool attachModule();
 	bool queryModule();
 	bool detachModule();
+#ifndef FAKEMETA
+	bool attachMetamod(const char *mmfile, PLUG_LOADTIME now);
+#endif
 	const char* getStatus() const;
 	inline const char* getType() const { return m_Amxx ? "amxx" : (m_Metamod ? "amx&mm" : "amx"); }
 	inline const char* getAuthor() const { return m_Amxx ? (m_InfoNew.author) : (m_InfoOld ? m_InfoOld->author : "unknown"); }
@@ -101,12 +104,11 @@ public:
 	inline bool isAmxx() const { return m_Amxx; }
 	inline const char *getMissingFunc() const { return m_MissingFunc; }
 	inline const char *getFilename() { return m_Filename.c_str(); }
+	inline bool IsMetamod() { return m_Metamod; }
 	void CModule::CallPluginsLoaded();
 
 	CList<AMX_NATIVE_INFO*> m_Natives;
 };
-
-
 
 #endif
 

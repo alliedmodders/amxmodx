@@ -31,6 +31,10 @@
 #ifndef __FAKEMETA_H__
 #define __FAKEMETA_H__
 
+#ifndef FAKEMETA
+int UnloadMetamodPlugin(void *handle);
+int LoadMetamodPlugin(const char *path, void **handle, PLUG_LOADTIME now);
+#else
 // Fake metamod api for modules
 
 #include "CList.h"
@@ -224,6 +228,8 @@ public:
 // Fake Metamod
 // defined in meta_api.cpp
 extern CFakeMeta g_FakeMeta;
+
+#endif FAKEMETA
 
 #endif // #ifndef __FAKEMETA_H__
 

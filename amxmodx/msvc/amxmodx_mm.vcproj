@@ -255,7 +255,10 @@
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\extra\lib_win32"
 				ModuleDefinitionFile=""
+				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\memtestrelease/amxx_mm.pdb"
+				GenerateMapFile="TRUE"
+				MapExports="TRUE"
 				ImportLibrary=".\memtestrelease/amxx_mm.lib"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -392,7 +395,9 @@
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\extra\lib_win32"
 				ModuleDefinitionFile=""
+				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\jitrelease/amxx_mm.pdb"
+				GenerateMapFile="FALSE"
 				ImportLibrary=".\jitrelease/amxx_mm.lib"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -460,6 +465,7 @@
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\extra\lib_win32"
 				ModuleDefinitionFile=""
+				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\jitmemtestrelease/amxx_mm.pdb"
 				ImportLibrary=".\jitmemtestrelease/amxx_mm.lib"/>
 			<Tool

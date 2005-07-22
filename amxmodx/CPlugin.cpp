@@ -69,8 +69,8 @@ int  CPluginMngr::loadPluginsFromFile( const char* filename )
 
 	while ( !feof(fp) ) 
 	{
-		*pluginName = 0;
-		*debug = 0;
+		pluginName[0] = '\0';
+		debug[0] = '\0';
 		debugFlag = 0;
 		line.clear();
 		line._fread(fp);

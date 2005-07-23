@@ -612,7 +612,7 @@ begin
       except
         on E: Exception do begin
           if not Cancel then
-            MessageBox(frmMain.Handle, PChar('An error occured while uploading "' + FileList[i] + '"!' + #13 + E.Message), PChar(frmMain.Caption), MB_ICONSTOP);
+            MessageBox(frmMain.Handle, PChar('An error occured while uploading "' + FileList[i] + '"!' + #13 + E.Message), PChar(Application.Title), MB_ICONSTOP);
           Screen.Cursor := crDefault;
           Application.Terminate;
           exit;

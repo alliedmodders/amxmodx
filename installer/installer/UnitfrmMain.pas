@@ -154,6 +154,9 @@ var ePath: String;
     eOS: TOS;
 begin
   if jplWizard.ActivePage = jspFTP then begin
+    if not IdFTP.Connected then
+      IdFTP.Connect;
+    
     { FTP }
     eStr := TStringList.Create;
     ePath := '/';

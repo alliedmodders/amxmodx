@@ -5,6 +5,13 @@
 #include "hash.h"
 
 /**
+ * (C)2005 David "BAILOPAN" Anderson
+ * Licensed under the GNU General Public License, version 2
+ * 
+ * Vault implementation using a Hash Table
+ */
+
+/**
  * Vault file format:
  *  Headers
  *   uint32_t - nVLT

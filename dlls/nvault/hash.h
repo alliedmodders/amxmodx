@@ -5,6 +5,13 @@
 #include "sdk/amxxmodule.h"
 #include "sdk/CString.h"
 
+/**
+ * (C)2005 David "BAILOPAN" Anderson
+ * Licensed under the GNU General Public License, version 2
+ * 
+ * Small hash table implementation
+ */
+
 #if defined WIN32 || defined _WIN32
 	typedef unsigned __int8	uint8_t;
 	typedef __int8 int8_t;
@@ -13,7 +20,7 @@
 #endif
 
 /** 
- * Hash Table implementation (by David "BAILOPAN" Anderson)
+ * Hash Table implementation
  *  This is not designed to be flexible for size/type, it's hardcoded.
  *  The table size is 2^11, which should be good enough for fast small lookups.
  *  A hash is computed by two chopped up 8bit versions of CRC32, which is then combined to 

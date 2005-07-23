@@ -20,12 +20,23 @@ native vault_open(const name[]);
  *  One extra param - Float byref
  *  Two extra params - gets as a string
  */
-native nvault_get(id, const name[], ...);
+native nvault_get(id, const key[], ...);
 
-/* Reads a data from given key.
- * If len is set to zero then get_vaultdata
-* returns value as an number. */
-native get_vaultdata(const key[], data[] = "", len = 0);
+/* Reads from a vault, includes time
+ *  Parameter format same as nvault_get()
+ */
+native nvault_timeget(id, const key[], &time, ...);
+
+/* Sets a key/value pair
+ *  valFmt is formatted according to format()
+ */
+native nvault_set(id, const key[], const valFmt[], {Float,_}:...);
+
+/* Sets a permanent key/value pair
+ *  A permanent key isn't timestamped, so it can be invulnerable to pruning.
+ */
+native nvault_pset(id, const key[], const valFmt[], {Float,_}:...);
+
 
 /* Sets a data under given key. */
 native set_vaultdata(const key[], const data[] = "" );

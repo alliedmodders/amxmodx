@@ -3,6 +3,13 @@
 
 #include "nvault.h"
 
+/**
+ * (C)2005 David "BAILOPAN" Anderson
+ * Licensed under the GNU General Public License, version 2
+ * 
+ * Adds Journaling capabilities for an nVault
+ */
+
 #define JOURNAL_MAGIC	0x6E564A4C
 
 class Journal

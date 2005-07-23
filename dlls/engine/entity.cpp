@@ -1098,6 +1098,8 @@ static cell AMX_NATIVE_CALL entity_set_edict(AMX *amx, cell *params)
 	int idx = params[2];
 	int iSetEnt = params[3];
 
+	CHECK_ENTITY(iEnt);
+
 	edict_t *pEnt = INDEXENT2(iEnt);
 	edict_t *pSetEnt = INDEXENT2(iSetEnt);
 

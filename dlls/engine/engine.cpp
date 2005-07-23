@@ -11,7 +11,6 @@ TraceResult g_tr;
 #define	BUFFERSIZE	1023
 char g_buffer[BUFFERSIZE + 1];
 
-
 void UTIL_SetSize(edict_t *pev, const Vector &vecMin, const Vector &vecMax)
 {
 	SET_SIZE(ENT(pev), vecMin, vecMax);

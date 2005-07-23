@@ -26,6 +26,9 @@ void ClearHooks()
 	for (i=0; i<Thinks.size(); i++)
 		delete Thinks[i];
 
+	for (i=0; i<256; i++)
+		msgHooks[i].clear();
+
 	Touches.clear();
 	Impulses.clear();
 	Thinks.clear();
@@ -225,14 +228,6 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 {
 	for(int f = 1; f <= gpGlobals->maxClients;f++) 
 		g_player_edicts[f]=pEdictList + f;
-	register int i = 0, j = 0;
-	for (i=0; i<256; i++) {
-		for (j=0; j<(int)msgHooks[i].size(); j++)
-			if (msgHooks[i].at(j) != -1)
-				MF_UnregisterSPForward(msgHooks[i].at(j));
-		msgHooks[i].clear();
-		msgBlocks[i] = 0;
-	}
 
 	RETURN_META(MRES_IGNORED);
 }

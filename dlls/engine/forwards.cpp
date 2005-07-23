@@ -232,6 +232,8 @@ void pfnTouch(edict_t *pToucher, edict_t *pTouched)
 	int retVal = 0;
 	const char *ptrClass = STRING(pToucher->v.classname);
 	const char *ptdClass = STRING(pTouched->v.classname);
+	int ptrIndex = ENTINDEX(pToucher);
+	int ptdIndex = ENTINDEX(pTouched);
 	META_RES res=MRES_IGNORED;
 	for (i=0; i<Touches.size(); i++)
 	{
@@ -239,13 +241,13 @@ void pfnTouch(edict_t *pToucher, edict_t *pTouched)
 		{
 			if (Touches[i]->Touched.size() == 0)
 			{
-				retVal = MF_ExecuteForward(Touches[i]->Forward, ENTINDEX(pToucher), ENTINDEX(pTouched));
+				retVal = MF_ExecuteForward(Touches[i]->Forward, ptrIndex, ptdIndex);
 				if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
 					RETURN_META(MRES_SUPERCEDE);
 				else if (retVal)
 					res=MRES_SUPERCEDE;
 			} else if (Touches[i]->Touched.compare(ptdClass)==0) {
-				retVal = MF_ExecuteForward(Touches[i]->Forward, ENTINDEX(pToucher), ENTINDEX(pTouched));
+				retVal = MF_ExecuteForward(Touches[i]->Forward, ptrIndex, ptdIndex);
 				if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
 					RETURN_META(MRES_SUPERCEDE);
 				else if (retVal)
@@ -254,13 +256,13 @@ void pfnTouch(edict_t *pToucher, edict_t *pTouched)
 		} else if (Touches[i]->Toucher.compare(ptrClass)==0) {
 			if (Touches[i]->Touched.size() == 0)
 			{
-				retVal = MF_ExecuteForward(Touches[i]->Forward, ENTINDEX(pToucher), ENTINDEX(pTouched));
+				retVal = MF_ExecuteForward(Touches[i]->Forward, ptrIndex, ptdIndex);
 				if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
 					RETURN_META(MRES_SUPERCEDE);
 				else if (retVal)
 					res=MRES_SUPERCEDE;
 			} else if (Touches[i]->Touched.compare(ptdClass)==0) {
-				retVal = MF_ExecuteForward(Touches[i]->Forward, ENTINDEX(pToucher), ENTINDEX(pTouched));
+				retVal = MF_ExecuteForward(Touches[i]->Forward, ptrIndex, ptdIndex);
 				if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
 					RETURN_META(MRES_SUPERCEDE);
 				else if (retVal)
@@ -270,12 +272,12 @@ void pfnTouch(edict_t *pToucher, edict_t *pTouched)
 	}
 	/* Execute pfnTouch forwards */
 	if (pfnTouchForward != -1) {
-		retVal = MF_ExecuteForward(pfnTouchForward, ENTINDEX(pToucher), ENTINDEX(pTouched));
+		retVal = MF_ExecuteForward(pfnTouchForward, ptrIndex, ptdIndex);
 		if (retVal)
 			RETURN_META(MRES_SUPERCEDE);
 	}
 	if (VexdTouchForward != -1) {
-		retVal = MF_ExecuteForward(VexdTouchForward, ENTINDEX(pToucher), ENTINDEX(pTouched));
+		retVal = MF_ExecuteForward(VexdTouchForward, ptrIndex, ptdIndex);
 		if (retVal)
 			RETURN_META(MRES_SUPERCEDE);
 	}

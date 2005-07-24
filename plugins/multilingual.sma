@@ -62,7 +62,7 @@ public plugin_init()
     copy(lang,2,"en")
     set_vaultdata("server_language",lang)
   }
-  set_cvar_string("amxx_language",lang)
+  set_cvar_string("amx_language",lang)
   g_serverLang = get_lang_id(lang)
 
   g_langNum = get_langsnum()
@@ -99,7 +99,7 @@ public cmdLang(id,level,cid) {
   }
 
   set_vaultdata("server_language",arg)
-  set_cvar_string("amxx_language",arg)
+  set_cvar_string("amx_language",arg)
   g_serverLang = get_lang_id(arg)
 
   return PLUGIN_HANDLED
@@ -182,7 +182,7 @@ public actionMenu(id,key) {
 
   if ( isAdmin && (key==2) && !equali(sLang,sLang_old) ) {
     set_vaultdata("server_language",sLang)
-    set_cvar_string("amxx_language",sLang)
+    set_cvar_string("amx_language",sLang)
     g_serverLang = g_menuLang[id][1]
     format(lName,63,"%L",sLang,"LANG_NAME")
     client_print(id,print_chat,"%L",pLang,"SET_LANG_SERVER",lName)

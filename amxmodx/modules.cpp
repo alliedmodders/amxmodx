@@ -690,7 +690,7 @@ int loadModules(const char* filename, PLUG_LOADTIME now)
 #ifndef FAKEMETA
 		if ( cc->IsMetamod())
 		{
-			char* mmpathname = build_pathname_addons("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"), line);
+			char* mmpathname = build_pathname_addons("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"), line.c_str());
 			ConvertModuleName(mmpathname, path);
 			cc->attachMetamod(path.c_str(), now);
 		}

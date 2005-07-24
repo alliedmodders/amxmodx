@@ -139,7 +139,7 @@ public:
 		if (index >= (int)len || index < 0)
 			return npos;
 		unsigned int i = 0;
-		for (i=index; i<(int)len; i++)
+		for (i=index; i<(unsigned int)len; i++)
 		{
 			if (v[i] == c)
 			{
@@ -271,7 +271,7 @@ public:
 			num = len - index;
 		}
 
-		unsigned int i = 0, j=0;
+		unsigned int i = 0;
 		unsigned int nslen = num + 2;
 
 		ns.Grow(nslen);

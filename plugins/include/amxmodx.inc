@@ -689,7 +689,8 @@ native find_plugin_byfile(const filename[], ignoreCase=1);
 //If you set ml to 1, everything will be preformatted
 // with the multi-lingual system.
 //NOTE: ml=1 currently is not enabled.
-native menu_create(title[], ml=0);
+//handler[] will be called when someone presses a key on your menu
+native menu_create(title[], handler[], ml=0);
 
 //Creates a menu item callback handler.  
 //The callback handler is passed the playerid, menuid, and itemid.
@@ -698,7 +699,8 @@ native menu_makecallback(function[]);
 
 //Adds an item to a menu.  When displayed, the name will be shown.
 //If the player does not have the access it is disabled.
-//If you set callbac, the callback will be activated beforehand.
+//If you set callback, the callback will be called before the item is printed on the screen.
+//this lets you change it in real time depending on conditions.
 native menu_additem(menu, const name[], const command[]="", paccess=0, callback=-1);
 
 //returns how many pages are in a menu

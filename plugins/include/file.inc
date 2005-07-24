@@ -50,22 +50,10 @@ native fopen(const filename[],const mode[]);
 native fclose(file);
 //Read a file for ret_size length
 native fread(file,ret[],ret_size);
-//Write a file
-native fwrite(file,const str[],{Float,Sql,Result,_}:...);
-//Check if at the end of a file
-native feof(file);
-//Seek a file
-native fseek(file,pos,type);
-//Rewind a file (reset)
-native rewind(file);
-//Flush a file
-native fflush(file);
-//Scan a file by a format
-native fscanf(file,const str[],{Float,Sql,Result,_}:...);
-//Returns the current file position pointer
-native ftell(file);
+
 //Return the size of a file
 native filesize(const filename[],{Float,Sql,Result,_}:...);
+
 //Delete a file (delete_file macro)
 native unlink(const filename[],{Float,Sql,Result,_}:...);
 
@@ -73,20 +61,6 @@ native unlink(const filename[],{Float,Sql,Result,_}:...);
 native open_dir(dir[], firstfile[], length);
 native next_file(dirh, buffer[], length);
 native close_dir(dirh);
-
-//These are type specific file getting and writing commands:
-//c=char, s=short, l=long, i=int, f=float
-native fgetc(file);		//read char (size 1)
-native fgets(file);		//read short (size 2)
-native fgetl(file);		//read long (size 4)
-native fgeti(file);		//read int (size 4)
-native Float:fgetf(file);	//read float (size 4)
-
-native fputc(file,num);		//write char (size 1)
-native fputs(file,num);		//write short (size 2)
-native fputl(file,num);		//write long (size 4)
-native fputi(file,num);		//write int (size 4)
-native fputf(file,Float:num);	//write float (size 4)
 
 stock bool:file_copy(const SOURCE[], const TARGET[], error[], const ERRORLEN, const bool:REPLACE_TARGET = false) {
 	if (!file_exists(SOURCE)) {

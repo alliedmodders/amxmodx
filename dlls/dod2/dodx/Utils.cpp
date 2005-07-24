@@ -81,6 +81,7 @@ weapon_t weaponData[] = {
 /* Function will select correct id */
 int get_weaponid(CPlayer* pPlayer){
 	int weapon = pPlayer->current;
+	const char *sz;
 	switch(weapon) {
 	case  1: if ( g_map.detect_allies_country ) weapon = 37; break;
 	case  5: if ( pPlayer->pEdict->v.button&IN_ATTACK2 ) weapon = 38; break;
@@ -89,20 +90,25 @@ int get_weaponid(CPlayer* pPlayer){
 		if ( g_map.detect_allies_paras ) weapon = 33;
 		break;
 	case 23: 
-		if ( pPlayer->pEdict->v.weaponmodel )
-			pPlayer->wpnModel = pPlayer->pEdict->v.weaponmodel; 
-		if ( !( pPlayer->wpnModel&(1<<3) ) ) 
+        sz = STRING(pPlayer->pEdict->v.weaponmodel);
+        if ( sz[13] == 's' )
 			weapon = 32; 	
 		break;
 	case 24: if ( pPlayer->pEdict->v.button&IN_ATTACK2 ) weapon = 41; break;
 	case 25:
-		if ( pPlayer->pEdict->v.weaponmodel )
-			pPlayer->wpnModel = pPlayer->pEdict->v.weaponmodel;
-		if ( pPlayer->wpnModel&(1<<3) ) 
+        sz = STRING(pPlayer->pEdict->v.weaponmodel);
+        if ( sz[16] == 's' )
 			 weapon = 35; 
 		else if ( pPlayer->pEdict->v.button&IN_ATTACK2 )
 			 weapon = 39;
-		 break;
+		break;
+	case 15:
+        weapon = 14;
+        break;
+    case 16:
+        if ( g_map.detect_allies_country ) weapon = 36;
+        else weapon = 13;
+        break;
 	}
 	return weapon;
 }

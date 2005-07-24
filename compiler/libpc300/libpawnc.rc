@@ -1,0 +1,62 @@
+#include <windows.h>
+#if defined WIN32 || defined _WIN32 || defined __WIN32__
+#  include <winver.h>
+#else
+#  include <ver.h>
+#endif
+
+AppIcon ICON "pawn.ico"
+
+/*  Version information
+ *
+ *  All strings MUST have an explicit \0. See the Windows SDK documentation
+ *  for details on version information and the VERSIONINFO structure.
+ */
+#define VERSION              3
+#define REVISION             0
+#define BUILD                0
+#define VERSIONSTR           "3.0.0\0"
+#if defined STAND_ALONE
+#define VERSIONNAME          "pawncc.exe\0"
+#define VERSIONDESCRIPTION   "Pawn Compiler\0"
+#define VERSIONPRODUCTNAME   "pawncc\0"
+#else
+#define VERSIONNAME          "libpawnc.dll\0"
+#define VERSIONDESCRIPTION   "Pawn Compiler library\0"
+#define VERSIONPRODUCTNAME   "libpawnc\0"
+#endif
+#define VERSIONCOMPANYNAME   "ITB CompuPhase\0"
+#define VERSIONCOPYRIGHT     "Copyright \251 1998-2005 ITB CompuPhase\0"
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION    VERSION, REVISION, BUILD, 0
+PRODUCTVERSION VERSION, REVISION, BUILD, 0
+FILEFLAGSMASK  0x0000003FL
+FILEFLAGS      0
+#if defined(WIN32)
+  FILEOS       VOS__WINDOWS32
+#else
+  FILEOS       VOS__WINDOWS16
+#endif
+FILETYPE       VFT_DLL
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "CompanyName",      VERSIONCOMPANYNAME
+            VALUE "FileDescription",  VERSIONDESCRIPTION
+            VALUE "FileVersion",      VERSIONSTR
+            VALUE "InternalName",     VERSIONNAME
+            VALUE "LegalCopyright",   VERSIONCOPYRIGHT
+            VALUE "OriginalFilename", VERSIONNAME
+            VALUE "ProductName",      VERSIONPRODUCTNAME
+            VALUE "ProductVersion",   VERSIONSTR
+        END
+    END
+
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END

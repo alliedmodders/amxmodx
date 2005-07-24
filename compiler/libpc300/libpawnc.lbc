@@ -1,0 +1,5 @@
+++_Compile@16        .libpawnc .Compile
+++pc_compile         .libpawnc .pc_compile
+++pc_addconstant     .libpawnc .pc_addconstant
+++pc_addtag          .libpawnc .pc_addtag
+++pc_enablewarning   .libpawnc .pc_enablewarning                                     

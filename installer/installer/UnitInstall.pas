@@ -36,7 +36,7 @@ uses UnitfrmMain, UnitfrmProxy, UnitFunctions, UnitScanMods;
 
 function InstallTime: String;
 begin
-  Result := TimeToStr(Now - StartTime);
+  Result := FormatDateTime('HH:MM:SS', Now - StartTime);
 end;
 
 procedure AddStatus(Text: String; Color: TColor; ShowTime: Boolean = True);

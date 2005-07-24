@@ -461,7 +461,7 @@ begin
   finally
     eStr := TStringList.Create;
     eStr.Add(';;Metamod plugins.ini');
-    eStr.Add(';;AMX Mod X 1.1');
+    eStr.Add(';;AMX Mod X 1.5');
     if OS = osWindows then
       eStr.Add('win32   addons\amxmodx\dlls\amxmodx_mm.dll')
     else if OS = osLinux32 then

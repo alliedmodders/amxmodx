@@ -1,6 +1,6 @@
 program AMXInstaller;
 
-{ AMXX Installer 1.1
+{ AMXX Installer for AMX Mod X 1.5
   by the AMXX Development Team
 
   Used components:
@@ -10,7 +10,7 @@ program AMXInstaller;
   - FlatPack Component Pack (www.torry.net)
   - JVCL Lib Pack 3.0 (jvcl.sourceforge.net)
 
-  AMXX Installer 1.1 is developed under GNU Public License
+  AMXX Installer for AMX Mod X 1.5 is developed under GNU Public License
   and comes WITH ABSOLUTELY NO WARRANTY!
 }
 

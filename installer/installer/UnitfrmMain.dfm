@@ -57,7 +57,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 527
     Height = 314
-    ActivePage = jspWelcome
+    ActivePage = jspInstallProgress
     PropagateEnable = False
     Align = alClient
     OnChange = jplWizardChange
@@ -4911,7 +4911,7 @@ object frmMain: TfrmMain
         Top = 10
         Width = 343
         Height = 50
-        Caption = 'Welcome to the AMX Mod X Installer 1.1 Setup Wizard'
+        Caption = 'Welcome to the AMX Mod X Installer 1.5 Setup Wizard'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -21
@@ -4923,11 +4923,11 @@ object frmMain: TfrmMain
       object lblInfo1: TLabel
         Left = 172
         Top = 82
-        Width = 326
-        Height = 13
+        Width = 327
+        Height = 15
         Caption = 
           'This wizard will guide you through the installation of AMX Mod X' +
-          ' 1.1.'
+          ' 1.5.'
         WordWrap = True
       end
       object lblInfo2: TLabel
@@ -5016,7 +5016,7 @@ object frmMain: TfrmMain
           Height = 13
           Caption = 
             'Please review the following license terms before installing AMX ' +
-            'Mod X 1.1.'
+            'Mod X 1.5.'
         end
         object bvlSpacer1: TBevel
           Left = 0
@@ -5949,7 +5949,7 @@ object frmMain: TfrmMain
           Top = 28
           Width = 277
           Height = 13
-          Caption = 'Please select the mod AMX Mod X 1.1 shall be installed to.'
+          Caption = 'Please select the mod AMX Mod X 1.5 shall be installed to.'
         end
         object bvlSelectMod: TBevel
           Left = 0
@@ -6062,7 +6062,7 @@ object frmMain: TfrmMain
           Top = 8
           Width = 202
           Height = 14
-          Caption = 'Installing AMX Mod X 1.1 via FTP'
+          Caption = 'Installing AMX Mod X 1.5 via FTP'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -6380,7 +6380,7 @@ object frmMain: TfrmMain
           Top = 8
           Width = 156
           Height = 14
-          Caption = 'Installing AMX Mod X 1.1'
+          Caption = 'Installing AMX Mod X 1.5'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -6393,7 +6393,7 @@ object frmMain: TfrmMain
           Top = 28
           Width = 241
           Height = 13
-          Caption = 'Please wait while AMX Mod X 1.1 is being installed.'
+          Caption = 'Please wait while AMX Mod X 1.5 is being installed.'
         end
         object bvlSpacer5: TBevel
           Left = 0

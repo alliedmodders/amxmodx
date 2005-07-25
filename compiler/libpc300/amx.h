@@ -217,7 +217,7 @@ typedef struct tagAMX_FUNCSTUB {
 
 typedef struct tagFUNCSTUBNT {
   ucell address         PACKED;
-  uint32_t nameofs      PACKED;
+  ucell nameofs      PACKED;	//we need this for amxx to be backwards comaptible
 } PACKED AMX_FUNCSTUBNT;
 
 /* The AMX structure is the internal structure for many functions. Not all

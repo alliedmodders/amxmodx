@@ -217,7 +217,7 @@ typedef struct tagAMX_FUNCSTUB {
 
 typedef struct tagFUNCSTUBNT {
   ucell address         PACKED;
-  uint32_t nameofs      PACKED;
+  ucell nameofs      PACKED;	//we need this for amxx to be backwards comaptible
 } PACKED AMX_FUNCSTUBNT;
 
 /* The AMX structure is the internal structure for many functions. Not all
@@ -249,11 +249,9 @@ typedef struct tagAMX {
   cell reset_stk        PACKED;
   cell reset_hea        PACKED;
   cell sysreq_d         PACKED; /* relocated address/value for the SYSREQ.D opcode */
-  #if defined JIT
-    /* support variables for the JIT */
-    int reloc_size      PACKED; /* required temporary buffer for relocations */
-    long code_size      PACKED; /* estimated memory footprint of the native code */
-  #endif
+  /* support variables for the JIT */
+  int reloc_size      PACKED; /* required temporary buffer for relocations */
+  long code_size      PACKED; /* estimated memory footprint of the native code */
 } PACKED AMX;
 
 /* The AMX_HEADER structure is both the memory format as the file format. The
@@ -279,13 +277,8 @@ typedef struct tagAMX_HEADER {
   int32_t nametable     PACKED; /* name table */
 } PACKED AMX_HEADER;
 
-#if PAWN_CELL_SIZE==16
-  #define AMX_MAGIC     0xf1e2
-#elif PAWN_CELL_SIZE==32
-  #define AMX_MAGIC     0xf1e0
-#elif PAWN_CELL_SIZE==64
-  #define AMX_MAGIC     0xf1e1
-#endif
+//This is always the same for us
+#define AMX_MAGIC     0xf1e0
 
 enum {
   AMX_ERR_NONE,

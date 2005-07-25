@@ -90,6 +90,7 @@ float g_auth_time;
 bool g_initialized = false;
 bool g_IsNewMM = false;
 bool g_NeedsP = false;
+bool g_coloredmenus;
 
 #ifdef MEMORY_TEST
 float g_next_memreport_time;
@@ -605,7 +606,6 @@ void C_ClientCommand(	edict_t	*pEntity ) {
   CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
   META_RES result =	MRES_IGNORED;
   cell ret = 0;
-  int err;
   const	char* cmd =	CMD_ARGV(0);
   const	char* arg =	CMD_ARGV(1);
 
@@ -665,10 +665,7 @@ void C_ClientCommand(	edict_t	*pEntity ) {
 	  if ( (*aa).matchCommandLine( cmd , arg  )	&&
 		(*aa).getPlugin()->isExecutable(  (*aa).getFunction() )	)
 	  {
-
-		if ((err =amx_Exec((*aa).getPlugin()->getAMX(),	&ret , (*aa).getFunction()	 , 3, pPlayer->index, (*aa).getFlags(),(*aa).getId()  )) !=	AMX_ERR_NONE)
-			LogError((*aa).getPlugin()->getAMX(), err, "");
-
+	    ret = executeForwards((*aa).getFunction(), pPlayer->index, (*aa).getFlags(), (*aa).getId());
 		if ( ret & 2 )	result = MRES_SUPERCEDE;
 		if ( ret & 1 )	RETURN_META(MRES_SUPERCEDE);
 	  }
@@ -695,33 +692,19 @@ void C_ClientCommand(	edict_t	*pEntity ) {
 	  int menuid = pPlayer->menu;
 	  pPlayer->menu	= 0;
 
-#ifdef ENABLEEXEPTIONS
-	  try{
-#endif
 		MenuMngr::iterator a = g_menucmds.begin();
 
 		while( a )
 		{
 		  if ( (*a).matchCommand(  menuid ,	bit_key	 ) && (*a).getPlugin()->isExecutable( (*a).getFunction() ) )
 		  {
-
-			if ( ( err = amx_Exec((*a).getPlugin()->getAMX(), &ret ,(*a).getFunction() , 2,	pPlayer->index,pressed_key)) !=	AMX_ERR_NONE)
-				LogError((*a).getPlugin()->getAMX(), err, "");
-
+		    ret = executeForwards((*a).getFunction(), pPlayer->index, pressed_key);
 			if ( ret & 2 ) result =	MRES_SUPERCEDE;
 			if ( ret & 1 ) RETURN_META(MRES_SUPERCEDE);
 		  }
 
 		  ++a;
 		}
-
-#ifdef ENABLEEXEPTIONS
-	  }
-	  catch( ... )
-	  {
-		AMXXLOG_Log( "[AMXX] Fatal error at menu commmand execution");
-	  }
-#endif
 	}
   }
   /* check for PLUGIN_HANDLED_MAIN and block hl	call if	needed */
@@ -898,35 +881,6 @@ void C_WriteEntity_Post(int iValue) {
 }
 void C_MessageEnd_Post(void) {
   g_events.executeEvents();
-
-#if	0 // ######### this	is done	by call	above
-  EventsMngr::iterator a = g_events.begin();
-  int err;
-#ifdef ENABLEEXEPTIONS
-  try
-  {
-#endif
-
-	while (	a )
-	{
-
-	  if ((err = amx_Exec((*a).getPlugin()->getAMX(), NULL ,  (*a).getFunction() , 1, mPlayerIndex	/*g_events.getArgInteger(0)*/ )) !=	AMX_ERR_NONE)
-		LogError((*a).getPlugin()->getAMX(), err, "");
-
-
-	  ++a;
-
-	}
-
-#ifdef ENABLEEXEPTIONS
-  }
-  catch( ... )
-  {
-	AMXXLOG_Log( "[AMXX] Fatal error at event execution");
-  }
-#endif
-#endif
-
   if (endfunction) (*endfunction)(NULL);
   RETURN_META(MRES_IGNORED);
 }
@@ -1134,6 +1088,13 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	  a	= &gameDir[i];
   g_mod_name.assign(a);
 
+  if (g_mod_name.compare("cstrike")==0 ||
+	  g_mod_name.compare("czero")==0 ||
+	  g_mod_name.compare("dod")==0)
+	  g_coloredmenus = true;
+  else
+	  g_coloredmenus = false;
+
   // ###### Print short GPL
   print_srvconsole(	"\n   AMX Mod X version %s Copyright (c) 2004-2005 AMX Mod X Development Team \n"
 					"   AMX Mod X comes with ABSOLUTELY NO WARRANTY; for details type `amxx gpl'.\n", AMX_VERSION);
@@ -1193,6 +1154,8 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)	{
 #endif
 
   g_log.CloseFile();
+
+  Module_UncacheFunctions();
 
   return(TRUE);
 }

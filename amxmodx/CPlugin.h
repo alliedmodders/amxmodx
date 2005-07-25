@@ -64,6 +64,8 @@ public:
 		String title;
 		String author;
 		String errorMsg;
+		int m_PauseFwd;
+		int m_UnpauseFwd;
 		int paused_fun;
 		int status;
 		CPlugin* next;
@@ -88,8 +90,8 @@ public:
 		inline void setError( const char* n ) { errorMsg.assign(n); }
 		inline bool isValid() const { return ((status != ps_bad_load) && (status != ps_locked)); }
 		inline bool isPaused() const { return ( (status == ps_paused) || (status == ps_stopped)); }
-		inline bool isFunctionPaused( int id ) const { return (paused_fun & (1<<id)) ? true : false; 	}
-		inline bool isExecutable(int id) const { 	return (isValid() && !isPaused() && !isFunctionPaused(id));	}
+		//inline bool isFunctionPaused( int id ) const { return (paused_fun & (1<<id)) ? true : false; 	}
+		inline bool isExecutable(int id) const { return (isValid() && !isPaused());	}
 		void pausePlugin();
 		void unpausePlugin();
 		void pauseFunction( int id );

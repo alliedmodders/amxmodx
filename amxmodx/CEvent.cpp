@@ -396,40 +396,21 @@ void EventsMngr::parseValue(const char *sz)
 
 void EventsMngr::executeEvents()
 {
-	int err;
-
 	if (!m_ParseFun)
 	{
 		return;
 	}
 
-#ifdef ENABLEEXEPTIONS
-	try
+	for (ClEventVecIter iter = m_ParseFun->begin(); iter; ++iter)
 	{
-#endif		// #ifdef ENABLEEXEPTIONS
-		for (ClEventVecIter iter = m_ParseFun->begin(); iter; ++iter)
+		if ( (*iter).m_Done ) 
 		{
-			if ( (*iter).m_Done ) 
-			{
-				(*iter).m_Done = false;
-				continue;
-			}
-
-			(*iter).m_Stamp = (float)*m_Timer;
-
-			if ((err = amx_Exec((*iter).m_Plugin->getAMX(), NULL, (*iter).m_Func, 1, m_ParseVault ? m_ParseVault[0].iValue : 0)) != AMX_ERR_NONE)
-			{
-				LogError((*iter).m_Plugin->getAMX(), err, "");
-			}
+			(*iter).m_Done = false;
+			continue;
 		}
-
-#ifdef ENABLEEXEPTIONS
+		(*iter).m_Stamp = (float)*m_Timer;
+		executeForwards((*iter).m_Func, m_ParseVault ? m_ParseVault[0].iValue : 0);
 	}
-	catch( ... )
-	{
-		AMXXLOG_Log( "[AMXX] fatal error at event execution");
-	}
-#endif		// #ifdef ENABLEEXEPTIONS
 
 	m_CurrentMsgType = -1;
 	m_ParseFun = NULL;

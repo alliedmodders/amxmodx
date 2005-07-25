@@ -35,92 +35,12 @@
 #define FAR
 #endif
 
-// Old
-typedef int (FAR *QUERYMOD)(module_info_s**);
-typedef int (FAR *ATTACHMOD)(pfnamx_engine_g*,pfnmodule_engine_g*);
-typedef int (FAR *DETACHMOD)(void);
-
 // New
 typedef void* (*PFN_REQ_FNPTR)(const char * /*name*/);
 typedef int (FAR *QUERYMOD_NEW)(int * /*ifvers*/, amxx_module_info_s * /*modInfo*/);
 typedef int (FAR *ATTACHMOD_NEW)(PFN_REQ_FNPTR /*reqFnptrFunc*/);
 typedef int (FAR *DETACHMOD_NEW)(void);
 typedef void (FAR *PLUGINSLOADED_NEW)(void);
-
-// Old
-// These functions are needed since Small Abstract Machine 2.5.0
-int wamx_FindPublic(AMX *amx, char *name, int *index)
-{ return amx_FindPublic(amx, name, index); }
-
-int wamx_FindPubVar(AMX *amx, char *varname, cell *amx_addr)
-{ return amx_FindPubVar(amx, varname, amx_addr); }
-
-int wamx_GetString(char *dest, cell *source)
-{ return amx_GetString(dest, source, 0); }
-
-AMX_NATIVE_INFO *wamx_NativeInfo(char *name, AMX_NATIVE func)
-{ return amx_NativeInfo(name, func); }
-
-int wamx_SetString(cell *dest, char *source, int pack)
-{ return amx_SetString(dest, source, pack, 0); }
-
-pfnamx_engine_g engAmxFunc = {
-  amx_Align16,
-  amx_Align32,
-  amx_Allot,
-  amx_Callback,
-  amx_Clone,
-  amx_Debug,
-  amx_Exec,
-  amx_Execv,
-  wamx_FindPublic,
-  wamx_FindPubVar,
-  amx_FindTagId,
-  amx_Flags,
-  amx_GetAddr,
-  amx_GetPublic,
-  amx_GetPubVar,
-  wamx_GetString,
-  amx_GetTag,
-  amx_GetUserData,
-  amx_Init,
-  amx_InitJIT,
-  amx_MemInfo,
-  amx_NameLength,
-  wamx_NativeInfo,
-  amx_NumPublics,
-  amx_NumPubVars,
-  amx_NumTags,
-  amx_RaiseError,
-  amx_Register,
-  amx_Release,
-  amx_SetCallback,
-  amx_SetDebugHook,
-  wamx_SetString,
-  amx_SetUserData,
-  amx_StrLen,
-};
-
-pfnmodule_engine_g engModuleFunc = {
-  add_amxnatives,
-  build_pathname,
-  copy_amxmemory,
-  format_amxstring,
-  get_amxaddr,
-  get_amxscript,
-  get_amxscriptname,
-  get_amxstring,
-  get_modname,
-  load_amxscript,
-  print_srvconsole,
-  report_error,
-  set_amxnatives,
-  set_amxstring,
-  amxstring_len,
-  unload_amxscript,
-  alloc_amxmemory,
-  free_amxmemory,
-};
 
 // *****************************************************
 // class CModule
@@ -150,8 +70,6 @@ void CModule::clear(bool clearFilename)
 	if (clearFilename)
 		m_Filename.assign("unknown");
 
-	// old
-	m_InfoOld = NULL;
 	// new
 	m_Amxx = false;
 	m_InfoNew.author = "unknown";
@@ -220,17 +138,11 @@ bool CModule::attachModule()
 			m_Status = MODULE_BADLOAD;
 			return false;
 		}
+	} else {
+		m_Status = MODULE_BADLOAD;
 	}
-	else
-	{
-		// old
-		ATTACHMOD AttachFunc = (ATTACHMOD)DLPROC(m_Handle, "AMX_Attach");
 
-		if (AttachFunc)
-			(*AttachFunc)(&engAmxFunc,&engModuleFunc);
-		m_Status = MODULE_LOADED;
-		return true;
-	}
+	return false;
 }
 
 bool CModule::queryModule()
@@ -292,44 +204,9 @@ bool CModule::queryModule()
 	}
 	else
 	{
-		// old interface not 64 bit compatible
-#if SMALL_CELL_SIZE == 64
-		m_Status = MODULE_NOT64BIT;
+		m_Status = MODULE_NOQUERY;
+		m_Amxx = false;
 		return false;
-#else
-		// Try old interface
-		QUERYMOD queryFunc_Old = (QUERYMOD)DLPROC(m_Handle,"AMX_Query"); // check what version
-		if (!queryFunc_Old)
-		{
-			m_Status = MODULE_NOQUERY;
-			return false;
-		}
-
-		(*queryFunc_Old)(&m_InfoOld);
-
-		if (!m_InfoOld)
-		{
-			m_Status = MODULE_NOINFO;
-			return false;
-		}
-
-		if (m_InfoOld->ivers != AMX_INTERFACE_VERSION)
-		{
-			m_Status = MODULE_OLD;
-			return false;
-		}
-
-		// Check for attach
-		if (!DLPROC(m_Handle, "AMX_Attach"))
-		{
-			m_Status = MODULE_NOATTACH;
-			return false;
-		}
-
-		m_InfoOld->serial = (long int)this;
-		m_Status = MODULE_QUERY;
-		return true;
-#endif
 	}
 }
 
@@ -349,12 +226,6 @@ bool CModule::detachModule()
 			g_CurrentlyCalledModule = NULL;
 			g_ModuleCallReason = ModuleCall_NotCalled;
 		}
-	}
-	else
-	{
-		DETACHMOD detachFunc_Old = (DETACHMOD)DLPROC(m_Handle, "AMX_Detach");
-		if (detachFunc_Old)
-			(*detachFunc_Old)();
 	}
 #ifndef FAKEMETA
 	if (IsMetamod())

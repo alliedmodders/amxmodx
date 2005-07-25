@@ -1,4 +1,5 @@
-; JIT.ASM: Just-In-Time compiler for the Abstract Machine of the "Small"language
+; AMXJITSN.ASM: Just-In-Time compiler for the Abstract Machine of the "Pawn"
+; scripting language
 ; (C) 1999-2000, Marc Peter; beta version; provided AS IS WITHOUT ANY WARRANTIES
 
 ; I reached >155 million instr./sec on my AMD K6-2/366 with the Hanoi "bench"
@@ -20,42 +21,78 @@
 ; step.
 
 ; NOTE 3:
-; During execution of the compiled code with amx_exec_asm() the x86 processor's
+; During execution of the compiled code with amx_exec_jit() the x86 processor's
 ; stack is switched into the data section of the abstract machine. This means
 ; that there should always be enough memory left between HEA and STK to provide
 ; stack space for occurring interrupts! (see the STACKRESERVE variable)
 
 ; NOTE 4:
-; Although the Small compiler doesn't generate the LCTRL, SCTRL and CALL.I
+; Although the Pawn compiler doesn't generate the LCTRL, SCTRL and CALL.I
 ; instructions, I have to tell that they don't work as expected in a JIT
 ; compiled program, because there is no easy way of transforming AMX code
 ; addresses and JIT translated ones. This might be fixed in a future version.
+
+; NX ("No eXecute") and XD (eXecution Denied) bits
+; (by Thiadmer Riemersma)
 ;
-; CALLING CONVENTIONS (by Thiadmer Riemersma)
+; AMD defined a bit "No eXecute" for the page table entries (for its 64-bit
+; processors) and Intel came with the same design, but calling it differently.
+; The purpose is to make "buffer overrun" security holes impossible, or at least
+; very, very difficult, by marking the stack and the heap as memory regions
+; such that an attempt to execute processor instructions will cause a processor
+; exception (of course, a buffer overrun that is not explictly handled will then
+; crash the application --instead of executing the rogue code).
+;
+; For JIT compilers, this has the impact that you are not allowed to execute the
+; code that the JIT has generated. To do that, you must adjust the attributes
+; for the memory page. For Microsoft Windows, you can use VirtualAlloc() to
+; allocate a memory block with the appropriate fags; on Linux (with a recent
+; kernel), you would use vmalloc_exec(). Microsoft Windows also offers the
+; function VirtualProtect() to change the page attributes of an existing memory
+; block, but there are caveats in its use: if the block spans multiple pages,
+; these pages must be consecutive, and if there are blocks of memory in a page
+; unrelated to the JIT, their page attributes will change too.
+;
+; The JIT compiler itself requires only read-write access (this is the default
+; for a memory block that you allocate). The execution of the JIT-compiled code
+; requires full access to the memory block: read, write and execute. It needs
+; write access, because the SYSREQ.C opcode is patched to SYSREQ.D after the
+; first lookup (this is an optimization, look up the address of the native
+; function only once). For processors that do not support the NX/XD bit,
+; execution of code is implicitly supported if read access is supported.
+;
+; During compilation, the JIT compiler requires write-access to its own code
+; segment: the JIT-compiler patches P-code parameters into its own code segment
+; during compilation. This is handled in the support code for amx_InitJIT.
+;
+;
+; CALLING CONVENTIONS
+; (by Thiadmer Riemersma)
+;
 ; This version is the JIT that uses the "stack calling convention". In the
 ; original implementation, this meant __cdecl; both for the calling convention
 ; for the _asm_runJIT routine itself as for the callback functions.
 ; The current release supports __stdcall for the callback functions; to
-; use it, you need to assemble the file with STDECL defined (Since STDCALL is 
+; use it, you need to assemble the file with STDECL defined (Since STDCALL is
 ; a reserved word on the assembler, I had to choose a different name for the
 ; macro, hence STDECL.)
 
 ; Revision History
-;------------------
-; 16 September 2004 by David "BAILOPAN" Anderson
-;     Implemented a compile time toggleable debug hook on OP_CALL and OP_RET.
-;     NOTE: JIT has not had debug hooks since 1999.
-;  8 September 2004 by David "BAILOPAN" Anderson
-;     Changed OP_LINE call to be compile-time toggle-able between compiling
-;	  line ops or not.
+; ----------------
+; 17 february 2005  by Thiadmer Riemersms
+;       Addition of the BREAK opcode, removal of the older debugging opcode
+;       table. There should now be some debug support (if enabled during the
+;       build of the JIT compiler), but not enough to run a debugger: the JIT
+;       compiler does not keep a list that relates the code addresses of the
+;       P-code versus the native code.
 ; 29 June 2004  by G.W.M. Vissers
-;	Translated the thing into NASM. The actual generation of the code is 
-;	put into the data section because the code modifies itself whereas the 
-;	text section is usually read-only in the Unix ELF format. 
+;	Translated the thing into NASM. The actual generation of the code is
+;	put into the data section because the code modifies itself whereas the
+;	text section is usually read-only in the Unix ELF format.
 ;  6 march 2004  by Thiadmer Riemersma
 ;       Corrected a bug in OP_FILL, where a cell preceding the array would
 ;       be overwritten (zero'ed out). This bug was brought to my attention
-;       by Robert Daniels. 
+;       by Robert Daniels.
 ; 22 december 2003  by Thiadmer Riemersma (TR)
 ;       Added the SYMTAG and SYSCALL.D opcodes (these are not really supported;
 ;       SYMTAG is a no-op).
@@ -94,8 +131,8 @@
 ;         hanoi bench.
 ; 1999/08/05    MP
 ;       * fixed OP_LINE in the case of NODBGCALLS==1, where no compiled address
-;         was stored for the LINE byte code (I.e. SWITCH would jump to totally
-;         wrong addresses.) The same fix was applied to OP_FILL, OP_FILE and
+;         was stored for the LINE byte code (i.e. SWITCH would jump to totally
+;         wrong addresses). The same fix was applied to OP_FILL, OP_FILE and
 ;         OP_SCTRL (for the no-op case).
 ; 1999/08/04    MP
 ;       * updated with 4 new opcodes (SRANGE does nothing at the moment; 2dim.
@@ -106,6 +143,16 @@
 ;       * The run-time function for SWITCH uses a (hopefully) faster algorithm
 ;         to compute the destination address: It searches backwards now.
 ; 1999/07/08    MP - initial revision
+
+
+;
+; Support for the BREAK opcode (callback to the debugger): 0 = no, all other
+; values = yes. Beware that the compiled code runs slower when this is enabled,
+; and that debug support is still fairly minimal.
+;
+; GWMV: to generate LINE opcode, %define DEBUGSUPPORT
+;
+%undef DEBUGSUPPORT
 
 ;
 ; If this is set to 1 the JIT generates relocatable code for case tables, too.
@@ -128,119 +175,17 @@
 ;
 ; This variable controls the generation of memory range checks at run-time.
 ; You should set this to 0, only when you are sure that there are no range
-; violations in your Small programs and you really need those 5% speed gain.
+; violations in your Pawn programs and you really need those 5% speed gain.
 ;
 ; GWMV: To disable runtime checks, %undef it, instread of setting it to zero
 ;
 %define DORUNTIMECHECKS
 
-
-	struc amx_s
-_base:       resd 1
-_dataseg:    resd 1
-_callback:   resd 1
-_debug:      resd 1
-_cip:        resd 1
-_frm:        resd 1
-_hea:        resd 1
-_hlw:        resd 1
-_stk:        resd 1
-_stp:        resd 1
-_flags:      resd 1
-_curline:    resd 1
-_curfile:    resd 1
-_dbgcode:    resd 1
-_dbgaddr:    resd 1
-_dbgparam:   resd 1
-_dbgname:    resd 1
-;usertags and userdata are 16 bytes on AMX Mod X
-_usertags1:  resd 1	; 4 = AMX_USERNUM (#define'd in amx.h)
-_usertags2:  resd 1	; 4 = AMX_USERNUM (#define'd in amx.h)
-_usertags3:  resd 1	; 4 = AMX_USERNUM (#define'd in amx.h)
-_usertags4:  resd 1	; 4 = AMX_USERNUM (#define'd in amx.h)
-_userdata1:  resd 1	; 4 = AMX_USERNUM (#define'd in amx.h)
-_userdata2:  resd 1	; 4 = AMX_USERNUM (#define'd in amx.h)
-_userdata3:  resd 1	; 4 = AMX_USERNUM (#define'd in amx.h)
-_userdata4:  resd 1	; 4 = AMX_USERNUM (#define'd in amx.h)
-_error:      resd 1
-_pri:        resd 1
-_alt:        resd 1
-_reset_stk:  resd 1
-_reset_hea:  resd 1
-_syscall_d:  resd 1
-; the two fields below are for the JIT
-; they are included in the non-JIT version for AMX Mod X
-;  this is to make sure that the structs match universally!
-_reloc_size: resd 1          ; memory block for relocations
-_code_size:  resd 1          ; memory size of the native code
-	endstruc
-
-
-	struc amxhead_s
-_size:       resd 1  ; size of the "file"
-_magic:      resw 1  ; signature
-_file_version: resb 1 ;file format version
-_amx_version: resb 1 ; required version of the AMX
-_h_flags:    resw 1
-_defsize:    resw 1  ; size of one public/native function entry
-_cod:        resd 1  ; initial value of COD - code block
-_dat:        resd 1  ; initial value of DAT - data block
-_h_hea:      resd 1  ; initial value of HEA - start of the heap
-_h_stp:      resd 1  ; initial value of STP - stack top
-_h_cip:      resd 1  ; initial value of CIP - the instruction pointer
-_publics:    resd 1  ; offset to the "public functions" table
-_natives:    resd 1  ; offset to the "native functions" table
-_libraries:  resd 1  ; offset to the "library" table
-_pubvars:    resd 1  ; offset to the "public variables" table
-_tags:       resd 1  ; offset to the "public tagnames" table
-	endstruc
-
-
-AMX_ERR_NONE		equ 0
-AMX_ERR_EXIT		equ 1
-AMX_ERR_ASSERT		equ 2
-AMX_ERR_STACKERR	equ 3
-AMX_ERR_BOUNDS		equ 4
-AMX_ERR_MEMACCESS	equ 5
-AMX_ERR_INVINSTR	equ 6
-AMX_ERR_STACKLOW	equ 7
-AMX_ERR_HEAPLOW		equ 8
-AMX_ERR_CALLBACK	equ 9
-AMX_ERR_NATIVE		equ 10
-AMX_ERR_DIVIDE		equ 11	; MP: added for catching divide errors
-AMX_ERR_SLEEP		equ 12	; (TR) go into sleep mode
-
-AMX_ERR_MEMORY		equ 16
-AMX_ERR_FORMAT		equ 17
-AMX_ERR_VERSION		equ 18
-AMX_ERR_NOTFOUND	equ 19
-AMX_ERR_INDEX		equ 20
-AMX_ERR_DEBUG		equ 21
-AMX_ERR_INIT		equ 22
-AMX_ERR_USERDATA	equ 23
-AMX_ERR_INIT_JIT	equ 24
-AMX_ERR_PARAMS		equ 25
-AMX_ERR_DOMAIN		equ 26
-
-DBG_INIT		equ 0
-DBG_FILE		equ 1
-DBG_LINE		equ 2
-DBG_SYMBOL		equ 3
-DBG_CLRSYM		equ 4
-DBG_CALL		equ 5
-DBG_RETURN		equ 6
-DBG_TERMINATE		equ 7
-DBG_SRANGE		equ 8
-DBG_SYMTAG		equ 9
-
-AMX_FLAG_CHAR16		equ 0001h ; characters are 16-bit
-AMX_FLAG_DEBUG		equ 0002h ; symbolic info. available
-AMX_FLAG_LINEOPS	equ 0020h ; line ops should be parsed [load time only flag] - ~dvander
-AMX_FLAG_BROWSE		equ 4000h
-AMX_FLAG_RELOC		equ 8000h ; jump/call addresses relocated
+%define JIT     1
+%include "amxdefn.asm"
 
 ; GWMV:
-; Nasm can't do the next as equivalence statements, since the value of 
+; Nasm can't do the next as equivalence statements, since the value of
 ; esi is not determined at compile time
 %define stk     [esi+32]    ; define some aliases to registers that will
 %define alt     [esi+28]    ;   be stored on the stack when the code is
@@ -269,7 +214,7 @@ AMX_FLAG_RELOC		equ 8000h ; jump/call addresses relocated
 
 
 ;
-; For determining the biggest native code section generated for ONE Small
+; For determining the biggest native code section generated for ONE Pawn
 ; opcode. (See the following macro and the PUBLIC function getMaxCodeSize().)
 ;
 ; GWMV: Do NOT see the following macro. See CHECKCODESIZE instead.
@@ -278,20 +223,12 @@ AMX_FLAG_RELOC		equ 8000h ; jump/call addresses relocated
 
 ;
 ; This is the work horse of the whole JIT: It actually copies the code.
-; Notes from ~dvander (with help of dJeyL)
-;  This takes a source and ending address pointer in the assembled JIT code.
-;  Then it subtracts them and copies the code in between.
-;  The last parameter is the number of bytes the opcode is so it can jump 
-;    to the next one.
-;  Also note that the "in between" code is NEVER executed during the compile 
-;    phase of the JIT.  It's only assembled in memory, and copied into the 
-;    final output bytecode by this function.
 %macro GO_ON 2-3 4
         mov     esi, %1         ;get source address of JIT code
         mov     ecx,%2-%1            ;get number of bytes to copy
         mov     [ebx],edi               ;store address for jump-correction
-        add	ebx,%3
-        rep	movsb
+        add     ebx,%3
+        rep     movsb
         cmp     ebx,[end_code]
         jae     code_gen_done
         jmp     dword [ebx]         ;go on with the next opcode
@@ -300,9 +237,7 @@ AMX_FLAG_RELOC		equ 8000h ; jump/call addresses relocated
 ; GWMV:
 ; Nasm can't handle the determination of the maximum code size as was done
 ; in the Masm implementation, since it only does two passes. This macro is
-; called *after* the code for each Small instruction.
-; Notes by ~dvander: This just substracts a label's ip from the current ip.
-;  Therefore you get an instant size check - see RELOC
+; called *after* the code for each Pawn instruction.
 %macro CHECKCODESIZE 1
 	%if MAXCODESIZE < $-%1
         	%assign MAXCODESIZE $-%1
@@ -310,14 +245,9 @@ AMX_FLAG_RELOC		equ 8000h ; jump/call addresses relocated
 %endmacro
 
 ;
-; Modify the argument of an x86 instruction with the Small opcode's parameter
+; Modify the argument of an x86 instruction with the Pawn opcode's parameter
 ; before copying the code.
 ;
-; Notes by ~dvander (thanks to dJeyL) - this will take an address and modify
-;   the dword at it.  Since the JIT copies already assembled code, you see
-;   things like "call   12345678h".  This is an arbitrary value as putval
-;   will modify it in memory and then GO_ON will add it to the program.
-;   It is important to get the putval address right - it's in bytes.
 %macro putval 1
         mov     eax,[ebx+4]
         mov     dword [%1],eax
@@ -326,17 +256,12 @@ AMX_FLAG_RELOC		equ 8000h ; jump/call addresses relocated
 ;
 ; Add an entry to the table of addresses which have to be relocated after the
 ; code compilation is done.
-; Notes by ~dvander: This is sort of what amx_BrowseRelocate() does, although
-;   relocation is actually done after code generation (this just adds to a 
-;   table).  Like putval, this takes in an address and marks it to be 
-;   rewritten.  It is a good idea to just use labels to find relocation
-;   offsets (see OP_CALL and OP_RETN).  After code generation, this table
-;   is browsed and the correct threaded jumps are placed.
+;
 %macro RELOC 1-2 ;   adr, dest
         mov     ebp,[reloc_num]
         %if %0 < 2
           mov	eax,[ebx+4]
-        %else        
+        %else
           lea	eax,[%2]
         %endif
         mov     [edx+ebp],eax           ; write absolute destination
@@ -356,7 +281,7 @@ section .text
 
 
 global  asm_runJIT, _asm_runJIT
-global  amx_exec_asm, _amx_exec_asm
+global  amx_exec_jit, _amx_exec_jit
 global  getMaxCodeSize, _getMaxCodeSize
 
 
@@ -381,7 +306,7 @@ _asm_runJIT:
         mov     eax,[esp+20]            ; get amxh
         mov     edx,[esp+24]            ; get jumps array
         mov     ebx,[esp+28]            ; get destination
-	
+
         mov     [amxhead],eax           ; save pointer to AMX_HEADER struct
         mov     ecx,[eax+_cod]          ; get offset of start of code
         mov     eax,[eax+_dat]          ; offset of start of data = end of code
@@ -481,9 +406,9 @@ reloc_done:
         ret
 
 ; GWMV:
-; The code below modifies itself to store the arguments to the Small opcodes
+; The code below modifies itself to store the arguments to the Pawn opcodes
 ; in the compiled code. This is fine, but the .text section in an ELF executable
-; is usually marked read-only, that's why this code is in the .data section. 
+; is usually marked read-only, that's why this code is in the .data section.
 
 section .data exec
 
@@ -817,7 +742,7 @@ OP_ALIGN_PRI:
 	CHECKCODESIZE j_align_pri
 
 OP_ALIGN_ALT:
-;nop
+;nop;
         mov     eax,4
         sub     eax,[ebx+4]
         mov     dword [j_align_alt+1],eax
@@ -1045,7 +970,7 @@ OP_HEAP:
         call    [chk_marginheap]
 %endif
 	CHECKCODESIZE j_heap
-        
+
 ;good
 OP_PROC:
 ;nop;
@@ -1073,119 +998,22 @@ OP_RET:
 ;good
 OP_RETN:
 ;nop;
-        ;save registers
-        push    eax
-        push    ebp
-        ;get .amx flags
-        mov     ebp,[amxhead]
-        mov	    eax,[ebp+_h_flags]
-        ;check to see if the flag has line ops 
-        and     eax,AMX_FLAG_DEBUG
-        cmp     eax,AMX_FLAG_DEBUG
-        ;restore registers
-        pop     ebp
-        pop     eax
-        ;if so, skip down to debug compiler
-        jmp     _go_jit_retn_debug
+        GO_ON   j_retn, OP_CALL
 
-_go_jit_retn_nodebug:
-        GO_ON   j_retn_nodebug, _go_jit_retn_go
-      j_retn_nodebug:
+        j_retn:
         jmp     [jit_retn]
-		CHECKCODESIZE j_retn_nodebug
-_go_jit_retn_go:
-		jmp		_go_jit_retn_end
-
-_go_jit_retn_debug:
-		GO_ON	j_retn, OP_CALL
-	  j_retn:
-	  	push	ebp
-		push	eax
-		push	edx
-		;get AMX
-		mov		ebp,amx
-		;get debug call ptr
-		mov		eax,[ebp+_userdata2]
-		;check validity
-		mov		edx, dword 0
-		cmp		eax, edx
-		je		_go_jit_skip_debug
-		xchg	esp,esi		;switch stack
-		push	1			;param 2 mode 1 = pop
-		push	ebp			;param 1 - amx
-		call	eax			;indirect debug call
-		add		esp, 8		;restore stack
-		xchg	esp,esi		;return to AMX stack
-		mov		ebp,amx		;restore AMX [necessary?]
-	  _go_jit_skip_debug:
-	    pop		edx
-		pop		eax
-		pop		ebp
-	  	jmp		[jit_retn]
-		CHECKCODESIZE j_retn
-_go_jit_retn_end:
+	CHECKCODESIZE j_retn
 
 ;good
 OP_CALL:
 ;nop;
-        ;save registers
-        push    eax
-        push    ebp
-        ;get .amx flags
-        mov     ebp,[amxhead]
-        mov	    eax,[ebp+_h_flags]
-        ;check to see if the flag has line ops 
-        and     eax,AMX_FLAG_DEBUG
-        cmp     eax,AMX_FLAG_DEBUG
-        ;restore registers
-        pop     ebp
-        pop     eax
-        ;if so, skip down to debug compiler
-        jmp     _go_jit_debug
+        RELOC   1
+        GO_ON   j_call, OP_CALL_I, 8
 
-_go_jit_nodebug:
-		RELOC 1
-		GO_ON	j_call_nodebug, _j_call_go_on, 8
-		j_call_nodebug:
-		db      0e8h, 0, 0, 0, 0
-		CHECKCODESIZE j_call_nodebug
-
-_j_call_go_on:
-		jmp _opcall_end
-
-_go_jit_debug:
-		;thanks to Julien "dJeyL" Laurent for code relocation explanation
-		RELOC   _go_jit_reloc-j_call+1
-		GO_ON	j_call, OP_CALL_I, 8
-		j_call:
-		; save some registers
-		push	ebp
-		push	eax
-		push	edx
-		; get AMX
-		mov		ebp,amx
-		; get debug call pointer
-		mov		eax,[ebp+_userdata2]
-		; check to see if it's valid
-		mov		edx, dword 0
-		cmp		eax,edx		
-		je		_go_jit_skip_call
-		xchg	esp,esi		;switch to caller stack
-		push	2			;param mode=2, push
-		push	ebp			;param amx
-		call	eax			;indirect call
-		add		esp, 8		;restore stack
-		xchg	esp,esi		;return to AMX stack
-		mov		ebp,amx		;restore AMX [necessary?]
-	_go_jit_skip_call:
-		;restore original registers
-		pop		edx
-		pop		eax
-		pop		ebp
-	_go_jit_reloc:
-		db      0e8h, 0, 0, 0, 0
-		CHECKCODESIZE j_call
-_opcall_end:
+        j_call:
+        ;call   12345678h ; tasm chokes on this out of a sudden
+        db      0e8h, 0, 0, 0, 0
+	CHECKCODESIZE j_call
 
 OP_CALL_I:
 ;nop;
@@ -1857,38 +1685,11 @@ OP_FILE:                                ;opcode is simply ignored
 
 OP_LINE:
 ;nop;
-;~dvander - opline is now variable on compile time :]
-        ;save registers
-        push    eax
-        push    ebp
-        ;get .amx flags
-        mov     ebp,[amxhead]
-        mov	    eax,[ebp+_h_flags]
-        ;check to see if the flag has line ops 
-        and     eax,AMX_FLAG_LINEOPS
-        cmp     eax,AMX_FLAG_LINEOPS
-        ;restore registers
-        pop     ebp
-        pop     eax
-        ;if so, skip down to debug compiler
-        je      _go_debug
-
         mov     [ebx],edi               ; no line number support: ignore opcode
         add     ebx,12                  ; move on to next opcode
         cmp     ebx,[end_code]
         jae     code_gen_done
         jmp     dword [ebx]         ; go on with the next opcode
-
-_go_debug:
-        putval  j_line+6
-        mov     eax,[ebx+8]
-        mov     [j_line_sm],eax
-        GO_ON   j_line, OP_SYMBOL, 12
-    j_line:
-        call    [jit_line]
-                DD      0               ; space for curline
-j_line_sm       DD      0               ; space for curfile
-	CHECKCODESIZE j_line
 
 OP_SYMBOL:                              ;ignored
         mov     [ebx],edi
@@ -2019,6 +1820,23 @@ OP_SYMTAG:                              ;ignored (TR)
         jmp     dword [ebx]         ; go on with the next opcode
 
 
+OP_BREAK:
+%ifndef DEBUGSUPPORT
+        mov     [ebx],edi               ; no line number support: ignore opcode
+        add     ebx,4                   ; move on to next opcode
+        cmp     ebx,[end_code]
+        jae     code_gen_done
+        jmp     DWORD [ebx]             ; go on with the next opcode
+%else
+        GO_ON   j_break, OP_INVALID
+    j_break:
+        mov     ebp,amx
+        cmp     DWORD [ebp+_debug], 0
+        je      $+4                     ; jump around the "call" statement
+        call    [jit_break]
+    CHECKCODESIZE j_break
+%endif
+
 OP_INVALID:                     ; break from the compiler with an error code
         mov     eax,AMX_ERR_INVINSTR
         pop     esi
@@ -2032,12 +1850,12 @@ section .text
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;                                                               ;
-;cell   asm_exec( cell *regs, cell *retval, cell stp, cell hea );
+;cell   amx_exec( cell *regs, cell *retval, cell stp, cell hea );
 ;                       eax         edx          ebx       ecx  ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-amx_exec_asm:
-_amx_exec_asm:
+amx_exec_jit:
+_amx_exec_jit:
         push    edi
         push    esi
         push    ebp
@@ -2338,20 +2156,39 @@ JIT_OP_SYSREQ_D:                ; (TR)
         ret
 
 
-JIT_OP_LINE:
-        pop     ecx                     ; get return address
-        mov     ebp,amx
-        push    eax
-        push    edx
-        mov     eax,[ecx]               ; get curline
-        mov     edx,[ecx+4]             ; get curfile
-        add     ecx,8                   ; skip curline & curfile
-        mov     [ebp+_curline],eax      ; store curline
-        mov     [ebp+_curfile],edx      ; store curfile
+JIT_OP_BREAK:
+%ifdef DEBUGSUPPORT
+        mov     ecx,esp         ; get STK into ECX
+        mov     ebp,amx         ; get amx into EBP
 
-        pop     edx
-        pop     eax
-        jmp     ecx                     ; jump back
+        sub     ecx,edi         ; correct STK
+
+        mov     [ebp+_pri],eax  ; store values in AMX structure: PRI,
+        mov     [ebp+_alt],edx  ; ALT,
+        mov     [ebp+_stk],ecx  ; STK,
+        mov     ecx,hea         ; HEA,
+        mov     ebx,frm         ; and FRM
+        mov     [ebp+_hea],ecx
+        mov     [ebp+_frm],ebx  ; EBX & ECX are invalid by now
+        ;??? storing CIP is not very useful, because the code changed (during JIT compile)
+
+        xchg    esp,esi         ; switch to caller stack
+        push    ebp             ; 1st param: amx
+        call    [ebp+_debug]
+        _DROPARGS 4             ; remove args from stack
+        xchg    esp,esi         ; switch back to AMX stack
+        cmp     eax,AMX_ERR_NONE
+        jne     _return_popstack; return error code, if any
+
+        mov     ebp,amx         ; get amx into EBP
+        mov     eax,[ebp+_pri]  ; restore values
+        mov     edx,[ebp+_alt]  ; ALT,
+        mov     edx,alt         ; restore ALT
+        mov     ebx,frm         ; restore FRM
+        add     ebx,edi         ; relocate frame
+%endif
+        ret
+
 
 JIT_OP_SWITCH:
         pop     ebp             ; pop return address = table address
@@ -2370,9 +2207,10 @@ JIT_OP_SWITCH:
         jmp     ebp
 %endif
 
+
 ; The caller of asm_runJIT() can determine the maximum size of the compiled
 ; code by multiplying the result of this function by the number of opcodes in
-; Small module.
+; Pawn module.
 ;
 ; unsigned long getMaxCodeSize_();
 ;
@@ -2414,17 +2252,17 @@ jit_fill        DD      JIT_OP_FILL
 jit_bounds      DD      JIT_OP_BOUNDS
 jit_sysreq      DD      JIT_OP_SYSREQ
 jit_sysreq_d    DD      JIT_OP_SYSREQ_D
-jit_line        DD      JIT_OP_LINE
+jit_break       DD      JIT_OP_BREAK
 jit_switch      DD      JIT_OP_SWITCH
 
 ;
 ; The table for the browser/relocator function.
 ;
 
-global amx_opcodelist, _amx_opcodelist
+global amx_opcodelist_jit, _amx_opcodelist_jit
 
-amx_opcodelist:
-_amx_opcodelist:
+amx_opcodelist_jit:
+_amx_opcodelist_jit:
         DD      OP_INVALID
         DD      OP_LOAD_PRI
         DD      OP_LOAD_ALT
@@ -2562,3 +2400,6 @@ _amx_opcodelist:
         DD      OP_NOP          ; TR
         DD      OP_SYSREQ_D     ; TR
         DD      OP_SYMTAG       ; TR
+        DD      OP_BREAK        ; TR
+
+END

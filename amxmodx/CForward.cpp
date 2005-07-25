@@ -71,7 +71,7 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 		if (iter->pPlugin->isExecutable(iter->func))
 		{
 			// handle strings & arrays
-			int i;
+			int i, ax=0;
 			for (i = 0; i < m_NumParams; ++i)
 			{
 				if (m_ParamTypes[i] == FP_STRING || m_ParamTypes[i] == FP_STRINGEX)
@@ -80,7 +80,7 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 					amx_Allot(iter->pPlugin->getAMX(),
 						(m_ParamTypes[i] == FP_STRING) ? strlen(reinterpret_cast<const char*>(params[i]))+1 : STRINGEX_MAXLENGTH,
 						&realParams[i], &tmp);
-					amx_SetString(tmp, (const char *)(params[i]), 0, 0);
+					amx_SetStringOld(tmp, (const char *)(params[i]), 0, 0);
 					physAddrs[i] = tmp;
 				}
 				else if (m_ParamTypes[i] == FP_ARRAY)
@@ -105,9 +105,14 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 					realParams[i] = params[i];
 				}
 			}
+			//Push the parameters in reverse order.  Weird, unfriendly part of Small 3.0!
+			for (i=m_NumParams-1; i>=0; i--)
+			{
+				amx_Push(iter->pPlugin->getAMX(), realParams[i]);
+			}
 			// exec
 			cell retVal;
-			int err = amx_Execv(iter->pPlugin->getAMX(), &retVal, iter->func, m_NumParams, realParams);
+			int err = amx_Exec(iter->pPlugin->getAMX(), &retVal, iter->func);
 			// log runtime error, if any
 			if (err != AMX_ERR_NONE)
 				LogError(iter->pPlugin->getAMX(), err, "");
@@ -122,7 +127,7 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 				else if (m_ParamTypes[i] == FP_STRINGEX)
 				{
 					// copy back
-					amx_GetString(reinterpret_cast<char*>(params[i]), physAddrs[i], 0);
+					amx_GetStringOld(reinterpret_cast<char*>(params[i]), physAddrs[i], 0);
 					amx_Release(iter->pPlugin->getAMX(), realParams[i]);
 				}
 				else if (m_ParamTypes[i] == FP_ARRAY)
@@ -216,7 +221,7 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 			amx_Allot(m_Amx,
 				(m_ParamTypes[i] == FP_STRING) ? strlen(reinterpret_cast<const char*>(params[i]))+1 : STRINGEX_MAXLENGTH,
 				&realParams[i], &tmp);
-			amx_SetString(tmp, (const char *)(params[i]), 0, 0);
+			amx_SetStringOld(tmp, (const char *)(params[i]), 0, 0);
 			physAddrs[i] = tmp;
 		}
 		else if (m_ParamTypes[i] == FP_ARRAY)
@@ -241,10 +246,11 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 			realParams[i] = params[i];
 		}
 	}
-
+	for (i=m_NumParams-1; i>=0; i--)
+		amx_Push(m_Amx, realParams[i]);
 	// exec
 	cell retVal;
-	int err = amx_Execv(m_Amx, &retVal, m_Func, m_NumParams, realParams);
+	int err = amx_Exec(m_Amx, &retVal, m_Func);
 
 	// log runtime error, if any
 	if (err != AMX_ERR_NONE)
@@ -260,7 +266,7 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 		else if (m_ParamTypes[i] == FP_STRINGEX)
 		{
 			// copy back
-			amx_GetString(reinterpret_cast<char*>(params[i]), physAddrs[i], 0);
+			amx_GetStringOld(reinterpret_cast<char*>(params[i]), physAddrs[i], 0);
 			amx_Release(m_Amx, realParams[i]);
 		}
 		else if (m_ParamTypes[i] == FP_ARRAY)

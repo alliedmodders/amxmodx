@@ -172,38 +172,12 @@ CPluginMngr::CPlugin::CPlugin(int i, const char* p,const char* n, char* e, int d
 	paused_fun = 0;
 	next = 0;
 	id = i;
+	m_PauseFwd = registerSPForwardByName(&amx, "plugin_pause");
+	m_UnpauseFwd = registerSPForwardByName(&amx, "plugin_unpause");
 }
 
 CPluginMngr::CPlugin::~CPlugin( )
 {
-	AMX_DBG *pDbg = (AMX_DBG *)amx.userdata[0];
-	
-	if (pDbg)
-	{
-		if (pDbg->files)
-		{
-			for (int i=0; i<pDbg->numFiles; i++)
-			{
-				if (pDbg->files[i])
-				{
-					free(pDbg->files[i]);
-					pDbg->files[i] = NULL;
-				}
-			}
-			free(pDbg->files);
-		}
-		AMX_TRACE *pTrace = pDbg->head;
-		AMX_TRACE *pNext = NULL;
-		while (pTrace)
-		{
-			pNext = pTrace->next;
-			free(pTrace);
-			pTrace = pNext;
-		}
-		free(pDbg);
-		amx.userdata[0] = NULL;
-	}
-
 	unload_amxscript( &amx, &code );
 }
 
@@ -232,16 +206,8 @@ void CPluginMngr::CPlugin::pausePlugin()
 	if (isValid())
 	{
 		// call plugin_pause if provided
-		int func;
-		cell retval;
-		if (amx_FindPublic(&amx, "plugin_pause", &func) == AMX_ERR_NONE)
-		{
-			if (isExecutable(func))
-			{
-
-				amx_Exec(&amx, &retval, func, 0);
-			}
-		}
+		if (m_PauseFwd != -1)
+			executeForwards(m_PauseFwd);
 	
 		setStatus(ps_paused);
 	}
@@ -256,14 +222,7 @@ void CPluginMngr::CPlugin::unpausePlugin()
 
 		setStatus(ps_running);
 		// call plugin_unpause if provided
-		int func;
-		cell retval;
-		if (amx_FindPublic(&amx, "plugin_unpause", &func) == AMX_ERR_NONE)
-		{
-			if (isExecutable(func))
-			{
-				amx_Exec(&amx, &retval, func, 0);
-			}
-		}
+		if (m_UnpauseFwd != -1)
+			executeForwards(m_UnpauseFwd);
 	}
 }

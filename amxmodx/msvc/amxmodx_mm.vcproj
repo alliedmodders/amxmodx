@@ -300,7 +300,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;C:\Hry\Half-Life\SDK\Multiplayer Source\pm_shared&quot;;&quot;C:\Hry\Half-Life\SDK\Multiplayer Source\dlls&quot;;&quot;C:\Hry\Half-Life\SDK\Multiplayer Source\engine&quot;;&quot;C:\Hry\Half-Life\SDK\Multiplayer Source\common&quot;;C:\Files\Programming\metamod\metamod"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;JIT"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;PAWN_CELL_SIZE=32;ASM32;JIT"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="5"
 				StructMemberAlignment="3"
@@ -319,7 +319,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="..\jit\jits.obj ..\zlib\zlib.lib"
+				AdditionalDependencies="..\zlib\zlib.lib ..\JIT\amxjitsn.obj ..\JIT\amxexecn.obj"
 				OutputFile="jitdebug/amxmodx_mm.dll"
 				Version="0.1"
 				LinkIncremental="1"
@@ -371,7 +371,8 @@
 				InlineFunctionExpansion="1"
 				FavorSizeOrSpeed="1"
 				AdditionalIncludeDirectories="..\..\metamod\metamod,..\..\hlsdk\sourcecode\common,..\..\hlsdk\sourcecode\engine,..\..\hlsdk\sourcecode\dlls,..\..\hlsdk\sourcecode\pm_shared,..\extra\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;JIT"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;JIT;ASM32;PAWN_CELL_SIZE=32"
+				IgnoreStandardIncludePath="FALSE"
 				StringPooling="TRUE"
 				RuntimeLibrary="4"
 				EnableFunctionLevelLinking="TRUE"
@@ -389,7 +390,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="..\jit\jits.obj ..\zlib\zlib.lib"
+				AdditionalDependencies="..\zlib\zlib.lib ..\JIT\amxjitsn.obj ..\JIT\amxexecn.obj"
 				OutputFile="jitrelease/amxmodx_mm.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -650,6 +651,9 @@
 				RelativePath="..\md5.cpp">
 			</File>
 			<File
+				RelativePath="..\menus.cpp">
+			</File>
+			<File
 				RelativePath="..\meta_api.cpp">
 			</File>
 			<File
@@ -779,6 +783,9 @@
 			</File>
 			<File
 				RelativePath="..\md5.h">
+			</File>
+			<File
+				RelativePath="..\menus.h">
 			</File>
 			<File
 				RelativePath="..\modules.h">

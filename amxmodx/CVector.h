@@ -48,7 +48,8 @@ template <class T> class CVector
 			return false;
 		if (m_Data)
 		{
-			memcpy(newData, m_Data, m_Size * sizeof(T));
+			for (size_t i=0; i<m_CurrentUsedSize; i++)
+				newData[i] = m_Data[i];
 			delete [] m_Data;
 		}
 		m_Data = newData;
@@ -74,7 +75,9 @@ template <class T> class CVector
 			return false;
 		if (m_Data)
 		{
-			memcpy(newData, m_Data, (m_Size < size) ? (m_Size * sizeof(T)) : (size * sizeof(T)));
+			size_t end = (m_Size < size) ? (m_Size) : size;
+			for (size_t i=0; i<end; i++)
+				newData[i] = m_Data[i];
 			delete [] m_Data;
 		}
 		if (m_Size < size)
@@ -251,10 +254,11 @@ public:
 	CVector<T>(const CVector<T> & other)
 	{
 		// copy data
-		m_Data = new T [other.m_Size];
-		m_Size = other.m_Size;
+		m_Data = new T [other.m_CurrentUsedSize];
+		m_Size = other.m_CurrentUsedSize;
 		m_CurrentUsedSize = other.m_CurrentUsedSize;
-		memcpy(m_Data, other.m_Data, m_CurrentUsedSize * sizeof(T));
+		for (size_t i=0; i<other.m_CurrentUsedSize; i++)
+			m_Data[i] = other.m_Data[i];
 	}
 
 	~CVector<T>()

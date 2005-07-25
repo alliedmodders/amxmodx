@@ -150,14 +150,14 @@ void amx_command(){
 				print_srvconsole( "%s %s\n", Plugin_info.name, Plugin_info.version);
 				print_srvconsole(   "Authors: %s  (%s)\n", "Felix \"SniperBeamer\" Geyer, David \"BAILOPAN\" Anderson, Pavol \"PM OnoTo\" Marko, Jonny \"Got His Gun\" Bergstrom, and Lukasz \"SidLuke\" Wlasinski.",  Plugin_info.url);
 				print_srvconsole(   "Compiled: %s\n", __DATE__ ", " __TIME__);
-#ifdef JIT
-				print_srvconsole(   "Core mode: JIT\n");
+#if defined JIT && !defined ASM32
+				print_srvconsole(   "Core mode: JIT Only\n");
+#elif !defined JIT && defined ASM32
+				print_srvconsole(	"Core mode: ASM32 Only\n");
+#elif defined JIT && defined ASM32
+				print_srvconsole(	"Core mode: JIT+ASM32\n");
 #else
-#ifdef ASM32
-				print_srvconsole(   "Core mode: ASM\n");
-#else
-				print_srvconsole(   "Core mode: Normal\n");
-#endif
+				print_srvconsole(	"Core mode: Normal\n");
 #endif
 		}
 		else if (!strcmp(cmd,"modules"))
@@ -264,39 +264,19 @@ void amx_command(){
 
 void plugin_srvcmd()
 {
-
-		cell ret = 0;
-		int err;
-		const char* cmd = CMD_ARGV(0);
-		
-#ifdef ENABLEEXEPTIONS
-		try{
-#endif
+	cell ret = 0;
+	const char* cmd = CMD_ARGV(0);
 				
-				CmdMngr::iterator a = g_commands.srvcmdbegin();
-				
-				while ( a )
-				{
-						if (  (*a).matchCommand( cmd )  && 
-								(*a).getPlugin()->isExecutable( (*a).getFunction() ) )
-						{
-								
-								if ((err = amx_Exec( (*a).getPlugin()->getAMX(), &ret , (*a).getFunction() 
-										, 3 , g_srvindex , (*a).getFlags() , (*a).getId() )) != AMX_ERR_NONE)
-								{
-									LogError((*a).getPlugin()->getAMX(), err, "");
-								}
-								if ( ret ) break;
-						}
-						
-						++a;
-				}
-				
-#ifdef ENABLEEXEPTIONS
-		}catch( ... )
+	CmdMngr::iterator a = g_commands.srvcmdbegin();
+			
+	while ( a )
+	{
+		if (  (*a).matchCommand( cmd )  && 
+			(*a).getPlugin()->isExecutable( (*a).getFunction() ) )
 		{
-				AMXXLOG_Log( "[AMXX] fatal error at forward function execution");
+			cell ret = executeForwards((*a).getFunction(), g_srvindex, (*a).getFlags(), (*a).getId());
+			if ( ret ) break;
 		}
-#endif
-		
+		++a;
+	}
 }

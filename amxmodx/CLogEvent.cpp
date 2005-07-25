@@ -151,7 +151,6 @@ LogEventsMngr::CLogEvent* LogEventsMngr::registerLogEvent( CPluginMngr::CPlugin*
 
 void LogEventsMngr::executeLogEvents()
 {
-    int err;
     bool valid;
     for(CLogEvent* a = logevents[ logArgc ]; a ; a = a->next)
 	{
@@ -171,8 +170,7 @@ void LogEventsMngr::executeLogEvents()
 		
 		if (valid)
 		{
-			if ((err = amx_Exec(a->plugin->getAMX(), NULL , a->func , 0)) != AMX_ERR_NONE)
-				LogError(a->plugin->getAMX(), err, "");
+			executeForwards(a->func);
 		}
     }
 }

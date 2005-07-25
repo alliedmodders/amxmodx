@@ -95,7 +95,7 @@ void free_amxmemory(void **ptr)
 int load_amxscript(AMX *amx, void **program, const char *filename, char error[64], int debug)
 {
 	*error = 0;
-	CAmxxReader reader(filename, SMALL_CELL_SIZE / 8);
+	CAmxxReader reader(filename, PAWN_CELL_SIZE / 8);
 	if (reader.GetStatus() == CAmxxReader::Err_None)
 	{
 		size_t bufSize = reader.GetBufferSize();
@@ -153,59 +153,72 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 		return (amx->error = AMX_ERR_FORMAT);
 	}
 
-	if ( (int)CVAR_GET_FLOAT("amx_debug") >= 2 || debug)
-	{
-		//automatic debug mode
-		hdr->flags |= AMX_FLAG_LINEOPS;
-		hdr->flags |= AMX_FLAG_DEBUG;
-	}
-
 	int err;
 	memset(amx, 0, sizeof(*amx));
+
+	if ((int)CVAR_GET_FLOAT("amx_debug") >= 2 || debug)
+	{
+		if ((amx->flags & AMX_FLAG_DEBUG) != 0)
+		{
+			//:TODO: debug support
+		}
+	} else {
+#ifdef JIT
+		//if (hdr->file_version == CUR_FILE_VERSION)
+		amx->flags |= AMX_FLAG_JITC;
+#endif
+	}
+
 	if ((err = amx_Init( amx, *program )) != AMX_ERR_NONE)
 	{
 		sprintf(error,"Load error %d (invalid file format or version)", err);
 		return (amx->error = AMX_ERR_INIT);
 	}
 
-#ifdef JIT
-	void *np = new char[ amx->code_size ];
-	void *rt = new char[ amx->reloc_size ];
-	if ( !np || (!rt && amx->reloc_size > 0) )
-	{
-		delete[] np;
-		delete[] rt;
-		strcpy(error,"Failed to initialize plugin");
-		return (amx->error = AMX_ERR_INIT);
-	}
+	LOG_MESSAGE(PLID, "AMX: %p FLAGS: %d\n", amx, amx->flags);
 
-	if ( (err = amx_InitJIT(amx, rt, np)) == AMX_ERR_NONE ) 
+#ifdef JIT
+	if (amx->flags & AMX_FLAG_JITC)
 	{
-		//amx->base = (unsigned char FAR *)realloc( np, amx->code_size );
-#ifndef __linux__
-		amx->base = new unsigned char[ amx->code_size ];
-#else
-		//posix_memalign((void **)&(amx->base), sysconf(_SC_PAGESIZE), amx->code_size);
-		amx->base = (unsigned char *)memalign(sysconf(_SC_PAGESIZE), amx->code_size);
-		mprotect((void *)amx->base, amx->code_size, PROT_READ|PROT_WRITE|PROT_EXEC);
-#endif
-		if ( amx->base )
-			memcpy( amx->base , np , amx->code_size );
-		delete[] np;
-		delete[] rt;
-		delete[] *program;
-		(*program) = amx->base;
-		if ( *program == 0 ){
-			strcpy(error,"Failed to allocate memory");
-			return (amx->error = AMX_ERR_MEMORY);
+		char *np = new char[ amx->code_size ];
+		char *rt = new char[ amx->reloc_size ];
+		if ( !np || (!rt && amx->reloc_size > 0) )
+		{
+			delete[] np;
+			delete[] rt;
+			strcpy(error,"Failed to initialize plugin");
+			return (amx->error = AMX_ERR_INIT);
 		}
-	}
-	else 
-	{
-		delete[] np;
-		delete[] rt;
-		sprintf(error, "Failed to initialize plugin (%d)", err);
-		return (amx->error = AMX_ERR_INIT_JIT);
+	
+		if ( (err = amx_InitJIT(amx, (void *)rt, (void *)np)) == AMX_ERR_NONE ) 
+		{
+			//amx->base = (unsigned char FAR *)realloc( np, amx->code_size );
+#ifndef __linux__
+			amx->base = new unsigned char[ amx->code_size ];
+#else
+			//posix_memalign((void **)&(amx->base), sysconf(_SC_PAGESIZE), amx->code_size);
+			amx->base = (unsigned char *)memalign(sysconf(_SC_PAGESIZE), amx->code_size);
+			mprotect((void *)amx->base, amx->code_size, PROT_READ|PROT_WRITE|PROT_EXEC);
+#endif
+			if ( amx->base )
+				memcpy( amx->base , np , amx->code_size );
+			delete[] np;
+			delete[] rt;
+			char *prg = (char *)(*program);
+			delete[] *prg;
+			(*program) = amx->base;
+			if ( *program == 0 ){
+				strcpy(error,"Failed to allocate memory");
+				return (amx->error = AMX_ERR_MEMORY);
+			}
+		}
+		else 
+		{
+			delete[] np;
+			delete[] rt;
+			sprintf(error, "Failed to initialize plugin (%d)", err);
+			return (amx->error = AMX_ERR_INIT_JIT);
+		}
 	}
 
 #endif
@@ -219,7 +232,6 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 	}
 
 	g_loadedscripts.put( aa );
-	amx->sysreq_d = 0;
 	return set_amxnatives(amx,error);
 }
 
@@ -345,7 +357,8 @@ int unload_amxscript(AMX* amx, void** program)
 {
 	CList<CScript,AMX*>::iterator a = g_loadedscripts.find( amx  );
 	if ( a ) a.remove();
-	delete[] *program;
+	char *prg = (char *)*program;
+	delete[] *prg;
 	*program = 0;
 	return AMX_ERR_NONE;
 }
@@ -469,27 +482,6 @@ char* build_pathname_addons(char *fmt, ... )
 	return string;
 }
 
-int add_amxnatives(module_info_s* info,AMX_NATIVE_INFO*natives)
-{
-	CList<CModule,const char *>::iterator  a  = g_modules.begin();
-
-	while ( a )
-	{
-		if (  (*a).getInfo() == info )
-		{
-			AMX_NATIVE_INFO** aa = new AMX_NATIVE_INFO*(natives);
-			if ( aa == 0 ) return AMX_ERR_NATIVE;
-			(*a).m_Natives.put( aa  );
-			return AMX_ERR_NONE;
-		}
-
-		++a;
-	}
-
-	return AMX_ERR_NATIVE;
-}
-
-
 bool validFile(const char* file)
 {
 	const char* a = 0;
@@ -505,7 +497,7 @@ bool validFile(const char* file)
 
 void ConvertModuleName(const char *pathString, String &path)
 {
-#if SMALL_CELL_SIZE==64
+#if PAWN_CELL_SIZE==64
 	char *ptr = strstr(pathString, "i386");
 	if (ptr)
 	{
@@ -600,7 +592,7 @@ void ConvertModuleName(const char *pathString, String &path)
 		}
 	}
 #endif //__linux__
-#endif //SMALL_CELL_SIZE==64
+#endif //PAWN_CELL_SIZE==64
 }
 
 int loadModules(const char* filename, PLUG_LOADTIME now)
@@ -930,10 +922,14 @@ int MNF_AddNatives(AMX_NATIVE_INFO* natives)
 
 const char *MNF_GetModname(void)
 {
-	// :TODO: Do we have to do this??
+	// :TODO: Do we have to do this?? 
+	// I dunno who wrote the above comment but no
+#if 0
 	static char buffer[64];
 	strcpy(buffer, g_mod_name.c_str());
 	return buffer;
+#endif
+	return g_mod_name.c_str();
 }
 
 AMX *MNF_GetAmxScript(int id)
@@ -1169,13 +1165,17 @@ REAL MNF_CellToReal(cell x)
 	return *(REAL*)&x;
 }
 
+#ifdef __linux__
+#define _vsnprintf vsnprintf
+#endif
+
 void MNF_Log(const char *fmt, ...)
 {
-	// :TODO: Overflow possible here
 	char msg[3072];
 	va_list arglst;
 	va_start(arglst, fmt);
-	vsprintf(msg, fmt, arglst);
+	_vsnprintf(msg, sizeof(msg)-1, fmt, arglst);
+	//vsprintf(msg, fmt, arglst);
 	va_end(arglst);
 	AMXXLOG_Log("%s", msg);
 }
@@ -1220,7 +1220,7 @@ void GenericError(AMX *amx, int err, int line, char buf[], const char *file)
 		geterr = NULL;
 	else
 		geterr = amx_errs[err];
-	if (!(amx->flags & AMX_FLAG_LINEOPS))
+	if (!(amx->flags & AMX_FLAG_DEBUG))
 	{
 		if (geterr == NULL)
 		{
@@ -1250,7 +1250,7 @@ void LogError(AMX *amx, int err, const char *fmt, ...)
 {
 	//does this plugin have debug info?
 	va_list arg;
-	AMX_DBG *dbg = (AMX_DBG *)(amx->userdata[0]);
+	//AMX_DBG *dbg = (AMX_DBG *)(amx->userdata[0]);
 	static char buf[1024];
 	static char vbuf[1024];
 	*buf = 0;
@@ -1259,7 +1259,7 @@ void LogError(AMX *amx, int err, const char *fmt, ...)
 	va_start(arg, fmt);
 	vsprintf(vbuf, fmt, arg);
 	va_end(arg);
-
+#if 0
 	if (!dbg || !(dbg->tail))
 	{
 		if (dbg && amx->curfile < dbg->numFiles && amx->curfile >= 0)
@@ -1313,6 +1313,8 @@ void LogError(AMX *amx, int err, const char *fmt, ...)
 			t = dbg->tail;
 		}
 	}
+#endif
+	amx_RaiseError(amx, err);
 }
 
 void MNF_MergeDefinitionFile(const char *file)
@@ -1386,7 +1388,7 @@ const char *g_LastRequestedFunc = NULL;
 #define REGISTER_FUNC(name, func) \
 	{ \
 		pFunc = new func_s; \
-		pFunc->pfn = func; \
+		pFunc->pfn = (void *)func; \
 		pFunc->desc = name; \
 		g_functions.put(pFunc); \
 	}
@@ -1396,6 +1398,16 @@ void MNF_RegisterFunction(void *pfn, const char *description)
 	func_s *pFunc;
 
 	REGISTER_FUNC(description, pfn);
+}
+
+void Module_UncacheFunctions()
+{
+	g_functions.clear();
+}
+
+int amx_Execv()
+{
+	return AMX_ERR_NOTFOUND;
 }
 
 void Module_CacheFunctions()
@@ -1430,7 +1442,7 @@ void Module_CacheFunctions()
 
 	// other amx stuff
 	REGISTER_FUNC("amx_Exec", amx_Exec)
-	REGISTER_FUNC("amx_Execv", amx_Execv)
+	REGISTER_FUNC("amx_Execv", amx_Execv)		//I HOPE NO ONE USES THIS!!!!
 	REGISTER_FUNC("amx_Allot", amx_Allot)
 	REGISTER_FUNC("amx_FindPublic", amx_FindPublic)
 	REGISTER_FUNC("amx_FindNative", amx_FindNative)

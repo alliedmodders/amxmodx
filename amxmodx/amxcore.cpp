@@ -1,6 +1,6 @@
-/*  Core module for the Small AMX
+/*  Core module for the Pawn AMX
  *
- *  Copyright (c) ITB CompuPhase, 1997-2004
+ *  Copyright (c) ITB CompuPhase, 1997-2005
  *
  *  This software is provided "as-is", without any express or implied warranty.
  *  In no event will the authors be held liable for any damages arising from
@@ -34,14 +34,7 @@
 #include <string.h>
 #include <limits.h>
 #include <assert.h>
-
-// this file does not include amxmodx.h, so we have to include the memory manager here
-#ifdef MEMORY_TEST
-#include "mmgr/mmgr.h"
-#endif // MEMORY_TEST
-
 #include "amx.h"
-
 #if defined __WIN32__ || defined _WIN32 || defined WIN32 || defined _Windows
   #include <windows.h>
 #endif
@@ -60,14 +53,13 @@
 # define _tcscpy        strcpy
 # define _tcsdup        strdup
 # define _tcslen        strlen
-# define _stprintf      sprintf
 #endif
 
 
 #define CHARBITS        (8*sizeof(char))
 typedef unsigned char   uchar;
 
-#if !defined NOPROPLIST
+#if !defined AMX_NOPROPLIST
 typedef struct _property_list {
   struct _property_list *next;
   cell id;
@@ -76,7 +68,7 @@ typedef struct _property_list {
   //??? safe AMX (owner of the property)
 } proplist;
 
-static proplist proproot = { NULL };
+static proplist proproot = { NULL, 0, NULL, 0 };
 
 static proplist *list_additem(proplist *root)
 {
@@ -142,15 +134,13 @@ static proplist *list_finditem(proplist *root,cell id,char *name,cell value,
 }
 #endif
 
-#if defined __BORLANDC__ || defined __WATCOMC__
-  #pragma argsused
-#endif
 static cell AMX_NATIVE_CALL numargs(AMX *amx, cell *params)
 {
   AMX_HEADER *hdr;
   uchar *data;
   cell bytes;
 
+  (void)params;
   hdr=(AMX_HEADER *)amx->base;
   data=amx->data ? amx->data : amx->base+(int)hdr->dat;
   /* the number of bytes is on the stack, at "frm + 2*cell" */
@@ -190,18 +180,16 @@ static cell AMX_NATIVE_CALL setarg(AMX *amx, cell *params)
   /* adjust the address in "value" in case of an array access */
   value+=params[2]*sizeof(cell);
   /* verify the address */
-  if (value<0 || (value>=amx->hea && value<amx->stk))
+  if (value<0 || value>=amx->hea && value<amx->stk)
     return 0;
   /* set the value indirectly */
   * (cell *)(data+(int)value) = params[3];
   return 1;
 }
 
-#if defined __BORLANDC__ || defined __WATCOMC__
-  #pragma argsused
-#endif
 static cell AMX_NATIVE_CALL heapspace(AMX *amx,cell *params)
 {
+  (void)params;
   return amx->stk - amx->hea;
 }
 
@@ -220,142 +208,22 @@ static cell AMX_NATIVE_CALL funcidx(AMX *amx,cell *params)
     return 0;
   } /* if */
 
-  amx_GetString(name,cstr,0);
+  amx_GetString(name,cstr,0,UNLIMITED);
   err=amx_FindPublic(amx,name,&index);
   if (err!=AMX_ERR_NONE)
     index=-1;   /* this is not considered a fatal error */
   return index;
 }
 
-int amx_StrPack(cell *dest,cell *source)
-{
-  int len;
-
-  amx_StrLen(source,&len);
-  if ((ucell)*source>UNPACKEDMAX) {
-    /* source string is already packed */
-    while (len >= 0) {
-      *dest++ = *source++;
-      len-=sizeof(cell);
-    } /* while */
-  } else {
-    /* pack string, from bottom up */
-    cell c;
-    int i;
-    for (c=0,i=0; i<len; i++) {
-      assert((*source & ~0xffL)==0);
-      c=(c<<CHARBITS) | *source++;
-      if (i%sizeof(cell) == sizeof(cell)-1) {
-        *dest++=c;
-        c=0;
-      } /* if */
-    } /* for */
-    if (i%sizeof(cell) != 0)    /* store remaining packed characters */
-      *dest=c << (sizeof(cell)-i%sizeof(cell))*CHARBITS;
-    else
-      *dest=0;                  /* store full cell of zeros */
-  } /* if */
-  return AMX_ERR_NONE;
-}
-
-int amx_StrUnpack(cell *dest,cell *source)
-{
-  if ((ucell)*source>UNPACKEDMAX) {
-    /* unpack string, from top down (so string can be unpacked in place) */
-    cell c;
-    int i,len;
-    amx_StrLen(source,&len);
-    dest[len]=0;
-    for (i=len-1; i>=0; i--) {
-      c=source[i/sizeof(cell)] >> (sizeof(cell)-i%sizeof(cell)-1)*CHARBITS;
-      dest[i]=c & UCHAR_MAX;
-    } /* for */
-  } else {
-    /* source string is already unpacked */
-    while ((*dest++ = *source++) != 0)
-      /* nothing */;
-  } /* if */
-  return AMX_ERR_NONE;
-}
-
-static int verify_addr(AMX *amx,cell addr)
-{
-  int err;
-  cell *cdest;
-
-  err=amx_GetAddr(amx,addr,&cdest);
-  if (err!=AMX_ERR_NONE)
-    amx_RaiseError(amx,err);
-  return err;
-}
-
-static cell AMX_NATIVE_CALL core_strlen(AMX *amx,cell *params)
-{
-  cell *cptr;
-  int len = 0;
-
-  if (amx_GetAddr(amx,params[1],&cptr)==AMX_ERR_NONE)
-    amx_StrLen(cptr,&len);
-  return len;
-}
-
-static cell AMX_NATIVE_CALL strpack(AMX *amx,cell *params)
-{
-  cell *cdest,*csrc;
-  int len,needed,err;
-  size_t lastaddr;
-
-  /* calculate number of cells needed for (packed) destination */
-  amx_GetAddr(amx,params[2],&csrc);
-  amx_StrLen(csrc,&len);
-  needed=(len+sizeof(cell))/sizeof(cell);     /* # of cells needed */
-  assert(needed>0);
-  lastaddr=(size_t)(params[1]+sizeof(cell)*needed-1);
-  if (verify_addr(amx,(cell)lastaddr)!=AMX_ERR_NONE)
-    return 0;
-
-  amx_GetAddr(amx,params[1],&cdest);
-  err=amx_StrPack(cdest,csrc);
-  if (err!=AMX_ERR_NONE)
-    return amx_RaiseError(amx,err);
-
-  return len;
-}
-
-static cell AMX_NATIVE_CALL strunpack(AMX *amx,cell *params)
-{
-  cell *cdest,*csrc;
-  int len,err;
-  size_t lastaddr;
-
-  /* calculate number of cells needed for (packed) destination */
-  amx_GetAddr(amx,params[2],&csrc);
-  amx_StrLen(csrc,&len);
-  assert(len>=0);
-  lastaddr=(size_t)(params[1]+sizeof(cell)*(len+1)-1);
-  if (verify_addr(amx,(cell)lastaddr)!=AMX_ERR_NONE)
-    return 0;
-
-  amx_GetAddr(amx,params[1],&cdest);
-  err=amx_StrUnpack(cdest,csrc);
-  if (err!=AMX_ERR_NONE)
-    return amx_RaiseError(amx,err);
-
-  return len;
-}
-
-#if defined __BORLANDC__ || defined __WATCOMC__
-  #pragma argsused
-#endif
 static cell AMX_NATIVE_CALL swapchars(AMX *amx,cell *params)
 {
   union {
     cell c;
-    #if SMALL_CELL_SIZE==16
+    #if PAWN_CELL_SIZE==16
       uchar b[2];
-    #elif SMALL_CELL_SIZE==32
+    #elif PAWN_CELL_SIZE==32
       uchar b[4];
-    #elif SMALL_CELL_SIZE==64
+    #elif PAWN_CELL_SIZE==64
       uchar b[8];
 	#else
 	  #error Unsupported cell size
@@ -363,20 +231,21 @@ static cell AMX_NATIVE_CALL swapchars(AMX *amx,cell *params)
   } value;
   uchar t;
 
+  (void)amx;
   assert((size_t)params[0]==sizeof(cell));
   value.c = params[1];
-  #if SMALL_CELL_SIZE==16
+  #if PAWN_CELL_SIZE==16
     t = value.b[0];
     value.b[0] = value.b[1];
     value.b[1] = t;
-  #elif SMALL_CELL_SIZE==32
+  #elif PAWN_CELL_SIZE==32
     t = value.b[0];
     value.b[0] = value.b[3];
     value.b[3] = t;
     t = value.b[1];
     value.b[1] = value.b[2];
     value.b[2] = t;
-  #elif SMALL_CELL_SIZE==64
+  #elif PAWN_CELL_SIZE==64
     t = value.b[0];
     value.b[0] = value.b[7];
     value.b[7] = t;
@@ -395,11 +264,9 @@ static cell AMX_NATIVE_CALL swapchars(AMX *amx,cell *params)
   return value.c;
 }
 
-#if defined __BORLANDC__ || defined __WATCOMC__
-  #pragma argsused
-#endif
 static cell AMX_NATIVE_CALL core_tolower(AMX *amx,cell *params)
 {
+  (void)amx;
   #if defined __WIN32__ || defined _WIN32 || defined WIN32
     return (cell)CharLower((LPTSTR)params[1]);
   #elif defined _Windows
@@ -409,11 +276,9 @@ static cell AMX_NATIVE_CALL core_tolower(AMX *amx,cell *params)
   #endif
 }
 
-#if defined __BORLANDC__ || defined __WATCOMC__
-  #pragma argsused
-#endif
 static cell AMX_NATIVE_CALL core_toupper(AMX *amx,cell *params)
 {
+  (void)amx;
   #if defined __WIN32__ || defined _WIN32 || defined WIN32
     return (cell)CharUpper((LPTSTR)params[1]);
   #elif defined _Windows
@@ -423,19 +288,15 @@ static cell AMX_NATIVE_CALL core_toupper(AMX *amx,cell *params)
   #endif
 }
 
-#if defined __BORLANDC__ || defined __WATCOMC__
-  #pragma argsused
-#endif
 static cell AMX_NATIVE_CALL core_min(AMX *amx,cell *params)
 {
+  (void)amx;
   return params[1] <= params[2] ? params[1] : params[2];
 }
 
-#if defined __BORLANDC__ || defined __WATCOMC__
-  #pragma argsused
-#endif
 static cell AMX_NATIVE_CALL core_max(AMX *amx,cell *params)
 {
+  (void)amx;
   return params[1] >= params[2] ? params[1] : params[2];
 }
 
@@ -451,7 +312,7 @@ static cell AMX_NATIVE_CALL core_clamp(AMX *amx,cell *params)
   return value;
 }
 
-#if !defined NOPROPLIST
+#if !defined AMX_NOPROPLIST
 static char *MakePackedString(cell *cptr)
 {
   int len;
@@ -459,8 +320,19 @@ static char *MakePackedString(cell *cptr)
 
   amx_StrLen(cptr,&len);
   dest=(char *)malloc(len+sizeof(cell));
-  amx_GetString(dest,cptr,0);
+  amx_GetString(dest,cptr,0,UNLIMITED);
   return dest;
+}
+
+static int verify_addr(AMX *amx,cell addr)
+{
+  int err;
+  cell *cdest;
+
+  err=amx_GetAddr(amx,addr,&cdest);
+  if (err!=AMX_ERR_NONE)
+    amx_RaiseError(amx,err);
+  return err;
 }
 
 static cell AMX_NATIVE_CALL getproperty(AMX *amx,cell *params)
@@ -480,7 +352,7 @@ static cell AMX_NATIVE_CALL getproperty(AMX *amx,cell *params)
       return 0;
     } /* if */
     amx_GetAddr(amx,params[4],&cstr);
-    amx_SetString(cstr,item->name,1,0);
+    amx_SetString(cstr,item->name,1,0,UNLIMITED);
   } /* if */
   free(name);
   return (item!=NULL) ? item->value : 0;
@@ -545,12 +417,14 @@ static cell AMX_NATIVE_CALL existproperty(AMX *amx,cell *params)
 }
 #endif
 
+#if !defined AMX_NORANDOM
 /* This routine comes from the book "Inner Loops" by Rick Booth, Addison-Wesley
  * (ISBN 0-201-47960-5). This is a "multiplicative congruential random number
  * generator" that has been extended to 31-bits (the standard C version returns
  * only 15-bits).
  */
-static unsigned long IL_StandardRandom_seed = 0L;
+#define INITIAL_SEED  0xcaa938dbL
+static unsigned long IL_StandardRandom_seed = INITIAL_SEED; /* always use a non-zero seed */
 #define IL_RMULT 1103515245L
 #if defined __BORLANDC__ || defined __WATCOMC__
   #pragma argsused
@@ -562,7 +436,7 @@ static cell AMX_NATIVE_CALL core_random(AMX *amx,cell *params)
 
     /* one-time initialization (or, mostly one-time) */
     #if !defined SN_TARGET_PS2 && !defined _WIN32_WCE
-        if (IL_StandardRandom_seed == 0L)
+        if (IL_StandardRandom_seed == INITIAL_SEED)
             IL_StandardRandom_seed=(unsigned long)time(NULL);
     #endif
 
@@ -579,6 +453,7 @@ static cell AMX_NATIVE_CALL core_random(AMX *amx,cell *params)
         result %= params[1];
     return (cell)result;
 }
+#endif
 
 
 AMX_NATIVE_INFO core_Natives[] = {
@@ -587,22 +462,13 @@ AMX_NATIVE_INFO core_Natives[] = {
   { "setarg",        setarg },
   { "heapspace",     heapspace },
   { "funcidx",       funcidx },
-  { "strlen",        core_strlen },
-  { "strpack",       strpack },
-  { "strunpack",     strunpack },
   { "swapchars",     swapchars },
   { "tolower",       core_tolower },
   { "toupper",       core_toupper },
-  { "random",        core_random },
   { "min",           core_min },
   { "max",           core_max },
   { "clamp",         core_clamp },
-#if !defined NOPROPLIST
-  { "getproperty",   getproperty },
-  { "setproperty",   setproperty },
-  { "deleteproperty",delproperty },
-  { "existproperty", existproperty },
-#endif
+  { "random",        core_random },
   { NULL, NULL }        /* terminator */
 };
 
@@ -611,12 +477,10 @@ int AMXEXPORT amx_CoreInit(AMX *amx)
   return amx_Register(amx, core_Natives, -1);
 }
 
-#if defined __BORLANDC__ || defined __WATCOMC__
-  #pragma argsused
-#endif
 int AMXEXPORT amx_CoreCleanup(AMX *amx)
 {
-  #if !defined NOPROPLIST
+  (void)amx;
+  #if !defined AMX_NOPROPLIST
     //??? delete only the properties owned by the AMX
     while (proproot.next!=NULL)
       list_delete(&proproot,proproot.next);

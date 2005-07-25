@@ -68,7 +68,7 @@
 #include "amxxlog.h"
 
 #define AMXXLOG_Log g_log.Log
-#define AMX_VERSION     "1.10-RC1"
+#define AMX_VERSION     "1.50-RC1"
 
 extern AMX_NATIVE_INFO  core_Natives[];
 extern AMX_NATIVE_INFO  time_Natives[];
@@ -244,7 +244,6 @@ enum CountModulesMode
 int countModules(CountModulesMode mode);
 void modules_callPluginsLoaded();
 
-int add_amxnatives(module_info_s* info,AMX_NATIVE_INFO*natives);
 cell* get_amxaddr(AMX *amx,cell amx_addr);
 char* build_pathname(char *fmt, ... );
 char* build_pathname_r(char *buffer, size_t maxlen, char *fmt, ...);
@@ -280,6 +279,7 @@ extern ModuleCallReason g_ModuleCallReason;		// modules.cpp
 extern CModule *g_CurrentlyCalledModule;		// modules.cpp
 extern const char *g_LastRequestedFunc;			// modules.cpp
 void Module_CacheFunctions();
+void Module_UncacheFunctions();
 
 void *Module_ReqFnptr(const char *funcName);	// modules.cpp
 
@@ -297,6 +297,7 @@ extern int FF_PluginLog;
 extern int FF_PluginEnd;
 extern int FF_InconsistentFile;
 extern int FF_ClientAuthorized;
+extern bool g_coloredmenus;
 
 #ifdef FAKEMETA
 extern CFakeMeta g_FakeMeta;

@@ -1,4 +1,4 @@
-;       AMXEXECN.ASM    Abstract Machine for the "Small" language
+;       AMXEXECN.ASM    Abstract Machine for the "Pawn" language
 ;
 
 ;Some notes:
@@ -25,7 +25,7 @@
 ;
 ;Copyright and license of use, please read
 ;-----------------------------------------
-;The assembler implementation of the abstract machine for the Small language,
+;The assembler implementation of the abstract machine for the Pawn language,
 ;specifically the file AMXEXEC.ASM, is copyright (c) 1998-2000 by Marc Peter.
 ;
 ;Permission is hereby granted, without written agreement and without paid
@@ -56,6 +56,8 @@
 ;
 ;History (list of changes)
 ;-------------------------
+; 17 february 2005  by Thiadmer Riemersms
+;       Addition of the BREAK opcode, removal of the older debugging opcode table.
 ;  6 march 2004  by Thiadmer Riemersma
 ;       Corrected a bug in OP_FILL, where a cell preceding the array would
 ;       be overwritten (zero'ed out). This bug was brought to my attention
@@ -95,92 +97,7 @@
   %endif
 %endmacro
 
-
-; I could not get NASM's structure definition to work (it appears to confuse
-; ENDSTRUC with "end segment"). So the definition below uses constants for
-; the field offsets.
-;amx_s   STRUC
-    _base       EQU 00h ;DD ?
-    _dataseg    EQU 04h ;DD ?
-    _callback   EQU 08h ;DD ?
-    _debug      EQU 0ch ;DD ?
-    _cip        EQU 10h ;DD ?
-    _frm        EQU 14h ;DD ?
-    _hea        EQU 18h ;DD ?
-    _hlw        EQU 1ch ;DD ?
-    _stk        EQU 20h ;DD ?
-    _stp        EQU 24h ;DD ?
-    _flags      EQU 28h ;DD ?
-    _curline    EQU 2ch ;DD ?
-    _curfile    EQU 30h ;DD ?
-    _dbgcode    EQU 34h ;DD ?
-    _dbgaddr    EQU 38h ;DD ?
-    _dbgparam   EQU 3ch ;DD ?
-    _dbgname    EQU 40h ;DD ?
-    _usertags1  EQU 44h ;DD 4 DUP (?)    ; 4 = AMX_USERNUM (#define'd in amx.h)
-    _usertags2  EQU 44h ;DD 4 DUP (?)    ; 4 = AMX_USERNUM (#define'd in amx.h)
-    _usertags3  EQU 44h ;DD 4 DUP (?)    ; 4 = AMX_USERNUM (#define'd in amx.h)
-    _usertags4  EQU 44h ;DD 4 DUP (?)    ; 4 = AMX_USERNUM (#define'd in amx.h)
-    _userdata1  EQU 54h ;DD 4 DUP (?)    ; 4 = AMX_USERNUM (#define'd in amx.h)
-    _userdata2  EQU 54h ;DD 4 DUP (?)    ; 4 = AMX_USERNUM (#define'd in amx.h)
-    _userdata3  EQU 54h ;DD 4 DUP (?)    ; 4 = AMX_USERNUM (#define'd in amx.h)
-    _userdata4  EQU 54h ;DD 4 DUP (?)    ; 4 = AMX_USERNUM (#define'd in amx.h)
-    _error      EQU 64h ;DD ?
-    _pri        EQU 68h ;DD ?
-    _alt        EQU 6ch ;DD ?
-    _reset_stk  EQU 70h ;DD ?
-    _reset_hea  EQU 74h ;DD ?
-    _syscall_d  EQU 78h ;DD ?
-    ; the two fields below are for the JIT; they do not exist in
-    ; the non-JIT version of the abstract machine
-;   _reloc_size EQU 7ch ;DD ?            ; memory block for relocations
-;   _code_size  EQU 80h ;DD ?            ; memory size of the native code
-;amx_s   ENDS
-
-
-        AMX_ERR_NONE        EQU 0
-        AMX_ERR_EXIT        EQU 1
-        AMX_ERR_ASSERT      EQU 2
-        AMX_ERR_STACKERR    EQU 3
-        AMX_ERR_BOUNDS      EQU 4
-        AMX_ERR_MEMACCESS   EQU 5
-        AMX_ERR_INVINSTR    EQU 6
-        AMX_ERR_STACKLOW    EQU 7
-        AMX_ERR_HEAPLOW     EQU 8
-        AMX_ERR_CALLBACK    EQU 9
-        AMX_ERR_NATIVE      EQU 10
-        AMX_ERR_DIVIDE      EQU 11      ; MP: added for catching divide errors
-        AMX_ERR_SLEEP       EQU 12      ; (TR)
-
-        AMX_ERR_MEMORY      EQU 16
-        AMX_ERR_FORMAT      EQU 17
-        AMX_ERR_VERSION     EQU 18
-        AMX_ERR_NOTFOUND    EQU 19
-        AMX_ERR_INDEX       EQU 20
-        AMX_ERR_DEBUG       EQU 21
-        AMX_ERR_INIT        EQU 22
-        AMX_ERR_USERDATA    EQU 23
-        AMX_ERR_INIT_JIT    EQU 24
-        AMX_ERR_PARAMS      EQU 25
-        AMX_ERR_DOMAIN      EQU 26
-
-        DBG_INIT            EQU 0
-        DBG_FILE            EQU 1
-        DBG_LINE            EQU 2
-        DBG_SYMBOL          EQU 3
-        DBG_CLRSYM          EQU 4
-        DBG_CALL            EQU 5
-        DBG_RETURN          EQU 6
-        DBG_TERMINATE       EQU 7
-        DBG_SRANGE          EQU 8       ; (TR)
-        DBG_SYMTAG          EQU 9       ; (TR)
-
-        AMX_FLAG_CHAR16     EQU 0001h   ; characters are 16-bit
-        AMX_FLAG_DEBUG      EQU 0002h   ; symbolic info. available
-		AMX_FLAG_LINEOPS	EQU	0020h	; line op information
-		AMX_FLAG_TRACED		EQU	0040h	; 
-        AMX_FLAG_BROWSE     EQU 4000h
-        AMX_FLAG_RELOC      EQU 8000h   ; jump/call addresses relocated
+%include "amxdefn.asm"
 
 ;#define PUSH(v)         ( stk-=sizeof(cell), *(cell *)(data+(int)stk)=v )
 %macro  _PUSH   1
@@ -663,29 +580,6 @@ OP_STACK:
         add     ecx,[esi+4]
         _CHKMARGIN
         _CHKSTACK
-        mov     ebp,amx
-        test    DWORD [ebp+_flags],AMX_FLAG_DEBUG
-        jz      short op_stk_goon
-        ; update several structure fields and call the debug hook
-        mov     DWORD [ebp+_dbgcode],DBG_CLRSYM
-        mov     [ebp+_stk],ecx
-        push    eax
-        mov     eax,ebp         ; 1st parm: amx
-        _SAVEREGS
-        push    eax             ; pass parameter via the stack
-        call    [ebp+_debug]    ; call debug function
-        _DROPARGS 4             ; remove arguments from stack
-        _RESTOREREGS
-        pop     eax
-    op_stk_goon:
-        add     esi,8
-        GO_ON
-
-OP_STACK_nodebug:
-        mov     edx,ecx
-        add     ecx,[esi+4]
-        _CHKMARGIN
-        _CHKSTACK
         add     esi,8
         GO_ON
 
@@ -719,35 +613,6 @@ OP_RET:
         jae     err_memaccess
         mov     frm,ebx
         add     ebx,edi
-        mov     ebp,amx
-        test    DWORD [ebp+_flags], AMX_FLAG_DEBUG
-        jz      short op_ret_goon
-        ; update several structure fields and call the debug hook
-        mov     DWORD [ebp+_dbgcode],DBG_RETURN
-        mov     [ebp+_dbgparam],eax
-        push    eax
-        mov     [ebp+_stk],ecx  ; store STK
-        mov     eax,hea
-        mov     [ebp+_hea],eax  ; store HEA
-        mov     eax,ebp         ; 1st parm: amx
-        _SAVEREGS
-        push    eax
-        call    [ebp+_debug]    ; call debug function
-        _DROPARGS 4             ; remove arguments from stack
-        _RESTOREREGS
-        pop     eax
-    op_ret_goon:
-        GO_ON
-
-OP_RET_nodebug:
-        _POP    ebx
-        _POP    esi
-        cmp     esi,code        ; verify ESI>=code
-        jb      err_memaccess
-        cmp     esi,codesiz     ; verify ESI<codesiz ("end-of-code" pointer)
-        jae     err_memaccess
-        mov     frm,ebx
-        add     ebx,edi
         GO_ON
 
 ;good
@@ -760,107 +625,17 @@ OP_RETN:
         jae     err_memaccess
         mov     frm,ebx
         add     ebx,edi
-        mov     ebp,amx
-        test    DWORD [ebp+_flags], AMX_FLAG_DEBUG
-        jz      short op_retn_goon
-        ; update several structure fields and call the debug hook
-        mov     DWORD [ebp+_dbgcode],DBG_RETURN
-        mov     [ebp+_dbgparam],eax
-        push    eax
-        mov     [ebp+_stk],ecx  ; store STK
-        mov     eax,hea
-        mov     [ebp+_hea],eax  ; store HEA
-        mov     eax,ebp         ; parm: amx
-        _SAVEREGS
-        push    eax
-        call    [ebp+_debug]    ; call debug function
-        _DROPARGS 4             ; remove arguments from stack
-        _RESTOREREGS
-        ; also send the DBG_CLRSYM code
-        mov     eax,[edi+ecx]
-        lea     ecx,[ecx+eax+4]
-        mov     DWORD [ebp+_dbgcode],DBG_CLRSYM
-        mov     [ebp+_stk],ecx
-        mov     eax,ebp         ; parm: amx
-        _SAVEREGS
-        push    eax
-        call    [ebp+_debug]    ; call debug function
-        _DROPARGS 4             ; remove arguments from stack
-        _RESTOREREGS
-        pop     eax
-        ; ECX already adjusted
-        GO_ON
-    op_retn_goon:
         mov     ebp,[edi+ecx]
         lea     ecx,[ecx+ebp+4]
         GO_ON
 
-OP_RETN_nodebug:
-        _POP    ebx
-        _POP    esi
-        cmp     esi,code        ; verify ESI>=code
-        jb      err_memaccess
-        cmp     esi,codesiz     ; verify ESI<codesiz ("end-of-code" pointer)
-        jae     err_memaccess
-        mov     frm,ebx
-        mov     ebp,[edi+ecx]
-        add     ebx,edi
-        lea     ecx,[ecx+ebp+4]
-        GO_ON
-
-;good
 OP_CALL:
-        lea     ebp,[esi+8]
-        mov     esi,[esi+4]
-        _PUSH   ebp
-        mov     ebp,amx
-        test    DWORD [ebp+_flags], AMX_FLAG_DEBUG
-        jz      short op_call_goon
-        ; update several structure fields and call the debug hook
-        push    eax
-        mov     eax,[esp+24]            ; this is "code", but ESP moved
-        mov     [ebp+_dbgaddr],esi
-        sub     [ebp+_dbgaddr],eax      ; dbgaddr = cip - code
-        mov     DWORD [ebp+_dbgcode],DBG_CALL
-        mov     eax,ebp         ; 1st parm: amx
-        _SAVEREGS
-        push    eax
-        call    [ebp+_debug]    ; call debug function
-        _DROPARGS 4             ; remove arguments from stack
-        _RESTOREREGS
-        pop     eax
-    op_call_goon:
-        GO_ON
-
-OP_CALL_nodebug:
         lea     ebp,[esi+8]
         mov     esi,[esi+4]
         _PUSH   ebp
         GO_ON
 
 OP_CALL_PRI:
-        lea     ebp,[esi+4]
-        mov     esi,eax
-        add     esi,code        ; cip = PRI + code
-        _PUSH   ebp
-        mov     ebp,amx
-        test    DWORD [ebp+_flags], AMX_FLAG_DEBUG
-        jz      short op_calli_goon
-        ; update several structure fields and call the debug hook
-        mov     [ebp+_dbgaddr],eax      ; dbgaddr = PRI (== cip - code)
-        mov     DWORD [ebp+_dbgcode],DBG_CALL
-        push    eax
-        mov     eax,ebp         ; 1st parm: amx
-        _SAVEREGS
-        push    eax
-        call    [ebp+_debug]    ; call debug function
-        _DROPARGS 4             ; remove arguments from stack
-        _RESTOREREGS
-        pop     eax
-    op_calli_goon:
-        GO_ON
-
-OP_CALL_PRI_nodebug:
         lea     ebp,[esi+4]
         mov     esi,eax
         add     esi,code        ; cip = PRI + code
@@ -928,7 +703,7 @@ OP_JGRTR:
 
 OP_JGEQ:
         cmp     eax,edx
-        jae     short jump_taken ; unsigned comparison
+        jae     short jump_taken    ; unsigned comparison
         add     esi,8
         GO_ON
 
@@ -941,19 +716,19 @@ OP_JSLESS:
 ;good
 OP_JSLEQ:
         cmp     eax,edx
-        jle     short jump_taken
+        jle     near jump_taken
         add     esi,8
         GO_ON
 
 OP_JSGRTR:
         cmp     eax,edx
-        jg      short jump_taken
+        jg      near jump_taken
         add     esi,8
         GO_ON
 
 OP_JSGEQ:
         cmp     eax,edx
-        jge     near jump_taken ; signed comparison
+        jge     near jump_taken    ; signed comparison
         add     esi,8
         GO_ON
 
@@ -1350,12 +1125,11 @@ OP_CMPS:
         _VERIFYADDRESS  eax             ; PRI
         _VERIFYADDRESS  edx             ; ALT
         mov     ebp,eax
-        add     ebp,[esi+4]
-        dec     ebp
+        add     ebp,[esi+4]             ; size in bytes
+        dec     ebp                     ; EBP = PRI + size - 1
         _VERIFYADDRESS  ebp             ; PRI + size - 1
-        mov     ebp,edx
-        add     ebp,[esi+4]
-        dec     ebp
+        sub     ebp,eax                 ; EBP = size - 1
+        add     ebp,edx                 ; EBP = ALT + size - 1
         _VERIFYADDRESS  ebp             ; ALT + size - 1
 
         push    ecx
@@ -1422,19 +1196,6 @@ OP_HALT:
         mov     eax,esi         ; EAX=CIP
         sub     eax,code
         mov     [ebp+_cip],eax
-        ; optionally call the debug hook
-        test    DWORD [ebp+_flags], AMX_FLAG_DEBUG
-        jz      short halt_goon
-        mov     DWORD [ebp+_dbgcode],DBG_TERMINATE
-        mov     [ebp+_dbgaddr],eax
-        mov     [ebp+_dbgparam],ebx
-        mov     eax,ebp         ; 1st parm: amx
-        _SAVEREGS
-        push    eax
-        call    [ebp+_debug]    ; call debug function
-        _DROPARGS 4             ; remove arguments from stack
-        _RESTOREREGS
-    halt_goon:
         mov     eax,ebx         ; return the parameter of the HALT opcode
         jmp     _return
 
@@ -1549,159 +1310,21 @@ OP_FILE:
 
 OP_LINE:
         add     esi,12
-        mov     ebp,amx
-        push    eax
-        push    edx
-        mov     eax,[esi-8]     ; get curline
-        mov     edx,[esi-4]     ; get curfile
-        mov     [ebp+_curline],eax
-        mov     [ebp+_curfile],edx
-        pop     edx
-        pop     eax
-        test    DWORD [ebp+_flags], AMX_FLAG_DEBUG
-        jz      short line_goon
-        ; update several structure fields
-        mov     [ebp+_pri],eax
-        mov     [ebp+_alt],edx  ; EAX and EDX are now free to use
-        mov     eax,frm
-        mov     edx,hea
-        mov     [ebp+_frm],eax  ; store values in AMX structure (STK, FRM & HEA)
-        mov     [ebp+_hea],edx
-        mov     [ebp+_stk],ecx
-        mov     eax,esi
-        sub     eax,code        ; EAX = CIP (relative to start of code segment)
-        mov     [ebp+_cip],eax
-        ; call the debugger hook
-        mov     eax,ebp         ; 1st parm: amx
-        _SAVEREGS
-        push    eax
-        call    [ebp+_debug]    ; call debug function
-        _DROPARGS 4             ; remove arguments from stack
-        cmp     eax,AMX_ERR_NONE
-        je      short line_noabort  ; continue running
-        mov     [ebp+_dbgcode],eax  ; save EAX (error code) before restoring all regs
-        _RESTOREREGS            ; abort run, but restore stack first
-        mov     eax,[ebp+_dbgcode]  ; get error code in EAX back again
-        jmp     _return         ; return error code
-    line_noabort:
-        _RESTOREREGS
-        mov     eax,[ebp+_pri]  ; restore PRI and ALT
-        mov     edx,[ebp+_alt]
-    line_goon:
-        GO_ON
-
-
-OP_LINE_nodebug:
-        add     esi,12
-        mov     ebp,amx
-        push    eax
-        push    edx
-        mov     eax,[esi-8]     ; get curline
-        mov     edx,[esi-4]     ; get curfile
-        mov     [ebp+_curline],eax
-        mov     [ebp+_curfile],edx
-        pop     edx
-        pop     eax
         GO_ON
 
 
 OP_SYMBOL:
-        mov     ebp,amx
-        test    DWORD [ebp+_flags],AMX_FLAG_DEBUG
-        jz      short op_symbol_goon
-        push    eax
-        push    edx
-        mov     eax,[esi+8]     ; address
-        mov     edx,[esi+12]    ; flags
-        mov     [ebp+_dbgaddr],eax
-        mov     [ebp+_dbgparam],edx
-        mov     DWORD [ebp+_dbgcode],DBG_SYMBOL
-        mov     eax,esi
-        add     eax,16          ; start of symbol name
-        mov     [ebp+_dbgname],eax
-        mov     edx,[esp+8]     ; this is FRM, but offset by two PUSH'es
-        mov     [ebp+_frm],edx
-        mov     eax,ebp         ; parameter of the debugger hook
-        _SAVEREGS
-        push    eax
-        call    [ebp+_debug]    ; call debugger hook
-        _DROPARGS 4             ; remove arguments from stack
-        _RESTOREREGS
-        pop     edx
-        pop     eax
-    op_symbol_goon:
-        add     esi,[esi+4]
-        add     esi,8           ; skip "fixed" part
-        GO_ON
-
-
-OP_SYMBOL_nodebug:
         add     esi,[esi+4]
         add     esi,8           ; skip "fixed" part
         GO_ON
 
 
 OP_SRANGE:
-        mov     ebp,amx
-        add     esi,12
-        test    DWORD [ebp+_flags], AMX_FLAG_DEBUG
-        jz      short op_srange_goon
-        push    eax
-        push    edx
-        mov     eax,[esi-8]     ; get dimensions
-        mov     edx,[esi-4]     ; get size
-        mov     [ebp+_dbgaddr],eax
-        mov     [ebp+_dbgparam],edx
-        mov     DWORD [ebp+_dbgcode],DBG_SRANGE
-        mov     edx,frm
-        mov     [ebp+_frm],edx
-        mov     [ebp+_stk],ecx  ; store values in AMX structure (STK & FRM)
-        ; call the debugger hook
-        mov     eax,ebp         ; 1st parm: amx
-        _SAVEREGS
-        push    eax
-        call    [ebp+_debug]    ; call debug function
-        _DROPARGS 4             ; remove arguments from stack
-        _RESTOREREGS
-        pop     edx
-        pop     eax
-    op_srange_goon:
-        GO_ON
-
-
-OP_SRANGE_nodebug:
         add     esi,12
         GO_ON
 
 
 OP_SYMTAG:
-        mov     ebp,amx
-        add     esi,8
-        test    DWORD [ebp+_flags], AMX_FLAG_DEBUG
-        jz      short op_symtag_goon
-        mov     ebp,amx
-        push    eax
-        push    edx
-        mov     eax,[esi-4]     ; get tag
-        mov     edx,frm
-        mov     DWORD [ebp+_dbgcode],DBG_SRANGE
-        mov     [ebp+_dbgparam],eax
-        mov     [ebp+_frm],edx
-        mov     [ebp+_stk],ecx  ; store values in AMX structure (STK & FRM)
-        ; call the debugger hook
-        mov     eax,ebp         ; 1st parm: amx
-        _SAVEREGS
-        push    eax
-        call    [ebp+_debug]    ; call debug function
-        _DROPARGS 4             ; remove arguments from stack
-        _RESTOREREGS
-        pop     edx
-        pop     eax
-    op_symtag_goon:
-        GO_ON
-
-
-OP_SYMTAG_nodebug:              ; (TR)
         add     esi,8
         GO_ON
 
@@ -1759,6 +1382,45 @@ OP_PUSHADDR:
 
 
 OP_NOP:
+        add     esi,4
+        GO_ON
+
+
+OP_BREAK:
+        mov     ebp,amx         ; get amx into ebp
+        add     esi,4
+        cmp     DWORD [ebp+_debug], 0
+        jnz     break_calldebug
+        GO_ON                   ; debug hook not active, ignore
+
+    break_calldebug:
+        ; store the status in the AMX (FRM, STK, HEA, CIP, and PRI + ALT)
+        mov     [ebp+_pri],eax
+        mov     [ebp+_alt],edx  ; EAX and EDX are now free to use
+        mov     eax,frm
+        mov     edx,hea
+        mov     [ebp+_frm],eax  ; store values in AMX structure (STK, FRM & HEA)
+        mov     [ebp+_hea],edx
+        mov     [ebp+_stk],ecx
+        mov     eax,esi
+        sub     eax,code        ; EAX = CIP (relative to start of code segment)
+        mov     [ebp+_cip],eax
+        ; call the debug hook
+        mov     eax,ebp         ; 1st parm: amx
+        _SAVEREGS
+        push    eax
+        call    [ebp+_debug]    ; call debug function
+        _DROPARGS 4             ; remove arguments from stack
+        cmp     eax,AMX_ERR_NONE
+        je      short break_noabort; continue running
+        mov     [ebp+_error],eax   ; save EAX (error code) before restoring all regs
+        _RESTOREREGS               ; abort run, but restore stack first
+        mov     eax,[ebp+_error]   ; get error code in EAX back again
+        jmp     _return         ; return error code
+    break_noabort:
+        _RESTOREREGS
+        mov     eax,[ebp+_pri]  ; restore PRI and ALT
+        mov     edx,[ebp+_alt]
         GO_ON
 
 
@@ -1796,7 +1458,7 @@ err_divide:
 
 
 _return:
-        ; save a few paraneters, mostly for the "sleep"function
+        ; save a few parameters, mostly for the "sleep"function
         mov     ebp,amx         ; get amx into ebp
         mov     [ebp+_pri],eax  ; store values in AMX structure (PRI, ALT)
         mov     [ebp+_alt],edx  ; store values in AMX structure (PRI, ALT)
@@ -1967,144 +1629,5 @@ _amx_opcodelist DD OP_INVALID
         DD      OP_NOP
         DD      OP_SYSREQ_D
         DD      OP_SYMTAG
+        DD      OP_BREAK
 
-        GLOBAL  amx_opcodelist_nodebug
-        GLOBAL  _amx_opcodelist_nodebug
-amx_opcodelist_nodebug:
-_amx_opcodelist_nodebug DD OP_INVALID
-        DD      OP_LOAD_PRI
-        DD      OP_LOAD_ALT
-        DD      OP_LOAD_S_PRI
-        DD      OP_LOAD_S_ALT
-        DD      OP_LREF_PRI
-        DD      OP_LREF_ALT
-        DD      OP_LREF_S_PRI
-        DD      OP_LREF_S_ALT
-        DD      OP_LOAD_I
-        DD      OP_LODB_I
-        DD      OP_CONST_PRI
-        DD      OP_CONST_ALT
-        DD      OP_ADDR_PRI
-        DD      OP_ADDR_ALT
-        DD      OP_STOR_PRI
-        DD      OP_STOR_ALT
-        DD      OP_STOR_S_PRI
-        DD      OP_STOR_S_ALT
-        DD      OP_SREF_PRI
-        DD      OP_SREF_ALT
-        DD      OP_SREF_S_PRI
-        DD      OP_SREF_S_ALT
-        DD      OP_STOR_I
-        DD      OP_STRB_I
-        DD      OP_LIDX
-        DD      OP_LIDX_B
-        DD      OP_IDXADDR
-        DD      OP_IDXADDR_B
-        DD      OP_ALIGN_PRI
-        DD      OP_ALIGN_ALT
-        DD      OP_LCTRL
-        DD      OP_SCTRL
-        DD      OP_MOVE_PRI
-        DD      OP_MOVE_ALT
-        DD      OP_XCHG
-        DD      OP_PUSH_PRI
-        DD      OP_PUSH_ALT
-        DD      OP_PUSH_R_PRI
-        DD      OP_PUSH_C
-        DD      OP_PUSH
-        DD      OP_PUSH_S
-        DD      OP_POP_PRI
-        DD      OP_POP_ALT
-        DD      OP_STACK_nodebug
-        DD      OP_HEAP
-        DD      OP_PROC
-        DD      OP_RET_nodebug
-        DD      OP_RETN_nodebug
-        DD      OP_CALL_nodebug
-        DD      OP_CALL_PRI_nodebug
-        DD      OP_JUMP
-        DD      OP_JREL
-        DD      OP_JZER
-        DD      OP_JNZ
-        DD      OP_JEQ
-        DD      OP_JNEQ
-        DD      OP_JLESS
-        DD      OP_JLEQ
-        DD      OP_JGRTR
-        DD      OP_JGEQ
-        DD      OP_JSLESS
-        DD      OP_JSLEQ
-        DD      OP_JSGRTR
-        DD      OP_JSGEQ
-        DD      OP_SHL
-        DD      OP_SHR
-        DD      OP_SSHR
-        DD      OP_SHL_C_PRI
-        DD      OP_SHL_C_ALT
-        DD      OP_SHR_C_PRI
-        DD      OP_SHR_C_ALT
-        DD      OP_SMUL
-        DD      OP_SDIV
-        DD      OP_SDIV_ALT
-        DD      OP_UMUL
-        DD      OP_UDIV
-        DD      OP_UDIV_ALT
-        DD      OP_ADD
-        DD      OP_SUB
-        DD      OP_SUB_ALT
-        DD      OP_AND
-        DD      OP_OR
-        DD      OP_XOR
-        DD      OP_NOT
-        DD      OP_NEG
-        DD      OP_INVERT
-        DD      OP_ADD_C
-        DD      OP_SMUL_C
-        DD      OP_ZERO_PRI
-        DD      OP_ZERO_ALT
-        DD      OP_ZERO
-        DD      OP_ZERO_S
-        DD      OP_SIGN_PRI
-        DD      OP_SIGN_ALT
-        DD      OP_EQ
-        DD      OP_NEQ
-        DD      OP_LESS
-        DD      OP_LEQ
-        DD      OP_GRTR
-        DD      OP_GEQ
-        DD      OP_SLESS
-        DD      OP_SLEQ
-        DD      OP_SGRTR
-        DD      OP_SGEQ
-        DD      OP_EQ_C_PRI
-        DD      OP_EQ_C_ALT
-        DD      OP_INC_PRI
-        DD      OP_INC_ALT
-        DD      OP_INC
-        DD      OP_INC_S
-        DD      OP_INC_I
-        DD      OP_DEC_PRI
-        DD      OP_DEC_ALT
-        DD      OP_DEC
-        DD      OP_DEC_S
-        DD      OP_DEC_I
-        DD      OP_MOVS
-        DD      OP_CMPS
-        DD      OP_FILL
-        DD      OP_HALT
-        DD      OP_BOUNDS
-        DD      OP_SYSREQ_PRI
-        DD      OP_SYSREQ_C
-        DD      OP_FILE
-        DD      OP_LINE_nodebug
-        DD      OP_SYMBOL_nodebug
-        DD      OP_SRANGE_nodebug
-        DD      OP_JUMP_PRI
-        DD      OP_SWITCH
-        DD      OP_CASETBL
-        DD      OP_SWAP_PRI
-        DD      OP_SWAP_ALT
-        DD      OP_PUSHADDR
-        DD      OP_NOP
-        DD      OP_SYSREQ_D
-        DD      OP_SYMTAG_nodebug

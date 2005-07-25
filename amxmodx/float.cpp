@@ -96,7 +96,7 @@ static cell AMX_NATIVE_CALL n_floatstr(AMX *amx,cell *params)
         return 0;
 
     /* Now convert the Small String into a C type null terminated string */
-    amx_GetString(szSource, pString, 0);
+    amx_GetStringOld(szSource, pString, 0);
 
     /* Now convert this to a float. */
     fNum = (REAL)atof(szSource);

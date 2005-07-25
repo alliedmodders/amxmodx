@@ -471,7 +471,7 @@ static cell AMX_NATIVE_CALL amx_strtok(AMX *amx, cell *params)
 	char token = params[6];
 	//trim
 	int trim = params[7];
-	for (i=0; i<len; i++)
+	for (i=0; i<(unsigned int)len; i++)
 	{
 		if (trim && !done_flag)
 		{
@@ -521,7 +521,7 @@ static cell AMX_NATIVE_CALL strbreak(AMX *amx, cell *params)	/* 5 param */
 	int LeftMax = params[3];
 	int RightMax = params[5];
 
-	for (i=0; i<l; i++) {
+	for (i=0; i<(unsigned int)l; i++) {
 		if (string[i] == '"' && !quote_flag) {
 			quote_flag = true;
 		} else if (string[i] == '"' && quote_flag) {
@@ -603,6 +603,14 @@ static cell AMX_NATIVE_CALL amx_ucfirst(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL amx_strlen(AMX *amx, cell *params)
+{
+	int len;
+	char *str = get_amxstring(amx, params[1], 0, len);
+
+	return strlen(str);
+}
+
 static cell AMX_NATIVE_CALL amx_trim(AMX *amx, cell *params)
 {
 	cell *asdf = get_amxaddr(amx, params[1]);
@@ -668,5 +676,6 @@ AMX_NATIVE_INFO string_Natives[] = {
   { "trim", amx_trim },
   { "ucfirst", amx_ucfirst },
   { "strtok", amx_strtok },
+  { "strlen", amx_strlen },
   { NULL, NULL }
 };

@@ -364,19 +364,6 @@ static cell AMX_NATIVE_CALL amx_fclose(AMX *amx, cell *params)
 	}
 }
 
-static cell AMX_NATIVE_CALL amx_fgetc(AMX *amx, cell *params)
-{
-	unsigned int id = params[1] - 1;
-	if (id >= FileList.size() || FileList.at(id) == NULL)
-		return 0;
-	FILE *fp = FileList.at(id);
-	if (fp) {
-		return fgetc(fp);
-	} else {
-		return -1;
-	}
-}
-
 static cell AMX_NATIVE_CALL amx_fread(AMX *amx, cell *params)
 {
 	unsigned int id = params[1] - 1;
@@ -392,6 +379,20 @@ static cell AMX_NATIVE_CALL amx_fread(AMX *amx, cell *params)
 		return 1;
 	}
 	return -1;
+}
+
+#ifdef UNUSED
+static cell AMX_NATIVE_CALL amx_fgetc(AMX *amx, cell *params)
+{
+	unsigned int id = params[1] - 1;
+	if (id >= FileList.size() || FileList.at(id) == NULL)
+		return 0;
+	FILE *fp = FileList.at(id);
+	if (fp) {
+		return fgetc(fp);
+	} else {
+		return -1;
+	}
 }
 
 static cell AMX_NATIVE_CALL amx_fwrite(AMX *amx, cell *params)
@@ -506,6 +507,7 @@ static cell AMX_NATIVE_CALL amx_ftell(AMX *amx, cell *params)
 	}
 	return -1;
 }
+#endif //UNUSED
 
 static cell AMX_NATIVE_CALL amx_filesize(AMX *amx, cell *params)
 {
@@ -521,6 +523,7 @@ static cell AMX_NATIVE_CALL amx_filesize(AMX *amx, cell *params)
 	return -1;
 }
 
+#ifdef UNUSED
 static cell AMX_NATIVE_CALL amx_fgetl(AMX *amx, cell *params)
 {
 	unsigned int id = params[1] - 1;
@@ -636,6 +639,7 @@ static cell AMX_NATIVE_CALL amx_fputf(AMX *amx, cell *params)
 	}
 	return -1;
 }
+#endif //UNUSED
 
 static cell AMX_NATIVE_CALL amx_build_pathname(AMX *amx, cell *params)
 {
@@ -723,8 +727,10 @@ AMX_NATIVE_INFO file_Natives[] = {
   //Sanji's File Natives
   { "fopen",		amx_fopen },
   { "fclose",		amx_fclose },
-  { "fgetc",		amx_fgetc },
   { "fread",		amx_fread },
+  { "filesize",		amx_filesize },
+#ifdef UNUSED
+  { "fgetc",		amx_fgetc },
   { "fwrite",		amx_fwrite },
   { "feof",			amx_feof },
   { "fseek",		amx_fseek },
@@ -733,16 +739,16 @@ AMX_NATIVE_INFO file_Natives[] = {
   { "fflush",		amx_fflush },
   { "fscanf",		amx_fscanf },
   { "ftell",		amx_ftell },
-  { "filesize",		amx_filesize },
   { "fgetl",		amx_fgetl },
   { "fgeti",		amx_fgeti },
   { "fgets",		amx_fgets },
   { "fputs",		amx_fputs },
   { "fputl",		amx_fputl },
   { "fputi",		amx_fputi },
-  { "unlink",		delete_file },
   { "fgetf",		amx_fgetf },
   { "fputf",		amx_fputf },
+#endif
+  { "unlink",		delete_file },
   { "build_pathname", amx_build_pathname},
   { "dir_exists",	dir_exists },
   { "open_dir",		amx_open_dir },

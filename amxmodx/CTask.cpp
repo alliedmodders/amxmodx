@@ -138,7 +138,7 @@ void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, f
 		}
 		else
 		{
-			clear();
+			clear();	// hamster
 		}
 	}
 }
@@ -239,8 +239,5 @@ void CTaskMngr::startFrame()
 
 void CTaskMngr::clear()
 {
-	for (TaskListIter iter = m_Tasks.begin(); iter; ++iter)
-		delete &(*iter);	// hamster
-
 	m_Tasks.clear();
 }

@@ -45,6 +45,7 @@
 #include <stddef.h>     /* for wchar_t */
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "osdefs.h"
 #if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
   #include <sclinux.h>

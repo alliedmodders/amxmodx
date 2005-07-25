@@ -18,6 +18,8 @@
 #	endif
 #endif
 
+#include <stdlib.h>
+
 // this file does not include amxmodx.h, so we have to include the memory manager here
 #ifdef MEMORY_TEST
 #include "mmgr/mmgr.h"

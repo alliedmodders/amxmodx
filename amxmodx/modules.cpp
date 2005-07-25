@@ -205,7 +205,7 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 			delete[] np;
 			delete[] rt;
 			char *prg = (char *)(*program);
-			delete[] *prg;
+			delete[] prg;
 			(*program) = amx->base;
 			if ( *program == 0 ){
 				strcpy(error,"Failed to allocate memory");
@@ -358,7 +358,7 @@ int unload_amxscript(AMX* amx, void** program)
 	CList<CScript,AMX*>::iterator a = g_loadedscripts.find( amx  );
 	if ( a ) a.remove();
 	char *prg = (char *)*program;
-	delete[] *prg;
+	delete[] prg;
 	*program = 0;
 	return AMX_ERR_NONE;
 }

@@ -96,14 +96,6 @@
 extern  "C" {
 #endif
 
-#if PAWN_CELL_SIZE==32
-  #define REAL          float
-#elif PAWN_CELL_SIZE==64
-  #define REAL          double
-#else
-  #error Unsupported cell size
-#endif
-
 #if defined PAWN_DLL
   #if !defined AMX_NATIVE_CALL
     #define AMX_NATIVE_CALL __stdcall
@@ -157,9 +149,11 @@ extern  "C" {
 #elif PAWN_CELL_SIZE==32
   typedef uint32_t  ucell;
   typedef int32_t   cell;
+#define REAL	float
 #elif PAWN_CELL_SIZE==64
   typedef uint64_t  ucell;
   typedef int64_t   cell;
+#define REAL	double
 #else
   #error Unsupported cell size (PAWN_CELL_SIZE)
 #endif
@@ -246,6 +240,8 @@ typedef struct tagAMX {
   int flags             PACKED; /* current status, see amx_Flags() */
   /* user data */
   long usertags[AMX_USERNUM] PACKED;
+  //okay userdata[3] in AMX Mod X is for the CPlugin * pointer
+  //we're also gonna set userdata[2] to a special debug structure
   void _FAR *userdata[AMX_USERNUM] PACKED;
   /* native functions can raise an error */
   int error             PACKED;
@@ -337,6 +333,12 @@ enum {
 #if !defined AMX_COMPACTMARGIN
   #define AMX_COMPACTMARGIN 64
 #endif
+
+struct AMX_DBGINFO
+{
+	void *pDebug;		//Pointer to debug data
+	int error;			//non-amx_Exec() error setting
+};
 
 /* for native functions that use floating point parameters, the following
  * two macros are convenient for casting a "cell" into a "float" type _without_

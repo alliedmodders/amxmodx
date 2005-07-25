@@ -45,6 +45,7 @@ CPluginMngr::CPlugin *CTaskMngr::CTask::getPlugin() const
 
 void CTaskMngr::CTask::set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, int iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat, float fCurrentTime)
 {
+	clear();
 	m_bFree = false;
 
 	m_pPlugin = pPlugin;
@@ -137,9 +138,7 @@ void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, f
 		}
 		else
 		{
-			unregisterSPForward(m_iFunc);
-			m_iFunc = -1;
-			m_bFree = true;
+			clear();
 		}
 	}
 }

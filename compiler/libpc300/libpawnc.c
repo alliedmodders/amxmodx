@@ -56,48 +56,13 @@
 
 # if defined __WIN32__ || defined _WIN32 || defined WIN32 || defined __NT__
   __declspec (dllexport)
-  void EXCOMPILER(HWND hwnd, HINSTANCE hinst, LPSTR lpCommandLine, int nCmdShow)
+  void EXCOMPILER(int argc, char **argv)
 # else
-  void extern EXCOMPILER(HWND hwnd, HINSTANCE hinst, LPSTR lpCommandLine, int nCmdShow)
+  void extern EXCOMPILER(int argc, char **argv)
 # endif
   {
-    char RootPath[_MAX_PATH];
-    LPSTR ptr;
-
-    /* RUNDLL32 may have passed us a HWND and a HINSTANCE, but we can hardly
-     * trust these. They may not contain values that we can use.
-     */
-
-    /* the root path in argv[0] */
-    GetModuleFileName(hinstDLL, RootPath, sizeof RootPath);
-    argv[argc++]=RootPath;
-
-    /* all other options */
-    assert(lpCommandLine!=NULL);
-    ptr=dll_skipwhite(lpCommandLine);
-    while (*ptr!='\0') {
-      if (*ptr=='"') {
-        argv[argc++]=ptr+1;
-        while (*ptr!='"' && *ptr!='\0')
-          ptr++;
-      } else {
-        argv[argc++]=ptr;
-        while (*ptr>' ')
-          ptr++;
-      } /* if */
-      if (*ptr!='\0')
-        *ptr++='\0';
-      ptr=dll_skipwhite(ptr);
-    } /* while */
-    pc_compile(argc,argv);
-    UNUSED_PARAM(hwnd);
-    UNUSED_PARAM(hinst);
-    UNUSED_PARAM(nCmdShow);
+	  pc_compile(argc, argv);
   }
-
-#else /* PAWNC_DLL */
-
-
 #endif /* PAWNC_DLL */
 
 

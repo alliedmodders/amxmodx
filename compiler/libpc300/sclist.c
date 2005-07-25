@@ -409,15 +409,17 @@ SC_FUNC stringlist *insert_dbgline(int linenr)
     char string[40];
     if (linenr>0)
       linenr--;         /* line numbers are zero-based in the debug information */
-#if PAWN_CELL_SIZE==32
     sprintf(string,"L:%08lx %04x",(long)code_idx,linenr);
-#elif PAWN_CELL_SIZE==64
-    sprintf(string,"L:%08Lx %04x",(long)code_idx,linenr);
-#endif
     return insert_string(&dbgstrings,string);
   } /* if */
   return NULL;
 }
+
+#ifdef WIN32
+#define	LONGCAST	long
+#else
+#define	LONGCAST	cell
+#endif
 
 SC_FUNC stringlist *insert_dbgsymbol(symbol *sym)
 {
@@ -440,10 +442,10 @@ SC_FUNC stringlist *insert_dbgsymbol(symbol *sym)
               symname,sym->codeaddr,code_idx,sym->ident,sym->vclass);
 #elif PAWN_CELL_SIZE==64
     if (sym->ident==iFUNCTN)
-      sprintf(string,"S:%08Lx %x:%s %08Lx %08Lx %x %x",sym->addr,sym->tag,
+      sprintf(string,"S:%08Lx %x:%s %08Lx %08Lx %x %x",(LONGCAST)sym->addr,sym->tag,
               symname,sym->addr,sym->codeaddr,sym->ident,sym->vclass);
     else
-      sprintf(string,"S:%08Lx %x:%s %08Lx %08Lx %x %x",sym->addr,sym->tag,
+      sprintf(string,"S:%08Lx %x:%s %08Lx %08Lx %x %x",(LONGCAST)sym->addr,sym->tag,
               symname,sym->codeaddr,code_idx,sym->ident,sym->vclass);
 #endif
     if (sym->ident==iARRAY || sym->ident==iREFARRAY) {

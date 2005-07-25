@@ -249,9 +249,11 @@ typedef struct tagAMX {
   cell reset_stk        PACKED;
   cell reset_hea        PACKED;
   cell sysreq_d         PACKED; /* relocated address/value for the SYSREQ.D opcode */
-  /* support variables for the JIT */
-  int reloc_size      PACKED; /* required temporary buffer for relocations */
-  long code_size      PACKED; /* estimated memory footprint of the native code */
+  #if defined JIT
+    /* support variables for the JIT */
+    int reloc_size      PACKED; /* required temporary buffer for relocations */
+    long code_size      PACKED; /* estimated memory footprint of the native code */
+  #endif
 } PACKED AMX;
 
 /* The AMX_HEADER structure is both the memory format as the file format. The
@@ -277,8 +279,13 @@ typedef struct tagAMX_HEADER {
   int32_t nametable     PACKED; /* name table */
 } PACKED AMX_HEADER;
 
-//This is always the same for us
-#define AMX_MAGIC     0xf1e0
+#if PAWN_CELL_SIZE==16
+  #define AMX_MAGIC     0xf1e2
+#elif PAWN_CELL_SIZE==32
+  #define AMX_MAGIC     0xf1e0
+#elif PAWN_CELL_SIZE==64
+  #define AMX_MAGIC     0xf1e1
+#endif
 
 enum {
   AMX_ERR_NONE,

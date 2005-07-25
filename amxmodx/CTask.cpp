@@ -74,17 +74,30 @@ void CTaskMngr::CTask::set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags,
 
 void CTaskMngr::CTask::clear()
 {
+	m_bFree = true;
+
 	if (m_iFunc >= 0)
 	{
 		unregisterSPForward(m_iFunc);
 		m_iFunc = -1;
 	}
-	m_bFree = true;
+
 	if (m_pParams)
 	{
 		delete [] m_pParams;
 		m_pParams = NULL;
 	}
+
+	m_pPlugin = NULL;
+	m_iId = 0;
+	m_fBase = 0.0f;
+
+	m_iRepeat =		0;
+	m_bLoop =		false;
+	m_bAfterStart =	false;
+	m_bBeforeEnd =	false;
+
+	m_fNextExecTime = 0.0f;
 }
 
 bool CTaskMngr::CTask::isFree() const
@@ -146,6 +159,21 @@ void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, f
 CTaskMngr::CTask::CTask()
 {
 	m_bFree = true;
+
+	m_pPlugin = NULL;
+	m_iFunc = -1;
+	m_iId = 0;
+	m_fBase = 0.0f;
+
+	m_iRepeat =		0;
+	m_bLoop =		false;
+	m_bAfterStart =	false;
+	m_bBeforeEnd =	false;
+
+	m_fNextExecTime = 0.0f;
+
+	m_iParamLen = 0;
+	m_pParams = NULL;
 }
 
 CTaskMngr::CTask::~CTask()

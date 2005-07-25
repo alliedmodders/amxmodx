@@ -162,6 +162,11 @@ CTaskMngr::CTaskMngr()
 	m_pTmr_TimeLeft = NULL;
 }
 
+CTaskMngr::~CTaskMngr()
+{
+	clear();
+}
+
 void CTaskMngr::registerTimers(float *pCurrentTime, float *pTimeLimit, float *pTimeLeft)
 {
 	m_pTmr_CurrentTime = pCurrentTime;
@@ -235,5 +240,8 @@ void CTaskMngr::startFrame()
 
 void CTaskMngr::clear()
 {
+	for (TaskListIter iter = m_Tasks.begin(); iter; ++iter)
+		delete &(*iter);	// hamster
+
 	m_Tasks.clear();
 }

@@ -106,6 +106,7 @@ private:
 	float *m_pTmr_TimeLeft;
 public:
 	CTaskMngr();
+	~CTaskMngr();
 
 	void registerTimers(float *pCurrentTime, float *pTimeLimit, float *pTimeLeft);	// The timers will always point to the right value
 	void registerTask(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, int iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat);

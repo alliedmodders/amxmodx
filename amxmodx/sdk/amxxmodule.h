@@ -31,8 +31,10 @@
 
 // ***** AMXX stuff *****
 
-// module interface version is 1
-#define AMXX_INTERFACE_VERSION 2
+// module interface version was 1
+// 2 - added logtag to struct (amxx1.1-rc1)
+// 3 - added new tagAMX structure (amxx1.5)
+#define AMXX_INTERFACE_VERSION 3
 
 // amxx module info
 struct amxx_module_info_s
@@ -54,38 +56,55 @@ struct amxx_module_info_s
 
 // *** Small stuff ***
 // The next section is copied from the amx.h file
-// Copyright (c) ITB CompuPhase, 1997-2004
+// Copyright (c) ITB CompuPhase, 1997-2005
 
-#if defined __LCC__ || defined __DMC__ || defined __linux__ || defined __GNUC__
+#if defined HAVE_STDINT_H
   #include <stdint.h>
-#elif !defined __STDC_VERSION__ || __STDC_VERSION__ < 199901L
-  /* The ISO C99 defines the int16_t and int_32t types. If the compiler got
-   * here, these types are probably undefined.
-   */
-  #if defined __FreeBSD__
-    #include <inttypes.h>
-  #else
-    typedef short int           int16_t;
-    typedef unsigned short int  uint16_t;
-    #if defined SN_TARGET_PS2
-      typedef int               int32_t;
-      typedef unsigned int      uint32_t;
+#else
+  #if defined __LCC__ || defined __DMC__ || defined LINUX
+    #if defined HAVE_INTTYPES_H
+      #include <inttypes.h>
     #else
-      typedef long int          int32_t;
-      typedef unsigned long int uint32_t;
+      #include <stdint.h>
     #endif
-    #if defined __WIN32__ || defined _WIN32 || defined WIN32
-      typedef __int64			int64_t;
-      typedef unsigned __int64	uint64_t;
-      #define HAVE_I64
-    #elif defined __GNUC__
-      typedef long long			int64_t;
-      typedef unsigned long long uint64_t;
-      #define HAVE_I64
+  #elif !defined __STDC_VERSION__ || __STDC_VERSION__ < 199901L
+    /* The ISO C99 defines the int16_t and int_32t types. If the compiler got
+     * here, these types are probably undefined.
+     */
+    #if defined __MACH__
+      #include <ppc/types.h>
+      typedef unsigned short int  uint16_t;
+      typedef unsigned long int   uint32_t;
+    #elif defined __FreeBSD__
+      #include <inttypes.h>
+    #else
+      typedef short int           int16_t;
+      typedef unsigned short int  uint16_t;
+      #if defined SN_TARGET_PS2
+        typedef int               int32_t;
+        typedef unsigned int      uint32_t;
+      #else
+        typedef long int          int32_t;
+        typedef unsigned long int uint32_t;
+      #endif
+      #if defined __WIN32__ || defined _WIN32 || defined WIN32
+        typedef __int64	          int64_t;
+        typedef unsigned __int64  uint64_t;
+        #define HAVE_I64
+      #elif defined __GNUC__
+        typedef long long         int64_t;
+        typedef unsigned long long uint64_t;
+        #define HAVE_I64
+      #endif
     #endif
   #endif
+  #define HAVE_STDINT_H
 #endif
-
+#if defined _LP64 || defined WIN64 || defined _WIN64
+  #if !defined __64BIT__
+    #define __64BIT__
+  #endif
+#endif
 
 /* calling convention for native functions */
 #if !defined AMX_NATIVE_CALL
@@ -105,24 +124,26 @@ struct amxx_module_info_s
   #define AMXEXPORT
 #endif
 
-
-
-#if !defined SMALL_CELL_SIZE
-  #define SMALL_CELL_SIZE 32    /* by default, use 32-bit cells */
+#if !defined PAWN_CELL_SIZE
+  #define PAWN_CELL_SIZE 32     /* by default, use 32-bit cells */
 #endif
-#if SMALL_CELL_SIZE==32
+#if PAWN_CELL_SIZE==16
+  typedef uint16_t  ucell;
+  typedef int16_t   cell;
+#elif PAWN_CELL_SIZE==32
   typedef uint32_t  ucell;
   typedef int32_t   cell;
-  typedef float		REAL;
-#elif SMALL_CELL_SIZE==64
+#define REAL	float
+#elif PAWN_CELL_SIZE==64
   typedef uint64_t  ucell;
   typedef int64_t   cell;
-  typedef double	REAL;
+#define REAL	double
 #else
-  #error Unsupported cell size (SMALL_CELL_SIZE)
+  #error Unsupported cell size (PAWN_CELL_SIZE)
 #endif
 
 #define UNPACKEDMAX   ((1 << (sizeof(cell)-1)*8) - 1)
+#define UNLIMITED     (~1u >> 1)
 
 struct tagAMX;
 typedef cell (AMX_NATIVE_CALL *AMX_NATIVE)(struct tagAMX *amx, cell *params);
@@ -140,10 +161,12 @@ typedef int (AMXAPI *AMX_DEBUG)(struct tagAMX *amx);
 #endif
 
 
-#if defined SN_TARGET_PS2 || defined __GNUC__
+/* Some compilers do not support the #pragma align, which should be fine. Some
+ * compilers give a warning on unknown #pragmas, which is not so fine...
+ */
+#if (defined SN_TARGET_PS2 || defined __GNUC__) && !defined AMX_NO_ALIGN
   #define AMX_NO_ALIGN
 #endif
-
 
 #if defined __GNUC__
   #define PACKED        __attribute__((packed))
@@ -151,10 +174,11 @@ typedef int (AMXAPI *AMX_DEBUG)(struct tagAMX *amx);
   #define PACKED
 #endif
 
-
 #if !defined AMX_NO_ALIGN
-  #if defined __linux__
+  #if defined LINUX || defined __FreeBSD__
     #pragma pack(1)         /* structures must be packed (byte-aligned) */
+  #elif defined MACOS && defined __MWERKS__
+	#pragma options align=mac68k
   #else
     #pragma pack(push)
     #pragma pack(1)         /* structures must be packed (byte-aligned) */
@@ -175,7 +199,7 @@ typedef struct {
  * fields are valid at all times; many fields are cached in local variables.
  */
 typedef struct tagAMX {
-  unsigned char _FAR *base PACKED; /* points to the AMX header ("amxhdr") plus the code, optionally also the data */
+  unsigned char _FAR *base PACKED; /* points to the AMX header plus the code, optionally also the data */
   unsigned char _FAR *data PACKED; /* points to separate data+stack+heap, may be NULL */
   AMX_CALLBACK callback PACKED;
   AMX_DEBUG debug       PACKED; /* debug callback */
@@ -187,28 +211,25 @@ typedef struct tagAMX {
   cell stk              PACKED; /* stack pointer: relative to base + amxhdr->dat */
   cell stp              PACKED; /* top of the stack: relative to base + amxhdr->dat */
   int flags             PACKED; /* current status, see amx_Flags() */
-  /* for assertions and debug hook */
-  cell curline          PACKED;
-  cell curfile          PACKED;
-  int dbgcode           PACKED;
-  cell dbgaddr          PACKED;
-  cell dbgparam         PACKED;
-  char _FAR *dbgname    PACKED;
   /* user data */
   long usertags[AMX_USERNUM] PACKED;
+  //okay userdata[3] in AMX Mod X is for the CPlugin * pointer
+  //we're also gonna set userdata[2] to a special debug structure
   void _FAR *userdata[AMX_USERNUM] PACKED;
   /* native functions can raise an error */
   int error             PACKED;
+  /* passing parameters requires a "count" field */
+  int paramcount;
   /* the sleep opcode needs to store the full AMX status */
   cell pri              PACKED;
   cell alt              PACKED;
   cell reset_stk        PACKED;
   cell reset_hea        PACKED;
   cell sysreq_d         PACKED; /* relocated address/value for the SYSREQ.D opcode */
-    /* support variables for the JIT */
-    int reloc_size      PACKED; /* required temporary buffer for relocations */
-    long code_size      PACKED; /* estimated memory footprint of the native code */
-} AMX;
+  /* support variables for the JIT */
+  int reloc_size      PACKED; /* required temporary buffer for relocations */
+  long code_size      PACKED; /* estimated memory footprint of the native code */
+} PACKED AMX;
 
 enum {
   AMX_ERR_NONE,
@@ -225,6 +246,7 @@ enum {
   AMX_ERR_NATIVE,       /* native function failed */
   AMX_ERR_DIVIDE,       /* divide by zero */
   AMX_ERR_SLEEP,        /* go into sleepmode - code can be restarted */
+  AMX_ERR_INVSTATE,     /* invalid state for this access */
 
   AMX_ERR_MEMORY = 16,  /* out of memory */
   AMX_ERR_FORMAT,       /* invalid file format */

@@ -79,6 +79,8 @@
 
 ; Revision History
 ; ----------------
+; 26 july 2005 by David "BAILOPAN" Anderson
+;       Fixed a bug where zero casetbl entries would crash the JIT.
 ; 17 february 2005  by Thiadmer Riemersms
 ;       Addition of the BREAK opcode, removal of the older debugging opcode
 ;       table. There should now be some debug support (if enabled during the
@@ -2194,6 +2196,9 @@ JIT_OP_SWITCH:
         pop     ebp             ; pop return address = table address
         mov     ecx,[ebp]       ; ECX = number of records
         lea     ebp,[ebp+ecx*8+8]       ; set pointer _after_ LAST case
+        ;if there are zero cases we should just skip this -- bail
+        test	ecx, ecx
+        jz		op_switch_jump
     op_switch_loop:
         cmp     eax,[ebp-8]     ; PRI == case label?
         je      op_switch_jump  ; found, jump
@@ -2206,6 +2211,7 @@ JIT_OP_SWITCH:
         add     ebp,[ebp-4]     ; add offset to make absolute adddress
         jmp     ebp
 %endif
+
 
 
 ; The caller of asm_runJIT() can determine the maximum size of the compiled

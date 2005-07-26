@@ -137,7 +137,7 @@ const char* CPluginMngr::CPlugin::getStatus() const {
 	switch(status){
 	case ps_running: 
 			{
-					if (getAMX()->flags & AMX_FLAG_DEBUG)
+					if (m_Debug)
 					{
 						return "debug";
 					} else {
@@ -172,8 +172,17 @@ CPluginMngr::CPlugin::CPlugin(int i, const char* p,const char* n, char* e, int d
 	paused_fun = 0;
 	next = 0;
 	id = i;
-	m_PauseFwd = registerSPForwardByName(&amx, "plugin_pause");
-	m_UnpauseFwd = registerSPForwardByName(&amx, "plugin_unpause");
+	if (status == ps_running)
+	{
+		m_PauseFwd = registerSPForwardByName(&amx, "plugin_pause");
+		m_UnpauseFwd = registerSPForwardByName(&amx, "plugin_unpause");
+		if (amx.flags & AMX_FLAG_DEBUG)
+		{
+			m_Debug = true;
+		} else {
+			m_Debug = false;
+		}
+	}
 }
 
 CPluginMngr::CPlugin::~CPlugin( )

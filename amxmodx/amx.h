@@ -334,10 +334,22 @@ enum {
   #define AMX_COMPACTMARGIN 64
 #endif
 
+struct amx_trace
+{
+	cell frm;
+	amx_trace *prev;
+	amx_trace *next;
+	bool used;
+};
+
 struct AMX_DBGINFO
 {
-	void *pDebug;		//Pointer to debug data
-	int error;			//non-amx_Exec() error setting
+	void *pDebug;			//Pointer to debug data
+	int error;				//non-amx_Exec() error setting
+	amx_trace *pTrace;		//Pointer to stack trace 
+	amx_trace *pTraceFrm;
+	amx_trace *pTraceEnd;
+	cell frm;
 };
 
 /* for native functions that use floating point parameters, the following

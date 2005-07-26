@@ -38,6 +38,7 @@
 #include "osdep.h"			// sleep, etc
 #include "CFile.h"
 #include "amxxfile.h"
+#include "amxdbg.h"
 
 CList<CModule,const char*> g_modules;
 CList<CScript,AMX*> g_loadedscripts;
@@ -88,8 +89,168 @@ void* alloc_amxmemory(void** p, int size)
 
 void free_amxmemory(void **ptr)
 {
-	delete[] *ptr;
+	delete[] (unsigned char *)(*ptr);
 	*ptr = 0;
+}
+
+void amxx_FreeTrace(AMX_DBGINFO *pInfo)
+{
+	amx_trace *pTrace = pInfo->pTrace;
+	amx_trace *pTemp = NULL;
+
+	while (pTrace)
+	{
+		pTemp = pTrace->next;
+		delete pTrace;
+		pTrace = pTemp;
+	}
+
+	pInfo->pTrace = NULL;
+	pInfo->pTraceFrm = NULL;
+	pInfo->pTraceEnd = NULL;
+}
+
+//returns true if this was the last call
+bool amxx_RemTraceCall(AMX_DBGINFO *pInfo)
+{
+	amx_trace *pTrace = pInfo->pTraceFrm;
+
+	assert(pTrace != NULL);
+	
+	pInfo->pTraceFrm = pTrace->prev;
+	pTrace->used = false;
+
+	if (pInfo->pTraceFrm == NULL)
+	{
+		//invalidate the trace
+		pInfo->frm = 0;
+		return true;
+	}
+
+	return false;
+}
+
+void amxx_FreeDebug(AMX *amx)
+{
+	AMX_DBGINFO *pInfo = (AMX_DBGINFO *)amx->userdata[2];
+	if (pInfo)
+	{
+		AMX_DBG *pDbg = (AMX_DBG *)pInfo->pDebug;
+		if (pDbg)
+		{
+			dbg_FreeInfo(pDbg);
+			delete pDbg;
+		}
+		if (pInfo->pTrace)
+			amxx_FreeTrace(pInfo);
+		delete pInfo;
+		amx->userdata[2] = NULL;
+	}
+}
+
+amx_trace *amxx_AddTraceCall(AMX_DBGINFO *pInfo)
+{
+	amx_trace *pTrace = NULL;
+
+	if (pInfo->pTrace == NULL)
+	{
+		pTrace = new amx_trace;
+		memset(pTrace, 0, sizeof(amx_trace));
+		pInfo->pTrace = pTrace;
+		pInfo->pTraceFrm = pTrace;
+		pInfo->pTraceEnd = pTrace;
+	} else if (pInfo->pTraceFrm == NULL) {
+		pTrace = pInfo->pTrace;
+		pInfo->pTraceFrm = pTrace;
+	} else {
+		if (pInfo->pTraceFrm->next == NULL)
+		{
+			//if we are at the end of the list...
+			assert(pInfo->pTraceFrm == pInfo->pTraceEnd);
+			pTrace = new amx_trace;
+			memset(pTrace, 0, sizeof(amx_trace));
+			pTrace->prev = pInfo->pTraceEnd;
+			pInfo->pTraceEnd->next = pTrace;
+			pInfo->pTraceEnd = pTrace;
+			pInfo->pTraceFrm = pTrace;
+		} else {
+			//we are somewhere else.  whatever.
+			pTrace = pInfo->pTraceFrm->next;
+			pInfo->pTraceFrm = pTrace;
+		}
+	}
+
+	pTrace->used = true;
+
+	return pTrace;
+}
+
+void AMXAPI amxx_InvalidateTrace(AMX *amx)
+{
+	AMX_DBGINFO *pInfo = (AMX_DBGINFO *)(amx->userdata[2]);
+	if (!pInfo)
+		return;
+	amx_trace *pTrace = pInfo->pTrace;
+
+	while (pTrace && pTrace->used)
+	{
+		pTrace->used = false;
+		pTrace = pTrace->next;
+	}
+
+	pInfo->pTraceFrm = NULL;
+	pInfo->frm = 0;
+}
+
+int AMXAPI amxx_DebugHook(AMX *amx)
+{
+	AMX_DBGINFO *pInfo = (AMX_DBGINFO *)amx->userdata[2];
+
+	if ( !(amx->flags & AMX_FLAG_DEBUG) || !pInfo )
+		return AMX_ERR_DEBUG;
+
+	enum StackState
+	{
+		Stack_Same,
+		Stack_Push,
+		Stack_Pop,
+	};
+
+	StackState state = Stack_Same;
+
+	if (!pInfo->frm)
+	{
+		pInfo->frm = amx->frm;
+		state = Stack_Push;
+	} else {
+		//Are we stepping through a different frame?
+		if (amx->frm < pInfo->frm)
+		{
+			pInfo->frm = amx->frm;
+			state = Stack_Push;
+		} else if (amx->frm > pInfo->frm) {
+			pInfo->frm = amx->frm;
+			state = Stack_Pop;
+		}
+	}
+
+	if (state == Stack_Push)
+	{
+		amx_trace *pTrace = amxx_AddTraceCall(pInfo);
+		pTrace->frm = amx->cip;
+	} else if (state == Stack_Pop) {
+		if (amxx_RemTraceCall(pInfo))
+		{
+			pInfo->frm = 0;
+		}
+	} else if (state == Stack_Same)  {
+		//save the cip
+		amx_trace *pTrace = pInfo->pTraceFrm;
+		assert(pTrace != NULL);
+		pTrace->frm = amx->cip;
+	}
+
+	return AMX_ERR_NONE;
 }
 
 int load_amxscript(AMX *amx, void **program, const char *filename, char error[64], int debug)
@@ -155,12 +316,36 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 
 	int err;
 	memset(amx, 0, sizeof(*amx));
+	bool will_be_debugged = false;
+
+	tagAMX_DBG *pDbg = NULL;
 
 	if ((int)CVAR_GET_FLOAT("amx_debug") >= 2 || debug)
 	{
-		if ((amx->flags & AMX_FLAG_DEBUG) != 0)
+		if ((hdr->file_version < CUR_FILE_VERSION))
 		{
-			//:TODO: debug support
+			sprintf(error, "Plugin needs newer debug version info");
+			return (amx->error = AMX_ERR_VERSION);
+		} else if ((hdr->flags & AMX_FLAG_DEBUG) != 0) {
+			will_be_debugged = true;
+			char *addr = (char *)hdr + hdr->size;
+			pDbg = new tagAMX_DBG;
+			memset(pDbg, 0, sizeof(AMX_DBG));
+
+			int err = dbg_LoadInfo(pDbg, addr);
+
+			if (err != AMX_ERR_NONE)
+			{
+				dbg_FreeInfo(pDbg);
+				delete pDbg;
+				sprintf(error, "Debug loading error %d", err);
+				return (amx->error = AMX_ERR_INIT);
+			}
+
+			amx->flags |= AMX_FLAG_DEBUG;
+		} else {
+			sprintf(error,"Plugin not compiled with debug option");
+			return (amx->error = AMX_ERR_INIT);
 		}
 	} else {
 #ifdef JIT
@@ -171,11 +356,31 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 
 	if ((err = amx_Init( amx, *program )) != AMX_ERR_NONE)
 	{
+		if (pDbg)
+		{
+			dbg_FreeInfo(pDbg);
+			delete pDbg;
+		}
 		sprintf(error,"Load error %d (invalid file format or version)", err);
 		return (amx->error = AMX_ERR_INIT);
 	}
 
-	LOG_MESSAGE(PLID, "AMX: %p FLAGS: %d\n", amx, amx->flags);
+	AMX_DBGINFO *pInfo = new AMX_DBGINFO;
+	memset(pInfo, 0, sizeof(AMX_DBGINFO));
+	amx->userdata[2] = (void *)pInfo;
+
+	pInfo->error = AMX_ERR_NONE;
+	pInfo->pDebug = (void *)pDbg;
+
+	if (will_be_debugged)
+	{
+		amx->flags |= AMX_FLAG_DEBUG;
+		amx_SetDebugHook(amx, amxx_DebugHook);
+	} else {
+		//set this again because amx_Init() erases it!
+		amx->flags |= AMX_FLAG_JITC;
+		amx->sysreq_d = NULL;
+	}
 
 #ifdef JIT
 	if (amx->flags & AMX_FLAG_JITC)
@@ -355,6 +560,7 @@ int set_amxnatives(AMX* amx,char error[128])
 
 int unload_amxscript(AMX* amx, void** program)
 {
+	amxx_FreeDebug(amx);
 	CList<CScript,AMX*>::iterator a = g_loadedscripts.find( amx  );
 	if ( a ) a.remove();
 	char *prg = (char *)*program;
@@ -362,7 +568,6 @@ int unload_amxscript(AMX* amx, void** program)
 	*program = 0;
 	return AMX_ERR_NONE;
 }
-
 
 AMX* get_amxscript(int id , void** code, const char** filename)
 {
@@ -1180,9 +1385,27 @@ void MNF_Log(const char *fmt, ...)
 	AMXXLOG_Log("%s", msg);
 }
 
+bool amxx_GetPluginData(AMX *amx, cell addr, long &line, const char *&filename, const char *&function)
+{
+	AMX_DBGINFO *pInfo = (AMX_DBGINFO *)(amx->userdata[2]);
+
+	if (pInfo && pInfo->pDebug)
+	{
+		AMX_DBG *pDbg = (AMX_DBG *)pInfo->pDebug;
+		dbg_LookupFunction(pDbg, addr, &function);
+		dbg_LookupLine(pDbg, addr, &line);
+		dbg_LookupFile(pDbg, addr, &filename);
+
+		return true;
+	}
+
+	return false;
+}
+
 //by BAILOPAN
 //  generic error printing routine
-void GenericError(AMX *amx, int err, int line, char buf[], const char *file)
+//  for pawn 3.0 this is just a wrapper
+const char *GenericError(int err)
 {
 	static const char *amx_errs[] =
 	{
@@ -1199,7 +1422,7 @@ void GenericError(AMX *amx, int err, int line, char buf[], const char *file)
 		"native",
 		"divide",
 		"sleep",
-		NULL,
+		"invalid access state",
 		NULL,
 		NULL,
 		"out of memory", //16
@@ -1217,31 +1440,10 @@ void GenericError(AMX *amx, int err, int line, char buf[], const char *file)
 	//does this plugin have line ops?
 	const char *geterr = NULL;
 	if (err > 26 || err < 0)
-		geterr = NULL;
+		geterr = "";
 	else
 		geterr = amx_errs[err];
-	if (!(amx->flags & AMX_FLAG_DEBUG))
-	{
-		if (geterr == NULL)
-		{
-			sprintf(buf, "Run time error %d (plugin \"%s\" - debug not enabled).", err, g_plugins.findPluginFast(amx)->getName());
-		} else {
-			sprintf(buf, "Run time error %d (%s) (plugin \"%s\") - debug not enabled.", err, geterr, g_plugins.findPluginFast(amx)->getName());
-		}
-	} else {
-		if (geterr == NULL)
-		{
-			sprintf(buf, "Run time error %d on line %d (%s \"%s\").", err, line, (file?"file":"plugin"), (file?file:g_plugins.findPluginFast(amx)->getName()));
-		} else {
-			if (err == AMX_ERR_NATIVE && amx->userdata[2])
-			{
-				geterr = (char *)(amx->userdata[2]);	
-				sprintf(buf, "Native error in \"%s\" on line %d (%s \"%s\").", geterr, line, (file?"file":"plugin"), (file?file:g_plugins.findPluginFast(amx)->getName()));
-			} else {
-				sprintf(buf, "Run time error %d (%s) on line %d (%s \"%s\").", err, geterr, line, (file?"file":"plugin"), (file?file:g_plugins.findPluginFast(amx)->getName()));
-			}
-		}
-	}
+	return geterr;
 }
 
 //by BAILOPAN
@@ -1250,71 +1452,69 @@ void LogError(AMX *amx, int err, const char *fmt, ...)
 {
 	//does this plugin have debug info?
 	va_list arg;
-	//AMX_DBG *dbg = (AMX_DBG *)(amx->userdata[0]);
+	AMX_DBGINFO *pInfo = (AMX_DBGINFO *)(amx->userdata[2]);
+	CPluginMngr::CPlugin *pPlugin = g_plugins.findPluginFast(amx);
 	static char buf[1024];
 	static char vbuf[1024];
 	*buf = 0;
 	*vbuf = 0;
 
-	va_start(arg, fmt);
-	vsprintf(vbuf, fmt, arg);
-	va_end(arg);
-#if 0
-	if (!dbg || !(dbg->tail))
+	if (fmt[0] == '\0')
 	{
-		if (dbg && amx->curfile < dbg->numFiles && amx->curfile >= 0)
-		{
-			GenericError(amx, err, amx->curline, buf, dbg->files[amx->curfile]);
-		} else {
-			GenericError(amx, err, amx->curline, buf, NULL);
-		}
-		AMXXLOG_Log("[AMXX] %s", buf);
-		if (*vbuf)
-		{
-			AMXXLOG_Log("%s", vbuf);
-		}
-		if (!dbg)
-		{
-			AMXXLOG_Log("[AMXX] To enable debug mode, add \" debug\" after the plugin name in plugins.ini (without quotes).");
-		}
+		_snprintf(vbuf, sizeof(vbuf)-1, "Run time error %d (%s)", err, GenericError(err));
 	} else {
-		AMX_TRACE *t = dbg->tail;
-		AMX_DEBUGCALL tracer = (AMX_DEBUGCALL)(amx->userdata[1]);
-		//actuall
-		cell line = amx->curline;
-		cell file = amx->curfile;
-		int i = 0;
-		GenericError(amx, err, line, buf, NULL);
-		AMXXLOG_Log("[AMXX] %s", buf);
-		if (*vbuf)
-		{
-			AMXXLOG_Log("%s", vbuf);
-		}
-		AMXXLOG_Log("[AMXX] Debug Trace =>");
-		//log the error right away
-		if (file >= dbg->numFiles || file < 0)
-		{
-            AMXXLOG_Log("[AMXX]       [%d] Line %d, File \"%s\"", i++, line, g_plugins.findPluginFast(amx)->getName());
-		} else {
-			AMXXLOG_Log("[AMXX]       [%d] Line %d, File \"%s\"", i++, line, dbg->files[file]);
-		}
-		while (t != NULL)
-		{
-			line = t->line;
-			file = t->file;
-			if (file >= dbg->numFiles)
-			{
-				AMXXLOG_Log("[AMXX]       [%d] Line %d, File \"%s\"", i++, line, g_plugins.findPluginFast(amx)->getName());	
-			} else {
-				AMXXLOG_Log("[AMXX]       [%d] Line %d, File \"%s\"", i++, line, dbg->files[file]);	
-			}
-			if (tracer)
-				(tracer)(amx, 1);		//pop	
-			t = dbg->tail;
-		}
+		va_start(arg, fmt);
+		vsprintf(vbuf, fmt, arg);
+		va_end(arg);
 	}
-#endif
-	amx_RaiseError(amx, err);
+
+	bool invalidate = false;
+	AMXXLOG_Log("[AMXX] %s", vbuf);
+	if (!pInfo || !(amx->flags & AMX_FLAG_DEBUG) || !pInfo->pDebug)
+	{
+		AMXXLOG_Log("[AMXX] Debug is not enabled (plugin \"%s\")", pPlugin->getName());
+		invalidate = true;
+	} else {
+		long line;
+		const char *filename = NULL;
+		const char *function = NULL;
+		amx_trace *pTrace = pInfo->pTraceFrm;
+		int i=0, iLine;
+		cell frame;
+		
+		AMXXLOG_Log("[AMXX] Displaying call trace (plugin \"%s\")", pPlugin->getName());
+		while (pTrace)
+		{
+			frame = pTrace->frm;
+
+			if (amxx_GetPluginData(amx, frame, line, filename, function))
+			{
+				//line seems to be 1 off o_O
+				iLine = static_cast<int>(line) + 1;
+				AMXXLOG_Log("[AMXX]    [%d] %s::%s (line %d)", 
+						i, 
+						filename?filename:"",
+						function?function:"",
+						iLine
+						);
+			}
+
+			pTrace->used = false;
+			pTrace = pTrace->prev;
+			i++;
+		}
+		//by now we have already invalidated
+		pInfo->pTraceFrm = NULL;
+		pInfo->frm = 0;
+	}
+
+	if (invalidate)
+		amxx_InvalidateTrace(amx);
+
+	//set these so ForwardMngr knows not to call us again
+	//This will also halt the script!
+	amx->error = err;
+	pInfo->error = err;
 }
 
 void MNF_MergeDefinitionFile(const char *file)

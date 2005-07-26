@@ -31,6 +31,8 @@
 
 #include "amxmodx.h"
 
+void AMXAPI amxx_InvalidateTrace(AMX *amx);
+
 CForward::CForward(const char *name, ForwardExecType et, int numParams, const ForwardParam *paramTypes)
 {
 	m_FuncName = name;
@@ -70,6 +72,11 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 	{
 		if (iter->pPlugin->isExecutable(iter->func))
 		{
+			// Get debug info
+			AMX *amx = (*iter).pPlugin->getAMX();
+			AMX_DBGINFO *pInfo = (AMX_DBGINFO *)(amx->userdata[2]);
+			if (pInfo)
+				pInfo->error = AMX_ERR_NONE;
 			// handle strings & arrays
 			int i, ax=0;
 			for (i = 0; i < m_NumParams; ++i)
@@ -86,7 +93,7 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 				else if (m_ParamTypes[i] == FP_ARRAY)
 				{
 					cell *tmp;
-					amx_Allot(iter->pPlugin->getAMX(), preparedArrays[params[i]].size,
+					amx_Allot(amx, preparedArrays[params[i]].size,
 						&realParams[i], &tmp);
 					physAddrs[i] = tmp;
 					if (preparedArrays[params[i]].type == Type_Cell)
@@ -108,14 +115,25 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 			//Push the parameters in reverse order.  Weird, unfriendly part of Small 3.0!
 			for (i=m_NumParams-1; i>=0; i--)
 			{
-				amx_Push(iter->pPlugin->getAMX(), realParams[i]);
+				amx_Push(amx, realParams[i]);
 			}
 			// exec
 			cell retVal;
-			int err = amx_Exec(iter->pPlugin->getAMX(), &retVal, iter->func);
+			int err = amx_Exec(amx, &retVal, iter->func);
 			// log runtime error, if any
 			if (err != AMX_ERR_NONE)
-				LogError(iter->pPlugin->getAMX(), err, "");
+			{
+				//Did something else set an error?
+				if (pInfo && pInfo->error != AMX_ERR_NONE)
+				{
+					//we don't care, something else logged the error.
+				} else {
+					//nothing logged the error so spit it out anyway
+					LogError(amx, err, "");
+				}
+			}
+			amxx_InvalidateTrace(amx);
+			amx->error = AMX_ERR_NONE;
 
 			// cleanup strings & arrays
 			for (i = 0; i < m_NumParams; ++i)
@@ -211,6 +229,10 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 	if (!pPlugin->isExecutable(m_Func))
 		return 0;
 
+	AMX_DBGINFO *pInfo = (AMX_DBGINFO *)(m_Amx->userdata[2]);
+	if (pInfo)
+		pInfo->error = AMX_ERR_NONE;
+
 	// handle strings & arrays
 	int i;
 	for (i = 0; i < m_NumParams; ++i)
@@ -251,10 +273,19 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 	// exec
 	cell retVal;
 	int err = amx_Exec(m_Amx, &retVal, m_Func);
-
-	// log runtime error, if any
 	if (err != AMX_ERR_NONE)
-		LogError(m_Amx, err, "");
+	{
+		//Did something else set an error?
+		if (pInfo && pInfo->error != AMX_ERR_NONE)
+		{
+			//we don't care, something else logged the error.
+		} else {
+			//nothing logged the error so spit it out anyway
+			LogError(m_Amx, err, "");
+		}
+	}
+	amxx_InvalidateTrace(m_Amx);
+	m_Amx->error = AMX_ERR_NONE;
 
 	// cleanup strings & arrays
 	for (i = 0; i < m_NumParams; ++i)

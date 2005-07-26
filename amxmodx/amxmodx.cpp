@@ -958,7 +958,7 @@ static cell AMX_NATIVE_CALL get_concmd(AMX *amx, cell *params) /* 7 param */
   else // -1 parameter - all commands
     who = CMD_ConsoleCommand;
 
-  CmdMngr::Command* cmd = g_commands.getCmd(params[1] ,who  , params[7] );
+  CmdMngr::Command* cmd = g_commands.getCmd(params[1], who, params[7]);
 
   if ( cmd == 0 ) return 0;
     set_amxstring(amx,params[2], cmd->getCmdLine() ,params[3]);

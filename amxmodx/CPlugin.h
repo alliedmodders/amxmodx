@@ -42,7 +42,7 @@ enum {
 	ps_paused,
 	ps_running,
 	ps_stopped,
-	ps_locked
+	ps_locked,
 };
 
 class CPluginMngr
@@ -72,6 +72,7 @@ public:
 		int id;
 		CPlugin(int i , const char* p,const char* n, char* e, int d);
 		~CPlugin( );
+		bool m_Debug;
 
 	public:
 
@@ -98,6 +99,7 @@ public:
 		void unpauseFunction( int id );
 		void setStatus( int a   );
 		const char* getStatus() const;
+		inline bool isDebug() const { return m_Debug; }
 	}; 
 	
 private:	

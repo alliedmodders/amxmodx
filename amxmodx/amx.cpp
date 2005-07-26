@@ -57,7 +57,7 @@
     #include <sys/mman.h>
   #endif
 #endif
-#if defined __LCC__
+#if defined __LCC__ || defined __GNUC__
   #include <wchar.h>    /* for wcslen() */
 #endif
 #include "amx.h"
@@ -416,20 +416,6 @@ int AMXAPI amx_Flags(AMX *amx,uint16_t *flags)
 }
 #endif /* AMX_FLAGS */
 
-void debug(const char *fmt, ...)
-{
-	va_list ap;
-	va_start(ap, fmt);
-	FILE *fp = fopen("c:\\dump.txt", "at");
-	if (fp)
-	{
-		vfprintf(fp, fmt, ap);
-		fclose(fp);
-	}
-	va_end(ap);
-}
-
-
 #if defined AMX_INIT
 int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
 {
@@ -538,7 +524,7 @@ static int amx_BrowseRelocate(AMX *amx)
   assert(hdr->magic==AMX_MAGIC);
   code=amx->base+(int)hdr->cod;
   codesize=hdr->dat - hdr->cod;
-  amx->flags=AMX_FLAG_BROWSE;
+  amx->flags|=AMX_FLAG_BROWSE;
 
   /* sanity checks */
   assert(OP_PUSH_PRI==36);
@@ -569,7 +555,6 @@ static int amx_BrowseRelocate(AMX *amx)
   #endif
 
   /* start browsing code */
-	debug("opcode_list=%p\n", opcode_list);
   for (cip=0; cip<codesize; ) {
     op=(OPCODE) *(ucell *)(code+(int)cip);
     assert(op>0 && op<OP_NUM_OPCODES);
@@ -1069,7 +1054,6 @@ int AMXAPI amx_InitJIT(AMX *amx, void *reloc_table, void *native_code)
 
   if ((amx->flags & AMX_FLAG_JITC)==0)
   {
-    debug("failing at line %d\n", __LINE__);
     return AMX_ERR_INIT_JIT;    /* flag not set, this AMX is not prepared for JIT */
   }
 
@@ -1082,7 +1066,6 @@ int AMXAPI amx_InitJIT(AMX *amx, void *reloc_table, void *native_code)
 
   if (mprotect(asm_runJIT, CODESIZE_JIT, PROT_READ | PROT_WRITE | PROT_EXEC) != 0)
   {
-	debug("failing at line %d\n", __LINE__);
     return AMX_ERR_INIT_JIT;
   }
 
@@ -1109,8 +1092,6 @@ int AMXAPI amx_InitJIT(AMX *amx, void *reloc_table, void *native_code)
     *(cell *)((char*)native_code + hdr->dat + hdr->stp - sizeof(cell)) = 0;
     amx->stk = amx->stp;
   } /* if */
-
-  debug("return value is %d\n", res);
 
   return (res == 0) ? AMX_ERR_NONE : AMX_ERR_INIT_JIT;
 }
@@ -2731,7 +2712,6 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
       return AMX_ERR_INDEX;
     func=GETENTRY(hdr,publics,index);
     cip=(cell *)(code + (int)func->address);
-	debug("CIP: %p.  CIP op: %p.  opcode_list: %p", cip, *cip, amx_opcodelist);
   } /* if */
   /* check values just copied */
   CHKSTACK();

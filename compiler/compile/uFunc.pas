@@ -36,6 +36,9 @@ interface
 uses
   Windows, SysUtils, Classes, Math, IniFiles;
 
+resourcestring
+  COMPILER_EXE = 'amxxpc.exe';
+
 procedure AppExit;
 procedure CompilePlugin(const Name: String);
 function GetAgeFromDat(const FileName: String): Integer;
@@ -79,7 +82,7 @@ begin
 
   try
     cStart := GetTickCount;
-    if not GetConsoleOutput(ExtractFilePath(ParamStr(0))+'amxxsc.exe "'+FilePath+FileName+'" "-o'+Compiled+'"',Output) then
+    if not GetConsoleOutput(ExtractFilePath(ParamStr(0))+COMPILER_EXE+' "'+FilePath+FileName+'" "-o'+Compiled+'"',Output) then
     begin
       WriteLn('// Internal error.');
       AppExit;

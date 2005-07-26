@@ -260,18 +260,15 @@ CAmxxReader::Error CAmxxReader::GetSection(void *buffer)
 	TableEntry entry;
 	DATAREAD(&entry, sizeof(entry), 1);
 	fseek(m_pFile, entry.offset, SEEK_SET);
-//	AMXXLOG_Log("|||| Offset needed: %d At: %d", entry.offset, ftell(m_pFile));
 	uLongf destLen = GetBufferSize();
 	// read the data to a temporary buffer
 	char *tempBuffer = new char[m_SectionLength + 1];
 	//fread(tempBuffer, sizeof(char), m_SectionLength, m_pFile);
 	DATAREAD((void*)tempBuffer, 1, m_SectionLength);
 	// decompress
-//	AMXXLOG_Log("|||| First Bytes: %d %d %d %d", tempBuffer[0], tempBuffer[1], tempBuffer[2], tempBuffer[3]);
 	int result = uncompress((Bytef *)buffer, &destLen,
 			(Bytef *)tempBuffer, m_SectionLength);
 	delete [] tempBuffer;
-//	AMXXLOG_Log("|||| Result: %d, m_SectionLength=%d, destLen=%d", result, m_SectionLength, destLen);
 	if (result != Z_OK)
 	{
 		m_Status = Err_Decompress;

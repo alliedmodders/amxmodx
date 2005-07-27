@@ -27,3 +27,6 @@ NEXT_MAP = Volgende Map:
 
 [es]
 NEXT_MAP = Proximo Mapa:
+
+[bp]
+NEXT_MAP = Proximo Mapa:

@@ -102,6 +102,19 @@ COL_OCEAN = blekitny
 COL_MAROON = bordowy
 PRINT_ALL = (WSZYSTKO) %s : %s
 
+[bp]
+COL_WHITE = branco
+COL_RED = vermelho
+COL_GREEN = verde
+COL_BLUE = azul
+COL_YELLOW = amarelo
+COL_MAGENTA = magenta
+COL_CYAN = ciano
+COL_ORANGE = laranja
+COL_OCEAN = oceano
+COL_MAROON = marrom
+PRINT_ALL = (TUDO) %s : %s
+
 [nl]
 COL_WHITE = wit
 COL_RED = rood

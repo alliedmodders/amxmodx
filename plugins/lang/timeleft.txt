@@ -87,3 +87,12 @@ MINUTE = minuto
 MINUTES = minutos
 SECOND = segundo
 SECONDS = segundos
+
+[bp]
+THE_TIME = Hora certa
+TIME_LEFT = Tempo Restante
+NO_T_LIMIT = Sem Tempo Limite
+MINUTE = minuto
+MINUTES = minutos
+SECOND = segundo
+SECONDS = segundos

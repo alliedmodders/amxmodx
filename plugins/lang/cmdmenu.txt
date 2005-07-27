@@ -47,3 +47,8 @@ SPE_MENU = Spraak Menu
 CMD_MENU = Menu de Comandos
 CONF_MENU = Menu de Configuracion
 SPE_MENU = Menu de Voz
+
+[bp]
+CMD_MENU = Menu de Comandos
+CONF_MENU = Menu de Configs
+SPE_MENU = Menu de Vozes

@@ -127,3 +127,16 @@ INV_PAS = Contrasenya Incorrecta!
 PAS_ACC = Contrasenya Aceptada
 PRIV_SET = Privilegios establecidos
 NO_ENTRY = No tienes acceso a este servidor...
+
+[bp]
+LOADED_ADMIN = Carregado 1 admin do arquivo
+LOADED_ADMINS = Carregado %d Admins do arquivo
+SQL_CANT_CON = Erro de SQL: nao pode conectar: '%s'
+SQL_CANT_LOAD_ADMINS = Erro de SQL: nao pode carregar os admins: '%s'
+NO_ADMINS = Nenhum administrador encontrado.
+SQL_LOADED_ADMIN = Carregado 1 admin do banco de dados
+SQL_LOADED_ADMINS = Carregados %d Admins do banco de dados
+INV_PAS = Password invalido!
+PAS_ACC = Password aceito
+PRIV_SET = Privilegios estabelecidos
+NO_ENTRY = Voce nao tem acesso ao servidor...

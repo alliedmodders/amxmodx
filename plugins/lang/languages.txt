@@ -37,3 +37,7 @@ LANG_NAME_NATIVE = Nederlands
 [es]
 LANG_NAME = Spanish
 LANG_NAME_NATIVE = Espanyol
+
+[bp]
+LANG_NAME = Brazil Portuguese
+LANG_NAME_NATIVE = Portugues Brasil

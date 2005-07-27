@@ -237,3 +237,27 @@ ADMIN_V_MAP_2 = ADMIN %s: votar mapa(s)
 ADMIN_CHANGEL_1 = ADMIN: cambiando el mapa a %s
 ADMIN_CHANGEL_2 = ADMIN %s: cambiando el mapa a %s
 CHANGLE_MENU = Menu de Cambio de Mapa
+
+[bp]
+RESULT_REF = Resultado negado
+RESULT_ACC = Resultado aceito
+VOTE_SUCCESS = Votacao com sucesso. O mapa sera mudado para
+VOTE_FAILED = Votacao falhou
+THE_WINNER = O vencedor
+WANT_CONT = Voce quer continuar?
+VOT_CANC = Votacao foi cancelada
+X_VOTED_FOR = %s voto para opcao #%d
+VOTEMAP_MENU = Menu de votacao de mapa
+START_VOT = Votacao iniciada
+SEL_MAPS = Selecione os Mapas
+ALREADY_VOT = Ja tem uma votacao...
+NO_MAPS_MENU = Nao tem nenhum mapa no menu
+VOT_NOW_ALLOW = Votacao nao permitida neste momento...
+WHICH_MAP = Qual mapa voce quer?
+CHANGE_MAP_TO = Mudar mapa para
+CANC_VOTE = Cancelar Votacao
+ADMIN_V_MAP_1 = ADMIN: votar em mapa(s)
+ADMIN_V_MAP_2 = ADMIN %s: votar em mapa(s)
+ADMIN_CHANGEL_1 = ADMIN: mudou mapa para %s
+ADMIN_CHANGEL_2 = ADMIN %s: mudou mapa para %s
+CHANGLE_MENU = Menu Mudanca de Mapas

@@ -39,6 +39,8 @@ CL_NOT_FOUND = Spieler mit diesem Namen oder dieser UserID nicht gefunden
 CLIENT_IMM = Spieler "%s" hat Immnuitaet
 CANT_PERF_DEAD = Diese Aktion kann nicht am toten Spieler "%s" ausgefuehrt werden.
 CANT_PERF_BOT = Diese Aktion kann nicht am Bot "%s" ausgefuehrt werden.
+ON = An
+OFF = Aus
 
 [sr]
 BACK = Nazad
@@ -59,6 +61,8 @@ CL_NOT_FOUND = Klijent sa tim imenom ili korisnickim ID-om nije nadjen
 CLIENT_IMM = Klijent "%s" ima imunitet
 CANT_PERF_DEAD = Komanda ne moze biti izvrsena na mrtvom klijentu "%s"
 CANT_PERF_BOT = Komanda ne moze biti izvrsena na botu "%s"
+ON = Ukljucen
+OFF = Iskljucen
 
 [tr]
 BACK = Geri
@@ -167,6 +171,8 @@ CL_NOT_FOUND = Nie znaleziono klienta z tym nickiem lub ID
 CLIENT_IMM = Klient "%s" ma immunitet
 CANT_PERF_DEAD = Nie mozesz tego wykonac na martwym kliencie "%s"
 CANT_PERF_BOT = Nie mozesz tego wykonac na bocie "%s"
+ON = Wl
+OFF = Wyl
 
 [nl]
 BACK = Terug
@@ -211,3 +217,25 @@ CANT_PERF_DEAD = Esta accion no se puede aplicar a un cliente muerto "%s"
 CANT_PERF_BOT = Esta accion no se puede aplicar a un bot "%s"
 ON = Activado
 OFF = Desactivado
+
+[bp]
+BACK = Voltar
+EXIT = Sair
+MORE = Mais
+NONE = Nenhum
+ADMIN = ADMIN
+PLAYER = JOGADOR
+ERROR = erro
+YES = Sim
+NO = Nao
+BAN = banir
+KICK = kickar
+NO_ACC_COM = Voce nao tem acesso a este comando
+USAGE = Uso
+MORE_CL_MATCHT = Aqui sao mais clientes ... para seu argumento
+CL_NOT_FOUND = Cliente com este nome ou userid nao encontrado
+CLIENT_IMM = Cliente "%s" tem imunidade
+CANT_PERF_DEAD = Aquela acao nao pode ser executada com o cliente morto "%s"
+CANT_PERF_BOT = Aquela acao nao pode ser executada com bot "%s"
+ON = Ligado
+OFF = Desligado

@@ -177,3 +177,21 @@ STATS_SET = Configuracion de las Estadisticas ^n
 PAUSE_PLUG = Pausar Plugins
 RES_WEAP = Restringir Armas
 TELE_PLAYER = Teletransportar Jugador
+
+[bp]
+KICK_PLAYER = Kickar Jogadores
+BAN_PLAYER = Banir Jogadores
+SLAP_SLAY = Tapa/Assassinar Jogadores
+TEAM_PLAYER = Time do Jogador ^n
+CHANGEL = Mudar Mapa
+VOTE_MAPS = Votacao de mapas ^n
+SPECH_STUFF = Menu de Vozes
+CLIENT_COM = Comandos de Cliente
+SERVER_COM = Comandos de Servidor
+CVARS_SET = Ajustes dos Cvars
+CONFIG = Configuracao
+LANG_SET = Ajustes da Linguagem
+STATS_SET = Ajustes do Stats ^n
+PAUSE_PLUG = Pausar Plugins
+RES_WEAP = Limitar Armas
+TELE_PLAYER = Teletransportar Jogador

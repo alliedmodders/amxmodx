@@ -27,3 +27,6 @@ STOP_FLOOD = Stop met het spammen van de server!
 
 [es]
 STOP_FLOOD = Para de saturar el servidor!
+
+[bp]
+STOP_FLOOD = Parem com o flood no servidor!

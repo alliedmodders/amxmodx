@@ -67,3 +67,10 @@ ADMIN_TELEPORT_2 = ADMIN %s: %s teletransportado
 TELE_MENU = Menu de Teletransporte
 CUR_LOC = Posicion Actual
 SAVE_LOC = Guardar Posicion
+
+[bp]
+ADMIN_TELEPORT_1 = ADMIN: teletransportou %s
+ADMIN_TELEPORT_2 = ADMIN %s: teletransportou %s
+TELE_MENU = Menu de Teletransporte
+CUR_LOC = Local Atual
+SAVE_LOC = Salvar Local

@@ -47,3 +47,8 @@ MSG_DISABLED = Scrollend bericht uitgeschakeld
 MIN_FREQ = La frecuencia minima para este mensaje es de %d segundos
 MSG_FREQ = Frecuencia de aparicion del mensaje rotatorio: %d:%02d minutos
 MSG_DISABLED = Mensaje rotatorio desactivado
+
+[bp]
+MIN_FREQ = Frequencia minima para esta mensagem e de %d segundos
+MSG_FREQ = Mensagem Rolante sera exibida na frequencia de: %d:%02d minutos
+MSG_DISABLED = Mensagem Rolante desabilitada

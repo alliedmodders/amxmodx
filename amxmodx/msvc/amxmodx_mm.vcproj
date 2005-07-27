@@ -654,9 +654,6 @@
 				RelativePath="..\md5.cpp">
 			</File>
 			<File
-				RelativePath="..\menus.cpp">
-			</File>
-			<File
 				RelativePath="..\meta_api.cpp">
 			</File>
 			<File

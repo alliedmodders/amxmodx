@@ -30,7 +30,9 @@
 
 #if defined PAWNC_DLL
 
-# include "dllmain.c"
+#ifndef __linux__
+#include "dllmain.c"
+#endif
 
 # define MAX_ARGS   100
 # if !defined UNUSED_PARAM
@@ -39,14 +41,6 @@
 
   static char *argv[MAX_ARGS];
   static int  argc;
-
-  LPSTR dll_skipwhite(LPSTR ptr)
-  {
-    assert(ptr!=NULL);
-    while (*ptr<=' ' && *ptr!='\0')
-      ptr++;
-    return ptr;
-  }
 
 #if PAWN_CELL_SIZE==32
 #define EXCOMPILER	Compile32

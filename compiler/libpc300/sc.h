@@ -44,6 +44,11 @@
 #include "osdefs.h"
 #include "amx.h"
 
+#if PAWN_CELL_SIZE==64 && !defined _I64_MIN
+#define _I64_MIN    (-9223372036854775807ULL - 1)
+#define _I64_MAX      9223372036854775807ULL
+#endif
+
 /* Note: the "cell" and "ucell" types are defined in AMX.H */
 
 #define PUBLIC_CHAR '@'     /* character that defines a function "public" */

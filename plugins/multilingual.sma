@@ -63,9 +63,9 @@ public plugin_init()
     set_vaultdata("server_language",lang)
   }
   set_cvar_string("amx_language",lang)
-  g_serverLang = get_lang_id(lang)
 
   g_langNum = get_langsnum()
+  g_serverLang = get_lang_id(lang)
   g_coloredMenus = colored_menus()
 }
 

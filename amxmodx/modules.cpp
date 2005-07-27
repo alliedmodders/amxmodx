@@ -392,7 +392,7 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 		{
 			delete[] np;
 			delete[] rt;
-			strcpy(error,"Failed to initialize plugin");
+			strcpy(error,"Failed to initialize JIT'd plugin");
 			return (amx->error = AMX_ERR_INIT);
 		}
 	

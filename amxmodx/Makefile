@@ -17,7 +17,7 @@ OBJECTS = meta_api.cpp CFile.cpp CVault.cpp vault.cpp float.cpp file.cpp modules
 	amxxfile.cpp CLang.cpp md5.cpp emsg.cpp CForward.cpp CPlugin.cpp CModule.cpp \
 	CMenu.cpp util.cpp amx.cpp amxdbg.cpp
 
-LINK = -lz JIT/amxexecn.o JIT/amxjitsn.o
+LINK = -lz 
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
 	-I$(MM_ROOT) -Lzlib -I$(HLSDK)/common
@@ -41,7 +41,8 @@ ifeq "$(AMD64)" "true"
 	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -m64
 else
 	BINARY = $(NAME)_i386.so
-	CFLAGS += -DPAWN_CELL_SIZE=32 
+	OBJECTS += JIT/amxexecn.o JIT/amxjitsn.o
+	CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32
 	OPT_FLAGS += -march=i686
 endif
 

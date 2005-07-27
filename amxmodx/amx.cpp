@@ -49,6 +49,8 @@
 #include "osdefs.h"
 #if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
   #include <sclinux.h>
+  #include <unistd.h>
+  #include <errno.h>
   #if !defined AMX_NODYNALOAD
     #include <dlfcn.h>
   #endif
@@ -1034,9 +1036,13 @@ int AMXAPI amx_Init(AMX *amx,void *program)
       return !VirtualProtect(addr, len, p, &prev);
     }
 
+    #define ALIGN(addr) (addr)
+
   #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
 
     /* Linux already has mprotect() */
+    /* But wants the address aligned! */
+    #define ALIGN(addr) (char *)(((long)addr + sysconf(_SC_PAGESIZE)-1) & ~(sysconf(_SC_PAGESIZE)-1))
 
   #else
 
@@ -1064,7 +1070,7 @@ int AMXAPI amx_InitJIT(AMX *amx, void *reloc_table, void *native_code)
    */
   assert(amx->sysreq_d==0);
 
-  if (mprotect(asm_runJIT, CODESIZE_JIT, PROT_READ | PROT_WRITE | PROT_EXEC) != 0)
+  if (mprotect(ALIGN(asm_runJIT), CODESIZE_JIT, PROT_READ | PROT_WRITE | PROT_EXEC) != 0)
   {
     return AMX_ERR_INIT_JIT;
   }

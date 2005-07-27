@@ -15,7 +15,7 @@ OBJECTS = meta_api.cpp CFile.cpp CVault.cpp vault.cpp float.cpp file.cpp modules
 	CMisc.cpp CTask.cpp string.cpp amxmodx.cpp CEvent.cpp CCmd.cpp CLogEvent.cpp \
 	srvcmd.cpp strptime.cpp amxcore.cpp amxtime.cpp power.cpp amxxlog.cpp fakemeta.cpp \
 	amxxfile.cpp CLang.cpp md5.cpp emsg.cpp CForward.cpp CPlugin.cpp CModule.cpp \
-	CMenu.cpp util.cpp amx.cpp
+	CMenu.cpp util.cpp amx.cpp amxdbg.cpp
 
 LINK = -lz JIT/amxexecn.o JIT/amxjitsn.o
 

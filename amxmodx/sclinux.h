@@ -20,6 +20,13 @@
 #define	stricmp(a,b)    strcasecmp(a,b)
 #define	strnicmp(a,b,c) strncasecmp(a,b,c)
 
+#if defined __linux__  && !defined _snprintf 
+#define _snprintf snprintf
+#endif 
+#if defined __linux__  && !defined _vsnprintf
+//#define _vsnprintf vsnprintf
+#endif
+
 /*
  * WinWorld wants '\'. Unices do not.
  */

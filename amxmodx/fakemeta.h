@@ -229,7 +229,7 @@ public:
 // defined in meta_api.cpp
 extern CFakeMeta g_FakeMeta;
 
-#endif FAKEMETA
+#endif //FAKEMETA
 
 #endif // #ifndef __FAKEMETA_H__
 

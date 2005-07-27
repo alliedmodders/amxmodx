@@ -1338,3 +1338,4 @@ C_DLLEXPORT int GetNewDLLFunctions_Post(NEW_DLL_FUNCTIONS *pNewFunctionTable, in
 	return g_FakeMeta.GetNewDLLFunctions_Post(pNewFunctionTable, interfaceVersion, &gNewDLLFunctionTable_Post);
 }
 #endif
+

@@ -36,6 +36,7 @@
 #ifdef __linux__
 #include <unistd.h>
 #include <stdlib.h>
+#include "sclinux.h"
 #endif
 #include <ctype.h> //tolower, etc
 #include "string.h"

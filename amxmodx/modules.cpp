@@ -33,6 +33,7 @@
 #include <malloc.h>
 #include <stdlib.h>
 #include <sys/mman.h>
+#include "sclinux.h"
 #endif
 #include "amxmodx.h"
 #include "osdep.h"			// sleep, etc
@@ -484,10 +485,10 @@ int CheckModules(AMX *amx, char error[128])
 	{
 		amx_GetLibrary(amx, i, buffer, sizeof(buffer)-1);
 		found = false;
-		if (strcmpi(buffer, "float")==0)
+		if (stricmp(buffer, "float")==0)
 			continue;
 		isdbi = false;
-		if (strcmpi(buffer, "dbi")==0)
+		if (stricmp(buffer, "dbi")==0)
 			isdbi = true;
 		for (a=g_modules.begin(); a; ++a)
 		{
@@ -508,7 +509,7 @@ int CheckModules(AMX *amx, char error[128])
 							break;
 						}
 					} else {
-						if (info->logtag && (strcmpi(info->logtag, buffer) == 0))
+						if (info->logtag && (stricmp(info->logtag, buffer) == 0))
 						{
 							found = true;
 							break;
@@ -1369,10 +1370,6 @@ REAL MNF_CellToReal(cell x)
 {
 	return *(REAL*)&x;
 }
-
-#ifdef __linux__
-#define _vsnprintf vsnprintf
-#endif
 
 void MNF_Log(const char *fmt, ...)
 {

@@ -210,7 +210,7 @@ int TeamIds::findTeamId( const char* n )
 {
 	TeamEle* a = head;
     while( a ){
-		if ( !strcmpi(a->name.c_str(),n) )
+		if ( !stricmp(a->name.c_str(),n) )
 			return a->id;
 		a = a->next;
     }

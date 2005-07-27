@@ -1520,14 +1520,6 @@ static cell AMX_NATIVE_CALL get_players(AMX *amx, cell *params) /* 4 param */
         continue;
       if ((flags & 16) && (pPlayer->teamId != team) )
     continue;
-    /*if ( flags & 16  ) {
-          if (flags & 64){
-            if (strcmpi(pPlayer->team.c_str(),sptemp))
-              continue;
-          }
-          else if (strcmp(pPlayer->team.c_str(),sptemp))
-              continue;
-    }*/
       if (flags & 32){
           if (flags & 64){
             if (stristr(pPlayer->name.c_str(),sptemp)==NULL)
@@ -1564,7 +1556,7 @@ static cell AMX_NATIVE_CALL find_player(AMX *amx, cell *params) /* 1 param */
         continue;
       if (flags&1){
         if (flags&2048) {
-          if (strcmpi(pPlayer->name.c_str(),sptemp))
+          if (stricmp(pPlayer->name.c_str(),sptemp))
             continue;
         }
         else if (strcmp(pPlayer->name.c_str(),sptemp))
@@ -1593,7 +1585,7 @@ static cell AMX_NATIVE_CALL find_player(AMX *amx, cell *params) /* 1 param */
       }
       if (flags&16){
         if (flags&2048) {
-          if (strcmpi(pPlayer->team.c_str(),sptemp))
+          if (stricmp(pPlayer->team.c_str(),sptemp))
             continue;
         }
         else if (strcmp(pPlayer->team.c_str(),sptemp))
@@ -2874,7 +2866,7 @@ static cell AMX_NATIVE_CALL find_plugin_byfile(AMX *amx, cell *params)
 
 	if (params[2])
 	{
-		func = strcmpi;
+		func = strcasecmp;
 	} else {
 		func = strcmp;
 	}

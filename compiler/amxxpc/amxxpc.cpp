@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <io.h>
 #endif
+#include <stdlib.h>
 #include "zlib.h"
 #include "amx.h"
 #include "amxxpc.h"
@@ -39,7 +40,7 @@ int main(int argc, char **argv)
 	if (!sc32)
 	{
 #ifdef __linux__
-		printf("32bit compiler failed to link: %p|%p.\n",sc32, sc_printf);
+		printf("32bit compiler failed to link: %p.\n",sc32);
 #else
 		printf("32bit compiler failed to link: %d.\n", GetLastError());
 #endif
@@ -117,7 +118,7 @@ int main(int argc, char **argv)
 	if (!sc64)
 	{
 #ifdef __linux__
-		sc_printf("64bit compiler failed to link: %s.\n", dlerror());
+		printf("64bit compiler failed to link: %s.\n", dlerror());
 #else
 		printf("64bit compiler failed to link: %d.\n", GetLastError());
 #endif

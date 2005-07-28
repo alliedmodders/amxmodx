@@ -161,6 +161,7 @@ CPluginMngr::CPlugin::CPlugin(int i, const char* p,const char* n, char* e, int d
 	char file[256];
 	char* path = build_pathname_r(file, sizeof(file)-1, "%s/%s",p,n);
 	code = 0;
+	memset(&amx, 0, sizeof(AMX));
 	int err = load_amxscript(&amx,&code,path,e, d);
 	if ( err == AMX_ERR_NONE )
 	{

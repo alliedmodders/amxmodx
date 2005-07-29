@@ -253,13 +253,14 @@ enum {
 	module_old,
 };
 
-#define AMX_FLAG_DEBUG		(1<<1)  /* symbolic info. available */
-#define AMX_FLAG_COMPACT  	(1<<2)  /* compact encoding */
-#define AMX_FLAG_BIGENDIAN	(1<<3) /* big endian encoding */
-#define AMX_FLAG_NOCHECKS	(1<<4) /* no array bounds checking */
-#define AMX_FLAG_LINEOPS	(1<<5)   /* line ops are parsed by the JIT [loadtime only flag] */
-#define AMX_FLAG_BROWSE		(1<<14)   /* browsing/relocating or executing */
-#define AMX_FLAG_RELOC		(1<<15)   /* jump/call addresses relocated */
+#define AMX_FLAG_DEBUG    0x02  /* symbolic info. available */
+#define AMX_FLAG_COMPACT  0x04  /* compact encoding */
+#define AMX_FLAG_BYTEOPC  0x08  /* opcode is a byte (not a cell) */
+#define AMX_FLAG_NOCHECKS 0x10  /* no array bounds checking; no STMT opcode */
+#define AMX_FLAG_NTVREG 0x1000  /* all native functions are registered */
+#define AMX_FLAG_JITC   0x2000  /* abstract machine is JIT compiled */
+#define AMX_FLAG_BROWSE 0x4000  /* busy browsing */
+#define AMX_FLAG_RELOC  0x8000  /* jump/call addresses relocated */
 
 #define INVALID_PLUGIN_ID	-1	
 

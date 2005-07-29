@@ -40,6 +40,7 @@
 #include "CFile.h"
 #include "amxxfile.h"
 #include "amxdbg.h"
+#include "newmenus.h"
 
 CList<CModule,const char*> g_modules;
 CList<CScript,AMX*> g_loadedscripts;
@@ -544,6 +545,7 @@ int set_amxnatives(AMX* amx,char error[128])
 	amx_Register(amx, power_Natives, -1);
 	amx_Register(amx, time_Natives, -1);
 	amx_Register(amx, vault_Natives, -1);
+	amx_Register(amx, g_NewMenuNatives, -1);
 
 	if (CheckModules(amx, error))
 	{

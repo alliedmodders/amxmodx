@@ -32,6 +32,7 @@
 #include <time.h>
 #include "amxmodx.h"
 #include "fakemeta.h"
+#include "newmenus.h"
 
 plugin_info_t Plugin_info = {
   META_INTERFACE_VERSION, // ifvers
@@ -460,6 +461,7 @@ void C_ServerDeactivate_Post() {
   g_logevents.clearLogEvents();
   g_events.clearEvents();
   g_menucmds.clear();
+  ClearMenus();
   g_vault.clear();
   g_xvars.clear();
   g_plugins.clear();
@@ -1140,6 +1142,7 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)	{
   g_logevents.clearLogEvents();
   g_events.clearEvents();
   g_menucmds.clear();
+  ClearMenus();
   g_vault.clear();
   g_xvars.clear();
   g_plugins.clear();

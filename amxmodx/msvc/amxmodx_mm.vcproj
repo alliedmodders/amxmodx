@@ -660,6 +660,9 @@
 				RelativePath="..\modules.cpp">
 			</File>
 			<File
+				RelativePath="..\newmenus.cpp">
+			</File>
+			<File
 				RelativePath="..\power.cpp">
 			</File>
 			<File
@@ -792,6 +795,9 @@
 			</File>
 			<File
 				RelativePath="..\modules.h">
+			</File>
+			<File
+				RelativePath="..\newmenus.h">
 			</File>
 			<File
 				RelativePath="..\resource.h">

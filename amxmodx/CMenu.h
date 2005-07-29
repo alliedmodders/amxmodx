@@ -83,7 +83,7 @@ public:
 
 	int findMenuId(const char* name, AMX* a = 0);
 	int registerMenuId(const char* n, AMX* a );
-	void registerMenuCmd( CPluginMngr::CPlugin *a,int mi, int k , int f  );
+	void registerMenuCmd(CPluginMngr::CPlugin *a, int mi, int k, int f);
 	void clear();
 
 	class iterator {
@@ -98,10 +98,6 @@ public:
 	};
 	inline iterator begin() const { return iterator(headcmd); }
 	inline iterator end() const { return iterator(0); }
-	
-
 };
 
 #endif
-
-

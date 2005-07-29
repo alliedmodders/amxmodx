@@ -62,6 +62,7 @@ const char *GetItemCmd(menu_t menu, item_t item);*/
 
 void ClearMenus();
 
+extern CVector<Menu *> g_NewMenus;
 extern AMX_NATIVE_INFO g_NewMenuNatives[];
 
 #endif //_INCLUDE_NEWMENUS_H

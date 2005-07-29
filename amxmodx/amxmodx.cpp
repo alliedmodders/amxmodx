@@ -223,7 +223,7 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 		msg[len++] = '\n';
 		msg[len] = 0;
 		if (pPlayer->ingame)
-			UTIL_ClientPrint(pPlayer->pEdict, params[2], format_amxstring(amx, params, 3, len));
+			UTIL_ClientPrint(pPlayer->pEdict, params[2], msg); //format_amxstring(amx, params, 3, len));
 	}
 	return len;
 }
@@ -756,6 +756,8 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
       if (pPlayer->ingame){
         pPlayer->keys = keys;
         pPlayer->menu = menuid;
+		pPlayer->newmenu = -1;
+		pPlayer->page = 0;
         UTIL_ShowMenu(pPlayer->pEdict, keys, time, sMenu, ilen );
       }
     }
@@ -770,6 +772,8 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
     if (pPlayer->ingame){
       pPlayer->keys = keys;
       pPlayer->menu = menuid;
+	  pPlayer->newmenu = -1;
+	  pPlayer->page = 0;
       UTIL_ShowMenu(pPlayer->pEdict, keys, time, sMenu, ilen );
     }
   }
@@ -794,7 +798,7 @@ static cell AMX_NATIVE_CALL register_menucmd(AMX *amx, cell *params) /* 3 param 
   int ilen, idx;
   char* sptemp = get_amxstring(amx,params[3],0,ilen);
 
-  idx = registerSPForwardByName(amx, sptemp, FP_CELL, FP_CELL, FP_DONE);
+  idx = registerSPForwardByName(amx, sptemp, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
   if (idx == -1)
   {
 	  LogError(amx, AMX_ERR_NOTFOUND, "Function \"%s\" was not found", sptemp);

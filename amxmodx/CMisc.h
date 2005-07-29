@@ -99,6 +99,8 @@ public:
 	int death_victim;
 	bool death_tk;
 	String death_weapon;
+	int newmenu;
+	int page;
 	
 	Vector lastTrace;
 	Vector thisTrace;

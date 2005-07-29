@@ -175,19 +175,8 @@ int	C_InconsistentFile( const	edict_t	*player, const char	*filename, char	*disco
 	{
 		CPlayer	*pPlayer = GET_PLAYER_POINTER((edict_t *)player);
 
-#ifdef ENABLEEXEPTIONS
-		try
-		{
-#endif
 			if (executeForwards(FF_InconsistentFile, pPlayer->index, filename, disconnect_message) == 1)
 				RETURN_META_VALUE(MRES_SUPERCEDE, FALSE);
-#ifdef ENABLEEXEPTIONS
-		}
-		catch(	...	)
-		{
-			AMXXLOG_Log( "[AMXX] Fatal error at inconsistent file forward execution");
-		}
-#endif
 		RETURN_META_VALUE(MRES_SUPERCEDE, TRUE );
 	}
 
@@ -638,26 +627,11 @@ void C_ClientCommand(	edict_t	*pEntity ) {
     }
   }
 
-#ifdef ENABLEEXEPTIONS
-  try
-  {
-#endif
-	  if (executeForwards(FF_ClientCommand, pPlayer->index) > 0)
-		  RETURN_META(MRES_SUPERCEDE);
+  if (executeForwards(FF_ClientCommand, pPlayer->index) > 0)
+	RETURN_META(MRES_SUPERCEDE);
 
-#ifdef ENABLEEXEPTIONS
-  }
-  catch( ... )
-  {
-	AMXXLOG_Log( "[AMXX] Fatal error at commmand forward execution");
-  }
-#endif
 
   /* check for command and if needed also for first	argument and call proper function */
-
-#ifdef ENABLEEXEPTIONS
-  try{
-#endif
 
 	CmdMngr::iterator aa = g_commands.clcmdprefixbegin(	cmd	);
 	if ( !aa ) aa =	g_commands.clcmdbegin();
@@ -675,12 +649,6 @@ void C_ClientCommand(	edict_t	*pEntity ) {
 	  ++aa;
 	}
 
-#ifdef ENABLEEXEPTIONS
-  }catch( ... )
-  {
-	AMXXLOG_Log( "[AMXX] fatal error at client commmand execution");
-  }
-#endif
   /* check menu	commands */
 
   if (!strcmp(cmd,"menuselect"))
@@ -694,15 +662,39 @@ void C_ClientCommand(	edict_t	*pEntity ) {
 	  int menuid = pPlayer->menu;
 	  pPlayer->menu	= 0;
 
-		MenuMngr::iterator a = g_menucmds.begin();
+	  MenuMngr::iterator a = g_menucmds.begin();
 
 		while( a )
 		{
 		  if ( (*a).matchCommand(  menuid ,	bit_key	 ) && (*a).getPlugin()->isExecutable( (*a).getFunction() ) )
 		  {
-		    ret = executeForwards((*a).getFunction(), pPlayer->index, pressed_key);
-			if ( ret & 2 ) result =	MRES_SUPERCEDE;
-			if ( ret & 1 ) RETURN_META(MRES_SUPERCEDE);
+		    if (pPlayer->newmenu != -1)
+			{
+				int menu = pPlayer->newmenu;
+				pPlayer->newmenu = -1;
+				if (menu >= 0 && menu < (int)g_NewMenus.size())
+				{
+					Menu *pMenu = g_NewMenus[menu];
+					int item = pMenu->PagekeyToItem(pPlayer->page, pressed_key);
+					ret = executeForwards( (*a).getFunction(), pPlayer->index, menu, item );
+					if ( ret & 2 ) result = MRES_SUPERCEDE;
+					else if ( ret & 1 ) RETURN_META(MRES_SUPERCEDE);
+					else {
+						if (item == MENU_BACK)
+						{
+							pMenu->Display(pPlayer->index, pPlayer->page-1);
+						} else if (item == MENU_MORE) {
+							pMenu->Display(pPlayer->index, pPlayer->page+1);
+						} else if (item == MENU_EXIT) {
+							//nothing
+						}
+					}
+				}
+			} else {
+				ret = executeForwards((*a).getFunction(), pPlayer->index, pressed_key, 0);
+				if ( ret & 2 ) result =	MRES_SUPERCEDE;
+				if ( ret & 1 ) RETURN_META(MRES_SUPERCEDE);
+			}
 		  }
 
 		  ++a;

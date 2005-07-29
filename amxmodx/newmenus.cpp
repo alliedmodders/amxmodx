@@ -127,6 +127,8 @@ bool Menu::Display(int player, page_t page)
 
 	pPlayer->keys = keys;
 	pPlayer->menu = menuId;
+	pPlayer->newmenu = thisId;
+	pPlayer->page = (int)page;
 
 	UTIL_ShowMenu(pPlayer->pEdict, keys, -1, buffer, len);
 
@@ -238,7 +240,7 @@ static cell AMX_NATIVE_CALL menu_create(AMX *amx, cell *params)
 	char *title = get_amxstring(amx, params[1], 0, len);
 	char *handler = get_amxstring(amx, params[2], 1, len);
 
-	int func = registerSPForwardByName(amx, handler, FP_CELL, FP_CELL, FP_DONE);
+	int func = registerSPForwardByName(amx, handler, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 	if (func == -1)
 	{
 		LogError(amx, AMX_ERR_NOTFOUND, "Invalid function \"%s\"", handler);

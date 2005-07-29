@@ -45,6 +45,8 @@ public:
 	void SetParam(size_t index, const char *data);
 	const char *GetParamString(size_t index);
 	float GetParamFloat(size_t index);
+	bool Ready();
+	void Init();
 	int GetParamInt(size_t index);
 	msgtype GetParamType(size_t index);
 	void Reset();

@@ -12,6 +12,20 @@ bool inblock = false;
 
 Message::Message()
 {
+	m_CurParam = 0;
+}
+
+bool Message::Ready()
+{
+	if (!m_Params.size())
+		return false;
+	return true;
+}
+
+void Message::Init()
+{
+	if (Ready())
+		return;
 	msgparam *p = new msgparam;
 	m_Params.push_back(p);
 	m_CurParam = 0;
@@ -317,7 +331,12 @@ static cell AMX_NATIVE_CALL register_message(AMX *amx, cell *params)
 {
 	int len;
 	char *name = MF_GetAmxString(amx, params[2], 0, &len);
-	if (params[1]>0 && params[1] < 256) {
+
+	if (!Msg.Ready())
+		Msg.Init();
+
+	if (params[1]>0 && params[1] < 256)
+	{
 		int id = MF_RegisterSPForwardByName(amx, name, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 		if (id != -1)
 		{

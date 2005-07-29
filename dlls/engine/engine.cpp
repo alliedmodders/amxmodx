@@ -956,6 +956,133 @@ static cell AMX_NATIVE_CALL get_string(AMX *amx, cell *params) // (string, retur
 	return MF_SetAmxString(amx, params[2], g_buffer, params[3]);
 }
 
+//contributed by twistedeuphoria
+static cell AMX_NATIVE_CALL trace_forward(AMX *amx, cell *params)
+//native trace_forward(Float:start[3], Float:angle, Float:give, ignoreEnt, &Float:hitX, &Float:hitY, &Float:shortestDistance, &Float:shortestDistLow, &Float:shortestDistHigh)
+{
+   cell *cStart = MF_GetAmxAddr(amx, params[1]);
+   REAL fAngle = amx_ctof(params[2]);
+   REAL fGive = amx_ctof(params[3]);
+   int iIgnoreEnt = params[4];
+   cell *hitX = MF_GetAmxAddr(amx, params[5]);
+   cell *hitY = MF_GetAmxAddr(amx, params[6]);
+   cell *shortestDistance = MF_GetAmxAddr(amx, params[7]);
+   cell *shortestDistLow = MF_GetAmxAddr(amx, params[8]);
+   cell *shortestDistHigh = MF_GetAmxAddr(amx, params[9]);
+ 
+   if(fGive < 0.0)
+      fGive = 20.0;
+   fAngle -= 90.0;
+   if(fAngle < 0.0)
+      fAngle += 360.0;
+
+   REAL fRadians = M_PI * fAngle;
+   fRadians /= 180.0;
+   REAL fTanResult = tan(fRadians);
+   REAL fStartX = amx_ctof(cStart[0]);
+   REAL fStartY = amx_ctof(cStart[1]);
+   REAL fStartZ = amx_ctof(cStart[2]);
+   REAL fEndX = -1.0;
+   REAL fEndY = -1.0;
+   if((fAngle == 0.0) || (fAngle == 360.0))
+   {
+      fEndX = fStartX;
+      fEndY = 4000;
+   }
+   else if(fAngle == 90.0)
+   {
+      fEndX = 4000;
+      fEndY = fStartY;
+   }
+   else if(fAngle == 180.0)
+   {
+      fEndX = -4000;
+      fEndY = fStartY;
+   }
+   else if(fAngle == 270.0)
+   {
+      fEndX = fStartX;
+      fEndY = -4000;
+   }
+   if((fAngle > 0.0) && (fAngle < 180.0) && (fEndX == -1.0))
+      fEndX = fStartX - 4000;
+   else if(fEndX == -1.0)
+      fEndX = fStartX + 4000;
+   if(fEndY == -1.0)
+      fEndY = fStartY + (4000.0 * fTanResult);
+   if((fAngle > 0.0) && (fAngle < 90.0))
+   {
+      REAL tempSlot = fEndX;
+      fEndX = fEndY * -1.0;
+      fEndY = tempSlot * -1.0;
+   }
+   if((fAngle > 90.0) && (fAngle < 180.0))
+   {
+      REAL tempSlot = fEndX;
+      fEndX = fEndY * -1.0;
+      fEndY = tempSlot;
+   }
+   if((fAngle > 180.0) && (fAngle < 270.0))
+   {
+      REAL tempSlot = fEndX;
+      fEndX = fEndY;
+      fEndY = tempSlot;
+      fEndY *= -1.0;
+   }
+   if((fAngle > 270.0) && (fAngle < 360.0))
+   {
+      REAL tempSlot = fEndX;
+      fEndX = fEndY;
+      fEndY = tempSlot;
+   }
+   REAL fClosestDist = 999999.9;
+   REAL fClosestLow = 0.0;
+   REAL fClosestHigh = 0.0;
+   REAL fClosestX = 0.0;
+   REAL fClosestY = 0.0;
+   TraceResult tr;
+   REAL fRetX;
+   REAL fRetY;
+   REAL fRetZ;
+
+   for(int inum=-36;inum<=36;inum++)
+   {
+      REAL fUseZ = fStartZ + (REAL)inum;
+      Vector vStart =  Vector(fStartX, fStartY, fUseZ);
+      Vector vEnd = Vector(fEndX, fEndY, fUseZ);
+      if(iIgnoreEnt == -1)
+         TRACE_LINE(vStart, vEnd, ignore_monsters, NULL, &tr);
+      else   
+         TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT2(iIgnoreEnt), &tr); 
+      fRetX = tr.vecEndPos.x;
+      fRetY = tr.vecEndPos.y;
+      fRetZ = tr.vecEndPos.z;
+      Vector vHit = Vector(fRetX, fRetY, fRetZ);
+
+      REAL fLength = (vStart - vHit).Length();
+      if(fLength < 20.0) continue;
+      if(fabs(fLength - fClosestDist) < fGive)
+            fClosestHigh = fUseZ - fStartZ;
+      else if(fLength < fClosestDist)
+      {
+         fClosestDist = fLength;
+         fClosestLow = fUseZ - fStartZ;
+         fClosestHigh = fUseZ - fStartZ;
+         fClosestX = fRetX;
+         fClosestY = fRetY;
+      }
+   }
+   fClosestLow += 36.0;
+   fClosestHigh += 36.0;
+
+   *hitX = amx_ftoc(fClosestX);
+   *hitY = amx_ftoc(fClosestY);
+   *shortestDistance = amx_ftoc(fClosestDist);
+   *shortestDistLow = amx_ftoc(fClosestLow);
+   *shortestDistHigh = amx_ftoc(fClosestHigh);
+   return 1;
+}
+
 AMX_NATIVE_INFO engine_Natives[] = {
 	{"halflife_time",		halflife_time},
 
@@ -999,6 +1126,7 @@ AMX_NATIVE_INFO engine_Natives[] = {
 	{"get_string",			get_string},
 	{"in_view_cone",		in_view_cone},
 	{"is_visible",			is_visible},
+	{"trace_forward",		trace_forward},
 
 	{NULL,					NULL},
 	 ///////////////////

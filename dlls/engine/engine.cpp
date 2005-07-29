@@ -403,11 +403,6 @@ static cell AMX_NATIVE_CALL attach_view(AMX *amx, cell *params)
 	int iIndex = params[1];
 	int iTargetIndex = params[2];
 
-	if (iIndex > gpGlobals->maxClients || !MF_IsPlayerIngame(iIndex)) {
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", iIndex);
-		return 0;
-	}
-
 	CHECK_ENTITY(iIndex);
 
 	SET_VIEW(INDEXENT2(iIndex), INDEXENT2(iTargetIndex));

@@ -2801,9 +2801,14 @@ static cell AMX_NATIVE_CALL register_dictionary(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL plugin_flags(AMX *amx, cell *params)
 {
-	AMX_HEADER *hdr;
-	hdr = (AMX_HEADER *)amx->base;
-	return hdr->flags;
+	if (params[1])
+	{
+		AMX_HEADER *hdr;
+		hdr = (AMX_HEADER *)amx->base;
+		return hdr->flags;
+	}
+
+	return amx->flags;
 }
 
 // lang_exists(const name[]);

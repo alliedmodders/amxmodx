@@ -819,9 +819,13 @@ static void initglobals(void)
   errnum=0;             /* number of errors */
   warnnum=0;            /* number of warnings */
   optproccall=TRUE;     /* support "procedure call" */
+#if PAWN_CELL_SIZE==32
   verbosity=1;          /* verbosity level, no copyright banner */
+#else
+  verbosity=0;
+#endif
   sc_debug=sCHKBOUNDS|sSYMBOLIC;  /* by default: bounds checking+assertions */
-  sc_packstr=TRUE;     /* strings are unpacked by default */
+  sc_packstr=FALSE;     /* strings are unpacked by default */
   sc_compress=FALSE;
   sc_needsemicolon=FALSE;/* semicolon required to terminate expressions? */
   sc_dataalign=sizeof(cell);
@@ -1274,7 +1278,9 @@ static void setconfig(char *root)
 
 static void setcaption(void)
 {
+#if 0
   pc_printf("Pawn compiler " VERSION_STR "\t\t\tCopyright (c) 1997-2005, ITB CompuPhase\n\n");
+#endif
 }
 
 static void about(void)

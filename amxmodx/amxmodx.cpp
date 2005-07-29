@@ -2593,13 +2593,15 @@ static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 	g_CallFunc_Plugin = NULL;
 	g_CallFunc_CurParam = 0;
 
+	AMX *pAmx = plugin->getAMX();
+
 	// actual call
 	// Pawn - push parameters in reverse order
 	for (int i=curParam-1; i>=0; i--)
 	{
-		amx_Push(amx, gparams[i]);
+		amx_Push(pAmx, gparams[i]);
 	}
-	if ((err = amx_Exec(plugin->getAMX(), &retVal, func) != AMX_ERR_NONE))
+	if ((err = amx_Exec(pAmx, &retVal, func) != AMX_ERR_NONE))
 	{
 		return 0;
 	}

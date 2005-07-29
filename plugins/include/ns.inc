@@ -70,7 +70,7 @@ native ns_get_build(classname[],builtOnly=1,Number=0);
 
 /* Returns if the player has the weapon or not in their pev->weapons field.
    set "setweapon" to 0 to turn the bit off, set to 1 to turn it on. Or omit it to just return the value. */
-native ns_has_weapon(id,NSWeapon:weapon,setweapon=-1);
+native ns_has_weapon(id,weapon,setweapon=-1);
 
 /* Gets spawn point for specified team (type). 
 	If:

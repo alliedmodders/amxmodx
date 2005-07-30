@@ -435,7 +435,12 @@ int pc_enablewarning(int number,int enable);
  */
 
 /* general console output */
+#if defined __WIN32__ || defined _WIN32 || defined WIN32
+ __declspec (dllexport)
 int pc_printf(const char *message,...);
+#else
+extern int pc_printf(const char *message,...);
+#endif
 
 /* error report function */
 int pc_error(int number,char *message,char *filename,int firstline,int lastline,va_list argptr);

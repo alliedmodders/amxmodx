@@ -26,7 +26,7 @@ native register_touch(Toucher[], Touched[], function[]);
 /* Registers a think action to a function by classname. */
 native register_think(Classname[], function[]);
 
-/* This is a highly experimental command that will directly hook a message in the engine!
+/* Lets you directly hook a message in the engine!
  * You can overwrite the message before anything happens and either let the message continue
  * or fully block it. Here is how it works:
  * If you hook a message, the message is stored but not sent. You have the opportunity to
@@ -34,11 +34,14 @@ native register_think(Classname[], function[]);
  * either block it or let it go on its way. The hooked function will be passed a msg_id, msg_dest, and entity index. */
 native register_message(iMsgId, szFunction[]);
 
-/* The get/set _msg commands will utterly fail if used outside a hooked message scope.
- * They should never, NEVER, EVER be used unless inside a registered message function.
+/* The get/set _msg commands will fail if used outside a hooked message scope.
+ * They should never be used unless inside a registered message function.
  * There are eight different ways of sending a message, five are ints, two are floats, and one is string.
  * These are denoted by iArgType.  argn is the number
- * of the argument. Exceeding the bounds of 1 to get_msg_args() is a bad idea. */
+ * of the argument. Exceeding the bounds of 1 to get_msg_args() is a bad idea. 
+ * As of AMX Mod X 1.5, the middle parameter of set_* no longer does anything.
+ * You cannot change the message argument type (as this would crash the mod anyway)
+ */
 
 /* Gets number of arguments that were passed to this message */
 native get_msg_args();

@@ -63,6 +63,18 @@ native esf_get_speed(player);
 native esf_set_speed(player, speed);
 
 /**************************
+ * Avatar functions *******
+ **************************/
+
+native esf_set_avatar_model(id, const szModel[]);
+
+native esf_has_avatar(id);
+
+native esf_remove_avatar(id);
+
+native esf_create_avatar(id);
+
+/**************************
  * Graphics functions *****
  **************************/
  
@@ -74,6 +86,16 @@ native esf_stop_powerup(player);
 
 /* Creates a generic ESF explosion. */
 native esf_explosion(origin[3], radius, type = Explosion_White);
+
+/* use character's TransformFX 1 message */
+native esf_transformfx_1(id);
+
+/* use characters TransformFX 2 message */
+native esf_transformfx_2(id);
+
+/* stop character's transform */
+native esf_transformfx_off(id);
+
 
 /**************************
  * Animation based stuff **

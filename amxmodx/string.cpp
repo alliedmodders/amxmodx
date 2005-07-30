@@ -649,33 +649,106 @@ static cell AMX_NATIVE_CALL amx_trim(AMX *amx, cell *params)
 	return incr;
 }
 
+static cell AMX_NATIVE_CALL n_strcat(AMX *amx,cell *params)
+{
+  cell *cdest,*csrc;
+
+  cdest = get_amxaddr(amx, params[1]);
+  csrc = get_amxaddr(amx, params[2]);
+  int num = params[3];
+  while (*cdest && num)
+  {
+	  cdest++;
+	  num--;
+  }
+  if (!num)
+	  return 0;
+  while (*csrc && num)
+  {
+	  *cdest++ = *csrc++;
+	  num--;
+  }
+  *cdest = 0;
+
+  return params[3] - num;
+}
+
+static cell AMX_NATIVE_CALL n_strcmp(AMX *amx, cell *params)
+{
+	int len;
+	char *str1 = get_amxstring(amx, params[1], 0, len);
+	char *str2 = get_amxstring(amx, params[2], 1, len);
+
+	if (params[1])
+		return stricmp(str1, str2);
+	else
+		return strcmp(str1, str2);
+}
+
+static cell AMX_NATIVE_CALL n_strfind(AMX *amx, cell *params)
+{
+	int len;
+	char *str = get_amxstring(amx, params[1], 0, len);
+	int sublen;
+	char *sub = get_amxstring(amx, params[2], 1, sublen);
+
+	bool found = false;
+	bool igcase = params[3] ? true : false;
+	if (igcase)
+	{
+		for (int i=0; i<len; i++)
+		{
+			if (str[i] & (1<<5))
+				str[i] &= ~(1<<5);
+		}
+		for (int i=0; i<sublen; i++)
+		{
+			if (str[i] & (1<<5))
+				str[i] &= ~(1<<5);			
+		}
+	}
+	if (params[4] > len)
+		return -1;
+	char *pos = &(str[ params[4] ]);
+	char *find = strstr(str, sub);
+
+	if (!find)
+		return -1;
+
+	return (find - str);
+}
+
 AMX_NATIVE_INFO string_Natives[] = {
-  { "add",    add },
-  { "contain",  contain },
-  { "containi", containi },
-  { "copy",   copy },
-  { "copyc",    copyc },
-  { "equal",    equal },
-  { "equali",   equali },
-  { "format",   format },
-  { "format_args",   format_args },
-  { "isdigit", is_digit },
-  { "isalnum", is_alnum },
-  { "isspace", is_space },
-  { "isalpha", is_alpha },
-  { "num_to_str", numtostr },
-  { "numtostr", numtostr },
-  { "parse",    parse },
-  { "replace",  replace },
-  { "setc",   setc },
-  { "strbreak", strbreak},
-  { "strtolower", strtolower },
-  { "strtoupper", strtoupper },
-  { "str_to_num", strtonum },
-  { "strtonum", strtonum },
-  { "trim", amx_trim },
-  { "ucfirst", amx_ucfirst },
-  { "strtok", amx_strtok },
-  { "strlen", amx_strlen },
+  { "add",			add },
+  { "contain",		contain },
+  { "containi",		containi },
+  { "copy",			copy },
+  { "copyc",		copyc },
+  { "equal",		equal },
+  { "equali",		equali },
+  { "format",		format },
+  { "format_args",  format_args },
+  { "isdigit",		is_digit },
+  { "isalnum",		is_alnum },
+  { "isspace",		is_space },
+  { "isalpha",		is_alpha },
+  { "num_to_str",	numtostr },
+  { "numtostr",		numtostr },
+  { "parse",		parse },
+  { "replace",		replace },
+  { "setc",			setc },
+  { "strbreak",		strbreak},
+  { "strtolower",	strtolower },
+  { "strtoupper",	strtoupper },
+  { "str_to_num",	strtonum },
+  { "strtonum",		strtonum },
+  { "trim",			amx_trim },
+  { "ucfirst",		amx_ucfirst },
+  { "strtok",		amx_strtok },
+  { "strlen",		amx_strlen },
+  { "strcat",		n_strcat },
+  { "strfind",		n_strfind },
+  { "strcmp",		n_strcmp },
+
   { NULL, NULL }
 };

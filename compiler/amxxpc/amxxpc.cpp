@@ -8,7 +8,10 @@
 #include <stdlib.h>
 #include "zlib.h"
 #include "amx.h"
+#include "amxdbg.h"
 #include "amxxpc.h"
+
+void ReadFileIntoPl(abl *pl, FILE *fp);
 
 int main(int argc, char **argv)
 {
@@ -36,26 +39,25 @@ int main(int argc, char **argv)
 	}
 
 	COMPILER sc32 = (COMPILER)dlsym(lib, "Compile32");
+	PRINTF pc_printf = (PRINTF)dlsym(lib, "pc_printf");
 
-	if (!sc32)
+	if (!sc32 || !pc_printf)
 	{
 #ifdef __linux__
-		printf("32bit compiler failed to link: %p.\n",sc32);
+		printf("32bit compiler failed to link: %p|%p.\n",sc32, sc_printf);
 #else
 		printf("32bit compiler failed to link: %d.\n", GetLastError());
 #endif
 		exit(0);
 	}
 
-	AMX_HEADER hdr;
-
-	printf("Welcome to the AMX Mod X %s Compiler.\n", VERSION_STRING);
-	printf("Copyright (c) 1997-2005 ITB CompuPhase, AMX Mod X Team\n\n");
+	pc_printf("Welcome to the AMX Mod X %s Compiler.\n", VERSION_STRING);
+	pc_printf("Copyright (c) 1997-2005 ITB CompuPhase, AMX Mod X Team\n\n");
 	
 	if (argc < 2)
 	{
-		printf("Usage: <file.sma> [options]\n");
-		printf("Use -? or --help to see full options\n\n");
+		pc_printf("Usage: <file.sma> [options]\n");
+		pc_printf("Use -? or --help to see full options\n\n");
 		getchar();
 		exit(0);
 	}
@@ -63,7 +65,7 @@ int main(int argc, char **argv)
 	if (!strcmp(argv[1], "-?") || !strcmp(argv[1], "--help"))
 	{
 		show_help();
-		printf("Press any key to continue.\n");
+		pc_printf("Press any key to continue.\n");
 		getchar();
 		exit(0);
 	}
@@ -74,28 +76,20 @@ int main(int argc, char **argv)
 
 	if (file == NULL)
 	{
-		printf("Could not locate the output file.\n");
+		pc_printf("Could not locate the output file.\n");
 		exit(0);
 	} else if (strstr(file, ".asm")) {
-		printf("Assembler output succeeded.\n");
+		pc_printf("Assembler output succeeded.\n");
 		exit(0);
 	} else {
 		FILE *fp = fopen(file, "rb");
 		if (fp == NULL)
 		{
-			printf("Could not locate output file %s (compile failed).\n", file);
+			pc_printf("Could not locate output file %s (compile failed).\n", file);
 			exit(0);
 		}
-		fread(&hdr, sizeof(hdr), 1, fp);
-		amx_Align32((uint32_t *)&hdr.stp);
-		amx_Align32((uint32_t *)&hdr.size);
-		pl32.stp = hdr.stp;
+		ReadFileIntoPl(&pl32, fp);
 		pl32.cellsize = 4;
-		int size = sizeof(hdr) + hdr.size;
-		pl32.size = size;
-		pl32.data = new char[size];
-		rewind(fp);
-		fread(pl32.data, 1, size, fp);
 		fclose(fp);
 	}
 
@@ -109,7 +103,7 @@ int main(int argc, char **argv)
 #endif
 	if (!lib64)
 	{
-		printf("64bit compiler failed to instantiate.\n");
+		pc_printf("64bit compiler failed to instantiate.\n");
 		exit(0);
 	}
 
@@ -118,9 +112,9 @@ int main(int argc, char **argv)
 	if (!sc64)
 	{
 #ifdef __linux__
-		printf("64bit compiler failed to link: %s.\n", dlerror());
+		pc_printf("64bit compiler failed to link: %s.\n", dlerror());
 #else
-		printf("64bit compiler failed to link: %d.\n", GetLastError());
+		pc_printf("64bit compiler failed to link: %d.\n", GetLastError());
 #endif
 		exit(0);
 	}
@@ -131,25 +125,17 @@ int main(int argc, char **argv)
 
 	if (file == NULL)
 	{
-		printf("Could not locate the output file on second pass.\n");
+		pc_printf("Could not locate the output file on second pass.\n");
 		exit(0);
 	} else {
 		FILE *fp = fopen(file, "rb");
 		if (fp == NULL)
 		{
-			printf("Could not locate output file on second pass (compile failed).\n");
+			pc_printf("Could not locate output file on second pass (compile failed).\n");
 			exit(0);
 		}
-		fread(&hdr, sizeof(hdr), 1, fp);
-		amx_Align32((uint32_t *)&hdr.stp);
-		amx_Align32((uint32_t *)&hdr.size);
-		pl64.stp = hdr.stp;
+		ReadFileIntoPl(&pl64, fp);
 		pl64.cellsize = 8;
-		int size = sizeof(hdr) + hdr.size;
-		pl64.size = sizeof(hdr) + hdr.size;
-		pl64.data = new char[size];
-		rewind(fp);
-		fread(pl64.data, 1, size, fp);
 		fclose(fp);
 	}
 
@@ -165,7 +151,7 @@ int main(int argc, char **argv)
 	
 	if (err != Z_OK)
 	{
-		printf("internal error - compression failed on first pass: %d\n", err);
+		pc_printf("internal error - compression failed on first pass: %d\n", err);
 		exit(0);
 	}
 
@@ -175,7 +161,7 @@ int main(int argc, char **argv)
 	
 	if (err != Z_OK)
 	{
-		printf("internal error - compression failed on second pass: %d\n", err);
+		pc_printf("internal error - compression failed on second pass: %d\n", err);
 		exit(0);
 	}
 
@@ -187,7 +173,7 @@ int main(int argc, char **argv)
 	FILE *fp = fopen(newfile, "wb");
 	if (!fp)
 	{
-		printf("Error trying to write file %s.\n", newfile);
+		pc_printf("Error trying to write file %s.\n", newfile);
 		exit(0);
 	}
 
@@ -215,11 +201,34 @@ int main(int argc, char **argv)
 
 	unlink(file);
 
-	printf("Done.\n");
+	pc_printf("Done.\n");
 
 	dlclose(lib);
 
 	exit(0);
+}
+
+//As of Small 3.0, there's extra debug info in the file we need to get out.
+//Sadly this is placed somewhere really inconvenient and I'm mad.
+void ReadFileIntoPl(abl *pl, FILE *fp)
+{
+	AMX_HEADER hdr;
+	AMX_DBG_HDR dbg;
+	fread(&hdr, sizeof(hdr), 1, fp);
+	amx_Align32((uint32_t *)&hdr.stp);
+	amx_Align32((uint32_t *)&hdr.size);
+	pl->stp = hdr.stp;
+	int size = hdr.size;
+	if (hdr.flags & AMX_FLAG_DEBUG)
+	{
+		fseek(fp, hdr.size, SEEK_SET);
+		fread(&dbg, sizeof(dbg), 1, fp);
+		size += dbg.size;
+	}
+	pl->size = size;
+	pl->data = new char[size];
+	rewind(fp);
+	fread(pl->data, 1, size, fp);
 }
 
 //we get the full name of the file here

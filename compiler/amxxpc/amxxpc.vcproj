@@ -129,6 +129,9 @@
 				RelativePath=".\amx.h">
 			</File>
 			<File
+				RelativePath=".\amxdbg.h">
+			</File>
+			<File
 				RelativePath=".\amxxpc.h">
 			</File>
 			<File

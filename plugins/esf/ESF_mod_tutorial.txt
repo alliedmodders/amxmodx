@@ -1,0 +1,310 @@
+---------------------- [ ESF modification tutorial version > [ 1.0 ] < ] ----------------------------
+---------------- [ Made by LynX for purpose of attaching it to AMX Mod X documentation ] ------------
+-------------------------------------[ (c) 2005 ] ---------------------------------------------------
+-----------------[Credits go to Jinto for originally developing some functions]----------------------
+
+-----------------------------------------------
+[ Chapter 1 ] -> [ Powerup color modification ]
+-----------------------------------------------
+
+[//////////////////////////////////START//////////////////////////////]
+
+To modify the powerup color, you need to capture the game message,
+then modify it.
+
+Here is the basic color override plugin example.
+
+[--------------------------------------Example-------------------------------------]
+
+#include <amxmodx>
+#include <fun>
+
+public plugin_init()
+
+{
+
+	register_plugin("Powerup modification","final","LynX")
+	register_message( get_user_msgid( "Powerup" ), "PowerupMessage" )
+
+	return PLUGIN_CONTINUE
+
+}
+
+public PowerupMessage( msgid, dest, pEnt )
+
+{ 
+
+	set_msg_arg_int( 2, ARG_BYTE, red ); 
+	set_msg_arg_int( 3, ARG_BYTE, green ); 
+	set_msg_arg_int( 4, ARG_BYTE, blue ); 
+    
+	return PLUGIN_CONTINUE; 
+
+}
+
+[------------------------------------Example-------------------------------------- ]
+
+This above would change everyones powerup color to the one you specify.
+To get the id of player, use 
+
+[------------------------------------Example-------------------------------------- ]
+
+new player = get_msg_arg_int(1)
+
+[------------------------------------Example-------------------------------------- ]
+
+This concludes the powerup color changing section.
+
+[///////////////////////////////////END//////////////////////////////////////////// ]
+
+-----------------------------------------------------------------------------------
+
+
+---------------------------------------------
+[ Chapter 2 ] -> [ Turbo modification ]
+---------------------------------------------
+
+[ //////////////////////////////////START////////////////////////////////////////// ]
+
+
+To modify Turbo you need to find the turbo entity & change its model/skin.
+This all must be in client_PostThink, otherwise, it would change it only when one function is called.
+
+Here is the basic Turbo color replacement plugin:
+
+[------------------------------------Example-------------------------------------- ]
+
+#include <amxmodx>
+#include <fun>
+#include <engine>
+#include <fakemeta>
+
+public plugin_init()
+
+{
+
+	register_plugin("Turbo color change","final","LynX")
+
+	return PLUGIN_CONTINUE
+
+}
+
+public client_PostThink(id)
+
+{
+
+	new entity; 
+	new maxentities = get_global_int(GL_maxEntities); 
+    
+	for( entity = 1; entity < maxentities; entity++) { 
+	   if ( !is_valid_ent( entity ) ) 
+	      continue; 
+            
+	   new owner = entity_get_edict( entity, EV_ENT_owner ); 
+	   if( owner == id ) { 
+          
+	      new szModel[32]; 
+	      entity_get_string( entity, EV_SZ_model, szModel, 31 ); 
+             
+	      if( containi( szModel, "aura" ) != -1 ) { 
+	         entity_set_int( entity, EV_INT_skin, SKIN_NUMBER ); // replace skin number with number from 1 to 5
+	      } 
+	   } 
+	}
+
+	return PLUGIN_CONTINUE
+
+}
+
+[------------------------------------Example-------------------------------------- ]
+
+Notice that the SKIN_NUMBER needs to be deleted and replaced with skin number.
+Here is the list of skins, use the number to get the right color:
+
+1 - white
+2 - green
+3 - purple
+4 - red
+5 - yellow
+
+This concludes the turbo color changing section.
+::NOTE:: You can set the model or any other stuff of aura since "entity" is the id of
+aura when using the code snippet above.
+So just use that id when changing something aura related.
+
+[///////////////////////////////////END//////////////////////////////////////////// ]
+
+-----------------------------------------------------------------------------------
+
+
+
+---------------------------------------------
+[ Chapter 3 ] -> [ Attack charge sprite modification ]
+---------------------------------------------
+
+[ //////////////////////////////////START////////////////////////////////////////// ]
+
+To modify attack sprite, use this below.
+
+[------------------------------------Example-------------------------------------- ]
+
+#include <amxmodx>
+#include <fun>
+#include <engine>
+#include <fakemeta>
+
+public plugin_init()
+
+{
+
+	register_plugin("Attack sprite","final","Lynx")
+
+	return PLUGIN_CONTINUE
+
+}
+
+public client_PostThink(id)
+
+{
+
+	new ent = find_ent_in_sphere( -1, vOrigin, 64.0 ); 
+	while( ent > 0 )
+
+	{ 
+
+		new szModel[32]; 
+		entity_get_string( ent, EV_SZ_model, szModel, 31 ); 
+		if( containi( szModel, "sprites/sprite.spr" ) != -1 )
+
+		{ 
+
+	        	entity_set_model( ent, "sprites/sprite2.spr" ); 
+
+		} 
+
+	}
+
+	return PLUGIN_CONTINUE
+
+}
+
+[------------------------------------Example-------------------------------------- ]
+
+You need to find the charge sprite of the attack you want to change, then place it except
+sprite.spr
+If its found, put your charge replacement sprite except of sprite2.spr
+
+This concludes Attack charge sprite section.
+
+[///////////////////////////////////END//////////////////////////////////////////// ]
+
+-----------------------------------------------------------------------------------
+
+---------------------------------------------
+[ Chapter 4 ] -> [ Attack beam sprite modification ]
+---------------------------------------------
+
+[ //////////////////////////////////START////////////////////////////////////////// ]
+
+In this section, the tutorial will show how to change the beam trail, head. start.
+
+Watch this example:
+
+
+[------------------------------------Example-------------------------------------- ]
+
+#include <amxmodx>
+#include <fun>
+#include <engine>
+#include <fakemeta>
+
+public plugin_init()
+
+{
+
+	register_plugin("Attack modification","final","EncorE_SX")
+	register_message( get_user_msgid( "EETrail" ), "trail" );
+
+	return PLUGIN_CONTINUE
+
+}
+
+new sprite
+new sprite2
+
+public trail( id )
+
+{
+
+	new playerID = get_msg_arg_int( 1 );
+
+	new clip,ammo
+
+	new weapon = get_user_weapon( pid, clip, ammo )
+   
+	if( weapon == WEAPON )
+
+	{
+
+		set_msg_arg_int( 5, ARG_SHORT, sprite ); // beam start
+		set_msg_arg_int( 6, ARG_SHORT, sprite ); // beam head
+		set_msg_arg_int( 7, ARG_SHORT, sprite );
+		set_msg_arg_int( 8, ARG_SHORT, sprite2 ); // trail
+
+		return PLUGIN_CONTINUE;
+
+	}
+   
+
+	return PLUGIN_CONTINUE;
+
+}
+
+
+
+[------------------------------------Example-------------------------------------- ]
+
+::NOTICE:: This above shows how to check if player has certain attack selected,
+and if he has, its changed. If not, its not changed. I'm leaving up to you to find the numbers of
+weapons.
+Here is just a basic list of attacks.
+
+[---EXAMPLE---]
+
+generic beam = 4
+gallit gun = 5
+kamehameha = 6
+finalflash = 15
+
+[---EXAMPLE---]
+
+This concludes the weapon sprite changing tutoiral(s).
+
+[///////////////////////////////////END//////////////////////////////////////////// ]
+
+-----------------------------------------------------------------------------------
+
+---------------------------------------------
+[ Chapter 5 ] -> [ Creating a transformation ]
+---------------------------------------------
+
+[ //////////////////////////////////START////////////////////////////////////////// ]
+
+I won't put any snippets here since this is just pure AMXX.
+To create a transformation, you need to block ascend button and see if conditions were met to
+go in some other transformation.
+To create a transformation, simply connect a bunch of set_task's in one chain.
+Usefull stuff when creating transformations is "avatar" functions, since
+this will allow you wheter is player ascended to that level or no, without extra array.
+Then you can use procedures described above.
+
+This concluded the Create transformation explanation % also concluded the whole tutorial.
+
+[///////////////////////////////////END//////////////////////////////////////////// ]
+
+-----------------------------------------------------------------------------------
+
+In next version of this tutorial there will be more explanations and code snippets, since this
+is rushed version for AMX Mod X release.
+
+---[ LynX ]---

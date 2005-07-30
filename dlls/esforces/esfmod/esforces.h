@@ -74,5 +74,6 @@ extern AMX_NATIVE_INFO g_AnimationNatives[];
 extern AMX_NATIVE_INFO g_PdataNatives[];
 extern AMX_NATIVE_INFO g_EffectsNatives[];
 extern AMX_NATIVE_INFO g_BaseNatives[];
+extern AMX_NATIVE_INFO g_AvatarNatives[];
 
 #endif //_INCLUDE_ESFORCES_H

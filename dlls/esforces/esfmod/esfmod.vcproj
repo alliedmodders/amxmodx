@@ -118,6 +118,9 @@
 				RelativePath=".\esf_anim.cpp">
 			</File>
 			<File
+				RelativePath=".\esf_avatars.cpp">
+			</File>
+			<File
 				RelativePath=".\esf_base.cpp">
 			</File>
 			<File

@@ -111,3 +111,9 @@ native isspace(ch);
 
 /* Returns true when value is letter or digit. */
 native isalnum(ch);
+
+/* Concatenates a string.  Maxlength is the total buffer of the destination. */
+native strcat(dest[], const source[], maxlength);
+
+/* Finds a string in another string.  Returns -1 if not found. */
+native strfind(const string[], const sub[], bool:ignorecase=false, pos=0);

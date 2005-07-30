@@ -953,10 +953,10 @@ static cell AMX_NATIVE_CALL get_string(AMX *amx, cell *params) // (string, retur
 
 //contributed by twistedeuphoria
 static cell AMX_NATIVE_CALL trace_forward(AMX *amx, cell *params)
-//native trace_forward(Float:start[3], Float:angle, Float:give, ignoreEnt, &Float:hitX, &Float:hitY, &Float:shortestDistance, &Float:shortestDistLow, &Float:shortestDistHigh)
+//native trace_forward(Float:start[3], Float:angles[3], give, ignoreEnt, &Float:hitX, &Float:hitY, &Float:shortestDistance, &Float:shortestDistLow, &Float:shortestDistHigh)
 {
    cell *cStart = MF_GetAmxAddr(amx, params[1]);
-   REAL fAngle = amx_ctof(params[2]);
+   cell *cAngles = MF_GetAmxAddr(amx, params[2]);
    REAL fGive = amx_ctof(params[3]);
    int iIgnoreEnt = params[4];
    cell *hitX = MF_GetAmxAddr(amx, params[5]);
@@ -964,72 +964,25 @@ static cell AMX_NATIVE_CALL trace_forward(AMX *amx, cell *params)
    cell *shortestDistance = MF_GetAmxAddr(amx, params[7]);
    cell *shortestDistLow = MF_GetAmxAddr(amx, params[8]);
    cell *shortestDistHigh = MF_GetAmxAddr(amx, params[9]);
- 
+
    if(fGive < 0.0)
       fGive = 20.0;
-   fAngle -= 90.0;
-   if(fAngle < 0.0)
-      fAngle += 360.0;
 
-   REAL fRadians = M_PI * fAngle;
-   fRadians /= 180.0;
-   REAL fTanResult = tan(fRadians);
    REAL fStartX = amx_ctof(cStart[0]);
    REAL fStartY = amx_ctof(cStart[1]);
    REAL fStartZ = amx_ctof(cStart[2]);
-   REAL fEndX = -1.0;
-   REAL fEndY = -1.0;
-   if((fAngle == 0.0) || (fAngle == 360.0))
-   {
-      fEndX = fStartX;
-      fEndY = 4000;
-   }
-   else if(fAngle == 90.0)
-   {
-      fEndX = 4000;
-      fEndY = fStartY;
-   }
-   else if(fAngle == 180.0)
-   {
-      fEndX = -4000;
-      fEndY = fStartY;
-   }
-   else if(fAngle == 270.0)
-   {
-      fEndX = fStartX;
-      fEndY = -4000;
-   }
-   if((fAngle > 0.0) && (fAngle < 180.0) && (fEndX == -1.0))
-      fEndX = fStartX - 4000;
-   else if(fEndX == -1.0)
-      fEndX = fStartX + 4000;
-   if(fEndY == -1.0)
-      fEndY = fStartY + (4000.0 * fTanResult);
-   if((fAngle > 0.0) && (fAngle < 90.0))
-   {
-      REAL tempSlot = fEndX;
-      fEndX = fEndY * -1.0;
-      fEndY = tempSlot * -1.0;
-   }
-   if((fAngle > 90.0) && (fAngle < 180.0))
-   {
-      REAL tempSlot = fEndX;
-      fEndX = fEndY * -1.0;
-      fEndY = tempSlot;
-   }
-   if((fAngle > 180.0) && (fAngle < 270.0))
-   {
-      REAL tempSlot = fEndX;
-      fEndX = fEndY;
-      fEndY = tempSlot;
-      fEndY *= -1.0;
-   }
-   if((fAngle > 270.0) && (fAngle < 360.0))
-   {
-      REAL tempSlot = fEndX;
-      fEndX = fEndY;
-      fEndY = tempSlot;
-   }
+
+   REAL fAnglesX = amx_ctof(cAngles[0]);
+   REAL fAnglesY = amx_ctof(cAngles[1]);
+   REAL fAnglesZ = amx_ctof(cAngles[2]);
+   Vector playerAngleVector = Vector(fAnglesX,fAnglesY,fAnglesZ);
+   MAKE_VECTORS(playerAngleVector);
+   
+   Vector forwardVector = gpGlobals->v_forward;
+   REAL fEndX = forwardVector[0] * 4000;
+   REAL fEndY = forwardVector[1] * 4000;
+   REAL fEndZ = fStartZ;   
+
    REAL fClosestDist = 999999.9;
    REAL fClosestLow = 0.0;
    REAL fClosestHigh = 0.0;
@@ -1055,7 +1008,6 @@ static cell AMX_NATIVE_CALL trace_forward(AMX *amx, cell *params)
       Vector vHit = Vector(fRetX, fRetY, fRetZ);
 
       REAL fLength = (vStart - vHit).Length();
-      if(fLength < 20.0) continue;
       if(fabs(fLength - fClosestDist) < fGive)
             fClosestHigh = fUseZ - fStartZ;
       else if(fLength < fClosestDist)

@@ -116,4 +116,7 @@ native isalnum(ch);
 native strcat(dest[], const source[], maxlength);
 
 /* Finds a string in another string.  Returns -1 if not found. */
-native strfind(const string[], const sub[], bool:ignorecase=false, pos=0);
+native strfind(const string[], const sub[], ignorecase=0, pos=0);
+
+/* Compares two strings with the C function strcmp().  Returns 0 on equal. */
+native strcmp(const string1[], const string2[], ignorecase=0);

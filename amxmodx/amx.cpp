@@ -539,7 +539,7 @@ static int amx_BrowseRelocate(AMX *amx)
   assert(OP_SYMBOL==126);
 
   amx->sysreq_d=0;      /* preset */
-  #if (defined __GNUC__ || defined ASM32 || defined JIT) && !defined __64BIT__
+  #if (defined __GNUC__ || defined ASM32 || defined JIT) 
     amx_Exec(amx, (cell*)(void*)&opcode_list, 0);
     /* to use direct system requests, a function pointer must fit in a cell;
      * because the native function's address will be stored as the parameter
@@ -927,7 +927,7 @@ int AMXAPI amx_Init(AMX *amx,void *program)
     for (i=0; i<num; i++) {
       amx_AlignCell(&fs->address);      /* redundant, because it should be zero */
       if (USENAMETABLE(hdr))
-        amx_Align32(&((AMX_FUNCSTUBNT*)fs)->nameofs);
+        amx_AlignCell(&((AMX_FUNCSTUBNT*)fs)->nameofs);
       fs=(AMX_FUNCSTUB*)((unsigned char *)fs+hdr->defsize);
     } /* for */
 
@@ -937,7 +937,7 @@ int AMXAPI amx_Init(AMX *amx,void *program)
     for (i=0; i<num; i++) {
       amx_AlignCell(&fs->address);
       if (USENAMETABLE(hdr))
-        amx_Align32(&((AMX_FUNCSTUBNT*)fs)->nameofs);
+        amx_AlignCell(&((AMX_FUNCSTUBNT*)fs)->nameofs);
       fs=(AMX_FUNCSTUB*)((unsigned char *)fs+hdr->defsize);
     } /* for */
 
@@ -947,7 +947,7 @@ int AMXAPI amx_Init(AMX *amx,void *program)
     for (i=0; i<num; i++) {
       amx_AlignCell(&fs->address);
       if (USENAMETABLE(hdr))
-        amx_Align32(&((AMX_FUNCSTUBNT*)fs)->nameofs);
+        amx_AlignCell(&((AMX_FUNCSTUBNT*)fs)->nameofs);
       fs=(AMX_FUNCSTUB*)((unsigned char *)fs+hdr->defsize);
     } /* for */
 
@@ -962,7 +962,7 @@ int AMXAPI amx_Init(AMX *amx,void *program)
     for (i=0; i<num; i++) {
       amx_AlignCell(&fs->address);
       if (USENAMETABLE(hdr))
-        amx_Align32(&((AMX_FUNCSTUBNT*)fs)->nameofs);
+        amx_AlignCell(&((AMX_FUNCSTUBNT*)fs)->nameofs);
       fs=(AMX_FUNCSTUB*)((unsigned char *)fs+hdr->defsize);
     } /* for */
   } /* local */

@@ -5,12 +5,12 @@
 
 // Module info
 #define MODULE_NAME "nVault"
-#define MODULE_VERSION "1.02"
+#define MODULE_VERSION "1.50"
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "http://www.amxmodx.org/"
 #define MODULE_LOGTAG "nVault"
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line
-#define MODULE_RELOAD_ON_MAPCHANGE
+//#define MODULE_RELOAD_ON_MAPCHANGE
 
 #ifdef __DATE__
 #define MODULE_DATE __DATE__
@@ -19,7 +19,7 @@
 #endif // __DATE__
 
 // metamod plugin?
-// #define USE_METAMOD
+#define USE_METAMOD
 
 // - AMXX Init functions
 // Also consider using FN_META_*

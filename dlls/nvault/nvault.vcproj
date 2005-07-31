@@ -21,7 +21,7 @@
 				Optimization="0"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;NVAULT_EXPORTS"
 				MinimalRebuild="TRUE"
-				ExceptionHandling="FALSE"
+				ExceptionHandling="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="5"
 				StructMemberAlignment="3"
@@ -130,25 +130,13 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\hash.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"/>
-				</FileConfiguration>
+				RelativePath=".\Binary.cpp">
 			</File>
 			<File
-				RelativePath=".\journal.cpp">
+				RelativePath=".\Journal.cpp">
 			</File>
 			<File
-				RelativePath=".\nvault.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Detect64BitPortabilityProblems="FALSE"/>
-				</FileConfiguration>
+				RelativePath=".\NVault.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -159,13 +147,22 @@
 				RelativePath=".\amxxapi.h">
 			</File>
 			<File
-				RelativePath=".\hash.h">
+				RelativePath=".\Binary.h">
 			</File>
 			<File
-				RelativePath=".\journal.h">
+				RelativePath=".\compat.h">
 			</File>
 			<File
-				RelativePath=".\nvault.h">
+				RelativePath=".\IVault.h">
+			</File>
+			<File
+				RelativePath=".\Journal.h">
+			</File>
+			<File
+				RelativePath=".\NHash.h">
+			</File>
+			<File
+				RelativePath=".\NVault.h">
 			</File>
 		</Filter>
 		<Filter
@@ -183,7 +180,7 @@
 				RelativePath=".\sdk\amxxmodule.h">
 			</File>
 			<File
-				RelativePath=".\sdk\CString.h">
+				RelativePath=".\CString.h">
 			</File>
 			<File
 				RelativePath=".\sdk\moduleconfig.h">

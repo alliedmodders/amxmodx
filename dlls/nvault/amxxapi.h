@@ -1,7 +1,7 @@
 #ifndef _INCLUDE_AMXXAPI_H
 #define _INCLUDE_AMXXAPI_H
 
-#include "sdk/CVector.h"
+#include "CVector.h"
 #include "hash.h"
 #include "nvault.h"
 #include "journal.h"

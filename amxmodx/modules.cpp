@@ -377,12 +377,16 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 
 	if (will_be_debugged)
 	{
+#ifdef JIT
 		amx->flags |= AMX_FLAG_DEBUG;
+#endif
 		amx_SetDebugHook(amx, amxx_DebugHook);
 	} else {
 		//set this again because amx_Init() erases it!
+#ifdef JIT
 		amx->flags |= AMX_FLAG_JITC;
 		amx->sysreq_d = NULL;
+#endif
 	}
 
 #ifdef JIT

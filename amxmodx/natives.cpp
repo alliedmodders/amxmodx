@@ -1,6 +1,12 @@
 #include "amxmodx.h"
+#include <malloc.h>
+#include <stdlib.h>
 #include "CStack.h"
 #include "natives.h"
+
+#ifdef __linux__
+#include <sys/mman.h>
+#endif
 
 CVector<regnative *> g_RegNatives;
 CStack<regnative *> g_NativeStack;
@@ -76,7 +82,7 @@ AMX_NATIVE_INFO *BuildNativeTable()
 	{
 		pNative = g_RegNatives[i];
 		info.name = pNative->name.c_str();
-		info.func = reinterpret_cast<AMX_NATIVE>(pNative->pfn);
+		info.func = (AMX_NATIVE)((void *)(pNative->pfn));
 		pNatives[i] = info;
 	}
 	pNatives[g_RegNatives.size()].name = NULL;
@@ -301,7 +307,7 @@ static cell AMX_NATIVE_CALL register_library(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL register_native(AMX *amx, cell *params)
 {
 	if (!g_Initialized)
-		amxx_DynaInit(static_cast<void *>(amxx_DynaCallback));
+		amxx_DynaInit((void *)(amxx_DynaCallback));
 
 	g_Initialized = true;
 
@@ -328,7 +334,7 @@ static cell AMX_NATIVE_CALL register_native(AMX *amx, cell *params)
 	pNative->pfn = new char[size + 10];
 	VirtualProtect(pNative->pfn, size+10, PAGE_EXECUTE_READWRITE, &temp);
 #else
-	pNative->pfn = (unsigned char *)memalign(sysconf(_SC_PAGESIZE), amx->code_size);
+	pNative->pfn = (char *)memalign(sysconf(_SC_PAGESIZE), amx->code_size);
 	mprotect((void *)pNative->pfn, size+10, PROT_READ|PROT_WRITE|PROT_EXEC);
 #endif
 

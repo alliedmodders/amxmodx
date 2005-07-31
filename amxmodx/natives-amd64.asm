@@ -20,7 +20,8 @@ global amxx_DynaInit, _amxx_DynaInit
 amxx_DynaInit:
 _amxx_DynaInit:
 	mov		rax, rdi			;get pointer, first param is in rdi
-	mov		[GLOBAL_GATE], rax	;store
+	lea		rdi, [GLOBAL_GATE wrt rip]
+	mov		[rdi], rax	;store
 	
 	mov		rax, 1
 	ret
@@ -67,7 +68,7 @@ _amxx_DynaFuncStart:
 	;this old trick, we'll move in the real pointer in a bit.
 _amxx_DynaMoveOffset:
 	mov		rsi, qword 1234567812345678h
-	call	[GLOBAL_GATE]		;pass through teh global gateway.
+	call		[GLOBAL_GATE wrt rip]	;pass through teh global gateway.
 	
 	pop		rbp
 	ret
@@ -83,3 +84,4 @@ _amxx_DynaCodesize:
 	ret
 	
 GLOBAL_GATE		DQ		0
+

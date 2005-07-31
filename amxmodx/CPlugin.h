@@ -89,8 +89,8 @@ public:
 		inline void setAuthor( const char* n ) { author.assign(n); }
 		inline void setVersion( const char* n ) { version.assign(n); }
 		inline void setError( const char* n ) { errorMsg.assign(n); }
-		inline bool isValid() const { return ((status != ps_bad_load) && (status != ps_locked)); }
-		inline bool isPaused() const { return ( (status == ps_paused) || (status == ps_stopped)); }
+		inline bool isValid() const { return ((status == ps_running) && (status != ps_locked)); }
+		inline bool isPaused() const { return ( (status == ps_paused) ); }
 		//inline bool isFunctionPaused( int id ) const { return (paused_fun & (1<<id)) ? true : false; 	}
 		inline bool isExecutable(int id) const { return (isValid() && !isPaused());	}
 		void Finalize();

@@ -15,7 +15,7 @@ OBJECTS = meta_api.cpp CFile.cpp CVault.cpp vault.cpp float.cpp file.cpp modules
 	CMisc.cpp CTask.cpp string.cpp amxmodx.cpp CEvent.cpp CCmd.cpp CLogEvent.cpp \
 	srvcmd.cpp strptime.cpp amxcore.cpp amxtime.cpp power.cpp amxxlog.cpp fakemeta.cpp \
 	amxxfile.cpp CLang.cpp md5.cpp emsg.cpp CForward.cpp CPlugin.cpp CModule.cpp \
-	CMenu.cpp util.cpp amx.cpp amxdbg.cpp
+	CMenu.cpp util.cpp amx.cpp amxdbg.cpp natives.cpp newmenus.cpp \
 
 LINK = -lz 
 
@@ -38,10 +38,12 @@ CFLAGS += -DLINUX -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H
 
 ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_amd64.so
-	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -m64
+	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -m64 
+	OBJECTS += JIT/natives-amd64.o
+	LINK += -lstdc++
 else
 	BINARY = $(NAME)_i386.so
-	OBJECTS += JIT/amxexecn.o JIT/amxjitsn.o
+	OBJECTS += JIT/amxexecn.o JIT/amxjitsn.o JIT/natives-x86.o
 	CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32
 	OPT_FLAGS += -march=i686
 endif

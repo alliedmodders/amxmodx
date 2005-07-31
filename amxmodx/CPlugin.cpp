@@ -34,6 +34,9 @@
 #include "CForward.h"
 #include "CFile.h"
 #include "amx.h"
+#include "natives.h"
+
+extern const char *no_function;
 
 CPluginMngr::CPlugin* CPluginMngr::loadPlugin(const char* path, const char* name, char* error, int debug) {	
 	CPlugin** a = &head;
@@ -47,6 +50,25 @@ void CPluginMngr::unloadPlugin( CPlugin** a ) {
 	delete *a;
 	*a = next;
 	--pCounter;
+}
+
+void CPluginMngr::Finalize()
+{
+	if (m_Finalized)
+		return;
+	pNatives = BuildNativeTable();
+
+	CPlugin *a = head;
+	while (a)
+	{
+		if (a->getStatusCode() == ps_running)
+		{
+			amx_Register(a->getAMX(), pNatives, -1);
+			a->Finalize();
+		}
+		a=a->next;
+	}
+	m_Finalized = true;
 }
 
 int  CPluginMngr::loadPluginsFromFile( const char* filename )
@@ -102,6 +124,12 @@ void CPluginMngr::clear() {
 	CPlugin**a = &head;	
 	while ( *a )
 		unloadPlugin(a);
+	m_Finalized = false;
+	if (pNatives)
+	{
+		delete [] pNatives;
+		pNatives = NULL;
+	}
 }
 
 CPluginMngr::CPlugin* CPluginMngr::findPluginFast(AMX *amx) 
@@ -189,6 +217,31 @@ CPluginMngr::CPlugin::CPlugin(int i, const char* p,const char* n, char* e, int d
 CPluginMngr::CPlugin::~CPlugin( )
 {
 	unload_amxscript( &amx, &code );
+}
+
+void CPluginMngr::CPlugin::Finalize()
+{
+	char buffer[128];
+
+	int old_status = status;
+	if (CheckModules(&amx, buffer))
+	{
+		if ( amx_Register(&amx, core_Natives, -1) != AMX_ERR_NONE )
+		{
+			status = ps_bad_load;
+			sprintf(buffer, "Plugin uses an unknown function (name \"%s\") - check your modules.ini.", no_function);
+			errorMsg.assign(buffer);
+			amx.error = AMX_ERR_NOTFOUND;
+		}
+	} else {
+		status = ps_bad_load;
+		errorMsg.assign(buffer);
+		amx.error = AMX_ERR_NOTFOUND;
+	}
+	if (old_status != status)
+	{
+		AMXXLOG_Log("[AMXX] Plugin \"%s\" failed to load: %s", name.c_str(), errorMsg.c_str());
+	}
 }
 
 void CPluginMngr::CPlugin::pauseFunction( int id ) { 

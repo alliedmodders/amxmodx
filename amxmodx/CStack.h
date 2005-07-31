@@ -29,25 +29,73 @@
 *  version.
 */
 
-#ifndef __MODULES_H__
-#define __MODULES_H__
+//by David "BAILOPAN" Anderson
+#ifndef _INCLUDE_CSTACK_H
+#define _INCLUDE_CSTACK_H
 
-#include "amx.h"
+template <class T>
+class CStack
+{
+public:
+	struct CStackItem
+	{
+	public:
+		T item;
+		CStackItem *prev;
+	};
+public:
+	CStack()
+	{
+		mSize = 0;
+		mStack = NULL;
+	}
+	~CStack()
+	{
+		CStackItem *p, *t;
+		p = mStack;
+		while (p)
+		{
+			t = p->prev;
+			delete p;
+			p = t;
+		}
+		mStack = NULL;
+	}
+	bool empty()
+	{
+		return (mSize==0);
+	}
 
-#undef DLLEXPORT
-#ifndef __linux__
-  #define DLLEXPORT   __declspec(dllexport)
-#else
-  #define DLLEXPORT
-  #define WINAPI
-#endif
+	void push(const T & v)
+	{
+		CStackItem *p = new CStackItem;
+		p->item = v;
+		p->prev = mStack;
+		mStack = p;
+		mSize++;
+	}
 
-#undef C_DLLEXPORT
-#define C_DLLEXPORT extern "C" DLLEXPORT
+	void pop()
+	{
+		CStackItem *p = mStack;
+		mStack = p->prev;
+		delete p;
+		mSize--;
+	}
 
-#define RELOAD_MODULE 0
-#define STATIC_MODULE 1
+	T & top()
+	{
+		return mStack->item;
+	}
 
-int CheckModules(AMX *amx, char error[128]);
+	size_t size()
+	{
+		return mSize;
+	}
+private:
+	CStackItem *mStack;
+	size_t mSize;
+};
 
-#endif // __MODULES_H__
+#endif //_INCLUDE_CQUEUE_H
+

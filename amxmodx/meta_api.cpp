@@ -33,6 +33,7 @@
 #include "amxmodx.h"
 #include "fakemeta.h"
 #include "newmenus.h"
+#include "natives.h"
 
 plugin_info_t Plugin_info = {
   META_INTERFACE_VERSION, // ifvers
@@ -266,6 +267,7 @@ int	C_Spawn( edict_t *pent ) {
 
   //  ###### Load AMX scripts
   g_plugins.loadPluginsFromFile( get_localinfo("amxx_plugins", "addons/amxmodx/configs/plugins.ini") );
+  g_plugins.Finalize();
 
   // Register forwards
   FF_PluginInit = registerForward("plugin_init", ET_IGNORE, FP_DONE);
@@ -454,6 +456,7 @@ void C_ServerDeactivate_Post() {
   g_vault.clear();
   g_xvars.clear();
   g_plugins.clear();
+  ClearPluginLibraries();
   char file[256];
   g_langMngr.Save(build_pathname_r(file, sizeof(file)-1, "%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
   g_langMngr.SaveCache(build_pathname_r(file, sizeof(file)-1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));

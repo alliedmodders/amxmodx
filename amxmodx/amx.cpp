@@ -1747,8 +1747,9 @@ static const void * const amx_opcodelist[] = {
 
   if (amx->callback==NULL)
     return AMX_ERR_CALLBACK;
-  if ((amx->flags & AMX_FLAG_NTVREG)==0)
-    return AMX_ERR_NOTFOUND;
+  if (!(amx->flags & AMX_FLAG_PRENIT))
+	if ((amx->flags & AMX_FLAG_NTVREG)==0)
+		return AMX_ERR_NOTFOUND;
   if ((amx->flags & AMX_FLAG_RELOC)==0)
     return AMX_ERR_INIT;
   assert((amx->flags & AMX_FLAG_BROWSE)==0);
@@ -2678,8 +2679,9 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
 
   if (amx->callback==NULL)
     return AMX_ERR_CALLBACK;
-  if ((amx->flags & AMX_FLAG_NTVREG)==0)
-    return AMX_ERR_NOTFOUND;
+  if (!(amx->flags & AMX_FLAG_PRENIT))
+	if ((amx->flags & AMX_FLAG_NTVREG)==0)
+		return AMX_ERR_NOTFOUND;
   if ((amx->flags & AMX_FLAG_RELOC)==0)
     return AMX_ERR_INIT;
   assert((amx->flags & AMX_FLAG_BROWSE)==0);

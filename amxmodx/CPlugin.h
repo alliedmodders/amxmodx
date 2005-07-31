@@ -93,6 +93,7 @@ public:
 		inline bool isPaused() const { return ( (status == ps_paused) || (status == ps_stopped)); }
 		//inline bool isFunctionPaused( int id ) const { return (paused_fun & (1<<id)) ? true : false; 	}
 		inline bool isExecutable(int id) const { return (isValid() && !isPaused());	}
+		void Finalize();
 		void pausePlugin();
 		void unpausePlugin();
 		void pauseFunction( int id );
@@ -108,8 +109,11 @@ private:
 
 
 public:
-	CPluginMngr() { head = 0; pCounter = 0; }
+	CPluginMngr() { head = 0; pCounter = 0; pNatives = NULL; m_Finalized=false;}
 	~CPluginMngr() { clear(); }
+
+	bool m_Finalized;
+	AMX_NATIVE_INFO *pNatives;
 
 	// Interface
 
@@ -121,6 +125,7 @@ public:
 	CPlugin* findPlugin(int index);
 	CPlugin* findPlugin(const char* name);
 	inline int getPluginsNum() const { return pCounter; }
+	void Finalize();
 	void clear();
 
 	class iterator {

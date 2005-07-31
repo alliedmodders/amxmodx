@@ -41,6 +41,7 @@
 #include "amxxfile.h"
 #include "amxdbg.h"
 #include "newmenus.h"
+#include "natives.h"
 
 CList<CModule,const char*> g_modules;
 CList<CScript,AMX*> g_loadedscripts;
@@ -439,7 +440,25 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 	}
 
 	g_loadedscripts.put( aa );
-	return set_amxnatives(amx,error);
+
+    set_amxnatives(amx,error);
+
+	if (g_plugins.m_Finalized)
+	{
+		amx_Register(amx, g_plugins.pNatives, -1);
+		if (CheckModules(amx, error))
+		{
+			if ( amx_Register(amx, core_Natives, -1) != AMX_ERR_NONE )
+			{
+				sprintf(error, "Plugin uses an unknown function (name \"%s\") - check your modules.ini.", no_function);
+				return (amx->error = AMX_ERR_NOTFOUND);
+			}
+		} else {
+			return (amx->error = AMX_ERR_NOTFOUND);
+		}
+	}
+
+	return (amx->error = AMX_ERR_NONE);
 }
 
 const char *StrCaseStr(const char *as, const char *bs)
@@ -520,6 +539,8 @@ int CheckModules(AMX *amx, char error[128])
 			}
 		}
 		if (!found)
+			found = LibraryExists(buffer);
+		if (!found)
 		{
 			sprintf(error, "Module \"%s\" required for plugin.  Check modules.ini.", buffer);
 			return 0;
@@ -546,19 +567,24 @@ int set_amxnatives(AMX* amx,char error[128])
 	amx_Register(amx, time_Natives, -1);
 	amx_Register(amx, vault_Natives, -1);
 	amx_Register(amx, g_NewMenuNatives, -1);
+	amx_Register(amx, g_NativeNatives, -1);
 
-	if (CheckModules(amx, error))
+	//we're not actually gonna check these here anymore
+	amx->flags |= AMX_FLAG_PRENIT;
+
+	int idx;
+	cell retval;
+	if (amx_FindPublic(amx, "plugin_natives", &idx)==AMX_ERR_NONE)
 	{
-		if ( amx_Register(amx, core_Natives, -1) != AMX_ERR_NONE )
+		if (amx_Exec(amx, &retval, idx)!=AMX_ERR_NONE)
 		{
-			sprintf(error, "Plugin uses an unknown function (name \"%s\") - check your modules.ini.", no_function);
-			return (amx->error = AMX_ERR_NATIVE);
+			//someday clear libraries that this added
 		}
-		
-		return AMX_ERR_NONE;
 	}
 
-	return (amx->error = AMX_ERR_NATIVE);
+	amx->flags &= ~(AMX_FLAG_PRENIT);
+
+	return (amx->error = AMX_ERR_NONE);
 }
 
 int unload_amxscript(AMX* amx, void** program)

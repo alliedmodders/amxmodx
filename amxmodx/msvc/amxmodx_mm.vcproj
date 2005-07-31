@@ -319,7 +319,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="..\zlib\zlib.lib ..\JIT\amxjitsn.obj ..\JIT\amxexecn.obj"
+				AdditionalDependencies="..\zlib\zlib.lib ..\JIT\amxjitsn.obj ..\JIT\amxexecn.obj ..\JIT\natives-x86.obj"
 				OutputFile="jitdebug/amxmodx_mm.dll"
 				Version="0.1"
 				LinkIncremental="1"
@@ -660,6 +660,9 @@
 				RelativePath="..\modules.cpp">
 			</File>
 			<File
+				RelativePath="..\natives.cpp">
+			</File>
+			<File
 				RelativePath="..\newmenus.cpp">
 			</File>
 			<File
@@ -773,6 +776,9 @@
 				RelativePath="..\CQueue.h">
 			</File>
 			<File
+				RelativePath="..\CStack.h">
+			</File>
+			<File
 				RelativePath="..\CString.h">
 			</File>
 			<File
@@ -795,6 +801,9 @@
 			</File>
 			<File
 				RelativePath="..\modules.h">
+			</File>
+			<File
+				RelativePath="..\natives.h">
 			</File>
 			<File
 				RelativePath="..\newmenus.h">

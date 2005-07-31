@@ -32,6 +32,8 @@
 #ifndef _INCLUDE_CSTRING_H
 #define _INCLUDE_CSTRING_H
 
+#include <string.h>
+
 //by David "BAILOPAN" Anderson
 class String
 {
@@ -63,9 +65,9 @@ public:
 		assign(src.c_str()); 
 	}
 
-	const char *c_str() { return v; }
+	const char *c_str() { return v?v:""; }
 
-	const char *c_str() const { return v; }
+	const char *c_str() const { return v?v:""; }
 
 	void append(const char *t)
 	{

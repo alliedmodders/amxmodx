@@ -100,7 +100,7 @@ static cell AMX_NATIVE_CALL esf_avatar_setmodel(AMX *amx, cell *params)
 		}
 		int len;
 		const char *str = MF_GetAmxString(amx, params[2], 0, &len);
-		SET_MODEL(player, STRING(ALLOC_STRING(str)));
+		SET_MODEL(pEntity, STRING(ALLOC_STRING(str)));
 
 		return 1;
 	}

@@ -1217,6 +1217,21 @@ static cell AMX_NATIVE_CALL cs_get_user_shield(AMX *amx, cell *params)
 	return 0;   
 }
 
+static cell AMX_NATIVE_CALL cs_user_spawn(AMX *amx, cell *params)
+{
+	//Check player
+	CHECK_PLAYER(params[1]);
+   
+	// Make into edict pointer
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+
+	pPlayer->v.deadflag = DEAD_RESPAWNABLE;
+	MDLL_Spawn(pPlayer);
+	pPlayer->v.iuser1 = 0;
+
+	return 1;
+}
+
 AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_user_money",			cs_set_user_money},
 	{"cs_get_user_money",			cs_get_user_money},
@@ -1258,6 +1273,7 @@ AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_get_user_armor",			cs_get_user_armor},
 	{"cs_set_user_armor",			cs_set_user_armor},
 	{"cs_get_user_shield",			cs_get_user_shield},
+	{"cs_user_spawn",				cs_user_spawn},
 	//------------------- <-- max 19 characters!
 	{NULL,							NULL}
 };

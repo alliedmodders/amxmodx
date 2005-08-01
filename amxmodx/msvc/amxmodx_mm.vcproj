@@ -325,6 +325,7 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\extra\lib_win32"
+				IgnoreDefaultLibraryNames="MSVCRT"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\jitdebug/amxx_mm.pdb"
@@ -390,11 +391,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="..\zlib\zlib.lib ..\JIT\amxjitsn.obj ..\JIT\amxexecn.obj"
+				AdditionalDependencies="..\zlib\zlib.lib ..\JIT\amxjitsn.obj ..\JIT\amxexecn.obj ..\JIT\natives-x86.obj"
 				OutputFile="jitrelease/amxmodx_mm.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\extra\lib_win32"
+				IgnoreDefaultLibraryNames="MSVCRT"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\jitrelease/amxx_mm.pdb"
@@ -810,6 +812,12 @@
 			</File>
 			<File
 				RelativePath="..\resource.h">
+			</File>
+			<File
+				RelativePath="..\zlib\zconf.h">
+			</File>
+			<File
+				RelativePath="..\zlib\zlib.h">
 			</File>
 			<Filter
 				Name="mmgr"

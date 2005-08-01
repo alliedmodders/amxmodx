@@ -1482,7 +1482,7 @@ void LogError(AMX *amx, int err, const char *fmt, ...)
 	//does this plugin have debug info?
 	va_list arg;
 	AMX_DBGINFO *pInfo = (AMX_DBGINFO *)(amx->userdata[2]);
-	CPluginMngr::CPlugin *pPlugin = g_plugins.findPluginFast(amx);
+	const char *name = get_amxscriptname(amx);
 	static char buf[1024];
 	static char vbuf[1024];
 	*buf = 0;
@@ -1501,7 +1501,8 @@ void LogError(AMX *amx, int err, const char *fmt, ...)
 	AMXXLOG_Log("[AMXX] %s", vbuf);
 	if (!pInfo || !(amx->flags & AMX_FLAG_DEBUG) || !pInfo->pDebug)
 	{
-		AMXXLOG_Log("[AMXX] Debug is not enabled (plugin \"%s\")", pPlugin->getName());
+		
+		AMXXLOG_Log("[AMXX] Debug is not enabled (plugin \"%s\")", name);
 		invalidate = true;
 	} else {
 		long line;
@@ -1511,7 +1512,7 @@ void LogError(AMX *amx, int err, const char *fmt, ...)
 		int i=0, iLine;
 		cell frame;
 		
-		AMXXLOG_Log("[AMXX] Displaying call trace (plugin \"%s\")", pPlugin->getName());
+		AMXXLOG_Log("[AMXX] Displaying call trace (plugin \"%s\")", name);
 		while (pTrace)
 		{
 			frame = pTrace->frm;
@@ -1671,6 +1672,7 @@ void Module_CacheFunctions()
 
 	// other amx stuff
 	REGISTER_FUNC("amx_Exec", amx_Exec)
+	REGISTER_FUNC("amx_Push", amx_Push);
 	REGISTER_FUNC("amx_Execv", amx_Execv)		//I HOPE NO ONE USES THIS!!!!
 	REGISTER_FUNC("amx_Allot", amx_Allot)
 	REGISTER_FUNC("amx_FindPublic", amx_FindPublic)

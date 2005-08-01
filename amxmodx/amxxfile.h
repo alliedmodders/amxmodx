@@ -32,6 +32,31 @@
 #ifndef __AMXXFILE_H__
 #define __AMXXFILE_H__
 
+#define MAGIC_HEADER		0x414D5842
+#define MAGIC_HEADER2		0x414D5858
+#define	MAGIC_VERSION		0x0300
+
+typedef char		mint8_t;
+typedef int16_t		mint16_t;
+typedef int32_t		mint32_t;
+
+struct PluginEntry
+{
+	mint8_t cellsize;	//cell size
+	int32_t imagesize;	//uncompressed image size
+	int32_t disksize;	//compressed image size
+	int32_t memsize;	//memory image size
+	int32_t offs;		//file offset
+};
+
+struct BinHeader
+{
+	int32_t		magic;
+	mint16_t	version;
+	mint8_t		numPlugins;
+	PluginEntry *plugins;
+};
+
 class CAmxxReader
 {
 public:
@@ -53,6 +78,9 @@ private:
 	FILE *m_pFile;
 
 	bool m_OldFile;					// old .amx file
+	bool m_AmxxFile;				// new 'AMXX' header format
+	BinHeader m_Bh;					// binary header
+	int m_Entry;					// entry #
 
 	int m_CellSize;
 	int m_SectionHdrOffset;			// offset to the table in the header that describes the required section
@@ -65,7 +93,6 @@ public:
 	size_t GetBufferSize();					// Get the size for the buffer
 	Error GetSection(void *buffer);			// Copy the currently selected section to the buffer
 };
-
 
 #endif // __AMXXFILE_H__
 

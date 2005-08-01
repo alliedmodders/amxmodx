@@ -36,6 +36,7 @@ public:
 	~NVault();
 public:
 	bool GetValue(const char *key, time_t &stamp, char buffer[], size_t len);
+	const char *GetValue(const char *key);
 	void SetValue(const char *key, const char *val);
 	void SetValue(const char *key, const char *val, time_t stamp);
 	size_t Prune(time_t start, time_t end);
@@ -44,6 +45,7 @@ public:
 	bool Open();
 	bool Close();
 	size_t Items();
+	const char *GetFilename() { return m_File.c_str(); }
 private:
 	VaultError _ReadFromFile();
 	bool _SaveToFile();
@@ -54,7 +56,7 @@ private:
 	bool m_Open;
 };
 
-class VaultMngr
+class VaultMngr : public IVaultMngr
 {
 public:
 	//when you delete it, it will be closed+saved automatically

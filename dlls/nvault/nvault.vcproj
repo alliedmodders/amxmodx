@@ -153,6 +153,9 @@
 				RelativePath=".\compat.h">
 			</File>
 			<File
+				RelativePath=".\CQueue.h">
+			</File>
+			<File
 				RelativePath=".\IVault.h">
 			</File>
 			<File
@@ -174,16 +177,19 @@
 			Name="SDK"
 			Filter="">
 			<File
-				RelativePath=".\sdk\amxxmodule.cpp">
+				RelativePath=".\amxxmodule.cpp">
 			</File>
 			<File
-				RelativePath=".\sdk\amxxmodule.h">
+				RelativePath=".\amxxmodule.h">
 			</File>
 			<File
 				RelativePath=".\CString.h">
 			</File>
 			<File
 				RelativePath=".\sdk\moduleconfig.h">
+			</File>
+			<File
+				RelativePath=".\moduleconfig.h">
 			</File>
 		</Filter>
 	</Files>

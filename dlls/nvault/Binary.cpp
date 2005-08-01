@@ -1,4 +1,5 @@
 #include "Binary.h"
+#include "amxxmodule.h"
 
 BinaryWriter::BinaryWriter(FILE *fp)
 {

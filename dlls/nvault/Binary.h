@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include "compat.h"
+#include "amxxmodule.h"
 
 class BinaryReader
 {

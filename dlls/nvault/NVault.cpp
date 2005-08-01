@@ -1,5 +1,6 @@
 #include "NVault.h"
 #include "Binary.h"
+#include "amxxmodule.h"
 
 template <class K>
 int HashFunction<String>(const K & k)
@@ -154,6 +155,17 @@ bool NVault::_SaveToFile()
 	return true;
 }
 
+const char *NVault::GetValue(const char *key)
+{
+	String sKey(key);
+	if (!m_Hash.Exists(sKey))
+	{
+		return "";
+	} else {
+		return m_Hash.Retrieve(sKey).c_str();
+	}
+}
+
 bool NVault::Open()
 {
 	_ReadFromFile();
@@ -189,6 +201,7 @@ bool NVault::Close()
 	_SaveToFile();
 	m_Journal->End();
 	m_Journal->Erase();
+	m_Open = false;
 
 	return true;
 }
@@ -259,4 +272,11 @@ bool NVault::GetValue(const char *key, time_t &stamp, char buffer[], size_t len)
 	_snprintf(buffer, len, "%s", sVal.c_str());
 
 	return true;
+}
+
+IVault *VaultMngr::OpenVault(const char *file)
+{
+	NVault *pVault = new NVault(file);
+	
+	return static_cast<IVault *>(pVault);
 }

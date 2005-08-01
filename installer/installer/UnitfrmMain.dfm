@@ -6217,6 +6217,8 @@ object frmMain: TfrmMain
           Indent = 19
           TabOrder = 0
           OnChange = trvDirectoriesChange
+          OnCollapsing = trvDirectoriesCollapsing
+          OnExpanding = trvDirectoriesExpanding
           OnExpanded = trvDirectoriesExpanded
         end
       end

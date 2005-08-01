@@ -271,3 +271,13 @@ enum {
 #define	ITEM_ENABLED	1
 #define ITEM_DISABLED	2
 
+#define	AMX_ERR_NATIVE		10
+#define	AMX_ERR_MEMACCESS	5
+#define	AMX_ERR_NONE		0
+#define AMX_ERR_BOUNDS		4
+#define AMX_ERR_STACKERR	3
+#define AMX_ERR_STACKLOW	7
+#define AMX_ERR_HEAPLOW		8
+#define AMX_ERR_DIVIDE		11
+#define AMX_ERR_NOTFOUND	19
+#define AMX_ERR_PARAMS		25

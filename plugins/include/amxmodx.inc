@@ -85,7 +85,7 @@ native set_localinfo(const info[],const value[]);
 /* Gets info from server. */
 native get_localinfo(const info[],output[],len);
 
-/* Shows text in MOTD window. When there is no header, the MOTD title
+/* Shows text in MOTD window. When there is no header, the MOTD title 
 * will be the name of server. If message is filename, then a contents
 * of this file will be displayed as MOTD. */
 native show_motd(player,const message[],const header[]="");
@@ -148,7 +148,7 @@ native read_datanum();
 /* Gets log message. Can be called only in plugin_log() forward function. */
 native read_logdata(output[],len);
 
-/* Returns number of log arguments.
+/* Returns number of log arguments. 
 * Can be called only in plugin_log() forward function. */
 native read_logargc();
 
@@ -212,6 +212,9 @@ native get_user_deaths(index);
 /* Sets player deaths. */
 native set_user_deaths(index, newdeaths);
 
+/* Sets player frags. */
+native set_user_frags(index, frags);
+
 /* Returns player health. */
 native get_user_health(index);
 
@@ -225,7 +228,7 @@ native get_user_ip(index,ip[],len, without_port = 0);
    set "setweapon" to 0 to turn the bit off, set to 1 to turn it on. */
 native user_has_weapon(index,weapon,setweapon=-1);
 
-/* Returns id of currently carried weapon. Gets also
+/* Returns id of currently carried weapon. Gets also 
 * ammount of ammo in clip and backpack. */
 native get_user_weapon(index,&clip,&ammo);
 
@@ -239,7 +242,7 @@ native num_to_word(num,output[],len);
 * then a name of team is set. */
 native get_user_team(index, team[]="", len = 0);
 
-/* Returns player playing time in seconds.
+/* Returns player playing time in seconds. 
 * If flag is set then result is without connection time. */
 native get_user_time(index, flag = 0);
 
@@ -251,7 +254,7 @@ native get_user_ping(index, &ping, &loss);
 * 0 - current position.
 * 1 - position from eyes (weapon aiming).
 * 2 - end position from player position.
-* 3 - end position from eyes (hit point for weapon).
+* 3 - end position from eyes (hit point for weapon). 
 * 4 - position of last bullet hit (only CS). */
 native get_user_origin(index, origin[3], mode = 0);
 
@@ -291,7 +294,7 @@ native log_message(const message[],{Float,Sql,Result,_}:...);
 /* Sends log message to specified file. */
 native log_to_file(const file[],const message[],{Float,Sql,Result,_}:...);
 
-/* Returns number of players put in server.
+/* Returns number of players put in server. 
 * If flag is set then also connecting are counted. */
 native get_playersnum(flag=0);
 
@@ -335,7 +338,7 @@ native get_flags(flags,output[],len);
 * "g" - don't look in alive players.
 * "h" - skip bots.
 * "i" - skip real players.
-* "j" - return index of last found player.
+* "j" - return index of last found player. 
 * "k" - with given userid.
 * "l" - ignore case sensitivity. */
 native find_player(const flags[], ... );
@@ -409,7 +412,7 @@ native get_time(const format[],output[],len);
 * Last parameter sets time to format. */
 native format_time(output[],len, const format[],time = -1);
 
-/* Returns system time in seconds elapsed since 00:00:00 on January 1, 1970.
+/* Returns system time in seconds elapsed since 00:00:00 on January 1, 1970. 
 * Offset is given in seconds.*/
 native get_systime(offset = 0);
 
@@ -429,7 +432,7 @@ native parse_time(const input[],const format[], time = -1);
 * "d" - do task on time before a map timelimit. */
 native set_task(Float:time,const function[],id = 0,parameter[]="",len = 0,flags[]="", repeat = 0);
 
-/* Removes all tasks with given id. If outside var is
+/* Removes all tasks with given id. If outside var is 
 * set then a task can be removed also when
 * was set in another plugin. */
 native remove_task(id = 0, outside = 0);
@@ -516,9 +519,6 @@ native emit_sound(index, channel, sample[], Float:vol, Float:att,flags, pitch);
 /* Returns distance between two vectors. */
 native get_distance(origin1[3],origin2[3]);
 
-/* Floating point version */
-native Float:get_distance_f(Float:origin1[3], Float:origin2[3]);
-
 /* Registers new cvar for HL engine. */
 native register_cvar(const name[],const string[],flags = 0,Float:fvalue = 0.0);
 
@@ -602,7 +602,7 @@ native get_pluginsnum();
 * "d" - set "stopped" status when pausing whole plugin.
 * "e" - set "locked" status when pausing whole plugin.
 *       In this status plugin is unpauseable.
-* Example: pause("ac","myplugin.amx")
+* Example: pause("ac","myplugin.amx") 
 *          pause("bc","myfunc","myplugin.amx") */
 native pause(flag[], const param1[]="",const param2[]="");
 
@@ -666,10 +666,8 @@ native md5(const szString[], md5buffer[34]);
 /* Calculates the md5 keysum of a file */
 native md5_file(const file[], md5buffer[34]);
 
-/* Returns the internal flags set on the called plugin's state
- * If hdr is 1, it will return the pcode flags rather than state flags.
- */
-native plugin_flags(hdr=0);
+/* Returns the internal flags set on the called bytecode structure - Do not use */
+native plugin_flags();
 
 /* When using modules that aren't part of AMX Mod X base package, do
 * a require_module("modulename") for each of them within the plugin_modules()
@@ -684,46 +682,60 @@ native is_amd64_server();
 /* Returns 0 on success, like the POSIX specification */
 native mkdir(const dirname[]);
 
-/* Returns plugin id searched by file/name.  Returns INVALID_PLUGIN_ID on failure. */
-native find_plugin_byfile(const filename[], ignoreCase=1);
+/* This is called before plugin_init and allows you to register natives. */
+forward plugin_natives();
 
-/** The new menu natives */
-//If you set ml to 1, everything will be preformatted
-// with the multi-lingual system.
-//NOTE: ml=1 currently is not enabled.
-//handler[] will be called when someone presses a key on your menu
-native menu_create(title[], handler[], ml=0);
+/* Registers a NATIVE.  When a plugin uses your native (you should distribute a .inc),
+ * the handler will be called with two parameters: the calling plugin id, and the
+ * number of parameters.
+ * If you set style=1, the method of parameter passing is a tad more efficient.
+ * Instead of "id, numParams", you label the native exactly as how the parameters
+ *  should, in theory, be sent.  Then for each byreference parameter, you call
+ *  param_convert(num).  This is theoretically more efficient but quite hacky.
+ *  The method was discovered by dJeyL, props to him!
+ */
+native register_native(const name[], const handler[], style=0);
 
-//Creates a menu item callback handler.  
-//The callback handler is passed the playerid, menuid, and itemid.
-//It can return either ITEM_IGNORE, ITEM_ENABLED, or ITEM_DISABLED.
-native menu_makecallback(function[]);
+/* Registers a library.  You can put #pragma library <name> in your include files,
+ * and plugins that use your include without loading your plugin will get a nice
+ * error message.
+ */
+native register_library(const library[]);
 
-//Adds an item to a menu.  When displayed, the name will be shown.
-//If the player does not have the access it is disabled.
-//If you set callback, the callback will be called before the item is printed on the screen.
-//this lets you change it in real time depending on conditions.
-native menu_additem(menu, const name[], const command[]="", paccess=0, callback=-1);
+/* Logs an error in your native, and breaks into the debugger.
+ * Acts as if the calling plugin had the error.
+ */
+native log_error(error, const fmt[], ...);
 
-//returns how many pages are in a menu
-native menu_pages(menu);
+// More Dynamic Native System Stuff
+// Each of these natives affects one of the parameters sent to your native.
+// Parameters go from 1 to n, just like in modules, and it is important to 
+//  remember two things: The parameters are actually coming from another plugin
+//  (and just like modules, you must use these special natives).
+//  two: you CANNOT call your native from inside your native.  This is very bad.
 
-//returns how many items are in a menu
-native menu_items(menu);
+// This function should only be called if you registered with style=1
+native param_convert(num);
 
-//displays a menu to a player
-//page of the menu starts at 0.  there are 7 items to a page.
-//back/exit/next/more whatever are automatically added as needed.
-//you cannot use this to show a menu to everyone at once!
-native menu_display(id, menu, page);
+// Gets a string from the calling plugin 
+native get_string(param, dest[], maxlen);
 
-//Given a page on a menu and a keypress on that page, returns the item id selected.
-//if the item is less than 0, a special option was chosen (such as MENU_EXIT)
-native menu_find_id(menu, page, key);
+// Sets a string in the calling plugin
+native set_string(param, dest[], maxlen);
 
-//Gets/sets info about a menu option
-native menu_item_getinfo(menu, item, &access, command[], cmdlen, name[]="", namelen=0, &callback);
+// Gets a normal int or float parameter
+native get_param(param);
+native Float:get_param_f(param);
 
-native menu_item_setname(menu, item, name[]);
-native menu_item_setcmd(menu, item, cmd[]);
-native menu_item_setcall(menu, item, callback=-1);
+// Gets/Sets a float or int parameter by reference
+native get_param_byref(param);
+native Float:get_float_byref(param);
+native set_param_byref(param, value);
+native set_float_byref(param, Float:value);
+
+// Copies an array either from the calling plugin to you
+// Or copies an array from you to the calling plugin
+native get_array(param, dest[], size);
+native get_array_f(param, Float:dest[], size);
+native set_array(param, source[], size);
+native set_array_f(param, Float:source[], size);

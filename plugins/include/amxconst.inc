@@ -281,3 +281,5 @@ enum {
 #define AMX_ERR_DIVIDE		11
 #define AMX_ERR_NOTFOUND	19
 #define AMX_ERR_PARAMS		25
+
+#define	INVALID_HANDLE		-1

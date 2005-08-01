@@ -10,8 +10,14 @@
 #include "amx.h"
 #include "amxdbg.h"
 #include "amxxpc.h"
+#include "Binary.h"
+
+static PRINTF pc_printf = NULL;
 
 void ReadFileIntoPl(abl *pl, FILE *fp);
+bool CompressPl(abl *pl);
+void Pl2Bh(abl *pl, BinPlugin *bh);
+void WriteBh(BinaryWriter *bw, BinPlugin *bh);
 
 int main(int argc, char **argv)
 {
@@ -39,7 +45,7 @@ int main(int argc, char **argv)
 	}
 
 	COMPILER sc32 = (COMPILER)dlsym(lib, "Compile32");
-	PRINTF pc_printf = (PRINTF)dlsym(lib, "pc_printf");
+	pc_printf = (PRINTF)dlsym(lib, "pc_printf");
 
 	if (!sc32 || !pc_printf)
 	{
@@ -143,27 +149,9 @@ int main(int argc, char **argv)
 	// COMPRSSION
 	/////////////
 
-	int err;
+	CompressPl(&pl32);
 
-	pl32.cmpsize = compressBound(pl32.size);
-	pl32.cmp = new char[pl32.cmpsize];
-	err = compress((Bytef *)pl32.cmp, (uLongf *)&(pl32.cmpsize), (const Bytef*)pl32.data, pl32.size);
-	
-	if (err != Z_OK)
-	{
-		pc_printf("internal error - compression failed on first pass: %d\n", err);
-		exit(0);
-	}
-
-	pl64.cmpsize = compressBound(pl64.size);
-	pl64.cmp = new char[pl64.cmpsize];
-	err = compress((Bytef *)pl64.cmp, (uLongf *)&(pl64.cmpsize), (const Bytef*)pl64.data, pl64.size);
-	
-	if (err != Z_OK)
-	{
-		pc_printf("internal error - compression failed on second pass: %d\n", err);
-		exit(0);
-	}
+	CompressPl(&pl64);
 
 	char *newfile = new char[strlen(file)+3];
 	strcpy(newfile, file);
@@ -177,25 +165,41 @@ int main(int argc, char **argv)
 		exit(0);
 	}
 
-	//magic + archn
-	int hdrsize = sizeof(long) + sizeof(char);
-	int entry = sizeof(long) + sizeof(long) + sizeof(char);
-	int offset1 = hdrsize + (entry * 2);
-	int offset2 = offset1 + pl32.cmpsize;
-
-	int magic = MAGIC_HEADER;
-	fwrite((void *)&magic, sizeof(int), 1, fp);
-	char n = 2;
-	fwrite((void *)&n, sizeof(char), 1, fp);
+	BinPlugin bh32, bh64;
 	
-	fwrite((void *)&(pl32.cellsize), sizeof(char), 1, fp);
-	fwrite((void *)&(pl32.stp), sizeof(long), 1, fp);
-	fwrite((void *)&(offset1), sizeof(long), 1, fp);
-	fwrite((void *)&(pl64.cellsize), sizeof(char), 1, fp);
-	fwrite((void *)&(pl64.stp), sizeof(long), 1, fp);
-	fwrite((void *)&(offset2), sizeof(long), 1, fp);
-	fwrite(pl32.cmp, sizeof(char), pl32.cmpsize, fp);
-	fwrite(pl64.cmp, sizeof(char), pl64.cmpsize, fp);
+	Pl2Bh(&pl32, &bh32);
+	Pl2Bh(&pl64, &bh64);
+
+	try
+	{
+
+	BinaryWriter bw(fp);
+
+	bw.WriteUInt32(MAGIC_HEADER2);
+	bw.WriteUInt16(MAGIC_VERSION);
+	bw.WriteUInt8(2);
+
+	//base header
+	int baseaddr = sizeof(int32_t) + sizeof(int16_t) + sizeof(int8_t);
+	//entry is 4 ints and a byte
+	int entrysize = (sizeof(int32_t) * 4) + sizeof(int8_t);
+	//extend this by the two entries we have
+	baseaddr += entrysize * 2;
+
+	bh32.offs = baseaddr;
+	bh64.offs = bh32.offs + bh32.disksize;
+	
+	WriteBh(&bw, &bh32);
+	WriteBh(&bw, &bh64);
+	bw.WriteChars(pl32.cmp, pl32.cmpsize);
+	bw.WriteChars(pl64.cmp, pl64.cmpsize);
+	} catch (...) {
+		fclose(fp);
+		unlink(file);
+		pc_printf("Error, failed to write binary\n");
+		dlclose(lib);
+		exit(0);
+	}
 
 	fclose(fp);
 
@@ -206,6 +210,42 @@ int main(int argc, char **argv)
 	dlclose(lib);
 
 	exit(0);
+}
+
+void WriteBh(BinaryWriter *bw, BinPlugin *bh)
+{
+	bw->WriteUInt8(bh->cellsize);
+	bw->WriteUInt32(bh->disksize);
+	bw->WriteUInt32(bh->imagesize);
+	bw->WriteUInt32(bh->memsize);
+	bw->WriteUInt32(bh->offs);
+}
+
+void Pl2Bh(abl *pl, BinPlugin *bh)
+{
+	bh->cellsize = pl->cellsize;
+	bh->disksize = pl->cmpsize;
+	bh->imagesize = pl->size;
+	bh->memsize = pl->stp;
+}
+
+bool CompressPl(abl *pl)
+{
+	pl->cmpsize = compressBound(pl->size);
+	pl->cmp = new char[pl->cmpsize];
+
+	int err = compress((Bytef *)(pl->cmp), (uLongf *)&(pl->cmpsize), (const Bytef *)(pl->data), pl->size);
+
+	delete [] pl->data;
+	pl->data = NULL;
+
+	if (err != Z_OK)
+	{
+		pc_printf("internal error - compression failed on first pass: %d\n", err);
+		exit(0);
+	}
+
+	return true;
 }
 
 //As of Small 3.0, there's extra debug info in the file we need to get out.

@@ -69,6 +69,7 @@
 				Name="VCCLCompilerTool"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="4"
+				StructMemberAlignment="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
@@ -120,6 +121,9 @@
 			<File
 				RelativePath=".\amxxpc.cpp">
 			</File>
+			<File
+				RelativePath=".\Binary.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -133,6 +137,9 @@
 			</File>
 			<File
 				RelativePath=".\amxxpc.h">
+			</File>
+			<File
+				RelativePath=".\Binary.h">
 			</File>
 			<File
 				RelativePath=".\osdefs.h">

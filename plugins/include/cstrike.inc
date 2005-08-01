@@ -235,3 +235,5 @@ native cs_get_no_knives();
  */
 native cs_set_no_knives(noknives = 0);
 
+//Spawns a Counter-Strike player
+native cs_user_spawn(player);

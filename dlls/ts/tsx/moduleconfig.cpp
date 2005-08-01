@@ -43,8 +43,8 @@ CPlayer players[33];
 bool is_theonemode;
 bool rankBots;
 
-Forward g_death_info;
-Forward g_damage_info;
+int g_death_info;
+int g_damage_info;
 
 int gKnifeOffset;
 
@@ -146,7 +146,8 @@ void PlayerPreThink_Post( edict_t *pEntity ) {
 	RETURN_META(MRES_IGNORED);
 }
 
-void ServerDeactivate() {
+void ServerDeactivate() 
+{
 	int i;
 	for(i = 1;i<=gpGlobals->maxClients; ++i){
 		CPlayer *pPlayer = GET_PLAYER_POINTER_I(i);
@@ -163,6 +164,9 @@ void ServerDeactivate() {
 	// clear custom weapons info
 	for ( i=TSMAX_WEAPONS-TSMAX_CUSTOMWPNS;i<TSMAX_WEAPONS;i++)
 		weaponData[i].custom = false;
+
+	g_rank.clear();
+	g_rank.unloadCalc();
 
 	RETURN_META(MRES_IGNORED);
 }
@@ -307,9 +311,8 @@ void OnAmxxAttach() {
 	}
 }
 
-void OnAmxxDetach() {
-	g_rank.clear();
-	g_rank.unloadCalc();
-	g_damage_info.clear();
-	g_death_info.clear();
+void OnPluginsLoaded()
+{
+	g_damage_info = MF_RegisterForward("client_damage", ET_IGNORE, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	g_death_info = MF_RegisterForward("client_death", ET_IGNORE, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 }

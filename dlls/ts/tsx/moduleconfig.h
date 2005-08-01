@@ -29,10 +29,10 @@
 //   Do native functions init here (MF_AddNatives)
 #define FN_AMXX_ATTACH OnAmxxAttach
 // AMXX dettach
-#define FN_AMXX_DETACH OnAmxxDetach
+// #define FN_AMXX_DETACH OnAmxxDetach
 // All plugins loaded
 //   Do forward functions init here (MF_RegisterForward)
-//#define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
+#define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
 
 /**** METAMOD ****/
 // If your module doesn't use metamod, you may close the file now :)

@@ -9,7 +9,7 @@ uses
 
 type
   TfrmProxy = class(TForm)
-    cmdCancel: TFlatButton;
+    cmdClose: TFlatButton;
     lblProxy: TLabel;
     txtHost: TFlatEdit;
     cboProxy: TFlatComboBox;

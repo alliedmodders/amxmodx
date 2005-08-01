@@ -140,7 +140,7 @@ end;
 procedure UploadFile(eFile: String; eDestination: String; CopyConfig: Boolean = True);
 var TransferType: TIdFTPTransferType;
 begin
-  if Pos('config', eFile) > 0 then exit;
+  if (Pos('config', eFile) > 0) and (not CopyConfig) then exit;
   eDestination := StringReplace(eDestination, '\', '/', [rfReplaceAll]);
 
   // the same as in DownloadFile()
@@ -521,6 +521,7 @@ var eStr: TStringList;
     i: integer;
     ePath: String;
     CurNode: TTreeNode;
+    CopyConfig: Boolean;
 begin
   frmMain.cmdCancel.Show;
   frmMain.cmdNext.Hide;
@@ -548,6 +549,7 @@ begin
     FileList[i] := Copy(FileList[i], Length(ExtractFilePath(ParamStr(0))) + 6, Length(FileList[i]));
 
   // liblist.gam
+  CopyConfig := True;
   AddStatus('Editing liblist.gam...', clBlack);
   eStr := TStringList.Create;
   eStr.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'temp\liblist.gam');
@@ -567,7 +569,17 @@ begin
       eStr.Add('gamedll_linux "addons/metamod/dlls/metamod_amd64.so"');
     FileSetAttr(ExtractFilePath(ParamStr(0)) + 'temp\liblist.gam', 0);
     eStr.SaveToFile(ExtractFilePath(ParamStr(0)) + 'temp\liblist.gam');
+  end
+  else begin
+    case MessageBox(frmMain.Handle, 'An AMX Mod X installation was already detected. If you choose to reinstall, your configuration files will be erased. Click Yes to continue, No to Upgrade, or Cancel to abort the install.', PChar(frmMain.Caption), MB_ICONQUESTION + MB_YESNOCANCEL) of
+      mrNo: CopyConfig := False;
+      mrCancel: begin
+        Application.Terminate;
+        exit;
+      end;
+    end;
   end;
+  
   eStr.Free;
   AddDone;
 
@@ -606,7 +618,7 @@ begin
       try
         if LowerCase(FileList[i]) = 'liblist.gam' then
           frmMain.IdFTP.Site('CHMOD 744 ' + FileList[i]);
-        UploadFile(ExtractFilePath(ParamStr(0)) + 'temp\' + FileList[i], ePath + FileList[i], True);
+        UploadFile(ExtractFilePath(ParamStr(0)) + 'temp\' + FileList[i], ePath + FileList[i], CopyConfig);
         if LowerCase(FileList[i]) = 'liblist.gam' then
           frmMain.IdFTP.Size('CHMOD 444 ' + FileList[i]);
       except

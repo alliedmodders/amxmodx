@@ -118,6 +118,10 @@ type
       const AWorkCount: Integer);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure tmrSpeedTimer(Sender: TObject);
+    procedure trvDirectoriesExpanding(Sender: TObject; Node: TTreeNode;
+      var AllowExpansion: Boolean);
+    procedure trvDirectoriesCollapsing(Sender: TObject; Node: TTreeNode;
+      var AllowCollapse: Boolean);
   private
     OldProgress: Integer;
     CurrProgress: Integer;
@@ -717,6 +721,20 @@ procedure TfrmMain.tmrSpeedTimer(Sender: TObject);
 begin
   Caption := CalcSpeed(OldProgress, CurrProgress);
   OldProgress := CurrProgress;
+end;
+
+procedure TfrmMain.trvDirectoriesExpanding(Sender: TObject;
+  Node: TTreeNode; var AllowExpansion: Boolean);
+begin
+  Node.ImageIndex := 1;
+  Node.SelectedIndex := 1;
+end;
+
+procedure TfrmMain.trvDirectoriesCollapsing(Sender: TObject;
+  Node: TTreeNode; var AllowCollapse: Boolean);
+begin
+  Node.ImageIndex := 0;
+  Node.SelectedIndex := 0;
 end;
 
 end.

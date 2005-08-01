@@ -229,7 +229,7 @@ native set_usercmd(type,{Float,Sql,Result,_}:...);
 
 /* Converts a string offset into a real string. Some of the forwards in fakemeta
    uses string offsets. (FM_CreateNamedEntity) */
-native get_string(_string, _returnString[], _len);
+native eng_get_string(_string, _returnString[], _len);
 
 /* FORWARDS 
  **********/

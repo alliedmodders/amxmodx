@@ -202,7 +202,10 @@ public plugin_cfg() {
 }
 
 public client_putinserver(id)
-  g_multiKills[id] = g_streakKills[ id ] = { 0 , 0 }
+{
+  g_multiKills[id] = { 0 , 0 }
+  g_streakKills[ id ] = { 0 , 0 }
+}
 
 public client_death(killer,victim,wpnindex,hitplace,TK) {
 

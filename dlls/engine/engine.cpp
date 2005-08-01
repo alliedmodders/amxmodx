@@ -1070,7 +1070,7 @@ AMX_NATIVE_INFO engine_Natives[] = {
 	{"register_think",		register_think},
 	{"register_touch",		register_touch},
 
-	{"get_string",			get_string},
+	{"eng_get_string",		get_string},
 	{"in_view_cone",		in_view_cone},
 	{"is_visible",			is_visible},
 	{"trace_forward",		trace_forward},

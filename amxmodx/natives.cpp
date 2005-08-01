@@ -334,7 +334,7 @@ static cell AMX_NATIVE_CALL register_native(AMX *amx, cell *params)
 	pNative->pfn = new char[size + 10];
 	VirtualProtect(pNative->pfn, size+10, PAGE_EXECUTE_READWRITE, &temp);
 #else
-	pNative->pfn = (char *)memalign(sysconf(_SC_PAGESIZE), amx->code_size);
+	pNative->pfn = (char *)memalign(sysconf(_SC_PAGESIZE), size+10);
 	mprotect((void *)pNative->pfn, size+10, PROT_READ|PROT_WRITE|PROT_EXEC);
 #endif
 

@@ -19,11 +19,7 @@ global amxx_DynaInit, _amxx_DynaInit
 ;void amxx_DynaInit(void *ptr);
 amxx_DynaInit:
 _amxx_DynaInit:
-	mov		rax, rdi			;get pointer, first param is in rdi
-	lea		rdi, [GLOBAL_GATE wrt rip]
-	mov		[rdi], rax	;store
-	
-	mov		rax, 1
+	mov	[GLOBAL_GATE wrt rip], rdi
 	ret
 	
 ;;Assembles the gateway function
@@ -34,8 +30,8 @@ _amxx_DynaMake:
 	;we're not damaging the stack I think so we should be safe with no prologue
 	
 	;save these two we're about to destroy them
-	push	rsi		;push id
-	push	rdi		;push buffer
+	push		rsi		;push id
+	push		rdi		;push buffer
 	
 	mov		rsi, _amxx_DynaFuncStart
 	mov		rcx, _amxx_DynaFuncEnd - _amxx_DynaFuncStart
@@ -45,10 +41,14 @@ _amxx_DynaMake:
 	pop		rdi		;get buffer as destination
 	pop		rax		;get id
 	;align us to mov rsi, 1234... - on x86-64 this is 2 bytes after the differential
-	add		rdi, (_amxx_DynaMoveOffset-_amxx_DynaFuncStart) + 2
+	add		rdi, (_amxx_DynaFuncStart.move-_amxx_DynaFuncStart) + 2
 	mov		[rdi], qword rax
+	;align rdi to the call
+	add		rdi, (_amxx_DynaFuncStart.call-_amxx_DynaFuncStart.move) 
+	mov		rax, qword [GLOBAL_GATE wrt rip]
+	;copy the real address
+	mov		[rdi], rax
 	
-	mov		rax, 1
 	ret
 
 ;;The gateway function we will re-assemble
@@ -59,16 +59,18 @@ global amxx_DynaFunc, _amxx_DynaFunc
 amxx_DynaFunc:
 _amxx_DynaFunc:
 _amxx_DynaFuncStart:
-	push	rbp
+	push		rbp
 	mov		rbp, rsp
 	
 	;we're given an amx and params... we're also hardcoded for this though:
 	mov		rdx, rsi	;move 2nd param to 3rd 
 	mov		rsi, rdi	;move 1st param to 2nd
 	;this old trick, we'll move in the real pointer in a bit.
-_amxx_DynaMoveOffset:
-	mov		rsi, qword 1234567812345678h
-	call		[GLOBAL_GATE wrt rip]	;pass through teh global gateway.
+.move:
+	mov		rdi, qword 1234567812345678h
+.call:
+	mov		rcx, qword 1234567812345678h
+	call		rcx
 	
 	pop		rbp
 	ret
@@ -82,6 +84,8 @@ _amxx_DynaCodesize:
 	; on x86 is this 17 bytes
 	mov		rax, _amxx_DynaFuncEnd - _amxx_DynaFuncStart
 	ret
+
+section .data
 	
 GLOBAL_GATE		DQ		0
 

@@ -57,7 +57,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 527
     Height = 314
-    ActivePage = jspInstallProgress
+    ActivePage = jspWelcome
     PropagateEnable = False
     Align = alClient
     OnChange = jplWizardChange
@@ -4923,8 +4923,8 @@ object frmMain: TfrmMain
       object lblInfo1: TLabel
         Left = 172
         Top = 82
-        Width = 327
-        Height = 15
+        Width = 326
+        Height = 13
         Caption = 
           'This wizard will guide you through the installation of AMX Mod X' +
           ' 1.5.'

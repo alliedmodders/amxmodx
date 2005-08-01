@@ -248,9 +248,6 @@
 				RelativePath=".\scstate.c">
 			</File>
 			<File
-				RelativePath=".\scstub.c">
-			</File>
-			<File
 				RelativePath=".\scvars.c">
 			</File>
 		</Filter>

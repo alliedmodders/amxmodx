@@ -663,8 +663,10 @@ native md5(const szString[], md5buffer[34]);
 /* Calculates the md5 keysum of a file */
 native md5_file(const file[], md5buffer[34]);
 
-/* Returns the internal flags set on the called bytecode structure - Do not use */
-native plugin_flags();
+/* Returns the internal flags set on the called plugin's state
+ * If hdr is 1, it will return the pcode flags rather than state flags.
+ */
+native plugin_flags(hdr=0);
 
 /* When using modules that aren't part of AMX Mod X base package, do
 * a require_module("modulename") for each of them within the plugin_modules()
@@ -678,6 +680,9 @@ native is_amd64_server();
 
 /* Returns 0 on success, like the POSIX specification */
 native mkdir(const dirname[]);
+
+/* Returns plugin id searched by file/name.  Returns INVALID_PLUGIN_ID on failure. */
+native find_plugin_byfile(const filename[], ignoreCase=1);
 
 /* This is called before plugin_init and allows you to register natives. */
 forward plugin_natives();
@@ -736,3 +741,44 @@ native get_array(param, dest[], size);
 native get_array_f(param, Float:dest[], size);
 native set_array(param, source[], size);
 native set_array_f(param, Float:source[], size);
+
+/** The new menu natives */
+//If you set ml to 1, everything will be preformatted
+// with the multi-lingual system.
+//NOTE: ml=1 currently is not enabled.
+//handler[] will be called when someone presses a key on your menu
+native menu_create(title[], handler[], ml=0);
+
+//Creates a menu item callback handler.  
+//The callback handler is passed the playerid, menuid, and itemid.
+//It can return either ITEM_IGNORE, ITEM_ENABLED, or ITEM_DISABLED.
+native menu_makecallback(function[]);
+
+//Adds an item to a menu.  When displayed, the name will be shown.
+//If the player does not have the access it is disabled.
+//If you set callback, the callback will be called before the item is printed on the screen.
+//this lets you change it in real time depending on conditions.
+native menu_additem(menu, const name[], const command[]="", paccess=0, callback=-1);
+
+//returns how many pages are in a menu
+native menu_pages(menu);
+
+//returns how many items are in a menu
+native menu_items(menu);
+
+//displays a menu to a player
+//page of the menu starts at 0.  there are 7 items to a page.
+//back/exit/next/more whatever are automatically added as needed.
+//you cannot use this to show a menu to everyone at once!
+native menu_display(id, menu, page);
+
+//Given a page on a menu and a keypress on that page, returns the item id selected.
+//if the item is less than 0, a special option was chosen (such as MENU_EXIT)
+native menu_find_id(menu, page, key);
+
+//Gets/sets info about a menu option
+native menu_item_getinfo(menu, item, &access, command[], cmdlen, name[]="", namelen=0, &callback);
+
+native menu_item_setname(menu, item, name[]);
+native menu_item_setcmd(menu, item, cmd[]);
+native menu_item_setcall(menu, item, callback=-1);

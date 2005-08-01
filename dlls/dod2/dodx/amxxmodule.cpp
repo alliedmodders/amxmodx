@@ -2502,6 +2502,7 @@ PFN_GET_PLAYER_EDICT		g_fn_GetPlayerEdict;
 PFN_FORMAT					g_fn_Format;
 PFN_REGISTERFUNCTION		g_fn_RegisterFunction;
 PFN_REQ_FNPTR				g_fn_RequestFunction;
+PFN_AMX_PUSH				g_fn_AmxPush;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2610,6 +2611,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("GetPlayerHealth", g_fn_GetPlayerHealth, PFN_GET_PLAYER_HEALTH);
 	REQFUNC("GetPlayerFlags", g_fn_GetPlayerFlags, PFN_GETPLAYERFLAGS);
 	REQFUNC("GetPlayerEdict", g_fn_GetPlayerEdict, PFN_GET_PLAYER_EDICT);
+	REQFUNC("amx_Push", g_fn_AmxPush, PFN_AMX_PUSH);
 
 	// Memory
 	REQFUNC_OPT("Allocator", g_fn_Allocator, PFN_ALLOCATOR);
@@ -2717,7 +2719,7 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_IsPlayerHLTV(0);
 	MF_GetPlayerArmor(0);
 	MF_GetPlayerHealth(0);
-	MF_AmxExec(0, 0, 0, 0);
+	MF_AmxExec(0, 0, 0);
 	MF_AmxExecv(0, 0, 0, 0, 0);
 	MF_AmxFindPublic(0, 0, 0);
 	MF_AmxAllot(0, 0, 0, 0);

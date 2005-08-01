@@ -170,7 +170,8 @@ static cell AMX_NATIVE_CALL get_user_weapon(AMX *amx, cell *params){
 	return 0;
 }
 
-static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params){ // forward 
+static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
+{ // forward 
 
 #ifdef FORWARD_OLD_SYSTEM
 
@@ -269,22 +270,14 @@ static cell AMX_NATIVE_CALL cwpn_dmg(AMX *amx, cell *params){ // wid,att,vic,dmg
 	if ( (pVic->pEdict->v.team == pAtt->pEdict->v.team ) && ( pVic != pAtt) )
 		TA = 1;
 
-#ifdef FORWARD_OLD_SYSTEM
-	g_damage_info.exec( pAtt->index, pVic->index, dmg, weapon, aim, TA );
-#else
 	MF_ExecuteForward( iFDamage,pAtt->index, pVic->index, dmg, weapon, aim, TA );
-#endif
-	
+
 	if ( pVic->IsAlive() )
 		return 1;
 
 	pAtt->saveKill(pVic,weapon,( aim == 1 ) ? 1:0 ,TA);
 
-#ifdef FORWARD_OLD_SYSTEM
-	g_death_info.exec( pAtt->index, pVic->index, weapon, aim, TA );
-#else
 	MF_ExecuteForward( iFDeath,pAtt->index, pVic->index, weapon, aim, TA );
-#endif
 
 	return 1;
 }

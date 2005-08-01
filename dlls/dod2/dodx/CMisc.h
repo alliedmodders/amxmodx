@@ -160,31 +160,5 @@ public:
 	void Init();
 };
 
-#ifdef FORWARD_OLD_SYSTEM
-
-// *****************************************************
-// class Forward
-// *****************************************************
-
-class Forward
-{
-	struct AmxCall {
-		AMX *amx;
-		int iFunctionIdx;
-		AmxCall* next;
-		AmxCall( AMX *a , int i, AmxCall* n ): amx(a), iFunctionIdx(i), next(n) {}
-	} *head;
-public:
-	Forward() { head = 0; }
-	~Forward() { clear(); }
-	void clear();
-	void put( AMX *a , int i );
-	void exec(int p1,int p2,int p3,int p4,int p5,int p6);
-	void exec(int p1,int p2,int p3,int p4,int p5);
-	void exec(int p1,int p2,int p3);
-	void exec(int p1,int p2);
-};
-#endif
-
 #endif // CMISC_H
 

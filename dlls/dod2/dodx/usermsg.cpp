@@ -168,22 +168,12 @@ void Client_Health_End(void* mValue){
 			TA = 1;
 	}
 
-#ifdef FORWARD_OLD_SYSTEM
-	g_damage_info.exec( pAttacker->index, mPlayer->index, damage, weapon, aim, TA );
-#else
 	MF_ExecuteForward( iFDamage,pAttacker->index, mPlayer->index, damage, weapon, aim, TA );
-#endif
 
 	if ( !mPlayer->IsAlive() ){
 		pAttacker->saveKill(mPlayer,weapon,( aim == 1 ) ? 1:0 ,TA);
 
-#ifdef FORWARD_OLD_SYSTEM
-		g_death_info.exec( pAttacker->index, mPlayer->index, weapon, aim, TA );
-#else
 		MF_ExecuteForward( iFDeath,pAttacker->index, mPlayer->index, weapon, aim, TA );
-#endif
-
-
 	}
 }
 

@@ -995,9 +995,36 @@ begin
 end;
 
 procedure TfrmMain.acIdenterExecute(Sender: TObject);
+function GetMatchingBrace(eString: String): Integer;
+var a, b,c : integer;
+begin
+  Result := 0;
+  if Length(eString) < 1 then exit;
+
+  b := 0;
+  c := 0;
+
+  for a := 1 to Length(eString) do begin
+    if eString[a] = '(' then begin
+      b := b +1;
+      c := 1;
+    end
+    else if eString[a] = ')' then begin
+      b := b -1;
+      c := 1;
+    end;
+
+    if (b = 0) and (c = 1) then begin
+      Result := a;
+      exit;
+    end;
+  end;
+end;
+
 var eStr: TStringList;
     i, k: integer;
     eIdent, eTempIdent: Integer;
+    eString: String;
 begin
   Screen.Cursor := crHourGlass;
   sciEditor.Enabled := False;
@@ -1007,32 +1034,48 @@ begin
   for i := 0 to sciEditor.Lines.Count -1 do begin
     eStr.Add(TrimLeft(sciEditor.Lines[i]));
     // Remove strings and comments virtually because they could include brackets
-    if CountChars(eStr[i], '"') <> 0 then begin
-      Caption := Format('AMXX-Edit v2 - Preparing (%s of %s lines)', [IntToStr(i+1), IntToStr(sciEditor.Lines.Count)]);
-      while CountChars(eStr[i], '"') > 1 do
-        eStr[i] := StringReplace(eStr[i], '"' + Between(eStr[i], '"', '"') + '"', '', [rfReplaceAll]);
-      if (Pos('/*', eStr[i]) = 1) or (Pos('*', eStr[i]) = 1) or (Pos('*/', eStr[i]) = 1) then
-        eStr[i] := '';
-      if Pos('//', eStr[i]) <> 0 then
-        eStr[i] := Copy(eStr[i], 1, Pos('//', eStr[i]) -2);
-    end;
+    Caption := Format('AMXX-Edit v2 - Preparing (%s of %s lines)', [IntToStr(i+1), IntToStr(sciEditor.Lines.Count)]);
+    while CountChars(eStr[i], '"') > 1 do
+      eStr[i] := StringReplace(eStr[i], '"' + Between(eStr[i], '"', '"') + '"', '', [rfReplaceAll]);
+    if (Pos('/*', eStr[i]) = 1) or (Pos('*', eStr[i]) = 1) or (Pos('*/', eStr[i]) = 1) then
+      eStr[i] := '';
+    if Pos('//', eStr[i]) <> 0 then
+      eStr[i] := Copy(eStr[i], 1, Pos('//', eStr[i]) -2);
   end;
 
   for i := 0 to eStr.Count -1 do begin
     if CountChars(eStr[i], '{') <> CountChars(eStr[i], '}') then
       eIdent := eIdent - CountChars(eStr[i], '}');
+
     sciEditor.Lines[i] := TrimLeft(sciEditor.Lines[i]);
+
     for k := 1 to eIdent + eTempIdent do
       sciEditor.Lines[i] := '	' + sciEditor.Lines[i];
     if eTempIdent <> 0 then
       eTempIdent := eTempIdent -1;
+
+    if (Pos('if', eStr[i]) = 1) and (Pos('{', eStr[i]) = 0) and (Length(eStr[i]) > 3) then begin
+      eString := eStr[i];
+      Delete(eString, 1, 2);
+      if eString[1] <> Trim(eString)[1] then begin
+        eString := Trim(eString);
+        if GetMatchingBrace(eString) = Length(eString) then
+          eTempIdent := eTempIdent +1;
+      end;
+    end
+    else if (Pos('else', eStr[i]) = 1) and (Pos('{', eStr[i]) = 0) and (Length(eStr[i]) > 3) then begin
+      eString := eStr[i];
+      Delete(eString, 1, 2);
+      if eString[1] <> Trim(eString)[1] then begin
+        eString := Trim(eString);
+        if GetMatchingBrace(eString) = Length(eString) then
+          eTempIdent := eTempIdent +1;
+      end;
+    end;
+
     if CountChars(eStr[i], '{') <> CountChars(eStr[i], '}') then
       eIdent := eIdent + CountChars(eStr[i], '{');
-
-    if (Pos('if', eStr[i]) = 1) and (Pos('{', eStr[i]) = 0) then
-      eTempIdent := eTempIdent +1
-    else if (Pos('else', eStr[i]) = 1) and (Pos('{', eStr[i]) = 0) then
-      eTempIdent := eTempIdent +1;
+      
     Caption := Format('AMXX-Edit v2 - Setting indents (%s of %s lines)', [IntToStr(i+1), IntToStr(sciEditor.Lines.Count)]);
   end;
   Sleep(350);

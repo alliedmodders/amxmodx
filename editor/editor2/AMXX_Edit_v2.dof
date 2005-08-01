@@ -115,7 +115,7 @@ AutoIncBuild=1
 MajorVer=2
 MinorVer=1
 Release=0
-Build=2
+Build=6
 Debug=0
 PreRelease=0
 Special=0
@@ -126,7 +126,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=AMX Mod X
 FileDescription=Final
-FileVersion=2.1.0.2
+FileVersion=2.1.0.6
 InternalName=
 LegalCopyright=
 LegalTrademarks=

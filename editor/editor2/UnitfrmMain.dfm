@@ -1569,7 +1569,7 @@ object frmMain: TfrmMain
           CommentStreamEnd = '*/'
           NumStyleBits = 5
         end>
-      LanguageManager.SelectedLanguage = 'SMALL'
+      LanguageManager.SelectedLanguage = 'null'
       FoldDrawFlags = [sciBelowIfNotExpanded]
       KeyCommands = <
         item

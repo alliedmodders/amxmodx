@@ -372,31 +372,6 @@ static cell AMX_NATIVE_CALL TFC_UserKill(AMX *amx, cell *params){ // player,wid
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params){ // forward 
-	int iFunctionIndex;
-	int err;
-	switch( params[1] ){
-	case 0:
-		if( (err=MF_AmxFindPublic(amx, "client_damage", &iFunctionIndex)) == AMX_ERR_NONE )
-			g_damage_info.put( amx , iFunctionIndex );
-		else
-			MF_LogError(amx, err, "Error finding function \"client_damage\"");
-			return 0;
-		break;
-	case 1:
-		if( (err=MF_AmxFindPublic(amx, "client_death", &iFunctionIndex)) == AMX_ERR_NONE )
-			g_death_info.put( amx , iFunctionIndex );
-		else
-			MF_LogError(amx, err, "Error finding function \"client_death\"");
-			return 0;
-		break;
-	default:
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid forward id %d", params[1]);
-		return 0;
-	}
-	return 1;
-}
-
 static cell AMX_NATIVE_CALL get_maxweapons(AMX *amx, cell *params){
 	return TFCMAX_WEAPONS;
 }
@@ -410,6 +385,11 @@ static cell AMX_NATIVE_CALL is_custom(AMX *amx, cell *params){
 	if (  weapon < TFCMAX_WEAPONS-TFCMAX_CUSTOMWPNS ){
 		return 0;
 	}
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
+{
 	return 1;
 }
 

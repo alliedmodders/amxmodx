@@ -81,8 +81,8 @@ extern CPlayer* mPlayer;
 extern int mPlayerIndex;
 extern int mState;
 
-extern Forward g_death_info;
-extern Forward g_damage_info;
+extern int g_death_info;
+extern int g_damage_info;
 
 //extern int gmsgCurWeapon;
 //extern int gmsgDamage;

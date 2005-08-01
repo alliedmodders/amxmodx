@@ -225,11 +225,11 @@ void Client_Damage_End(void* mValue){
 		TA = 0;
 		if ( (mPlayer->teamId == pAttacker->teamId) && (mPlayer != pAttacker) )
 			TA = 1;
-		g_damage_info.exec( pAttacker->index, mPlayer->index, damage, weapon, aim, TA );
+		MF_ExecuteForward(g_damage_info, pAttacker->index, mPlayer->index, damage, weapon, aim, TA);
 	
 		if( !mPlayer->IsAlive() ){
 			pAttacker->saveKill(mPlayer,weapon,( aim == 1 ) ? 1:0 ,TA);
-			g_death_info.exec( pAttacker->index, mPlayer->index, weapon, aim, TA );
+			MF_ExecuteForward(g_death_info, pAttacker->index, mPlayer->index, damage, weapon, aim, TA);
 		}
 	}
 

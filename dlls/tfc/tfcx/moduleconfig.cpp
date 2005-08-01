@@ -55,8 +55,8 @@ int gmsgAmmoPickup;
 int mState;
 int mPlayerIndex;
 
-Forward g_death_info;
-Forward g_damage_info;
+int g_death_info;
+int g_damage_info;
 
 RankSystem g_rank;
 Grenades g_grenades;
@@ -349,10 +349,8 @@ void OnAmxxAttach() {
 	
 }
 
-void OnAmxxDetach() {
-	g_grenades.clear();
-	g_rank.clear();
-	g_rank.unloadCalc();
-	g_damage_info.clear();
-	g_death_info.clear();
+void OnPluginsLoaded()
+{
+	g_damage_info = MF_RegisterForward("client_damage", ET_IGNORE, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	g_damage_info = MF_RegisterForward("client_death", ET_IGNORE, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 }

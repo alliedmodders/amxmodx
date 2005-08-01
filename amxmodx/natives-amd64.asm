@@ -1,7 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; (C)2005 by David "BAILOPAN" Anderson			 ;
-; register_native functions for amd64			 ;;;;;;
-; Based on the concept by Julien "dJeyL" Laurent	  ;
+; (C)2005 by David "BAILOPAN" Anderson		 ;
+; register_native functions for amd64		 ;;;;;;
+; Based on the concept by Julien "dJeyL" Laurent      ;
 ; Thanks to T(+)rget for pushing me to implement this ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -81,7 +81,7 @@ global _amxx_DynaCodesize, amxx_DynaCodesize
 ;int amxx_DynaCodesize()
 amxx_DynaCodesize:
 _amxx_DynaCodesize:
-	; on x86 is this 17 bytes
+	; on x86-64 this is 34 bytes
 	mov		rax, _amxx_DynaFuncEnd - _amxx_DynaFuncStart
 	ret
 

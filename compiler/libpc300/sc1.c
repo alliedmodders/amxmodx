@@ -1919,8 +1919,8 @@ static int declloc(int fstatic)
      * of a global variable or to that of a local variable at a lower
      * level might indicate a bug.
      */
-    if ((sym=findloc(name))!=NULL && sym->compound!=nestlevel || findglb(name)!=NULL)
-      error(219,name);                  /* variable shadows another symbol */
+    if ((sym=findloc(name))!=NULL && sym->compound!=nestlevel || findglb(name)!=NULL);
+      //error(219,name);                  /* variable shadows another symbol */
     while (matchtoken('[')){
       ident=iARRAY;
       if (numdim == sDIMEN_MAX) {
@@ -3643,8 +3643,8 @@ static void doarg(char *name,int ident,int offset,int tags[],int numtags,
   if (argsym!=NULL) {
     error(21,name);             /* symbol already defined */
   } else {
-    if ((argsym=findglb(name))!=NULL && argsym->ident!=iFUNCTN)
-      error(219,name);          /* variable shadows another symbol */
+    if ((argsym=findglb(name))!=NULL && argsym->ident!=iFUNCTN) ;
+      //error(219,name);          /* variable shadows another symbol */
     /* add details of type and address */
     assert(numtags>0);
     argsym=addvariable(name,offset,ident,sLOCAL,tags[0],

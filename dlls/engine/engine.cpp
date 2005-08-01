@@ -830,19 +830,19 @@ static cell AMX_NATIVE_CALL set_usercmd(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL is_visible(AMX *amx, cell *params)
 {
 	int src = params[1];
+	int dest = params[2];
 	CHECK_ENTITY(src);
+	CHECK_ENTITY(dest);
 
-	edict_t *pEntity = INDEXENT(src);
+	edict_t *pEntity = MF_GetPlayerEdict(src);
+	edict_t *pTarget = MF_GetPlayerEdict(dest);
 
-	TraceResult tr;
-	Vector vecLookerOrigin;
-	cell *addr = MF_GetAmxAddr(amx, params[2]);
+	Vector vLooker = ((pEntity->v.absmin + pEntity->v.absmax) * pEntity->v.fov) + pEntity->v.view_ofs;
+	Vector vTarget = (pTarget->v.absmin + pTarget->v.absmax) * pTarget->v.fov;
 
-	Vector vecOrigin(amx_ctof(addr[0]), amx_ctof(addr[1]), amx_ctof(addr[2]));
-    	
-	vecLookerOrigin = pEntity->v.origin + pEntity->v.view_ofs;
+    TraceResult tr;
 
-	TRACE_LINE(vecLookerOrigin, vecOrigin, ignore_monsters, pEntity, &tr);
+	TRACE_LINE(vLooker, vTarget, FALSE, pEntity, &tr);
 
 	if (tr.flFraction != 1.0)
 	{

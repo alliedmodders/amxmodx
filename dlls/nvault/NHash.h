@@ -141,14 +141,17 @@ public:
 			while (n)
 			{
 				t = n->next;
-				if (start == 0 && end == 0)
-					_Remove(b, n);
-				else if (start == 0 && n->stamp < end)
-					_Remove(b, n);
-				else if (end == 0 && n->stamp > start)
-					_Remove(b, n);
-				else if (n->stamp > start && n->stamp < end)
-					_Remove(b, n);
+				if (n->stamp != 0)
+				{
+					if (start == 0 && end == 0)
+						_Remove(b, n);
+					else if (start == 0 && n->stamp < end)
+						_Remove(b, n);
+					else if (end == 0 && n->stamp > start)
+						_Remove(b, n);
+					else if (n->stamp > start && n->stamp < end)
+						_Remove(b, n);
+				}
 				n = t;
 			}
 			if (!m_Size)

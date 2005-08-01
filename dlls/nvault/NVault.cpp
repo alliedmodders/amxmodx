@@ -280,3 +280,4 @@ IVault *VaultMngr::OpenVault(const char *file)
 	
 	return static_cast<IVault *>(pVault);
 }
+

@@ -26,7 +26,7 @@ static cell nvault_open(AMX *amx, cell *params)
 	char *name = MF_GetAmxString(amx, params[1], 0, &len);
 	char path[255], file[255];
 	MF_BuildPathnameR(path, sizeof(path)-1, "%s/vault", LOCALINFO("amxx_datadir"));
-	sprintf(file, "%s/%s.vault", path, file);
+	sprintf(file, "%s/%s.vault", path, name);
 	for (size_t i=0; i<g_Vaults.size(); i++)
 	{
 		if (strcmp(g_Vaults.at(i)->GetFilename(), file) == 0) 
@@ -35,6 +35,11 @@ static cell nvault_open(AMX *amx, cell *params)
 		}
 	}
 	NVault *v = new NVault(file);
+	if (!v->Open())
+	{
+		delete v;
+		return -1;
+	}
 	if (!g_OldVaults.empty())
 	{
 		id = g_OldVaults.front();
@@ -100,15 +105,15 @@ static cell nvault_lookup(AMX *amx, cell *params)
 	NVault *pVault = g_Vaults.at(id);
 	int len;
 	time_t stamp;
-	char *key = MF_GetAmxString(amx, params[1], 0, &len);
-	char *buffer = new char[params[3]+1];
-	if (!pVault->GetValue(key, stamp, buffer, params[3]))
+	char *key = MF_GetAmxString(amx, params[2], 0, &len);
+	char *buffer = new char[params[4]+1];
+	if (!pVault->GetValue(key, stamp, buffer, params[4]))
 	{
 		delete [] buffer;
 		return 0;
 	}
-	MF_SetAmxString(amx, params[2], buffer, params[3]);
-	cell *addr = MF_GetAmxAddr(amx, params[4]);
+	MF_SetAmxString(amx, params[3], buffer, params[4]);
+	cell *addr = MF_GetAmxAddr(amx, params[5]);
 	addr[0] = (cell)stamp;
 	delete [] buffer;
 	return 1;
@@ -167,6 +172,21 @@ static cell nvault_close(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL nvault_prune(AMX *amx, cell *params)
+{
+	unsigned int id = params[1];
+	if (id >= g_Vaults.size() || !g_Vaults.at(id))
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid vault id: %d\n", id);
+		return 0;
+	}
+	NVault *pVault = g_Vaults.at(id);
+	time_t start = (time_t )params[2];
+	time_t end = (time_t )params[3];
+
+	return pVault->Prune(start, end);
+}
+
 IVaultMngr *GetVaultMngr()
 {
 	return static_cast<IVaultMngr *>(&g_VaultMngr);
@@ -180,6 +200,18 @@ void OnAmxxAttach()
 	MF_RegisterFunction(GetVaultMngr, "GetVaultMngr");
 }
 
+void ServerDeactivate_Post()
+{
+	for (size_t i=0; i<g_Vaults.size(); i++)
+	{
+		if (g_Vaults[i])
+			delete g_Vaults[i];
+	}
+	g_Vaults.clear();
+	while (!g_OldVaults.empty())
+		g_OldVaults.pop();
+}
+
 AMX_NATIVE_INFO nVault_natives[] = {
 	{"nvault_open",				nvault_open},
 	{"nvault_get",				nvault_get},
@@ -187,5 +219,6 @@ AMX_NATIVE_INFO nVault_natives[] = {
 	{"nvault_set",				nvault_set},
 	{"nvault_pset",				nvault_pset},
 	{"nvault_close",			nvault_close},
+	{"nvault_prune",			nvault_prune},
 	{NULL,				NULL},
 };

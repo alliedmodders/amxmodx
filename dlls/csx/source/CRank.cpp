@@ -184,8 +184,10 @@ void RankSystem::updatePos(  RankStats* rr ,  Stats* s )
 			calc.physAddr2[i] = rr->bodyHits[i];
 		cell result = 0;
 		int err;
-		if ((err = MF_AmxExec(&calc.amx,&result, calc.func ,2,calc.amxAddr1,calc.amxAddr2 )) != AMX_ERR_NONE)
-			LOG_CONSOLE( PLID, "Run time error %d on line %ld (plugin \"%s\")",	err,calc.amx.curline,LOCALINFO("csstats_score"));
+		MF_AmxPush(&calc.amx, calc.amxAddr2);
+		MF_AmxPush(&calc.amx, calc.amxAddr1);
+		if ((err = MF_AmxExec(&calc.amx,&result, calc.func)) != AMX_ERR_NONE)
+			MF_LogError(&calc.amx, err, "Error encountered in stats routine");
 		rr->score = result;
 	}
 	else rr->score = rr->kills - rr->deaths;

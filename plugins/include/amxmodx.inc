@@ -212,9 +212,6 @@ native get_user_deaths(index);
 /* Sets player deaths. */
 native set_user_deaths(index, newdeaths);
 
-/* Sets player frags. */
-native set_user_frags(index, frags);
-
 /* Returns player health. */
 native get_user_health(index);
 

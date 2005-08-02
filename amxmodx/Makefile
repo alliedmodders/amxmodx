@@ -58,15 +58,19 @@ all:
 	$(MAKE) amxmodx
 
 amd64:
+	rm zlib/libz.a
 	$(MAKE) all AMD64=true
 
 amd64_mmgr:
+	rm zlib/libz.a
 	$(MAKE) all AMD64=true MMGR=true
 
 amd64_debug_mmgr:
+	rm zlib/libz.a
 	$(MAKE) all AMD64=true DEBUG=true MMGR=true
 
 amd64_debug:
+	rm zlib/libz.a
 	$(MAKE) all AMD64=true DEBUG=true
 
 mmgr:

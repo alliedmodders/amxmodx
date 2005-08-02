@@ -1,9 +1,14 @@
 #include "NVault.h"
 #include "Binary.h"
+#include "CString.h"
 #include "amxxmodule.h"
 
-template <class K>
-int HashFunction<String>(const K & k)
+#ifdef __linux__
+#define _snprintf snprintf
+#endif
+
+template <>
+int HashFunction<String>(const String & k)
 {
 	unsigned long hash = 5381;
 	const char *str = k.c_str();
@@ -12,8 +17,8 @@ int HashFunction<String>(const K & k)
 	return hash;
 }
 
-template <class K>
-bool Compare<String>(const K & k1, const K & k2)
+template <>
+bool Compare<String>(const String & k1, const String & k2)
 {
 	return (strcmp(k1.c_str(),k2.c_str())==0);
 }

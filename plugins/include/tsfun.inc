@@ -11,7 +11,7 @@
 
 #include <tsconst>
 
-#pragma tsfun
+#pragma library tsfun
 
 /* Function is called just before a kung foo attack is done,
 * damage and time length may be altered with natives.

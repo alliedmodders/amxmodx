@@ -10,7 +10,7 @@
 #endif
 #define _nvault_included
 
-#pragma nvault
+#pragma library nvault
 
 //Opens a vault by name (such as "myvault")
 //Returns a vault id, INVALID_HANDLE otherwise (-1)

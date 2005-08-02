@@ -32,6 +32,8 @@
 #ifndef _INCLUDE_CSTRING_H
 #define _INCLUDE_CSTRING_H
 
+#include <string.h>
+
 //by David "BAILOPAN" Anderson
 class String
 {
@@ -40,7 +42,7 @@ public:
 	{
 		v = NULL;
 		a_size = 0;
-		assign("");
+		//assign("");
 	}
 
 	~String()
@@ -63,19 +65,19 @@ public:
 		assign(src.c_str()); 
 	}
 
-	const char *c_str() { return v; }
+	const char *c_str() { return v?v:""; }
 
-	const char *c_str() const { return v; }
+	const char *c_str() const { return v?v:""; }
 
 	void append(const char *t)
 	{
-		Grow(strlen(v) + strlen(t) + 1);
+		Grow(size() + strlen(t) + 1);
 		strcat(v, t);
 	}
 
 	void append(const char c)
 	{
-		size_t len = strlen(v);
+		size_t len = size();
 		Grow(len + 2);
 		v[len] = c;
 		v[len + 1] = '\0';
@@ -104,17 +106,24 @@ public:
 
 	void clear()
 	{
-		v[0] = '\0';
+		if (v)
+			v[0] = '\0';
 	}
 
 	int compare (const char *d)
 	{
-		return strcmp(v, d);
+		if (!v)
+			return strcmp("", d);
+		else
+			return strcmp(v, d);
 	}
 
 	//Added this for amxx inclusion
 	bool empty()
 	{
+		if (!v)
+			return false;
+
 		if (v[0] == '\0')
 			return true;
 
@@ -123,23 +132,21 @@ public:
 
 	size_t size()
 	{
-		return strlen(v);
-	}
-
-	const char * _fread(FILE *fp)
-	{
-		Grow(512, false);
-		char *ret = fgets(v, 511, fp);
-		return ret;
+		if (v)
+			return strlen(v);
+		else
+			return 0;
 	}
 
 	int find(const char c, int index = 0)
 	{
-		size_t len = strlen(v);
+		size_t len = size();
+		if (len < 1)
+			return npos;
 		if (index >= (int)len || index < 0)
 			return npos;
 		unsigned int i = 0;
-		for (i=index; i<(unsigned int)len; i++)
+		for (i=index; i<(int)len; i++)
 		{
 			if (v[i] == c)
 			{
@@ -164,6 +171,9 @@ public:
 	
 	void trim()
 	{
+		if (!v)
+			return;
+
 		unsigned int i = 0;
 		unsigned int j = 0;
 		size_t len = strlen(v);
@@ -224,6 +234,8 @@ public:
 
 	void erase(unsigned int start, int num = npos)
 	{
+		if (!v)
+			return;
 		unsigned int i = 0;
 		size_t len = size();
 		//check for bounds
@@ -257,6 +269,9 @@ public:
 
 	String substr(unsigned int index, int num = npos)
 	{
+		if (!v)
+			return String("");
+
 		String ns;
 
 		size_t len = size();
@@ -271,7 +286,7 @@ public:
 			num = len - index;
 		}
 
-		unsigned int i = 0;
+		unsigned int i = 0, j=0;
 		unsigned int nslen = num + 2;
 
 		ns.Grow(nslen);
@@ -284,6 +299,8 @@ public:
 
 	void toLower()
 	{
+		if (!v)
+			return;
 		unsigned int i = 0;
 		size_t len = strlen(v);
 		for (i=0; i<len; i++)
@@ -308,7 +325,7 @@ public:
 
 	char operator [] (unsigned int index)
 	{
-		if (index > size())
+		if (index > size() || !v)
 		{
 			return -1;
 		} else {
@@ -318,7 +335,7 @@ public:
 
 	int at(int a)
 	{
-		if (a < 0 || a >= (int)size())
+		if (a < 0 || a >= (int)size() || !v)
 			return -1;
 
 		return v[a];
@@ -326,7 +343,7 @@ public:
 
 	bool at(int at, char c)
 	{
-		if (at < 0 || at >= (int)size())
+		if (at < 0 || at >= (int)size() || !v)
 			return false;
 
 		v[at] = c;
@@ -340,9 +357,10 @@ private:
 		if (d <= a_size)
 			return;
 		char *n = new char[d + 1];
-		if (copy)
+		if (copy && v)
 			strcpy(n, v);
-		delete [] v;
+		if (v)
+			delete [] v;
 		v = n;
 		a_size = d + 1;
 	}

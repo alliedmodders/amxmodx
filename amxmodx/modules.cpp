@@ -1672,7 +1672,7 @@ void Module_CacheFunctions()
 
 	// other amx stuff
 	REGISTER_FUNC("amx_Exec", amx_Exec)
-	REGISTER_FUNC("amx_Push", amx_Push);
+	REGISTER_FUNC("amx_Push", amx_Push)
 	REGISTER_FUNC("amx_Execv", amx_Execv)		//I HOPE NO ONE USES THIS!!!!
 	REGISTER_FUNC("amx_Allot", amx_Allot)
 	REGISTER_FUNC("amx_FindPublic", amx_FindPublic)

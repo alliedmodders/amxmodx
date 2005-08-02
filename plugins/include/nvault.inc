@@ -10,6 +10,8 @@
 #endif
 #define _nvault_included
 
+#pragma nvault
+
 //Opens a vault by name (such as "myvault")
 //Returns a vault id, INVALID_HANDLE otherwise (-1)
 native nvault_open(const name[]);

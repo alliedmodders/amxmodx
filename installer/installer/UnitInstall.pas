@@ -465,9 +465,9 @@ begin
     if OS = osWindows then
       eStr.Add('win32   addons\amxmodx\dlls\amxmodx_mm.dll')
     else if OS = osLinux32 then
-      eStr.Add('linux   addons/amxmodx/dlls/metamod_i386.so')
+      eStr.Add('linux   addons/amxmodx/dlls/amxmodx_mm_i386.so')
     else
-      eStr.Add('linux   addons/amxmodx/dlls/metamod_amd64.so'); 
+      eStr.Add('linux   addons/amxmodx/dlls/amxmodx_mm_amd64.so'); 
     eStr.SaveToFile(ePath + 'addons\metamod\plugins.ini');
     eStr.Free;
   end;

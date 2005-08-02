@@ -1,102 +1,66 @@
-MODNAME = csx_amxx
-SRCFILES = amxxmodule.cpp CMisc.cpp CRank.cpp meta_api.cpp rank.cpp usermsg.cpp
+#(C)2004-2005 AMX Mod X Development Team
+# Makefile written by David "BAILOPAN" Anderson
 
-EXTRA_LIBS_LINUX =
-EXTRA_LIBS_WIN32 =
-EXTRA_LIBDIRS_LINUX = -Lextra/lib_linux
-EXTRA_LIBDIRS_WIN32 = -Lextra/lib_win32
+HLSDK = ../../../hlsdk/SourceCode
+MM_ROOT = ../../../metamod/metamod
 
-EXTRA_INCLUDEDIRS = -Iextra/include -I../amx
+### EDIT BELOW FOR OTHER PROJECTS ###
 
-EXTRA_FLAGS = -Dstrcmpi=strcasecmp
+OPT_FLAGS = -O3 -fno-rtti -funroll-loops -s -pipe
+DEBUG_FLAGS = -g -ggdb3
+CPP = gcc
+NAME = csx_amxx
 
-AMXDIR=../amx
-SDKSRC=../sdk
-METADIR=../metamod
+OBJECTS = amxxmodule.cpp CRank.cpp CMisc.cpp meta_api.cpp rank.cpp usermsg.cpp
 
-OBJDIR_LINUX=obj.linux
-OBJDIR_WIN32=obj.win32
-SRCDIR=.
+LINK = 
 
-ifdef windir
-	OS=WIN32
+INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
+	-I$(MM_ROOT) -Lzlib -I$(HLSDK)/common
+
+ifeq "$(DEBUG)" "true"
+	BIN_DIR = Debug
+	CFLAGS = $(DEBUG_FLAGS)
 else
-	OS=LINUX
+	BIN_DIR = Release
+	CFLAGS = $(OPT_FLAGS)
 endif
 
-CC_LINUX=gcc
-ifeq "$(OS)" "WIN32"
-	CC_WIN32=gcc
-	LD_WINDLL=dllwrap
-	DEFAULT=win32
-	CLEAN=clean_win32
+CFLAGS += -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H
+
+ifeq "$(AMD64)" "true"
+	BINARY = $(NAME)_amd64.so
+	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -m64 
+	LINK += -lstdc++
 else
-	CC_WIN32=/usr/local/cross-tools/i386-mingw32msvc/bin/gcc
-	LD_WINDLL=/usr/local/cross-tools/bin/i386-mingw32msvc-dllwrap
-	DEFAULT=linux win32
-	CLEAN=clean_both
+	BINARY = $(NAME)_i386.so
+	CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32
+	OPT_FLAGS += -march=i686
 endif
 
+OBJ_LINUX := $(OBJECTS:%.cpp=$(BIN_DIR)/%.o)
 
-LIBFILE_LINUX = $(MODNAME)_i386.so
-LIBFILE_WIN32 = $(MODNAME).dll
-TARGET_LINUX = $(OBJDIR_LINUX)/$(LIBFILE_LINUX)
-TARGET_WIN32 = $(OBJDIR_WIN32)/$(LIBFILE_WIN32)
+$(BIN_DIR)/%.o: %.cpp
+	$(CPP) $(INCLUDE) $(CFLAGS) -o $@ -c $<
 
-FILES_ALL = *.cpp *.h [A-Z]* *.rc
-ifeq "$(OS)" "LINUX"
-	ASRCFILES := $(shell ls -t $(SRCFILES))
-else
-	ASRCFILES := $(shell dir /b)
-endif
-OBJ_LINUX := $(SRCFILES:%.cpp=$(OBJDIR_LINUX)/%.o)
-OBJ_WIN32 := $(SRCFILES:%.cpp=$(OBJDIR_WIN32)/%.o)
+all:
+	mkdir -p $(BIN_DIR)
+	$(MAKE) csx
 
-CCOPT = -march=i586 -O6 -ffast-math -funroll-loops \
-	-fomit-frame-pointer -fexpensive-optimizations -malign-loops=2 \
-	-malign-jumps=2 -malign-functions=2 -s -DNDEBUG
+amd64:
+	$(MAKE) all AMD64=true
 
-INCLUDEDIRS=-I../curl/include -I$(SRCDIR) -I$(AMXDIR) -I$(METADIR) -I$(SDKSRC)/engine -I$(SDKSRC)/common -I$(SDKSRC)/dlls -I$(SDKSRC) $(EXTRA_INCLUDEDIRS)
-CFLAGS=-Wall -Wno-unknown-pragmas
-ODEF = -DOPT_TYPE=\"optimized\"
-CFLAGS:=$(CCOPT) $(CFLAGS) $(ODEF) $(EXTRA_FLAGS)
+csx: $(OBJ_LINUX)
+	$(CPP) $(INCLUDE) $(CFLAGS) $(OBJ_LINUX) $(LINK) -shared -ldl -lm -o$(BIN_DIR)/$(BINARY)
 
-DO_CC_LINUX=$(CC_LINUX) $(CFLAGS) -fPIC $(INCLUDEDIRS) -o $@ -c $<
-DO_CC_WIN32=$(CC_WIN32) $(CFLAGS) $(INCLUDEDIRS) -o $@ -c $<
-LINK_LINUX=$(CC_LINUX) $(CFLAGS) -shared -ldl -lm $(OBJ_LINUX) $(EXTRA_LIBDIRS_LINUX) $(EXTRA_LIBS_LINUX) -o $@
-LINK_WIN32=$(LD_WINDLL) -mwindows --add-stdcall-alias $(OBJ_WIN32) $(EXTRA_LIBDIRS_WIN32) $(EXTRA_LIBS_WIN32) -o $@
+debug:	
+	$(MAKE) all DEBUG=true
 
-$(OBJDIR_LINUX)/%.o: $(SRCDIR)/%.cpp
-	$(DO_CC_LINUX)
+default: all
 
-$(OBJDIR_WIN32)/%.o: $(SRCDIR)/%.cpp
-	$(DO_CC_WIN32)
-
-default: $(DEFAULT)
-
-$(TARGET_LINUX): $(OBJDIR_LINUX) $(OBJ_LINUX)
-	$(LINK_LINUX)
-
-$(TARGET_WIN32): $(OBJDIR_WIN32) $(OBJ_WIN32)
-	$(LINK_WIN32)
-
-$(OBJDIR_LINUX):
-	mkdir $@
-
-$(OBJDIR_WIN32):
-	mkdir $@
-
-win32: $(TARGET_WIN32)
-
-linux: $(TARGET_LINUX)
-
-clean: $(CLEAN)
-
-clean_both:
-	-rm -f $(OBJDIR_LINUX)/*
-	-rm -f $(OBJDIR_WIN32)/*
-
-clean_win32:
-	del /q $(OBJDIR_WIN32)
-
+clean:
+	rm -rf Release/*.o
+	rm -rf Release/$(BINARY)
+	rm -rf Debug/*.o
+	rm -rf Debug/$(BINARY)
 

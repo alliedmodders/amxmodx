@@ -197,7 +197,7 @@ void OnAmxxAttach()
 	//create the dir if it doesn't exist
 	MKDIR(MF_BuildPathname("%s/vault", LOCALINFO("amxx_datadir")));
 	MF_AddNatives(nVault_natives);
-	MF_RegisterFunction(GetVaultMngr, "GetVaultMngr");
+	MF_RegisterFunction((void *)GetVaultMngr, "GetVaultMngr");
 }
 
 void ServerDeactivate_Post()

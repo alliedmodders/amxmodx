@@ -419,7 +419,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_int(AMX *amx, cell *params)
 		return 0;
 	}
 
-	Msg.SetParam(argn, params[3]);
+	Msg.SetParam(argn, (int)params[3]);
 
 	return 1;
 }
@@ -449,7 +449,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_float(AMX *amx, cell *params)
 
 	REAL fVal = amx_ctof(params[3]);
 
-	Msg.SetParam(argn, fVal);
+	Msg.SetParam(argn, (float)fVal);
 
 	return 1;
 }

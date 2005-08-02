@@ -67,6 +67,7 @@ namespace AMXXRelease
 			AddPlugin("adminchat");
 			AddPlugin("admincmd");
 			AddPlugin("adminhelp");
+			AddPlugin("adminslots");
 			AddPlugin("adminvote");
 			AddPlugin("antiflood");
 			AddPlugin("imessage");

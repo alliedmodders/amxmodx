@@ -12,6 +12,7 @@
 #define _amxconst_included
 
 #define AMXX_VERSION		1.50
+#define AMXX_VERSION_NUM	150
 stock const AMXX_VERSION_STR[]="1.50"
 
 #define ADMIN_ALL		0	/* everyone */

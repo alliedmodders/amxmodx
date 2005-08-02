@@ -278,7 +278,10 @@ public:
 	String substr(unsigned int index, int num = npos)
 	{
 		if (!v)
-			return String("");
+		{
+			String b("");
+			return b;
+		}
 
 		String ns;
 

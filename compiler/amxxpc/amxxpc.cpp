@@ -50,7 +50,7 @@ int main(int argc, char **argv)
 	if (!sc32 || !pc_printf)
 	{
 #ifdef __linux__
-		printf("32bit compiler failed to link: %p|%p.\n",sc32, sc_printf);
+		printf("32bit compiler failed to link: %p.\n",sc32);
 #else
 		printf("32bit compiler failed to link: %d.\n", GetLastError());
 #endif

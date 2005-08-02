@@ -51,3 +51,4 @@ private:
 };
 
 #endif //_INCLUDE_BINARY_H
+

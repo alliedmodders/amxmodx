@@ -5,10 +5,10 @@
 
 OPT_FLAGS = -O3 -fno-rtti -funroll-loops -s -pipe
 DEBUG_FLAGS = -g -ggdb3
-CPP = gcc
+CPP = g++
 BINARY = amxxpc
 
-OBJECTS = amx.cpp amxxpc.cpp
+OBJECTS = amx.cpp amxxpc.cpp Binary.cpp
 
 LINK = -lz
 
@@ -22,7 +22,7 @@ else
 	CFLAGS = $(OPT_FLAGS)
 endif
 
-CFLAGS += -DLINUX -DNDEBUG -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H -DAMX_ANSIONLY
+CFLAGS += -DLINUX -DNDEBUG -Wno-deprecated -fexceptions -DHAVE_STDINT_H -DAMX_ANSIONLY
 
 OBJ_LINUX := $(OBJECTS:%.cpp=$(BIN_DIR)/%.o)
 

@@ -16,7 +16,7 @@
 #include <string.h>
 
 #ifdef __linux__
-# define dlmount(x)		dlopen(x, RTLD_NOW)
+# define dlmount(x)		dlopen(x, RTLD_NOW|RTLD_GLOBAL)
   typedef void*			HINSTANCE;
 #else
 # define dlsym(x, s)	GetProcAddress(x, s)

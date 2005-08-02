@@ -42,6 +42,9 @@ all:
 pawn_make: $(OBJ_LINUX)
 	$(CPP) $(INCLUDE) $(CFLAGS) $(OBJ_LINUX) $(LINK) -shared -ldl -lm -o$(BIN_DIR)/$(BINARY)
 
+pawn64:
+	$(MAKE) pawn_make PAWN64=true
+
 debug:	
 	$(MAKE) all DEBUG=true
 

@@ -99,6 +99,7 @@ int main(int argc, char **argv)
 		fclose(fp);
 	}
 
+	dlclose(lib);
 	unlink(file);
 
 	HINSTANCE lib64 = 0;
@@ -107,7 +108,8 @@ int main(int argc, char **argv)
 #else
 	lib64 = dlmount("amxxpc64.dll");
 #endif
-	if (!lib64)
+	pc_printf = (PRINTF)dlsym(lib64, "pc_printf");
+	if (!lib64 || !pc_printf)
 	{
 		pc_printf("64bit compiler failed to instantiate.\n");
 		exit(0);
@@ -126,8 +128,6 @@ int main(int argc, char **argv)
 	}
 
 	sc64(argc, argv);
-
-	dlclose(lib64);
 
 	if (file == NULL)
 	{
@@ -207,7 +207,7 @@ int main(int argc, char **argv)
 
 	pc_printf("Done.\n");
 
-	dlclose(lib);
+	dlclose(lib64);
 
 	exit(0);
 }

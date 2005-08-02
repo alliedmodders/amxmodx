@@ -149,10 +149,10 @@ static cell AMX_NATIVE_CALL socket_recv(AMX *amx, cell *params)  /* 2 param */
     memset(tmpchar, 0, length);
     // Now we recieve
     tmp = recv(socket, tmpchar, length-1, 0);
-	if (tmp == SOCKET_ERROR)
+	if (tmp == -1)
 	{
 		delete [] tmpchar;
-		return SOCKET_ERROR;
+		return -1;
 	}
     // And put a copy of our recieved data into amx's string
     tmpchar[tmp]='\0';

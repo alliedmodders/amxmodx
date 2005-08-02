@@ -26,7 +26,7 @@ else
 	CFLAGS = $(OPT_FLAGS)
 endif
 
-CFLAGS += -DLINUX -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H
+CFLAGS += -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H
 
 ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_amd64.so

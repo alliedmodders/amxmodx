@@ -130,7 +130,7 @@ public:
 	bool empty()
 	{
 		if (!v)
-			return false;
+			return true;
 
 		if (v[0] == '\0')
 			return true;
@@ -369,6 +369,8 @@ private:
 			strcpy(n, v);
 		if (v)
 			delete [] v;
+		else
+			strcpy(n, "");			
 		v = n;
 		a_size = d + 1;
 	}

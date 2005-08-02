@@ -33,6 +33,7 @@
 #define _INCLUDE_CSTRING_H
 
 #include <string.h>
+#include <stdio.h>
 
 //by David "BAILOPAN" Anderson
 class String
@@ -56,6 +57,13 @@ public:
 		v = NULL; 
 		a_size = 0;
 		assign(src); 
+	}
+
+	const char * _fread(FILE *fp) 	 
+	{ 	 
+		Grow(512, false); 	 
+		char *ret = fgets(v, 511, fp); 	 
+		return ret; 	 
 	}
 
 	String(String &src) 
@@ -122,7 +130,7 @@ public:
 	bool empty()
 	{
 		if (!v)
-			return false;
+			return true;
 
 		if (v[0] == '\0')
 			return true;
@@ -361,6 +369,8 @@ private:
 			strcpy(n, v);
 		if (v)
 			delete [] v;
+		else
+			strcpy(n, "");			
 		v = n;
 		a_size = d + 1;
 	}

@@ -1081,7 +1081,9 @@ int AMXAPI amx_InitJIT(AMX *amx, void *reloc_table, void *native_code)
 
   /* JIT rulz! (TM) */
   /* MP: added check for correct compilation */
-  if ((res = asm_runJIT(amx->base, reloc_table, native_code)) != 0) {
+  //Fixed bug (thanks T(+)rget)
+  if ((res = asm_runJIT(amx->base, reloc_table, native_code)) == 0) 
+  {
     /* update the required memory size (the previous value was a
      * conservative estimate, now we know the exact size)
      */

@@ -242,7 +242,7 @@ initialization
   eModsPath.Add('wizwars');
   eModsPath.Add('wormshl');
   eModsPath.Add('zp');
-  eModsPath.Add('esf');
+  eModsPath.Add('esforce');
 
 finalization
 

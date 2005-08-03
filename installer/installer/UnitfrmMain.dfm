@@ -6449,12 +6449,14 @@ object frmMain: TfrmMain
       Top = 7
       Width = 85
       Height = 25
+      Color = clBtnFace
       ColorFocused = 16245198
       ColorDown = 16245198
       ColorBorder = clBtnShadow
       ColorHighLight = clBtnShadow
       ColorShadow = clBtnShadow
       Caption = '&Cancel'
+      ParentColor = False
       TabOrder = 1
       OnClick = cmdCancelClick
     end

@@ -10,6 +10,7 @@ type TOS = (osWindows, osLinux32, osLinux64);
 
 procedure AddStatus(Text: String; Color: TColor; ShowTime: Boolean = True);
 procedure AddDone(Additional: String = '');
+procedure AddSkipped;
 function DelDir(Dir: string): Boolean;
 procedure MakeDir(Dir: String);
 procedure DownloadFile(eFile: String; eDestination: String);
@@ -70,7 +71,18 @@ begin
     frmMain.rtfDetails.SelText := ' Done.'
   else
     frmMain.rtfDetails.SelText := ' Done, ' + Additional + '.';
-  frmMain.rtfDetails.Perform(WM_VSCROLL, SB_BOTTOM, 0); 
+  frmMain.rtfDetails.Perform(WM_VSCROLL, SB_BOTTOM, 0);
+
+  frmMain.Repaint;
+  Application.ProcessMessages;
+end;
+
+procedure AddSkipped;
+begin
+  frmMain.rtfDetails.SelStart := Length(frmMain.rtfDetails.Text);
+  frmMain.rtfDetails.SelAttributes.Color := $0000ECFF;
+  frmMain.rtfDetails.SelText := ' Skipped.';
+  frmMain.rtfDetails.Perform(WM_VSCROLL, SB_BOTTOM, 0);
 
   frmMain.Repaint;
   Application.ProcessMessages;
@@ -140,7 +152,11 @@ end;
 procedure UploadFile(eFile: String; eDestination: String; CopyConfig: Boolean = True);
 var TransferType: TIdFTPTransferType;
 begin
-  if (Pos('config', eFile) > 0) and (not CopyConfig) then exit;
+  if (Pos('config', eFile) > 0) and (not CopyConfig) then begin
+    AddSkipped;
+    exit;
+  end;
+  
   eDestination := StringReplace(eDestination, '\', '/', [rfReplaceAll]);
 
   // the same as in DownloadFile()
@@ -155,6 +171,7 @@ begin
     frmMain.IdFTP.TransferType := TransferType;
   // upload the file
   frmMain.IdFTP.Put(eFile, eDestination);
+  AddDone;
 end;
 
 procedure FTPMakeDir(eDir: String);
@@ -385,7 +402,7 @@ begin
         end;
       end;
       modESF: begin
-        if Pos('esf', DirList[i]) = 1 then begin
+        if Pos('esforce', DirList[i]) = 1 then begin
           MakeDir(ePath + 'addons\amxmodx\' + Copy(DirList[i], 4, Length(DirList[i])));
           AddStatus('Created directory: addons\amxmodx\' + Copy(DirList[i], 4, Length(DirList[i])), clBlack);
         end;
@@ -440,7 +457,7 @@ begin
           end;
         end;
         modESF: begin
-          if Pos('esf', FileList[i]) = 1 then begin
+          if Pos('esforce', FileList[i]) = 1 then begin
             FileCopy(ExtractFilePath(ParamStr(0)) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), CopyConfig);
             AddStatus('Copied file: addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), clBlack);
           end;
@@ -617,10 +634,10 @@ begin
       frmMain.ggeItem.MaxValue := FSize(ExtractFilePath(ParamStr(0)) + 'temp\' + FileList[i]);
       try
         if LowerCase(FileList[i]) = 'liblist.gam' then
-          frmMain.IdFTP.Site('CHMOD 744 ' + FileList[i]);
+          frmMain.IdFTP.Site('CHMOD 744 liblist.gam');
         UploadFile(ExtractFilePath(ParamStr(0)) + 'temp\' + FileList[i], ePath + FileList[i], CopyConfig);
         if LowerCase(FileList[i]) = 'liblist.gam' then
-          frmMain.IdFTP.Size('CHMOD 444 ' + FileList[i]);
+          frmMain.IdFTP.Size('CHMOD 444 liblist.gam');
       except
         on E: Exception do begin
           if not Cancel then
@@ -630,8 +647,6 @@ begin
           exit;
         end;
       end;
-
-      AddDone;
     end;
     frmMain.ggeAll.Progress := frmMain.ggeAll.Progress + 1;
     frmMain.ggeItem.Progress := i;

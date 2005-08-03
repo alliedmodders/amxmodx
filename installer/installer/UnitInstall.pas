@@ -385,7 +385,7 @@ begin
         end;
       end;
       modESF: begin
-        if Pos('esforce', DirList[i]) = 1 then begin
+        if Pos('esf', DirList[i]) = 1 then begin
           MakeDir(ePath + 'addons\amxmodx\' + Copy(DirList[i], 4, Length(DirList[i])));
           AddStatus('Created directory: addons\amxmodx\' + Copy(DirList[i], 4, Length(DirList[i])), clBlack);
         end;
@@ -440,7 +440,7 @@ begin
           end;
         end;
         modESF: begin
-          if Pos('esforce', FileList[i]) = 1 then begin
+          if Pos('esf', FileList[i]) = 1 then begin
             FileCopy(ExtractFilePath(ParamStr(0)) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), CopyConfig);
             AddStatus('Copied file: addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), clBlack);
           end;

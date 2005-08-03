@@ -258,7 +258,7 @@ begin
         if MessageBox(Handle, 'Install The Specialists addon?', PChar(Application.Title), MB_ICONQUESTION + MB_YESNO) = mrYes then
           ChosenMod := modTS;
       end;
-      if ePath = 'esforce' then begin
+      if ePath = 'esf' then begin
         if MessageBox(Handle, 'Install Earth''s Special Forces addon?', PChar(Application.Title), MB_ICONQUESTION + MB_YESNO) = mrYes then
           ChosenMod := modESF;
       end;

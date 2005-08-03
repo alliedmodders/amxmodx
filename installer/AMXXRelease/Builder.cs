@@ -49,7 +49,7 @@ namespace AMXXRelease
 					System.Console.WriteLine("Mod failed to build: " + mod.GetName());
 					return false;
 				}
-				ZipDir(build.GetName() + "-" + mod.GetName() + ".zip", mod.GetName());
+				ZipDir(build.GetName() + "-" + mod.GetName() + ".zip", mod.GetName() + "\\*.*");
 			}
 
 			return true;
@@ -63,7 +63,7 @@ namespace AMXXRelease
 			if (!BuildModPlugins(mod))
 				return false;
 			
-			string basedir = m_Cfg.OutputPath() + "\\" + mod.GetName();
+			string basedir = m_Cfg.OutputPath() + "\\" + mod.GetModPath();
 			string sourcetree = m_Cfg.GetSourceTree();
 
 			if (!mod.CopyExtraFiles(basedir, sourcetree))
@@ -87,7 +87,7 @@ namespace AMXXRelease
 
 		public void CopyConfigs(AMod mod)
 		{
-			string basedir = m_Cfg.OutputPath() + "\\" + mod.GetName() + "\\configs";
+			string basedir = m_Cfg.OutputPath() + "\\" + mod.GetModPath() + "\\configs";
 
 			if (!Directory.Exists(basedir))
 				Directory.CreateDirectory(basedir);
@@ -126,7 +126,7 @@ namespace AMXXRelease
 			string binary, basedir;
 
 			basedir = m_Cfg.OutputPath();
-			basedir += "\\" + mod.GetName();
+			basedir += "\\" + mod.GetModPath();
 
 			string dir, file, target;
 			for (int i=0; i<num; i++)
@@ -193,7 +193,7 @@ namespace AMXXRelease
 			string binary, basedir;
 
 			basedir = m_Cfg.OutputPath();
-			basedir += "\\" + mod.GetName();
+			basedir += "\\" + mod.GetModPath();
 
 			string dir;
 			for (int i=0; i<num; i++)

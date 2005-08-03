@@ -87,6 +87,11 @@ namespace AMXXRelease
 			return m_Plugins.Count;
 		}
 
+		public virtual string GetModPath()
+		{
+			return GetName() + "\\addons\\amxmodx";
+		}
+
 		public virtual Plugin GetPlugin(int i)
 		{
 			return (Plugin)m_Plugins[i];

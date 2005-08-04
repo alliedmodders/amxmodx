@@ -11,6 +11,7 @@ type TOS = (osWindows, osLinux32, osLinux64);
 procedure AddStatus(Text: String; Color: TColor; ShowTime: Boolean = True);
 procedure AddDone(Additional: String = '');
 procedure AddSkipped;
+procedure AddNotFound;
 function DelDir(Dir: string): Boolean;
 procedure MakeDir(Dir: String);
 procedure DownloadFile(eFile: String; eDestination: String);
@@ -80,8 +81,19 @@ end;
 procedure AddSkipped;
 begin
   frmMain.rtfDetails.SelStart := Length(frmMain.rtfDetails.Text);
-  frmMain.rtfDetails.SelAttributes.Color := $0000ECFF;
+  frmMain.rtfDetails.SelAttributes.Color := $004080FF; // orange
   frmMain.rtfDetails.SelText := ' Skipped.';
+  frmMain.rtfDetails.Perform(WM_VSCROLL, SB_BOTTOM, 0);
+
+  frmMain.Repaint;
+  Application.ProcessMessages;
+end;
+
+procedure AddNotFound;
+begin
+  frmMain.rtfDetails.SelStart := Length(frmMain.rtfDetails.Text);
+  frmMain.rtfDetails.SelAttributes.Color := clRed;
+  frmMain.rtfDetails.SelText := ' Not found.';
   frmMain.rtfDetails.Perform(WM_VSCROLL, SB_BOTTOM, 0);
 
   frmMain.Repaint;
@@ -110,26 +122,30 @@ begin
   end;
 end;
 
-procedure FileCopy(Source, Destination: String; CopyConfig: Boolean);
+procedure FileCopy(Source, Destination: String; CopyConfig: Boolean; AddStatus: Boolean = True);
 begin
-  if (not CopyConfig) and (Pos('config', Source) <> 0) then
+  if (not CopyConfig) and (Pos('config', Source) <> 0) then begin
+    if AddStatus then
+      AddSkipped;
     exit;
-  if not FileExists(Source) then
-    exit;
+  end;
 
-  if FileExists(Destination) then begin
-    try
-      DeleteFile(PChar(Destination));
-    except
-      Application.ProcessMessages;
-    end;
+  if not FileExists(Source) then begin
+    if AddStatus then
+      AddNotFound;
+    exit;
   end;
 
   try
+    if FileExists(Destination) then
+      DeleteFile(PChar(Destination));
     CopyFile(PChar(Source), PChar(Destination), False);
   except
     Application.ProcessMessages;
   end;
+
+  if AddStatus then
+    AddDone;
 end;
 
 procedure DownloadFile(eFile: String; eDestination: String);
@@ -350,9 +366,11 @@ begin
       FileSetAttr(ePath + 'liblist.gam', 0);
       eStr.SaveToFile(ePath + 'liblist.gam');
       FileSetAttr(ePath + 'liblist.gam', faReadOnly); // important for listen servers
-    end;
+      AddDone;
+    end
+    else
+      AddSkipped;
     eStr.Free;
-    AddDone;
     { create directories }
     AddStatus('Creating directories...', clBlack);
   end;
@@ -422,44 +440,45 @@ begin
       
     if not IsForbidden(FileList[i], OS) then begin
       if Pos('base', FileList[i]) = 1 then begin
+        AddStatus('Copying file: addons\amxmodx\' + Copy(FileList[i], 6, Length(FileList[i])), clBlack);
         FileCopy(ExtractFilePath(ParamStr(0)) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 6, Length(FileList[i])), CopyConfig);
-        AddStatus('Copied file: addons\amxmodx\' + Copy(FileList[i], 6, Length(FileList[i])), clBlack);
       end;
+      
       case eMod of
         modCS: begin
           if Pos('cstrike', FileList[i]) = 1 then begin
+            AddStatus('Copying file: addons\amxmodx\' + Copy(FileList[i], 9, Length(FileList[i])), clBlack);
             FileCopy(ExtractFilePath(ParamStr(0)) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 9, Length(FileList[i])), CopyConfig);
-            AddStatus('Copied file: addons\amxmodx\' + Copy(FileList[i], 9, Length(FileList[i])), clBlack);
           end;
         end;
         modDoD: begin
           if Pos('dod', FileList[i]) = 1 then begin
+            AddStatus('Copying file: addons\amxmodx\' + Copy(FileList[i], 5, Length(FileList[i])), clBlack);
             FileCopy(ExtractFilePath(ParamStr(0)) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 5, Length(FileList[i])), CopyConfig);
-            AddStatus('Copied file: addons\amxmodx\' + Copy(FileList[i], 5, Length(FileList[i])), clBlack);
           end;
         end;
         modTFC: begin
           if Pos('tfc', FileList[i]) = 1 then begin
+            AddStatus('Copying file: addons\amxmodx\' + Copy(FileList[i], 5, Length(FileList[i])), clBlack);
             FileCopy(ExtractFilePath(ParamStr(0)) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 5, Length(FileList[i])), CopyConfig);
-            AddStatus('Copied file: addons\amxmodx\' + Copy(FileList[i], 5, Length(FileList[i])), clBlack);
           end;
         end;
         modNS: begin
           if Pos('ns', FileList[i]) = 1 then begin
+            AddStatus('Copying file: addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), clBlack);
             FileCopy(ExtractFilePath(ParamStr(0)) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), CopyConfig);
-            AddStatus('Copied file: addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), clBlack);
           end;
         end;
         modTS: begin
           if Pos('ts', FileList[i]) = 1 then begin
+            AddStatus('Copying file: addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), clBlack);
             FileCopy(ExtractFilePath(ParamStr(0)) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), CopyConfig);
-            AddStatus('Copied file: addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), clBlack);
           end;
         end;
         modESF: begin
           if Pos('esforce', FileList[i]) = 1 then begin
+            AddStatus('Copying file: addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), clBlack);
             FileCopy(ExtractFilePath(ParamStr(0)) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), CopyConfig);
-            AddStatus('Copied file: addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), clBlack);
           end;
         end;
       end;
@@ -468,9 +487,11 @@ begin
     frmMain.ggeItem.Progress := i;
   end;
   { metamod }
-  FileCopy(ePath + 'addons\amxmodx\dlls\metamod.dll', ePath + '\addons\metamod\dlls\metamod.dll', CopyConfig);
-  FileCopy(ePath + '\addons\amxmodx\dlls\metamod_i386.so', ePath + '\addons\metamod\dlls\metamod_i386.so', CopyConfig);
-  FileCopy(ePath + '\addons\amxmodx\dlls\metamod_amd64.so', ePath + '\addons\metamod\dlls\metamod_amd64.so', CopyConfig);
+  AddStatus('Copying Metamod...', clBlack);
+  FileCopy(ePath + 'addons\amxmodx\dlls\metamod.dll', ePath + '\addons\metamod\dlls\metamod.dll', CopyConfig, False);
+  FileCopy(ePath + '\addons\amxmodx\dlls\metamod_i386.so', ePath + '\addons\metamod\dlls\metamod_i386.so', CopyConfig, False);
+  FileCopy(ePath + '\addons\amxmodx\dlls\metamod_amd64.so', ePath + '\addons\metamod\dlls\metamod_amd64.so', CopyConfig, False);
+
   try
     if FileExists(ePath + '\addons\amxmodx\dlls\metamod.dll')      then DeleteFile(PChar(ePath + '\addons\amxmodx\dlls\metamod.dll'));
     if FileExists(ePath + '\addons\amxmodx\dlls\metamod_amd64.so') then DeleteFile(PChar(ePath + '\addons\amxmodx\dlls\metamod_amd64.so'));
@@ -488,6 +509,7 @@ begin
     eStr.SaveToFile(ePath + 'addons\metamod\plugins.ini');
     eStr.Free;
   end;
+  AddDone;
 
   // finish...
   frmMain.ggeAll.Progress := frmMain.ggeAll.MaxValue;
@@ -534,11 +556,27 @@ end;
 { FTP }
 
 procedure InstallFTP(eMod: TMod; OS: TOS);
+function DoReconnect: Boolean;
+begin
+  Result := False;
+  if MessageBox(frmMain.Handle, 'You have been disconnected due to an error. Try to reconnect?', PChar(Application.Title), MB_ICONQUESTION + MB_YESNO) = mrYes then begin
+    try
+      frmMain.IdFTP.Connect;
+      Result := True;
+    except
+      MessageBox(frmMain.Handle, 'Failed to reconnect. Installation aborted.', PChar(Application.Title), MB_ICONSTOP);
+    end;
+  end;
+end;
+
+label CreateAgain;
+label UploadAgain;
 var eStr: TStringList;
     i: integer;
     ePath: String;
     CurNode: TTreeNode;
     CopyConfig: Boolean;
+    eGoBack: Boolean;
 begin
   frmMain.cmdCancel.Show;
   frmMain.cmdNext.Hide;
@@ -614,9 +652,36 @@ begin
     if Cancel then
       exit;
 
-    FTPMakeDir(ePath + DirList[i]);
-    AddStatus('Created directory: ' + DirList[i], clBlack);
+    AddStatus('Creating directory: ' + DirList[i], clBlack);
+    CreateAgain:
+    try
+      eGoBack := False;
+      FTPMakeDir(ePath + DirList[i]);
+    except
+      on E: Exception do begin
+        if Cancel then exit;
 
+        if frmMain.IdFTP.Connected then begin
+          if MessageBox(frmMain.Handle, PChar('An error occured while creating "' + FileList[i] + '"!' + #13 + E.Message + #13 + #13 + 'Retry?'), PChar(Application.Title), MB_ICONSTOP + MB_YESNO) = mrYes then
+            eGoBack := True
+          else begin
+            Screen.Cursor := crDefault;
+            Application.Terminate;
+            exit;
+          end;
+        end
+        else if not DoReconnect then
+          exit
+        else
+          eGoBack := True;
+      end;
+    end;
+    
+    if eGoBack then
+      goto CreateAgain;  
+
+    AddDone;
+    
     frmMain.ggeAll.Progress := i;
     frmMain.ggeItem.Progress := i;
   end;
@@ -629,27 +694,47 @@ begin
     if Cancel then
       exit;
 
-    if (not IsForbidden(FileList[i], OS)) and (FileExists(ExtractFilePath(ParamStr(0)) + 'temp\' + FileList[i])) then begin
+    if not IsForbidden(FileList[i], OS) then begin
       AddStatus('Uploading file: ' + FileList[i], clBlack);
-      frmMain.ggeItem.MaxValue := FSize(ExtractFilePath(ParamStr(0)) + 'temp\' + FileList[i]);
-      try
-        if LowerCase(FileList[i]) = 'liblist.gam' then
-          frmMain.IdFTP.Site('CHMOD 744 liblist.gam');
-        UploadFile(ExtractFilePath(ParamStr(0)) + 'temp\' + FileList[i], ePath + FileList[i], CopyConfig);
-        if LowerCase(FileList[i]) = 'liblist.gam' then
-          frmMain.IdFTP.Size('CHMOD 444 liblist.gam');
-      except
-        on E: Exception do begin
-          if not Cancel then
-            MessageBox(frmMain.Handle, PChar('An error occured while uploading "' + FileList[i] + '"!' + #13 + E.Message), PChar(Application.Title), MB_ICONSTOP);
-          Screen.Cursor := crDefault;
-          Application.Terminate;
-          exit;
+      if FileExists(ExtractFilePath(ParamStr(0)) + 'temp\' + FileList[i]) then begin
+        frmMain.ggeItem.MaxValue := FSize(ExtractFilePath(ParamStr(0)) + 'temp\' + FileList[i]);
+        UploadAgain:
+        try
+          eGoBack := False;
+          
+          if FileList[i] = 'liblist.gam' then
+            frmMain.IdFTP.Site('CHMOD 744 liblist.gam');
+          UploadFile(ExtractFilePath(ParamStr(0)) + 'temp\' + FileList[i], ePath + FileList[i], CopyConfig);
+          if FileList[i] = 'liblist.gam' then
+            frmMain.IdFTP.Size('CHMOD 444 liblist.gam');
+        except
+          on E: Exception do begin
+            if Cancel then exit;
+
+            if frmMain.IdFTP.Connected then begin
+              if MessageBox(frmMain.Handle, PChar('An error occured while uploading "' + FileList[i] + '"!' + #13 + E.Message + #13 + #13 + 'Retry?'), PChar(Application.Title), MB_ICONSTOP + MB_YESNO) = mrYes then
+                eGoBack := True
+              else begin
+                Screen.Cursor := crDefault;
+                Application.Terminate;
+                exit;
+              end;
+            end
+            else if not DoReconnect then
+              exit
+            else
+              eGoBack := True;
+          end;
         end;
-      end;
+
+        if eGoBack then
+          goto UploadAgain;
+      end
+      else
+        AddNotFound;
     end;
     frmMain.ggeAll.Progress := frmMain.ggeAll.Progress + 1;
-    frmMain.ggeItem.Progress := i;
+    frmMain.ggeItem.Progress := 0;
   end;
   frmMain.ggeAll.Progress := frmMain.ggeAll.MaxValue;
   frmMain.ggeItem.Progress := frmMain.ggeItem.MaxValue;

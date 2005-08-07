@@ -235,5 +235,17 @@ native cs_get_no_knives();
  */
 native cs_set_no_knives(noknives = 0);
 
-//Spawns a Counter-Strike player
+/* Spawns a Counter-Strike player
+ */
 native cs_user_spawn(player);
+
+/* Get what weapon type (CSW_*) an armoury_entity is.
+ */
+native cs_get_armoury_type(index);
+
+/* Set an armoury_entity to be of specified type. You will have to set the appropriate model.
+ * The second argument, type, should be a CSW_* constant. Not all weapons are supported by Counter-strike.
+ * Supported weapons/items: CSW_MP5NAVY, CSW_TMP, CSW_P90, CSW_MAC10, CSW_AK47, CSW_SG552, CSW_M4A1, CSW_AUG, CSW_SCOUT
+ * CSW_G3SG1, CSW_AWP, CSW_M3, CSW_XM1014, CSW_M249, CSW_FLASHBANG, CSW_HEGRENADE, CSW_VEST, CSW_VESTHELM, CSW_SMOKEGRENADE
+ */
+native cs_set_armoury_type(index, type);

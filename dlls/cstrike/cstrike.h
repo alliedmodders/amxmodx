@@ -102,6 +102,8 @@
 	// "hostage_entity" entities
 	#define OFFSET_HOSTAGEFOLLOW		86 + EXTRAOFFSET
 	#define OFFSET_HOSTAGEID			487 + EXTRAOFFSET
+	// "armoury_entity"
+	#define OFFSET_ARMOURY_TYPE			34 + EXTRAOFFSET
 #else
 	// Amd64 offsets here
 	#define OFFSET_ARMORTYPE			137 + EXTRAOFFSET
@@ -141,6 +143,8 @@
 	// "hostage_entity" entities
 	#define OFFSET_HOSTAGEFOLLOW		51 + EXTRAOFFSET // +21, long=51, int=107! (must use the long* offset because pointers on amd64 are stored the size of longs, 8 bytes, instead of the usual int 4 bytes.)
 	#define OFFSET_HOSTAGEID			516 + EXTRAOFFSET // +29
+	// "armoury_entity"
+	#define OFFSET_WEAPONTYPE			??? + EXTRAOFFSET // To do...
 #endif
 
 // Ids of weapons in CS
@@ -174,6 +178,29 @@
 #define CSW_AK47						28
 //#define CSW_KNIFE						29
 #define CSW_P90							30
+#define CSW_VEST						31 // Brand new invention!
+#define CSW_VESTHELM					32 // Brand new invention!
+
+// These are used with armoury_entity:s.
+#define CSA_MP5NAVY						0
+#define CSA_TMP							1
+#define CSA_P90							2
+#define CSA_MAC10						3
+#define CSA_AK47						4
+#define CSA_SG552						5
+#define CSA_M4A1						6
+#define CSA_AUG							7
+#define CSA_SCOUT						8
+#define CSA_G3SG1						9
+#define CSA_AWP							10
+#define CSA_M3							11
+#define CSA_XM1014						12
+#define CSA_M249						13
+#define CSA_FLASHBANG					14
+#define CSA_HEGRENADE					15
+#define CSA_VEST						16
+#define CSA_VESTHELM					17
+#define CSA_SMOKEGRENADE				18
 
 #define M4A1_SILENCED					(1<<2)
 #define M4A1_ATTACHSILENCEANIM			6

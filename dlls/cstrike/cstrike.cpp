@@ -1232,6 +1232,107 @@ static cell AMX_NATIVE_CALL cs_user_spawn(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL cs_get_armoury_type(AMX *amx, cell *params)
+{
+	// Return CSW_* constants of specified armoury_entity.
+	// params[1] = entity
+
+	// Valid entity should be within range.
+	CHECK_NONPLAYER(params[1]);
+
+	// Make into edict pointer.
+	edict_t *pArmoury = INDEXENT(params[1]);
+
+	// Make sure this is an armoury_entity.
+	if (strcmp(STRING(pArmoury->v.classname), "armoury_entity")) {
+		// Error out here.
+		MF_LogError(amx, AMX_ERR_NATIVE, "Not an armoury_entity! (%d)", params[1]);
+		return 0;
+	}
+
+	int weapontype = *((int *)pArmoury->pvPrivateData + OFFSET_ARMOURY_TYPE);
+
+	// We do a switch instead of a mapped array because this way we can nicely catch unexpected values, and we don't get array out of bounds thingies.
+	int weapontype_out;
+	switch (weapontype) {
+		case CSA_MP5NAVY:		weapontype_out = CSW_MP5NAVY; break;
+		case CSA_TMP:			weapontype_out = CSW_TMP; break;
+		case CSA_P90:			weapontype_out = CSW_P90; break;
+		case CSA_MAC10:			weapontype_out = CSW_MAC10; break;
+		case CSA_AK47:			weapontype_out = CSW_AK47; break;
+		case CSA_SG552:			weapontype_out = CSW_SG552; break;
+		case CSA_M4A1:			weapontype_out = CSW_M4A1; break;
+		case CSA_AUG:			weapontype_out = CSW_AUG; break;
+		case CSA_SCOUT:			weapontype_out = CSW_SCOUT; break;
+		case CSA_G3SG1:			weapontype_out = CSW_G3SG1; break;
+		case CSA_AWP:			weapontype_out = CSW_AWP; break;
+		case CSA_M3:			weapontype_out = CSW_M3; break;
+		case CSA_XM1014:		weapontype_out = CSW_XM1014; break;
+		case CSA_M249:			weapontype_out = CSW_M249; break;
+		case CSA_FLASHBANG:		weapontype_out = CSW_FLASHBANG; break;
+		case CSA_HEGRENADE:		weapontype_out = CSW_HEGRENADE; break;
+		case CSA_VEST:			weapontype_out = CSW_VEST; break;
+		case CSA_VESTHELM:		weapontype_out = CSW_VESTHELM; break;
+		case CSA_SMOKEGRENADE:	weapontype_out = CSW_SMOKEGRENADE; break;
+		default:
+			MF_LogError(amx, AMX_ERR_NATIVE, "Unexpected weapon type of %d!", params[1]);
+			return 0;
+	}
+
+	return weapontype_out;   
+}
+
+static cell AMX_NATIVE_CALL cs_set_armoury_type(AMX *amx, cell *params)
+{
+	// Set CSW->CSA mapped weapon type to entity.
+	// params[1] = entity
+	// params[2] = CSW_* constant
+
+	// Valid entity should be within range.
+	CHECK_NONPLAYER(params[1]);
+
+	// Make into edict pointer.
+	edict_t *pArmoury = INDEXENT(params[1]);
+
+	// Make sure this is an armoury_entity.
+	if (strcmp(STRING(pArmoury->v.classname), "armoury_entity")) {
+		// Error out here.
+		MF_LogError(amx, AMX_ERR_NATIVE, "Not an armoury_entity! (%d)", params[1]);
+		return 0;
+	}
+
+	// We do a switch instead of a mapped array because this way we can nicely catch unexpected values, and we don't get array out of bounds thingies.
+	int weapontype;
+	switch (params[2]) {
+		case CSW_MP5NAVY:		weapontype = CSA_MP5NAVY; break;
+		case CSW_TMP:			weapontype = CSA_TMP; break;
+		case CSW_P90:			weapontype = CSA_P90; break;
+		case CSW_MAC10:			weapontype = CSA_MAC10; break;
+		case CSW_AK47:			weapontype = CSA_AK47; break;
+		case CSW_SG552:			weapontype = CSA_SG552; break;
+		case CSW_M4A1:			weapontype = CSA_M4A1; break;
+		case CSW_AUG:			weapontype = CSA_AUG; break;
+		case CSW_SCOUT:			weapontype = CSA_SCOUT; break;
+		case CSW_G3SG1:			weapontype = CSA_G3SG1; break;
+		case CSW_AWP:			weapontype = CSA_AWP; break;
+		case CSW_M3:			weapontype = CSA_M3; break;
+		case CSW_XM1014:		weapontype = CSA_XM1014; break;
+		case CSW_M249:			weapontype = CSA_M249; break;
+		case CSW_FLASHBANG:		weapontype = CSA_FLASHBANG; break;
+		case CSW_HEGRENADE:		weapontype = CSA_HEGRENADE; break;
+		case CSW_VEST:			weapontype = CSA_VEST; break;
+		case CSW_VESTHELM:		weapontype = CSA_VESTHELM; break;
+		case CSW_SMOKEGRENADE:	weapontype = CSA_SMOKEGRENADE; break;
+		default:
+			MF_LogError(amx, AMX_ERR_NATIVE, "Unsupported weapon type! (%d)", params[2]);
+			return 0;
+	}
+
+	*((int *)pArmoury->pvPrivateData + OFFSET_ARMOURY_TYPE) = weapontype;
+
+	return 1;   
+}
+
 AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_user_money",			cs_set_user_money},
 	{"cs_get_user_money",			cs_get_user_money},
@@ -1274,6 +1375,8 @@ AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_user_armor",			cs_set_user_armor},
 	{"cs_get_user_shield",			cs_get_user_shield},
 	{"cs_user_spawn",				cs_user_spawn},
+	{"cs_get_armoury_type",			cs_get_armoury_type},
+	{"cs_set_armoury_type",			cs_set_armoury_type},
 	//------------------- <-- max 19 characters!
 	{NULL,							NULL}
 };

@@ -115,6 +115,8 @@ stock const AMXX_VERSION_STR[]="1.50"
 #define CSW_AK47		28
 #define CSW_KNIFE		29
 #define CSW_P90			30
+#define CSW_VEST		31
+#define CSW_VESTHELM	32
 
 #define HIW_BERETTA		1
 #define HIW_SPAS12		2
@@ -201,7 +203,7 @@ enum {
 }
 
 /* Render for set_user_rendering() */
-enum {	
+enum {
 	kRenderNormal = 0,		/* src */
 	kRenderTransColor,		/* c*a+dest*(1-a) */
 	kRenderTransTexture,		/* src*a+dest*(1-a) */
@@ -211,20 +213,20 @@ enum {
 }
 
 /* Fx for set_user_rendering() */
-enum {	
-	kRenderFxNone = 0, 
-	kRenderFxPulseSlow, 
-	kRenderFxPulseFast, 
-	kRenderFxPulseSlowWide, 
-	kRenderFxPulseFastWide, 
-	kRenderFxFadeSlow, 
-	kRenderFxFadeFast, 
-	kRenderFxSolidSlow, 
-	kRenderFxSolidFast, 	   
-	kRenderFxStrobeSlow, 
-	kRenderFxStrobeFast, 
-	kRenderFxStrobeFaster, 
-	kRenderFxFlickerSlow, 
+enum {
+	kRenderFxNone = 0,
+	kRenderFxPulseSlow,
+	kRenderFxPulseFast,
+	kRenderFxPulseSlowWide,
+	kRenderFxPulseFastWide,
+	kRenderFxFadeSlow,
+	kRenderFxFadeFast,
+	kRenderFxSolidSlow,
+	kRenderFxSolidFast,
+	kRenderFxStrobeSlow,
+	kRenderFxStrobeFast,
+	kRenderFxStrobeFaster,
+	kRenderFxFlickerSlow,
 	kRenderFxFlickerFast,
 	kRenderFxNoDissipation,
 	kRenderFxDistort,		/* Distort/scale/translate flicker */
@@ -263,7 +265,7 @@ enum {
 #define AMX_FLAG_BROWSE 0x4000  /* busy browsing */
 #define AMX_FLAG_RELOC  0x8000  /* jump/call addresses relocated */
 
-#define INVALID_PLUGIN_ID	-1	
+#define INVALID_PLUGIN_ID	-1
 
 #define MENU_EXIT	-3
 #define	MENU_BACK	-2

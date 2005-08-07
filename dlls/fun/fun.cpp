@@ -61,6 +61,7 @@
 // ######## Utils:
 void FUNUTIL_ResetPlayer(int index)
 {
+	//MF_PrintSrvConsole("Resetting player index %d! maxclients: %d\n", index, gpGlobals->maxClients);
 	for (int i = 1; i <= gpGlobals->maxClients; i++) {
 		g_bodyhits[index][i] = (1<<HITGROUP_GENERIC) | 
 						(1<<HITGROUP_HEAD) | 
@@ -654,14 +655,17 @@ void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *shoot
 void OnAmxxAttach()
 {
 	MF_AddNatives(fun_Exports);
+}
 
+// The content of OnPluginsLoaded() was moved from OnAmxxAttach with AMXx 1.5 because for some reason gpGlobals->maxClients wasn't
+// initialized to its proper value until some time after OnAmxxAttach(). In OnAmxxAttach() it always showed 0. /JGHG
+void OnPluginsLoaded() {
 	// Reset stuff - hopefully this should
 	for (int i = 1; i <= gpGlobals->maxClients; i++) {
 		// Reset all hitzones
 		FUNUTIL_ResetPlayer(i);
 	}
 }
-
 /*
 void ClientConnectFakeBot(int index)
 {

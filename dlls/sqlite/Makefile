@@ -1,7 +1,7 @@
 MODNAME = sqlite_amxx
 SRCFILES = sqlite_amx.cpp sqlite.cpp amxxmodule.cpp
 
-EXTRA_INCLUDEDIRS = -I../../amxmodx -Isqlite-source-3_1_2
+EXTRA_INCLUDEDIRS = -I../../amxmodx -Isqlite-source-3_2_2
 
 EXTRA_FLAGS = -Dstrcmpi=strcasecmp
 

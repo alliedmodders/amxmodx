@@ -15,7 +15,7 @@
 $PROJECT = "sqlite_amxx";
 $sdk = "../../hlsdk/SourceCode";
 $mm = "../../metamod/metamod";
-$sql = "sqlite-source-3_1_2";
+$sql = "sqlite-source-3_2_2";
 $gccf = "gcc";
 
 @CPP_SOURCE_FILES = ("sqlite.cpp", "sqlite_amx.cpp", "amxxmodule.cpp");
@@ -24,8 +24,8 @@ $gccf = "gcc";
 
 my %OPTIONS, %OPT;
 
-$OPT{"debug"} = "-g -ggdb";
-$OPT{"opt"} = "-O2 -ffast-math -funroll-loops -fomit-frame-pointer -s -DNDEBUG -Wall -Wno-unknown-pragmas -DOPT_TYPE=\"optimized\" -fno-exceptions -fno-rtti";
+$OPT{"debug"} = "-DNO_TCL -g -ggdb";
+$OPT{"opt"} = "-DNO_TCL -O2 -ffast-math -funroll-loops -fomit-frame-pointer -s -DNDEBUG -Wall -Wno-unknown-pragmas -DOPT_TYPE=\"optimized\" -fno-exceptions -fno-rtti";
 
 $OPTIONS{"include"} = "-I$sdk -I. -I$mm -I$sdk/engine -I$sdk/common -I$sdk/pm_shared -I$sdk/dlls -I$sql";
 

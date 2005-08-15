@@ -597,7 +597,13 @@ int unload_amxscript(AMX* amx, void** program)
 	CList<CScript,AMX*>::iterator a = g_loadedscripts.find( amx  );
 	if ( a ) a.remove();
 	char *prg = (char *)*program;
+#if defined __linux__ && defined JIT && defined MEMORY_TEST
+#undef free
+	free(prg);
+#define free(ptr)       m_deallocator(__FILE__,__LINE__,__FUNCTION__,m_alloc_free,ptr)
+#else
 	delete[] prg;
+#endif
 	*program = 0;
 	return AMX_ERR_NONE;
 }

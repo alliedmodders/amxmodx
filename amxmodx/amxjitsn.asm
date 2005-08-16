@@ -21,17 +21,26 @@
 ; step.
 
 ; NOTE 3:
-; During execution of the compiled code with amx_exec_jit() the x86 processor's
-; stack is switched into the data section of the abstract machine. This means
-; that there should always be enough memory left between HEA and STK to provide
-; stack space for occurring interrupts! (see the STACKRESERVE variable)
-
-; NOTE 4:
 ; Although the Pawn compiler doesn't generate the LCTRL, SCTRL and CALL.I
 ; instructions, I have to tell that they don't work as expected in a JIT
 ; compiled program, because there is no easy way of transforming AMX code
 ; addresses and JIT translated ones. This might be fixed in a future version.
 
+; NOTE 4:
+; Stack Pointer issues (by David Anderson)
+; The JIT was changed recently so it no longer uses ESP as a general purpose
+; register (GRP), because it can conflict with threading/signal systems which
+; rely on the stack pointer being in-tact to find thread-ids.  My fix for this
+; was to keep esp safe, but save the stack pointer in 'ecx'.  As such, ecx is no
+; longer the CIP or scratch register, it is the save point for pieces of the AMX
+; structure on the x86 stack.  
+; This means that the optimization of the JIT has changed, as every amx stack
+; push call now takes two operations instead of one (same for pop), and pushing
+; addresses is 4 instructions instead of 1.
+; As of this moment I don't see a better way around it, but the sacrifice for
+; having pthread-safe code was deemed to be necessary.
+
+; NOTE 5:
 ; NX ("No eXecute") and XD (eXecution Denied) bits
 ; (by Thiadmer Riemersma)
 ;
@@ -65,7 +74,8 @@
 ; segment: the JIT-compiler patches P-code parameters into its own code segment
 ; during compilation. This is handled in the support code for amx_InitJIT.
 ;
-;
+
+; NOTE 6:
 ; CALLING CONVENTIONS
 ; (by Thiadmer Riemersma)
 ;
@@ -77,9 +87,16 @@
 ; a reserved word on the assembler, I had to choose a different name for the
 ; macro, hence STDECL.)
 
+
 ; Revision History
 ; ----------------
-; 26 july 2005 by David "BAILOPAN" Anderson
+; 16 august 2005 by David "BAILOPAN" Anderson (DA)
+;		Changed JIT to not swap stack pointer during execution.  This 
+;		is playing with fire, especially with pthreads and signals on linux,
+;		where the stack pointer is used to find the current thread id.  If
+;		the stack pointer is altered during a thread/signal switch/interrupt
+;		unexpected behaviour can occur (crashes).
+; 26 july 2005 by David "BAILOPAN" Anderson (DA)
 ;       Fixed a bug where zero casetbl entries would crash the JIT.
 ; 17 february 2005  by Thiadmer Riemersms
 ;       Addition of the BREAK opcode, removal of the older debugging opcode
@@ -166,15 +183,6 @@
 %define FORCERELOCATABLE
 
 ;
-; Determines how much memory should be reserved for occurring interrupts.
-; (If my memory serves me right, DOS4/G(W) provides a stack of 512 bytes
-; for interrupts that occur in real mode and are promoted to protected mode.)
-; This value _MUST_ be greater than 64 (for AMX needs) and should be at least
-; 128 (to serve interrupts).
-;
-%define STACKRESERVE 256
-
-;
 ; This variable controls the generation of memory range checks at run-time.
 ; You should set this to 0, only when you are sure that there are no range
 ; violations in your Pawn programs and you really need those 5% speed gain.
@@ -186,32 +194,49 @@
 %define JIT     1
 %include "amxdefn.asm"
 
-; GWMV:
-; Nasm can't do the next as equivalence statements, since the value of
-; esi is not determined at compile time
-%define stk     [esi+32]    ; define some aliases to registers that will
-%define alt     [esi+28]    ;   be stored on the stack when the code is
-%define pri     [esi+24]    ;   actually beeing executed
-%define code    [esi+20]
-%define amx     [esi+16]
-%define retval  [esi+12]
-%define stp     [esi+8]
-%define hea     [esi+4]
-%define frm     [esi]       ; FRM is NOT stored in ebp, FRM+DAT is being held
+;Registers used for JIT during execution:
+;	eax		- pri
+;	ebx		- reloc frame
+;	ecx		- info params
+;	edx		- alt
+;	esi		- AMX stack
+;	edi		- DAT
+;	ebp		- scratch
+
+;DA:
+; These are still stored in the stack, but the stack pointer
+; holding them is now kept in ecx.  
+%define stk     [ecx+32]    ; define some aliases to registers that will
+%define alt     [ecx+28]    ;   be stored on the stack when the code is
+%define pri     [ecx+24]    ;   actually beeing executed
+%define code    [ecx+20]
+%define amx     [ecx+16]
+%define retval  [ecx+12]
+%define stp     [ecx+8]
+%define hea     [ecx+4]
+%define frm     [ecx]       ; FRM is NOT stored in ebp, FRM+DAT is being held
                             ; in ebx instead.
 
 ;
 ; #define  PUSH(v)  ( stk-=sizeof(cell), *(cell *)(data+(int)stk)=v )
 ;
 %macro _PUSH 1
-	push	dword %1
+	sub		esi, 4
+	mov		dword [esi], %1
+%endmacro
+
+%macro _PUSHMEM 1
+	sub		esi, 4
+	mov		ebp, dword %1
+	mov		dword [esi], ebp
 %endmacro
 
 ;
 ; #define  POP(v)   ( v=*(cell *)(data+(int)stk), stk+=sizeof(cell) )
 ;
 %macro _POP 1
-	pop	dword %1
+	mov		%1, dword [esi]
+	add		esi, 4
 %endmacro
 
 
@@ -790,7 +815,7 @@ OP_LCTRL:
         jne     lctrl_5
         GO_ON   j_lctrl_4, lctrl_5, 8
         j_lctrl_4:
-        mov     eax,esp         ; 4=STK
+        mov     eax,esi         ; 4=STK
         sub     eax,edi
     	CHECKCODESIZE j_lctrl_4
     lctrl_5:
@@ -824,7 +849,7 @@ OP_SCTRL:
         j_sctrl_4:
         ;mov     esp,eax  ; 4=STK
         ;add    esp,edi  ; relocate stack
-        lea     esp,[eax+edi]
+        lea     esi,[eax+edi]
     	CHECKCODESIZE j_sctrl_4
     sctrl_5:
         cmp     eax,5
@@ -885,14 +910,16 @@ OP_PUSH_ALT:
 
 OP_PUSH_R_PRI:
 ;nop;
-        putval  j_push_r_pri+1
+        putval  j_push_r_pri+2
         GO_ON   j_push_r_pri, OP_PUSH_C, 8
 
     j_push_r_pri:
+    	push 	ecx
         mov     ecx,12345678h
         j_push_loop:
         _PUSH   eax
         loop    j_push_loop
+        pop		ecx
         ;dec     ecx
         ;jnz     j_push_loop
 	CHECKCODESIZE j_push_r_pri
@@ -900,30 +927,33 @@ OP_PUSH_R_PRI:
 ;good
 OP_PUSH_C:
 ;nop;
-        putval  j_push_c+1
+        putval  j_push_c_end-4
         GO_ON   j_push_c, OP_PUSH, 8
 
     j_push_c:
         _PUSH   12345678h
+    j_push_c_end:
 	CHECKCODESIZE j_push_c
 
 OP_PUSH:
 ;nop;
-        putval  j_push+2
+        putval  j_push_end-6
         GO_ON   j_push, OP_PUSH_S, 8
 
     j_push:
-        _PUSH   [edi+12345678h]
+        _PUSHMEM   [edi+12345678h]
+    j_push_end:
 	CHECKCODESIZE j_push
 
 ;good
 OP_PUSH_S:
 ;nop;
-        putval  j_push_s+2
+        putval  j_push_s_end-6
         GO_ON   j_push_s, OP_POP_PRI, 8
 
         j_push_s:
-        _PUSH   [ebx+12345678h]
+        _PUSHMEM   [ebx+12345678h]
+        j_push_s_end:
 	CHECKCODESIZE j_push_s
 
 OP_POP_PRI:
@@ -950,8 +980,8 @@ OP_STACK:
         GO_ON   j_stack, OP_HEAP, 8
 
         j_stack:
-        mov     edx,esp
-        add     esp,12345678h
+        mov     edx,esi
+        add     esi,12345678h
         sub     edx,edi
 %ifdef DORUNTIMECHECKS
         call    [chk_marginstack]
@@ -979,9 +1009,9 @@ OP_PROC:
         GO_ON   j_proc, OP_RET
 
         j_proc:                 ;[STK] = FRM, STK = STK - cell size, FRM = STK
-        _PUSH   frm             ; push old frame (for RET/RETN)
-        mov     frm,esp         ; get new frame
-        mov     ebx,esp         ; already relocated
+        _PUSHMEM   frm          ; push old frame (for RET/RETN)
+        mov     frm,esi         ; get new frame
+        mov     ebx,esi         ; already relocated
         sub     frm,edi         ; relocate frame
 	CHECKCODESIZE j_proc
 
@@ -991,6 +1021,7 @@ OP_RET:
 
         j_ret:
         _POP    ebx             ; pop frame
+        add		esi,4			; pop extra param
         mov     frm,ebx
         add     ebx,edi
         ret
@@ -1009,11 +1040,13 @@ OP_RETN:
 ;good
 OP_CALL:
 ;nop;
-        RELOC   1
+        RELOC   j_call_e8-j_call+1
         GO_ON   j_call, OP_CALL_I, 8
 
         j_call:
         ;call   12345678h ; tasm chokes on this out of a sudden
+        _PUSH	0
+        j_call_e8
         db      0e8h, 0, 0, 0, 0
 	CHECKCODESIZE j_call
 
@@ -1022,6 +1055,7 @@ OP_CALL_I:
         GO_ON   j_call_i, OP_JUMP
 
         j_call_i:
+        _PUSH	0
         call    eax
 	CHECKCODESIZE j_call_i
 
@@ -1172,24 +1206,30 @@ OP_SHL:
 ;nop;
         GO_ON   j_shl, OP_SHR
    j_shl:
-        mov     ecx,edx         ; TODO: save ECX if used as special register
+        push	ecx   
+        mov     ecx,edx
         shl     eax,cl
+        pop		ecx
 	CHECKCODESIZE j_shl
 
 OP_SHR:
 ;nop;
         GO_ON   j_shr, OP_SSHR
    j_shr:
-        mov     ecx,edx         ; TODO: save ECX if used as special register
+        push	ecx
+        mov     ecx,edx
         shr     eax,cl
+        pop		ecx
 	CHECKCODESIZE j_shr
 
 OP_SSHR:
 ;nop;
         GO_ON   j_sshr, OP_SHL_C_PRI
    j_sshr:
-        mov     ecx,edx         ; TODO: save ECX if used as special register
+        push	ecx
+        mov     ecx,edx
         sar     eax,cl
+        pop		ecx
 	CHECKCODESIZE j_sshr
 
 OP_SHL_C_PRI:
@@ -1608,29 +1648,35 @@ OP_DEC_I:
 
 OP_MOVS:
 ;nop;
-        putval  j_movs+1
+        putval  j_movs+2
         GO_ON   j_movs, OP_CMPS, 8
     j_movs:
-        mov     ecx,12345678h   ;TODO: save ECX if used as special register
+    	push	ecx
+        mov     ecx,12345678h
         call    [jit_movs]
+        pop		ecx
 	CHECKCODESIZE j_movs
 
 OP_CMPS:
 ;nop;
-        putval  j_cmps+1
+        putval  j_cmps+2
         GO_ON   j_cmps, OP_FILL, 8
     j_cmps:
-        mov     ecx,12345678h   ;TODO: save ECX if used as special register
+        push	ecx
+        mov     ecx,12345678h
         call    [jit_cmps]
+        pop		ecx
 	CHECKCODESIZE j_cmps
 
 OP_FILL:
 ;nop;
-        putval  j_fill+1
+        putval  j_fill+2
         GO_ON   j_fill, OP_HALT, 8
     j_fill:
+        push	ecx
         mov     ecx,12345678h   ;TODO: save ECX if used as special register
         call    [jit_fill]
+        pop		ecx
 	CHECKCODESIZE j_fill
 
 ;good
@@ -1879,7 +1925,7 @@ _amx_exec_jit:
         push    dword [eax+20]; store FRM
 
         mov     edx,[eax+4]     ; get ALT
-        mov     ecx,[eax+8]     ; get CIP
+        mov     ebp,[eax+8]     ; get CIP
         mov     edi,[eax+12]    ; get pointer to data segment
         mov     esi,[eax+16]    ; get STK !!changed, now ECX free as counter!!
         mov     ebx,[eax+20]    ; get FRM
@@ -1887,13 +1933,13 @@ _amx_exec_jit:
         add     ebx,edi         ; relocate frame
 
         add     esi,edi         ; ESP will contain DAT+STK
-        xchg    esp,esi         ; switch to AMX stack
 
-        add     stp,edi         ; make STP absolute address for run-time checks
+        add     [esp+8],edi         ; make STP absolute address for run-time checks
 
-        _POP    ebp             ; AMX pseudo-return address, ignored
+        _POP    ecx             ; AMX pseudo-return address, ignored
+        mov		ecx,esp			; copy stack pointer
         ; Call compiled code via CALL NEAR <address>
-        call    ecx
+        call    ebp
 
 return_to_caller:
         cmp     dword retval,0
@@ -1906,15 +1952,17 @@ return_to_caller:
         jmp     _return
 
 _return_popstack:
-        add     esp,4           ; Correct ESP, because we just come from a
-                                ; runtime error checking routine.
+		mov		esp,ecx			; get our old stack pointer
 _return:
         ; store machine state
-        mov     ecx,esp         ; get STK into ECX
+        push	ecx
+        push	ecx
         mov     ebp,amx         ; get amx into EBP
+        mov     ecx,esi         ; get STK into ECX
 
         sub     ecx,edi         ; correct STK
         mov     [ebp+_stk],ecx  ; store values in AMX structure: STK, ...
+        pop		ecx				; get orig value
         mov     ecx,hea         ; ... HEA, ...
         mov     [ebp+_hea],ecx
         mov     ecx,ebx         ; ... and FRM
@@ -1924,8 +1972,8 @@ _return:
         mov     [ebp+_alt],edx  ; ... and ALT
 
         ; return
+        pop		ecx
         sub     stp,edi         ; make STP relative to DAT again
-        xchg    esp,esi         ; switch back to caller's stack
 
         add     esp,4*9         ; remove temporary data
 
@@ -1946,12 +1994,8 @@ err_stacklow:
         jmp     _return_popstack
 
 _CHKMARGIN_STACK:               ; some run-time check routines
-        cmp     esp,stp
-        lea     ebp,[esp-STACKRESERVE]
+        cmp     esi,stp
         jg      err_stacklow
-        sub     ebp,edi
-        cmp     hea,ebp
-        jg      err_stack
         ret
 
 err_heaplow:
@@ -1959,7 +2003,7 @@ err_heaplow:
         jmp     _return_popstack
 
 _CHKMARGIN_HEAP:
-        cmp     esp,stp
+        cmp     esi,stp
         jg      err_stacklow
         cmp     dword hea,0
         jl      err_heaplow
@@ -1975,7 +2019,7 @@ _VERIFYADDRESS_eax:             ; used in load.i, store.i & lidx
         cmp     eax,hea
         jb      veax1
         lea     ebp,[eax+edi]
-        cmp     ebp,esp
+        cmp     ebp,esi
         jb      err_memaccess
     veax1:
         ret
@@ -1986,7 +2030,7 @@ _VERIFYADDRESS_edx:             ; used in load.i, store.i & lidx
         cmp     edx,hea
         jb      vedx1
         lea     ebp,[edx+edi]
-        cmp     ebp,esp
+        cmp     ebp,esi
         jb      err_memaccess
     vedx1:
         ret
@@ -2018,15 +2062,15 @@ JIT_OP_SDIV:
 
 JIT_OP_RETN:
         _POP    ebx             ; pop frame
-        _POP    ecx             ; get return address
+        add		esi,4			; get rid of the extra parameter from call
 
         mov     frm,ebx
         _POP    ebp
 
         add     ebx,edi
-        add     esp,ebp         ; remove data from stack
+        add     esi,ebp         ; remove data from stack
 
-        jmp     ecx
+        ret
 
 
 JIT_OP_MOVS:                    ;length of block to copy is already in ECX
@@ -2092,34 +2136,33 @@ err_divide:
         jmp     _return_popstack
 
 JIT_OP_SYSREQ:
-        mov     ecx,esp         ; get STK into ECX
+		push	ecx
+		push	esi
         mov     ebp,amx         ; get amx into EBP
 
-        sub     ecx,edi         ; correct STK
+        sub     esi,edi         ; correct STK
         mov     alt,edx         ; save ALT
 
-        mov     [ebp+_stk],ecx  ; store values in AMX structure: STK,
-        mov     ecx,hea         ; HEA,
+        mov     [ebp+_stk],esi  ; store values in AMX structure: STK,
+        mov     esi,hea         ; HEA,
         mov     ebx,frm         ; and FRM
-        mov     [ebp+_hea],ecx
+        mov     [ebp+_hea],esi
         mov     [ebp+_frm],ebx
 
         lea     ebx,pri         ; 3rd param: addr. of retval
-        lea     ecx,[esp+4]     ; 4th param: parameter array
 
-        xchg    esp,esi         ; switch to caller stack
-
-        push    ecx
+        ;Our original esi is still pushed!
         push    ebx
         push    eax             ; 2nd param: function number
         push    ebp             ; 1st param: amx
         call    [ebp+_callback]
-        _DROPARGS 16            ; remove args from stack
-
-        xchg    esp,esi         ; switch back to AMX stack
+        _DROPARGS 12            ; remove args from stack
+        
+		pop		esi
+        pop		ecx
         cmp     eax,AMX_ERR_NONE
-        jne     _return_popstack; return error code, if any
-
+        jne		_return_popstack
+.continue:
         mov     eax,pri         ; get retval into eax (PRI)
         mov     edx,alt         ; restore ALT
         mov     ebx,frm         ; restore FRM
@@ -2128,25 +2171,25 @@ JIT_OP_SYSREQ:
 
 
 JIT_OP_SYSREQ_D:                ; (TR)
-        mov     ecx,esp         ; get STK into ECX
+		push	ecx
+		push	esi
         mov     ebp,amx         ; get amx into EBP
 
-        sub     ecx,edi         ; correct STK
+        sub     esi,edi         ; correct STK
         mov     alt,edx         ; save ALT
 
-        mov     [ebp+_stk],ecx  ; store values in AMX structure: STK,
-        mov     ecx,hea         ; HEA,
+        mov     [ebp+_stk],esi  ; store values in AMX structure: STK,
+        mov     esi,hea         ; HEA,
         mov     eax,frm         ; and FRM
-        mov     [ebp+_hea],ecx
+        mov     [ebp+_hea],esi
         mov     [ebp+_frm],eax  ; eax & ecx are invalid by now
 
-        lea     edx,[esp+4]     ; 2nd param: parameter array
-        xchg    esp,esi         ; switch to caller stack
-        push    edx
+        ;esi is still pushed!
         push    ebp             ; 1st param: amx
         call    ebx             ; direct call
         _DROPARGS 8             ; remove args from stack
-        xchg    esp,esi         ; switch back to AMX stack
+        
+        pop		ecx
         mov     ebp,amx         ; get amx into EBP
         cmp     dword [ebp+_error],AMX_ERR_NONE
         jne     _return_popstack; return error code, if any
@@ -2160,25 +2203,27 @@ JIT_OP_SYSREQ_D:                ; (TR)
 
 JIT_OP_BREAK:
 %ifdef DEBUGSUPPORT
-        mov     ecx,esp         ; get STK into ECX
+		push	ecx
+		push	esi
         mov     ebp,amx         ; get amx into EBP
 
-        sub     ecx,edi         ; correct STK
+        sub     esi,edi         ; correct STK
 
         mov     [ebp+_pri],eax  ; store values in AMX structure: PRI,
         mov     [ebp+_alt],edx  ; ALT,
-        mov     [ebp+_stk],ecx  ; STK,
-        mov     ecx,hea         ; HEA,
+        mov     [ebp+_stk],esi  ; STK,
+        mov     esi,hea         ; HEA,
         mov     ebx,frm         ; and FRM
-        mov     [ebp+_hea],ecx
+        mov     [ebp+_hea],esi
         mov     [ebp+_frm],ebx  ; EBX & ECX are invalid by now
         ;??? storing CIP is not very useful, because the code changed (during JIT compile)
 
-        xchg    esp,esi         ; switch to caller stack
         push    ebp             ; 1st param: amx
         call    [ebp+_debug]
         _DROPARGS 4             ; remove args from stack
-        xchg    esp,esi         ; switch back to AMX stack
+
+        pop		esi
+        pop		ecx
         cmp     eax,AMX_ERR_NONE
         jne     _return_popstack; return error code, if any
 
@@ -2194,6 +2239,7 @@ JIT_OP_BREAK:
 
 JIT_OP_SWITCH:
         pop     ebp             ; pop return address = table address
+        push	ecx
         mov     ecx,[ebp]       ; ECX = number of records
         lea     ebp,[ebp+ecx*8+8]       ; set pointer _after_ LAST case
         ;if there are zero cases we should just skip this -- bail
@@ -2205,6 +2251,7 @@ JIT_OP_SWITCH:
         sub     ebp,8           ; position to preceding case
         loop    op_switch_loop  ; check next case, or fall through
     op_switch_jump:
+    	pop		ecx
 %ifndef FORCERELOCATABLE
         jmp     [ebp-4]         ; jump to the case instructions
 %else

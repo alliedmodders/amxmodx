@@ -2895,6 +2895,22 @@ static cell AMX_NATIVE_CALL find_plugin_byfile(AMX *amx, cell *params)
 	return -1;
 }
 
+static cell AMX_NATIVE_CALL int3(AMX *amx, cell *params)
+{
+#ifdef DEBUG
+#if defined WIN32
+	__asm
+	{
+		int 3;
+	};
+#else
+	asm("int $3");
+#endif //WIN32
+#endif //DEBUG
+
+	return 0;
+}
+
 AMX_NATIVE_INFO amxmod_Natives[] = {
   { "client_cmd",       client_cmd },
   { "client_print",     client_print },
@@ -3062,5 +3078,6 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "plugin_flags",		plugin_flags},
   { "lang_phrase",		lang_phrase},
   { "mkdir",			amx_mkdir},
+  { "int3",				int3},
   { NULL, NULL }
 };

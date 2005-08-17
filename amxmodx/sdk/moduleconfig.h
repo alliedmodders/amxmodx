@@ -21,13 +21,19 @@
 // metamod plugin?
 // #define USE_METAMOD
 
+// use memory manager/tester?
+// note that if you use this, you cannot construct/allocate 
+// anything before the module attached (OnAmxxAttach).
+// be careful of default constructors using new/malloc!
+// #define MEMORY_TEST
+
 // - AMXX Init functions
 // Also consider using FN_META_*
 // AMXX query
 //#define FN_AMXX_QUERY OnAmxxQuery
 // AMXX attach
 //   Do native functions init here (MF_AddNatives)
-// #define FN_AMXX_ATTACH OnAmxxAttach
+//#define FN_AMXX_ATTACH OnAmxxAttach
 // AMXX detach
 //#define FN_AMXX_DETACH OnAmxxDetach
 // All plugins loaded

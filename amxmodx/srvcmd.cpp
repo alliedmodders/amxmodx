@@ -97,12 +97,15 @@ void amx_command(){
 
 				CPluginMngr::CPlugin *plugin = g_plugins.findPlugin(sPlugin);
 
-				if ( plugin && plugin->isValid() ) 
+				if ( plugin && plugin->isValid() && plugin->isPaused() ) 
 				{
 						plugin->unpausePlugin();
 						print_srvconsole("Unpaused plugin \"%s\"\n",plugin->getName() );
+				} else if (!plugin) {
+					print_srvconsole("Couldn't find plugin matching \"%s\"\n",sPlugin);
+				} else {
+					print_srvconsole("Plugin %s can't be unpaused right now.", sPlugin);
 				}
-				else print_srvconsole("Couldn't find plugin matching \"%s\"\n",sPlugin);
 
 		}
 		else if (!strcmp(cmd,"cvars")) 

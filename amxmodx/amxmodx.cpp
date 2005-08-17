@@ -1914,7 +1914,8 @@ static cell AMX_NATIVE_CALL unpause(AMX *amx, cell *params) /* 3 param */
   }
   else
     plugin = g_plugins.findPluginFast( amx);
-  if (plugin && plugin->isValid()) {
+  if (plugin && plugin->isValid() && plugin->isPaused() )
+  {
     plugin->unpausePlugin();
     return 1;
   }

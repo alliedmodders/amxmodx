@@ -244,18 +244,12 @@ void CPluginMngr::CPlugin::Finalize()
 	}
 }
 
-void CPluginMngr::CPlugin::pauseFunction( int id ) { 
-	if (isValid()){
-		paused_fun |= (1<<id);
-		g_commands.clearBufforedInfo();
-	}
+void CPluginMngr::CPlugin::pauseFunction( int id )
+{ 
 }
 
-void CPluginMngr::CPlugin::unpauseFunction( int id ) {
-	if (isValid()) {
-		paused_fun &= ~(1<<id); 
-		g_commands.clearBufforedInfo();
-	}
+void CPluginMngr::CPlugin::unpauseFunction( int id )
+{
 }
 
 void CPluginMngr::CPlugin::setStatus( int a   ) { 

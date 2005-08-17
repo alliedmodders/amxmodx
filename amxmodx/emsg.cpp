@@ -153,17 +153,6 @@ void Client_WeaponList(void* mValue)
     break;
   case 7:
     int iId = *(int*)mValue;
-	/*int* blocker;
-
-	int iwpn = iId;
-	
-	if (iId > 31) {
-		iwpn -= 31;
-		blocker = &wpnList2;
-	}
-	else
-		blocker = &wpnList;*/
-
     if ( (iId < 0 || iId >= MAX_WEAPONS ) || (wpnList & (1<<iId)) )
       break;
     wpnList |= (1<<iId);

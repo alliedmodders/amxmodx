@@ -515,8 +515,10 @@ static cell AMX_NATIVE_CALL get_user_weapons(AMX *amx, cell *params) /* 3 param 
     cell *cpIds = get_amxaddr(amx,params[2]);
 	*cpIds = 0;
     int weapons = pPlayer->pEdict->v.weapons & ~(1<<31); // don't count last element
-    for(int i = 1; i < MAX_WEAPONS; ++i){
-      if (weapons & (1<<i)) {
+    for(int i = 1; i < MAX_WEAPONS; ++i)
+	{
+      if (weapons & (1<<i))
+	  {
         *(cpIds+(*cpNum)) = i;
         (*cpNum)++;
       }
@@ -664,13 +666,20 @@ static cell AMX_NATIVE_CALL user_has_weapon(AMX *amx,cell *params)
 static cell AMX_NATIVE_CALL get_user_weapon(AMX *amx, cell *params) /* 3 param */
 {
   int index = params[1];
-  if (index < 1 || index > gpGlobals->maxClients){
+  if (index < 1 || index > gpGlobals->maxClients)
+  {
     LogError(amx, AMX_ERR_NATIVE, "Invalid player id %d", index);
     return 0;
   }
   CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
-  if (pPlayer->ingame){
-  int wpn = pPlayer->current;
+  if (pPlayer->ingame)
+  {
+    int wpn = pPlayer->current;
+	if ( !(pPlayer->pEdict->v.weapons & (1<<wpn)) )
+	{
+		pPlayer->current = 0;
+		return 0;
+	}
     cell *cpTemp = get_amxaddr(amx,params[2]);
     *cpTemp = pPlayer->weapons[wpn].clip;
     cpTemp = get_amxaddr(amx,params[3]);

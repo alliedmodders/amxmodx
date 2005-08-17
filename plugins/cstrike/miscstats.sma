@@ -269,7 +269,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK) {
       	{ 
 	        new message[128],team_name[32]
         	set_hudmessage(255,255,255,0.02,0.85,2, 0.05, 0.1, 0.02, 3.0, 3)
-        	for(new a=0; a<pplnum; ++a
+        	for(new a=0; a<pplnum; ++a)
         	{
            		format(team_name,31,"%L",ppl[a],(epplnum==1)?g_teamsNames[team]:g_teamsNames[team+2])
     	    	format(message,127,"%L",ppl[a],"REMAINING",epplnum,team_name)

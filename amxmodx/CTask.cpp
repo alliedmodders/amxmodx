@@ -53,8 +53,14 @@ void CTaskMngr::CTask::set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags,
 	m_iId = iId;
 	m_fBase = fBase;
 
-	m_iRepeat =		(iFlags & 1) ? iRepeat : 0;
-	m_bLoop =		(iFlags & 2) ?  true : false;
+	if (iFlags & 2)
+	{
+		m_bLoop = true;
+		m_iRepeat = -1;
+	} else if (iFlags & 1) {
+		m_bLoop = true;
+		m_iRepeat = iRepeat;
+	}
 	m_bAfterStart =	(iFlags & 4) ?  true : false;
 	m_bBeforeEnd =	(iFlags & 8) ?  true : false;
 
@@ -118,6 +124,7 @@ void CTaskMngr::CTask::resetNextExecTime(float fCurrentTime)
 void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, float fTimeLeft)
 {
 	bool execute=false;
+	bool done=false;
 	if (m_bAfterStart)
 	{
 		if (fCurrentTime - fTimeLeft + 1.0f >= m_fBase)
@@ -127,31 +134,41 @@ void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, f
 	{
 		if (fTimeLimit != 0.0f && (fTimeLeft + fTimeLimit * 60.0f) - fCurrentTime - 1.0f <= m_fBase)
 			execute = true;
-	}
-	else if (m_fNextExecTime <= fCurrentTime)
+	} else if (m_fNextExecTime <= fCurrentTime) {
 		execute = true;
+	}
 
 	if (execute)
 	{
-		if (m_iParamLen)	// call with parameters
+		//only bother calling if we have something to call
+		if ( !(m_bLoop && !m_iRepeat) )
 		{
-			cell arr = prepareCellArray(m_pParams, m_iParamLen);
-			executeForwards(m_iFunc, arr, m_iId);
-		} else {
-			executeForwards(m_iFunc, m_iId);
+			if (m_iParamLen)	// call with parameters
+			{
+				cell arr = prepareCellArray(m_pParams, m_iParamLen);
+				executeForwards(m_iFunc, arr, m_iId);
+			} else {
+				executeForwards(m_iFunc, m_iId);
+			}
 		}
-
+	
 		if (isFree())
 			return;
 
 		// set new exec time OR remove the task if needed
-		if (m_bLoop || (m_iRepeat-- > 0))
+		if (m_bLoop)
 		{
-			m_fNextExecTime += m_fBase;
+			if (m_iRepeat != -1 && --m_iRepeat <= 0)
+				done = true;
+		} else {
+			done = true;
 		}
-		else
+
+		if (done)
 		{
-			clear();	// hamster
+			clear();
+		} else {
+			m_fNextExecTime += m_fBase;
 		}
 	}
 }

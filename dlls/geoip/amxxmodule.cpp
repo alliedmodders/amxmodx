@@ -45,15 +45,12 @@
 enginefuncs_t g_engfuncs;
 globalvars_t  *gpGlobals;
 
-
-
 DLL_FUNCTIONS *g_pFunctionTable;
 DLL_FUNCTIONS *g_pFunctionTable_Post;
 enginefuncs_t *g_pengfuncsTable;
 enginefuncs_t *g_pengfuncsTable_Post;
 NEW_DLL_FUNCTIONS *g_pNewFunctionsTable;
 NEW_DLL_FUNCTIONS *g_pNewFunctionsTable_Post;
-
 
 // GetEntityAPI2 functions
 static DLL_FUNCTIONS g_EntityAPI_Table = 
@@ -2481,9 +2478,11 @@ PFN_IS_PLAYER_CONNECTING	g_fn_IsPlayerConnecting;
 PFN_IS_PLAYER_HLTV			g_fn_IsPlayerHLTV;
 PFN_GET_PLAYER_ARMOR		g_fn_GetPlayerArmor;
 PFN_GET_PLAYER_HEALTH		g_fn_GetPlayerHealth;
+#ifdef MEMORY_TEST
 PFN_ALLOCATOR				g_fn_Allocator;
 PFN_REALLOCATOR				g_fn_Reallocator;
 PFN_DEALLOCATOR				g_fn_Deallocator;
+#endif
 PFN_AMX_EXEC				g_fn_AmxExec;
 PFN_AMX_EXECV				g_fn_AmxExecv;
 PFN_AMX_ALLOT				g_fn_AmxAllot;
@@ -2502,6 +2501,7 @@ PFN_GET_PLAYER_EDICT		g_fn_GetPlayerEdict;
 PFN_FORMAT					g_fn_Format;
 PFN_REGISTERFUNCTION		g_fn_RegisterFunction;
 PFN_REQ_FNPTR				g_fn_RequestFunction;
+PFN_AMX_PUSH				g_fn_AmxPush;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2610,11 +2610,14 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("GetPlayerHealth", g_fn_GetPlayerHealth, PFN_GET_PLAYER_HEALTH);
 	REQFUNC("GetPlayerFlags", g_fn_GetPlayerFlags, PFN_GETPLAYERFLAGS);
 	REQFUNC("GetPlayerEdict", g_fn_GetPlayerEdict, PFN_GET_PLAYER_EDICT);
+	REQFUNC("amx_Push", g_fn_AmxPush, PFN_AMX_PUSH);
 
+#ifdef MEMORY_TEST
 	// Memory
 	REQFUNC_OPT("Allocator", g_fn_Allocator, PFN_ALLOCATOR);
 	REQFUNC_OPT("Reallocator", g_fn_Reallocator, PFN_REALLOCATOR);
 	REQFUNC_OPT("Deallocator", g_fn_Deallocator, PFN_DEALLOCATOR);
+#endif
 
 	REQFUNC("CellToReal", g_fn_CellToReal, PFN_CELL_TO_REAL);
 	REQFUNC("RealToCell", g_fn_RealToCell, PFN_REAL_TO_CELL);
@@ -2717,7 +2720,7 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_IsPlayerHLTV(0);
 	MF_GetPlayerArmor(0);
 	MF_GetPlayerHealth(0);
-	MF_AmxExec(0, 0, 0, 0);
+	MF_AmxExec(0, 0, 0);
 	MF_AmxExecv(0, 0, 0, 0, 0);
 	MF_AmxFindPublic(0, 0, 0);
 	MF_AmxAllot(0, 0, 0, 0);
@@ -2732,6 +2735,8 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_RegisterFunction(NULL, "");
 }
 #endif
+
+#ifdef MEMORY_TEST
 
 /************* MEMORY *************/
 // undef all defined macros
@@ -2903,6 +2908,8 @@ void	operator delete[](void *reportedAddress)
 
 	Mem_Deallocator(g_Mem_CurrentFilename, g_Mem_CurrentLine, g_Mem_CurrentFunc, m_alloc_delete_array, reportedAddress);
 }
+
+#endif //MEMORY_TEST
 
 /************* stuff from dlls/util.cpp *************/
 //				must come here because cbase.h declares it's own operator new

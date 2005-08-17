@@ -253,23 +253,30 @@ public client_death(killer,victim,wpnindex,hitplace,TK) {
       set_task( 4.0 + float( param[1] ) ,"checkKills",0,param,2)
     }
   }
-  if ( EnemyRemaining ) {
+  if ( EnemyRemaining )
+  {
     new ppl[32], pplnum = 0
     new team = get_user_team( victim ) - 1
     if ( team >= 0 && team < 4 )
       get_players(ppl,pplnum,"e", g_teamsNames[1 - team] ) 
-    if (pplnum) {
-      new eppl[32], epplnum 
-      get_players(eppl,epplnum,"ae",g_teamsNames[team]) 
-      if (epplnum) { 
-        new message[128],team_name[32]
-        set_hudmessage(255,255,255,0.02,0.85,2, 0.05, 0.1, 0.02, 3.0, 3)
-        for(new a=0; a<pplnum; ++a){
-           format(team_name,31,"%L",ppl[a],(epplnum==1)?g_teamsNames[team]:g_teamsNames[team+2])
-           format(message,127,"%L",ppl[a],"REMAINING",epplnum,team_name)
-           show_hudmessage(ppl[a],message)
-        }
-      }
+    if (pplnum)
+    {
+      new eppl[32], epplnum
+      if (team >= 0 && team < 4)
+      {
+      	get_players(eppl,epplnum,"ae",g_teamsNames[team]) 
+      	if (epplnum)
+      	{ 
+	        new message[128],team_name[32]
+        	set_hudmessage(255,255,255,0.02,0.85,2, 0.05, 0.1, 0.02, 3.0, 3)
+        	for(new a=0; a<pplnum; ++a
+        	{
+           		format(team_name,31,"%L",ppl[a],(epplnum==1)?g_teamsNames[team]:g_teamsNames[team+2])
+    	    	format(message,127,"%L",ppl[a],"REMAINING",epplnum,team_name)
+	        	show_hudmessage(ppl[a],message)
+        	}
+      	}
+  	  }
     }
   }
   if ( LastMan ) {

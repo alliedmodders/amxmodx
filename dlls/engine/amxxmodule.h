@@ -46,8 +46,6 @@ struct amxx_module_info_s
 	const char *logtag;		// added in version 2
 };
 
-
-
 // return values from functions called by amxx
 #define AMXX_OK					0			/* no error */
 #define AMXX_IFVERS				1			/* interface version */
@@ -1981,13 +1979,15 @@ typedef edict_t *		(*PFN_GET_PLAYER_EDICT)			(int /*id*/);
 typedef void *			(*PFN_GET_PLAYER_EDICT)			(int /*id*/);
 #endif
 
+#ifdef MEMORY_TEST
 typedef void *			(*PFN_ALLOCATOR)				(const char* /*filename*/, const unsigned int /*line*/, const char* /*func*/,
 														 const unsigned int /*type*/, const size_t /*size*/);
 typedef void *			(*PFN_REALLOCATOR)				(const char* /*filename*/, const unsigned int /*line*/, const char* /*func*/,
 														 const unsigned int /*type*/, const size_t /*size*/, void* /*addr*/ );
 typedef void			(*PFN_DEALLOCATOR)				(const char* /*filename*/, const unsigned int /*line*/, const char* /*func*/,
 														 const unsigned int /*type*/, const void* /*addr*/ );
-typedef int				(*PFN_AMX_EXEC)					(AMX* /*amx*/, cell* /*return val*/, int /*index*/, int /*numparams*/, ... /*params*/);
+#endif
+typedef int				(*PFN_AMX_EXEC)					(AMX* /*amx*/, cell* /*return val*/, int /*index*/);
 typedef int				(*PFN_AMX_EXECV)				(AMX* /*amx*/, cell* /*return val*/, int /*index*/, int /*numparams*/, cell[] /*params*/);
 typedef int				(*PFN_AMX_ALLOT)				(AMX* /*amx*/, int /*length*/, cell* /*amx_addr*/, cell** /*phys_addr*/);
 typedef int				(*PFN_AMX_FINDPUBLIC)			(AMX* /*amx*/, char* /*func name*/, int* /*index*/);
@@ -2002,6 +2002,7 @@ typedef void			(*PFN_UNREGISTER_SPFORWARD)		(int /*id*/);
 typedef	void			(*PFN_MERGEDEFINITION_FILE)		(const char * /*filename*/);
 typedef const char *	(*PFN_FORMAT)					(const char * /*fmt*/, ... /*params*/);
 typedef void			(*PFN_REGISTERFUNCTION)			(void * /*pfn*/, const char * /*desc*/);
+typedef	int				(*PFN_AMX_PUSH)					(AMX * /*amx*/, cell /*value*/);
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
 extern PFN_BUILD_PATHNAME			g_fn_BuildPathname;
@@ -2047,7 +2048,6 @@ extern PFN_IS_PLAYER_HLTV			g_fn_IsPlayerHLTV;
 extern PFN_GET_PLAYER_ARMOR			g_fn_GetPlayerArmor;
 extern PFN_GET_PLAYER_HEALTH		g_fn_GetPlayerHealth;
 extern PFN_AMX_EXEC					g_fn_AmxExec;
-extern PFN_AMX_EXECV				g_fn_AmxExecv;
 extern PFN_AMX_ALLOT				g_fn_AmxAllot;
 extern PFN_AMX_FINDPUBLIC			g_fn_AmxFindPublic;
 extern PFN_LOAD_AMXSCRIPT			g_fn_LoadAmxScript;
@@ -2065,6 +2065,7 @@ extern PFN_FORMAT					g_fn_Format;
 extern PFN_GET_PLAYER_TEAM			g_fn_GetPlayerTeam;
 extern PFN_REGISTERFUNCTION			g_fn_RegisterFunction;
 extern PFN_REQ_FNPTR				g_fn_RequestFunction;
+extern PFN_AMX_PUSH					g_fn_AmxPush;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2123,6 +2124,8 @@ edict_t*		MF_GetPlayerEdict			(int id) { }
 const char *	MF_Format					(const char *fmt, ...) { }
 void			MF_RegisterFunction			(void *pfn, const char *description) { }
 void *			MF_RequestFunction			(const char *description) { }
+int				MF_AmxPush					(AMX *amx, cell *params) { }
+int				MF_AmxExec					(AMX *amx, cell *retval, int idx) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
@@ -2187,7 +2190,9 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...);
 #define MF_Format g_fn_Format
 #define MF_RegisterFunction g_fn_RegisterFunction
 #define MF_RequestFunction g_fn_RequestFunction;
+#define MF_AmxPush g_fn_AmxPush
 
+#ifdef MEMORY_TEST
 /*** Memory ***/
 void	*operator new(size_t reportedSize);
 void	*operator new[](size_t reportedSize);
@@ -2230,5 +2235,7 @@ void	Mem_Deallocator(const char *sourceFile, const unsigned int sourceLine, cons
 #define	calloc(sz)	Mem_Allocator  (__FILE__,__LINE__,__FUNCTION__,m_alloc_calloc,sz)
 #define	realloc(ptr,sz)	Mem_Reallocator(__FILE__,__LINE__,__FUNCTION__,m_alloc_realloc,sz,ptr)
 #define	free(ptr)	Mem_Deallocator(__FILE__,__LINE__,__FUNCTION__,m_alloc_free,ptr)
+
+#endif //MEMORY_TEST
 
 #endif // #ifndef __AMXXMODULE_H__

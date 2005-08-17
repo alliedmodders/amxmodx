@@ -221,12 +221,12 @@
 ; #define  PUSH(v)  ( stk-=sizeof(cell), *(cell *)(data+(int)stk)=v )
 ;
 %macro _PUSH 1
-	sub		esi, 4
+	lea		esi,[esi-4]
 	mov		dword [esi], %1
 %endmacro
 
 %macro _PUSHMEM 1
-	sub		esi, 4
+	lea		esi,[esi-4]
 	mov		ebp, dword %1
 	mov		dword [esi], ebp
 %endmacro
@@ -236,7 +236,7 @@
 ;
 %macro _POP 1
 	mov		%1, dword [esi]
-	add		esi, 4
+	lea		esi,[esi+4]
 %endmacro
 
 
@@ -1021,7 +1021,7 @@ OP_RET:
 
         j_ret:
         _POP    ebx             ; pop frame
-        add		esi,4			; pop extra param
+        lea		esi,[esi+4]
         mov     frm,ebx
         add     ebx,edi
         ret
@@ -1934,9 +1934,10 @@ _amx_exec_jit:
 
         add     esi,edi         ; ESP will contain DAT+STK
 
-        add     [esp+8],edi         ; make STP absolute address for run-time checks
+        add     [esp+8],edi     ; make STP absolute address for run-time checks
 
-        _POP    ecx             ; AMX pseudo-return address, ignored
+        mov		dword [esi], 0	; zero this out, but we need to keep it so
+        						; the stack frame is in tact
         mov		ecx,esp			; copy stack pointer
         ; Call compiled code via CALL NEAR <address>
         call    ebp

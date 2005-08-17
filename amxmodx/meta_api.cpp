@@ -93,6 +93,7 @@ bool g_initialized = false;
 bool g_IsNewMM = false;
 bool g_NeedsP = false;
 bool g_coloredmenus;
+bool g_activated = false;
 
 #ifdef MEMORY_TEST
 float g_next_memreport_time;
@@ -196,9 +197,12 @@ const char*	get_localinfo( const char* name	, const	char* def )
 // Load	AMX	modules	for	new	native functions
 // Initialize AMX stuff	and	load it's plugins from plugins.ini list
 // Call	precache forward function from plugins
-int	C_Spawn( edict_t *pent ) {
+int	C_Spawn( edict_t *pent )
+{
   if (g_initialized)
 	  RETURN_META_VALUE(MRES_IGNORED, 0);
+
+  g_activated = false;
   g_initialized = true;
   g_forcedmodules =	false;
   g_forcedsounds = false;
@@ -360,8 +364,8 @@ Much more later	after precache.	All	is precached, server
 will be	flaged as ready	to use so call
 plugin_init	forward	function from plugins
 */
-void C_ServerActivate( edict_t *pEdictList, int edictCount, int clientMax	){
-
+void C_ServerActivate( edict_t *pEdictList, int edictCount, int clientMax )
+{
   int id;
   for (int i = 0; g_user_msg[ i	].name;	++i	)
   {
@@ -383,9 +387,10 @@ void C_ServerActivate( edict_t *pEdictList, int edictCount, int clientMax	){
   RETURN_META(MRES_IGNORED);
 }
 
-void C_ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax ){
-
-//	g_edict_point =	(int)pEdictList;
+void C_ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax )
+{
+  if (g_activated)
+	  RETURN_META(MRES_IGNORED);
 
   for(int i	= 1; i <= gpGlobals->maxClients; ++i) {
 	CPlayer	*pPlayer = GET_PLAYER_POINTER_I(i);
@@ -412,12 +417,16 @@ void C_ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax )
   g_memreport_enabled = true;
 #endif
 
+  g_activated = true;
+
   RETURN_META(MRES_IGNORED);
 }
 
 // Call	plugin_end forward function	from plugins.
-void C_ServerDeactivate()	{
-
+void C_ServerDeactivate()
+{
+  if (!g_activated)
+	  RETURN_META(MRES_IGNORED);
   for(int i	= 1; i <= gpGlobals->maxClients; ++i){
 	CPlayer	*pPlayer = GET_PLAYER_POINTER_I(i);
 	if (pPlayer->initialized)
@@ -438,8 +447,10 @@ void C_ServerDeactivate()	{
 
 // After all clear whole AMX configuration
 // However leave AMX modules which are loaded only once
-void C_ServerDeactivate_Post() {
-
+void C_ServerDeactivate_Post()
+{
+  if (!g_initialized)
+    RETURN_META(MRES_IGNORED);
   detachReloadModules();
   g_auth.clear();
   g_commands.clear();
@@ -519,7 +530,8 @@ void C_ServerDeactivate_Post() {
   RETURN_META(MRES_IGNORED);
 }
 
-BOOL C_ClientConnect_Post( edict_t *pEntity, const char *pszName,	const char *pszAddress,	char szRejectReason[ 128 ]	){
+BOOL C_ClientConnect_Post( edict_t *pEntity, const char *pszName,	const char *pszAddress,	char szRejectReason[ 128 ] )
+{
   CPlayer* pPlayer = GET_PLAYER_POINTER(pEntity);
   if (!pPlayer->bot) {
 
@@ -541,7 +553,8 @@ BOOL C_ClientConnect_Post( edict_t *pEntity, const char *pszName,	const char *ps
   RETURN_META_VALUE(MRES_IGNORED, TRUE);
 }
 
-void C_ClientDisconnect( edict_t *pEntity	) {
+void C_ClientDisconnect( edict_t *pEntity )
+{
   CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
   if (pPlayer->initialized)
 	  executeForwards(FF_ClientDisconnect, pPlayer->index);
@@ -553,7 +566,8 @@ void C_ClientDisconnect( edict_t *pEntity	) {
   RETURN_META(MRES_IGNORED);
 }
 
-void C_ClientPutInServer_Post( edict_t *pEntity )	{
+void C_ClientPutInServer_Post( edict_t *pEntity )
+{
   CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
   if (!pPlayer->bot) {
 	pPlayer->PutInServer();
@@ -565,7 +579,8 @@ void C_ClientPutInServer_Post( edict_t *pEntity )	{
   RETURN_META(MRES_IGNORED);
 }
 
-void C_ClientUserInfoChanged_Post( edict_t *pEntity, char	*infobuffer	) {
+void C_ClientUserInfoChanged_Post( edict_t *pEntity, char	*infobuffer	)
+{
   CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
 
   executeForwards(FF_ClientInfoChanged, pPlayer->index);
@@ -596,7 +611,8 @@ void C_ClientUserInfoChanged_Post( edict_t *pEntity, char	*infobuffer	) {
   RETURN_META(MRES_IGNORED);
 }
 
-void C_ClientCommand(	edict_t	*pEntity ) {
+void C_ClientCommand(	edict_t	*pEntity )
+{
   CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
   META_RES result =	MRES_IGNORED;
   cell ret = 0;
@@ -708,8 +724,8 @@ void C_ClientCommand(	edict_t	*pEntity ) {
   RETURN_META( result );
 }
 
-void C_StartFrame_Post( void ) {
-
+void C_StartFrame_Post( void )
+{
   if (g_auth_time <	gpGlobals->time	)
   {
   g_auth_time =	gpGlobals->time	+ 0.7;
@@ -802,7 +818,8 @@ void C_StartFrame_Post( void ) {
   RETURN_META(MRES_IGNORED);
 }
 
-void C_MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed) {
+void C_MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
+{
   if (ed)
   {
 
@@ -836,47 +853,56 @@ void C_MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict
   g_events.parserInit(msg_type,	&gpGlobals->time, mPlayer ,mPlayerIndex);
   RETURN_META(MRES_IGNORED);
 }
-void C_WriteByte_Post(int	iValue)	{
+void C_WriteByte_Post(int	iValue)
+{
   g_events.parseValue(iValue);
   if (function)	(*function)((void *)&iValue);
   RETURN_META(MRES_IGNORED);
 }
-void C_WriteChar_Post(int	iValue)	{
+void C_WriteChar_Post(int	iValue)
+{
   g_events.parseValue(iValue);
   if (function)	(*function)((void *)&iValue);
   RETURN_META(MRES_IGNORED);
 }
-void C_WriteShort_Post(int iValue) {
+void C_WriteShort_Post(int iValue)
+{
   g_events.parseValue(iValue);
   if (function)	(*function)((void *)&iValue);
   RETURN_META(MRES_IGNORED);
 }
-void C_WriteLong_Post(int	iValue)	{
+void C_WriteLong_Post(int	iValue)
+{
   g_events.parseValue(iValue);
   if (function)	(*function)((void *)&iValue);
   RETURN_META(MRES_IGNORED);
 }
-void C_WriteAngle_Post(float flValue)	{
+void C_WriteAngle_Post(float flValue)
+{
   g_events.parseValue(flValue);
   if (function)	(*function)((void *)&flValue);
   RETURN_META(MRES_IGNORED);
 }
-void C_WriteCoord_Post(float flValue)	{
+void C_WriteCoord_Post(float flValue)
+{
   g_events.parseValue(flValue);
   if (function)	(*function)((void *)&flValue);
   RETURN_META(MRES_IGNORED);
 }
-void C_WriteString_Post(const	char *sz) {
+void C_WriteString_Post(const char *sz)
+{
   g_events.parseValue(sz);
   if (function)	(*function)((void *)sz);
   RETURN_META(MRES_IGNORED);
 }
-void C_WriteEntity_Post(int iValue) {
+void C_WriteEntity_Post(int iValue)
+{
   g_events.parseValue(iValue);
   if (function)	(*function)((void *)&iValue);
   RETURN_META(MRES_IGNORED);
 }
-void C_MessageEnd_Post(void) {
+void C_MessageEnd_Post(void)
+{
   g_events.executeEvents();
   if (endfunction) (*endfunction)(NULL);
   RETURN_META(MRES_IGNORED);
@@ -923,14 +949,16 @@ int	C_Cmd_Argc( void )
 
 // Grenade has been	thrown.
 // Only	here we	may	find out who is	an owner.
-void C_SetModel(edict_t *e, const	char *m){
+void C_SetModel(edict_t *e, const	char *m)
+{
   if(e->v.owner&&m[7]=='w'&&m[8]=='_'&&m[9]=='h')
 	g_grenades.put(	e ,	1.75, 4, GET_PLAYER_POINTER(e->v.owner)	);
   RETURN_META(MRES_IGNORED);
 }
 
 // Save	at what	part of	body a player is aiming
-void C_TraceLine_Post(const float	*v1, const float *v2, int fNoMonsters, edict_t *e, TraceResult *ptr) {
+void C_TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *e, TraceResult *ptr)
+{
   if ( e &&	( e->v.flags & (FL_CLIENT |	FL_FAKECLIENT) ) ) {
 	CPlayer* pPlayer = GET_PLAYER_POINTER(e);
 	if (ptr->pHit&&(ptr->pHit->v.flags&	(FL_CLIENT | FL_FAKECLIENT)	))

@@ -29,8 +29,6 @@
 */
 
 #include "amxmodx.h"
-#include <malloc.h>
-#include <stdlib.h>
 #include "CStack.h"
 #include "natives.h"
 

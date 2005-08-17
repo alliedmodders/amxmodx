@@ -363,6 +363,58 @@ static cell AMX_NATIVE_CALL menu_makecallback(AMX *amx, cell *params)
 	return id;
 }
 
+static cell AMX_NATIVE_CALL menu_item_setname(AMX *amx, cell *params)
+{
+    GETMENU(params[1]);
+
+    menuitem *pItem = pMenu->GetMenuItem(static_cast<item_t>(params[2]));
+
+    if (!pItem)
+        return 0;
+
+    int len;
+    char *name;
+
+    name = get_amxstring(amx, params[3], 0, len);
+
+    pItem->name.assign(name);
+
+    return 1;
+}
+
+static cell AMX_NATIVE_CALL menu_item_setcmd(AMX *amx, cell *params)
+{
+    GETMENU(params[1]);
+
+    menuitem *pItem = pMenu->GetMenuItem(static_cast<item_t>(params[2]));
+
+    if (!pItem)
+        return 0;
+
+    int len;
+    char *cmd;
+
+    cmd = get_amxstring(amx, params[3], 0, len);
+
+    pItem->cmd.assign(cmd);
+
+    return 1;
+}
+
+static cell AMX_NATIVE_CALL menu_item_setcall(AMX *amx, cell *params)
+{
+    GETMENU(params[1]);
+
+    menuitem *pItem = pMenu->GetMenuItem(static_cast<item_t>(params[2]));
+
+    if (!pItem)
+        return 0;
+
+    pItem->handler = params[3];
+
+    return 1;
+} 
+
 AMX_NATIVE_INFO g_NewMenuNatives[] = 
 {
 	{"menu_create",				menu_create},
@@ -373,5 +425,8 @@ AMX_NATIVE_INFO g_NewMenuNatives[] =
 	{"menu_find_id",			menu_find_id},
 	{"menu_item_getinfo",		menu_item_getinfo},
 	{"menu_makecallback",		menu_makecallback},
+	{"menu_item_setcall",		menu_item_setcall},
+	{"menu_item_setcmd",		menu_item_setcmd},
+	{"menu_item_setname",		menu_item_setname},
 	{NULL,						NULL},
 };

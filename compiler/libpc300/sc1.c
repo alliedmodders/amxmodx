@@ -654,7 +654,6 @@ cleanup:
       int flag_exceed=0;
       if (sc_amxlimit > 0 && (long)(hdrsize+code_idx+glb_declared*sizeof(cell)+sc_stksize*sizeof(cell)) >= sc_amxlimit)
         flag_exceed=1;
-#if PAWN_CELL_SIZE==32
       if ((sc_debug & sSYMBOLIC)!=0 || verbosity>=2 || stacksize+32>=(long)sc_stksize || flag_exceed) {
         pc_printf("Header size:       %8ld bytes\n", (long)hdrsize);
         pc_printf("Code size:         %8ld bytes\n", (long)code_idx);
@@ -666,7 +665,6 @@ cleanup:
           pc_printf("estimated max. usage=%ld cells (%ld bytes)\n",stacksize,stacksize*sizeof(cell));
         pc_printf("Total requirements:%8ld bytes\n", (long)hdrsize+(long)code_idx+(long)glb_declared*sizeof(cell)+(long)sc_stksize*sizeof(cell));
       } /* if */
-#endif
       if (flag_exceed)
         error(106,sc_amxlimit); /* this causes a jump back to label "cleanup" */
     } /* if */
@@ -1921,8 +1919,8 @@ static int declloc(int fstatic)
      * of a global variable or to that of a local variable at a lower
      * level might indicate a bug.
      */
-    if ((sym=findloc(name))!=NULL && sym->compound!=nestlevel || findglb(name)!=NULL);
-      //error(219,name);                  /* variable shadows another symbol */
+    if ((sym=findloc(name))!=NULL && sym->compound!=nestlevel || findglb(name)!=NULL)
+      error(219,name);                  /* variable shadows another symbol */
     while (matchtoken('[')){
       ident=iARRAY;
       if (numdim == sDIMEN_MAX) {
@@ -3645,8 +3643,8 @@ static void doarg(char *name,int ident,int offset,int tags[],int numtags,
   if (argsym!=NULL) {
     error(21,name);             /* symbol already defined */
   } else {
-    if ((argsym=findglb(name))!=NULL && argsym->ident!=iFUNCTN) ;
-      //error(219,name);          /* variable shadows another symbol */
+    if ((argsym=findglb(name))!=NULL && argsym->ident!=iFUNCTN)
+      error(219,name);          /* variable shadows another symbol */
     /* add details of type and address */
     assert(numtags>0);
     argsym=addvariable(name,offset,ident,sLOCAL,tags[0],

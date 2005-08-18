@@ -3,14 +3,14 @@
 
 ### EDIT BELOW FOR OTHER PROJECTS ###
 
-OPT_FLAGS = -O3 -fno-rtti -funroll-loops -s -pipe
+OPT_FLAGS = -O3 -funroll-loops -s -pipe
 DEBUG_FLAGS = -g -ggdb3
-CPP = g++
+CPP = gcc
 BINARY = amxxpc
 
 OBJECTS = amx.cpp amxxpc.cpp Binary.cpp
 
-LINK = -lz
+LINK = -lz /lib/libstdc++.a
 
 INCLUDE = -I.  -L.
 
@@ -22,7 +22,7 @@ else
 	CFLAGS = $(OPT_FLAGS)
 endif
 
-CFLAGS += -DLINUX -DNDEBUG -Wno-deprecated -fexceptions -DHAVE_STDINT_H -DAMX_ANSIONLY
+CFLAGS += -DLINUX -DNDEBUG -Wno-deprecated -fexceptions -DHAVE_STDINT_H -DAMX_ANSIONLY -fno-rtti -static-libgcc
 
 OBJ_LINUX := $(OBJECTS:%.cpp=$(BIN_DIR)/%.o)
 

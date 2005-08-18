@@ -3,7 +3,7 @@
 
 ### EDIT BELOW FOR OTHER PROJECTS ###
 
-OPT_FLAGS = -O3 -fno-rtti -funroll-loops -s -pipe
+OPT_FLAGS = -O3 -funroll-loops -s -pipe
 DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
 NAME = amxxpc
@@ -25,7 +25,7 @@ else
 	CFLAGS += -DPAWN_CELL_SIZE=32 
 endif
 
-CFLAGS += -DLINUX -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H -DENABLE_BINRELOC -DNO_MAIN -DPAWNC_DLL
+CFLAGS += -DLINUX -DNDEBUG -fPIC -DHAVE_STDINT_H -DENABLE_BINRELOC -DNO_MAIN -DPAWNC_DLL -static-libgcc
 
 CFLAGS += $(OPT_FLAGS)
 OBJ_LINUX := $(OBJECTS:%.c=$(BIN_DIR)/%.o)
@@ -41,9 +41,6 @@ all:
 
 pawn_make: $(OBJ_LINUX)
 	$(CPP) $(INCLUDE) $(CFLAGS) $(OBJ_LINUX) $(LINK) -shared -ldl -lm -o$(BIN_DIR)/$(BINARY)
-
-pawn64:
-	$(MAKE) pawn_make PAWN64=true
 
 debug:	
 	$(MAKE) all DEBUG=true

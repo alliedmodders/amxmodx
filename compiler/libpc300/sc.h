@@ -629,11 +629,7 @@ SC_FUNC void jmp_eq0(int number);
 SC_FUNC void outval(cell val,int newline);
 
 /* function prototypes in SC5.C */
-#ifdef __linux__
-SC_FUNC int error(int number,...) __attribute__((visibility("internal")));
-#else
-SC_FUNC int error(int number,...)
-#endif
+SC_FUNC int error(int number,...) __attribute__((visibility("protected")));
 SC_FUNC void errorset(int code);
 
 /* function prototypes in SC6.C */

@@ -31,7 +31,6 @@ CFLAGS += -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H
 ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_amd64.so
 	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -m64 
-	LINK += -lstdc++
 	INCLUDE += -Llib_linux64
 else
 	BINARY = $(NAME)_i386.so

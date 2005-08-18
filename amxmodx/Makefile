@@ -15,7 +15,7 @@ OBJECTS = meta_api.cpp CFile.cpp CVault.cpp vault.cpp float.cpp file.cpp modules
 	CMisc.cpp CTask.cpp string.cpp amxmodx.cpp CEvent.cpp CCmd.cpp CLogEvent.cpp \
 	srvcmd.cpp strptime.cpp amxcore.cpp amxtime.cpp power.cpp amxxlog.cpp fakemeta.cpp \
 	amxxfile.cpp CLang.cpp md5.cpp emsg.cpp CForward.cpp CPlugin.cpp CModule.cpp \
-	CMenu.cpp util.cpp amx.cpp amxdbg.cpp natives.cpp newmenus.cpp \
+	CMenu.cpp util.cpp amx.cpp amxdbg.cpp natives.cpp newmenus.cpp mmgr/mmgr.cpp
 
 LINK = -lz 
 
@@ -34,7 +34,7 @@ ifeq "$(MMGR)" "true"
 	OBJECTS += MMGR/MMGR.CPP
 endif
 
-CFLAGS += -DLINUX -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H
+CFLAGS += -DLINUX -DNDEBUG -fPIC -Wno-deprecated -DHAVE_STDINT_H -DMEMORY_TEST
 
 ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_amd64.so

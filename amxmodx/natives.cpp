@@ -33,7 +33,10 @@
 #include "natives.h"
 
 #ifdef __linux__
+#include <malloc.h>
+#include <stdlib.h>
 #include <sys/mman.h>
+#include "sclinux.h"
 #endif
 
 //Written by David "BAILOPAN" Anderson

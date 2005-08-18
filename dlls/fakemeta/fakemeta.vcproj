@@ -161,23 +161,12 @@
 			<File
 				RelativePath=".\engfunc.h">
 			</File>
-			<File
-				RelativePath=".\newdllfunc.cpp">
-			</File>
-			<File
-				RelativePath=".\newdllfunc.h">
-			</File>
 		</Filter>
 		<Filter
 			Name="pev"
 			Filter="">
 			<File
 				RelativePath=".\pev.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\pev.h">

@@ -155,14 +155,6 @@ enum
 	DLLFunc_ClientUserInfoChanged // void (idplayer)
 };
 
-/* Used with newdllfunc()
- */
-enum {
-	NEWDLLFunc_OnFreeEntPrivateData,	// void  )			(edict_t *pEnt);
-	NEWDLLFunc_GameShutdown,			// void  )			(void);
-	NEWDLLFunc_ShouldCollide			// int  )			(edict_t *pentTouched, edict_t *pentOther);
-};
-
 enum {
 	pev_string_start = 0,
 	pev_classname,

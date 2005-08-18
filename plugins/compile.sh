@@ -16,7 +16,7 @@ for sourcefile in *.sma
 do
         amxxfile="`echo $sourcefile | sed -e 's/\.sma$/.amxx/'`"
         echo -n "Compiling $sourcefile ..."
-        ./amxxsc $sourcefile -ocompiled/$amxxfile >> temp.txt
+        ./amxxpc $sourcefile -ocompiled/$amxxfile >> temp.txt
         echo "done"
 done
 

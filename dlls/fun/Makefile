@@ -6,7 +6,7 @@ MM_ROOT = ../metamod/metamod
 
 ### EDIT BELOW FOR OTHER PROJECTS ###
 
-OPT_FLAGS = -O3 -fno-rtti -funroll-loops -s -pipe
+OPT_FLAGS = -O3 -funroll-loops -s -pipe
 DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
 NAME = fun_amxx
@@ -26,7 +26,7 @@ else
 	CFLAGS = $(OPT_FLAGS)
 endif
 
-CFLAGS += -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H
+CFLAGS += -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H -fno-rtti -static-libgcc
 
 ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_amd64.so

@@ -2909,6 +2909,28 @@ void	operator delete[](void *reportedAddress)
 	Mem_Deallocator(g_Mem_CurrentFilename, g_Mem_CurrentLine, g_Mem_CurrentFunc, m_alloc_delete_array, reportedAddress);
 }
 
+#else
+
+#if !defined NO_ALLOC_OVERRIDES && !defined MEMORY_TEST
+void * ::operator new(size_t size) {
+	return(calloc(1, size)); 
+}
+
+void * ::operator new[](size_t size) {
+	return(calloc(1, size)); 
+}
+
+void ::operator delete(void * ptr) {
+	if(ptr)
+		free(ptr);
+}
+
+void ::operator delete[](void * ptr) {
+	if(ptr)
+		free(ptr);
+}
+#endif
+
 #endif //MEMORY_TEST
 
 /************* stuff from dlls/util.cpp *************/

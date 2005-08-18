@@ -41,7 +41,6 @@ ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_amd64.so
 	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -m64 
 	OBJECTS += JIT/natives-amd64.o
-	LINK += -lstdc++
 else
 	BINARY = $(NAME)_i386.so
 	OBJECTS += JIT/amxexecn.o JIT/amxjitsn.o JIT/natives-x86.o

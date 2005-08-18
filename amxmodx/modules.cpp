@@ -1757,7 +1757,7 @@ void *Module_ReqFnptr(const char *funcName)
 	return NULL;
 }
 
-#ifndef MEMORY_TEST
+#if !defined MEMORY_TEST && !defined WIN32
 void * ::operator new(size_t size) {
 	return(calloc(1, size)); 
 }

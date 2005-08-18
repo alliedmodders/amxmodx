@@ -27,6 +27,10 @@
 // be careful of default constructors using new/malloc!
 // #define MEMORY_TEST
 
+// Unless you use STL or exceptions, keep this commented.
+// It allows you to compile without libstdc++.so as a dependency
+// #define NO_ALLOC_OVERRIDES
+
 // - AMXX Init functions
 // Also consider using FN_META_*
 // AMXX query

@@ -1756,3 +1756,24 @@ void *Module_ReqFnptr(const char *funcName)
 
 	return NULL;
 }
+
+#ifndef MEMORY_TEST
+void * ::operator new(size_t size) {
+	return(calloc(1, size)); 
+}
+
+void * ::operator new[](size_t size) {
+	return(calloc(1, size)); 
+}
+
+void ::operator delete(void * ptr) {
+	if(ptr)
+		free(ptr);
+}
+
+void ::operator delete[](void * ptr) {
+	if(ptr)
+		free(ptr);
+}
+#endif
+

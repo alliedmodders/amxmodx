@@ -6,7 +6,7 @@ MM_ROOT = ../metamod/metamod
 
 ### EDIT BELOW FOR OTHER PROJECTS ###
 
-OPT_FLAGS = -O3 -fno-rtti -funroll-loops -s -pipe
+OPT_FLAGS = -O3 -funroll-loops -s -pipe
 DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
 NAME = amxmodx_mm
@@ -15,7 +15,7 @@ OBJECTS = meta_api.cpp CFile.cpp CVault.cpp vault.cpp float.cpp file.cpp modules
 	CMisc.cpp CTask.cpp string.cpp amxmodx.cpp CEvent.cpp CCmd.cpp CLogEvent.cpp \
 	srvcmd.cpp strptime.cpp amxcore.cpp amxtime.cpp power.cpp amxxlog.cpp fakemeta.cpp \
 	amxxfile.cpp CLang.cpp md5.cpp emsg.cpp CForward.cpp CPlugin.cpp CModule.cpp \
-	CMenu.cpp util.cpp amx.cpp amxdbg.cpp natives.cpp newmenus.cpp mmgr/mmgr.cpp
+	CMenu.cpp util.cpp amx.cpp amxdbg.cpp natives.cpp newmenus.cpp 
 
 LINK = -lz 
 
@@ -31,10 +31,11 @@ else
 endif
 
 ifeq "$(MMGR)" "true"
-	OBJECTS += MMGR/MMGR.CPP
+	OBJECTS += mmgr/mmgr.cpp
+	CFLAGS += -DMEMORY_TEST
 endif
 
-CFLAGS += -DLINUX -DNDEBUG -fPIC -Wno-deprecated -DHAVE_STDINT_H -DMEMORY_TEST
+CFLAGS += -DLINUX -DNDEBUG -fPIC -Wno-deprecated -DHAVE_STDINT_H -static-libgcc -fno-rtti -fno-exceptions
 
 ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_amd64.so

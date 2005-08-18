@@ -154,6 +154,15 @@ enum
 	MetaFunc_CallGameEntity,	// bool	(plid_t plid, const char *entStr,entvars_t *pev);
 	DLLFunc_ClientUserInfoChanged // void (idplayer)
 };
+
+/* Used with newdllfunc()
+ */
+enum {
+	NEWDLLFunc_OnFreeEntPrivateData,	// void  )			(edict_t *pEnt);
+	NEWDLLFunc_GameShutdown,			// void  )			(void);
+	NEWDLLFunc_ShouldCollide			// int  )			(edict_t *pentTouched, edict_t *pentOther);
+};
+
 enum {
 	pev_string_start = 0,
 	pev_classname,
@@ -437,6 +446,11 @@ enum {
 	FM_CreateInstancedBaseline,	// done 
 	FM_AllowLagCompensation,	// done
 	FM_AlertMessage, //done (at_type, message[])
+	
+	// NEW_DLL_FUNCTIONS:
+	FM_OnFreeEntPrivateData,
+	FM_GameShutdown,
+	FM_ShouldCollide
 };
 
 enum TraceResult

@@ -89,7 +89,7 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		iparam1 = MDLL_ClientConnect(INDEXENT2(index),STRING(ALLOC_STRING(temp)),STRING(ALLOC_STRING(temp2)),temp3);
 		cRet = MF_GetAmxAddr(amx,params[6]);
 		MF_SetAmxString(amx,params[5],temp3,cRet[0]);
-		return 1;
+		return iparam1;
 	
 	case	DLLFunc_ClientDisconnect:	// void )	( edict_t *pEntity );
 		cRet = MF_GetAmxAddr(amx,params[2]);

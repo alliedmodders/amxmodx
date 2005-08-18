@@ -11,10 +11,10 @@ DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
 NAME = fakemeta_amxx
 
-OBJECTS = sdk/amxxmodule.cpp dllfunc.cpp engfunc.cpp fakemeta_amxx.cpp pdata.cpp forward.cpp \
-	fm_tr.cpp pev.cpp	
+OBJECTS = sdk/amxxmodule.cpp dllfunc.cpp newdllfunc.cpp engfunc.cpp fakemeta_amxx.cpp pdata.cpp forward.cpp \
+	fm_tr.cpp pev.cpp
 
-LINK = 
+LINK =
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
 	-I$(MM_ROOT) -Lzlib -I$(HLSDK)/common
@@ -31,7 +31,7 @@ CFLAGS += -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H
 
 ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_amd64.so
-	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -m64 
+	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -m64
 else
 	BINARY = $(NAME)_i386.so
 	CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32
@@ -54,7 +54,7 @@ amd64:
 fakemeta: $(OBJ_LINUX)
 	$(CPP) $(INCLUDE) $(CFLAGS) $(OBJ_LINUX) $(LINK) -shared -ldl -lm -o$(BIN_DIR)/$(BINARY)
 
-debug:	
+debug:
 	$(MAKE) all DEBUG=true
 
 default: all

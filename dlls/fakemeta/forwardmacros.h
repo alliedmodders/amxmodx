@@ -742,12 +742,31 @@
 		RETURN_META(MRES_IGNORED); \
 	}
 
+/*
+#define SIMPLE_INT_HOOK_EDICT(call) \
+	int call (edict_t *pent) \
+	{ \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  ENTINDEX(pent))); \
+		RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult); \
+	} \
+	int call##_post (edict_t *pent) \
+	{ \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  ENTINDEX(pent))); \
+		RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult); \
+	}
+*/
 
-
-
-
-
-
+#define SIMPLE_INT_HOOK_EDICT_EDICT(call) \
+	int call (edict_t *pent,edict_t *pentb) \
+	{ \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  ENTINDEX(pent), ENTINDEX(pentb))); \
+		RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult); \
+	} \
+	int call##_post (edict_t *pent,edict_t *pentb) \
+	{ \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  ENTINDEX(pent), ENTINDEX(pentb))); \
+		RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult); \
+	}
 
 #define ENGHOOK(pfnCall) \
 	if (post) \
@@ -772,6 +791,17 @@
 		if (dlltable->pfn##pfnCall == NULL) \
 			dlltable->pfn##pfnCall = pfnCall; \
 	} 
+#define NEWDLLHOOK(pfnCall) \
+	if (post) \
+	{ \
+		if (newdlltable->pfn##pfnCall == NULL) \
+			newdlltable->pfn##pfnCall = pfnCall##_post; \
+	} \
+	else \
+	{ \
+		if (newdlltable->pfn##pfnCall == NULL) \
+			newdlltable->pfn##pfnCall = pfnCall; \
+	}
 
 #define PREPARE_VECTOR(vector_name) \
 	cell vector_name##_cell[3] = {amx_ftoc(vector_name[0]), amx_ftoc(vector_name[1]), amx_ftoc(vector_name[2])}; \

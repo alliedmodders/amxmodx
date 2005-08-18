@@ -161,6 +161,12 @@
 			<File
 				RelativePath=".\engfunc.h">
 			</File>
+			<File
+				RelativePath=".\newdllfunc.cpp">
+			</File>
+			<File
+				RelativePath=".\newdllfunc.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="pev"
@@ -168,8 +174,7 @@
 			<File
 				RelativePath=".\pev.cpp">
 				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCLCompilerTool"/>
 				</FileConfiguration>
@@ -177,8 +182,7 @@
 			<File
 				RelativePath=".\pev.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"/>
 				</FileConfiguration>

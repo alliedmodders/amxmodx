@@ -479,7 +479,15 @@ SIMPLE_VOID_HOOK_VOID(CreateInstancedBaselines);
 SIMPLE_INT_HOOK_VOID(AllowLagCompensation);
 
 
-
+/*
+ * NEW_DLL_FUNCTIONS
+ */
+// pfnOnFreeEntPrivateData
+SIMPLE_VOID_HOOK_EDICT(OnFreeEntPrivateData);
+// pfnGameShutdown
+SIMPLE_VOID_HOOK_VOID(GameShutdown);
+// pfnShouldCollide
+SIMPLE_INT_HOOK_EDICT_EDICT(ShouldCollide);
 
 
 
@@ -503,15 +511,19 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 
 	DLL_FUNCTIONS *dlltable;
 
+	NEW_DLL_FUNCTIONS *newdlltable;
+
 	if (post)
 	{
 		engtable = g_pengfuncsTable_Post;
 		dlltable = g_pFunctionTable_Post;
+		newdlltable = g_pNewFunctionsTable_Post;
 	}
 	else
 	{
 		engtable = g_pengfuncsTable;
 		dlltable = g_pFunctionTable;
+		newdlltable = g_pNewFunctionsTable;
 	}
 	
 	switch (func)
@@ -1060,6 +1072,20 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	case FM_AllowLagCompensation:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
 		DLLHOOK(AllowLagCompensation);
+		break;
+	// NEW_DLL_FUNCTIONS:
+	case FM_OnFreeEntPrivateData:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		NEWDLLHOOK(OnFreeEntPrivateData);
+		break;
+	// Maybe it's not possible to hook this forward? O_o
+	case FM_GameShutdown:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
+		NEWDLLHOOK(GameShutdown);
+		break;
+	case FM_ShouldCollide:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
+		NEWDLLHOOK(ShouldCollide);
 		break;
 #if 0
 

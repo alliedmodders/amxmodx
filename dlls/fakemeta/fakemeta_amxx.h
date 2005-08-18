@@ -42,7 +42,7 @@ inline edict_t* INDEXENT2( int iEdictNum )
 #define CHECK_ENTITY(x) if (x != 0 && (FNullEnt(INDEXENT2(x)) || x < 0 || x > gpGlobals->maxEntities)) { MF_RaiseAmxError(amx,AMX_ERR_NATIVE); return 0; }
 extern AMX_NATIVE_INFO engfunc_natives[];
 extern AMX_NATIVE_INFO dllfunc_natives[];
-//extern AMX_NATIVE_INFO pev_natives[];
+extern AMX_NATIVE_INFO newdllfunc_natives[];
 extern AMX_NATIVE_INFO forward_natives[];
 extern AMX_NATIVE_INFO pdata_natives[];
 extern AMX_NATIVE_INFO tr_Natives[];
@@ -58,7 +58,8 @@ extern DLL_FUNCTIONS *g_pFunctionTable;
 extern DLL_FUNCTIONS *g_pFunctionTable_Post;
 extern enginefuncs_t *g_pengfuncsTable;
 extern enginefuncs_t *g_pengfuncsTable_Post;
-
+extern NEW_DLL_FUNCTIONS *g_pNewFunctionsTable;
+extern NEW_DLL_FUNCTIONS *g_pNewFunctionsTable_Post;
 
 #endif //_FAKEMETA_INCLUDE_H
 

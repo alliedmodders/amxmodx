@@ -1,7 +1,7 @@
 #ifndef _INCLUDE_FORWARD_H
 #define _INCLUDE_FORWARD_H
 
-#define ENGFUNC_NUM		118
+#define ENGFUNC_NUM		FM_LAST_DONT_USE_ME // 118
 
 #define	FMV_STRING		1
 #define FMV_FLOAT		2
@@ -150,6 +150,12 @@ enum {
 	FM_CreateInstancedBaselines,	// done 
 	FM_AllowLagCompensation,	// done
 	FM_AlertMessage,
+
+	// NEW_DLL_FUNCTIONS
+	FM_OnFreeEntPrivateData,
+	FM_GameShutdown,
+	FM_ShouldCollide,
+	// FM_CvarValue
 	FM_LAST_DONT_USE_ME,
 };
 

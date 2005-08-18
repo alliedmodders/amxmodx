@@ -372,6 +372,7 @@
 				GlobalOptimizations="TRUE"
 				InlineFunctionExpansion="1"
 				FavorSizeOrSpeed="1"
+				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories="..\..\metamod\metamod,..\..\hlsdk\sourcecode\common,..\..\hlsdk\sourcecode\engine,..\..\hlsdk\sourcecode\dlls,..\..\hlsdk\sourcecode\pm_shared,..\extra\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;JIT;ASM32;PAWN_CELL_SIZE=32"
 				IgnoreStandardIncludePath="FALSE"

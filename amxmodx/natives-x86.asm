@@ -95,4 +95,6 @@ _amxx_DynaCodesize:
 	pop		ebp
 	ret
 	
+section .data
+	
 GLOBAL_GATE		DD		0

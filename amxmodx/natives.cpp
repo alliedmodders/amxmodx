@@ -406,7 +406,7 @@ void ClearPluginLibraries()
 
 	for (size_t i=0; i<g_RegNatives.size(); i++)
 	{
-		delete g_RegNatives[i]->pfn;
+		delete [] g_RegNatives[i]->pfn;
 		delete g_RegNatives[i];
 	}
 	g_RegNatives.clear();

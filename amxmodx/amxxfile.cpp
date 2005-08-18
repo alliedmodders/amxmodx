@@ -220,7 +220,7 @@ CAmxxReader::~CAmxxReader()
 	}
 	if (m_Bh.plugins)
 	{
-		delete m_Bh.plugins;
+		delete [] m_Bh.plugins;
 		m_Bh.plugins = NULL;
 	}
 }

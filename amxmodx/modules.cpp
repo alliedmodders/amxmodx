@@ -603,7 +603,12 @@ int unload_amxscript(AMX* amx, void** program)
 #if defined JIT
 #if defined __linux__ && defined MEMORY_TEST
 #undef free
-	free(prg);
+	if (flags & AMX_FLAG_DEBUG)
+	{
+		delete [] prg;
+	} else {
+		free(prg);
+	}
 #define free(ptr)       m_deallocator(__FILE__,__LINE__,__FUNCTION__,m_alloc_free,ptr)
 #elif defined WIN32
 	if (flags & AMX_FLAG_DEBUG)

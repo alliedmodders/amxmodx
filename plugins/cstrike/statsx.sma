@@ -1548,8 +1548,3 @@ public client_connect( id ) {
 
   return PLUGIN_CONTINUE
 }
-
-public plugin_modules()
-{
-	require_module("csx")
-}

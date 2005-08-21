@@ -30,6 +30,9 @@
 */
 
 #include <time.h>
+#if defined WIN32
+#include <direct.h>
+#endif
 #include "amxmodx.h"
 #include "fakemeta.h"
 #include "newmenus.h"
@@ -1034,7 +1037,7 @@ C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_
 			g_NeedsP = true;
 			
 #endif
-		} else if (mminor == 11) {
+		} else if (mminor >= 11) {
 			g_IsNewMM = true;
 		} else if (pminor > mminor) {
 			LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please	find a newer version of	this plugin");

@@ -406,7 +406,7 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 		{
 			//amx->base = (unsigned char FAR *)realloc( np, amx->code_size );
 #ifndef __linux__
-			amx->base = new unsigned char[ amx->code_size ];
+			amx->base = (unsigned char *)VirtualAlloc(NULL, amx->code_size, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
 #else
 			//posix_memalign((void **)&(amx->base), sysconf(_SC_PAGESIZE), amx->code_size);
 			amx->base = (unsigned char *)memalign(sysconf(_SC_PAGESIZE), amx->code_size);
@@ -593,15 +593,29 @@ int set_amxnatives(AMX* amx,char error[128])
 
 int unload_amxscript(AMX* amx, void** program)
 {
+	int flags = amx->flags;
 	amxx_FreeDebug(amx);
 	CList<CScript,AMX*>::iterator a = g_loadedscripts.find( amx  );
 	if ( a ) a.remove();
 	char *prg = (char *)*program;
-#if defined __linux__ && defined JIT && defined MEMORY_TEST
+	if (!prg)
+		return AMX_ERR_NONE;
+#if defined JIT
+#if defined __linux__ && defined MEMORY_TEST
 #undef free
 	free(prg);
 #define free(ptr)       m_deallocator(__FILE__,__LINE__,__FUNCTION__,m_alloc_free,ptr)
+#elif defined WIN32
+	if (flags & AMX_FLAG_DEBUG)
+	{
+		delete [] prg;
+	} else if (!VirtualFree((LPVOID)prg, 0, MEM_RELEASE)) {
+		AMXXLOG_Log("[AMXX] Could not free plugin memory, failure %d.", GetLastError());
+		return AMX_ERR_PARAMS;
+	}
+#endif //OS support
 #else
+	//delete normally
 	delete[] prg;
 #endif
 	*program = 0;

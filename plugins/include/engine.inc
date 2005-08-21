@@ -279,12 +279,4 @@ native is_visible(entity, target);
 //Added at twistedeuphoria's request, see funcwiki for details
 native trace_forward(Float:start[3], Float:angle, Float:give, ignoreEnt, &Float:hitX, &Float:hitY, &Float:shortestDistance, &Float:shortestDistLow, &Float:shortestDistHigh);
 
-//NOTE that for the string offsets below, on AMD64, a byref (char **) offset is NOT the same as an int offset
-//In fact it's QWORD aligned rather than DWORD aligned, so the offset will be exactly half.
-//Gets a string from a private offset.  If byref is false, the string is treated as static rather than dynamic.
-native get_pdata_string(entity, offset, dest[], maxlength, byref=1, linux=-5);
-
-//Sets a string in a private offset.
-native set_pdata_string(entity, offset, const source[], realloc=2, linux=-5);
-
 #include <engine_stocks>

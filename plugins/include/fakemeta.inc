@@ -44,3 +44,15 @@ native dllfunc(type,{Float,Sql,Result,_}:...);
 // set: use anything
 native get_tr(TraceResult:tr_member, {Float,_}:...);
 native set_tr(TraceResult:tr_member, {Float,_}:...);
+
+//NOTE that for the string offsets below, on AMD64, a byref (char **) offset is NOT the same as an int offset
+//In fact it's QWORD aligned rather than DWORD aligned, so the offset will be exactly half.
+//Gets a string from a private offset.  If byref is false, the string is treated as static rather than dynamic.
+native get_pdata_string(entity, offset, dest[], maxlength, byref=1, linux=-5);
+
+//Sets a string in a private offset.
+//realloc = -1 - nonbyref copy (static
+//realloc = 0 - copy byref, no realloc *(char **)
+//realloc = 1 - reallocate new string with free+malloc
+//realloc = 2 - reallocate new string with delete[]+new[]
+native set_pdata_string(entity, offset, const source[], realloc=2, linux=-5);

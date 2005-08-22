@@ -19,7 +19,7 @@
 #endif // __DATE__
 
 // metamod plugin?
-#define USE_METAMOD
+//#define USE_METAMOD
 
 // - AMXX Init functions
 // Also consider using FN_META_*
@@ -28,8 +28,8 @@
 // AMXX attach
 //   Do native functions init here (MF_AddNatives)
 #define FN_AMXX_ATTACH OnAmxxAttach
-// AMXX dettach
-//#define FN_AMXX_DETTACH OnAmxxDettach
+// AMXX detach
+#define FN_AMXX_DETACH OnAmxxDetach
 // All plugins loaded
 //   Do forward functions init here (MF_RegisterForward)
 // #define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
@@ -48,8 +48,8 @@
 //#define FN_META_QUERY OnMetaQuery
 // Meta attach
 //#define FN_META_ATTACH OnMetaAttach
-// Meta dettach
-//#define FN_META_DETTACH OnMetaDettach
+// Meta detach
+//#define FN_META_DETACH OnMetaDetach
 
 // (wd) are Will Day's notes
 // - GetEntityAPI2 functions
@@ -75,7 +75,7 @@
 // #define FN_ClientCommand				ClientCommand				/* pfnClientCommand()			(wd) Player has sent a command (typed or from a bind) */
 // #define FN_ClientUserInfoChanged		ClientUserInfoChanged		/* pfnClientUserInfoChanged()	(wd) Client has updated their setinfo structure */
 // #define FN_ServerActivate			ServerActivate				/* pfnServerActivate()			(wd) Server is starting a new map */
-#define FN_ServerDeactivate			ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
+//#define FN_ServerDeactivate			ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
 // #define FN_PlayerPreThink			PlayerPreThink				/* pfnPlayerPreThink() */
 // #define FN_PlayerPostThink			PlayerPostThink				/* pfnPlayerPostThink() */
 // #define FN_StartFrame				StartFrame					/* pfnStartFrame() */

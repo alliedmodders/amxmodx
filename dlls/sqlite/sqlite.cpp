@@ -57,7 +57,7 @@ static cell AMX_NATIVE_CALL sql_connect(AMX *amx, cell *params) //	6 param
 	i = 0;
 
 	if (!strlen(dbname)) {
-		MF_LogError(amx, AMX_ERR_NATIVE, "Recieved invalid parameter.");
+		MF_LogError(amx, AMX_ERR_NATIVE, "Received invalid parameter.");
 		return -1;
 	}
 	
@@ -77,8 +77,14 @@ static cell AMX_NATIVE_CALL sql_connect(AMX *amx, cell *params) //	6 param
 		DBList.push_back(c);
 		id = (unsigned int)(DBList.size() - 1);
 	}
+
+	char pathbuffer[1024];
+	MF_BuildPathnameR(pathbuffer, 1023, "%s", dbname);
+#if defined _DEBUG
+	MF_PrintSrvConsole("Sqlite connect uses path: \"%s\"\n", pathbuffer);
+#endif
 	
-	if (!c->Connect(dbname))
+	if (!c->Connect(pathbuffer))
 	{
 		if (c->ErrorStr.size() < 1)
 		{
@@ -376,7 +382,7 @@ void OnAmxxAttach()
 	MF_AddNatives(mysql_Natives);
 }
 
-void ServerDeactivate()
+void OnAmxxDetach()
 {
 	unsigned int i = 0;
 	for (i=0; i<Results.size(); i++)
@@ -393,5 +399,5 @@ void ServerDeactivate()
 	Results.clear();
 	DBList.clear();
 
-	RETURN_META(MRES_IGNORED);
+	//RETURN_META(MRES_IGNORED);
 }

@@ -6,7 +6,7 @@
 # where x is debug or opt and proc is ix86 or amd64
 # You must use this script from the project src dir
 
-#options = 
+#options =
 # debug - enable gdb debugging
 # amd64 - compile for AMD64
 # proc=ix86 - assumed not amd64
@@ -15,7 +15,7 @@
 $PROJECT = "sqlite_amxx";
 $sdk = "../../hlsdk/SourceCode";
 $mm = "../../metamod/metamod";
-$sql = "sqlite-source-3_2_2";
+$sql = "sqlite-source-3_2_3";
 $gccf = "gcc";
 
 @CPP_SOURCE_FILES = ("sqlite.cpp", "sqlite_amx.cpp", "amxxmodule.cpp");
@@ -44,7 +44,7 @@ while ($cmd = shift)
 			$OPTIONS{"proc"} = "i".$proc."86";
 		}
 	} elsif ($cmd =~ /clean/) {
-		$OPTIONS{"clean"} = 1;		
+		$OPTIONS{"clean"} = 1;
 	}
 }
 

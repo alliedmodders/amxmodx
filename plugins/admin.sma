@@ -33,7 +33,7 @@
 */
 
 // Uncomment for SQL version
-#define USING_SQL
+//#define USING_SQL
 
 #include <amxmodx>
 #include <amxmisc>

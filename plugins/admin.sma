@@ -33,7 +33,7 @@
 */
 
 // Uncomment for SQL version
-//#define USING_SQL
+#define USING_SQL
 
 #include <amxmodx>
 #include <amxmisc>
@@ -227,11 +227,12 @@ loadSettings(szFilename[]) {
 
 #if defined USING_SQL
 public adminSql() {
-  new host[64],user[32],pass[32],db[32],table[32],error[128]
+  new host[64],user[32],pass[32],db[128],table[32],error[128],dbType[7]
+  dbi_type(dbType, 6)
   get_cvar_string("amx_sql_host",host,63)
   get_cvar_string("amx_sql_user",user,31)
   get_cvar_string("amx_sql_pass",pass,31)
-  get_cvar_string("amx_sql_db",db,31)
+  get_cvar_string("amx_sql_db", db, 127)
   get_cvar_string("amx_sql_table",table,31)
 
   new Sql:sql = dbi_connect(host,user,pass,db,error,127)
@@ -247,10 +248,18 @@ public adminSql() {
     return PLUGIN_HANDLED
   }
 
-  dbi_query(sql,"CREATE TABLE IF NOT EXISTS `%s` ( `auth` VARCHAR( 32 ) NOT NULL, `password` VARCHAR( 32 ) NOT NULL, `access` VARCHAR( 32 ) NOT NULL, `flags` VARCHAR( 32 ) NOT NULL ) COMMENT = 'AMX Mod X Admins'",table)
+  new Result:Res
+  if (equali(dbType,"sqlite")) {
+    if (!sqlite_table_exists(sql,table)) {
+      dbi_query(sql,"CREATE TABLE %s ( auth TEXT NOT NULL DEFAULT '', password TEXT NOT NULL DEFAULT '', access TEXT NOT NULL DEFAULT '', flags TEXT NOT NULL DEFAULT '' )",table)
+    }
 
-
-  new Result:Res = dbi_query(sql,"SELECT `auth`,`password`,`access`,`flags` FROM `%s`",table)
+    Res = dbi_query(sql,"SELECT auth, password, access, flags FROM %s",table)
+  }
+  else {
+    dbi_query(sql,"CREATE TABLE IF NOT EXISTS `%s` ( `auth` VARCHAR( 32 ) NOT NULL, `password` VARCHAR( 32 ) NOT NULL, `access` VARCHAR( 32 ) NOT NULL, `flags` VARCHAR( 32 ) NOT NULL ) COMMENT = 'AMX Mod X Admins'",table)
+    Res = dbi_query(sql,"SELECT `auth`,`password`,`access`,`flags` FROM `%s`",table)
+  }
 
   if (Res == RESULT_FAILED) {
     dbi_error(sql,error,127)

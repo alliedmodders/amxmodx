@@ -117,3 +117,14 @@ SET_LANG_SERVER = O idioma do servidor foi ajustada para "%s"
 SET_LANG_USER = Seu idioma foi configurado para "%s"
 TYPE_LANGMENU = Escreva 'amx_langmenu' no console para mostrar um menu onde voce pode escolher seu idioma preferido
 LANG_MENU_DISABLED = Menu de Idiomas desativado
+
+[cz]
+LANG_NOT_EXISTS = Zvoleny jazyk neexistuje
+PERSO_LANG = Jazyk klienta
+LANG_MENU = Nastaveni jazyka
+SERVER_LANG = Jazyk na serveru
+SAVE_LANG = Ulozit
+SET_LANG_SERVER = Na serveru zvolen jazyk "%s"
+SET_LANG_USER = Tvuj jazyk nastaven na "%s"
+TYPE_LANGMENU = Napis 'amx_langmenu' do konzole pro zobrazeni menu vyberu jazyku
+LANG_MENU_DISABLED = Volba jazyku nepovolena.

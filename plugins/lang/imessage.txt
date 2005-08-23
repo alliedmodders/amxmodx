@@ -30,3 +30,6 @@ INF_REACH = Se ha alcanzado el limite maximo de Mensajes de Informacion!
 
 [bp]
 INF_REACH = Limite de mensagens de informacao obtido!
+
+[cz]
+INF_REACH = Limit informacnich zprav presazen!

@@ -96,3 +96,12 @@ HELP_USE_BEGIN = Escribe 'amx_help 1' para volver al principio
 TYPE_HELP = Escribe 'amx_help' en la consola para ver los comandos disponibles
 TIME_INFO_1 = Tiempo restante: %d:%02d min. Proximo Mapa: %s
 TIME_INFO_2 = Tiempo Ilimitado. Proximo Mapa: %s
+
+[cz]
+HELP_COMS = AMX Mod X Help: Prikazy
+HELP_ENTRIES = Polozky %d - %d z %d
+HELP_USE_MORE = Napis 'amx_help %d' pro vice
+HELP_USE_BEGIN = napis 'amx_help 1' pro zacatek
+TYPE_HELP = Napis 'amx_help' do konzole pro vypis prikazu
+TIME_INFO_1 = Zbyva jeste: %d:%02d min. Dalsi mapa: %s
+TIME_INFO_2 = Neni casovy limit. Dalsi mapa: %s

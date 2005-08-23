@@ -30,3 +30,6 @@ DROPPED_RES = Connectie verbroken vanwege plek reservering
 
 [es]
 DROPPED_RES = Desconectado por reserva de plazas
+
+[cz]
+DROPPED_RES = Vyhozen, slot je rezervovan

@@ -140,3 +140,16 @@ COL_ORANGE = naranja
 COL_OCEAN = azul marino
 COL_MAROON = marron
 PRINT_ALL = (TODOS) %s : %s
+
+[cz]
+COL_WHITE = bila
+COL_RED = cervena
+COL_GREEN = zelena
+COL_BLUE = modra
+COL_YELLOW = zluta
+COL_MAGENTA = fuchsiova
+COL_CYAN = modrozelena
+COL_ORANGE = oranzova
+COL_OCEAN = mpdra
+COL_MAROON = kastanova
+PRINT_ALL = (ALL) %s :   %s

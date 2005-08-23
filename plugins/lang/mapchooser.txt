@@ -96,3 +96,12 @@ X_CHOSE_X = %s escolheu %s
 CHOOSE_NEXTM = AMX Escolher proximo mapa
 EXTED_MAP = Extender o mapa %s
 TIME_CHOOSE = E a hora de escolher o proximo mapa...
+
+[cz]
+CHO_FIN_EXT = Volba ukoncena. Nynejsi mapa zde bude na dalsich %.0f minut
+CHO_FIN_NEXT = Volba ukoncena. Dalsi mapa bude %s
+CHOSE_EXT = %s volil prodlouzeni soucasne mapy
+X_CHOSE_X = %s volil %s
+CHOOSE_NEXTM = Zvol si dalsi mapu
+EXTED_MAP = Prodluzuje mapu %s
+TIME_CHOOSE = Je cas pro volbu dalsi mapy...

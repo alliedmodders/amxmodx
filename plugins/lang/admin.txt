@@ -140,3 +140,16 @@ INV_PAS = Password invalido!
 PAS_ACC = Password aceito
 PRIV_SET = Privilegios estabelecidos
 NO_ENTRY = Voce nao tem acesso ao servidor...
+
+[cz]
+LOADED_ADMIN = 1 admin nacteny ze souboru
+LOADED_ADMINS = %d adminu nactenych ze souboru
+SQL_CANT_CON = SQL error: nemuzu se pripojit: '%s'
+SQL_CANT_LOAD_ADMINS = SQL error: Nemuzu nacist adminy: '%s'
+NO_ADMINS = Zadny admin nenalezen.
+SQL_LOADED_ADMIN = 1 admin nacteny z databaze
+SQL_LOADED_ADMINS = %d adminu nactenych z databaze
+INV_PAS = Nespravne heslo!
+PAS_ACC = Heslo overeno
+PRIV_SET = Privilegia nastavena
+NO_ENTRY = Nemas zadny zaznam na serveru...

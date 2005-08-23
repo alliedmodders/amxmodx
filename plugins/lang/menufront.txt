@@ -195,3 +195,21 @@ STATS_SET = Ajustes do Stats ^n
 PAUSE_PLUG = Pausar Plugins
 RES_WEAP = Limitar Armas
 TELE_PLAYER = Teletransportar Jogador
+
+[cz]
+KICK_PLAYER = Vykopnout hrace
+BAN_PLAYER = Banovat hrace
+SLAP_SLAY = Prastit/Zabit Hrace
+TEAM_PLAYER = Tymovy hrac ^n
+CHANGEL = Zmena levelu
+VOTE_MAPS = Hlasovani pro zmenu mapy ^n
+SPECH_STUFF = Veci okolo reci
+CLIENT_COM = Prikazy klienta
+SERVER_COM = Prikazy serveru
+CVARS_SET = Nastaveni Cvar
+CONFIG = Konfigurace
+LANG_SET = Nastaveni jazyka
+STATS_SET = Nastaveni statistik ^n
+PAUSE_PLUG = Pauznout pluginy
+RES_WEAP = Omezit zbrane
+TELE_PLAYER = Teleportovat hrace

@@ -30,3 +30,6 @@ NEXT_MAP = Proximo Mapa:
 
 [bp]
 NEXT_MAP = Proximo Mapa:
+
+[cz]
+NEXT_MAP = Dalsi mapa:

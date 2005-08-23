@@ -30,3 +30,6 @@ STOP_FLOOD = Para de saturar el servidor!
 
 [bp]
 STOP_FLOOD = Parem com o flood no servidor!
+
+[cz]
+STOP_FLOOD = Prestan floodovat!

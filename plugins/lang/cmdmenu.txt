@@ -52,3 +52,8 @@ SPE_MENU = Menu de Voz
 CMD_MENU = Menu de Comandos
 CONF_MENU = Menu de Configs
 SPE_MENU = Menu de Vozes
+
+[cz]
+CMD_MENU = Menu prikazu
+CONF_MENU = Menu nastaveni
+SPE_MENU = Nastaveni reci

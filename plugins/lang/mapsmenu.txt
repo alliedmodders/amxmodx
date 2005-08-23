@@ -261,3 +261,27 @@ ADMIN_V_MAP_2 = ADMIN %s: votar em mapa(s)
 ADMIN_CHANGEL_1 = ADMIN: mudou mapa para %s
 ADMIN_CHANGEL_2 = ADMIN %s: mudou mapa para %s
 CHANGLE_MENU = Menu Mudanca de Mapas
+
+[cz]
+RESULT_REF = Vysledek odmitnut
+RESULT_ACC = Vysledek prijmut
+VOTE_SUCCESS = Hlasovani uspesne. Mapa se bude menit na
+VOTE_FAILED = Hlasovani selhalo
+THE_WINNER = Vitez
+WANT_CONT = Chces pokracovat?
+VOT_CANC = Hlasovani bylo zruseno
+X_VOTED_FOR = %s hlasoval pro volbu #%d
+VOTEMAP_MENU = Menu volby mapy
+START_VOT = Zacatek hlasovani
+SEL_MAPS = Zvolene mapy
+ALREADY_VOT = Uz zde jedno hlasovani bylo...
+NO_MAPS_MENU = V menu nejsou zadne mapy
+VOT_NOW_ALLOW = Hlasovani zrovna neni povoleno
+WHICH_MAP = Jakou mapu chces?
+CHANGE_MAP_TO = Zmena mapy na
+CANC_VOTE = Zrusit hlasovani
+ADMIN_V_MAP_1 = ADMIN: volil mapu
+ADMIN_V_MAP_2 = ADMIN %s: volili mapu
+ADMIN_CHANGEL_1 = ADMIN: meni level na %s
+ADMIN_CHANGEL_2 = ADMIN %s: meni level na %s
+CHANGLE_MENU = Menu zmeny mapy

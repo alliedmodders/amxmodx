@@ -96,3 +96,12 @@ MINUTE = minuto
 MINUTES = minutos
 SECOND = segundo
 SECONDS = segundos
+
+[cz]
+THE_TIME = Cas
+TIME_LEFT = Zbyva jeste
+NO_T_LIMIT = Neni casovy limit
+MINUTE = minuta
+MINUTES = minut
+SECOND = sekunda
+SECONDS = second

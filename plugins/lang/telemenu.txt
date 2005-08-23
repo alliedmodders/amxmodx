@@ -74,3 +74,10 @@ ADMIN_TELEPORT_2 = ADMIN %s: teletransportou %s
 TELE_MENU = Menu de Teletransporte
 CUR_LOC = Local Atual
 SAVE_LOC = Salvar Local
+
+[cz]
+ADMIN_TELEPORT_1 = ADMIN: teleportoval %s
+ADMIN_TELEPORT_2 = ADMIN %s: teleportovali %s
+TELE_MENU = Menu Teleportu
+CUR_LOC = Soucasna misto
+SAVE_LOC = Ulozit misto

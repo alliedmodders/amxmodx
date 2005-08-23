@@ -239,3 +239,25 @@ CANT_PERF_DEAD = Aquela acao nao pode ser executada com o cliente morto "%s"
 CANT_PERF_BOT = Aquela acao nao pode ser executada com bot "%s"
 ON = Ligado
 OFF = Desligado
+
+[cz]
+BACK = Zpatky
+EXIT = Exit
+MORE = Vice
+NONE = Nic
+ADMIN = ADMIN
+PLAYER = HRAC
+ERROR = error
+YES = Ano
+NO = Ne
+BAN = ban
+KICK = kick
+NO_ACC_COM = Nemas pristup k tomuto prikazu
+USAGE = Pouziti
+MORE_CL_MATCHT = je zde vic klientu odpovidajici tvym kriteriim
+CL_NOT_FOUND = Klient s timto jmenem nebo userid nenalezen
+CLIENT_IMM = Klient "%s" ma imunitu
+CANT_PERF_DEAD = Tato operace nelze provest na mrtvem klientu "%s"
+CANT_PERF_BOT = Tato operace nelze provest na botovi "%s"
+ON = ON
+OFF = OFF

@@ -184,3 +184,20 @@ TEAM_MENU = Menu Controle de Time
 TRANSF_TO = Transferir para %s
 CL_CMD_MENU = Menu de Comandos no Cliente
 NO_CMDS = Sem cmds disponivel
+
+[cz]
+ADMIN_BAN_1 = ADMIN: zabanoval %s
+ADMIN_BAN_2 = ADMIN %s: zabanovali %s
+BAN_MENU = Menu banu
+BAN_FOR_MIN = Zabanovan na %d minut
+BAN_PERM = Zaban permanentne
+SLAP_SLAY_MENU = Menu Pohlavku/Zabiti
+SLAP_WITH_DMG = Pleskl za %d damage
+SLAY = Zabit
+KICK_MENU = Menu vykopnuti
+ADMIN_TRANSF_1 = ADMIN: premistil %s k %s
+ADMIN_TRANSF_2 = ADMIN %s: premistili %s k %s
+TEAM_MENU = Menu Tymu
+TRANSF_TO = Premistit k %s
+CL_CMD_MENU = Menu klientskych prikazu
+NO_CMDS = Zadny cmds

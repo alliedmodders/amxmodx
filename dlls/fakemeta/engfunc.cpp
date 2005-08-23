@@ -972,3 +972,4 @@ AMX_NATIVE_INFO engfunc_natives[] = {
 	{"engfunc",			engfunc},
 	{NULL,				NULL},
 };
+

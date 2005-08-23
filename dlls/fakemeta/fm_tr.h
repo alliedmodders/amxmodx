@@ -28,3 +28,4 @@ enum KeyValue
 extern AMX_NATIVE_INFO tr_Natives[];
 
 #endif //_INCLUDE_TR_H
+

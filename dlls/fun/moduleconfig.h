@@ -5,7 +5,7 @@
 
 // Module info
 #define MODULE_NAME "Fun"
-#define MODULE_VERSION "1.50"
+#define MODULE_VERSION "1.55"
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "http://www.amxmodx.org"
 #define MODULE_LOGTAG "FUN"
@@ -460,3 +460,4 @@
 #endif // USE_METAMOD
 
 #endif // __MODULECONFIG_H__
+

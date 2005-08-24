@@ -32,8 +32,15 @@
 *  version.
 */
 
+//Uncomment to enable cstrike specific features
+//#define	CSTRIKE	1
+
 #include <amxmodx>
 #include <amxmisc>
+
+#if defined CSTRIKE
+#include <cstrike>
+#endif
 
 new g_menuPosition[33]
 new g_menuPlayers[33][32]
@@ -458,11 +465,15 @@ public actionTeamMenu(id,key) {
         case 1: client_print(0,print_chat,"%L",id,"ADMIN_TRANSF_1",name2,g_menuOption[id] ? "TERRORIST" : "CT" )
       }
 
+#if defined CSTRIKE
+	  cs_set_user_team(player, g_menuOption[id] ? 1 : 2)
+#else
       new limit_setting = get_cvar_num("mp_limitteams")
       set_cvar_num("mp_limitteams", 0)
       engclient_cmd(player, "jointeam", g_menuOption[id] ?  "1" : "2")
       engclient_cmd(player, "joinclass", "1")
       set_cvar_num("mp_limitteams", limit_setting)
+#endif
 
       displayTeamMenu(id,g_menuPosition[id])
     }

@@ -7,7 +7,7 @@ namespace AMXXRelease
 	{
 		public ModEsf()
 		{
-			AddModules();
+			AddPlugins();
 		}
 
 		public override sealed string GetName()
@@ -15,14 +15,9 @@ namespace AMXXRelease
 			return "esf";
 		}
 
-		private void AddModules()
+		private void AddPlugins()
 		{
-			Module esfmod = new Module();
-			esfmod.sourcedir = "dlls\\esforces\\esfmod";
-			esfmod.vcproj = "esfmod";
-			esfmod.projname = "esfmod_amxx";
-
-			m_Modules.Add(esfmod);
+			AddPlugin("EvolutionX.Core");
 		}
 	}
 }

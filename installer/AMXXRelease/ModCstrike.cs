@@ -25,6 +25,11 @@ namespace AMXXRelease
 			AddPlugin("stats_logging");
 			AddPlugin("statsx");
 			AddPlugin("restmenu");
+
+			Plugin pl = new Plugin("plmenu");
+			pl.source = "..\\plmenu";
+			pl.options = "CSTRIKE=1 -oplmenu.amx";
+			m_Plugins.Add(pl);
 			
 			Plugin csstats = new Plugin("csstats");
 			csstats.outdir = "data";

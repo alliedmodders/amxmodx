@@ -14,8 +14,7 @@ namespace AMXXRelease
 			m_Mods = new ArrayList();
 
 			CoreMod core = new CoreMod();
-			ModCstrike cstrike = new 
-ModCstrike();
+			ModCstrike cstrike = new ModCstrike();
 			ModDoD dod = new ModDoD();
 			ModEsf esf = new ModEsf();
 			ModNs ns = new ModNs();

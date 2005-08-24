@@ -660,8 +660,3 @@ load_settings( szFilename[] ) {
   }
   return 1
 }
-
-public plugin_modules()
-{
-	require_module("dodx")
-}

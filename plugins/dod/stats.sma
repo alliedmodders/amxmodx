@@ -888,11 +888,6 @@ isDSMActive(){
   return 1
 }
 
-public plugin_modules()
-{
-	require_module("dodx")
-}
-
 public cmdStatsMe(id){
   if ( !SayStatsMe || !isDSMActive() ){
     client_print(id,print_chat,"%L",id,g_disabledMsg )

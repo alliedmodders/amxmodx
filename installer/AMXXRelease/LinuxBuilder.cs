@@ -80,7 +80,10 @@ namespace AMXXRelease
 			p.WaitForExit();
 
 			if (!File.Exists(file))
+			{
+				Console.WriteLine("Output file failed: " + file);
 				return null;
+			}
 
 			//Now we need to see if the DL handle is valid!
 			string dlsym_dir = m_Cfg.GetSourceTree() + "\\plugins";

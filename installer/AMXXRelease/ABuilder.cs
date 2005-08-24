@@ -221,7 +221,17 @@ namespace AMXXRelease
 
 		public static string PropSlashes(string path)
 		{
-			return path.Replace(Path.AltDirectorySeparatorChar,Path.DirectorySeparatorChar);
+			char sep;
+			char alt;
+			if (Releaser.IsWindows)
+			{
+				sep = '\\';
+				alt = '/';
+			} else {
+				sep = '/';
+				alt = '\\';
+			}
+			return path.Replace(alt,sep);
 		}
 	}
 }

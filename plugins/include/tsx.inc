@@ -67,7 +67,7 @@ native ts_wpnlogtoname(logname[],name[],len);
 /* weapon logname to weapon index convertion */
 native ts_wpnlogtoid(logname[]);
 
-native ts_getuserwpn( index,&clip,&ammo,&mode,&extra );
+native ts_getuserwpn( index,&ammo,&clip,&mode,&extra );
 native ts_getusercash( index );
 native ts_getuserspace( index );
 native ts_getuserpwup( index,&Value );

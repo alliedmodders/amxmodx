@@ -20,12 +20,12 @@ $gccf = "gcc";
 
 @CPP_SOURCE_FILES = ("sqlite.cpp", "sqlite_amx.cpp", "amxxmodule.cpp");
 
-@C_SOURCE_FILES = ("$sql/attach.c", "$sql/auth.c", "$sql/btree.c", "$sql/build.c", "$sql/date.c", "$sql/delete.c", "$sql/expr.c", "$sql/func.c", "$sql/hash.c", "$sql/insert.c", "$sql/legacy.c", "$sql/main.c", "$sql/opcodes.c", "$sql/os_unix.c", "$sql/os_win.c", "$sql/pager.c", "$sql/parse.c", "$sql/pragma.c", "$sql/printf.c", "$sql/random.c", "$sql/select.c", "$sql/shell.c", "$sql/table.c", "$sql/tokenize.c", "$sql/trigger.c", "$sql/update.c", "$sql/utf.c", "$sql/util.c", "$sql/vacuum.c", "$sql/vdbe.c", "$sql/vdbeapi.c", "$sql/vdbeaux.c", "$sql/vdbemem.c", "$sql/where.c");
+@C_SOURCE_FILES = ("$sql/attach.c", "$sql/auth.c", "$sql/btree.c", "$sql/build.c", "$sql/date.c", "$sql/delete.c", "$sql/func.c", "$sql/hash.c", "$sql/insert.c", "$sql/legacy.c", "$sql/main.c", "$sql/opcodes.c", "$sql/os_unix.c", "$sql/os_win.c", "$sql/pager.c", "$sql/parse.c", "$sql/pragma.c", "$sql/printf.c", "$sql/random.c", "$sql/select.c", "$sql/shell.c", "$sql/table.c", "$sql/tokenize.c", "$sql/trigger.c", "$sql/update.c", "$sql/utf.c", "$sql/util.c", "$sql/vacuum.c", "$sql/vdbe.c", "$sql/vdbeapi.c", "$sql/vdbeaux.c", "$sql/vdbemem.c", "$sql/where.c", "$sql/prepare.c", "$sql/expr.c", "$sql/callback.c", "$sql/alter.c", "$sql/vdbefifo.c", "$sql/complete.c", "$sql/analyze.c");
 
 my %OPTIONS, %OPT;
 
 $OPT{"debug"} = "-DNO_TCL -g -ggdb";
-$OPT{"opt"} = "-DNO_TCL -O2 -ffast-math -funroll-loops -fomit-frame-pointer -s -DNDEBUG -Wall -Wno-unknown-pragmas -DOPT_TYPE=\"optimized\" -fno-exceptions -fno-rtti";
+$OPT{"opt"} = "-DNO_TCL -O2 -ffast-math -funroll-loops -fomit-frame-pointer -s -DNDEBUG -Wall -Wno-unknown-pragmas -DOPT_TYPE=\"optimized\"";
 
 $OPTIONS{"include"} = "-I$sdk -I. -I$mm -I$sdk/engine -I$sdk/common -I$sdk/pm_shared -I$sdk/dlls -I$sql";
 
@@ -71,7 +71,7 @@ if ($OPTIONS{"debug"})
 	} else {
 		$cflags = $OPT{"opt"};
 	}
-}
+} 
 
 if ($OPTIONS{"amd64"})
 {
@@ -141,7 +141,7 @@ for ($i=0; $i<=$#CPP_SOURCE_FILES; $i++)
 	$ofile = $file;
 	$ofile =~ s/\.cpp/\.o/;
 	$ofile = "$outdir/$ofile";
-	$gcc = "$gccf $cflags -Dstrcmpi=strcasecmp -fPIC $inc -c $file -o $ofile";
+	$gcc = "$gccf $cflags -fno-rtti -fno-exceptions -Dstrcmpi=strcasecmp -fPIC $inc -c $file -o $ofile";
 	if (-e $ofile)
 	{
 		$file_time = (stat($file))[9];
@@ -179,6 +179,6 @@ for ($i=0; $i<=$#C_SOURCE_FILES; $i++)
 	}
 }
 
-$gcc = "$gccf $cflags $inc -shared -ldl -lm @LINK -lz -lcrypt -o $outdir/$bin";
+$gcc = "$gccf $cflags $inc -shared -static-libgcc -ldl -lm @LINK -lz -lcrypt -o $outdir/$bin";
 print "$gcc\n";
 `$gcc`;

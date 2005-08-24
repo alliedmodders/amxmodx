@@ -263,3 +263,4 @@ unsigned int SQLResult::NumRows()
 #if defined _DEBUG
 unsigned int SQLResult::latestStoredResultId = 0;
 #endif
+

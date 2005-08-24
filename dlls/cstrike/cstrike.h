@@ -303,3 +303,4 @@ bool g_noknives = false;
 
 #define GETEDICT(n) \
 	((n >= 1 && n <= gpGlobals->maxClients) ? MF_GetPlayerEdict(n) : INDEXENT(n))
+

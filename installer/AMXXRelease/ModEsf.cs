@@ -2,9 +2,7 @@ using System;
 
 namespace AMXXRelease
 {
-	/// <summary>
-	/// Summary description for ModEsf.
-	/// </summary>
+	//Earth's Special Forces
 	public class ModEsf : AMod
 	{
 		public ModEsf()

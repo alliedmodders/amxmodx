@@ -6,12 +6,12 @@ using System.Runtime.CompilerServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("AMXXRelease")]
+[assembly: AssemblyDescription("Build scripts for AMX Mod X")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCompany("AMX Mod X")]
+[assembly: AssemblyProduct("AMXXRelease")]
+[assembly: AssemblyCopyright("(C)Copyright 2004-2005 AMX Mod X Development Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 

@@ -2,9 +2,7 @@ using System;
 
 namespace AMXXRelease
 {
-	/// <summary>
-	/// Summary description for ModTFC.
-	/// </summary>
+	//Team Fortress Classic
 	public class ModTFC : AMod
 	{
 		public ModTFC()

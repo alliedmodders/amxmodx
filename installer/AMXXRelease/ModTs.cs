@@ -2,9 +2,7 @@ using System;
 
 namespace AMXXRelease
 {
-	/// <summary>
-	/// Summary description for ModTs.
-	/// </summary>
+	//The Specialists
 	public class ModTs : AMod
 	{
 		public ModTs()

@@ -2,9 +2,7 @@ using System;
 
 namespace AMXXRelease
 {
-	/// <summary>
-	/// Summary description for ModDoD.
-	/// </summary>
+	//Day of Defeat
 	public class ModDoD : AMod
 	{
 		public ModDoD()

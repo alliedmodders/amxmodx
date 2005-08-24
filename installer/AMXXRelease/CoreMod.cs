@@ -3,6 +3,7 @@ using System.IO;
 
 namespace AMXXRelease
 {
+	//AMX Mod X core distribution
 	public class CoreMod : AMod
 	{
 		public CoreMod()
@@ -31,26 +32,32 @@ namespace AMXXRelease
 			//Create directory structures
 			string datadir = basedir + "\\data";
 
-			if (!Directory.Exists(datadir))
-				Directory.CreateDirectory(datadir);
+			if (!Directory.Exists(ABuilder.PropSlashes(datadir)))
+				Directory.CreateDirectory(ABuilder.PropSlashes(datadir));
 
-			File.Copy(source + "\\dlls\\geoip\\GeoIP.dat",
-					  datadir + "\\GeoIP.dat", 
+			File.Copy(ABuilder.PropSlashes(source + "\\dlls\\geoip\\GeoIP.dat"),
+					  ABuilder.PropSlashes(datadir + "\\GeoIP.dat"), 
 					  true);
 
-			Builder.CopyNormal(source + "\\plugins\\lang", datadir + "\\lang");
+			ABuilder.CopyNormal(
+					ABuilder.PropSlashes(source + "\\plugins\\lang"), 
+					ABuilder.PropSlashes(datadir + "\\lang")
+					);
 
-			if (!Directory.Exists(basedir + "\\logs"))
-				Directory.CreateDirectory(basedir + "\\logs");
+			if (!Directory.Exists(ABuilder.PropSlashes(basedir + "\\logs")))
+				Directory.CreateDirectory(ABuilder.PropSlashes(basedir + "\\logs"));
 
-			if (!Directory.Exists(basedir + "\\doc"))
-				Directory.CreateDirectory(basedir + "\\doc");
+			if (!Directory.Exists(ABuilder.PropSlashes(basedir + "\\doc")))
+				Directory.CreateDirectory(ABuilder.PropSlashes(basedir + "\\doc"));
 
-			File.Copy(source + "\\doc\\amxmodx-doc.chm",
-					  basedir + "\\doc\\amxmodx-doc.chm",
+			File.Copy(
+				ABuilder.PropSlashes(source + "\\doc\\amxmodx-doc.chm"),
+				ABuilder.PropSlashes(basedir + "\\doc\\amxmodx-doc.chm"),
 					  true);
 
-			Builder.CopyNormal(source + "\\plugins\\include", basedir + "\\scripting\\include");
+			ABuilder.CopyNormal(
+				ABuilder.PropSlashes(source + "\\plugins\\include"), 
+				ABuilder.PropSlashes(basedir + "\\scripting\\include"));
 
 			return true;
 		}

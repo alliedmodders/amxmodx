@@ -4,12 +4,13 @@ using System.Collections;
 
 namespace AMXXRelease
 {
+	//Holds information about a plugin
 	public class Plugin
 	{
-		public string name;
-		public string source;
-		public string options;
-		public string outdir;
+		public string name;		//Plugin output file name
+		public string source;		//Source code file
+		public string options;		//Compile-time options
+		public string outdir;		//Output folder
 
 		public Plugin(string Name)
 		{
@@ -19,14 +20,15 @@ namespace AMXXRelease
 		}
 	}
 
+	//Holds information necessary to compile a module/C++ program
 	public class Module
 	{
-		public string sourcedir;
-		public string projname;
-		public string build;
-		public string bindir;
-		public string vcproj;
-		public string outdir;
+		public string sourcedir;	//Source directory
+		public string projname;		//Output binary name (such as amxmodx_mm)
+		public string build;		//Build configuration
+		public string bindir;		//Binary directory
+		public string vcproj;		//VCProj file name
+		public string outdir;		//Output directory
 
 		public Module()
 		{
@@ -44,6 +46,10 @@ namespace AMXXRelease
 		}
 	}
 
+	//Class that represents how a mod wants to be built.
+	//It exports a list of functions, mods, and a few
+	// tidbits of information.  It can also hook an extra
+	// step for copying miscellanious files.
 	public abstract class AMod
 	{
 		protected ArrayList m_Modules;

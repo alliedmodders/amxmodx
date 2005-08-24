@@ -2,9 +2,7 @@ using System;
 
 namespace AMXXRelease
 {
-	/// <summary>
-	/// Summary description for ModNs.
-	/// </summary>
+	//Natural Selection
 	public class ModNs : AMod
 	{
 		public ModNs()

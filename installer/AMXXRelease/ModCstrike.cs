@@ -33,9 +33,14 @@ namespace AMXXRelease
 
 		public override sealed bool CopyExtraFiles(string basedir, string source)
 		{
-			File.Copy(source + "\\dlls\\csx\\source\\WinCSX\\Release\\WinCSX.exe",
+
+			if ((int)System.Environment.OSVersion.Platform == 128)
+			{
+			} else {
+				File.Copy(source + "\\dlls\\csx\\source\\WinCSX\\Release\\WinCSX.exe",
 					  basedir + "\\data\\WinCSX.exe",
 					  true);
+			}
 
 			return true;
 		}

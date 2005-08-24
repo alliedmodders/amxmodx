@@ -12,6 +12,7 @@ namespace AMXXRelease
 	public class Releaser
 	{
 		private Config m_Cfg;
+		public static bool IsWindows;
 
 		[STAThread]
 		static void Main(string[] args)
@@ -42,8 +43,10 @@ namespace AMXXRelease
 			if ((int)System.Environment.OSVersion.Platform == 128)
 			{
 				builder = new LinuxBuilder();
+				Releaser.IsWindows = false;
 			} else {
 				builder = new Win32Builder();
+				Releaser.IsWindows = true;
 			}
 
 			Build build = new Build();

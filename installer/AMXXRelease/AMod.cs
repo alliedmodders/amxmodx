@@ -68,9 +68,17 @@ namespace AMXXRelease
 			m_Plugins = new ArrayList();
 		}
 
+		//called when it's okay to build an extra dir structure
+		// and copy files to it
 		public virtual bool CopyExtraFiles(string basedir, string sourcedir)
 		{
 			return true;
+		}
+
+		//defines a copy prevention filter
+		public virtual bool ExcludeCopy(string file)
+		{
+			return false;
 		}
 
 		public virtual string GetPluginDir()
@@ -110,6 +118,4 @@ namespace AMXXRelease
 			return pl;
 		}
 	}
-
-
 }

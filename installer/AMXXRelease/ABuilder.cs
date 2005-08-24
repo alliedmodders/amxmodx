@@ -5,7 +5,7 @@ using System.IO;
 namespace AMXXRelease
 {
 	//This class specifies the process that builds a release.
-	//It also implements the functions that are unlikely to change.
+	//It also implements the functions that are unlikely to change from mod to mod.
 	public abstract class ABuilder
 	{
 		protected Config m_Cfg;
@@ -138,6 +138,8 @@ namespace AMXXRelease
 				for (int i=0; i<files.Length; i++)
 				{
 					dest = PropSlashes(basedir + "\\scripting\\" + GetFileName(files[i]));
+					if (mod.ExcludeCopy(files[i]))
+						continue;
 					File.Copy(files[i], dest, true);
 				}
 			}
@@ -145,7 +147,7 @@ namespace AMXXRelease
 			return true;
 		}
 
-		private static string GetFileName(string input)
+		public static string GetFileName(string input)
 		{
 			for (int i=input.Length-1; i>=0; i--)
 			{

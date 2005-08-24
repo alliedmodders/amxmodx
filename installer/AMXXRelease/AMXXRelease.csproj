@@ -76,7 +76,7 @@
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.XML"
+                    AssemblyName = "System.Xml"
                     HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
             </References>
@@ -84,7 +84,7 @@
         <Files>
             <Include>
                 <File
-                    RelPath = "ABuild.cs"
+                    RelPath = "ABuilder.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -103,7 +103,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Builder.cs"
+                    RelPath = "Build.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -114,6 +114,16 @@
                 />
                 <File
                     RelPath = "CoreMod.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "LinuxBuilder.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Main.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -148,7 +158,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Release15.cs"
+                    RelPath = "Win32Builder.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -27,6 +27,27 @@ namespace AMXXRelease
 			return null;
 		}
 
+		//annoyingly complicated file exclusion filter
+		public override sealed bool ExcludeCopy(string file)
+		{
+			if ( ((file.IndexOf(".so")!=-1) || (ABuilder.GetFileName(file).CompareTo("amxxpc")==0))
+				&& (Releaser.IsWindows) )
+				return true;
+			if ( (file.IndexOf(".sh")!=-1) && Releaser.IsWindows )
+				return true;
+			if ( ((file.IndexOf(".exe")!=-1) || (file.IndexOf(".dll")!=-1))
+				&& (!Releaser.IsWindows) )
+				return true;
+			if ( (file.IndexOf("dlsym")!=-1) && Releaser.IsWindows )
+				return true;
+			if ( ((ABuilder.GetFileName(file).CompareTo("sasm")) == 0) 
+				  && Releaser.IsWindows )
+				return true;
+
+			return base.ExcludeCopy(file);
+		}
+
+
 		public override sealed bool CopyExtraFiles(string basedir, string source)
 		{
 			//Create directory structures

@@ -6,7 +6,7 @@ MM_ROOT = ../../metamod/metamod
 
 ### EDIT BELOW FOR OTHER PROJECTS ###
 
-OPT_FLAGS = -O3 -fno-rtti -funroll-loops -s -pipe
+OPT_FLAGS = -O3 -funroll-loops -s -pipe
 DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
 NAME = nvault_amxx
@@ -26,7 +26,7 @@ else
 	CFLAGS = $(OPT_FLAGS)
 endif
 
-CFLAGS += -DNDEBUG -fPIC -Wno-deprecated -fexceptions -DHAVE_STDINT_H
+CFLAGS += -DNDEBUG -fPIC -Wno-deprecated -fexceptions -DHAVE_STDINT_H -fno-rtti -static-libgcc
 
 ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_amd64.so
@@ -35,6 +35,7 @@ else
 	BINARY = $(NAME)_i386.so
 	CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32
 	OPT_FLAGS += -march=i686
+	LINK += /lib/libgcc_eh.a /lib/libstdc++.a
 endif
 
 OBJ_LINUX := $(OBJECTS:%.cpp=$(BIN_DIR)/%.o)

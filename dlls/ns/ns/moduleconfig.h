@@ -4,7 +4,7 @@
 
 // Module info
 #define MODULE_NAME "NS"
-#define MODULE_VERSION "1.50"
+#define MODULE_VERSION "1.55"
 #define MODULE_AUTHOR "Steve Dudenhoeffer"
 #define MODULE_URL "http://www.amxmodx.org/"
 #define MODULE_LOGTAG "NS"

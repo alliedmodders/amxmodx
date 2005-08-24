@@ -6,7 +6,7 @@ MM_ROOT = ../../../metamod/metamod
 
 ### EDIT BELOW FOR OTHER PROJECTS ###
 
-OPT_FLAGS = -O3 -fno-rtti -funroll-loops -s -pipe
+OPT_FLAGS = -O3 -funroll-loops -s -pipe
 DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
 NAME = tfcx_amxx

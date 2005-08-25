@@ -20,7 +20,7 @@ namespace AMXXRelease
 
 			info.FileName = m_Cfg.CompressPath();
 			info.WorkingDirectory = m_Cfg.OutputPath();
-			info.Arguments = "-r " + target + " " + dir;
+			info.Arguments = "-r " + target + " " + dir +  "\\*.*";
 			info.UseShellExecute = false;
 
 			Process p = Process.Start(info);

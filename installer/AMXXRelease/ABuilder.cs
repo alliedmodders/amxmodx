@@ -31,7 +31,10 @@ namespace AMXXRelease
 					System.Console.WriteLine("Mod failed to build: " + mod.GetName());
 					return false;
 				}
-				CompressDir(m_Cfg.GetReleaseName() + "-" + mod.GetName() + ".zip", mod.GetName() + "\\*.*");
+				CompressDir(
+					m_Cfg.GetReleaseName() + "-" + mod.GetName() + ".zip", 
+					PropSlashes(mod.GetName() + "\\addons")
+					);
 			}
 
 			return true;

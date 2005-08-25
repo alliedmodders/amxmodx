@@ -1,46 +1,90 @@
-/* TSFUN functions
+/* TSFUN
  *
- * (c) 2004, Twilight Suzuka
+ * (c) 2005, Twilight Suzuka
  * This file is provided as is (no warranties).
  */
 
-#if defined _tsfun_included
+#if defined _tsxfun_included
   #endinput
 #endif
-#define _tsfun_included
+#define _tsxfun_included
 
 #include <tsconst>
 
+/************* Shared Natives Start ********************************/
+
+/* Forward types */
+enum {
+  XMF_DAMAGE = 0,
+  XMF_DEATH,
+}
+
 #pragma library tsfun
+
+/* Function is called after player to player attacks ,
+* if players were damaged by teammate TA is set to 1 */
+forward client_damage(attacker,victim,damage,wpnindex,hitplace,TA);
+
+/* Function is called after player death ,
+* if player was killed by teammate TK is set to 1 */
+forward client_death(killer,victim,wpnindex,hitplace,TK);
+
+/************* Shared Natives End ********************************/
 
 /* Function is called just before a kung foo attack is done,
 * damage and time length may be altered with natives.
 * Return PLUGIN_HANDLED to stop attack. */
-forward KungFoo_Attack(id,Float:time,Float:damage);
+forward Melee_Attack(id,Float:time,Float:damage);
+
+// Returns when someone stunts, after they do it.
+forward client_stunt(id,stunttype);
 
 /* Function is called when powerups are ran,
 * Returns value of powerup. Use TSPWUP_*'s
 * to find exactly which one it is. */
 forward client_powerup(id,powerup);
 
+/* weapon logname to weapon name convertion */
+native ts_wpnlogtoname(logname[],name[],len);
+
+/* weapon logname to weapon index convertion */
+native ts_wpnlogtoid(logname[]);
 
 native Float:ts_getusertime( index );
 native ts_setusertime( index, Float:time );
 
+native ts_getusercash( index );
+native ts_setusercash( index, money );
+
 native ts_getuserslots( index );
 native ts_setuserslots( index, slots );
 
-stock ts_has_stored_superjump(id) return (ts_getuseritems(id) & TSITEM_SUPERJUMP)
-stock ts_has_stored_kungfoo(id) return (ts_getuseritems(id) & TSITEM_KUNGFU)
-stock ts_has_stored_slowmo(id) return (ts_getuserpwup(id) == TSPWUP_SLOWMO)
+native ts_getuserstate( index )
+native ts_getuserwpn( index,&ammo,&clip,&mode,&extra );
+native ts_getuserspace( index );
 
-stock ts_has_stored_infammo(id) return (ts_getuserpwup(id) == TSPWUP_INFAMMO)
-stock ts_has_stored_slowpause(id) return (ts_getuserpwup(id) == TSPWUP_SLOWPAUSE)
-stock ts_has_stored_dfirerate(id) return (ts_getuserpwup(id) == TSPWUP_DFIRERATE)
+native ts_getuserkillflags(killer);
+native ts_getkillingstreak( index );
+native ts_getuserlastfrag( index );
 
-stock ts_has_stored_grenade(id) return (ts_getuserpwup(id) == TSPWUP_GRENADE)
-stock ts_has_stored_health(id) return (ts_getuserpwup(id) == TSPWUP_HEALTH)
-stock ts_has_stored_armor(id) return (ts_getuserpwup(id) == TSPWUP_ARMOR)
+native ts_giveweapon( index,weapon,clips,extra );
+
+native ts_getuserpwup( index );
+
+stock ts_has_slowmo(id) return (ts_getuserpwup(id) &TSPWUP_SLOWMO);
+stock ts_has_infammo(id) return (ts_getuserpwup(id) &TSPWUP_INFAMMO);
+stock ts_has_slowpause(id) return (ts_getuserpwup(id) &TSPWUP_SLOWPAUSE);
+stock ts_has_dfirerate(id) return (ts_getuserpwup(id) &TSPWUP_DFIRERATE);
+stock ts_has_grenade(id) return (ts_getuserpwup(id) &TSPWUP_GRENADE);
+stock ts_has_health(id) return (ts_getuserpwup(id) &TSPWUP_HEALTH);
+stock ts_has_armor(id) return (ts_getuserpwup(id) &TSPWUP_ARMOR);
+
+/* Function will create pwup entity and return its index (pwupent) */
+native ts_createpwup( pwup );
+
+native ts_givepwup( index,pwupent );
+
+native ts_setpddata( knifeoffset );
 
 // Alters a fu attack. Use with fu forward
 native ts_set_fuattack(id,Float:time,Float:damage)

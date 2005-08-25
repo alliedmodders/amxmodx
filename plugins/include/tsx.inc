@@ -9,7 +9,6 @@
 #endif
 #define _tsx_included
 
-#include <tsconst>
 #include <tsstats>
 
 #pragma library tsx
@@ -60,27 +59,3 @@ native xmod_get_stats_size();
 native xmod_is_custom_wpn(wpnindex);
 
 /************* Shared Natives End ********************************/
-
-/* weapon logname to weapon name convertion */
-native ts_wpnlogtoname(logname[],name[],len);
-
-/* weapon logname to weapon index convertion */
-native ts_wpnlogtoid(logname[]);
-
-native ts_getuserwpn( index,&ammo,&clip,&mode,&extra );
-native ts_getusercash( index );
-native ts_getuserspace( index );
-native ts_getuserpwup( index,&Value );
-native ts_getuseritems( index );
-native ts_getuserkillflags(killer);
-native ts_getkillingstreak( index );
-native ts_getuserlastfrag( index );
-
-native ts_giveweapon( index,weapon,clips,extra );
-
-/* Function will create pwup entity and return its index (pwupent) */
-native ts_createpwup( pwup );
-
-native ts_givepwup( index,pwupent );
-
-native ts_setpddata( knifeoffset );

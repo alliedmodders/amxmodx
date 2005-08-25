@@ -153,6 +153,19 @@ static cell AMX_NATIVE_CALL get_user_weapon(AMX *amx, cell *params)
 
 }
 
+static cell AMX_NATIVE_CALL get_user_state(AMX *amx, cell *params)
+{
+	int id = params[1];
+	CHECK_PLAYER(id);
+	CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
+
+	if(!pPlayer->ingame) return 0;
+
+	return pPlayer->state;
+
+}
+
+
 static cell AMX_NATIVE_CALL set_user_cash(AMX *amx, cell *params)
 {
 	int id = params[1];
@@ -174,7 +187,6 @@ static cell AMX_NATIVE_CALL get_user_cash(AMX *amx, cell *params)
 
 }
 
-
 static cell AMX_NATIVE_CALL set_user_slots(AMX *amx, cell *params)
 {
 	int id = params[1];
@@ -194,13 +206,6 @@ static cell AMX_NATIVE_CALL get_user_slots(AMX *amx, cell *params)
 	return pPlayer->GetSlots();
 }
 
-static cell AMX_NATIVE_CALL get_user_space(AMX *amx, cell *params){
-	int id = params[1];
-	CHECK_PLAYER(id);
-
-	CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
-	return pPlayer->space;
-}
 
 static cell AMX_NATIVE_CALL get_user_pwup(AMX *amx, cell *params)
 {
@@ -493,7 +498,6 @@ static cell AMX_NATIVE_CALL get_consecutive_frags(AMX *amx, cell *params)
 	CHECK_PLAYER(id);
 
 	return pPlayer->GetOffsetInt(433);
-
 }
 
 static cell AMX_NATIVE_CALL set_consecutive_frags(AMX *amx, cell *params)
@@ -681,6 +685,8 @@ AMX_NATIVE_INFO base_Natives[] = {
 
 	//****************************************
 
+	{ "ts_getuserstate", get_user_state },
+
 	{ "ts_getusercash", get_user_cash },
 	{ "ts_setusercash", set_user_cash },
 
@@ -690,7 +696,7 @@ AMX_NATIVE_INFO base_Natives[] = {
 	{ "ts_getusertime",get_usertime },
 	{ "ts_setusertime",set_usertime},
 
-	{ "ts_getuserspace", get_user_space },
+	{ "ts_getuserspace", get_user_slots },
 	{ "ts_getuserpwup",get_user_pwup },
 	{ "ts_getuseritems",get_user_items },
 

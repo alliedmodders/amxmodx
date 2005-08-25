@@ -97,6 +97,7 @@ void Client_ClipInfo(void* mValue)
 
 void Client_TSHealth_End(void* mValue)
 {
+
 	edict_t *enemy = mPlayer->pEdict->v.dmg_inflictor;
 	int damage = (int)mPlayer->pEdict->v.dmg_take;
 
@@ -227,6 +228,15 @@ void Client_TSHealth_End(void* mValue)
 	pAttacker->killFlags = killFlags;
 }
 
+
+void Client_TSState(void* mValue)
+{
+	mPlayer->oldstate = mPlayer->state;
+	mPlayer->checkstate = 1;
+	mPlayer->state =  *(int*)mValue;
+}
+
+
 void Client_WStatus(void* mValue)
 {
 	switch(mState++)
@@ -238,11 +248,6 @@ void Client_WStatus(void* mValue)
 		}
 		break;
 	}
-}
-
-void Client_TSSpace(void* mValue)
-{
-	mPlayer->space = *(int*)mValue;
 }
 
 void Client_PwUp(void* mValue)

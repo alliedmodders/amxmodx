@@ -77,7 +77,9 @@ struct CPlayer {
 	int aiming;
 	int current;
 
-	int space;
+	int checkstate;
+	int state;
+	int oldstate;
 	int PwUp;
 	int PwUpValue;
 	int items; // "stale" przedmioty , super jump i kung fu bonus

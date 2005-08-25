@@ -1,54 +1,5 @@
 #include "tsfun.h"
 
-funEventCall modMsgsEnd[MAX_REG_MSGS];
-funEventCall modMsgs[MAX_REG_MSGS];
-void (*function)(void*);
-void (*endfunction)(void*);
-CPlayer* mPlayer;
-int mPlayerIndex;
-int mState;
-CPlayer players[33];
-
-int gKnifeOffset;
-
-int gmsgResetHUD;
-int gmsgWeaponInfo;
-int gmsgClipInfo;
-int gmsgScoreInfo;
-int gmsgTSHealth;
-
-int gmsgWStatus;
-int gmsgTSCash;
-int gmsgTSSpace;
-int gmsgPwUp;
-
-struct sUserMsg {
-	const char* name;
-	int* id;
-	funEventCall func;
-	bool endmsg;
-} g_user_msg[] = {
-	{ "ResetHUD",&gmsgResetHUD,Client_ResetHUD_End,true },
-	{ "WeaponInfo",&gmsgWeaponInfo,Client_WeaponInfo,false },
-	{ "ClipInfo",&gmsgClipInfo,Client_ClipInfo,false },
-	{ "ScoreInfo",&gmsgScoreInfo,Client_ScoreInfo,false },
-	{ "TSHealth",&gmsgTSHealth,Client_TSHealth_End,true },
-
-	{ "WStatus",&gmsgWStatus,Client_WStatus,false },
-	{ "TSSpace",&gmsgTSSpace,Client_TSSpace,false },
-	{ "PwUp",&gmsgPwUp,Client_PwUp,false},
-
-	{ 0,0,0,false }
-};
-
-const char* get_localinfo( const char* name , const char* def = 0 )
-{
-	const char* b = LOCALINFO( (char*)name );
-	if (((b==0)||(*b==0)) && def )
-		SET_LOCALINFO((char*)name,(char*)(b = def) );
-	return b;
-}
-
 weapon_t weaponData[] = { 
 	{ 1,"Kung Fu","kung_fu",3 }, // id 0 like in WeaponInfo , DeathMsg 
 	{ 0,"Glock-18","glock-18",1 },

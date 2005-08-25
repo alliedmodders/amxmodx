@@ -33,6 +33,16 @@
 #include "amxxmodule.h"
 #include "CPlayer.h"
 
+#define STUNT_NONE 0
+#define STUNT_DUCK 1
+#define STUNT_ROLL 2
+#define STUNT_DIVE 3
+#define STUNT_GETUP 4
+#define STUNT_FLIP 5
+
+extern int Death;
+extern int Damage;
+
 #define GET_PLAYER_POINTER(e)   (&players[ENTINDEX(e)])
 #define GET_PLAYER_POINTER_I(i) (&players[i])
 
@@ -47,7 +57,7 @@ extern int gmsgScoreInfo;
 extern int gmsgTSHealth;
 
 extern int gmsgWStatus;
-extern int gmsgTSSpace;
+extern int gmsgTSState;
 extern int gmsgPwUp;
 
 void Client_ResetHUD_End(void*);
@@ -58,7 +68,7 @@ void Client_TSHealth_End(void*);
 
 void Client_WStatus(void* mValue);
 void Client_TSCash(void* mValue);
-void Client_TSSpace(void* mValue);
+void Client_TSState(void* mValue);
 void Client_PwUp(void* mValue);
 
 typedef void (*funEventCall)(void*);

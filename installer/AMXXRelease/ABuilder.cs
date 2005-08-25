@@ -32,8 +32,8 @@ namespace AMXXRelease
 					return false;
 				}
 				CompressDir(
-					m_Cfg.GetReleaseName() + "-" + mod.GetName() + ".zip", 
-					PropSlashes(mod.GetName() + "\\addons")
+					PropSlashes(m_Cfg.OutputPath() + "\\" + m_Cfg.GetReleaseName() + "-" + mod.GetName() + ".zip"), 
+					PropSlashes(m_Cfg.OutputPath() + "\\" + mod.GetName())
 					);
 			}
 

@@ -19,8 +19,8 @@ namespace AMXXRelease
 			ProcessStartInfo info = new ProcessStartInfo();
 
 			info.FileName = m_Cfg.CompressPath();
-			info.WorkingDirectory = m_Cfg.OutputPath();
-			info.Arguments = "zcvf " + target + " " + dir;
+			info.WorkingDirectory = dir;
+			info.Arguments = "zcvf " + target + " " + "*";
 			info.UseShellExecute = false;
 
 			Process p = Process.Start(info);

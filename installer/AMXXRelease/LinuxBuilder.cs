@@ -20,7 +20,18 @@ namespace AMXXRelease
 
 			info.FileName = m_Cfg.CompressPath();
 			info.WorkingDirectory = dir;
-			info.Arguments = "zcvf " + target + " " + "*";
+
+			string [] files = Directory.GetFiles(dir);
+			string file_list = "";
+			for (int i=0; i<files.Length; i++)
+				file_list += GetFileName(files[i]) + " ";
+			files = Directory.GetDirectories(dir);
+			for (int i=0; i<files.Length; i++)
+				file_list += GetFileName(files[i]) + " ";
+
+			info.Arguments = "zcvf " + target + ".tar.gz " + file_list;
+			Console.WriteLine(info.WorkingDirectory);
+			Console.WriteLine(info.Arguments);
 			info.UseShellExecute = false;
 
 			Process p = Process.Start(info);

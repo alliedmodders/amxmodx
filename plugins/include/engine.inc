@@ -277,6 +277,6 @@ native is_in_viewcone(entity, Float:origin[3]);
 native is_visible(entity, target);
 
 //Added at twistedeuphoria's request, see funcwiki for details
-native trace_forward(Float:start[3], Float:angle, Float:give, ignoreEnt, &Float:hitX, &Float:hitY, &Float:shortestDistance, &Float:shortestDistLow, &Float:shortestDistHigh);
+native trace_forward(Float:start[3], Float:angle[3], Float:give, ignoreEnt, &Float:hitX, &Float:hitY, &Float:shortestDistance, &Float:shortestDistLow, &Float:shortestDistHigh);
 
 #include <engine_stocks>

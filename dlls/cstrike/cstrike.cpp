@@ -175,7 +175,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_silenced(AMX *amx, cell *params) // cs
 	// Make into edict pointer
 	edict_t *pWeapon = INDEXENT(params[1]);
 
-	int weapontype = (int)*((int *)pWeapon->pvPrivateData + OFFSET_WEAPONTYPE);
+	int weapontype = *((int *)pWeapon->pvPrivateData + OFFSET_WEAPONTYPE);
 	int *silencemode = ((int *)pWeapon->pvPrivateData + OFFSET_SILENCER_FIREMODE);
 	switch (weapontype) {
 		case CSW_M4A1:
@@ -357,10 +357,12 @@ static cell AMX_NATIVE_CALL cs_get_user_armor(AMX *amx, cell *params) // cs_get_
 	// Make into edict pointer
 	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
+#if 0
 	cell *armorTypeByRef = MF_GetAmxAddr(amx, params[2]);
 	*armorTypeByRef = *((int *)pPlayer->pvPrivateData + OFFSET_ARMORTYPE);
+#endif
 
-	return pPlayer->v.armorvalue;
+	return (cell)pPlayer->v.armorvalue;
 }
 
 static cell AMX_NATIVE_CALL cs_set_user_armor(AMX *amx, cell *params) // cs_set_user_armor(index, armorvalue, CsArmorType:armortype); = 3 params
@@ -1250,6 +1252,7 @@ static cell AMX_NATIVE_CALL cs_get_armoury_type(AMX *amx, cell *params)
 		return 0;
 	}
 
+#if PAWN_CELL_SIZE == 32
 	int weapontype = *((int *)pArmoury->pvPrivateData + OFFSET_ARMOURY_TYPE);
 
 	// We do a switch instead of a mapped array because this way we can nicely catch unexpected values, and we don't get array out of bounds thingies.
@@ -1280,6 +1283,10 @@ static cell AMX_NATIVE_CALL cs_get_armoury_type(AMX *amx, cell *params)
 	}
 
 	return weapontype_out;   
+#else
+	MF_LogError(amx, AMX_ERR_NATIVE, "This function not implemented on AMD64.");
+	return 0;
+#endif
 }
 
 static cell AMX_NATIVE_CALL cs_set_armoury_type(AMX *amx, cell *params)
@@ -1300,6 +1307,8 @@ static cell AMX_NATIVE_CALL cs_set_armoury_type(AMX *amx, cell *params)
 		MF_LogError(amx, AMX_ERR_NATIVE, "Not an armoury_entity! (%d)", params[1]);
 		return 0;
 	}
+
+#if PAWN_CELL_SIZE == 32
 
 	// We do a switch instead of a mapped array because this way we can nicely catch unexpected values, and we don't get array out of bounds thingies.
 	int weapontype;
@@ -1331,6 +1340,10 @@ static cell AMX_NATIVE_CALL cs_set_armoury_type(AMX *amx, cell *params)
 	*((int *)pArmoury->pvPrivateData + OFFSET_ARMOURY_TYPE) = weapontype;
 
 	return 1;   
+#else
+	MF_LogError(amx, AMX_ERR_NATIVE, "This function not implemented on AMD64.");
+	return 0;
+#endif
 }
 
 AMX_NATIVE_INFO cstrike_Exports[] = {

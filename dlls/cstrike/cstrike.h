@@ -143,8 +143,6 @@
 	// "hostage_entity" entities
 	#define OFFSET_HOSTAGEFOLLOW		51 + EXTRAOFFSET // +21, long=51, int=107! (must use the long* offset because pointers on amd64 are stored the size of longs, 8 bytes, instead of the usual int 4 bytes.)
 	#define OFFSET_HOSTAGEID			516 + EXTRAOFFSET // +29
-	// "armoury_entity"
-	#define OFFSET_WEAPONTYPE			??? + EXTRAOFFSET // To do...
 #endif
 
 // Ids of weapons in CS

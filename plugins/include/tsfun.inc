@@ -21,14 +21,6 @@ enum {
 
 #pragma library tsfun
 
-/* Function is called after player to player attacks ,
-* if players were damaged by teammate TA is set to 1 */
-forward client_damage(attacker,victim,damage,wpnindex,hitplace,TA);
-
-/* Function is called after player death ,
-* if player was killed by teammate TK is set to 1 */
-forward client_death(killer,victim,wpnindex,hitplace,TK);
-
 /************* Shared Natives End ********************************/
 
 /* Function is called just before a kung foo attack is done,

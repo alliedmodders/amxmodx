@@ -297,7 +297,8 @@ void OnAmxxAttach() {
 	gKnifeOffset = TSKNIFE_OFFSET;
 
 	MF_AddNatives( stats_Natives );
-	MF_AddNatives( base_Natives );
+	//TSFun does these now
+	//MF_AddNatives( base_Natives );
 
 	const char* path =  get_localinfo("tsstats_score","addons/amxmodx/data/tsstats.amxx");
 	if ( path && *path ) 

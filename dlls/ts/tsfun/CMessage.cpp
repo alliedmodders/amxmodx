@@ -32,7 +32,6 @@
 #include "amxxmodule.h"
 #include "tsfun.h"
 
-
 void Client_ResetHUD_End(void* mValue)
 {
 	if ( mPlayer->IsAlive() )

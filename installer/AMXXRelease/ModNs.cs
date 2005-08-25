@@ -21,6 +21,9 @@ namespace AMXXRelease
 			AddPlugin("mapchooser");
 			AddPlugin("nextmap");
 			AddPlugin("timeleft");
+			AddPlugin("idlekicker");
+			AddPlugin("nscommands");
+			AddPlugin("unstuck");
 		}
 
 		private void AddModules()

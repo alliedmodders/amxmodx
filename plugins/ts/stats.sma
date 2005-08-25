@@ -17,7 +17,9 @@
 */
 
 #include <amxmodx>
+#include <tsconst>
 #include <tsx>
+#include <tsfun>
 
 #define MAX_MENUPOS		7 // 7 positions in tsstatsmenu
 #define StatsTime			5.0 // 5 sec hold time for ShowAttackers , ShowVictims list and ShowKiller

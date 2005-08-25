@@ -8,6 +8,7 @@
 
 #include <amxmodx>
 #include <tsx>
+#include <tsfun>
 
 new g_pingSum[33]
 new g_pingCount[33]

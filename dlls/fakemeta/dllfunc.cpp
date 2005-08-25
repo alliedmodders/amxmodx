@@ -229,3 +229,4 @@ AMX_NATIVE_INFO dllfunc_natives[] = {
 	{"dllfunc",			dllfunc},
 	{NULL,				NULL},
 };
+

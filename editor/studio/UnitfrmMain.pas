@@ -553,7 +553,7 @@ begin
   if frmSettings.ShowModal = mrOk then begin
     { Shortcuts }
 		for i := 0 to frmSettings.lvShortcuts.Items.Count - 1 do
-      TSciKeyCommand(frmSettings.lvShortcuts.Items[i].Data).ShortCut := ShortcutToSciKey(TextToShortCut(frmSettings.lvShortcuts.Items[i].SubItems[0]));
+      TSciKeyCommand(frmSettings.lvShortcuts.Items[i].Data).ShortCut := (TextToShortCut(frmSettings.lvShortcuts.Items[i].SubItems[0]));
     { Tools }
     if frmSettings.chkIndentGuides.Checked then
       sciEditor.Indentation := sciEditor.Indentation + [IndentationGuides]

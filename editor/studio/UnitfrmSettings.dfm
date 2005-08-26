@@ -59,7 +59,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 353
     Height = 260
-    ActivePage = jspTools
+    ActivePage = jspShortcuts
     PropagateEnable = False
     Align = alClient
     OnChange = jplSettingsChange
@@ -105,7 +105,7 @@ object frmSettings: TfrmSettings
         Height = 21
         Style = csDropDownList
         Color = clWindow
-        ItemHeight = 13
+        ItemHeight = 0
         TabOrder = 0
         ItemIndex = -1
         OnChange = cboLanguageChange

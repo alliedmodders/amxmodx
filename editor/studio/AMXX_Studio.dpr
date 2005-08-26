@@ -1,9 +1,6 @@
 program AMXX_Studio;
 
 uses
-  madExcept,
-  madLinkDisAsm,
-  madScreenShot,
   Forms,
   Windows,
   Messages,
@@ -38,12 +35,13 @@ uses
   UnitPlugins in 'UnitPlugins.pas';
 
 { Used components:
-  JVCL 3.0
-  FlatPack
-  FlatStyle
-  Toolbar2000, TBX, SpTBX, mbTBX Lib
-  Scintilla and DelphiSci
-  madExcept
+  - JVCL 3.0
+  - FlatPack
+  - FlatStyle
+  - Toolbar2000, TBX, SpTBX, mbTBX Lib
+  - Scintilla and DelphiSci
+  - madExcept
+}
 
 {$R *.res}
 

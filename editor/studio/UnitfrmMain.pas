@@ -1,0 +1,2652 @@
+unit UnitfrmMain;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, SpTBXItem, TB2Item, TBX, TB2Dock, TB2Toolbar, Menus, ImgList,
+  TBXSwitcher, { Themes -> } TBXAluminumTheme, TBXDreamTheme, TBXEosTheme,
+  TBXMonaiTheme, TBXNexos2Theme, TBXNexos3Theme, TBXNexos4Theme, TBXNexos5Theme,
+  TBXOffice11AdaptiveTheme, TBXOfficeCTheme, TBXOfficeKTheme, TBXOfficeXPTheme,
+  TBXReliferTheme, TBXSentimoXTheme, TBXTristanTheme, TBXTristan2Theme,
+  TBXXitoTheme, { <- Themes } SpTBXTabs, ExtCtrls, SpTBXDkPanels, TFlatSplitterUnit,
+  SciLexer, SciLexerMemo, SciLexerMod, SciCallTips, ComCtrls, mbTBXTreeView,
+  StdCtrls, mbTBXRichEdit, TBXDkPanels, TBXToolPals, SciPropertyMgr,
+  mbTBXHint, mbTBXHotKeyEdit, SciAutoComplete, sciKeyBindings,
+  sciPrint, mxFlatControls, ClipBrd, ActnList, SciSearchReplace,
+  IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, IdFTP,
+  ShellAPI, IdFTPCommon, IdAntiFreezeBase, IdAntiFreeze, JvComponent,
+  JvInspector, JvExControls, JvPluginManager, JvgLanguageLoader,
+  JvWndProcHook, CommCtrl;
+
+type
+  TfrmMain = class(TForm)
+    TBXSwitcher: TTBXSwitcher;
+    ilImages: TImageList;
+    ppmOutput: TSpTBXPopupMenu;
+    tbxTopDock: TSpTBXDock;
+    tbxMenu: TSpTBXToolbar;
+    mnuFile: TSpTBXSubmenuItem;
+    mnuNew: TSpTBXSubmenuItem;
+    mnuEmptyPlugin: TSpTBXItem;
+    mnuNewPlugin: TSpTBXItem;
+    mnuHeaderPAWN: TSpTBXItem;
+    mnuNewModule: TSpTBXItem;
+    mnuNewUnit: TSpTBXItem;
+    mnuNewHeaderCPP: TSpTBXItem;
+    sepFile1: TSpTBXSeparatorItem;
+    mnuOpen: TSpTBXItem;
+    sepFile2: TSpTBXSeparatorItem;
+    mnuSave: TSpTBXItem;
+    mnuSaveAs: TSpTBXItem;
+    mnuSaveAllFiles: TSpTBXItem;
+    sepFile3: TSpTBXSeparatorItem;
+    mnuClose: TSpTBXItem;
+    mnuCloseAllFiles: TSpTBXItem;
+    sepFile4: TSpTBXSeparatorItem;
+    mnuPrint: TSpTBXItem;
+    sepFile5: TSpTBXSeparatorItem;
+    mnuExit: TSpTBXItem;
+    mnuEdit: TSpTBXSubmenuItem;
+    mnuUndo: TSpTBXItem;
+    mnuRedo: TSpTBXItem;
+    sepEdit1: TSpTBXSeparatorItem;
+    mnuCut: TSpTBXItem;
+    mnuCopy: TSpTBXItem;
+    mnuPaste: TSpTBXItem;
+    sepEdit2: TSpTBXSeparatorItem;
+    mnuSelectAll: TSpTBXItem;
+    mnuSearch: TSpTBXSubmenuItem;
+    mnuSearchDialog: TSpTBXItem;
+    mnuSearchAgain: TSpTBXItem;
+    sepSearch1: TSpTBXSeparatorItem;
+    mnuReplace: TSpTBXItem;
+    sepSearch2: TSpTBXSeparatorItem;
+    mnuGoToLine: TSpTBXItem;
+    mnuView: TSpTBXSubmenuItem;
+    mnuChangeTheme: TSpTBXSubmenuItem;
+    mnuThemes: TSpTBXThemeGroupItem;
+    mnuSelectHighlighter: TSpTBXSubmenuItem;
+    mnuHPAWN: TSpTBXItem;
+    mnuHCPP: TSpTBXItem;
+    mnuHHTML: TSpTBXItem;
+    mnuHSQL: TSpTBXItem;
+    mnuHXML: TSpTBXItem;
+    sepHighlighter: TSpTBXSeparatorItem;
+    mnuHNone: TSpTBXItem;
+    sepView2: TSpTBXSeparatorItem;
+    mnuShowFileTB: TSpTBXItem;
+    mnuShowEditTB: TSpTBXItem;
+    mnuShowCodeSnippets: TSpTBXItem;
+    mnuShowCodeToolsWindow: TSpTBXItem;
+    mnuCompile: TSpTBXSubmenuItem;
+    mnuDoCompile: TSpTBXItem;
+    sepCompile1: TSpTBXSeparatorItem;
+    mnuCompileAndStartHL: TSpTBXItem;
+    mnuCompileAndUpload: TSpTBXItem;
+    sepCompile2: TSpTBXSeparatorItem;
+    mnuRegisterPluginsIniLocal: TSpTBXItem;
+    mnuRegisterPluginsIniWeb: TSpTBXItem;
+    mnuTools: TSpTBXSubmenuItem;
+    mnuIndenter: TSpTBXItem;
+    mnuUnindenter: TSpTBXItem;
+    sepTools1: TSpTBXSeparatorItem;
+    mnuSocketTerminal: TSpTBXItem;
+    sepTools2: TSpTBXSeparatorItem;
+    mnuPluginsIniEditor: TSpTBXItem;
+    sepTools3: TSpTBXSeparatorItem;
+    mnuSettings: TSpTBXItem;
+    mnuGenerators: TSpTBXSubmenuItem;
+    mnuHudmessage: TSpTBXItem;
+    mnuMOTDGenerator: TSpTBXItem;
+    mnuHelp: TSpTBXSubmenuItem;
+    mnuOpenHelp: TSpTBXItem;
+    sepHelp1: TSpTBXSeparatorItem;
+    mnuSearchForums: TSpTBXItem;
+    mnuOpenScriptingForum: TSpTBXItem;
+    tbxToolbar: TTBXToolbar;
+    mnuTNew: TSpTBXItem;
+    mnuTOpen: TSpTBXItem;
+    mnuTSave: TSpTBXItem;
+    sepToolbar1: TSpTBXSeparatorItem;
+    mnuTSearch: TSpTBXItem;
+    sepToolbar2: TSpTBXSeparatorItem;
+    mnuTCompile: TSpTBXItem;
+    tbxCodeSnippets: TSpTBXToolbar;
+    mnuCodeSnippets: TSpTBXRightAlignSpacerItem;
+    mnuPAWN: TSpTBXItem;
+    mnuCPP: TSpTBXItem;
+    sepCodeSnippets: TSpTBXSeparatorItem;
+    tbxEdit: TSpTBXToolbar;
+    mnuTUndo: TSpTBXItem;
+    mnuTRedo: TSpTBXItem;
+    sepTEdit1: TSpTBXSeparatorItem;
+    mnuTCopy: TSpTBXItem;
+    mnuTCut: TSpTBXItem;
+    mnuTPaste: TSpTBXItem;
+    sepTEdit2: TSpTBXSeparatorItem;
+    mnuTSelectAll: TSpTBXItem;
+    tsMain: TSpTBXTabSet;
+    tiPAWN: TSpTBXTabItem;
+    tiCPP: TSpTBXTabItem;
+    tsDocuments: TSpTBXTabSet;
+    tiDocument1: TSpTBXTabItem;
+    spcLeft1: TImage;
+    spcRight1: TImage;
+    sciCallTips: TSciCallTips;
+    sbStatus: TSpTBXStatusBar;
+    sepGenerators1: TSpTBXSeparatorItem;
+    infoNewAMXX: TSpTBXRightAlignSpacerItem;
+    infoNewCPP: TSpTBXRightAlignSpacerItem;
+    sepNew1: TSpTBXSeparatorItem;
+    mnuPaster: TSpTBXItem;
+    tiOther: TSpTBXTabItem;
+    sciPropertyLoader: TSciPropertyLoader;
+    odOpen: TOpenDialog;
+    sdSave: TSaveDialog;
+    sepNew3: TSpTBXSeparatorItem;
+    infoNewOther: TSpTBXRightAlignSpacerItem;
+    mnuNewTextfile: TSpTBXItem;
+    mnuNewHTML: TSpTBXItem;
+    mnuNewSQL: TSpTBXItem;
+    mnuNewXML: TSpTBXItem;
+    sepHelp2: TSpTBXSeparatorItem;
+    mnuInfo: TSpTBXItem;
+    mnuFilename: TSpTBXRightAlignSpacerItem;
+    sepStatus2: TSpTBXSeparatorItem;
+    mnuCaret: TSpTBXRightAlignSpacerItem;
+    sepStatus3: TSpTBXSeparatorItem;
+    mnuModified: TSpTBXRightAlignSpacerItem;
+    sepStatus1: TSpTBXSeparatorItem;
+    mnuShowCodeTools: TSpTBXItem;
+    mnuOther: TSpTBXItem;
+    mnuFoldAll: TSpTBXItem;
+    sepView1: TSpTBXSeparatorItem;
+    sciPrinter: TSciPrinter;
+    pnlParent: TPanel;
+    sciEditor: TScintilla;
+    splRight: TSplitter;
+    tcTools: TSpTBXTabControl;
+    tiTools: TSpTBXTabItem;
+    tiNotes: TSpTBXTabItem;
+    tsNotes: TSpTBXTabSheet;
+    imgRight4: TImage;
+    imgBottom4: TImage;
+    imgTop4: TImage;
+    imgLeft4: TImage;
+    tbxNotes: TSpTBXToolbar;
+    mnuBold: TSpTBXItem;
+    mnuItalic: TSpTBXItem;
+    mnuUnderline: TSpTBXItem;
+    sepNotes: TSpTBXSeparatorItem;
+    mnuSelectColor: TSpTBXSubmenuItem;
+    cpNotes: TTBXColorPalette;
+    rtfNotes: TRichEdit;
+    tsExplorer: TSpTBXTabSheet;
+    spcBottom2: TImage;
+    spcLeft2: TImage;
+    spcRight2: TImage;
+    lstOutput: TListBox;
+    splOutput: TSplitter;
+    mnuCopyMessage: TSpTBXItem;
+    mnuCopyAll: TSpTBXItem;
+    mnuSaveToFile: TSpTBXItem;
+    sepOutput: TSpTBXSeparatorItem;
+    alControlChars: TActionList;
+    acControlChar1: TAction;
+    acControlChar2: TAction;
+    acControlChar3: TAction;
+    acControlChar4: TAction;
+    acControlChar5: TAction;
+    acControlChar6: TAction;
+    acControlChar7: TAction;
+    acControlChar8: TAction;
+    acControlChar9: TAction;
+    acControlChar10: TAction;
+    acControlChar11: TAction;
+    acControlChar12: TAction;
+    acControlChar13: TAction;
+    acControlChar14: TAction;
+    acControlChar15: TAction;
+    acControlChar16: TAction;
+    acControlChar17: TAction;
+    acControlChar18: TAction;
+    acControlChar19: TAction;
+    acControlChar20: TAction;
+    acControlChar22: TAction;
+    acControlChar23: TAction;
+    acControlChar24: TAction;
+    acControlChar25: TAction;
+    acControlChar21: TAction;
+    acControlChar26: TAction;
+    acControlChar27: TAction;
+    acControlChar28: TAction;
+    acControlChar29: TAction;
+    acControlChar30: TAction;
+    acControlChar31: TAction;
+    acControlChar32: TAction;
+    acControlChar33: TAction;
+    ppmEditor: TSpTBXPopupMenu;
+    mnuEditorCopy: TSpTBXItem;
+    mnuEditorPaste: TSpTBXItem;
+    mnuEditorCut: TSpTBXItem;
+    sepEditorMenu2: TSpTBXSeparatorItem;
+    mnuEditorUndo: TSpTBXItem;
+    mnuEditorRedo: TSpTBXItem;
+    sepEditorMenu3: TSpTBXSeparatorItem;
+    mnuToogleBookmark: TSpTBXItem;
+    mnuGoToBookmark: TSpTBXItem;
+    mnuEditorDelete: TSpTBXItem;
+    sepEditorMenu1: TSpTBXSeparatorItem;
+    mnuEditorSelectAll: TSpTBXItem;
+    sciSearchReplace: TSciSearchReplace;
+    acControlChar34: TAction;
+    acControlChar35: TAction;
+    acControlChar36: TAction;
+    acControlChar37: TAction;
+    IdFTP: TIdFTP;
+    acControlChar38: TAction;
+    pnlLoading: TSpTBXPanel;
+    pbLoading: TSpTBXProgressBar;
+    cmdCancel: TSpTBXButton;
+    acControlChar39: TAction;
+    acControlChar40: TAction;
+    sciAutoComplete: TSciAutoComplete;
+    mnuHTML: TSpTBXItem;
+    ppmDocuments: TSpTBXPopupMenu;
+    mnuPClose: TSpTBXItem;
+    mnuPSave: TSpTBXItem;
+    sepDocuments: TSpTBXSeparatorItem;
+    mnuPCloseAllFiles: TSpTBXItem;
+    mnuMenuGenerator: TSpTBXItem;
+    pnlDock: TSpTBXMultiDock;
+    pnlCodeExplorer: TSpTBXDockablePanel;
+    trvExplorer: TTreeView;
+    pnlCodeInspector: TSpTBXDockablePanel;
+    JvInspectorDotNETPainter: TJvInspectorDotNETPainter;
+    jviCode: TJvInspector;
+    mnuConnectionGen: TSpTBXItem;
+    acControlChar41: TAction;
+    sepView3: TSpTBXSeparatorItem;
+    mnuShowCodeExplorer: TSpTBXItem;
+    mnuShowCodeInspector: TSpTBXItem;
+    procedure FormConstrainedResize(Sender: TObject; var MinWidth,
+      MinHeight, MaxWidth, MaxHeight: Integer);
+    procedure mnuExitClick(Sender: TObject);
+    procedure OnCodeSnippetSelect(Sender: TObject);
+    procedure cpNotesChange(Sender: TObject);
+    procedure mnuBoldClick(Sender: TObject);
+    procedure mnuItalicClick(Sender: TObject);
+    procedure mnuUnderlineClick(Sender: TObject);
+    procedure rtfNotesMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure rtfNotesKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure trvExplorerCollapsed(Sender: TObject; Node: TTreeNode);
+    procedure trvExplorerExpanded(Sender: TObject; Node: TTreeNode);
+    procedure mnuSettingsClick(Sender: TObject);
+    procedure tsMainActiveTabChange(Sender: TObject; ItemIndex: Integer);
+    procedure tsDocumentsActiveTabChange(Sender: TObject;
+      ItemIndex: Integer);
+    procedure FormShow(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure mnuTOpenClick(Sender: TObject);
+    procedure mnuTSaveClick(Sender: TObject);
+    procedure mnuTSearchClick(Sender: TObject);
+    procedure mnuTCompileClick(Sender: TObject);
+    procedure mnuTUndoClick(Sender: TObject);
+    procedure mnuTRedoClick(Sender: TObject);
+    procedure mnuTCopyClick(Sender: TObject);
+    procedure mnuTCutClick(Sender: TObject);
+    procedure mnuTPasteClick(Sender: TObject);
+    procedure mnuTSelectAllClick(Sender: TObject);
+    procedure mnuEmptyPluginClick(Sender: TObject);
+    procedure mnuNewPluginClick(Sender: TObject);
+    procedure mnuHXMLClick(Sender: TObject);
+    procedure mnuHNoneClick(Sender: TObject);
+    procedure mnuOpenClick(Sender: TObject);
+    procedure mnuNewTextfileClick(Sender: TObject);
+    procedure mnuNewHTMLClick(Sender: TObject);
+    procedure mnuNewSQLClick(Sender: TObject);
+    procedure mnuNewXMLClick(Sender: TObject);
+    procedure mnuUndoClick(Sender: TObject);
+    procedure mnuSaveClick(Sender: TObject);
+    procedure mnuSaveAsClick(Sender: TObject);
+    procedure mnuThemesClick(Sender: TObject);
+    procedure mnuInfoClick(Sender: TObject);
+    procedure mnuRedoClick(Sender: TObject);
+    procedure mnuCutClick(Sender: TObject);
+    procedure mnuCopyClick(Sender: TObject);
+    procedure mnuPasteClick(Sender: TObject);
+    procedure mnuSelectAllClick(Sender: TObject);
+    procedure mnuCloseClick(Sender: TObject);
+    procedure mnuShowCodeToolsClick(Sender: TObject);
+    procedure sciEditorClick(Sender: TObject);
+    procedure sciEditorKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure sciEditorKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure mnuFoldAllClick(Sender: TObject);
+    procedure tbxToolbarVisibleChanged(Sender: TObject);
+    procedure mnuShowFileTBClick(Sender: TObject);
+    procedure tbxEditVisibleChanged(Sender: TObject);
+    procedure mnuShowEditTBClick(Sender: TObject);
+    procedure tbxCodeSnippetsVisibleChanged(Sender: TObject);
+    procedure mnuShowCodeSnippetsClick(Sender: TObject);
+    procedure mnuCopyMessageClick(Sender: TObject);
+    procedure mnuCopyAllClick(Sender: TObject);
+    procedure mnuSaveToFileClick(Sender: TObject);
+    procedure ppmOutputInitPopup(Sender: TObject; PopupView: TTBView);
+    procedure mnuSearchForumsClick(Sender: TObject);
+    procedure mnuOpenScriptingForumClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure acControlCharHandler(Sender: TObject);
+    procedure mnuEditorUndoClick(Sender: TObject);
+    procedure mnuEditorRedoClick(Sender: TObject);
+    procedure mnuEditorCopyClick(Sender: TObject);
+    procedure mnuEditorCutClick(Sender: TObject);
+    procedure mnuEditorPasteClick(Sender: TObject);
+    procedure mnuToogleBookmarkClick(Sender: TObject);
+    procedure mnuEditorDeleteClick(Sender: TObject);
+    procedure mnuEditorSelectAllClick(Sender: TObject);
+    procedure mnuGoToBookmarkClick(Sender: TObject);
+    procedure mnuSearchDialogClick(Sender: TObject);
+    procedure mnuReplaceClick(Sender: TObject);
+    procedure mnuSearchAgainClick(Sender: TObject);
+    procedure mnuGoToLineClick(Sender: TObject);
+    procedure mnuPrintClick(Sender: TObject);
+    procedure mnuSaveAllFilesClick(Sender: TObject);
+    procedure sciEditorKeyPress(Sender: TObject; var Key: Char);
+    procedure mnuCloseAllFilesClick(Sender: TObject);
+    procedure mnuIndenterClick(Sender: TObject);
+    procedure mnuUnindenterClick(Sender: TObject);
+    procedure mnuPasterClick(Sender: TObject);
+    procedure mnuPluginsIniEditorClick(Sender: TObject);
+    procedure cmdCancelClick(Sender: TObject);
+    procedure mnuSocketTerminalClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure trvExplorerDblClick(Sender: TObject);
+    procedure tiPAWNClick(Sender: TObject);
+    procedure tiCPPClick(Sender: TObject);
+    procedure tiOtherClick(Sender: TObject);
+    procedure mnuOpenHelpClick(Sender: TObject);
+    procedure mnuHudmessageClick(Sender: TObject);
+    procedure mnuDoCompileClick(Sender: TObject);
+    procedure lstOutputMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure lstOutputDblClick(Sender: TObject);
+    procedure lstOutputMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure sciEditorMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure lstOutputEnter(Sender: TObject);
+    procedure mnuCompileAndStartHLClick(Sender: TObject);
+    procedure mnuCompileAndUploadClick(Sender: TObject);
+    procedure mnuRegisterPluginsIniLocalClick(Sender: TObject);
+    procedure mnuRegisterPluginsIniWebClick(Sender: TObject);
+    procedure sciAutoCompleteBeforeShow(Sender: TObject;
+      const Position: Integer; ListToDisplay: TStrings;
+      var CancelDisplay: Boolean);
+    procedure mnuMOTDGeneratorClick(Sender: TObject);
+    procedure mnuHeaderPAWNClick(Sender: TObject);
+    procedure OnTabSelect(Sender: TTBCustomItem; Viewer: TTBItemViewer;
+      Selecting: Boolean);
+    procedure mnuPCloseClick(Sender: TObject);
+    procedure mnuPCloseAllFilesClick(Sender: TObject);
+    procedure mnuTNewClick(Sender: TObject);
+    procedure jviCodeItemValueChanged(Sender: TObject;
+      Item: TJvCustomInspectorItem);
+    procedure mnuMenuGeneratorClick(Sender: TObject);
+    procedure JvPluginManagerPlugInError(Sender: TObject;
+      AError: Exception);
+    procedure mnuNewModuleClick(Sender: TObject);
+    procedure mnuNewUnitClick(Sender: TObject);
+    procedure mnuNewHeaderCPPClick(Sender: TObject);
+    procedure tcToolsActiveTabChange(Sender: TObject; ItemIndex: Integer);
+    procedure sciEditorModified(Sender: TObject; const position,
+      modificationType: Integer; text: PAnsiChar; const len, linesAdded,
+      line, foldLevelNow, foldLevelPrev: Integer);
+    procedure sciEditorDblClick(Sender: TObject);
+    procedure sciCallTipsBeforeShow(Sender: TObject;
+      const Position: Integer; ListToDisplay: TStrings;
+      var CancelDisplay: Boolean);
+    procedure sciEditorCallTipClick(Sender: TObject;
+      const position: Integer);
+    procedure sciEditorAutoCSelection(Sender: TObject; text: PAnsiChar);
+    procedure WMCopyData(var Msg: TWMCopyData); message WM_COPYDATA;
+    procedure pnlCodeInspectorVisibleChanged(Sender: TObject);
+    procedure pnlCodeExplorerVisibleChanged(Sender: TObject);
+    procedure mnuShowCodeExplorerClick(Sender: TObject);
+    procedure mnuShowCodeInspectorClick(Sender: TObject);
+    procedure mnuConnectionGenClick(Sender: TObject);
+  private
+    procedure UpdateNotes;
+  public
+    IRCPasterStop: Boolean;
+    eErrorLine: Integer;
+    SelectedTab: TSpTBXTabItem;
+    procedure OnCodeSnippetClick(Sender: TObject);
+    procedure OnCustomClick(Sender: TObject);
+    procedure SetErrorLine(eLine: Integer);
+  end;
+
+var
+  frmMain: TfrmMain;
+  eCPP: Boolean;
+
+implementation
+
+uses UnitfrmSettings, UnitMainTools, UnitLanguages, UnitfrmInfo,
+  UnitCodeSnippets, UnitfrmSearch, UnitfrmReplace, UnitfrmGoToLine,
+  UnitfrmAllFilesForm, UnitCodeUtils, UnitfrmPluginsIniEditor,
+  UnitfrmSocketsTerminal, UnitfrmSplashscreen, UnitCodeExplorerUpdater,
+  UnitTextAnalyze, UnitfrmHudMsgGenerator, UnitCompile, UnitfrmAutoIndent,
+  UnitfrmHTMLPreview, UnitCodeInspector, UnitfrmMOTDGen,
+  UnitfrmMenuGenerator, UnitfrmClose, UnitPlugins, UnitfrmConnGen,
+  UnitMenuGenerators;
+
+{$R *.dfm}
+
+procedure TfrmMain.FormConstrainedResize(Sender: TObject; var MinWidth,
+  MinHeight, MaxWidth, MaxHeight: Integer);
+begin
+  pnlLoading.Left := sciEditor.Left + 3 + (sciEditor.Width div 2) - (pnlLoading.Width div 2);
+  pnlLoading.Top := tsDocuments.Top + sciEditor.Top + ((sciEditor.Height * 5) div 6) - (pnlLoading.Height div 2);
+
+  if (Canvas.TextWidth(ActiveDoc.FileName) +10 > mnuFilename.CustomWidth) then
+    mnuFilename.Caption := ExtractFileName(ActiveDoc.FileName)
+  else
+    mnuFilename.Caption := ActiveDoc.FileName;
+end;
+
+procedure TfrmMain.mnuExitClick(Sender: TObject);
+begin
+  Close;
+end;
+
+{ Notes -> }
+
+procedure TfrmMain.OnCodeSnippetSelect(Sender: TObject);
+begin
+  mnuPAWN.Checked := Sender = mnuPAWN;
+  mnuCPP.Checked := Sender = mnuCPP;
+  mnuHTML.Checked := Sender = mnuHTML;
+  mnuOther.Checked := Sender = mnuOther;
+  LoadCodeSnippets((Sender As TSpTBXItem).Caption);
+end;
+
+procedure TfrmMain.cpNotesChange(Sender: TObject);
+begin
+  rtfNotes.SelAttributes.Color := cpNotes.Color;
+end;
+
+procedure TfrmMain.UpdateNotes;
+begin
+  cpNotes.Color := rtfNotes.SelAttributes.Color;
+  mnuBold.Checked := fsBold in rtfNotes.SelAttributes.Style;
+  mnuItalic.Checked := fsItalic in rtfNotes.SelAttributes.Style;
+  mnuUnderline.Checked := fsUnderline in rtfNotes.SelAttributes.Style;
+end;
+
+procedure TfrmMain.mnuBoldClick(Sender: TObject);
+begin
+  if fsBold in rtfNotes.SelAttributes.Style then
+    rtfNotes.SelAttributes.Style := rtfNotes.SelAttributes.Style - [fsBold]
+  else
+    rtfNotes.SelAttributes.Style := rtfNotes.SelAttributes.Style + [fsBold];
+end;
+
+procedure TfrmMain.mnuItalicClick(Sender: TObject);
+begin
+  if fsItalic in rtfNotes.SelAttributes.Style then
+    rtfNotes.SelAttributes.Style := rtfNotes.SelAttributes.Style - [fsItalic]
+  else
+    rtfNotes.SelAttributes.Style := rtfNotes.SelAttributes.Style + [fsItalic];
+end;
+
+procedure TfrmMain.mnuUnderlineClick(Sender: TObject);
+begin
+  if fsUnderline in rtfNotes.SelAttributes.Style then
+    rtfNotes.SelAttributes.Style := rtfNotes.SelAttributes.Style - [fsUnderline]
+  else
+    rtfNotes.SelAttributes.Style := rtfNotes.SelAttributes.Style + [fsUnderline];
+end;
+
+procedure TfrmMain.rtfNotesMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  UpdateNotes;
+end;
+
+procedure TfrmMain.rtfNotesKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  UpdateNotes;
+end;
+
+{ <- Notes - Code-Explorer -> }
+
+procedure TfrmMain.trvExplorerCollapsed(Sender: TObject; Node: TTreeNode);
+begin
+  Node.ImageIndex := 42;
+  Node.SelectedIndex := 42;
+end;
+
+procedure TfrmMain.trvExplorerExpanded(Sender: TObject; Node: TTreeNode);
+begin
+  Node.ImageIndex := 43;
+  Node.SelectedIndex := 43;
+end;
+
+{ <- Code Explorer }
+
+procedure TfrmMain.mnuSettingsClick(Sender: TObject);
+var i: integer;
+    eModified: Boolean;
+begin
+  CopyFile(PChar(ExtractFilePath(ParamStr(0)) + 'config\PAWN.csl'), PChar(ExtractFilePath(ParamStr(0)) + 'config\PAWN.bak'), False);
+  CopyFile(PChar(ExtractFilePath(ParamStr(0)) + 'config\C++.csl'), PChar(ExtractFilePath(ParamStr(0)) + 'config\C++.bak'), False);
+  CopyFile(PChar(ExtractFilePath(ParamStr(0)) + 'config\Other.csl'), PChar(ExtractFilePath(ParamStr(0)) + 'config\Other.bak'), False);
+  eModified := ActiveDoc.Modified;
+
+  if frmSettings.ShowModal = mrOk then begin
+    { Shortcuts }
+		for i := 0 to frmSettings.lvShortcuts.Items.Count - 1 do
+      TSciKeyCommand(frmSettings.lvShortcuts.Items[i].Data).ShortCut := ShortcutToSciKey(TextToShortCut(frmSettings.lvShortcuts.Items[i].SubItems[0]));
+    { Tools }
+    if frmSettings.chkIndentGuides.Checked then
+      sciEditor.Indentation := sciEditor.Indentation + [IndentationGuides]
+    else
+      sciEditor.Indentation := sciEditor.Indentation - [IndentationGuides];
+    sciEditor.BraceHilite := frmSettings.chkHighlightBraces.Checked;
+    sciEditor.ClearUndoAfterSave := frmSettings.chkClearUndoAfterSave.Checked;
+    sciEditor.AutoCloseBraces := frmSettings.chkAutoCloseBraces.Checked;
+    sciEditor.AutoCloseQuotes := frmSettings.chkAutoCloseQuotes.Checked;
+    if frmSettings.chkWordWrap.Checked then
+      sciEditor.WordWrap := sciWrap
+    else
+      sciEditor.WordWrap := sciNoWrap;
+
+    case frmSettings.cboCodeFolding.ItemIndex of
+      0: sciEditor.FoldMarkerType := sciMarkArrows;
+      1: sciEditor.FoldMarkerType := sciMarkBox;
+      2: sciEditor.FoldMarkerType := sciMarkCircle;
+      3: sciEditor.FoldMarkerType := sciMarkPlusMinus;
+    end;
+    if frmSettings.cboCodeFolding.ItemIndex = 4 then
+      sciEditor.Folding := sciEditor.Folding - [foldFold]
+    else
+      sciEditor.Folding := sciEditor.Folding + [foldFold];
+
+    sciEditor.Caret.ForeColor := frmSettings.CaretFore;
+    sciEditor.Caret.LineBackColor := frmSettings.CaretBack;
+    sciEditor.Caret.LineVisible := frmSettings.chkShowCaret.Checked;
+    sciEditor.Caret.Period := StrToInt(frmSettings.txtPeriod.Text);
+    eConfig.WriteBool('Editor', 'Auto-Indent', frmSettings.chkAutoIndent.Checked);
+    eConfig.WriteBool('Editor', 'IndentOpeningBrace', frmAutoIndent.chkIndentOpeningBrace.Checked);
+    eConfig.WriteBool('Editor', 'UnindentClosingBrace', frmAutoIndent.chkUnindentPressingClosingBrace.Checked);
+    eConfig.WriteBool('Editor', 'UnindentEmptyLine', frmAutoIndent.chkUnindentLine.Checked);
+    { Editor }
+    eConfig.WriteBool('Editor', 'LimitCaretRestore', frmSettings.chkRestoreCaret.Checked);
+    eConfig.WriteString('Editor', 'LimitCaretRestoreVal', frmSettings.txtLines.Text);
+    if FileExists(sciPropertyLoader.FileName) then
+      sciPropertyLoader.Save;
+    { Compiler }
+    eConfig.WriteString('Pawn-Compiler', 'Path', frmSettings.txtPAWNCompilerPath.Text);
+    eConfig.WriteString('Pawn-Compiler', 'Args', frmSettings.txtPAWNArgs.Text);
+    eConfig.WriteString('Pawn-Compiler', 'DefaultOutput', frmSettings.txtPAWNOutput.Text);
+    eConfig.WriteString('CPP-Compiler', 'Path', frmSettings.txtCPPCompilerPath.Text);
+    eConfig.WriteString('CPP-Compiler', 'Args', frmSettings.txtCPPCompilerArguments.Text);
+    eConfig.WriteString('CPP-Compiler', 'DefaultOutput', frmSettings.txtCPPOutput.Text);
+    { HL }
+    eConfig.WriteString('Half-Life', 'Filename', frmSettings.txtHLExec.Text);
+    eConfig.WriteString('Half-Life', 'Params', frmSettings.txtCustomParameters.Text); 
+    eConfig.WriteString('Half-Life', 'AMXXListen', frmSettings.txtAMXXDir.Text); 
+    { FTP Settings }
+    eConfig.WriteString('FTP', 'Host', frmSettings.txtHost.Text);
+    eConfig.WriteString('FTP', 'Port', frmSettings.txtPort.Text);
+    eConfig.WriteString('FTP', 'Username', frmSettings.txtUsername.Text);
+    eConfig.WriteString('FTP', 'Password', frmSettings.txtPassword.Text);
+    eConfig.WriteString('FTP', 'DefaultDir', frmSettings.txtDefaultDir.Text);
+    eConfig.WriteBool('FTP', 'Passive', frmSettings.chkPassive.Checked);
+    { FTP Proxy }
+    eConfig.WriteInteger('Proxy', 'ProxyType', frmSettings.cboProxy.ItemIndex);
+    eConfig.WriteString('Proxy', 'Host', frmSettings.txtProxyHost.Text);
+    eConfig.WriteString('Proxy', 'Port', frmSettings.txtProxyPort.Text);
+    eConfig.WriteString('Proxy', 'Username', frmSettings.txtUsername.Text);
+    eConfig.WriteString('Proxy', 'Password', frmSettings.txtProxyPassword.Text);  
+    { Misc }
+    eConfig.WriteString('Misc', 'DefaultPluginName', frmSettings.txtDefaultName.Text);
+    eConfig.WriteString('Misc', 'DefaultPluginVersion', frmSettings.txtDefaultVersion.Text);
+    eConfig.WriteString('Misc', 'DefaultPluginAuthor', frmSettings.txtDefaultAuthor.Text);
+    if frmSettings.optFileComment.Checked then
+      eConfig.WriteInteger('Misc', 'SaveNotesTo', 0)
+    else if frmSettings.optConfig.Checked then
+      eConfig.WriteInteger('Misc', 'SaveNotesTo', 1)
+    else
+      eConfig.WriteInteger('Misc', 'SaveNotesTo', 3); 
+    eConfig.WriteInteger('Misc', 'CPUSpeed', frmSettings.sldSpeed.Value);
+    eConfig.WriteBool('Misc', 'ShowStatusbar', frmSettings.chkShowStatusbar.Checked);
+  end
+  else begin
+    { Restore Code-Snippets }
+    DeleteFile(ExtractFilePath(ParamStr(0)) + 'config\PAWN.csl');
+    DeleteFile(ExtractFilePath(ParamStr(0)) + 'config\C++.csl');
+    DeleteFile(ExtractFilePath(ParamStr(0)) + 'config\Other.csl');
+    CopyFile(PChar(ExtractFilePath(ParamStr(0)) + 'config\PAWN.bak'), PChar(ExtractFilePath(ParamStr(0)) + 'config\PAWN.csl'), False);
+    CopyFile(PChar(ExtractFilePath(ParamStr(0)) + 'config\C++.bak'), PChar(ExtractFilePath(ParamStr(0)) + 'config\C++.csl'), False);
+    CopyFile(PChar(ExtractFilePath(ParamStr(0)) + 'config\Other.bak'), PChar(ExtractFilePath(ParamStr(0)) + 'config\Other.csl'), False);
+  end;
+
+  DeleteFile(ExtractFilePath(ParamStr(0)) + 'config\PAWN.bak');
+  DeleteFile(ExtractFilePath(ParamStr(0)) + 'config\C++.bak');
+  DeleteFile(ExtractFilePath(ParamStr(0)) + 'config\Other.bak');
+
+  if FileExists(sciPropertyLoader.FileName) then
+    sciPropertyLoader.Load;
+  ReloadIni;
+
+  sciEditor.Modified := eModified;
+  ActiveDoc.Modified := eModified;
+  if eModified then
+    mnuModified.Caption := lModified
+  else
+    mnuModified.Caption := '';
+
+  sciEditor.Gutter1.MarginType := gutLineNumber;
+  sciEditor.Gutter1.Width := 40;
+end;
+
+{ Change Tab -> }
+
+procedure TfrmMain.tsMainActiveTabChange(Sender: TObject;
+  ItemIndex: Integer);
+begin
+  if (not Started) or (frmMain.pnlLoading.Visible) then exit;
+
+  if (lstOutput.Visible) then begin
+    if Plugin_VisibleControlChange(CTRL_OUTPUT, False) then begin
+      splOutput.Hide;
+      lstOutput.Hide;
+      Plugin_VisibleControlChange(CTRL_OUTPUT, False);
+    end;
+  end;
+
+  case tsMain.ActiveTabIndex of
+    0: begin
+      mnuTNew.Caption := 'New Plugin';
+    end;
+    1: begin
+      mnuTNew.Caption := 'New Unit';
+      sciCallTips.ApiStrings.Clear;
+      sciAutoComplete.AStrings.Clear;
+    end;
+    2: begin
+      mnuTNew.Caption := 'New Textfile';
+      sciCallTips.ApiStrings.Clear;
+      sciAutoComplete.AStrings.Clear;
+    end;
+  end;                  
+  ActivateProjects(ItemIndex, True);
+
+  trvExplorer.Items.Clear;
+  FillCodeExplorer(GetCurrLang.Name);
+end;
+
+procedure TfrmMain.tsDocumentsActiveTabChange(Sender: TObject;
+  ItemIndex: Integer);
+var Collection: TDocCollection;
+begin
+  if (not Started) or (pnlLoading.Visible) then exit;
+
+  if (lstOutput.Visible) then begin
+    if Plugin_VisibleControlChange(CTRL_OUTPUT, False) then begin
+      splOutput.Hide;
+      lstOutput.Hide;
+      Plugin_VisibleControlChange(CTRL_OUTPUT, False);
+    end;
+  end;
+
+  case tsMain.ActiveTabIndex of
+      0: Collection := PAWNProjects; // PAWN
+      1: Collection := CPPProjects;   // C++
+    else Collection := OtherProjects; // Other
+  end;      
+  Collection.Activate(ItemIndex, True);
+end;
+
+{ <- Change Tab | Settings -> }
+
+procedure TfrmMain.FormShow(Sender: TObject);
+begin
+  if (Screen.Cursor = crDefault) and (not pnlLoading.Visible) then begin
+    Started := True;
+    TCodeExplorerUpdater.Create(False);
+    ReloadIni;
+  end;
+end;
+
+procedure TfrmMain.FormCreate(Sender: TObject);
+begin
+end;
+
+{ <- Settings | Toolbars -> }
+
+procedure TfrmMain.mnuTOpenClick(Sender: TObject);
+begin
+  mnuOpen.Click;
+end;
+
+procedure TfrmMain.mnuTSaveClick(Sender: TObject);
+begin
+  mnuSave.Click;
+end;
+
+procedure TfrmMain.mnuTSearchClick(Sender: TObject);
+begin
+  mnuSearch.Click;
+end;
+
+procedure TfrmMain.mnuTCompileClick(Sender: TObject);
+begin
+  mnuDoCompile.Click;
+end;
+
+procedure TfrmMain.mnuTUndoClick(Sender: TObject);
+begin
+  mnuUndo.Click;
+end;
+
+procedure TfrmMain.mnuTRedoClick(Sender: TObject);
+begin
+  mnuRedo.Click;
+end;
+
+procedure TfrmMain.mnuTCopyClick(Sender: TObject);
+begin
+  mnuCopy.Click;
+end;
+
+procedure TfrmMain.mnuTCutClick(Sender: TObject);
+begin
+  mnuCut.Click;
+end;
+
+procedure TfrmMain.mnuTPasteClick(Sender: TObject);
+begin
+  mnuPaste.Click;
+end;
+
+procedure TfrmMain.mnuTSelectAllClick(Sender: TObject);
+begin
+  mnuSelectAll.Click;
+end;
+
+procedure TfrmMain.mnuEmptyPluginClick(Sender: TObject);
+begin
+  if not Plugin_CreateNewFile(NEW_PAWN_EMPTYPLUGIN, True) then exit;
+
+  if tsMain.ActiveTabIndex <> 0 then
+    ActivateProjects(0, False);
+
+  PAWNProjects.Activate(PAWNProjects.Add(''), True);
+  Plugin_CreateNewFile(NEW_PAWN_EMPTYPLUGIN, False);
+end;
+
+procedure TfrmMain.mnuNewPluginClick(Sender: TObject);
+begin
+  if not Plugin_CreateNewFile(NEW_PAWN_PLUGIN, True) then exit;
+
+  if tsMain.ActiveTabIndex <> 0 then
+    ActivateProjects(0, False);
+
+  PAWNProjects.Activate(PAWNProjects.Add(''), False);
+  sciEditor.Lines.Add('/* Plugin generated by AMXX-Studio */');
+  sciEditor.Lines.Add('');
+  sciEditor.Lines.Add('#include <amxmodx>');
+  sciEditor.Lines.Add('#include <amxmisc>');
+  sciEditor.Lines.Add('');
+  sciEditor.Lines.Add('#define PLUGIN "' + eConfig.ReadString('Misc', 'DefaultPluginName', 'New Plugin') + '"');
+  sciEditor.Lines.Add('#define VERSION "' + eConfig.ReadString('Misc', 'DefaultPluginVersion', '1.0') + '"');
+  sciEditor.Lines.Add('#define AUTHOR "' + eConfig.ReadString('Misc', 'DefaultPluginAuthor', 'Your name') + '"');
+  sciEditor.Lines.Add('');
+  sciEditor.Lines.Add('');
+  sciEditor.Lines.Add('public plugin_init() {');
+  sciEditor.Lines.Add('	register_plugin(PLUGIN, VERSION, AUTHOR)');
+  sciEditor.Lines.Add('	');
+  sciEditor.Lines.Add('	// Add your code here...');
+  sciEditor.Lines.Add('}');
+
+  Plugin_CreateNewFile(NEW_PAWN_PLUGIN, False);
+end;
+
+procedure TfrmMain.mnuHXMLClick(Sender: TObject);
+begin
+  SelectLanguage((Sender As TSpTBXItem).Caption);
+end;
+
+procedure TfrmMain.mnuHNoneClick(Sender: TObject);
+begin
+  SelectLanguage('null');
+end;
+
+procedure TfrmMain.mnuOpenClick(Sender: TObject);
+var eExt: String;
+begin
+  if odOpen.Execute then begin
+    eExt := ExtractFileExt(odOpen.FileName);
+    eExt := LowerCase(eExt);
+    if (eExt = '.sma') or (eExt = '.inc') then begin // Pawn files
+      if tsMain.ActiveTabIndex <> 0 then
+        ActivateProjects(0, False);
+      PAWNProjects.Open(odOpen.FileName);
+    end
+    else if (eExt = '.cpp') or (eExt = '.h') then begin // C++ files
+      if not eCPP then
+        MessageBox(Handle, PChar(lNoCPP), PChar(Application.Title), MB_ICONWARNING)
+      else begin
+        if tsMain.ActiveTabIndex <> 1 then
+          ActivateProjects(1, False);
+        CPPProjects.Open(odOpen.FileName);
+      end;
+    end
+    else if (eExt = '.htm') or (eExt = '.html') then begin // HTML files
+      if tsMain.ActiveTabIndex <> 1 then
+        ActivateProjects(2, False);
+      OtherProjects.Open(odOpen.FileName, 'HTML');
+    end
+    else if (eExt = '.sql') then begin // SQL databases
+      if tsMain.ActiveTabIndex <> 1 then
+        ActivateProjects(2, False);
+      OtherProjects.Open(odOpen.FileName, 'SQL');
+    end
+    else if (eExt = '.xml') then begin // XML files
+      if tsMain.ActiveTabIndex <> 1 then
+        ActivateProjects(2, False);
+      OtherProjects.Open(odOpen.FileName, 'XML');
+    end
+    else begin // Other files and/or Textfiles
+      if tsMain.ActiveTabIndex <> 1 then
+        ActivateProjects(2, False);
+      OtherProjects.Open(odOpen.FileName, 'null');
+    end;
+  end;
+end;
+
+procedure TfrmMain.mnuNewTextfileClick(Sender: TObject);
+begin
+  if not Plugin_CreateNewFile(NEW_OTHER_TEXTFILE, True) then exit;
+
+  if tsMain.ActiveTabIndex <> 2 then
+    ActivateProjects(2, False);
+
+  OtherProjects.Activate(OtherProjects.Add(''), True);
+
+  Plugin_CreateNewFile(NEW_OTHER_TEXTFILE, False);
+end;
+
+procedure TfrmMain.mnuNewHTMLClick(Sender: TObject);
+begin
+  if not Plugin_CreateNewFile(NEW_OTHER_HTML, True) then exit;
+
+  if tsMain.ActiveTabIndex <> 2 then
+    ActivateProjects(2, False);
+
+  OtherProjects.Activate(OtherProjects.Add('', 'HTML'), True);
+  sciEditor.Lines.Add('<html>');
+  sciEditor.Lines.Add(#9'<head>');
+  sciEditor.Lines.Add(#9#9'<title>Your Title</title>');
+  sciEditor.Lines.Add(#9'</head>');
+  sciEditor.Lines.Add(#9'<body>');
+  sciEditor.Lines.Add(#9#9'<-- Your text here -->');
+  sciEditor.Lines.Add(#9'</body>');      
+  sciEditor.Lines.Add('</html>');
+  
+  Plugin_CreateNewFile(NEW_OTHER_HTML, False);
+end;
+
+procedure TfrmMain.mnuNewSQLClick(Sender: TObject);
+begin
+  if not Plugin_CreateNewFile(NEW_OTHER_SQL, True) then exit;
+
+  if tsMain.ActiveTabIndex <> 2 then
+    ActivateProjects(2, False);
+
+  OtherProjects.Activate(OtherProjects.Add('', 'SQL'), True);
+
+  Plugin_CreateNewFile(NEW_OTHER_SQL, False);
+end;
+
+procedure TfrmMain.mnuNewXMLClick(Sender: TObject);
+begin
+  if not Plugin_CreateNewFile(NEW_OTHER_XML, True) then exit;
+
+  if tsMain.ActiveTabIndex <> 2 then
+    ActivateProjects(2, False);
+
+  OtherProjects.Activate(OtherProjects.Add('', 'XML'), True);
+
+  Plugin_CreateNewFile(NEW_OTHER_XML, False);
+end;
+
+procedure TfrmMain.mnuUndoClick(Sender: TObject);
+begin
+  sciEditor.Undo;
+end;
+
+procedure TfrmMain.mnuSaveClick(Sender: TObject);
+begin
+  if ActiveDoc.Untitled then
+    mnuSaveAs.Click
+  else begin
+    ActiveDoc.Save;
+    mnuModified.Caption := '';
+  end;
+end;
+
+procedure TfrmMain.mnuSaveAsClick(Sender: TObject);
+begin
+  if sdSave.Execute then begin
+    ActiveDoc.FileName := AddExtension(sdSave.FileName, ActiveDoc.Highlighter);
+    ActiveDoc.Save;
+    // Don't know why tsDocuments.Items[0].Caption := '???'; not works, but this works:
+    TSpTBXTabItem(tsDocuments.Items[ActiveDoc.Index]).Caption := ActiveDoc.Title;
+  end;
+end;
+
+procedure TfrmMain.mnuThemesClick(Sender: TObject);
+begin
+  if Started then
+    eConfig.WriteString('Misc', 'Theme', TBXCurrentTheme);
+  Plugin_ThemeChange(TBXCurrentTheme);
+end;
+
+procedure TfrmMain.mnuInfoClick(Sender: TObject);
+begin
+  if Plugin_ShowHelp(HELP_ABOUT) then
+    frmInfo.ShowModal;
+end;
+
+procedure TfrmMain.mnuRedoClick(Sender: TObject);
+begin
+  sciEditor.Redo;
+end;
+
+procedure TfrmMain.mnuCutClick(Sender: TObject);
+begin
+  sciEditor.Cut;
+end;
+
+procedure TfrmMain.mnuCopyClick(Sender: TObject);
+begin
+  sciEditor.Copy;
+end;
+
+procedure TfrmMain.mnuPasteClick(Sender: TObject);
+begin
+  sciEditor.Paste;
+end;
+
+procedure TfrmMain.mnuSelectAllClick(Sender: TObject);
+begin
+  sciEditor.SelectAll;
+end;
+
+procedure TfrmMain.mnuCloseClick(Sender: TObject);
+begin
+  CloseDocument(ActiveDoc);
+end;
+
+procedure TfrmMain.mnuShowCodeToolsClick(Sender: TObject);
+begin
+  if not Plugin_VisibleControlChange(CTRL_CODETOOLS_MAIN, not tcTools.Visible) then exit;
+
+  tcTools.Visible := (Sender As TSpTBXItem).Checked;
+  splRight.Visible := (Sender As TSpTBXItem).Checked;
+  mnuShowCodeTools.Checked := (Sender As TSpTBXItem).Checked;
+  mnuShowCodeToolsWindow.Checked := (Sender As TSpTBXItem).Checked;
+  Application.ProcessMessages;
+
+  Plugin_VisibleControlChange(CTRL_CODETOOLS_MAIN, tcTools.Visible);
+end;
+
+procedure TfrmMain.sciEditorClick(Sender: TObject);
+begin
+  mnuCaret.Caption := Format(lLnCh, [sciEditor.GetCurrentLineNumber +1, sciEditor.GetCaretInLine +1]);
+  Plugin_EditorClick(False);
+  Plugin_UpdateSel(sciEditor.SelStart, sciEditor.SelLength, sciEditor.GetFirstVisibleLine);
+end;
+
+procedure TfrmMain.sciEditorKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var i: integer;
+begin
+  mnuCaret.Caption := Format(lLnCh, [sciEditor.GetCurrentLineNumber +1, sciEditor.GetCaretInLine +1]);
+  Plugin_UpdateSel(sciEditor.SelStart, sciEditor.SelLength, sciEditor.GetFirstVisibleLine);
+
+  if Key = 46 then begin
+    mnuModified.Caption := lModified;
+    ActiveDoc.Modified := True;
+  end;
+
+  if sciEditor.Caret.LineVisible <> frmSettings.chkShowCaret.Checked then
+    sciEditor.Caret.LineVisible := frmSettings.chkShowCaret.Checked;
+  if sciEditor.Caret.LineBackColor <> frmSettings.CaretBack then begin
+    sciEditor.Caret.LineBackColor := frmSettings.CaretBack;
+    sciEditor.Colors.SelBack := clHighlight;
+
+    i := sciEditor.SelLength;
+    sciEditor.SelLength := 0;
+    sciEditor.SelStart := sciEditor.SelStart +i;
+  end;
+end;
+
+procedure TfrmMain.sciEditorKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var eStr: String;
+begin
+  if not Started then exit;
+
+  mnuCaret.Caption := Format(lLnCh, [sciEditor.GetCurrentLineNumber +1, sciEditor.GetCaretInLine +1]);
+  Plugin_UpdateSel(sciEditor.SelStart, sciEditor.SelLength, sciEditor.GetFirstVisibleLine);
+
+  if (Key = 13) and (frmSettings.chkAutoIndent.Checked) and (Trim(sciEditor.Lines[sciEditor.GetCurrentLineNumber]) = '') then begin
+    if (sciEditor.LanguageManager.SelectedLanguage = 'Pawn') or (sciEditor.LanguageManager.SelectedLanguage = 'C++') then begin
+      eStr := Trim(RemoveStringsAndComments(sciEditor.Lines[sciEditor.GetCurrentLineNumber -1], True));
+      if (Copy(eStr, Length(eStr), 1) = '{') and (frmAutoIndent.chkIndentOpeningBrace.Checked) then
+          sciEditor.SelText := #9;
+      if (eStr = '') and (frmAutoIndent.chkUnindentLine.Checked) then begin
+        sciEditor.Lines[sciEditor.GetCurrentLineNumber] := Copy(sciEditor.Lines[sciEditor.GetCurrentLineNumber], 1, Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber]) -1); // remove last indent..
+        sciEditor.SelStart := sciEditor.SelStart + Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber]);                                                                      // and jump to last position
+      end;
+    end;
+  end;
+
+  Application.ProcessMessages;
+  UpdateCI;
+end;
+
+procedure TfrmMain.mnuFoldAllClick(Sender: TObject);
+begin
+  Screen.Cursor := crHourGlass;
+  sciEditor.FoldAll;
+  Screen.Cursor := crDefault;
+end;
+
+procedure TfrmMain.tbxToolbarVisibleChanged(Sender: TObject);
+begin
+  mnuShowFileTB.Checked := tbxToolbar.Visible;
+end;
+
+procedure TfrmMain.mnuShowFileTBClick(Sender: TObject);
+begin
+  tbxToolbar.Visible := mnuShowFileTB.Checked;
+end;
+
+procedure TfrmMain.tbxEditVisibleChanged(Sender: TObject);
+begin
+  mnuShowEditTB.Checked := tbxEdit.Visible;
+end;
+
+procedure TfrmMain.mnuShowEditTBClick(Sender: TObject);
+begin
+  tbxEdit.Visible := mnuShowEditTB.Checked;
+end;
+
+procedure TfrmMain.tbxCodeSnippetsVisibleChanged(Sender: TObject);
+begin
+  mnuShowCodeSnippets.Checked := tbxCodeSnippets.Visible;
+end;
+
+procedure TfrmMain.mnuShowCodeSnippetsClick(Sender: TObject);
+begin
+  tbxCodeSnippets.Visible := mnuShowCodeSnippets.Checked;
+end;
+
+procedure TfrmMain.OnCodeSnippetClick(Sender: TObject);
+function GetCat: String;
+begin
+  if mnuPAWN.Checked then
+    Result := 'Pawn'
+  else if mnuCPP.Checked then
+    Result := 'C++'
+  else if mnuHTML.Checked then
+    Result := 'HTML'
+  else
+    Result := 'Other';
+end;
+
+begin
+  if Plugin_CodeSnippetClick(TSpTBXItem(Sender).Caption, GetCat, GetSnippet(GetCat, (Sender As TSpTBXItem).Caption)) then
+    sciEditor.SelText := GetSnippet('Pawn', (Sender As TSpTBXItem).Caption);
+end;
+
+procedure TfrmMain.mnuCopyMessageClick(Sender: TObject);
+begin
+  if lstOutput.ItemIndex <> -1 then
+    Clipboard.SetTextBuf(PChar(lstOutput.Items[lstOutput.ItemIndex]));
+end;
+
+procedure TfrmMain.mnuCopyAllClick(Sender: TObject);
+begin
+  Clipboard.SetTextBuf(PChar(lstOutput.Items.Text));
+end;
+
+procedure TfrmMain.mnuSaveToFileClick(Sender: TObject);
+begin
+  sdSave.FilterIndex := 7;
+  if sdSave.Execute then
+    lstOutput.Items.SaveToFile(sdSave.FileName);
+end;
+
+procedure TfrmMain.ppmOutputInitPopup(Sender: TObject; PopupView: TTBView);
+begin
+  mnuCopyMessage.Enabled := lstOutput.ItemIndex <> -1;
+end;
+
+procedure TfrmMain.mnuSearchForumsClick(Sender: TObject);
+begin
+  if Plugin_ShowHelp(HELP_SEARCH) then
+    ShellExecute(Handle, 'open', 'http://www.amxmodx.org/forums/search.php', nil, nil, SW_SHOW);
+end;
+
+procedure TfrmMain.mnuOpenScriptingForumClick(Sender: TObject);
+begin
+  if Plugin_ShowHelp(HELP_FORUMS) then
+    ShellExecute(Handle, 'open', 'http://www.amxmodx.org/forums/viewforum.php?f=8', nil, nil, SW_SHOW);
+end;
+
+procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (Shift = [ssCtrl, ssShift]) then begin
+    if Key = 16 then
+      Key := 0;
+  end;
+end;
+
+procedure TfrmMain.acControlCharHandler(Sender: TObject);
+function TriggerMenuShortcut(eShortcut: TShortcut; Item: TTBCustomItem): Boolean;
+var i: integer;
+begin
+  Result := False;
+  for i := 0 to Item.Count -1 do begin
+    if Item.Items[i].ShortCut = eShortcut then begin
+      Item.Items[i].OnClick(Self);
+      Result := True;
+      exit;
+    end
+    else
+      TriggerMenuShortcut(eShortcut, Item.Items[i]);
+  end;
+end;
+
+var i: integer;
+begin
+  Application.ProcessMessages;
+  // stop IRC Paster if escape is pressed
+  if ShortCutToText((Sender As TAction).ShortCut) = 'Esc' then
+    IRCPasterStop := True;
+  if sciEditor.CallTipActive then
+    sciEditor.CallTipCancel;
+  if sciEditor.AutoCActive then
+    sciEditor.AutoCCancel;
+  // Some menu commands are suppressed by the controlchars thingy, so they will be triggered manually
+  for i := 0 to tbxMenu.Items.Count -1 do begin
+    if TriggerMenuShortcut((Sender As TAction).ShortCut, tbxMenu.Items[i]) then
+      exit;
+  end;
+  Application.ProcessMessages;
+end;
+
+procedure TfrmMain.mnuEditorUndoClick(Sender: TObject);
+begin
+  mnuUndo.Click;
+end;
+
+procedure TfrmMain.mnuEditorRedoClick(Sender: TObject);
+begin
+  mnuRedo.Click;
+end;
+
+procedure TfrmMain.mnuEditorCopyClick(Sender: TObject);
+begin
+  mnuCopy.Click;
+end;
+
+procedure TfrmMain.mnuEditorCutClick(Sender: TObject);
+begin
+  mnuCut.Click;
+end;
+
+procedure TfrmMain.mnuEditorPasteClick(Sender: TObject);
+begin
+  mnuPaste.Click;
+end;
+
+procedure TfrmMain.mnuToogleBookmarkClick(Sender: TObject);
+begin
+  sciEditor.BookmarkToggle(sciEditor.GetCurrentLineNumber);
+end;
+
+procedure TfrmMain.mnuEditorDeleteClick(Sender: TObject);
+begin
+  sciEditor.Clear;
+end;
+
+procedure TfrmMain.mnuEditorSelectAllClick(Sender: TObject);
+begin
+  sciEditor.SelectAll;
+end;
+
+procedure TfrmMain.mnuGoToBookmarkClick(Sender: TObject);
+begin
+  sciEditor.BookmarkNext;
+end;
+
+procedure TfrmMain.mnuSearchDialogClick(Sender: TObject);
+begin
+  Plugin_Search(frmSearch.cboSearchFor.Items.Text, frmSearch.cboSearchFor.Text, True, False);
+  if frmSearch.ShowModal = mrOk then begin
+    if not Plugin_Search(frmSearch.cboSearchFor.Items.Text, frmSearch.cboSearchFor.Text, False, False) then
+      exit;
+      
+    with sciSearchReplace do begin
+      SearchBackwards := frmSearch.chkBackward.Checked;
+      SearchCaseSensitive := frmSearch.chkCaseSensivity.Checked;
+      SearchFromCaret := frmSearch.chkSearchFromCaret.Checked;
+      SearchSelectionOnly := frmSearch.chkSelectedTextOnly.Checked;
+      SearchWholeWords := frmSearch.chkWholeWordsOnly.Checked;
+      SearchRegex := frmSearch.chkRegularExpression.Checked;
+      SearchText := frmSearch.cboSearchFor.Text;
+      Screen.Cursor := crHourGlass;
+      DoSearchReplaceText(False, frmSearch.chkBackward.Checked);
+      Screen.Cursor := crDefault;
+    end;
+  end;
+end;
+
+procedure TfrmMain.mnuReplaceClick(Sender: TObject);
+var Stop: Boolean;
+begin
+  if frmReplace.ShowModal = mrOk then begin
+    if not Plugin_SearchReplace(frmReplace.cboSearchFor.Text, frmReplace.cboReplaceWith.Text, frmReplace.cboSearchFor.Items.Text, frmReplace.cboReplaceWith.Items.Text, frmSearch.chkCaseSensivity.Checked, frmSearch.chkWholeWordsOnly.Checked, frmSearch.chkSearchFromCaret.Checked, frmSearch.chkSelectedTextOnly.Checked, frmSearch.chkRegularExpression.Checked, frmSearch.chkForward.Checked) then
+      exit;
+    with sciSearchReplace do begin
+      SearchBackwards := frmReplace.chkBackward.Checked;
+      SearchCaseSensitive := frmReplace.chkCaseSensivity.Checked;
+      SearchFromCaret := frmReplace.chkSearchFromCaret.Checked;
+      SearchSelectionOnly := frmReplace.chkSelectedTextOnly.Checked;
+      SearchWholeWords := frmReplace.chkWholeWordsOnly.Checked;
+      SearchRegex := frmReplace.chkRegularExpression.Checked;
+      SearchText := frmReplace.cboSearchFor.Text;
+
+      Stop := False;
+      Screen.Cursor := crHourGlass;
+      repeat
+        DoSearchReplaceText(False, frmReplace.chkBackward.Checked);
+        if sciEditor.SelLength = 0 then
+          Stop := True
+        else
+          sciEditor.SelText := frmReplace.cboReplaceWith.Text;
+      until (not frmReplace.chkReplaceAll.Checked) or (Stop);
+      Screen.Cursor := crDefault;
+    end;
+  end;
+end;
+
+procedure TfrmMain.mnuSearchAgainClick(Sender: TObject);
+begin
+  if not Plugin_Search(frmSearch.cboSearchFor.Items.Text, frmSearch.cboSearchFor.Text, False, True) then
+    exit;
+
+  sciSearchReplace.SearchText := frmSearch.cboSearchFor.Text;
+  sciSearchReplace.SearchFromCaret := True;
+  Screen.Cursor := crHourGlass;
+  sciSearchReplace.DoSearchReplaceText(False, frmSearch.chkBackward.Checked);
+  Screen.Cursor := crDefault;
+end;
+
+procedure TfrmMain.mnuGoToLineClick(Sender: TObject);
+begin
+  if frmGoToLine.ShowModal = mrOk then begin
+    sciEditor.GotoLineEnsureVisible(StrToInt(frmGoToLine.txtGoToLine.Text) -1);
+    UpdateCI;
+  end;
+end;
+
+procedure TfrmMain.mnuPrintClick(Sender: TObject);
+begin
+  sciPrinter.Title := ExtractFileName(ActiveDoc.FileName);
+  sciPrinter.PrintRange := prAllPages;
+  if sciEditor.SelLength <> 0 then begin
+    case MessageBox(Handle, PChar(lPrintSelection), PChar(Application.Title), MB_ICONQUESTION + MB_YESNOCANCEL) of
+      mrYes: sciPrinter.PrintRange := prSelection;
+      mrCancel: exit;
+    end;
+  end;
+  sciPrinter.Print;
+end;
+
+procedure TfrmMain.mnuSaveAllFilesClick(Sender: TObject);
+var a,b: integer;
+    Collection: TDocCollection;
+begin
+  case tsMain.ActiveTabIndex of
+    0: Collection := PAWNProjects;
+    1: Collection := CPPProjects;
+    else Collection := OtherProjects;
+  end;
+
+  frmAllFilesForm.Caption := lSaveAllCaption1;
+  frmAllFilesForm.lblCaption.Caption := lSaveAllCaption2;
+
+  frmAllFilesForm.lstFiles.Clear;
+  for a := 0 to Collection.Count -1 do begin
+    if TDocument(Collection.Items[a]).Modified then
+      frmAllFilesForm.lstFiles.Checked[frmAllFilesForm.lstFiles.Items.AddObject(IntToStr(a +1) +  ') ' + ExtractFileName(TDocument(Collection.Items[a]).FileName), TObject(a))] := True;
+  end;
+
+  if frmAllFilesForm.lstFiles.Items.Count = 0 then begin
+    MessageBox(Handle, PChar(lNoFilesToSave), PChar(Application.Title), MB_ICONINFORMATION);
+    exit;
+  end;
+
+  if frmAllFilesForm.ShowModal = mrOk then begin
+    for a := 0 to frmAllFilesForm.lstFiles.Items.Count -1 do begin
+      if frmAllFilesForm.lstFiles.Checked[a] then begin
+        b := Integer(frmAllFilesForm.lstFiles.Items.Objects[a]);
+        if TDocument(Collection.Items[b]).Untitled then begin
+          if sdSave.Execute then begin
+            TDocument(Collection.Items[b]).FileName := AddExtension(sdSave.FileName, TDocument(Collection.Items[b]).Highlighter);
+            TDocument(Collection.Items[b]).Save;
+            TSpTBXTabItem(tsDocuments.Items[b]).Caption := TDocument(Collection.Items[b]).Title;
+          end
+          else
+            exit;
+        end
+        else
+          TDocument(Collection.Items[b]).Save;
+        if ActiveDoc = Collection.Items[b] then
+          mnuModified.Caption := '';
+      end;
+    end;
+  end;
+end;
+
+procedure TfrmMain.sciEditorKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Started then begin
+    if not Plugin_KeyPress(Key) then
+      exit;
+
+    mnuModified.Caption := lModified;
+    ActiveDoc.Modified := True;
+
+    if (Key = '}') and (frmSettings.chkAutoIndent.Checked) then begin
+      if (Trim(sciEditor.Lines[sciEditor.GetCurrentLineNumber]) = '') and (frmAutoIndent.chkUnindentPressingClosingBrace.Checked) then begin
+        if (sciEditor.LanguageManager.SelectedLanguage = 'Pawn') or (sciEditor.LanguageManager.SelectedLanguage = 'C++') then begin
+          sciEditor.Lines[sciEditor.GetCurrentLineNumber] := Copy(sciEditor.Lines[sciEditor.GetCurrentLineNumber], 1, Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber]) -1); // remove last indent..
+          sciEditor.SelStart := sciEditor.SelStart + Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber]);                                                                      // and jump to last position
+        end;
+      end;
+    end;
+  end;
+end;
+
+procedure TfrmMain.mnuCloseAllFilesClick(Sender: TObject);
+var i: integer;
+    Collection: TDocCollection;
+begin
+  case tsMain.ActiveTabIndex of
+    0: Collection := PAWNProjects;
+    1: Collection := CPPProjects;
+    else Collection := OtherProjects;
+  end;
+
+  frmAllFilesForm.Caption := lCloseAllCaption1;
+  frmAllFilesForm.lblCaption.Caption := lCloseAllCaption2;
+
+  frmAllFilesForm.lstFiles.Clear;
+  for i := 0 to Collection.Count -1 do
+    frmAllFilesForm.lstFiles.Checked[frmAllFilesForm.lstFiles.Items.Add(IntToStr(i +1) +  ') ' + ExtractFileName(TDocument(Collection.Items[i]).FileName))] := True;
+
+  if frmAllFilesForm.ShowModal = mrOk then begin
+    for i := Collection.Count -1 downto 0 do begin
+      if not CloseDocument(TDocument(Collection.Items[i])) then
+        exit;
+    end;
+  end;
+end;
+
+procedure TfrmMain.mnuIndenterClick(Sender: TObject);
+begin
+  IndentCode;
+end;
+
+procedure TfrmMain.mnuUnindenterClick(Sender: TObject);
+begin
+  UnindentCode;
+end;
+
+procedure TfrmMain.mnuPasterClick(Sender: TObject);
+var i: integer;
+    eChannel: String;
+    eIsGamesurge: Boolean;
+begin
+  if FindWindow('mirc', nil) = 0 then begin
+    MessageBox(Handle, PChar(lNoMIRCWindowOpen), PChar(Application.Title), MB_ICONERROR);
+    exit;
+  end;
+
+  if sciEditor.Lines.Count > 35 then begin
+    if MessageBox(Handle, PChar(lWarnBigPluginPaste), PChar(Application.Title), MB_ICONWARNING + MB_YESNO) = mrNo then
+      exit;
+  end;
+  
+  if InputQuery(lSelectChannel, lSelectChannelPrompt, eChannel) then begin
+    if eChannel = '' then exit;
+    IRCPasterStop := False;
+    
+    Caption := 'AMXX-Studio - ' + lPastingCodeEscStop;
+    eISGamesurge := Pos('gamesurge', LowerCase(mIRCGet('mIRC', 'SERVER', 'SERVER'))) = 0;
+    for i := 0 to sciEditor.Lines.Count -1 do begin
+      if (FindWindow('mirc', nil) = 0) or (Application.Terminated) or (IRCPasterStop) then begin
+        Caption := 'AMXX-Studio';
+        exit;
+      end;
+
+      if (sciEditor.LanguageManager.SelectedLanguage = 'Pawn') or (sciEditor.LanguageManager.SelectedLanguage = 'C++') then
+        mIRCDDE('mIRC', 'COMMAND', '/msg ' + eChannel + #32 + StringReplace(GetColoredLine(i), '|', '$chr(124)', [rfReplaceAll]))
+      else
+        mIRCDDE('mIRC', 'COMMAND', '/msg ' + eChannel + #32 + StringReplace(sciEditor.Lines[i], ' | ', ' $chr(124) ', [rfReplaceAll]));
+
+      if not eIsGamesurge then
+        Delay(2500)
+      else
+        Application.ProcessMessages;
+    end;
+    Caption := 'AMXX-Studio';
+  end;
+end;
+
+procedure TfrmMain.mnuPluginsIniEditorClick(Sender: TObject);
+begin
+  frmPluginsIniEditor.txtFile.Clear;
+  
+  if FileExists(GetAMXXDir(True) + 'configs\plugins.ini') then
+    frmPluginsIniEditor.chkEditLocal.Click
+  else if (frmSettings.txtHost.Text <> '') and (frmPluginsIniEditor.chkEditFTP.Checked) then
+    frmPluginsIniEditor.chkEditFTP.Click
+  else
+    frmPluginsIniEditor.chkEditLocal.Click;
+
+  if frmPluginsIniEditor.txtFile.Text = '' then exit;
+
+  if frmPluginsIniEditor.ShowModal = mrOk then begin
+    Screen.Cursor := crHourGlass;
+    if frmPluginsIniEditor.chkEditFTP.Checked then begin
+      if not IdFTP.Connected then begin
+        if TryConnect <> 0 then
+          exit;
+      end;
+
+      try
+        IdFTP.ChangeDir(frmSettings.txtDefaultDir.Text + 'configs/');
+      except
+        IdFTP.Disconnect;
+        MessageBox(Handle, PChar(lInvalidDirectory), PChar(Application.Title), MB_ICONERROR);
+        Screen.Cursor := crDefault;
+        exit;
+      end;
+
+      frmPluginsIniEditor.txtFile.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'plugins.ini');
+      IdFTP.TransferType := ftASCII;
+      IdFTP.Put(ExtractFilePath(ParamStr(0)) + 'plugins.ini', 'plugins.ini');
+      DeleteFile(ExtractFilePath(ParamStr(0)) + 'plugins.ini');
+    end
+    else
+      frmPluginsIniEditor.txtFile.Lines.SaveToFile(frmPluginsIniEditor.odOpen.FileName); 
+    Screen.Cursor := crDefault;
+  end;
+end;
+
+procedure TfrmMain.cmdCancelClick(Sender: TObject);
+begin
+  Cancel := True;
+  HideProgress;
+  Screen.Cursor := crDefault;
+end;
+
+procedure TfrmMain.mnuSocketTerminalClick(Sender: TObject);
+begin
+  frmSocketsTerminal.ShowModal;
+end;
+
+procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
+var i, k: integer;
+    eRoot: TTreeNode;
+    eItem: TDocument;
+    eSavedFiles: TStringList;
+begin
+  ActiveDoc.Code.Text := sciEditor.Lines.Text;
+  frmClose.trvFiles.Items.Clear;
+  { PAWN Projects }
+  eRoot := frmClose.trvFiles.Items.Add(nil, tsMain.Items[0].Caption);
+  for i := 0 to PAWNProjects.Count -1 do begin
+    if TDocument(PAWNProjects.Items[i]).Modified then
+      frmClose.trvFiles.Items.AddChild(eRoot, IntToStr(i +1) + '. ' + ExtractFileName(TDocument(PAWNProjects.Items[i]).FileName));
+  end;
+  if eRoot.Count = 0 then
+    eRoot.Free
+  else
+    eRoot.Expand(False);
+  { C++ Projects }
+  eRoot := frmClose.trvFiles.Items.Add(nil, tsMain.Items[1].Caption);
+  for i := 0 to CPPProjects.Count -1 do begin
+    if TDocument(CPPProjects.Items[i]).Modified then
+      frmClose.trvFiles.Items.AddChild(eRoot, IntToStr(i +1) + '. ' + ExtractFileName(TDocument(CPPProjects.Items[i]).FileName));
+  end;
+  if eRoot.Count = 0 then
+    eRoot.Free
+  else
+    eRoot.Expand(False);
+  { Other Projects }
+  eRoot := frmClose.trvFiles.Items.Add(nil, tsMain.Items[1].Caption);
+  for i := 0 to OtherProjects.Count -1 do begin
+    if TDocument(OtherProjects.Items[i]).Modified then
+      frmClose.trvFiles.Items.AddChild(eRoot, IntToStr(i +1) + '. ' + ExtractFileName(TDocument(OtherProjects.Items[i]).FileName));
+  end;
+  if eRoot.Count = 0 then
+    eRoot.Free
+  else
+    eRoot.Expand(False);
+
+  eSavedFiles := TStringList.Create;
+  eSavedFiles.Clear;
+  for i := 0 to frmSettings.lvPlugins.Items.Count -1 do begin
+    if frmSettings.lvPlugins.Items[i].Data <> nil then
+      eSavedFiles.Add('LOADED ' + frmSettings.lvPlugins.Items[i].SubItems[0])
+    else
+      eSavedFiles.Add('UNLOADED ' + frmSettings.lvPlugins.Items[i].SubItems[0]); 
+  end;
+  eSavedFiles.SaveToFile(ExtractFilePath(ParamStr(0)) + 'config\Plugins.cfg'); 
+  eSavedFiles.Clear;
+
+  if frmClose.trvFiles.Items.Count <> 0 then begin
+    frmClose.cmdSave.Caption := lCloseCaption;
+    if (frmClose.ShowModal = mrOk) then begin
+      if frmClose.cmdSave.Caption = lSaveCaption then begin
+        for i := 0 to frmClose.trvFiles.Items.Count -1 do begin
+          { PAWN Projects }
+          if frmClose.trvFiles.Items[i].Text = tsMain.Items[0].Caption then begin
+            with frmClose.trvFiles.Items[i] do begin
+              for k := 0 to Count -1 do begin
+                if frmClose.trvFiles.Checked[Item[k]] then begin
+                  eItem := TDocument(PAWNProjects.Items[StrToInt(Copy(Item[k].Text, 1, Pos('.', Item[k].Text) -1)) -1]);
+                  // Process item here
+                  if not eItem.Untitled then
+                    eItem.Save
+                  else begin
+                    frmMain.sdSave.FilterIndex := 1;
+                    if frmMain.sdSave.Execute then begin
+                      eItem.FileName := AddExtension(frmMain.sdSave.FileName, eItem.Highlighter);
+                      eItem.Save;
+                    end
+                    else begin
+                      Action := caNone;
+                      exit;
+                    end;
+                  end;
+                  eSavedFiles.Add(eItem.FileName);
+                end;
+              end;
+            end;
+          end;
+          { C++ Projects }
+          if frmClose.trvFiles.Items[i].Text = tsMain.Items[1].Caption then begin
+            with frmClose.trvFiles.Items[i] do begin
+              for k := 0 to Count -1 do begin
+                if frmClose.trvFiles.Checked[Item[k]] then begin
+                  eItem := TDocument(CPPProjects.Items[StrToInt(Copy(Item[k].Text, 1, Pos('.', Item[k].Text) -1)) -1]);
+                  // Process item here
+                  if not eItem.Untitled then
+                    eItem.Save
+                  else begin
+                    frmMain.sdSave.FilterIndex := 2;
+                    if frmMain.sdSave.Execute then begin
+                      eItem.FileName := AddExtension(frmMain.sdSave.FileName, eItem.Highlighter);
+                      eItem.Save;
+                    end
+                    else begin
+                      Action := caNone;
+                      exit;
+                    end;
+                  end;
+                  eSavedFiles.Add(eItem.FileName);
+                end;
+              end;
+            end;
+          end;
+          { Other Projects }
+          if frmClose.trvFiles.Items[i].Text = tsMain.Items[2].Caption then begin
+            with frmClose.trvFiles.Items[i] do begin
+              for k := 0 to Count -1 do begin
+                if frmClose.trvFiles.Checked[Item[k]] then begin
+                  eItem := TDocument(OtherProjects.Items[StrToInt(Copy(Item[k].Text, 1, Pos('.', Item[k].Text) -1)) -1]);
+                  // Process item here
+                  if not eItem.Untitled then
+                    eItem.Save
+                  else begin
+                    frmMain.sdSave.FilterIndex := 0;
+                    if frmMain.sdSave.Execute then begin
+                      eItem.FileName := AddExtension(frmMain.sdSave.FileName, eItem.Highlighter);
+                      eItem.Save;
+                    end
+                    else begin
+                      Action := caNone;
+                      exit;
+                    end;
+                  end;
+                  eSavedFiles.Add(eItem.FileName);
+                end;
+              end;
+            end;
+          end;
+        end;
+      end;
+      Application.Terminate;
+      Started := False;
+    end
+    else begin
+      Action := caNone;
+      exit;
+    end;
+  end
+  else begin
+    Application.Terminate;
+    Started := False;
+  end;
+
+  if eSavedFiles.Count = 0 then begin
+    for i := 0 to PAWNProjects.Count -1 do begin
+      if (not TDocument(PAWNProjects.Items[i]).Untitled) then
+        eSavedFiles.Add(TDocument(PAWNProjects.Items[i]).FileName);
+    end;
+    for i := 0 to CPPProjects.Count -1 do begin
+      if (not TDocument(CPPProjects.Items[i]).Untitled) then
+        eSavedFiles.Add(TDocument(CPPProjects.Items[i]).FileName);
+    end;
+    for i := 0 to OtherProjects.Count -1 do begin
+      if (not TDocument(OtherProjects.Items[i]).Untitled) then
+        eSavedFiles.Add(TDocument(OtherProjects.Items[i]).FileName);
+    end;
+  end;
+  eSavedFiles.SaveToFile(ExtractFilePath(ParamStr(0)) + 'config\Cache.cfg');
+  eSavedFiles.Free;
+end;
+
+procedure TfrmMain.trvExplorerDblClick(Sender: TObject);
+begin
+  if Assigned(trvExplorer.Selected) then begin
+    if (trvExplorer.Selected.ImageIndex <> 42) and (trvExplorer.Selected.ImageIndex <> 43) then begin
+      sciEditor.GotoLineEnsureVisible(Integer(trvExplorer.Selected.Data));
+      sciEditor.SetFocus;
+      UpdateCI;
+    end;
+  end;
+end;
+
+procedure TfrmMain.tiPAWNClick(Sender: TObject);
+begin
+  trvExplorer.Enabled := True;
+  jviCode.Enabled := True;
+  mnuGenerators.Visible := True;
+  mnuIndenter.Enabled := True;
+  mnuCompile.Visible := True;
+  mnuRegisterPluginsIniLocal.Enabled := True;
+  mnuRegisterPluginsIniWeb.Enabled := True;
+  UpdateCI;
+end;
+
+procedure TfrmMain.tiCPPClick(Sender: TObject);
+begin
+  trvExplorer.Enabled := False;
+  jviCode.Clear;
+  AddField('', 'This language is not supported.', '');
+  jviCode.Enabled := False;
+  mnuGenerators.Visible := False;
+  mnuIndenter.Enabled := True;
+  mnuCompile.Visible := True;
+  mnuRegisterPluginsIniLocal.Enabled := False;
+  mnuRegisterPluginsIniWeb.Enabled := False;
+end;
+
+procedure TfrmMain.tiOtherClick(Sender: TObject);
+begin
+  trvExplorer.Enabled := False;
+  jviCode.Clear;
+  AddField('', 'This language is not supported.', '');
+  jviCode.Enabled := False;
+  mnuGenerators.Visible := False;
+  mnuIndenter.Enabled := False;
+  mnuCompile.Visible := False;
+  mnuRegisterPluginsIniLocal.Enabled := False;
+  mnuRegisterPluginsIniWeb.Enabled := False;
+end;
+
+procedure TfrmMain.mnuOpenHelpClick(Sender: TObject);
+begin
+  if Plugin_ShowHelp(HELP_DEFAULT) then
+    ShellExecute(Handle, 'open', 'http://www.amxmodx.org/doc/', nil, nil, SW_SHOW);
+end;
+
+procedure TfrmMain.mnuHudmessageClick(Sender: TObject);
+function Dot(eIn: String): String;
+begin
+  Result := StringReplace(eIn, ',', '.', [rfReplaceAll]);
+end;
+
+var eStr: String;
+begin
+  frmHudMsgGenerator.chkXCenter.Checked := False;
+  frmHudMsgGenerator.chkYCenter.Checked := False;
+  frmHudMsgGenerator.txtXPos.Text := '0,00';
+  frmHudMsgGenerator.txtYPos.Text := '0,00';
+  frmHudMsgGenerator.lblHudMsg.Left := 0;
+  frmHudMsgGenerator.lblHudMsg.Top := 0;
+  frmHudMsgGenerator.lblHudMsg.Font.Color := clRed;
+  frmHudMsgGenerator.txtText.Text := '';
+  frmHudMsgGenerator.CurrColor := clRed;
+
+  if frmHudMsgGenerator.ShowModal = mrOk then begin
+    eStr := Format(GetIndents + 'set_hudmessage(%u, %u, %u, %s, %s, 0, 6.0, %s)', [GetRValue(frmHudMsgGenerator.CurrColor), GetGValue(frmHudMsgGenerator.CurrColor), GetBValue(frmHudMsgGenerator.CurrColor), Dot(frmHudMsgGenerator.txtXPos.Text), Dot(frmHudMsgGenerator.txtYPos.Text), Dot(frmHudMsgGenerator.txtTimeToShow.Text)]);
+    eStr := eStr + #13#10 + GetIndents + 'show_hudmessage(id, "' + frmHudMsgGenerator.txtText.Text + '")';
+    sciEditor.Lines.Insert(sciEditor.GetCurrentLineNumber, eStr); 
+  end;
+end;
+
+procedure TfrmMain.mnuDoCompileClick(Sender: TObject);
+begin
+  if not Plugin_Compile(COMP_DEFAULT, GetCurrLang.Name, ActiveDoc.FileName, True) then
+    exit;
+
+  if (LowerCase(ExtractFileExt(ActiveDoc.FileName)) = '.inc') or (LowerCase(ExtractFileExt(ActiveDoc.FileName)) = '.h') then exit;
+
+  if tsMain.ActiveTabIndex = 0 then
+    DoCompilePAWN(COMP_DEFAULT)
+  else if (LowerCase(ExtractFileExt(ActiveDoc.FileName)) = '.htm') or (LowerCase(ExtractFileExt(ActiveDoc.FileName)) = '.html') then begin
+    if IEInstalled then
+      frmHTMLPreview.Show
+    else
+      MessageBox(Handle, PChar(lInternetExplorerRequired), PChar(Application.Title), MB_ICONINFORMATION);
+  end;
+end;
+
+procedure TfrmMain.lstOutputMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+var eItem: Integer;
+begin
+  eItem := lstOutput.ItemAtPos(Point(X, Y), True);
+  if eItem = -1 then
+    lstOutput.Hint := ''
+  else begin
+    if (lstOutput.Hint <> lstOutput.Items[eItem]) and (Canvas.TextWidth(lstOutput.Items[eItem]) > lstOutput.Width) then
+      lstOutput.Hint := lstOutput.Items[eItem];
+  end;
+end;
+
+procedure TfrmMain.lstOutputDblClick(Sender: TObject);
+var eLine: Integer;
+    eStr: String;
+begin
+  if not Plugin_OutputDblClick(lstOutput.ItemIndex) then
+    exit;
+
+  if (lstOutput.ItemIndex <> -1) then begin
+    eStr := lstOutput.Items[lstOutput.ItemIndex];
+    while Pos(#32, eStr) <> 0 do
+      Delete(eStr, 1, 1);
+    if IsNumeric(eStr) then begin
+      eLine := StrToInt(eStr);
+      SetErrorLine(eLine);
+    end;
+  end;
+end;
+
+procedure TfrmMain.lstOutputMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  if (Button = mbRight) and (Plugin_OutputPopup(lstOutput.ItemIndex)) then begin
+    lstOutput.ItemIndex := lstOutput.ItemAtPos(Point(X, Y), True);
+    mnuCopyMessage.Enabled := lstOutput.ItemAtPos(Point(X, Y), True) <> -1;
+    ppmOutput.Popup(Mouse.CursorPos.X, Mouse.CursorPos.Y);
+  end;
+end;
+
+procedure TfrmMain.SetErrorLine(eLine: Integer);
+begin
+  eLine := eLine -1;
+  sciEditor.SetFocus;
+  sciEditor.SelLength := 0;
+  sciEditor.GotoLineEnsureVisible(eLine);
+  sciEditor.SelLength := Length(sciEditor.Lines[eLine]);
+  sciEditor.Caret.LineVisible := True;
+  sciEditor.Caret.LineBackColor := clMaroon;
+  sciEditor.Colors.SelBack := clMaroon;
+  eErrorLine := eLine;
+end;
+
+procedure TfrmMain.sciEditorMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var i: integer;
+begin
+  if not Started then exit;
+
+  if sciEditor.Caret.LineVisible <> frmSettings.chkShowCaret.Checked then
+    sciEditor.Caret.LineVisible := frmSettings.chkShowCaret.Checked;
+  if sciEditor.Caret.LineBackColor <> frmSettings.CaretBack then begin
+    sciEditor.Caret.LineBackColor := frmSettings.CaretBack;
+    sciEditor.Colors.SelBack := clHighlight;
+
+    i := sciEditor.SelLength;
+    sciEditor.SelLength := 0;
+    sciEditor.SelStart := sciEditor.SelStart +i;
+  end;
+  UpdateCI;
+end;
+
+procedure TfrmMain.lstOutputEnter(Sender: TObject);
+var i: integer;
+begin
+  if sciEditor.Caret.LineVisible <> frmSettings.chkShowCaret.Checked then
+    sciEditor.Caret.LineVisible := frmSettings.chkShowCaret.Checked;
+  if sciEditor.Caret.LineBackColor <> frmSettings.CaretBack then begin
+    sciEditor.Caret.LineBackColor := frmSettings.CaretBack;
+    sciEditor.Colors.SelBack := clHighlight;
+
+    i := sciEditor.SelLength;
+    sciEditor.SelLength := 0;
+    sciEditor.SelStart := sciEditor.SelStart +i;
+  end;
+end;
+
+procedure TfrmMain.mnuCompileAndStartHLClick(Sender: TObject);
+begin
+  if not Plugin_Compile(COMP_STARTHL, GetCurrLang.Name, ActiveDoc.FileName, True) then
+    exit;
+
+  if tsMain.ActiveTabIndex = 0 then
+    DoCompilePAWN(COMP_STARTHL);
+end;
+
+procedure TfrmMain.mnuCompileAndUploadClick(Sender: TObject);
+begin
+  if not Plugin_Compile(COMP_UPLOAD, GetCurrLang.Name, ActiveDoc.FileName, True) then
+    exit;
+
+  if tsMain.ActiveTabIndex = 0 then
+    DoCompilePAWN(COMP_UPLOAD);
+end;
+
+procedure TfrmMain.mnuRegisterPluginsIniLocalClick(Sender: TObject);
+function RemComments(eLine: String): String;
+var a, b: integer;
+begin
+  if Length(eLine) > 0 then begin
+    b := 0;
+    for a := 1 to Length(eLine) -1 do begin
+      if (eLine[a] = ';') or (eLine[a] = '/') then begin
+        b := a;
+        break;
+      end;
+    end;
+
+    if (b = 0) and (Pos(' debug', LowerCase(eLine)) <> 0) then
+      b := Pos(' debug', LowerCase(eLine));
+    if b <> 0 then
+      eLine := Trim(Copy(eLine, 1, b -1));
+  end;
+  Result := Trim(eLine);
+end;
+
+var eStr: TStringList;
+    i: integer;
+    eFound: Boolean;
+begin
+  if ActiveDoc.Untitled then begin
+    MessageBox(Handle, PChar(lNoUntitledRegister), PChar(Application.Title), MB_ICONINFORMATION);
+    exit;
+  end;
+
+  if FileExists(GetAMXXDir(True) + 'configs\plugins.ini') then begin
+    eFound := False;
+
+    eStr := TStringList.Create;
+    eStr.LoadFromFile(GetAMXXDir(True) + 'configs\plugins.ini');
+    for i := 0 to eStr.Count -1 do begin
+      if (Copy(eStr[i], 1, 1) <> ';') and (Copy(eStr[i], 1, 2) <> '//') then begin
+        if LowerCase(RemComments(eStr[i])) = LowerCase(ChangeFileExt(ExtractFileName(ActiveDoc.FileName), '.amxx')) then begin
+          eFound := True;
+          break;
+        end;
+      end;
+    end;
+
+    if eFound then
+      MessageBox(Handle, PChar(lAlreadyRegistered), PChar(Application.Title), MB_ICONINFORMATION)
+    else begin
+      eStr.Add(ChangeFileExt(ExtractFileName(ActiveDoc.FileName), '.amxx'));
+      eStr.SaveToFile(GetAMXXDir(True) + 'configs\plugins.ini');
+      MessageBox(Handle, PChar(lSuccessfulRegistered), PChar(Application.Title), MB_ICONINFORMATION);
+    end;
+
+    eStr.Free;
+  end;
+end;
+
+procedure TfrmMain.mnuRegisterPluginsIniWebClick(Sender: TObject);
+function RemComments(eLine: String): String;
+var a, b: integer;
+begin
+  if Length(eLine) > 0 then begin
+    b := 0;
+    for a := 1 to Length(eLine) -1 do begin
+      if (eLine[a] = ';') or (eLine[a] = '/') then begin
+        b := a;
+        break;
+      end;
+    end;
+    eLine := Trim(Copy(eLine, 1, b -1));
+  end;
+  Result := eLine;
+end;
+
+var eStr: TStringList;
+    i: integer;
+    eFound: Boolean;
+begin
+  if ActiveDoc.Untitled then begin
+    MessageBox(Handle, PChar(lNoUntitledRegister), PChar(Application.Title), MB_ICONINFORMATION);
+    exit;
+  end;
+
+  Screen.Cursor := crHourGlass;
+  if not IdFTP.Connected then begin
+    if TryConnect <> 0 then
+      exit;
+  end;
+
+  try
+    IdFTP.ChangeDir(frmSettings.txtDefaultDir.Text + 'configs/');
+    IdFTP.Get('plugins.ini', ExtractFilePath(ParamStr(0)) + 'plugins.ini');
+  except
+    Screen.Cursor := crDefault;
+    MessageBox(Handle, PChar(lFailedUpdatePluginsIni), PChar(Application.Title), MB_ICONERROR);
+  end;
+
+  eFound := False;
+
+  eStr := TStringList.Create;
+  eStr.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'plugins.ini');
+  for i := 0 to eStr.Count -1 do begin
+    if (Copy(eStr[i], 1, 1) <> ';') and (Copy(eStr[i], 1, 2) <> '//') then begin
+      if LowerCase(RemComments(eStr[i])) = LowerCase(ChangeFileExt(ExtractFileName(ActiveDoc.FileName), '.amxx')) then begin
+        eFound := True;
+        break;
+      end;
+    end;
+  end;
+
+  if eFound then begin
+    Screen.Cursor := crDefault;
+    MessageBox(Handle, PChar(lAlreadyRegistered), PChar(Application.Title), MB_ICONINFORMATION);
+    exit;
+  end
+  else begin
+    eStr.Add(ChangeFileExt(ExtractFileName(ActiveDoc.FileName), '.amxx'));
+    eStr.SaveToFile(ExtractFilePath(ParamStr(0)) + 'plugins.ini');
+    Screen.Cursor := crDefault;
+    MessageBox(Handle, PChar(lSuccessfulRegistered), PChar(Application.Title), MB_ICONINFORMATION);
+  end;
+  eStr.Free;
+
+  try
+    IdFTP.TransferType := ftASCII;
+    IdFTP.Put(ExtractFilePath(ParamStr(0)) + 'plugins.ini', 'plugins.ini');
+    IdFTP.Disconnect;
+  except
+    Screen.Cursor := crDefault;
+    MessageBox(Handle, PChar(lFailedUpdatePluginsIni), PChar(Application.Title), MB_ICONERROR);
+  end;
+end;
+
+procedure TfrmMain.sciAutoCompleteBeforeShow(Sender: TObject;
+  const Position: Integer; ListToDisplay: TStrings;
+  var CancelDisplay: Boolean);
+var eCurrStyle: Integer;
+begin
+  if not Plugin_AutoCompleteShow(ListToDisplay.GetText) then begin
+    CancelDisplay := True;
+    exit;
+  end;
+
+  if (Started) and (Assigned(GetStyleAt(sciEditor.SelStart))) then begin
+    eCurrStyle := GetStyleAt(sciEditor.SelStart).StyleNumber;
+
+    if (ActiveDoc.Highlighter = 'Pawn') or (ActiveDoc.Highlighter = 'C++') then begin
+      CancelDisplay := (eCurrStyle = 12) or (eCurrStyle = 1) or (eCurrStyle = 2) or (eCurrStyle = 3) or (eCurrStyle = 15);
+      CancelDisplay := (CancelDisplay) or (Pos('#', Trim(sciEditor.Lines[sciEditor.GetCurrentLineNumber])) = 1);
+      CancelDisplay := (CancelDisplay) or (IsAtStart('new', sciEditor.Lines[sciEditor.GetCurrentLineNumber], False));
+    end;
+  end;
+end;
+
+procedure TfrmMain.mnuMOTDGeneratorClick(Sender: TObject);
+var eStr: TStringList;
+    i: integer;
+begin
+  if (GetCurrLang.Name = 'HTML') then begin
+    eStr := TStringList.Create;
+    eStr.Text := StringReplace(sciEditor.Lines.Text, #9, '', [rfReplaceAll]);
+    for i := 0 to eStr.Count -1 do
+      eStr[i] := '"' + eStr[i] + '\n" +';
+    frmMOTDGen.txtMOTD.Lines.Assign(eStr);
+    eStr.Free;
+
+    frmMOTDGen.ShowModal;
+  end
+  else begin
+    mnuNewHTML.Click;
+    if IEInstalled then
+      frmHTMLPreview.Show;
+    MessageBox(Handle, PChar(lUseMOTDAgain), PChar(Application.Title), MB_ICONINFORMATION);
+  end;
+end;
+
+procedure TfrmMain.mnuHeaderPAWNClick(Sender: TObject);
+begin
+  if not Plugin_CreateNewFile(NEW_PAWN_HEADER, True) then exit;
+
+  if tsMain.ActiveTabIndex <> 0 then
+    ActivateProjects(0, False);
+
+  PAWNProjects.Activate(PAWNProjects.Add('Untitled.inc'), False);
+  sciEditor.Lines.Add('/* Header generated by AMXX-Studio*/');
+  sciEditor.Lines.Add('');
+  Plugin_CreateNewFile(NEW_PAWN_HEADER, False);
+end;
+
+procedure TfrmMain.OnTabSelect(Sender: TTBCustomItem;
+  Viewer: TTBItemViewer; Selecting: Boolean);
+begin
+  if (GetAsyncKeyState(VK_RBUTTON) <> 0) and (not pnlLoading.Visible) and (not Selecting) then begin
+    SelectedTab := TSpTBXTabItem(Sender);
+    ppmDocuments.Popup(Mouse.CursorPos.X, Mouse.CursorPos.Y);
+  end;
+end;
+
+procedure TfrmMain.mnuPCloseClick(Sender: TObject);
+var Collection: TDocCollection;
+begin
+  try
+    case tsMain.ActiveTabIndex of
+      0: Collection := PAWNProjects; // PAWN
+      1: Collection := CPPProjects;   // C++
+      else Collection := OtherProjects; // Other
+    end;
+
+    if tsDocuments.Items.IndexOf(SelectedTab) <> -1 then
+      CloseDocument(TDocument(Collection.Items[tsDocuments.Items.IndexOf(SelectedTab)]));
+  except
+    Application.ProcessMessages; // :o
+  end;
+end;
+
+procedure TfrmMain.mnuPCloseAllFilesClick(Sender: TObject);
+begin
+  mnuCloseAllFiles.Click;
+end;
+
+procedure TfrmMain.mnuTNewClick(Sender: TObject);
+begin
+  case tsMain.ActiveTabIndex of
+    0: mnuNewPlugin.Click;
+    1: mnuNewUnit.Click;
+    2: mnuNewTextfile.Click;
+  end;
+end;
+
+procedure TfrmMain.jviCodeItemValueChanged(Sender: TObject;
+  Item: TJvCustomInspectorItem);
+function FindItem(eParent: TJvCustomInspectorItem; eName: String): TJvCustomInspectorItem;
+var i: integer;
+begin
+  Result := nil;
+  for i := 0 to eParent.Count -1 do begin
+    if eParent.Items[i].DisplayName = eName then
+      Result := eParent.Items[i];
+  end;
+end;
+
+var eLine, eTemp: String;
+    i: integer;
+begin
+  if (Assigned(Item.Parent)) then begin
+    // Variables and Constants
+    if (Pos('Constant', Item.Parent.DisplayName) = 1) or (Pos('Variable', Item.Parent.DisplayName) = 1) then begin
+      eLine := eFormatSettings;
+      for i := 0 to jviCode.Root.Count -1 do begin
+        eTemp := '';
+        if Pos('Constant', jviCode.Root.Items[i].DisplayName) = 1 then begin
+          if (FindItem(jviCode.Root.Items[i], 'Name').DisplayValue <> '') then begin
+            eTemp := eTemp + ', ';
+            if Assigned(FindItem(jviCode.Root.Items[i], 'Type')) then
+              eTemp := eTemp + FindItem(jviCode.Root.Items[i], 'Type').DisplayValue + ':';
+            eTemp := eTemp + FindItem(jviCode.Root.Items[i], 'Name').DisplayValue;
+            eTemp := eTemp + ' = ' + FindItem(jviCode.Root.Items[i], 'Value').DisplayValue;
+          end;
+        end
+        else begin
+          if (FindItem(jviCode.Root.Items[i], 'Name').DisplayValue <> '') then begin
+            eTemp := eTemp + ', ';
+            if Assigned(FindItem(jviCode.Root.Items[i], 'Type')) then
+              eTemp := eTemp + FindItem(jviCode.Root.Items[i], 'Type').DisplayValue + ':';
+            eTemp := eTemp + FindItem(jviCode.Root.Items[i], 'Name').DisplayValue;
+          end;
+        end;
+        
+        if jviCode.Root.Count = 1 then
+          eLine := StringReplace(eLine, '-' + jviCode.Root.Items[i].DisplayName + ' 1-', eTemp, [])
+        else
+          eLine := StringReplace(eLine, '-' + jviCode.Root.Items[i].DisplayName + '-', eTemp, []);
+      end;
+      Delete(eLine, 1, 2);
+      eLine := GetIndents + 'new ' + eLine;
+      sciEditor.Lines[sciEditor.GetCurrentLineNumber] := eLine;
+    end
+    // If-Conditions
+    else if Pos('If-Condition', Item.Parent.DisplayName) = 1 then begin
+      eLine := '';
+      for i := 0 to jviCode.Root.Count -1 do begin
+        eLine := eLine + FindItem(jviCode.Root.Items[i], 'Condition').DisplayValue;
+        if i <> jviCode.Root.Count -1 then
+          eLine := eLine + #32 + FindItem(jviCode.Root.Items[i], 'Operator').DisplayValue + #32;
+      end;
+      eLine := StringReplace(eFormatSettings, #1#3#3#7, '(' + eLine + ')', []);
+      sciEditor.Lines[sciEditor.GetCurrentLineNumber] := eLine;
+    end
+    // Defined
+    else if Item.Parent.DisplayName = 'Defined' then begin
+      eLine := GetIndents + '#define ';
+      eLine := eLine + Item.Parent.Items[0].DisplayValue;
+      eLine := eLine + ' ' + Item.Parent.Items[1].DisplayValue;
+      sciEditor.Lines[sciEditor.GetCurrentLineNumber] := eLine;
+    end
+    // Included
+    else if Item.Parent.DisplayName = 'Included' then begin
+      eLine := StringReplace(eFormatSettings, '-Filename-', Item.DisplayValue, []);
+      eLine := GetIndents + eLine;
+      sciEditor.Lines[sciEditor.GetCurrentLineNumber] := eLine;
+    end
+    // Assignment
+    else if Item.Parent.DisplayName = 'Assignment' then begin
+      eLine := GetIndents + Item.Parent.Items[0].DisplayValue;
+      eLine := eLine + #32 + Item.Parent.Items[2].DisplayValue + #32 + Item.Parent.Items[1].DisplayValue;
+      sciEditor.Lines[sciEditor.GetCurrentLineNumber] := eLine;
+    end;
+  end;
+end;
+
+procedure TfrmMain.mnuMenuGeneratorClick(Sender: TObject);
+begin
+  frmMenuGenerator.ShowModal;
+end;
+
+procedure TfrmMain.JvPluginManagerPlugInError(Sender: TObject;
+  AError: Exception);
+begin
+  MessageBox(Handle, PChar(lPluginError + #13 + AError.Message), PChar(Application.Title), MB_ICONERROR);
+end;
+
+procedure TfrmMain.mnuNewModuleClick(Sender: TObject);
+begin
+  Plugin_CreateNewFile(NEW_CPP_MODULE, True);
+end;
+
+procedure TfrmMain.mnuNewUnitClick(Sender: TObject);
+begin
+  Plugin_CreateNewFile(NEW_CPP_UNIT, True);
+end;
+
+procedure TfrmMain.mnuNewHeaderCPPClick(Sender: TObject);
+begin
+  Plugin_CreateNewFile(NEW_CPP_HEADER, True);
+end;
+
+procedure TfrmMain.tcToolsActiveTabChange(Sender: TObject;
+  ItemIndex: Integer);
+begin
+  Plugin_VisibleControlChange(CTRL_CODETOOLS_ITEM, ItemIndex = 0);
+  Plugin_VisibleControlChange(CTRL_NOTES, ItemIndex = 1);
+end;
+
+procedure TfrmMain.sciEditorModified(Sender: TObject; const position,
+  modificationType: Integer; text: PAnsiChar; const len, linesAdded, line,
+  foldLevelNow, foldLevelPrev: Integer);
+begin
+  if Started then
+    Plugin_Modified(text);
+end;
+
+procedure TfrmMain.sciEditorDblClick(Sender: TObject);
+begin
+  Plugin_EditorClick(True);
+end;
+
+procedure TfrmMain.sciCallTipsBeforeShow(Sender: TObject;
+  const Position: Integer; ListToDisplay: TStrings;
+  var CancelDisplay: Boolean);
+begin
+  CancelDisplay := not Plugin_CallTipShow(ListToDisplay.GetText);
+end;
+
+procedure TfrmMain.sciEditorCallTipClick(Sender: TObject;
+  const position: Integer);
+begin
+  if not Plugin_CallTipClick(position) then
+    sciEditor.CallTipCancel;
+end;
+
+procedure TfrmMain.sciEditorAutoCSelection(Sender: TObject;
+  text: PAnsiChar);
+begin
+  Plugin_AutoCompleteSelect(text);
+end;
+
+procedure TfrmMain.WMCopyData(var Msg: TWMCopyData);
+var eCommand, eExt: String;
+    eItem: TSpTBXItem;
+    eItem2: TTBCustomItem;
+begin
+  if Msg.Msg = WM_COPYDATA then begin
+    SetLength(eCommand, Msg.CopyDataStruct.cbData);
+    StrLCopy(PChar(eCommand), Msg.CopyDataStruct.lpData, Msg.CopyDataStruct.cbData);
+    { AddMenuItem }
+    if Pos('ADDMENUITEM', UpperCase(eCommand)) = 1 then begin
+      Delete(eCommand, 1, 11);
+      eCommand := Trim(eCommand);
+      if (CountChars(eCommand, '"') = 4) then begin
+        eItem2 := GetMenuItem(Between(eCommand, '"', '"'));
+        while CountChars(eCommand, '"') > 2 do
+          Delete(eCommand, 1, 1);
+        eItem := TSpTBXItem.Create(frmMain.tbxMenu.Items);
+        eItem.OnClick := OnCustomClick;
+        eItem.Caption := Between(eCommand, '"', '"');
+        eItem2.Add(eItem);
+        Msg.Result := 1;
+        exit;
+      end
+      else
+        Msg.Result := 0;
+    end
+    { AddMenuSubItem }
+    else if Pos('ADDMENUSUBITEM', UpperCase(eCommand)) = 1 then begin
+      Delete(eCommand, 1, 12);
+      eCommand := Trim(eCommand);
+      if (CountChars(eCommand, '"') = 4) and (Assigned(GetMenuItem(Between(eCommand, '"', '"')))) then begin
+        while CountChars(eCommand, '"') > 2 do
+          Delete(eCommand, 1, 1);
+        eItem := TSpTBXSubmenuItem.Create(frmMain.tbxMenu.Items);
+        eItem.OnClick := OnCustomClick;
+        eItem.Caption := Between(eCommand, '"', '"');
+        frmMain.tbxMenu.Items.Add(GetMenuItem(Between(eCommand, '"', '"')));
+        Msg.Result := 1;
+        exit;
+      end
+      else
+        Msg.Result := 0;
+    end
+    else if Pos('REMOVEMENUITEM', UpperCase(eCommand)) = 1 then begin
+      eCommand := Between(eCommand, '"', '"');
+      if Assigned(GetMenuItem(eCommand)) then begin
+        TSpTBXItem(GetMenuItem(eCommand)).Free;
+        Msg.Result := 1;
+      end
+      else
+        Msg.Result := 0;
+    end
+    { SetEditorText }
+    else if Pos('SETEDITORTEXT', UpperCase(eCommand)) = 1 then begin
+      Delete(eCommand, 1, 14);
+      frmMain.sciEditor.Lines.Text := eCommand;
+      Msg.Result := 1;
+    end
+    { GetEditorText }
+    else if Pos('GETEDITORTEXT', UpperCase(eCommand)) = 1 then
+      Msg.Result := LongInt(sciEditor.Lines.GetText)
+    { ExecMenuItem }
+    else if Pos('EXECMENUITEM', UpperCase(eCommand)) = 1 then begin
+      eCommand := TrimLeft(Copy(eCommand, Pos(#32, eCommand) +1, Length(eCommand)));
+      if Assigned(GetMenuItem(eCommand)) then begin
+        GetMenuItem(eCommand).Click;
+        Msg.Result := 1;
+      end
+      else
+        Msg.Result := 0;
+    end
+    { LoadFile }
+    else if Pos('LOADFILE PAWN', UpperCase(eCommand)) = 1 then begin
+      Delete(eCommand, 1, 13);
+      if frmMain.tsMain.ActiveTabIndex <> 0 then
+        ActivateProjects(0, False);
+      if PAWNProjects.Open(Trim(eCommand)) <> -1 then
+        Msg.Result := 1
+      else
+        Msg.Result := 0;
+    end
+    else if Pos('LOADFILE CPP', UpperCase(eCommand)) = 1 then begin
+      if frmMain.tsMain.ActiveTabIndex <> 1 then
+        ActivateProjects(1, False);
+      Delete(eCommand, 1, 12);
+      if CPPProjects.Open(Trim(eCommand)) <> -1 then
+        Msg.Result := 1
+      else
+        Msg.Result := 0;
+    end
+    else if Pos('LOADFILE OTHER', UpperCase(eCommand)) = 1 then begin
+      if frmMain.tsMain.ActiveTabIndex <> 1 then
+        ActivateProjects(2, False);
+      Delete(eCommand, 1, 12);
+      if CPPProjects.Open(Trim(eCommand)) <> -1 then
+        Msg.Result := 1
+      else
+        Msg.Result := 0;
+    end
+    else if Pos('LOADFILE', UpperCase(eCommand)) = 1 then begin
+      eExt := ExtractFileExt(eCommand);
+      eExt := LowerCase(eExt);
+      Msg.Result := 0;
+      if (eExt = '.sma') or (eExt = '.inc') then begin // Pawn files
+        if frmMain.tsMain.ActiveTabIndex <> 0 then
+          ActivateProjects(0, False);
+        if PAWNProjects.Open(eCommand) <> -1 then
+          Msg.Result := 1;
+      end
+      else if (eExt = '.cpp') or (eExt = '.h') then begin // C++ files
+        if frmMain.tsMain.ActiveTabIndex <> 1 then
+          ActivateProjects(1, False);
+        if CPPProjects.Open(eCommand) <> -1 then
+          Msg.Result := 1;
+      end
+      else if (eExt = '.htm') or (eExt = '.html') then begin // HTML files
+        if frmMain.tsMain.ActiveTabIndex <> 1 then
+          ActivateProjects(2, False);
+        if OtherProjects.Open(eCommand, 'HTML') <> -1 then
+          Msg.Result := 1;
+      end
+      else if (eExt = '.sql') then begin // SQL databases
+        if frmMain.tsMain.ActiveTabIndex <> 1 then
+          ActivateProjects(2, False);
+        if OtherProjects.Open(eCommand, 'SQL') <> -1 then
+          Msg.Result := 1;
+      end
+      else if (eExt = '.xml') then begin // XML files
+        if frmMain.tsMain.ActiveTabIndex <> 1 then
+          ActivateProjects(2, False);
+        if OtherProjects.Open(eCommand, 'XML') <> -1 then
+          Msg.Result := 1;
+      end
+      else begin // Other files and/or Textfiles
+        if frmMain.tsMain.ActiveTabIndex <> 1 then
+          ActivateProjects(2, False);
+        if OtherProjects.Open(eCommand, 'null') <> -1 then
+          Msg.Result := 1;
+      end;
+    end
+    { SaveFile }
+    else if Pos('SAVEFILE', UpperCase(eCommand)) = 1 then begin
+      Delete(eCommand, 1, 8);
+      Msg.Result := 0;
+      eCommand := Trim(eCommand);
+      if eCommand <> '' then
+        ActiveDoc.FileName := eCommand;
+      if ActiveDoc.Save then
+        Msg.Result := 1;
+    end
+    { ActivateFile }
+    else if Pos('ACTIVATEFILE', UpperCase(eCommand)) = 1 then begin
+      Delete(eCommand, 1, 12);
+      eCommand := Trim(eCommand);
+      Msg.Result := 0;
+      if IsNumeric(eCommand) then begin
+        if StrToInt(eCommand) < frmMain.tsDocuments.Items.Count then begin
+          frmMain.tsDocuments.ActiveTabIndex := StrToInt(eCommand);
+          Msg.Result := 1;
+        end;
+      end;
+    end
+    { ActivateProjects }
+    else if Pos('ACTIVATEPROJECTS', UpperCase(eCommand)) = 1 then begin
+      Delete(eCommand, 1, 12);
+      eCommand := Trim(eCommand);
+      Msg.Result := 0;
+      if IsNumeric(eCommand) then begin
+        if StrToInt(eCommand) < frmMain.tsMain.Items.Count then begin
+          ActivateProjects(StrToInt(eCommand), True);
+          Msg.Result := 1;
+        end;
+      end;
+    end
+    { DeleteMenuItem }
+    else if Pos('DELETEMENUITEM', UpperCase(eCommand)) = 1 then begin
+      Delete(eCommand, 1, 14);
+      eCommand := Trim(eCommand);
+      if Assigned(GetMenuItem(eCommand)) then begin
+        GetMenuItem(eCommand).Free;
+        Msg.Result := 1;
+      end
+      else
+        Msg.Result := 0;
+    end
+    { C++ IDE }
+    else if Pos('CPPIDE', UpperCase(eCommand)) = 1 then begin
+      Delete(eCommand, 1, 7);
+      eCommand := Trim(UpperCase(eCommand));
+      Msg.Result := 0;
+      if eCommand = 'ON' then begin
+        tiCPP.Enabled := True;
+        mnuNewHeaderCPP.Enabled := True;
+        mnuNewModule.Enabled := True;
+        mnuNewUnit.Enabled := True;
+        eCPP := True;
+        Msg.Result := 1;
+      end
+      else if eCommand = 'OFF' then begin
+        frmMain.tiCPP.Enabled := False;
+        frmMain.mnuNewHeaderCPP.Enabled := False;
+        frmMain.mnuNewModule.Enabled := False;
+        frmMain.mnuNewUnit.Enabled := False;
+        eCPP := False;
+        Msg.Result := 1;
+      end;
+    end
+    { Output }
+    else if Pos('OUTPUT', UpperCase(eCommand)) = 1 then begin
+      Delete(eCommand, 1, 6);
+      eCommand := Trim(eCommand);
+      Msg.Result := 0;
+      if Pos('ADD', eCommand) = 1 then begin
+        Delete(eCommand, 1, 4); // +1 for space
+        frmMain.lstOutput.Items.Add(eCommand);
+        Msg.Result := 1;
+      end
+      else if Pos('DELETE', eCommand) = 1 then begin
+        Delete(eCommand, 1, 7);
+        if IsNumeric(eCommand) then begin
+          if StrToInt(eCommand) < frmMain.lstOutput.Items.Count then
+            frmMain.lstOutput.Items.Delete(StrToInt(eCommand));
+        end;
+      end
+      else if Pos('SETTEXT', UpperCase(eCommand)) = 1 then begin
+        Delete(eCommand, 1, 8); // +1 for space
+        frmMain.lstOutput.Items.Text := eCommand;
+        Msg.Result := 1;
+      end
+      else if Pos('GETTEXT', UpperCase(eCommand)) = 1 then begin
+        eCommand := frmMain.lstOutput.Items.Text;
+        Msg.Result := LongInt(PChar(eCommand));
+      end
+      else if Pos('CLEAR', UpperCase(eCommand)) = 1 then begin
+        frmMain.lstOutput.Items.Clear;
+        Msg.Result := 1;
+      end
+      else if Pos('SHOW', UpperCase(eCommand)) = 1 then begin
+        frmMain.splOutput.Show;
+        frmMain.lstOutput.Show;
+        Msg.Result := 1;
+      end
+      else if Pos('HIDE', UpperCase(eCommand)) = 1 then begin
+        frmMain.splOutput.Hide;
+        frmMain.lstOutput.Hide;
+        Msg.Result := 1;
+      end
+    end
+    { New }
+    else if Pos('NEW', UpperCase(eCommand)) = 1 then begin
+      Delete(eCommand, 1, 4);
+      Msg.Result := 1;
+      if UpperCase(eCommand) = 'EMPTY_PLUGIN' then
+        frmMain.mnuEmptyPlugin.Click
+      else if UpperCase(eCommand) = 'PLUGIN' then
+        frmMain.mnuNewPlugin.Click
+      else if UpperCase(eCommand) = 'HEADER_PAWN' then
+        frmMain.mnuHeaderPAWN.Click
+      else if UpperCase(eCommand) = 'MODULE' then
+        frmMain.mnuNewModule.Click
+      else if UpperCase(eCommand) = 'HEADER_CPP' then
+        frmMain.mnuNewHeaderCPP.Click
+      else if UpperCase(eCommand) = 'TEXTFILE' then
+        frmMain.mnuNewTextfile.Click
+      else if UpperCase(eCommand) = 'HTML' then
+        frmMain.mnuNewHTML.Click
+      else if UpperCase(eCommand) = 'SQL' then
+        frmMain.mnuNewSQL.Click
+      else if UpperCase(eCommand) = 'XML' then
+        frmMain.mnuNewXML.Click
+      else
+        Msg.Result := 0;
+    end;
+  end
+end;
+
+procedure TfrmMain.OnCustomClick(Sender: TObject);
+begin
+  Plugin_CustomItemClick((Sender As TTBXCustomItem).Caption);
+end;
+
+procedure TfrmMain.pnlCodeInspectorVisibleChanged(Sender: TObject);
+begin
+  mnuShowCodeInspector.Checked := pnlCodeInspector.Visible;
+end;
+
+procedure TfrmMain.pnlCodeExplorerVisibleChanged(Sender: TObject);
+begin
+  mnuShowCodeExplorer.Checked := pnlCodeExplorer.Visible;
+end;
+
+procedure TfrmMain.mnuShowCodeExplorerClick(Sender: TObject);
+begin
+  pnlCodeExplorer.Visible := mnuShowCodeExplorer.Checked;
+end;
+
+procedure TfrmMain.mnuShowCodeInspectorClick(Sender: TObject);
+begin
+  pnlCodeInspector.Visible := mnuShowCodeInspector.Checked;
+end;
+
+procedure TfrmMain.mnuConnectionGenClick(Sender: TObject);
+var eIncluded: Integer;
+    eRegLine: Integer;
+    eIndents: String;
+begin
+  eRegLine := PluginInitLine;
+  if (frmConnGen.ShowModal = mrOk) and (eRegLine <> -1) then begin
+    // Add include and add var
+    eIncluded := GetLast('#include', True);
+    if eIncluded = -1 then
+      eIncluded := 0;
+    sciEditor.Lines.Insert(eIncluded +1, 'new sck' + frmConnGen.txtName.Text);
+    eRegLine := eRegLine +1;
+    AddIfDoesntExist('sockets');
+    // CVar stuff
+    eIndents := GetIndents(eRegLine +1);
+    sciEditor.Lines.Insert(eRegLine +2, eIndents + '/* Init CVars for the socket "' + frmConnGen.txtName.Text + '" */');
+    sciEditor.Lines.Insert(eRegLine +3, eIndents + 'if (cvar_exists("amx_' + frmConnGen.txtName.Text + '_socket")) {');
+    sciEditor.Lines.Insert(eRegLine +4, eIndents + #9 + 'sck' + frmConnGen.txtName.Text + ' = get_cvar_num("amx_' + frmConnGen.txtName.Text + '_socket")');
+    sciEditor.Lines.Insert(eRegLine +5, eIndents + #9 + 'read_' + frmConnGen.txtName.Text + '()');
+    sciEditor.Lines.Insert(eRegLine +6, eIndents + '}');
+    sciEditor.Lines.Insert(eRegLine +7, eIndents + 'else');
+    sciEditor.Lines.Insert(eRegLine +8, eIndents + #9 + 'register_cvar("amx_' + frmConnGen.txtName.Text + '_socket", "0", FCVAR_PROTECTED&FCVAR_UNLOGGED)');
+    sciEditor.Lines.Insert(eRegLine +9, eIndents + '/* End */');
+    // Functions
+    sciEditor.Lines.Add('');
+    sciEditor.Lines.Add('/* Socket ' + frmConnGen.txtName.Text + ' */'); 
+    sciEditor.Lines.Add(''); 
+    sciEditor.Lines.Add('public connect_' + frmConnGen.txtName.Text + '() {');
+    sciEditor.Lines.Add(#9 + 'new error = 0');
+    sciEditor.Lines.Add(#9 + 'sck' + frmConnGen.txtName.Text + ' = socket_open("' + frmConnGen.txtHost.Text + '", ' + frmConnGen.txtPort.Text + ', ' + frmConnGen.cboProtocol.Text + ', error)');
+    sciEditor.Lines.Add(#9 + 'if (sck' + frmConnGen.txtName.Text + ' > 0) {');
+    sciEditor.Lines.Add(#9 + #9 + '/* Connect successful */');
+    sciEditor.Lines.Add(#9 + #9 + 'read_' + frmConnGen.txtName.Text + '()');
+    sciEditor.Lines.Add(#9 + '}');
+    sciEditor.Lines.Add(#9 + 'else {'); 
+    sciEditor.Lines.Add(#9 + #9 + 'switch (error) {');
+    sciEditor.Lines.Add(#9 + #9 + #9 + 'case 1: { /* Error creating socket */ }');
+    sciEditor.Lines.Add(#9 + #9 + #9 + 'case 2: { /* Could not resolve hostname */ }');
+    sciEditor.Lines.Add(#9 + #9 + #9 + 'case 3: { /* Could not connect to given host:port */ }');
+    sciEditor.Lines.Add(#9 + #9 + '}');
+    sciEditor.Lines.Add(#9 + '}');
+    sciEditor.Lines.Add('}');
+    sciEditor.Lines.Add('');
+    sciEditor.Lines.Add('public read_' + frmConnGen.txtName.Text + '() {');
+    sciEditor.Lines.Add(#9 + 'if (socket_change(sck' + frmConnGen.txtName.Text + ', 100)) {');
+    sciEditor.Lines.Add(#9 + #9 + 'new buf[512], lines[30][100], count = 0');
+    sciEditor.Lines.Add(#9 + #9 + 'socket_recv(sck' + frmConnGen.txtName.Text + ', buf, 511)');
+    sciEditor.Lines.Add(#9 + #9 + 'count = ExplodeString(lines, 50, 119, buf, 13)');
+    sciEditor.Lines.Add(#9 + #9 + 'for(new i=0;i<count;i++) {');
+    sciEditor.Lines.Add(#9 + #9 + #9 + '/* Process items here */');
+    sciEditor.Lines.Add(#9 + #9 + '}');
+    sciEditor.Lines.Add(#9 + '}');
+    sciEditor.Lines.Add(#9 + '');
+    sciEditor.Lines.Add(#9 + 'if (sck' + frmConnGen.txtName.Text + ' != 0)');
+    sciEditor.Lines.Add(#9 + #9 + 'set_task(0.5, "read_' + frmConnGen.txtName.Text + '")');
+    sciEditor.Lines.Add(#9 + 'else {');
+    sciEditor.Lines.Add(#9 + #9 + 'set_cvar_num("amx_' + frmConnGen.txtName.Text + '_socket", 0)');
+    sciEditor.Lines.Add(#9 + #9 + 'disconnect_' + frmConnGen.txtName.Text + '()');
+    sciEditor.Lines.Add(#9 + '}');
+    sciEditor.Lines.Add('}');
+    sciEditor.Lines.Add('');
+    sciEditor.Lines.Add('public write_' + frmConnGen.txtName.Text + '(text[512]) {');
+    sciEditor.Lines.Add(#9 + 'socket_send(sck' + frmConnGen.txtName.Text + ', text, 511)');
+    sciEditor.Lines.Add('}');
+    sciEditor.Lines.Add('');
+    sciEditor.Lines.Add('public disconnect_' + frmConnGen.txtName.Text + '() {');
+    sciEditor.Lines.Add(#9 + '/* Disconnected */');
+    sciEditor.Lines.Add('}');
+
+    if GetLine('stock ExplodeString', True, True) = -1 then begin
+      sciEditor.Lines.Add('');
+      sciEditor.Lines.Add('stock ExplodeString( p_szOutput[][], p_nMax, p_nSize, p_szInput[], p_szDelimiter ) { // Function by xeroblood');
+      sciEditor.Lines.Add(#9 + 'new nIdx = 0, l = strlen(p_szInput)');
+      sciEditor.Lines.Add(#9 + 'new nLen = (1 + copyc( p_szOutput[nIdx], p_nSize, p_szInput, p_szDelimiter ))');
+      sciEditor.Lines.Add(#9 + 'while( (nLen < l) && (++nIdx < p_nMax) )');
+      sciEditor.Lines.Add(#9 + #9 + 'nLen += (1 + copyc( p_szOutput[nIdx], p_nSize, p_szInput[nLen], p_szDelimiter ))');
+      sciEditor.Lines.Add(#9 + 'return nIdx');
+      sciEditor.Lines.Add('}');
+    end;
+  end;
+end;
+
+end.

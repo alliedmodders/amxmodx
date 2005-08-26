@@ -1,0 +1,198 @@
+unit UnitfrmTextAnalyze;
+
+interface
+
+uses SysUtils, Classes;
+
+type TPAWNParseResult = class
+  public
+
+end
+
+function ParseCodePAWN(eCode: TStringList): TPAWNParseResult;
+
+implementation
+
+function ParseCodePAWN(eCode: TStringList): TPAWNParseResult;
+var i, k: integer;
+    eTrimmed, eLowered, eNoComments: String;
+    eStr, ePreEvents: TStringList;
+    eStartLine, eBracesOpen: Integer;
+    eTemp: String;
+begin
+  Synchronize(GetCodeAndPos);
+  eConstants.Clear;
+  eDefined.Clear;
+  eCVars.Clear;
+  eIncluded.Clear;
+  eMethodsDefault.Clear;
+  eMethodsEvents.Clear;
+  eStocks.Clear;
+  eNatives.Clear;
+  eForwards.Clear;
+  eVariables.Clear;
+  ePreEvents.Clear;
+  eBracesOpen := 0;
+  eCurrLine := 0;
+  eStartLine := -1;
+  for i := 0 to eCode.Count -1 do begin
+    eTrimmed := Trim(eCode[i]);
+    eLowered := LowerCase(eTrimmed);
+    eNoComments := RemoveStringsAndComments(eTrimmed);
+
+    { Constants and Variables }
+    if (Pos('new ', eLowered) = 1) and (eBracesOpen = 0) then begin // const or variable
+      Delete(eTrimmed, 1, 4);
+      eLowered := Trim(eTrimmed);
+      // we don't need braces so delete them...
+      while (CountChars(eTrimmed, '{') = CountChars(eTrimmed, '}')) and (CountChars(eTrimmed, '{') <> 0) and (Pos('{', eTrimmed) < Pos('}', eTrimmed)) do
+        eTrimmed := StringReplace(eTrimmed, '{' + Between(eTrimmed, '{', '}') + '}', '', [rfReplaceAll]);
+      while (CountChars(eTrimmed, '[') = CountChars(eTrimmed, ']')) and (CountChars(eTrimmed, '[') <> 0) and (Pos('[', eTrimmed) < Pos(']', eTrimmed)) do
+        eTrimmed := StringReplace(eTrimmed, '[' + Between(eTrimmed, '[', ']') + ']', '', [rfReplaceAll]);
+      // done? okay, split all items if there are more than one; and if not, it's okay...
+      eStr.Text := StringReplace(eTrimmed, ',', #13, [rfReplaceAll]);
+      for k := 0 to eStr.Count -1 do begin
+        if Trim(eStr[k]) <> '' then begin
+          if Pos(':', eStr[k]) <> 0 then
+            eStr[k] := Copy(eStr[k], Pos(':', eStr[k]) +1, Length(eStr[k]));
+          eStr[k] := Trim(RemoveSemicolon(eStr[k]));
+          if Pos('=', eStr[k]) <> 0 then // constant
+            eConstants.AddObject(Copy(eStr[k], 1, Pos('=', eStr[k]) -1), TObject(i))
+          else
+            eVariables.AddObject(eStr[k], TObject(i));
+          end;
+        end;
+      end
+      { Included }
+      else if Pos('#include ', eLowered) = 1 then begin
+        if Between(eTrimmed, '<', '>') <> '' then begin
+          eTrimmed := Between(eTrimmed, '<', '>');
+          if ExtractFileExt(eTrimmed) <> '' then
+            ChangeFileExt(eTrimmed, '');
+        end
+        else if Between(eTrimmed, '"', '"') <> '' then begin
+          eTrimmed := Between(eTrimmed, '"', '"');
+          if ExtractFileExt(eTrimmed) <> '' then
+            ChangeFileExt(eTrimmed, '');
+        end
+        else begin
+          eTrimmed := Copy(eTrimmed, 9, Length(eTrimmed));
+          if ExtractFileExt(eTrimmed) <> '' then
+            ChangeFileExt(eTrimmed, '');
+        end;
+        eTrimmed := Trim(eTrimmed);
+        eIncluded.AddObject(eTrimmed, TObject(i));
+      end
+      { CVars }
+      else if Pos('register_cvar(', eLowered) = 1 then begin
+        if Between(eTrimmed, '"', '"') <> '' then
+          eCVars.AddObject(Between(eTrimmed, '"', '"'), TObject(i));
+      end
+      { Defined }
+      else if Pos('#define ', eLowered) = 1 then begin
+        eTrimmed := Copy(eTrimmed, 8, Length(eTrimmed));
+        eTrimmed := Trim(eTrimmed);
+        if Pos(#32, eTrimmed) <> 0 then
+          eTrimmed := Copy(eTrimmed, 1, Pos(#32, eTrimmed) -1);
+        eDefined.AddObject(eTrimmed, TObject(i));
+      end
+      { Events (Part 1) }
+      else if Pos('register_event(', eLowered) = 1 then begin
+        if CountChars(eLowered, '"') >= 4 then
+          ePreEvents.Add(Between(eTrimmed, '"', '"'));
+      end;
+
+      { Functions, this is adapted from AMXX-Edit v2 [see TextAnalyze.pas] }
+      if Pos('{', eNoComments) <> 0 then begin
+        if eStartLine = -1 then
+          eStartLine := i;
+        Inc(eBracesOpen, CountChars(eTrimmed, '{'));
+      end;
+      if Pos('}', eNoComments) <> 0 then begin
+        Inc(eBracesOpen, -CountChars(eTrimmed, '}'));
+        if (eBracesOpen = 0) then begin
+          eTemp := Trim(StringReplace(eCode[eStartLine], '{', '', [rfReplaceAll]));
+          // Analyze type
+          k := 0;
+          if Pos('public ', LowerCase(eTemp)) = 1 then
+            k := 1
+          else if Pos('stock ', LowerCase(eTemp)) = 1 then
+            k := 2
+          else if Pos('native ', LowerCase(eTemp)) = 1 then
+              k := 3
+            else if Pos('forward ', LowerCase(eTemp)) = 1 then
+              k := 4;
+            // Remove type
+            if (Pos(#32, eTemp) <> 0) and (Pos(#32, eTemp) < Pos('(', eTemp)) then
+              eTemp := Copy(eCode[eStartLine], Pos(#32, eCode[eStartLine]) +1, Length(eCode[eStartLine]));
+            // Copy function-name
+            if Pos('(', eTemp) <> 0 then
+              eTemp := Copy(eTemp, 1, Pos('(', eTemp) -1);
+            // Remove return-type
+            if Pos(':', eTemp) <> 0 then
+              Delete(eTemp, 1, Pos(':', eTemp));
+            eTemp := Trim(eTemp);
+
+            if eTemp <> '' then begin
+              case k of
+                0: eMethodsDefault.AddObject(eTemp, TObject(i)); // Default Method
+                1: begin
+                  k := ePreEvents.IndexOf(eTemp);
+                  if k <> -1 then begin
+                    eMethodsEvents.AddObject(eTemp, ePreEvents.Objects[k]);
+                    ePreEvents.Delete(k);
+                  end
+                  else
+                    eMethodsDefault.AddObject(eTemp, TObject(i));
+                end;
+                2: eStocks.AddObject(eTemp, TObject(i));
+                3: eNatives.AddObject(eTemp, TObject(i));
+                4: eForwards.AddObject(eTemp, TObject(i));
+              end;
+            end;
+            eStartLine := -1;
+            eBracesOpen := -2;
+          end;
+        end;
+        if (Pos('forward ', eLowered) = 1) or (Pos('public ', eLowered) = 1) or (Pos('native ', eLowered) = 1) or (Pos('stock ', eLowered) = 1) then begin
+          eBracesOpen := 0;
+          if ((Pos('{', eLowered) = 0)) or (Pos('{', eLowered) <> 0) and (Pos('}', eLowered) <> 0) then begin
+            eTemp := eTrimmed;
+            // Remove type
+            if (Pos(#32, eTemp) <> 0) and (Pos(#32, eTemp) < Pos('(', eTemp)) then
+              eTemp := Copy(eTemp, Pos(#32, eTemp) +1, Length(eTemp));
+            // Copy function-name
+            if Pos('(', eTemp) <> 0 then
+              eTemp := Copy(eTemp, 1, Pos('(', eTemp) -1);
+            // Remove return-type
+            if Pos(':', eTemp) <> 0 then
+              Delete(eTemp, 1, Pos(':', eTemp));
+            eTemp := Trim(eTemp);
+            
+            if eTemp <> '' then begin
+              if Pos('forward', eLowered) = 1 then
+                eForwards.AddObject(eTrimmed, TObject(i))
+              else if Pos('public', eLowered) = 1 then begin
+                k := ePreEvents.IndexOf(eTemp);
+                if k <> -1 then begin
+                  eMethodsEvents.AddObject(eTemp, ePreEvents.Objects[k]);
+                  ePreEvents.Delete(k); 
+                end
+                else
+                  eMethodsDefault.Add(eTemp);  
+              end
+              else if Pos('native', eLowered) = 1 then
+                eNatives.AddObject(eTemp, TObject(i))
+              else if Pos('stock', eLowered) = 1 then
+                eStocks.AddObject(eTemp, TObject(i))
+              else
+                eMethodsDefault.AddObject(eTemp, TObject(i));
+            end;
+          end;
+        end;
+
+        Sleep(5);
+      end;
+end;
+
+end.

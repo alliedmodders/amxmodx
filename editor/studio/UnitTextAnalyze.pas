@@ -113,7 +113,9 @@ begin
       eString := RemoveStringsAndComments(Trim(eCode[i]), True);
     end
     { Included }
-    else if (IsAtStart('#include', eString)) then begin
+    else if (IsAtStart('#include', Trim(eCode[i]), False)) then begin
+      eString := Trim(eCode[i]);
+      
       if Between(eString, '<', '>') <> '' then begin
         eString := Between(eString, '<', '>');
         if ExtractFileExt(eString) <> '' then
@@ -164,8 +166,8 @@ begin
         Result.CVars.AddObject(Between(eString, '"', '"'), TObject(i));
     end
     { Defined }
-    else if (IsAtStart('#define', eString)) then begin
-      eString := Copy(eString, 8, Length(eString));
+    else if (IsAtStart('#define', Trim(eCode[i]))) then begin
+      eString := Copy(Trim(eCode[i]), 8, Length(Trim(eCode[i])));
       eString := Trim(eString);
       Result.CallTips.Add(eString + '-> ' + FileName);
       if Pos(#32, eString) <> 0 then
@@ -177,8 +179,8 @@ begin
     end
     { Events (Part 1) }
     else if (IsAtStart('register_event(', eString)) and (not IsRecursive) then begin
-      if CountChars(eString, '"') >= 4 then begin
-        eTemp := StringReplace(eString, '"' + Between(eString, '"', '"') + '"', '', []);
+      if CountChars(Trim(eCode[i]), '"') >= 4 then begin
+        eTemp := StringReplace(Trim(eCode[i]), '"' + Between(Trim(eCode[i]), '"', '"') + '"', '', []);
         ePreEvents.Add(Between(eString, '"', '"'));
       end;
     end;

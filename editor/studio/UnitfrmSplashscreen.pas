@@ -118,7 +118,7 @@ begin
       eCache.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'config\Cache.cfg');
     for i := 1 to ParamCount do begin
       if eCache.IndexOf(ParamStr(i)) = -1 then
-        eCache.Add(ParamStr(i));
+        eCache.Add(ParamStr(i));  
     end;
     
     for i := 0 to eCache.Count -1 do begin

@@ -1,6 +1,9 @@
 program AMXX_Studio;
 
 uses
+  madExcept,
+  madLinkDisAsm,
+  madScreenShot,
   Forms,
   Windows,
   Messages,
@@ -33,6 +36,14 @@ uses
   UnitfrmClose in 'UnitfrmClose.pas' {frmClose},
   UnitfrmConnGen in 'UnitfrmConnGen.pas' {frmConnGen},
   UnitPlugins in 'UnitPlugins.pas';
+
+{ Used components:
+  JVCL 3.0
+  FlatPack
+  FlatStyle
+  Toolbar2000, TBX, SpTBX, mbTBX Lib
+  Scintilla and DelphiSci
+  madExcept
 
 {$R *.res}
 

@@ -287,7 +287,7 @@ end;
 function Between(eText, eFirst, eSecond: String): String;
 var eTemp: String;
 begin
-  if (Pos(eFirst, eText) = 0) or (Pos(eSecond, eText) = 0) then
+  if (Pos(eFirst, eText) = 0) and (Pos(eSecond, eText) = 0) then
     Result := ''
   else begin
     eTemp := eText;

@@ -1,6 +1,6 @@
 object frmMain: TfrmMain
-  Left = 312
-  Top = 331
+  Left = 254
+  Top = 332
   Width = 888
   Height = 640
   Caption = 'AMXX-Studio'
@@ -4180,45 +4180,45 @@ object frmMain: TfrmMain
           ImageIndex = -1
           TabItem = 'tiTools'
           object spcBottom2: TImage
-            Left = 2
+            Left = 0
             Top = 447
-            Width = 169
+            Width = 173
             Height = 2
             Align = alBottom
           end
           object spcLeft2: TImage
-            Left = 2
-            Top = 2
+            Left = 0
+            Top = 0
             Width = 3
-            Height = 445
+            Height = 447
             Align = alLeft
           end
           object spcRight2: TImage
-            Left = 168
-            Top = 2
+            Left = 170
+            Top = 0
             Width = 3
-            Height = 445
+            Height = 447
             Align = alRight
           end
           object pnlDock: TSpTBXMultiDock
-            Left = 5
-            Top = 2
-            Width = 163
-            Height = 445
+            Left = 3
+            Top = 0
+            Width = 167
+            Height = 447
             Position = dpxClient
             object pnlCodeExplorer: TSpTBXDockablePanel
               Left = 0
               Top = 0
               Caption = 'Code-Explorer'
-              DockedWidth = 159
+              DockedWidth = 163
               DockPos = 0
               TabOrder = 0
               OnVisibleChanged = pnlCodeExplorerVisibleChanged
               object trvExplorer: TTreeView
                 Left = 0
                 Top = 26
-                Width = 159
-                Height = 184
+                Width = 163
+                Height = 186
                 Align = alClient
                 Images = ilImages
                 Indent = 19
@@ -4246,16 +4246,16 @@ object frmMain: TfrmMain
             end
             object pnlCodeInspector: TSpTBXDockablePanel
               Left = 0
-              Top = 214
+              Top = 216
               Caption = 'Code-Inspector'
-              DockedWidth = 159
-              DockPos = 214
+              DockedWidth = 163
+              DockPos = 216
               TabOrder = 1
               OnVisibleChanged = pnlCodeInspectorVisibleChanged
               object jviCode: TJvInspector
                 Left = 0
                 Top = 26
-                Width = 159
+                Width = 163
                 Height = 185
                 Align = alClient
                 Divider = 80

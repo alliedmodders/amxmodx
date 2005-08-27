@@ -97,6 +97,7 @@ bool g_IsNewMM = false;
 bool g_NeedsP = false;
 bool g_coloredmenus;
 bool g_activated = false;
+bool g_NewDLL_Available=false;
 
 #ifdef MEMORY_TEST
 float g_next_memreport_time;
@@ -818,6 +819,22 @@ void C_StartFrame_Post( void )
 
   g_tasksMngr.startFrame();
 
+
+  // Dispatch client cvar queries
+  for(int i = 1; i <= gpGlobals->maxClients; ++i)
+  {
+	  CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
+	  if (pPlayer->pEdict && pPlayer->initialized && !pPlayer->cvarQueryQueue.empty())
+	  {
+		  if (!IS_QUERYING_CLIENT_CVAR(PLID, pPlayer->pEdict))
+		  {
+			  QUERY_CLIENT_CVAR_VALUE(pPlayer->pEdict, pPlayer->cvarQueryQueue.front()->cvarName.c_str());
+			  pPlayer->cvarQueryQueue.front()->querying = true;
+		  }
+	  }
+  }
+
+
   RETURN_META(MRES_IGNORED);
 }
 
@@ -1004,6 +1021,26 @@ void C_AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...)
 	RETURN_META(MRES_IGNORED);
 }
 
+void C_CvarValue(const edict_t *pEdict, const char *value)
+{
+	CPlayer *pPlayer = GET_PLAYER_POINTER(pEdict);
+	if (pPlayer->cvarQueryQueue.empty())
+		RETURN_META(MRES_IGNORED);
+
+	ClientCvarQuery_Info *pQuery = pPlayer->cvarQueryQueue.front();
+
+	if (pPlayer->cvarQueryQueue.front()->querying)
+	{
+		executeForwards(pQuery->resultFwd, ENTINDEX(pEdict), pQuery->cvarName.c_str(), value);
+		unregisterSPForward(pQuery->resultFwd);
+		delete pQuery;
+		pPlayer->cvarQueryQueue.pop();
+		RETURN_META(MRES_HANDLED);
+	}
+
+	RETURN_META(MRES_IGNORED);
+}
+
 bool m_NeedsP = false;
 
 C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_t *pMetaUtilFuncs)
@@ -1091,8 +1128,8 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
   gMetaFunctionTable.pfnGetEntityAPI2_Post = GetEntityAPI2_Post;
   gMetaFunctionTable.pfnGetEngineFunctions = GetEngineFunctions;
   gMetaFunctionTable.pfnGetEngineFunctions_Post	= GetEngineFunctions_Post;
-#ifdef FAKEMETA
   gMetaFunctionTable.pfnGetNewDLLFunctions = GetNewDLLFunctions;
+#ifdef FAKEMETA
   gMetaFunctionTable.pfnGetNewDLLFunctions_Post = GetNewDLLFunctions_Post;
 #endif
 
@@ -1354,17 +1391,30 @@ C_DLLEXPORT	int	GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine,	int	
 #endif
 }
 
-#ifdef FAKEMETA
 NEW_DLL_FUNCTIONS gNewDLLFunctionTable;
 C_DLLEXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pNewFunctionTable, int *interfaceVersion)
 {
+	// default metamod does not call this if the gamedll doesn't provide it
+	g_NewDLL_Available = true;
+
+	gNewDLLFunctionTable.pfnCvarValue = C_CvarValue;
+#ifdef FAKEMETA
 	return g_FakeMeta.GetNewDLLFunctions(pNewFunctionTable, interfaceVersion, &gNewDLLFunctionTable);
+#else
+	memcpy(pNewFunctionTable, &gNewDLLFunctionTable, sizeof(NEW_DLL_FUNCTIONS));
+	return 1;
+#endif
 }
+
+
+#ifdef FAKEMETA
 
 NEW_DLL_FUNCTIONS gNewDLLFunctionTable_Post;
 C_DLLEXPORT int GetNewDLLFunctions_Post(NEW_DLL_FUNCTIONS *pNewFunctionTable, int *interfaceVersion)
 {
 	return g_FakeMeta.GetNewDLLFunctions_Post(pNewFunctionTable, interfaceVersion, &gNewDLLFunctionTable_Post);
+	memcpy(pNewFunctionTable, &gNewDLLFunctionTable_Post, sizeof(NEW_DLL_FUNCTIONS));
+	return 1;
 }
-#endif
 
+#endif

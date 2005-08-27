@@ -62,9 +62,15 @@ public:
 // class CPlayer
 // *****************************************************
 
+struct ClientCvarQuery_Info
+{
+	bool querying;			// Are we actually waiting for a response at the moment?
+	String cvarName;
+	int resultFwd;
+};
+
 class CPlayer 
 {
-	
 public:
 	edict_t* pEdict;
 	
@@ -106,6 +112,8 @@ public:
 	Vector thisTrace;
 	Vector lastHit;
 	
+	CQueue<ClientCvarQuery_Info*> cvarQueryQueue;
+
 	void Init( edict_t* e , int i );
 	void Disconnect();
 	void PutInServer();

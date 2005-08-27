@@ -59,6 +59,10 @@ void CPlayer::Disconnect() {
   ingame = false;
   initialized = false;
   authorized = false;
+
+  while (!cvarQueryQueue.empty())
+	  cvarQueryQueue.pop();
+
   bot = 0;
 }
 

@@ -2921,6 +2921,56 @@ static cell AMX_NATIVE_CALL int3(AMX *amx, cell *params)
 	return 0;
 }
 
+/*********************************************************************/
+
+
+
+// native query_client_cvar(id, const cvar[], const resultfunc[])
+static cell AMX_NATIVE_CALL query_client_cvar(AMX *amx, cell *params)
+{
+	if (!g_NewDLL_Available)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "NewDLL functions are not available. Blame (your) metamod (version)");
+		return 0;
+	}
+
+	int id = params[1];
+	if (id < 1 || id > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid player id %d", id);
+		return 0;
+	}
+
+	CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
+
+	if (!pPlayer->initialized || pPlayer->bot)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player %d is either not connected or a bot", id);
+		return 0;
+	}
+
+	int dummy;
+	const char *cvarname = get_amxstring(amx, params[2], 0, dummy);
+	const char *resultfuncname = get_amxstring(amx, params[3], 1, dummy);
+
+	// public clientcvarquery_result(id, const cvar[], const result[])
+	int iFunc = registerSPForwardByName(amx, resultfuncname, FP_CELL, FP_STRING, FP_STRING, FP_DONE);
+	if (iFunc == -1)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Function \"%s\" is not present", resultfuncname);
+		return 0;
+	}
+
+	ClientCvarQuery_Info *queryObject = new ClientCvarQuery_Info;
+	queryObject->querying = false;
+	queryObject->cvarName.assign(cvarname);
+	queryObject->resultFwd = iFunc;
+
+	pPlayer->cvarQueryQueue.push(queryObject);
+
+	return 1;
+}
+
 AMX_NATIVE_INFO amxmod_Natives[] = {
   { "client_cmd",       client_cmd },
   { "client_print",     client_print },
@@ -3089,5 +3139,6 @@ AMX_NATIVE_INFO amxmod_Natives[] = {
   { "lang_phrase",		lang_phrase},
   { "mkdir",			amx_mkdir},
   { "int3",				int3},
+  { "query_client_cvar", query_client_cvar },
   { NULL, NULL }
 };

@@ -176,6 +176,7 @@ extern float g_game_restarting;
 extern float g_game_timeleft;
 extern float g_task_time;
 extern float g_auth_time;
+extern bool g_NewDLL_Available;
 extern hudtextparms_t g_hudset;
 //extern int g_edict_point;
 extern int g_players_num;

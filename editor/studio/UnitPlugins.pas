@@ -34,7 +34,7 @@ type TCodeSnippetClick = function (pTitle, pCategory: PChar; pCode: PChar): Inte
 type TIntegerArray = array of Integer;
 
 type TLoadInfo = record
-  { Plugin Values }
+  { Plugin values }
   sPluginName: PChar;
   sPluginDescription: PChar;
   { Form Handles }
@@ -66,7 +66,7 @@ type TLoadInfo = record
 end;
 
 type PLoadInfo = ^TLoadInfo;
-     TLoadPlugin = procedure (var LoadInfo: PLoadInfo); cdecl;
+     TLoadPlugin = procedure (LoadInfo: PLoadInfo); cdecl;
      TUnloadPlugin = procedure; cdecl;
 
 procedure SendToMainApp(eData: String);
@@ -188,12 +188,17 @@ begin
   
   if @eFunc2 <> nil then begin
     if @eFunc <> nil then begin
-      ListItem.Data := Pointer(eHandle);
-      ListItem.SubItems[2] := 'Loaded';
-      LoadInfo := @eLoadInfo;
-      eFunc(LoadInfo);
-      ListItem.Caption := eLoadInfo.sPluginName;
-      ListItem.SubItems[1] := eLoadInfo.sPluginDescription;
+      try
+        LoadInfo := @eLoadInfo;
+        eFunc(LoadInfo);
+        ListItem.Data := Pointer(eHandle);
+        ListItem.Caption := eLoadInfo.sPluginName;
+        ListItem.SubItems[1] := eLoadInfo.sPluginDescription;
+        ListItem.SubItems[2] := 'Loaded';
+      except
+        on E: Exception do
+          Application.MessageBox(PChar(E.Message), PChar(Application.Title), MB_ICONERROR);
+      end;
     end
     else
       MessageBox(Application.Handle, PChar('Error loading plugin:' + #13 + 'pftPluginLoad function not found.'), PChar(ExtractFileName(ExtractFilePath(ParamStr(0)) + 'plugins\' + ListItem.SubItems[0])), MB_ICONERROR);

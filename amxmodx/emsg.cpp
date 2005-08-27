@@ -123,7 +123,7 @@ void Client_TextMsg(void* mValue)
 			//    g_newround_time = g_game_timeleft + CVAR_GET_FLOAT("mp_freezetime");
 		}
 		else if ( g_game_timeleft == -3 )
-			g_game_restarting = atoi( msg ) * 60;
+			g_game_restarting = atoi( msg ) * 60.0f;
 		break;
 		   }
 	case 3:{

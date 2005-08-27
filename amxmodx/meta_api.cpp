@@ -260,11 +260,11 @@ int	C_Spawn( edict_t *pent )
   }
 
   //  ###### Init time and freeze tasks
-  g_game_timeleft =	g_bmod_dod ? 1 : 0;
-  g_task_time =	gpGlobals->time	+ 99999.0;
-  g_auth_time =	gpGlobals->time	+ 99999.0;
+  g_game_timeleft =	g_bmod_dod ? 1.0f : 0.0f;
+  g_task_time =	gpGlobals->time	+ 99999.0f;
+  g_auth_time =	gpGlobals->time	+ 99999.0f;
 #ifdef MEMORY_TEST
-  g_next_memreport_time = gpGlobals->time + 99999.0;
+  g_next_memreport_time = gpGlobals->time + 99999.0f;
 #endif
 
   g_players_num	= 0;
@@ -731,7 +731,7 @@ void C_StartFrame_Post( void )
 {
   if (g_auth_time <	gpGlobals->time	)
   {
-  g_auth_time =	gpGlobals->time	+ 0.7;
+  g_auth_time =	gpGlobals->time	+ 0.7f;
 
   CList<CPlayer*>::iterator	a =	g_auth.begin();
 
@@ -814,7 +814,7 @@ void C_StartFrame_Post( void )
   if (g_task_time >	gpGlobals->time)
 	RETURN_META(MRES_IGNORED);
 
-  g_task_time =	gpGlobals->time	+ 0.1;
+  g_task_time =	gpGlobals->time	+ 0.1f;
 
   g_tasksMngr.startFrame();
 
@@ -836,7 +836,7 @@ void C_MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict
 #endif
 	  int stop = (int)ed->v.armorvalue;
 	  *z = stop;
-	  ed->v.armorvalue = stop;
+	  ed->v.armorvalue = (float)stop;
 	}
 
 	mPlayerIndex = ENTINDEX(ed);

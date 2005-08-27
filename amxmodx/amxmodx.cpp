@@ -270,9 +270,9 @@ static cell AMX_NATIVE_CALL set_hudmessage(AMX *amx, cell *params)  /* 11 param 
   g_hudset.r2 = 255;
   g_hudset.g2 = 255;
   g_hudset.b2 = 250;
-  g_hudset.r1 = params[1];
-  g_hudset.g1 = params[2];
-  g_hudset.b1 = params[3];
+  g_hudset.r1 = static_cast<byte>(params[1]);
+  g_hudset.g1 = static_cast<byte>(params[2]);
+  g_hudset.b1 = static_cast<byte>(params[3]);
   g_hudset.x = amx_ctof(params[4]);
   g_hudset.y = amx_ctof(params[5]);
   g_hudset.effect = params[6];
@@ -1112,13 +1112,13 @@ static cell AMX_NATIVE_CALL user_slap(AMX *amx, cell *params) /* 2 param */
         ANGLEVECTORS( fang, v_forward, v_right, NULL );
         pEdict->v.velocity = pEdict->v.velocity + v_forward * 220 + Vector(0,0,200);
       }
-      pEdict->v.punchangle.x = RANDOM_LONG(-10,10);
-      pEdict->v.punchangle.y = RANDOM_LONG(-10,10);
+      pEdict->v.punchangle.x = static_cast<vec_t>(RANDOM_LONG(-10,10));
+      pEdict->v.punchangle.y = static_cast<vec_t>(RANDOM_LONG(-10,10));
       pEdict->v.health -= power;
       int armor = (int)pEdict->v.armorvalue;
       armor -= power;
       if (armor < 0) armor = 0;
-      pEdict->v.armorvalue = armor;
+      pEdict->v.armorvalue = static_cast<float>(armor);
       pEdict->v.dmg_inflictor = pEdict;
       if (g_bmod_cstrike){
         static const char *cs_sound[4] = {
@@ -1249,9 +1249,9 @@ static cell AMX_NATIVE_CALL message_begin(AMX *amx, cell *params) /* 4 param */
 		  return 0;
 	  }
 	  cpOrigin = get_amxaddr(amx,params[3]);
-	  vecOrigin[0] = *cpOrigin;
-	  vecOrigin[1] = *(cpOrigin+1);
-	  vecOrigin[2] = *(cpOrigin+2);
+	  vecOrigin[0] = static_cast<float>(*cpOrigin);
+	  vecOrigin[1] = static_cast<float>(*(cpOrigin+1));
+	  vecOrigin[2] = static_cast<float>(*(cpOrigin+2));
 	  MESSAGE_BEGIN( params[1], params[2] , vecOrigin );
 	  break;
   case MSG_ONE_UNRELIABLE:
@@ -1305,13 +1305,13 @@ static cell AMX_NATIVE_CALL write_entity(AMX *amx, cell *params) /* 1 param */
 
 static cell AMX_NATIVE_CALL write_angle(AMX *amx, cell *params) /* 1 param */
 {
-	WRITE_ANGLE( params[1] );
+	WRITE_ANGLE( static_cast<float>(params[1]) );
 	return 1;
 }
 
 static cell AMX_NATIVE_CALL write_coord(AMX *amx, cell *params) /* 1 param */
 {
-	WRITE_COORD( params[1] );
+	WRITE_COORD( static_cast<float>(params[1]) );
 	return 1;
 }
 
@@ -1748,8 +1748,8 @@ static cell AMX_NATIVE_CALL set_task(AMX *amx, cell *params) /* 2 param */
 
   float base = amx_ctof(params[1]);
 
-  if ( base < 0.1 )
-    base = 0.1;
+  if ( base < 0.1f )
+    base = 0.1f;
 
   char* temp = get_amxstring(amx,params[6],0,a);
 
@@ -2045,8 +2045,8 @@ static cell AMX_NATIVE_CALL get_distance(AMX *amx, cell *params) /* 2 param */
 {
   cell *cpVec1 = get_amxaddr(amx,params[1]);
   cell *cpVec2 = get_amxaddr(amx,params[2]);
-  Vector vec1 = Vector(cpVec1[0],cpVec1[1],cpVec1[2]);
-  Vector vec2 = Vector(cpVec2[0],cpVec2[1],cpVec2[2]);
+  Vector vec1 = Vector((float)cpVec1[0],(float)cpVec1[1],(float)cpVec1[2]);
+  Vector vec2 = Vector((float)cpVec2[0],(float)cpVec2[1],(float)cpVec2[2]);
   int iDist = (int)((vec1 - vec2).Length());
   return iDist;
 }
@@ -2120,7 +2120,7 @@ static cell AMX_NATIVE_CALL get_user_aiming(AMX *amx, cell *params) /* 4 param *
     Vector v_src = edict->v.origin + edict->v.view_ofs;
     ANGLEVECTORS( edict->v.v_angle , v_forward, NULL, NULL );
     TraceResult trEnd;
-    Vector v_dest = v_src + v_forward * params[4];
+    Vector v_dest = v_src + v_forward * static_cast<float>(params[4]);
     TRACE_LINE( v_src , v_dest,  0 , edict, &trEnd );
     *cpId = FNullEnt(trEnd.pHit) ? 0 : ENTINDEX(trEnd.pHit);
     *cpBody = trEnd.iHitgroup;
@@ -2181,8 +2181,8 @@ static cell AMX_NATIVE_CALL force_unmodified(AMX *amx, cell *params)
   int a;
   cell *cpVec1 = get_amxaddr(amx,params[2]);
   cell *cpVec2 = get_amxaddr(amx,params[3]);
-  Vector vec1 = Vector(cpVec1[0],cpVec1[1],cpVec1[2]);
-  Vector vec2 = Vector(cpVec2[0],cpVec2[1],cpVec2[2]);
+  Vector vec1 = Vector((float)cpVec1[0],(float)cpVec1[1],(float)cpVec1[2]);
+  Vector vec2 = Vector((float)cpVec2[0],(float)cpVec2[1],(float)cpVec2[2]);
   char* filename = get_amxstring(amx,params[4],0,a);
 
   ForceObject* aaa = new ForceObject(filename ,  (FORCE_TYPE)((int)(params[1])) , vec1 ,  vec2 , amx);

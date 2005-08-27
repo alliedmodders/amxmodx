@@ -405,9 +405,9 @@ char* fo_getargstr(AMX *amx, int swap, int pos)
   char* b = buffer[swap];
   int a = 0;
   do {
-  value = src_value + a++ * sizeof(cell);
-  value = *(cell *)(data+(int)value);
-  *b++ = value;
+    value = src_value + a++ * sizeof(cell);
+    value = *(cell *)(data+(int)value);
+    *b++ = static_cast<char>(value);
   } while (value);
 
   return buffer[swap];
@@ -468,7 +468,7 @@ static cell AMX_NATIVE_CALL amx_strtok(AMX *amx, cell *params)
 	int leftMax = params[3];
 	int rightMax = params[5];
 	//token
-	char token = params[6];
+	char token = static_cast<char>(params[6]);
 	//trim
 	int trim = params[7];
 	for (i=0; i<(unsigned int)len; i++)

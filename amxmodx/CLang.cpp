@@ -613,7 +613,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 									NEXT_PARAM();
 									cell *tmpCell = get_amxaddr(amx, params[parm++]);
 									while (tmpPtr-tmpString < sizeof(tmpString) && *tmpCell)
-										*tmpPtr++ = *tmpCell++;
+										*tmpPtr++ = static_cast<char>(*tmpCell++);
 
 									*tmpPtr = 0;
 									_snprintf(outptr, sizeof(outbuf)-(outptr-outbuf)-1, format, tmpString);
@@ -688,7 +688,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 				char *ptr = format+1;
 				if (*src != '%')
 				{
-					while (*src != 0 && ptr-format<sizeof(format) && !isalpha(*ptr++ = *src++))
+					while (*src != 0 && ptr-format<sizeof(format) && !isalpha(*ptr++ = static_cast<char>(*src++)))
 						/*nothing*/;
 					*ptr = 0;
 					ZEROTERM(format);
@@ -700,7 +700,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 							NEXT_PARAM();
 							cell *tmpCell = get_amxaddr(amx, params[parm++]);
 							while (tmpPtr-tmpString<sizeof(tmpString) && *tmpCell)
-								*tmpPtr++ = *tmpCell++;
+								*tmpPtr++ = static_cast<char>(*tmpCell++);
 							*tmpPtr = 0;
 							_snprintf(outptr, sizeof(outbuf)-(outptr-outbuf)-1, format, tmpString);
 							ZEROTERM(outbuf);
@@ -738,7 +738,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 		else
 		{
 			CHECK_OUTPTR(1);
-			*outptr++ = *src;
+			*outptr++ = static_cast<char>(*src);
 		}
 		++src;
 	}

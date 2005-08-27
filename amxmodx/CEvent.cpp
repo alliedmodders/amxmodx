@@ -170,7 +170,7 @@ void EventsMngr::ClEvent::registerFilter(char *filter)
 
 	// rest of line
 	tmpCond->sValue.assign(value);
-	tmpCond->fValue = atof(value);
+	tmpCond->fValue = static_cast<float>(atof(value));
 	tmpCond->iValue = atoi(value);
 	
 	tmpCond->next = NULL;
@@ -465,9 +465,9 @@ float EventsMngr::getArgFloat(int a) const
 	switch(m_ParseVault[a].type)
 	{
 	case MSG_INTEGER:
-		return m_ParseVault[a].iValue;
+		return static_cast<float>(m_ParseVault[a].iValue);
 	case MSG_STRING:
-		return atof(m_ParseVault[a].sValue);
+		return static_cast<float>(atof(m_ParseVault[a].sValue));
 	default:
 		return m_ParseVault[a].fValue; 
 	}

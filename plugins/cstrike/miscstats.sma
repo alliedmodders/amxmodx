@@ -272,8 +272,8 @@ public client_death(killer,victim,wpnindex,hitplace,TK) {
         	for(new a=0; a<pplnum; ++a)
         	{
            		format(team_name,31,"%L",ppl[a],(epplnum==1)?g_teamsNames[team]:g_teamsNames[team+2])
-    	    	format(message,127,"%L",ppl[a],"REMAINING",epplnum,team_name)
-	        	show_hudmessage(ppl[a],message)
+           		format(message,127,"%L",ppl[a],"REMAINING",epplnum,team_name)
+           		show_hudmessage(ppl[a],message)
         	}
       	}
   	  }

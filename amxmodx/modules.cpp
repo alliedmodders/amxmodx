@@ -601,17 +601,21 @@ int unload_amxscript(AMX* amx, void** program)
 	if (!prg)
 		return AMX_ERR_NONE;
 #if defined JIT
-#if defined __linux__ && defined MEMORY_TEST
-#undef free
-	if (flags & AMX_FLAG_DEBUG)
+#if defined __linux__
+	if ( (flags & AMX_FLAG_JITC) != AMX_FLAG_JITC )
 	{
 		delete [] prg;
 	} else {
+#ifdef free
+#undef free
 		free(prg);
-	}
 #define free(ptr)       m_deallocator(__FILE__,__LINE__,__FUNCTION__,m_alloc_free,ptr)
+#else
+		free(prg);
+#endif
+	}
 #elif defined WIN32
-	if (flags & AMX_FLAG_DEBUG)
+	if ( (flags & AMX_FLAG_JITC) != AMX_FLAG_JITC )
 	{
 		delete [] prg;
 	} else if (!VirtualFree((LPVOID)prg, 0, MEM_RELEASE)) {
@@ -621,7 +625,7 @@ int unload_amxscript(AMX* amx, void** program)
 #endif //OS support
 #else
 	//delete normally
-	delete[] prg;
+	delete [] prg;
 #endif
 	*program = 0;
 	return AMX_ERR_NONE;

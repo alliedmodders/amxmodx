@@ -131,7 +131,7 @@ enum CA_VALUE {
 };
 
 /* use this function to get info about specified control point's area */
-native area_get_data( index, CP_VALUE:key, szValue[]="", len=0 );
+native area_get_data( index, CA_VALUE:key, szValue[]="", len=0 );
 
 /* use this function to change control point's area data */
-native area_set_data( index, CP_VALUE:key , iValue=-1, szValue[]="" );
+native area_set_data( index, CA_VALUE:key , iValue=-1, szValue[]="" );

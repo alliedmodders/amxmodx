@@ -39,10 +39,10 @@
 enum {
 	ps_bad_load,
 	ps_error,
-	ps_paused,
-	ps_running,
-	ps_stopped,
 	ps_locked,
+	ps_paused,
+	ps_stopped,
+	ps_running,
 };
 
 class CPluginMngr
@@ -89,9 +89,8 @@ public:
 		inline void setAuthor( const char* n ) { author.assign(n); }
 		inline void setVersion( const char* n ) { version.assign(n); }
 		inline void setError( const char* n ) { errorMsg.assign(n); }
-		inline bool isValid() const { return ((status == ps_running || status == ps_paused)); }
-		inline bool isPaused() const { return ( (status == ps_paused) ); }
-		//inline bool isFunctionPaused( int id ) const { return (paused_fun & (1<<id)) ? true : false; 	}
+		inline bool isValid() const { return (status >= ps_paused); }
+		inline bool isPaused() const { return ( (status == ps_paused) || (status == ps_stopped) ); }
 		inline bool isExecutable(int id) const { return (isValid() && !isPaused());	}
 		void Finalize();
 		void pausePlugin();

@@ -67,7 +67,7 @@ native Float:get_user_maxspeed(index);
 native set_user_gravity(index, Float:gravity = 1.0);
 
 /* Returns users gravity. */
-native get_user_gravity(index);
+native Float:get_user_gravity(index);
 
 /* Spawns entity. */
 native spawn(index);

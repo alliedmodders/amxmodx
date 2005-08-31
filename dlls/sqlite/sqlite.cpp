@@ -360,6 +360,58 @@ static cell AMX_NATIVE_CALL sql_type(AMX *amx, cell *params)
 	return MF_SetAmxString(amx, params[1], "sqlite", params[2]);
 }
 
+static cell AMX_NATIVE_CALL sql_num_fields(AMX *amx, cell *params)
+{
+	unsigned int id = params[1]-1;
+
+	if (id == -1)
+	{
+		//the user should have checked, but we'll return 0 anyway
+		return 0;
+	}
+
+	if (id >= Results.size() || Results[id]->isFree)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid result handle %d", id);
+		return 0;
+	}
+
+	SQLResult *Result = Results[id];
+
+	return Result->m_columnCount;
+}
+
+static cell AMX_NATIVE_CALL sql_field_name(AMX *amx, cell *params)
+{
+	unsigned int id = params[1]-1;
+
+	if (id == -1)
+	{
+		//the user should have checked, but we'll return 0 anyway
+		return 0;
+	}
+
+	if (id >= Results.size() || Results[id]->isFree)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid result handle %d", id);
+		return 0;
+	}
+
+	SQLResult *Result = Results[id];
+
+	int field = params[2];
+
+	if (field < 1 || field > (int)Result->m_columnCount)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid field number %d", field);
+		return 0;
+	}
+
+	MF_SetAmxString(amx, params[3], Result->m_fieldNames[field-1].c_str(), params[4]);
+
+	return 1;
+}
+
 AMX_NATIVE_INFO mysql_Natives[] = {
 	{ "dbi_connect",		sql_connect },
 	{ "dbi_query",			sql_query },	
@@ -371,6 +423,8 @@ AMX_NATIVE_INFO mysql_Natives[] = {
 	{ "dbi_free_result",	sql_free_result },
 	{ "dbi_num_rows",		sql_num_rows },
 	{ "dbi_result",			sql_getresult },
+	{ "dbi_num_fields",		sql_num_fields },
+	{ "dbi_field_name",		sql_field_name },
 	{ NULL, NULL }
 };
 

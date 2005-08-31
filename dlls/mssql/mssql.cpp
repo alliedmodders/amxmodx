@@ -214,7 +214,7 @@ static cell AMX_NATIVE_CALL sql_getfield(AMX *amx, cell *params) // 2-4 params
 	SQLResult *Result = Results[id];
 	int numParams = (*params)/sizeof(cell);
 	cell *fAddr = NULL;
-	const char *field = Result->GetField(id);
+	const char *field = Result->GetField(params[2]);
 	if (field == NULL)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid column %d", id);
@@ -260,7 +260,7 @@ static cell AMX_NATIVE_CALL sql_getresult(AMX *amx, cell *params) // 4 params
 	cell *fAddr = NULL;
 	int len = 0;
 	const char *column = MF_GetAmxString(amx, params[2], 0, &len);
-	const char *field = Result->GetField(id);
+	const char *field = Result->GetField(column);
 	if (field == NULL)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid column \"%s\"", column);
@@ -319,6 +319,54 @@ static cell AMX_NATIVE_CALL sql_num_rows(AMX *amx, cell *params)
 	return (cell)Result->NumRows();
 }
 
+static cell AMX_NATIVE_CALL sql_num_fields(AMX *amx, cell *params)
+{
+	unsigned int id = params[1]-1;
+
+	if (id >= Results.size() || Results[id]->isFree)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid result handle %d", id);
+		return 0;
+	}
+
+	SQLResult *Result = Results[id];
+
+	return (cell)Result->FieldCount;
+}
+
+static cell AMX_NATIVE_CALL sql_field_name(AMX *amx, cell *params)
+{
+	unsigned int id = params[1]-1;
+
+	if (id >= Results.size() || Results[id]->isFree)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid result handle %d", id);
+		return 0;
+	}
+
+	SQLResult *Result = Results[id];
+
+	int field = params[2];
+	
+	if (field < 1 || field > Result->FieldCount)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid field number %d", field);
+		return 0;
+	}
+
+	ADODB::FieldPtr pFld = NULL;
+	_variant_t index = (short)field;
+	pFld = Result->res->Fields->GetItem(&index);
+	if (pFld != NULL && (LPCSTR)(pFld->GetName()) != NULL)
+	{
+		MF_SetAmxString(amx, params[3], (LPCSTR)(pFld->GetName()), params[4]);
+		return 1;
+	}
+
+	return 0;
+}
+
+
 static cell AMX_NATIVE_CALL sql_type(AMX *amx, cell *params)
 {
 	return MF_SetAmxString(amx, params[1], "mssql", params[2]);
@@ -335,6 +383,8 @@ AMX_NATIVE_INFO mssql_Natives[] = {
 	{ "dbi_free_result",	sql_free_result },
 	{ "dbi_num_rows",		sql_num_rows },
 	{ "dbi_result",			sql_getresult },
+	{ "dbi_num_fields",		sql_num_fields },
+	{ "dbi_field_name",		sql_field_name },
 	{ NULL, NULL }
 };
 

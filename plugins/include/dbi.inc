@@ -93,7 +93,17 @@ native dbi_error(Sql:_sql, _error[], _len);
  */
 native dbi_type(_type[], _len);
 
-/* This function can be used to found out if a table in a Sqlite database exists.
+/* Returns the number of fields/colums in a result set.
+ * Unlike dbi_nextrow, you must pass a valid result handle.
+ */
+native dbi_num_fields(Result:result);
+
+/* Retrieves the name of a field/column in a result set.
+ * Requires a valid result handle, and columns are numbered 1 to n.
+ */
+native dbi_field_name(Result:result, field, name[], maxLength);
+
+/* This function can be used to find out if a table in a Sqlite database exists.
  */
 stock bool:sqlite_table_exists(Sql:sql, table[]) {
 	new bool:exists

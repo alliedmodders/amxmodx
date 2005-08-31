@@ -5,7 +5,7 @@
 
 // Module info
 #define MODULE_NAME "TSFun"
-#define MODULE_VERSION "1.55"
+#define MODULE_VERSION "1.56"
 #define MODULE_AUTHOR "Twilight Suzuka"
 #define MODULE_URL "http://www.amxmodx.org"
 #define MODULE_LOGTAG "TSFUN"

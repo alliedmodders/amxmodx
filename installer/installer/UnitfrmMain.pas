@@ -8,7 +8,8 @@ uses
   ExtCtrls, JvExControls, JvComponent, TFlatButtonUnit, jpeg, TFlatEditUnit,
   TFlatGaugeUnit, ImgList, FileCtrl, Registry, CheckLst, TFlatComboBoxUnit,
   TFlatCheckBoxUnit, IdBaseComponent, IdComponent, IdTCPConnection,
-  IdTCPClient, IdFTP, IdException, IdAntiFreezeBase, IdAntiFreeze;
+  IdTCPClient, IdFTP, IdException, IdAntiFreezeBase, IdAntiFreeze,
+  IdIntercept, IdLogBase, IdLogFile;
 
 type
   TfrmMain = class(TForm)
@@ -100,6 +101,7 @@ type
     cboGameAddon: TFlatComboBox;
     frbStandaloneServer: TFlatRadioButton;
     tmrSpeed: TTimer;
+    IdLogFile: TIdLogFile;
     procedure jvwStepsCancelButtonClick(Sender: TObject);
     procedure cmdCancelClick(Sender: TObject);
     procedure cmdNextClick(Sender: TObject);
@@ -131,6 +133,8 @@ type
 
 var
   frmMain: TfrmMain;
+
+const VERSION = '1.56';
 
 implementation
 
@@ -450,7 +454,7 @@ var i: integer;
     eStr: TStringList;
     CurNode: TTreeNode;
 begin
-  if (Trim(txtHost.Text) = '') or (Trim(txtUsername.Text) = '') or (Trim(txtPassword.Text) = '') then
+  if (Trim(txtHost.Text) = '') or (Trim(txtUsername.Text) = '') then
     MessageBox(Handle, 'Please fill in each field!', PChar(Application.Title), MB_ICONWARNING)
   else if cmdConnect.Caption = 'Connect' then begin
     // ... design stuff ...
@@ -472,6 +476,36 @@ begin
     // ... connect and check values etc ...
     try
       IdFTP.Connect(True, 15000);
+      // ... scan for initial directory ...
+      eStr := TStringList.Create;
+      eStr.Text := StringReplace(IdFTP.RetrieveCurrentDir, '/', #13, [rfReplaceAll]);
+      for i := eStr.Count -1 downto 0 do begin
+        if eStr[i] = '' then
+          eStr.Delete(i);
+      end;
+      // ... connect successful, change captions ...
+      trvDirectories.Enabled := True;
+      cmdConnect.Enabled := True;
+      cmdConnect.Caption := 'Disconnect';
+
+      CurNode := nil;
+      if eStr.Count <> 0 then begin
+        for i := 0 to eStr.Count -1 do
+          CurNode := trvDirectories.Items.AddChild(CurNode, eStr[i]);
+      end;
+      if trvDirectories.Items.Count <> 0 then
+        trvDirectories.Items.Item[0].Expand(True);
+      eStr.Free;
+
+      // ... scan for directories ...
+      with GetAllDirs do begin
+        for i := 0 to Count -1 do
+          trvDirectories.Items.AddChild(trvDirectories.Items.AddChild(CurNode, Strings[i]), 'Scanning...');
+        Free;
+      end;
+
+      if Assigned(CurNode) then
+        CurNode.Expand(False);
     except
       on E: Exception do begin
         // reset button properties
@@ -484,7 +518,6 @@ begin
         cmdProxySettings.Enabled := True;
         cmdNext.Enabled := False;
         cmdConnect.Caption := 'Connect';
-        Screen.Cursor := crDefault;
         // analyze messages
         if Pos('Login incorrect.', E.Message) <> 0 then begin // login failed
           MessageBox(Handle, 'Login incorrect. Check your FTP settings and try again.', PChar(Application.Title), MB_ICONWARNING);
@@ -512,36 +545,7 @@ begin
         exit;
       end;
     end;
-    // ... connect successful, change captions ...
-    trvDirectories.Enabled := True;
-    cmdConnect.Enabled := True;
-    cmdConnect.Caption := 'Disconnect';
-    // ... scan for initial directory ...
-    eStr := TStringList.Create;
-    eStr.Text := StringReplace(IdFTP.RetrieveCurrentDir, '/', #13, [rfReplaceAll]);
-    for i := eStr.Count -1 downto 0 do begin
-      if eStr[i] = '' then
-        eStr.Delete(i);
-    end;
 
-    CurNode := nil;
-    if eStr.Count <> 0 then begin
-      for i := 0 to eStr.Count -1 do
-        CurNode := trvDirectories.Items.AddChild(CurNode, eStr[i]);
-    end;
-    if trvDirectories.Items.Count <> 0 then
-      trvDirectories.Items.Item[0].Expand(True); 
-    eStr.Free;
-    
-    // ... scan for directories ...
-    with GetAllDirs do begin
-      for i := 0 to Count -1 do
-        trvDirectories.Items.AddChild(trvDirectories.Items.AddChild(CurNode, Strings[i]), 'Scanning...');
-      Free;
-    end;
-
-    if Assigned(CurNode) then
-      CurNode.Expand(False);
     Screen.Cursor := crDefault;
   end
   else begin
@@ -584,6 +588,12 @@ end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
+  if LowerCase(ParamStr(1)) = '-logftp' then begin
+    MessageBox(Handle, 'FTP installation will be logged to FTP.log!', PChar(Application.Title), MB_ICONINFORMATION);
+    IdLogFile.Filename := ExtractFilePath(ParamStr(0)) + 'FTP.log';
+    IdLogFile.Active := True;
+  end;
+
   if not DirectoryExists(ExtractFilePath(ParamStr(0)) + 'files') then begin
     MessageBox(Handle, 'The files-folder couldn''t be found. Run the Pre-Installer of AMX Mod X and try again.', 'Error', MB_ICONERROR);
     Application.Terminate;

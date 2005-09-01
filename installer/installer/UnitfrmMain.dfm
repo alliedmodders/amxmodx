@@ -4911,7 +4911,7 @@ object frmMain: TfrmMain
         Top = 10
         Width = 343
         Height = 50
-        Caption = 'Welcome to the AMX Mod X Installer 1.5 Setup Wizard'
+        Caption = 'Welcome to the AMX Mod X Installer (version) Setup Wizard'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -21
@@ -4923,11 +4923,11 @@ object frmMain: TfrmMain
       object lblInfo1: TLabel
         Left = 172
         Top = 82
-        Width = 326
-        Height = 13
+        Width = 353
+        Height = 26
         Caption = 
           'This wizard will guide you through the installation of AMX Mod X' +
-          ' 1.5.'
+          ' (version).'
         WordWrap = True
       end
       object lblInfo2: TLabel
@@ -5012,11 +5012,11 @@ object frmMain: TfrmMain
         object lblSubTitle1: TLabel
           Left = 22
           Top = 28
-          Width = 353
+          Width = 380
           Height = 13
           Caption = 
             'Please review the following license terms before installing AMX ' +
-            'Mod X 1.5.'
+            'Mod X (version).'
         end
         object bvlSpacer1: TBevel
           Left = 0
@@ -5947,9 +5947,9 @@ object frmMain: TfrmMain
         object lblSelectModInfo: TLabel
           Left = 22
           Top = 28
-          Width = 277
+          Width = 304
           Height = 13
-          Caption = 'Please select the mod AMX Mod X 1.5 shall be installed to.'
+          Caption = 'Please select the mod AMX Mod X (version) shall be installed to.'
         end
         object bvlSelectMod: TBevel
           Left = 0
@@ -6060,9 +6060,9 @@ object frmMain: TfrmMain
         object lblTitle3: TLabel
           Left = 12
           Top = 8
-          Width = 202
+          Width = 236
           Height = 14
-          Caption = 'Installing AMX Mod X 1.5 via FTP'
+          Caption = 'Installing AMX Mod X (version) via FTP'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -6380,9 +6380,9 @@ object frmMain: TfrmMain
         object lblTitle5: TLabel
           Left = 12
           Top = 8
-          Width = 156
+          Width = 190
           Height = 14
-          Caption = 'Installing AMX Mod X 1.5'
+          Caption = 'Installing AMX Mod X (version)'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -6393,9 +6393,9 @@ object frmMain: TfrmMain
         object lblSubTitle5: TLabel
           Left = 22
           Top = 28
-          Width = 241
+          Width = 268
           Height = 13
-          Caption = 'Please wait while AMX Mod X 1.5 is being installed.'
+          Caption = 'Please wait while AMX Mod X (version) is being installed.'
         end
         object bvlSpacer5: TBevel
           Left = 0
@@ -6477,8 +6477,8 @@ object frmMain: TfrmMain
     end
   end
   object ilImages: TImageList
-    Left = 488
-    Top = 10
+    Left = 492
+    Top = 8
     Bitmap = {
       494C010102000400040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
@@ -6620,25 +6620,30 @@ object frmMain: TfrmMain
       000000000000}
   end
   object IdFTP: TIdFTP
+    Intercept = IdLogFile
     MaxLineAction = maException
     RecvBufferSize = 1024
     SendBufferSize = 1024
     OnWork = IdFTPWork
     ProxySettings.ProxyType = fpcmNone
     ProxySettings.Port = 0
-    Left = 454
+    Left = 462
     Top = 8
   end
   object IdAntiFreeze: TIdAntiFreeze
     IdleTimeOut = 150
-    Left = 424
+    Left = 432
     Top = 8
   end
   object tmrSpeed: TTimer
     Enabled = False
-    Interval = 500
     OnTimer = tmrSpeedTimer
-    Left = 394
+    Left = 402
+    Top = 8
+  end
+  object IdLogFile: TIdLogFile
+    LogTime = False
+    Left = 372
     Top = 8
   end
 end

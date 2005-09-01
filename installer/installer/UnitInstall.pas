@@ -499,7 +499,7 @@ begin
   finally
     eStr := TStringList.Create;
     eStr.Add(';;Metamod plugins.ini');
-    eStr.Add(';;AMX Mod X 1.5');
+    eStr.Add(';;AMX Mod X ' + VERSION);
     if OS = osWindows then
       eStr.Add('win32   addons\amxmodx\dlls\amxmodx_mm.dll')
     else if OS = osLinux32 then
@@ -701,10 +701,12 @@ begin
         UploadAgain:
         try
           eGoBack := False;
-          
+
           if FileList[i] = 'liblist.gam' then
             frmMain.IdFTP.Site('CHMOD 744 liblist.gam');
+
           UploadFile(ExtractFilePath(ParamStr(0)) + 'temp\' + FileList[i], ePath + FileList[i], CopyConfig);
+
           if FileList[i] = 'liblist.gam' then
             frmMain.IdFTP.Size('CHMOD 444 liblist.gam');
         except

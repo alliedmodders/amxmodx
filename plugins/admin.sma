@@ -454,3 +454,10 @@ public ackSignal(id) {
 
 public client_authorized(id)
   return get_cvar_num( "amx_mode" ) ? accessUser( id ) : PLUGIN_CONTINUE
+
+public client_putinserver(id)
+{
+	if (!is_dedicated_server() && id == 1)
+		return get_cvar_num("amx_mode") ? accessUser(id) : PLUGIN_CONTINUE
+	return PLUGIN_CONTINUE
+}

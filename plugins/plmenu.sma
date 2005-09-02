@@ -33,7 +33,7 @@
 */
 
 //Uncomment to enable cstrike specific features
-#define	CSTRIKE	1
+// #define	CSTRIKE	1
 
 #include <amxmodx>
 #include <amxmisc>

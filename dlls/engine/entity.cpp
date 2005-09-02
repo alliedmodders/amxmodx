@@ -1404,7 +1404,8 @@ static cell AMX_NATIVE_CALL find_ent_by_model(AMX *amx, cell *params) {
 
 	edict_t *pStart;
 
-	if (iStart == -1) {
+	if (iStart == -1)
+	{
 		pStart = NULL;
 	} else {
 		if (!is_ent_valid(iStart))
@@ -1413,20 +1414,20 @@ static cell AMX_NATIVE_CALL find_ent_by_model(AMX *amx, cell *params) {
 			pStart = INDEXENT2(iStart);
 	}
 
-	int checkEnt = ENTINDEX(FIND_ENTITY_BY_STRING(pStart, "classname", szClass));
-	const char *CheckModel = "";
+	edict_t *pEdict = FIND_ENTITY_BY_STRING(pStart, "classname", szClass);
 
-	while (!FNullEnt(checkEnt)) {
-		CheckModel = STRING(pStart->v.model);
-		if (strcmp(CheckModel, szModel)==0) {
-			return checkEnt;
-		} else {
-			pStart = INDEXENT2(checkEnt);
-			checkEnt = ENTINDEX(FIND_ENTITY_BY_STRING(pStart, "classname", szClass));
-		}
+	const char *check;
+
+	while (pEdict && !FNullEnt(pEdict))
+	{
+		check = STRING(pEdict->v.model);
+		if (!check || strcmp(check, szModel))
+			pEdict = FIND_ENTITY_BY_STRING(pEdict, "classname", szClass);
+		else
+			return ENTINDEX(pEdict);
 	}
 
-	return checkEnt;
+	return 0;
 }
 
 static cell AMX_NATIVE_CALL find_ent_by_tname(AMX *amx, cell *params) {

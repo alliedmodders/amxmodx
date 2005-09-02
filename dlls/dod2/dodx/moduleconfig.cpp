@@ -379,9 +379,11 @@ void OnAmxxAttach() {
 		g_rank.loadRank( MF_BuildPathname("%s",
 			get_localinfo("dodstats","addons/amxmodx/data/dodstats.dat") ) );
 	}
+}
 
+void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
+{
 	g_map.Init();
-	
 }
 
 void OnAmxxDetach() {

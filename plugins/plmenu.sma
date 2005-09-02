@@ -33,7 +33,7 @@
 */
 
 //Uncomment to enable cstrike specific features
-//#define	CSTRIKE	1
+#define	CSTRIKE	1
 
 #include <amxmodx>
 #include <amxmisc>
@@ -303,7 +303,18 @@ displaySlapMenu(id,pos) {
   for (new a = start; a < end; ++a) {
     i = g_menuPlayers[id][a]
     get_user_name(i,name,31)
-    get_user_team(i,team,3)
+#if defined CSTRIKE
+	if (cs_get_user_team(i) == CS_TEAM_T)
+	{
+		copy(team, 3, "CT")
+	} else if (cs_get_user_team(i) == CS_TEAM_CT) {
+		copy(team, 3, "TE")
+	} else {
+    	get_user_team(i,team,3)
+	}
+#else
+	get_user_team(i,team,3)
+#endif
 
     if ( !is_user_alive(i) || access(i,ADMIN_IMMUNITY) ) {
       ++b
@@ -509,7 +520,18 @@ displayTeamMenu(id,pos) {
   for (new a = start; a < end; ++a) {
     i = g_menuPlayers[id][a]
     get_user_name(i,name,31)
+#if defined CSTRIKE
+	iteam = _:cs_get_user_team(i)
+	if (iteam == 1) {
+		copy(team, 3, "CT")
+	} else if (iteam == 2) {
+		copy(team, 3, "TE")
+	} else {
+    	get_user_team(i,team,3)
+	}
+#else
     iteam = get_user_team(i,team,3)
+#endif
 
     if ( (iteam == (g_menuOption[id] ? 1 : 2)) || access(i,ADMIN_IMMUNITY) ) {
       ++b

@@ -530,14 +530,14 @@ begin
       tsDocuments.Items.Add(TabItem);
     end;
     
-    Plugin_ProjectsChange(OldIndex, Index, False);
-
     if JumpToLastDoc then begin
       Started := False;
       tsDocuments.Items[Collection.ActiveDocument.Index].Checked := True;
       Collection.Activate(Collection.ActiveDocument.Index, True);
       Started := True;
     end;
+
+    Plugin_ProjectsChange(OldIndex, Index, False);
   end;
 end;
 
@@ -910,25 +910,7 @@ begin
     Started := True;
   end;
   
-  if Document.Code.Count > 75 then begin
-    ShowProgress;
-    frmMain.pbLoading.Max := Document.Code.Count;
-    for i := 0 to Document.Code.Count -1 do begin
-      if Cancel then begin
-        Cancel := False;
-        exit;
-      end;
-
-      frmMain.sciEditor.Lines.Add(Document.Code.Strings[i]);
-      frmMain.pbLoading.Position := i;
-      SetProgressStatus('Adding Code To Editor...');
-      Application.ProcessMessages;
-    end;
-    HideProgress;
-    frmMain.sciEditor.EmptyUndoBuffer;
-  end
-  else
-    frmMain.sciEditor.Lines.Text := Document.Code.Text;
+  frmMain.sciEditor.SetText(Document.Code.GetText);
   SetRTFText(frmMain.rtfNotes, Document.NotesText);
   frmMain.sciEditor.ReadOnly := Document.ReadOnly;
   
@@ -996,7 +978,7 @@ begin
     if (Self = PawnProjects) and (frmMain.tsMain.ActiveTabIndex <> 0) then exit;
     if (Self = CPPProjects) and (frmMain.tsMain.ActiveTabIndex <> 1) then exit;
     if (Self = OtherProjects) and (frmMain.tsMain.ActiveTabIndex <> 2) then exit;
-      
+
     TabItem := TSpTBXTabItem.Create(frmMain.tsDocuments);
     TabItem.Caption := Title;
     TabItem.OnSelect := frmMain.OnTabSelect;

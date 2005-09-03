@@ -270,7 +270,6 @@ type
     sepView3: TSpTBXSeparatorItem;
     mnuShowCodeExplorer: TSpTBXItem;
     mnuShowCodeInspector: TSpTBXItem;
-    JvWindowHook: TJvWindowHook;
     procedure FormConstrainedResize(Sender: TObject; var MinWidth,
       MinHeight, MaxWidth, MaxHeight: Integer);
     procedure mnuExitClick(Sender: TObject);

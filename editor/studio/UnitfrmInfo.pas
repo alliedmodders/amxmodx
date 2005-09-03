@@ -14,16 +14,16 @@ type
     lblInfo1: TLabel;
     imgAMXXLarge: TImage;
     cmdClose: TSpTBXButton;
-    pnlGallery: TPanel;
-    Label1: TLabel;
-    imgGabeN: TImage;
-    imgBurger: TImage;
-    Label2: TLabel;
-    Label3: TLabel;
+    lblCHelp: TLabel;
+    lblScintilla1: TLabel;
+    lblScintilla2: TLabel;
+    pnlImages: TPanel;
+    imgDoom4: TImage;
+    imgHampster: TImage;
     imgYams: TImage;
-    procedure imgGabeNDblClick(Sender: TObject);
-    procedure imgBurgerDblClick(Sender: TObject);
-    procedure imgYamsDblClick(Sender: TObject);
+    procedure imgHampsterClick(Sender: TObject);
+    procedure imgDoom4Click(Sender: TObject);
+    procedure imgYamsClick(Sender: TObject);
   end;
 
 var
@@ -33,24 +33,25 @@ implementation
 
 {$R *.DFM}
 
-procedure TfrmInfo.imgGabeNDblClick(Sender: TObject);
+procedure TfrmInfo.imgHampsterClick(Sender: TObject);
 begin
-  ShellExecute(Handle, 'open', PChar('http://sniperbeamer.de/gallery/gaben.php'), nil, nil, SW_SHOW);
+  MessageBox(Handle, 'Hampster!', 'Your computer! wtf', MB_ICONERROR);
+  MessageBox(Handle, 'ZOMG YES it''s a hampster!', 'zomg', MB_ICONINFORMATION);
+  MessageBox(Handle, 'hampster hampster hampster hampster hampster hampster hampster hampster hampster hampster hampster hampster hampster hampster hampster hampster!', 'ham ham hampster', MB_ICONWARNING);
 end;
 
-procedure TfrmInfo.imgBurgerDblClick(Sender: TObject);
+procedure TfrmInfo.imgDoom4Click(Sender: TObject);
 begin
-  MessageBeep(MB_ICONQUESTION);
-  if MessageBox(Handle, 'Do you want a BIG TASTY BURGER?', 'all-in-one-messagebox', MB_ICONQUESTION + MB_YESNO) = mrYes then begin
-    ShellExecute(Handle, 'open', 'http://www.amxmodx.org/forums/viewtopic.php?t=14658&karma_up=8284', nil, nil, SW_SHOW);
-    Sleep(5000);
-    MessageBox(Handle, 'zomg you won''t get one. GabeN (tm) has already eaten each burger on THIS F**KIN'' BURGERLESS WORLD >_< :( Sorry.', 'all-in-one-messagebox', MB_ICONERROR);
-  end;
+  MessageBox(Handle, 'gaben', 'doom', MB_ICONWARNING);
+  MessageBox(Handle, 'gaben gaben gaben gaben gaben gaben!', 'doom', MB_ICONERROR);
+  MessageBox(Handle, 'gab gab gab gab gab GABEN GABEN GABEN GAAGAGAGABEN! gabenygabgab gaben da gaben0r gabbagaben >_<', 'doom', MB_ICONINFORMATION);  
 end;
 
-procedure TfrmInfo.imgYamsDblClick(Sender: TObject);
+procedure TfrmInfo.imgYamsClick(Sender: TObject);
 begin
-  MessageBox(Handle, 'myam(s) myam(s), myam(s)...', 'all-in-one-messagebox', MB_ICONINFORMATION);
+  MessageBox(Handle, 'mmm.. yams', 'personal farmer', MB_ICONINFORMATION);
+  MessageBox(Handle, 'yam yam yam.. oh a yam! yaaaam yaaaam yayayammm yaaamamamamam and some yaaams', 'gran farmer', MB_ICONERROR);
+  MessageBox(Handle, 'yams? deadly yams? >:(', 'not a farmer', MB_ICONQUESTION);
 end;
 
 end.

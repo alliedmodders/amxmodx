@@ -7738,9 +7738,4 @@ object frmMain: TfrmMain
     Left = 632
     Top = 6
   end
-  object JvWindowHook: TJvWindowHook
-    Left = 632
-    Top = 36
-    IsForm = True
-  end
 end

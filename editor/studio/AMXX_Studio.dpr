@@ -55,7 +55,7 @@ begin
       for i := 1 to ParamCount  do
         SendStudioMsg(SCM_LOADFILE, ParamStr(i), 0);
     end;
-    exit;
+    //exit;
   end;
   Application.Initialize;
   Application.Title := 'AMXX-Studio';

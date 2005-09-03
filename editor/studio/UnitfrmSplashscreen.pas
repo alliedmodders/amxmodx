@@ -153,7 +153,7 @@ begin
       OtherProjects.Close(0);
 
     ActivateProjects(0, False); // Started := True is already set here
-    PAWNProjects.Activate(PAWNProjects.Count -1, False, False); 
+    PAWNProjects.Activate(PAWNProjects.Count -1, False, False);
     UpdateCI;
     LoadPlugins;
   end;

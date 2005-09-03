@@ -187,6 +187,8 @@ void ServerDeactivate() {
 	for ( i=DODMAX_WEAPONS-DODMAX_CUSTOMWPNS;i<DODMAX_WEAPONS;i++)
 		weaponData[i].needcheck = false;
 
+	g_map.Init();
+
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -379,10 +381,7 @@ void OnAmxxAttach() {
 		g_rank.loadRank( MF_BuildPathname("%s",
 			get_localinfo("dodstats","addons/amxmodx/data/dodstats.dat") ) );
 	}
-}
 
-void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
-{
 	g_map.Init();
 }
 

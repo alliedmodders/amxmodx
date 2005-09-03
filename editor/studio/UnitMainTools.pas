@@ -5,7 +5,7 @@ interface
 uses SysUtils, Classes, Windows, Forms, Controls, SpTBXTabs, TBX, SciLexer,
   SciLexerMemo, ExtCtrls, Graphics, sciKeyBindings, ComCtrls, TB2Item,
   sciLexerMod, ScintillaLanguageManager, Menus, SpTBXItem, Registry,
-  ShellApi, DDEMan, IdFTP, IdFTPList, IdException, JvInspector;
+  ShellApi, DDEMan, IdFTP, IdFTPList, IdException, JvInspector, JvComCtrls;
 
 type TDocument = class(TCollectionItem)
   private
@@ -59,6 +59,10 @@ type TStringArray = array of string;
 
 function GetMenuItem(Caption: String; eParent: TTBCustomItem = nil): TTBCustomItem;
 
+function GetCat: String;
+function GetCIItem(eName: String; eParent: TJvCustomInspectorItem = nil): TJvCustomInspectorItem;
+function FindSettingsNode(eText: String; eParent: TTreeNode = nil): TTreeNode;
+
 procedure LoadPlugins;
 function GetAllIncludeFiles: TStringArray;
 function GetCurrLang(FileName: String = ''): TSciLangItem;
@@ -105,6 +109,79 @@ implementation
 uses UnitfrmMain, UnitfrmSettings, UnitLanguages, UnitfrmSelectColor,
      UnitCodeSnippets, UnitTextAnalyze, UnitCodeUtils, UnitfrmAutoIndent,
   UnitPlugins;
+
+function GetCat: String;
+begin
+  if frmMain.mnuPAWN.Checked then
+    Result := 'Pawn'
+  else if frmMain.mnuCPP.Checked then
+    Result := 'C++'
+  else if frmMain.mnuHTML.Checked then
+    Result := 'HTML'
+  else
+    Result := 'Other';
+end;
+
+function GetCIItem(eName: String; eParent: TJvCustomInspectorItem = nil): TJvCustomInspectorItem;
+var i: integer;
+begin
+  eName := LowerCase(eName);
+  Result := nil;
+
+  if eParent = nil then begin
+    for i := 0 to frmMain.jviCode.Root.Count -1 do begin
+      if LowerCase(frmMain.jviCode.Root.Items[i].DisplayName) = eName then
+        Result := frmMain.jviCode.Root.Items[i]
+      else if frmMain.jviCode.Root.Items[i].Count <> 0 then
+        Result := GETCIItem(eName, frmMain.jviCode.Root.Items[i]);
+
+      if Assigned(Result) then
+        exit;
+    end;
+  end
+  else begin
+    for i := 0 to eParent.Count -1 do begin
+      if LowerCase(eParent.Items[i].DisplayName) = eName then
+        Result := eParent.Items[i]
+      else if eParent.Items[i].Count <> 0 then
+        Result := GETCIItem(eName, eParent.Items[i]);
+
+      if Assigned(Result) then
+        exit;
+    end;
+  end;
+end;
+
+function FindSettingsNode(eText: String; eParent: TTreeNode = nil): TTreeNode;
+var i: integer;
+begin
+  Result := nil;    
+  if eText = '' then exit;
+
+  eText := LowerCase(eText);
+  if eParent = nil then begin
+    for i := 0 to frmSettings.trvSettings.Items.Count -1 do begin
+      if LowerCase(frmSettings.trvSettings.Items[i].Text) = eText then
+        Result := frmSettings.trvSettings.Items[i]
+      else if frmSettings.trvSettings.Items[i].Count <> 0 then
+        Result := FindSettingsNode(eText, frmSettings.trvSettings.Items[i]);
+
+      if Assigned(Result) then
+        exit;
+    end;
+  end
+  else begin
+    for i := 0 to eParent.Count -1 do begin
+      if LowerCase(eParent[i].Text) = eText then
+        Result := eParent[i]
+      else if eParent[i].Count <> 0 then
+        Result := FindSettingsNode(eText, eParent[i]);
+
+      if Assigned(Result) then
+        exit;
+    end;
+  end;
+end;
 
 function GetMenuItem(Caption: String; eParent: TTBCustomItem = nil): TTBCustomItem;
 var i: integer;
@@ -636,6 +713,7 @@ begin
   for i := 0 to frmMain.tcTools.Items.Count -1 do
     frmMain.tcTools.Items[i].Enabled := False;
   frmMain.ppmDocuments.Items.Enabled := False;
+  frmMain.sciEditor.ReadOnly := True;
 end;
 
 procedure HideProgress;
@@ -665,6 +743,7 @@ begin
   frmMain.mnuNewUnit.Enabled := eCPP;
 
   frmMain.ppmDocuments.Items.Enabled := True;
+  frmMain.sciEditor.ReadOnly := False;
 end;
 
 { TDocument }
@@ -914,7 +993,10 @@ begin
       Title := '< ' + IntToStr(Count) + #32 + ExtractFileName(AFilename) + ' >';
 
     if not Started then exit;
-
+    if (Self = PawnProjects) and (frmMain.tsMain.ActiveTabIndex <> 0) then exit;
+    if (Self = CPPProjects) and (frmMain.tsMain.ActiveTabIndex <> 1) then exit;
+    if (Self = OtherProjects) and (frmMain.tsMain.ActiveTabIndex <> 2) then exit;
+      
     TabItem := TSpTBXTabItem.Create(frmMain.tsDocuments);
     TabItem.Caption := Title;
     TabItem.OnSelect := frmMain.OnTabSelect;

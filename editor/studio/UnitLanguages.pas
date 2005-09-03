@@ -78,6 +78,7 @@ var lInvalidFile: String;
     lSaveCaption: String;
     lCloseCaption: String;
     lNoCPP: String;
+    lInvalidChannel: String;
 
 procedure ResetToEnglish;
 
@@ -110,7 +111,7 @@ begin
   lNoMIRCWindowOpen := 'You have to open mIRC first to use IRC Paster!';
   lSelectChannel := 'Select channel';
   lSelectChannelPrompt := 'Please enter the channel the code shall be sent to:';
-  lWarnBigPluginPaste := 'Warning: The plugin is quite large, if you post it to a channel it MAY result in a ban. Are you sure to paste it?'; 
+  lWarnBigPluginPaste := 'Warning: This plugin is quite large for pasting it to the IRC network, maybe you should paste it on pastebin.com instead. Otherwise it MAY result in a ban, are you sure to continue?'; 
   lConnect := 'Connect';
   lConnecting := 'Connecting...';
   lDisconnect := 'Disconnect';
@@ -140,7 +141,7 @@ begin
   lSuccessfulRegistered := 'The plugin has been registered successfully!';
   lFailedUpdatePluginsIni := 'Failed to update plugins.ini!';
   lInternetExplorerRequired := 'Microsoft Internet Explorer 6.0 is required to use this function.';
-  lUseMOTDAgain := 'When you finished, use this function again to convert the HTML code to a PAWN string.';
+  lUseMOTDAgain := 'When you''ve finished, use this function again to convert the HTML code to a PAWN string.';
   lName := 'Name';
   lType := 'Type';
   lValue := 'Value';
@@ -159,6 +160,7 @@ begin
   lSaveCaption := 'Save';
   lCloseCaption := 'Close';
   lNoCPP := 'Sorry, the C++ IDE is not enabled.';
+  lInvalidChannel := 'Invalid channel.';
 end;
 
 end.

@@ -29,7 +29,8 @@ implementation
 uses UnitCodeExplorerUpdater, UnitCodeSnippets, UnitCodeUtils,
   UnitLanguages, UnitMainTools, UnitReadThread, UnitfrmHudMsgGenerator,
   UnitfrmAutoIndent, UnitfrmHTMLPreview, UnitCodeInspector, UnitPlugins,
-  UnitfrmMenuGenerator, UnitfrmMOTDGen, UnitfrmClose, UnitfrmConnGen;
+  UnitfrmMenuGenerator, UnitfrmMOTDGen, UnitfrmClose, UnitfrmConnGen,
+  UnitfrmIRCPaster;
 
 
 {$R *.DFM}
@@ -89,7 +90,10 @@ begin
   Application.CreateForm(TfrmConnGen, frmConnGen);
   Application.ProcessMessages;
   Repaint;
-  
+  Application.CreateForm(TfrmIRCPaster, frmIRCPaster);
+  Application.ProcessMessages;
+  Repaint;
+
   if IEInstalled then begin
     Application.CreateForm(TfrmHTMLPreview, frmHTMLPreview);
     Application.ProcessMessages;

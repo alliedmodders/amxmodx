@@ -59,7 +59,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 353
     Height = 260
-    ActivePage = jspShortcuts
+    ActivePage = jspPlugIns
     PropagateEnable = False
     Align = alClient
     OnChange = jplSettingsChange

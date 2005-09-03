@@ -17,7 +17,7 @@ uses
   IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, IdFTP,
   ShellAPI, IdFTPCommon, IdAntiFreezeBase, IdAntiFreeze, JvComponent,
   JvInspector, JvExControls, JvPluginManager, JvgLanguageLoader,
-  JvWndProcHook, CommCtrl;
+  JvWndProcHook, CommCtrl, JvPageList, JvPageListTreeView;
 
 type
   TfrmMain = class(TForm)
@@ -270,6 +270,7 @@ type
     sepView3: TSpTBXSeparatorItem;
     mnuShowCodeExplorer: TSpTBXItem;
     mnuShowCodeInspector: TSpTBXItem;
+    JvWindowHook: TJvWindowHook;
     procedure FormConstrainedResize(Sender: TObject; var MinWidth,
       MinHeight, MaxWidth, MaxHeight: Integer);
     procedure mnuExitClick(Sender: TObject);
@@ -414,7 +415,6 @@ type
     procedure sciEditorCallTipClick(Sender: TObject;
       const position: Integer);
     procedure sciEditorAutoCSelection(Sender: TObject; text: PAnsiChar);
-    procedure WMCopyData(var Msg: TWMCopyData); message WM_COPYDATA;
     procedure pnlCodeInspectorVisibleChanged(Sender: TObject);
     procedure pnlCodeExplorerVisibleChanged(Sender: TObject);
     procedure mnuShowCodeExplorerClick(Sender: TObject);
@@ -429,6 +429,7 @@ type
     procedure OnCodeSnippetClick(Sender: TObject);
     procedure OnCustomClick(Sender: TObject);
     procedure SetErrorLine(eLine: Integer);
+    procedure OnCopyData(var Msg: TWMCopyData); message WM_COPYDATA;
   end;
 
 var
@@ -444,7 +445,7 @@ uses UnitfrmSettings, UnitMainTools, UnitLanguages, UnitfrmInfo,
   UnitTextAnalyze, UnitfrmHudMsgGenerator, UnitCompile, UnitfrmAutoIndent,
   UnitfrmHTMLPreview, UnitCodeInspector, UnitfrmMOTDGen,
   UnitfrmMenuGenerator, UnitfrmClose, UnitPlugins, UnitfrmConnGen,
-  UnitMenuGenerators;
+  UnitMenuGenerators, UnitfrmIRCPaster;
 
 {$R *.dfm}
 
@@ -834,43 +835,46 @@ end;
 procedure TfrmMain.mnuOpenClick(Sender: TObject);
 var eExt: String;
 begin
-  if odOpen.Execute then begin
-    eExt := ExtractFileExt(odOpen.FileName);
-    eExt := LowerCase(eExt);
-    if (eExt = '.sma') or (eExt = '.inc') then begin // Pawn files
-      if tsMain.ActiveTabIndex <> 0 then
-        ActivateProjects(0, False);
-      PAWNProjects.Open(odOpen.FileName);
-    end
-    else if (eExt = '.cpp') or (eExt = '.h') then begin // C++ files
-      if not eCPP then
-        MessageBox(Handle, PChar(lNoCPP), PChar(Application.Title), MB_ICONWARNING)
-      else begin
-        if tsMain.ActiveTabIndex <> 1 then
-          ActivateProjects(1, False);
-        CPPProjects.Open(odOpen.FileName);
-      end;
-    end
-    else if (eExt = '.htm') or (eExt = '.html') then begin // HTML files
+  if Assigned(Sender) then begin
+    if not odOpen.Execute then
+      exit;
+  end;
+
+  eExt := ExtractFileExt(odOpen.FileName);
+  eExt := LowerCase(eExt);
+  if (eExt = '.sma') or (eExt = '.inc') then begin // Pawn files
+    if tsMain.ActiveTabIndex <> 0 then
+      ActivateProjects(0, False);
+    PAWNProjects.Open(odOpen.FileName);
+  end
+  else if (eExt = '.cpp') or (eExt = '.h') then begin // C++ files
+    if not eCPP then
+      MessageBox(Handle, PChar(lNoCPP), PChar(Application.Title), MB_ICONWARNING)
+    else begin
       if tsMain.ActiveTabIndex <> 1 then
-        ActivateProjects(2, False);
-      OtherProjects.Open(odOpen.FileName, 'HTML');
-    end
-    else if (eExt = '.sql') then begin // SQL databases
-      if tsMain.ActiveTabIndex <> 1 then
-        ActivateProjects(2, False);
-      OtherProjects.Open(odOpen.FileName, 'SQL');
-    end
-    else if (eExt = '.xml') then begin // XML files
-      if tsMain.ActiveTabIndex <> 1 then
-        ActivateProjects(2, False);
-      OtherProjects.Open(odOpen.FileName, 'XML');
-    end
-    else begin // Other files and/or Textfiles
-      if tsMain.ActiveTabIndex <> 1 then
-        ActivateProjects(2, False);
-      OtherProjects.Open(odOpen.FileName, 'null');
+        ActivateProjects(1, False);
+      CPPProjects.Open(odOpen.FileName);
     end;
+  end
+  else if (eExt = '.htm') or (eExt = '.html') then begin // HTML files
+    if tsMain.ActiveTabIndex <> 1 then
+      ActivateProjects(2, False);
+    OtherProjects.Open(odOpen.FileName, 'HTML');
+  end
+  else if (eExt = '.sql') then begin // SQL databases
+    if tsMain.ActiveTabIndex <> 1 then
+      ActivateProjects(2, False);
+    OtherProjects.Open(odOpen.FileName, 'SQL');
+  end
+  else if (eExt = '.xml') then begin // XML files
+    if tsMain.ActiveTabIndex <> 1 then
+      ActivateProjects(2, False);
+    OtherProjects.Open(odOpen.FileName, 'XML');
+  end
+  else begin // Other files and/or Textfiles
+    if tsMain.ActiveTabIndex <> 1 then
+      ActivateProjects(2, False);
+    OtherProjects.Open(odOpen.FileName, 'null');
   end;
 end;
 
@@ -950,7 +954,7 @@ begin
   if sdSave.Execute then begin
     ActiveDoc.FileName := AddExtension(sdSave.FileName, ActiveDoc.Highlighter);
     ActiveDoc.Save;
-    // Don't know why tsDocuments.Items[0].Caption := '???'; not works, but this works:
+    // Don't know why tsDocuments.Items[0].Caption := '???'; not works, but this does:
     TSpTBXTabItem(tsDocuments.Items[ActiveDoc.Index]).Caption := ActiveDoc.Title;
   end;
 end;
@@ -1105,21 +1109,9 @@ begin
 end;
 
 procedure TfrmMain.OnCodeSnippetClick(Sender: TObject);
-function GetCat: String;
-begin
-  if mnuPAWN.Checked then
-    Result := 'Pawn'
-  else if mnuCPP.Checked then
-    Result := 'C++'
-  else if mnuHTML.Checked then
-    Result := 'HTML'
-  else
-    Result := 'Other';
-end;
-
 begin
   if Plugin_CodeSnippetClick(TSpTBXItem(Sender).Caption, GetCat, GetSnippet(GetCat, (Sender As TSpTBXItem).Caption)) then
-    sciEditor.SelText := GetSnippet('Pawn', (Sender As TSpTBXItem).Caption);
+    sciEditor.SelText := GetSnippet(GetCat, (Sender As TSpTBXItem).Caption);
 end;
 
 procedure TfrmMain.mnuCopyMessageClick(Sender: TObject);
@@ -1247,9 +1239,9 @@ end;
 
 procedure TfrmMain.mnuSearchDialogClick(Sender: TObject);
 begin
-  Plugin_Search(frmSearch.cboSearchFor.Items.Text, frmSearch.cboSearchFor.Text, True, False);
+  Plugin_Search(frmSearch.cboSearchFor.Items.Text, frmSearch.cboSearchFor.Text, True, False, frmSearch.chkCaseSensivity.Checked, frmSearch.chkWholeWordsOnly.Checked, frmSearch.chkSearchFromCaret.Checked, frmSearch.chkSelectedTextOnly.Checked, frmSearch.chkRegularExpression.Checked, frmSearch.chkForward.Checked);
   if frmSearch.ShowModal = mrOk then begin
-    if not Plugin_Search(frmSearch.cboSearchFor.Items.Text, frmSearch.cboSearchFor.Text, False, False) then
+    if not Plugin_Search(frmSearch.cboSearchFor.Items.Text, frmSearch.cboSearchFor.Text, False, False, frmSearch.chkCaseSensivity.Checked, frmSearch.chkWholeWordsOnly.Checked, frmSearch.chkSearchFromCaret.Checked, frmSearch.chkSelectedTextOnly.Checked, frmSearch.chkRegularExpression.Checked, frmSearch.chkForward.Checked) then
       exit;
       
     with sciSearchReplace do begin
@@ -1298,7 +1290,7 @@ end;
 
 procedure TfrmMain.mnuSearchAgainClick(Sender: TObject);
 begin
-  if not Plugin_Search(frmSearch.cboSearchFor.Items.Text, frmSearch.cboSearchFor.Text, False, True) then
+  if not Plugin_Search(frmSearch.cboSearchFor.Items.Text, frmSearch.cboSearchFor.Text, False, True, frmSearch.chkCaseSensivity.Checked, frmSearch.chkWholeWordsOnly.Checked, frmSearch.chkSearchFromCaret.Checked, frmSearch.chkSelectedTextOnly.Checked, frmSearch.chkRegularExpression.Checked, frmSearch.chkForward.Checked) then
     exit;
 
   sciSearchReplace.SearchText := frmSearch.cboSearchFor.Text;
@@ -1378,8 +1370,10 @@ end;
 procedure TfrmMain.sciEditorKeyPress(Sender: TObject; var Key: Char);
 begin
   if Started then begin
-    if not Plugin_KeyPress(Key) then
+    if not Plugin_KeyPress(Key) then begin
+      Key := #0;
       exit;
+    end;
 
     mnuModified.Caption := lModified;
     ActiveDoc.Modified := True;
@@ -1432,42 +1426,53 @@ end;
 
 procedure TfrmMain.mnuPasterClick(Sender: TObject);
 var i: integer;
-    eChannel: String;
-    eIsGamesurge: Boolean;
+    eTo, eFrom: Integer;
+    eLine: String;
 begin
   if FindWindow('mirc', nil) = 0 then begin
     MessageBox(Handle, PChar(lNoMIRCWindowOpen), PChar(Application.Title), MB_ICONERROR);
     exit;
   end;
 
-  if sciEditor.Lines.Count > 35 then begin
-    if MessageBox(Handle, PChar(lWarnBigPluginPaste), PChar(Application.Title), MB_ICONWARNING + MB_YESNO) = mrNo then
-      exit;
-  end;
-  
-  if InputQuery(lSelectChannel, lSelectChannelPrompt, eChannel) then begin
-    if eChannel = '' then exit;
-    IRCPasterStop := False;
-    
-    Caption := 'AMXX-Studio - ' + lPastingCodeEscStop;
-    eISGamesurge := Pos('gamesurge', LowerCase(mIRCGet('mIRC', 'SERVER', 'SERVER'))) = 0;
-    for i := 0 to sciEditor.Lines.Count -1 do begin
-      if (FindWindow('mirc', nil) = 0) or (Application.Terminated) or (IRCPasterStop) then begin
-        Caption := 'AMXX-Studio';
-        exit;
-      end;
-
-      if (sciEditor.LanguageManager.SelectedLanguage = 'Pawn') or (sciEditor.LanguageManager.SelectedLanguage = 'C++') then
-        mIRCDDE('mIRC', 'COMMAND', '/msg ' + eChannel + #32 + StringReplace(GetColoredLine(i), '|', '$chr(124)', [rfReplaceAll]))
-      else
-        mIRCDDE('mIRC', 'COMMAND', '/msg ' + eChannel + #32 + StringReplace(sciEditor.Lines[i], ' | ', ' $chr(124) ', [rfReplaceAll]));
-
-      if not eIsGamesurge then
-        Delay(2500)
-      else
-        Application.ProcessMessages;
+  frmIRCPaster.chkDelay.Checked := Pos('gamesurge', LowerCase(mIRCGet('mIRC', 'SERVER', 'SERVER'))) = 0;
+  if frmIRCPaster.ShowModal = mrOk then begin
+    { All }
+    if frmIRCPaster.optAll.Checked then begin
+      eFrom := 0;
+      eTo := sciEditor.Lines.Count -1;
+    end
+    { Special Lines }
+    else if frmIRCPaster.optLines.Checked then begin
+      eFrom := StrToInt(frmIRCPaster.txtFrom.Text) -1;
+      eTo := StrToInt(frmIRCPaster.txtTo.Text) -1;
+    end
+    { Selected }
+    else begin
+      eFrom := LineFromPos(sciEditor.SelStart);
+      eTo := LineFromPos(sciEditor.SelStart + sciEditor.SelLength);
     end;
-    Caption := 'AMXX-Studio';
+    pbLoading.Max := eTo - eFrom;
+    pbLoading.Position := 0;
+    ShowProgress;
+    for i := eFrom to eTo do begin
+      if (FindWindow('mirc', nil) = 0) or (Application.Terminated) or (IRCPasterStop) then
+        break;
+
+      pbLoading.Position := i;
+      SetProgressStatus('Pasting code...');
+
+      eLine := sciEditor.Lines[i];
+      eLine := Trim(eLine);
+      eLine := StringReplace(eLine, #9, #32, [rfReplaceAll]);
+      if frmIRCPaster.chkColors.Checked then
+        mIRCDDE('mIRC', 'COMMAND', '/msg ' + frmIRCPaster.txtChannel.Text + #32 + GetColoredLine(i))
+      else
+        mIRCDDE('mIRC', 'COMMAND', '/msg ' + frmIRCPaster.txtChannel.Text + #32 + eLine);
+
+      if frmIRCPaster.chkDelay.Checked then
+        Delay(eConfig.ReadInteger('Misc', 'IRCPasteDelay', 2500));
+    end;
+    HideProgress;
   end;
 end;
 
@@ -2265,282 +2270,6 @@ begin
   Plugin_AutoCompleteSelect(text);
 end;
 
-procedure TfrmMain.WMCopyData(var Msg: TWMCopyData);
-var eCommand, eExt: String;
-    eItem: TSpTBXItem;
-    eItem2: TTBCustomItem;
-begin
-  if Msg.Msg = WM_COPYDATA then begin
-    SetLength(eCommand, Msg.CopyDataStruct.cbData);
-    StrLCopy(PChar(eCommand), Msg.CopyDataStruct.lpData, Msg.CopyDataStruct.cbData);
-    { AddMenuItem }
-    if Pos('ADDMENUITEM', UpperCase(eCommand)) = 1 then begin
-      Delete(eCommand, 1, 11);
-      eCommand := Trim(eCommand);
-      if (CountChars(eCommand, '"') = 4) then begin
-        eItem2 := GetMenuItem(Between(eCommand, '"', '"'));
-        while CountChars(eCommand, '"') > 2 do
-          Delete(eCommand, 1, 1);
-        eItem := TSpTBXItem.Create(frmMain.tbxMenu.Items);
-        eItem.OnClick := OnCustomClick;
-        eItem.Caption := Between(eCommand, '"', '"');
-        eItem2.Add(eItem);
-        Msg.Result := 1;
-        exit;
-      end
-      else
-        Msg.Result := 0;
-    end
-    { AddMenuSubItem }
-    else if Pos('ADDMENUSUBITEM', UpperCase(eCommand)) = 1 then begin
-      Delete(eCommand, 1, 12);
-      eCommand := Trim(eCommand);
-      if (CountChars(eCommand, '"') = 4) and (Assigned(GetMenuItem(Between(eCommand, '"', '"')))) then begin
-        while CountChars(eCommand, '"') > 2 do
-          Delete(eCommand, 1, 1);
-        eItem := TSpTBXSubmenuItem.Create(frmMain.tbxMenu.Items);
-        eItem.OnClick := OnCustomClick;
-        eItem.Caption := Between(eCommand, '"', '"');
-        frmMain.tbxMenu.Items.Add(GetMenuItem(Between(eCommand, '"', '"')));
-        Msg.Result := 1;
-        exit;
-      end
-      else
-        Msg.Result := 0;
-    end
-    else if Pos('REMOVEMENUITEM', UpperCase(eCommand)) = 1 then begin
-      eCommand := Between(eCommand, '"', '"');
-      if Assigned(GetMenuItem(eCommand)) then begin
-        TSpTBXItem(GetMenuItem(eCommand)).Free;
-        Msg.Result := 1;
-      end
-      else
-        Msg.Result := 0;
-    end
-    { SetEditorText }
-    else if Pos('SETEDITORTEXT', UpperCase(eCommand)) = 1 then begin
-      Delete(eCommand, 1, 14);
-      frmMain.sciEditor.Lines.Text := eCommand;
-      Msg.Result := 1;
-    end
-    { GetEditorText }
-    else if Pos('GETEDITORTEXT', UpperCase(eCommand)) = 1 then
-      Msg.Result := LongInt(sciEditor.Lines.GetText)
-    { ExecMenuItem }
-    else if Pos('EXECMENUITEM', UpperCase(eCommand)) = 1 then begin
-      eCommand := TrimLeft(Copy(eCommand, Pos(#32, eCommand) +1, Length(eCommand)));
-      if Assigned(GetMenuItem(eCommand)) then begin
-        GetMenuItem(eCommand).Click;
-        Msg.Result := 1;
-      end
-      else
-        Msg.Result := 0;
-    end
-    { LoadFile }
-    else if Pos('LOADFILE PAWN', UpperCase(eCommand)) = 1 then begin
-      Delete(eCommand, 1, 13);
-      if frmMain.tsMain.ActiveTabIndex <> 0 then
-        ActivateProjects(0, False);
-      if PAWNProjects.Open(Trim(eCommand)) <> -1 then
-        Msg.Result := 1
-      else
-        Msg.Result := 0;
-    end
-    else if Pos('LOADFILE CPP', UpperCase(eCommand)) = 1 then begin
-      if frmMain.tsMain.ActiveTabIndex <> 1 then
-        ActivateProjects(1, False);
-      Delete(eCommand, 1, 12);
-      if CPPProjects.Open(Trim(eCommand)) <> -1 then
-        Msg.Result := 1
-      else
-        Msg.Result := 0;
-    end
-    else if Pos('LOADFILE OTHER', UpperCase(eCommand)) = 1 then begin
-      if frmMain.tsMain.ActiveTabIndex <> 1 then
-        ActivateProjects(2, False);
-      Delete(eCommand, 1, 12);
-      if CPPProjects.Open(Trim(eCommand)) <> -1 then
-        Msg.Result := 1
-      else
-        Msg.Result := 0;
-    end
-    else if Pos('LOADFILE', UpperCase(eCommand)) = 1 then begin
-      eExt := ExtractFileExt(eCommand);
-      eExt := LowerCase(eExt);
-      Msg.Result := 0;
-      if (eExt = '.sma') or (eExt = '.inc') then begin // Pawn files
-        if frmMain.tsMain.ActiveTabIndex <> 0 then
-          ActivateProjects(0, False);
-        if PAWNProjects.Open(eCommand) <> -1 then
-          Msg.Result := 1;
-      end
-      else if (eExt = '.cpp') or (eExt = '.h') then begin // C++ files
-        if frmMain.tsMain.ActiveTabIndex <> 1 then
-          ActivateProjects(1, False);
-        if CPPProjects.Open(eCommand) <> -1 then
-          Msg.Result := 1;
-      end
-      else if (eExt = '.htm') or (eExt = '.html') then begin // HTML files
-        if frmMain.tsMain.ActiveTabIndex <> 1 then
-          ActivateProjects(2, False);
-        if OtherProjects.Open(eCommand, 'HTML') <> -1 then
-          Msg.Result := 1;
-      end
-      else if (eExt = '.sql') then begin // SQL databases
-        if frmMain.tsMain.ActiveTabIndex <> 1 then
-          ActivateProjects(2, False);
-        if OtherProjects.Open(eCommand, 'SQL') <> -1 then
-          Msg.Result := 1;
-      end
-      else if (eExt = '.xml') then begin // XML files
-        if frmMain.tsMain.ActiveTabIndex <> 1 then
-          ActivateProjects(2, False);
-        if OtherProjects.Open(eCommand, 'XML') <> -1 then
-          Msg.Result := 1;
-      end
-      else begin // Other files and/or Textfiles
-        if frmMain.tsMain.ActiveTabIndex <> 1 then
-          ActivateProjects(2, False);
-        if OtherProjects.Open(eCommand, 'null') <> -1 then
-          Msg.Result := 1;
-      end;
-    end
-    { SaveFile }
-    else if Pos('SAVEFILE', UpperCase(eCommand)) = 1 then begin
-      Delete(eCommand, 1, 8);
-      Msg.Result := 0;
-      eCommand := Trim(eCommand);
-      if eCommand <> '' then
-        ActiveDoc.FileName := eCommand;
-      if ActiveDoc.Save then
-        Msg.Result := 1;
-    end
-    { ActivateFile }
-    else if Pos('ACTIVATEFILE', UpperCase(eCommand)) = 1 then begin
-      Delete(eCommand, 1, 12);
-      eCommand := Trim(eCommand);
-      Msg.Result := 0;
-      if IsNumeric(eCommand) then begin
-        if StrToInt(eCommand) < frmMain.tsDocuments.Items.Count then begin
-          frmMain.tsDocuments.ActiveTabIndex := StrToInt(eCommand);
-          Msg.Result := 1;
-        end;
-      end;
-    end
-    { ActivateProjects }
-    else if Pos('ACTIVATEPROJECTS', UpperCase(eCommand)) = 1 then begin
-      Delete(eCommand, 1, 12);
-      eCommand := Trim(eCommand);
-      Msg.Result := 0;
-      if IsNumeric(eCommand) then begin
-        if StrToInt(eCommand) < frmMain.tsMain.Items.Count then begin
-          ActivateProjects(StrToInt(eCommand), True);
-          Msg.Result := 1;
-        end;
-      end;
-    end
-    { DeleteMenuItem }
-    else if Pos('DELETEMENUITEM', UpperCase(eCommand)) = 1 then begin
-      Delete(eCommand, 1, 14);
-      eCommand := Trim(eCommand);
-      if Assigned(GetMenuItem(eCommand)) then begin
-        GetMenuItem(eCommand).Free;
-        Msg.Result := 1;
-      end
-      else
-        Msg.Result := 0;
-    end
-    { C++ IDE }
-    else if Pos('CPPIDE', UpperCase(eCommand)) = 1 then begin
-      Delete(eCommand, 1, 7);
-      eCommand := Trim(UpperCase(eCommand));
-      Msg.Result := 0;
-      if eCommand = 'ON' then begin
-        tiCPP.Enabled := True;
-        mnuNewHeaderCPP.Enabled := True;
-        mnuNewModule.Enabled := True;
-        mnuNewUnit.Enabled := True;
-        eCPP := True;
-        Msg.Result := 1;
-      end
-      else if eCommand = 'OFF' then begin
-        frmMain.tiCPP.Enabled := False;
-        frmMain.mnuNewHeaderCPP.Enabled := False;
-        frmMain.mnuNewModule.Enabled := False;
-        frmMain.mnuNewUnit.Enabled := False;
-        eCPP := False;
-        Msg.Result := 1;
-      end;
-    end
-    { Output }
-    else if Pos('OUTPUT', UpperCase(eCommand)) = 1 then begin
-      Delete(eCommand, 1, 6);
-      eCommand := Trim(eCommand);
-      Msg.Result := 0;
-      if Pos('ADD', eCommand) = 1 then begin
-        Delete(eCommand, 1, 4); // +1 for space
-        frmMain.lstOutput.Items.Add(eCommand);
-        Msg.Result := 1;
-      end
-      else if Pos('DELETE', eCommand) = 1 then begin
-        Delete(eCommand, 1, 7);
-        if IsNumeric(eCommand) then begin
-          if StrToInt(eCommand) < frmMain.lstOutput.Items.Count then
-            frmMain.lstOutput.Items.Delete(StrToInt(eCommand));
-        end;
-      end
-      else if Pos('SETTEXT', UpperCase(eCommand)) = 1 then begin
-        Delete(eCommand, 1, 8); // +1 for space
-        frmMain.lstOutput.Items.Text := eCommand;
-        Msg.Result := 1;
-      end
-      else if Pos('GETTEXT', UpperCase(eCommand)) = 1 then begin
-        eCommand := frmMain.lstOutput.Items.Text;
-        Msg.Result := LongInt(PChar(eCommand));
-      end
-      else if Pos('CLEAR', UpperCase(eCommand)) = 1 then begin
-        frmMain.lstOutput.Items.Clear;
-        Msg.Result := 1;
-      end
-      else if Pos('SHOW', UpperCase(eCommand)) = 1 then begin
-        frmMain.splOutput.Show;
-        frmMain.lstOutput.Show;
-        Msg.Result := 1;
-      end
-      else if Pos('HIDE', UpperCase(eCommand)) = 1 then begin
-        frmMain.splOutput.Hide;
-        frmMain.lstOutput.Hide;
-        Msg.Result := 1;
-      end
-    end
-    { New }
-    else if Pos('NEW', UpperCase(eCommand)) = 1 then begin
-      Delete(eCommand, 1, 4);
-      Msg.Result := 1;
-      if UpperCase(eCommand) = 'EMPTY_PLUGIN' then
-        frmMain.mnuEmptyPlugin.Click
-      else if UpperCase(eCommand) = 'PLUGIN' then
-        frmMain.mnuNewPlugin.Click
-      else if UpperCase(eCommand) = 'HEADER_PAWN' then
-        frmMain.mnuHeaderPAWN.Click
-      else if UpperCase(eCommand) = 'MODULE' then
-        frmMain.mnuNewModule.Click
-      else if UpperCase(eCommand) = 'HEADER_CPP' then
-        frmMain.mnuNewHeaderCPP.Click
-      else if UpperCase(eCommand) = 'TEXTFILE' then
-        frmMain.mnuNewTextfile.Click
-      else if UpperCase(eCommand) = 'HTML' then
-        frmMain.mnuNewHTML.Click
-      else if UpperCase(eCommand) = 'SQL' then
-        frmMain.mnuNewSQL.Click
-      else if UpperCase(eCommand) = 'XML' then
-        frmMain.mnuNewXML.Click
-      else
-        Msg.Result := 0;
-    end;
-  end
-end;
-
 procedure TfrmMain.OnCustomClick(Sender: TObject);
 begin
   Plugin_CustomItemClick((Sender As TTBXCustomItem).Caption);
@@ -2646,6 +2375,431 @@ begin
       sciEditor.Lines.Add(#9 + 'return nIdx');
       sciEditor.Lines.Add('}');
     end;
+  end;
+end;
+
+procedure TfrmMain.OnCopyData(var Msg: TWMCopyData);
+var eData: String;
+    eIntData: Integer;
+    eMessage: Integer;
+
+    eBMP: TBitmap;
+    eTemp: String;
+    eItem: TSpTBXItem;
+    ePage: TJvStandardPage;
+    eStr: TStringList;
+    eValues: array of string;
+    i: integer;
+begin
+  eData := String(PChar(Msg.CopyDataStruct.lpData));
+  eIntData := Msg.CopyDataStruct.dwData;
+  eMessage := Msg.From;
+  try
+    Msg.Result := 1;
+    case eMessage of
+      SCM_SHOWPROGRESS: ShowProgress;
+      SCM_HIDEPROGRESS: HideProgress;
+      SCM_UPDATEPROGRESS: begin
+        pbLoading.Position := eIntData;
+        SetProgressStatus(eData);
+      end;
+      SCM_LOADCODESNIPPETS: LoadCodeSnippets(eData);
+      SCM_CODESNIPPETCLICK: begin
+        if Plugin_CodeSnippetClick(eData, GetCat, GetSnippet(GetCat, eData)) then
+          sciEditor.SelText := GetSnippet(GetCat, eData);
+      end;
+      SCM_MIRC_CMD: mIRCDDE('mIRC', 'COMMAND', eData);
+      SCM_RELOADINI: ReloadIni;
+      SCM_SELECTLANGUAGE: SelectLanguage(eData);
+      SCM_LOADFILE: begin
+        odOpen.FileName := eData;
+        mnuOpenClick(nil);
+      end;
+      SCM_CURRPROJECTS: Msg.Result := tsMain.ActiveTabIndex;
+      SCM_COMPILE: mnuDoCompile.Click;
+      SCM_COMPILE_UPLOAD: mnuCompileAndUpload.Click;
+      SCM_COMPILE_STARTHL: mnuCompileAndStartHL.Click;
+      SCM_MENU_LOADIMAGE: begin
+        eBMP := TBitmap.Create;
+        eBMP.LoadFromFile(eData);
+        if eIntData = -1 then
+          Msg.Result := ilImages.Add(eBMP, nil)
+        else
+          Msg.Result := ilImages.AddMasked(eBMP, eIntData);
+        eBMP.Free;
+      end;
+      SCM_MENU_ADDITEM: begin
+        if Pos('->', eData) <> 0 then begin
+          eTemp := Copy(eData, 1, Pos('->', eData) -1);
+          eData := Copy(eData, Pos('->', eData) +2, Length(eData));
+        end
+        else
+          eTemp := '';
+
+        eItem := TSpTBXItem.Create(tbxMenu.Items);
+        with eItem do begin
+          Caption := eData;
+          ImageIndex := eIntData;
+          OnClick := OnCustomClick;
+        end;
+
+        if Assigned(GetMenuItem(eTemp)) then
+          GetMenuItem(eTemp).Add(eItem)
+        else
+          tbxMenu.Items.Add(eItem);
+      end;
+      SCM_MENU_ADDSUBITEM: begin
+        if Pos('->', eData) <> 0 then begin
+          eTemp := Copy(eData, 1, Pos('->', eData) -1);
+          eData := Copy(eData, Pos('->', eData) +2, Length(eData));
+        end
+        else
+          eTemp := '';
+          
+        eItem := TSpTBXSubMenuItem.Create(tbxMenu.Items);
+        with eItem do begin
+          Caption := eData;
+          ImageIndex := eIntData;
+          OnClick := OnCustomClick;
+        end;
+
+        if Assigned(GetMenuItem(eTemp)) then
+          GetMenuItem(eTemp).Add(eItem)
+        else
+          tbxMenu.Items.Add(eItem);
+      end;
+      SCM_MENU_FAKECLICK: begin
+        if Assigned(GetMenuItem(eData)) then
+          GetMenuItem(eData).Click
+        else
+          Msg.Result := 0;
+      end;
+      SCM_MENU_SHOWITEM: begin
+        if Assigned(GetMenuItem(eData)) then
+          GetMenuItem(eData).Visible := True
+        else
+          Msg.Result := 0;
+      end;
+      SCM_MENU_HIDEITEM: begin
+        if Assigned(GetMenuItem(eData)) then
+          GetMenuItem(eData).Visible := False
+        else
+          Msg.Result := 0;
+      end;
+      SCM_PLUGIN_LOAD: begin
+        if eData <> '' then begin
+          Msg.Result := 0;
+          for i := 0 to frmSettings.lvPlugins.Items.Count -1 do begin
+            if LowerCase(frmSettings.lvPlugins.Items[i].SubItems[0]) = LowerCase(eData) then begin
+              LoadPlugin(frmSettings.lvPlugins.Items[i]);
+              Msg.Result := 1;
+              break;
+            end;
+          end;
+        end
+        else
+          LoadPlugin(frmSettings.lvPlugins.Items[eIntData]);
+      end;
+      SCM_PLUGIN_UNLOAD: begin
+        if eData <> '' then begin
+          Msg.Result := 0;
+          for i := 0 to frmSettings.lvPlugins.Items.Count -1 do begin
+            if LowerCase(frmSettings.lvPlugins.Items[i].SubItems[0]) = LowerCase(eData) then begin
+              UnloadPlugin(frmSettings.lvPlugins.Items[i]);
+              Msg.Result := 1;
+              break;
+            end;
+          end;
+        end
+        else
+          UnloadPlugin(frmSettings.lvPlugins.Items[eIntData]);
+      end;
+      SCM_SETTINGS_CREATEPAGE: begin
+        if Pos('->', eData) <> 0 then begin
+          eTemp := Copy(eData, 1, Pos('->', eData) -1);
+          eData := Copy(eData, Pos('->', eData) +2, Length(eData));
+        end
+        else
+          eTemp := '';
+
+        ePage := TJvStandardPage.Create(frmSettings.jplSettings);
+        ePage.Caption := eData;
+        TJvPageIndexNode(frmSettings.trvSettings.Items.AddChild(FindSettingsNode(eTemp), eData)).PageIndex := ePage.PageIndex;
+
+        Msg.Result := ePage.Handle;
+      end;
+      SCM_CODEINSPECTOR_CLEAR: jviCode.Root.Clear;
+      SCM_CODEINSPECTOR_ADD: begin
+        eStr := TStringList.Create;
+        eStr.Text := eData;
+        if eStr.Count = 3 then
+          AddField(eStr[0], eStr[1], eStr[2])
+        else
+          Msg.Result := 0;
+        eStr.Free;
+      end;
+      SCM_CODEINSPECTOR_ADDCOMBO: begin
+        eStr := TStringList.Create;
+        eStr.Text := eData;
+        if eStr.Count > 3 then begin
+          SetLength(eValues, eStr.Count -2);
+          for i := 0 to eStr.Count -4 do
+            eValues[i] := eStr[i +3];
+          AddCombo(eStr[0], eStr[1], eStr[2], eValues);
+        end
+        else
+          Msg.Result := 0;
+        eStr.Free;   
+      end;
+      SCM_CODEINSPECTOR_SETVALUE: begin
+        eStr := TStringList.Create;
+        eStr.Text := eData;
+        if eStr.Count = 2 then begin
+          if Assigned(GetCIItem(eStr[0])) then
+            GetCIItem(eStr[0]).DisplayValue := eStr[1]
+          else
+            Msg.Result := 0;
+        end
+        else
+          Msg.Result := 0;
+      end;
+      SCM_CODEINSPECTOR_SETNAME: begin
+        eStr := TStringList.Create;
+        eStr.Text := eData;
+        if eStr.Count = 2 then begin
+          if Assigned(GetCIItem(eStr[0])) then
+            GetCIItem(eStr[0]).DisplayName := eStr[1]
+          else
+            Msg.Result := 0;
+        end
+        else
+          Msg.Result := 0;
+      end;
+      SCM_CODEINSPECTOR_GETVALUE: begin
+        if Assigned(GetCIItem(eData)) then
+          Msg.Result := Integer(PChar(GetCIItem(eData).DisplayValue))
+        else
+          Msg.Result := Integer(PChar(''));
+      end;
+      SCM_CODEINSPECTOR_GETNAME: begin
+        if Assigned(GetCIItem(eData)) then
+          Msg.Result := Integer(PChar(GetCIItem(eData).DisplayName))
+        else
+          Msg.Result := Integer(PChar(''));
+      end;
+      SCM_CODEINSPECTOR_COUNT: Msg.Result := jviCode.Root.Count;
+      SCM_CODEINSPECTOR_BEGINUPDATE: jviCode.BeginUpdate;
+      SCM_CODEINSPECTOR_ENDUPDATE: jviCode.EndUpdate;
+      SCM_CODEINSPECTOR_DELETE: begin
+        if Assigned(GETCIItem(eData)) then
+          jviCode.Root.Delete(GETCIItem(eData))
+        else
+          Msg.Result := 0;
+      end;
+      SCM_PAWN_NEWFILE: PawnProjects.Add(eData, '');
+      SCM_PAWN_SAVEFILE: begin
+        if (eData = '') and (TDocument(PawnProjects.Items[eIntData]).Untitled) then
+          Msg.Result := 0
+        else
+          PawnProjects.Save(eIntData, eData);
+      end;
+      SCM_PAWN_CLOSEFILE: PawnProjects.Close(eIntData);
+      SCM_PAWN_ISUNTITLED: begin
+        try
+          if TDocument(PawnProjects.Items[eIntData]).Untitled then
+            Msg.Result := 1
+          else
+            Msg.Result := 0;
+        except
+          Msg.Result := -1;
+        end;
+      end;
+      SCM_PAWN_ACTIVATE: begin
+        if tsMain.ActiveTabIndex <> 0 then
+          ActivateProjects(0, eIntData = 1);
+      end;
+      SCM_PAWN_ACTIVATEDOC: PawnProjects.Activate(eIntData, Pos('r', eData) <> 0, Pos('s', eData) <> 0);
+      SCM_PAWN_GETNOTES: begin
+        if (tsMain.ActiveTabIndex = 0) and (tsDocuments.ActiveTabIndex = eIntData) then
+          Msg.Result := Integer(PChar(GetRTFText(rtfNotes)))
+        else
+          Msg.Result := Integer(PChar(TDocument(PawnProjects.Items[eIntData]).NotesText));
+      end;
+      SCM_PAWN_SETNOTES: begin
+        if (tsMain.ActiveTabIndex = 0) and (tsDocuments.ActiveTabIndex = eIntData) then
+          SetRTFText(rtfNotes, eData)
+        else
+          TDocument(PawnProjects.Items[eIntData]).NotesText := eData;
+      end;
+      SCM_PAWN_GETFILENAME: Msg.Result := Integer(PChar(TDocument(PawnProjects.Items[eIntData]).FileName));
+      SCM_PAWN_GETTEXT: begin
+        if (tsMain.ActiveTabIndex = 0) and (tsDocuments.ActiveTabIndex = eIntData) then
+          Msg.Result := Integer(sciEditor.Lines.GetText)
+        else
+          Msg.Result := Integer(TDocument(PawnProjects.Items[eIntData]).Code.GetText);
+      end;
+      SCM_CPP_NEWFILE: begin
+        if eCPP then
+          CPPProjects.Add(eData)
+        else
+          Msg.Result := 0;
+      end;
+      SCM_CPP_SAVEFILE: begin
+        if eCPP then begin
+          if (eData = '') and (TDocument(CPPProjects.Items[eIntData]).Untitled) then
+            Msg.Result := 0
+          else
+            CPPProjects.Save(eIntData, eData);
+        end;
+      end;
+      SCM_CPP_CLOSEFILE: begin
+        if eCPP then
+          CPPProjects.Close(eIntData) 
+        else
+          Msg.Result := 0;
+      end;
+      SCM_CPP_ISUNTITLED: begin
+        try
+          if TDocument(CPPProjects.Items[eIntData]).Untitled then
+            Msg.Result := 1
+          else
+            Msg.Result := 0;
+        except
+          Msg.Result := -1;
+        end;
+      end;
+      SCM_CPP_ACTIVATE: begin
+        if (eCPP) and (tsMain.ActiveTabIndex <> 1) then
+          ActivateProjects(1, eIntData = 1)
+        else
+          Msg.Result := 0;
+      end;
+      SCM_CPP_ACTIVATEDOC: begin
+        if eCPP then
+          CPPProjects.Activate(eIntData, Pos('r', eData) <> 0, Pos('s', eData) <> 0)
+        else
+          Msg.Result := 0;
+      end;
+      SCM_CPP_ACTIVATEIDE: begin
+        eCPP := eIntData = 1;
+        if eCPP then begin
+          tiCPP.Enabled := True;
+          mnuNewHeaderCPP.Enabled := True;
+          mnuNewModule.Enabled := True;
+          mnuNewUnit.Enabled := True;
+        end
+        else begin
+          tiCPP.Enabled := False;
+          mnuNewHeaderCPP.Enabled := False;
+          mnuNewModule.Enabled := False;
+          mnuNewUnit.Enabled := False;
+        end;
+      end;
+      SCM_CPP_GETNOTES: begin
+        if (tsMain.ActiveTabIndex = 1) and (tsDocuments.ActiveTabIndex = eIntData) then
+          Msg.Result := Integer(PChar(GetRTFText(rtfNotes)))
+        else
+          Msg.Result := Integer(PChar(TDocument(CPPProjects.Items[eIntData]).NotesText));
+      end;
+      SCM_CPP_SETNOTES: begin
+        if (tsMain.ActiveTabIndex = 1) and (tsDocuments.ActiveTabIndex = eIntData) then
+          SetRTFText(rtfNotes, eData)
+        else
+          TDocument(CPPProjects.Items[eIntData]).NotesText := eData;
+      end;
+      SCM_CPP_GETFILENAME: Msg.Result := Integer(PChar(TDocument(CPPProjects.Items[eIntData]).FileName));
+      SCM_CPP_GETTEXT: begin
+        if (tsMain.ActiveTabIndex = 1) and (tsDocuments.ActiveTabIndex = eIntData) then
+          Msg.Result := Integer(sciEditor.Lines.GetText)
+        else
+          Msg.Result := Integer(TDocument(CPPProjects.Items[eIntData]).Code.GetText);
+      end;
+      SCM_OTHER_NEWFILE: OtherProjects.Add(eData);
+      SCM_OTHER_SAVEFILE: begin
+        if (eData = '') and (TDocument(CPPProjects.Items[eIntData]).Untitled) then
+          Msg.Result := 0
+        else
+          OtherProjects.Save(eIntData, eData);
+      end;
+      SCM_OTHER_CLOSEFILE: OtherProjects.Delete(eIntData);
+      SCM_OTHER_ISUNTITLED: begin
+        try
+          if TDocument(OtherProjects.Items[eIntData]).Untitled then
+            Msg.Result := 1
+          else
+            Msg.Result := 0;
+        except
+          Msg.Result := -1;
+        end;
+      end;
+      SCM_OTHER_ACTIVATE: begin
+        if tsMain.ActiveTabIndex <> 2 then
+          ActivateProjects(2, eIntData = 1)
+        else
+          Msg.Result := 0;
+      end;
+      SCM_OTHER_ACTIVATEDOC: OtherProjects.Activate(eIntData, Pos('r', eData) <> 0, Pos('s', eData) <> 0);
+      SCM_OTHER_GETNOTES: begin
+        if (tsMain.ActiveTabIndex = 2) and (tsDocuments.ActiveTabIndex = eIntData) then
+          Msg.Result := Integer(PChar(GetRTFText(rtfNotes)))
+        else
+          Msg.Result := Integer(PChar(TDocument(OtherProjects.Items[eIntData]).NotesText));
+      end;
+      SCM_OTHER_SETNOTES: begin
+        if (tsMain.ActiveTabIndex = 2) and (tsDocuments.ActiveTabIndex = eIntData) then
+          SetRTFText(rtfNotes, eData)
+        else
+          TDocument(OtherProjects.Items[eIntData]).NotesText := eData;
+      end;
+      SCM_OUTPUT_SHOW: begin
+        splOutput.Show;
+        lstOutput.Show;
+      end;
+      SCM_OUTPUT_HIDE: begin
+        splOutput.Hide;
+        lstOutput.Hide;
+      end;
+      SCM_OUTPUT_ADD: Msg.Result := lstOutput.Items.Add(eData);
+      SCM_OUTPUT_CLEAR: lstOutput.Items.Clear;
+      SCM_OUTPUT_DELETE: lstOutput.Items.Delete(eIntData);
+      SCM_OUTPUT_GETTEXT: Msg.Result := Integer(lstOutput.Items.GetText);
+      SCM_OUTPUT_GETITEM: begin
+        try
+          Msg.Result := Integer(PChar(lstOutput.Items[eIntData]));
+        except
+          Msg.Result := Integer(PChar(''));
+        end;
+      end;
+      SCM_OUTPUT_INDEXOF: Msg.Result := lstOutput.Items.IndexOf(eData);
+      SCM_ACTIVE_DOCUMENT: Msg.Result := tsDocuments.ActiveTabIndex;
+      SCM_ACTIVE_PROJECTS: Msg.Result := tsMain.ActiveTabIndex;
+      SCM_EDITOR_SETTEXT: sciEditor.Lines.SetText(Msg.CopyDataStruct.lpData);
+      SCM_EDITOR_GETTEXT: Msg.Result := Integer(sciEditor.Lines.GetText);
+      SCM_EDTIOR_SETCALLTIPS: sciCallTips.ApiStrings.Text := eData;
+      SCM_EDITOR_SHOWCALLTIP: sciEditor.CallTipShow(eIntData, Msg.CopyDataStruct.lpData);
+      SCM_EDITOR_SETAUTOCOMPLETE: sciAutoComplete.AStrings.Text := eData;
+      SCM_EDITOR_SHOWAUTOCOMPLETE: sciEditor.AutoCShow(eIntData, Msg.CopyDataStruct.lpData);
+      SCM_EDITOR_GETSELSTART: Msg.Result := sciEditor.SelStart;
+      SCM_EDTIOR_GETSELLENGTH: Msg.Result := sciEditor.SelLength;
+      SCM_EDITOR_SETSELSTART: sciEditor.SelStart := eIntData;
+      SCM_EDITOR_SETSELLENGH: sciEditor.SelLength := eIntData;
+      SCM_REMOVE_MENUITEM: begin
+        if Assigned(GetMenuItem(eData)) then begin
+          if Assigned(GetMenuItem(eData).Parent) then
+            GetMenuItem(eData).Parent.Remove(GetMenuItem(eData))
+          else
+            tbxMenu.Items.Remove(GetMenuItem(eData));
+          Msg.Result := 1;
+        end
+        else
+          Msg.Result := 0;
+      end;
+      SCM_REMOVE_IMAGE: ilImages.Delete(eIntData);
+      SCM_SETTHEME: TBXSetTheme(eData);
+      SCM_GETTHEME: Msg.Result := Integer(PChar(TBXCurrentTheme));
+    end;
+  except
+    Msg.Result := 0;
   end;
 end;
 

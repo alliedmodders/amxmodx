@@ -1,6 +1,8 @@
 program AMXX_Studio;
 
 uses
+  madExcept,
+  madLinkDisAsm,
   Forms,
   Windows,
   Messages,
@@ -32,7 +34,8 @@ uses
   UnitMenuGenerators in 'UnitMenuGenerators.pas',
   UnitfrmClose in 'UnitfrmClose.pas' {frmClose},
   UnitfrmConnGen in 'UnitfrmConnGen.pas' {frmConnGen},
-  UnitPlugins in 'UnitPlugins.pas';
+  UnitPlugins in 'UnitPlugins.pas',
+  UnitfrmIRCPaster in 'UnitfrmIRCPaster.pas' {frmIRCPaster};
 
 { Used components:
   - JVCL 3.0
@@ -50,9 +53,9 @@ begin
   if FindWindow(nil, 'AMXX-Studio') <> 0 then begin
     if ParamCount > 0 then begin
       for i := 1 to ParamCount  do
-        SendToMainApp('LoadFile' + ParamStr(i));
+        SendStudioMsg(SCM_LOADFILE, ParamStr(i), 0);
     end;
-    //exit;
+    exit;
   end;
   Application.Initialize;
   Application.Title := 'AMXX-Studio';

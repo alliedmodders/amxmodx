@@ -24,7 +24,7 @@ procedure SetRTFText(ARichEdit: TRichedit; ARTFText: String);
 
 implementation
 
-uses UnitfrmMain, UnitMainTools, UnitLanguages;
+uses UnitfrmMain, UnitMainTools, UnitLanguages, UnitfrmIRCPaster;
 
 function IsAtStart(eSubStr, eStr: String; AllowFunctions: Boolean = True): Boolean;
 begin
@@ -90,7 +90,7 @@ begin
   eLength := 0;
 
   for i := 0 to frmMain.sciEditor.Lines.Count -1 do begin
-    eLength := eLength + Length(frmMain.sciEditor.Lines[i]);
+    eLength := eLength + Length(frmMain.sciEditor.Lines[i]) + 2;
     if eLength >= ePos then begin
       Result := i;
       break;
@@ -335,9 +335,14 @@ begin
   end;
 
   eCurrStyle := '';
-  Result := IntToStr(eLine +1) + '] ';
-  if Length(frmMain.sciEditor.Lines[eLine]) = 0 then exit;
+  if frmIRCPaster.chkLineNumbers.Checked then
+    Result := IntToStr(eLine +1) + '] '
+  else
+    Result := '';
 
+  if Trim(frmMain.sciEditor.Lines[eLine]) = '' then
+    exit;
+    
   for i := 0 to Length(frmMain.sciEditor.Lines[eLine]) -1 do begin
     if eCurrStyle <> GetStyleAt(eChars + i).Name then begin
       eCurrStyle := GetStyleAt(eChars + i).Name;

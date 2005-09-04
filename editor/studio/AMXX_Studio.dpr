@@ -1,8 +1,6 @@
 program AMXX_Studio;
 
 uses
-  madExcept,
-  madLinkDisAsm,
   Forms,
   Windows,
   Messages,
@@ -50,12 +48,12 @@ uses
 
 var i: integer;
 begin
-  if FindWindow(nil, 'AMXX-Studio') <> 0 then begin
+  if FindWindow('TfrmMain', 'AMXX-Studio') <> 0 then begin
     if ParamCount > 0 then begin
       for i := 1 to ParamCount  do
         SendStudioMsg(SCM_LOADFILE, ParamStr(i), 0);
     end;
-    //exit;
+    exit;
   end;
   Application.Initialize;
   Application.Title := 'AMXX-Studio';

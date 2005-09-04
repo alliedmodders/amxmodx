@@ -1,6 +1,6 @@
 object frmMain: TfrmMain
-  Left = 254
-  Top = 332
+  Left = 237
+  Top = 236
   Width = 888
   Height = 640
   Caption = 'AMXX-Studio'
@@ -37,6 +37,7 @@ object frmMain: TfrmMain
     000000000000000380000000000000000000000000000000000000000000}
   KeyPreview = True
   OldCreateOrder = False
+  Position = poDesktopCenter
   OnClose = FormClose
   OnConstrainedResize = FormConstrainedResize
   OnCreate = FormCreate

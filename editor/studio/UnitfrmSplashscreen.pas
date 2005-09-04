@@ -145,15 +145,24 @@ begin
     end;
     eCache.Free;
 
-    if PAWNProjects.Count > 1 then
+    i := 0;
+    if PAWNProjects.Count > 1 then begin
       PAWNProjects.Close(0);
-    if CPPProjects.Count > 1 then
+      i := 1;
+    end;
+    if CPPProjects.Count > 1 then begin
       CPPProjects.Close(0);
-    if OtherProjects.Count > 1 then
+      i := 1;
+    end;
+    if OtherProjects.Count > 1 then begin
       OtherProjects.Close(0);
+      i := 1;
+    end;
 
-    ActivateProjects(0, False); // Started := True is already set here
-    PAWNProjects.Activate(PAWNProjects.Count -1, False, False);
+    if i = 1 then begin
+      ActivateProjects(0, False); // Started := True is already set here
+      PAWNProjects.Activate(PAWNProjects.Count -1, False, False);
+    end;
     UpdateCI;
     LoadPlugins;
   end;

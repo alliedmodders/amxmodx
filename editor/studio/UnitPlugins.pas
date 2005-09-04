@@ -6,28 +6,28 @@ uses SysUtils, Classes, Windows, Messages, Forms, ComCtrls;
 
 type TCodeSnippetClick = function (pTitle, pCategory: PChar; pCode: PChar): Integer; cdecl;
      TFileAction = function (pFilename: PChar): Integer; cdecl;
-     TDocChange = function (pIndex: DWord; pFilename: PChar; pHighlighter: PChar; pRestoreCaret: Boolean): Integer; cdecl;
-     TProjectsChange = function (pOldIndex, pNewIndex: DWord): Integer; cdecl;
-     TCreateNewFile = function (Item: PByte): Integer; cdecl;
+     TDocChange = function (pIndex: Integer; pFilename: PChar; pHighlighter: PChar; pRestoreCaret: Boolean): Integer; cdecl;
+     TProjectsChange = function (pOldIndex, pNewIndex: Integer): Integer; cdecl;
+     TCreateNewFile = function (Item: Byte): Integer; cdecl;
      TDisplaySearch = function (pSearchList: PChar; pSelected: PChar): Integer; cdecl;
      TSearch = function (pExpression, pSearchList: PChar; pCaseSensivity, pWholeWords, pSearchFromCaret, pSelectedOnly, pRegEx, pForward: Boolean): Integer; cdecl;
      TSearchReplace = function (pExpression, pReplace, pExpList, pRepList: PChar; pCaseSensivity, pWholeWords, pSearchFromCaret, pSelectedOnly, pRegEx, pForward: Boolean): Integer; cdecl;
-     TVisibleControlChange = function (pControl: DWord; pShow: Boolean): Integer; cdecl;
-     TCompile = function (pCompileType: DWord; Lang, Filename: PChar): Integer; cdecl;
-     TShowHelp = function (pHelpType: DWord): Integer; cdecl;
+     TVisibleControlChange = function (pControl: Integer; pShow: Boolean): Integer; cdecl;
+     TCompile = function (pCompileType: Integer; Lang, Filename: PChar): Integer; cdecl;
+     TShowHelp = function (pHelpType: Integer): Integer; cdecl;
      TCustomItemClick = function (pCaption: PChar): Integer; cdecl;
      TThemeChanged = function (pTheme: PChar): Integer; cdecl;
 
-     TModified = function (pText: PChar): Integer; cdecl;
+     TModified = function (pModifiedText: PChar; pText: PChar): Integer; cdecl;
      TKeyPress = function (pKey: PChar): Integer; cdecl;
-     TEditorClick = function (pDoubleClick: Boolean): Integer; cdecl;
-     TUpdateSel = function (pSelStart, pSelLength, pFirstVisibleLine: DWord): Integer; cdecl;
+     TEditorClick = function: Integer; cdecl;
+     TUpdateSel = function (pSelStart, pSelLength, pFirstVisibleLine: Integer): Integer; cdecl;
      TCallTipShow = function (pList: PChar): Integer; cdecl;
-     TCallTipClick = function (pPosition: DWord): Integer; cdecl;
+     TCallTipClick = function (pPosition: Integer): Integer; cdecl;
      TAutoCompleteShow = function (pList: PChar): Integer; cdecl;
      TAutoCompleteSelect = function (pText: PChar): Integer; cdecl;
 
-     TAppMsg = function (pHwnd: HWND; pMessage: DWord; pWParam, pLParam: Integer; pTime: DWord; pPt: TPoint): Integer; cdecl;
+     TAppMsg = function (pHwnd: HWND; pMessage: Integer; pWParam, pLParam: Integer; pTime: Integer; pPt: TPoint): Integer; cdecl;
      TUpdateCodeTools = function (pLang, pFilename, pCurrProjects: PChar): Integer; cdecl;
      TOutputEvent = function (pItemIndex: Integer): Integer; cdecl;
 
@@ -89,7 +89,7 @@ function Plugin_ShowHelp(HelpType: Integer): Boolean;
 function Plugin_CustomItemClick(Caption: String): Boolean;
 function Plugin_ThemeChange(Theme: String): Boolean;
 
-function Plugin_Modified(Code: PChar): Boolean;
+function Plugin_Modified(Modified, Text: PChar): Boolean;
 function Plugin_KeyPress(Key: Char): Boolean;
 function Plugin_EditorClick(DoubleClick: Boolean): Boolean;
 function Plugin_UpdateSel(SelStart, SelLength, FirstVisibleLine: Integer): Boolean;
@@ -98,7 +98,7 @@ function Plugin_CallTipClick(Position: Integer): Boolean;
 function Plugin_AutoCompleteShow(List: PChar): Boolean;
 function Plugin_AutoCompleteSelect(Text: PChar): Boolean;
 
-function Plugin_AppMsg(hwnd: HWND; Message: DWord; wParam, lParam: Integer; time: DWord; pt: TPoint): Boolean;
+function Plugin_AppMsg(hwnd: HWND; Message: Integer; wParam, lParam: Integer; time: Integer; pt: TPoint): Boolean;
 function Plugin_UpdateCodeExplorer(Lang, Filename, CurrProjects: String; Updating: Boolean): Boolean;
 function Plugin_UpdateCodeInspector(Lang, Filename, CurrProjects: String; Updating: Boolean): Boolean;
 function Plugin_OutputDblClick(ItemIndex: Integer): Boolean;
@@ -503,7 +503,7 @@ begin
       @Func := GetProcAddress(Handles[i], 'CreatedNewFile');
 
     if @Func <> nil then begin
-      case Func(PByte(Item)) of
+      case Func(Item) of
         PLUGIN_HANDLED: Result := False;
         PLUGIN_STOP: begin
           Result := False;
@@ -683,7 +683,7 @@ begin
   end;
 end;
 
-function Plugin_Modified(Code: PChar): Boolean;
+function Plugin_Modified(Modified, Text: PChar): Boolean;
 var Func: TModified;
     i: integer;
     Handles: TIntegerArray;
@@ -695,7 +695,7 @@ begin
     @Func := GetProcAddress(Handles[i], 'Modified');
 
     if @Func <> nil then begin
-      case Func(Code)  of
+      case Func(Modified, Text)  of
         PLUGIN_HANDLED: Result := False;
         PLUGIN_STOP: begin
           Result := False;
@@ -744,7 +744,7 @@ begin
       @Func := GetProcAddress(Handles[i], 'Click');
 
     if @Func <> nil then begin
-      case Func(DoubleClick)  of
+      case Func of
         PLUGIN_HANDLED: Result := False;
         PLUGIN_STOP: begin
           Result := False;
@@ -870,7 +870,7 @@ begin
   end;
 end;
 
-function Plugin_AppMsg(hwnd: HWND; Message: DWord; wParam, lParam: Integer; time: DWord; pt: TPoint): Boolean;
+function Plugin_AppMsg(hwnd: HWND; Message: Integer; wParam, lParam: Integer; time: Integer; pt: TPoint): Boolean;
 var Func: TAppMsg;
     i: integer;
     Handles: TIntegerArray;
@@ -879,7 +879,7 @@ begin
 
   Handles := GetDLLHandles;
   for i := 0 to High(Handles) do begin
-    @Func := GetProcAddress(Handles[i], 'Message');
+    @Func := GetProcAddress(Handles[i], 'AppMessage');
 
     if @Func <> nil then begin
       case Func(hwnd, Message, wParam, lParam, time, pt)  of

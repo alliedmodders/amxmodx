@@ -2241,7 +2241,7 @@ procedure TfrmMain.sciEditorModified(Sender: TObject; const position,
   foldLevelNow, foldLevelPrev: Integer);
 begin
   if Started then
-    Plugin_Modified(text);
+    Plugin_Modified(text, sciEditor.Lines.GetText);
 end;
 
 procedure TfrmMain.sciEditorDblClick(Sender: TObject);
@@ -2438,6 +2438,7 @@ begin
         eItem := TSpTBXItem.Create(tbxMenu.Items);
         with eItem do begin
           Caption := eData;
+          Images := ilImages;
           ImageIndex := eIntData;
           OnClick := OnCustomClick;
         end;
@@ -2458,6 +2459,7 @@ begin
         eItem := TSpTBXSubMenuItem.Create(tbxMenu.Items);
         with eItem do begin
           Caption := eData;
+          Images := ilImages;
           ImageIndex := eIntData;
           OnClick := OnCustomClick;
         end;
@@ -2581,8 +2583,8 @@ begin
           Msg.Result := Integer(PChar(''));
       end;
       SCM_CODEINSPECTOR_GETNAME: begin
-        if Assigned(GetCIItem(eData)) then
-          Msg.Result := Integer(PChar(GetCIItem(eData).DisplayName))
+        if Assigned(GetCIItemByValue(eData)) then
+          Msg.Result := Integer(PChar(GetCIItemByValue(eData).DisplayName))
         else
           Msg.Result := Integer(PChar(''));
       end;
@@ -2615,7 +2617,9 @@ begin
       end;
       SCM_PAWN_ACTIVATE: begin
         if tsMain.ActiveTabIndex <> 0 then
-          ActivateProjects(0, eIntData = 1);
+          ActivateProjects(0, eIntData = 1)
+        else
+          Msg.Result := 0;
       end;
       SCM_PAWN_ACTIVATEDOC: PawnProjects.Activate(eIntData, Pos('r', eData) <> 0, Pos('s', eData) <> 0);
       SCM_PAWN_GETNOTES: begin

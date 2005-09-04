@@ -61,6 +61,7 @@ function GetMenuItem(Caption: String; eParent: TTBCustomItem = nil): TTBCustomIt
 
 function GetCat: String;
 function GetCIItem(eName: String; eParent: TJvCustomInspectorItem = nil): TJvCustomInspectorItem;
+function GetCIItemByValue(eValue: String; eParent: TJvCustomInspectorItem = nil): TJvCustomInspectorItem;
 function FindSettingsNode(eText: String; eParent: TTreeNode = nil): TTreeNode;
 
 procedure LoadPlugins;
@@ -145,6 +146,36 @@ begin
         Result := eParent.Items[i]
       else if eParent.Items[i].Count <> 0 then
         Result := GETCIItem(eName, eParent.Items[i]);
+
+      if Assigned(Result) then
+        exit;
+    end;
+  end;
+end;
+
+function GetCIItemByValue(eValue: String; eParent: TJvCustomInspectorItem = nil): TJvCustomInspectorItem;
+var i: integer;
+begin
+  eValue := LowerCase(eValue);
+  Result := nil;
+
+  if eParent = nil then begin
+    for i := 0 to frmMain.jviCode.Root.Count -1 do begin
+      if LowerCase(frmMain.jviCode.Root.Items[i].DisplayValue) = eValue then
+        Result := frmMain.jviCode.Root.Items[i]
+      else if frmMain.jviCode.Root.Items[i].Count <> 0 then
+        Result := GetCIItemByValue(eValue, frmMain.jviCode.Root.Items[i]);
+
+      if Assigned(Result) then
+        exit;
+    end;
+  end
+  else begin
+    for i := 0 to eParent.Count -1 do begin
+      if LowerCase(eParent.Items[i].DisplayValue) = eValue then
+        Result := eParent.Items[i]
+      else if eParent.Items[i].Count <> 0 then
+        Result := GetCIItemByValue(eValue, eParent.Items[i]);
 
       if Assigned(Result) then
         exit;

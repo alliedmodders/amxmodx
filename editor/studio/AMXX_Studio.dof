@@ -96,7 +96,7 @@ PackageDLLOutputDir=
 PackageDCPOutputDir=
 SearchPath=
 Packages=vcl;rtl;vclx;vclie;xmlrtl;inetdbbde;inet;inetdbxpress;VclSmp;dbrtl;dbexpress;vcldb;dsnap;dbxcds;inetdb;bdertl;vcldbx;adortl;teeui;teedb;tee;ibxpress;visualclx;visualdbclx;vclactnband;vclshlctrls;Rave50CLX;Rave50VCL;dclOffice2k;Indy70;DJcl;FlatStyle_D5;DelphiX_for7;mxFlatPack_D7;tbx_d7;tb2k_d7;mbTBXLibPack;TntUnicodeVcl_R70;SynEdit_R7
-Conditionals=madExcept
+Conditionals=
 DebugSourceDirs=
 UsePackages=0
 [Parameters]
@@ -115,7 +115,7 @@ AutoIncBuild=1
 MajorVer=1
 MinorVer=1
 Release=0
-Build=4
+Build=8
 Debug=0
 PreRelease=0
 Special=0
@@ -126,13 +126,13 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=AMX Mod X Dev Team
 FileDescription=
-FileVersion=1.1.0.4
+FileVersion=1.1.0.8
 InternalName=
 LegalCopyright=
 LegalTrademarks=
 OriginalFilename=
 ProductName=AMXX-Studio
-ProductVersion=1.0.0.0
+ProductVersion=1.1.0.0
 Comments=
 [HistoryLists\hlConditionals]
 Count=1

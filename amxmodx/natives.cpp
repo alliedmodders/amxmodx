@@ -266,8 +266,7 @@ static cell AMX_NATIVE_CALL get_array(AMX *amx, cell *params)
 
 	int size = params[3];
 
-	while (size-->0)
-		*dest = *source;
+	memcpy(dest, source, size * sizeof(cell));
 
 	return 1;
 }
@@ -293,8 +292,7 @@ static cell AMX_NATIVE_CALL set_array(AMX *amx, cell *params)
 
 	int size = params[3];
 
-	while (size-->0)
-		*dest = *source;
+	memcpy(dest, source, size * sizeof(cell));
 
 	return 1;
 }
@@ -424,7 +422,7 @@ AMX_NATIVE_INFO g_NativeNatives[] = {
 	{"get_param",		get_param},
 	{"get_param_byref",	get_param_byref},
 	{"set_param_byref",	set_param_byref},
-	{"get_array",		set_array},
+	{"get_array",		get_array},
 	{"set_array",		set_array},
 	//these are dummy functions for floats ;p
 	{"get_param_f",		get_param},

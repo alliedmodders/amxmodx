@@ -828,7 +828,7 @@ void C_StartFrame_Post( void )
 	  {
 		  if (!IS_QUERYING_CLIENT_CVAR(PLID, pPlayer->pEdict))
 		  {
-			  QUERY_CLIENT_CVAR_VALUE(pPlayer->pEdict, pPlayer->cvarQueryQueue.front()->cvarName.c_str());
+			  (*g_engfuncs.pfnQueryClientCvarValue)(pPlayer->pEdict, pPlayer->cvarQueryQueue.front()->cvarName.c_str());
 			  pPlayer->cvarQueryQueue.front()->querying = true;
 		  }
 	  }

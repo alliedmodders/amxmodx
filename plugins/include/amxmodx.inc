@@ -782,3 +782,6 @@ native menu_item_getinfo(menu, item, &access, command[], cmdlen, name[]="", name
 native menu_item_setname(menu, item, name[]);
 native menu_item_setcmd(menu, item, cmd[]);
 native menu_item_setcall(menu, item, callback=-1);
+
+// Gets distance between two origins (float)
+native Float:get_distance_f( Float:Origin1[3], Float:Origin2[3] ); 

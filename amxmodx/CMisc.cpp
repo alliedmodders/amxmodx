@@ -61,7 +61,12 @@ void CPlayer::Disconnect() {
   authorized = false;
 
   while (!cvarQueryQueue.empty())
+  {
+	  ClientCvarQuery_Info *pQuery = cvarQueryQueue.front();
+	  unregisterSPForward(pQuery->resultFwd);
+	  delete pQuery;
 	  cvarQueryQueue.pop();
+  }
 
   bot = 0;
 }

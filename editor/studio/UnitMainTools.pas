@@ -903,7 +903,6 @@ begin
 end;
 
 procedure TDocCollection.Activate(Document: TDocument; RestoreCaret: Boolean; SaveLastDoc: Boolean = True);
-var i: integer;
 begin
   if not Plugin_DocChange(Document.Index, Document.FileName, Document.Highlighter, RestoreCaret, True) then begin
     Started := False;

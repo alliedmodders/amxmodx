@@ -79,6 +79,7 @@ var lInvalidFile: String;
     lCloseCaption: String;
     lNoCPP: String;
     lInvalidChannel: String;
+    lResetShortcuts: String;
 
 procedure ResetToEnglish;
 
@@ -161,6 +162,7 @@ begin
   lCloseCaption := 'Close';
   lNoCPP := 'Sorry, the C++ IDE is not enabled.';
   lInvalidChannel := 'Invalid channel.';
+  lResetShortcuts := 'Warning: The shortcut reset would immediately take affect. Reset anyway?';
 end;
 
 end.

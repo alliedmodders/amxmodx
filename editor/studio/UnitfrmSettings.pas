@@ -73,7 +73,6 @@ type
     cboCodeFolding: TFlatComboBox;
     lblCodeFoldingStyle: TLabel;
     lvShortcuts: TListView;
-    hkShortcut: THotKey;
     cmdApply: TFlatButton;
     shpShortcuts: TShape;
     ftcCodeSnippets: TFlatTabControl;
@@ -184,6 +183,8 @@ type
     txtAMXXDir: TFlatEdit;
     lblAMXXDir: TLabel;
     cmdBrowseAMXXDir: TFlatButton;
+    cmdResetShortcuts: TFlatButton;
+    txtShortcut: TFlatEdit;
     procedure jplSettingsChange(Sender: TObject);
     procedure txtLinesChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -243,6 +244,12 @@ type
     procedure cmdLoadClick(Sender: TObject);
     procedure cmdRemoveClick(Sender: TObject);
     procedure cmdBrowseAMXXDirClick(Sender: TObject);
+    procedure txtShortcutKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure txtShortcutKeyPress(Sender: TObject; var Key: Char);
+    procedure cmdResetShortcutsClick(Sender: TObject);
+    procedure txtShortcutKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   public
     Foreground, Background: TColor;
     CaretFore, CaretBack: TColor;
@@ -485,9 +492,9 @@ end;
 procedure TfrmSettings.lvShortcutsClick(Sender: TObject);
 begin
   cmdApply.Enabled := Assigned(lvShortcuts.Selected);
-  hkShortcut.Enabled := cmdApply.Enabled;
+  txtShortcut.Enabled := cmdApply.Enabled;
   if cmdApply.Enabled then
-    hkShortcut.HotKey := TextToShortCut(lvShortcuts.Selected.Subitems[0]);
+    txtShortcut.Text := lvShortcuts.Selected.Subitems[0];
 end;
 
 procedure TfrmSettings.trvSettingsChanging(Sender: TObject;
@@ -536,7 +543,7 @@ end;
 procedure TfrmSettings.cmdApplyClick(Sender: TObject);
 begin
   if Assigned(lvShortcuts.Selected) then
-    lvShortcuts.Selected.SubItems[0] := ShortcutToText(hkShortcut.HotKey);
+    lvShortcuts.Selected.SubItems[0] := txtShortcut.Text;
 end;
 
 procedure TfrmSettings.cmdSelectForegroundClick(Sender: TObject);
@@ -944,6 +951,65 @@ var eStr: String;
 begin
   if SelectDirectory(lSelectAMXXCaption, ExtractFilePath(txtHLExec.Text), eStr) then
     txtAMXXDir.Text := eStr;
+end;
+
+procedure TfrmSettings.txtShortcutKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (Key = VK_SHIFT) or (Key = VK_CONTROL) or (Key = VK_MENU) then begin
+    txtShortcut.Clear;
+    if ssShift in Shift then
+      txtShortcut.Text := txtShortcut.Text + 'Shift+';
+    if ssCtrl in Shift then
+      txtShortcut.Text := txtShortcut.Text + 'Ctrl+';
+    if ssAlt in Shift then
+      txtShortcut.Text := txtShortcut.Text + 'Alt+';
+    Key := 0;
+  end
+  else
+    txtShortcut.Text := ShortcutToText(Shortcut(Key, Shift));
+end;
+
+procedure TfrmSettings.txtShortcutKeyPress(Sender: TObject; var Key: Char);
+begin
+  Key := #0;
+end;
+
+procedure TfrmSettings.cmdResetShortcutsClick(Sender: TObject);
+var i: integer;
+    Item: TListItem;
+    KeyCommand: TSciKeyCommand;
+    Ident: String;
+begin
+  if MessageBox(Handle, PChar(lResetShortcuts), PChar(Application.Title), MB_ICONQUESTION + MB_YESNO) = mrYes then begin
+    frmMain.sciEditor.KeyCommands.ResetDefaultCommands;
+   	frmSettings.lvShortcuts.Items.BeginUpdate;
+   	try
+   		frmSettings.lvShortcuts.Clear;
+   		for i := 0 to frmMain.sciEditor.KeyCommands.Count - 1 do begin
+	  		KeyCommand := frmMain.sciEditor.KeyCommands.Items[i] as TSciKeyCommand;
+        Ident := 'Unknown';
+	  		IntToIdent(KeyCommand.Command, Ident, Sci_KeyboardCommandMap);
+        if Ident <> 'No Command' then begin // Important for Control Chars, the user mustn't change the values for it...
+        	Item := frmSettings.lvShortcuts.Items.Add;
+ 	        Item.Caption:= Ident;
+          Item.SubItems.Add(ShortCutToText(KeyCommand.ShortCut));
+ 	       	Item.Data := KeyCommand;
+        end;
+	   end;
+	  finally
+   		frmSettings.lvShortcuts.Items.EndUpdate;
+   	end;
+  end;
+end;
+
+procedure TfrmSettings.txtShortcutKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (Key = VK_SHIFT) or (Key = VK_CONTROL) or (Key = VK_MENU) then begin
+    if txtShortcut.Text[Length(txtShortcut.Text)] = '+' then
+      txtShortcut.Text := 'None';
+  end;
 end;
 
 end.

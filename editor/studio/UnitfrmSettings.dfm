@@ -59,7 +59,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 353
     Height = 260
-    ActivePage = jspPlugIns
+    ActivePage = jspShortcuts
     PropagateEnable = False
     Align = alClient
     OnChange = jplSettingsChange
@@ -105,7 +105,7 @@ object frmSettings: TfrmSettings
         Height = 21
         Style = csDropDownList
         Color = clWindow
-        ItemHeight = 0
+        ItemHeight = 13
         TabOrder = 0
         ItemIndex = -1
         OnChange = cboLanguageChange
@@ -662,20 +662,10 @@ object frmSettings: TfrmSettings
         OnClick = lvShortcutsClick
         OnSelectItem = lvShortcutsSelectItem
       end
-      object hkShortcut: THotKey
-        Left = 8
-        Top = 206
-        Width = 247
-        Height = 19
-        Enabled = False
-        InvalidKeys = []
-        Modifiers = []
-        TabOrder = 1
-      end
       object cmdApply: TFlatButton
-        Left = 263
+        Left = 173
         Top = 205
-        Width = 85
+        Width = 84
         Height = 20
         ColorFocused = 16245198
         ColorDown = 16245198
@@ -683,8 +673,33 @@ object frmSettings: TfrmSettings
         ColorShadow = 8623776
         Caption = 'Apply'
         Enabled = False
-        TabOrder = 2
+        TabOrder = 1
         OnClick = cmdApplyClick
+      end
+      object cmdResetShortcuts: TFlatButton
+        Left = 261
+        Top = 205
+        Width = 85
+        Height = 20
+        ColorFocused = 16245198
+        ColorDown = 16245198
+        ColorHighLight = 8623776
+        ColorShadow = 8623776
+        Caption = 'Reset'
+        TabOrder = 2
+        OnClick = cmdResetShortcutsClick
+      end
+      object txtShortcut: TFlatEdit
+        Left = 8
+        Top = 206
+        Width = 159
+        Height = 19
+        ColorFlat = clWhite
+        TabOrder = 3
+        Text = 'None'
+        OnKeyDown = txtShortcutKeyDown
+        OnKeyPress = txtShortcutKeyPress
+        OnKeyUp = txtShortcutKeyUp
       end
     end
     object jspCodeSnippets: TJvStandardPage
@@ -777,9 +792,9 @@ object frmSettings: TfrmSettings
       object lblPAWN: TLabel
         Left = 8
         Top = 12
-        Width = 79
+        Width = 75
         Height = 13
-        Caption = 'PAWN-Compiler:'
+        Caption = 'Pawn-Compiler:'
       end
       object lblCPPCompiler: TLabel
         Left = 8
@@ -1657,11 +1672,11 @@ object frmSettings: TfrmSettings
   end
   object odBrowse: TOpenDialog
     Filter = 'Executables (*.exe)|*.exe|All files (*.*)|*.*'
-    Left = 441
+    Left = 455
     Top = 2
   end
   object ilImages: TImageList
-    Left = 410
+    Left = 424
     Top = 2
     Bitmap = {
       494C010102000400040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600

@@ -729,6 +729,7 @@ end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
+
 end;
 
 { <- Settings | Toolbars -> }

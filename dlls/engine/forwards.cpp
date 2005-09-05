@@ -37,7 +37,8 @@ int fstrcmp(const char *s1, const char *s2)
 	return 1;
 }
 
-int Spawn(edict_t *pEntity) {
+int Spawn(edict_t *pEntity)
+{
 	if (!g_precachedStuff) {
 		// Used for SetView, added by JGHG
 		int returnValue = PRECACHE_MODEL("models/rpgrocket.mdl");

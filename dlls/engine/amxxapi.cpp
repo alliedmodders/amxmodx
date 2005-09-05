@@ -65,7 +65,7 @@ void OnPluginsLoaded()
 	StartFrameForward = MF_RegisterForward("server_frame", ET_IGNORE, FP_DONE); // done
 	DispatchKeyForward = MF_RegisterForward("pfn_keyvalue", ET_STOP, FP_CELL, FP_DONE); // done
 	PlaybackForward = MF_RegisterForward("pfn_playbackevent", ET_STOP, FP_CELL, FP_CELL, FP_CELL, FP_FLOAT, FP_ARRAY, FP_ARRAY, FP_FLOAT, FP_FLOAT, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE); // done
-	SpawnForward = MF_RegisterForward("pfn_spawn", ET_IGNORE, FP_CELL, FP_DONE); // done
+	SpawnForward = MF_RegisterForward("pfn_spawn", ET_STOP, FP_CELL, FP_DONE); // done
 	pfnTouchForward = MF_RegisterForward("pfn_touch", ET_STOP, FP_CELL, FP_CELL, FP_DONE);  // done
 	VexdTouchForward = MF_RegisterForward("vexd_pfntouch", ET_IGNORE, FP_CELL, FP_CELL, FP_DONE); // done
 	VexdServerForward = MF_RegisterForward("ServerFrame", ET_IGNORE, FP_DONE); // done

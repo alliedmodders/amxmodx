@@ -40,6 +40,12 @@ native num_to_str(num,string[],len);
 /* Returns converted string to number. */
 native str_to_num(const string[]);
 
+/* Converts float to string. */
+native float_to_str(Float:fl, string[], len);
+
+/* Parses a float. */
+native Float:str_to_float(const string[]);
+
 /* Checks if two strings equal. If len var is set
 * then there are only c chars comapred. */
 native equal(const a[],const b[],c=0);

@@ -964,8 +964,12 @@ static int hier14(value *lval1)
     check_userop(NULL,lval2.tag,lval3.tag,2,&lval3,&lval2.tag);
     store(&lval3);      /* now, store the expression result */
   } /* if */
-  if (!oper && !matchtag(lval3.tag,lval2.tag,TRUE))
-    error(213);         /* tagname mismatch (if "oper", warning already given in plunge2()) */
+  if (!oper) {  /* tagname mismatch (if "oper", warning already given in plunge2()) */
+    if (lval3.sym && !matchtag(lval3.sym->tag, lval2.tag, TRUE))
+      error(213);
+    else if (!lval3.sym && !matchtag(lval3.tag, lval2.tag, TRUE))
+      error(213);
+  }
   if (lval3.sym)
     markusage(lval3.sym,uWRITTEN);
   sideeffect=TRUE;

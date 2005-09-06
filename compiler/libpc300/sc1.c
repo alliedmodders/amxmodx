@@ -3178,7 +3178,7 @@ static int newfunc(char *firstname,int firsttag,int fpublic,int fstatic,int stoc
   if ((sym->usage & (uPROTOTYPED | uREAD))==uREAD && sym->tag!=0) {
     int curstatus=sc_status;
     sc_status=statWRITE;  /* temporarily set status to WRITE, so the warning isn't blocked */
-    error(208);
+    //error(208);		  //this is silly, it should be caught the first pass
     sc_status=curstatus;
     sc_reparse=TRUE;      /* must add another pass to "initial scan" phase */
   } /* if */

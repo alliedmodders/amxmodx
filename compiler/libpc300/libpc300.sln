@@ -7,6 +7,7 @@ Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
 		Debug32 = Debug32
+		Debug64 = Debug64
 		Release = Release
 		Release32 = Release32
 		Release64 = Release64
@@ -16,6 +17,8 @@ Global
 		{19B72687-080B-437A-917A-12AEB0031635}.Debug.Build.0 = Release|Win32
 		{19B72687-080B-437A-917A-12AEB0031635}.Debug32.ActiveCfg = Debug32|Win32
 		{19B72687-080B-437A-917A-12AEB0031635}.Debug32.Build.0 = Debug32|Win32
+		{19B72687-080B-437A-917A-12AEB0031635}.Debug64.ActiveCfg = Debug64|Win32
+		{19B72687-080B-437A-917A-12AEB0031635}.Debug64.Build.0 = Debug64|Win32
 		{19B72687-080B-437A-917A-12AEB0031635}.Release.ActiveCfg = Release|Win32
 		{19B72687-080B-437A-917A-12AEB0031635}.Release.Build.0 = Release|Win32
 		{19B72687-080B-437A-917A-12AEB0031635}.Release32.ActiveCfg = Release32|Win32

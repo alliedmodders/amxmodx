@@ -715,18 +715,6 @@ static int ftoi(cell *val,const unsigned char *curptr)
       #endif
     #elif PAWN_CELL_SIZE==64
       *val=*((cell *)&fnum);
-      #if !defined NDEBUG
-        /* I assume that the C/C++ compiler stores "double" values in IEEE 754
-         * format (as mandated in the ANSI standard).
-         */
-        { float test1 = 0.0, test2 = 50.0, test3 = -50.0;
-          uint64_t bit = 1;
-          /* test 0.0 == all bits 0 */
-          assert(*(uint64_t*)&test1==0x00000000L);
-          /* test sign & magnitude format */
-          assert(((*(uint64_t*)&test2) ^ (*(uint64_t*)&test3)) == (bit << (PAWN_CELL_SIZE-1)));
-        }
-      #endif
     #else
       #error Unsupported cell size
     #endif
@@ -1578,7 +1566,7 @@ static void substallpatterns(unsigned char *line,int buffersize)
     if (*start=='\0')
       break;            /* abort loop on error */
     /* if matching the operator "defined", skip it plus the symbol behind it */
-    if (strncmp((char*)start,"defined",7)==0 && *(start+7)<=' ') {
+    if (strncmp((char*)start,"defined",7)==0 && !isalpha((char)*(start+7))) {
       start+=7;         /* skip "defined" */
       /* skip white space & parantheses */
       while (*start<=' ' && *start!='\0' || *start=='(')

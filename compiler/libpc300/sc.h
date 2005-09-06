@@ -629,7 +629,12 @@ SC_FUNC void jmp_eq0(int number);
 SC_FUNC void outval(cell val,int newline);
 
 /* function prototypes in SC5.C */
-SC_FUNC int error(int number,...) __attribute__((visibility("protected")));
+#if defined WIN32
+#define INVISIBLE
+#else
+#define INVISIBLE __attribute__((visibility("protected")))
+#endif
+SC_FUNC int error(int number,...) INVISIBLE;
 SC_FUNC void errorset(int code);
 
 /* function prototypes in SC6.C */

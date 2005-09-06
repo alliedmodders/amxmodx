@@ -1031,8 +1031,18 @@ void C_CvarValue(const edict_t *pEdict, const char *value)
 
 	if (pPlayer->cvarQueryQueue.front()->querying)
 	{
-		executeForwards(pQuery->resultFwd, ENTINDEX(pEdict), pQuery->cvarName.c_str(), value);
+		if (pQuery->paramLen)
+		{
+			cell arr = prepareCellArray(pQuery->params, pQuery->paramLen);
+			executeForwards(pQuery->resultFwd, ENTINDEX(pEdict), pQuery->cvarName.c_str(), value, arr);
+		}
+		else
+			executeForwards(pQuery->resultFwd, ENTINDEX(pEdict), pQuery->cvarName.c_str(), value);
+
+
 		unregisterSPForward(pQuery->resultFwd);
+		if (pQuery->params)
+			delete [] pQuery->params;
 		delete pQuery;
 		pPlayer->cvarQueryQueue.pop();
 		RETURN_META(MRES_HANDLED);

@@ -2928,6 +2928,13 @@ static cell AMX_NATIVE_CALL int3(AMX *amx, cell *params)
 // native query_client_cvar(id, const cvar[], const resultfunc[])
 static cell AMX_NATIVE_CALL query_client_cvar(AMX *amx, cell *params)
 {
+	int numParams = params[0] / sizeof(cell);
+	if (numParams != 3 && numParams != 5)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid number of parameters passed!");
+		return 0;
+	}
+
 	if (!g_NewDLL_Available)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "NewDLL functions are not available. Blame (your) metamod (version)");
@@ -2953,8 +2960,13 @@ static cell AMX_NATIVE_CALL query_client_cvar(AMX *amx, cell *params)
 	const char *cvarname = get_amxstring(amx, params[2], 0, dummy);
 	const char *resultfuncname = get_amxstring(amx, params[3], 1, dummy);
 
-	// public clientcvarquery_result(id, const cvar[], const result[])
-	int iFunc = registerSPForwardByName(amx, resultfuncname, FP_CELL, FP_STRING, FP_STRING, FP_DONE);
+	// public clientcvarquery_result(id, const cvar[], const result[], [const param[]])
+	int iFunc;
+	if (numParams == 5 && params[4] != 0)
+		iFunc = registerSPForwardByName(amx, resultfuncname, FP_CELL, FP_STRING, FP_STRING, FP_ARRAY, FP_DONE);
+	else
+		iFunc = registerSPForwardByName(amx, resultfuncname, FP_CELL, FP_STRING, FP_STRING, FP_DONE);
+
 	if (iFunc == -1)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Function \"%s\" is not present", resultfuncname);
@@ -2965,6 +2977,29 @@ static cell AMX_NATIVE_CALL query_client_cvar(AMX *amx, cell *params)
 	queryObject->querying = false;
 	queryObject->cvarName.assign(cvarname);
 	queryObject->resultFwd = iFunc;
+
+	if (numParams == 5 && params[4] != 0)
+	{
+		queryObject->paramLen = params[4] + 1;
+		queryObject->params = new cell[ queryObject->paramLen ];
+		if (!queryObject->params)
+		{
+			delete queryObject;
+			unregisterSPForward(iFunc);
+			LogError(amx, AMX_ERR_MEMORY, "Hmm. Out of memory?");
+			return 0;
+		}
+		memcpy(reinterpret_cast<void*>(queryObject->params),
+			reinterpret_cast<const void *>(get_amxaddr(amx, params[5])),
+			queryObject->paramLen * sizeof(cell));
+
+		queryObject->params[queryObject->paramLen - 1] = 0;
+	}
+	else
+	{
+		queryObject->params = NULL;
+		queryObject->paramLen = 0;
+	}
 
 	pPlayer->cvarQueryQueue.push(queryObject);
 

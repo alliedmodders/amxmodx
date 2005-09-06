@@ -67,6 +67,9 @@ struct ClientCvarQuery_Info
 	bool querying;			// Are we actually waiting for a response at the moment?
 	String cvarName;
 	int resultFwd;
+
+	int paramLen;
+	cell *params;
 };
 
 class CPlayer 

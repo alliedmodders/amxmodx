@@ -581,6 +581,8 @@ SC_FUNC int assemble(FILE *fout,FILE *fin)
   constvalue *constptr;
   cell mainaddr;
 
+  fcurrent = -1;
+
   /* if compression failed, restart the assembly with compaction switched off */
   if (setjmp(compact_err)!=0) {
     assert(sc_compress);  /* cannot arrive here if compact encoding was disabled */

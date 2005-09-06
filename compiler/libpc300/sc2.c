@@ -2439,7 +2439,7 @@ static symbol *find_symbol(const symbol *root,const char *name,int fnumber,int i
   while (ptr!=NULL) {
     if (hash==ptr->hash && strcmp(name,ptr->name)==0
         && (ptr->parent==NULL || includechildren)
-        && (ptr->fnumber<0 || ptr->fnumber==fnumber))
+		&& (fnumber<0 || (ptr->fnumber<0 || ptr->fnumber==fnumber)))
       return ptr;
     ptr=ptr->next;
   } /* while */

@@ -2941,6 +2941,12 @@ static cell AMX_NATIVE_CALL query_client_cvar(AMX *amx, cell *params)
 		return 0;
 	}
 
+	if (!g_engfuncs.pfnQueryClientCvarValue)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "QueryClientCvarValue engine function not available. Make sure hlds and metamod are up-to-date");
+		return 0;
+	}
+
 	int id = params[1];
 	if (id < 1 || id > gpGlobals->maxClients)
 	{

@@ -450,9 +450,14 @@ SC_FUNC stringlist *insert_dbgsymbol(symbol *sym)
 #endif
     if (sym->ident==iARRAY || sym->ident==iREFARRAY) {
       symbol *sub;
+#if !defined NDEBUG
+	  count = sym->dim.array.level;
+#endif
       strcat(string," [ ");
       for (sub=sym; sub!=NULL; sub=finddepend(sub)) {
-        assert(sub->dim.array.level==count++);
+#if !defined NDEBUG
+        assert(sub->dim.array.level==count--);
+#endif
         sprintf(string+strlen(string),"%x:%x ",sub->x.idxtag,sub->dim.array.length);
       } /* for */
       strcat(string,"]");

@@ -1407,7 +1407,11 @@ C_DLLEXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pNewFunctionTable, int *in
 	// default metamod does not call this if the gamedll doesn't provide it
 	g_NewDLL_Available = true;
 
-	gNewDLLFunctionTable.pfnCvarValue = C_CvarValue;
+	// If pfnQueryClientCvarValue is not available, the newdllfunctions table will probably
+	// not have the pfnCvarValue member -> better don't write there to avoid corruption
+	if (g_engfuncs.pfnQueryClientCvarValue)
+		gNewDLLFunctionTable.pfnCvarValue = C_CvarValue;
+
 #ifdef FAKEMETA
 	return g_FakeMeta.GetNewDLLFunctions(pNewFunctionTable, interfaceVersion, &gNewDLLFunctionTable);
 #else

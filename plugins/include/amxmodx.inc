@@ -785,3 +785,14 @@ native menu_item_setcall(menu, item, callback=-1);
 
 // Gets distance between two origins (float)
 native Float:get_distance_f( Float:Origin1[3], Float:Origin2[3] ); 
+
+// Dispatches a client cvar query
+//  id: Player id
+//  cvar: cvar name
+//  resultFunc: public handler function
+//  paramLen + params: optional array parameter
+// resultFunc looks like:
+//  public callbackCvarValue(id, const cvar[], const value[])
+// or if you use the optional parameter:
+//  public callbackCvarValue(id, const cvar[], const value[], const param[])
+native query_client_cvar(id, const cvar[], const resultFunc[], paramlen=0, const params[] = "");

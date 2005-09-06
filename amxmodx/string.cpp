@@ -34,23 +34,23 @@
 
 const char* stristr(const char* str,const char* substr)
 {
-   register char *needle = (char *)substr;
-   register char *prevloc = (char *)str;
-   register char *haystack = (char *)str;
+	register char *needle = (char *)substr;
+	register char *prevloc = (char *)str;
+	register char *haystack = (char *)str;
 
-   while (*haystack) {
-       if (tolower(*haystack) == tolower(*needle)) {
-           haystack++;
-           if (!*++needle)
-               return prevloc;
-       }
-       else {
-           haystack = ++prevloc;
-           needle = (char *)substr;
-       }
-   }
+	while (*haystack) {
+		if (tolower(*haystack) == tolower(*needle)) {
+			haystack++;
+			if (!*++needle)
+				return prevloc;
+		}
+		else {
+			haystack = ++prevloc;
+			needle = (char *)substr;
+		}
+	}
 
-   return NULL;
+	return NULL;
 }
 
 char* format_amxstring(AMX *amx, cell *params, int parm,int& len)
@@ -60,39 +60,39 @@ char* format_amxstring(AMX *amx, cell *params, int parm,int& len)
 
 int amxstring_len(cell* a)
 {
-  register int c = 0;
+	register int c = 0;
 
-  while( a[ c ] )
-    ++c;
+	while( a[ c ] )
+		++c;
 
-  return c;
+	return c;
 }
 
 cell* get_amxaddr(AMX *amx,cell amx_addr)
 {
-  return (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
+	return (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
 }
 
 int set_amxstring(AMX *amx,cell amx_addr,const char *source,int max)
 {
-  cell* dest = (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
-  cell* start = dest;
-  while (max--&&*source)
-    *dest++=(cell)*source++;
-  *dest = 0;
-  return dest-start;
+	cell* dest = (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
+	cell* start = dest;
+	while (max--&&*source)
+		*dest++=(cell)*source++;
+	*dest = 0;
+	return dest-start;
 }
 
 char* get_amxstring(AMX *amx,cell amx_addr,int id, int& len)
 {
-  static char buffor[4][3072];
-  register cell* source = (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
-  register char* dest = buffor[id];
-  char* start = dest;
-  while ((*dest++=(char)(*source++)))
-    ;
-  len = --dest - start;
-  return start;
+	static char buffor[4][3072];
+	register cell* source = (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
+	register char* dest = buffor[id];
+	char* start = dest;
+	while ((*dest++=(char)(*source++)))
+		;
+	len = --dest - start;
+	return start;
 }
 
 void copy_amxmemory(cell* dest,cell* src,int len)
@@ -104,348 +104,408 @@ void copy_amxmemory(cell* dest,cell* src,int len)
 
 char* parse_arg(char** line,int& state)
 {
-  static char arg[3072];
-  char* dest = arg;
-  state = 0;
-  while(**line) {
-    if ( isspace(**line) ) {
-      if (state == 1)
-        break;
-      else if (!state) {
-        (*line)++;
-        continue;
-      }
-    }
-    else if (state != 2)
-      state = 1;
-    if (**line=='"') {
-      (*line)++;
-      if (state == 2)
-        break;
-      state = 2;
-      continue;
-    }
-    *dest++ = *(*line)++;
-  }
-  *dest = '\0';
-  return arg;
+	static char arg[3072];
+	char* dest = arg;
+	state = 0;
+	while(**line) {
+		if ( isspace(**line) ) {
+			if (state == 1)
+				break;
+			else if (!state) {
+				(*line)++;
+				continue;
+			}
+		}
+		else if (state != 2)
+			state = 1;
+		if (**line=='"') {
+			(*line)++;
+			if (state == 2)
+				break;
+			state = 2;
+			continue;
+		}
+		*dest++ = *(*line)++;
+	}
+	*dest = '\0';
+	return arg;
 }
 
 static cell AMX_NATIVE_CALL replace(AMX *amx, cell *params) /* 4 param */
 {
-  static char buffor[3072];
-  cell *a = get_amxaddr(amx,params[1]);
-  cell *b = get_amxaddr(amx,params[3]);
-  cell *c = get_amxaddr(amx,params[4]);
-  int iMain = amxstring_len(a);
-  int iWhat = amxstring_len(b);
-  int iWith = amxstring_len(c);
-  int iPot = iMain + iWith - iWhat;
-  if (iPot>=params[2]){
-    amx_RaiseError(amx,AMX_ERR_NATIVE);
-    return 0;
-  }
-  char *d = buffor;
-  cell *x, *y, *z = a, *l = a;
-  int p = 0;
-  while(*a){
-    if (*a==*b){
-      x=a+1;
-      y=b+1;
-      p=1;
-      if (!*y) break;
-      while(*x==*y){
-        x++; y++; p++;
-        if (!*y) break;
-      }
-      if (!*y) break;
-      p = 0;
-      *d++=(char)*a++;
-      continue;
-    }
-    *d++=(char)*a++;
-  }
-  if (p){
-    while(*c) *d++=(char)*c++;
-    a+=p;
-    while(*a) *d++=(char)*a++;
-    *d=0;
-    d = buffor;
-    while(*d) *z++=*d++;
-    *z=0;
-    return (z-l);
-  }
-  return 0;
+	static char buffor[3072];
+	cell *a = get_amxaddr(amx,params[1]);
+	cell *b = get_amxaddr(amx,params[3]);
+	cell *c = get_amxaddr(amx,params[4]);
+	int iMain = amxstring_len(a);
+	int iWhat = amxstring_len(b);
+	int iWith = amxstring_len(c);
+	int iPot = iMain + iWith - iWhat;
+	if (iPot>=params[2]){
+		amx_RaiseError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+	char *d = buffor;
+	cell *x, *y, *z = a, *l = a;
+	int p = 0;
+	while(*a){
+		if (*a==*b){
+			x=a+1;
+			y=b+1;
+			p=1;
+			if (!*y) break;
+			while(*x==*y){
+				x++; y++; p++;
+				if (!*y) break;
+			}
+			if (!*y) break;
+			p = 0;
+			*d++=(char)*a++;
+			continue;
+		}
+		*d++=(char)*a++;
+	}
+	if (p){
+		while(*c) *d++=(char)*c++;
+		a+=p;
+		while(*a) *d++=(char)*a++;
+		*d=0;
+		d = buffor;
+		while(*d) *z++=*d++;
+		*z=0;
+		return (z-l);
+	}
+	return 0;
 }
 
 static cell AMX_NATIVE_CALL contain(AMX *amx, cell *params) /* 2 param */
 {
-  register cell *a = get_amxaddr(amx,params[2]);
-  register cell *b = get_amxaddr(amx,params[1]);
-  register cell *c = b;
-  cell* str = b;
-  cell* substr = a;
-  while (*c) {
-    if (*c == *a) {
-      c++;
-      if (!*++a)
-        return b - str;
-    }
-    else {
-      c = ++b;
-      a = substr;
-    }
-  }
-  return -1;
+	register cell *a = get_amxaddr(amx,params[2]);
+	register cell *b = get_amxaddr(amx,params[1]);
+	register cell *c = b;
+	cell* str = b;
+	cell* substr = a;
+	while (*c) {
+		if (*c == *a) {
+			c++;
+			if (!*++a)
+				return b - str;
+		}
+		else {
+			c = ++b;
+			a = substr;
+		}
+	}
+	return -1;
 }
 
 static cell AMX_NATIVE_CALL containi(AMX *amx, cell *params) /* 2 param */
 {
-  register cell *a = get_amxaddr(amx,params[2]);
-  register cell *b = get_amxaddr(amx,params[1]);
-  register cell *c = b;
-  cell* str = b;
-  cell* substr = a;
-  while (*c) {
-    if (tolower(*c) == tolower(*a)) {
-      c++;
-      if (!*++a)
-        return b - str;
-    }
-    else {
-      c = ++b;
-      a = substr;
-    }
-  }
-  return -1;
+	register cell *a = get_amxaddr(amx,params[2]);
+	register cell *b = get_amxaddr(amx,params[1]);
+	register cell *c = b;
+	cell* str = b;
+	cell* substr = a;
+	while (*c) {
+		if (tolower(*c) == tolower(*a)) {
+			c++;
+			if (!*++a)
+				return b - str;
+		}
+		else {
+			c = ++b;
+			a = substr;
+		}
+	}
+	return -1;
 }
 
 static cell AMX_NATIVE_CALL strtonum(AMX *amx, cell *params) /* 1 param */
 {
-  int iLen;
-  return atoi(get_amxstring(amx,params[1],0,iLen));
+	int iLen;
+	return atoi(get_amxstring(amx, params[1], 0, iLen));
 }
 
 static cell AMX_NATIVE_CALL numtostr(AMX *amx, cell *params) /* 3 param */
 {
-  char szTemp[32];
-  sprintf(szTemp,"%d",(int)params[1]);
-  return set_amxstring(amx,params[2],szTemp,params[3]);
+	char szTemp[32];
+	sprintf(szTemp, "%d", (int)params[1]);
+	return set_amxstring(amx, params[2], szTemp, params[3]);
+}
+
+static cell AMX_NATIVE_CALL str_to_float(AMX *amx, cell *params)
+{
+	cell *str = get_amxaddr(amx, params[1]);
+
+	bool neg=false;
+	unsigned long part1 = 0;
+
+	if (*str == '-')
+	{
+		neg = true;
+		++str;
+	}
+	else if (*str == '+')
+		++str;
+
+	while (*str)
+	{
+		if (*str == '.')
+		{
+			++str;
+			break;
+		}
+		if (*str < '0' || *str > '9')
+		{
+			REAL fl = neg ? -static_cast<REAL>(part1) : static_cast<REAL>(part1);
+			return amx_ftoc(fl);
+		}
+
+		part1 *= 10;
+		part1 += *str - '0';
+
+		++str;
+	}
+
+	unsigned long part2 = 0;
+	unsigned long div = 1;
+	while (*str)
+	{
+		if (*str < '0' || *str > '9')
+			break;
+
+		part2 *= 10;
+		part2 += *str - '0';
+		div *= 10;
+		++str;
+	}
+
+	REAL fl = static_cast<REAL>(part1) + (static_cast<REAL>(part2) / div);
+	if (neg)
+		fl = -fl;
+	return amx_ftoc(fl);
+}
+
+static cell AMX_NATIVE_CALL float_to_str(AMX *amx, cell *params)
+{
+	char szTemp[32];
+	sprintf(szTemp, "%f", amx_ctof(params[1]));
+	return set_amxstring(amx, params[2], szTemp, params[3]);
 }
 
 static cell AMX_NATIVE_CALL add(AMX *amx, cell *params) /* 4 param */
 {
-  cell *src = get_amxaddr(amx,params[3]);
-  cell *dest = get_amxaddr(amx,params[1]);
-  cell *start = dest;
-  int c = params[2], d = params[4];
-  while(*dest&&c--)
-    ++dest;
-  if (d){
-    while(c--&&d--&&*src)
-    *dest++=*src++;
-    *dest=0;
-    return (dest-start);
-  }
-  while(c--&&*src)
-    *dest++=*src++;
-  *dest=0;
-  return (dest-start);
+	cell *src = get_amxaddr(amx,params[3]);
+	cell *dest = get_amxaddr(amx,params[1]);
+	cell *start = dest;
+	int c = params[2], d = params[4];
+	while(*dest&&c--)
+		++dest;
+	if (d){
+		while(c--&&d--&&*src)
+			*dest++=*src++;
+		*dest=0;
+		return (dest-start);
+	}
+	while(c--&&*src)
+		*dest++=*src++;
+	*dest=0;
+	return (dest-start);
 }
 
 static cell AMX_NATIVE_CALL copy(AMX *amx, cell *params) /* 4 param */
 {
-  cell *src = get_amxaddr(amx,params[3]);
-  cell *dest = get_amxaddr(amx,params[1]);
-  cell *start = dest;
-  int c = params[2];
-  while(c--&&*src)
-    *dest++=*src++;
-  *dest=0;
-  return (dest-start);
+	cell *src = get_amxaddr(amx,params[3]);
+	cell *dest = get_amxaddr(amx,params[1]);
+	cell *start = dest;
+	int c = params[2];
+	while(c--&&*src)
+		*dest++=*src++;
+	*dest=0;
+	return (dest-start);
 }
 
 static cell AMX_NATIVE_CALL copyc(AMX *amx, cell *params) /* 4 param */
 {
-  cell *src = get_amxaddr(amx,params[3]);
-  cell *dest = get_amxaddr(amx,params[1]);
-  cell *start = dest;
-  int c = params[2];
-  cell ch = params[4];
-  while(c--&&*src&&*src!=ch)
-    *dest++=*src++;
-  *dest=0;
-  return (dest-start);
+	cell *src = get_amxaddr(amx,params[3]);
+	cell *dest = get_amxaddr(amx,params[1]);
+	cell *start = dest;
+	int c = params[2];
+	cell ch = params[4];
+	while(c--&&*src&&*src!=ch)
+		*dest++=*src++;
+	*dest=0;
+	return (dest-start);
 }
 
 static cell AMX_NATIVE_CALL setc(AMX *amx, cell *params) /* 4 param */
 {
-  cell *src = get_amxaddr(amx,params[1]);
-  int c = params[2];
-  cell ch = params[3];
-  while(c--)
-    *src++=ch;
-  return 1;
+	cell *src = get_amxaddr(amx,params[1]);
+	int c = params[2];
+	cell ch = params[3];
+	while(c--)
+		*src++=ch;
+	return 1;
 }
 
 static cell AMX_NATIVE_CALL equal(AMX *amx, cell *params) /* 3 param */
 {
-  cell *a = get_amxaddr(amx,params[1]);
-  cell *b = get_amxaddr(amx,params[2]);
-  int c = params[3];
-  if (c) {
-        while (--c&&*a&&(*a==*b))
-            ++a, ++b;
-    return (*a-*b)?0:1;
-  }
-  int ret;
-  while(!(ret=*a-*b)&&*b)
-    ++a, ++b;
-  return ret?0:1;
+	cell *a = get_amxaddr(amx,params[1]);
+	cell *b = get_amxaddr(amx,params[2]);
+	int c = params[3];
+	if (c) {
+		while (--c&&*a&&(*a==*b))
+			++a, ++b;
+		return (*a-*b)?0:1;
+	}
+	int ret;
+	while(!(ret=*a-*b)&&*b)
+		++a, ++b;
+	return ret?0:1;
 }
 
 static cell AMX_NATIVE_CALL equali(AMX *amx, cell *params) /* 3 param */
 {
-  cell *a = get_amxaddr(amx,params[1]);
-  cell *b = get_amxaddr(amx,params[2]);
-  int  f,l, c = params[3];
-  if (c) {
-    do {
-      f = tolower(*a++);
-      l = tolower(*b++);
-    }
-    while (--c &&l&&f&& f==l);
-    return(f - l)?0:1;
-  }
-  do {
-    f = tolower(*a++);
-    l = tolower(*b++);
-  } while (f && f == l);
-  return (f - l)?0:1;
+	cell *a = get_amxaddr(amx,params[1]);
+	cell *b = get_amxaddr(amx,params[2]);
+	int  f,l, c = params[3];
+	if (c) {
+		do {
+			f = tolower(*a++);
+			l = tolower(*b++);
+		}
+		while (--c &&l&&f&& f==l);
+		return(f - l)?0:1;
+	}
+	do {
+		f = tolower(*a++);
+		l = tolower(*b++);
+	} while (f && f == l);
+	return (f - l)?0:1;
 }
 
 static cell AMX_NATIVE_CALL format(AMX *amx, cell *params) /* 3 param */
 {
-  int len;
-  return set_amxstring(amx,params[1],format_amxstring(amx,params,3,len),params[2]);
+	int len;
+	return set_amxstring(amx,params[1],format_amxstring(amx,params,3,len),params[2]);
 }
 
 static cell AMX_NATIVE_CALL parse(AMX *amx, cell *params) /* 3 param */
 {
-  int inum = *params/sizeof(cell), iarg = 2, c;
-  char* arg, *parse = get_amxstring(amx,params[1],0,c);
-  cell *cptr;
-  int state;
-  while(*parse){
-  arg = parse_arg(&parse,state);
-    if (state){
-      if (inum <= iarg)
-        return( (iarg-2)>>1 );
-      cptr = get_amxaddr(amx,params[iarg++]);
-      c = *get_amxaddr(amx,params[iarg++]);
-      while(c--&&*arg)
-        *cptr++=(cell)*arg++;
-      *cptr=0;
-    }
-  }
+	int inum = *params/sizeof(cell), iarg = 2, c;
+	char* arg, *parse = get_amxstring(amx,params[1],0,c);
+	cell *cptr;
+	int state;
+	while(*parse){
+		arg = parse_arg(&parse,state);
+		if (state){
+			if (inum <= iarg)
+				return( (iarg-2)>>1 );
+			cptr = get_amxaddr(amx,params[iarg++]);
+			c = *get_amxaddr(amx,params[iarg++]);
+			while(c--&&*arg)
+				*cptr++=(cell)*arg++;
+			*cptr=0;
+		}
+	}
 
-  return( (iarg-2)>>1 );
+	return( (iarg-2)>>1 );
 }
 
 static cell AMX_NATIVE_CALL strtolower(AMX *amx, cell *params) /* 1 param */
 {
-  cell *cptr = get_amxaddr(amx,params[1]);
-  cell *begin = cptr;
-  while(*cptr){
-    *cptr = tolower(*cptr);
-    cptr++;
-  }
-  return cptr - begin;
+	cell *cptr = get_amxaddr(amx,params[1]);
+	cell *begin = cptr;
+	while(*cptr){
+		*cptr = tolower(*cptr);
+		cptr++;
+	}
+	return cptr - begin;
 }
 
 static cell AMX_NATIVE_CALL strtoupper(AMX *amx, cell *params) /* 1 param */
 {
-  cell *cptr = get_amxaddr(amx,params[1]);
-  cell *begin = cptr;
-  while(*cptr){
-    *cptr = toupper(*cptr);
-    cptr++;
-  }
-  return cptr - begin;
+	cell *cptr = get_amxaddr(amx,params[1]);
+	cell *begin = cptr;
+	while(*cptr){
+		*cptr = toupper(*cptr);
+		cptr++;
+	}
+	return cptr - begin;
 }
 
 int fo_numargs(AMX *amx)
 {
-  unsigned char *data =amx->base+(int)((AMX_HEADER *)amx->base)->dat;
-  cell bytes= * (cell *)(data+(int)amx->frm+2*sizeof(cell));
-  return (int)(bytes/sizeof(cell));
+	unsigned char *data =amx->base+(int)((AMX_HEADER *)amx->base)->dat;
+	cell bytes= * (cell *)(data+(int)amx->frm+2*sizeof(cell));
+	return (int)(bytes/sizeof(cell));
 }
 
 int fo_getargnum(AMX *amx, int pos)
 {
-  unsigned char *data =amx->base+(int)((AMX_HEADER *)amx->base)->dat;
-  cell value = * (cell *)(data+(int)amx->frm+(pos+3)*sizeof(cell));
-  return *(cell *)(data+(int)value);
+	unsigned char *data =amx->base+(int)((AMX_HEADER *)amx->base)->dat;
+	cell value = * (cell *)(data+(int)amx->frm+(pos+3)*sizeof(cell));
+	return *(cell *)(data+(int)value);
 }
 
 float fo_getargfloat(AMX *amx, int pos)
 {
-  unsigned char *data =amx->base+(int)((AMX_HEADER *)amx->base)->dat;
-  cell value = * (cell *)(data+(int)amx->frm+(pos+3)*sizeof(cell));
-  cell number = *(cell *)(data+(int)value);
-  return *(REAL *)((void *)&number);
+	unsigned char *data =amx->base+(int)((AMX_HEADER *)amx->base)->dat;
+	cell value = * (cell *)(data+(int)amx->frm+(pos+3)*sizeof(cell));
+	cell number = *(cell *)(data+(int)value);
+	return *(REAL *)((void *)&number);
 }
 
 char* fo_getargstr(AMX *amx, int swap, int pos)
 {
-  unsigned char *data =amx->base+(int)((AMX_HEADER *)amx->base)->dat;
-  cell src_value= * (cell *)(data+(int)amx->frm+(pos+3)*sizeof(cell));
-  cell value;
-  static char buffer[2][3072];
-  char* b = buffer[swap];
-  int a = 0;
-  do {
-    value = src_value + a++ * sizeof(cell);
-    value = *(cell *)(data+(int)value);
-    *b++ = static_cast<char>(value);
-  } while (value);
+	unsigned char *data =amx->base+(int)((AMX_HEADER *)amx->base)->dat;
+	cell src_value= * (cell *)(data+(int)amx->frm+(pos+3)*sizeof(cell));
+	cell value;
+	static char buffer[2][3072];
+	char* b = buffer[swap];
+	int a = 0;
+	do {
+		value = src_value + a++ * sizeof(cell);
+		value = *(cell *)(data+(int)value);
+		*b++ = static_cast<char>(value);
+	} while (value);
 
-  return buffer[swap];
+	return buffer[swap];
 }
 
 char* format_arguments(AMX *amx, int parm,int& len)
 {
-  static char buffer[2][3072];
-  static char format[16];
-  char *ptr,*arg, *dest = *buffer;
-  char *src = fo_getargstr(amx, 0,parm++);
-  int numparam = fo_numargs(amx);
-  while(*src) {
-    if (*src=='%'&&*(src+1)) {
-      ptr = format;
-      *ptr++ = *src++;
-      if (*src=='%'){
-        *dest++=*src++;
-        continue;
-      }
-      while (!isalpha(*ptr++=*src++))
-        ;
-      *ptr='\0';
-      if (numparam < parm) continue;
-      arg = buffer[1];
-      switch(*(ptr-1)){
-      case 's':  sprintf(arg,format,fo_getargstr(amx,1, parm++)); break;
-      case 'f': case 'g': sprintf(arg,format,fo_getargfloat(amx, parm++)); break;
-      default: sprintf(arg,format,fo_getargnum(amx, parm++));
-      }
-      while(*arg) *dest++=*arg++;
-      continue;
-    }
-    *dest++=*src++;
-  }
-  *dest='\0';
-  len = dest - *buffer;
-  return *buffer;
+	static char buffer[2][3072];
+	static char format[16];
+	char *ptr,*arg, *dest = *buffer;
+	char *src = fo_getargstr(amx, 0,parm++);
+	int numparam = fo_numargs(amx);
+	while(*src) {
+		if (*src=='%'&&*(src+1)) {
+			ptr = format;
+			*ptr++ = *src++;
+			if (*src=='%'){
+				*dest++=*src++;
+				continue;
+			}
+			while (!isalpha(*ptr++=*src++))
+				;
+			*ptr='\0';
+			if (numparam < parm) continue;
+			arg = buffer[1];
+			switch(*(ptr-1)){
+	  case 's':  sprintf(arg,format,fo_getargstr(amx,1, parm++)); break;
+	  case 'f': case 'g': sprintf(arg,format,fo_getargfloat(amx, parm++)); break;
+	  default: sprintf(arg,format,fo_getargnum(amx, parm++));
+			}
+			while(*arg) *dest++=*arg++;
+			continue;
+		}
+		*dest++=*src++;
+	}
+	*dest='\0';
+	len = dest - *buffer;
+	return *buffer;
 }
 
 //added by BAILOPAN for jtp10181
@@ -563,34 +623,34 @@ static cell AMX_NATIVE_CALL strbreak(AMX *amx, cell *params)	/* 5 param */
 
 static cell AMX_NATIVE_CALL format_args(AMX *amx, cell *params)
 {
-  int len;
-  int pos = params[3];
-  if (pos < 0){
-     amx_RaiseError(amx,AMX_ERR_NATIVE);
-     return 0;
-  }
-  char* string = format_arguments(amx, pos ,len); // indexed from 0
-  return set_amxstring(amx,params[1],string,params[2]);
+	int len;
+	int pos = params[3];
+	if (pos < 0){
+		amx_RaiseError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
+	char* string = format_arguments(amx, pos ,len); // indexed from 0
+	return set_amxstring(amx,params[1],string,params[2]);
 }
 
 static cell AMX_NATIVE_CALL is_digit(AMX *amx, cell *params)
 {
-  return isdigit( params[1] );
+	return isdigit( params[1] );
 }
 
 static cell AMX_NATIVE_CALL is_alnum(AMX *amx, cell *params)
 {
-  return isalnum( params[1] );
+	return isalnum( params[1] );
 }
 
 static cell AMX_NATIVE_CALL is_space(AMX *amx, cell *params)
 {
-  return isspace( params[1] );
+	return isspace( params[1] );
 }
 
 static cell AMX_NATIVE_CALL is_alpha(AMX *amx, cell *params)
 {
-  return isalpha( params[1] );
+	return isalpha( params[1] );
 }
 
 static cell AMX_NATIVE_CALL amx_ucfirst(AMX *amx, cell *params)
@@ -629,7 +689,7 @@ static cell AMX_NATIVE_CALL amx_trim(AMX *amx, cell *params)
 			len--;
 		}
 	}
-	
+
 	for (i=0; i<len; i++)
 	{
 		if (isspace(asdf[i]) && !flag)
@@ -651,26 +711,26 @@ static cell AMX_NATIVE_CALL amx_trim(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL n_strcat(AMX *amx,cell *params)
 {
-  cell *cdest,*csrc;
+	cell *cdest,*csrc;
 
-  cdest = get_amxaddr(amx, params[1]);
-  csrc = get_amxaddr(amx, params[2]);
-  int num = params[3];
-  while (*cdest && num)
-  {
-	  cdest++;
-	  num--;
-  }
-  if (!num)
-	  return 0;
-  while (*csrc && num)
-  {
-	  *cdest++ = *csrc++;
-	  num--;
-  }
-  *cdest = 0;
+	cdest = get_amxaddr(amx, params[1]);
+	csrc = get_amxaddr(amx, params[2]);
+	int num = params[3];
+	while (*cdest && num)
+	{
+		cdest++;
+		num--;
+	}
+	if (!num)
+		return 0;
+	while (*csrc && num)
+	{
+		*cdest++ = *csrc++;
+		num--;
+	}
+	*cdest = 0;
 
-  return params[3] - num;
+	return params[3] - num;
 }
 
 static cell AMX_NATIVE_CALL n_strcmp(AMX *amx, cell *params)
@@ -749,6 +809,8 @@ AMX_NATIVE_INFO string_Natives[] = {
   { "strcat",		n_strcat },
   { "strfind",		n_strfind },
   { "strcmp",		n_strcmp },
+  { "str_to_float",	str_to_float },
+  { "float_to_str", float_to_str },
 
   { NULL, NULL }
 };

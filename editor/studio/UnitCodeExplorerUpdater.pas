@@ -60,30 +60,32 @@ begin
       if Plugin_UpdateCodeExplorer(GetCurrLang.Name, ActiveDoc.FileName, frmMain.tsMain.Items[frmMain.tsMain.ActiveTabIndex].Caption, True) then begin
         try
           if (frmMain.tsMain.ActiveTabIndex = 0) then begin
-            // analyze code
-            with ParseCodePAWN(eCode, ExtractFileName(ActiveDoc.FileName)) do begin
-              eConstants.Assign(Constants);
-              eDefined.Assign(Defined);
-              eCVars.Assign(CVars);
-              eIncluded.Assign(Included);
-              eMethodsDefault.Assign(MethodsDefault);
-              eMethodsEvents.Assign(Events);
-              eStocks.Assign(Stocks);
-              eNatives.Assign(Natives);
-              eForwards.Assign(Forwards);
-              eVariables.Assign(Variables);
+            if Plugin_UpdateCodeExplorer(GetCurrLang.Name, ActiveDoc.FileName, frmMain.tsMain.Items[frmMain.tsMain.ActiveTabIndex].Caption, True) then begin
+              // analyze code
+              with ParseCodePAWN(eCode, ExtractFileName(ActiveDoc.FileName)) do begin
+                eConstants.Assign(Constants);
+                eDefined.Assign(Defined);
+                eCVars.Assign(CVars);
+                eIncluded.Assign(Included);
+                eMethodsDefault.Assign(MethodsDefault);
+                eMethodsEvents.Assign(Events);
+                eStocks.Assign(Stocks);
+                eNatives.Assign(Natives);
+                eForwards.Assign(Forwards);
+                eVariables.Assign(Variables);
 
-              eAutoComplete := eAutoComplete + #13 + AutoComplete.Text;
-              eCallTips := eCallTips + #13 + CallTips.Text;
-              eKeywords := eKeywords + #13 + HighlightKeywords.Text;
+                eAutoComplete := eAutoComplete + #13 + AutoComplete.Text;
+                eCallTips := eCallTips + #13 + CallTips.Text;
+                eKeywords := eKeywords + #13 + HighlightKeywords.Text;
 
-              DestroyResult;
+                DestroyResult;
+              end;
+              // apply changes
+              Synchronize(SetValuesPAWN);
             end;
-            // apply changes
-            Synchronize(SetValuesPAWN);
           end;
         except
-          // GABEM
+          // GABEN
         end;
       end;
       Sleep(1000);

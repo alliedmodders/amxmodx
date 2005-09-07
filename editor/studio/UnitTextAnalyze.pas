@@ -113,9 +113,7 @@ begin
       eString := RemoveStringsAndComments(Trim(eCode[i]), True);
     end
     { Included }
-    else if (IsAtStart('#include', Trim(eCode[i]), False)) then begin
-      eString := Trim(eCode[i]);
-      
+    else if (IsAtStart('#include', eString)) then begin
       if Between(eString, '<', '>') <> '' then begin
         eString := Between(eString, '<', '>');
         if ExtractFileExt(eString) <> '' then
@@ -141,6 +139,7 @@ begin
 
         if (eString <> '') and (FileExists(eTemp)) then begin
           // Load code and parse
+          eTempResult := nil;
           try
             eStr.LoadFromFile(eTemp);
             if Application.Terminated then exit;
@@ -150,11 +149,11 @@ begin
             Result.CallTips.AddStrings(eTempResult.CallTips);
             Result.HighlightKeywords.AddStrings(eTempResult.HighlightKeywords);
             // free
-            eTempResult.DestroyResult;
-            eTempResult := nil;
           except
             // mmmm.. burger
           end;
+          if Assigned(eTempResult) then
+            eTempResult.DestroyResult;
           // wait
           Sleep(20);
         end;
@@ -166,8 +165,8 @@ begin
         Result.CVars.AddObject(Between(eString, '"', '"'), TObject(i));
     end
     { Defined }
-    else if (IsAtStart('#define', Trim(eCode[i]))) then begin
-      eString := Copy(Trim(eCode[i]), 8, Length(Trim(eCode[i])));
+    else if (IsAtStart('#define', eString)) then begin
+      eString := Copy(eString, 8, Length(eString));
       eString := Trim(eString);
       Result.CallTips.Add(eString + '-> ' + FileName);
       if Pos(#32, eString) <> 0 then
@@ -179,8 +178,8 @@ begin
     end
     { Events (Part 1) }
     else if (IsAtStart('register_event(', eString)) and (not IsRecursive) then begin
-      if CountChars(Trim(eCode[i]), '"') >= 4 then begin
-        eTemp := StringReplace(Trim(eCode[i]), '"' + Between(Trim(eCode[i]), '"', '"') + '"', '', []);
+      if CountChars(eString, '"') >= 4 then begin
+        eTemp := StringReplace(eString, '"' + Between(eString, '"', '"') + '"', '', []);
         ePreEvents.Add(Between(eString, '"', '"'));
       end;
     end;
@@ -403,4 +402,3 @@ finalization
 
 
 end.
-

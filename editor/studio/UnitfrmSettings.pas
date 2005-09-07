@@ -765,7 +765,7 @@ begin
     end;
     if trvDirectories.Items.Count <> 0 then
       trvDirectories.Items.Item[0].Expand(True); 
-    eStr.Free;
+    eStr.Destroy;
     
     // ... scan for directories ...
     with GetAllDirs do begin

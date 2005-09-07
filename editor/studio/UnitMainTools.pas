@@ -93,7 +93,7 @@ function GetAllDirs: TStringList;
 procedure SetProxySettings;
 function TryConnect: Integer;
 
-var PAWNProjects: TDocCollection;
+var PawnProjects: TDocCollection;
     CPPProjects: TDocCollection;
     OtherProjects: TDocCollection;
 
@@ -113,7 +113,7 @@ uses UnitfrmMain, UnitfrmSettings, UnitLanguages, UnitfrmSelectColor,
 
 function GetCat: String;
 begin
-  if frmMain.mnuPAWN.Checked then
+  if frmMain.mnuPawn.Checked then
     Result := 'Pawn'
   else if frmMain.mnuCPP.Checked then
     Result := 'C++'
@@ -286,7 +286,7 @@ begin
       end;
     until FindNext(eRec) <> 0;
   end;
-  ePConfig.Free;
+  ePConfig.Destroy;
 end;
 
 function GetAllIncludeFiles: TStringArray;
@@ -323,7 +323,7 @@ begin
   for i := 0 to eStr.Count -1 do
     Result[i] := eStr[i];
 
-  eStr.Free;
+  eStr.Destroy;
 end;
 
 
@@ -407,8 +407,8 @@ begin
   if Started then begin
     if ListenServer then
       Result := frmSettings.txtAMXXDir.Text
-    else if Length(frmSettings.txtPAWNCompilerPath.Text) > 8 then
-      Result := IncludeTrailingPathDelimiter(Copy(ExtractFilePath(frmSettings.txtPAWNCompilerPath.Text), 1, Length(ExtractFilePath(frmSettings.txtPAWNCompilerPath.Text)) - 10))
+    else if Length(frmSettings.txtPawnCompilerPath.Text) > 8 then
+      Result := IncludeTrailingPathDelimiter(Copy(ExtractFilePath(frmSettings.txtPawnCompilerPath.Text), 1, Length(ExtractFilePath(frmSettings.txtPawnCompilerPath.Text)) - 10))
     else
       Result := '';
   end
@@ -420,7 +420,7 @@ function CloseDocument(eDocument: TDocument; SaveActiveDoc: Boolean = False): Bo
 var Collection: TDocCollection;
 begin
   case frmMain.tsMain.ActiveTabIndex of
-    0: Collection := PAWNProjects;
+    0: Collection := PawnProjects;
     1: Collection := CPPProjects;
     else Collection := OtherProjects;
   end;
@@ -463,7 +463,7 @@ procedure LoadCodeSnippets(Lang: String);
 var i: integer;
     CSItem: TSpTBXItem;
 begin
-  for i := frmMain.tbxCodeSnippets.Items.Count -1 downto 5 do
+  for i := frmMain.tbxCodeSnippets.Items.Count -1 downto 6 do
     frmMain.tbxCodeSnippets.Items.Delete(i);
 
   with GetSnippetList(Lang) do begin
@@ -542,7 +542,7 @@ begin
     // no save here, it saves when another tab is being activated...
 
     case Index of
-        0: Collection := PAWNProjects; // PAWN
+        0: Collection := PawnProjects; // Pawn
         1: Collection := CPPProjects;   // C++
       else Collection := OtherProjects; // Other
     end;
@@ -640,7 +640,7 @@ begin
 		frmSettings.lvShortcuts.Clear;
 		for i := 0 to frmMain.sciEditor.KeyCommands.Count - 1 do begin
 			KeyCommand := frmMain.sciEditor.KeyCommands.Items[i] as TSciKeyCommand;
-      Ident:= 'Unknown';
+      Ident := 'Unknown';
 			IntToIdent(KeyCommand.Command, Ident, Sci_KeyboardCommandMap);
       if Ident <> 'No Command' then begin // Important for Control Chars, the user mustn't change the values for it...
       	Item := frmSettings.lvShortcuts.Items.Add;
@@ -676,11 +676,11 @@ begin
 
   SetProxySettings;
   { Compiler }
-  frmSettings.txtPAWNCompilerPath.Text := eConfig.ReadString('Pawn-Compiler', 'Path', '');
-  frmSettings.txtPAWNArgs.Text := eConfig.ReadString('Pawn-Compiler', 'Args', '');
-  frmSettings.txtPAWNOutput.Text := IncludeTrailingPathDelimiter(eConfig.ReadString('Pawn-Compiler', 'DefaultOutput', ''));
-  if frmSettings.txtPAWNOutput.Text = '\' then
-    frmSettings.txtPAWNOutput.Text := '';
+  frmSettings.txtPawnCompilerPath.Text := eConfig.ReadString('Pawn-Compiler', 'Path', '');
+  frmSettings.txtPawnArgs.Text := eConfig.ReadString('Pawn-Compiler', 'Args', '');
+  frmSettings.txtPawnOutput.Text := IncludeTrailingPathDelimiter(eConfig.ReadString('Pawn-Compiler', 'DefaultOutput', ''));
+  if frmSettings.txtPawnOutput.Text = '\' then
+    frmSettings.txtPawnOutput.Text := '';
   frmSettings.txtCPPCompilerPath.Text := eConfig.ReadString('CPP-Compiler', 'Path', '');
   frmSettings.txtCPPCompilerArguments.Text := eConfig.ReadString('CPP-Compiler', 'Args', '');
   frmSettings.txtCPPOutput.Text := IncludeTrailingPathDelimiter(eConfig.ReadString('CPP-Compiler', 'DefaultOutput', ''));
@@ -715,7 +715,7 @@ end;
 procedure SelectLanguage(Lang: String);
 begin
   frmMain.sciEditor.LanguageManager.SelectedLanguage := Lang;
-  frmMain.mnuHPAWN.Checked := Lang = 'Pawn';
+  frmMain.mnuHPawn.Checked := Lang = 'Pawn';
   frmMain.mnuHCPP.Checked := Lang = 'C++';
   frmMain.mnuHHTML.Checked := Lang = 'HTML';
   frmMain.mnuHSQL.Checked := Lang = 'SQL';
@@ -790,8 +790,8 @@ end;
 
 destructor TDocument.Destroy;
 begin
+  FCode.Destroy;
   inherited Destroy;
-  FCode.Free;
 end;
 
 function TDocument.Save: Boolean;
@@ -872,7 +872,7 @@ begin
         sLines.Add(sNotes);
       end;
       sLines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'config\Notes.dat');
-      sLines.Free;
+      sLines.Destroy;
     end;
     
     FModified := False;
@@ -1021,7 +1021,7 @@ var Collection: TDocCollection;
     i: integer;
 begin
   case frmMain.tsMain.ActiveTabIndex of
-    0: Collection := PAWNProjects;
+    0: Collection := PawnProjects;
     1: Collection := CPPProjects;
     else Collection := OtherProjects;
   end;
@@ -1152,7 +1152,7 @@ begin
         end;
       end;
 
-      eLines.Free;
+      eLines.Destroy;
     end;
   end;
   Screen.Cursor := crDefault;
@@ -1275,15 +1275,15 @@ end;
 
 initialization
 
-PAWNProjects := TDocCollection.Create('Pawn');
+PawnProjects := TDocCollection.Create('Pawn');
 CPPProjects := TDocCollection.Create('C++');
 OtherProjects := TDocCollection.Create('null');
 CurrProjects := 0;
-ActiveDoc := PAWNProjects.ActiveDocument;
+ActiveDoc := PawnProjects.ActiveDocument;
 
 finalization
 
-PAWNProjects.Free;
+PawnProjects.Free;
 CPPProjects.Free;
 OtherProjects.Free;
 

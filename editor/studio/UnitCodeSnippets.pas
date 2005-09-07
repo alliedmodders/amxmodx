@@ -25,7 +25,7 @@ begin
       Result := StringReplace(Result, #2, #13#10, [rfReplaceAll]);
     end;
   end;
-  eFile.Free;
+  eFile.Destroy;
 end;
 
 function GetSnippetList(Lang: String): TStringList;
@@ -48,7 +48,7 @@ begin
   eFile.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'config\' + Lang + '.csl');  // ... .csl = CodeSnippetList
   eFile.Add(Ident + #1 + Code);
   eFile.SaveToFile(ExtractFilePath(ParamStr(0)) + 'config\' + Lang + '.csl');  // ... .csl = CodeSnippetList
-  eFile.Free;
+  eFile.Destroy;
 end;
 
 procedure DelSnippet(Lang, Ident: String);
@@ -62,7 +62,7 @@ begin
       eFile.Delete(i);
   end;
   eFile.SaveToFile(ExtractFilePath(ParamStr(0)) + 'config\' + Lang + '.csl');  // ... .csl = CodeSnippetList
-  eFile.Free;
+  eFile.Destroy;
 end;
 
 procedure SetSnippet(Lang, Ident, Code: String);
@@ -78,7 +78,7 @@ begin
     if Pos(Ident + #1, eFile[i]) = 1 then begin
       eFile[i] := Ident + #1 + Code;
       eFile.SaveToFile(ExtractFilePath(ParamStr(0)) + 'config\' + Lang + '.csl');  // ... .csl = CodeSnippetList
-      eFile.Free;
+      eFile.Destroy;
 
       exit;
     end;
@@ -86,7 +86,7 @@ begin
   { else... }
   eFile.Add(Ident + #1 + Code);
   eFile.SaveToFile(ExtractFilePath(ParamStr(0)) + 'config\' + Lang + '.csl');  // ... .csl = CodeSnippetList
-  eFile.Free;
+  eFile.Destroy;
 end;
 
 end.

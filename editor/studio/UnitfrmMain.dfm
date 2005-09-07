@@ -1,6 +1,6 @@
 object frmMain: TfrmMain
-  Left = 237
-  Top = 236
+  Left = 224
+  Top = 293
   Width = 888
   Height = 640
   Caption = 'AMXX-Studio'
@@ -579,7 +579,7 @@ object frmMain: TfrmMain
       object mnuCodeSnippets: TSpTBXRightAlignSpacerItem
         CaptionW = 'Code-Snippets:'
       end
-      object mnuPAWN: TSpTBXItem
+      object mnuPawn: TSpTBXItem
         AutoCheck = True
         Checked = True
         OnClick = OnCodeSnippetSelect

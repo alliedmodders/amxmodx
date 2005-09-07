@@ -18,7 +18,7 @@ type TCodeSnippetClick = function (pTitle, pCategory: PChar; pCode: PChar): Inte
      TCustomItemClick = function (pCaption: PChar): Integer; cdecl;
      TThemeChanged = function (pTheme: PChar): Integer; cdecl;
 
-     TModified = function (pModifiedText: PChar; pText: PChar): Integer; cdecl;
+     TModified = function (pModifiedText: PChar): Integer; cdecl;
      TKeyPress = function (pKey: PChar): Integer; cdecl;
      TEditorClick = function: Integer; cdecl;
      TUpdateSel = function (pSelStart, pSelLength, pFirstVisibleLine: Integer): Integer; cdecl;
@@ -89,7 +89,7 @@ function Plugin_ShowHelp(HelpType: Integer): Boolean;
 function Plugin_CustomItemClick(Caption: String): Boolean;
 function Plugin_ThemeChange(Theme: String): Boolean;
 
-function Plugin_Modified(Modified, Text: PChar): Boolean;
+function Plugin_Modified(ModifiedStr: PAnsiChar): Boolean;
 function Plugin_KeyPress(Key: Char): Boolean;
 function Plugin_EditorClick(DoubleClick: Boolean): Boolean;
 function Plugin_UpdateSel(SelStart, SelLength, FirstVisibleLine: Integer): Boolean;
@@ -382,6 +382,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_FileLoad(Filename: String; Loading: Boolean): Boolean;
@@ -408,6 +410,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_FileSave(Filename: String; Saving: Boolean): Boolean;
@@ -434,6 +438,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_DocChange(Index: Integer; Filename, Highlighter: String; RestoreCaret, Changing: Boolean): Boolean;
@@ -460,6 +466,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_ProjectsChange(OldIndex, NewIndex: Integer; Changing: Boolean): Boolean;
@@ -486,6 +494,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_CreateNewFile(Item: Byte; Creating: Boolean): Boolean;
@@ -512,6 +522,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_Search(SearchList, Selected: String; Displaying, SearchAgain: Boolean; CaseSensivity, WholeWords, SearchFromCaret, SelectedOnly, RegEx, Forward: Boolean): Boolean;
@@ -540,6 +552,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_SearchReplace(Expression, Replace, ExpList, RepList: String; CaseSensivity, WholeWords, SearchFromCaret, SelectedOnly, RegEx, Forward: Boolean): Boolean;
@@ -563,6 +577,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_VisibleControlChange(Control: Integer; Show: Boolean): Boolean;
@@ -586,6 +602,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_Compile(CompileType: Integer; Lang, Filename: String; Compiling: Boolean): Boolean;
@@ -612,6 +630,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_ShowHelp(HelpType: Integer): Boolean;
@@ -635,6 +655,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_CustomItemClick(Caption: String): Boolean;
@@ -658,6 +680,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_ThemeChange(Theme: String): Boolean;
@@ -681,9 +705,11 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
-function Plugin_Modified(Modified, Text: PChar): Boolean;
+function Plugin_Modified(ModifiedStr: PAnsiChar): Boolean;
 var Func: TModified;
     i: integer;
     Handles: TIntegerArray;
@@ -695,7 +721,7 @@ begin
     @Func := GetProcAddress(Handles[i], 'Modified');
 
     if @Func <> nil then begin
-      case Func(Modified, Text)  of
+      case Func(ModifiedStr)  of
         PLUGIN_HANDLED: Result := False;
         PLUGIN_STOP: begin
           Result := False;
@@ -704,6 +730,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_KeyPress(Key: Char): Boolean;
@@ -727,6 +755,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_EditorClick(DoubleClick: Boolean): Boolean;
@@ -753,6 +783,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_UpdateSel(SelStart, SelLength, FirstVisibleLine: Integer): Boolean;
@@ -776,6 +808,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_CallTipShow(List: PChar): Boolean;
@@ -799,6 +833,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_CallTipClick(Position: Integer): Boolean;
@@ -822,6 +858,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_AutoCompleteShow(List: PChar): Boolean;
@@ -845,6 +883,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_AutoCompleteSelect(Text: PChar): Boolean;
@@ -868,6 +908,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_AppMsg(hwnd: HWND; Message: Integer; wParam, lParam: Integer; time: Integer; pt: TPoint): Boolean;
@@ -891,7 +933,9 @@ begin
       end;
     end;
   end;
-end;                                 
+  SetLength(Handles, 0);
+  Handles := nil;
+end;
 
 function Plugin_UpdateCodeExplorer(Lang, Filename, CurrProjects: String; Updating: Boolean): Boolean;
 var Func: TUpdateCodeTools;
@@ -917,6 +961,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_UpdateCodeInspector(Lang, Filename, CurrProjects: String; Updating: Boolean): Boolean;
@@ -943,6 +989,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_OutputDblClick(ItemIndex: Integer): Boolean;
@@ -966,6 +1014,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 function Plugin_OutputPopup(ItemIndex: Integer): Boolean;
@@ -989,6 +1039,8 @@ begin
       end;
     end;
   end;
+  SetLength(Handles, 0);
+  Handles := nil;
 end;
 
 end.

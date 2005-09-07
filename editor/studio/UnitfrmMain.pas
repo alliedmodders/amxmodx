@@ -114,7 +114,7 @@ type
     mnuTCompile: TSpTBXItem;
     tbxCodeSnippets: TSpTBXToolbar;
     mnuCodeSnippets: TSpTBXRightAlignSpacerItem;
-    mnuPAWN: TSpTBXItem;
+    mnuPawn: TSpTBXItem;
     mnuCPP: TSpTBXItem;
     sepCodeSnippets: TSpTBXSeparatorItem;
     tbxEdit: TSpTBXToolbar;
@@ -639,6 +639,15 @@ begin
     CopyFile(PChar(ExtractFilePath(ParamStr(0)) + 'config\Other.bak'), PChar(ExtractFilePath(ParamStr(0)) + 'config\Other.csl'), False);
   end;
 
+  if mnuPawn.Checked then
+    LoadCodeSnippets('Pawn')
+  else if mnuCPP.Checked then
+    LoadCodeSnippets('C++')
+  else if mnuHTML.Checked then
+    LoadCodeSnippets('HTML')
+  else
+    LoadCodeSnippets('Other');
+    
   DeleteFile(ExtractFilePath(ParamStr(0)) + 'config\PAWN.bak');
   DeleteFile(ExtractFilePath(ParamStr(0)) + 'config\C++.bak');
   DeleteFile(ExtractFilePath(ParamStr(0)) + 'config\Other.bak');
@@ -1544,7 +1553,7 @@ begin
       frmClose.trvFiles.Items.AddChild(eRoot, IntToStr(i +1) + '. ' + ExtractFileName(TDocument(PAWNProjects.Items[i]).FileName));
   end;
   if eRoot.Count = 0 then
-    eRoot.Free
+    eRoot.Destroy
   else
     eRoot.Expand(False);
   { C++ Projects }
@@ -1554,7 +1563,7 @@ begin
       frmClose.trvFiles.Items.AddChild(eRoot, IntToStr(i +1) + '. ' + ExtractFileName(TDocument(CPPProjects.Items[i]).FileName));
   end;
   if eRoot.Count = 0 then
-    eRoot.Free
+    eRoot.Destroy
   else
     eRoot.Expand(False);
   { Other Projects }
@@ -1564,7 +1573,7 @@ begin
       frmClose.trvFiles.Items.AddChild(eRoot, IntToStr(i +1) + '. ' + ExtractFileName(TDocument(OtherProjects.Items[i]).FileName));
   end;
   if eRoot.Count = 0 then
-    eRoot.Free
+    eRoot.Destroy
   else
     eRoot.Expand(False);
 
@@ -1689,7 +1698,7 @@ begin
     end;
   end;
   eSavedFiles.SaveToFile(ExtractFilePath(ParamStr(0)) + 'config\Cache.cfg');
-  eSavedFiles.Free;
+  eSavedFiles.Destroy;
 end;
 
 procedure TfrmMain.trvExplorerDblClick(Sender: TObject);
@@ -1947,7 +1956,7 @@ begin
       MessageBox(Handle, PChar(lSuccessfulRegistered), PChar(Application.Title), MB_ICONINFORMATION);
     end;
 
-    eStr.Free;
+    eStr.Destroy;
   end;
 end;
 
@@ -2015,7 +2024,7 @@ begin
     Screen.Cursor := crDefault;
     MessageBox(Handle, PChar(lSuccessfulRegistered), PChar(Application.Title), MB_ICONINFORMATION);
   end;
-  eStr.Free;
+  eStr.Destroy;
 
   try
     IdFTP.TransferType := ftASCII;
@@ -2058,7 +2067,7 @@ begin
     for i := 0 to eStr.Count -1 do
       eStr[i] := '"' + eStr[i] + '\n" +';
     frmMOTDGen.txtMOTD.Lines.Assign(eStr);
-    eStr.Free;
+    eStr.Destroy;
 
     frmMOTDGen.ShowModal;
   end
@@ -2242,7 +2251,7 @@ procedure TfrmMain.sciEditorModified(Sender: TObject; const position,
   foldLevelNow, foldLevelPrev: Integer);
 begin
   if Started then
-    Plugin_Modified(text, sciEditor.Lines.GetText);
+    Plugin_Modified(text);
 end;
 
 procedure TfrmMain.sciEditorDblClick(Sender: TObject);
@@ -2426,7 +2435,7 @@ begin
           Msg.Result := ilImages.Add(eBMP, nil)
         else
           Msg.Result := ilImages.AddMasked(eBMP, eIntData);
-        eBMP.Free;
+        eBMP.Destroy;
       end;
       SCM_MENU_ADDITEM: begin
         if Pos('->', eData) <> 0 then begin
@@ -2538,7 +2547,7 @@ begin
           AddField(eStr[0], eStr[1], eStr[2])
         else
           Msg.Result := 0;
-        eStr.Free;
+        eStr.Destroy;
       end;
       SCM_CODEINSPECTOR_ADDCOMBO: begin
         eStr := TStringList.Create;
@@ -2551,7 +2560,7 @@ begin
         end
         else
           Msg.Result := 0;
-        eStr.Free;   
+        eStr.Destroy;   
       end;
       SCM_CODEINSPECTOR_SETVALUE: begin
         eStr := TStringList.Create;

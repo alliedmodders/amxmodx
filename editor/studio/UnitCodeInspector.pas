@@ -28,21 +28,22 @@ type
   TStringWrapper = class(TObject)
   public
     Value: string;
-    constructor Create(const AValue: string);
+    constructor Create(const AValue: string); reintroduce;
   end;
 
   TSTLWrapper = class(TObject)
   public
     STL: TSelectionTextList;
     Value: String;
-    constructor Create(const ASTL: TSelectionTextList; const AValue: String);
+    constructor Create(const ASTL: TSelectionTextList; const AValue: String); reintroduce;
+    destructor Destroy; reintroduce;
   end;
 
 function AddField(eName, eCategory, eValue: String): TJvCustomInspectorItem;
 function AddCombo(eName, eCategory, eValue: String; eValues: array of string): TJvCustomInspectorItem;
 
 procedure UpdateCI;
-procedure UpdateCI_PAWN;
+procedure UpdateCI_Pawn;
 
 var eFormatSettings: String;
     eAllIncluded: TStringArray;
@@ -211,12 +212,12 @@ begin
   if not Plugin_UpdateCodeInspector(GetCurrLang.Name, ActiveDoc.FileName, frmMain.tsMain.Items[frmMain.tsMain.ActiveTabIndex].Caption, True) then exit;
 
   if GetCurrLang.Name = 'Pawn' then begin
-    UpdateCI_PAWN;
+    UpdateCI_Pawn;
     Plugin_UpdateCodeInspector(GetCurrLang.Name, ActiveDoc.FileName, frmMain.tsMain.Items[frmMain.tsMain.ActiveTabIndex].Caption, False);
   end;
 end;
 
-procedure UpdateCI_PAWN;
+procedure UpdateCI_Pawn;
 procedure HideBracesAndStrings(var eStr: String);
 begin
   while Between(eStr, '{', '}') <> '' do begin
@@ -393,8 +394,9 @@ begin
     else
       AddField('', 'No information available.', '');
   end;
-  eStr.Free;
   eBraceTexts.Free;
+  SetLength(eAllIncluded, 0);
+  eStr.Free;
 end;
 
 { TSTLWrapper }
@@ -404,6 +406,13 @@ constructor TSTLWrapper.Create(const ASTL: TSelectionTextList;
 begin
   STL := ASTL;
   Value := AValue;
+  inherited Create;
+end;
+
+destructor TSTLWrapper.Destroy;
+begin
+  STL.Free;
+  inherited;
 end;
 
 initialization

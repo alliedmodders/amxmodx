@@ -106,13 +106,6 @@ public plugin_init() {
 #endif
 }
 
-#if defined USING_SQL
-public plugin_modules()
-{
-   require_module("DBI")
-}
-#endif
-
 public addadminfn(id, level, cid) {
 	if (!cmd_access(id, level, cid, 3))
 		return PLUGIN_HANDLED

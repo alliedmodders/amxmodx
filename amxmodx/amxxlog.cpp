@@ -143,7 +143,7 @@ void CLog::MapChange()
 	}
 	else if (m_LogType == 1)
 	{
-		Log("-------- Mapchange --------");
+		Log("-------- Mapchange to %s --------", STRING(gpGlobals->mapname));
 	}
 	else
 		return;

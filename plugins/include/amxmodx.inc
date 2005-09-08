@@ -599,8 +599,8 @@ native get_pluginsnum();
 * "d" - set "stopped" status when pausing whole plugin.
 * "e" - set "locked" status when pausing whole plugin.
 *       In this status plugin is unpauseable.
-* Example: pause("ac","myplugin.amx") 
-*          pause("bc","myfunc","myplugin.amx") */
+* Example: pause("ac","myplugin.amxx") 
+*          pause("bc","myfunc","myplugin.amxx") */
 native pause(flag[], const param1[]="",const param2[]="");
 
 /* Unpauses function or plugin.
@@ -613,7 +613,7 @@ native unpause(flag[], const param1[]="",const param2[]="");
 /* Call a function in this / an another plugin by name.
 * Parameters:
 *  plugin - plugin filename; if "", the caller plugin is used.
-*           If specified, it has to be the exact filename (for example stats.amx)
+*           If specified, it has to be the exact filename (for example stats.amxx)
 *  func   - function name
 * Return value:
 *   1     - Success

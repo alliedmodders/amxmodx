@@ -38,23 +38,24 @@
 #include "newmenus.h"
 #include "natives.h"
 
-plugin_info_t Plugin_info = {
-  META_INTERFACE_VERSION, // ifvers
-  "AMX Mod X",  // name
-  AMX_VERSION,  // version
-  __DATE__, // date
-  "AMX Mod X Dev Team", // author
-  "http://www.amxmodx.org",  // url
-  "AMXX",  // logtag
-  PT_ANYTIME,// (when) loadable
-  PT_ANYTIME,// (when) unloadable
+plugin_info_t Plugin_info = 
+{
+	META_INTERFACE_VERSION,		// ifvers
+	"AMX Mod X",				// name
+	AMX_VERSION,				// version
+	__DATE__,					// date
+	"AMX Mod X Dev Team",		// author
+	"http://www.amxmodx.org",	// url
+	"AMXX",						// logtag
+	PT_ANYTIME,					// (when) loadable
+	PT_ANYTIME,					// (when) unloadable
 };
 
 meta_globals_t *gpMetaGlobals;
 gamedll_funcs_t *gpGamedllFuncs;
 mutil_funcs_t *gpMetaUtilFuncs;
 enginefuncs_t g_engfuncs;
-globalvars_t  *gpGlobals;
+globalvars_t *gpGlobals;
 pextension_funcs_t *gpMetaPExtFuncs;
 
 funEventCall modMsgsEnd[MAX_REG_MSGS];
@@ -63,7 +64,7 @@ void (*function)(void*);
 void (*endfunction)(void*);
 
 CLog g_log;
-CForwardMngr  g_forwards;
+CForwardMngr g_forwards;
 CList<CPlayer*> g_auth;
 CList<CCVar> g_cvars;
 CList<ForceObject> g_forcemodels;
@@ -97,14 +98,14 @@ bool g_IsNewMM = false;
 bool g_NeedsP = false;
 bool g_coloredmenus;
 bool g_activated = false;
-bool g_NewDLL_Available=false;
+bool g_NewDLL_Available = false;
 
 #ifdef MEMORY_TEST
-float g_next_memreport_time;
-unsigned int g_memreport_count;
-String g_memreport_dir;
-bool g_memreport_enabled;
-#define MEMREPORT_INTERVAL 300.0f	/* 5 mins */
+	float g_next_memreport_time;
+	unsigned int g_memreport_count;
+	String g_memreport_dir;
+	bool g_memreport_enabled;
+	#define MEMREPORT_INTERVAL 300.0f	/* 5 mins */
 #endif // MEMORY_TEST
 
 hudtextparms_t g_hudset;
@@ -139,228 +140,244 @@ int FF_ChangeLevel = -1;
 
 // fake metamod api
 #ifdef FAKEMETA
-CFakeMeta g_FakeMeta;
+	CFakeMeta g_FakeMeta;
 #endif
 
 // Precache	stuff from force consistency calls
 // or check	for	pointed	files won't	be done
-int	C_PrecacheModel(char *s) {
-  if ( !g_forcedmodules	){
-	g_forcedmodules	= true;
-	for(CList<ForceObject>::iterator a =  g_forcemodels.begin(); a ; ++a){
-	  PRECACHE_MODEL((char*)(*a).getFilename());
-	  ENGINE_FORCE_UNMODIFIED((*a).getForceType(),(*a).getMin(),(*a).getMax(),(*a).getFilename());
+int	C_PrecacheModel(char *s)
+{
+	if (!g_forcedmodules)
+	{
+		g_forcedmodules	= true;
+		for (CList<ForceObject>::iterator a = g_forcemodels.begin(); a; ++a)
+		{
+			PRECACHE_MODEL((char*)(*a).getFilename());
+			ENGINE_FORCE_UNMODIFIED((*a).getForceType(), (*a).getMin(), (*a).getMax(), (*a).getFilename());
+		}
 	}
-  }
-  RETURN_META_VALUE(MRES_IGNORED, 0);
+
+	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
-int	C_PrecacheSound(char *s) {
-  if ( !g_forcedsounds ) {
-	g_forcedsounds = true;
-	for(CList<ForceObject>::iterator a =  g_forcesounds.begin(); a ; ++a){
-	  PRECACHE_SOUND((char*)(*a).getFilename());
-	  ENGINE_FORCE_UNMODIFIED((*a).getForceType(),(*a).getMin(),(*a).getMax(),(*a).getFilename());
+int	C_PrecacheSound(char *s)
+{
+	if (!g_forcedsounds)
+	{
+		g_forcedsounds = true;
+		for (CList<ForceObject>::iterator a = g_forcesounds.begin(); a; ++a)
+		{
+			PRECACHE_SOUND((char*)(*a).getFilename());
+			ENGINE_FORCE_UNMODIFIED((*a).getForceType(),(*a).getMin(),(*a).getMax(),(*a).getFilename());
+		}
+	
+		if (!g_bmod_cstrike)
+		{
+			PRECACHE_SOUND("weapons/cbar_hitbod1.wav");
+			PRECACHE_SOUND("weapons/cbar_hitbod2.wav");
+			PRECACHE_SOUND("weapons/cbar_hitbod3.wav");
+		}
 	}
-	if (!g_bmod_cstrike){
-	  PRECACHE_SOUND("weapons/cbar_hitbod1.wav");
-	  PRECACHE_SOUND("weapons/cbar_hitbod2.wav");
-	  PRECACHE_SOUND("weapons/cbar_hitbod3.wav");
-	}
-  }
-  RETURN_META_VALUE(MRES_IGNORED, 0);
+
+	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
 // On InconsistentFile call	forward	function from plugins
-int	C_InconsistentFile( const	edict_t	*player, const char	*filename, char	*disconnect_message	)
+int	C_InconsistentFile(const edict_t *player, const char *filename, char *disconnect_message)
 {
 	if (FF_InconsistentFile < 0)
 		RETURN_META_VALUE(MRES_IGNORED,	FALSE);
 
-	if ( MDLL_InconsistentFile(player,filename,disconnect_message) )
+	if (MDLL_InconsistentFile(player, filename, disconnect_message))
 	{
 		CPlayer	*pPlayer = GET_PLAYER_POINTER((edict_t *)player);
 
-			if (executeForwards(FF_InconsistentFile, pPlayer->index, filename, disconnect_message) == 1)
-				RETURN_META_VALUE(MRES_SUPERCEDE, FALSE);
-		RETURN_META_VALUE(MRES_SUPERCEDE, TRUE );
+		if (executeForwards(FF_InconsistentFile, pPlayer->index, filename, disconnect_message) == 1)
+			RETURN_META_VALUE(MRES_SUPERCEDE, FALSE);
+		
+		RETURN_META_VALUE(MRES_SUPERCEDE, TRUE);
 	}
 
 	RETURN_META_VALUE(MRES_IGNORED, FALSE);
 }
 
-const char*	get_localinfo( const char* name	, const	char* def )
+const char*	get_localinfo(const char* name, const char* def)
 {
-  const	char* b	= LOCALINFO( (char*)name );
-  if ( b ==	0 || *b	== 0 )
-	SET_LOCALINFO((char*)name,(char*)(b	= def) );
-  return b;
+	const char* b = LOCALINFO((char*)name);
+
+	if (b == 0 || *b == 0)
+		SET_LOCALINFO((char*)name,(char*)(b	= def));
+
+	return b;
 }
 
 // Very	first point	at map load
 // Load	AMX	modules	for	new	native functions
 // Initialize AMX stuff	and	load it's plugins from plugins.ini list
 // Call	precache forward function from plugins
-int	C_Spawn( edict_t *pent )
+int	C_Spawn(edict_t *pent)
 {
-  if (g_initialized)
-	  RETURN_META_VALUE(MRES_IGNORED, 0);
+	if (g_initialized)
+		RETURN_META_VALUE(MRES_IGNORED, 0);
 
-  g_activated = false;
-  g_initialized = true;
-  g_forcedmodules =	false;
-  g_forcedsounds = false;
+	g_activated = false;
+	g_initialized = true;
+	g_forcedmodules = false;
+	g_forcedsounds = false;
 
-  g_srvindex = IS_DEDICATED_SERVER() ? 0 : 1;
+	g_srvindex = IS_DEDICATED_SERVER() ? 0 : 1;
 
-  hostname = CVAR_GET_POINTER("hostname");
-  mp_timelimit = CVAR_GET_POINTER("mp_timelimit");
+	hostname = CVAR_GET_POINTER("hostname");
+	mp_timelimit = CVAR_GET_POINTER("mp_timelimit");
 
-  g_forwards.clear();
+	g_forwards.clear();
 
-  g_log.MapChange();
+	g_log.MapChange();
 
-  // ######	Initialize task	manager
-  g_tasksMngr.registerTimers( &gpGlobals->time,	&mp_timelimit->value,  &g_game_timeleft		);
+	// ###### Initialize task manager
+	g_tasksMngr.registerTimers(&gpGlobals->time, &mp_timelimit->value, &g_game_timeleft);
 
-  //  ###### Load lang
-  char file[256];
-  g_langMngr.LoadCache(build_pathname_r(file, sizeof(file)-1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
-  g_langMngr.Load(build_pathname_r(file, sizeof(file)-1, "%s/languages.dat", get_localinfo("amxmodx_datadir", "addons/amxmodx/data")));
-  // ######	Initialize commands	prefixes
-  g_commands.registerPrefix( "amx" );
-  g_commands.registerPrefix( "amxx"	);
-  g_commands.registerPrefix( "say" );
-  g_commands.registerPrefix( "admin_" );
-  g_commands.registerPrefix( "sm_" );
-  g_commands.registerPrefix( "cm_" );
+	// ###### Load lang
+	char file[256];
+	g_langMngr.LoadCache(build_pathname_r(file, sizeof(file)-1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
+	g_langMngr.Load(build_pathname_r(file, sizeof(file)-1, "%s/languages.dat", get_localinfo("amxmodx_datadir", "addons/amxmodx/data")));
 
-  // make sure localinfos are set
-  get_localinfo("amxx_basedir",	"addons/amxmodx");
-  get_localinfo("amxx_pluginsdir", "addons/amxmodx/plugins");
-  get_localinfo("amxx_modulesdir", "addons/amxmodx/modules");
-  get_localinfo("amxx_configsdir", "addons/amxmodx/configs");
-  get_localinfo("amxx_customdir", "addons/amxmodx/custom");
+	// ###### Initialize commands prefixes
+	g_commands.registerPrefix("amx");
+	g_commands.registerPrefix("amxx");
+	g_commands.registerPrefix("say");
+	g_commands.registerPrefix("admin_");
+	g_commands.registerPrefix("sm_");
+	g_commands.registerPrefix("cm_");
 
-  //  ###### Load modules
-  loadModules(get_localinfo("amxx_modules",	"addons/amxmodx/configs/modules.ini"), PT_ANYTIME);
-  int loaded = countModules(CountModules_Running);	// Call	after attachModules	so all modules don't have pending stat
-  // Set some info about amx version and modules
-  CVAR_SET_STRING(init_amxmodx_version.name, AMX_VERSION);
-  char buffer[32];
-  sprintf(buffer, "%d", loaded);
-  CVAR_SET_STRING(init_amxmodx_modules.name, buffer);
+	// make sure localinfos are set
+	get_localinfo("amxx_basedir", "addons/amxmodx");
+	get_localinfo("amxx_pluginsdir", "addons/amxmodx/plugins");
+	get_localinfo("amxx_modulesdir", "addons/amxmodx/modules");
+	get_localinfo("amxx_configsdir", "addons/amxmodx/configs");
+	get_localinfo("amxx_customdir", "addons/amxmodx/custom");
 
-  //  ######  Load Vault
-  g_vault.setSource( build_pathname_r(file, sizeof(file)-1, "%s", get_localinfo("amxx_vault", "addons/amxmodx/configs/vault.ini"))	);
-  g_vault.loadVault( );
-  if (strlen(g_vault.get("server_language")) < 1)
-  {
-     g_vault.put("server_language", "en");
-	 g_vault.saveVault();
-  }
+	// ###### Load modules
+	loadModules(get_localinfo("amxx_modules", "addons/amxmodx/configs/modules.ini"), PT_ANYTIME);
+	int loaded = countModules(CountModules_Running); // Call after attachModules so all modules don't have pending stat
+	// Set some info about amx version and modules
+	CVAR_SET_STRING(init_amxmodx_version.name, AMX_VERSION);
+	char buffer[32];
+	sprintf(buffer, "%d", loaded);
+	CVAR_SET_STRING(init_amxmodx_modules.name, buffer);
 
-  //  ###### Init time and freeze tasks
-  g_game_timeleft =	g_bmod_dod ? 1.0f : 0.0f;
-  g_task_time =	gpGlobals->time	+ 99999.0f;
-  g_auth_time =	gpGlobals->time	+ 99999.0f;
+	// ###### Load Vault
+	g_vault.setSource(build_pathname_r(file, sizeof(file)-1, "%s", get_localinfo("amxx_vault", "addons/amxmodx/configs/vault.ini")));
+	g_vault.loadVault();
+	
+	if (strlen(g_vault.get("server_language")) < 1)
+	{
+		g_vault.put("server_language", "en");
+		g_vault.saveVault();
+	}
+
+	// ###### Init time and freeze tasks
+	g_game_timeleft = g_bmod_dod ? 1.0f : 0.0f;
+	g_task_time = gpGlobals->time + 99999.0f;
+	g_auth_time = gpGlobals->time + 99999.0f;
+
 #ifdef MEMORY_TEST
-  g_next_memreport_time = gpGlobals->time + 99999.0f;
+	g_next_memreport_time = gpGlobals->time + 99999.0f;
 #endif
 
-  g_players_num	= 0;
+	g_players_num = 0;
 
-  // Set server	flags
-  memset(g_players[0].flags,-1,sizeof(g_players[0].flags));
+	// Set server flags
+	memset(g_players[0].flags, -1, sizeof(g_players[0].flags));
 
-  //  ###### Load AMX scripts
-  g_plugins.loadPluginsFromFile( get_localinfo("amxx_plugins", "addons/amxmodx/configs/plugins.ini") );
-  g_plugins.Finalize();
+	// ###### Load AMX scripts
+	g_plugins.loadPluginsFromFile(get_localinfo("amxx_plugins", "addons/amxmodx/configs/plugins.ini"));
+	g_plugins.Finalize();
 
-  // Register forwards
-  FF_PluginInit = registerForward("plugin_init", ET_IGNORE, FP_DONE);
-  FF_ClientCommand = registerForward("client_command", ET_STOP, FP_CELL, FP_DONE);
-  FF_ClientConnect = registerForward("client_connect", ET_IGNORE, FP_CELL, FP_DONE);
-  FF_ClientDisconnect = registerForward("client_disconnect", ET_IGNORE, FP_CELL, FP_DONE);
-  FF_ClientInfoChanged = registerForward("client_infochanged", ET_IGNORE, FP_CELL, FP_DONE);
-  FF_ClientPutInServer = registerForward("client_putinserver", ET_IGNORE, FP_CELL, FP_DONE);
-  FF_PluginCfg = registerForward("plugin_cfg", ET_IGNORE, FP_DONE);
-  FF_PluginPrecache = registerForward("plugin_precache", ET_IGNORE, FP_DONE);
-  FF_PluginLog = registerForward("plugin_log", ET_STOP, FP_DONE);
-  FF_PluginEnd = registerForward("plugin_end", ET_IGNORE, FP_DONE);
-  FF_InconsistentFile = registerForward("inconsistent_file", ET_STOP, FP_CELL, FP_STRING, FP_STRINGEX, FP_DONE);
-  FF_ClientAuthorized = registerForward("client_authorized", ET_IGNORE, FP_CELL, FP_DONE);
-  FF_ChangeLevel = registerForward("server_changelevel", ET_STOP, FP_STRING, FP_DONE);
+	// Register forwards
+	FF_PluginInit = registerForward("plugin_init", ET_IGNORE, FP_DONE);
+	FF_ClientCommand = registerForward("client_command", ET_STOP, FP_CELL, FP_DONE);
+	FF_ClientConnect = registerForward("client_connect", ET_IGNORE, FP_CELL, FP_DONE);
+	FF_ClientDisconnect = registerForward("client_disconnect", ET_IGNORE, FP_CELL, FP_DONE);
+	FF_ClientInfoChanged = registerForward("client_infochanged", ET_IGNORE, FP_CELL, FP_DONE);
+	FF_ClientPutInServer = registerForward("client_putinserver", ET_IGNORE, FP_CELL, FP_DONE);
+	FF_PluginCfg = registerForward("plugin_cfg", ET_IGNORE, FP_DONE);
+	FF_PluginPrecache = registerForward("plugin_precache", ET_IGNORE, FP_DONE);
+	FF_PluginLog = registerForward("plugin_log", ET_STOP, FP_DONE);
+	FF_PluginEnd = registerForward("plugin_end", ET_IGNORE, FP_DONE);
+	FF_InconsistentFile = registerForward("inconsistent_file", ET_STOP, FP_CELL, FP_STRING, FP_STRINGEX, FP_DONE);
+	FF_ClientAuthorized = registerForward("client_authorized", ET_IGNORE, FP_CELL, FP_DONE);
+	FF_ChangeLevel = registerForward("server_changelevel", ET_STOP, FP_STRING, FP_DONE);
 
-  modules_callPluginsLoaded();
+	modules_callPluginsLoaded();
 
-  //  ###### Call precache forward function
-  g_dontprecache = false;
-  executeForwards(FF_PluginPrecache);
-  g_dontprecache = true;
+	// ###### Call precache forward function
+	g_dontprecache = false;
+	executeForwards(FF_PluginPrecache);
+	g_dontprecache = true;
 
-  for(CList<ForceObject>::iterator a =	g_forcegeneric.begin();	a ;	++a){
-	  PRECACHE_GENERIC((char*)(*a).getFilename());
-	  ENGINE_FORCE_UNMODIFIED((*a).getForceType(),
-	  (*a).getMin(),(*a).getMax(),(*a).getFilename());
-  }
+	for (CList<ForceObject>::iterator a = g_forcegeneric.begin(); a; ++a)
+	{
+		PRECACHE_GENERIC((char*)(*a).getFilename());
+		ENGINE_FORCE_UNMODIFIED((*a).getForceType(),
+		(*a).getMin(),(*a).getMax(),(*a).getFilename());
+	}
 
-  RETURN_META_VALUE(MRES_IGNORED, 0);
+	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
-struct sUserMsg	{
-  const	char* name;
-  int* id;
-  funEventCall func;
-  bool endmsg;
-  bool cstrike;
-} g_user_msg[] = {
-  {	"CurWeapon"	, &gmsgCurWeapon , Client_CurWeapon, false,false },
-  {	"Damage" , &gmsgDamage,Client_DamageEnd, true ,	true },
-  {	"DeathMsg" , &gmsgDeathMsg,	Client_DeathMsg, false,true	},
-  {	"TextMsg" ,	&gmsgTextMsg,Client_TextMsg	, false,false},
-  {	"TeamInfo" , &gmsgTeamInfo,Client_TeamInfo , false,false},
-  {	"WeaponList" , &gmsgWeaponList,	Client_WeaponList, false, false},
-  {	"MOTD" , &gmsgMOTD,	0 ,	false,false},
-  {	"ServerName" , &gmsgServerName,	0 ,	false, false},
-  {	"Health" , &gmsgHealth,	0 ,	false,false	},
-  {	"Battery" ,	&gmsgBattery, 0	, false,false},
-  {	"ShowMenu" , &gmsgShowMenu,Client_ShowMenu , false,false},
-  {	"SendAudio"	, &gmsgSendAudio, 0, false,false},
-  {	"AmmoX"	, &gmsgAmmoX, Client_AmmoX , false,false },
-  {	"ScoreInfo"	, &gmsgScoreInfo, Client_ScoreInfo,	false, false},
-  {	"VGUIMenu" , &gmsgVGUIMenu,Client_VGUIMenu,	false,false	},
-  {	"AmmoPickup" , &gmsgAmmoPickup,	Client_AmmoPickup ,	false,false	},
-  {	"WeapPickup" , &gmsgWeapPickup,0, false,false },
-  {	"ResetHUD" , &gmsgResetHUD,0, false,false },
-  {	"RoundTime"	, &gmsgRoundTime,0,	false, false},
-  {	0 ,	0,0,false,false	}
+struct sUserMsg
+{
+	const char* name;
+	int* id;
+	funEventCall func;
+	bool endmsg;
+	bool cstrike;
+} g_user_msg[] = 
+{
+	{"CurWeapon", &gmsgCurWeapon, Client_CurWeapon, false, false},
+	{"Damage", &gmsgDamage, Client_DamageEnd, true, true},
+	{"DeathMsg", &gmsgDeathMsg,	Client_DeathMsg, false, true},
+	{"TextMsg", &gmsgTextMsg, Client_TextMsg, false, false},
+	{"TeamInfo", &gmsgTeamInfo, Client_TeamInfo, false, false},
+	{"WeaponList", &gmsgWeaponList, Client_WeaponList, false, false},
+	{"MOTD", &gmsgMOTD,	0, false, false},
+	{"ServerName", &gmsgServerName,	0, false, false},
+	{"Health", &gmsgHealth,	0, false, false},
+	{"Battery", &gmsgBattery, 0, false, false},
+	{"ShowMenu", &gmsgShowMenu, Client_ShowMenu, false, false},
+	{"SendAudio", &gmsgSendAudio, 0, false, false},
+	{"AmmoX", &gmsgAmmoX, Client_AmmoX, false, false},
+	{"ScoreInfo", &gmsgScoreInfo, Client_ScoreInfo,	false, false},
+	{"VGUIMenu", &gmsgVGUIMenu, Client_VGUIMenu, false, false},
+	{"AmmoPickup", &gmsgAmmoPickup,	Client_AmmoPickup, false, false},
+	{"WeapPickup", &gmsgWeapPickup, 0, false, false},
+	{"ResetHUD", &gmsgResetHUD, 0, false, false},
+	{"RoundTime", &gmsgRoundTime, 0, false, false},
+	{0, 0, 0, false, false}
 };
-
 
 int	C_RegUserMsg_Post(const char *pszName, int iSize)
 {
-  for (int i = 0; g_user_msg[ i	].name;	++i	)
-  {
-	if ( strcmp( g_user_msg[ i ].name ,	pszName	 ) == 0	)
+	for (int i = 0; g_user_msg[i].name;	++i)
 	{
-	  int id = META_RESULT_ORIG_RET( int );
+		if (strcmp(g_user_msg[i].name, pszName) == 0)
+		{
+			int id = META_RESULT_ORIG_RET(int);
+			*g_user_msg[i].id =	id;
 
-	  *g_user_msg[ i ].id =	id;
+			if (!g_user_msg[i].cstrike || g_bmod_cstrike)
+			{
+				if (g_user_msg[i].endmsg)
+					modMsgsEnd[id] = g_user_msg[i].func;
+				else
+					modMsgs[id] = g_user_msg[i].func;
+			}
+			break;
+		}
+	 }
 
-	  if ( !g_user_msg[	i ].cstrike	|| g_bmod_cstrike  )
-	  {
-		if ( g_user_msg[ i ].endmsg	)
-		  modMsgsEnd[ id  ]	= g_user_msg[ i	].func;
-		else
-		  modMsgs[ id  ] = g_user_msg[ i ].func;
-	  }
-
-	  break;
-	}
-  }
-
-  RETURN_META_VALUE(MRES_IGNORED, 0);
+	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
 /*
@@ -368,116 +385,121 @@ Much more later	after precache.	All	is precached, server
 will be	flaged as ready	to use so call
 plugin_init	forward	function from plugins
 */
-void C_ServerActivate( edict_t *pEdictList, int edictCount, int clientMax )
+void C_ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 {
-  int id;
-  for (int i = 0; g_user_msg[ i	].name;	++i	)
-  {
-	if ( (*g_user_msg[ i ].id == 0)	&&
-	  (id =	GET_USER_MSG_ID(PLID, g_user_msg[ i	].name , NULL ))!=0)
+	int id;
+	
+	for (int i = 0; g_user_msg[i].name;	++i)
 	{
-	  *g_user_msg[ i ].id =	id;
-
-	  if ( !g_user_msg[	i ].cstrike	|| g_bmod_cstrike  )
-	  {
-		if ( g_user_msg[ i ].endmsg	)
-		  modMsgsEnd[ id  ]	= g_user_msg[ i	].func;
-		else
-		  modMsgs[ id  ] = g_user_msg[ i ].func;
-	  }
+		if ((*g_user_msg[i].id == 0) && (id = GET_USER_MSG_ID(PLID, g_user_msg[i].name, NULL)) != 0)
+		{
+			*g_user_msg[i].id =	id;
+			
+			if (!g_user_msg[i].cstrike || g_bmod_cstrike)
+			{
+				if (g_user_msg[i].endmsg)
+					modMsgsEnd[id] = g_user_msg[i].func;
+				else
+					modMsgs[id] = g_user_msg[i].func;
+			}
+		}
 	}
-  }
 
-  RETURN_META(MRES_IGNORED);
+	RETURN_META(MRES_IGNORED);
 }
 
-void C_ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax )
+void C_ServerActivate_Post(edict_t *pEdictList, int edictCount, int clientMax)
 {
-  if (g_activated)
-	  RETURN_META(MRES_IGNORED);
+	if (g_activated)
+		RETURN_META(MRES_IGNORED);
 
-  for(int i	= 1; i <= gpGlobals->maxClients; ++i) {
-	CPlayer	*pPlayer = GET_PLAYER_POINTER_I(i);
-	pPlayer->Init( pEdictList +	i ,	i );
-  }
+	for (int i= 1; i <= gpGlobals->maxClients; ++i)
+	{
+		CPlayer	*pPlayer = GET_PLAYER_POINTER_I(i);
+		pPlayer->Init(pEdictList + i, i);
+	}
 
-  executeForwards(FF_PluginInit);
-  executeForwards(FF_PluginCfg);
+	executeForwards(FF_PluginInit);
+	executeForwards(FF_PluginCfg);
 
-  //  ###### Save lang
-  char file[256];
-  g_langMngr.Save(build_pathname_r(file, sizeof(file)-1, "%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
-  g_langMngr.SaveCache(build_pathname_r(file, sizeof(file)-1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
+	// ###### Save lang
+	char file[256];
+	g_langMngr.Save(build_pathname_r(file, sizeof(file)-1, "%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
+	g_langMngr.SaveCache(build_pathname_r(file, sizeof(file)-1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
 
-// Correct time in Counter-Strike	and	other mods (except DOD)
-  if ( !g_bmod_dod)	 g_game_timeleft = 0;
+	// Correct time in Counter-Strike and other mods (except DOD)
+	if (!g_bmod_dod)
+		g_game_timeleft = 0;
 
-  g_task_time =	gpGlobals->time;
-  g_auth_time =	gpGlobals->time;
+	g_task_time = gpGlobals->time;
+	g_auth_time = gpGlobals->time;
 
 #ifdef MEMORY_TEST
-  g_next_memreport_time = gpGlobals->time + MEMREPORT_INTERVAL;
-  g_memreport_count = 0;
-  g_memreport_enabled = true;
+	g_next_memreport_time = gpGlobals->time + MEMREPORT_INTERVAL;
+	g_memreport_count = 0;
+	g_memreport_enabled = true;
 #endif
 
-  g_activated = true;
+	g_activated = true;
 
-  RETURN_META(MRES_IGNORED);
+	RETURN_META(MRES_IGNORED);
 }
 
 // Call	plugin_end forward function	from plugins.
 void C_ServerDeactivate()
 {
-  if (!g_activated)
-	  RETURN_META(MRES_IGNORED);
-  for(int i	= 1; i <= gpGlobals->maxClients; ++i){
-	CPlayer	*pPlayer = GET_PLAYER_POINTER_I(i);
-	if (pPlayer->initialized)
-		executeForwards(FF_ClientDisconnect, pPlayer->index);
+	if (!g_activated)
+		RETURN_META(MRES_IGNORED);
+	
+	for (int i = 1; i <= gpGlobals->maxClients; ++i)
+	{
+		CPlayer	*pPlayer = GET_PLAYER_POINTER_I(i);
+		if (pPlayer->initialized)
+			executeForwards(FF_ClientDisconnect, pPlayer->index);
 
-	if (pPlayer->ingame){
-
-	  pPlayer->Disconnect();
-	  --g_players_num;
+		if (pPlayer->ingame)
+		{
+			pPlayer->Disconnect();
+			--g_players_num;
+		}
 	}
-  }
 
-  g_players_num	= 0;
-  executeForwards(FF_PluginEnd);
+	g_players_num	= 0;
+	executeForwards(FF_PluginEnd);
 
-  RETURN_META(MRES_IGNORED);
+	RETURN_META(MRES_IGNORED);
 }
 
 // After all clear whole AMX configuration
 // However leave AMX modules which are loaded only once
 void C_ServerDeactivate_Post()
 {
-  if (!g_initialized)
-    RETURN_META(MRES_IGNORED);
-  detachReloadModules();
-  g_auth.clear();
-  g_commands.clear();
-  g_forcemodels.clear();
-  g_forcesounds.clear();
-  g_forcegeneric.clear();
-  g_grenades.clear();
-  g_tasksMngr.clear();
-  g_forwards.clear();
-  g_logevents.clearLogEvents();
-  g_events.clearEvents();
-  g_menucmds.clear();
-  ClearMenus();
-  g_vault.clear();
-  g_xvars.clear();
-  g_plugins.clear();
-  ClearPluginLibraries();
-  char file[256];
-  g_langMngr.Save(build_pathname_r(file, sizeof(file)-1, "%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
-  g_langMngr.SaveCache(build_pathname_r(file, sizeof(file)-1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
-  g_langMngr.Clear();
+	if (!g_initialized)
+		RETURN_META(MRES_IGNORED);
+	
+	detachReloadModules();
+	g_auth.clear();
+	g_commands.clear();
+	g_forcemodels.clear();
+	g_forcesounds.clear();
+	g_forcegeneric.clear();
+	g_grenades.clear();
+	g_tasksMngr.clear();
+	g_forwards.clear();
+	g_logevents.clearLogEvents();
+	g_events.clearEvents();
+	g_menucmds.clear();
+	ClearMenus();
+	g_vault.clear();
+	g_xvars.clear();
+	g_plugins.clear();
+	ClearPluginLibraries();
+	char file[256];
+	g_langMngr.Save(build_pathname_r(file, sizeof(file)-1, "%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
+	g_langMngr.SaveCache(build_pathname_r(file, sizeof(file)-1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
+	g_langMngr.Clear();
 
-  // last memreport
+	// last memreport
 #ifdef MEMORY_TEST
 	if (g_memreport_enabled)
 	{
@@ -510,9 +532,7 @@ void C_ServerDeactivate_Post()
 						// good
 						++i;
 						continue;
-					}
-					else
-					{
+					} else {
 						// bad
 						g_memreport_enabled = false;
 						AMXXLOG_Log("[AMXX] Fatal error: Can't create directory for memreport files (%s)", buffer);
@@ -530,239 +550,238 @@ void C_ServerDeactivate_Post()
 	}
 #endif // MEMORY_TEST
 
-  g_initialized = false;
-  RETURN_META(MRES_IGNORED);
+	g_initialized = false;
+
+	RETURN_META(MRES_IGNORED);
 }
 
-BOOL C_ClientConnect_Post( edict_t *pEntity, const char *pszName,	const char *pszAddress,	char szRejectReason[ 128 ] )
+BOOL C_ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[128])
 {
-  CPlayer* pPlayer = GET_PLAYER_POINTER(pEntity);
-  if (!pPlayer->bot) {
-
-	bool a = pPlayer->Connect(pszName,pszAddress);
-
-	executeForwards(FF_ClientConnect, pPlayer->index);
-
-	if ( a )
+	CPlayer* pPlayer = GET_PLAYER_POINTER(pEntity);
+	if (!pPlayer->bot)
 	{
-	  CPlayer**	aa = new CPlayer*(pPlayer);
-	  if ( aa )	g_auth.put(	aa );
-	}
-	else
-	{
-	  pPlayer->Authorize();
-	  executeForwards(FF_ClientAuthorized, pPlayer->index);
-	}
-  }
-  RETURN_META_VALUE(MRES_IGNORED, TRUE);
-}
-
-void C_ClientDisconnect( edict_t *pEntity )
-{
-  CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-  if (pPlayer->initialized)
-	  executeForwards(FF_ClientDisconnect, pPlayer->index);
-
-  if (pPlayer->ingame)	{
-	--g_players_num;
-  }
-  pPlayer->Disconnect();
-  RETURN_META(MRES_IGNORED);
-}
-
-void C_ClientPutInServer_Post( edict_t *pEntity )
-{
-  CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-  if (!pPlayer->bot) {
-	pPlayer->PutInServer();
-	++g_players_num;
-
-	executeForwards(FF_ClientPutInServer, pPlayer->index);
-
-  }
-  RETURN_META(MRES_IGNORED);
-}
-
-void C_ClientUserInfoChanged_Post( edict_t *pEntity, char	*infobuffer	)
-{
-  CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-
-  executeForwards(FF_ClientInfoChanged, pPlayer->index);
-
-  const	char* name = INFOKEY_VALUE(infobuffer,"name");
-
-  // Emulate bot connection	and	putinserver
-  if ( pPlayer->ingame )
-  {
-	pPlayer->name.assign(name); //	Make sure player have name up to date
-  }
-  else if (	pPlayer->IsBot() )
-  {
-	pPlayer->Connect( name ,"127.0.0.1"/*CVAR_GET_STRING("net_address")*/);
-
-	executeForwards(FF_ClientConnect, pPlayer->index);
-
-	pPlayer->Authorize();
-	executeForwards(FF_ClientAuthorized, pPlayer->index);
-
-
-	pPlayer->PutInServer();
-	++g_players_num;
-
-	executeForwards(FF_ClientPutInServer, pPlayer->index);
-  }
-
-  RETURN_META(MRES_IGNORED);
-}
-
-void C_ClientCommand(	edict_t	*pEntity )
-{
-  CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-  META_RES result =	MRES_IGNORED;
-  cell ret = 0;
-  const	char* cmd =	CMD_ARGV(0);
-  const	char* arg =	CMD_ARGV(1);
-
-  // Handle "amxx" if not on listenserver
-  if (IS_DEDICATED_SERVER())
-  {
-    if (cmd && stricmp(cmd, "amxx")==0)
-    {
-      // Print version
-	  static char buf[1024];
-	  sprintf(buf, "%s %s\n", Plugin_info.name, Plugin_info.version);
-      CLIENT_PRINT(pEntity, print_console, buf);
-	  sprintf(buf, "Authors: %s  (%s)\n", "Felix \"SniperBeamer\" Geyer, David \"BAILOPAN\" Anderson, Pavol \"PM OnoTo\" Marko, Jonny \"Got His Gun\" Bergstrom, and Lukasz \"SidLuke\" Wlasinski.",  Plugin_info.url);
-	  CLIENT_PRINT(pEntity, print_console, buf);
-	  sprintf(buf, "Compiled: %s\n", __DATE__ ", " __TIME__);
-      CLIENT_PRINT(pEntity, print_console, buf);
-#ifdef JIT
-	  sprintf(buf, "Core mode: JIT\n");
-#else
-#ifdef ASM32
-      sprintf(buf, "Core mode: ASM\n");
-#else
-	  sprintf(buf, "Core mode: Normal\n");
-#endif
-#endif
-	  CLIENT_PRINT(pEntity, print_console, buf);
-      RETURN_META(MRES_SUPERCEDE);
-    }
-  }
-
-  if (executeForwards(FF_ClientCommand, pPlayer->index) > 0)
-	RETURN_META(MRES_SUPERCEDE);
-
-
-  /* check for command and if needed also for first	argument and call proper function */
-
-	CmdMngr::iterator aa = g_commands.clcmdprefixbegin(	cmd	);
-	if ( !aa ) aa =	g_commands.clcmdbegin();
-
-	while (	aa )
-	{
-	  if ( (*aa).matchCommandLine( cmd , arg  )	&&
-		(*aa).getPlugin()->isExecutable(  (*aa).getFunction() )	)
-	  {
-	    ret = executeForwards((*aa).getFunction(), pPlayer->index, (*aa).getFlags(), (*aa).getId());
-		if ( ret & 2 )	result = MRES_SUPERCEDE;
-		if ( ret & 1 )	RETURN_META(MRES_SUPERCEDE);
-	  }
-
-	  ++aa;
-	}
-
-  /* check menu	commands */
-
-  if (!strcmp(cmd,"menuselect"))
-  {
-	int	pressed_key	= atoi(	arg	) -	1;
-	int	bit_key	= (1<<pressed_key);
-
-	if (pPlayer->keys &	bit_key)
-	{
-
-	  int menuid = pPlayer->menu;
-	  pPlayer->menu	= 0;
-
-	  MenuMngr::iterator a = g_menucmds.begin();
-
-		while( a )
+		bool a = pPlayer->Connect(pszName, pszAddress);
+		executeForwards(FF_ClientConnect, pPlayer->index);
+		
+		if (a)
 		{
-		  if ( (*a).matchCommand(  menuid ,	bit_key	 ) && (*a).getPlugin()->isExecutable( (*a).getFunction() ) )
-		  {
-		    if (pPlayer->newmenu != -1)
-			{
-				int menu = pPlayer->newmenu;
-				pPlayer->newmenu = -1;
-				if (menu >= 0 && menu < (int)g_NewMenus.size())
-				{
-					Menu *pMenu = g_NewMenus[menu];
-					int item = pMenu->PagekeyToItem(pPlayer->page, pressed_key);
-					ret = executeForwards( (*a).getFunction(), pPlayer->index, menu, item );
-					if ( ret & 2 ) result = MRES_SUPERCEDE;
-					else if ( ret & 1 ) RETURN_META(MRES_SUPERCEDE);
-					else {
-						if (item == MENU_BACK)
-						{
-							pMenu->Display(pPlayer->index, pPlayer->page-1);
-						} else if (item == MENU_MORE) {
-							pMenu->Display(pPlayer->index, pPlayer->page+1);
-						} else if (item == MENU_EXIT) {
-							//nothing
-						}
-					}
-				}
-			} else {
-				ret = executeForwards((*a).getFunction(), pPlayer->index, pressed_key, 0);
-				if ( ret & 2 ) result =	MRES_SUPERCEDE;
-				if ( ret & 1 ) RETURN_META(MRES_SUPERCEDE);
-			}
-		  }
-
-		  ++a;
+			CPlayer** aa = new CPlayer*(pPlayer);
+			if (aa) 
+				g_auth.put(aa);
+		} else {
+			pPlayer->Authorize();
+			executeForwards(FF_ClientAuthorized, pPlayer->index);
 		}
 	}
-  }
-  /* check for PLUGIN_HANDLED_MAIN and block hl	call if	needed */
-  RETURN_META( result );
+	
+	RETURN_META_VALUE(MRES_IGNORED, TRUE);
 }
 
-void C_StartFrame_Post( void )
+void C_ClientDisconnect(edict_t *pEntity)
 {
-  if (g_auth_time <	gpGlobals->time	)
-  {
-  g_auth_time =	gpGlobals->time	+ 0.7f;
+	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
+	if (pPlayer->initialized)
+		executeForwards(FF_ClientDisconnect, pPlayer->index);
 
-  CList<CPlayer*>::iterator	a =	g_auth.begin();
-
-  while	( a	)
-  {
-	const char*	auth = GETPLAYERAUTHID(	(*a)->pEdict );
-
-	if ( (auth == 0) ||	(*auth == 0) ) {
-	  a.remove();
-	  continue;
-	}
-
-	if ( strcmp( auth, "STEAM_ID_PENDING" )	)
+	if (pPlayer->ingame)
 	{
-	  (*a)->Authorize();
-	  executeForwards(FF_ClientAuthorized, (*a)->index);
-	  a.remove();
-	  continue;
+		--g_players_num;
+	}
+	pPlayer->Disconnect();
+
+	RETURN_META(MRES_IGNORED);
+}
+
+void C_ClientPutInServer_Post(edict_t *pEntity)
+{
+	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
+	if (!pPlayer->bot)
+	{
+		pPlayer->PutInServer();
+		++g_players_num;
+		executeForwards(FF_ClientPutInServer, pPlayer->index);
+	}
+	
+	RETURN_META(MRES_IGNORED);
+}
+
+void C_ClientUserInfoChanged_Post(edict_t *pEntity, char *infobuffer)
+{
+	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
+	executeForwards(FF_ClientInfoChanged, pPlayer->index);
+	const char* name = INFOKEY_VALUE(infobuffer,"name");
+
+	// Emulate bot connection and putinserver
+	if (pPlayer->ingame)
+	{
+		pPlayer->name.assign(name); //	Make sure player have name up to date
+	}
+	 else if (pPlayer->IsBot())
+	{
+		pPlayer->Connect(name, "127.0.0.1"/*CVAR_GET_STRING("net_address")*/);
+
+		executeForwards(FF_ClientConnect, pPlayer->index);
+
+		pPlayer->Authorize();
+		executeForwards(FF_ClientAuthorized, pPlayer->index);
+
+		pPlayer->PutInServer();
+		++g_players_num;
+
+		executeForwards(FF_ClientPutInServer, pPlayer->index);
 	}
 
-	++a;
-  }
+	RETURN_META(MRES_IGNORED);
+}
 
-  }
+void C_ClientCommand(edict_t *pEntity)
+{
+	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
+	META_RES result = MRES_IGNORED;
+	cell ret = 0;
+	const char* cmd = CMD_ARGV(0);
+	const char* arg = CMD_ARGV(1);
 
+	// Handle "amxx" if not on listenserver
+	if (IS_DEDICATED_SERVER())
+	{
+		if (cmd && stricmp(cmd, "amxx") == 0)
+		{
+			// Print version
+			static char buf[1024];
+			sprintf(buf, "%s %s\n", Plugin_info.name, Plugin_info.version);
+			CLIENT_PRINT(pEntity, print_console, buf);
+			sprintf(buf, "Authors: %s  (%s)\n", "Felix \"SniperBeamer\" Geyer, David \"BAILOPAN\" Anderson, Pavol \"PM OnoTo\" Marko, Jonny \"Got His Gun\" Bergstrom, and Lukasz \"SidLuke\" Wlasinski.", Plugin_info.url);
+			CLIENT_PRINT(pEntity, print_console, buf);
+			sprintf(buf, "Compiled: %s\n", __DATE__ ", " __TIME__);
+			CLIENT_PRINT(pEntity, print_console, buf);
+#ifdef JIT
+			sprintf(buf, "Core mode: JIT\n");
+#else
+#ifdef ASM32
+			sprintf(buf, "Core mode: ASM\n");
+#else
+			sprintf(buf, "Core mode: Normal\n");
+#endif
+#endif
+			CLIENT_PRINT(pEntity, print_console, buf);
+			RETURN_META(MRES_SUPERCEDE);
+		}
+	}
+
+	if (executeForwards(FF_ClientCommand, pPlayer->index) > 0)
+		RETURN_META(MRES_SUPERCEDE);
+
+	/* check for command and if needed also for first argument and call proper function */
+
+	CmdMngr::iterator aa = g_commands.clcmdprefixbegin(cmd);
+	if (!aa) aa = g_commands.clcmdbegin();
+
+	while (aa)
+	{
+		if ((*aa).matchCommandLine(cmd, arg) && (*aa).getPlugin()->isExecutable((*aa).getFunction()))
+		{
+			ret = executeForwards((*aa).getFunction(), pPlayer->index, (*aa).getFlags(), (*aa).getId());
+			if (ret & 2) result = MRES_SUPERCEDE;
+			if (ret & 1) RETURN_META(MRES_SUPERCEDE);
+		}
+		++aa;
+	}
+
+	/* check menu commands */
+
+	if (!strcmp(cmd,"menuselect"))
+	{
+		int	pressed_key	= atoi(arg) - 1;
+		int	bit_key	= (1<<pressed_key);
+
+		if (pPlayer->keys &	bit_key)
+		{
+			int menuid = pPlayer->menu;
+			pPlayer->menu = 0;
+
+			MenuMngr::iterator a = g_menucmds.begin();
+
+			while (a)
+			{
+				if ((*a).matchCommand(menuid, bit_key) && (*a).getPlugin()->isExecutable((*a).getFunction()))
+				{
+					if (pPlayer->newmenu != -1)
+					{
+						int menu = pPlayer->newmenu;
+						pPlayer->newmenu = -1;
+						
+						if (menu >= 0 && menu < (int)g_NewMenus.size())
+						{
+							Menu *pMenu = g_NewMenus[menu];
+							int item = pMenu->PagekeyToItem(pPlayer->page, pressed_key);
+							ret = executeForwards((*a).getFunction(), pPlayer->index, menu, item);
+							
+							if (ret & 2) result = MRES_SUPERCEDE;
+							else if (ret & 1) RETURN_META(MRES_SUPERCEDE);
+							else 
+							{
+								if (item == MENU_BACK)
+								{
+									pMenu->Display(pPlayer->index, pPlayer->page-1);
+								} else if (item == MENU_MORE)
+								{
+									pMenu->Display(pPlayer->index, pPlayer->page+1);
+								} else if (item == MENU_EXIT)
+								{
+									//nothing
+								}
+							}
+						}
+					} else {
+						ret = executeForwards((*a).getFunction(), pPlayer->index, pressed_key, 0);
+						
+						if (ret & 2) result = MRES_SUPERCEDE;
+						if (ret & 1) RETURN_META(MRES_SUPERCEDE);
+					}
+				}
+				++a;
+			}
+		}
+	}
+
+	/* check for PLUGIN_HANDLED_MAIN and block hl call if needed */
+	RETURN_META(result);
+}
+
+void C_StartFrame_Post(void)
+{
+	if (g_auth_time < gpGlobals->time)
+	{
+		g_auth_time = gpGlobals->time + 0.7f;
+		CList<CPlayer*>::iterator a = g_auth.begin();
+
+		while (a)
+		{
+			const char*	auth = GETPLAYERAUTHID((*a)->pEdict);
+
+			if ((auth == 0) || (*auth == 0))
+			{
+				a.remove();
+				continue;
+			}
+
+			if (strcmp(auth, "STEAM_ID_PENDING"))
+			{
+				(*a)->Authorize();
+				executeForwards(FF_ClientAuthorized, (*a)->index);
+				a.remove();
+				continue;
+			}
+			++a;
+		}
+	}
 
 #ifdef MEMORY_TEST
 	if (g_memreport_enabled && g_next_memreport_time <= gpGlobals->time)
 	{
 		g_next_memreport_time = gpGlobals->time + MEMREPORT_INTERVAL;
+		
 		if (g_memreport_count == 0)
 		{
 			// make new directory
@@ -792,9 +811,7 @@ void C_StartFrame_Post( void )
 						// good
 						++i;
 						continue;
-					}
-					else
-					{
+					} else {
 						// bad
 						g_memreport_enabled = false;
 						AMXXLOG_Log("[AMXX] Fatal error: Can't create directory for memreport files (%s)", buffer);
@@ -812,139 +829,159 @@ void C_StartFrame_Post( void )
 	}
 #endif // MEMORY_TEST
 
-  if (g_task_time >	gpGlobals->time)
+	if (g_task_time > gpGlobals->time)
+		RETURN_META(MRES_IGNORED);
+
+	g_task_time = gpGlobals->time + 0.1f;
+
+	g_tasksMngr.startFrame();
+
+	// Dispatch client cvar queries
+	for (int i = 1; i <= gpGlobals->maxClients; ++i)
+	{
+		CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
+		
+		if (pPlayer->pEdict && pPlayer->initialized && !pPlayer->cvarQueryQueue.empty())
+		{
+			if (!IS_QUERYING_CLIENT_CVAR(PLID, pPlayer->pEdict))
+			{
+				(*g_engfuncs.pfnQueryClientCvarValue)(pPlayer->pEdict, pPlayer->cvarQueryQueue.front()->cvarName.c_str());
+				pPlayer->cvarQueryQueue.front()->querying = true;
+			}
+		}
+	}
+
 	RETURN_META(MRES_IGNORED);
-
-  g_task_time =	gpGlobals->time	+ 0.1f;
-
-  g_tasksMngr.startFrame();
-
-
-  // Dispatch client cvar queries
-  for(int i = 1; i <= gpGlobals->maxClients; ++i)
-  {
-	  CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
-	  if (pPlayer->pEdict && pPlayer->initialized && !pPlayer->cvarQueryQueue.empty())
-	  {
-		  if (!IS_QUERYING_CLIENT_CVAR(PLID, pPlayer->pEdict))
-		  {
-			  (*g_engfuncs.pfnQueryClientCvarValue)(pPlayer->pEdict, pPlayer->cvarQueryQueue.front()->cvarName.c_str());
-			  pPlayer->cvarQueryQueue.front()->querying = true;
-		  }
-	  }
-  }
-
-
-  RETURN_META(MRES_IGNORED);
 }
 
 void C_MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
 {
-  if (ed)
-  {
-
-	if (gmsgBattery==msg_type&&g_bmod_cstrike)
+	if (ed)
 	{
-	  void*	ptr	= GET_PRIVATE(ed);
+		if (gmsgBattery == msg_type && g_bmod_cstrike)
+		{
+			void* ptr = GET_PRIVATE(ed);
 #ifdef __linux__
-	  int *z = (int*)ptr + 0x171;
+			int *z = (int*)ptr + 0x171;
 #else
-	  int *z = (int*)ptr + 0x16C;
+			int *z = (int*)ptr + 0x16C;
 #endif
-	  int stop = (int)ed->v.armorvalue;
-	  *z = stop;
-	  ed->v.armorvalue = (float)stop;
+			int stop = (int)ed->v.armorvalue;
+			*z = stop;
+			ed->v.armorvalue = (float)stop;
+		}
+
+		mPlayerIndex = ENTINDEX(ed);
+		mPlayer	= GET_PLAYER_POINTER_I(mPlayerIndex);
+	} else {
+		mPlayerIndex = 0;
+		mPlayer	= 0;
 	}
+	
+	if (msg_type < 0 || msg_type >= MAX_REG_MSGS)
+		msg_type = 0;
 
-	mPlayerIndex = ENTINDEX(ed);
-	mPlayer	= GET_PLAYER_POINTER_I(mPlayerIndex);
-  }
-  else
-  {
-	mPlayerIndex = 0;
-	mPlayer	= 0;
-  }
-  if ( msg_type	< 0	|| msg_type	>= MAX_REG_MSGS	)
-	msg_type = 0;
+	mState = 0;
+	function=modMsgs[msg_type];
+	endfunction=modMsgsEnd[msg_type];
+	g_events.parserInit(msg_type, &gpGlobals->time, mPlayer, mPlayerIndex);
 
-  mState = 0;
-  function=modMsgs[msg_type];
-  endfunction=modMsgsEnd[msg_type];
-  g_events.parserInit(msg_type,	&gpGlobals->time, mPlayer ,mPlayerIndex);
-  RETURN_META(MRES_IGNORED);
+	RETURN_META(MRES_IGNORED);
 }
-void C_WriteByte_Post(int	iValue)
+
+void C_WriteByte_Post(int iValue)
 {
-  g_events.parseValue(iValue);
-  if (function)	(*function)((void *)&iValue);
-  RETURN_META(MRES_IGNORED);
+	g_events.parseValue(iValue);
+	if (function) (*function)((void *)&iValue);
+	
+	RETURN_META(MRES_IGNORED);
 }
-void C_WriteChar_Post(int	iValue)
+
+void C_WriteChar_Post(int iValue)
 {
-  g_events.parseValue(iValue);
-  if (function)	(*function)((void *)&iValue);
-  RETURN_META(MRES_IGNORED);
+	g_events.parseValue(iValue);
+	if (function) (*function)((void *)&iValue);
+
+	RETURN_META(MRES_IGNORED);
 }
+
 void C_WriteShort_Post(int iValue)
 {
-  g_events.parseValue(iValue);
-  if (function)	(*function)((void *)&iValue);
-  RETURN_META(MRES_IGNORED);
+	g_events.parseValue(iValue);
+	if (function) (*function)((void *)&iValue);
+	
+	RETURN_META(MRES_IGNORED);
 }
-void C_WriteLong_Post(int	iValue)
+
+void C_WriteLong_Post(int iValue)
 {
-  g_events.parseValue(iValue);
-  if (function)	(*function)((void *)&iValue);
-  RETURN_META(MRES_IGNORED);
+	g_events.parseValue(iValue);
+	if (function) (*function)((void *)&iValue);
+	
+	RETURN_META(MRES_IGNORED);
 }
+
 void C_WriteAngle_Post(float flValue)
 {
-  g_events.parseValue(flValue);
-  if (function)	(*function)((void *)&flValue);
-  RETURN_META(MRES_IGNORED);
+	g_events.parseValue(flValue);
+	if (function) (*function)((void *)&flValue);
+	
+	RETURN_META(MRES_IGNORED);
 }
+
 void C_WriteCoord_Post(float flValue)
 {
-  g_events.parseValue(flValue);
-  if (function)	(*function)((void *)&flValue);
-  RETURN_META(MRES_IGNORED);
+	g_events.parseValue(flValue);
+	if (function) (*function)((void *)&flValue);
+
+	RETURN_META(MRES_IGNORED);
 }
+
 void C_WriteString_Post(const char *sz)
 {
-  g_events.parseValue(sz);
-  if (function)	(*function)((void *)sz);
-  RETURN_META(MRES_IGNORED);
+	g_events.parseValue(sz);
+	if (function) (*function)((void *)sz);
+
+	RETURN_META(MRES_IGNORED);
 }
+
 void C_WriteEntity_Post(int iValue)
 {
-  g_events.parseValue(iValue);
-  if (function)	(*function)((void *)&iValue);
-  RETURN_META(MRES_IGNORED);
+	g_events.parseValue(iValue);
+	if (function) (*function)((void *)&iValue);
+	
+	RETURN_META(MRES_IGNORED);
 }
+
 void C_MessageEnd_Post(void)
 {
-  g_events.executeEvents();
-  if (endfunction) (*endfunction)(NULL);
-  RETURN_META(MRES_IGNORED);
+	g_events.executeEvents();
+	if (endfunction) (*endfunction)(NULL);
+	
+	RETURN_META(MRES_IGNORED);
 }
 
 void C_ChangeLevel(char* s1, char* s2)
 {
-	if (FF_ChangeLevel) {
+	if (FF_ChangeLevel)
+	{
 		int retVal = 0;
 		char *map = s1;
 		retVal = executeForwards(FF_ChangeLevel, map);
+		
 		if (retVal)
 			RETURN_META(MRES_SUPERCEDE);
 	}
+	
 	RETURN_META(MRES_IGNORED);
 }
 
-const char *C_Cmd_Args( void )
+const char *C_Cmd_Args(void)
 {
 	// if the global "fake" flag is set, which means that engclient_cmd was used, supercede the function
 	if (g_fakecmd.fake)
 		RETURN_META_VALUE(MRES_SUPERCEDE, (g_fakecmd.argc > 1) ? g_fakecmd.args : g_fakecmd.argv[0]);
+	
 	// otherwise ignore it
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 }
@@ -953,40 +990,47 @@ const char *C_Cmd_Argv(int argc)
 {
 	// if the global "fake" flag is set, which means that engclient_cmd was used, supercede the function
 	if (g_fakecmd.fake)
-		RETURN_META_VALUE(MRES_SUPERCEDE,	(argc < 3) ? g_fakecmd.argv[argc] : "");
+		RETURN_META_VALUE(MRES_SUPERCEDE, (argc < 3) ? g_fakecmd.argv[argc] : "");
+	
 	// otherwise ignore it
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 }
 
-int	C_Cmd_Argc( void )
+int	C_Cmd_Argc(void)
 {
 	// if the global "fake" flag is set, which means that engclient_cmd was used, supercede the function
 	if (g_fakecmd.fake)
 		RETURN_META_VALUE(MRES_SUPERCEDE, g_fakecmd.argc);
+	
 	// otherwise ignore it
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
 // Grenade has been	thrown.
 // Only	here we	may	find out who is	an owner.
-void C_SetModel(edict_t *e, const	char *m)
+void C_SetModel(edict_t *e, const char *m)
 {
-  if(e->v.owner&&m[7]=='w'&&m[8]=='_'&&m[9]=='h')
-	g_grenades.put(	e ,	1.75, 4, GET_PLAYER_POINTER(e->v.owner)	);
-  RETURN_META(MRES_IGNORED);
+	if (e->v.owner && m[7]=='w' && m[8]=='_' && m[9]=='h')
+		g_grenades.put(e, 1.75, 4, GET_PLAYER_POINTER(e->v.owner));
+	
+	RETURN_META(MRES_IGNORED);
 }
 
 // Save	at what	part of	body a player is aiming
 void C_TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *e, TraceResult *ptr)
 {
-  if ( e &&	( e->v.flags & (FL_CLIENT |	FL_FAKECLIENT) ) ) {
-	CPlayer* pPlayer = GET_PLAYER_POINTER(e);
-	if (ptr->pHit&&(ptr->pHit->v.flags&	(FL_CLIENT | FL_FAKECLIENT)	))
-	  pPlayer->aiming =	ptr->iHitgroup;
-	pPlayer->lastTrace = pPlayer->thisTrace;
-	pPlayer->thisTrace = ptr->vecEndPos;
-  }
-  RETURN_META(MRES_IGNORED);
+	if (e && (e->v.flags & (FL_CLIENT | FL_FAKECLIENT)))
+	{
+		CPlayer* pPlayer = GET_PLAYER_POINTER(e);
+		
+		if (ptr->pHit && (ptr->pHit->v.flags & (FL_CLIENT | FL_FAKECLIENT)))
+			pPlayer->aiming = ptr->iHitgroup;
+			
+		pPlayer->lastTrace = pPlayer->thisTrace;
+		pPlayer->thisTrace = ptr->vecEndPos;
+	}
+
+	RETURN_META(MRES_IGNORED);
 }
 
 void C_AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...)
@@ -994,7 +1038,7 @@ void C_AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...)
 	if (atype != at_logged)
 		RETURN_META(MRES_IGNORED);
 
-	/*  There	are	also more messages but we want only	logs
+	/* There are also more messages but we want only logs
 	at_notice,
 	at_console,		// same	as at_notice, but forces a ConPrintf, not a	message	box
 	at_aiconsole,	// same	as at_console, but only	shown if developer level is	2!
@@ -1007,13 +1051,16 @@ void C_AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...)
 	if (g_logevents.logEventsExist() || FF_PluginLog >= 0)
 	{
 		va_list	logArgPtr;
-		va_start ( logArgPtr , szFmt );
-		g_logevents.setLogString( szFmt	, logArgPtr	);
-		va_end ( logArgPtr );
-		g_logevents.parseLogString(	);
+		va_start (logArgPtr, szFmt);
+		g_logevents.setLogString(szFmt, logArgPtr);
+		va_end (logArgPtr);
+		g_logevents.parseLogString();
+
 		if (g_logevents.logEventsExist())
-			g_logevents.executeLogEvents( );
+			g_logevents.executeLogEvents();
+		
 		cell retVal = executeForwards(FF_PluginLog);
+		
 		if (retVal)
 			RETURN_META(MRES_HANDLED);
 	}
@@ -1038,13 +1085,15 @@ void C_CvarValue(const edict_t *pEdict, const char *value)
 		}
 		else
 			executeForwards(pQuery->resultFwd, ENTINDEX(pEdict), pQuery->cvarName.c_str(), value);
-
-
+		
 		unregisterSPForward(pQuery->resultFwd);
+		
 		if (pQuery->params)
 			delete [] pQuery->params;
+
 		delete pQuery;
 		pPlayer->cvarQueryQueue.pop();
+		
 		RETURN_META(MRES_HANDLED);
 	}
 
@@ -1055,195 +1104,217 @@ bool m_NeedsP = false;
 
 C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_t *pMetaUtilFuncs)
 {
-  gpMetaUtilFuncs=pMetaUtilFuncs;
-  *pPlugInfo=&Plugin_info;
-  if(strcmp(ifvers,	Plugin_info.ifvers))
-  {
-	int	mmajor=0, mminor=0,	pmajor=0, pminor=0;
-	LOG_MESSAGE(PLID, "WARNING:	meta-interface version mismatch; requested=%s ours=%s",	Plugin_info.logtag,	ifvers);
-	sscanf(ifvers, "%d:%d",	&mmajor, &mminor);
-	sscanf(META_INTERFACE_VERSION, "%d:%d",	&pmajor, &pminor);
-	if(pmajor >	mmajor)
+	gpMetaUtilFuncs=pMetaUtilFuncs;
+	*pPlugInfo=&Plugin_info;
+	
+	if (strcmp(ifvers, Plugin_info.ifvers))
 	{
-	  LOG_ERROR(PLID, "metamod version is too old for this plugin; update metamod");
-	  return(FALSE);
-	} else if(pmajor < mmajor) {
-	  LOG_ERROR(PLID, "metamod version is incompatible with	this plugin; please	find a newer version of	this plugin");
-	  return(FALSE);
-	} else if (pmajor==mmajor) {
+		int	mmajor = 0, mminor = 0,	pmajor = 0, pminor = 0;
+		
+		LOG_MESSAGE(PLID, "WARNING:	meta-interface version mismatch; requested=%s ours=%s",	Plugin_info.logtag,	ifvers);
+		sscanf(ifvers, "%d:%d",	&mmajor, &mminor);
+		sscanf(META_INTERFACE_VERSION, "%d:%d",	&pmajor, &pminor);
+		
+		if (pmajor > mmajor)
+		{
+			LOG_ERROR(PLID, "metamod version is too old for this plugin; update metamod");
+			return (FALSE);
+		} else if (pmajor < mmajor)
+		{
+			LOG_ERROR(PLID, "metamod version is incompatible with	this plugin; please	find a newer version of	this plugin");
+			return (FALSE);
+		} else if (pmajor == mmajor)
+		{
 #ifdef FAKEMETA
-		if (mminor == 10)
-		{
-			LOG_MESSAGE(PLID,	"WARNING: metamod version is older than	expected; consider finding a newer version");
-			g_IsNewMM = false;
-			//hack!
-			Plugin_info.ifvers = "5:10";
+			if (mminor == 10)
+			{
+				LOG_MESSAGE(PLID,	"WARNING: metamod version is older than	expected; consider finding a newer version");
+				g_IsNewMM = false;
+				
+				//hack!
+				Plugin_info.ifvers = "5:10";
 #else
-		if (mminor < 11)
-		{
-			g_NeedsP = true;
-			
+				if (mminor < 11)
+				{
+					g_NeedsP = true;
 #endif
-		} else if (mminor >= 11) {
-			g_IsNewMM = true;
-		} else if (pminor > mminor) {
-			LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please	find a newer version of	this plugin");
-			return FALSE;
-		} else if (pminor < mminor) {
-			LOG_MESSAGE(PLID,	"WARNING: metamod version is newer than	expected; consider finding a newer version of this plugin");
-			if (mminor > 11)
-				g_IsNewMM = true;
+				} else if (mminor >= 11)
+				{
+					g_IsNewMM = true;
+				} else if (pminor > mminor)
+				{
+					LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please	find a newer version of	this plugin");
+					return FALSE;
+				} else if (pminor < mminor)
+				{
+					LOG_MESSAGE(PLID, "WARNING: metamod version is newer than expected; consider finding a newer version of this plugin");
+				
+					if (mminor > 11)
+						g_IsNewMM = true;
+				}
+		} else {
+			LOG_ERROR(PLID, "unexpected version comparison; metavers=%s, mmajor=%d, mminor=%d; plugvers=%s, pmajor=%d, pminor=%d", ifvers, mmajor, mminor, META_INTERFACE_VERSION, pmajor, pminor);
 		}
 	} else {
-	  LOG_ERROR(PLID, "unexpected version comparison; metavers=%s, mmajor=%d, mminor=%d; plugvers=%s, pmajor=%d, pminor=%d", ifvers, mmajor, mminor, META_INTERFACE_VERSION, pmajor, pminor);
+		g_IsNewMM = true;
 	}
-  } else {
-	  g_IsNewMM = true;
-  }
 
-  // We can set this to null here because Meta_PExtGiveFnptrs is called after this
-  gpMetaPExtFuncs = NULL;
+	// We can set this to null here because Meta_PExtGiveFnptrs is called after this
+	gpMetaPExtFuncs = NULL;
 
-  // :NOTE: Don't call modules query here (g_FakeMeta.Meta_Query), because we don't know modules yet. Do it in Meta_Attach
-  return(TRUE);
+	// :NOTE: Don't call modules query here (g_FakeMeta.Meta_Query), because we don't know modules yet. Do it in Meta_Attach
+	return (TRUE);
 }
 
 // evilspy's patch for mm-p ext support
 // this is called right after Meta_Query
 C_DLLEXPORT int Meta_PExtGiveFnptrs(int interfaceVersion, pextension_funcs_t *pMetaPExtFuncs)
 {
-	if(interfaceVersion<META_PEXT_VERSION)
+	if (interfaceVersion < META_PEXT_VERSION)
 	{
-		return(META_PEXT_VERSION);
+		return (META_PEXT_VERSION);
 	}
+	
 	gpMetaPExtFuncs = pMetaPExtFuncs;
-	return(META_PEXT_VERSION);
+	
+	return (META_PEXT_VERSION);
 }
 
 static META_FUNCTIONS gMetaFunctionTable;
 C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, meta_globals_t *pMGlobals, gamedll_funcs_t *pGamedllFuncs)
 {
-  if(now > Plugin_info.loadable)
-  {
-    LOG_ERROR(PLID,	"Can't load	plugin right now");
-	return(FALSE);
-  }
-  if (g_NeedsP && !gpMetaPExtFuncs)
-  {
-    LOG_ERROR(PLID, "You need Metamod-P or Metamod-1.18 to use AMX Mod X 1.1!");
-	return(FALSE);
-  }
-  gpMetaGlobals=pMGlobals;
-  gMetaFunctionTable.pfnGetEntityAPI2 =	GetEntityAPI2;
-  gMetaFunctionTable.pfnGetEntityAPI2_Post = GetEntityAPI2_Post;
-  gMetaFunctionTable.pfnGetEngineFunctions = GetEngineFunctions;
-  gMetaFunctionTable.pfnGetEngineFunctions_Post	= GetEngineFunctions_Post;
-  gMetaFunctionTable.pfnGetNewDLLFunctions = GetNewDLLFunctions;
+	if (now > Plugin_info.loadable)
+	{
+		LOG_ERROR(PLID,	"Can't load	plugin right now");
+		return (FALSE);
+	}
+
+	if (g_NeedsP && !gpMetaPExtFuncs)
+	{
+		LOG_ERROR(PLID, "You need Metamod-P or Metamod-1.18 to use AMX Mod X %s!", AMX_VERSION);
+		return (FALSE);
+	}
+	
+	gpMetaGlobals=pMGlobals;
+	gMetaFunctionTable.pfnGetEntityAPI2 = GetEntityAPI2;
+	gMetaFunctionTable.pfnGetEntityAPI2_Post = GetEntityAPI2_Post;
+	gMetaFunctionTable.pfnGetEngineFunctions = GetEngineFunctions;
+	gMetaFunctionTable.pfnGetEngineFunctions_Post = GetEngineFunctions_Post;
+	gMetaFunctionTable.pfnGetNewDLLFunctions = GetNewDLLFunctions;
+
 #ifdef FAKEMETA
-  gMetaFunctionTable.pfnGetNewDLLFunctions_Post = GetNewDLLFunctions_Post;
+	gMetaFunctionTable.pfnGetNewDLLFunctions_Post = GetNewDLLFunctions_Post;
 #endif
 
-  memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
-  gpGamedllFuncs=pGamedllFuncs;
+	memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
+	gpGamedllFuncs=pGamedllFuncs;
 
-  Module_CacheFunctions();
+	Module_CacheFunctions();
 
-  CVAR_REGISTER(&init_amxmodx_version);
-  CVAR_REGISTER(&init_amxmodx_modules);
-  CVAR_REGISTER(&init_amxmodx_debug);
-  amxmodx_version =	CVAR_GET_POINTER(init_amxmodx_version.name);
-  REG_SVR_COMMAND("amxx",amx_command);
+	CVAR_REGISTER(&init_amxmodx_version);
+	CVAR_REGISTER(&init_amxmodx_modules);
+	CVAR_REGISTER(&init_amxmodx_debug);
+	amxmodx_version = CVAR_GET_POINTER(init_amxmodx_version.name);
+	REG_SVR_COMMAND("amxx", amx_command);
 
-  char gameDir[512];
-  GET_GAME_DIR(gameDir);
-  char *a =	gameDir;
-  int i	= 0;
-  while	( gameDir[i] )
-	if (gameDir[i++] ==	'/')
-	  a	= &gameDir[i];
-  g_mod_name.assign(a);
+	char gameDir[512];
+	GET_GAME_DIR(gameDir);
+	char *a = gameDir;
+	int i = 0;
+	
+	while (gameDir[i])
+		if (gameDir[i++] ==	'/')
+			a = &gameDir[i];
+	
+	g_mod_name.assign(a);
 
-  if (g_mod_name.compare("cstrike")==0 ||
-	  g_mod_name.compare("czero")==0 ||
-	  g_mod_name.compare("dod")==0)
-	  g_coloredmenus = true;
-  else
-	  g_coloredmenus = false;
+	if (g_mod_name.compare("cstrike") == 0 ||
+		g_mod_name.compare("czero") == 0 ||
+		g_mod_name.compare("dod") == 0)
+		g_coloredmenus = true;
+	else
+		g_coloredmenus = false;
 
-  // ###### Print short GPL
-  print_srvconsole(	"\n   AMX Mod X version %s Copyright (c) 2004-2005 AMX Mod X Development Team \n"
-					"   AMX Mod X comes with ABSOLUTELY NO WARRANTY; for details type `amxx gpl'.\n", AMX_VERSION);
-  print_srvconsole(	"   This is free software and you are welcome to redistribute it under \n"
-					"   certain conditions; type 'amxx gpl' for details.\n  \n");
+	// ###### Print short GPL
+	print_srvconsole("\n   AMX Mod X version %s Copyright (c) 2004-2005 AMX Mod X Development Team \n"
+					 "   AMX Mod X comes with ABSOLUTELY NO WARRANTY; for details type `amxx gpl'.\n", AMX_VERSION);
+	print_srvconsole("   This is free software and you are welcome to redistribute it under \n"
+					 "   certain conditions; type 'amxx gpl' for details.\n  \n");
 
-  // ######	Load custom	path configuration
-  Vault	amx_config;
-  amx_config.setSource(build_pathname("%s",	get_localinfo("amxx_cfg", "addons/amxmodx/configs/core.ini")));
+	// ###### Load custom path configuration
+	Vault amx_config;
+	amx_config.setSource(build_pathname("%s", get_localinfo("amxx_cfg", "addons/amxmodx/configs/core.ini")));
 
-  if ( amx_config.loadVault() ){
-	Vault::iterator	a =	amx_config.begin();
-	while (	a != amx_config.end() )	{
-	  SET_LOCALINFO( (char*)a.key().c_str(), (char*)a.value().c_str() );
-	  ++a;
+	if (amx_config.loadVault())
+	{
+		Vault::iterator	a =	amx_config.begin();
+		
+		while (a != amx_config.end())
+		{
+			SET_LOCALINFO((char*)a.key().c_str(), (char*)a.value().c_str());
+			++a;
+		}
+		amx_config.clear();
 	}
-	amx_config.clear();
-  }
 
-  // ######	Initialize logging here
-  g_log_dir.assign(get_localinfo("amxx_logs", "addons/amxmodx/logs"));
+	// ###### Initialize logging here
+	g_log_dir.assign(get_localinfo("amxx_logs", "addons/amxmodx/logs"));
 
-  //  ###### Now attach	metamod	modules
-  // This will also call modules Meta_Query and Meta_Attach functions
-  loadModules(get_localinfo("amxx_modules",	"addons/amxmodx/configs/modules.ini"), now);
+	// ###### Now attach metamod modules
+	// This will also call modules Meta_Query and Meta_Attach functions
+	loadModules(get_localinfo("amxx_modules", "addons/amxmodx/configs/modules.ini"), now);
 
-  return(TRUE);
+	return (TRUE);
 }
 
-C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)	{
-  if(now > Plugin_info.unloadable && reason	!= PNL_CMD_FORCED) {
-	LOG_ERROR(PLID,	"Can't unload plugin right now");
-	return(FALSE);
-  }
-  g_auth.clear();
-  g_forwards.clear();
-  g_commands.clear();
-  g_forcemodels.clear();
-  g_forcesounds.clear();
-  g_forcegeneric.clear();
-  g_grenades.clear();
-  g_tasksMngr.clear();
-  g_logevents.clearLogEvents();
-  g_events.clearEvents();
-  g_menucmds.clear();
-  ClearMenus();
-  g_vault.clear();
-  g_xvars.clear();
-  g_plugins.clear();
-  g_cvars.clear();
+C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)
+{
+	if (now > Plugin_info.unloadable && reason != PNL_CMD_FORCED)
+	{
+		LOG_ERROR(PLID,	"Can't unload plugin right now");
+		return (FALSE);
+	}
 
-  detachModules();
+	g_auth.clear();
+	g_forwards.clear();
+	g_commands.clear();
+	g_forcemodels.clear();
+	g_forcesounds.clear();
+	g_forcegeneric.clear();
+	g_grenades.clear();
+	g_tasksMngr.clear();
+	g_logevents.clearLogEvents();
+	g_events.clearEvents();
+	g_menucmds.clear();
+	ClearMenus();
+	g_vault.clear();
+	g_xvars.clear();
+	g_plugins.clear();
+	g_cvars.clear();
 
-  //  ###### Now detach metamod modules
+	detachModules();
+
+	// ###### Now detach metamod modules
 #ifdef FAKEMETA
-  g_FakeMeta.Meta_Detach(now, reason);
-  g_FakeMeta.ReleasePlugins();
+	g_FakeMeta.Meta_Detach(now, reason);
+	g_FakeMeta.ReleasePlugins();
 #endif
 
-  g_log.CloseFile();
+	g_log.CloseFile();
 
-  Module_UncacheFunctions();
+	Module_UncacheFunctions();
 
-  return(TRUE);
+	return (TRUE);
 }
 
 #ifdef __linux__
 // linux prototype
-C_DLLEXPORT void GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals ) {
-
+C_DLLEXPORT void GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals)
+{
 #else
 #ifdef _MSC_VER
 // MSVC: Simulate __stdcall calling convention
-C_DLLEXPORT __declspec(naked) void GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals )
+C_DLLEXPORT __declspec(naked) void GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals)
 {
 	__asm			// Prolog
 	{
@@ -1262,7 +1333,7 @@ C_DLLEXPORT __declspec(naked) void GiveFnptrsToDll( enginefuncs_t* pengfuncsFrom
 #else	// _MSC_VER
 #ifdef __GNUC__
 // GCC can also work with this
-C_DLLEXPORT void __stdcall GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals )
+C_DLLEXPORT void __stdcall GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals)
 {
 #else	// __GNUC__
 // compiler not known
@@ -1314,90 +1385,90 @@ C_DLLEXPORT void __stdcall GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, 
 }
 
 DLL_FUNCTIONS gFunctionTable;
-C_DLLEXPORT	int	GetEntityAPI2( DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion	){
-  gFunctionTable.pfnSpawn =	C_Spawn;
-  gFunctionTable.pfnClientCommand =	C_ClientCommand;
-  gFunctionTable.pfnServerDeactivate = C_ServerDeactivate;
-  gFunctionTable.pfnClientDisconnect = C_ClientDisconnect;
-  gFunctionTable.pfnInconsistentFile = C_InconsistentFile;
-  gFunctionTable.pfnServerActivate = C_ServerActivate;
+C_DLLEXPORT	int	GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion)
+{
+	gFunctionTable.pfnSpawn = C_Spawn;
+	gFunctionTable.pfnClientCommand = C_ClientCommand;
+	gFunctionTable.pfnServerDeactivate = C_ServerDeactivate;
+	gFunctionTable.pfnClientDisconnect = C_ClientDisconnect;
+	gFunctionTable.pfnInconsistentFile = C_InconsistentFile;
+	gFunctionTable.pfnServerActivate = C_ServerActivate;
 
 #ifdef FAKEMETA
-  return g_FakeMeta.GetEntityAPI2(pFunctionTable, interfaceVersion, &gFunctionTable);
+	return g_FakeMeta.GetEntityAPI2(pFunctionTable, interfaceVersion, &gFunctionTable);
 #else
-  memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
-  return 1;
+	memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
+	return 1;
 #endif
 }
 
 DLL_FUNCTIONS gFunctionTable_Post;
-C_DLLEXPORT	int	GetEntityAPI2_Post(	DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion ) {
-  gFunctionTable_Post.pfnClientPutInServer = C_ClientPutInServer_Post;
-  gFunctionTable_Post.pfnClientUserInfoChanged = C_ClientUserInfoChanged_Post;
-  gFunctionTable_Post.pfnServerActivate	= C_ServerActivate_Post;
-  gFunctionTable_Post.pfnClientConnect = C_ClientConnect_Post;
-  gFunctionTable_Post.pfnStartFrame	= C_StartFrame_Post;
-  gFunctionTable_Post.pfnServerDeactivate =	C_ServerDeactivate_Post;
+C_DLLEXPORT	int	GetEntityAPI2_Post(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion)
+{
+	gFunctionTable_Post.pfnClientPutInServer = C_ClientPutInServer_Post;
+	gFunctionTable_Post.pfnClientUserInfoChanged = C_ClientUserInfoChanged_Post;
+	gFunctionTable_Post.pfnServerActivate = C_ServerActivate_Post;
+	gFunctionTable_Post.pfnClientConnect = C_ClientConnect_Post;
+	gFunctionTable_Post.pfnStartFrame = C_StartFrame_Post;
+	gFunctionTable_Post.pfnServerDeactivate = C_ServerDeactivate_Post;
 
 #ifdef FAKEMETA
-  return g_FakeMeta.GetEntityAPI2_Post(pFunctionTable, interfaceVersion, &gFunctionTable_Post);
+	return g_FakeMeta.GetEntityAPI2_Post(pFunctionTable, interfaceVersion, &gFunctionTable_Post);
 #else
-  memcpy(pFunctionTable, &gFunctionTable_Post, sizeof(DLL_FUNCTIONS));
-  return 1;
+	memcpy(pFunctionTable, &gFunctionTable_Post, sizeof(DLL_FUNCTIONS));
+	return 1;
 #endif
 }
 
 enginefuncs_t meta_engfuncs;
-C_DLLEXPORT	int	GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion ) {
+C_DLLEXPORT	int	GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion)
+{
+	if (stricmp(g_mod_name.c_str(),"cstrike") == 0 || stricmp(g_mod_name.c_str(),"czero") == 0)
+	{
+		meta_engfuncs.pfnSetModel =	C_SetModel;
+		g_bmod_cstrike = true;
+	} else {
+		g_bmod_cstrike = false;
+		g_bmod_dod = !stricmp(g_mod_name.c_str(),"dod");
+	}
 
-  if ( stricmp(g_mod_name.c_str(),"cstrike") == 0	|| stricmp(g_mod_name.c_str(),"czero")==0 )
-  {
-	meta_engfuncs.pfnSetModel =	C_SetModel;
-	g_bmod_cstrike = true;
-  }
-  else
-  {
-	g_bmod_cstrike = false;
-	g_bmod_dod = !stricmp(g_mod_name.c_str(),"dod");
-  }
-
-
-  meta_engfuncs.pfnCmd_Argc	= C_Cmd_Argc;
-  meta_engfuncs.pfnCmd_Argv	= C_Cmd_Argv;
-  meta_engfuncs.pfnCmd_Args	= C_Cmd_Args;
-  meta_engfuncs.pfnPrecacheModel = C_PrecacheModel;
-  meta_engfuncs.pfnPrecacheSound = C_PrecacheSound;
-  meta_engfuncs.pfnChangeLevel = C_ChangeLevel;
+	meta_engfuncs.pfnCmd_Argc = C_Cmd_Argc;
+	meta_engfuncs.pfnCmd_Argv = C_Cmd_Argv;
+	meta_engfuncs.pfnCmd_Args = C_Cmd_Args;
+	meta_engfuncs.pfnPrecacheModel = C_PrecacheModel;
+	meta_engfuncs.pfnPrecacheSound = C_PrecacheSound;
+	meta_engfuncs.pfnChangeLevel = C_ChangeLevel;
 
 #ifdef FAKEMETA
-  return g_FakeMeta.GetEngineFunctions(pengfuncsFromEngine, interfaceVersion, &meta_engfuncs);
+	return g_FakeMeta.GetEngineFunctions(pengfuncsFromEngine, interfaceVersion, &meta_engfuncs);
 #else
-  memcpy(pengfuncsFromEngine, &meta_engfuncs, sizeof(enginefuncs_t));
-  return 1;
+	memcpy(pengfuncsFromEngine, &meta_engfuncs, sizeof(enginefuncs_t));
+	return 1;
 #endif
 }
 
 enginefuncs_t meta_engfuncs_post;
-C_DLLEXPORT	int	GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine,	int	*interfaceVersion )	{
-  meta_engfuncs_post.pfnTraceLine =	C_TraceLine_Post;
-  meta_engfuncs_post.pfnMessageBegin = C_MessageBegin_Post;
-  meta_engfuncs_post.pfnMessageEnd = C_MessageEnd_Post;
-  meta_engfuncs_post.pfnWriteByte =	C_WriteByte_Post;
-  meta_engfuncs_post.pfnWriteChar =	C_WriteChar_Post;
-  meta_engfuncs_post.pfnWriteShort = C_WriteShort_Post;
-  meta_engfuncs_post.pfnWriteLong =	C_WriteLong_Post;
-  meta_engfuncs_post.pfnWriteAngle = C_WriteAngle_Post;
-  meta_engfuncs_post.pfnWriteCoord = C_WriteCoord_Post;
-  meta_engfuncs_post.pfnWriteString	= C_WriteString_Post;
-  meta_engfuncs_post.pfnWriteEntity	=  C_WriteEntity_Post;
-  meta_engfuncs_post.pfnAlertMessage =	C_AlertMessage_Post;
-  meta_engfuncs_post.pfnRegUserMsg = C_RegUserMsg_Post;
+C_DLLEXPORT	int	GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine,	int	*interfaceVersion)
+{
+	meta_engfuncs_post.pfnTraceLine = C_TraceLine_Post;
+	meta_engfuncs_post.pfnMessageBegin = C_MessageBegin_Post;
+	meta_engfuncs_post.pfnMessageEnd = C_MessageEnd_Post;
+	meta_engfuncs_post.pfnWriteByte = C_WriteByte_Post;
+	meta_engfuncs_post.pfnWriteChar = C_WriteChar_Post;
+	meta_engfuncs_post.pfnWriteShort = C_WriteShort_Post;
+	meta_engfuncs_post.pfnWriteLong = C_WriteLong_Post;	
+	meta_engfuncs_post.pfnWriteAngle = C_WriteAngle_Post;
+	meta_engfuncs_post.pfnWriteCoord = C_WriteCoord_Post;
+	meta_engfuncs_post.pfnWriteString = C_WriteString_Post;
+	meta_engfuncs_post.pfnWriteEntity = C_WriteEntity_Post;
+	meta_engfuncs_post.pfnAlertMessage = C_AlertMessage_Post;
+	meta_engfuncs_post.pfnRegUserMsg = C_RegUserMsg_Post;
 
 #ifdef FAKEMETA
-  return g_FakeMeta.GetEngineFunctions_Post(pengfuncsFromEngine, interfaceVersion, &meta_engfuncs_post);
+	return g_FakeMeta.GetEngineFunctions_Post(pengfuncsFromEngine, interfaceVersion, &meta_engfuncs_post);
 #else
-  memcpy(pengfuncsFromEngine, &meta_engfuncs_post, sizeof(enginefuncs_t));
-  return 1;
+	memcpy(pengfuncsFromEngine, &meta_engfuncs_post, sizeof(enginefuncs_t));
+	return 1;
 #endif
 }
 
@@ -1406,7 +1477,7 @@ C_DLLEXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pNewFunctionTable, int *in
 {
 	// default metamod does not call this if the gamedll doesn't provide it
 	g_NewDLL_Available = true;
-
+	
 	// If pfnQueryClientCvarValue is not available, the newdllfunctions table will probably
 	// not have the pfnCvarValue member -> better don't write there to avoid corruption
 	if (g_engfuncs.pfnQueryClientCvarValue)

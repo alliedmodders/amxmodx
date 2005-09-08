@@ -39,3 +39,8 @@ native time(&hour=0,&minute=0,&second=0);
 native date(&year=0,&month=0,&day=0);
 
 native tickcount(&granularity=0);
+
+stock abs(x)
+{
+	return x > 0 ? x : -x;
+}

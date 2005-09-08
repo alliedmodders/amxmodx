@@ -193,7 +193,7 @@ stock AddMenuItem_call(const MENU_TEXT[], const MENU_CMD[], const MENU_ACCESS, c
 }
 
 
-stock gaben(low, high, seed, offset)
+stock constraint_offset(low, high, seed, offset)
 {
    new numElements = high - low + 1;
    offset += seed - low;

@@ -191,3 +191,16 @@ stock AddMenuItem_call(const MENU_TEXT[], const MENU_CMD[], const MENU_ACCESS, c
 
 	callfunc_end()
 }
+
+
+stock gaben(low, high, seed, offset)
+{
+   new numElements = high - low + 1;
+   offset += seed - low;
+   
+   if (offset >= 0)
+      return low + (offset % numElements);
+   else
+      return high - (abs(offset) % numElements) + 1;
+   return 0;	// Makes the compiler happy -_-
+}

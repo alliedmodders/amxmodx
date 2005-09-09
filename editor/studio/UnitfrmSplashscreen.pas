@@ -8,7 +8,7 @@ uses
   UnitfrmMain, UnitfrmSettings, UnitfrmSelectColor, UnitfrmSearch,
   UnitfrmReplace, UnitfrmAllFilesForm, UnitfrmGoToLine,
   UnitfrmPluginsIniEditor, UnitfrmSocketsTerminal, UnitfrmInfo, TBX,
-  TB2Item, SpTBXItem, Dialogs;
+  TB2Item, SpTBXItem, Dialogs, menus, SciKeyBindings;
 
 type
   TfrmSplashscreen = class(TForm)
@@ -19,6 +19,7 @@ type
     procedure tmrHideTimer(Sender: TObject);
   public
     procedure OnMessage(var Msg: TMsg; var Handled: Boolean);
+    procedure OnShortCut(var Msg: TWMKey; var Handled: Boolean);
   end;
 
 var
@@ -103,6 +104,7 @@ begin
     frmMain.mnuMOTDGenerator.Enabled := False;
 
   Application.OnMessage := OnMessage;
+  Application.OnShortCut := OnShortCut;
 
   with frmMain do begin
     sciPropertyLoader.FileName := ExtractFilePath(ParamStr(0)) + 'config\Editor.sci';
@@ -129,7 +131,7 @@ begin
       if FileExists(eCache[i]) then begin
         eExt := ExtractFileExt(eCache[i]);
         eExt := LowerCase(eExt);
-        if (eExt = '.sma') or (eExt = '.inc') then // PAWN files
+        if (eExt = '.sma') or (eExt = '.inc') or (eExt = '.inl') then // Pawn files
           PAWNProjects.Open(eCache[i])
         else if (eExt = '.cpp') or (eExt = '.h') then // C++ files
           CPPProjects.Open(eCache[i])
@@ -173,6 +175,129 @@ end;
 procedure TfrmSplashscreen.OnMessage(var Msg: TMsg; var Handled: Boolean);
 begin
   Handled := not Plugin_AppMsg(Msg.hwnd, Msg.message, Msg.wParam, Msg.lParam, Msg.time, Msg.pt);
+end;
+
+procedure TfrmSplashscreen.OnShortCut(var Msg: TWMKey;
+  var Handled: Boolean);
+function TriggerMenuShortcut(eShortcut: TShortcut; Item: TTBCustomItem): Boolean;
+var i: integer;
+begin
+  Result := False;
+  for i := 0 to Item.Count -1 do begin
+    if Item.Items[i].ShortCut = eShortcut then begin
+      Item.Items[i].OnClick(Self);
+      Result := True;
+      exit;
+    end
+    else
+      TriggerMenuShortcut(eShortcut, Item.Items[i]);
+  end;
+end;
+
+var i: integer;
+    eShortcut: TShortcut;
+begin
+  if not Started then exit;
+
+  // Check frmSettings shortcut
+  if (frmSettings.Visible) and (frmSettings.txtShortcut.Focused) then begin
+    if (Msg.CharCode = VK_CONTROL) or (Msg.CharCode = VK_MENU) or (Msg.CharCode = VK_SHIFT) then begin
+      frmSettings.txtShortcut.Clear;
+      if ssShift in KeyDataToShiftState(Msg.KeyData) then
+        frmSettings.txtShortcut.Text := frmSettings.txtShortcut.Text + 'Shift+';
+      if ssCtrl in KeyDataToShiftState(Msg.KeyData) then
+        frmSettings.txtShortcut.Text := frmSettings.txtShortcut.Text + 'Ctrl+';
+      if ssAlt in KeyDataToShiftState(Msg.KeyData) then
+        frmSettings.txtShortcut.Text := frmSettings.txtShortcut.Text + 'Alt+';
+    end
+    else
+      frmSettings.txtShortcut.Text := ShortcutToText(Shortcut(Msg.CharCode, KeyDataToShiftState(Msg.KeyData)));
+    Handled := True;
+  end;
+
+  if not frmMain.Focused then exit;
+  
+  // stop IRC Paster if escape is pressed
+  if (Msg.CharCode = VK_ESCAPE) then begin
+    frmMain.IRCPasterStop := True;
+    if frmMain.sciEditor.CallTipActive then
+      frmMain.sciEditor.CallTipCancel;
+    if frmMain.sciEditor.AutoCActive then
+      frmMain.sciEditor.AutoCCancel;
+    exit;
+  end;
+
+  eShortcut := Shortcut(Msg.CharCode, KeyDataToShiftState(Msg.KeyData));
+  // Some menu commands are suppressed by the controlchars thingy, so they will be triggered manually
+  for i := 0 to frmMain.tbxMenu.Items.Count -1 do begin
+    if TriggerMenuShortcut(eShortcut, frmMain.tbxMenu.Items[i]) then begin
+      Handled := True;
+      exit;
+    end;
+  end;
+  for i := 0 to frmMain.tbxToolbar.Items.Count -1 do begin
+    if frmMain.tbxToolbar.Items[i].ShortCut = eShortcut then begin
+      Handled := True;
+      frmMain.tbxToolbar.Items[i].OnClick(Self);
+      exit;
+    end;
+  end;
+  for i := 0 to frmMain.tbxEdit.Items.Count -1 do begin
+    if frmMain.tbxEdit.Items[i].ShortCut = eShortcut then begin
+      Handled := True;
+      frmMain.tbxEdit.Items[i].OnClick(Self);
+      exit;
+    end;
+  end;
+  Application.ProcessMessages;
+  // Control chars
+  if (eShortcut = Shortcut(Ord('E'), [ssCtrl])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('H'), [ssCtrl])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('K'), [ssCtrl])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('B'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('C'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('D'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('E'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('F'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('G'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('H'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('K'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('N'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('O'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('P'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('Q'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('R'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('V'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('W'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('X'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('Y'), [ssCtrl, ssShift])) then
+    Handled := True;
+
+  if Handled then begin
+    for i := 0 to frmMain.sciEditor.KeyCommands.Count -1 do begin
+      if TSciKeyCommand(frmMain.sciEditor.KeyCommands.Items[i]).ShortCut = eShortcut then
+        Handled := False;
+    end;
+  end;
 end;
 
 procedure TfrmSplashscreen.tmrHideTimer(Sender: TObject);

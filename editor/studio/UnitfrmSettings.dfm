@@ -59,7 +59,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 353
     Height = 260
-    ActivePage = jspHighlighter
+    ActivePage = jspShortcuts
     PropagateEnable = False
     Align = alClient
     OnChange = jplSettingsChange
@@ -563,15 +563,15 @@ object frmSettings: TfrmSettings
           Top = 46
           Width = 331
           Height = 17
-          Caption = 'Do not restore caret when document has more than xxxxxx lines'
+          Caption = 'Do not restore caret if the document has more than xxxxxx lines'
           TabOrder = 4
           TabStop = True
           OnClick = chkRestoreCaretClick
         end
         object txtLines: TFlatEdit
-          Left = 272
+          Left = 270
           Top = 47
-          Width = 35
+          Width = 37
           Height = 14
           ColorFlat = clWhite
           Font.Charset = DEFAULT_CHARSET
@@ -697,7 +697,6 @@ object frmSettings: TfrmSettings
         ColorFlat = clWhite
         TabOrder = 3
         Text = 'None'
-        OnKeyDown = txtShortcutKeyDown
         OnKeyPress = txtShortcutKeyPress
         OnKeyUp = txtShortcutKeyUp
       end

@@ -122,7 +122,7 @@ begin
   eIdent := 0;
   eTempIdent := 0;
 
-  ShowProgress;
+  ShowProgress(False);
   frmMain.pbLoading.Max := frmMain.sciEditor.Lines.Count *2 -2;
   for i := 0 to frmMain.sciEditor.Lines.Count -1 do begin
     if Cancel then begin
@@ -211,6 +211,7 @@ begin
 
     frmMain.pbLoading.Position := frmMain.sciEditor.Lines.Count + i -1;
     SetProgressStatus('Indenting Code...');
+    frmMain.pnlLoading.Repaint;
   end;
 
   ActiveDoc.Modified := True;
@@ -226,8 +227,9 @@ var i: integer;
 begin
   Screen.Cursor := crHourGlass;
   frmMain.sciEditor.Enabled := False;
-  ShowProgress;
+  ShowProgress(False);
   frmMain.pbLoading.Max := frmMain.sciEditor.Lines.Count -1;
+
   for i := 0 to frmMain.sciEditor.Lines.Count -1 do begin
     if Cancel then begin
       Cancel := False;
@@ -237,8 +239,10 @@ begin
     frmMain.sciEditor.Lines[i] := TrimLeft(frmMain.sciEditor.Lines[i]);
     frmMain.pbLoading.Position := i;
     SetProgressStatus('Unintending Code...');
+    frmMain.pnlLoading.Repaint;
   end;
   HideProgress;
+
   frmMain.sciEditor.Enabled := True;
   Screen.Cursor := crDefault;
 end;

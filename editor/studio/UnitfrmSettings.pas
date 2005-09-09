@@ -244,8 +244,6 @@ type
     procedure cmdLoadClick(Sender: TObject);
     procedure cmdRemoveClick(Sender: TObject);
     procedure cmdBrowseAMXXDirClick(Sender: TObject);
-    procedure txtShortcutKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
     procedure txtShortcutKeyPress(Sender: TObject; var Key: Char);
     procedure cmdResetShortcutsClick(Sender: TObject);
     procedure txtShortcutKeyUp(Sender: TObject; var Key: Word;
@@ -951,23 +949,6 @@ var eStr: String;
 begin
   if SelectDirectory(lSelectAMXXCaption, ExtractFilePath(txtHLExec.Text), eStr) then
     txtAMXXDir.Text := eStr;
-end;
-
-procedure TfrmSettings.txtShortcutKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  if (Key = VK_SHIFT) or (Key = VK_CONTROL) or (Key = VK_MENU) then begin
-    txtShortcut.Clear;
-    if ssShift in Shift then
-      txtShortcut.Text := txtShortcut.Text + 'Shift+';
-    if ssCtrl in Shift then
-      txtShortcut.Text := txtShortcut.Text + 'Ctrl+';
-    if ssAlt in Shift then
-      txtShortcut.Text := txtShortcut.Text + 'Alt+';
-    Key := 0;
-  end
-  else
-    txtShortcut.Text := ShortcutToText(Shortcut(Key, Shift));
 end;
 
 procedure TfrmSettings.txtShortcutKeyPress(Sender: TObject; var Key: Char);

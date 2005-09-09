@@ -1,5 +1,7 @@
 program AMXX_Studio;
 
+{%ToDo 'AMXX_Studio.todo'}
+
 uses
   Forms,
   Windows,
@@ -48,7 +50,7 @@ uses
 
 var i: integer;
 begin
-  if FindWindow('TfrmMain', 'AMXX-Studio') <> 0 then begin
+  if (FindWindow('TfrmMain', 'AMXX-Studio') <> 0) and (FindWindow(nil, 'Delphi 7') = 0) then begin
     if ParamCount > 0 then begin
       for i := 1 to ParamCount  do
         SendStudioMsg(SCM_LOADFILE, ParamStr(i), 0);

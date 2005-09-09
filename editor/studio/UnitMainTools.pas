@@ -12,7 +12,7 @@ type TDocument = class(TCollectionItem)
     FSelLength: Integer;
     FSelStart: Integer;
     FFileName: String;
-    FCode: TStringList;
+    FCode: String;
     FReadOnly: Boolean;
     FTopLine: Integer;
     FHighlighter: String;
@@ -23,7 +23,7 @@ type TDocument = class(TCollectionItem)
   published
     property FileName: String read FFileName write SetFileName;
     property Title: String read FTitle write FTitle;
-    property Code: TStringList read FCode write FCode;
+    property Code: String read FCode write FCode;
     property SelStart: Integer read FSelStart write FSelStart;
     property SelLength: Integer read FSelLength write FSelLength;
     property Highlighter: String read FHighlighter write FHighlighter;
@@ -83,7 +83,7 @@ procedure ActivateProjects(Index: Integer; JumpToLastDoc: Boolean);
 procedure ReloadIni;
 procedure SelectLanguage(Lang: String);
 
-procedure ShowProgress;
+procedure ShowProgress(ReadOnly: Boolean);
 procedure HideProgress;
 
 procedure mIRCDDE(Service, Topic, Cmd: string);
@@ -335,7 +335,7 @@ begin
   else
     eExt := LowerCase(ExtractFileExt(FileName));
     
-  if (eExt = '.sma') or (eExt = '.inc') then
+  if (eExt = '.sma') or (eExt = '.inc') or (eExt = '.inl') then
     eLang := 'Pawn'
   else if (eExt = '.cpp') or (eExt = '.h') then
     eLang := 'C++'
@@ -723,7 +723,7 @@ begin
   frmMain.mnuHNone.Checked := Lang = 'null';
 end;
 
-procedure ShowProgress;
+procedure ShowProgress(ReadOnly: Boolean);
 var i: integer;
 begin
   if not Started then exit;
@@ -744,7 +744,7 @@ begin
   for i := 0 to frmMain.tcTools.Items.Count -1 do
     frmMain.tcTools.Items[i].Enabled := False;
   frmMain.ppmDocuments.Items.Enabled := False;
-  frmMain.sciEditor.ReadOnly := True;
+  frmMain.sciEditor.ReadOnly := ReadOnly;
 end;
 
 procedure HideProgress;
@@ -784,13 +784,11 @@ constructor TDocument.Create(ACollection: TCollection;
 begin
   inherited Create(ACollection);
   FHighlighter := TDocCollection(ACollection).Highlighter;
-  FCode := TStringList.Create;
   FModified := False;
 end;
 
 destructor TDocument.Destroy;
 begin
-  FCode.Destroy;
   inherited Destroy;
 end;
 
@@ -808,7 +806,7 @@ begin
 
   Result := True;
 
-  ShowProgress;
+  ShowProgress(True);
   try
     AssignFile(F, FFilename);
     Rewrite(F);
@@ -817,7 +815,8 @@ begin
       sNotes := GetRTFText(frmMain.rtfNotes);
     end
     else begin
-      sLines := Code;
+      sLines := TStringList.Create;
+      sLines.Text := Code;
       sNotes := NotesText;
     end;
 
@@ -914,7 +913,7 @@ begin
   Screen.Cursor := crHourGlass;
   { Save old }
   if SaveLastDoc then begin
-    ActiveDoc.Code.Text := frmMain.sciEditor.Lines.Text; // saving is fast, but loading is usually slow because of code-folding...
+    ActiveDoc.Code := frmMain.sciEditor.Lines.Text; // saving is fast, but loading is usually slow because of code-folding...
     ActiveDoc.Highlighter := frmMain.sciEditor.LanguageManager.SelectedLanguage;
     ActiveDoc.ReadOnly := frmMain.sciEditor.ReadOnly;
     ActiveDoc.SelStart := frmMain.sciEditor.SelStart;
@@ -940,7 +939,7 @@ begin
     Started := True;
   end;
   
-  frmMain.sciEditor.SetText(Document.Code.GetText);
+  frmMain.sciEditor.SetText(PChar(Document.Code));
   SetRTFText(frmMain.rtfNotes, Document.NotesText);
   frmMain.sciEditor.ReadOnly := Document.ReadOnly;
   
@@ -951,7 +950,7 @@ begin
   frmMain.sciEditor.Modified := Document.Modified;
 
   if RestoreCaret then begin
-    if (eConfig.ReadBool('Editor', 'CheckRestoreCaret', True)) and (eConfig.ReadInteger('Editor', 'CheckRestoreLines', 600) < Document.Code.Count) then begin
+    if (eConfig.ReadBool('Editor', 'CheckRestoreCaret', True)) and (eConfig.ReadInteger('Editor', 'CheckRestoreLines', 600) < CountChars(Document.Code, #13)) then begin
       Screen.Cursor := crDefault;
       exit;
     end;
@@ -1072,7 +1071,7 @@ begin
   end;
 
   if Assigned(ActiveDoc) then begin
-    ActiveDoc.Code.Text := frmMain.sciEditor.Lines.Text; // saving is fast, but loading is usually slow because of code-folding...
+    ActiveDoc.Code := frmMain.sciEditor.Lines.Text; // saving is fast, but loading is usually slow because of code-folding...
     ActiveDoc.Highlighter := frmMain.sciEditor.LanguageManager.SelectedLanguage;
     ActiveDoc.ReadOnly := frmMain.sciEditor.ReadOnly;
     ActiveDoc.SelStart := frmMain.sciEditor.SelStart;
@@ -1083,7 +1082,7 @@ begin
   end;
 
   Screen.Cursor := crHourGlass;
-  ShowProgress;
+  ShowProgress(True);
 
   AssignFile(F, AFilename);
   { ... count lines ... }
@@ -1097,7 +1096,7 @@ begin
   { ... read lines ... }
   Reset(F);
   with Add(AFilename, AHighlighter) do begin
-    ShowProgress;
+    ShowProgress(True);
     frmMain.pbLoading.Max := i;
     i := 0;
     while not EOF(F) do begin
@@ -1118,11 +1117,20 @@ begin
             MessageBox(frmMain.Handle, PChar(lFailedLoadNotes), PChar(Application.Title), MB_ICONERROR);
           end;
         end
-        else
-          Code.Add(eString);
+        else begin
+          if i = 0 then
+            Code := eString
+          else
+            Code := Code + #13#10 + eString;
+        end;
       end
-      else
-        Code.Add(eString); 
+      else begin
+        if i = 0 then
+          Code := eString
+        else
+          Code := Code + #13#10 + eString;
+      end;
+      
       frmMain.pbLoading.Position := i;
       SetProgressStatus('Loading file...');
       Inc(i, 1);

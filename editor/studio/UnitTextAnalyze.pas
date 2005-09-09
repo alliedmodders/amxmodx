@@ -39,6 +39,7 @@ var eLookedUpIncluded: TStringList;
 
 function UpdateIncPath(eInput: String): String;
 begin
+  eInput := StringReplace(Trim(eInput), '/', '\', [rfReplaceAll]);
   if FileExists(ExtractFilePath(frmSettings.txtPAWNCompilerPath.Text) + eInput + '.inc') then
     Result := ExtractFilePath(frmSettings.txtPAWNCompilerPath.Text) + eInput + '.inc'
   else if FileExists(ExtractFilePath(frmSettings.txtPAWNCompilerPath.Text) + 'include\' + eInput + '.inc') then
@@ -51,7 +52,7 @@ end;
 
 function ParseCodePAWN(eCode: TStringList; FileName: String; IsRecursive: Boolean = False): TPAWNParseResult;
 var i, k: integer;
-    eString, eTemp: string;
+    eString, eTemp, eBackup: string;
     eStr, ePreEvents: TStringList;
     eStartLine, eBracesOpen: Integer;
     eTimeToSleep: Integer;
@@ -74,6 +75,8 @@ begin
     if (Application.Terminated) or (not Started) or (frmMain.pnlLoading.Visible) or (not frmMain.trvExplorer.Visible) then exit;
 
     eString := RemoveStringsAndComments(Trim(eCode[i]), True);
+    eBackup := Trim(eCode[i]);
+    
     eProcedureAdded := False;
     Inc(eTimeToSleep, 1);
 
@@ -82,6 +85,8 @@ begin
       eTimeToSleep := 0;
     end;
 
+    if Pos('smbans/constants.inl"', eString) <> 0 then
+      eString := eString;
     { Constants and Variables }
     if (IsAtStart('new', eString)) and (eBracesOpen = 0) and (not IsRecursive) then begin // const or variable
       Delete(eString, 1, 4);
@@ -113,7 +118,8 @@ begin
       eString := RemoveStringsAndComments(Trim(eCode[i]), True);
     end
     { Included }
-    else if (IsAtStart('#include', eString)) then begin
+    else if (IsAtStart('#include', eBackup)) then begin
+      eString := StringReplace(eBackup, '/', '\', [rfReplaceAll]);
       if Between(eString, '<', '>') <> '' then begin
         eString := Between(eString, '<', '>');
         if ExtractFileExt(eString) <> '' then
@@ -125,7 +131,7 @@ begin
           ChangeFileExt(eString, '');
       end
       else begin
-        eString := Copy(eString, 9, Length(eString));
+        eString := Trim(eString);
         if ExtractFileExt(eString) <> '' then
           ChangeFileExt(eString, '');
       end;
@@ -162,7 +168,7 @@ begin
     { CVars }
     else if (IsAtStart('register_cvar', eString)) and (not IsRecursive) then begin
       if Between(eString, '"', '"') <> '' then
-        Result.CVars.AddObject(Between(eString, '"', '"'), TObject(i));
+        Result.CVars.AddObject(Between(eBackup, '"', '"'), TObject(i));
     end
     { Defined }
     else if (IsAtStart('#define', eString)) then begin
@@ -178,9 +184,9 @@ begin
     end
     { Events (Part 1) }
     else if (IsAtStart('register_event(', eString)) and (not IsRecursive) then begin
-      if CountChars(eString, '"') >= 4 then begin
-        eTemp := StringReplace(eString, '"' + Between(eString, '"', '"') + '"', '', []);
-        ePreEvents.Add(Between(eString, '"', '"'));
+      if CountChars(eBackup, '"') >= 4 then begin
+        eTemp := StringReplace(eBackup, '"' + Between(eBackup, '"', '"') + '"', '', []);
+        ePreEvents.Add(Between(eBackup, '"', '"'));
       end;
     end;
 

@@ -1,6 +1,6 @@
 object frmMain: TfrmMain
-  Left = 224
-  Top = 293
+  Left = 260
+  Top = 195
   Width = 888
   Height = 640
   Caption = 'AMXX-Studio'
@@ -40,8 +40,6 @@ object frmMain: TfrmMain
   Position = poDesktopCenter
   OnClose = FormClose
   OnConstrainedResize = FormConstrainedResize
-  OnCreate = FormCreate
-  OnKeyDown = FormKeyDown
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -533,7 +531,7 @@ object frmMain: TfrmMain
       object mnuTNew: TSpTBXItem
         ImageIndex = 0
         Images = ilImages
-        ShortCut = 16467
+        ShortCut = 16462
         OnClick = mnuTNewClick
         CaptionW = 'New'
       end
@@ -6202,10 +6200,10 @@ object frmMain: TfrmMain
   object odOpen: TOpenDialog
     Filter = 
       'All supported files|*.sma;*.inc;*.cpp;*.h;*.htm;*.html;*.sql;*.x' +
-      'ml;*.txt|SMALL scripts (*.sma;*.inc)|*.sma;*.inc|C++ files (*.cp' +
-      'p;*.h)|*.cpp;*.h|HTML files (*.htm;*.html)|*.htm;*.html|SQL data' +
-      'bases (*.sql)|*.sql|XML files (*.xml)|*.xml|Textfiles (*.txt)|*.' +
-      'txt|All Files (*.*)|*.*'
+      'ml;*.txt;*.inl|SMALL scripts (*.sma;*.inc;*.inl)|*.sma;*.inc;*.i' +
+      'nl|C++ files (*.cpp;*.h)|*.cpp;*.h|HTML files (*.htm;*.html)|*.h' +
+      'tm;*.html|SQL databases (*.sql)|*.sql|XML files (*.xml)|*.xml|Te' +
+      'xtfiles (*.txt)|*.txt|All Files (*.*)|*.*'
     Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
     Title = 'Open...'
     Left = 752
@@ -6214,10 +6212,10 @@ object frmMain: TfrmMain
   object sdSave: TSaveDialog
     Filter = 
       'All supported files|*.sma;*.inc;*.cpp;*.h;*.htm;*.html;*.sql;*.x' +
-      'ml;*.txt|SMALL scripts (*.sma;*.inc)|*.sma;*.inc|C++ files (*.cp' +
-      'p;*.h)|*.cpp;*.h|HTML files (*.htm;*.html)|*.htm;*.html|SQL data' +
-      'bases (*.sql)|*.sql|XML files (*.xml)|*.xml|Textfiles (*.txt)|*.' +
-      'txt|All Files (*.*)|*.*'
+      'ml;*.txt;*.inl|SMALL scripts (*.sma;*.inc;*.inl)|*.sma;*.inc;*.i' +
+      'nl|C++ files (*.cpp;*.h)|*.cpp;*.h|HTML files (*.htm;*.html)|*.h' +
+      'tm;*.html|SQL databases (*.sql)|*.sql|XML files (*.xml)|*.xml|Te' +
+      'xtfiles (*.txt)|*.txt|All Files (*.*)|*.*'
     Title = 'Save...'
     Left = 752
     Top = 36
@@ -6240,175 +6238,6 @@ object frmMain: TfrmMain
     Magnification = 0
     Left = 692
     Top = 6
-  end
-  object alControlChars: TActionList
-    Left = 662
-    Top = 36
-    object acControlChar1: TAction
-      ShortCut = 24641
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar2: TAction
-      ShortCut = 24641
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar3: TAction
-      ShortCut = 16453
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar4: TAction
-      ShortCut = 16454
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar5: TAction
-      ShortCut = 16455
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar6: TAction
-      ShortCut = 16456
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar7: TAction
-      ShortCut = 16459
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar8: TAction
-      ShortCut = 16462
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar9: TAction
-      ShortCut = 16463
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar10: TAction
-      ShortCut = 16465
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar11: TAction
-      ShortCut = 16466
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar12: TAction
-      ShortCut = 16467
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar13: TAction
-      ShortCut = 16468
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar14: TAction
-      ShortCut = 16473
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar15: TAction
-      ShortCut = 24642
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar16: TAction
-      ShortCut = 24643
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar17: TAction
-      ShortCut = 24644
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar18: TAction
-      ShortCut = 24645
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar19: TAction
-      ShortCut = 24646
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar20: TAction
-      ShortCut = 24647
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar21: TAction
-      ShortCut = 24648
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar22: TAction
-      ShortCut = 24651
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar23: TAction
-      ShortCut = 24654
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar24: TAction
-      ShortCut = 24655
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar25: TAction
-      ShortCut = 24656
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar26: TAction
-      ShortCut = 24657
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar27: TAction
-      ShortCut = 24658
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar28: TAction
-      ShortCut = 24659
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar29: TAction
-      ShortCut = 24662
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar30: TAction
-      ShortCut = 24663
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar31: TAction
-      ShortCut = 24664
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar32: TAction
-      ShortCut = 24665
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar33: TAction
-      ShortCut = 24666
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar34: TAction
-      Caption = 'acControlChar34'
-      ShortCut = 114
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar35: TAction
-      ShortCut = 16463
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar36: TAction
-      ShortCut = 16467
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar37: TAction
-      ShortCut = 24659
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar38: TAction
-      ShortCut = 27
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar39: TAction
-      ShortCut = 16457
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar40: TAction
-      ShortCut = 24649
-      OnExecute = acControlCharHandler
-    end
-    object acControlChar41: TAction
-      ShortCut = 112
-      OnExecute = acControlCharHandler
-    end
   end
   object ppmEditor: TSpTBXPopupMenu
     Images = ilImages
@@ -7736,7 +7565,7 @@ object frmMain: TfrmMain
   end
   object JvInspectorDotNETPainter: TJvInspectorDotNETPainter
     DrawNameEndEllipsis = False
-    Left = 632
-    Top = 6
+    Left = 662
+    Top = 36
   end
 end

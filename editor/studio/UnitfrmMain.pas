@@ -192,40 +192,6 @@ type
     mnuCopyAll: TSpTBXItem;
     mnuSaveToFile: TSpTBXItem;
     sepOutput: TSpTBXSeparatorItem;
-    alControlChars: TActionList;
-    acControlChar1: TAction;
-    acControlChar2: TAction;
-    acControlChar3: TAction;
-    acControlChar4: TAction;
-    acControlChar5: TAction;
-    acControlChar6: TAction;
-    acControlChar7: TAction;
-    acControlChar8: TAction;
-    acControlChar9: TAction;
-    acControlChar10: TAction;
-    acControlChar11: TAction;
-    acControlChar12: TAction;
-    acControlChar13: TAction;
-    acControlChar14: TAction;
-    acControlChar15: TAction;
-    acControlChar16: TAction;
-    acControlChar17: TAction;
-    acControlChar18: TAction;
-    acControlChar19: TAction;
-    acControlChar20: TAction;
-    acControlChar22: TAction;
-    acControlChar23: TAction;
-    acControlChar24: TAction;
-    acControlChar25: TAction;
-    acControlChar21: TAction;
-    acControlChar26: TAction;
-    acControlChar27: TAction;
-    acControlChar28: TAction;
-    acControlChar29: TAction;
-    acControlChar30: TAction;
-    acControlChar31: TAction;
-    acControlChar32: TAction;
-    acControlChar33: TAction;
     ppmEditor: TSpTBXPopupMenu;
     mnuEditorCopy: TSpTBXItem;
     mnuEditorPaste: TSpTBXItem;
@@ -240,17 +206,10 @@ type
     sepEditorMenu1: TSpTBXSeparatorItem;
     mnuEditorSelectAll: TSpTBXItem;
     sciSearchReplace: TSciSearchReplace;
-    acControlChar34: TAction;
-    acControlChar35: TAction;
-    acControlChar36: TAction;
-    acControlChar37: TAction;
     IdFTP: TIdFTP;
-    acControlChar38: TAction;
     pnlLoading: TSpTBXPanel;
     pbLoading: TSpTBXProgressBar;
     cmdCancel: TSpTBXButton;
-    acControlChar39: TAction;
-    acControlChar40: TAction;
     sciAutoComplete: TSciAutoComplete;
     mnuHTML: TSpTBXItem;
     ppmDocuments: TSpTBXPopupMenu;
@@ -266,7 +225,6 @@ type
     JvInspectorDotNETPainter: TJvInspectorDotNETPainter;
     jviCode: TJvInspector;
     mnuConnectionGen: TSpTBXItem;
-    acControlChar41: TAction;
     sepView3: TSpTBXSeparatorItem;
     mnuShowCodeExplorer: TSpTBXItem;
     mnuShowCodeInspector: TSpTBXItem;
@@ -289,7 +247,6 @@ type
     procedure tsDocumentsActiveTabChange(Sender: TObject;
       ItemIndex: Integer);
     procedure FormShow(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure mnuTOpenClick(Sender: TObject);
     procedure mnuTSaveClick(Sender: TObject);
     procedure mnuTSearchClick(Sender: TObject);
@@ -339,9 +296,6 @@ type
     procedure ppmOutputInitPopup(Sender: TObject; PopupView: TTBView);
     procedure mnuSearchForumsClick(Sender: TObject);
     procedure mnuOpenScriptingForumClick(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure acControlCharHandler(Sender: TObject);
     procedure mnuEditorUndoClick(Sender: TObject);
     procedure mnuEditorRedoClick(Sender: TObject);
     procedure mnuEditorCopyClick(Sender: TObject);
@@ -736,11 +690,6 @@ begin
   end;
 end;
 
-procedure TfrmMain.FormCreate(Sender: TObject);
-begin
-
-end;
-
 { <- Settings | Toolbars -> }
 
 procedure TfrmMain.mnuTOpenClick(Sender: TObject);
@@ -851,7 +800,7 @@ begin
 
   eExt := ExtractFileExt(odOpen.FileName);
   eExt := LowerCase(eExt);
-  if (eExt = '.sma') or (eExt = '.inc') then begin // Pawn files
+  if (eExt = '.sma') or (eExt = '.inc') or (eExt = '.inl') then begin // Pawn files
     if tsMain.ActiveTabIndex <> 0 then
       ActivateProjects(0, False);
     PAWNProjects.Open(odOpen.FileName);
@@ -1158,49 +1107,6 @@ begin
     ShellExecute(Handle, 'open', 'http://www.amxmodx.org/forums/viewforum.php?f=8', nil, nil, SW_SHOW);
 end;
 
-procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  if (Shift = [ssCtrl, ssShift]) then begin
-    if Key = 16 then
-      Key := 0;
-  end;
-end;
-
-procedure TfrmMain.acControlCharHandler(Sender: TObject);
-function TriggerMenuShortcut(eShortcut: TShortcut; Item: TTBCustomItem): Boolean;
-var i: integer;
-begin
-  Result := False;
-  for i := 0 to Item.Count -1 do begin
-    if Item.Items[i].ShortCut = eShortcut then begin
-      Item.Items[i].OnClick(Self);
-      Result := True;
-      exit;
-    end
-    else
-      TriggerMenuShortcut(eShortcut, Item.Items[i]);
-  end;
-end;
-
-var i: integer;
-begin
-  Application.ProcessMessages;
-  // stop IRC Paster if escape is pressed
-  if ShortCutToText((Sender As TAction).ShortCut) = 'Esc' then
-    IRCPasterStop := True;
-  if sciEditor.CallTipActive then
-    sciEditor.CallTipCancel;
-  if sciEditor.AutoCActive then
-    sciEditor.AutoCCancel;
-  // Some menu commands are suppressed by the controlchars thingy, so they will be triggered manually
-  for i := 0 to tbxMenu.Items.Count -1 do begin
-    if TriggerMenuShortcut((Sender As TAction).ShortCut, tbxMenu.Items[i]) then
-      exit;
-  end;
-  Application.ProcessMessages;
-end;
-
 procedure TfrmMain.mnuEditorUndoClick(Sender: TObject);
 begin
   mnuUndo.Click;
@@ -1462,7 +1368,7 @@ begin
     end;
     pbLoading.Max := eTo - eFrom;
     pbLoading.Position := 0;
-    ShowProgress;
+    ShowProgress(True);
     for i := eFrom to eTo do begin
       if (FindWindow('mirc', nil) = 0) or (Application.Terminated) or (IRCPasterStop) then
         break;
@@ -1544,7 +1450,7 @@ var i, k: integer;
     eItem: TDocument;
     eSavedFiles: TStringList;
 begin
-  ActiveDoc.Code.Text := sciEditor.Lines.Text;
+  ActiveDoc.Code := sciEditor.Lines.Text;
   frmClose.trvFiles.Items.Clear;
   { PAWN Projects }
   eRoot := frmClose.trvFiles.Items.Add(nil, tsMain.Items[0].Caption);
@@ -1786,7 +1692,7 @@ begin
   if not Plugin_Compile(COMP_DEFAULT, GetCurrLang.Name, ActiveDoc.FileName, True) then
     exit;
 
-  if (LowerCase(ExtractFileExt(ActiveDoc.FileName)) = '.inc') or (LowerCase(ExtractFileExt(ActiveDoc.FileName)) = '.h') then exit;
+  if (LowerCase(ExtractFileExt(ActiveDoc.FileName)) = '.inl') or (LowerCase(ExtractFileExt(ActiveDoc.FileName)) = '.inc') or (LowerCase(ExtractFileExt(ActiveDoc.FileName)) = '.h') then exit;
 
   if tsMain.ActiveTabIndex = 0 then
     DoCompilePAWN(COMP_DEFAULT)
@@ -2406,7 +2312,7 @@ begin
   try
     Msg.Result := 1;
     case eMessage of
-      SCM_SHOWPROGRESS: ShowProgress;
+      SCM_SHOWPROGRESS: ShowProgress(eIntData = 1);
       SCM_HIDEPROGRESS: HideProgress;
       SCM_UPDATEPROGRESS: begin
         pbLoading.Position := eIntData;
@@ -2649,7 +2555,7 @@ begin
         if (tsMain.ActiveTabIndex = 0) and (tsDocuments.ActiveTabIndex = eIntData) then
           Msg.Result := Integer(sciEditor.Lines.GetText)
         else
-          Msg.Result := Integer(TDocument(PawnProjects.Items[eIntData]).Code.GetText);
+          Msg.Result := Integer(PChar(TDocument(PawnProjects.Items[eIntData]).Code));
       end;
       SCM_CPP_NEWFILE: begin
         if eCPP then
@@ -2725,7 +2631,7 @@ begin
         if (tsMain.ActiveTabIndex = 1) and (tsDocuments.ActiveTabIndex = eIntData) then
           Msg.Result := Integer(sciEditor.Lines.GetText)
         else
-          Msg.Result := Integer(TDocument(CPPProjects.Items[eIntData]).Code.GetText);
+          Msg.Result := Integer(PChar(TDocument(CPPProjects.Items[eIntData]).Code));
       end;
       SCM_OTHER_NEWFILE: OtherProjects.Add(eData);
       SCM_OTHER_SAVEFILE: begin

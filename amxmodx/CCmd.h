@@ -36,7 +36,8 @@
 // class CmdMngr
 // *****************************************************
 
-enum {
+enum
+{
 	CMD_ConsoleCommand,
 	CMD_ClientCommand,
 	CMD_ServerCommand
@@ -48,7 +49,8 @@ public:
 	class Command;
 	friend class Command;
 	
-	class Command {
+	class Command
+	{
 		friend class CmdMngr;
 		CPluginMngr::CPlugin* plugin;
 		CmdMngr* parent;
@@ -63,33 +65,31 @@ public:
 		int cmdtype;
 		int prefix;
 		static int uniqueid;
-		Command( CPluginMngr::CPlugin* pplugin,const char* pcmd, const char* pinfo , int pflags , int pfunc, bool pviewable, CmdMngr* pparent );
+		Command(CPluginMngr::CPlugin* pplugin, const char* pcmd, const char* pinfo, int pflags, int pfunc, bool pviewable, CmdMngr* pparent);
 		~Command();
 	public:
-
 		inline const char* getCommand() { return command.c_str(); }
 		inline const char* getArgument() { return argument.c_str(); }
 		inline const char* getCmdInfo() { return info.c_str(); }
 		inline const char* getCmdLine() { return commandline.c_str(); }
-		inline bool matchCommandLine(const char* cmd, const char* arg) 	{ return (!stricmp(command.c_str()+prefix, cmd+prefix ) && (argument.empty() || !stricmp(argument.c_str() , arg ))); }
-		inline bool matchCommand(const char* cmd) {	return (!strcmp(command.c_str(), cmd ));	}
+		inline bool matchCommandLine(const char* cmd, const char* arg) 	{ return (!stricmp(command.c_str()+prefix, cmd+prefix) && (argument.empty() || !stricmp(argument.c_str(), arg))); }
+		inline bool matchCommand(const char* cmd) {	return (!strcmp(command.c_str(), cmd)); }
 		inline int getFunction() const { return function; }
-		inline bool gotAccess(int f) const { return (!flags||((flags & f)==flags)); }
+		inline bool gotAccess(int f) const { return (!flags || ((flags & f) == flags)); }
 		inline CPluginMngr::CPlugin* getPlugin() { return plugin; }
 		inline bool isViewable() const { return listable; }
 		inline int getFlags() const { return flags; }
 		inline long int getId() const { return (long int)id; }
 		const char* getCmdType() const;		
-		void setCmdType( int a );
-
+		void setCmdType(int a);
 	};
 
 private:
-
 	struct CmdPrefix;
 	friend struct CmdPrefix;
 
-	struct CmdLink {
+	struct CmdLink
+	{
 		Command* cmd;
 		CmdLink* next;
 		CmdLink(Command* c): cmd(c), next(0) {}
@@ -99,36 +99,38 @@ private:
 	CmdLink* srvcmdlist;
 	CmdLink* clcmdlist;
 
-	struct CmdPrefix {
+	struct CmdPrefix
+	{
 		String name;
 		CmdMngr* parent;
 		CmdLink* list;
 		CmdPrefix* next;
-		CmdPrefix( const char* nn , CmdMngr* pp) : 	name(nn),parent(pp),list(0),next(0){}
-		~CmdPrefix(){  parent->clearCmdLink(&list);  }
+		CmdPrefix(const char* nn, CmdMngr* pp) : name(nn), parent(pp), list(0), next(0){}
+		~CmdPrefix() { parent->clearCmdLink(&list); }
 	} *prefixHead;
 
-	bool registerCmdPrefix( Command* cc );
-	CmdPrefix** findPrefix(  const char* nn );
+	bool registerCmdPrefix(Command* cc);
+	CmdPrefix** findPrefix(const char* nn);
 	void clearPrefix();
 
-	void setCmdLink( CmdLink** a , Command* c, bool sorted = true );
-	void clearCmdLink( CmdLink** phead, bool pclear = false  );
+	void setCmdLink(CmdLink** a, Command* c, bool sorted = true);
+	void clearCmdLink(CmdLink** phead, bool pclear = false);
 
 public:
 	CmdMngr();
-	~CmdMngr() {clear();}
+	~CmdMngr() { clear(); }
 
 	// Interface
 
-	void registerPrefix( const char* nn );
-	Command* registerCommand( CPluginMngr::CPlugin* plugin , int func , char* cmd ,  char* info , int level , bool listable );
-	Command* getCmd( long int id ,int type,  int access);
-	int getCmdNum( int type, int access );
+	void registerPrefix(const char* nn);
+	Command* registerCommand(CPluginMngr::CPlugin* plugin, int func, char* cmd, char* info, int level, bool listable);
+	Command* getCmd(long int id, int type, int access);
+	int getCmdNum(int type, int access);
 	void clearBufforedInfo();
 	void clear();
 
-	class iterator {
+	class iterator
+	{
 		CmdLink *a;
 	public:
 		iterator(CmdLink*aa = 0) : a(aa) {}
@@ -138,17 +140,19 @@ public:
 		operator bool () const { return a ? true : false; }
 		Command& operator*() { return *a->cmd; }
 	};
-	inline iterator clcmdprefixbegin(const char* nn){
+
+	inline iterator clcmdprefixbegin(const char* nn)
+	{
 		CmdPrefix* a = *findPrefix(nn);
-		return iterator( a ? a->list : 0 );
+		return iterator(a ? a->list : 0);
 	}
-	inline iterator clcmdbegin() const {return iterator(clcmdlist);}
-	inline iterator srvcmdbegin() const {return iterator(srvcmdlist);}
-	inline iterator begin( int type ) const { return iterator(sortedlists[type]); }
+
+	inline iterator clcmdbegin() const { return iterator(clcmdlist); }
+	inline iterator srvcmdbegin() const { return iterator(srvcmdlist); }
+	inline iterator begin(int type) const { return iterator(sortedlists[type]); }
 	inline iterator end() const { return iterator(0); }
 
 private:
-
 	int buf_cmdid;
 	int buf_cmdtype;
 	int buf_cmdaccess;
@@ -158,8 +162,7 @@ private:
 	int buf_type;
 	int buf_access;
 	int buf_num;
-
 };
 
-#endif
+#endif //COMMANDS_H
 

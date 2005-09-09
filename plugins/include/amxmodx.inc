@@ -796,3 +796,16 @@ native Float:get_distance_f( Float:Origin1[3], Float:Origin2[3] );
 // or if you use the optional parameter:
 //  public callbackCvarValue(id, const cvar[], const value[], const param[])
 native query_client_cvar(id, const cvar[], const resultFunc[], paramlen=0, const params[] = "");
+
+
+/**
+ * Allows you to trap error messages that occur in your plugin.  
+ * You can use this to override the debug messages that occur when your plugin
+ *  causes some sort of runtime error.  Your handler will be called in this style:
+ * public error_filter(error_code, bool:debugging, message[])
+ *    error_code is the AMX_ERR code.  debugging is whether or not the plugin is in debug mode.
+ *    message[] is any message that was sent along with the error.
+ * Return PLUGIN_CONTINUE to let the error pass through the filter.
+ * Return PLUGIN_HANDLED to block the error from displaying.
+ */
+native set_error_filter(consthandler[]);

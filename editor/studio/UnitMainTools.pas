@@ -482,11 +482,16 @@ begin
   frmSelectColor.HSL.SelectedColor := Color;
   frmSelectColor.chkDefault1.Checked := Color = clDefault;
   frmSelectColor.chkDefault2.Checked := Color = clDefault;
+  frmSelectColor.chkNone1.Checked := Color = clNone;
+  frmSelectColor.chkNone2.Checked := Color = clNone;
+  
   frmSelectColor.OldSwatch.Color := Color;
   Result := frmSelectColor.ShowModal = mrOk;
   if Result then begin
     if frmSelectColor.chkDefault1.Checked then
       Color := clDefault
+    else if frmSelectColor.chkNone1.Checked then
+      Color := clNone
     else
       Color := frmSelectColor.NewSwatch.Color;
       
@@ -580,8 +585,6 @@ var i: integer;
 begin
   //> INI-Values <//
   { Tools }
-  frmSettings.chkRestoreCaret.Checked := eConfig.ReadBool('Editor', 'LimitCaretRestore', True);
-  frmSettings.txtLines.Text := eConfig.ReadString('Editor', 'LimitCaretRestoreVal', '600');
   frmSettings.txtDefaultName.Text := eConfig.ReadString('Misc', 'DefaultPluginName', 'New Plugin');
   frmSettings.txtDefaultVersion.Text := eConfig.ReadString('Misc', 'DefaultPluginVersion', '1.0');
   frmSettings.txtDefaultAuthor.Text := eConfig.ReadString('Misc', 'DefaultPluginAuthor', 'Your name');
@@ -950,14 +953,9 @@ begin
   frmMain.sciEditor.Modified := Document.Modified;
 
   if RestoreCaret then begin
-    if (eConfig.ReadBool('Editor', 'CheckRestoreCaret', True)) and (eConfig.ReadInteger('Editor', 'CheckRestoreLines', 600) < CountChars(Document.Code, #13)) then begin
-      Screen.Cursor := crDefault;
-      exit;
-    end;
-       
-    frmMain.sciEditor.LineScroll(0, (0 - frmMain.sciEditor.GetFirstVisibleLine) + Document.TopLine);
     frmMain.sciEditor.SelStart := Document.SelStart;
     frmMain.sciEditor.SelLength := Document.SelLength;
+    frmMain.sciEditor.LineScroll(0, (0 - frmMain.sciEditor.GetFirstVisibleLine) + Document.TopLine);
   end;
   Screen.Cursor := crDefault;
   Plugin_DocChange(Document.Index, Document.FileName, Document.Highlighter, RestoreCaret, False);

@@ -59,7 +59,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 353
     Height = 260
-    ActivePage = jspShortcuts
+    ActivePage = jspHighlighter
     PropagateEnable = False
     Align = alClient
     OnChange = jplSettingsChange
@@ -355,14 +355,14 @@ object frmSettings: TfrmSettings
       Caption = 'Tools'
       object bvlTools1: TBevel
         Left = 4
-        Top = 66
+        Top = 68
         Width = 347
         Height = 3
         Shape = bsTopLine
       end
       object lblCodeFolding: TLabel
         Left = 6
-        Top = 164
+        Top = 142
         Width = 67
         Height = 13
         Caption = 'Code-Folding:'
@@ -376,7 +376,7 @@ object frmSettings: TfrmSettings
       end
       object lblAutoIndent: TLabel
         Left = 194
-        Top = 164
+        Top = 142
         Width = 63
         Height = 13
         Caption = 'Auto-Indent:'
@@ -428,7 +428,7 @@ object frmSettings: TfrmSettings
       end
       object pnlCodeFolding: TPanel
         Left = 6
-        Top = 180
+        Top = 158
         Width = 183
         Height = 49
         BevelOuter = bvLowered
@@ -463,7 +463,7 @@ object frmSettings: TfrmSettings
         Left = 6
         Top = 92
         Width = 343
-        Height = 67
+        Height = 43
         BevelOuter = bvLowered
         TabOrder = 6
         object imgCaretFore: TImage
@@ -505,13 +505,6 @@ object frmSettings: TfrmSettings
           Width = 34
           Height = 13
           Caption = 'Period:'
-        end
-        object bvlCaret2: TBevel
-          Left = 1
-          Top = 42
-          Width = 340
-          Height = 3
-          Shape = bsTopLine
         end
         object cmdSelectCaretFore: TFlatButton
           Left = 28
@@ -558,32 +551,6 @@ object frmSettings: TfrmSettings
           TabOrder = 3
           OnChange = txtPeriodChange
         end
-        object chkRestoreCaret: TFlatCheckBox
-          Left = 4
-          Top = 46
-          Width = 331
-          Height = 17
-          Caption = 'Do not restore caret if the document has more than xxxxxx lines'
-          TabOrder = 4
-          TabStop = True
-          OnClick = chkRestoreCaretClick
-        end
-        object txtLines: TFlatEdit
-          Left = 270
-          Top = 47
-          Width = 37
-          Height = 14
-          ColorFlat = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -7
-          Font.Name = 'Tahoma'
-          Font.Style = [fsBold]
-          ParentFont = False
-          TabOrder = 5
-          Text = '600'
-          OnChange = txtLinesChange
-        end
       end
       object chkIndentGuides: TFlatCheckBox
         Left = 6
@@ -596,7 +563,7 @@ object frmSettings: TfrmSettings
       end
       object pnlAutoIndent: TPanel
         Left = 194
-        Top = 180
+        Top = 158
         Width = 155
         Height = 49
         BevelOuter = bvLowered

@@ -215,7 +215,7 @@ begin
     Handled := True;
   end;
 
-  if not frmMain.Focused then exit;
+  if GetForegroundWindow <> frmMain.Handle then exit;
   
   // stop IRC Paster if escape is pressed
   if (Msg.CharCode = VK_ESCAPE) then begin
@@ -256,6 +256,8 @@ begin
   if (eShortcut = Shortcut(Ord('H'), [ssCtrl])) then
     Handled := True;
   if (eShortcut = Shortcut(Ord('K'), [ssCtrl])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('S'), [ssCtrl])) then
     Handled := True;
   if (eShortcut = Shortcut(Ord('B'), [ssCtrl, ssShift])) then
     Handled := True;

@@ -542,8 +542,6 @@ begin
     eConfig.WriteBool('Editor', 'UnindentClosingBrace', frmAutoIndent.chkUnindentPressingClosingBrace.Checked);
     eConfig.WriteBool('Editor', 'UnindentEmptyLine', frmAutoIndent.chkUnindentLine.Checked);
     { Editor }
-    eConfig.WriteBool('Editor', 'LimitCaretRestore', frmSettings.chkRestoreCaret.Checked);
-    eConfig.WriteString('Editor', 'LimitCaretRestoreVal', frmSettings.txtLines.Text);
     if FileExists(sciPropertyLoader.FileName) then
       sciPropertyLoader.Save;
     { Compiler }

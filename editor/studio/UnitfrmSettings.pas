@@ -105,9 +105,6 @@ type
     cmdLoad: TFlatButton;
     cmdUnload: TFlatButton;
     cmdRemove: TFlatButton;
-    chkRestoreCaret: TFlatCheckBox;
-    txtLines: TFlatEdit;
-    bvlCaret2: TBevel;
     optDontSave: TFlatRadioButton;
     lblPAWN: TLabel;
     pnlSMALLCompiler: TPanel;
@@ -186,11 +183,9 @@ type
     cmdResetShortcuts: TFlatButton;
     txtShortcut: TFlatEdit;
     procedure jplSettingsChange(Sender: TObject);
-    procedure txtLinesChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure chkRestoreCaretClick(Sender: TObject);
     procedure txtFontSizeChange(Sender: TObject);
     procedure cboLanguageChange(Sender: TObject);
     procedure chkUseDefaultFontClick(Sender: TObject);
@@ -283,12 +278,6 @@ begin
   txtCPPOutputChange(Sender);
 end;
 
-procedure TfrmSettings.txtLinesChange(Sender: TObject);
-begin
-  if not IsNumeric(txtLines.Text) then
-    txtLines.Text := '600';
-end;
-
 procedure TfrmSettings.FormCreate(Sender: TObject);
 begin
   eConfig := TIniFile.Create(ExtractFilePath(ParamStr(0)) + 'config\Settings.ini');
@@ -322,15 +311,9 @@ end;
 procedure TfrmSettings.FormShow(Sender: TObject);
 var i: integer;
 begin
-  txtLines.Enabled := chkRestoreCaret.Checked;
   cboLanguage.OnChange(Self);
   for i := 0 to trvSettings.Items.Count -1 do
     trvSettings.Items[i].Expand(True);
-end;
-
-procedure TfrmSettings.chkRestoreCaretClick(Sender: TObject);
-begin
-  txtLines.Enabled := chkRestoreCaret.Checked;
 end;
 
 procedure TfrmSettings.txtFontSizeChange(Sender: TObject);
@@ -476,6 +459,9 @@ begin
       chkVisible.Checked := Visible;
       txtFontSize.Text := IntToStr(TSciStyle(TSciLangItem(frmMain.sciEditor.LanguageManager.LanguageList.Items[cboLanguage.ItemIndex]).Styles.Items[lstStyles.ItemIndex]).FontSize);
 
+      Foreground := ForeColor;
+      Background := BackColor;
+      
       PaintForeground(ForeColor);
       PaintBackground(BackColor);
     end;

@@ -1,6 +1,6 @@
 object frmMain: TfrmMain
   Left = 260
-  Top = 195
+  Top = 305
   Width = 888
   Height = 640
   Caption = 'AMXX-Studio'

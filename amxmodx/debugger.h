@@ -116,6 +116,10 @@ public:
 
 	//Destroy internal states for shutdown
 	void Clear();
+
+	void DisplayTrace(const char *message);
+
+	AMX *GetAMX() const { return m_pAmx; }
 public:
 	//generic static opcode breaker
 	static int AMXAPI DebugHook(AMX *amx);
@@ -123,14 +127,42 @@ private:
 	void _CacheAmxOpcodeList();
 	int _GetOpcodeFromCip(cell cip, cell *&addr);
 	cell _CipAsVa(cell cip);
+	const char *_GetFilename();
 public:
 	AMX *m_pAmx;
 	AMX_DBG *m_pAmxDbg;
 	int m_Top;
 	cell *m_pOpcodeList;
+	String m_FileName;
 	CVector<Tracer *> m_pCalls;
 };
 
 typedef Debugger::Tracer::trace_info trace_info_t;
+
+/**
+ * Error handler for plugins
+ */
+
+class Handler
+{
+public:
+	Handler(AMX *pAmx) : m_pAmx(pAmx), 
+		m_iErrFunc(-1), m_iModFunc(-1), m_iNatFunc(-1)
+	{ };
+	~Handler() { };
+public:
+	int SetErrorHandler(const char *function);
+	int SetNativeFilter(const char *function);
+	int SetModuleFilter(const char *function);
+public:
+	int HandleError(const char *msg);
+	int HandleNative(const char *native);
+	int HandleModule(const char *module);
+public:
+	AMX *m_pAmx;
+	int m_iErrFunc;
+	int m_iModFunc;
+	int m_iNatFunc;
+};
 
 #endif //_INCLUDE_DEBUGGER_H_

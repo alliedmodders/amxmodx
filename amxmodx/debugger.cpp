@@ -778,7 +778,100 @@ void Debugger::Clear()
 	m_pCalls.clear();
 }
 
+void Debugger::DisplayTrace(const char *message)
+{
+	if (message != NULL)
+		AMXXLOG_Log("%s", message);
+
+	char buffer[512];
+	FormatError(buffer, sizeof(buffer)-1);
+
+	const char *filename = _GetFilename();
+
+	AMXXLOG_Log("[AMXX] Displaying debug trace (plugin \"%s\")", filename);
+	AMXXLOG_Log("[AMXX] %s", buffer);
+	
+	int count = 0;
+	long lLine;
+	const char *file, *function;
+	trace_info_t *pTrace = GetTraceStart();
+	while (pTrace)
+	{
+		GetTraceInfo(pTrace, lLine, function, file);
+		AMXXLOG_Log(
+			"[AMXX]    [%d] %s::%s (line %d)",
+			count,
+			file,
+			function,
+			(int)(lLine + 1)
+			);
+		count++;
+		pTrace = GetNextTrace(pTrace);
+	}
+}
+
+const char *Debugger::_GetFilename()
+{
+	if (m_FileName.size() < 1)
+	{
+		const char *filename = "";
+		CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(m_pAmx);
+		if (pl)
+		{
+			filename = pl->getName();
+		} else {
+			CList<CScript,AMX*>::iterator a = g_loadedscripts.find(m_pAmx);
+			if (a)
+				filename = (*a).getName();
+		}
+		m_FileName.assign(filename);
+	}
+
+	return m_FileName.c_str();
+}
+
 Debugger::~Debugger()
 {
 	Clear();
+}
+
+int Handler::SetErrorHandler(const char *function)
+{
+	int error;
+	
+	error = amx_FindPublic(m_pAmx, function, &m_iErrFunc);
+
+	if (error != AMX_ERR_NONE)
+		m_iErrFunc = -1;
+
+	return error;
+}
+
+int Handler::SetModuleFilter(const char *function)
+{
+	int error;
+	
+	error = amx_FindPublic(m_pAmx, function, &m_iModFunc);
+
+	if (error != AMX_ERR_NONE)
+		m_iModFunc = -1;
+
+	return error;
+}
+
+int Handler::SetNativeFilter(const char *function)
+{
+	int error;
+	
+	error = amx_FindPublic(m_pAmx, function, &m_iNatFunc);
+
+	if (error != AMX_ERR_NONE)
+		m_iNatFunc = -1;
+
+	return error;
+}
+
+int Handler::HandleError(const char *msg)
+{
+	return 0;
 }

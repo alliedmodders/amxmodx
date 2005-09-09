@@ -339,6 +339,7 @@ enum {
 #define UD_FINDPLUGIN	3
 #define UD_DEBUGGER		2
 #define UD_OPCODELIST	1
+#define	UD_HANDLER		0
 
 /* for native functions that use floating point parameters, the following
  * two macros are convenient for casting a "cell" into a "float" type _without_

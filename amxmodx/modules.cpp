@@ -1289,19 +1289,10 @@ void LogError(AMX *amx, int err, const char *fmt, ...)
 	Debugger *pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
 
 	amx->error = err;
-	CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(amx);
 
-	const char *filename = "";
-	if (pl)
-	{
-		filename = pl->getName();
-	} else {
-		CList<CScript,AMX*>::iterator a = g_loadedscripts.find(amx);
-		if (a)
-			filename = (*a).getName();
-	}
+	char msg_buffer[2048];
 
-	static char msg_buffer[4096];
+	msg_buffer[0] = '\0';
 	if (fmt != NULL)
 	{
 		va_list ap;
@@ -1310,43 +1301,39 @@ void LogError(AMX *amx, int err, const char *fmt, ...)
 		va_end(ap);
 	}
 
-	if (fmt != NULL)
-		AMXXLOG_Log("%s", msg_buffer);
+	//give the plugin first chance to handle any sort of error
+	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
+	if (pHandler)
+	{
+		//give the user a first-chance at blocking the error from displaying
+		if (pHandler->HandleError(msg_buffer) != 0)
+			return;
+	}
 
 	if (!pDebugger)
 	{
+		CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(amx);
+
+		const char *filename = "";
+		if (pl)
+		{
+			filename = pl->getName();
+		} else {
+			CList<CScript,AMX*>::iterator a = g_loadedscripts.find(amx);
+			if (a)
+				filename = (*a).getName();
+		}
+		if (fmt != NULL)
+			AMXXLOG_Log("%s", msg_buffer);
 		//give the module's error first.  makes the report look nicer.
 		AMXXLOG_Log("[AMXX] Run time error %d (plugin \"%s\") - debug not enabled!", err, filename);
 		AMXXLOG_Log("[AMXX] To enable debug mode, add \"debug\" after the plugin name in plugins.ini (without quotes).");
 		//destroy original error code so the original is not displayed again
 		amx->error = -1;
-		return;
-	}
-
-	pDebugger->SetTracedError(err);
-
-	char buffer[512];
-	pDebugger->FormatError(buffer, sizeof(buffer)-1);
-
-	AMXXLOG_Log("[AMXX] Displaying debug trace (plugin \"%s\")", filename);
-	AMXXLOG_Log("[AMXX] %s", buffer);
-	
-	int count = 0;
-	long lLine;
-	const char *file, *function;
-	trace_info_t *pTrace = pDebugger->GetTraceStart();
-	while (pTrace)
-	{
-		pDebugger->GetTraceInfo(pTrace, lLine, function, file);
-		AMXXLOG_Log(
-			"[AMXX]    [%d] %s::%s (line %d)",
-			count,
-			file,
-			function,
-			(int)(lLine + 1)
-			);
-		count++;
-		pTrace = pDebugger->GetNextTrace(pTrace);
+	} else {
+		pDebugger->SetTracedError(err);
+		//we can display error now
+		pDebugger->DisplayTrace(fmt ? msg_buffer : NULL);
 	}
 }
 

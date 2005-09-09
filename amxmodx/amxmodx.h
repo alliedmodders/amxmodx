@@ -149,6 +149,7 @@ extern CList<ForceObject> g_forcemodels;
 extern CList<ForceObject> g_forcesounds;
 extern CList<ForceObject> g_forcegeneric;
 extern CList<CModule,const char *> g_modules;
+extern CList<CScript,AMX*> g_loadedscripts;
 extern CList<CPlayer*> g_auth;
 extern EventsMngr g_events;
 extern Grenades g_grenades;

@@ -38,10 +38,11 @@
 
 extern const char *no_function;
 
-CPluginMngr::CPlugin* CPluginMngr::loadPlugin(const char* path, const char* name, char* error, int debug) {	
+CPluginMngr::CPlugin* CPluginMngr::loadPlugin(const char* path, const char* name, char* error, int debug)
+{	
 	CPlugin** a = &head;
 	while( *a ) a = &(*a)->next;
-	*a = new CPlugin( pCounter++ ,path,name,error, debug);
+	*a = new CPlugin(pCounter++, path, name, error, debug);
 	return (*a);
 }
 

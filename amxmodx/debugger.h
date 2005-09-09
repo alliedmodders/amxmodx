@@ -123,6 +123,7 @@ public:
 public:
 	//generic static opcode breaker
 	static int AMXAPI DebugHook(AMX *amx);
+	static void GenericMessage(AMX *amx, int error);
 private:
 	void _CacheAmxOpcodeList();
 	int _GetOpcodeFromCip(cell cip, cell *&addr);
@@ -146,8 +147,9 @@ typedef Debugger::Tracer::trace_info trace_info_t;
 class Handler
 {
 public:
-	Handler(AMX *pAmx) : m_pAmx(pAmx), 
-		m_iErrFunc(-1), m_iModFunc(-1), m_iNatFunc(-1)
+	Handler(AMX *pAmx) : m_pAmx(pAmx),
+		m_iErrFunc(-1), m_iModFunc(-1), m_iNatFunc(-1),
+		m_Handling(false)
 	{ };
 	~Handler() { };
 public:
@@ -159,10 +161,18 @@ public:
 	int HandleNative(const char *native);
 	int HandleModule(const char *module);
 public:
+	bool IsHandling() const { return m_Handling; }
+	void SetErrorMsg(const char *msg);
+	const char *GetLastMsg();
+public:
 	AMX *m_pAmx;
 	int m_iErrFunc;
 	int m_iModFunc;
 	int m_iNatFunc;
+	bool m_Handling;
+	String m_MsgCache;
 };
+
+extern AMX_NATIVE_INFO g_DebugNatives[];
 
 #endif //_INCLUDE_DEBUGGER_H_

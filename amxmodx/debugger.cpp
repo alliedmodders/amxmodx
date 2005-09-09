@@ -830,6 +830,27 @@ const char *Debugger::_GetFilename()
 	return m_FileName.c_str();
 }
 
+void Debugger::GenericMessage(AMX *amx, int err)
+{
+	CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(amx);
+	const char *filename = "";
+
+	CList<CScript,AMX*>::iterator a = g_loadedscripts.find(amx);
+	if (a)
+		filename = (*a).getName();
+	size_t len = strlen(filename);
+	for (size_t i=len-1; i>=0; i--)
+	{
+		if (filename[i] == '/' || filename[i] == '\\' && i != len - 1)
+		{
+			filename = &(filename[i+1]);
+			break;
+		}
+	}
+
+	AMXXLOG_Log("[AMXX] Run time error %d (plugin \"%s\") - debug not enabled!", err, filename);
+}
+
 Debugger::~Debugger()
 {
 	Clear();
@@ -871,7 +892,98 @@ int Handler::SetNativeFilter(const char *function)
 	return error;
 }
 
+void Handler::SetErrorMsg(const char *msg)
+{
+	if (!msg)
+		m_MsgCache.clear();
+	else
+		m_MsgCache.assign(msg);
+}
+
+const char *Handler::GetLastMsg()
+{
+	if (m_MsgCache.size() < 1)
+		return NULL;
+
+	return m_MsgCache.c_str();
+}
+
 int Handler::HandleError(const char *msg)
 {
-	return 0;
+	if (m_iErrFunc <= 0)
+		return 0;
+
+	m_Handling = true;
+
+	Debugger *pDebugger = (Debugger *)m_pAmx->userdata[UD_DEBUGGER];
+
+	int error = m_pAmx->error;
+
+	if (pDebugger)
+		pDebugger->BeginExec();
+	
+	SetErrorMsg(msg);
+
+	cell hea_addr, *phys_addr, result;
+
+	amx_PushString(m_pAmx, &hea_addr, &phys_addr, msg, 0, 0);
+	amx_Push(m_pAmx, pDebugger ? 1 : 0);
+	amx_Push(m_pAmx, error);
+	int err = amx_Exec(m_pAmx, &result, m_iErrFunc);
+	if (err != AMX_ERR_NONE)
+	{
+		//handle this manually.
+		if (pDebugger)
+		{
+			pDebugger->SetTracedError(err);
+			pDebugger->DisplayTrace(msg);
+		} else {
+			if (GetLastMsg())
+				AMXXLOG_Log("%s", GetLastMsg());
+			Debugger::GenericMessage(m_pAmx, err);
+		}
+		AMXXLOG_Log("[AMXX] NOTE: Runtime failures in an error filter are not good!");
+	}
+
+	if (pDebugger)
+		pDebugger->EndExec();
+
+	amx_Release(m_pAmx, hea_addr);
+
+	m_Handling = false;
+
+	if (err != AMX_ERR_NONE || !result)
+		return 0;
+
+	return result;
 }
+
+static cell AMX_NATIVE_CALL set_error_filter(AMX *amx, cell *params)
+{
+	int len;
+	char *function = get_amxstring(amx, params[1], 0, len);
+
+	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
+
+	if (!pHandler)
+	{
+		Debugger::GenericMessage(amx, AMX_ERR_NOTFOUND);
+		AMXXLOG_Log("[AMXX] Plugin not initialized correctly.");
+		return 0;
+	}
+
+	int err = pHandler->SetErrorHandler(function);
+	if (err != AMX_ERR_NONE)
+	{
+		Debugger::GenericMessage(amx, AMX_ERR_NOTFOUND);
+		AMXXLOG_Log("[AMXX] Function not found: %s", function);
+		return 0;
+	}
+
+	return 1;
+}
+
+AMX_NATIVE_INFO g_DebugNatives[] = {
+	{"set_error_filter",	set_error_filter},
+	{NULL,					NULL},
+};

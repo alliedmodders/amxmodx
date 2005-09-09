@@ -209,6 +209,9 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 		return (amx->error = AMX_ERR_INIT);
 	}
 
+	Handler *pHandler = new Handler(amx);
+	amx->userdata[UD_HANDLER] = (void *)pHandler;
+
 	if (will_be_debugged)
 	{
 		amx->flags |= AMX_FLAG_DEBUG;
@@ -409,17 +412,19 @@ int set_amxnatives(AMX* amx,char error[128])
 	amx_Register(amx, vault_Natives, -1);
 	amx_Register(amx, g_NewMenuNatives, -1);
 	amx_Register(amx, g_NativeNatives, -1);
+	amx_Register(amx, g_DebugNatives, -1);
 
 	//we're not actually gonna check these here anymore
 	amx->flags |= AMX_FLAG_PRENIT;
 
-	int idx;
+	int idx, err;
 	cell retval;
 	if (amx_FindPublic(amx, "plugin_natives", &idx)==AMX_ERR_NONE)
 	{
-		if (amx_Exec(amx, &retval, idx)!=AMX_ERR_NONE)
+		if ( (err=amx_Exec(amx, &retval, idx))!=AMX_ERR_NONE )
 		{
-			//someday clear libraries that this added
+			Debugger::GenericMessage(amx, err);
+			AMXXLOG_Log("An error occurred in plugins_native.  This is dangerous!");
 		}
 	}
 
@@ -434,6 +439,9 @@ int unload_amxscript(AMX* amx, void** program)
 	Debugger *pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
 	if (pDebugger)
 		delete pDebugger;
+	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
+	if (pHandler)
+		delete pHandler;
 	CList<CScript,AMX*>::iterator a = g_loadedscripts.find( amx  );
 	if ( a ) a.remove();
 	char *prg = (char *)*program;
@@ -1256,11 +1264,6 @@ float MNF_GetPlayerHealth(int id)
 	return (GET_PLAYER_POINTER_I(id)->pEdict->v.health);
 }
 
-void MNF_HiddenStuff()
-{
-	// :TODO:
-}
-
 cell MNF_RealToCell(REAL x)
 {
 	return *(cell*)&x;
@@ -1305,36 +1308,34 @@ void LogError(AMX *amx, int err, const char *fmt, ...)
 	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
 	if (pHandler)
 	{
-		//give the user a first-chance at blocking the error from displaying
-		if (pHandler->HandleError(msg_buffer) != 0)
+		if (pHandler->IsHandling())
+		{
+			if (fmt != NULL)
+				pHandler->SetErrorMsg(msg_buffer);
 			return;
+		}
+		//give the user a first-chance at blocking the error from displaying
+		if (pHandler->HandleError(fmt ? msg_buffer : NULL) != 0)
+		{
+			amx->error = -1;
+			return;
+		}
 	}
 
 	if (!pDebugger)
 	{
-		CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(amx);
-
-		const char *filename = "";
-		if (pl)
-		{
-			filename = pl->getName();
-		} else {
-			CList<CScript,AMX*>::iterator a = g_loadedscripts.find(amx);
-			if (a)
-				filename = (*a).getName();
-		}
-		if (fmt != NULL)
+		if (fmt)
 			AMXXLOG_Log("%s", msg_buffer);
-		//give the module's error first.  makes the report look nicer.
-		AMXXLOG_Log("[AMXX] Run time error %d (plugin \"%s\") - debug not enabled!", err, filename);
+		Debugger::GenericMessage(amx, err);
 		AMXXLOG_Log("[AMXX] To enable debug mode, add \"debug\" after the plugin name in plugins.ini (without quotes).");
 		//destroy original error code so the original is not displayed again
-		amx->error = -1;
 	} else {
 		pDebugger->SetTracedError(err);
 		//we can display error now
 		pDebugger->DisplayTrace(fmt ? msg_buffer : NULL);
 	}
+
+	amx->error = -1;
 }
 
 void MNF_MergeDefinitionFile(const char *file)
@@ -1516,8 +1517,6 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("Deallocator", MNF_Deallocator)
 	REGISTER_FUNC("Reallocator", MNF_Reallocator)
 #endif // MEMORY_TEST
-
-	REGISTER_FUNC("Haha_HiddenStuff", MNF_HiddenStuff)
 }
 
 void *Module_ReqFnptr(const char *funcName)

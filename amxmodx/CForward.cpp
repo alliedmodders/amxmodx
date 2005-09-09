@@ -30,8 +30,7 @@
 */
 
 #include "amxmodx.h"
-
-void AMXAPI amxx_InvalidateTrace(AMX *amx);
+#include "debugger.h"
 
 CForward::CForward(const char *name, ForwardExecType et, int numParams, const ForwardParam *paramTypes)
 {
@@ -74,9 +73,9 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 		{
 			// Get debug info
 			AMX *amx = (*iter).pPlugin->getAMX();
-			AMX_DBGINFO *pInfo = (AMX_DBGINFO *)(amx->userdata[2]);
-			if (pInfo)
-				pInfo->error = AMX_ERR_NONE;
+			Debugger *pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
+			if (pDebugger)
+				pDebugger->BeginExec();
 			// handle strings & arrays
 			int i, ax=0;
 			for (i = 0; i < m_NumParams; ++i)
@@ -124,16 +123,17 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 			if (err != AMX_ERR_NONE)
 			{
 				//Did something else set an error?
-				if (pInfo && pInfo->error != AMX_ERR_NONE)
+				if (pDebugger && pDebugger->ErrorExists())
 				{
 					//we don't care, something else logged the error.
-				} else {
+				} else if (err != -1) {
 					//nothing logged the error so spit it out anyway
-					LogError(amx, err, "");
+					LogError(amx, err, NULL);
 				}
 			}
-			amxx_InvalidateTrace(amx);
 			amx->error = AMX_ERR_NONE;
+			if (pDebugger)
+				pDebugger->EndExec();
 
 			// cleanup strings & arrays
 			for (i = 0; i < m_NumParams; ++i)
@@ -229,9 +229,9 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 	if (!pPlugin->isExecutable(m_Func))
 		return 0;
 
-	AMX_DBGINFO *pInfo = (AMX_DBGINFO *)(m_Amx->userdata[2]);
-	if (pInfo)
-		pInfo->error = AMX_ERR_NONE;
+	Debugger *pDebugger = (Debugger *)m_Amx->userdata[UD_DEBUGGER];
+	if (pDebugger)
+		pDebugger->BeginExec();
 
 	// handle strings & arrays
 	int i;
@@ -276,15 +276,16 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 	if (err != AMX_ERR_NONE)
 	{
 		//Did something else set an error?
-		if (pInfo && pInfo->error != AMX_ERR_NONE)
+		if (pDebugger && pDebugger->ErrorExists())
 		{
 			//we don't care, something else logged the error.
-		} else {
+		} else if (err != -1) {
 			//nothing logged the error so spit it out anyway
-			LogError(m_Amx, err, "");
+			LogError(m_Amx, err, NULL);
 		}
 	}
-	amxx_InvalidateTrace(m_Amx);
+	if (pDebugger)
+		pDebugger->EndExec();
 	m_Amx->error = AMX_ERR_NONE;
 
 	// cleanup strings & arrays

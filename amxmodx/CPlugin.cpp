@@ -134,7 +134,7 @@ void CPluginMngr::clear() {
 
 CPluginMngr::CPlugin* CPluginMngr::findPluginFast(AMX *amx) 
 { 
-	return (CPlugin*)(amx->userdata[3]); 
+	return (CPlugin*)(amx->userdata[UD_FINDPLUGIN]); 
 }
 
 CPluginMngr::CPlugin* CPluginMngr::findPlugin(AMX *amx) {
@@ -197,7 +197,7 @@ CPluginMngr::CPlugin::CPlugin(int i, const char* p,const char* n, char* e, int d
 	} else {
 		status = ps_bad_load;
 	}
-	amx.userdata[3] = this;
+	amx.userdata[UD_FINDPLUGIN] = this;
 	paused_fun = 0;
 	next = 0;
 	id = i;

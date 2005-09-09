@@ -129,6 +129,28 @@
         jg      near err_stack
 %endmacro
 
+;Normal abort, saves pri/alt
+%macro	_ABORT 1
+		mov		ebp,amx
+        mov     [ebp+_pri], dword eax  ; store values in AMX structure (PRI, ALT)
+        mov     [ebp+_alt], dword edx  ; store values in AMX structure (PRI, ALT)
+		mov		[ebp+_error], dword %1
+		jmp		_return
+%endmacro
+
+;Checked abort, saves nothing and uses a conditional
+%macro	_CHKABORT 1
+		mov		ebp,amx
+		mov		[ebp+_error], %1
+		cmp		%1, AMX_ERR_NONE
+		jne		_return
+%endmacro
+
+;Fast abort, only aborts, nothing else
+%macro	_FASTABORT 0
+		jmp		_return
+%endmacro
+
 %macro  _CHKHEAP 0
         mov     ebp,amx
         mov     ebp,[ebp+_hlw]
@@ -1196,8 +1218,7 @@ OP_HALT:
         mov     eax,esi         ; EAX=CIP
         sub     eax,code
         mov     [ebp+_cip],eax
-        mov     eax,ebx         ; return the parameter of the HALT opcode
-        jmp     _return
+        _ABORT	ebx
 
 
 OP_BOUNDS:
@@ -1221,6 +1242,7 @@ OP_SYSREQ_PRI:
         mov     alt,edx         ; save ALT
 
         mov     [ebp+_stk],ecx  ; store values in AMX structure (STK, HEA, FRM)
+        ;we don't save regs since they're useless after this
         mov     ecx,hea
         mov     ebx,frm
         mov     [ebp+_hea],ecx
@@ -1251,8 +1273,7 @@ OP_SYSREQ_PRI:
         pop     edi             ; restore saved registers
         pop     esi
         pop     ebp
-        cmp     eax,AMX_ERR_NONE
-        jne     near _return    ; return error code, if any
+        _CHKABORT eax			; if result was invalid, leave
 
         mov     eax,pri         ; get retval into eax (PRI)
         mov     edx,alt         ; restore ALT
@@ -1293,8 +1314,8 @@ OP_SYSREQ_D:                    ; (TR)
         pop     edi             ; restore saved registers
         pop     esi
         pop     ebp
-        cmp     DWORD [ebp+_error],AMX_ERR_NONE
-        jne     near _return    ; return error code, if any
+        mov		eax,[ebp+_error]
+        _CHKABORT eax
 
         ; function result is in eax (PRI)
         mov     edx,alt         ; restore ALT
@@ -1416,7 +1437,7 @@ OP_BREAK:
         mov     [ebp+_error],eax   ; save EAX (error code) before restoring all regs
         _RESTOREREGS               ; abort run, but restore stack first
         mov     eax,[ebp+_error]   ; get error code in EAX back again
-        jmp     _return         ; return error code
+        _FASTABORT
     break_noabort:
         _RESTOREREGS
         mov     eax,[ebp+_pri]  ; restore PRI and ALT
@@ -1425,43 +1446,34 @@ OP_BREAK:
 
 
 OP_INVALID:
-        mov     eax,AMX_ERR_INVINSTR
-        jmp     _return
+        _ABORT	AMX_ERR_INVINSTR
 
 err_call:
-        mov     eax,AMX_ERR_CALLBACK
-        jmp     _return
+        _ABORT	AMX_ERR_CALLBACK
 
 err_stack:
-        mov     eax,AMX_ERR_STACKERR
-        jmp     _return
+        _ABORT	AMX_ERR_STACKERR
 
 err_stacklow:
-        mov     eax,AMX_ERR_STACKLOW
-        jmp     _return
+        _ABORT	AMX_ERR_STACKLOW
 
 err_memaccess:
-        mov     eax,AMX_ERR_MEMACCESS
-        jmp     _return
+        _ABORT	AMX_ERR_MEMACCESS
 
 err_bounds:
-        mov     eax,AMX_ERR_BOUNDS
-        jmp     _return
+        _ABORT	AMX_ERR_BOUNDS
 
 err_heaplow:
-        mov     eax,AMX_ERR_HEAPLOW
-        jmp     _return
+        _ABORT	AMX_ERR_HEAPLOW
 
 err_divide:
-        mov     eax,AMX_ERR_DIVIDE
-        jmp     _return
-
+        _ABORT	AMX_ERR_DIVIDE
 
 _return:
         ; save a few parameters, mostly for the "sleep"function
         mov     ebp,amx         ; get amx into ebp
-        mov     [ebp+_pri],eax  ; store values in AMX structure (PRI, ALT)
-        mov     [ebp+_alt],edx  ; store values in AMX structure (PRI, ALT)
+        mov		[ebp+_cip],esi	; get corrected cip for amxmodx
+        mov		eax,[ebp+_error]; get error code
 
         pop     esi             ; remove FRM from stack
 

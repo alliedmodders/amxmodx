@@ -450,28 +450,34 @@ int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
    * This trick cannot work in the JIT, because the program would need to
    * be re-JIT-compiled after patching a P-code instruction.
    */
-  #if defined JIT && !defined NDEBUG
-    if ((amx->flags & AMX_FLAG_JITC)!=0)
-      assert(amx->sysreq_d==0);
-  #endif
-  if (amx->sysreq_d!=0) {
-    /* at the point of the call, the CIP pseudo-register points directly
-     * behind the SYSREQ instruction and its parameter.
-     */
-    unsigned char *code=amx->base+(int)hdr->cod+(int)amx->cip-4;
-    assert(amx->cip >= 4 && amx->cip < (hdr->dat - hdr->cod));
-    assert(sizeof(f)<=sizeof(cell));    /* function pointer must fit in a cell */
+#if !defined JIT
+  if (amx->sysreq_d != 0)
+  {
+    //if we're about to patch this, and we're debugging, don't patch!
+    //otherwise we won't be able to get back native names
+    if (amx->flags & AMX_FLAG_DEBUG)
+    {
+      amx->sysreq_d = 0;
+	} else {
+      /* at the point of the call, the CIP pseudo-register points directly
+       * behind the SYSREQ instruction and its parameter.
+       */
+      unsigned char *code=amx->base+(int)hdr->cod+(int)amx->cip-4;
+      assert(amx->cip >= 4 && amx->cip < (hdr->dat - hdr->cod));
+      assert(sizeof(f)<=sizeof(cell));    /* function pointer must fit in a cell */
 #if defined __GNUC__ || defined ASM32
-    if (*(cell*)code==index) {
+      if (*(cell*)code==index) {
 #else
-    if (*(cell*)code!=OP_SYSREQ_PRI) {
-      assert(*(cell*)(code-sizeof(cell))==OP_SYSREQ_C);
-      assert(*(cell*)code==index);
-#endif
-      *(cell*)(code-sizeof(cell))=amx->sysreq_d;
-      *(cell*)code=(cell)f;
+      if (*(cell*)code!=OP_SYSREQ_PRI) {
+        assert(*(cell*)(code-sizeof(cell))==OP_SYSREQ_C);
+        assert(*(cell*)code==index);
+#endif	//defined __GNU__ || defined ASM32
+        *(cell*)(code-sizeof(cell))=amx->sysreq_d;
+        *(cell*)code=(cell)f;
+      } /* if */
     } /* if */
   } /* if */
+#endif	//!defined JIT
 
   /* Note:
    *   params[0] == number of bytes for the additional parameters passed to the native function
@@ -547,6 +553,7 @@ static int amx_BrowseRelocate(AMX *amx)
      */
     if ((amx->flags & AMX_FLAG_JITC)==0 && sizeof(AMX_NATIVE)<=sizeof(cell))
       amx->sysreq_d=opcode_list[OP_SYSREQ_D];
+	amx->userdata[UD_OPCODELIST] = (void *)opcode_list;
   #else
     /* ANSI C
      * to use direct system requests, a function pointer must fit in a cell;
@@ -554,6 +561,7 @@ static int amx_BrowseRelocate(AMX *amx)
      */
     if (sizeof(AMX_NATIVE)<=sizeof(cell))
       amx->sysreq_d=OP_SYSREQ_D;
+	amx->userdata[UD_OPCODELIST] = (long)NULL;
   #endif
 
   /* start browsing code */
@@ -1676,7 +1684,13 @@ int AMXAPI amx_PushString(AMX *amx, cell *amx_addr, cell **phys_addr, const char
 #define SKIPPARAM(n)    ( cip=(cell *)cip+(n) )
 #define PUSH(v)         ( stk-=sizeof(cell), *(cell *)(data+(int)stk)=v )
 #define POP(v)          ( v=*(cell *)(data+(int)stk), stk+=sizeof(cell) )
-#define ABORT(amx,v)    { (amx)->stk=reset_stk; (amx)->hea=reset_hea; return v; }
+#define ABORT(amx,v)    { (amx)->stk=reset_stk; \
+						  (amx)->hea=reset_hea; \
+						  (amx)->cip=(cell)cip; \
+						  (amx)->pri=pri; \
+						  (amx)->alt=alt; \
+						  return v; \
+						}
 
 #define CHKMARGIN()     if (hea+STKMARGIN>stk) return AMX_ERR_STACKERR
 #define CHKSTACK()      if (stk>amx->stp) return AMX_ERR_STACKLOW
@@ -2471,6 +2485,8 @@ static const void * const amx_opcodelist[] = {
     amx->hea=hea;
     amx->frm=frm;
     amx->stk=stk;
+    amx->pri=pri;
+    amx->alt=alt;
     num=amx->callback(amx,pri,&pri,(cell *)(data+(int)stk));
     if (num!=AMX_ERR_NONE) {
       if (num==AMX_ERR_SLEEP) {
@@ -2490,6 +2506,8 @@ static const void * const amx_opcodelist[] = {
     amx->hea=hea;
     amx->frm=frm;
     amx->stk=stk;
+    amx->pri=pri;
+    amx->alt=alt;
     num=amx->callback(amx,offs,&pri,(cell *)(data+(int)stk));
     if (num!=AMX_ERR_NONE) {
       if (num==AMX_ERR_SLEEP) {
@@ -2509,6 +2527,8 @@ static const void * const amx_opcodelist[] = {
     amx->hea=hea;
     amx->frm=frm;
     amx->stk=stk;
+    amx->pri=pri;
+    amx->alt=alt;
     pri=((AMX_NATIVE)offs)(amx,(cell *)(data+(int)stk));
     if (amx->error!=AMX_ERR_NONE) {
       if (amx->error==AMX_ERR_SLEEP) {
@@ -2578,6 +2598,8 @@ static const void * const amx_opcodelist[] = {
       amx->frm=frm;
       amx->stk=stk;
       amx->hea=hea;
+      amx->pri=pri;
+      amx->alt=alt;
       amx->cip=(cell)((unsigned char*)cip-code);
       num=amx->debug(amx);
       if (num!=AMX_ERR_NONE) {
@@ -3445,6 +3467,8 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
       amx->hea=hea;
       amx->frm=frm;
       amx->stk=stk;
+      amx->pri=pri;
+      amx->alt=alt;
       num=amx->callback(amx,pri,&pri,(cell *)(data+(int)stk));
       if (num!=AMX_ERR_NONE) {
         if (num==AMX_ERR_SLEEP) {
@@ -3464,6 +3488,8 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
       amx->hea=hea;
       amx->frm=frm;
       amx->stk=stk;
+      amx->pri=pri;
+      amx->alt=alt;
       num=amx->callback(amx,offs,&pri,(cell *)(data+(int)stk));
       if (num!=AMX_ERR_NONE) {
         if (num==AMX_ERR_SLEEP) {
@@ -3483,6 +3509,8 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
       amx->hea=hea;
       amx->frm=frm;
       amx->stk=stk;
+      amx->pri=pri;
+      amx->alt=alt;
       pri=((AMX_NATIVE)offs)(amx,(cell *)(data+(int)stk));
       if (amx->error!=AMX_ERR_NONE) {
         if (amx->error==AMX_ERR_SLEEP) {
@@ -3546,6 +3574,8 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
         amx->frm=frm;
         amx->stk=stk;
         amx->hea=hea;
+        amx->pri=pri;
+        amx->alt=alt;
         amx->cip=(cell)((unsigned char*)cip-code);
         num=amx->debug(amx);
         if (num!=AMX_ERR_NONE) {

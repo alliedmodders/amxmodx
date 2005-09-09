@@ -242,6 +242,7 @@ typedef struct tagAMX {
   long usertags[AMX_USERNUM] PACKED;
   //okay userdata[3] in AMX Mod X is for the CPlugin * pointer
   //we're also gonna set userdata[2] to a special debug structure
+  //lastly, userdata[1] is for opcode_list from amx_BrowseRelocate
   void _FAR *userdata[AMX_USERNUM] PACKED;
   /* native functions can raise an error */
   int error             PACKED;
@@ -335,23 +336,9 @@ enum {
   #define AMX_COMPACTMARGIN 64
 #endif
 
-struct amx_trace
-{
-	cell frm;
-	amx_trace *prev;
-	amx_trace *next;
-	bool used;
-};
-
-struct AMX_DBGINFO
-{
-	void *pDebug;			//Pointer to debug data
-	int error;				//non-amx_Exec() error setting
-	amx_trace *pTrace;		//Pointer to stack trace 
-	amx_trace *pTraceFrm;
-	amx_trace *pTraceEnd;
-	cell frm;
-};
+#define UD_FINDPLUGIN	3
+#define UD_DEBUGGER		2
+#define UD_OPCODELIST	1
 
 /* for native functions that use floating point parameters, the following
  * two macros are convenient for casting a "cell" into a "float" type _without_

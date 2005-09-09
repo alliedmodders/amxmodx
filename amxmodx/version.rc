@@ -27,8 +27,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,5,5,0
- PRODUCTVERSION 1,5,5,0
+ FILEVERSION 1,5,6,0
+ PRODUCTVERSION 1,5,6,0
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -45,12 +45,12 @@ BEGIN
         BEGIN
             VALUE "Comments", "AMX Mod X"
             VALUE "FileDescription", "AMX Mod X"
-            VALUE "FileVersion", "1.55"
+            VALUE "FileVersion", "1.56"
             VALUE "InternalName", "amxmodx"
             VALUE "LegalCopyright", "Copyright (c) 2004-2005, AMX Mod X Dev Team"
             VALUE "OriginalFilename", "amxmodx_mm.dll"
             VALUE "ProductName", "AMX Mod X"
-            VALUE "ProductVersion", "1.55"
+            VALUE "ProductVersion", "1.56"
         END
     END
     BLOCK "VarFileInfo"

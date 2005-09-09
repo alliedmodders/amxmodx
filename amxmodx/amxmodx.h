@@ -80,7 +80,6 @@ extern  AMX_NATIVE_INFO float_Natives[];
 extern  AMX_NATIVE_INFO string_Natives[];
 extern  AMX_NATIVE_INFO vault_Natives[];
 
-
 #ifndef __linux__
 #define DLLOAD(path) (DLHANDLE)LoadLibrary(path)
 #define DLPROC(m,func) GetProcAddress(m,func)
@@ -133,7 +132,6 @@ struct WeaponsVault {
 struct fakecmd_t {
   char args[256];
   const char *argv[3];
-  //char argv[3][128];
   int argc;
   bool fake;
 };

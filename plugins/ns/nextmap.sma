@@ -49,7 +49,7 @@ new g_numMaps, g_numPlayers, g_nextPos
 new bool:g_mapChanging, bool:g_changeMapDelay
 
 public plugin_init() {
-	register_plugin("NextMap","0.20","AMXX Dev Team")
+	register_plugin("NextMap",AMXX_VERSION_STR,"AMXX Dev Team")
 	register_cvar("amx_nextmap","",FCVAR_SERVER|FCVAR_EXTDLL|FCVAR_SPONLY)
 	register_cvar("amx_mapnum_ignore", "0")
 	register_event("TextMsg", "voteMap", "a", "1=3", "2&executed votemap")

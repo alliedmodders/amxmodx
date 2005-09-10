@@ -80,8 +80,3 @@ public getPing( id ) {
   g_pingSum[ id ] += iPing
   ++g_pingCount[ id ]
 }
-
-public plugin_modules()
-{ 
-	require_module("tfcx")
-}

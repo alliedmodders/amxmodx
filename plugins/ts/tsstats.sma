@@ -14,7 +14,7 @@
  * 5 - hits
  * 6 - damage
  *
- * File location: $moddir/addons/amxx
+ * File location: $moddir/addons/amxmodx/data/tsstats.amxx
  */
 
 #include <amxmodx>

@@ -15,7 +15,7 @@
  * 6 - damage
  * 7 - score
  *
- * File location: $moddir/addons/amx
+ * File location: $moddir/addons/amxmodx/data/dodstats.amxx
  */
 
 #include <amxmodx>

@@ -550,9 +550,3 @@ showStatsMenu(id,pos){
   show_menu(id,keys,menu_body)
   return PLUGIN_HANDLED
 }
-
-
-public plugin_modules()
-{
-	require_module("tsx")
-}

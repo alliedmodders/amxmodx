@@ -42,7 +42,7 @@ new Float:g_roundStartTime = 999999.9
 new bool:is_combat
 
 public plugin_init() {
-  register_plugin("TimeLeft","0.20","AMXX Dev Team")
+  register_plugin("TimeLeft",AMXX_VERSION_STR,"AMXX Dev Team")
   register_cvar("amx_time_voice","1")
   register_srvcmd("amx_time_display","setDisplaying")
   register_cvar("amx_timeleft","00:00",FCVAR_SERVER|FCVAR_EXTDLL|FCVAR_UNLOGGED|FCVAR_SPONLY)

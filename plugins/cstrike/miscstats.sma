@@ -541,11 +541,6 @@ public bomb_defused(defuser)
 public bomb_explode(planter,defuser)
 	if (BombFailed && defuser) announceEvent(defuser ,  "FAILED_DEFU" )
 
-public plugin_modules()
-{
-	require_module("csx")
-}
-
 public play_sound(sound[])
 {
 	new players[32], pnum

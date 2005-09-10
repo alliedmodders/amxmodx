@@ -43,8 +43,6 @@ new Float:g_lastcmdtime[33]
 
 public plugin_init() {
 	register_plugin("UnStuck",AMXX_VERSION_STR,"AMXX Dev Team")
-	require_module("engine")
-	require_module("ns")
 	register_cvar("amx_unstuck_frequency", "4.0")
 	register_clcmd("say_team /stuck", "unStuck")
 	register_clcmd("say /stuck", "unStuck")

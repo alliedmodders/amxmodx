@@ -14,7 +14,7 @@
  * 5 - hits
  * 6 - damage
  *
- * File location: $moddir/addons/amx
+ * File location: $moddir/addons/amxmodx/data/tfcstats.amxx
  */
 
 #include <amxmodx>

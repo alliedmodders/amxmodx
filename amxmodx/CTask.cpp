@@ -33,6 +33,7 @@
 #include "CTask.h"
 
 /*********************** CTask ***********************/
+
 int CTaskMngr::CTask::getTaskId() const
 {
 	return m_iId;
@@ -57,12 +58,15 @@ void CTaskMngr::CTask::set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags,
 	{
 		m_bLoop = true;
 		m_iRepeat = -1;
-	} else if (iFlags & 1) {
+	}
+	else if (iFlags & 1)
+	{
 		m_bLoop = true;
 		m_iRepeat = iRepeat;
 	}
-	m_bAfterStart =	(iFlags & 4) ?  true : false;
-	m_bBeforeEnd =	(iFlags & 8) ?  true : false;
+	
+	m_bAfterStart =	(iFlags & 4) ? true : false;
+	m_bBeforeEnd = (iFlags & 8) ? true : false;
 
 	m_fNextExecTime = fCurrentTime + m_fBase;
 
@@ -123,8 +127,9 @@ void CTaskMngr::CTask::resetNextExecTime(float fCurrentTime)
 
 void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, float fTimeLeft)
 {
-	bool execute=false;
-	bool done=false;
+	bool execute = false;
+	bool done = false;
+	
 	if (m_bAfterStart)
 	{
 		if (fCurrentTime - fTimeLeft + 1.0f >= m_fBase)
@@ -134,14 +139,16 @@ void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, f
 	{
 		if (fTimeLimit != 0.0f && (fTimeLeft + fTimeLimit * 60.0f) - fCurrentTime - 1.0f <= m_fBase)
 			execute = true;
-	} else if (m_fNextExecTime <= fCurrentTime) {
+	}
+	else if (m_fNextExecTime <= fCurrentTime)
+	{
 		execute = true;
 	}
 
 	if (execute)
 	{
 		//only bother calling if we have something to call
-		if ( !(m_bLoop && !m_iRepeat) )
+		if (!(m_bLoop && !m_iRepeat))
 		{
 			if (m_iParamLen)	// call with parameters
 			{
@@ -199,6 +206,7 @@ CTaskMngr::CTask::~CTask()
 }
 
 /*********************** CTaskMngr ***********************/
+
 CTaskMngr::CTaskMngr()
 {
 	m_pTmr_CurrentTime = NULL;
@@ -222,17 +230,18 @@ void CTaskMngr::registerTask(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlag
 {
 	// first, search for free tasks
 	TaskListIter iter = m_Tasks.find(CTaskDescriptor(0, NULL, true));
+	
 	if (iter)
 	{
 		// found: reuse it
 		iter->set(pPlugin, iFunc, iFlags, iId, fBase, iParamsLen, pParams, iRepeat, *m_pTmr_CurrentTime);
-	}
-	else
-	{
+	} else {
 		// not found: make a new one
 		CTask *pTmp = new CTask;
+		
 		if (!pTmp)
 			return;
+		
 		pTmp->set(pPlugin, iFunc, iFlags, iId, fBase, iParamsLen, pParams, iRepeat, *m_pTmr_CurrentTime);
 		m_Tasks.put(pTmp);
 	}
@@ -242,13 +251,15 @@ int CTaskMngr::removeTasks(int iId, AMX *pAmx)
 {
 	CTaskDescriptor descriptor(iId, pAmx);
 	TaskListIter iter = m_Tasks.find(descriptor);
-	int i=0;
+	int i = 0;
+	
 	while (iter)
 	{
-			iter->clear();
-			++i;
-			iter = m_Tasks.find(++iter, descriptor);
+		iter->clear();
+		++i;
+		iter = m_Tasks.find(++iter, descriptor);
 	}
+	
 	return i;
 }
 
@@ -256,14 +267,16 @@ int CTaskMngr::changeTasks(int iId, AMX *pAmx, float fNewBase)
 {
 	CTaskDescriptor descriptor(iId, pAmx);
 	TaskListIter iter = m_Tasks.find(descriptor);
-	int i=0;
+	int i = 0;
+	
 	while (iter)
 	{
-			iter->changeBase(fNewBase);
-			iter->resetNextExecTime(*m_pTmr_CurrentTime);
-			++i;
-			iter = m_Tasks.find(++iter, descriptor);
+		iter->changeBase(fNewBase);
+		iter->resetNextExecTime(*m_pTmr_CurrentTime);
+		++i;
+		iter = m_Tasks.find(++iter, descriptor);
 	}
+	
 	return i;
 }
 

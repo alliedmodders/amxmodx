@@ -35,7 +35,8 @@
 // *****************************************************
 // class MenuMngr
 // *****************************************************
-MenuMngr::MenuCommand::MenuCommand( CPluginMngr::CPlugin *a, int mi, int k, int f ) {
+MenuMngr::MenuCommand::MenuCommand(CPluginMngr::CPlugin *a, int mi, int k, int f)
+{
 	plugin = a;
 	keys = k;
 	menuid = mi;
@@ -50,45 +51,49 @@ MenuMngr::~MenuMngr()
 
 int MenuMngr::findMenuId(const char* name, AMX* amx)
 {
-  for( MenuIdEle* b = headid; b ; b = b->next) {
-    if ( (!amx || !b->amx || amx == b->amx) && strstr(name,b->name.c_str()) )
-      return b->id;
-  }
-  return 0;
+	for (MenuIdEle* b = headid; b; b = b->next)
+	{
+		if ((!amx || !b->amx || amx == b->amx) && strstr(name,b->name.c_str()))
+			return b->id;
+	}
+	
+	return 0;
 }
 
-int MenuMngr::registerMenuId(const char* n, AMX* a )
+int MenuMngr::registerMenuId(const char* n, AMX* a)
 {
-  int id = findMenuId( n, a );
-  if (id) return id;
-  headid = new MenuIdEle( n, a , headid  );
-  if (!headid)
-	  return 0;			// :TODO: Better error report
-  return headid->id;
+	int id = findMenuId(n, a);
+	if (id) return id;
+	headid = new MenuIdEle(n, a, headid);
+	
+	if (!headid)
+		return 0;			// :TODO: Better error report
+	
+	return headid->id;
 }
 
-void MenuMngr::registerMenuCmd( CPluginMngr::CPlugin *a,int mi, int k , int f  ) 
+void MenuMngr::registerMenuCmd(CPluginMngr::CPlugin *a, int mi, int k, int f) 
 {
 	MenuCommand** temp = &headcmd;
-	while(*temp) temp = &(*temp)->next;
-	*temp = new MenuCommand(a,mi, k,f);
+	while (*temp) temp = &(*temp)->next;
+	*temp = new MenuCommand(a, mi, k, f);
 }
 
-void MenuMngr::clear() 
+void MenuMngr::clear()
 {
-  while (headid)
-  {
-    MenuIdEle* a = headid->next;
-    delete headid;
-    headid = a;
-  }
+	while (headid)
+	{
+		MenuIdEle* a = headid->next;
+		delete headid;
+		headid = a;
+	}
 
-  while (headcmd)
-  {
-    MenuCommand* a = headcmd->next;
-    delete headcmd;
-    headcmd = a;
-  }
+	while (headcmd)
+	{
+		MenuCommand* a = headcmd->next;
+		delete headcmd;
+		headcmd = a;
+	}
 }
 
 int MenuMngr::MenuIdEle::uniqueid = 0;

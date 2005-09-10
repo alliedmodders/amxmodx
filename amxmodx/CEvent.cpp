@@ -299,7 +299,7 @@ void EventsMngr::parseValue(int iValue)
 			if (condIter->paramId == m_ParsePos)
 			{
 				anyConditions = true;
-				switch(condIter->type)
+				switch (condIter->type)
 				{
 					case '=': if (condIter->iValue == iValue) execute = true; break;
 					case '!': if (condIter->iValue != iValue) execute = true; break;
@@ -345,7 +345,7 @@ void EventsMngr::parseValue(float fValue)
 			if (condIter->paramId == m_ParsePos)
 			{
 				anyConditions = true;
-				switch(condIter->type)
+				switch (condIter->type)
 				{
 					case '=': if (condIter->fValue == fValue) execute = true; break;
 					case '!': if (condIter->fValue != fValue) execute = true; break;
@@ -390,7 +390,7 @@ void EventsMngr::parseValue(const char *sz)
 			if (condIter->paramId == m_ParsePos)
 			{
 				anyConditions = true;
-				switch(condIter->type)
+				switch (condIter->type)
 				{
 					case '=': if (!strcmp(sz, condIter->sValue.c_str())) execute = true; break;
 					case '!': if (strcmp(sz, condIter->sValue.c_str())) execute = true; break;
@@ -440,7 +440,7 @@ const char* EventsMngr::getArgString(int a) const
 
 	static char var[32];
 
-	switch(m_ParseVault[a].type)
+	switch (m_ParseVault[a].type)
 	{
 		case MSG_INTEGER: 
 			sprintf(var, "%d", m_ParseVault[a].iValue);
@@ -458,7 +458,7 @@ int EventsMngr::getArgInteger(int a) const
 	if (a < 0 || a > m_ParsePos)
 		return 0;
 
-	switch(m_ParseVault[a].type)
+	switch (m_ParseVault[a].type)
 	{
 		case MSG_INTEGER:
 			return m_ParseVault[a].iValue;
@@ -474,7 +474,7 @@ float EventsMngr::getArgFloat(int a) const
 	if (a < 0 || a > m_ParsePos)
 		return 0.0f;
 
-	switch(m_ParseVault[a].type)
+	switch (m_ParseVault[a].type)
 	{
 		case MSG_INTEGER:
 			return static_cast<float>(m_ParseVault[a].iValue);

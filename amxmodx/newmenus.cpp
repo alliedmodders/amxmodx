@@ -1,3 +1,33 @@
+/* AMX Mod X 
+*
+* by the AMX Mod X Development Team
+*  originally developed by OLO
+*
+*  This program is free software; you can redistribute it and/or modify it
+*  under the terms of the GNU General Public License as published by the
+*  Free Software Foundation; either version 2 of the License, or (at
+*  your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful, but
+*  WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+*  General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with this program; if not, write to the Free Software Foundation,
+*  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+*
+*  In addition, as a special exception, the author gives permission to
+*  link the code of this program with the Half-Life Game Engine ("HL
+*  Engine") and Modified Game Libraries ("MODs") developed by Valve,
+*  L.L.C ("Valve"). You must obey the GNU General Public License in all
+*  respects for all of the code used other than the HL Engine and MODs
+*  from Valve. If you modify this file, you may extend this exception
+*  to your version of the file, but you are not obligated to do so. If
+*  you do not wish to do so, delete this exception statement from your
+*  version.
+*/
+
 #include "amxmodx.h"
 #include "newmenus.h"
 
@@ -5,7 +35,7 @@ CVector<Menu *> g_NewMenus;
 
 void ClearMenus()
 {
-	for (size_t i=0; i<g_NewMenus.size(); i++)
+	for (size_t i = 0; i < g_NewMenus.size(); i++)
 		delete g_NewMenus[i];
 	g_NewMenus.clear();
 }
@@ -19,7 +49,7 @@ Menu::Menu(const char *title, int mid, int tid)
 
 Menu::~Menu()
 {
-	for (size_t i=0; i<m_Items.size(); i++)
+	for (size_t i = 0; i < m_Items.size(); i++)
 		delete m_Items[i];
 	m_Items.clear();
 }
@@ -86,10 +116,14 @@ int Menu::PagekeyToItem(page_t page, item_t key)
 				return MENU_MORE;
 			else
 				return MENU_EXIT;
-		} else if (key == rem+1) {
+		} 
+		else if (key == rem + 1)
+		{
 			return MENU_EXIT;
 		}
-	} else if (page == pages - 1) {
+	}
+	else if (page == pages - 1)
+	{
 		//find number of remaining items
 		//for example, 11 items on page 1... means start=7, 11-7=4
 		item_t rem = numItems - start;
@@ -97,14 +131,18 @@ int Menu::PagekeyToItem(page_t page, item_t key)
 		if (key == rem)
 		{
 			return MENU_EXIT;
-		} else if (key == rem+1) {
+		}
+		else if (key == rem + 1)
+		{
 			return MENU_BACK;
 		}
 	} else {
 		if (key == 7)
 		{
 			return MENU_MORE;
-		} else if (key == 8) {
+		} 
+		else if (key == 8)
+		{
 			return MENU_BACK;
 		}
 	}
@@ -147,9 +185,9 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 
 	char buffer[255];
 	if (g_coloredmenus)
-		_snprintf(buffer, sizeof(buffer)-1, "\\y%s %d/%d\n\\w\n", m_Title.c_str(), page+1, pages);
+		_snprintf(buffer, sizeof(buffer)-1, "\\y%s %d/%d\n\\w\n", m_Title.c_str(), page + 1, pages);
 	else
-		_snprintf(buffer, sizeof(buffer)-1, "%s %d/%d\n\n", m_Title.c_str(), page+1, pages);
+		_snprintf(buffer, sizeof(buffer)-1, "%s %d/%d\n\n", m_Title.c_str(), page + 1, pages);
 	m_Text.append(buffer);
 
 	item_t start = page * 7;
@@ -166,7 +204,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	keys = 0;
 	bool enabled = true;
 	int ret = 0;
-	for (item_t i=start; i<end; i++)
+	for (item_t i = start; i < end; i++)
 	{
 		pItem = m_Items[i];
 		if (pItem->access && !(pItem->access & g_players[player].flags[0]))

@@ -556,10 +556,12 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 					} else {
 						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(m_CurGlobId)->pEdict, "lang");
 					}
-				} else if (*pAmxLangName == LANG_SERVER) // LANG_SERVER
+				}
+				else if (*pAmxLangName == LANG_SERVER) // LANG_SERVER
 				{
 					cpLangName = g_vault.get("server_language");
-				} else if (*pAmxLangName >= 1 && *pAmxLangName <= 32) // Direct Client Id
+				}
+				else if (*pAmxLangName >= 1 && *pAmxLangName <= 32) // Direct Client Id
 				{
 					if ((int)CVAR_GET_FLOAT("amx_client_languages") == 0)
 					{
@@ -629,7 +631,6 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 									cell *tmpCell = get_amxaddr(amx, params[parm++]);
 									while (tmpPtr-tmpString < sizeof(tmpString) && *tmpCell)
 											*tmpPtr++ = static_cast<char>(*tmpCell++);
-	
 									*tmpPtr = 0;
 									_snprintf(outptr, sizeof(outbuf)-(outptr-outbuf)-1, format, tmpString);
 									ZEROTERM(outbuf);
@@ -815,10 +816,12 @@ char *CLangMngr::FormatString(const char *fmt, va_list &ap)
 					} else {
 						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(m_CurGlobId)->pEdict, "lang");
 					}
-				} else if (pAmxLangName == (const char *)LANG_SERVER) // LANG_SERVER
+				}
+				else if (pAmxLangName == (const char *)LANG_SERVER) // LANG_SERVER
 				{
 					cpLangName = g_vault.get("server_language");
-				} else if (pAmxLangName >= (const char *)1 && pAmxLangName <= (const char *)32) // Direct Client Id
+				}
+				else if (pAmxLangName >= (const char *)1 && pAmxLangName <= (const char *)32) // Direct Client Id
 				{
 					if ((int)CVAR_GET_FLOAT("amx_client_languages"))
 					{
@@ -1126,6 +1129,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 			} // if !multiline
 		} //if - main
 	}
+	
 	// merge last section
 	if (!Defq.empty())
 	{
@@ -1170,6 +1174,7 @@ const char *CLangMngr::GetDef(const char *langName, const char *key)
 	CLang *lang = GetLangR(langName);
 	if (lang)
 		return lang->GetDef(key);
+	
 	return "ML_NOTFOUND(LANG)";
 }
 

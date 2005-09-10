@@ -105,7 +105,8 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 		m_pFile = NULL;
 		
 		return;
-	} else if (magic == MAGIC_HEADER2)
+	}
+	else if (magic == MAGIC_HEADER2)
 	{
 		DATAREAD(&m_Bh.version, sizeof(int16_t), 1);
 		
@@ -155,7 +156,8 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 		
 		pe = &(m_Bh.plugins[m_Entry]);
 		m_SectionLength = pe->disksize;
-	} else if (magic == MAGIC_HEADER)
+	}
+	else if (magic == MAGIC_HEADER)
 	{
 		// try to find the section
 		mint8_t numOfPlugins;
@@ -185,7 +187,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 		}
 
 		// compute section length
-		if ((i+1) < static_cast<int>(numOfPlugins))
+		if ((i + 1) < static_cast<int>(numOfPlugins))
 		{
 			// there is a next section
 			TableEntry nextEntry;
@@ -274,7 +276,8 @@ size_t CAmxxReader::GetBufferSize()
 		DATAREAD(&hdr, sizeof(hdr), 1);
 		fseek(m_pFile, save, SEEK_SET);
 		return hdr.stp;
-	} else if (m_AmxxFile)
+	}
+	else if (m_AmxxFile)
 	{
 		PluginEntry *pe = &(m_Bh.plugins[m_Entry]);
 		
@@ -321,7 +324,8 @@ CAmxxReader::Error CAmxxReader::GetSection(void *buffer)
 		m_Status = Err_None;
 		
 		return m_Status;
-	} else if (m_AmxxFile)
+	}
+	else if (m_AmxxFile)
 	{
 		PluginEntry *pe = &(m_Bh.plugins[m_Entry]);
 		char *tempBuffer = new char[m_SectionLength + 1];

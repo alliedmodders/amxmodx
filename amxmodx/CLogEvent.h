@@ -112,7 +112,7 @@ public:
 		LogCond *filters;
 		LogEventsMngr* parent;
 		CLogEvent *next;
-		CLogEvent(CPluginMngr::CPlugin *p,int f, LogEventsMngr* ppp) : plugin(p), func(f), filters(0), parent(ppp), next(0) { }
+		CLogEvent(CPluginMngr::CPlugin *p, int f, LogEventsMngr* ppp) : plugin(p), func(f), filters(0), parent(ppp), next(0) { }
 		~CLogEvent();
 	public:
 		inline CPluginMngr::CPlugin *getPlugin() { return plugin; }
@@ -121,7 +121,7 @@ public:
 	};
 
 private:
-	CLogEvent *logevents[MAX_LOGARGS+1];
+	CLogEvent *logevents[MAX_LOGARGS + 1];
 	CLogEvent *getValidLogEvent(CLogEvent * a);
 	CLogCmp* registerCondition(char* filter);
 	void clearConditions();

@@ -39,46 +39,47 @@
 // *****************************************************
 // class Vault
 // *****************************************************
-bool Vault::exists( const char* k )
-{
-	if ( *k == 0 ) return false;
 
-	return *find( k ) != 0;
+bool Vault::exists(const char* k)
+{
+	if (*k == 0) return false;
+
+	return *find(k) != 0;
 }
 
-void Vault::put( const char* k, const char* v )
+void Vault::put(const char* k, const char* v)
 {
-	if ( *k == 0 ) return;
+	if (*k == 0) return;
 
-	if ( *v == 0 )
+	if (*v == 0)
 	{
-		remove( k );
+		remove(k);
 		return;
 	}
 
-	Obj** a = find( k );
+	Obj** a = find(k);
 
-	if ( *a )
+	if (*a)
 	{
 		(*a)->value.assign(v);
-		(*a)->number = atoi( v );
+		(*a)->number = atoi(v);
 	}
 	else
-		*a = new Obj( k , v );
-
+		*a = new Obj(k, v);
 }
 
-Vault::Obj::Obj( const char* k,  const char* v): key(k) , value(v) , next(0) {
+Vault::Obj::Obj(const char* k, const char* v): key(k), value(v), next(0)
+{
 	number = atoi(v);
 }
 
-Vault::Obj** Vault::find( const char* n )
+Vault::Obj** Vault::find(const char* n)
 {
 	Obj** a = &head;
 
-	while( *a )
+	while (*a)
 	{
-		if ( strcmp((*a)->key.c_str(), n) == 0 )
+		if (strcmp((*a)->key.c_str(), n) == 0)
 			return a;
 
 		a = &(*a)->next;
@@ -88,31 +89,31 @@ Vault::Obj** Vault::find( const char* n )
 }
 
 
-int Vault::get_number( const char* n )
+int Vault::get_number(const char* n)
 {
-	if ( *n == 0 ) return 0;
+	if (*n == 0) return 0;
 
-	Obj* b = *find( n );
+	Obj* b = *find(n);
 
-	if ( b == 0 ) return 0;
+	if (b == 0) return 0;
 
 	return b->number;
 }
 
-const char* Vault::get( const char* n )
+const char* Vault::get(const char* n)
 {
-	if ( *n == 0 ) return "";
+	if (*n == 0) return "";
 
-	Obj* b = *find( n );
+	Obj* b = *find(n);
 
-	if ( b == 0 ) return "";
+	if (b == 0) return "";
 
 	return b->value.c_str();
 }
 
 void Vault::clear()
 {
-	while ( head )
+	while (head)
 	{
 		Obj* a = head->next;
 		delete head;
@@ -120,58 +121,57 @@ void Vault::clear()
 	}
 }
 
-void Vault::remove( const char* n )
+void Vault::remove(const char* n)
 {
-	Obj** b = find( n );
+	Obj** b = find(n);
 
-	if ( *b == 0 ) return;
+	if (*b == 0) return;
 
 	Obj* a = (*b)->next;
 	delete *b;
 	*b = a;
 }
 
-void Vault::setSource( const char* n )
+void Vault::setSource(const char* n)
 {
 	path.assign(n);
 }
 
-
-bool Vault::loadVault(  )
+bool Vault::loadVault()
 {
-	if ( path.empty() ) return false;
+	if (path.empty()) return false;
 
 	clear();
 
-	File a( path.c_str() , "r" );
+	File a(path.c_str(), "r");
 
-	if ( !a ) return false;
+	if (!a) return false;
 
 	const int sz = 512;
-	char value[sz+1];
-	char key[sz+1];
+	char value[sz + 1];
+	char key[sz + 1];
 
-	while ( a >> key && a.skipWs() && a.getline( value , sz ) )
+	while (a >> key && a.skipWs() && a.getline(value, sz))
 	{
-		if ( isalpha ( *key ) )
-			put( key, value );
+		if (isalpha(*key))
+			put(key, value);
 	}
 
 	return true;
 
 }
 
-bool Vault::saveVault( )
+bool Vault::saveVault()
 {
-	if ( path.empty() ) return false;
+	if (path.empty()) return false;
 
-	File a( path.c_str() , "w" );
+	File a(path.c_str(), "w");
 
-	if ( !a ) return false;
+	if (!a) return false;
 
 	a << "; Don't modify!" << '\n';
 
-	for (Obj* b = head; b ;b = b->next)
+	for (Obj* b = head; b; b = b->next)
 		a << b->key << '\t' << b->value << '\n';
 
 	return true;

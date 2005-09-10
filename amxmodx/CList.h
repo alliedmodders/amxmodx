@@ -292,7 +292,7 @@ public:
 	iterator find(iterator startOn, const F &desc)
 	{
 		iterator iter = startOn;
-		while(iter)
+		while (iter)
 		{
 			if (*iter == desc)
 				break;

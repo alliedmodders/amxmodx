@@ -111,8 +111,7 @@ CmdMngr::Command* CmdMngr::getCmd(long int id, int type, int access)
 
 	while (buf_cmdptr)
 	{
-		if ((*buf_cmdptr).gotAccess(access) && (*buf_cmdptr).getPlugin()->isExecutable((*buf_cmdptr).getFunction())
-			&& (*buf_cmdptr).isViewable())
+		if ((*buf_cmdptr).gotAccess(access) && (*buf_cmdptr).getPlugin()->isExecutable((*buf_cmdptr).getFunction()) && (*buf_cmdptr).isViewable())
 		{
 			if (id-- == 0) 
 				return &(*buf_cmdptr);
@@ -154,7 +153,7 @@ void CmdMngr::setCmdLink(CmdLink** a, Command* c, bool sorted)
 	{
 		while (*a)
 		{
-			int i = strcmp(c->getCommand(),(*a)->cmd->getCommand());
+			int i = strcmp(c->getCommand(), (*a)->cmd->getCommand());
 
 			if ((i < 0) || (i == 0) && (strcmp(c->getArgument(), (*a)->cmd->getArgument()) < 0))
 				break;
@@ -184,7 +183,7 @@ void CmdMngr::clearCmdLink(CmdLink** phead, bool pclear)
 
 void CmdMngr::Command::setCmdType(int a)
 {
-	switch(a)
+	switch (a)
 	{
 		case CMD_ConsoleCommand: cmdtype |= 3; break;
 		case CMD_ClientCommand: cmdtype |= 1; break;
@@ -207,7 +206,7 @@ void CmdMngr::Command::setCmdType(int a)
 
 const char* CmdMngr::Command::getCmdType() const
 {
-	switch(cmdtype)
+	switch (cmdtype)
 	{
 		case 1:	return "client";
 		case 2:	return "server";

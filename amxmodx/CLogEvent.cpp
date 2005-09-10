@@ -46,7 +46,7 @@ LogEventsMngr::LogEventsMngr()
 
 LogEventsMngr::~LogEventsMngr()
 {
-  clearLogEvents();
+	clearLogEvents();
 }
 
 int LogEventsMngr::CLogCmp::compareCondition(const char* string)

@@ -32,7 +32,7 @@
 #include "amxmodx.h"
 
 #ifndef FAR
-#define FAR
+	#define FAR
 #endif
 
 // New
@@ -55,7 +55,7 @@ CModule::CModule(const char* fname)
 CModule::~CModule()
 {
 	// old & new
-	if ( m_Handle )
+	if (m_Handle)
 		DLFREE(m_Handle);
 
 	clear();
@@ -67,6 +67,7 @@ void CModule::clear(bool clearFilename)
 	m_Metamod = false;
 	m_Handle = NULL;
 	m_Status = MODULE_NONE;
+	
 	if (clearFilename)
 		m_Filename.assign("unknown");
 
@@ -114,6 +115,7 @@ bool CModule::attachModule()
 
 		if (!AttachFunc_New)
 			return false;
+		
 		g_ModuleCallReason = ModuleCall_Attach;
 		g_CurrentlyCalledModule = this;
 		int retVal = (*AttachFunc_New)(Module_ReqFnptr);
@@ -122,21 +124,21 @@ bool CModule::attachModule()
 
 		switch (retVal)
 		{
-		case AMXX_OK:
-			m_Status = MODULE_LOADED;
-			return true;
-		case AMXX_PARAM:
-			AMXXLOG_Log("[AMXX] Internal Error: Module \"%s\" (version \"%s\") retured \"Invalid parameter\" from Attach func.", m_Filename.c_str(), getVersion());
-			m_Status = MODULE_INTERROR;
-			return false;
-		case AMXX_FUNC_NOT_PRESENT:
-			m_Status = MODULE_FUNCNOTPRESENT;
-			m_MissingFunc = g_LastRequestedFunc;
-			return false;
-		default:
-			AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.",  m_Filename.c_str(), getVersion());
-			m_Status = MODULE_BADLOAD;
-			return false;
+			case AMXX_OK:
+				m_Status = MODULE_LOADED;
+				return true;
+			case AMXX_PARAM:
+				AMXXLOG_Log("[AMXX] Internal Error: Module \"%s\" (version \"%s\") retured \"Invalid parameter\" from Attach func.", m_Filename.c_str(), getVersion());
+				m_Status = MODULE_INTERROR;
+				return false;
+			case AMXX_FUNC_NOT_PRESENT:
+				m_Status = MODULE_FUNCNOTPRESENT;
+				m_MissingFunc = g_LastRequestedFunc;
+				return false;
+			default:
+				AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.",  m_Filename.c_str(), getVersion());
+				m_Status = MODULE_BADLOAD;
+				return false;
 		}
 	} else {
 		m_Status = MODULE_BADLOAD;
@@ -147,7 +149,7 @@ bool CModule::attachModule()
 
 bool CModule::queryModule()
 {
-	if (m_Status != MODULE_NONE)			// don't check if already queried
+	if (m_Status != MODULE_NONE)				// don't check if already queried
 		return false;
 
 	m_Handle = DLLOAD(m_Filename.c_str());		// load file
@@ -163,6 +165,7 @@ bool CModule::queryModule()
 
 	// Try new interface first
 	QUERYMOD_NEW queryFunc_New = (QUERYMOD_NEW)DLPROC(m_Handle, "AMXX_Query");
+	
 	if (queryFunc_New)
 	{
 		m_Amxx = true;
@@ -172,24 +175,25 @@ bool CModule::queryModule()
 		int retVal = (*queryFunc_New)(&ifVers, &m_InfoNew);
 		g_CurrentlyCalledModule = NULL;
 		g_ModuleCallReason = ModuleCall_NotCalled;
+		
 		switch (retVal)
 		{
-		case AMXX_PARAM:
-			AMXXLOG_Log("[AMXX] Internal Error: Module \"%s\" (version \"%s\") retured \"Invalid parameter\" from Attach func.", m_Filename.c_str(), getVersion());
-			m_Status = MODULE_INTERROR;
-			return false;
-		case AMXX_IFVERS:
-			if (ifVers < AMXX_INTERFACE_VERSION)
-				m_Status = MODULE_OLD;
-			else
-				m_Status = MODULE_NEWER;
-			return false;
-		case AMXX_OK:
-			break;
-		default:
-			AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.",  m_Filename.c_str(), getVersion());
-			m_Status = MODULE_BADLOAD;
-			return false;
+			case AMXX_PARAM:
+				AMXXLOG_Log("[AMXX] Internal Error: Module \"%s\" (version \"%s\") retured \"Invalid parameter\" from Attach func.", m_Filename.c_str(), getVersion());
+				m_Status = MODULE_INTERROR;
+				return false;
+			case AMXX_IFVERS:
+				if (ifVers < AMXX_INTERFACE_VERSION)
+					m_Status = MODULE_OLD;
+				else
+					m_Status = MODULE_NEWER;
+				return false;
+			case AMXX_OK:
+				break;
+			default:
+				AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.",  m_Filename.c_str(), getVersion());
+				m_Status = MODULE_BADLOAD;
+				return false;
 		}
 
 		// Check for attach
@@ -201,9 +205,7 @@ bool CModule::queryModule()
 
 		m_Status = MODULE_QUERY;
 		return true;
-	}
-	else
-	{
+	} else {
 		m_Status = MODULE_NOQUERY;
 		m_Amxx = false;
 		return false;
@@ -218,6 +220,7 @@ bool CModule::detachModule()
 	if (m_Amxx)
 	{
 		DETACHMOD_NEW detachFunc_New = (DETACHMOD_NEW)DLPROC(m_Handle, "AMXX_Detach");
+		
 		if (detachFunc_New)
 		{
 			g_ModuleCallReason = ModuleCall_Detach;
@@ -227,14 +230,17 @@ bool CModule::detachModule()
 			g_ModuleCallReason = ModuleCall_NotCalled;
 		}
 	}
+
 #ifndef FAKEMETA
 	if (IsMetamod())
 	{
 		UnloadMetamodPlugin(m_Handle);
 	}
 #endif
+	
 	DLFREE(m_Handle);
 	clear();
+	
 	return true;
 }
 
@@ -247,28 +253,31 @@ void CModule::CallPluginsLoaded()
 		return;
 
 	PLUGINSLOADED_NEW func = (PLUGINSLOADED_NEW)DLPROC(m_Handle, "AMXX_PluginsLoaded");
+	
 	if (!func)
 		return;
+	
 	func();
 }
 
 const char* CModule::getStatus() const
 {
-	switch(m_Status)
+	switch (m_Status)
 	{
-	case MODULE_NONE:		return "error";
-	case MODULE_QUERY:		return "pending";
-	case MODULE_BADLOAD:	return "bad load";
-	case MODULE_LOADED:		return "running";
-	case MODULE_NOINFO:		return "no info";
-	case MODULE_NOQUERY:	return "no query";
-	case MODULE_NOATTACH:	return "no attach";
-	case MODULE_OLD:		return "old";
-	case MODULE_FUNCNOTPRESENT:
-	case MODULE_NEWER:		return "newer";
-	case MODULE_INTERROR:	return "internal err";
-	case MODULE_NOT64BIT:	return "not 64bit";
-	default:		break;
+		case MODULE_NONE:		return "error";
+		case MODULE_QUERY:		return "pending";
+		case MODULE_BADLOAD:	return "bad load";
+		case MODULE_LOADED:		return "running";
+		case MODULE_NOINFO:		return "no info";
+		case MODULE_NOQUERY:	return "no query";
+		case MODULE_NOATTACH:	return "no attach";
+		case MODULE_OLD:		return "old";
+		case MODULE_FUNCNOTPRESENT:
+		case MODULE_NEWER:		return "newer";
+		case MODULE_INTERROR:	return "internal err";
+		case MODULE_NOT64BIT:	return "not 64bit";
+		default:				break;
 	}
+	
 	return "unknown";
 }

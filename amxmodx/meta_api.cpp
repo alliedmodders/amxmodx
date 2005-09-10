@@ -168,7 +168,7 @@ int	C_PrecacheSound(char *s)
 		for (CList<ForceObject>::iterator a = g_forcesounds.begin(); a; ++a)
 		{
 			PRECACHE_SOUND((char*)(*a).getFilename());
-			ENGINE_FORCE_UNMODIFIED((*a).getForceType(),(*a).getMin(),(*a).getMax(),(*a).getFilename());
+			ENGINE_FORCE_UNMODIFIED((*a).getForceType(), (*a).getMin(), (*a).getMax(), (*a).getFilename());
 		}
 	
 		if (!g_bmod_cstrike)
@@ -206,7 +206,7 @@ const char*	get_localinfo(const char* name, const char* def)
 	const char* b = LOCALINFO((char*)name);
 
 	if (b == 0 || *b == 0)
-		SET_LOCALINFO((char*)name,(char*)(b	= def));
+		SET_LOCALINFO((char*)name, (char*)(b = def));
 
 	return b;
 }
@@ -320,7 +320,7 @@ int	C_Spawn(edict_t *pent)
 	{
 		PRECACHE_GENERIC((char*)(*a).getFilename());
 		ENGINE_FORCE_UNMODIFIED((*a).getForceType(),
-		(*a).getMin(),(*a).getMax(),(*a).getFilename());
+		(*a).getMin(), (*a).getMax(), (*a).getFilename());
 	}
 
 	RETURN_META_VALUE(MRES_IGNORED, 0);
@@ -413,7 +413,7 @@ void C_ServerActivate_Post(edict_t *pEdictList, int edictCount, int clientMax)
 	if (g_activated)
 		RETURN_META(MRES_IGNORED);
 
-	for (int i= 1; i <= gpGlobals->maxClients; ++i)
+	for (int i = 1; i <= gpGlobals->maxClients; ++i)
 	{
 		CPlayer	*pPlayer = GET_PLAYER_POINTER_I(i);
 		pPlayer->Init(pEdictList + i, i);
@@ -609,14 +609,14 @@ void C_ClientUserInfoChanged_Post(edict_t *pEntity, char *infobuffer)
 {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
 	executeForwards(FF_ClientInfoChanged, pPlayer->index);
-	const char* name = INFOKEY_VALUE(infobuffer,"name");
+	const char* name = INFOKEY_VALUE(infobuffer, "name");
 
 	// Emulate bot connection and putinserver
 	if (pPlayer->ingame)
 	{
 		pPlayer->name.assign(name); //	Make sure player have name up to date
 	}
-	 else if (pPlayer->IsBot())
+	else if (pPlayer->IsBot())
 	{
 		pPlayer->Connect(name, "127.0.0.1"/*CVAR_GET_STRING("net_address")*/);
 
@@ -690,7 +690,7 @@ void C_ClientCommand(edict_t *pEntity)
 
 	/* check menu commands */
 
-	if (!strcmp(cmd,"menuselect"))
+	if (!strcmp(cmd, "menuselect"))
 	{
 		int	pressed_key	= atoi(arg) - 1;
 		int	bit_key	= (1<<pressed_key);
@@ -718,16 +718,19 @@ void C_ClientCommand(edict_t *pEntity)
 							ret = executeForwards((*a).getFunction(), pPlayer->index, menu, item);
 							
 							if (ret & 2) result = MRES_SUPERCEDE;
-							else if (ret & 1) RETURN_META(MRES_SUPERCEDE);
+							else 
+								if (ret & 1) RETURN_META(MRES_SUPERCEDE);
 							else 
 							{
 								if (item == MENU_BACK)
 								{
 									pMenu->Display(pPlayer->index, pPlayer->page-1);
-								} else if (item == MENU_MORE)
+								} 
+								else if (item == MENU_MORE)
 								{
-									pMenu->Display(pPlayer->index, pPlayer->page+1);
-								} else if (item == MENU_EXIT)
+									pMenu->Display(pPlayer->index, pPlayer->page + 1);
+								}
+								else if (item == MENU_EXIT)
 								{
 									//nothing
 								}
@@ -1119,11 +1122,13 @@ C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_
 		{
 			LOG_ERROR(PLID, "metamod version is too old for this plugin; update metamod");
 			return (FALSE);
-		} else if (pmajor < mmajor)
+		}
+		else if (pmajor < mmajor)
 		{
 			LOG_ERROR(PLID, "metamod version is incompatible with	this plugin; please	find a newer version of	this plugin");
 			return (FALSE);
-		} else if (pmajor == mmajor)
+		}
+		else if (pmajor == mmajor)
 		{
 #ifdef FAKEMETA
 			if (mminor == 10)
@@ -1138,14 +1143,17 @@ C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_
 				{
 					g_NeedsP = true;
 #endif
-				} else if (mminor >= 11)
+				}
+				else if (mminor >= 11)
 				{
 					g_IsNewMM = true;
-				} else if (pminor > mminor)
+				}
+				else if (pminor > mminor)
 				{
 					LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please	find a newer version of	this plugin");
 					return FALSE;
-				} else if (pminor < mminor)
+				}
+				else if (pminor < mminor)
 				{
 					LOG_MESSAGE(PLID, "WARNING: metamod version is newer than expected; consider finding a newer version of this plugin");
 				
@@ -1423,13 +1431,13 @@ C_DLLEXPORT	int	GetEntityAPI2_Post(DLL_FUNCTIONS *pFunctionTable, int *interface
 enginefuncs_t meta_engfuncs;
 C_DLLEXPORT	int	GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion)
 {
-	if (stricmp(g_mod_name.c_str(),"cstrike") == 0 || stricmp(g_mod_name.c_str(),"czero") == 0)
+	if (stricmp(g_mod_name.c_str(), "cstrike") == 0 || stricmp(g_mod_name.c_str(), "czero") == 0)
 	{
 		meta_engfuncs.pfnSetModel =	C_SetModel;
 		g_bmod_cstrike = true;
 	} else {
 		g_bmod_cstrike = false;
-		g_bmod_dod = !stricmp(g_mod_name.c_str(),"dod");
+		g_bmod_dod = !stricmp(g_mod_name.c_str(), "dod");
 	}
 
 	meta_engfuncs.pfnCmd_Argc = C_Cmd_Argc;

@@ -1407,7 +1407,7 @@ static int substpattern(unsigned char *line,size_t buffersize,char *pattern,char
   int prefixlen;
   const unsigned char *p,*s,*e;
   unsigned char *args[10];
-  int match,arg,len;
+  int match,arg,len,argsnum=0;
 
   memset(args,0,sizeof args);
 
@@ -1447,6 +1447,8 @@ static int substpattern(unsigned char *line,size_t buffersize,char *pattern,char
         /* store the parameter (overrule any earlier) */
         if (args[arg]!=NULL)
           free(args[arg]);
+		else
+          argsnum++;
         len=(int)(e-s);
         args[arg]=(unsigned char*)malloc(len+1);
         if (args[arg]==NULL)
@@ -1503,12 +1505,15 @@ static int substpattern(unsigned char *line,size_t buffersize,char *pattern,char
   if (match) {
     /* calculate the length of the substituted string */
     for (e=(unsigned char*)substitution,len=0; *e!='\0'; e++) {
-      if (*e=='%' && isdigit(*(e+1))) {
+      if (*e=='%' && isdigit(*(e+1)) && argsnum) {
         arg=*(e+1)-'0';
         assert(arg>=0 && arg<=9);
-        if (args[arg]!=NULL)
+		if (args[arg]!=NULL) {
           len+=strlen((char*)args[arg]);
-        e++;          /* skip %, digit is skipped later */
+          e++;          /* skip %, digit is skipped later */
+		} else {
+          len++;
+		}
       } else {
         len++;
       } /* if */
@@ -1526,8 +1531,21 @@ static int substpattern(unsigned char *line,size_t buffersize,char *pattern,char
           if (args[arg]!=NULL) {
             strins((char*)s,(char*)args[arg],strlen((char*)args[arg]));
             s+=strlen((char*)args[arg]);
-          } /* if */
-          e++;          /* skip %, digit is skipped later */
+            e++;          /* skip %, digit is skipped later */
+		  } else {
+		    strins((char*)s,(char*)e,1);
+		    s++;
+		  } /* if */
+        } else if (*e=='"') {
+          p=e;
+		  if (is_startstring(e)) {              /* skip strings */
+            e=skipstring(e);
+            strins((char*)s,(char*)p,(e-p+1));
+            s+=(e-p+1);
+		  } else {
+            strins((char*)s,(char*)e,1);
+            s++;
+		  }
         } else {
           strins((char*)s,(char*)e,1);
           s++;

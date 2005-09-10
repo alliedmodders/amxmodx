@@ -830,9 +830,8 @@ const char *Debugger::_GetFilename()
 	return m_FileName.c_str();
 }
 
-void Debugger::GenericMessage(AMX *amx, int err)
+void Debugger::FmtGenericMsg(AMX *amx, int error, char buffer[], size_t maxLength)
 {
-	CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(amx);
 	const char *filename = "";
 
 	CList<CScript,AMX*>::iterator a = g_loadedscripts.find(amx);
@@ -848,7 +847,18 @@ void Debugger::GenericMessage(AMX *amx, int err)
 		}
 	}
 
-	AMXXLOG_Log("[AMXX] Run time error %d (plugin \"%s\") - debug not enabled!", err, filename);
+	_snprintf(buffer, maxLength, "Run time error %d (plugin \"%s\") - debug not enabled!", error, filename);
+}
+
+void Debugger::GenericMessage(AMX *amx, int err)
+{
+	static char buffer[512];
+
+	buffer[0] = '\0';
+	Debugger::FmtGenericMsg(amx, err, buffer, sizeof(buffer)-1);
+
+	if (buffer[0] != '\0')
+		AMXXLOG_Log("[AMXX] %s", buffer);
 }
 
 Debugger::~Debugger()
@@ -914,13 +924,25 @@ int Handler::HandleError(const char *msg)
 		return 0;
 
 	m_Handling = true;
+	m_pTrace = NULL;
+	m_FmtCache.clear();
 
 	Debugger *pDebugger = (Debugger *)m_pAmx->userdata[UD_DEBUGGER];
 
 	int error = m_pAmx->error;
 
+	static char _buffer[512];
 	if (pDebugger)
+	{
+		pDebugger->SetTracedError(error);
+		m_pTrace = pDebugger->GetTraceStart();
+		pDebugger->FormatError(_buffer, sizeof(_buffer)-1);
+		m_FmtCache.assign(_buffer);
 		pDebugger->BeginExec();
+	} else {
+		Debugger::FmtGenericMsg(m_pAmx, error, _buffer, sizeof(_buffer)-1);
+		m_FmtCache.assign(_buffer);
+	}
 	
 	SetErrorMsg(msg);
 
@@ -951,6 +973,8 @@ int Handler::HandleError(const char *msg)
 	amx_Release(m_pAmx, hea_addr);
 
 	m_Handling = false;
+	m_pTrace = NULL;
+	m_FmtCache.clear();
 
 	if (err != AMX_ERR_NONE || !result)
 		return 0;
@@ -983,7 +1007,77 @@ static cell AMX_NATIVE_CALL set_error_filter(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL dbg_trace_begin(AMX *amx, cell *params)
+{
+	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
+
+	if (!pHandler)
+		return 0;		//should never happen
+
+	trace_info_t *pTrace = pHandler->GetTrace();
+
+	return (cell)(pTrace);
+}
+
+static cell AMX_NATIVE_CALL dbg_trace_next(AMX *amx, cell *params)
+{
+	Debugger *pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
+
+	if (!pDebugger)
+		return 0;
+
+	trace_info_t *pTrace = (trace_info_t *)(params[1]);
+
+	if (pTrace)
+		return (cell)(pDebugger->GetNextTrace(pTrace));
+
+	return 0;
+}
+
+static cell AMX_NATIVE_CALL dbg_trace_info(AMX *amx, cell *params)
+{
+	Debugger *pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
+
+	if (!pDebugger)
+		return 0;
+
+	trace_info_t *pTrace = (trace_info_t *)(params[1]);
+
+	if (!pTrace)
+		return 0;
+
+	cell *line_addr = get_amxaddr(amx, params[2]);
+	long lLine=-1;
+	const char *function=NULL, *file=NULL;
+
+	pDebugger->GetTraceInfo(pTrace, lLine, function, file);
+
+	set_amxstring(amx, params[3], function ? function : "", params[4]);
+	set_amxstring(amx, params[5], file ? file : "", params[5]);
+	*line_addr = (cell)lLine + 1;
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL dbg_fmt_error(AMX *amx, cell *params)
+{
+	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
+
+	if (!pHandler)
+		return 0;
+
+	const char *str = pHandler->GetFmtCache();
+
+	set_amxstring(amx, params[1], str, params[2]);
+
+	return 1;
+}
+
 AMX_NATIVE_INFO g_DebugNatives[] = {
 	{"set_error_filter",	set_error_filter},
+	{"dbg_trace_begin",		dbg_trace_begin},
+	{"dbg_trace_next",		dbg_trace_next},
+	{"dbg_trace_info",		dbg_trace_info},
+	{"dbg_fmt_error",		dbg_fmt_error},
 	{NULL,					NULL},
 };

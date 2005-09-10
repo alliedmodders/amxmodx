@@ -809,3 +809,24 @@ native query_client_cvar(id, const cvar[], const resultFunc[], paramlen=0, const
  * Return PLUGIN_HANDLED to block the error from displaying.
  */
 native set_error_filter(consthandler[]);
+
+/**
+ * Gets a trace handle for the item at the top of the traced call stack.
+ * Returns 0 if no debugging information is available.
+ */
+native dbg_trace_begin();
+
+/**
+ * Gets the next item in a traced call stack.  Returns 0 if no more traces exist.
+ */
+native dbg_trace_next(trace);
+
+/**
+ * Gets the call stack info for a trace.
+ */
+native dbg_trace_info(trace, &line, function[], maxLength1, file[], maxLength2);
+
+/**
+ * Gets the formatted error string, which looks like "Run time error X: (description)"
+ */
+native dbg_fmt_error(buffer[], maxLength);

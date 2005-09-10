@@ -123,6 +123,7 @@ public:
 public:
 	//generic static opcode breaker
 	static int AMXAPI DebugHook(AMX *amx);
+	static void FmtGenericMsg(AMX *amx, int error, char buffer[], size_t maxLength);
 	static void GenericMessage(AMX *amx, int error);
 private:
 	void _CacheAmxOpcodeList();
@@ -164,13 +165,17 @@ public:
 	bool IsHandling() const { return m_Handling; }
 	void SetErrorMsg(const char *msg);
 	const char *GetLastMsg();
-public:
+	trace_info_t *GetTrace() const { return m_pTrace; }
+	const char *GetFmtCache() { return m_FmtCache.c_str(); }
+private:
 	AMX *m_pAmx;
 	int m_iErrFunc;
 	int m_iModFunc;
 	int m_iNatFunc;
 	bool m_Handling;
 	String m_MsgCache;
+	String m_FmtCache;
+	trace_info_t *m_pTrace;
 };
 
 extern AMX_NATIVE_INFO g_DebugNatives[];

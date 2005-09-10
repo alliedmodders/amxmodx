@@ -30,6 +30,7 @@ type TCodeSnippetClick = function (pTitle, pCategory: PChar; pCode: PChar): Inte
      TAppMsg = function (pHwnd: HWND; pMessage: Integer; pWParam, pLParam: Integer; pTime: Integer; pPt: TPoint): Integer; cdecl;
      TUpdateCodeTools = function (pLang, pFilename, pCurrProjects: PChar): Integer; cdecl;
      TOutputEvent = function (pItemIndex: Integer): Integer; cdecl;
+     TShortcutEvent = function (pCharCode, pKeyData: Integer): Integer; cdecl;
 
 type TIntegerArray = array of Integer;
 
@@ -56,7 +57,6 @@ type TLoadInfo = record
   hSelectColor: HWND;
   hSettings: HWND;
   hSocketsTerminal: HWND;
-  hSplashscreen: HWND;
   { Important Control Handles }
   hOutput: HWND;
   hCodeExplorer: HWND;
@@ -103,6 +103,7 @@ function Plugin_UpdateCodeExplorer(Lang, Filename, CurrProjects: String; Updatin
 function Plugin_UpdateCodeInspector(Lang, Filename, CurrProjects: String; Updating: Boolean): Boolean;
 function Plugin_OutputDblClick(ItemIndex: Integer): Boolean;
 function Plugin_OutputPopup(ItemIndex: Integer): Boolean;
+function Plugin_Shortcut(CharCode, KeyData: Integer): Boolean;
 
 const { Return values for dlls }
       PLUGIN_CONTINUE = 0; // continue...
@@ -241,10 +242,9 @@ uses UnitfrmSettings, UnitMainTools, UnitfrmAllFilesForm,
   UnitfrmHTMLPreview, UnitfrmHudMsgGenerator, UnitfrmInfo, UnitfrmMain,
   UnitfrmMenuGenerator, UnitfrmMOTDGen, UnitfrmPluginsIniEditor,
   UnitfrmReplace, UnitfrmSearch, UnitfrmSelectColor,
-  UnitfrmSocketsTerminal, UnitfrmSplashscreen, UnitLanguages,
-  UnitCodeExplorerUpdater, UnitCodeInspector, UnitCodeSnippets,
-  UnitCodeUtils, UnitCompile, UnitfrmIRCPaster, UnitMenuGenerators,
-  UnitReadThread, UnitTextAnalyze;
+  UnitfrmSocketsTerminal, UnitLanguages,UnitCodeExplorerUpdater,
+  UnitCodeInspector, UnitCodeSnippets, UnitCodeUtils, UnitCompile,
+  UnitfrmIRCPaster, UnitMenuGenerators, UnitReadThread, UnitTextAnalyze;
 
 function LoadPlugin(ListItem: TListItem): Boolean;
 var eLoadInfo: TLoadInfo;
@@ -276,7 +276,6 @@ begin
     hSelectColor := frmSelectColor.Handle;
     hSettings := frmSettings.Handle;
     hSocketsTerminal := frmSocketsTerminal.Handle;
-    hSplashscreen := frmSplashscreen.Handle;
     { Important Control Handles }
     hOutput := frmMain.lstOutput.Handle;
     hCodeExplorer := frmMain.trvExplorer.Handle;
@@ -1031,6 +1030,31 @@ begin
 
     if @Func <> nil then begin
       case Func(ItemIndex)  of
+        PLUGIN_HANDLED: Result := False;
+        PLUGIN_STOP: begin
+          Result := False;
+          exit;
+        end;
+      end;
+    end;
+  end;
+  SetLength(Handles, 0);
+  Handles := nil;
+end;
+
+function Plugin_Shortcut(CharCode, KeyData: Integer): Boolean;
+var Func: TShortcutEvent;
+    i: integer;
+    Handles: TIntegerArray;
+begin
+  Result := True;
+
+  Handles := GetDLLHandles;
+  for i := 0 to High(Handles) do begin
+    @Func := GetProcAddress(Handles[i], 'Shortcut');
+
+    if @Func <> nil then begin
+      case Func(CharCode, KeyData)  of
         PLUGIN_HANDLED: Result := False;
         PLUGIN_STOP: begin
           Result := False;

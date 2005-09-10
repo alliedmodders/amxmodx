@@ -4,7 +4,7 @@ interface
 
 uses SysUtils, Classes, Windows, Forms;
 
-type TPAWNParseResult = class
+type TPawnParseResult = class
   public
     Constants: TStringList;
     Defined: TStringList;
@@ -25,7 +25,7 @@ type TPAWNParseResult = class
     procedure DestroyResult;
   end;
 
-function ParseCodePAWN(eCode: TStringList; FileName: String; IsRecursive: Boolean = False): TPAWNParseResult;
+function ParseCodePawn(eCode: TStringList; FileName: String; IsRecursive: Boolean = False): TPawnParseResult;
 function UpdateIncPath(eInput: String): String;
 
 var eCPUSpeed: Integer = 1;
@@ -40,17 +40,17 @@ var eLookedUpIncluded: TStringList;
 function UpdateIncPath(eInput: String): String;
 begin
   eInput := StringReplace(Trim(eInput), '/', '\', [rfReplaceAll]);
-  if FileExists(ExtractFilePath(frmSettings.txtPAWNCompilerPath.Text) + eInput + '.inc') then
-    Result := ExtractFilePath(frmSettings.txtPAWNCompilerPath.Text) + eInput + '.inc'
-  else if FileExists(ExtractFilePath(frmSettings.txtPAWNCompilerPath.Text) + 'include\' + eInput + '.inc') then
-    Result := ExtractFilePath(frmSettings.txtPAWNCompilerPath.Text) + 'include\' + eInput + '.inc'
+  if FileExists(ExtractFilePath(frmSettings.txtPawnCompilerPath.Text) + eInput + '.inc') then
+    Result := ExtractFilePath(frmSettings.txtPawnCompilerPath.Text) + eInput + '.inc'
+  else if FileExists(ExtractFilePath(frmSettings.txtPawnCompilerPath.Text) + 'include\' + eInput + '.inc') then
+    Result := ExtractFilePath(frmSettings.txtPawnCompilerPath.Text) + 'include\' + eInput + '.inc'
   else if (FileExists(ExtractFilePath(ActiveDoc.FileName) + eInput + '.inc')) and (not ActiveDoc.Modified) then
     Result := ExtractFilePath(ActiveDoc.FileName) + eInput + '.inc'
   else
     Result := '';
 end;
 
-function ParseCodePAWN(eCode: TStringList; FileName: String; IsRecursive: Boolean = False): TPAWNParseResult;
+function ParseCodePawn(eCode: TStringList; FileName: String; IsRecursive: Boolean = False): TPawnParseResult;
 var i, k: integer;
     eString, eTemp, eBackup: string;
     eStr, ePreEvents: TStringList;
@@ -85,8 +85,6 @@ begin
       eTimeToSleep := 0;
     end;
 
-    if Pos('smbans/constants.inl"', eString) <> 0 then
-      eString := eString;
     { Constants and Variables }
     if (IsAtStart('new', eString)) and (eBracesOpen = 0) and (not IsRecursive) then begin // const or variable
       Delete(eString, 1, 4);
@@ -149,7 +147,7 @@ begin
           try
             eStr.LoadFromFile(eTemp);
             if Application.Terminated then exit;
-            eTempResult := ParseCodePAWN(eStr, ExtractFileName(eTemp), True);
+            eTempResult := ParseCodePawn(eStr, ExtractFileName(eTemp), True);
             // Assign parsed values
             Result.AutoComplete.AddStrings(eTempResult.AutoComplete);
             Result.CallTips.AddStrings(eTempResult.CallTips);
@@ -356,9 +354,9 @@ begin
   eStr.Free;
 end;
 
-{ TPAWNParseResult }
+{ TPawnParseResult }
 
-constructor TPAWNParseResult.Create;
+constructor TPawnParseResult.Create;
 begin
   inherited Create;
 
@@ -378,22 +376,21 @@ begin
   HighlightKeywords := TStringList.Create;
 end;
 
-procedure TPAWNParseResult.DestroyResult;
+procedure TPawnParseResult.DestroyResult;
 begin
+  AutoComplete.Free;
+  CallTips.Free;
   Constants.Free;
-  Defined.Free;
   CVars.Free;
+  Defined.Free;
+  Events.Free;
+  Forwards.Free;
+  HighlightKeywords.Free;
   Included.Free;
   MethodsDefault.Free;
-  Events.Free;
-  Stocks.Free;
   Natives.Free;
-  Forwards.Free;
-  Variables.Free;
-
-  CallTips.Free;
-  AutoComplete.Free;
-  HighlightKeywords.Free;
+  Stocks.Free;
+  Variables.Free;    
 
   Free;
 end;

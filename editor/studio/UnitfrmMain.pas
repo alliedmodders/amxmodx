@@ -9,7 +9,9 @@ uses
   TBXMonaiTheme, TBXNexos2Theme, TBXNexos3Theme, TBXNexos4Theme, TBXNexos5Theme,
   TBXOffice11AdaptiveTheme, TBXOfficeCTheme, TBXOfficeKTheme, TBXOfficeXPTheme,
   TBXReliferTheme, TBXSentimoXTheme, TBXTristanTheme, TBXTristan2Theme,
-  TBXXitoTheme, { <- Themes } SpTBXTabs, ExtCtrls, SpTBXDkPanels, TFlatSplitterUnit,
+  TBXXitoTheme, TBXMonaiXPTheme, TBXZezioTheme, TBXWhidbeyTheme,
+  TBXRomaTheme, TBXMirandaTheme, { <- Themes }
+  SpTBXTabs, ExtCtrls, SpTBXDkPanels, TFlatSplitterUnit,
   SciLexer, SciLexerMemo, SciLexerMod, SciCallTips, ComCtrls, mbTBXTreeView,
   StdCtrls, mbTBXRichEdit, TBXDkPanels, TBXToolPals, SciPropertyMgr,
   mbTBXHint, mbTBXHotKeyEdit, SciAutoComplete, sciKeyBindings,
@@ -30,7 +32,7 @@ type
     mnuNew: TSpTBXSubmenuItem;
     mnuEmptyPlugin: TSpTBXItem;
     mnuNewPlugin: TSpTBXItem;
-    mnuHeaderPAWN: TSpTBXItem;
+    mnuHeaderPawn: TSpTBXItem;
     mnuNewModule: TSpTBXItem;
     mnuNewUnit: TSpTBXItem;
     mnuNewHeaderCPP: TSpTBXItem;
@@ -67,7 +69,7 @@ type
     mnuChangeTheme: TSpTBXSubmenuItem;
     mnuThemes: TSpTBXThemeGroupItem;
     mnuSelectHighlighter: TSpTBXSubmenuItem;
-    mnuHPAWN: TSpTBXItem;
+    mnuHPawn: TSpTBXItem;
     mnuHCPP: TSpTBXItem;
     mnuHHTML: TSpTBXItem;
     mnuHSQL: TSpTBXItem;
@@ -127,7 +129,7 @@ type
     sepTEdit2: TSpTBXSeparatorItem;
     mnuTSelectAll: TSpTBXItem;
     tsMain: TSpTBXTabSet;
-    tiPAWN: TSpTBXTabItem;
+    tiPawn: TSpTBXTabItem;
     tiCPP: TSpTBXTabItem;
     tsDocuments: TSpTBXTabSet;
     tiDocument1: TSpTBXTabItem;
@@ -321,7 +323,7 @@ type
     procedure mnuSocketTerminalClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure trvExplorerDblClick(Sender: TObject);
-    procedure tiPAWNClick(Sender: TObject);
+    procedure tiPawnClick(Sender: TObject);
     procedure tiCPPClick(Sender: TObject);
     procedure tiOtherClick(Sender: TObject);
     procedure mnuOpenHelpClick(Sender: TObject);
@@ -343,7 +345,7 @@ type
       const Position: Integer; ListToDisplay: TStrings;
       var CancelDisplay: Boolean);
     procedure mnuMOTDGeneratorClick(Sender: TObject);
-    procedure mnuHeaderPAWNClick(Sender: TObject);
+    procedure mnuHeaderPawnClick(Sender: TObject);
     procedure OnTabSelect(Sender: TTBCustomItem; Viewer: TTBItemViewer;
       Selecting: Boolean);
     procedure mnuPCloseClick(Sender: TObject);
@@ -383,6 +385,9 @@ type
     procedure OnCustomClick(Sender: TObject);
     procedure SetErrorLine(eLine: Integer);
     procedure OnCopyData(var Msg: TWMCopyData); message WM_COPYDATA;
+
+    procedure OnMessage(var Msg: TMsg; var Handled: Boolean);
+    procedure OnShortCut(var Msg: TWMKey; var Handled: Boolean);
   end;
 
 var
@@ -394,8 +399,8 @@ implementation
 uses UnitfrmSettings, UnitMainTools, UnitLanguages, UnitfrmInfo,
   UnitCodeSnippets, UnitfrmSearch, UnitfrmReplace, UnitfrmGoToLine,
   UnitfrmAllFilesForm, UnitCodeUtils, UnitfrmPluginsIniEditor,
-  UnitfrmSocketsTerminal, UnitfrmSplashscreen, UnitCodeExplorerUpdater,
-  UnitTextAnalyze, UnitfrmHudMsgGenerator, UnitCompile, UnitfrmAutoIndent,
+  UnitfrmSocketsTerminal, UnitCodeExplorerUpdater, UnitTextAnalyze,
+  UnitfrmHudMsgGenerator, UnitCompile, UnitfrmAutoIndent,
   UnitfrmHTMLPreview, UnitCodeInspector, UnitfrmMOTDGen,
   UnitfrmMenuGenerator, UnitfrmClose, UnitPlugins, UnitfrmConnGen,
   UnitMenuGenerators, UnitfrmIRCPaster;
@@ -423,7 +428,7 @@ end;
 
 procedure TfrmMain.OnCodeSnippetSelect(Sender: TObject);
 begin
-  mnuPAWN.Checked := Sender = mnuPAWN;
+  mnuPawn.Checked := Sender = mnuPawn;
   mnuCPP.Checked := Sender = mnuCPP;
   mnuHTML.Checked := Sender = mnuHTML;
   mnuOther.Checked := Sender = mnuOther;
@@ -499,7 +504,7 @@ procedure TfrmMain.mnuSettingsClick(Sender: TObject);
 var i: integer;
     eModified: Boolean;
 begin
-  CopyFile(PChar(ExtractFilePath(ParamStr(0)) + 'config\PAWN.csl'), PChar(ExtractFilePath(ParamStr(0)) + 'config\PAWN.bak'), False);
+  CopyFile(PChar(ExtractFilePath(ParamStr(0)) + 'config\Pawn.csl'), PChar(ExtractFilePath(ParamStr(0)) + 'config\Pawn.bak'), False);
   CopyFile(PChar(ExtractFilePath(ParamStr(0)) + 'config\C++.csl'), PChar(ExtractFilePath(ParamStr(0)) + 'config\C++.bak'), False);
   CopyFile(PChar(ExtractFilePath(ParamStr(0)) + 'config\Other.csl'), PChar(ExtractFilePath(ParamStr(0)) + 'config\Other.bak'), False);
   eModified := ActiveDoc.Modified;
@@ -545,9 +550,9 @@ begin
     if FileExists(sciPropertyLoader.FileName) then
       sciPropertyLoader.Save;
     { Compiler }
-    eConfig.WriteString('Pawn-Compiler', 'Path', frmSettings.txtPAWNCompilerPath.Text);
-    eConfig.WriteString('Pawn-Compiler', 'Args', frmSettings.txtPAWNArgs.Text);
-    eConfig.WriteString('Pawn-Compiler', 'DefaultOutput', frmSettings.txtPAWNOutput.Text);
+    eConfig.WriteString('Pawn-Compiler', 'Path', frmSettings.txtPawnCompilerPath.Text);
+    eConfig.WriteString('Pawn-Compiler', 'Args', frmSettings.txtPawnArgs.Text);
+    eConfig.WriteString('Pawn-Compiler', 'DefaultOutput', frmSettings.txtPawnOutput.Text);
     eConfig.WriteString('CPP-Compiler', 'Path', frmSettings.txtCPPCompilerPath.Text);
     eConfig.WriteString('CPP-Compiler', 'Args', frmSettings.txtCPPCompilerArguments.Text);
     eConfig.WriteString('CPP-Compiler', 'DefaultOutput', frmSettings.txtCPPOutput.Text);
@@ -583,10 +588,10 @@ begin
   end
   else begin
     { Restore Code-Snippets }
-    DeleteFile(ExtractFilePath(ParamStr(0)) + 'config\PAWN.csl');
+    DeleteFile(ExtractFilePath(ParamStr(0)) + 'config\Pawn.csl');
     DeleteFile(ExtractFilePath(ParamStr(0)) + 'config\C++.csl');
     DeleteFile(ExtractFilePath(ParamStr(0)) + 'config\Other.csl');
-    CopyFile(PChar(ExtractFilePath(ParamStr(0)) + 'config\PAWN.bak'), PChar(ExtractFilePath(ParamStr(0)) + 'config\PAWN.csl'), False);
+    CopyFile(PChar(ExtractFilePath(ParamStr(0)) + 'config\Pawn.bak'), PChar(ExtractFilePath(ParamStr(0)) + 'config\Pawn.csl'), False);
     CopyFile(PChar(ExtractFilePath(ParamStr(0)) + 'config\C++.bak'), PChar(ExtractFilePath(ParamStr(0)) + 'config\C++.csl'), False);
     CopyFile(PChar(ExtractFilePath(ParamStr(0)) + 'config\Other.bak'), PChar(ExtractFilePath(ParamStr(0)) + 'config\Other.csl'), False);
   end;
@@ -600,7 +605,7 @@ begin
   else
     LoadCodeSnippets('Other');
     
-  DeleteFile(ExtractFilePath(ParamStr(0)) + 'config\PAWN.bak');
+  DeleteFile(ExtractFilePath(ParamStr(0)) + 'config\Pawn.bak');
   DeleteFile(ExtractFilePath(ParamStr(0)) + 'config\C++.bak');
   DeleteFile(ExtractFilePath(ParamStr(0)) + 'config\Other.bak');
 
@@ -670,7 +675,7 @@ begin
   end;
 
   case tsMain.ActiveTabIndex of
-      0: Collection := PAWNProjects; // PAWN
+      0: Collection := PawnProjects; // Pawn
       1: Collection := CPPProjects;   // C++
     else Collection := OtherProjects; // Other
   end;      
@@ -742,23 +747,23 @@ end;
 
 procedure TfrmMain.mnuEmptyPluginClick(Sender: TObject);
 begin
-  if not Plugin_CreateNewFile(NEW_PAWN_EMPTYPLUGIN, True) then exit;
+  if not Plugin_CreateNewFile(NEW_Pawn_EMPTYPLUGIN, True) then exit;
 
   if tsMain.ActiveTabIndex <> 0 then
     ActivateProjects(0, False);
 
-  PAWNProjects.Activate(PAWNProjects.Add(''), True);
-  Plugin_CreateNewFile(NEW_PAWN_EMPTYPLUGIN, False);
+  PawnProjects.Activate(PawnProjects.Add(''), True);
+  Plugin_CreateNewFile(NEW_Pawn_EMPTYPLUGIN, False);
 end;
 
 procedure TfrmMain.mnuNewPluginClick(Sender: TObject);
 begin
-  if not Plugin_CreateNewFile(NEW_PAWN_PLUGIN, True) then exit;
+  if not Plugin_CreateNewFile(NEW_Pawn_PLUGIN, True) then exit;
 
   if tsMain.ActiveTabIndex <> 0 then
     ActivateProjects(0, False);
 
-  PAWNProjects.Activate(PAWNProjects.Add(''), False);
+  PawnProjects.Activate(PawnProjects.Add(''), False);
   sciEditor.Lines.Add('/* Plugin generated by AMXX-Studio */');
   sciEditor.Lines.Add('');
   sciEditor.Lines.Add('#include <amxmodx>');
@@ -775,7 +780,7 @@ begin
   sciEditor.Lines.Add('	// Add your code here...');
   sciEditor.Lines.Add('}');
 
-  Plugin_CreateNewFile(NEW_PAWN_PLUGIN, False);
+  Plugin_CreateNewFile(NEW_Pawn_PLUGIN, False);
 end;
 
 procedure TfrmMain.mnuHXMLClick(Sender: TObject);
@@ -801,7 +806,7 @@ begin
   if (eExt = '.sma') or (eExt = '.inc') or (eExt = '.inl') then begin // Pawn files
     if tsMain.ActiveTabIndex <> 0 then
       ActivateProjects(0, False);
-    PAWNProjects.Open(odOpen.FileName);
+    PawnProjects.Open(odOpen.FileName);
   end
   else if (eExt = '.cpp') or (eExt = '.h') then begin // C++ files
     if not eCPP then
@@ -1239,7 +1244,7 @@ var a,b: integer;
     Collection: TDocCollection;
 begin
   case tsMain.ActiveTabIndex of
-    0: Collection := PAWNProjects;
+    0: Collection := PawnProjects;
     1: Collection := CPPProjects;
     else Collection := OtherProjects;
   end;
@@ -1307,7 +1312,7 @@ var i: integer;
     Collection: TDocCollection;
 begin
   case tsMain.ActiveTabIndex of
-    0: Collection := PAWNProjects;
+    0: Collection := PawnProjects;
     1: Collection := CPPProjects;
     else Collection := OtherProjects;
   end;
@@ -1450,11 +1455,11 @@ var i, k: integer;
 begin
   ActiveDoc.Code := sciEditor.Lines.Text;
   frmClose.trvFiles.Items.Clear;
-  { PAWN Projects }
+  { Pawn Projects }
   eRoot := frmClose.trvFiles.Items.Add(nil, tsMain.Items[0].Caption);
-  for i := 0 to PAWNProjects.Count -1 do begin
-    if TDocument(PAWNProjects.Items[i]).Modified then
-      frmClose.trvFiles.Items.AddChild(eRoot, IntToStr(i +1) + '. ' + ExtractFileName(TDocument(PAWNProjects.Items[i]).FileName));
+  for i := 0 to PawnProjects.Count -1 do begin
+    if TDocument(PawnProjects.Items[i]).Modified then
+      frmClose.trvFiles.Items.AddChild(eRoot, IntToStr(i +1) + '. ' + ExtractFileName(TDocument(PawnProjects.Items[i]).FileName));
   end;
   if eRoot.Count = 0 then
     eRoot.Destroy
@@ -1497,12 +1502,12 @@ begin
     if (frmClose.ShowModal = mrOk) then begin
       if frmClose.cmdSave.Caption = lSaveCaption then begin
         for i := 0 to frmClose.trvFiles.Items.Count -1 do begin
-          { PAWN Projects }
+          { Pawn Projects }
           if frmClose.trvFiles.Items[i].Text = tsMain.Items[0].Caption then begin
             with frmClose.trvFiles.Items[i] do begin
               for k := 0 to Count -1 do begin
                 if frmClose.trvFiles.Checked[Item[k]] then begin
-                  eItem := TDocument(PAWNProjects.Items[StrToInt(Copy(Item[k].Text, 1, Pos('.', Item[k].Text) -1)) -1]);
+                  eItem := TDocument(PawnProjects.Items[StrToInt(Copy(Item[k].Text, 1, Pos('.', Item[k].Text) -1)) -1]);
                   // Process item here
                   if not eItem.Untitled then
                     eItem.Save
@@ -1588,9 +1593,9 @@ begin
   end;
 
   if eSavedFiles.Count = 0 then begin
-    for i := 0 to PAWNProjects.Count -1 do begin
-      if (not TDocument(PAWNProjects.Items[i]).Untitled) then
-        eSavedFiles.Add(TDocument(PAWNProjects.Items[i]).FileName);
+    for i := 0 to PawnProjects.Count -1 do begin
+      if (not TDocument(PawnProjects.Items[i]).Untitled) then
+        eSavedFiles.Add(TDocument(PawnProjects.Items[i]).FileName);
     end;
     for i := 0 to CPPProjects.Count -1 do begin
       if (not TDocument(CPPProjects.Items[i]).Untitled) then
@@ -1616,7 +1621,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.tiPAWNClick(Sender: TObject);
+procedure TfrmMain.tiPawnClick(Sender: TObject);
 begin
   trvExplorer.Enabled := True;
   jviCode.Enabled := True;
@@ -1693,7 +1698,7 @@ begin
   if (LowerCase(ExtractFileExt(ActiveDoc.FileName)) = '.inl') or (LowerCase(ExtractFileExt(ActiveDoc.FileName)) = '.inc') or (LowerCase(ExtractFileExt(ActiveDoc.FileName)) = '.h') then exit;
 
   if tsMain.ActiveTabIndex = 0 then
-    DoCompilePAWN(COMP_DEFAULT)
+    DoCompilePawn(COMP_DEFAULT)
   else if (LowerCase(ExtractFileExt(ActiveDoc.FileName)) = '.htm') or (LowerCase(ExtractFileExt(ActiveDoc.FileName)) = '.html') then begin
     if IEInstalled then
       frmHTMLPreview.Show
@@ -1796,7 +1801,7 @@ begin
     exit;
 
   if tsMain.ActiveTabIndex = 0 then
-    DoCompilePAWN(COMP_STARTHL);
+    DoCompilePawn(COMP_STARTHL);
 end;
 
 procedure TfrmMain.mnuCompileAndUploadClick(Sender: TObject);
@@ -1805,7 +1810,7 @@ begin
     exit;
 
   if tsMain.ActiveTabIndex = 0 then
-    DoCompilePAWN(COMP_UPLOAD);
+    DoCompilePawn(COMP_UPLOAD);
 end;
 
 procedure TfrmMain.mnuRegisterPluginsIniLocalClick(Sender: TObject);
@@ -1983,17 +1988,17 @@ begin
   end;
 end;
 
-procedure TfrmMain.mnuHeaderPAWNClick(Sender: TObject);
+procedure TfrmMain.mnuHeaderPawnClick(Sender: TObject);
 begin
-  if not Plugin_CreateNewFile(NEW_PAWN_HEADER, True) then exit;
+  if not Plugin_CreateNewFile(NEW_Pawn_HEADER, True) then exit;
 
   if tsMain.ActiveTabIndex <> 0 then
     ActivateProjects(0, False);
 
-  PAWNProjects.Activate(PAWNProjects.Add('Untitled.inc'), False);
+  PawnProjects.Activate(PawnProjects.Add('Untitled.inc'), False);
   sciEditor.Lines.Add('/* Header generated by AMXX-Studio*/');
   sciEditor.Lines.Add('');
-  Plugin_CreateNewFile(NEW_PAWN_HEADER, False);
+  Plugin_CreateNewFile(NEW_Pawn_HEADER, False);
 end;
 
 procedure TfrmMain.OnTabSelect(Sender: TTBCustomItem;
@@ -2010,7 +2015,7 @@ var Collection: TDocCollection;
 begin
   try
     case tsMain.ActiveTabIndex of
-      0: Collection := PAWNProjects; // PAWN
+      0: Collection := PawnProjects; // Pawn
       1: Collection := CPPProjects;   // C++
       else Collection := OtherProjects; // Other
     end;
@@ -2511,15 +2516,15 @@ begin
         else
           Msg.Result := 0;
       end;
-      SCM_PAWN_NEWFILE: PawnProjects.Add(eData, '');
-      SCM_PAWN_SAVEFILE: begin
+      SCM_Pawn_NEWFILE: PawnProjects.Add(eData, '');
+      SCM_Pawn_SAVEFILE: begin
         if (eData = '') and (TDocument(PawnProjects.Items[eIntData]).Untitled) then
           Msg.Result := 0
         else
           PawnProjects.Save(eIntData, eData);
       end;
-      SCM_PAWN_CLOSEFILE: PawnProjects.Close(eIntData);
-      SCM_PAWN_ISUNTITLED: begin
+      SCM_Pawn_CLOSEFILE: PawnProjects.Close(eIntData);
+      SCM_Pawn_ISUNTITLED: begin
         try
           if TDocument(PawnProjects.Items[eIntData]).Untitled then
             Msg.Result := 1
@@ -2529,27 +2534,27 @@ begin
           Msg.Result := -1;
         end;
       end;
-      SCM_PAWN_ACTIVATE: begin
+      SCM_Pawn_ACTIVATE: begin
         if tsMain.ActiveTabIndex <> 0 then
           ActivateProjects(0, eIntData = 1)
         else
           Msg.Result := 0;
       end;
-      SCM_PAWN_ACTIVATEDOC: PawnProjects.Activate(eIntData, Pos('r', eData) <> 0, Pos('s', eData) <> 0);
-      SCM_PAWN_GETNOTES: begin
+      SCM_Pawn_ACTIVATEDOC: PawnProjects.Activate(eIntData, Pos('r', eData) <> 0, Pos('s', eData) <> 0);
+      SCM_Pawn_GETNOTES: begin
         if (tsMain.ActiveTabIndex = 0) and (tsDocuments.ActiveTabIndex = eIntData) then
           Msg.Result := Integer(PChar(GetRTFText(rtfNotes)))
         else
           Msg.Result := Integer(PChar(TDocument(PawnProjects.Items[eIntData]).NotesText));
       end;
-      SCM_PAWN_SETNOTES: begin
+      SCM_Pawn_SETNOTES: begin
         if (tsMain.ActiveTabIndex = 0) and (tsDocuments.ActiveTabIndex = eIntData) then
           SetRTFText(rtfNotes, eData)
         else
           TDocument(PawnProjects.Items[eIntData]).NotesText := eData;
       end;
-      SCM_PAWN_GETFILENAME: Msg.Result := Integer(PChar(TDocument(PawnProjects.Items[eIntData]).FileName));
-      SCM_PAWN_GETTEXT: begin
+      SCM_Pawn_GETFILENAME: Msg.Result := Integer(PChar(TDocument(PawnProjects.Items[eIntData]).FileName));
+      SCM_Pawn_GETTEXT: begin
         if (tsMain.ActiveTabIndex = 0) and (tsDocuments.ActiveTabIndex = eIntData) then
           Msg.Result := Integer(sciEditor.Lines.GetText)
         else
@@ -2719,5 +2724,137 @@ begin
     Msg.Result := 0;
   end;
 end;
+
+procedure TfrmMain.OnMessage(var Msg: TMsg; var Handled: Boolean);
+begin
+  Handled := not Plugin_AppMsg(Msg.hwnd, Msg.message, Msg.wParam, Msg.lParam, Msg.time, Msg.pt);
+end;
+
+procedure TfrmMain.OnShortCut(var Msg: TWMKey;
+  var Handled: Boolean);
+function TriggerMenuShortcut(eShortcut: TShortcut; Item: TTBCustomItem): Boolean;
+var i: integer;
+begin
+  Result := False;
+  for i := 0 to Item.Count -1 do begin
+    if Item.Items[i].ShortCut = eShortcut then begin
+      Item.Items[i].OnClick(Self);
+      Result := True;
+      exit;
+    end
+    else
+      TriggerMenuShortcut(eShortcut, Item.Items[i]);
+  end;
+end;
+
+var i: integer;
+    eShortcut: TShortcut;
+begin
+  if not Started then
+    exit;
+  if not Plugin_Shortcut(Msg.CharCode, Msg.KeyData) then begin
+    Handled := True;
+    exit;
+  end;
+
+  // Check frmSettings shortcut
+  if (frmSettings.Visible) and (frmSettings.txtShortcut.Focused) then begin
+    if (Msg.CharCode = VK_CONTROL) or (Msg.CharCode = VK_MENU) or (Msg.CharCode = VK_SHIFT) then begin
+      frmSettings.txtShortcut.Clear;
+      if ssShift in KeyDataToShiftState(Msg.KeyData) then
+        frmSettings.txtShortcut.Text := frmSettings.txtShortcut.Text + 'Shift+';
+      if ssCtrl in KeyDataToShiftState(Msg.KeyData) then
+        frmSettings.txtShortcut.Text := frmSettings.txtShortcut.Text + 'Ctrl+';
+      if ssAlt in KeyDataToShiftState(Msg.KeyData) then
+        frmSettings.txtShortcut.Text := frmSettings.txtShortcut.Text + 'Alt+';
+    end
+    else
+      frmSettings.txtShortcut.Text := ShortcutToText(Shortcut(Msg.CharCode, KeyDataToShiftState(Msg.KeyData)));
+    Handled := True;
+  end;
+
+  if GetActiveWindow <> frmMain.Handle then exit;
+  
+  // stop IRC Paster if escape is pressed
+  if (Msg.CharCode = VK_ESCAPE) then begin
+    frmMain.IRCPasterStop := True;
+    if frmMain.sciEditor.CallTipActive then
+      frmMain.sciEditor.CallTipCancel;
+    if frmMain.sciEditor.AutoCActive then
+      frmMain.sciEditor.AutoCCancel;
+    exit;
+  end;
+
+  eShortcut := Shortcut(Msg.CharCode, KeyDataToShiftState(Msg.KeyData));
+  // Some menu commands are suppressed by the controlchars thingy, so they will be triggered manually
+  for i := 0 to frmMain.tbxMenu.Items.Count -1 do begin
+    if TriggerMenuShortcut(eShortcut, frmMain.tbxMenu.Items[i]) then
+      Handled := True;
+  end;
+  for i := 0 to frmMain.tbxToolbar.Items.Count -1 do begin
+    if frmMain.tbxToolbar.Items[i].ShortCut = eShortcut then begin
+      Handled := True;
+      frmMain.tbxToolbar.Items[i].OnClick(Self);
+    end;
+  end;
+  for i := 0 to frmMain.tbxEdit.Items.Count -1 do begin
+    if frmMain.tbxEdit.Items[i].ShortCut = eShortcut then begin
+      Handled := True;
+      frmMain.tbxEdit.Items[i].OnClick(Self);
+    end;
+  end;
+  Application.ProcessMessages;
+  // Control chars
+  if (eShortcut = Shortcut(Ord('E'), [ssCtrl])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('H'), [ssCtrl])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('K'), [ssCtrl])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('S'), [ssCtrl])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('B'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('C'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('D'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('E'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('F'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('G'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('H'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('K'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('N'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('O'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('P'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('Q'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('R'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('V'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('W'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('X'), [ssCtrl, ssShift])) then
+    Handled := True;
+  if (eShortcut = Shortcut(Ord('Y'), [ssCtrl, ssShift])) then
+    Handled := True;
+
+  if Handled then begin
+    for i := 0 to frmMain.sciEditor.KeyCommands.Count -1 do begin
+      if TSciKeyCommand(frmMain.sciEditor.KeyCommands.Items[i]).ShortCut = eShortcut then
+        Handled := False;
+    end;
+  end;
+end;
+
 
 end.

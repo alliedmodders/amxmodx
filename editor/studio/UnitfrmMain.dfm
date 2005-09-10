@@ -1,6 +1,6 @@
 object frmMain: TfrmMain
-  Left = 260
-  Top = 305
+  Left = 284
+  Top = 290
   Width = 888
   Height = 640
   Caption = 'AMXX-Studio'
@@ -306,7 +306,7 @@ object frmMain: TfrmMain
             AutoCheck = True
             Checked = True
             OnClick = mnuHXMLClick
-            CaptionW = 'PAWN'
+            CaptionW = 'Pawn'
           end
           object mnuHCPP: TSpTBXItem
             AutoCheck = True
@@ -4222,7 +4222,7 @@ object frmMain: TfrmMain
                 Images = ilImages
                 Indent = 19
                 ReadOnly = True
-                SortType = stText
+                SortType = stBoth
                 TabOrder = 1
                 OnCollapsed = trvExplorerCollapsed
                 OnDblClick = trvExplorerDblClick

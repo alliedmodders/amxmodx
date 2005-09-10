@@ -24,7 +24,7 @@ type
   protected
     procedure Execute; override;
     procedure GetCode;
-    procedure SetValuesPAWN;
+    procedure SetValuesPawn;
   end;
 
 implementation
@@ -62,7 +62,7 @@ begin
           if (frmMain.tsMain.ActiveTabIndex = 0) then begin
             if Plugin_UpdateCodeExplorer(GetCurrLang.Name, ActiveDoc.FileName, frmMain.tsMain.Items[frmMain.tsMain.ActiveTabIndex].Caption, True) then begin
               // analyze code
-              with ParseCodePAWN(eCode, ExtractFileName(ActiveDoc.FileName)) do begin
+              with ParseCodePawn(eCode, ExtractFileName(ActiveDoc.FileName)) do begin
                 eConstants.Assign(Constants);
                 eDefined.Assign(Defined);
                 eCVars.Assign(CVars);
@@ -81,7 +81,7 @@ begin
                 DestroyResult;
               end;
               // apply changes
-              Synchronize(SetValuesPAWN);
+              Synchronize(SetValuesPawn);
             end;
           end;
         except
@@ -113,7 +113,7 @@ begin
   eCode.Assign(frmMain.sciEditor.Lines);
 end;
 
-procedure TCodeExplorerUpdater.SetValuesPAWN;
+procedure TCodeExplorerUpdater.SetValuesPawn;
 function GetNode(eText: String): TTreeNode;
 var i: integer;
 begin
@@ -223,6 +223,15 @@ begin
       SelectedIndex := 35;
     end;
   end;
+  // Sort items
+  eIncluded.Sort;
+  eMethodsDefault.Sort;
+  eMethodsEvents.Sort;
+  eStocks.Sort;
+  eNatives.Sort;
+  eForwards.Sort;
+  eVariables.Sort;
+  // Add items
   for i := 0 to eIncluded.Count -1 do begin
     with frmMain.trvExplorer.Items.AddChildObject(GetNode('Included'), eIncluded[i], Pointer(eIncluded.Objects[i])) do begin
       ImageIndex := 34;

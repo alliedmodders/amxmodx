@@ -29,6 +29,7 @@ type
   public
     Value: string;
     constructor Create(const AValue: string); reintroduce;
+    destructor Destroy; reintroduce;
   end;
 
   TSTLWrapper = class(TObject)
@@ -412,6 +413,12 @@ end;
 destructor TSTLWrapper.Destroy;
 begin
   STL.Free;
+  inherited;
+end;
+
+destructor TStringWrapper.Destroy;
+begin
+  Value := '';
   inherited;
 end;
 

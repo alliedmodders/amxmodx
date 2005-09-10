@@ -36,12 +36,12 @@
 
 #include <time.h>
 #ifndef __linux__
-#include <io.h>
+	#include <io.h>
 #endif
 #include "amxmodx.h"
 
 #ifndef __linux__
-#define	vsnprintf	_vsnprintf
+	#define	vsnprintf	_vsnprintf
 #endif
 
 CLog::CLog()
@@ -61,6 +61,7 @@ void CLog::CloseFile()
 	if (!m_LogFile.empty())
 	{
 		FILE *fp = fopen(m_LogFile.c_str(), "r");
+		
 		if (fp)
 		{
 			fclose(fp);
@@ -77,6 +78,7 @@ void CLog::CloseFile()
 			fprintf(fp, "L %s: %s\n", date, "Log file closed.");
 			fclose(fp);
 		}
+		
 		m_LogFile.clear();
 	}
 }
@@ -90,23 +92,26 @@ void CLog::CreateNewFile()
 	tm *curTime = localtime(&td);
 
 	int i = 0;
+	
 	while (true)
 	{
-		FILE *pTmpFile = fopen(m_LogFile.c_str(), "r");		// open for reading to check whether the file exists
+		FILE *pTmpFile = fopen(m_LogFile.c_str(), "r");			// open for reading to check whether the file exists
+		
 		if (!pTmpFile)
 			break;
+		
 		fclose(pTmpFile);
 		++i;
 	}
+	
 	// Log logfile start
 	FILE *fp = fopen(m_LogFile.c_str(), "w");
+	
 	if (!fp)
 	{
 		ALERT(at_logged, "[AMXX] Unexpected fatal logging error. AMXX Logging disabled.\n");
 		SET_LOCALINFO("amxx_logging", "0");
-	}
-	else
-	{
+	} else {
 		fprintf(fp, "AMX Mod X log file started (file \"%s/L%02d%02d%03d.log\") (version \"%s\")\n", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday, i, AMX_VERSION);
 		fclose(fp);
 	}
@@ -129,6 +134,7 @@ void CLog::MapChange()
 #endif
 
 	m_LogType = atoi(get_localinfo("amxx_logging", "1"));
+	
 	if (m_LogType < 0 || m_LogType > 3)
 	{
 		SET_LOCALINFO("amxx_logging", "1");
@@ -152,6 +158,7 @@ void CLog::MapChange()
 void CLog::Log(const char *fmt, ...)
 {
 	static char file[256];
+	
 	if (m_LogType == 1 || m_LogType == 2)
 	{
 		// get time
@@ -178,6 +185,7 @@ void CLog::Log(const char *fmt, ...)
 			{
 				CreateNewFile();
 				pF = fopen(m_LogFile.c_str(), "a+");
+				
 				if (!pF)
 				{
 					ALERT(at_logged, "[AMXX] Unexpected fatal logging error (couldn't open %s for a+). AMXX Logging disabled for this map.\n", m_LogFile.c_str());
@@ -185,9 +193,7 @@ void CLog::Log(const char *fmt, ...)
 					return;
 				}
 			}
-		}
-		else
-		{
+		} else {
 			build_pathname_r(file, sizeof(file)-1, "%s/L%02d%02d.log", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday);
 			pF = fopen(file, "a+");
 		}
@@ -195,9 +201,7 @@ void CLog::Log(const char *fmt, ...)
 		{
 			fprintf(pF, "L %s: %s\n", date, msg);
 			fclose(pF);
-		}
-		else
-		{
+		} else {
 			ALERT(at_logged, "[AMXX] Unexpected fatal logging error (couldn't open %s for a+). AMXX Logging disabled for this map.\n", file);
 			m_LogType = 0;
 			return;

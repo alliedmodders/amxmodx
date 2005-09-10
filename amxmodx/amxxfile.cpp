@@ -35,19 +35,20 @@
 /**********************
  ****** AMXXFILE ******
  **********************/
+
 #if defined __GNUC__
-  #define PACKED        __attribute__((packed))
+	#define PACKED		__attribute__((packed))
 #else
-  #define PACKED
+	#define PACKED
 #endif
 
 #if defined __linux__
-  #pragma pack(1)         /* structures must be packed (byte-aligned) */
+	#pragma pack(1)				/* structures must be packed (byte-aligned) */
 #else
-  #pragma pack(1)         /* structures must be packed (byte-aligned) */
-  #if defined __TURBOC__
-    #pragma option -a-    /* "pack" pragma for older Borland compilers */
-  #endif
+	#pragma pack(1)				/* structures must be packed (byte-aligned) */
+	#if defined __TURBOC__
+		#pragma option -a-		/* "pack" pragma for older Borland compilers */
+	#endif
 #endif
 
 struct TableEntry
@@ -73,6 +74,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 {
 	m_Bh.plugins = NULL;
 	m_AmxxFile = false;
+	
 	if (!filename)
 	{
 		m_Status = Err_InvalidParam;
@@ -83,6 +85,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 	m_CellSize = cellsize;
 
 	m_pFile = fopen(filename, "rb");
+	
 	if (!m_pFile)
 	{
 		m_Status = Err_FileOpen;
@@ -93,14 +96,19 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 	DATAREAD(&magic, sizeof(magic), 1);
 
 	m_OldFile = false;
-	if ( magic == 0x524C4542 ) {
+	
+	if (magic == 0x524C4542)
+	{
 		//we have an invalid, old, RLEB file
 		m_Status = Err_OldFile;
 		fclose(m_pFile);
 		m_pFile = NULL;
+		
 		return;
-	} else if ( magic == MAGIC_HEADER2 ) {
+	} else if (magic == MAGIC_HEADER2)
+	{
 		DATAREAD(&m_Bh.version, sizeof(int16_t), 1);
+		
 		if (m_Bh.version != MAGIC_VERSION)
 		{
 			m_Status = Err_OldFile;
@@ -108,13 +116,15 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 			m_pFile = NULL;
 			return;
 		}
+		
 		m_AmxxFile = true;
 		DATAREAD(&m_Bh.numPlugins, sizeof(mint8_t), 1);
 		m_Bh.plugins = new PluginEntry[m_Bh.numPlugins];
 		PluginEntry *pe;
 		m_SectionHdrOffset = 0;
 		m_Entry = -1;
-		for (mint8_t i=0; i<m_Bh.numPlugins; i++)
+		
+		for (mint8_t i = 0; i < m_Bh.numPlugins; i++)
 		{
 			pe = &(m_Bh.plugins[i]);
 			DATAREAD(&pe->cellsize, sizeof(mint8_t), 1);
@@ -123,15 +133,18 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 			DATAREAD(&pe->memsize, sizeof(int32_t), 1);
 			DATAREAD(&pe->offs, sizeof(int32_t), 1);
 		}
-		for (mint8_t i=0; i<m_Bh.numPlugins; i++)
+		
+		for (mint8_t i = 0; i < m_Bh.numPlugins; i++)
 		{
 			pe = &(m_Bh.plugins[i]);
+			
 			if (pe->cellsize == m_CellSize)
 			{
 				m_Entry = i;
 				break;
 			}
 		}
+		
 		if (m_Entry == -1)
 		{
 			m_Status = Err_SectionNotFound;
@@ -139,10 +152,11 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 			m_pFile = NULL;
 			return;
 		}
+		
 		pe = &(m_Bh.plugins[m_Entry]);
 		m_SectionLength = pe->disksize;
-	} else if (magic == MAGIC_HEADER) {
-
+	} else if (magic == MAGIC_HEADER)
+	{
 		// try to find the section
 		mint8_t numOfPlugins;
 		DATAREAD(&numOfPlugins, sizeof(numOfPlugins), 1);
@@ -151,6 +165,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 	
 		m_SectionHdrOffset = 0;
 		int i = 0;
+		
 		for (i = 0; i < static_cast<int>(numOfPlugins); ++i)
 		{
 			DATAREAD(&entry, sizeof(entry), 1);
@@ -160,6 +175,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 				break;
 			}
 		}
+		
 		if (!m_SectionHdrOffset)
 		{
 			m_Status = Err_SectionNotFound;
@@ -175,9 +191,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 			TableEntry nextEntry;
 			DATAREAD(&nextEntry, sizeof(nextEntry), 1);
 			m_SectionLength = nextEntry.offset - entry.offset;
-		}
-		else
-		{
+		} else {
 			fseek(m_pFile, 0, SEEK_END);
 			m_SectionLength = ftell(m_pFile) - (long)entry.offset;
 		}
@@ -187,6 +201,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 		rewind(m_pFile);
 		fread(&hdr, sizeof(hdr), 1, m_pFile);
 		amx_Align16(&hdr.magic);
+		
 		if (hdr.magic == AMX_MAGIC)
 		{
 			if (cellsize != 4)
@@ -194,18 +209,19 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 				m_Status = Err_SectionNotFound;
 				fclose(m_pFile);
 				m_pFile = NULL;
+				
 				return;
 			}
 
 			m_OldFile = true;
+			
 			return;
-		}
-		else
-		{
+		} else {
 			// no known file format
 			m_Status = Err_FileInvalid;
 			fclose(m_pFile);
 			m_pFile = NULL;
+			
 			return;
 		}
 	} 
@@ -218,6 +234,7 @@ CAmxxReader::~CAmxxReader()
 		fclose(m_pFile);
 		m_pFile = NULL;
 	}
+	
 	if (m_Bh.plugins)
 	{
 		delete [] m_Bh.plugins;
@@ -257,10 +274,13 @@ size_t CAmxxReader::GetBufferSize()
 		DATAREAD(&hdr, sizeof(hdr), 1);
 		fseek(m_pFile, save, SEEK_SET);
 		return hdr.stp;
-	} else if (m_AmxxFile) {
+	} else if (m_AmxxFile)
+	{
 		PluginEntry *pe = &(m_Bh.plugins[m_Entry]);
+		
 		if (pe->imagesize > pe->memsize)
 			return pe->imagesize + 1;
+		
 		return pe->memsize + 1;
 	}
 
@@ -269,6 +289,7 @@ size_t CAmxxReader::GetBufferSize()
 	TableEntry entry;
 	DATAREAD(&entry, sizeof(entry), 1);
 	fseek(m_pFile, save, SEEK_SET);
+	
 	return entry.origSize + 1;			// +1 : safe
 }
 
@@ -298,22 +319,25 @@ CAmxxReader::Error CAmxxReader::GetSection(void *buffer)
 		rewind(m_pFile);
 		DATAREAD(buffer, 1, filesize);
 		m_Status = Err_None;
+		
 		return m_Status;
-	} else if (m_AmxxFile) {
+	} else if (m_AmxxFile)
+	{
 		PluginEntry *pe = &(m_Bh.plugins[m_Entry]);
 		char *tempBuffer = new char[m_SectionLength + 1];
 		fseek(m_pFile, pe->offs, SEEK_SET);
 		DATAREAD((void *)tempBuffer, 1, m_SectionLength);
 		uLongf destLen = GetBufferSize();
-		int result = uncompress((Bytef *)buffer, &destLen, 
-			(Bytef *)tempBuffer, m_SectionLength);
+		int result = uncompress((Bytef *)buffer, &destLen, (Bytef *)tempBuffer, m_SectionLength);
 		delete [] tempBuffer;
+		
 		if (result != Z_OK)
 		{
 			AMXXLOG_Log("[AMXX] Zlib error encountered: %d(%d)", result, m_SectionLength);
 			m_Status = Err_Decompress;
 			return Err_Decompress;
 		}
+		
 		return Err_None;
 	} else {
 		// new file type: go to the section table entry
@@ -328,15 +352,17 @@ CAmxxReader::Error CAmxxReader::GetSection(void *buffer)
 		//fread(tempBuffer, sizeof(char), m_SectionLength, m_pFile);
 		DATAREAD((void*)tempBuffer, 1, m_SectionLength);
 		// decompress
-		int result = uncompress((Bytef *)buffer, &destLen,
-				(Bytef *)tempBuffer, m_SectionLength);
+		int result = uncompress((Bytef *)buffer, &destLen, (Bytef *)tempBuffer, m_SectionLength);
 		delete [] tempBuffer;
+		
 		if (result != Z_OK)
 		{
 			AMXXLOG_Log("[AMXX] Zlib error encountered: %d(%d)", result, m_SectionLength);
 			m_Status = Err_Decompress;
+			
 			return Err_Decompress;
 		}
+		
 		return Err_None;
 	}
 }

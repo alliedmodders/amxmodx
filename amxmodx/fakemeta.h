@@ -32,8 +32,8 @@
 #define __FAKEMETA_H__
 
 #ifndef FAKEMETA
-int UnloadMetamodPlugin(void *handle);
-int LoadMetamodPlugin(const char *path, void **handle, PLUG_LOADTIME now);
+	int UnloadMetamodPlugin(void *handle);
+	int LoadMetamodPlugin(const char *path, void **handle, PLUG_LOADTIME now);
 #else
 // Fake metamod api for modules
 
@@ -42,11 +42,12 @@ int LoadMetamodPlugin(const char *path, void **handle, PLUG_LOADTIME now);
 // from mplugin.h (metamod)
 // Flags to indicate current "load" state of plugin.
 // NOTE: order is important, as greater/less comparisons are made.
-typedef enum {
+typedef enum
+{
 	PL_EMPTY = 0,		// empty slot
 	PL_VALID,			// has valid info in it
 	PL_BADFILE,			// nonexistent file (open failed), 
-						//    or not a valid plugin file (query failed)
+						// or not a valid plugin file (query failed)
 	PL_OPENED,			// dlopened and queried
 	PL_FAILED,			// opened, but failed to attach or unattach
 	PL_RUNNING,			// attached and running
@@ -55,11 +56,10 @@ typedef enum {
 
 // from h_export.h (metamod)
 // Our GiveFnptrsToDll, called by engine.
-typedef void (WINAPI *GIVE_ENGINE_FUNCTIONS_FN) (enginefuncs_t 
-		*pengfuncsFromEngine, globalvars_t *pGlobals);
-
+typedef void (WINAPI *GIVE_ENGINE_FUNCTIONS_FN) (enginefuncs_t *pengfuncsFromEngine, globalvars_t *pGlobals);
 
 // *** CFakeMeta
+
 class CFakeMeta
 {
 private:
@@ -99,7 +99,6 @@ public:
 		{ return m_Status; }
 		inline void SetStatus(PLUG_STATUS newStatus)
 		{ m_Status = newStatus; }
-
 
 		inline plugin_info_t * GetInfo()
 		{ return m_Info; }
@@ -232,4 +231,3 @@ extern CFakeMeta g_FakeMeta;
 #endif //FAKEMETA
 
 #endif // #ifndef __FAKEMETA_H__
-

@@ -38,55 +38,56 @@
 
 class MenuMngr
 {
-  struct MenuIdEle
-  {
-    String name;
-    AMX* amx;
-    MenuIdEle* next;
-	int id;
-	static int uniqueid;
-    MenuIdEle( const char* n, AMX* a, MenuIdEle* m ) : name( n ) , amx(a) , next( m ) {
-		id = ++uniqueid;
-	}
-	~MenuIdEle() { --uniqueid; }
-  } *headid;
+	struct MenuIdEle
+	{
+		String name;
+		AMX* amx;
+		MenuIdEle* next;
+		int id;
+		static int uniqueid;
+		
+		MenuIdEle(const char* n, AMX* a, MenuIdEle* m) : name(n), amx(a), next(m)
+		{
+			id = ++uniqueid;
+		}
+		
+		~MenuIdEle() { --uniqueid; }
+	} *headid;
 
 public:
-	class iterator;
-
+		class iterator;
 private:
 
-  class MenuCommand 
-  {
-	  friend class iterator;
-	  friend class MenuMngr;
+	class MenuCommand 
+	{
+		friend class iterator;
+		friend class MenuMngr;
 	  
-	  CPluginMngr::CPlugin *plugin;
-	  int menuid;
-	  int keys;
-	  int function;
-	  MenuCommand* next;
-	  MenuCommand( CPluginMngr::CPlugin *a, int mi, int k, int f );
-  public:
-	  inline int getFunction() { return function; }
-	  inline CPluginMngr::CPlugin* getPlugin() { return plugin; }
-	  inline bool matchCommand( int m, int k  ) { return ((m == menuid) && (keys & k)); }
-  } *headcmd;
+		CPluginMngr::CPlugin *plugin;
+		int menuid;
+		int keys;
+		int function;
+		MenuCommand* next;
+		MenuCommand(CPluginMngr::CPlugin *a, int mi, int k, int f);
+	public:
+		inline int getFunction() { return function; }
+		inline CPluginMngr::CPlugin* getPlugin() { return plugin; }
+		inline bool matchCommand(int m, int k) { return ((m == menuid) && (keys & k)); }
+	} *headcmd;
 	
 public:
-	
-	MenuMngr() { headid = 0;  headcmd = 0; }
+	MenuMngr() { headid = 0; headcmd = 0; }
 	~MenuMngr();
 
 	// Interface
 
-
 	int findMenuId(const char* name, AMX* a = 0);
-	int registerMenuId(const char* n, AMX* a );
+	int registerMenuId(const char* n, AMX* a);
 	void registerMenuCmd(CPluginMngr::CPlugin *a, int mi, int k, int f);
 	void clear();
 
-	class iterator {
+	class iterator
+	{
 		MenuCommand* a;
 	public:
 		iterator(MenuCommand*aa) : a(aa) {}
@@ -96,8 +97,9 @@ public:
 		operator bool () const { return a ? true : false; }
 		MenuCommand& operator*() { return *a; }
 	};
+	
 	inline iterator begin() const { return iterator(headcmd); }
 	inline iterator end() const { return iterator(0); }
 };
 
-#endif
+#endif //MENUS_H

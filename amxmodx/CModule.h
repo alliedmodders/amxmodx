@@ -36,19 +36,20 @@
 #ifndef CMODULE_H
 #define CMODULE_H
 
-enum MODULE_STATUS {
-  MODULE_NONE,				// No module loaded
-  MODULE_QUERY,				// Query failed
-  MODULE_BADLOAD,			// Bad file or the module writer messed something up ;]
-  MODULE_LOADED,			// Loaded
-  MODULE_NOINFO,			// No info
-  MODULE_NOQUERY,			// No query function present
-  MODULE_NOATTACH,			// No attach function present
-  MODULE_OLD,				// Old interface
-  MODULE_NEWER,				// newer interface
-  MODULE_INTERROR,			// Internal error
-  MODULE_FUNCNOTPRESENT,	// Function not present
-  MODULE_NOT64BIT			// Not 64 bit compatible
+enum MODULE_STATUS
+{
+	MODULE_NONE,			// No module loaded
+	MODULE_QUERY,			// Query failed
+	MODULE_BADLOAD,			// Bad file or the module writer messed something up ;]
+	MODULE_LOADED,			// Loaded
+	MODULE_NOINFO,			// No info
+	MODULE_NOQUERY,			// No query function present
+	MODULE_NOATTACH,		// No attach function present
+	MODULE_OLD,				// Old interface
+	MODULE_NEWER,			// newer interface
+	MODULE_INTERROR,		// Internal error
+	MODULE_FUNCNOTPRESENT,	// Function not present
+	MODULE_NOT64BIT			// Not 64 bit compatible
 };
 
 struct amxx_module_info_s
@@ -59,7 +60,6 @@ struct amxx_module_info_s
 	int reload;				// reload on mapchange when nonzero
 	const char *logtag;		//added in version 2
 };
-
 
 #define AMXX_OK					0			/* no error */
 #define AMXX_IFVERS				1			/* interface version */
@@ -84,12 +84,15 @@ public:
 	~CModule();
 
 	// Interface
+	
 	bool attachModule();
 	bool queryModule();
 	bool detachModule();
+
 #ifndef FAKEMETA
 	bool attachMetamod(const char *mmfile, PLUG_LOADTIME now);
 #endif
+
 	const char* getStatus() const;
 	inline const char* getType() const { return m_Amxx ? "amxx" : (m_Metamod ? "amx&mm" : "amx"); }
 	inline const char* getAuthor() const { return m_InfoNew.author; }
@@ -97,7 +100,7 @@ public:
 	inline const char* getName() const { return m_InfoNew.name; }
 	inline const amxx_module_info_s* getInfoNew() const { return &m_InfoNew; }	// new
 	inline int getStatusValue() { return m_Status; }
-	inline bool operator==( const char* fname ) { return !strcmp( m_Filename.c_str() , fname );  }
+	inline bool operator==(const char* fname) { return !strcmp(m_Filename.c_str(), fname);  }
 	inline bool isReloadable() { return ((m_Status == MODULE_LOADED) && (m_InfoNew.reload != 0)); }
 	inline bool isAmxx() const { return m_Amxx; }
 	inline const char *getMissingFunc() const { return m_MissingFunc; }
@@ -108,7 +111,4 @@ public:
 	CList<AMX_NATIVE_INFO*> m_Natives;
 };
 
-#endif
-
-
-
+#endif //CMODULE_H

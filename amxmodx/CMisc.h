@@ -37,26 +37,27 @@
 // *****************************************************
 // class CCVar
 // *****************************************************
+
 class CCVar
 {
     cvar_t cvar;
     String name;
     String plugin;
+
 public:	
-    CCVar( const char* pname, const char* pplugin, 
-		int pflags, float pvalue ) : name(pname) , plugin(pplugin ) {
+	CCVar(const char* pname, const char* pplugin, int pflags, float pvalue) : name(pname), plugin(pplugin)
+	{
 		cvar.name = (char*)name.c_str();
 		cvar.flags = pflags;
 		cvar.string = "";
 		cvar.value = pvalue;
     }
+	
 	inline cvar_t* getCvar() { return &cvar; }
 	inline const char* getPluginName() { return plugin.c_str(); }
 	inline const char* getName() { return name.c_str(); }
-	inline bool operator == ( const char* string ) { return (strcmp(name.c_str(),string)==0); }
+	inline bool operator == (const char* string) { return (strcmp(name.c_str(),string)==0); }
 };
-
-
 
 // *****************************************************
 // class CPlayer
@@ -64,7 +65,7 @@ public:
 
 struct ClientCvarQuery_Info
 {
-	bool querying;			// Are we actually waiting for a response at the moment?
+	bool querying;				// Are we actually waiting for a response at the moment?
 	String cvarName;
 	int resultFwd;
 
@@ -89,7 +90,8 @@ public:
 	float time;
 	float playtime;
 	
-	struct {
+	struct
+	{
 		int ammo;
 		int clip;
 	} weapons[MAX_WEAPONS];
@@ -117,17 +119,20 @@ public:
 	
 	CQueue<ClientCvarQuery_Info*> cvarQueryQueue;
 
-	void Init( edict_t* e , int i );
+	void Init(edict_t* e, int i);
 	void Disconnect();
 	void PutInServer();
-	bool Connect(const char* connectname,const char* ipaddress);
+	
+	bool Connect(const char* connectname, const char* ipaddress);
 
-	inline bool IsBot(){
-		return ((pEdict->v.flags & FL_FAKECLIENT)?true:false);
+	inline bool IsBot()
+	{
+		return ((pEdict->v.flags & FL_FAKECLIENT) ? true : false);
 	}
 
-	inline bool IsAlive(){
-		return ((pEdict->v.deadflag==DEAD_NO)&&(pEdict->v.health>0));
+	inline bool IsAlive()
+	{
+		return ((pEdict->v.deadflag == DEAD_NO) && (pEdict->v.health > 0));
 	}
 
 	inline void Authorize() { authorized = true; }
@@ -140,36 +145,38 @@ public:
 
 class Grenades
 {
-  struct Obj 
-  {
-    CPlayer* player;
-    edict_t* grenade;
-    float time;
-    int type;
-    Obj* next;
-  } *head;
-
+	struct Obj 
+	{
+		CPlayer* player;
+		edict_t* grenade;
+		float time;
+		int type;
+		Obj* next;
+	} *head;
 
 public:
-  Grenades() { head = 0; }
-  ~Grenades() { clear(); }
-  void put( edict_t* grenade, float time, int type, CPlayer* player  );
-  bool find( edict_t* enemy, CPlayer** p, int& type );
-  void clear();
+	Grenades() { head = 0; }
+	~Grenades() { clear(); }
+	void put(edict_t* grenade, float time, int type, CPlayer* player);
+	bool find(edict_t* enemy, CPlayer** p, int& type);
+	void clear();
 };
 
 // *****************************************************
 // class ForceObject
 // *****************************************************
-class ForceObject {
+
+class ForceObject
+{
     String filename;
     FORCE_TYPE type;
     Vector mins;
     Vector maxs;
     AMX* amx;
 public:
-    ForceObject(const char* n, FORCE_TYPE c,Vector& mi, Vector& ma, AMX* a) :
-    filename(n) , type(c), mins(mi), maxs(ma), amx(a) {}
+    ForceObject(const char* n, FORCE_TYPE c, Vector& mi, Vector& ma, AMX* a) :
+    filename(n), type(c), mins(mi), maxs(ma), amx(a) {}
+
 	inline const char* getFilename() { return filename.c_str(); }
 	inline AMX* getAMX() { return amx; }
 	Vector& getMin() { return mins; }
@@ -183,81 +190,89 @@ public:
 
 class XVars
 {
-  struct XVarEle  {
-    AMX* amx;
-    cell* value;
-  };
+	struct XVarEle
+	{
+		AMX* amx;
+		cell* value;
+	};
   
-  XVarEle* head;
-  int size;
-  int num;
-
-  int realloc_array( int nsize );
+	XVarEle* head;
+	int size;
+	int num;
+	int realloc_array(int nsize);
 
 public:
-  XVars() {  num = 0;  size = 0;  head = 0; }
-  ~XVars() { clear(); }
-  void clear();
-  int put( AMX* a, cell* v );
-  inline cell getValue( int a ) {
-	  return ( a >= 0 && a < num ) ? *(head[a].value) : 0;
-  }
-  inline int setValue( int a, cell v ) { 
-	  if ( a >= 0 && a < num ){
-		*(head[a].value) = v;
-		return 0;
-	  }
-	  return 1;
-  }
+	XVars() { num = 0;  size = 0;  head = 0; }
+	~XVars() { clear(); }
+	void clear();
+	int put(AMX* a, cell* v);
+	
+	inline cell getValue(int a)
+	{
+		return (a >= 0 && a < num) ? *(head[a].value) : 0;
+	}
+  
+	inline int setValue(int a, cell v)
+	{ 
+		if (a >= 0 && a < num)
+		{
+			*(head[a].value) = v;
+			return 0;
+		}
+	  
+		return 1;
+	}
 };
 
 // *****************************************************
 // class CScript
 // *****************************************************
+
 class CScript
 {
 	String filename;
 	AMX* amx;
 	void* code;
 public:
-	CScript(AMX* aa, void* cc,const char* ff):filename(ff),amx(aa),code(cc){}
+	CScript(AMX* aa, void* cc, const char* ff) : filename(ff), amx(aa), code(cc) { }
+	
 	inline AMX* getAMX() { return amx; }
 	inline const char* getName() { return filename.c_str(); }
-	inline bool operator==( void* a ) { return (amx == (AMX*)a); }
+	inline bool operator==(void* a) { return (amx == (AMX*)a); }
 	inline void* getCode() { return code; }
 };
 
 // *****************************************************
 // class TeamIds
 // *****************************************************
+
 class TeamIds
 {
-  struct TeamEle {
-    String name;
-    int id;
-	char tid;
-	static char uid;
-    TeamEle* next;
-    TeamEle(const char* n, int& i) : name(n) , id(i) , next(0) {
-		tid = uid++;
-	};
-	~TeamEle(){ --uid; }
-  } *head;
+	struct TeamEle
+	{
+		String name;
+		int id;
+		char tid;
+		static char uid;
+		TeamEle* next;
+		
+		TeamEle(const char* n, int& i) : name(n), id(i), next(0)
+		{
+			tid = uid++;
+		}
+		
+		~TeamEle() { --uid; }
+	} *head;
 
-  int newTeam;
+	int newTeam;
 
 public:
-  TeamIds();
-  ~TeamIds();
-  void registerTeam( const char* n ,int s );
-  int findTeamId( const char* n);
-  int findTeamIdCase( const char* n);
-  inline bool isNewTeam() { return newTeam ? true : false; }
+	TeamIds();
+	~TeamIds();
+	void registerTeam(const char* n, int s);
+	int findTeamId(const char* n);
+	int findTeamIdCase(const char* n);
+	inline bool isNewTeam() { return newTeam ? true : false; }
 };
 
-
-
-#endif
-
-
-
+#endif //CMISC_H

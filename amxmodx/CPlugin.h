@@ -36,7 +36,8 @@
 // class CPluginMngr
 // *****************************************************
 
-enum {
+enum
+{
 	ps_bad_load,
 	ps_error,
 	ps_locked,
@@ -47,7 +48,6 @@ enum {
 
 class CPluginMngr
 {
-
 public:
 
 	class iterator;
@@ -70,12 +70,10 @@ public:
 		int status;
 		CPlugin* next;
 		int id;
-		CPlugin(int i , const char* p,const char* n, char* e, int d);
-		~CPlugin( );
+		CPlugin(int i, const char* p, const char* n, char* e, int d);
+		~CPlugin();
 		bool m_Debug;
-
 	public:
-
 		inline const char* getName() { return name.c_str();}
 		inline const char* getVersion() { return version.c_str();}
 		inline const char* getTitle() { return title.c_str();}
@@ -85,19 +83,19 @@ public:
 		inline int getId() const { return id; }
 		inline AMX* getAMX() { return &amx; }
 		inline const AMX* getAMX() const { return &amx; }
-		inline void setTitle( const char* n ) { title.assign(n); }
-		inline void setAuthor( const char* n ) { author.assign(n); }
-		inline void setVersion( const char* n ) { version.assign(n); }
-		inline void setError( const char* n ) { errorMsg.assign(n); }
+		inline void setTitle(const char* n) { title.assign(n); }
+		inline void setAuthor(const char* n) { author.assign(n); }
+		inline void setVersion(const char* n) { version.assign(n); }
+		inline void setError(const char* n) { errorMsg.assign(n); }
 		inline bool isValid() const { return (status >= ps_paused); }
-		inline bool isPaused() const { return ( (status == ps_paused) || (status == ps_stopped) ); }
+		inline bool isPaused() const { return ((status == ps_paused) || (status == ps_stopped)); }
 		inline bool isExecutable(int id) const { return (isValid() && !isPaused());	}
 		void Finalize();
 		void pausePlugin();
 		void unpausePlugin();
-		void pauseFunction( int id );
-		void unpauseFunction( int id );
-		void setStatus( int a   );
+		void pauseFunction(int id);
+		void unpauseFunction(int id);
+		void setStatus(int a);
 		const char* getStatus() const;
 		inline bool isDebug() const { return m_Debug; }
 	}; 
@@ -105,8 +103,6 @@ public:
 private:	
 	CPlugin *head;
 	int pCounter;
-
-
 public:
 	CPluginMngr() { head = 0; pCounter = 0; pNatives = NULL; m_Finalized=false;}
 	~CPluginMngr() { clear(); }
@@ -117,8 +113,8 @@ public:
 	// Interface
 
 	CPlugin* loadPlugin(const char* path, const char* name, char* error, int debug);
-	void unloadPlugin( CPlugin** a );
-	int loadPluginsFromFile( const char* filename );
+	void unloadPlugin(CPlugin** a);
+	int loadPluginsFromFile(const char* filename);
 	CPlugin* findPluginFast(AMX *amx);
 	CPlugin* findPlugin(AMX *amx);
 	CPlugin* findPlugin(int index);
@@ -127,7 +123,8 @@ public:
 	void Finalize();
 	void clear();
 
-	class iterator {
+	class iterator
+	{
 		CPlugin *a;
 	public:
 		iterator(CPlugin*aa) : a(aa) {}
@@ -137,10 +134,9 @@ public:
 		operator bool () const { return a ? true : false; }
 		CPlugin& operator*() { return *a; }
 	};
+	
 	inline iterator begin() const { return iterator(head); }
 	inline iterator end() const { return iterator(0); }
 };
 
-#endif
-
-
+#endif //PLUGIN_H

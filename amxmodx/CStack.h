@@ -43,27 +43,32 @@ public:
 		T item;
 		CStackItem *prev;
 	};
+
 public:
 	CStack()
 	{
 		mSize = 0;
 		mStack = NULL;
 	}
+	
 	~CStack()
 	{
 		CStackItem *p, *t;
 		p = mStack;
+		
 		while (p)
 		{
 			t = p->prev;
 			delete p;
 			p = t;
 		}
+		
 		mStack = NULL;
 	}
+	
 	bool empty()
 	{
-		return (mSize==0);
+		return (mSize == 0);
 	}
 
 	void push(const T & v)
@@ -98,4 +103,3 @@ private:
 };
 
 #endif //_INCLUDE_CQUEUE_H
-

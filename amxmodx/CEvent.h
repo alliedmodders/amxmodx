@@ -34,7 +34,8 @@
 
 #define MAX_AMX_REG_MSG MAX_REG_MSGS+16
  
-enum {
+enum
+{
 	CS_DEATHMSG = MAX_REG_MSGS,
 //	CS_ROUNDEND,
 //	CS_ROUNDSTART,
@@ -67,7 +68,7 @@ public:
 
 	class ClEvent
 	{
-		friend class EventsMngr;		// events manager may access our private members
+		friend class EventsMngr;				// events manager may access our private members
 
 		int m_Func;								// function to be executed
 		CPluginMngr::CPlugin *m_Plugin;			// the plugin this ClEvent class is assigned to
@@ -100,7 +101,7 @@ public:
 
 	public:
 		// constructors & destructors
-		ClEvent(CPluginMngr::CPlugin* plugin,  int func, int flags);
+		ClEvent(CPluginMngr::CPlugin* plugin, int func, int flags);
 		~ClEvent();
 
 		inline CPluginMngr::CPlugin* getPlugin();
@@ -116,21 +117,22 @@ private:
 		const char* sValue;
 		MsgParamType type;
 	};
+
 	MsgDataEntry *m_ParseVault;
 	int m_ParseVaultSize;
-	void NextParam();				// make sure a new parameter can be added
+	void NextParam();			// make sure a new parameter can be added
 
 	typedef CList<ClEvent> ClEventVec;
 	typedef ClEventVec::iterator ClEventVecIter;
 
 	ClEventVec m_Events[MAX_AMX_REG_MSG];
-	ClEventVec *m_ParseFun;	// current Event vector
+	ClEventVec *m_ParseFun;		// current Event vector
 
 	bool m_ParseNotDone;
 	int m_ParsePos;				// is args. num. - 1
 	float* m_Timer;
 	
-	ClEvent* getValidEvent(ClEvent* a );
+	ClEvent* getValidEvent(ClEvent* a);
 
 	int m_CurrentMsgType;
 public:
@@ -145,15 +147,13 @@ public:
 	void parseValue(float fValue);
 	void parseValue(const char *sz);
 	void executeEvents();
-	int getArgNum() const; //{ return (parsePos+1); }
+	int getArgNum() const;		//{ return (parsePos+1); }
 	const char* getArgString(int a) const;
 	int getArgInteger(int a) const;
 	float getArgFloat(int a) const;
 	void clearEvents(void);
-	static int getEventId( const char* msg );
+	static int getEventId(const char* msg);
 	int getCurrentMsgType();
 };
 
-#endif // #ifdef __CEVENTS_H__
-
-
+#endif //__CEVENTS_H__

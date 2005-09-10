@@ -54,19 +54,19 @@ private:
 		// execution
 		float m_fNextExecTime;
 	public:
-		 void set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, int iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat, float fCurrentTime);
-		 void clear();
-		 bool isFree() const;
+		void set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, int iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat, float fCurrentTime);
+		void clear();
+		bool isFree() const;
 
-		 CPluginMngr::CPlugin *getPlugin() const;
-		 int getTaskId() const;
+		CPluginMngr::CPlugin *getPlugin() const;
+		int getTaskId() const;
 
-		 void executeIfRequired(float fCurrentTime, float fTimeLimit, float fTimeLeft);	// also removes the task if needed
+		void executeIfRequired(float fCurrentTime, float fTimeLimit, float fTimeLeft);	// also removes the task if needed
 
-		 void changeBase(float fNewBase);
-		 void resetNextExecTime(float fCurrentTime);
+		void changeBase(float fNewBase);
+		void resetNextExecTime(float fCurrentTime);
 
-		 bool shouldRepeat();
+		bool shouldRepeat();
 
 		CTask();
 		~CTask();
@@ -91,9 +91,8 @@ private:
 			if (right.m_bFree)
 				return left.isFree();
 			
-			return !left.isFree() &&
-				(right.m_pAmx ? left.getPlugin()->getAMX() == right.m_pAmx : true) &&
-				left.getTaskId() == right.m_iId;
+			return !left.isFree() && (right.m_pAmx ? left.getPlugin()->getAMX() == right.m_pAmx : true) &&
+					left.getTaskId() == right.m_iId;
 		}
 	};
 
@@ -110,13 +109,11 @@ public:
 
 	void registerTimers(float *pCurrentTime, float *pTimeLimit, float *pTimeLeft);	// The timers will always point to the right value
 	void registerTask(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, int iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat);
-	int removeTasks(int iId, AMX *pAmx);	// remove all tasks that match the id and amx
-	int changeTasks(int iId, AMX *pAmx, float fNewBase);	// change all tasks that match the id and amx
+	int removeTasks(int iId, AMX *pAmx);											// remove all tasks that match the id and amx
+	int changeTasks(int iId, AMX *pAmx, float fNewBase);							// change all tasks that match the id and amx
 	bool taskExists(int iId, AMX *pAmx);
 	void startFrame();
 	void clear();
 };
 
-#endif
-
-
+#endif //CTASK_H

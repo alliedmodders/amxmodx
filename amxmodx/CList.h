@@ -35,6 +35,7 @@
 // *****************************************************
 // class CList
 // *****************************************************
+
 // Linked list
 template <typename T, typename F = char* >
 class CList
@@ -162,6 +163,7 @@ public:
 		{
 			iterator tmp(*this);
 			m_CurPos = m_CurPos->next;
+			
 			return tmp;
 		}
 
@@ -176,6 +178,7 @@ public:
 		{
 			return m_pList->remove(*this);
 		}
+		
 		iterator put(T *obj)
 		{
 			return m_pList->put(obj, *this);
@@ -187,6 +190,7 @@ public:
 		m_pHead = NULL;
 		m_pTail = NULL;
 	}
+	
 	~CList<T,F>()
 	{
 		clear();
@@ -198,12 +202,15 @@ public:
 	iterator remove(iterator &where)
 	{
 		iterator tmp(where.GetNext());
+		
 		if (where.m_CurPos == m_pHead)
 			m_pHead = where.m_CurPos->GetNext();
 		if (where.m_CurPos == m_pTail)
 			m_pTail = where.m_CurPos->GetPrev();
+		
 		delete where.m_CurPos;
 		where = tmp;
+		
 		return tmp;
 	}
 
@@ -212,36 +219,36 @@ public:
 	iterator put_back(T *pObj)
 	{
 		CElement *pTmp = new CElement(pObj);
+		
 		if (!m_pHead)
 		{
 			m_pHead = pTmp;
 			m_pTail = pTmp;
-		}
-		else
-		{
+		} else {
 			pTmp->SetNext(NULL);
 			pTmp->SetPrev(m_pTail);
 			m_pTail->SetNext(pTmp);
 			m_pTail = pTmp;
 		}
+		
 		return iterator(this, pTmp);
 	}
 
 	iterator put_front(T *pObj)
 	{
 		CElement *pTmp = new CElement(pObj);
+		
 		if (!m_pHead)
 		{
 			m_pHead = pTmp;
 			m_pTail = pTmp;
-		}
-		else
-		{
+		} else {
 			pTmp->SetNext(m_pHead);
 			pTmp->SetPrev(NULL);
 			m_pHead->SetPrev(pTmp);
 			m_pHead = pTmp;
 		}
+		
 		return iterator(this, pTmp);
 	}
 
@@ -257,6 +264,7 @@ public:
 	iterator put(T *pObj, iterator &where)
 	{
 		CElement *pTmp = new CElement(pObj);
+		
 		if (where.m_CurPos->GetNext())
 			where.m_CurPos->GetNext()->SetPrev(pTmp);
 		else		// where = tail
@@ -266,6 +274,7 @@ public:
 		pTmp->SetNext(where.m_CurPos->GetNext());
 
 		where.m_CurPos->SetNext(pTmp);
+		
 		return ++where;
 	}
 
@@ -289,6 +298,7 @@ public:
 				break;
 			++iter;
 		}
+		
 		return iter;
 	}
 
@@ -300,14 +310,16 @@ public:
 	int size()
 	{
 		iterator iter = begin();
-		int i=0;
+		int i = 0;
+		
 		while (iter)
 		{
 			++i;
 			++iter;
 		}
+		
 		return i;
 	}
 };
-#endif
 
+#endif //CLIST_H

@@ -79,6 +79,7 @@ class CLangMngr
 		{
 			return strcmp(left.m_LanguageName, right)==0 ? true : false;
 		}
+		
 		// Get language name
 		const char *GetName() { return m_LanguageName; }
 		// Save to file
@@ -91,8 +92,8 @@ class CLangMngr
 		int Entries() { return m_LookUpTable.size(); }
 		// Make a hash from a string; convert to lowercase first if needed
 		static uint32_t MakeHash(const char *src, bool makeLower = false);
+	
 	protected:
-
 		// An entry in the language
 		class LangEntry
 		{
@@ -145,7 +146,7 @@ class CLangMngr
 	// Merge definitions into a language
 	void MergeDefinitions(const char *lang, CQueue <sKeyDef*> &tmpVec);
 	// strip lowercase; make lower if needed
-	static size_t strip(char *str, char *newstr, bool makelower=false);
+	static size_t strip(char *str, char *newstr, bool makelower = false);
 
 	typedef CVector<CLang*> LangVec;
 	typedef CVector<CLang*>::iterator LangVecIter;

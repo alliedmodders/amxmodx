@@ -41,53 +41,50 @@
 
 class Vault
 {
-  struct Obj
-  {
-	String key;
-	String value;
-	int number;
-    Obj *next;
-	Obj( const char* k,  const char* v);
-  } *head;
+	struct Obj
+	{
+		String key;
+		String value;
+		int number;
+		Obj *next;
+		Obj(const char* k, const char* v);
+	} *head;
 
-  String path;
+	String path;
 
-  Obj** find( const char* n );
+	Obj** find(const char* n);
 
 public:
 
-  Vault() {head=0;}
-  ~Vault() { clear();}
+	Vault() {head=0;}
+	~Vault() { clear();}
 
 	// Interface
 
-  bool exists( const char* k );
-  void put(const char* k, const char* v);
-  void remove( const char* k );
-  const char* get( const char* n );
-  int get_number( const char* n );
-  void setSource( const char* n );
-  bool loadVault( );
-  bool saveVault( );
-  void clear();
+	bool exists(const char* k);
+	void put(const char* k, const char* v);
+	void remove(const char* k);
+	const char* get(const char* n);
+	int get_number(const char* n);
+	void setSource(const char* n);
+	bool loadVault();
+	bool saveVault();
+	void clear();
 
+	class iterator
+	{
+		Obj * a;
+	public:
+		iterator(Obj* aa) : a(aa) {}
+		iterator& operator++() { if (a) a = a->next; return *this; }
+		bool operator==(const iterator& b) const { return a == b.a; }
+		bool operator!=(const iterator& b) const { return !operator==(b); }
+		String& key() const { return a->key; }
+		String& value() const { return a->value; }
+	};
 
-  class iterator {
-	Obj * a;
-  public:
-	iterator(Obj*aa) : a(aa) {}
-	iterator& operator++() { if ( a ) a = a->next; return *this; }
-	bool operator==(const iterator& b) const { return a == b.a; }
-	bool operator!=(const iterator& b) const { return !operator==(b); }
-	String& key() const { return a->key; }
-	String& value() const { return a->value; }
-  };
-
-  inline iterator begin() const { return iterator(head); }
-  inline iterator end() const { return iterator(0); }
+	inline iterator begin() const { return iterator(head); }
+	inline iterator end() const { return iterator(0); }
 };
 
-#endif
-
-
-
+#endif //VAULT_CUSTOM_H

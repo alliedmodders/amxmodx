@@ -802,13 +802,14 @@ native query_client_cvar(id, const cvar[], const resultFunc[], paramlen=0, const
  * Allows you to trap error messages that occur in your plugin.  
  * You can use this to override the debug messages that occur when your plugin
  *  causes some sort of runtime error.  Your handler will be called in this style:
+ *
  * public error_filter(error_code, bool:debugging, message[])
  *    error_code is the AMX_ERR code.  debugging is whether or not the plugin is in debug mode.
  *    message[] is any message that was sent along with the error.
  * Return PLUGIN_CONTINUE to let the error pass through the filter.
  * Return PLUGIN_HANDLED to block the error from displaying.
  */
-native set_error_filter(consthandler[]);
+native set_error_filter(const handler[]);
 
 /**
  * Gets a trace handle for the item at the top of the traced call stack.
@@ -830,3 +831,28 @@ native dbg_trace_info(trace, &line, function[], maxLength1, file[], maxLength2);
  * Gets the formatted error string, which looks like "Run time error X: (description)"
  */
 native dbg_fmt_error(buffer[], maxLength);
+
+/**
+ * Sets a native filter.  This must be first set in plugin_natives(), but future calls will
+ *  simply set a new filter.
+ * This filter will allow your plugin to load even if its modules aren't loaded.  For example,
+ *  if Fun isn't loaded and you use set_user_frags, your plugin will still load.  However, if you 
+ *  attempt to call this native, your filter will intercept it with these parameters:
+ *
+ * public function native_filter(native[], index)
+ *  native - name of native
+ *  index - index of native
+ * 
+ * If you return PLUGIN_HANDLED, no error is thrown.  If you return PLUGIN_CONTINUE, 
+ *  your plugin will have a run-time-error.  You can throw your own error with abort().
+ */
+native set_native_filter(const handler[]);
+
+/**
+ * Aborts execution of the current callback.  Your script will throw a run time error.
+ * You can also specify an optional message.
+ * You should NOT call this function inside:
+ *  - Error, native, or module filters
+ *  - plugin_natives()
+ */
+native abort(error, const fmt[]="", {Float,_}:...);

@@ -33,7 +33,7 @@
 #include "debugger.h"
 
 #if !defined WIN32 && !defined _WIN32
-#define _snprintf sprintf
+#define _snprintf snprintf
 #endif
 
 /**

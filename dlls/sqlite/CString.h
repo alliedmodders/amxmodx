@@ -32,6 +32,9 @@
 #ifndef _INCLUDE_CSTRING_H
 #define _INCLUDE_CSTRING_H
 
+#include <string.h>
+#include <stdio.h>
+
 //by David "BAILOPAN" Anderson
 class String
 {
@@ -39,10 +42,8 @@ public:
 	String() 
 	{
 		v = NULL;
-		mSize = 0;
-		cSize = 0;
-		Grow(2);
-		assign("");
+		a_size = 0;
+		//assign("");
 	}
 
 	~String()
@@ -54,41 +55,45 @@ public:
 	String(const char *src) 
 	{
 		v = NULL; 
-		mSize = 0; 
-		cSize = 0; assign(src); 
+		a_size = 0;
+		assign(src); 
+	}
+
+	const char * _fread(FILE *fp) 	 
+	{ 	 
+		Grow(512, false); 	 
+		char *ret = fgets(v, 511, fp); 	 
+		return ret; 	 
 	}
 
 	String(String &src) 
 	{
 		v = NULL;
-		mSize = 0;
-		cSize = 0;
+		a_size = 0;
 		assign(src.c_str()); 
 	}
 
 	const char *c_str() { return v?v:""; }
+
 	const char *c_str() const { return v?v:""; }
 
 	void append(const char *t)
 	{
-		Grow(cSize + strlen(t) + 1);
+		Grow(size() + strlen(t) + 1);
 		strcat(v, t);
-		cSize = strlen(v);
 	}
 
 	void append(const char c)
 	{
-		Grow(cSize + 2);
-		v[cSize] = c;
-		v[++cSize] = 0;
+		size_t len = size();
+		Grow(len + 2);
+		v[len] = c;
+		v[len + 1] = '\0';
 	}
 
 	void append(String &d)
 	{
-		const char *t = d.c_str();
-		Grow(cSize + strlen(t));
-		strcat(v, t);
-		cSize = strlen(v);
+		append(d.c_str());
 	}
 
 	void assign(const String &src)
@@ -100,79 +105,56 @@ public:
 	{
 		if (!d)
 		{
-			Grow(1);
-			cSize = 0;
-			strcpy(v, "");
-			return;
-		}
-		Grow(strlen(d));
-		if (v)
-		{
-			strcpy(v, d);
-			cSize = strlen(v);
+			clear();
 		} else {
-			cSize = 0;
+			Grow(strlen(d) + 1, false);
+			strcpy(v, d);
 		}
 	}
 
 	void clear()
 	{
 		if (v)
-		{
-			v[0] = 0;
-			cSize = 0;
-		}
+			v[0] = '\0';
 	}
 
 	int compare (const char *d)
 	{
-		if (v) {
-			if (d) {
-				return strcmp(v, d);
-			} else {
-				return strlen(v);
-			}
-		} else {
-			if (d) {
-				return strlen(d);
-			} else {
-				return 0;
-			}
-		}
+		if (!v)
+			return strcmp("", d);
+		else
+			return strcmp(v, d);
 	}
 
 	//Added this for amxx inclusion
 	bool empty()
 	{
-		if (!v || !cSize)
+		if (!v)
+			return true;
+
+		if (v[0] == '\0')
 			return true;
 
 		return false;
 	}
 
-	int size()
+	size_t size()
 	{
-		if (!v)
+		if (v)
+			return strlen(v);
+		else
 			return 0;
-		return cSize;
-	}
-
-	const char * _fread(FILE *fp)
-	{
-		Grow(512);
-		char * ret = fgets(v, 511, fp);
-		cSize = strlen(v);
-		return ret;
 	}
 
 	int find(const char c, int index = 0)
 	{
-		if (!v)
+		size_t len = size();
+		if (len < 1)
 			return npos;
-		if (index >= (int)cSize || index < 0)
+		if (index >= (int)len || index < 0)
 			return npos;
 		unsigned int i = 0;
-		for (i=index; i<cSize; i++)
+		for (i=index; i<(int)len; i++)
 		{
 			if (v[i] == c)
 			{
@@ -199,10 +181,12 @@ public:
 	{
 		if (!v)
 			return;
+
 		unsigned int i = 0;
 		unsigned int j = 0;
+		size_t len = strlen(v);
 
-		if (cSize == 1)
+		if (len == 1)
 		{
 			if (is_space(v[i]))
 			{
@@ -215,9 +199,9 @@ public:
 
 		if (is_space(c0))
 		{
-			for (i=0; i<cSize; i++)
+			for (i=0; i<len; i++)
 			{
-				if (!is_space(v[i]) || (is_space(v[i]) && ((unsigned char)i==cSize-1)))
+				if (!is_space(v[i]) || (is_space(v[i]) && ((unsigned char)i==len-1)))
 				{
 					erase(0, i);
 					break;
@@ -225,16 +209,16 @@ public:
 			}
 		}
 
-		cSize = strlen(v);
+		len = strlen(v);
 
-		if (cSize < 1)
+		if (len < 1)
 		{
 			return;
 		}
 
-		if (is_space(v[cSize-1]))
+		if (is_space(v[len-1]))
 		{
-			for (i=cSize-1; i>=0; i--)
+			for (i=len-1; i>=0; i--)
 			{
 				if (!is_space(v[i])
 					|| (is_space(v[i]) && i==0))
@@ -246,7 +230,7 @@ public:
 			}
 		}
 
-		if (cSize == 1)
+		if (len == 1)
 		{
 			if (is_space(v[0]))
 			{
@@ -256,21 +240,22 @@ public:
 		}
 	}
 
-	String & erase(unsigned int start, int num = npos)
+	void erase(unsigned int start, int num = npos)
 	{
 		if (!v)
-			return (*this);
+			return;
 		unsigned int i = 0;
+		size_t len = size();
 		//check for bounds
-		if (num == npos || start+num > cSize-num+1)
-			num = cSize - start;
+		if (num == npos || start+num > len-num+1)
+			num = len - start;
 		//do the erasing
 		bool copyflag = false;
-		for (i=0; i<cSize; i++)
+		for (i=0; i<len; i++)
 		{
 			if (i>=start && i<start+num)
 			{
-				if (i+num < cSize)
+				if (i+num < len)
 				{	
 					v[i] = v[i+num];
 				} else {
@@ -278,7 +263,7 @@ public:
 				}
 				copyflag = true;
 			} else if (copyflag) {
-				if (i+num < cSize)
+				if (i+num < len)
 				{
 					v[i] = v[i+num];
 				} else {
@@ -286,38 +271,39 @@ public:
 				}
 			}
 		}
-		cSize -= num;
-		v[cSize] = 0;
-
-		return (*this);
+		len -= num;
+		v[len] = 0;
 	}
 
 	String substr(unsigned int index, int num = npos)
 	{
+		if (!v)
+		{
+			String b("");
+			return b;
+		}
+
 		String ns;
 
-		if (index >= cSize || !v)
+		size_t len = size();
+
+		if (index >= len || !v)
 			return ns;
 		
 		if (num == npos)
 		{
-			num = cSize - index;
-		} else if (index+num >= cSize) {
-			num = cSize - index;
+			num = len - index;
+		} else if (index+num >= len) {
+			num = len - index;
 		}
 
 		unsigned int i = 0, j=0;
-		char *s = new char[cSize+1];
+		unsigned int nslen = num + 2;
+
+		ns.Grow(nslen);
 
 		for (i=index; i<index+num; i++)
-		{
-			s[j++] = v[i];
-		}
-		s[j] = 0;
-
-		ns.assign(s);
-
-		delete [] s;
+			ns.append(v[i]);
 
 		return ns;
 	}
@@ -327,10 +313,11 @@ public:
 		if (!v)
 			return;
 		unsigned int i = 0;
-		for (i=0; i<cSize; i++)
+		size_t len = strlen(v);
+		for (i=0; i<len; i++)
 		{
 			if (v[i] >= 65 && v[i] <= 90)
-				v[i] |= 32;
+				v[i] &= ~(1<<5);
 		}
 	}
 
@@ -349,7 +336,7 @@ public:
 
 	char operator [] (unsigned int index)
 	{
-		if (index > cSize)
+		if (index > size() || !v)
 		{
 			return -1;
 		} else {
@@ -359,7 +346,7 @@ public:
 
 	int at(int a)
 	{
-		if (a < 0 || a >= (int)cSize)
+		if (a < 0 || a >= (int)size() || !v)
 			return -1;
 
 		return v[a];
@@ -367,7 +354,7 @@ public:
 
 	bool at(int at, char c)
 	{
-		if (at < 0 || at >= (int)cSize)
+		if (at < 0 || at >= (int)size() || !v)
 			return false;
 
 		v[at] = c;
@@ -376,27 +363,23 @@ public:
 	}
 
 private:
-	void Grow(unsigned int d)
+	void Grow(unsigned int d, bool copy=true)
 	{
-		if (d<1)
+		if (d <= a_size)
 			return;
-		if (d > mSize)
-		{
-			mSize = d + 16;	// allocate a buffer
-			char *t = new char[d+1];
-			if (v) {
-				strcpy(t, v);
-				t[cSize] = 0;
-				delete [] v;
-			}
-			v = t;
-			mSize = d;
-		}
+		char *n = new char[d + 1];
+		if (copy && v)
+			strcpy(n, v);
+		if (v)
+			delete [] v;
+		else
+			strcpy(n, "");			
+		v = n;
+		a_size = d + 1;
 	}
 
 	char *v;
-	unsigned int mSize;
-	unsigned int cSize;
+	unsigned int a_size;
 public:
 	static const int npos = -1;
 };

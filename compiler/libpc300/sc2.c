@@ -1508,12 +1508,12 @@ static int substpattern(unsigned char *line,size_t buffersize,char *pattern,char
       if (*e=='%' && isdigit(*(e+1)) && argsnum) {
         arg=*(e+1)-'0';
         assert(arg>=0 && arg<=9);
-		if (args[arg]!=NULL) {
+        if (args[arg]!=NULL) {
           len+=strlen((char*)args[arg]);
           e++;          /* skip %, digit is skipped later */
-		} else {
+        } else {
           len++;
-		}
+        }
       } else {
         len++;
       } /* if */

@@ -157,7 +157,7 @@ size_t CLangMngr::strip(char *str, char *newstr, bool makelower)
 	int flag = 0;
 	size_t strln = strlen(str);
 
-	for (i=strln-1; i>=0; i--)
+	for (i = strln - 1; i >= 0; i--)
 	{
 		if (str[i] == '\n' || str[i] == ' ' || str[i] == '\t')
 		{
@@ -184,6 +184,7 @@ size_t CLangMngr::strip(char *str, char *newstr, bool makelower)
 	}
 
 	newstr[pos] = 0;
+	
 	return ptr - str + 1;
 }
 
@@ -300,11 +301,12 @@ CLangMngr::CLang::~CLang()
 
 void CLangMngr::CLang::Clear()
 {
-	for (unsigned int i=0; i<m_LookUpTable.size(); i++)
+	for (unsigned int i = 0; i < m_LookUpTable.size(); i++)
 	{
 		if (m_LookUpTable[i])
 			delete m_LookUpTable[i];
 	}
+	
 	m_LookUpTable.clear();
 }
 
@@ -312,7 +314,7 @@ CLangMngr::CLang::LangEntry * CLangMngr::CLang::GetEntry(int pkey)
 {
 	unsigned int i;
 	
-	for (i=0; i<m_LookUpTable.size(); i++)
+	for (i = 0; i < m_LookUpTable.size(); i++)
 	{
 		if (m_LookUpTable[i]->GetKey() == pkey)
 		{
@@ -332,11 +334,13 @@ void CLangMngr::CLang::MergeDefinitions(CQueue<sKeyDef*> &vec)
 {
 	const char *def = 0;
 	int key = -1;
+	
 	while (!vec.empty())
 	{
 		key = vec.front()->key;
 		def = vec.front()->def->c_str();
 		LangEntry *entry = GetEntry(key);
+		
 		if (entry->GetDefHash() != MakeHash(def))
 		{
 			if (entry->GetCache())
@@ -348,6 +352,7 @@ void CLangMngr::CLang::MergeDefinitions(CQueue<sKeyDef*> &vec)
 				//AMXXLOG_Log("[AMXX] Language key %s[%s] defined twice", m_LMan->GetKey(key), m_LanguageName);
 			}
 		}
+		
 		delete vec.front();
 		vec.pop();
 	}
@@ -357,19 +362,21 @@ const char * CLangMngr::CLang::GetDef(const char *key)
 {
 	static char nfind[1024] = "ML_NOTFOUND(KEY)";
 	int ikey = m_LMan->GetKeyEntry(key);
+	
 	if (ikey == -1)
 	{
 		sprintf(nfind, "ML_NOTFOUND: %s", key);
 		return nfind;
 	}
-	for (unsigned int i = 0; i<m_LookUpTable.size(); i++)
+	
+	for (unsigned int i = 0; i < m_LookUpTable.size(); i++)
 	{
 		if (m_LookUpTable[i]->GetKey() == ikey)
 			return m_LookUpTable[i]->GetDef();
 	}
+	
 	return NULL;
 }
-
 
 struct OffsetPair
 {
@@ -381,7 +388,8 @@ struct OffsetPair
 bool CLangMngr::CLang::SaveDefinitions(FILE *fp, uint32_t &curOffset)
 {
 	unsigned short defLen = 0;
-	for (unsigned int i = 0; i<m_LookUpTable.size(); i++)
+	
+	for (unsigned int i = 0; i < m_LookUpTable.size(); i++)
 	{
 		defLen = m_LookUpTable[i]->GetDefLength();
 		fwrite((void *)&defLen, sizeof(unsigned short), 1, fp);
@@ -403,7 +411,7 @@ bool CLangMngr::CLang::Save(FILE *fp, int &defOffset, uint32_t &curOffset)
 	fwrite((void*)&size, sizeof(uint32_t), 1, fp);
 	curOffset += sizeof(uint32_t);
 
-	for (unsigned int i = 0; i<m_LookUpTable.size(); i++)
+	for (unsigned int i = 0; i < m_LookUpTable.size(); i++)
 	{
 		keynum = m_LookUpTable[i]->GetKey();
 		defhash = m_LookUpTable[i]->GetDefHash();
@@ -423,7 +431,6 @@ bool CLangMngr::CLang::Save(FILE *fp, int &defOffset, uint32_t &curOffset)
 // assumes fp is set to the right position
 bool CLangMngr::CLang::Load(FILE *fp)
 {
-
 	return true;
 }
 
@@ -461,9 +468,10 @@ int CLangMngr::GetKeyEntry(const char *key)
 		return -1;
 	}
 
-	for (i = 0; i<KeyList.size(); i++)
+	for (i = 0; i < KeyList.size(); i++)
 	{
 		cmpKey = KeyList[i]->hash;
+		
 		if (hKey == cmpKey)
 		{
 			return i;
@@ -490,7 +498,7 @@ int CLangMngr::GetKeyEntry(String &key)
 	uint32_t hKey = MakeHash(key.c_str(), true);
 	unsigned int i = 0;
 
-	for (i = 0; i<KeyList.size(); i++)
+	for (i = 0; i < KeyList.size(); i++)
 	{
 		if (hKey == KeyList[i]->hash)
 		{
@@ -521,6 +529,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 {
 	// number of parameters ( for NEXT_PARAM macro )
 	int paramCount = *params / sizeof(cell);
+	
 	// the output buffer
 	static char outbuf[4096];
 	char *outptr = outbuf;
@@ -531,13 +540,14 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 		if (*src == '%')
 		{
 			++src;
-			if (*src=='L')
+			if (*src == 'L')
 			{
 				cell langName = params[parm];		// "en" case (langName contains the address to the string)
 				NEXT_PARAM();
 				cell *pAmxLangName = get_amxaddr(amx, params[parm++]);	// other cases
 				const char *cpLangName=NULL;
 				// Handle player ids (1-32) and server language
+				
 				if (*pAmxLangName == LANG_PLAYER)	// LANG_PLAYER
 				{
 					if ((int)CVAR_GET_FLOAT("amx_client_languages") == 0)
@@ -546,9 +556,11 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 					} else {
 						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(m_CurGlobId)->pEdict, "lang");
 					}
-				} else if (*pAmxLangName == LANG_SERVER) {	// LANG_SERVER
+				} else if (*pAmxLangName == LANG_SERVER) // LANG_SERVER
+				{
 					cpLangName = g_vault.get("server_language");
-				} else if (*pAmxLangName >= 1 && *pAmxLangName <= 32) {	// Direct Client Id
+				} else if (*pAmxLangName >= 1 && *pAmxLangName <= 32) // Direct Client Id
+				{
 					if ((int)CVAR_GET_FLOAT("amx_client_languages") == 0)
 					{
 						cpLangName = g_vault.get("server_language");
@@ -559,12 +571,15 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 					int tmplen = 0;
 					cpLangName = get_amxstring(amx, langName, 2, tmplen);
 				}
+				
 				if (!cpLangName || strlen(cpLangName) < 1)
 					cpLangName = "en";
+				
 				int tmplen = 0;
 				NEXT_PARAM();
 				char *key = get_amxstring(amx, params[parm++], 1, tmplen);
 				const char *def = GetDef(cpLangName, key);
+				
 				if (def == NULL)
 				{
 					if (*pAmxLangName != LANG_SERVER)
@@ -583,6 +598,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 						def = buf;
 					}
 				}
+				
 				while (*def)
 				{
 					if (*def == '%')
@@ -592,9 +608,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 						{
 							*outptr++ = '%';
 							++def;
-						}
-						else
-						{
+						} else {
 							static char format[32];
 							format[0] = '%';
 							char *ptr = format+1;
@@ -604,88 +618,89 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 							ZEROTERM(format);
 
 							*ptr = 0;
-							switch ( *(ptr-1) )
+							
+							switch (*(ptr - 1))
 							{
-							case 's':
+								case 's':
 								{
 									static char tmpString[4096];
 									char *tmpPtr = tmpString;
 									NEXT_PARAM();
 									cell *tmpCell = get_amxaddr(amx, params[parm++]);
 									while (tmpPtr-tmpString < sizeof(tmpString) && *tmpCell)
-										*tmpPtr++ = static_cast<char>(*tmpCell++);
-
+											*tmpPtr++ = static_cast<char>(*tmpCell++);
+	
 									*tmpPtr = 0;
 									_snprintf(outptr, sizeof(outbuf)-(outptr-outbuf)-1, format, tmpString);
 									ZEROTERM(outbuf);
 									break;
 								}
-							case 'g':
-							case 'f':
+								case 'g':
+								case 'f':
 								{
 									NEXT_PARAM();
 									_snprintf(outptr, sizeof(outbuf)-(outptr-outbuf)-1, format, *(REAL*)get_amxaddr(amx, params[parm++]));
 									ZEROTERM(outbuf);
 									break;
 								}
-							case 'i':
-							case 'd':
-							case 'c':
+								case 'i':
+								case 'd':
+								case 'c':
 								{
 									NEXT_PARAM();
 									_snprintf(outptr, sizeof(outbuf)-(outptr-outbuf)-1, format, (int)*get_amxaddr(amx, params[parm++]));
 									ZEROTERM(outbuf);
 									break;
 								}
-							default:
+								default:
 								{
 									CHECK_OUTPTR(strlen(format)+1);
-									strcpy(outptr, format);
+									strcpy(outptr, format);	
 									break;
 								}
 							}
+							
 							outptr += strlen(outptr);
 						}
 					}
 					else if (*def == '^')
 					{
 						++def;
+						
 						switch (*def)
 						{
-						case 'n':
-							CHECK_OUTPTR(1);
-							*outptr++ = '\n';
-							break;
-						case 't':
-							CHECK_OUTPTR(1);
-							*outptr++ = '\t';
-							break;
-						case '^':
-							CHECK_OUTPTR(1);
-							*outptr++ = '^';
-							break;
-						default:
-							CHECK_OUTPTR(2);
-							*outptr++ = '^';
-							*outptr++ = *def;
-							break;
+							case 'n':
+								CHECK_OUTPTR(1);
+								*outptr++ = '\n';
+								break;
+							case 't':
+								CHECK_OUTPTR(1);
+								*outptr++ = '\t';
+								break;
+							case '^':
+								CHECK_OUTPTR(1);
+								*outptr++ = '^';
+								break;
+							default:
+								CHECK_OUTPTR(2);
+								*outptr++ = '^';
+								*outptr++ = *def;
+								break;
 						}
+						
 						++def;
-					}
-					else
-					{
+					} else {
 						CHECK_OUTPTR(1);
 						*outptr++ = *def++;
 					}
 				}
-			}
-			else
-			{
+			} else {
 				static char tmpString[4096];
 				char *tmpPtr = tmpString;
 				int tmpLen = 0;
 				static char format[32] = {'%'};
 				char *ptr = format+1;
+				
 				if (*src != '%')
 				{
 					while (*src != 0 && ptr-format<sizeof(format) && !isalpha(*ptr++ = static_cast<char>(*src++)))
@@ -693,9 +708,10 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 					*ptr = 0;
 					ZEROTERM(format);
 					--src;
-					switch ( *(ptr-1) )
+					
+					switch (*(ptr - 1))
 					{
-					case 's':
+						case 's':
 						{
 							NEXT_PARAM();
 							cell *tmpCell = get_amxaddr(amx, params[parm++]);
@@ -706,45 +722,46 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 							ZEROTERM(outbuf);
 							break;
 						}
-					case 'g':
-					case 'f':
+						case 'g':
+						case 'f':
 						{
 							NEXT_PARAM();
 							_snprintf(outptr, sizeof(outbuf)-(outptr-outbuf)-1, format, *(REAL*)get_amxaddr(amx, params[parm++]));
 							break;
 						}
-					case 'i':
-					case 'd':
-					case 'c':
+						case 'i':
+						case 'd':
+						case 'c':
 						{
 							NEXT_PARAM();
 							_snprintf(outptr, sizeof(outbuf)-(outptr-outbuf)-1, format, (int)*get_amxaddr(amx, params[parm++]));
 							break;
 						}
-					default:
+						default:
 						{
 							CHECK_OUTPTR(strlen(format)+1);
 							strcpy(outptr, format);
 							break;
 						}
 					}
+					
 					outptr += strlen(outptr);
 				} else {
 					CHECK_OUTPTR(1);
 					*outptr++ = '%';
 				}
 			}
-		}
-		else
-		{
+		} else {
 			CHECK_OUTPTR(1);
 			*outptr++ = static_cast<char>(*src);
 		}
 		++src;
 	}
+	
 	len = outptr - outbuf;
 	CHECK_OUTPTR(1);
 	*outptr++ = 0;
+	
 	return outbuf;
 }
 
@@ -754,6 +771,7 @@ const char *CLangMngr::Format(const char *fmt, ...)
 	va_start(ap, fmt);
 	const char *retVal = FormatString(fmt, ap);
 	va_end(ap);
+	
 	return retVal;
 }
 
@@ -782,12 +800,13 @@ char *CLangMngr::FormatString(const char *fmt, va_list &ap)
 		if (*src == '%')
 		{
 			++src;
-			if (*src=='L')
+			if (*src == 'L')
 			{
 				NEXT_PARAM();
 				const char *pAmxLangName = va_arg(ap, const char*);
 				const char *cpLangName=NULL;
 				// Handle player ids (1-32) and server language
+				
 				if (pAmxLangName == (const char *)LANG_PLAYER)	// LANG_PLAYER
 				{
 					if ((int)CVAR_GET_FLOAT("amx_client_languages"))
@@ -796,9 +815,11 @@ char *CLangMngr::FormatString(const char *fmt, va_list &ap)
 					} else {
 						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(m_CurGlobId)->pEdict, "lang");
 					}
-				} else if (pAmxLangName == (const char *)LANG_SERVER) {	// LANG_SERVER
+				} else if (pAmxLangName == (const char *)LANG_SERVER) // LANG_SERVER
+				{
 					cpLangName = g_vault.get("server_language");
-				} else if (pAmxLangName >= (const char *)1 && pAmxLangName <= (const char *)32) {	// Direct Client Id
+				} else if (pAmxLangName >= (const char *)1 && pAmxLangName <= (const char *)32) // Direct Client Id
+				{
 					if ((int)CVAR_GET_FLOAT("amx_client_languages"))
 					{
 						cpLangName = g_vault.get("server_language");
@@ -809,11 +830,14 @@ char *CLangMngr::FormatString(const char *fmt, va_list &ap)
 					int tmplen = 0;
 					cpLangName = pAmxLangName;
 				}
+				
 				if (!cpLangName || strlen(cpLangName) < 1)
 					cpLangName = "en";
+				
 				int tmplen = 0;
 				const char *key = va_arg(ap, const char *);
 				const char *def = GetDef(cpLangName, key);
+				
 				if (def == NULL)
 				{
 					if (pAmxLangName != LANG_SERVER)
@@ -832,6 +856,7 @@ char *CLangMngr::FormatString(const char *fmt, va_list &ap)
 						def = buf;
 					}
 				}
+				
 				while (*def)
 				{
 					if (*def == '%')
@@ -847,8 +872,72 @@ char *CLangMngr::FormatString(const char *fmt, va_list &ap)
 						*ptr = 0;
 						vsprintf(outptr, format, ap);
 						// vsprintf doesnt alter the ap, increment here
-						switch (*(ptr-1))
+						
+						switch (*(ptr - 1))
 						{
+							case 'f':
+								va_arg(ap, double);
+								break;
+							case 's':
+								va_arg(ap, char *);
+								break;
+							case 'c':
+							case 'd':
+							case 'i':
+							default:		// default: assume int-like parameter
+								va_arg(ap, int);
+								break;
+						}
+						
+						outptr += strlen(outptr);
+					}
+					else if (*def == '^')
+					{
+						++def;
+						
+						switch (*def)
+						{
+							case 'n':
+								CHECK_OUTPTR(1);
+								*outptr++ = '\n';
+								break;
+							case 't':
+								CHECK_OUTPTR(1);
+								*outptr++ = '\t';
+								break;
+							case '^':
+								CHECK_OUTPTR(1);
+								*outptr++ = '^';
+								break;
+							default:
+								CHECK_OUTPTR(2);
+								*outptr++ = '^';
+								*outptr++ = *def;
+								break;
+						}
+						
+						++def;
+					} else {
+						CHECK_OUTPTR(1);
+						*outptr++ = *def++;
+					}
+				}
+			} else {
+				static char format[32] = {'%'};
+				char *ptr = format+1;
+				
+				if (*src != '%')
+				{
+					while (*src != 0 && ptr-format < sizeof(format) && !isalpha(*ptr++ = *src++))
+						/*nothing*/;
+					*ptr = 0;
+					ZEROTERM(format);
+					--src;
+					vsprintf(outptr, format, ap);
+					// vsprintf doesnt alter the ap, increment here
+					
+					switch (*(ptr - 1))
+					{
 						case 'f':
 							va_arg(ap, double);
 							break;
@@ -861,85 +950,24 @@ char *CLangMngr::FormatString(const char *fmt, va_list &ap)
 						default:		// default: assume int-like parameter
 							va_arg(ap, int);
 							break;
-						}
-						outptr += strlen(outptr);
 					}
-					else if (*def == '^')
-					{
-						++def;
-						switch (*def)
-						{
-						case 'n':
-							CHECK_OUTPTR(1);
-							*outptr++ = '\n';
-							break;
-						case 't':
-							CHECK_OUTPTR(1);
-							*outptr++ = '\t';
-							break;
-						case '^':
-							CHECK_OUTPTR(1);
-							*outptr++ = '^';
-							break;
-						default:
-							CHECK_OUTPTR(2);
-							*outptr++ = '^';
-							*outptr++ = *def;
-							break;
-						}
-						++def;
-					}
-					else
-					{
-						CHECK_OUTPTR(1);
-						*outptr++ = *def++;
-					}
-				}
-			}
-			else
-			{
-				static char format[32] = {'%'};
-				char *ptr = format+1;
-				if (*src != '%')
-				{
-					while (*src != 0 && ptr-format<sizeof(format) && !isalpha(*ptr++ = *src++))
-						/*nothing*/;
-					*ptr = 0;
-					ZEROTERM(format);
-					--src;
-					vsprintf(outptr, format, ap);
-					// vsprintf doesnt alter the ap, increment here
-					switch (*(ptr-1))
-					{
-					case 'f':
-						va_arg(ap, double);
-						break;
-					case 's':
-						va_arg(ap, char *);
-						break;
-					case 'c':
-					case 'd':
-					case 'i':
-					default:		// default: assume int-like parameter
-						va_arg(ap, int);
-						break;
-					}
+					
 					outptr += strlen(outptr);
 				} else {
 					CHECK_OUTPTR(1);
 					*outptr++ = '%';
 				}
 			}
-		}
-		else
-		{
+		} else {
 			CHECK_OUTPTR(1);
 			*outptr++ = *src;
 		}
 		++src;
 	}
+	
 	CHECK_OUTPTR(1);
 	*outptr++ = 0;
+	
 	return outbuf;
 }
 void CLangMngr::MergeDefinitions(const char *lang, CQueue<sKeyDef*> &tmpVec)
@@ -957,9 +985,9 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 	if (!fp)
 	{
 		CVector<md5Pair *>::iterator iter;
-		for (iter=FileList.begin(); iter!=FileList.end(); ++iter)
+		for (iter = FileList.begin(); iter != FileList.end(); ++iter)
 		{
-			if ( (*iter)->file.compare(file) == 0 )
+			if ((*iter)->file.compare(file) == 0)
 			{
 				char buf[33] = {0};
 				(*iter)->val.assign(buf);
@@ -969,19 +997,20 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 		AMXXLOG_Log("[AMXX] Failed to open dictionary file: %s", file);
 		return 0;
 	}
+	
 	MD5 md5;
-	md5.update(fp);		// closes for us
+	md5.update(fp);			// closes for us
 	md5.finalize();
 	char md5buffer[33];
 	md5.hex_digest(md5buffer);
 	bool foundFlag = false;
 	
 	CVector<md5Pair *>::iterator iter;
-	for (iter=FileList.begin(); iter!=FileList.end(); ++iter)
+	for (iter = FileList.begin(); iter != FileList.end(); ++iter)
 	{
-		if ( (*iter)->file.compare(file) == 0 )
+		if ((*iter)->file.compare(file) == 0)
 		{
-			if ( (*iter)->val.compare(md5buffer) == 0 )
+			if ((*iter)->val.compare(md5buffer) == 0)
 			{
 				return -1;
 			} else {
@@ -1022,6 +1051,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 		buf.trim();
 		if (buf[0] == 0)
 			continue;
+		
 		if (buf[0] == '[' && buf.size() >= 3)
 		{
 			if (multiline)
@@ -1031,10 +1061,12 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 					delete tmpEntry;
 				tmpEntry = 0;
 			}
+			
 			if (!Defq.empty())
 			{
 				MergeDefinitions(language, Defq);
 			}
+			
 			language[0] = buf[1];
 			language[1] = buf[2];
 			language[2] = 0;
@@ -1042,6 +1074,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 			if (!multiline)
 			{
 				pos = buf.find('=');
+				
 				if (pos > String::npos)
 				{
 					tmpEntry = new sKeyDef;
@@ -1062,6 +1095,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 					tmpEntry = 0;
 				} else {
 					pos = buf.find(':');
+					
 					if (pos > String::npos)
 					{
 						tmpEntry = new sKeyDef;
@@ -1105,9 +1139,9 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 CLangMngr::CLang * CLangMngr::GetLang(const char *name)
 {
 	LangVecIter iter;
-	for (iter=m_Languages.begin(); iter!=m_Languages.end(); ++iter)
+	for (iter = m_Languages.begin(); iter != m_Languages.end(); ++iter)
 	{
-		if ( strcmp((*iter)->GetName(), name)==0 )
+		if (strcmp((*iter)->GetName(), name) == 0)
 			return (*iter);
 	}
 
@@ -1122,9 +1156,9 @@ CLangMngr::CLang * CLangMngr::GetLang(const char *name)
 CLangMngr::CLang * CLangMngr::GetLangR(const char *name)
 {
 	LangVecIter iter;
-	for (iter=m_Languages.begin(); iter!=m_Languages.end(); ++iter)
+	for (iter = m_Languages.begin(); iter != m_Languages.end(); ++iter)
 	{
-		if ( strcmp((*iter)->GetName(), name)==0 )
+		if (strcmp((*iter)->GetName(), name) == 0)
 			return (*iter);
 	}
 
@@ -1166,7 +1200,7 @@ bool CLangMngr::Save(const char *filename)
 	curOffset += sizeof(uint32_t);
 
 	uint32_t langOffset = curOffset + ktbSize + ltbSize;
-	for (unsigned int i = 0; i<m_Languages.size(); i++)
+	for (unsigned int i = 0; i < m_Languages.size(); i++)
 	{
 		langName = m_Languages[i]->GetName();
 		fwrite(langName, sizeof(char), 2, fp);
@@ -1179,7 +1213,7 @@ bool CLangMngr::Save(const char *filename)
 	//Note - langOffset now points to the start of key lookup table
 	uint32_t keyHash = 0;
 	uint32_t keyOffset = langOffset;
-	for (unsigned int i = 0; i<KeyList.size(); i++)
+	for (unsigned int i = 0; i < KeyList.size(); i++)
 	{
 		keyHash = KeyList[i]->hash;
 		fwrite((void*)&keyHash, sizeof(uint32_t), 1, fp);
@@ -1192,7 +1226,7 @@ bool CLangMngr::Save(const char *filename)
 
 	//Note - now keyOffset points toward the start of the def table
 	int defOffset = keyOffset;
-	for (unsigned int i = 0; i<m_Languages.size(); i++)
+	for (unsigned int i = 0; i < m_Languages.size(); i++)
 	{
 		m_Languages[i]->Save(fp, defOffset, curOffset);
 	}
@@ -1200,7 +1234,7 @@ bool CLangMngr::Save(const char *filename)
 	//Now, defOffset points toward the END of the file
 	//curoffset should point toward the key table, so...
 	unsigned char keyLen = 0;
-	for (unsigned int i = 0; i<KeyList.size(); i++)
+	for (unsigned int i = 0; i < KeyList.size(); i++)
 	{
 		keyLen = KeyList[i]->key.size();
 		fwrite((void*)&keyLen, sizeof(unsigned char), 1, fp);
@@ -1211,7 +1245,7 @@ bool CLangMngr::Save(const char *filename)
 
 	//Finally, write the def table
 	// It's assumed no orders changed...
-	for (unsigned int i = 0; i<m_Languages.size(); i++)
+	for (unsigned int i = 0; i < m_Languages.size(); i++)
 	{
 		m_Languages[i]->SaveDefinitions(fp, curOffset);
 	}
@@ -1236,7 +1270,7 @@ bool CLangMngr::SaveCache(const char *filename)
 	
 	fwrite((void *)&dictCount, sizeof(short), 1, fp);
 
-	for (i=FileList.begin(); i!=FileList.end(); i++)
+	for (i = FileList.begin(); i != FileList.end(); i++)
 	{
 		len = (*i)->file.size();
 		fwrite((void *)&len, sizeof(char), 1, fp);
@@ -1264,8 +1298,7 @@ bool CLangMngr::LoadCache(const char *filename)
 	fread((void*)&dictCount, sizeof(short), 1, fp);
 	md5Pair *p = 0;
 
-
-	for (int i=1; i<=dictCount; i++)
+	for (int i = 1; i <= dictCount; i++)
 	{
 		fread((void*)&len, sizeof(char), 1, fp);
 		fread(buf, sizeof(char), len, fp);
@@ -1311,7 +1344,8 @@ bool CLangMngr::Load(const char *filename)
 
 	uint32_t *LangOffsets = new uint32_t[langCount];
 	char langname[3];
-	for (unsigned int i=0; i<langCount; i++)
+	
+	for (unsigned int i = 0; i < langCount; i++)
 	{
 		fread(langname, sizeof(char), 2, fp);
 		langname[2] = 0;
@@ -1324,7 +1358,8 @@ bool CLangMngr::Load(const char *filename)
 	keyEntry *e = 0;
 	unsigned char keylen;
 	uint32_t keyoffset, save;
-	for (unsigned i=0; i<keycount; i++)
+	
+	for (unsigned i = 0; i < keycount; i++)
 	{
 		e = new keyEntry;
 		fread((void*)&(e->hash), sizeof(uint32_t), 1, fp);
@@ -1347,10 +1382,12 @@ bool CLangMngr::Load(const char *filename)
 	uint32_t defhash;
 	uint32_t defoffset;
 	unsigned short deflen;
-	for (unsigned int i=0; i<langCount; i++)
+	
+	for (unsigned int i = 0; i < langCount; i++)
 	{
 		fread((void*)&numentries, sizeof(uint32_t), 1, fp);
-		for (unsigned int j=0; j<numentries; j++)
+		
+		for (unsigned int j = 0; j < numentries; j++)
 		{
 			fread((void *)&keynum, sizeof(uint32_t), 1, fp);
 			fread((void *)&defhash, sizeof(uint32_t), 1, fp);
@@ -1383,19 +1420,20 @@ CLangMngr::~CLangMngr()
 void CLangMngr::Clear()
 {
 	unsigned int i = 0;
-	for (i=0; i<m_Languages.size(); i++)
+	
+	for (i = 0; i < m_Languages.size(); i++)
 	{
 		if (m_Languages[i])
 			delete m_Languages[i];
 	}
 
-	for (i=0; i<FileList.size(); i++)
+	for (i = 0; i < FileList.size(); i++)
 	{
 		if (FileList[i])
 			delete FileList[i];
 	}
 
-	for (i=0; i<KeyList.size(); i++)
+	for (i = 0; i < KeyList.size(); i++)
 	{
 		if (KeyList[i])
 			delete KeyList[i];
@@ -1415,7 +1453,8 @@ const char *CLangMngr::GetLangName(int langId)
 {
 	int i = 0;
 	LangVecIter iter;
-	for (iter=m_Languages.begin(); iter!=m_Languages.end(); ++iter)
+	
+	for (iter = m_Languages.begin(); iter != m_Languages.end(); ++iter)
 	{
 		if (i == langId)
 		{
@@ -1423,13 +1462,15 @@ const char *CLangMngr::GetLangName(int langId)
 		}
 		i++;
 	}
+	
 	return "";
 }
 
 bool CLangMngr::LangExists(const char *langName)
 {
-	char buf[3] = { 0 };
+	char buf[3] = {0};
 	int i = 0;
+	
 	while (buf[i] = tolower(*langName++))
 	{	
 		if (++i == 2)
@@ -1437,11 +1478,13 @@ bool CLangMngr::LangExists(const char *langName)
 	}
 	
 	LangVecIter iter;
-	for (iter=m_Languages.begin(); iter!=m_Languages.end(); ++iter)
+	
+	for (iter = m_Languages.begin(); iter != m_Languages.end(); ++iter)
 	{
-		if ( strcmp((*iter)->GetName(), buf)==0 )
+		if (strcmp((*iter)->GetName(), buf) == 0)
 			return true;
 	}
+	
 	return false;
 }
 

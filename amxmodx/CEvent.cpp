@@ -36,7 +36,7 @@
 // class ClEvent
 // *****************************************************
 
-EventsMngr::ClEvent::ClEvent(CPluginMngr::CPlugin* plugin,  int func, int flags)
+EventsMngr::ClEvent::ClEvent(CPluginMngr::CPlugin* plugin, int func, int flags)
 {
 	m_Plugin = plugin;
 	m_Func = func;
@@ -45,13 +45,14 @@ EventsMngr::ClEvent::ClEvent(CPluginMngr::CPlugin* plugin,  int func, int flags)
 	m_FlagAlive = true;
 	m_FlagDead = true;
 
-	m_FlagWorld = (flags & 1) ? true : false;						// flag a
-	m_FlagPlayer = (flags & 2) ? true : false;						// flag b
-	m_FlagOnce = (flags & 4) ? true : false;						// flag c
+	m_FlagWorld = (flags & 1) ? true : false;			// flag a
+	m_FlagPlayer = (flags & 2) ? true : false;			// flag b
+	m_FlagOnce = (flags & 4) ? true : false;			// flag c
+	
 	if (flags & 24)
 	{
-		m_FlagAlive = (flags & 16) ? true : false;				// flag e
-		m_FlagDead = (flags & 8) ? true : false;				// flag d
+		m_FlagAlive = (flags & 16) ? true : false;		// flag e
+		m_FlagDead = (flags & 8) ? true : false;		// flag d
 	}
 
 	m_Stamp = 0.0f;
@@ -64,12 +65,14 @@ EventsMngr::ClEvent::~ClEvent()
 {
 	cond_t *tmp1 = m_Conditions;
 	cond_t *tmp2 = NULL;
+	
 	while (tmp1)
 	{
 		tmp2 = tmp1->next;
 		delete tmp1;
 		tmp1 = tmp2;
 	}
+	
 	m_Conditions = NULL;
 }
 
@@ -82,14 +85,17 @@ void EventsMngr::NextParam()
 
 	MsgDataEntry *tmp = NULL;
 	int tmpSize = 0;
+	
 	if (m_ParseVault)
 	{
 		// copy to tmp
 		tmp = new MsgDataEntry[m_ParseVaultSize];
+		
 		if (!tmp)
 		{
 			return;		// :TODO: Error report !!
 		}
+		
 		memcpy(tmp, m_ParseVault, m_ParseVaultSize * sizeof(MsgDataEntry));
 		tmpSize = m_ParseVaultSize;
 		delete [] m_ParseVault;
@@ -102,6 +108,7 @@ void EventsMngr::NextParam()
 		m_ParseVaultSize = INITIAL_PARSEVAULT_SIZE;
 
 	m_ParseVault = new MsgDataEntry[m_ParseVaultSize];
+	
 	if (tmp)
 	{
 		memcpy(m_ParseVault, tmp, tmpSize * sizeof(MsgDataEntry));
@@ -178,10 +185,11 @@ void EventsMngr::ClEvent::registerFilter(char *filter)
 	if (m_Conditions)
 	{
 		cond_t *tmp = m_Conditions;
+		
 		while (tmp->next)
 			tmp = tmp->next;
+		
 		tmp->next = tmpCond;
-
 	}
 	else
 		m_Conditions = tmpCond;
@@ -194,6 +202,7 @@ EventsMngr::ClEvent* EventsMngr::registerEvent(CPluginMngr::CPlugin* plugin, int
 		return NULL;
 
 	ClEvent *event = new ClEvent(plugin, func, flags);
+	
 	if (!event)
 		return NULL;
 
@@ -216,11 +225,10 @@ void EventsMngr::parserInit(int msg_type, float* timer, CPlayer* pPlayer, int in
 	if (!m_Events[msg_type].size())
 		return;
 
-	for(ClEventVecIter iter = m_Events[msg_type].begin(); iter; ++iter)
+	for (ClEventVecIter iter = m_Events[msg_type].begin(); iter; ++iter)
 	{
 		if ((*iter).m_Done)
 			continue;
-
 
 		if (!(*iter).m_Plugin->isExecutable((*iter).m_Func))
 		{
@@ -230,7 +238,7 @@ void EventsMngr::parserInit(int msg_type, float* timer, CPlayer* pPlayer, int in
 
 		if (pPlayer)
 		{
-			if (!(*iter).m_FlagPlayer || (pPlayer->IsAlive() ? !(*iter).m_FlagAlive : !(*iter).m_FlagDead ) )
+			if (!(*iter).m_FlagPlayer || (pPlayer->IsAlive() ? !(*iter).m_FlagAlive : !(*iter).m_FlagDead))
 			{
 				(*iter).m_Done = true;
 				continue;
@@ -247,6 +255,7 @@ void EventsMngr::parserInit(int msg_type, float* timer, CPlayer* pPlayer, int in
 			(*iter).m_Done = true;
 			continue;
 		}
+		
 		m_ParseNotDone = true;
 	}
 
@@ -257,6 +266,7 @@ void EventsMngr::parserInit(int msg_type, float* timer, CPlayer* pPlayer, int in
 		m_ParseVault[0].type = MSG_INTEGER;
 		m_ParseVault[0].iValue = index;
 	}
+	
 	m_ParseFun = &m_Events[msg_type];
 }
 
@@ -265,7 +275,6 @@ void EventsMngr::parseValue(int iValue)
 	// not parsing
 	if (!m_ParseNotDone || !m_ParseFun)
 		return;
-
 
 	// grow if needed
 	++m_ParsePos;
@@ -284,6 +293,7 @@ void EventsMngr::parseValue(int iValue)
 		// loop through conditions
 		bool execute = false;
 		bool anyConditions = false;
+		
 		for (ClEvent::cond_t *condIter = (*iter).m_Conditions; condIter; condIter = condIter->next)
 		{
 			if (condIter->paramId == m_ParsePos)
@@ -291,11 +301,11 @@ void EventsMngr::parseValue(int iValue)
 				anyConditions = true;
 				switch(condIter->type)
 				{
-				case '=': if (condIter->iValue == iValue) execute=true; break;
-				case '!': if (condIter->iValue != iValue) execute=true; break;
-				case '&': if (iValue & condIter->iValue) execute=true; break;
-				case '<': if (iValue < condIter->iValue) execute=true; break;
-				case '>': if (iValue > condIter->iValue) execute=true; break;
+					case '=': if (condIter->iValue == iValue) execute = true; break;
+					case '!': if (condIter->iValue != iValue) execute = true; break;
+					case '&': if (iValue & condIter->iValue) execute = true; break;
+					case '<': if (iValue < condIter->iValue) execute = true; break;
+					case '>': if (iValue > condIter->iValue) execute = true; break;
 				}
 				if (execute)
 					break;
@@ -311,7 +321,6 @@ void EventsMngr::parseValue(float fValue)
 	// not parsing
 	if (!m_ParseNotDone || !m_ParseFun)
 		return;
-
 
 	// grow if needed
 	++m_ParsePos;
@@ -330,6 +339,7 @@ void EventsMngr::parseValue(float fValue)
 		// loop through conditions
 		bool execute = false;
 		bool anyConditions = false;
+		
 		for (ClEvent::cond_t *condIter = (*iter).m_Conditions; condIter; condIter = condIter->next)
 		{
 			if (condIter->paramId == m_ParsePos)
@@ -337,10 +347,10 @@ void EventsMngr::parseValue(float fValue)
 				anyConditions = true;
 				switch(condIter->type)
 				{
-				case '=': if (condIter->fValue == fValue) execute=true; break;
-				case '!': if (condIter->fValue != fValue) execute=true; break;
-				case '<': if (fValue < condIter->fValue) execute=true; break;
-				case '>': if (fValue > condIter->fValue) execute=true; break;
+					case '=': if (condIter->fValue == fValue) execute = true; break;
+					case '!': if (condIter->fValue != fValue) execute = true; break;
+					case '<': if (fValue < condIter->fValue) execute = true; break;
+					case '>': if (fValue > condIter->fValue) execute = true; break;
 				}
 				if (execute)
 					break;
@@ -374,6 +384,7 @@ void EventsMngr::parseValue(const char *sz)
 		// loop through conditions
 		bool execute = false;
 		bool anyConditions = false;
+		
 		for (ClEvent::cond_t *condIter = (*iter).m_Conditions; condIter; condIter = condIter->next)
 		{
 			if (condIter->paramId == m_ParsePos)
@@ -381,9 +392,9 @@ void EventsMngr::parseValue(const char *sz)
 				anyConditions = true;
 				switch(condIter->type)
 				{
-				case '=': if (!strcmp(sz, condIter->sValue.c_str())) execute=true; break;
-				case '!': if (strcmp(sz, condIter->sValue.c_str())) execute=true; break;
-				case '&': if (strstr(sz, condIter->sValue.c_str())) execute=true; break;
+					case '=': if (!strcmp(sz, condIter->sValue.c_str())) execute = true; break;
+					case '!': if (strcmp(sz, condIter->sValue.c_str())) execute = true; break;
+					case '&': if (strstr(sz, condIter->sValue.c_str())) execute = true; break;
 				}
 				if (execute)
 					break;
@@ -403,11 +414,12 @@ void EventsMngr::executeEvents()
 
 	for (ClEventVecIter iter = m_ParseFun->begin(); iter; ++iter)
 	{
-		if ( (*iter).m_Done ) 
+		if ((*iter).m_Done) 
 		{
 			(*iter).m_Done = false;
 			continue;
 		}
+		
 		(*iter).m_Stamp = (float)*m_Timer;
 		executeForwards((*iter).m_Func, m_ParseVault ? m_ParseVault[0].iValue : 0);
 	}
@@ -423,53 +435,53 @@ int EventsMngr::getArgNum() const
 
 const char* EventsMngr::getArgString(int a) const
 {
-	if ( a < 0 || a > m_ParsePos )
+	if (a < 0 || a > m_ParsePos)
 		return "";
 
 	static char var[32];
 
 	switch(m_ParseVault[a].type)
 	{
-	case MSG_INTEGER: 
-		sprintf( var, "%d", m_ParseVault[a].iValue );
-		return var;
-	case MSG_STRING: 
-		return m_ParseVault[a].sValue;
-	default:
-		sprintf( var, "%g", m_ParseVault[a].fValue );
-		return var;
+		case MSG_INTEGER: 
+			sprintf(var, "%d", m_ParseVault[a].iValue);
+			return var;
+		case MSG_STRING: 
+			return m_ParseVault[a].sValue;
+		default:
+			sprintf(var, "%g", m_ParseVault[a].fValue);
+			return var;
 	}
 }
 
 int EventsMngr::getArgInteger(int a) const
 {
-	if ( a < 0 || a > m_ParsePos )
+	if (a < 0 || a > m_ParsePos)
 		return 0;
 
 	switch(m_ParseVault[a].type)
 	{
-	case MSG_INTEGER:
-		return m_ParseVault[a].iValue;
-	case MSG_STRING:
-		return atoi(m_ParseVault[a].sValue);
-	default:
-		return (int)m_ParseVault[a].fValue; 
+		case MSG_INTEGER:
+			return m_ParseVault[a].iValue;
+		case MSG_STRING:
+			return atoi(m_ParseVault[a].sValue);
+		default:
+			return (int)m_ParseVault[a].fValue; 
 	}
 }
 
 float EventsMngr::getArgFloat(int a) const
 {
-	if ( a < 0 || a > m_ParsePos )
+	if (a < 0 || a > m_ParsePos)
 		return 0.0f;
 
 	switch(m_ParseVault[a].type)
 	{
-	case MSG_INTEGER:
-		return static_cast<float>(m_ParseVault[a].iValue);
-	case MSG_STRING:
-		return static_cast<float>(atof(m_ParseVault[a].sValue));
-	default:
-		return m_ParseVault[a].fValue; 
+		case MSG_INTEGER:
+			return static_cast<float>(m_ParseVault[a].iValue);
+		case MSG_STRING:
+			return static_cast<float>(atof(m_ParseVault[a].sValue));
+		default:
+			return m_ParseVault[a].fValue; 
 	}
 }
 
@@ -479,6 +491,7 @@ void EventsMngr::clearEvents(void)
 	{
 		m_Events[i].clear();
 	}
+	
 	// delete parsevault
 	if (m_ParseVault)
 	{
@@ -497,25 +510,26 @@ int EventsMngr::getEventId(const char* msg)
 		CS_EventsIds id;
 	} table[] =
 	{
-		{ "CS_DeathMsg" ,	CS_DeathMsg  },
-			//		{ "CS_RoundEnd" ,	CS_RoundEnd  },
-			//		{ "CS_RoundStart" , CS_RoundStart  },
-			//		{ "CS_Restart" ,	CS_Restart  },
-		{ "" ,				CS_Null  }
+		{"CS_DeathMsg",		CS_DeathMsg},
+//		{"CS_RoundEnd",		CS_RoundEnd},
+//		{"CS_RoundStart",	CS_RoundStart},
+//		{"CS_Restart",		CS_Restart},
+		{"",				CS_Null}
 	};
 
 	// if msg is a number, return it
 	int pos = atoi(msg);
+	
 	if (pos != 0)
 		return pos;
 
 	// try to find in table first
-	for (pos = 0; table[ pos ].id != CS_Null; ++pos )
-		if ( !strcmp( table[ pos ].name , msg ) )
-			return table[ pos ].id;
+	for (pos = 0; table[pos].id != CS_Null; ++pos)
+		if (!strcmp(table[pos].name, msg))
+			return table[pos].id;
 
 	// find the id of the message
-	return pos = GET_USER_MSG_ID(PLID, msg , 0 );
+	return pos = GET_USER_MSG_ID(PLID, msg, 0);
 }
 
 int EventsMngr::getCurrentMsgType()

@@ -36,91 +36,91 @@
 // *****************************************************
 // class File
 // *****************************************************
-File::File( const char* n, const char* m )
+
+File::File(const char* n, const char* m)
 {
-  fp = fopen( n , m );
+	fp = fopen(n, m);
 }
 
-File::~File( )
+File::~File()
 {
-  if ( fp )
-    fclose( fp );
+	if (fp)
+		fclose(fp);
 }
 
-File::operator bool ( ) const
+File::operator bool () const
 {
-  return fp && !feof(fp);
+	return fp && !feof(fp);
 }
 
-File& operator<<( File& f, const String& n )
+File& operator<<(File& f, const String& n)
 {
-  if ( f ) fputs( n.c_str() , f.fp ) ;
-  return f;
+	if (f) fputs(n.c_str(), f.fp);
+	return f;
 }
 
-File& operator<<( File& f, const char* n )
+File& operator<<(File& f, const char* n)
 {
-  if ( f ) fputs( n , f.fp ) ;
-  return f;
+	if (f) fputs(n, f.fp);
+	return f;
 }
 
-File& operator<<( File& f, int n )
+File& operator<<(File& f, int n)
 {
-  if ( f ) fprintf( f.fp , "%d" , n ) ;
-  return f;
+	if (f) fprintf(f.fp, "%d", n);
+	return f;
 }
 
-
-File& operator<<( File& f, const char& c )
+File& operator<<(File& f, const char& c)
 {
-  if ( f ) fputc( c , f.fp ) ;
-  return f;
+	if (f) fputc(c, f.fp);
+	return f;
 }
 
-File& operator>>( File& f, String& n )
+File& operator>>(File& f, String& n)
 {
-  if ( !f ) return f;
-  char temp[1024];
-  fscanf( f.fp , "%s", temp );
-  n.assign(temp);
-  return f;
+	if (!f) return f;
+	char temp[1024];
+	fscanf(f.fp, "%s", temp);
+	n.assign(temp);
+	return f;
 }
 
-File& operator>>( File& f, char* n )
+File& operator>>(File& f, char* n)
 {
-  if ( f ) fscanf( f.fp , "%s", n );
-  return f;
+	if (f) fscanf(f.fp, "%s", n);
+	return f;
 }
 
-int File::getline( char* buf, int sz )
+int File::getline(char* buf, int sz)
 {
-  int a = sz;
-  char *origBuf = buf;
-  if ( *this )
-  {
-    int c;
-    while ( sz-- && (c = getc( (*this).fp)) && c != EOF && c != '\n'  )
-      *buf++ = c;
-    *buf = 0;
-  }
-
-  // trim 0x0a and 0x0d characters at the end
-  while (buf != origBuf)
-  {
-    if (*buf == 0x0a || *buf == 0x0d)
+	int a = sz;
+	char *origBuf = buf;
+	
+	if (*this)
+	{
+		int c;
+		while (sz-- && (c = getc((*this).fp)) && c != EOF && c != '\n')
+		*buf++ = c;
 		*buf = 0;
-	--buf;
-  }
+	}
 
-  return a - sz;
+	// trim 0x0a and 0x0d characters at the end
+	while (buf != origBuf)
+	{
+		if (*buf == 0x0a || *buf == 0x0d)
+			*buf = 0;
+		--buf;
+	}
+
+	return a - sz;
 }
 
-File& File::skipWs( )
+File& File::skipWs()
 {
-  if ( !*this ) return *this;
-  int c;
-  while( isspace( c = getc( fp ) ) ){};
-  ungetc( c , fp );
-  return *this;
+	if (!*this) return *this;
+	int c;
+	while (isspace(c = getc(fp))) {};
+	ungetc(c, fp);
+	return *this;
 }
-

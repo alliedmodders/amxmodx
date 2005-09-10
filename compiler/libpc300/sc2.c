@@ -1532,20 +1532,20 @@ static int substpattern(unsigned char *line,size_t buffersize,char *pattern,char
             strins((char*)s,(char*)args[arg],strlen((char*)args[arg]));
             s+=strlen((char*)args[arg]);
             e++;          /* skip %, digit is skipped later */
-		  } else {
-		    strins((char*)s,(char*)e,1);
-		    s++;
-		  } /* if */
+          } else {
+            strins((char*)s,(char*)e,1);
+            s++;
+          } /* if */
         } else if (*e=='"') {
           p=e;
-		  if (is_startstring(e)) {              /* skip strings */
+          if (is_startstring(e)) {              /* skip strings */
             e=skipstring(e);
             strins((char*)s,(char*)p,(e-p+1));
             s+=(e-p+1);
-		  } else {
+          } else {
             strins((char*)s,(char*)e,1);
             s++;
-		  }
+          }
         } else {
           strins((char*)s,(char*)e,1);
           s++;

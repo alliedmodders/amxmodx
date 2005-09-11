@@ -548,6 +548,9 @@ int Debugger::FormatError(char *buffer, size_t maxLength)
 				} else if (v_class == 0) {
 					p_addr = (cell *)(data + pSymbol->address);
 				}
+				//make sure our address is in bounds!
+				if (arr_addr < p_addr || arr_addr > (p_addr + size))
+					continue;
 				int *sizes = new int[pSymbol->dim];
 				int *indexes = new int[pSymbol->dim];
 				for (int i=0; i<pSymbol->dim; i++)

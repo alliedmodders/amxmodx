@@ -150,7 +150,7 @@ class Handler
 public:
 	Handler(AMX *pAmx) : m_pAmx(pAmx),
 		m_iErrFunc(-1), m_iModFunc(-1), m_iNatFunc(-1),
-		m_Handling(false)
+		m_Handling(false), m_InNativeFilter(false)
 	{ };
 	~Handler() { };
 public:

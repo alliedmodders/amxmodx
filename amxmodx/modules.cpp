@@ -344,6 +344,7 @@ int CheckModules(AMX *amx, char error[128])
 	bool isdbi = false;
 	CList<CModule,const char *>::iterator a;
 	const amxx_module_info_s *info;
+	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
     
 	for (int i=0; i<numLibraries; i++)
 	{
@@ -386,6 +387,11 @@ int CheckModules(AMX *amx, char error[128])
 			found = LibraryExists(buffer);
 		if (!found)
 		{
+			if (pHandler->HandleModule(buffer))
+				found = true;
+		}
+		if (!found)
+		{
 			sprintf(error, "Module \"%s\" required for plugin.  Check modules.ini.", buffer);
 			return 0;
 		}
@@ -406,7 +412,7 @@ int set_amxnatives(AMX* amx,char error[128])
 	amx_Register(amx, string_Natives, -1);
 	amx_Register(amx, float_Natives, -1);
 	amx_Register(amx, file_Natives, -1);
-	amx_Register(amx, amxmod_Natives, -1);
+	amx_Register(amx, amxmodx_Natives, -1);
 	amx_Register(amx, power_Natives, -1);
 	amx_Register(amx, time_Natives, -1);
 	amx_Register(amx, vault_Natives, -1);
@@ -1306,19 +1312,26 @@ void LogError(AMX *amx, int err, const char *fmt, ...)
 
 	//give the plugin first chance to handle any sort of error
 	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
-	if (pHandler)
+
+	if (pHandler->InNativeFilter())
 	{
-		if (pHandler->IsHandling())
+		if (pDebugger)
+			pDebugger->EndExec();
+	} else {
+		if (pHandler)
 		{
-			if (fmt != NULL)
-				pHandler->SetErrorMsg(msg_buffer);
-			return;
-		}
-		//give the user a first-chance at blocking the error from displaying
-		if (pHandler->HandleError(fmt ? msg_buffer : NULL) != 0)
-		{
-			amx->error = -1;
-			return;
+			if (pHandler->IsHandling())
+			{
+				if (fmt != NULL)
+					pHandler->SetErrorMsg(msg_buffer);
+				return;
+			}
+			//give the user a first-chance at blocking the error from displaying
+			if (pHandler->HandleError(fmt ? msg_buffer : NULL) != 0)
+			{
+				amx->error = -1;
+				return;
+			}
 		}
 	}
 

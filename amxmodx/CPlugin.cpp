@@ -35,6 +35,7 @@
 #include "CFile.h"
 #include "amx.h"
 #include "natives.h"
+#include "debugger.h"
 
 extern const char *no_function;
 
@@ -220,6 +221,56 @@ CPluginMngr::CPlugin::~CPlugin( )
 	unload_amxscript( &amx, &code );
 }
 
+int AMXAPI native_handler(AMX *amx, int index)
+{
+	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
+
+	char name[sNAMEMAX+1];
+	amx_GetNative(amx, index, name);
+
+	return pHandler->HandleNative(name, index, 0);
+}
+
+static cell AMX_NATIVE_CALL invalid_native(AMX *amx, cell *params)
+{
+	//A script has accidentally called an invalid native! give them a
+	// first chance to block the resulting error.
+
+	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
+
+	//this should never happen
+	if (!pHandler)
+	{
+		LogError(amx, AMX_ERR_INVNATIVE, "Invalid native attempt");
+		return 0;
+	}
+
+	//this should never happen because this native won't be called
+	// if the plugin isn't filtering.
+	if (!pHandler->IsNativeFiltering())
+	{
+		LogError(amx, AMX_ERR_INVNATIVE, "Invalid native attempt");
+		return 0;
+	}
+
+	char name[sNAMEMAX+1];
+	int native = amx->usertags[UT_NATIVE];
+	int err = amx_GetNative(amx, native, name);
+
+	if (err != AMX_ERR_NONE)
+		name[0] = '\0';
+
+	//1 - because we're trapping usage
+	if (!pHandler->HandleNative(name, native, 1))
+	{
+		LogError(amx, AMX_ERR_INVNATIVE, NULL);
+		return 0;
+	}
+
+	//Someday maybe allow native filters to write their own return value?
+	return 0;
+}
+
 void CPluginMngr::CPlugin::Finalize()
 {
 	char buffer[128];
@@ -229,10 +280,19 @@ void CPluginMngr::CPlugin::Finalize()
 	{
 		if ( amx_Register(&amx, core_Natives, -1) != AMX_ERR_NONE )
 		{
-			status = ps_bad_load;
-			sprintf(buffer, "Plugin uses an unknown function (name \"%s\") - check your modules.ini.", no_function);
-			errorMsg.assign(buffer);
-			amx.error = AMX_ERR_NOTFOUND;
+			Handler *pHandler = (Handler *)amx.userdata[UD_HANDLER];
+			int res = 0;
+			if (pHandler->IsNativeFiltering())
+				res = amx_CheckNatives(&amx, native_handler);
+			if (!res)
+			{
+				status = ps_bad_load;
+				sprintf(buffer, "Plugin uses an unknown function (name \"%s\") - check your modules.ini.", no_function);
+				errorMsg.assign(buffer);
+				amx.error = AMX_ERR_NOTFOUND;
+			} else {
+				amx_RegisterToAny(&amx, invalid_native);
+			}
 		}
 	} else {
 		status = ps_bad_load;

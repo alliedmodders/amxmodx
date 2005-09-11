@@ -166,6 +166,7 @@ typedef cell (AMX_NATIVE_CALL *AMX_NATIVE)(struct tagAMX *amx, cell *params);
 typedef int (AMXAPI *AMX_CALLBACK)(struct tagAMX *amx, cell index,
                                    cell *result, cell *params);
 typedef int (AMXAPI *AMX_DEBUG)(struct tagAMX *amx);
+typedef int (AMXAPI *AMX_NATIVE_FILTER)(struct tagAMX *amx, int index);
 #if !defined _FAR
   #define _FAR
 #endif
@@ -301,6 +302,7 @@ enum {
   AMX_ERR_DIVIDE,       /* divide by zero */
   AMX_ERR_SLEEP,        /* go into sleepmode - code can be restarted */
   AMX_ERR_INVSTATE,     /* invalid state for this access */
+  AMX_ERR_INVNATIVE,	/* invalid native was used */
 
   AMX_ERR_MEMORY = 16,  /* out of memory */
   AMX_ERR_FORMAT,       /* invalid file format */
@@ -340,6 +342,7 @@ enum {
 #define UD_DEBUGGER		2
 #define UD_OPCODELIST	1
 #define	UD_HANDLER		0
+#define	UT_NATIVE		3
 
 /* for native functions that use floating point parameters, the following
  * two macros are convenient for casting a "cell" into a "float" type _without_
@@ -373,6 +376,7 @@ uint32_t * AMXAPI amx_Align32(uint32_t *v);
 #endif
 int AMXAPI amx_Allot(AMX *amx, int cells, cell *amx_addr, cell **phys_addr);
 int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params);
+int AMXAPI amx_CheckNatives(AMX *amx, AMX_NATIVE_FILTER nf);
 int AMXAPI amx_Cleanup(AMX *amx);
 int AMXAPI amx_Clone(AMX *amxClone, AMX *amxSource, void *data);
 int AMXAPI amx_Exec(AMX *amx, cell *retval, int index);
@@ -402,6 +406,7 @@ int AMXAPI amx_PushArray(AMX *amx, cell *amx_addr, cell **phys_addr, const cell 
 int AMXAPI amx_PushString(AMX *amx, cell *amx_addr, cell **phys_addr, const char *string, int pack, int use_wchar);
 int AMXAPI amx_RaiseError(AMX *amx, int error);
 int AMXAPI amx_Register(AMX *amx, const AMX_NATIVE_INFO *nativelist, int number);
+int AMXAPI amx_RegisterToAny(AMX *amx, AMX_NATIVE f);
 int AMXAPI amx_Release(AMX *amx, cell amx_addr);
 int AMXAPI amx_SetCallback(AMX *amx, AMX_CALLBACK callback);
 int AMXAPI amx_SetDebugHook(AMX *amx, AMX_DEBUG debug);

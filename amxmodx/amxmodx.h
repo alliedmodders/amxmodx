@@ -74,11 +74,11 @@
 extern AMX_NATIVE_INFO  core_Natives[];
 extern AMX_NATIVE_INFO  time_Natives[];
 extern AMX_NATIVE_INFO  power_Natives[];
-extern  AMX_NATIVE_INFO amxmod_Natives[];
-extern  AMX_NATIVE_INFO file_Natives[];
-extern  AMX_NATIVE_INFO float_Natives[];
-extern  AMX_NATIVE_INFO string_Natives[];
-extern  AMX_NATIVE_INFO vault_Natives[];
+extern AMX_NATIVE_INFO amxmodx_Natives[];
+extern AMX_NATIVE_INFO file_Natives[];
+extern AMX_NATIVE_INFO float_Natives[];
+extern AMX_NATIVE_INFO string_Natives[];
+extern AMX_NATIVE_INFO vault_Natives[];
 
 #ifndef __linux__
 #define DLLOAD(path) (DLHANDLE)LoadLibrary(path)

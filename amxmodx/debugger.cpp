@@ -430,24 +430,25 @@ int Debugger::FormatError(char *buffer, size_t maxLength)
 	buffer += size;
 	maxLength -= size;
 
-	if (error == AMX_ERR_NATIVE)
+	if (error == AMX_ERR_NATIVE || error == AMX_ERR_INVNATIVE)
 	{
-		char native_name[32];
+		char native_name[sNAMEMAX+1];
 		int num = 0;
-		//go two instructions back
+		/*//go two instructions back
 		cip -= (sizeof(cell) * 2);
 		int instr = _GetOpcodeFromCip(cip, p_cip);
 		if (instr == OP_SYSREQ_C)
 		{
 			num = (int)*p_cip;
-		} else if (instr == OP_SYSREQ_PRI) {
-			num = (int)m_pAmx->pri;
-		}
-		if (num)
+		}*/
+		//New code only requires this...
+		num = m_pAmx->usertags[UT_NATIVE];
+		amx_err = amx_GetNative(m_pAmx, num, native_name);
+		/*if (num)
 			amx_err = amx_GetNative(m_pAmx, (int)*p_cip, native_name);
 		else 
-			amx_err = AMX_ERR_NOTFOUND;
-		if (!amx_err)
+			amx_err = AMX_ERR_NOTFOUND;*/
+		//if (!amx_err)
 			size += _snprintf(buffer, maxLength, "(native \"%s\")", native_name);
 	} else if (error == AMX_ERR_BOUNDS) {
 		tagAMX_DBG *pDbg = m_pAmxDbg;
@@ -731,7 +732,7 @@ const char *GenericError(int err)
 		"divide",
 		"sleep",
 		"invalid access state",
-		NULL,
+		"native not found",
 		NULL,
 		"out of memory", //16
 		"bad file format",
@@ -758,6 +759,9 @@ int AMXAPI Debugger::DebugHook(AMX *amx)
 	Debugger *pDebugger = NULL;
 
 	if (!amx || !(amx->flags & AMX_FLAG_DEBUG))
+		return AMX_ERR_NONE;
+
+	if (amx->flags & AMX_FLAG_PRENIT)
 		return AMX_ERR_NONE;
 
 	pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
@@ -872,7 +876,7 @@ int Handler::SetErrorHandler(const char *function)
 	
 	error = amx_FindPublic(m_pAmx, function, &m_iErrFunc);
 
-	if (error != AMX_ERR_NONE)
+	if (error != AMX_ERR_NONE && m_iErrFunc < 1)
 		m_iErrFunc = -1;
 
 	return error;
@@ -884,7 +888,7 @@ int Handler::SetModuleFilter(const char *function)
 	
 	error = amx_FindPublic(m_pAmx, function, &m_iModFunc);
 
-	if (error != AMX_ERR_NONE)
+	if (error != AMX_ERR_NONE && m_iModFunc < 1)
 		m_iModFunc = -1;
 
 	return error;
@@ -896,7 +900,7 @@ int Handler::SetNativeFilter(const char *function)
 	
 	error = amx_FindPublic(m_pAmx, function, &m_iNatFunc);
 
-	if (error != AMX_ERR_NONE)
+	if (error != AMX_ERR_NONE && !IsNativeFiltering())
 		m_iNatFunc = -1;
 
 	return error;
@@ -916,6 +920,94 @@ const char *Handler::GetLastMsg()
 		return NULL;
 
 	return m_MsgCache.c_str();
+}
+
+int Handler::HandleModule(const char *module)
+{
+	if (m_iModFunc < 1)
+		return 0;
+
+	/**
+	 * This is the most minimalistic handler of them all
+	 */
+
+	cell hea_addr, *phys_addr, retval;
+
+	//temporarily set prenit
+	m_pAmx->flags |= AMX_FLAG_PRENIT;
+	amx_PushString(m_pAmx, &hea_addr, &phys_addr, module, 0, 0);
+	int err = amx_Exec(m_pAmx, &retval, m_iModFunc);
+	amx_Release(m_pAmx, hea_addr);
+	m_pAmx->flags &= ~AMX_FLAG_PRENIT;
+
+	if (err != AMX_ERR_NONE)
+		return 0;
+
+	return (int)retval;
+}
+
+int Handler::HandleNative(const char *native, int index, int trap)
+{
+	if (!IsNativeFiltering())
+		return 0;
+
+	/**
+	 * Our handler here is a bit different from HandleError().
+	 * For one, there is no current error in pDebugger, so we 
+	 *  don't have to save some states.
+	 */
+
+	m_InNativeFilter = true;
+
+	Debugger *pDebugger = (Debugger *)m_pAmx->userdata[UD_DEBUGGER];
+
+	if (pDebugger && trap)
+		pDebugger->BeginExec();
+
+	cell hea_addr, *phys_addr, retval;
+
+	if (!trap)
+		m_pAmx->flags |= AMX_FLAG_PRENIT;
+
+	amx_Push(m_pAmx, trap);
+	amx_Push(m_pAmx, index);
+	amx_PushString(m_pAmx, &hea_addr, &phys_addr, native, 0, 0);
+	int err = amx_Exec(m_pAmx, &retval, m_iNatFunc);
+	if (err != AMX_ERR_NONE)
+	{
+		//LogError() took care of something for us.
+		if (err == -1)
+		{
+			m_InNativeFilter = false;
+			amx_Release(m_pAmx, hea_addr);
+			return 1;
+		}
+		if (!trap)
+		{
+			AMXXLOG_Log("[AMXX] Runtime failure %d occurred in native filter.  Aborting plugin load.", err);
+			return 0;
+		}
+		//handle this manually.
+		//we need to push this through an error filter, same as executeForwards!
+		if (pDebugger && pDebugger->ErrorExists())
+		{
+			//don't display, it was already handled.
+		} else if (err != -1) {
+			LogError(m_pAmx, err, NULL);
+		}
+		AMXXLOG_Log("[AMXX] NOTE: Runtime failures in native filters are not good!");
+		retval = 0;
+	}
+	if (!trap)
+		m_pAmx->flags &= ~AMX_FLAG_PRENIT;
+	if (pDebugger && trap)
+		pDebugger->EndExec();
+
+	amx_Release(m_pAmx, hea_addr);
+
+	m_InNativeFilter = false;
+
+	return (int)retval;
 }
 
 int Handler::HandleError(const char *msg)
@@ -1073,11 +1165,63 @@ static cell AMX_NATIVE_CALL dbg_fmt_error(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL set_native_filter(AMX *amx, cell *params)
+{
+	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
+
+	if (!pHandler)
+	{
+		Debugger::GenericMessage(amx, AMX_ERR_NOTFOUND);
+		AMXXLOG_Log("[AMXX] Plugin not initialized correctly.");
+		return 0;
+	}
+
+	if (!pHandler->IsNativeFiltering())
+	{
+		//we can only initialize this during PRENIT
+		if (! (amx->flags & AMX_FLAG_PRENIT) )
+			return 0;
+	}
+
+	int len;
+	char *func = get_amxstring(amx, params[1], 0, len);
+
+	int err = pHandler->SetNativeFilter(func);
+
+	if (err != AMX_ERR_NONE)
+	{
+		Debugger::GenericMessage(amx, AMX_ERR_NOTFOUND);
+		AMXXLOG_Log("[AMXX] Function not found: %s", function);
+		return 0;
+	}
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL set_module_filter(AMX *amx, cell *params)
+{
+	if ( !(amx->flags & AMX_FLAG_PRENIT) )
+		return -1;
+
+	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
+
+	if (!pHandler)
+		return -2;
+
+	int len;
+	char *function = get_amxstring(amx, params[1], 0, len);
+
+	return pHandler->SetModuleFilter(function);
+}
+
+
 AMX_NATIVE_INFO g_DebugNatives[] = {
 	{"set_error_filter",	set_error_filter},
 	{"dbg_trace_begin",		dbg_trace_begin},
 	{"dbg_trace_next",		dbg_trace_next},
 	{"dbg_trace_info",		dbg_trace_info},
 	{"dbg_fmt_error",		dbg_fmt_error},
+	{"set_native_filter",	set_native_filter},
+	{"set_module_filter",	set_module_filter},
 	{NULL,					NULL},
 };

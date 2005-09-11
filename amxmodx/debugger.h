@@ -159,7 +159,7 @@ public:
 	int SetModuleFilter(const char *function);
 public:
 	int HandleError(const char *msg);
-	int HandleNative(const char *native);
+	int HandleNative(const char *native, int index, int trap);
 	int HandleModule(const char *module);
 public:
 	bool IsHandling() const { return m_Handling; }
@@ -167,12 +167,16 @@ public:
 	const char *GetLastMsg();
 	trace_info_t *GetTrace() const { return m_pTrace; }
 	const char *GetFmtCache() { return m_FmtCache.c_str(); }
+	bool IsNativeFiltering() { return (m_iNatFunc > 0); }
+	bool InNativeFilter() { return m_InNativeFilter; }
 private:
 	AMX *m_pAmx;
 	int m_iErrFunc;
 	int m_iModFunc;
 	int m_iNatFunc;
 	bool m_Handling;
+	//in the future, make this a stack!
+	bool m_InNativeFilter;
 	String m_MsgCache;
 	String m_FmtCache;
 	trace_info_t *m_pTrace;

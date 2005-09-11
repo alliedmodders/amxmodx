@@ -425,10 +425,7 @@ int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
   AMX_FUNCSTUB *func;
   AMX_NATIVE f;
 
-  assert(amx!=NULL);
   hdr=(AMX_HEADER *)amx->base;
-  assert(hdr!=NULL);
-  assert(hdr->magic==AMX_MAGIC);
   assert(hdr->natives<=hdr->libraries);
 #if defined AMX_NATIVETABLE
   if (index<NULL) {
@@ -444,40 +441,10 @@ int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
 #endif
   assert(f!=NULL);
 
-  /* Now that we have found the function, patch the program so that any
-   * subsequent call will call the function directly (bypassing this
-   * callback).
-   * This trick cannot work in the JIT, because the program would need to
-   * be re-JIT-compiled after patching a P-code instruction.
+  /* As of AMX Mod X 1.56, we don't patch sysreq.c to sysreq.d anymore.
+   * Otherwise, we'd have no way of knowing the last native to be used.
    */
-#if !defined JIT
-  if (amx->sysreq_d != 0)
-  {
-    //if we're about to patch this, and we're debugging, don't patch!
-    //otherwise we won't be able to get back native names
-    if (amx->flags & AMX_FLAG_DEBUG)
-    {
-      amx->sysreq_d = 0;
-	} else {
-      /* at the point of the call, the CIP pseudo-register points directly
-       * behind the SYSREQ instruction and its parameter.
-       */
-      unsigned char *code=amx->base+(int)hdr->cod+(int)amx->cip-4;
-      assert(amx->cip >= 4 && amx->cip < (hdr->dat - hdr->cod));
-      assert(sizeof(f)<=sizeof(cell));    /* function pointer must fit in a cell */
-#if defined __GNUC__ || defined ASM32
-      if (*(cell*)code==index) {
-#else
-      if (*(cell*)code!=OP_SYSREQ_PRI) {
-        assert(*(cell*)(code-sizeof(cell))==OP_SYSREQ_C);
-        assert(*(cell*)code==index);
-#endif	//defined __GNU__ || defined ASM32
-        *(cell*)(code-sizeof(cell))=amx->sysreq_d;
-        *(cell*)code=(cell)f;
-      } /* if */
-    } /* if */
-  } /* if */
-#endif	//!defined JIT
+  amx->usertags[UT_NATIVE] = (long)index;
 
   /* Note:
    *   params[0] == number of bytes for the additional parameters passed to the native function
@@ -486,7 +453,9 @@ int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
    */
 
   amx->error=AMX_ERR_NONE;
+
   *result = f(amx,params);
+
   return amx->error;
 }
 #endif /* defined AMX_INIT */
@@ -1571,6 +1540,61 @@ static AMX_NATIVE findfunction(const char *name, const AMX_NATIVE_INFO *list, in
 }
 
 const char *no_function;
+
+int AMXAPI amx_CheckNatives(AMX *amx, AMX_NATIVE_FILTER nf)
+{
+  AMX_FUNCSTUB *func;
+  AMX_HEADER *hdr;
+  int i,numnatives,res=0;
+
+  hdr=(AMX_HEADER *)amx->base;
+  assert(hdr!=NULL);
+  assert(hdr->magic==AMX_MAGIC);
+  assert(hdr->natives<=hdr->libraries);
+  numnatives=NUMENTRIES(hdr,natives,libraries);
+
+  func=GETENTRY(hdr,natives,0);
+  for (i=0; i<numnatives; i++) {
+    if (func->address==0) {
+      /* this function is not yet located */
+      res=nf(amx,i);
+      if (!res)
+	  {
+        no_function = GETENTRYNAME(hdr,func);
+        return 0;
+	  }
+    } /* if */
+    func=(AMX_FUNCSTUB*)((unsigned char*)func+hdr->defsize);
+  } /* for */
+  return 1;
+}
+
+int AMXAPI amx_RegisterToAny(AMX *amx, AMX_NATIVE f)
+{
+  AMX_FUNCSTUB *func;
+  AMX_HEADER *hdr;
+  int i,numnatives,err;
+
+  hdr=(AMX_HEADER *)amx->base;
+  assert(hdr!=NULL);
+  assert(hdr->magic==AMX_MAGIC);
+  assert(hdr->natives<=hdr->libraries);
+  numnatives=NUMENTRIES(hdr,natives,libraries);
+
+  err=AMX_ERR_NONE;
+  func=GETENTRY(hdr,natives,0);
+  for (i=0; i<numnatives; i++) {
+    if (func->address==0) {
+      /* this function is not yet located */
+      func->address=(ucell)f;
+    } /* if */
+    func=(AMX_FUNCSTUB*)((unsigned char*)func+hdr->defsize);
+  } /* for */
+  if (err==AMX_ERR_NONE)
+    amx->flags|=AMX_FLAG_NTVREG;
+  return err;
+}
+
 int AMXAPI amx_Register(AMX *amx, const AMX_NATIVE_INFO *list, int number)
 {
   AMX_FUNCSTUB *func;

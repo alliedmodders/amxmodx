@@ -702,13 +702,21 @@ begin
         try
           eGoBack := False;
 
-          if FileList[i] = 'liblist.gam' then
-            frmMain.IdFTP.Site('CHMOD 744 liblist.gam');
+          try
+            if FileList[i] = 'liblist.gam' then
+              frmMain.IdFTP.Site('CHMOD 744 liblist.gam');
+          except
+            AddStatus('Warning: CHMOD not supported.', clMaroon);
+          end;
 
           UploadFile(ExtractFilePath(ParamStr(0)) + 'temp\' + FileList[i], ePath + FileList[i], CopyConfig);
 
-          if FileList[i] = 'liblist.gam' then
-            frmMain.IdFTP.Size('CHMOD 444 liblist.gam');
+          try
+            if FileList[i] = 'liblist.gam' then
+              frmMain.IdFTP.Size('CHMOD 444 liblist.gam');
+          except
+            AddStatus('Warning: CHMOD not supported.', clMaroon);
+          end;
         except
           on E: Exception do begin
             if Cancel then exit;

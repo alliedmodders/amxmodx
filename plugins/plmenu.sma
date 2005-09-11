@@ -32,15 +32,9 @@
 *  version.
 */
 
-//Uncomment to enable cstrike specific features
-// #define	CSTRIKE	1
-
 #include <amxmodx>
 #include <amxmisc>
-
-#if defined CSTRIKE
 #include <cstrike>
-#endif
 
 new g_menuPosition[33]
 new g_menuPlayers[33][32]
@@ -59,6 +53,12 @@ new g_clcmdMisc[MAX_CLCMDS][2]
 new g_clcmdNum
 
 new g_coloredMenus
+new g_cstrike = 0
+
+public plugin_natives()
+{
+	set_module_filter("module_filter")
+}
 
 public plugin_init() {
   register_plugin("Players Menu",AMXX_VERSION_STR,"AMXX Dev Team")
@@ -85,6 +85,16 @@ public plugin_init() {
   get_configsdir(clcmds_ini_file, 63)
   format(clcmds_ini_file, 63, "%s/clcmds.ini", clcmds_ini_file)
   load_settings(clcmds_ini_file)
+  
+  if (module_exists("cstrike"))
+    g_cstrike = 1
+}
+
+public module_filter(const module[])
+{
+	if (equali(module, "cstrike"))
+		return PLUGIN_HANDLED
+	return PLUGIN_CONTINUE
 }
 
 /* Ban menu */
@@ -303,18 +313,19 @@ displaySlapMenu(id,pos) {
   for (new a = start; a < end; ++a) {
     i = g_menuPlayers[id][a]
     get_user_name(i,name,31)
-#if defined CSTRIKE
-	if (cs_get_user_team(i) == CS_TEAM_T)
-	{
+    if (g_cstrike)
+    {
+	  if (cs_get_user_team(i) == CS_TEAM_T)
+	  {
 		copy(team, 3, "CT")
-	} else if (cs_get_user_team(i) == CS_TEAM_CT) {
+	  } else if (cs_get_user_team(i) == CS_TEAM_CT) {
 		copy(team, 3, "TE")
-	} else {
+	  } else {
     	get_user_team(i,team,3)
-	}
-#else
-	get_user_team(i,team,3)
-#endif
+	  }
+    } else {
+      get_user_team(i,team,3)
+    }
 
     if ( !is_user_alive(i) || access(i,ADMIN_IMMUNITY) ) {
       ++b
@@ -476,15 +487,16 @@ public actionTeamMenu(id,key) {
         case 1: client_print(0,print_chat,"%L",id,"ADMIN_TRANSF_1",name2,g_menuOption[id] ? "TERRORIST" : "CT" )
       }
 
-#if defined CSTRIKE
-	  cs_set_user_team(player, g_menuOption[id] ? 1 : 2)
-#else
-      new limit_setting = get_cvar_num("mp_limitteams")
-      set_cvar_num("mp_limitteams", 0)
-      engclient_cmd(player, "jointeam", g_menuOption[id] ?  "1" : "2")
-      engclient_cmd(player, "joinclass", "1")
-      set_cvar_num("mp_limitteams", limit_setting)
-#endif
+      if (g_cstrike)
+      {
+	    cs_set_user_team(player, g_menuOption[id] ? 1 : 2)
+      } else {
+        new limit_setting = get_cvar_num("mp_limitteams")
+        set_cvar_num("mp_limitteams", 0)
+        engclient_cmd(player, "jointeam", g_menuOption[id] ?  "1" : "2")
+        engclient_cmd(player, "joinclass", "1")
+        set_cvar_num("mp_limitteams", limit_setting)
+      }
 
       displayTeamMenu(id,g_menuPosition[id])
     }
@@ -520,18 +532,19 @@ displayTeamMenu(id,pos) {
   for (new a = start; a < end; ++a) {
     i = g_menuPlayers[id][a]
     get_user_name(i,name,31)
-#if defined CSTRIKE
-	iteam = _:cs_get_user_team(i)
-	if (iteam == 1) {
+    if (g_cstrike)
+    {
+	  iteam = _:cs_get_user_team(i)
+	  if (iteam == 1) {
 		copy(team, 3, "CT")
-	} else if (iteam == 2) {
+	  } else if (iteam == 2) {
 		copy(team, 3, "TE")
-	} else {
+	  } else {
     	get_user_team(i,team,3)
-	}
-#else
-    iteam = get_user_team(i,team,3)
-#endif
+	  }
+    } else {
+      iteam = get_user_team(i,team,3)
+    }
 
     if ( (iteam == (g_menuOption[id] ? 1 : 2)) || access(i,ADMIN_IMMUNITY) ) {
       ++b

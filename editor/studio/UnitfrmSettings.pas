@@ -189,7 +189,6 @@ type
     procedure txtFontSizeChange(Sender: TObject);
     procedure cboLanguageChange(Sender: TObject);
     procedure chkUseDefaultFontClick(Sender: TObject);
-    procedure cboFontChange(Sender: TObject);
     procedure chkBoldClick(Sender: TObject);
     procedure chkItalicClick(Sender: TObject);
     procedure chkUnderlinedClick(Sender: TObject);
@@ -243,6 +242,7 @@ type
     procedure cmdResetShortcutsClick(Sender: TObject);
     procedure txtShortcutKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure cboFontChange(Sender: TObject);
   public
     Foreground, Background: TColor;
     CaretFore, CaretBack: TColor;
@@ -369,12 +369,6 @@ begin
   if chkUseDefaultFont.Checked then
     TSciStyle(TSciLangItem(frmMain.sciEditor.LanguageManager.LanguageList.Items[cboLanguage.ItemIndex]).Styles.Items[lstStyles.ItemIndex]).FontName := ''
   else
-    TSciStyle(TSciLangItem(frmMain.sciEditor.LanguageManager.LanguageList.Items[cboLanguage.ItemIndex]).Styles.Items[lstStyles.ItemIndex]).FontName := cboFont.Selected;
-end;
-
-procedure TfrmSettings.cboFontChange(Sender: TObject);
-begin
-  if (not chkUseDefaultFont.Checked) then
     TSciStyle(TSciLangItem(frmMain.sciEditor.LanguageManager.LanguageList.Items[cboLanguage.ItemIndex]).Styles.Items[lstStyles.ItemIndex]).FontName := cboFont.Selected;
 end;
 
@@ -977,6 +971,12 @@ begin
     if txtShortcut.Text[Length(txtShortcut.Text)] = '+' then
       txtShortcut.Text := 'None';
   end;
+end;
+
+procedure TfrmSettings.cboFontChange(Sender: TObject);
+begin
+  if (not chkUseDefaultFont.Checked) then
+    TSciStyle(TSciLangItem(frmMain.sciEditor.LanguageManager.LanguageList.Items[cboLanguage.ItemIndex]).Styles.Items[lstStyles.ItemIndex]).FontName := cboFont.Text;
 end;
 
 end.

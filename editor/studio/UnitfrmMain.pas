@@ -1607,7 +1607,7 @@ begin
     end;
   end;
   eSavedFiles.SaveToFile(ExtractFilePath(ParamStr(0)) + 'config\Cache.cfg');
-  eSavedFiles.Destroy;
+  eSavedFiles.Free;
 end;
 
 procedure TfrmMain.trvExplorerDblClick(Sender: TObject);

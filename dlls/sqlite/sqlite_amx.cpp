@@ -158,6 +158,8 @@ int SQLResult::Query(SQL *cn, const char *query)
 		return 1;
 	}
 	else {
+		if (!m_rowCount)
+			return -1;
 		m_hasData = true;
 		this->m_fieldNames = new String[m_columnCount];
 		for (unsigned int i = 0; i < m_columnCount; i++)

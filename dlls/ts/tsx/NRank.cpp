@@ -314,6 +314,11 @@ static cell AMX_NATIVE_CALL cwpn_shot(AMX *amx, cell *params){ // player,wid
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
+{
+	return 1;
+}
+
 AMX_NATIVE_INFO stats_Natives[] = {
 	{ "get_stats",      get_stats},
 	{ "get_statsnum",   get_statsnum},
@@ -330,6 +335,7 @@ AMX_NATIVE_INFO stats_Natives[] = {
 	{ "custom_weapon_add", register_cwpn },
 	{ "custom_weapon_dmg", cwpn_dmg },
 	{ "custom_weapon_shot", cwpn_shot },
+	{ "register_statsfwd",register_forward },
 
 	{ NULL, NULL }
 };

@@ -335,11 +335,6 @@ static cell AMX_NATIVE_CALL ts_setup(AMX *amx, cell *params){ // index,pwupentin
 
 }
 
-static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
-{
-	return 1;
-}
-
 static cell AMX_NATIVE_CALL get_maxweapons(AMX *amx, cell *params){
 	return TSMAX_WEAPONS;
 }
@@ -382,8 +377,6 @@ AMX_NATIVE_INFO base_Natives[] = {
 	{ "ts_givepwup",give_pwup },
 
 	{ "ts_setpddata",ts_setup },
-
-	{ "register_statsfwd",register_forward },
 
 	//****************************************
 	{ "get_weaponname", get_weapon_name },

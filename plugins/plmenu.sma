@@ -499,6 +499,7 @@ public actionTeamMenu(id,key) {
       if (g_cstrike)
       {
 	    cs_set_user_team(player, g_menuOption[id] ? 1 : 2)
+	    cs_reset_user_model(player)
       } else {
         new limit_setting = get_cvar_num("mp_limitteams")
         set_cvar_num("mp_limitteams", 0)

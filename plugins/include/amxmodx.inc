@@ -883,5 +883,15 @@ native set_module_filter(const handler[]);
  * You should NOT call this function inside:
  *  - Error or module filters (native filters are safe if trap is 1)
  *  - plugin_natives()
+ * Note that the plugin's filename is prepending to your message:
+ *  [myplugin.amxx] MESSAGE
  */
 native abort(error, const fmt[]="", {Float,_}:...);
+
+/**
+ * Checks if a specific module is loaded.  This is the exact same method AMX Mod X 
+ *  uses to see if a module is required by a plugin.  For example:
+ *  module_exists("cstrike")
+ *  module_exists("dbi")
+ */
+native module_exists(const logtag[]);

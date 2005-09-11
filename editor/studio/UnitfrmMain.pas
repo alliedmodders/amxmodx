@@ -2787,23 +2787,30 @@ begin
 
   eShortcut := Shortcut(Msg.CharCode, KeyDataToShiftState(Msg.KeyData));
   // Some menu commands are suppressed by the controlchars thingy, so they will be triggered manually
-  for i := 0 to frmMain.tbxMenu.Items.Count -1 do begin
-    if TriggerMenuShortcut(eShortcut, frmMain.tbxMenu.Items[i]) then
+  for i := 0 to tbxMenu.Items.Count -1 do begin
+    if TriggerMenuShortcut(eShortcut, tbxMenu.Items[i]) then
       Handled := True;
   end;
-  for i := 0 to frmMain.tbxToolbar.Items.Count -1 do begin
-    if frmMain.tbxToolbar.Items[i].ShortCut = eShortcut then begin
+  for i := 0 to tbxToolbar.Items.Count -1 do begin
+    if tbxToolbar.Items[i].ShortCut = eShortcut then begin
       Handled := True;
-      frmMain.tbxToolbar.Items[i].OnClick(Self);
+      tbxToolbar.Items[i].OnClick(Self);
     end;
   end;
-  for i := 0 to frmMain.tbxEdit.Items.Count -1 do begin
-    if frmMain.tbxEdit.Items[i].ShortCut = eShortcut then begin
+  for i := 0 to tbxEdit.Items.Count -1 do begin
+    if tbxEdit.Items[i].ShortCut = eShortcut then begin
       Handled := True;
-      frmMain.tbxEdit.Items[i].OnClick(Self);
+      tbxEdit.Items[i].OnClick(Self);
+    end;
+  end;
+  for i := 0 to ppmEditor.Items.Count -1 do begin
+    if ppmEditor.Items[i].ShortCut = eShortcut then begin
+      Handled := True;
+      ppmEditor.Items[i].OnClick(Self);
     end;
   end;
   Application.ProcessMessages;
+  if Handled then exit;
   // Control chars
   if (eShortcut = Shortcut(Ord('E'), [ssCtrl])) then
     Handled := True;

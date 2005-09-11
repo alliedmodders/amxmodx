@@ -33,7 +33,7 @@
 */
 
 // Uncomment for SQL version
-#define USING_SQL
+//#define USING_SQL
 
 #include <amxmodx>
 #include <amxmisc>
@@ -104,8 +104,8 @@ public plugin_init()
   new configsDir[64]
   get_configsdir(configsDir, 63)
   server_cmd("exec %s/amxx.cfg", configsDir) // Execute main configuration file
-#if defined USING_SQL
   server_cmd("exec %s/sql.cfg", configsDir)
+#if defined USING_SQL
   server_cmd("amx_sqladmins")
 #else
   format(configsDir, 63, "%s/users.ini", configsDir)

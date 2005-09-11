@@ -786,41 +786,19 @@ static cell AMX_NATIVE_CALL amx_strlen(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL amx_trim(AMX *amx, cell *params)
 {
-	cell *asdf = get_amxaddr(amx, params[1]);
-	cell *cptr = asdf;
-	int len = 0;
-	while (*cptr++) len++;
-	int flag = 0, incr = 0;
-	register int i = 0;
-	
-	for (i = len - 1; i >= 0; i--)
-	{
-		if (!isspace(asdf[i]))
-		{
-			break;
-		} else {
-			asdf[i] = 0;
-			len--;
-		}
-	}
+	int len;
+	char *str = get_amxstring(amx, params[1], 0, len);
 
-	for (i = 0; i < len; i++)
-	{
-		if (isspace(asdf[i]) && !flag)
-		{
-			incr++;
-			if (incr + i < len)
-				asdf[i] = asdf[incr + i];
-		} else {
-			if (!flag)
-				flag = 1;
-			if (incr)
-				asdf[i] = asdf[incr+i];
-		}
-	}
-	asdf[len] = 0;
+	String toTrim;
 
-	return incr;
+	toTrim.assign(str);
+	toTrim.trim();
+
+	len -= toTrim.size();
+
+	set_amxstring(amx, params[1], toTrim.c_str(), toTrim.size());
+
+	return len;
 }
 
 static cell AMX_NATIVE_CALL n_strcat(AMX *amx, cell *params)

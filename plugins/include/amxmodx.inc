@@ -833,26 +833,55 @@ native dbg_trace_info(trace, &line, function[], maxLength1, file[], maxLength2);
 native dbg_fmt_error(buffer[], maxLength);
 
 /**
+ * The following two natives are useful for creating cross-mod plugins
+ *  where instead of #define flags to compile separate versions, you can
+ *  filter out the natives and modules depending on the current mod.
+ * Examples of this usage are in plmenu.sma, which filters out the cstrike module.
+ */
+
+/**
  * Sets a native filter.  This must be first set in plugin_natives(), but future calls will
  *  simply set a new filter.
  * This filter will allow your plugin to load even if its modules aren't loaded.  For example,
  *  if Fun isn't loaded and you use set_user_frags, your plugin will still load.  However, if you 
  *  attempt to call this native, your filter will intercept it with these parameters:
  *
- * public function native_filter(native[], index)
+ * public function native_filter(const name[], index)
  *  native - name of native
  *  index - index of native
+ *  trap - 0 if native couldn't be found, 1 if native use was attempted
  * 
  * If you return PLUGIN_HANDLED, no error is thrown.  If you return PLUGIN_CONTINUE, 
- *  your plugin will have a run-time-error.  You can throw your own error with abort().
+ *  your plugin will have a run-time-error.  To print your own error, or change the default,
+ *  you can return PLUGIN_HANDLED or return PLUGIN_CONTINUE and use set_error_filter.
+ * If you return PLUGIN_CONTINUE when trap is 0, the plugin will ABORT AND FAIL TO LOAD!
+ * When trap is 0, it is unsafe to use natives that modify the server or use other plugins.
  */
 native set_native_filter(const handler[]);
+
+/**
+ * This function sets a module filter.  It will let you intercept the automatic requirement 
+ *  of a module and return PLUGIN_CONTINUE to fail load or PLUGIN_HANDLED to imply that load
+ *  can continue even without the module.  
+ * 
+ * This is the most unforgiving of the filter functions.  You can ONLY call it during plugin_natives,
+ *  and any error that occurs is not filtered -- instead your plugin will fail to load as if you
+ *  returned PLUGIN_CONTINUE.  
+ *
+ * Your handler will be called with this prototype:
+ *
+ * public module_filter(const module[]);
+ *  module - logtag of the module required to load the plugin
+ *
+ * set_module_filter() returns 0 on success (unlike most natives).
+ */
+native set_module_filter(const handler[]);
 
 /**
  * Aborts execution of the current callback.  Your script will throw a run time error.
  * You can also specify an optional message.
  * You should NOT call this function inside:
- *  - Error, native, or module filters
+ *  - Error or module filters (native filters are safe if trap is 1)
  *  - plugin_natives()
  */
 native abort(error, const fmt[]="", {Float,_}:...);

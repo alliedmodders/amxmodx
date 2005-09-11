@@ -31,6 +31,7 @@
 
 #include <time.h>
 #include "amxmodx.h"
+#include "natives.h"
 
 static cell AMX_NATIVE_CALL get_xvar_id(AMX *amx, cell *params)
 {
@@ -3035,6 +3036,52 @@ static cell AMX_NATIVE_CALL amx_abort(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL module_exists(AMX *amx, cell *params)
+{
+	int len;
+	char *module = get_amxstring(amx, params[1], 0, len);
+
+	CList<CModule,const char *>::iterator a;
+
+	bool isdbi = false, found = false;
+	const amxx_module_info_s *info;
+	if (stricmp(module, "dbi")==0)
+		isdbi = true;
+
+	for (a=g_modules.begin(); a; ++a)
+	{
+		if ( (*a).getStatusValue() == MODULE_LOADED )
+		{
+			info = (*a).getInfoNew();
+			if (info)
+			{
+				if (isdbi)
+				{
+					if (info->logtag 
+						&& (StrCaseStr(info->logtag, "sql")
+							||
+							StrCaseStr(info->logtag, "dbi"))
+							)
+					{
+						found = true;
+						break;
+					}
+				} else {
+					if (info->logtag && (stricmp(info->logtag, module) == 0))
+					{
+						found = true;
+						break;
+					}
+				}
+			}
+		}
+	}
+	if (!found)
+		found = LibraryExists(module);
+
+	return (found ? 1 : 0);
+}
+
 AMX_NATIVE_INFO amxmodx_Natives[] = {
 	{"abort",					amx_abort},
 	{"callfunc_begin",			callfunc_begin},
@@ -3139,6 +3186,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] = {
 	{"md5_file",				amx_md5_file},
 	{"message_begin",			message_begin},
 	{"message_end",				message_end},
+	{"module_exists",			module_exists},
 	{"mkdir",					amx_mkdir},
 	{"num_to_word",				num_to_word},
 	{"parse_loguser",			parse_loguser},

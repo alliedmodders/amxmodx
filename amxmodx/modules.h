@@ -49,5 +49,6 @@
 #define STATIC_MODULE 1
 
 int CheckModules(AMX *amx, char error[128]);
+const char *StrCaseStr(const char *as, const char *bs);
 
 #endif // __MODULES_H__

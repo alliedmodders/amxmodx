@@ -326,9 +326,9 @@ displaySlapMenu(id,pos) {
     {
 	  if (cs_get_user_team(i) == CS_TEAM_T)
 	  {
-		copy(team, 3, "CT")
-	  } else if (cs_get_user_team(i) == CS_TEAM_CT) {
 		copy(team, 3, "TE")
+	  } else if (cs_get_user_team(i) == CS_TEAM_CT) {
+		copy(team, 3, "CT")
 	  } else {
     	get_user_team(i,team,3)
 	  }
@@ -545,9 +545,9 @@ displayTeamMenu(id,pos) {
     {
 	  iteam = _:cs_get_user_team(i)
 	  if (iteam == 1) {
-		copy(team, 3, "CT")
-	  } else if (iteam == 2) {
 		copy(team, 3, "TE")
+	  } else if (iteam == 2) {
+		copy(team, 3, "CT")
 	  } else {
     	get_user_team(i,team,3)
 	  }

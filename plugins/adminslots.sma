@@ -40,67 +40,68 @@
 
 new g_cmdLoopback[16]
 
-public plugin_init() {
-  register_plugin("Slots Reservation",AMXX_VERSION_STR,"AMXX Dev Team")
-  register_dictionary("adminslots.txt")
-  register_dictionary("common.txt")
-  register_cvar("amx_reservation","1")
-
-  format( g_cmdLoopback, 15, "amxres%c%c%c%c" , 
-    random_num('A','Z') , random_num('A','Z') ,random_num('A','Z'),random_num('A','Z')  )
-
-  register_clcmd( g_cmdLoopback, "ackSignal" )
+public plugin_init()
+{
+	register_plugin("Slots Reservation", AMXX_VERSION_STR, "AMXX Dev Team")
+	register_dictionary("adminslots.txt")
+	register_dictionary("common.txt")
+	register_cvar("amx_reservation", "1")
+	
+	format(g_cmdLoopback, 15, "amxres%c%c%c%c", random_num('A', 'Z'), random_num('A', 'Z'), random_num('A', 'Z'), random_num('A', 'Z'))
+	register_clcmd(g_cmdLoopback, "ackSignal")
 
 #if defined HIDE_RESERVED_SLOTS
-  new maxplayers = get_maxplayers()
-  new players = get_playersnum(1)
-  new limit = maxplayers - get_cvar_num("amx_reservation")
-  setVisibleSlots(players, maxplayers, limit)
+	new maxplayers = get_maxplayers()
+	new players = get_playersnum(1)
+	new limit = maxplayers - get_cvar_num("amx_reservation")
+	setVisibleSlots(players, maxplayers, limit)
 #endif
 }
 
-public ackSignal(id) {
-  new lReason[64]
-  format(lReason,63,"%L",id,"DROPPED_RES")
-  server_cmd("kick #%d ^"%s^"", get_user_userid(id), lReason )
+public ackSignal(id)
+{
+	new lReason[64]
+	format(lReason, 63, "%L", id, "DROPPED_RES")
+	server_cmd("kick #%d ^"%s^"", get_user_userid(id), lReason)
 }
 
-public client_authorized(id) {
-  new maxplayers = get_maxplayers()
-  new players = get_playersnum( 1 )
-  new limit = maxplayers - get_cvar_num("amx_reservation")
-  
-  if ( access(id,ADMIN_RESERVATION) || (players <= limit) )
-  {
+public client_authorized(id)
+{
+	new maxplayers = get_maxplayers()
+	new players = get_playersnum(1)
+	new limit = maxplayers - get_cvar_num("amx_reservation")
+
+	if (access(id, ADMIN_RESERVATION) || (players <= limit))
+	{
 #if defined HIDE_RESERVED_SLOTS
-    setVisibleSlots( players , maxplayers, limit )
+		setVisibleSlots(players, maxplayers, limit)
 #endif
-    return PLUGIN_CONTINUE
-  }
+		return PLUGIN_CONTINUE
+	}
+	
+	client_cmd(id, g_cmdLoopback)
 
-  client_cmd(id,g_cmdLoopback)
-
-  return PLUGIN_HANDLED
+	return PLUGIN_HANDLED
 }
 
 #if defined HIDE_RESERVED_SLOTS
 public client_disconnect(id)
 {
-  new maxplayers = get_maxplayers()
-  setVisibleSlots( get_playersnum(1) - 1 , maxplayers , 
-    maxplayers - get_cvar_num("amx_reservation")  )
-  return PLUGIN_CONTINUE
+	new maxplayers = get_maxplayers()
+	
+	setVisibleSlots(get_playersnum(1) - 1, maxplayers, maxplayers - get_cvar_num("amx_reservation"))
+	return PLUGIN_CONTINUE
 }
 
-setVisibleSlots( players , maxplayers , limit )
+setVisibleSlots(players, maxplayers, limit)
 {
-  new num = players + 1
+	new num = players + 1
 
-  if ( players == maxplayers )
-    num = maxplayers
-  else if ( players < limit )
-    num = limit
+	if (players == maxplayers)
+		num = maxplayers
+	else if (players < limit)
+		num = limit
 	
-  set_cvar_num( "sv_visiblemaxplayers" , num )
+	set_cvar_num("sv_visiblemaxplayers", num)
 }
 #endif

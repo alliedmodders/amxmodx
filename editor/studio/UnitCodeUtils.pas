@@ -122,6 +122,7 @@ begin
   eIdent := 0;
   eTempIdent := 0;
 
+  Cancel := False;
   ShowProgress(False);
   frmMain.pbLoading.Max := frmMain.sciEditor.Lines.Count *2 -2;
   for i := 0 to frmMain.sciEditor.Lines.Count -1 do begin
@@ -227,6 +228,7 @@ var i: integer;
 begin
   Screen.Cursor := crHourGlass;
   frmMain.sciEditor.Enabled := False;
+  Cancel := False;
   ShowProgress(False);
   frmMain.pbLoading.Max := frmMain.sciEditor.Lines.Count -1;
 
@@ -291,7 +293,7 @@ end;
 function Between(eText, eFirst, eSecond: String): String;
 var eTemp: String;
 begin
-  if (Pos(eFirst, eText) = 0) and (Pos(eSecond, eText) = 0) then
+  if (Pos(eFirst, eText) = 0) or (Pos(eSecond, eText) = 0) then
     Result := ''
   else begin
     eTemp := eText;

@@ -808,6 +808,7 @@ begin
   end;
 
   Result := True;
+  Cancel := False;
 
   ShowProgress(True);
   try
@@ -1080,6 +1081,7 @@ begin
   end;
 
   Screen.Cursor := crHourGlass;
+  Cancel := False;
   ShowProgress(True);
 
   AssignFile(F, AFilename);

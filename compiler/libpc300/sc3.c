@@ -2206,7 +2206,8 @@ static int nesting=0;
     if ((sym->usage & uNATIVE)==0)
       totalsize++;                    /* add "call" opcode */
     totalsize+=nest_stkusage;
-    assert(curfunc!=NULL);
+    if (!curfunc) /* if we got here, the function is invalid! */
+      return;
     if (curfunc->x.stacksize<totalsize)
       curfunc->x.stacksize=totalsize;
     nest_stkusage-=nargs+heapalloc+1; /* stack/heap space, +1 for argcount param */

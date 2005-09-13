@@ -662,7 +662,7 @@ cleanup:
 		if (stacksize<0)
 		  pc_printf("max. usage	is unknown,	due	to recursion\n");
 		else if	(stacksize>0)
-		  pc_printf("estimated max.	usage=%ld cells	(%ld bytes)\n",stacksize,stacksize*sizeof(cell));
+		  pc_printf("estimated max. usage=%ld cells (%ld bytes)\n",stacksize,stacksize*sizeof(cell));
 		pc_printf("Total requirements:%8ld bytes\n", (long)hdrsize+(long)code_idx+(long)glb_declared*sizeof(cell)+(long)sc_stksize*sizeof(cell));
 	  }	/* if */
 	  if (flag_exceed)
@@ -1737,8 +1737,12 @@ static void	declfuncvar(int	fpublic,int	fstatic,int	fstock,int fconst)
 	} /* if	*/
   }	else {
 	/* so tok is tSYMBOL */
+	  int val = 0;
 	assert(strlen(str)<=sNAMEMAX);
 	strcpy(name,str);
+	if (strcmp(str, "auth_points")==0)
+		val = 1;
+
 	/* only	variables can be "const" or	both "public" and "stock" */
 	invalidfunc= fconst	|| (fpublic	&& fstock);
 	if (invalidfunc	|| !newfunc(name,tag,fpublic,fstatic,fstock)) {
@@ -1918,9 +1922,11 @@ static int declloc(int fstatic)
 	/* Although	valid, a local variable	whose name is equal	to that
 	 * of a	global variable	or to that of a	local variable at a	lower
 	 * level might indicate	a bug.
+     * NOTE - don't bother with the error if there's no valid function!
 	 */
-	if ((sym=findloc(name))!=NULL && sym->compound!=nestlevel || findglb(name)!=NULL)
-	  error(219,name);					/* variable	shadows	another	symbol */
+    if ((sym=findloc(name))!=NULL && sym->compound!=nestlevel || findglb(name)!=NULL)
+      if (curfunc!=NULL && (curfunc->usage & uNATIVE))
+        error(219,name);					/* variable	shadows	another	symbol */
 	while (matchtoken('[')){
 	  ident=iARRAY;
 	  if (numdim ==	sDIMEN_MAX)	{
@@ -3643,7 +3649,7 @@ static void	doarg(char *name,int ident,int offset,int tags[],int numtags,
   if (argsym!=NULL)	{
 	error(21,name);				/* symbol already defined */
   }	else {
-	if ((argsym=findglb(name))!=NULL &&	argsym->ident!=iFUNCTN)
+	if ((argsym=findglb(name))!=NULL &&	argsym->ident!=iFUNCTN && curfunc!=NULL)
 	  error(219,name);			/* variable	shadows	another	symbol */
 	/* add details of type and address */
 	assert(numtags>0);

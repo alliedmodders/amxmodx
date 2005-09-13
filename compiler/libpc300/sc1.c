@@ -3646,8 +3646,8 @@ static void	doarg(char *name,int ident,int offset,int tags[],int numtags,
   if (argsym!=NULL)	{
 	error(21,name);				/* symbol already defined */
   }	else {
-	if ((argsym=findglb(name))!=NULL &&	argsym->ident!=iFUNCTN && curfunc!=NULL)
-	  error(219,name);			/* variable	shadows	another	symbol */
+    if ((argsym=findglb(name))!=NULL &&	argsym->ident!=iFUNCTN && curfunc!=NULL)
+      error(219,name);			/* variable	shadows	another	symbol */
 	/* add details of type and address */
 	assert(numtags>0);
 	argsym=addvariable(name,offset,ident,sLOCAL,tags[0],

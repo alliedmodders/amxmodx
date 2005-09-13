@@ -346,7 +346,7 @@ public plugin_cfg()
 	new len = format(configFile, 63, "%s/maps/%s.cfg", configFile, curMap)
 
 	if (file_exists(configFile))
-		set_task(6.1, "delayed_load", 0, configFile, len+1)
+		set_task(6.1, "delayed_load", 0, configFile, len + 1)
 }
 
 public delayed_load(configFile[])

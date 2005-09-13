@@ -215,8 +215,8 @@ displayCfgMenu(id, pos)
 	
 	for (new a = start; a < end; ++a)
 	{
-			keys |= (1<<k)
-			len += format(menu_body[len], 511-len, "%d. %s\y\R%L^n\w", ++k, g_menuData[a], id, get_xvar_num(g_menuDataId[a]) ? "ON" : "OFF")
+		keys |= (1<<k)
+		len += format(menu_body[len], 511-len, "%d. %s\y\R%L^n\w", ++k, g_menuData[a], id, get_xvar_num(g_menuDataId[a]) ? "ON" : "OFF")
 	}
 	
 	if (g_menuDataNum == 0)

@@ -1737,11 +1737,8 @@ static void	declfuncvar(int	fpublic,int	fstatic,int	fstock,int fconst)
 	} /* if	*/
   }	else {
 	/* so tok is tSYMBOL */
-	  int val = 0;
 	assert(strlen(str)<=sNAMEMAX);
 	strcpy(name,str);
-	if (strcmp(str, "auth_points")==0)
-		val = 1;
 
 	/* only	variables can be "const" or	both "public" and "stock" */
 	invalidfunc= fconst	|| (fpublic	&& fstock);

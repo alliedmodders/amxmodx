@@ -64,7 +64,7 @@ namespace AMXXRelease
 			if (!Directory.Exists(basedir))
 				Directory.CreateDirectory(basedir);
 
-			string srcdir = m_Cfg.GetSourceTree() + "\\configs";
+			string srcdir = PropSlashes(m_Cfg.GetSourceTree() + "\\configs");
 
 			if (!Directory.Exists(srcdir))
 				return;

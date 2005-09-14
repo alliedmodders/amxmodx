@@ -1289,19 +1289,19 @@ static void	about(void)
 	setcaption();
 	pc_printf("Usage:	pawncc <filename> [filename...]	[options]\n\n");
 	pc_printf("Options:\n");
-	pc_printf("			-A<num>	 alignment in bytes	of the data	segment	and	the	stack\n");
-	pc_printf("			-a		 output	assembler code\n");
+	pc_printf("			-A<num>	 alignment in bytes of the data segment and the stack\n");
+	pc_printf("			-a output assembler code\n");
 #if	AMX_COMPACTMARGIN >	2
-	pc_printf("			-C[+/-]	 compact encoding for output file (default=%c)\n", sc_compress ? '+' : '-');
+	pc_printf("			-C[+/-] compact encoding for output file (default=%c)\n", sc_compress ? '+' : '-');
 #endif
 	pc_printf("			-c<name> codepage name or number; e.g. 1252	for	Windows	Latin-1\n");
 #if	defined	dos_setdrive
-	pc_printf("			-Dpath	 active	directory path\n");
+	pc_printf("			-Dpath active directory path\n");
 #endif
-	pc_printf("			-d0		 no	symbolic information, no run-time checks\n");
-	pc_printf("			-d1		 [default] run-time	checks,	no symbolic	information\n");
-	pc_printf("			-d2		 full debug	information	and	dynamic	checking\n");
-	pc_printf("			-d3		 full debug	information, dynamic checking, no optimization\n");
+	pc_printf("			-d0 no symbolic information, no run-time checks\n");
+	pc_printf("			-d1 [default] run-time	checks,	no symbolic	information\n");
+	pc_printf("			-d2 full debug information and dynamic checking\n");
+	pc_printf("			-d3 full debug information, dynamic checking, no optimization\n");
 	pc_printf("			-e<name> set name of error file	(quiet compile)\n");
 #if	defined	__WIN32__ || defined _WIN32	|| defined _Windows
 	pc_printf("			-H<hwnd> window	handle to send a notification message on finish\n");

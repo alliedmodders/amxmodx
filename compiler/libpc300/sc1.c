@@ -660,7 +660,7 @@ cleanup:
 		pc_printf("Data	size:		  %8ld bytes\n", (long)glb_declared*sizeof(cell));
 		pc_printf("Stack/heap size:	  %8ld bytes; ", (long)sc_stksize*sizeof(cell));
 		if (stacksize<0)
-		  pc_printf("max. usage	is unknown,	due	to recursion\n");
+		  pc_printf("max. usage	is unknown, due to recursion\n");
 		else if	(stacksize>0)
 		  pc_printf("estimated max. usage=%ld cells (%ld bytes)\n",stacksize,stacksize*sizeof(cell));
 		pc_printf("Total requirements:%8ld bytes\n", (long)hdrsize+(long)code_idx+(long)glb_declared*sizeof(cell)+(long)sc_stksize*sizeof(cell));

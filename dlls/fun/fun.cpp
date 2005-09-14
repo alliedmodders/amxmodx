@@ -31,6 +31,7 @@
 *  version.
 */
 
+#include <string.h>
 #include "fun.h"
 
 /*

@@ -1054,7 +1054,9 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 		buf.trim();
 		if (buf[0] == 0)
 			continue;
-		
+		if ((buf[0] == ';') || (buf[0] == '/' && buf[1] == '/'))
+			continue;
+
 		if (buf[0] == '[' && buf.size() >= 3)
 		{
 			if (multiline)

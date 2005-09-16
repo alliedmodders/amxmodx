@@ -86,6 +86,7 @@ void CLog::CloseFile()
 void CLog::CreateNewFile()
 {
 	CloseFile();
+	
 	// build filename
 	time_t td;
 	time(&td);
@@ -128,9 +129,9 @@ void CLog::MapChange()
 	// create dir if not existing
 	char file[256];
 #ifdef __linux
-	mkdir(build_pathname_r(file, sizeof(file)-1,"%s", g_log_dir.c_str()), 0700);
+	mkdir(build_pathname_r(file, sizeof(file)-1, "%s", g_log_dir.c_str()), 0700);
 #else
-	mkdir(build_pathname_r(file, sizeof(file)-1,"%s", g_log_dir.c_str()));
+	mkdir(build_pathname_r(file, sizeof(file)-1, "%s", g_log_dir.c_str()));
 #endif
 
 	m_LogType = atoi(get_localinfo("amxx_logging", "1"));
@@ -197,6 +198,7 @@ void CLog::Log(const char *fmt, ...)
 			build_pathname_r(file, sizeof(file)-1, "%s/L%02d%02d.log", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday);
 			pF = fopen(file, "a+");
 		}
+		
 		if (pF)
 		{
 			fprintf(pF, "L %s: %s\n", date, msg);

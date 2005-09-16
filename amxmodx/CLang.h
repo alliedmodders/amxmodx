@@ -51,6 +51,7 @@ struct sKeyDef
 {
 	sKeyDef() { key = -1; def = 0; }
 	~sKeyDef() { if (def) delete def; }
+	
 	int key;
 	String *def;
 };
@@ -77,7 +78,7 @@ class CLangMngr
 		// compare this language to a language name
 		friend bool operator == (const CLang &left, const char *right)
 		{
-			return strcmp(left.m_LanguageName, right)==0 ? true : false;
+			return strcmp(left.m_LanguageName, right) == 0 ? true : false;
 		}
 		
 		// Get language name

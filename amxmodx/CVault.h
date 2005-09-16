@@ -45,6 +45,7 @@ class Vault
 	{
 		String key;
 		String value;
+		
 		int number;
 		Obj *next;
 		Obj(const char* k, const char* v);
@@ -56,19 +57,23 @@ class Vault
 
 public:
 
-	Vault() {head=0;}
-	~Vault() { clear();}
+	Vault() { head = 0; }
+	~Vault() { clear(); }
 
 	// Interface
 
 	bool exists(const char* k);
+	
 	void put(const char* k, const char* v);
 	void remove(const char* k);
+	
 	const char* get(const char* n);
 	int get_number(const char* n);
 	void setSource(const char* n);
+	
 	bool loadVault();
 	bool saveVault();
+	
 	void clear();
 
 	class iterator

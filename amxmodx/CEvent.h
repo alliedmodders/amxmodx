@@ -32,7 +32,7 @@
 #ifndef __CEVENTS_H__
 #define __CEVENTS_H__
 
-#define MAX_AMX_REG_MSG MAX_REG_MSGS+16
+#define MAX_AMX_REG_MSG MAX_REG_MSGS + 16
  
 enum
 {
@@ -142,12 +142,14 @@ public:
 	// Interface
 
 	ClEvent* registerEvent(CPluginMngr::CPlugin* plugin, int func, int flags, int msgid);
+	
 	void parserInit(int msg_type, float* timer, CPlayer* pPlayer, int index);
 	void parseValue(int iValue);
 	void parseValue(float fValue);
 	void parseValue(const char *sz);
 	void executeEvents();
-	int getArgNum() const;		//{ return (parsePos+1); }
+	
+	int getArgNum() const;		//{ return (parsePos + 1); }
 	const char* getArgString(int a) const;
 	int getArgInteger(int a) const;
 	float getArgFloat(int a) const;

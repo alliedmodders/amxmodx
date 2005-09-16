@@ -95,4 +95,3 @@ public:
 };
 
 #endif // __AMXXFILE_H__
-

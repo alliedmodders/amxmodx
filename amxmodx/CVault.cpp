@@ -117,7 +117,7 @@ void Vault::clear()
 	{
 		Obj* a = head->next;
 		delete head;
-		head =  a;
+		head = a;
 	}
 }
 

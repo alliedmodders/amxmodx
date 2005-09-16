@@ -32,20 +32,19 @@
 #ifndef AMXMODX_H
 #define AMXMODX_H
 
-
 #ifdef __linux__
 #include <unistd.h>
 #include <stdlib.h>
 #include "sclinux.h"
 #endif
-#include <ctype.h> //tolower, etc
+#include <ctype.h>				//tolower, etc
 #include "string.h"
 #include <extdll.h>
 #include <meta_api.h>
-#include "mm_pextensions.h"			// metamod-p extensions
+#include "mm_pextensions.h"		// metamod-p extensions
 
 #ifdef MEMORY_TEST
-#include "mmgr/mmgr.h"
+	#include "mmgr/mmgr.h"
 #endif
 
 #include "md5.h"
@@ -69,11 +68,11 @@
 #include "amxxlog.h"
 
 #define AMXXLOG_Log g_log.Log
-#define AMX_VERSION     "1.56"
+#define AMX_VERSION	"1.56"
 
-extern AMX_NATIVE_INFO  core_Natives[];
-extern AMX_NATIVE_INFO  time_Natives[];
-extern AMX_NATIVE_INFO  power_Natives[];
+extern AMX_NATIVE_INFO core_Natives[];
+extern AMX_NATIVE_INFO time_Natives[];
+extern AMX_NATIVE_INFO power_Natives[];
 extern AMX_NATIVE_INFO amxmodx_Natives[];
 extern AMX_NATIVE_INFO file_Natives[];
 extern AMX_NATIVE_INFO float_Natives[];
@@ -82,18 +81,18 @@ extern AMX_NATIVE_INFO vault_Natives[];
 
 #ifndef __linux__
 #define DLLOAD(path) (DLHANDLE)LoadLibrary(path)
-#define DLPROC(m,func) GetProcAddress(m,func)
+#define DLPROC(m, func) GetProcAddress(m, func)
 #define DLFREE(m) FreeLibrary(m)
 #else
 #define DLLOAD(path) (DLHANDLE)dlopen(path, RTLD_NOW)
-#define DLPROC(m,func) dlsym(m,func)
+#define DLPROC(m, func) dlsym(m, func)
 #define DLFREE(m) dlclose(m)
 #endif
 
 #ifndef __linux__
-typedef HINSTANCE DLHANDLE;
+	typedef HINSTANCE DLHANDLE;
 #else
-typedef void* DLHANDLE;
+	typedef void* DLHANDLE;
 #endif
 
 #ifndef GETPLAYERAUTHID
@@ -109,31 +108,35 @@ typedef void* DLHANDLE;
 
 char* UTIL_SplitHudMessage(register const char *src);
 int UTIL_ReadFlags(const char* c);
-void UTIL_ClientPrint( edict_t *pEntity, int msg_dest,  char *msg );
+
+void UTIL_ClientPrint(edict_t *pEntity, int msg_dest, char *msg);
 void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1 = NULL, const char *arg2 = NULL);
-void UTIL_GetFlags(char* flags,int flag);
+void UTIL_GetFlags(char* flags, int flag);
 void UTIL_HudMessage(edict_t *pEntity, const hudtextparms_t &textparms, char *pMessage);
 void UTIL_IntToString(int value, char *output);
-void UTIL_ShowMOTD( edict_t *client , char *motd, int mlen, const char *name);
-void UTIL_ShowMenu( edict_t* pEntity, int slots, int time, char *menu, int mlen );
+void UTIL_ShowMOTD(edict_t *client, char *motd, int mlen, const char *name);
+void UTIL_ShowMenu(edict_t* pEntity, int slots, int time, char *menu, int mlen);
+
 char *UTIL_VarArgs(const char *fmt, ...);
 
 
 #define GET_PLAYER_POINTER(e)   (&g_players[ENTINDEX(e)])
-//#define GET_PLAYER_POINTER(e)   (&g_players[(((int)e-g_edict_point)/sizeof(edict_t ))])
+//#define GET_PLAYER_POINTER(e)   (&g_players[(((int)e-g_edict_point)/sizeof(edict_t))])
 #define GET_PLAYER_POINTER_I(i) (&g_players[i])
 
-struct WeaponsVault {
-  String fullName;
-  short int iId;
-  short int ammoSlot;
+struct WeaponsVault
+{
+	String fullName;
+	short int iId;
+	short int ammoSlot;
 };
 
-struct fakecmd_t {
-  char args[256];
-  const char *argv[3];
-  int argc;
-  bool fake;
+struct fakecmd_t
+{
+	char args[256];
+	const char *argv[3];
+	int argc;
+	bool fake;
 };
 
 extern bool g_IsNewMM;
@@ -148,8 +151,8 @@ extern CList<CCVar> g_cvars;
 extern CList<ForceObject> g_forcemodels;
 extern CList<ForceObject> g_forcesounds;
 extern CList<ForceObject> g_forcegeneric;
-extern CList<CModule,const char *> g_modules;
-extern CList<CScript,AMX*> g_loadedscripts;
+extern CList<CModule, const char *> g_modules;
+extern CList<CScript, AMX*> g_loadedscripts;
 extern CList<CPlayer*> g_auth;
 extern EventsMngr g_events;
 extern Grenades g_grenades;
@@ -160,7 +163,7 @@ extern String g_log_dir;
 extern String g_mod_name;
 extern TeamIds g_teamsIds;
 extern Vault g_vault;
-extern CForwardMngr  g_forwards;
+extern CForwardMngr g_forwards;
 extern WeaponsVault g_weaponsData[MAX_WEAPONS];
 extern XVars g_xvars;
 extern bool g_bmod_cstrike;
@@ -224,14 +227,15 @@ void Client_DeathMsg(void*);
 void amx_command();
 void plugin_srvcmd();
 
-const char* stristr(const char* a,const char* b);
+const char* stristr(const char* a, const char* b);
 char *strptime(const char *buf, const char *fmt, struct tm *tm, short addthem);
 
 int loadModules(const char* filename, PLUG_LOADTIME now);
 void detachModules();
 void detachReloadModules();
+
 #ifdef FAKEMETA
-void attachModules();
+	void attachModules();
 #endif
 
 // Count modules
@@ -245,40 +249,43 @@ enum CountModulesMode
 int countModules(CountModulesMode mode);
 void modules_callPluginsLoaded();
 
-cell* get_amxaddr(AMX *amx,cell amx_addr);
-char* build_pathname(char *fmt, ... );
+cell* get_amxaddr(AMX *amx, cell amx_addr);
+char* build_pathname(char *fmt, ...);
 char* build_pathname_r(char *buffer, size_t maxlen, char *fmt, ...);
-char* format_amxstring(AMX *amx, cell *params, int parm,int& len);
-AMX* get_amxscript(int, void**,const char**);
+char* format_amxstring(AMX *amx, cell *params, int parm, int& len);
+AMX* get_amxscript(int, void**, const char**);
 const char* get_amxscriptname(AMX* amx);
-char* get_amxstring(AMX *amx,cell amx_addr,int id,int& len);
+char* get_amxstring(AMX *amx, cell amx_addr, int id, int& len);
+
 int amxstring_len(cell* cstr);
 int load_amxscript(AMX* amx, void** program, const char* path, char error[64], int debug);
-int set_amxnatives(AMX* amx,char error[64]);
-int set_amxstring(AMX *amx,cell amx_addr,const char *source,int max);
-int unload_amxscript(AMX* amx,void** program);
-void copy_amxmemory(cell* dest,cell* src,int len);
+int set_amxnatives(AMX* amx, char error[64]);
+int set_amxstring(AMX *amx, cell amx_addr, const char *source, int max);
+int unload_amxscript(AMX* amx, void** program);
+
+void copy_amxmemory(cell* dest, cell* src, int len);
 void get_modname(char*);
-void print_srvconsole( char *fmt, ... );
-void report_error( int code, char* fmt, ... );
+void print_srvconsole(char *fmt, ...);
+void report_error(int code, char* fmt, ...);
 void* alloc_amxmemory(void**, int size);
 void free_amxmemory(void **ptr);
 // get_localinfo
-const char* get_localinfo( const char* name , const char* def );
+const char* get_localinfo(const char* name, const char* def);
 cell AMX_NATIVE_CALL require_module(AMX *amx, cell *params);
 void LogError(AMX *amx, int err, const char *fmt, ...);
 
 enum ModuleCallReason
 {
-	ModuleCall_NotCalled = 0,			// nothing
-	ModuleCall_Query,					// in Query func
-	ModuleCall_Attach,					// in Attach func
-	ModuleCall_Detach,					// in Detach func
+	ModuleCall_NotCalled = 0,					// nothing
+	ModuleCall_Query,							// in Query func
+	ModuleCall_Attach,							// in Attach func
+	ModuleCall_Detach,							// in Detach func
 };
 
 extern ModuleCallReason g_ModuleCallReason;		// modules.cpp
 extern CModule *g_CurrentlyCalledModule;		// modules.cpp
 extern const char *g_LastRequestedFunc;			// modules.cpp
+
 void Module_CacheFunctions();
 void Module_UncacheFunctions();
 
@@ -301,7 +308,7 @@ extern int FF_ClientAuthorized;
 extern bool g_coloredmenus;
 
 #ifdef FAKEMETA
-extern CFakeMeta g_FakeMeta;
+	extern CFakeMeta g_FakeMeta;
 #endif
 
 struct func_s
@@ -311,4 +318,3 @@ struct func_s
 };
 
 #endif // AMXMODX_H
-

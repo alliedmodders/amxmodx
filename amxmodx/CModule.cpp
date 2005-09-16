@@ -136,7 +136,7 @@ bool CModule::attachModule()
 				m_MissingFunc = g_LastRequestedFunc;
 				return false;
 			default:
-				AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.",  m_Filename.c_str(), getVersion());
+				AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.", m_Filename.c_str(), getVersion());
 				m_Status = MODULE_BADLOAD;
 				return false;
 		}
@@ -191,7 +191,7 @@ bool CModule::queryModule()
 			case AMXX_OK:
 				break;
 			default:
-				AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.",  m_Filename.c_str(), getVersion());
+				AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.", m_Filename.c_str(), getVersion());
 				m_Status = MODULE_BADLOAD;
 				return false;
 		}

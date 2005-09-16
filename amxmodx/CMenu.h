@@ -43,6 +43,7 @@ class MenuMngr
 		String name;
 		AMX* amx;
 		MenuIdEle* next;
+		
 		int id;
 		static int uniqueid;
 		
@@ -62,11 +63,12 @@ private:
 	{
 		friend class iterator;
 		friend class MenuMngr;
-	  
+
 		CPluginMngr::CPlugin *plugin;
 		int menuid;
 		int keys;
 		int function;
+		
 		MenuCommand* next;
 		MenuCommand(CPluginMngr::CPlugin *a, int mi, int k, int f);
 	public:

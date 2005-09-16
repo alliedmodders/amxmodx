@@ -159,7 +159,7 @@ void UTIL_IntToString(int value, char *output)
 	{
 		aaa += sprintf(&output[aaa], words[tho]);
 		aaa += sprintf(&output[aaa], words[29]);
-		value =  value % 1000;
+		value = value % 1000;
 	}
 
 	int hun = value / 100;
@@ -168,13 +168,13 @@ void UTIL_IntToString(int value, char *output)
 	{
 		aaa += sprintf(&output[aaa], words[hun]);
 		aaa += sprintf(&output[aaa], words[28]);
-		value =  value % 100;
+		value = value % 100;
 	}
 
 	int ten = value / 10;
 	int unit = value % 10;
 	
-	if (ten)  
+	if (ten)
 		aaa += sprintf(&output[aaa], words[(ten > 1) ? (ten + 18) : (unit + 10)]);
 	
 	if (ten != 1 && (unit || (!value && !hun && !tho))) 

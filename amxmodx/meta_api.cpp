@@ -30,9 +30,11 @@
 */
 
 #include <time.h>
+
 #if defined WIN32
 #include <direct.h>
 #endif
+
 #include "amxmodx.h"
 #include "fakemeta.h"
 #include "newmenus.h"
@@ -60,6 +62,7 @@ pextension_funcs_t *gpMetaPExtFuncs;
 
 funEventCall modMsgsEnd[MAX_REG_MSGS];
 funEventCall modMsgs[MAX_REG_MSGS];
+
 void (*function)(void*);
 void (*endfunction)(void*);
 
@@ -75,6 +78,7 @@ CPlayer* mPlayer;
 CPluginMngr g_plugins;
 CTaskMngr g_tasksMngr;
 CmdMngr g_commands;
+
 EventsMngr g_events;
 Grenades g_grenades;
 LogEventsMngr g_logevents;
@@ -83,16 +87,20 @@ CLangMngr g_langMngr;
 String g_log_dir;
 String g_mod_name;
 XVars g_xvars;
+
 bool g_bmod_cstrike;
 bool g_bmod_dod;
 bool g_dontprecache;
 bool g_forcedmodules;
 bool g_forcedsounds;
+
 fakecmd_t g_fakecmd;
+
 float g_game_restarting;
 float g_game_timeleft;
 float g_task_time;
 float g_auth_time;
+
 bool g_initialized = false;
 bool g_IsNewMM = false;
 bool g_NeedsP = false;
@@ -239,8 +247,8 @@ int	C_Spawn(edict_t *pent)
 
 	// ###### Load lang
 	char file[256];
-	g_langMngr.LoadCache(build_pathname_r(file, sizeof(file)-1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
-	g_langMngr.Load(build_pathname_r(file, sizeof(file)-1, "%s/languages.dat", get_localinfo("amxmodx_datadir", "addons/amxmodx/data")));
+	g_langMngr.LoadCache(build_pathname_r(file, sizeof(file) - 1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
+	g_langMngr.Load(build_pathname_r(file, sizeof(file) - 1, "%s/languages.dat", get_localinfo("amxmodx_datadir", "addons/amxmodx/data")));
 
 	// ###### Initialize commands prefixes
 	g_commands.registerPrefix("amx");
@@ -260,6 +268,7 @@ int	C_Spawn(edict_t *pent)
 	// ###### Load modules
 	loadModules(get_localinfo("amxx_modules", "addons/amxmodx/configs/modules.ini"), PT_ANYTIME);
 	int loaded = countModules(CountModules_Running); // Call after attachModules so all modules don't have pending stat
+	
 	// Set some info about amx version and modules
 	CVAR_SET_STRING(init_amxmodx_version.name, AMX_VERSION);
 	char buffer[32];
@@ -267,7 +276,7 @@ int	C_Spawn(edict_t *pent)
 	CVAR_SET_STRING(init_amxmodx_modules.name, buffer);
 
 	// ###### Load Vault
-	g_vault.setSource(build_pathname_r(file, sizeof(file)-1, "%s", get_localinfo("amxx_vault", "addons/amxmodx/configs/vault.ini")));
+	g_vault.setSource(build_pathname_r(file, sizeof(file) - 1, "%s", get_localinfo("amxx_vault", "addons/amxmodx/configs/vault.ini")));
 	g_vault.loadVault();
 	
 	if (strlen(g_vault.get("server_language")) < 1)
@@ -280,11 +289,9 @@ int	C_Spawn(edict_t *pent)
 	g_game_timeleft = g_bmod_dod ? 1.0f : 0.0f;
 	g_task_time = gpGlobals->time + 99999.0f;
 	g_auth_time = gpGlobals->time + 99999.0f;
-
 #ifdef MEMORY_TEST
 	g_next_memreport_time = gpGlobals->time + 99999.0f;
 #endif
-
 	g_players_num = 0;
 
 	// Set server flags
@@ -424,8 +431,8 @@ void C_ServerActivate_Post(edict_t *pEdictList, int edictCount, int clientMax)
 
 	// ###### Save lang
 	char file[256];
-	g_langMngr.Save(build_pathname_r(file, sizeof(file)-1, "%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
-	g_langMngr.SaveCache(build_pathname_r(file, sizeof(file)-1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
+	g_langMngr.Save(build_pathname_r(file, sizeof(file) - 1, "%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
+	g_langMngr.SaveCache(build_pathname_r(file, sizeof(file) - 1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
 
 	// Correct time in Counter-Strike and other mods (except DOD)
 	if (!g_bmod_dod)
@@ -494,9 +501,11 @@ void C_ServerDeactivate_Post()
 	g_xvars.clear();
 	g_plugins.clear();
 	ClearPluginLibraries();
+	
 	char file[256];
-	g_langMngr.Save(build_pathname_r(file, sizeof(file)-1, "%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
-	g_langMngr.SaveCache(build_pathname_r(file, sizeof(file)-1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
+	
+	g_langMngr.Save(build_pathname_r(file, sizeof(file) - 1, "%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
+	g_langMngr.SaveCache(build_pathname_r(file, sizeof(file) - 1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
 	g_langMngr.Clear();
 
 	// last memreport
@@ -540,12 +549,15 @@ void C_ServerDeactivate_Post()
 					}
 				}
 				g_memreport_dir.assign(buffer);
+				
 				// g_memreport_dir should be valid now
 				break;
 			}
 		}
+		
 		m_dumpMemoryReport(build_pathname("%s/r%03d.txt", g_memreport_dir.c_str(), g_memreport_count));
 		AMXXLOG_Log("Memreport #%d created (file \"%s/r%03d.txt\") (interval %f)", g_memreport_count + 1, g_memreport_dir.c_str(), g_memreport_count, MEMREPORT_INTERVAL);
+		
 		g_memreport_count++;
 	}
 #endif // MEMORY_TEST
@@ -614,7 +626,7 @@ void C_ClientUserInfoChanged_Post(edict_t *pEntity, char *infobuffer)
 	// Emulate bot connection and putinserver
 	if (pPlayer->ingame)
 	{
-		pPlayer->name.assign(name); //	Make sure player have name up to date
+		pPlayer->name.assign(name);			//	Make sure player have name up to date
 	}
 	else if (pPlayer->IsBot())
 	{
@@ -637,8 +649,10 @@ void C_ClientUserInfoChanged_Post(edict_t *pEntity, char *infobuffer)
 void C_ClientCommand(edict_t *pEntity)
 {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
+	
 	META_RES result = MRES_IGNORED;
 	cell ret = 0;
+	
 	const char* cmd = CMD_ARGV(0);
 	const char* arg = CMD_ARGV(1);
 
@@ -649,6 +663,7 @@ void C_ClientCommand(edict_t *pEntity)
 		{
 			// Print version
 			static char buf[1024];
+			
 			sprintf(buf, "%s %s\n", Plugin_info.name, Plugin_info.version);
 			CLIENT_PRINT(pEntity, print_console, buf);
 			sprintf(buf, "Authors: %s  (%s)\n", "Felix \"SniperBeamer\" Geyer, David \"BAILOPAN\" Anderson, Pavol \"PM OnoTo\" Marko, Jonny \"Got His Gun\" Bergstrom, and Lukasz \"SidLuke\" Wlasinski.", Plugin_info.url);
@@ -675,7 +690,9 @@ void C_ClientCommand(edict_t *pEntity)
 	/* check for command and if needed also for first argument and call proper function */
 
 	CmdMngr::iterator aa = g_commands.clcmdprefixbegin(cmd);
-	if (!aa) aa = g_commands.clcmdbegin();
+	
+	if (!aa)
+		aa = g_commands.clcmdbegin();
 
 	while (aa)
 	{
@@ -717,14 +734,15 @@ void C_ClientCommand(edict_t *pEntity)
 							int item = pMenu->PagekeyToItem(pPlayer->page, pressed_key);
 							ret = executeForwards((*a).getFunction(), pPlayer->index, menu, item);
 							
-							if (ret & 2) result = MRES_SUPERCEDE;
-							else 
-								if (ret & 1) RETURN_META(MRES_SUPERCEDE);
+							if (ret & 2)
+								result = MRES_SUPERCEDE;
+							else if (ret & 1)
+								RETURN_META(MRES_SUPERCEDE);
 							else 
 							{
 								if (item == MENU_BACK)
 								{
-									pMenu->Display(pPlayer->index, pPlayer->page-1);
+									pMenu->Display(pPlayer->index, pPlayer->page - 1);
 								} 
 								else if (item == MENU_MORE)
 								{
@@ -774,6 +792,7 @@ void C_StartFrame_Post(void)
 				(*a)->Authorize();
 				executeForwards(FF_ClientAuthorized, (*a)->index);
 				a.remove();
+				
 				continue;
 			}
 			++a;
@@ -791,6 +810,7 @@ void C_StartFrame_Post(void)
 			time_t td;
 			time(&td);
 			tm *curTime = localtime(&td);
+			
 			int i = 0;
 #ifdef __linux__
 			mkdir(build_pathname("%s/memreports", get_localinfo("amxx_basedir", "addons/amxmodx")), 0700);
@@ -826,8 +846,10 @@ void C_StartFrame_Post(void)
 				break;
 			}
 		}
+		
 		m_dumpMemoryReport(build_pathname("%s/r%03d.txt", g_memreport_dir.c_str(), g_memreport_count));
 		AMXXLOG_Log("Memreport #%d created (file \"%s/r%03d.txt\") (interval %f)", g_memreport_count + 1, g_memreport_dir.c_str(), g_memreport_count, MEMREPORT_INTERVAL);
+		
 		g_memreport_count++;
 	}
 #endif // MEMORY_TEST
@@ -836,7 +858,6 @@ void C_StartFrame_Post(void)
 		RETURN_META(MRES_IGNORED);
 
 	g_task_time = gpGlobals->time + 0.1f;
-
 	g_tasksMngr.startFrame();
 
 	// Dispatch client cvar queries
@@ -870,6 +891,7 @@ void C_MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict
 			int *z = (int*)ptr + 0x16C;
 #endif
 			int stop = (int)ed->v.armorvalue;
+			
 			*z = stop;
 			ed->v.armorvalue = (float)stop;
 		}
@@ -885,8 +907,9 @@ void C_MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict
 		msg_type = 0;
 
 	mState = 0;
-	function=modMsgs[msg_type];
-	endfunction=modMsgsEnd[msg_type];
+	function = modMsgs[msg_type];
+	endfunction = modMsgsEnd[msg_type];
+	
 	g_events.parserInit(msg_type, &gpGlobals->time, mPlayer, mPlayerIndex);
 
 	RETURN_META(MRES_IGNORED);
@@ -970,6 +993,7 @@ void C_ChangeLevel(char* s1, char* s2)
 	{
 		int retVal = 0;
 		char *map = s1;
+		
 		retVal = executeForwards(FF_ChangeLevel, map);
 		
 		if (retVal)
@@ -1054,9 +1078,9 @@ void C_AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...)
 	if (g_logevents.logEventsExist() || FF_PluginLog >= 0)
 	{
 		va_list	logArgPtr;
-		va_start (logArgPtr, szFmt);
+		va_start(logArgPtr, szFmt);
 		g_logevents.setLogString(szFmt, logArgPtr);
-		va_end (logArgPtr);
+		va_end(logArgPtr);
 		g_logevents.parseLogString();
 
 		if (g_logevents.logEventsExist())
@@ -1107,14 +1131,15 @@ bool m_NeedsP = false;
 
 C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_t *pMetaUtilFuncs)
 {
-	gpMetaUtilFuncs=pMetaUtilFuncs;
-	*pPlugInfo=&Plugin_info;
+	gpMetaUtilFuncs = pMetaUtilFuncs;
+	*pPlugInfo = &Plugin_info;
 	
 	if (strcmp(ifvers, Plugin_info.ifvers))
 	{
 		int	mmajor = 0, mminor = 0,	pmajor = 0, pminor = 0;
 		
 		LOG_MESSAGE(PLID, "WARNING:	meta-interface version mismatch; requested=%s ours=%s",	Plugin_info.logtag,	ifvers);
+		
 		sscanf(ifvers, "%d:%d",	&mmajor, &mminor);
 		sscanf(META_INTERFACE_VERSION, "%d:%d",	&pmajor, &pminor);
 		
@@ -1203,7 +1228,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 		return (FALSE);
 	}
 	
-	gpMetaGlobals=pMGlobals;
+	gpMetaGlobals = pMGlobals;
 	gMetaFunctionTable.pfnGetEntityAPI2 = GetEntityAPI2;
 	gMetaFunctionTable.pfnGetEntityAPI2_Post = GetEntityAPI2_Post;
 	gMetaFunctionTable.pfnGetEngineFunctions = GetEngineFunctions;
@@ -1222,7 +1247,9 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	CVAR_REGISTER(&init_amxmodx_version);
 	CVAR_REGISTER(&init_amxmodx_modules);
 	CVAR_REGISTER(&init_amxmodx_debug);
+	
 	amxmodx_version = CVAR_GET_POINTER(init_amxmodx_version.name);
+	
 	REG_SVR_COMMAND("amxx", amx_command);
 
 	char gameDir[512];
@@ -1236,9 +1263,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	
 	g_mod_name.assign(a);
 
-	if (g_mod_name.compare("cstrike") == 0 ||
-		g_mod_name.compare("czero") == 0 ||
-		g_mod_name.compare("dod") == 0)
+	if (g_mod_name.compare("cstrike") == 0 || g_mod_name.compare("czero") == 0 || g_mod_name.compare("dod") == 0)
 		g_coloredmenus = true;
 	else
 		g_coloredmenus = false;
@@ -1499,9 +1524,7 @@ C_DLLEXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pNewFunctionTable, int *in
 #endif
 }
 
-
 #ifdef FAKEMETA
-
 NEW_DLL_FUNCTIONS gNewDLLFunctionTable_Post;
 C_DLLEXPORT int GetNewDLLFunctions_Post(NEW_DLL_FUNCTIONS *pNewFunctionTable, int *interfaceVersion)
 {
@@ -1509,5 +1532,4 @@ C_DLLEXPORT int GetNewDLLFunctions_Post(NEW_DLL_FUNCTIONS *pNewFunctionTable, in
 	memcpy(pNewFunctionTable, &gNewDLLFunctionTable_Post, sizeof(NEW_DLL_FUNCTIONS));
 	return 1;
 }
-
 #endif

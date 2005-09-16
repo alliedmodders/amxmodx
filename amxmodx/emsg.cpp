@@ -58,7 +58,7 @@ WeaponsVault g_weaponsData[MAX_WEAPONS];
 void Client_VGUIMenu(void* mValue)
 {
 	if (!mPlayer) return;
-  
+
 	switch (mState++)
 	{
 		case 0:
@@ -244,7 +244,7 @@ void Client_ScoreInfo(void* mValue)
 {
 	static int index;
 	static int deaths;
-  
+
 	switch (mState++)
 	{
 		case 0:

@@ -83,7 +83,6 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 
 	m_Status = Err_None;
 	m_CellSize = cellsize;
-
 	m_pFile = fopen(filename, "rb");
 	
 	if (!m_pFile)
@@ -115,6 +114,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 			m_Status = Err_OldFile;
 			fclose(m_pFile);
 			m_pFile = NULL;
+			
 			return;
 		}
 		
@@ -151,6 +151,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 			m_Status = Err_SectionNotFound;
 			fclose(m_pFile);
 			m_pFile = NULL;
+			
 			return;
 		}
 		
@@ -275,6 +276,7 @@ size_t CAmxxReader::GetBufferSize()
 		AMX_HEADER hdr;
 		DATAREAD(&hdr, sizeof(hdr), 1);
 		fseek(m_pFile, save, SEEK_SET);
+		
 		return hdr.stp;
 	}
 	else if (m_AmxxFile)

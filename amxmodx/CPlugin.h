@@ -59,19 +59,23 @@ public:
 	
 		AMX amx;
 		void* code;
+		
 		String name;
 		String version;
 		String title;
 		String author;
 		String errorMsg;
+		
 		int m_PauseFwd;
 		int m_UnpauseFwd;
 		int paused_fun;
 		int status;
 		CPlugin* next;
 		int id;
+		
 		CPlugin(int i, const char* p, const char* n, char* e, int d);
 		~CPlugin();
+		
 		bool m_Debug;
 	public:
 		inline const char* getName() { return name.c_str();}
@@ -90,12 +94,14 @@ public:
 		inline bool isValid() const { return (status >= ps_paused); }
 		inline bool isPaused() const { return ((status == ps_paused) || (status == ps_stopped)); }
 		inline bool isExecutable(int id) const { return (isValid() && !isPaused());	}
+		
 		void Finalize();
 		void pausePlugin();
 		void unpausePlugin();
 		void pauseFunction(int id);
 		void unpauseFunction(int id);
 		void setStatus(int a);
+		
 		const char* getStatus() const;
 		inline bool isDebug() const { return m_Debug; }
 	}; 
@@ -115,10 +121,12 @@ public:
 	CPlugin* loadPlugin(const char* path, const char* name, char* error, int debug);
 	void unloadPlugin(CPlugin** a);
 	int loadPluginsFromFile(const char* filename);
+	
 	CPlugin* findPluginFast(AMX *amx);
 	CPlugin* findPlugin(AMX *amx);
 	CPlugin* findPlugin(int index);
 	CPlugin* findPlugin(const char* name);
+	
 	inline int getPluginsNum() const { return pCounter; }
 	void Finalize();
 	void clear();

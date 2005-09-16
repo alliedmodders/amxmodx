@@ -62,7 +62,7 @@ class AutoFilePtr
 	FILE *m_FP;
 public:
 	AutoFilePtr(FILE *fp) : m_FP(fp)
-	{ }
+	{}
 	
 	~AutoFilePtr()
 	{
@@ -87,6 +87,7 @@ static cell AMX_NATIVE_CALL read_dir(AMX *amx, cell *params)
 	
 	if ((dp = opendir (dirname)) == NULL)
 		return 0;
+	
 	seekdir(dp, a);
 	
 	if ((ep = readdir (dp)) != NULL)
@@ -143,23 +144,28 @@ static cell AMX_NATIVE_CALL read_file(AMX *amx, cell *params) /* 5 param */
 		amx_RaiseError(amx, AMX_ERR_NATIVE);
 		return 0;
 	}
-  
+
 	char buffor[1024];
 	int i = 0, iLine = params[2];
 	
 	while ((i <= iLine) && fgets(buffor, 1023, fp))
 		i++;
+	
 	fclose(fp);
 
 	if (i > iLine)
 	{
 		int len = strlen(buffor);
+		
 		if (buffor[len - 1] == '\n')
 			buffor[--len] = 0;
+		
 		if (buffor[len - 1] == '\r')
 			buffor[--len] = 0;
+		
 		cell *length = get_amxaddr(amx, params[5]);
 		*length = set_amxstring(amx, params[3], buffor, params[4]);
+		
 		return i;
 	}
 	
@@ -186,6 +192,7 @@ static cell AMX_NATIVE_CALL write_file(AMX *amx, cell *params) /* 3 param */
 		fputs(sText, pFile);
 		fputc('\n', pFile);
 		fclose(pFile);
+		
 		return 1;
 	}
 
@@ -200,10 +207,11 @@ static cell AMX_NATIVE_CALL write_file(AMX *amx, cell *params) /* 3 param */
 		
 		for (i = 0; i < iLine; ++i)
 			fputc('\n', pFile);
-    
+
 		fputs(sText, pFile);
 		fputc('\n', pFile);
 		fclose(pFile);
+		
 		return 1;
 	}
 
@@ -233,7 +241,8 @@ static cell AMX_NATIVE_CALL write_file(AMX *amx, cell *params) /* 3 param */
 		{
 			fputc('\n', pTemp);
 		}
-		else break;
+		else
+			break;
 	}
 
 	fclose(pFile);
@@ -259,6 +268,7 @@ static cell AMX_NATIVE_CALL delete_file(AMX *amx, cell *params) /* 1 param */
 {
 	int iLen;
 	char* sFile = get_amxstring(amx, params[1], 0, iLen);
+	
 	return (unlink(build_pathname("%s", sFile)) ? 0 : 1);
 }
 
@@ -270,17 +280,23 @@ static cell AMX_NATIVE_CALL file_exists(AMX *amx, cell *params) /* 1 param */
 
 #if defined WIN32 || defined _WIN32
 	DWORD attr = GetFileAttributes(file);
+	
 	if (attr == INVALID_FILE_ATTRIBUTES)
 		return 0;
+	
 	if (attr == FILE_ATTRIBUTE_DIRECTORY)
 		return 0;
+	
 	return 1;
 #else
 	struct stat s;
+	
 	if (stat(file, &s) != 0)
 		return 0;
+	
 	if (S_ISDIR(s.st_mode))
 		return 0;
+	
 	return 1;
 #endif
 }
@@ -293,17 +309,23 @@ static cell AMX_NATIVE_CALL dir_exists(AMX *amx, cell *params) /* 1 param */
 
 #if defined WIN32 || defined _WIN32
 	DWORD attr = GetFileAttributes(file);
+	
 	if (attr == INVALID_FILE_ATTRIBUTES)
 		return 0;
+	
 	if (attr == FILE_ATTRIBUTE_DIRECTORY)
 		return 1;
+	
 	return 0;
 #else
 	struct stat s;
+	
 	if (stat(file, &s) != 0)
 		return 0;
+	
 	if (S_ISDIR(s.st_mode))
 		return 1;
+	
 	return 0;
 #endif
 }
@@ -320,6 +342,7 @@ static cell AMX_NATIVE_CALL file_size(AMX *amx, cell *params) /* 1 param */
 		{
 			fseek(fp, 0, SEEK_END);
 			int size = ftell(fp);
+			
 			return size;
 		}
 		else if (params[2] == 1)
@@ -347,6 +370,7 @@ static cell AMX_NATIVE_CALL file_size(AMX *amx, cell *params) /* 1 param */
 			
 			if (fgetc(fp) == '\n')
 				return 1;
+			
 			return 0;
 		}
 	}
@@ -359,11 +383,12 @@ static cell AMX_NATIVE_CALL file_size(AMX *amx, cell *params) /* 1 param */
 static cell AMX_NATIVE_CALL amx_fopen(AMX *amx, cell *params)
 {
 	unsigned int i;
-	int len, j=-1;
+	int len, j = -1;
 	char *file = build_pathname("%s", get_amxstring(amx, params[1], 1, len));
 	char *flags = get_amxstring(amx, params[2], 0, len);
 
 	FILE *fp = fopen(file, flags);
+	
 	if (fp == NULL)
 	{
 		// Failed
@@ -396,6 +421,7 @@ static cell AMX_NATIVE_CALL amx_fclose(AMX *amx, cell *params)
 	
 	if (id >= FileList.size() || FileList.at(id) == NULL)
 		return 0;
+	
 	FILE *fp = FileList.at(id);
 	
 	if (fp)
@@ -412,6 +438,7 @@ static cell AMX_NATIVE_CALL amx_fread(AMX *amx, cell *params)
 	
 	if (id >= FileList.size() || FileList.at(id) == NULL)
 		return 0;
+	
 	FILE *fp = FileList.at(id);
 	
 	char *buffer;
@@ -422,6 +449,7 @@ static cell AMX_NATIVE_CALL amx_fread(AMX *amx, cell *params)
 		fread(buffer, sizeof(char), params[3], fp);
 		set_amxstring(amx, params[2], buffer, params[3]);
 		delete [] buffer;
+		
 		return 1;
 	}
 	
@@ -435,6 +463,7 @@ static cell AMX_NATIVE_CALL amx_fgetc(AMX *amx, cell *params)
 	
 	if (id >= FileList.size() || FileList.at(id) == NULL)
 		return 0;
+	
 	FILE *fp = FileList.at(id);
 	
 	if (fp)
@@ -451,6 +480,7 @@ static cell AMX_NATIVE_CALL amx_fwrite(AMX *amx, cell *params)
 	
 	if (id >= FileList.size() || FileList.at(id) == NULL)
 		return 0;
+	
 	FILE *fp = FileList.at(id);
 	char *buf;
 	int len;
@@ -470,6 +500,7 @@ static cell AMX_NATIVE_CALL amx_feof(AMX *amx, cell *params)
 	
 	if (id >= FileList.size() || FileList.at(id) == NULL)
 		return 0;
+	
 	FILE *fp = FileList.at(id);
 	
 	if (fp)
@@ -490,6 +521,7 @@ static cell AMX_NATIVE_CALL amx_fseek(AMX *amx, cell *params)
 	
 	if (id >= FileList.size() || FileList.at(id) == NULL)
 		return 0;
+	
 	FILE *fp = FileList.at(id);
 
 	if (fp)
@@ -506,6 +538,7 @@ static cell AMX_NATIVE_CALL amx_fputc(AMX *amx, cell *params)
 	
 	if (id >= FileList.size() || FileList.at(id) == NULL)
 		return 0;
+	
 	FILE *fp = FileList.at(id);
 
 	if (fp)
@@ -522,6 +555,7 @@ static cell AMX_NATIVE_CALL amx_rewind(AMX *amx, cell *params)
 	
 	if (id >= FileList.size() || FileList.at(id) == NULL)
 		return 0;
+	
 	FILE *fp = FileList.at(id);
 
 	if (fp)
@@ -539,6 +573,7 @@ static cell AMX_NATIVE_CALL amx_fflush(AMX *amx, cell *params)
 	
 	if (id >= FileList.size() || FileList.at(id) == NULL)
 		return 0;
+	
 	FILE *fp = FileList.at(id);
 
 	if (fp)
@@ -555,6 +590,7 @@ static cell AMX_NATIVE_CALL amx_fscanf(AMX *amx, cell *params)
 	
 	if (id >= FileList.size() || FileList.at(id) == NULL)
 		return 0;
+	
 	FILE *fp = FileList.at(id);
 
 	char *buf;
@@ -575,6 +611,7 @@ static cell AMX_NATIVE_CALL amx_ftell(AMX *amx, cell *params)
 	
 	if (id >= FileList.size() || FileList.at(id) == NULL)
 		return 0;
+	
 	FILE *fp = FileList.at(id);
 
 	if (fp)
@@ -591,12 +628,14 @@ static cell AMX_NATIVE_CALL amx_filesize(AMX *amx, cell *params)
 	int len;
 	char *file = build_pathname("%s", format_amxstring(amx, params, 1, len));
 	long size;
+	
 	AutoFilePtr fp(fopen(file, "rb"));
 	
 	if (fp)
 	{
 		fseek(fp, 0, SEEK_END);
 		size = ftell(fp);
+		
 		return size;
 	}
 	
@@ -610,6 +649,7 @@ static cell AMX_NATIVE_CALL amx_fgetl(AMX *amx, cell *params)
 	
 	if (id >= FileList.size() || FileList.at(id) == NULL)
 		return 0;
+	
 	FILE *fp = FileList.at(id);
 
 	long t;
@@ -629,6 +669,7 @@ static cell AMX_NATIVE_CALL amx_fgeti(AMX *amx, cell *params)
 	
 	if (id >= FileList.size() || FileList.at(id) == NULL)
 		return 0;
+	
 	FILE *fp = FileList.at(id);
 
 	int t;
@@ -648,6 +689,7 @@ static cell AMX_NATIVE_CALL amx_fgets(AMX *amx, cell *params)
 	
 	if (id >= FileList.size() || FileList.at(id) == NULL)
 		return 0;
+	
 	FILE *fp = FileList.at(id);
 
 	short t;
@@ -667,6 +709,7 @@ static cell AMX_NATIVE_CALL amx_fputs(AMX *amx, cell *params)
 	
 	if (id >= FileList.size() || FileList.at(id) == NULL)
 		return 0;
+	
 	FILE *fp = FileList.at(id);
 
 	short size = params[2];
@@ -685,6 +728,7 @@ static cell AMX_NATIVE_CALL amx_fputl(AMX *amx, cell *params)
 	
 	if (id >= FileList.size() || FileList.at(id) == NULL)
 		return 0;
+	
 	FILE *fp = FileList.at(id);
 
 	long size = params[2];
@@ -703,6 +747,7 @@ static cell AMX_NATIVE_CALL amx_fputi(AMX *amx, cell *params)
 	
 	if (id >= FileList.size() || FileList.at(id) == NULL)
 		return 0;
+	
 	FILE *fp = FileList.at(id);
 
 	int size = params[2];
@@ -721,6 +766,7 @@ static cell AMX_NATIVE_CALL amx_fgetf(AMX *amx, cell *params)
 	
 	if (id >= FileList.size() || FileList.at(id) == NULL)
 		return 0;
+	
 	FILE *fp = FileList.at(id);
 
 	float t;
@@ -740,6 +786,7 @@ static cell AMX_NATIVE_CALL amx_fputf(AMX *amx, cell *params)
 	
 	if (id >= FileList.size() || FileList.at(id) == NULL)
 		return 0;
+	
 	FILE *fp = FileList.at(id);
 
 	float size = *(float *)((void *)&params[2]);
@@ -757,6 +804,7 @@ static cell AMX_NATIVE_CALL amx_build_pathname(AMX *amx, cell *params)
 {
 	int len;
 	char *szPath = get_amxstring(amx, params[1], 0, len);
+	
 	return set_amxstring(amx, params[2], build_pathname("%s", szPath), params[3]);
 }
 
@@ -767,11 +815,13 @@ static cell AMX_NATIVE_CALL amx_open_dir(AMX *amx, cell *params)
 
 #if defined WIN32 || defined _WIN32
 	char *dirname = build_pathname("%s\\*", path);
+	
 	WIN32_FIND_DATA fd;
 	HANDLE hFile = FindFirstFile(dirname, &fd);
 	
 	if (hFile == INVALID_HANDLE_VALUE)
 		return 0;
+	
 	set_amxstring(amx, params[2], fd.cFileName, params[3]);
 	
 	return (DWORD)hFile;
@@ -802,6 +852,7 @@ static cell AMX_NATIVE_CALL amx_close_dir(AMX *amx, cell *params)
 	
 	if (hFile == INVALID_HANDLE_VALUE || hFile == NULL)
 		return 0;
+	
 	FindClose(hFile);
 	
 	return 1;
@@ -823,10 +874,12 @@ static cell AMX_NATIVE_CALL amx_get_dir(AMX *amx, cell *params)
 	
 	if (hFile == INVALID_HANDLE_VALUE || hFile == NULL)
 		return 0;
+	
 	WIN32_FIND_DATA fd;
 	
 	if (!FindNextFile(hFile, &fd))
-        return 0;
+		return 0;
+	
 	set_amxstring(amx, params[2], fd.cFileName, params[3]);
 	
 	return 1;
@@ -839,6 +892,7 @@ static cell AMX_NATIVE_CALL amx_get_dir(AMX *amx, cell *params)
 	
 	if (!ep)
 		return 0;
+	
 	set_amxstring(amx, params[2], ep->d_name, params[3]);
 	
 	return 1;
@@ -849,9 +903,9 @@ AMX_NATIVE_INFO file_Natives[] =
 {
 	{"delete_file", delete_file},
 	{"file_exists", file_exists},
-	{"file_size",   file_size},
-	{"read_dir",    read_dir},
-	{"read_file",   read_file},
+	{"file_size",	file_size},
+	{"read_dir",	read_dir},
+	{"read_file",	read_file},
 	{"write_file",	write_file},
 	//Sanji's File Natives
 	{"fopen",		amx_fopen},
@@ -882,6 +936,6 @@ AMX_NATIVE_INFO file_Natives[] =
 	{"dir_exists",	dir_exists},
 	{"open_dir",	amx_open_dir},
 	{"close_dir",	amx_close_dir},
-	{"next_file",	amx_get_dir},  
+	{"next_file",	amx_get_dir},
 	{NULL,			NULL}
 };

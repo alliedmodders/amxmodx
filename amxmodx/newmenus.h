@@ -47,8 +47,10 @@ struct menuitem
 {
 	String name;
 	String cmd;
+	
 	int access;
 	int handler;
+	
 	MENUITEM_CALLBACK pfn;
 	size_t id;
 };
@@ -62,18 +64,23 @@ class Menu
 public:
 	Menu(const char *title, int menuId, int thisId);
 	~Menu();
+	
 	menuitem *GetMenuItem(item_t item);
 	size_t GetPageCount();
 	size_t GetItemCount();
 	menuitem *AddItem(const char *name, const char *cmd, int access);
+	
 	const char *GetTextString(int player, page_t page, int &keys);
 	bool Display(int player, page_t page);
+	
 	int PagekeyToItem(page_t page, item_t key);
 	int GetMenuMenuid();
 private:
 	CVector<menuitem * > m_Items;
+	
 	String m_Title;
 	String m_Text;
+	
 	int menuId;
 	int thisId;
 };

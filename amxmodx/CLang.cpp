@@ -280,7 +280,7 @@ CLangMngr::CLang::CLang(const char *lang)
 {
 	m_LookUpTable.clear();
 	strncpy(m_LanguageName, lang, 2);
-	m_LanguageName[2]=0;
+	m_LanguageName[2] = 0;
 }
 
 CLangMngr::CLang::LangEntry *CLangMngr::CLang::AddEntry(int pKey, uint32_t defHash, const char *def, bool cache)
@@ -588,14 +588,14 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 					{
 						def = GetDef(g_vault.get("server_language"), key);
 					}
-					if (strcmp(cpLangName, "en")!=0 && strcmp(g_vault.get("server_language"), "en")!=0)
+					if (strcmp(cpLangName, "en") != 0 && strcmp(g_vault.get("server_language"), "en") != 0)
 					{
 						def = GetDef("en", key);
 					}
 					if (!def)
 					{
 						static char buf[512];
-						CHECK_PTR((char*)(buf+17+strlen(key)), buf, sizeof(buf));
+						CHECK_PTR((char*)(buf + 17 + strlen(key)), buf, sizeof(buf));
 						sprintf(buf, "ML_LNOTFOUND: %s", key);
 						def = buf;
 					}
@@ -613,7 +613,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 						} else {
 							static char format[32];
 							format[0] = '%';
-							char *ptr = format+1;
+							char *ptr = format + 1;
 							
 							while (ptr-format<sizeof(format) && !isalpha(*ptr++ = *def++))
 								/*nothing*/;
@@ -655,7 +655,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 								}
 								default:
 								{
-									CHECK_OUTPTR(strlen(format)+1);
+									CHECK_OUTPTR(strlen(format) + 1);
 									strcpy(outptr, format);	
 									break;
 								}
@@ -700,7 +700,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 				char *tmpPtr = tmpString;
 				int tmpLen = 0;
 				static char format[32] = {'%'};
-				char *ptr = format+1;
+				char *ptr = format + 1;
 				
 				if (*src != '%')
 				{
@@ -740,7 +740,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 						}
 						default:
 						{
-							CHECK_OUTPTR(strlen(format)+1);
+							CHECK_OUTPTR(strlen(format) + 1);
 							strcpy(outptr, format);
 							break;
 						}
@@ -847,14 +847,14 @@ char *CLangMngr::FormatString(const char *fmt, va_list &ap)
 					{
 						def = GetDef(g_vault.get("server_language"), key);
 					}
-					if (strcmp(cpLangName, "en")!=0 && strcmp(g_vault.get("server_language"), "en")!=0)
+					if (strcmp(cpLangName, "en") != 0 && strcmp(g_vault.get("server_language"), "en") != 0)
 					{
 						def = GetDef("en", key);
 					}
 					if (!def)
 					{
 						static char buf[512];
-						CHECK_PTR((char*)(buf+17+strlen(key)), buf, sizeof(buf));
+						CHECK_PTR((char*)(buf + 17 + strlen(key)), buf, sizeof(buf));
 						sprintf(buf, "ML_LNOTFOUND: %s", key);
 						def = buf;
 					}
@@ -867,7 +867,7 @@ char *CLangMngr::FormatString(const char *fmt, va_list &ap)
 						++def;
 						static char format[32];
 						format[0] = '%';
-						char *ptr = format+1;
+						char *ptr = format + 1;
 						while (ptr-format<sizeof(format) && !isalpha(*ptr++ = *def++))
 							/*nothing*/;
 						ZEROTERM(format);
@@ -927,7 +927,7 @@ char *CLangMngr::FormatString(const char *fmt, va_list &ap)
 				}
 			} else {
 				static char format[32] = {'%'};
-				char *ptr = format+1;
+				char *ptr = format + 1;
 				
 				if (*src != '%')
 				{
@@ -973,6 +973,7 @@ char *CLangMngr::FormatString(const char *fmt, va_list &ap)
 	
 	return outbuf;
 }
+
 void CLangMngr::MergeDefinitions(const char *lang, CQueue<sKeyDef*> &tmpVec)
 {
 	CLang * language = GetLang(lang);
@@ -1086,7 +1087,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 					String key;
 					key.assign(buf.substr(0, pos).c_str());
 					String def;
-					def.assign(buf.substr(pos+1).c_str());
+					def.assign(buf.substr(pos + 1).c_str());
 					key.trim();
 					key.toLower();
 					int iKey = GetKeyEntry(key);
@@ -1374,7 +1375,7 @@ bool CLangMngr::Load(const char *filename)
 		save = ftell(fp);
 		fseek(fp, keyoffset, SEEK_SET);
 		fread((void*)&keylen, sizeof(char), 1, fp);
-		char *data = new char[keylen+1];
+		char *data = new char[keylen + 1];
 		fread(data, sizeof(char), keylen, fp);
 		data[keylen] = 0;
 		e->key.assign(data);
@@ -1402,7 +1403,7 @@ bool CLangMngr::Load(const char *filename)
 			save = ftell(fp);
 			fseek(fp, defoffset, SEEK_SET);
 			fread((void *)&deflen, sizeof(unsigned short), 1, fp);
-			char *data = new char[deflen+1];
+			char *data = new char[deflen + 1];
 			fread(data, sizeof(char), deflen, fp);
 			data[deflen] = 0;
 			m_Languages[i]->AddEntry(keynum, defhash, data, true);

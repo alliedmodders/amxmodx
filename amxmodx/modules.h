@@ -36,7 +36,7 @@
 
 #undef DLLEXPORT
 #ifndef __linux__
-	#define DLLEXPORT   __declspec(dllexport)
+	#define DLLEXPORT __declspec(dllexport)
 #else
 	#define DLLEXPORT
 	#define WINAPI

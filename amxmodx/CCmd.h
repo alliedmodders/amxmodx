@@ -52,12 +52,14 @@ public:
 	class Command
 	{
 		friend class CmdMngr;
+		
 		CPluginMngr::CPlugin* plugin;
 		CmdMngr* parent;
 		String command;
 		String argument;
 		String commandline;
 		String info;
+		
 		bool listable;
 		int function;
 		int flags;
@@ -65,6 +67,7 @@ public:
 		int cmdtype;
 		int prefix;
 		static int uniqueid;
+		
 		Command(CPluginMngr::CPlugin* pplugin, const char* pcmd, const char* pinfo, int pflags, int pfunc, bool pviewable, CmdMngr* pparent);
 		~Command();
 	public:
@@ -72,7 +75,7 @@ public:
 		inline const char* getArgument() { return argument.c_str(); }
 		inline const char* getCmdInfo() { return info.c_str(); }
 		inline const char* getCmdLine() { return commandline.c_str(); }
-		inline bool matchCommandLine(const char* cmd, const char* arg) 	{ return (!stricmp(command.c_str()+prefix, cmd+prefix) && (argument.empty() || !stricmp(argument.c_str(), arg))); }
+		inline bool matchCommandLine(const char* cmd, const char* arg) 	{ return (!stricmp(command.c_str() + prefix, cmd + prefix) && (argument.empty() || !stricmp(argument.c_str(), arg))); }
 		inline bool matchCommand(const char* cmd) {	return (!strcmp(command.c_str(), cmd)); }
 		inline int getFunction() const { return function; }
 		inline bool gotAccess(int f) const { return (!flags || ((flags & f) == flags)); }
@@ -80,6 +83,7 @@ public:
 		inline bool isViewable() const { return listable; }
 		inline int getFlags() const { return flags; }
 		inline long int getId() const { return (long int)id; }
+		
 		const char* getCmdType() const;		
 		void setCmdType(int a);
 	};
@@ -105,7 +109,7 @@ private:
 		CmdMngr* parent;
 		CmdLink* list;
 		CmdPrefix* next;
-		CmdPrefix(const char* nn, CmdMngr* pp) : name(nn), parent(pp), list(0), next(0){}
+		CmdPrefix(const char* nn, CmdMngr* pp): name(nn), parent(pp), list(0), next(0) {}
 		~CmdPrefix() { parent->clearCmdLink(&list); }
 	} *prefixHead;
 
@@ -123,9 +127,11 @@ public:
 	// Interface
 
 	void registerPrefix(const char* nn);
+	
 	Command* registerCommand(CPluginMngr::CPlugin* plugin, int func, char* cmd, char* info, int level, bool listable);
 	Command* getCmd(long int id, int type, int access);
 	int getCmdNum(int type, int access);
+	
 	void clearBufforedInfo();
 	void clear();
 
@@ -156,6 +162,7 @@ private:
 	int buf_cmdid;
 	int buf_cmdtype;
 	int buf_cmdaccess;
+	
 	iterator buf_cmdptr;
 
 	int buf_id;

@@ -107,7 +107,6 @@ void copy_amxmemory(cell* dest, cell* src, int len)
 		*dest++=*src++;
 }
 
-
 char* parse_arg(char** line, int& state)
 {
 	static char arg[3072];
@@ -150,9 +149,11 @@ char* parse_arg(char** line, int& state)
 static cell AMX_NATIVE_CALL replace(AMX *amx, cell *params) /* 4 param */
 {
 	static char buffor[3072];
+	
 	cell *a = get_amxaddr(amx, params[1]);
 	cell *b = get_amxaddr(amx, params[3]);
 	cell *c = get_amxaddr(amx, params[4]);
+	
 	int iMain = amxstring_len(a);
 	int iWhat = amxstring_len(b);
 	int iWith = amxstring_len(c);
@@ -264,6 +265,7 @@ static cell AMX_NATIVE_CALL numtostr(AMX *amx, cell *params) /* 3 param */
 {
 	char szTemp[32];
 	sprintf(szTemp, "%d", (int)params[1]);
+	
 	return set_amxstring(amx, params[2], szTemp, params[3]);
 }
 
@@ -328,6 +330,7 @@ static cell AMX_NATIVE_CALL float_to_str(AMX *amx, cell *params)
 {
 	char szTemp[32];
 	sprintf(szTemp, "%f", amx_ctof(params[1]));
+	
 	return set_amxstring(amx, params[2], szTemp, params[3]);
 }
 
@@ -408,7 +411,7 @@ static cell AMX_NATIVE_CALL equal(AMX *amx, cell *params) /* 3 param */
 	{
 		while (--c && *a && (*a == *b))
 			++a, ++b;
-		return (*a-*b)?0:1;
+		return (*a-*b) ? 0 : 1;
 	}
 	
 	int ret;
@@ -511,6 +514,7 @@ int fo_numargs(AMX *amx)
 {
 	unsigned char *data = amx->base + (int)((AMX_HEADER *)amx->base)->dat;
 	cell bytes= *(cell *)(data + (int)amx->frm + 2 * sizeof(cell));
+	
 	return (int)(bytes / sizeof(cell));
 }
 
@@ -518,6 +522,7 @@ int fo_getargnum(AMX *amx, int pos)
 {
 	unsigned char *data = amx->base + (int)((AMX_HEADER *)amx->base)->dat;
 	cell value = *(cell *)(data + (int)amx->frm + (pos + 3) * sizeof(cell));
+	
 	return *(cell *)(data + (int)value);
 }
 
@@ -526,6 +531,7 @@ float fo_getargfloat(AMX *amx, int pos)
 	unsigned char *data = amx->base + (int)((AMX_HEADER *)amx->base)->dat;
 	cell value = *(cell *)(data + (int)amx->frm + (pos + 3) * sizeof(cell));
 	cell number = *(cell *)(data + (int)value);
+	
 	return *(REAL *)((void *)&number);
 }
 
@@ -577,7 +583,7 @@ char* format_arguments(AMX *amx, int parm, int& len)
 			
 			switch (*(ptr - 1))
 			{
-				case 's':  sprintf(arg, format, fo_getargstr(amx, 1, parm++)); break;
+				case 's': sprintf(arg, format, fo_getargstr(amx, 1, parm++)); break;
 				case 'f': case 'g': sprintf(arg, format, fo_getargfloat(amx, parm++)); break;
 				default: sprintf(arg, format, fo_getargnum(amx, parm++));
 			}
@@ -741,6 +747,7 @@ static cell AMX_NATIVE_CALL format_args(AMX *amx, cell *params)
 	}
 
 	char* string = format_arguments(amx, pos, len); // indexed from 0
+	
 	return set_amxstring(amx, params[1], string, params[2]);
 }
 
@@ -878,37 +885,37 @@ static cell AMX_NATIVE_CALL n_strfind(AMX *amx, cell *params)
 
 AMX_NATIVE_INFO string_Natives[] =
 {
-	{"add",			add},
-	{"contain",		contain},
-	{"containi",	containi},
-	{"copy",		copy},
-	{"copyc",		copyc},
-	{"equal",		equal},
-	{"equali",		equali},
-	{"format",		format},
-	{"format_args", format_args},
-	{"isdigit",		is_digit},
-	{"isalnum",		is_alnum},
-	{"isspace",		is_space},
-	{"isalpha",		is_alpha},
-	{"num_to_str",	numtostr},
-	{"numtostr",	numtostr},
-	{"parse",		parse},
-	{"replace",		replace},
-	{"setc",		setc},
-	{"strbreak",	strbreak},
-	{"strtolower",	strtolower},
-	{"strtoupper",	strtoupper},
-	{"str_to_num",	strtonum},
-	{"strtonum",	strtonum},
-	{"trim",		amx_trim},
-	{"ucfirst",		amx_ucfirst},
-	{"strtok",		amx_strtok},
-	{"strlen",		amx_strlen},
-	{"strcat",		n_strcat},
-	{"strfind",		n_strfind},
-	{"strcmp",		n_strcmp},
+	{"add",				add},
+	{"contain",			contain},
+	{"containi",		containi},
+	{"copy",			copy},
+	{"copyc",			copyc},
+	{"equal",			equal},
+	{"equali",			equali},
+	{"format",			format},
+	{"format_args",		format_args},
+	{"isdigit",			is_digit},
+	{"isalnum",			is_alnum},
+	{"isspace",			is_space},
+	{"isalpha",			is_alpha},
+	{"num_to_str",		numtostr},
+	{"numtostr",		numtostr},
+	{"parse",			parse},
+	{"replace",			replace},
+	{"setc",			setc},
+	{"strbreak",		strbreak},
+	{"strtolower",		strtolower},
+	{"strtoupper",		strtoupper},
+	{"str_to_num",		strtonum},
+	{"strtonum",		strtonum},
+	{"trim",			amx_trim},
+	{"ucfirst",			amx_ucfirst},
+	{"strtok",			amx_strtok},
+	{"strlen",			amx_strlen},
+	{"strcat",			n_strcat},
+	{"strfind",			n_strfind},
+	{"strcmp",			n_strcmp},
 	{"str_to_float",	str_to_float},
 	{"float_to_str",	float_to_str},
-	{NULL,			NULL }
+	{NULL,				NULL}
 };

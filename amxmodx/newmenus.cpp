@@ -37,6 +37,7 @@ void ClearMenus()
 {
 	for (size_t i = 0; i < g_NewMenus.size(); i++)
 		delete g_NewMenus[i];
+	
 	g_NewMenus.clear();
 }
 
@@ -51,6 +52,7 @@ Menu::~Menu()
 {
 	for (size_t i = 0; i < m_Items.size(); i++)
 		delete m_Items[i];
+	
 	m_Items.clear();
 }
 
@@ -110,6 +112,7 @@ int Menu::PagekeyToItem(page_t page, item_t key)
 	if (page == 0)
 	{
 		item_t rem = numItems >= 7 ? 7 : numItems;
+		
 		if (key == rem)
 		{
 			if (pages > 1)
@@ -188,6 +191,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 		_snprintf(buffer, sizeof(buffer)-1, "\\y%s %d/%d\n\\w\n", m_Title.c_str(), page + 1, pages);
 	else
 		_snprintf(buffer, sizeof(buffer)-1, "%s %d/%d\n\n", m_Title.c_str(), page + 1, pages);
+	
 	m_Text.append(buffer);
 
 	item_t start = page * 7;
@@ -200,15 +204,19 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	}
 
 	menuitem *pItem = NULL;
+	
 	int option = 0;
 	keys = 0;
 	bool enabled = true;
 	int ret = 0;
+	
 	for (item_t i = start; i < end; i++)
 	{
 		pItem = m_Items[i];
+		
 		if (pItem->access && !(pItem->access & g_players[player].flags[0]))
 			enabled = false;
+		
 		if (pItem->handler != -1)
 		{
 			ret = executeForwards(pItem->handler, player, thisId, i);
@@ -217,6 +225,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 			else if (ret == ITEM_DISABLED)
 				enabled = false;
 		}
+		
 		if (pItem->pfn)
 		{
 			ret = (pItem->pfn)(player, thisId, i);
@@ -225,6 +234,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 			else if (ret == ITEM_DISABLED)
 				enabled = false;
 		}
+		
 		if (enabled)
 		{
 			keys |= (1<<option);
@@ -240,6 +250,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 		}
 		m_Text.append(buffer);
 	}
+	
 	//now for a weird part >:o
 	//this will either be MORE or BACK..
 	keys |= (1<<option++);
@@ -249,7 +260,9 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	} else {
 		_snprintf(buffer, sizeof(buffer)-1, "%d. %s\n", option, "Exit");
 	}
+	
 	m_Text.append(buffer);
+	
 	if (pages > 1)
 	{
 		keys |= (1<<option++);
@@ -279,6 +292,7 @@ static cell AMX_NATIVE_CALL menu_create(AMX *amx, cell *params)
 	char *handler = get_amxstring(amx, params[2], 1, len);
 
 	int func = registerSPForwardByName(amx, handler, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	
 	if (func == -1)
 	{
 		LogError(amx, AMX_ERR_NOTFOUND, "Invalid function \"%s\"", handler);
@@ -286,7 +300,7 @@ static cell AMX_NATIVE_CALL menu_create(AMX *amx, cell *params)
 	}
 
 	int id = g_menucmds.registerMenuId(title, amx);
-	g_menucmds.registerMenuCmd( g_plugins.findPluginFast(amx), id, 1023, func );
+	g_menucmds.registerMenuCmd(g_plugins.findPluginFast(amx), id, 1023, func);
 
 	Menu *pMenu = new Menu(title, id, (int)g_NewMenus.size());
 	g_NewMenus.push_back(pMenu);
@@ -307,7 +321,7 @@ static cell AMX_NATIVE_CALL menu_additem(AMX *amx, cell *params)
 	name = get_amxstring(amx, params[2], 0, len);
 	cmd = get_amxstring(amx, params[3], 1, len);
 	access = params[4];
-    
+
 	menuitem *pItem = pMenu->AddItem(name, cmd, access);
 
 	pItem->handler = params[5];
@@ -403,54 +417,54 @@ static cell AMX_NATIVE_CALL menu_makecallback(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL menu_item_setname(AMX *amx, cell *params)
 {
-    GETMENU(params[1]);
+	GETMENU(params[1]);
 
-    menuitem *pItem = pMenu->GetMenuItem(static_cast<item_t>(params[2]));
+	menuitem *pItem = pMenu->GetMenuItem(static_cast<item_t>(params[2]));
 
-    if (!pItem)
-        return 0;
+	if (!pItem)
+		return 0;
 
-    int len;
-    char *name;
+	int len;
+	char *name;
 
-    name = get_amxstring(amx, params[3], 0, len);
+	name = get_amxstring(amx, params[3], 0, len);
 
-    pItem->name.assign(name);
+	pItem->name.assign(name);
 
-    return 1;
+	return 1;
 }
 
 static cell AMX_NATIVE_CALL menu_item_setcmd(AMX *amx, cell *params)
 {
-    GETMENU(params[1]);
+	GETMENU(params[1]);
 
-    menuitem *pItem = pMenu->GetMenuItem(static_cast<item_t>(params[2]));
+	menuitem *pItem = pMenu->GetMenuItem(static_cast<item_t>(params[2]));
 
-    if (!pItem)
-        return 0;
+	if (!pItem)
+		return 0;
 
-    int len;
-    char *cmd;
+	int len;
+	char *cmd;
 
-    cmd = get_amxstring(amx, params[3], 0, len);
+	cmd = get_amxstring(amx, params[3], 0, len);
 
-    pItem->cmd.assign(cmd);
+	pItem->cmd.assign(cmd);
 
-    return 1;
+	return 1;
 }
 
 static cell AMX_NATIVE_CALL menu_item_setcall(AMX *amx, cell *params)
 {
-    GETMENU(params[1]);
+	GETMENU(params[1]);
 
-    menuitem *pItem = pMenu->GetMenuItem(static_cast<item_t>(params[2]));
+	menuitem *pItem = pMenu->GetMenuItem(static_cast<item_t>(params[2]));
 
-    if (!pItem)
-        return 0;
+	if (!pItem)
+		return 0;
 
-    pItem->handler = params[3];
+	pItem->handler = params[3];
 
-    return 1;
+	return 1;
 } 
 
 AMX_NATIVE_INFO g_NewMenuNatives[] = 

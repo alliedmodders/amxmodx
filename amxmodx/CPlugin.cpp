@@ -15,12 +15,12 @@
 *  General Public License for more details.
 *
 *  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software Foundation,
+*  along with this program; if not, write to the Free Software Foundation, 
 *  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 *
 *  In addition, as a special exception, the author gives permission to
 *  link the code of this program with the Half-Life Game Engine ("HL
-*  Engine") and Modified Game Libraries ("MODs") developed by Valve,
+*  Engine") and Modified Game Libraries ("MODs") developed by Valve, 
 *  L.L.C ("Valve"). You must obey the GNU General Public License in all
 *  respects for all of the code used other than the HL Engine and MODs
 *  from Valve. If you modify this file, you may extend this exception
@@ -42,12 +42,17 @@ extern const char *no_function;
 CPluginMngr::CPlugin* CPluginMngr::loadPlugin(const char* path, const char* name, char* error, int debug)
 {	
 	CPlugin** a = &head;
-	while( *a ) a = &(*a)->next;
+	
+	while (*a)
+		a = &(*a)->next;
+	
 	*a = new CPlugin(pCounter++, path, name, error, debug);
+	
 	return (*a);
 }
 
-void CPluginMngr::unloadPlugin( CPlugin** a ) {
+void CPluginMngr::unloadPlugin(CPlugin** a)
+{
 	CPlugin* next = (*a)->next;
 	delete *a;
 	*a = next;
@@ -58,9 +63,10 @@ void CPluginMngr::Finalize()
 {
 	if (m_Finalized)
 		return;
+	
 	pNatives = BuildNativeTable();
-
 	CPlugin *a = head;
+	
 	while (a)
 	{
 		if (a->getStatusCode() == ps_running)
@@ -68,19 +74,20 @@ void CPluginMngr::Finalize()
 			amx_Register(a->getAMX(), pNatives, -1);
 			a->Finalize();
 		}
-		a=a->next;
+		a = a->next;
 	}
+	
 	m_Finalized = true;
 }
 
-int  CPluginMngr::loadPluginsFromFile( const char* filename )
+int CPluginMngr::loadPluginsFromFile(const char* filename)
 {
 	char file[256];
-	FILE *fp = fopen(build_pathname_r(file, sizeof(file)-1, "%s",filename) , "rt");
+	FILE *fp = fopen(build_pathname_r(file, sizeof(file) - 1, "%s", filename), "rt");
 
-	if ( !fp ) 
+	if (!fp) 
 	{
-		AMXXLOG_Log( "[AMXX] Plugins list not found (file \"%s\")",filename);
+		AMXXLOG_Log("[AMXX] Plugins list not found (file \"%s\")", filename);
 		return 1;
 	}
 	
@@ -91,22 +98,26 @@ int  CPluginMngr::loadPluginsFromFile( const char* filename )
 	
 	String line;
 
-	while ( !feof(fp) ) 
+	while (!feof(fp)) 
 	{
 		pluginName[0] = '\0';
+		
 		debug[0] = '\0';
 		debugFlag = 0;
+		
 		line.clear();
 		line._fread(fp);
-		sscanf(line.c_str(),"%s %s",pluginName, debug);
-		if (!isalnum(*pluginName))  continue;
+		sscanf(line.c_str(), "%s %s", pluginName, debug);
+		
+		if (!isalnum(*pluginName))
+			continue;
 
 		if (isalnum(*debug) && strcmp(debug, "debug") == 0)
 		{
 			debugFlag = 1;
 		}
 
-		CPlugin* plugin = loadPlugin( pluginsDir , pluginName  , error,  debugFlag);
+		CPlugin* plugin = loadPlugin(pluginsDir, pluginName, error, debugFlag);
 		
 		if (plugin->getStatusCode() == ps_bad_load)
 		{
@@ -122,11 +133,15 @@ int  CPluginMngr::loadPluginsFromFile( const char* filename )
 	return pCounter;
 }
 
-void CPluginMngr::clear() {
+void CPluginMngr::clear()
+{
 	CPlugin**a = &head;	
-	while ( *a )
+	
+	while (*a)
 		unloadPlugin(a);
+	
 	m_Finalized = false;
+	
 	if (pNatives)
 	{
 		delete [] pNatives;
@@ -139,74 +154,98 @@ CPluginMngr::CPlugin* CPluginMngr::findPluginFast(AMX *amx)
 	return (CPlugin*)(amx->userdata[UD_FINDPLUGIN]); 
 }
 
-CPluginMngr::CPlugin* CPluginMngr::findPlugin(AMX *amx) {
+CPluginMngr::CPlugin* CPluginMngr::findPlugin(AMX *amx)
+{
 	CPlugin*a = head;
-	while ( a && &a->amx != amx )
-		a=a->next;
+	
+	while (a && &a->amx != amx)
+		a = a->next;
+	
 	return a;
 }
 	
-CPluginMngr::CPlugin* CPluginMngr::findPlugin(int index){
+CPluginMngr::CPlugin* CPluginMngr::findPlugin(int index)
+{
 	CPlugin*a = head;
-	while ( a && index--)
-		a=a->next;
+	
+	while (a && index--)
+		a = a->next;
+	
 	return a;
 }
 	
-CPluginMngr::CPlugin* CPluginMngr::findPlugin(const char* name) {
-	if (!name) return 0;
+CPluginMngr::CPlugin* CPluginMngr::findPlugin(const char* name)
+{
+	if (!name)
+		return 0;
+	
 	int len = strlen(name);
-	if (!len) return 0;
+	
+	if (!len)
+		return 0;
+	
 	CPlugin*a = head;
-	while( a && strncmp(a->name.c_str(), name,len) )
-		a=a->next;
+	
+	while (a && strncmp(a->name.c_str(), name, len))
+		a = a->next;
+	
 	return a;
 }
 
-const char* CPluginMngr::CPlugin::getStatus() const {
-	switch(status){
-	case ps_running: 
+const char* CPluginMngr::CPlugin::getStatus() const
+{
+	switch (status)
+	{
+		case ps_running: 
+		{
+			if (m_Debug)
 			{
-					if (m_Debug)
-					{
-						return "debug";
-					} else {
-						return "running";
-					}
-					break;
+				return "debug";
+			} else {
+				return "running";
 			}
-	case ps_paused: return "paused";
-	case ps_bad_load: return "bad load";
-	case ps_stopped: return "stopped";
-	case ps_locked: return "locked";
+			break;
+		}
+		case ps_paused: return "paused";
+		case ps_bad_load: return "bad load";
+		case ps_stopped: return "stopped";
+		case ps_locked: return "locked";
 	}
+	
 	return "error";
 }
 
-CPluginMngr::CPlugin::CPlugin(int i, const char* p,const char* n, char* e, int d) : name(n), title(n) {
+CPluginMngr::CPlugin::CPlugin(int i, const char* p, const char* n, char* e, int d) : name(n), title(n)
+{
 	const char* unk = "unknown";
+	
 	title.assign(unk);
 	author.assign(unk);
 	version.assign(unk);
+	
 	char file[256];
-	char* path = build_pathname_r(file, sizeof(file)-1, "%s/%s",p,n);
+	char* path = build_pathname_r(file, sizeof(file) - 1, "%s/%s", p, n);
 	code = 0;
 	memset(&amx, 0, sizeof(AMX));
-	int err = load_amxscript(&amx,&code,path,e, d);
-	if ( err == AMX_ERR_NONE )
+	int err = load_amxscript(&amx, &code, path, e, d);
+	
+	if (err == AMX_ERR_NONE)
 	{
 		status = ps_running;
 	} else {
 		status = ps_bad_load;
 	}
+	
 	amx.userdata[UD_FINDPLUGIN] = this;
 	paused_fun = 0;
 	next = 0;
 	id = i;
+	
 	if (status == ps_running)
 	{
 		m_PauseFwd = registerSPForwardByName(&amx, "plugin_pause");
 		m_UnpauseFwd = registerSPForwardByName(&amx, "plugin_unpause");
+		
 		if (amx.flags & AMX_FLAG_DEBUG)
 		{
 			m_Debug = true;
@@ -216,16 +255,16 @@ CPluginMngr::CPlugin::CPlugin(int i, const char* p,const char* n, char* e, int d
 	}
 }
 
-CPluginMngr::CPlugin::~CPlugin( )
+CPluginMngr::CPlugin::~CPlugin()
 {
-	unload_amxscript( &amx, &code );
+	unload_amxscript(&amx, &code);
 }
 
 int AMXAPI native_handler(AMX *amx, int index)
 {
 	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
 
-	char name[sNAMEMAX+1];
+	char name[sNAMEMAX + 1];
 	amx_GetNative(amx, index, name);
 
 	return pHandler->HandleNative(name, index, 0);
@@ -253,7 +292,7 @@ static cell AMX_NATIVE_CALL invalid_native(AMX *amx, cell *params)
 		return 0;
 	}
 
-	char name[sNAMEMAX+1];
+	char name[sNAMEMAX + 1];
 	int native = amx->usertags[UT_NATIVE];
 	int err = amx_GetNative(amx, native, name);
 
@@ -274,16 +313,18 @@ static cell AMX_NATIVE_CALL invalid_native(AMX *amx, cell *params)
 void CPluginMngr::CPlugin::Finalize()
 {
 	char buffer[128];
-
 	int old_status = status;
+	
 	if (CheckModules(&amx, buffer))
 	{
-		if ( amx_Register(&amx, core_Natives, -1) != AMX_ERR_NONE )
+		if (amx_Register(&amx, core_Natives, -1) != AMX_ERR_NONE)
 		{
 			Handler *pHandler = (Handler *)amx.userdata[UD_HANDLER];
 			int res = 0;
+			
 			if (pHandler->IsNativeFiltering())
 				res = amx_CheckNatives(&amx, native_handler);
+			
 			if (!res)
 			{
 				status = ps_bad_load;
@@ -299,21 +340,23 @@ void CPluginMngr::CPlugin::Finalize()
 		errorMsg.assign(buffer);
 		amx.error = AMX_ERR_NOTFOUND;
 	}
+	
 	if (old_status != status)
 	{
 		AMXXLOG_Log("[AMXX] Plugin \"%s\" failed to load: %s", name.c_str(), errorMsg.c_str());
 	}
 }
 
-void CPluginMngr::CPlugin::pauseFunction( int id )
+void CPluginMngr::CPlugin::pauseFunction(int id)
 { 
 }
 
-void CPluginMngr::CPlugin::unpauseFunction( int id )
+void CPluginMngr::CPlugin::unpauseFunction(int id)
 {
 }
 
-void CPluginMngr::CPlugin::setStatus( int a   ) { 
+void CPluginMngr::CPlugin::setStatus(int a)
+{ 
 	status = a; 
 	g_commands.clearBufforedInfo(); // ugly way
 }
@@ -337,8 +380,8 @@ void CPluginMngr::CPlugin::unpausePlugin()
 	if (isValid())
 	{
 		// set status first so the function will be marked executable
-
 		setStatus(ps_running);
+		
 		// call plugin_unpause if provided
 		if (m_UnpauseFwd != -1)
 			executeForwards(m_UnpauseFwd);

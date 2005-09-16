@@ -102,10 +102,10 @@ void CTaskMngr::CTask::clear()
 	m_iId = 0;
 	m_fBase = 0.0f;
 
-	m_iRepeat =		0;
-	m_bLoop =		false;
+	m_iRepeat =	0;
+	m_bLoop = false;
 	m_bAfterStart =	false;
-	m_bBeforeEnd =	false;
+	m_bBeforeEnd = false;
 
 	m_fNextExecTime = 0.0f;
 }
@@ -189,10 +189,10 @@ CTaskMngr::CTask::CTask()
 	m_iId = 0;
 	m_fBase = 0.0f;
 
-	m_iRepeat =		0;
-	m_bLoop =		false;
+	m_iRepeat =	0;
+	m_bLoop = false;
 	m_bAfterStart =	false;
-	m_bBeforeEnd =	false;
+	m_bBeforeEnd = false;
 
 	m_fNextExecTime = 0.0f;
 

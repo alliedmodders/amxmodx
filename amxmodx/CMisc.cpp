@@ -89,8 +89,10 @@ bool CPlayer::Connect(const char* connectname, const char* ipaddress)
 	time = gpGlobals->time;
 	bot = IsBot();
 	death_killer = 0;
+	
 	memset(flags, 0, sizeof(flags));
 	memset(weapons, 0, sizeof(weapons));
+	
 	initialized = true;
 	authorized = false;
 
@@ -180,6 +182,7 @@ int XVars::put(AMX* p, cell* v)
 
 	head[num].value = v;
 	head[num].amx = p;
+	
 	return num++;
 }
 
@@ -237,7 +240,10 @@ void TeamIds::registerTeam(const char* n, int s)
 	}
 
 	*a = new TeamEle(n, s);
-	if (*a == 0) return;
+	
+	if (*a == 0)
+		return;
+	
 	newTeam |= (1<<(*a)->tid);
 }
 

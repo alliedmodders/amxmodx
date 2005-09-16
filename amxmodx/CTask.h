@@ -39,15 +39,18 @@ private:
 	class CTask
 	{
 		// task settings
+		
 		CPluginMngr::CPlugin *m_pPlugin;
 		int m_iId;
 		int m_iFunc;
 		int m_iRepeat;
+		
 		bool m_bLoop;
 		bool m_bAfterStart;
 		bool m_bBeforeEnd;
 		float m_fBase;		// for normal tasks, stores the interval, for the others, stores the amount of time before start / after end
 		int m_iParamLen;
+		
 		cell *m_pParams;
 		bool m_bFree;
 
@@ -91,15 +94,16 @@ private:
 			if (right.m_bFree)
 				return left.isFree();
 			
-			return !left.isFree() && (right.m_pAmx ? left.getPlugin()->getAMX() == right.m_pAmx : true) &&
-					left.getTaskId() == right.m_iId;
+			return !left.isFree() && (right.m_pAmx ? left.getPlugin()->getAMX() == right.m_pAmx : true) && left.getTaskId() == right.m_iId;
 		}
 	};
 
 	/*** CTaskMngr priv members ***/
 	typedef CList<CTask, CTaskDescriptor> TaskList;
 	typedef TaskList::iterator TaskListIter;
+	
 	TaskList m_Tasks;
+	
 	float *m_pTmr_CurrentTime;
 	float *m_pTmr_TimeLimit;
 	float *m_pTmr_TimeLeft;
@@ -109,9 +113,11 @@ public:
 
 	void registerTimers(float *pCurrentTime, float *pTimeLimit, float *pTimeLeft);	// The timers will always point to the right value
 	void registerTask(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, int iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat);
+	
 	int removeTasks(int iId, AMX *pAmx);											// remove all tasks that match the id and amx
 	int changeTasks(int iId, AMX *pAmx, float fNewBase);							// change all tasks that match the id and amx
 	bool taskExists(int iId, AMX *pAmx);
+	
 	void startFrame();
 	void clear();
 };

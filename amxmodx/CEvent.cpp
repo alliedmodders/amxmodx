@@ -135,7 +135,6 @@ EventsMngr::~EventsMngr()
 	clearEvents();
 }
 
-
 CPluginMngr::CPlugin * EventsMngr::ClEvent::getPlugin()
 {
 	return m_Plugin;
@@ -311,6 +310,7 @@ void EventsMngr::parseValue(int iValue)
 					break;
 			}
 		}
+		
 		if (anyConditions && !execute)
 			(*iter).m_Done = true;		// don't execute
 	}
@@ -352,10 +352,12 @@ void EventsMngr::parseValue(float fValue)
 					case '<': if (fValue < condIter->fValue) execute = true; break;
 					case '>': if (fValue > condIter->fValue) execute = true; break;
 				}
+				
 				if (execute)
 					break;
 			}
 		}
+		
 		if (anyConditions && !execute)
 			(*iter).m_Done = true;		// don't execute
 	}
@@ -396,10 +398,12 @@ void EventsMngr::parseValue(const char *sz)
 					case '!': if (strcmp(sz, condIter->sValue.c_str())) execute = true; break;
 					case '&': if (strstr(sz, condIter->sValue.c_str())) execute = true; break;
 				}
+				
 				if (execute)
 					break;
 			}
 		}
+		
 		if (anyConditions && !execute)
 			(*iter).m_Done = true;		// don't execute
 	}

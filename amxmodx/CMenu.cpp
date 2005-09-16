@@ -63,7 +63,10 @@ int MenuMngr::findMenuId(const char* name, AMX* amx)
 int MenuMngr::registerMenuId(const char* n, AMX* a)
 {
 	int id = findMenuId(n, a);
-	if (id) return id;
+	
+	if (id)
+		return id;
+	
 	headid = new MenuIdEle(n, a, headid);
 	
 	if (!headid)

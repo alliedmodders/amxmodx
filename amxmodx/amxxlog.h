@@ -42,6 +42,7 @@ private:
 public:
 	CLog();
 	~CLog();
+	
 	void CreateNewFile();
 	void CloseFile();
 	void MapChange();
@@ -49,4 +50,3 @@ public:
 };
 
 #endif // __AMXXLOG_H__
-

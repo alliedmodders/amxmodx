@@ -45,14 +45,17 @@ public:
 			item = i;
 			next = n;
 		}
+		
 		CQueueItem *GetNext()
 		{
 			return next;
 		}
+		
 		T & GetItem()
 		{
 			return item;
 		}
+		
 		void SetNext(CQueueItem *n)
 		{
 			next = n;
@@ -71,7 +74,7 @@ public:
 
 	bool empty()
 	{
-		return ((mSize==0)?true:false);
+		return ((mSize == 0) ? true : false);
 	}
 
 	void push(const T &v)
@@ -119,8 +122,8 @@ public:
 private:
 	CQueueItem *mFirst;
 	CQueueItem *mLast;
+	
 	unsigned int mSize;
 };
 
 #endif //_INCLUDE_CQUEUE_H
-

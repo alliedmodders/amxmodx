@@ -52,7 +52,7 @@ CmdMngr::CmdMngr()
 }
 
 CmdMngr::Command::Command(CPluginMngr::CPlugin* pplugin, const char* pcmd, const char* pinfo, int pflags, 
-						  int pfunc, bool pviewable, CmdMngr* pparent) : commandline(pcmd), info(pinfo)
+							int pfunc, bool pviewable, CmdMngr* pparent) : commandline(pcmd), info(pinfo)
 {
 	char szCmd[64], szArg[64];
 	*szCmd = 0; *szArg = 0;
@@ -193,6 +193,7 @@ void CmdMngr::Command::setCmdType(int a)
 	if (cmdtype & 1)	// ClientCommand
 	{
 		parent->setCmdLink(&parent->sortedlists[1], this);
+		
 		if (!parent->registerCmdPrefix(this))
 			parent->setCmdLink(&parent->clcmdlist, this, false);
 	}

@@ -77,7 +77,9 @@ enum ForwardArrayElemType
 struct ForwardPreparedArray
 {
 	void *ptr;
+	
 	ForwardArrayElemType type;
+	
 	unsigned int size;
 	bool copyBack;
 };
@@ -96,13 +98,14 @@ class CForward
 	};
 	
 	typedef CVector<AMXForward> AMXForwardList;
+	
 	AMXForwardList m_Funcs;
 	ForwardParam m_ParamTypes[FORWARD_MAX_PARAMS];
 
 public:
 	CForward(const char *name, ForwardExecType et, int numParams, const ForwardParam * paramTypes);
-	CForward()
-	{ }			// leaves everything unitialized'
+	CForward() {}		// leaves everything unitialized'
+	
 	cell execute(cell *params, ForwardPreparedArray *preparedArrays);
 	
 	int getParamsNum() const
@@ -129,8 +132,10 @@ class CSPForward
 {
 	const char *m_FuncName;
 	int m_NumParams;
+	
 	ForwardParam m_ParamTypes[FORWARD_MAX_PARAMS];
 	AMX *m_Amx;
+	
 	int m_Func;
 	bool m_HasFunc;
 
@@ -179,8 +184,7 @@ public:
 
 	CForwardMngr()
 	{ m_TmpArraysNum = 0; }
-	~CForwardMngr()
-	{ }
+	~CForwardMngr() {}
 
 	// Interface
 	// Register normal forward
@@ -188,15 +192,19 @@ public:
 	// Register single plugin forward
 	int registerSPForward(const char *funcName, AMX *amx, int numParams, const ForwardParam * paramTypes);
 	int registerSPForward(int func, AMX *amx, int numParams, const ForwardParam * paramTypes);
+	
 	// Unregister single plugin forward
 	void unregisterSPForward(int id);
+	
 	// execute forward
 	cell executeForwards(int id, cell *params);
 	void clear();							// delete all forwards
+	
 	bool isIdValid(int id) const;			// check whether forward id is valid
 	bool isSPForward(int id) const;			// check whether forward is single plugin
 	int getParamsNum(int id) const;			// get num of params of a forward
 	int getFuncsNum(int id) const;			// get num of found functions of a forward
+	
 	ForwardParam getParamType(int id, int paramId) const;
 	cell prepareArray(void *ptr, unsigned int size, ForwardArrayElemType type, bool copyBack);		// prepare array
 };
@@ -214,4 +222,3 @@ cell prepareCellArray(cell *ptr, unsigned int size, bool copyBack = false);
 cell prepareCharArray(char *ptr, unsigned int size, bool copyBack = false);
 
 #endif //FORWARD_H
-

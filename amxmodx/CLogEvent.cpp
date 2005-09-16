@@ -55,7 +55,9 @@ int LogEventsMngr::CLogCmp::compareCondition(const char* string)
 		return result;
 	
 	logid = parent->logCounter;
-	if (in) return result = strstr(string, text.c_str()) ? 0 : 1;
+	
+	if (in)
+		return result = strstr(string, text.c_str()) ? 0 : 1;
 	
 	return result = strcmp(string,text.c_str());
 }
@@ -64,14 +66,17 @@ LogEventsMngr::CLogCmp* LogEventsMngr::registerCondition(char* filter)
 {
 	char* temp = filter;
 	// expand "1=message"
-    
+
 	while (isdigit(*filter))
 		++filter;
-    
+
 	bool in = (*filter=='&');
-    *filter++ = 0;
-    int pos = atoi(temp);
-	if (pos < 0 || pos >= MAX_LOGARGS) pos = 0;
+	*filter++ = 0;
+	int pos = atoi(temp);
+	
+	if (pos < 0 || pos >= MAX_LOGARGS)
+		pos = 0;
+	
 	CLogCmp* c = logcmplist;
 	
 	while (c)
@@ -99,7 +104,10 @@ void LogEventsMngr::CLogEvent::registerFilter(char* filter)
 	}
 	
 	LogCondEle* aa = new LogCondEle(cmp, 0);
-	if (aa == 0) return;
+	
+	if (aa == 0)
+		return;
+
 	filters = new LogCond(cmp->pos, aa, filters);
 }
 
@@ -114,7 +122,9 @@ void LogEventsMngr::setLogString(char* frmt, va_list& vaptr)
 		logString[len] = 0;
 	}
 	
-	if (len) logString[--len] = 0;
+	if (len)
+		logString[--len] = 0;
+	
 	logArgc = 0;
 }
 
@@ -132,7 +142,10 @@ void LogEventsMngr::setLogString(char* frmt, ...)
 	}
 	
 	va_end(logArgPtr);
-	if (len) logString[--len] = 0;
+	
+	if (len)
+		logString[--len] = 0;
+	
 	logArgc = 0;
 }
 
@@ -180,15 +193,17 @@ LogEventsMngr::CLogEvent* LogEventsMngr::registerLogEvent(CPluginMngr::CPlugin* 
 
 	arelogevents = true;
 	CLogEvent** d = &logevents[pos];
-	while (*d) d = &(*d)->next;
+	
+	while (*d)
+		d = &(*d)->next;
 	
 	return *d = new CLogEvent(plugin, func, this);
 }
 
 void LogEventsMngr::executeLogEvents()
 {
-    bool valid;
-    
+	bool valid;
+
 	for (CLogEvent* a = logevents[logArgc]; a; a = a->next)
 	{
 		valid = true;
@@ -214,7 +229,7 @@ void LogEventsMngr::executeLogEvents()
 		{
 			executeForwards(a->func);
 		}
-    }
+	}
 }
 
 void LogEventsMngr::clearLogEvents()
@@ -247,7 +262,7 @@ void LogEventsMngr::clearConditions()
 }
 
 LogEventsMngr::CLogEvent::LogCond::~LogCond()
-{  
+{
 	while (list)
 	{
 		LogCondEle* cc = list->next;

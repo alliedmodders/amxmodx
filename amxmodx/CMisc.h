@@ -40,9 +40,9 @@
 
 class CCVar
 {
-    cvar_t cvar;
-    String name;
-    String plugin;
+	cvar_t cvar;
+	String name;
+	String plugin;
 
 public:	
 	CCVar(const char* pname, const char* pplugin, int pflags, float pvalue) : name(pname), plugin(pplugin)
@@ -51,12 +51,12 @@ public:
 		cvar.flags = pflags;
 		cvar.string = "";
 		cvar.value = pvalue;
-    }
+	}
 	
 	inline cvar_t* getCvar() { return &cvar; }
 	inline const char* getPluginName() { return plugin.c_str(); }
 	inline const char* getName() { return name.c_str(); }
-	inline bool operator == (const char* string) { return (strcmp(name.c_str(),string)==0); }
+	inline bool operator == (const char* string) { return (strcmp(name.c_str(), string) == 0); }
 };
 
 // *****************************************************
@@ -157,6 +157,7 @@ class Grenades
 public:
 	Grenades() { head = 0; }
 	~Grenades() { clear(); }
+	
 	void put(edict_t* grenade, float time, int type, CPlayer* player);
 	bool find(edict_t* enemy, CPlayer** p, int& type);
 	void clear();
@@ -168,19 +169,20 @@ public:
 
 class ForceObject
 {
-    String filename;
-    FORCE_TYPE type;
-    Vector mins;
-    Vector maxs;
-    AMX* amx;
+	String filename;
+	FORCE_TYPE type;
+	Vector mins;
+	Vector maxs;
+	AMX* amx;
 public:
-    ForceObject(const char* n, FORCE_TYPE c, Vector& mi, Vector& ma, AMX* a) :
-    filename(n), type(c), mins(mi), maxs(ma), amx(a) {}
+	ForceObject(const char* n, FORCE_TYPE c, Vector& mi, Vector& ma, AMX* a) : filename(n), type(c), mins(mi), maxs(ma), amx(a) {}
 
 	inline const char* getFilename() { return filename.c_str(); }
 	inline AMX* getAMX() { return amx; }
+	
 	Vector& getMin() { return mins; }
 	Vector& getMax() { return maxs; }
+	
 	inline FORCE_TYPE getForceType() { return type; }
 };
 
@@ -195,15 +197,17 @@ class XVars
 		AMX* amx;
 		cell* value;
 	};
-  
+
 	XVarEle* head;
+	
 	int size;
 	int num;
 	int realloc_array(int nsize);
 
 public:
-	XVars() { num = 0;  size = 0;  head = 0; }
+	XVars() { num = 0; size = 0; head = 0; }
 	~XVars() { clear(); }
+	
 	void clear();
 	int put(AMX* a, cell* v);
 	
@@ -211,7 +215,7 @@ public:
 	{
 		return (a >= 0 && a < num) ? *(head[a].value) : 0;
 	}
-  
+
 	inline int setValue(int a, cell v)
 	{ 
 		if (a >= 0 && a < num)
@@ -219,7 +223,7 @@ public:
 			*(head[a].value) = v;
 			return 0;
 		}
-	  
+
 		return 1;
 	}
 };
@@ -234,7 +238,7 @@ class CScript
 	AMX* amx;
 	void* code;
 public:
-	CScript(AMX* aa, void* cc, const char* ff) : filename(ff), amx(aa), code(cc) { }
+	CScript(AMX* aa, void* cc, const char* ff) : filename(ff), amx(aa), code(cc) {}
 	
 	inline AMX* getAMX() { return amx; }
 	inline const char* getName() { return filename.c_str(); }
@@ -269,6 +273,7 @@ class TeamIds
 public:
 	TeamIds();
 	~TeamIds();
+	
 	void registerTeam(const char* n, int s);
 	int findTeamId(const char* n);
 	int findTeamIdCase(const char* n);

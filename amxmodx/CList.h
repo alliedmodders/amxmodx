@@ -66,8 +66,10 @@ private:
 		~CElement()
 		{
 			delete m_pObject;
+			
 			if (m_pNext)
 				m_pNext->m_pPrev = m_pPrev;
+			
 			if (m_pPrev)
 				m_pPrev->m_pNext = m_pNext;
 		}
@@ -103,15 +105,16 @@ private:
 		}
 	};
 
-	// CList<T,F> class
+	// CList<T, F> class
 	CElement *m_pHead;					// head of the linked list
 	CElement *m_pTail;					// tail of the linked list
 public:
 	// iterator class
 	class iterator
 	{
-		friend class CList<T,F>;
-		CList<T,F> *m_pList;			// The list that created this iterator
+		friend class CList<T, F>;
+		
+		CList<T, F> *m_pList;			// The list that created this iterator
 		CElement *m_CurPos;				// Current position in the list
 	public:
 		iterator()
@@ -121,7 +124,7 @@ public:
 		}
 
 		// constructor based on list, element
-		iterator(CList<T,F> *pList, CElement *startPos)
+		iterator(CList<T, F> *pList, CElement *startPos)
 		{
 			m_pList = pList;
 			m_CurPos = startPos;
@@ -148,7 +151,7 @@ public:
 		// validity check operator
 		inline operator bool () const
 		{
-			return m_pList!=NULL && m_CurPos!=NULL && m_CurPos->GetObj()!=NULL;
+			return m_pList != NULL && m_CurPos != NULL && m_CurPos->GetObj() != NULL;
 		}
 
 		// pre increment operator
@@ -185,13 +188,13 @@ public:
 		}
 	};
 
-	CList<T,F>()
+	CList<T, F>()
 	{
 		m_pHead = NULL;
 		m_pTail = NULL;
 	}
 	
-	~CList<T,F>()
+	~CList<T, F>()
 	{
 		clear();
 	}
@@ -205,6 +208,7 @@ public:
 		
 		if (where.m_CurPos == m_pHead)
 			m_pHead = where.m_CurPos->GetNext();
+		
 		if (where.m_CurPos == m_pTail)
 			m_pTail = where.m_CurPos->GetPrev();
 		

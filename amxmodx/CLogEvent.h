@@ -61,12 +61,15 @@ public:
 	{
 		friend class LogEventsMngr;
 		friend class CLogEvent;
+		
 		LogEventsMngr* parent;
 		String text;
+		
 		int logid;
 		int pos;
 		int result;
 		bool in;
+		
 		CLogCmp *next;
 		
 		CLogCmp(const char* s, bool r, int p, CLogCmp *n, LogEventsMngr* mg) : text(s)
@@ -95,12 +98,13 @@ public:
 		{
 			CLogCmp *cmp;
 			LogCondEle *next;
-			LogCondEle(CLogCmp *c, LogCondEle *n): cmp(c), next(n) { }
+			LogCondEle(CLogCmp *c, LogCondEle *n): cmp(c), next(n) {}
 		};
 	
 		struct LogCond
 		{
 			int argnum;
+			
 			LogCondEle *list;
 			LogCond *next;
 			LogCond(int a, LogCondEle* ee, LogCond* n) : argnum(a), list(ee), next(n) {}
@@ -108,11 +112,14 @@ public:
 		};
 		
 		CPluginMngr::CPlugin *plugin;
+		
 		int func;
+		
 		LogCond *filters;
 		LogEventsMngr* parent;
+		
 		CLogEvent *next;
-		CLogEvent(CPluginMngr::CPlugin *p, int f, LogEventsMngr* ppp) : plugin(p), func(f), filters(0), parent(ppp), next(0) { }
+		CLogEvent(CPluginMngr::CPlugin *p, int f, LogEventsMngr* ppp) : plugin(p), func(f), filters(0), parent(ppp), next(0) {}
 		~CLogEvent();
 	public:
 		inline CPluginMngr::CPlugin *getPlugin() { return plugin; }
@@ -124,6 +131,7 @@ private:
 	CLogEvent *logevents[MAX_LOGARGS + 1];
 	CLogEvent *getValidLogEvent(CLogEvent * a);
 	CLogCmp* registerCondition(char* filter);
+	
 	void clearConditions();
 public:
 	LogEventsMngr();
@@ -132,10 +140,12 @@ public:
 	// Interface
 	CLogEvent* registerLogEvent(CPluginMngr::CPlugin* plugin, int func, int pos);
 	inline bool logEventsExist() { return arelogevents; } 
+	
 	void setLogString(char* frmt, va_list& vaptr);
 	void setLogString(char* frmt, ...);
 	void parseLogString();
 	void executeLogEvents();
+	
 	inline const char* getLogString() { return logString; }
 	inline int getLogArgNum() { return logArgc; }
 	inline const char* getLogArg(int i) { return (i < 0 || i >= logArgc) ? "" : logArgs[i]; }
@@ -147,16 +157,16 @@ public:
 		LogEventsMngr* b;
 	
 	public:
-		inline iterator(CLogEvent*aa,LogEventsMngr* bb) : a(aa), b(bb) {}
+		inline iterator(CLogEvent*aa, LogEventsMngr* bb) : a(aa), b(bb) {}
 			
 		inline iterator& operator++()
 		{
 			a = b->getValidLogEvent(a->next);
 			return *this;
 		}
-	  
+
 		inline bool operator==(const iterator& c) const { return a == c.a; }
-		inline bool operator!=(const iterator& c) const  { return !operator == (c); }
+		inline bool operator!=(const iterator& c) const { return !operator == (c); }
 		CLogEvent& operator*() { return *a; }
 		operator bool () const { return a ? true : false; }
 	};

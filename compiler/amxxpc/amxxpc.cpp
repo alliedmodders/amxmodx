@@ -30,7 +30,11 @@ int main(int argc, char **argv)
 #endif
 
 #ifdef __linux__
-	HINSTANCE lib = dlmount("./amxxpc32.so");
+	HINSTANCE lib = NULL;
+	if (FileExists("./amxxpc32.so"))
+		lib = dlmount("./amxxpc32.so");
+	else
+		lib = dlmount("amxxpc32.so");
 #else
 	HINSTANCE lib = dlmount("amxxpc32.dll");
 #endif
@@ -101,9 +105,12 @@ int main(int argc, char **argv)
 
 	unlink(file);
 
-	HINSTANCE lib64 = 0;
+	HINSTANCE lib64 = NULL;
 #ifdef __linux__
-	lib64 = dlmount("./amxxpc64.so");
+	if (FileExists("./amxxpc64.so"))
+		lib64 = dlmount("./amxxpc64.so");
+	else
+		lib64 = dlmount("amxxpc64.so");
 #else
 	lib64 = dlmount("amxxpc64.dll");
 #endif
@@ -374,3 +381,15 @@ void show_help()
 	printf("\t-p<name> set name of \"prefix\" file\n");
 	printf("\t-r[name] write cross reference report to console or to specified file\n");
 }
+
+#ifdef __linux__
+bool FileExists(const char *file)
+{
+	FILE *fp = fopen(file, "rb");
+	if (!fp)
+		return false;
+	fclose(fp);
+	return true;
+}
+#endif
+

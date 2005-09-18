@@ -1,7 +1,7 @@
 #ifndef _AMXXSC_INCLUDE_H
 #define _AMXXSC_INCLUDE_H
 
-#define VERSION_STRING		"1.56-300"
+#define VERSION_STRING		"1.60-300"
 #define VERSION				03000
 #define MAGIC_HEADER		0x414D5842
 #define MAGIC_HEADER2		0x414D5858
@@ -66,5 +66,9 @@ struct BinPlugin
 	int32_t memsize;	//memory image size
 	int32_t offs;		//file offset
 };
+
+#ifdef __linux__
+bool FileExists(const char *file);
+#endif
 
 #endif //_AMXXSC_INCLUDE_H

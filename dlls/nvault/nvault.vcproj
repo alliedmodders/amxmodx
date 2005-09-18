@@ -162,10 +162,13 @@
 				RelativePath=".\Journal.h">
 			</File>
 			<File
-				RelativePath=".\NHash.h">
+				RelativePath=".\NVault.h">
 			</File>
 			<File
-				RelativePath=".\NVault.h">
+				RelativePath=".\sh_list.h">
+			</File>
+			<File
+				RelativePath=".\sh_tinyhash.h">
 			</File>
 		</Filter>
 		<Filter
@@ -186,10 +189,10 @@
 				RelativePath=".\CString.h">
 			</File>
 			<File
-				RelativePath=".\sdk\moduleconfig.h">
+				RelativePath=".\moduleconfig.h">
 			</File>
 			<File
-				RelativePath=".\moduleconfig.h">
+				RelativePath=".\sdk\moduleconfig.h">
 			</File>
 		</Filter>
 	</Files>

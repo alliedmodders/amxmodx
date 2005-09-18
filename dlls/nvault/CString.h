@@ -66,7 +66,7 @@ public:
 		return ret; 	 
 	}
 
-	String(String &src) 
+	String(const String &src) 
 	{
 		v = NULL;
 		a_size = 0;

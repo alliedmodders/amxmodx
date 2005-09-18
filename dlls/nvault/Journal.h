@@ -2,7 +2,8 @@
 #define _INCLUDE_JOURNAL_H
 
 #include "Binary.h"
-#include "NHash.h"
+#include "sh_list.h"
+#include "sh_tinyhash.h"
 #include "CString.h"
 
 enum JOp
@@ -21,7 +22,7 @@ enum Encode
 	Encode_Medium,
 };
 
-typedef NHash<String,String> VaultMap;
+typedef THash<String,String> VaultMap;
 
 class Journal
 {

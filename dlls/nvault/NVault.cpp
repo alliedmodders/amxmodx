@@ -18,9 +18,9 @@ int HashFunction<String>(const String & k)
 }
 
 template <>
-bool Compare<String>(const String & k1, const String & k2)
+int Compare<String>(const String & k1, const String & k2)
 {
-	return (strcmp(k1.c_str(),k2.c_str())==0);
+	return strcmp(k1.c_str(),k2.c_str());
 }
 
 NVault::NVault(const char *file)
@@ -137,18 +137,18 @@ bool NVault::_SaveToFile()
 		String key;
 		String val;
 	
-		NHash<String,String>::iterator iter = m_Hash.GetIter();
-		while (!iter.Done())
+		THash<String,String>::iterator iter = m_Hash.begin();
+		while (iter != m_Hash.end())
 		{
-			key = iter.GetKey();
-			val = iter.GetVal();
-			stamp = iter.GetStamp();
+			key = (*iter).key;
+			val = (*iter).val;
+			stamp = (*iter).stamp;
 			bw.WriteInt32(stamp);
 			bw.WriteUInt8( key.size() );
 			bw.WriteUInt16( val.size() );
 			bw.WriteChars( key.c_str(), key.size() );
 			bw.WriteChars( val.c_str(), val.size() );
-			iter.Next();
+			iter++;
 		}
 	} catch (...) {
 		fclose(fp);

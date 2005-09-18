@@ -1,6 +1,8 @@
 #ifndef _INCLUDE_NVAULT_H
 #define _INCLUDE_NVAULT_H
 
+#include "sh_list.h"
+#include "sh_tinyhash.h"
 #include "IVault.h"
 #include "CString.h"
 #include "Journal.h"
@@ -51,7 +53,7 @@ private:
 	bool _SaveToFile();
 private:
 	String m_File;
-	NHash<String, String> m_Hash;
+	THash<String, String> m_Hash;
 	Journal *m_Journal;
 	bool m_Open;
 };

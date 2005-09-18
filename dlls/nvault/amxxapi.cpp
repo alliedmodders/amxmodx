@@ -29,10 +29,10 @@ static cell nvault_open(AMX *amx, cell *params)
 	sprintf(file, "%s/%s.vault", path, name);
 	for (size_t i=0; i<g_Vaults.size(); i++)
 	{
+		if (!g_Vaults[i])
+			continue;
 		if (strcmp(g_Vaults.at(i)->GetFilename(), file) == 0) 
-		{
 			return i;
-		}
 	}
 	NVault *v = new NVault(file);
 	if (!v->Open())

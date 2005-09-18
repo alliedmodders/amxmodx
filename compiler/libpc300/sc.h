@@ -63,6 +63,12 @@
 #define PREPROC_TERM  '\x7f'/* termination character for preprocessor expressions (the "DEL" code) */
 #define sDEF_PREFIX   "default.inc" /* default prefix filename */
 
+#if defined WIN32
+#define INVISIBLE
+#else
+#define INVISIBLE __attribute__((visibility("protected")))
+#endif
+
 typedef union {
   void *pv;                 /* e.g. a name */
   int i;
@@ -435,11 +441,15 @@ int pc_enablewarning(int number,int enable);
  */
 
 /* general console output */
+#if PAWN_CELL_SIZE==32
 #if defined __WIN32__ || defined _WIN32 || defined WIN32
  __declspec (dllexport)
 int pc_printf(const char *message,...);
 #else
 extern int pc_printf(const char *message,...);
+#endif
+#else
+int pc_printf(const char *message, ...) INVISIBLE;
 #endif
 
 /* error report function */
@@ -629,11 +639,6 @@ SC_FUNC void jmp_eq0(int number);
 SC_FUNC void outval(cell val,int newline);
 
 /* function prototypes in SC5.C */
-#if defined WIN32
-#define INVISIBLE
-#else
-#define INVISIBLE __attribute__((visibility("protected")))
-#endif
 SC_FUNC int error(int number,...) INVISIBLE;
 SC_FUNC void errorset(int code);
 

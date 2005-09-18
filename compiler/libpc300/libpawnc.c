@@ -65,11 +65,15 @@
  * purpose messages; errors go through pc_error(). The function is modelled
  * after printf().
  */
+#if PAWN_CELL_SIZE==32
 #if defined __WIN32__ || defined _WIN32 || defined WIN32
  __declspec (dllexport)
 int pc_printf(const char *message,...)
 #else
 extern int pc_printf(const char *message,...)
+#endif
+#else
+int pc_printf(const char *message, ...)
 #endif
 {
 #if PAWN_CELL_SIZE==32

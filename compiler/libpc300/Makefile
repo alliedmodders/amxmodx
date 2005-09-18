@@ -18,7 +18,7 @@ INCLUDE = -I.
 ifeq "$(PAWN64)" "true"
 	BINARY = $(NAME)64.so
 	BIN_DIR = Release64
-	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64
+	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -Dpc_printf=pc_printf64
 else
 	BINARY = $(NAME)32.so
 	BIN_DIR = Release32

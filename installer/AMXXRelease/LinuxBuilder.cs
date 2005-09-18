@@ -29,9 +29,16 @@ namespace AMXXRelease
 			for (int i=0; i<files.Length; i++)
 				file_list += GetFileName(files[i]) + " ";
 
+			ProcessStartInfo chmod = new ProcessStartInfo();
+			chmod.FileName = "/bin/chmod";
+			chmod.WorkingDirectory = dir;
+			chmod.Arguments = "-R 755 " + file_list;
+			chmod.UseShellExecute = false;
+			Process c = Process.Start(chmod);
+			c.WaitForExit();
+			
+
 			info.Arguments = "zcvf " + target + ".tar.gz " + file_list;
-			Console.WriteLine(info.WorkingDirectory);
-			Console.WriteLine(info.Arguments);
 			info.UseShellExecute = false;
 
 			Process p = Process.Start(info);

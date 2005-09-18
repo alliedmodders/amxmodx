@@ -31,7 +31,7 @@ namespace AMXXRelease
 			m_Plugins.Add(csstats);
 		}
 
-		public override sealed bool CopyExtraFiles(string basedir, string source)
+		public override sealed bool CopyExtraFiles(ABuilder ab, string basedir, string source)
 		{
 
 			if ((int)System.Environment.OSVersion.Platform == 128)

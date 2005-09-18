@@ -48,35 +48,35 @@ namespace AMXXRelease
 		}
 
 
-		public override sealed bool CopyExtraFiles(string basedir, string source)
+		public override sealed bool CopyExtraFiles(ABuilder ab, string basedir, string source)
 		{
 			//Create directory structures
 			string datadir = basedir + "\\data";
 
 			if (!Directory.Exists(ABuilder.PropSlashes(datadir)))
-				Directory.CreateDirectory(ABuilder.PropSlashes(datadir));
+				ab.CreateDir(ABuilder.PropSlashes(datadir));
 
 			File.Copy(ABuilder.PropSlashes(source + "\\dlls\\geoip\\GeoIP.dat"),
 					  ABuilder.PropSlashes(datadir + "\\GeoIP.dat"), 
 					  true);
 
-			ABuilder.CopyNormal(
+			ABuilder.CopyNormal(ab,
 					ABuilder.PropSlashes(source + "\\plugins\\lang"), 
 					ABuilder.PropSlashes(datadir + "\\lang")
 					);
 
 			if (!Directory.Exists(ABuilder.PropSlashes(basedir + "\\logs")))
-				Directory.CreateDirectory(ABuilder.PropSlashes(basedir + "\\logs"));
+				ab.CreateDir(ABuilder.PropSlashes(basedir + "\\logs"));
 
 			if (!Directory.Exists(ABuilder.PropSlashes(basedir + "\\doc")))
-				Directory.CreateDirectory(ABuilder.PropSlashes(basedir + "\\doc"));
+				ab.CreateDir(ABuilder.PropSlashes(basedir + "\\doc"));
 
 			File.Copy(
 				ABuilder.PropSlashes(source + "\\doc\\amxmodx-doc.chm"),
 				ABuilder.PropSlashes(basedir + "\\doc\\amxmodx-doc.chm"),
 					  true);
 
-			ABuilder.CopyNormal(
+			ABuilder.CopyNormal(ab,
 				ABuilder.PropSlashes(source + "\\plugins\\include"), 
 				ABuilder.PropSlashes(basedir + "\\scripting\\include"));
 

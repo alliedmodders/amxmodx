@@ -14,6 +14,11 @@ namespace AMXXRelease
 		{
 		}
 
+		public virtual void CreateDir(string dir)
+		{
+			Directory.CreateDirectory(dir);
+		}
+
 		public virtual bool Build(Config cfg, Build build)
 		{
 			m_Cfg = cfg;
@@ -51,7 +56,7 @@ namespace AMXXRelease
 			string basedir = PropSlashes(m_Cfg.OutputPath() + "\\" + mod.GetModPath());
 			string sourcetree = m_Cfg.GetSourceTree();
 
-			if (!mod.CopyExtraFiles(basedir, sourcetree))
+			if (!mod.CopyExtraFiles(this, basedir, sourcetree))
 				return false;
 			
 			return true;
@@ -62,7 +67,7 @@ namespace AMXXRelease
 			string basedir = PropSlashes(m_Cfg.OutputPath() + "\\" + mod.GetModPath() + "\\configs");
 
 			if (!Directory.Exists(basedir))
-				Directory.CreateDirectory(basedir);
+				CreateDir(basedir);
 
 			string srcdir = PropSlashes(m_Cfg.GetSourceTree() + "\\configs");
 
@@ -74,15 +79,15 @@ namespace AMXXRelease
 
 			srcdir = PropSlashes(srcdir);
 
-			CopyNormal(srcdir, basedir);
+			CopyNormal(this, srcdir, basedir);
 		}
 
-		public static void CopyNormal(string src, string dest)
+		public static void CopyNormal(ABuilder ab, string src, string dest)
 		{
 			string[] files = Directory.GetFiles(src);
 
 			if (!Directory.Exists(dest))
-				Directory.CreateDirectory(dest);
+				ab.CreateDir(dest);
 
 			for (int i=0; i<files.Length; i++)
 			{
@@ -117,7 +122,7 @@ namespace AMXXRelease
 				}
 				dir = PropSlashes(basedir + "\\" + plugin.outdir);
 				if (!Directory.Exists(dir))
-					Directory.CreateDirectory(dir);
+					CreateDir(dir);
 				target = PropSlashes(dir + "\\" + plugin.name + ".amxx");
 				if (File.Exists(target))
 					File.Delete(target);
@@ -137,7 +142,7 @@ namespace AMXXRelease
 			{
 				string[] files = Directory.GetFiles(search_dir);
 				if (!Directory.Exists(PropSlashes(basedir + "\\scripting")))
-					Directory.CreateDirectory(PropSlashes(basedir + "\\scripting"));
+					CreateDir(PropSlashes(basedir + "\\scripting"));
 				for (int i=0; i<files.Length; i++)
 				{
 					dest = PropSlashes(basedir + "\\scripting\\" + GetFileName(files[i]));
@@ -188,7 +193,7 @@ namespace AMXXRelease
 				}
 				dir = PropSlashes(basedir + "\\" + module.outdir);
 				if (!Directory.Exists(dir))
-					Directory.CreateDirectory(dir);
+					CreateDir(dir);
 				File.Copy(binary,
 					PropSlashes(dir + "\\" + module.projname + GetLibExt()),
 					true);

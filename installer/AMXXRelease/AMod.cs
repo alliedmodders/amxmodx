@@ -70,7 +70,7 @@ namespace AMXXRelease
 
 		//called when it's okay to build an extra dir structure
 		// and copy files to it
-		public virtual bool CopyExtraFiles(string basedir, string sourcedir)
+		public virtual bool CopyExtraFiles(ABuilder ab, string basedir, string sourcedir)
 		{
 			return true;
 		}

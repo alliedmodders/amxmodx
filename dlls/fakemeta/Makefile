@@ -60,8 +60,10 @@ debug:
 default: all
 
 clean:
+	rm -rf Release/sdk/*.o
 	rm -rf Release/*.o
 	rm -rf Release/$(BINARY)
+	rm -rf Debug/sdk/*.o
 	rm -rf Debug/*.o
 	rm -rf Debug/$(BINARY)
 

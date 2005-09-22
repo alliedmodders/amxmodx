@@ -5,7 +5,7 @@
 
 // Module info
 #define MODULE_NAME "Sqlite"
-#define MODULE_VERSION "1.56"
+#define MODULE_VERSION "1.60"
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "http://www.amxmodx.org/"
 #define MODULE_LOGTAG "SQLITE"

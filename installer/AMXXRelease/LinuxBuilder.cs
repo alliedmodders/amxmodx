@@ -38,7 +38,11 @@ namespace AMXXRelease
 			c.WaitForExit();
 			
 
-			info.Arguments = "zcvf " + target + ".tar.gz " + file_list;
+
+			if (m_Cfg.MakeOpts().IndexOf("amd64") != -1)
+				info.Arguments = "zcvf " + target + "_amd64.tar.gz " + file_list;
+			else
+				info.Arguments = "zcvf " + target + ".tar.gz " + file_list;
 			info.UseShellExecute = false;
 
 			Process p = Process.Start(info);

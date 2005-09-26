@@ -32,6 +32,7 @@
 #include <time.h>
 #include "amxmodx.h"
 #include "natives.h"
+#include "debugger.h"
 
 static cell AMX_NATIVE_CALL get_xvar_id(AMX *amx, cell *params)
 {
@@ -3092,6 +3093,10 @@ static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 	// call the func
 	cell retVal;
 	int err;
+	Debugger *pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
+
+	if (pDebugger)
+		pDebugger->BeginExec();
 
 	// copy the globs so the called func can also use callfunc
 	cell gparams[CALLFUNC_MAXPARAMS];
@@ -3117,10 +3122,20 @@ static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 		amx_Push(pAmx, gparams[i]);
 	}
 	
-	if ((err = amx_Exec(pAmx, &retVal, func) != AMX_ERR_NONE))
+	err = amx_Exec(pAmx, &retVal, func);
+
+	if (err != AMX_ERR_NONE)
 	{
-		return 0;
+		if (pDebugger && pDebugger->ErrorExists())
+		{
+			//already handled
+		} else {
+			LogError(amx, err, NULL);
+		}
 	}
+
+	if (pDebugger)
+		pDebugger->EndExec();
 
 	// process byref params (not byref_reused)
 	for (int i = 0; i < curParam; ++i)

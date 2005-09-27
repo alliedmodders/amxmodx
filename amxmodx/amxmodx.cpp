@@ -3046,6 +3046,12 @@ static cell AMX_NATIVE_CALL callfunc_begin_i(AMX *amx, cell *params)
 	if (!plugin)
 		return -1;
 
+	if (params[1] < 0)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Public function %d is invalid", params[1]);
+		return -1;
+	}
+
 	if (!plugin->isExecutable(params[1]))
 		return -2;
 

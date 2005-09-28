@@ -586,7 +586,7 @@ static cell AMX_NATIVE_CALL get_weaponname(AMX *amx, cell *params) /* 3 param */
 	
 	if (index < 1 || index >= MAX_WEAPONS)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid player id %d", index);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", index);
 		return 0;
 	}
 	

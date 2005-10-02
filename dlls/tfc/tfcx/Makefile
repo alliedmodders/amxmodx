@@ -35,7 +35,7 @@ ifeq "$(AMD64)" "true"
 else
 	BINARY = $(NAME)_i386.so
 	CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32
-	OPT_FLAGS += -march=i686
+	OPT_FLAGS += -march=i586
 endif
 
 OBJ_LINUX := $(OBJECTS:%.cpp=$(BIN_DIR)/%.o)

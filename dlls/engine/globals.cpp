@@ -175,3 +175,4 @@ AMX_NATIVE_INFO global_Natives[] = {
 	{NULL,					NULL},
 	  ///////////////////
 };
+

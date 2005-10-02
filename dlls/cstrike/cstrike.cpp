@@ -140,6 +140,13 @@ static cell AMX_NATIVE_CALL cs_set_user_deaths(AMX *amx, cell *params) // cs_set
 	WRITE_SHORT(*((int *)pPlayer->pvPrivateData + OFFSET_TEAM)); // should these be byte?
 	MESSAGE_END();
 
+	if (params[2] == 1)
+		MF_SetPlayerTeamInfo(params[1], params[2], "TERRORIST");
+	else if (params[2] == 2)
+		MF_SetPlayerTeamInfo(params[1], params[2], "CT");
+	else
+		MF_SetPlayerTeamInfo(params[1], params[2], NULL);
+
 	return 1;
 }
 

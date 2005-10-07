@@ -42,24 +42,26 @@ object frmSettings: TfrmSettings
       000000FFFFFFFFFFFFFFFF040000000200000008436F6D70696C65722A000000
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF040000000000000011436F6D70696C65
       722053657474696E67732C000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0500
-      0000000000001348616C662D4C696665204469726563746F727926000000FFFF
-      FFFFFFFFFFFFFFFFFFFFFFFFFFFF03000000000000000D436F64652D536E6970
-      706574731C0000000100000001000000FFFFFFFFFFFFFFFF0600000002000000
-      0346545021000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0600000000000000
-      0853657474696E67731E000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF070000
-      00000000000550726F787921000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF08
-      0000000000000008506C75672D496E731D000000FFFFFFFFFFFFFFFFFFFFFFFF
-      FFFFFFFF0900000000000000044D697363}
+      0000000000001348616C662D4C696665204469726563746F7279230000000100
+      000001000000FFFFFFFFFFFFFFFF0A000000020000000A436F64652D546F6F6C
+      7321000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0A00000000000000085365
+      7474696E677326000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF030000000000
+      00000D436F64652D536E6970706574731C0000000100000001000000FFFFFFFF
+      FFFFFFFF06000000020000000346545021000000FFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFF06000000000000000853657474696E67731E000000FFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFF07000000000000000550726F787921000000FFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFF080000000000000008506C75672D496E731D000000
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0900000000000000044D697363}
     Items.Links = {
-      0D00000000000000000000000100000002000000040000000400000005000000
-      030000000600000006000000070000000800000009000000}
+      0F00000000000000000000000100000002000000040000000400000005000000
+      0A0000000A000000030000000600000006000000070000000800000009000000}
   end
   object jplSettings: TJvPageList
     Left = 135
     Top = 0
     Width = 353
     Height = 260
-    ActivePage = jspHighlighter
+    ActivePage = jspTools
     PropagateEnable = False
     Align = alClient
     OnChange = jplSettingsChange
@@ -355,35 +357,35 @@ object frmSettings: TfrmSettings
       Caption = 'Tools'
       object bvlTools1: TBevel
         Left = 4
-        Top = 68
+        Top = 90
         Width = 347
         Height = 3
         Shape = bsTopLine
       end
       object lblCodeFolding: TLabel
         Left = 6
-        Top = 142
+        Top = 158
         Width = 67
         Height = 13
         Caption = 'Code-Folding:'
       end
       object lblCaret: TLabel
         Left = 6
-        Top = 76
+        Top = 96
         Width = 31
         Height = 13
         Caption = 'Caret:'
       end
       object lblAutoIndent: TLabel
         Left = 194
-        Top = 142
+        Top = 158
         Width = 63
         Height = 13
         Caption = 'Auto-Indent:'
       end
       object chkHighlightBraces: TFlatCheckBox
         Left = 6
-        Top = 26
+        Top = 22
         Width = 95
         Height = 17
         Caption = 'Highlight braces'
@@ -392,7 +394,7 @@ object frmSettings: TfrmSettings
       end
       object chkAutoCloseBraces: TFlatCheckBox
         Left = 176
-        Top = 4
+        Top = 6
         Width = 107
         Height = 17
         Caption = 'Auto-Close braces'
@@ -401,7 +403,7 @@ object frmSettings: TfrmSettings
       end
       object chkAutoCloseQuotes: TFlatCheckBox
         Left = 176
-        Top = 24
+        Top = 22
         Width = 107
         Height = 17
         Caption = 'Auto-Close quotes'
@@ -410,7 +412,7 @@ object frmSettings: TfrmSettings
       end
       object chkClearUndoAfterSave: TFlatCheckBox
         Left = 6
-        Top = 46
+        Top = 38
         Width = 125
         Height = 17
         Caption = 'Clear Undo after save'
@@ -419,7 +421,7 @@ object frmSettings: TfrmSettings
       end
       object chkWordWrap: TFlatCheckBox
         Left = 176
-        Top = 44
+        Top = 38
         Width = 173
         Height = 17
         Caption = 'Word-Wrap (not recommended)'
@@ -428,7 +430,7 @@ object frmSettings: TfrmSettings
       end
       object pnlCodeFolding: TPanel
         Left = 6
-        Top = 158
+        Top = 174
         Width = 183
         Height = 49
         BevelOuter = bvLowered
@@ -461,7 +463,7 @@ object frmSettings: TfrmSettings
       end
       object pnlCaret: TPanel
         Left = 6
-        Top = 92
+        Top = 112
         Width = 343
         Height = 43
         BevelOuter = bvLowered
@@ -563,7 +565,7 @@ object frmSettings: TfrmSettings
       end
       object pnlAutoIndent: TPanel
         Left = 194
-        Top = 158
+        Top = 174
         Width = 155
         Height = 49
         BevelOuter = bvLowered
@@ -590,6 +592,42 @@ object frmSettings: TfrmSettings
           TabOrder = 1
           OnClick = cmdAdvancedAutoIndentClick
         end
+      end
+      object chkDontLoadFilesTwice: TFlatCheckBox
+        Left = 6
+        Top = 54
+        Width = 157
+        Height = 17
+        Caption = 'Don'#39't allow to load files twice'
+        TabOrder = 9
+        TabStop = True
+      end
+      object chkMakeBaks: TFlatCheckBox
+        Left = 176
+        Top = 54
+        Width = 151
+        Height = 17
+        Caption = 'Create BAK-file for each file'
+        TabOrder = 10
+        TabStop = True
+      end
+      object chkDisableAC: TFlatCheckBox
+        Left = 6
+        Top = 70
+        Width = 127
+        Height = 17
+        Caption = 'Disable Auto-Complete'
+        TabOrder = 11
+        TabStop = True
+      end
+      object chkDisableCT: TFlatCheckBox
+        Left = 176
+        Top = 70
+        Width = 97
+        Height = 15
+        Caption = 'Disable Call-Tips'
+        TabOrder = 12
+        TabStop = True
       end
     end
     object jspShortcuts: TJvStandardPage
@@ -1480,7 +1518,7 @@ object frmSettings: TfrmSettings
       end
       object chkShowStatusbar: TFlatCheckBox
         Left = 8
-        Top = 214
+        Top = 146
         Width = 93
         Height = 17
         Caption = 'Show Statusbar'
@@ -1528,13 +1566,34 @@ object frmSettings: TfrmSettings
           TabOrder = 2
         end
       end
+    end
+    object jspCTSettings: TJvStandardPage
+      Left = 0
+      Top = 25
+      Width = 353
+      Height = 235
+      Caption = 'Settings'
+      object lblCodeExplorer: TLabel
+        Left = 6
+        Top = 6
+        Width = 73
+        Height = 13
+        Caption = 'Code-Explorer:'
+      end
+      object lblCodeInspector: TLabel
+        Left = 6
+        Top = 94
+        Width = 79
+        Height = 13
+        Caption = 'Code-Inspector:'
+      end
       object pnlPCSpeed: TPanel
-        Left = 8
-        Top = 146
-        Width = 337
+        Left = 6
+        Top = 22
+        Width = 341
         Height = 67
         BevelOuter = bvLowered
-        TabOrder = 3
+        TabOrder = 0
         object lblCPUSpeed: TLabel
           Left = 4
           Top = 4
@@ -1550,14 +1609,14 @@ object frmSettings: TfrmSettings
           Caption = 'Slow'
         end
         object lblAverage: TLabel
-          Left = 131
+          Left = 133
           Top = 48
           Width = 41
           Height = 13
           Caption = 'Average'
         end
         object lblFast: TLabel
-          Left = 308
+          Left = 314
           Top = 48
           Width = 21
           Height = 13
@@ -1566,13 +1625,49 @@ object frmSettings: TfrmSettings
         object sldSpeed: TJvxSlider
           Left = 4
           Top = 18
-          Width = 325
+          Width = 331
           Height = 31
           Increment = 2
           MinValue = 1
           MaxValue = 10
           TabOrder = 0
           Value = 5
+        end
+      end
+      object pnlCodeInspector: TPanel
+        Left = 6
+        Top = 112
+        Width = 341
+        Height = 47
+        BevelOuter = bvLowered
+        TabOrder = 1
+        object lblLangDir: TLabel
+          Left = 4
+          Top = 4
+          Width = 143
+          Height = 13
+          Caption = 'Directory of all language files:'
+        end
+        object cmdBrowseLangDir: TFlatButton
+          Left = 306
+          Top = 20
+          Width = 29
+          Height = 19
+          ColorFocused = 16245198
+          ColorDown = 16245198
+          ColorHighLight = 8623776
+          ColorShadow = 8623776
+          Caption = '...'
+          TabOrder = 0
+          OnClick = cmdBrowseLangDirClick
+        end
+        object txtLangDir: TFlatEdit
+          Left = 4
+          Top = 20
+          Width = 297
+          Height = 19
+          ColorFlat = clWhite
+          TabOrder = 1
         end
       end
     end

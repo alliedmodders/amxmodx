@@ -159,12 +159,6 @@ type
     lblProxyHost: TLabel;
     cboProxy: TFlatComboBox;
     lblProxy: TLabel;
-    pnlPCSpeed: TPanel;
-    lblCPUSpeed: TLabel;
-    sldSpeed: TJvxSlider;
-    lblSlow: TLabel;
-    lblAverage: TLabel;
-    lblFast: TLabel;
     jspHalfLife: TJvStandardPage;
     pnlHLExecutable: TPanel;
     lblHLExec: TLabel;
@@ -182,6 +176,23 @@ type
     cmdBrowseAMXXDir: TFlatButton;
     cmdResetShortcuts: TFlatButton;
     txtShortcut: TFlatEdit;
+    jspCTSettings: TJvStandardPage;
+    pnlPCSpeed: TPanel;
+    lblCPUSpeed: TLabel;
+    lblSlow: TLabel;
+    lblAverage: TLabel;
+    lblFast: TLabel;
+    sldSpeed: TJvxSlider;
+    lblCodeExplorer: TLabel;
+    lblCodeInspector: TLabel;
+    pnlCodeInspector: TPanel;
+    cmdBrowseLangDir: TFlatButton;
+    txtLangDir: TFlatEdit;
+    lblLangDir: TLabel;
+    chkDontLoadFilesTwice: TFlatCheckBox;
+    chkMakeBaks: TFlatCheckBox;
+    chkDisableAC: TFlatCheckBox;
+    chkDisableCT: TFlatCheckBox;
     procedure jplSettingsChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -243,6 +254,7 @@ type
     procedure txtShortcutKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure cboFontChange(Sender: TObject);
+    procedure cmdBrowseLangDirClick(Sender: TObject);
   public
     Foreground, Background: TColor;
     CaretFore, CaretBack: TColor;
@@ -977,6 +989,13 @@ procedure TfrmSettings.cboFontChange(Sender: TObject);
 begin
   if (not chkUseDefaultFont.Checked) then
     TSciStyle(TSciLangItem(frmMain.sciEditor.LanguageManager.LanguageList.Items[cboLanguage.ItemIndex]).Styles.Items[lstStyles.ItemIndex]).FontName := cboFont.Text;
+end;
+
+procedure TfrmSettings.cmdBrowseLangDirClick(Sender: TObject);
+var eStr: String;
+begin
+  if SelectDirectory(lSelectLanguageDir, ExtractFilePath(txtLangDir.Text), eStr) then
+    txtLangDir.Text := eStr;
 end;
 
 end.

@@ -80,6 +80,9 @@ var lInvalidFile: String;
     lNoCPP: String;
     lInvalidChannel: String;
     lResetShortcuts: String;
+    lSelectLanguageDir: String;
+    lFailedCreateBak: String;
+    lAskRestore: String;
 
 procedure ResetToEnglish;
 
@@ -163,6 +166,9 @@ begin
   lNoCPP := 'Sorry, the C++ IDE is not enabled.';
   lInvalidChannel := 'Invalid channel.';
   lResetShortcuts := 'Warning: The shortcut reset would immediately take affect. Reset anyway?';
+  lSelectLanguageDir := 'Please select the directory of all dictionary files (default "%datadir%/lang"):';
+  lFailedCreateBak := 'Error creating file backup.';
+  lAskRestore := 'Do you want to restore the old file backup?';
 end;
 
 end.

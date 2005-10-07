@@ -4,7 +4,7 @@ interface
 
 uses
   Classes, Forms, SysUtils, ComCtrls, Windows, ScintillaLanguageManager,
-  Dialogs, CommCtrl;
+  Dialogs, CommCtrl, madExcept;
 
 type
   TCodeExplorerUpdater = class(TThread)
@@ -19,13 +19,15 @@ type
     eVariables: TStringList;
 
     eCode: TStringList;
-    
-    eAutoComplete, eCallTips, eKeywords: String;
+
+    eAutoComplete, eCallTips, eKeywords: string;
   protected
     procedure Execute; override;
     procedure GetCode;
     procedure SetValuesPawn;
   end;
+
+function GetNode(eText: string): TTreeNode;
 
 implementation
 
@@ -85,14 +87,15 @@ begin
             end;
           end;
         except
-          // GABEN
+          if FindWindow(nil, 'Delphi 7') <> 0 then // This is "Debug Mode"
+            madExcept.HandleException;
         end;
       end;
       Sleep(1000);
     end
     else
       Sleep(50);
-  until (Application.Terminated);
+  until not Started;
 
   eCode.Free;
   eConstants.Free;
@@ -113,13 +116,12 @@ begin
   eCode.Assign(frmMain.sciEditor.Lines);
 end;
 
-procedure TCodeExplorerUpdater.SetValuesPawn;
-function GetNode(eText: String): TTreeNode;
+function GetNode(eText: string): TTreeNode;
 var i: integer;
 begin
   Result := nil;
 
-  for i := 0 to frmMain.trvExplorer.Items.Count -1 do begin
+  for i := 0 to frmMain.trvExplorer.Items.Count - 1 do begin
     if (frmMain.trvExplorer.Items[i].Text = eText) then begin
       if (frmMain.trvExplorer.Items[i].ImageIndex = 42) or (frmMain.trvExplorer.Items[i].ImageIndex = 43) then begin
         Result := frmMain.trvExplorer.Items[i];
@@ -129,196 +131,221 @@ begin
   end;
 end;
 
+procedure TCodeExplorerUpdater.SetValuesPawn;
 var exConstants, exDefined, exIncluded, exMethods, exDefault, exEvents,
-    exStocks, exNatives, exForwards, exVariables, exCVars: Boolean;
-    i, eSelStart, eSelLength: integer;
-    LineMaxSubord: integer;
-    eStr: TStringList;
-    eScrollPosX, eScrollPosY: Integer;
+  exStocks, exNatives, exForwards, exVariables, exCVars: Boolean;
+  i, eSelStart, eSelLength: integer;
+  LineMaxSubord: integer;
+  eStr: TStringList;
+  eScrollPosX, eScrollPosY: Integer;
+  eTempNode: TTreeNode;
+  eSelected: Integer;
 begin
+  if Application.Terminated then exit;
   if frmMain.trvExplorer.Items.Count = 0 then exit;
 
+  if Assigned(frmMain.trvExplorer.Selected) then
+    eSelected := frmMain.trvExplorer.Selected.AbsoluteIndex
+  else
+    eSelected := -1;
+
   frmMain.trvExplorer.Items.BeginUpdate;
-  eScrollPosX := GetScrollPos(frmMain.trvExplorer.Handle, SB_HORZ);
-  eScrollPosY := GetScrollPos(frmMain.trvExplorer.Handle, SB_VERT);
+  try
+    eScrollPosX := GetScrollPos(frmMain.trvExplorer.Handle, SB_HORZ);
+    eScrollPosY := GetScrollPos(frmMain.trvExplorer.Handle, SB_VERT);
 
   // Get Expanded-State and delete children
-  with GetNode('Constants') do begin
-    exConstants := Expanded;
-    DeleteChildren;
-  end;
-  with GetNode('CVars') do begin
-    exCVars := Expanded;
-    DeleteChildren;
-  end;
-  with GetNode('Defined') do begin
-    exDefined := Expanded;
-    DeleteChildren;
-  end;
-  with GetNode('Included') do begin
-    exIncluded := Expanded;
-    DeleteChildren;
-  end;
-  with GetNode('Default') do begin
-    exDefault := Expanded;
-    DeleteChildren;
-  end;
-  with GetNode('Events') do begin
-    exEvents := Expanded;
-    DeleteChildren;
-  end;
-  with GetNode('Stocks') do begin
-    exStocks := Expanded;
-    DeleteChildren;
-  end;
-  with GetNode('Methods') do begin
-    exMethods := Expanded;
-    DeleteChildren;
-  end;
-  with GetNode('Natives') do begin
-    exNatives := Expanded;
-    DeleteChildren;
-  end;
-  with GetNode('Forwards') do begin
-    exForwards := Expanded;
-    DeleteChildren;
-  end;
-  with GetNode('Variables') do begin
-    exVariables := Expanded;
-    DeleteChildren;
-  end;
+    with GetNode('Constants') do begin
+      exConstants := Expanded;
+      DeleteChildren;
+    end;
+    with GetNode('CVars') do begin
+      exCVars := Expanded;
+      DeleteChildren;
+    end;
+    with GetNode('Defined') do begin
+      exDefined := Expanded;
+      DeleteChildren;
+    end;
+    with GetNode('Included') do begin
+      exIncluded := Expanded;
+      DeleteChildren;
+    end;
+    with GetNode('Default') do begin
+      exDefault := Expanded;
+      DeleteChildren;
+    end;
+    with GetNode('Events') do begin
+      exEvents := Expanded;
+      DeleteChildren;
+    end;
+    with GetNode('Stocks') do begin
+      exStocks := Expanded;
+      DeleteChildren;
+    end;
+    with GetNode('Methods') do begin
+      exMethods := Expanded;
+      DeleteChildren;
+    end;
+    with GetNode('Natives') do begin
+      exNatives := Expanded;
+      DeleteChildren;
+    end;
+    with GetNode('Forwards') do begin
+      exForwards := Expanded;
+      DeleteChildren;
+    end;
+    with GetNode('Variables') do begin
+      exVariables := Expanded;
+      DeleteChildren;
+    end;
   // Create new children
-  with frmMain.trvExplorer.Items.AddChild(GetNode('Defined'), 'CVars') do begin
-    ImageIndex := 42;
-    SelectedIndex := 42;
-  end;
-  with frmMain.trvExplorer.Items.AddChild(GetNode('Methods'), 'Default') do begin
-    ImageIndex := 42;
-    SelectedIndex := 42;
-  end;
-  with frmMain.trvExplorer.Items.AddChild(GetNode('Methods'), 'Events') do begin
-    ImageIndex := 42;
-    SelectedIndex := 42;
-  end;
-  with frmMain.trvExplorer.Items.AddChild(GetNode('Methods'), 'Stocks') do begin
-    ImageIndex := 42;
-    SelectedIndex := 42;
-  end;
+    with frmMain.trvExplorer.Items.AddChild(GetNode('Defined'), 'CVars') do begin
+      ImageIndex := 42;
+      SelectedIndex := 42;
+    end;
+    with frmMain.trvExplorer.Items.AddChild(GetNode('Methods'), 'Default') do begin
+      ImageIndex := 42;
+      SelectedIndex := 42;
+    end;
+    with frmMain.trvExplorer.Items.AddChild(GetNode('Methods'), 'Events') do begin
+      ImageIndex := 42;
+      SelectedIndex := 42;
+    end;
+    with frmMain.trvExplorer.Items.AddChild(GetNode('Methods'), 'Stocks') do begin
+      ImageIndex := 42;
+      SelectedIndex := 42;
+    end;
 
-  for i := 0 to eConstants.Count -1 do begin
-    with frmMain.trvExplorer.Items.AddChildObject(GetNode('Constants'), eConstants[i], Pointer(eConstants.Objects[i])) do begin
-      ImageIndex := 48;
-      SelectedIndex := 48;
+    eTempNode := GetNode('Constants');
+    for i := 0 to eConstants.Count - 1 do begin
+      with frmMain.trvExplorer.Items.AddChildObject(eTempNode, eConstants[i], Pointer(eConstants.Objects[i])) do begin
+        ImageIndex := 48;
+        SelectedIndex := 48;
+      end;
     end;
-  end;
-  for i := 0 to eDefined.Count -1 do begin
-    with frmMain.trvExplorer.Items.AddChildObject(GetNode('Defined'), eDefined[i], Pointer(eDefined.Objects[i])) do begin
-      ImageIndex := 48;
-      SelectedIndex := 48;
+    eTempNode := GetNode('Defined');
+    for i := 0 to eDefined.Count - 1 do begin
+      with frmMain.trvExplorer.Items.AddChildObject(eTempNode, eDefined[i], Pointer(eDefined.Objects[i])) do begin
+        ImageIndex := 48;
+        SelectedIndex := 48;
+      end;
     end;
-  end;
-  for i := 0 to eCVars.Count -1 do begin
-    with frmMain.trvExplorer.Items.AddChildObject(GetNode('CVars'), eCVars[i], Pointer(eCVars.Objects[i])) do begin
-      ImageIndex := 35;
-      SelectedIndex := 35;
+    eTempNode := GetNode('CVars');
+    for i := 0 to eCVars.Count - 1 do begin
+      with frmMain.trvExplorer.Items.AddChildObject(eTempNode, eCVars[i], Pointer(eCVars.Objects[i])) do begin
+        ImageIndex := 35;
+        SelectedIndex := 35;
+      end;
     end;
-  end;
   // Sort items
-  eIncluded.Sort;
-  eMethodsDefault.Sort;
-  eMethodsEvents.Sort;
-  eStocks.Sort;
-  eNatives.Sort;
-  eForwards.Sort;
-  eVariables.Sort;
+    eIncluded.Sort;
+    eMethodsDefault.Sort;
+    eMethodsEvents.Sort;
+    eStocks.Sort;
+    eNatives.Sort;
+    eForwards.Sort;
+    eVariables.Sort;
   // Add items
-  for i := 0 to eIncluded.Count -1 do begin
-    with frmMain.trvExplorer.Items.AddChildObject(GetNode('Included'), eIncluded[i], Pointer(eIncluded.Objects[i])) do begin
-      ImageIndex := 34;
-      SelectedIndex := 34;
+    eTempNode := GetNode('Included');
+    for i := 0 to eIncluded.Count - 1 do begin
+      with frmMain.trvExplorer.Items.AddChildObject(eTempNode, eIncluded[i], Pointer(eIncluded.Objects[i])) do begin
+        ImageIndex := 34;
+        SelectedIndex := 34;
+      end;
     end;
-  end;
-  for i := 0 to eMethodsDefault.Count -1 do begin
-    with frmMain.trvExplorer.Items.AddChildObject(GetNode('Default'), eMethodsDefault[i], Pointer(eMethodsDefault.Objects[i])) do begin
-      ImageIndex := 12;
-      SelectedIndex := 12;
+    eTempNode := GetNode('Default');
+    for i := 0 to eMethodsDefault.Count - 1 do begin
+      with frmMain.trvExplorer.Items.AddChildObject(eTempNode, eMethodsDefault[i], Pointer(eMethodsDefault.Objects[i])) do begin
+        ImageIndex := 12;
+        SelectedIndex := 12;
+      end;
     end;
-  end;
-  for i := 0 to eMethodsEvents.Count -1 do begin
-    with frmMain.trvExplorer.Items.AddChildObject(GetNode('Events'), eMethodsEvents[i], Pointer(eMethodsEvents.Objects[i])) do begin
-      ImageIndex := 47;
-      SelectedIndex := 47;
+    eTempNode := GetNode('Events');
+    for i := 0 to eMethodsEvents.Count - 1 do begin
+      with frmMain.trvExplorer.Items.AddChildObject(eTempNode, eMethodsEvents[i], Pointer(eMethodsEvents.Objects[i])) do begin
+        ImageIndex := 47;
+        SelectedIndex := 47;
+      end;
     end;
-  end;
-  for i := 0 to eStocks.Count -1 do begin
-    with frmMain.trvExplorer.Items.AddChildObject(GetNode('Stocks'), eStocks[i], Pointer(eStocks.Objects[i])) do begin
-      ImageIndex := 12;
-      SelectedIndex := 12;
+    eTempNode := GetNode('Stocks');
+    for i := 0 to eStocks.Count - 1 do begin
+      with frmMain.trvExplorer.Items.AddChildObject(eTempNode, eStocks[i], Pointer(eStocks.Objects[i])) do begin
+        ImageIndex := 12;
+        SelectedIndex := 12;
+      end;
     end;
-  end;
-  for i := 0 to eNatives.Count -1 do begin
-    with frmMain.trvExplorer.Items.AddChildObject(GetNode('Natives'), eNatives[i], Pointer(eNatives.Objects[i])) do begin
-      ImageIndex := 47;
-      SelectedIndex := 47;
+    eTempNode := GetNode('Natives');
+    for i := 0 to eNatives.Count - 1 do begin
+      with frmMain.trvExplorer.Items.AddChildObject(eTempNode, eNatives[i], Pointer(eNatives.Objects[i])) do begin
+        ImageIndex := 47;
+        SelectedIndex := 47;
+      end;
     end;
-  end;
-  for i := 0 to eForwards.Count -1 do begin
-    with frmMain.trvExplorer.Items.AddChildObject(GetNode('Forwards'), eForwards[i], Pointer(eForwards.Objects[i])) do begin
-      ImageIndex := 47;
-      SelectedIndex := 47;
+    eTempNode := GetNode('Forwards');
+    for i := 0 to eForwards.Count - 1 do begin
+      with frmMain.trvExplorer.Items.AddChildObject(eTempNode, eForwards[i], Pointer(eForwards.Objects[i])) do begin
+        ImageIndex := 47;
+        SelectedIndex := 47;
+      end;
     end;
-  end;
-  for i := 0 to eVariables.Count -1 do begin
-    with frmMain.trvExplorer.Items.AddChildObject(GetNode('Variables'), eVariables[i], Pointer(eVariables.Objects[i])) do begin
-      ImageIndex := 35;
-      SelectedIndex := 35;
+    eTempNode := GetNode('Variables');
+    for i := 0 to eVariables.Count - 1 do begin
+      with frmMain.trvExplorer.Items.AddChildObject(eTempNode, eVariables[i], Pointer(eVariables.Objects[i])) do begin
+        ImageIndex := 35;
+        SelectedIndex := 35;
+      end;
     end;
-  end;
 
-  GetNode('Constants').Expanded := exConstants;
-  GetNode('Defined').Expanded := exDefined;
-  GetNode('CVars').Expanded := exCVars;
-  GetNode('Included').Expanded := exIncluded;
-  GetNode('Methods').Expanded := exMethods;
-  GetNode('Default').Expanded := exDefault;
-  GetNode('Events').Expanded := exEvents;
-  GetNode('Stocks').Expanded := exStocks;
-  GetNode('Natives').Expanded := exNatives;
-  GetNode('Forwards').Expanded := exForwards;
-  GetNode('Variables').Expanded := exVariables;
+    GetNode('Constants').Expanded := exConstants;
+    GetNode('Defined').Expanded := exDefined;
+    GetNode('CVars').Expanded := exCVars;
+    GetNode('Included').Expanded := exIncluded;
+    GetNode('Methods').Expanded := exMethods;
+    GetNode('Default').Expanded := exDefault;
+    GetNode('Events').Expanded := exEvents;
+    GetNode('Stocks').Expanded := exStocks;
+    GetNode('Natives').Expanded := exNatives;
+    GetNode('Forwards').Expanded := exForwards;
+    GetNode('Variables').Expanded := exVariables;
 
-  SetScrollPos(frmMain.trvExplorer.Handle, SB_HORZ, eScrollPosX, False);
-  SetScrollPos(frmMain.trvExplorer.Handle, SB_VERT, eScrollPosY, False);
+    SetScrollPos(frmMain.trvExplorer.Handle, SB_HORZ, eScrollPosX, False);
+    SetScrollPos(frmMain.trvExplorer.Handle, SB_VERT, eScrollPosY, False);
+    if eSelected <> -1 then
+      frmMain.trvExplorer.Items[eSelected].Selected := True;
+  except
+    // well, yes.
+  end;
   frmMain.trvExplorer.Items.EndUpdate;
 
   if (not frmMain.pnlLoading.Visible) and (not frmMain.sciEditor.AutoCActive) and (not frmMain.sciEditor.CallTipActive) then begin
     frmMain.sciAutoComplete.AStrings.Text := eAutoComplete;
-    for i := frmMain.sciAutoComplete.AStrings.Count -1 downto 0 do begin
+    for i := frmMain.sciAutoComplete.AStrings.Count - 1 downto 0 do begin
       if Length(Trim(frmMain.sciAutoComplete.AStrings[i])) <= 1 then
         frmMain.sciAutoComplete.AStrings.Delete(i);
     end;
     frmMain.sciCallTips.ApiStrings.Text := eCallTips;
-    for i := frmMain.sciCallTips.ApiStrings.Count -1 downto 0 do begin
+    for i := frmMain.sciCallTips.ApiStrings.Count - 1 downto 0 do begin
       if Length(Trim(frmMain.sciCallTips.ApiStrings[i])) <= 1 then
         frmMain.sciCallTips.ApiStrings.Delete(i);
     end;
 
     with TSciKeywords(TSciLangItem(frmMain.sciEditor.LanguageManager.LanguageList.Find('Pawn').Keywords.Items[1])) do begin
       eStr := TStringList.Create;
-      for i := 0 to frmMain.sciEditor.Lines.Count -1 do begin
+      for i := 0 to frmMain.sciEditor.Lines.Count - 1 do begin
         if not frmMain.sciEditor.GetFoldExpanded(i) then
           eStr.Add(IntToStr(i));
       end;
-      
+
       Keywords.Text := eKeywords;
       frmMain.sciEditor.LanguageManager.Update;
 
-      for i := 0 to frmMain.sciEditor.Lines.Count -1 do begin
+      for i := 0 to frmMain.sciEditor.Lines.Count - 1 do begin
         if eStr.IndexOf(IntToStr(i)) <> -1 then begin
           LineMaxSubord := frmMain.sciEditor.GetLastChild(i, -1);
           frmMain.sciEditor.SetFoldExpanded(i, False);
           if LineMaxSubord > i then
-            frmMain.sciEditor.HideLines(i+1, LineMaxSubord);
+            frmMain.sciEditor.HideLines(i + 1, LineMaxSubord);
         end;
       end;
 
@@ -330,3 +357,4 @@ begin
 end;
 
 end.
+

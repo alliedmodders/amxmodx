@@ -1,6 +1,6 @@
 object frmMain: TfrmMain
-  Left = 284
-  Top = 290
+  Left = 257
+  Top = 302
   Width = 888
   Height = 640
   Caption = 'AMXX-Studio'
@@ -455,6 +455,13 @@ object frmMain: TfrmMain
           OnClick = mnuPasterClick
           CaptionW = 'IRC Paster'
         end
+        object mnuRestoreBackup: TSpTBXItem
+          Enabled = False
+          ImageIndex = 46
+          Images = ilImages
+          OnClick = mnuRestoreBackupClick
+          CaptionW = 'Restore from backup'
+        end
         object sepTools3: TSpTBXSeparatorItem
         end
         object mnuSettings: TSpTBXItem
@@ -714,7 +721,7 @@ object frmMain: TfrmMain
         Align = alRight
       end
       object splRight: TSplitter
-        Left = 701
+        Left = 669
         Top = 23
         Height = 472
         Align = alRight
@@ -722,7 +729,7 @@ object frmMain: TfrmMain
       object pnlParent: TPanel
         Left = 3
         Top = 23
-        Width = 698
+        Width = 666
         Height = 472
         Align = alClient
         BevelOuter = bvNone
@@ -730,7 +737,7 @@ object frmMain: TfrmMain
         object splOutput: TSplitter
           Left = 0
           Top = 387
-          Width = 698
+          Width = 666
           Height = 3
           Cursor = crVSplit
           Align = alBottom
@@ -739,7 +746,7 @@ object frmMain: TfrmMain
         object sciEditor: TScintilla
           Left = 0
           Top = 0
-          Width = 698
+          Width = 666
           Height = 387
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
@@ -818,7 +825,7 @@ object frmMain: TfrmMain
           WordChars = '_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
           ControlCharSymbol = #0
           BraceHilite = True
-          Folding = [foldFold, foldComment, foldPreprocessor, foldCommentPython, foldAtElse, foldHTML, foldHTMLPreProcessor]
+          Folding = [foldFold, foldCompact, foldComment, foldPreprocessor, foldCommentPython, foldAtElse, foldHTML, foldHTMLPreProcessor]
           FoldMarkerType = sciMarkBox
           LanguageManager.LanguageList = <
             item
@@ -4001,7 +4008,7 @@ object frmMain: TfrmMain
         object lstOutput: TListBox
           Left = 0
           Top = 390
-          Width = 698
+          Width = 666
           Height = 82
           Align = alBottom
           ItemHeight = 13
@@ -4062,9 +4069,9 @@ object frmMain: TfrmMain
         end
       end
       object tcTools: TSpTBXTabControl
-        Left = 704
+        Left = 672
         Top = 23
-        Width = 173
+        Width = 205
         Height = 472
         Align = alRight
         ActiveTabIndex = 0
@@ -4086,13 +4093,13 @@ object frmMain: TfrmMain
         object tsNotes: TSpTBXTabSheet
           Left = 0
           Top = 0
-          Width = 173
+          Width = 205
           Height = 449
           Caption = 'Notes'
           ImageIndex = -1
           TabItem = 'tiNotes'
           object imgRight4: TImage
-            Left = 170
+            Left = 202
             Top = 26
             Width = 1
             Height = 421
@@ -4101,14 +4108,14 @@ object frmMain: TfrmMain
           object imgBottom4: TImage
             Left = 2
             Top = 447
-            Width = 169
+            Width = 201
             Height = 2
             Align = alBottom
           end
           object imgTop4: TImage
             Left = 2
             Top = 24
-            Width = 169
+            Width = 201
             Height = 2
             Align = alTop
           end
@@ -4122,7 +4129,7 @@ object frmMain: TfrmMain
           object tbxNotes: TSpTBXToolbar
             Left = 2
             Top = 2
-            Width = 169
+            Width = 201
             Height = 22
             Align = alTop
             Caption = 'tbxNotes'
@@ -4162,7 +4169,7 @@ object frmMain: TfrmMain
           object rtfNotes: TRichEdit
             Left = 3
             Top = 26
-            Width = 167
+            Width = 199
             Height = 421
             Align = alClient
             TabOrder = 1
@@ -4173,7 +4180,7 @@ object frmMain: TfrmMain
         object tsExplorer: TSpTBXTabSheet
           Left = 0
           Top = 0
-          Width = 173
+          Width = 205
           Height = 449
           Caption = 'Code-Tools'
           ImageIndex = -1
@@ -4181,7 +4188,7 @@ object frmMain: TfrmMain
           object spcBottom2: TImage
             Left = 0
             Top = 447
-            Width = 173
+            Width = 205
             Height = 2
             Align = alBottom
           end
@@ -4193,7 +4200,7 @@ object frmMain: TfrmMain
             Align = alLeft
           end
           object spcRight2: TImage
-            Left = 170
+            Left = 202
             Top = 0
             Width = 3
             Height = 447
@@ -4202,21 +4209,21 @@ object frmMain: TfrmMain
           object pnlDock: TSpTBXMultiDock
             Left = 3
             Top = 0
-            Width = 167
+            Width = 199
             Height = 447
             Position = dpxClient
             object pnlCodeExplorer: TSpTBXDockablePanel
               Left = 0
               Top = 0
               Caption = 'Code-Explorer'
-              DockedWidth = 163
+              DockedWidth = 195
               DockPos = 0
               TabOrder = 0
               OnVisibleChanged = pnlCodeExplorerVisibleChanged
               object trvExplorer: TTreeView
                 Left = 0
                 Top = 26
-                Width = 163
+                Width = 195
                 Height = 186
                 Align = alClient
                 Images = ilImages
@@ -4224,6 +4231,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 SortType = stBoth
                 TabOrder = 1
+                OnClick = trvExplorerClick
                 OnCollapsed = trvExplorerCollapsed
                 OnDblClick = trvExplorerDblClick
                 OnExpanded = trvExplorerExpanded
@@ -4247,17 +4255,17 @@ object frmMain: TfrmMain
               Left = 0
               Top = 216
               Caption = 'Code-Inspector'
-              DockedWidth = 163
+              DockedWidth = 195
               DockPos = 216
               TabOrder = 1
               OnVisibleChanged = pnlCodeInspectorVisibleChanged
               object jviCode: TJvInspector
                 Left = 0
                 Top = 26
-                Width = 163
+                Width = 195
                 Height = 185
                 Align = alClient
-                Divider = 80
+                Divider = 110
                 ItemHeight = 16
                 Painter = JvInspectorDotNETPainter
                 OnItemValueChanged = jviCodeItemValueChanged
@@ -7564,7 +7572,7 @@ object frmMain: TfrmMain
     end
   end
   object JvInspectorDotNETPainter: TJvInspectorDotNETPainter
-    DrawNameEndEllipsis = False
+    DrawNameEndEllipsis = True
     Left = 662
     Top = 36
   end

@@ -5,6 +5,7 @@ interface
 uses SysUtils, Classes, Forms, Controls, Windows, ScintillaLanguageManager,
      RichEdit, ComCtrls, JvInspector;
 
+function PosBack(eSubStr, eStr: String): Integer;
 function IsAtStart(eSubStr, eStr: String; AllowFunctions: Boolean = True): Boolean;
 function GetIndents(Line: Integer = -1): String;
 function GetStyleAt(ePos: Integer): TSciStyle;
@@ -12,10 +13,10 @@ function LineFromPos(ePos: Integer): Integer;
 function RemoveSemicolon(eStr: String): String;
 procedure IndentCode;
 procedure UnindentCode;
-function Between(eText, eFirst, eSecond: String): String;
+function Between(eText, eFirst, eSecond: String; eSecondBack: Boolean = False): String;
 procedure Delay(eTime: Integer);
 function CountChars(eIn: String; eChar: Char): Integer;
-function RemoveStringsAndComments(eLine: String; eRemoveStrings: Boolean): String;
+function RemoveStringsAndComments(eLine: String; eRemoveStrings: Boolean; eRemoveComments: Boolean): String;
 function GetMatchingBrace(eString: String): Integer;
 function GetColoredLine(eLine: Integer): String;
 
@@ -25,6 +26,15 @@ procedure SetRTFText(ARichEdit: TRichedit; ARTFText: String);
 implementation
 
 uses UnitfrmMain, UnitMainTools, UnitLanguages, UnitfrmIRCPaster;
+
+function PosBack(eSubStr, eStr: String): Integer;
+begin
+  Result := 0;
+  if Pos(eSubStr, eStr) <> 0 then begin
+    while Pos(eSubStr, Copy(eStr, Result +1, Length(eStr))) <> 0 do
+      Inc(Result, 1);
+  end;
+end;
 
 function IsAtStart(eSubStr, eStr: String; AllowFunctions: Boolean = True): Boolean;
 begin
@@ -70,14 +80,12 @@ begin
   else if eBits = 7 then
     eStyleNo := eStyleNo and $7f //Strip away the indicators (1 bit)
   else if eBits = 6 then
-    eStyleNo := eStyleNo and $3f; //Strip away the indicators (2 bits)  
+    eStyleNo := eStyleNo and $3f; //Strip away the indicators (2 bits)
 
-  if eStyleNo <> 32 then begin
-    with frmMain.sciEditor.LanguageManager.LanguageList.Find(ActiveDoc.Highlighter).Styles do begin
-      for i := 0 to Count -1 do begin
-        if TSciStyle(Items[i]).StyleNumber = eStyleNo then
-          Result := TSciStyle(Items[i]);
-      end;
+  with frmMain.sciEditor.LanguageManager.LanguageList.Find(ActiveDoc.Highlighter).Styles do begin
+    for i := 0 to Count -1 do begin
+      if TSciStyle(Items[i]).StyleNumber = eStyleNo then
+        Result := TSciStyle(Items[i]);
     end;
   end;
 end;
@@ -113,14 +121,14 @@ end;
 procedure IndentCode;
 var eStr: TStringList;
     i, k: integer;
-    eIdent, eTempIdent: Integer;
+    eIndent, eTempIndent: Integer;
     eString: String;
 begin
   Screen.Cursor := crHourGlass;
   frmMain.sciEditor.Enabled := False;
   eStr := TStringList.Create;
-  eIdent := 0;
-  eTempIdent := 0;
+  eIndent := 0;
+  eTempIndent := 0;
 
   Cancel := False;
   ShowProgress(False);
@@ -134,18 +142,18 @@ begin
     // Remove strings and comments virtually because they could include brackets
     frmMain.pbLoading.Position := i;
     SetProgressStatus('Indenting Code...');
-    eStr[i] := RemoveStringsAndComments(eStr[i], True);
+    eStr[i] := RemoveStringsAndComments(eStr[i], True, True);
   end;
 
   for i := 0 to eStr.Count -1 do begin
     if CountChars(eStr[i], '{') <> CountChars(eStr[i], '}') then
-      eIdent := eIdent - CountChars(eStr[i], '}');
+      eIndent := eIndent - CountChars(eStr[i], '}');
     frmMain.sciEditor.Lines[i] := TrimLeft(frmMain.sciEditor.Lines[i]);
 
-    for k := 1 to eIdent + eTempIdent do
+    for k := 1 to eIndent + eTempIndent do
       frmMain.sciEditor.Lines[i] := '	' + frmMain.sciEditor.Lines[i];
-    if eTempIdent <> 0 then
-      eTempIdent := eTempIdent -1;
+    if eTempIndent <> 0 then
+      eTempIndent := eTempIndent -1;
 
     if (IsAtStart('if', eStr[i], True)) and (Pos('{', eStr[i]) = 0) and (Length(eStr[i]) > 3) then begin
       eString := eStr[i];
@@ -153,7 +161,7 @@ begin
       if (eString[1] <> Trim(eString)[1]) or (eString[1] = '(') then begin
         eString := Trim(eString);
         if GetMatchingBrace(eString) = Length(eString) then
-          eTempIdent := eTempIdent +1;
+          eTempIndent := eTempIndent +1;
       end;
     end
     else if (IsAtStart('for', eStr[i], True)) and (Pos('{', eStr[i]) = 0) and (Length(eStr[i]) > 4) then begin
@@ -162,16 +170,16 @@ begin
       if (eString[1] <> Trim(eString)[1]) or (eString[1] = '(') then begin
         eString := Trim(eString);
         if GetMatchingBrace(eString) = Length(eString) then
-          eTempIdent := eTempIdent +1;
+          eTempIndent := eTempIndent +1;
       end;
     end
-    else if (IsAtStart('else', eStr[i], False)) and (Pos('{', eStr[i]) = 0) and (Length(eStr[i]) > 5) then begin
+    else if (IsAtStart('else', eStr[i], False)) and (Pos('{', eStr[i]) = 0) then begin
       eString := eStr[i];
       Delete(eString, 1, 4);
       if eString[1] <> Trim(eString)[1] then begin
         eString := Trim(eString);
         if GetMatchingBrace(eString) = Length(eString) then
-          eTempIdent := eTempIdent +1;
+          eTempIndent := eTempIndent +1;
       end;
     end
     else if (Pos('{', eStr[i]) = 0) and (Length(eStr[i]) > 6) then begin
@@ -181,7 +189,7 @@ begin
         if (eString[1] <> Trim(eString)[1]) or (eString[1] = '(') then begin
           eString := Trim(eString);
           if GetMatchingBrace(eString) = Length(eString) then
-            eTempIdent := eTempIdent +1;
+            eTempIndent := eTempIndent +1;
         end;
       end;
     end;
@@ -193,7 +201,7 @@ begin
         if eString[1] <> Trim(eString)[1] then begin
           eString := Trim(eString);
           if GetMatchingBrace(eString) = Length(eString) then
-            eTempIdent := eTempIdent +1;
+            eTempIndent := eTempIndent +1;
         end;
       end;
     end
@@ -203,12 +211,12 @@ begin
       if eString[1] <> Trim(eString)[1] then begin
         eString := Trim(eString);
         if GetMatchingBrace(eString) = Length(eString) then
-          eTempIdent := eTempIdent +1;
+          eTempIndent := eTempIndent +1;
       end;
     end;
 
     if CountChars(eStr[i], '{') <> CountChars(eStr[i], '}') then
-      eIdent := eIdent + CountChars(eStr[i], '{');
+      eIndent := eIndent + CountChars(eStr[i], '{');
 
     frmMain.pbLoading.Position := frmMain.sciEditor.Lines.Count + i -1;
     SetProgressStatus('Indenting Code...');
@@ -249,18 +257,20 @@ begin
   Screen.Cursor := crDefault;
 end;
 
-function RemoveStringsAndComments(eLine: String; eRemoveStrings: Boolean): String;
+function RemoveStringsAndComments(eLine: String; eRemoveStrings: Boolean; eRemoveComments: Boolean): String;
 begin
   // Remove comments
-  if (Pos(GetCurrLang.CommentBoxStart, eLine) = 1) or (Pos(GetCurrLang.CommentBoxMiddle, eLine) = 1) or (Pos(GetCurrLang.CommentBoxEnd, eLine) = 1) or (Pos(GetCurrLang.CommentBlock, eLine) = 1) then
-    eLine := '';
-  if Pos(GetCurrLang.CommentBlock, eLine) <> 0 then
-    eLine := Copy(eLine, 1, Pos('//', eLine) -2);
-  if (Pos(GetCurrLang.CommentStreamStart, eLine) < Pos(GetCurrLang.CommentStreamEnd, eLine)) and (Pos(GetCurrLang.CommentStreamStart, eLine) <> 0) then
-    eLine := StringReplace(eLine, GetCurrLang.CommentStreamStart + Between(eLine, GetCurrLang.CommentStreamStart, GetCurrLang.CommentStreamEnd) + GetCurrLang.CommentStreamEnd, '', [rfReplaceAll]); // maybe not the best method, but simple and quite easy
+  if eRemoveComments then begin
+    if (Pos(GetCurrLang.CommentBoxStart, eLine) = 1) or (Pos(GetCurrLang.CommentBoxMiddle, eLine) = 1) or (Pos(GetCurrLang.CommentBoxEnd, eLine) = 1) or (Pos(GetCurrLang.CommentBlock, eLine) = 1) then
+      eLine := '';
+    if Pos(GetCurrLang.CommentBlock, eLine) <> 0 then
+      eLine := Copy(eLine, 1, Pos('//', eLine) -2);
+    if (Pos(GetCurrLang.CommentStreamStart, eLine) < Pos(GetCurrLang.CommentStreamEnd, eLine)) and (Pos(GetCurrLang.CommentStreamStart, eLine) <> 0) then
+      eLine := StringReplace(eLine, GetCurrLang.CommentStreamStart + Between(eLine, GetCurrLang.CommentStreamStart, GetCurrLang.CommentStreamEnd) + GetCurrLang.CommentStreamEnd, '', [rfReplaceAll]); // maybe not the best method, but simple and quite easy
+  end;
   // Remove quotes
   if eRemoveStrings then begin
-    while CountChars(eLine, '"') > 1 do
+    while Between(eLine, '"', '"') <> '' do
       eLine := StringReplace(eLine, '"' + Between(eLine, '"', '"') + '"', '', [rfReplaceAll]);
   end;
   
@@ -290,17 +300,22 @@ begin
   end;
 end;
 
-function Between(eText, eFirst, eSecond: String): String;
+function Between(eText, eFirst, eSecond: String; eSecondBack: Boolean = False): String;
 var eTemp: String;
 begin
-  if (Pos(eFirst, eText) = 0) or (Pos(eSecond, eText) = 0) then
-    Result := ''
-  else begin
-    eTemp := eText;
-    Delete(eTemp, 1, Pos(eFirst, eText) + Length(eFirst) - 1);
+  Result := '';
+  
+  if Pos(eFirst, eText) = PosBack(eSecond, eText) then exit;
+  if Pos(eFirst, eText) = 0 then exit;
+  if PosBack(eSecond, eText) < Pos(eFirst, eText) then exit;
+
+  eTemp := eText;
+  Delete(eTemp, 1, Pos(eFirst, eText) + Length(eFirst) - 1);
+  if eSecondBack then
+    Delete(eTemp, PosBack(eSecond, eTemp), Length(eTemp))
+  else
     Delete(eTemp, Pos(eSecond, eTemp), Length(eTemp));
-    Result := eTemp;
-  end;
+  Result := eTemp;
 end;
 
 function GetMatchingBrace(eString: String): Integer;

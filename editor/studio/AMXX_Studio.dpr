@@ -10,7 +10,6 @@ uses
   SysUtils,
   SciLexerMemo,
   JvInspector,
-  
   UnitfrmMain in 'UnitfrmMain.pas' {frmMain},
   UnitMainTools in 'UnitMainTools.pas',
   UnitfrmSettings in 'UnitfrmSettings.pas' {frmSettings},
@@ -61,6 +60,7 @@ begin
       for i := 1 to ParamCount  do
         SendStudioMsg(SCM_LOADFILE, ParamStr(i), 0);
     end;
+    SetForegroundWindow(FindWindow('TfrmMain', 'AMXX-Studio'));
     exit;
   end;
   Application.Initialize;
@@ -70,6 +70,9 @@ begin
   Application.CreateForm(TfrmSettings, frmSettings);
   Application.OnMessage := frmMain.OnMessage;
   Application.OnShortCut := frmMain.OnShortCut;
+  frmMain.sciEditor.Lines[5] := '#define PLUGIN "' + frmSettings.txtDefaultName.Text + '"';
+  frmMain.sciEditor.Lines[6] := '#define VERSION "' + frmSettings.txtDefaultVersion.Text + '"';
+  frmMain.sciEditor.Lines[7] := '#define AUTHOR "' + frmSettings.txtDefaultAuthor.Text + '"';
 
   frmMain.sciPropertyLoader.FileName := ExtractFilePath(ParamStr(0)) + 'config\Editor.sci';
   if FileExists(frmMain.sciPropertyLoader.FileName) then
@@ -129,7 +132,7 @@ begin
     ActivateProjects(0, False); // Started := True is already set here
     PAWNProjects.Activate(PAWNProjects.Count -1, False, False);
   end;
-  UpdateCI;
+  UpdateCI(frmMain.sciEditor.GetCurrentLineNumber);
 
   Application.CreateForm(TfrmSelectColor, frmSelectColor);
   Application.CreateForm(TfrmInfo, frmInfo);

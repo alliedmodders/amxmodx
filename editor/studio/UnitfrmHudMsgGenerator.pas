@@ -178,10 +178,16 @@ procedure TfrmHudMsgGenerator.cmdSelectColorClick(Sender: TObject);
 begin
   frmSelectColor.chkDefault1.Enabled := False;
   frmSelectColor.chkDefault2.Enabled := False;
+  frmSelectColor.chkNone1.Enabled := False;
+  frmSelectColor.chkNone2.Enabled := False;
+  
   ShowColorDialog(CurrColor, imgColor);
   lblHudMsg.Font.Color := CurrColor;
+
   frmSelectColor.chkDefault1.Enabled := True;
   frmSelectColor.chkDefault2.Enabled := True;
+  frmSelectColor.chkNone1.Enabled := True;
+  frmSelectColor.chkNone2.Enabled := True;
 end;
 
 procedure TfrmHudMsgGenerator.txtTextChange(Sender: TObject);
@@ -189,7 +195,7 @@ begin
   if txtText.Text = '' then
     lblHudMsg.Caption := 'Custom Hudmessage'
   else
-    lblHudMsg.Caption := stringReplace(txtText.Text, '\n', #13, [rfReplaceAll]);
+    lblHudMsg.Caption := StringReplace(txtText.Text, '\n', #13, [rfReplaceAll]);
 
   if chkXCenter.Checked then
     CenterX;

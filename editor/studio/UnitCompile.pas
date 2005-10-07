@@ -81,7 +81,12 @@ begin
   if Pos(LowerCase(FileName), LowerCase(eLineStr)) = 1 then begin
     Delete(eLineStr, 1, Length(FileName));
     if IsNumeric(Between(eLineStr, '(', ')')) then
-      eLine := StrToInt(Between(eLineStr, '(', ')'));
+      eLine := StrToInt(Between(eLineStr, '(', ')'))
+    else begin
+      eTemp := Between(eLineStr, '(', ')');
+      eTemp := Copy(eTemp, 1, Pos(#32, eTemp) -1);
+      eLine := StrToInt(eTemp)
+    end;
 
     eTemp := Between(eLineStr, ':', ':');
 

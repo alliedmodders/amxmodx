@@ -65,7 +65,7 @@ function GetCIItemByValue(eValue: String; eParent: TJvCustomInspectorItem = nil)
 function FindSettingsNode(eText: String; eParent: TTreeNode = nil): TTreeNode;
 
 procedure LoadPlugins;
-function GetAllIncludeFiles: TStringArray;
+function GetAllIncludeFiles(eMask: String): TStringArray;
 function GetCurrLang(FileName: String = ''): TSciLangItem;
 procedure FillCodeExplorer(Lang: String);
 function IEInstalled: Boolean;
@@ -289,23 +289,36 @@ begin
   ePConfig.Destroy;
 end;
 
-function GetAllIncludeFiles: TStringArray;
+function GetAllIncludeFiles(eMask: String): TStringArray;
 var eSearchRec: TSearchRec;
     eStr: TStringList;
     i: integer;
 begin
+  if Between(eMask, '<', '>') <> '' then
+    eMask := Between(eMask, '<', '>', True)
+  else if Between(eMask, '"', '"') <> '' then
+    eMask := Between(eMask, '"', '"', True);
+
   eStr := TStringList.Create;
   if GetAMXXDir(False) <> '' then begin
     if FindFirst(GetAMXXDir(False) + 'scripting\include\*.inc', faAnyFile, eSearchRec) = 0 then begin
       repeat
-        if (eSearchRec.Name[1] <> '.') and (eSearchRec.Attr and faDirectory <> faDirectory) then
-          eStr.Add(eSearchRec.Name); 
+        if (eSearchRec.Name[1] <> '.') and (eSearchRec.Attr and faDirectory <> faDirectory) then begin
+          if ExtractFileExt(eMask) <> '' then
+            eStr.Add(eSearchRec.Name)
+          else
+            eStr.Add(ChangeFileExt(eSearchRec.Name, ''));
+        end;
       until (FindNext(eSearchRec) <> 0);
     end;
     if FindFirst(GetAMXXDir(False) + 'scripting\*.inc', faAnyFile, eSearchRec) = 0 then begin
       repeat
-        if (eSearchRec.Name[1] <> '.') and (eSearchRec.Attr and faDirectory <> faDirectory) then
-          eStr.Add(eSearchRec.Name); 
+        if (eSearchRec.Name[1] <> '.') and (eSearchRec.Attr and faDirectory <> faDirectory) then begin
+          if ExtractFileExt(eMask) <> '' then
+            eStr.Add(eSearchRec.Name)
+          else
+            eStr.Add(ChangeFileExt(eSearchRec.Name, ''));
+        end;
       until (FindNext(eSearchRec) <> 0);
     end;
   end;
@@ -313,8 +326,12 @@ begin
   if (not ActiveDoc.Untitled) then begin
     if FindFirst(GetAMXXDir(False) + 'scripting\include\*.inc', faAnyFile, eSearchRec) = 0 then begin
       repeat
-        if (eSearchRec.Name[1] <> '.') and (eSearchRec.Attr and faDirectory <> faDirectory) then
-          eStr.Add(eSearchRec.Name); 
+        if (eSearchRec.Name[1] <> '.') and (eSearchRec.Attr and faDirectory <> faDirectory) then begin
+          if ExtractFileExt(eMask) <> '' then
+            eStr.Add(eSearchRec.Name)
+          else
+            eStr.Add(ChangeFileExt(eSearchRec.Name, ''));
+        end;
       until (FindNext(eSearchRec) <> 0);
     end;
   end;
@@ -608,7 +625,9 @@ begin
   frmSettings.chkAutoCloseBraces.Checked := frmMain.sciEditor.AutoCloseBraces;
   frmSettings.chkAutoCloseQuotes.Checked := frmMain.sciEditor.AutoCloseQuotes;
   frmSettings.chkWordWrap.Checked := frmMain.sciEditor.WordWrap = sciWrap;
-  frmSettings.chkAutoIndent.Checked := eConfig.ReadBool('Editor', 'Auto-Indent', True); 
+  frmSettings.chkMakeBaks.Checked := eConfig.ReadBool('Editor', 'MakeBaks', True);
+  frmSettings.chkDontLoadFilesTwice.Checked := eConfig.ReadBool('Editor', 'DontLoadFilesTwice', True);
+  frmSettings.chkAutoIndent.Checked := eConfig.ReadBool('Editor', 'Auto-Indent', True);
   frmAutoIndent.chkIndentOpeningBrace.Checked := eConfig.ReadBool('Editor', 'IndentOpeningBrace', True);
   frmAutoIndent.chkUnindentPressingClosingBrace.Checked := eConfig.ReadBool('Editor', 'UnindentClosingBrace', True);
   frmAutoIndent.chkUnindentLine.Checked := eConfig.ReadBool('Editor', 'UnindentEmptyLine', False);
@@ -637,6 +656,10 @@ begin
   frmMain.sciEditor.AutoCloseQuotes := frmSettings.chkAutoCloseQuotes.Checked;
   frmMain.sciEditor.BraceHilite := frmSettings.chkHighlightBraces.Checked;
   frmMain.sciEditor.ClearUndoAfterSave := frmSettings.chkClearUndoAfterSave.Checked;
+  frmSettings.chkDisableAC.Checked := eConfig.ReadBool('Editor', 'Disable_AC', False);
+  frmSettings.chkDisableCT.Checked := eConfig.ReadBool('Editor', 'Disable_CT', False);
+  frmMain.sciAutoComplete.Disabled := frmSettings.chkDisableAC.Checked;
+  frmMain.sciCallTips.Disabled := frmSettings.chkDisableCT.Checked;
   { Shortcuts }
 	frmSettings.lvShortcuts.Items.BeginUpdate;
 	try
@@ -711,6 +734,7 @@ begin
     eCPUSpeed := frmSettings.sldSpeed.Value
   else
     eCPUSpeed := 1; // otherwise the program would hang up
+  frmSettings.txtLangDir.Text := IncludeTrailingPathDelimiter(eConfig.ReadString('Misc', 'LangDir', ''));
   frmSettings.chkShowStatusbar.Checked := eConfig.ReadBool('Misc', 'ShowStatusbar', True);
   frmMain.sbStatus.Visible := frmSettings.chkShowStatusbar.Checked;
 end;
@@ -811,6 +835,18 @@ begin
   Cancel := False;
 
   ShowProgress(True);
+  if (FileExists(FFileName)) and (frmSettings.chkMakeBaks.Checked) then begin
+    try
+      CopyFile(PChar(FFileName), PChar(FFileName + '.bak'), False);
+      SetFileAttributes(PChar(FFileName + '.bak'), faHidden);
+      if ActiveDoc = Self then
+        frmMain.mnuRestoreBackup.Enabled := True;
+    except
+      MessageBox(Application.Handle, PChar(lFailedCreateBak), PChar(Application.Title), MB_ICONERROR);
+      frmMain.mnuRestoreBackup.Enabled := False;
+    end;
+  end;
+
   try
     AssignFile(F, FFilename);
     Rewrite(F);
@@ -958,6 +994,7 @@ begin
     frmMain.sciEditor.SelLength := Document.SelLength;
     frmMain.sciEditor.LineScroll(0, (0 - frmMain.sciEditor.GetFirstVisibleLine) + Document.TopLine);
   end;
+  frmMain.mnuRestoreBackup.Enabled := (FileExists(Document.FileName + '.bak')) and (not Document.Untitled);
   Screen.Cursor := crDefault;
   Plugin_DocChange(Document.Index, Document.FileName, Document.Highlighter, RestoreCaret, False);
 end;
@@ -1069,6 +1106,16 @@ begin
     exit;
   end;
 
+  if frmSettings.chkDontLoadFilesTwice.Checked then begin
+    for i := 0 to Count -1 do begin
+      if AnsiSameText(TDocument(Items[i]).FileName, AFilename) then begin
+        Result := i;
+        Activate(i, True);
+        exit;
+      end;
+    end;
+  end;
+  
   if Assigned(ActiveDoc) then begin
     ActiveDoc.Code := frmMain.sciEditor.Lines.Text; // saving is fast, but loading is usually slow because of code-folding...
     ActiveDoc.Highlighter := frmMain.sciEditor.LanguageManager.SelectedLanguage;

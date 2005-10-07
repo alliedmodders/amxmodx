@@ -7,6 +7,7 @@ del .\*.~dfm
 del .\*.~dpr
 del .\*.map
 del .\*.drc
+del .\bugreport.txt
 del .\plugins\*.~xfm
 del .\plugins\*.~pas
 del .\plugins\*.dcu

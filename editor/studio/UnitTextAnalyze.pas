@@ -25,8 +25,8 @@ type TPawnParseResult = class
     procedure DestroyResult;
   end;
 
-function ParseCodePawn(eCode: TStringList; FileName: String; IsRecursive: Boolean = False): TPawnParseResult;
-function UpdateIncPath(eInput: String): String;
+function ParseCodePawn(eCode: TStringList; FileName: string; IsRecursive: Boolean = False): TPawnParseResult;
+function UpdateIncPath(eInput: string): string;
 
 var eCPUSpeed: Integer = 1;
 
@@ -37,7 +37,7 @@ uses UnitCodeExplorerUpdater, UnitCodeUtils, UnitfrmSettings,
 
 var eLookedUpIncluded: TStringList;
 
-function UpdateIncPath(eInput: String): String;
+function UpdateIncPath(eInput: string): string;
 begin
   eInput := StringReplace(Trim(eInput), '/', '\', [rfReplaceAll]);
   if FileExists(ExtractFilePath(frmSettings.txtPawnCompilerPath.Text) + eInput + '.inc') then
@@ -50,15 +50,15 @@ begin
     Result := '';
 end;
 
-function ParseCodePawn(eCode: TStringList; FileName: String; IsRecursive: Boolean = False): TPawnParseResult;
+function ParseCodePawn(eCode: TStringList; FileName: string; IsRecursive: Boolean = False): TPawnParseResult;
 var i, k: integer;
-    eString, eTemp, eBackup: string;
-    eStr, ePreEvents: TStringList;
-    eStartLine, eBracesOpen: Integer;
-    eTimeToSleep: Integer;
-    eAddingEnum: Integer;
-    eTempResult: TPawnParseResult;
-    eProcedureAdded: Boolean;
+  eString, eTemp, eBackup: string;
+  eStr, ePreEvents: TStringList;
+  eStartLine, eBracesOpen: Integer;
+  eTimeToSleep: Integer;
+  eAddingEnum: Integer;
+  eTempResult: TPawnParseResult;
+  eProcedureAdded: Boolean;
 begin
   Result := TPawnParseResult.Create;
   if not IsRecursive then
@@ -74,9 +74,9 @@ begin
   for i := 0 to eCode.Count - 1 do begin
     if (Application.Terminated) or (not Started) or (frmMain.pnlLoading.Visible) or (not frmMain.trvExplorer.Visible) then exit;
 
-    eString := RemoveStringsAndComments(Trim(eCode[i]), True);
+    eString := RemoveStringsAndComments(Trim(eCode[i]), True, True);
     eBackup := Trim(eCode[i]);
-    
+
     eProcedureAdded := False;
     Inc(eTimeToSleep, 1);
 
@@ -86,34 +86,36 @@ begin
     end;
 
     { Constants and Variables }
-    if (IsAtStart('new', eString)) and (eBracesOpen = 0) and (not IsRecursive) then begin // const or variable
-      Delete(eString, 1, 4);
-      eString := Trim(eString);
-      // we don't need braces so delete them...
-      while (CountChars(eString, '{') <> 0) and (CountChars(eString, '}') <> 0) and (Pos('{', eString) < Pos('}', eString)) do
-        eString := StringReplace(eString, '{' + Between(eString, '{', '}') + '}', '', [rfReplaceAll]);
-      while (CountChars(eString, '[') <> 0) and (CountChars(eString, ']') <> 0) and (Pos('[', eString) < Pos(']', eString)) do
-        eString := StringReplace(eString, '[' + Between(eString, '[', ']') + ']', '', [rfReplaceAll]);
-      // done? okay, split all items if there are more than one; and if not, it's okay...
-      eStr.Text := StringReplace(eString, ',', #13, [rfReplaceAll]);
-      for k := 0 to eStr.Count - 1 do begin
-        if (Trim(eStr[k]) <> '') and (eStr[k] <> '}') then begin
-          eTemp := Trim(RemoveSemicolon(eStr[k]));
+    if (IsAtStart('new', eString, False)) or (IsAtStart('stock', eString, False)) then begin // const or variable
+      if (eBracesOpen = 0) and (not IsRecursive) and (Pos('(', eString) = Pos(')', eString)) then begin
+        Delete(eString, 1, Pos(#32, eString));
+        eString := Trim(eString);
+        // we don't need braces so delete them...
+        while (CountChars(eString, '{') <> 0) and (CountChars(eString, '}') <> 0) and (Pos('{', eString) < Pos('}', eString)) do
+          eString := StringReplace(eString, '{' + Between(eString, '{', '}') + '}', '', [rfReplaceAll]);
+        while (CountChars(eString, '[') <> 0) and (CountChars(eString, ']') <> 0) and (Pos('[', eString) < Pos(']', eString)) do
+          eString := StringReplace(eString, '[' + Between(eString, '[', ']') + ']', '', [rfReplaceAll]);
+        // done? okay, split all items if there are more than one; and if not, it's okay...
+        eStr.Text := StringReplace(eString, ',', #13, [rfReplaceAll]);
+        for k := 0 to eStr.Count - 1 do begin
+          if (Trim(eStr[k]) <> '') and (eStr[k] <> '}') then begin
+            eTemp := Trim(RemoveSemicolon(eStr[k]));
 
-          if Pos(':', eTemp) <> 0 then
-            eTemp := Copy(eTemp, Pos(':', eTemp) + 1, Length(eTemp));
+            if Pos(':', eTemp) <> 0 then
+              eTemp := Copy(eTemp, Pos(':', eTemp) + 1, Length(eTemp));
 
-          if Pos('=', eTemp) <> 0 then begin // constant
-            Result.Constants.AddObject(Copy(eTemp, 1, Pos('=', eTemp) - 1), TObject(i));
-            Result.AutoComplete.Add(Copy(eTemp, 1, Pos('=', eTemp) - 1));
-          end
-          else begin // variable
-            Result.Variables.AddObject(eTemp, TObject(i));
-            Result.AutoComplete.Add(eTemp);
+            if Pos('=', eTemp) <> 0 then begin // constant
+              Result.Constants.AddObject(Copy(eTemp, 1, Pos('=', eTemp) - 1), TObject(i));
+              Result.AutoComplete.Add(Copy(eTemp, 1, Pos('=', eTemp) - 1));
+            end
+            else begin // variable
+              Result.Variables.AddObject(eTemp, TObject(i));
+              Result.AutoComplete.Add(eTemp);
+            end;
           end;
         end;
+        eString := RemoveStringsAndComments(Trim(eCode[i]), True, True);
       end;
-      eString := RemoveStringsAndComments(Trim(eCode[i]), True);
     end
     { Included }
     else if (IsAtStart('#include', eBackup)) then begin
@@ -206,77 +208,89 @@ begin
       end;
       { <- Enums }
     end;
-    if (Pos('}', eString) <> 0) and (not IsAtStart('new', Trim(eCode[eStartLine]))) then begin
+    if (Pos('}', eString) <> 0) then begin
       { Enums -> }
       if eAddingEnum <> 0 then
         eAddingEnum := 0;
-        
-      { <- Enums }
-      if (eBracesOpen = 0) and (Length(Trim(eCode[eStartLine])) > 1) then begin
-        eTemp := Trim(RemoveSemicolon(Trim(eCode[eStartLine])));
 
-        if eTemp[Length(eTemp)] = '{' then
-          eTemp := Trim(Copy(eTemp, 1, Length(eTemp) -1));
+      { <- Enums }
+      if (eStartLine <> -1) then begin
+        if (eBracesOpen = 0) and (not IsAtStart('new', Trim(eCode[eStartLine]))) then begin
+          if Trim(RemoveStringsAndComments(eCode[eStartLine], True, True)) = '{' then
+            eStartLine := eStartLine - 1;
+          eTemp := Trim(RemoveSemicolon(Trim(eCode[eStartLine])));
 
         // Analyze type
-        k := 0;
-        if IsAtStart('public', eTemp) then
-          k := 1
-        else if IsAtStart('stock', eTemp) then
-          k := 2
-        else if IsAtStart('native', eTemp) then
-          k := 3
-        else if IsAtStart('forward', eTemp) then
-          k := 4
-        else if Pos('enum', LowerCase(eTemp)) = 1 then // no method
-          k := 5;
+          k := 0;
+          if IsAtStart('public', eTemp) then
+            k := 1
+          else if IsAtStart('stock', eTemp) then
+            k := 2
+          else if IsAtStart('native', eTemp) then
+            k := 3
+          else if IsAtStart('forward', eTemp) then
+            k := 4
+          else if Pos('enum', LowerCase(eTemp)) = 1 then // no method
+            k := 5;
+
 
         // Remove type
-        if (Pos(#32, eTemp) <> 0) and (Pos(#32, eTemp) < Pos('(', eTemp)) then
-          eTemp := Copy(eCode[eStartLine], Pos(#32, eCode[eStartLine]) + 1, Length(eCode[eStartLine]))
-        else if (Pos(#9, eTemp) <> 0) and (Pos(#9, eTemp) < Pos('(', eTemp)) then
-          eTemp := Copy(eTemp, Pos(#9, eTemp) + 1, Length(eTemp));
-        // Remove return-type
-        if (Pos(':', eTemp) <> 0) and (Pos(':', eTemp) < Pos('(', eTemp)) then
-          Delete(eTemp, 1, Pos(':', eTemp));
-
-        if Pos('operator', eTemp) = 1 then
-          k := 6;
-
-        if k < 5 then
-          Result.CallTips.Add(eTemp + '-> ' + FileName);
-        // Copy function-name
-        if Pos('(', eTemp) <> 0 then
-          eTemp := Copy(eTemp, 1, Pos('(', eTemp) - 1);
-        eTemp := Trim(eTemp);
-
-        if k < 5 then begin
-          Result.AutoComplete.Add(eTemp);
-          Result.HighlightKeywords.Add(eTemp);
-        end;
-        
-        if eTemp <> '' then begin
-          case k of
-            0: begin
-              if not IsRecursive then
-                Result.MethodsDefault.AddObject(eTemp, TObject(eStartLine)); // Default Method
-            end;
-            1: begin
-                k := ePreEvents.IndexOf(eTemp);
-                if k <> -1 then begin
-                  Result.Events.AddObject(eTemp, ePreEvents.Objects[k]);
-                  ePreEvents.Delete(k);
-                end
-                else
-                  Result.MethodsDefault.AddObject(eTemp, TObject(eStartLine));
-              end;
-            2: Result.Stocks.AddObject(eTemp, TObject(eStartLine));
-            3: Result.Natives.AddObject(eTemp, TObject(eStartLine));
-            4: Result.Forwards.AddObject(eTemp, TObject(eStartLine));
+          if Pos('@', eTemp) = 1 then begin
+            eTemp := Copy(eTemp, 2, Length(eTemp));
+            k := 1;
+          end
+          else begin
+            if (Pos(#32, eTemp) <> 0) and (Pos(#32, eTemp) < Pos('(', eTemp)) then
+              eTemp := Copy(eCode[eStartLine], Pos(#32, eCode[eStartLine]) + 1, Length(eCode[eStartLine]))
+            else if (Pos(#9, eTemp) <> 0) and (Pos(#9, eTemp) < Pos('(', eTemp)) then
+              eTemp := Copy(eTemp, Pos(#9, eTemp) + 1, Length(eTemp));
           end;
+
+          if eTemp[Length(eTemp)] = '{' then
+            eTemp := Trim(Copy(eTemp, 1, Length(eTemp) - 1));
+
+        // Remove return-type
+          if (Pos(':', eTemp) <> 0) and (Pos(':', eTemp) < Pos('(', eTemp)) then
+            Delete(eTemp, 1, Pos(':', eTemp));
+
+          if Pos('operator', eTemp) = 1 then
+            k := 6;
+
+          if k < 5 then
+            Result.CallTips.Add(eTemp + '-> ' + FileName);
+        // Copy function-name
+          if Pos('(', eTemp) <> 0 then
+            eTemp := Copy(eTemp, 1, Pos('(', eTemp) - 1);
+          eTemp := Trim(eTemp);
+
+          if k < 5 then begin
+            Result.AutoComplete.Add(eTemp);
+            Result.HighlightKeywords.Add(eTemp);
+          end;
+
+          if eTemp <> '' then begin
+            case k of
+              0: begin
+                  if not IsRecursive then
+                    Result.MethodsDefault.AddObject(eTemp, TObject(eStartLine)); // Default Method
+                end;
+              1: begin
+                  k := ePreEvents.IndexOf(eTemp);
+                  if k <> -1 then begin
+                    Result.Events.AddObject(eTemp, ePreEvents.Objects[k]);
+                    ePreEvents.Delete(k);
+                  end
+                  else
+                    Result.MethodsDefault.AddObject(eTemp, TObject(eStartLine));
+                end;
+              2: Result.Stocks.AddObject(eTemp, TObject(eStartLine));
+              3: Result.Natives.AddObject(eTemp, TObject(eStartLine));
+              4: Result.Forwards.AddObject(eTemp, TObject(eStartLine));
+            end;
+          end;
+          eStartLine := -1;
+          eBracesOpen := 0;
         end;
-        eStartLine := -1;
-        eBracesOpen := 0;
       end;
     end
     else if (eAddingEnum = 2) and (Pos('enum', LowerCase(eString)) <> 1) then begin
@@ -301,10 +315,11 @@ begin
 
     { Functions (2) }
     if (IsAtStart('forward', eString)) or (IsAtStart('public', eString)) or (IsAtStart('native', eString)) or (IsAtStart('stock', eString)) then begin
-      if (not eProcedureAdded) and (Pos('(', eString) <> 0) then begin
-        eTemp := Trim(RemoveSemicolon(eString));
+      if (not eProcedureAdded) and (Pos('(', eString) <> 0) and (Pos(')', eString) <> 0) then begin
+        eTemp := StringReplace(Trim(eBackup), #9, #32, [rfReplaceAll]);
+        eTemp := Trim(RemoveSemicolon(eTemp));
         if eTemp[Length(eTemp)] = '{' then
-          eTemp := Trim(Copy(eTemp, 1, Length(eTemp) -1));
+          eTemp := Trim(Copy(eTemp, 1, Length(eTemp) - 1));
 
         // Remove type
         if (Pos(#32, eTemp) <> 0) and (Pos(#32, eTemp) < Pos('(', eTemp)) then
@@ -317,11 +332,11 @@ begin
 
         if (Pos('enum', eTemp) = Pos('operator', eTemp)) and (Pos('enum', eTemp) = 0) then
           Result.CallTips.Add(eTemp + '-> ' + FileName);
-          
+
         // Copy function-name
         if Pos('(', eTemp) <> 0 then
-        eTemp := Copy(eTemp, 1, Pos('(', eTemp) - 1);
-          eTemp := Trim(eTemp);
+          eTemp := Copy(eTemp, 1, Pos('(', eTemp) - 1);
+        eTemp := Trim(eTemp);
 
         if (Pos('enum', eTemp) = Pos('operator', eTemp)) and (Pos('enum', eTemp) = 0) then begin
           Result.AutoComplete.Add(eTemp);
@@ -348,7 +363,7 @@ begin
             Result.MethodsDefault.AddObject(eTemp, TObject(i));
         end;
       end;
-    end;    
+    end;
   end;
   ePreEvents.Free;
   eStr.Free;
@@ -390,7 +405,7 @@ begin
   MethodsDefault.Free;
   Natives.Free;
   Stocks.Free;
-  Variables.Free;    
+  Variables.Free;
 
   Free;
 end;
@@ -405,3 +420,4 @@ finalization
 
 
 end.
+

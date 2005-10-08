@@ -687,10 +687,7 @@ public cmdPause(id, level, cid)
 	
 	log_amx("Cmd: ^"%s<%d><%s><>^" %s server", name, get_user_userid(id), authid, g_Paused ? "unpause" : "pause")
 	
-	new pausing[16]
-	
-	format(pausing, 15, "%L", id, g_Paused ? "UNPAUSING" : "PAUSING")
-	console_print(id, "[AMXX] %L", id, pausing)
+	console_print(id, "[AMXX] %L", id, g_Paused ? "UNPAUSING" : "PAUSING")
 
 	new activity = get_cvar_num("amx_show_activity")
 	if (activity != 0)

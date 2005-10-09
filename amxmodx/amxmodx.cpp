@@ -176,7 +176,7 @@ static cell AMX_NATIVE_CALL console_cmd(AMX *amx, cell *params) /* 2 param */
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 		
 		if (!pPlayer->bot && pPlayer->initialized)
-			CLIENT_COMMAND(pPlayer->pEdict, UTIL_VarArgs("%s", cmd));
+			CLIENT_COMMAND(pPlayer->pEdict, "%s", cmd);
 	}
 
 	return len;
@@ -1403,7 +1403,7 @@ static cell AMX_NATIVE_CALL client_cmd(AMX *amx, cell *params) /* 2 param */
 		{
 			CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
 			if (!pPlayer->bot && pPlayer->initialized /*&& pPlayer->ingame*/)
-				CLIENT_COMMAND(pPlayer->pEdict, UTIL_VarArgs("%s", cmd));
+				CLIENT_COMMAND(pPlayer->pEdict, "%s", cmd);
 		}
 	} else {
 		int index = params[1];
@@ -1417,7 +1417,7 @@ static cell AMX_NATIVE_CALL client_cmd(AMX *amx, cell *params) /* 2 param */
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 		
 		if (!pPlayer->bot && pPlayer->initialized /*&& pPlayer->ingame*/)
-			CLIENT_COMMAND(pPlayer->pEdict, UTIL_VarArgs("%s", cmd));
+			CLIENT_COMMAND(pPlayer->pEdict, "%s", cmd);
 	}
 	
 	return len;

@@ -469,7 +469,7 @@ int Debugger::FormatError(char *buffer, size_t maxLength)
 		if (m_pAmx->alt < 0)
 		{
 			//take a guess that it's local
-            addr = m_pAmx->alt - pTrace->frm;
+			addr = m_pAmx->alt - pTrace->frm;
 			v_class = 1;
 		} else {
 			//take a guess that it's a global

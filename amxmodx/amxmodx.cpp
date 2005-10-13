@@ -3099,10 +3099,6 @@ static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 	// call the func
 	cell retVal;
 	int err;
-	Debugger *pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
-
-	if (pDebugger)
-		pDebugger->BeginExec();
 
 	// copy the globs so the called func can also use callfunc
 	cell gparams[CALLFUNC_MAXPARAMS];
@@ -3120,6 +3116,11 @@ static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 	g_CallFunc_CurParam = 0;
 
 	AMX *pAmx = plugin->getAMX();
+
+	Debugger *pDebugger = (Debugger *)pAmx->userdata[UD_DEBUGGER];
+
+	if (pDebugger)
+		pDebugger->BeginExec();
 
 	// actual call
 	// Pawn - push parameters in reverse order

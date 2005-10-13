@@ -387,8 +387,7 @@ type
     procedure OnCodeSnippetClick(Sender: TObject);
     procedure OnCustomClick(Sender: TObject);
     procedure SetErrorLine(eLine: Integer);
-    procedure OnCopyData(var Msg: TWMCopyData); message WM_COPYDATA;
-
+    procedure OnCopyData(var Msg: TWMCopyData); message WM_COPYDATA;    
     procedure OnMessage(var Msg: TMsg; var Handled: Boolean);
     procedure OnShortCut(var Msg: TWMKey; var Handled: Boolean);
   end;
@@ -826,22 +825,22 @@ begin
     end;
   end
   else if (eExt = '.htm') or (eExt = '.html') then begin // HTML files
-    if tsMain.ActiveTabIndex <> 1 then
+    if tsMain.ActiveTabIndex <> 2 then
       ActivateProjects(2, False);
     OtherProjects.Open(odOpen.FileName, 'HTML');
   end
   else if (eExt = '.sql') then begin // SQL databases
-    if tsMain.ActiveTabIndex <> 1 then
+    if tsMain.ActiveTabIndex <> 2 then
       ActivateProjects(2, False);
     OtherProjects.Open(odOpen.FileName, 'SQL');
   end
   else if (eExt = '.xml') then begin // XML files
-    if tsMain.ActiveTabIndex <> 1 then
+    if tsMain.ActiveTabIndex <> 2 then
       ActivateProjects(2, False);
     OtherProjects.Open(odOpen.FileName, 'XML');
   end
   else begin // Other files and/or Textfiles
-    if tsMain.ActiveTabIndex <> 1 then
+    if tsMain.ActiveTabIndex <> 2 then
       ActivateProjects(2, False);
     OtherProjects.Open(odOpen.FileName, 'null');
   end;
@@ -2524,6 +2523,7 @@ begin
             TDocument(PawnProjects.Items[eIntData]).NotesText := eData;
         end;
       SCM_Pawn_GETFILENAME: Msg.Result := Integer(PChar(TDocument(PawnProjects.Items[eIntData]).FileName));
+      SCM_Pawn_FILECOUNT: Msg.Result := PawnProjects.Count;
       SCM_Pawn_GETTEXT: begin
           if (tsMain.ActiveTabIndex = 0) and (tsDocuments.ActiveTabIndex = eIntData) then
             Msg.Result := Integer(sciEditor.Lines.GetText)
@@ -2600,6 +2600,7 @@ begin
             TDocument(CPPProjects.Items[eIntData]).NotesText := eData;
         end;
       SCM_CPP_GETFILENAME: Msg.Result := Integer(PChar(TDocument(CPPProjects.Items[eIntData]).FileName));
+      SCM_CPP_FILECOUNT: Msg.Result := CPPProjects.Count;
       SCM_CPP_GETTEXT: begin
           if (tsMain.ActiveTabIndex = 1) and (tsDocuments.ActiveTabIndex = eIntData) then
             Msg.Result := Integer(sciEditor.Lines.GetText)
@@ -2643,6 +2644,14 @@ begin
           else
             TDocument(OtherProjects.Items[eIntData]).NotesText := eData;
         end;
+      SCM_OTHER_GETFILENAME: Msg.Result := Integer(PChar(TDocument(OtherProjects.Items[eIntData]).FileName));
+      SCM_OTHER_FILECOUNT: Msg.Result := OtherProjects.Count;
+      SCM_OTHER_GETTEXT: begin
+          if (tsMain.ActiveTabIndex = 2) and (tsDocuments.ActiveTabIndex = eIntData) then
+            Msg.Result := Integer(sciEditor.Lines.GetText)
+          else
+            Msg.Result := Integer(PChar(TDocument(OtherProjects.Items[eIntData]).Code));
+        end;
       SCM_OUTPUT_SHOW: begin
           splOutput.Show;
           lstOutput.Show;
@@ -2672,7 +2681,7 @@ begin
       SCM_EDITOR_SETAUTOCOMPLETE: sciAutoComplete.AStrings.Text := eData;
       SCM_EDITOR_SHOWAUTOCOMPLETE: sciEditor.AutoCShow(eIntData, Msg.CopyDataStruct.lpData);
       SCM_EDITOR_GETSELSTART: Msg.Result := sciEditor.SelStart;
-      SCM_EDTIOR_GETSELLENGTH: Msg.Result := sciEditor.SelLength;
+      SCM_EDITOR_GETSELLENGTH: Msg.Result := sciEditor.SelLength;
       SCM_EDITOR_SETSELSTART: sciEditor.SelStart := eIntData;
       SCM_EDITOR_SETSELLENGH: sciEditor.SelLength := eIntData;
       SCM_REMOVE_MENUITEM: begin

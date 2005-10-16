@@ -384,7 +384,7 @@ switchCommand(id, action)
 			{
 				g_Modified = found = true
 				setWeapon(a, action)
-				console_print(id, "%s %L %L", g_WeaponNames[a], id, "HAS_BEEN", id, action ? "RESTRICTED" : "UNRESTRICTED ")
+				console_print(id, "%s %L %L", g_WeaponNames[a], id, "HAS_BEEN", id, action ? "RESTRICTED" : "UNRESTRICTED")
 			}
 		}
 

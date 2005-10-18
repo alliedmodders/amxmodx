@@ -47,7 +47,7 @@ int Spawn(edict_t *pEntity)
 	if (SpawnForward != -1) {
 		int retVal = 0;
 		int id = ENTINDEX(pEntity);
-		retVal = MF_ExecuteForward(SpawnForward, id);
+		retVal = MF_ExecuteForward(SpawnForward, (cell)id);
 		if (retVal)
 			RETURN_META_VALUE(MRES_SUPERCEDE, 0);
 	}
@@ -83,7 +83,7 @@ void PlaybackEvent(int flags, const edict_t *pInvoker, unsigned short eventindex
 		cAngles[2] = amx_ftoc(vAngles.z);
 		cell CellOrigin = MF_PrepareCellArray(cOrigin, 3);
 		cell CellAngles = MF_PrepareCellArray(cAngles, 3);
-		retVal = MF_ExecuteForward(PlaybackForward, flags, ENTINDEX(e), eventindex, amx_ftoc(delay), CellOrigin, CellAngles, amx_ftoc(fparam1), amx_ftoc(fparam2), iparam1, iparam2, bparam2);
+		retVal = MF_ExecuteForward(PlaybackForward, (cell)flags, (cell)ENTINDEX(e), (cell)eventindex, amx_ftoc(delay), CellOrigin, CellAngles, amx_ftoc(fparam1), amx_ftoc(fparam2), (cell)iparam1, (cell)iparam2, (cell)bparam2);
 		if (retVal)
 			RETURN_META(MRES_SUPERCEDE);
 	}
@@ -98,7 +98,7 @@ void KeyValue(edict_t *pEntity, KeyValueData *pkvd)
 	g_pkvd=pkvd;
 	int index = ENTINDEX(pEntity);
 	if (DispatchKeyForward != -1) {
-		retVal = MF_ExecuteForward(DispatchKeyForward, index);
+		retVal = MF_ExecuteForward(DispatchKeyForward, (cell)index);
 		g_inKeyValue=false;
 		if (retVal)
 			RETURN_META(MRES_SUPERCEDE);
@@ -136,7 +136,7 @@ void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int 
 	{
 		if (Impulses[i]->Check == g_cmd->impulse)
 		{
-			retVal = MF_ExecuteForward(Impulses[i]->Forward, ENTINDEX(pEntity),origImpulse);
+			retVal = MF_ExecuteForward(Impulses[i]->Forward, (cell)ENTINDEX(pEntity), (cell)origImpulse);
 			if (retVal & 2 /*PLUGIN_HANDLED_MAIN*/)
 			{
 				g_cmd->impulse=0;
@@ -148,7 +148,7 @@ void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int 
 	}
 	if (CmdStartForward != -1) {
 		incmd = true;
-		retVal = MF_ExecuteForward(CmdStartForward, ENTINDEX(pEntity), origImpulse);
+		retVal = MF_ExecuteForward(CmdStartForward, (cell)ENTINDEX(pEntity), (cell)origImpulse);
 		incmd = false;
 		if (retVal) {
 			g_cmd->impulse = 0;
@@ -165,7 +165,7 @@ void ClientKill(edict_t *pEntity)
 	int retVal = 0;
 
 	if (ClientKillForward != -1) {
-		retVal = MF_ExecuteForward(ClientKillForward, ENTINDEX(pEntity));
+		retVal = MF_ExecuteForward(ClientKillForward, (cell)ENTINDEX(pEntity));
 		if (retVal)
 			RETURN_META(MRES_SUPERCEDE);
 	}
@@ -175,7 +175,7 @@ void ClientKill(edict_t *pEntity)
 
 void PlayerPreThink(edict_t *pEntity)
 {
-	MF_ExecuteForward(PlayerPreThinkForward, ENTINDEX(pEntity));
+	MF_ExecuteForward(PlayerPreThinkForward, (cell)ENTINDEX(pEntity));
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -220,7 +220,7 @@ void PlayerPostThink_Post(edict_t *pEntity)
 
 	if (PlayerPostThinkForward != -1)
 	{
-		if (MF_ExecuteForward(PlayerPostThinkForward, ENTINDEX(pEntity)))
+		if (MF_ExecuteForward(PlayerPostThinkForward, (cell)ENTINDEX(pEntity)))
 			RETURN_META(MRES_SUPERCEDE);
 	}
 
@@ -242,13 +242,13 @@ void pfnTouch(edict_t *pToucher, edict_t *pTouched)
 		{
 			if (Touches[i]->Touched.size() == 0)
 			{
-				retVal = MF_ExecuteForward(Touches[i]->Forward, ptrIndex, ptdIndex);
+				retVal = MF_ExecuteForward(Touches[i]->Forward, (cell)ptrIndex, (cell)ptdIndex);
 				if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
 					RETURN_META(MRES_SUPERCEDE);
 				else if (retVal)
 					res=MRES_SUPERCEDE;
 			} else if (Touches[i]->Touched.compare(ptdClass)==0) {
-				retVal = MF_ExecuteForward(Touches[i]->Forward, ptrIndex, ptdIndex);
+				retVal = MF_ExecuteForward(Touches[i]->Forward, (cell)ptrIndex, (cell)ptdIndex);
 				if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
 					RETURN_META(MRES_SUPERCEDE);
 				else if (retVal)
@@ -257,13 +257,13 @@ void pfnTouch(edict_t *pToucher, edict_t *pTouched)
 		} else if (Touches[i]->Toucher.compare(ptrClass)==0) {
 			if (Touches[i]->Touched.size() == 0)
 			{
-				retVal = MF_ExecuteForward(Touches[i]->Forward, ptrIndex, ptdIndex);
+				retVal = MF_ExecuteForward(Touches[i]->Forward, (cell)ptrIndex, (cell)ptdIndex);
 				if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
 					RETURN_META(MRES_SUPERCEDE);
 				else if (retVal)
 					res=MRES_SUPERCEDE;
 			} else if (Touches[i]->Touched.compare(ptdClass)==0) {
-				retVal = MF_ExecuteForward(Touches[i]->Forward, ptrIndex, ptdIndex);
+				retVal = MF_ExecuteForward(Touches[i]->Forward, (cell)ptrIndex, (cell)ptdIndex);
 				if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
 					RETURN_META(MRES_SUPERCEDE);
 				else if (retVal)
@@ -273,12 +273,12 @@ void pfnTouch(edict_t *pToucher, edict_t *pTouched)
 	}
 	/* Execute pfnTouch forwards */
 	if (pfnTouchForward != -1) {
-		retVal = MF_ExecuteForward(pfnTouchForward, ptrIndex, ptdIndex);
+		retVal = MF_ExecuteForward(pfnTouchForward, (cell)ptrIndex, (cell)ptdIndex);
 		if (retVal)
 			RETURN_META(MRES_SUPERCEDE);
 	}
 	if (VexdTouchForward != -1) {
-		retVal = MF_ExecuteForward(VexdTouchForward, ptrIndex, ptdIndex);
+		retVal = MF_ExecuteForward(VexdTouchForward, (cell)ptrIndex, (cell)ptdIndex);
 		if (retVal)
 			RETURN_META(MRES_SUPERCEDE);
 	}
@@ -296,14 +296,14 @@ void Think(edict_t *pent)
 	{
 		if (Thinks[i]->Class.compare(cls)==0)
 		{
-			retVal=MF_ExecuteForward(Thinks[i]->Forward, ENTINDEX(pent));
+			retVal=MF_ExecuteForward(Thinks[i]->Forward, (cell)ENTINDEX(pent));
 			if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
 				RETURN_META(MRES_SUPERCEDE);
 			else if (retVal)
 				res=MRES_SUPERCEDE;
 		}
 	}
-	retVal=MF_ExecuteForward(pfnThinkForward, ENTINDEX(pent));
+	retVal=MF_ExecuteForward(pfnThinkForward, (cell)ENTINDEX(pent));
 	if (retVal)
 		res=MRES_SUPERCEDE;
 

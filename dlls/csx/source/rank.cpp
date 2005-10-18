@@ -303,13 +303,16 @@ static cell AMX_NATIVE_CALL custom_wpn_dmg(AMX *amx, cell *params){ // wid,att,v
 	int TA = 0;
 	if ( (pVic->teamId == pAtt->teamId) && ( pVic != pAtt) )
 		TA = 1;
-	MF_ExecuteForward( iFDamage,pAtt->index, pVic->index, dmg, weapon, aim, TA );
+	MF_ExecuteForward( iFDamage, static_cast<cell>(pAtt->index),
+		static_cast<cell>(pVic->index), static_cast<cell>(dmg), static_cast<cell>(weapon),
+		static_cast<cell>(aim), static_cast<cell>(TA) );
 	
 	if ( pVic->IsAlive() )
 		return 1;
 
 	pAtt->saveKill(pVic,weapon,( aim == 1 ) ? 1:0 ,TA);
-	MF_ExecuteForward( iFDeath,pAtt->index, pVic->index, weapon, aim, TA );
+	MF_ExecuteForward( iFDeath, static_cast<cell>(pAtt->index), static_cast<cell>(pVic->index),
+		static_cast<cell>(weapon), static_cast<cell>(aim), static_cast<cell>(TA) );
 
 	return 1;
 }

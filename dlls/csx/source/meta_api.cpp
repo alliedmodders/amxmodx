@@ -117,9 +117,11 @@ void ClientKill(edict_t *pEntity){
 	if ( !pPlayer->IsAlive())
 		RETURN_META(MRES_IGNORED);
 
-	MF_ExecuteForward( iFDamage,pPlayer->index , pPlayer->index , 0, 0, 0, 0 );
+	MF_ExecuteForward( iFDamage,static_cast<cell>(pPlayer->index), static_cast<cell>(pPlayer->index) , 
+		static_cast<cell>(0), static_cast<cell>(0), static_cast<cell>(0), static_cast<cell>(0) );		// he would
 	pPlayer->saveKill(pPlayer,0,0,0);
-	MF_ExecuteForward( iFDeath,pPlayer->index, pPlayer->index, 0, 0, 0 );
+	MF_ExecuteForward( iFDeath,static_cast<cell>(pPlayer->index), static_cast<cell>(pPlayer->index),
+		static_cast<cell>(0), static_cast<cell>(0), static_cast<cell>(0) );
 
 	RETURN_META(MRES_IGNORED);
 }
@@ -271,19 +273,19 @@ void StartFrame_Post(){
 	if (g_bombAnnounce){
 		switch (g_bombAnnounce){
 		case BOMB_PLANTING:
-			MF_ExecuteForward( iFBPlanting,g_Planter );
+			MF_ExecuteForward( iFBPlanting, static_cast<cell>(g_Planter) );
 			break;
 		case BOMB_PLANTED:
-			MF_ExecuteForward( iFBPlanted,g_Planter );
+			MF_ExecuteForward( iFBPlanted, static_cast<cell>(g_Planter) );
 			break;
 		case BOMB_EXPLODE:
-			MF_ExecuteForward( iFBExplode,g_Planter,g_Defuser );
+			MF_ExecuteForward( iFBExplode, static_cast<cell>(g_Planter), static_cast<cell>(g_Defuser) );
 			break;
 		case BOMB_DEFUSING:
-			MF_ExecuteForward( iFBDefusing,g_Defuser );
+			MF_ExecuteForward( iFBDefusing, static_cast<cell>(g_Defuser) );
 			break;
 		case BOMB_DEFUSED:
-			MF_ExecuteForward( iFBDefused,g_Defuser );
+			MF_ExecuteForward( iFBDefused, static_cast<cell>(g_Defuser) );
 			break;
 		}
 		g_bombAnnounce = 0;
@@ -313,7 +315,8 @@ void SetModel_Post(edict_t *e, const char *m){
 			break;
 		}
 		if ( w_id )	
-			MF_ExecuteForward( iFGrenade, pPlayer->index, ENTINDEX(e) ,w_id );
+			MF_ExecuteForward( iFGrenade, static_cast<cell>(pPlayer->index), 
+			static_cast<cell>(ENTINDEX(e)), static_cast<cell>(w_id));
 	}
 
 	RETURN_META(MRES_IGNORED);

@@ -99,12 +99,14 @@ void Client_Damage_End(void* mValue){
 	if ( (mPlayer->teamId == pAttacker->teamId) && (mPlayer != pAttacker) )
 		TA = 1;
 
-	MF_ExecuteForward( iFDamage,pAttacker->index , mPlayer->index , damage, weapon, aim, TA );
+	MF_ExecuteForward( iFDamage, static_cast<cell>(pAttacker->index) , static_cast<cell>(mPlayer->index) ,
+		static_cast<cell>(damage), static_cast<cell>(weapon), static_cast<cell>(aim), static_cast<cell>(TA) );
 	 
 	if ( !mPlayer->IsAlive() ){
 		if ( weapon != CSW_C4 )
 			pAttacker->saveKill(mPlayer,weapon,( aim == 1 ) ? 1:0 ,TA);
-		MF_ExecuteForward( iFDeath,pAttacker->index, mPlayer->index, weapon, aim, TA );
+		MF_ExecuteForward( iFDeath, static_cast<cell>(pAttacker->index), static_cast<cell>(mPlayer->index),
+			static_cast<cell>(weapon), static_cast<cell>(aim), static_cast<cell>(TA) );
 	}
 }
 

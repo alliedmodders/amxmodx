@@ -200,7 +200,8 @@ int	C_InconsistentFile(const edict_t *player, const char *filename, char *discon
 	{
 		CPlayer	*pPlayer = GET_PLAYER_POINTER((edict_t *)player);
 
-		if (executeForwards(FF_InconsistentFile, pPlayer->index, filename, disconnect_message) == 1)
+		if (executeForwards(FF_InconsistentFile, static_cast<cell>(pPlayer->index),
+			filename, disconnect_message) == 1)
 			RETURN_META_VALUE(MRES_SUPERCEDE, FALSE);
 		
 		RETURN_META_VALUE(MRES_SUPERCEDE, TRUE);
@@ -462,7 +463,7 @@ void C_ServerDeactivate()
 	{
 		CPlayer	*pPlayer = GET_PLAYER_POINTER_I(i);
 		if (pPlayer->initialized)
-			executeForwards(FF_ClientDisconnect, pPlayer->index);
+			executeForwards(FF_ClientDisconnect, static_cast<cell>(pPlayer->index));
 
 		if (pPlayer->ingame)
 		{
@@ -573,7 +574,7 @@ BOOL C_ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *psz
 	if (!pPlayer->bot)
 	{
 		bool a = pPlayer->Connect(pszName, pszAddress);
-		executeForwards(FF_ClientConnect, pPlayer->index);
+		executeForwards(FF_ClientConnect, static_cast<cell>(pPlayer->index));
 		
 		if (a)
 		{
@@ -582,7 +583,7 @@ BOOL C_ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *psz
 				g_auth.put(aa);
 		} else {
 			pPlayer->Authorize();
-			executeForwards(FF_ClientAuthorized, pPlayer->index);
+			executeForwards(FF_ClientAuthorized, static_cast<cell>(pPlayer->index));
 		}
 	}
 	
@@ -593,7 +594,7 @@ void C_ClientDisconnect(edict_t *pEntity)
 {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
 	if (pPlayer->initialized)
-		executeForwards(FF_ClientDisconnect, pPlayer->index);
+		executeForwards(FF_ClientDisconnect, static_cast<cell>(pPlayer->index));
 
 	if (pPlayer->ingame)
 	{
@@ -611,7 +612,7 @@ void C_ClientPutInServer_Post(edict_t *pEntity)
 	{
 		pPlayer->PutInServer();
 		++g_players_num;
-		executeForwards(FF_ClientPutInServer, pPlayer->index);
+		executeForwards(FF_ClientPutInServer, static_cast<cell>(pPlayer->index));
 	}
 	
 	RETURN_META(MRES_IGNORED);
@@ -620,7 +621,7 @@ void C_ClientPutInServer_Post(edict_t *pEntity)
 void C_ClientUserInfoChanged_Post(edict_t *pEntity, char *infobuffer)
 {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-	executeForwards(FF_ClientInfoChanged, pPlayer->index);
+	executeForwards(FF_ClientInfoChanged, static_cast<cell>(pPlayer->index));
 	const char* name = INFOKEY_VALUE(infobuffer, "name");
 
 	// Emulate bot connection and putinserver
@@ -632,15 +633,15 @@ void C_ClientUserInfoChanged_Post(edict_t *pEntity, char *infobuffer)
 	{
 		pPlayer->Connect(name, "127.0.0.1"/*CVAR_GET_STRING("net_address")*/);
 
-		executeForwards(FF_ClientConnect, pPlayer->index);
+		executeForwards(FF_ClientConnect, static_cast<cell>(pPlayer->index));
 
 		pPlayer->Authorize();
-		executeForwards(FF_ClientAuthorized, pPlayer->index);
+		executeForwards(FF_ClientAuthorized, static_cast<cell>(pPlayer->index));
 
 		pPlayer->PutInServer();
 		++g_players_num;
 
-		executeForwards(FF_ClientPutInServer, pPlayer->index);
+		executeForwards(FF_ClientPutInServer, static_cast<cell>(pPlayer->index));
 	}
 
 	RETURN_META(MRES_IGNORED);
@@ -684,7 +685,7 @@ void C_ClientCommand(edict_t *pEntity)
 		}
 	}
 
-	if (executeForwards(FF_ClientCommand, pPlayer->index) > 0)
+	if (executeForwards(FF_ClientCommand, static_cast<cell>(pPlayer->index)) > 0)
 		RETURN_META(MRES_SUPERCEDE);
 
 	/* check for command and if needed also for first argument and call proper function */
@@ -698,7 +699,8 @@ void C_ClientCommand(edict_t *pEntity)
 	{
 		if ((*aa).matchCommandLine(cmd, arg) && (*aa).getPlugin()->isExecutable((*aa).getFunction()))
 		{
-			ret = executeForwards((*aa).getFunction(), pPlayer->index, (*aa).getFlags(), (*aa).getId());
+			ret = executeForwards((*aa).getFunction(), static_cast<cell>(pPlayer->index),
+				static_cast<cell>((*aa).getFlags()), static_cast<cell>((*aa).getId()));
 			if (ret & 2) result = MRES_SUPERCEDE;
 			if (ret & 1) RETURN_META(MRES_SUPERCEDE);
 		}
@@ -732,7 +734,8 @@ void C_ClientCommand(edict_t *pEntity)
 						{
 							Menu *pMenu = g_NewMenus[menu];
 							int item = pMenu->PagekeyToItem(pPlayer->page, pressed_key);
-							ret = executeForwards((*a).getFunction(), pPlayer->index, menu, item);
+							ret = executeForwards((*a).getFunction(), static_cast<cell>(pPlayer->index),
+								static_cast<cell>(menu), static_cast<cell>(item));
 							
 							if (ret & 2)
 								result = MRES_SUPERCEDE;
@@ -755,7 +758,8 @@ void C_ClientCommand(edict_t *pEntity)
 							}
 						}
 					} else {
-						ret = executeForwards((*a).getFunction(), pPlayer->index, pressed_key, 0);
+						ret = executeForwards((*a).getFunction(), static_cast<cell>(pPlayer->index),
+							static_cast<cell>(pressed_key), 0);
 						
 						if (ret & 2) result = MRES_SUPERCEDE;
 						if (ret & 1) RETURN_META(MRES_SUPERCEDE);
@@ -790,7 +794,7 @@ void C_StartFrame_Post(void)
 			if (strcmp(auth, "STEAM_ID_PENDING"))
 			{
 				(*a)->Authorize();
-				executeForwards(FF_ClientAuthorized, (*a)->index);
+				executeForwards(FF_ClientAuthorized, static_cast<cell>((*a)->index));
 				a.remove();
 				
 				continue;
@@ -1108,10 +1112,12 @@ void C_CvarValue(const edict_t *pEdict, const char *value)
 		if (pQuery->paramLen)
 		{
 			cell arr = prepareCellArray(pQuery->params, pQuery->paramLen);
-			executeForwards(pQuery->resultFwd, ENTINDEX(pEdict), pQuery->cvarName.c_str(), value, arr);
+			executeForwards(pQuery->resultFwd, static_cast<cell>(ENTINDEX(pEdict)),
+				pQuery->cvarName.c_str(), value, arr);
 		}
 		else
-			executeForwards(pQuery->resultFwd, ENTINDEX(pEdict), pQuery->cvarName.c_str(), value);
+			executeForwards(pQuery->resultFwd, static_cast<cell>(ENTINDEX(pEdict)),
+			pQuery->cvarName.c_str(), value);
 		
 		unregisterSPForward(pQuery->resultFwd);
 		

@@ -425,7 +425,7 @@ void EventsMngr::executeEvents()
 		}
 		
 		(*iter).m_Stamp = (float)*m_Timer;
-		executeForwards((*iter).m_Func, m_ParseVault ? m_ParseVault[0].iValue : 0);
+		executeForwards((*iter).m_Func, static_cast<cell>(m_ParseVault ? m_ParseVault[0].iValue : 0));
 	}
 
 	m_CurrentMsgType = -1;

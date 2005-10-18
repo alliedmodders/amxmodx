@@ -41,7 +41,7 @@ private:
 		// task settings
 		
 		CPluginMngr::CPlugin *m_pPlugin;
-		int m_iId;
+		cell m_iId;
 		int m_iFunc;
 		int m_iRepeat;
 		
@@ -57,7 +57,7 @@ private:
 		// execution
 		float m_fNextExecTime;
 	public:
-		void set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, int iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat, float fCurrentTime);
+		void set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, cell iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat, float fCurrentTime);
 		void clear();
 		bool isFree() const;
 
@@ -78,7 +78,7 @@ private:
 	class CTaskDescriptor
 	{
 	public:
-		int m_iId;
+		cell m_iId;
 		AMX *m_pAmx;
 		bool m_bFree;
 
@@ -112,7 +112,7 @@ public:
 	~CTaskMngr();
 
 	void registerTimers(float *pCurrentTime, float *pTimeLimit, float *pTimeLeft);	// The timers will always point to the right value
-	void registerTask(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, int iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat);
+	void registerTask(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, cell iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat);
 	
 	int removeTasks(int iId, AMX *pAmx);											// remove all tasks that match the id and amx
 	int changeTasks(int iId, AMX *pAmx, float fNewBase);							// change all tasks that match the id and amx

@@ -254,7 +254,8 @@ void plugin_srvcmd()
 	{
 		if ((*a).matchCommand(cmd) && (*a).getPlugin()->isExecutable((*a).getFunction()))
 		{
-			cell ret = executeForwards((*a).getFunction(), g_srvindex, (*a).getFlags(), (*a).getId());
+			cell ret = executeForwards((*a).getFunction(), static_cast<cell>(g_srvindex),
+				static_cast<cell>((*a).getFlags()), static_cast<cell>((*a).getId()));
 			if (ret) break;
 		}
 		++a;

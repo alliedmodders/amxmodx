@@ -219,7 +219,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 		
 		if (pItem->handler != -1)
 		{
-			ret = executeForwards(pItem->handler, player, thisId, i);
+			ret = executeForwards(pItem->handler, static_cast<cell>(player), static_cast<cell>(thisId), static_cast<cell>(i));
 			if (ret == ITEM_ENABLED)
 				enabled = true;
 			else if (ret == ITEM_DISABLED)

@@ -44,7 +44,7 @@ CPluginMngr::CPlugin *CTaskMngr::CTask::getPlugin() const
 	return m_pPlugin;
 }
 
-void CTaskMngr::CTask::set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, int iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat, float fCurrentTime)
+void CTaskMngr::CTask::set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, cell iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat, float fCurrentTime)
 {
 	clear();
 	m_bFree = false;
@@ -226,7 +226,7 @@ void CTaskMngr::registerTimers(float *pCurrentTime, float *pTimeLimit, float *pT
 	m_pTmr_TimeLeft = pTimeLeft;
 }
 
-void CTaskMngr::registerTask(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, int iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat)
+void CTaskMngr::registerTask(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, cell iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat)
 {
 	// first, search for free tasks
 	TaskListIter iter = m_Tasks.find(CTaskDescriptor(0, NULL, true));

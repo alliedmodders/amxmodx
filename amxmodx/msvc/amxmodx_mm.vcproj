@@ -787,9 +787,6 @@
 				RelativePath="..\CQueue.h">
 			</File>
 			<File
-				RelativePath="..\CStack.h">
-			</File>
-			<File
 				RelativePath="..\CString.h">
 			</File>
 			<File
@@ -824,6 +821,9 @@
 			</File>
 			<File
 				RelativePath="..\resource.h">
+			</File>
+			<File
+				RelativePath="..\sh_stack.h">
 			</File>
 			<File
 				RelativePath="..\zlib\zconf.h">

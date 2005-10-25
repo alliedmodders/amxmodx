@@ -46,6 +46,8 @@
 #ifndef FORWARD_H
 #define FORWARD_H
 
+#include "sh_stack.h"
+
 const int FORWARD_MAX_PARAMS = 32;
 
 enum ForwardExecType
@@ -171,7 +173,7 @@ class CForwardMngr
 {
 	typedef CVector<CForward*> ForwardVec;
 	typedef CVector<CSPForward*> SPForwardVec;
-	typedef CQueue<int> FreeSPVec;							// Free SP Forwards
+	typedef CStack<int> FreeSPVec;							// Free SP Forwards
 
 	ForwardVec m_Forwards;
 

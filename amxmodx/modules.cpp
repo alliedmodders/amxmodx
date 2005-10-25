@@ -453,6 +453,8 @@ int set_amxnatives(AMX* amx, char error[128])
 
 	int idx, err;
 	cell retval;
+
+	DisableDebugHandler(amx);
 	
 	if (amx_FindPublic(amx, "plugin_natives", &idx) == AMX_ERR_NONE)
 	{
@@ -462,6 +464,8 @@ int set_amxnatives(AMX* amx, char error[128])
 			AMXXLOG_Log("An error occurred in plugins_native. This is dangerous!");
 		}
 	}
+
+	EnableDebugHandler(amx);
 
 	amx->flags &= ~(AMX_FLAG_PRENIT);
 
@@ -1687,6 +1691,22 @@ void *Module_ReqFnptr(const char *funcName)
 	}
 
 	return NULL;
+}
+
+void DisableDebugHandler(AMX *amx)
+{
+	amx_SetDebugHook(amx, NULL);
+}
+
+void EnableDebugHandler(AMX *amx)
+{
+	if (amx->flags & AMX_FLAG_DEBUG)
+	{
+		if (amx->userdata[UD_DEBUGGER] != NULL)
+		{
+			amx_SetDebugHook(amx, &Debugger::DebugHook);
+		}
+	}
 }
 
 #if !defined MEMORY_TEST && !defined WIN32

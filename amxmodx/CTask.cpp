@@ -31,6 +31,9 @@
 
 #include "amxmodx.h"
 #include "CTask.h"
+#include "sh_stack.h"
+
+CStack<CTaskMngr::CTask *> *g_FreeTasks;
 
 /*********************** CTask ***********************/
 
@@ -73,12 +76,19 @@ void CTaskMngr::CTask::set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags,
 	if (iParamsLen)
 	{
 		m_iParamLen = iParamsLen + 1;
-		m_pParams = new cell[m_iParamLen];
+		if (m_ParamSize < m_iParamLen)
+		{
+			m_ParamSize = m_iParamLen;
+			cell *temp = new cell[m_ParamSize];
+			memset(temp, 0, sizeof(cell) * m_ParamSize);
+			if (m_pParams != NULL)
+				delete [] m_pParams;
+			m_pParams = temp;
+		}
 		memcpy(m_pParams, pParams, sizeof(cell)*iParamsLen);
 		m_pParams[iParamsLen] = 0;
 	} else {
 		m_iParamLen = 0;
-		m_pParams = NULL;
 	}
 }
 
@@ -92,11 +102,7 @@ void CTaskMngr::CTask::clear()
 		m_iFunc = -1;
 	}
 
-	if (m_pParams)
-	{
-		delete [] m_pParams;
-		m_pParams = NULL;
-	}
+	m_iParamLen = 0;
 
 	m_pPlugin = NULL;
 	m_iId = 0;
@@ -106,6 +112,7 @@ void CTaskMngr::CTask::clear()
 	m_bLoop = false;
 	m_bAfterStart =	false;
 	m_bBeforeEnd = false;
+	m_iParamLen = 0;
 
 	m_fNextExecTime = 0.0f;
 }
@@ -174,6 +181,7 @@ void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, f
 		if (done)
 		{
 			clear();
+			g_FreeTasks->push(this);
 		} else {
 			m_fNextExecTime += m_fBase;
 		}
@@ -197,12 +205,19 @@ CTaskMngr::CTask::CTask()
 	m_fNextExecTime = 0.0f;
 
 	m_iParamLen = 0;
+	m_ParamSize = 0;
 	m_pParams = NULL;
 }
 
 CTaskMngr::CTask::~CTask()
 {
 	clear();
+
+	if (m_pParams)
+	{
+		delete [] m_pParams;
+		m_pParams = NULL;
+	}
 }
 
 /*********************** CTaskMngr ***********************/
@@ -212,11 +227,17 @@ CTaskMngr::CTaskMngr()
 	m_pTmr_CurrentTime = NULL;
 	m_pTmr_TimeLimit = NULL;
 	m_pTmr_TimeLeft = NULL;
+
+	g_FreeTasks = new CStack<CTaskMngr::CTask *>();
 }
 
 CTaskMngr::~CTaskMngr()
 {
-	clear();
+	while (!g_FreeTasks->empty())
+		g_FreeTasks->pop();
+	delete g_FreeTasks;
+
+	m_Tasks.clear();
 }
 
 void CTaskMngr::registerTimers(float *pCurrentTime, float *pTimeLimit, float *pTimeLeft)
@@ -229,18 +250,15 @@ void CTaskMngr::registerTimers(float *pCurrentTime, float *pTimeLimit, float *pT
 void CTaskMngr::registerTask(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, cell iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat)
 {
 	// first, search for free tasks
-	TaskListIter iter = m_Tasks.find(CTaskDescriptor(0, NULL, true));
-	
-	if (iter)
+	if (!g_FreeTasks->empty())
 	{
 		// found: reuse it
-		iter->set(pPlugin, iFunc, iFlags, iId, fBase, iParamsLen, pParams, iRepeat, *m_pTmr_CurrentTime);
+		CTask *pTmp = g_FreeTasks->front();
+		g_FreeTasks->pop();
+		pTmp->set(pPlugin, iFunc, iFlags, iId, fBase, iParamsLen, pParams, iRepeat, *m_pTmr_CurrentTime);
 	} else {
 		// not found: make a new one
 		CTask *pTmp = new CTask;
-		
-		if (!pTmp)
-			return;
 		
 		pTmp->set(pPlugin, iFunc, iFlags, iId, fBase, iParamsLen, pParams, iRepeat, *m_pTmr_CurrentTime);
 		m_Tasks.put(pTmp);
@@ -255,7 +273,11 @@ int CTaskMngr::removeTasks(int iId, AMX *pAmx)
 	
 	while (iter)
 	{
-		iter->clear();
+		if (!iter->isFree())
+		{
+			iter->clear();
+			g_FreeTasks->push(iter->getTask());
+		}
 		++i;
 		iter = m_Tasks.find(++iter, descriptor);
 	}
@@ -297,5 +319,9 @@ void CTaskMngr::startFrame()
 
 void CTaskMngr::clear()
 {
-	m_Tasks.clear();
+	for (TaskListIter iter = m_Tasks.begin(); iter; ++iter)
+	{
+		if (!iter->isFree())
+			iter->clear();
+	}
 }

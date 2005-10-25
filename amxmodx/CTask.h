@@ -34,7 +34,7 @@
 
 class CTaskMngr
 {
-private:
+public:
 	/*** class CTask ***/
 	class CTask
 	{
@@ -52,6 +52,7 @@ private:
 		int m_iParamLen;
 		
 		cell *m_pParams;
+		cell m_ParamSize;
 		bool m_bFree;
 
 		// execution
@@ -70,6 +71,7 @@ private:
 		void resetNextExecTime(float fCurrentTime);
 
 		bool shouldRepeat();
+		CTask *getTask() { return this; }
 
 		CTask();
 		~CTask();

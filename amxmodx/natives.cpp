@@ -29,7 +29,7 @@
 */
 
 #include "amxmodx.h"
-#include "CStack.h"
+#include "sh_stack.h"
 #include "natives.h"
 
 #ifdef __linux__
@@ -146,7 +146,7 @@ static cell AMX_NATIVE_CALL get_string(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
 	}
-	regnative *pNative = g_NativeStack.top();
+	regnative *pNative = g_NativeStack.front();
 	if (pNative->style)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
@@ -167,7 +167,7 @@ static cell AMX_NATIVE_CALL set_string(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
 	}
-	regnative *pNative = g_NativeStack.top();
+	regnative *pNative = g_NativeStack.front();
 	if (pNative->style)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
@@ -190,7 +190,7 @@ static cell AMX_NATIVE_CALL get_param(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
 	}
-	regnative *pNative = g_NativeStack.top();
+	regnative *pNative = g_NativeStack.front();
 	if (pNative->style)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
@@ -209,7 +209,7 @@ static cell AMX_NATIVE_CALL get_param_byref(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
 	}
-	regnative *pNative = g_NativeStack.top();
+	regnative *pNative = g_NativeStack.front();
 	if (pNative->style)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
@@ -230,7 +230,7 @@ static cell AMX_NATIVE_CALL set_param_byref(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
 	}
-	regnative *pNative = g_NativeStack.top();
+	regnative *pNative = g_NativeStack.front();
 	if (pNative->style)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
@@ -253,7 +253,7 @@ static cell AMX_NATIVE_CALL get_array(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
 	}
-	regnative *pNative = g_NativeStack.top();
+	regnative *pNative = g_NativeStack.front();
 	if (pNative->style)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
@@ -279,7 +279,7 @@ static cell AMX_NATIVE_CALL set_array(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
 	}
-	regnative *pNative = g_NativeStack.top();
+	regnative *pNative = g_NativeStack.front();
 	if (pNative->style)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
@@ -308,7 +308,7 @@ static cell AMX_NATIVE_CALL param_convert(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
 	}
-	regnative *pNative = g_NativeStack.top();
+	regnative *pNative = g_NativeStack.front();
 	if (pNative->style != 1)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");

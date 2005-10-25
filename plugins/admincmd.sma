@@ -700,7 +700,7 @@ public cmdPause(id, level, cid)
 			len = format(msg, 127, "%L", players[i], "ADMIN")
 			
 			if (activity == 1)
-				len += copy(msg[len], 127-len, ":")
+				len += copy(msg[len], 127-len, ": ")
 			else
 				len += format(msg[len], 127-len, " %s: ", name)
 			

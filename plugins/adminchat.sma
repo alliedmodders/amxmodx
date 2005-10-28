@@ -134,11 +134,16 @@ public cmdSayAdmin(id)
 	log_amx("Chat: ^"%s<%d><%s><>^" chat ^"%s^"", name, userid, authid, message[1])
 	log_message("^"%s<%d><%s><>^" triggered ^"amx_chat^" (text ^"%s^")", name, userid, authid, message[1])
 	
-	format(message, 191, "(ADMINS) %s :  %s", name, message[1])
+	if (is_user_admin(id))
+		format(message, 191, "(%L) %s :  %s", id, "ADMIN", name, message[1])
+	else
+		format(message, 191, "(%L) %s :  %s", id, "PLAYER", name, message[1])
+
 	get_players(players, inum)
 	
 	for (new i = 0; i < inum; ++i)
 	{
+		// dont print the message to the client that used the cmd if he has ADMIN_CHAT to avoid double printing
 		if (players[i] != id && get_user_flags(players[i]) & ADMIN_CHAT)
 			client_print(players[i], print_chat, "%s", message)
 	}

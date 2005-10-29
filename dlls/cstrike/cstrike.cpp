@@ -353,7 +353,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_burstmode(AMX *amx, cell *params) // c
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL cs_get_user_armor(AMX *amx, cell *params) // cs_get_user_armor(index, CsArmorType:&armortype); = 2 params
+static cell AMX_NATIVE_CALL cs_get_user_armor(AMX *amx, cell *params) // cs_get_user_armor(index, &CsArmorType:armortype); = 2 params
 {
 	// Return how much armor and set reference of what type...
 	// params[1] = user index
@@ -364,10 +364,10 @@ static cell AMX_NATIVE_CALL cs_get_user_armor(AMX *amx, cell *params) // cs_get_
 	// Make into edict pointer
 	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
-#if 0
+// #if 0 (Removed this to make the function work)
 	cell *armorTypeByRef = MF_GetAmxAddr(amx, params[2]);
 	*armorTypeByRef = *((int *)pPlayer->pvPrivateData + OFFSET_ARMORTYPE);
-#endif
+// #endif
 
 	return (cell)pPlayer->v.armorvalue;
 }

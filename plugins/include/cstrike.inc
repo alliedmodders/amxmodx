@@ -182,14 +182,14 @@ native cs_get_user_shield(index);
  */
 native cs_get_user_stationary(index);
 
-/* Returns armor value and sets armor type in second parameter.
+/* Returns armor value and sets by reference the armor type in second parameter.
  */
 enum CsArmorType {
 	CS_ARMOR_NONE = 0, // no armor
 	CS_ARMOR_KEVLAR = 1, // armor
 	CS_ARMOR_VESTHELM = 2 // armor and helmet
 };
-native cs_get_user_armor(index, CsArmorType:armortype);
+native cs_get_user_armor(index, &CsArmorType:armortype);
 
 /* Use this instead of fun's set_user_armor.
  * Appropriate message to update client's HUD will be sent if armortype is kevlar or vesthelm.

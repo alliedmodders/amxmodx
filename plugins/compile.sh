@@ -10,7 +10,7 @@
 # new code contributed by \malex\
 
 test -e compiled || mkdir compiled
-rm test.txt
+rm temp.txt
 
 for sourcefile in *.sma
 do

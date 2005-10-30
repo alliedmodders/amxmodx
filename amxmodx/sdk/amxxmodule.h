@@ -2003,6 +2003,7 @@ typedef	void			(*PFN_MERGEDEFINITION_FILE)		(const char * /*filename*/);
 typedef const char *	(*PFN_FORMAT)					(const char * /*fmt*/, ... /*params*/);
 typedef void			(*PFN_REGISTERFUNCTION)			(void * /*pfn*/, const char * /*desc*/);
 typedef	int				(*PFN_AMX_PUSH)					(AMX * /*amx*/, cell /*value*/);
+typedef	int				(*PFN_SET_TEAM_INFO)			(int /*player */, int /*teamid */, const char */*name */);
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
 extern PFN_BUILD_PATHNAME			g_fn_BuildPathname;
@@ -2066,6 +2067,7 @@ extern PFN_GET_PLAYER_TEAM			g_fn_GetPlayerTeam;
 extern PFN_REGISTERFUNCTION			g_fn_RegisterFunction;
 extern PFN_REQ_FNPTR				g_fn_RequestFunction;
 extern PFN_AMX_PUSH					g_fn_AmxPush;
+extern PFN_SET_TEAM_INFO			g_fn_SetTeamInfo;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2126,6 +2128,7 @@ void			MF_RegisterFunction			(void *pfn, const char *description) { }
 void *			MF_RequestFunction			(const char *description) { }
 int				MF_AmxPush					(AMX *amx, cell *params) { }
 int				MF_AmxExec					(AMX *amx, cell *retval, int idx) { }
+int				MF_SetPlayerTeamInfo		(int id, int teamid, const char *teamname) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
@@ -2191,6 +2194,7 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...);
 #define MF_RegisterFunction g_fn_RegisterFunction
 #define MF_RequestFunction g_fn_RequestFunction;
 #define MF_AmxPush g_fn_AmxPush
+#define	MF_SetPlayerTeamInfo g_fn_SetTeamInfo
 
 #ifdef MEMORY_TEST
 /*** Memory ***/

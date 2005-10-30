@@ -1577,6 +1577,23 @@ void Module_UncacheFunctions()
 	g_functions.clear();
 }
 
+int MNF_SetPlayerTeamInfo(int player, int teamid, const char *teamname)
+{
+	if (player < 1 || player > gpGlobals->maxClients)
+		return 0;
+
+    CPlayer *pPlayer = GET_PLAYER_POINTER_I(player);
+
+	if (!pPlayer->ingame)
+		return 0;
+
+	pPlayer->teamId = teamid;
+	if (teamname != NULL)
+		pPlayer->team.assign(teamname);
+
+	return 1;
+}
+
 int amx_Execv()
 {
 	return AMX_ERR_NOTFOUND;
@@ -1658,6 +1675,7 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("GetPlayerEdict", MNF_GetPlayerEdict)
 	REGISTER_FUNC("CellToReal", MNF_CellToReal)
 	REGISTER_FUNC("RealToCell", MNF_RealToCell)
+	REGISTER_FUNC("SetPlayerTeamInfo", MNF_SetPlayerTeamInfo)
 
 #ifdef MEMORY_TEST
 	REGISTER_FUNC("Allocator", m_allocator)

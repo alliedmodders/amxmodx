@@ -2502,6 +2502,7 @@ PFN_FORMAT					g_fn_Format;
 PFN_REGISTERFUNCTION		g_fn_RegisterFunction;
 PFN_REQ_FNPTR				g_fn_RequestFunction;
 PFN_AMX_PUSH				g_fn_AmxPush;
+PFN_SET_TEAM_INFO			g_fn_SetTeamInfo;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2611,6 +2612,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("GetPlayerFlags", g_fn_GetPlayerFlags, PFN_GETPLAYERFLAGS);
 	REQFUNC("GetPlayerEdict", g_fn_GetPlayerEdict, PFN_GET_PLAYER_EDICT);
 	REQFUNC("amx_Push", g_fn_AmxPush, PFN_AMX_PUSH);
+	REQFUNC("SetPlayerTeamInfo", g_fn_SetTeamInfo, PFN_SET_TEAM_INFO);
 
 #ifdef MEMORY_TEST
 	// Memory
@@ -2733,6 +2735,7 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_GetPlayerEdict(0);
 	MF_Format("", 4, "str");
 	MF_RegisterFunction(NULL, "");
+	MF_SetPlayerTeamInfo(0, 0, "");
 }
 #endif
 

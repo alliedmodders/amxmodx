@@ -73,6 +73,8 @@ implementation
 Uses
  SciSearchTextDlg, SciConfirmReplaceDlg, SciReplaceTextDlg, SciSupport,sciUtils;
 
+var ConfirmReplaceDialog: TConfirmReplaceDialog;
+
 { TSciSearchReplace }
 constructor TSciSearchReplace.Create(AOwner : TComponent);
 begin
@@ -94,9 +96,11 @@ var
   findLen : Integer;
   LenFound, LenReplaced : Integer;
 //  lastMatch : Integer;
+  ConfirmReplaceDialog: TConfirmReplaceDialog;
   doendundo : Boolean;
 begin
   doendundo:=false;
+  ConfirmReplaceDialog := nil;
   if not Assigned(FEditor) then Exit;
   Options := 0;
   if SearchCaseSensitive then

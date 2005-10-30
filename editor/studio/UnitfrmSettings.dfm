@@ -61,7 +61,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 353
     Height = 260
-    ActivePage = jspTools
+    ActivePage = jspHighlighter
     PropagateEnable = False
     Align = alClient
     OnChange = jplSettingsChange

@@ -562,12 +562,16 @@ procedure TfrmSettings.cmdBrowsePAWNCompilerClick(Sender: TObject);
 begin
   if odBrowse.Execute then
     txtPAWNCompilerPath.Text := odBrowse.FileName;
+  txtPawnOutput.OnEnter(Sender);
+  txtCPPOutput.OnEnter(Sender);
 end;
 
 procedure TfrmSettings.cmdBrowseCPPCompilerClick(Sender: TObject);
 begin
   if odBrowse.Execute then
     txtCPPCompilerPath.Text := odBrowse.FileName;
+  txtPawnOutput.OnEnter(Sender);
+  txtCPPOutput.OnEnter(Sender);
 end;
 
 procedure TfrmSettings.cmdBrowseOutputPAWNClick(Sender: TObject);

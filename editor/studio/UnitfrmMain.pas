@@ -12,14 +12,15 @@ uses
   TBXXitoTheme, TBXMonaiXPTheme, TBXZezioTheme, TBXWhidbeyTheme,
   TBXRomaTheme, TBXMirandaTheme, { <- Themes }
   SpTBXTabs, ExtCtrls, SpTBXDkPanels, TFlatSplitterUnit,
-  SciLexer, SciLexerMemo, SciLexerMod, SciCallTips, ComCtrls, mbTBXTreeView,
-  StdCtrls, mbTBXRichEdit, TBXDkPanels, TBXToolPals, SciPropertyMgr,
-  mbTBXHint, mbTBXHotKeyEdit, SciAutoComplete, sciKeyBindings,
-  sciPrint, mxFlatControls, ClipBrd, ActnList, SciSearchReplace,
+  SciLexer, SciLexerMemo, SciLexerMod, SciCallTips, ComCtrls, 
+  StdCtrls, TBXDkPanels, TBXToolPals, SciPropertyMgr,
+  SciAutoComplete, sciKeyBindings,
+  sciPrint, ClipBrd, ActnList, SciSearchReplace,
   IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, IdFTP,
   ShellAPI, IdFTPCommon, IdAntiFreezeBase, IdAntiFreeze, JvComponent,
   JvInspector, JvExControls, JvPluginManager, JvgLanguageLoader,
-  JvWndProcHook, CommCtrl, JvPageList, JvPageListTreeView;
+  JvWndProcHook, CommCtrl, JvPageList, JvPageListTreeView,
+  SciSearchReplaceBase;
 
 type
   TfrmMain = class(TForm)
@@ -378,6 +379,7 @@ type
     procedure jviCodeItemValueChanged(Sender: TObject;
       Item: TJvCustomInspectorItem);
     procedure mnuRestoreBackupClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     procedure UpdateNotes;
   public
@@ -405,7 +407,7 @@ uses UnitfrmSettings, UnitMainTools, UnitLanguages, UnitfrmInfo,
   UnitfrmHudMsgGenerator, UnitCompile, UnitfrmAutoIndent,
   UnitfrmHTMLPreview, UnitCodeInspector, UnitfrmMOTDGen,
   UnitfrmMenuGenerator, UnitfrmClose, UnitPlugins, UnitfrmConnGen,
-  UnitMenuGenerators, UnitfrmIRCPaster;
+  UnitMenuGenerators, UnitfrmIRCPaster, MyEditFileClasses;
 
 {$R *.dfm}
 
@@ -1144,7 +1146,7 @@ end;
 
 procedure TfrmMain.mnuToogleBookmarkClick(Sender: TObject);
 begin
-  sciEditor.BookmarkToggle(sciEditor.GetCurrentLineNumber);
+  sciEditor.Bookmark.Toggle(sciEditor.GetCurrentLineNumber);
 end;
 
 procedure TfrmMain.mnuEditorDeleteClick(Sender: TObject);
@@ -1159,7 +1161,7 @@ end;
 
 procedure TfrmMain.mnuGoToBookmarkClick(Sender: TObject);
 begin
-  sciEditor.BookmarkNext;
+  sciEditor.Bookmark.Next(True);
 end;
 
 procedure TfrmMain.mnuSearchDialogClick(Sender: TObject);
@@ -2859,7 +2861,12 @@ end;
 procedure TfrmMain.mnuRestoreBackupClick(Sender: TObject);
 begin
   if MessageBox(Handle, PChar(lAskRestore), PChar(Application.Title), MB_ICONQUESTION + MB_YESNO) = mrYes then
-    sciEditor.LoadFromFile(ActiveDoc.FileName + '.bak');
+    sciEditor.Lines.LoadFromFile(ActiveDoc.FileName + '.bak');
+end;
+
+procedure TfrmMain.FormCreate(Sender: TObject);
+begin
+  sciEditor.StreamClass := TSciMyStream;
 end;
 
 end.

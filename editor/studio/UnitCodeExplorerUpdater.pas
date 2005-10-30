@@ -4,7 +4,7 @@ interface
 
 uses
   Classes, Forms, SysUtils, ComCtrls, Windows, ScintillaLanguageManager,
-  Dialogs, CommCtrl, madExcept;
+  Dialogs, CommCtrl;
 
 type
   TCodeExplorerUpdater = class(TThread)
@@ -88,7 +88,7 @@ begin
           end;
         except
           if FindWindow(nil, 'Delphi 7') <> 0 then // This is "Debug Mode"
-            madExcept.HandleException;
+            //madExcept.HandleException;
         end;
       end;
       Sleep(1000);

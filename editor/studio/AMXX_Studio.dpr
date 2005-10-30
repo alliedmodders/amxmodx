@@ -1,8 +1,6 @@
 program AMXX_Studio;
 
 uses
-  madExcept,
-  madLinkDisAsm,
   Forms,
   Windows,
   Classes,
@@ -38,7 +36,8 @@ uses
   UnitfrmClose in 'UnitfrmClose.pas' {frmClose},
   UnitfrmConnGen in 'UnitfrmConnGen.pas' {frmConnGen},
   UnitPlugins in 'UnitPlugins.pas',
-  UnitfrmIRCPaster in 'UnitfrmIRCPaster.pas' {frmIRCPaster};
+  UnitfrmIRCPaster in 'UnitfrmIRCPaster.pas' {frmIRCPaster},
+  MyEditFileClasses in 'MyEditFileClasses.pas';
 
 { Used components:
   - JVCL 3.0

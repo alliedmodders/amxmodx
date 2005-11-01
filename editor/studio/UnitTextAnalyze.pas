@@ -59,6 +59,7 @@ var i, k: integer;
   eAddingEnum: Integer;
   eTempResult: TPawnParseResult;
   eProcedureAdded: Boolean;
+  eCActive: Boolean;
 begin
   Result := TPawnParseResult.Create;
   if not IsRecursive then
@@ -70,13 +71,20 @@ begin
   eStartLine := -1;
   eTimeToSleep := 0;
   eAddingEnum := 0;
+  eCActive := False;
 
   for i := 0 to eCode.Count - 1 do begin
     if (Application.Terminated) or (not Started) or (frmMain.pnlLoading.Visible) or (not frmMain.trvExplorer.Visible) then exit;
 
     eString := RemoveStringsAndComments(Trim(eCode[i]), True, True);
-    eBackup := Trim(eCode[i]);
-
+    if (Pos('/*', eString) = 1) or (Pos('*/', eString) <> 0) then begin
+      eCActive := (Pos('/*', eString) = 1);
+      continue;
+    end;
+    if eCActive then
+      continue;
+    
+    eBackup := Trim(eCode[i]);  
     eProcedureAdded := False;
     Inc(eTimeToSleep, 1);
 
@@ -116,9 +124,10 @@ begin
         end;
         eString := RemoveStringsAndComments(Trim(eCode[i]), True, True);
       end;
-    end
+      continue;
+    end;
     { Included }
-    else if (IsAtStart('#include', eBackup)) then begin
+    if (IsAtStart('#include', eBackup)) then begin
       eString := StringReplace(eBackup, '/', '\', [rfReplaceAll]);
       if Between(eString, '<', '>') <> '' then begin
         eString := Between(eString, '<', '>');
@@ -164,14 +173,16 @@ begin
           Sleep(20);
         end;
       end;
-    end
+      continue;
+    end;
     { CVars }
-    else if (IsAtStart('register_cvar', eString)) and (not IsRecursive) then begin
+    if (IsAtStart('register_cvar', eString)) and (not IsRecursive) then begin
       if Between(eString, '"', '"') <> '' then
         Result.CVars.AddObject(Between(eBackup, '"', '"'), TObject(i));
-    end
+      continue;
+    end;
     { Defined }
-    else if (IsAtStart('#define', eString)) then begin
+    if (IsAtStart('#define', eString)) then begin
       eString := Copy(eString, 8, Length(eString));
       eString := Trim(eString);
       Result.CallTips.Add(eString + '-> ' + FileName);
@@ -181,13 +192,15 @@ begin
         eString := Copy(eString, 1, Pos('	', eString) - 1);
       Result.Defined.AddObject(eString, TObject(i));
       Result.AutoComplete.Add(eString);
-    end
+      continue;
+    end;
     { Events (Part 1) }
-    else if (IsAtStart('register_event(', eString)) and (not IsRecursive) then begin
+    if (IsAtStart('register_event(', eString)) and (not IsRecursive) then begin
       if CountChars(eBackup, '"') >= 4 then begin
         eTemp := StringReplace(eBackup, '"' + Between(eBackup, '"', '"') + '"', '', []);
         ePreEvents.Add(Between(eBackup, '"', '"'));
       end;
+      continue;
     end;
 
     { Functions (1), this is adapted from AMXX-Edit v2 [see TextAnalyze.pas] }

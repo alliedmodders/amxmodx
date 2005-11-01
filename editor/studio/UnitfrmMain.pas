@@ -2854,8 +2854,10 @@ end;
 procedure TfrmMain.jviCodeItemValueChanged(Sender: TObject;
   Item: TJvCustomInspectorItem);
 begin
-  if GetCurrLang.Name = 'Pawn' then
+  if GetCurrLang.Name = 'Pawn' then begin
+    eCILine := sciEditor.GetCurrentLineNumber;
     RebuildLine;
+  end;
 end;
 
 procedure TfrmMain.mnuRestoreBackupClick(Sender: TObject);

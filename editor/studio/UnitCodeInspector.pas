@@ -371,11 +371,6 @@ end;
 
 procedure UpdateCI(eLine: Integer);
 begin
-  if eCILine <> -1 then begin
-    eCILine := eLine;
-    exit;
-  end;
-
   if not Plugin_UpdateCodeInspector(GetCurrLang.Name, ActiveDoc.FileName, frmMain.tsMain.Items[frmMain.tsMain.ActiveTabIndex].Caption, True) then exit;
 
   if GetCurrLang.Name = 'Pawn' then begin

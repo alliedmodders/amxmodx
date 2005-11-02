@@ -240,7 +240,7 @@ begin
     if (frbDedicatedServer.Checked) or (frbStandaloneServer.Checked) then begin
       jspInstallProgress.Show;
       ChosenMod := modNone;
-      ePath := GetModPathName(lstMods.Items[lstMods.ItemIndex]);
+      ePath := LowerCase(GetModPathName(lstMods.Items[lstMods.ItemIndex]));
       // ask for additional mods...
       if (ePath = 'cstrike') or (ePath = 'czero') then begin
         if MessageBox(Handle, 'Install Counter-Strike addon?', PChar(Application.Title), MB_ICONQUESTION + MB_YESNO) = mrYes then

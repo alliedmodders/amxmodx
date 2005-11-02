@@ -52,14 +52,14 @@ end;
 
 function ParseCodePawn(eCode: TStringList; FileName: string; IsRecursive: Boolean = False): TPawnParseResult;
 var i, k: integer;
-  eString, eTemp, eBackup: string;
-  eStr, ePreEvents: TStringList;
-  eStartLine, eBracesOpen: Integer;
-  eTimeToSleep: Integer;
-  eAddingEnum: Integer;
-  eTempResult: TPawnParseResult;
-  eProcedureAdded: Boolean;
-  eCActive: Boolean;
+    eString, eTemp, eBackup: string;
+    eStr, ePreEvents: TStringList;
+    eStartLine, eBracesOpen: Integer;
+    eTimeToSleep: Integer;
+    eAddingEnum: Integer;
+    eTempResult: TPawnParseResult;
+    eProcedureAdded: Boolean;
+    eCActive: Boolean;
 begin
   Result := TPawnParseResult.Create;
   if not IsRecursive then

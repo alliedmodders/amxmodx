@@ -631,7 +631,9 @@ begin
   frmAutoIndent.chkIndentOpeningBrace.Checked := eConfig.ReadBool('Editor', 'IndentOpeningBrace', True);
   frmAutoIndent.chkUnindentPressingClosingBrace.Checked := eConfig.ReadBool('Editor', 'UnindentClosingBrace', True);
   frmAutoIndent.chkUnindentLine.Checked := eConfig.ReadBool('Editor', 'UnindentEmptyLine', False);
-
+  frmSettings.chkAUDisable.Checked := eConfig.ReadString('Editor', 'AutoDisable', '1500') <> '-1';
+  if eConfig.ReadString('Editor', 'AutoDisable', '1500') <> '-1' then
+    frmSettings.txtAUDisable.Text := eConfig.ReadString('Editor', 'AutoDisable', '1500');
   if foldFold in frmMain.sciEditor.Folding then begin
     case frmMain.sciEditor.FoldMarkerType of
       sciMarkArrows: frmSettings.cboCodeFolding.ItemIndex := 0;

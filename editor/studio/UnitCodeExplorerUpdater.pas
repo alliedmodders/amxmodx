@@ -21,6 +21,8 @@ type
     eCode: TStringList;
 
     eAutoComplete, eCallTips, eKeywords: string;
+    eLastActive: Integer;
+    eActive: Integer;
   protected
     procedure Execute; override;
     procedure GetCode;
@@ -37,6 +39,16 @@ uses UnitfrmMain, UnitLanguages, UnitMainTools, UnitCodeUtils,
 { TCodeExplorerUpdater }
 
 procedure TCodeExplorerUpdater.Execute;
+function CheckAU: Boolean;
+begin
+  Result := True;
+  if (eLastActive = eActive) and (frmSettings.chkAUDisable.Checked) then begin
+    if frmMain.sciEditor.Lines.Count > StrToIntDef(frmSettings.txtAUDisable.Text, 1500) then
+      Result := False;
+  end;
+  eLastActive := eActive;
+end;
+
 var eStr: TStringList;
 begin
   eCode := TStringList.Create;
@@ -59,9 +71,9 @@ begin
     eKeywords := '';
 
     if (not Application.Terminated) and (Started) and (not frmMain.pnlLoading.Visible) and (frmMain.trvExplorer.Visible) then begin
-      if Plugin_UpdateCodeExplorer(GetCurrLang.Name, ActiveDoc.FileName, frmMain.tsMain.Items[frmMain.tsMain.ActiveTabIndex].Caption, True) then begin
+      if (Plugin_UpdateCodeExplorer(GetCurrLang.Name, ActiveDoc.FileName, frmMain.tsMain.Items[frmMain.tsMain.ActiveTabIndex].Caption, True)) and (frmMain.tsMain.ActiveTabIndex = 0) then begin
         try
-          if (frmMain.tsMain.ActiveTabIndex = 0) then begin
+          if CheckAU then begin
             if Plugin_UpdateCodeExplorer(GetCurrLang.Name, ActiveDoc.FileName, frmMain.tsMain.Items[frmMain.tsMain.ActiveTabIndex].Caption, True) then begin
               // analyze code
               with ParseCodePawn(eCode, ExtractFileName(ActiveDoc.FileName)) do begin
@@ -114,6 +126,7 @@ end;
 procedure TCodeExplorerUpdater.GetCode;
 begin
   eCode.Assign(frmMain.sciEditor.Lines);
+  eActive := ActiveDoc.Index;
 end;
 
 function GetNode(eText: string): TTreeNode;

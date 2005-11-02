@@ -61,7 +61,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 353
     Height = 260
-    ActivePage = jspHighlighter
+    ActivePage = jspCTSettings
     PropagateEnable = False
     Align = alClient
     OnChange = jplSettingsChange
@@ -1669,6 +1669,31 @@ object frmSettings: TfrmSettings
           ColorFlat = clWhite
           TabOrder = 1
         end
+      end
+      object chkAUDisable: TFlatCheckBox
+        Left = 8
+        Top = 166
+        Width = 297
+        Height = 17
+        Caption = 'Disable Auto-Update if plugin has more than               lines'
+        TabOrder = 2
+        TabStop = True
+      end
+      object txtAUDisable: TFlatEdit
+        Left = 238
+        Top = 166
+        Width = 37
+        Height = 16
+        ColorFlat = clWhite
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -8
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 3
+        Text = '1500'
+        OnExit = txtAUDisableExit
       end
     end
     object lblCurrSetting: TLabel

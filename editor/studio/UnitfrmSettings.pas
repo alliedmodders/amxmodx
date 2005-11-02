@@ -193,6 +193,8 @@ type
     chkMakeBaks: TFlatCheckBox;
     chkDisableAC: TFlatCheckBox;
     chkDisableCT: TFlatCheckBox;
+    chkAUDisable: TFlatCheckBox;
+    txtAUDisable: TFlatEdit;
     procedure jplSettingsChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -255,6 +257,7 @@ type
       Shift: TShiftState);
     procedure cboFontChange(Sender: TObject);
     procedure cmdBrowseLangDirClick(Sender: TObject);
+    procedure txtAUDisableExit(Sender: TObject);
   public
     Foreground, Background: TColor;
     CaretFore, CaretBack: TColor;
@@ -1000,6 +1003,12 @@ var eStr: String;
 begin
   if SelectDirectory(lSelectLanguageDir, ExtractFilePath(txtLangDir.Text), eStr) then
     txtLangDir.Text := eStr;
+end;
+
+procedure TfrmSettings.txtAUDisableExit(Sender: TObject);
+begin
+  if not IsNumeric(txtAUDisable.Text) then
+    txtAUDisable.Text := '1500';
 end;
 
 end.

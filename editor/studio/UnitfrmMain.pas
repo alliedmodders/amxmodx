@@ -553,7 +553,11 @@ begin
     eConfig.WriteBool('Editor', 'UnindentClosingBrace', frmAutoIndent.chkUnindentPressingClosingBrace.Checked);
     eConfig.WriteBool('Editor', 'UnindentEmptyLine', frmAutoIndent.chkUnindentLine.Checked);
     eConfig.WriteBool('Editor', 'Disable_AC', frmSettings.chkDisableAC.Checked);
-    eConfig.WriteBool('Editor', 'Disable_CT', frmSettings.chkDisableCT.Checked); 
+    eConfig.WriteBool('Editor', 'Disable_CT', frmSettings.chkDisableCT.Checked);
+    if frmSettings.chkAUDisable.Checked then
+      eConfig.WriteString('Editor', 'AutoDisable', frmSettings.txtAUDisable.Text)
+    else
+      eConfig.WriteString('Editor', 'AutoDisable', '-1');
     { Editor }
     if FileExists(sciPropertyLoader.FileName) then
       sciPropertyLoader.Save;

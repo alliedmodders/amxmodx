@@ -54,6 +54,7 @@ var eCILine: Integer;
     FItems: TObjectList;
     STLItem: TSelectionTextList;
     eStock: Boolean;
+    eUpdating: Boolean;
 
 implementation
 
@@ -371,12 +372,15 @@ end;
 
 procedure UpdateCI(eLine: Integer);
 begin
+  if eUpdating then exit;
+  eUpdating := True;
   if not Plugin_UpdateCodeInspector(GetCurrLang.Name, ActiveDoc.FileName, frmMain.tsMain.Items[frmMain.tsMain.ActiveTabIndex].Caption, True) then exit;
 
   if GetCurrLang.Name = 'Pawn' then begin
     UpdateCI_Pawn(eLine);
     Plugin_UpdateCodeInspector(GetCurrLang.Name, ActiveDoc.FileName, frmMain.tsMain.Items[frmMain.tsMain.ActiveTabIndex].Caption, False);
   end;
+  eUpdating := False;
 end;
 
 procedure UpdateCI_Pawn(eLine: Integer);
@@ -387,6 +391,7 @@ var eCurrLine, eBackupLine: string;
   eVarCount, eConstCount: Integer;
   eFound: Boolean;
 begin
+  eCILine := eLine;
   eBackupLine := frmMain.sciEditor.Lines[eLine];
   // Prevent parse errors
   eBackupLine := StringReplace(eBackupLine, #1, '', [rfReplaceAll]);
@@ -576,9 +581,7 @@ begin
     eStr.Free;
     frmMain.jviCode.EndUpdate;
     if eLine <> eCILine then
-      UpdateCI_Pawn(eLine)
-    else
-      eCILine := -1;
+      UpdateCI_Pawn(eLine);
     exit;
   end;
   { Return }
@@ -598,9 +601,7 @@ begin
     eStr.Free;
     frmMain.jviCode.EndUpdate;
     if eLine <> eCILine then
-      UpdateCI_Pawn(eLine)
-    else
-      eCILine := -1;
+      UpdateCI_Pawn(eLine);
     exit;
   end;
   { For-Loop }
@@ -639,9 +640,7 @@ begin
     eStr.Free;
     frmMain.jviCode.EndUpdate;
     if eLine <> eCILine then
-      UpdateCI_Pawn(eLine)
-    else
-      eCILine := -1;
+      UpdateCI_Pawn(eLine);
     exit;
   end;
   { While-Loops }
@@ -689,9 +688,7 @@ begin
     eStr.Free;
     frmMain.jviCode.EndUpdate;
     if eLine <> eCILine then
-      UpdateCI_Pawn(eLine)
-    else
-      eCILine := -1;
+      UpdateCI_Pawn(eLine);
     exit;
   end;
 
@@ -779,9 +776,7 @@ begin
     eStr.Free;
     frmMain.jviCode.EndUpdate;
     if eLine <> eCILine then
-      UpdateCI_Pawn(eLine)
-    else
-      eCILine := -1;
+      UpdateCI_Pawn(eLine);
     exit;
   end
   else if (Pos('(', eCurrLine) <> Pos(')', eCurrLine)) and (Assignment(eBackupLine) = '') then begin // Function Call
@@ -896,9 +891,7 @@ begin
     eStr2.Free;
     frmMain.jviCode.EndUpdate;
     if eLine <> eCILine then
-      UpdateCI_Pawn(eLine)
-    else
-      eCILine := -1;
+      UpdateCI_Pawn(eLine);
     exit;
   end
   { Assignment }
@@ -922,9 +915,7 @@ begin
     eStr.Free;
     frmMain.jviCode.EndUpdate;
     if eLine <> eCILine then
-      UpdateCI_Pawn(eLine)
-    else
-      eCILine := -1;
+      UpdateCI_Pawn(eLine);
     exit;
   end;
 
@@ -934,9 +925,7 @@ begin
   frmMain.jviCode.EndUpdate;
 
   if eLine <> eCILine then
-    UpdateCI_Pawn(eLine)
-  else
-    eCILine := -1;
+    UpdateCI_Pawn(eLine);
 end;
 
 { TSTLWrapper }
@@ -1153,7 +1142,8 @@ begin
 
   if Trim(eLine) <> '' then
     frmMain.sciEditor.Lines[eCILine] := eLine;
-//  UpdateCI(eCILine);
+  frmMain.mnuModified.Caption := lModified;
+  ActiveDoc.Modified := True;
 end;
 
 initialization

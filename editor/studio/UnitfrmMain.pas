@@ -1323,7 +1323,7 @@ begin
   case tsMain.ActiveTabIndex of
     0: Collection := PawnProjects;
     1: Collection := CPPProjects;
-  else Collection := OtherProjects;
+    else Collection := OtherProjects;
   end;
 
   frmAllFilesForm.Caption := lCloseAllCaption1;
@@ -2847,17 +2847,18 @@ end;
 
 procedure TfrmMain.trvExplorerClick(Sender: TObject);
 begin
-  if Assigned(trvExplorer.Selected) then
+  if Assigned(trvExplorer.Selected) then begin
+    if trvExplorer.Selected.ImageIndex >= 42 then exit;
+
     UpdateCI(Integer(trvExplorer.Selected.Data));
+  end;
 end;
 
 procedure TfrmMain.jviCodeItemValueChanged(Sender: TObject;
   Item: TJvCustomInspectorItem);
 begin
-  if GetCurrLang.Name = 'Pawn' then begin
-    eCILine := sciEditor.GetCurrentLineNumber;
+  if GetCurrLang.Name = 'Pawn' then
     RebuildLine;
-  end;
 end;
 
 procedure TfrmMain.mnuRestoreBackupClick(Sender: TObject);

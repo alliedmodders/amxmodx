@@ -61,7 +61,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 353
     Height = 260
-    ActivePage = jspCTSettings
+    ActivePage = jspFTP
     PropagateEnable = False
     Align = alClient
     OnChange = jplSettingsChange
@@ -107,7 +107,7 @@ object frmSettings: TfrmSettings
         Height = 21
         Style = csDropDownList
         Color = clWindow
-        ItemHeight = 13
+        ItemHeight = 0
         TabOrder = 0
         ItemIndex = -1
         OnChange = cboLanguageChange
@@ -1077,21 +1077,21 @@ object frmSettings: TfrmSettings
       Caption = 'Settings'
       object lblFTPData: TLabel
         Left = 8
-        Top = 6
+        Top = 26
         Width = 48
         Height = 13
         Caption = 'FTP Data:'
       end
       object lblDefaultDirectory: TLabel
-        Left = 10
-        Top = 94
+        Left = 8
+        Top = 108
         Width = 282
         Height = 13
         Caption = 'Plesae select the AMX Mod X directory on your FTP server:'
       end
       object pnlFTPData: TPanel
         Left = 6
-        Top = 22
+        Top = 42
         Width = 339
         Height = 63
         BevelOuter = bvLowered
@@ -1186,30 +1186,30 @@ object frmSettings: TfrmSettings
       end
       object pnlDefaultPath: TPanel
         Left = 8
-        Top = 110
+        Top = 124
         Width = 339
-        Height = 119
+        Height = 105
         BevelOuter = bvLowered
         TabOrder = 1
         object lblDefaultDir: TLabel
           Left = 4
-          Top = 96
+          Top = 84
           Width = 104
           Height = 13
           Caption = 'AMX Mod X Directory:'
         end
         object pnlDirectory: TPanel
           Left = 4
-          Top = 4
+          Top = 6
           Width = 331
-          Height = 85
+          Height = 71
           BevelOuter = bvLowered
           TabOrder = 0
           object trvDirectories: TTreeView
             Left = 1
             Top = 1
             Width = 329
-            Height = 83
+            Height = 69
             Align = alClient
             BorderStyle = bsNone
             Images = ilImages
@@ -1223,7 +1223,7 @@ object frmSettings: TfrmSettings
         end
         object txtDefaultDir: TFlatEdit
           Left = 112
-          Top = 94
+          Top = 82
           Width = 223
           Height = 19
           ColorFlat = clWhite

@@ -145,7 +145,6 @@ var i, eIndex: integer;
 begin
  if Output.Count > 1 then begin
     eIndex := frmMain.lstOutput.ItemIndex;
-    frmMain.lstOutput.Items.BeginUpdate;
     frmMain.lstOutput.Items.Clear;
     if Finished then begin
       for i := 0 to Output.Count -1 do
@@ -155,7 +154,6 @@ begin
       for i := 0 to Output.Count -2 do
         ProcessItem(Output[i]);
     end;
-    frmMain.lstOutput.Items.EndUpdate;
     frmMain.lstOutput.ItemIndex := eIndex;
     frmMain.Repaint;
     Application.ProcessMessages;

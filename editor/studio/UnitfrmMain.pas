@@ -1919,6 +1919,7 @@ begin
   except
     Screen.Cursor := crDefault;
     MessageBox(Handle, PChar(lFailedUpdatePluginsIni), PChar(Application.Title), MB_ICONERROR);
+    exit;
   end;
 
   eFound := False;
@@ -1953,6 +1954,7 @@ begin
   except
     Screen.Cursor := crDefault;
     MessageBox(Handle, PChar(lFailedUpdatePluginsIni), PChar(Application.Title), MB_ICONERROR);
+    exit;
   end;
   Screen.Cursor := crDefault;
 end;

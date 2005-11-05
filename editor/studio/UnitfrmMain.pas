@@ -1535,7 +1535,6 @@ begin
                       exit;
                     end;
                   end;
-                  eSavedFiles.Add(eItem.FileName);
                 end;
               end;
             end;
@@ -1560,7 +1559,6 @@ begin
                       exit;
                     end;
                   end;
-                  eSavedFiles.Add(eItem.FileName);
                 end;
               end;
             end;
@@ -1585,7 +1583,6 @@ begin
                       exit;
                     end;
                   end;
-                  eSavedFiles.Add(eItem.FileName);
                 end;
               end;
             end;
@@ -1601,21 +1598,20 @@ begin
   end
   else
     Application.Terminate;
-
-  if eSavedFiles.Count = 0 then begin
-    for i := 0 to PawnProjects.Count - 1 do begin
-      if (not TDocument(PawnProjects.Items[i]).Untitled) then
-        eSavedFiles.Add(TDocument(PawnProjects.Items[i]).FileName);
-    end;
-    for i := 0 to CPPProjects.Count - 1 do begin
-      if (not TDocument(CPPProjects.Items[i]).Untitled) then
-        eSavedFiles.Add(TDocument(CPPProjects.Items[i]).FileName);
-    end;
-    for i := 0 to OtherProjects.Count - 1 do begin
-      if (not TDocument(OtherProjects.Items[i]).Untitled) then
-        eSavedFiles.Add(TDocument(OtherProjects.Items[i]).FileName);
-    end;
+    
+  for i := 0 to PawnProjects.Count - 1 do begin
+    if (not TDocument(PawnProjects.Items[i]).Untitled) then
+      eSavedFiles.Add(TDocument(PawnProjects.Items[i]).FileName);
   end;
+  for i := 0 to CPPProjects.Count - 1 do begin
+    if (not TDocument(CPPProjects.Items[i]).Untitled) then
+      eSavedFiles.Add(TDocument(CPPProjects.Items[i]).FileName);
+  end;
+  for i := 0 to OtherProjects.Count - 1 do begin
+    if (not TDocument(OtherProjects.Items[i]).Untitled) then
+      eSavedFiles.Add(TDocument(OtherProjects.Items[i]).FileName);
+  end;
+
   eSavedFiles.SaveToFile(ExtractFilePath(ParamStr(0)) + 'config\Cache.cfg');
   eSavedFiles.Free;
 

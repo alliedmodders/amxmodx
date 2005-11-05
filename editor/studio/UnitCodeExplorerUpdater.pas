@@ -155,7 +155,7 @@ var exConstants, exDefined, exIncluded, exMethods, exDefault, exEvents,
   eSelected: Integer;
 begin
   if Application.Terminated then exit;
-  if frmMain.trvExplorer.Items.Count = 0 then exit;
+  if (frmMain.trvExplorer.Items.Count = 0) or (eActive <> ActiveDoc.Index) then exit;
 
   if Assigned(frmMain.trvExplorer.Selected) then
     eSelected := frmMain.trvExplorer.Selected.AbsoluteIndex

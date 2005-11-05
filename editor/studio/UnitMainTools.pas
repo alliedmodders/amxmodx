@@ -19,6 +19,9 @@ type TDocument = class(TCollectionItem)
     FTitle: String;
     FModified: Boolean;
     FNotesText: String;
+    FAutoCompleteItems: String;
+    FKeywords: String;
+    FCallTips: String;
     procedure SetFileName(const Value: String);
   published
     property FileName: String read FFileName write SetFileName;
@@ -31,6 +34,9 @@ type TDocument = class(TCollectionItem)
     property TopLine: Integer read FTopLine write FTopLine;
     property Modified: Boolean read FModified write FModified;
     property NotesText: String read FNotesText write FNotesText;
+    property Keywords: String read FKeywords write FKeywords;
+    property CallTips: String read FCallTips write FCallTips;
+    property AutoCompleteItems: String read FAutoCompleteItems write FAutoCompleteItems;
   public
     constructor Create(ACollection: TCollection; AHighlighter: String); reintroduce;
     destructor Destroy; reintroduce;
@@ -963,6 +969,9 @@ begin
     ActiveDoc.TopLine := frmMain.sciEditor.GetFirstVisibleLine;
     ActiveDoc.Modified := frmMain.sciEditor.Modified;
     ActiveDoc.NotesText := GetRTFText(frmMain.rtfNotes);
+    ActiveDoc.Keywords := TSciKeywords(TSciLangItem(frmMain.sciEditor.LanguageManager.LanguageList.Find('Pawn').Keywords.Items[1])).Keywords.Text;
+    ActiveDoc.CallTips := frmMain.sciCallTips.ApiStrings.Text;
+    ActiveDoc.AutoCompleteItems := frmMain.sciAutoComplete.AStrings.Text;
   end;
   { Other }
   ActiveDoc := Document; // one global for save...
@@ -983,6 +992,10 @@ begin
   
   frmMain.sciEditor.SetText(PChar(Document.Code));
   SetRTFText(frmMain.rtfNotes, Document.NotesText);
+  TSciKeywords(TSciLangItem(frmMain.sciEditor.LanguageManager.LanguageList.Find('Pawn').Keywords.Items[1])).Keywords.Text := ActiveDoc.Keywords;
+  frmMain.sciCallTips.ApiStrings.Text := ActiveDoc.CallTips;
+  frmMain.sciAutoComplete.AStrings.Text := ActiveDoc.AutoCompleteItems;
+  frmMain.sciEditor.LanguageManager.Update;
   frmMain.sciEditor.ReadOnly := Document.ReadOnly;
   
   if Document.Modified then

@@ -2,7 +2,7 @@ object frmMain: TfrmMain
   Left = 257
   Top = 302
   Width = 888
-  Height = 641
+  Height = 646
   Caption = 'AMXX-Studio'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -661,7 +661,7 @@ object frmMain: TfrmMain
     Left = 0
     Top = 72
     Width = 880
-    Height = 519
+    Height = 524
     Align = alClient
     ActiveTabIndex = 0
     TabPosition = ttpBottom
@@ -692,7 +692,7 @@ object frmMain: TfrmMain
       Left = 0
       Top = 0
       Width = 880
-      Height = 496
+      Height = 501
       Align = alClient
       ActiveTabIndex = 0
       ThemeType = tttTBX
@@ -708,33 +708,33 @@ object frmMain: TfrmMain
         Left = 0
         Top = 23
         Width = 3
-        Height = 473
+        Height = 478
         Align = alLeft
       end
       object spcRight1: TImage
         Left = 877
         Top = 23
         Width = 3
-        Height = 473
+        Height = 478
         Align = alRight
       end
       object splRight: TSplitter
         Left = 669
         Top = 23
-        Height = 473
+        Height = 478
         Align = alRight
       end
       object pnlParent: TPanel
         Left = 3
         Top = 23
         Width = 666
-        Height = 473
+        Height = 478
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 1
         object splOutput: TSplitter
           Left = 0
-          Top = 388
+          Top = 393
           Width = 666
           Height = 3
           Cursor = crVSplit
@@ -745,7 +745,7 @@ object frmMain: TfrmMain
           Left = 0
           Top = 0
           Width = 666
-          Height = 388
+          Height = 393
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -4238,7 +4238,7 @@ object frmMain: TfrmMain
         end
         object lstOutput: TListBox
           Left = 0
-          Top = 391
+          Top = 396
           Width = 666
           Height = 82
           Align = alBottom
@@ -4303,7 +4303,7 @@ object frmMain: TfrmMain
         Left = 672
         Top = 23
         Width = 205
-        Height = 473
+        Height = 478
         Align = alRight
         ActiveTabIndex = 0
         TabPosition = ttpBottom
@@ -4325,7 +4325,7 @@ object frmMain: TfrmMain
           Left = 0
           Top = 0
           Width = 205
-          Height = 450
+          Height = 455
           Caption = 'Notes'
           ImageIndex = -1
           TabItem = 'tiNotes'
@@ -4333,12 +4333,12 @@ object frmMain: TfrmMain
             Left = 202
             Top = 26
             Width = 1
-            Height = 422
+            Height = 427
             Align = alRight
           end
           object imgBottom4: TImage
             Left = 2
-            Top = 448
+            Top = 453
             Width = 201
             Height = 2
             Align = alBottom
@@ -4354,7 +4354,7 @@ object frmMain: TfrmMain
             Left = 2
             Top = 26
             Width = 1
-            Height = 422
+            Height = 427
             Align = alLeft
           end
           object tbxNotes: TSpTBXToolbar
@@ -4400,7 +4400,7 @@ object frmMain: TfrmMain
             Left = 3
             Top = 26
             Width = 199
-            Height = 422
+            Height = 427
             Align = alClient
             TabOrder = 1
             OnKeyDown = rtfNotesKeyDown
@@ -4411,13 +4411,13 @@ object frmMain: TfrmMain
           Left = 0
           Top = 0
           Width = 205
-          Height = 450
+          Height = 455
           Caption = 'Code-Tools'
           ImageIndex = -1
           TabItem = 'tiTools'
           object spcBottom2: TImage
             Left = 2
-            Top = 448
+            Top = 453
             Width = 201
             Height = 2
             Align = alBottom
@@ -4426,21 +4426,21 @@ object frmMain: TfrmMain
             Left = 2
             Top = 2
             Width = 3
-            Height = 446
+            Height = 451
             Align = alLeft
           end
           object spcRight2: TImage
             Left = 200
             Top = 2
             Width = 3
-            Height = 446
+            Height = 451
             Align = alRight
           end
           object pnlDock: TSpTBXMultiDock
             Left = 5
             Top = 2
             Width = 195
-            Height = 446
+            Height = 451
             Position = dpxClient
             object pnlCodeExplorer: TSpTBXDockablePanel
               Left = 0
@@ -4454,7 +4454,7 @@ object frmMain: TfrmMain
                 Left = 0
                 Top = 26
                 Width = 191
-                Height = 185
+                Height = 188
                 Align = alClient
                 Images = ilImages
                 Indent = 19
@@ -4483,17 +4483,17 @@ object frmMain: TfrmMain
             end
             object pnlCodeInspector: TSpTBXDockablePanel
               Left = 0
-              Top = 215
+              Top = 218
               Caption = 'Code-Inspector'
               DockedWidth = 191
-              DockPos = 215
+              DockPos = 218
               TabOrder = 1
               OnVisibleChanged = pnlCodeInspectorVisibleChanged
               object jviCode: TJvInspector
                 Left = 0
                 Top = 26
                 Width = 191
-                Height = 185
+                Height = 187
                 Align = alClient
                 Divider = 110
                 ItemHeight = 16
@@ -4508,7 +4508,7 @@ object frmMain: TfrmMain
   end
   object sbStatus: TSpTBXStatusBar
     Left = 0
-    Top = 591
+    Top = 596
     Width = 880
     Height = 23
     object mnuFilename: TSpTBXRightAlignSpacerItem

@@ -344,7 +344,7 @@ begin
     eStr.Add('public ShowMenu' + frmMenuGenerator.txtMenuName.Text + '(id, position) {');
     if frmMenuGenerator.chkAddComment.Checked then
       eStr.Add('	// Menu stuff //');
-    eStr.Add('	if (position < 0) { return 0; }');
+    eStr.Add('	if (position < 0) { return 0 }-/*');
     eStr.Add('	');
     eStr.Add('	new i, k');
     eStr.Add('	new MenuBody[255]');
@@ -397,7 +397,7 @@ begin
     eStr.Add('	else {');
     eStr.Add('		format(MenuBody[Len], (255-Len), "^n%s", position ? "\w' + eBackText + '" : "\w' + eExitText + '")');
     eStr.Add('	}');
-    eStr.Add('	show_menu(id, Keys, MenuBody, -1)');
+    eStr.Add('	show_menu(id, Keys, MenuBody, -1, "' + frmMenuGenerator.txtMenuName.Text + '")');
     eStr.Add('	return 0');
     eStr.Add('}');
     eStr.Add('');

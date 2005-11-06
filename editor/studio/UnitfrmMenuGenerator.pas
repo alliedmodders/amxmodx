@@ -148,8 +148,12 @@ end;
 
 procedure TfrmMenuGenerator.cmdBackClick(Sender: TObject);
 begin
-  jplMain.ActivePageIndex := 0;
-  lblState.Caption := 'Menu Generator';
+  if jplMain.ActivePage = jspOldMenuAdd2 then
+    jplMain.ActivePage := jspOldMenuAdd1
+  else begin
+    jplMain.ActivePageIndex := 0;
+    lblState.Caption := 'Menu Generator';
+  end;
 end;
 
 procedure TfrmMenuGenerator.cmdNextClick(Sender: TObject);
@@ -239,7 +243,8 @@ begin
 end;
 
 procedure TfrmMenuGenerator.cmdOldNext1Click(Sender: TObject);
-var i: integer;
+var i, k: integer;
+    a, b: integer;
 begin
   if Trim(rtfMenu.Text) = '' then begin
     MessageBox(Handle, 'The menu is empty!', PChar(Application.Title), MB_ICONERROR);
@@ -250,6 +255,28 @@ begin
   for i := 0 to rtfMenu.Lines.Count -1 do begin
     if IsNumeric(Copy(rtfMenu.Lines[i], 1, 1)) then
       txtKeys.Text := txtKeys.Text + rtfMenu.Lines[i][1];
+    if lblHelp.Visible then begin
+      try
+        if Pos('$players(', LowerCase(rtfMenu.Lines[i])) = 1 then begin
+          a := StrToInt(Trim(Between(rtfMenu.Lines[i], '$players(', ',')));
+          b := StrToInt(Trim(Between(rtfMenu.Lines[i], '$players(' + IntToStr(a) + ',', ',')));
+          for k := a to b do
+            txtKeys.Text := txtKeys.Text + IntToStr(k);
+        end;
+        
+        if Pos('$next(', LowerCase(rtfMenu.Lines[i])) = 1 then begin
+          a := StrToInt(Trim(Between(rtfMenu.Lines[i], '$next(', ',')));
+          txtKeys.Text := txtKeys.Text + IntToStr(a);
+        end;
+
+        if Pos('$exitorback(', LowerCase(rtfMenu.Lines[i])) = 1 then begin
+          a := StrToInt(Trim(Between(rtfMenu.Lines[i], '$exitorback(', ',')));
+          txtKeys.Text := txtKeys.Text + IntToStr(a);
+        end;
+      except
+        MessageBox(Handle, PChar('Invalid menu.'), PChar(Application.Title), MB_ICONERROR);
+      end;
+    end;
   end;
   jplMain.ActivePageIndex := 3;
 end;
@@ -287,7 +314,13 @@ begin
     rtfMenu.SelText := 'Kick player' + #13 + #13;
     rtfMenu.SelStart := Length(rtfMenu.Lines.Text);
     rtfMenu.SelAttributes.Color := clWhite;
-    rtfMenu.SelText := '$players(1,8,%n. %v)' + #13 + '$next(9,9. Next)' + '$exitorback(0,0. Exit,0. Back)';
+    rtfMenu.SelText := #13 + '$players(1,8,%n. %v)';
+    rtfMenu.SelStart := Length(rtfMenu.Lines.Text);
+    rtfMenu.SelAttributes.Color := clWhite;
+    rtfMenu.SelText := #13 + #13 + '$next(9,9. Next)';
+    rtfMenu.SelStart := Length(rtfMenu.Lines.Text);
+    rtfMenu.SelAttributes.Color := clWhite;
+    rtfMenu.SelText := #13 + '$exitorback(0,0. Exit,0. Back)';
     rtfMenu.SelStart := 0;
   end;
 end;

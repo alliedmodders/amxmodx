@@ -75,11 +75,16 @@ begin
 
   for i := 0 to eCode.Count - 1 do begin
     if (Application.Terminated) or (not Started) or (frmMain.pnlLoading.Visible) or (not frmMain.trvExplorer.Visible) then exit;
+    if Pos('get_user_button', eCode[i]) <> 0 then
+      eCActive := eCActive;
 
     eString := RemoveStringsAndComments(Trim(eCode[i]), True, True);
     if (Pos('/*', eString) = 1) or (Pos('*/', eString) <> 0) then begin
       eCActive := (Pos('/*', eString) = 1);
-      continue;
+      if Pos('*/', eString) < Pos('/*', eString) then
+        continue
+      else
+        eCActive := False;
     end;
     if eCActive then
       continue;
@@ -123,8 +128,8 @@ begin
           end;
         end;
         eString := RemoveStringsAndComments(Trim(eCode[i]), True, True);
+        continue;
       end;
-      continue;
     end;
     { Included }
     if (IsAtStart('#include', eBackup)) then begin

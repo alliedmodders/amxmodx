@@ -1854,6 +1854,9 @@ static cell AMX_NATIVE_CALL get_players(AMX *amx, cell *params) /* 4 param */
 
 static cell AMX_NATIVE_CALL find_player(AMX *amx, cell *params) /* 1 param */
 {
+	typedef int (*STRCOMPARE)(const char*, const char*);
+	STRCOMPARE func;
+
 	int ilen, userid = 0;
 	char* sptemp = get_amxstring(amx, params[1], 0, ilen);
 	int flags = UTIL_ReadFlags(sptemp);
@@ -1865,6 +1868,12 @@ static cell AMX_NATIVE_CALL find_player(AMX *amx, cell *params) /* 1 param */
 	
 	// a b c d e f g h i j k l
 	int result = 0;
+
+	// Switch for the l flag
+	if (flags & 2048)
+		func = stricmp;
+	else
+		func = strcmp;
 	
 	for (int i = 1; i <= gpGlobals->maxClients; ++i)
 	{
@@ -1880,12 +1889,7 @@ static cell AMX_NATIVE_CALL find_player(AMX *amx, cell *params) /* 1 param */
 			
 			if (flags & 1)
 			{
-				if (flags & 2048)
-				{
-					if (stricmp(pPlayer->name.c_str(), sptemp))
-						continue;
-				}
-				else if (strcmp(pPlayer->name.c_str(), sptemp))
+				if ((func)(pPlayer->name.c_str(), sptemp))
 					continue;
 			}
 			
@@ -1903,7 +1907,8 @@ static cell AMX_NATIVE_CALL find_player(AMX *amx, cell *params) /* 1 param */
 			if (flags & 4)
 			{
 				const char* authid = GETPLAYERAUTHID(pPlayer->pEdict);
-				if (!authid || strcmp(authid, sptemp))
+				
+				if (!authid || (func)(authid, sptemp))
 					continue;
 			}
 			
@@ -1921,12 +1926,7 @@ static cell AMX_NATIVE_CALL find_player(AMX *amx, cell *params) /* 1 param */
 			
 			if (flags & 16)
 			{
-				if (flags & 2048)
-				{
-					if (stricmp(pPlayer->team.c_str(), sptemp))
-						continue;
-				}
-				else if (strcmp(pPlayer->team.c_str(), sptemp))
+				if ((func)(pPlayer->team.c_str(), sptemp))
 					continue;
 			}
 			

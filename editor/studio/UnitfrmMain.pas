@@ -1489,7 +1489,7 @@ begin
   else
     eRoot.Expand(False);
   { Other Projects }
-  eRoot := frmClose.trvFiles.Items.Add(nil, tsMain.Items[1].Caption);
+  eRoot := frmClose.trvFiles.Items.Add(nil, tsMain.Items[2].Caption);
   for i := 0 to OtherProjects.Count - 1 do begin
     if TDocument(OtherProjects.Items[i]).Modified then
       frmClose.trvFiles.Items.AddChild(eRoot, IntToStr(i + 1) + '. ' + ExtractFileName(TDocument(OtherProjects.Items[i]).FileName));
@@ -1992,6 +1992,7 @@ begin
         eStr[i] := '"' + eStr[i] + '^n" +';
     end;
     frmMOTDGen.txtMOTD.Lines.Assign(eStr);
+    frmMOTDGen.lblLength.Caption := 'Length: ' + IntToStr(Length(eStr.Text));
     eStr.Destroy;
 
     frmMOTDGen.ShowModal;

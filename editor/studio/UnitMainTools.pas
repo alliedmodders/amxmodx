@@ -1093,8 +1093,8 @@ begin
   if Count = 0 then
     Add('', '');
 
-  if (AIndex < Count) then
-    Activate(AIndex, True, False)
+  if (AIndex -1 < Count) and (AIndex <> 0) then
+    Activate(AIndex -1, True, False)
   else
     Activate(0, True, False);
 end;

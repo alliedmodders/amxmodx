@@ -11,6 +11,7 @@ type
     txtMOTD: TmxFlatMemo;
     cmdClose: TSpTBXButton;
     cmdCopy: TSpTBXButton;
+    lblLength: TLabel;
     procedure cmdCopyClick(Sender: TObject);
   end;
 

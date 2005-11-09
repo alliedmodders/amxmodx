@@ -1871,7 +1871,7 @@ static cell AMX_NATIVE_CALL find_player(AMX *amx, cell *params) /* 1 param */
 
 	// Switch for the l flag
 	if (flags & 2048)
-		func = stricmp;
+		func = strcasecmp;
 	else
 		func = strcmp;
 	

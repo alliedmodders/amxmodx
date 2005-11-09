@@ -3,7 +3,7 @@ unit UnitfrmMOTDGen;
 interface
 
 uses
-  SysUtils, Windows, Messages, Classes, Graphics, Controls,
+  SysUtils, Windows, Messages, Classes, Graphics, Controls, ClipBrd,
   StdCtrls, ExtCtrls, Forms, mxFlatControls, TBXDkPanels, SpTBXDkPanels;
 
 type
@@ -23,8 +23,7 @@ implementation
 
 procedure TfrmMOTDGen.cmdCopyClick(Sender: TObject);
 begin
-  txtMOTD.CopyToClipboard;
-  txtMOTD.CopyToClipboard;
+  Clipboard.SetTextBuf(txtMOTD.Lines.GetText); 
 end;
 
 end.

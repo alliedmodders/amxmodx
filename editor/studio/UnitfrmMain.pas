@@ -690,7 +690,7 @@ begin
   case tsMain.ActiveTabIndex of
     0: Collection := PawnProjects; // Pawn
     1: Collection := CPPProjects; // C++
-  else Collection := OtherProjects; // Other
+    else Collection := OtherProjects; // Other
   end;
   Collection.Activate(ItemIndex, True);
 end;
@@ -869,7 +869,7 @@ begin
   if not Plugin_CreateNewFile(NEW_OTHER_HTML, True) then exit;
 
   if tsMain.ActiveTabIndex <> 2 then
-    ActivateProjects(2, False);
+    ActivateProjects(2, True);
 
   OtherProjects.Activate(OtherProjects.Add('', 'HTML'), True);
   sciEditor.Lines.Add('<html>');
@@ -1984,8 +1984,13 @@ begin
   if (GetCurrLang.Name = 'HTML') then begin
     eStr := TStringList.Create;
     eStr.Text := StringReplace(sciEditor.Lines.Text, #9, '', [rfReplaceAll]);
-    for i := 0 to eStr.Count - 1 do
-      eStr[i] := '"' + eStr[i] + '\n" +';
+    eStr.Text := StringReplace(sciEditor.Lines.Text, '"', '^"', [rfReplaceAll]);
+    for i := 0 to eStr.Count -1 do begin
+      if i = eStr.Count -1 then
+        eStr[i] := '"' + eStr[i] + '"'
+      else
+        eStr[i] := '"' + eStr[i] + '^n" +';
+    end;
     frmMOTDGen.txtMOTD.Lines.Assign(eStr);
     eStr.Destroy;
 

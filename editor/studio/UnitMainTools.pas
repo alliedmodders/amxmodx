@@ -579,7 +579,6 @@ begin
     Started := False; // dont run this command twice
     frmMain.tsMain.Items[Index].Checked := True; // select tab
     CurrProjects := Index;
-    Started := True;
 
     tsDocuments.Items.Clear;
     for i := 0 to Collection.Count -1 do begin
@@ -588,6 +587,7 @@ begin
       TabItem.OnSelect := frmMain.OnTabSelect;
       tsDocuments.Items.Add(TabItem);
     end;
+    Started := True;
     
     if JumpToLastDoc then begin
       Started := False;

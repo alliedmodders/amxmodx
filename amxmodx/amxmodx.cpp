@@ -809,13 +809,7 @@ static cell AMX_NATIVE_CALL get_user_weapon(AMX *amx, cell *params) /* 3 param *
 	if (pPlayer->ingame)
 	{
 		int wpn = pPlayer->current;
-		
-		if (!(pPlayer->pEdict->v.weapons & (1<<wpn)))
-		{
-			pPlayer->current = 0;
-			return 0;
-		}
-		
+
 		cell *cpTemp = get_amxaddr(amx, params[2]);
 		*cpTemp = pPlayer->weapons[wpn].clip;
 		cpTemp = get_amxaddr(amx, params[3]);

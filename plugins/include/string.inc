@@ -139,3 +139,31 @@ stock bool:is_str_num(sString[])
     } while (i++ < len);
     return true;
 }
+
+/* It is basically strbreak but you have a delimiter that is more than one character in length.
+   You pass the Input string, the Left output, the max length of the left output,
+   the right output , the max right length, and then the delimiter string.
+   By Suicid3
+*/
+stock split(szInput[] , szLeft[] , pL_Max , szRight[] , pR_Max , szDelim[])
+{
+    new iEnd = contain(szInput , szDelim);
+    new iStart = iEnd + strlen(szDelim);
+
+    //If delimiter isnt in Input just split the string at max lengths
+    if(iEnd == -1)
+    {
+        iStart = copy(szLeft , pL_Max , szInput);
+        copy(szRight , pR_Max , szInput[iStart]);
+        return;
+    }
+
+    //If delimter is in Input then split at input for max lengths
+    if(pL_Max >= iEnd)
+        copy(szLeft , iEnd , szInput);
+    else
+        copy(szLeft , pL_Max , szInput);
+
+    copy(szRightt , pR_Max , szInput[iStart]);
+    return;
+}

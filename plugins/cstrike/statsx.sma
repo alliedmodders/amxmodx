@@ -1059,7 +1059,9 @@ public cmdReport(id)
 	new iWeapon, iClip, iAmmo, iHealth, iArmor
 	
 	iWeapon = get_user_weapon(id, iClip, iAmmo) 
-	xmod_get_wpnname(iWeapon, t_sWpn, MAX_WEAPON_LENGTH)
+	
+	if (iWeapon != 0)
+		xmod_get_wpnname(iWeapon, t_sWpn, MAX_WEAPON_LENGTH)
 	
 	iHealth = get_user_health(id) 
 	iArmor = get_user_armor(id)

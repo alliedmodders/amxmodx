@@ -520,7 +520,7 @@ static cell AMX_NATIVE_CALL set_user_footsteps(AMX *amx, cell *params) // set_us
 }
 
 // SidLuke
-static cell AMX_NATIVE_CALL strip_user_weapons(AMX *amx, cell *params) { // index 
+static cell AMX_NATIVE_CALL strip_user_weapons(AMX *amx, cell *params) { // index
 	CHECK_PLAYER(params[1]);
 
 	edict_t* pPlayer = MF_GetPlayerEdict(params[1]);
@@ -562,7 +562,9 @@ static cell AMX_NATIVE_CALL strip_user_weapons(AMX *amx, cell *params) { // inde
 	REMOVE_ENTITY(pent);
 	REMOVE_ENTITY(pent2);
 
-	return 1; 
+	pPlayer->v.weapons = 0;
+
+	return 1;
 }
 
 AMX_NATIVE_INFO fun_Exports[] = {

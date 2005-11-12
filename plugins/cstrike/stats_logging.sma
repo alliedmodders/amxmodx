@@ -37,6 +37,7 @@
 
 new g_pingSum[33]
 new g_pingCount[33]
+new g_inGame[33]
 
 public plugin_init()
 {
@@ -45,6 +46,11 @@ public plugin_init()
 
 public client_disconnect(id)
 {
+	if (!g_inGame[id])
+		return
+		
+	g_inGame[id] = 0
+	
 	if (is_user_bot(id))
 	{
 		return
@@ -78,11 +84,19 @@ public client_disconnect(id)
 	log_message("^"%s<%d><%s><%s>^" triggered ^"latency^" (ping ^"%d^")", szName, iUserid, szAuthid, szTeam, (g_pingSum[id] / (g_pingCount[id] ? g_pingCount[id] : 1)))
 }
 
+public client_connect(id)
+{
+	g_inGame[id] = 0
+}
+
 public client_putinserver(id)
 {
+	g_inGame[id] = 1
 	if (!is_user_bot(id))
 	{
 		g_pingSum[id] = g_pingCount[id] = 0
+		if (task_exists(id))
+			remove_task(id)
 		set_task(19.5, "getPing", id, "", 0, "b")
 	}
 }

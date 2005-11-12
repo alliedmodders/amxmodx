@@ -44,7 +44,7 @@ begin
     Result := ExtractFilePath(frmSettings.txtPawnCompilerPath.Text) + eInput + '.inc'
   else if FileExists(ExtractFilePath(frmSettings.txtPawnCompilerPath.Text) + 'include\' + eInput + '.inc') then
     Result := ExtractFilePath(frmSettings.txtPawnCompilerPath.Text) + 'include\' + eInput + '.inc'
-  else if (FileExists(ExtractFilePath(ActiveDoc.FileName) + eInput + '.inc')) and (not ActiveDoc.Modified) then
+  else if (FileExists(ExtractFilePath(ActiveDoc.FileName) + eInput + '.inc')) then
     Result := ExtractFilePath(ActiveDoc.FileName) + eInput + '.inc'
   else
     Result := '';
@@ -75,21 +75,20 @@ begin
 
   for i := 0 to eCode.Count - 1 do begin
     if (Application.Terminated) or (not Started) or (frmMain.pnlLoading.Visible) or (not frmMain.trvExplorer.Visible) then exit;
-    if Pos('get_user_button', eCode[i]) <> 0 then
-      eCActive := eCActive;
 
+    eBackup := Trim(eCode[i]);
     eString := RemoveStringsAndComments(Trim(eCode[i]), True, True);
-    if (Pos('/*', eString) = 1) or (Pos('*/', eString) <> 0) then begin
-      eCActive := (Pos('/*', eString) = 1);
-      if Pos('*/', eString) < Pos('/*', eString) then
-        continue
-      else
+    if (Pos('/*', eBackup) = 1) or (Pos('*/', eBackup) <> 0) then begin
+      eCActive := (Pos('/*', eBackup) = 1);
+      if (eCActive) and (Pos('*/', eBackup) <> 0) then begin
         eCActive := False;
+        continue
+      end;
     end;
-    if eCActive then
+    if (eBackup = '') or (Pos('//', eBackup) = 1) or (eCActive) then
       continue;
-    
-    eBackup := Trim(eCode[i]);  
+      
+
     eProcedureAdded := False;
     Inc(eTimeToSleep, 1);
 

@@ -143,6 +143,7 @@ begin
     frmMain.pbLoading.Position := i;
     SetProgressStatus('Indenting Code...');
     eStr[i] := RemoveStringsAndComments(eStr[i], True, True);
+    eStr[i] := LowerCase(Trim(eStr[i]));
   end;
 
   for i := 0 to eStr.Count -1 do begin
@@ -173,15 +174,8 @@ begin
           eTempIndent := eTempIndent +1;
       end;
     end
-    else if (IsAtStart('else', eStr[i], False)) and (Pos('{', eStr[i]) = 0) then begin
-      eString := eStr[i];
-      Delete(eString, 1, 4);
-      if eString[1] <> Trim(eString)[1] then begin
-        eString := Trim(eString);
-        if GetMatchingBrace(eString) = Length(eString) then
-          eTempIndent := eTempIndent +1;
-      end;
-    end
+    else if (eStr[i] = 'else') or (Pos('else if', eStr[i]) = 1) and (Pos('{', eStr[i]) = 0) then
+        eTempIndent := eTempIndent +1
     else if (Pos('{', eStr[i]) = 0) and (Length(eStr[i]) > 6) then begin
       if (IsAtStart('stock', eStr[i], False)) or (IsAtStart('while', eStr[i], True)) then begin
         eString := eStr[i];

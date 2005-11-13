@@ -93,6 +93,7 @@ extern AMX_NATIVE_INFO vault_Natives[];
 	typedef HINSTANCE DLHANDLE;
 #else
 	typedef void* DLHANDLE;
+	#define INFINITE 0xFFFFFFFF
 #endif
 
 #ifndef GETPLAYERAUTHID

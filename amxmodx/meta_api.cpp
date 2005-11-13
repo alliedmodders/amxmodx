@@ -716,6 +716,14 @@ void C_ClientCommand(edict_t *pEntity)
 
 		if (pPlayer->keys &	bit_key)
 		{
+			if (gpGlobals->time > pPlayer->menuexpire)
+			{
+				pPlayer->menu = 0;
+				pPlayer->keys = 0;
+
+				RETURN_META(MRES_SUPERCEDE);
+			}
+			
 			int menuid = pPlayer->menu;
 			pPlayer->menu = 0;
 

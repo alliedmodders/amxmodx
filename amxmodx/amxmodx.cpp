@@ -920,11 +920,17 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 		for (int i = 1; i <= gpGlobals->maxClients; ++i)
 		{
 			CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
-			
+
 			if (pPlayer->ingame)
 			{
 				pPlayer->keys = keys;
 				pPlayer->menu = menuid;
+				
+				if (time == -1)
+					pPlayer->menuexpire = INFINITE;
+				else
+					pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
+				
 				pPlayer->newmenu = -1;
 				pPlayer->page = 0;
 				UTIL_ShowMenu(pPlayer->pEdict, keys, time, sMenu, ilen);
@@ -940,11 +946,17 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 		}
 		
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
-		
+
 		if (pPlayer->ingame)
 		{
 			pPlayer->keys = keys;
 			pPlayer->menu = menuid;
+			
+			if (time == -1)
+				pPlayer->menuexpire = INFINITE;
+			else
+				pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
+			
 			pPlayer->newmenu = -1;
 			pPlayer->page = 0;
 			UTIL_ShowMenu(pPlayer->pEdict, keys, time, sMenu, ilen);
@@ -2416,8 +2428,18 @@ static cell AMX_NATIVE_CALL get_user_menu(AMX *amx, cell *params) /* 3 param */
 	
 	if (pPlayer->ingame)
 	{
+		if (gpGlobals->time > pPlayer->menuexpire)
+		{
+			pPlayer->menu = 0;
+			*cpMenu = 0;
+			*cpKeys = 0;
+			
+			return 0;
+		}
+
 		*cpMenu = pPlayer->menu;
 		*cpKeys = pPlayer->keys;
+		
 		return 1;
 	}
 	

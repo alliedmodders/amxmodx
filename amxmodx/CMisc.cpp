@@ -48,6 +48,7 @@ void CPlayer::Init(edict_t* e, int i)
 	aiming = 0;
 	menu = 0;
 	keys = 0;
+	menuexpire = 0.0;
 
 	death_weapon.clear();
 	name.clear();

@@ -89,6 +89,7 @@ public:
 	
 	float time;
 	float playtime;
+	float menuexpire;
 	
 	struct
 	{

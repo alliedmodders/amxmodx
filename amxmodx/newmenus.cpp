@@ -351,9 +351,13 @@ static cell AMX_NATIVE_CALL menu_items(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 {
 	GETMENU(params[2]);
-
+	
 	int player = params[1];
 	int page = params[3];
+	CPlayer* pPlayer = GET_PLAYER_POINTER_I(player);
+	
+	// This will set the expire time of the menu to infinite
+	pPlayer->menuexpire = INFINITE;
 
 	return pMenu->Display(player, page);
 }

@@ -1199,6 +1199,8 @@ begin
     with sciSearchReplace do begin
       SearchBackwards := frmReplace.chkBackward.Checked;
       SearchCaseSensitive := frmReplace.chkCaseSensivity.Checked;
+      if (frmReplace.chkReplaceAll.Checked) and (LowerCase(frmReplace.cboSearchFor.Text) = LowerCase(frmReplace.cboReplaceWith.Text)) then
+        SearchCaseSensitive := True;
       SearchFromCaret := frmReplace.chkSearchFromCaret.Checked;
       SearchSelectionOnly := frmReplace.chkSelectedTextOnly.Checked;
       SearchWholeWords := frmReplace.chkWholeWordsOnly.Checked;

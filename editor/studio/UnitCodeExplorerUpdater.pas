@@ -169,47 +169,47 @@ begin
 
   // Get Expanded-State and delete children
     with GetNode('Constants') do begin
-      exConstants := Expanded;
+      exConstants := (Expanded) and (Count <> 0);
       DeleteChildren;
     end;
     with GetNode('CVars') do begin
-      exCVars := Expanded;
+      exCVars := (Expanded) and (Count <> 0);
       DeleteChildren;
     end;
     with GetNode('Defined') do begin
-      exDefined := Expanded;
+      exDefined := (Expanded) and (Count <> 0);
       DeleteChildren;
     end;
     with GetNode('Included') do begin
-      exIncluded := Expanded;
+      exIncluded := (Expanded) and (Count <> 0);
       DeleteChildren;
     end;
     with GetNode('Default') do begin
-      exDefault := Expanded;
+      exDefault := (Expanded) and (Count <> 0);
       DeleteChildren;
     end;
     with GetNode('Events') do begin
-      exEvents := Expanded;
+      exEvents := (Expanded) and (Count <> 0);
       DeleteChildren;
     end;
     with GetNode('Stocks') do begin
-      exStocks := Expanded;
+      exStocks := (Expanded) and (Count <> 0);
       DeleteChildren;
     end;
     with GetNode('Methods') do begin
-      exMethods := Expanded;
+      exMethods := (Expanded) and (Count <> 0);
       DeleteChildren;
     end;
     with GetNode('Natives') do begin
-      exNatives := Expanded;
+      exNatives := (Expanded) and (Count <> 0);
       DeleteChildren;
     end;
     with GetNode('Forwards') do begin
-      exForwards := Expanded;
+      exForwards := (Expanded) and (Count <> 0);
       DeleteChildren;
     end;
     with GetNode('Variables') do begin
-      exVariables := Expanded;
+      exVariables := (Expanded) and (Count <> 0);
       DeleteChildren;
     end;
   // Create new children

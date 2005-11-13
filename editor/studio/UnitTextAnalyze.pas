@@ -279,6 +279,12 @@ begin
           if Pos('(', eTemp) <> 0 then
             eTemp := Copy(eTemp, 1, Pos('(', eTemp) - 1);
           eTemp := Trim(eTemp);
+          
+          if (Result.AutoComplete.IndexOf(eTemp) <> -1) then begin
+            eStartLine := -1;
+            eBracesOpen := 0;
+            continue;
+          end;
 
           if k < 5 then begin
             Result.AutoComplete.Add(eTemp);

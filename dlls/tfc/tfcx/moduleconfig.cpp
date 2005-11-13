@@ -55,8 +55,8 @@ int gmsgAmmoPickup;
 int mState;
 int mPlayerIndex;
 
-int g_death_info;
-int g_damage_info;
+int g_death_info = -1;
+int g_damage_info = -1;
 
 RankSystem g_rank;
 Grenades g_grenades;
@@ -164,7 +164,9 @@ void ServerDeactivate() {
 	// clear custom weapons info
 	for ( i=TFCMAX_WEAPONS-TFCMAX_CUSTOMWPNS;i<TFCMAX_WEAPONS;i++)
 		weaponData[i].ammoSlot = false;
-
+	
+	g_grenades.clear();
+	
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -352,5 +354,5 @@ void OnAmxxAttach() {
 void OnPluginsLoaded()
 {
 	g_damage_info = MF_RegisterForward("client_damage", ET_IGNORE, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
-	g_damage_info = MF_RegisterForward("client_death", ET_IGNORE, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	g_death_info = MF_RegisterForward("client_death", ET_IGNORE, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 }

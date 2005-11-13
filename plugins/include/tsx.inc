@@ -59,3 +59,18 @@ native xmod_get_stats_size();
 native xmod_is_custom_wpn(wpnindex);
 
 /************* Shared Natives End ********************************/
+
+/* Spawns a Weapon */
+stock ts_weaponspawn(weaponid[], duration[], extraclip[], spawnflags[], Float:Origin[3])
+{
+	new ent = create_entity("ts_groundweapon");
+
+	DispatchKeyValue(ent, "tsweaponid", weaponid);
+	DispatchKeyValue(ent, "wduration", duration);
+	DispatchKeyValue(ent, "wextraclip", extraclip);
+	DispatchKeyValue(ent, "spawnflags", spawnflags);
+	DispatchSpawn(ent);
+
+	entity_set_origin(ent, Origin);
+	return PLUGIN_HANDLED;
+}

@@ -66,7 +66,7 @@ public:
 		return ret; 	 
 	}
 
-	String(String &src) 
+	String(const String &src) 
 	{
 		v = NULL;
 		a_size = 0;
@@ -148,13 +148,13 @@ public:
 
 	int find(const char c, int index = 0)
 	{
-		size_t len = size();
+		int len = static_cast<int>(size());
 		if (len < 1)
 			return npos;
-		if (index >= (int)len || index < 0)
+		if (index >= len || index < 0)
 			return npos;
-		unsigned int i = 0;
-		for (i=index; i<(int)len; i++)
+		int i = 0;
+		for (i=index; i<len; i++)
 		{
 			if (v[i] == c)
 			{
@@ -247,7 +247,7 @@ public:
 		unsigned int i = 0;
 		size_t len = size();
 		//check for bounds
-		if (num == npos || start+num > len-num+1)
+		if (num == npos || start+num > len-start)
 			num = len - start;
 		//do the erasing
 		bool copyflag = false;
@@ -297,7 +297,7 @@ public:
 			num = len - index;
 		}
 
-		unsigned int i = 0, j=0;
+		unsigned int i = 0;
 		unsigned int nslen = num + 2;
 
 		ns.Grow(nslen);

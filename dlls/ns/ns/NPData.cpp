@@ -228,6 +228,9 @@ static cell AMX_NATIVE_CALL ns_set_weap_reserve(AMX *amx, cell *params)
 	case WEAPON_LMG:
 		set_private(player->edict,OFFSET_WIN_AMMO_LMG,OFFSET_LIN_AMMO_LMG,(int)params[3]);
 		return 1;
+	case WEAPON_SHOTGUN: 
+		set_private(player->edict,OFFSET_WIN_AMMO_SHOTGUN,OFFSET_LIN_AMMO_SHOTGUN,(int)params[3]); 
+		return 1;
 	case WEAPON_HMG:
 		set_private(player->edict,OFFSET_WIN_AMMO_HMG,OFFSET_LIN_AMMO_HMG,(int)params[3]);
 		return 1;

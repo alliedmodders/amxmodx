@@ -716,7 +716,7 @@ void C_ClientCommand(edict_t *pEntity)
 
 		if (pPlayer->keys &	bit_key)
 		{
-			if ((pPlayer->menu > 0) && (gpGlobals->time > pPlayer->menuexpire))
+			if ((pPlayer->menu > 0 && !pPlayer->vgui) && (gpGlobals->time > pPlayer->menuexpire))
 			{
 				pPlayer->menu = 0;
 				pPlayer->keys = 0;

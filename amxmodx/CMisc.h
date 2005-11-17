@@ -86,7 +86,8 @@ public:
 	bool ingame;
 	bool bot;
 	bool authorized;
-	
+	bool vgui;	
+
 	float time;
 	float playtime;
 	float menuexpire;

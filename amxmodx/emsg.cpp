@@ -59,6 +59,8 @@ void Client_VGUIMenu(void* mValue)
 {
 	if (!mPlayer) return;
 
+	mPlayer->vgui = true;
+
 	switch (mState++)
 	{
 		case 0:
@@ -72,7 +74,9 @@ void Client_VGUIMenu(void* mValue)
 void Client_ShowMenu(void* mValue)
 {
 	if (!mPlayer) return;
-	
+
+	mPlayer->vgui = true;
+
 	switch (mState++)
 	{
 		case 0:

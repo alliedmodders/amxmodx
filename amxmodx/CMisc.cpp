@@ -90,6 +90,7 @@ bool CPlayer::Connect(const char* connectname, const char* ipaddress)
 	time = gpGlobals->time;
 	bot = IsBot();
 	death_killer = 0;
+	menu = 0;
 	
 	memset(flags, 0, sizeof(flags));
 	memset(weapons, 0, sizeof(weapons));

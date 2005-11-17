@@ -127,17 +127,15 @@ native strfind(const string[], const sub[], ignorecase=0, pos=0);
 /* Compares two strings with the C function strcmp().  Returns 0 on equal. */
 native strcmp(const string1[], const string2[], ignorecase=0);
 
-// tests if given string contains only digits
+/* Tests if given string contains only digits */
 stock bool:is_str_num(sString[])
 {
-    new i = 0, len = strlen(sString);
-    
-    do
-    {
-        if (!isdigit(sString[i]))
-            return false;
-    } while (i++ < len);
-    return true;
+	new i = 0;
+	
+	while (sString[i] && isdigit(sString[i])
+		++i;
+	
+	return sString[i] == 0 && i != 0;
 }
 
 /* It is basically strbreak but you have a delimiter that is more than one character in length.

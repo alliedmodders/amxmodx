@@ -681,10 +681,6 @@ loadSettings(filename[])
 // JGHG
 public fn_setautobuy(id)
 {
-	// Don't do anything if no items are blocked.
-	if (!g_AliasBlockNum)
-		return PLUGIN_CONTINUE
-
 	// Empty user's autobuy prefs. (unnecessary?)
 	g_Autobuy[id][0] = '^0'
 
@@ -703,16 +699,21 @@ public fn_setautobuy(id)
 			autobuyLen += format(g_Autobuy[id][autobuyLen], AUTOBUYLENGTH - autobuyLen, " ")
 	}
 
-	// Strip any blocked items
-	new strippedItems[AUTOBUYLENGTH + 1]
+	if (g_AliasBlockNum)
+	{
+		// Strip any blocked items
+		new strippedItems[AUTOBUYLENGTH + 1]
 	
-	if (!StripBlockedItems(g_Autobuy[id], strippedItems))
-		return PLUGIN_CONTINUE				// don't touch anything if we didn't strip anything...
+		if (!StripBlockedItems(g_Autobuy[id], strippedItems))
+			return PLUGIN_CONTINUE				// don't touch anything if we didn't strip anything...
 
-	//server_print("Stripped items: ^"%s^"", strippedItems)
-	engclient_cmd(id, "cl_setautobuy", strippedItems)
+		//server_print("Stripped items: ^"%s^"", strippedItems)
+		engclient_cmd(id, "cl_setautobuy", strippedItems)
+
+		return PLUGIN_HANDLED
+	}
 	
-	return PLUGIN_HANDLED
+	return PLUGIN_CONTINUE
 }
 
 // Returns true if this strips any items, else false.
@@ -724,9 +725,9 @@ StripBlockedItems(inString[AUTOBUYLENGTH + 1], outString[AUTOBUYLENGTH + 1])
 	// Then strip those that are blocked.
 	for (new i = 0; i < g_AliasBlockNum; i++)
 	{
-		while (contain(outString, g_Aliases[g_AliasBlock[i]]) != -1)
+		while (containi(outString, g_Aliases[g_AliasBlock[i]]) != -1)
 			replace(outString, AUTOBUYLENGTH, g_Aliases[g_AliasBlock[i]], "")
-		while (contain(outString, g_Aliases2[g_AliasBlock[i]]) != -1)
+		while (containi(outString, g_Aliases2[g_AliasBlock[i]]) != -1)
 			replace(outString, AUTOBUYLENGTH, g_Aliases2[g_AliasBlock[i]], "")
 	}
 

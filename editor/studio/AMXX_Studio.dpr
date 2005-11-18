@@ -37,7 +37,9 @@ uses
   UnitfrmConnGen in 'UnitfrmConnGen.pas' {frmConnGen},
   UnitPlugins in 'UnitPlugins.pas',
   UnitfrmIRCPaster in 'UnitfrmIRCPaster.pas' {frmIRCPaster},
-  MyEditFileClasses in 'MyEditFileClasses.pas';
+  MyEditFileClasses in 'MyEditFileClasses.pas',
+  UnitfrmParamEdit in 'UnitfrmParamEdit.pas' {frmParamEdit},
+  UnitACCheck in 'UnitACCheck.pas';
 
 { Used components:
   - JVCL 3.0
@@ -67,6 +69,7 @@ begin
   Application.CreateForm(TfrmMain, frmMain);
   Application.CreateForm(TfrmAutoIndent, frmAutoIndent);
   Application.CreateForm(TfrmSettings, frmSettings);
+  Application.CreateForm(TfrmParamEdit, frmParamEdit);
   Application.OnMessage := frmMain.OnMessage;
   Application.OnShortCut := frmMain.OnShortCut;
   frmMain.sciEditor.Lines[5] := '#define PLUGIN "' + frmSettings.txtDefaultName.Text + '"';

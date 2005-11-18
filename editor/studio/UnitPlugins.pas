@@ -57,6 +57,7 @@ type TLoadInfo = record
   hSelectColor: HWND;
   hSettings: HWND;
   hSocketsTerminal: HWND;
+  hParamEdit: HWND;
   { Important Control Handles }
   hOutput: HWND;
   hCodeExplorer: HWND;
@@ -248,7 +249,8 @@ uses UnitfrmSettings, UnitMainTools, UnitfrmAllFilesForm,
   UnitfrmReplace, UnitfrmSearch, UnitfrmSelectColor,
   UnitfrmSocketsTerminal, UnitLanguages,UnitCodeExplorerUpdater,
   UnitCodeInspector, UnitCodeSnippets, UnitCodeUtils, UnitCompile,
-  UnitfrmIRCPaster, UnitMenuGenerators, UnitReadThread, UnitTextAnalyze;
+  UnitfrmIRCPaster, UnitMenuGenerators, UnitReadThread, UnitTextAnalyze,
+  UnitfrmParamEdit;
 
 function LoadPlugin(ListItem: TListItem): Boolean;
 var eLoadInfo: TLoadInfo;
@@ -280,6 +282,7 @@ begin
     hSelectColor := frmSelectColor.Handle;
     hSettings := frmSettings.Handle;
     hSocketsTerminal := frmSocketsTerminal.Handle;
+    hParamEdit := frmParamEdit.Handle;
     { Important Control Handles }
     hOutput := frmMain.lstOutput.Handle;
     hCodeExplorer := frmMain.trvExplorer.Handle;

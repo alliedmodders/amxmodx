@@ -668,6 +668,7 @@ begin
   frmSettings.chkDisableCT.Checked := eConfig.ReadBool('Editor', 'Disable_CT', False);
   frmMain.sciAutoComplete.Disabled := frmSettings.chkDisableAC.Checked;
   frmMain.sciCallTips.Disabled := frmSettings.chkDisableCT.Checked;
+  frmSettings.chkAutoHideCT.Checked := eConfig.ReadBool('Editor', 'AutoHideCT', True);
   { Shortcuts }
 	frmSettings.lvShortcuts.Items.BeginUpdate;
 	try

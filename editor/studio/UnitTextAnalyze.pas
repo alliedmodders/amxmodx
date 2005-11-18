@@ -189,7 +189,7 @@ begin
     if (IsAtStart('#define', eString)) then begin
       eString := Copy(eString, 8, Length(eString));
       eString := Trim(eString);
-      Result.CallTips.Add(eString + '-> ' + FileName);
+      Result.CallTips.Add(eString + '-> ' + FileName + ', defined constant');
       if Pos(#32, eString) <> 0 then
         eString := Copy(eString, 1, Pos(#32, eString) - 1);
       if Pos('	', eString) <> 0 then
@@ -273,8 +273,15 @@ begin
           if Pos('operator', eTemp) = 1 then
             k := 6;
 
-          if k < 5 then
-            Result.CallTips.Add(eTemp + '-> ' + FileName);
+          if k < 5 then begin
+            case k of
+              0: Result.CallTips.Add(eTemp + '-> ' + FileName + ', function');
+              1: Result.CallTips.Add(eTemp + '-> ' + FileName + ', public function');
+              2: Result.CallTips.Add(eTemp + '-> ' + FileName + ', stock');
+              3: Result.CallTips.Add(eTemp + '-> ' + FileName + ', native');
+              4: Result.CallTips.Add(eTemp + '-> ' + FileName + ', forward');
+            end;
+          end;
         // Copy function-name
           if Pos('(', eTemp) <> 0 then
             eTemp := Copy(eTemp, 1, Pos('(', eTemp) - 1);
@@ -354,7 +361,7 @@ begin
           Delete(eTemp, 1, Pos(':', eTemp));
 
         if (Pos('enum', eTemp) = Pos('operator', eTemp)) and (Pos('enum', eTemp) = 0) then
-          Result.CallTips.Add(eTemp + '-> ' + FileName);
+          Result.CallTips.Add(eTemp + '-> ' + FileName + ', ' + Trim(Copy(eString, 1, Pos(#32, eString) -1)));
 
         // Copy function-name
         if Pos('(', eTemp) <> 0 then

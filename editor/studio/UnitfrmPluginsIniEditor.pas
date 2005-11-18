@@ -95,7 +95,7 @@ function RemComments(eLine: String): String;
 var a, b: integer;
 begin
   if Length(eLine) > 0 then begin
-    b := 0;
+    b := Length(eLine) +1;
     for a := 1 to Length(eLine) -1 do begin
       if (eLine[a] = ';') or (eLine[a] = '/') then begin
         b := a;

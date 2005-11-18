@@ -4,7 +4,7 @@ object frmSettings: TfrmSettings
   BorderStyle = bsDialog
   Caption = 'AMXX-Studio - Settings'
   ClientHeight = 297
-  ClientWidth = 488
+  ClientWidth = 504
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object frmSettings: TfrmSettings
   object trvSettings: TJvSettingsTreeView
     Left = 0
     Top = 0
-    Width = 135
+    Width = 153
     Height = 260
     AutoExpand = False
     ShowButtons = True
@@ -43,25 +43,28 @@ object frmSettings: TfrmSettings
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF040000000000000011436F6D70696C65
       722053657474696E67732C000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0500
       0000000000001348616C662D4C696665204469726563746F7279230000000100
-      000001000000FFFFFFFFFFFFFFFF0A000000020000000A436F64652D546F6F6C
+      000001000000FFFFFFFFFFFFFFFF0A000000030000000A436F64652D546F6F6C
       7321000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0A00000000000000085365
       7474696E677326000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF030000000000
-      00000D436F64652D536E6970706574731C0000000100000001000000FFFFFFFF
-      FFFFFFFF06000000020000000346545021000000FFFFFFFFFFFFFFFFFFFFFFFF
-      FFFFFFFF06000000000000000853657474696E67731E000000FFFFFFFFFFFFFF
-      FFFFFFFFFFFFFFFFFF07000000000000000550726F787921000000FFFFFFFFFF
-      FFFFFFFFFFFFFFFFFFFFFF080000000000000008506C75672D496E731D000000
-      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0900000000000000044D697363}
+      00000D436F64652D536E6970706574732B000000FFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFF0B00000000000000124175746F636F6D706C65746520436865636B1C
+      0000000100000001000000FFFFFFFFFFFFFFFF06000000020000000346545021
+      000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF06000000000000000853657474
+      696E67731E000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0700000000000000
+      0550726F787921000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF080000000000
+      000008506C75672D496E731D000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF09
+      00000000000000044D697363}
     Items.Links = {
-      0F00000000000000000000000100000002000000040000000400000005000000
-      0A0000000A000000030000000600000006000000070000000800000009000000}
+      1000000000000000000000000100000002000000040000000400000005000000
+      0A0000000A000000030000000B00000006000000060000000700000008000000
+      09000000}
   end
   object jplSettings: TJvPageList
-    Left = 135
+    Left = 153
     Top = 0
-    Width = 353
+    Width = 351
     Height = 260
-    ActivePage = jspFTP
+    ActivePage = jspCTSettings
     PropagateEnable = False
     Align = alClient
     OnChange = jplSettingsChange
@@ -69,7 +72,7 @@ object frmSettings: TfrmSettings
     object jspHighlighter: TJvStandardPage
       Left = 0
       Top = 25
-      Width = 353
+      Width = 351
       Height = 235
       Caption = 'Highlighter'
       object lblStyles: TLabel
@@ -107,7 +110,7 @@ object frmSettings: TfrmSettings
         Height = 21
         Style = csDropDownList
         Color = clWindow
-        ItemHeight = 0
+        ItemHeight = 13
         TabOrder = 0
         ItemIndex = -1
         OnChange = cboLanguageChange
@@ -352,7 +355,7 @@ object frmSettings: TfrmSettings
     object jspTools: TJvStandardPage
       Left = 0
       Top = 25
-      Width = 353
+      Width = 351
       Height = 235
       Caption = 'Tools'
       object bvlTools1: TBevel
@@ -633,7 +636,7 @@ object frmSettings: TfrmSettings
     object jspShortcuts: TJvStandardPage
       Left = 0
       Top = 25
-      Width = 353
+      Width = 351
       Height = 235
       Caption = 'Shortcuts'
       object shpShortcuts: TShape
@@ -709,7 +712,7 @@ object frmSettings: TfrmSettings
     object jspCodeSnippets: TJvStandardPage
       Left = 0
       Top = 25
-      Width = 353
+      Width = 351
       Height = 235
       Caption = 'Code-Snippets'
       object ftcCodeSnippets: TFlatTabControl
@@ -790,7 +793,7 @@ object frmSettings: TfrmSettings
     object jspCompiler: TJvStandardPage
       Left = 0
       Top = 25
-      Width = 353
+      Width = 351
       Height = 235
       Caption = 'Compiler'
       object lblPAWN: TLabel
@@ -986,7 +989,7 @@ object frmSettings: TfrmSettings
     object jspHalfLife: TJvStandardPage
       Left = 0
       Top = 25
-      Width = 353
+      Width = 351
       Height = 235
       Caption = 'Half-Life Directory'
       object pnlHLExecutable: TPanel
@@ -1072,7 +1075,7 @@ object frmSettings: TfrmSettings
     object jspFTP: TJvStandardPage
       Left = 0
       Top = 25
-      Width = 353
+      Width = 351
       Height = 235
       Caption = 'Settings'
       object lblFTPData: TLabel
@@ -1235,7 +1238,7 @@ object frmSettings: TfrmSettings
     object jspProxy: TJvStandardPage
       Left = 0
       Top = 25
-      Width = 353
+      Width = 351
       Height = 235
       Caption = 'Proxy'
       object pnlProxy: TPanel
@@ -1354,7 +1357,7 @@ object frmSettings: TfrmSettings
     object jspPlugIns: TJvStandardPage
       Left = 0
       Top = 25
-      Width = 353
+      Width = 351
       Height = 235
       Caption = 'Plug-Ins'
       object shpPlugins: TShape
@@ -1450,7 +1453,7 @@ object frmSettings: TfrmSettings
     object jspMisc: TJvStandardPage
       Left = 0
       Top = 25
-      Width = 353
+      Width = 351
       Height = 235
       Caption = 'Misc'
       object pnlDefaultNewPluginValues: TPanel
@@ -1570,7 +1573,7 @@ object frmSettings: TfrmSettings
     object jspCTSettings: TJvStandardPage
       Left = 0
       Top = 25
-      Width = 353
+      Width = 351
       Height = 235
       Caption = 'Settings'
       object lblCodeExplorer: TLabel
@@ -1695,11 +1698,134 @@ object frmSettings: TfrmSettings
         Text = '1500'
         OnExit = txtAUDisableExit
       end
+      object chkAutoHideCT: TFlatCheckBox
+        Left = 8
+        Top = 184
+        Width = 287
+        Height = 17
+        Caption = 'Hide calltip if function parameters have been customized'
+        TabOrder = 4
+        TabStop = True
+      end
+    end
+    object jspAutocompleteCheck: TJvStandardPage
+      Left = 0
+      Top = 25
+      Width = 351
+      Height = 235
+      Caption = 'Autocomplete Check'
+      object shpFunctions: TShape
+        Left = 6
+        Top = 32
+        Width = 121
+        Height = 175
+        Pen.Color = 8623776
+      end
+      object shpParams: TShape
+        Left = 132
+        Top = 30
+        Width = 215
+        Height = 177
+        Pen.Color = 8623776
+      end
+      object lstFunctions: TListBox
+        Left = 7
+        Top = 33
+        Width = 119
+        Height = 173
+        BorderStyle = bsNone
+        ItemHeight = 13
+        TabOrder = 1
+        OnClick = lstFunctionsClick
+      end
+      object txtSearch: TFlatEdit
+        Left = 6
+        Top = 8
+        Width = 121
+        Height = 19
+        ColorFlat = clWhite
+        TabOrder = 0
+        OnChange = txtSearchChange
+      end
+      object lvParams: TListView
+        Left = 134
+        Top = 31
+        Width = 211
+        Height = 174
+        BorderStyle = bsNone
+        Columns = <
+          item
+            Caption = 'Param'
+            Width = 45
+          end
+          item
+            Caption = 'Auto-Complete items'
+            Width = 400
+          end>
+        ColumnClick = False
+        FlatScrollBars = True
+        RowSelect = True
+        TabOrder = 2
+        ViewStyle = vsReport
+        OnDblClick = lvParamsDblClick
+      end
+      object cmdAddParam: TFlatButton
+        Left = 132
+        Top = 211
+        Width = 137
+        Height = 18
+        ColorFocused = 16245198
+        ColorDown = 16245198
+        ColorHighLight = 8623776
+        ColorShadow = 8623776
+        Caption = 'Add parameter information'
+        TabOrder = 5
+        OnClick = cmdAddParamClick
+      end
+      object cmdRemParam: TFlatButton
+        Left = 274
+        Top = 211
+        Width = 73
+        Height = 18
+        ColorFocused = 16245198
+        ColorDown = 16245198
+        ColorHighLight = 8623776
+        ColorShadow = 8623776
+        Caption = 'Delete'
+        TabOrder = 6
+        OnClick = cmdRemParamClick
+      end
+      object cmdAddFunction: TFlatButton
+        Left = 6
+        Top = 211
+        Width = 73
+        Height = 18
+        ColorFocused = 16245198
+        ColorDown = 16245198
+        ColorHighLight = 8623776
+        ColorShadow = 8623776
+        Caption = 'Add function'
+        TabOrder = 3
+        OnClick = cmdAddFunctionClick
+      end
+      object cmdRemFunction: TFlatButton
+        Left = 82
+        Top = 211
+        Width = 45
+        Height = 18
+        ColorFocused = 16245198
+        ColorDown = 16245198
+        ColorHighLight = 8623776
+        ColorShadow = 8623776
+        Caption = 'Delete'
+        TabOrder = 4
+        OnClick = cmdRemFunctionClick
+      end
     end
     object lblCurrSetting: TLabel
       Left = 0
       Top = 0
-      Width = 353
+      Width = 351
       Height = 25
       Align = alTop
       Alignment = taCenter
@@ -1716,7 +1842,7 @@ object frmSettings: TfrmSettings
   object pnlControls: TPanel
     Left = 0
     Top = 260
-    Width = 488
+    Width = 504
     Height = 37
     Align = alBottom
     BevelOuter = bvNone
@@ -1724,13 +1850,13 @@ object frmSettings: TfrmSettings
     object bvlControls: TBevel
       Left = 0
       Top = 0
-      Width = 488
+      Width = 504
       Height = 3
       Align = alTop
       Shape = bsTopLine
     end
     object cmdOK: TFlatButton
-      Left = 386
+      Left = 416
       Top = 7
       Width = 85
       Height = 25
@@ -1743,7 +1869,7 @@ object frmSettings: TfrmSettings
       TabOrder = 0
     end
     object cmdCancel: TFlatButton
-      Left = 296
+      Left = 326
       Top = 7
       Width = 85
       Height = 25

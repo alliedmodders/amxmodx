@@ -407,7 +407,7 @@ uses UnitfrmSettings, UnitMainTools, UnitLanguages, UnitfrmInfo,
   UnitfrmHudMsgGenerator, UnitCompile, UnitfrmAutoIndent,
   UnitfrmHTMLPreview, UnitCodeInspector, UnitfrmMOTDGen,
   UnitfrmMenuGenerator, UnitfrmClose, UnitPlugins, UnitfrmConnGen,
-  UnitMenuGenerators, UnitfrmIRCPaster, MyEditFileClasses;
+  UnitMenuGenerators, UnitfrmIRCPaster, MyEditFileClasses, UnitACCheck;
 
 {$R *.dfm}
 
@@ -512,6 +512,9 @@ begin
   CopyFile(PChar(ExtractFilePath(ParamStr(0)) + 'config\C++.csl'), PChar(ExtractFilePath(ParamStr(0)) + 'config\C++.bak'), False);
   CopyFile(PChar(ExtractFilePath(ParamStr(0)) + 'config\Other.csl'), PChar(ExtractFilePath(ParamStr(0)) + 'config\Other.bak'), False);
   eModified := ActiveDoc.Modified;
+  frmSettings.lstFunctions.Clear;
+  for i := 0 to eACList.Count -1 do
+    frmSettings.lstFunctions.Items.Add(TACFunction(eACList.Items[i]).Name);
 
   if frmSettings.ShowModal = mrOk then begin
     { Shortcuts }
@@ -554,6 +557,7 @@ begin
     eConfig.WriteBool('Editor', 'UnindentEmptyLine', frmAutoIndent.chkUnindentLine.Checked);
     eConfig.WriteBool('Editor', 'Disable_AC', frmSettings.chkDisableAC.Checked);
     eConfig.WriteBool('Editor', 'Disable_CT', frmSettings.chkDisableCT.Checked);
+    eConfig.WriteBool('Editor', 'AutoHideCT', frmSettings.chkAutoHideCT.Checked);
     if frmSettings.chkAUDisable.Checked then
       eConfig.WriteString('Editor', 'AutoDisable', frmSettings.txtAUDisable.Text)
     else
@@ -598,6 +602,7 @@ begin
     eConfig.WriteInteger('Misc', 'CPUSpeed', frmSettings.sldSpeed.Value);
     eConfig.WriteString('Misc', 'LangDir', frmSettings.txtLangDir.Text);
     eConfig.WriteBool('Misc', 'ShowStatusbar', frmSettings.chkShowStatusbar.Checked);
+    eACList.SaveToFile(ExtractFilePath(ParamStr(0)) + 'config\ACList.cfg');
   end
   else begin
     { Restore Code-Snippets }
@@ -607,6 +612,7 @@ begin
     CopyFile(PChar(ExtractFilePath(ParamStr(0)) + 'config\Pawn.bak'), PChar(ExtractFilePath(ParamStr(0)) + 'config\Pawn.csl'), False);
     CopyFile(PChar(ExtractFilePath(ParamStr(0)) + 'config\C++.bak'), PChar(ExtractFilePath(ParamStr(0)) + 'config\C++.csl'), False);
     CopyFile(PChar(ExtractFilePath(ParamStr(0)) + 'config\Other.bak'), PChar(ExtractFilePath(ParamStr(0)) + 'config\Other.csl'), False);
+    eACList.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'config\ACList.cfg');
   end;
 
   if mnuPawn.Checked then
@@ -1616,6 +1622,7 @@ begin
 
   eSavedFiles.SaveToFile(ExtractFilePath(ParamStr(0)) + 'config\Cache.cfg');
   eSavedFiles.Free;
+  eACList.Free;
 
   Started := False;
 end;
@@ -1884,7 +1891,7 @@ procedure TfrmMain.mnuRegisterPluginsIniWebClick(Sender: TObject);
   var a, b: integer;
   begin
     if Length(eLine) > 0 then begin
-      b := 0;
+      b := Length(eLine) +1;
       for a := 1 to Length(eLine) - 1 do begin
         if (eLine[a] = ';') or (eLine[a] = '/') then begin
           b := a;
@@ -1913,7 +1920,8 @@ begin
 
   try
     IdFTP.ChangeDir(frmSettings.txtDefaultDir.Text + 'configs/');
-    IdFTP.Get('plugins.ini', ExtractFilePath(ParamStr(0)) + 'plugins.ini');
+    IdFTP.TransferType := ftASCII;
+    IdFTP.Get('plugins.ini', ExtractFilePath(ParamStr(0)) + 'plugins.ini', True);
   except
     Screen.Cursor := crDefault;
     MessageBox(Handle, PChar(lFailedUpdatePluginsIni), PChar(Application.Title), MB_ICONERROR);
@@ -1936,6 +1944,7 @@ begin
   if eFound then begin
     Screen.Cursor := crDefault;
     MessageBox(Handle, PChar(lAlreadyRegistered), PChar(Application.Title), MB_ICONINFORMATION);
+    IdFTP.Disconnect;
     exit;
   end
   else begin
@@ -1945,7 +1954,6 @@ begin
   eStr.Free;
 
   try
-    IdFTP.TransferType := ftASCII;
     IdFTP.Put(ExtractFilePath(ParamStr(0)) + 'plugins.ini', 'plugins.ini');
     IdFTP.Disconnect;
     MessageBox(Handle, PChar(lSuccessfulRegistered), PChar(Application.Title), MB_ICONINFORMATION);
@@ -1960,7 +1968,25 @@ end;
 procedure TfrmMain.sciAutoCompleteBeforeShow(Sender: TObject;
   const Position: Integer; ListToDisplay: TStrings;
   var CancelDisplay: Boolean);
+function GetFunctionPos: Integer;
+var eStr: String;
+    i: integer;
+begin
+  Result := 0;
+  eStr := StringReplace(sciEditor.Lines[sciEditor.GetCurrentLineNumber], '^"', '', [rfReplaceAll]);
+  while Between(eStr, '"', '"') <> '' do
+    eStr := StringReplace(eStr, Between(eStr, '"', '"'), '', [rfReplaceAll]);
+  while Between(eStr, '{', '}') <> '' do
+    eStr := StringReplace(eStr, Between(eStr, '"', '"'), '', [rfReplaceAll]);
+  for i := 0 to Length(eStr) -1 do begin
+    if eStr[i] = ',' then
+      Result := Result +1;
+  end;
+end;
+
 var eCurrStyle: Integer;
+    eFunction: String;
+    i: integer;
 begin
   if not Plugin_AutoCompleteShow(ListToDisplay.GetText) then begin
     CancelDisplay := True;
@@ -1970,11 +1996,29 @@ begin
   if (Started) and (Assigned(GetStyleAt(sciEditor.SelStart))) then begin
     eCurrStyle := GetStyleAt(sciEditor.SelStart).StyleNumber;
 
-
     if (ActiveDoc.Highlighter = 'Pawn') or (ActiveDoc.Highlighter = 'C++') then begin
-      CancelDisplay := (eCurrStyle = 12) or (eCurrStyle = 1) or (eCurrStyle = 2) or (eCurrStyle = 3) or (eCurrStyle = 15);
-      CancelDisplay := (CancelDisplay) or (Pos('#', Trim(sciEditor.Lines[sciEditor.GetCurrentLineNumber])) = 1);
-      CancelDisplay := (CancelDisplay) or (IsAtStart('new', sciEditor.Lines[sciEditor.GetCurrentLineNumber], False));
+      eFunction := '';
+      for i := 0 to jviCode.Root.Count -1 do begin
+        if jviCode.Root.Items[i].DisplayName = 'Function Call' then begin
+          eFunction := jviCode.Root.Items[i].Items[0].DisplayValue;
+          break;
+        end;
+      end;
+      if eFunction <> '' then begin
+        eFunction := LowerCase(Trim(eFunction));
+        for i := 0 to eACList.Count -1 do begin
+          if eFunction = LowerCase(Trim(TACFunction(eACList.Items[i]).Name)) then begin
+            if TACFunction(eACList.Items[i]).Items.Count > GetFunctionPos then begin
+              ListToDisplay.Text := StringReplace(TACFunction(eACList.Items[i]).Items[GetFunctionPos], '; ', #13, [rfReplaceAll]);
+              break;
+            end;
+          end;
+        end;
+      end
+      else if (eCurrStyle = 11) or (eCurrStyle = 10) or (eCurrStyle = 9) or (eCurrStyle = 8) or (eCurrStyle = 5) or (eCurrStyle = 4) or (eCurrStyle = 0) or (eCurrStyle >= 34) then
+        CancelDisplay := False
+      else
+        CancelDisplay := True;
     end;
   end;
 end;
@@ -2109,8 +2153,46 @@ end;
 procedure TfrmMain.sciCallTipsBeforeShow(Sender: TObject;
   const Position: Integer; ListToDisplay: TStrings;
   var CancelDisplay: Boolean);
+function GetFunctionPos: Integer;
+var eStr: String;
+    i: integer;
+begin
+  Result := 0;
+  eStr := StringReplace(sciEditor.Lines[sciEditor.GetCurrentLineNumber], '^"', '', [rfReplaceAll]);
+  while Between(eStr, '"', '"') <> '' do
+    eStr := StringReplace(eStr, Between(eStr, '"', '"'), '', [rfReplaceAll]);
+  while Between(eStr, '{', '}') <> '' do
+    eStr := StringReplace(eStr, Between(eStr, '"', '"'), '', [rfReplaceAll]);
+  for i := 0 to Length(eStr) -1 do begin
+    if eStr[i] = ',' then
+      Result := Result +1;
+  end;
+end;
+
+var i: integer;
+    eFunction: String;
 begin
   CancelDisplay := not Plugin_CallTipShow(ListToDisplay.GetText);
+  if (frmSettings.chkAutoHideCT.Checked) and (jviCode.Root.Items[0].DisplayName = 'Function Call') then begin
+    for i := 0 to jviCode.Root.Count -1 do begin
+      if jviCode.Root.Items[i].DisplayName = 'Function Call' then begin
+        eFunction := jviCode.Root.Items[i].Items[0].DisplayValue;
+        break;
+      end;
+    end;
+    
+    if eFunction <> '' then begin
+      eFunction := LowerCase(Trim(eFunction));
+      for i := 0 to eACList.Count -1 do begin
+        if eFunction = LowerCase(Trim(TACFunction(eACList.Items[i]).Name)) then begin
+          if TACFunction(eACList.Items[i]).Items.Count > GetFunctionPos then begin
+            CancelDisplay := True;
+            break;
+          end;
+        end;
+      end;
+    end;
+  end;
 end;
 
 procedure TfrmMain.sciEditorCallTipClick(Sender: TObject;
@@ -2878,8 +2960,12 @@ begin
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
+var i: integer;
 begin
   sciEditor.StreamClass := TSciMyStream;
+  eACList := TmxJsCollection.Create(TACFunction);
+  eACList.Collectionname := 'Autocomplete_List';
+  eACList.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'config\ACList.cfg');
 end;
 
 end.

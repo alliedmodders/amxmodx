@@ -195,6 +195,17 @@ type
     chkDisableCT: TFlatCheckBox;
     chkAUDisable: TFlatCheckBox;
     txtAUDisable: TFlatEdit;
+    jspAutocompleteCheck: TJvStandardPage;
+    shpFunctions: TShape;
+    lstFunctions: TListBox;
+    txtSearch: TFlatEdit;
+    lvParams: TListView;
+    shpParams: TShape;
+    cmdAddParam: TFlatButton;
+    cmdRemParam: TFlatButton;
+    cmdAddFunction: TFlatButton;
+    cmdRemFunction: TFlatButton;
+    chkAutoHideCT: TFlatCheckBox;
     procedure jplSettingsChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -258,6 +269,13 @@ type
     procedure cboFontChange(Sender: TObject);
     procedure cmdBrowseLangDirClick(Sender: TObject);
     procedure txtAUDisableExit(Sender: TObject);
+    procedure txtSearchChange(Sender: TObject);
+    procedure cmdRemFunctionClick(Sender: TObject);
+    procedure cmdAddParamClick(Sender: TObject);
+    procedure cmdRemParamClick(Sender: TObject);
+    procedure lvParamsDblClick(Sender: TObject);
+    procedure cmdAddFunctionClick(Sender: TObject);
+    procedure lstFunctionsClick(Sender: TObject);
   public
     Foreground, Background: TColor;
     CaretFore, CaretBack: TColor;
@@ -276,7 +294,8 @@ var
 implementation
 
 uses UnitMainTools, UnitfrmMain, UnitfrmSelectColor, UnitLanguages,
-  UnitCodeSnippets, UnitfrmAutoIndent, UnitPlugins;
+  UnitCodeSnippets, UnitfrmAutoIndent, UnitPlugins, UnitfrmParamEdit,
+  UnitACCheck;
 
 {$R *.DFM}
 
@@ -1009,6 +1028,108 @@ procedure TfrmSettings.txtAUDisableExit(Sender: TObject);
 begin
   if not IsNumeric(txtAUDisable.Text) then
     txtAUDisable.Text := '1500';
+end;
+
+procedure TfrmSettings.txtSearchChange(Sender: TObject);
+var i: integer;
+begin
+  for i := 0 to lstFunctions.Items.Count -1 do begin
+    if Pos(LowerCase(Trim(lstFunctions.Items[i])), LowerCase(Trim(txtSearch.Text))) = 1 then begin
+      lstFunctions.ItemIndex := i;
+      break;
+    end;
+  end;
+end;
+
+procedure TfrmSettings.cmdRemFunctionClick(Sender: TObject);
+var i: integer;
+begin
+  if lstFunctions.ItemIndex <> -1 then begin
+    eACList.Delete(lstFunctions.ItemIndex);
+    i := lstFunctions.ItemIndex;
+    lstFunctions.DeleteSelected;
+    if i <> 0 then
+      lstFunctions.ItemIndex := i-1;
+    lstFunctionsClick(Self);
+  end;
+end;
+
+procedure TfrmSettings.cmdAddParamClick(Sender: TObject);
+begin
+  if lstFunctions.ItemIndex = -1 then exit;
+
+  frmParamEdit.txtFunction.Text := lstFunctions.Items[lstFunctions.ItemIndex];
+  frmParamEdit.txtInformation.Clear;
+  frmParamEdit.Caption := 'Add parameter';
+  if frmParamEdit.ShowModal = mrOk then begin
+    with lvParams.Items.Add do begin
+      Caption := IntToStr(lvParams.Items.Count);
+      SubItems.Add(StringReplace(frmParamEdit.txtInformation.Text, #13#10, '; ', [rfReplaceAll]));
+    end;
+    lstFunctions.Items[lstFunctions.ItemIndex] := frmParamEdit.txtFunction.Text;
+
+    with TACFunction(eACList.Items[lstFunctions.ItemIndex]) do begin
+      Name := lstFunctions.Items[lstFunctions.ItemIndex];
+      Items.Add(StringReplace(frmParamEdit.txtInformation.Text, #13#10, '; ', [rfReplaceAll]));
+    end;
+  end;
+end;
+
+procedure TfrmSettings.cmdRemParamClick(Sender: TObject);
+var i: integer;
+begin
+  if (lstFunctions.ItemIndex <> -1) and (lvParams.Items.Count <> 0) then begin
+    TACFunction(eACList.Items[lstFunctions.ItemIndex]).Items.Delete(lvParams.ItemIndex);
+    lvParams.DeleteSelected;
+    for i := 0 to lvParams.Items.Count -1 do
+      lvParams.Items[i].Caption := IntToStr(i+1);
+  end;
+end;
+
+procedure TfrmSettings.lvParamsDblClick(Sender: TObject);
+begin
+  frmParamEdit.Caption := 'Edit parameter information';
+  if (lstFunctions.ItemIndex <> -1) and (Assigned(lvParams.Selected)) then begin
+    frmParamEdit.txtInformation.Text := lvParams.Selected.SubItems[0];
+    if frmParamEdit.ShowModal = mrOk then begin
+      lvParams.Selected.SubItems[0] := StringReplace(frmParamEdit.txtInformation.Lines.Text, #13#10, '; ', [rfReplaceAll]);
+
+      with TACFunction(eACList.Items[lstFunctions.ItemIndex]) do begin
+        Name := lstFunctions.Items[lstFunctions.ItemIndex];
+        Items[lvParams.ItemIndex] := StringReplace(frmParamEdit.txtInformation.Text, #13#10, '; ', [rfReplaceAll]);
+      end;
+    end;
+  end;
+end;
+
+procedure TfrmSettings.cmdAddFunctionClick(Sender: TObject);
+begin
+  frmParamEdit.txtFunction.Clear;
+  frmParamEdit.txtInformation.Clear;
+  frmParamEdit.txtInformation.Enabled := False;
+  frmParamEdit.lblItems.Enabled := False;
+  frmParamEdit.Caption := 'Add function';
+  if frmParamEdit.ShowModal = mrOk then begin
+    lstFunctions.ItemIndex := lstFunctions.Items.Add(frmParamEdit.txtFunction.Text);
+    TACFunction(eACList.Add).Name := frmParamEdit.txtFunction.Text;
+    lstFunctionsClick(Self);
+  end;
+  frmParamEdit.txtInformation.Enabled := True;
+  frmParamEdit.lblItems.Enabled := True;
+end;
+
+procedure TfrmSettings.lstFunctionsClick(Sender: TObject);
+var i: integer;
+begin
+  lvParams.Clear;
+  if lstFunctions.ItemIndex <> -1 then begin
+    for i := 0 to TACFunction(eACList.Items[lstFunctions.ItemIndex]).Items.Count -1 do begin
+      with lvParams.Items.Add do begin
+        Caption := IntToStr(i+1);
+        SubItems.Add(TACFunction(eACList.Items[lstFunctions.ItemIndex]).Items[i]); 
+      end;
+    end;
+  end;
 end;
 
 end.

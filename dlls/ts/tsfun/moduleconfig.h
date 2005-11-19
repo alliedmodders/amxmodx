@@ -349,16 +349,16 @@
 // #define FN_LightStyle_Post					LightStyle_Post
 // #define FN_DecalIndex_Post					DecalIndex_Post
 // #define FN_PointContents_Post				PointContents_Post
-//#define FN_MessageBegin_Post					MessageBegin_Post
-//#define FN_MessageEnd_Post					MessageEnd_Post
-//#define FN_WriteByte_Post					WriteByte_Post
-//#define FN_WriteChar_Post					WriteChar_Post
-//#define FN_WriteShort_Post					WriteShort_Post
-//#define FN_WriteLong_Post					WriteLong_Post
-//#define FN_WriteAngle_Post					WriteAngle_Post
-//#define FN_WriteCoord_Post					WriteCoord_Post
-//#define FN_WriteString_Post					WriteString_Post
-//#define FN_WriteEntity_Post					WriteEntity_Post
+#define FN_MessageBegin_Post					MessageBegin_Post
+#define FN_MessageEnd_Post					MessageEnd_Post
+#define FN_WriteByte_Post					WriteByte_Post
+#define FN_WriteChar_Post					WriteChar_Post
+#define FN_WriteShort_Post					WriteShort_Post
+#define FN_WriteLong_Post					WriteLong_Post
+#define FN_WriteAngle_Post					WriteAngle_Post
+#define FN_WriteCoord_Post					WriteCoord_Post
+#define FN_WriteString_Post					WriteString_Post
+#define FN_WriteEntity_Post					WriteEntity_Post
 // #define FN_CVarRegister_Post					CVarRegister_Post
 // #define FN_CVarGetFloat_Post					CVarGetFloat_Post
 // #define FN_CVarGetString_Post				CVarGetString_Post
@@ -378,7 +378,7 @@
 // #define FN_PEntityOfEntIndex_Post			PEntityOfEntIndex_Post
 // #define FN_FindEntityByVars_Post				FindEntityByVars_Post
 // #define FN_GetModelPtr_Post					GetModelPtr_Post
-//#define FN_RegUserMsg_Post					RegUserMsg_Post
+#define FN_RegUserMsg_Post					RegUserMsg_Post
 // #define FN_AnimationAutomove_Post			AnimationAutomove_Post
 // #define FN_GetBonePosition_Post				GetBonePosition_Post
 // #define FN_FunctionFromName_Post				FunctionFromName_Post

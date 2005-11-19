@@ -525,43 +525,30 @@ static cell AMX_NATIVE_CALL strip_user_weapons(AMX *amx, cell *params) { // inde
 
 	edict_t* pPlayer = MF_GetPlayerEdict(params[1]);
 
-	string_t item = MAKE_STRING("trigger_once");
-	edict_t *pent = CREATE_NAMED_ENTITY( item );
-	if ( FNullEnt( pent ) ){
+	string_t item = MAKE_STRING("player_weaponstrip");
+	edict_t *pent = CREATE_NAMED_ENTITY(item);
+	if (FNullEnt(pent)) 
+	{
 		return 0;
 	}
-
-	KeyValueData pkvd;
-
-	pkvd.szClassName = (char *)STRING(pent->v.classname);
-	pkvd.szKeyName = "target"; // type
-	pkvd.szValue = "stripper";
-	pkvd.fHandled = false;
-	MDLL_KeyValue(pent, &pkvd);
 
 	MDLL_Spawn(pent);
-
-	item = MAKE_STRING("player_weaponstrip");
-	edict_t   *pent2 = CREATE_NAMED_ENTITY( item );
-	if ( FNullEnt( pent2 ) ) {
-		return 0;
-	}
-
-	pkvd.szClassName = (char *)STRING(pent->v.classname);
-	pkvd.szKeyName = "targetname"; // type
-	pkvd.szValue =  "stripper";
-	pkvd.fHandled = false;
-	MDLL_KeyValue(pent2, &pkvd);
-
-	MDLL_Spawn(pent2);
-
-	pent->v.origin = pPlayer->v.origin;
-
-	MDLL_Touch(pent, pPlayer);
-
+	MDLL_Use(pPlayer, pent);
 	REMOVE_ENTITY(pent);
-	REMOVE_ENTITY(pent2);
 
+	void *_cur = MF_PlayerPropAddr(params[1], Player_CurrentWeapon);
+	void *_wpns = MF_PlayerPropAddr(params[1], Player_Weapons);
+
+	typedef struct {
+		int a;
+		int b;
+	} WPN;
+	WPN *wpns = (WPN *)_wpns;
+	int *cur = (int *)_cur;
+	*cur = 0;
+	wpns[0].a = 0;
+	wpns[0].b = 0;
+	
 	pPlayer->v.weapons = 0;
 
 	return 1;

@@ -1088,11 +1088,13 @@ end;
 
 procedure TfrmSettings.lvParamsDblClick(Sender: TObject);
 begin
-  frmParamEdit.Caption := 'Edit parameter information';
   if (lstFunctions.ItemIndex <> -1) and (Assigned(lvParams.Selected)) then begin
-    frmParamEdit.txtInformation.Text := lvParams.Selected.SubItems[0];
+    frmParamEdit.Caption := 'Edit parameter information';
+    frmParamEdit.txtFunction.Text := lstFunctions.Items[lstFunctions.ItemIndex];
+    frmParamEdit.txtInformation.Text := StringReplace(lvParams.Selected.SubItems[0], '; ', #13#10, [rfReplaceAll]);
     if frmParamEdit.ShowModal = mrOk then begin
       lvParams.Selected.SubItems[0] := StringReplace(frmParamEdit.txtInformation.Lines.Text, #13#10, '; ', [rfReplaceAll]);
+      lstFunctions.Items[lstFunctions.ItemIndex] := frmParamEdit.txtFunction.Text;
 
       with TACFunction(eACList.Items[lstFunctions.ItemIndex]) do begin
         Name := lstFunctions.Items[lstFunctions.ItemIndex];

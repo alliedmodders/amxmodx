@@ -517,6 +517,7 @@ begin
     frmSettings.lstFunctions.Items.Add(TACFunction(eACList.Items[i]).Name);
 
   if frmSettings.ShowModal = mrOk then begin
+    Screen.Cursor := crHourGlass;
     { Shortcuts }
     for i := 0 to frmSettings.lvShortcuts.Items.Count - 1 do
       TSciKeyCommand(frmSettings.lvShortcuts.Items[i].Data).ShortCut := (TextToShortCut(frmSettings.lvShortcuts.Items[i].SubItems[0]));
@@ -603,6 +604,7 @@ begin
     eConfig.WriteString('Misc', 'LangDir', frmSettings.txtLangDir.Text);
     eConfig.WriteBool('Misc', 'ShowStatusbar', frmSettings.chkShowStatusbar.Checked);
     eACList.SaveToFile(ExtractFilePath(ParamStr(0)) + 'config\ACList.cfg');
+    Screen.Cursor := crDefault;
   end
   else begin
     { Restore Code-Snippets }
@@ -2138,16 +2140,15 @@ var i: integer;
     eFunction: String;
 begin
   CancelDisplay := not Plugin_CallTipShow(ListToDisplay.GetText);
-  if (frmSettings.chkAutoHideCT.Checked) and (jviCode.Root.Items[0].DisplayName = 'Function Call') then begin
-    eFunction := GetCurrFunc;
-    if eFunction <> '' then begin
-      eFunction := LowerCase(eFunction);
-      for i := 0 to eACList.Count -1 do begin
-        if eFunction = LowerCase(Trim(TACFunction(eACList.Items[i]).Name)) then begin
-          if TACFunction(eACList.Items[i]).Items.Count > GetFunctionPos then begin
-            CancelDisplay := True;
-            break;
-          end;
+  eFunction := GetCurrFunc;
+  if (frmSettings.chkAutoHideCT.Checked) and (eFunction <> '') then begin
+    eFunction := LowerCase(eFunction);
+
+    for i := 0 to eACList.Count -1 do begin
+      if eFunction = LowerCase(Trim(TACFunction(eACList.Items[i]).Name)) then begin
+        if TACFunction(eACList.Items[i]).Items.Count > GetFunctionPos then begin
+          CancelDisplay := True;
+          break;
         end;
       end;
     end;

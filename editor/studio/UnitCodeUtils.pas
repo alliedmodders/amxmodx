@@ -473,7 +473,7 @@ begin
   if Pos('(', eStr) = 0 then
     Result := ''
   else
-    Result := Trim(Copy(eStr, 1, Pos('(', eStr)));
+    Result := Trim(Copy(eStr, 1, Pos('(', eStr) -1));
 end;
 
 end.

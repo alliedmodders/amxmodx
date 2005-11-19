@@ -177,6 +177,8 @@ new t_sText[MAX_TEXT_LENGTH + 1]                    = ""
 new t_sName[MAX_NAME_LENGTH + 1]                    = ""
 new t_sWpn[MAX_WEAPON_LENGTH + 1]                   = ""
 
+new g_LastChannel[33]								= {0, ...}
+
 //--------------------------------
 // Initialize
 //--------------------------------
@@ -266,8 +268,10 @@ public plugin_cfg()
 set_hudtype_killer(Float:fDuration)
 	set_hudmessage(220, 80, 0, 0.05, 0.15, 0, 6.0, fDuration, (fDuration >= g_fHUDDuration) ? 1.0 : 0.0, 1.0, -1)
 
-set_hudtype_endround(Float:fDuration)
-	set_hudmessage(100, 200, 0, 0.05, 0.55, 0, 0.02, fDuration, (fDuration >= g_fHUDDuration) ? 1.0 : 0.0, 1.0, -1)
+set_hudtype_endround(id, Float:fDuration)
+{
+	set_hudmessage(100, 200, 0, 0.05, 0.55, 0, 0.02, fDuration, (fDuration >= g_fHUDDuration) ? 1.0 : 0.0, 1.0, g_LastChannel[id])
+}
 
 set_hudtype_attacker(Float:fDuration)
 	set_hudmessage(220, 80, 0, 0.55, 0.35, 0, 6.0, fDuration, (fDuration >= g_fHUDDuration) ? 1.0 : 0.0, 1.0, -1)
@@ -833,7 +837,7 @@ show_roundend_hudstats(id, Float:fGameTime)
 	// If round end timer is zero clear round end stats.
 	if (g_fShowStatsTime == 0.0)
 	{
-		set_hudtype_endround(0.05)
+		set_hudtype_endround(id, 0.05)
 		show_hudmessage(id, "")
 #if defined STATSX_DEBUG
 		log_amx("Clear round end HUD stats for #%d", id)
@@ -856,7 +860,8 @@ show_roundend_hudstats(id, Float:fGameTime)
 	// Show stats only if more time left than coded minimum.
 	if (fDuration >= HUD_MIN_DURATION)
 	{
-		set_hudtype_endround(fDuration)
+		g_LastChannel[id] = next_hudchannel(id)
+		set_hudtype_endround(id, fDuration)
 		show_hudmessage(id, g_sAwardAndScore)
 #if defined STATSX_DEBUG
 		log_amx("Show %1.2fs round end HUD stats for #%d", fDuration, id)

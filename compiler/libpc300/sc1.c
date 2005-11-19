@@ -3300,9 +3300,8 @@ static int newfunc(char *firstname,int firsttag,int fpublic,int fstatic,int stoc
 
 static int argcompare(arginfo *a1,arginfo *a2)
 {
-  int result,level,i;
+  int result=1,level,i;
 
-  result= strcmp(a1->name,a2->name)==0;     /* name */
   if (result)
     result= a1->ident==a2->ident;           /* type/class */
   if (result)

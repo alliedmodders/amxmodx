@@ -77,6 +77,7 @@ new Float:g_doubleKill
 new g_doubleKillId
 new g_friend[33]
 new g_firstBlood
+new g_channel[33]
 
 new g_MultiKillMsg[7][] =
 {
@@ -227,6 +228,7 @@ public client_putinserver(id)
 {
 	g_multiKills[id] = {0, 0}
 	g_streakKills[id] = {0, 0}
+	g_channel[id] = 0
 }
 
 public client_death(killer, victim, wpnindex, hitplace, TK)
@@ -266,7 +268,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				
 				if (KillingStreak)
 				{
-					set_hudmessage(0, 100, 255, 0.05, 0.55, 2, 0.02, 6.0, 0.01, 0.1, 3)
+					set_hudmessage(0, 100, 255, 0.05, 0.55, 2, 0.02, 6.0, 0.01, 0.1, -1)
 					show_hudmessage(0, g_KillingMsg[a], name)
 				}
 				
@@ -316,7 +318,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				{
 					new message[128], team_name[32]
 
-					set_hudmessage(255, 255, 255, 0.02, 0.85, 2, 0.05, 0.1, 0.02, 3.0, 3)
+					set_hudmessage(255, 255, 255, 0.02, 0.85, 2, 0.05, 0.1, 0.02, 3.0, -1)
 
 					for (new a = 0; a < pplnum; ++a)
 					{
@@ -344,7 +346,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 			get_user_name(cts[0], ctname, 31)
 			get_user_name(ts[0], tname, 31)
 			
-			set_hudmessage(0, 255, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, 3)
+			set_hudmessage(0, 255, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, -1)
 			show_hudmessage(0, "%s vs. %s", ctname, tname)
 			
 			play_sound("misc/maytheforce")
@@ -372,7 +374,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				
 				get_user_name(g_LastAnnounce, name, 31)
 				
-				set_hudmessage(0, 255, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, 3)
+				set_hudmessage(0, 255, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, -1)
 				show_hudmessage(0, "%s (%d HP) vs. %d %s%s: %L", name, get_user_health(g_LastAnnounce), oposite, g_teamsNames[team], (oposite == 1) ? "" : "S", LANG_PLAYER, g_LastMessages[random_num(0, 3)])
 				
 				if (!is_user_connecting(g_LastAnnounce))
@@ -390,7 +392,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 			get_user_name(killer, killer_name, 31)
 			get_user_name(victim, victim_name, 31)
 			
-			set_hudmessage(255, 100, 100, -1.0, 0.25, 1, 6.0, 6.0, 0.5, 0.15, 1)
+			set_hudmessage(255, 100, 100, -1.0, 0.25, 1, 6.0, 6.0, 0.5, 0.15, -1)
 			show_hudmessage(0, "%L", LANG_PLAYER, g_KinfeMsg[random_num(0, 3)], killer_name, victim_name)
 		}
 		
@@ -405,7 +407,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 		get_user_name(killer, killer_name, 32)
 		get_user_name(victim, victim_name, 32)
 		
-		set_hudmessage(255, 100, 100, -1.0, 0.25, 1, 6.0, 6.0, 0.5, 0.15, 1)
+		set_hudmessage(255, 100, 100, -1.0, 0.25, 1, 6.0, 6.0, 0.5, 0.15, -1)
 		
 		if (!selfkill)
 		{
@@ -435,7 +437,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				replace(message, 127, "$wn", weapon_name)
 				replace(message, 127, "$kn", killer_name)
 				
-				set_hudmessage(100, 100, 255, -1.0, 0.29, 0, 6.0, 6.0, 0.5, 0.15, 1)
+				set_hudmessage(100, 100, 255, -1.0, 0.29, 0, 6.0, 6.0, 0.5, 0.15, -1)
 				show_hudmessage(players[i], message)
 			}
 		}
@@ -459,7 +461,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				
 				get_user_name(killer, name, 31)
 				
-				set_hudmessage(255, 0, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, 3)
+				set_hudmessage(255, 0, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, -1)
 				show_hudmessage(0, "%L", LANG_PLAYER, "DOUBLE_KILL", name)
 			}
 			
@@ -476,7 +478,7 @@ public hideStatus(id)
 {
 	if (PlayerName)
 	{
-		set_hudmessage(0, 0, 0, 0.0, 0.0, 0, 0.0, 0.01, 0.0, 0.0, 4)
+		set_hudmessage(0, 0, 0, 0.0, 0.0, 0, 0.0, 0.01, 0.0, 0.0, g_channel[id])
 		show_hudmessage(id, "")
 	}
 }
@@ -497,6 +499,8 @@ public showStatus(id)
 			color1 = 255
 		else
 			color2 = 255
+			
+		g_channel[id] = next_hudchannel(id)
 		
 		if (g_friend[id] == 1)	// friend
 		{
@@ -506,10 +510,10 @@ public showStatus(id)
 			if (wpnid)
 				xmod_get_wpnname(wpnid, wpnname, 31)
 			
-			set_hudmessage(color1, 50, color2, -1.0, 0.60, 1, 0.01, 3.0, 0.01, 0.01, 4)
+			set_hudmessage(color1, 50, color2, -1.0, 0.60, 1, 0.01, 3.0, 0.01, 0.01, g_channel[id])
 			show_hudmessage(id, "%s -- %d HP / %d AP / %s", name, get_user_health(pid), get_user_armor(pid), wpnname)
 		} else {
-			set_hudmessage(color1, 50, color2, -1.0, 0.60, 1, 0.01, 3.0, 0.01, 0.01, 4)
+			set_hudmessage(color1, 50, color2, -1.0, 0.60, 1, 0.01, 3.0, 0.01, 0.01, g_channel[id])
 			show_hudmessage(id, name)
 		}
 	}
@@ -525,7 +529,7 @@ public eNewRound()
 		
 		if (RoundCounter)
 		{
-			set_hudmessage(200, 0, 0, -1.0, 0.30, 0, 6.0, 6.0, 0.5, 0.15, 1)
+			set_hudmessage(200, 0, 0, -1.0, 0.30, 0, 6.0, 6.0, 0.5, 0.15, -1)
 			show_hudmessage(0, "%L", LANG_PLAYER, "PREPARE_FIGHT", g_roundCount)
 		}
 		
@@ -581,7 +585,7 @@ public checkKills(param[])
 				new name[32]
 				
 				get_user_name(id, name, 31)
-				set_hudmessage(255, 0, 100, 0.05, 0.65, 2, 0.02, 6.0, 0.01, 0.1, 2)
+				set_hudmessage(255, 0, 100, 0.05, 0.65, 2, 0.02, 6.0, 0.01, 0.1, -1)
 				
 				if (a > 6)
 					a = 6
@@ -615,7 +619,7 @@ announceEvent(id, message[])
 	new name[32]
 	
 	get_user_name(id, name, 31)
-	set_hudmessage(255, 100, 50, -1.0, 0.30, 0, 6.0, 6.0, 0.5, 0.15, 1)
+	set_hudmessage(255, 100, 50, -1.0, 0.30, 0, 6.0, 6.0, 0.5, 0.15, -1)
 	show_hudmessage(0, "%L", LANG_PLAYER, message, name)
 }
 

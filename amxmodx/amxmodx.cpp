@@ -763,11 +763,23 @@ static cell AMX_NATIVE_CALL get_user_attacker(AMX *amx, cell *params) /* 2 param
 			{
 				pPlayer = GET_PLAYER_POINTER(enemy);
 				weapon = pPlayer->current;
-			}
-			else if (g_grenades.find(enemy, &pPlayer, weapon))
+			} else if (g_grenades.find(enemy, &pPlayer, weapon)) {
 				enemy = pPlayer->pEdict;
-			else
-				enemy = NULL;
+			} else {
+				enemy = enemy->v.owner;
+				if (!FNullEnt(enemy) && (enemy->v.flags & (FL_CLIENT | FL_FAKECLIENT)))
+				{
+					pPlayer = GET_PLAYER_POINTER(enemy);
+					weapon = pPlayer->current;
+				} else {
+					switch (*params / sizeof(cell))
+					{
+						case 3: *get_amxaddr(amx, params[3]) = 0;
+						case 2: *get_amxaddr(amx, params[2]) = 0;
+					}
+					return ENTINDEX(pPlayer->pEdict->v.dmg_inflictor);
+				}
+			}
 
 			if (enemy)
 			{

@@ -68,7 +68,7 @@
 #include "amxxlog.h"
 
 #define AMXXLOG_Log g_log.Log
-#define AMX_VERSION	"1.60"
+#define AMX_VERSION	"1.61"
 
 extern AMX_NATIVE_INFO core_Natives[];
 extern AMX_NATIVE_INFO time_Natives[];

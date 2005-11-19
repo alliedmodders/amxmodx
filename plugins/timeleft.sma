@@ -256,9 +256,9 @@ public timeRemain(param[])
 					setTimeText(arg, 127, tmlf, players[i])
 					
 					if (flags & 16)
-						set_hudmessage(255, 255, 255, -1.0, 0.85, 0, 0.0, 1.1, 0.1, 0.5, 1)
+						set_hudmessage(255, 255, 255, -1.0, 0.85, 0, 0.0, 1.1, 0.1, 0.5, -1)
 					else
-						set_hudmessage(255, 255, 255, -1.0, 0.85, 0, 0.0, 3.0, 0.0, 0.5, 1)
+						set_hudmessage(255, 255, 255, -1.0, 0.85, 0, 0.0, 3.0, 0.0, 0.5, -1)
 					
 					show_hudmessage(players[i], arg)
 				}

@@ -264,20 +264,20 @@ public plugin_cfg()
 
 // Set hudmessage format.
 set_hudtype_killer(Float:fDuration)
-	set_hudmessage(220, 80, 0, 0.05, 0.15, 0, 6.0, fDuration, (fDuration >= g_fHUDDuration) ? 1.0 : 0.0, 1.0, 2)
+	set_hudmessage(220, 80, 0, 0.05, 0.15, 0, 6.0, fDuration, (fDuration >= g_fHUDDuration) ? 1.0 : 0.0, 1.0, -1)
 
 set_hudtype_endround(Float:fDuration)
-	set_hudmessage(100, 200, 0, 0.05, 0.55, 0, 0.02, fDuration, (fDuration >= g_fHUDDuration) ? 1.0 : 0.0, 1.0, 1)
+	set_hudmessage(100, 200, 0, 0.05, 0.55, 0, 0.02, fDuration, (fDuration >= g_fHUDDuration) ? 1.0 : 0.0, 1.0, -1)
 
 set_hudtype_attacker(Float:fDuration)
-	set_hudmessage(220, 80, 0, 0.55, 0.35, 0, 6.0, fDuration, (fDuration >= g_fHUDDuration) ? 1.0 : 0.0, 1.0, 3)
+	set_hudmessage(220, 80, 0, 0.55, 0.35, 0, 6.0, fDuration, (fDuration >= g_fHUDDuration) ? 1.0 : 0.0, 1.0, -1)
 
 set_hudtype_victim(Float:fDuration)
-	set_hudmessage(0, 80, 220, 0.55, 0.60, 0, 6.0, fDuration, (fDuration >= g_fHUDDuration) ? 1.0 : 0.0, 1.0, 4)
+	set_hudmessage(0, 80, 220, 0.55, 0.60, 0, 6.0, fDuration, (fDuration >= g_fHUDDuration) ? 1.0 : 0.0, 1.0, -1)
 
 set_hudtype_specmode()
 {
-	set_hudmessage(255, 255, 255, 0.02, 0.87, 2, 0.05, 0.1, 0.01, 3.0, 1)
+	set_hudmessage(255, 255, 255, 0.02, 0.87, 2, 0.05, 0.1, 0.01, 3.0, -1)
 }
 
 #if defined STATSX_DEBUG

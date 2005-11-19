@@ -100,7 +100,7 @@ public cmdSayChat(id)
 	
 	new Float:verpos = g_Pos[i][1] + float(g_msgChannel) / 35.0
 	
-	set_hudmessage(g_Values[a][0], g_Values[a][1], g_Values[a][2], g_Pos[i][0], verpos, 0, 6.0, 6.0, 0.5, 0.15, g_msgChannel)
+	set_hudmessage(g_Values[a][0], g_Values[a][1], g_Values[a][2], g_Pos[i][0], verpos, 0, 6.0, 6.0, 0.5, 0.15, -1)
 
 	if (get_cvar_num("amx_show_activity") == 2)
 	{
@@ -292,7 +292,7 @@ public cmdTsay(id, level, cid)
 	get_user_authid(id, authid, 31)
 	get_user_name(id, name, 31)
 	userid = get_user_userid(id)
-	set_hudmessage(g_Values[a][0], g_Values[a][1], g_Values[a][2], tsay ? 0.05 : -1.0, verpos, 0, 6.0, 6.0, 0.5, 0.15, g_msgChannel)
+	set_hudmessage(g_Values[a][0], g_Values[a][1], g_Values[a][2], tsay ? 0.05 : -1.0, verpos, 0, 6.0, 6.0, 0.5, 0.15, -1)
 
 	if (get_cvar_num("amx_show_activity") == 2)
 	{

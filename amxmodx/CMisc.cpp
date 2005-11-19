@@ -83,6 +83,19 @@ void CPlayer::PutInServer()
 	ingame = true;
 }
 
+int CPlayer::NextHUDChannel()
+{
+	int ilow = 1;
+
+	for (int i=ilow+1; i<=4; i++)
+	{
+		if (channels[i] < channels[ilow])
+			ilow = i;
+	}
+
+	return ilow;
+}
+
 bool CPlayer::Connect(const char* connectname, const char* ipaddress)
 {
 	name.assign(connectname);
@@ -97,6 +110,9 @@ bool CPlayer::Connect(const char* connectname, const char* ipaddress)
 	
 	initialized = true;
 	authorized = false;
+
+	for (int i=0; i<=4; i++)
+		channels[i] = 0.0f;
 
 	const char* authid = GETPLAYERAUTHID(pEdict);
 

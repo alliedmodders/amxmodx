@@ -309,6 +309,25 @@ static cell AMX_NATIVE_CALL show_motd(AMX *amx, cell *params) /* 3 param */
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL next_hudchannel(AMX *amx, cell *params)
+{
+	int index = params[1];
+	if (index < 1 || index > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid player %d");
+		return 0;
+	}
+
+	CPlayer *pPlayer = GET_PLAYER_POINTER_I(index);
+	if (!pPlayer->ingame)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player %d not in game", index);
+		return 0;
+	}
+	
+	return pPlayer->NextHUDChannel();
+}
+
 static cell AMX_NATIVE_CALL set_hudmessage(AMX *amx, cell *params) /* 11 param */
 {
 	g_hudset.a1 = 0;
@@ -333,10 +352,11 @@ static cell AMX_NATIVE_CALL set_hudmessage(AMX *amx, cell *params) /* 11 param *
 
 static cell AMX_NATIVE_CALL show_hudmessage(AMX *amx, cell *params) /* 2 param */
 {
-	int len = 0;
+		int len = 0;
 	g_langMngr.SetDefLang(params[1]);
 	char* message = NULL;
 	
+	bool aut = (g_hudset.channel == -1) ? true : false;
 	if (params[1] == 0)
 	{
 		for (int i = 1; i <= gpGlobals->maxClients; ++i)
@@ -347,6 +367,11 @@ static cell AMX_NATIVE_CALL show_hudmessage(AMX *amx, cell *params) /* 2 param *
 			{
 				g_langMngr.SetDefLang(i);
 				message = UTIL_SplitHudMessage(format_amxstring(amx, params, 2, len));
+				if (aut)
+				{
+					g_hudset.channel = pPlayer->NextHUDChannel();
+					pPlayer->channels[g_hudset.channel] = gpGlobals->time;
+				}
 				UTIL_HudMessage(pPlayer->pEdict, g_hudset, message);
 			}
 		}
@@ -363,7 +388,14 @@ static cell AMX_NATIVE_CALL show_hudmessage(AMX *amx, cell *params) /* 2 param *
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 		
 		if (pPlayer->ingame)
+		{
+			if (aut)
+			{
+				g_hudset.channel = pPlayer->NextHUDChannel();
+				pPlayer->channels[g_hudset.channel] = gpGlobals->time;
+			}
 			UTIL_HudMessage(pPlayer->pEdict, g_hudset, message);
+		}
 	}
 	
 	return len;
@@ -3736,6 +3768,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"message_end",				message_end},
 	{"module_exists",			module_exists},
 	{"mkdir",					amx_mkdir},
+	{"next_hudchannel",			next_hudchannel},
 	{"num_to_word",				num_to_word},
 	{"parse_loguser",			parse_loguser},
 	{"parse_time",				parse_time},

@@ -114,6 +114,8 @@ public:
 	String death_weapon;
 	int newmenu;
 	int page;
+
+	float channels[5];
 	
 	Vector lastTrace;
 	Vector thisTrace;
@@ -138,6 +140,8 @@ public:
 	}
 
 	inline void Authorize() { authorized = true; }
+
+	int NextHUDChannel();
 
 };
 

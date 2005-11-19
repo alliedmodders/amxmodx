@@ -1896,7 +1896,7 @@ static int nesting=0;
       if (matchtoken('_')) {
         arglist[argpos]=ARG_IGNORED;  /* flag argument as "present, but ignored" */
         if (arg[argidx].ident==0 || arg[argidx].ident==iVARARGS) {
-          error(202);             /* argument count mismatch */
+          error(88);             /* argument count mismatch */
         } else if (!arg[argidx].hasdefault) {
           error(34,nargs+1);      /* argument has no default value */
         } /* if */
@@ -1912,7 +1912,7 @@ static int nesting=0;
         lvalue=hier14(&lval);
         switch (arg[argidx].ident) {
         case 0:
-          error(202);             /* argument count mismatch */
+          error(88);             /* argument count mismatch */
           break;
         case iVARARGS:
           /* always pass by reference */
@@ -2132,7 +2132,7 @@ static int nesting=0;
       markexpr(sPARM,NULL,0);   /* mark the end of a sub-expression */
       nest_stkusage++;
     } else {
-      error(202,argidx);        /* argument count mismatch */
+      error(99,argidx);        /* argument count mismatch */
     } /* if */
     if (arglist[argidx]==ARG_UNHANDLED)
       nargs++;

@@ -1227,7 +1227,10 @@ static void setconfig(char *root)
       GetModuleFileName(NULL,path,_MAX_PATH);
     #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
       /* see www.autopackage.org for the BinReloc module */
-      strncpy(path,SELFPATH,sizeof path);
+      ptr = SELFPATH;
+      if (!ptr)
+        ptr = root;
+      strncpy(path,ptr,sizeof path);
     #else
       if (root!=NULL)
         strncpy(path,root,sizeof path); /* path + filename (hopefully) */

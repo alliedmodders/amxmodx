@@ -2918,20 +2918,20 @@ void	operator delete[](void *reportedAddress)
 #else
 
 #if !defined NO_ALLOC_OVERRIDES && !defined MEMORY_TEST && !defined WIN32
-void * ::operator new(size_t size) {
+void * operator new(size_t size) {
 	return(calloc(1, size)); 
 }
 
-void * ::operator new[](size_t size) {
+void * operator new[](size_t size) {
 	return(calloc(1, size)); 
 }
 
-void ::operator delete(void * ptr) {
+void operator delete(void * ptr) {
 	if(ptr)
 		free(ptr);
 }
 
-void ::operator delete[](void * ptr) {
+void operator delete[](void * ptr) {
 	if(ptr)
 		free(ptr);
 }

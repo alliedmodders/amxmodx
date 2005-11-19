@@ -1704,6 +1704,8 @@ begin
     eStr := Format(GetIndents + 'set_hudmessage(%u, %u, %u, %s, %s, 0, 6.0, %s)', [GetRValue(frmHudMsgGenerator.CurrColor), GetGValue(frmHudMsgGenerator.CurrColor), GetBValue(frmHudMsgGenerator.CurrColor), Dot(frmHudMsgGenerator.txtXPos.Text), Dot(frmHudMsgGenerator.txtYPos.Text), Dot(frmHudMsgGenerator.txtTimeToShow.Text)]);
     eStr := eStr + #13#10 + GetIndents + 'show_hudmessage(id, "' + frmHudMsgGenerator.txtText.Text + '")';
     sciEditor.Lines.Insert(sciEditor.GetCurrentLineNumber, eStr);
+    mnuModified.Caption := lModified;
+    ActiveDoc.Modified := True;
   end;
 end;
 
@@ -1968,22 +1970,6 @@ end;
 procedure TfrmMain.sciAutoCompleteBeforeShow(Sender: TObject;
   const Position: Integer; ListToDisplay: TStrings;
   var CancelDisplay: Boolean);
-function GetFunctionPos: Integer;
-var eStr: String;
-    i: integer;
-begin
-  Result := 0;
-  eStr := StringReplace(sciEditor.Lines[sciEditor.GetCurrentLineNumber], '^"', '', [rfReplaceAll]);
-  while Between(eStr, '"', '"') <> '' do
-    eStr := StringReplace(eStr, Between(eStr, '"', '"'), '', [rfReplaceAll]);
-  while Between(eStr, '{', '}') <> '' do
-    eStr := StringReplace(eStr, Between(eStr, '"', '"'), '', [rfReplaceAll]);
-  for i := 0 to Length(eStr) -1 do begin
-    if eStr[i] = ',' then
-      Result := Result +1;
-  end;
-end;
-
 var eCurrStyle: Integer;
     eFunction: String;
     i: integer;
@@ -1997,15 +1983,9 @@ begin
     eCurrStyle := GetStyleAt(sciEditor.SelStart).StyleNumber;
 
     if (ActiveDoc.Highlighter = 'Pawn') or (ActiveDoc.Highlighter = 'C++') then begin
-      eFunction := '';
-      for i := 0 to jviCode.Root.Count -1 do begin
-        if jviCode.Root.Items[i].DisplayName = 'Function Call' then begin
-          eFunction := jviCode.Root.Items[i].Items[0].DisplayValue;
-          break;
-        end;
-      end;
+      eFunction := GetCurrFunc;
       if eFunction <> '' then begin
-        eFunction := LowerCase(Trim(eFunction));
+        eFunction := LowerCase(eFunction);
         for i := 0 to eACList.Count -1 do begin
           if eFunction = LowerCase(Trim(TACFunction(eACList.Items[i]).Name)) then begin
             if TACFunction(eACList.Items[i]).Items.Count > GetFunctionPos then begin
@@ -2106,6 +2086,7 @@ end;
 
 procedure TfrmMain.mnuMenuGeneratorClick(Sender: TObject);
 begin
+  frmMenuGenerator.jplMain.ActivePage := frmMenuGenerator.jspSelectType;
   frmMenuGenerator.ShowModal;
 end;
 
@@ -2153,36 +2134,14 @@ end;
 procedure TfrmMain.sciCallTipsBeforeShow(Sender: TObject;
   const Position: Integer; ListToDisplay: TStrings;
   var CancelDisplay: Boolean);
-function GetFunctionPos: Integer;
-var eStr: String;
-    i: integer;
-begin
-  Result := 0;
-  eStr := StringReplace(sciEditor.Lines[sciEditor.GetCurrentLineNumber], '^"', '', [rfReplaceAll]);
-  while Between(eStr, '"', '"') <> '' do
-    eStr := StringReplace(eStr, Between(eStr, '"', '"'), '', [rfReplaceAll]);
-  while Between(eStr, '{', '}') <> '' do
-    eStr := StringReplace(eStr, Between(eStr, '"', '"'), '', [rfReplaceAll]);
-  for i := 0 to Length(eStr) -1 do begin
-    if eStr[i] = ',' then
-      Result := Result +1;
-  end;
-end;
-
 var i: integer;
     eFunction: String;
 begin
   CancelDisplay := not Plugin_CallTipShow(ListToDisplay.GetText);
   if (frmSettings.chkAutoHideCT.Checked) and (jviCode.Root.Items[0].DisplayName = 'Function Call') then begin
-    for i := 0 to jviCode.Root.Count -1 do begin
-      if jviCode.Root.Items[i].DisplayName = 'Function Call' then begin
-        eFunction := jviCode.Root.Items[i].Items[0].DisplayValue;
-        break;
-      end;
-    end;
-    
+    eFunction := GetCurrFunc;
     if eFunction <> '' then begin
-      eFunction := LowerCase(Trim(eFunction));
+      eFunction := LowerCase(eFunction);
       for i := 0 to eACList.Count -1 do begin
         if eFunction = LowerCase(Trim(TACFunction(eACList.Items[i]).Name)) then begin
           if TACFunction(eACList.Items[i]).Items.Count > GetFunctionPos then begin
@@ -2197,9 +2156,26 @@ end;
 
 procedure TfrmMain.sciEditorCallTipClick(Sender: TObject;
   const position: Integer);
+var i: integer;
+    eFunc: String;
 begin
-  if not Plugin_CallTipClick(position) then
+  if not Plugin_CallTipClick(position) then begin
     sciEditor.CallTipCancel;
+    exit;
+  end;
+
+  eFunc := LowerCase(GetCurrFunc);
+  for i := 0 to sciCallTips.ApiStrings.Count -1 do begin
+    if Pos(eFunc, LowerCase(sciCallTips.ApiStrings[i])) = 1 then begin
+      eFunc := UpdateIncPath(Between(sciCallTips.ApiStrings[i], '-> ', ','));
+      if eFunc <> '' then begin
+        sciEditor.CallTipCancel;
+        PawnProjects.Open(eFunc);
+      end;
+      
+      break;
+    end;
+  end;
 end;
 
 procedure TfrmMain.sciEditorAutoCSelection(Sender: TObject;
@@ -2313,6 +2289,9 @@ begin
       sciEditor.Lines.Add(#9 + 'return nIdx');
       sciEditor.Lines.Add('}');
     end;
+    
+    mnuModified.Caption := lModified;
+    ActiveDoc.Modified := True;
   end;
 end;
 
@@ -2960,7 +2939,6 @@ begin
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
-var i: integer;
 begin
   sciEditor.StreamClass := TSciMyStream;
   eACList := TmxJsCollection.Create(TACFunction);

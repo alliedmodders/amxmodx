@@ -6,8 +6,8 @@ uses SysUtils, Classes, Windows, Forms, Graphics;
 
 procedure GenerateSimpleMenu;
 
-{ Yes, this is from AMXX-Edit v2. I'm too lazy to rewrite it... }
-{ >:( }
+{ Yes, a part is copied from AMXX-Edit v2. I'm too lazy to rewrite everything... }
+{ gaben }
 
 function AddOldMenu: Boolean;
 function AddOldPlayerMenu: Boolean;
@@ -20,7 +20,8 @@ function PluginInitLine: Integer;
 
 implementation
 
-uses UnitCodeUtils, UnitfrmMain, UnitfrmMenuGenerator, UnitLanguages;
+uses UnitCodeUtils, UnitfrmMain, UnitfrmMenuGenerator, UnitLanguages,
+  UnitMainTools;
 
 function GetLine(eExpression: String; eAllowFunction, eBreak: Boolean): Integer;
 var i: integer;
@@ -99,6 +100,9 @@ begin
   end
   else
     MessageBox(frmMenuGenerator.Handle, PChar(lInvalidPlugin), PChar(Application.Title), MB_ICONERROR);
+
+  ActiveDoc.Modified := True;
+  frmMain.mnuModified.Caption := lModified;
 end;
 
 { Normal Menu }
@@ -159,11 +163,9 @@ begin
   eStr.Add('}');
   // Insert
   AddIfDoesntExist('amxmodx');
-  i := GetFirst('#define', True) +2;
-  if i = 1 then
-    i := GetFirst('#include', True) +2;
-  if i = 1 then
-    i := 0;
+  i := GetLast('#define', True) +1;
+  if i = 0 then
+    i := GetLast('#include', True) +1;
     
   frmMain.sciEditor.Lines.Insert(i, Format('#define Keys%s %s', [frmMenuGenerator.txtMenuName.Text, DefinedKeys]));
   frmMain.sciEditor.Lines.Text := frmMain.sciEditor.Lines.Text + #13 + eStr.Text;
@@ -183,6 +185,8 @@ begin
       frmMain.sciEditor.Lines.Insert(i, '	register_menucmd(register_menuid("' + frmMenuGenerator.txtMenuName.Text + '"), Keys' + frmMenuGenerator.txtMenuName.Text + ', "Pressed' + frmMenuGenerator.txtMenuName.Text + '")');
   end;
   eStr.Free;
+  ActiveDoc.Modified := True;
+  frmMain.mnuModified.Caption := lModified;
 end;
 
 { Player Menu }
@@ -312,14 +316,14 @@ begin
       end;
       Delete(DefinedKeys, 1, 1);
     end;
-    i := GetLast('#define', True) +2;
-    if i = 1 then
-      i := GetLast('#include', True) +2;
-    if i = 1 then
-      i := 0;
+    i := GetLast('#define', True) +1;
+    if i = 0 then
+      i := GetLast('#include', True) +1;
+
     frmMain.sciEditor.Lines.Insert(i, Format('#define Keys%s %s', [frmMenuGenerator.txtMenuName.Text, DefinedKeys]));
-    frmMain.sciEditor.Lines.Insert(i +1, 'new MenuPos' + frmMenuGenerator.txtMenuName.Text);
-    frmMain.sciEditor.Lines.Insert(i +2, 'new MenuPlayers' + frmMenuGenerator.txtMenuName.Text + '[32]');
+    frmMain.sciEditor.Lines.Insert(i +1, '');
+    frmMain.sciEditor.Lines.Insert(i +2, 'new MenuPos' + frmMenuGenerator.txtMenuName.Text);
+    frmMain.sciEditor.Lines.Insert(i +3, 'new MenuPlayers' + frmMenuGenerator.txtMenuName.Text + '[32]');
     { Register }
     i := GetFirst('register_plugin', True) +2;
     if i = 1 then
@@ -344,7 +348,7 @@ begin
     eStr.Add('public ShowMenu' + frmMenuGenerator.txtMenuName.Text + '(id, position) {');
     if frmMenuGenerator.chkAddComment.Checked then
       eStr.Add('	// Menu stuff //');
-    eStr.Add('	if (position < 0) { return 0 }-/*');
+    eStr.Add('	if (position < 0) { return 0; }');
     eStr.Add('	');
     eStr.Add('	new i, k');
     eStr.Add('	new MenuBody[255]');
@@ -356,8 +360,8 @@ begin
     eStr.Add('	get_players(MenuPlayers' + frmMenuGenerator.txtMenuName.Text + ', Num)');
     eStr.Add('	if (Start >= Num) { Start = position = MenuPos' + frmMenuGenerator.txtMenuName.Text + ' = 0; }');
     eCurLine := GetColoredMenu;
-    eCurLine := Copy(eCurLine, 1, Pos('$players', eCurLine) -3);
-    Insert('\R%d/%d^n\w', eCurLine, Pos('^n', eCurLine));
+    eCurLine := Copy(eCurLine, 1, Pos('$players', eCurLine) -5);
+    Insert('\R%d/%d', eCurLine, Pos('^n', eCurLine));
     eStr.Add('	new Len = format(MenuBody, 255, "' + eCurLine + '", position+1, (Num / ' + IntToStr(ePlayersTo - ePlayersFrom) + ' + ((Num % ' + IntToStr(ePlayersTo - ePlayersFrom) + ') ? 1 : 0 )) )');
     eStr.Add('	new End = Start + ' + IntToStr(ePlayersTo - ePlayersFrom));
     if eExit = 0 then
@@ -386,7 +390,7 @@ begin
 //      eStr.Add('		}');
 //    end
 //    else begin
-      eStr.Add('		Keys |= (i<<CurrentKey++)');
+      eStr.Add('		Keys |= (1<<CurrentKey++)');
       eStr.Add('		Len += format(MenuBody[Len], (255-Len), "' + PrepareItem(ePlayerFormat, False) + '", CurrentKey, UserName)');
 //    end;
     eStr.Add('	}');
@@ -438,11 +442,13 @@ begin
     eStr.Add('	}');
     eStr.Add('	return PLUGIN_HANDLED');
     eStr.Add('}');
-    frmMain.sciEditor.Lines.Text := frmMain.sciEditor.Lines.Text + #13 + eStr.Text; 
+    frmMain.sciEditor.Lines.Text := frmMain.sciEditor.Lines.Text + #13 + eStr.Text;
   except
     MessageBox(frmMenuGenerator.Handle, PChar('An error occured while inserting code!'), 'Warning', MB_ICONWARNING);
   end;
   eStr.Free;
+  frmMain.mnuModified.Caption := lModified;
+  ActiveDoc.Modified := True;
 end;
 
 { Functions }

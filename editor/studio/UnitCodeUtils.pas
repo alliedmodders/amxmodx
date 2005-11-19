@@ -19,6 +19,8 @@ function CountChars(eIn: String; eChar: Char): Integer;
 function RemoveStringsAndComments(eLine: String; eRemoveStrings: Boolean; eRemoveComments: Boolean): String;
 function GetMatchingBrace(eString: String): Integer;
 function GetColoredLine(eLine: Integer): String;
+function GetFunctionPos: Integer;
+function GetCurrFunc: String;
 
 function GetRTFText(ARichEdit: TRichedit): string;
 procedure SetRTFText(ARichEdit: TRichedit; ARTFText: String);
@@ -446,6 +448,32 @@ begin
   finally
     ss.Free;
   end;
+end;
+
+function GetFunctionPos: Integer;
+var eStr: String;
+    i: integer;
+begin
+  Result := 0;
+  eStr := StringReplace(frmMain.sciEditor.Lines[frmMain.sciEditor.GetCurrentLineNumber], '^"', '', [rfReplaceAll]);
+  while Between(eStr, '"', '"') <> '' do
+    eStr := StringReplace(eStr, Between(eStr, '"', '"'), '', [rfReplaceAll]);
+  while Between(eStr, '{', '}') <> '' do
+    eStr := StringReplace(eStr, Between(eStr, '"', '"'), '', [rfReplaceAll]);
+  for i := 0 to Length(eStr) -1 do begin
+    if eStr[i] = ',' then
+      Result := Result +1;
+  end;
+end;
+
+function GetCurrFunc: String;
+var eStr: String;
+begin
+  eStr := frmMain.sciEditor.Lines[frmMain.sciEditor.GetCurrentLineNumber];
+  if Pos('(', eStr) = 0 then
+    Result := ''
+  else
+    Result := Trim(Copy(eStr, 1, Pos('(', eStr)));
 end;
 
 end.

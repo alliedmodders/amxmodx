@@ -1,6 +1,6 @@
 object frmMain: TfrmMain
   Left = 257
-  Top = 302
+  Top = 297
   Width = 888
   Height = 646
   Caption = 'AMXX-Studio'
@@ -756,6 +756,7 @@ object frmMain: TfrmMain
           Align = alClient
           OnModified = sciEditorModified
           OnDblClick = sciEditorDblClick
+          OnCallTipClick = sciEditorCallTipClick
           OnKeyUp = sciEditorKeyUp
           OnKeyDown = sciEditorKeyDown
           OnKeyPress = sciEditorKeyPress

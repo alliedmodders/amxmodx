@@ -40,12 +40,15 @@ var eLookedUpIncluded: TStringList;
 function UpdateIncPath(eInput: string): string;
 begin
   eInput := StringReplace(Trim(eInput), '/', '\', [rfReplaceAll]);
-  if FileExists(ExtractFilePath(frmSettings.txtPawnCompilerPath.Text) + eInput + '.inc') then
-    Result := ExtractFilePath(frmSettings.txtPawnCompilerPath.Text) + eInput + '.inc'
-  else if FileExists(ExtractFilePath(frmSettings.txtPawnCompilerPath.Text) + 'include\' + eInput + '.inc') then
-    Result := ExtractFilePath(frmSettings.txtPawnCompilerPath.Text) + 'include\' + eInput + '.inc'
-  else if (FileExists(ExtractFilePath(ActiveDoc.FileName) + eInput + '.inc')) then
-    Result := ExtractFilePath(ActiveDoc.FileName) + eInput + '.inc'
+  if ExtractFileExt(eInput) = '' then
+    eInput := eInput + '.inc';
+  
+  if FileExists(ExtractFilePath(frmSettings.txtPawnCompilerPath.Text) + eInput) then
+    Result := ExtractFilePath(frmSettings.txtPawnCompilerPath.Text) + eInput
+  else if FileExists(ExtractFilePath(frmSettings.txtPawnCompilerPath.Text) + 'include\' + eInput) then
+    Result := ExtractFilePath(frmSettings.txtPawnCompilerPath.Text) + 'include\' + eInput
+  else if (FileExists(ExtractFilePath(ActiveDoc.FileName) + eInput)) then
+    Result := ExtractFilePath(ActiveDoc.FileName) + eInput
   else
     Result := '';
 end;
@@ -133,21 +136,10 @@ begin
     { Included }
     if (IsAtStart('#include', eBackup)) then begin
       eString := StringReplace(eBackup, '/', '\', [rfReplaceAll]);
-      if Between(eString, '<', '>') <> '' then begin
-        eString := Between(eString, '<', '>');
-        if ExtractFileExt(eString) <> '' then
-          ChangeFileExt(eString, '');
-      end
-      else if Between(eString, '"', '"') <> '' then begin
+      if Between(eString, '<', '>') <> '' then
+        eString := Between(eString, '<', '>')
+      else if Between(eString, '"', '"') <> '' then
         eString := Between(eString, '"', '"');
-        if ExtractFileExt(eString) <> '' then
-          ChangeFileExt(eString, '');
-      end
-      else begin
-        eString := Trim(eString);
-        if ExtractFileExt(eString) <> '' then
-          ChangeFileExt(eString, '');
-      end;
       eString := Trim(eString);
       Result.Included.AddObject(eString, TObject(i));
 
@@ -273,6 +265,7 @@ begin
           if Pos('operator', eTemp) = 1 then
             k := 6;
 
+          eTemp := RemoveSemicolon(eTemp);
           if k < 5 then begin
             case k of
               0: Result.CallTips.Add(eTemp + '-> ' + FileName + ', function');
@@ -360,6 +353,7 @@ begin
         if (Pos(':', eTemp) <> 0) and (Pos(':', eTemp) < Pos('(', eTemp)) then
           Delete(eTemp, 1, Pos(':', eTemp));
 
+        eTemp := RemoveSemicolon(eTemp);
         if (Pos('enum', eTemp) = Pos('operator', eTemp)) and (Pos('enum', eTemp) = 0) then
           Result.CallTips.Add(eTemp + '-> ' + FileName + ', ' + Trim(Copy(eString, 1, Pos(#32, eString) -1)));
 

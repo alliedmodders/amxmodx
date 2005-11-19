@@ -1736,6 +1736,7 @@ public client_connect(id)
 	g_izKilled[id][KILLED_KILLER_STATSFIX] = 0
 	g_izShowStatsFlags[id] = 0		// Clear all flags
 	g_fzShowUserStatsTime[id] = 0.0
+	g_LastChannel[id] = 0
 
 	return PLUGIN_CONTINUE
 }

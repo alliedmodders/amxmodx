@@ -4,6 +4,7 @@
 	Version="7.10"
 	Name="libpc300"
 	ProjectGUID="{19B72687-080B-437A-917A-12AEB0031635}"
+	RootNamespace="libpc300"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -366,6 +367,12 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
 			<File
 				RelativePath=".\libpawnc.rc">
+			</File>
+			<File
+				RelativePath=".\sc5.scp">
+			</File>
+			<File
+				RelativePath=".\sc7.scp">
 			</File>
 		</Filter>
 	</Files>

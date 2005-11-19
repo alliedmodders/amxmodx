@@ -1920,7 +1920,7 @@ static int nesting=0;
             assert(lval.sym!=NULL);
             if ((lval.sym->usage & uCONST)!=0 && (arg[argidx].usage & uCONST)==0) {
               /* treat a "const" variable passed to a function with a non-const
-               * "variable argument list" as a constant here */
+               * "variable argument flist" as a constant here */
               assert(lvalue);
               rvalue(&lval);      /* get value in PRI */
               setheap_pri();      /* address of the value on the heap in PRI */
@@ -2132,7 +2132,7 @@ static int nesting=0;
       markexpr(sPARM,NULL,0);   /* mark the end of a sub-expression */
       nest_stkusage++;
     } else {
-      error(99,argidx);        /* argument count mismatch */
+      error(88,argidx);        /* argument count mismatch */
     } /* if */
     if (arglist[argidx]==ARG_UNHANDLED)
       nargs++;

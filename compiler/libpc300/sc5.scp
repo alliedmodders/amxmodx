@@ -125,7 +125,8 @@ static char *errmsg[] = {
 /*084*/  "state conflict: one of the states is already assigned to another implementation (symbol \"%s\")\n",
 /*085*/  "no states are defined for function \"%s\"\n",
 /*086*/  "unknown automaton \"%s\"\n",
-/*087*/  "unknown state \"%s\" for automaton \"%s\"\n"
+/*087*/  "unknown state \"%s\" for automaton \"%s\"\n",
+/*088*/  "number of arguments does not match definition\n"
 #else
   "\267pect\233\277k\210:\242\312bu\202fo\217\206\216\012",
   "\201l\223\247s\203g\361\326\373\202(\254\355\201) c\350f\246\356w ea\273 \042c\342e\042\012",
@@ -213,7 +214,8 @@ static char *errmsg[] = {
   "\326\200\302flict: \201\200\300\266\200\326\325\274\212\222ad\223a\250gn\233\277 a\221\266\270i\357l\373\320\231\364",
   "\376\326\325\204\200\323\233f\254\251\216\012",
   "\217k\221w\346au\277\334\201\311",
-  "\217k\221w\346\326\200\216 f\254au\277\334\201\311"
+  "\217k\221w\346\326\200\216 f\254au\277\334\201\311",
+  "\374\270\300\265t\207do\325\241\334\273 \323i\213\012"
 #endif
        };
 

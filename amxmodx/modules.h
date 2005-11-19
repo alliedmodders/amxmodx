@@ -48,6 +48,29 @@
 #define RELOAD_MODULE 0
 #define STATIC_MODULE 1
 
+typedef enum
+{
+	Player_Name,		//String
+	Player_Ip,			//String
+	Player_Team,		//String
+	Player_Ingame,		//bool
+	Player_Authorized,	//bool
+	Player_Vgui,		//bool
+	Player_Time,		//float
+	Player_Playtime,	//float
+	Player_MenuExpire,	//float
+	Player_Weapons,		//struct{int,int}[32]
+	Player_CurrentWeapon,	//int
+	Player_TeamID,			//int
+	Player_Deaths,			//int
+	Player_Aiming,			//int
+	Player_Menu,			//int
+	Player_Keys,			//int
+	Player_Flags,			//int[32]
+	Player_Newmenu,			//int
+	Player_NewmenuPage,		//int
+}  PlayerProp;
+
 int CheckModules(AMX *amx, char error[128]);
 const char *StrCaseStr(const char *as, const char *bs);
 void DisableDebugHandler(AMX *amx);

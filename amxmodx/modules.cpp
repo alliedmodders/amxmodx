@@ -1594,6 +1594,60 @@ int MNF_SetPlayerTeamInfo(int player, int teamid, const char *teamname)
 	return 1;
 }
 
+void *MFN_PlayerPropAddr(int id, int prop)
+{
+	if (id < 1 || id > gpGlobals->maxClients)
+		return NULL;
+
+	CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
+
+	switch (prop)
+	{
+	case Player_Name:
+		return &pPlayer->name;
+	case Player_Ip:
+		return &pPlayer->ip;
+	case Player_Team:
+		return &pPlayer->team;
+	case Player_Ingame:
+		return &pPlayer->ingame;
+	case Player_Authorized:
+		return &pPlayer->authorized;
+	case Player_Vgui:
+		return &pPlayer->vgui;
+	case Player_Time:
+		return &pPlayer->time;
+	case Player_Playtime:
+		return &pPlayer->playtime;
+	case Player_MenuExpire:
+		return &pPlayer->menuexpire;
+	case Player_Weapons:
+		return &pPlayer->weapons[0];
+	case Player_CurrentWeapon:
+		return &pPlayer->current;
+	case Player_TeamID:
+		return &pPlayer->teamId;
+	case Player_Deaths:
+		return &pPlayer->deaths;
+	case Player_Aiming:
+		return &pPlayer->aiming;
+	case Player_Menu:
+		return &pPlayer->menu;
+	case Player_Keys:
+		return &pPlayer->keys;
+	case Player_Flags:
+		return &pPlayer->flags[0];
+	case Player_Newmenu:
+		return &pPlayer->newmenu;
+	case Player_NewmenuPage:
+		return &pPlayer->page;
+	default:
+		return NULL;
+	}
+
+	return NULL;
+}
+
 int amx_Execv()
 {
 	return AMX_ERR_NOTFOUND;
@@ -1676,6 +1730,7 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("CellToReal", MNF_CellToReal)
 	REGISTER_FUNC("RealToCell", MNF_RealToCell)
 	REGISTER_FUNC("SetPlayerTeamInfo", MNF_SetPlayerTeamInfo)
+	REGISTER_FUNC("PlayerPropAddr", MFN_PlayerPropAddr)
 
 #ifdef MEMORY_TEST
 	REGISTER_FUNC("Allocator", m_allocator)

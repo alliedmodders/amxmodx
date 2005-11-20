@@ -3422,44 +3422,6 @@ cell AMX_NATIVE_CALL require_module(AMX *amx, cell *params)
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL lang_phrase(AMX *amx, cell *params)
-{
-	int len = 0;
-	int iLang = params[1];
-
-	const char *cpLangName=NULL;
-	// Handle player ids (1-32) and server language
-	
-	if (iLang == LANG_SERVER)				// LANG_SERVER
-	{
-		cpLangName = g_vault.get("server_language");
-	}
-	else if (iLang >= 1 && iLang <= 32)		// Direct Client Id
-	{
-		if ((int)CVAR_GET_FLOAT("amx_client_languages") == 0)
-		{
-			cpLangName = g_vault.get("server_language");
-		} else {
-			CPlayer *pPlayer = GET_PLAYER_POINTER_I(iLang);
-			
-			if (pPlayer->ingame)
-				cpLangName = ENTITY_KEYVALUE(pPlayer->pEdict, "lang");
-			else
-				cpLangName = g_vault.get("server_language");
-		}
-	}
-	
-	if (!cpLangName || strlen(cpLangName) < 1)
-		cpLangName = "en";
-
-	const char *str = get_amxstring(amx, params[2], 0, len);
-	const char *dat = g_langMngr.GetDef(cpLangName, str);
-	
-	set_amxstring(amx, params[3], dat ? dat : "ML_LNOTFOUND", params[4]);
-
-	return 1;
-}
-
 static cell AMX_NATIVE_CALL amx_mkdir(AMX *amx, cell *params)
 {
 	int len = 0;
@@ -3770,7 +3732,6 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"is_user_connecting",		is_user_connecting},
 	{"is_user_hltv",			is_user_hltv},
 	{"lang_exists",				lang_exists},
-	{"lang_phrase",				lang_phrase},
 	{"log_amx",					log_amx},
 	{"log_message",				log_message},
 	{"log_to_file",				log_to_file},

@@ -1927,6 +1927,28 @@ enum ForwardParam
 	FP_ARRAY,						// array; use the return value of prepareArray.
 };
 
+enum PlayerProp
+{
+	Player_Name,		//String
+	Player_Ip,			//String
+	Player_Team,		//String
+	Player_Ingame,		//bool
+	Player_Authorized,	//bool
+	Player_Vgui,		//bool
+	Player_Time,		//float
+	Player_Playtime,	//float
+	Player_MenuExpire,	//float
+	Player_Weapons,		//struct{int,int}[32]
+	Player_CurrentWeapon,	//int
+	Player_TeamID,			//int
+	Player_Deaths,			//int
+	Player_Aiming,			//int
+	Player_Menu,			//int
+	Player_Keys,			//int
+	Player_Flags,			//int[32]
+	Player_Newmenu,			//int
+	Player_NewmenuPage,		//int
+};
 
 typedef int				(*PFN_ADD_NATIVES)				(const AMX_NATIVE_INFO * /*list*/);
 typedef char *			(*PFN_BUILD_PATHNAME)			(const char * /*format*/, ...);
@@ -1978,6 +2000,7 @@ typedef edict_t *		(*PFN_GET_PLAYER_EDICT)			(int /*id*/);
 #else
 typedef void *			(*PFN_GET_PLAYER_EDICT)			(int /*id*/);
 #endif
+typedef void *			(*PFN_PLAYER_PROP_ADDR)			(int /*id*/, int /*prop*/);
 
 #ifdef MEMORY_TEST
 typedef void *			(*PFN_ALLOCATOR)				(const char* /*filename*/, const unsigned int /*line*/, const char* /*func*/,
@@ -2068,6 +2091,7 @@ extern PFN_REGISTERFUNCTION			g_fn_RegisterFunction;
 extern PFN_REQ_FNPTR				g_fn_RequestFunction;
 extern PFN_AMX_PUSH					g_fn_AmxPush;
 extern PFN_SET_TEAM_INFO			g_fn_SetTeamInfo;
+extern PFN_PLAYER_PROP_ADDR			g_fn_PlayerPropAddr;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2129,6 +2153,7 @@ void *			MF_RequestFunction			(const char *description) { }
 int				MF_AmxPush					(AMX *amx, cell *params) { }
 int				MF_AmxExec					(AMX *amx, cell *retval, int idx) { }
 int				MF_SetPlayerTeamInfo		(int id, int teamid, const char *teamname) { }
+void *			MF_PlayerPropAddr			(int id, int prop) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
@@ -2195,6 +2220,7 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...);
 #define MF_RequestFunction g_fn_RequestFunction;
 #define MF_AmxPush g_fn_AmxPush
 #define	MF_SetPlayerTeamInfo g_fn_SetTeamInfo
+#define MF_PlayerPropAddr g_fn_PlayerPropAddr
 
 #ifdef MEMORY_TEST
 /*** Memory ***/

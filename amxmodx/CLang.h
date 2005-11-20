@@ -35,6 +35,10 @@
 #define LANG_SERVER 0
 #define LANG_PLAYER -1
 
+#define LANG_STATUS_OK 0			// OK
+#define LANG_STATUS_KLNOTFOUND 1	// Lang key not found in the lang.txt
+#define LANG_STATUS_LNOTFOUND 3		// Invalid lang
+
 struct md5Pair
 {
 	String file;
@@ -69,7 +73,7 @@ class CLangMngr
 		~CLang();
 
 		// Get the definition
-		const char *GetDef(const char *key);
+		const char *GetDef(const char *key, int &status);
 		// Add definitions to this language
 		void MergeDefinitions(CQueue <sKeyDef*> & vec);
 		// Reset this language
@@ -167,8 +171,8 @@ class CLangMngr
 public:
 	// Merge a definitions file
 	int MergeDefinitionFile(const char *file);
-	// Get a definition from a lang name and a kyer
-	const char *GetDef(const char *langName, const char *key);
+	// Get a definition from a lang name and a key
+	const char *GetDef(const char *langName, const char *key, int &status);
 	// Format a string
 	const char *Format(const char *src, ...);
 	// Format a string for an AMX plugin

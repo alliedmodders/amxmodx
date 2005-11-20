@@ -358,23 +358,22 @@ void CLangMngr::CLang::MergeDefinitions(CQueue<sKeyDef*> &vec)
 	}
 }
 
-const char * CLangMngr::CLang::GetDef(const char *key)
+const char * CLangMngr::CLang::GetDef(const char *key, int &status)
 {
-	static char nfind[1024] = "ML_NOTFOUND(KEY)";
 	int ikey = m_LMan->GetKeyEntry(key);
 	
 	if (ikey == -1)
 	{
-		sprintf(nfind, "ML_NOTFOUND: %s", key);
-		return nfind;
+		return NULL;
 	}
-	
+
 	for (unsigned int i = 0; i < m_LookUpTable.size(); i++)
 	{
 		if (m_LookUpTable[i]->GetKey() == ikey)
 			return m_LookUpTable[i]->GetDef();
 	}
 	
+	status = LANG_STATUS_KLNOTFOUND;
 	return NULL;
 }
 
@@ -529,6 +528,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 {
 	// number of parameters ( for NEXT_PARAM macro )
 	int paramCount = *params / sizeof(cell);
+	int status;
 	
 	// the output buffer
 	static char outbuf[4096];
@@ -580,27 +580,43 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 				int tmplen = 0;
 				NEXT_PARAM();
 				char *key = get_amxstring(amx, params[parm++], 1, tmplen);
-				const char *def = GetDef(cpLangName, key);
-				
+				const char *def = GetDef(cpLangName, key, status);
+
 				if (def == NULL)
 				{
+					bool a = true;
+					if (status == LANG_STATUS_LNOTFOUND)
+					{
+						AMXXLOG_Log("[AMXX] Language \"%s\" not found", cpLangName);
+					}
+					else if (status == LANG_STATUS_KLNOTFOUND)
+					{
+						a = false;
+						AMXXLOG_Log("[AMXX] Language key \"%s\" not found for language \"%s\"", key, cpLangName);
+					}
+
 					if (*pAmxLangName != LANG_SERVER)
 					{
-						def = GetDef(g_vault.get("server_language"), key);
+						def = GetDef(g_vault.get("server_language"), key, status);
 					}
-					if (strcmp(cpLangName, "en") != 0 && strcmp(g_vault.get("server_language"), "en") != 0)
+					
+					if (!def && (strcmp(cpLangName, "en") != 0 && strcmp(g_vault.get("server_language"), "en") != 0))
 					{
-						def = GetDef("en", key);
+						def = GetDef("en", key, status);
 					}
+
 					if (!def)
 					{
 						static char buf[512];
 						CHECK_PTR((char*)(buf + 17 + strlen(key)), buf, sizeof(buf));
 						sprintf(buf, "ML_LNOTFOUND: %s", key);
 						def = buf;
-					}
+						
+						if (a)
+							AMXXLOG_Log("[AMXX] Language key \"%s\" not found, check \"%s\"", key, GetFileName(amx));
+					}				
 				}
-				
+
 				while (*def)
 				{
 					if (*def == '%')
@@ -795,6 +811,7 @@ char *CLangMngr::FormatString(const char *fmt, va_list &ap)
 	static char outbuf[4096];
 	char *outptr = outbuf;
 	const char *src = fmt;
+	int status;
 
 	while (*src)
 	{
@@ -839,18 +856,20 @@ char *CLangMngr::FormatString(const char *fmt, va_list &ap)
 				
 				int tmplen = 0;
 				const char *key = va_arg(ap, const char *);
-				const char *def = GetDef(cpLangName, key);
+				const char *def = GetDef(cpLangName, key, status);
 				
 				if (def == NULL)
 				{
 					if (pAmxLangName != LANG_SERVER)
 					{
-						def = GetDef(g_vault.get("server_language"), key);
+						def = GetDef(g_vault.get("server_language"), key, status);
 					}
+					
 					if (strcmp(cpLangName, "en") != 0 && strcmp(g_vault.get("server_language"), "en") != 0)
 					{
-						def = GetDef("en", key);
+						def = GetDef("en", key, status);
 					}
+					
 					if (!def)
 					{
 						static char buf[512];
@@ -859,7 +878,7 @@ char *CLangMngr::FormatString(const char *fmt, va_list &ap)
 						def = buf;
 					}
 				}
-				
+
 				while (*def)
 				{
 					if (*def == '%')
@@ -1172,13 +1191,17 @@ CLangMngr::CLang * CLangMngr::GetLangR(const char *name)
 	return NULL;
 }
 
-const char *CLangMngr::GetDef(const char *langName, const char *key)
+const char *CLangMngr::GetDef(const char *langName, const char *key, int &status)
 {
 	CLang *lang = GetLangR(langName);
 	if (lang)
-		return lang->GetDef(key);
-	
-	return "ML_NOTFOUND(LANG)";
+	{
+		//status = LANG_STATUS_OK;
+		return lang->GetDef(key, status);
+	} else {
+		status = LANG_STATUS_LNOTFOUND;
+		return NULL;
+	}
 }
 
 bool CLangMngr::Save(const char *filename)

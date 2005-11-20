@@ -548,10 +548,13 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA)
 }
 
 /* save state at death */ 
-public client_death(killer,victim,wpnindex,hitplace,TK){
-
+public client_death(killer,victim,wpnindex,hitplace,TK)
+{
   new killer_name[32]
   get_user_name(killer,killer_name,31) 
+  
+  if (!is_user_connected(killer))
+    return PLUGIN_CONTINUE
 
   new enemygre = ( ( (wpnindex == DODW_HANDGRENADE || wpnindex == DODW_MILLS_BOMB) && get_user_team(killer) == 2 ) || ( wpnindex == DODW_STICKGRENADE && get_user_team(killer) == 1 ) ) ? 1:0
 

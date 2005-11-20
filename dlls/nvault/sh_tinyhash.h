@@ -44,9 +44,24 @@
 		};
 		typedef List<THashNode *> *	NodePtr;
 	public:
-		THash() : m_numBuckets(0), m_Buckets(NULL), m_Items(0)
+		THash() : m_Buckets(NULL), m_numBuckets(0), m_percentUsed(0.0f), m_Items(0)
 		{
 			_Refactor();
+		}
+		THash(const THash &other) : m_Buckets(new NodePtr[other.numBuckets]),
+			m_numBuckets(other.m_numBuckets),
+			m_percentUsed(other.m_percentUsed)
+		{
+			for (size_t i=0; i<m_numBuckets; i++)
+				m_Buckets[i] = NULL;
+			for (const_iterator iter=other.begin(); iter != other.end(); ++iter)
+				_FindOrInsert(iter->key)->val = iter->val;
+		}
+		void operator=(const THash &other)
+		{
+			clear();
+			for (const_iterator iter=other.begin(); iter!=other.end(); ++iter)
+				_FindOrInsert(iter->key)->val = iter->val;
 		}
 		~THash()
 		{
@@ -106,6 +121,7 @@
 				if (Compare(key, (*iter)->key) == 0)
 				{
 					iter = m_Buckets[place]->erase(iter);
+					m_Items--;
 					return;
 				}
 			}
@@ -117,6 +133,8 @@
 			size_t removed = 0;
 			for (size_t i=0; i<m_numBuckets; i++)
 			{
+				if (!m_Buckets[i])
+					continue;
 				iter = m_Buckets[i]->begin();
 				bool remove;
 				while (iter != m_Buckets[i]->end())
@@ -143,6 +161,7 @@
 					}
 				}
 			}
+			m_Items -= removed;
 			return removed;
 		}
 		size_t Size()
@@ -188,6 +207,7 @@
 				pNode = new THashNode(key, V());
 				m_Buckets[place]->push_back(pNode);
 				m_percentUsed += (1.0f / (float)m_numBuckets);
+				m_Items++;
 			} else {
 				typename List<THashNode *>::iterator iter;
 				for (iter=m_Buckets[place]->begin(); iter!=m_Buckets[place]->end(); iter++)
@@ -198,10 +218,10 @@
 				//node does not exist
 				pNode = new THashNode(key, V());
 				m_Buckets[place]->push_back(pNode);
+				m_Items++;
 			}
 			if (PercentUsed() > 0.75f)
 				_Refactor();
-			m_Items++;
 			return pNode;
 		}
 		void _Refactor()
@@ -254,14 +274,15 @@
 		}
 	public:
 		friend class iterator;
+		friend class const_iterator;
 		class iterator
 		{
 			friend class THash;
 		public:
-			iterator() : hash(NULL), end(true)
+			iterator() : curbucket(-1), hash(NULL), end(true)
 			{
 			};
-			iterator(THash *h) : hash(h), end(false)
+			iterator(THash *h) : curbucket(-1), hash(h), end(false)
 			{
 				if (!h->m_Buckets)
 					end = true;
@@ -281,7 +302,7 @@
 				_Inc();
 				return old;
 			}
-			THashNode & operator * () const
+			const THashNode & operator * () const
 			{
 				return *(*iter);
 			}
@@ -289,7 +310,7 @@
 			{
 				return *(*iter);
 			}
-			THashNode * operator ->() const
+			const THashNode * operator ->() const
 			{
 				return (*iter);
 			}
@@ -316,7 +337,7 @@
 		private:
 			void _Inc()
 			{
-				if (end || !hash || curbucket >= (int)hash->m_numBuckets)
+				if (end || !hash || curbucket >= static_cast<int>(hash->m_numBuckets))
 					return;
 				if (curbucket < 0)
 				{
@@ -361,6 +382,114 @@
 			THash *hash;
 			bool end;
 		};
+		class const_iterator
+		{
+			friend class THash;
+		public:
+			const_iterator() : curbucket(-1), hash(NULL), end(true)
+			{
+			};
+			const_iterator(const THash *h) : curbucket(-1), hash(h), end(true)
+			{
+				if (!h->m_Buckets)
+					end = true;
+				else
+					_Inc();
+			};
+			const_iterator & operator++()
+			{
+				_Inc();
+				return *this;
+			}
+			const_iterator operator++(int)
+			{
+				iterator old(*this);
+				_Inc();
+				return old;
+			}
+			void erase()
+			{
+				if (end || !hash || curbucket < 0 || curbucket >= static_cast<int>(hash->m_numBuckets))
+					return true;
+
+				iterator tmp = *this;
+				++tmp;
+				hash->m_Items--;
+				hash->m_Buckets[curbucket]->erase(iter);
+				*this = tmp;
+			}
+			const THashNode & operator *() const
+			{
+				return *(*iter);
+			}
+			const THashNode * operator ->() const
+			{
+				return (*iter);
+			}
+			bool operator ==(const const_iterator &where) const
+			{
+				if (where.hash == this->hash
+					&& where.end == this->end
+					&&
+					(this->end ||
+					((where.curbucket == this->curbucket)
+					&& (where.iter == iter))
+					))
+					return true;
+				return false;
+			}
+			bool operator !=(const const_iterator &where) const
+			{
+				return !((*this)==where);
+			}
+		private:
+			void _Inc()
+			{
+				if (end || !hash || curbucket >= static_cast<int>(hash->m_numBuckets))
+					return;
+				if (curbucket < 0)
+				{
+					for (int i=0; i<(int)hash->m_numBuckets; i++)
+					{
+						if (hash->m_Buckets[i])
+						{
+							iter = hash->m_Buckets[i]->begin();
+							if (iter == hash->m_Buckets[i]->end())
+								continue;
+							curbucket = i;
+							break;
+						}
+					}
+					if (curbucket < 0)
+						end = true;
+				} else {
+					if (iter != hash->m_Buckets[curbucket]->end())
+						iter++;
+					if (iter == hash->m_Buckets[curbucket]->end())
+					{
+						int oldbucket = curbucket;
+						for (int i=curbucket+1; i<(int)hash->m_numBuckets; i++)
+						{
+							if (hash->m_Buckets[i])
+							{
+								iter = hash->m_Buckets[i]->begin();
+								if (iter == hash->m_Buckets[i]->end())
+									continue;
+								curbucket = i;
+								break;
+							}
+						}
+						if (curbucket == oldbucket)
+							end = true;
+					}
+				}
+			}
+		private:
+			int curbucket;
+			typename List<THashNode *>::iterator iter;
+			const THash *hash;
+			bool end;
+		};
 	public:
 		iterator begin()
 		{
@@ -371,6 +500,29 @@
 			iterator iter;
 			iter.hash = this;
 			return iter;
+		}
+		const_iterator begin() const
+		{
+			return const_iterator(this);
+		}
+		const_iterator end() const
+		{
+			const_iterator iter;
+			iter.hash = this;
+			return iter;
+		}
+		iterator erase(iterator where)
+		{
+			where.erase();
+			return where;
+		}
+		template <typename U>
+		void erase(const U & u)
+		{
+			iterator iter = find(u);
+			if (iter == end())
+				return;
+			iter.erase();
 		}
 		template <typename U>
 		iterator find(const U & u) const

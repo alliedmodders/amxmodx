@@ -143,25 +143,38 @@ stock bool:is_str_num(sString[])
    the right output , the max right length, and then the delimiter string.
    By Suicid3
 */
-stock split(szInput[] , szLeft[] , pL_Max , szRight[] , pR_Max , szDelim[])
+stock split(szInput[], szLeft[], pL_Max, szRight[], pR_Max, szDelim[])
 {
-    new iEnd = contain(szInput , szDelim);
-    new iStart = iEnd + strlen(szDelim);
+	new iEnd = contain(szInput, szDelim);
+	new iStart = iEnd + strlen(szDelim);
 
-    //If delimiter isnt in Input just split the string at max lengths
-    if(iEnd == -1)
-    {
-        iStart = copy(szLeft , pL_Max , szInput);
-        copy(szRight , pR_Max , szInput[iStart]);
-        return;
-    }
+	//If delimiter isnt in Input just split the string at max lengths
+	if(iEnd == -1)
+	{
+		iStart = copy(szLeft, pL_Max, szInput);
+		copy(szRight, pR_Max, szInput[iStart]);
+		return;
+	}
 
-    //If delimter is in Input then split at input for max lengths
-    if(pL_Max >= iEnd)
-        copy(szLeft , iEnd , szInput);
-    else
-        copy(szLeft , pL_Max , szInput);
+	//If delimter is in Input then split at input for max lengths
+	if(pL_Max >= iEnd)
+		copy(szLeft, iEnd, szInput);
+	else
+		copy(szLeft, pL_Max, szInput);
 
-    copy(szRightt , pR_Max , szInput[iStart]);
-    return;
+	copy(szRightt, pR_Max, szInput[iStart]);
+
+	return;
+}
+
+/* Removes a path from szFilePath leaving the name of the file in szFile for a pMax length. */
+stock remove_filepath(szFilePath[], szFile[], pMax)
+{
+	new len = strlen(szFilePath);
+
+	while((--len >= 0) && (szFilePath[len] != '/') && (szFilePath[len] != '\')) { }
+
+	copy(szFile , pMax , szFilePath[len + 1]);
+
+	return;
 }

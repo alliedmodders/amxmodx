@@ -6,116 +6,107 @@
 
 // Offsets (used in NPData.cpp)
 
-#define		OFFSET_WIN_RESOURCES		1808	//1604
-#define		OFFSET_LIN_RESOURCES		1828	//1624
+#define      OFFSET_WIN_RESOURCES		1816	//454 * 4
+#define      OFFSET_LIN_RESOURCES		1836	//459 * 4
 
-#define		OFFSET_WIN_WEAPDMG			404		//200
-#define		OFFSET_LIN_WEAPDMG			420		//216
+#define      OFFSET_WIN_WEAPDMG			400		//100 * 4
+#define      OFFSET_LIN_WEAPDMG			420		//105 * 4
 
-#define		OFFSET_WIN_WEAPRANGE		400		//196
-#define		OFFSET_LIN_WEAPRANGE		416		//212
+#define      OFFSET_WIN_WEAPRANGE		396		//99 * 4
+#define      OFFSET_LIN_WEAPRANGE		416		//104 * 4
 
-#define		OFFSET_WIN_WEAPCLIP			364		//160
-#define		OFFSET_LIN_WEAPCLIP			380		//176
+#define      OFFSET_WIN_WEAPCLIP		364		//91 * 4
+#define      OFFSET_LIN_WEAPCLIP		384		//96 * 4
 
-#define		OFFSET_WIN_HIVE_TRAIT		516		//312
-#define		OFFSET_LIN_HIVE_TRAIT		500		//296
+#define      OFFSET_WIN_HIVE_TRAIT		6220	//1555 * 4
+#define      OFFSET_LIN_HIVE_TRAIT		6240	//1560 * 4
 
-#define		OFFSET_WIN_SCORE			6636	//6432
-#define		OFFSET_LIN_SCORE			6512	//6308
+#define      OFFSET_WIN_SCORE			6556	//1639 * 4
+#define      OFFSET_LIN_SCORE			6576	//1644 * 4
 
-#define		OFFSET_WIN_EXP				6572	//6368
-#define		OFFSET_LIN_EXP				6460	//6256
+#define      OFFSET_WIN_EXP				6480	//1620 * 4
+#define      OFFSET_LIN_EXP				6500	//1625 * 4
 
-#define		OFFSET_WIN_POINTS			6580	//6376
-#define		OFFSET_LIN_POINTS			6468	//6264
+#define      OFFSET_WIN_POINTS			6488	//1622 * 4
+#define      OFFSET_LIN_POINTS			6508	//1627 * 4
 
-#define		OFFSET_WIN_AMMO_LMG			1116	//912
-#define		OFFSET_LIN_AMMO_LMG			1136	//932
+#define      OFFSET_WIN_AMMO_LMG		1116	//279 * 4
+#define      OFFSET_LIN_AMMO_LMG		1136	//284 * 4
 
-#define		OFFSET_WIN_AMMO_PISTOL		1120	//916
-#define		OFFSET_LIN_AMMO_PISTOL		1140	//936
+#define      OFFSET_WIN_AMMO_PISTOL		1120	//280 * 4
+#define      OFFSET_LIN_AMMO_PISTOL		1140	//285 * 4
 
-#define		OFFSET_WIN_AMMO_SHOTGUN		1124	//920
-#define		OFFSET_LIN_AMMO_SHOTGUN		1144	//940
+#define      OFFSET_WIN_AMMO_SHOTGUN	1124	//281 * 4
+#define      OFFSET_LIN_AMMO_SHOTGUN	1144	//286 * 4
 
+#define      OFFSET_WIN_AMMO_HMG		1128	//282 * 4
+#define      OFFSET_LIN_AMMO_HMG		1148	//287 * 4
 
-#define		OFFSET_WIN_AMMO_HMG			1128	//924
-#define		OFFSET_LIN_AMMO_HMG			1148	//944
+#define      OFFSET_WIN_AMMO_GL			1132	//283 * 4
+#define      OFFSET_LIN_AMMO_GL			1152	//288 * 4
 
+#define      OFFSET_WIN_AMMO_HG			1136	//284 * 4
+#define      OFFSET_LIN_AMMO_HG			1156	//289 * 4
 
-#define		OFFSET_WIN_AMMO_GL			1132	//928
-#define		OFFSET_LIN_AMMO_GL			1152	//948
+#define      OFFSET_WIN_DEATHS			1380	//345 * 4
+#define      OFFSET_LIN_DEATHS			1400	//349 * 4
 
-#define		OFFSET_WIN_AMMO_HG			1136	//932	// Couldn't find anything at this offset but other weapons haven't changed.
-#define		OFFSET_LIN_AMMO_HG			1156	//952 // Offset 880 is the only one to change when you get a grenade, but data in it makes no sense.
-
-#define		OFFSET_WIN_DEATHS			1380	//1176
-#define		OFFSET_LIN_DEATHS			1400	//1196
-
-#define		OFFSET_WIN_STRUCTOWNER		324		//120
-#define		OFFSET_LIN_STRUCTOWNER		340		//136
-
-
-
-
-
-
+#define      OFFSET_WIN_STRUCTOWNER		324		//81 * 4
+#define      OFFSET_LIN_STRUCTOWNER		344		//86 * 4
 
 
 enum
 {
-	MASK_NONE = 0,
-	MASK_SIGHTED = 1,
-	MASK_DETECTED = 2,
-	MASK_BUILDABLE = 4,
-	MASK_BASEBUILD0 = 8,		// Base build slot #0
-	MASK_WEAPONS1 = 8,		// Marine weapons 1
-	MASK_CARAPACE = 8,		// Alien carapace
-	MASK_WEAPONS2 = 16,		// Marines weapons 2
-	MASK_REGENERATION = 16,		// Alien regeneration
-	MASK_BASEBUILD1 = 16,		// Base build slot #1
-	MASK_WEAPONS3 = 32,		// Marine weapons 3
-	MASK_REDEMPTION = 32,		// Alien redemption
-	MASK_BASEBUILD2 = 32,		// Base build slot #2
-	MASK_ARMOR1 = 64,		// Marine armor 1
-	MASK_CELERITY = 64,		// Alien celerity
-	MASK_BASEBUILD3 = 64,		// Base build slot #3
-	MASK_ARMOR2 = 128,		// Marine armor 2
-	MASK_ADRENALINE = 128,		// Alien adrenaline
-	MASK_BASEBUILD4 = 128,		// Base build slot #4
-	MASK_ARMOR3 = 256,		// Marine armor 3
-	MASK_SILENCE = 256,		// Alien silence
-	MASK_BASEBUILD5 = 256,		// Base build slot #5
-	MASK_JETPACK = 512,		// Marine jetpacks
-	MASK_CLOAKING = 512,		// Alien cloaking
-	MASK_BASEBUILD6 = 512,		// Base build slot #6
-	MASK_FOCUS = 1024,		// Alien focus
-	MASK_MOTION = 1024,		// Marine motion tracking
-	MASK_BASEBUILD7 = 1024,		// Base build slot #7
-	MASK_SCENTOFFEAR = 2048,	// Alien scent of fear
-	MASK_DEFENSE2 = 4096,		// Defense level 2
-	MASK_DEFENSE3 = 8192,		// Defense level 3
-	MASK_ELECTRICITY = 8192,	// Electricy
-	MASK_MOVEMENT2 = 16384,		// Movement level 2,
-	MASK_MOVEMENT3 = 32768,		// Movement level 3
-	MASK_HEAVYARMOR = 32768,	// Marine heavy armor
-	MASK_SENSORY2 = 65536,		// Sensory level 2
-	MASK_SENSORY3 = 131072,		// Sensory level 3
-	MASK_ALIEN_MOVEMENT = 262144,	// Onos is charging
-	MASK_WALLSTICKING = 524288,	// Flag for wall-sticking
-	MASK_PRIMALSCREAM = 1048576,	// Alien is in range of active primal scream
-	MASK_UMBRA = 2097152,		// In umbra
-	MASK_DIGESTING = 4194304,	// When set on a visible player, player is digesting.  When set on invisible player, player is being digested
-	MASK_RECYCLING = 8388608,	// Building is recycling
-	MASK_TOPDOWN = 16777216,	// Commander view
-	MASK_PLAYER_STUNNED = 33554432,	// Player has been stunned by stomp
-	MASK_ENSNARED = 67108864,	// Webbed
-	MASK_ALIEN_EMBRYO = 268435456,	// Gestating
-	MASK_SELECTABLE = 536870912,	// ???
-	MASK_PARASITED = 1073741824,	// Parasite flag
-	MASK_SENSORY_NEARBY = 2147483648	// Sensory chamber in range
-
+   MASK_NONE = 0,
+   MASK_SIGHTED = 1,
+   MASK_DETECTED = 2,
+   MASK_BUILDABLE = 4,
+   MASK_BASEBUILD0 = 8,      // Base build slot #0
+   MASK_WEAPONS1 = 8,      // Marine weapons 1
+   MASK_CARAPACE = 8,      // Alien carapace
+   MASK_WEAPONS2 = 16,      // Marines weapons 2
+   MASK_REGENERATION = 16,      // Alien regeneration
+   MASK_BASEBUILD1 = 16,      // Base build slot #1
+   MASK_WEAPONS3 = 32,      // Marine weapons 3
+   MASK_REDEMPTION = 32,      // Alien redemption
+   MASK_BASEBUILD2 = 32,      // Base build slot #2
+   MASK_ARMOR1 = 64,      // Marine armor 1
+   MASK_CELERITY = 64,      // Alien celerity
+   MASK_BASEBUILD3 = 64,      // Base build slot #3
+   MASK_ARMOR2 = 128,      // Marine armor 2
+   MASK_ADRENALINE = 128,      // Alien adrenaline
+   MASK_BASEBUILD4 = 128,      // Base build slot #4
+   MASK_ARMOR3 = 256,      // Marine armor 3
+   MASK_SILENCE = 256,      // Alien silence
+   MASK_BASEBUILD5 = 256,      // Base build slot #5
+   MASK_JETPACK = 512,      // Marine jetpacks
+   MASK_CLOAKING = 512,      // Alien cloaking
+   MASK_BASEBUILD6 = 512,      // Base build slot #6
+   MASK_FOCUS = 1024,      // Alien focus
+   MASK_MOTION = 1024,      // Marine motion tracking
+   MASK_BASEBUILD7 = 1024,      // Base build slot #7
+   MASK_SCENTOFFEAR = 2048,   // Alien scent of fear
+   MASK_DEFENSE2 = 4096,      // Defense level 2
+   MASK_DEFENSE3 = 8192,      // Defense level 3
+   MASK_ELECTRICITY = 8192,   // Electricy
+   MASK_MOVEMENT2 = 16384,      // Movement level 2,
+   MASK_MOVEMENT3 = 32768,      // Movement level 3
+   MASK_HEAVYARMOR = 32768,   // Marine heavy armor
+   MASK_SENSORY2 = 65536,      // Sensory level 2
+   MASK_SENSORY3 = 131072,      // Sensory level 3
+   MASK_ALIEN_MOVEMENT = 262144,   // Onos is charging
+   MASK_WALLSTICKING = 524288,   // Flag for wall-sticking
+   MASK_PRIMALSCREAM = 1048576,   // Alien is in range of active primal scream
+   MASK_UMBRA = 2097152,      // In umbra
+   MASK_DIGESTING = 4194304,   // When set on a visible player, player is digesting.  When set on invisible player, player is being digested
+   MASK_RECYCLING = 8388608,   // Building is recycling
+   MASK_TOPDOWN = 16777216,   // Commander view
+   MASK_PLAYER_STUNNED = 33554432,   // Player has been stunned by stomp
+   MASK_ENSNARED = 67108864,   // Webbed
+   MASK_ALIEN_EMBRYO = 134217728,      //268435456,   // Gestating
+   MASK_SELECTABLE = 268435456,      //536870912,   // ???
+   MASK_PARASITED = 536870912,         //1073741824,   // Parasite flag
+   MASK_SENSORY_NEARBY = 1073741824   //2147483648   // Sensory chamber in range
 };
 
 typedef enum

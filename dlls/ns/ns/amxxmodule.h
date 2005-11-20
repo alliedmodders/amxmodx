@@ -2026,7 +2026,7 @@ typedef	void			(*PFN_MERGEDEFINITION_FILE)		(const char * /*filename*/);
 typedef const char *	(*PFN_FORMAT)					(const char * /*fmt*/, ... /*params*/);
 typedef void			(*PFN_REGISTERFUNCTION)			(void * /*pfn*/, const char * /*desc*/);
 typedef	int				(*PFN_AMX_PUSH)					(AMX * /*amx*/, cell /*value*/);
-typedef	int				(*PFN_SET_TEAM_INFO)			(int /*player */, int /*teamid */, const char */*name */);
+typedef	int				(*PFN_SET_TEAM_INFO)			(int /*player */, int /*teamid */, const char * /*name */);
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
 extern PFN_BUILD_PATHNAME			g_fn_BuildPathname;

@@ -359,7 +359,9 @@ switchCommand(id, action)
 
 	if (c < 3)
 	{
-		setc(g_blockPos, 112, action)
+		for (new x = 0; x < MAXMENUPOS; x++)
+			setWeapon(x, action)		
+
 		console_print(id, "%L", id, action ? "EQ_WE_RES" : "EQ_WE_UNRES")
 		g_Modified = true
 	} else {

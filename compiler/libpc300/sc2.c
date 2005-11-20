@@ -1189,6 +1189,7 @@ static int command(void)
 #endif
 #if !defined NO_DEFINE
   case tpDEFINE: {
+    int flag=0;
     ret=CMD_DEFINE;
     if (!SKIPPING) {
       char *pattern,*substitution;
@@ -1200,7 +1201,13 @@ static int command(void)
         lptr++;
       start=lptr;       /* save starting point of the match pattern */
       count=0;
-      while (*lptr>' ' && *lptr!='\0') {
+      while (*lptr!='\0') {
+        if (*lptr=='(')
+          flag=1;
+        if (flag && *lptr==')')
+          flag=0;
+        if (!flag && *lptr<=' ')
+          break;
         litchar(&lptr,0); /* litchar() advances "lptr" and handles escape characters */
         count++;
       } /* while */

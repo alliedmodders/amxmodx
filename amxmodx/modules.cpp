@@ -546,6 +546,23 @@ AMX* get_amxscript(int id, void** code, const char** filename)
 	return 0;
 }
 
+const char* GetFileName(AMX *amx)
+{
+	const char *filename = "";
+	CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(amx);
+		
+	if (pl)
+	{
+		filename = pl->getName();
+	} else {
+		CList<CScript,AMX*>::iterator a = g_loadedscripts.find(amx);
+		if (a)
+			filename = (*a).getName();
+	}
+
+	return filename;
+}
+
 const char* get_amxscriptname(AMX* amx)
 {
 	CList<CScript, AMX*>::iterator a = g_loadedscripts.find(amx);

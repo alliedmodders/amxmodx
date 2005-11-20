@@ -75,5 +75,6 @@ int CheckModules(AMX *amx, char error[128]);
 const char *StrCaseStr(const char *as, const char *bs);
 void DisableDebugHandler(AMX *amx);
 void EnableDebugHandler(AMX *amx);
+const char* GetFileName(AMX *amx);
 
 #endif // __MODULES_H__

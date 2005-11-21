@@ -149,7 +149,7 @@ stock split(szInput[], szLeft[], pL_Max, szRight[], pR_Max, szDelim[])
 	new iStart = iEnd + strlen(szDelim);
 
 	//If delimiter isnt in Input just split the string at max lengths
-	if(iEnd == -1)
+	if (iEnd == -1)
 	{
 		iStart = copy(szLeft, pL_Max, szInput);
 		copy(szRight, pR_Max, szInput[iStart]);
@@ -157,7 +157,7 @@ stock split(szInput[], szLeft[], pL_Max, szRight[], pR_Max, szDelim[])
 	}
 
 	//If delimter is in Input then split at input for max lengths
-	if(pL_Max >= iEnd)
+	if (pL_Max >= iEnd)
 		copy(szLeft, iEnd, szInput);
 	else
 		copy(szLeft, pL_Max, szInput);
@@ -172,9 +172,24 @@ stock remove_filepath(szFilePath[], szFile[], pMax)
 {
 	new len = strlen(szFilePath);
 
-	while((--len >= 0) && (szFilePath[len] != '/') && (szFilePath[len] != '\')) { }
+	while ((--len >= 0) && (szFilePath[len] != '/') && (szFilePath[len] != '\')) { }
 
-	copy(szFile , pMax , szFilePath[len + 1]);
+	copy(szFile, pMax, szFilePath[len + 1]);
 
 	return;
+}
+
+/* Replaces a contained string
+   By jtp10181
+*/
+stock replace_all(string[], len, what[], with[])
+{
+	new withlen, charnum = 0;
+	
+	withlen = strlen(with);
+	
+	while (replace(string[charnum], len, what, with) != 0)
+	{
+		charnum += contain(string[charnum], with) + withlen;
+	}
 }

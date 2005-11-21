@@ -59,13 +59,12 @@ public:
 	defentry() : definition(NULL)
 	{
 	};
+	defentry(const defentry &src)
+	{
+		definition = src.definition;
+	}
 	~defentry()
 	{
-		if (definition)
-		{
-			delete definition;
-			definition = NULL;
-		}
 	}
 	String *definition;
 };
@@ -183,6 +182,8 @@ public:
 
 	// When a language id in a format string in FormatAmxString is LANG_PLAYER, the glob id decides which language to take.
 	void SetDefLang(int id);
+
+	inline int GetDefLang() const { return m_CurGlobId; }
 
 	// Reset
 	void Clear();

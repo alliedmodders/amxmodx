@@ -13,7 +13,7 @@
 
 #include "sh_list.h"
 
-#define _T_INIT_HASH_SIZE	32
+#define _T_INIT_HASH_SIZE	128
 
 //namespace SourceHook
 //{
@@ -43,7 +43,7 @@
 			K key;
 			V val;
 		};
-		typedef List<THashNode *> *	NodePtr;
+		typedef List<THashNode> *	NodePtr;
 	public:
 		THash() : m_Buckets(NULL), m_numBuckets(0), m_percentUsed(0.0f), m_NumItems(0)
 		{
@@ -93,15 +93,10 @@
 	private:
 		void _Clear()
 		{
-			List<THashNode *>::iterator iter, begin, end;
 			for (size_t i=0; i<m_numBuckets; i++)
 			{
 				if (m_Buckets[i])
 				{
-					begin = m_Buckets[i]->begin();
-					end = m_Buckets[i]->end();
-					for (iter=begin; iter!=end; iter++)
-						delete (*iter);
 					delete m_Buckets[i];
 					m_Buckets[i] = NULL;
 				}
@@ -118,25 +113,33 @@
 			THashNode *pNode = NULL;
 			if (!m_Buckets[place])
 			{
-				m_Buckets[place] = new List<THashNode *>;
-				pNode = new THashNode(key, V());
-				m_Buckets[place]->push_back(pNode);
+				m_Buckets[place] = new List<THashNode>;
+				m_Buckets[place]->push_back(THashNode(key, V()));
 				m_percentUsed += (1.0f / (float)m_numBuckets);
 				m_NumItems++;
+				typename List<THashNode>::iterator iter;
+				iter = m_Buckets[place]->end();
+				iter--;
+				pNode = &(*iter);
 			} else {
-				typename List<THashNode *>::iterator iter;
-				for (iter=m_Buckets[place]->begin(); iter!=m_Buckets[place]->end(); iter++)
+				typename List<THashNode>::iterator iter, end=m_Buckets[place]->end();
+				for (iter=m_Buckets[place]->begin(); iter!=end; iter++)
 				{
-					if (Compare((*iter)->key, key) == 0)
-						return (*iter);
+					if (Compare((*iter).key, key) == 0)
+						return &(*iter);
 				}
 				//node does not exist
-				pNode = new THashNode(key, V());
-				m_Buckets[place]->push_back(pNode);
+				m_Buckets[place]->push_back(THashNode(key, V()));
 				m_NumItems++;
+				iter = m_Buckets[place]->end();
+				iter--;
+				pNode = &(*iter);
 			}
 			if (PercentUsed() > 0.75f)
+			{
 				_Refactor();
+				return _FindOrInsert(key);
+			}
 			return pNode;
 		}
 		void _Refactor()
@@ -151,7 +154,7 @@
 			} else {
 				size_t oldSize = m_numBuckets;
 				m_numBuckets *= 2;
-				typename List<THashNode *>::iterator iter;
+				typename List<THashNode>::iterator iter, end;
 				size_t place;
 				THashNode *pHashNode;
 				NodePtr *temp = new NodePtr[m_numBuckets];
@@ -164,18 +167,19 @@
 					if (m_Buckets[i])
 					{
 						//go through the list of items
-						for (iter = m_Buckets[i]->begin(); iter != m_Buckets[i]->end(); iter++)
+						end = m_Buckets[i]->end();
+						for (iter = m_Buckets[i]->begin(); iter!=end; iter++)
 						{
-							pHashNode = (*iter);
+							pHashNode = &(*iter);
 							//rehash it with the new bucket filter
 							place = HashFunction(pHashNode->key) % m_numBuckets;
 							//add it to the new hash table
 							if (!temp[place])
 							{
-								temp[place] = new List<THashNode *>;
+								temp[place] = new List<THashNode>;
 								m_percentUsed += (1.0f / (float)m_numBuckets);
 							}
-							temp[place]->push_back(pHashNode);
+							temp[place]->push_back((*iter));
 						}
 						//delete that bucket!
 						delete m_Buckets[i];
@@ -219,19 +223,19 @@
 			}
 			const THashNode & operator * () const
 			{
-				return *(*iter);
+				return (*iter);
 			}
 			THashNode & operator * ()
 			{
-				return *(*iter);
+				return (*iter);
 			}
 			const THashNode * operator ->() const
 			{
-				return (*iter);
+				return &(*iter);
 			}
 			THashNode * operator ->()
 			{
-				return (*iter);
+				return &(*iter);
 			}
 			bool operator ==(const iterator &where) const
 			{
@@ -308,7 +312,7 @@
 			}
 		private:
 			int curbucket;
-			typename List<THashNode *>::iterator iter;
+			typename List<THashNode>::iterator iter;
 			THash *hash;
 			bool end;
 		};

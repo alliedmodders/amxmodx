@@ -87,6 +87,20 @@ int set_amxstring(AMX *amx, cell amx_addr, const char *source, int max)
 	return dest - start;
 }
 
+size_t get_amxstring_r(AMX *amx, cell amx_addr, char *destination, int maxlen)
+{
+	register cell *source = (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
+	register char *dest = destination;
+	char *start = dest;
+	
+	while (*source && maxlen-- > 0)
+		*dest++=(char)(*source++);
+	if (dest)
+		*dest = '\0';
+
+	return --dest - start;
+}
+
 char* get_amxstring(AMX *amx, cell amx_addr, int id, int& len)
 {
 	static char buffor[4][3072];

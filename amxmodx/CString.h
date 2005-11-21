@@ -107,8 +107,10 @@ public:
 		{
 			clear();
 		} else {
-			Grow(strlen(d) + 1, false);
-			strcpy(v, d);
+			size_t len = strlen(d);
+			Grow(len + 1, false);
+			memcpy(v, d, len);
+			v[len] = '\0';
 		}
 	}
 

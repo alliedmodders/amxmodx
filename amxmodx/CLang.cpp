@@ -324,277 +324,244 @@ int CLangMngr::GetKeyEntry(String &key)
 	return val.index;
 }
 
-#define CHECK_PTR(ptr, start, bufsize) if ((ptr) - (start) >= (bufsize)) { \
-	LogError(amx, AMX_ERR_STACKERR, "Buffer overflow in string formatting"); \
-	outbuf[0] = 0; \
-	len = 0; \
-	return outbuf; }
-#define CHECK_OUTPTR(offset) CHECK_PTR(outptr+offset, outbuf, sizeof(outbuf))
-#define ZEROTERM(buf) buf[(sizeof(buf)/sizeof(buf[0]))-1]=0;
-#define NEXT_PARAM()		\
-	if (parm > paramCount) \
-	{ \
-		strcpy(outbuf, ""); \
-		len = 0; \
-		LogError(amx, AMX_ERR_PARAMS, "String formatted incorrectly - parameter %d (total %d)", parm, paramCount); \
-		return outbuf; \
-	} 
+/**
+ * FORMATTING ROUTINES
+ */
 
-char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
+
+#define MAX_LEVELS	4
+
+size_t do_amx_format(AMX *amx, cell *params, int *param, const char **lex, char *output, size_t maxlen, int level);
+
+size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int *param, char *output, size_t maxlen, int level)
 {
-	// number of parameters ( for NEXT_PARAM macro )
-	int paramCount = *params / sizeof(cell);
-	int status;
-	
-	// the output buffer
-	static char outbuf[4096];
-	char *outptr = outbuf;
-	cell *src = get_amxaddr(amx, params[parm++]);
-
-	while (*src)
+	static char buffer[MAX_LEVELS][2048];
+	static char fmt[MAX_LEVELS][32];
+	size_t len = 0;
+	char *fmtptr = fmt[level];
+	const char *fmtsrc = *fmtstr;
+	char ctrl_code;
+	int numParams = params[0] / sizeof(cell);
+	if (*param > numParams)
 	{
-		if (*src == '%')
+		LogError(amx, AMX_ERR_PARAMS, "String formatted incorrectly - parameter %d (total %d)", *param, numParams);
+		return 0;
+	}
+	cell _addr = params[*param];
+	cell *addr = get_amxaddr(amx, _addr);
+	(*param)++;
+
+	if (level >= MAX_LEVELS)
+	{
+		output[0] = '\0';
+		return 0;
+	}
+
+	*fmtptr++ = '%';
+	while (fmtsrc[len] && !isalpha((char)fmtsrc[len]))
+	{
+		if (len >= sizeof(fmt)-2)
+			break;
+		*fmtptr++ = static_cast<char>(fmtsrc[len++]);
+	} 
+	//get the final character
+	ctrl_code = fmtsrc[len++];
+	//inc the source pointer
+	*fmtstr = &(fmtsrc[len]);
+	//finalize the string
+	*fmtptr++ = ctrl_code;
+	*fmtptr = '\0';
+	len = 0;
+	//reset the format pointer
+	fmtptr = fmt[level];
+
+	char *tmp_buf = buffer[level];
+
+	//we now have the format
+	switch (ctrl_code)
+	{
+	case 's':
 		{
-			++src;
-			if (*src == 'L')
+			get_amxstring_r(amx, _addr, tmp_buf, 2047);
+			return _snprintf(output, maxlen, fmtptr, tmp_buf);
+			break;
+		}
+	case 'g':
+	case 'f':
+		{
+			return _snprintf(output, maxlen, fmtptr, *(REAL *)addr);
+			break;
+		}
+	case 'i':
+	case 'd':
+	case 'c':
+		{
+			return _snprintf(output, maxlen, fmtptr, (int)addr[0]);
+			break;
+		}
+	case 'L':
+		{
+			const char *pLangName = NULL;
+			const char *def = NULL, *key = NULL;
+			int status;
+			int tmpLen;
+			if (addr[0] == LANG_PLAYER)
 			{
-				cell langName = params[parm];		// "en" case (langName contains the address to the string)
-				NEXT_PARAM();
-				cell *pAmxLangName = get_amxaddr(amx, params[parm++]);	// other cases
-				const char *cpLangName=NULL;
-				// Handle player ids (1-32) and server language
-				
-				if (*pAmxLangName == LANG_PLAYER)	// LANG_PLAYER
+				if ( (int)CVAR_GET_FLOAT("amx_client_languages") == 0 )
 				{
-					if ((int)CVAR_GET_FLOAT("amx_client_languages") == 0)
-					{
-						cpLangName = g_vault.get("server_language");
-					} else {
-						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(m_CurGlobId)->pEdict, "lang");
-					}
+					pLangName = g_vault.get("server_language");
+				} else {
+					pLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(g_langMngr.GetDefLang())->pEdict, "lang");
 				}
-				else if (*pAmxLangName == LANG_SERVER) // LANG_SERVER
+			} else if (addr[0] == LANG_SERVER) {
+				pLangName = g_vault.get("server_language");
+			} else if (addr[0] >= 1 && addr[0] <= gpGlobals->maxClients) {
+				if ( (int)CVAR_GET_FLOAT("amx_client_languages") == 0 )
 				{
-					cpLangName = g_vault.get("server_language");
-				}
-				else if (*pAmxLangName >= 1 && *pAmxLangName <= 32) // Direct Client Id
-				{
-					if ((int)CVAR_GET_FLOAT("amx_client_languages") == 0)
-					{
-						cpLangName = g_vault.get("server_language");
-					} else {
-						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(*pAmxLangName)->pEdict, "lang");
-					}
-				} else {	// Language Name
-					int tmplen = 0;
-					cpLangName = get_amxstring(amx, langName, 2, tmplen);
-				}
-				
-				if (!cpLangName || strlen(cpLangName) < 1)
-					cpLangName = "en";
-				
-				int tmplen = 0;
-				NEXT_PARAM();
-				char *key = get_amxstring(amx, params[parm++], 1, tmplen);
-				const char *def = GetDef(cpLangName, key, status);
-
-				if (def == NULL)
-				{
-					bool a = true;
-					if (status == LANG_STATUS_LNOTFOUND)
-					{
-						AMXXLOG_Log("[AMXX] Language \"%s\" not found", cpLangName);
-					}
-					else if (status == LANG_STATUS_KLNOTFOUND)
-					{
-						a = false;
-						AMXXLOG_Log("[AMXX] Language key \"%s\" not found for language \"%s\"", key, cpLangName);
-					}
-
-					if (*pAmxLangName != LANG_SERVER)
-					{
-						def = GetDef(g_vault.get("server_language"), key, status);
-					}
-					
-					if (!def && (strcmp(cpLangName, "en") != 0 && strcmp(g_vault.get("server_language"), "en") != 0))
-					{
-						def = GetDef("en", key, status);
-					}
-
-					if (!def)
-					{
-						static char buf[512];
-						CHECK_PTR((char*)(buf + 17 + strlen(key)), buf, sizeof(buf));
-						sprintf(buf, "ML_LNOTFOUND: %s", key);
-						def = buf;
-						
-						if (a)
-							AMXXLOG_Log("[AMXX] Language key \"%s\" not found, check \"%s\"", key, GetFileName(amx));
-					}				
-				}
-
-				while (*def)
-				{
-					if (*def == '%')
-					{
-						++def;
-						if (*def == '%' || *def == 0)
-						{
-							*outptr++ = '%';
-							++def;
-						} else {
-							static char format[32];
-							format[0] = '%';
-							char *ptr = format + 1;
-							
-							while (ptr-format<sizeof(format) && !isalpha(*ptr++ = *def++))
-								/*nothing*/;
-							ZEROTERM(format);
-
-							*ptr = 0;
-							
-							switch (*(ptr - 1))
-							{
-								case 's':
-								{
-									static char tmpString[4096];
-									char *tmpPtr = tmpString;
-									NEXT_PARAM();
-									cell *tmpCell = get_amxaddr(amx, params[parm++]);
-									while (tmpPtr-tmpString < sizeof(tmpString) && *tmpCell)
-											*tmpPtr++ = static_cast<char>(*tmpCell++);
-									*tmpPtr = 0;
-									_snprintf(outptr, sizeof(outbuf)-(outptr-outbuf)-1, format, tmpString);
-									ZEROTERM(outbuf);
-									break;
-								}
-								case 'g':
-								case 'f':
-								{
-									NEXT_PARAM();
-									_snprintf(outptr, sizeof(outbuf)-(outptr-outbuf)-1, format, *(REAL*)get_amxaddr(amx, params[parm++]));
-									ZEROTERM(outbuf);
-									break;
-								}
-								case 'i':
-								case 'd':
-								case 'c':
-								{
-									NEXT_PARAM();
-									_snprintf(outptr, sizeof(outbuf)-(outptr-outbuf)-1, format, (int)*get_amxaddr(amx, params[parm++]));
-									ZEROTERM(outbuf);
-									break;
-								}
-								default:
-								{
-									CHECK_OUTPTR(strlen(format) + 1);
-									strcpy(outptr, format);	
-									break;
-								}
-							}
-							
-							outptr += strlen(outptr);
-						}
-					}
-					else if (*def == '^')
-					{
-						++def;
-						
-						switch (*def)
-						{
-							case 'n':
-								CHECK_OUTPTR(1);
-								*outptr++ = '\n';
-								break;
-							case 't':
-								CHECK_OUTPTR(1);
-								*outptr++ = '\t';
-								break;
-							case '^':
-								CHECK_OUTPTR(1);
-								*outptr++ = '^';
-								break;
-							default:
-								CHECK_OUTPTR(2);
-								*outptr++ = '^';
-								*outptr++ = *def;
-								break;
-						}
-						
-						++def;
-					} else {
-						CHECK_OUTPTR(1);
-						*outptr++ = *def++;
-					}
+					pLangName = g_vault.get("server_language");
+				} else {
+					pLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(addr[0])->pEdict, "lang");
 				}
 			} else {
-				static char tmpString[4096];
-				char *tmpPtr = tmpString;
-				int tmpLen = 0;
-				static char format[32] = {'%'};
-				char *ptr = format + 1;
+				pLangName = get_amxstring(amx, _addr, 0, tmpLen);
+			}
+			if (!pLangName || !isalpha(pLangName[0]))
+				pLangName = "en";
+			//next parameter!
+			_addr = params[*param];
+			(*param)++;
+			key = get_amxstring(amx, _addr, 1, tmpLen);
+			def = g_langMngr.GetDef(pLangName, key, status);
 				
-				if (*src != '%')
+			if (def == NULL)
+			{
+				bool a = true;
+				if (status == LANG_STATUS_LNOTFOUND)
 				{
-					while (*src != 0 && ptr-format<sizeof(format) && !isalpha(*ptr++ = static_cast<char>(*src++)))
-						/*nothing*/;
-					*ptr = 0;
-					ZEROTERM(format);
-					--src;
-					
-					switch (*(ptr - 1))
+					AMXXLOG_Log("[AMXX] Language \"%s\" not found", pLangName);
+				} else if (status == LANG_STATUS_KLNOTFOUND) {
+					a = false;
+					AMXXLOG_Log("[AMXX] Language key \"%s\" not found for language \"%s\"", key, pLangName);
+				}
+
+				if (addr[0] != LANG_SERVER)
+					def = g_langMngr.GetDef(g_vault.get("server_language"), key, status);
+				
+				if (!def && (strcmp(pLangName, "en") != 0 && strcmp(g_vault.get("server_language"), "en") != 0))
+					def = g_langMngr.GetDef("en", key, status);
+
+				if (!def)
+				{
+					return _snprintf(output, maxlen, "ML_NOTFOUND: %s", key);
+					if (a)
+						AMXXLOG_Log("[AMXX] Language key \"%s\" not found, check \"%s\"", key, GetFileName(amx));
+				}				
+			}
+			return do_amx_format(amx, params, param, &def, output, maxlen, level + 1);
+		}
+	default:
+		{
+			return _snprintf(output, maxlen, "%s", fmtptr);
+			break;
+		}
+	}
+}
+
+#define DUMP_CP_BUFFER(expr) \
+	if (sofar > 0) { \
+		if (sofar <= (int)maxlen) { \
+			memcpy(output, save, sofar); \
+			output += sofar; \
+			maxlen -= sofar; \
+			sofar = 0; \
+		} else { \
+			expr; \
+		} \
+	}
+
+size_t do_amx_format(AMX *amx, cell *params, int *param, const char **lex, char *output, size_t maxlen, int level)
+{
+	int sofar = 0;
+	size_t written;
+	size_t orig_maxlen = maxlen;
+	const char *save = *lex;
+	register const char *lexptr = save;
+
+	while (*lexptr)
+	{
+		switch (*lexptr)
+		{
+		case '%':
+			{
+				lexptr++;
+				if (*lexptr == '%' || *lexptr == '\0')
+				{
+					sofar+=2;
+				} else {
+					DUMP_CP_BUFFER(break);
+					written = do_amx_format_parameter(amx, params, &lexptr, param, output, maxlen, level + 1);
+					output += written;
+					maxlen -= written;
+					save = lexptr;
+				}
+				break;
+			}
+		case '^':
+			{
+				if (level)
+				{
+					DUMP_CP_BUFFER(break);
+					lexptr++;
+					switch (*lexptr)
 					{
-						case 's':
+						case 'n':
 						{
-							NEXT_PARAM();
-							cell *tmpCell = get_amxaddr(amx, params[parm++]);
-							while (tmpPtr-tmpString<sizeof(tmpString) && *tmpCell)
-								*tmpPtr++ = static_cast<char>(*tmpCell++);
-							*tmpPtr = 0;
-							_snprintf(outptr, sizeof(outbuf)-(outptr-outbuf)-1, format, tmpString);
-							ZEROTERM(outbuf);
+							*output++ = '\n';
 							break;
 						}
-						case 'g':
-						case 'f':
+						case 't':
 						{
-							NEXT_PARAM();
-							_snprintf(outptr, sizeof(outbuf)-(outptr-outbuf)-1, format, *(REAL*)get_amxaddr(amx, params[parm++]));
-							break;
-						}
-						case 'i':
-						case 'd':
-						case 'c':
-						{
-							NEXT_PARAM();
-							_snprintf(outptr, sizeof(outbuf)-(outptr-outbuf)-1, format, (int)*get_amxaddr(amx, params[parm++]));
+							*output++ = '\t';
 							break;
 						}
 						default:
 						{
-							CHECK_OUTPTR(strlen(format) + 1);
-							strcpy(outptr, format);
+							*output++ = *lexptr;
 							break;
 						}
 					}
-					
-					outptr += strlen(outptr);
-				} else {
-					CHECK_OUTPTR(1);
-					*outptr++ = '%';
+					lexptr++;
+					maxlen--;
+					save = lexptr;
+					break;
 				}
 			}
-		} else {
-			CHECK_OUTPTR(1);
-			*outptr++ = static_cast<char>(*src);
+		default:
+			{
+				lexptr++;
+				sofar++;
+			}
 		}
-		++src;
 	}
-	
-	len = outptr - outbuf;
-	CHECK_OUTPTR(1);
-	*outptr++ = 0;
-	
+	DUMP_CP_BUFFER(;);
+	*output = '\0';
+
+	*lex = lexptr;
+
+	return (orig_maxlen-maxlen);
+}
+
+char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
+{
+	//do an initial run through all this 
+	static char mystr[4096];
+	static char outbuf[4096];
+	const char *ptr = mystr;
+
+	get_amxstring_r(amx, params[parm++], mystr, sizeof(mystr)-1);
+
+	len = do_amx_format(amx, params, &parm, &ptr, outbuf, sizeof(outbuf)-1, 0);
+
 	return outbuf;
 }
 

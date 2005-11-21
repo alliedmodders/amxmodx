@@ -118,7 +118,7 @@ public:
 			v[0] = '\0';
 	}
 
-	int compare (const char *d)
+	int compare (const char *d) const
 	{
 		if (!v)
 			return strcmp("", d);

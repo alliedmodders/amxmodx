@@ -32,7 +32,9 @@
 #define _INCLUDE_NATIVES_H
 
 //only 16 for now sorry
+#if !defined CALLFUNC_MAXPARAMS
 #define CALLFUNC_MAXPARAMS 16
+#endif
 
 #define CALLFUNC_FLAG_BYREF			1
 #define CALLFUNC_FLAG_BYREF_REUSED	2

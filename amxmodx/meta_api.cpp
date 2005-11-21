@@ -249,7 +249,10 @@ int	C_Spawn(edict_t *pent)
 	// ###### Load lang
 	char file[256];
 	g_langMngr.LoadCache(build_pathname_r(file, sizeof(file) - 1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
-	g_langMngr.Load(build_pathname_r(file, sizeof(file) - 1, "%s/languages.dat", get_localinfo("amxmodx_datadir", "addons/amxmodx/data")));
+	if (!g_langMngr.Load(build_pathname_r(file, sizeof(file) - 1, "%s/languages.dat", get_localinfo("amxmodx_datadir", "addons/amxmodx/data"))))
+	{
+		g_langMngr.InvalidateCache();
+	}
 
 	// ###### Initialize commands prefixes
 	g_commands.registerPrefix("amx");

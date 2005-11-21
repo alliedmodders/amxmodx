@@ -103,7 +103,7 @@ public sayTimeLeft(id)
 		{
 			new svoice[128]
 			setTimeVoice(svoice, 127, 0, a)
-			client_cmd(id, svoice)
+			client_cmd(id, "%s", svoice)
 		}
 		client_print(0, print_chat, "%L:  %d:%02d", LANG_PLAYER, "TIME_LEFT", (a / 60), (a % 60))
 	}
@@ -260,14 +260,14 @@ public timeRemain(param[])
 					else
 						set_hudmessage(255, 255, 255, -1.0, 0.85, 0, 0.0, 3.0, 0.0, 0.5, -1)
 					
-					show_hudmessage(players[i], arg)
+					show_hudmessage(players[i], "%s", arg)
 				}
 			}
 
 			if (flags & 2)
 			{
 				setTimeVoice(arg, 127, flags, tmlf)
-				client_cmd(0, arg)
+				client_cmd(0, "%s", arg)
 			}
 		}
 	}

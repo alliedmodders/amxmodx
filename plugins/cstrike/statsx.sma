@@ -294,7 +294,7 @@ public cmdHudTest(id)
 		iLen += format(g_sBuffer[iLen], MAX_BUFFER_LENGTH - iLen, "....x....1....x....2....x....3....x....4....x....^n")
 	
 	set_hudtype_killer(50.0)
-	show_hudmessage(id, g_sBuffer)
+	show_hudmessage(id, "%s", g_sBuffer)
 }
 #endif
 
@@ -862,7 +862,7 @@ show_roundend_hudstats(id, Float:fGameTime)
 	{
 		g_LastChannel[id] = next_hudchannel(id)
 		set_hudtype_endround(id, fDuration)
-		show_hudmessage(id, g_sAwardAndScore)
+		show_hudmessage(id, "%s", g_sAwardAndScore)
 #if defined STATSX_DEBUG
 		log_amx("Show %1.2fs round end HUD stats for #%d", fDuration, id)
 #endif
@@ -901,7 +901,7 @@ show_user_hudstats(id, Float:fGameTime)
 			get_kill_info(id, iKiller, g_sBuffer)
 			add_attacker_hits(id, iKiller, g_sBuffer)
 			set_hudtype_killer(fDuration)
-			show_hudmessage(id, g_sBuffer)
+			show_hudmessage(id, "%s", g_sBuffer)
 #if defined STATSX_DEBUG
 			log_amx("Show %1.2fs %suser HUD k-stats for #%d", fDuration, g_sBuffer[0] ? "" : "no ", id)
 #endif
@@ -911,7 +911,7 @@ show_user_hudstats(id, Float:fGameTime)
 		{
 			get_victims(id, g_sBuffer)
 			set_hudtype_victim(fDuration)
-			show_hudmessage(id, g_sBuffer)
+			show_hudmessage(id, "%s", g_sBuffer)
 #if defined STATSX_DEBUG
 			log_amx("Show %1.2fs %suser HUD v-stats for #%d", fDuration, g_sBuffer[0] ? "" : "no ", id)
 #endif
@@ -921,7 +921,7 @@ show_user_hudstats(id, Float:fGameTime)
 		{
 			get_attackers(id, g_sBuffer)
 			set_hudtype_attacker(fDuration)
-			show_hudmessage(id, g_sBuffer)
+			show_hudmessage(id, "%s", g_sBuffer)
 #if defined STATSX_DEBUG
 			log_amx("Show %1.2fs %suser HUD a-stats for #%d", fDuration, g_sBuffer[0] ? "" : "no ", id)
 #endif

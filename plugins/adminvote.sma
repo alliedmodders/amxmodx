@@ -107,7 +107,7 @@ public cmdCancelVote(id, level, cid)
 }
 
 public delayedExec(cmd[])
-	server_cmd(cmd)
+	server_cmd("%s", cmd)
 
 public autoRefuse()
 {

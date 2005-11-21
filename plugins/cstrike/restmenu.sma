@@ -585,7 +585,7 @@ public client_command(id)
 		{
 			if (equali(g_Aliases[g_AliasBlock[a]], arg) || equali(g_Aliases2[g_AliasBlock[a]], arg))
 			{
-				client_print(id, print_center, g_Restricted)
+				client_print(id, print_center, "%s", g_Restricted)
 				return PLUGIN_HANDLED
 			}
 		} while (++a < g_AliasBlockNum)
@@ -596,7 +596,7 @@ public client_command(id)
 
 public blockcommand(id)
 {
-	client_print(id, print_center, g_Restricted)
+	client_print(id, print_center, "%s", g_Restricted)
 	return PLUGIN_HANDLED
 }
 
@@ -618,7 +618,7 @@ checkRest(id, menu, key)
 	if (g_blockPos[(menu * 8 + key) + (get_user_team(id) - 1) * 56])
 	{
 		engclient_cmd(id, "menuselect", "10")
-		client_print(id, print_center, g_Restricted)
+		client_print(id, print_center, "%s", g_Restricted)
 		
 		return PLUGIN_HANDLED
 	}

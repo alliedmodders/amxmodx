@@ -79,7 +79,7 @@ public client_authorized(id)
 		return PLUGIN_CONTINUE
 	}
 	
-	client_cmd(id, g_cmdLoopback)
+	client_cmd(id, "%s", g_cmdLoopback)
 
 	return PLUGIN_HANDLED
 }

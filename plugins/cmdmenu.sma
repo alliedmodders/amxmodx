@@ -134,11 +134,11 @@ public actionCmdMenu(id, key)
 			new flags = g_cmdMisc[option][1]
 			
 			if (flags & 1)
-				server_cmd(g_cmdCmd[option])
+				server_cmd("%s", g_cmdCmd[option])
 			else if (flags & 2)
-				client_cmd(id, g_cmdCmd[option])
+				client_cmd(id, "%s", g_cmdCmd[option])
 			else if (flags & 4)
-				client_cmd(0, g_cmdCmd[option])
+				client_cmd(0, "%s", g_cmdCmd[option])
 			
 			if (flags & 8)
 				displayCmdMenu(id, g_menuPosition[id])

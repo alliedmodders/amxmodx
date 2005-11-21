@@ -256,7 +256,7 @@ public cmdBan(id, level, cid)
 			else
 				format(msg[len], 255-len, "%L", players[i], "PERM")
 			
-			client_print(players[i], print_chat, msg)
+			client_print(players[i], print_chat, "%s", msg)
 		}
 	}
 	console_print(id, "[AMXX] %L", id, "CLIENT_BANNED", name2)
@@ -329,7 +329,7 @@ public cmdBanIP(id, level, cid)
 			else
 				format(msg[len], 255-len, "%L", players[i], "PERM")
 			
-			client_print(players[i], print_chat, msg)
+			client_print(players[i], print_chat, "%s", msg)
 		}
 	}
 	console_print(id, "[AMXX] %L", id, "CLIENT_BANNED", name2)

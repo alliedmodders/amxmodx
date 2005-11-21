@@ -641,7 +641,7 @@ accessUser(id, name[] = "")
 	
 	if (result & 2)
 	{
-		client_cmd(id, g_cmdLoopback)
+		client_cmd(id, "%s", g_cmdLoopback)
 		return PLUGIN_HANDLED
 	}
 	

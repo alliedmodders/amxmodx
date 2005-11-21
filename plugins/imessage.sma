@@ -65,8 +65,8 @@ public infoMessage()
 		g_Current = 0
 	
 	set_hudmessage(g_Values[g_Current][0], g_Values[g_Current][1], g_Values[g_Current][2], X_POS, Y_POS, 0, 0.5, HOLD_TIME, 2.0, 2.0, -1)
-	show_hudmessage(0, g_Messages[g_Current])
-	client_print(0, print_console, g_Messages[g_Current])
+	show_hudmessage(0, "%s", g_Messages[g_Current])
+	client_print(0, print_console, "%s", g_Messages[g_Current])
 	++g_Current
 	
 	new Float:freq_im = get_cvar_float("amx_freq_imessage")

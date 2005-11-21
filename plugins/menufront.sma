@@ -149,7 +149,7 @@ public actionMenu(id, key)
 	{
 		case 8: displayMenu(id, ++g_menuPosition[id])
 		case 9: displayMenu(id, --g_menuPosition[id])
-		default: client_cmd(id, g_menuCmd[g_menuPosition[id] * 8 + key])
+		default: client_cmd(id, "%s", g_menuCmd[g_menuPosition[id] * 8 + key])
 	}
 	
 	return PLUGIN_HANDLED
@@ -161,7 +161,7 @@ public clientActionMenu(id, key)
 	{
 		case 8: clientDisplayMenu(id, ++g_clientMenuPosition[id])
 		case 9: clientDisplayMenu(id, --g_clientMenuPosition[id])
-		default: client_cmd(id, g_clientMenuCmd[g_clientMenuPosition[id] * 8 + key])
+		default: client_cmd(id, "%s", g_clientMenuCmd[g_clientMenuPosition[id] * 8 + key])
 	}
 	
 	return PLUGIN_HANDLED

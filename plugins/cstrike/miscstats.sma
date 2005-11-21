@@ -325,7 +325,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 						format(team_name, 31, "%L", ppl[a], (epplnum == 1) ? g_teamsNames[team] : g_teamsNames[team + 2])
 						format(message, 127, "%L", ppl[a], "REMAINING", epplnum, team_name)
 
-						show_hudmessage(ppl[a], message)
+						show_hudmessage(ppl[a], "%s", message)
 					}
 				}
 			}
@@ -438,7 +438,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				replace(message, 127, "$kn", killer_name)
 				
 				set_hudmessage(100, 100, 255, -1.0, 0.29, 0, 6.0, 6.0, 0.5, 0.15, -1)
-				show_hudmessage(players[i], message)
+				show_hudmessage(players[i], "%s", message)
 			}
 		}
 		
@@ -514,7 +514,7 @@ public showStatus(id)
 			show_hudmessage(id, "%s -- %d HP / %d AP / %s", name, get_user_health(pid), get_user_armor(pid), wpnname)
 		} else {
 			set_hudmessage(color1, 50, color2, -1.0, 0.60, 1, 0.01, 3.0, 0.01, 0.01, g_channel[id])
-			show_hudmessage(id, name)
+			show_hudmessage(id, "%s", name)
 		}
 	}
 }

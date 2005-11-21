@@ -74,7 +74,7 @@ public showMsg()
 	}
 
 	set_hudmessage(200, 100, 0, g_xPos, 0.90, 0, SPEED, SPEED, 0.05, 0.05, -1)
-	show_hudmessage(0, g_displayMsg)
+	show_hudmessage(0, "%s", g_displayMsg)
 }
 
 public msgInit()
@@ -84,7 +84,7 @@ public msgInit()
 	g_xPos = 0.65
 	
 	set_task(SPEED, "showMsg", 123, "", 0, "a", g_Length + 48)
-	client_print(0, print_console, g_scrollMsg)
+	client_print(0, print_console, "%s", g_scrollMsg)
 }
 
 public setMessage()

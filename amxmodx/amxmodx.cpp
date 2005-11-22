@@ -3591,6 +3591,11 @@ static cell AMX_NATIVE_CALL amx_abort(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL get_tick_count(AMX *amx, cell *params)
+{
+	return GetTickCount();
+}
+
 static cell AMX_NATIVE_CALL module_exists(AMX *amx, cell *params)
 {
 	int len;
@@ -3807,5 +3812,6 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"write_short",				write_short},
 	{"write_string",			write_string},
 	{"xvar_exists",				xvar_exists},
+	{"get_tick_count",			get_tick_count},
 	{NULL,						NULL}
 };

@@ -68,8 +68,11 @@ void CTaskMngr::CTask::set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags,
 		m_iRepeat = iRepeat;
 	}
 	
-	m_bAfterStart =	(iFlags & 4) ? true : false;
-	m_bBeforeEnd = (iFlags & 8) ? true : false;
+	type = 0;
+	if (iFlags & 4)
+		type = 1;
+	if (iFlags & 8)
+		type = 2;
 
 	m_fNextExecTime = fCurrentTime + m_fBase;
 
@@ -80,12 +83,25 @@ void CTaskMngr::CTask::set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags,
 		{
 			m_ParamSize = m_iParamLen;
 			cell *temp = new cell[m_ParamSize];
-			memset(temp, 0, sizeof(cell) * m_ParamSize);
 			if (m_pParams != NULL)
 				delete [] m_pParams;
 			m_pParams = temp;
 		}
-		memcpy(m_pParams, pParams, sizeof(cell)*iParamsLen);
+		cell *dest = m_pParams;
+		__asm
+		{
+			push esi;
+			push edi;
+			push ecx;
+			mov esi, pParams;
+			mov edi, dest;
+			mov ecx, iParamsLen;
+			rep movsd;
+			pop esi;
+			pop edi;
+			pop ecx;
+		};
+		//memcpy(m_pParams, pParams, sizeof(cell) * iParamsLen);
 		m_pParams[iParamsLen] = 0;
 	} else {
 		m_iParamLen = 0;
@@ -102,18 +118,7 @@ void CTaskMngr::CTask::clear()
 		m_iFunc = -1;
 	}
 
-	m_iParamLen = 0;
-
-	m_pPlugin = NULL;
 	m_iId = 0;
-	m_fBase = 0.0f;
-
-	m_iRepeat =	0;
-	m_bLoop = false;
-	m_bAfterStart =	false;
-	m_bBeforeEnd = false;
-	m_iParamLen = 0;
-
 	m_fNextExecTime = 0.0f;
 }
 
@@ -132,24 +137,29 @@ void CTaskMngr::CTask::resetNextExecTime(float fCurrentTime)
 	m_fNextExecTime = fCurrentTime + m_fBase;
 }
 
-void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, float fTimeLeft)
+bool CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, float fTimeLeft)
 {
 	bool execute = false;
 	bool done = false;
-	
-	if (m_bAfterStart)
+
+	switch (type)
 	{
-		if (fCurrentTime - fTimeLeft + 1.0f >= m_fBase)
-			execute = true;
-	}
-	else if (m_bBeforeEnd)
-	{
-		if (fTimeLimit != 0.0f && (fTimeLeft + fTimeLimit * 60.0f) - fCurrentTime - 1.0f <= m_fBase)
-			execute = true;
-	}
-	else if (m_fNextExecTime <= fCurrentTime)
-	{
-		execute = true;
+	case 1:
+		{
+			if (fCurrentTime - fTimeLeft + 1.0f >= m_fBase)
+				execute = true;
+			break;
+		}
+	case 2:
+		{
+			if (fTimeLimit != 0.0f && (fTimeLeft + fTimeLimit * 60.0f) - fCurrentTime - 1.0f <= m_fBase)
+				execute = true;
+			break;
+		}
+	default:
+		{
+			execute = (m_fNextExecTime <= fCurrentTime) ? true : false;
+		}
 	}
 
 	if (execute)
@@ -165,9 +175,6 @@ void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, f
 				executeForwards(m_iFunc, m_iId);
 			}
 		}
-	
-		if (isFree())
-			return;
 
 		// set new exec time OR remove the task if needed
 		if (m_bLoop)
@@ -178,14 +185,11 @@ void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, f
 			done = true;
 		}
 
-		if (done)
-		{
-			clear();
-			g_FreeTasks->push(this);
-		} else {
+		if (!done)
 			m_fNextExecTime += m_fBase;
-		}
 	}
+
+	return done;
 }
 
 CTaskMngr::CTask::CTask()
@@ -199,8 +203,7 @@ CTaskMngr::CTask::CTask()
 
 	m_iRepeat =	0;
 	m_bLoop = false;
-	m_bAfterStart =	false;
-	m_bBeforeEnd = false;
+	type = 0;
 
 	m_fNextExecTime = 0.0f;
 
@@ -233,11 +236,9 @@ CTaskMngr::CTaskMngr()
 
 CTaskMngr::~CTaskMngr()
 {
-	while (!g_FreeTasks->empty())
-		g_FreeTasks->pop();
+	clear();
 	delete g_FreeTasks;
-
-	m_Tasks.clear();
+	g_FreeTasks = NULL;
 }
 
 void CTaskMngr::registerTimers(float *pCurrentTime, float *pTimeLimit, float *pTimeLeft)
@@ -256,30 +257,32 @@ void CTaskMngr::registerTask(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlag
 		CTask *pTmp = g_FreeTasks->front();
 		g_FreeTasks->pop();
 		pTmp->set(pPlugin, iFunc, iFlags, iId, fBase, iParamsLen, pParams, iRepeat, *m_pTmr_CurrentTime);
+		m_Tasks.unshift(pTmp);
 	} else {
 		// not found: make a new one
 		CTask *pTmp = new CTask;
 		
 		pTmp->set(pPlugin, iFunc, iFlags, iId, fBase, iParamsLen, pParams, iRepeat, *m_pTmr_CurrentTime);
-		m_Tasks.put(pTmp);
+		m_Tasks.unshift(pTmp);
 	}
 }
 
 int CTaskMngr::removeTasks(int iId, AMX *pAmx)
 {
 	CTaskDescriptor descriptor(iId, pAmx);
-	TaskListIter iter = m_Tasks.find(descriptor);
+	List<CTask *>::iterator iter, end=m_Tasks.end();
 	int i = 0;
-	
-	while (iter)
+
+	for (iter=m_Tasks.begin(); iter!=end; )
 	{
-		if (!iter->isFree())
+		if ( descriptor == (*iter) )
 		{
-			iter->clear();
-			g_FreeTasks->push(iter->getTask());
+			g_FreeTasks->push( (*iter) );
+			iter = m_Tasks.erase(iter);
+			++i;
+		} else {
+			iter++;
 		}
-		++i;
-		iter = m_Tasks.find(++iter, descriptor);
 	}
 	
 	return i;
@@ -288,15 +291,17 @@ int CTaskMngr::removeTasks(int iId, AMX *pAmx)
 int CTaskMngr::changeTasks(int iId, AMX *pAmx, float fNewBase)
 {
 	CTaskDescriptor descriptor(iId, pAmx);
-	TaskListIter iter = m_Tasks.find(descriptor);
+	List<CTask *>::iterator iter, end=m_Tasks.end();
 	int i = 0;
 	
-	while (iter)
+	for (iter=m_Tasks.begin(); iter!=end; iter++)
 	{
-		iter->changeBase(fNewBase);
-		iter->resetNextExecTime(*m_pTmr_CurrentTime);
-		++i;
-		iter = m_Tasks.find(++iter, descriptor);
+		if ( descriptor == (*iter) )
+		{
+			(*iter)->changeBase(fNewBase);
+			(*iter)->resetNextExecTime(*m_pTmr_CurrentTime);
+			++i;
+		}
 	}
 	
 	return i;
@@ -304,24 +309,49 @@ int CTaskMngr::changeTasks(int iId, AMX *pAmx, float fNewBase)
 
 bool CTaskMngr::taskExists(int iId, AMX *pAmx)
 {
-	return m_Tasks.find(CTaskDescriptor(iId, pAmx));
+	CTaskDescriptor descriptor(iId, pAmx);
+	List<CTask *>::iterator iter, end=m_Tasks.end();
+
+	for (iter=m_Tasks.begin(); iter!=end; iter++)
+	{
+		if ( descriptor == (*iter) )
+			return true;
+	}
+
+	return false;
 }
 
 void CTaskMngr::startFrame()
 {
-	for (TaskListIter iter = m_Tasks.begin(); iter; ++iter)
+	List<CTask *>::iterator iter, end=m_Tasks.end();
+	CTask *pTask;
+	int ignored=0, used=0;
+	for (TaskListIter iter = m_Tasks.begin(); iter!=end;)
 	{
-		if (iter->isFree())
-			continue;
-		iter->executeIfRequired(*m_pTmr_CurrentTime, *m_pTmr_TimeLimit, *m_pTmr_TimeLeft);
+		pTask = (*iter);
+		if (pTask->executeIfRequired(*m_pTmr_CurrentTime, *m_pTmr_TimeLimit, *m_pTmr_TimeLeft))
+		{
+			pTask->clear();
+			iter = m_Tasks.erase(iter);
+			g_FreeTasks->push(pTask);
+			used++;
+		} else {
+			iter++;
+			ignored++;
+		}
 	}
 }
 
 void CTaskMngr::clear()
 {
-	for (TaskListIter iter = m_Tasks.begin(); iter; ++iter)
+	while (!g_FreeTasks->empty())
 	{
-		if (!iter->isFree())
-			iter->clear();
+		delete g_FreeTasks->front();
+		g_FreeTasks->pop();
 	}
+
+	List<CTask *>::iterator iter, end=m_Tasks.end();
+	for (iter=m_Tasks.begin(); iter!=end; iter++)
+		delete (*iter);
+	m_Tasks.clear();
 }

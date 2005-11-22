@@ -328,6 +328,14 @@ int CLangMngr::GetKeyEntry(String &key)
  * FORMATTING ROUTINES
  */
 
+#define FMTPM_NEXTPARAM() \
+	if (*param > numParams) { \
+		LogError(amx, AMX_ERR_PARAMS, "String formatted incorrectly - parameter %d (total %d)", *param, numParams); \
+		return 0; \
+	} \
+	_addr = params[*param]; \
+	addr = get_amxaddr(amx, _addr); \
+	(*param)++;
 
 #define MAX_LEVELS	4
 
@@ -342,14 +350,7 @@ size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int 
 	const char *fmtsrc = *fmtstr;
 	char ctrl_code;
 	int numParams = params[0] / sizeof(cell);
-	if (*param > numParams)
-	{
-		LogError(amx, AMX_ERR_PARAMS, "String formatted incorrectly - parameter %d (total %d)", *param, numParams);
-		return 0;
-	}
-	cell _addr = params[*param];
-	cell *addr = get_amxaddr(amx, _addr);
-	(*param)++;
+	cell _addr, *addr;
 
 	if (level >= MAX_LEVELS)
 	{
@@ -382,6 +383,7 @@ size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int 
 	{
 	case 's':
 		{
+			FMTPM_NEXTPARAM();
 			get_amxstring_r(amx, _addr, tmp_buf, 2047);
 			return _snprintf(output, maxlen, fmtptr, tmp_buf);
 			break;
@@ -389,6 +391,7 @@ size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int 
 	case 'g':
 	case 'f':
 		{
+			FMTPM_NEXTPARAM();
 			return _snprintf(output, maxlen, fmtptr, *(REAL *)addr);
 			break;
 		}
@@ -396,11 +399,13 @@ size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int 
 	case 'd':
 	case 'c':
 		{
+			FMTPM_NEXTPARAM();
 			return _snprintf(output, maxlen, fmtptr, (int)addr[0]);
 			break;
 		}
 	case 'L':
 		{
+			FMTPM_NEXTPARAM();
 			const char *pLangName = NULL;
 			const char *def = NULL, *key = NULL;
 			int status;
@@ -428,8 +433,7 @@ size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int 
 			if (!pLangName || !isalpha(pLangName[0]))
 				pLangName = "en";
 			//next parameter!
-			_addr = params[*param];
-			(*param)++;
+			FMTPM_NEXTPARAM();
 			key = get_amxstring(amx, _addr, 1, tmpLen);
 			def = g_langMngr.GetDef(pLangName, key, status);
 				
@@ -467,27 +471,14 @@ size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int 
 	}
 }
 
-#define DUMP_CP_BUFFER(expr) \
-	if (sofar > 0) { \
-		if (sofar <= (int)maxlen) { \
-			memcpy(output, save, sofar); \
-			output += sofar; \
-			maxlen -= sofar; \
-			sofar = 0; \
-		} else { \
-			expr; \
-		} \
-	}
-
 size_t do_amx_format(AMX *amx, cell *params, int *param, const char **lex, char *output, size_t maxlen, int level)
-{
-	int sofar = 0;
+{	
 	size_t written;
 	size_t orig_maxlen = maxlen;
 	const char *save = *lex;
 	register const char *lexptr = save;
 
-	while (*lexptr)
+	while (*lexptr && maxlen)
 	{
 		switch (*lexptr)
 		{
@@ -496,13 +487,13 @@ size_t do_amx_format(AMX *amx, cell *params, int *param, const char **lex, char 
 				lexptr++;
 				if (*lexptr == '%' || *lexptr == '\0')
 				{
-					sofar+=2;
+					*output++ = *lexptr++;
+					*output++ = *lexptr++;
+					maxlen -= 2;
 				} else {
-					DUMP_CP_BUFFER(break);
 					written = do_amx_format_parameter(amx, params, &lexptr, param, output, maxlen, level + 1);
 					output += written;
 					maxlen -= written;
-					save = lexptr;
 				}
 				break;
 			}
@@ -510,7 +501,6 @@ size_t do_amx_format(AMX *amx, cell *params, int *param, const char **lex, char 
 			{
 				if (level)
 				{
-					DUMP_CP_BUFFER(break);
 					lexptr++;
 					switch (*lexptr)
 					{
@@ -532,18 +522,16 @@ size_t do_amx_format(AMX *amx, cell *params, int *param, const char **lex, char 
 					}
 					lexptr++;
 					maxlen--;
-					save = lexptr;
 					break;
 				}
 			}
 		default:
 			{
-				lexptr++;
-				sofar++;
+				*output++ = *lexptr++;
+				maxlen--;
 			}
 		}
 	}
-	DUMP_CP_BUFFER(;);
 	*output = '\0';
 
 	*lex = lexptr;

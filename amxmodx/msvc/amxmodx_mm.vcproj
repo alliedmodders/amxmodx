@@ -164,7 +164,7 @@
 				AdditionalIncludeDirectories="&quot;C:\Hry\Half-Life\SDK\Multiplayer Source\pm_shared&quot;;&quot;C:\Hry\Half-Life\SDK\Multiplayer Source\dlls&quot;;&quot;C:\Hry\Half-Life\SDK\Multiplayer Source\engine&quot;;&quot;C:\Hry\Half-Life\SDK\Multiplayer Source\common&quot;;C:\Files\Programming\metamod\metamod"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;MEMORY_TEST"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="5"
+				RuntimeLibrary="3"
 				StructMemberAlignment="3"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="amxmodx.h"
@@ -183,7 +183,7 @@
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="odbc32.lib odbccp32.lib ..\zlib\zlib.lib ..\JIT\natives-x86.obj"
 				OutputFile="memtestdebug/amxmodx_mm.dll"
-				Version="0.1"
+				Version="1.6.5.0"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\extra\lib_win32"
@@ -372,10 +372,13 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
+				Optimization="2"
 				GlobalOptimizations="TRUE"
 				InlineFunctionExpansion="1"
+				EnableIntrinsicFunctions="TRUE"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="TRUE"
+				OptimizeForProcessor="0"
 				AdditionalIncludeDirectories="..\..\metamod\metamod,..\..\hlsdk\sourcecode\common,..\..\hlsdk\sourcecode\engine,..\..\hlsdk\sourcecode\dlls,..\..\hlsdk\sourcecode\pm_shared,..\extra\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;JIT;ASM32;PAWN_CELL_SIZE=32"
 				IgnoreStandardIncludePath="FALSE"
@@ -390,6 +393,7 @@
 				ProgramDataBaseFileName=".\jitrelease/"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="3"
 				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -404,8 +408,8 @@
 				IgnoreDefaultLibraryNames="MSVCRT"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\jitrelease/amxx_mm.pdb"
-				GenerateMapFile="FALSE"
+				ProgramDatabaseFile=".\jitrelease/amxmodx_mm.pdb"
+				GenerateMapFile="TRUE"
 				ImportLibrary=".\jitrelease/amxx_mm.lib"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -636,6 +640,12 @@
 			</File>
 			<File
 				RelativePath="..\CTask.cpp">
+				<FileConfiguration
+					Name="JITRelease|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="0"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\CVault.cpp">
@@ -684,6 +694,12 @@
 			</File>
 			<File
 				RelativePath="..\string.cpp">
+				<FileConfiguration
+					Name="JITRelease|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="2"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\strptime.cpp">

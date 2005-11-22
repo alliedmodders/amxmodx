@@ -32,6 +32,8 @@
 #ifndef CTASK_H
 #define CTASK_H
 
+#include "sh_list.h"
+
 class CTaskMngr
 {
 public:
@@ -45,18 +47,19 @@ public:
 		int m_iFunc;
 		int m_iRepeat;
 		
-		bool m_bLoop;
-		bool m_bAfterStart;
-		bool m_bBeforeEnd;
+		int type;
 		float m_fBase;		// for normal tasks, stores the interval, for the others, stores the amount of time before start / after end
 		int m_iParamLen;
 		
 		cell *m_pParams;
 		cell m_ParamSize;
-		bool m_bFree;
 
 		// execution
 		float m_fNextExecTime;
+
+		bool m_bFree;
+		bool m_bLoop;
+
 	public:
 		void set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, cell iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat, float fCurrentTime);
 		void clear();
@@ -65,7 +68,7 @@ public:
 		CPluginMngr::CPlugin *getPlugin() const;
 		int getTaskId() const;
 
-		void executeIfRequired(float fCurrentTime, float fTimeLimit, float fTimeLeft);	// also removes the task if needed
+		bool executeIfRequired(float fCurrentTime, float fTimeLimit, float fTimeLeft);	// also removes the task if needed
 
 		void changeBase(float fNewBase);
 		void resetNextExecTime(float fCurrentTime);
@@ -91,17 +94,17 @@ public:
 			m_bFree = bFree;
 		}
 
-		friend bool operator == (const CTask &left, const CTaskDescriptor &right)
+		friend bool operator == (const CTaskDescriptor &right, const CTask *left)
 		{
 			if (right.m_bFree)
-				return left.isFree();
+				return left->isFree();
 			
-			return !left.isFree() && (right.m_pAmx ? left.getPlugin()->getAMX() == right.m_pAmx : true) && left.getTaskId() == right.m_iId;
+			return !left->isFree() && (right.m_pAmx ? left->getPlugin()->getAMX() == right.m_pAmx : true) && left->getTaskId() == right.m_iId;
 		}
 	};
 
 	/*** CTaskMngr priv members ***/
-	typedef CList<CTask, CTaskDescriptor> TaskList;
+	typedef List<CTask *> TaskList;
 	typedef TaskList::iterator TaskListIter;
 	
 	TaskList m_Tasks;

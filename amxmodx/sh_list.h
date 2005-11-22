@@ -11,6 +11,8 @@
 #ifndef _INCLUDE_SMM_LIST_H
 #define _INCLUDE_SMM_LIST_H
 
+#include "sh_stack.h"
+
 //namespace SourceHook
 //{
 //This class is from CSDM for AMX Mod X
@@ -25,6 +27,7 @@ public:
 	public:
 		ListNode(const T & o) : obj(o) { };
 		ListNode() { };
+		void Set(const T & o) { obj = o; }
 		~ListNode()
 		{ 
 		};
@@ -59,9 +62,49 @@ public:
 			m_Head = NULL;
 		}
 	}
+	void unshift(const T &obj)
+	{
+		if (!m_Head->next)
+		{
+			push_back(obj);
+			return;
+		}
+
+		ListNode *node;
+		if (m_FreeStack.empty())
+		{
+			node = new ListNode(obj);
+		} else {
+			node = m_FreeStack.front();
+			m_FreeStack.pop();
+			node->Set(obj);
+		}
+
+		//is the list one item circular?
+		/*bool realign = false;
+		if (m_Head->next == m_Head->prev)
+		{
+			m_Head->next->next = 
+		}*/
+			
+		node->next = m_Head->next;
+		node->prev = m_Head;
+		m_Head->next->prev = node;
+		m_Head->next = node;
+
+		m_Size++;
+	}
 	void push_back(const T &obj)
 	{
-		ListNode *node = new ListNode(obj);
+		ListNode *node;
+		if (m_FreeStack.empty())
+		{
+			node = new ListNode(obj);
+		} else {
+			node = m_FreeStack.front();
+			m_FreeStack.pop();
+			node->Set(obj);
+		}
 
 		if (!m_Head->prev)
 		{
@@ -95,6 +138,11 @@ public:
 			node = temp;
 		}
 		m_Size = 0;
+		while (!m_FreeStack.empty())
+		{
+			delete m_FreeStack.front();
+			m_FreeStack.pop();
+		}
 	}
 	bool empty()
 	{
@@ -105,6 +153,7 @@ public:
 		return m_Head->prev->obj;
 	}
 private:
+	typename CStack<ListNode *> m_FreeStack;
 	ListNode *m_Head;
 	size_t m_Size;
 public:
@@ -225,7 +274,7 @@ public:
 			pNode->next->prev = pNode->prev;
 		}
 
-		delete pNode;
+		m_FreeStack.push(pNode);
 		m_Size--;
 
 		return iter;

@@ -64,7 +64,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 351
     Height = 260
-    ActivePage = jspAutocompleteCheck
+    ActivePage = jspHighlighter
     PropagateEnable = False
     Align = alClient
     OnChange = jplSettingsChange
@@ -110,7 +110,7 @@ object frmSettings: TfrmSettings
         Height = 21
         Style = csDropDownList
         Color = clWindow
-        ItemHeight = 0
+        ItemHeight = 13
         TabOrder = 0
         ItemIndex = -1
         OnChange = cboLanguageChange

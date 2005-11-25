@@ -1996,8 +1996,9 @@ begin
             end;
           end;
         end;
-      end
-      else if (eCurrStyle = 11) or (eCurrStyle = 10) or (eCurrStyle = 9) or (eCurrStyle = 8) or (eCurrStyle = 5) or (eCurrStyle = 4) or (eCurrStyle = 0) or (eCurrStyle >= 34) then
+      end;
+      
+      if (eCurrStyle = 11) or (eCurrStyle = 10) or (eCurrStyle = 9) or (eCurrStyle = 8) or (eCurrStyle = 5) or (eCurrStyle = 4) or (eCurrStyle = 0) or (eCurrStyle >= 34) then
         CancelDisplay := False
       else
         CancelDisplay := True;
@@ -2141,7 +2142,7 @@ var i: integer;
 begin
   CancelDisplay := not Plugin_CallTipShow(ListToDisplay.GetText);
   eFunction := GetCurrFunc;
-  if (frmSettings.chkAutoHideCT.Checked) and (eFunction <> '') then begin
+  if (frmSettings.chkAutoHideCT.Checked) and (not CancelDisplay) and (eFunction <> '') then begin
     eFunction := LowerCase(eFunction);
 
     for i := 0 to eACList.Count -1 do begin

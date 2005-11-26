@@ -49,7 +49,6 @@ void OnAmxxAttach()
 	MF_AddNatives(global_Natives);
 	memset(glinfo.szLastLights, 0x0, 128);
 	memset(glinfo.szRealLights, 0x0, 128);
-	glinfo.bLights = false;
 	glinfo.fNextLights = 0;
 	glinfo.bCheckLights = false;
 }
@@ -203,7 +202,7 @@ void ServerDeactivate()
 {
 	memset(glinfo.szLastLights, 0x0, 128);
 	memset(glinfo.szRealLights, 0x0, 128);
-	glinfo.bLights = false;
+	glinfo.bCheckLights = false;
 	glinfo.fNextLights = 0;
 	
 	// Reset all forwarding function tables (so that forwards won't be called before plugins are initialized)
@@ -218,6 +217,7 @@ void ServerDeactivate()
 	g_pFunctionTable->pfnThink=NULL; // "pfn_think", "register_think"
 	g_pFunctionTable->pfnStartFrame=NULL; // "server_frame","ServerFrame"
 	g_pFunctionTable->pfnTouch=NULL; // "pfn_touch","vexd_pfntouch"
+	g_pFunctionTable_Post->pfnStartFrame = NULL; // "set_lights"
 
 	ClearHooks();
 

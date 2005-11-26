@@ -108,7 +108,6 @@ struct PlayerInfo {
 };
 
 struct GlobalInfo {
-	bool bLights;
 	float fNextLights;
 	char *szLastLights[128];
 	char *szRealLights[128];

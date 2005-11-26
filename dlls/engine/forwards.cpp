@@ -109,17 +109,24 @@ void KeyValue(edict_t *pEntity, KeyValueData *pkvd)
 
 void StartFrame()
 {
-	if (glinfo.bCheckLights) {
-		if (!FStrEq((const char*)glinfo.szLastLights, "")) {
-			(g_engfuncs.pfnLightStyle)(0, (char *)glinfo.szLastLights);
-			glinfo.fNextLights = gpGlobals->time + 1;
-		}
-	}
-
 	if (StartFrameForward != -1)
 		MF_ExecuteForward(StartFrameForward);
 	else if (VexdServerForward != -1)
 		MF_ExecuteForward(VexdServerForward);
+
+	RETURN_META(MRES_IGNORED);
+}
+
+void StartFrame_Post()
+{
+	if (glinfo.bCheckLights)
+	{
+		if (glinfo.fNextLights < gpGlobals->time)
+		{
+			(g_engfuncs.pfnLightStyle)(0, (char *)glinfo.szLastLights);
+			glinfo.fNextLights = gpGlobals->time + 1;
+		}
+	}
 
 	RETURN_META(MRES_IGNORED);
 }

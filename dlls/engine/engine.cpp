@@ -559,15 +559,15 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL set_lights(AMX *amx, cell *params) { 
 	int iLength;
 	char *szLights = MF_GetAmxString(amx, params[1], 0, &iLength);
+	g_pFunctionTable_Post->pfnStartFrame = StartFrame_Post;
 
 	if (FStrEq(szLights, "#OFF")) {
-		glinfo.bLights = false;
+		glinfo.bCheckLights = false;
 		memset(glinfo.szLastLights, 0x0, 128);
 		(g_engfuncs.pfnLightStyle)(0, (char *)glinfo.szRealLights);
 		return 1;
 	}
 
-	glinfo.bLights = true;
 	glinfo.bCheckLights = true;
 
 	//Reset LastLights

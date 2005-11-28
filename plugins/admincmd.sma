@@ -42,6 +42,7 @@ new g_cvarRconNum
 new g_pauseCon
 new Float:g_pausAble
 new bool:g_Paused
+new bool:g_PauseAllowed = false
 new g_addCvar[] = "amx_cvar add %s"
 
 public plugin_init()
@@ -648,11 +649,15 @@ public cmdCfg(id, level, cid)
 
 public cmdLBack()
 {
-	new paused[16]
+	if (!g_PauseAllowed)
+		return PLUGIN_CONTINUE	
+
+	new paused[25]
 	
-	format(paused, 15, "%L", g_pauseCon, g_Paused ? "UNPAUSED" : "PAUSED")
+	format(paused, 24, "%L", g_pauseCon, g_Paused ? "UNPAUSED" : "PAUSED")
 	set_cvar_float("pausable", g_pausAble)
 	console_print(g_pauseCon, "[AMXX] Server %s", paused)
+	g_PauseAllowed = false
 	
 	if (g_Paused)
 		g_Paused = false
@@ -682,7 +687,8 @@ public cmdPause(id, level, cid)
 		return PLUGIN_HANDLED
 	}
 
-	set_cvar_float("pausable", 1.0) 
+	set_cvar_float("pausable", 1.0)
+	g_PauseAllowed = true
 	client_cmd(slayer, "pause;pauseAck")
 	
 	log_amx("Cmd: ^"%s<%d><%s><>^" %s server", name, get_user_userid(id), authid, g_Paused ? "unpause" : "pause")

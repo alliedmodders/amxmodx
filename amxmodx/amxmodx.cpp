@@ -2320,8 +2320,8 @@ static cell AMX_NATIVE_CALL pause(AMX *amx, cell *params) /* 3 param */
 	{
 		if (flags & 8)
 			plugin->setStatus(ps_stopped);
-		else if (flags & 16)
-			plugin->setStatus(ps_locked);
+		/*else if (flags & 16)
+			plugin->setStatus(ps_locked);*/
 		else
 			plugin->pausePlugin();
 		

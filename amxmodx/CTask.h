@@ -32,83 +32,76 @@
 #ifndef CTASK_H
 #define CTASK_H
 
+#define AVL_LEFT	0
+#define	AVL_RIGHT	1
+#define	AVL_PARENT	-1
+
 #include "sh_list.h"
 
 class CTaskMngr
 {
 public:
+	enum
+	{
+		Task_Nothing = 0,
+		Task_Done,
+		Task_Rel
+	};
 	/*** class CTask ***/
 	class CTask
 	{
-		// task settings
-		
+		friend class CTaskMngr;
+		//plugin
 		CPluginMngr::CPlugin *m_pPlugin;
+		//task ID
 		cell m_iId;
+		//registered forward
 		int m_iFunc;
+		//number of times to repeat
 		int m_iRepeat;
-		
+		//type of task (a|b, c, d)
 		int type;
-		float m_fBase;		// for normal tasks, stores the interval, for the others, stores the amount of time before start / after end
+		// for normal tasks, stores the interval, for the others, stores the amount of time before start / after end
+		float m_fBase;
+		//Number of parameters
 		int m_iParamLen;
-		
+		//Parameter array
 		cell *m_pParams;
+		//Size of parameter array
 		cell m_ParamSize;
-
-		// execution
+		//next execution 
 		float m_fNextExecTime;
-
-		bool m_bFree;
+		//will we repeat?
 		bool m_bLoop;
-
+	private:
+		//Tasks are both a binary tree and a doubly-linked list...
+		//The path of execution is stored in the linked list.
+		//The search tree is for fast insertion.
+		CTask *next;
+		CTask *prev;
+		CTask *child[2];
+		CTask *parent;
+		//balance factor for AVL trees
+		char balance;
+		int dir;
 	public:
 		void set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, cell iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat, float fCurrentTime);
 		void clear();
 		bool isFree() const;
-
 		CPluginMngr::CPlugin *getPlugin() const;
 		int getTaskId() const;
-
-		bool executeIfRequired(float fCurrentTime, float fTimeLimit, float fTimeLeft);	// also removes the task if needed
-
+		int executeIfRequired(float fCurrentTime, float fTimeLimit, float fTimeLeft);
 		void changeBase(float fNewBase);
 		void resetNextExecTime(float fCurrentTime);
-
 		bool shouldRepeat();
-		CTask *getTask() { return this; }
-
+		float nextThink();
 		CTask();
 		~CTask();
 	};
 
-	class CTaskDescriptor
-	{
-	public:
-		cell m_iId;
-		AMX *m_pAmx;
-		bool m_bFree;
-
-		CTaskDescriptor(int iId, AMX *pAmx, bool bFree = false)
-		{
-			m_iId = iId;
-			m_pAmx = pAmx;
-			m_bFree = bFree;
-		}
-
-		friend bool operator == (const CTaskDescriptor &right, const CTask *left)
-		{
-			if (right.m_bFree)
-				return left->isFree();
-			
-			return !left->isFree() && (right.m_pAmx ? left->getPlugin()->getAMX() == right.m_pAmx : true) && left->getTaskId() == right.m_iId;
-		}
-	};
-
 	/*** CTaskMngr priv members ***/
-	typedef List<CTask *> TaskList;
-	typedef TaskList::iterator TaskListIter;
-	
-	TaskList m_Tasks;
-	
+	CTask *root;
+	CTask *first;
 	float *m_pTmr_CurrentTime;
 	float *m_pTmr_TimeLimit;
 	float *m_pTmr_TimeLeft;
@@ -116,15 +109,22 @@ public:
 	CTaskMngr();
 	~CTaskMngr();
 
+	inline float CurrentTime() { return *m_pTmr_CurrentTime; }
+	inline float TimeLimit() { return *m_pTmr_TimeLimit; }
+	inline float TimeLeft() { return *m_pTmr_TimeLeft; }
 	void registerTimers(float *pCurrentTime, float *pTimeLimit, float *pTimeLeft);	// The timers will always point to the right value
 	void registerTask(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, cell iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat);
 	
+	void insertTask(CTask *pTask);
+	void removeTask(CTask *pTask);
 	int removeTasks(int iId, AMX *pAmx);											// remove all tasks that match the id and amx
 	int changeTasks(int iId, AMX *pAmx, float fNewBase);							// change all tasks that match the id and amx
 	bool taskExists(int iId, AMX *pAmx);
 	
 	void startFrame();
 	void clear();
+private:
+	void insertTask(CTask *pTask, float time, CTask *pRoot);
 };
 
 #endif //CTASK_H

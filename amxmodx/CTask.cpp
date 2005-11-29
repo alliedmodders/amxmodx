@@ -50,7 +50,6 @@ CPluginMngr::CPlugin *CTaskMngr::CTask::getPlugin() const
 void CTaskMngr::CTask::set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, cell iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat, float fCurrentTime)
 {
 	clear();
-	m_bFree = false;
 
 	m_pPlugin = pPlugin;
 	m_iFunc = iFunc;
@@ -110,8 +109,6 @@ void CTaskMngr::CTask::set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags,
 
 void CTaskMngr::CTask::clear()
 {
-	m_bFree = true;
-
 	if (m_iFunc >= 0)
 	{
 		unregisterSPForward(m_iFunc);
@@ -120,11 +117,6 @@ void CTaskMngr::CTask::clear()
 
 	m_iId = 0;
 	m_fNextExecTime = 0.0f;
-}
-
-bool CTaskMngr::CTask::isFree() const
-{
-	return m_bFree;
 }
 
 void CTaskMngr::CTask::changeBase(float fNewBase)
@@ -137,7 +129,7 @@ void CTaskMngr::CTask::resetNextExecTime(float fCurrentTime)
 	m_fNextExecTime = fCurrentTime + m_fBase;
 }
 
-bool CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, float fTimeLeft)
+int CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, float fTimeLeft)
 {
 	bool execute = false;
 	bool done = false;
@@ -189,13 +181,11 @@ bool CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, f
 			m_fNextExecTime += m_fBase;
 	}
 
-	return done;
+	return (execute ? (done ? Task_Done : Task_Rel) : Task_Nothing);
 }
 
 CTaskMngr::CTask::CTask()
 {
-	m_bFree = true;
-
 	m_pPlugin = NULL;
 	m_iFunc = -1;
 	m_iId = 0;
@@ -237,7 +227,8 @@ CTaskMngr::CTaskMngr()
 CTaskMngr::~CTaskMngr()
 {
 	clear();
-	delete g_FreeTasks;
+	if (g_FreeTasks)
+		delete g_FreeTasks;
 	g_FreeTasks = NULL;
 }
 
@@ -251,107 +242,349 @@ void CTaskMngr::registerTimers(float *pCurrentTime, float *pTimeLimit, float *pT
 void CTaskMngr::registerTask(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, cell iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat)
 {
 	// first, search for free tasks
+	CTask *pTmp = NULL;
 	if (!g_FreeTasks->empty())
 	{
 		// found: reuse it
-		CTask *pTmp = g_FreeTasks->front();
+		pTmp = g_FreeTasks->front();
 		g_FreeTasks->pop();
 		pTmp->set(pPlugin, iFunc, iFlags, iId, fBase, iParamsLen, pParams, iRepeat, *m_pTmr_CurrentTime);
-		m_Tasks.unshift(pTmp);
 	} else {
 		// not found: make a new one
-		CTask *pTmp = new CTask;
-		
+		pTmp = new CTask;
 		pTmp->set(pPlugin, iFunc, iFlags, iId, fBase, iParamsLen, pParams, iRepeat, *m_pTmr_CurrentTime);
-		m_Tasks.unshift(pTmp);
 	}
+
+	insertTask(pTmp);
+}
+
+float CTaskMngr::CTask::nextThink()
+{
+	float _next = 0.0f;
+	/*switch (type)
+	{
+	case 0:
+		{*/
+			_next = m_fNextExecTime - g_tasksMngr.CurrentTime();
+			if (_next < 0.0f)
+				_next = 0.0f;
+			/*break;
+		}
+	case 1:
+		{
+			_next = m_fBase - (g_tasksMngr.CurrentTime() - g_tasksMngr.TimeLeft() + 1.0f);
+			if (_next < 0.0f)
+				_next = 0.0f;
+			break;
+		}
+	case 2:
+		{
+			if (g_tasksMngr.TimeLimit() == 0.0f)
+			{
+				_next = INFINITE;
+			} else {
+				_next = ((g_tasksMngr.TimeLeft() + g_tasksMngr.TimeLimit() * 60.0f) - g_tasksMngr.CurrentTime() - 1.0f) - m_fBase;
+				if (_next < 0.0f)
+					_next = 0.0f;
+			}
+			break;
+		}
+	}*/
+	return _next;
 }
 
 int CTaskMngr::removeTasks(int iId, AMX *pAmx)
 {
-	CTaskDescriptor descriptor(iId, pAmx);
-	List<CTask *>::iterator iter, end=m_Tasks.end();
-	int i = 0;
-
-	for (iter=m_Tasks.begin(); iter!=end; )
+	CTask *pTask = first;
+	CTask *pTemp;
+	int num = 0;
+	while (pTask)
 	{
-		if ( descriptor == (*iter) )
+		pTemp = pTask->next;
+		if ((!pAmx || (pTask->m_pPlugin->getAMX() == pAmx))
+			&& (pTask->m_iId == iId))
 		{
-			g_FreeTasks->push( (*iter) );
-			iter = m_Tasks.erase(iter);
-			++i;
-		} else {
-			iter++;
+			removeTask(pTask);
+			pTask->clear();
+			delete pTask;
+			num++;
 		}
+		pTask = pTemp;
 	}
-	
-	return i;
+
+	return num;
 }
 
 int CTaskMngr::changeTasks(int iId, AMX *pAmx, float fNewBase)
 {
-	CTaskDescriptor descriptor(iId, pAmx);
-	List<CTask *>::iterator iter, end=m_Tasks.end();
-	int i = 0;
-	
-	for (iter=m_Tasks.begin(); iter!=end; iter++)
+	CTask *pTask = first;
+	int num = 0;
+	while (pTask)
 	{
-		if ( descriptor == (*iter) )
+		if ((!pAmx || (pTask->m_pPlugin->getAMX() == pAmx))
+			&& (pTask->m_iId == iId))
 		{
-			(*iter)->changeBase(fNewBase);
-			(*iter)->resetNextExecTime(*m_pTmr_CurrentTime);
-			++i;
+			pTask->changeBase(fNewBase);
+			pTask->resetNextExecTime(*m_pTmr_CurrentTime);
+			num++;
 		}
+		pTask = pTask->next;
 	}
-	
-	return i;
+
+	return num;
 }
 
 bool CTaskMngr::taskExists(int iId, AMX *pAmx)
 {
-	CTaskDescriptor descriptor(iId, pAmx);
-	List<CTask *>::iterator iter, end=m_Tasks.end();
-
-	for (iter=m_Tasks.begin(); iter!=end; iter++)
+	CTask *pTask = first;
+	while (pTask)
 	{
-		if ( descriptor == (*iter) )
+		if ((!pAmx || (pTask->m_pPlugin->getAMX() == pAmx))
+			&& (pTask->m_iId == iId))
+		{
 			return true;
+		}
+		pTask = pTask->next;
 	}
 
 	return false;
 }
 
+static int run_tasks = 0;
+
 void CTaskMngr::startFrame()
 {
-	List<CTask *>::iterator iter, end=m_Tasks.end();
-	CTask *pTask;
-	int ignored=0, used=0;
-	for (TaskListIter iter = m_Tasks.begin(); iter!=end;)
+	CTask *pTask = first;
+	CTask *pNext;
+	float time_cur = *m_pTmr_CurrentTime;
+	float time_left = *m_pTmr_TimeLeft;
+	float time_limit = *m_pTmr_TimeLimit;
+	int val;
+	while (pTask)
 	{
-		pTask = (*iter);
-		if (pTask->executeIfRequired(*m_pTmr_CurrentTime, *m_pTmr_TimeLimit, *m_pTmr_TimeLeft))
+		pNext = pTask->next;
+		if ( (val=pTask->executeIfRequired(time_cur, time_limit, time_left)) == Task_Nothing )
 		{
-			pTask->clear();
-			iter = m_Tasks.erase(iter);
-			g_FreeTasks->push(pTask);
-			used++;
+			//we're DONE
+			break;
 		} else {
-			iter++;
-			ignored++;
+			run_tasks++;
+			removeTask(pTask);
+			if (val == Task_Rel)
+			{
+				//relocate task
+				insertTask(pTask);
+			} else {
+				//do this for now to catch list/tree errors
+				delete pTask;
+			}
 		}
+		pTask = pNext;
+	}
+}
+
+static int removed_tasks = 0;
+
+void CTaskMngr::removeTask(CTask *pTask)
+{
+	removed_tasks++;
+	//first, remove us from the linked list.
+	if (pTask->prev)
+		pTask->prev->next = pTask->next;
+	if (pTask->next)
+		pTask->next->prev = pTask->prev;
+	if (pTask == first)
+		first = pTask->next;
+
+	//case 1: no right child
+	if (pTask->child[AVL_RIGHT] == NULL)
+	{
+		if (pTask->parent)
+		{
+			//link our parent's child to our child, eliminating us
+			if (pTask->parent->child[AVL_LEFT] == pTask)
+				pTask->parent->child[AVL_LEFT] = pTask->child[AVL_LEFT];
+			else
+				pTask->parent->child[AVL_RIGHT] = pTask->child[AVL_LEFT];
+		} else {
+			//the only node with no parent is root
+			root = pTask->child[AVL_LEFT];
+		}
+		//if we have a left child, correct its parent
+		if (pTask->child[AVL_LEFT])
+			pTask->child[AVL_LEFT]->parent = pTask->parent;
+	} else {
+		CTask *pSwap = NULL;
+		if (pTask->child[AVL_LEFT] == NULL)
+		{
+			//case 2: we have no left child, it's safe to just rebind
+			if (pTask->parent)
+			{
+				if (pTask->parent->child[AVL_LEFT] == pTask)
+					pTask->parent->child[AVL_LEFT] = pTask->child[AVL_RIGHT];
+				else
+					pTask->parent->child[AVL_RIGHT] = pTask->child[AVL_RIGHT];
+			} else {
+				//the only node with no parent is root
+				root = pTask->child[AVL_RIGHT];
+			}
+			//if we have a left child, correct its parent
+			//we have a right channel because of the case we're in.
+			pTask->child[AVL_RIGHT]->parent = pTask->parent;
+		} else {
+			//case 3: we have a right child, but it has no left child.
+			if (pTask->child[AVL_RIGHT]->child[AVL_LEFT] == NULL)
+			{
+				pSwap = pTask->child[AVL_RIGHT];
+				if (pTask->parent)
+				{
+					//link our parent's child to our child, eliminating us
+					if (pTask->parent->child[AVL_LEFT] == pTask)
+						pTask->parent->child[AVL_LEFT] = pSwap;
+					else
+						pTask->parent->child[AVL_RIGHT] = pSwap;
+				} else {
+					root = pSwap;
+				}
+				//set our child's parent to our parent
+				pSwap->parent = pTask->parent;
+				//if we have a left child, link it up to its new parent
+				if (pTask->child[AVL_LEFT])
+					pTask->child[AVL_LEFT]->parent = pSwap;
+				//Set our child's left to whatever our left is
+				pSwap->child[AVL_LEFT] = pTask->child[AVL_LEFT];
+			} else {
+				//case 4: we have a right child with at least a left child.
+				//climb down the list to find the BIGGEST value that is
+				// SMALLER than our node.
+				pSwap = pTask->child[AVL_LEFT];
+				while (pSwap->child[AVL_RIGHT])
+					pSwap = pSwap->child[AVL_RIGHT];
+				if (pTask->parent)
+				{
+					if (pTask->parent->child[AVL_LEFT] == pTask)
+						pTask->parent->child[AVL_LEFT] = pSwap;
+					else
+						pTask->parent->child[AVL_RIGHT] = pSwap;
+				} else {
+					root = pSwap;
+				}
+				//the left child is guaranteed to not have another left child.
+				//for this reason we can perform a swap like above ones.
+				//however, there are more precautions.
+				//unlink our swapped node.  it's gone from that position.
+				if (pSwap->parent)
+					pSwap->parent->child[AVL_RIGHT] = NULL;
+				//link swap to new parent
+				pSwap->parent = pTask->parent;
+				//set our children to have the swap as the parent
+				pTask->child[AVL_RIGHT]->parent = pSwap;
+				if (pTask->child[AVL_LEFT])
+					pTask->child[AVL_LEFT]->parent = pSwap;
+				//link our children in
+				pSwap->child[AVL_LEFT] = pTask->child[AVL_LEFT];
+				pSwap->child[AVL_RIGHT] = pTask->child[AVL_RIGHT];
+			}
+		}
+	}
+
+	//pTask->clear();
+	//g_FreeTasks->push(pTask);
+}
+
+static int inserted_tasks = 0;
+
+void CTaskMngr::insertTask(CTask *pTask, float time, CTask *pRoot)
+{
+	inserted_tasks++;
+	int num_ran = 0;
+	while (true)
+	{
+		num_ran++;
+		float parent = pRoot->nextThink();
+		if (time <= parent)
+		{
+			if (pRoot->child[AVL_LEFT])
+			{
+				pRoot = pRoot->child[AVL_LEFT];
+				continue;
+			} else {
+				pTask->balance = 0;
+				pTask->dir = AVL_LEFT;
+				pTask->child[AVL_LEFT] = NULL;
+				pTask->child[AVL_RIGHT] = NULL;
+				pTask->parent = pRoot;
+				pRoot->child[AVL_LEFT] = pTask;
+				//insert us into the linked list.
+				//we want to be between pRoot and pRoot->prev
+				pTask->prev = pRoot->prev;		//set our previous node
+				pTask->next = pRoot;			//set our next node
+				if (pRoot->prev)
+				{
+					pRoot->prev->next = pTask;	//link previous node forward to us
+					pRoot->prev = pTask;			//link next node back to us
+				} else {
+					assert(pRoot == first);
+					pRoot->prev = pTask;
+					first = pTask;
+				}
+				break;
+			}
+		} else if (time > parent) {
+			if (pRoot->child[AVL_RIGHT])
+			{
+				pRoot = pRoot->child[AVL_RIGHT];
+				continue;
+			} else {
+				pTask->balance = 0;
+				pTask->dir = AVL_RIGHT;
+				pTask->child[AVL_LEFT] = NULL;
+				pTask->child[AVL_RIGHT] = NULL;
+				pTask->parent = pRoot;
+				pRoot->child[AVL_RIGHT] = pTask;
+				//insert us into the linked list.
+				//we want to be between pRoot and pRoot->next
+				pTask->next = pRoot->next;		//set our next node
+				pTask->prev = pRoot;			//set our previous node
+				if (pRoot->next)
+					pRoot->next->prev = pTask;	//link next node back to us
+				pRoot->next = pTask;			//link previous node forward to us
+				break;
+			}
+		}
+	}
+	//:TODO: rebalance the tree!
+}
+
+void CTaskMngr::insertTask(CTask *pTask)
+{
+	if (root == NULL)
+	{
+		pTask->parent = NULL;
+		pTask->child[AVL_LEFT] = NULL;
+		pTask->child[AVL_RIGHT] = NULL;
+		pTask->next = NULL;
+		pTask->prev = NULL;
+		pTask->balance = 0;
+		pTask->dir = AVL_PARENT;
+		root = pTask;
+		first = pTask;
+	} else {
+		float num = pTask->nextThink();
+		insertTask(pTask, num, root);
 	}
 }
 
 void CTaskMngr::clear()
 {
-	while (!g_FreeTasks->empty())
+	if (g_FreeTasks)
 	{
-		delete g_FreeTasks->front();
-		g_FreeTasks->pop();
+		while (!g_FreeTasks->empty())
+		{
+			delete g_FreeTasks->front();
+			g_FreeTasks->pop();
+		}
 	}
 
-	List<CTask *>::iterator iter, end=m_Tasks.end();
-	for (iter=m_Tasks.begin(); iter!=end; iter++)
-		delete (*iter);
-	m_Tasks.clear();
+	//:TODO: Free the linked list
 }

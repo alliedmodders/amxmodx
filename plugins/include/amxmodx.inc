@@ -904,3 +904,12 @@ native module_exists(const logtag[]);
  * Returns the next valid hudchannel for a user, from 1-4.
  */
 native next_hudchannel(player);
+
+//no
+native int3();
+
+//Sets your plugin to a failed/error state.
+//If you use this, your plugin will cease operating.
+//This is a good idea to fatally, but gracefully, handle errors.
+//You can set a failed error message.
+native set_fail_state(const err_msg[]);

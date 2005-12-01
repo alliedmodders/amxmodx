@@ -456,10 +456,11 @@ var eStr: String;
 begin
   Result := 0;
   eStr := StringReplace(frmMain.sciEditor.Lines[frmMain.sciEditor.GetCurrentLineNumber], '^"', '', [rfReplaceAll]);
+  eStr := Copy(eStr, 1, frmMain.sciEditor.GetCaretInLine);
   while Between(eStr, '"', '"') <> '' do
     eStr := StringReplace(eStr, Between(eStr, '"', '"'), '', [rfReplaceAll]);
   while Between(eStr, '{', '}') <> '' do
-    eStr := StringReplace(eStr, Between(eStr, '"', '"'), '', [rfReplaceAll]);
+    eStr := StringReplace(eStr, Between(eStr, '{', '}'), '', [rfReplaceAll]);
   for i := 0 to Length(eStr) -1 do begin
     if eStr[i] = ',' then
       Result := Result +1;

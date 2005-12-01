@@ -47,7 +47,6 @@ uses
   - FlatStyle
   - Toolbar2000, TBX, SpTBX, mbTBX Lib
   - Scintilla and DelphiSci
-  - madExcept
 }
 
 {$R *.res}

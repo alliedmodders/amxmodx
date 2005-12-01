@@ -1204,12 +1204,15 @@ begin
   if frmReplace.ShowModal = mrOk then begin
     if not Plugin_SearchReplace(frmReplace.cboSearchFor.Text, frmReplace.cboReplaceWith.Text, frmReplace.cboSearchFor.Items.Text, frmReplace.cboReplaceWith.Items.Text, frmSearch.chkCaseSensivity.Checked, frmSearch.chkWholeWordsOnly.Checked, frmSearch.chkSearchFromCaret.Checked, frmSearch.chkSelectedTextOnly.Checked, frmSearch.chkRegularExpression.Checked, frmSearch.chkForward.Checked) then
       exit;
+
     with sciSearchReplace do begin
       SearchBackwards := frmReplace.chkBackward.Checked;
       SearchCaseSensitive := frmReplace.chkCaseSensivity.Checked;
-      if (frmReplace.chkReplaceAll.Checked) and (LowerCase(frmReplace.cboSearchFor.Text) = LowerCase(frmReplace.cboReplaceWith.Text)) then
-        SearchCaseSensitive := True;
-      SearchFromCaret := frmReplace.chkSearchFromCaret.Checked;
+      // I don't like this but it works so far
+      if (frmReplace.chkReplaceAll.Checked) and (Pos(LowerCase(frmReplace.cboSearchFor.Text), LowerCase(frmReplace.cboReplaceWith.Text)) <> 0) then
+        SearchFromCaret := True
+      else
+        SearchFromCaret := frmReplace.chkSearchFromCaret.Checked;
       SearchSelectionOnly := frmReplace.chkSelectedTextOnly.Checked;
       SearchWholeWords := frmReplace.chkWholeWordsOnly.Checked;
       SearchRegex := frmReplace.chkRegularExpression.Checked;
@@ -1991,7 +1994,8 @@ begin
         for i := 0 to eACList.Count -1 do begin
           if eFunction = LowerCase(Trim(TACFunction(eACList.Items[i]).Name)) then begin
             if TACFunction(eACList.Items[i]).Items.Count > GetFunctionPos then begin
-              ListToDisplay.Text := StringReplace(TACFunction(eACList.Items[i]).Items[GetFunctionPos], '; ', #13, [rfReplaceAll]);
+              if Trim(TACFunction(eACList.Items[i]).Items[GetFunctionPos]) <> '' then
+                ListToDisplay.Text := StringReplace(TACFunction(eACList.Items[i]).Items[GetFunctionPos], '; ', #13, [rfReplaceAll]);
               break;
             end;
           end;

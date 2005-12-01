@@ -756,7 +756,6 @@ object frmMain: TfrmMain
           Align = alClient
           OnModified = sciEditorModified
           OnDblClick = sciEditorDblClick
-          OnCallTipClick = sciEditorCallTipClick
           OnKeyUp = sciEditorKeyUp
           OnKeyDown = sciEditorKeyDown
           OnKeyPress = sciEditorKeyPress
@@ -7781,7 +7780,7 @@ object frmMain: TfrmMain
     OnBeforeShow = sciAutoCompleteBeforeShow
     MaxWidth = 0
     MaxHeight = 5
-    Left = 842
+    Left = 844
     Top = 6
   end
   object ppmDocuments: TSpTBXPopupMenu

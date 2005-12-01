@@ -58,12 +58,17 @@ void amx_command()
 
 		a = g_plugins.begin();
 
+		int num = 0;
 		while (a)
 		{
+			num++;
 			if ((*a).getStatusCode() == ps_bad_load)
 			{
 				//error
-				print_srvconsole("Load fails: %s\n", (*a).getError());
+				print_srvconsole("(%3d) Load fails: %s\n", num, (*a).getError());
+			} else if ( (*a).getStatusCode() == ps_error) {
+				//error
+				print_srvconsole("(%3d) Error: %s\n", num, (*a).getError());
 			}
 			++a;
 		}

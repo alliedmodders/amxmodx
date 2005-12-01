@@ -153,7 +153,11 @@ public:
 		return m_Head->prev->obj;
 	}
 private:
-	typename CStack<ListNode *> m_FreeStack;
+#if defined __GNUC__
+	CStack<List::ListNode *> m_FreeStack;
+#else
+	typename CStack<List::ListNode *> m_FreeStack;
+#endif
 	ListNode *m_Head;
 	size_t m_Size;
 public:

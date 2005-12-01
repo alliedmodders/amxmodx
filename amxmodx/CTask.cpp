@@ -87,6 +87,7 @@ void CTaskMngr::CTask::set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags,
 			m_pParams = temp;
 		}
 		cell *dest = m_pParams;
+#if defined WIN32 && !defined __GNUC__
 		__asm
 		{
 			push esi;
@@ -100,7 +101,9 @@ void CTaskMngr::CTask::set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags,
 			pop edi;
 			pop ecx;
 		};
-		//memcpy(m_pParams, pParams, sizeof(cell) * iParamsLen);
+#else
+		memcpy(m_pParams, pParams, sizeof(cell) * iParamsLen);
+#endif
 		m_pParams[iParamsLen] = 0;
 	} else {
 		m_iParamLen = 0;

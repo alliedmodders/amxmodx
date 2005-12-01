@@ -1085,8 +1085,11 @@ static cell AMX_NATIVE_CALL amx_md5_file(AMX *amx, cell *params)
 	int len = 0;
 	char *str = get_amxstring(amx, params[1], 0, len);
 	char buffer[33];
+	char file[255];
 
-	FILE *fp = fopen(str, "rb");
+	build_pathname_r(file, sizeof(file)-1, "%s", str);
+
+	FILE *fp = fopen(file, "rb");
 	
 	if (!fp)
 	{
@@ -3593,7 +3596,11 @@ static cell AMX_NATIVE_CALL amx_abort(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_tick_count(AMX *amx, cell *params)
 {
+#if defined WIN32
 	return GetTickCount();
+#else
+	return 0;
+#endif
 }
 
 static cell AMX_NATIVE_CALL module_exists(AMX *amx, cell *params)
@@ -3638,6 +3645,20 @@ static cell AMX_NATIVE_CALL module_exists(AMX *amx, cell *params)
 		found = LibraryExists(module);
 
 	return (found ? 1 : 0);
+}
+
+static cell AMX_NATIVE_CALL set_fail_state(AMX *amx, cell *params)
+{
+	int len;
+	char *str = get_amxstring(amx, params[1], 0, len);
+
+	CPluginMngr::CPlugin *pPlugin = g_plugins.findPluginFast(amx);
+	
+	pPlugin->setStatus(ps_error);
+	pPlugin->setError(str);
+
+	//plugin dies once amx_Exec concludes
+	return 0;
 }
 
 AMX_NATIVE_INFO amxmodx_Natives[] =
@@ -3789,6 +3810,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"set_cvar_float",			set_cvar_float},
 	{"set_cvar_num",			set_cvar_num},
 	{"set_cvar_string",			set_cvar_string},
+	{"set_fail_state",			set_fail_state},
 	{"set_hudmessage",			set_hudmessage},
 	{"set_localinfo",			set_localinfo},
 	{"set_task",				set_task},

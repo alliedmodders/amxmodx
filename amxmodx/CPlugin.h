@@ -38,12 +38,12 @@
 
 enum
 {
-	ps_bad_load,
-	ps_error,
-	ps_locked,
-	ps_paused,
-	ps_stopped,
-	ps_running,
+	ps_bad_load,	//Load failed
+	ps_error,	//Erroneous state
+	ps_locked,	//UNUSED
+	ps_paused,	//Plugin is temporarily paused
+	ps_stopped,	//Plugin is ... more temporarily paused
+	ps_running,	//Plugin is running
 };
 
 class CPluginMngr

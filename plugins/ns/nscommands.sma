@@ -160,7 +160,7 @@ public cmdRandom(id,level,cid) {
       case 2: client_print(0,print_chat,"ADMIN %s: random %s",name,name_targ);
       case 1: client_print(0,print_chat,"ADMIN: random %s",name_targ);
     }
-    client_cmd(player,g_AutoAssignAck);
+    client_cmd(player, "%s", g_AutoAssignAck);
   }
   else {
     new cur=0;
@@ -197,7 +197,7 @@ public randomStep(index) {
 	new end = index+5
 	while (index < end) {
     if (g_Team[index] == 0 && !(get_user_flags(index) & ADMIN_IMMUNITY)) {
-      client_cmd(index,g_AutoAssignAck);
+      client_cmd(index, "%s", g_AutoAssignAck);
     }
     if (++index > get_maxplayers()) {
     	return PLUGIN_HANDLED_MAIN
@@ -228,7 +228,7 @@ public cmdReadyRoom(id,level,cid) {
       case 2: client_print(0,print_chat,"ADMIN %s: ready room %s",name,name_targ);
       case 1: client_print(0,print_chat,"ADMIN: ready room %s",name_targ);
     }
-    client_cmd(player,g_ReadyRoomAck);
+    client_cmd(player, "%s", g_ReadyRoomAck);
   }
   else {
     new cur=0;
@@ -263,7 +263,7 @@ public rrStep(index) {
 	new end = index+5
 	while (index < end) {
     if (is_user_connected(index) && g_Team[index]!=0) {
-      client_cmd(index,g_ReadyRoomAck)
+      client_cmd(index, "%s", g_ReadyRoomAck)
     }
     if (++index > get_maxplayers()) {
     	return PLUGIN_HANDLED_MAIN
@@ -297,7 +297,7 @@ public cmdTeamTwo(id,level,cid) {
       case 2: client_print(0,print_chat,"ADMIN %s: alien %s",name,name_targ);
       case 1: client_print(0,print_chat,"ADMIN: alien %s",name_targ);
     }
-    client_cmd(player,g_TeamTwoAck);
+    client_cmd(player, "%s", g_TeamTwoAck);
   }
   return PLUGIN_HANDLED_MAIN;
   
@@ -326,7 +326,7 @@ public cmdTeamOne(id,level,cid) {
       case 2: client_print(0,print_chat,"ADMIN %s: marine %s",name,name_targ);
       case 1: client_print(0,print_chat,"ADMIN: marine %s",name_targ);
     }
-    client_cmd(player,g_TeamOneAck);
+    client_cmd(player, "%s", g_TeamOneAck);
   }
   return PLUGIN_HANDLED_MAIN;
   
@@ -339,7 +339,7 @@ public cmdUnComm(id,level,cid) {
     return PLUGIN_HANDLED
   new comm = UTIL_FindCommander();
   if (comm>0&&comm<=get_maxplayers()) {
-    client_cmd(comm,g_StopCommAck);
+    client_cmd(comm, "%s", g_StopCommAck);
     new name[32],name_targ[32];
     new auth[32],auth_targ[32];
     get_user_name(id,name,31);

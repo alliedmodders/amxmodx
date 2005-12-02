@@ -93,7 +93,7 @@ public sayTimeLeft(id){
     if ( get_cvar_num("amx_time_voice") ) {
       new svoice[128]
       setTimeVoice( svoice , 127 , 0 , a )
-      client_cmd( id , svoice  )
+      client_cmd( id , "%s", svoice  )
     }    
     client_print(0,print_chat, "Time Left:  %d:%02d", (a / 60) , (a % 60) )
   }
@@ -219,14 +219,14 @@ public timeRemain(param[]){
       if (flags & 1){			// display white text on bottom
         setTimeText(arg,127,tmlf)
         if (flags & 16)			// show/speak if current time is less than this set in parameter
-          set_hudmessage(255, 255, 255, -1.0, 0.85, 0, 0.0, 1.1, 0.1, 0.5, 1)
+          set_hudmessage(255, 255, 255, -1.0, 0.85, 0, 0.0, 1.1, 0.1, 0.5, -1)
         else
-          set_hudmessage(255, 255, 255, -1.0, 0.85, 0, 0.0, 3.0, 0.0, 0.5, 1)
-        show_hudmessage(0,arg)
+          set_hudmessage(255, 255, 255, -1.0, 0.85, 0, 0.0, 3.0, 0.0, 0.5, -1)
+        show_hudmessage(0, "%s", arg)
       }
       if (flags & 2){			// use voice
         setTimeVoice(arg,127,flags,tmlf)
-        client_cmd(0,arg)
+        client_cmd(0, "%s", arg)
       }
     }
   }

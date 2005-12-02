@@ -197,7 +197,7 @@ public plugin_cfg(){
 
 public cmdStatsMe(id){
   if ( !SayStatsMe || !isActive() ){
-    client_print(id,print_chat, g_disabledMsg )
+    client_print(id,print_chat, "%s", g_disabledMsg )
     return PLUGIN_HANDLED
   }
   displayStats(id,id)
@@ -225,7 +225,7 @@ displayStats(id,dest) {
 
 public cmdRank(id){
   if ( !SayRank || !isActive() ){
-    client_print(id,print_chat, g_disabledMsg )
+    client_print(id,print_chat, "%s", g_disabledMsg )
     return PLUGIN_HANDLED
   }
   displayRank(id,id)  
@@ -247,7 +247,7 @@ displayRank(id,dest) {
 
 public cmdTop15(id) {
   if ( !SayTop15 || !isActive() ){
-    client_print(id,print_chat, g_disabledMsg )
+    client_print(id,print_chat, "%s", g_disabledMsg )
     return PLUGIN_HANDLED
   }
   getTop15()
@@ -291,7 +291,7 @@ public eInterMission()
 public cmdStats(id){
   if ( !SayStatsAll || !isActive() ){
 
-    client_print(id,print_chat, g_disabledMsg )
+    client_print(id,print_chat, "%s", g_disabledMsg )
     return PLUGIN_HANDLED
   }
   showStatsMenu(id,g_userPosition[id]=0)
@@ -371,7 +371,7 @@ public eResetHud( id )
 
 public cmdKiller(id) {
   if ( !SayHP ){
-    client_print(id,print_chat, g_disabledMsg )
+    client_print(id,print_chat, "%s", g_disabledMsg )
     return PLUGIN_HANDLED
   }
   if (g_Killers[id][0]) {
@@ -384,7 +384,7 @@ public cmdKiller(id) {
     if ( get_user_vstats(id,g_Killers[id][0],mstats,mbody) )  {
       client_print(id,print_chat,"You did %d damage to him with %d hit%s",mstats[6], mstats[5],(mstats[5]==1)?"":"s" )
       getMyHits(id,g_Killers[id][0])
-      client_print(id,print_chat,g_Buffer)
+      client_print(id,print_chat, "%s", g_Buffer)
     }
     else client_print(id,print_chat,"You did no damage to him")
   }
@@ -455,9 +455,9 @@ public client_putinserver(id)
 public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){ 
   if ( BulletDamage ) { 
     if ( attacker==victim || xmod_is_melee_wpn(wpnindex) ) return PLUGIN_CONTINUE
-    set_hudmessage(0, 100, 200, 0.45, 0.85, 2, 0.1, 4.0, 0.02, 0.02, 1) 
+    set_hudmessage(0, 100, 200, 0.45, 0.85, 2, 0.1, 4.0, 0.02, 0.02, -1) 
     show_hudmessage(attacker,"%i", damage)   
-    set_hudmessage(200, 0, 0, 0.55, 0.85, 2, 0.1, 4.0, 0.02, 0.02, 2) 
+    set_hudmessage(200, 0, 0, 0.55, 0.85, 2, 0.1, 4.0, 0.02, 0.02, -1) 
     show_hudmessage(victim,"%i", damage)  
   } 
   return PLUGIN_CONTINUE 
@@ -483,17 +483,17 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
   new Float:statstime = get_cvar_float("tfcstats_statstime")
 
   if ( ShowVictims && getVictims(victim) ){ 
-    set_hudmessage(0,80,220,0.55,0.60,0, statstime, 12.0, 1.0, 2.0, 4) 
-    show_hudmessage(victim,g_Buffer) 
+    set_hudmessage(0,80,220,0.55,0.60,0, statstime, 12.0, 1.0, 2.0, -1) 
+    show_hudmessage(victim, "%s", g_Buffer) 
   } 
   if ( ShowAttackers  && getAttackers(victim)){ 
-    set_hudmessage(220,80,0,0.55,0.35,0, statstime, 12.0, 1.0, 2.0, 3) 
-    show_hudmessage(victim,g_Buffer) 
+    set_hudmessage(220,80,0,0.55,0.35,0, statstime, 12.0, 1.0, 2.0, -1) 
+    show_hudmessage(victim, "%s", g_Buffer) 
   } 
 
   if ( selfKill && grenade && GrenadeSuicide ){ 
-    set_hudmessage(255, 100, 100, -1.0, 0.15, 1, 6.0, 6.0, 0.5, 0.15, 1)
-    show_hudmessage(0,g_SHeMessages[ random_num(0,3) ],victim_name) 
+    set_hudmessage(255, 100, 100, -1.0, 0.15, 1, 6.0, 6.0, 0.5, 0.15, -1)
+    show_hudmessage(0, "%s", g_SHeMessages[ random_num(0,3) ],victim_name) 
   }
 
   if ( selfKill || TK )
@@ -516,7 +516,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
   
     get_user_astats(victim,killer,stats,body,wpn,31) 
     get_user_vstats(victim,killer,mstats,mbody) 
-    set_hudmessage(220,80,0,0.05,0.15,0, statstime, 12.0, 1.0, 2.0, 1) 
+    set_hudmessage(220,80,0,0.05,0.15,0, statstime, 12.0, 1.0, 2.0, -1) 
     getHits(victim,killer) 
     show_hudmessage(victim,"%s killed you with %s^nfrom distance of %.2f meters.^nHe did %d damage to you with %d hit(s)^nand still has %dhp and %dap.^nYou did %d damage to him with %d hit(s).^nHe hits you in:^n%s", 
                                 killer_name,wpn,float(g_Killers[victim][3]) * 0.0254,  stats[6],stats[5],
@@ -526,9 +526,9 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
   if ( KillerHp ){
     new kmsg[128]
     format(kmsg,127,"%s still has %dhp and %d ap",killer_name,g_Killers[victim][1],g_Killers[victim][1])
-    client_print(victim,print_console,kmsg)
-    set_hudmessage(255,255,255,0.02,0.9,2, 1.5, 3.0, 0.02, 5.0, 2)
-    show_hudmessage(victim,kmsg)
+    client_print(victim,print_console, "%s", kmsg)
+    set_hudmessage(255,255,255,0.02,0.9,2, 1.5, 3.0, 0.02, 5.0, -1)
+    show_hudmessage(victim, "%s", kmsg)
   }
 
   if ( KillingStreak || KillingStreakSound ){    
@@ -538,11 +538,11 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
     if ( (a > -1) && !( a % 2 ) ) {
       if ( (a >>= 1) > 6 ) a = 6
       if ( KillingStreak ){
-        set_hudmessage(0, 100, 255, 0.05, 0.55, 2, 0.02, 6.0, 0.01, 0.1, 3)
+        set_hudmessage(0, 100, 255, 0.05, 0.55, 2, 0.02, 6.0, 0.01, 0.1, -1)
         for (new i=1;i<=get_maxplayers();i++){
           if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
             continue
-          show_hudmessage(i,g_KillingMsg[ a ], killer_name) 
+          show_hudmessage(i, "%s", g_KillingMsg[ a ], killer_name) 
         }
       }
       if (  KillingStreakSound )  client_cmd( 0 ,  "spk misc/%s" , g_Sounds[ a ] )
@@ -562,23 +562,23 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
 
   if ( xmod_is_melee_wpn(wpnindex) && ( KnifeKill || KnifeKillSound )  ){
     if ( KnifeKill ){
-      set_hudmessage(255, 100, 100, -1.0, 0.15, 1, 6.0, 6.0, 0.5, 0.15, 1)
+      set_hudmessage(255, 100, 100, -1.0, 0.15, 1, 6.0, 6.0, 0.5, 0.15, -1)
       for (new i=1;i<=get_maxplayers();i++){
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
 
           continue
-        show_hudmessage(i,g_KnifeMsg[ random_num(0,3) ],killer_name,victim_name) 
+        show_hudmessage(i, "%s", g_KnifeMsg[ random_num(0,3) ],killer_name,victim_name) 
       } 
     }
     if ( KnifeKillSound ) client_cmd(0,"spk misc/humiliation") 
   }
   else if ( grenade ){
     if ( GrenadeKill ){
-      set_hudmessage(255, 100, 100, -1.0, 0.15, 1, 6.0, 6.0, 0.5, 0.15, 1) 
+      set_hudmessage(255, 100, 100, -1.0, 0.15, 1, 6.0, 6.0, 0.5, 0.15, -1) 
       for (new i=1;i<=get_maxplayers();i++){
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
           continue
-        show_hudmessage(i,g_HeMessages[ random_num(0,3)],killer_name,victim_name) 
+        show_hudmessage(i, "%s", g_HeMessages[ random_num(0,3)],killer_name,victim_name) 
       }   
     }
   }
@@ -591,11 +591,11 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
       replace( message, 127 , "$vn", victim_name )
       replace( message, 127 , "$wn", weapon )    
       replace( message, 127 , "$kn", killer_name )
-      set_hudmessage(100, 100, 255, -1.0, 0.19, 0, 6.0, 6.0, 0.5, 0.15, 1) 
+      set_hudmessage(100, 100, 255, -1.0, 0.19, 0, 6.0, 6.0, 0.5, 0.15, -1) 
       for (new i=1;i<=get_maxplayers();i++){
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
           continue
-        show_hudmessage(i,message) 
+        show_hudmessage(i,"%s", message) 
       }      
     }
     if ( HeadShotKillSound ) client_cmd(0,"spk misc/headshot") 
@@ -631,11 +631,11 @@ public showDoubleKill(){
       num_to_str(g_KillCount,kills,2)
       replace( message, 127 , "$kk", kills )
     }
-    set_hudmessage(65, 102, 158, -1.0, 0.25, 0, 6.0, 6.0, 0.5, 0.15, 3)
+    set_hudmessage(65, 102, 158, -1.0, 0.25, 0, 6.0, 6.0, 0.5, 0.15, -1)
     for (new i=1;i<=get_maxplayers();i++){
       if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
         continue
-      show_hudmessage(i,message) 
+      show_hudmessage(i, "%s", message) 
     } 
   }
   if ( DoubleKillSound ) {
@@ -653,12 +653,12 @@ public checkKills(param[]){
       if ( MultiKill ) {
         new name[32]
         get_user_name(id,name,31)
-        set_hudmessage(255, 0, 100, 0.05, 0.65, 2, 0.02, 6.0, 0.01, 0.1, 2)
+        set_hudmessage(255, 0, 100, 0.05, 0.65, 2, 0.02, 6.0, 0.01, 0.1, -1)
         if ( a > 6 ) a = 6
         for (new i=1;i<=get_maxplayers();i++){
           if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
             continue
-          show_hudmessage(i,g_MultiKillMsg[a],name,g_multiKills[id][0],g_multiKills[id][1]) 
+          show_hudmessage(i, "%s", g_MultiKillMsg[a],name,g_multiKills[id][0],g_multiKills[id][1]) 
         } 
       }
       if ( MultiKillSound ) client_cmd(0,"spk misc/%s",g_Sounds[a])

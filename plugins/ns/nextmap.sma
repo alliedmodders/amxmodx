@@ -236,7 +236,7 @@ public sayNextMapTimeLeft(){
 		new a = get_timeleft()
 		format(szText, 127, "%s  Time Left:  %d:%02d", szText, (a / 60) , (a % 60) )
 	}
-	client_print(0, print_chat, szText)
+	client_print(0, print_chat, "%s", szText)
 }
 
 public changeMap(szMapName[])

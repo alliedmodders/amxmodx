@@ -555,13 +555,13 @@ public actionClcmdMenu(id,key) {
         replace(command,63,"%authid%",authid)
         replace(command,63,"%name%",name)
         if (flags & 1) {
-          server_cmd(command)
+          server_cmd("%s", command)
           server_exec()
         }
         else if (flags & 2)
-          client_cmd(id,command)
+          client_cmd(id, "%s", command)
         else if (flags & 4)
-          client_cmd(player,command)
+          client_cmd(player, "%s", command)
       }
       if (flags & 8) displayClcmdMenu(id,g_menuPosition[id])
     }

@@ -346,7 +346,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
   if ( killer == victim ){
     if ( grenade && GrenadeSuicide ){ 
       set_hudmessage(255, 100, 100, -1.0, 0.25, 1, 6.0, 6.0, 0.5, 0.15, -1)
-      show_hudmessage(0, "%s", g_SHeMessages[ random_num(0,3) ],victim_name) 
+      show_hudmessage(0, g_SHeMessages[ random_num(0,3) ],victim_name) 
     }
     return PLUGIN_CONTINUE
   }
@@ -370,7 +370,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
       for (new i=1;i<=get_maxplayers();i++){
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
           continue
-        show_hudmessage(i, "%s", g_HeMessages[ random_num(0,3)],killer_name,victim_name) 
+        show_hudmessage(i, g_HeMessages[ random_num(0,3)],killer_name,victim_name) 
       }   
   }
   else if ( headshot && (HeadShotKill || HeadShotKillSound) && !xmod_is_melee_wpn(wpnindex) ){

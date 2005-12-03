@@ -493,7 +493,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
 
   if ( selfKill && grenade && GrenadeSuicide ){ 
     set_hudmessage(255, 100, 100, -1.0, 0.15, 1, 6.0, 6.0, 0.5, 0.15, -1)
-    show_hudmessage(0, "%s", g_SHeMessages[ random_num(0,3) ],victim_name) 
+    show_hudmessage(0, g_SHeMessages[ random_num(0,3) ],victim_name) 
   }
 
   if ( selfKill || TK )
@@ -542,7 +542,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
         for (new i=1;i<=get_maxplayers();i++){
           if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
             continue
-          show_hudmessage(i, "%s", g_KillingMsg[ a ], killer_name) 
+          show_hudmessage(i, g_KillingMsg[ a ], killer_name) 
         }
       }
       if (  KillingStreakSound )  client_cmd( 0 ,  "spk misc/%s" , g_Sounds[ a ] )
@@ -567,7 +567,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
 
           continue
-        show_hudmessage(i, "%s", g_KnifeMsg[ random_num(0,3) ],killer_name,victim_name) 
+        show_hudmessage(i, g_KnifeMsg[ random_num(0,3) ],killer_name,victim_name) 
       } 
     }
     if ( KnifeKillSound ) client_cmd(0,"spk misc/humiliation") 
@@ -578,7 +578,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
       for (new i=1;i<=get_maxplayers();i++){
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
           continue
-        show_hudmessage(i, "%s", g_HeMessages[ random_num(0,3)],killer_name,victim_name) 
+        show_hudmessage(i, g_HeMessages[ random_num(0,3)],killer_name,victim_name) 
       }   
     }
   }
@@ -658,7 +658,7 @@ public checkKills(param[]){
         for (new i=1;i<=get_maxplayers();i++){
           if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
             continue
-          show_hudmessage(i, "%s", g_MultiKillMsg[a],name,g_multiKills[id][0],g_multiKills[id][1]) 
+          show_hudmessage(i, g_MultiKillMsg[a],name,g_multiKills[id][0],g_multiKills[id][1]) 
         } 
       }
       if ( MultiKillSound ) client_cmd(0,"spk misc/%s",g_Sounds[a])

@@ -178,6 +178,7 @@ void PlayerPreThink(edict_t *pEntity);
 void PlayerPostThink_Post(edict_t *pEntity);
 void pfnTouch(edict_t *pToucher, edict_t *pTouched);
 void Think(edict_t *pent);
+void StartFrame_Post();
 
 #define CHECK_ENTITY(x) \
 	if (x < 0 || x > gpGlobals->maxEntities) { \

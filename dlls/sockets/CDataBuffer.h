@@ -31,6 +31,9 @@
 
 // Class by Pavol "PMOnoTo" Marko
 
+#ifndef __CDATABUFFER_H__
+#define __CDATABUFFER_H__
+
 template <class T> class DataBuffer
 {
 	T *m_pBuf;
@@ -71,3 +74,5 @@ public:
 		return true;
 	}
 };
+
+#endif // #ifndef __CDATABUFFER_H__

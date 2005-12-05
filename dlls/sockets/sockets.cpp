@@ -11,6 +11,8 @@
  *
  * v0.1
  * - code structure renewed
+ * v0.2
+ * - added socket_send2 to send data containing null bytes (FALUCO)(AMXX v1.65)
  */
 
 #include <stdlib.h>
@@ -36,6 +38,7 @@
 
 // AMX Headers
 #include "amxxmodule.h"
+#include "CDataBuffer.h"
 
 #define SOCKET_TCP 1
 #define SOCKET_UDP 2
@@ -175,21 +178,41 @@ static cell AMX_NATIVE_CALL socket_recv(AMX *amx, cell *params)  /* 2 param */
 // native socket_send(_socket, _data[], _length);
 static cell AMX_NATIVE_CALL socket_send(AMX *amx, cell *params)  /* 3 param */
 {
-    // We get the string from amx
-    int len;
-    int socket = params[1];
-    char* data = MF_GetAmxString(amx,params[2],0,&len);
-    // And send it to the socket
-    return send(socket, data, len, 0);
+	// We get the string from amx
+	int len;
+	int socket = params[1];
+	char* data = MF_GetAmxString(amx,params[2],0,&len);
+	// And send it to the socket
+	return send(socket, data, len, 0);
+}
+
+// native socket_send2(_socket, _data[], _length);
+static cell AMX_NATIVE_CALL socket_send2(AMX *amx, cell *params)  /* 3 param */
+{
+	// We get the string from amx
+	int len = params[3];
+	int socket = params[1];
+	static DataBuffer<char> buffer;
+
+	buffer.resize(params[3]);
+	cell *pData = MF_GetAmxAddr(amx, params[2]);
+	char *pBuffer = buffer;
+
+	while (len--)
+		*pBuffer++ = *pData++;
+
+	// And send it to the socket
+    return send(socket, buffer, params[3], 0);
 }
 
 AMX_NATIVE_INFO sockets_natives[] = {
-    {"socket_open", socket_open},
-    {"socket_close", socket_close},
-    {"socket_change", socket_change},
-    {"socket_recv", socket_recv},
-    {"socket_send", socket_send},
-    {NULL, NULL}
+	{"socket_open", socket_open},
+	{"socket_close", socket_close},
+	{"socket_change", socket_change},
+	{"socket_recv", socket_recv},
+	{"socket_send", socket_send},
+	{"socket_send2", socket_send2},
+	{NULL, NULL}
 };
 
 void OnAmxxAttach()

@@ -4,6 +4,7 @@
 	Version="7.10"
 	Name="sockets"
 	ProjectGUID="{F15BBA96-2F66-44BB-9DDF-D91AE6D33AE7}"
+	RootNamespace="sockets"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -124,6 +125,9 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			<File
+				RelativePath=".\CDataBuffer.h">
+			</File>
 			<Filter
 				Name="SDK"
 				Filter="">

@@ -122,7 +122,11 @@ public checkVotes(id)
 		if (g_voteCount[a] < g_voteCount[i])
 			a = i
 
-	if (100 * g_voteCount[a] / num > 50)
+	new votesNum = g_voteCount[0] + g_voteCount[1] + g_voteCount[2] + g_voteCount[3] + g_voteCount[4]
+	new iRatio = votesNum ? floatround(get_cvar_float("amx_votemap_ratio") * float(votesNum), floatround_ceil) : 1
+	new iResult = g_voteCount[a]
+
+	if (iResult >= iRatio)
 	{
 		g_choosed = g_voteSelected[id][a]
 		client_print(0, print_chat, "%L %s", LANG_PLAYER, "VOTE_SUCCESS", g_mapName[g_choosed])

@@ -2947,6 +2947,7 @@ end;
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   sciEditor.StreamClass := TSciMyStream;
+  sciEditor.OnCallTipClick := sciEditorCallTipClick; // god why doesn't delphi save this
   eACList := TmxJsCollection.Create(TACFunction);
   eACList.Collectionname := 'Autocomplete_List';
   eACList.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'config\ACList.cfg');

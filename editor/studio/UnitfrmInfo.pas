@@ -14,7 +14,7 @@ type
     lblInfo1: TLabel;
     imgAMXXLarge: TImage;
     cmdClose: TSpTBXButton;
-    lblCHelp: TLabel;
+    lblDonations: TLabel;
     lblScintilla1: TLabel;
     lblScintilla2: TLabel;
     pnlImages: TPanel;

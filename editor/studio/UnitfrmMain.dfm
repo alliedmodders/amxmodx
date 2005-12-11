@@ -756,6 +756,7 @@ object frmMain: TfrmMain
           Align = alClient
           OnModified = sciEditorModified
           OnDblClick = sciEditorDblClick
+          OnCallTipClick = sciEditorCallTipClick
           OnKeyUp = sciEditorKeyUp
           OnKeyDown = sciEditorKeyDown
           OnKeyPress = sciEditorKeyPress

@@ -36,11 +36,13 @@
 // *****************************************************
 // class Stats
 // *****************************************************
-Stats::Stats(){
+Stats::Stats()
+{
 	hits = shots = damage = hs = tks = kills = deaths = 0;
 	memset( bodyHits , 0 ,sizeof( bodyHits ) );
 }
-void Stats::commit(Stats* a){
+void Stats::commit(Stats* a)
+{
 	hits += a->hits;
 	shots += a->shots;
 	damage += a->damage;
@@ -48,14 +50,14 @@ void Stats::commit(Stats* a){
 	tks += a->tks;
 	kills += a->kills;
 	deaths += a->deaths;
-	for(int i = 1; i < 8; ++i)
-		bodyHits[i] += a->bodyHits[i];
+	for(int i = 1; i < 8; ++i) bodyHits[i] += a->bodyHits[i];
 }
 
 // *****************************************************
 // class RankSystem
 // *****************************************************
-RankSystem::RankStats::RankStats( const char* uu, const char* nn, RankSystem* pp ) {
+RankSystem::RankStats::RankStats( const char* uu, const char* nn, RankSystem* pp )
+{
 	name = 0;
 	namelen = 0;
 	unique = 0;
@@ -67,77 +69,92 @@ RankSystem::RankStats::RankStats( const char* uu, const char* nn, RankSystem* pp
 	setName( nn );
 	setUnique( uu );
 }
-RankSystem::RankStats::~RankStats() {
-	delete[] name;
-	delete[] unique;
+RankSystem::RankStats::~RankStats()
+{
+	delete name;
+	delete unique;
 	--parent->rankNum;
 }
-void RankSystem::RankStats::setName( const char* nn  )	{
+void RankSystem::RankStats::setName( const char* nn  )
+{
 	delete[] name;
 	namelen = strlen(nn) + 1;
 	name = new char[namelen];
-	if ( name )
-		strcpy( name , nn );
-	else
-		namelen = 0;
+
+	if ( name ) strcpy( name , nn );
+	else namelen = 0;
 }
-void RankSystem::RankStats::setUnique( const char* nn  )	{
-	delete[] unique;
+void RankSystem::RankStats::setUnique( const char* nn  )
+{
+	delete unique;
 	uniquelen = strlen(nn) + 1;
 	unique = new char[uniquelen];
-	if ( unique )
-		strcpy( unique , nn );	
-	else
-		uniquelen = 0;
+
+	if ( unique ) strcpy( unique , nn );	
+	else uniquelen = 0;
 }
 
-RankSystem::RankSystem() { 
+RankSystem::RankSystem() 
+{ 
 	head = 0; 
 	tail = 0; 
 	rankNum = 0;
 	calc.code = 0;
 }
 
-RankSystem::~RankSystem() {
+RankSystem::~RankSystem() 
+{
 	clear();
 }
 
-void RankSystem::put_before( RankStats* a, RankStats* ptr ){
+void RankSystem::put_before( RankStats* a, RankStats* ptr )
+{
 	a->next = ptr;
-	if ( ptr ){
+	if ( ptr )
+	{
 		a->prev = ptr->prev;
 		ptr->prev = a;
 	}
-	else{
+	else
+	{
 		a->prev = head;
 		head = a;
 	}
+
 	if ( a->prev )	a->prev->next = a;
 	else tail = a;
 }
-void  RankSystem::put_after( RankStats* a, RankStats* ptr ) {
+void  RankSystem::put_after( RankStats* a, RankStats* ptr ) 
+{
 	a->prev = ptr;
-	if ( ptr ){
+	if ( ptr )
+	{
 		a->next = ptr->next;
 		ptr->next = a;
 	}
-	else{
+	else
+	{
 		a->next = tail;
 		tail = a;
 	}
+
 	if ( a->next )	a->next->prev = a;
 	else head = a;
 }
 
-void RankSystem::unlink( RankStats* ptr ){
+void RankSystem::unlink( RankStats* ptr )
+{
 	if (ptr->prev) ptr->prev->next = ptr->next;
 	else tail = ptr->next;
+
 	if (ptr->next) ptr->next->prev = ptr->prev;
 	else head = ptr->prev;
 }
 
-void RankSystem::clear(){
-	while( tail ){
+void RankSystem::clear()
+{
+	while( tail )
+	{
 		head = tail->next;
 		delete tail;
 		tail = head;
@@ -149,7 +166,8 @@ bool RankSystem::loadCalc(const char* filename, char* error)
 	if ((MF_LoadAmxScript(&calc.amx,&calc.code,filename,error,0)!=AMX_ERR_NONE)||
 		(MF_AmxAllot(&calc.amx, 8 , &calc.amxAddr1, &calc.physAddr1)!=AMX_ERR_NONE)||
 		(MF_AmxAllot(&calc.amx, 8 , &calc.amxAddr2, &calc.physAddr2)!=AMX_ERR_NONE)||
-		(MF_AmxFindPublic(&calc.amx,"get_score",&calc.func)!=AMX_ERR_NONE)){
+		(MF_AmxFindPublic(&calc.amx,"get_score",&calc.func)!=AMX_ERR_NONE))
+	{
 		MF_PrintSrvConsole("Couldn't load plugin (file \"%s\")",filename);
 		MF_UnloadAmxScript(&calc.amx, &calc.code);
 		return false;
@@ -167,14 +185,16 @@ RankSystem::RankStats* RankSystem::findEntryInRank(const char* unique, const cha
 	
 	while ( a )
 	{
-		if (  strcmp( a->getUnique() ,unique ) == 0 )
-			return a;
+		if (  strcmp( a->getUnique() ,unique ) == 0 ) return a;
 
 		a = a->prev;
 	}
+
 	a = new RankStats( unique ,name,this );
+
 	if ( a == 0 ) return 0;
 	put_after( a  , 0 );
+
 	return a;
 }
 
@@ -182,7 +202,8 @@ void RankSystem::updatePos(  RankStats* rr ,  Stats* s )
 {
 	rr->addStats( s );
 
-	if ( calc.code ) {
+	if ( calc.code ) 
+	{
 		calc.physAddr1[0] = rr->kills;
 		calc.physAddr1[1] = rr->deaths;
 		calc.physAddr1[2] = rr->hs;
@@ -190,20 +211,25 @@ void RankSystem::updatePos(  RankStats* rr ,  Stats* s )
 		calc.physAddr1[4] = rr->shots;
 		calc.physAddr1[5] = rr->hits;
 		calc.physAddr1[6] = rr->damage;
-		for(int i = 1; i < 8; ++i)
-			calc.physAddr2[i] = rr->bodyHits[i];
+
+		for(int i = 1; i < 8; ++i)	calc.physAddr2[i] = rr->bodyHits[i];
 		cell result = 0;
 		int err;
+
 		MF_AmxPush(&calc.amx, calc.amxAddr2);
 		MF_AmxPush(&calc.amx, calc.amxAddr1);
+
 		if ((err = MF_AmxExec(&calc.amx,&result, calc.func)) != AMX_ERR_NONE)
 			MF_LogError(&calc.amx, err, "Fatal error calculating stats");
+
 		rr->score = result;
 	}
 	else rr->score = rr->kills - rr->deaths;
 
 	RankStats* aa = rr->next;
-	while ( aa && (aa->score <= rr->score) ) { // try to nominate
+
+	while ( aa && (aa->score <= rr->score) ) 
+	{ // try to nominate
 		rr->goUp();
 		aa->goDown();
 		aa = aa->next;		// go to next rank
@@ -216,12 +242,14 @@ void RankSystem::updatePos(  RankStats* rr ,  Stats* s )
 	else
 	{
 		aa = rr->prev;
-		while ( aa && (aa->score > rr->score) ) { // go down
+		while ( aa && (aa->score > rr->score) ) 
+		{ // go down
 			rr->goDown();
 			aa->goUp();
 			aa = aa->prev;	// go to prev rank
 		}
-		if ( aa != rr->prev ){
+		if ( aa != rr->prev )
+		{
 			unlink( rr );
 			put_after( rr, aa );
 		}

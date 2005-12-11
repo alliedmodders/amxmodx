@@ -45,30 +45,8 @@
 #define GETPLAYERAUTHID   (*g_engfuncs.pfnGetPlayerAuthId)
 #endif
 
-extern AMX_NATIVE_INFO stats_Natives[];
+//extern AMX_NATIVE_INFO stats_Natives[];
 extern AMX_NATIVE_INFO base_Natives[];
-
-extern int gmsgResetHUD;
-extern int gmsgWeaponInfo;
-extern int gmsgClipInfo;
-extern int gmsgScoreInfo;
-extern int gmsgTSHealth;
-
-extern int gmsgWStatus;
-extern int gmsgTSCash;
-extern int gmsgTSSpace;
-extern int gmsgPwUp;
-
-void Client_ResetHUD_End(void*);
-void Client_WeaponInfo(void*);
-void Client_ClipInfo(void*);
-void Client_ScoreInfo(void*);
-void Client_TSHealth_End(void*);
-
-void Client_WStatus(void* mValue);
-void Client_TSCash(void* mValue);
-void Client_TSSpace(void* mValue);
-void Client_PwUp(void* mValue);
 
 typedef void (*funEventCall)(void*);
 extern funEventCall modMsgsEnd[MAX_REG_MSGS];
@@ -105,8 +83,17 @@ extern int gKnifeOffset;
 
 extern weapon_t weaponData[TSMAX_WEAPONS];
 
-bool isModuleActive();
-bool ignoreBots (edict_t *pEnt, edict_t *pOther = NULL);
+inline bool ignoreBots (edict_t *pEnt, edict_t *pOther = NULL)
+{
+	if ( !rankBots && ( pEnt->v.flags & FL_FAKECLIENT || ( pOther && pOther->v.flags & FL_FAKECLIENT ) ) ) return true;
+	return false;
+}
+
+inline bool isModuleActive()
+{
+	if ( !(int)CVAR_GET_FLOAT("tsstats_pause") ) return true;
+	return false;
+}
 
 #define CHECK_ENTITY(x) \
 	if (x < 0 || x > gpGlobals->maxEntities) { \

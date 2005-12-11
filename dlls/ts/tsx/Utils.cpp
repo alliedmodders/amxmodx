@@ -1,6 +1,6 @@
 /*
- * TFCX 
- * Copyright (c) 2004 Lukasz Wlasinski
+ * TSX 
+ * Copyright (c) 2005 Melanie Maye
  *
  *
  *    This program is free software; you can redistribute it and/or modify it
@@ -73,15 +73,3 @@ weapon_t weaponData[] = {
 	{ 1,"Throwing Knife","throwing_knife",2 }, // new id 37 
 	{ 0,"breakable", "breakable", 1 },
 };
-
-bool ignoreBots (edict_t *pEnt, edict_t *pOther){
-	if ( !rankBots && ( pEnt->v.flags & FL_FAKECLIENT || ( pOther && pOther->v.flags & FL_FAKECLIENT ) ) )
-		return true;
-	return false;
-}
-
-bool isModuleActive(){
-	if ( !(int)CVAR_GET_FLOAT("tsstats_pause") )
-		return true;
-	return false;
-}

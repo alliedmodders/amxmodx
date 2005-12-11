@@ -1,0 +1,664 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:x="urn:schemas-microsoft-com:office:excel"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Excel.Sheet>
+<meta name=Generator content="Microsoft Excel 11">
+<link id=Main-File rel=Main-File href="../Functions%20and%20Events.htm">
+<link rel=File-List href=filelist.xml>
+<link rel=Edit-Time-Data href=editdata.mso>
+<link rel=Stylesheet href=stylesheet.css>
+<style>
+<!--table
+	{mso-displayed-decimal-separator:"\,";
+	mso-displayed-thousand-separator:"\.";}
+@page
+	{margin:.98in .79in .98in .79in;
+	mso-header-margin:.49in;
+	mso-footer-margin:.49in;}
+-->
+</style>
+<![if !supportTabStrip]><script language="JavaScript">
+<!--
+function fnUpdateTabs()
+ {
+  if (parent.window.g_iIEVer>=4) {
+   if (parent.document.readyState=="complete"
+    && parent.frames['frTabs'].document.readyState=="complete")
+   parent.fnSetActiveSheet(0);
+  else
+   window.setTimeout("fnUpdateTabs();",150);
+ }
+}
+
+if (window.name!="frSheet")
+ window.location.replace("../Functions%20and%20Events.htm");
+else
+ fnUpdateTabs();
+//-->
+</script>
+<![endif]><!--[if gte mso 9]><xml>
+ <x:WorksheetOptions>
+  <x:DefaultColWidth>10</x:DefaultColWidth>
+  <x:Print>
+   <x:ValidPrinterInfo/>
+   <x:PaperSizeIndex>9</x:PaperSizeIndex>
+   <x:HorizontalResolution>600</x:HorizontalResolution>
+   <x:VerticalResolution>600</x:VerticalResolution>
+  </x:Print>
+  <x:CodeName>Tabelle1</x:CodeName>
+  <x:Selected/>
+  <x:ProtectContents>False</x:ProtectContents>
+  <x:ProtectObjects>False</x:ProtectObjects>
+  <x:ProtectScenarios>False</x:ProtectScenarios>
+ </x:WorksheetOptions>
+ <x:Sorting>
+  <x:Sort>Event</x:Sort>
+ </x:Sorting>
+</xml><![endif]-->
+</head>
+
+<body link=blue vlink=purple>
+
+<table x:str border=0 cellpadding=0 cellspacing=0 width=1162 style='border-collapse:
+ collapse;table-layout:fixed;width:872pt'>
+ <col width=255 style='mso-width-source:userset;mso-width-alt:9325;width:191pt'>
+ <col width=220 style='mso-width-source:userset;mso-width-alt:8045;width:165pt'>
+ <col width=141 style='mso-width-source:userset;mso-width-alt:5156;width:106pt'>
+ <col width=546 style='mso-width-source:userset;mso-width-alt:19968;width:410pt'>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl24 width=255 style='height:12.75pt;width:191pt'>Functions
+  for AMXX-Studio</td>
+  <td width=220 style='width:165pt'></td>
+  <td width=141 style='width:106pt'></td>
+  <td width=546 style='width:410pt'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=4 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr class=xl25 height=17 style='height:12.75pt'>
+  <td height=17 class=xl25 style='height:12.75pt'>Message</td>
+  <td class=xl25>Data</td>
+  <td class=xl25>IntData</td>
+  <td class=xl25>Description</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_SHOWPROGRESS</td>
+  <td class=xl26>-</td>
+  <td class=xl26>ReadOnly (0/1)</td>
+  <td>Shows the progress panel</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_HIDEPROGRESS</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Hides the progress panel</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_UPDATEPROGRESS</td>
+  <td class=xl26>Progress caption</td>
+  <td class=xl26>Position</td>
+  <td>Sets the current progress</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_LOADCODESNIPPETS</td>
+  <td class=xl26>Language</td>
+  <td class=xl26>-</td>
+  <td>Loads the Code-Snippets of a language</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_MIRC_CMD</td>
+  <td class=xl26>Command</td>
+  <td class=xl26>-</td>
+  <td>Performs a command in mIRC</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_RELOADINI</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Reloads the ini configuration (Hint: the ini configuration is not the
+  whole config!)</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_SELECTLANGUAGE</td>
+  <td class=xl26>Language</td>
+  <td class=xl26>-</td>
+  <td>Sets the highlighter for your active document</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_LOADFILE</td>
+  <td class=xl26>File</td>
+  <td class=xl26>-</td>
+  <td>Loads a file</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CURRPROJECTS</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Returns the index of the current projects</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_COMPILE</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Compiles the active document (only Pawn supported)</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_COMPILE_UPLOAD</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Compiles the active document (only Pawn supported) and uploads the output</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_COMPILE_STARTHL</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Compiles the active document (only Pawn supported) and starts Half-Life</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_MENU_LOADIMAGE</td>
+  <td class=xl26>Filename</td>
+  <td class=xl26>-</td>
+  <td>Loads a bitmap and returns the image index</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_MENU_ADDITEM</td>
+  <td class=xl26>Category-&gt;Caption</td>
+  <td class=xl26>Image Index</td>
+  <td>Adds an item to the menu</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_MENU_ADDSUBITEM</td>
+  <td class=xl26>Category-&gt;Item</td>
+  <td class=xl26>Image Index</td>
+  <td>Adds a subitem to the menu</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_MENU_FAKECLICK</td>
+  <td class=xl26>Caption</td>
+  <td class=xl26>-</td>
+  <td>Simulates a click on the item</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_MENU_SHOWITEM</td>
+  <td class=xl26>Caption</td>
+  <td class=xl26>-</td>
+  <td>Shows a menu item</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_MENU_HIDEITEM</td>
+  <td class=xl26>Caption</td>
+  <td class=xl26>-</td>
+  <td>Hides a menu item</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_PLUGIN_LOAD</td>
+  <td class=xl26>File in .\plugins\</td>
+  <td class=xl26>or Plugin Index</td>
+  <td>Loads a plugin</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_PLUGIN_UNLOAD</td>
+  <td class=xl26>File in .\plugins\</td>
+  <td class=xl26>or Plugin Index</td>
+  <td>Unloads a plugin</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_SETTINGS_CREATEPAGE</td>
+  <td class=xl26>Caption</td>
+  <td class=xl26>-</td>
+  <td>Creates a new page in the Settings dialog</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_SETTINGS_REMOVEPAGE</td>
+  <td class=xl26>Caption</td>
+  <td class=xl26>-</td>
+  <td>Removes a page from the Settings dialog</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CODEINSPECTOR_CLEAR</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Clears the code-inspector</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CODEINSPECTOR_ADD</td>
+  <td class=xl26>Name\nCategory\nValue</td>
+  <td class=xl26>-</td>
+  <td>Adds a new item to the code-inspector</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CODEINSPECTOR_ADDCOMBO</td>
+  <td class=xl26>Name\nCategory\nValue\nValues</td>
+  <td class=xl26>-</td>
+  <td>Adds a new combobox-item to the code-inspector</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CODEINSPECTOR_SETVALUE</td>
+  <td class=xl26>Name\nValue</td>
+  <td class=xl26>-</td>
+  <td>Sets the value of an item in the code-inspector</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CODEINSPECTOR_SETNAME</td>
+  <td class=xl26>Name\nNewName</td>
+  <td class=xl26>-</td>
+  <td>Sets the name of an item in the code-inspector</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CODEINSPECTOR_GETVALUE</td>
+  <td class=xl26>Name</td>
+  <td class=xl26>-</td>
+  <td>Gets the value of an item in the code-inspector</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CODEINSPECTOR_GETNAME</td>
+  <td class=xl26>Value</td>
+  <td class=xl26>-</td>
+  <td>Gets the name of an item in the code-inspector</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CODEINSPECTOR_COUNT</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Returns the number of items in the code-inspector</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CODEINSPECTOR_BEGINUPDATE</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>It's recommended to use this before you update the whole code-inspector</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CODEINSPECTOR_ENDUPDATE</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Use this when you've finished the update in the code-inspector</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CODEINSPECTOR_DELETE</td>
+  <td class=xl26>Name</td>
+  <td class=xl26>-</td>
+  <td>Deletes an item in the code-inspector</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_PAWN_NEWFILE</td>
+  <td class=xl26>Filename</td>
+  <td class=xl26>-</td>
+  <td>Adds a new file to the Pawn Projects</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_PAWN_SAVEFILE</td>
+  <td class=xl26>[Filename]</td>
+  <td class=xl26>Index</td>
+  <td>Saves a Pawn file</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_PAWN_CLOSEFILE</td>
+  <td class=xl26>-</td>
+  <td class=xl26>Index</td>
+  <td>Closes a file in the Pawn Projects</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_PAWN_ISUNTITLED</td>
+  <td class=xl26>-</td>
+  <td class=xl26>Index</td>
+  <td>Returns 1 if Pawn document is untitled, otherwise 0</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_PAWN_ACTIVATE</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Activates the Pawn Projects</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_PAWN_ACTIVATEDOC</td>
+  <td class=xl26>Flags</td>
+  <td class=xl26>Index</td>
+  <td>Activates a document in the Pawn Projects (Flags: r = Resore caret, s =
+  Save last document)</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_PAWN_GETNOTES</td>
+  <td class=xl26>-</td>
+  <td class=xl26>Index</td>
+  <td>Gets the notes of a Pawn document as RTF</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_PAWN_SETNOTES</td>
+  <td class=xl26>Notes</td>
+  <td class=xl26>Index</td>
+  <td>Sets the notes of a Pawn document</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_PAWN_GETFILENAME</td>
+  <td class=xl26>-</td>
+  <td class=xl26>Index</td>
+  <td>Returns the filename of a Pawn document as integer</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_PAWN_SETFILENAME</td>
+  <td class=xl26>Filename</td>
+  <td class=xl26>Index</td>
+  <td>Sets the filename of a file (only in AMXX-Studio)</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_PAWN_FILECOUNT</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Returns the number of loaded Pawn scripts</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_PAWN_GETTEXT</td>
+  <td class=xl26>-</td>
+  <td class=xl26>Index</td>
+  <td>Returns the text of a Pawn document as integer</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CPP_NEWFILE</td>
+  <td class=xl26>Filename</td>
+  <td class=xl26>-</td>
+  <td>Creates a new C++ file</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CPP_SAVEFILE</td>
+  <td class=xl26>[Filename]</td>
+  <td class=xl26>Index</td>
+  <td>Saves a C++ file</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CPP_CLOSEFILE</td>
+  <td class=xl26>-</td>
+  <td class=xl26>Index</td>
+  <td>Closes a C++ file</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CPP_ISUNTITLED</td>
+  <td class=xl26>-</td>
+  <td class=xl26>Index</td>
+  <td>Returns 1 if Pawn document is untitled, otherwise 0</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CPP_ACTIVATE</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Activates the C++ Projects</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CPP_ACTIVATEDOC</td>
+  <td class=xl26>Flags</td>
+  <td class=xl26>Index</td>
+  <td>Activates a document in the C++ Projects (Flags: r = Resore caret, s =
+  Save last document)</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CPP_ACTIVATEIDE</td>
+  <td class=xl26>-</td>
+  <td class=xl26>Enable (0/1)</td>
+  <td x:str="Activate the C++ IDE  ">Activate the C++ IDE<span
+  style='mso-spacerun:yes'>  </span></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CPP_GETNOTES</td>
+  <td class=xl26>-</td>
+  <td class=xl26>Index</td>
+  <td>Gets the notes of a C++ document as RTF</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CPP_SETNOTES</td>
+  <td class=xl26>Notes</td>
+  <td class=xl26>Index</td>
+  <td>Sets the notes of a C++ document</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CPP_GETFILENAME</td>
+  <td class=xl26>-</td>
+  <td class=xl26>Index</td>
+  <td>Returns the filename of a C++ document as integer</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CPP_SETFILENAME</td>
+  <td class=xl26>Filename</td>
+  <td class=xl26>Index</td>
+  <td>Sets the filename of a file (only in AMXX-Studio)</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_CPP_FILECOUNT</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Returns the number of loaded C(++) files</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_OTHER_NEWFILE</td>
+  <td class=xl26>Filename</td>
+  <td class=xl26>-</td>
+  <td>Creates a new file</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_OTHER_SAVEFILE</td>
+  <td class=xl26>[Filename]</td>
+  <td class=xl26>Index</td>
+  <td>Saves a file</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_OTHER_CLOSEFILE</td>
+  <td class=xl26>-</td>
+  <td class=xl26>Index</td>
+  <td>Closes a file</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_OTHER_ISUNTITLED</td>
+  <td class=xl26>-</td>
+  <td class=xl26>Index</td>
+  <td>Returns 1 if the document is untitled, otherwise 0</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_OTHER_ACTIVATE</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Activates the Other Projects</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_OTHER_ACTIVATEDOC</td>
+  <td class=xl26>Flags</td>
+  <td class=xl26>Index</td>
+  <td>Activates a document in the Other Projects (Flags: r = Resore caret, s =
+  Save last document)</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_OTHER_GETNOTES</td>
+  <td class=xl26>-</td>
+  <td class=xl26>Index</td>
+  <td>Gets the notes of a document as RTF</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_OTHER_SETNOTES</td>
+  <td class=xl26>Notes</td>
+  <td class=xl26>Index</td>
+  <td>Sets the notes of a document</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_OTHER_GETFILENAME</td>
+  <td class=xl26>-</td>
+  <td class=xl26>Index</td>
+  <td>Returns the filename of a file</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_OTHER_SETFILENAME</td>
+  <td class=xl26>Filename</td>
+  <td class=xl26>Index</td>
+  <td>Sets the filename of a file (only in AMXX-Studio)</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_OTHER_FILECOUNT</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Returns the number of loaded textfiles</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_OUTPUT_SHOW</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Shows the ouput list</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_OUTPUT_HIDE</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Hides the output list</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_OUTPUT_ADD</td>
+  <td class=xl26>Item</td>
+  <td class=xl26>-</td>
+  <td>Adds an item to the output list</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_OUTPUT_CLEAR</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Clears the output list</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_OUTPUT_DELETE</td>
+  <td class=xl26>-</td>
+  <td class=xl26>Item Index</td>
+  <td>Deletes an item in the output list</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_OUTPUT_GETTEXT</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Returns the output list as integer</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_OUTPUT_GETITEM</td>
+  <td class=xl26>-</td>
+  <td class=xl26>Item Index</td>
+  <td>Returns an output item as integer</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_OUTPUT_INDEXOF</td>
+  <td class=xl26>Item</td>
+  <td class=xl26>-</td>
+  <td>Returns the index of an item in the output list</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_ACTIVE_DOCUMENT</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Returns the index of the active document</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_ACTIVE_PROJECTS</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Returns the index of the active projects</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_EDITOR_SETTEXT</td>
+  <td class=xl26>Text</td>
+  <td class=xl26>-</td>
+  <td>Sets the text of the editor</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_EDITOR_GETTEXT</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Returns the text of the editor as integer</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_EDTIOR_SETCALLTIPS</td>
+  <td class=xl26>Calltips</td>
+  <td class=xl26>-</td>
+  <td>Sets the calltips</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_EDITOR_SHOWCALLTIP</td>
+  <td class=xl26>Definition</td>
+  <td class=xl26>Position</td>
+  <td>Shows a calltip</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_EDITOR_SETAUTOCOMPLETE</td>
+  <td class=xl26>List</td>
+  <td class=xl26>-</td>
+  <td>Sets the autocomplete list</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_EDITOR_SHOWAUTOCOMPLETE</td>
+  <td class=xl26>List</td>
+  <td class=xl26>Length Entered</td>
+  <td>Shows the autocomplete list</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_EDITOR_GETSELSTART</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Returns the current selection start</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_EDTIOR_GETSELLENGTH</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Returns the current selection length</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_EDITOR_SETSELSTART</td>
+  <td class=xl26>-</td>
+  <td class=xl26>Selection Start</td>
+  <td>Sets the selection start</td>
+ </tr>
+ <tr class=xl25 height=17 style='height:12.75pt'>
+  <td height=17 class=xl29 style='height:12.75pt'>SCM_EDITOR_SETSELLENGH</td>
+  <td class=xl28>-</td>
+  <td class=xl28>Selection Length</td>
+  <td class=xl29>Sets the selection length</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_REMOVE_MENUITEM</td>
+  <td class=xl26>Caption</td>
+  <td class=xl26>-</td>
+  <td>Removes a menu item</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_REMOVE_IMAGE</td>
+  <td class=xl26>-</td>
+  <td class=xl26>Image Index</td>
+  <td>Removes an image from the image list</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_SETTHEME</td>
+  <td class=xl26>Theme</td>
+  <td class=xl26>-</td>
+  <td>Sets the current theme</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SCM_GETTHEME</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Returns the current theme as integer</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=4 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl27 colspan=4 style='height:12.75pt;mso-ignore:colspan'>All
+  functions should be called with SendStudioMsg(Message, Data, IntData). Each
+  &quot;normal&quot; function returns 1 on succeed, othwise 0.</td>
+ </tr>
+ <![if supportMisalignedColumns]>
+ <tr height=0 style='display:none'>
+  <td width=255 style='width:191pt'></td>
+  <td width=220 style='width:165pt'></td>
+  <td width=141 style='width:106pt'></td>
+  <td width=546 style='width:410pt'></td>
+ </tr>
+ <![endif]>
+</table>
+
+</body>
+
+</html>

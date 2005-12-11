@@ -1,0 +1,33 @@
+<html>
+<body>
+<pre>
+<h1>Erstellungsprotokoll</h1>
+<h3>
+--------------------Konfiguration: Hello_World - Win32 Release--------------------
+</h3>
+<h3>Befehlszeilen</h3>
+Erstellen der temporären Datei  "C:\DOKUME~1\BASIC-~1\LOKALE~1\Temp\RSP9.tmp" mit Inhalten
+[
+/nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "HELLO_WORLD_EXPORTS" /Fp"Release/Hello_World.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Dokumente und Einstellungen\Basic-Master\Eigene Dateien\Programmieren\AMXX-Studio\plugins\Hello_World CPP\sample.cpp"
+]
+Creating command line "cl.exe @"C:\DOKUME~1\BASIC-~1\LOKALE~1\Temp\RSP9.tmp"" 
+Erstellen der temporären Datei  "C:\DOKUME~1\BASIC-~1\LOKALE~1\Temp\RSPA.tmp" mit Inhalten
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /incremental:no /pdb:"Release/Hello_World.pdb" /machine:I386 /out:"Release/Hello_World.dll" /implib:"Release/Hello_World.lib" 
+".\Release\sample.obj"
+]
+Erstellen der Befehlzeile "link.exe @"C:\DOKUME~1\BASIC-~1\LOKALE~1\Temp\RSPA.tmp""
+<h3>Ausgabefenster</h3>
+Kompilierung läuft...
+sample.cpp
+Linker-Vorgang läuft...
+   Bibliothek Release/Hello_World.lib und Objekt Release/Hello_World.exp wird erstellt
+
+
+
+<h3>Ergebnisse</h3>
+Hello_World.dll - 0 Fehler, 0 Warnung(en)
+</pre>
+</body>
+</html>

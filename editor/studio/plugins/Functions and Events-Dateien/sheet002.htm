@@ -1,0 +1,379 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:x="urn:schemas-microsoft-com:office:excel"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Excel.Sheet>
+<meta name=Generator content="Microsoft Excel 11">
+<link id=Main-File rel=Main-File href="../Functions%20and%20Events.htm">
+<link rel=File-List href=filelist.xml>
+<link rel=Edit-Time-Data href=editdata.mso>
+<link rel=Stylesheet href=stylesheet.css>
+<style>
+<!--table
+	{mso-displayed-decimal-separator:"\,";
+	mso-displayed-thousand-separator:"\.";}
+@page
+	{margin:.98in .79in .98in .79in;
+	mso-header-margin:.49in;
+	mso-footer-margin:.49in;}
+-->
+</style>
+<![if !supportTabStrip]><script language="JavaScript">
+<!--
+function fnUpdateTabs()
+ {
+  if (parent.window.g_iIEVer>=4) {
+   if (parent.document.readyState=="complete"
+    && parent.frames['frTabs'].document.readyState=="complete")
+   parent.fnSetActiveSheet(1);
+  else
+   window.setTimeout("fnUpdateTabs();",150);
+ }
+}
+
+if (window.name!="frSheet")
+ window.location.replace("../Functions%20and%20Events.htm");
+else
+ fnUpdateTabs();
+//-->
+</script>
+<![endif]><!--[if gte mso 9]><xml>
+ <x:WorksheetOptions>
+  <x:DefaultColWidth>10</x:DefaultColWidth>
+  <x:Print>
+   <x:ValidPrinterInfo/>
+   <x:PaperSizeIndex>9</x:PaperSizeIndex>
+   <x:HorizontalResolution>600</x:HorizontalResolution>
+   <x:VerticalResolution>600</x:VerticalResolution>
+  </x:Print>
+  <x:CodeName>Tabelle2</x:CodeName>
+  <x:Panes>
+   <x:Pane>
+    <x:Number>3</x:Number>
+    <x:ActiveRow>50</x:ActiveRow>
+    <x:ActiveCol>2</x:ActiveCol>
+   </x:Pane>
+  </x:Panes>
+  <x:ProtectContents>False</x:ProtectContents>
+  <x:ProtectObjects>False</x:ProtectObjects>
+  <x:ProtectScenarios>False</x:ProtectScenarios>
+ </x:WorksheetOptions>
+ <x:Sorting>
+  <x:Sort>Event</x:Sort>
+ </x:Sorting>
+</xml><![endif]-->
+</head>
+
+<body link=blue vlink=purple>
+
+<table x:str border=0 cellpadding=0 cellspacing=0 width=2687 style='border-collapse:
+ collapse;table-layout:fixed;width:2016pt'>
+ <col width=175 style='mso-width-source:userset;mso-width-alt:6400;width:131pt'>
+ <col width=1186 style='mso-width-source:userset;mso-width-alt:43373;
+ width:890pt'>
+ <col width=870 style='mso-width-source:userset;mso-width-alt:31817;width:653pt'>
+ <col width=456 style='mso-width-source:userset;mso-width-alt:16676;width:342pt'>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl24 width=175 style='height:12.75pt;width:131pt'>Events
+  for AMXX-Studio</td>
+  <td width=1186 style='width:890pt'></td>
+  <td width=870 style='width:653pt'></td>
+  <td width=456 style='width:342pt'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=4 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl25 style='height:12.75pt'>Event</td>
+  <td class=xl25>Parameters ( C )</td>
+  <td class=xl25>Parameters ( Delphi )</td>
+  <td class=xl25>Description</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>AppMessage</td>
+  <td>HWND pHwnd; int pMessage; int pWParam; int pLParam; int pTime; POINT pPt</td>
+  <td>pHwnd: HWND; pMessage: Integer; pWParam, pLParam: Integer; pTime:
+  Integer; pPt: TPoint</td>
+  <td>Called when a message has been sent to the application</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>AutoCompleteSelect</td>
+  <td>CHAR *pText</td>
+  <td>pText: PChar</td>
+  <td>Called when an item in the autocomplete list has been selected</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>AutoCompleteShow</td>
+  <td>CHAR *pList</td>
+  <td>pList: PChar</td>
+  <td>Called when the autocomplete list is being shown</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>CallTipClick</td>
+  <td>int pPosition</td>
+  <td>pPosition: Integer</td>
+  <td>Called when a click on the calltip has been performed</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>CallTipShow</td>
+  <td>CHAR *pList</td>
+  <td>pList: PChar</td>
+  <td>Called when a calltip is being shown</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>Click</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Called when a click on the editor has been performed</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>CodeSnippetClick</td>
+  <td>CHAR *pTitle; CHAR *pCategory; CHAR *pCode</td>
+  <td>pTitle, pCategory: PChar; pCode: PChar</td>
+  <td>Called when a click on a code-snippet has been performed</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>Compile</td>
+  <td>int pCompileType; CHAR *Lang; CHAR *Filename</td>
+  <td>pCompileType: Integer; Lang, Filename: PChar</td>
+  <td>Called after a document has been compiled</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>Compiling</td>
+  <td>int pCompileType; CHAR *Lang; CHAR *Filename</td>
+  <td>pCompileType: Integer; Lang, Filename: PChar</td>
+  <td>Called right before a document is being compiled</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>CreatedNewFile</td>
+  <td>byte Item</td>
+  <td>Item: Byte</td>
+  <td>Called after a document has been created (only called on a menu click)</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>CreatingNewFile</td>
+  <td>byte Item</td>
+  <td>Item: Byte</td>
+  <td>Called right before a document is being created (only called on a menu
+  click)</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>CustomItemClick</td>
+  <td>CHAR *pCaption</td>
+  <td>pCaption: PChar</td>
+  <td>Called when a click on a custom menu item has been performed</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>DisplayingSearch</td>
+  <td>CHAR *pExpression; CHAR *pSearchList; BOOL pCaseSensivity;BOOL
+  pWholeWords; pSearchFromCaret; BOOL pSelectedOnly; BOOL pRegEx; BOOL pForward</td>
+  <td>pExpression, pSearchList: PChar; pCaseSensivity, pWholeWords,
+  pSearchFromCaret, pSelectedOnly, pRegEx, pForward: Boolean</td>
+  <td>Called when the Search-Dialog is being shown</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>DocChanged</td>
+  <td>int pIndex; CHAR *pFilename; CHAR *pHighlighter; BOOL pRestoreCaret</td>
+  <td>pIndex: Integer; pFilename: PChar; pHighlighter: PChar; pRestoreCaret:
+  Boolean</td>
+  <td>Called when the active document has changed</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>DocChanging</td>
+  <td>int pIndex; CHAR *pFilename; CHAR *pHighlighter; BOOL pRestoreCaret</td>
+  <td>pIndex: Integer; pFilename: PChar; pHighlighter: PChar; pRestoreCaret:
+  Boolean</td>
+  <td>Called before the active document changes</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>KeyPress</td>
+  <td>CHAR *pKey</td>
+  <td>pKey: PChar</td>
+  <td>Called when a key has been pressed in the editor</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>Loaded</td>
+  <td>CHAR *pFilename</td>
+  <td>pFilename: PChar</td>
+  <td>Called after a document has been opened</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>Loading</td>
+  <td>CHAR *pFilename</td>
+  <td>pFilename: PChar</td>
+  <td>Called when a new document is being loaded</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>Modified</td>
+  <td>CHAR *pModifiedText</td>
+  <td>pModifiedText: PChar</td>
+  <td>Called when the code has been changed</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>OutputDoubleClick</td>
+  <td>int pItemIndex</td>
+  <td>pItemIndex: Integer</td>
+  <td>Called when a double-click on the output list has been performed</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>OutputPopup</td>
+  <td>int pItemIndex</td>
+  <td>pItemIndex: Integer</td>
+  <td>Called when the popup-menu of the output-list is being shown</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>PluginLoad</td>
+  <td>load_info *LoadInfo</td>
+  <td>LoadInfo: PLoadInfo</td>
+  <td>Called when the plugin is being loaded. Register menu items etc. here</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>PluginUnload</td>
+  <td class=xl26>-</td>
+  <td class=xl26>-</td>
+  <td>Called when the plugin is being unloaded. Remove registered objects here.</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>ProjectsChanged</td>
+  <td>int pOldIndex; int pNewIndex</td>
+  <td>pOldIndex, pNewIndex: Integer</td>
+  <td>Called after the active projects have been changed</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>ProjectsChanging</td>
+  <td>int pOldIndex; int pNewIndex</td>
+  <td>pOldIndex, pNewIndex: Integer</td>
+  <td>Called when the active projects change</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>Saved</td>
+  <td>CHAR *pFilename</td>
+  <td>pFilename: PChar</td>
+  <td>Called after a document has been saved</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>Saving</td>
+  <td>CHAR *pFilename</td>
+  <td>pFilename: PChar</td>
+  <td>Called when a document is being saved</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>Search</td>
+  <td>CHAR *pExpression; CHAR *pSearchList; BOOL pCaseSensivity;BOOL
+  pWholeWords; pSearchFromCaret; BOOL pSelectedOnly; BOOL pRegEx; BOOL pForward</td>
+  <td>pExpression, pSearchList: PChar; pCaseSensivity, pWholeWords,
+  pSearchFromCaret, pSelectedOnly, pRegEx, pForward: Boolean</td>
+  <td>Called when an expression is being searched</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SearchAgain</td>
+  <td>CHAR *pExpression; CHAR *pSearchList; BOOL pCaseSensivity;BOOL
+  pWholeWords; pSearchFromCaret; BOOL pSelectedOnly; BOOL pRegEx; BOOL pForward</td>
+  <td>pExpression, pSearchList: PChar; pCaseSensivity, pWholeWords,
+  pSearchFromCaret, pSelectedOnly, pRegEx, pForward: Boolean</td>
+  <td>Called when the user searches again an expression</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>SearchReplace</td>
+  <td>CHAR *pExpression; CHAR *pReplace; CHAR pExpList; CHAR *pRepList; BOOL
+  pCaseSensivity; BOOL pWholeWords; BOOL pSearchFromCaret; BOOL pSelectedOnly;
+  BOOL pRegEx; BOOL pForward</td>
+  <td>pExpression, pReplace, pExpList, pRepList: PChar; pCaseSensivity,
+  pWholeWords, pSearchFromCaret, pSelectedOnly, pRegEx, pForward: Boolean</td>
+  <td>Called when an expression is being replaced</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>Shortcut</td>
+  <td>int pCharCode; int KeyData</td>
+  <td>pCharCode, pKeyData: Integer</td>
+  <td>Called when a shortcut is being pressed</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>ShowHelp</td>
+  <td>int pHelpType</td>
+  <td>pHelpType: Integer</td>
+  <td>Called when the help is being opened</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>ThemeChanged</td>
+  <td>CHAR *pTheme</td>
+  <td>pTheme: PChar</td>
+  <td>Called after the current theme has changed</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>UpdatedCodeExplorer</td>
+  <td>CHAR *pLang; CHAR *pFilename; CHAR *pCurrProjects</td>
+  <td>pLang, pFilename, pCurrProjects: PChar</td>
+  <td>Called after the code-explorer has been updated</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>UpdatedCodeInspector</td>
+  <td>CHAR *pLang; CHAR *pFilename; CHAR *pCurrProjects</td>
+  <td>pLang, pFilename, pCurrProjects: PChar</td>
+  <td>Called after the code-inspector has been updated</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>UpdateSel</td>
+  <td>int pSelStart; int pSelLength; int pFirstVisibleLine</td>
+  <td>pSelStart, pSelLength, pFirstVisibleLine: Integer</td>
+  <td>Called when the selection has been changed</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>UpdatingCodeExplorer</td>
+  <td>CHAR *pLang; CHAR *pFilename; CHAR *pCurrProjects</td>
+  <td>pLang, pFilename, pCurrProjects: PChar</td>
+  <td>Called when the code-explorer updates</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>UpdatingCodeInspector</td>
+  <td>CHAR *pLang; CHAR *pFilename; CHAR *pCurrProjects</td>
+  <td>pLang, pFilename, pCurrProjects: PChar</td>
+  <td>Called when the code-inspector is being updated</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt'>VisibleControlChange</td>
+  <td>int pControl; BOOL pShow</td>
+  <td>pControl: Integer; pShow: Boolean</td>
+  <td>Called when a visible control has been hidden or shown</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=4 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=2 style='height:12.75pt;mso-ignore:colspan'>You should
+  implement these events in this style:</td>
+  <td colspan=2 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=2 style='height:12.75pt;mso-ignore:colspan'>Delphi:
+  function CustomItemClick(Caption: PChar): Integer; cdecl;</td>
+  <td colspan=2 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=2 style='height:12.75pt;mso-ignore:colspan'>C: EXPORT
+  int CustomItemClick(CHAR *Caption)</td>
+  <td colspan=2 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=4 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=2 style='height:12.75pt;mso-ignore:colspan'>All events
+  should return PLUGIN_CONTINUE, PLUGIN_HANDLED or PLUGIN_STOP</td>
+  <td colspan=2 style='mso-ignore:colspan'></td>
+ </tr>
+ <![if supportMisalignedColumns]>
+ <tr height=0 style='display:none'>
+  <td width=175 style='width:131pt'></td>
+  <td width=1186 style='width:890pt'></td>
+  <td width=870 style='width:653pt'></td>
+  <td width=456 style='width:342pt'></td>
+ </tr>
+ <![endif]>
+</table>
+
+</body>
+
+</html>

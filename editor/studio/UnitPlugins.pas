@@ -39,30 +39,30 @@ type TLoadInfo = record
   sPluginName: PChar;
   sPluginDescription: PChar;
   { Form Handles }
-  hAllFilesForm: HWND;
-  hAutoIndent: HWND;
-  hClose: HWND;
-  hConnGen: HWND;
-  hGoToLine: HWND;
-  hHTMLPreview: HWND;
-  hHudMsgGenerator: HWND;
-  hInfo: HWND;
-  hIRCPaster: HWND;
-  hMainForm: HWND;
-  hMenuGenerator: HWND;
-  hMOTDGen: HWND;
-  hPluginsIniEditor: HWND;
-  hReplace: HWND;
-  hSearch: HWND;
-  hSelectColor: HWND;
-  hSettings: HWND;
-  hSocketsTerminal: HWND;
-  hParamEdit: HWND;
+  hAllFilesForm: PHandle;
+  hAutoIndent: PHandle;
+  hClose: PHandle;
+  hConnGen: PHandle;
+  hGoToLine: PHandle;
+  hHTMLPreview: PHandle;
+  hHudMsgGenerator: PHandle;
+  hInfo: PHandle;
+  hIRCPaster: PHandle;
+  hMainForm: PHandle;
+  hMenuGenerator: PHandle;
+  hMOTDGen: PHandle;
+  hPluginsIniEditor: PHandle;
+  hReplace: PHandle;
+  hSearch: PHandle;
+  hSelectColor: PHandle;
+  hSettings: PHandle;
+  hSocketsTerminal: PHandle;
+  hParamEdit: PHandle;
   { Important Control Handles }
-  hOutput: HWND;
-  hCodeExplorer: HWND;
-  hCodeInspector: HWND; // even if it won't be useful
-  hNotes: HWND;
+  hOutput: PHandle;
+  hCodeExplorer: PHandle;
+  hCodeInspector: PHandle; // even if it won't be useful
+  hNotes: PHandle;
   { Other }
   pApplication: Pointer; // this is only useful for Delphi developers
 end;
@@ -264,30 +264,30 @@ begin
     sPluginName := 'Untitled';
     sPluginDescription := 'No description';
     { Handles }
-    hAllFilesForm := frmAllFilesForm.Handle;
-    hAutoIndent := frmAutoIndent.Handle;
-    hClose := frmClose.Handle;
-    hConnGen := frmConnGen.Handle;
-    hGoToLine := frmGoToLine.Handle;
-    hHTMLPreview := frmHTMLPreview.Handle;
-    hHudMsgGenerator := frmHudMsgGenerator.Handle;
-    hInfo := frmInfo.Handle;
-    hIRCPaster := frmIRCPaster.Handle;
-    hMainForm := frmMain.Handle;
-    hMenuGenerator := frmMenuGenerator.Handle;
-    hMOTDGen := frmMOTDGen.Handle;
-    hPluginsIniEditor := frmPluginsIniEditor.Handle;
-    hReplace := frmReplace.Handle;
-    hSearch := frmSearch.Handle;
-    hSelectColor := frmSelectColor.Handle;
-    hSettings := frmSettings.Handle;
-    hSocketsTerminal := frmSocketsTerminal.Handle;
-    hParamEdit := frmParamEdit.Handle;
+    hAllFilesForm := PHandle(frmAllFilesForm.Handle);
+    hAutoIndent := PHandle(frmAutoIndent.Handle);
+    hClose := PHandle(frmClose.Handle);
+    hConnGen := PHandle(frmConnGen.Handle);
+    hGoToLine := PHandle(frmGoToLine.Handle);
+    hHTMLPreview := PHandle(frmHTMLPreview.Handle);
+    hHudMsgGenerator := PHandle(frmHudMsgGenerator.Handle);
+    hInfo := PHandle(frmInfo.Handle);
+    hIRCPaster := PHandle(frmIRCPaster.Handle);
+    hMainForm := PHandle(frmMain.Handle);
+    hMenuGenerator := PHandle(frmMenuGenerator.Handle);
+    hMOTDGen := PHandle(frmMOTDGen.Handle);
+    hPluginsIniEditor := PHandle(frmPluginsIniEditor.Handle);
+    hReplace := PHandle(frmReplace.Handle);
+    hSearch := PHandle(frmSearch.Handle);
+    hSelectColor := PHandle(frmSelectColor.Handle);
+    hSettings := PHandle(frmSettings.Handle);
+    hSocketsTerminal := PHandle(frmSocketsTerminal.Handle);
+    hParamEdit := PHandle(frmParamEdit.Handle);
     { Important Control Handles }
-    hOutput := frmMain.lstOutput.Handle;
-    hCodeExplorer := frmMain.trvExplorer.Handle;
-    hCodeInspector := frmMain.jviCode.Handle; // even if it won't be useful
-    hNotes := frmMain.rtfNotes.Handle;
+    hOutput := PHandle(frmMain.lstOutput.Handle);
+    hCodeExplorer := PHandle(frmMain.trvExplorer.Handle);
+    hCodeInspector := PHandle(frmMain.jviCode.Handle); // even if it won't be useful
+    hNotes := PHandle(frmMain.rtfNotes.Handle);
     { Other }
     pApplication := @Application; // this is only useful for Delphi developers
   end;

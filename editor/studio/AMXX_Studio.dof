@@ -115,7 +115,7 @@ AutoIncBuild=1
 MajorVer=1
 MinorVer=4
 Release=0
-Build=4
+Build=5
 Debug=0
 PreRelease=0
 Special=0
@@ -126,7 +126,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=AMX Mod X Dev Team
 FileDescription=
-FileVersion=1.4.0.4
+FileVersion=1.4.0.5
 InternalName=gaben
 LegalCopyright=AMX Mod X Dev Team
 LegalTrademarks=

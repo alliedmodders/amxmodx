@@ -40,8 +40,8 @@
 #define STUNT_GETUP 4
 #define STUNT_FLIP 5
 
-extern int Death;
-extern int Damage;
+//extern int Death;
+//extern int Damage;
 
 #define GET_PLAYER_POINTER(e)   (&players[ENTINDEX(e)])
 #define GET_PLAYER_POINTER_I(i) (&players[i])

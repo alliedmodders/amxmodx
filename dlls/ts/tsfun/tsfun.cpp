@@ -84,8 +84,8 @@ const char* get_localinfo( const char* name , const char* def = 0 )
 
 int Powerup = -1;
 int KungFoo = -1;	//-1 is an invalid forward so initiate this to that
-int Death = -1;
-int Damage = -1;
+//int Death = -1;
+//int Damage = -1;
 int Stunt = -1;
 
 void OnPluginsLoaded()
@@ -96,8 +96,8 @@ void OnPluginsLoaded()
    //FP_CELL - second parameter is a normal cell
    //FP_DONE - that's the end of the parameter descriptions
 	KungFoo = MF_RegisterForward("Melee_Attack", ET_STOP, FP_CELL, FP_FLOAT,FP_FLOAT, FP_DONE);
-	Death = MF_RegisterForward("client_death", ET_IGNORE, FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL, FP_DONE);
-	Damage = MF_RegisterForward("client_damage", ET_IGNORE, FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL, FP_DONE);
+	//Death = MF_RegisterForward("client_death", ET_IGNORE, FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL, FP_DONE);
+	//Damage = MF_RegisterForward("client_damage", ET_IGNORE, FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL, FP_DONE);
 	Powerup = MF_RegisterForward("client_powerup", ET_IGNORE, FP_CELL, FP_CELL, FP_DONE);
 	Stunt = MF_RegisterForward("client_stunt", ET_IGNORE, FP_CELL, FP_CELL, FP_DONE);
 }

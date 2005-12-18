@@ -64,7 +64,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 351
     Height = 260
-    ActivePage = jspHighlighter
+    ActivePage = jspCompiler
     PropagateEnable = False
     Align = alClient
     OnChange = jplSettingsChange
@@ -820,9 +820,9 @@ object frmSettings: TfrmSettings
         object lblPAWNCompilerPath: TLabel
           Left = 4
           Top = 4
-          Width = 45
+          Width = 115
           Height = 13
-          Caption = 'Compiler:'
+          Caption = 'Compiler (amxxpc.exe):'
         end
         object lblPAWNArgs: TLabel
           Left = 4

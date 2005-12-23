@@ -63,6 +63,7 @@ begin
     SetForegroundWindow(FindWindow('TfrmMain', 'AMXX-Studio'));
     exit;
   end;
+
   Application.Initialize;
   Application.Title := 'AMXX-Studio';
   Application.CreateForm(TfrmMain, frmMain);

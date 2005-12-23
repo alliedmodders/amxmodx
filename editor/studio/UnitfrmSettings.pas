@@ -11,7 +11,7 @@ uses
   SciKeyBindings, menus, TFlatTabControlUnit, TFlatMemoUnit,
   TFlatRadioButtonUnit, sciLexer, sciLexerMod, sciLexerMemo, Dialogs,
   FileCtrl, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
-  IdFTP, IdException, ImgList, JvxSlider;
+  IdFTP, IdException, ImgList, JvxSlider, Registry;
 
 type
   TfrmSettings = class(TForm)
@@ -313,8 +313,118 @@ begin
 end;
 
 procedure TfrmSettings.FormCreate(Sender: TObject);
+  function GetUser: String;
+  var
+    Buffer: Array[0..MAX_COMPUTERNAME_LENGTH +1] of Char;
+    Size: DWord;
+  begin
+    Size := Pred(SizeOf(Buffer));
+    Windows.GetUserName(Buffer, Size);
+    Result := StrPas(Buffer);
+  end;
+
+var AMXXDir: String;
+    SteamDir, ListenDir: String;
+    eReg: TRegistry;
+    eRec: TSearchRec;
 begin
   eConfig := TIniFile.Create(ExtractFilePath(ParamStr(0)) + 'config\Settings.ini');
+  { Auto-Setup if Settings.ini doesn't exist }
+  if (not FileExists(ExtractFilePath(ParamStr(0)) + 'config\Settings.ini')) then begin
+    eReg := TRegistry.Create(KEY_READ);
+    try
+      eReg.RootKey := HKEY_LOCAL_MACHINE;
+      eReg.OpenKey('SOFTWARE\Microsoft\Windows\CurrentVersion', False);
+      { AMXX }
+      AMXXDir := eReg.ReadString('ProgramFilesDir') + '\AMX Mod X\';
+      if not DirectoryExists(AMXXDir) then
+        AMXXDir := '';
+      eReg.CloseKey;
+      { Steam }
+      if eReg.KeyExists('SOFTWARE\Valve\Steam') then begin
+        eReg.OpenKey('SOFTWARE\Valve\Steam', False);
+        SteamDir := eReg.ReadString('InstallPath') + '\';
+        eReg.CloseKey;
+      end
+      else
+        SteamDir := '';
+      ListenDir := '';
+    finally
+      eReg.Free;
+    end;
+    // Editor
+    eConfig.WriteInteger('Editor', 'MakeBaks', 1);
+    eConfig.WriteInteger('Editor', 'DontLoadFilesTwice', 1);
+    eConfig.WriteInteger('Editor', 'Auto-Indent', 1);
+    eConfig.WriteInteger('Editor', 'UnindentClosingBrace', 1);
+    eConfig.WriteInteger('Editor', 'UnindentEmptyLine', 0);
+    eConfig.WriteInteger('Editor', 'Disable_AC', 0);
+    eConfig.WriteInteger('Editor', 'Disable_CT', 0);
+    eConfig.WriteInteger('Editor', 'AutoDisable', 1500);
+    eConfig.WriteInteger('Editor', 'AutoHideCT', 1);
+    // Pawn-Compiler
+    if AMXXDir <> '' then
+      eConfig.WriteString('Pawn-Compiler', 'Path', AMXXDir + 'files\base\scripting\amxxpc.exe')
+    else
+      eConfig.WriteString('Pawn-Compiler', 'Path', '');
+    eConfig.WriteString('Pawn-Compiler', 'Args', '');
+    eConfig.WriteString('Pawn-Compiler', 'DefaultOutput', '');
+    // CPP-Compiler
+    eConfig.WriteString('CPP-Compiler', 'Path', '');
+    eConfig.WriteString('CPP-Compiler', 'Args', '');
+    eConfig.WriteString('CPP-Compiler', 'DefaultOutput', '');
+    // Half-Life
+    if SteamDir <> '' then begin
+      if FindFirst(SteamDir + 'SteamApps\*@*.*', faDirectory, eRec) = 0 then begin
+        SteamDir := SteamDir + 'SteamApps\' + eRec.Name + '\';
+        if FileExists(SteamDir + 'counter-strike\hl.exe') then begin
+          if DirectoryExists(SteamDir + 'counter-strike\cstrike\addons\amxmodx') then
+            ListenDir := SteamDir + 'counter-strike\cstrike\addons\amxmodx\';
+          SteamDir := SteamDir + 'counter-strike\hl.exe';
+        end
+        else if FileExists(SteamDir + 'team fortress classic\hl.exe') then begin
+          if DirectoryExists(SteamDir + 'team fortress classic\tfc\addons\amxmodx') then
+            ListenDir := SteamDir + 'team fortress classic\tfc\addons\amxmodx\';
+          SteamDir := SteamDir + 'team fortress classic\hl.exe';
+        end
+        else if FileExists(SteamDir + 'half-life\hl.exe') then begin
+          if DirectoryExists(SteamDir + 'half-life\addons\amxmodx') then
+            ListenDir := SteamDir + 'half-life\addons\amxmodx\';
+          SteamDir := SteamDir + 'half-life\hl.exe';
+        end
+        else
+          SteamDir := '';
+      end
+      else
+        SteamDir := '';
+      FindClose(eRec.FindHandle);
+    end;
+    eConfig.WriteString('Half-Life', 'Filename', SteamDir);
+    eConfig.WriteString('Half-Life', 'Params', '');
+    eConfig.WriteString('Half-Life', 'AMXXListen', ListenDir);
+    // FTP
+    eConfig.WriteString('FTP', 'Host', '');
+    eConfig.WriteInteger('FTP', 'Port', 21);
+    eConfig.WriteString('FTP', 'Username', '');
+    eConfig.WriteString('FTP', 'Password', '');
+    // Proxy
+    eConfig.WriteInteger('Proxy', 'ProxyType', 0);
+    eConfig.WriteString('Proxy', 'Host', '');
+    eConfig.WriteInteger('Proxy', 'Port', 8080);
+    eConfig.WriteString('Proxy', 'Username', '');
+    eConfig.WriteString('Proxy', 'Password', '');
+    // Misc
+    eConfig.WriteString('Misc', 'DefaultPluginName', 'New Plug-In');
+    eConfig.WriteString('Misc', 'DefaultPluginVersion', '1.0');
+    eConfig.WriteString('Misc', 'DefaultPluginAuthor', GetUser);
+    eConfig.WriteInteger('Misc', 'SaveNotesTo', 0);
+    eConfig.WriteInteger('Misc', 'CPUSpeed', 5);
+    eConfig.WriteString('Misc', 'LangDir', '');
+    eConfig.WriteInteger('Misc', 'ShowStatusbar', 1);
+    eConfig.WriteInteger('Misc', 'WindowState', 0);
+  end;
+
+
   ReloadIni;
   case eConfig.ReadInteger('Misc', 'WindowState', 0) of
     0: frmMain.WindowState := wsNormal;

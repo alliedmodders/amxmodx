@@ -855,7 +855,7 @@ static cell AMX_NATIVE_CALL n_strcmp(AMX *amx, cell *params)
 	char *str1 = get_amxstring(amx, params[1], 0, len);
 	char *str2 = get_amxstring(amx, params[2], 1, len);
 
-	if (params[1])
+	if (params[3])
 		return stricmp(str1, str2);
 	else
 		return strcmp(str1, str2);

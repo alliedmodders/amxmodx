@@ -136,10 +136,11 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 
 	case	DLLFunc_ParmsNewLevel:		// void )		( void );
 		gpGamedllFuncs->dllapi_table->pfnParmsNewLevel();
-
+		return 1;
 
 	case	DLLFunc_ParmsChangeLevel:	// void )	( void );
 		gpGamedllFuncs->dllapi_table->pfnParmsChangeLevel();
+		return 1;
 
 	 // Returns string describing current .dll.  E.g., TeamFotrress 2, Half-Life
 	case	DLLFunc_GetGameDescription:	 // const char * )( void );     

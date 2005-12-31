@@ -556,6 +556,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		index = cRet[0];
 		CHECK_ENTITY(index);
 		(*g_engfuncs.pfnFreeEntPrivateData)(INDEXENT2(index));
+		return 1;
 
 
 		// pfnSzFromIndex

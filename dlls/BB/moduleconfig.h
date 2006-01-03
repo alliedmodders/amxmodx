@@ -5,8 +5,8 @@
 
 // Module info
 #define MODULE_NAME "BBFUN"
-#define MODULE_VERSION "1.17"
-#define MODULE_AUTHOR "Rukia"
+#define MODULE_VERSION "1.65"
+#define MODULE_AUTHOR "Avalanche"
 #define MODULE_URL "www.rcrclansite.com"
 #define MODULE_LOGTAG "BB"
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line

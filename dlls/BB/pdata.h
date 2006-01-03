@@ -11,10 +11,20 @@
 	#define EXTRAOFFSET					0 // no change in Windows builds
 #endif // defined __linux__
 
+inline edict_t* MF_GetEntityEdict( long& EntID )
+{
+	if( (EntID > 0) && (EntID <= (gpGlobals->maxClients) ) ) 
+		return MF_GetPlayerEdict( EntID );
+
+	return NULL;
+}
+
 template <typename ValueType>
 inline void SetPData( long& targetid, long offset, ValueType value, bool reset = false )
 {
-	edict_t* target = MF_GetPlayerEdict( targetid );
+	edict_t* target = MF_GetEntityEdict( targetid );
+	if(target == NULL) return;
+
 	*((ValueType *)target->pvPrivateData + offset + EXTRAOFFSET) = value;
 	if(reset) UpdateBBHud( targetid );
 };
@@ -22,7 +32,8 @@ inline void SetPData( long& targetid, long offset, ValueType value, bool reset =
 template <typename ValueType>
 inline ValueType GetPData( long& targetid, long offset, ValueType value )
 {
-	edict_t* target = MF_GetPlayerEdict( targetid );
+	edict_t* target = MF_GetEntityEdict( targetid );
+	if(target == NULL) return NULL;
 	return *((ValueType *)target->pvPrivateData + offset + EXTRAOFFSET);
 }
 

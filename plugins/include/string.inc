@@ -127,12 +127,12 @@ native strfind(const string[], const sub[], ignorecase=0, pos=0);
 /* Compares two strings with the C function strcmp().  Returns 0 on equal. */
 native strcmp(const string1[], const string2[], ignorecase=0);
 
-/* Tests if given string contains only digits */
+/* Tests if given string contains only digits. Also, returns false for zero-length strings. */
 stock bool:is_str_num(sString[])
 {
 	new i = 0;
 	
-	while (sString[i] && isdigit(sString[i])
+	while (sString[i] && isdigit(sString[i]))
 		++i;
 	
 	return sString[i] == 0 && i != 0;

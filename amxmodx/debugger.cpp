@@ -935,8 +935,9 @@ int Handler::HandleModule(const char *module)
 	 */
 
 	cell hea_addr, *phys_addr, retval;
+	Debugger *pd;
 
-	DisableDebugHandler(m_pAmx);
+	pd = DisableDebugHandler(m_pAmx);
 
 	//temporarily set prenit
 	m_pAmx->flags |= AMX_FLAG_PRENIT;
@@ -945,7 +946,7 @@ int Handler::HandleModule(const char *module)
 	amx_Release(m_pAmx, hea_addr);
 	m_pAmx->flags &= ~AMX_FLAG_PRENIT;
 
-	EnableDebugHandler(m_pAmx);
+	EnableDebugHandler(m_pAmx, pd);
 
 	if (err != AMX_ERR_NONE)
 		return 0;
@@ -1012,7 +1013,7 @@ int Handler::HandleNative(const char *native, int index, int trap)
 	if (pDebugger && trap)
 		pDebugger->EndExec();
 	else if (pDebugger && !trap)
-		EnableDebugHandler(m_pAmx);
+		EnableDebugHandler(m_pAmx, pDebugger);
 
 	amx_Release(m_pAmx, hea_addr);
 

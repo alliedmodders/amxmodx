@@ -73,8 +73,11 @@ typedef enum
 
 int CheckModules(AMX *amx, char error[128]);
 const char *StrCaseStr(const char *as, const char *bs);
-void DisableDebugHandler(AMX *amx);
-void EnableDebugHandler(AMX *amx);
+
+class Debugger;
+Debugger *DisableDebugHandler(AMX *amx);
+void EnableDebugHandler(AMX *amx, Debugger *pd);
+
 const char* GetFileName(AMX *amx);
 
 #endif // __MODULES_H__

@@ -454,7 +454,8 @@ int set_amxnatives(AMX* amx, char error[128])
 	int idx, err;
 	cell retval;
 
-	DisableDebugHandler(amx);
+	Debugger *pd;
+	pd = DisableDebugHandler(amx);
 	
 	if (amx_FindPublic(amx, "plugin_natives", &idx) == AMX_ERR_NONE)
 	{
@@ -465,7 +466,7 @@ int set_amxnatives(AMX* amx, char error[128])
 		}
 	}
 
-	EnableDebugHandler(amx);
+	EnableDebugHandler(amx, pd);
 
 	amx->flags &= ~(AMX_FLAG_PRENIT);
 
@@ -1783,20 +1784,24 @@ void *Module_ReqFnptr(const char *funcName)
 	return NULL;
 }
 
-void DisableDebugHandler(AMX *amx)
+Debugger *DisableDebugHandler(AMX *amx)
 {
+	Debugger *pd = static_cast<Debugger *>(amx->userdata[UD_DEBUGGER]);
+	
+	amx->userdata[UD_DEBUGGER] = NULL;
+	amx->flags &= ~(AMX_FLAG_DEBUG);
 	amx_SetDebugHook(amx, NULL);
+
+	return pd;
 }
 
-void EnableDebugHandler(AMX *amx)
+void EnableDebugHandler(AMX *amx, Debugger *pd)
 {
-	if (amx->flags & AMX_FLAG_DEBUG)
-	{
-		if (amx->userdata[UD_DEBUGGER] != NULL)
-		{
-			amx_SetDebugHook(amx, &Debugger::DebugHook);
-		}
-	}
+	if (pd)
+		amx->flags |= AMX_FLAG_DEBUG;
+
+	amx->userdata[UD_DEBUGGER] = pd;
+	amx_SetDebugHook(amx, &Debugger::DebugHook);
 }
 
 #if !defined MEMORY_TEST && !defined WIN32

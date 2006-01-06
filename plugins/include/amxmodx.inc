@@ -913,3 +913,18 @@ native int3();
 //This is a good idea to fatally, but gracefully, handle errors.
 //You can set a failed error message.
 native set_fail_state(const err_msg[]);
+
+//Returns the reference address of the variable passed in.
+//This address is local to the plugin, and not a full CPU address
+//pass the variable as the first parameter
+native get_var_addr(...);
+
+//Returns the value of an address.  This dereferences something returned by
+// get_var_addr().  Attempting to pass in a value beyond stack or heap limits
+// will result in AMX_ERR_MEMACCESS.
+native get_addr_val(addr);
+
+//Sets the value of an address.  same as above, essentially
+native set_addr_val(addr, val);
+
+

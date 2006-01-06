@@ -88,7 +88,7 @@ int amxx_DynaCallback(int idx, AMX *amx, cell *params)
 		for (int i=numParams; i>=1; i--)
 			amx_Push(pNative->amx, params[i]);
 	}
-	Debugger *pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
+	Debugger *pDebugger = (Debugger *)pNative->amx->userdata[UD_DEBUGGER];
 	if (pDebugger)
 		pDebugger->BeginExec();
 	err=amx_Exec(pNative->amx, &ret, pNative->func);
@@ -99,9 +99,9 @@ int amxx_DynaCallback(int idx, AMX *amx, cell *params)
 			//don't care
 		} else if (err != -1) {
 			//nothing logged the error
-			LogError(amx, err, NULL);
+			LogError(pNative->amx, err, NULL);
 		}
-		amx->error = AMX_ERR_NONE;
+		pNative->amx->error = AMX_ERR_NONE;
 	} else if (g_errorNum) {
 		g_NativeStack.pop();
 		LogError(amx, g_errorNum, g_errorStr);

@@ -31,6 +31,7 @@
 #include "amxmodx.h"
 #include "sh_stack.h"
 #include "natives.h"
+#include "Debugger.h"
 
 #ifdef __linux__
 #include <malloc.h>
@@ -87,18 +88,26 @@ int amxx_DynaCallback(int idx, AMX *amx, cell *params)
 		for (int i=numParams; i>=1; i--)
 			amx_Push(pNative->amx, params[i]);
 	}
-	if ( (err=amx_Exec(pNative->amx, &ret, pNative->func)) != AMX_ERR_NONE)
+	Debugger *pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
+	if (pDebugger)
+		pDebugger->BeginExec();
+	err=amx_Exec(pNative->amx, &ret, pNative->func);
+	if (err != AMX_ERR_NONE)
 	{
-		g_NativeStack.pop();
-		LogError(pNative->amx, err, "");
-		return 0;
-	}
-	if (g_errorNum)
-	{
+		if (pDebugger && pDebugger->ErrorExists())
+		{
+			//don't care
+		} else if (err != -1) {
+			//nothing logged the error
+			LogError(amx, err, NULL);
+		}
+		amx->error = AMX_ERR_NONE;
+	} else if (g_errorNum) {
 		g_NativeStack.pop();
 		LogError(amx, g_errorNum, g_errorStr);
-		return ret;
 	}
+	if (pDebugger)
+		pDebugger->EndExec();
 	g_NativeStack.pop();
 
 	return ret;

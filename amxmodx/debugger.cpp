@@ -450,6 +450,7 @@ int Debugger::FormatError(char *buffer, size_t maxLength)
 			amx_err = AMX_ERR_NOTFOUND;*/
 		//if (!amx_err)
 			size += _snprintf(buffer, maxLength, "(native \"%s\")", native_name);
+#if 0
 	} else if (error == AMX_ERR_BOUNDS) {
 		tagAMX_DBG *pDbg = m_pAmxDbg;
 		int symbols = pDbg->hdr->symbols;
@@ -649,6 +650,7 @@ int Debugger::FormatError(char *buffer, size_t maxLength)
 			_msgbuf[0] = '\0';
 
 		size += _snprintf(buffer, maxLength, "%s", _msgbuf);
+#endif	//0 - NOT USED!
 	}
 
 	return size;

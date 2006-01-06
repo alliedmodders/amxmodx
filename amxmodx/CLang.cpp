@@ -395,6 +395,13 @@ size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int 
 			return _snprintf(output, maxlen, fmtptr, *(REAL *)addr);
 			break;
 		}
+	case 'p':
+		{
+			FMTPM_NEXTPARAM();
+			return _snprintf(output, maxlen, fmtptr, addr);
+			break;
+		}
+	case 'x':
 	case 'i':
 	case 'd':
 	case 'c':

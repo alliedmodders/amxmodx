@@ -3661,9 +3661,35 @@ static cell AMX_NATIVE_CALL set_fail_state(AMX *amx, cell *params)
 	return 0;
 }
 
+static cell AMX_NATIVE_CALL amx_var_addr(AMX *amx, cell *params)
+{
+	if (params[0] / sizeof(cell) > 0)
+	{
+		return params[1];
+	}
+
+	return 0;
+}
+
+static cell AMX_NATIVE_CALL amx_addr_val(AMX *amx, cell *params)
+{
+	cell *addr;
+	int err;
+
+	if ( (err=amx_GetAddr(amx, params[1], &addr)) != AMX_ERR_NONE )
+	{
+		LogError(amx, err, "Bad reference %d supplied", params[1]);
+		return 0;
+	}
+
+	return addr ? *addr : 0;
+}
+
 AMX_NATIVE_INFO amxmodx_Natives[] =
 {
 	{"abort",					amx_abort},
+	{"amx_addr_val",			amx_addr_val},
+	{"amx_var_addr",			amx_var_addr},
 	{"callfunc_begin",			callfunc_begin},
 	{"callfunc_begin_i",		callfunc_begin_i},
 	{"callfunc_end",			callfunc_end},

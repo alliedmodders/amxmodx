@@ -378,250 +378,273 @@ static cell AMX_NATIVE_CALL file_size(AMX *amx, cell *params) /* 1 param */
 	return -1;
 }
 
-//ported from Sanji's file access module by BAILOPAN
-// Important update - now uses new handles
 static cell AMX_NATIVE_CALL amx_fopen(AMX *amx, cell *params)
 {
-	unsigned int i;
 	int len, j = -1;
 	char *file = build_pathname("%s", get_amxstring(amx, params[1], 1, len));
 	char *flags = get_amxstring(amx, params[2], 0, len);
 
 	FILE *fp = fopen(file, flags);
-	
-	if (fp == NULL)
-	{
-		// Failed
-		return 0;
-	}
 
-	for (i = 0; i < FileList.size(); i++)
+	return (cell)fp;
+}
+
+static cell AMX_NATIVE_CALL amx_fwrite_blocks(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+
+	if (!fp)
+		return 0;
+
+	cell *addr = get_amxaddr(amx, params[2]);
+	size_t blocks = params[3];
+	size_t btmp = blocks;
+	cell mode = params[4];
+	switch (mode)
 	{
-		if (FileList.at(i) == NULL)
+	case 1:
 		{
-			j = i;
-			break;
+			char *a = new char[blocks];
+			char *ptr = a;
+			while (btmp--)
+				*a++ = static_cast<char>(*addr++);
+			size_t res = fwrite(a, sizeof(char), blocks, fp);
+			delete [] a;
+			return res;
+		}
+	case 2:
+		{
+			short *a = new short[blocks];
+			short *ptr = a;
+			while (btmp--)
+				*a++ = static_cast<short>(*addr++);
+			size_t res = fwrite(a, sizeof(short), blocks, fp);
+			delete [] a;
+			return res;
+		}
+	case 4:
+		{
+			int *a = new int[blocks];
+			int *ptr = a;
+			while (btmp--)
+				*a++ = static_cast<int>(*addr++);
+			size_t res = fwrite(a, sizeof(int), blocks, fp);
+			delete [] a;
+			return res;
 		}
 	}
-	
-	if (j == -1)
-	{
-		FileList.push_back(fp);
-		j = FileList.size() - 1;
-	} else {
-		FileList.at(j) = fp;
-	}
 
-	return j + 1;
-}
-
-static cell AMX_NATIVE_CALL amx_fclose(AMX *amx, cell *params)
-{
-	unsigned int id = params[1] - 1;
-	
-	if (id >= FileList.size() || FileList.at(id) == NULL)
-		return 0;
-	
-	FILE *fp = FileList.at(id);
-	
-	if (fp)
-	{
-		return fclose(fp);
-	} else {
-		return -1;
-	}
-}
-
-static cell AMX_NATIVE_CALL amx_fread(AMX *amx, cell *params)
-{
-	unsigned int id = params[1] - 1;
-	
-	if (id >= FileList.size() || FileList.at(id) == NULL)
-		return 0;
-	
-	FILE *fp = FileList.at(id);
-	
-	char *buffer;
-	
-	if (fp)
-	{
-		buffer = new char[params[3]];			// SLOW!!! :TODO: Find a better way (auto pointers?)
-		fread(buffer, sizeof(char), params[3], fp);
-		set_amxstring(amx, params[2], buffer, params[3]);
-		delete [] buffer;
-		
-		return 1;
-	}
-	
-	return -1;
-}
-
-#ifdef UNUSED
-static cell AMX_NATIVE_CALL amx_fgetc(AMX *amx, cell *params)
-{
-	unsigned int id = params[1] - 1;
-	
-	if (id >= FileList.size() || FileList.at(id) == NULL)
-		return 0;
-	
-	FILE *fp = FileList.at(id);
-	
-	if (fp)
-	{
-		return fgetc(fp);
-	} else {
-		return -1;
-	}
+	return 0;
 }
 
 static cell AMX_NATIVE_CALL amx_fwrite(AMX *amx, cell *params)
 {
-	unsigned int id = params[1] - 1;
-	
-	if (id >= FileList.size() || FileList.at(id) == NULL)
+	FILE *fp = (FILE *)params[1];
+
+	if (!fp)
 		return 0;
-	
-	FILE *fp = FileList.at(id);
-	char *buf;
-	int len;
-	
-	if (fp)
+
+	size_t mode = params[3];
+	switch (mode)
 	{
-		buf = format_amxstring(amx, params, 2, len);
-		return fwrite(buf, sizeof(char), strlen(buf), fp);
+	case 1:
+		{
+			char a = static_cast<char>(params[2]);
+			return fwrite(&a, sizeof(char), 1, fp);
+		}
+	case 2:
+		{
+			short b = static_cast<short>(params[2]);
+			return fwrite(&b, sizeof(short), 1, fp);
+		}
+	case 4:
+		{
+			int c = static_cast<int>(params[2]);
+			return fwrite(&c, sizeof(short), 1, fp);
+		}
 	}
-	
-	return -1;
+
+	return 0;
 }
 
-static cell AMX_NATIVE_CALL amx_feof(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL amx_fwrite_raw(AMX *amx, cell *params)
 {
-	unsigned int id = params[1] - 1;
-	
-	if (id >= FileList.size() || FileList.at(id) == NULL)
+	FILE *fp = (FILE *)params[1];
+
+	if (!fp)
 		return 0;
-	
-	FILE *fp = FileList.at(id);
-	
-	if (fp)
+
+	cell *addr = get_amxaddr(amx, params[2]);
+	return fwrite(addr, params[3], params[4], fp);
+}
+
+static cell AMX_NATIVE_CALL amx_fread_raw(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+
+	if (!fp)
+		return 0;
+
+	cell *addr = get_amxaddr(amx, params[2]);
+	size_t size = static_cast<cell>(params[3]);
+	size_t blocks = static_cast<cell>(params[4]);
+    
+	return fread(addr, size, blocks, fp);
+}
+
+static cell AMX_NATIVE_CALL amx_fread(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+
+	if (!fp)
+		return 0;
+
+	cell *addr = get_amxaddr(amx, params[2]);
+	switch (params[3])
 	{
-		if (feof(fp))
+	case 1:	//char
 		{
-			return 1;
+			char a;
+			size_t res = fread(&a, sizeof(char), 1, fp);
+			*addr = static_cast<cell>(a);
+			return res;
 		}
-		return 0;
+	case 2:	//short
+		{
+			short a;
+			size_t res = fread(&a, sizeof(short), 1, fp);
+			*addr = static_cast<cell>(a);
+			return res;
+		}
+	case 4:	//int
+	default:
+		{
+			int a;
+			size_t res = fread(&a, sizeof(int), 1, fp);
+			*addr = static_cast<cell>(a);
+			return res;
+		}
 	}
-	
-	return -1;
+
+	return 0;
+}
+
+static cell AMX_NATIVE_CALL amx_fread_blocks(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+
+	if (!fp)
+		return 0;
+
+	cell *addr = get_amxaddr(amx, params[2]);
+	size_t blocks = params[3];
+	switch (params[3])
+	{
+	case 1:	//char
+		{
+			char *a = new char[blocks];
+			char *ptr = a;
+			size_t res = fread(a, sizeof(char), blocks, fp);
+			while (blocks--)
+				*addr++ = static_cast<cell>(*ptr++);
+			delete [] a;
+			return res;
+		}
+	case 2:	//short
+		{
+			short *a = new short[blocks];
+			short *ptr = a;
+			size_t res = fread(a, sizeof(short), blocks, fp);
+			while (blocks--)
+				*addr++ = static_cast<cell>(*ptr++);
+			delete [] a;
+			return res;
+		}
+	case 4:	//int
+	default:
+		{
+			int *a = new int[blocks];
+			int *ptr = a;
+			size_t res = fread(a, sizeof(int), blocks, fp);
+			while (blocks--)
+				*addr++ = static_cast<cell>(*ptr++);
+			delete [] a;
+			return res;
+		}
+	}
+
+	return 0;
+}
+
+static cell AMX_NATIVE_CALL amx_fgets(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+
+	if (!fp)
+		return 0;
+
+	static char buffer[4096];
+	buffer[0] = '\0';
+	fgets(buffer, sizeof(buffer)-1, fp);
+	return set_amxstring(amx, params[2], buffer, params[3]);
 }
 
 static cell AMX_NATIVE_CALL amx_fseek(AMX *amx, cell *params)
 {
-	unsigned int id = params[1] - 1;
-	
-	if (id >= FileList.size() || FileList.at(id) == NULL)
+	FILE *fp = (FILE *)params[1];
+
+	if (!fp)
 		return 0;
-	
-	FILE *fp = FileList.at(id);
 
-	if (fp)
-	{
-		return fseek(fp, (long)params[2], params[3]);
-	}
-	
-	return -1;
-}
-
-static cell AMX_NATIVE_CALL amx_fputc(AMX *amx, cell *params)
-{
-	unsigned int id = params[1] - 1;
-	
-	if (id >= FileList.size() || FileList.at(id) == NULL)
-		return 0;
-	
-	FILE *fp = FileList.at(id);
-
-	if (fp)
-	{
-		return fputc(params[2], fp);
-	}
-	
-	return -1;
-}
-
-static cell AMX_NATIVE_CALL amx_rewind(AMX *amx, cell *params)
-{
-	unsigned int id = params[1] - 1;
-	
-	if (id >= FileList.size() || FileList.at(id) == NULL)
-		return 0;
-	
-	FILE *fp = FileList.at(id);
-
-	if (fp)
-	{
-		rewind(fp);
-		return 1;
-	}
-	
-	return -1;
-}
-
-static cell AMX_NATIVE_CALL amx_fflush(AMX *amx, cell *params)
-{
-	unsigned int id = params[1] - 1;
-	
-	if (id >= FileList.size() || FileList.at(id) == NULL)
-		return 0;
-	
-	FILE *fp = FileList.at(id);
-
-	if (fp)
-	{
-		return fflush(fp);
-	}
-	
-	return -1;
-}
-
-static cell AMX_NATIVE_CALL amx_fscanf(AMX *amx, cell *params)
-{
-	unsigned int id = params[1] - 1;
-	
-	if (id >= FileList.size() || FileList.at(id) == NULL)
-		return 0;
-	
-	FILE *fp = FileList.at(id);
-
-	char *buf;
-	int len;
-	buf = format_amxstring(amx, params, 2, len);
-	
-	if (fp)
-	{
-		return fscanf(fp, "%s", buf);
-	}
-
-	return -1;
+	return fseek(fp, params[2], params[3]);
 }
 
 static cell AMX_NATIVE_CALL amx_ftell(AMX *amx, cell *params)
 {
-	unsigned int id = params[1] - 1;
-	
-	if (id >= FileList.size() || FileList.at(id) == NULL)
-		return 0;
-	
-	FILE *fp = FileList.at(id);
+	FILE *fp = (FILE *)params[1];
 
-	if (fp)
-	{
-		return ftell(fp);
-	}
-	
-	return -1;
+	if (!fp)
+		return 0;
+
+	return ftell(fp);
 }
-#endif //UNUSED
+
+static cell AMX_NATIVE_CALL amx_fprintf(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+
+	if (!fp)
+		return 0;
+
+	int len;
+	char *str = format_amxstring(amx, params, 2, len);
+	return fprintf(fp, "%s", str);
+}
+
+static cell AMX_NATIVE_CALL amx_feof(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+
+	if (!fp)
+		return 1;
+
+	return feof(fp);
+}
+
+static cell AMX_NATIVE_CALL amx_fclose(AMX *amx, cell *params)
+{
+	cell *addr = get_amxaddr(amx, params[1]);
+	if (*addr)
+	{
+		FILE *fp = (FILE *)*addr;
+		fclose(fp);
+		*addr = 0;
+
+		return 1;
+	}
+
+	return 0;
+}
 
 static cell AMX_NATIVE_CALL amx_filesize(AMX *amx, cell *params)
 {
@@ -641,164 +664,6 @@ static cell AMX_NATIVE_CALL amx_filesize(AMX *amx, cell *params)
 	
 	return -1;
 }
-
-#ifdef UNUSED
-static cell AMX_NATIVE_CALL amx_fgetl(AMX *amx, cell *params)
-{
-	unsigned int id = params[1] - 1;
-	
-	if (id >= FileList.size() || FileList.at(id) == NULL)
-		return 0;
-	
-	FILE *fp = FileList.at(id);
-
-	long t;
-	
-	if (fp)
-	{
-		fread(&t, sizeof(long), 1, fp);
-		return t;
-	}
-	
-	return -1;
-}
-
-static cell AMX_NATIVE_CALL amx_fgeti(AMX *amx, cell *params)
-{
-	unsigned int id = params[1] - 1;
-	
-	if (id >= FileList.size() || FileList.at(id) == NULL)
-		return 0;
-	
-	FILE *fp = FileList.at(id);
-
-	int t;
-	
-	if (fp)
-	{
-		fread(&t, sizeof(int), 1, fp);
-		return t;
-	}
-	
-	return -1;
-}
-
-static cell AMX_NATIVE_CALL amx_fgets(AMX *amx, cell *params)
-{
-	unsigned int id = params[1] - 1;
-	
-	if (id >= FileList.size() || FileList.at(id) == NULL)
-		return 0;
-	
-	FILE *fp = FileList.at(id);
-
-	short t;
-	
-	if (fp)
-	{
-		fread(&t, sizeof(short), 1, fp);
-		return t;
-	}
-	
-	return -1;
-}
-
-static cell AMX_NATIVE_CALL amx_fputs(AMX *amx, cell *params)
-{
-	unsigned int id = params[1] - 1;
-	
-	if (id >= FileList.size() || FileList.at(id) == NULL)
-		return 0;
-	
-	FILE *fp = FileList.at(id);
-
-	short size = params[2];
-	
-	if (fp)
-	{
-		return fwrite(&size, sizeof(short), 1, fp);
-	}
-	
-	return -1;
-}
-
-static cell AMX_NATIVE_CALL amx_fputl(AMX *amx, cell *params)
-{
-	unsigned int id = params[1] - 1;
-	
-	if (id >= FileList.size() || FileList.at(id) == NULL)
-		return 0;
-	
-	FILE *fp = FileList.at(id);
-
-	long size = params[2];
-	
-	if (fp)
-	{
-		return fwrite(&size, sizeof(long), 1, fp);
-	}
-	
-	return -1;
-}
-
-static cell AMX_NATIVE_CALL amx_fputi(AMX *amx, cell *params)
-{
-	unsigned int id = params[1] - 1;
-	
-	if (id >= FileList.size() || FileList.at(id) == NULL)
-		return 0;
-	
-	FILE *fp = FileList.at(id);
-
-	int size = params[2];
-	
-	if (fp)
-	{
-		return fwrite(&size, sizeof(int), 1, fp);
-	}
-	
-	return -1;
-}
-
-static cell AMX_NATIVE_CALL amx_fgetf(AMX *amx, cell *params)
-{
-	unsigned int id = params[1] - 1;
-	
-	if (id >= FileList.size() || FileList.at(id) == NULL)
-		return 0;
-	
-	FILE *fp = FileList.at(id);
-
-	float t;
-	
-	if (fp)
-	{
-		fread(&t, sizeof(float), 1, fp);
-		return *(cell*)&t;
-	}
-	
-	return -1;
-}
-
-static cell AMX_NATIVE_CALL amx_fputf(AMX *amx, cell *params)
-{
-	unsigned int id = params[1] - 1;
-	
-	if (id >= FileList.size() || FileList.at(id) == NULL)
-		return 0;
-	
-	FILE *fp = FileList.at(id);
-
-	float size = *(float *)((void *)&params[2]);
-	
-	if (fp)
-	{
-		return fwrite(&size, sizeof(float), 1, fp);
-	}
-	
-	return -1;
-}
-#endif //UNUSED
 
 static cell AMX_NATIVE_CALL amx_build_pathname(AMX *amx, cell *params)
 {
@@ -901,41 +766,32 @@ static cell AMX_NATIVE_CALL amx_get_dir(AMX *amx, cell *params)
 
 AMX_NATIVE_INFO file_Natives[] =
 {
-	{"delete_file", delete_file},
-	{"file_exists", file_exists},
-	{"file_size",	file_size},
-	{"read_dir",	read_dir},
-	{"read_file",	read_file},
-	{"write_file",	write_file},
-	//Sanji's File Natives
-	{"fopen",		amx_fopen},
-	{"fclose",		amx_fclose},
-	{"fread",		amx_fread},
-	{"filesize",	amx_filesize},
-#ifdef UNUSED
-	{"fgetc",		amx_fgetc},
-	{"fwrite",		amx_fwrite},
-	{"feof",		amx_feof},
-	{"fseek",		amx_fseek},
-	{"fputc",		amx_fputc},
-	{"rewind",		amx_rewind},
-	{"fflush",		amx_fflush},
-	{"fscanf",		amx_fscanf},
-	{"ftell",		amx_ftell},
-	{"fgetl",		amx_fgetl},
-	{"fgeti",		amx_fgeti},
-	{"fgets",		amx_fgets},
-	{"fputs",		amx_fputs},
-	{"fputl",		amx_fputl},
-	{"fputi",		amx_fputi},
-	{"fgetf",		amx_fgetf},
-	{"fputf",		amx_fputf},
-#endif
-	{"unlink",		delete_file},
+	{"delete_file",		delete_file},
+	{"file_exists",		file_exists},
+	{"file_size",		file_size},
+	{"read_dir",		read_dir},
+	{"read_file",		read_file},
+	{"write_file",		write_file},
+	//new, sane file natives
+	{"fopen",			amx_fopen},
+	{"fclose",			amx_fclose},
+	{"fread",			amx_fread},
+	{"fread_blocks",	amx_fread_blocks},
+	{"fread_raw",		amx_fread_raw},
+	{"fwrite",			amx_fwrite},
+	{"fwrite_blocks",	amx_fwrite_blocks},
+	{"fwrite_raw",		amx_fwrite_raw},
+	{"feof",			amx_feof},
+	{"fprintf",			amx_fprintf},
+	{"fgets",			amx_fgets},
+	{"fseek",			amx_fseek},
+	{"ftell",			amx_ftell},
+	{"filesize",		amx_filesize},
+	{"unlink",			delete_file},
 	{"build_pathname", amx_build_pathname},
-	{"dir_exists",	dir_exists},
-	{"open_dir",	amx_open_dir},
-	{"close_dir",	amx_close_dir},
-	{"next_file",	amx_get_dir},
-	{NULL,			NULL}
+	{"dir_exists",		dir_exists},
+	{"open_dir",		amx_open_dir},
+	{"close_dir",		amx_close_dir},
+	{"next_file",		amx_get_dir},
+	{NULL,				NULL}
 };

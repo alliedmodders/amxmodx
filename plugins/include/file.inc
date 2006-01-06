@@ -41,15 +41,45 @@ native file_size(const file[], flag=0);
 #define SEEK_CUR 1
 #define SEEK_END 2
 
-// These are C style file access functions
-// Code ported from Sanji's File module
-
-//Open a file
+//Open a file, returns a handle or 0 on vailure
 native fopen(const filename[],const mode[]);
-//Close a file
+
+//Closes a file handle
 native fclose(file);
-//Read a file for ret_size length
-native fread(file,ret[],ret_size);
+
+#define BLOCK_INT	4
+#define BLOCK_SHORT	2
+#define BLOCK_CHAR	1
+#define BLOCK_BYTE	1
+
+//The following functions work as such:
+// RAW - means the array you pass is a raw bytestream, for experts only
+// BLOCK - means you are passing in an array where each element will be written
+// NORMAL - means you are writing only one element
+// RAW and BLOCK return the number of blocks acted upon successfully
+// NORMAL returns 1 on success
+
+native fread(file, &data, mode);
+native fread_blocks(file, data[], blocks, mode);
+native fread_raw(file, stream[], blocksize, blocks);
+native fwrite(file, data, mode);
+native fwrite_blocks(file, const data[], blocks, mode);
+native fwrite_raw(file, const stream[], blocksize, mode);
+
+//Returns 1 if the file is ended, 0 otherwise
+native feof(file);
+
+//Reads a line from a text file -- includes newline!
+native fgets(file, buffer[], maxlength);
+
+//Writes a line to the file
+native fprintf(file, const fmt[], {Float,Sql,Result_}:...);
+
+//Sets the current position in a file (see SEEK_ values above)
+native fseek(file, position, start);
+
+//Returns the current position in a file
+native ftell(file);
 
 //Return the size of a file
 native filesize(const filename[],{Float,Sql,Result,_}:...);
@@ -61,37 +91,3 @@ native unlink(const filename[],{Float,Sql,Result,_}:...);
 native open_dir(dir[], firstfile[], length);
 native next_file(dirh, buffer[], length);
 native close_dir(dirh);
-
-stock bool:file_copy(const SOURCE[], const TARGET[], error[], const ERRORLEN, const bool:REPLACE_TARGET = false) {
-	if (!file_exists(SOURCE)) {
-		format(error, ERRORLEN, "File copy error: Source ^"%s^" doesn't exist!", SOURCE)
-		return false
-	}
-	if (!REPLACE_TARGET && file_exists(TARGET)) {
-		format(error, ERRORLEN, "File copy error: Target ^"%s^" exists!", TARGET)
-		return false
-	}
-
-	new source = fopen(SOURCE, "rb")
-	if (!source) {
-		format(error, ERRORLEN, "File copy error: Opening source ^"%s^" failed!", SOURCE)
-		return false
-	}
-
-	new target = fopen(TARGET, "wb")
-	if (!target) {
-		format(error, ERRORLEN, "File copy error: Opening target ^"%s^" failed!", TARGET)
-		fclose(source)
-		return false
-	}
-
-	for (new buffer, eof = feof(source); !eof; !eof && fputc(target, buffer)) {
-		buffer = fgetc(source)
-		eof = feof(source)
-	}
-
-	fclose(source)
-	fclose(target)
-
-	return true
-}

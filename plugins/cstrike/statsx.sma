@@ -84,7 +84,6 @@ public SayReport            = 0 // report user's weapon status to team
 public SayScore             = 0 // displays team's map score
 public SayTop15             = 0 // displays first 15 players
 public SayStatsAll          = 0 // displays all players stats and rank
-public SayMiscFunc          = 0 // displays timeleft, thetime, currentmap, ff
 
 public ShowStats            = 1 // set client HUD-stats switched off by default
 public ShowDistHS           = 0 // show distance and HS in attackers and
@@ -208,10 +207,6 @@ public plugin_init()
 	register_clcmd("say /report", "cmdReport", 0, "- display waepon status (say_team)")
 	register_clcmd("say /top15", "cmdTop15", 0, "- display top 15 players (MOTD)")
 	register_clcmd("say /stats", "cmdStats", 0, "- display players stats (menu/MOTD)")
-	register_clcmd("say /timeleft", "cmdTimeLeft", 0, "- display time left on map (say)")
-	register_clcmd("say /thetime", "cmdTheTime", 0, "- display the time (say)")
-	register_clcmd("say /currentmap", "cmdCurrentMap", 0, "- display current map (say)")
-	register_clcmd("say /ff", "cmdFf", 0, "- display friendly fire status (say)")
 	register_clcmd("say /switch", "cmdSwitch", 0, "- switch client's stats on or off")
 
 	// Register menus.
@@ -257,7 +252,6 @@ public plugin_cfg()
 	server_cmd(addStast, "Say /score", "SayScore")
 	server_cmd(addStast, "Say /top15", "SayTop15")
 	server_cmd(addStast, "Say /stats", "SayStatsAll")
-	server_cmd(addStast, "Misc say commands", "SayMiscFunc")
 	server_cmd(addStast, "Spec. Rank Info", "SpecRankInfo")
 
 	// Update local configuration vars with value in cvars.
@@ -1098,57 +1092,6 @@ public cmdScore(id)
 	}
 	
 	client_print(id, print_chat, "%L: %s", id, "GAME_SCORE", g_sScore)
-	
-	return PLUGIN_CONTINUE
-}
-
-// Display time left on map
-public cmdTimeLeft(id)
-{
-	if (!SayMiscFunc)
-		return PLUGIN_CONTINUE
-		
-	new iTimeLeft = get_timeleft()
-	
-	if (iTimeLeft)
-		client_print(0, print_chat, "%L:  %02d:%02d", id, "TIME_REM", iTimeLeft / 60, iTimeLeft % 60)
-	else
-		client_print(0, print_chat, "* %L *", LANG_PLAYER, "NO_T_LIMIT")
-	
-	return PLUGIN_CONTINUE
-}
-
-// Display the time.
-public cmdTheTime(id)
-{
-	if (!SayMiscFunc)
-		return PLUGIN_CONTINUE
-
-	get_time("%H:%M:%S", g_sBuffer, MAX_BUFFER_LENGTH)
-	client_print(0, print_chat, "%L:  %s", LANG_PLAYER, "THE_TIME", g_sBuffer)
-	
-	return PLUGIN_CONTINUE
-}
-
-// Display current map name.
-public cmdCurrentMap(id)
-{
-	if (!SayMiscFunc)
-		return PLUGIN_CONTINUE
-
-	get_mapname(g_sBuffer, MAX_BUFFER_LENGTH)
-	client_print(0, print_chat, "%L:  %s", LANG_PLAYER, "PLAYED_MAP", g_sBuffer)
-	
-	return PLUGIN_CONTINUE
-}
-
-// Display friendly fire status.
-public cmdFf(id)
-{
-	if (!SayMiscFunc)
-		return PLUGIN_CONTINUE
-	
-	client_print(0, print_chat, "%L:  %L", LANG_PLAYER, "FRIEND_FIRE", LANG_PLAYER, get_cvar_num("mp_friendlyfire") ? "ON" : "OFF")
 	
 	return PLUGIN_CONTINUE
 }

@@ -49,6 +49,8 @@ public plugin_init()
 	register_dictionary("nextmap.txt")
 	register_event("30", "changeMap", "a")
 	register_clcmd("say nextmap", "sayNextMap", 0, "- displays nextmap")
+	register_clcmd("say currentmap", "sayCurrentMap", 0, "- display current map")
+	register_clcmd("say ff", "sayFFStatus", 0, "- display friendly fire status")
 	register_cvar("amx_nextmap", "", FCVAR_SERVER|FCVAR_EXTDLL|FCVAR_SPONLY)
 
 	new szString[32], szString2[32], szString3[8]
@@ -84,6 +86,19 @@ public sayNextMap()
 	
 	getNextMapName(name, 31)
 	client_print(0, print_chat, "%L %s", LANG_PLAYER, "NEXT_MAP", name)
+}
+
+public sayCurrentMap()
+{
+	new mapname[32]
+
+	get_mapname(mapname, 31)
+	client_print(0, print_chat, "%L: %s", LANG_PLAYER, "PLAYED_MAP", mapname)
+}
+
+public sayFFStatus()
+{
+	client_print(0, print_chat, "%L: %L", LANG_PLAYER, "FRIEND_FIRE", LANG_PLAYER, get_cvar_num("mp_friendlyfire") ? "ON" : "OFF")
 }
 
 public delayedChange(param[])

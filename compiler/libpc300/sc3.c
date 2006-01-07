@@ -682,9 +682,6 @@ SC_FUNC int expression(cell *val,int *tag,symbol **symptr,int chkfuncresult)
 
   if (lval.ident==iCONSTEXPR && val!=NULL)    /* constant expression */
     *val=lval.constval;
-  if (lval.ident==iARRAY || lval.ident==iREFARRAY) {
-    error(13, lval.sym ? (lval.sym->name ? lval.sym->name : "-unknown-") : "-unknown-");
-  }
   if (tag!=NULL)
     *tag=lval.tag;
   if (symptr!=NULL)
@@ -1020,10 +1017,10 @@ static int hier13(value *lval)
     array1= (lval->ident==iARRAY || lval->ident==iREFARRAY);
     array2= (lval2.ident==iARRAY || lval2.ident==iREFARRAY);
     if (array1 && !array2) {
-      char *ptr=(lval->sym->name!=NULL) ? lval->sym->name : "-unknown-";
+      char *ptr=(lval->sym!=NULL && lval->sym->name!=NULL) ? lval->sym->name : "-unknown-";
       error(33,ptr);            /* array must be indexed */
     } else if (!array1 && array2) {
-      char *ptr=(lval2.sym->name!=NULL) ? lval2.sym->name : "-unknown-";
+      char *ptr=(lval2.sym!=NULL && lval2.sym->name!=NULL) ? lval2.sym->name : "-unknown-";
       error(33,ptr);            /* array must be indexed */
     } /* if */
     /* ??? if both are arrays, should check dimensions */

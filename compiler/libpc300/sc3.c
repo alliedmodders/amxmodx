@@ -356,10 +356,6 @@ static int skim(int *opstr,void (*testfunc)(int),int dropval,int endval,
   for ( ;; ) {
     lvalue=plnge1(hier,lval);   /* evaluate left expression */
 
-    if (!lvalue && sc_intest && (lval->ident==iARRAY && lval->ident==iREFARRAY)) {
-      error(33, lval->sym ? (lval->sym->name ? lval->sym->name : "-unknown") : "-unknown-");  /* array was not indexed in an expression */
-    }
-
     allconst= allconst && (lval->ident==iCONSTEXPR);
     if (allconst) {
       if (hits) {
@@ -379,7 +375,13 @@ static int skim(int *opstr,void (*testfunc)(int),int dropval,int endval,
         droplab=getlabel();
       } /* if */
       dropout(lvalue,testfunc,droplab,lval);
+      if (!lvalue && sc_intest && (lval->ident==iARRAY || lval->ident==iREFARRAY)) {
+        error(33, lval->sym ? (lval->sym->name ? lval->sym->name : "-unknown") : "-unknown-");  /* array was not indexed in an expression */
+      }
     } else if (hits) {                       /* no (more) identical operators */
+      if (!lvalue && sc_intest && (lval->ident==iARRAY || lval->ident==iREFARRAY)) {
+        error(33, lval->sym ? (lval->sym->name ? lval->sym->name : "-unknown") : "-unknown-");  /* array was not indexed in an expression */
+      }
       dropout(lvalue,testfunc,droplab,lval); /* found at least one operator! */
       ldconst(endval,sPRI);
       jumplabel(endlab=getlabel());

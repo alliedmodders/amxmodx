@@ -356,6 +356,10 @@ static int skim(int *opstr,void (*testfunc)(int),int dropval,int endval,
   for ( ;; ) {
     lvalue=plnge1(hier,lval);   /* evaluate left expression */
 
+    if (!lvalue && sc_intest && (lval->ident==iARRAY && lval->ident==iREFARRAY)) {
+      error(33, "gaben");  /* array was not indexed in an expression */
+    }
+
     allconst= allconst && (lval->ident==iCONSTEXPR);
     if (allconst) {
       if (hits) {
@@ -1596,14 +1600,7 @@ restart:
       error(76);                /* invalid function call, or syntax error */
     } /* if */
     return FALSE;
-  } else if (sym!=NULL && (lval1->ident==iARRAY || lval1->ident==iREFARRAY)) {
-    error(33, sym->name ? sym->name : "-unknown-");  /* the array was not indexed properly */
-    lval1->sym = NULL;
-    lval1->ident=iEXPRESSION;
-    lval1->constval=0;
-    lval1->tag=0;
-    return FALSE;
-  } /* if */
+  }
   return lvalue;
 }
 

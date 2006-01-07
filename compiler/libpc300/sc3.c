@@ -676,6 +676,9 @@ SC_FUNC int expression(cell *val,int *tag,symbol **symptr,int chkfuncresult)
 
   if (lval.ident==iCONSTEXPR && val!=NULL)    /* constant expression */
     *val=lval.constval;
+  if (lval.ident==iARRAY || lval.ident==iREFARRAY) {
+    error(13, lval.sym ? (lval.sym->name ? lval.sym->name : "-unknown-") : "-unknown-");
+  }
   if (tag!=NULL)
     *tag=lval.tag;
   if (symptr!=NULL)
@@ -1592,6 +1595,13 @@ restart:
       lval1->tag=0;
       error(76);                /* invalid function call, or syntax error */
     } /* if */
+    return FALSE;
+  } else if (sym!=NULL && (lval1->ident==iARRAY || lval1->ident==iREFARRAY)) {
+    error(33, sym->name ? sym->name : "-unknown-");  /* the array was not indexed properly */
+    lval1->sym = NULL;
+    lval1->ident=iEXPRESSION;
+    lval1->constval=0;
+    lval1->tag=0;
     return FALSE;
   } /* if */
   return lvalue;

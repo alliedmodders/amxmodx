@@ -357,7 +357,7 @@ static int skim(int *opstr,void (*testfunc)(int),int dropval,int endval,
     lvalue=plnge1(hier,lval);   /* evaluate left expression */
 
     if (!lvalue && sc_intest && (lval->ident==iARRAY && lval->ident==iREFARRAY)) {
-      error(33, "gaben");  /* array was not indexed in an expression */
+      error(33, lval->sym ? (lval->sym->name ? lval->sym->name : "-unknown") : "-unknown-");  /* array was not indexed in an expression */
     }
 
     allconst= allconst && (lval->ident==iCONSTEXPR);

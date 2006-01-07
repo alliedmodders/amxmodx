@@ -3,6 +3,7 @@
 *
 * by the AMX Mod X Development Team
 *  originally developed by OLO
+* Updated by Marticus
 *
 * This file is part of AMX Mod X.
 *
@@ -30,78 +31,63 @@
 *  to your version of the file, but you are not obligated to do so. If
 *  you do not wish to do so, delete this exception statement from your
 *  version.
+*
+* Notes:
+* sv_visiblemaxplayers is a steam cvar which hides given number of slots
+* from clients. This is only useful to those who wish to have hidden reserved
+* slots. With 1 reserved slot, max players 17, this cvar can be used to make
+* the server appear to have only 16 available slots. The client can use the gui
+* to "auto join" when a slot is available. Players who know they have access
+* to that reserved slot can connect using the console command "connect".
+*
+* This plugin was designed to check players with reservation slots and kick
+* those who do not have one. With the revised hidden slot feature, all other
+* players can use their client's very useful auto join feature.
+*
 */
 
 #include <amxmodx>
 #include <amxmisc>
 
-// Comment if you don't want to hide not used reserved slots
-#define HIDE_RESERVED_SLOTS
-
-new g_cmdLoopback[16]
+new gPlayerLimit
 
 public plugin_init()
 {
 	register_plugin("Slots Reservation", AMXX_VERSION_STR, "AMXX Dev Team")
 	register_dictionary("adminslots.txt")
 	register_dictionary("common.txt")
+
 	register_cvar("amx_reservation", "1")
-	
-	format(g_cmdLoopback, 15, "amxres%c%c%c%c", random_num('A', 'Z'), random_num('A', 'Z'), random_num('A', 'Z'), random_num('A', 'Z'))
-	register_clcmd(g_cmdLoopback, "ackSignal")
 
-#if defined HIDE_RESERVED_SLOTS
-	new maxplayers = get_maxplayers()
-	new players = get_playersnum(1)
-	new limit = maxplayers - get_cvar_num("amx_reservation")
-	setVisibleSlots(players, maxplayers, limit)
-#endif
-}
+	/* Provide server admin with cvar to hide slots, 0 or 1 -Marticus */
+	register_cvar("amx_hideslots", "1")
 
-public ackSignal(id)
-{
-	new lReason[64]
-	format(lReason, 63, "%L", id, "DROPPED_RES")
-	server_cmd("kick #%d ^"%s^"", get_user_userid(id), lReason)
+	/* The maximum number of players after reserved slot(s) */
+	gPlayerLimit = get_maxplayers() - get_cvar_num("amx_reservation")
+
+	/* Set server cvar to new player limit to hide the reserved slot(s) */
+	if (get_cvar_num("amx_hideslots") == 1)
+		set_cvar_num("sv_visiblemaxplayers", gPlayerLimit)
 }
 
 public client_authorized(id)
 {
-	new maxplayers = get_maxplayers()
+	new userid = get_user_userid(id)
+	new reason[64]
+	format(reason, 63, "%L", id, "DROPPED_RES")
+
 	new players = get_playersnum(1)
-	new limit = maxplayers - get_cvar_num("amx_reservation")
 
-	if (access(id, ADMIN_RESERVATION) || (players <= limit))
+	/* Check if player took a reserved slot on a full 
+	   server and kick if they have no slot reservation */
+	if ((players > gPlayerLimit) && (!access(id, ADMIN_RESERVATION)))
 	{
-#if defined HIDE_RESERVED_SLOTS
-		setVisibleSlots(players, maxplayers, limit)
-#endif
-		return PLUGIN_CONTINUE
+		/* In case player disconnected */
+		if (!userid)
+		{
+			server_cmd("kick #%d ^"%s^"", userid, reason)
+			return PLUGIN_CONTINUE
+		}
 	}
-	
-	client_cmd(id, "%s", g_cmdLoopback)
-
-	return PLUGIN_HANDLED
-}
-
-#if defined HIDE_RESERVED_SLOTS
-public client_disconnect(id)
-{
-	new maxplayers = get_maxplayers()
-	
-	setVisibleSlots(get_playersnum(1) - 1, maxplayers, maxplayers - get_cvar_num("amx_reservation"))
 	return PLUGIN_CONTINUE
 }
-
-setVisibleSlots(players, maxplayers, limit)
-{
-	new num = players + 1
-
-	if (players == maxplayers)
-		num = maxplayers
-	else if (players < limit)
-		num = limit
-	
-	set_cvar_num("sv_visiblemaxplayers", num)
-}
-#endif

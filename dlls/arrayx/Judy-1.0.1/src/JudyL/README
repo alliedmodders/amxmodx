@@ -1,0 +1,8 @@
+# @(#) $Revision$ $Source$
+#
+# This tree contains sources for the JudyL*() functions.
+#
+
+JudyL.h
+
+lint.waivers		see usage in makefile

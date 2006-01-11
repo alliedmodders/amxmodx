@@ -1,6 +1,11 @@
 program AMXX_Studio;
 
 uses
+  madExcept,
+  madLinkDisAsm,
+  madListHardware,
+  madListProcesses,
+  madListModules,
   Forms,
   Windows,
   Classes,

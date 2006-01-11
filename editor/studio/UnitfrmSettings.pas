@@ -206,6 +206,7 @@ type
     cmdAddFunction: TFlatButton;
     cmdRemFunction: TFlatButton;
     chkAutoHideCT: TFlatCheckBox;
+    lblACHint: TLabel;
     procedure jplSettingsChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -308,6 +309,7 @@ begin
   else
     lblCurrSetting.Caption := (jplSettings.ActivePage as TJvStandardPage).Caption;
 
+  lblACHint.Visible := jplSettings.ActivePage = jspAutocompleteCheck;
   txtPAWNOutputExit(Sender);
   txtCPPOutputChange(Sender);
 end;
@@ -711,6 +713,8 @@ var eDir: String;
 begin
   if SelectDirectory(lSelectOutputPAWN, txtPAWNOutput.Text, eDir) then
     txtPAWNOutput.Text := eDir;
+  txtPAWNOutput.OnEnter(Self);
+  txtCPPOutput.OnEnter(Self);
 end;
 
 procedure TfrmSettings.cmdBrowseOutputCPPClick(Sender: TObject);
@@ -718,6 +722,8 @@ var eDir: String;
 begin
   if SelectDirectory(lSelectOutputCPP, txtCPPOutput.Text, eDir) then
     txtCPPOutput.Text := eDir;
+  txtPAWNOutput.OnEnter(Self);
+  txtCPPOutput.OnEnter(Self);
 end;
 
 procedure TfrmSettings.txtPAWNOutputExit(Sender: TObject);

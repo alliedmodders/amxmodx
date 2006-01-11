@@ -455,26 +455,69 @@ var eStr: String;
     i: integer;
 begin
   Result := 0;
-  eStr := StringReplace(frmMain.sciEditor.Lines[frmMain.sciEditor.GetCurrentLineNumber], '^"', '', [rfReplaceAll]);
   eStr := Copy(eStr, 1, frmMain.sciEditor.GetCaretInLine);
+  eStr := StringReplace(frmMain.sciEditor.Lines[frmMain.sciEditor.GetCurrentLineNumber], '^"', '', [rfReplaceAll]);
+  if (Length(eStr) = 0) then exit;
+
   while Between(eStr, '"', '"') <> '' do
     eStr := StringReplace(eStr, Between(eStr, '"', '"'), '', [rfReplaceAll]);
   while Between(eStr, '{', '}') <> '' do
     eStr := StringReplace(eStr, Between(eStr, '{', '}'), '', [rfReplaceAll]);
-  for i := 0 to Length(eStr) -1 do begin
+  for i := Length(eStr) -1 downto 1 do begin
     if eStr[i] = ',' then
-      Result := Result +1;
+      Result := Result +1
+    else if eStr[i] = '(' then
+      exit;
   end;
 end;
 
 function GetCurrFunc: String;
 var eStr: String;
+    i: integer;
+    eStart, eEnd: integer;
+    eInString, eInArray: Boolean;
 begin
+  Result := '';
+  eStart := 1;
+  eEnd := -1;
+  eInString := False;
+  eInArray := False;
   eStr := frmMain.sciEditor.Lines[frmMain.sciEditor.GetCurrentLineNumber];
-  if Pos('(', eStr) = 0 then
-    Result := ''
+  eStr := StringReplace(eStr, '^"', 'AB', [rfReplaceAll]); // we don't need those
+
+  if (Length(eStr) = 0) then exit;
+
+  for i := frmMain.sciEditor.GetCaretInLine downto 1 do begin
+    if eStr[i] = '"' then
+      eInString := not eInString
+    else if (eStr[i] = '{') and (not eInString) then
+      eInArray := True
+    else if (eStr[i] = '}') and (not eInString) then
+      eInArray := False
+    else if (not eInArray) and (not eInString) and (eStr[i] = '(') then begin
+      eEnd := i-1;
+      break;
+    end;
+  end;
+  
+  if eEnd <> -1 then begin
+    for i := eEnd downto 1 do begin
+      if eStr[i] = '"' then
+        eInString := not eInString
+      else if (eStr[i] = '{') and (not eInString) then
+        eInArray := True
+      else if (eStr[i] = '}') and (not eInString) then
+        eInArray := False
+      else if (not eInArray) and (not eInString) and (eStr[i] = '(') then begin
+        eStart := i+1;
+        break;
+      end;
+    end;
+  end
   else
-    Result := Trim(Copy(eStr, 1, Pos('(', eStr) -1));
+    exit;
+
+  Result := Trim(Copy(eStr, eStart, eEnd - eStart + 1));
 end;
 
 end.

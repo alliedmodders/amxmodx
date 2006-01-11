@@ -37,7 +37,7 @@ object frmMain: TfrmMain
     000000000000000380000000000000000000000000000000000000000000}
   KeyPreview = True
   OldCreateOrder = False
-  Position = poDesktopCenter
+  Position = poScreenCenter
   OnClose = FormClose
   OnConstrainedResize = FormConstrainedResize
   OnCreate = FormCreate
@@ -668,9 +668,9 @@ object frmMain: TfrmMain
     ThemeType = tttTBX
     OnActiveTabChange = tsMainActiveTabChange
     HiddenItems = <>
-    object tiPAWN: TSpTBXTabItem
+    object tiPawn: TSpTBXTabItem
       Checked = True
-      OnClick = tiPAWNClick
+      OnClick = tiPawnClick
       TabPosition = ttpBottom
       ThemeType = tttTBX
       CaptionW = 'Pawn Projects'
@@ -756,7 +756,6 @@ object frmMain: TfrmMain
           Align = alClient
           OnModified = sciEditorModified
           OnDblClick = sciEditorDblClick
-          OnCallTipClick = sciEditorCallTipClick
           OnKeyUp = sciEditorKeyUp
           OnKeyDown = sciEditorKeyDown
           OnKeyPress = sciEditorKeyPress

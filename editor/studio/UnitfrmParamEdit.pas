@@ -15,6 +15,7 @@ type
     lblFunction: TLabel;
     txtFunction: TSpTBXEdit;
     lblItems: TLabel;
+    Label1: TLabel;
   end;
 
 var

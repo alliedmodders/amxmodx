@@ -1010,6 +1010,12 @@ begin
     frmMain.sciEditor.SelLength := Document.SelLength;
     frmMain.sciEditor.LineScroll(0, (0 - frmMain.sciEditor.GetFirstVisibleLine) + Document.TopLine);
   end;
+  if frmMain.sciEditor.Caret.LineVisible <> frmSettings.chkShowCaret.Checked then
+    frmMain.sciEditor.Caret.LineVisible := frmSettings.chkShowCaret.Checked;
+  if frmMain.sciEditor.Caret.LineBackColor <> frmSettings.CaretBack then begin
+    frmMain.sciEditor.Caret.LineBackColor := frmSettings.CaretBack;
+    frmMain.sciEditor.Colors.SelBack := clHighlight;
+  end;
   frmMain.mnuRestoreBackup.Enabled := (FileExists(Document.FileName + '.bak')) and (not Document.Untitled);
   Screen.Cursor := crDefault;
   Plugin_DocChange(Document.Index, Document.FileName, Document.Highlighter, RestoreCaret, False);

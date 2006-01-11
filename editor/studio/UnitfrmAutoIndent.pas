@@ -8,10 +8,11 @@ uses
 
 type
   TfrmAutoIndent = class(TForm)
+    cmdClose: TFlatButton;
+    pnlCheckboxes: TPanel;
     chkUnindentPressingClosingBrace: TFlatCheckBox;
     chkUnindentLine: TFlatCheckBox;
     chkIndentOpeningBrace: TFlatCheckBox;
-    cmdClose: TFlatButton;
   end;
 
 var

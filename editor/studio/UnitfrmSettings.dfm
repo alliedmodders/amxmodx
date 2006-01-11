@@ -64,7 +64,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 351
     Height = 260
-    ActivePage = jspCompiler
+    ActivePage = jspAutocompleteCheck
     PropagateEnable = False
     Align = alClient
     OnChange = jplSettingsChange
@@ -1854,6 +1854,14 @@ object frmSettings: TfrmSettings
       Height = 3
       Align = alTop
       Shape = bsTopLine
+    end
+    object lblACHint: TLabel
+      Left = 2
+      Top = 16
+      Width = 312
+      Height = 13
+      Caption = 'This feature allows you to set your Autocomplete-Items manually'
+      Visible = False
     end
     object cmdOK: TFlatButton
       Left = 416

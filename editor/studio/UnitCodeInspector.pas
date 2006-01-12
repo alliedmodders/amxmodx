@@ -408,7 +408,6 @@ begin
   FItems.Clear;
   eVarCount := 0;
   eConstCount := 0;
-  eCILine := eLine;
 
   { Constants and Variables }
   if (IsAtStart('new', eCurrLine, False)) or ((IsAtStart('stock', eCurrLine, False) and (CountChars(RemoveStringsAndComments(eCurrLine, True, True), '(') = 0) and (CountChars(RemoveStringsAndComments(eCurrLine, True, True), ')') = 0))) then begin
@@ -467,9 +466,7 @@ begin
     eStr.Free;
     frmMain.jviCode.EndUpdate;
     if eLine <> eCILine then
-      UpdateCI_Pawn(eLine)
-    else
-      eCILine := -1;
+      UpdateCI_Pawn(eLine);
     exit;
   end;
   { Conditions }
@@ -512,10 +509,10 @@ begin
       eCurrLine := Trim(StringReplace(eBackupLine, #9, #32, [rfReplaceAll]));
       eCurrLine := RemoveStringsAndComments(eCurrLine, False, True);
       eCurrLine := Trim(Copy(eCurrLine, GetMatchingBrace(eCurrLine) + 1, Length(eCurrLine)));
-      if eCurrLine = '{' then
+     { if eCurrLine = '{' then
         AddField('Action', 'If-Condition', 'New Code-Block').ReadOnly := True
       else
-        AddFunc('Action', eCurrLine, 'If-Condition');
+        AddFunc('Action', eCurrLine, 'If-Condition'); }
     end;
     {--> Analyze comments }
     eCurrLine := Trim(StringReplace(eBackupLine, #9, #32, [rfReplaceAll]));
@@ -526,9 +523,7 @@ begin
     eStr.Free;
     frmMain.jviCode.EndUpdate;
     if eLine <> eCILine then
-      UpdateCI_Pawn(eLine)
-    else
-      eCILine := -1;
+      UpdateCI_Pawn(eLine);
     exit;
   end;
   { Defined }
@@ -555,9 +550,7 @@ begin
     eStr.Free;
     frmMain.jviCode.EndUpdate;
     if eLine <> eCILine then
-      UpdateCI_Pawn(eLine)
-    else
-      eCILine := -1;
+      UpdateCI_Pawn(eLine);
     exit;
   end;
   { Included }

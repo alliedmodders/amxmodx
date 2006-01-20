@@ -44,6 +44,7 @@ new g_menuDataNum
 new g_menuPosition[33]
 new g_fileToSave[64]
 new bool:g_modified
+new g_coloredMenus
 
 public plugin_precache()
 {
@@ -61,6 +62,7 @@ public plugin_init()
 	get_configsdir(g_fileToSave, 63)
 	format(g_fileToSave, 63, "%s/stats.ini", g_fileToSave)
 	loadSettings(g_fileToSave)
+	g_coloredMenus = colored_menus()
 }
 
 public cmdCfg(id, level, cid)
@@ -207,7 +209,7 @@ displayCfgMenu(id, pos)
 	if (start >= g_menuDataNum)
 		start = pos = g_menuPosition[id] = 0
 	
-	new len = format(menu_body, 511, "\y%L\R%d/%d^n\w^n", id, "STATS_CONF", pos + 1, ((g_menuDataNum / 7)+((g_menuDataNum % 7) ? 1 : 0)))
+	new len = format(menu_body, 511, g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, "STATS_CONF", pos + 1, ((g_menuDataNum / 7)+((g_menuDataNum % 7) ? 1 : 0)))
 	new end = start + 7, keys = MENU_KEY_0|MENU_KEY_8, k = 0
 	
 	if (end > g_menuDataNum)
@@ -216,13 +218,13 @@ displayCfgMenu(id, pos)
 	for (new a = start; a < end; ++a)
 	{
 		keys |= (1<<k)
-		len += format(menu_body[len], 511-len, "%d. %s\y\R%L^n\w", ++k, g_menuData[a], id, get_xvar_num(g_menuDataId[a]) ? "ON" : "OFF")
+		len += format(menu_body[len], 511-len, g_coloredMenus ? "%d. %s\y\R%L^n\w" : "%d. %s %L^n", ++k, g_menuData[a], id, get_xvar_num(g_menuDataId[a]) ? "ON" : "OFF")
 	}
 	
 	if (g_menuDataNum == 0)
-		len += format(menu_body[len], 511-len, "\d%L\w", id, "NO_STATS")
+		len += format(menu_body[len], 511-len, g_coloredMenus ? "\d%L\w" : "%L", id, "NO_STATS")
 
-	len += format(menu_body[len], 511-len, "^n8. %L\y\R%s^n\w", id, "SAVE_CONF", g_modified ? "*" : "")
+	len += format(menu_body[len], 511-len, g_coloredMenus ? "^n8. %L\y\R%s^n\w" : "^n8. %L %s^n", id, "SAVE_CONF", g_modified ? "*" : "")
 
 	if (end != g_menuDataNum)
 	{

@@ -293,7 +293,7 @@ static cell AMX_NATIVE_CALL cwpn_dmg(AMX *amx, cell *params){ // wid,att,vic,dmg
 		return 1;
 
 	pAtt->saveKill(pVic,weapon,( aim == 1 ) ? 1:0 ,TA);
-	MF_ExecuteForward(g_death_info, pAtt->index, pVic->index, dmg, weapon, aim, TA);
+	MF_ExecuteForward(g_death_info, pAtt->index, pVic->index, weapon, aim, TA);
 
 	return 1;
 }

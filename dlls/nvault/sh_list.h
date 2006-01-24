@@ -17,6 +17,28 @@
 //namespace SourceHook
 //{
 //This class is from CSDM for AMX Mod X
+/*
+	A circular, doubly-linked list with one sentinel node
+
+	Empty:
+		m_Head = sentinel
+		m_Head->next = m_Head;
+		m_Head->prev = m_Head;
+	One element:
+		m_Head = sentinel
+		m_Head->next = node1
+		m_Head->prev = node1
+		node1->next = m_Head
+		node1->prev = m_Head
+	Two elements:
+		m_Head = sentinel
+		m_Head->next = node1
+		m_Head->prev = node2
+		node1->next = node2
+		node1->prev = m_Head
+		node2->next = m_Head
+		node2->prev = node1
+*/
 template <class T>
 class List
 {
@@ -33,11 +55,13 @@ public:
 		ListNode *prev;
 	};
 private:
+	// Initializes the sentinel node.
+	// BAIL used malloc instead of new in order to bypass the need for a constructor.
 	ListNode *_Initialize()
 	{
 		ListNode *n = (ListNode *)malloc(sizeof(ListNode));
-		n->next = NULL;
-		n->prev = NULL;
+		n->next = n;
+		n->prev = n;
 		return n;
 	}
 public:
@@ -53,6 +77,8 @@ public:
 	~List()
 	{
 		clear();
+
+		// Don't forget to free the sentinel
 		if (m_Head)
 		{
 			free(m_Head);
@@ -63,32 +89,27 @@ public:
 	{
 		ListNode *node = new ListNode(obj);
 
-		if (!m_Head->prev)
-		{
-			//link in the node as the first item 
-			node->next = m_Head;
-			node->prev = m_Head;
-			m_Head->prev = node;
-			m_Head->next = node;
-		} else {
-			node->prev = m_Head->prev;
-			node->next = m_Head;
-			m_Head->prev->next = node;
-			m_Head->prev = node;
-		}
+		node->prev = m_Head->prev;
+		node->next = m_Head;
+		m_Head->prev->next = node;
+		m_Head->prev = node;
+
 		m_Size++;
 	}
 	size_t size()
 	{
 		return m_Size;
 	}
+
 	void clear()
 	{
 		ListNode *node = m_Head->next;
 		ListNode *temp;
-		m_Head->next = NULL;
-		m_Head->prev = NULL;
-		while (node && node != m_Head)
+		m_Head->next = m_Head;
+		m_Head->prev = m_Head;
+
+		// Iterate through the nodes until we find g_Head (the sentinel) again
+		while (node != m_Head)
 		{
 			temp = node->next;
 			delete node;
@@ -98,7 +119,7 @@ public:
 	}
 	bool empty()
 	{
-		return (m_Head->next == NULL);
+		return (m_Size == 0);
 	}
 	T & back()
 	{
@@ -110,7 +131,7 @@ private:
 public:
 	class iterator
 	{
-	friend class List;
+		friend class List;
 	public:
 		iterator()
 		{
@@ -142,7 +163,7 @@ public:
 				m_This = m_This->prev;
 			return old;
 		}	
-		
+
 		//pre increment
 		iterator & operator++()
 		{
@@ -158,7 +179,7 @@ public:
 				m_This = m_This->next;
 			return old;
 		}
-		
+
 		const T & operator * () const
 		{
 			return m_This->obj;
@@ -167,7 +188,7 @@ public:
 		{
 			return m_This->obj;
 		}
-		
+
 		T * operator -> ()
 		{
 			return &(m_This->obj);
@@ -176,7 +197,7 @@ public:
 		{
 			return &(m_This->obj);
 		}
-		
+
 		bool operator != (const iterator &where) const
 		{
 			return (m_This != where.m_This);
@@ -191,10 +212,7 @@ public:
 public:
 	iterator begin() const
 	{
-		if (m_Size)
-			return iterator(m_Head->next);
-		else
-			return iterator(m_Head);
+		return iterator(m_Head->next);
 	}
 	iterator end() const
 	{
@@ -206,30 +224,34 @@ public:
 		iterator iter(where);
 		iter++;
 
-		//If we are both the head and tail...
-		if (m_Head->next == pNode && m_Head->prev == pNode)
-		{
-			m_Head->next = NULL;
-			m_Head->prev = NULL;
-		} else if (m_Head->next == pNode) {
-			//we are only the first
-			pNode->next->prev = m_Head;
-			m_Head->next = pNode->next;
-		} else if (m_Head->prev == pNode) {
-			//we are the tail
-			pNode->prev->next = m_Head;
-			m_Head->prev = pNode->prev;
-		} else {
-			//middle unlink
-			pNode->prev->next = pNode->next;
-			pNode->next->prev = pNode->prev;
-		}
+
+		// Works for all cases: empty list, erasing first element, erasing tail, erasing in the middle...
+		pNode->prev->next = pNode->next;
+		pNode->next->prev = pNode->prev;
 
 		delete pNode;
 		m_Size--;
 
 		return iter;
 	}
+
+	iterator insert(iterator where, const T &obj)
+	{
+		// Insert obj right before where
+
+		ListNode *node = new ListNode(obj);
+		ListNode *pWhereNode = where.m_This;
+
+		pWhereNode->prev->next = node;
+		node->prev = pWhereNode->prev;
+		pWhereNode->prev = node;
+		node->next = pWhereNode;
+
+		m_Size++;
+
+		return iterator(node);
+	}
+
 public:
 	void remove(const T & obj)
 	{
@@ -254,7 +276,7 @@ public:
 		}
 		return end();
 	}
-	List & operator =(List &src)
+	List & operator =(const List &src)
 	{
 		clear();
 		iterator iter;

@@ -68,14 +68,6 @@ namespace AMXXRelease
 			if (!Directory.Exists(ABuilder.PropSlashes(basedir + "\\logs")))
 				ab.CreateDir(ABuilder.PropSlashes(basedir + "\\logs"));
 
-			if (!Directory.Exists(ABuilder.PropSlashes(basedir + "\\doc")))
-				ab.CreateDir(ABuilder.PropSlashes(basedir + "\\doc"));
-
-			File.Copy(
-				ABuilder.PropSlashes(source + "\\doc\\amxmodx-doc.chm"),
-				ABuilder.PropSlashes(basedir + "\\doc\\amxmodx-doc.chm"),
-					  true);
-
 			ABuilder.CopyNormal(ab,
 				ABuilder.PropSlashes(source + "\\plugins\\include"), 
 				ABuilder.PropSlashes(basedir + "\\scripting\\include"));

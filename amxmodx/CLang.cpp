@@ -217,7 +217,7 @@ const char * CLangMngr::CLang::GetDef(int key, int &status)
 
 	if (!def.definition)
 	{
-		status = LANG_STATUS_KLNOTFOUND;
+		status = ERR_BADKEY;
 		return NULL;
 	}
 
@@ -340,6 +340,7 @@ int CLangMngr::GetKeyEntry(String &key)
 #define MAX_LEVELS	4
 
 size_t do_amx_format(AMX *amx, cell *params, int *param, const char **lex, char *output, size_t maxlen, int level);
+THash<String, lang_err> BadLang_Table;
 
 size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int *param, char *output, size_t maxlen, int level)
 {
@@ -443,16 +444,36 @@ size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int 
 			FMTPM_NEXTPARAM();
 			key = get_amxstring(amx, _addr, 1, tmpLen);
 			def = g_langMngr.GetDef(pLangName, key, status);
+			
+			bool debug = (strcmp(CVAR_GET_STRING("amx_mldebug"), "")) ? true : false;
+		
+			if (debug)
+			{
+				int debug_status;
+				bool validlang = true;
+				const char *testlang = CVAR_GET_STRING("amx_mldebug");
+
+				if (!g_langMngr.LangExists(testlang))
+				{
+					AMXXLOG_Log("[AMXX] \"%s\" is an invalid debug language", testlang);
+					validlang = false;
+				}
+				
+				g_langMngr.GetDef(testlang, key, debug_status);
+				
+				if (validlang && debug_status == ERR_BADKEY)
+					AMXXLOG_Log("[AMXX] Language key \"%s\" not found for language \"%s\", check \"%s\"", key, testlang, GetFileName(amx));
+			}
 				
 			if (def == NULL)
 			{
-				bool a = true;
-				if (status == LANG_STATUS_LNOTFOUND)
+				if (debug)
 				{
-					AMXXLOG_Log("[AMXX] Language \"%s\" not found", pLangName);
-				} else if (status == LANG_STATUS_KLNOTFOUND) {
-					a = false;
-					AMXXLOG_Log("[AMXX] Language key \"%s\" not found for language \"%s\"", key, pLangName);
+					if (status == ERR_BADLANG && (BadLang_Table[pLangName].last + 120.0f < gpGlobals->time))
+					{
+						AMXXLOG_Log("[AMXX] Language \"%s\" not found", pLangName);
+						BadLang_Table[pLangName].last = gpGlobals->time;
+					}
 				}
 
 				if (addr[0] != LANG_SERVER)
@@ -464,8 +485,6 @@ size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int 
 				if (!def)
 				{
 					return _snprintf(output, maxlen, "ML_NOTFOUND: %s", key);
-					if (a)
-						AMXXLOG_Log("[AMXX] Language key \"%s\" not found, check \"%s\"", key, GetFileName(amx));
 				}				
 			}
 			return do_amx_format(amx, params, param, &def, output, maxlen, level + 1);
@@ -976,10 +995,10 @@ const char *CLangMngr::GetDef(const char *langName, const char *key, int &status
 	keytbl_val val = KeyTable[key];
 	if (lang == NULL)
 	{
-		status = LANG_STATUS_LNOTFOUND;
+		status = ERR_BADLANG;
 		return NULL;
 	} else if (val.index == -1) {
-		status = LANG_STATUS_KLNOTFOUND;
+		status = ERR_BADKEY;
 		return NULL;
 	} else {
 		return lang->GetDef(val.index, status);

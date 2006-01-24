@@ -37,9 +37,8 @@
 #define LANG_SERVER 0
 #define LANG_PLAYER -1
 
-#define LANG_STATUS_OK 0			// OK
-#define LANG_STATUS_KLNOTFOUND 1	// Lang key not found in the lang.txt
-#define LANG_STATUS_LNOTFOUND 3		// Invalid lang
+#define ERR_BADKEY	1	// Lang key not found
+#define ERR_BADLANG 2	// Invalid lang
 
 struct md5Pair
 {
@@ -51,6 +50,14 @@ struct sKeyDef
 {
 	String *definition;
 	int key;
+};
+
+struct lang_err
+{
+	lang_err() : last(0.0f)
+	{
+	};
+	float last;
 };
 
 class defentry

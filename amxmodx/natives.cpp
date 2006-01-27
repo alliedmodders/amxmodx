@@ -31,7 +31,7 @@
 #include "amxmodx.h"
 #include "sh_stack.h"
 #include "natives.h"
-#include "Debugger.h"
+#include "debugger.h"
 
 #ifdef __linux__
 #include <malloc.h>

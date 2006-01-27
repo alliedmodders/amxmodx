@@ -40,9 +40,11 @@
 #include "newmenus.h"
 #include "natives.h"
 
+#define MIN_COMPAT_MM_VERS		"5:11"
+
 plugin_info_t Plugin_info = 
 {
-	META_INTERFACE_VERSION,		// ifvers
+	MIN_COMPAT_MM_VERS,		// ifvers
 	"AMX Mod X",				// name
 	AMX_VERSION,				// version
 	__DATE__,					// date
@@ -107,6 +109,7 @@ bool g_NeedsP = false;
 bool g_coloredmenus;
 bool g_activated = false;
 bool g_NewDLL_Available = false;
+int g_mm_vers = 0;
 
 #ifdef MEMORY_TEST
 	float g_next_memreport_time;
@@ -146,11 +149,6 @@ int FF_PluginEnd = -1;
 int FF_InconsistentFile = -1;
 int FF_ClientAuthorized = -1;
 int FF_ChangeLevel = -1;
-
-// fake metamod api
-#ifdef FAKEMETA
-	CFakeMeta g_FakeMeta;
-#endif
 
 // Precache	stuff from force consistency calls
 // or check	for	pointed	files won't	be done
@@ -1151,15 +1149,19 @@ C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_
 {
 	gpMetaUtilFuncs = pMetaUtilFuncs;
 	*pPlugInfo = &Plugin_info;
-	
+
+	int	mmajor = 0, mminor = 0,	pmajor = 0, pminor = 0;
+		
+	LOG_MESSAGE(PLID, "WARNING:	meta-interface version mismatch; requested=%s ours=%s",	Plugin_info.logtag,	ifvers);
+		
+	sscanf(ifvers, "%d:%d",	&mmajor, &mminor);
+	sscanf(META_INTERFACE_VERSION, "%d:%d",	&pmajor, &pminor);
+
+	g_mm_vers = mminor;
+
 	if (strcmp(ifvers, Plugin_info.ifvers))
 	{
-		int	mmajor = 0, mminor = 0,	pmajor = 0, pminor = 0;
-		
 		LOG_MESSAGE(PLID, "WARNING:	meta-interface version mismatch; requested=%s ours=%s",	Plugin_info.logtag,	ifvers);
-		
-		sscanf(ifvers, "%d:%d",	&mmajor, &mminor);
-		sscanf(META_INTERFACE_VERSION, "%d:%d",	&pmajor, &pminor);
 		
 		if (pmajor > mmajor)
 		{
@@ -1173,42 +1175,19 @@ C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_
 		}
 		else if (pmajor == mmajor)
 		{
-#ifdef FAKEMETA
-			if (mminor == 10)
+			if (mminor < 11)
 			{
-				LOG_MESSAGE(PLID,	"WARNING: metamod version is older than	expected; consider finding a newer version");
-				g_IsNewMM = false;
-				
-				//hack!
-				Plugin_info.ifvers = "5:10";
-#else
-				if (mminor < 11)
-				{
-					g_NeedsP = true;
-#endif
-				}
-				else if (mminor >= 11)
-				{
-					g_IsNewMM = true;
-				}
-				else if (pminor > mminor)
-				{
-					LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please	find a newer version of	this plugin");
-					return FALSE;
-				}
-				else if (pminor < mminor)
-				{
-					LOG_MESSAGE(PLID, "WARNING: metamod version is newer than expected; consider finding a newer version of this plugin");
-				
-					if (mminor > 11)
-						g_IsNewMM = true;
-				}
+				g_NeedsP = true;
+			} else if (pminor > mminor) {
+				LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin");
+				return FALSE;
+			}
 		} else {
 			LOG_ERROR(PLID, "unexpected version comparison; metavers=%s, mmajor=%d, mminor=%d; plugvers=%s, pmajor=%d, pminor=%d", ifvers, mmajor, mminor, META_INTERFACE_VERSION, pmajor, pminor);
 		}
-	} else {
-		g_IsNewMM = true;
 	}
+	if (!g_NeedsP)
+		g_IsNewMM = true;
 
 	// We can set this to null here because Meta_PExtGiveFnptrs is called after this
 	gpMetaPExtFuncs = NULL;
@@ -1252,10 +1231,6 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	gMetaFunctionTable.pfnGetEngineFunctions = GetEngineFunctions;
 	gMetaFunctionTable.pfnGetEngineFunctions_Post = GetEngineFunctions_Post;
 	gMetaFunctionTable.pfnGetNewDLLFunctions = GetNewDLLFunctions;
-
-#ifdef FAKEMETA
-	gMetaFunctionTable.pfnGetNewDLLFunctions_Post = GetNewDLLFunctions_Post;
-#endif
 
 	memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
 	gpGamedllFuncs=pGamedllFuncs;
@@ -1345,12 +1320,6 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)
 	g_cvars.clear();
 
 	detachModules();
-
-	// ###### Now detach metamod modules
-#ifdef FAKEMETA
-	g_FakeMeta.Meta_Detach(now, reason);
-	g_FakeMeta.ReleasePlugins();
-#endif
 
 	g_log.CloseFile();
 
@@ -1446,12 +1415,8 @@ C_DLLEXPORT	int	GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersi
 	gFunctionTable.pfnInconsistentFile = C_InconsistentFile;
 	gFunctionTable.pfnServerActivate = C_ServerActivate;
 
-#ifdef FAKEMETA
-	return g_FakeMeta.GetEntityAPI2(pFunctionTable, interfaceVersion, &gFunctionTable);
-#else
 	memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
 	return 1;
-#endif
 }
 
 DLL_FUNCTIONS gFunctionTable_Post;
@@ -1464,12 +1429,8 @@ C_DLLEXPORT	int	GetEntityAPI2_Post(DLL_FUNCTIONS *pFunctionTable, int *interface
 	gFunctionTable_Post.pfnStartFrame = C_StartFrame_Post;
 	gFunctionTable_Post.pfnServerDeactivate = C_ServerDeactivate_Post;
 
-#ifdef FAKEMETA
-	return g_FakeMeta.GetEntityAPI2_Post(pFunctionTable, interfaceVersion, &gFunctionTable_Post);
-#else
 	memcpy(pFunctionTable, &gFunctionTable_Post, sizeof(DLL_FUNCTIONS));
 	return 1;
-#endif
 }
 
 enginefuncs_t meta_engfuncs;
@@ -1491,12 +1452,8 @@ C_DLLEXPORT	int	GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
 	meta_engfuncs.pfnPrecacheSound = C_PrecacheSound;
 	meta_engfuncs.pfnChangeLevel = C_ChangeLevel;
 
-#ifdef FAKEMETA
-	return g_FakeMeta.GetEngineFunctions(pengfuncsFromEngine, interfaceVersion, &meta_engfuncs);
-#else
 	memcpy(pengfuncsFromEngine, &meta_engfuncs, sizeof(enginefuncs_t));
 	return 1;
-#endif
 }
 
 enginefuncs_t meta_engfuncs_post;
@@ -1516,12 +1473,8 @@ C_DLLEXPORT	int	GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine,	int	
 	meta_engfuncs_post.pfnAlertMessage = C_AlertMessage_Post;
 	meta_engfuncs_post.pfnRegUserMsg = C_RegUserMsg_Post;
 
-#ifdef FAKEMETA
-	return g_FakeMeta.GetEngineFunctions_Post(pengfuncsFromEngine, interfaceVersion, &meta_engfuncs_post);
-#else
 	memcpy(pengfuncsFromEngine, &meta_engfuncs_post, sizeof(enginefuncs_t));
 	return 1;
-#endif
 }
 
 NEW_DLL_FUNCTIONS gNewDLLFunctionTable;
@@ -1535,20 +1488,7 @@ C_DLLEXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pNewFunctionTable, int *in
 	if (g_engfuncs.pfnQueryClientCvarValue)
 		gNewDLLFunctionTable.pfnCvarValue = C_CvarValue;
 
-#ifdef FAKEMETA
-	return g_FakeMeta.GetNewDLLFunctions(pNewFunctionTable, interfaceVersion, &gNewDLLFunctionTable);
-#else
 	memcpy(pNewFunctionTable, &gNewDLLFunctionTable, sizeof(NEW_DLL_FUNCTIONS));
 	return 1;
-#endif
 }
 
-#ifdef FAKEMETA
-NEW_DLL_FUNCTIONS gNewDLLFunctionTable_Post;
-C_DLLEXPORT int GetNewDLLFunctions_Post(NEW_DLL_FUNCTIONS *pNewFunctionTable, int *interfaceVersion)
-{
-	return g_FakeMeta.GetNewDLLFunctions_Post(pNewFunctionTable, interfaceVersion, &gNewDLLFunctionTable_Post);
-	memcpy(pNewFunctionTable, &gNewDLLFunctionTable_Post, sizeof(NEW_DLL_FUNCTIONS));
-	return 1;
-}
-#endif

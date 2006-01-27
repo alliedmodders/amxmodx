@@ -308,10 +308,9 @@ extern int FF_PluginEnd;
 extern int FF_InconsistentFile;
 extern int FF_ClientAuthorized;
 extern bool g_coloredmenus;
+extern int g_mm_vers;
 
-#ifdef FAKEMETA
-	extern CFakeMeta g_FakeMeta;
-#endif
+#define MM_CVAR2_VERS	13
 
 struct func_s
 {

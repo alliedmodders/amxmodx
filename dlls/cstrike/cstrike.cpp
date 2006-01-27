@@ -386,10 +386,11 @@ static cell AMX_NATIVE_CALL cs_set_user_armor(AMX *amx, cell *params) // cs_set_
 	// Set armor type
 	*((int *)pPlayer->pvPrivateData + OFFSET_ARMORTYPE) = params[3];
 	
-	if (params[3] == CS_ARMOR_KEVLAR || params[3] == CS_ARMOR_ASSAULTSUIT) {
+	if (params[3] == CS_ARMOR_KEVLAR || params[3] == CS_ARMOR_ASSAULTSUIT)
+	{
 		// And send appropriate message
-		MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "ItemPickup", NULL), NULL, pPlayer);
-		WRITE_STRING(params[3] == CS_ARMOR_KEVLAR ? "item_kevlar" : "item_assaultsuit");
+		MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "ArmorType", NULL), NULL, pPlayer);
+		WRITE_BYTE(params[3] == CS_ARMOR_ASSAULTSUIT ? 1 : 0);
 		MESSAGE_END();
 	}
 

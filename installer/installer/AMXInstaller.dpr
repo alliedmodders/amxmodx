@@ -15,6 +15,11 @@ program AMXInstaller;
 }
 
 uses
+  madExcept,
+  madLinkDisAsm,
+  madListHardware,
+  madListProcesses,
+  madListModules,
   Forms,
   UnitfrmMain in 'UnitfrmMain.pas' {frmMain},
   UnitFunctions in 'UnitFunctions.pas',

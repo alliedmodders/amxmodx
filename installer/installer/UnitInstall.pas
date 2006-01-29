@@ -381,8 +381,11 @@ begin
   MakeDir(ePath + 'addons\metamod\dlls');
   // rest...
   for i := 0 to DirList.Count -1 do begin
-    if Cancel then
+    if Cancel then begin
+      AddStatus('', clBlack, False);
+      AddStatus('Installation canceled by user!', clBlack, False);
       exit;
+    end;
       
     if Pos('base', DirList[i]) = 1 then begin
       MakeDir(ePath + 'addons\amxmodx\' + Copy(DirList[i], 6, Length(DirList[i])));
@@ -435,8 +438,11 @@ begin
   AddStatus('', clBlack, False);
   AddStatus('Copying files...', clBlack);
   for i := 0 to FileList.Count -1 do begin
-    if Cancel then
+    if Cancel then begin
+      AddStatus('', clBlack, False);
+      AddStatus('Installation canceled by user!', clBlack, False);
       exit;
+    end;
       
     if not IsForbidden(FileList[i], OS) then begin
       if Pos('base', FileList[i]) = 1 then begin
@@ -578,7 +584,9 @@ var eStr: TStringList;
     CopyConfig: Boolean;
     eGoBack: Boolean;
 begin
+  Screen.Cursor := crAppStart;
   frmMain.cmdCancel.Show;
+  frmMain.cmdCancel.Caption := '&Cancel';
   frmMain.cmdNext.Hide;
   Screen.Cursor := crHourGlass;
   AddStatus('Scanning for directories...', clBlack);
@@ -609,8 +617,11 @@ begin
   eStr := TStringList.Create;
   eStr.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'temp\liblist.gam');
   if eStr.IndexOf('gamedll "addons\metamod\dlls\metamod.dll"') = -1 then begin
-    if Cancel then
+    if Cancel then begin
+      AddStatus('', clBlack, False);
+      AddStatus('Installation canceled by user!', clBlack, False);
       exit;
+    end;
 
     for i := 0 to eStr.Count -1 do begin
       if Pos('gamedll', TrimLeft(eStr[i])) = 1 then
@@ -649,8 +660,11 @@ begin
   AddStatus('Creating directories...', clBlack);   
   // rest...
   for i := 0 to DirList.Count -1 do begin
-    if Cancel then
+    if Cancel then begin
+      AddStatus('', clBlack, False);
+      AddStatus('Installation canceled by user!', clBlack, False);
       exit;
+    end;
 
     AddStatus('Creating directory: ' + DirList[i], clBlack);
     CreateAgain:
@@ -659,7 +673,11 @@ begin
       FTPMakeDir(ePath + DirList[i]);
     except
       on E: Exception do begin
-        if Cancel then exit;
+        if Cancel then begin
+          AddStatus('', clBlack, False);
+          AddStatus('Installation canceled by user!', clBlack, False);
+          exit;
+        end;
 
         if frmMain.IdFTP.Connected then begin
           if MessageBox(frmMain.Handle, PChar('An error occured while creating "' + FileList[i] + '"!' + #13 + E.Message + #13 + #13 + 'Retry?'), PChar(Application.Title), MB_ICONSTOP + MB_YESNO) = mrYes then
@@ -691,8 +709,11 @@ begin
   AddStatus('Uploading files...', clBlack);
   AddStatus('', clBlack, False);
   for i := 0 to FileList.Count -1 do begin
-    if Cancel then
+    if Cancel then begin
+      AddStatus('', clBlack, False);
+      AddStatus('Installation canceled by user!', clBlack, False);
       exit;
+    end;
 
     if not IsForbidden(FileList[i], OS) then begin
       AddStatus('Uploading file: ' + FileList[i], clBlack);
@@ -719,7 +740,11 @@ begin
           end;
         except
           on E: Exception do begin
-            if Cancel then exit;
+            if Cancel then begin
+              AddStatus('', clBlack, False);
+              AddStatus('Installation canceled by user!', clBlack, False);
+              exit;
+            end;
 
             if frmMain.IdFTP.Connected then begin
               if MessageBox(frmMain.Handle, PChar('An error occured while uploading "' + FileList[i] + '"!' + #13 + E.Message + #13 + #13 + 'Retry?'), PChar(Application.Title), MB_ICONSTOP + MB_YESNO) = mrYes then

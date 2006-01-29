@@ -4924,7 +4924,7 @@ object frmMain: TfrmMain
         Left = 172
         Top = 82
         Width = 353
-        Height = 26
+        Height = 13
         Caption = 
           'This wizard will guide you through the installation of AMX Mod X' +
           ' (version).'
@@ -5980,6 +5980,7 @@ object frmMain: TfrmMain
       Top = 0
       Width = 527
       Height = 314
+      OnShow = jspFTPShow
       object lblStep1: TLabel
         Left = 44
         Top = 60
@@ -6455,7 +6456,7 @@ object frmMain: TfrmMain
       ColorBorder = clBtnShadow
       ColorHighLight = clBtnShadow
       ColorShadow = clBtnShadow
-      Caption = '&Cancel'
+      Caption = '&Close'
       ParentColor = False
       TabOrder = 1
       OnClick = cmdCancelClick

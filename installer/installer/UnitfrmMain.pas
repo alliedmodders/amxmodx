@@ -124,6 +124,7 @@ type
       var AllowExpansion: Boolean);
     procedure trvDirectoriesCollapsing(Sender: TObject; Node: TTreeNode;
       var AllowCollapse: Boolean);
+    procedure jspFTPShow(Sender: TObject);
   private
     OldProgress: Integer;
     CurrProgress: Integer;
@@ -150,7 +151,30 @@ end;
 
 procedure TfrmMain.cmdCancelClick(Sender: TObject);
 begin
-  Close;
+  if (jplWizard.ActivePage = jspFTP) and (cmdConnect.Caption = 'Connecting...') then begin
+    Screen.Cursor := crDefault;
+    Cancel := True;
+    try
+      IdFTP.Disconnect;
+    except
+      // oh, hello BAILOPAN!
+    end;
+    cmdCancel.Caption := 'Close';
+  end
+  else if (jplWizard.ActivePage = jspInstallProgress) then begin
+   if Cancel then
+     Close
+   else if MessageBox(Handle, 'Do you really want to cancel the installation?', PChar(Application.Title), MB_ICONQUESTION + MB_YESNO) = mrYes then begin
+      Screen.Cursor := crDefault;
+      Application.OnException := ExceptionHandler;
+      Cancel := True;
+      if IdFTP.Connected then
+        IdFTP.Quit;
+    end;
+    cmdCancel.Caption := 'Close';
+  end
+  else
+    Close;
 end;
 
 procedure TfrmMain.cmdNextClick(Sender: TObject);
@@ -219,8 +243,10 @@ begin
     Sleep(1500);
     ggeAll.Progress := 0;
     ggeItem.Progress := 0;
-    InstallCustom(ExtractFilePath(ParamStr(0)) + 'temp\', ChosenMod, eOS);
     cmdNext.Hide;
+    InstallCustom(ExtractFilePath(ParamStr(0)) + 'temp\', ChosenMod, eOS);
+    if Cancel then
+      exit;
     AddStatus('', clBlack, False);
     AddStatus('', clBlack, False);
     AddStatus('- - - - -', clBlack, False);
@@ -230,7 +256,6 @@ begin
     // ... then upload ...
     ggeAll.Progress := 0;
     ggeItem.Progress := 0;
-    Screen.Cursor := crAppStart;
     InstallFTP(ChosenMod, eOS);
   end
   else if jplWizard.ActivePage = jspInstallProgress then
@@ -467,6 +492,7 @@ begin
     txtPassword.Enabled := False;
     chkPassive.Enabled := False;
     cmdConnect.Caption := 'Connecting...';
+    cmdCancel.Caption := '&Cancel';
     // ... set values ...
     IdFTP.Host := txtHost.Text;
     IdFTP.Port := StrToInt(txtPort.Text);
@@ -487,6 +513,7 @@ begin
       trvDirectories.Enabled := True;
       cmdConnect.Enabled := True;
       cmdConnect.Caption := 'Disconnect';
+      cmdCancel.Caption := '&Close';
 
       CurNode := nil;
       if eStr.Count <> 0 then begin
@@ -508,6 +535,7 @@ begin
         CurNode.Expand(False);
     except
       on E: Exception do begin
+        Screen.Cursor := crDefault;
         // reset button properties
         cmdConnect.Enabled := True;
         txtHost.Enabled := True;
@@ -518,6 +546,11 @@ begin
         cmdProxySettings.Enabled := True;
         cmdNext.Enabled := False;
         cmdConnect.Caption := 'Connect';
+        cmdCancel.Caption := '&Cancel';
+        if Cancel then begin
+          Cancel := False;
+          exit;
+        end;
         // analyze messages
         if Pos('Login incorrect.', E.Message) <> 0 then begin // login failed
           MessageBox(Handle, 'Login incorrect. Check your FTP settings and try again.', PChar(Application.Title), MB_ICONWARNING);
@@ -541,11 +574,11 @@ begin
         end
         else
           MessageBox(Handle, PChar(E.Message), PChar(Application.Title), MB_ICONWARNING); // unknown error
+
         // ... connect failed, leave procedure ...
         exit;
       end;
     end;
-
     Screen.Cursor := crDefault;
   end
   else begin
@@ -561,6 +594,7 @@ begin
     txtPassword.Enabled := True;
     chkPassive.Enabled := True;
     cmdConnect.Caption := 'Connect';
+    cmdCancel.Caption := '&Close';
     cmdNext.Enabled := False;
     Screen.Cursor := crDefault;
   end;
@@ -745,6 +779,11 @@ procedure TfrmMain.trvDirectoriesCollapsing(Sender: TObject;
 begin
   Node.ImageIndex := 0;
   Node.SelectedIndex := 0;
+end;
+
+procedure TfrmMain.jspFTPShow(Sender: TObject);
+begin
+  Cancel := False;
 end;
 
 end.

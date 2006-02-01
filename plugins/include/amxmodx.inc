@@ -36,9 +36,6 @@ forward plugin_cfg();
 /* Function called before plugin unloading (server deactivation) */
 forward plugin_end();
 
-/* Function called to handle changelevel */
-forward server_changelevel(map[]);
-
 /* Called on log message. */
 forward plugin_log();
 

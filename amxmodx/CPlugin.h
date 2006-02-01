@@ -122,7 +122,7 @@ public:
 	void unloadPlugin(CPlugin** a);
 	int loadPluginsFromFile(const char* filename);
 	
-	CPlugin* findPluginFast(AMX *amx);
+	inline CPlugin* findPluginFast(AMX *amx) { return (CPlugin*)(amx->userdata[UD_FINDPLUGIN]); }
 	CPlugin* findPlugin(AMX *amx);
 	CPlugin* findPlugin(int index);
 	CPlugin* findPlugin(const char* name);

@@ -149,11 +149,6 @@ void CPluginMngr::clear()
 	}
 }
 
-CPluginMngr::CPlugin* CPluginMngr::findPluginFast(AMX *amx) 
-{ 
-	return (CPlugin*)(amx->userdata[UD_FINDPLUGIN]); 
-}
-
 CPluginMngr::CPlugin* CPluginMngr::findPlugin(AMX *amx)
 {
 	CPlugin*a = head;

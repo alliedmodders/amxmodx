@@ -928,3 +928,34 @@ native get_addr_val(addr);
 native set_addr_val(addr, val);
 
 
+/**
+ * creates a multi-plugin forward.
+ * results will be > 0 for success
+ */
+native CreateMultiForward(const name[], stop_type, ...);
+
+/**
+ * creates a forward for one plugin.
+ * results will be > 0 for success
+ * id can be returned from find_plugin_byfile or
+ * anything get_plugin is compatible with.
+ */
+native CreateOneForward(plugin_id, const name[], ...);
+
+/**
+ * prepares an array.  use this and pass the result into
+ * ExecuteForward() instead of the array itself.
+ */
+native PrepareArray(array[], size, copyback=0);
+
+/**
+ * executes a forward.  returns result in ret.
+ * returns 1 for success, 0 for failure.
+ */
+native ExecuteForward(forward_handle, &ret, ...);
+
+/**
+ * Destroys/deallocates any type of forward
+ */
+native DestroyForward(forward_handle);
+

@@ -286,3 +286,13 @@ enum {
 #define AMX_ERR_PARAMS		25
 
 #define	INVALID_HANDLE		-1
+
+#define ET_IGNORE		0	//ignore return val
+#define ET_STOP			1	//stop on PLUGIN_HANDLED
+#define ET_STOP2		2	//same, except return biggest
+#define ET_CONTINUE		3	//no stop, return biggest
+
+#define FP_CELL			0
+#define FP_FLOAT		1
+#define FP_STRING		2
+#define FP_ARRAY		4

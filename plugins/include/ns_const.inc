@@ -57,11 +57,11 @@ enum {
 	MASK_RECYCLING = 8388608,	// Building is recycling
 	MASK_TOPDOWN = 16777216,	// Commander view
 	MASK_PLAYER_STUNNED = 33554432,	// Player has been stunned by stomp
-	MASK_ENSNARED = 67108864,	// Webbed
-	MASK_ALIEN_EMBRYO = 268435456,	// Gestating
-	MASK_SELECTABLE = 536870912,	// ???
-	MASK_PARASITED = 1073741824,	// Parasite flag
-	MASK_SENSORY_NEARBY = 2147483648	// Sensory chamber in range
+	MASK_ENSNARED = 67108864,   	// Webbed
+	MASK_ALIEN_EMBRYO = 134217728,  // Gestating
+	MASK_SELECTABLE = 268435456,	// ???
+	MASK_PARASITED = 536870912,	// Parasite flag
+	MASK_SENSORY_NEARBY = 1073741824 // Sensory chamber in range
 
 }
 

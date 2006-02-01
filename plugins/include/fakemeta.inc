@@ -12,10 +12,15 @@
 #pragma library fakemeta
 
 /* Returns entvar data from an entity   Use the pev_* enum to specify which form of data you want returned. */
-native pev(_index,_value,{Float,Sql,Result,_}:...)
+native pev(_index,_value,{Float,Sql,Result,_}:...);
 
 /* Sets entvar data for an entity.  Use the pev_* enum */
-native set_pev(_index,_value,{Float,Sql,Result,_}:...)
+native set_pev(_index,_value,{Float,Sql,Result,_}:...);
+
+/* returns 0 if ent is invalid, >0 if valid
+ * (1 == valid, 2 == valid+pvPrivateData valid)
+ */
+native pev_valid(entindex);
 
 /* Returns an integer from private data.  _linuxdiff is added into the _Offset if it's used on a linux server. */
 native get_pdata_int(_index,_Offset,_linuxdiff=5);

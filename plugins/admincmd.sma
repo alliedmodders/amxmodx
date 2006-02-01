@@ -460,7 +460,7 @@ public cmdMap(id, level, cid)
 onlyRcon(name[])
 {
 	for (new a = 0; a < g_cvarRconNum; ++a)
-		if (equal(g_cvarRcon[a], name))
+		if (equali(g_cvarRcon[a], name))
 			return 1
 	return 0
 }

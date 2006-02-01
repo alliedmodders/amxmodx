@@ -613,7 +613,6 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 	if (iSwitch > pev_int_start && iSwitch < pev_int_end)
 	{
 		// Grrr...
-		int len;
 		int iValue = blah[0];
 		switch(iSwitch)
 		{
@@ -1070,8 +1069,24 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 	return 0;
 }
 
+static cell AMX_NATIVE_CALL amx_pev_valid(AMX *amx, cell *params)
+{
+	int idx = static_cast<int>(params[1]);
+
+	edict_t *e = INDEXENT(idx);
+
+	if (FNullEnt(e))
+		return 0;
+
+	if (e->pvPrivateData)
+		return 2;
+
+	return 1;
+}
+
 AMX_NATIVE_INFO pev_natives[] = {
 	{ "pev",			amx_pev },
 	{ "set_pev",		amx_set_pev },
+	{ "pev_valid",		amx_pev_valid },
 	{NULL,				NULL},
 };

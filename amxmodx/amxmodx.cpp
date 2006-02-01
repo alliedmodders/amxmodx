@@ -3048,7 +3048,9 @@ struct CallFunc_ParamInfo
 	cell size;														// byref size
 };
 
+#if !defined CALLFUNC_MAXPARAMS
 #define CALLFUNC_MAXPARAMS 64										/* Maximal params number */
+#endif
 
 cell g_CallFunc_Params[CALLFUNC_MAXPARAMS] = {0};					// Params
 CallFunc_ParamInfo g_CallFunc_ParamInfo[CALLFUNC_MAXPARAMS] = {{0}};	// Flags
@@ -3482,6 +3484,7 @@ static cell AMX_NATIVE_CALL int3(AMX *amx, cell *params)
 
 /*********************************************************************/
 
+static bool g_warned_ccqv = false;
 // native query_client_cvar(id, const cvar[], const resultfunc[])
 static cell AMX_NATIVE_CALL query_client_cvar(AMX *amx, cell *params)
 {
@@ -3493,15 +3496,25 @@ static cell AMX_NATIVE_CALL query_client_cvar(AMX *amx, cell *params)
 		return 0;
 	}
 
-	if (!g_NewDLL_Available)
+#if defined AMD64
+		if (!g_warned_ccqv)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "[AMXX] Client CVAR Querying is not available on AMD64 (one time warn)");
+			g_warned_ccqv = true;
+		}
+
+		return 0;
+#endif
+
+	if (g_mm_vers < 13)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "NewDLL functions are not available. Blame (your) metamod (version)");
+		LogError(amx, AMX_ERR_NATIVE, "[AMXX] Client CVAR querying is not enabled - MM version out of date.");
 		return 0;
 	}
 
-	if (!g_engfuncs.pfnQueryClientCvarValue)
+	if (!g_NewDLL_Available)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "QueryClientCvarValue engine function not available. Make sure hlds and metamod are up-to-date");
+		LogError(amx, AMX_ERR_NATIVE, "Client CVAR querying is not enabled - check MM version!");
 		return 0;
 	}
 
@@ -3540,9 +3553,8 @@ static cell AMX_NATIVE_CALL query_client_cvar(AMX *amx, cell *params)
 	}
 
 	ClientCvarQuery_Info *queryObject = new ClientCvarQuery_Info;
-	queryObject->querying = false;
-	queryObject->cvarName.assign(cvarname);
 	queryObject->resultFwd = iFunc;
+	queryObject->requestId = MAKE_REQUESTID(PLID);
 
 	if (numParams == 5 && params[4] != 0)
 	{
@@ -3565,7 +3577,7 @@ static cell AMX_NATIVE_CALL query_client_cvar(AMX *amx, cell *params)
 		queryObject->paramLen = 0;
 	}
 
-	pPlayer->cvarQueryQueue.push(queryObject);
+	pPlayer->queries.push_back(queryObject);
 
 	return 1;
 }
@@ -3702,6 +3714,83 @@ static cell AMX_NATIVE_CALL set_addr_val(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL CreateMultiForward(AMX *amx, cell *params)
+{
+	int len;
+	char *funcname = get_amxstring(amx, params[1], 0, len);
+
+	cell ps[FORWARD_MAX_PARAMS];
+	cell count = params[0] / sizeof(cell);
+	for (cell i=3; i<=count; i++)
+		ps[i-3] = *get_amxaddr(amx, params[i]);
+	
+	return registerForwardC(funcname, static_cast<ForwardExecType>(params[2]), ps, count-2);
+}
+
+static cell AMX_NATIVE_CALL CreateOneForward(AMX *amx, cell *params)
+{
+	CPluginMngr::CPlugin *p = g_plugins.findPlugin(params[1]);
+	int len;
+	char *funcname = get_amxstring(amx, params[2], 0, len);
+
+	cell ps[FORWARD_MAX_PARAMS];
+	cell count = params[0] / sizeof(cell);
+	for (cell i=3; i<=count; i++)
+		ps[i-3] = *get_amxaddr(amx, params[i]);
+	
+	return registerSPForwardByNameC(amx, funcname, ps, count-2);
+}
+
+static cell AMX_NATIVE_CALL PrepareArray(AMX *amx, cell *params)
+{
+	cell *addr = get_amxaddr(amx, params[1]);
+	unsigned int len = static_cast<unsigned int>(params[2]);
+	bool copyback = params[3] ? true : false;
+
+	return prepareCellArray(addr, len, copyback);
+}
+
+static cell AMX_NATIVE_CALL ExecuteForward(AMX *amx, cell *params)
+{
+	int id = static_cast<int>(params[1]);
+	int str_id = 0;
+	int len;
+	cell *addr = get_amxaddr(amx, params[1]);
+
+	if (!g_forwards.isIdValid(id))
+		return 0;
+
+	cell ps[FORWARD_MAX_PARAMS];
+	cell count = params[0] / sizeof(cell);
+	if (count - 2 != g_forwards.getParamsNum(id))
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Expected %d parameters, got %d", g_forwards.getParamsNum(id), count-2);
+		return 0;
+	}
+	for (cell i=3; i<=count; i++)
+	{
+		if (g_forwards.getParamType(id, i-3) == FP_STRING)
+			ps[i-3] = reinterpret_cast<cell>(get_amxstring(amx, params[i], str_id++, len));
+		else
+			ps[i-3] = *get_amxaddr(amx, params[i]);
+	}
+
+	*addr = g_forwards.executeForwards(id, ps);
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL DestroyForward(AMX *amx, cell *params)
+{
+	int id = static_cast<int>(params[1]);
+
+	/* only implemented for single forwards */
+	if (g_forwards.isIdValid(id) && g_forwards.isSPForward(id))
+		g_forwards.unregisterSPForward(id);
+
+	return 1;
+}
+
 AMX_NATIVE_INFO amxmodx_Natives[] =
 {
 	{"abort",					amx_abort},
@@ -3716,6 +3805,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"callfunc_push_intrf",		callfunc_push_byref},
 	{"callfunc_push_floatrf",	callfunc_push_byref},
 	{"callfunc_push_str",		callfunc_push_str},
+	{"change_task",				change_task},
 	{"client_cmd",				client_cmd},
 	{"client_print",			client_print},
 	{"console_cmd",				console_cmd},
@@ -3758,6 +3848,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"get_systime",				get_systime},
 	{"get_time",				get_time},
 	{"get_timeleft",			get_timeleft},
+	{"get_tick_count",			get_tick_count},
 	{"get_user_aiming",			get_user_aiming},
 	{"get_user_ammo",			get_user_ammo},
 	{"get_user_armor",			get_user_armor},
@@ -3780,7 +3871,6 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"get_user_time",			get_user_time},
 	{"get_user_userid",			get_user_userid},
 	{"hcsardhnexsnu",			register_byval},
-	{"user_has_weapon",			user_has_weapon},
 	{"get_user_weapon",			get_user_weapon},
 	{"get_user_weapons",		get_user_weapons},
 	{"get_weaponname",			get_weaponname},
@@ -3845,7 +3935,6 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"remove_cvar_flags",		remove_cvar_flags},
 	{"remove_quotes",			remove_quotes},
 	{"remove_task",				remove_task},
-	{"change_task",				change_task},
 	{"remove_user_flags",		remove_user_flags},
 	{"server_cmd",				server_cmd},
 	{"server_exec",				server_exec},
@@ -3867,6 +3956,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"show_motd",				show_motd},
 	{"task_exists",				task_exists},
 	{"unpause",					unpause},
+	{"user_has_weapon",			user_has_weapon},
 	{"user_kill",				user_kill},
 	{"user_slap",				user_slap},
 	{"write_angle",				write_angle},
@@ -3878,6 +3968,10 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"write_short",				write_short},
 	{"write_string",			write_string},
 	{"xvar_exists",				xvar_exists},
-	{"get_tick_count",			get_tick_count},
+	{"CreateMultiForward",		CreateMultiForward},
+	{"CreateOneForward",		CreateOneForward},
+	{"PrepareArray",			PrepareArray},
+	{"ExecuteForward",			ExecuteForward},
+	{"DestroyForward",			DestroyForward},
 	{NULL,						NULL}
 };

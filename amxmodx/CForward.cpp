@@ -480,6 +480,16 @@ void CForwardMngr::unregisterSPForward(int id)
 	m_FreeSPForwards.push(id);
 }
 
+int registerForwardC(const char *funcName, ForwardExecType et, cell *list, size_t num)
+{
+	ForwardParam params[FORWARD_MAX_PARAMS];
+	
+	for (size_t i=0; i<num; i++)
+		params[i] = static_cast<ForwardParam>(list[i]);
+	
+	return g_forwards.registerForward(funcName, et, num, params);
+}
+
 int registerForward(const char *funcName, ForwardExecType et, ...)
 {
 	int curParam = 0;
@@ -507,6 +517,16 @@ int registerForward(const char *funcName, ForwardExecType et, ...)
 	va_end(argptr);
 	
 	return g_forwards.registerForward(funcName, et, curParam, params);
+}
+
+int registerSPForwardByNameC(AMX *amx, const char *funcName, cell *list, size_t num)
+{
+	ForwardParam params[FORWARD_MAX_PARAMS];
+	
+	for (size_t i=0; i<num; i++)
+		params[i] = static_cast<ForwardParam>(list[i]);
+
+	return g_forwards.registerSPForward(funcName, amx, num, params);
 }
 
 int registerSPForwardByName(AMX *amx, const char *funcName, ...)

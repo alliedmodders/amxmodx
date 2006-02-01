@@ -46,6 +46,7 @@
 #ifndef FORWARD_H
 #define FORWARD_H
 
+#include <stdarg.h>
 #include "sh_stack.h"
 
 const int FORWARD_MAX_PARAMS = 32;
@@ -213,7 +214,9 @@ public:
 
 // (un)register forward
 int registerForward(const char *funcName, ForwardExecType et, ...);
+int registerForwardC(const char *funcName, ForwardExecType et, cell *list, size_t num);
 int registerSPForwardByName(AMX *amx, const char *funcName, ...);
+int registerSPForwardByNameC(AMX *amx, const char *funcName, cell *list, size_t num);
 int registerSPForward(AMX *amx, int func, ...);
 void unregisterSPForward(int id);
 

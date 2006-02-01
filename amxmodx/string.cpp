@@ -678,73 +678,66 @@ static cell AMX_NATIVE_CALL amx_strtok(AMX *amx, cell *params)
 //strbreak(String[], First[], FirstLen, Rest[], RestLen)
 static cell AMX_NATIVE_CALL strbreak(AMX *amx, cell *params)	/* 5 param */
 {
-	bool quote_flag = false;
-	bool done_flag = false;
-	int left_pos = 0;
-	int right_pos = 0;
-	int l = 0;
-	unsigned int i = 0;
-	char hold = '"';
+	int _len;
+	bool in_quote = false;
+	bool had_quotes = false;
+	size_t i = 0;
+	size_t beg = 0;
 
-	char *string = get_amxstring(amx, params[1], 0, l);
-	char *left = new char[strlen(string) + 1];
-	char *right = new char[strlen(string) + 1];
+	char *string = get_amxstring(amx, params[1], 0, _len);
+	cell *left = get_amxaddr(amx, params[2]);
+	cell *right = get_amxaddr(amx, params[4]);
 	int LeftMax = params[3];
 	int RightMax = params[5];
 
-	for (i = 0; i < (unsigned int)l; i++)
+	size_t len = (size_t)_len;
+
+    while (isspace(string[i]) && i<len)
+		i++;
+    beg = i;
+	for (; i<len; i++)
 	{
-		if (string[i] == '"' && !quote_flag)
+		if (string[i] == '"' && !in_quote)
 		{
-			quote_flag = true;
-		}
-		else if (string[i] == '"' && quote_flag)
-		{
-			quote_flag = false;
-		}
-		
-		if (isspace(string[i]) && !quote_flag && !done_flag)
-		{
-			done_flag = true;
-			i++;
-		}
-		
-		if (!done_flag && string[i]!='"')
-		{
-			if (left_pos < LeftMax)
-			{
-				left[left_pos] = string[i];
-				
-				if (left[left_pos] == '\'')
-				{
-					left[left_pos] = hold;
-				}
-				
-				left_pos++;
-			} else {
-				done_flag = true;
-			}
+			in_quote = (had_quotes = true);
+		} else if (string[i] == '"' && in_quote) {
+			in_quote = false;
+			if (i == len-1)
+				goto do_copy;
 		} else {
-			if (right_pos < RightMax && string[i]!='"')
+			if (isspace(string[i]) && !in_quote)
 			{
-				right[right_pos] = string[i];
-				
-				if (right[right_pos] == '\'')
+do_copy:
+				size_t pos = i;
+				while (isspace(string[i]))
+					i++;
+				const char *start = had_quotes ? &(string[beg+1]) : &(string[beg]);
+				size_t _end = had_quotes ? (i==len-1 ? 1 : 2) : 0;
+				size_t end = (pos - _end > RightMax) ? RightMax : pos - _end;
+				size_t to_go = end-beg;
+				if (end && to_go)
 				{
-					right[right_pos] = hold;
+					while (to_go--)
+						*left++ = (cell)*start++;
 				}
-				
-				right_pos++;
+				*left = '\0';
+				end = (len-i+1 > LeftMax) ? LeftMax : len-i+1;
+                if (end)
+				{
+					start = &(string[i]);
+					while (end--)
+						*right++ = (cell)*start++;
+				}
+				*right = '\0';
+				return 1;
 			}
 		}
 	}
 
-	left[left_pos] = '\0';
-	right[right_pos] = '\0';
-	set_amxstring(amx, params[2], left, params[3]);
-	set_amxstring(amx, params[4], right, params[5]);
-	delete [] left;
-	delete [] right;
+	//if we got here, there was nothing to break
+	set_amxstring(amx, params[2], &(string[beg]), params[3]);
+	if (RightMax)
+		*right = '\0';
 
 	return 1;
 }

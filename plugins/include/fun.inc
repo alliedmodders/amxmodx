@@ -78,6 +78,9 @@ native set_user_noclip(index, noclip = 0);
 /* Returns 1 if noclip is set. */
 native get_user_noclip(index);
 
+/* Returns 1 if player has silent footsteps, 0 if footsteps are set to normal */
+native get_user_footsteps(index);
+
 /* Gives player silent footsteps.
 * if set = 0 it will return footsteps to normal */
 native set_user_footsteps(id, set = 1);

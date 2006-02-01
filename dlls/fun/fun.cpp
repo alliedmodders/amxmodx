@@ -519,6 +519,13 @@ static cell AMX_NATIVE_CALL set_user_footsteps(AMX *amx, cell *params) // set_us
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL get_user_footsteps(AMX *amx, cell *params)
+{
+	CHECK_PLAYER(params[1]);
+
+	return g_silent[params[1]];
+}
+
 // SidLuke
 static cell AMX_NATIVE_CALL strip_user_weapons(AMX *amx, cell *params) { // index
 	CHECK_PLAYER(params[1]);
@@ -570,6 +577,7 @@ AMX_NATIVE_INFO fun_Exports[] = {
 	{"get_user_maxspeed",		get_user_maxspeed},
 	{"set_user_gravity",		set_user_gravity},
 	{"get_user_gravity",		get_user_gravity},
+	{"get_user_footsteps",		get_user_footsteps},
 	{"set_user_hitzones",		set_user_hitzones},
 	{"get_user_hitzones",		get_user_hitzones},
 	{"set_user_noclip",			set_user_noclip},

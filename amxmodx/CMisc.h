@@ -33,6 +33,7 @@
 #define CMISC_H
 
 #include "CList.h"
+#include "sh_list.h"
 
 // *****************************************************
 // class CCVar
@@ -65,10 +66,8 @@ public:
 
 struct ClientCvarQuery_Info
 {
-	bool querying;				// Are we actually waiting for a response at the moment?
-	String cvarName;
 	int resultFwd;
-
+	int requestId;
 	int paramLen;
 	cell *params;
 };
@@ -121,7 +120,7 @@ public:
 	Vector thisTrace;
 	Vector lastHit;
 	
-	CQueue<ClientCvarQuery_Info*> cvarQueryQueue;
+	List<ClientCvarQuery_Info *> queries;
 
 	void Init(edict_t* e, int i);
 	void Disconnect();

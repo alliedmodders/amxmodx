@@ -874,21 +874,6 @@ void C_StartFrame_Post(void)
 	g_task_time = gpGlobals->time + 0.1f;
 	g_tasksMngr.startFrame();
 
-	// Dispatch client cvar queries
-	for (int i = 1; i <= gpGlobals->maxClients; ++i)
-	{
-		CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
-		
-		if (pPlayer->pEdict && pPlayer->initialized && !pPlayer->cvarQueryQueue.empty())
-		{
-			if (!IS_QUERYING_CLIENT_CVAR(PLID, pPlayer->pEdict))
-			{
-				(*g_engfuncs.pfnQueryClientCvarValue)(pPlayer->pEdict, pPlayer->cvarQueryQueue.front()->cvarName.c_str());
-				pPlayer->cvarQueryQueue.front()->querying = true;
-			}
-		}
-	}
-
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -1109,38 +1094,38 @@ void C_AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...)
 	RETURN_META(MRES_IGNORED);
 }
 
-void C_CvarValue(const edict_t *pEdict, const char *value)
+void C_CvarValue2(const edict_t *pEdict, int requestId, const char *cvar, const char *value)
 {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEdict);
-	if (pPlayer->cvarQueryQueue.empty())
+	if (pPlayer->queries.empty())
 		RETURN_META(MRES_IGNORED);
 
-	ClientCvarQuery_Info *pQuery = pPlayer->cvarQueryQueue.front();
-
-	if (pPlayer->cvarQueryQueue.front()->querying)
+	List<ClientCvarQuery_Info *>::iterator iter, end=pPlayer->queries.end();
+	ClientCvarQuery_Info *info;
+	for (iter=pPlayer->queries.begin(); iter!=end; iter++)
 	{
-		if (pQuery->paramLen)
+		info = (*iter);
+		if ( info->requestId == requestId )
 		{
-			cell arr = prepareCellArray(pQuery->params, pQuery->paramLen);
-			executeForwards(pQuery->resultFwd, static_cast<cell>(ENTINDEX(pEdict)),
-				pQuery->cvarName.c_str(), value, arr);
-		}
-		else
-			executeForwards(pQuery->resultFwd, static_cast<cell>(ENTINDEX(pEdict)),
-			pQuery->cvarName.c_str(), value);
-		
-		unregisterSPForward(pQuery->resultFwd);
-		
-		if (pQuery->params)
-			delete [] pQuery->params;
+			if (info->paramLen)
+			{
+				cell arr = prepareCellArray(info->params, info->paramLen);
+				executeForwards(info->resultFwd, static_cast<cell>(ENTINDEX(pEdict)),
+					cvar, value, arr);
+			} else {
+				executeForwards(info->resultFwd, static_cast<cell>(ENTINDEX(pEdict)),
+					cvar, value);
+			}
+			unregisterSPForward(info->resultFwd);
+			pPlayer->queries.erase(iter);
+			delete [] info->params;
+			delete info;
 
-		delete pQuery;
-		pPlayer->cvarQueryQueue.pop();
-		
-		RETURN_META(MRES_HANDLED);
+			break;
+		}
 	}
 
-	RETURN_META(MRES_IGNORED);
+	RETURN_META(MRES_HANDLED);
 }
 
 bool m_NeedsP = false;
@@ -1152,8 +1137,6 @@ C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_
 
 	int	mmajor = 0, mminor = 0,	pmajor = 0, pminor = 0;
 		
-	LOG_MESSAGE(PLID, "WARNING:	meta-interface version mismatch; requested=%s ours=%s",	Plugin_info.logtag,	ifvers);
-		
 	sscanf(ifvers, "%d:%d",	&mmajor, &mminor);
 	sscanf(META_INTERFACE_VERSION, "%d:%d",	&pmajor, &pminor);
 
@@ -1161,31 +1144,40 @@ C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_
 
 	if (strcmp(ifvers, Plugin_info.ifvers))
 	{
-		LOG_MESSAGE(PLID, "WARNING:	meta-interface version mismatch; requested=%s ours=%s",	Plugin_info.logtag,	ifvers);
-		
 		if (pmajor > mmajor)
 		{
 			LOG_ERROR(PLID, "metamod version is too old for this plugin; update metamod");
 			return (FALSE);
-		}
-		else if (pmajor < mmajor)
-		{
-			LOG_ERROR(PLID, "metamod version is incompatible with	this plugin; please	find a newer version of	this plugin");
+		} else if (pmajor < mmajor) {
+			LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin");
 			return (FALSE);
-		}
-		else if (pmajor == mmajor)
-		{
-			if (mminor < 11)
+		} else if (pmajor == mmajor) {
+			//wait it out... pminor should never be greater than 11 as of 1.65
+			// so mminor should be 10 at most.
+			if (pminor > mminor) 
 			{
-				g_NeedsP = true;
-			} else if (pminor > mminor) {
-				LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin");
-				return FALSE;
+				//we need at least Metamod-p now
+				if (mminor == 10)
+				{
+					//wait for P extensions
+					g_NeedsP = true;
+					LOG_MESSAGE(PLID, "warning! old metamod detecting, expecting metamod-p");
+				} else {
+					//if we have less than 1.17, there's no hope.
+					LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin");
+					return FALSE;
+				}
+			} else if (pminor < mminor) {
+				//if we have 1.19, tell MM that we're okay.
+				//NOTE: ifvers 5:12 did not exist.
+				if (mminor == 13)
+				{
+					Plugin_info.ifvers = "5:13";
+				}
 			}
-		} else {
-			LOG_ERROR(PLID, "unexpected version comparison; metavers=%s, mmajor=%d, mminor=%d; plugvers=%s, pmajor=%d, pminor=%d", ifvers, mmajor, mminor, META_INTERFACE_VERSION, pmajor, pminor);
 		}
 	}
+
 	if (!g_NeedsP)
 		g_IsNewMM = true;
 
@@ -1221,7 +1213,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 	if (g_NeedsP && !gpMetaPExtFuncs)
 	{
-		LOG_ERROR(PLID, "You need Metamod-P or Metamod-1.18 to use AMX Mod X %s!", AMX_VERSION);
+		LOG_ERROR(PLID, "You need Metamod-P or Metamod-1.18+ to use AMX Mod X %s!", AMX_VERSION);
 		return (FALSE);
 	}
 	
@@ -1263,7 +1255,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 		g_coloredmenus = false;
 
 	// ###### Print short GPL
-	print_srvconsole("\n   AMX Mod X version %s Copyright (c) 2004-2005 AMX Mod X Development Team \n"
+	print_srvconsole("\n   AMX Mod X version %s Copyright (c) 2004-2006 AMX Mod X Development Team \n"
 					 "   AMX Mod X comes with ABSOLUTELY NO WARRANTY; for details type `amxx gpl'.\n", AMX_VERSION);
 	print_srvconsole("   This is free software and you are welcome to redistribute it under \n"
 					 "   certain conditions; type 'amxx gpl' for details.\n  \n");
@@ -1408,6 +1400,8 @@ C_DLLEXPORT void __stdcall GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, g
 DLL_FUNCTIONS gFunctionTable;
 C_DLLEXPORT	int	GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion)
 {
+	memset(&gFunctionTable, 0, sizeof(DLL_FUNCTIONS));
+
 	gFunctionTable.pfnSpawn = C_Spawn;
 	gFunctionTable.pfnClientCommand = C_ClientCommand;
 	gFunctionTable.pfnServerDeactivate = C_ServerDeactivate;
@@ -1416,12 +1410,15 @@ C_DLLEXPORT	int	GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersi
 	gFunctionTable.pfnServerActivate = C_ServerActivate;
 
 	memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
+
 	return 1;
 }
 
 DLL_FUNCTIONS gFunctionTable_Post;
 C_DLLEXPORT	int	GetEntityAPI2_Post(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion)
 {
+	memset(&gFunctionTable_Post, 0, sizeof(DLL_FUNCTIONS));
+
 	gFunctionTable_Post.pfnClientPutInServer = C_ClientPutInServer_Post;
 	gFunctionTable_Post.pfnClientUserInfoChanged = C_ClientUserInfoChanged_Post;
 	gFunctionTable_Post.pfnServerActivate = C_ServerActivate_Post;
@@ -1430,12 +1427,15 @@ C_DLLEXPORT	int	GetEntityAPI2_Post(DLL_FUNCTIONS *pFunctionTable, int *interface
 	gFunctionTable_Post.pfnServerDeactivate = C_ServerDeactivate_Post;
 
 	memcpy(pFunctionTable, &gFunctionTable_Post, sizeof(DLL_FUNCTIONS));
+
 	return 1;
 }
 
 enginefuncs_t meta_engfuncs;
 C_DLLEXPORT	int	GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion)
 {
+	memset(&meta_engfuncs, 0, sizeof(enginefuncs_t));
+
 	if (stricmp(g_mod_name.c_str(), "cstrike") == 0 || stricmp(g_mod_name.c_str(), "czero") == 0)
 	{
 		meta_engfuncs.pfnSetModel =	C_SetModel;
@@ -1453,12 +1453,15 @@ C_DLLEXPORT	int	GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
 	meta_engfuncs.pfnChangeLevel = C_ChangeLevel;
 
 	memcpy(pengfuncsFromEngine, &meta_engfuncs, sizeof(enginefuncs_t));
+
 	return 1;
 }
 
 enginefuncs_t meta_engfuncs_post;
 C_DLLEXPORT	int	GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine,	int	*interfaceVersion)
 {
+	memset(&meta_engfuncs_post, 0, sizeof(enginefuncs_t));
+
 	meta_engfuncs_post.pfnTraceLine = C_TraceLine_Post;
 	meta_engfuncs_post.pfnMessageBegin = C_MessageBegin_Post;
 	meta_engfuncs_post.pfnMessageEnd = C_MessageEnd_Post;
@@ -1474,21 +1477,31 @@ C_DLLEXPORT	int	GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine,	int	
 	meta_engfuncs_post.pfnRegUserMsg = C_RegUserMsg_Post;
 
 	memcpy(pengfuncsFromEngine, &meta_engfuncs_post, sizeof(enginefuncs_t));
+
 	return 1;
 }
 
+//quick hack - disable all newdll stuff for AMD64
+// until VALVe gets their act together!
+#if !defined AMD64
 NEW_DLL_FUNCTIONS gNewDLLFunctionTable;
 C_DLLEXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pNewFunctionTable, int *interfaceVersion)
 {
+	memset(&gNewDLLFunctionTable, 0, sizeof(NEW_DLL_FUNCTIONS));
 	// default metamod does not call this if the gamedll doesn't provide it
 	g_NewDLL_Available = true;
 	
 	// If pfnQueryClientCvarValue is not available, the newdllfunctions table will probably
 	// not have the pfnCvarValue member -> better don't write there to avoid corruption
-	if (g_engfuncs.pfnQueryClientCvarValue)
-		gNewDLLFunctionTable.pfnCvarValue = C_CvarValue;
+	if (g_mm_vers >= 13)
+	{
+		if (g_engfuncs.pfnQueryClientCvarValue2)
+			gNewDLLFunctionTable.pfnCvarValue2 = C_CvarValue2;
+		memcpy(pNewFunctionTable, &gNewDLLFunctionTable, sizeof(NEW_DLL_FUNCTIONS));
+	} else {
+		memcpy(pNewFunctionTable, &gNewDLLFunctionTable, sizeof(NEW_DLL_FUNCTIONS) - sizeof(void *));
+	}
 
-	memcpy(pNewFunctionTable, &gNewDLLFunctionTable, sizeof(NEW_DLL_FUNCTIONS));
 	return 1;
 }
-
+#endif

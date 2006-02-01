@@ -62,17 +62,14 @@ void CPlayer::Disconnect()
 	initialized = false;
 	authorized = false;
 
-	while (!cvarQueryQueue.empty())
+	List<ClientCvarQuery_Info *>::iterator iter, end=queries.end();
+	for (iter=queries.begin(); iter!=end; iter++)
 	{
-		ClientCvarQuery_Info *pQuery = cvarQueryQueue.front();
-		unregisterSPForward(pQuery->resultFwd);
-		
-		if (pQuery->params)
-			delete [] pQuery->params;
-		
-		delete pQuery;
-		cvarQueryQueue.pop();
+		unregisterSPForward((*iter)->resultFwd);
+		delete [] (*iter)->params;
+		delete (*iter);
 	}
+	queries.clear();
 
 	bot = 0;
 }
@@ -118,6 +115,15 @@ bool CPlayer::Connect(const char* connectname, const char* ipaddress)
 
 	if ((authid == 0) || (*authid == 0) || (strcmp(authid, "STEAM_ID_PENDING") == 0))
 		return true;
+
+	List<ClientCvarQuery_Info *>::iterator iter, end=queries.end();
+	for (iter=queries.begin(); iter!=end; iter++)
+	{
+		unregisterSPForward((*iter)->resultFwd);
+		delete [] (*iter)->params;
+		delete (*iter);
+	}
+	queries.clear();
 
 	return false;
 }

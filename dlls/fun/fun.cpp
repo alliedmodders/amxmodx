@@ -527,36 +527,29 @@ static cell AMX_NATIVE_CALL get_user_footsteps(AMX *amx, cell *params)
 }
 
 // SidLuke
-static cell AMX_NATIVE_CALL strip_user_weapons(AMX *amx, cell *params) { // index
+static cell AMX_NATIVE_CALL strip_user_weapons(AMX *amx, cell *params) // index
+{
 	CHECK_PLAYER(params[1]);
 
 	edict_t* pPlayer = MF_GetPlayerEdict(params[1]);
 
 	string_t item = MAKE_STRING("player_weaponstrip");
 	edict_t *pent = CREATE_NAMED_ENTITY(item);
+	
 	if (FNullEnt(pent)) 
 	{
 		return 0;
 	}
 
 	MDLL_Spawn(pent);
-	MDLL_Use(pPlayer, pent);
+	MDLL_Use(pent, pPlayer);
 	REMOVE_ENTITY(pent);
 
-	void *_cur = MF_PlayerPropAddr(params[1], Player_CurrentWeapon);
 	void *_wpns = MF_PlayerPropAddr(params[1], Player_Weapons);
-
-	typedef struct {
-		int a;
-		int b;
-	} WPN;
-	WPN *wpns = (WPN *)_wpns;
-	int *cur = (int *)_cur;
-	*cur = 0;
-	wpns[0].a = 0;
-	wpns[0].b = 0;
+	*reinterpret_cast<int *>(MF_PlayerPropAddr(params[1], Player_CurrentWeapon)) = 0;
 	
-	pPlayer->v.weapons = 0;
+	if (_wpns)
+		memset(_wpns, 0, sizeof(_wpns) * MAX_WEAPONS);
 
 	return 1;
 }

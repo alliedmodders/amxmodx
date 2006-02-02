@@ -102,6 +102,7 @@ type
     frbStandaloneServer: TFlatRadioButton;
     tmrSpeed: TTimer;
     IdLogFile: TIdLogFile;
+    lblInfo4: TLabel;
     procedure jvwStepsCancelButtonClick(Sender: TObject);
     procedure cmdCancelClick(Sender: TObject);
     procedure cmdNextClick(Sender: TObject);

@@ -4907,7 +4907,7 @@ object frmMain: TfrmMain
           01033E00004201033F00004000013D00003E0000400001430204}
       end
       object lblWelcome: TLabel
-        Left = 172
+        Left = 170
         Top = 10
         Width = 343
         Height = 50
@@ -4921,7 +4921,7 @@ object frmMain: TfrmMain
         WordWrap = True
       end
       object lblInfo1: TLabel
-        Left = 172
+        Left = 170
         Top = 82
         Width = 353
         Height = 13
@@ -4931,7 +4931,7 @@ object frmMain: TfrmMain
         WordWrap = True
       end
       object lblInfo2: TLabel
-        Left = 172
+        Left = 170
         Top = 120
         Width = 315
         Height = 39
@@ -4942,8 +4942,23 @@ object frmMain: TfrmMain
         WordWrap = True
       end
       object lblInfo3: TLabel
-        Left = 172
-        Top = 176
+        Left = 170
+        Top = 170
+        Width = 355
+        Height = 13
+        Caption = 
+          'Make sure that your HL server is shut down before you install AM' +
+          'X Mod X!'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+      end
+      object lblInfo4: TLabel
+        Left = 170
+        Top = 196
         Width = 108
         Height = 13
         Caption = 'Click Next to continue.'

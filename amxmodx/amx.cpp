@@ -994,7 +994,7 @@ int AMXAPI amx_Init(AMX *amx,void *program)
 
 #if defined JIT
 
-  #define CODESIZE_JIT    8192  /* approximate size of the code for the JIT */
+  #define CODESIZE_JIT    65536  /* approximate size of the code for the JIT */
 
   #if defined __WIN32__   /* this also applies to Win32 "console" applications */
 

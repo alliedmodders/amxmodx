@@ -304,7 +304,11 @@
 %endmacro
 
 
+%ifdef WIN32
+section .data exec
+%else
 section .text
+%endif
 
 
 global  asm_runJIT, _asm_runJIT
@@ -437,7 +441,9 @@ reloc_done:
 ; in the compiled code. This is fine, but the .text section in an ELF executable
 ; is usually marked read-only, that's why this code is in the .data section.
 
+%ifndef WIN32
 section .data exec
+%endif
 
 OP_LOAD_PRI:
 ;nop;

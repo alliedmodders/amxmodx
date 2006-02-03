@@ -41,11 +41,52 @@ void ClearMenus()
 	g_NewMenus.clear();
 }
 
+void validate_menu_text(char *str)
+{
+	if (!g_coloredmenus)
+	{
+		size_t offs = 0;
+		while (*str)
+		{
+			if (*str == '\\')
+			{
+				str++;
+				char c = tolower(*str);
+				if (c == 'r' || c == 'w'
+					|| c== 'w' || c == 'd')
+				{
+					str++;
+					offs += 2;
+					continue;
+				}
+			}
+			if (offs)
+				*(str-offs) = *str;
+			str++;
+		}
+		if (offs)
+			*(str-offs) = '\0';
+	}
+}
+
 Menu::Menu(const char *title, int mid, int tid)
 {
 	m_Title.assign(title);
 	menuId = mid;
 	thisId = tid;
+
+	m_OptNames[abs(MENU_BACK)].assign("Back");
+	m_OptNames[abs(MENU_MORE)].assign("More");
+	m_OptNames[abs(MENU_EXIT)].assign("Exit");
+
+	m_OptOrders[0] = MENU_BACK;
+	m_OptOrders[1] = MENU_MORE;
+	m_OptOrders[2] = MENU_EXIT;
+
+	m_AlwaysExit = false;
+	m_AutoColors = g_coloredmenus;
+
+	items_per_page = 7;
 }
 
 Menu::~Menu()
@@ -88,69 +129,53 @@ size_t Menu::GetItemCount()
 size_t Menu::GetPageCount()
 {
 	size_t items = GetItemCount();
-	page_t numPages = (items / MENUITEMS) + 1;
+	if (items_per_page == 0)
+		return 1;
 
-	if (!items)
-		return 0;
-
-	if (numPages % MENUITEMS == 0)
-		numPages--;
-
-	return numPages;
+	return ((items/items_per_page) + ((items % items_per_page) ? 1 : 0));
 }
 
 int Menu::PagekeyToItem(page_t page, item_t key)
 {
-	page_t pages = GetPageCount();
-	item_t numItems = GetItemCount();
+	size_t start = page * items_per_page;
+	size_t num_pages = GetPageCount();
 
-	if (page >= pages)
-		return MENU_EXIT;
-
-	item_t start = page * 7;
-
-	if (page == 0)
+	if (num_pages == 1 || !items_per_page)
 	{
-		item_t rem = numItems >= 7 ? 7 : numItems;
-		
-		if (key == rem)
-		{
-			if (pages > 1)
-				return MENU_MORE;
-			else
-				return MENU_EXIT;
-		} 
-		else if (key == rem + 1)
-		{
+		if (m_AlwaysExit && key > m_Items.size())
 			return MENU_EXIT;
-		}
-	}
-	else if (page == pages - 1)
-	{
-		//find number of remaining items
-		//for example, 11 items on page 1... means start=7, 11-7=4
-		item_t rem = numItems - start;
-		//however, the last item is actually this -1, so...
-		if (key == rem)
-		{
-			return MENU_EXIT;
-		}
-		else if (key == rem + 1)
-		{
-			return MENU_BACK;
-		}
+		else
+			return key-1;
 	} else {
-		if (key == 7)
+		//first page
+		if (page == 0)
 		{
-			return MENU_MORE;
-		} 
-		else if (key == 8)
-		{
-			return MENU_BACK;
+			if (key == items_per_page + 1)
+				return MENU_MORE;
+			else if (key == items_per_page + 2)
+				return MENU_EXIT;
+			else
+				return (start + key - 1);
+		} else if (page == num_pages - 1) {
+			//last page
+			size_t remaining = m_Items.size() - start;
+			if (key == remaining + 1)
+			{
+				return MENU_BACK;
+			} else if (key == remaining + 2) {
+				return MENU_EXIT;
+			} else {
+				return (start + key - 1);
+			}
+		} else {
+			if (key > items_per_page && (key-items_per_page<=3))
+			{
+				return m_OptOrders[key-items_per_page-1];
+			} else {
+				return (start + key - 1);
+			}
 		}
 	}
-
-	return (start + key);
 }
 
 bool Menu::Display(int player, page_t page)
@@ -187,22 +212,44 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	m_Text.clear();
 
 	char buffer[255];
-	if (g_coloredmenus)
+	if (m_AutoColors)
 		_snprintf(buffer, sizeof(buffer)-1, "\\y%s %d/%d\n\\w\n", m_Title.c_str(), page + 1, pages);
 	else
 		_snprintf(buffer, sizeof(buffer)-1, "%s %d/%d\n\n", m_Title.c_str(), page + 1, pages);
 	
 	m_Text.append(buffer);
 
-	item_t start = page * 7;
-	item_t end = 0;
-	if (start + 7 <= numItems)
+	enum
 	{
-		end = start + 7;
+		Display_Back = (1<<0),
+		Display_Next = (1<<1),
+		Display_Exit = (1<<2),
+	};
+
+	int flags = Display_Back|Display_Next;
+	item_t start = page * items_per_page;
+	item_t end = 0;
+	if (items_per_page)
+	{
+		if (start + items_per_page >= numItems)
+		{
+			end = numItems - 1;
+			flags &= ~Display_Next;
+		} else {
+			end = start + items_per_page - 1;
+		}
+		if (m_AlwaysExit || (page == 0 || page == pages-1))
+			flags |= Display_Exit;
 	} else {
-		end = numItems;
+		end = numItems - 1;
+		if (end > 10)
+			end = 10;
+		flags = 0;
 	}
 
+	if (page == 0)
+		flags &= ~Display_Back;
+	
 	menuitem *pItem = NULL;
 	
 	int option = 0;
@@ -210,7 +257,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	bool enabled = true;
 	int ret = 0;
 	
-	for (item_t i = start; i < end; i++)
+	for (item_t i = start; i <= end; i++)
 	{
 		pItem = m_Items[i];
 		
@@ -235,50 +282,88 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 				enabled = false;
 		}
 		
-		if (enabled)
+		if (pItem->name.size() < 1)
 		{
-			keys |= (1<<option);
-			_snprintf(buffer, sizeof(buffer)-1, "%d. %s\n", ++option, pItem->name.c_str());
+			option++;
+			_snprintf(buffer, sizeof(buffer)-1, "\n");
 		} else {
-			if (g_coloredmenus)
+			if (enabled)
 			{
-				_snprintf(buffer, sizeof(buffer)-1, "\\d%d. %s\n\\w", ++option, pItem->name.c_str());
+				keys |= (1<<option);
+				if (m_AutoColors) 
+					_snprintf(buffer, sizeof(buffer)-1, "\\r%d.\\w %s\n", ++option, pItem->name.c_str());
+				else
+					_snprintf(buffer, sizeof(buffer)-1, "%d. %s\n", ++option, pItem->name.c_str());
 			} else {
-				_snprintf(buffer, sizeof(buffer)-1, "#. %s\n", pItem->name.c_str());
-				option++;
+				if (m_AutoColors)
+				{
+					_snprintf(buffer, sizeof(buffer)-1, "\\d%d. %s\n\\w", ++option, pItem->name.c_str());
+				} else {
+					_snprintf(buffer, sizeof(buffer)-1, "#. %s\n", pItem->name.c_str());
+					option++;
+				}
 			}
 		}
-		m_Text.append(buffer);
-	}
-	
-	//now for a weird part >:o
-	//this will either be MORE or BACK..
-	keys |= (1<<option++);
-	if ((page < pages - 1) && (pages > 1))
-	{
-		_snprintf(buffer, sizeof(buffer)-1, "%d. %s\n", option, "More");
-	} else {
-		_snprintf(buffer, sizeof(buffer)-1, "%d. %s\n", option, "Exit");
-	}
-	
-	m_Text.append(buffer);
-	
-	if (pages > 1)
-	{
-		keys |= (1<<option++);
-		if (pages == 0)
-		{
-			_snprintf(buffer, sizeof(buffer)-1, "%d. %s\n", option, "Exit");
-		} else {
-			_snprintf(buffer, sizeof(buffer)-1, "%d. %s\n", option, "Back");
-		}
+
 		m_Text.append(buffer);
 	}
 
+	for (int i=0; i<3; i++)
+	{
+		switch (m_OptOrders[i])
+		{
+		case MENU_BACK:
+			{
+				if (flags & Display_Back)
+				{
+					keys |= (1<<option++);
+					_snprintf(buffer, 
+						sizeof(buffer)-1, 
+						m_AutoColors ? "\\r%d. \\w%s\n" : "%d. %s\n", 
+						option, 
+						m_OptNames[abs(MENU_BACK)].c_str()
+						);
+					m_Text.append(buffer);
+				}
+				break;
+			}
+		case MENU_MORE:
+			{
+				if (flags & Display_Next)
+				{
+					keys |= (1<<option++);
+					_snprintf(buffer, 
+						sizeof(buffer)-1, 
+						m_AutoColors ? "\\r%d. \\w%s\n" : "%d. %s\n", 
+						option, 
+						m_OptNames[abs(MENU_MORE)].c_str()
+						);
+					m_Text.append(buffer);
+				}
+				break;
+			}
+		case MENU_EXIT:
+			{
+				if (flags & Display_Exit)
+				{
+					keys |= (1<<option++);
+					_snprintf(buffer, 
+						sizeof(buffer)-1, 
+						m_AutoColors ? "\\r%d. \\w%s\n" : "%d. %s\n", 
+						option, 
+						m_OptNames[abs(MENU_EXIT)].c_str()
+						);
+					m_Text.append(buffer);
+				}
+				break;
+			}
+		}
+	}
+	
 	return m_Text.c_str();
 }
 
-#define GETMENU(p) if (p >= (int)g_NewMenus.size() || p < 0) { \
+#define GETMENU(p) if (p >= (int)g_NewMenus.size() || p < 0 || !g_NewMenus[p]) { \
 	LogError(amx, AMX_ERR_NATIVE, "Invalid menu id %d", p); \
 	return 0; } \
 	Menu *pMenu = g_NewMenus[p];
@@ -289,6 +374,7 @@ static cell AMX_NATIVE_CALL menu_create(AMX *amx, cell *params)
 {
 	int len;
 	char *title = get_amxstring(amx, params[1], 0, len);
+	validate_menu_text(title);
 	char *handler = get_amxstring(amx, params[2], 1, len);
 
 	int func = registerSPForwardByName(amx, handler, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
@@ -318,7 +404,14 @@ static cell AMX_NATIVE_CALL menu_additem(AMX *amx, cell *params)
 
 	GETMENU(params[1]);
 
+	if (!pMenu->items_per_page && pMenu->GetItemCount() >= 10)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Non-paginated menus are limited to 10 items.");
+		return 0;
+	}
+
 	name = get_amxstring(amx, params[2], 0, len);
+	validate_menu_text(name);
 	cmd = get_amxstring(amx, params[3], 1, len);
 	access = params[4];
 
@@ -469,7 +562,131 @@ static cell AMX_NATIVE_CALL menu_item_setcall(AMX *amx, cell *params)
 	pItem->handler = params[3];
 
 	return 1;
-} 
+}
+
+static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
+{
+	GETMENU(params[1]);
+
+	int len = params[0] / sizeof(cell);
+	if (len < 3)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Expected 3 parameters");
+		return 0;
+	}
+
+	switch (params[2])
+	{
+	case MPROP_PERPAGE:
+		{
+			cell count = *get_amxaddr(amx, params[3]);
+			if (count < 0 || count > 7)
+			{
+				LogError(amx, AMX_ERR_NATIVE, "Cannot set %d items per page", count);
+				return 0;
+			}
+			pMenu->items_per_page = count;
+			break;
+		}
+	case MPROP_BACKNAME:
+		{
+			char *str = get_amxstring(amx, params[3], 0, len);
+			validate_menu_text(str);
+			pMenu->m_OptNames[abs(MENU_BACK)].assign(str);
+			break;
+		}
+	case MPROP_NEXTNAME:
+		{
+			char *str = get_amxstring(amx, params[3], 0, len);
+			validate_menu_text(str);
+			pMenu->m_OptNames[abs(MENU_MORE)].assign(str);
+			break;
+		}
+	case MPROP_EXITNAME:
+		{
+			char *str = get_amxstring(amx, params[3], 0, len);
+			validate_menu_text(str);
+			pMenu->m_OptNames[abs(MENU_EXIT)].assign(str);
+			break;
+		}
+	case MPROP_TITLE:
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Title changing not implemented.");
+			return 0;
+			break;
+		}
+	case MPROP_EXITALL:
+		{
+			pMenu->m_AlwaysExit = *get_amxaddr(amx, params[3]) ? true : false;
+			break;
+		}
+	case MPROP_ORDER:
+		{
+			cell *addr = get_amxaddr(amx, params[3]);
+			pMenu->m_OptOrders[0] = addr[0];
+			pMenu->m_OptOrders[1] = addr[1];
+			pMenu->m_OptOrders[2] = addr[2];
+			break;
+		}
+	case MPROP_NOCOLORS:
+		{
+			pMenu->m_AutoColors = *get_amxaddr(amx, params[3]) ? true : false;
+			break;
+		}
+	default:
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Invalid menu setting: %d", params[1]);
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL menu_destroy(AMX *amx, cell *params)
+{
+	GETMENU(params[1]);
+
+	g_NewMenus[params[1]] = NULL;
+	g_menucmds.removeMenuId(pMenu->menuId);
+	CPlayer *player;
+	for (int i=1; i<=gpGlobals->maxClients; i++)
+	{
+		player = GET_PLAYER_POINTER_I(i);
+		if (player->newmenu == pMenu->menuId)
+			player->newmenu = -1;
+	}
+	delete pMenu;
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL player_menu_info(AMX *amx, cell *params)
+{
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid player id %d", params[1]);
+		return 0;
+	}
+
+	CPlayer *player = GET_PLAYER_POINTER_I(params[1]);
+	if (!player->ingame)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player %d is not ingame", params[1]);
+		return 0;
+	}
+
+	cell *m = get_amxaddr(amx, params[2]);
+	cell *n = get_amxaddr(amx, params[3]);
+
+	*m = player->menu;
+	*n = player->newmenu;
+
+	if ( (*m != 0 && *m != -1) && (*n != 0 && *n != -1))
+		return 1;
+
+	return 0;
+}
 
 AMX_NATIVE_INFO g_NewMenuNatives[] = 
 {
@@ -484,5 +701,8 @@ AMX_NATIVE_INFO g_NewMenuNatives[] =
 	{"menu_item_setcall",		menu_item_setcall},
 	{"menu_item_setcmd",		menu_item_setcmd},
 	{"menu_item_setname",		menu_item_setname},
+	{"menu_destroy",			menu_destroy},
+	{"menu_setprop",			menu_setprop},
+	{"player_menu_info",		player_menu_info},
 	{NULL,						NULL},
 };

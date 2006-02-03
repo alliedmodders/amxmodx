@@ -39,7 +39,15 @@
 #define	ITEM_ENABLED	1
 #define ITEM_DISABLED	2
 
-#define	MENUITEMS		7
+
+#define MPROP_PERPAGE	1
+#define MPROP_BACKNAME	2
+#define MPROP_NEXTNAME	3
+#define MPROP_EXITNAME	4
+#define MPROP_TITLE		5
+#define MPROP_EXITALL	6	
+#define MPROP_ORDER		7
+#define MPROP_NOCOLORS	8
 
 typedef int (*MENUITEM_CALLBACK)(int, int, int);
 
@@ -77,12 +85,20 @@ public:
 	int GetMenuMenuid();
 private:
 	CVector<menuitem * > m_Items;
-	
+public:
 	String m_Title;
 	String m_Text;
+
+	String m_OptNames[4];
+	int m_OptOrders[3];
+
+	bool m_AlwaysExit;
+	bool m_AutoColors;
 	
 	int menuId;
 	int thisId;
+public:
+	unsigned int items_per_page;
 };
 
 /*Menu *CreateMenu(const char *title);

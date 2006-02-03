@@ -741,30 +741,24 @@ void C_ClientCommand(edict_t *pEntity)
 						if (menu >= 0 && menu < (int)g_NewMenus.size())
 						{
 							Menu *pMenu = g_NewMenus[menu];
-							int item = pMenu->PagekeyToItem(pPlayer->page, pressed_key);
-							ret = executeForwards((*a).getFunction(), static_cast<cell>(pPlayer->index),
-								static_cast<cell>(menu), static_cast<cell>(item));
-							
-							if (ret & 2)
-								result = MRES_SUPERCEDE;
-							else if (ret & 1)
-								RETURN_META(MRES_SUPERCEDE);
-							else 
+							int item = pMenu->PagekeyToItem(pPlayer->page, pressed_key+1);
+
+							if (item == MENU_BACK)
 							{
-								if (item == MENU_BACK)
-								{
-									pMenu->Display(pPlayer->index, pPlayer->page - 1);
-								} 
-								else if (item == MENU_MORE)
-								{
-									pMenu->Display(pPlayer->index, pPlayer->page + 1);
-								}
-								else if (item == MENU_EXIT)
-								{
-									//nothing
-								}
+								pMenu->Display(pPlayer->index, pPlayer->page - 1);
+							} else if (item == MENU_MORE) {
+								pMenu->Display(pPlayer->index, pPlayer->page + 1);
+							} else {
+								ret = executeForwards((*a).getFunction(), static_cast<cell>(pPlayer->index), static_cast<cell>(menu), static_cast<cell>(item));
+								
+								if (ret & 2)
+									result = MRES_SUPERCEDE;
+								else if (ret & 1)
+									RETURN_META(MRES_SUPERCEDE);
 							}
 						}
+						if (pPlayer->newmenu != -1)
+							break;
 					} else {
 						ret = executeForwards((*a).getFunction(), static_cast<cell>(pPlayer->index),
 							static_cast<cell>(pressed_key), 0);

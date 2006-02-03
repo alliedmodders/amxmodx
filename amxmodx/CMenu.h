@@ -85,6 +85,7 @@ public:
 
 	int findMenuId(const char* name, AMX* a = 0);
 	int registerMenuId(const char* n, AMX* a);
+	void removeMenuId(int id);
 	void registerMenuCmd(CPluginMngr::CPlugin *a, int mi, int k, int f);
 	void clear();
 

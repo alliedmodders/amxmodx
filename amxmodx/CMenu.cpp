@@ -60,6 +60,43 @@ int MenuMngr::findMenuId(const char* name, AMX* amx)
 	return 0;
 }
 
+void MenuMngr::removeMenuId(int id)
+{
+	MenuIdEle *n = headid;
+	MenuIdEle *l = NULL;
+	while (n)
+	{
+		if (n->id == id)
+		{
+			if (l)
+				l->next = n->next;
+			else
+				headid = n->next;
+			delete n;
+			break;
+		}
+		l = n;
+		n = n->next;
+	}
+
+	MenuCommand *c = headcmd;
+	MenuCommand *lc = NULL;
+	while (c)
+	{
+		if (c->menuid == id)
+		{
+			if (lc)
+				lc->next = c->next;
+			else
+				headcmd = c->next;
+			delete c;
+			break;
+		}
+		lc = c;
+		c = c->next;
+	}
+}
+
 int MenuMngr::registerMenuId(const char* n, AMX* a)
 {
 	int id = findMenuId(n, a);

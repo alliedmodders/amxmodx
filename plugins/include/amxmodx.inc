@@ -784,6 +784,15 @@ native menu_item_setname(menu, item, name[]);
 native menu_item_setcmd(menu, item, cmd[]);
 native menu_item_setcall(menu, item, callback=-1);
 
+//Destroys a menu - invalidates the handle
+//This is safe, as it will go through the players and make
+// sure they don't have this menu set anymore.
+native menu_destroy(menu);
+
+//Sets a menu property.  See amxconst.inc for various menu properties.
+//The third value depends on the property
+native menu_setprop(menu, prop, ...);
+
 // Gets distance between two origins (float)
 native Float:get_distance_f( Float:Origin1[3], Float:Origin2[3] ); 
 

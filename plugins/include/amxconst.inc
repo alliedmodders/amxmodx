@@ -296,3 +296,14 @@ enum {
 #define FP_FLOAT		1
 #define FP_STRING		2
 #define FP_ARRAY		4
+
+#define MPROP_PERPAGE	1	//NUM - items per page.  0=no paginating, 7=default
+#define MPROP_BACKNAME	2	//STRING - name of "back" button
+#define MPROP_NEXTNAME	3	//STRING - name of "more" button
+#define MPROP_EXITNAME	4	//STRING - name of "exit" button
+#define MPROP_TITLE	5	//STRING - sets menu title
+#define MPROP_EXITALL	6	//NUM - sets if "exit" appears on every page
+#define MPROP_ORDER	7	//Sets the back/next/exit order
+				//Send an 3-cell array with MENU_EXIT etc in the order
+				//(from 0-2), 0 being first
+#define MPROP_NOCOLORS	8	//NUM - sets whether colors are not auto (0=default)

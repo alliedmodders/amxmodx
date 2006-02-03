@@ -789,6 +789,9 @@ native menu_item_setcall(menu, item, callback=-1);
 // sure they don't have this menu set anymore.
 native menu_destroy(menu);
 
+//Gets info about a player's menu.  Returns 1 if the player is viewing a menu.
+native player_menu_info(id, &menu, &newmenu);
+
 //Sets a menu property.  See amxconst.inc for various menu properties.
 //The third value depends on the property
 native menu_setprop(menu, prop, ...);

@@ -35,8 +35,16 @@ native Float:get_pdata_float(_index,_Offset,_linuxdiff=5);
 native set_pdata_float(_index,_Offset,Float:_Value,_linuxdiff=5);
 
 
-/* Registers a forward */
+/* Registers a forward.
+ * Returns an id you can pass to unregister_forward
+ */
 native register_forward(_forwardType,_function[],_post=0);
+
+/* Unregisters a forward.
+ * The registerId must be from register_forward, and
+ * post/forwardtype must match what you registered the forward as.
+ */
+native unregister_forward(_forwardType, registerId, post=0);
 
 /* Returns data for metamod */
 native forward_return(type,{Float,Sql,Result,_}:...);

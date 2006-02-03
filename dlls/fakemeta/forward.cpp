@@ -491,7 +491,36 @@ SIMPLE_INT_HOOK_EDICT_EDICT(ShouldCollide);
 
 
 
+static cell AMX_NATIVE_CALL unregister_forward(AMX *amx, cell *params)
+{
+	int func = params[1];
+	int func_id = params[2];
+	int post = params[3];
 
+	if (func >= FM_LAST_DONT_USE_ME || func < 1)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid function: %d", func);
+		return 0;
+	}
+
+	CVector<int>::iterator begin, end=Engine[func].end();
+
+    for (begin=Engine[func].begin(); begin!=end; begin++)
+	{
+		if ((*begin) == func_id)
+		{
+			Engine[func].erase(begin);
+			if (!Engine[func].size())
+			{
+				//:TODO: we should probably clear this here!
+				//but, we have no reverse lookup possible.
+			}
+			return 1;
+		}
+	}
+
+	return 0;
+}
 
 
 static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
@@ -501,7 +530,7 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	int post = params[3];
 	if (func >= FM_LAST_DONT_USE_ME || func < 1)
 	{
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid function: %d", func);
 		return 0;
 	}
 
@@ -1099,7 +1128,10 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	}
 
 	if (!fId)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Function not found (%d, %s)", func, funcname);
 		return 0;
+	}
 
 	if (post)
 	{
@@ -1108,11 +1140,12 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 		Engine[func].push_back(fId);
 	}
 
-	return 1;
+	return fId;
 }
 
 AMX_NATIVE_INFO forward_natives[] = {
 	{ "register_forward",	register_forward },
+	{ "unregister_forward", unregister_forward },
 	{ "forward_return",		fm_return },
 	{ NULL,					NULL }
 };

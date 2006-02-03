@@ -503,14 +503,20 @@ static cell AMX_NATIVE_CALL unregister_forward(AMX *amx, cell *params)
 		return 0;
 	}
 
-	CVector<int>::iterator begin, end=Engine[func].end();
+	CVector<int> *peng = NULL;
+	if (post)
+		peng = &(Engine[func]);
+	else
+		peng = &(EnginePost[func]);
 
-    for (begin=Engine[func].begin(); begin!=end; begin++)
+	CVector<int>::iterator begin, end=peng->end();
+
+    for (begin=peng->begin(); begin!=end; begin++)
 	{
 		if ((*begin) == func_id)
 		{
-			Engine[func].erase(begin);
-			if (!Engine[func].size())
+			peng->erase(begin);
+			if (!peng->size())
 			{
 				//:TODO: we should probably clear this here!
 				//but, we have no reverse lookup possible.
@@ -521,7 +527,6 @@ static cell AMX_NATIVE_CALL unregister_forward(AMX *amx, cell *params)
 
 	return 0;
 }
-
 
 static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 {

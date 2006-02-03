@@ -3579,6 +3579,8 @@ static cell AMX_NATIVE_CALL query_client_cvar(AMX *amx, cell *params)
 
 	pPlayer->queries.push_back(queryObject);
 
+	QUERY_CLIENT_CVAR_VALUE2(pPlayer->pEdict, cvarname, queryObject->requestId);
+
 	return 1;
 }
 

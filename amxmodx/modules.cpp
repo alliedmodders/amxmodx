@@ -878,7 +878,6 @@ int loadModules(const char* filename, PLUG_LOADTIME now)
 
 		g_modules.put(cc);
 
-#ifndef FAKEMETA
 		if (cc->IsMetamod())
 		{
 			char* mmpathname = build_pathname_addons("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"), line.c_str());
@@ -907,7 +906,6 @@ int loadModules(const char* filename, PLUG_LOADTIME now)
 					break;
 			}
 		}
-#endif
 	}
 
 	fclose(fp);
@@ -932,11 +930,7 @@ void detachReloadModules()
 
 	while (a)
 	{
-#ifdef FAKEMETA
-		if ((*a).isReloadable())
-#else
 		if ((*a).isReloadable() && !(*a).IsMetamod())
-#endif
 		{
 			(*a).detachModule();
 			a.remove();
@@ -946,38 +940,6 @@ void detachReloadModules()
 		++a;
 	}
 }
-
-#ifdef FAKEMETA
-void attachModules()
-{
-	CList<CModule, const char *>::iterator a = g_modules.begin();
-
-	while (a)
-	{
-		bool retVal = (*a).attachModule();
-		
-		if ((*a).isAmxx() && !retVal)
-		{
-			switch ((*a).getStatusValue())
-			{
-				case MODULE_FUNCNOTPRESENT:
-					report_error(1, "[AMXX] Module requested a not exisitng function (file \"%s\")%s%s%s", (*a).getFilename(), (*a).getMissingFunc() ? " (func \"" : "", 
-							(*a).getMissingFunc() ? (*a).getMissingFunc() : "", (*a).getMissingFunc() ? "\")" : "");
-					break;
-				case MODULE_INTERROR:
-					report_error(1, "[AMXX] Internal error during module load (file \"%s\")", (*a).getFilename());
-					break;
-				case MODULE_BADLOAD:
-					report_error(1, "[AMXX] Module is not a valid library (file \"%s\")", (*a).getFilename());
-					break;
-				default:
-					break;
-			}
-		}
-		++a;
-	}
-}
-#endif
 
 const char* strip_name(const char* a)
 {
@@ -995,72 +957,6 @@ const char* strip_name(const char* a)
 	
 	return ret;
 }
-
-#ifdef FAKEMETA
-void attachMetaModModules(PLUG_LOADTIME now, const char* filename)
-{
-	File fp(build_pathname("%s", filename), "r");
-
-	if (!fp)
-	{
-		AMXXLOG_Log("[AMXX] Modules list not found (file \"%s\")", filename);
-		return;
-	}
-
-	char line[256], moduleName[256];
-	String modPath, mmPath;
-	DLHANDLE module;
-
-	while (fp.getline(line, 255))
-	{
-		*moduleName = 0;
-		sscanf(line, "%s", moduleName);
-
-		if (!isalnum(*moduleName))
-			continue;
-
-		char* pathname = build_pathname("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"), line);
-		char* mmpathname = build_pathname_addons("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"), line);
-
-		ConvertModuleName(pathname, modPath);
-		ConvertModuleName(mmpathname, mmPath);
-
-		CList<CFakeMeta::CFakeMetaPlugin>::iterator iter = g_FakeMeta.m_Plugins.begin();
-
-		//prevent double loading
-		int foundFlag = 0;
-
-		while (iter)
-		{
-			if (strcmp((*iter).GetPath(), mmPath.c_str()) == 0)
-			{
-				foundFlag = 1;
-				break;
-			}
-			++iter;
-		}
-
-		if (foundFlag)
-			continue;
-		
-		module = DLLOAD(modPath.c_str()); // link dll
-
-		if (module)
-		{
-			int a = (int)DLPROC(module, "Meta_Attach");
-			DLFREE(module);
-
-			if (a)
-			{
-				g_FakeMeta.AddPlugin(mmPath.c_str());
-			}
-		}
-	}
-	
-	g_FakeMeta.Meta_Query(gpMetaUtilFuncs);
-	g_FakeMeta.Meta_Attach(now, gpMetaGlobals, gpGamedllFuncs);
-}
-#endif
 
 // Get the number of running modules
 int countModules(CountModulesMode mode)

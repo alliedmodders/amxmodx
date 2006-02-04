@@ -11,7 +11,7 @@ DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
 NAME = tsx_amxx
 
-OBJECTS = amxxmodule.cpp CRank.cpp CMisc.cpp NBase.cpp NRank.cpp usermsg.cpp Utils.cpp moduleconfig.cpp
+OBJECTS = amxxmodule.cpp CRank.cpp CMisc.cpp Utils.cpp tsx.cpp StatsNatives.cpp
 
 LINK = 
 

@@ -45,8 +45,8 @@
 #define GETPLAYERAUTHID   (*g_engfuncs.pfnGetPlayerAuthId)
 #endif
 
-//extern AMX_NATIVE_INFO stats_Natives[];
-extern AMX_NATIVE_INFO base_Natives[];
+extern AMX_NATIVE_INFO stats_Natives[];
+//extern AMX_NATIVE_INFO base_Natives[];
 
 typedef void (*funEventCall)(void*);
 extern funEventCall modMsgsEnd[MAX_REG_MSGS];

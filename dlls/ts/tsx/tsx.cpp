@@ -30,7 +30,6 @@
  */
 
 #include "tsx.h"
-#include "StatsNatives.h"
 #include "UserMsg.h"
 
 funEventCall modMsgsEnd[MAX_REG_MSGS];
@@ -292,6 +291,8 @@ void OnMetaAttach() {
 	tsstats_pause = CVAR_GET_POINTER(init_tsstats_pause.name);
 
 }
+
+
 
 void OnAmxxAttach() {
 

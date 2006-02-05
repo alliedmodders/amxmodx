@@ -31,6 +31,12 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 	Engine[FM_##call].clear(); \
 	EnginePost[FM_##call].clear() 
 
+#define RESETN(call) \
+	g_pNewFunctionsTable->pfn##call = NULL; \
+	g_pNewFunctionsTable_Post->pfn##call = NULL; \
+	Engine[FM_##call].clear(); \
+	EnginePost[FM_##call].clear();
+
 void OnPluginsLoaded()
 {
 	// Reset all call lists here.
@@ -122,7 +128,7 @@ void OnPluginsLoaded()
 	RESETE(CVarGetString);
 	RESETE(CVarSetFloat);
 	RESETE(CVarSetString);
-
+	RESETE(AlertMessage);
 
 	RESETD(Spawn);
 	RESETD(Think);
@@ -151,6 +157,10 @@ void OnPluginsLoaded()
 	RESETD(RegisterEncoders);
 	RESETD(CreateInstancedBaselines);
 	RESETD(AllowLagCompensation);
+
+	RESETN(OnFreeEntPrivateData);
+	RESETN(GameShutdown);
+	RESETN(ShouldCollide);
 
 	g_pFunctionTable->pfnServerActivate = ServerActivate;
 }

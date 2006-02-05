@@ -86,7 +86,7 @@ void SetModel(edict_t *e, const char *m)
 }
 void SetModel_post(edict_t *e, const char *m)
 {
-	FM_ENG_HANDLE(FM_SetModel, (Engine[FM_SetModel].at(i), ENTINDEX(e), m));
+	FM_ENG_HANDLE(FM_SetModel, (EnginePost[FM_SetModel].at(i), ENTINDEX(e), m));
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -122,13 +122,16 @@ typedef struct KeyValueData_s
 	int32	fHandled;		// out: DLL sets to true if key-value pair was understood
 } KeyValueData;
 */
-void KeyValue(edict_t* entity, KeyValueData* data) {
+void KeyValue(edict_t* entity, KeyValueData* data)
+{
 	g_fm_keyValueData = data;
 	FM_ENG_HANDLE(FM_KeyValue, (Engine[FM_KeyValue].at(i), ENTINDEX(entity)));
 	RETURN_META(mswi(lastFmRes));
 }
-void KeyValue_post(edict_t* entity, KeyValueData* data) {
-	FM_ENG_HANDLE_POST(FM_KeyValue, (Engine[FM_KeyValue].at(i), ENTINDEX(entity)));
+
+void KeyValue_post(edict_t* entity, KeyValueData* data)
+{
+	FM_ENG_HANDLE_POST(FM_KeyValue, (EnginePost[FM_KeyValue].at(i), ENTINDEX(entity)));
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -150,7 +153,7 @@ void AlertMessage_post(ALERT_TYPE atype, char *szFmt, ...)
 	va_start(ap, szFmt);
 	vsprintf(buf, szFmt, ap);
 	va_end(ap);
-	FM_ENG_HANDLE(FM_AlertMessage, (Engine[FM_AlertMessage].at(i), atype, buf));
+	FM_ENG_HANDLE(FM_AlertMessage, (EnginePost[FM_AlertMessage].at(i), atype, buf));
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -184,7 +187,7 @@ void VecToAngles_post(const float *rgflVectorIn, float *rgflVectorOut)
 	cell vec2[3] = {amx_ftoc(rgflVectorOut[0]), amx_ftoc(rgflVectorOut[1]), amx_ftoc(rgflVectorOut[2])};;
 	cell retvec1 = MF_PrepareCellArray(vec1, 3);
 	cell retvec2 = MF_PrepareCellArray(vec2, 3);
-	FM_ENG_HANDLE(FM_VecToAngles, (Engine[FM_VecToAngles].at(i),  retvec1, retvec2));
+	FM_ENG_HANDLE(FM_VecToAngles, (EnginePost[FM_VecToAngles].at(i),  retvec1, retvec2));
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -195,11 +198,12 @@ void MoveToOrigin(edict_t *ent, const float *pflGoal, float dist, int iMoveType)
 	FM_ENG_HANDLE(FM_MoveToOrigin, (Engine[FM_MoveToOrigin].at(i),  ENTINDEX(ent), retvec, dist, iMoveType));
 	RETURN_META(mswi(lastFmRes));
 }
+
 void MoveToOrigin_post(edict_t *ent, const float *pflGoal, float dist, int iMoveType)
 {
 	cell vec[3] = {amx_ftoc(pflGoal[0]), amx_ftoc(pflGoal[1]), amx_ftoc(pflGoal[2])};
 	cell retvec = MF_PrepareCellArray(vec, 3);
-	FM_ENG_HANDLE(FM_MoveToOrigin, (Engine[FM_MoveToOrigin].at(i),  ENTINDEX(ent), retvec, dist, iMoveType));
+	FM_ENG_HANDLE(FM_MoveToOrigin, (EnginePost[FM_MoveToOrigin].at(i),  ENTINDEX(ent), retvec, dist, iMoveType));
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -208,9 +212,10 @@ edict_t *FindEntityByString(edict_t *pEdictStartSearchAfter, const char *pszFiel
 	FM_ENG_HANDLE(FM_FindEntityByString, (Engine[FM_FindEntityByString].at(i),  ENTINDEX(pEdictStartSearchAfter), pszField, pszValue));
 	RETURN_META_VALUE(mswi(lastFmRes), INDEXENT2((int)mlCellResult));
 }
+
 edict_t *FindEntityByString_post(edict_t *pEdictStartSearchAfter, const char *pszField, const char *pszValue)
 {
-	FM_ENG_HANDLE(FM_FindEntityByString, (Engine[FM_FindEntityByString].at(i),  ENTINDEX(pEdictStartSearchAfter), pszField, pszValue));
+	FM_ENG_HANDLE(FM_FindEntityByString, (EnginePost[FM_FindEntityByString].at(i),  ENTINDEX(pEdictStartSearchAfter), pszField, pszValue));
 	RETURN_META_VALUE(MRES_IGNORED, INDEXENT2((int)mlCellResult));
 }
 // pfnGetEntityIllum

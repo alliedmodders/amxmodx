@@ -65,7 +65,7 @@ public:
 	}
 	void operator=(const THash &other)
 	{
-		clear();
+		Clear();
 		for (const_iterator iter=other.begin(); iter!=other.end(); ++iter)
 			_FindOrInsert(iter->key)->val = iter->val;
 	}

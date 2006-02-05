@@ -29,6 +29,9 @@ forward plugin_pause();
 /* Called when the plugin is unpaused. */
 forward plugin_unpause();
 
+/* Called when the mod tries to change the map. */
+forward server_changelevel(map[]);
+
 /* Function is called when all plugin_init from plugins
 * were called, so all commmands and cvars should be already registered. */
 forward plugin_cfg();

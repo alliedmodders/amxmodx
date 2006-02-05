@@ -269,7 +269,10 @@ begin
     hClose := PHandle(frmClose.Handle);
     hConnGen := PHandle(frmConnGen.Handle);
     hGoToLine := PHandle(frmGoToLine.Handle);
-    hHTMLPreview := PHandle(frmHTMLPreview.Handle);
+    if Assigned(frmHTMLPreview) then
+      hHTMLPreview := PHandle(frmHTMLPreview.Handle)
+    else
+      hHTMLPreview := PHandle(0);
     hHudMsgGenerator := PHandle(frmHudMsgGenerator.Handle);
     hInfo := PHandle(frmInfo.Handle);
     hIRCPaster := PHandle(frmIRCPaster.Handle);

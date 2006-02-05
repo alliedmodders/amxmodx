@@ -105,3 +105,12 @@ MINUTE = minuta
 MINUTES = minut
 SECOND = sekunda
 SECONDS = second
+
+[fi]
+THE_TIME = Aika
+TIME_LEFT = Aikaa jaljella
+NO_T_LIMIT = Ei aikarajaa
+MINUTE = minuutti
+MINUTES = minuuttia
+SECOND = sekunti
+SECONDS = sekuntia

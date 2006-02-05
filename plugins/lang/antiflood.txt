@@ -33,3 +33,6 @@ STOP_FLOOD = Parem com o flood no servidor!
 
 [cz]
 STOP_FLOOD = Prestan floodovat!
+
+[fi]
+STOP_FLOOD = Lopeta floodiminen!

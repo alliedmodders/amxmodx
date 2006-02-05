@@ -33,3 +33,6 @@ INF_REACH = Limite de mensagens de informacao obtido!
 
 [cz]
 INF_REACH = Limit informacnich zprav presazen!
+
+[fi]
+INF_REACH = Information Message -raja ylitetty!

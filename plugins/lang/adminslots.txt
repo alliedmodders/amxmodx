@@ -33,3 +33,6 @@ DROPPED_RES = Desconectado por reserva de plazas
 
 [cz]
 DROPPED_RES = Vyhozen, slot je rezervovan
+
+[fi]
+DROPPED_RES = Pudotettiin palvelimelta slotvarauksen takia (adminslot)

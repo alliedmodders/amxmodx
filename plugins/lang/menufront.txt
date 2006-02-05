@@ -213,3 +213,21 @@ STATS_SET = Nastaveni statistik ^n
 PAUSE_PLUG = Pauznout pluginy
 RES_WEAP = Omezit zbrane
 TELE_PLAYER = Teleportovat hrace
+
+[fi]
+KICK_PLAYER = Potki pelaaja
+BAN_PLAYER = Bannaa pelaaja
+SLAP_SLAY = Slappaa/slayaa pelaaja
+TEAM_PLAYER = Vaihda pejaajan tiimia ^n
+CHANGEL = Vaihda mappi
+VOTE_MAPS = Votea mappeja^n
+SPECH_STUFF = Puhemoussea
+CLIENT_COM = Clientkomentoja
+SERVER_COM = Palvelinkomentoja
+CVARS_SET = Cvarsasetuksia
+CONFIG = Saatoa
+LANG_SET = Kieliasetuksia
+STATS_SET = Tilastoasetuksia ^n
+PAUSE_PLUG = Pysayta plugineja
+RES_WEAP = Kiella aseita
+TELE_PLAYER = Teleporttaa pelaaja

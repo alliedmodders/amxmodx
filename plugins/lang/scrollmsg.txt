@@ -57,3 +57,8 @@ MSG_DISABLED = Mensagem Rolante desabilitada
 MIN_FREQ = Minimalalni frekvence teto zpravy je %d sekund
 MSG_FREQ = Frekvence zobrazeni skrolujici zpravy: %d:%02d minut
 MSG_DISABLED = Skrolovaci zpravy vyple
+
+[fi]
+MIN_FREQ = Minimitaajuus talle viestille on %d sekuntia
+MSG_FREQ = Vierivan tekstin taajuus on: %d:%02d minuuttia
+MSG_DISABLED = Vieriva teksti poissa kaytosta

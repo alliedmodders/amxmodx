@@ -153,3 +153,16 @@ COL_ORANGE = oranzova
 COL_OCEAN = mpdra
 COL_MAROON = kastanova
 PRINT_ALL = (ALL) %s :   %s
+
+[fi]
+COL_WHITE = valkoinen
+COL_RED = punainen
+COL_GREEN = vihrea
+COL_BLUE = sininen
+COL_YELLOW = keltainen
+COL_MAGENTA = mangaani
+COL_CYAN = kyaani
+COL_ORANGE = oranssi
+COL_OCEAN = merensininen
+COL_MAROON = viininpunainen
+PRINT_ALL = (KAIKKI) %s :   %s

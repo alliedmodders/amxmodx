@@ -285,3 +285,27 @@ ADMIN_V_MAP_2 = ADMIN %s: volili mapu
 ADMIN_CHANGEL_1 = ADMIN: meni level na %s
 ADMIN_CHANGEL_2 = ADMIN %s: meni level na %s
 CHANGLE_MENU = Menu zmeny mapy
+
+[fi]
+RESULT_REF = Tulos hylatty
+RESULT_ACC = Tulos hyvaksytty
+VOTE_SUCCESS = Vote onnistui. Mappi vaihdetaan
+VOTE_FAILED = Vote epaonnistui
+THE_WINNER = Voittaja
+WANT_CONT = Haluatko jatkaa?
+VOT_CANC = Vote peruutettu
+X_VOTED_FOR = %s aanesti vaihtoehtoa #%d
+VOTEMAP_MENU = Votemapvalikko
+START_VOT = Aloita voteeminen
+SEL_MAPS = Valitut mapit
+ALREADY_VOT = Yksi voteeminen on jo kaynnissa
+NO_MAPS_MENU = Valikossa ei ole mappeja
+VOT_NOW_ALLOW = Nyt ei saa aanestaa
+WHICH_MAP = Minka mapin haluat?
+CHANGE_MAP_TO = Vaihda mappi
+CANC_VOTE = Peruuta vote
+ADMIN_V_MAP_1 = ADMIN: vote mapista/mapeista
+ADMIN_V_MAP_2 = ADMIN %s: vote mapista/mapeista
+ADMIN_CHANGEL_1 = ADMIN: vaihtoi mapin %s
+ADMIN_CHANGEL_2 = ADMIN %s: vaihtoi mapin %s
+CHANGLE_MENU = Mapinvaihtovalikko

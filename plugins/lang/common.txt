@@ -261,3 +261,25 @@ CANT_PERF_DEAD = Tato operace nelze provest na mrtvem klientu "%s"
 CANT_PERF_BOT = Tato operace nelze provest na botovi "%s"
 ON = ON
 OFF = OFF
+
+[fi]
+BACK = Takaisin
+EXIT = Poistu
+MORE = Lisaa
+NONE = Ei yhtaan
+ADMIN = ADMIN
+PLAYER = PELAAJA
+ERROR = virhe
+YES = Kylla
+NO = Ei
+BAN = banni
+KICK = potku
+NO_ACC_COM = Sinulla ei ole valtuuksia tuohon komentoon
+USAGE = Kaytto
+MORE_CL_MATCHT = taalla on enemman kuin yksi client, joka vastaa kuvaukseesi
+CL_NOT_FOUND = Tuon nimista pelaajaa tai tuota ID:ta ei loytynyt
+CLIENT_IMM = "%s":lla on immunitteetti
+CANT_PERF_DEAD = Tuota toimintoa ei voida suorittaa kuolleeseen pelaajaan "%s"
+CANT_PERF_BOT = Tuota toimintoa ei voida suorittaa bottiin "%s"
+ON = Paalla
+OFF = Poissa paalta

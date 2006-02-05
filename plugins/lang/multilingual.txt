@@ -128,3 +128,14 @@ SET_LANG_SERVER = Na serveru zvolen jazyk "%s"
 SET_LANG_USER = Tvuj jazyk nastaven na "%s"
 TYPE_LANGMENU = Napis 'amx_langmenu' do konzole pro zobrazeni menu vyberu jazyku
 LANG_MENU_DISABLED = Volba jazyku nepovolena.
+
+[fi]
+LANG_NOT_EXISTS = Kielta ei ole olemassa
+PERSO_LANG = Henkilokohtainen kieli
+LANG_MENU = Kielivalikko
+SERVER_LANG = Palvelimen kieli
+SAVE_LANG = Tallenna kieli
+SET_LANG_SERVER = palvelimen kieli on nyt "%s"
+SET_LANG_USER = Kielesi on nyt "%s"
+TYPE_LANGMENU = Kirjoita 'amx_langmenu' konsoliin nahdaksesi kielivalikon
+LANG_MENU_DISABLED = Kielivalikko poistettu kaytosta

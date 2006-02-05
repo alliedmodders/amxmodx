@@ -9,7 +9,7 @@ SAVE_LOC = Save Location
 ADMIN_TELEPORT_1 = ADMIN: teleportiert %s
 ADMIN_TELEPORT_2 = ADMIN %s: teleportiert %s
 TELE_MENU = Menu > Teleport
-CUR_LOC = Gegenwaertige Position
+CUR_LOC = Momentane Position
 SAVE_LOC = Position speichern
 
 [sr]
@@ -81,3 +81,10 @@ ADMIN_TELEPORT_2 = ADMIN %s: teleportovali %s
 TELE_MENU = Menu Teleportu
 CUR_LOC = Soucasna misto
 SAVE_LOC = Ulozit misto
+
+[fi]
+ADMIN_TELEPORT_1 = ADMIN: teleporttasi pelaajan %s
+ADMIN_TELEPORT_2 = ADMIN %s: teleporttasi pelaajan %s
+TELE_MENU = Teleportvalikko
+CUR_LOC = Nykyinen sijainti
+SAVE_LOC = Tallenna sijainti

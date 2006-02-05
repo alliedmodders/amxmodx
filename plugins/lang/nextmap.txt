@@ -1,35 +1,64 @@
 [en]
 NEXT_MAP = Next Map:
+PLAYED_MAP = Played map
+FRIEND_FIRE = Friendly fire
 
 [de]
 NEXT_MAP = Naechste Map:
+PLAYED_MAP = Gespielte Maps
+FRIEND_FIRE = Friendly fire
 
 [sr]
 NEXT_MAP = Sledeca Mapa:
+PLAYED_MAP = Igrana mapa
+FRIEND_FIRE = Friendly fire
 
 [tr]
 NEXT_MAP = Diger Map:
+PLAYED_MAP = Oynanan map
+FRIEND_FIRE = Dost atesi
 
 [fr]
 NEXT_MAP = Prochaine Carte:
+PLAYED_MAP = Carte jouee
+FRIEND_FIRE = Friendly fire
 
 [sv]
 NEXT_MAP = N'a'sta karta:
+PLAYED_MAP = Spelade karta
+FRIEND_FIRE = Egna laget skada.
 
 [da]
 NEXT_MAP = Naeste bane:
+PLAYED_MAP = Spillet bane
+FRIEND_FIRE = Venskablig ild
 
 [pl]
 NEXT_MAP = Nastepna Mapa:
+PLAYED_MAP = Mapy grane
+FRIEND_FIRE = Friendly fire
 
 [nl]
 NEXT_MAP = Volgende Map:
+PLAYED_MAP = Gespeelde map
+FRIEND_FIRE = Friendly fire
 
 [es]
 NEXT_MAP = Proximo Mapa:
+PLAYED_MAP = Mapa actual
+FRIEND_FIRE = Fuego amigo
 
 [bp]
 NEXT_MAP = Proximo Mapa:
+PLAYED_MAP = Mapa Jogado
+FRIEND_FIRE = Fogo Amigo
 
 [cz]
 NEXT_MAP = Dalsi mapa:
+PLAYED_MAP = Aktualni mapa
+FRIEND_FIRE = Friendly fire
+
+[fi]
+NEXT_MAP = Seuraava mappi:
+PLAYED_MAP = Pelattu map
+FRIEND_FIRE = Friendly fire

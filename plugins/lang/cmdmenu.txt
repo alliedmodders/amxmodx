@@ -57,3 +57,8 @@ SPE_MENU = Menu de Vozes
 CMD_MENU = Menu prikazu
 CONF_MENU = Menu nastaveni
 SPE_MENU = Nastaveni reci
+
+[fi]
+CMD_MENU = Komentovalikko
+CONF_MENU = Saatovalikko
+SPE_MENU = Puhevalikko

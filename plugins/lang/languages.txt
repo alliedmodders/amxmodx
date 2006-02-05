@@ -45,3 +45,7 @@ LANG_NAME_NATIVE = Portugues Brasil
 [cz]
 LANG_NAME = Czech
 LANG_NAME_NATIVE = Cestina
+
+[fi]
+LANG_NAME = Finnish
+LANG_NAME_NATIVE = Suomi

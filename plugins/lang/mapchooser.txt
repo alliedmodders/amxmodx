@@ -14,7 +14,7 @@ CHOSE_EXT = %s waehlten Map-Verlaengerung
 X_CHOSE_X = %s waehlten %s
 CHOOSE_NEXTM = AMXX waehlt naechste Map
 EXTED_MAP = Verlangere Map %s
-TIME_CHOOSE = Es ist an der Zeit, die neue Map zu waehlen...
+TIME_CHOOSE = Es ist an der Zeit, die naechste Map zu waehlen...
 
 [sr]
 CHO_FIN_EXT = Biranje zavrseno. Sadasnja mapa ce biti produzena za %.0f minuta
@@ -105,3 +105,12 @@ X_CHOSE_X = %s volil %s
 CHOOSE_NEXTM = Zvol si dalsi mapu
 EXTED_MAP = Prodluzuje mapu %s
 TIME_CHOOSE = Je cas pro volbu dalsi mapy...
+
+[fi]
+CHO_FIN_EXT = Valinta suoritettu. nykyista mappia jatketaan %.0f minuuttia
+CHO_FIN_NEXT = Valinta suoritettu. Seuraava mappi on %s
+CHOSE_EXT = %s valitsi nykyisen mapin
+X_CHOSE_X = %s valitsi %s
+CHOOSE_NEXTM = Valitse seuraava mappi
+EXTED_MAP = Jatka mappia %s
+TIME_CHOOSE = On aika valita seruaava mappi...

@@ -153,3 +153,16 @@ INV_PAS = Nespravne heslo!
 PAS_ACC = Heslo overeno
 PRIV_SET = Privilegia nastavena
 NO_ENTRY = Nemas zadny zaznam na serveru...
+
+[fi]
+LOADED_ADMIN = Ladattiin 1 admin tiedostosta
+LOADED_ADMINS = Ladattiim %d adminia tiedostosta
+SQL_CANT_CON = SQL virhe: Ei voi yhdistaa: '%s'
+SQL_CANT_LOAD_ADMINS = SQL virhe: Ei voi ladata admineita: '%s'
+NO_ADMINS = Ei loydetty admineita
+SQL_LOADED_ADMIN = Ladattiin 1 admin tietokannasta
+SQL_LOADED_ADMINS = Ladattiin %d adminia tietokannasta
+INV_PAS = Vaara salasana!
+PAS_ACC = Salasana oikein
+PRIV_SET = Etuoikeudet laitettu
+NO_ENTRY = Sinulla ei ole merkintaa palvelimella...

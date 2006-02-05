@@ -88,9 +88,12 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 			{
 				if (m_ParamTypes[i] == FP_STRING || m_ParamTypes[i] == FP_STRINGEX)
 				{
+					const char *str = reinterpret_cast<const char*>(params[i]);
 					cell *tmp;
-					amx_Allot(iter->pPlugin->getAMX(), (m_ParamTypes[i] == FP_STRING) ? strlen(reinterpret_cast<const char*>(params[i])) + 1 : STRINGEX_MAXLENGTH, &realParams[i], &tmp);
-					amx_SetStringOld(tmp, (const char *)(params[i]), 0, 0);
+					if (!str)
+						str = "";
+					amx_Allot(iter->pPlugin->getAMX(), (m_ParamTypes[i] == FP_STRING) ? strlen(str) + 1 : STRINGEX_MAXLENGTH, &realParams[i], &tmp);
+					amx_SetStringOld(tmp, str, 0, 0);
 					physAddrs[i] = tmp;
 				}
 				else if (m_ParamTypes[i] == FP_ARRAY)
@@ -248,9 +251,12 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 	{
 		if (m_ParamTypes[i] == FP_STRING || m_ParamTypes[i] == FP_STRINGEX)
 		{
+			const char *str = reinterpret_cast<const char*>(params[i]);
+			if (!str)
+				str = "";
 			cell *tmp;
-			amx_Allot(m_Amx, (m_ParamTypes[i] == FP_STRING) ? strlen(reinterpret_cast<const char*>(params[i])) + 1 : STRINGEX_MAXLENGTH, &realParams[i], &tmp);
-			amx_SetStringOld(tmp, (const char *)(params[i]), 0, 0);
+			amx_Allot(m_Amx, (m_ParamTypes[i] == FP_STRING) ? strlen(str) + 1 : STRINGEX_MAXLENGTH, &realParams[i], &tmp);
+			amx_SetStringOld(tmp, str, 0, 0);
 			physAddrs[i] = tmp;
 		}
 		else if (m_ParamTypes[i] == FP_ARRAY)

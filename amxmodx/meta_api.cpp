@@ -148,6 +148,7 @@ int FF_PluginLog = -1;
 int FF_PluginEnd = -1;
 int FF_InconsistentFile = -1;
 int FF_ClientAuthorized = -1;
+int FF_ChangeLevel = -1;
 
 // Precache	stuff from force consistency calls
 // or check	for	pointed	files won't	be done
@@ -316,6 +317,7 @@ int	C_Spawn(edict_t *pent)
 	FF_PluginEnd = registerForward("plugin_end", ET_IGNORE, FP_DONE);
 	FF_InconsistentFile = registerForward("inconsistent_file", ET_STOP, FP_CELL, FP_STRING, FP_STRINGEX, FP_DONE);
 	FF_ClientAuthorized = registerForward("client_authorized", ET_IGNORE, FP_CELL, FP_DONE);
+	FF_ChangeLevel = registerForward("server_changelevel", ET_STOP, FP_STRING, FP_DONE);
 
 	modules_callPluginsLoaded();
 
@@ -1070,6 +1072,14 @@ void C_AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...)
 	RETURN_META(MRES_IGNORED);
 }
 
+void C_ChangeLevel(char *map, char *what)
+{
+	int ret = executeForwards(FF_ChangeLevel,  map);
+	if (ret)
+		RETURN_META(MRES_SUPERCEDE);
+	RETURN_META(MRES_IGNORED);
+}
+
 void C_CvarValue2(const edict_t *pEdict, int requestId, const char *cvar, const char *value)
 {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEdict);
@@ -1426,6 +1436,7 @@ C_DLLEXPORT	int	GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
 	meta_engfuncs.pfnCmd_Args = C_Cmd_Args;
 	meta_engfuncs.pfnPrecacheModel = C_PrecacheModel;
 	meta_engfuncs.pfnPrecacheSound = C_PrecacheSound;
+	meta_engfuncs.pfnChangeLevel = C_ChangeLevel;
 
 	memcpy(pengfuncsFromEngine, &meta_engfuncs, sizeof(enginefuncs_t));
 

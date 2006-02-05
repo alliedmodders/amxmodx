@@ -107,8 +107,10 @@ public:
 		{
 			clear();
 		} else {
-			Grow(strlen(d) + 1, false);
-			strcpy(v, d);
+			size_t len = strlen(d);
+			Grow(len + 1, false);
+			memcpy(v, d, len);
+			v[len] = '\0';
 		}
 	}
 
@@ -118,7 +120,7 @@ public:
 			v[0] = '\0';
 	}
 
-	int compare (const char *d)
+	int compare (const char *d) const
 	{
 		if (!v)
 			return strcmp("", d);

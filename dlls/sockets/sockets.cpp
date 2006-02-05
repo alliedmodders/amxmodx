@@ -38,7 +38,6 @@
 
 // AMX Headers
 #include "amxxmodule.h"
-#include "CDataBuffer.h"
 
 #define SOCKET_TCP 1
 #define SOCKET_UDP 2
@@ -186,23 +185,30 @@ static cell AMX_NATIVE_CALL socket_send(AMX *amx, cell *params)  /* 3 param */
 	return send(socket, data, len, 0);
 }
 
+static char *g_buffer = NULL;
+static size_t g_buflen = 0;
+
 // native socket_send2(_socket, _data[], _length);
 static cell AMX_NATIVE_CALL socket_send2(AMX *amx, cell *params)  /* 3 param */
 {
 	// We get the string from amx
 	int len = params[3];
 	int socket = params[1];
-	static DataBuffer<char> buffer;
+	if (len > g_buflen)
+	{
+		delete [] g_buffer;
+		g_buffer = new char[len+1];
+		g_buflen = len;
+	}
 
-	buffer.resize(params[3]);
 	cell *pData = MF_GetAmxAddr(amx, params[2]);
-	char *pBuffer = buffer;
+	char *pBuffer = g_buffer;
 
 	while (len--)
 		*pBuffer++ = *pData++;
 
 	// And send it to the socket
-    return send(socket, buffer, params[3], 0);
+    return send(socket, g_buffer, params[3], 0);
 }
 
 AMX_NATIVE_INFO sockets_natives[] = {
@@ -235,5 +241,6 @@ void OnAmxxDetach()
     #ifdef _WIN32
     WSACleanup();
     #endif
+    delete [] g_buffer;
     return;
 }

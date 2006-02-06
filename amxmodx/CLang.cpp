@@ -303,7 +303,7 @@ bool CLangMngr::CLang::Load(FILE *fp)
 
 /******** CLangMngr *********/
 
-String &make_string(const char *str)
+inline String &make_string(const char *str)
 {
 	static String g_temp;
 
@@ -369,6 +369,8 @@ int CLangMngr::GetKeyEntry(String &key)
 
 size_t do_amx_format(AMX *amx, cell *params, int *param, const char **lex, char *output, size_t maxlen, int level);
 THash<String, lang_err> BadLang_Table;
+
+static cvar_t *amx_mldebug = NULL;
 
 size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int *param, char *output, size_t maxlen, int level)
 {
@@ -473,13 +475,16 @@ size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int 
 			key = get_amxstring(amx, _addr, 1, tmpLen);
 			def = g_langMngr.GetDef(pLangName, key, status);
 			
-			bool debug = (strcmp(CVAR_GET_STRING("amx_mldebug"), "")) ? true : false;
+			if (!amx_mldebug)
+				amx_mldebug = CVAR_GET_POINTER("amx_mldebug");
+
+			bool debug = (amx_mldebug && amx_mldebug->string && (amx_mldebug->string[0] != '\0'));
 		
 			if (debug)
 			{
 				int debug_status;
 				bool validlang = true;
-				const char *testlang = CVAR_GET_STRING("amx_mldebug");
+				const char *testlang = amx_mldebug->string;
 
 				if (!g_langMngr.LangExists(testlang))
 				{

@@ -84,6 +84,7 @@ Menu::Menu(const char *title, int mid, int tid)
 	m_OptOrders[2] = MENU_EXIT;
 
 	m_AlwaysExit = false;
+	m_NeverExit = false;
 	m_AutoColors = g_coloredmenus;
 
 	items_per_page = 7;
@@ -238,7 +239,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 		} else {
 			end = start + items_per_page - 1;
 		}
-		if (m_AlwaysExit || (page == 0 || page == pages-1))
+		if (!m_NeverExit && (m_AlwaysExit || (page == 0 || page == pages-1)))
 			flags |= Display_Exit;
 	} else {
 		end = numItems - 1;
@@ -617,7 +618,18 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 		}
 	case MPROP_EXITALL:
 		{
-			pMenu->m_AlwaysExit = *get_amxaddr(amx, params[3]) ? true : false;
+			cell ans = *get_amxaddr(amx, params[3]);
+			if (ans == 1)
+			{
+				pMenu->m_AlwaysExit = true;
+				pMenu->m_NeverExit = false;
+			} else if (ans == 0) {
+				pMenu->m_AlwaysExit = false;
+				pMenu->m_NeverExit = false;
+			} else if (ans == -1) {
+				pMenu->m_NeverExit = true;
+				pMenu->m_AlwaysExit = false;
+			}
 			break;
 		}
 	case MPROP_ORDER:

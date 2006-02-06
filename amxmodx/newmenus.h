@@ -45,7 +45,7 @@
 #define MPROP_NEXTNAME	3
 #define MPROP_EXITNAME	4
 #define MPROP_TITLE		5
-#define MPROP_EXITALL	6	
+#define MPROP_EXITALL	6
 #define MPROP_ORDER		7
 #define MPROP_NOCOLORS	8
 
@@ -93,6 +93,7 @@ public:
 	int m_OptOrders[3];
 
 	bool m_AlwaysExit;
+	bool m_NeverExit;
 	bool m_AutoColors;
 	
 	int menuId;

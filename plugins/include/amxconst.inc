@@ -301,6 +301,9 @@ enum {
 #define MEXIT_NORMAL	0
 #define MEXIT_NEVER	-1
 
+#define MENUPAD_NONE		0	//no padding (default)
+#define MENUPAD_PAGE		1	//pads based on items per page
+
 #define MPROP_PERPAGE	1	//NUM - items per page.  0=no paginating, 7=default
 #define MPROP_BACKNAME	2	//STRING - name of "back" button
 #define MPROP_NEXTNAME	3	//STRING - name of "more" button
@@ -311,3 +314,5 @@ enum {
 				//Send an 3-cell array with MENU_EXIT etc in the order
 				//(from 0-2), 0 being first
 #define MPROP_NOCOLORS	8	//NUM - sets whether colors are not auto (0=default)
+#define MPROP_PADMENU	9	//NUM - sets how the ending portions of a menu are padded
+				//i.e. 2 items, 7 per page, with endings at slots 5/6/7.

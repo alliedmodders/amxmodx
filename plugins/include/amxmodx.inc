@@ -793,7 +793,13 @@ native menu_item_setcall(menu, item, callback=-1);
 native menu_destroy(menu);
 
 //Gets info about a player's menu.  Returns 1 if the player is viewing a menu.
+//menu will be >0 for a valid oldmenu.  newmenu will be != -1 for a valid newmenu.
 native player_menu_info(id, &menu, &newmenu);
+
+//adds a blank line to a menu.
+//if slot is nonzero (default), the blank line will increase
+//the numbering rather than just shifting down.
+native menu_addblank(menu, slot=1);
 
 //Sets a menu property.  See amxconst.inc for various menu properties.
 //The third value depends on the property

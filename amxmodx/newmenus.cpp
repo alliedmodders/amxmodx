@@ -682,7 +682,7 @@ static cell AMX_NATIVE_CALL player_menu_info(AMX *amx, cell *params)
 	*m = player->menu;
 	*n = player->newmenu;
 
-	if ( (*m != 0 && *m != -1) && (*n != 0 && *n != -1))
+	if ( (*m != 0 && *m != -1) || (*n != -1))
 		return 1;
 
 	return 0;

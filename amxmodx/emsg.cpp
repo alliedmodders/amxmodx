@@ -65,6 +65,7 @@ void Client_VGUIMenu(void* mValue)
 	{
 		case 0:
 			mPlayer->menu = -(*(int*)mValue);
+			mPlayer->newmenu = -1;
 			break;
 		case 1:
 			mPlayer->keys = *(int*)mValue;
@@ -83,7 +84,11 @@ void Client_ShowMenu(void* mValue)
 			mPlayer->keys = *(int*)mValue;
 			break;
 		case 3:
+			{
 			mPlayer->menu = g_menucmds.findMenuId((char*)mValue);
+			mPlayer->newmenu = 0;
+			break;
+			}
 	}
 }
 

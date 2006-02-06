@@ -118,7 +118,7 @@ class CLangMngr
 		bool Load(FILE *fp);
 		void SetMngr(CLangMngr *l) { m_LMan = l; }
 		// Get number of entries
-		int Entries() { return m_LookUpTable.size(); }
+		int Entries();
 	protected:
 		typedef THash<int, defentry> LookUpVec;
 		typedef LookUpVec::iterator	 LookUpVecIter;
@@ -127,6 +127,7 @@ class CLangMngr
 
 		// our lookup table
 		LookUpVec m_LookUpTable;
+		int m_entries;
 		CLangMngr *m_LMan;
 	public:
 		void AddEntry(int key, const char *definition);

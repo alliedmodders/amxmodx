@@ -247,10 +247,11 @@ int	C_Spawn(edict_t *pent)
 
 	// ###### Load lang
 	char file[256];
-	g_langMngr.LoadCache(build_pathname_r(file, sizeof(file) - 1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
 	if (!g_langMngr.Load(build_pathname_r(file, sizeof(file) - 1, "%s/languages.dat", get_localinfo("amxmodx_datadir", "addons/amxmodx/data"))))
 	{
 		g_langMngr.InvalidateCache();
+	} else {
+		g_langMngr.LoadCache(build_pathname_r(file, sizeof(file) - 1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
 	}
 
 	// ###### Initialize commands prefixes
@@ -1124,7 +1125,7 @@ C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_
 	int	mmajor = 0, mminor = 0,	pmajor = 0, pminor = 0;
 		
 	sscanf(ifvers, "%d:%d",	&mmajor, &mminor);
-	sscanf(META_INTERFACE_VERSION, "%d:%d",	&pmajor, &pminor);
+	sscanf(Plugin_info.ifvers, "%d:%d",	&pmajor, &pminor);
 
 	g_mm_vers = mminor;
 
@@ -1154,11 +1155,14 @@ C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_
 					return FALSE;
 				}
 			} else if (pminor < mminor) {
+				//there's a later version of MM.
 				//if we have 1.19, tell MM that we're okay.
-				//NOTE: ifvers 5:12 did not exist.
-				if (mminor == 13)
+				//NOTE: ifvers 5:11 did not exist.
+				if (mminor <= 13)
 				{
-					Plugin_info.ifvers = "5:13";
+					static char newvers[16];
+					snprintf(newvers, sizeof(newvers)-1, "%d:%d", mmajor, mminor);
+					Plugin_info.ifvers = newvers;
 				}
 			}
 		}

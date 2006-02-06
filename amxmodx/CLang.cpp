@@ -155,11 +155,13 @@ size_t CLangMngr::strip(char *str, char *newstr, bool makelower)
 CLangMngr::CLang::CLang()
 {
 	m_LookUpTable.clear();
+	m_entries = 0;
 }
 
 CLangMngr::CLang::CLang(const char *lang)
 {
 	m_LookUpTable.clear();
+	m_entries = 0;
 	strncpy(m_LanguageName, lang, 2);
 	m_LanguageName[2] = 0;
 }
@@ -167,9 +169,13 @@ CLangMngr::CLang::CLang(const char *lang)
 void CLangMngr::CLang::AddEntry(int key, const char *definition)
 {
 	defentry &d = m_LookUpTable[key];
-	
+
 	if (d.definition)
+	{
 		delete d.definition;
+	} else {
+		m_entries++;
+	}
 
 	d.definition = new String(definition);
 }
@@ -191,6 +197,7 @@ void CLangMngr::CLang::Clear()
 		}
 	}
 	m_LookUpTable.clear();
+	m_entries = 0;
 }
 
 void CLangMngr::CLang::MergeDefinitions(CQueue<sKeyDef> &vec)
@@ -229,14 +236,13 @@ bool CLangMngr::CLang::SaveDefinitions(FILE *fp, uint32_t &curOffset)
 {
 	unsigned short defLen = 0;
 	String *pdef;
-	String blank;
 	
 	THash<int, defentry>::iterator iter;
 	for (iter=m_LookUpTable.begin(); iter!=m_LookUpTable.end(); iter++)
 	{
 		pdef = iter->val.definition;
 		if (!pdef)
-			pdef = &blank;
+			continue;
 		defLen = pdef->size();
 		fwrite((void *)&defLen, sizeof(unsigned short), 1, fp);
 		curOffset += sizeof(unsigned short);
@@ -247,24 +253,38 @@ bool CLangMngr::CLang::SaveDefinitions(FILE *fp, uint32_t &curOffset)
 	return true;
 }
 
+int CLangMngr::CLang::Entries()
+{
+	return m_entries;
+}
+
 // Assumes fp is set to the right position
 bool CLangMngr::CLang::Save(FILE *fp, int &defOffset, uint32_t &curOffset)
 {
 	uint32_t keynum = 0;
-	uint32_t size = m_LookUpTable.size();
+	uint32_t size = 0;
 	String *pdef;
-	String blank;
+
+	//:TODO: speed this up by writing 0, then fseek()ing back
+	// and writing the right amt
+	THash<int, defentry>::iterator iter;
+	for (iter=m_LookUpTable.begin(); iter!=m_LookUpTable.end(); iter++)
+	{
+		if (iter->val.definition)
+			size++;
+	}
+
+	assert(size == m_entries);
 
 	fwrite((void*)&size, sizeof(uint32_t), 1, fp);
 	curOffset += sizeof(uint32_t);
 
-	THash<int, defentry>::iterator iter;
 	for (iter=m_LookUpTable.begin(); iter!=m_LookUpTable.end(); iter++)
 	{
 		keynum = iter->key;
 		pdef = iter->val.definition;
 		if (!pdef)
-			pdef = &blank;
+			continue;
 		fwrite((void *)&keynum, sizeof(uint32_t), 1, fp);
 		curOffset += sizeof(uint32_t);
 		fwrite((void *)&defOffset, sizeof(uint32_t), 1, fp);
@@ -284,6 +304,15 @@ bool CLangMngr::CLang::Load(FILE *fp)
 
 /******** CLangMngr *********/
 
+String &make_string(const char *str)
+{
+	static String g_temp;
+
+	g_temp.assign(str);
+
+	return g_temp;
+}
+
 CLangMngr::CLangMngr()
 {
 	Clear();
@@ -299,7 +328,7 @@ const char * CLangMngr::GetKey(int key)
 
 int CLangMngr::GetKeyEntry(const char *key)
 {
-	keytbl_val val = KeyTable[key];
+	keytbl_val &val = KeyTable[make_string(key)];
 
 	return val.index;
 }
@@ -319,7 +348,7 @@ int CLangMngr::AddKeyEntry(String &key)
 
 int CLangMngr::GetKeyEntry(String &key)
 {
-	keytbl_val val = KeyTable[key];
+	keytbl_val &val = KeyTable[key];
 
 	return val.index;
 }
@@ -992,7 +1021,7 @@ CLangMngr::CLang * CLangMngr::GetLangR(const char *name)
 const char *CLangMngr::GetDef(const char *langName, const char *key, int &status)
 {
 	CLang *lang = GetLangR(langName);
-	keytbl_val val = KeyTable[key];
+	keytbl_val &val = KeyTable[make_string(key)];
 	if (lang == NULL)
 	{
 		status = ERR_BADLANG;
@@ -1124,7 +1153,7 @@ bool CLangMngr::SaveCache(const char *filename)
 }
 
 #define CACHEREAD(expr, type) \
-	if (! (expr==sizeof(type)) ) { \
+	if (! (expr==1) ) { \
 		FileList.clear(); \
 		fclose(fp); \
 		return false; \

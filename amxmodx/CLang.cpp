@@ -265,8 +265,7 @@ bool CLangMngr::CLang::Save(FILE *fp, int &defOffset, uint32_t &curOffset)
 	uint32_t size = 0;
 	String *pdef;
 
-	//:TODO: speed this up by writing 0, then fseek()ing back
-	// and writing the right amt
+	//:TODO: remove this loop and assertion, use m_entries for size
 	THash<int, defentry>::iterator iter;
 	for (iter=m_LookUpTable.begin(); iter!=m_LookUpTable.end(); iter++)
 	{
@@ -498,10 +497,10 @@ size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int 
 			{
 				if (debug)
 				{
-					if (status == ERR_BADLANG && (BadLang_Table[pLangName].last + 120.0f < gpGlobals->time))
+					if (status == ERR_BADLANG && (BadLang_Table[make_string(pLangName)].last + 120.0f < gpGlobals->time))
 					{
 						AMXXLOG_Log("[AMXX] Language \"%s\" not found", pLangName);
-						BadLang_Table[pLangName].last = gpGlobals->time;
+						BadLang_Table[make_string(pLangName)].last = gpGlobals->time;
 					}
 				}
 

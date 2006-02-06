@@ -713,7 +713,7 @@ do_copy:
 					i++;
 				const char *start = had_quotes ? &(string[beg+1]) : &(string[beg]);
 				size_t _end = had_quotes ? (i==len-1 ? 1 : 2) : 0;
-				size_t end = (pos - _end > RightMax) ? RightMax : pos - _end;
+				size_t end = (pos - _end > LeftMax) ? LeftMax : pos - _end;
 				size_t to_go = end-beg;
 				if (end && to_go)
 				{
@@ -721,7 +721,7 @@ do_copy:
 						*left++ = (cell)*start++;
 				}
 				*left = '\0';
-				end = (len-i+1 > LeftMax) ? LeftMax : len-i+1;
+				end = (len-i+1 > RightMax) ? RightMax : len-i+1;
                 if (end)
 				{
 					start = &(string[i]);
@@ -735,7 +735,7 @@ do_copy:
 	}
 
 	//if we got here, there was nothing to break
-	set_amxstring(amx, params[2], &(string[beg]), params[3]);
+	set_amxstring(amx, params[2], &(string[beg]), LeftMax);
 	if (RightMax)
 		*right = '\0';
 

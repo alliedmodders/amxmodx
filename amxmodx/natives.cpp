@@ -44,11 +44,11 @@
 //With the exception for param_convert, which was written by
 // Julien "dJeyL" Laurent
 
+CStack<int> g_ErrorStk;
 CVector<regnative *> g_RegNatives;
 CStack<regnative *> g_NativeStack;
 CVector<String> g_Libraries;
 static char g_errorStr[512] = {0};
-static int g_errorNum = 0;
 bool g_Initialized = false;
 
 int amxx_DynaCallback(int idx, AMX *amx, cell *params)
@@ -75,7 +75,7 @@ int amxx_DynaCallback(int idx, AMX *amx, cell *params)
 
 	int err = 0;
 	cell ret = 0;
-	g_errorNum = 0;
+	g_ErrorStk.push(0);
 	g_NativeStack.push(pNative);
 	if (pNative->style == 0)
 	{
@@ -102,13 +102,15 @@ int amxx_DynaCallback(int idx, AMX *amx, cell *params)
 			LogError(pNative->amx, err, NULL);
 		}
 		pNative->amx->error = AMX_ERR_NONE;
-	} else if (g_errorNum) {
-		g_NativeStack.pop();
-		LogError(amx, g_errorNum, g_errorStr);
+		//furthermore, log an error in the parent plugin.
+		LogError(amx, AMX_ERR_NATIVE, "Unhandled dynamic native error");
+	} else if (g_ErrorStk.front()) {
+		LogError(amx, g_ErrorStk.front(), g_errorStr);
 	}
 	if (pDebugger)
 		pDebugger->EndExec();
 	g_NativeStack.pop();
+	g_ErrorStk.pop();
 
 	return ret;
 }
@@ -142,7 +144,8 @@ static cell AMX_NATIVE_CALL log_error(AMX *amx, cell *params)
 	char *err = format_amxstring(amx, params, 2, len);
 
 	_snprintf(g_errorStr, sizeof(g_errorStr), "%s", err);
-	g_errorNum = params[1];
+	g_ErrorStk.pop();
+	g_ErrorStk.push(params[1]);
 
 	return 1;
 }

@@ -173,8 +173,6 @@ bool fastcellcmp(cell *a, cell *b, cell len)
 
 static cell AMX_NATIVE_CALL replace(AMX *amx, cell *params) /* 4 param */
 {
-	static char buffor[3072];
-
 	cell *text = get_amxaddr(amx, params[1]);
 	cell len = params[2];
 	cell *what = get_amxaddr(amx, params[3]);

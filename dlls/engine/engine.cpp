@@ -875,7 +875,7 @@ static cell AMX_NATIVE_CALL in_view_cone(AMX *amx, cell *params)
 
 	MAKE_VECTORS(pEdictSrc->v.angles);
 
-	vec2LOS = (pEdictSrc->v.origin - origin).Make2D();
+	vec2LOS = (origin - pEdictSrc->v.origin).Make2D();
 	vec2LOS = vec2LOS.Normalize();
 
 	flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());

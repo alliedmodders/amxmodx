@@ -177,7 +177,7 @@ static cell AMX_NATIVE_CALL replace(AMX *amx, cell *params) /* 4 param */
 	cell len = params[2];
 	cell *what = get_amxaddr(amx, params[3]);
 	cell *with = get_amxaddr(amx, params[4]);
-	cell *origtext = text;
+	cell *textptr = text;
 
 	int withLen = amxstring_len(with);
 	int whatLen = amxstring_len(what);
@@ -207,13 +207,9 @@ static cell AMX_NATIVE_CALL replace(AMX *amx, cell *params) /* 4 param */
 			{
 				cell *saveptr = text + whatLen;
 				cell restlen = textLen - (browsed + whatLen);
-				cell amx_addr, *phys_addr;
-				amx_Allot(amx, restlen + 1, &amx_addr, &phys_addr);
-				memcpy(phys_addr, saveptr, (restlen + 1) * sizeof(cell));
+				textptr = text + withLen;
+				memmove(textptr, saveptr, (restlen + 1) * sizeof(cell));
 				memcpy(text, with, withLen * sizeof(cell));
-				text += withLen;
-				memcpy(text, phys_addr, (restlen + 1) * sizeof(cell));
-				amx_Release(amx, amx_addr);
 				return (textLen - whatLen + withLen);
 			}
 		}

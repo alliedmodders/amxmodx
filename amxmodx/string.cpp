@@ -160,62 +160,67 @@ char* parse_arg(char** line, int& state)
 	return arg;
 }
 
+bool fastcellcmp(cell *a, cell *b, cell len)
+{
+	while (len--)
+	{
+		if (*a++ != *b++)
+			return false;
+	}
+
+	return true;
+}
+
 static cell AMX_NATIVE_CALL replace(AMX *amx, cell *params) /* 4 param */
 {
 	static char buffor[3072];
-	
-	cell *a = get_amxaddr(amx, params[1]);
-	cell *b = get_amxaddr(amx, params[3]);
-	cell *c = get_amxaddr(amx, params[4]);
-	
-	int iMain = amxstring_len(a);
-	int iWhat = amxstring_len(b);
-	int iWith = amxstring_len(c);
-	int iPot = iMain + iWith - iWhat;
-	
-	if (iPot >= params[2])
+
+	cell *text = get_amxaddr(amx, params[1]);
+	cell len = params[2];
+	cell *what = get_amxaddr(amx, params[3]);
+	cell *with = get_amxaddr(amx, params[4]);
+	cell *origtext = text;
+
+	int withLen = amxstring_len(with);
+	int whatLen = amxstring_len(what);
+	int textLen = amxstring_len(text);
+
+	if (whatLen > textLen)
+		return 0;
+
+	if (whatLen < 1)
 	{
-		amx_RaiseError(amx,AMX_ERR_NATIVE);
+		LogError(amx, AMX_ERR_NATIVE, "No search string specified.");
 		return 0;
 	}
 
-	char *d = buffor;
-	cell *x, *y, *z = a, *l = a;
-	int p = 0;
-	
-	while (*a)
+	if (textLen - whatLen + withLen > len)
 	{
-		if (*a == *b)
-		{
-			x = a + 1;
-			y = b + 1;
-			p = 1;
-			if (!*y) break;
-			
-			while (*x == *y)
-			{
-				x++; y++; p++;
-				if (!*y) break;
-			}
-
-			if (!*y) break;
-			p = 0;
-			*d++ = (char)*a++;
-			continue;
-		}
-		*d++ = (char)*a++;
+		LogError(amx, AMX_ERR_NATIVE, "replace() buffer not big enough (%d>=%d)", (textLen - whatLen + withLen), len);
+		return 0;
 	}
 
-	if (p)
+	cell browsed = 0;
+	while (*text && (browsed <= (textLen-whatLen)))
 	{
-		while (*c) *d++ = (char)*c++;
-		a += p;
-		while (*a) *d++ = (char)*a++;
-		*d = 0;
-		d = buffor;
-		while (*d) *z++ = *d++;
-		*z = 0;
-		return (z - l);
+		if (*text == *what)
+		{
+			if (fastcellcmp(text, what, whatLen))
+			{
+				cell *saveptr = text + whatLen;
+				cell restlen = textLen - (browsed + whatLen);
+				cell amx_addr, *phys_addr;
+				amx_Allot(amx, restlen + 1, &amx_addr, &phys_addr);
+				memcpy(phys_addr, saveptr, (restlen + 1) * sizeof(cell));
+				memcpy(text, with, withLen * sizeof(cell));
+				text += withLen;
+				memcpy(text, phys_addr, (restlen + 1) * sizeof(cell));
+				amx_Release(amx, amx_addr);
+				return (textLen - whatLen + withLen);
+			}
+		}
+		text++;
+		browsed++;
 	}
 	
 	return 0;

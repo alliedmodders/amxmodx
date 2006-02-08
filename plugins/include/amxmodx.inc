@@ -720,7 +720,8 @@ native log_error(error, const fmt[], ...);
 //  (and just like modules, you must use these special natives).
 //  two: you CANNOT call your native from inside your native.  This is very bad.
 
-// This function should only be called if you registered with style=1
+//This function should only be called if you registered with style=1
+//You only need to use it on by-reference parameters.
 native param_convert(num);
 
 // Gets a string from the calling plugin 

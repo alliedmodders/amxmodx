@@ -215,6 +215,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\StatsNatives.cpp">
+			</File>
+			<File
 				RelativePath="..\tsx.cpp">
 			</File>
 			<File

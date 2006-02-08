@@ -141,7 +141,7 @@ void Client_TSHealth_End(void* mValue)
 
 			pAttacker = GET_PLAYER_POINTER( (edict_t*)pOwner );
 			
-			weapon = 37; // throwing knife
+			//weapon = 37; // throwing knife
 			aim = pAttacker->aiming;
 			pAttacker->saveHit( mPlayer , weapon , damage, aim );
 		}

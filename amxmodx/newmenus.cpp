@@ -88,6 +88,8 @@ Menu::Menu(const char *title, int mid, int tid)
 	m_AutoColors = g_coloredmenus;
 
 	items_per_page = 7;
+	func = 0;
+	padding = 0;
 }
 
 Menu::~Menu()
@@ -257,6 +259,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	keys = 0;
 	bool enabled = true;
 	int ret = 0;
+	int slots = 0;
 	
 	for (item_t i = start; i <= end; i++)
 	{
@@ -299,6 +302,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 				option++;
 			}
 		}
+		slots++;
 
 		m_Text.append(buffer);
 
@@ -310,7 +314,24 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 				if (pItem->blanks[j] == 1)
 					option++;
 				m_Text.append("\n");
+				slots++;
 			}
+		}
+	}
+
+	if (padding == 1 && items_per_page)
+	{
+		int pad = items_per_page;
+		if (flags & Display_Back)
+			pad--;
+		if (flags & Display_Next)
+			pad--;
+		if (flags & Display_Exit)
+			pad--;
+		for (int i=slots+1; i<=pad; i++)
+		{
+			m_Text.append("\n");
+			option++;
 		}
 	}
 
@@ -395,6 +416,9 @@ static cell AMX_NATIVE_CALL menu_create(AMX *amx, cell *params)
 	g_menucmds.registerMenuCmd(g_plugins.findPluginFast(amx), id, 1023, func);
 
 	Menu *pMenu = new Menu(title, id, (int)g_NewMenus.size());
+
+	pMenu->func = func;
+
 	g_NewMenus.push_back(pMenu);
 
 	return (int)g_NewMenus.size() - 1;
@@ -639,8 +663,15 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 		}
 	case MPROP_TITLE:
 		{
-			LogError(amx, AMX_ERR_NATIVE, "Title changing not implemented.");
-			return 0;
+			char *str = get_amxstring(amx, params[3], 0, len);
+			g_menucmds.removeMenuId(pMenu->menuId);
+			pMenu->m_Title.assign(str);
+			pMenu->menuId = g_menucmds.registerMenuId(str, amx);
+			g_menucmds.registerMenuCmd(
+				g_plugins.findPluginFast(amx),
+				pMenu->menuId,
+				1023,
+				pMenu->func);
 			break;
 		}
 	case MPROP_EXITALL:
@@ -670,6 +701,11 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 	case MPROP_NOCOLORS:
 		{
 			pMenu->m_AutoColors = *get_amxaddr(amx, params[3]) ? true : false;
+			break;
+		}
+	case MPROP_PADMENU:
+		{
+			pMenu->padding = *get_amxaddr(amx, params[3]);
 			break;
 		}
 	default:

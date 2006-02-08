@@ -48,6 +48,7 @@
 #define MPROP_EXITALL	6
 #define MPROP_ORDER		7
 #define MPROP_NOCOLORS	8
+#define MPROP_PADMENU	9
 
 typedef int (*MENUITEM_CALLBACK)(int, int, int);
 
@@ -99,22 +100,11 @@ public:
 	
 	int menuId;
 	int thisId;
+	int func;
+	int padding;
 public:
 	unsigned int items_per_page;
 };
-
-/*Menu *CreateMenu(const char *title);
-Menu *GetMenuById(menu_t menu);
-menuitem *GetMenuItem(menu_t menu, item_t item);
-size_t GetMenuPages(menu_t menu);
-size_t GetMenuItems(menu_t menu);
-menuitem *AddMenuItem(menu_t menu, const char *name, const char *cmd, int access);
-bool DisplayMenu(menu_t menu, int player, page_t page);
-int MenuPagekeyToItem(menu_t menu, page_t page, int key);
-int FindByMenuid(int menuid);
-int GetMenuMenuid(menu_t menu);
-const char *GetItemName(menu_t menu, item_t item);
-const char *GetItemCmd(menu_t menu, item_t item);*/
 
 void ClearMenus();
 

@@ -3506,12 +3506,6 @@ static cell AMX_NATIVE_CALL query_client_cvar(AMX *amx, cell *params)
 		return 0;
 #endif
 
-	if (g_mm_vers < 13)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "[AMXX] Client CVAR querying is not enabled - MM version out of date.");
-		return 0;
-	}
-
 	if (!g_NewDLL_Available)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Client CVAR querying is not enabled - check MM version!");

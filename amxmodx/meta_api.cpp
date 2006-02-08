@@ -40,11 +40,9 @@
 #include "newmenus.h"
 #include "natives.h"
 
-#define MIN_COMPAT_MM_VERS		"5:11"
-
 plugin_info_t Plugin_info = 
 {
-	MIN_COMPAT_MM_VERS,		// ifvers
+	META_INTERFACE_VERSION,		// ifvers
 	"AMX Mod X",				// name
 	AMX_VERSION,				// version
 	__DATE__,					// date
@@ -60,7 +58,6 @@ gamedll_funcs_t *gpGamedllFuncs;
 mutil_funcs_t *gpMetaUtilFuncs;
 enginefuncs_t g_engfuncs;
 globalvars_t *gpGlobals;
-pextension_funcs_t *gpMetaPExtFuncs;
 
 funEventCall modMsgsEnd[MAX_REG_MSGS];
 funEventCall modMsgs[MAX_REG_MSGS];
@@ -104,12 +101,9 @@ float g_task_time;
 float g_auth_time;
 
 bool g_initialized = false;
-bool g_IsNewMM = false;
-bool g_NeedsP = false;
 bool g_coloredmenus;
 bool g_activated = false;
 bool g_NewDLL_Available = false;
-int g_mm_vers = 0;
 
 #ifdef MEMORY_TEST
 	float g_next_memreport_time;
@@ -1127,10 +1121,9 @@ C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_
 	sscanf(ifvers, "%d:%d",	&mmajor, &mminor);
 	sscanf(Plugin_info.ifvers, "%d:%d",	&pmajor, &pminor);
 
-	g_mm_vers = mminor;
-
 	if (strcmp(ifvers, Plugin_info.ifvers))
 	{
+		LOG_MESSAGE(PLID, "warning: ifvers mismatch (pl \"%s\") (mm \"%s\")", Plugin_info.ifvers, ifvers);
 		if (pmajor > mmajor)
 		{
 			LOG_ERROR(PLID, "metamod version is too old for this plugin; update metamod");
@@ -1139,57 +1132,18 @@ C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_
 			LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin");
 			return (FALSE);
 		} else if (pmajor == mmajor) {
-			//wait it out... pminor should never be greater than 11 as of 1.65
-			// so mminor should be 10 at most.
 			if (pminor > mminor) 
 			{
-				//we need at least Metamod-p now
-				if (mminor == 10)
-				{
-					//wait for P extensions
-					g_NeedsP = true;
-					LOG_MESSAGE(PLID, "warning! old metamod detecting, expecting metamod-p");
-				} else {
-					//if we have less than 1.17, there's no hope.
-					LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin");
-					return FALSE;
-				}
+				LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin");
+				return FALSE;
 			} else if (pminor < mminor) {
-				//there's a later version of MM.
-				//if we have 1.19, tell MM that we're okay.
-				//NOTE: ifvers 5:11 did not exist.
-				if (mminor <= 13)
-				{
-					static char newvers[16];
-					snprintf(newvers, sizeof(newvers)-1, "%d:%d", mmajor, mminor);
-					Plugin_info.ifvers = newvers;
-				}
+				LOG_MESSAGE(PLID, "warning: there may be a newer version of metamod available");
 			}
 		}
 	}
 
-	if (!g_NeedsP)
-		g_IsNewMM = true;
-
-	// We can set this to null here because Meta_PExtGiveFnptrs is called after this
-	gpMetaPExtFuncs = NULL;
-
 	// :NOTE: Don't call modules query here (g_FakeMeta.Meta_Query), because we don't know modules yet. Do it in Meta_Attach
 	return (TRUE);
-}
-
-// evilspy's patch for mm-p ext support
-// this is called right after Meta_Query
-C_DLLEXPORT int Meta_PExtGiveFnptrs(int interfaceVersion, pextension_funcs_t *pMetaPExtFuncs)
-{
-	if (interfaceVersion < META_PEXT_VERSION)
-	{
-		return (META_PEXT_VERSION);
-	}
-	
-	gpMetaPExtFuncs = pMetaPExtFuncs;
-	
-	return (META_PEXT_VERSION);
 }
 
 static META_FUNCTIONS gMetaFunctionTable;
@@ -1201,12 +1155,6 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 		return (FALSE);
 	}
 
-	if (g_NeedsP && !gpMetaPExtFuncs)
-	{
-		LOG_ERROR(PLID, "You need Metamod-P or Metamod-1.18+ to use AMX Mod X %s!", AMX_VERSION);
-		return (FALSE);
-	}
-	
 	gpMetaGlobals = pMGlobals;
 	gMetaFunctionTable.pfnGetEntityAPI2 = GetEntityAPI2;
 	gMetaFunctionTable.pfnGetEntityAPI2_Post = GetEntityAPI2_Post;
@@ -1483,14 +1431,8 @@ C_DLLEXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pNewFunctionTable, int *in
 	
 	// If pfnQueryClientCvarValue is not available, the newdllfunctions table will probably
 	// not have the pfnCvarValue member -> better don't write there to avoid corruption
-	if (g_mm_vers >= 13)
-	{
-		if (g_engfuncs.pfnQueryClientCvarValue2)
-			gNewDLLFunctionTable.pfnCvarValue2 = C_CvarValue2;
-		memcpy(pNewFunctionTable, &gNewDLLFunctionTable, sizeof(NEW_DLL_FUNCTIONS));
-	} else {
-		memcpy(pNewFunctionTable, &gNewDLLFunctionTable, sizeof(NEW_DLL_FUNCTIONS) - sizeof(void *));
-	}
+	if (g_engfuncs.pfnQueryClientCvarValue2)
+		gNewDLLFunctionTable.pfnCvarValue2 = C_CvarValue2;
 
 	return 1;
 }

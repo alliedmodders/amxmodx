@@ -41,7 +41,6 @@
 #include "string.h"
 #include <extdll.h>
 #include <meta_api.h>
-#include "mm_pextensions.h"		// metamod-p extensions
 
 #ifdef MEMORY_TEST
 	#include "mmgr/mmgr.h"
@@ -140,8 +139,6 @@ struct fakecmd_t
 	bool fake;
 };
 
-extern bool g_IsNewMM;
-extern pextension_funcs_t *gpMetaPExtFuncs;
 extern CLog g_log;
 extern CPluginMngr g_plugins;
 extern CTaskMngr g_tasksMngr;
@@ -309,7 +306,6 @@ extern int FF_InconsistentFile;
 extern int FF_ClientAuthorized;
 extern int FF_ChangeLevel;
 extern bool g_coloredmenus;
-extern int g_mm_vers;
 
 #define MM_CVAR2_VERS	13
 

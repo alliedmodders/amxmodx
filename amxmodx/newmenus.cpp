@@ -283,30 +283,35 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 				enabled = false;
 		}
 		
-		if (pItem->name.size() < 1)
+		if (enabled)
 		{
-			option++;
-			_snprintf(buffer, sizeof(buffer)-1, "\n");
+			keys |= (1<<option);
+			if (m_AutoColors) 
+				_snprintf(buffer, sizeof(buffer)-1, "\\r%d.\\w %s\n", ++option, pItem->name.c_str());
+			else
+				_snprintf(buffer, sizeof(buffer)-1, "%d. %s\n", ++option, pItem->name.c_str());
 		} else {
-			if (enabled)
+			if (m_AutoColors)
 			{
-				keys |= (1<<option);
-				if (m_AutoColors) 
-					_snprintf(buffer, sizeof(buffer)-1, "\\r%d.\\w %s\n", ++option, pItem->name.c_str());
-				else
-					_snprintf(buffer, sizeof(buffer)-1, "%d. %s\n", ++option, pItem->name.c_str());
+				_snprintf(buffer, sizeof(buffer)-1, "\\d%d. %s\n\\w", ++option, pItem->name.c_str());
 			} else {
-				if (m_AutoColors)
-				{
-					_snprintf(buffer, sizeof(buffer)-1, "\\d%d. %s\n\\w", ++option, pItem->name.c_str());
-				} else {
-					_snprintf(buffer, sizeof(buffer)-1, "#. %s\n", pItem->name.c_str());
-					option++;
-				}
+				_snprintf(buffer, sizeof(buffer)-1, "#. %s\n", pItem->name.c_str());
+				option++;
 			}
 		}
 
 		m_Text.append(buffer);
+
+		//attach blanks
+		if (pItem->blanks.size())
+		{
+			for (size_t j=0; j<pItem->blanks.size(); j++)
+			{
+				if (pItem->blanks[j] == 1)
+					option++;
+				m_Text.append("\n");
+			}
+		}
 	}
 
 	for (int i=0; i<3; i++)
@@ -393,6 +398,28 @@ static cell AMX_NATIVE_CALL menu_create(AMX *amx, cell *params)
 	g_NewMenus.push_back(pMenu);
 
 	return (int)g_NewMenus.size() - 1;
+}
+
+static cell AMX_NATIVE_CALL menu_addblank(AMX *amx, cell *params)
+{
+	GETMENU(params[1]);
+
+	if (params[2] && (!pMenu->items_per_page && pMenu->GetItemCount() >= 10))
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Non-paginated menus are limited to 10 items.");
+		return 0;
+	}
+
+	if (!pMenu->m_Items.size())
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Blanks can only be added after items.");
+		return 0;
+	}
+
+	menuitem *item = pMenu->m_Items[pMenu->m_Items.size() - 1];
+	item->blanks.push_back(params[2]);
+
+	return 1;
 }
 
 //Adds an item to the menu (returns current item count - 1)
@@ -704,6 +731,7 @@ AMX_NATIVE_INFO g_NewMenuNatives[] =
 {
 	{"menu_create",				menu_create},
 	{"menu_additem",			menu_additem},
+	{"menu_addblank",			menu_addblank},
 	{"menu_pages",				menu_pages},
 	{"menu_items",				menu_items},
 	{"menu_display",			menu_display},

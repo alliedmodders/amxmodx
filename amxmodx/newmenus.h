@@ -61,6 +61,8 @@ struct menuitem
 	
 	MENUITEM_CALLBACK pfn;
 	size_t id;
+
+	CVector<int> blanks;
 };
 
 typedef unsigned int menu_t;
@@ -83,9 +85,8 @@ public:
 	
 	int PagekeyToItem(page_t page, item_t key);
 	int GetMenuMenuid();
-private:
-	CVector<menuitem * > m_Items;
 public:
+	CVector<menuitem * > m_Items;
 	String m_Title;
 	String m_Text;
 

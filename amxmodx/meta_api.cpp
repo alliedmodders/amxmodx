@@ -1109,8 +1109,6 @@ void C_CvarValue2(const edict_t *pEdict, int requestId, const char *cvar, const 
 	RETURN_META(MRES_HANDLED);
 }
 
-bool m_NeedsP = false;
-
 C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_t *pMetaUtilFuncs)
 {
 	gpMetaUtilFuncs = pMetaUtilFuncs;
@@ -1426,13 +1424,15 @@ NEW_DLL_FUNCTIONS gNewDLLFunctionTable;
 C_DLLEXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pNewFunctionTable, int *interfaceVersion)
 {
 	memset(&gNewDLLFunctionTable, 0, sizeof(NEW_DLL_FUNCTIONS));
-	// default metamod does not call this if the gamedll doesn't provide it
-	g_NewDLL_Available = true;
 	
-	// If pfnQueryClientCvarValue is not available, the newdllfunctions table will probably
-	// not have the pfnCvarValue member -> better don't write there to avoid corruption
+	// default metamod does not call this if the gamedll doesn't provide it
 	if (g_engfuncs.pfnQueryClientCvarValue2)
+	{
 		gNewDLLFunctionTable.pfnCvarValue2 = C_CvarValue2;
+		g_NewDLL_Available = true;
+	}
+
+	memcpy(pNewFunctionTable, &gNewDLLFunctionTable, sizeof(NEW_DLL_FUNCTIONS));
 
 	return 1;
 }

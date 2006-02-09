@@ -29,6 +29,7 @@
 *  version.
 */
 #include "amxmodx.h"
+#include "newmenus.h"
 // *****************************************************
 // class CPlayer
 // *****************************************************
@@ -49,6 +50,7 @@ void CPlayer::Init(edict_t* e, int i)
 	menu = 0;
 	keys = 0;
 	menuexpire = 0.0;
+	newmenu = -1;
 
 	death_weapon.clear();
 	name.clear();
@@ -62,6 +64,21 @@ void CPlayer::Disconnect()
 	initialized = false;
 	authorized = false;
 
+	if (newmenu != -1)
+	{
+		Menu *pMenu = g_NewMenus[newmenu];
+		if (pMenu)
+		{
+			//prevent recursion
+			newmenu = -1;
+			menu = 0;
+			executeForwards(pMenu->func, 
+				static_cast<cell>(ENTINDEX(pEdict)),
+				static_cast<cell>(pMenu->thisId),
+				static_cast<cell>(MENU_EXIT));
+		}
+	}
+
 	List<ClientCvarQuery_Info *>::iterator iter, end=queries.end();
 	for (iter=queries.begin(); iter!=end; iter++)
 	{
@@ -72,6 +89,8 @@ void CPlayer::Disconnect()
 	queries.clear();
 
 	bot = 0;
+	menu = 0;
+	newmenu = -1;
 }
 
 void CPlayer::PutInServer()
@@ -101,6 +120,7 @@ bool CPlayer::Connect(const char* connectname, const char* ipaddress)
 	bot = IsBot();
 	death_killer = 0;
 	menu = 0;
+	newmenu = -1;
 	
 	memset(flags, 0, sizeof(flags));
 	memset(weapons, 0, sizeof(weapons));

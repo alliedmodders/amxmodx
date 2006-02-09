@@ -32,6 +32,7 @@
 #include "newmenus.h"
 
 CVector<Menu *> g_NewMenus;
+CStack<int> g_MenuFreeStack;
 
 void ClearMenus()
 {
@@ -39,6 +40,8 @@ void ClearMenus()
 		delete g_NewMenus[i];
 	
 	g_NewMenus.clear();
+	while (!g_MenuFreeStack.empty())
+		g_MenuFreeStack.pop();
 }
 
 void validate_menu_text(char *str)
@@ -90,6 +93,7 @@ Menu::Menu(const char *title, int mid, int tid)
 	items_per_page = 7;
 	func = 0;
 	padding = 0;
+	isDestroying = false;
 }
 
 Menu::~Menu()
@@ -393,7 +397,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 }
 
 #define GETMENU(p) if (p >= (int)g_NewMenus.size() || p < 0 || !g_NewMenus[p]) { \
-	LogError(amx, AMX_ERR_NATIVE, "Invalid menu id %d", p); \
+	LogError(amx, AMX_ERR_NATIVE, "Invalid menu id %d(%d)", p, g_NewMenus.size()); \
 	return 0; } \
 	Menu *pMenu = g_NewMenus[p];
 
@@ -417,13 +421,22 @@ static cell AMX_NATIVE_CALL menu_create(AMX *amx, cell *params)
 	int id = g_menucmds.registerMenuId(title, amx);
 	g_menucmds.registerMenuCmd(g_plugins.findPluginFast(amx), id, 1023, func);
 
-	Menu *pMenu = new Menu(title, id, (int)g_NewMenus.size());
+	Menu *pMenu = new Menu(title, id, 0);
 
 	pMenu->func = func;
 
-	g_NewMenus.push_back(pMenu);
-
-	return (int)g_NewMenus.size() - 1;
+	if (g_MenuFreeStack.empty())
+	{
+		g_NewMenus.push_back(pMenu);
+		pMenu->thisId = (int)g_NewMenus.size() - 1;
+		return (int)g_NewMenus.size() - 1;
+	} else {
+		int pos = g_MenuFreeStack.front();
+		g_MenuFreeStack.pop();
+		g_NewMenus[pos] = pMenu;
+		pMenu->thisId = pos;
+		return pos;
+	}
 }
 
 static cell AMX_NATIVE_CALL menu_addblank(AMX *amx, cell *params)
@@ -724,6 +737,10 @@ static cell AMX_NATIVE_CALL menu_destroy(AMX *amx, cell *params)
 {
 	GETMENU(params[1]);
 
+	if (pMenu->isDestroying)
+		return 0;	//prevent infinite recursion
+
+	pMenu->isDestroying = true;
 	g_NewMenus[params[1]] = NULL;
 	g_menucmds.removeMenuId(pMenu->menuId);
 	CPlayer *player;
@@ -741,6 +758,7 @@ static cell AMX_NATIVE_CALL menu_destroy(AMX *amx, cell *params)
 		}
 	}
 	delete pMenu;
+	g_MenuFreeStack.push(params[1]);
 
 	return 1;
 }

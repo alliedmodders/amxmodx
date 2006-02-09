@@ -102,6 +102,7 @@ public:
 	int thisId;
 	int func;
 	int padding;
+	bool isDestroying;
 public:
 	unsigned int items_per_page;
 };

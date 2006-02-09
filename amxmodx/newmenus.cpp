@@ -396,7 +396,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	return m_Text.c_str();
 }
 
-#define GETMENU(p) if (p >= (int)g_NewMenus.size() || p < 0 || !g_NewMenus[p]) { \
+#define GETMENU(p) if (p >= (int)g_NewMenus.size() || p < 0 || !g_NewMenus[p] || g_NewMenus[p]->isDestroying) { \
 	LogError(amx, AMX_ERR_NATIVE, "Invalid menu id %d(%d)", p, g_NewMenus.size()); \
 	return 0; } \
 	Menu *pMenu = g_NewMenus[p];
@@ -733,15 +733,19 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 	return 1;
 }
 
+#define GETMENU_R(p) if (p >= (int)g_NewMenus.size() || p < 0 || !g_NewMenus[p]) { \
+	LogError(amx, AMX_ERR_NATIVE, "Invalid menu id %d(%d)", p, g_NewMenus.size()); \
+	return 0; } \
+	Menu *pMenu = g_NewMenus[p];
+
 static cell AMX_NATIVE_CALL menu_destroy(AMX *amx, cell *params)
 {
-	GETMENU(params[1]);
+	GETMENU_R(params[1]);
 
 	if (pMenu->isDestroying)
 		return 0;	//prevent infinite recursion
 
 	pMenu->isDestroying = true;
-	g_NewMenus[params[1]] = NULL;
 	g_menucmds.removeMenuId(pMenu->menuId);
 	CPlayer *player;
 	for (int i=1; i<=gpGlobals->maxClients; i++)
@@ -757,6 +761,7 @@ static cell AMX_NATIVE_CALL menu_destroy(AMX *amx, cell *params)
 			player->menu = 0;
 		}
 	}
+	g_NewMenus[params[1]] = NULL;
 	delete pMenu;
 	g_MenuFreeStack.push(params[1]);
 

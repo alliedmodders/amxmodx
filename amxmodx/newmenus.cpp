@@ -96,6 +96,8 @@ Menu::~Menu()
 {
 	for (size_t i = 0; i < m_Items.size(); i++)
 		delete m_Items[i];
+
+	unregisterSPForward(this->func);
 	
 	m_Items.clear();
 }
@@ -728,8 +730,15 @@ static cell AMX_NATIVE_CALL menu_destroy(AMX *amx, cell *params)
 	for (int i=1; i<=gpGlobals->maxClients; i++)
 	{
 		player = GET_PLAYER_POINTER_I(i);
-		if (player->newmenu == pMenu->menuId)
+		if (player->newmenu == pMenu->thisId)
+		{
+			executeForwards(pMenu->func, 
+				static_cast<cell>(i), 
+				static_cast<cell>(pMenu->thisId),
+				static_cast<cell>(MENU_EXIT));
 			player->newmenu = -1;
+			player->menu = 0;
+		}
 	}
 	delete pMenu;
 

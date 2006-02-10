@@ -687,6 +687,9 @@
 				RelativePath="..\newmenus.cpp">
 			</File>
 			<File
+				RelativePath="..\optimizer.cpp">
+			</File>
+			<File
 				RelativePath="..\power.cpp">
 			</File>
 			<File
@@ -834,6 +837,9 @@
 			</File>
 			<File
 				RelativePath="..\newmenus.h">
+			</File>
+			<File
+				RelativePath="..\optimizer.h">
 			</File>
 			<File
 				RelativePath="..\resource.h">

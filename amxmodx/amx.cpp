@@ -46,6 +46,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "osdefs.h"
 #if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
   #include <sclinux.h>
@@ -265,6 +266,12 @@ typedef enum {
   OP_SYSREQ_D,
   OP_SYMTAG,  /* obsolete */
   OP_BREAK,
+  OP_FLOAT_MUL,
+  OP_FLOAT_DIV,
+  OP_FLOAT_ADD,
+  OP_FLOAT_SUB,
+  OP_FLOAT_TO,
+  OP_FLOAT_ROUND,
   /* ----- */
   OP_NUM_OPCODES
 } OPCODE;
@@ -444,7 +451,7 @@ int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
   /* As of AMX Mod X 1.56, we don't patch sysreq.c to sysreq.d anymore.
    * Otherwise, we'd have no way of knowing the last native to be used.
    */
-  amx->usertags[UT_NATIVE] = (long)index;
+  amx->usertags[UT_NATIVE] = (void *)index;
 
   /* Note:
    *   params[0] == number of bytes for the additional parameters passed to the native function
@@ -487,6 +494,7 @@ static int amx_BrowseRelocate(AMX *amx)
   cell cip;
   long codesize;
   OPCODE op;
+  BROWSEHOOK hook = NULL;
   #if defined __GNUC__ || defined ASM32 || defined JIT
     cell *opcode_list;
   #endif
@@ -502,6 +510,7 @@ static int amx_BrowseRelocate(AMX *amx)
   code=amx->base+(int)hdr->cod;
   codesize=hdr->dat - hdr->cod;
   amx->flags|=AMX_FLAG_BROWSE;
+  hook = (BROWSEHOOK)amx->usertags[UT_BROWSEHOOK];
 
   /* sanity checks */
   assert(OP_PUSH_PRI==36);
@@ -607,11 +616,22 @@ static int amx_BrowseRelocate(AMX *amx)
     case OP_FILL:
     case OP_HALT:
     case OP_BOUNDS:
-    case OP_SYSREQ_C:
     case OP_PUSHADDR:
     case OP_SYSREQ_D:
       cip+=sizeof(cell);
       break;
+    case OP_SYSREQ_C:
+		{
+			if (hook)
+#if defined __GNUC__ || defined ASM32 || defined JIT
+				hook(amx, opcode_list, &cip);
+#else
+				hook(amx, NULL, &cip);
+#endif
+			else
+				cip+=sizeof(cell);
+			break;
+		}
 
     case OP_LOAD_I:     /* instructions without parameters */
     case OP_STOR_I:
@@ -672,6 +692,12 @@ static int amx_BrowseRelocate(AMX *amx)
     case OP_SWAP_ALT:
     case OP_NOP:
     case OP_BREAK:
+    case OP_FLOAT_MUL:
+    case OP_FLOAT_DIV:
+    case OP_FLOAT_ADD:
+    case OP_FLOAT_SUB:
+    case OP_FLOAT_TO:
+    case OP_FLOAT_ROUND:
       break;
 
     case OP_CALL:       /* opcodes that need relocation */
@@ -796,9 +822,10 @@ static void expand(unsigned char *code, long codesize, long memsize)
 }
 #endif /* defined AMX_INIT */
 
-int AMXAPI amx_Init(AMX *amx,void *program)
+int AMXAPI amx_Init(AMX *amx, void *program)
 {
   AMX_HEADER *hdr;
+  BROWSEHOOK hook = NULL;
   #if (defined _Windows || defined LINUX || defined __FreeBSD__ || defined __OpenBSD__) && !defined AMX_NODYNALOAD
     char libname[sNAMEMAX+8];  /* +1 for '\0', +3 for 'amx' prefix, +4 for extension */
     #if defined _Windows
@@ -946,6 +973,9 @@ int AMXAPI amx_Init(AMX *amx,void *program)
   #endif
 
   /* relocate call and jump instructions */
+  hook = (BROWSEHOOK)amx->usertags[UT_BROWSEHOOK];
+  if (hook)
+	  hook(amx, NULL, NULL);
   amx_BrowseRelocate(amx);
 
   /* load any extension modules that the AMX refers to */
@@ -1259,27 +1289,22 @@ int AMXAPI amx_GetNative(AMX *amx, int index, char *funcname)
 
 int AMXAPI amx_FindNative(AMX *amx, const char *name, int *index)
 {
-  int first,last,mid,result;
+  int first,last,mid;
   char pname[sNAMEMAX+1];
 
   amx_NumNatives(amx, &last);
   last--;       /* last valid index is 1 less than the number of functions */
   first=0;
-  /* binary search */
-  while (first<=last) {
-    mid=(first+last)/2;
+  /* normal search */
+  for (mid=0; mid<=last; mid++)
+  {
     amx_GetNative(amx, mid, pname);
-    result=strcmp(pname,name);
-    if (result>0) {
-      last=mid-1;
-    } else if (result<0) {
-      first=mid+1;
-    } else {
-      *index=mid;
+    if (strcmp(pname, name)==0)
+	{
+      *index = mid;
       return AMX_ERR_NONE;
-    } /* if */
-  } /* while */
-  /* not found, set to an invalid index, so amx_Exec() will fail */
+	} /* if */
+  } /* for */
   *index=INT_MAX;
   return AMX_ERR_NOTFOUND;
 }
@@ -1492,37 +1517,11 @@ int AMXAPI amx_FindTagId(AMX *amx, cell tag_id, char *tagname)
 #if defined AMX_XXXUSERDATA
 int AMXAPI amx_GetUserData(AMX *amx, long tag, void **ptr)
 {
-  int index;
-
-  assert(amx!=NULL);
-  assert(tag!=0);
-  for (index=0; index<AMX_USERNUM && amx->usertags[index]!=tag; index++)
-    /* nothing */;
-  if (index>=AMX_USERNUM)
-    return AMX_ERR_USERDATA;
-  *ptr=amx->userdata[index];
   return AMX_ERR_NONE;
 }
 
 int AMXAPI amx_SetUserData(AMX *amx, long tag, void *ptr)
 {
-  int index;
-
-  assert(amx!=NULL);
-  assert(tag!=0);
-  /* try to find existing tag */
-  for (index=0; index<AMX_USERNUM && amx->usertags[index]!=tag; index++)
-    /* nothing */;
-  /* if not found, try to find empty tag */
-  if (index>=AMX_USERNUM)
-    for (index=0; index<AMX_USERNUM && amx->usertags[index]!=0; index++)
-      /* nothing */;
-  /* if still not found, quit with error */
-  if (index>=AMX_USERNUM)
-    return AMX_ERR_INDEX;
-  /* set the tag and the value */
-  amx->usertags[index]=tag;
-  amx->userdata[index]=ptr;
   return AMX_ERR_NONE;
 }
 #endif /* AMX_XXXUSERDATA */
@@ -1764,13 +1763,15 @@ static const void * const amx_opcodelist[] = {
         &&op_file,      &&op_line,      &&op_symbol,    &&op_srange,
         &&op_jump_pri,  &&op_switch,    &&op_casetbl,   &&op_swap_pri,
         &&op_swap_alt,  &&op_pushaddr,  &&op_nop,       &&op_sysreq_d,
-        &&op_symtag,    &&op_break };
+        &&op_symtag,    &&op_break,     &&op_float_mul, &&op_float_div,
+		&&op_float_add, &&op_float_sub, &&op_float_to,  &&op_float_round};
   AMX_HEADER *hdr;
   AMX_FUNCSTUB *func;
   unsigned char *code, *data;
   cell pri,alt,stk,frm,hea;
   cell reset_stk, reset_hea, *cip;
-  cell offs;
+  cell offs, offs2;
+  REAL fnum;
   ucell codesize;
   int num,i;
 
@@ -2616,7 +2617,48 @@ static const void * const amx_opcodelist[] = {
     NEXT(cip);
   op_nop:
     NEXT(cip);
-  op_break:
+  op_float_mul:
+    offs = *(cell *)(data + (int)stk + sizeof(cell)*1);
+    offs2 = *(cell *)(data + (int)stk + sizeof(cell)*2);
+    fnum = amx_ctof(offs) * amx_ctof(offs2);
+    pri = amx_ftoc(fnum);
+    NEXT(cip);
+  op_float_add:
+    offs = *(cell *)(data + (int)stk + sizeof(cell)*1);
+    offs2 = *(cell *)(data + (int)stk + sizeof(cell)*2);
+    fnum = amx_ctof(offs) + amx_ctof(offs2);
+    pri = amx_ftoc(fnum);
+    NEXT(cip);
+  op_float_sub:
+    offs = *(cell *)(data + (int)stk + sizeof(cell)*1);
+    offs2 = *(cell *)(data + (int)stk + sizeof(cell)*2);
+    fnum = amx_ctof(offs) - amx_ctof(offs2);
+    pri = amx_ftoc(fnum);
+    NEXT(cip);
+  op_float_div:
+    offs = *(cell *)(data + (int)stk + sizeof(cell)*1);
+    offs2 = *(cell *)(data + (int)stk + sizeof(cell)*2);
+    fnum = amx_ctof(offs) / amx_ctof(offs2);
+    pri = amx_ftoc(fnum);
+    NEXT(cip);
+  op_float_to:
+    offs = *(cell *)(data + (int)stk + sizeof(cell)*1);
+    fnum = (REAL)offs;
+    pri = amx_ftoc(fnum);
+    NEXT(cip);
+  op_float_round:
+    offs = *(cell *)(data + (int)stk + sizeof(cell)*1);
+    offs2 = *(cell *)(data + (int)stk + sizeof(cell)*2);
+    fnum = amx_ctof(offs);
+    if (!offs2)
+       fnum = floor(fnum + 0.5);
+	else  if (offs2 == 1)
+       fnum = floor(fnum);
+	else
+       fnum = ceil(fnum);
+    pri = (cell)fnum;
+    NEXT(cip);
+op_break:
     if (amx->debug!=NULL) {
       /* store status */
       amx->frm=frm;
@@ -2700,7 +2742,8 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
     cell  parms[9];     /* registers and parameters for assembler AMX */
   #else
     OPCODE op;
-    cell offs;
+    cell offs, offs2;
+	REAL fnum;
     int num;
   #endif
   assert(amx!=NULL);
@@ -3590,6 +3633,47 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
       PUSH(frm+offs);
       break;
     case OP_NOP:
+      break;
+	case OP_FLOAT_MUL:
+      offs = *(cell *)(data + (int)stk + sizeof(cell)*1);
+      offs2 = *(cell *)(data + (int)stk + sizeof(cell)*2);
+      fnum = amx_ctof(offs) * amx_ctof(offs2);
+      pri = amx_ftoc(fnum);
+	  break;
+	case OP_FLOAT_ADD:
+      offs = *(cell *)(data + (int)stk + sizeof(cell)*1);
+      offs2 = *(cell *)(data + (int)stk + sizeof(cell)*2);
+      fnum = amx_ctof(offs) + amx_ctof(offs2);
+      pri = amx_ftoc(fnum);
+	  break;
+	case OP_FLOAT_SUB:
+      offs = *(cell *)(data + (int)stk + sizeof(cell)*1);
+      offs2 = *(cell *)(data + (int)stk + sizeof(cell)*2);
+      fnum = amx_ctof(offs) - amx_ctof(offs2);
+      pri = amx_ftoc(fnum);
+	  break;
+	case OP_FLOAT_DIV:
+      offs = *(cell *)(data + (int)stk + sizeof(cell)*1);
+      offs2 = *(cell *)(data + (int)stk + sizeof(cell)*2);
+      fnum = amx_ctof(offs) / amx_ctof(offs2);
+      pri = amx_ftoc(fnum);
+	  break;
+	case OP_FLOAT_TO:
+      offs = *(cell *)(data + (int)stk + sizeof(cell)*1);
+      fnum = (float)offs;
+      pri = amx_ftoc(fnum);
+      break;
+    case OP_FLOAT_ROUND:
+      offs = *(cell *)(data + (int)stk + sizeof(cell)*1);
+      offs2 = *(cell *)(data + (int)stk + sizeof(cell)*2);
+      fnum = amx_ctof(offs);
+      if (!offs2)
+         fnum = (REAL)floor(fnum + 0.5);
+	  else  if (offs2 == 1)
+         fnum = floor(fnum);
+	  else
+         fnum = ceil(fnum);
+      pri = (cell)fnum;
       break;
     case OP_BREAK:
       assert((amx->flags & AMX_FLAG_BROWSE)==0);

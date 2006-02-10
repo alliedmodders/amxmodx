@@ -44,6 +44,7 @@
 #include "newmenus.h"
 #include "natives.h"
 #include "debugger.h"
+#include "optimizer.h"
 
 CList<CModule, const char*> g_modules;
 CList<CScript, AMX*> g_loadedscripts;
@@ -99,6 +100,8 @@ void free_amxmemory(void **ptr)
 	delete[] (unsigned char *)(*ptr);
 	*ptr = 0;
 }
+
+void AMXAPI dbg_DumpFuncs(AMX_DBG *amxdbg, const char *file);
 
 int load_amxscript(AMX *amx, void **program, const char *filename, char error[64], int debug)
 {
@@ -197,6 +200,8 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 				return (amx->error = AMX_ERR_INIT);
 			}
 
+			dbg_DumpFuncs(pDbg, "c:\\test.txt");
+
 			amx->flags |= AMX_FLAG_DEBUG;
 		} else {
 			sprintf(error, "Plugin not compiled with debug option");
@@ -208,6 +213,8 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 		amx->flags |= AMX_FLAG_JITC;
 #endif
 	}
+
+	SetupOptimizer(amx);
 
 	if ((err = amx_Init(amx, *program)) != AMX_ERR_NONE)
 	{

@@ -1882,7 +1882,7 @@ OP_BREAK:
         jae     code_gen_done
         jmp     DWORD [ebx]             ; go on with the next opcode
 %else
-        GO_ON   j_break, OP_INVALID
+        GO_ON   j_break, OP_FLOAT_MUL
     j_break:
         mov     ebp,amx
         cmp     DWORD [ebp+_debug], 0
@@ -1890,6 +1890,90 @@ OP_BREAK:
         call    [jit_break]
     CHECKCODESIZE j_break
 %endif
+
+OP_FLOAT_MUL:
+		GO_ON	j_float_mul, OP_FLOAT_DIV
+	j_float_mul:
+		fld		dword [esi+4]
+		fmul	dword [esi+8]
+		push	dword 0
+		fstp	dword [esp]
+		pop		eax
+	CHECKCODESIZE j_float_mul
+	
+OP_FLOAT_DIV:
+		GO_ON	j_float_div, OP_FLOAT_ADD
+	j_float_div:
+		fld		dword [esi+4]
+		fdiv	dword [esi+8]
+		push	dword 0
+		fstp	dword [esp]
+		pop		eax
+	CHECKCODESIZE j_float_div
+	
+OP_FLOAT_ADD:
+		GO_ON	j_float_add, OP_FLOAT_SUB
+	j_float_add:
+		fld		dword [esi+4]
+		fadd	dword [esi+8]
+		push	dword 0
+		fstp	dword [esp]
+		pop		eax
+	CHECKCODESIZE j_float_add
+	
+OP_FLOAT_SUB:
+		GO_ON	j_float_sub, OP_FLOAT_TO
+	j_float_sub:
+		fld		dword [esi+4]
+		fsub	dword [esi+8]
+		push	dword 0
+		fstp	dword [esp]
+		pop		eax
+	CHECKCODESIZE j_float_sub
+	
+OP_FLOAT_TO:
+		GO_ON   j_float_to, OP_FLOAT_ROUND
+	j_float_to:
+		fild    dword [esi+4]
+		push    0
+		fstp    dword [esp]
+		pop	    eax
+	CHECKCODESIZE j_float_to
+	
+OP_FLOAT_ROUND:
+		GO_ON   j_float_round, OP_INVALID
+	j_float_round:
+		;get the float control word
+		push    0
+		mov     ebp,esp
+		fstcw   [ebp]
+		mov		eax,[ebp]
+		push    eax
+		;clear the top bits
+		xor     ah,ah
+		;get the control method
+		push    edx
+		mov     edx,[esi+8]
+		and     edx,3	;sanity check
+		shl     edx,2	;shift it to right position
+		;set the bits
+		or      ah,dl	;set bits 15,14 of FCW to rounding method
+		or      ah,3	;set precision to 64bit
+		mov     [ebp], eax
+		fldcw   [ebp]
+		;calculate
+		push    0
+		fld     dword [esi+4]
+		frndint
+		fistp   dword [esp]
+		pop     eax
+		pop     edx
+		;restore bits
+		pop     ebp
+		mov     [esp], ebp
+		fldcw   [esp]
+		pop      ebp
+	CHECKCODESIZE j_float_round
 
 OP_INVALID:                     ; break from the compiler with an error code
         mov     eax,AMX_ERR_INVINSTR
@@ -2461,5 +2545,11 @@ _amx_opcodelist_jit:
         DD      OP_SYSREQ_D     ; TR
         DD      OP_SYMTAG       ; TR
         DD      OP_BREAK        ; TR
+        DD		OP_FLOAT_MUL	; DA
+        DD		OP_FLOAT_DIV	; DA
+        DD		OP_FLOAT_ADD	; DA
+        DD		OP_FLOAT_SUB	; DA
+        DD		OP_FLOAT_TO		; DA
+        DD		OP_FLOAT_ROUND	; DA
 
 END

@@ -231,7 +231,7 @@ typedef struct tagAMX {
   cell stp              PACKED; /* top of the stack: relative to base + amxhdr->dat */
   int flags             PACKED; /* current status, see amx_Flags() */
   /* user data */
-  long usertags[AMX_USERNUM] PACKED;
+  void _FAR *usertags[AMX_USERNUM] PACKED;
   //okay userdata[3] in AMX Mod X is for the CPlugin * pointer
   //we're also gonna set userdata[2] to a special debug structure
   //lastly, userdata[1] is for opcode_list from amx_BrowseRelocate
@@ -334,6 +334,10 @@ enum {
 #define UD_OPCODELIST	1
 #define	UD_HANDLER		0
 #define	UT_NATIVE		3
+#define UT_OPTIMIZER	2
+#define UT_BROWSEHOOK	1
+
+typedef void (*BROWSEHOOK)(AMX *amx, cell *oplist, cell *cip);
 
 /* for native functions that use floating point parameters, the following
  * two macros are convenient for casting a "cell" into a "float" type _without_

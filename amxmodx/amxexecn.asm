@@ -56,6 +56,8 @@
 ;
 ;History (list of changes)
 ;-------------------------
+; 10 february 2006 by David Anderson
+;       Addition of float opcodes
 ; 17 february 2005  by Thiadmer Riemersms
 ;       Addition of the BREAK opcode, removal of the older debugging opcode table.
 ;  6 march 2004  by Thiadmer Riemersma
@@ -1405,7 +1407,84 @@ OP_PUSHADDR:
 OP_NOP:
         add     esi,4
         GO_ON
-
+        
+OP_FLOAT_MUL:
+		add		esi,4
+		fld		dword [edi+ecx+4]
+		fmul	dword [edi+ecx+8]
+		push	dword 0
+		fstp	dword [esp]
+		pop		eax
+		GO_ON
+		
+OP_FLOAT_DIV:
+		add		esi,4
+		fld		dword [edi+ecx+4]
+		fdiv	dword [edi+ecx+8]
+		push	dword 0
+		fstp	dword [esp]
+		pop		eax
+		GO_ON
+		
+OP_FLOAT_ADD:
+		add		esi,4
+		fld		dword [edi+ecx+4]
+		fadd	dword [edi+ecx+8]
+		push	dword 0
+		fstp	dword [esp]
+		pop		eax
+		GO_ON
+		
+OP_FLOAT_SUB:
+		add		esi,4
+		fld		dword [edi+ecx+4]
+		fsub	dword [edi+ecx+8]
+		push	dword 0
+		fstp	dword [esp]
+		pop		eax
+		GO_ON
+		
+OP_FLOAT_TO:
+		add	    esi,4
+		fild    dword [edi+ecx+4]
+		push    0
+		fstp    dword [esp]
+		pop	    eax
+		GO_ON
+		
+OP_FLOAT_ROUND:
+		add	    esi,4
+		;get the float control word
+		push    0
+		mov     ebp,esp
+		fstcw   [ebp]
+		mov		eax,[ebp]
+		push    eax
+		;clear the top bits
+		xor     ah,ah
+		;get the control method
+		push    edx
+		mov     edx,[edi+ecx+8]
+		and     edx,3	;sanity check
+		shl     edx,2	;shift it to right position
+		;set the bits
+		or      ah,dl	;set bits 15,14 of FCW to rounding method
+		or      ah,3	;set precision to 64bit
+		mov     [ebp], eax
+		fldcw   [ebp]
+		;calculate
+		push    0
+		fld     dword [edi+ecx+4]
+		frndint
+		fistp   dword [esp]
+		pop     eax
+		pop     edx
+		;restore bits
+		pop     ebp
+		mov     [esp], ebp
+		fldcw   [esp]
+		pop      ebp
+		GO_ON
 
 OP_BREAK:
         mov     ebp,amx         ; get amx into ebp
@@ -1642,4 +1721,9 @@ _amx_opcodelist DD OP_INVALID
         DD      OP_SYSREQ_D
         DD      OP_SYMTAG
         DD      OP_BREAK
-
+        DD		OP_FLOAT_MUL
+        DD		OP_FLOAT_DIV
+		DD		OP_FLOAT_ADD
+		DD		OP_FLOAT_SUB
+		DD		OP_FLOAT_TO
+		DD		OP_FLOAT_ROUND

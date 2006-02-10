@@ -442,7 +442,7 @@ int Debugger::FormatError(char *buffer, size_t maxLength)
 			num = (int)*p_cip;
 		}*/
 		//New code only requires this...
-		num = m_pAmx->usertags[UT_NATIVE];
+		num = (int)m_pAmx->usertags[UT_NATIVE];
 		amx_err = amx_GetNative(m_pAmx, num, native_name);
 		/*if (num)
 			amx_err = amx_GetNative(m_pAmx, (int)*p_cip, native_name);

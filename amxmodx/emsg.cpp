@@ -86,7 +86,7 @@ void Client_ShowMenu(void* mValue)
 		case 3:
 			{
 			mPlayer->menu = g_menucmds.findMenuId((char*)mValue);
-			mPlayer->newmenu = 0;
+			mPlayer->newmenu = -1;
 			break;
 			}
 	}

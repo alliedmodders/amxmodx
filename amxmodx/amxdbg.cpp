@@ -267,28 +267,6 @@ int AMXAPI dbg_LookupLine(AMX_DBG *amxdbg, ucell address, long *line)
   return AMX_ERR_NONE;
 }
 
-void AMXAPI dbg_DumpFuncs(AMX_DBG *amxdbg, const char *file)
-{
-	int index;
-	FILE *fp = fopen(file, "at");
-	
-	if (!fp)
-		return;
-
-	for (index=0; index<amxdbg->hdr->symbols; index++)
-	{
-		if (amxdbg->symboltbl[index]->ident == iFUNCTN)
-		{
-			fprintf(fp, "[%s] --> (%d-%d)", 
-				amxdbg->symboltbl[index]->name,
-				amxdbg->symboltbl[index]->codestart,
-				amxdbg->symboltbl[index]->codeend);
-		}
-	}
-
-	fclose(fp);
-}
-
 int AMXAPI dbg_LookupFunction(AMX_DBG *amxdbg, ucell address, const char **funcname)
 {
   /* dbg_LookupFunction() finds the function a code address is in. It can be

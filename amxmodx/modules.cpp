@@ -101,8 +101,6 @@ void free_amxmemory(void **ptr)
 	*ptr = 0;
 }
 
-void AMXAPI dbg_DumpFuncs(AMX_DBG *amxdbg, const char *file);
-
 int load_amxscript(AMX *amx, void **program, const char *filename, char error[64], int debug)
 {
 	*error = 0;
@@ -199,8 +197,6 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 				sprintf(error, "Debug loading error %d", err);
 				return (amx->error = AMX_ERR_INIT);
 			}
-
-			dbg_DumpFuncs(pDbg, "c:\\test.txt");
 
 			amx->flags |= AMX_FLAG_DEBUG;
 		} else {

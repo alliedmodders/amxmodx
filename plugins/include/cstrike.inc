@@ -118,6 +118,7 @@ native cs_set_user_plant(index, plant = 1, showbombicon = 1);
  * 3 = spectator
  */
 enum CsTeams {
+	CS_TEAM_UNASSIGNED = 0,
 	CS_TEAM_T = 1,
 	CS_TEAM_CT = 2,
 	CS_TEAM_SPECTATOR = 3

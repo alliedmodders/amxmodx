@@ -1,5 +1,20 @@
 #include "fakemeta_amxx.h"
 
+#if defined WIN32
+#define WINDOWS_LEAN_AND_MEAN
+#include <windows.h>
+#else
+//implement these with setjmp later.
+bool IsBadReadPtr(void *l, size_t size)
+{
+	return false;
+}
+bool IsBadWritePtr(void *l, size_t size)
+{
+	return false;
+}
+#endif
+
 static cell AMX_NATIVE_CALL set_pdata_int(AMX *amx, cell *params)
 {
 	int index=params[1];
@@ -76,8 +91,14 @@ static cell AMX_NATIVE_CALL get_pdata_string(AMX *amx, cell *params)
 		szData = (char *)pEdict->pvPrivateData + iOffset;
 	}
 
-	return MF_SetAmxString(amx, params[3], szData, params[4]);
+	if (IsBadReadPtr(szData, 1))
+	{
+		return 0;
+	}
 
+	MF_SetAmxString(amx, params[3], szData, params[4]);
+
+	return 1;
 }
 
 static cell AMX_NATIVE_CALL set_pdata_string(AMX *amx, cell *params)
@@ -100,9 +121,13 @@ static cell AMX_NATIVE_CALL set_pdata_string(AMX *amx, cell *params)
 	if (params[4] == -1)
 	{
 		szData = (char *)pEdict->pvPrivateData + iOffset;
+		if (IsBadWritePtr(szData, 1))
+			return 0;
 		strcpy(szData, data);
 	} else {
 		szData = *((char **)pEdict->pvPrivateData + iOffset);
+		if (IsBadWritePtr(szData, 1))
+			return 0;
 		if (params[4] == 1)
 		{
 			free(szData);

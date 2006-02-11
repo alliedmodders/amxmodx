@@ -36,11 +36,11 @@ static cell AMX_NATIVE_CALL memhack_set_long(AMX *amx, cell *params)
 {
 	if(NATIVE_PATCH_SIGNED)
 	{
-		return (cell)UTIL_PatchMemory_Byte(NATIVE_PATCH_MEMORY, (long)(NATIVE_PATCH_PARAMETER), NATIVE_PATCH_FLAGS);
+		return (cell)UTIL_PatchMemory_Dword(NATIVE_PATCH_MEMORY, (long)(NATIVE_PATCH_PARAMETER), NATIVE_PATCH_FLAGS);
 	}
 	else
 	{
-		return (cell)UTIL_PatchMemory_UnsignedByte(NATIVE_PATCH_MEMORY, (unsigned long)(NATIVE_PATCH_PARAMETER), NATIVE_PATCH_FLAGS);
+		return (cell)UTIL_PatchMemory_Dword(NATIVE_PATCH_MEMORY, (unsigned long)(NATIVE_PATCH_PARAMETER), NATIVE_PATCH_FLAGS);
 	}
 }
 

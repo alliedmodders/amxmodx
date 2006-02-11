@@ -398,6 +398,8 @@ size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int 
 	} 
 	//get the final character
 	ctrl_code = fmtsrc[len++];
+	if (!ctrl_code)
+		return 0;
 	//inc the source pointer
 	*fmtstr = &(fmtsrc[len]);
 	//finalize the string

@@ -1492,10 +1492,11 @@ OP_FLOAT_CMP:
 		fld     dword [edi+ecx+4]
 		fucompp
 		fnstsw  ax
+		fwait
 		sahf
 		cmovz   eax, [g_flags+4]
-		cmovg   eax, [g_flags+8]
-		cmovl   eax, [g_flags+0]
+		cmova   eax, [g_flags+8]
+		cmovb   eax, [g_flags+0]
 		GO_ON
 		
 OP_BREAK:

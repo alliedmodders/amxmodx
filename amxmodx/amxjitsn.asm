@@ -1982,10 +1982,11 @@ OP_FLOAT_CMP:
 		fld     dword [esi+4]
 		fucompp
 		fnstsw  ax
+		fwait
 		sahf
 		cmovz   eax, [g_flagsjit+4]
-		cmovg   eax, [g_flagsjit+8]
-		cmovl   eax, [g_flagsjit+0]
+		cmova   eax, [g_flagsjit+8]
+		cmovb   eax, [g_flagsjit+0]
 	CHECKCODESIZE j_float_cmp
 
 OP_INVALID:                     ; break from the compiler with an error code

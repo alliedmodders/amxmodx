@@ -9,6 +9,7 @@
 #define OP_FLOAT_SUB	141
 #define OP_FLOAT_TO		142
 #define OP_FLOAT_ROUND	143
+#define OP_FLOAT_CMP	144
 
 cell op_trans_table[N_Total_FloatOps] =
 {
@@ -17,7 +18,8 @@ cell op_trans_table[N_Total_FloatOps] =
 	OP_FLOAT_ADD,
 	OP_FLOAT_SUB,
 	OP_FLOAT_TO,
-	OP_FLOAT_ROUND
+	OP_FLOAT_ROUND,
+	OP_FLOAT_CMP
 };
 
 void OnBrowseRelocate(AMX *amx, cell *oplist, cell *cip)
@@ -87,6 +89,7 @@ void _Setup_Optimizer_Stage2(AMX *amx, cell *oplist, cell *cip)
 	FIND_NATIVE("floatsub", N_Float_Sub);
 	FIND_NATIVE("float", N_Float_To);
 	FIND_NATIVE("floatround", N_Float_Round);
+	FIND_NATIVE("floatcmp", N_Float_Cmp);
 	//we don't do these yet because of radix stuff >:\
 	//FIND_NATIVE("floatsin", N_Float_Sin);
 	//FIND_NATIVE("floatcos", N_Float_Cos);

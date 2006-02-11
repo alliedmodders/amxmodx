@@ -1485,7 +1485,19 @@ OP_FLOAT_ROUND:
 		fldcw   [esp]
 		pop      ebp
 		GO_ON
-
+		
+OP_FLOAT_CMP:
+		add     esi, 4
+		fld     dword [edi+ecx+8]
+		fld     dword [edi+ecx+4]
+		fucompp
+		fnstsw  ax
+		sahf
+		cmovz   eax, [g_flags+4]
+		cmovg   eax, [g_flags+8]
+		cmovl   eax, [g_flags+0]
+		GO_ON
+		
 OP_BREAK:
         mov     ebp,amx         ; get amx into ebp
         add     esi,4
@@ -1579,6 +1591,12 @@ Start_DATA
         ALIGN   4       ; This is essential to avoid misalignment stalls.
 
 lodb_and DD     0ffh, 0ffffh, 0, 0ffffffffh
+
+		GLOBAL g_flags
+g_flags:
+		DD		-1
+		DD		0
+		DD		1
 
         GLOBAL  amx_opcodelist
         GLOBAL  _amx_opcodelist
@@ -1727,3 +1745,4 @@ _amx_opcodelist DD OP_INVALID
 		DD		OP_FLOAT_SUB
 		DD		OP_FLOAT_TO
 		DD		OP_FLOAT_ROUND
+		DD		OP_FLOAT_CMP

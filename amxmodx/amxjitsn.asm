@@ -1941,7 +1941,7 @@ OP_FLOAT_TO:
 	CHECKCODESIZE j_float_to
 	
 OP_FLOAT_ROUND:
-		GO_ON   j_float_round, OP_INVALID
+		GO_ON   j_float_round, OP_FLOAT_CMP
 	j_float_round:
 		;get the float control word
 		push    0
@@ -1974,6 +1974,19 @@ OP_FLOAT_ROUND:
 		fldcw   [esp]
 		pop      ebp
 	CHECKCODESIZE j_float_round
+	
+OP_FLOAT_CMP:
+		GO_ON	j_float_cmp, OP_INVALID
+	j_float_cmp:
+		fld     dword [esi+8]
+		fld     dword [esi+4]
+		fucompp
+		fnstsw  ax
+		sahf
+		cmovz   eax, [g_flagsjit+4]
+		cmovg   eax, [g_flagsjit+8]
+		cmovl   eax, [g_flagsjit+0]
+	CHECKCODESIZE j_float_cmp
 
 OP_INVALID:                     ; break from the compiler with an error code
         mov     eax,AMX_ERR_INVINSTR
@@ -2403,6 +2416,12 @@ jit_switch      DD      JIT_OP_SWITCH
 ; The table for the browser/relocator function.
 ;
 
+global g_flagsjit
+g_flagsjit:
+		DD		-1
+		DD		0
+		DD		1
+
 global amx_opcodelist_jit, _amx_opcodelist_jit
 
 amx_opcodelist_jit:
@@ -2551,5 +2570,6 @@ _amx_opcodelist_jit:
         DD		OP_FLOAT_SUB	; DA
         DD		OP_FLOAT_TO		; DA
         DD		OP_FLOAT_ROUND	; DA
+        DD		OP_FLOAT_CMP	; DA
 
 END

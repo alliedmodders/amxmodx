@@ -11,7 +11,9 @@ enum
 	N_Float_Sub,
 	N_Float_To,
 	N_Float_Round,
-	N_Total_FloatOps
+	N_Float_Cmp,
+	/* ------------ */
+	N_Total_FloatOps,
 };
 
 struct optimizer_s

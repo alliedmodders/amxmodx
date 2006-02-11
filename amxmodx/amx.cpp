@@ -272,6 +272,7 @@ typedef enum {
   OP_FLOAT_SUB,
   OP_FLOAT_TO,
   OP_FLOAT_ROUND,
+  OP_FLOAT_CMP,
   /* ----- */
   OP_NUM_OPCODES
 } OPCODE;
@@ -698,6 +699,7 @@ static int amx_BrowseRelocate(AMX *amx)
     case OP_FLOAT_SUB:
     case OP_FLOAT_TO:
     case OP_FLOAT_ROUND:
+	case OP_FLOAT_CMP:
       break;
 
     case OP_CALL:       /* opcodes that need relocation */
@@ -1764,14 +1766,15 @@ static const void * const amx_opcodelist[] = {
         &&op_jump_pri,  &&op_switch,    &&op_casetbl,   &&op_swap_pri,
         &&op_swap_alt,  &&op_pushaddr,  &&op_nop,       &&op_sysreq_d,
         &&op_symtag,    &&op_break,     &&op_float_mul, &&op_float_div,
-		&&op_float_add, &&op_float_sub, &&op_float_to,  &&op_float_round};
+        &&op_float_add, &&op_float_sub, &&op_float_to,  &&op_float_round,
+        &&op_float_cmp};
   AMX_HEADER *hdr;
   AMX_FUNCSTUB *func;
   unsigned char *code, *data;
   cell pri,alt,stk,frm,hea;
   cell reset_stk, reset_hea, *cip;
   cell offs, offs2;
-  REAL fnum;
+  REAL fnum, fnum2;
   ucell codesize;
   int num,i;
 
@@ -2658,6 +2661,18 @@ static const void * const amx_opcodelist[] = {
        fnum = ceil(fnum);
     pri = (cell)fnum;
     NEXT(cip);
+  op_float_cmp:
+    offs = *(cell *)(data + (int)stk + sizeof(cell)*1);
+    offs2 = *(cell *)(data + (int)stk + sizeof(cell)*2);
+    fnum = amx_ctof(offs);
+    fnum2 = amx_ctof(offs2);
+    if (fnum == fnum2)
+      pri = 0;
+	else if (fnum > fnum2)
+      pri = 1;
+	else
+      pri = -1;
+    NEXT(cip);
 op_break:
     if (amx->debug!=NULL) {
       /* store status */
@@ -2743,7 +2758,7 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
   #else
     OPCODE op;
     cell offs, offs2;
-	REAL fnum;
+	REAL fnum, fnum2;
     int num;
   #endif
   assert(amx!=NULL);
@@ -3634,31 +3649,31 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
       break;
     case OP_NOP:
       break;
-	case OP_FLOAT_MUL:
+    case OP_FLOAT_MUL:
       offs = *(cell *)(data + (int)stk + sizeof(cell)*1);
       offs2 = *(cell *)(data + (int)stk + sizeof(cell)*2);
       fnum = amx_ctof(offs) * amx_ctof(offs2);
       pri = amx_ftoc(fnum);
-	  break;
-	case OP_FLOAT_ADD:
+      break;
+    case OP_FLOAT_ADD:
       offs = *(cell *)(data + (int)stk + sizeof(cell)*1);
       offs2 = *(cell *)(data + (int)stk + sizeof(cell)*2);
       fnum = amx_ctof(offs) + amx_ctof(offs2);
       pri = amx_ftoc(fnum);
-	  break;
-	case OP_FLOAT_SUB:
+      break;
+    case OP_FLOAT_SUB:
       offs = *(cell *)(data + (int)stk + sizeof(cell)*1);
       offs2 = *(cell *)(data + (int)stk + sizeof(cell)*2);
       fnum = amx_ctof(offs) - amx_ctof(offs2);
       pri = amx_ftoc(fnum);
-	  break;
-	case OP_FLOAT_DIV:
+      break;
+    case OP_FLOAT_DIV:
       offs = *(cell *)(data + (int)stk + sizeof(cell)*1);
       offs2 = *(cell *)(data + (int)stk + sizeof(cell)*2);
       fnum = amx_ctof(offs) / amx_ctof(offs2);
       pri = amx_ftoc(fnum);
-	  break;
-	case OP_FLOAT_TO:
+      break;
+    case OP_FLOAT_TO:
       offs = *(cell *)(data + (int)stk + sizeof(cell)*1);
       fnum = (float)offs;
       pri = amx_ftoc(fnum);
@@ -3669,11 +3684,23 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
       fnum = amx_ctof(offs);
       if (!offs2)
          fnum = (REAL)floor(fnum + 0.5);
-	  else  if (offs2 == 1)
+      else  if (offs2 == 1)
          fnum = floor(fnum);
 	  else
          fnum = ceil(fnum);
       pri = (cell)fnum;
+      break;
+	case OP_FLOAT_CMP:
+      offs = *(cell *)(data + (int)stk + sizeof(cell)*1);
+      offs2 = *(cell *)(data + (int)stk + sizeof(cell)*2);
+      fnum = amx_ctof(offs);
+      fnum2 = amx_ctof(offs2);
+      if (fnum == fnum2)
+        pri = 0;
+	  else if (fnum > fnum2)
+        pri = 1;
+	  else
+        pri = -1;
       break;
     case OP_BREAK:
       assert((amx->flags & AMX_FLAG_BROWSE)==0);

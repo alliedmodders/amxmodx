@@ -175,6 +175,9 @@ native ns_set_fov(idPlayer,Float:_fov=0.0);
 /* Give a player an item. */
 native ns_give_item(id,const _szClassName[]);
 
+/* Returns if a player has the hive ability number, if ability is 0 it will return the number of active hives */
+native ns_get_hive_ability(idPlayer, ability=0);
+
 /* A player's team entvar has changed */
 forward client_changeteam(id,newteam,oldteam);
 

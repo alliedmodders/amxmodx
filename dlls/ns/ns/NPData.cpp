@@ -334,6 +334,19 @@ static cell AMX_NATIVE_CALL ns_set_struct_owner(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL ns_get_hive_ability(AMX *amx, cell *params)
+{
+	int id = params[1];
+	int abilitynum = params[2];
+	if (id < 1 || id > gpGlobals->maxClients)
+		return 0;
+	
+	CPlayer *player = GET_PLAYER_I(id);
+	int result = get_private(player->edict, OFFSET_WIN_HIVEABILITY, OFFSET_LIN_HIVEABILITY);
+
+	return (abilitynum > 0) ? (result >= abilitynum - 1) : result;
+}
+
 AMX_NATIVE_INFO ns_pdata_natives[] = {
 	   /*****************/
 	{ "ns_get_res",				ns_get_res },
@@ -368,6 +381,8 @@ AMX_NATIVE_INFO ns_pdata_natives[] = {
 
 	{ "ns_get_struct_owner",	ns_get_struct_owner },
 	{ "ns_set_struct_owner",	ns_set_struct_owner },
+
+	{ "ns_get_hive_ability",	ns_get_hive_ability},
 
 	{ NULL, NULL }
 };

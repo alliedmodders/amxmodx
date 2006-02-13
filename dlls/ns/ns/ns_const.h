@@ -54,6 +54,8 @@
 #define      OFFSET_WIN_STRUCTOWNER		324		//81 * 4
 #define      OFFSET_LIN_STRUCTOWNER		340		//85 * 4
 
+#define      OFFSET_WIN_HIVEABILITY		6220	//1555 * 4
+#define      OFFSET_LIN_HIVEABILITY		6240	//1560 * 4
 
 enum
 {

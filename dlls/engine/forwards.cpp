@@ -70,7 +70,7 @@ void PlaybackEvent(int flags, const edict_t *pInvoker, unsigned short eventindex
 		cAngles[2] = amx_ftoc(vAngles.z);
 		cell CellOrigin = MF_PrepareCellArray(cOrigin, 3);
 		cell CellAngles = MF_PrepareCellArray(cAngles, 3);
-		retVal = MF_ExecuteForward(PlaybackForward, (cell)flags, (cell)ENTINDEX(e), (cell)eventindex, amx_ftoc(delay), CellOrigin, CellAngles, amx_ftoc(fparam1), amx_ftoc(fparam2), (cell)iparam1, (cell)iparam2, (cell)bparam2);
+		retVal = MF_ExecuteForward(PlaybackForward, (cell)flags, (cell)ENTINDEX(e), (cell)eventindex, delay, CellOrigin, CellAngles, fparam1, fparam2, (cell)iparam1, (cell)iparam2, (cell)bparam1, (cell)bparam2);
 		if (retVal)
 			RETURN_META(MRES_SUPERCEDE);
 	}

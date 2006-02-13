@@ -204,12 +204,12 @@
 #define SIMPLE_VOID_HOOK_CONSTSTRING_FLOAT(call) \
 	void call (const char *s, float f) \
 	{ \
-		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i), s, amx_ftoc(f))); \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i), s, f)); \
 		RETURN_META(mswi(lastFmRes)); \
 	} \
 	void call##_post (const char *s, float f) \
 	{ \
-		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i), s, (cell)amx_ftoc(f))); \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i), s, f)); \
 		RETURN_META(MRES_IGNORED); \
 	}
 
@@ -292,23 +292,23 @@
 #define SIMPLE_VOID_HOOK_CONSTEDICT_FLOAT(call) \
 	void call (const edict_t *ent, float blah) \
 	{ \
-		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)ENTINDEX((edict_t*)ent), (cell)amx_ftoc(blah))); \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)ENTINDEX((edict_t*)ent), blah)); \
 		RETURN_META(mswi(lastFmRes)); \
 	} \
 	void call##_post (const edict_t *ent, float blah) \
 	{ \
-		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX((edict_t*)ent), (cell)amx_ftoc(blah))); \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX((edict_t*)ent), blah)); \
 		RETURN_META(MRES_IGNORED); \
 	} 
 #define SIMPLE_VOID_HOOK_CONSTEDICT_FLOAT_FLOAT(call) \
 	void call (const edict_t *ent, float blah, float blahb) \
 	{ \
-		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)ENTINDEX((edict_t*)ent), (cell)amx_ftoc(blah), (cell)amx_ftoc(blahb))); \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)ENTINDEX((edict_t*)ent), blah, blahb)); \
 		RETURN_META(mswi(lastFmRes)); \
 	} \
 	void call##_post (const edict_t *ent, float blah, float blahb) \
 	{ \
-		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX((edict_t*)ent), (cell)amx_ftoc(blah), (cell)amx_ftoc(blahb))); \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX((edict_t*)ent), blah, blahb)); \
 		RETURN_META(MRES_IGNORED); \
 	} 
 
@@ -364,13 +364,13 @@
 	edict_t* call (edict_t *ed, const float *vec, float fla) \
 	{ \
 		PREPARE_VECTOR(vec); \
-		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)ENTINDEX(ed), p_vec, (cell)amx_ftoc(fla))); \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)ENTINDEX(ed), p_vec, fla)); \
 		RETURN_META_VALUE(mswi(lastFmRes), INDEXENT2((int)mlCellResult)); \
 	} \
 	edict_t* call##_post (edict_t *ed, const float *vec, float fla) \
 	{ \
 		PREPARE_VECTOR(vec); \
-		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX(ed), p_vec, (cell)amx_ftoc(fla))); \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX(ed), p_vec, fla)); \
 		RETURN_META_VALUE(MRES_IGNORED, INDEXENT2((int)mlCellResult)); \
 	}
 
@@ -550,13 +550,13 @@
 	void call (edict_t *e, float f, float *vec) \
 	{ \
 		PREPARE_VECTOR(vec); \
-		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)ENTINDEX(e), (cell)amx_ftoc(f), p_vec)); \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)ENTINDEX(e), f, p_vec)); \
 		RETURN_META(mswi(lastFmRes)); \
 	} \
 	void call##_post (edict_t *e, float f, float *vec) \
 	{ \
 		PREPARE_VECTOR(vec); \
-		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX(e), (cell)amx_ftoc(f), p_vec)); \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX(e), f, p_vec)); \
 		RETURN_META(MRES_IGNORED); \
 	}
 
@@ -687,12 +687,12 @@
 #define SIMPLE_VOID_HOOK_EDICT_INT_CONSTSTRING_FLOAT_FLOAT_INT_INT(call) \
 	void call (edict_t *e, int v, const char *sz, float f, float fb, int vb, int vc) \
 	{ \
-		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)ENTINDEX(e), (cell)v, sz, (cell)amx_ftoc(f), (cell)amx_ftoc(fb), (cell)vb, (cell)vc)); \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)ENTINDEX(e), (cell)v, sz, f, fb, (cell)vb, (cell)vc)); \
 		RETURN_META(mswi(lastFmRes)); \
 	} \
 	void call##_post (edict_t *e, int v, const char *sz, float f, float fb, int vb, int vc) \
 	{ \
-		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX(e), (cell)v, sz, (cell)amx_ftoc(f), (cell)amx_ftoc(fb), (cell)vb, (cell)vc)); \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX(e), (cell)v, sz, f, fb, (cell)vb, (cell)vc)); \
 		RETURN_META(MRES_IGNORED); \
 	}
 
@@ -700,13 +700,13 @@
 	void call (edict_t *e, float *vec, const char *sz, float f, float fb, int vb, int vc) \
 	{ \
 		PREPARE_VECTOR(vec); \
-		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)ENTINDEX(e), p_vec, sz, (cell)amx_ftoc(f), (cell)amx_ftoc(fb), (cell)vb, (cell)vc)); \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)ENTINDEX(e), p_vec, sz, f, fb, (cell)vb, (cell)vc)); \
 		RETURN_META(mswi(lastFmRes)); \
 	} \
 	void call##_post (edict_t *e, float *vec, const char *sz, float f, float fb, int vb, int vc) \
 	{ \
 		PREPARE_VECTOR(vec); \
-		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX(e), p_vec, sz, (cell)amx_ftoc(f), (cell)amx_ftoc(fb), (cell)vb, (cell)vc)); \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX(e), p_vec, sz, f, fb, (cell)vb, (cell)vc)); \
 		RETURN_META(MRES_IGNORED); \
 	}
 //int flags, const edict_t *pInvoker, unsigned short eventindex, float delay, float *origin, float *angles, float fparam1, float fparam2, int iparam1, int iparam2, int bparam1, int bparam2 );
@@ -715,14 +715,14 @@
 	{ \
 		PREPARE_VECTOR(vec); \
 		PREPARE_VECTOR(vecb); \
-		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)v, (cell)ENTINDEX((edict_t*)e), (cell)eb, (cell)amx_ftoc(f), p_vec, p_vecb, (cell)amx_ftoc(fb), (cell)amx_ftoc(fc), (cell)vb, (cell)vc, (cell)vd, (cell)ve)); \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)v, (cell)ENTINDEX((edict_t*)e), (cell)eb, f, p_vec, p_vecb, fb, fc, (cell)vb, (cell)vc, (cell)vd, (cell)ve)); \
 		RETURN_META(mswi(lastFmRes)); \
 	} \
 	void call##_post (int v, const edict_t *e, unsigned short eb, float f, float *vec, float *vecb, float fb, float fc, int vb, int vc, int vd, int ve) \
 	{ \
 		PREPARE_VECTOR(vec); \
 		PREPARE_VECTOR(vecb); \
-		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i), (cell)v, (cell)ENTINDEX((edict_t*)e),(cell)eb, f, p_vec, p_vecb, (cell)amx_ftoc(fb), (cell)amx_ftoc(fc), (cell)vb, (cell)vc, (cell)vd, (cell)ve)); \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i), (cell)v, (cell)ENTINDEX((edict_t*)e),(cell)eb, f, p_vec, p_vecb, fb, fc, (cell)vb, (cell)vc, (cell)vd, (cell)ve)); \
 		RETURN_META(MRES_IGNORED); \
 	} 
 
@@ -732,14 +732,14 @@
 	{ \
 		PREPARE_VECTOR(vec); \
 		PREPARE_VECTOR(vecb); \
-		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  p_vec, p_vecb, (cell)amx_ftoc(fla), (cell)amx_ftoc(flb))); \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  p_vec, p_vecb, fla, flb)); \
 		RETURN_META(mswi(lastFmRes)); \
 	} \
 	void call##_post (const float *vec,const float *vecb, float fla, float flb) \
 	{ \
 		PREPARE_VECTOR(vec); \
 		PREPARE_VECTOR(vecb); \
-		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  p_vec, p_vecb, (cell)amx_ftoc(fla), (cell)amx_ftoc(flb))); \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  p_vec, p_vecb, fla, flb)); \
 		RETURN_META(MRES_IGNORED); \
 	}
 

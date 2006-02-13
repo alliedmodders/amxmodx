@@ -14,5 +14,3 @@ void OnAmxxAttach()
 	MF_AddNatives(write_natives);
 	MF_AddNatives(misc_natives);
 }
-
-

@@ -1,24 +1,25 @@
 #include "MemConst.h"
 
 // Game memory addresses
-maddress gameDllAddress;
-maddress gameEngAddress;
+maddress gameDllAddress = NULL;
+maddress gameEngAddress = NULL;
 
-bool GetBaseAddress(void *pAddr, maddress &pBaseAddr)
+bool GetBaseAddress(void *pAddr, maddress &pBaseAddr/*, size_t *memLength*/)
 {
 #ifdef WIN32
 	MEMORY_BASIC_INFORMATION mem;
 	if (!VirtualQuery(pAddr, &mem, sizeof(mem)))
 		return false;
 
-	if (pBaseAddr)
-		pBaseAddr = (maddress)mem.AllocationBase;
-
+	pBaseAddr = (maddress)mem.AllocationBase;
+	
 	IMAGE_DOS_HEADER *dos = (IMAGE_DOS_HEADER *)(mem.AllocationBase);
-	IMAGE_NT_HEADERS *pe = reinterpret_cast<IMAGE_NT_HEADERS *>((unsigned long)dos + (unsigned long)dos->e_lfanew);
+	IMAGE_NT_HEADERS *pe = reinterpret_cast<IMAGE_NT_HEADERS*>( (unsigned long)dos + (unsigned long)dos->e_lfanew );
 	if (pe->Signature != IMAGE_NT_SIGNATURE)
 		return false;
 
+	//if (memLength)
+		//*memLength = (size_t)(pe->OptionalHeader.SizeOfImage);
 	return true;
 #else
 	Dl_info info;
@@ -34,9 +35,9 @@ bool GetBaseAddress(void *pAddr, maddress &pBaseAddr)
 		return false;
 	
 	if (pBaseAddr)
-		pBaseAddr = (maddress)info.dli_fbase;
-	if (memLength)
-		*memLength = buf.st_size;
+		*pBaseAddr = (unsigned char *)info.dli_fbase;
+	//if (memLength)
+		//*memLength = buf.st_size;
 	
 	return true;
 #endif
@@ -74,6 +75,15 @@ int MemoryProtect(void *addr, size_t len, unsigned long newProt, unsigned long *
 
 	return retVal;
 }
+
+// Linux won't work till I fix it for MEMTYPE_DATA
+#ifdef __linux__
+	// Data section stuff
+	maddress dataSectionStart;
+	maddress dataSectionOffset;
+
+	int pageSize = sysconf(_SC_PAGESIZE);
+#endif
 
 /* Gets real memory address */
 maddress GetRealMemoryAddress(maddress baseaddress, maddress address, char memType) 

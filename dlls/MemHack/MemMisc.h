@@ -4,7 +4,7 @@
 #include "MemConst.h"
 
 #define SAMPLE_DLLFUNC reinterpret_cast<void*>(gpGamedllFuncs->dllapi_table->pfnThink)
-#define SAMPLE_ENGFUNC reinterpret_cast<void*>(*g_engfuncs.pfnChangeLevel)
+#define SAMPLE_ENGFUNC reinterpret_cast<void*>(g_engfuncs.pfnChangeLevel)
 
 extern maddress gameDllAddress;
 extern maddress gameEngAddress;
@@ -26,10 +26,10 @@ inline bool GetBaseAddresses( void )
 {
 	bool success = false;
 
-	success = GetBaseAddress(SAMPLE_DLLFUNC, gameDllAddress );
+	success = GetBaseAddress(SAMPLE_DLLFUNC, gameDllAddress);
 	if(success == false) return false;
 
-	success = GetBaseAddress(SAMPLE_ENGFUNC, gameEngAddress );
+	success = GetBaseAddress(SAMPLE_ENGFUNC, gameEngAddress);
 	if(success == false) return false;
 
 	return true;

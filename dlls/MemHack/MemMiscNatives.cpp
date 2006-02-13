@@ -20,8 +20,14 @@ static cell AMX_NATIVE_CALL memhack_get_realaddr(AMX *amx, cell *params)
 	return (cell)GetRealMemoryAddress(NATIVE_MISC_ADDRESS,NATIVE_MISC_BASEADDRESS,NATIVE_MISC_FLAGS);
 }
 
+static cell AMX_NATIVE_CALL memhack_return_addr(AMX *amx, cell *params)
+{
+		return (cell)PickBaseAddress(params[1]);
+}
+
 AMX_NATIVE_INFO misc_natives[] = {
 	{ "memhack_get_base",	memhack_get_base	},
 	{ "memhack_get_realaddr",	memhack_get_realaddr	},
+	{ "memhack_return_addr",	memhack_return_addr	},
 	{ NULL, NULL }
 };

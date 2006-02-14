@@ -109,7 +109,7 @@ public:
 	inline const char *getFilename() { return m_Filename.c_str(); }
 	inline bool IsMetamod() { return m_Metamod; }
 	
-	void CModule::CallPluginsLoaded();
+	void CallPluginsLoaded();
 
 	CList<AMX_NATIVE_INFO*> m_Natives;
 };

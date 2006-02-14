@@ -1167,7 +1167,9 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	gMetaFunctionTable.pfnGetEntityAPI2_Post = GetEntityAPI2_Post;
 	gMetaFunctionTable.pfnGetEngineFunctions = GetEngineFunctions;
 	gMetaFunctionTable.pfnGetEngineFunctions_Post = GetEngineFunctions_Post;
+#if !defined AMD64
 	gMetaFunctionTable.pfnGetNewDLLFunctions = GetNewDLLFunctions;
+#endif
 
 	memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
 	gpGamedllFuncs=pGamedllFuncs;

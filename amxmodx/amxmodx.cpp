@@ -3602,15 +3602,6 @@ static cell AMX_NATIVE_CALL amx_abort(AMX *amx, cell *params)
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL get_tick_count(AMX *amx, cell *params)
-{
-#if defined WIN32
-	return GetTickCount();
-#else
-	return 0;
-#endif
-}
-
 static cell AMX_NATIVE_CALL module_exists(AMX *amx, cell *params)
 {
 	int len;
@@ -3844,7 +3835,6 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"get_systime",				get_systime},
 	{"get_time",				get_time},
 	{"get_timeleft",			get_timeleft},
-	{"get_tick_count",			get_tick_count},
 	{"get_user_aiming",			get_user_aiming},
 	{"get_user_ammo",			get_user_ammo},
 	{"get_user_armor",			get_user_armor},

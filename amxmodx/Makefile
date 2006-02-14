@@ -6,7 +6,7 @@ MM_ROOT = ../metamod/metamod
 
 ### EDIT BELOW FOR OTHER PROJECTS ###
 
-OPT_FLAGS = -O2 -funroll-loops -s -pipe
+OPT_FLAGS = -O2 -funroll-loops -s -fomit-frame-pointer -pipe
 DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
 NAME = amxmodx_mm

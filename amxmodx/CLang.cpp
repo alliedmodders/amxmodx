@@ -380,8 +380,6 @@ int CLangMngr::GetKeyEntry(String &key)
 	_addr = params[*param]; \
 	(*param)++;
 
-#define MAX_LEVELS	4
-
 extern "C" size_t do_amx_format(AMX *amx, cell *params, int *param, const char **lex, char *output, size_t maxlen, int level);
 THash<String, lang_err> BadLang_Table;
 
@@ -479,12 +477,6 @@ size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int 
 	int numParams = params[0] / sizeof(cell);
 	cell _addr, *addr;
 
-	if (level >= MAX_LEVELS)
-	{
-		output[0] = '\0';
-		return 0;
-	}
-
 	*fmtptr++ = '%';
 	while (*fmtsrc && !isalpha(*fmtsrc))
 	{
@@ -505,7 +497,7 @@ size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int 
 	*fmtptr = '\0';
 	len = 0;
 	//reset the format pointer
-	fmtptr = fmt[level];
+	fmtptr = fmt;
 
 	//we now have the format
 	switch (ctrl_code)
@@ -548,6 +540,7 @@ size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int 
 			FMTPM_NEXTPARAM();
 			cell lang_addr = _addr;
 			FMTPM_NEXTPARAM();
+			int tmpLen;
 			const char *key = get_amxstring(amx, _addr, 3, tmpLen);
 
 			const char *def = translate(amx, lang_addr, key);

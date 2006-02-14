@@ -288,7 +288,7 @@ static cell AMX_NATIVE_CALL invalid_native(AMX *amx, cell *params)
 	}
 
 	char name[sNAMEMAX + 1];
-	int native = reinterpret_cast<int>(amx->usertags[UT_NATIVE]);
+	int native = (int)(amx->usertags[UT_NATIVE]);
 	int err = amx_GetNative(amx, native, name);
 
 	if (err != AMX_ERR_NONE)

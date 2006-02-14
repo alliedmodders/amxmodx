@@ -18,7 +18,7 @@ OBJECTS = meta_api.cpp CFile.cpp CVault.cpp vault.cpp float.cpp file.cpp modules
 	CMenu.cpp util.cpp amx.cpp amxdbg.cpp natives.cpp newmenus.cpp debugger.cpp \
 	optimizer.cpp
 
-LINK = -lz 
+LINK = -lz /lib/libstdc++.a
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
 	-I$(MM_ROOT) -Lzlib -I$(HLSDK)/common
@@ -40,7 +40,7 @@ CFLAGS += -DLINUX -DNDEBUG -fPIC -Wno-deprecated -DHAVE_STDINT_H -static-libgcc 
 
 ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_amd64.so
-	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -m64 
+	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -DAMD64 -m64 
 	OBJECTS += JIT/natives-amd64.o
 else
 	BINARY = $(NAME)_i386.so

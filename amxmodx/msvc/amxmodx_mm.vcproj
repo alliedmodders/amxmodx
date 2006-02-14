@@ -957,6 +957,13 @@
 				RelativePath="..\sdk\moduleconfig.h">
 			</File>
 		</Filter>
+		<Filter
+			Name="Helpers"
+			Filter="">
+			<File
+				RelativePath="..\Jit\helpers-x86.obj">
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

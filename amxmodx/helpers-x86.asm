@@ -7,6 +7,10 @@
 
 section .text
 
+%ifdef LINUX
+%define __snprintf _snprintf
+%endif
+
 extern _LogError, _get_amxstring_r, __snprintf, _MNF_GetAmxString
 extern _translate
 

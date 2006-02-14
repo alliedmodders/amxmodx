@@ -87,11 +87,27 @@ int Compare<String>(const String &k1, const String &k2)
 }
 
 template<>
+int CompareAlt<char const *, String>(char const * const &k1,  String const &k2)
+{
+	return strcmp(k1, k2.c_str());
+}
+
+template<>
 int HashFunction<String>(const String &k)
 {
 	unsigned long hash = 5381;
-	const char *str = k.c_str();
-	char c;
+	register const char *str = k.c_str();
+	register char c;
+	while (c = *str++) hash = ((hash << 5) + hash) + c; // hash*33 + c
+	return hash;
+}
+
+template<>
+int HashAlt<const char *>(char const * const &k)
+{
+	unsigned long hash = 5381;
+	register const char *str = k;
+	register char c;
 	while (c = *str++) hash = ((hash << 5) + hash) + c; // hash*33 + c
 	return hash;
 }
@@ -327,7 +343,7 @@ const char * CLangMngr::GetKey(int key)
 
 int CLangMngr::GetKeyEntry(const char *key)
 {
-	keytbl_val &val = KeyTable[make_string(key)];
+	keytbl_val &val = KeyTable[key];
 
 	return val.index;
 }
@@ -362,23 +378,103 @@ int CLangMngr::GetKeyEntry(String &key)
 		return 0; \
 	} \
 	_addr = params[*param]; \
-	addr = get_amxaddr(amx, _addr); \
 	(*param)++;
 
 #define MAX_LEVELS	4
 
-size_t do_amx_format(AMX *amx, cell *params, int *param, const char **lex, char *output, size_t maxlen, int level);
+extern "C" size_t do_amx_format(AMX *amx, cell *params, int *param, const char **lex, char *output, size_t maxlen, int level);
 THash<String, lang_err> BadLang_Table;
 
 static cvar_t *amx_mldebug = NULL;
+static cvar_t *amx_cl_langs = NULL;
 
-size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int *param, char *output, size_t maxlen, int level)
+extern "C" const char *translate(AMX *amx, cell amxaddr, const char *key)
 {
-	static char buffer[MAX_LEVELS][2048];
-	static char fmt[MAX_LEVELS][32];
+	const char *pLangName = NULL;
+	const char *def = NULL;
+	int status;
+	cell *addr = get_amxaddr(amx, amxaddr);
+	char name[4];
+	if (addr[0] == LANG_PLAYER)
+	{
+		if (!amx_cl_langs)
+			amx_cl_langs = CVAR_GET_POINTER("amx_client_languages");
+		if ( (int)amx_cl_langs->value == 0 )
+		{
+			pLangName = g_vault.get("server_language");
+		} else {
+			pLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(g_langMngr.GetDefLang())->pEdict, "lang");
+		}
+	} else if (addr[0] == LANG_SERVER) {
+		pLangName = g_vault.get("server_language");
+	} else if (addr[0] >= 1 && addr[0] <= gpGlobals->maxClients) {
+		if (!amx_cl_langs)
+			amx_cl_langs = CVAR_GET_POINTER("amx_client_languages");
+		if ( (int)amx_cl_langs->value == 0 )
+		{
+			pLangName = g_vault.get("server_language");
+		} else {
+			pLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(addr[0])->pEdict, "lang");
+		}
+	} else {
+		get_amxstring_r(amx, amxaddr, name, 3);
+		pLangName = name;
+	}
+	if (!pLangName || !isalpha(pLangName[0]))
+		pLangName = "en";
+	//next parameter!
+	def = g_langMngr.GetDef(pLangName, key, status);
+			
+	if (!amx_mldebug)
+		amx_mldebug = CVAR_GET_POINTER("amx_mldebug");
+
+	bool debug = (amx_mldebug && amx_mldebug->string && (amx_mldebug->string[0] != '\0'));
+		
+	if (debug)
+	{
+		int debug_status;
+		bool validlang = true;
+		const char *testlang = amx_mldebug->string;
+		if (!g_langMngr.LangExists(testlang))
+		{
+			AMXXLOG_Log("[AMXX] \"%s\" is an invalid debug language", testlang);
+			validlang = false;
+		}
+				
+		g_langMngr.GetDef(testlang, key, debug_status);
+				
+		if (validlang && debug_status == ERR_BADKEY)
+			AMXXLOG_Log("[AMXX] Language key \"%s\" not found for language \"%s\", check \"%s\"", key, testlang, GetFileName(amx));
+	}
+				
+	if (def == NULL)
+	{
+		if (debug)
+		{
+			if (status == ERR_BADLANG && (BadLang_Table[make_string(pLangName)].last + 120.0f < gpGlobals->time))
+			{
+				AMXXLOG_Log("[AMXX] Language \"%s\" not found", pLangName);
+				BadLang_Table[make_string(pLangName)].last = gpGlobals->time;
+			}
+		}
+
+		if (addr[0] != LANG_SERVER)
+			def = g_langMngr.GetDef(g_vault.get("server_language"), key, status);
+		
+		if (!def && (strcmp(pLangName, "en") != 0 && strcmp(g_vault.get("server_language"), "en") != 0))
+			def = g_langMngr.GetDef("en", key, status);
+	}
+
+	return def;
+}
+
+#if defined AMD64
+size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int *param, char *output, size_t maxlen)
+{
+	char fmt[32];
 	size_t len = 0;
-	char *fmtptr = fmt[level];
-	const char *fmtsrc = *fmtstr;
+	char *fmtptr = fmt;
+	register const char *fmtsrc = *fmtstr;
 	char ctrl_code;
 	int numParams = params[0] / sizeof(cell);
 	cell _addr, *addr;
@@ -390,18 +486,20 @@ size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int 
 	}
 
 	*fmtptr++ = '%';
-	while (fmtsrc[len] && !isalpha((char)fmtsrc[len]))
+	while (*fmtsrc && !isalpha(*fmtsrc))
 	{
 		if (len >= sizeof(fmt)-2)
 			break;
-		*fmtptr++ = static_cast<char>(fmtsrc[len++]);
-	} 
+		*fmtptr++ = static_cast<char>(*fmtsrc++);
+		len++;
+	}
+
 	//get the final character
-	ctrl_code = fmtsrc[len++];
+	ctrl_code = *fmtsrc++;
 	if (!ctrl_code)
 		return 0;
 	//inc the source pointer
-	*fmtstr = &(fmtsrc[len]);
+	*fmtstr = fmtsrc;
 	//finalize the string
 	*fmtptr++ = ctrl_code;
 	*fmtptr = '\0';
@@ -409,28 +507,29 @@ size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int 
 	//reset the format pointer
 	fmtptr = fmt[level];
 
-	char *tmp_buf = buffer[level];
-
 	//we now have the format
 	switch (ctrl_code)
 	{
 	case 's':
 		{
 			FMTPM_NEXTPARAM();
-			get_amxstring_r(amx, _addr, tmp_buf, 2047);
-			return _snprintf(output, maxlen, fmtptr, tmp_buf);
+			char buffer[2048];
+			get_amxstring_r(amx, _addr, buffer, 2047);
+			return _snprintf(output, maxlen, fmtptr, buffer);
 			break;
 		}
 	case 'g':
 	case 'f':
 		{
 			FMTPM_NEXTPARAM();
+			addr = get_amxaddr(amx, _addr);
 			return _snprintf(output, maxlen, fmtptr, *(REAL *)addr);
 			break;
 		}
 	case 'p':
 		{
 			FMTPM_NEXTPARAM();
+			addr = get_amxaddr(amx, _addr);
 			return _snprintf(output, maxlen, fmtptr, addr);
 			break;
 		}
@@ -440,89 +539,23 @@ size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int 
 	case 'c':
 		{
 			FMTPM_NEXTPARAM();
+			addr = get_amxaddr(amx, _addr);
 			return _snprintf(output, maxlen, fmtptr, (int)addr[0]);
 			break;
 		}
 	case 'L':
 		{
 			FMTPM_NEXTPARAM();
-			const char *pLangName = NULL;
-			const char *def = NULL, *key = NULL;
-			int status;
-			int tmpLen;
-			if (addr[0] == LANG_PLAYER)
-			{
-				if ( (int)CVAR_GET_FLOAT("amx_client_languages") == 0 )
-				{
-					pLangName = g_vault.get("server_language");
-				} else {
-					pLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(g_langMngr.GetDefLang())->pEdict, "lang");
-				}
-			} else if (addr[0] == LANG_SERVER) {
-				pLangName = g_vault.get("server_language");
-			} else if (addr[0] >= 1 && addr[0] <= gpGlobals->maxClients) {
-				if ( (int)CVAR_GET_FLOAT("amx_client_languages") == 0 )
-				{
-					pLangName = g_vault.get("server_language");
-				} else {
-					pLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(addr[0])->pEdict, "lang");
-				}
-			} else {
-				pLangName = get_amxstring(amx, _addr, 0, tmpLen);
-			}
-			if (!pLangName || !isalpha(pLangName[0]))
-				pLangName = "en";
-			//next parameter!
+			cell lang_addr = _addr;
 			FMTPM_NEXTPARAM();
-			key = get_amxstring(amx, _addr, 1, tmpLen);
-			def = g_langMngr.GetDef(pLangName, key, status);
-			
-			if (!amx_mldebug)
-				amx_mldebug = CVAR_GET_POINTER("amx_mldebug");
+			const char *key = get_amxstring(amx, _addr, 3, tmpLen);
 
-			bool debug = (amx_mldebug && amx_mldebug->string && (amx_mldebug->string[0] != '\0'));
-		
-			if (debug)
-			{
-				int debug_status;
-				bool validlang = true;
-				const char *testlang = amx_mldebug->string;
+			const char *def = translate(amx, lang_addr, key);
 
-				if (!g_langMngr.LangExists(testlang))
-				{
-					AMXXLOG_Log("[AMXX] \"%s\" is an invalid debug language", testlang);
-					validlang = false;
-				}
-				
-				g_langMngr.GetDef(testlang, key, debug_status);
-				
-				if (validlang && debug_status == ERR_BADKEY)
-					AMXXLOG_Log("[AMXX] Language key \"%s\" not found for language \"%s\", check \"%s\"", key, testlang, GetFileName(amx));
-			}
-				
-			if (def == NULL)
-			{
-				if (debug)
-				{
-					if (status == ERR_BADLANG && (BadLang_Table[make_string(pLangName)].last + 120.0f < gpGlobals->time))
-					{
-						AMXXLOG_Log("[AMXX] Language \"%s\" not found", pLangName);
-						BadLang_Table[make_string(pLangName)].last = gpGlobals->time;
-					}
-				}
+			if (!def)
+				return _snprintf(output, maxlen, "ML_NOTFOUND: %s", key);
 
-				if (addr[0] != LANG_SERVER)
-					def = g_langMngr.GetDef(g_vault.get("server_language"), key, status);
-				
-				if (!def && (strcmp(pLangName, "en") != 0 && strcmp(g_vault.get("server_language"), "en") != 0))
-					def = g_langMngr.GetDef("en", key, status);
-
-				if (!def)
-				{
-					return _snprintf(output, maxlen, "ML_NOTFOUND: %s", key);
-				}				
-			}
-			return do_amx_format(amx, params, param, &def, output, maxlen, level + 1);
+			return do_amx_format(amx, params, param, &def, output, maxlen, 1);
 		}
 	default:
 		{
@@ -532,7 +565,9 @@ size_t do_amx_format_parameter(AMX *amx, cell *params, const char **fmtstr, int 
 	}
 }
 
-size_t do_amx_format(AMX *amx, cell *params, int *param, const char **lex, char *output, size_t maxlen, int level)
+//we implement this in raw asm for x86
+//we'll do it for AMD64 once VAC2 works on it
+extern "C" size_t do_amx_format(AMX *amx, cell *params, int *param, const char **lex, char *output, size_t maxlen, int level)
 {	
 	size_t written;
 	size_t orig_maxlen = maxlen;
@@ -552,7 +587,7 @@ size_t do_amx_format(AMX *amx, cell *params, int *param, const char **lex, char 
 					*output++ = *lexptr++;
 					maxlen -= 2;
 				} else {
-					written = do_amx_format_parameter(amx, params, &lexptr, param, output, maxlen, level + 1);
+					written = do_amx_format_parameter(amx, params, &lexptr, param, output, maxlen);
 					output += written;
 					maxlen -= written;
 				}
@@ -599,6 +634,7 @@ size_t do_amx_format(AMX *amx, cell *params, int *param, const char **lex, char 
 
 	return (orig_maxlen-maxlen);
 }
+#endif
 
 char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 {
@@ -1027,7 +1063,7 @@ CLangMngr::CLang * CLangMngr::GetLangR(const char *name)
 const char *CLangMngr::GetDef(const char *langName, const char *key, int &status)
 {
 	CLang *lang = GetLangR(langName);
-	keytbl_val &val = KeyTable[make_string(key)];
+	keytbl_val &val = KeyTable.AltFindOrInsert(key); //KeyTable[make_string(key)];
 	if (lang == NULL)
 	{
 		status = ERR_BADLANG;

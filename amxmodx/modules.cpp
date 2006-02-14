@@ -1115,7 +1115,7 @@ int MNF_FindAmxScriptByAmx(const AMX *amx)
 	return i;
 }
 
-char *MNF_GetAmxString(AMX *amx, cell amx_addr, int bufferId, int *pLen)
+extern "C" char *MNF_GetAmxString(AMX *amx, cell amx_addr, int bufferId, int *pLen)
 {
 	int len;
 	char *retVal = get_amxstring(amx, amx_addr, bufferId, len);
@@ -1342,7 +1342,7 @@ void MNF_Log(const char *fmt, ...)
 
 //by BAILOPAN
 // debugger engine front end
-void LogError(AMX *amx, int err, const char *fmt, ...)
+extern "C" void LogError(AMX *amx, int err, const char *fmt, ...)
 {
 	Debugger *pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
 

@@ -254,7 +254,7 @@ char* format_amxstring(AMX *amx, cell *params, int parm, int& len);
 AMX* get_amxscript(int, void**, const char**);
 const char* get_amxscriptname(AMX* amx);
 char* get_amxstring(AMX *amx, cell amx_addr, int id, int& len);
-size_t get_amxstring_r(AMX *amx, cell amx_addr, char *destination, int maxlen);
+extern "C" size_t get_amxstring_r(AMX *amx, cell amx_addr, char *destination, int maxlen);
 
 int amxstring_len(cell* cstr);
 int load_amxscript(AMX* amx, void** program, const char* path, char error[64], int debug);
@@ -271,7 +271,7 @@ void free_amxmemory(void **ptr);
 // get_localinfo
 const char* get_localinfo(const char* name, const char* def);
 cell AMX_NATIVE_CALL require_module(AMX *amx, cell *params);
-void LogError(AMX *amx, int err, const char *fmt, ...);
+extern "C" void LogError(AMX *amx, int err, const char *fmt, ...);
 
 enum ModuleCallReason
 {

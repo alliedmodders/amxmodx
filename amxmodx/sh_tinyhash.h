@@ -23,6 +23,12 @@
 	template <class K>
 	int Compare(const K & k1, const K & k2);
 
+	template <class U, class K>
+	int CompareAlt(const U &k1, const K &k2);
+
+	template <class U>
+	int HashAlt(const U &u);
+
 	/**
 	 * This is a tiny, growable hash class.
 	 * Meant for quick and dirty dictionaries only!
@@ -118,6 +124,35 @@
 			m_numBuckets = 0;
 			m_items = 0;
 		}
+	public:
+		template <typename U>
+		V & AltFindOrInsert(const U & ukey)
+		{
+			size_t place = HashAlt(ukey) % m_numBuckets;
+			THashNode *pNode = NULL;
+			if (!m_Buckets[place])
+			{
+				m_Buckets[place] = new List<THashNode *>;
+				pNode = new THashNode(ukey, V());
+				m_Buckets[place]->push_back(pNode);
+				m_percentUsed += (1.0f / (float)m_numBuckets);
+				m_items++;
+			} else {
+				typename List<THashNode *>::iterator iter;
+				for (iter=m_Buckets[place]->begin(); iter!=m_Buckets[place]->end(); iter++)
+				{
+					if (CompareAlt(ukey, (*iter)->key) == 0)
+						return (*iter)->val;
+				}
+				pNode = new THashNode(ukey, V());
+				m_Buckets[place]->push_back(pNode);
+				m_items++;
+			}
+			if (PercentUsed() > 0.75f)
+				_Refactor();
+			return pNode->val;
+		}
+	private:
 		THashNode *_FindOrInsert(const K & key)
 		{
 			size_t place = HashFunction(key) % m_numBuckets;

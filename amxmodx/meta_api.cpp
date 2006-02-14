@@ -124,6 +124,7 @@ cvar_t init_amxmodx_version = {"amxmodx_version", "", FCVAR_SERVER | FCVAR_SPONL
 cvar_t init_amxmodx_modules = {"amxmodx_modules", "", FCVAR_SPONLY};
 cvar_t init_amxmodx_debug = {"amx_debug", "1", FCVAR_SPONLY};
 cvar_t init_amxmodx_mldebug = {"amx_mldebug", "", FCVAR_SPONLY};
+cvar_t init_amxmodx_cl_langs = {"amx_client_languages", "", FCVAR_SERVER};
 cvar_t* amxmodx_version = NULL;
 cvar_t* amxmodx_modules = NULL;
 cvar_t* hostname = NULL;
@@ -1177,6 +1178,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	CVAR_REGISTER(&init_amxmodx_modules);
 	CVAR_REGISTER(&init_amxmodx_debug);
 	CVAR_REGISTER(&init_amxmodx_mldebug);
+	CVAR_REGISTER(&init_amxmodx_cl_langs);
 	
 	amxmodx_version = CVAR_GET_POINTER(init_amxmodx_version.name);
 	

@@ -1145,7 +1145,7 @@ C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_
 }
 
 #if !defined AMD64
-extern "C" init_format_jumps();
+extern "C" void init_format_jumps();
 #else
 void init_format_jumps()
 {

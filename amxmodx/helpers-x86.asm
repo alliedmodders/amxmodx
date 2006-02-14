@@ -8,7 +8,11 @@
 section .text
 
 %ifdef LINUX
-%define __snprintf _snprintf
+%define __snprintf snprintf
+%define _get_amxstring_r get_amxstring_r
+%define _MNF_GetAmxString MNF_GetAmxString
+%define _translate translate
+%define _LogError LogError
 %endif
 
 extern _LogError, _get_amxstring_r, __snprintf, _MNF_GetAmxString

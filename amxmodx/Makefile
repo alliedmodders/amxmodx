@@ -45,6 +45,7 @@ ifeq "$(AMD64)" "true"
 else
 	BINARY = $(NAME)_i386.so
 	OBJECTS += JIT/amxexecn.o JIT/amxjitsn.o JIT/natives-x86.o
+	OBJECTS += JIT/helpers-x86.o
 	CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32
 	OPT_FLAGS += -march=i586
 endif

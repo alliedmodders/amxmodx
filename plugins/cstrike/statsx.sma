@@ -366,7 +366,7 @@ get_attackers(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 	if (izStats[STATS_SHOTS] && ShowFullStats)
 	{
 		get_user_name(iAttacker, t_sName, MAX_NAME_LENGTH)
-		iLen = format(sBuffer, MAX_BUFFER_LENGTH, "%L -- %s -- %0.2f%%%% %L:^n", id, "ATTACKERS", t_sName, accuracy(izStats), id, "ACC")
+		iLen = format(sBuffer, MAX_BUFFER_LENGTH, "%L -- %s -- %0.2f%% %L:^n", id, "ATTACKERS", t_sName, accuracy(izStats), id, "ACC")
 	}
 	else
 		iLen = format(sBuffer, MAX_BUFFER_LENGTH, "%L:^n", id, "ATTACKERS")
@@ -420,7 +420,7 @@ get_victims(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 	get_user_vstats(id, 0, izStats, izBody)
 	
 	if (izStats[STATS_SHOTS])
-		iLen = format(sBuffer, MAX_BUFFER_LENGTH, "%L -- %0.2f%%%% %L:^n", id, "VICTIMS", accuracy(izStats), id, "ACC")
+		iLen = format(sBuffer, MAX_BUFFER_LENGTH, "%L -- %0.2f%% %L:^n", id, "VICTIMS", accuracy(izStats), id, "ACC")
 	else
 		iLen = format(sBuffer, MAX_BUFFER_LENGTH, "%L:^n", id, "VICTIMS")
 
@@ -514,7 +514,7 @@ add_most_disruptive(sBuffer[MAX_BUFFER_LENGTH + 1])
 		new Float:fGameEff = effec(g_izUserGameStats[id])
 		new Float:fRndAcc = accuracy(g_izUserRndStats[id])
 		
-		format(t_sText, MAX_TEXT_LENGTH, "%L: %s^n%d %L / %d %L -- %0.2f%%%% %L / %0.2f%%%% %L^n", LANG_SERVER, "MOST_DMG", g_izUserRndName[id], 
+		format(t_sText, MAX_TEXT_LENGTH, "%L: %s^n%d %L / %d %L -- %0.2f%% %L / %0.2f%% %L^n", LANG_SERVER, "MOST_DMG", g_izUserRndName[id], 
 				g_izUserRndStats[id][STATS_HITS], LANG_SERVER, "HIT_S", iMaxDamage, LANG_SERVER, "DMG", fGameEff, LANG_SERVER, "EFF", fRndAcc, LANG_SERVER, "ACC")
 		add(sBuffer, MAX_BUFFER_LENGTH, t_sText)
 	}
@@ -550,7 +550,7 @@ add_best_score(sBuffer[MAX_BUFFER_LENGTH + 1])
 		new Float:fGameEff = effec(g_izUserGameStats[id])
 		new Float:fRndAcc = accuracy(g_izUserRndStats[id])
 		
-		format(t_sText, MAX_TEXT_LENGTH, "%L: %s^n%d %L / %d hs -- %0.2f%%%% %L / %0.2f%%%% %L^n", LANG_SERVER, "BEST_SCORE", g_izUserRndName[id], 
+		format(t_sText, MAX_TEXT_LENGTH, "%L: %s^n%d %L / %d hs -- %0.2f%% %L / %0.2f%% %L^n", LANG_SERVER, "BEST_SCORE", g_izUserRndName[id], 
 				iMaxKills, LANG_SERVER, "KILL_S", iMaxHeadShots, fGameEff, LANG_SERVER, "EFF", fRndAcc, LANG_SERVER, "ACC")
 		add(sBuffer, MAX_BUFFER_LENGTH, t_sText)
 	}
@@ -572,7 +572,7 @@ add_team_score(sBuffer[MAX_BUFFER_LENGTH + 1])
 	}
 
 	// Format round team stats, MOTD
-	format(t_sText, MAX_TEXT_LENGTH, "TERRORIST %d / %0.2f%%%% %L / %0.2f%%%% %L^nCT %d / %0.2f%%%% %L / %0.2f%%%% %L^n", g_izTeamScore[0], 
+	format(t_sText, MAX_TEXT_LENGTH, "TERRORIST %d / %0.2f%% %L / %0.2f%% %L^nCT %d / %0.2f%% %L / %0.2f%% %L^n", g_izTeamScore[0], 
 			fzMapEff[0], LANG_SERVER, "EFF", fzRndAcc[0], LANG_SERVER, "ACC", g_izTeamScore[1], fzMapEff[1], LANG_SERVER, "EFF", fzRndAcc[1], LANG_SERVER, "ACC")
 	add(sBuffer, MAX_BUFFER_LENGTH, t_sText)
 }
@@ -591,7 +591,7 @@ save_team_chatscore()
 	}
 
 	// Format game team stats, chat
-	format(g_sScore, MAX_BUFFER_LENGTH, "TERRORIST %d / %0.2f%%%% %L / %0.2f%%%% %L  --  CT %d / %0.2f%%%% %L / %0.2f%%%% %L", g_izTeamScore[0], 
+	format(g_sScore, MAX_BUFFER_LENGTH, "TERRORIST %d / %0.2f%% %L / %0.2f%% %L  --  CT %d / %0.2f%% %L / %0.2f%% %L", g_izTeamScore[0], 
 			fzMapEff[0], LANG_SERVER, "EFF", fzMapAcc[0], LANG_SERVER, "ACC", g_izTeamScore[1], fzMapEff[1], LANG_SERVER, "EFF", fzMapAcc[1], LANG_SERVER, "ACC")
 }
 

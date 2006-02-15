@@ -1478,12 +1478,36 @@ static cell AMX_NATIVE_CALL client_cmd(AMX *amx, cell *params) /* 2 param */
 	return len;
 }
 
+static cell AMX_NATIVE_CALL get_pcvar_string(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	if (!ptr)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	return set_amxstring(amx, params[2], ptr->string ? ptr->string : "", params[3]);
+}
+
 static cell AMX_NATIVE_CALL get_cvar_string(AMX *amx, cell *params) /* 3 param */
 {
 	int ilen;
 	char* sptemp = get_amxstring(amx, params[1], 0, ilen);
 	
 	return set_amxstring(amx, params[2], CVAR_GET_STRING(sptemp), params[3]);
+}
+
+static cell AMX_NATIVE_CALL get_pcvar_float(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	if (!ptr)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	return amx_ftoc(ptr->value);
 }
 
 static cell AMX_NATIVE_CALL get_cvar_float(AMX *amx, cell *params) /* 1 param */
@@ -1494,6 +1518,20 @@ static cell AMX_NATIVE_CALL get_cvar_float(AMX *amx, cell *params) /* 1 param */
 	return amx_ftoc(pFloat);
 }
 
+static cell AMX_NATIVE_CALL set_pcvar_float(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	if (!ptr)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	ptr->value = amx_ctof(params[2]);
+	
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL set_cvar_float(AMX *amx, cell *params) /* 2 param */
 {
 	int ilen;
@@ -1502,10 +1540,36 @@ static cell AMX_NATIVE_CALL set_cvar_float(AMX *amx, cell *params) /* 2 param */
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL get_pcvar_num(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	if (!ptr)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	return (int)ptr->value;
+}
+
 static cell AMX_NATIVE_CALL get_cvar_num(AMX *amx, cell *params) /* 1 param */
 {
 	int ilen;
 	return (int)CVAR_GET_FLOAT(get_amxstring(amx, params[1], 0, ilen));
+}
+
+static cell AMX_NATIVE_CALL set_pcvar_num(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	if (!ptr)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	ptr->value = (float)params[2];
+
+	return 1;
 }
 
 static cell AMX_NATIVE_CALL set_cvar_num(AMX *amx, cell *params) /* 2 param */
@@ -2203,10 +2267,10 @@ static cell AMX_NATIVE_CALL register_cvar(AMX *amx, cell *params) /* 3 param */
 		}
 
 		CVAR_SET_STRING(temp, get_amxstring(amx, params[2], 1, i));
-		return 1;
+		return reinterpret_cast<cell>(CVAR_GET_POINTER(temp));
 	}
 
-	return 0;
+	return reinterpret_cast<cell>(CVAR_GET_POINTER(temp));
 }
 
 static cell AMX_NATIVE_CALL get_user_ping(AMX *amx, cell *params) /* 3 param */
@@ -2662,6 +2726,18 @@ static cell AMX_NATIVE_CALL remove_cvar_flags(AMX *amx, cell *params)
 	return 0;
 }
 
+static cell AMX_NATIVE_CALL get_pcvar_flags(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	if (!ptr)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	return ptr->flags;
+}
+
 static cell AMX_NATIVE_CALL get_cvar_flags(AMX *amx, cell *params)
 {
 	int ilen;
@@ -2669,6 +2745,20 @@ static cell AMX_NATIVE_CALL get_cvar_flags(AMX *amx, cell *params)
 	cvar_t* pCvar = CVAR_GET_POINTER(sCvar);
 	
 	return pCvar ? pCvar->flags : 0;
+}
+
+static cell AMX_NATIVE_CALL set_pcvar_flags(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	if (!ptr)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	ptr->flags = static_cast<int>(params[2]);
+
+	return 1;
 }
 
 static cell AMX_NATIVE_CALL set_cvar_flags(AMX *amx, cell *params)
@@ -3778,6 +3868,16 @@ static cell AMX_NATIVE_CALL DestroyForward(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL get_cvar_pointer(AMX *amx, cell *params)
+{
+	int len;
+	char *temp = get_amxstring(amx, params[1], 0, len);
+
+	cvar_t *ptr = CVAR_GET_POINTER(temp);
+
+	return reinterpret_cast<cell>(ptr);
+}
+
 AMX_NATIVE_INFO amxmodx_Natives[] =
 {
 	{"abort",					amx_abort},
@@ -3812,6 +3912,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"get_cvar_flags",			get_cvar_flags},
 	{"get_cvar_float",			get_cvar_float},
 	{"get_cvar_num",			get_cvar_num},
+	{"get_cvar_pointer",		get_cvar_pointer},
 	{"get_cvar_string",			get_cvar_string},
 	{"get_distance",			get_distance},
 	{"get_distance_f",			get_distance_f},
@@ -3826,6 +3927,10 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"get_modname",				get_modname},
 	{"get_module",				get_module},
 	{"get_modulesnum",			get_modulesnum},
+	{"get_pcvar_flags",			get_pcvar_flags},
+	{"get_pcvar_float",			get_pcvar_float},
+	{"get_pcvar_num",			get_pcvar_num},
+	{"get_pcvar_string",		get_pcvar_string},
 	{"get_players",				get_players},
 	{"get_playersnum",			get_playersnum},
 	{"get_plugin",				get_plugin},
@@ -3932,6 +4037,9 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"set_fail_state",			set_fail_state},
 	{"set_hudmessage",			set_hudmessage},
 	{"set_localinfo",			set_localinfo},
+	{"set_pcvar_flags",			set_pcvar_flags},
+	{"set_pcvar_float",			set_pcvar_float},
+	{"set_pcvar_num",			set_pcvar_num},
 	{"set_task",				set_task},
 	{"set_user_flags",			set_user_flags},
 	{"set_user_info",			set_user_info},

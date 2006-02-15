@@ -33,7 +33,7 @@ _init_format_jumps:
 	mov	[edx+'g'*4], dword format_parameter.fmt_float
 	mov	[edx+'i'*4], dword format_parameter.fmt_num
 	mov	[edx+'L'*4], dword format_parameter.fmt_ml
-	mov	[edx+'p'*4], dword format_parameter.fmt_ptr
+	;mov	[edx+'p'*4], dword format_parameter.fmt_ptr
 	mov	[edx+'s'*4], dword format_parameter.fmt_string
 	mov	[edx+'x'*4], dword format_parameter.fmt_num
 
@@ -58,6 +58,7 @@ format_parameter:
 	
 	push	edi
 	push	ebx
+	push	esi
 	
 	;len=30
 	mov	ecx, 30
@@ -100,7 +101,7 @@ format_parameter:
 	inc	esi
 	;get output ptr
 	mov	edi, [ebp-4]
-	
+	mov	edx, [ebp-12]
 	lea	ebx, [g_jumptbl]
 	jmp	[ebx+eax*4]	;LOLolOLoL.
 	
@@ -124,7 +125,7 @@ format_parameter:
 	push	dword [ebp+8]	;context
 	call	_get_amxstring_r
 	push	ebx		;push buffer
-	lea	ebx, [ebp-40]
+	lea	ebx, [ebp-44]
 	push	ebx		;push format
 	push	dword [ebp+28]	;push maxlen
 	push	edi		;push output
@@ -151,7 +152,7 @@ format_parameter:
 	add	edx, eax		;add dat to base
 	add	edx, dword [ebx+ecx*4]	;add params[ecx]
 	push	dword [edx]
-	lea	ebx, [ebp-40]
+	lea	ebx, [ebp-44]
 	push	ebx
 	push	dword [ebp+28]
 	push	edi
@@ -181,7 +182,7 @@ format_parameter:
 	sub	esp, 8
 	fstp	qword [esp]
 	;it's already on the stack now, push rest
-	lea	ebx, [ebp-40]
+	lea	ebx, [ebp-44]
 	push	ebx
 	push	dword [ebp+28]
 	push	edi
@@ -250,8 +251,12 @@ format_parameter:
 	
 	
 .fmt_default
-	
-.fmt_ptr
+	mov	esi, edx
+	;store the % at least
+	mov	[edi], byte '%'
+	inc 	edi
+	mov	eax, 1
+	jmp	.end	
 
 .error
 	push	ecx
@@ -267,6 +272,7 @@ format_parameter:
 
 .end
 	add	esp, 32
+	pop	ecx
 	pop	ebx
 	pop	ecx
 	

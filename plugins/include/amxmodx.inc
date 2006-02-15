@@ -520,7 +520,9 @@ native emit_sound(index, channel, sample[], Float:vol, Float:att,flags, pitch);
 /* Returns distance between two vectors. */
 native get_distance(origin1[3],origin2[3]);
 
-/* Registers new cvar for HL engine. */
+/* Registers new cvar for HL engine.
+ * Returns the cvar pointer for get/set_pcvar functions.
+ */
 native register_cvar(const name[],const string[],flags = 0,Float:fvalue = 0.0);
 
 /* Generates random floating point number from a to b. */
@@ -977,4 +979,20 @@ native ExecuteForward(forward_handle, &ret, ...);
  * Destroys/deallocates any type of forward
  */
 native DestroyForward(forward_handle);
+
+
+/* CVAR Pointer natives.  Use these for
+ *  more optimized CVAR usage.
+ * register_cvar() returns a pointer you can use.
+ */
+
+//Get a cvar pointer.  Returns 0 if not found.
+native get_cvar_pointer(const cvar[]);
+
+native get_pcvar_num(pcvar);
+native set_pcvar_num(pcvar, num);
+native Float:get_pcvar_float(pcvar);
+native set_pcvar(pcvar, Float:num);
+native get_pcvar_string(pcvar, string[], maxlen);
+
 

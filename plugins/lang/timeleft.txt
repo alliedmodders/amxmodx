@@ -13,7 +13,7 @@ TIME_LEFT = Zeit uebrig
 NO_T_LIMIT = Kein Zeitlimit
 MINUTE = Minute
 MINUTES = Minuten
-SECOND = Sekunden
+SECOND = Sekunde
 SECONDS = Sekunden
 
 [sr]

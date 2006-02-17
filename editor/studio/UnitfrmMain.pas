@@ -918,7 +918,10 @@ end;
 
 procedure TfrmMain.mnuUndoClick(Sender: TObject);
 begin
-  sciEditor.Undo;
+  if ActiveControl = sciEditor then
+    sciEditor.Undo
+  else if ActiveControl = rtfNotes then
+    rtfNotes.Undo;
 end;
 
 procedure TfrmMain.mnuSaveClick(Sender: TObject);
@@ -956,27 +959,42 @@ end;
 
 procedure TfrmMain.mnuRedoClick(Sender: TObject);
 begin
-  sciEditor.Redo;
+  if ActiveControl = sciEditor then
+    sciEditor.Redo
+  else if ActiveControl = rtfNotes then
+    rtfNotes.Undo;
 end;
 
 procedure TfrmMain.mnuCutClick(Sender: TObject);
 begin
-  sciEditor.Cut;
+  if ActiveControl = sciEditor then
+    sciEditor.Cut
+  else if ActiveControl = rtfNotes then
+    rtfNotes.CutToClipboard;
 end;
 
 procedure TfrmMain.mnuCopyClick(Sender: TObject);
 begin
-  sciEditor.Copy;
+  if ActiveControl = sciEditor then
+    sciEditor.Copy
+  else if ActiveControl = rtfNotes then
+    rtfNotes.CopyToClipboard;
 end;
 
 procedure TfrmMain.mnuPasteClick(Sender: TObject);
 begin
-  sciEditor.Paste;
+  if ActiveControl = sciEditor then
+    sciEditor.Paste
+  else if ActiveControl = rtfNotes then
+    rtfNotes.PasteFromClipboard;
 end;
 
 procedure TfrmMain.mnuSelectAllClick(Sender: TObject);
 begin
-  sciEditor.SelectAll;
+  if ActiveControl = sciEditor then
+    sciEditor.SelectAll
+  else if ActiveControl = rtfNotes then
+    rtfNotes.SelectAll;
 end;
 
 procedure TfrmMain.mnuCloseClick(Sender: TObject);

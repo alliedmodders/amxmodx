@@ -4402,7 +4402,9 @@ object frmMain: TfrmMain
             Width = 199
             Height = 427
             Align = alClient
+            ScrollBars = ssVertical
             TabOrder = 1
+            WantTabs = True
             OnKeyDown = rtfNotesKeyDown
             OnMouseDown = rtfNotesMouseDown
           end

@@ -989,10 +989,10 @@ native DestroyForward(forward_handle);
 //Get a cvar pointer.  Returns 0 if not found.
 native get_cvar_pointer(const cvar[]);
 
+native get_pcvar_flags(pcvar);
+native set_pcvar_flags(pcvar, flags);
 native get_pcvar_num(pcvar);
 native set_pcvar_num(pcvar, num);
 native Float:get_pcvar_float(pcvar);
-native set_pcvar(pcvar, Float:num);
+native set_pcvar_float(pcvar, Float:num);
 native get_pcvar_string(pcvar, string[], maxlen);
-
-

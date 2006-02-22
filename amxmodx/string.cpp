@@ -31,6 +31,7 @@
 
 #include <ctype.h>
 #include "amxmodx.h"
+#include "format.h"
 
 const char* stristr(const char* str, const char* substr)
 {
@@ -463,8 +464,14 @@ static cell AMX_NATIVE_CALL equali(AMX *amx, cell *params) /* 3 param */
 
 static cell AMX_NATIVE_CALL format(AMX *amx, cell *params) /* 3 param */
 {
-	int len;
-	return set_amxstring(amx, params[1], format_amxstring(amx, params, 3, len), params[2]);
+	//int len;
+	//return set_amxstring(amx, params[1], format_amxstring(amx, params, 3, len), params[2]);
+	cell *buf = get_amxaddr(amx, params[1]);
+	cell *fmt = get_amxaddr(amx, params[3]);
+	size_t maxlen = params[2];
+	int param = 4;
+	size_t total = atcprintf(buf, maxlen, fmt, amx, params, &param);
+	return total;
 }
 
 static cell AMX_NATIVE_CALL parse(AMX *amx, cell *params) /* 3 param */

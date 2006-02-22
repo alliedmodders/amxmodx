@@ -303,7 +303,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Hry\Half-Life\SDK\Multiplayer Source\pm_shared&quot;;&quot;C:\Hry\Half-Life\SDK\Multiplayer Source\dlls&quot;;&quot;C:\Hry\Half-Life\SDK\Multiplayer Source\engine&quot;;&quot;C:\Hry\Half-Life\SDK\Multiplayer Source\common&quot;;C:\Files\Programming\metamod\metamod"
+				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;PAWN_CELL_SIZE=32;ASM32;JIT"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="5"
@@ -672,6 +672,15 @@
 				RelativePath="..\float.cpp">
 			</File>
 			<File
+				RelativePath="..\format.cpp">
+				<FileConfiguration
+					Name="JITRelease|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="..\md5.cpp">
 			</File>
 			<File
@@ -824,6 +833,9 @@
 				RelativePath="..\fakemeta.h">
 			</File>
 			<File
+				RelativePath="..\format.h">
+			</File>
+			<File
 				RelativePath="..\md5.h">
 			</File>
 			<File
@@ -955,13 +967,6 @@
 			</File>
 			<File
 				RelativePath="..\sdk\moduleconfig.h">
-			</File>
-		</Filter>
-		<Filter
-			Name="Helpers"
-			Filter="">
-			<File
-				RelativePath="..\Jit\helpers-x86.obj">
 			</File>
 		</Filter>
 	</Files>

@@ -1145,14 +1145,6 @@ C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_
 	return (TRUE);
 }
 
-#if !defined AMD64
-extern "C" void init_format_jumps();
-#else
-void init_format_jumps()
-{
-}
-#endif
-
 static META_FUNCTIONS gMetaFunctionTable;
 C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, meta_globals_t *pMGlobals, gamedll_funcs_t *pGamedllFuncs)
 {
@@ -1230,8 +1222,6 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	// ###### Now attach metamod modules
 	// This will also call modules Meta_Query and Meta_Attach functions
 	loadModules(get_localinfo("amxx_modules", "addons/amxmodx/configs/modules.ini"), now);
-
-	init_format_jumps();
 
 	return (TRUE);
 }

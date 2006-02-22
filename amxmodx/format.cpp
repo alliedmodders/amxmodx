@@ -374,7 +374,7 @@ reswitch:
 				const char *def = translate(amx, addr, key);
 				size_t written = atcprintf(buf_p, llen, def, amx, params, &arg);
 				buf_p += written;
-				maxlen -= written;
+				llen -= written;
 				break;
 			}
 		case '%':

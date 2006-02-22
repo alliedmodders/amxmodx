@@ -1894,50 +1894,50 @@ OP_BREAK:
 OP_FLOAT_MUL:
 		GO_ON	j_float_mul, OP_FLOAT_DIV
 	j_float_mul:
-		fld		dword [esi+4]
-		fmul	dword [esi+8]
-		push	dword 0
-		fstp	dword [esp]
-		pop		eax
+		fld     dword [esi+4]
+		fmul    dword [esi+8]
+		sub     esp, 4
+		fstp    dword [esp]
+		pop     eax
 	CHECKCODESIZE j_float_mul
 	
 OP_FLOAT_DIV:
 		GO_ON	j_float_div, OP_FLOAT_ADD
 	j_float_div:
-		fld		dword [esi+4]
-		fdiv	dword [esi+8]
-		push	dword 0
-		fstp	dword [esp]
-		pop		eax
+		fld     dword [esi+4]
+		fdiv    dword [esi+8]
+		sub     esp, 4
+		fstp    dword [esp]
+		pop     eax
 	CHECKCODESIZE j_float_div
 	
 OP_FLOAT_ADD:
 		GO_ON	j_float_add, OP_FLOAT_SUB
 	j_float_add:
-		fld		dword [esi+4]
-		fadd	dword [esi+8]
-		push	dword 0
-		fstp	dword [esp]
-		pop		eax
+		fld     dword [esi+4]
+		fadd    dword [esi+8]
+		sub     esp, 4
+		fstp    dword [esp]
+		pop     eax
 	CHECKCODESIZE j_float_add
 	
 OP_FLOAT_SUB:
 		GO_ON	j_float_sub, OP_FLOAT_TO
 	j_float_sub:
-		fld		dword [esi+4]
-		fsub	dword [esi+8]
-		push	dword 0
-		fstp	dword [esp]
-		pop		eax
+		fld     dword [esi+4]
+		fsub    dword [esi+8]
+		sub     esp, 4
+		fstp	  dword [esp]
+		pop     eax
 	CHECKCODESIZE j_float_sub
 	
 OP_FLOAT_TO:
 		GO_ON   j_float_to, OP_FLOAT_ROUND
 	j_float_to:
 		fild    dword [esi+4]
-		push    0
+		sub     esp, 4
 		fstp    dword [esp]
-		pop	    eax
+		pop     eax
 	CHECKCODESIZE j_float_to
 	
 OP_FLOAT_ROUND:
@@ -1947,7 +1947,7 @@ OP_FLOAT_ROUND:
 		push    0
 		mov     ebp,esp
 		fstcw   [ebp]
-		mov		eax,[ebp]
+		mov     eax,[ebp]
 		push    eax
 		;clear the top bits
 		xor     ah,ah
@@ -2241,8 +2241,8 @@ err_divide:
         jmp     _return_popstack
 
 JIT_OP_SYSREQ:
-		push	ecx
-		push	esi
+        push	ecx
+        push	esi
         mov     ebp,amx         ; get amx into EBP
 
         sub     esi,edi         ; correct STK
@@ -2276,8 +2276,8 @@ JIT_OP_SYSREQ:
 
 
 JIT_OP_SYSREQ_D:                ; (TR)
-		push	ecx
-		push	esi
+        push	ecx
+        push	esi
         mov     ebp,amx         ; get amx into EBP
 
         sub     esi,edi         ; correct STK
@@ -2308,8 +2308,8 @@ JIT_OP_SYSREQ_D:                ; (TR)
 
 JIT_OP_BREAK:
 %ifdef DEBUGSUPPORT
-		push	ecx
-		push	esi
+        push	ecx
+        push	esi
         mov     ebp,amx         ; get amx into EBP
 
         sub     esi,edi         ; correct STK
@@ -2565,12 +2565,12 @@ _amx_opcodelist_jit:
         DD      OP_SYSREQ_D     ; TR
         DD      OP_SYMTAG       ; TR
         DD      OP_BREAK        ; TR
-        DD		OP_FLOAT_MUL	; DA
-        DD		OP_FLOAT_DIV	; DA
-        DD		OP_FLOAT_ADD	; DA
-        DD		OP_FLOAT_SUB	; DA
-        DD		OP_FLOAT_TO		; DA
-        DD		OP_FLOAT_ROUND	; DA
-        DD		OP_FLOAT_CMP	; DA
+        DD      OP_FLOAT_MUL	; DA
+        DD      OP_FLOAT_DIV	; DA
+        DD      OP_FLOAT_ADD	; DA
+        DD      OP_FLOAT_SUB	; DA
+        DD      OP_FLOAT_TO		; DA
+        DD      OP_FLOAT_ROUND	; DA
+        DD      OP_FLOAT_CMP	; DA
 
 END

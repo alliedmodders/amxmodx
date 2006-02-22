@@ -1409,47 +1409,47 @@ OP_NOP:
         GO_ON
         
 OP_FLOAT_MUL:
-		add		esi,4
-		fld		dword [edi+ecx+4]
+		add   esi,4
+		fld   dword [edi+ecx+4]
 		fmul	dword [edi+ecx+8]
-		push	dword 0
+		sub   esp,4
 		fstp	dword [esp]
-		pop		eax
+		pop   eax
 		GO_ON
 		
 OP_FLOAT_DIV:
-		add		esi,4
-		fld		dword [edi+ecx+4]
+		add   esi,4
+		fld   dword [edi+ecx+4]
 		fdiv	dword [edi+ecx+8]
-		push	dword 0
+		sub   esp,4
 		fstp	dword [esp]
-		pop		eax
+		pop   eax
 		GO_ON
 		
 OP_FLOAT_ADD:
-		add		esi,4
-		fld		dword [edi+ecx+4]
+		add   esi,4
+		fld   dword [edi+ecx+4]
 		fadd	dword [edi+ecx+8]
-		push	dword 0
+		sub   esp,4
 		fstp	dword [esp]
-		pop		eax
+		pop   eax
 		GO_ON
 		
 OP_FLOAT_SUB:
-		add		esi,4
-		fld		dword [edi+ecx+4]
+		add   esi,4
+		fld   dword [edi+ecx+4]
 		fsub	dword [edi+ecx+8]
-		push	dword 0
+		sub   esp, 4
 		fstp	dword [esp]
-		pop		eax
+		pop   eax
 		GO_ON
 		
 OP_FLOAT_TO:
-		add	    esi,4
+		add     esi,4
 		fild    dword [edi+ecx+4]
-		push    0
+		sub     esp,4
 		fstp    dword [esp]
-		pop	    eax
+		pop     eax
 		GO_ON
 		
 OP_FLOAT_ROUND:

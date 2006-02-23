@@ -47,10 +47,10 @@
 #define INSERT_STRING		3
 #define INSERT_NEWLINE		4
 
-// dictionary format is Fast-Format-Hash-Lookup, v5
+// dictionary format is Fast-Format-Hash-Lookup, v6
 #define MAGIC_HDR			0x4646484C
-#define FFHL_VERSION		5
-#define FFHL_MIN_VERSION	4
+#define FFHL_VERSION		6
+#define FFHL_MIN_VERSION	6
 
 /*version history:
 	* 1 (BAILOPAN) - Simplest form possible, no reverse
@@ -58,6 +58,7 @@
 	* 3 (PM OnoTo) - 2^32 languages per file with full reverse
 	* 4 (BAILOPAN) - Optimized by separating and relocating tables (normalization)
 	* 5 (BAILOPAN) - Removed hash storage
+	* 6 (BAILOPAN) - Arbitrary bump to force reparse.
 FORMAT:
 Magic					4bytes
 Version					1byte
@@ -403,192 +404,10 @@ const char *CLangMngr::Format(const char *fmt, ...)
 #define ZEROTERM(buf) buf[(sizeof(buf)/sizeof(buf[0]))-1]=0;
 #define NEXT_PARAM()
 
+//this is not implemented....
 char *CLangMngr::FormatString(const char *fmt, va_list &ap)
 {
-	// the output buffer
-	static char outbuf[4096];
-	char *outptr = outbuf;
-	const char *src = fmt;
-	int status;
-
-	while (*src)
-	{
-		if (*src == '%')
-		{
-			++src;
-			if (*src == 'L')
-			{
-				NEXT_PARAM();
-				const char *pAmxLangName = va_arg(ap, const char*);
-				const char *cpLangName=NULL;
-				// Handle player ids (1-32) and server language
-				
-				if (pAmxLangName == (const char *)LANG_PLAYER)	// LANG_PLAYER
-				{
-					if ((int)CVAR_GET_FLOAT("amx_client_languages"))
-					{
-						cpLangName = g_vault.get("server_language");
-					} else {
-						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(m_CurGlobId)->pEdict, "lang");
-					}
-				}
-				else if (pAmxLangName == (const char *)LANG_SERVER) // LANG_SERVER
-				{
-					cpLangName = g_vault.get("server_language");
-				}
-				else if (pAmxLangName >= (const char *)1 && pAmxLangName <= (const char *)32) // Direct Client Id
-				{
-					if ((int)CVAR_GET_FLOAT("amx_client_languages"))
-					{
-						cpLangName = g_vault.get("server_language");
-					} else {
-						cpLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I((int)pAmxLangName)->pEdict, "lang");
-					}
-				} else {	// Language Name
-					int tmplen = 0;
-					cpLangName = pAmxLangName;
-				}
-				
-				if (!cpLangName || strlen(cpLangName) < 1)
-					cpLangName = "en";
-				
-				int tmplen = 0;
-				const char *key = va_arg(ap, const char *);
-				const char *def = GetDef(cpLangName, key, status);
-				
-				if (def == NULL)
-				{
-					if (pAmxLangName != LANG_SERVER)
-					{
-						def = GetDef(g_vault.get("server_language"), key, status);
-					}
-					
-					if (strcmp(cpLangName, "en") != 0 && strcmp(g_vault.get("server_language"), "en") != 0)
-					{
-						def = GetDef("en", key, status);
-					}
-					
-					if (!def)
-					{
-						static char buf[512];
-						CHECK_PTR((char*)(buf + 17 + strlen(key)), buf, sizeof(buf));
-						sprintf(buf, "ML_LNOTFOUND: %s", key);
-						def = buf;
-					}
-				}
-
-				while (*def)
-				{
-					if (*def == '%')
-					{
-						++def;
-						static char format[32];
-						format[0] = '%';
-						char *ptr = format + 1;
-						while (ptr-format<sizeof(format) && !isalpha(*ptr++ = *def++))
-							/*nothing*/;
-						ZEROTERM(format);
-
-						*ptr = 0;
-						vsprintf(outptr, format, ap);
-						// vsprintf doesnt alter the ap, increment here
-						
-						switch (*(ptr - 1))
-						{
-							case 'f':
-								va_arg(ap, double);
-								break;
-							case 's':
-								va_arg(ap, char *);
-								break;
-							case 'c':
-							case 'd':
-							case 'i':
-							default:		// default: assume int-like parameter
-								va_arg(ap, int);
-								break;
-						}
-						
-						outptr += strlen(outptr);
-					}
-					else if (*def == '^')
-					{
-						++def;
-						
-						switch (*def)
-						{
-							case 'n':
-								CHECK_OUTPTR(1);
-								*outptr++ = '\n';
-								break;
-							case 't':
-								CHECK_OUTPTR(1);
-								*outptr++ = '\t';
-								break;
-							case '^':
-								CHECK_OUTPTR(1);
-								*outptr++ = '^';
-								break;
-							default:
-								CHECK_OUTPTR(2);
-								*outptr++ = '^';
-								*outptr++ = *def;
-								break;
-						}
-						
-						++def;
-					} else {
-						CHECK_OUTPTR(1);
-						*outptr++ = *def++;
-					}
-				}
-			} else {
-				static char format[32] = {'%'};
-				char *ptr = format + 1;
-				
-				if (*src != '%')
-				{
-					while (*src != 0 && ptr-format < sizeof(format) && !isalpha(*ptr++ = *src++))
-						/*nothing*/;
-					*ptr = 0;
-					ZEROTERM(format);
-					--src;
-					vsprintf(outptr, format, ap);
-					// vsprintf doesnt alter the ap, increment here
-					
-					switch (*(ptr - 1))
-					{
-						case 'f':
-							va_arg(ap, double);
-							break;
-						case 's':
-							va_arg(ap, char *);
-							break;
-						case 'c':
-						case 'd':
-						case 'i':
-						default:		// default: assume int-like parameter
-							va_arg(ap, int);
-							break;
-					}
-					
-					outptr += strlen(outptr);
-				} else {
-					CHECK_OUTPTR(1);
-					*outptr++ = '%';
-				}
-			}
-		} else {
-			CHECK_OUTPTR(1);
-			*outptr++ = *src;
-		}
-		++src;
-	}
-	
-	CHECK_OUTPTR(1);
-	*outptr++ = 0;
-	
-	return outbuf;
+	return "";
 }
 
 void CLangMngr::MergeDefinitions(const char *lang, CQueue<sKeyDef> &tmpVec)
@@ -712,6 +531,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 					tmpEntry.definition = new String;
 					tmpEntry.definition->assign(def.c_str());
 					tmpEntry.definition->trim();
+					tmpEntry.definition->reparse_newlines();
 					Defq.push(tmpEntry);
 					tmpEntry.key = -1;
 					tmpEntry.definition = NULL;
@@ -738,6 +558,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 			} else {
 				if (buf[0] == ':')
 				{
+					tmpEntry.definition->reparse_newlines();
 					Defq.push(tmpEntry);
 					tmpEntry.key = -1;
 					tmpEntry.definition = NULL;

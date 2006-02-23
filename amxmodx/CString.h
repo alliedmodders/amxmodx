@@ -178,6 +178,30 @@ public:
 
 		return false;
 	}
+
+	void reparse_newlines()
+	{
+		size_t len = size();
+		int offs = 0;
+		char c;
+		if (!len)
+			return;
+		for (size_t i=0; i<len; i++)
+		{
+			c = v[i];
+			if (c == '^' && (i != len-1))
+			{
+				c = v[++i];
+				if (c == 'n')
+					c = '\n';
+				else if (c == 't')
+					c = '\t';
+				offs++;
+			}
+			v[i-offs] = c;
+		}
+		v[len-offs] = '\0';
+	}
 	
 	void trim()
 	{

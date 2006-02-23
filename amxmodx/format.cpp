@@ -1,7 +1,12 @@
 #include "amxmodx.h"
 #include "format.h"
 
-//Adapted from Quake3's snprintf
+//Adapted from Quake3's vsprintf
+// thanks to cybermind for linking me to this :)
+//I made the following changes:
+// - Fixed spacing to be AMX Mod X standard
+// - Added 'n' support, no buffer overflows
+// - Templatized input/output buffers
 
 #define ALT			0x00000001		/* alternate form */
 #define HEXPREFIX	0x00000002		/* add 0x or 0X prefix */
@@ -372,6 +377,12 @@ reswitch:
 				int len;
 				const char *key = get_amxstring(amx, params[arg++], 3, len);
 				const char *def = translate(amx, addr, key);
+				if (!def)
+				{
+					static char buf[255];
+					snprintf(buf, sizeof(buf)-1, "ML_NOTFOUND: %s", key);
+					def = buf;
+				}
 				size_t written = atcprintf(buf_p, llen, def, amx, params, &arg);
 				buf_p += written;
 				llen -= written;
@@ -408,7 +419,7 @@ void __WHOA_DONT_CALL_ME_PLZ_K_lol_o_O()
 	atcprintf((cell *)NULL, 0, (const char *)NULL, NULL, NULL, NULL);
 	//accprintf
 	atcprintf((cell *)NULL, 0, (cell *)NULL, NULL, NULL, NULL);
-	//acsprintf
+	//ascprintf
 	atcprintf((char *)NULL, 0, (cell *)NULL, NULL, NULL, NULL);
 }
 

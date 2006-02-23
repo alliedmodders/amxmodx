@@ -462,15 +462,53 @@ static cell AMX_NATIVE_CALL equali(AMX *amx, cell *params) /* 3 param */
 	return (f - l) ? 0 : 1;
 }
 
+static cell g_cpbuf[4096];
+
+static cell AMX_NATIVE_CALL formatex(AMX *amx, cell *params)
+{
+	cell *buf = get_amxaddr(amx, params[1]);
+	size_t maxlen = static_cast<size_t>(params[2]);
+    cell *fmt = get_amxaddr(amx, params[3]);
+	int param = 4;
+	size_t total = atcprintf(buf, maxlen, fmt, amx, params, &param);
+	return static_cast<cell>(total);
+}
+
 static cell AMX_NATIVE_CALL format(AMX *amx, cell *params) /* 3 param */
 {
-	//int len;
-	//return set_amxstring(amx, params[1], format_amxstring(amx, params, 3, len), params[2]);
 	cell *buf = get_amxaddr(amx, params[1]);
 	cell *fmt = get_amxaddr(amx, params[3]);
 	size_t maxlen = params[2];
+	/** 
+	 * SPECIAL CASE - check if the buffers overlap.
+	 *  some users, for whatever reason, do things like:
+	 *  format(buf, 255, buf....
+	 *  this is considered "deprecated" but we have to support it.
+	 * we do this by checking to see if reading from buf will overlap
+	 */
+	cell addr_start = params[1];
+	cell addr_end = params[1] + maxlen * sizeof(cell);
+	cell max = params[0] / sizeof(cell);
+	bool copy = false;
+	for (cell i = 3; i <= max; i++)
+	{
+		//does this clip the bounds?!?!? WELL, DOES IT!?!?! i am a loud dog
+		if (params[i] >= addr_start && params[i] <= addr_end)
+		{
+			copy = true;
+			break;
+		}
+	}
+	if (copy)
+		buf = g_cpbuf;
 	int param = 4;
 	size_t total = atcprintf(buf, maxlen, fmt, amx, params, &param);
+	if (copy)
+	{
+		/* copy back */
+		cell *old = get_amxaddr(amx, params[1]);
+		memcpy(old, g_cpbuf, total * sizeof(cell));
+	}
 	return total;
 }
 
@@ -906,6 +944,7 @@ AMX_NATIVE_INFO string_Natives[] =
 	{"equal",			equal},
 	{"equali",			equali},
 	{"format",			format},
+	{"formatex",		formatex},
 	{"format_args",		format_args},
 	{"isdigit",			is_digit},
 	{"isalnum",			is_alnum},

@@ -362,7 +362,10 @@ begin
           eStr[i] := '//' + eStr[i];
       end;
       eStr.Add('gamedll "addons\metamod\dlls\metamod.dll"');
-      eStr.Add('gamedll_linux "addons/metamod/dlls/metamod_i386.so"');
+      if OS = osLinux64 then
+        eStr.Add('gamedll_linux "addons/metamod/dlls/metamod_amd64.so"')
+      else
+        eStr.Add('gamedll_linux "addons/metamod/dlls/metamod_i386.so"');
       FileSetAttr(ePath + 'liblist.gam', 0);
       eStr.SaveToFile(ePath + 'liblist.gam');
       FileSetAttr(ePath + 'liblist.gam', faReadOnly); // important for listen servers

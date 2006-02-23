@@ -390,13 +390,16 @@ reswitch:
 			}
 		case '%':
 			*buf_p++ = static_cast<D>(ch);
+			llen--;
 			break;
 		case '\0':
 			*buf_p++ = static_cast<D>('%');
+			llen--;
 			goto done;
 			break;
 		default:
 			*buf_p++ = static_cast<D>(ch);
+			llen--;
 			break;
 		}
 	}

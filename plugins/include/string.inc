@@ -37,11 +37,11 @@ native add(dest[],len,const src[],max=0);
 native format(output[] ,len ,const format[] , {Float,Sql,Result,_}:...);
 
 /* Same as format(), except does not perform a "copy back" check.
- * This means formatex() is faster, but does not allow this type
+ * This means formatex() is faster, but DOES NOT ALLOW this type
  * of call:
- *  formatex(buffer, "%s", buffer)
- *  formatex(buffer, buffer, buffer)
- *  formatex(buffer, "%s", buffer[5])
+ *  formatex(buffer, len, "%s", buffer)
+ *  formatex(buffer, len, buffer, buffer)
+ *  formatex(buffer, len, "%s", buffer[5])
  * This is because the output is directly stored into "buffer", 
  *  rather than copied back at the end.
  */

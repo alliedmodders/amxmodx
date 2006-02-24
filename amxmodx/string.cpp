@@ -507,7 +507,7 @@ static cell AMX_NATIVE_CALL format(AMX *amx, cell *params) /* 3 param */
 	{
 		/* copy back */
 		cell *old = get_amxaddr(amx, params[1]);
-		memcpy(old, g_cpbuf, total * sizeof(cell));
+		memcpy(old, g_cpbuf, (total+1) * sizeof(cell));
 	}
 	return total;
 }

@@ -27,9 +27,25 @@ native replace(text[],len,const what[],const with[]);
 native add(dest[],len,const src[],max=0);
 
 /* Fills string with given format and parameters.
-* Function returns number of copied chars.
-* Example: format(dest,"Hello %s. You are %d years old","Tom",17). */
+ * Function returns number of copied chars.
+ * Example: format(dest,"Hello %s. You are %d years old","Tom",17).
+ * If any of your input buffers overlap with the destination buffer,
+ *  format() falls back to a "copy-back" version as of 1.65.  This is 
+ *  slower, so you should using a source string that is the same as
+ *  the destination.
+ */
 native format(output[] ,len ,const format[] , {Float,Sql,Result,_}:...);
+
+/* Same as format(), except does not perform a "copy back" check.
+ * This means formatex() is faster, but does not allow this type
+ * of call:
+ *  formatex(buffer, "%s", buffer)
+ *  formatex(buffer, buffer, buffer)
+ *  formatex(buffer, "%s", buffer[5])
+ * This is because the output is directly stored into "buffer", 
+ *  rather than copied back at the end.
+ */
+native formatex(output[] ,len ,const format[] , {Float,Sql,Result,_}:...);
 
 /* Gets parameters from function as formated string. */
 native format_args(output[] ,len ,pos = 0);

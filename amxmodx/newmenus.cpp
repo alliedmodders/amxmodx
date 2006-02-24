@@ -679,7 +679,8 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 	case MPROP_TITLE:
 		{
 			char *str = get_amxstring(amx, params[3], 0, len);
-			g_menucmds.removeMenuId(pMenu->menuId);
+			int old = pMenu->menuId;
+			g_menucmds.removeMenuId(old);
 			pMenu->m_Title.assign(str);
 			pMenu->menuId = g_menucmds.registerMenuId(str, amx);
 			g_menucmds.registerMenuCmd(
@@ -687,6 +688,18 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 				pMenu->menuId,
 				1023,
 				pMenu->func);
+			CPlayer *pl;
+			/**
+			 * NOTE - this is actually bogus
+			 *  the client's screen won't actually match the cmd here 
+			 *  I think, this scenario needs to be tested. 
+			 */
+			for (int i=1; i<=gpGlobals->maxClients; i++)
+			{
+				pl = GET_PLAYER_POINTER_I(i);
+				if (pl->menu == old)
+					pl->menu = pMenu->menuId;
+			}
 			break;
 		}
 	case MPROP_EXITALL:

@@ -51,8 +51,6 @@ class MenuMngr
 		{
 			id = ++uniqueid;
 		}
-		
-		~MenuIdEle() { --uniqueid; }
 	} *headid;
 
 public:

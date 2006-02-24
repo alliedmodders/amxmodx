@@ -47,6 +47,7 @@ MenuMngr::MenuCommand::MenuCommand(CPluginMngr::CPlugin *a, int mi, int k, int f
 MenuMngr::~MenuMngr() 
 {
 	clear();
+	MenuMngr::MenuIdEle::uniqueid = 0;
 }
 
 int MenuMngr::findMenuId(const char* name, AMX* amx)
@@ -81,6 +82,7 @@ void MenuMngr::removeMenuId(int id)
 
 	MenuCommand *c = headcmd;
 	MenuCommand *lc = NULL;
+	MenuCommand *tmp;
 	while (c)
 	{
 		if (c->menuid == id)
@@ -89,11 +91,13 @@ void MenuMngr::removeMenuId(int id)
 				lc->next = c->next;
 			else
 				headcmd = c->next;
+			tmp = c->next;
 			delete c;
-			break;
+			c = tmp;
+		} else {
+			lc = c;
+			c = c->next;
 		}
-		lc = c;
-		c = c->next;
 	}
 }
 

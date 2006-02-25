@@ -1,4 +1,4 @@
-#(C)2004-2005 AMX Mod X Development Team
+#(C)2004-2006 AMX Mod X Development Team
 # Makefile written by David "BAILOPAN" Anderson
 
 HLSDK = ../../hlsdk/SourceCode
@@ -11,16 +11,16 @@ DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
 CC = cc
 NAME = sqlite_amxx
-SQL = sqlite-source-3_2_5
+SQL = sqlite-source-3_3_4
 
 CPP_OBJECTS = sqlite.cpp sqlite_amx.cpp amxxmodule.cpp
 C_OBJECTS = $(SQL)/attach.c $(SQL)/auth.c $(SQL)/btree.c $(SQL)/build.c \
 	$(SQL)/date.c $(SQL)/delete.c $(SQL)/func.c $(SQL)/hash.c \
 	$(SQL)/insert.c $(SQL)/legacy.c $(SQL)/main.c $(SQL)/opcodes.c \
-	$(SQL)/os_unix.c $(SQL)/os_win.c $(SQL)/pager.c $(SQL)/parse.c \
+	$(SQL)/os.c $(SQL)/os_unix.c $(SQL)/pager.c $(SQL)/parse.c \
 	$(SQL)/pragma.c $(SQL)/printf.c $(SQL)/random.c $(SQL)/select.c \
-	$(SQL)/shell.c $(SQL)/table.c $(SQL)/tokenize.c $(SQL)/trigger.c \
-	$(SQL)/update.c $(SQL)/utf.c $(SQL)/util.c $(SQL)/vacuum.c $(SQL)/vdbe.c \
+	$(SQL)/table.c $(SQL)/tokenize.c $(SQL)/trigger.c $(SQL)/update.c \
+	$(SQL)/utf.c $(SQL)/util.c $(SQL)/vacuum.c $(SQL)/vdbe.c \
 	$(SQL)/vdbeapi.c $(SQL)/vdbeaux.c $(SQL)/vdbemem.c $(SQL)/where.c \
 	$(SQL)/prepare.c $(SQL)/expr.c $(SQL)/callback.c $(SQL)/alter.c \
 	$(SQL)/vdbefifo.c $(SQL)/complete.c $(SQL)/analyze.c
@@ -28,7 +28,7 @@ C_OBJECTS = $(SQL)/attach.c $(SQL)/auth.c $(SQL)/btree.c $(SQL)/build.c \
 LINK = -static-libgcc
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
-	-I$(MM_ROOT) -Lzlib -I$(HLSDK)/common -I$(SQL)
+	-I$(MM_ROOT) -I$(HLSDK)/common -I$(SQL)
 
 ifeq "$(DEBUG)" "true"
 	BIN_DIR = Debug

@@ -88,6 +88,17 @@ extern AMX_NATIVE_INFO vault_Natives[];
 #define DLFREE(m) dlclose(m)
 #endif
 
+#if defined __GNUC__
+	#include <stdint.h>
+	typedef intptr_t _INT_PTR;
+#else
+	#if defined AMD64
+		typedef __int64 _INT_PTR;
+	#else
+		typedef __int32 _INT_PTR;
+	#endif
+#endif
+
 #ifndef __linux__
 	typedef HINSTANCE DLHANDLE;
 #else

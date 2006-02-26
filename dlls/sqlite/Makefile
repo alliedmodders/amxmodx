@@ -33,9 +33,11 @@ INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_share
 ifeq "$(DEBUG)" "true"
 	BIN_DIR = Debug
 	CFLAGS = $(DEBUG_FLAGS)
+	CPPFLAGS = $(DEBUG_FLAGS)
 else
 	BIN_DIR = Release
 	CFLAGS = $(OPT_FLAGS)
+	CPPFLAGS = $(OPT_FLAGS)
 endif
 
 CPPFLAGS += -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H -fno-rtti
@@ -43,7 +45,7 @@ CFLAGS += -DNDEBUG -fPIC -DHAVE_STDINT_H
 
 ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_amd64.so
-	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -m64 
+	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -m64
 else
 	BINARY = $(NAME)_i386.so
 	CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32

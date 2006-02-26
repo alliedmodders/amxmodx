@@ -215,10 +215,16 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\StatsNatives.cpp">
+				RelativePath="..\moduleconfig.cpp">
 			</File>
 			<File
-				RelativePath="..\tsx.cpp">
+				RelativePath="..\NBase.cpp">
+			</File>
+			<File
+				RelativePath="..\NRank.cpp">
+			</File>
+			<File
+				RelativePath="..\usermsg.cpp">
 			</File>
 			<File
 				RelativePath="..\Utils.cpp">

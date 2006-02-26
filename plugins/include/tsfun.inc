@@ -1,6 +1,6 @@
 /* TSFUN
  *
- * (c) 2005, Twilight Suzuka
+ * (c) 2005-2006, AMX Mod X Dev Team
  * This file is provided as is (no warranties).
  */
 
@@ -9,6 +9,7 @@
 #endif
 #define _tsxfun_included
 
+#include <tsx>
 #include <tsconst>
 
 /************* Shared Natives Start ********************************/
@@ -24,17 +25,23 @@ enum {
 /************* Shared Natives End ********************************/
 
 /* Function is called just before a kung foo attack is done,
-* damage and time length may be altered with natives.
-* Return PLUGIN_HANDLED to stop attack. */
-forward Melee_Attack(id,Float:time,Float:damage);
+ * damage and time length may be altered with natives.
+ * Return PLUGIN_HANDLED to stop attack.
+ * UNAVAILABLE IN 1.70
+ */
+forward Melee_Attack(id,Float:time,Float:damage,UNAVAILABLE);
+
 
 // Returns when someone stunts, after they do it.
-forward client_stunt(id,stunttype);
+//UNAVAILABLE IN 1.70
+forward client_stunt(id,stunttype,UNAVAILABLE);
 
 /* Function is called when powerups are ran,
-* Returns value of powerup. Use TSPWUP_*'s
-* to find exactly which one it is. */
-forward client_powerup(id,powerup);
+ * Returns value of powerup. Use TSPWUP_*'s
+ * to find exactly which one it is. 
+ * UNAVAILABLE IN 1.70
+ */
+forward client_powerup(id,powerup,UNAVAILABLE);
 
 /* weapon logname to weapon name convertion */
 native ts_wpnlogtoname(logname[],name[],len);
@@ -42,8 +49,9 @@ native ts_wpnlogtoname(logname[],name[],len);
 /* weapon logname to weapon index convertion */
 native ts_wpnlogtoid(logname[]);
 
-native Float:ts_getusertime( index );
-native ts_setusertime( index, Float:time );
+//UNAVAILABLE IN 1.70
+//native Float:ts_getusertime( index );		//!
+//native ts_setusertime( index, Float:time );	//!
 
 native ts_getusercash( index );
 native ts_setusercash( index, money );
@@ -79,7 +87,8 @@ native ts_givepwup( index,pwupent );
 native ts_setpddata( knifeoffset );
 
 // Alters a fu attack. Use with fu forward
-native ts_set_fuattack(id,Float:time,Float:damage)
+// UNAVAILABLE IN 1.70
+// native ts_set_fuattack(id,Float:time,Float:damage);	//!
 
 // Changes board message
 native ts_set_message(id,message)
@@ -102,16 +111,18 @@ stock ts_is_unstoppable(id) return (ts_get_message(id) == TSMSG_UNSTOPPABLE)
 stock ts_is_theone(id) return (ts_get_message(id) == TSMSG_THEONE)
 
 // Return one on true, 0 on false
-native ts_has_superjump(id)
-native ts_has_fupowerup(id)
+// UNAVAILABLE IN 1.70
+// native ts_has_superjump(id);					//!
+// native ts_has_fupowerup(id);					//!
 native ts_is_in_slowmo(id)
 
 // Get and set consecutive frags
-native ts_get_cons_frags(id)
-native ts_set_cons_frags(id,num)
+//UNAVAILABLE IN 1.70
+//native ts_get_cons_frags(id);
+//native ts_set_cons_frags(id,num);
 
 // Set to see cool bullet trails. Only id will see them.
-native ts_set_bullettrail(id,yesorno)
+native ts_set_bullettrail(id,yesorno);
 
 // Sets fake versions of slow mo and slow pause. Use ts_set_speed for more options.
 native ts_set_fakeslowmo(id,Float:time)

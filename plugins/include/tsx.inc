@@ -21,7 +21,9 @@ enum {
   XMF_DEATH,
 }
 
-/* Use this function to register forwards */
+/* Use this function to register forwards 
+ * DEPRECATED
+ */
 native register_statsfwd( ftype );
 
 /* Function is called after player to player attacks ,

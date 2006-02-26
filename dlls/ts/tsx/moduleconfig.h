@@ -6,8 +6,8 @@
 // Module info
 #define MODULE_NAME "TSX"
 #define MODULE_VERSION "1.65"
-#define MODULE_AUTHOR "Twilight Suzuka"
-#define MODULE_URL "http://www.amxmodx.org"
+#define MODULE_AUTHOR "AMX Mod X Dev Team"
+#define MODULE_URL "http://www.amxmodx.org/"
 #define MODULE_LOGTAG "TSX"
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line
 #define MODULE_RELOAD_ON_MAPCHANGE
@@ -21,6 +21,16 @@
 // metamod plugin?
 #define USE_METAMOD
 
+// use memory manager/tester?
+// note that if you use this, you cannot construct/allocate 
+// anything before the module attached (OnAmxxAttach).
+// be careful of default constructors using new/malloc!
+// #define MEMORY_TEST
+
+// Unless you use STL or exceptions, keep this commented.
+// It allows you to compile without libstdc++.so as a dependency
+// #define NO_ALLOC_OVERRIDES
+
 // - AMXX Init functions
 // Also consider using FN_META_*
 // AMXX query
@@ -28,8 +38,8 @@
 // AMXX attach
 //   Do native functions init here (MF_AddNatives)
 #define FN_AMXX_ATTACH OnAmxxAttach
-// AMXX dettach
-// #define FN_AMXX_DETACH OnAmxxDetach
+// AMXX detach
+#define FN_AMXX_DETACH OnAmxxDetach
 // All plugins loaded
 //   Do forward functions init here (MF_RegisterForward)
 #define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
@@ -48,7 +58,7 @@
 //#define FN_META_QUERY OnMetaQuery
 // Meta attach
 #define FN_META_ATTACH OnMetaAttach
-// Meta dettach
+// Meta detach
 //#define FN_META_DETACH OnMetaDetach
 
 // (wd) are Will Day's notes
@@ -460,4 +470,3 @@
 #endif // USE_METAMOD
 
 #endif // __MODULECONFIG_H__
-

@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2003-2005 Twilight Suzuka
+ * Copyright (c) 2003-2004 Lukasz Wlasinski
  *
- *    This file is part of TSXMod.
+ *    This file is part of TS XMod.
  *
  *    TS XMod is free software; you can redistribute it and/or modify it
  *    under the terms of the GNU General Public License as published by the
@@ -32,44 +32,41 @@
 #include "amxxmodule.h"
 #include "tsx.h"
 
-void Client_ResetHUD_End(void* mValue)
-{
-	if ( mPlayer->IsAlive() )
-	{
-		mPlayer->clearStats = gpGlobals->time + 0.25f;
+
+void Client_ResetHUD_End(void* mValue){
+	if ( mPlayer->IsAlive() ){ // ostatni przed spawn'em 
+		mPlayer->clearStats = gpGlobals->time + 0.25f; // teraz czysc statystyki 
 	}
-	else 
-	{
+	else { // dalej "dead" nie czysc statystyk!
 		mPlayer->items = 0;
 		mPlayer->is_specialist = 0;
 		mPlayer->killingSpree = 0;
 		mPlayer->killFlags = 0;
 		mPlayer->frags = (int)mPlayer->pEdict->v.frags;
+		/* 
+		fix dla user_kill() z addfrag 
+		oraz self kills
+		*/
 	}
 }
 
-void Client_ScoreInfo(void* mValue)
-{
+void Client_ScoreInfo(void* mValue){
 	static int iId;
-	switch(mState++)
-	{
+	switch(mState++){
 	case 0:
 		iId = *(int*)mValue;
 		break;
 	case 4:
-		if ( iId && (iId < 33) )
-		{
+		if ( iId && (iId < 33) ){
 			GET_PLAYER_POINTER_I(iId)->teamId = *(int*)mValue;
 		}
 		break;
 	}
 }
 
-void Client_WeaponInfo(void* mValue)
-{
+void Client_WeaponInfo(void* mValue){
 	static int wpn;
-	switch(mState++)
-	{
+	switch(mState++){
 	case 0:
 		wpn =  *(int*)mValue;
 		if ( !wpn ) wpn = 36; // kung fu
@@ -90,58 +87,51 @@ void Client_WeaponInfo(void* mValue)
 	}
 }
 
-void Client_ClipInfo(void* mValue)
-{
+void Client_ClipInfo(void* mValue){
 	int iValue = *(int*)mValue;
-	if ( iValue < mPlayer->weapons[mPlayer->current].clip ) 
-	{
+	if ( iValue < mPlayer->weapons[mPlayer->current].clip ) {
 		mPlayer->saveShot(mPlayer->current);
 	}
 	mPlayer->weapons[mPlayer->current].clip = iValue;
 }
 
-void Client_TSHealth_End(void* mValue)
-{
+void Client_TSHealth_End(void* mValue){
 	edict_t *enemy = mPlayer->pEdict->v.dmg_inflictor;
 	int damage = (int)mPlayer->pEdict->v.dmg_take;
-
-	if ( !damage || !enemy ) return;
+	if ( !damage || !enemy )
+		return;
 
 	int aim = 0;
 	int weapon = 0;
 	mPlayer->pEdict->v.dmg_take = 0.0; 
 
 	CPlayer* pAttacker = NULL;
-	if ( enemy->v.flags & (FL_CLIENT | FL_FAKECLIENT) )
-	{
+	if ( enemy->v.flags & (FL_CLIENT | FL_FAKECLIENT) ){
 		pAttacker = GET_PLAYER_POINTER(enemy);
 		weapon = pAttacker->current;
 		aim = pAttacker->aiming;
 		pAttacker->saveHit( mPlayer , weapon , damage, aim );
 	}
-	else 
-	{
+	else {
 		char szCName[16];
 		strcpy( szCName,STRING(enemy->v.classname) );
 
-		if ( szCName[0] == 'g' ) 
-		{ 
-			if ( enemy->v.owner && enemy->v.owner->v.flags & (FL_CLIENT | FL_FAKECLIENT) )
-			{ 
+		if ( szCName[0] == 'g' ) { 
+			if ( enemy->v.owner && enemy->v.owner->v.flags & (FL_CLIENT | FL_FAKECLIENT) ){ 
 				pAttacker = GET_PLAYER_POINTER(enemy->v.owner);
 				weapon = 24; // grenade
-				if ( pAttacker != mPlayer ) pAttacker->saveHit( mPlayer , weapon , damage, 0 );
+				if ( pAttacker != mPlayer )
+					pAttacker->saveHit( mPlayer , weapon , damage, 0 );
 			}
 		}
-		else if ( szCName[0] == 'k' ) 
-		{
+		else if ( szCName[0] == 'k' ) {
 			int pOwner =  *( (int*)enemy->pvPrivateData + gKnifeOffset );
 
-			if ( FNullEnt( (edict_t*)pOwner) ) return;
-
+			if ( FNullEnt( (edict_t*)pOwner) )
+				return;
 			pAttacker = GET_PLAYER_POINTER( (edict_t*)pOwner );
 			
-			//weapon = 37; // throwing knife
+			weapon = 37; // throwing knife
 			aim = pAttacker->aiming;
 			pAttacker->saveHit( mPlayer , weapon , damage, aim );
 		}
@@ -149,74 +139,86 @@ void Client_TSHealth_End(void* mValue)
 	if ( !pAttacker ) pAttacker = mPlayer;
 
 	int TA = 0;
-
-	if ( mPlayer->teamId || is_theonemode  )
-	{
-		if ( (mPlayer->teamId == pAttacker->teamId ) && (mPlayer != pAttacker) ) TA = 1;
+	if ( mPlayer->teamId || is_theonemode  ){
+		if ( (mPlayer->teamId == pAttacker->teamId ) && (mPlayer != pAttacker) )
+			TA = 1;
 	}
 
-	if ( weaponData[weapon].melee ) pAttacker->saveShot(weapon);
+	if ( weaponData[weapon].melee ) 
+		pAttacker->saveShot(weapon);
 	
-	MF_ExecuteForward(g_damage_info, pAttacker->index, mPlayer->index, damage, weapon, aim, TA );
-	
-	if ( mPlayer->IsAlive() ) return;
+	MF_ExecuteForward(g_damage_info,
+		(cell)pAttacker->index,
+		(cell)mPlayer->index,
+		(cell)damage,
+		(cell)weapon,
+		(cell)aim,
+		(cell)TA
+		);
+
+	if ( mPlayer->IsAlive() )
+		return;
 
 	// death
 
-    if ( (int)pAttacker->pEdict->v.frags - pAttacker->frags == 0 ) pAttacker = mPlayer;
+    if ( (int)pAttacker->pEdict->v.frags - pAttacker->frags == 0 ) // nie bylo fraga ? jest tak dla bledu z granatem ..
+		pAttacker = mPlayer;
 
 	int killFlags = 0;
 
-	if ( !TA && mPlayer!=pAttacker ) 
-	{
+	if ( !TA && mPlayer!=pAttacker ) {
 
 		int sflags = pAttacker->pEdict->v.iuser4;
 	
 		int stuntKill = 0;
 		int slpos = 0;
 
-		if ( weapon == 24 );
-
-		else if ( sflags == 20 || sflags == 1028 || sflags == 2052 ) stuntKill = 1;
-		else if ( sflags == 36) slpos = 1;
+		if ( weapon == 24 ) // dla granata nie liczy sie sflags
+			; // nic nie rob..
+		else if ( sflags == 20 || sflags == 1028 || sflags == 2052 )
+			stuntKill = 1;
+		else if ( sflags == 36)
+			slpos = 1;
 
 		int doubleKill = 0;
 		
-		if ( gpGlobals->time - pAttacker->lastKill < 1.0 ) doubleKill = 1;
+		if ( gpGlobals->time - pAttacker->lastKill < 1.0 )
+			doubleKill = 1;
 		
-		if ( stuntKill ) killFlags |= TSKF_STUNTKILL;
+		if ( stuntKill )
+			killFlags |= TSKF_STUNTKILL;
 		
 		pAttacker->lastKill = gpGlobals->time;
 	
 		pAttacker->killingSpree++;
 
-		if ( pAttacker->killingSpree == 10 ) pAttacker->is_specialist = 1;
+		if ( pAttacker->killingSpree == 10 )
+			pAttacker->is_specialist = 1;
 	
 		pAttacker->lastFrag = weaponData[weapon].bonus + 2*stuntKill;
 
-		if ( doubleKill )
-		{
+		if ( doubleKill ){
 			pAttacker->lastFrag *= 2;
 			killFlags |= TSKF_DOUBLEKILL;
 		}
 
-		if ( pAttacker->is_specialist )
-		{
+		if ( pAttacker->is_specialist ){
 			pAttacker->lastFrag *= 2;
 			killFlags |= TSKF_ISSPEC;
 		}
 
-		if ( mPlayer->is_specialist )
-		{
+		if ( mPlayer->is_specialist ){
 			pAttacker->lastFrag += 5; 
 			killFlags |= TSKF_KILLEDSPEC;
 		}
 
 		pAttacker->frags += pAttacker->lastFrag; 
-			if ( pAttacker->frags != pAttacker->pEdict->v.frags )
-			{
-				if ( slpos ) killFlags |= TSKF_SLIDINGKILL;	
-				else weapon = 36;
+			if ( pAttacker->frags != pAttacker->pEdict->v.frags ){
+				// moze to sliding kill ?
+				if ( slpos )
+					killFlags |= TSKF_SLIDINGKILL;	
+				else  // moze to kung fu z bronia ?
+					weapon = 36;
 				pAttacker->lastFrag += (int)pAttacker->pEdict->v.frags - pAttacker->frags;
 				pAttacker->frags = (int)pAttacker->pEdict->v.frags;
 			}
@@ -224,42 +226,38 @@ void Client_TSHealth_End(void* mValue)
 
 	pAttacker->killFlags = killFlags;
 	pAttacker->saveKill(mPlayer,weapon,( aim == 1 ) ? 1:0 ,TA);
-	MF_ExecuteForward(g_death_info, pAttacker->index, mPlayer->index, weapon, aim, TA );
-
+	MF_ExecuteForward(g_death_info,
+		(cell)pAttacker->index,
+		(cell)mPlayer->index,
+		(cell)weapon,
+		(cell)aim,
+		(cell)TA);
 }
 
-void Client_WStatus(void* mValue)
-{
-	switch(mState++)
-	{
+void Client_WStatus(void* mValue){
+	switch(mState++){
 	case 1:
-		if ( !*(int*)mValue )
-		{
+		if ( !*(int*)mValue ){
 			mPlayer->current = 36; // fix dla wytraconej broni
 		}
 		break;
 	}
 }
 
-void Client_TSCash(void* mValue)
-{
+void Client_TSCash(void* mValue){
 	mPlayer->money = *(int*)mValue;
 }
 
-void Client_TSSpace(void* mValue)
-{
+void Client_TSSpace(void* mValue){
 	mPlayer->space = *(int*)mValue;
 }
 
-void Client_PwUp(void* mValue)
-{
+void Client_PwUp(void* mValue){
 	static int iPwType;
 	switch(mState++){
 	case 0:
 		iPwType = *(int*)mValue;
-
-		switch(iPwType)
-		{
+		switch(iPwType){
 		case TSPWUP_KUNGFU :
 			mPlayer->items |= TSITEM_KUNGFU;
 			break;
@@ -270,7 +268,8 @@ void Client_PwUp(void* mValue)
 		}
 		break;
 	case 1:
-		if ( iPwType != TSPWUP_KUNGFU && iPwType != TSPWUP_SJUMP ) mPlayer->PwUpValue = *(int*)mValue;
+		if ( iPwType != TSPWUP_KUNGFU && iPwType != TSPWUP_SJUMP )
+			mPlayer->PwUpValue = *(int*)mValue;
 		break;
 	}
 }

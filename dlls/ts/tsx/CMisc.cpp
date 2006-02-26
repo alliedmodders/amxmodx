@@ -36,8 +36,7 @@
 // class CPlayer
 // *****************************************************
 
-void CPlayer::Disconnect()
-{
+void CPlayer::Disconnect(){
 	if ( ignoreBots(pEdict) || !isModuleActive() ) // ignore if he is bot and bots rank is disabled or module is paused
 		return;
 	rank->updatePosition( &life );

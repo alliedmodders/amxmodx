@@ -1,6 +1,6 @@
 /*
- * TSX
- * Copyright (c) 2005 Twilight Suzuka
+ * TFCX 
+ * Copyright (c) 2004 Lukasz Wlasinski
  *
  *
  *    This program is free software; you can redistribute it and/or modify it
@@ -36,9 +36,15 @@
 static cell AMX_NATIVE_CALL get_user_astats(AMX *amx, cell *params) /* 6 param */
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
+	if (index<1||index>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
 	int attacker = params[2];
-	CHECK_PLAYERRANGE(attacker);
+	if (attacker<0||attacker>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->attackers[attacker].hits){
 		cell *cpStats = MF_GetAmxAddr(amx,params[3]);
@@ -63,9 +69,15 @@ static cell AMX_NATIVE_CALL get_user_astats(AMX *amx, cell *params) /* 6 param *
 static cell AMX_NATIVE_CALL get_user_vstats(AMX *amx, cell *params) /* 6 param */
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
+	if (index<1||index>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
 	int victim = params[2];
-	CHECK_PLAYERRANGE(victim);
+	if (victim<0||victim>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->victims[victim].hits){
 		cell *cpStats = MF_GetAmxAddr(amx,params[3]);
@@ -90,10 +102,13 @@ static cell AMX_NATIVE_CALL get_user_vstats(AMX *amx, cell *params) /* 6 param *
 static cell AMX_NATIVE_CALL get_user_wrstats(AMX *amx, cell *params) /* 4 param */ // DEC-Weapon (round) stats (end)
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
+	if (index<1||index>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
 	int weapon = params[2];
 	if (weapon<0||weapon>=TSMAX_WEAPONS){
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", weapon);
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
@@ -118,10 +133,13 @@ static cell AMX_NATIVE_CALL get_user_wrstats(AMX *amx, cell *params) /* 4 param 
 static cell AMX_NATIVE_CALL get_user_wstats(AMX *amx, cell *params) /* 4 param */
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
+	if (index<1||index>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
 	int weapon = params[2];
 	if (weapon<0||weapon>=TSMAX_WEAPONS){
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", weapon);
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
@@ -146,7 +164,10 @@ static cell AMX_NATIVE_CALL get_user_wstats(AMX *amx, cell *params) /* 4 param *
 static cell AMX_NATIVE_CALL reset_user_wstats(AMX *amx, cell *params) /* 6 param */
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
+	if (index<1||index>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
 	GET_PLAYER_POINTER_I(index)->restartStats();
 	return 1;
 }
@@ -154,7 +175,10 @@ static cell AMX_NATIVE_CALL reset_user_wstats(AMX *amx, cell *params) /* 6 param
 static cell AMX_NATIVE_CALL get_user_stats(AMX *amx, cell *params) /* 3 param */
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
+	if (index<1||index>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if ( pPlayer->rank ){
 		cell *cpStats = MF_GetAmxAddr(amx,params[2]);
@@ -178,7 +202,10 @@ static cell AMX_NATIVE_CALL get_user_stats(AMX *amx, cell *params) /* 3 param */
 static cell AMX_NATIVE_CALL get_user_rstats(AMX *amx, cell *params) /* 3 param */
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
+	if (index<1||index>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->rank){
 		cell *cpStats = MF_GetAmxAddr(amx,params[2]);
@@ -255,25 +282,31 @@ static cell AMX_NATIVE_CALL register_cwpn(AMX *amx, cell *params){ // name,logna
 static cell AMX_NATIVE_CALL cwpn_dmg(AMX *amx, cell *params){ // wid,att,vic,dmg,hp=0
 	int weapon = params[1];
 	if (  weapon < TSMAX_WEAPONS-TSMAX_CUSTOMWPNS ){ // only for custom weapons
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid custom weapon id %d", weapon);
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
 	int att = params[2];
-	CHECK_PLAYERRANGE(att);
+	if (att<1||att>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
 
 	int vic = params[3];
-	CHECK_PLAYERRANGE(vic);
+	if (vic<1||vic>gpGlobals->maxClients){
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
+		return 0;
+	}
 	
 	int dmg = params[4];
 	if ( dmg<1 ){
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid damage %d", dmg);
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 	
 	int aim = params[5];
 	if ( aim < 0 || aim > 7 ){
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid aim %d", aim);
+		MF_RaiseAmxError(amx,AMX_ERR_NATIVE);
 		return 0;
 	}
 
@@ -287,24 +320,43 @@ static cell AMX_NATIVE_CALL cwpn_dmg(AMX *amx, cell *params){ // wid,att,vic,dmg
 	int TA = 0;
 	if ( (pVic->pEdict->v.team == pAtt->pEdict->v.team ) && ( pVic != pAtt) )
 		TA = 1;
-	MF_ExecuteForward(g_damage_info, pAtt->index, pVic->index, dmg, weapon, aim, TA );
+
+	MF_ExecuteForward(g_damage_info,
+		(cell)pAtt->index,
+		(cell)pVic->index,
+		(cell)dmg,
+		(cell)weapon,
+		(cell)aim,
+		(cell)TA);
 	
 	if ( pVic->IsAlive() )
 		return 1;
 
 	pAtt->saveKill(pVic,weapon,( aim == 1 ) ? 1:0 ,TA);
-	MF_ExecuteForward(g_death_info, pAtt->index, pVic->index, weapon, aim, TA );
+
+	MF_ExecuteForward(g_death_info,
+		(cell)pAtt->index,
+		(cell)pVic->index,
+		(cell)weapon,
+		(cell)aim,
+		(cell)TA);
 
 	return 1;
 }
 
 static cell AMX_NATIVE_CALL cwpn_shot(AMX *amx, cell *params){ // player,wid
 	int index = params[2];
-	CHECK_PLAYERRANGE(index);
+
+	if (!MF_IsPlayerIngame(index))
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", index);
+		return 0;
+	}
 
 	int weapon = params[1];
-	if (  weapon < TSMAX_WEAPONS-TSMAX_CUSTOMWPNS ){
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid custom weapon id %d", weapon);
+	if (weapon < TSMAX_WEAPONS-TSMAX_CUSTOMWPNS)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon %d", weapon);
 		return 0;
 	}
 

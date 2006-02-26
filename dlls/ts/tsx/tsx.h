@@ -46,7 +46,29 @@
 #endif
 
 extern AMX_NATIVE_INFO stats_Natives[];
-//extern AMX_NATIVE_INFO base_Natives[];
+extern AMX_NATIVE_INFO base_Natives[];
+
+extern int gmsgResetHUD;
+extern int gmsgWeaponInfo;
+extern int gmsgClipInfo;
+extern int gmsgScoreInfo;
+extern int gmsgTSHealth;
+
+extern int gmsgWStatus;
+extern int gmsgTSCash;
+extern int gmsgTSSpace;
+extern int gmsgPwUp;
+
+void Client_ResetHUD_End(void*);
+void Client_WeaponInfo(void*);
+void Client_ClipInfo(void*);
+void Client_ScoreInfo(void*);
+void Client_TSHealth_End(void*);
+
+void Client_WStatus(void* mValue);
+void Client_TSCash(void* mValue);
+void Client_TSSpace(void* mValue);
+void Client_PwUp(void* mValue);
 
 typedef void (*funEventCall)(void*);
 extern funEventCall modMsgsEnd[MAX_REG_MSGS];
@@ -83,67 +105,8 @@ extern int gKnifeOffset;
 
 extern weapon_t weaponData[TSMAX_WEAPONS];
 
-inline bool ignoreBots (edict_t *pEnt, edict_t *pOther = NULL)
-{
-	if ( !rankBots && ( pEnt->v.flags & FL_FAKECLIENT || ( pOther && pOther->v.flags & FL_FAKECLIENT ) ) ) return true;
-	return false;
-}
-
-inline bool isModuleActive()
-{
-	if ( !(int)CVAR_GET_FLOAT("tsstats_pause") ) return true;
-	return false;
-}
-
-#define CHECK_ENTITY(x) \
-	if (x < 0 || x > gpGlobals->maxEntities) { \
-		MF_LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", x); \
-		return 0; \
-	} else { \
-		if (x <= gpGlobals->maxClients) { \
-			if (!MF_IsPlayerIngame(x)) { \
-				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d (not in-game)", x); \
-				return 0; \
-			} \
-		} else { \
-			if (x != 0 && FNullEnt(INDEXENT(x))) { \
-				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", x); \
-				return 0; \
-			} \
-		} \
-	}
-
-#define CHECK_PLAYER(x) \
-	if (x < 1 || x > gpGlobals->maxClients) { \
-		MF_LogError(amx, AMX_ERR_NATIVE, "Player out of range (%d)", x); \
-		return 0; \
-	} else { \
-		if (!MF_IsPlayerIngame(x) || FNullEnt(MF_GetPlayerEdict(x))) { \
-			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", x); \
-			return 0; \
-		} \
-	}
-
-#define CHECK_NONPLAYER(x) \
-	if (x < 1 || x <= gpGlobals->maxClients || x > gpGlobals->maxEntities) { \
-		MF_LogError(amx, AMX_ERR_NATIVE, "Non-player entity %d out of range", x); \
-		return 0; \
-	} else { \
-		if (FNullEnt(INDEXENT(x))) { \
-			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid non-player entity %d", x); \
-			return 0; \
-		} \
-	}
-
-#define CHECK_PLAYERRANGE(x) \
-	if (x > gpGlobals->maxClients || x < 0) \
-	{ \
-		MF_LogError(amx, AMX_ERR_NATIVE, "Player out of range (%d)", x); \
-		return 0; \
-	}
-
-#define GETEDICT(n) \
-	((n >= 1 && n <= gpGlobals->maxClients) ? MF_GetPlayerEdict(n) : INDEXENT(n))
+bool isModuleActive();
+bool ignoreBots (edict_t *pEnt, edict_t *pOther = NULL);
 
 #endif //TSX_H
 

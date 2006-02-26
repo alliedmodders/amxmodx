@@ -6,12 +6,14 @@ MM_ROOT = ../../../metamod/metamod
 
 ### EDIT BELOW FOR OTHER PROJECTS ###
 
-OPT_FLAGS = -O3 -funroll-loops -s -pipe
+OPT_FLAGS = -O2 -funroll-loops -s -pipe
 DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
 NAME = tsx_amxx
 
-OBJECTS = amxxmodule.cpp CRank.cpp CMisc.cpp Utils.cpp tsx.cpp StatsNatives.cpp
+OBJECTS = CMisc.cpp CRank.cpp NBase.cpp NRank.cpp \
+	Utils.cpp amxxmodule.cpp moduleconfig.cpp \
+	usermsg.cpp
 
 LINK = 
 

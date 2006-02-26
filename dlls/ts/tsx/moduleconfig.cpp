@@ -53,6 +53,7 @@ int gmsgWeaponInfo;
 int gmsgClipInfo;
 int gmsgScoreInfo;
 int gmsgTSHealth;
+int gmsgTSState;
 
 int gmsgWStatus;
 int gmsgTSCash;
@@ -85,7 +86,7 @@ struct sUserMsg
 	{ "ClipInfo",&gmsgClipInfo,Client_ClipInfo,false },
 	{ "ScoreInfo",&gmsgScoreInfo,Client_ScoreInfo,false },
 	{ "TSHealth",&gmsgTSHealth,Client_TSHealth_End,true },
-
+	{ "TSState",&gmsgTSState,Client_TSState,false },
 	{ "WStatus",&gmsgWStatus,Client_WStatus,false },
 	{ "TSCash",&gmsgTSCash,Client_TSCash,false },
 	{ "TSSpace",&gmsgTSSpace,Client_TSSpace,false },
@@ -122,6 +123,28 @@ int RegUserMsg_Post(const char *pszName, int iSize)
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
+void check_stunts(edict_s *player)
+{
+	CPlayer *pPlayer = GET_PLAYER_POINTER(player);
+
+	if(pPlayer->checkstate == 0) return;
+
+	int stunttype;
+	int newstate = pPlayer->state;
+	int oldstate = pPlayer->oldstate;
+	
+	if(newstate == 0) stunttype = STUNT_NONE;
+	else if(newstate == 2) stunttype = STUNT_DIVE;
+	else if(oldstate == 2) stunttype = STUNT_GETUP;
+	else if( pPlayer->GetOffset(TSX_SROLL_OFFSET) == 1) stunttype = STUNT_ROLL;
+	else if( pPlayer->GetOffset(TSX_SDUCK_OFFSET) == 1 ) stunttype = STUNT_DUCK;
+	else stunttype = STUNT_FLIP;
+
+	pPlayer->checkstate = 0;
+
+	//MF_ExecuteForward(Stunt,pPlayer->index,stunttype);
+}
+
 void ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax )
 {
 
@@ -139,14 +162,18 @@ void PlayerPreThink_Post( edict_t *pEntity )
 {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
 
+	check_stunts(pEntity);
+
 	if ( !isModuleActive() ) // stats only
 		return;
 
-	if (pPlayer->clearStats && pPlayer->clearStats < gpGlobals->time && pPlayer->ingame){
+	if (pPlayer->clearStats && pPlayer->clearStats < gpGlobals->time && pPlayer->ingame)
+	{
 		pPlayer->clearStats = 0.0f;
 		pPlayer->rank->updatePosition( &pPlayer->life );
 		pPlayer->restartStats(false);
 	}
+
 	RETURN_META(MRES_IGNORED);
 }
 

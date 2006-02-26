@@ -137,7 +137,118 @@ static cell AMX_NATIVE_CALL get_user_weapon(AMX *amx, cell *params){
 	return 0;
 }
 
-static cell AMX_NATIVE_CALL get_user_cash(AMX *amx, cell *params){
+#define BEGIN_USER_FUNC(__name) \
+	static cell AMX_NATIVE_CALL __name(AMX *amx, cell *params) { \
+	int id = params[1]; \
+	if (id<1 || id>gpGlobals->maxClients) { \
+		MF_LogError(amx, AMX_ERR_NATIVE, "Player %d is not valid", id); \
+		return 0; } \
+	CPlayer *pPlayer = GET_PLAYER_POINTER_I(id); \
+	if (!pPlayer->ingame) { \
+		MF_LogError(amx, AMX_ERR_NATIVE, "Player %d is not ingame", id); \
+	}
+#define END_USER_FUNC() \
+	}
+
+BEGIN_USER_FUNC(get_user_slots)
+	return pPlayer->GetSlots();
+END_USER_FUNC()
+
+BEGIN_USER_FUNC(set_user_slots)
+	pPlayer->SetSlots(params[2]);
+	return 1;
+END_USER_FUNC()
+
+BEGIN_USER_FUNC(get_user_state)
+	return pPlayer->state;
+END_USER_FUNC()
+
+BEGIN_USER_FUNC(get_user_message)
+	int val = pPlayer->GetOffset(TSX_MSG_OFFSET);
+	return (val & 15);
+END_USER_FUNC()
+
+BEGIN_USER_FUNC(set_user_message)
+	int message = params[2];
+	if (message < 1 || message > 16)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid message id: %d", message);
+		return 0;
+	}
+	int val = pPlayer->GetOffset(TSX_MSG_OFFSET);
+	pPlayer->SetOffset(TSX_MSG_OFFSET, (val & ~15)^message);
+	return 1;
+END_USER_FUNC()
+
+BEGIN_USER_FUNC(set_bullettrail)
+	int bullettrail = params[2] * 256;
+	pPlayer->SetOffset(TSX_BTRAIL_OFFSET, bullettrail);
+	return 1;
+END_USER_FUNC()
+
+BEGIN_USER_FUNC(set_fake_slowmo)
+	float time = amx_ctof(params[2]);
+	pPlayer->SetOffset(TSX_SLOMO1_OFFSET, TSPWUP_SLOWMO);
+	float prev = pPlayer->GetTime();
+	pPlayer->SetOffsetF(TSX_SLOMO2_OFFSET, prev+time);
+	return 1;
+END_USER_FUNC()
+
+BEGIN_USER_FUNC(set_fake_slowpause)
+	float time = amx_ctof(params[2]);
+	pPlayer->SetOffset(TSX_SLOMO1_OFFSET, TSPWUP_SLOWPAUSE);
+	float prev = pPlayer->GetTime();
+	pPlayer->SetOffsetF(TSX_SLOMO2_OFFSET, prev+time);
+	return 1;
+END_USER_FUNC()
+
+BEGIN_USER_FUNC(is_in_slowmo)
+	if (pPlayer->GetOffsetF(TSX_ISSLO_OFFSET))
+		return pPlayer->GetOffsetF(TSX_SLOMO2_OFFSET);
+	return 0;
+END_USER_FUNC()
+
+BEGIN_USER_FUNC(set_speed)
+	pPlayer->SetOffsetF(TSX_ISSLO_OFFSET, amx_ctof(params[2]));
+	pPlayer->SetOffsetF(TSX_SPEED2_OFFSET, amx_ctof(params[3]));
+	pPlayer->SetOffsetF(TSX_SPEED1_OFFSET, amx_ctof(params[3]));
+	pPlayer->SetOffsetF(TSX_SLOMO2_OFFSET, amx_ctof(params[4]));
+	return 1;
+END_USER_FUNC()
+
+BEGIN_USER_FUNC(set_physics_speed)
+	pPlayer->SetOffsetF(TSX_PHYSICS_OFFSET, amx_ctof(params[2]));
+	return 1;
+END_USER_FUNC()
+
+BEGIN_USER_FUNC(is_running_powerup)
+	return pPlayer->GetOffset(TSX_SLOMO1_OFFSET);
+END_USER_FUNC()
+
+BEGIN_USER_FUNC(force_powerup_run)
+	pPlayer->SetOffset(TSX_SLOMO1_OFFSET, params[2]);
+	return 1;
+END_USER_FUNC()
+
+static cell AMX_NATIVE_CALL set_user_cash(AMX *amx, cell *params)
+{
+	int id = params[1];
+	if (id<1 || id>gpGlobals->maxClients)
+	{ 
+		MF_LogError(amx, AMX_ERR_NATIVE, "Player %d is not valid", id);
+		return 0;
+	}
+	CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
+	if (pPlayer->ingame)
+	{
+		pPlayer->SetMoney(params[2]);
+		pPlayer->money = params[2];
+	}
+	return 0;
+}
+
+static cell AMX_NATIVE_CALL get_user_cash(AMX *amx, cell *params)
+{
 	int id = params[1];
 	if (id<1 || id>gpGlobals->maxClients)
 	{ 
@@ -442,20 +553,37 @@ AMX_NATIVE_INFO base_Natives[] = {
 	
 	{ "ts_getuserwpn", ts_get_user_weapon },
 	{ "ts_getusercash", get_user_cash },
+	{ "ts_setusercash", set_user_cash },
 	{ "ts_getuserspace", get_user_space },
-	{ "ts_getuserpwup",get_user_pwup },
-	{ "ts_getuseritems",get_user_items },
-	{ "ts_getkillingstreak",get_killingStreak },
-	{ "ts_getuserlastfrag",get_lastFrag },
-	{ "ts_getuserkillflags",get_killflags },
+	{ "ts_getuserpwup", get_user_pwup },
+	{ "ts_getuseritems", get_user_items },
+	{ "ts_getkillingstreak", get_killingStreak },
+	{ "ts_getuserlastfrag", get_lastFrag },
+	{ "ts_getuserkillflags", get_killflags },
+	{ "ts_getuserslots", get_user_slots },
+	{" ts_setuserslots", set_user_slots },
+
+	{ "ts_getuserstate", get_user_state },
 
 	{ "ts_giveweapon",give_weapon },
 	{ "ts_createpwup",create_pwup },
 	{ "ts_givepwup",give_pwup },
 
+	{ "ts_set_message", set_user_message },
+	{ "ts_get_message", get_user_message },
+
 	{ "ts_setpddata",ts_setup },
 
-	{ "register_statsfwd",register_forward },
+	{ "register_statsfwd", register_forward },
+
+	{ "ts_set_bullettrail",set_bullettrail },
+	{ "ts_set_fakeslowmo",set_fake_slowmo },
+	{ "ts_set_fakeslowpause",set_fake_slowpause },
+	{ "ts_is_in_slowmo",is_in_slowmo },
+	{ "ts_set_speed",set_speed },
+	{ "ts_set_physics_speed",set_physics_speed },
+	{ "ts_is_running_powerup",is_running_powerup},
+	{ "ts_force_run_powerup",force_powerup_run},
 
 	//****************************************
 	{ "get_weaponname", get_weapon_name },

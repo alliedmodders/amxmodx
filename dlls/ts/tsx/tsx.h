@@ -45,6 +45,13 @@
 #define GETPLAYERAUTHID   (*g_engfuncs.pfnGetPlayerAuthId)
 #endif
 
+#define STUNT_NONE 0
+#define STUNT_DUCK 1
+#define STUNT_ROLL 2
+#define STUNT_DIVE 3
+#define STUNT_GETUP 4
+#define STUNT_FLIP 5
+
 extern AMX_NATIVE_INFO stats_Natives[];
 extern AMX_NATIVE_INFO base_Natives[];
 
@@ -53,6 +60,7 @@ extern int gmsgWeaponInfo;
 extern int gmsgClipInfo;
 extern int gmsgScoreInfo;
 extern int gmsgTSHealth;
+extern int gmsgTSState;
 
 extern int gmsgWStatus;
 extern int gmsgTSCash;
@@ -64,7 +72,7 @@ void Client_WeaponInfo(void*);
 void Client_ClipInfo(void*);
 void Client_ScoreInfo(void*);
 void Client_TSHealth_End(void*);
-
+void Client_TSState(void*);
 void Client_WStatus(void* mValue);
 void Client_TSCash(void* mValue);
 void Client_TSSpace(void* mValue);

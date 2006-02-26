@@ -52,6 +52,26 @@
 #define TSPWUP_DFIRERATE		16
 #define TSPWUP_SJUMP			256
 
+#if defined __linux__
+#define EXTRAOFFSET	5
+#else
+#define EXTRAOFFSET 0
+#endif
+
+#define TSX_SDUCK_OFFSET		(27+EXTRAOFFSET)
+#define TSX_SPEED1_OFFSET		(85+EXTRAOFFSET)
+#define TSX_PHYSICS_OFFSET		(86+EXTRAOFFSET)
+#define TSX_BTRAIL_OFFSET		(87+EXTRAOFFSET)
+#define TSX_ISSLO_OFFSET		(89+EXTRAOFFSET)
+#define TSX_SPEED2_OFFSET		(90+EXTRAOFFSET)
+#define TSX_SROLL_OFFSET		(158+EXTRAOFFSET)
+#define TSX_MONEY_OFFSET		(301+EXTRAOFFSET)
+#define TSX_SLOTS_OFFSET		(304+EXTRAOFFSET)
+#define TSX_SLOMO1_OFFSET		(423+EXTRAOFFSET)
+#define TSX_SLOMO2_OFFSET		(425+EXTRAOFFSET)
+#define TSX_MSG_OFFSET			(433+EXTRAOFFSET)
+#define TSX_TIME_OFFSET			(444+EXTRAOFFSET)
+
 #define TSITEM_KUNGFU			1<<0
 #define TSITEM_SUPERJUMP		1<<1
 
@@ -91,6 +111,10 @@ struct CPlayer {
 
 	bool ingame;
 	float clearStats;
+
+	int checkstate;
+	int state;
+	int oldstate;
 	
 	struct PlayerWeapon : public Stats {
 		char*		name;
@@ -116,6 +140,14 @@ struct CPlayer {
 	void saveHit(CPlayer* pVictim, int weapon, int damage, int aiming);
 	void saveShot(int weapon);
 	void restartStats(bool all = true);
+	void SetMoney(int money);
+	void SetSlots(int slots);
+	int GetSlots();
+	void SetOffset(int offs, int val);
+	int GetOffset(int offs);
+	void SetOffsetF(int offs, float val);
+	float GetOffsetF(int offs);
+	float GetTime();
 
 	inline bool IsBot(){
 		const char* auth= (*g_engfuncs.pfnGetPlayerAuthId)(pEdict);

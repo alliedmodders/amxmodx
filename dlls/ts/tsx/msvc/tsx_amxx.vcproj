@@ -265,12 +265,6 @@
 				RelativePath="..\moduleconfig.h">
 			</File>
 			<File
-				RelativePath="..\MsgFunc.h">
-			</File>
-			<File
-				RelativePath="..\StatsNatives.h">
-			</File>
-			<File
 				RelativePath="..\tsx.h">
 			</File>
 			<File

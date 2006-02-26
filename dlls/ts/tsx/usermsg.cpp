@@ -33,7 +33,8 @@
 #include "tsx.h"
 
 
-void Client_ResetHUD_End(void* mValue){
+void Client_ResetHUD_End(void* mValue)
+{
 	if ( mPlayer->IsAlive() ){ // ostatni przed spawn'em 
 		mPlayer->clearStats = gpGlobals->time + 0.25f; // teraz czysc statystyki 
 	}
@@ -50,7 +51,8 @@ void Client_ResetHUD_End(void* mValue){
 	}
 }
 
-void Client_ScoreInfo(void* mValue){
+void Client_ScoreInfo(void* mValue)
+{
 	static int iId;
 	switch(mState++){
 	case 0:
@@ -64,7 +66,8 @@ void Client_ScoreInfo(void* mValue){
 	}
 }
 
-void Client_WeaponInfo(void* mValue){
+void Client_WeaponInfo(void* mValue)
+{
 	static int wpn;
 	switch(mState++){
 	case 0:
@@ -87,7 +90,8 @@ void Client_WeaponInfo(void* mValue){
 	}
 }
 
-void Client_ClipInfo(void* mValue){
+void Client_ClipInfo(void* mValue)
+{
 	int iValue = *(int*)mValue;
 	if ( iValue < mPlayer->weapons[mPlayer->current].clip ) {
 		mPlayer->saveShot(mPlayer->current);
@@ -234,7 +238,15 @@ void Client_TSHealth_End(void* mValue){
 		(cell)TA);
 }
 
-void Client_WStatus(void* mValue){
+void Client_TSState(void* mValue)
+{
+	mPlayer->oldstate = mPlayer->state;
+	mPlayer->checkstate = 1;
+	mPlayer->state =  *(int*)mValue;
+}
+
+void Client_WStatus(void* mValue)
+{
 	switch(mState++){
 	case 1:
 		if ( !*(int*)mValue ){
@@ -244,15 +256,18 @@ void Client_WStatus(void* mValue){
 	}
 }
 
-void Client_TSCash(void* mValue){
+void Client_TSCash(void* mValue)
+{
 	mPlayer->money = *(int*)mValue;
 }
 
-void Client_TSSpace(void* mValue){
+void Client_TSSpace(void* mValue)
+{
 	mPlayer->space = *(int*)mValue;
 }
 
-void Client_PwUp(void* mValue){
+void Client_PwUp(void* mValue)
+{
 	static int iPwType;
 	switch(mState++){
 	case 0:

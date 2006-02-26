@@ -11,7 +11,7 @@ DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
 NAME = tsfun_amxx
 
-OBJECTS = CMessage.cpp CMisc.cpp CPlayer.cpp amxxmodule.cpp tsfun.cpp
+OBJECTS = amxxmodule.cpp 
 
 LINK = 
 

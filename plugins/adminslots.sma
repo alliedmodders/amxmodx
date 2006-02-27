@@ -32,6 +32,26 @@
 *  you do not wish to do so, delete this exception statement from your
 *  version.
 *
+* Changelog:
+*
+* Sun Feb 26 16:19:05 EST 2006 - Marticus
+* -Set cvar defaults to 0 because the plugin is enabled by default
+*
+* Fri Feb 24 15:29:21 EST 2006 - Marticus
+* -Added plugin_cfg and moved get cvars to it
+* -Created global for reserved slots
+* -Now checks for one or more reserved slots before attempting to hide them
+* -Fixed whitespace.
+*
+* Thu Dec 22 12:41:25 EST 2005 - Marticus
+* -Added documentation and cleaned up the code
+* -Created amx_hideslots cvar to replace #define HIDE_RESERVED_SLOTS
+* -Removed ackSignal *sigh* and the horribly coded setVisibleSlots function
+* -Removed client disconnect
+* -Created global variable gPlayerLimit to be used in both functions
+* -Moved set cvar sv_visiblemaxplayers to plugin_init
+* -Enjoy!
+*
 * Notes:
 * sv_visiblemaxplayers is a steam cvar which hides given number of slots
 * from clients. This is only useful to those who wish to have hidden reserved
@@ -49,7 +69,7 @@
 #include <amxmodx>
 #include <amxmisc>
 
-new gPlayerLimit
+new gPlayerLimit, gReservedSlots
 
 public plugin_init()
 {
@@ -57,16 +77,24 @@ public plugin_init()
 	register_dictionary("adminslots.txt")
 	register_dictionary("common.txt")
 
-	register_cvar("amx_reservation", "1")
+	register_cvar("amx_reservation", "0")
 
 	/* Provide server admin with cvar to hide slots, 0 or 1 -Marticus */
-	register_cvar("amx_hideslots", "1")
+	register_cvar("amx_hideslots", "0")
+}
 
+public plugin_cfg()
+{
+	/* Get configured number of reserved slots */
+	gReservedSlots = get_cvar_num("amx_reservedslots")
+	
 	/* The maximum number of players after reserved slot(s) */
-	gPlayerLimit = get_maxplayers() - get_cvar_num("amx_reservation")
+	gPlayerLimit = get_maxplayers() - gReservedSlots
 
-	/* Set server cvar to new player limit to hide the reserved slot(s) */
-	if (get_cvar_num("amx_hideslots") == 1)
+	/* Set server cvar sv_visiblemaxplayers to new player limit to hide 
+	   the reserved slot(s). Do this only if there are one or more 
+	   reserved slots. */
+	if ( ( get_cvar_num("amx_hideslots") == 1 ) && gReservedSlots >= 1 )
 		set_cvar_num("sv_visiblemaxplayers", gPlayerLimit)
 }
 
@@ -74,7 +102,7 @@ public client_authorized(id)
 {
 	new userid = get_user_userid(id)
 	new reason[64]
-	format(reason, 63, "%L", id, "DROPPED_RES")
+	format(reason, 63, "[AMXX] %L", id, "DROPPED_RES")
 
 	new players = get_playersnum(1)
 
@@ -89,5 +117,6 @@ public client_authorized(id)
 			return PLUGIN_CONTINUE
 		}
 	}
+	
 	return PLUGIN_CONTINUE
 }

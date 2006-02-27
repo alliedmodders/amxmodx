@@ -487,6 +487,10 @@ int unload_amxscript(AMX* amx, void** program)
 	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
 	if (pHandler)
 		delete pHandler;
+
+	optimizer_s *opt = (optimizer_s *)amx->usertags[UT_OPTIMIZER];
+	if (opt)
+		delete opt;
 	
 	CList<CScript, AMX*>::iterator a = g_loadedscripts.find(amx);
 	

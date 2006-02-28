@@ -158,7 +158,10 @@ public actionBanMenu(id, key)
 			/* ---------- check for Steam ID added by MistaGee -------------------- 
 			IF AUTHID == 4294967295 OR VALVE_ID_LAN OR HLTV, BAN PER IP TO NOT BAN EVERYONE */
 			
-			if ((equal("4294967295", authid2)) || (equal("HLTV", authid2)) || (equali("VALVE_ID_LAN", authid2)))	/* lan or HLTV!*/
+			if (equal("4294967295", authid2)
+				|| equal("HLTV", authid2)
+				|| equal("STEAM_ID_LAN", authid2)
+				|| equali("VALVE_ID_LAN", authid2))
 			{
 				/* END OF MODIFICATIONS BY MISTAGEE */
 				new ipa[32]

@@ -476,6 +476,8 @@ void C_ServerDeactivate()
 	RETURN_META(MRES_IGNORED);
 }
 
+extern CVector<cell *> g_hudsync;
+
 // After all clear whole AMX configuration
 // However leave AMX modules which are loaded only once
 void C_ServerDeactivate_Post()
@@ -506,6 +508,10 @@ void C_ServerDeactivate_Post()
 	g_langMngr.Save(build_pathname_r(file, sizeof(file) - 1, "%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
 	g_langMngr.SaveCache(build_pathname_r(file, sizeof(file) - 1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
 	g_langMngr.Clear();
+
+	for (unsigned int i=0; i<g_hudsync.size(); i++)
+		delete [] g_hudsync[i];
+	g_hudsync.clear();
 
 	// last memreport
 #ifdef MEMORY_TEST

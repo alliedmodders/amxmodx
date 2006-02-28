@@ -115,6 +115,7 @@ public:
 	int page;
 
 	float channels[5];
+	cell hudmap[5];
 	
 	Vector lastTrace;
 	Vector thisTrace;

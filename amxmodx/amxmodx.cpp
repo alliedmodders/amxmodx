@@ -352,7 +352,7 @@ static cell AMX_NATIVE_CALL set_hudmessage(AMX *amx, cell *params) /* 11 param *
 
 static cell AMX_NATIVE_CALL show_hudmessage(AMX *amx, cell *params) /* 2 param */
 {
-		int len = 0;
+	int len = 0;
 	g_langMngr.SetDefLang(params[1]);
 	char* message = NULL;
 	
@@ -372,6 +372,7 @@ static cell AMX_NATIVE_CALL show_hudmessage(AMX *amx, cell *params) /* 2 param *
 					g_hudset.channel = pPlayer->NextHUDChannel();
 					pPlayer->channels[g_hudset.channel] = gpGlobals->time;
 				}
+				pPlayer->hudmap[g_hudset.channel] = 0;
 				UTIL_HudMessage(pPlayer->pEdict, g_hudset, message);
 			}
 		}
@@ -394,6 +395,7 @@ static cell AMX_NATIVE_CALL show_hudmessage(AMX *amx, cell *params) /* 2 param *
 				g_hudset.channel = pPlayer->NextHUDChannel();
 				pPlayer->channels[g_hudset.channel] = gpGlobals->time;
 			}
+			pPlayer->hudmap[g_hudset.channel] = 0;
 			UTIL_HudMessage(pPlayer->pEdict, g_hudset, message);
 		}
 	}
@@ -3878,6 +3880,114 @@ static cell AMX_NATIVE_CALL get_cvar_pointer(AMX *amx, cell *params)
 	return reinterpret_cast<cell>(ptr);
 }
 
+CVector<cell *> g_hudsync;
+
+static cell AMX_NATIVE_CALL CreateHudSyncObj(AMX *amx, cell *params)
+{
+	cell *p = new cell[gpGlobals->maxClients+1];
+	memcpy(p, 0, sizeof(cell) * (gpGlobals->maxClients + 1));
+	g_hudsync.push_back(p);
+
+	return static_cast<cell>(g_hudsync.size());
+}
+
+void CheckAndClearPlayerHUD(CPlayer *player, unsigned int channel, unsigned int sync_obj)
+{
+	/**
+	 * player and channel should be guaranteed to be good to go.
+	 */
+	//get the sync object's hud list
+	cell *plist = g_hudsync[sync_obj];
+	//get the last channel this message class was displayed on.
+	cell last_channel = plist[player->index];
+	//check if the last sync on this channel was this sync obj
+	if (player->hudmap[last_channel] == sync_obj)
+	{
+		//if so, we can safely CLEAR it.
+		g_hudset.a1 = 0;
+		g_hudset.a2 = 0;
+		g_hudset.r2 = 255;
+		g_hudset.g2 = 255;
+		g_hudset.b2 = 250;
+		g_hudset.r1 = 0;
+		g_hudset.g1 = 0;
+		g_hudset.b1 = 0;
+		g_hudset.x = 0.0f;
+		g_hudset.y = 0.0f;
+		g_hudset.effect = 0;
+		g_hudset.fxTime = 0.0f;
+		g_hudset.holdTime = 0.01;
+		g_hudset.fadeinTime = 0.0f;
+		g_hudset.fadeoutTime = 0.0f;
+		g_hudset.channel = last_channel;
+		static char msg[255];
+		msg[0] = '\0';
+		char *msg_ptr = UTIL_SplitHudMessage(msg);
+		UTIL_HudMessage(player->pEdict, g_hudset, msg_ptr);
+	}
+
+	//set the new states
+	plist[player->index] = channel;
+	player->hudmap[channel] = sync_obj;
+}
+
+//params[1] - target
+//params[2] - HudSyncObj
+//params[3] - hud message
+static cell AMX_NATIVE_CALL ShowSyncHudMsg(AMX *amx, cell *params)
+{
+	int len = 0;
+	char* message = NULL;
+	int index = params[1];
+    unsigned int sync_obj = static_cast<unsigned int>(params[2]) - 1;
+
+	if (sync_obj >= g_hudsync.size())
+	{
+		LogError(amx, AMX_ERR_NATIVE, "HudSyncObject %d is invalid", sync_obj);
+		return 0;
+	}
+
+	g_langMngr.SetDefLang(params[1]);
+	
+	if (index == 0)
+	{
+		for (int i = 1; i <= gpGlobals->maxClients; ++i)
+		{
+			CPlayer *pPlayer = GET_PLAYER_POINTER_I(i);
+			
+			if (pPlayer->ingame)
+			{
+				g_langMngr.SetDefLang(i);
+				message = UTIL_SplitHudMessage(format_amxstring(amx, params, 2, len));
+				g_hudset.channel = pPlayer->NextHUDChannel();
+				pPlayer->channels[g_hudset.channel] = gpGlobals->time;
+				CheckAndClearPlayerHUD(pPlayer, g_hudset.channel, sync_obj);
+				UTIL_HudMessage(pPlayer->pEdict, g_hudset, message);
+			}
+		}
+	} else {
+		message = UTIL_SplitHudMessage(format_amxstring(amx, params, 2, len));
+
+		if (index < 1 || index > gpGlobals->maxClients)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Invalid player id %d", index);
+			return 0;
+		}
+		
+		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+		
+		if (pPlayer->ingame)
+		{
+			g_hudset.channel = pPlayer->NextHUDChannel();
+			pPlayer->channels[g_hudset.channel] = gpGlobals->time;
+			CheckAndClearPlayerHUD(pPlayer, g_hudset.channel, sync_obj);
+			UTIL_HudMessage(pPlayer->pEdict, g_hudset, message);
+		}
+	}
+	
+	return len;
+}
+
 AMX_NATIVE_INFO amxmodx_Natives[] =
 {
 	{"abort",					amx_abort},
@@ -4062,10 +4172,12 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"write_short",				write_short},
 	{"write_string",			write_string},
 	{"xvar_exists",				xvar_exists},
+	{"CreateHudSyncObj",		CreateHudSyncObj},
 	{"CreateMultiForward",		CreateMultiForward},
 	{"CreateOneForward",		CreateOneForward},
-	{"PrepareArray",			PrepareArray},
-	{"ExecuteForward",			ExecuteForward},
 	{"DestroyForward",			DestroyForward},
+	{"ExecuteForward",			ExecuteForward},
+	{"PrepareArray",			PrepareArray},
+	{"ShowSyncHudMsg",			ShowSyncHudMsg},
 	{NULL,						NULL}
 };

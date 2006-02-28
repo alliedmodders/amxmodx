@@ -129,7 +129,10 @@ bool CPlayer::Connect(const char* connectname, const char* ipaddress)
 	authorized = false;
 
 	for (int i=0; i<=4; i++)
+	{
 		channels[i] = 0.0f;
+		hudmap[i] = 0;
+	}
 
 	const char* authid = GETPLAYERAUTHID(pEdict);
 

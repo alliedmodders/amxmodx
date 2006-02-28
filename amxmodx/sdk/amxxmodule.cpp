@@ -2504,6 +2504,8 @@ PFN_REQ_FNPTR				g_fn_RequestFunction;
 PFN_AMX_PUSH				g_fn_AmxPush;
 PFN_SET_TEAM_INFO			g_fn_SetTeamInfo;
 PFN_PLAYER_PROP_ADDR		g_fn_PlayerPropAddr;
+PFN_REG_AUTH_FUNC			g_fn_RegAuthFunc;
+PFN_UNREG_AUTH_FUNC			g_fn_UnregAuthFunc;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2615,6 +2617,8 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("amx_Push", g_fn_AmxPush, PFN_AMX_PUSH);
 	REQFUNC("SetPlayerTeamInfo", g_fn_SetTeamInfo, PFN_SET_TEAM_INFO);
 	REQFUNC("PlayerPropAddr", g_fn_PlayerPropAddr, PFN_PLAYER_PROP_ADDR);
+	REQFUNC("RegAuthFunc", g_fn_RegAuthFunc, PFN_REG_AUTH_FUNC);
+	REQFUNC("UnregAuthFunc", g_fn_UnregAuthFunc, PFN_UNREG_AUTH_FUNC);
 
 #ifdef MEMORY_TEST
 	// Memory
@@ -2739,6 +2743,8 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_RegisterFunction(NULL, "");
 	MF_SetPlayerTeamInfo(0, 0, "");
 	MF_PlayerPropAddr(0, 0);
+	MF_RegAuthFunc(NULL);
+	MF_UnregAuthFunc(NULL);
 }
 #endif
 

@@ -1140,6 +1140,17 @@ int MNF_GetAmxStringLen(const cell *ptr)
 	return c;
 }
 
+List<AUTHORIZEFUNC> g_auth_funcs;
+void MNF_RegAuthorizeFunc(AUTHORIZEFUNC fn)
+{
+	g_auth_funcs.push_back(fn);
+}
+
+void MNF_UnregAuthorizeFunc(AUTHORIZEFUNC fn)
+{
+	g_auth_funcs.remove(fn);
+}
+
 char *MNF_FormatAmxString(AMX *amx, cell *params, int startParam, int *pLen)
 {
 	int len;
@@ -1515,7 +1526,7 @@ int MNF_SetPlayerTeamInfo(int player, int teamid, const char *teamname)
 	return 1;
 }
 
-void *MFN_PlayerPropAddr(int id, int prop)
+void *MNF_PlayerPropAddr(int id, int prop)
 {
 	if (id < 1 || id > gpGlobals->maxClients)
 		return NULL;
@@ -1651,7 +1662,10 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("CellToReal", MNF_CellToReal)
 	REGISTER_FUNC("RealToCell", MNF_RealToCell)
 	REGISTER_FUNC("SetPlayerTeamInfo", MNF_SetPlayerTeamInfo)
-	REGISTER_FUNC("PlayerPropAddr", MFN_PlayerPropAddr)
+	REGISTER_FUNC("PlayerPropAddr", MNF_PlayerPropAddr)
+
+	REGISTER_FUNC("RegAuthFunc", MNF_RegAuthorizeFunc);
+	REGISTER_FUNC("UnregAuthFunc", MNF_UnregAuthorizeFunc);
 
 #ifdef MEMORY_TEST
 	REGISTER_FUNC("Allocator", m_allocator)

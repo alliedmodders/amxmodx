@@ -65,6 +65,8 @@ funEventCall modMsgs[MAX_REG_MSGS];
 void (*function)(void*);
 void (*endfunction)(void*);
 
+extern List<AUTHORIZEFUNC> g_auth_funcs;
+
 CLog g_log;
 CForwardMngr g_forwards;
 CList<CPlayer*> g_auth;
@@ -587,6 +589,17 @@ BOOL C_ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *psz
 				g_auth.put(aa);
 		} else {
 			pPlayer->Authorize();
+			if (g_auth_funcs.size())
+			{
+				List<AUTHORIZEFUNC>::iterator iter, end=g_auth_funcs.end();
+				AUTHORIZEFUNC fn;
+				const char* authid = GETPLAYERAUTHID(pEntity);
+				for (iter=g_auth_funcs.begin(); iter!=end; iter++)
+				{
+					fn = (*iter);
+					fn(pPlayer->index, authid);
+				}
+			}
 			executeForwards(FF_ClientAuthorized, static_cast<cell>(pPlayer->index));
 		}
 	}
@@ -640,6 +653,17 @@ void C_ClientUserInfoChanged_Post(edict_t *pEntity, char *infobuffer)
 		executeForwards(FF_ClientConnect, static_cast<cell>(pPlayer->index));
 
 		pPlayer->Authorize();
+		if (g_auth_funcs.size())
+		{
+			List<AUTHORIZEFUNC>::iterator iter, end=g_auth_funcs.end();
+			AUTHORIZEFUNC fn;
+			const char* authid = GETPLAYERAUTHID(pEntity);
+			for (iter=g_auth_funcs.begin(); iter!=end; iter++)
+			{
+				fn = (*iter);
+				fn(pPlayer->index, authid);
+			}
+		}
 		executeForwards(FF_ClientAuthorized, static_cast<cell>(pPlayer->index));
 
 		pPlayer->PutInServer();
@@ -800,6 +824,16 @@ void C_StartFrame_Post(void)
 			if (strcmp(auth, "STEAM_ID_PENDING"))
 			{
 				(*a)->Authorize();
+				if (g_auth_funcs.size())
+				{
+					List<AUTHORIZEFUNC>::iterator iter, end=g_auth_funcs.end();
+					AUTHORIZEFUNC fn;
+					for (iter=g_auth_funcs.begin(); iter!=end; iter++)
+					{
+						fn = (*iter);
+						fn((*a)->index, auth);
+					}
+				}
 				executeForwards(FF_ClientAuthorized, static_cast<cell>((*a)->index));
 				a.remove();
 				

@@ -318,6 +318,8 @@ extern int FF_ClientAuthorized;
 extern int FF_ChangeLevel;
 extern bool g_coloredmenus;
 
+typedef void (*AUTHORIZEFUNC)(int player, const char *authstring);
+
 #define MM_CVAR2_VERS	13
 
 struct func_s

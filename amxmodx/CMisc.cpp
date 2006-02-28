@@ -134,11 +134,6 @@ bool CPlayer::Connect(const char* connectname, const char* ipaddress)
 		hudmap[i] = 0;
 	}
 
-	const char* authid = GETPLAYERAUTHID(pEdict);
-
-	if ((authid == 0) || (*authid == 0) || (strcmp(authid, "STEAM_ID_PENDING") == 0))
-		return true;
-
 	List<ClientCvarQuery_Info *>::iterator iter, end=queries.end();
 	for (iter=queries.begin(); iter!=end; iter++)
 	{
@@ -147,6 +142,11 @@ bool CPlayer::Connect(const char* connectname, const char* ipaddress)
 		delete (*iter);
 	}
 	queries.clear();
+
+	const char* authid = GETPLAYERAUTHID(pEdict);
+
+	if ((authid == 0) || (*authid == 0) || (strcmp(authid, "STEAM_ID_PENDING") == 0))
+		return true;
 
 	return false;
 }

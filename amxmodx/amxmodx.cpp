@@ -3885,7 +3885,7 @@ CVector<cell *> g_hudsync;
 static cell AMX_NATIVE_CALL CreateHudSyncObj(AMX *amx, cell *params)
 {
 	cell *p = new cell[gpGlobals->maxClients+1];
-	memcpy(p, 0, sizeof(cell) * (gpGlobals->maxClients + 1));
+	memset(p, 0, sizeof(cell) * (gpGlobals->maxClients + 1));
 	g_hudsync.push_back(p);
 
 	return static_cast<cell>(g_hudsync.size());

@@ -78,6 +78,7 @@ new g_doubleKillId
 new g_friend[33]
 new g_firstBlood
 new g_channel[33]
+new g_main_sync
 
 new g_MultiKillMsg[7][] =
 {
@@ -187,6 +188,8 @@ public plugin_init()
 		register_event("23", "chickenKill", "a", "1=108", /*"12=106", */ "15=4")
 		register_event("23", "radioKill", "a", "1=108", /*"12=294", */ "15=2")
 	}
+	
+	g_main_sync = CreateHudSyncObj()
 }
 
 public plugin_cfg()
@@ -347,7 +350,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 			get_user_name(ts[0], tname, 31)
 			
 			set_hudmessage(0, 255, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, -1)
-			show_hudmessage(0, "%s vs. %s", ctname, tname)
+			ShowSyncHudMsg(0, g_main_sync, "%s vs. %s", ctname, tname)
 			
 			play_sound("misc/maytheforce")
 		}
@@ -438,7 +441,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				replace(message, 127, "$kn", killer_name)
 				
 				set_hudmessage(100, 100, 255, -1.0, 0.29, 0, 6.0, 6.0, 0.5, 0.15, -1)
-				show_hudmessage(players[i], "%s", message)
+				ShowSyncHudMsg(players[i], g_main_sync, "%s", message)
 			}
 		}
 		

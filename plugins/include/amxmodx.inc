@@ -926,6 +926,29 @@ native module_exists(const logtag[]);
  */
 native next_hudchannel(player);
 
+/**
+ * Creates a HUD Synchronization Object.  Create one of these
+ *  for each section of the screen that contains overlapping HUD messages.
+ * For example, if you use both sides of the screen to display three messages
+ *  that can potentially overlap, each side counts as a synchronizable area.
+ * You can then use ShowSyncHudMsg() to correctly synchronize displaying the 
+ *  HUD message with any other messages potentially in its class.  Note that this
+ *  does not yet do anything like reserve screen area, its sole purpose is to be
+ *  able to wipe an old message on an auto-channel and ensure that it will not
+ *  clear a message from another plugin.
+ * The parameters are kept blank for future use.
+ */
+native CreateHudSyncObj(num=0, ...);
+
+/**
+ * Displays a synchronized HUD message.  This will check that your
+ *  HUD object has its previous display on the screen cleared before
+ *  it proceeds to write another.  It will only do this in the case
+ *  of that channel not having been cleared already.
+ * Target can be 0 for all players or 1-get_maxplayers().
+ */
+native ShowSyncHudMsg(target, syncObj, const fmt[], ...);
+
 //no
 native int3();
 

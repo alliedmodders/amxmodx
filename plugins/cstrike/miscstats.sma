@@ -77,7 +77,6 @@ new Float:g_doubleKill
 new g_doubleKillId
 new g_friend[33]
 new g_firstBlood
-new g_channel[33]
 new g_main_sync
 new g_player_sync
 
@@ -233,7 +232,6 @@ public client_putinserver(id)
 {
 	g_multiKills[id] = {0, 0}
 	g_streakKills[id] = {0, 0}
-	g_channel[id] = 0
 }
 
 public client_death(killer, victim, wpnindex, hitplace, TK)
@@ -483,7 +481,7 @@ public hideStatus(id)
 {
 	if (PlayerName)
 	{
-		set_hudmessage(0, 0, 0, 0.0, 0.0, 0, 0.0, 0.01, 0.0, 0.0, g_channel[id])
+		set_hudmessage(0, 0, 0, 0.0, 0.0, 0, 0.0, 0.01, 0.0, 0.0, -1)
 		ShowSyncHudMsg(id, g_player_sync, "")
 	}
 }
@@ -513,10 +511,10 @@ public showStatus(id)
 			if (wpnid)
 				xmod_get_wpnname(wpnid, wpnname, 31)
 			
-			set_hudmessage(color1, 50, color2, -1.0, 0.60, 1, 0.01, 3.0, 0.01, 0.01, g_channel[id])
+			set_hudmessage(color1, 50, color2, -1.0, 0.60, 1, 0.01, 3.0, 0.01, 0.01)
 			ShowSyncHudMsg(id, g_player_sync, "%s -- %d HP / %d AP / %s", name, get_user_health(pid), get_user_armor(pid), wpnname)
 		} else {
-			set_hudmessage(color1, 50, color2, -1.0, 0.60, 1, 0.01, 3.0, 0.01, 0.01, g_channel[id])
+			set_hudmessage(color1, 50, color2, -1.0, 0.60, 1, 0.01, 3.0, 0.01, 0.01)
 			ShowSyncHudMsg(id, g_player_sync, "%s", name)
 		}
 	}

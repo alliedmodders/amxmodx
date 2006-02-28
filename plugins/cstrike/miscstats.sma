@@ -79,6 +79,7 @@ new g_friend[33]
 new g_firstBlood
 new g_channel[33]
 new g_main_sync
+new g_player_sync
 
 new g_MultiKillMsg[7][] =
 {
@@ -190,6 +191,7 @@ public plugin_init()
 	}
 	
 	g_main_sync = CreateHudSyncObj()
+	g_player_sync = CreateHudSyncObj()
 }
 
 public plugin_cfg()
@@ -482,7 +484,7 @@ public hideStatus(id)
 	if (PlayerName)
 	{
 		set_hudmessage(0, 0, 0, 0.0, 0.0, 0, 0.0, 0.01, 0.0, 0.0, g_channel[id])
-		show_hudmessage(id, "")
+		ShowSyncHudMsg(id, g_player_sync, "")
 	}
 }
 
@@ -503,8 +505,6 @@ public showStatus(id)
 		else
 			color2 = 255
 			
-		g_channel[id] = next_hudchannel(id)
-		
 		if (g_friend[id] == 1)	// friend
 		{
 			new clip, ammo, wpnid = get_user_weapon(pid, clip, ammo)
@@ -514,10 +514,10 @@ public showStatus(id)
 				xmod_get_wpnname(wpnid, wpnname, 31)
 			
 			set_hudmessage(color1, 50, color2, -1.0, 0.60, 1, 0.01, 3.0, 0.01, 0.01, g_channel[id])
-			show_hudmessage(id, "%s -- %d HP / %d AP / %s", name, get_user_health(pid), get_user_armor(pid), wpnname)
+			ShowSyncHudMsg(id, g_player_sync, "%s -- %d HP / %d AP / %s", name, get_user_health(pid), get_user_armor(pid), wpnname)
 		} else {
 			set_hudmessage(color1, 50, color2, -1.0, 0.60, 1, 0.01, 3.0, 0.01, 0.01, g_channel[id])
-			show_hudmessage(id, "%s", name)
+			ShowSyncHudMsg(id, g_player_sync, "%s", name)
 		}
 	}
 }
@@ -533,7 +533,7 @@ public eNewRound()
 		if (RoundCounter)
 		{
 			set_hudmessage(200, 0, 0, -1.0, 0.30, 0, 6.0, 6.0, 0.5, 0.15, -1)
-			show_hudmessage(0, "%L", LANG_PLAYER, "PREPARE_FIGHT", g_roundCount)
+			ShowSyncHudMsg(0, g_main_sync, "%L", LANG_PLAYER, "PREPARE_FIGHT", g_roundCount)
 		}
 		
 		if (RoundCounterSound)

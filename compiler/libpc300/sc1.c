@@ -531,6 +531,7 @@ int pc_compile(int argc, char *argv[])
     delete_symbols(&glbtab,0,TRUE,FALSE);
     #if !defined NO_DEFINE
       delete_substtable();
+      insert_subst("__DATE__", "\"" __DATE__ "\"", 8);
     #endif
     resetglobals();
     sc_ctrlchar=sc_ctrlchar_org;
@@ -545,7 +546,6 @@ int pc_compile(int argc, char *argv[])
     fline=skipinput;            /* reset line number */
     sc_reparse=FALSE;           /* assume no extra passes */
     sc_status=statFIRST;        /* resetglobals() resets it to IDLE */
-
     if (strlen(incfname)>0) {
       if (strcmp(incfname,sDEF_PREFIX)==0) {
         plungefile(incfname,FALSE,TRUE);    /* parse "default.inc" */
@@ -595,6 +595,7 @@ int pc_compile(int argc, char *argv[])
   delete_symbols(&glbtab,0,TRUE,FALSE);
   #if !defined NO_DEFINE
     delete_substtable();
+    insert_subst("__DATE__", "\"" __DATE__ "\"", 8);
   #endif
   resetglobals();
   sc_ctrlchar=sc_ctrlchar_org;

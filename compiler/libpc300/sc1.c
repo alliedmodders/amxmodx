@@ -62,7 +62,7 @@
 #endif
 
 #include "sc.h"
-#define VERSION_STR "3.0.3367"
+#define VERSION_STR "3.0.3367-amxx"
 #define VERSION_INT 0x300
 
 static void resetglobals(void);

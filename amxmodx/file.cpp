@@ -633,17 +633,14 @@ static cell AMX_NATIVE_CALL amx_feof(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL amx_fclose(AMX *amx, cell *params)
 {
-	cell *addr = get_amxaddr(amx, params[1]);
-	if (*addr)
-	{
-		FILE *fp = (FILE *)*addr;
-		fclose(fp);
-		*addr = 0;
+	FILE *fp = (FILE *)params[1];
 
+	if (!fp)
 		return 1;
-	}
 
-	return 0;
+	fclose(fp);
+
+	return 1;
 }
 
 static cell AMX_NATIVE_CALL amx_filesize(AMX *amx, cell *params)

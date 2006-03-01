@@ -621,7 +621,7 @@ announceEvent(id, message[])
 	
 	get_user_name(id, name, 31)
 	set_hudmessage(255, 100, 50, -1.0, 0.30, 0, 6.0, 6.0, 0.5, 0.15, -1)
-	show_hudmessage(0, "%L", LANG_PLAYER, message, name)
+	ShowSyncHudMsg(0, g_main_sync, "%L", LANG_PLAYER, message, name)
 }
 
 public eBombPickUp(id)

@@ -3940,7 +3940,7 @@ static cell AMX_NATIVE_CALL ShowSyncHudMsg(AMX *amx, cell *params)
 	int len = 0;
 	char* message = NULL;
 	int index = params[1];
-    unsigned int sync_obj = static_cast<unsigned int>(params[2]) - 1;
+	unsigned int sync_obj = static_cast<unsigned int>(params[2]) - 1;
 
 	if (sync_obj >= g_hudsync.size())
 	{
@@ -3959,16 +3959,14 @@ static cell AMX_NATIVE_CALL ShowSyncHudMsg(AMX *amx, cell *params)
 			if (pPlayer->ingame)
 			{
 				g_langMngr.SetDefLang(i);
-				message = UTIL_SplitHudMessage(format_amxstring(amx, params, 3, len));
 				g_hudset.channel = pPlayer->NextHUDChannel();
 				pPlayer->channels[g_hudset.channel] = gpGlobals->time;
 				CheckAndClearPlayerHUD(pPlayer, g_hudset.channel, sync_obj);
+				message = UTIL_SplitHudMessage(format_amxstring(amx, params, 3, len));
 				UTIL_HudMessage(pPlayer->pEdict, g_hudset, message);
 			}
 		}
 	} else {
-		message = UTIL_SplitHudMessage(format_amxstring(amx, params, 3, len));
-
 		if (index < 1 || index > gpGlobals->maxClients)
 		{
 			LogError(amx, AMX_ERR_NATIVE, "Invalid player id %d", index);
@@ -3982,6 +3980,7 @@ static cell AMX_NATIVE_CALL ShowSyncHudMsg(AMX *amx, cell *params)
 			g_hudset.channel = pPlayer->NextHUDChannel();
 			pPlayer->channels[g_hudset.channel] = gpGlobals->time;
 			CheckAndClearPlayerHUD(pPlayer, g_hudset.channel, sync_obj);
+			message = UTIL_SplitHudMessage(format_amxstring(amx, params, 3, len));
 			UTIL_HudMessage(pPlayer->pEdict, g_hudset, message);
 		}
 	}

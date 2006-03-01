@@ -3932,6 +3932,49 @@ void CheckAndClearPlayerHUD(CPlayer *player, unsigned int channel, unsigned int 
 	player->hudmap[channel] = sync_obj + 1;
 }
 
+static cell AMX_NATIVE_CALL ClearSyncHud(AMX *amx, cell *params)
+{
+	int index = params[1];
+	unsigned int sync_obj = static_cast<unsigned int>(params[2]) - 1;
+
+	if (sync_obj >= g_hudsync.size())
+	{
+		LogError(amx, AMX_ERR_NATIVE, "HudSyncObject %d is invalid", sync_obj);
+		return 0;
+	}
+
+	cell *plist = g_hudsync[sync_obj];
+
+	if (index == 0)
+	{
+		CPlayer *pPlayer;
+		for (int i = 1; i <= gpGlobals->maxClients; i++)
+		{
+			pPlayer = GET_PLAYER_POINTER_I(i);
+
+			if (!pPlayer->ingame)
+				continue;
+
+			CheckAndClearPlayerHUD(pPlayer, plist[pPlayer->index], sync_obj);
+		}
+	} else {
+		if (index < 1 || index > gpGlobals->maxClients)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Invalid player id %d", index);
+			return 0;
+		}
+		
+		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+		
+		if (pPlayer->ingame)
+		{
+			CheckAndClearPlayerHUD(pPlayer, plist[pPlayer->index], sync_obj);
+		}
+	}
+
+	return 1;
+}
+
 //params[1] - target
 //params[2] - HudSyncObj
 //params[3] - hud message
@@ -4172,6 +4215,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"write_short",				write_short},
 	{"write_string",			write_string},
 	{"xvar_exists",				xvar_exists},
+	{"ClearSyncHud",			ClearSyncHud},
 	{"CreateHudSyncObj",		CreateHudSyncObj},
 	{"CreateMultiForward",		CreateMultiForward},
 	{"CreateOneForward",		CreateOneForward},

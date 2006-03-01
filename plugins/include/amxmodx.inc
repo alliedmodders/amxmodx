@@ -946,8 +946,20 @@ native CreateHudSyncObj(num=0, ...);
  *  it proceeds to write another.  It will only do this in the case
  *  of that channel not having been cleared already.
  * Target can be 0 for all players or 1-get_maxplayers().
+ * You must use set_hudmessage, although the channel parameter is 
+ *  entirely ignored.
  */
 native ShowSyncHudMsg(target, syncObj, const fmt[], ...);
+
+/**
+ * Clears the display on a HudSync Object.  This is essentially the same
+ *  thing as: ShowSyncHudMsg(x, y, ""), except doing that would send
+ *  out two messages and use up another channel.  This re-uses the last
+ *  channel and clears it at the same time.
+ * Note: for this you do not have to use set_hudmessage().
+ * Note: target can be 0 for all players.
+ */
+native ClearSyncHud(target, syncObj);
 
 //no
 native int3();

@@ -176,7 +176,7 @@ new t_sText[MAX_TEXT_LENGTH + 1]                    = ""
 new t_sName[MAX_NAME_LENGTH + 1]                    = ""
 new t_sWpn[MAX_WEAPON_LENGTH + 1]                   = ""
 
-new g_LastChannel[33]								= {0, ...}
+new g_HudSync_EndRound
 
 //--------------------------------
 // Initialize
@@ -225,6 +225,8 @@ public plugin_init()
 	// Init buffers and some global vars.
 	g_sBuffer[0] = 0
 	save_team_chatscore()
+	
+	g_HudSync_EndRound = CreateHudSyncObj()
 }
 
 public plugin_cfg()
@@ -262,9 +264,9 @@ public plugin_cfg()
 set_hudtype_killer(Float:fDuration)
 	set_hudmessage(220, 80, 0, 0.05, 0.15, 0, 6.0, fDuration, (fDuration >= g_fHUDDuration) ? 1.0 : 0.0, 1.0, -1)
 
-set_hudtype_endround(id, Float:fDuration)
+set_hudtype_endround(Float:fDuration)
 {
-	set_hudmessage(100, 200, 0, 0.05, 0.55, 0, 0.02, fDuration, (fDuration >= g_fHUDDuration) ? 1.0 : 0.0, 1.0, g_LastChannel[id])
+	set_hudmessage(100, 200, 0, 0.05, 0.55, 0, 0.02, fDuration, (fDuration >= g_fHUDDuration) ? 1.0 : 0.0, 1.0)
 }
 
 set_hudtype_attacker(Float:fDuration)
@@ -831,8 +833,7 @@ show_roundend_hudstats(id, Float:fGameTime)
 	// If round end timer is zero clear round end stats.
 	if (g_fShowStatsTime == 0.0)
 	{
-		set_hudtype_endround(id, 0.05)
-		show_hudmessage(id, "")
+		ClearSyncHud(id, g_HudSync_EndRound)
 #if defined STATSX_DEBUG
 		log_amx("Clear round end HUD stats for #%d", id)
 #endif
@@ -854,9 +855,8 @@ show_roundend_hudstats(id, Float:fGameTime)
 	// Show stats only if more time left than coded minimum.
 	if (fDuration >= HUD_MIN_DURATION)
 	{
-		g_LastChannel[id] = next_hudchannel(id)
-		set_hudtype_endround(id, fDuration)
-		show_hudmessage(id, "%s", g_sAwardAndScore)
+		set_hudtype_endround(fDuration)
+		ShowSyncHudMsg(id, g_HudSync_EndRound, "%s", g_sAwardAndScore)
 #if defined STATSX_DEBUG
 		log_amx("Show %1.2fs round end HUD stats for #%d", fDuration, id)
 #endif
@@ -1679,7 +1679,6 @@ public client_connect(id)
 	g_izKilled[id][KILLED_KILLER_STATSFIX] = 0
 	g_izShowStatsFlags[id] = 0		// Clear all flags
 	g_fzShowUserStatsTime[id] = 0.0
-	g_LastChannel[id] = 0
 
 	return PLUGIN_CONTINUE
 }

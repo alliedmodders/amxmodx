@@ -82,8 +82,8 @@ TIME_INFO_2 = Sem Limite de Tempo. Proximo Mapa: %s
 [nl]
 HELP_COMS = AMX Mod X Help: Commando's
 HELP_ENTRIES = Data %d - %d van %d
-HELP_USE_MORE = Gebruik 'amx_help %d' voor meer
-HELP_USE_BEGIN = Gebruik 'amx_help 1' voor het begin
+HELP_USE_MORE = Typ 'amx_help %d' voor meer
+HELP_USE_BEGIN = Typ 'amx_help 1' voor het begin
 TYPE_HELP = Voer 'amx_help' in in de console om de beschikbare commando's te bekijken
 TIME_INFO_1 = Resterende tijd: %d:%02d min. Volgende map: %s
 TIME_INFO_2 = Geen tijdlimiet. Volgende map: %s

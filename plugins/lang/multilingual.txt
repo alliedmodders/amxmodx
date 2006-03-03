@@ -88,13 +88,13 @@ LANG_MENU_DISABLED = Menu jezykowe zostalo wylaczone.
 [nl]
 LANG_NOT_EXISTS = Deze taal bestaat niet
 PERSO_LANG = Persoonlijke Taal
-LANG_MENU = Taal Menu
-SERVER_LANG = Taal van de Server
-SAVE_LANG = Bewaar taal
-SET_LANG_SERVER = De server taal is veranderd naar "%s"
+LANG_MENU = Taalmenu
+SERVER_LANG = Servertaal
+SAVE_LANG = Taal Bewaren
+SET_LANG_SERVER = De servertaal is veranderd naar "%s"
 SET_LANG_USER = Je taal is veranderd naar "%s"
-TYPE_LANGMENU = Type 'amx_langmenu' in de console voor een menu waar je je taal kunt veranderen
-LANG_MENU_DISABLED = Taal menu uitgeschakeld.
+TYPE_LANGMENU = Typ 'amx_langmenu' in de console voor een menu waar je je taal kunt veranderen
+LANG_MENU_DISABLED = Taalmenu uitgeschakeld.
 
 [es]
 LANG_NOT_EXISTS = Este idioma no existe

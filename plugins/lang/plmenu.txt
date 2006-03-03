@@ -86,10 +86,10 @@ NO_CMDS = Aucune commande disponible
 [sv]
 ADMIN_BAN_1 = ADMIN: bannlys %s
 ADMIN_BAN_2 = ADMIN %s: bannlys %s
-BAN_MENU = Bannlysnings Meny
+BAN_MENU = Bannlysningsmeny
 BAN_FOR_MIN = Bannlys i %d minuter
 BAN_PERM = Permanent bannlysning
-SLAP_SLAY_MENU = Smiska/Slakta Meny
+SLAP_SLAY_MENU = Smisk-/Slakt-meny
 SLAP_WITH_DMG = Smiska med %d skada
 SLAY = Slakta
 KICK_MENU = Sparka Meny
@@ -137,18 +137,18 @@ NO_CMDS = Nie ma zadnych komend
 [nl]
 ADMIN_BAN_1 = ADMIN: ban %s
 ADMIN_BAN_2 = ADMIN %s: ban %s
-BAN_MENU = Ban Menu
-BAN_FOR_MIN = Ban voor %d minuten
-BAN_PERM = Ban permanent
-SLAP_SLAY_MENU = Slap/Slacht Menu
-SLAP_WITH_DMG = Slap met %d schade
+BAN_MENU = Banmenu
+BAN_FOR_MIN = Bannen voor %d minuten
+BAN_PERM = Permanent Bannen
+SLAP_SLAY_MENU = Sla/Slachtmenu
+SLAP_WITH_DMG = Sla met %d schade
 SLAY = Slacht
-KICK_MENU = Kick Menu
+KICK_MENU = Kickmenu
 ADMIN_TRANSF_1 = ADMIN: zet %s over naar %s
 ADMIN_TRANSF_2 = ADMIN %s: zet %s over naar %s
-TEAM_MENU = Team Menu
+TEAM_MENU = Teammenu
 TRANSF_TO = Zet over naar %s
-CL_CMD_MENU = Client Cmds Menu
+CL_CMD_MENU = Gebruikerscommandomenu
 NO_CMDS = Geen cmds beschikbaar
 
 [es]

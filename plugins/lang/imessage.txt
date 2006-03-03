@@ -23,7 +23,7 @@ INF_REACH = Informations beskeder graense naaet!
 INF_REACH = Osiagniety limit wiadomosci informacyjnych!
 
 [nl]
-INF_REACH = Informatieve Berichten limiet bereikt!
+INF_REACH = Informatieve Berichtenlimiet bereikt!
 
 [es]
 INF_REACH = Se ha alcanzado el limite maximo de Mensajes de Informacion!

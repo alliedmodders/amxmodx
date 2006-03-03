@@ -39,9 +39,9 @@ CONF_MENU = Menu konfiguracji
 SPE_MENU = Menu rozmowy
 
 [nl]
-CMD_MENU = Commando's Menu
-CONF_MENU = Configuratie's Menu
-SPE_MENU = Spraak Menu
+CMD_MENU = Commandomenu
+CONF_MENU = Configuratiemenu
+SPE_MENU = Spraakmenu
 
 [es]
 CMD_MENU = Menu de Comandos

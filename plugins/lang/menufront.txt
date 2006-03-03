@@ -93,7 +93,7 @@ KICK_PLAYER = Sparka spelare
 BAN_PLAYER = Bannlys spelare
 SLAP_SLAY = Smiska/Slakta spelare
 TEAM_PLAYER = Lagspelare^n
-CHANGEL = Bytkarta
+CHANGEL = Kartbyte
 VOTE_MAPS = Val av karta^n
 SPECH_STUFF = Tal
 CLIENT_COM = Klientkommandon
@@ -143,22 +143,22 @@ RES_WEAP = Ogranicz bronie
 TELE_PLAYER = Teleportuj gracza
 
 [nl]
-KICK_PLAYER = Kick Speler
-BAN_PLAYER = Verban Speler
-SLAP_SLAY = Sla/Slacht Speler
-TEAM_PLAYER = Team Speler ^n
-CHANGEL = Verander Map
+KICK_PLAYER = Speler Kicken
+BAN_PLAYER = Speler Verbannen
+SLAP_SLAY = Speler Slaan/Slachten
+TEAM_PLAYER = Speler van ploeg veranderen ^n
+CHANGEL = Map Veranderen
 VOTE_MAPS = Stem op maps ^n
-SPECH_STUFF = Spraak Dingen
-CLIENT_COM = Client Commando's
-SERVER_COM = Server Commando's
-CVARS_SET = Cvars Instellingen
+SPECH_STUFF = Geluiden
+CLIENT_COM = Gebruikerscommando's
+SERVER_COM = Servercommando's
+CVARS_SET = Cvar-instellingen
 CONFIG = Configuratie
-LANG_SET = Taal Instellingen
-STATS_SET = Stats Settings ^n
-PAUSE_PLUG = Pauseer Plugins
-RES_WEAP = Verbied Wapens
-TELE_PLAYER = Teleporteer Speler
+LANG_SET = Taalinstellingen
+STATS_SET = Statistiekinstellingen ^n
+PAUSE_PLUG = Plugins pauzeren
+RES_WEAP = Wapens Verbieden
+TELE_PLAYER = Speler Teleporteren
 
 [es]
 KICK_PLAYER = Expulsar Jugador

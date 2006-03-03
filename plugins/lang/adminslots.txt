@@ -26,7 +26,7 @@ DROPPED_RES = Wyrzucony z powodu rezerwacji slotow
 DROPPED_RES = Desconectado pois o slot esta reservado
 
 [nl]
-DROPPED_RES = Connectie verbroken vanwege plek reservering
+DROPPED_RES = Sorry, deze plaats is gereserveerd
 
 [es]
 DROPPED_RES = Desconectado por reserva de plazas

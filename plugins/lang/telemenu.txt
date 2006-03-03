@@ -55,11 +55,11 @@ CUR_LOC = Aktualna pozycja
 SAVE_LOC = Zapisz pozycje
 
 [nl]
-ADMIN_TELEPORT_1 = ADMIN: teleport %s
-ADMIN_TELEPORT_2 = ADMIN %s: teleport %s
-TELE_MENU = Teleport Menu
+ADMIN_TELEPORT_1 = ADMIN: teleporteer %s
+ADMIN_TELEPORT_2 = ADMIN %s: teleporteer %s
+TELE_MENU = Teleportatiemenu
 CUR_LOC = Huidige Locatie
-SAVE_LOC = Bewaar Locatie
+SAVE_LOC = Locatie Bewaren
 
 [es]
 ADMIN_TELEPORT_1 = ADMIN: %s teletransportado

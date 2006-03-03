@@ -186,18 +186,18 @@ SAVE_CONF = Zapisz konfiguracje
 
 [nl]
 NO_OPTION = Kon opties met zo'n variabele niet vinden (naam "%s")
-STATS_CONF_SAVED = Stats configuratie bewaren gelukt
-STATS_CONF_FAILED = Bewaren van stats configuratie mislukt!!!
-STATS_CONF_LOADED = Stats configuratie laden gelukt
-STATS_CONF_FAIL_LOAD = Laden van stats configuratie mislukt!!!
-STATS_CONF = Stats Configuratie
+STATS_CONF_SAVED = Statistiekconfiguratie bewaren gelukt
+STATS_CONF_FAILED = Bewaren van statistiekconfiguratie mislukt!!!
+STATS_CONF_LOADED = Statistiekconfiguratie laden gelukt
+STATS_CONF_FAIL_LOAD = Laden van statistiekconfiguratie mislukt!!!
+STATS_CONF = Statistiekinstellingen
 STATS_ENTRIES_OF = Ingangen %i - %i van de %i
-STATS_USE_MORE = Use 'amx_statscfg list %i' for more
-STATS_USE_BEGIN = Use 'amx_statscfg list 1' for begin
-STATS_ENABLED = Stats ingeschakeld
-STATS_DISABLED = Stats uitgeschakeld
-CANT_ADD_STATS = Kan stats niet bij de lijst voegen, limiet bereikt!
-COM_STATS_USAGE = Gebruik: amx_statscfg <commando> [parameters] ...
+STATS_USE_MORE = Typ 'amx_statscfg list %i' voor meer
+STATS_USE_BEGIN = Typ 'amx_statscfg list 1' voor begin
+STATS_ENABLED = Statistieken ingeschakeld
+STATS_DISABLED = Statistieken uitgeschakeld
+CANT_ADD_STATS = Kan statistieken niet bij de lijst voegen, limiet bereikt!
+COM_STATS_USAGE = Typ: amx_statscfg <commando> [parameters] ...
 COM_STATS_COM = Commando's:
 COM_STATS_ON = ^ton <variabele> - schakel gespecificeerde optie in
 COM_STATS_OFF = ^toff <variabele> - schakel gespecificeerde optie uit
@@ -206,7 +206,7 @@ COM_STATS_LOAD = ^tload - laad stats configuration
 COM_STATS_LIST = ^tlist [id] - lijst stats status
 COM_STATS_ADD = ^tvoeg toe <naam> <variabele> - voeg stats toe aan de lijst
 NO_STATS = Stats plugins zijn niet^ngeinstalleerd op deze server^n
-SAVE_CONF = Bewaar configuratie
+SAVE_CONF = Configuratie Bewaren
 
 [es]
 NO_OPTION = No se encontraron opcion(es) con dicha variable (nombre "%s")

@@ -124,7 +124,7 @@ RESULT_ACC = Resultat godtages
 VOTE_SUCCESS = Valet lyckades. Kartan kommer att bli
 VOTE_FAILED = Valet misslyckades
 THE_WINNER = Vinnaren
-WANT_CONT = Vill du fortsatta?
+WANT_CONT = Vill du forts'a'tta?
 VOT_CANC = Valet har blivit avslutat
 X_VOTED_FOR = %s valde alternativ #%d
 VOTEMAP_MENU = Kartmeny
@@ -193,7 +193,7 @@ CHANGLE_MENU = Menu zmiany mapy
 [nl]
 RESULT_REF = Resultaat geweigerd
 RESULT_ACC = Resultaat geaccepteerd
-VOTE_SUCCESS = Stemmen geslaagd. Map zal veranderen naar
+VOTE_SUCCESS = Stemmen geslaagd. De map wordt veranderd naar
 VOTE_FAILED = Stemmen mislukt
 THE_WINNER = De winnaar
 WANT_CONT = Wil je verder gaan?

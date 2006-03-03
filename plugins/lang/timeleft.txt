@@ -71,9 +71,9 @@ SECOND = sekunda
 SECONDS = sekund
 
 [nl]
-THE_TIME = De tijd
-TIME_LEFT = Tijd Over
-NO_T_LIMIT = Geen Tijd Limiet
+THE_TIME = Het is nu
+TIME_LEFT = Restende Tijd
+NO_T_LIMIT = Geen Tijdlimiet
 MINUTE = minuut
 MINUTES = minuten
 SECOND = seconde

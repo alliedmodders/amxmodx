@@ -692,12 +692,15 @@ void C_ClientCommand(edict_t *pEntity)
 		{
 			// Print version
 			static char buf[1024];
+			size_t len = 0;
 			
 			sprintf(buf, "%s %s\n", Plugin_info.name, Plugin_info.version);
 			CLIENT_PRINT(pEntity, print_console, buf);
-			sprintf(buf, "Authors: %s  (%s)\n", "Felix \"SniperBeamer\" Geyer, David \"BAILOPAN\" Anderson, Pavol \"PM OnoTo\" Marko, Jonny \"Got His Gun\" Bergstrom, and Lukasz \"SidLuke\" Wlasinski.", Plugin_info.url);
+			len = sprintf(buf, "Authors: David \"BAILOPAN\" Anderson, Pavol \"PM OnoTo\" Marko, Felix \"SniperBeamer\" Geyer\n");
+			len += sprintf(&buf[len], "Authors: Jonny \"Got His Gun\" Bergstrom, Lukasz \"SidLuke\" Wlasinski\n");
 			CLIENT_PRINT(pEntity, print_console, buf);
-			sprintf(buf, "Compiled: %s\n", __DATE__ ", " __TIME__);
+			len = sprintf(buf, "Authors: Christian \"Basic-Master\" Hammacher, Borja \"faluco\" Ferrer\n");
+			len += sprintf(&buf[len], "Compiled: %s\nURL:http://www.amxmodx.org/\n", __DATE__ ", " __TIME__);
 			CLIENT_PRINT(pEntity, print_console, buf);
 #ifdef JIT
 			sprintf(buf, "Core mode: JIT\n");

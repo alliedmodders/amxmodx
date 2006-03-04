@@ -564,7 +564,7 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 		dlltable = g_pFunctionTable;
 		newdlltable = g_pNewFunctionsTable;
 	}
-	
+
 	switch (func)
 	{
 	case FM_PrecacheModel:

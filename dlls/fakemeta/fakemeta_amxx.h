@@ -14,8 +14,7 @@ extern edict_t *g_player_edicts[33];
 inline edict_t* INDEXENT2( int iEdictNum )
 { 
 	if (iEdictNum >= 1 && iEdictNum <= gpGlobals->maxClients)
-		return g_player_edicts[iEdictNum];
-
+		return MF_GetPlayerEdict(iEdictNum);
 	else
 		return (*g_engfuncs.pfnPEntityOfEntIndex)(iEdictNum); 
 }

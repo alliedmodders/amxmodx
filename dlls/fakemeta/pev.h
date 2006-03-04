@@ -1,17 +1,6 @@
 #ifndef _INCLUDE_PEV_H
 #define _INCLUDE_PEV_H
 
-#define		RETURNTYPE_INT		2
-#define		RETURNTYPE_FLOAT	3
-#define		RETURNTYPE_VECTOR	3
-#define		RETURNTYPE_STRING	4
-#define		VALUETYPE_INT		1
-#define		VALUETYPE_FLOAT		2
-#define		VALUETYPE_VECTOR	3
-#define		VALUETYPE_EDICT		4
-#define		VALUETYPE_STRING	5
-#define		VALUETYPE_BYTE		6
-
 enum pev_pointers
 {
 	pev_string_start = 0,
@@ -157,6 +146,8 @@ enum pev_pointers
 	punchangle,
 	pev_vecarray_end
 };
+
+void initialze_offsets();
 
 #endif //_INCLUDE_PEV_H
 

@@ -4,6 +4,7 @@ edict_t *g_player_edicts[33]; // Used for INDEXENT() forward.
 
 void OnAmxxAttach()
 {
+	initialze_offsets();
 	MF_AddNatives(engfunc_natives);
 	MF_AddNatives(dllfunc_natives);
 	MF_AddNatives(pev_natives);

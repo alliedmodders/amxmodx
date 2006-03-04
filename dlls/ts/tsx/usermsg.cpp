@@ -102,6 +102,7 @@ void Client_ClipInfo(void* mValue)
 void Client_TSHealth_End(void* mValue){
 	edict_t *enemy = mPlayer->pEdict->v.dmg_inflictor;
 	int damage = (int)mPlayer->pEdict->v.dmg_take;
+
 	if ( !damage || !enemy )
 		return;
 
@@ -129,14 +130,15 @@ void Client_TSHealth_End(void* mValue){
 			}
 		}
 		else if ( szCName[0] == 'k' ) {
-			int pOwner =  *( (int*)enemy->pvPrivateData + gKnifeOffset );
+			edict_t *pOwner =  (edict_t *)*( (int*)enemy->pvPrivateData + gKnifeOffset );
 
 			if ( FNullEnt( (edict_t*)pOwner) )
 				return;
-			pAttacker = GET_PLAYER_POINTER( (edict_t*)pOwner );
+
+			pAttacker = GET_PLAYER_POINTER( pOwner );
 			
 			weapon = 37; // throwing knife
-			aim = pAttacker->aiming;
+			aim = pAttacker ? pAttacker->aiming : 0;
 			pAttacker->saveHit( mPlayer , weapon , damage, aim );
 		}
 	}
@@ -171,7 +173,6 @@ void Client_TSHealth_End(void* mValue){
 	int killFlags = 0;
 
 	if ( !TA && mPlayer!=pAttacker ) {
-
 		int sflags = pAttacker->pEdict->v.iuser4;
 	
 		int stuntKill = 0;

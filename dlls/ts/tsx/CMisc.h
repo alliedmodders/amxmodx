@@ -42,7 +42,7 @@
 #ifndef __linux__
 #define TSKNIFE_OFFSET			31 // owner offset in knife entity
 #else
-#define TSKNIFE_OFFSET			36
+#define TSKNIFE_OFFSET			35
 #endif
 
 #define TSPWUP_SLOWMO			1

@@ -230,6 +230,24 @@ BEGIN_USER_FUNC(force_powerup_run)
 	return 1;
 END_USER_FUNC()
 
+BEGIN_USER_FUNC(has_superjump)
+	int val3 = pPlayer->GetOffset(TSX_MSG_OFFSET);
+
+	if (val3 & 0x01000000)
+		return 1;
+
+	return 0;
+END_USER_FUNC()
+
+BEGIN_USER_FUNC(has_fupowerup)
+	int val3 = pPlayer->GetOffset(TSX_MSG_OFFSET);
+
+	if (val3 & 65536)
+		return 1;
+
+	return 0;
+END_USER_FUNC()
+
 static cell AMX_NATIVE_CALL set_user_cash(AMX *amx, cell *params)
 {
 	int id = params[1];
@@ -508,10 +526,10 @@ static cell AMX_NATIVE_CALL give_pwup(AMX *amx, cell *params)
 
 }
 
-static cell AMX_NATIVE_CALL ts_setup(AMX *amx, cell *params){ // index,pwupentindex
+static cell AMX_NATIVE_CALL ts_setup(AMX *amx, cell *params)
+{ // index,pwupentindex
 	gKnifeOffset = params[1];
 	return 1;
-
 }
 
 static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
@@ -561,13 +579,16 @@ AMX_NATIVE_INFO base_Natives[] = {
 	{ "ts_getuserlastfrag", get_lastFrag },
 	{ "ts_getuserkillflags", get_killflags },
 	{ "ts_getuserslots", get_user_slots },
-	{" ts_setuserslots", set_user_slots },
+	{ "ts_setuserslots", set_user_slots },
 
 	{ "ts_getuserstate", get_user_state },
 
 	{ "ts_giveweapon",give_weapon },
 	{ "ts_createpwup",create_pwup },
 	{ "ts_givepwup",give_pwup },
+
+	{ "ts_has_superjump", has_superjump },
+	{ "ts_has_fupowerup", has_fupowerup },
 
 	{ "ts_set_message", set_user_message },
 	{ "ts_get_message", get_user_message },

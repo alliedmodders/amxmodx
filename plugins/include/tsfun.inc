@@ -112,8 +112,8 @@ stock ts_is_theone(id) return (ts_get_message(id) == TSMSG_THEONE)
 
 // Return one on true, 0 on false
 // UNAVAILABLE IN 1.70
-// native ts_has_superjump(id);					//!
-// native ts_has_fupowerup(id);					//!
+native ts_has_superjump(id);					//!
+native ts_has_fupowerup(id);					//!
 native ts_is_in_slowmo(id)
 
 // Get and set consecutive frags

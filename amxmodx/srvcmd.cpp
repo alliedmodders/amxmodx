@@ -142,8 +142,11 @@ void amx_command()
 	}
 	else if (!strcmp(cmd, "version")) 
 	{
-		print_srvconsole("%s %s\n", Plugin_info.name, Plugin_info.version);
-		print_srvconsole("Authors: %s  (%s)\n", "Felix \"SniperBeamer\" Geyer, David \"BAILOPAN\" Anderson, Pavol \"PM OnoTo\" Marko, Jonny \"Got His Gun\" Bergstrom, and Lukasz \"SidLuke\" Wlasinski.", Plugin_info.url);
+		print_srvconsole("%s %s (%s)\n", Plugin_info.name, Plugin_info.version, Plugin_info.url);
+		print_srvconsole("Authors: David \"BAILOPAN\" Anderson, Pavol \"PM OnoTo\" Marko\n");
+		print_srvconsole("\tFelix \"SniperBeamer\" Geyer, Jonny \"Got His Gun\" Bergstrom\n");
+		print_srvconsole("\tLukasz \"SidLuke\" Wlasinski, Christian \"Basic-Master\" Hammacher\n");
+		print_srvconsole("\tBorja \"faluco\" Ferrer\n");
 		print_srvconsole("Compiled: %s\n", __DATE__ ", " __TIME__);
 #if defined JIT && !defined ASM32
 		print_srvconsole("Core mode: JIT Only\n");

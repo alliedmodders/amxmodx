@@ -5,7 +5,7 @@ interface
 uses
   SysUtils, Windows, Messages, Classes, Graphics, Controls,
   StdCtrls, ExtCtrls, Forms, TntStdCtrls, SpTBXEditors, SpTBXDkPanels,
-  TBXDkPanels, Dialogs;
+  TBXDkPanels, Dialogs, SpTBXControls;
 
 type
   TfrmSearch = class(TForm)

@@ -5,7 +5,7 @@ interface
 uses
   SysUtils, Windows, Messages, Classes, Graphics, Controls,
   StdCtrls, ExtCtrls, Forms, mbTBXEdit, mbTBXValidateEdit, TBXDkPanels,
-  SpTBXDkPanels, SpTBXEditors;
+  SpTBXDkPanels, SpTBXEditors, SpTBXControls;
 
 type
   TfrmGoToLine = class(TForm)

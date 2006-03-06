@@ -4,7 +4,8 @@ interface
 
 uses
   SysUtils, Windows, Messages, Classes, Graphics, Controls, ClipBrd,
-  StdCtrls, ExtCtrls, Forms, mxFlatControls, TBXDkPanels, SpTBXDkPanels;
+  StdCtrls, ExtCtrls, Forms, mxFlatControls, TBXDkPanels, SpTBXDkPanels,
+  SpTBXControls;
 
 type
   TfrmMOTDGen = class(TForm)

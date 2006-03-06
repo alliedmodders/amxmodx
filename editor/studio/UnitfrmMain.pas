@@ -20,7 +20,7 @@ uses
   ShellAPI, IdFTPCommon, IdAntiFreezeBase, IdAntiFreeze, JvComponent,
   JvInspector, JvExControls, JvPluginManager, JvgLanguageLoader,
   JvWndProcHook, CommCtrl, JvPageList, JvPageListTreeView,
-  SciSearchReplaceBase;
+  SciSearchReplaceBase, SpTBXControls;
 
 type
   TfrmMain = class(TForm)
@@ -536,10 +536,10 @@ begin
       sciEditor.WordWrap := sciNoWrap;
 
     case frmSettings.cboCodeFolding.ItemIndex of
-      0: sciEditor.FoldMarkerType := sciMarkArrows;
-      1: sciEditor.FoldMarkerType := sciMarkBox;
-      2: sciEditor.FoldMarkerType := sciMarkCircle;
-      3: sciEditor.FoldMarkerType := sciMarkPlusMinus;
+      0: sciEditor.FoldMarkers.MarkerType := sciMarkArrows;
+      1: sciEditor.FoldMarkers.MarkerType := sciMarkBox;
+      2: sciEditor.FoldMarkers.MarkerType := sciMarkCircle;
+      3: sciEditor.FoldMarkers.MarkerType := sciMarkPlusMinus;
     end;
     if frmSettings.cboCodeFolding.ItemIndex = 4 then
       sciEditor.Folding := sciEditor.Folding - [foldFold]
@@ -1651,9 +1651,17 @@ begin
 end;
 
 procedure TfrmMain.trvExplorerDblClick(Sender: TObject);
+var eFile, eTemp: String;
 begin
   if Assigned(trvExplorer.Selected) then begin
-    if (trvExplorer.Selected.ImageIndex <> 42) and (trvExplorer.Selected.ImageIndex <> 43) then begin
+    if (Assigned(trvExplorer.Selected.Parent)) and (trvExplorer.Selected.Parent.Text = 'Included') then begin
+      eFile := UpdateIncPath(trvExplorer.Selected.Text);
+      eTemp := odOpen.FileName;
+      odOpen.FileName := eFile;
+      mnuOpenClick(nil);
+      odOpen.FileName := eTemp;
+    end
+    else if (trvExplorer.Selected.ImageIndex <> 42) and (trvExplorer.Selected.ImageIndex <> 43) then begin
       sciEditor.GotoLineEnsureVisible(Integer(trvExplorer.Selected.Data));
       sciEditor.SetFocus;
       UpdateCI(frmMain.sciEditor.GetCurrentLineNumber);
@@ -2440,8 +2448,10 @@ begin
       SCM_RELOADINI: ReloadIni;
       SCM_SELECTLANGUAGE: SelectLanguage(eData);
       SCM_LOADFILE: begin
+          eTemp := odOpen.FileName;
           odOpen.FileName := eData;
           mnuOpenClick(nil);
+          odOpen.FileName := eTemp;
         end;
       SCM_CURRPROJECTS: Msg.Result := tsMain.ActiveTabIndex;
       SCM_COMPILE: mnuDoCompile.Click;

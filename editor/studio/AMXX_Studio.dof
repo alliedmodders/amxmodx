@@ -115,7 +115,7 @@ AutoIncBuild=1
 MajorVer=1
 MinorVer=4
 Release=0
-Build=16
+Build=17
 Debug=0
 PreRelease=0
 Special=0
@@ -126,7 +126,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=AMX Mod X Dev Team
 FileDescription=
-FileVersion=1.4.0.16
+FileVersion=1.4.0.17
 InternalName=gaben
 LegalCopyright=AMX Mod X Dev Team
 LegalTrademarks=
@@ -134,9 +134,3 @@ OriginalFilename=
 ProductName=AMXX-Studio
 ProductVersion=1.4.0.0
 Comments=
-[HistoryLists\hlConditionals]
-Count=1
-Item0=madExcept
-[HistoryLists\hlUnitAliases]
-Count=1
-Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;

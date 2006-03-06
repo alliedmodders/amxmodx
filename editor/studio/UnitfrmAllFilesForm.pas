@@ -5,7 +5,7 @@ interface
 uses
   SysUtils, Windows, Messages, Classes, Graphics, Controls,
   StdCtrls, ExtCtrls, Forms, TBXDkPanels, SpTBXDkPanels, mbTBXListBox,
-  mbTBXCheckListBox;
+  mbTBXCheckListBox, SpTBXControls;
 
 type
   TfrmAllFilesForm = class(TForm)

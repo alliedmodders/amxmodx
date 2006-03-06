@@ -280,8 +280,11 @@ end;
 
 procedure TSciSearchReplace.ShowSearchReplaceDialog(AReplace: boolean);
 var
-  dlg: TTextSearchDialog;
+  dlg: TForm;
   SelectedText : string;
+  SearchFromCursor: Boolean;
+  SearchInSelectionOnly: Boolean;
+  SearchRegularExpression: Boolean;
 begin
   if not Assigned(FEditor) then Exit;
   if AReplace then

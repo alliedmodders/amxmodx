@@ -152,15 +152,9 @@ var exConstants, exDefined, exIncluded, exMethods, exDefault, exEvents,
   eStr: TStringList;
   eScrollPosX, eScrollPosY: Integer;
   eTempNode: TTreeNode;
-  eSelected: Integer;
 begin
   if Application.Terminated then exit;
   if (frmMain.trvExplorer.Items.Count = 0) or (eActive <> ActiveDoc.Index) then exit;
-
-  if Assigned(frmMain.trvExplorer.Selected) then
-    eSelected := frmMain.trvExplorer.Selected.AbsoluteIndex
-  else
-    eSelected := -1;
 
   frmMain.trvExplorer.Items.BeginUpdate;
   try
@@ -324,8 +318,6 @@ begin
 
     SetScrollPos(frmMain.trvExplorer.Handle, SB_HORZ, eScrollPosX, False);
     SetScrollPos(frmMain.trvExplorer.Handle, SB_VERT, eScrollPosY, False);
-    if eSelected <> -1 then
-      frmMain.trvExplorer.Items[eSelected].Selected := True;
   except
     // well, yes.
   end;

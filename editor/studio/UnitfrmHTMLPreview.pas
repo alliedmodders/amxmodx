@@ -4,7 +4,7 @@ interface
 
 uses
   SysUtils, Windows, Messages, Classes, Graphics, Controls,
-  StdCtrls, ExtCtrls, Forms, OleCtrls, SHDocVw, ActiveX;
+  StdCtrls, ExtCtrls, Forms, OleCtrls, SHDocVw_TLB, ActiveX;
 
 type
   TfrmHTMLPreview = class(TForm)

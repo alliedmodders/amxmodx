@@ -5,7 +5,7 @@ interface
 uses
   SysUtils, Windows, Messages, Classes, Graphics, Controls,
   StdCtrls, ExtCtrls, Forms, TBXDkPanels, SpTBXDkPanels, JvExControls,
-  JvComponent, JvScrollText, ShellAPI, IdHTTP, jpeg, Dialogs;
+  JvComponent, JvScrollText, ShellAPI, IdHTTP, jpeg, Dialogs, SpTBXControls;
 
 type
   TfrmInfo = class(TForm)

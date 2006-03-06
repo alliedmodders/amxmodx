@@ -695,12 +695,14 @@ object frmMain: TfrmMain
       Height = 501
       Align = alClient
       ActiveTabIndex = 0
+      TabAutofitMaxSize = 100
       ThemeType = tttTBX
       OnActiveTabChange = tsDocumentsActiveTabChange
       HiddenItems = <>
       object tiDocument1: TSpTBXTabItem
         Checked = True
         OnSelect = OnTabSelect
+        CustomWidth = 100
         ThemeType = tttTBX
         CaptionW = '< 1 Untitled.sma >'
       end
@@ -809,13 +811,16 @@ object frmMain: TfrmMain
           Colors.WhiteSpaceBack = clDefault
           Bookmark.BackColor = clGray
           Bookmark.ForeColor = clWhite
-          Bookmark.MarkerType = 0
+          Bookmark.MarkerType = sciMFullRect
           Gutter0.Width = 0
           Gutter0.MarginType = gutLineNumber
+          Gutter0.Sensitive = False
           Gutter1.Width = 40
           Gutter1.MarginType = gutLineNumber
+          Gutter1.Sensitive = False
           Gutter2.Width = 14
           Gutter2.MarginType = gutSymbol
+          Gutter2.Sensitive = True
           WordWrapVisualFlags = []
           WordWrapVisualFlagsLocation = []
           LayoutCache = sciCacheCaret
@@ -827,7 +832,28 @@ object frmMain: TfrmMain
           WordChars = '_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
           ControlCharSymbol = #0
           Folding = [foldFold, foldCompact, foldComment, foldPreprocessor, foldCommentPython, foldAtElse, foldHTML, foldHTMLPreProcessor]
-          FoldMarkerType = sciMarkBox
+          FoldMarkers.MarkerType = sciMarkBox
+          FoldMarkers.FoldOpen.BackColor = clDefault
+          FoldMarkers.FoldOpen.ForeColor = clDefault
+          FoldMarkers.FoldOpen.MarkerType = sciMBoxMinus
+          FoldMarkers.FoldClosed.BackColor = clDefault
+          FoldMarkers.FoldClosed.ForeColor = clDefault
+          FoldMarkers.FoldClosed.MarkerType = sciMBoxPlus
+          FoldMarkers.FoldSub.BackColor = clDefault
+          FoldMarkers.FoldSub.ForeColor = clDefault
+          FoldMarkers.FoldSub.MarkerType = sciMVLine
+          FoldMarkers.FoldTail.BackColor = clDefault
+          FoldMarkers.FoldTail.ForeColor = clDefault
+          FoldMarkers.FoldTail.MarkerType = sciMLCorner
+          FoldMarkers.FoldEnd.BackColor = clDefault
+          FoldMarkers.FoldEnd.ForeColor = clDefault
+          FoldMarkers.FoldEnd.MarkerType = sciMBoxPlusConnected
+          FoldMarkers.FoldOpenMid.BackColor = clDefault
+          FoldMarkers.FoldOpenMid.ForeColor = clDefault
+          FoldMarkers.FoldOpenMid.MarkerType = sciMBoxMinusConnected
+          FoldMarkers.FoldMidTail.BackColor = clDefault
+          FoldMarkers.FoldMidTail.ForeColor = clDefault
+          FoldMarkers.FoldMidTail.MarkerType = sciMTCorner
           LanguageManager.LanguageList = <
             item
               Name = 'null'
@@ -6428,6 +6454,8 @@ object frmMain: TfrmMain
     ParametersSeparators = ','
     ParametersStart = '('
     WordCharacters = '_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    TabSize = 0
+    UseStyle = False
     OnBeforeShow = sciCallTipsBeforeShow
     Left = 842
     Top = 36

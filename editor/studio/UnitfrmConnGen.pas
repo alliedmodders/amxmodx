@@ -5,7 +5,7 @@ interface
 uses
   SysUtils, Windows, Messages, Classes, Graphics, Controls,
   StdCtrls, ExtCtrls, Forms, SpTBXEditors, TntStdCtrls, TBXDkPanels,
-  SpTBXDkPanels;
+  SpTBXDkPanels, SpTBXControls;
 
 type
   TfrmConnGen = class(TForm)

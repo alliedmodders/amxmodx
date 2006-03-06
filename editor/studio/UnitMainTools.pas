@@ -641,7 +641,7 @@ begin
   if eConfig.ReadString('Editor', 'AutoDisable', '1500') <> '-1' then
     frmSettings.txtAUDisable.Text := eConfig.ReadString('Editor', 'AutoDisable', '1500');
   if foldFold in frmMain.sciEditor.Folding then begin
-    case frmMain.sciEditor.FoldMarkerType of
+    case frmMain.sciEditor.FoldMarkers.MarkerType of
       sciMarkArrows: frmSettings.cboCodeFolding.ItemIndex := 0;
       sciMarkBox: frmSettings.cboCodeFolding.ItemIndex := 1;
       sciMarkCircle: frmSettings.cboCodeFolding.ItemIndex := 2;
@@ -1017,6 +1017,8 @@ begin
     frmMain.sciEditor.Colors.SelBack := clHighlight;
   end;
   frmMain.mnuRestoreBackup.Enabled := (FileExists(Document.FileName + '.bak')) and (not Document.Untitled);
+
+  frmMain.trvExplorer.Selected := nil;
   Screen.Cursor := crDefault;
   Plugin_DocChange(Document.Index, Document.FileName, Document.Highlighter, RestoreCaret, False);
 end;

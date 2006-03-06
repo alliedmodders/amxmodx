@@ -4,7 +4,8 @@ interface
 
 uses
   SysUtils, Windows, Messages, Classes, Graphics, Controls,
-  StdCtrls, ExtCtrls, Forms, TBXDkPanels, SpTBXDkPanels, SpTBXEditors;
+  StdCtrls, ExtCtrls, Forms, TBXDkPanels, SpTBXDkPanels, SpTBXEditors,
+  SpTBXControls;
 
 type
   TfrmIRCPaster = class(TForm)

@@ -5,7 +5,7 @@ interface
 uses
   SysUtils, Windows, Messages, Classes, Graphics, Controls,
   StdCtrls, ExtCtrls, Forms, TBXDkPanels, SpTBXDkPanels, mbTBXMemo,
-  SpTBXEditors;
+  SpTBXEditors, SpTBXControls;
 
 type
   TfrmParamEdit = class(TForm)

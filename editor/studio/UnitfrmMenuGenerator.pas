@@ -7,7 +7,8 @@ uses
   StdCtrls, ExtCtrls, Forms, TBXDkPanels, SpTBXDkPanels, JvExControls,
   JvComponent, JvPageList, TFlatRadioButtonUnit, TFlatMemoUnit,
   TFlatEditUnit, TB2Dock, TB2Toolbar, TBX, SpTBXItem, ImgList, TB2Item,
-  Dialogs, TFlatComboBoxUnit, ComCtrls, ClipBrd, TFlatCheckBoxUnit;
+  Dialogs, TFlatComboBoxUnit, ComCtrls, ClipBrd, TFlatCheckBoxUnit,
+  SpTBXControls;
 
 type
   TfrmMenuGenerator = class(TForm)

@@ -86,7 +86,7 @@ public plugin_init()
 public plugin_cfg()
 {
 	/* Get configured number of reserved slots */
-	gReservedSlots = get_cvar_num("amx_reservedslots")
+	gReservedSlots = get_cvar_num("amx_reservation")
 	
 	/* The maximum number of players after reserved slot(s) */
 	gPlayerLimit = get_maxplayers() - gReservedSlots

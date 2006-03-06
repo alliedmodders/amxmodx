@@ -178,7 +178,7 @@ stock split(szInput[], szLeft[], pL_Max, szRight[], pR_Max, szDelim[])
 	else
 		copy(szLeft, pL_Max, szInput);
 
-	copy(szRightt, pR_Max, szInput[iStart]);
+	copy(szRight, pR_Max, szInput[iStart]);
 
 	return;
 }

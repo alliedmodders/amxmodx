@@ -60,7 +60,7 @@ native ts_getuserslots( index );
 native ts_setuserslots( index, slots );
 
 native ts_getuserstate( index )
-native ts_getuserwpn( index,&ammo,&clip,&mode,&extra );
+native ts_getuserwpn( index,&clip,&ammo,&mode,&extra );
 native ts_getuserspace( index );
 
 native ts_getuserkillflags(killer);

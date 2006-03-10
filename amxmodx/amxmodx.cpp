@@ -3834,7 +3834,7 @@ static cell AMX_NATIVE_CALL ExecuteForward(AMX *amx, cell *params)
 	int id = static_cast<int>(params[1]);
 	int str_id = 0;
 	int len;
-	cell *addr = get_amxaddr(amx, params[1]);
+	cell *addr = get_amxaddr(amx, params[2]);
 
 	if (!g_forwards.isIdValid(id))
 		return 0;

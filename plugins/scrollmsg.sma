@@ -73,7 +73,7 @@ public showMsg()
 		g_xPos = 0.35
 	}
 
-	set_hudmessage(200, 100, 0, g_xPos, 0.90, 0, SPEED, SPEED, 0.05, 0.05, -1)
+	set_hudmessage(200, 100, 0, g_xPos, 0.90, 0, SPEED, SPEED, 0.05, 0.05, 2)
 	show_hudmessage(0, "%s", g_displayMsg)
 }
 

@@ -1954,6 +1954,8 @@ static cell AMX_NATIVE_CALL get_players(AMX *amx, cell *params) /* 4 param */
 				continue;
 			if ((flags & 16) && (pPlayer->teamId != team))
 				continue;
+			if ((flags & 128) && (pPlayer->pEdict->v.flags & FL_PROXY))
+				continue;
 			if (flags & 32)
 			{
 				if (flags & 64)

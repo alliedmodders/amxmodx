@@ -110,12 +110,8 @@ public client_authorized(id)
 	   server and kick if they have no slot reservation */
 	if ((players > gPlayerLimit) && (!access(id, ADMIN_RESERVATION)))
 	{
-		/* In case player disconnected */
-		if (!userid)
-		{
-			server_cmd("kick #%d ^"%s^"", userid, reason)
-			return PLUGIN_CONTINUE
-		}
+		server_cmd("kick #%d ^"%s^"", userid, reason)
+		return PLUGIN_CONTINUE
 	}
 	
 	return PLUGIN_CONTINUE

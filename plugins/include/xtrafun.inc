@@ -37,7 +37,7 @@ stock get_entity_origin(index, origin[3]) {
 /* Sets the origin of an entity */
 stock set_entity_origin(index, origin[3]) {
 	new Float:vector[3]
-	IVecFVec(originvector)
+	IVecFVec(origin, vector)
 	entity_set_vector(index, EV_VEC_origin, vector)
 }
 

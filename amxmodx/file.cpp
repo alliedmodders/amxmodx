@@ -313,7 +313,7 @@ static cell AMX_NATIVE_CALL dir_exists(AMX *amx, cell *params) /* 1 param */
 	if (attr == INVALID_FILE_ATTRIBUTES)
 		return 0;
 	
-	if (attr == FILE_ATTRIBUTE_DIRECTORY)
+	if (attr & FILE_ATTRIBUTE_DIRECTORY)
 		return 1;
 	
 	return 0;

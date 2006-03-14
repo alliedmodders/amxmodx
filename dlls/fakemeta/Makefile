@@ -12,7 +12,7 @@ CPP = gcc
 NAME = fakemeta_amxx
 
 OBJECTS = sdk/amxxmodule.cpp dllfunc.cpp engfunc.cpp fakemeta_amxx.cpp pdata.cpp forward.cpp \
-	fm_tr.cpp pev.cpp
+	fm_tr.cpp pev.cpp glb.cpp
 
 LINK =
 

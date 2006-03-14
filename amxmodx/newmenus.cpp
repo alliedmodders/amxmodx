@@ -751,6 +751,39 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 	return 0; } \
 	Menu *pMenu = g_NewMenus[p];
 
+static cell AMX_NATIVE_CALL menu_cancel(AMX *amx, cell *params)
+{
+	int index = params[1];
+
+	if (index < 1 || index > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player %d is not valid", index);
+		return 0;
+	}
+
+	CPlayer *player = GET_PLAYER_POINTER_I(index);
+	if (!player->ingame)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Played %d is not in game", index);
+		return 0;
+	}
+
+	int menu = player->newmenu;
+	if (menu < 0 || menu >= (int)g_NewMenus.size() || !g_NewMenus[menu])
+		return 0;
+
+	Menu *pMenu = g_NewMenus[menu];
+
+	player->newmenu = -1;
+	player->menu = 0;
+	executeForwards(pMenu->func, 
+		static_cast<cell>(index),
+		static_cast<cell>(pMenu->thisId),
+		static_cast<cell>(MENU_EXIT));
+
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL menu_destroy(AMX *amx, cell *params)
 {
 	GETMENU_R(params[1]);
@@ -766,12 +799,12 @@ static cell AMX_NATIVE_CALL menu_destroy(AMX *amx, cell *params)
 		player = GET_PLAYER_POINTER_I(i);
 		if (player->newmenu == pMenu->thisId)
 		{
+			player->newmenu = -1;
+			player->menu = 0;
 			executeForwards(pMenu->func, 
 				static_cast<cell>(i), 
 				static_cast<cell>(pMenu->thisId),
 				static_cast<cell>(MENU_EXIT));
-			player->newmenu = -1;
-			player->menu = 0;
 		}
 	}
 	g_NewMenus[params[1]] = NULL;
@@ -824,6 +857,7 @@ AMX_NATIVE_INFO g_NewMenuNatives[] =
 	{"menu_item_setname",		menu_item_setname},
 	{"menu_destroy",			menu_destroy},
 	{"menu_setprop",			menu_setprop},
+	{"menu_cancel",				menu_cancel},
 	{"player_menu_info",		player_menu_info},
 	{NULL,						NULL},
 };

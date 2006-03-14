@@ -207,6 +207,16 @@
 				RelativePath="..\..\plugins\include\fakemeta_stocks.inc">
 			</File>
 		</Filter>
+		<Filter
+			Name="global"
+			Filter="">
+			<File
+				RelativePath=".\glb.cpp">
+			</File>
+			<File
+				RelativePath=".\glb.h">
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

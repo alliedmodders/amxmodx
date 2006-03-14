@@ -57,6 +57,30 @@ ModuleCallReason g_ModuleCallReason;
 
 extern const char* no_function;				// stupid work around
 
+bool DirExists(const char *dir)
+{
+#if defined WIN32 || defined _WIN32
+	DWORD attr = GetFileAttributes(dir);
+	
+	if (attr == INVALID_FILE_ATTRIBUTES)
+		return false;
+	
+	if (attr & FILE_ATTRIBUTE_DIRECTORY)
+		return true;
+	
+#else
+	struct stat s;
+	
+	if (stat(dir, &s) != 0)
+		return false;
+	
+	if (S_ISDIR(s.st_mode))
+		return true;
+#endif
+
+	return false;
+}
+
 void report_error(int code, char* fmt, ...)
 {
 	va_list argptr;

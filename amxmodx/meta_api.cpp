@@ -39,6 +39,7 @@
 #include "fakemeta.h"
 #include "newmenus.h"
 #include "natives.h"
+#include "binlog.h"
 
 plugin_info_t Plugin_info = 
 {
@@ -298,6 +299,13 @@ int	C_Spawn(edict_t *pent)
 	// Set server flags
 	memset(g_players[0].flags, -1, sizeof(g_players[0].flags));
 
+#if defined BINLOG_ENABLED
+	if (!g_BinLog.Open())
+	{
+		LOG_ERROR(PLID, "Binary log failed to open.");
+	}
+#endif
+
 	// ###### Load AMX scripts
 	g_plugins.loadPluginsFromFile(get_localinfo("amxx_plugins", "addons/amxmodx/configs/plugins.ini"));
 	g_plugins.Finalize();
@@ -316,6 +324,10 @@ int	C_Spawn(edict_t *pent)
 	FF_InconsistentFile = registerForward("inconsistent_file", ET_STOP, FP_CELL, FP_STRING, FP_STRINGEX, FP_DONE);
 	FF_ClientAuthorized = registerForward("client_authorized", ET_IGNORE, FP_CELL, FP_DONE);
 	FF_ChangeLevel = registerForward("server_changelevel", ET_STOP, FP_STRING, FP_DONE);
+
+#if defined BINLOG_ENABLED
+	g_BinLog.CacheAllPlugins();
+#endif
 
 	modules_callPluginsLoaded();
 

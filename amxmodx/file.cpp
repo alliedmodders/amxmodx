@@ -307,27 +307,7 @@ static cell AMX_NATIVE_CALL dir_exists(AMX *amx, cell *params) /* 1 param */
 	char *sFile = get_amxstring(amx, params[1], 0, iLen);
 	char *file = build_pathname("%s", sFile);
 
-#if defined WIN32 || defined _WIN32
-	DWORD attr = GetFileAttributes(file);
-	
-	if (attr == INVALID_FILE_ATTRIBUTES)
-		return 0;
-	
-	if (attr & FILE_ATTRIBUTE_DIRECTORY)
-		return 1;
-	
-	return 0;
-#else
-	struct stat s;
-	
-	if (stat(file, &s) != 0)
-		return 0;
-	
-	if (S_ISDIR(s.st_mode))
-		return 1;
-	
-	return 0;
-#endif
+	return DirExists(file) ? 1 : 0;
 }
 
 static cell AMX_NATIVE_CALL file_size(AMX *amx, cell *params) /* 1 param */

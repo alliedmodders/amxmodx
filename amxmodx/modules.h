@@ -78,6 +78,8 @@ class Debugger;
 Debugger *DisableDebugHandler(AMX *amx);
 void EnableDebugHandler(AMX *amx, Debugger *pd);
 
+bool DirExists(const char *dir);
+
 const char* GetFileName(AMX *amx);
 
 #endif // __MODULES_H__

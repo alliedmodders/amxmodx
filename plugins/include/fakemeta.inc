@@ -22,6 +22,9 @@ native set_pev(_index,_value,{Float,Sql,Result,_}:...);
  */
 native pev_valid(entindex);
 
+/* Returns any global variable inside globalvars_t structure. Use the glb_* enum. */
+native global_get(_value, {Float,Sql,Result,_}:...);
+
 /* Returns an integer from private data.  _linuxdiff is added into the _Offset if it's used on a linux server. */
 native get_pdata_int(_index,_Offset,_linuxdiff=5);
 

@@ -300,6 +300,54 @@ enum {
 	pev_vecarray_end
 };
 
+/* Used with get_global()
+ */
+enum
+{
+	glb_start_int = 0, 
+	glb_trace_hitgroup, 
+	glb_trace_flags, 
+	glb_msg_entity, 
+	glb_cdAudioTrack, 
+	glb_maxClients, 
+	glb_maxEntities, 
+	glb_end_int, 
+	glb_start_float, 
+	glb_time, 
+	glb_frametime, 
+	glb_force_retouch, 
+	glb_deathmatch, 
+	glb_coop, 
+	glb_teamplay, 
+	glb_serverflags, 
+	glb_found_secrets, 
+	glb_trace_allsolid, 
+	glb_trace_startsolid, 
+	glb_trace_fraction, 
+	glb_trace_plane_dist, 
+	glb_trace_inopen, 
+	glb_trace_inwater, 
+	glb_end_float, 
+	glb_start_edict, 
+	glb_trace_ent, 
+	glb_end_edict, 
+	glb_start_vector, 
+	glb_v_forward, 
+	glb_v_up, 
+	glb_v_right, 
+	glb_trace_endpos, 
+	glb_trace_plane_normal, 
+	glb_vecLandmarkOffset,
+	glb_end_vector,
+	glb_start_string, 
+	glb_mapname, 
+	glb_startspot, 
+	glb_end_string, 
+	glb_start_pchar, 
+	glb_pStringBase, 
+	glb_end_pchar
+};
+
 /* Used with register_forward()
  */
 enum {

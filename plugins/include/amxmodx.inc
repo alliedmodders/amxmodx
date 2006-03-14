@@ -808,6 +808,11 @@ native menu_addblank(menu, slot=1);
 //The third value depends on the property
 native menu_setprop(menu, prop, ...);
 
+//Cancels a player's menu, effectively forcing the player to select MENU_EXIT
+//The menu will still exist on their screen but any results are invalidated,
+//and the callback is invoked.
+native menu_cancel(player);
+
 // Gets distance between two origins (float)
 native Float:get_distance_f( Float:Origin1[3], Float:Origin2[3] ); 
 

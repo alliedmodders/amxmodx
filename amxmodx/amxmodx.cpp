@@ -33,6 +33,7 @@
 #include "amxmodx.h"
 #include "natives.h"
 #include "debugger.h"
+#include "binlog.h"
 
 static cell AMX_NATIVE_CALL get_xvar_id(AMX *amx, cell *params)
 {
@@ -1018,10 +1019,18 @@ static cell AMX_NATIVE_CALL register_plugin(AMX *amx, cell *params) /* 3 param *
 {
 	CPluginMngr::CPlugin* a = g_plugins.findPluginFast(amx);
 	int i;
+
+	char *title = get_amxstring(amx, params[1], 0, i);
+	char *vers = get_amxstring(amx, params[2], 1, i);
+	char *author = get_amxstring(amx, params[3], 2, i);
+
+#if defined BINLOG_ENABLED
+	g_BinLog.WriteOp(BinLog_Registered, a->getId(), title, vers);
+#endif
 	
-	a->setTitle(get_amxstring(amx, params[1], 0, i));
-	a->setVersion(get_amxstring(amx, params[2], 0, i));
-	a->setAuthor(get_amxstring(amx, params[3], 0, i));
+	a->setTitle(title);
+	a->setVersion(vers);
+	a->setAuthor(author);
 	
 	return 1;
 }

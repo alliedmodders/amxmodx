@@ -580,6 +580,153 @@
 			<Tool
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
+		<Configuration
+			Name="JITDebugBinLog|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories=""
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;PAWN_CELL_SIZE=32;ASM32;JIT;BINLOG_ENABLED"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="5"
+				StructMemberAlignment="3"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="amxmodx.h"
+				PrecompiledHeaderFile=".\jitdebugbinlog/amxmodx.pch"
+				AssemblerListingLocation=".\jitdebugbinlog/"
+				ObjectFile=".\jitdebugbinlog/"
+				ProgramDataBaseFileName=".\jitdebugbinlog/"
+				WarningLevel="3"
+				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="4"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="..\zlib\zlib.lib ..\JIT\amxjitsn.obj ..\JIT\amxexecn.obj ..\JIT\natives-x86.obj"
+				OutputFile="jitdebugbinlog/amxmodx_mm.dll"
+				Version="0.1"
+				LinkIncremental="1"
+				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="..\extra\lib_win32"
+				IgnoreDefaultLibraryNames="MSVCRT"
+				ModuleDefinitionFile=""
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile=".\jitdebugbinlog/amxx_mm.pdb"
+				ImportLibrary=".\jitdebugbinlog/amxx_mm.lib"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="TRUE"
+				SuppressStartupBanner="TRUE"
+				TargetEnvironment="1"
+				TypeLibraryName=".\debug/amxmodx.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="JITReleaseBinLog|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				GlobalOptimizations="TRUE"
+				InlineFunctionExpansion="1"
+				EnableIntrinsicFunctions="TRUE"
+				FavorSizeOrSpeed="1"
+				OmitFramePointers="TRUE"
+				OptimizeForProcessor="0"
+				AdditionalIncludeDirectories="..\..\metamod\metamod,..\..\hlsdk\sourcecode\common,..\..\hlsdk\sourcecode\engine,..\..\hlsdk\sourcecode\dlls,..\..\hlsdk\sourcecode\pm_shared,..\extra\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;JIT;ASM32;PAWN_CELL_SIZE=32"
+				IgnoreStandardIncludePath="FALSE"
+				StringPooling="TRUE"
+				RuntimeLibrary="4"
+				EnableFunctionLevelLinking="TRUE"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="amxmodx.h"
+				PrecompiledHeaderFile=".\jitrelease/amxmodx.pch"
+				AssemblerListingLocation=".\jitrelease/"
+				ObjectFile=".\jitrelease/"
+				ProgramDataBaseFileName=".\jitrelease/"
+				WarningLevel="3"
+				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="3"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="..\zlib\zlib.lib ..\JIT\amxjitsn.obj ..\JIT\amxexecn.obj ..\JIT\natives-x86.obj"
+				OutputFile="jitrelease/amxmodx_mm.dll"
+				LinkIncremental="1"
+				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="..\extra\lib_win32"
+				IgnoreDefaultLibraryNames="MSVCRT"
+				ModuleDefinitionFile=""
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile=".\jitrelease/amxmodx_mm.pdb"
+				GenerateMapFile="TRUE"
+				ImportLibrary=".\jitrelease/amxx_mm.lib"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="TRUE"
+				SuppressStartupBanner="TRUE"
+				TargetEnvironment="1"
+				TypeLibraryName=".\release/amxmodx.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -607,6 +754,9 @@
 			</File>
 			<File
 				RelativePath="..\amxxlog.cpp">
+			</File>
+			<File
+				RelativePath="..\binlog.cpp">
 			</File>
 			<File
 				RelativePath="..\CCmd.cpp">
@@ -646,6 +796,12 @@
 						Name="VCCLCompilerTool"
 						AssemblerOutput="0"/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="JITReleaseBinLog|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="0"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\CVault.cpp">
@@ -679,6 +835,12 @@
 						Name="VCCLCompilerTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="JITReleaseBinLog|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\md5.cpp">
@@ -708,6 +870,12 @@
 				RelativePath="..\string.cpp">
 				<FileConfiguration
 					Name="JITRelease|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="2"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="JITReleaseBinLog|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						AssemblerOutput="2"/>
@@ -757,6 +925,18 @@
 						<Tool
 							Name="VCCLCompilerTool"/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="JITDebugBinLog|Win32"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCCLCompilerTool"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="JITReleaseBinLog|Win32"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCCLCompilerTool"/>
+					</FileConfiguration>
 				</File>
 			</Filter>
 		</Filter>
@@ -777,6 +957,9 @@
 			</File>
 			<File
 				RelativePath="..\amxxlog.h">
+			</File>
+			<File
+				RelativePath="..\binlog.h">
 			</File>
 			<File
 				RelativePath="..\CCmd.h">
@@ -957,6 +1140,18 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="MaximalSpeed|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="JITDebugBinLog|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="JITReleaseBinLog|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
 						Name="VCCLCompilerTool"/>

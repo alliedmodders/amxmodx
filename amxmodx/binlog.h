@@ -25,15 +25,15 @@
  * Format of bindb:
  * int32_t		magic
  * int16_t		version
- * int16_t		num plugins
+ * int32_t		num plugins
  * [
+ *  int8_t		status codes
  *  str[int8_t]	filename
- *  int8_t		valid/loaded?
- *  int16_t		num natives
+ *  int32_t		num natives
+ *  int32_t		num publics
  *  [
  *   str[int8_t] native name
  *  ]
- *  int16_t		num publics
  *  [
  *   str[int8_t] public name
  *  ]
@@ -41,7 +41,7 @@
 
 enum BinLogOp
 {
-	BinLog_Start=0,
+	BinLog_Start=1,
 	BinLog_End,
 	BinLog_NativeCall,	//<int16_t native id>
 	BinLog_CallPubFunc,	//<int16_t public id>
@@ -55,7 +55,7 @@ public:
 	bool Open();
 	void Close();
 	void CacheAllPlugins();
-	void WriteOp(BinLogOp op, ...);
+	void WriteOp(BinLogOp op, int plug, ...);
 private:
 	String m_dbfile;
 	String m_logfile;

@@ -1,3 +1,4 @@
+#include <time.h>
 #include "amxmodx.h"
 #include "binlog.h"
 
@@ -53,6 +54,42 @@ void BinLog::Close()
 	//dummy function - logs are not kept open
 }
 
+void BinLog::WriteOp(BinLogOp op, int plug, ...)
+{
+	FILE *fp = fopen(m_logfile.c_str(), "ab");
+	if (!fp)
+		return;
+
+	unsigned char c = static_cast<char>(op);
+	time_t t = time(NULL);
+	float gt = gpGlobals->time;
+	fwrite(&c, sizeof(char), 1, fp);
+	fwrite(&t, sizeof(time_t), 1, fp);
+	fwrite(&gt, sizeof(float), 1, fp);
+	fwrite(&plug, sizeof(int), 1, fp);
+
+	va_list ap;
+	va_start(ap, plug);
+
+	switch (c)
+	{
+	case BinLog_Registered:
+		{
+			const char *title = va_arg(ap, const char *);
+			const char *vers = va_arg(ap, const char *);
+			c = (char)strlen(title);
+			fwrite(&c, sizeof(char), 1, fp);
+			fwrite(title, sizeof(char), c+1, fp);
+			c = (char)strlen(vers);
+			fwrite(&c, sizeof(char), 1 ,fp);
+			fwrite(vers, sizeof(char), c+1, fp);
+			break;
+		}
+	};
+
+	va_end(ap);
+}
+
 void BinLog::CacheAllPlugins()
 {
 	FILE *fp = fopen(m_dbfile.c_str(), "wb");
@@ -78,16 +115,21 @@ void BinLog::CacheAllPlugins()
 			c = 1;
 		else
 			c = 0;
+		if (c && pl->isDebug())
+			c = 2;
 		fwrite(&c, sizeof(char), 1, fp);
 		len = (char)strlen(pl->getName());
 		fwrite(&len, sizeof(char), 1, fp);
 		len++;
 		fwrite(pl->getName(), sizeof(char), len, fp);
-		int objcount;
+		int natives, publics;
 		AMX *amx = pl->getAMX();
-		amx_NumNatives(amx, &objcount);
+		amx_NumNatives(amx, &natives);
+		amx_NumPublics(amx, &publics);
+		fwrite(&natives, sizeof(int), 1, fp);
+		fwrite(&publics, sizeof(int), 1, fp);
 		char name[34];
-		for (int i=0; i<objcount; i++)
+		for (int i=0; i<natives; i++)
 		{
 			amx_GetNative(amx, i, name);
 			len = (char)strlen(name);
@@ -95,8 +137,7 @@ void BinLog::CacheAllPlugins()
 			len++;
 			fwrite(name, sizeof(char), len, fp);
 		}
-		amx_NumPublics(amx, &objcount);
-		for (int i=0; i<objcount; i++)
+		for (int i=0; i<publics; i++)
 		{
 			amx_GetPublic(amx, i, name);
 			len = (char)strlen(name);
@@ -120,6 +161,9 @@ void BinLog::CacheAllPlugins()
 	fwrite(&magic, sizeof(int), 1, fp);
 	fwrite(&vers, sizeof(short), 1, fp);
 	fwrite(&c, sizeof(char), 1, fp);
+	fclose(fp);
+
+	WriteOp(BinLog_Start, -1);
 }
 
 #endif //BINLOG_ENABLED

@@ -7,8 +7,10 @@ Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
 		JITDebug = JITDebug
+		JITDebugBinLog = JITDebugBinLog
 		JITMemtestRelease = JITMemtestRelease
 		JITRelease = JITRelease
+		JITReleaseBinLog = JITReleaseBinLog
 		MaximalSpeed = MaximalSpeed
 		MemtestDebug = MemtestDebug
 		MemtestRelease = MemtestRelease
@@ -19,10 +21,14 @@ Global
 		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.Debug.Build.0 = Debug|Win32
 		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.JITDebug.ActiveCfg = JITDebug|Win32
 		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.JITDebug.Build.0 = JITDebug|Win32
+		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.JITDebugBinLog.ActiveCfg = JITDebugBinLog|Win32
+		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.JITDebugBinLog.Build.0 = JITDebugBinLog|Win32
 		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.JITMemtestRelease.ActiveCfg = JITMemtestRelease|Win32
 		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.JITMemtestRelease.Build.0 = JITMemtestRelease|Win32
 		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.JITRelease.ActiveCfg = JITRelease|Win32
 		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.JITRelease.Build.0 = JITRelease|Win32
+		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.JITReleaseBinLog.ActiveCfg = JITReleaseBinLog|Win32
+		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.JITReleaseBinLog.Build.0 = JITReleaseBinLog|Win32
 		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.MaximalSpeed.ActiveCfg = MaximalSpeed|Win32
 		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.MaximalSpeed.Build.0 = MaximalSpeed|Win32
 		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.MemtestDebug.ActiveCfg = MemtestDebug|Win32

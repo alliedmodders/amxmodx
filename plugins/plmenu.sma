@@ -543,6 +543,12 @@ public actionTeamMenu(id, key)
 
 			if (g_cstrike)
 			{
+				if (is_user_alive(player))
+				{
+					new deaths = cs_get_user_deaths(player)
+					user_kill(player, 1)
+					cs_set_user_deaths(player, deaths)
+				}
 				cs_set_user_team(player, g_menuOption[id] ? 1 : 2)
 				cs_reset_user_model(player)
 			} else {

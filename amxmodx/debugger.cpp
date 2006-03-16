@@ -31,6 +31,7 @@
 
 #include "amxmodx.h"
 #include "debugger.h"
+#include "binlog.h"
 
 #if !defined WIN32 && !defined _WIN32
 #define _snprintf snprintf
@@ -306,6 +307,19 @@ void Debugger::EndExec()
 void Debugger::StepI()
 {
 	assert(m_Top >= 0 && m_Top < (int)m_pCalls.size());
+
+#if defined BINLOG_ENABLED
+	if (g_binlog_level & 32)
+	{
+		CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(m_pAmx);
+		if (pl)
+		{
+			long line;
+			dbg_LookupLine(m_pAmxDbg, m_pAmx->cip, &line);
+			g_BinLog.WriteOp(BinLog_SetLine, pl->getId(), (int)(line + 1));
+		}
+	}
+#endif
 
 	m_pCalls[m_Top]->StepI(m_pAmx->frm, m_pAmx->cip);
 }

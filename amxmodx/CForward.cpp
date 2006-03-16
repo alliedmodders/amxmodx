@@ -31,6 +31,7 @@
 
 #include "amxmodx.h"
 #include "debugger.h"
+#include "binlog.h"
 
 CForward::CForward(const char *name, ForwardExecType et, int numParams, const ForwardParam *paramTypes)
 {
@@ -124,6 +125,9 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 			
 			// exec
 			cell retVal;
+#if defined BINLOG_ENABLED
+			g_BinLog.WriteOp(BinLog_CallPubFunc, (*iter).pPlugin->getId(), iter->func);
+#endif
 			int err = amx_Exec(amx, &retVal, iter->func);
 			
 			// log runtime error, if any
@@ -284,6 +288,9 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 	
 	// exec
 	cell retVal;
+#if defined BINLOG_ENABLED
+	g_BinLog.WriteOp(BinLog_CallPubFunc, pPlugin->getId(), m_Func);
+#endif
 	int err = amx_Exec(m_Amx, &retVal, m_Func);
 	
 	if (err != AMX_ERR_NONE)

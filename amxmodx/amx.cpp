@@ -462,7 +462,23 @@ int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
 
   amx->error=AMX_ERR_NONE;
 
+#if defined BINLOG_ENABLED
+  binlogfuncs_t *logfuncs = (binlogfuncs_t *)amx->usertags[UT_BINLOGS];
+  if (logfuncs)
+  {
+	  logfuncs->pfnLogNative(amx, index, (int)(params[0] / sizeof(cell)));
+	  logfuncs->pfnLogParams(amx, params);
+  }
+#endif //BINLOG_ENABLED
+
   *result = f(amx,params);
+
+#if defined BINLOG_ENABLED
+  if (logfuncs)
+  {
+	  logfuncs->pfnLogReturn(amx, *result);
+  }
+#endif
 
   return amx->error;
 }

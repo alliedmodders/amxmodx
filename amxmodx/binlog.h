@@ -12,30 +12,30 @@
 
 /**
  * Format of binlog:
- * int32_t		magic
- * int16_t		version
- * int8_t		sizeof(time_t)
+ * uint32		magic
+ * uint16		version
+ * uint8		sizeof(time_t)
  * [
+ *  uint8		operation code
  *  time_t		realtime
  *  float		gametime
- *  int8_t		operation code
- *  int16_t		plugin id
+ *  int32		plugin id
  *  <extra info>
  * ]
  * Format of bindb:
- * int32_t		magic
- * int16_t		version
- * int32_t		num plugins
+ * uint32		magic
+ * uint16		version
+ * uint32		num plugins
  * [
- *  int8_t		status codes
- *  str[int8_t]	filename
- *  int32_t		num natives
- *  int32_t		num publics
+ *  uint8		status codes
+ *  str[int8]	filename
+ *  uint32		num natives
+ *  uint32		num publics
  *  [
- *   str[int8_t] native name
+ *   str[uint8] native name
  *  ]
  *  [
- *   str[int8_t] public name
+ *   str[uint8] public name
  *  ]
  */
 
@@ -43,10 +43,16 @@ enum BinLogOp
 {
 	BinLog_Start=1,
 	BinLog_End,
-	BinLog_NativeCall,	//<int16_t native id>
-	BinLog_CallPubFunc,	//<int16_t public id>
-	BinLog_SetLine,		//<int16_t line no#>
+	BinLog_NativeCall,	//<int32 native id> <int32_t num_params>
+	BinLog_NativeError, //<int32 errornum> <str[int16] string>
+	BinLog_NativeRet,	//<cell value>
+	BinLog_CallPubFunc,	//<int32 public id>
+	BinLog_SetLine,		//<int32 line no#>
 	BinLog_Registered,	//<string title> <string version>
+	BinLog_FormatString, //<int32 param#> <int32 maxlen> <str[int16] string>
+	BinLog_NativeParams, //<int32 num> <cell ...>
+	BinLog_GetString,	//<cell addr> <string[int16]>
+	BinLog_SetString,	//<cell addr> <int maxlen> <string[int16]>
 };
 
 class BinLog
@@ -61,8 +67,9 @@ private:
 	String m_logfile;
 };
 
-#endif //BINLOG_ENABLED
-
 extern BinLog g_BinLog;
+extern int g_binlog_level;
+
+#endif //BINLOG_ENABLED
 
 #endif //_INCLUDE_BINLOG_H

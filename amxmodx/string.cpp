@@ -32,6 +32,7 @@
 #include <ctype.h>
 #include "amxmodx.h"
 #include "format.h"
+#include "binlog.h"
 
 const char* stristr(const char* str, const char* substr)
 {
@@ -57,7 +58,18 @@ const char* stristr(const char* str, const char* substr)
 
 char* format_amxstring(AMX *amx, cell *params, int parm, int& len)
 {
+#if !defined BINLOG_ENABLED
 	return g_langMngr.FormatAmxString(amx, params, parm, len);
+#else
+	char *ans = g_langMngr.FormatAmxString(amx, params, parm, len);
+	if (g_binlog_level & 4)
+	{
+		CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(amx);
+		if (pl)
+			g_BinLog.WriteOp(BinLog_FormatString, pl->getId(), parm, len, ans);
+	}
+	return ans;
+#endif
 }
 
 int amxstring_len(cell* a)
@@ -79,6 +91,15 @@ int set_amxstring(AMX *amx, cell amx_addr, const char *source, int max)
 {
 	register cell* dest = (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
 	register cell* start = dest;
+
+#if defined BINLOG_ENABLED
+	if (g_binlog_level & 2)
+	{
+		CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(amx);
+		if (pl)
+			g_BinLog.WriteOp(BinLog_SetString, pl->getId(), amx_addr, max, source);
+	}
+#endif
 	
 	while (max-- && *source)
 		*dest++ = (cell)*source++;
@@ -93,11 +114,20 @@ extern "C" size_t get_amxstring_r(AMX *amx, cell amx_addr, char *destination, in
 	register cell *source = (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
 	register char *dest = destination;
 	char *start = dest;
-	
+
 	while (maxlen-- && *source)
 		*dest++=(char)(*source++);
 
 	*dest = '\0';
+
+#if defined BINLOG_ENABLED
+	if (g_binlog_level & 2)
+	{
+		CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(amx);
+		if (pl)
+			g_BinLog.WriteOp(BinLog_GetString, pl->getId(), amx_addr, destination);
+	}
+#endif
 
 	return dest - start;
 }
@@ -112,6 +142,15 @@ char* get_amxstring(AMX *amx, cell amx_addr, int id, int& len)
 	while ((*dest++=(char)(*source++)));
 
 	len = --dest - start;
+
+#if defined BINLOG_ENABLED
+	if (g_binlog_level & 2)
+	{
+		CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(amx);
+		if (pl)
+			g_BinLog.WriteOp(BinLog_GetString, pl->getId(), amx_addr, start);
+	}
+#endif
 	
 	return start;
 }
@@ -279,7 +318,7 @@ static cell AMX_NATIVE_CALL numtostr(AMX *amx, cell *params) /* 3 param */
 {
 	char szTemp[32];
 	sprintf(szTemp, "%d", (int)params[1]);
-	
+
 	return set_amxstring(amx, params[2], szTemp, params[3]);
 }
 
@@ -757,7 +796,7 @@ do_copy:
 					i++;
 				const char *start = had_quotes ? &(string[beg+1]) : &(string[beg]);
 				size_t _end = had_quotes ? (i==len-1 ? 1 : 2) : 0;
-				size_t end = (pos - _end > LeftMax) ? LeftMax : pos - _end;
+				size_t end = (pos - _end > (size_t)LeftMax) ? (size_t)LeftMax : pos - _end;
 				size_t to_go = end-beg;
 				if (end && to_go)
 				{
@@ -765,7 +804,7 @@ do_copy:
 						*left++ = (cell)*start++;
 				}
 				*left = '\0';
-				end = (len-i+1 > RightMax) ? RightMax : len-i+1;
+				end = (len-i+1 > (size_t)RightMax) ? (size_t)RightMax : len-i+1;
                 if (end)
 				{
 					start = &(string[i]);

@@ -304,6 +304,7 @@ int	C_Spawn(edict_t *pent)
 	{
 		LOG_ERROR(PLID, "Binary log failed to open.");
 	}
+	g_binlog_level = atoi(get_localinfo("bin_logging", "17"));
 #endif
 
 	// ###### Load AMX scripts
@@ -580,6 +581,10 @@ void C_ServerDeactivate_Post()
 		g_memreport_count++;
 	}
 #endif // MEMORY_TEST
+
+#if defined BINLOG_ENABLED
+	g_BinLog.Close();
+#endif
 
 	g_initialized = false;
 

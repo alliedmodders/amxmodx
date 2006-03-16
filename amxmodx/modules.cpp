@@ -45,6 +45,7 @@
 #include "natives.h"
 #include "debugger.h"
 #include "optimizer.h"
+#include "binlog.h"
 
 CList<CModule, const char*> g_modules;
 CList<CScript, AMX*> g_loadedscripts;
@@ -124,6 +125,38 @@ void free_amxmemory(void **ptr)
 	delete[] (unsigned char *)(*ptr);
 	*ptr = 0;
 }
+
+#if defined BINLOG_ENABLED
+void BinLog_LogNative(AMX *amx, int native, int params)
+{
+	CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(amx);
+	if (pl)
+		g_BinLog.WriteOp(BinLog_NativeCall, pl->getId(), native, params);
+}
+void BinLog_LogReturn(AMX *amx, cell retval)
+{
+	CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(amx);
+	if (pl)
+		g_BinLog.WriteOp(BinLog_NativeRet, pl->getId(), retval);
+}
+
+void BinLog_LogParams(AMX *amx, cell *params)
+{
+	if (g_binlog_level & 8)
+	{
+		CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(amx);
+		if (pl)
+			g_BinLog.WriteOp(BinLog_NativeParams, pl->getId(), params);
+	}
+}
+
+static binlogfuncs_t logfuncs = 
+{
+	BinLog_LogNative,
+	BinLog_LogReturn,
+	BinLog_LogParams
+};
+#endif
 
 int load_amxscript(AMX *amx, void **program, const char *filename, char error[64], int debug)
 {
@@ -250,6 +283,10 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 
 	Handler *pHandler = new Handler(amx);
 	amx->userdata[UD_HANDLER] = (void *)pHandler;
+
+#if defined BINLOG_ENABLED
+	amx->usertags[UT_BINLOGS] = (void *)&logfuncs;
+#endif
 
 	if (will_be_debugged)
 	{
@@ -1398,6 +1435,12 @@ extern "C" void LogError(AMX *amx, int err, const char *fmt, ...)
 		_vsnprintf(msg_buffer, sizeof(msg_buffer) - 1, fmt, ap);
 		va_end(ap);
 	}
+
+#if defined BINLOG_ENABLED
+	CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(amx);
+	if (pl)
+		g_BinLog.WriteOp(BinLog_NativeError, pl->getId(), err, msg_buffer);
+#endif
 
 	//give the plugin first chance to handle any sort of error
 	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];

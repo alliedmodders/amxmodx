@@ -336,6 +336,7 @@ enum {
 #define	UT_NATIVE		3
 #define UT_OPTIMIZER	2
 #define UT_BROWSEHOOK	1
+#define UT_BINLOGS		0
 
 typedef void (*BROWSEHOOK)(AMX *amx, cell *oplist, cell *cip);
 
@@ -438,6 +439,15 @@ int AMXAPI amx_GetStringOld(char *dest,const cell *source,int use_wchar);
   #else
     #pragma pack(pop) /* reset previous packing */
   #endif
+#endif
+
+#if defined BINLOG_ENABLED
+typedef struct tagBINLOG
+{
+	void	(*pfnLogNative)(AMX *amx, int native, int params);
+	void	(*pfnLogReturn)(AMX *amx, cell retval);
+	void	(*pfnLogParams)(AMX *amx, cell *params);
+} binlogfuncs_t;
 #endif
 
 #ifdef  __cplusplus

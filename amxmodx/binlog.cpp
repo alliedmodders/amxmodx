@@ -5,6 +5,7 @@
 #if defined BINLOG_ENABLED
 
 BinLog g_BinLog;
+int g_binlog_level = 0;
 
 bool BinLog::Open()
 {
@@ -51,7 +52,7 @@ bool BinLog::Open()
 
 void BinLog::Close()
 {
-	//dummy function - logs are not kept open
+	WriteOp(BinLog_End, -1);
 }
 
 void BinLog::WriteOp(BinLogOp op, int plug, ...)
@@ -85,9 +86,89 @@ void BinLog::WriteOp(BinLogOp op, int plug, ...)
 			fwrite(vers, sizeof(char), c+1, fp);
 			break;
 		}
+	case BinLog_NativeCall:
+		{
+			int native = va_arg(ap, int);
+			int params = va_arg(ap, int);
+			fwrite(&native, sizeof(int), 1, fp);
+			fwrite(&params, sizeof(int), 1, fp);
+			break;
+		}
+	case BinLog_NativeRet:
+		{
+			cell retval = va_arg(ap, cell);
+			fwrite(&retval, sizeof(cell), 1, fp);
+			break;
+		}
+	case BinLog_NativeError:
+		{
+			int err = va_arg(ap, int);
+			const char *msg = va_arg(ap, const char *);
+			short len = (short)strlen(msg);
+			fwrite(&err, sizeof(int), 1, fp);
+			fwrite(&len, sizeof(short), 1, fp);
+			fwrite(msg, sizeof(char), len+1, fp);
+			break;
+		}
+	case BinLog_CallPubFunc:
+		{
+			int num = va_arg(ap, int);
+			fwrite(&num, sizeof(int), 1, fp);
+			break;
+		}
+	case BinLog_SetLine:
+		{
+			int line = va_arg(ap, int);
+			fwrite(&line, sizeof(int), 1, fp);
+			break;
+		}
+	case BinLog_FormatString:
+		{
+			int param = va_arg(ap, int);
+			int maxlen = va_arg(ap, int);
+			const char *str = va_arg(ap, const char *);
+			short len = (short)strlen(str);
+			fwrite(&param, sizeof(int), 1, fp);
+			fwrite(&maxlen, sizeof(int), 1, fp);
+			fwrite(&len, sizeof(short), 1, fp);
+			fwrite(str, sizeof(char), len+1, fp);
+			break;
+		}
+	case BinLog_NativeParams:
+		{
+			cell *params = va_arg(ap, cell *);
+			cell num = params[0] / sizeof(cell);
+			fwrite(&num, sizeof(cell), 1, fp);
+			for (cell i=1; i<=num; i++)
+				fwrite(&(params[i]), sizeof(cell), 1, fp);
+			break;
+		}
+	case BinLog_GetString:
+		{
+			cell addr = va_arg(ap, cell);
+			const char *str = va_arg(ap, const char *);
+			short len = (short)strlen(str);
+			fwrite(&addr, sizeof(cell), 1, fp);
+			fwrite(&len, sizeof(short), 1, fp);
+			fwrite(str, sizeof(char), len+1, fp);
+			break;
+		}
+	case BinLog_SetString:
+		{
+			cell addr = va_arg(ap, cell);
+			int maxlen = va_arg(ap, int);
+			const char *str = va_arg(ap, const char *);
+			short len = (short)strlen(str);
+			fwrite(&addr, sizeof(cell), 1, fp);
+			fwrite(&maxlen, sizeof(int), 1, fp);
+			fwrite(&len, sizeof(short), 1, fp);
+			fwrite(str, sizeof(char), len+1, fp);
+			break;
+		}
 	};
 
 	va_end(ap);
+	fclose(fp);
 }
 
 void BinLog::CacheAllPlugins()

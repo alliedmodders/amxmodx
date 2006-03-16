@@ -14,6 +14,14 @@ namespace BinLogReader
 		private static short BINDB_VERSION = 0x0100;
 		private ArrayList PluginList;
 
+		public int Count
+		{
+			get
+			{
+				return PluginList.Count;
+			}
+		}
+
 		public PluginDb(uint plugins)
 		{
 			PluginList = new ArrayList((int)plugins);
@@ -51,11 +59,11 @@ namespace BinLogReader
 				//check header
 				uint magic = br.ReadUInt32();
 				if (magic != BINDB_MAGIC)
-					throw new Exception("Invalid magic number");
+					throw new Exception("Invalid magic DB number");
 				//check version
 				ushort vers = br.ReadUInt16();
 				if (vers > BINDB_VERSION)
-					throw new Exception("Unknown version");
+					throw new Exception("Unknown DB version");
 				//read plugins
 				uint plugins = br.ReadUInt32();
 				db = new PluginDb(plugins);
@@ -70,7 +78,8 @@ namespace BinLogReader
 						Encoding.ASCII.GetString(name, 0, length), 
 						(int)natives,
 						(int)publics, 
-						status);
+						status,
+						(int)i);
 					Plugin pl = db.GetPluginById(id);
 					for (uint j=0; j<natives; j++)
 					{
@@ -88,7 +97,8 @@ namespace BinLogReader
 			} 
 			catch 
 			{
-				throw new Exception("File is corrupt");
+				db = null;
+				throw new Exception("DB file is corrupt");
 			} 
 			finally 
 			{
@@ -100,9 +110,9 @@ namespace BinLogReader
 			return db;
 		}
 
-		private int CreatePlugin(string file, int natives, int publics, byte status)
+		private int CreatePlugin(string file, int natives, int publics, byte status, int index)
 		{
-			Plugin pl = new Plugin(file, natives, publics, status);
+			Plugin pl = new Plugin(file, natives, publics, status, index);
 			PluginList.Add(pl);
 			return PluginList.Count - 1;
 		}

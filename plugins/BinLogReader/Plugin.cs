@@ -12,13 +12,71 @@ namespace BinLogReader
 		private string Filename;
 		private ArrayList Natives;
 		private ArrayList Publics;
+		private string title;
+		private string version;
+		private int index;
 
-		public Plugin(string name, int natives, int publics, byte _status)
+		public string File
+		{
+			get
+			{
+				return Filename;
+			}
+		}
+
+		public string Title
+		{
+			get
+			{
+				return title;
+			}
+			set
+			{
+				title = value;
+			}
+		}
+
+		public string Version
+		{
+			get
+			{
+				return version;
+			}
+			set
+			{
+				version = value;
+			}
+		}
+
+		public string Status
+		{
+			get
+			{
+				if (status == 0)
+					return "Failed";
+				else if (status == 1)
+					return "Running";
+				else if (status == 2)
+					return "Debug";
+				return "";
+			}
+		}
+
+		public int Index
+		{
+			get
+			{
+				return index;
+			}
+		}
+
+		public Plugin(string name, int natives, int publics, byte _status, int _index)
 		{
 			Filename = name;
 			Natives = new ArrayList(natives);
 			Publics = new ArrayList(publics);
 			status = _status;
+			index = _index;
 		}
 
 		public void AddNative(string name)

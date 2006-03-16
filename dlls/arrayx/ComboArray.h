@@ -12,13 +12,14 @@ private:
 	Array MasterArray;
 	
 public:
-	ComboArray()	{}
-	~ComboArray() { Clear(); }
+	ComboArray()			{				}
+	~ComboArray()			{ Clear();		}
+	void Remove()			{ delete this;	}
 
 	Word_t Clear()			{ return (MasterBin.Clear() + MasterArray.Clear() ); }
 	Word_t MemoryUsed()		{ return (MasterBin.MemoryUsed() + MasterArray.MemoryUsed() ); }
 
-	int Delete(cell Key)	{ return (MasterBin.Delete(Key) + MasterArray.Delete(Key) ); }
+	int Delete(cell Key)	{  return (MasterBin.Delete(Key) + MasterArray.Delete(Key) ); }
 
 	void Set(cell Index, Pvoid_t value, bool disable_check)
 	{

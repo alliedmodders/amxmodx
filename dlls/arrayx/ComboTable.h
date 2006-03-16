@@ -12,10 +12,11 @@ private:
 	Hashtable MasterHash;
 
 public:
-	ComboTable()					{ }
-	~ComboTable()				{ Clear(); }
+	ComboTable()				{				}
+	~ComboTable()				{ Clear();		}
+	void Remove()				{ delete this;	}
 
-	Word_t Clear()				{ return (MasterKey.Clear() + MasterHash.Clear() ); }
+	Word_t Clear()				{ return (MasterHash.Clear() + MasterKey.Clear() ); }
 	Word_t MemoryUsed()			{ return (MasterKey.MemoryUsed() + MasterHash.MemoryUsed() ); }
 
 	int Delete(char* Key)		{ return (MasterKey.Delete(Key) + MasterHash.Delete(Key) ); }
@@ -25,8 +26,8 @@ public:
 
 	void Set(char* Index, Pvoid_t value, bool disable_check)
 	{
-		MasterHash.Set(Index, value);
 		MasterKey.Set(Index, value);
+		MasterHash.Set(Index, value);
 	}
 
 	Pvoid_t Get(char* Index, bool disable_check = false)
@@ -37,8 +38,8 @@ public:
 	template <class Type> 
 	void Set(char* Index, Type value)
 	{
-		MasterHash.Set(Index, value);
 		MasterKey.Set(Index, value);
+		MasterHash.Set(Index, value);
 	}
 	
 	template <class Type> 

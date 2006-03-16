@@ -46,12 +46,24 @@ static cell AMX_NATIVE_CALL bintrie_get(AMX *amx,cell *params)
 	JUDY_ERROR_CATCH("Judy Error: (No error possible) - Slave Get Function ");
 }
 
+static cell AMX_NATIVE_CALL bintrie_remove(AMX *amx,cell *params)
+{
+	DTYPE* Unit = NULL;
+
+	JUDY_GET_INDEX(MNAME,Unit, params[1]);
+	ITYPE Indice = JUDY_GET_KEY(params,2);
+		
+	try { return Unit->Delete(Indice ); }
+	JUDY_ERROR_CATCH("Judy Error: (No error possible) - Slave Delete Function ");
+}
+
 
 AMX_NATIVE_INFO bintrie_usage_exports[] = 
 {
 	{ "bintrie_create", bintrie_create },
 	{ "bintrie_set", bintrie_set },
 	{ "bintrie_get", bintrie_get },
+	{ "bintrie_remove", bintrie_remove },
 
 	{ NULL, NULL }
 };

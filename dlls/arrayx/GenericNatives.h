@@ -14,6 +14,11 @@ ComboArray MNAME;
 		// generic_delete(id)
 		static cell AMX_NATIVE_CALL JUDY_MASTER_DELETE_FUNC(AMX *amx,cell *params)
 		{
+			DTYPE* Unit = NULL;
+			JUDY_GET_INDEX(MNAME,Unit, params[1] );
+
+			Unit->Remove();
+
 			try { return MNAME.Delete( params[1] ); }
 			JUDY_ERROR_CATCH("Judy Error: (No error possible) - Delete function ");
 		}
@@ -228,15 +233,25 @@ ComboArray MNAME;
 		static cell AMX_NATIVE_CALL JUDY_SLAVE_REMOVE_FUNC(AMX *amx,cell *params)
 		{
 			DTYPE* Unit = NULL;
+			STYPE* Storage;
+
 			JUDY_GET_INDEX(MNAME,Unit, params[1]);
+			ITYPE Indice = JUDY_GET_KEY(params,2);
+		
+			Storage = reinterpret_cast<STYPE*>( Unit->Get(Indice, true ) );
+			Storage->Remove();
 
-			try { return Unit->Delete(JUDY_GET_KEY(params,2) ); }
-			JUDY_ERROR_CATCH("Judy Error: (No error possible) - Slave Delete Function ");
+			try { return Unit->Delete(Indice); }
+			JUDY_ERROR_CATCH("Judy Error: (No Error Possible) - Delete function ");
 		}
-
 	#else
 
-		#error Must Have Delete func: JUDY_SLAVE_DELETE_FUNC not defined!
+		#ifdef NO_JUDY_SLAVE_REMOVE_FUNC
+		#else
+
+			#error Must Have Delete func: JUDY_SLAVE_REMOVE_FUNC not defined!
+
+		#endif
 
 	#endif
 ///*		End Required Slave Edit Funcs		*///
@@ -255,7 +270,7 @@ ComboArray MNAME;
 			ITYPE Indice = JUDY_GET_KEY(params,2);
 			bool Value = (params[3] != NULL);
 		
-			Storage = reinterpret_cast<Capsule*>( Unit->Get(Indice, true ) );
+			Storage = reinterpret_cast<STYPE*>( Unit->Get(Indice, true ) );
 
 			if(Storage == NULL) Storage = new STYPE(Value);
 			else Storage->SetBool(Value);
@@ -281,7 +296,7 @@ ComboArray MNAME;
 			ITYPE Indice = JUDY_GET_KEY(params,2);
 			bool disable_check = (params[3] != NULL);
 		
-			try { Storage = reinterpret_cast<Capsule*>( Unit->Get(Indice, disable_check ) ); }
+			try { Storage = reinterpret_cast<STYPE*>( Unit->Get(Indice, disable_check ) ); }
 			JUDY_ERROR_CATCH("Judy Error: (Retrieve unset value) - Slave Get Function ");
 
 			if(Storage == NULL) return 0;
@@ -313,7 +328,7 @@ ComboArray MNAME;
 			ITYPE Indice = JUDY_GET_KEY(params,2);
 			cell Value = params[3];
 		
-			Storage = reinterpret_cast<Capsule*>( Unit->Get(Indice, true ) );
+			Storage = reinterpret_cast<STYPE*>( Unit->Get(Indice, true ) );
 
 			if(Storage == NULL) Storage = new STYPE(Value);
 			else Storage->SetInt(Value);
@@ -339,7 +354,7 @@ ComboArray MNAME;
 			ITYPE Indice = JUDY_GET_KEY(params,2);
 			bool disable_check = (params[3] != NULL);
 		
-			try { Storage = reinterpret_cast<Capsule*>( Unit->Get(Indice, disable_check ) ); }
+			try { Storage = reinterpret_cast<STYPE*>( Unit->Get(Indice, disable_check ) ); }
 			JUDY_ERROR_CATCH("Judy Error: (Retrieve unset value) - Slave Get Function ");
 
 			if(Storage == NULL) return 0;
@@ -371,7 +386,7 @@ ComboArray MNAME;
 			ITYPE Indice = JUDY_GET_KEY(params,2);
 			REAL Value = amx_ctof(params[3]);
 		
-			Storage = reinterpret_cast<Capsule*>( Unit->Get(Indice, true ) );
+			Storage = reinterpret_cast<STYPE*>( Unit->Get(Indice, true ) );
 
 			if(Storage == NULL) Storage = new STYPE(Value);
 			else Storage->SetFlo(Value);
@@ -397,7 +412,7 @@ ComboArray MNAME;
 			ITYPE Indice = JUDY_GET_KEY(params,2);
 			bool disable_check = (params[3] != NULL);
 		
-			try { Storage = reinterpret_cast<Capsule*>( Unit->Get(Indice, disable_check ) ); }
+			try { Storage = reinterpret_cast<STYPE*>( Unit->Get(Indice, disable_check ) ); }
 			JUDY_ERROR_CATCH("Judy Error: (Retrieve unset value) - Slave Get Function ");
 
 			if(Storage == NULL) return 0;
@@ -429,7 +444,7 @@ ComboArray MNAME;
 			ITYPE Indice = JUDY_GET_KEY(params,2);
 			char* Value = MF_GetAmxString(amx,params[3],3,NULL);
 		
-			Storage = reinterpret_cast<Capsule*>( Unit->Get(Indice, true ) );
+			Storage = reinterpret_cast<STYPE*>( Unit->Get(Indice, true ) );
 
 			if(Storage == NULL) Storage = new STYPE(Value);
 			else Storage->SetStr(Value);
@@ -455,7 +470,7 @@ ComboArray MNAME;
 			ITYPE Indice = JUDY_GET_KEY(params,2);
 			bool disable_check = (params[5] != NULL);
 		
-			try { Storage = reinterpret_cast<Capsule*>( Unit->Get(Indice, disable_check ) ); }
+			try { Storage = reinterpret_cast<STYPE*>( Unit->Get(Indice, disable_check ) ); }
 			JUDY_ERROR_CATCH("Judy Error: (Retrieve unset value) - Slave Get Function ");
 
 			if(Storage == NULL) return 0;
@@ -493,7 +508,7 @@ ComboArray MNAME;
 				amx_ctof(input_vec[2])
 				);
 		
-			Storage = reinterpret_cast<Capsule*>( Unit->Get(Indice, true ) );
+			Storage = reinterpret_cast<STYPE*>( Unit->Get(Indice, true ) );
 
 			if(Storage == NULL) Storage = new STYPE(Value);
 			else Storage->SetVec(Value);
@@ -520,7 +535,7 @@ ComboArray MNAME;
 			cell *vAmx = MF_GetAmxAddr(amx, params[3]);
 			bool disable_check = (params[4] != NULL);
 		
-			try { Storage = reinterpret_cast<Capsule*>( Unit->Get(Indice, disable_check ) ); }
+			try { Storage = reinterpret_cast<STYPE*>( Unit->Get(Indice, disable_check ) ); }
 			JUDY_ERROR_CATCH("Judy Error: (Retrieve unset value) - Slave Get Function ");
 
 			if(Storage == NULL)
@@ -778,7 +793,10 @@ AMX_NATIVE_INFO EXPORT_NAME[] =
 	{ JUDY_SLAVE_MEMORY_STR , JUDY_SLAVE_MEMORY_FUNC },
 	{ JUDY_SLAVE_ISFILLED_STR , JUDY_SLAVE_ISFILLED_FUNC },
 	{ JUDY_SLAVE_ISEMPTY_STR , JUDY_SLAVE_ISEMPTY_FUNC },
+
+#ifndef NO_JUDY_SLAVE_REMOVE_FUNC
 	{ JUDY_SLAVE_REMOVE_STR , JUDY_SLAVE_REMOVE_FUNC },
+#endif
 
 #ifdef JUDY_SLAVE_EDIT_BOOL
 

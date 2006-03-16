@@ -1,8 +1,34 @@
 #include "JudyExtra.h"
+#include "CBinTrie.h"
+
+bool JudyClearMasterTrie(CBaseList* master)
+{
+	cell master_iten = NULL;
+	BinTrie* Storage = NULL;
+
+	try { master_iten = master->First(); }
+	catch(JudyEx& e) { return false; }
+
+	while( true )
+	{
+		try { Storage = reinterpret_cast<BinTrie*>(master->Get(master_iten) );  }
+		catch(JudyEx& e) { break; }
+
+		Storage->Remove();
+
+		try { master->Delete(master_iten); }
+		catch(JudyEx& e) { return false; }
+		
+		try { master_iten = master->Next(master_iten); }
+		catch(JudyEx& e) { break; }
+	}
+
+	return true;
+};
 
 bool JudyClearBinTrie(BinTrie* trie)
 {
-	Word_t trie_iten = 0;
+	Word_t trie_iten = NULL;
 
 	try { trie_iten = trie->First(); }
 	catch(JudyEx& e) { return false; }
@@ -19,7 +45,7 @@ bool JudyClearBinTrie(BinTrie* trie)
 
 bool JudySaveBinTrie(BinTrie* trie, char* file)
 {
-	Word_t trie_iten = 0;
+	Word_t trie_iten = NULL;
 
 	try { trie_iten = trie->First(); }
 	catch(JudyEx e) { return false; }
@@ -49,7 +75,7 @@ bool JudyLoadBinTrie(BinTrie* trie, char* file)
 	FILE *trieDB = fopen(file, "ab+");
 	if (!trieDB) return false;
 
-	Word_t trie_iten = 0;
+	Word_t trie_iten = NULL;
 
 	bool value = false;
 
@@ -67,15 +93,46 @@ bool JudyLoadBinTrie(BinTrie* trie, char* file)
 	return true;
 }
 
+bool JudyClearMasterList(CBaseList* master)
+{
+	cell master_iten = NULL;
+	CBaseList* Storage = NULL;
+
+	try { master_iten = master->First(); }
+	catch(JudyEx& e) { return false; }
+
+	while( true )
+	{
+		try { Storage = reinterpret_cast<CBaseList*>(master->Get(master_iten) );  }
+		catch(JudyEx& e) { break; }
+
+		Storage->Remove();
+
+		try { master->Delete(master_iten); }
+		catch(JudyEx& e) { return false; }
+		
+		try { master_iten = master->Next(master_iten); }
+		catch(JudyEx& e) { break; }
+	}
+
+	return true;
+};
+
 bool JudyClearList(CBaseList* list)
 {
-	Word_t list_iten = 0;
+	Word_t list_iten = NULL;
+	Capsule* Storage = NULL;
 
 	try { list_iten = list->First(); }
 	catch(JudyEx& e) { return false; }
 
 	while( true )
 	{
+		try { Storage = reinterpret_cast<Capsule*>(list->Get(list_iten) ); }
+		catch(JudyEx& e) { break; }
+
+		Storage->Remove();
+
 		try { list->Delete(list_iten); }
 		catch(JudyEx& e) { break; }
 		
@@ -88,7 +145,7 @@ bool JudyClearList(CBaseList* list)
 bool JudySaveList(CBaseList* list, char* file)
 {
 	Capsule* Storage = NULL;
-	Word_t list_iten = 0;
+	Word_t list_iten = NULL;
 	bool no_error = true;
 
 	try { list_iten = list->First(); }
@@ -120,7 +177,7 @@ bool JudyLoadList(CBaseList* list, char* file)
 	if (!listDB) return false;
 
 	Capsule* Storage = NULL;
-	Word_t list_iten = 0;
+	Word_t list_iten = NULL;
 	bool no_error = true;
 
 	while(!feof(listDB))
@@ -139,15 +196,46 @@ bool JudyLoadList(CBaseList* list, char* file)
 	return no_error;
 }
 
+bool JudyClearMasterMap(CBaseList* master)
+{
+	cell master_iten = NULL;
+	CBaseMap* Storage = NULL;
+
+	try { master_iten = master->First(); }
+	catch(JudyEx& e) { return false; }
+
+	while( true )
+	{
+		try { Storage = reinterpret_cast<CBaseMap*>(master->Get(master_iten) );  }
+		catch(JudyEx& e) { break; }
+
+		Storage->Remove();
+
+		try { master->Delete(master_iten); }
+		catch(JudyEx& e) { return false; }
+		
+		try { master_iten = master->Next(master_iten); }
+		catch(JudyEx& e) { break; }
+	}
+
+	return true;
+};
+
 bool JudyClearMap(CBaseMap* map)
 {
 	char* map_iten = NULL;
+	Capsule* Storage = NULL;
 
 	try { map_iten = map->First(); }
 	catch(JudyEx& e) { return false; }
 
 	while( true )
 	{
+		try { Storage = reinterpret_cast<Capsule*>(map->Get(map_iten) );  }
+		catch(JudyEx& e) { break; }
+
+		Storage->Remove();
+
 		try { map->Delete(map_iten); }
 		catch(JudyEx& e) { return false; }
 		
@@ -163,7 +251,7 @@ bool JudySaveMap(CBaseMap* map, char* file)
 {
 	Capsule* Storage = NULL;
 	char* map_iten = NULL;
-	size_t key_len = 0;
+	size_t key_len = NULL;
 	bool no_error = true;
 
 	try { map_iten = map->First(); }
@@ -200,7 +288,7 @@ bool JudyLoadMap(CBaseMap* map, char* file)
 
 	Capsule* Storage = NULL;
 	char* map_iten = NULL;
-	size_t key_len = 0;
+	size_t key_len = NULL;
 	bool no_error = true;
 
 	while(!feof(mapDB))

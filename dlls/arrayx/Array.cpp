@@ -24,12 +24,11 @@ void OnAmxxAttach( void )
 
 	MF_AddNatives(map_exports);
 	MF_AddNatives(map_creation_exports);
-
 }
 
 void OnAmxxDetach( void )
 {
-	MasterTrie.Clear();
-	MasterList.Clear();
-	MasterMap.Clear();
+	JudyClearMasterTrie(&MasterTrie);
+	JudyClearMasterList(&MasterList);
+	JudyClearMasterMap(&MasterMap);
 }

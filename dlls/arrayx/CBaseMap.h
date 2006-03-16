@@ -10,6 +10,7 @@ public:
 	virtual Word_t MemoryUsed() =0;
 
 	virtual int Delete(char* Key) =0;
+	virtual void Remove() =0;
 
 	virtual void Set(char* Index, Pvoid_t value, bool disable_check = false) =0;
 	

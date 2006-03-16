@@ -12,12 +12,13 @@ private:
 
 public:
 	Hashtable()					{ Table = NULL; }
-	~Hashtable()				{ Clear(); }
+	~Hashtable()				{ Clear();		}
+	void Remove()				{ delete this;	}
 
 	Word_t Clear()				{ return JudyHSFreeArray(&Table, PJE0); }
 	Word_t MemoryUsed()			{ return JudyLMemUsed(Table); }
 
-	int Delete(char* Key)		{ delete Get(Key,true); return JudyHSDel(&Table, Key, strlen(Key), PJE0 ); }
+	int Delete(char* Key)		{ return JudyHSDel(&Table, Key, strlen(Key), PJE0 ); }
 
 	void Set(char* Index, Pvoid_t value, bool disable_check)
 	{

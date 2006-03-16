@@ -48,8 +48,7 @@
 #define JUDY_SLAVE_ISEMPTY_FUNC		JUDY_GLUE_FUNC( bintrie ,	_isempty	)
 #define JUDY_SLAVE_ISEMPTY_STR		JUDY_GLUE_STR (	bintrie ,	_isempty	)
 
-#define JUDY_SLAVE_REMOVE_FUNC		JUDY_GLUE_FUNC( bintrie ,	_remove		)
-#define JUDY_SLAVE_REMOVE_STR		JUDY_GLUE_STR (	bintrie ,	_remove		)
+#define NO_JUDY_SLAVE_REMOVE_FUNC
 
 #define JUDY_SLAVE_SEARCH_FUNCTIONS
 #define JUDY_SLAVE_FIRST_FUNC		JUDY_GLUE_FUNC( bintrie ,	_first		)

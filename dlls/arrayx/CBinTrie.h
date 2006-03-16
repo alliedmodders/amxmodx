@@ -2,6 +2,7 @@
 #define _BINTRIECLASS_H
 
 #include "JudyIncludes.h"
+#include "JudyExtra.h"
 //#include <Judy1.h>
 
 class BinTrie
@@ -13,9 +14,10 @@ private:
 
 public:
 	BinTrie()				{ Table = NULL; }
-	~BinTrie()				{ Judy1FreeArray(&Table, PJE0); }
+	~BinTrie()				{ Clear();		}
+	void Remove()			{ delete this;	}
 
-	Word_t Clear()			{ return Judy1FreeArray(&Table, PJE0); }
+	Word_t Clear()			{ JudyClearBinTrie(this); return Judy1FreeArray(&Table, PJE0); }
 	Word_t MemoryUsed()		{ return Judy1MemUsed(Table); }
 
 	cell Delete(cell Key)	{ return Judy1Unset(&Table, Key, PJE0 ); }

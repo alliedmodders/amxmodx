@@ -27,13 +27,14 @@ protected:
 
 public:
 	Capsule()				{ data = NULL; type = capsule_type_none;}
-	~Capsule()				{ Clear(); }
+	~Capsule()				{ Clear(); 		}
+	void Remove()			{ delete this;	}
 
 	Capsule(bool set)		{ SetBool(set); }
-	Capsule(cell set)		{ SetInt(set); }
-	Capsule(REAL set)		{ SetFlo(set); }
-	Capsule(JudyVec* set)	{ SetVec(set); }
-	Capsule(char* set)		{ SetStr(set); }
+	Capsule(cell set)		{ SetInt(set);	}
+	Capsule(REAL set)		{ SetFlo(set);	}
+	Capsule(JudyVec* set)	{ SetVec(set);	}
+	Capsule(char* set)		{ SetStr(set);	}
 
 	bool GetBool( void );
 	void SetBool(bool set);
@@ -58,7 +59,7 @@ public:
 	bool CheckEmpty(bool clear);
 
 	Pvoid_t GetData( void )		{ return data; }
-	char GetType( void )			{ return type; }
+	char GetType( void )		{ return type; }
 };
 
 #endif

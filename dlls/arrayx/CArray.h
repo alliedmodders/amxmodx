@@ -16,12 +16,13 @@ private:
 
 public:
 	Array()					{ Table = NULL; }
-	~Array()				{ Clear(); }
+	~Array()				{ Clear();		}
+	void Remove()			{ delete this;	}
 
 	Word_t Clear()			{ JudyClearList(this); return JudyLFreeArray(&Table, PJE0); }
 	Word_t MemoryUsed()		{ return JudyLMemUsed(Table); }
 
-	int Delete(cell Key)	{ delete Get(Key,true); return JudyLDel(&Table, Key, PJE0 ); }
+	int Delete(cell Key)	{ return JudyLDel(&Table, Key, PJE0 ); }
 
 	void Set(cell Index, Pvoid_t value, bool disable_check) 
 	{

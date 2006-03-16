@@ -4,6 +4,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace BinLogReader
@@ -309,15 +310,15 @@ namespace BinLogReader
 			{
 				ArrayList al = binlog.OpList;
 				BinLogEntry ble;
-				string fulltext = "";
+				StringBuilder sb = new StringBuilder(al.Count * 10);
+				BinLogFlags flags = (BinLogFlags.Show_GameTime | BinLogFlags.Show_PlugFile | BinLogFlags.Show_PlugId);
 				for (int i=0; i<al.Count; i++)
 				{
 					ble = (BinLogEntry)al[i];
-					fulltext += BinLogEntry.BinLogString(ble, 
-						(BinLogFlags.Show_GameTime | BinLogFlags.Show_PlugFile | BinLogFlags.Show_PlugId));
-					fulltext += "\n";
+					BinLogEntry.BinLogString(sb, ble, flags);
+					sb.Append("\n");
 				}
-				TextLog.Text = fulltext;
+				TextLog.Text = sb.ToString();
 			}
 		}
 

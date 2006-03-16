@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Collections;
+using System.Text;
 
 namespace BinLogReader
 {
@@ -47,45 +48,52 @@ namespace BinLogReader
 			return ( (a & b) == b );
 		}
 
-		public static string PluginText(Plugin pl, BinLogFlags flags)
+		public static void PluginText(StringBuilder sb, Plugin pl, BinLogFlags flags)
 		{
-			string plugintext = "";
 			if (HasFlag(flags, BinLogFlags.Show_PlugId)
 				&& HasFlag(flags, BinLogFlags.Show_PlugFile))
 			{
-				plugintext = "\"" + pl.File + "\"" + " (" + pl.Index + ")";
+				sb.Append("\"");
+				sb.Append(pl.File);
+				sb.Append("\"");
+				sb.Append(" (");
+				sb.Append(pl.Index);
+				sb.Append(")");
 			} 
 			else if (HasFlag(flags, BinLogFlags.Show_PlugId))
 			{
-				plugintext = pl.Index.ToString();
+				sb.Append(pl.Index);
 			} 
 			else if (HasFlag(flags, BinLogFlags.Show_PlugFile))
 			{
-				plugintext = "\"" + pl.File + "\"";
+				sb.Append("\"");
+				sb.Append(pl.File);
+				sb.Append("\"");
 			}
-			return plugintext;
 		}
 
-		public static string BinLogString(BinLogEntry ble, BinLogFlags flags)
+		public static void BinLogString(StringBuilder sb, BinLogEntry ble, BinLogFlags flags)
 		{
-			string logtext = "";
+			bool realtime = false;
 			if (HasFlag(flags, BinLogFlags.Show_RealTime))
-				logtext += ble.realtime.ToString();
+			{
+				sb.Append(ble.realtime.ToString());
+				realtime = true;
+			}
 			if (HasFlag(flags, BinLogFlags.Show_GameTime))
 			{
-				if (logtext.Length > 0)
+				if (realtime)
 				{
-					logtext += ", " + ble.gametime.ToString();
+					sb.Append(", ");
+					sb.Append(ble.gametime.ToString());
 				}
 				else
 				{
-					logtext += ble.gametime.ToString();
+					sb.Append(ble.gametime.ToString());
 				}
 			}
-			logtext += ": ";
-			logtext += ble.ToLogString(flags);
-
-			return logtext;
+			sb.Append(": ");
+			ble.ToLogString(sb, flags);
 		}
 
 		public float gametime
@@ -116,7 +124,7 @@ namespace BinLogReader
 		}
 
 		public abstract BinLogOp Op();
-		public abstract string ToLogString(BinLogFlags flags);
+		public abstract void ToLogString(StringBuilder sb, BinLogFlags flags);
 	};
 
 	public class BinLogSetLine : BinLogEntry
@@ -137,12 +145,13 @@ namespace BinLogReader
 			line = _line;
 		}
 
-		public override string ToLogString(BinLogFlags flags)
+		public override void ToLogString(StringBuilder sb, BinLogFlags flags)
 		{
-			string plugtext = BinLogEntry.PluginText(plugin, flags);
-			string logtext = "Plugin hit line " + Line + ".";
-
-			return logtext;
+			sb.Append("Plugin ");
+			BinLogEntry.PluginText(sb, plugin, flags);
+			sb.Append(" hit line ");
+			sb.Append(Line);
+			sb.Append(".");
 		}
 
 		public override BinLogOp Op()
@@ -169,13 +178,15 @@ namespace BinLogReader
 			pubidx = pi;
 		}
 
-		public override string ToLogString(BinLogFlags flags)
+		public override void ToLogString(StringBuilder sb, BinLogFlags flags)
 		{
-			string plugtext = BinLogEntry.PluginText(plugin, flags);
-			string logtext = "Plugin " + plugtext + " had public function ";
-			logtext += "\"" + Public + "\" (" + pubidx + ") called.";
-
-			return logtext;
+			sb.Append("Plugin ");
+			BinLogEntry.PluginText(sb, plugin, flags);
+			sb.Append(" had public function \"");
+			sb.Append(Public);
+			sb.Append("\" (");
+			sb.Append(pubidx);
+			sb.Append(") called.");
 		}
 
 		public override BinLogOp Op()
@@ -198,13 +209,17 @@ namespace BinLogReader
 			text = fmt;
 		}
 
-		public override string ToLogString(BinLogFlags flags)
+		public override void ToLogString(StringBuilder sb, BinLogFlags flags)
 		{
-			string plugtext = BinLogEntry.PluginText(plugin, flags);
-			string logtext = "Setting string (addr " + address + ") (maxlen " + maxlen + ") from Plugin " + plugtext + ".  String:";
-			logtext += "\n\t " + text;
-
-			return logtext;
+			sb.Append("Setting string (addr ");
+			sb.Append(address);
+			sb.Append(") (maxlen ");
+			sb.Append(maxlen);
+			sb.Append(") from Plugin ");
+			BinLogEntry.PluginText(sb, plugin, flags);
+			sb.Append(".  String:");
+			sb.Append("\n\t ");
+			sb.Append(text);
 		}
 
 		public override BinLogOp Op()
@@ -225,13 +240,15 @@ namespace BinLogReader
 			text = fmt;
 		}
 
-		public override string ToLogString(BinLogFlags flags)
+		public override void ToLogString(StringBuilder sb, BinLogFlags flags)
 		{
-			string plugtext = BinLogEntry.PluginText(plugin, flags);
-			string logtext = "Retrieving string (addr " + address + ") from Plugin " + plugtext + ".  String:";
-			logtext += "\n\t " + text;
-
-			return logtext;
+			sb.Append("Retrieving string (addr ");
+			sb.AppendFormat("0x{0:X}", address);
+			sb.Append(") from Plugin ");
+			BinLogEntry.PluginText(sb, plugin, flags);
+			sb.Append(".  String:");
+			sb.Append("\n\t ");
+			sb.Append(text);
 		}
 
 		public override BinLogOp Op()
@@ -250,9 +267,10 @@ namespace BinLogReader
 			returnval = ret;
 		}
 
-		public override string ToLogString(BinLogFlags flags)
+		public override void ToLogString(StringBuilder sb, BinLogFlags flags)
 		{
-			return "Native returned: " + returnval;
+			sb.Append("Native returned: ");
+			sb.Append(returnval);
 		}
 
 		public override BinLogOp Op()
@@ -281,14 +299,17 @@ namespace BinLogReader
 			numparams = nu;
 		}
 
-		public override string ToLogString(BinLogFlags flags)
+		public override void ToLogString(StringBuilder sb, BinLogFlags flags)
 		{
-			string plugtext = BinLogEntry.PluginText(plugin, flags);
-			string logtext = "Plugin " + plugtext + " called native ";
-			logtext += "\"" + Native + "\" (" + nativeidx + ")";
-			logtext += " with " + numparams + " parameters.";
-
-			return logtext;
+			sb.Append("Plugin ");
+			BinLogEntry.PluginText(sb, plugin, flags);
+			sb.Append(" called native \"");
+			sb.Append(Native); 
+			sb.Append("\" (");
+			sb.Append(nativeidx);
+			sb.Append(") with ");
+			sb.Append(numparams);
+			sb.Append(" parameters.");
 		}
 
 		public override BinLogOp Op()
@@ -306,25 +327,26 @@ namespace BinLogReader
 			my_op = op;
 		}
 
-		public override string ToLogString(BinLogFlags flags)
+		public override void ToLogString(StringBuilder sb, BinLogFlags flags)
 		{
 			switch (my_op)
 			{
 				case BinLogOp.BinLog_Start:
 				{
-					return "Binary log started.";
+					sb.Append("Binary log started.");
+					break;
 				}
 				case BinLogOp.BinLog_End:
 				{
-					return "Binary log ended.";
+					sb.Append("Binary log ended.");
+					break;
 				}
 				case BinLogOp.BinLog_Invalid:
 				{
-					return "Binary log corrupt past this point.";
+					sb.Append("Binary log corrupt past this point.");
+					break;
 				}
 			}
-
-			return "";
 		}
 
 		public override BinLogOp Op()
@@ -359,21 +381,19 @@ namespace BinLogReader
 		{
 		}
 
-		public override string ToLogString(BinLogFlags flags)
+		public override void ToLogString(StringBuilder sb, BinLogFlags flags)
 		{
-			string logtext = "Native parameters: (";
+			sb.Append("Native parameters: (");
 			if (plist != null)
 			{
 				for (int i=0; i<plist.Count; i++)
 				{
-					logtext += plist[i].ToString();
+					sb.Append(plist[i].ToString());
 					if (i < plist.Count - 1)
-						logtext += ", ";
+						sb.Append(", ");
 				}
 			}
-			logtext += ")";
-
-			return logtext;
+			sb.Append(")");
 		}
 	}
 
@@ -396,13 +416,16 @@ namespace BinLogReader
 			text = str;
 		}
 
-		public override string ToLogString(BinLogFlags flags)
+		public override void ToLogString(StringBuilder sb, BinLogFlags flags)
 		{
-			string plugintext = BinLogEntry.PluginText(pl, flags);
-			string logtext = "Plugin " + plugintext + " formatted parameter " + parm;
-			logtext += " (maxlen " + maxlen + "), result: \n\t" + text;
-
-			return logtext;
+			sb.Append("Plugin ");
+			BinLogEntry.PluginText(sb, pl, flags);
+			sb.Append(" formatted parameter ");
+			sb.Append(parm);
+			sb.Append(" (maxlen ");
+			sb.Append(maxlen);
+			sb.Append("), result: \n\t");
+			sb.Append(text);
 		}
 	}
 
@@ -439,13 +462,15 @@ namespace BinLogReader
 			}
 		}
 
-		public override string ToLogString(BinLogFlags flags)
+		public override void ToLogString(StringBuilder sb, BinLogFlags flags)
 		{
-			string plugintext = BinLogEntry.PluginText(pl, flags);
-			string logtext = "Plugin " + plugintext + " registered as ";
-			logtext += "(\"" + _title + "\", \"" + _version + "\")";
-
-			return logtext;
+			sb.Append("Plugin "); 
+			BinLogEntry.PluginText(sb, pl, flags);
+			sb.Append(" registered as (\"");
+			sb.Append(_title);
+			sb.Append("\", \"");
+			sb.Append(_version);
+			sb.Append("\")");
 		}
 
 		public BinLogRegister(float gt, long rt, Plugin _pl) : 

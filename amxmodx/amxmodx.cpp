@@ -4042,9 +4042,17 @@ static cell AMX_NATIVE_CALL ShowSyncHudMsg(AMX *amx, cell *params)
 	return len;
 }
 
+static cell AMX_NATIVE_CALL arrayset(AMX *amx, cell *params)
+{
+	memset(get_amxaddr(amx, params[1]), params[2], params[3] * sizeof(cell));
+
+	return 1;
+}
+
 AMX_NATIVE_INFO amxmodx_Natives[] =
 {
 	{"abort",					amx_abort},
+	{"arrayset",				arrayset},
 	{"get_addr_val",			get_addr_val},
 	{"get_var_addr",			get_var_addr},
 	{"set_addr_val",			set_addr_val},

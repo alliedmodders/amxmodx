@@ -1036,3 +1036,8 @@ native set_pcvar_num(pcvar, num);
 native Float:get_pcvar_float(pcvar);
 native set_pcvar_float(pcvar, Float:num);
 native get_pcvar_string(pcvar, string[], maxlen);
+
+/**
+ * Sets a whole array to a certain value.
+ */
+native arrayset(array[], value, size);

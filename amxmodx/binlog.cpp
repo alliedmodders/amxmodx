@@ -70,6 +70,7 @@ void BinLog::WriteOp(BinLogOp op, int plug, ...)
 			fclose(fp);
 			Close();
 			Open();
+			CacheAllPlugins();
 			fp = fopen(m_logfile.c_str(), "ab");
 			if (!fp)
 				return;

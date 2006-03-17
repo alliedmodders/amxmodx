@@ -23,4 +23,6 @@ struct optimizer_s
 
 void SetupOptimizer(AMX *amx);
 
+extern int g_opt_level;
+
 #endif //_INCLUDE_AMXMODX_OPTIMIZER_H

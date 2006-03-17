@@ -267,7 +267,10 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 #endif
 	}
 
-	SetupOptimizer(amx);
+	if (g_opt_level != 65536)
+	{
+		SetupOptimizer(amx);
+	}
 
 	if ((err = amx_Init(amx, *program)) != AMX_ERR_NONE)
 	{

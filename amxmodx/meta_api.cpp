@@ -40,6 +40,7 @@
 #include "newmenus.h"
 #include "natives.h"
 #include "binlog.h"
+#include "optimizer.h"
 
 plugin_info_t Plugin_info = 
 {
@@ -305,7 +306,12 @@ int	C_Spawn(edict_t *pent)
 		LOG_ERROR(PLID, "Binary log failed to open.");
 	}
 	g_binlog_level = atoi(get_localinfo("bin_logging", "17"));
+	g_binlog_maxsize = atoi(get_localinfo("g_binlog_maxsize", "20"));
 #endif
+
+	g_opt_level = atoi(get_localinfo("optimizer", "7"));
+	if (!g_opt_level)
+		g_opt_level = 7;
 
 	// ###### Load AMX scripts
 	g_plugins.loadPluginsFromFile(get_localinfo("amxx_plugins", "addons/amxmodx/configs/plugins.ini"));

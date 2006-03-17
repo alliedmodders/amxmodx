@@ -1,6 +1,8 @@
 #include <string.h>
 #include "optimizer.h"
 
+int g_opt_level = 0;
+
 #define OP_SYSREQ_C		123
 #define OP_NOP			134
 #define OP_FLOAT_MUL	138
@@ -82,14 +84,23 @@ void _Setup_Optimizer_Stage2(AMX *amx, cell *oplist, cell *cip)
 		opt->natives[i] = -1;
 
 	amx->usertags[UT_OPTIMIZER] = (void *)opt;
-	
-	FIND_NATIVE("floatmul", N_Float_Mul);
-	FIND_NATIVE("floatdiv", N_Float_Div);
-	FIND_NATIVE("floatadd", N_Float_Add);
-	FIND_NATIVE("floatsub", N_Float_Sub);
-	FIND_NATIVE("float", N_Float_To);
-	FIND_NATIVE("floatround", N_Float_Round);
-	FIND_NATIVE("floatcmp", N_Float_Cmp);
+
+	if (g_opt_level & 1)
+	{
+		FIND_NATIVE("floatmul", N_Float_Mul);
+		FIND_NATIVE("floatdiv", N_Float_Div);
+		FIND_NATIVE("floatadd", N_Float_Add);
+		FIND_NATIVE("floatsub", N_Float_Sub);
+	}
+	if (g_opt_level & 4)
+	{
+		FIND_NATIVE("float", N_Float_To);
+		FIND_NATIVE("floatround", N_Float_Round);
+	}
+	if (g_opt_level & 2)
+	{
+		FIND_NATIVE("floatcmp", N_Float_Cmp);
+	}
 	//we don't do these yet because of radix stuff >:\
 	//FIND_NATIVE("floatsin", N_Float_Sin);
 	//FIND_NATIVE("floatcos", N_Float_Cos);

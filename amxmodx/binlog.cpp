@@ -6,6 +6,7 @@
 
 BinLog g_BinLog;
 int g_binlog_level = 0;
+int g_binlog_maxsize = 0;
 
 bool BinLog::Open()
 {
@@ -60,6 +61,20 @@ void BinLog::WriteOp(BinLogOp op, int plug, ...)
 	FILE *fp = fopen(m_logfile.c_str(), "ab");
 	if (!fp)
 		return;
+
+	if (g_binlog_maxsize)
+	{
+		fseek(fp, 0, SEEK_END);
+		if (ftell(fp) > (g_binlog_maxsize * (1024 * 1024)))
+		{
+			fclose(fp);
+			Close();
+			Open();
+			fp = fopen(m_logfile.c_str(), "ab");
+			if (!fp)
+				return;
+		}
+	}
 
 	unsigned char c = static_cast<char>(op);
 	time_t t = time(NULL);

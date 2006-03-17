@@ -69,6 +69,7 @@ private:
 
 extern BinLog g_BinLog;
 extern int g_binlog_level;
+extern int g_binlog_maxsize;
 
 #endif //BINLOG_ENABLED
 

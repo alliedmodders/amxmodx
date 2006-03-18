@@ -22,6 +22,7 @@ struct optimizer_s
 };
 
 void SetupOptimizer(AMX *amx);
+extern "C" int amxx_CpuSupport();
 
 extern int g_opt_level;
 

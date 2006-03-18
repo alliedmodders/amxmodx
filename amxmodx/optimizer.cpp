@@ -99,7 +99,12 @@ void _Setup_Optimizer_Stage2(AMX *amx, cell *oplist, cell *cip)
 	}
 	if (g_opt_level & 2)
 	{
-		FIND_NATIVE("floatcmp", N_Float_Cmp);
+		if (amxx_CpuSupport())
+		{
+			FIND_NATIVE("floatcmp", N_Float_Cmp);
+		} else {
+			g_opt_level &= ~(2);
+		}
 	}
 	//we don't do these yet because of radix stuff >:\
 	//FIND_NATIVE("floatsin", N_Float_Sin);

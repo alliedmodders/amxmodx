@@ -1085,11 +1085,21 @@
 				RelativePath="..\amxjitsn.asm">
 			</File>
 			<File
+				RelativePath="..\helpers-x86.asm">
+			</File>
+			<File
 				RelativePath="..\natives-amd64.asm">
 			</File>
 			<File
 				RelativePath="..\natives-x86.asm">
 			</File>
+			<Filter
+				Name="Builds"
+				Filter="">
+				<File
+					RelativePath="..\Jit\helpers-x86.obj">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="SDK"

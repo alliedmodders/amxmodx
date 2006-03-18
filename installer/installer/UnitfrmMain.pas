@@ -136,7 +136,7 @@ type
 var
   frmMain: TfrmMain;
 
-const VERSION = '1.70';
+const VERSION = '1.71';
 
 implementation
 

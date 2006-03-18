@@ -766,6 +766,8 @@ bool CLangMngr::LoadCache(const char *filename)
 		return false;
 	}
 
+	SetUnhandledExceptionFilter(NULL);
+
 	short dictCount = 0;
 	char len = 0;
 	char buf[255];
@@ -867,6 +869,11 @@ bool CLangMngr::Load(const char *filename)
 		save = ftell(fp);
 		fseek(fp, keyoffset, SEEK_SET);
 		DATREAD(fread((void*)&keylen, sizeof(char), 1, fp), char);
+		//technically this isn't possible since
+		// a char will never be more than 255
+		// but it's good practice.
+		if (keylen > sizeof(keybuf))
+			return false;
 		DATREAD_S(fread(keybuf, sizeof(char), keylen, fp), keylen);
 		keybuf[keylen] = 0;
 		_tmpkey.assign(keybuf);
@@ -902,7 +909,8 @@ bool CLangMngr::Load(const char *filename)
 			save = ftell(fp);
 			fseek(fp, defoffset, SEEK_SET);
 			DATREAD(fread((void *)&deflen, sizeof(unsigned short), 1, fp), short);
-			//:TODO: possible string overflow here.
+			if (deflen > sizeof(valbuf))
+				return false;
 			DATREAD_S(fread(valbuf, sizeof(char), deflen, fp), deflen);
 			valbuf[deflen] = 0;
 			m_Languages[i]->AddEntry(keynum, valbuf);

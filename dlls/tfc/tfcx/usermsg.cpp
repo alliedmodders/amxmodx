@@ -150,6 +150,7 @@ void Client_Damage(void* mValue){
 				case '_': // hmm...nailgun_nail, fastswitch and this one may not be true...
 					//PRINT_CONSOLE("Nail! Class:%d wpn:%d\n",pAttacker->classId,pAttacker->current);
 					weapon = pAttacker->current;
+					aim = pAttacker->aiming;
 					break;
 				case 'r':
 					weapon = TFC_WPN_FLAMETHROWER;

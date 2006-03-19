@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace BinLogReader
 {
@@ -61,7 +60,6 @@ namespace BinLogReader
 			base.Dispose( disposing );
 		}
 
-		private PluginDb plugdb;
 		private BinLog binlog;
 
 		#region Windows Form Designer generated code
@@ -250,7 +248,6 @@ namespace BinLogReader
 
 		private void Form1_Load(object sender, System.EventArgs e)
 		{
-			plugdb = null;
 			binlog = null;
 			g_UpdateViews = ViewAreas.Update_All;
 		}
@@ -281,8 +278,9 @@ namespace BinLogReader
 
 			if (v == ViewAreas.Update_All || 
 				((v & ViewAreas.Update_Plugins) == ViewAreas.Update_Plugins)
-				&& (plugdb != null))
+				&& (binlog.GetPluginDB() != null))
 			{
+				PluginDb plugdb = binlog.GetPluginDB();
 				PluginList.View = View.Details;
 				PluginList.Columns.Add("Number", 60, HorizontalAlignment.Left);
 				PluginList.Columns.Add("File", 100, HorizontalAlignment.Left);
@@ -333,25 +331,7 @@ namespace BinLogReader
 
 			try
 			{
-				/* try to open the accompanying database file */
-				Regex r = new Regex(@"binlog(\d+)\.blg");
-				Match m = r.Match(ofd.FileName);
-				if (!m.Success)
-				{
-					throw new Exception("Failed to find binary database, filename unrecognized!");
-				}
-				Group g = m.Groups[1];
-				CaptureCollection cc = g.Captures;
-				Capture c = cc[0];
-				string dbfile = r.Replace(ofd.FileName, "bindb" + c.ToString() + ".bdb", 1);
-
-				plugdb = PluginDb.FromFile(dbfile);
-				if (plugdb == null)
-				{
-					throw new Exception("Stream failure in database file");
-				}
-
-				binlog = BinLog.FromFile(ofd.FileName, plugdb);
+				binlog = BinLog.FromFile(ofd.FileName);
 				if (binlog == null)
 				{
 					throw new Exception("Stream failure in log file");

@@ -11,9 +11,10 @@ namespace BinLogReader
 	public class BinLog
 	{
 		private static uint BINLOG_MAGIC = 0x414D424C;
-		private static short BINLOG_VERSION = 0x0100;
+		private static short BINLOG_VERSION = 0x0200;
 
 		private ArrayList oplist;
+		private PluginDb plugdb;
 
 		public ArrayList OpList
 		{
@@ -28,7 +29,12 @@ namespace BinLogReader
 			oplist = new ArrayList(init_size);
 		}
 
-		public static BinLog FromFile(string filename, PluginDb db)
+		public PluginDb GetPluginDB()
+		{
+			return plugdb;
+		}
+
+		public static BinLog FromFile(string filename)
 		{
 			if (!File.Exists(filename))
 				return null;
@@ -67,6 +73,12 @@ namespace BinLogReader
 					bl = new BinLog( (int)((fi.Length - 500) / 6) );
 				else 
 					bl = new BinLog( (int)(fi.Length / 6) );
+
+				bl.plugdb = PluginDb.FromFile(br);
+				PluginDb db = bl.plugdb;
+
+				if (db == null)
+					throw new Exception("Plugin database read failure");
 
 				do
 				{
@@ -246,14 +258,18 @@ namespace BinLogReader
 				} while (opcode != BinLogOp.BinLog_End);
 				opcode =BinLogOp.BinLog_End;
 			} 
-			catch
+			catch (Exception e)
 			{
-				if (bl != null)
+				if (bl != null && bl.plugdb != null)
 				{
 					BinLogSimple bs = new BinLogSimple(BinLogOp.BinLog_Invalid, gametime, realtime, pl);
 					bl.oplist.Add(bs);
+				} 
+				else 
+				{
+					throw new Exception(e.Message);
 				}
-			} 
+			}
 			finally
 			{
 				br.Close();

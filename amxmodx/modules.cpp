@@ -1503,12 +1503,7 @@ edict_t* MNF_GetPlayerEdict(int id)
 
 const char *MNF_Format(const char *fmt, ...)
 {
-	va_list ap;
-	va_start(ap, fmt);
-	const char *retVal = g_langMngr.FormatString(fmt, ap);
-	va_end(ap);
-	
-	return retVal;
+	return "";
 }
 
 const char *MNF_GetPlayerTeam(int id)

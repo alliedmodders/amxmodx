@@ -244,15 +244,6 @@ int	C_Spawn(edict_t *pent)
 	// ###### Initialize task manager
 	g_tasksMngr.registerTimers(&gpGlobals->time, &mp_timelimit->value, &g_game_timeleft);
 
-	// ###### Load lang
-	char file[256];
-	if (!g_langMngr.Load(build_pathname_r(file, sizeof(file) - 1, "%s/languages.dat", get_localinfo("amxmodx_datadir", "addons/amxmodx/data"))))
-	{
-		g_langMngr.InvalidateCache();
-	} else {
-		g_langMngr.LoadCache(build_pathname_r(file, sizeof(file) - 1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
-	}
-
 	// ###### Initialize commands prefixes
 	g_commands.registerPrefix("amx");
 	g_commands.registerPrefix("amxx");
@@ -279,6 +270,7 @@ int	C_Spawn(edict_t *pent)
 	CVAR_SET_STRING(init_amxmodx_modules.name, buffer);
 
 	// ###### Load Vault
+	char file[255];
 	g_vault.setSource(build_pathname_r(file, sizeof(file) - 1, "%s", get_localinfo("amxx_vault", "addons/amxmodx/configs/vault.ini")));
 	g_vault.loadVault();
 	
@@ -449,11 +441,6 @@ void C_ServerActivate_Post(edict_t *pEdictList, int edictCount, int clientMax)
 	executeForwards(FF_PluginInit);
 	executeForwards(FF_PluginCfg);
 
-	// ###### Save lang
-	char file[256];
-	g_langMngr.Save(build_pathname_r(file, sizeof(file) - 1, "%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
-	g_langMngr.SaveCache(build_pathname_r(file, sizeof(file) - 1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
-
 	// Correct time in Counter-Strike and other mods (except DOD)
 	if (!g_bmod_dod)
 		g_game_timeleft = 0;
@@ -524,12 +511,6 @@ void C_ServerDeactivate_Post()
 	g_plugins.clear();
 	ClearPluginLibraries();
 	
-	char file[256];
-	
-	g_langMngr.Save(build_pathname_r(file, sizeof(file) - 1, "%s/languages.dat", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
-	g_langMngr.SaveCache(build_pathname_r(file, sizeof(file) - 1, "%s/dictionary.cache", get_localinfo("amxx_datadir", "addons/amxmodx/data")));
-	g_langMngr.Clear();
-
 	for (unsigned int i=0; i<g_hudsync.size(); i++)
 		delete [] g_hudsync[i];
 	g_hudsync.clear();
@@ -1316,6 +1297,7 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)
 	g_xvars.clear();
 	g_plugins.clear();
 	g_cvars.clear();
+	g_langMngr.Clear();
 
 	detachModules();
 

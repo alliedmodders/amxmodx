@@ -111,11 +111,6 @@ class CLangMngr
 		
 		// Get language name
 		const char *GetName() { return m_LanguageName; }
-		// Save to file
-		bool Save(FILE *fp, int &defOffset, uint32_t &curOffset);
-		bool SaveDefinitions(FILE *fp, uint32_t &curOffset);
-		// Load
-		bool Load(FILE *fp);
 		void SetMngr(CLangMngr *l) { m_LMan = l; }
 		// Get number of entries
 		int Entries();
@@ -159,18 +154,8 @@ public:
 	int MergeDefinitionFile(const char *file);
 	// Get a definition from a lang name and a key
 	const char *GetDef(const char *langName, const char *key, int &status);
-	// Format a string
-	const char *Format(const char *src, ...);
 	// Format a string for an AMX plugin
 	char *FormatAmxString(AMX *amx, cell *params, int parm, int &len);
-	char *FormatString(const char *fmt, va_list &ap);
-	// Save
-	bool Save(const char *filename);
-	// Load
-	bool Load(const char *filename);
-	// Cache
-	bool LoadCache(const char *filename);
-	bool SaveCache(const char *filename);
 	void InvalidateCache();
 	// Get index
 	int GetKeyEntry(String &key);

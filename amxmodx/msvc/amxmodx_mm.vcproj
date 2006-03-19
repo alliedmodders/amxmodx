@@ -614,7 +614,7 @@
 				AdditionalDependencies="..\zlib\zlib.lib ..\JIT\amxjitsn.obj ..\JIT\amxexecn.obj ..\JIT\natives-x86.obj"
 				OutputFile="jitdebugbinlog/amxmodx_mm.dll"
 				Version="0.1"
-				LinkIncremental="1"
+				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\extra\lib_win32"
 				IgnoreDefaultLibraryNames="MSVCRT"

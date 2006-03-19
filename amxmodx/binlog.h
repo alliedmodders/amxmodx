@@ -6,25 +6,13 @@
 #include "CString.h"
 
 #define BINLOG_MAGIC	0x414D424C
-#define BINLOG_VERSION	0x0100
-#define BINDB_MAGIC		0x414D4244
-#define BINDB_VERSION	0x0100
+#define BINLOG_VERSION	0x0200
 
 /**
  * Format of binlog:
  * uint32		magic
  * uint16		version
  * uint8		sizeof(time_t)
- * [
- *  uint8		operation code
- *  time_t		realtime
- *  float		gametime
- *  int32		plugin id
- *  <extra info>
- * ]
- * Format of bindb:
- * uint32		magic
- * uint16		version
  * uint32		num plugins
  * [
  *  uint8		status codes
@@ -37,6 +25,14 @@
  *  [
  *   str[uint8] public name
  *  ]
+ * ]
+ * [
+ *  uint8		operation code
+ *  time_t		realtime
+ *  float		gametime
+ *  int32		plugin id
+ *  <extra info>
+ * ]
  */
 
 enum BinLogOp
@@ -58,13 +54,18 @@ enum BinLogOp
 class BinLog
 {
 public:
+	BinLog() : m_state(false)
+	{
+	};
+public:
 	bool Open();
 	void Close();
-	void CacheAllPlugins();
 	void WriteOp(BinLogOp op, int plug, ...);
 private:
-	String m_dbfile;
+	void WritePluginDB(FILE *fp);
+private:
 	String m_logfile;
+	bool m_state;
 };
 
 extern BinLog g_BinLog;

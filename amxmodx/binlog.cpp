@@ -45,8 +45,27 @@ bool BinLog::Open()
 	}
 	build_pathname_r(file, sizeof(file)-1, "%s/binlogs/binlog%04d.blg", data, lastcntr);
 	m_logfile.assign(file);
-	build_pathname_r(file, sizeof(file)-1, "%s/binlogs/bindb%04d.bdb", data, lastcntr);
-	m_dbfile.assign(file);
+
+	/**
+	* it's now safe to create the binary log
+	*/
+	FILE *fp = fopen(m_logfile.c_str(), "wb");
+	if (!fp)
+		return false;
+
+	int magic = BINLOG_MAGIC;
+	short vers = BINLOG_VERSION;
+	char c = sizeof(time_t);
+	fwrite(&magic, sizeof(int), 1, fp);
+	fwrite(&vers, sizeof(short), 1, fp);
+	fwrite(&c, sizeof(char), 1, fp);
+
+	WritePluginDB(fp);
+	fclose(fp);
+
+	m_state = true;
+
+	WriteOp(BinLog_Start, -1);
 
 	return true;
 }
@@ -54,10 +73,14 @@ bool BinLog::Open()
 void BinLog::Close()
 {
 	WriteOp(BinLog_End, -1);
+	m_state = false;
 }
 
 void BinLog::WriteOp(BinLogOp op, int plug, ...)
 {
+	if (!m_state)
+		return;
+
 	FILE *fp = fopen(m_logfile.c_str(), "ab");
 	if (!fp)
 		return;
@@ -70,7 +93,6 @@ void BinLog::WriteOp(BinLogOp op, int plug, ...)
 			fclose(fp);
 			Close();
 			Open();
-			CacheAllPlugins();
 			fp = fopen(m_logfile.c_str(), "ab");
 			if (!fp)
 				return;
@@ -187,18 +209,8 @@ void BinLog::WriteOp(BinLogOp op, int plug, ...)
 	fclose(fp);
 }
 
-void BinLog::CacheAllPlugins()
+void BinLog::WritePluginDB(FILE *fp)
 {
-	FILE *fp = fopen(m_dbfile.c_str(), "wb");
-	if (!fp)
-		return;
-
-	unsigned int magic = BINDB_MAGIC;
-	unsigned short vers = BINDB_VERSION;
-
-	fwrite(&magic, sizeof(unsigned int), 1, fp);
-	fwrite(&vers, sizeof(unsigned short), 1, fp);
-
 	int num = g_plugins.getPluginsNum();
 	fwrite(&num, sizeof(int), 1, fp);
 
@@ -243,24 +255,6 @@ void BinLog::CacheAllPlugins()
 			fwrite(name, sizeof(char), len, fp);
 		}
 	}
-	fclose(fp);
-
-	/**
-	 * it's now safe to create the binary log
-	 */
-	fp = fopen(m_logfile.c_str(), "wb");
-	if (!fp)
-		return;
-
-	magic = BINLOG_MAGIC;
-	vers = BINLOG_VERSION;
-	c = sizeof(time_t);
-	fwrite(&magic, sizeof(int), 1, fp);
-	fwrite(&vers, sizeof(short), 1, fp);
-	fwrite(&c, sizeof(char), 1, fp);
-	fclose(fp);
-
-	WriteOp(BinLog_Start, -1);
 }
 
 #endif //BINLOG_ENABLED

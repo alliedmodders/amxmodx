@@ -292,15 +292,6 @@ int	C_Spawn(edict_t *pent)
 	// Set server flags
 	memset(g_players[0].flags, -1, sizeof(g_players[0].flags));
 
-#if defined BINLOG_ENABLED
-	if (!g_BinLog.Open())
-	{
-		LOG_ERROR(PLID, "Binary log failed to open.");
-	}
-	g_binlog_level = atoi(get_localinfo("bin_logging", "17"));
-	g_binlog_maxsize = atoi(get_localinfo("g_binlog_maxsize", "20"));
-#endif
-
 	g_opt_level = atoi(get_localinfo("optimizer", "7"));
 	if (!g_opt_level)
 		g_opt_level = 7;
@@ -325,7 +316,12 @@ int	C_Spawn(edict_t *pent)
 	FF_ChangeLevel = registerForward("server_changelevel", ET_STOP, FP_STRING, FP_DONE);
 
 #if defined BINLOG_ENABLED
-	g_BinLog.CacheAllPlugins();
+	if (!g_BinLog.Open())
+	{
+		LOG_ERROR(PLID, "Binary log failed to open.");
+	}
+	g_binlog_level = atoi(get_localinfo("bin_logging", "17"));
+	g_binlog_maxsize = atoi(get_localinfo("binlog_maxsize", "20"));
 #endif
 
 	modules_callPluginsLoaded();

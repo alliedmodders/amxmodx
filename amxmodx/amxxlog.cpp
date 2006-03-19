@@ -97,8 +97,8 @@ void CLog::CreateNewFile()
 	
 	while (true)
 	{
-		m_LogFile.assign(build_pathname_r(file, sizeof(file)-1, "%s/L%02d%02d%03d.log", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday, i));
-		FILE *pTmpFile = fopen(m_LogFile.c_str(), "r");			// open for reading to check whether the file exists
+		build_pathname_r(file, sizeof(file)-1, "%s/L%02d%02d%03d.log", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday, i);
+		FILE *pTmpFile = fopen(file, "r");			// open for reading to check whether the file exists
 		
 		if (!pTmpFile)
 			break;
@@ -106,6 +106,7 @@ void CLog::CreateNewFile()
 		fclose(pTmpFile);
 		++i;
 	}
+	m_LogFile.assign(file);
 	
 	// Log logfile start
 	FILE *fp = fopen(m_LogFile.c_str(), "w");

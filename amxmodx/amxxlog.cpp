@@ -92,10 +92,12 @@ void CLog::CreateNewFile()
 	time(&td);
 	tm *curTime = localtime(&td);
 
+	char file[256];
 	int i = 0;
 	
 	while (true)
 	{
+		m_LogFile.assign(build_pathname_r(file, sizeof(file)-1, "%s/L%02d%02d%03d.log", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday, i));
 		FILE *pTmpFile = fopen(m_LogFile.c_str(), "r");			// open for reading to check whether the file exists
 		
 		if (!pTmpFile)

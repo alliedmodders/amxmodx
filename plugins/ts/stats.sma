@@ -54,7 +54,10 @@ new g_userState[33]
 new g_userPlayers[33][32]
 new g_Buffer[2048]
 new g_Killers[33][3] 
-new Float:g_DeathStats[33] 
+new Float:g_DeathStats[33]
+
+new g_center1_sync
+new g_damage_sync
 
 new g_bodyParts[8][] = {"whole body","head","chest","stomach","left arm","right arm","left leg","right leg"}
 
@@ -102,6 +105,9 @@ public plugin_init() {
 
   register_statsfwd(XMF_DAMAGE)
   register_statsfwd(XMF_DEATH)
+
+  g_damage_sync = CreateHudSyncObj()
+  g_center1_sync = CreateHudSyncObj()
 }
 
 
@@ -318,9 +324,9 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA) {
   if ( BulletDamage ) { 
     if ( attacker==victim ) return PLUGIN_CONTINUE
     set_hudmessage(0, 100, 200, 0.45, 0.85, 2, 0.1, 4.0, 0.02, 0.02, -1) 
-    show_hudmessage(attacker, "%i", damage)   
+    ShowSyncHudMsg(attacker,g_damage_sync,"%i",damage)
     set_hudmessage(200, 0, 0, 0.55, 0.85, 2, 0.1, 4.0, 0.02, 0.02, -1) 
-    show_hudmessage(victim, "%i", damage)  
+    ShowSyncHudMsg(victim,g_damage_sync,"%i",damage)
   } 
   return PLUGIN_CONTINUE 
 }
@@ -385,7 +391,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
       for (new i=1;i<=get_maxplayers();i++){
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
           continue
-        show_hudmessage(i, "%s", message) 
+        ShowSyncHudMsg(i, g_center1_sync, "%s", message) 
       }  
     }
     if ( HeadShotKillSound ) client_cmd(0,"spk misc/headshot") 

@@ -71,7 +71,12 @@ new g_userPlayers[33][32]
 new g_Buffer[2048]
 
 new g_Killers[33][3]
-new Float:g_DeathStats[33] 
+new Float:g_DeathStats[33]
+
+new g_damage_sync
+new g_center1_sync
+new g_center2_sync
+new g_left_sync
 
 new g_bodyParts[8][] = { 
                         "WHOLEBODY",
@@ -189,6 +194,11 @@ public plugin_init() {
   register_statsfwd(XMF_DEATH)
   
   register_menucmd(register_menuid("Server Stats"),1023,"actionStatsMenu")
+
+  g_damage_sync = CreateHudSyncObj()
+  g_center1_sync = CreateHudSyncObj()
+  g_center2_sync = CreateHudSyncObj()
+  g_left_sync = CreateHudSyncObj()
 }
 
 public plugin_cfg(){
@@ -539,10 +549,10 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA)
   }
   if ( BulletDamage ) { 
     if ( attacker==victim || xmod_is_melee_wpn(wpnindex) ) return PLUGIN_CONTINUE
-    set_hudmessage(0, 100, 200, 0.45, 0.85, 2, 0.1, 4.0, 0.02, 0.02, -1) 
-    show_hudmessage(attacker,"%i", damage)   
-    set_hudmessage(200, 0, 0, 0.55, 0.85, 2, 0.1, 4.0, 0.02, 0.02, -1) 
-    show_hudmessage(victim,"%i", damage)  
+    set_hudmessage(0, 100, 200, 0.45, 0.85, 2, 0.1, 4.0, 0.02, 0.02)
+    ShowSyncHudMsg(attacker,g_damage_sync,"%i",damage)
+    set_hudmessage(200, 0, 0, 0.55, 0.85, 2, 0.1, 4.0, 0.02, 0.02)
+    ShowSyncHudMsg(victim,g_damage_sync,"%i",damage)
   } 
   return PLUGIN_CONTINUE 
 }
@@ -567,7 +577,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK)
     client_print(0,print_chat,"%L",LANG_PLAYER,"TK_MSG",killer_name)
     if ( enemygre ){
       set_hudmessage(255, 100, 100, -1.0, 0.15, 1, 6.0, 6.0, 0.5, 0.15, -1)
-      show_hudmessage(victim,"%L",victim,"NADE_FAILEDTK",killer_name)
+      ShowSyncHudMsg(victim, g_center1_sync, "%L",victim,"NADE_FAILEDTK",killer_name)
     }
   }
 
@@ -591,12 +601,12 @@ public client_death(killer,victim,wpnindex,hitplace,TK)
 
   if ( selfKill && grenade && GrenadeSuicide ){ 
     set_hudmessage(255, 100, 100, -1.0, 0.15, 1, 6.0, 6.0, 0.5, 0.15, -1)
-    if ( !enemygre ) show_hudmessage(0,"%L",LANG_PLAYER,g_SHeMessages[ random_num(0,3) ],victim_name) 
+    if ( !enemygre ) ShowSyncHudMsg(0, g_center1_sync,"%L",LANG_PLAYER,g_SHeMessages[ random_num(0,3) ],victim_name) 
     else
       for (new i=1;i<=get_maxplayers();i++){
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
           continue
-        show_hudmessage(i,"%L",i,"NADE_FAILED",victim_name) 
+        ShowSyncHudMsg(i, g_center1_sync, "%L",i,"NADE_FAILED",victim_name) 
       }
 
   }
@@ -647,7 +657,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK)
         for (new i=1;i<=get_maxplayers();i++){
           if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
             continue
-          show_hudmessage(i,"%L",i,g_KillingMsg[ a ], killer_name) 
+          ShowSyncHudMsg(i, g_left_sync, "%L",i,g_KillingMsg[ a ], killer_name) 
         }
       }
       if (  KillingStreakSound )  client_cmd( 0 ,  "spk misc/%s" , g_Sounds[ a ] )
@@ -674,7 +684,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK)
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
 
           continue
-        show_hudmessage(i,"%L",i,g_KnifeMsg[ random_num(0,3) ],killer_name,victim_name) 
+        ShowSyncHudMsg(i, g_center1_sync, "%L",i,g_KnifeMsg[ random_num(0,3) ],killer_name,victim_name) 
       } 
     }
     if ( KnifeKillSound ) client_cmd(0,"spk misc/humiliation") 
@@ -686,7 +696,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK)
         for (new i=1;i<=get_maxplayers();i++){
           if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
             continue
-          show_hudmessage(i,"%L",LANG_PLAYER,"NADE_MASTER",killer_name) 
+          ShowSyncHudMsg(i, g_center1_sync, "%L",LANG_PLAYER,"NADE_MASTER",killer_name) 
         } 
       }
       if ( EnemyGreKillSound ) client_cmd(0,"spk misc/godlike")
@@ -696,7 +706,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK)
       for (new i=1;i<=get_maxplayers();i++){
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
           continue
-        show_hudmessage(i,"%L",i,g_HeMessages[ random_num(0,3)],killer_name,victim_name) 
+        ShowSyncHudMsg(i, g_center1_sync, "%L",i,g_HeMessages[ random_num(0,3)],killer_name,victim_name) 
       }   
     }
   }
@@ -715,7 +725,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK)
         replace( message, 127 , "$wn", weapon )    
         replace( message, 127 , "$kn", killer_name )
         set_hudmessage(100, 100, 255, -1.0, 0.19, 0, 6.0, 6.0, 0.5, 0.15, -1)  
-        show_hudmessage(players[i], "%s", message) 
+        ShowSyncHudMsg(players[i], g_center2_sync, "%s", message) 
       }
     }
     if ( HeadShotKillSound ) client_cmd(0,"spk misc/headshot") 
@@ -726,7 +736,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK)
     for (new i=1;i<=get_maxplayers();i++){
       if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
         continue
-      show_hudmessage(i,"%L",i,mortarmsg[random_num(0,1)],killer_name,victim_name)
+      ShowSyncHudMsg(i, g_center2_sync, "%L",i,mortarmsg[random_num(0,1)],killer_name,victim_name)
     } 
   }
 
@@ -783,7 +793,7 @@ public checkKills(param[]){
         for (new i=1;i<=get_maxplayers();i++){
           if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
             continue
-          show_hudmessage(i,"%L",i,g_MultiKillMsg[a],name,g_multiKills[id][0],g_multiKills[id][1]) 
+          ShowSyncHudMsg(i, g_left_sync, "%L",i,g_MultiKillMsg[a],name,g_multiKills[id][0],g_multiKills[id][1]) 
         } 
       }
       if ( MultiKillSound ) client_cmd(0,"spk misc/%s",g_Sounds[a])

@@ -61,7 +61,12 @@ new g_Buffer[2048]
 
 
 new g_Killers[33][4]
-new Float:g_DeathStats[33] 
+new Float:g_DeathStats[33]
+
+new g_center1_sync
+new g_center2_sync
+new g_left_sync
+new g_damage_sync
 
 new g_bodyParts[8][] = { 
                         "whole body",
@@ -162,6 +167,10 @@ public plugin_init() {
   
   register_menucmd(register_menuid("Server Stats"),1023,"actionStatsMenu")
 
+  g_damage_sync = CreateHudSyncObj()
+  g_center1_sync = CreateHudSyncObj()
+  g_center2_sync = CreateHudSyncObj()
+  g_left_sync = CreateHudSyncObj()
 }
 
 new g_addStast[] = "amx_statscfg add ^"%s^" %s"
@@ -456,9 +465,9 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
   if ( BulletDamage ) { 
     if ( attacker==victim || xmod_is_melee_wpn(wpnindex) ) return PLUGIN_CONTINUE
     set_hudmessage(0, 100, 200, 0.45, 0.85, 2, 0.1, 4.0, 0.02, 0.02, -1) 
-    show_hudmessage(attacker,"%i", damage)   
+    ShowSyncHudMsg(attacker,g_damage_sync,"%i",damage)
     set_hudmessage(200, 0, 0, 0.55, 0.85, 2, 0.1, 4.0, 0.02, 0.02, -1) 
-    show_hudmessage(victim,"%i", damage)  
+    ShowSyncHudMsg(victim,g_damage_sync,"%i",damage)
   } 
   return PLUGIN_CONTINUE 
 }
@@ -493,7 +502,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
 
   if ( selfKill && grenade && GrenadeSuicide ){ 
     set_hudmessage(255, 100, 100, -1.0, 0.15, 1, 6.0, 6.0, 0.5, 0.15, -1)
-    show_hudmessage(0, g_SHeMessages[ random_num(0,3) ],victim_name) 
+    ShowSyncHudMsg(0, g_center1_sync, g_SHeMessages[ random_num(0,3) ],victim_name) 
   }
 
   if ( selfKill || TK )
@@ -542,7 +551,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
         for (new i=1;i<=get_maxplayers();i++){
           if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
             continue
-          show_hudmessage(i, g_KillingMsg[ a ], killer_name) 
+          ShowSyncHudMsg(i, g_left_sync, g_KillingMsg[ a ], killer_name) 
         }
       }
       if (  KillingStreakSound )  client_cmd( 0 ,  "spk misc/%s" , g_Sounds[ a ] )
@@ -567,7 +576,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
 
           continue
-        show_hudmessage(i, g_KnifeMsg[ random_num(0,3) ],killer_name,victim_name) 
+        ShowSyncHudMsg(i, g_center1_sync, g_KnifeMsg[ random_num(0,3) ],killer_name,victim_name) 
       } 
     }
     if ( KnifeKillSound ) client_cmd(0,"spk misc/humiliation") 
@@ -578,7 +587,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
       for (new i=1;i<=get_maxplayers();i++){
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
           continue
-        show_hudmessage(i, g_HeMessages[ random_num(0,3)],killer_name,victim_name) 
+        ShowSyncHudMsg(i, g_center1_sync, g_HeMessages[ random_num(0,3)],killer_name,victim_name) 
       }   
     }
   }
@@ -595,7 +604,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
       for (new i=1;i<=get_maxplayers();i++){
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
           continue
-        show_hudmessage(i,"%s", message) 
+        ShowSyncHudMsg(i, g_center2_sync, "%s", message) 
       }      
     }
     if ( HeadShotKillSound ) client_cmd(0,"spk misc/headshot") 
@@ -658,7 +667,7 @@ public checkKills(param[]){
         for (new i=1;i<=get_maxplayers();i++){
           if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
             continue
-          show_hudmessage(i, g_MultiKillMsg[a],name,g_multiKills[id][0],g_multiKills[id][1]) 
+          ShowSyncHudMsg(i, g_left_sync, g_MultiKillMsg[a],name,g_multiKills[id][0],g_multiKills[id][1]) 
         } 
       }
       if ( MultiKillSound ) client_cmd(0,"spk misc/%s",g_Sounds[a])

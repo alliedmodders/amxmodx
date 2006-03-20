@@ -77,8 +77,12 @@ new Float:g_doubleKill
 new g_doubleKillId
 new g_friend[33]
 new g_firstBlood
-new g_main_sync
-new g_player_sync
+new g_center1_sync
+new g_center2_sync
+new g_announce_sync
+new g_status_sync
+new g_left_sync
+new g_bottom_sync
 
 new g_MultiKillMsg[7][] =
 {
@@ -189,8 +193,12 @@ public plugin_init()
 		register_event("23", "radioKill", "a", "1=108", /*"12=294", */ "15=2")
 	}
 	
-	g_main_sync = CreateHudSyncObj()
-	g_player_sync = CreateHudSyncObj()
+	g_center1_sync = CreateHudSyncObj()
+	g_center2_sync = CreateHudSyncObj()
+	g_announce_sync = CreateHudSyncObj()
+	g_status_sync = CreateHudSyncObj()
+	g_left_sync = CreateHudSyncObj()
+	g_bottom_sync = CreateHudSyncObj()
 }
 
 public plugin_cfg()
@@ -272,7 +280,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				if (KillingStreak)
 				{
 					set_hudmessage(0, 100, 255, 0.05, 0.55, 2, 0.02, 6.0, 0.01, 0.1, -1)
-					show_hudmessage(0, g_KillingMsg[a], name)
+					ShowSyncHudMsg(0, g_left_sync, g_KillingMsg[a], name)
 				}
 				
 				if (KillingStreakSound)
@@ -328,7 +336,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 						format(team_name, 31, "%L", ppl[a], (epplnum == 1) ? g_teamsNames[team] : g_teamsNames[team + 2])
 						format(message, 127, "%L", ppl[a], "REMAINING", epplnum, team_name)
 
-						show_hudmessage(ppl[a], "%s", message)
+						ShowSyncHudMsg(ppl[a], g_bottom_sync, "%s", message)
 					}
 				}
 			}
@@ -350,7 +358,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 			get_user_name(ts[0], tname, 31)
 			
 			set_hudmessage(0, 255, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, -1)
-			ShowSyncHudMsg(0, g_main_sync, "%s vs. %s", ctname, tname)
+			ShowSyncHudMsg(0, g_center1_sync, "%s vs. %s", ctname, tname)
 			
 			play_sound("misc/maytheforce")
 		}
@@ -378,7 +386,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				get_user_name(g_LastAnnounce, name, 31)
 				
 				set_hudmessage(0, 255, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, -1)
-				show_hudmessage(0, "%s (%d HP) vs. %d %s%s: %L", name, get_user_health(g_LastAnnounce), oposite, g_teamsNames[team], (oposite == 1) ? "" : "S", LANG_PLAYER, g_LastMessages[random_num(0, 3)])
+				ShowSyncHudMsg(0, g_center1_sync, "%s (%d HP) vs. %d %s%s: %L", name, get_user_health(g_LastAnnounce), oposite, g_teamsNames[team], (oposite == 1) ? "" : "S", LANG_PLAYER, g_LastMessages[random_num(0, 3)])
 				
 				if (!is_user_connecting(g_LastAnnounce))
 					client_cmd(g_LastAnnounce, "spk misc/oneandonly")
@@ -441,7 +449,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				replace(message, 127, "$kn", killer_name)
 				
 				set_hudmessage(100, 100, 255, -1.0, 0.29, 0, 6.0, 6.0, 0.5, 0.15, -1)
-				ShowSyncHudMsg(players[i], g_main_sync, "%s", message)
+				ShowSyncHudMsg(players[i], g_center2_sync, "%s", message)
 			}
 		}
 		
@@ -465,7 +473,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				get_user_name(killer, name, 31)
 				
 				set_hudmessage(255, 0, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, -1)
-				show_hudmessage(0, "%L", LANG_PLAYER, "DOUBLE_KILL", name)
+				ShowSyncHudMsg(0, g_center1_sync, "%L", LANG_PLAYER, "DOUBLE_KILL", name)
 			}
 			
 			if (DoubleKillSound)
@@ -481,8 +489,7 @@ public hideStatus(id)
 {
 	if (PlayerName)
 	{
-		set_hudmessage(0, 0, 0, 0.0, 0.0, 0, 0.0, 0.01, 0.0, 0.0, -1)
-		ShowSyncHudMsg(id, g_player_sync, "")
+		ClearSyncHud(id, g_status_sync)
 	}
 }
 
@@ -512,10 +519,10 @@ public showStatus(id)
 				xmod_get_wpnname(wpnid, wpnname, 31)
 			
 			set_hudmessage(color1, 50, color2, -1.0, 0.60, 1, 0.01, 3.0, 0.01, 0.01)
-			ShowSyncHudMsg(id, g_player_sync, "%s -- %d HP / %d AP / %s", name, get_user_health(pid), get_user_armor(pid), wpnname)
+			ShowSyncHudMsg(id, g_status_sync, "%s -- %d HP / %d AP / %s", name, get_user_health(pid), get_user_armor(pid), wpnname)
 		} else {
 			set_hudmessage(color1, 50, color2, -1.0, 0.60, 1, 0.01, 3.0, 0.01, 0.01)
-			ShowSyncHudMsg(id, g_player_sync, "%s", name)
+			ShowSyncHudMsg(id, g_status_sync, "%s", name)
 		}
 	}
 }
@@ -531,7 +538,7 @@ public eNewRound()
 		if (RoundCounter)
 		{
 			set_hudmessage(200, 0, 0, -1.0, 0.30, 0, 6.0, 6.0, 0.5, 0.15, -1)
-			ShowSyncHudMsg(0, g_main_sync, "%L", LANG_PLAYER, "PREPARE_FIGHT", g_roundCount)
+			ShowSyncHudMsg(0, g_announce_sync, "%L", LANG_PLAYER, "PREPARE_FIGHT", g_roundCount)
 		}
 		
 		if (RoundCounterSound)
@@ -591,7 +598,7 @@ public checkKills(param[])
 				if (a > 6)
 					a = 6
 				
-				show_hudmessage(0, g_MultiKillMsg[a], name, LANG_PLAYER, "WITH", g_multiKills[id][0], LANG_PLAYER, "KILLS", g_multiKills[id][1], LANG_PLAYER, "HS")
+				ShowSyncHudMsg(0, g_left_sync, g_MultiKillMsg[a], name, LANG_PLAYER, "WITH", g_multiKills[id][0], LANG_PLAYER, "KILLS", g_multiKills[id][1], LANG_PLAYER, "HS")
 			}
 			
 			if (MultiKillSound)
@@ -621,7 +628,7 @@ announceEvent(id, message[])
 	
 	get_user_name(id, name, 31)
 	set_hudmessage(255, 100, 50, -1.0, 0.30, 0, 6.0, 6.0, 0.5, 0.15, -1)
-	ShowSyncHudMsg(0, g_main_sync, "%L", LANG_PLAYER, message, name)
+	ShowSyncHudMsg(0, g_announce_sync, "%L", LANG_PLAYER, message, name)
 }
 
 public eBombPickUp(id)

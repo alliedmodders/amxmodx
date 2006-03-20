@@ -130,6 +130,9 @@
 				RelativePath=".\fm_tr.h">
 			</File>
 			<File
+				RelativePath=".\fm_tr2.cpp">
+			</File>
+			<File
 				RelativePath=".\pdata.cpp">
 			</File>
 			<Filter

@@ -13,7 +13,13 @@ void OnAmxxAttach()
 	MF_AddNatives(pdata_natives);
 	MF_AddNatives(tr_Natives);
 	MF_AddNatives(glb_natives);
+	MF_AddNatives(ext2_natives);
+	g_kvd_2.szClassName = "";
+	g_kvd_2.szKeyName = "";
+	g_kvd_2.szValue = "";
+	g_kvd_glb.kvd = &g_kvd_2;
 }
+
 int GetHullBounds(int hullnumber, float *mins, float *maxs);
 // sawce:  Do not null out the forward for ServerActivate.  It's required for the INDEXENT() fix. (I don't think ServerActivate is planned on being forwarded anyway)
 void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)

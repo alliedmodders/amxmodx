@@ -496,7 +496,7 @@ enum {
 enum TraceResult
 {
 	TR_AllSolid,
-    TR_StartSolid,
+	TR_StartSolid,
 	TR_InOpen,
 	TR_InWater,
 	TR_flFraction,
@@ -506,3 +506,12 @@ enum TraceResult
 	TR_pHit,
 	TR_iHitgroup,
 };
+
+enum KeyValueData
+{
+	KV_ClassName,
+	KV_KeyName,
+	KV_Value,
+	KV_fHandled
+};
+

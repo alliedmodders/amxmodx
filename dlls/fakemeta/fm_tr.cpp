@@ -159,94 +159,12 @@ static cell AMX_NATIVE_CALL get_tr(AMX *amx, cell *params)
 	}
 }
 
-// native set_kv(TraceResult:tr_member, {Float,_}:...);
-static cell AMX_NATIVE_CALL set_kv(AMX *amx, cell *params)
+AMX_NATIVE_INFO tr_Natives[] = 
 {
-	
-	
-	//if (*params / sizeof(cell) < 2)
-		//return 0;	//TODO: Error
-	
-	//cell *ptr = MF_GetAmxAddr(amx, params[2]);
-	//edict_t *e = 0;
-
-	switch (params[1])
-	{
-		case KV_ClassName:
-		{
-			int len;
-			g_fm_keyValueData->szClassName = MF_GetAmxString(amx, params[2], 0, &len);
-			return 1;
-		}
-		case KV_KeyName:
-		{
-			int len;
-			g_fm_keyValueData->szKeyName = MF_GetAmxString(amx, params[2], 0, &len);
-			return 1;
-		}
-		case KV_Value:
-		{
-			int len;
-			g_fm_keyValueData->szValue = MF_GetAmxString(amx, params[2], 0, &len);
-			return 1;
-		}
-		case KV_fHandled:
-		{
-			g_fm_keyValueData->fHandled = params[2];
-			return 1;
-		}
-		default:
-		{
-			//TODO: error
-			return 0;
-		}
-	}
-}
-
-static cell AMX_NATIVE_CALL get_kv(AMX *amx, cell *params)
-{
-	int type = params[1];
-	cell *ptr = 0;
-	const char *szRet = "";
-
-	switch (type)
-	{
-		case KV_ClassName:
-		{
-			if (g_fm_keyValueData->szClassName)
-				szRet = g_fm_keyValueData->szClassName;
-			break;
-		}
-		case KV_KeyName:
-		{
-			if (g_fm_keyValueData->szKeyName)
-				szRet = g_fm_keyValueData->szKeyName;
-			break;
-		}
-		case KV_Value:
-		{
-			if (g_fm_keyValueData->szValue)
-				szRet = g_fm_keyValueData->szValue;
-			break;
-		}
-		case KV_fHandled: {
-			return g_fm_keyValueData->fHandled;
-		}
-		default:
-		{
-			//TODO: error
-			return 0;
-		}
-	}
-
-	return MF_SetAmxString(amx, params[2], szRet, params[3]);
-}
-
-AMX_NATIVE_INFO tr_Natives[] = {
 	{"get_tr",			get_tr},
 	{"set_tr",			set_tr},
-	{"get_kv",			get_kv},
-	{"set_kv",			set_kv},
 	{NULL,				NULL},
 };
+
+
 

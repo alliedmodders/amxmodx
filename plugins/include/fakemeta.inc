@@ -61,6 +61,21 @@ native dllfunc(type,{Float,Sql,Result,_}:...);
 native get_tr(TraceResult:tr_member, {Float,_}:...);
 native set_tr(TraceResult:tr_member, {Float,_}:...);
 
+//Upgraded version takes in a TraceResult handle, optionally passed in as the last parameter to the
+//TraceResult forward.  Use 0 to specify the global traceresult handle set from calling 
+// some of the Engfucs.
+native get_tr2(tr_handle, TraceResult:tr_member, {Float,_}:...);
+native set_tr2(tr_handle, TraceResult:tr_member, {Float,_}:...);
+
+//Same as above, use either a kvd_handle or 0 for global reserved kvd data
+//kvd_handle is passed by the kvd hook, last param
+native get_kvd(kvd_handle, KeyValueData:member, {Float,_}:...);
+
+//Using set_kvd with the handle from the hook for anything under KV_fHandled
+// is considered an undefined operation (it could crash).  You should fire a new
+// keyvalues structure rather than changing the internal engine strings.
+native set_kvd(kvd_handle, KeyValueData:member, {Float,_}:...);
+
 //NOTE that for the string offsets below, on AMD64, a byref (char **) offset is NOT the same as an int offset
 //In fact it's QWORD aligned rather than DWORD aligned, so the offset will be exactly half.
 //Gets a string from a private offset.  If byref is false, the string is treated as static rather than dynamic.

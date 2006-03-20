@@ -11,6 +11,7 @@ const char *mStringResult;
 const char *mlStringResult;
 int retType = 0;
 int lastFmRes = FMRES_IGNORED;
+KVD_Wrapper g_kvd_hook;
 
 #include "forwardmacros.h"
 
@@ -98,7 +99,7 @@ void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *pentT
 	gfm_tr=ptr;
 	PREPARE_VECTOR(v1);
 	PREPARE_VECTOR(v2);
-	FM_ENG_HANDLE(FM_TraceLine, (Engine[FM_TraceLine].at(i), p_v1, p_v2, fNoMonsters, ENTINDEX(pentToSkip) /*, (cell)ptr*/));
+	FM_ENG_HANDLE(FM_TraceLine, (Engine[FM_TraceLine].at(i), p_v1, p_v2, fNoMonsters, ENTINDEX(pentToSkip) , (cell)ptr));
 	RETURN_META(mswi(lastFmRes));
 }
 
@@ -107,7 +108,7 @@ void TraceLine_post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 	gfm_tr=ptr;
 	PREPARE_VECTOR(v1);
 	PREPARE_VECTOR(v2);
-	FM_ENG_HANDLE_POST(FM_TraceLine, (EnginePost[FM_TraceLine].at(i), p_v1, p_v2, fNoMonsters, ENTINDEX(pentToSkip)/*, (cell)ptr*/));
+	FM_ENG_HANDLE_POST(FM_TraceLine, (EnginePost[FM_TraceLine].at(i), p_v1, p_v2, fNoMonsters, ENTINDEX(pentToSkip), (cell)ptr));
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -124,14 +125,15 @@ typedef struct KeyValueData_s
 */
 void KeyValue(edict_t* entity, KeyValueData* data)
 {
-	g_fm_keyValueData = data;
-	FM_ENG_HANDLE(FM_KeyValue, (Engine[FM_KeyValue].at(i), ENTINDEX(entity)));
+	g_kvd_hook.kvd = data;
+	FM_ENG_HANDLE(FM_KeyValue, (Engine[FM_KeyValue].at(i), ENTINDEX(entity), (cell)(&g_kvd_hook)));
 	RETURN_META(mswi(lastFmRes));
 }
 
 void KeyValue_post(edict_t* entity, KeyValueData* data)
 {
-	FM_ENG_HANDLE_POST(FM_KeyValue, (EnginePost[FM_KeyValue].at(i), ENTINDEX(entity)));
+	g_kvd_hook.kvd = data;
+	FM_ENG_HANDLE_POST(FM_KeyValue, (EnginePost[FM_KeyValue].at(i), ENTINDEX(entity), (cell)(&g_kvd_hook)));
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -684,7 +686,7 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 		ENGHOOK(EmitAmbientSound);
 		break;
 	case FM_TraceLine:
-		fId = MF_RegisterSPForwardByName(amx, funcname, FP_ARRAY, FP_ARRAY, FP_CELL, FP_CELL, FP_DONE);
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_ARRAY, FP_ARRAY, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 		ENGHOOK(TraceLine);
 		break;
 	case FM_TraceToss:
@@ -1004,7 +1006,7 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	//DLLFunc_KeyValue,	// void )			( edict_t *pentKeyvalue, KeyValueData *pkvd );
 	case FM_KeyValue:
 		//fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_STRING, FP_STRING, FP_STRING, FP_CELL, FP_DONE);
-		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
 		DLLHOOK(KeyValue);
 		break;
 	//DLLFunc_SetAbsBox,			// void )			( edict_t *pent );

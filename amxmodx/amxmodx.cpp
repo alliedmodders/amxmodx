@@ -3902,8 +3902,7 @@ static cell AMX_NATIVE_CALL CreateHudSyncObj(AMX *amx, cell *params)
 	return static_cast<cell>(g_hudsync.size());
 }
 
-hudtextparms_t temp_hud_stuff;
-void CheckAndClearPlayerHUD(CPlayer *player, unsigned int channel, unsigned int sync_obj)
+void CheckAndClearPlayerHUD(CPlayer *player, int &channel, unsigned int sync_obj)
 {
 	/**
 	 * player and channel should be guaranteed to be good to go.
@@ -3915,27 +3914,8 @@ void CheckAndClearPlayerHUD(CPlayer *player, unsigned int channel, unsigned int 
 	//check if the last sync on this channel was this sync obj
 	if (player->hudmap[last_channel] == sync_obj + 1)
 	{
-		//if so, we can safely CLEAR it.
-		temp_hud_stuff.a1 = 0;
-		temp_hud_stuff.a2 = 0;
-		temp_hud_stuff.r2 = 255;
-		temp_hud_stuff.g2 = 255;
-		temp_hud_stuff.b2 = 250;
-		temp_hud_stuff.r1 = 0;
-		temp_hud_stuff.g1 = 0;
-		temp_hud_stuff.b1 = 0;
-		temp_hud_stuff.x = 0.0f;
-		temp_hud_stuff.y = 0.0f;
-		temp_hud_stuff.effect = 0;
-		temp_hud_stuff.fxTime = 0.0f;
-		temp_hud_stuff.holdTime = 0.01;
-		temp_hud_stuff.fadeinTime = 0.0f;
-		temp_hud_stuff.fadeoutTime = 0.0f;
-		temp_hud_stuff.channel = last_channel;
-		static char msg[255];
-		msg[0] = '\0';
-		char *msg_ptr = UTIL_SplitHudMessage(msg);
-		UTIL_HudMessage(player->pEdict, temp_hud_stuff, msg_ptr);
+		//if so, we can safely REUSE it
+		channel = (int)last_channel;
 	}
 
 	//set the new states
@@ -3945,6 +3925,7 @@ void CheckAndClearPlayerHUD(CPlayer *player, unsigned int channel, unsigned int 
 
 static cell AMX_NATIVE_CALL ClearSyncHud(AMX *amx, cell *params)
 {
+	int len = 0;
 	int index = params[1];
 	unsigned int sync_obj = static_cast<unsigned int>(params[2]) - 1;
 
@@ -3954,19 +3935,24 @@ static cell AMX_NATIVE_CALL ClearSyncHud(AMX *amx, cell *params)
 		return 0;
 	}
 
-	cell *plist = g_hudsync[sync_obj];
+	g_langMngr.SetDefLang(params[1]);
 
 	if (index == 0)
 	{
-		CPlayer *pPlayer;
-		for (int i = 1; i <= gpGlobals->maxClients; i++)
+		for (int i = 1; i <= gpGlobals->maxClients; ++i)
 		{
-			pPlayer = GET_PLAYER_POINTER_I(i);
+			CPlayer *pPlayer = GET_PLAYER_POINTER_I(i);
 
-			if (!pPlayer->ingame)
-				continue;
-
-			CheckAndClearPlayerHUD(pPlayer, plist[pPlayer->index], sync_obj);
+			int channel;
+			if (pPlayer->ingame)
+			{
+				g_langMngr.SetDefLang(i);
+				channel = pPlayer->NextHUDChannel();
+				CheckAndClearPlayerHUD(pPlayer, channel, sync_obj);
+				pPlayer->channels[channel] = gpGlobals->time;
+				g_hudset.channel = channel;
+				UTIL_HudMessage(pPlayer->pEdict, g_hudset, "");
+			}
 		}
 	} else {
 		if (index < 1 || index > gpGlobals->maxClients)
@@ -3974,16 +3960,20 @@ static cell AMX_NATIVE_CALL ClearSyncHud(AMX *amx, cell *params)
 			LogError(amx, AMX_ERR_NATIVE, "Invalid player id %d", index);
 			return 0;
 		}
-		
+
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
-		
+
 		if (pPlayer->ingame)
 		{
-			CheckAndClearPlayerHUD(pPlayer, plist[pPlayer->index], sync_obj);
+			int channel = pPlayer->NextHUDChannel();
+			CheckAndClearPlayerHUD(pPlayer, channel, sync_obj);
+			pPlayer->channels[channel] = gpGlobals->time;
+			g_hudset.channel = channel;
+			UTIL_HudMessage(pPlayer->pEdict, g_hudset, "");
 		}
 	}
 
-	return 1;
+	return len;
 }
 
 //params[1] - target
@@ -4010,12 +4000,14 @@ static cell AMX_NATIVE_CALL ShowSyncHudMsg(AMX *amx, cell *params)
 		{
 			CPlayer *pPlayer = GET_PLAYER_POINTER_I(i);
 			
+			int channel;
 			if (pPlayer->ingame)
 			{
 				g_langMngr.SetDefLang(i);
-				g_hudset.channel = pPlayer->NextHUDChannel();
-				pPlayer->channels[g_hudset.channel] = gpGlobals->time;
-				CheckAndClearPlayerHUD(pPlayer, g_hudset.channel, sync_obj);
+				channel = pPlayer->NextHUDChannel();
+				CheckAndClearPlayerHUD(pPlayer, channel, sync_obj);
+				pPlayer->channels[channel] = gpGlobals->time;
+				g_hudset.channel = channel;
 				message = UTIL_SplitHudMessage(format_amxstring(amx, params, 3, len));
 				UTIL_HudMessage(pPlayer->pEdict, g_hudset, message);
 			}
@@ -4031,9 +4023,10 @@ static cell AMX_NATIVE_CALL ShowSyncHudMsg(AMX *amx, cell *params)
 		
 		if (pPlayer->ingame)
 		{
-			g_hudset.channel = pPlayer->NextHUDChannel();
-			pPlayer->channels[g_hudset.channel] = gpGlobals->time;
-			CheckAndClearPlayerHUD(pPlayer, g_hudset.channel, sync_obj);
+			int channel = pPlayer->NextHUDChannel();
+			CheckAndClearPlayerHUD(pPlayer, channel, sync_obj);
+			pPlayer->channels[channel] = gpGlobals->time;
+			g_hudset.channel = channel;
 			message = UTIL_SplitHudMessage(format_amxstring(amx, params, 3, len));
 			UTIL_HudMessage(pPlayer->pEdict, g_hudset, message);
 		}

@@ -380,7 +380,18 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		iparam1=cRet[0];
 		cRet = MF_GetAmxAddr(amx,params[5]);
 		index=cRet[0];
-		(*g_engfuncs.pfnTraceLine)(Vec1,Vec2,iparam1,index != -1 ? INDEXENT2(index) : NULL, &g_tr);
+		TraceResult *tr;
+		if ((params[0] / sizeof(cell)) == 6)
+		{
+			cell *ptr = MF_GetAmxAddr(amx, params[6]);
+			if (*ptr == 0)
+				tr = &g_tr_2;
+			else
+				tr = reinterpret_cast<TraceResult *>(*ptr);
+		} else {
+			tr = &g_tr;
+		}
+		(*g_engfuncs.pfnTraceLine)(Vec1,Vec2,iparam1,index != -1 ? INDEXENT2(index) : NULL, tr);
 		return 1;
 
 
@@ -391,7 +402,17 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		iparam1 = cRet[0];
 		CHECK_ENTITY(index);
-		(*g_engfuncs.pfnTraceToss)(INDEXENT2(index),iparam1 == -1 ? NULL : INDEXENT2(iparam1),&g_tr);
+		if ((params[0] / sizeof(cell)) == 4)
+		{
+			cell *ptr = MF_GetAmxAddr(amx, params[4]);
+			if (*ptr == 0)
+				tr = &g_tr_2;
+			else
+				tr = reinterpret_cast<TraceResult *>(*ptr);
+		} else {
+			tr = &g_tr;
+		}
+		(*g_engfuncs.pfnTraceToss)(INDEXENT2(index),iparam1 == -1 ? NULL : INDEXENT2(iparam1),tr);
 		return 1;
 
 
@@ -412,7 +433,17 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		iparam1=cRet[0];
 		cRet = MF_GetAmxAddr(amx,params[6]);
 		iparam2=cRet[0];
-		(*g_engfuncs.pfnTraceMonsterHull)(INDEXENT2(index),Vec1,Vec2,iparam1,iparam2 == 0 ? NULL : INDEXENT2(iparam2),&g_tr);
+		if ((params[0] / sizeof(cell)) == 7)
+		{
+			cell *ptr = MF_GetAmxAddr(amx, params[7]);
+			if (*ptr == 0)
+				tr = &g_tr_2;
+			else
+				tr = reinterpret_cast<TraceResult *>(*ptr);
+		} else {
+			tr = &g_tr;
+		}
+		(*g_engfuncs.pfnTraceMonsterHull)(INDEXENT2(index),Vec1,Vec2,iparam1,iparam2 == 0 ? NULL : INDEXENT2(iparam2),tr);
 		return 1;
 
 
@@ -432,7 +463,17 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		iparam2 = cRet[0];
 		cRet = MF_GetAmxAddr(amx,params[6]);
 		iparam3 = cRet[0];
-		(*g_engfuncs.pfnTraceHull)(Vec1,Vec2,iparam1,iparam2,iparam3 == 0 ? 0 : INDEXENT2(iparam3),&g_tr);
+		if ((params[0] / sizeof(cell)) == 7)
+		{
+			cell *ptr = MF_GetAmxAddr(amx, params[7]);
+			if (*ptr == 0)
+				tr = &g_tr_2;
+			else
+				tr = reinterpret_cast<TraceResult *>(*ptr);
+		} else {
+			tr = &g_tr;
+		}
+		(*g_engfuncs.pfnTraceHull)(Vec1,Vec2,iparam1,iparam2,iparam3 == 0 ? 0 : INDEXENT2(iparam3),tr);
 		return 1;
 
 
@@ -450,7 +491,17 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		iparam1 = cRet[0];
 		cRet = MF_GetAmxAddr(amx,params[5]);
 		iparam2 = cRet[0];
-		(*g_engfuncs.pfnTraceModel)(Vec1,Vec2,iparam1,iparam2 == 0 ? NULL : INDEXENT2(iparam2),&g_tr);
+		if ((params[0] / sizeof(cell)) == 6)
+		{
+			cell *ptr = MF_GetAmxAddr(amx, params[6]);
+			if (*ptr == 0)
+				tr = &g_tr_2;
+			else
+				tr = reinterpret_cast<TraceResult *>(*ptr);
+		} else {
+			tr = &g_tr;
+		}
+		(*g_engfuncs.pfnTraceModel)(Vec1,Vec2,iparam1,iparam2 == 0 ? NULL : INDEXENT2(iparam2),tr);
 		return 1;
 
 

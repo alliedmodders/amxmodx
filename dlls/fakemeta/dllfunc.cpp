@@ -49,6 +49,21 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		gpGamedllFuncs->dllapi_table->pfnUse(INDEXENT2(index),INDEXENT2(indexb));
 		return 1;
 
+	case DLLFunc_KeyValue:
+		{
+			cRet = MF_GetAmxAddr(amx, params[2]);
+			index=cRet[0];
+			CHECK_ENTITY(index);
+			cRet = MF_GetAmxAddr(amx, params[3]);
+			KVD_Wrapper *kvdw;
+			if (*cRet == 0)
+				kvdw = &g_kvd_glb;
+			else
+				kvdw = reinterpret_cast<KVD_Wrapper *>(*cRet);
+			gpGamedllFuncs->dllapi_table->pfnKeyValue(INDEXENT2(index), kvdw->kvd);
+			return 1;
+		}
+
 		// pfnTouch
 	case	DLLFunc_Touch:	// void )				( edict_t *pentTouched, edict_t *pentOther );
 		cRet = MF_GetAmxAddr(amx,params[2]);

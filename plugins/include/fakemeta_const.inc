@@ -53,6 +53,9 @@ enum {
 	EngFunc_SetOrigin,			// void )				(edict_t *e, const float *rgflOrigin);
 	EngFunc_EmitSound,			// void )				(edict_t *entity, int channel, const char *sample, /*int*/float volume, float attenuation, int fFlags, int pitch);
 	EngFunc_EmitAmbientSound,	// void )		(edict_t *entity, float *pos, const char *samp, float vol, float attenuation, int fFlags, int pitch);
+	//With 1.71 you can pass an optional TraceLine ptr for trace natives
+	// it can be 0, for meaning "global tr handle" (for get/set_tr2), or
+	// it can be any other TR handle (such as one from a TR hook)
 	EngFunc_TraceLine,			// void )				(const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr);
 	EngFunc_TraceToss,			// void )				(edict_t* pent, edict_t* pentToIgnore, TraceResult *ptr);
 	EngFunc_TraceMonsterHull,	// int  )		(edict_t *pEdict, const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr);
@@ -112,6 +115,8 @@ enum
 	DLLFunc_Use,	// void )				( edict_t *pentUsed, edict_t *pentOther );
 	DLLFunc_Touch,	// void )				( edict_t *pentTouched, edict_t *pentOther );
 	DLLFunc_Blocked,	// void )			( edict_t *pentBlocked, edict_t *pentOther );
+	
+	//You can pass in 0 for glb kvd handle or a kvd handle here
 	DLLFunc_KeyValue,	// void )			( edict_t *pentKeyvalue, KeyValueData *pkvd );
 	DLLFunc_SetAbsBox,			// void )			( edict_t *pent );
 	DLLFunc_ClientConnect,		// bool)		( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ] );

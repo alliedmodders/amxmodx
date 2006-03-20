@@ -12,7 +12,7 @@ void initialize_glb_offsets()
 	DO_OFFSET_GLB(cdAudioTrack);
 	DO_OFFSET_GLB(maxClients);
 	DO_OFFSET_GLB(maxEntities);
-	DO_OFFSET_GLB(time);
+	g_glob_offset_table[gl_time] = offsetof(globalvars_t, time);
 	DO_OFFSET_GLB(frametime);
 	DO_OFFSET_GLB(force_retouch);
 	DO_OFFSET_GLB(deathmatch);

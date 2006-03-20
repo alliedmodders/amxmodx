@@ -12,7 +12,7 @@ enum glb_pointers
 	maxEntities, 
 	glb_end_int, 
 	glb_start_float, 
-	time, 
+	gl_time, 
 	frametime, 
 	force_retouch, 
 	deathmatch, 
@@ -50,3 +50,4 @@ enum glb_pointers
 void initialize_glb_offsets();
 
 #endif /* _INCLUDE_GLB_H */
+

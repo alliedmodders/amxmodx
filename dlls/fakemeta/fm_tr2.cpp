@@ -303,6 +303,7 @@ AMX_NATIVE_INFO ext2_natives[] =
 	{"get_tr2",			get_tr2},
 	{"set_tr2",			set_tr2},
 	{"get_kvd",			get_kvd},
+	{"set_kvd",			set_kvd},
 	{NULL,				NULL},
 };
 

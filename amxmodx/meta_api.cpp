@@ -321,7 +321,7 @@ int	C_Spawn(edict_t *pent)
 		LOG_ERROR(PLID, "Binary log failed to open.");
 	}
 	g_binlog_level = atoi(get_localinfo("bin_logging", "17"));
-	g_binlog_maxsize = atoi(get_localinfo("binlog_maxsize", "20"));
+	g_binlog_maxsize = atoi(get_localinfo("max_binlog_size", "20"));
 #endif
 
 	modules_callPluginsLoaded();

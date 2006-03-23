@@ -272,21 +272,21 @@ static cell AMX_NATIVE_CALL set_kvd(AMX *amx, cell *params)
 		}
 	case KV_ClassName:
 		{
-			kvdw->cls.assign(MF_GetAmxString(amx, params[1], 0, &len));
+			kvdw->cls.assign(MF_GetAmxString(amx, params[3], 0, &len));
 			kvd->szClassName = const_cast<char *>(kvdw->cls.c_str());
 			return 1;
 			break;
 		}
 	case KV_KeyName:
 		{
-			kvdw->key.assign(MF_GetAmxString(amx, params[1], 0, &len));
+			kvdw->key.assign(MF_GetAmxString(amx, params[3], 0, &len));
 			kvd->szKeyName = const_cast<char *>(kvdw->key.c_str());
 			return 1;
 			break;
 		}
 	case KV_Value:
 		{
-			kvdw->val.assign(MF_GetAmxString(amx, params[1], 0, &len));
+			kvdw->val.assign(MF_GetAmxString(amx, params[3], 0, &len));
 			kvd->szValue = const_cast<char *>(kvdw->val.c_str());
 			return 1;
 			break;

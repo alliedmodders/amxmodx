@@ -85,7 +85,7 @@ void BinLog::WriteOp(BinLogOp op, int plug, ...)
 	if (!fp)
 		return;
 
-	if (g_binlog_maxsize)
+	if (g_binlog_maxsize && op != BinLog_End)
 	{
 		fseek(fp, 0, SEEK_END);
 		if (ftell(fp) > (g_binlog_maxsize * (1024 * 1024)))

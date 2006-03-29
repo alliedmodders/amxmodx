@@ -647,7 +647,7 @@ int Handler::SetErrorHandler(const char *function)
 	
 	error = amx_FindPublic(m_pAmx, function, &m_iErrFunc);
 
-	if (error != AMX_ERR_NONE && m_iErrFunc < 1)
+	if (error != AMX_ERR_NONE && m_iErrFunc < 0)
 		m_iErrFunc = -1;
 
 	return error;
@@ -659,7 +659,7 @@ int Handler::SetModuleFilter(const char *function)
 	
 	error = amx_FindPublic(m_pAmx, function, &m_iModFunc);
 
-	if (error != AMX_ERR_NONE && m_iModFunc < 1)
+	if (error != AMX_ERR_NONE && m_iModFunc < 0)
 		m_iModFunc = -1;
 
 	return error;
@@ -695,7 +695,7 @@ const char *Handler::GetLastMsg()
 
 int Handler::HandleModule(const char *module)
 {
-	if (m_iModFunc < 1)
+	if (m_iModFunc < 0)
 		return 0;
 
 	/**

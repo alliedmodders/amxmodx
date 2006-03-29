@@ -2,7 +2,7 @@
 
 /** Optimizations for Fakemeta.  In the end we'll do this for other things too.
  */
-static int g_offset_table[pev_vecarray_end] = {-1};
+static int g_offset_table[pev_absolute_end] = {-1};
 
 #define DO_OFFSET(offs)	g_offset_table[offs] = offsetof(entvars_t, offs)
 #define DO_OFFSET_R(named, real, offs) g_offset_table[named] = offsetof(entvars_t, real) + offs
@@ -136,6 +136,8 @@ void initialze_offsets()
 	DO_OFFSET(blending);
 	DO_OFFSET_R(blending_0, blending, 0);
 	DO_OFFSET_R(blending_1, blending, 1);
+	DO_OFFSET_R(pev_weaponmodel2, weaponmodel, 0);
+	DO_OFFSET_R(pev_viewmodel2, viewmodel, 0);
 }
 
 #define EDICT_OFFS(v,o) ((char *)v + o)
@@ -149,7 +151,7 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 	int iSwitch = params[2];
 
 	//onto normal cases - sanity check
-	if (iSwitch <= pev_string_start || iSwitch >= pev_vecarray_end)
+	if (iSwitch <= pev_string_start || iSwitch >= pev_absolute_end)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Undefined pev index: %d", iSwitch);
 		return 0;
@@ -217,7 +219,8 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 	} else if (iSwitch > pev_byte_start && iSwitch < pev_byte_end) {
 		rets.b = *(byte *)EDICT_OFFS(v, offs);
 		ValType = Ret_Int;
-	} else if (iSwitch > pev_string_start && iSwitch < pev_string_end) {
+	} else if ( (iSwitch > pev_string_start && iSwitch < pev_string_end)
+				|| (iSwitch > pev_string2_begin && iSwitch < pev_absolute_end) ) {
 		rets.s = *(string_t *)EDICT_OFFS(v, offs);
 		ValType = Ret_String;
 	} else if (iSwitch > pev_edict_start && iSwitch < pev_edict_end) {
@@ -316,7 +319,7 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 	int iSwitch = params[2];
 
 	//onto normal cases - sanity check
-	if (iSwitch <= pev_string_start || iSwitch >= pev_vecarray_end)
+	if (iSwitch <= pev_string_start || iSwitch >= pev_absolute_end)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Undefined pev index: %d", iSwitch);
 		return 0;
@@ -339,7 +342,8 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 		*(int *)EDICT_OFFS(v, offs) = (int)*blah;
 	} else if (iSwitch > pev_float_start && iSwitch < pev_float_end) {
 		*(float *)EDICT_OFFS(v, offs) = (float)amx_ctof(blah[0]);
-	} else if (iSwitch > pev_string_start && iSwitch < pev_string_end) {
+	} else if ( (iSwitch > pev_string_start && iSwitch < pev_string_end)
+				|| (iSwitch > pev_string2_begin && iSwitch < pev_absolute_end) ) {
 		int len;
 		char *string = MF_GetAmxString(amx, params[3], 0, &len);
 		string_t value = ALLOC_STRING(string);

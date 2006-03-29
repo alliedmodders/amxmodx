@@ -144,7 +144,11 @@ enum pev_pointers
 	vuser3,
 	vuser4,
 	punchangle,
-	pev_vecarray_end
+	pev_vecarray_end,
+	pev_string2_begin,	/* anything after here are string corrections */
+	pev_weaponmodel2,
+	pev_viewmodel2,
+	pev_absolute_end,
 };
 
 void initialze_offsets();

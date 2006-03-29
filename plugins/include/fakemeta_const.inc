@@ -302,7 +302,11 @@ enum {
 	pev_vuser3,
 	pev_vuser4,
 	pev_punchangle,
-	pev_vecarray_end
+	pev_vecarray_end,
+	pev_string2_begin,	/* anything after here are string corrections */
+	pev_weaponmodel2,
+	pev_viewmodel2,
+	pev_absolute_end
 };
 
 /* Used with get_global()

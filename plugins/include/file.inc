@@ -81,6 +81,11 @@ native fseek(file, position, start);
 //Returns the current position in a file
 native ftell(file);
 
+//These are straight from the C standard.
+native fgetc(file);
+native fputc(file, data);
+native fungetc(file, data);
+
 //Return the size of a file
 native filesize(const filename[],{Float,Sql,Result,_}:...);
 

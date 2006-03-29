@@ -741,6 +741,39 @@ static cell AMX_NATIVE_CALL amx_get_dir(AMX *amx, cell *params)
 #endif
 }
 
+//native fgetc( file );
+static cell AMX_NATIVE_CALL amx_fgetc(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+
+	if (!fp)
+		return 0;
+
+	return fgetc(fp);
+}
+
+//native fputc( file, data );
+static cell AMX_NATIVE_CALL amx_fputc(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+
+	if (!fp)
+		return 0;
+
+	return fputc(static_cast<int>(params[2]), fp);
+}
+
+//native ungetc( file, data );
+static cell AMX_NATIVE_CALL amx_ungetc(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+
+	if (!fp)
+		return 0;
+
+	return ungetc(static_cast<int>(params[2]), fp);
+}
+
 AMX_NATIVE_INFO file_Natives[] =
 {
 	{"delete_file",		delete_file},
@@ -765,10 +798,13 @@ AMX_NATIVE_INFO file_Natives[] =
 	{"ftell",			amx_ftell},
 	{"filesize",		amx_filesize},
 	{"unlink",			delete_file},
-	{"build_pathname", amx_build_pathname},
+	{"build_pathname",	amx_build_pathname},
 	{"dir_exists",		dir_exists},
 	{"open_dir",		amx_open_dir},
 	{"close_dir",		amx_close_dir},
 	{"next_file",		amx_get_dir},
+	{"fgetc",			amx_fgetc},
+	{"fputc",			amx_fputc},
+	{"fungetc",			amx_ungetc},
 	{NULL,				NULL}
 };

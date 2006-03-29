@@ -221,10 +221,18 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	m_Text.clear();
 
 	char buffer[255];
-	if (m_AutoColors)
-		_snprintf(buffer, sizeof(buffer)-1, "\\y%s %d/%d\n\\w\n", m_Title.c_str(), page + 1, pages);
-	else
-		_snprintf(buffer, sizeof(buffer)-1, "%s %d/%d\n\n", m_Title.c_str(), page + 1, pages);
+	if (items_per_page && (pages != 1))
+	{
+		if (m_AutoColors)
+			_snprintf(buffer, sizeof(buffer)-1, "\\y%s %d/%d\n\\w\n", m_Title.c_str(), page + 1, pages);
+		else
+			_snprintf(buffer, sizeof(buffer)-1, "%s %d/%d\n\n", m_Title.c_str(), page + 1, pages);
+	} else {
+		if (m_AutoColors)
+			_snprintf(buffer, sizeof(buffer)-1, "\\y%s\n\\w\n", m_Title.c_str());
+		else
+			_snprintf(buffer, sizeof(buffer)-1, "%s\n\n", m_Title.c_str());
+	}
 	
 	m_Text.append(buffer);
 

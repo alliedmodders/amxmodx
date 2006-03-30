@@ -156,6 +156,7 @@ enum {
 	FM_GameShutdown,
 	FM_ShouldCollide,
 	// FM_CvarValue
+	FM_ClientInfoChanged,
 	FM_LAST_DONT_USE_ME,
 };
 

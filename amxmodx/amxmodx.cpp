@@ -3199,6 +3199,7 @@ static cell AMX_NATIVE_CALL callfunc_begin(AMX *amx, cell *params)
 	// set globals
 	g_CallFunc_Plugin = plugin;
 	g_CallFunc_Func = func;
+	g_CallFunc_CurParam = 0;
 
 	return 1;			// success: 1
 }
@@ -3234,6 +3235,7 @@ static cell AMX_NATIVE_CALL callfunc_begin_i(AMX *amx, cell *params)
 
 	g_CallFunc_Plugin = plugin;
 	g_CallFunc_Func = params[1];
+	g_CallFunc_CurParam = 0;
 
 	return 1;
 }

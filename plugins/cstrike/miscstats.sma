@@ -287,7 +287,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				{
 					new file[32]
 					
-					format(file, 32, "misc/%s", g_Sounds[a])
+					format(file, 31, "misc/%s", g_Sounds[a])
 					play_sound(file)
 				}
 			}
@@ -415,8 +415,8 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 	{
 		new killer_name[32], victim_name[32]
 		
-		get_user_name(killer, killer_name, 32)
-		get_user_name(victim, victim_name, 32)
+		get_user_name(killer, killer_name, 31)
+		get_user_name(victim, victim_name, 31)
 		
 		set_hudmessage(255, 100, 100, -1.0, 0.25, 1, 6.0, 6.0, 0.5, 0.15, -1)
 		

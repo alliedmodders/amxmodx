@@ -3216,6 +3216,13 @@ static cell AMX_NATIVE_CALL callfunc_begin_i(AMX *amx, cell *params)
 	if (!plugin)
 		return -1;
 
+	if (g_CallFunc_Plugin)
+	{
+		// scripter's fault
+		LogError(amx, AMX_ERR_NATIVE, "callfunc_begin called without callfunc_end");
+		return 0;
+	}
+
 	if (params[1] < 0)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Public function %d is invalid", params[1]);
@@ -3696,6 +3703,10 @@ static cell AMX_NATIVE_CALL amx_abort(AMX *amx, cell *params)
 	
 	if (pPlugin)
 		filename = pPlugin->getName();
+
+	//we were in a callfunc?
+	if (g_CallFunc_Plugin == pPlugin)
+		g_CallFunc_Plugin = NULL;
 
 	if (fmt)
 		LogError(amx, err, "[%s] %s", filename, fmt);

@@ -774,6 +774,21 @@ static cell AMX_NATIVE_CALL amx_ungetc(AMX *amx, cell *params)
 	return ungetc(static_cast<int>(params[2]), fp);
 }
 
+#if defined __linux__
+#define _rmdir rmdir
+#endif
+
+static cell AMX_NATIVE_CALL amx_rmdir(AMX *amx, cell *params)
+{
+	int len;
+	char* sFile = build_pathname("%s", get_amxstring(amx, params[1], 0, len));
+
+	if (_rmdir(sFile) != 0)
+		return 0;
+
+	return 1;
+}
+
 AMX_NATIVE_INFO file_Natives[] =
 {
 	{"delete_file",		delete_file},
@@ -806,5 +821,6 @@ AMX_NATIVE_INFO file_Natives[] =
 	{"fgetc",			amx_fgetc},
 	{"fputc",			amx_fputc},
 	{"fungetc",			amx_ungetc},
+	{"rmdir",			amx_rmdir},
 	{NULL,				NULL}
 };

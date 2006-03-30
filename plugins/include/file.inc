@@ -89,6 +89,11 @@ native fungetc(file, data);
 //Return the size of a file
 native filesize(const filename[],{Float,Sql,Result,_}:...);
 
+//Attempts to remove a directory.
+//Note that you cannot remove a directory that has files on most
+// operating systems.
+native rmdir(const path[]);
+
 //Delete a file (delete_file macro)
 native unlink(const filename[],{Float,Sql,Result,_}:...);
 

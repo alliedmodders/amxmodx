@@ -3,4 +3,4 @@ source = c:\real\code\amxmodx
 makeopts = 
 output = c:\real\done
 devenv = C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\IDE\devenv.com
-release = amxmodx-1.70
+release = amxmodx-1.71

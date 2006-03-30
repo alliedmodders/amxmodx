@@ -499,7 +499,10 @@ enum {
 	// NEW_DLL_FUNCTIONS:
 	FM_OnFreeEntPrivateData,
 	FM_GameShutdown,
-	FM_ShouldCollide
+	FM_ShouldCollide,
+	
+	//LATE ADDITIONS (v1.71)
+	FM_ClientInfoChanged	//passes id only
 };
 
 enum TraceResult

@@ -92,7 +92,7 @@ public plugin_init()
 	register_cvar("amx_sql_db", "amx")
 
 	register_concmd("amx_reloadadmins", "cmdReload", ADMIN_CFG)
-	register_concmd("amx_addadmin", "addadminfn", ADMIN_CFG, "<playername|auth> <accessflags> [password] [authtype] - automatically add specified player as an admin to users.ini")
+	register_concmd("amx_addadmin", "addadminfn", ADMIN_RCON, "<playername|auth> <accessflags> [password] [authtype] - automatically add specified player as an admin to users.ini")
 
 	format(g_cmdLoopback, 15, "amxauth%c%c%c%c", random_num('A', 'Z'), random_num('A', 'Z'), random_num('A', 'Z'), random_num('A', 'Z'))
 

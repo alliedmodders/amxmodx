@@ -1026,7 +1026,9 @@ native DestroyForward(forward_handle);
  * register_cvar() returns a pointer you can use.
  */
 
-//Get a cvar pointer.  Returns 0 if not found.
+/**
+ * Get a cvar pointer.  Returns 0 if not found.
+ */
 native get_cvar_pointer(const cvar[]);
 
 native get_pcvar_flags(pcvar);

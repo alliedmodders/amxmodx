@@ -5,9 +5,9 @@
 #include <string.h> 
 #include <meta_api.h>
 #include <sdk_util.h>
+#include "amxxmodule.h"
 #include "CVector.h"
 #include "CString.h"
-#include "amxxmodule.h"
 #include <usercmd.h>
 #include "messages.h"
 #include "entity.h"

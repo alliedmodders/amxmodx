@@ -64,14 +64,14 @@ void FUNUTIL_ResetPlayer(int index)
 {
 	//MF_PrintSrvConsole("Resetting player index %d! maxclients: %d\n", index, gpGlobals->maxClients);
 	for (int i = 1; i <= gpGlobals->maxClients; i++) {
-		g_bodyhits[index][i] = (1<<HITGROUP_GENERIC) | 
+		g_bodyhits[index][i] = (char)((1<<HITGROUP_GENERIC) | 
 						(1<<HITGROUP_HEAD) | 
 						(1<<HITGROUP_CHEST) | 
 						(1<<HITGROUP_STOMACH) | 
 						(1<<HITGROUP_LEFTARM) | 
 						(1<<HITGROUP_RIGHTARM)| 
 						(1<<HITGROUP_LEFTLEG) | 
-						(1<<HITGROUP_RIGHTLEG);
+						(1<<HITGROUP_RIGHTLEG));
 	}
 	// Reset silent slippers
 	g_silent[index] = false;

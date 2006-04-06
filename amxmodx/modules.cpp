@@ -814,14 +814,14 @@ void ConvertModuleName(const char *pathString, String &path)
 		}
 	}
 #else
-	char *ptr = strstr(pathString, ".dll");
+	char *ptr = const_cast<char*>(strstr(pathString, ".dll"));
 	
 	if (ptr)
 	{
 		path.assign(pathString);
 	} else {
 		//prevent this from loading .so too
-		ptr = strstr(pathString, ".so");
+		ptr = const_cast<char*>(strstr(pathString, ".so"));
 		
 		if (ptr)
 		{

@@ -31,6 +31,9 @@
 // It allows you to compile without libstdc++.so as a dependency
 // #define NO_ALLOC_OVERRIDES
 
+// Uncomment this if you are using MSVC8 or greater and want to fix some of the compatibility issues yourself 
+// #define NO_MSVC8_AUTO_COMPAT
+
 // - AMXX Init functions
 // Also consider using FN_META_*
 // AMXX query

@@ -42,8 +42,13 @@
 #include <extdll.h>
 #include <meta_api.h>
 
-#ifdef MEMORY_TEST
-	#include "mmgr/mmgr.h"
+#ifdef _MSC_VER
+	// MSVC8 - replace POSIX functions with ISO C++ conformant ones as they are deprecated
+	#if _MSC_VER >= 1400
+		#define unlink _unlink	
+		#define mkdir _mkdir
+		#define strdup _strdup
+	#endif
 #endif
 
 #include "md5.h"

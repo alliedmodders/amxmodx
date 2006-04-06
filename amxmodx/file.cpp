@@ -51,8 +51,6 @@
 #include <io.h>
 #endif
 
-#include <extdll.h>
-#include <meta_api.h>
 #include "amxmodx.h"
 
 CVector<FILE *> FileList;

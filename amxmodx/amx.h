@@ -166,6 +166,14 @@ typedef int (AMXAPI *AMX_NATIVE_FILTER)(struct tagAMX *amx, int index);
   #pragma warning(disable:4103)  /* disable warning message 4103 that complains
                                   * about pragma pack in a header file */
   #pragma warning(disable:4100)  /* "'%$S' : unreferenced formal parameter" */
+
+	#if _MSC_VER >= 1400
+		// MSVC8 - Replace POSIX stricmp with ISO C++ conformant one as it is deprecated
+		#define stricmp _stricmp
+
+		// Need this because of some stupid bug
+		#pragma warning (disable : 4996)
+	#endif
 #endif
 
 /* Some compilers do not support the #pragma align, which should be fine. Some

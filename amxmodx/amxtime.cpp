@@ -54,7 +54,7 @@ static cell AMX_NATIVE_CALL _time(AMX *amx, cell *params)
   /* the time() function returns the number of seconds since January 1 1970
    * in Universal Coordinated Time (the successor to Greenwich Mean Time)
    */
-  return sec1970;
+  return (cell)sec1970;
 }
 
 #if defined __BORLANDC__ || defined __WATCOMC__

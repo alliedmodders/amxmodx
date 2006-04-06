@@ -14,6 +14,16 @@
 #define strnicmp strncasecmp
 #endif
 
+#if _MSC_VER
+	#if _MSC_VER >= 1400
+		// MSVC8 - Replace POSIX stricmp with ISO C++ conformant one as it is deprecated
+		#define stricmp _stricmp
+
+		// Need this because of some stupid bug
+		#pragma warning (disable : 4996)
+	#endif
+#endif
+
 // this file does not include amxmodx.h, so we have to include the memory manager here
 #ifdef MEMORY_TEST
 #include "mmgr/mmgr.h"

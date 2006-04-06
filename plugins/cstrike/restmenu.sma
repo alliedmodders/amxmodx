@@ -724,6 +724,9 @@ StripBlockedItems(inString[AUTOBUYLENGTH + 1], outString[AUTOBUYLENGTH + 1])
 	// First copy string
 	format(outString, AUTOBUYLENGTH, inString)
 
+	// After that convert all chars in string to lower case (fix by VEN)
+	strtolower(outString)
+
 	// Then strip those that are blocked.
 	for (new i = 0; i < g_AliasBlockNum; i++)
 	{

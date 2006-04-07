@@ -25,13 +25,27 @@
 extern "C" {
 #endif
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
+#ifdef _MSC_VER
+  #if _MSC_VER >= 1400
+	/* Disable deprecation warnings concerning unsafe CRT functions */
+    #define _CRT_SECURE_NO_DEPRECATE
+
+	/* Replace the POSIX function with ISO C++ conformant one as it is now deprecated */
+    #define fileno _fileno
+
+	/* Disable deprecation warnings because MSVC8 seemingly thinks ISO C++ conformant functions are deprecated. */
+    #pragma warning (disable : 4996)
+  #endif
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/types.h> /* for fstat */
 #include <sys/stat.h>	/* for fstat */
 
 //typedef int uint32_t;
+
 
 #define SEGMENT_RECORD_LENGTH 3
 #define STANDARD_RECORD_LENGTH 3

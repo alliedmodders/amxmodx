@@ -21,6 +21,19 @@
 // metamod plugin?
 #define USE_METAMOD
 
+// use memory manager/tester?
+// note that if you use this, you cannot construct/allocate 
+// anything before the module attached (OnAmxxAttach).
+// be careful of default constructors using new/malloc!
+// #define MEMORY_TEST
+
+// Unless you use STL or exceptions, keep this commented.
+// It allows you to compile without libstdc++.so as a dependency
+// #define NO_ALLOC_OVERRIDES
+
+// Uncomment this if you are using MSVC8 or greater and want to fix some of the compatibility issues yourself 
+// #define NO_MSVC8_AUTO_COMPAT
+
 // - AMXX Init functions
 // Also consider using FN_META_*
 // AMXX query
@@ -74,7 +87,7 @@
 // #define FN_ClientPutInServer			ClientPutInServer			/* pfnClientPutInServer()		(wd) Client is entering the game */
 // #define FN_ClientCommand				ClientCommand				/* pfnClientCommand()			(wd) Player has sent a command (typed or from a bind) */
 // #define FN_ClientUserInfoChanged		ClientUserInfoChanged		/* pfnClientUserInfoChanged()	(wd) Client has updated their setinfo structure */
-#define FN_ServerActivate			ServerActivate				/* pfnServerActivate()			(wd) Server is starting a new map */
+#define FN_ServerActivate				ServerActivate				/* pfnServerActivate()			(wd) Server is starting a new map */
 // #define FN_ServerDeactivate			ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
 // #define FN_PlayerPreThink			PlayerPreThink				/* pfnPlayerPreThink() */
 // #define FN_PlayerPostThink			PlayerPostThink				/* pfnPlayerPostThink() */
@@ -460,4 +473,3 @@
 #endif // USE_METAMOD
 
 #endif // __MODULECONFIG_H__
-

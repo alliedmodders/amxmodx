@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "csx", "csx.vcproj", "{1DC4A99A-F23F-4AAE-881C-79D157C91155}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinCSX", "..\WinCSX\msvc8\WinCSX.vcproj", "{39A1E5DD-81A1-441D-B99A-E50A01DB05D7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1DC4A99A-F23F-4AAE-881C-79D157C91155}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1DC4A99A-F23F-4AAE-881C-79D157C91155}.Debug|Win32.Build.0 = Debug|Win32
+		{1DC4A99A-F23F-4AAE-881C-79D157C91155}.Release|Win32.ActiveCfg = Release|Win32
+		{1DC4A99A-F23F-4AAE-881C-79D157C91155}.Release|Win32.Build.0 = Release|Win32
+		{39A1E5DD-81A1-441D-B99A-E50A01DB05D7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{39A1E5DD-81A1-441D-B99A-E50A01DB05D7}.Debug|Win32.Build.0 = Debug|Win32
+		{39A1E5DD-81A1-441D-B99A-E50A01DB05D7}.Release|Win32.ActiveCfg = Release|Win32
+		{39A1E5DD-81A1-441D-B99A-E50A01DB05D7}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

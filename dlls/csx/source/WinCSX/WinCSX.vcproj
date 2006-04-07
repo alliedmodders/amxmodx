@@ -4,6 +4,7 @@
 	Version="7.10"
 	Name="WinCSX"
 	ProjectGUID="{39A1E5DD-81A1-441D-B99A-E50A01DB05D7}"
+	RootNamespace="WinCSX"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -163,9 +164,6 @@
 			Name="Dependencies"
 			Filter="">
 			<File
-				RelativePath=".\amxxmodule.cpp">
-			</File>
-			<File
 				RelativePath=".\amxxmodule.h">
 			</File>
 			<File
@@ -178,9 +176,6 @@
 				RelativePath=".\moduleconfig.h">
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\ReadMe.txt">
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

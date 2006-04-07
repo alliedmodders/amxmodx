@@ -31,8 +31,10 @@
 
 // ***** AMXX stuff *****
 
-// module interface version is 1
-#define AMXX_INTERFACE_VERSION 1
+// module interface version was 1
+// 2 - added logtag to struct (amxx1.1-rc1)
+// 3 - added new tagAMX structure (amxx1.5)
+#define AMXX_INTERFACE_VERSION 3
 
 // amxx module info
 struct amxx_module_info_s
@@ -41,9 +43,8 @@ struct amxx_module_info_s
 	const char *author;
 	const char *version;
 	int reload;				// reload on mapchange when nonzero
+	const char *logtag;		// added in version 2
 };
-
-
 
 // return values from functions called by amxx
 #define AMXX_OK					0			/* no error */
@@ -53,38 +54,55 @@ struct amxx_module_info_s
 
 // *** Small stuff ***
 // The next section is copied from the amx.h file
-// Copyright (c) ITB CompuPhase, 1997-2004
+// Copyright (c) ITB CompuPhase, 1997-2005
 
-#if defined __LCC__ || defined __DMC__ || defined __linux__ || defined __GNUC__
+#if defined HAVE_STDINT_H
   #include <stdint.h>
-#elif !defined __STDC_VERSION__ || __STDC_VERSION__ < 199901L
-  /* The ISO C99 defines the int16_t and int_32t types. If the compiler got
-   * here, these types are probably undefined.
-   */
-  #if defined __FreeBSD__
-    #include <inttypes.h>
-  #else
-    typedef short int           int16_t;
-    typedef unsigned short int  uint16_t;
-    #if defined SN_TARGET_PS2
-      typedef int               int32_t;
-      typedef unsigned int      uint32_t;
+#else
+  #if defined __LCC__ || defined __DMC__ || defined LINUX
+    #if defined HAVE_INTTYPES_H
+      #include <inttypes.h>
     #else
-      typedef long int          int32_t;
-      typedef unsigned long int uint32_t;
+      #include <stdint.h>
     #endif
-    #if defined __WIN32__ || defined _WIN32 || defined WIN32
-      typedef __int64			int64_t;
-      typedef unsigned __int64	uint64_t;
-      #define HAVE_I64
-    #elif defined __GNUC__
-      typedef long long			int64_t;
-      typedef unsigned long long uint64_t;
-      #define HAVE_I64
+  #elif !defined __STDC_VERSION__ || __STDC_VERSION__ < 199901L
+    /* The ISO C99 defines the int16_t and int_32t types. If the compiler got
+     * here, these types are probably undefined.
+     */
+    #if defined __MACH__
+      #include <ppc/types.h>
+      typedef unsigned short int  uint16_t;
+      typedef unsigned long int   uint32_t;
+    #elif defined __FreeBSD__
+      #include <inttypes.h>
+    #else
+      typedef short int           int16_t;
+      typedef unsigned short int  uint16_t;
+      #if defined SN_TARGET_PS2
+        typedef int               int32_t;
+        typedef unsigned int      uint32_t;
+      #else
+        typedef long int          int32_t;
+        typedef unsigned long int uint32_t;
+      #endif
+      #if defined __WIN32__ || defined _WIN32 || defined WIN32
+        typedef __int64	          int64_t;
+        typedef unsigned __int64  uint64_t;
+        #define HAVE_I64
+      #elif defined __GNUC__
+        typedef long long         int64_t;
+        typedef unsigned long long uint64_t;
+        #define HAVE_I64
+      #endif
     #endif
   #endif
+  #define HAVE_STDINT_H
 #endif
-
+#if defined _LP64 || defined WIN64 || defined _WIN64
+  #if !defined __64BIT__
+    #define __64BIT__
+  #endif
+#endif
 
 /* calling convention for native functions */
 #if !defined AMX_NATIVE_CALL
@@ -104,24 +122,26 @@ struct amxx_module_info_s
   #define AMXEXPORT
 #endif
 
-
-
-#if !defined SMALL_CELL_SIZE
-  #define SMALL_CELL_SIZE 32    /* by default, use 32-bit cells */
+#if !defined PAWN_CELL_SIZE
+  #define PAWN_CELL_SIZE 32     /* by default, use 32-bit cells */
 #endif
-#if SMALL_CELL_SIZE==32
+#if PAWN_CELL_SIZE==16
+  typedef uint16_t  ucell;
+  typedef int16_t   cell;
+#elif PAWN_CELL_SIZE==32
   typedef uint32_t  ucell;
   typedef int32_t   cell;
-  typedef float		REAL;
-#elif SMALL_CELL_SIZE==64
+#define REAL	float
+#elif PAWN_CELL_SIZE==64
   typedef uint64_t  ucell;
   typedef int64_t   cell;
-  typedef double	REAL;
+#define REAL	double
 #else
-  #error Unsupported cell size (SMALL_CELL_SIZE)
+  #error Unsupported cell size (PAWN_CELL_SIZE)
 #endif
 
 #define UNPACKEDMAX   ((1 << (sizeof(cell)-1)*8) - 1)
+#define UNLIMITED     (~1u >> 1)
 
 struct tagAMX;
 typedef cell (AMX_NATIVE_CALL *AMX_NATIVE)(struct tagAMX *amx, cell *params);
@@ -133,16 +153,146 @@ typedef int (AMXAPI *AMX_DEBUG)(struct tagAMX *amx);
 #endif
 
 #if defined _MSC_VER
-  #pragma warning(disable:4103)  /* disable warning message 4103 that complains
-                                  * about pragma pack in a header file */
-  #pragma warning(disable:4100)  /* "'%$S' : unreferenced formal parameter" */
+	#pragma warning(disable:4103)  /* disable warning message 4103 that complains
+	                                * about pragma pack in a header file */
+	#pragma warning(disable:4100)  /* "'%$S' : unreferenced formal parameter" */
+
+	#if _MSC_VER >= 1400
+		#if !defined NO_MSVC8_AUTO_COMPAT
+
+			/* Disable deprecation warnings concerning unsafe CRT functions */
+			#if !defined _CRT_SECURE_NO_DEPRECATE
+				#define _CRT_SECURE_NO_DEPRECATE
+			#endif
+
+			/* Replace the POSIX function with ISO C++ conformant ones as they are now deprecated */
+			#define access _access
+			#define cabs _cabs
+			#define cgets _cgets
+			#define chdir _chdir
+			#define chmod _chmod
+			#define chsize _chsize
+			#define close _close
+			#define cprintf _cprintf
+			#define cputs _cputts
+			#define creat _creat
+			#define cscanf _cscanf
+			#define cwait _cwait
+			#define dup _dup
+			#define dup2 _dup2
+			#define ecvt _ecvt
+			#define eof _eof
+			#define execl _execl
+			#define execle _execle
+			#define execlp _execlp
+			#define execlpe _execlpe
+			#define execv _execv
+			#define execve _execv
+			#define execvp _execvp
+			#define execvpe _execvpe
+			#define fcloseall _fcloseall
+			#define fcvt _fcvt
+			#define fdopen _fdopen
+			#define fgetchar _fgetchar
+			#define filelength _filelength
+			#define fileno _fileno
+			#define flushall _flushall
+			#define fputchar _fputchar
+			#define gcvt _gcvt
+			#define getch _getch
+			#define getche _getche
+			#define getcwd _getcwd
+			#define getpid _getpid
+			#define getw _getw
+			#define hypot _hypot
+			#define inp _inp
+			#define inpw _inpw
+			#define isascii __isascii
+			#define isatty _isatty
+			#define iscsym __iscsym
+			#define iscsymf __iscsymf
+			#define itoa _itoa
+			#define j0 _j0
+			#define j1 _j1
+			#define jn _jn
+			#define kbhit _kbhit
+			#define lfind _lfind
+			#define locking _locking
+			#define lsearch _lsearch
+			#define lseek _lseek
+			#define ltoa _ltoa
+			#define memccpy _memccpy
+			#define memicmp _memicmp
+			#define mkdir _mkdir
+			#define mktemp _mktemp
+			#define open _open
+			#define outp _outp
+			#define outpw _outpw
+			#define putch _putch
+			#define putenv _putenv
+			#define putw _putw
+			#define read _read
+			#define rmdir _rmdir
+			#define rmtmp _rmtmp
+			#define setmode _setmode
+			#define sopen _sopen
+			#define spawnl _spawnl
+			#define spawnle _spawnle
+			#define spawnlp _spawnlp
+			#define spawnlpe _spawnlpe
+			#define spawnv _spawnv
+			#define spawnve _spawnve
+			#define spawnvp _spawnvp
+			#define spawnvpe _spawnvpe
+			#define strcmpi _strcmpi
+			#define strdup _strdup
+			#define stricmp _stricmp
+			#define strlwr _strlwr
+			#define strnicmp _strnicmp
+			#define strnset _strnset
+			#define strrev _strrev
+			#define strset _strset
+			#define strupr _strupr
+			#define swab _swab
+			#define tell _tell
+			#define tempnam _tempnam
+			#define toascii __toascii
+			#define tzset _tzset
+			#define ultoa _ultoa
+			#define umask _umask
+			#define ungetch _ungetch
+			#define unlink _unlink
+			#define wcsdup _wcsdup
+			#define wcsicmp _wcsicmp
+			#define wcsicoll _wcsicoll
+			#define wcslwr _wcslwr
+			#define wcsnicmp _wcsnicmp
+			#define wcsnset _wcsnset
+			#define wcsrev _wcsrev
+			#define wcsset _wcsset
+			#define wcsupr _wcsupr
+			#define write _write
+			#define y0 _y0
+			#define y1 _y1
+			#define yn _yn
+
+			/* Disable deprecation warnings because MSVC8 seemingly thinks the ISO C++ conformant 
+			 * functions above are deprecated. */
+			#pragma warning (disable:4996)
+				
+		#endif
+	#else
+		#define vsnprintf _vsnprintf
+	#endif
 #endif
 
 
-#if defined SN_TARGET_PS2 || defined __GNUC__
+/* Some compilers do not support the #pragma align, which should be fine. Some
+ * compilers give a warning on unknown #pragmas, which is not so fine...
+ */
+#if (defined SN_TARGET_PS2 || defined __GNUC__) && !defined AMX_NO_ALIGN
   #define AMX_NO_ALIGN
 #endif
-
 
 #if defined __GNUC__
   #define PACKED        __attribute__((packed))
@@ -150,10 +300,11 @@ typedef int (AMXAPI *AMX_DEBUG)(struct tagAMX *amx);
   #define PACKED
 #endif
 
-
 #if !defined AMX_NO_ALIGN
-  #if defined __linux__
+  #if defined LINUX || defined __FreeBSD__
     #pragma pack(1)         /* structures must be packed (byte-aligned) */
+  #elif defined MACOS && defined __MWERKS__
+	#pragma options align=mac68k
   #else
     #pragma pack(push)
     #pragma pack(1)         /* structures must be packed (byte-aligned) */
@@ -174,7 +325,7 @@ typedef struct {
  * fields are valid at all times; many fields are cached in local variables.
  */
 typedef struct tagAMX {
-  unsigned char _FAR *base PACKED; /* points to the AMX header ("amxhdr") plus the code, optionally also the data */
+  unsigned char _FAR *base PACKED; /* points to the AMX header plus the code, optionally also the data */
   unsigned char _FAR *data PACKED; /* points to separate data+stack+heap, may be NULL */
   AMX_CALLBACK callback PACKED;
   AMX_DEBUG debug       PACKED; /* debug callback */
@@ -186,28 +337,25 @@ typedef struct tagAMX {
   cell stk              PACKED; /* stack pointer: relative to base + amxhdr->dat */
   cell stp              PACKED; /* top of the stack: relative to base + amxhdr->dat */
   int flags             PACKED; /* current status, see amx_Flags() */
-  /* for assertions and debug hook */
-  cell curline          PACKED;
-  cell curfile          PACKED;
-  int dbgcode           PACKED;
-  cell dbgaddr          PACKED;
-  cell dbgparam         PACKED;
-  char _FAR *dbgname    PACKED;
   /* user data */
   long usertags[AMX_USERNUM] PACKED;
+  //okay userdata[3] in AMX Mod X is for the CPlugin * pointer
+  //we're also gonna set userdata[2] to a special debug structure
   void _FAR *userdata[AMX_USERNUM] PACKED;
   /* native functions can raise an error */
   int error             PACKED;
+  /* passing parameters requires a "count" field */
+  int paramcount;
   /* the sleep opcode needs to store the full AMX status */
   cell pri              PACKED;
   cell alt              PACKED;
   cell reset_stk        PACKED;
   cell reset_hea        PACKED;
   cell sysreq_d         PACKED; /* relocated address/value for the SYSREQ.D opcode */
-    /* support variables for the JIT */
-    int reloc_size      PACKED; /* required temporary buffer for relocations */
-    long code_size      PACKED; /* estimated memory footprint of the native code */
-} AMX;
+  /* support variables for the JIT */
+  int reloc_size      PACKED; /* required temporary buffer for relocations */
+  long code_size      PACKED; /* estimated memory footprint of the native code */
+} PACKED AMX;
 
 enum {
   AMX_ERR_NONE,
@@ -224,6 +372,7 @@ enum {
   AMX_ERR_NATIVE,       /* native function failed */
   AMX_ERR_DIVIDE,       /* divide by zero */
   AMX_ERR_SLEEP,        /* go into sleepmode - code can be restarted */
+  AMX_ERR_INVSTATE,     /* invalid state for this access */
 
   AMX_ERR_MEMORY = 16,  /* out of memory */
   AMX_ERR_FORMAT,       /* invalid file format */
@@ -1883,6 +2032,9 @@ void FN_AMXX_DETACH(void);
 void FN_AMXX_PLUGINSLOADED(void);
 #endif // FN_AMXX_PLUGINSLOADED
 
+// *** Types ***
+typedef void* (*PFN_REQ_FNPTR)(const char * /*name*/);
+
 // ***** Module funcs stuff *****
 enum ForwardExecType
 {
@@ -1903,9 +2055,34 @@ enum ForwardParam
 	FP_ARRAY,						// array; use the return value of prepareArray.
 };
 
+enum PlayerProp
+{
+	Player_Name,		//String
+	Player_Ip,			//String
+	Player_Team,		//String
+	Player_Ingame,		//bool
+	Player_Authorized,	//bool
+	Player_Vgui,		//bool
+	Player_Time,		//float
+	Player_Playtime,	//float
+	Player_MenuExpire,	//float
+	Player_Weapons,		//struct{int,int}[32]
+	Player_CurrentWeapon,	//int
+	Player_TeamID,			//int
+	Player_Deaths,			//int
+	Player_Aiming,			//int
+	Player_Menu,			//int
+	Player_Keys,			//int
+	Player_Flags,			//int[32]
+	Player_Newmenu,			//int
+	Player_NewmenuPage,		//int
+};
+
+typedef void (*AUTHORIZEFUNC)(int player, const char *authstring);
 
 typedef int				(*PFN_ADD_NATIVES)				(const AMX_NATIVE_INFO * /*list*/);
 typedef char *			(*PFN_BUILD_PATHNAME)			(const char * /*format*/, ...);
+typedef char *			(*PFN_BUILD_PATHNAME_R)			(char * /*buffer*/, size_t /* maxlen */, const char * /* format */, ...);
 typedef cell *			(*PFN_GET_AMXADDR)				(AMX * /*amx*/, cell /*offset*/);
 typedef void			(*PFN_PRINT_SRVCONSOLE)			(char * /*format*/, ...);
 typedef const char *	(*PFN_GET_MODNAME)				(void);
@@ -1953,14 +2130,17 @@ typedef edict_t *		(*PFN_GET_PLAYER_EDICT)			(int /*id*/);
 #else
 typedef void *			(*PFN_GET_PLAYER_EDICT)			(int /*id*/);
 #endif
+typedef void *			(*PFN_PLAYER_PROP_ADDR)			(int /*id*/, int /*prop*/);
 
+#ifdef MEMORY_TEST
 typedef void *			(*PFN_ALLOCATOR)				(const char* /*filename*/, const unsigned int /*line*/, const char* /*func*/,
 														 const unsigned int /*type*/, const size_t /*size*/);
 typedef void *			(*PFN_REALLOCATOR)				(const char* /*filename*/, const unsigned int /*line*/, const char* /*func*/,
 														 const unsigned int /*type*/, const size_t /*size*/, void* /*addr*/ );
 typedef void			(*PFN_DEALLOCATOR)				(const char* /*filename*/, const unsigned int /*line*/, const char* /*func*/,
 														 const unsigned int /*type*/, const void* /*addr*/ );
-typedef int				(*PFN_AMX_EXEC)					(AMX* /*amx*/, cell* /*return val*/, int /*index*/, int /*numparams*/, ... /*params*/);
+#endif
+typedef int				(*PFN_AMX_EXEC)					(AMX* /*amx*/, cell* /*return val*/, int /*index*/);
 typedef int				(*PFN_AMX_EXECV)				(AMX* /*amx*/, cell* /*return val*/, int /*index*/, int /*numparams*/, cell[] /*params*/);
 typedef int				(*PFN_AMX_ALLOT)				(AMX* /*amx*/, int /*length*/, cell* /*amx_addr*/, cell** /*phys_addr*/);
 typedef int				(*PFN_AMX_FINDPUBLIC)			(AMX* /*amx*/, char* /*func name*/, int* /*index*/);
@@ -1974,9 +2154,15 @@ typedef int				(*PFN_REGISTER_SPFORWARD_BYNAME)	(AMX * /*amx*/, const char * /*f
 typedef void			(*PFN_UNREGISTER_SPFORWARD)		(int /*id*/);
 typedef	void			(*PFN_MERGEDEFINITION_FILE)		(const char * /*filename*/);
 typedef const char *	(*PFN_FORMAT)					(const char * /*fmt*/, ... /*params*/);
+typedef void			(*PFN_REGISTERFUNCTION)			(void * /*pfn*/, const char * /*desc*/);
+typedef	int				(*PFN_AMX_PUSH)					(AMX * /*amx*/, cell /*value*/);
+typedef	int				(*PFN_SET_TEAM_INFO)			(int /*player */, int /*teamid */, const char * /*name */);
+typedef void			(*PFN_REG_AUTH_FUNC)			(AUTHORIZEFUNC);
+typedef void			(*PFN_UNREG_AUTH_FUNC)			(AUTHORIZEFUNC);
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
 extern PFN_BUILD_PATHNAME			g_fn_BuildPathname;
+extern PFN_BUILD_PATHNAME_R			g_fn_BuildPathnameR;
 extern PFN_GET_AMXADDR				g_fn_GetAmxAddr;
 extern PFN_PRINT_SRVCONSOLE			g_fn_PrintSrvConsole;
 extern PFN_GET_MODNAME				g_fn_GetModname;
@@ -2018,7 +2204,6 @@ extern PFN_IS_PLAYER_HLTV			g_fn_IsPlayerHLTV;
 extern PFN_GET_PLAYER_ARMOR			g_fn_GetPlayerArmor;
 extern PFN_GET_PLAYER_HEALTH		g_fn_GetPlayerHealth;
 extern PFN_AMX_EXEC					g_fn_AmxExec;
-extern PFN_AMX_EXECV				g_fn_AmxExecv;
 extern PFN_AMX_ALLOT				g_fn_AmxAllot;
 extern PFN_AMX_FINDPUBLIC			g_fn_AmxFindPublic;
 extern PFN_LOAD_AMXSCRIPT			g_fn_LoadAmxScript;
@@ -2034,12 +2219,20 @@ extern PFN_GETPLAYERFLAGS		g_fn_GetPlayerFlags;
 extern PFN_GET_PLAYER_EDICT			g_fn_GetPlayerEdict;
 extern PFN_FORMAT					g_fn_Format;
 extern PFN_GET_PLAYER_TEAM			g_fn_GetPlayerTeam;
+extern PFN_REGISTERFUNCTION			g_fn_RegisterFunction;
+extern PFN_REQ_FNPTR				g_fn_RequestFunction;
+extern PFN_AMX_PUSH					g_fn_AmxPush;
+extern PFN_SET_TEAM_INFO			g_fn_SetTeamInfo;
+extern PFN_PLAYER_PROP_ADDR			g_fn_PlayerPropAddr;
+extern PFN_REG_AUTH_FUNC			g_fn_RegAuthFunc;
+extern PFN_UNREG_AUTH_FUNC			g_fn_UnregAuthFunc;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
 // They understand #if 0 so we use #ifdef MAY_NEVER_BE_DEFINED
 int				MF_AddNatives				(const AMX_NATIVE_INFO *list) { }
 char *			MF_BuildPathname			(const char * format, ...) { }
+char *			MF_BuildPathnameR			(char *buffer, size_t maxlen, const char *fmt, ...) { }
 cell *			MF_GetAmxAddr				(AMX * amx, cell offset) { }
 void			MF_PrintSrvConsole			(char * format, ...) { }
 const char *	MF_GetModname				(void) { }
@@ -2089,10 +2282,19 @@ void			MF_UnregisterSPForward		(int id) { }
 int				MF_GetPlayerFlags			(int id) { }
 edict_t*		MF_GetPlayerEdict			(int id) { }
 const char *	MF_Format					(const char *fmt, ...) { }
+void			MF_RegisterFunction			(void *pfn, const char *description) { }
+void *			MF_RequestFunction			(const char *description) { }
+int				MF_AmxPush					(AMX *amx, cell *params) { }
+int				MF_AmxExec					(AMX *amx, cell *retval, int idx) { }
+int				MF_SetPlayerTeamInfo		(int id, int teamid, const char *teamname) { }
+void *			MF_PlayerPropAddr			(int id, int prop) { }
+void			MF_RegAuthFunc				(AUTHORIZEFUNC fn) { }
+void			MF_UnregAuthFunc			(AUTHORIZEFUNC fn) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
 #define MF_BuildPathname g_fn_BuildPathname
+#define MF_BuildPathnameR g_fn_BuildPathnameR
 #define MF_FormatAmxString g_fn_FormatAmxString
 #define MF_GetAmxAddr g_fn_GetAmxAddr
 #define MF_PrintSrvConsole g_fn_PrintSrvConsole
@@ -2150,7 +2352,15 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...);
 #define MF_GetPlayerFlags g_fn_GetPlayerFlags
 #define MF_GetPlayerEdict g_fn_GetPlayerEdict
 #define MF_Format g_fn_Format
+#define MF_RegisterFunction g_fn_RegisterFunction
+#define MF_RequestFunction g_fn_RequestFunction
+#define MF_AmxPush g_fn_AmxPush
+#define	MF_SetPlayerTeamInfo g_fn_SetTeamInfo
+#define MF_PlayerPropAddr g_fn_PlayerPropAddr
+#define MF_RegAuthFunc g_fn_RegAuthFunc
+#define MF_UnregAuthFunc g_fn_UnregAuthFunc
 
+#ifdef MEMORY_TEST
 /*** Memory ***/
 void	*operator new(size_t reportedSize);
 void	*operator new[](size_t reportedSize);
@@ -2193,5 +2403,7 @@ void	Mem_Deallocator(const char *sourceFile, const unsigned int sourceLine, cons
 #define	calloc(sz)	Mem_Allocator  (__FILE__,__LINE__,__FUNCTION__,m_alloc_calloc,sz)
 #define	realloc(ptr,sz)	Mem_Reallocator(__FILE__,__LINE__,__FUNCTION__,m_alloc_realloc,sz,ptr)
 #define	free(ptr)	Mem_Deallocator(__FILE__,__LINE__,__FUNCTION__,m_alloc_free,ptr)
+
+#endif //MEMORY_TEST
 
 #endif // #ifndef __AMXXMODULE_H__

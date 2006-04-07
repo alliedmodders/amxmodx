@@ -3,7 +3,6 @@
 #include "amxxmodule.h"
 #include "CVector.h"
 #include "CRegEx.h"
-#include "module.h"
 
 CVector<RegEx *> PEL;
 

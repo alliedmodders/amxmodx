@@ -43,8 +43,8 @@ POSSIBILITY OF SUCH DAMAGE.
 make changes to pcre.in. */
 
 #define PCRE_MAJOR          6
-#define PCRE_MINOR          1
-#define PCRE_DATE           21-Jun-2005
+#define PCRE_MINOR          4
+#define PCRE_DATE           05-Sep-2005
 
 /* Win32 uses DLL by default; it needs special stuff for exported functions. */
 

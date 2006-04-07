@@ -1,4 +1,5 @@
 // Configuration
+
 #ifndef __MODULECONFIG_H__
 #define __MODULECONFIG_H__
 
@@ -20,6 +21,19 @@
 // metamod plugin?
 #define USE_METAMOD
 
+// use memory manager/tester?
+// note that if you use this, you cannot construct/allocate 
+// anything before the module attached (OnAmxxAttach).
+// be careful of default constructors using new/malloc!
+// #define MEMORY_TEST
+
+// Unless you use STL or exceptions, keep this commented.
+// It allows you to compile without libstdc++.so as a dependency
+// #define NO_ALLOC_OVERRIDES
+
+// Uncomment this if you are using MSVC8 or greater and want to fix some of the compatibility issues yourself 
+// #define NO_MSVC8_AUTO_COMPAT
+
 // - AMXX Init functions
 // Also consider using FN_META_*
 // AMXX query
@@ -27,8 +41,8 @@
 // AMXX attach
 //   Do native functions init here (MF_AddNatives)
 #define FN_AMXX_ATTACH OnAmxxAttach
-// AMXX dettach
-//#define FN_AMXX_DETTACH OnAmxxDettach
+// AMXX detach
+//#define FN_AMXX_DETACH OnAmxxDetach
 // All plugins loaded
 //   Do forward functions init here (MF_RegisterForward)
 #define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
@@ -47,13 +61,13 @@
 //#define FN_META_QUERY OnMetaQuery
 // Meta attach
 //#define FN_META_ATTACH OnMetaAttach
-// Meta dettach
-//#define FN_META_DETTACH OnMetaDettach
+// Meta detach
+//#define FN_META_DETACH OnMetaDetach
 
 // (wd) are Will Day's notes
 // - GetEntityAPI2 functions
 // #define FN_GameDLLInit				GameDLLInit					/* pfnGameInit() */
-#define FN_DispatchSpawn			Spawn				/* pfnSpawn() */
+#define FN_DispatchSpawn				DispatchSpawn				/* pfnSpawn() */
 // #define FN_DispatchThink				DispatchThink				/* pfnThink() */
 // #define FN_DispatchUse				DispatchUse					/* pfnUse() */
 // #define FN_DispatchTouch				DispatchTouch				/* pfnTouch() */
@@ -68,14 +82,14 @@
 // #define FN_RestoreGlobalState		RestoreGlobalState			/* pfnRestoreGlobalState() */
 // #define FN_ResetGlobalState			ResetGlobalState			/* pfnResetGlobalState() */
 #define FN_ClientConnect				ClientConnect				/* pfnClientConnect()			(wd) Client has connected */
-#define FN_ClientDisconnect			ClientDisconnect			/* pfnClientDisconnect()		(wd) Player has left the game */
+#define FN_ClientDisconnect				ClientDisconnect			/* pfnClientDisconnect()		(wd) Player has left the game */
 // #define FN_ClientKill				ClientKill					/* pfnClientKill()				(wd) Player has typed "kill" */
 // #define FN_ClientPutInServer			ClientPutInServer			/* pfnClientPutInServer()		(wd) Client is entering the game */
 // #define FN_ClientCommand				ClientCommand				/* pfnClientCommand()			(wd) Player has sent a command (typed or from a bind) */
 // #define FN_ClientUserInfoChanged		ClientUserInfoChanged		/* pfnClientUserInfoChanged()	(wd) Client has updated their setinfo structure */
-#define FN_ServerActivate			ServerActivate				/* pfnServerActivate()			(wd) Server is starting a new map */
-#define FN_ServerDeactivate			ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
-#define FN_PlayerPreThink			PlayerPreThink				/* pfnPlayerPreThink() */
+#define FN_ServerActivate				ServerActivate				/* pfnServerActivate()			(wd) Server is starting a new map */
+#define FN_ServerDeactivate				ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
+#define FN_PlayerPreThink				PlayerPreThink				/* pfnPlayerPreThink() */
 // #define FN_PlayerPostThink			PlayerPostThink				/* pfnPlayerPostThink() */
 // #define FN_StartFrame				StartFrame					/* pfnStartFrame() */
 // #define FN_ParmsNewLevel				ParmsNewLevel				/* pfnParmsNewLevel() */
@@ -90,7 +104,7 @@
 // #define FN_PM_Init					PM_Init						/* pfnPM_Init()				Server version of player movement initialization; (wd) SDK2 */
 // #define FN_PM_FindTextureType		PM_FindTextureType			/* pfnPM_FindTextureType()		(wd) SDK2 */
 // #define FN_SetupVisibility			SetupVisibility				/* pfnSetupVisibility()		Set up PVS and PAS for networking for this client; (wd) SDK2 */
-#define FN_UpdateClientData			UpdateClientData			/* pfnUpdateClientData()		Set up data sent only to specific client; (wd) SDK2 */
+#define FN_UpdateClientData				UpdateClientData			/* pfnUpdateClientData()		Set up data sent only to specific client; (wd) SDK2 */
 // #define FN_AddToFullPack				AddToFullPack				/* pfnAddToFullPack()			(wd) SDK2 */
 // #define FN_CreateBaseline			CreateBaseline				/* pfnCreateBaseline()			Tweak entity baseline for network encoding allows setup of player baselines too.; (wd) SDK2 */
 // #define FN_RegisterEncoders			RegisterEncoders			/* pfnRegisterEncoders()		Callbacks for network encoding; (wd) SDK2 */
@@ -105,7 +119,7 @@
 
 // - GetEntityAPI2_Post functions
 // #define FN_GameDLLInit_Post					GameDLLInit_Post
-// #define FN_DispatchSpawn_Post				SpawnPost
+// #define FN_DispatchSpawn_Post				DispatchSpawn_Post
 // #define FN_DispatchThink_Post				DispatchThink_Post
 // #define FN_DispatchUse_Post					DispatchUse_Post
 // #define FN_DispatchTouch_Post				DispatchTouch_Post
@@ -127,8 +141,8 @@
 // #define FN_ClientUserInfoChanged_Post		ClientUserInfoChanged_Post
 // #define FN_ServerActivate_Post				ServerActivate_Post
 // #define FN_ServerDeactivate_Post				ServerDeactivate_Post
-#define FN_PlayerPreThink_Post				PlayerPreThink_Post
-#define FN_PlayerPostThink_Post				PlayerPostThink_Post
+#define FN_PlayerPreThink_Post					PlayerPreThink_Post
+#define FN_PlayerPostThink_Post					PlayerPostThink_Post
 // #define FN_StartFrame_Post					StartFrame_Post
 // #define FN_ParmsNewLevel_Post				ParmsNewLevel_Post
 // #define FN_ParmsChangeLevel_Post				ParmsChangeLevel_Post
@@ -204,7 +218,7 @@
 // #define FN_PointContents						PointContents
 // #define FN_MessageBegin						MessageBegin
 // #define FN_MessageEnd						MessageEnd
-// #define FN_WriteByte						WriteByte
+// #define FN_WriteByte							WriteByte
 // #define FN_WriteChar							WriteChar
 // #define FN_WriteShort						WriteShort
 // #define FN_WriteLong							WriteLong
@@ -457,5 +471,5 @@
 
 
 #endif // USE_METAMOD
-#endif // __MODULECONFIG_H__
 
+#endif // __MODULECONFIG_H__

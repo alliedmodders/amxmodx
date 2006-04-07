@@ -62,7 +62,7 @@ void OnPluginsLoaded()
 
 
 
-int Spawn(edict_t *pEntity) 
+int DispatchSpawn(edict_t *pEntity) 
 {
 	// Everything starting up:
 	//   - Reset CPlayer classes

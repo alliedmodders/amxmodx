@@ -21,14 +21,27 @@
 // metamod plugin?
 // #define USE_METAMOD
 
+// use memory manager/tester?
+// note that if you use this, you cannot construct/allocate 
+// anything before the module attached (OnAmxxAttach).
+// be careful of default constructors using new/malloc!
+// #define MEMORY_TEST
+
+// Unless you use STL or exceptions, keep this commented.
+// It allows you to compile without libstdc++.so as a dependency
+// #define NO_ALLOC_OVERRIDES
+
+// Uncomment this if you are using MSVC8 or greater and want to fix some of the compatibility issues yourself 
+// #define NO_MSVC8_AUTO_COMPAT
+
 // - AMXX Init functions
 // Also consider using FN_META_*
 // AMXX query
 //#define FN_AMXX_QUERY OnAmxxQuery
 // AMXX attach
 //   Do native functions init here (MF_AddNatives)
-// #define FN_AMXX_ATTACH OnAmxxAttach
-// AMXX dettach
+//#define FN_AMXX_ATTACH OnAmxxAttach
+// AMXX detach
 //#define FN_AMXX_DETACH OnAmxxDetach
 // All plugins loaded
 //   Do forward functions init here (MF_RegisterForward)
@@ -48,7 +61,7 @@
 //#define FN_META_QUERY OnMetaQuery
 // Meta attach
 //#define FN_META_ATTACH OnMetaAttach
-// Meta dettach
+// Meta detach
 //#define FN_META_DETACH OnMetaDetach
 
 // (wd) are Will Day's notes
@@ -460,4 +473,3 @@
 #endif // USE_METAMOD
 
 #endif // __MODULECONFIG_H__
-

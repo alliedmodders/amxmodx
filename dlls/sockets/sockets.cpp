@@ -194,7 +194,7 @@ static cell AMX_NATIVE_CALL socket_send2(AMX *amx, cell *params)  /* 3 param */
 	// We get the string from amx
 	int len = params[3];
 	int socket = params[1];
-	if (len > g_buflen)
+	if ((size_t)len > g_buflen)
 	{
 		delete [] g_buffer;
 		g_buffer = new char[len+1];
@@ -205,7 +205,7 @@ static cell AMX_NATIVE_CALL socket_send2(AMX *amx, cell *params)  /* 3 param */
 	char *pBuffer = g_buffer;
 
 	while (len--)
-		*pBuffer++ = *pData++;
+		*pBuffer++ = (char)*pData++;
 
 	// And send it to the socket
     return send(socket, g_buffer, params[3], 0);

@@ -1,3 +1,5 @@
+
+
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -6,6 +8,7 @@
 #define WINDOWS_LEAN_AND_MEAN
 #include <winsock.h>
 #endif
+#include "amxxmodule.h"
 #include "CVector.h"
 #include "CString.h"
 #include "sqlite3.h"
@@ -13,8 +16,6 @@
 #define MEM_ALLOC_FAILED -20
 #define CONNECT_FAILED   -10
 #define QUERY_FAILED     -5
-
-#include "amxxmodule.h"
 
 class SQL
 {

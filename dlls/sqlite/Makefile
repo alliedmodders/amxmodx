@@ -11,7 +11,7 @@ DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
 CC = cc
 NAME = sqlite_amxx
-SQL = sqlite-source-3_3_4
+SQL = sqlite-source
 
 CPP_OBJECTS = sqlite.cpp sqlite_amx.cpp amxxmodule.cpp
 C_OBJECTS = $(SQL)/attach.c $(SQL)/auth.c $(SQL)/btree.c $(SQL)/build.c \

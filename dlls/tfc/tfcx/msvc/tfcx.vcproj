@@ -88,7 +88,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\amxmodx,..\..\metamod,..\..\sdk\common,..\..\sdk\engine,..\..\sdk\dlls"
-				PreprocessorDefinitions="tfcx_EXPORTS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;tfcx_EXPORTS"
 				StringPooling="TRUE"
 				RuntimeLibrary="4"
 				StructMemberAlignment="3"

@@ -100,7 +100,7 @@ static cell AMX_NATIVE_CALL get_user_score(AMX *amx, cell *params){
 	CHECK_PLAYER(index);
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->ingame)
-		return pPlayer->savedScore; 
+		return (cell)pPlayer->savedScore; 
 	return -1;
 }
 

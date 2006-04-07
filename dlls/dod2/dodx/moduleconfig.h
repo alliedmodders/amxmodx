@@ -21,6 +21,19 @@
 // metamod plugin?
 #define USE_METAMOD
 
+// use memory manager/tester?
+// note that if you use this, you cannot construct/allocate 
+// anything before the module attached (OnAmxxAttach).
+// be careful of default constructors using new/malloc!
+// #define MEMORY_TEST
+
+// Unless you use STL or exceptions, keep this commented.
+// It allows you to compile without libstdc++.so as a dependency
+// #define NO_ALLOC_OVERRIDES
+
+// Uncomment this if you are using MSVC8 or greater and want to fix some of the compatibility issues yourself 
+// #define NO_MSVC8_AUTO_COMPAT
+
 // - AMXX Init functions
 // Also consider using FN_META_*
 // AMXX query
@@ -28,12 +41,11 @@
 // AMXX attach
 //   Do native functions init here (MF_AddNatives)
 #define FN_AMXX_ATTACH OnAmxxAttach
-// AMXX dettach
+// AMXX detach
 #define FN_AMXX_DETACH OnAmxxDetach
 // All plugins loaded
 //   Do forward functions init here (MF_RegisterForward)
 #define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
-
 
 /**** METAMOD ****/
 // If your module doesn't use metamod, you may close the file now :)
@@ -49,7 +61,7 @@
 //#define FN_META_QUERY OnMetaQuery
 // Meta attach
 #define FN_META_ATTACH OnMetaAttach
-// Meta dettach
+// Meta detach
 //#define FN_META_DETACH OnMetaDetach
 
 // (wd) are Will Day's notes
@@ -70,13 +82,13 @@
 // #define FN_RestoreGlobalState		RestoreGlobalState			/* pfnRestoreGlobalState() */
 // #define FN_ResetGlobalState			ResetGlobalState			/* pfnResetGlobalState() */
 // #define FN_ClientConnect				ClientConnect				/* pfnClientConnect()			(wd) Client has connected */
-#define FN_ClientDisconnect			ClientDisconnect			/* pfnClientDisconnect()		(wd) Player has left the game */
+#define FN_ClientDisconnect				ClientDisconnect			/* pfnClientDisconnect()		(wd) Player has left the game */
 // #define FN_ClientKill				ClientKill					/* pfnClientKill()				(wd) Player has typed "kill" */
 // #define FN_ClientPutInServer			ClientPutInServer			/* pfnClientPutInServer()		(wd) Client is entering the game */
 // #define FN_ClientCommand				ClientCommand				/* pfnClientCommand()			(wd) Player has sent a command (typed or from a bind) */
 // #define FN_ClientUserInfoChanged		ClientUserInfoChanged		/* pfnClientUserInfoChanged()	(wd) Client has updated their setinfo structure */
 // #define FN_ServerActivate			ServerActivate				/* pfnServerActivate()			(wd) Server is starting a new map */
-#define FN_ServerDeactivate			ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
+#define FN_ServerDeactivate				ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
 // #define FN_PlayerPreThink			PlayerPreThink				/* pfnPlayerPreThink() */
 // #define FN_PlayerPostThink			PlayerPostThink				/* pfnPlayerPostThink() */
 // #define FN_StartFrame				StartFrame					/* pfnStartFrame() */
@@ -114,22 +126,22 @@
 // #define FN_DispatchBlocked_Post				DispatchBlocked_Post
 #define FN_DispatchKeyValue_Post				DispatchKeyValue_Post
 // #define FN_DispatchSave_Post					DispatchSave_Post
-// #define FN_DispatchRestore_Post					DispatchRestore_Post
+// #define FN_DispatchRestore_Post				DispatchRestore_Post
 // #define FN_DispatchObjectCollsionBox_Post	DispatchObjectCollsionBox_Post
 // #define FN_SaveWriteFields_Post				SaveWriteFields_Post
 // #define FN_SaveReadFields_Post				SaveReadFields_Post
 // #define FN_SaveGlobalState_Post				SaveGlobalState_Post
 // #define FN_RestoreGlobalState_Post			RestoreGlobalState_Post
 // #define FN_ResetGlobalState_Post				ResetGlobalState_Post
-#define FN_ClientConnect_Post				ClientConnect_Post
+#define FN_ClientConnect_Post					ClientConnect_Post
 // #define FN_ClientDisconnect_Post				ClientDisconnect_Post
 // #define FN_ClientKill_Post					ClientKill_Post
-#define FN_ClientPutInServer_Post			ClientPutInServer_Post
+#define FN_ClientPutInServer_Post				ClientPutInServer_Post
 // #define FN_ClientCommand_Post				ClientCommand_Post
-#define FN_ClientUserInfoChanged_Post		ClientUserInfoChanged_Post
-#define FN_ServerActivate_Post				ServerActivate_Post
+#define FN_ClientUserInfoChanged_Post			ClientUserInfoChanged_Post
+#define FN_ServerActivate_Post					ServerActivate_Post
 // #define FN_ServerDeactivate_Post				ServerDeactivate_Post
-#define FN_PlayerPreThink_Post				PlayerPreThink_Post
+#define FN_PlayerPreThink_Post					PlayerPreThink_Post
 // #define FN_PlayerPostThink_Post				PlayerPostThink_Post
 // #define FN_StartFrame_Post					StartFrame_Post
 // #define FN_ParmsNewLevel_Post				ParmsNewLevel_Post
@@ -335,7 +347,7 @@
 // #define FN_SetOrigin_Post					SetOrigin_Post
 // #define FN_EmitSound_Post					EmitSound_Post
 // #define FN_EmitAmbientSound_Post				EmitAmbientSound_Post
-#define FN_TraceLine_Post					TraceLine_Post
+#define FN_TraceLine_Post						TraceLine_Post
 // #define FN_TraceToss_Post					TraceToss_Post
 // #define FN_TraceMonsterHull_Post				TraceMonsterHull_Post
 // #define FN_TraceHull_Post					TraceHull_Post
@@ -351,15 +363,15 @@
 // #define FN_DecalIndex_Post					DecalIndex_Post
 // #define FN_PointContents_Post				PointContents_Post
 #define FN_MessageBegin_Post					MessageBegin_Post
-#define FN_MessageEnd_Post					MessageEnd_Post
-#define FN_WriteByte_Post					WriteByte_Post
-#define FN_WriteChar_Post					WriteChar_Post
-#define FN_WriteShort_Post					WriteShort_Post
-#define FN_WriteLong_Post					WriteLong_Post
-#define FN_WriteAngle_Post					WriteAngle_Post
-#define FN_WriteCoord_Post					WriteCoord_Post
-#define FN_WriteString_Post					WriteString_Post
-#define FN_WriteEntity_Post					WriteEntity_Post
+#define FN_MessageEnd_Post						MessageEnd_Post
+#define FN_WriteByte_Post						WriteByte_Post
+#define FN_WriteChar_Post						WriteChar_Post
+#define FN_WriteShort_Post						WriteShort_Post
+#define FN_WriteLong_Post						WriteLong_Post
+#define FN_WriteAngle_Post						WriteAngle_Post
+#define FN_WriteCoord_Post						WriteCoord_Post
+#define FN_WriteString_Post						WriteString_Post
+#define FN_WriteEntity_Post						WriteEntity_Post
 // #define FN_CVarRegister_Post					CVarRegister_Post
 // #define FN_CVarGetFloat_Post					CVarGetFloat_Post
 // #define FN_CVarGetString_Post				CVarGetString_Post
@@ -379,7 +391,7 @@
 // #define FN_PEntityOfEntIndex_Post			PEntityOfEntIndex_Post
 // #define FN_FindEntityByVars_Post				FindEntityByVars_Post
 // #define FN_GetModelPtr_Post					GetModelPtr_Post
-#define FN_RegUserMsg_Post					RegUserMsg_Post
+#define FN_RegUserMsg_Post						RegUserMsg_Post
 // #define FN_AnimationAutomove_Post			AnimationAutomove_Post
 // #define FN_GetBonePosition_Post				GetBonePosition_Post
 // #define FN_FunctionFromName_Post				FunctionFromName_Post
@@ -461,4 +473,3 @@
 #endif // USE_METAMOD
 
 #endif // __MODULECONFIG_H__
-

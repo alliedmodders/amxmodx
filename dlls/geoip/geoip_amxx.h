@@ -3,8 +3,8 @@
 
 #define GEOIPDATADIR ""
 
-#include "GeoIP.h"
 #include "amxxmodule.h"
+#include "GeoIP.h"
 
 extern AMX_NATIVE_INFO geoip_natives[];
 

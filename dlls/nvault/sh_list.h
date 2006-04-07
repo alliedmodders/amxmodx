@@ -11,6 +11,13 @@
 #ifndef _INCLUDE_SMM_LIST_H
 #define _INCLUDE_SMM_LIST_H
 
+// MSVC8 fix for offsetof macro redefition warnings
+#ifdef _MSC_VER 
+	#if _MSC_VER >= 1400
+		#undef offsetof
+	#endif
+#endif
+
 #include <new>
 #include <malloc.h>
 

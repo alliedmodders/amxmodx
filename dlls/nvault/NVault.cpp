@@ -1,7 +1,7 @@
+#include "amxxmodule.h"
 #include "NVault.h"
 #include "Binary.h"
 #include "CString.h"
-#include "amxxmodule.h"
 
 #ifdef __linux__
 #define _snprintf snprintf

@@ -495,7 +495,7 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 			plinfo[ENTINDEX(pPlayer)].iRenderMode = pPlayer->v.rendermode;
 			plinfo[ENTINDEX(pPlayer)].fRenderAmt = pPlayer->v.renderamt;
 
-			plinfo[ENTINDEX(pPlayer)].iViewType = CAMERA_3RDPERSON;
+			plinfo[ENTINDEX(pPlayer)].iViewType = CAMERA_UPLEFT;
 			pNewCamera = CREATE_NAMED_ENTITY(MAKE_STRING("info_target"));
 			pNewCamera->v.classname = MAKE_STRING("VexdCam");
 

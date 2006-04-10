@@ -73,7 +73,7 @@ native feof(file);
 native fgets(file, buffer[], maxlength);
 
 //Writes a line to the file
-native fprintf(file, const fmt[], {Float,Sql,Result_}:...);
+native fprintf(file, const fmt[], {Float,Sql,Result,_}:...);
 
 //Sets the current position in a file (see SEEK_ values above)
 native fseek(file, position, start);
@@ -87,7 +87,7 @@ native fputc(file, data);
 native fungetc(file, data);
 
 //Return the size of a file
-native filesize(const filename[],{Float,Sql,Result,_}:...);
+native filesize(const filename[]);
 
 //Attempts to remove a directory.
 //Note that you cannot remove a directory that has files on most
@@ -95,7 +95,7 @@ native filesize(const filename[],{Float,Sql,Result,_}:...);
 native rmdir(const path[]);
 
 //Delete a file (delete_file macro)
-native unlink(const filename[],{Float,Sql,Result,_}:...);
+native unlink(const filename[]);
 
 //Returns a handle to a directory
 native open_dir(dir[], firstfile[], length);

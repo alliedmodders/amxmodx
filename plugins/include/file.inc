@@ -87,7 +87,7 @@ native fputc(file, data);
 native fungetc(file, data);
 
 //Return the size of a file
-native filesize(const filename[]);
+native filesize(const filename[], {Float,Sql,Result,_}:...);
 
 //Attempts to remove a directory.
 //Note that you cannot remove a directory that has files on most

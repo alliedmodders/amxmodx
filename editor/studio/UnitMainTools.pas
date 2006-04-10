@@ -612,8 +612,8 @@ begin
   frmSettings.chkHighlightBraces.Checked := eConfig.ReadBool('Editor', 'HighlightBraces', True);
   frmSettings.chkClearUndoAfterSave.Checked := eConfig.ReadBool('Editor', 'ClearUndoAfterSave', False);
   { Misc }
-  if (TBXCurrentTheme <> eConfig.ReadString('Misc', 'Theme', 'Office11Adaptive')) then
-    TBXSetTheme(eConfig.ReadString('Misc', 'Theme', 'Office11Adaptive'));
+  if (TBXCurrentTheme <> eConfig.ReadString('Misc', 'Theme', 'Xito')) then
+    TBXSetTheme(eConfig.ReadString('Misc', 'Theme', 'Xito'));
   //> Update Settings-Dialog <//
   { Highlighter }
   frmSettings.cboLanguage.Clear;

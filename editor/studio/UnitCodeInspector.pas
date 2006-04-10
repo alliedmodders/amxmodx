@@ -372,13 +372,13 @@ end;
 
 procedure UpdateCI(eLine: Integer);
 begin
-  if eUpdating then exit;
+  if (eUpdating) or (not Assigned(ActiveDoc)) then exit;
   eUpdating := True;
-  if not Plugin_UpdateCodeInspector(GetCurrLang.Name, ActiveDoc.FileName, frmMain.tsMain.Items[frmMain.tsMain.ActiveTabIndex].Caption, True) then exit;
+  if not Plugin_UpdateCodeInspector(GetCurrLang.Name, ActiveDoc.FileName, frmMain.tbDocs.SelectedTab.Caption, True) then exit;
 
   if GetCurrLang.Name = 'Pawn' then begin
     UpdateCI_Pawn(eLine);
-    Plugin_UpdateCodeInspector(GetCurrLang.Name, ActiveDoc.FileName, frmMain.tsMain.Items[frmMain.tsMain.ActiveTabIndex].Caption, False);
+    Plugin_UpdateCodeInspector(GetCurrLang.Name, ActiveDoc.FileName, frmMain.tbDocs.SelectedTab.Caption, False);
   end;
   eUpdating := False;
 end;

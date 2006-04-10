@@ -70,11 +70,11 @@ begin
     eCallTips := '';
     eKeywords := '';
 
-    if (not Application.Terminated) and (Started) and (not frmMain.pnlLoading.Visible) and (frmMain.trvExplorer.Visible) then begin
-      if (Plugin_UpdateCodeExplorer(GetCurrLang.Name, ActiveDoc.FileName, frmMain.tsMain.Items[frmMain.tsMain.ActiveTabIndex].Caption, True)) and (frmMain.tsMain.ActiveTabIndex = 0) then begin
+    if (not Application.Terminated) and (Started) and (not frmMain.pnlLoading.Visible) and (frmMain.trvExplorer.Visible) and (Assigned(ActiveDoc)) then begin
+      if (Plugin_UpdateCodeExplorer(GetCurrLang.Name, ActiveDoc.FileName, frmMain.tbDocs.SelectedTab.Caption, True)) and (frmMain.stlIDEs.ItemIndex = 0) then begin
         try
           if CheckAU then begin
-            if Plugin_UpdateCodeExplorer(GetCurrLang.Name, ActiveDoc.FileName, frmMain.tsMain.Items[frmMain.tsMain.ActiveTabIndex].Caption, True) then begin
+            if Plugin_UpdateCodeExplorer(GetCurrLang.Name, ActiveDoc.FileName, frmMain.stlIDEs.Strings[frmMain.stlIDEs.ItemIndex], True) then begin
               // analyze code
               with ParseCodePawn(eCode, ExtractFileName(ActiveDoc.FileName)) do begin
                 eConstants.Assign(Constants);
@@ -358,7 +358,7 @@ begin
     end;
   end;
 
-  Plugin_UpdateCodeExplorer(GetCurrLang.Name, ActiveDoc.FileName, frmMain.tsMain.Items[frmMain.tsMain.ActiveTabIndex].Caption, False);
+  Plugin_UpdateCodeExplorer(GetCurrLang.Name, ActiveDoc.FileName, frmMain.stlIDEs.Strings[frmMain.stlIDEs.ItemIndex], False);
 end;
 
 end.

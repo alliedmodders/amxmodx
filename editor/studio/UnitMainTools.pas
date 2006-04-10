@@ -5,7 +5,8 @@ interface
 uses SysUtils, Classes, Windows, Forms, Controls, SpTBXTabs, TBX, SciLexer,
   SciLexerMemo, ExtCtrls, Graphics, sciKeyBindings, ComCtrls, TB2Item,
   sciLexerMod, ScintillaLanguageManager, Menus, SpTBXItem, Registry,
-  ShellApi, DDEMan, IdFTP, IdFTPList, IdException, JvInspector, JvComCtrls;
+  ShellApi, DDEMan, IdFTP, IdFTPList, IdException, JvInspector, JvComCtrls,
+  JvTabBar;
 
 type TDocument = class(TCollectionItem)
   private
@@ -53,7 +54,7 @@ type TDocCollection = class(TCollection)
     function Add(AFilename: String; AHighlighter: String = ''): TDocument; reintroduce;
     function Open(AFilename: String; AHighlighter: String = ''): Integer;
     function Save(AIndex: Integer; AFilename: String = ''): Boolean;
-    procedure Close(AIndex: Integer);
+    procedure Close(AIndex: Integer; RemoveTab: Boolean);
     procedure Activate(Document: Integer; RestoreCaret: Boolean; SaveLastDoc: Boolean = True); overload;
     procedure Activate(Document: TDocument; RestoreCaret: Boolean; SaveLastDoc: Boolean = True); overload;
   published
@@ -77,7 +78,7 @@ procedure FillCodeExplorer(Lang: String);
 function IEInstalled: Boolean;
 function GetAMXXDir(ListenServer: Boolean): String;
 
-function CloseDocument(eDocument: TDocument; SaveActiveDoc: Boolean = False): Boolean;
+function CloseDocument(eDocument: TDocument; SaveActiveDoc, RemoveTab: Boolean): Boolean;
 function AddExtension(eFilename, eHighlighter: String): String;
 
 function ShowColorDialog(var Color: TColor; ePaintImage: TImage): Boolean;
@@ -439,10 +440,10 @@ begin
     Result := '';
 end;
 
-function CloseDocument(eDocument: TDocument; SaveActiveDoc: Boolean = False): Boolean;
+function CloseDocument(eDocument: TDocument; SaveActiveDoc, RemoveTab: Boolean): Boolean;
 var Collection: TDocCollection;
 begin
-  case frmMain.tsMain.ActiveTabIndex of
+  case frmMain.stlIDEs.ItemIndex of
     0: Collection := PawnProjects;
     1: Collection := CPPProjects;
     else Collection := OtherProjects;
@@ -452,16 +453,18 @@ begin
   if (eDocument.Modified) then begin
     case MessageBox(frmMain.Handle, PChar(Format(lCloseModify, [ExtractFileName(eDocument.FileName)])), PChar(Application.Title), MB_ICONQUESTION + MB_YESNOCANCEL) of
       mrYes: begin
+        Collection.Activate(eDocument, True);
         frmMain.mnuSave.Click;
-        if not eDocument.Untitled then
-          Collection.Close(eDocument.Index);
+        Result := not eDocument.Untitled;
+        if Result then
+          Collection.Close(eDocument.Index, RemoveTab);
       end;
-      mrNo: Collection.Close(eDocument.Index);
+      mrNo: Collection.Close(eDocument.Index, RemoveTab);
       mrCancel: Result := False;
     end;
   end
   else
-    Collection.Close(eDocument.Index);
+    Collection.Close(eDocument.Index, RemoveTab);
 end;
 
 function AddExtension(eFilename, eHighlighter: String): String;
@@ -554,12 +557,11 @@ end;
 procedure ActivateProjects(Index: Integer; JumpToLastDoc: Boolean);
 var Collection: TDocCollection;
     i: integer;
-    TabItem: TSpTBXTabItem;
     OldIndex: Integer;
 begin
   if not Plugin_ProjectsChange(CurrProjects, Index, True) then begin
     Started := False;
-    frmMain.tsMain.ActiveTabIndex := CurrProjects;
+    frmMain.stlIDEs.ItemIndex := CurrProjects;
     Started := True;
     exit;
   end;
@@ -577,21 +579,17 @@ begin
 
 
     Started := False; // dont run this command twice
-    frmMain.tsMain.Items[Index].Checked := True; // select tab
+    frmMain.stlIDEs.ItemIndex := Index;
     CurrProjects := Index;
 
-    tsDocuments.Items.Clear;
-    for i := 0 to Collection.Count -1 do begin
-      TabItem := TSpTBXTabItem.Create(tsDocuments);
-      TabItem.Caption := TDocument(Collection.Items[i]).Title;
-      TabItem.OnSelect := frmMain.OnTabSelect;
-      tsDocuments.Items.Add(TabItem);
-    end;
+    tbDocs.Tabs.Clear;
+    for i := 0 to Collection.Count -1 do
+      tbDocs.AddTab(TDocument(Collection.Items[i]).Title);
     Started := True;
     
     if JumpToLastDoc then begin
       Started := False;
-      tsDocuments.Items[Collection.ActiveDocument.Index].Checked := True;
+      tbDocs.Tabs[Collection.ActiveDocument.Index].Selected := True;
       Collection.Activate(Collection.ActiveDocument.Index, True);
       Started := True;
     end;
@@ -765,10 +763,8 @@ begin
   if not Started then exit;
   
   frmMain.pnlLoading.Show;
-  for i := 0 to frmMain.tsDocuments.Items.Count -1 do
-    frmMain.tsDocuments.Items[i].Enabled := i = frmMain.tsDocuments.ActiveTabIndex;
-  for i := 0 to frmMain.tsMain.Items.Count -1 do
-    frmMain.tsMain.Items[i].Enabled := i = frmMain.tsMain.ActiveTabIndex;
+  for i := 0 to frmMain.tbDocs.Tabs.Count -1 do
+    frmMain.tbDocs.Tabs[i].Enabled := i = frmMain.tbDocs.SelectedTab.Index;
   for i := 0 to frmMain.tbxMenu.Items.Count -1 do
     frmMain.tbxMenu.Items[i].Enabled := False;
   for i := 0 to frmMain.tbxToolbar.Items.Count -1 do
@@ -779,6 +775,7 @@ begin
     frmMain.tbxCodeSnippets.Items[i].Enabled := False;
   for i := 0 to frmMain.tcTools.Items.Count -1 do
     frmMain.tcTools.Items[i].Enabled := False;
+  frmMain.cboCurrentIDE.Enabled := False;
   frmMain.ppmDocuments.Items.Enabled := False;
   frmMain.sciEditor.ReadOnly := ReadOnly;
 end;
@@ -789,10 +786,8 @@ begin
   if not Started then exit;
   
   frmMain.pnlLoading.Hide;
-  for i := 0 to frmMain.tsDocuments.Items.Count -1 do
-    frmMain.tsDocuments.Items[i].Enabled := True;
-  for i := 0 to frmMain.tsMain.Items.Count -1 do
-    frmMain.tsMain.Items[i].Enabled := True;
+  for i := 0 to frmMain.tbDocs.Tabs.Count -1 do
+    frmMain.tbDocs.Tabs[i].Enabled := True;
   for i := 0 to frmMain.tbxMenu.Items.Count -1 do
     frmMain.tbxMenu.Items[i].Enabled := True;
   for i := 0 to frmMain.tbxToolbar.Items.Count -1 do
@@ -804,11 +799,11 @@ begin
   for i := 0 to frmMain.tcTools.Items.Count -1 do
     frmMain.tcTools.Items[i].Enabled := True;
 
-  frmMain.tiCPP.Enabled := eCPP;
   frmMain.mnuNewHeaderCPP.Enabled := eCPP;
   frmMain.mnuNewModule.Enabled := eCPP;
   frmMain.mnuNewUnit.Enabled := eCPP;
 
+  frmMain.cboCurrentIDE.Enabled := True;
   frmMain.ppmDocuments.Items.Enabled := True;
   frmMain.sciEditor.ReadOnly := False;
 end;
@@ -947,14 +942,15 @@ end;
 
 procedure TDocCollection.Activate(Document: Integer; RestoreCaret: Boolean; SaveLastDoc: Boolean = True);
 begin
-  Activate(TDocument(Items[Document]), RestoreCaret, SaveLastDoc);
+  if Document < Count then
+    Activate(TDocument(Items[Document]), RestoreCaret, SaveLastDoc);
 end;
 
 procedure TDocCollection.Activate(Document: TDocument; RestoreCaret: Boolean; SaveLastDoc: Boolean = True);
 begin
   if not Plugin_DocChange(Document.Index, Document.FileName, Document.Highlighter, RestoreCaret, True) then begin
     Started := False;
-    TSpTBXTabItem(frmMain.tsDocuments.Items[ActiveDoc.Index]).Checked := True;
+    TJvTabBarItem(frmMain.tbDocs.Tabs[ActiveDoc.Index]).Selected := True;
     Started := True;
     exit;
   end;
@@ -983,7 +979,7 @@ begin
   frmMain.sciEditor.Lines.Clear;
   if Started then begin
     Started := False;
-    frmMain.tsDocuments.Items[Document.Index].Checked := True;
+    frmMain.tbDocs.Tabs[Document.Index].Selected := True;
     if (frmMain.Canvas.TextWidth(Document.FileName) > frmMain.mnuFilename.CustomWidth) and (not Document.Untitled) then
       frmMain.mnuFilename.Caption := ExtractFileName(Document.FileName)
     else
@@ -1024,7 +1020,6 @@ begin
 end;
 
 function TDocCollection.Add(AFilename: String; AHighlighter: String = ''): TDocument;
-var TabItem: TSpTBXTabItem;
 begin
   if AHighlighter = '' then
     AHighlighter := Highlighter;
@@ -1064,43 +1059,63 @@ begin
       Title := '< ' + IntToStr(Count) + #32 + ExtractFileName(AFilename) + ' >';
 
     if not Started then exit;
-    if (Self = PawnProjects) and (frmMain.tsMain.ActiveTabIndex <> 0) then exit;
-    if (Self = CPPProjects) and (frmMain.tsMain.ActiveTabIndex <> 1) then exit;
-    if (Self = OtherProjects) and (frmMain.tsMain.ActiveTabIndex <> 2) then exit;
+    if (Self = PawnProjects) and (frmMain.stlIDEs.ItemIndex <> 0) then exit;
+    if (Self = CPPProjects) and (frmMain.stlIDEs.ItemIndex <> 1) then exit;
+    if (Self = OtherProjects) and (frmMain.stlIDEs.ItemIndex <> 2) then exit;
 
-    TabItem := TSpTBXTabItem.Create(frmMain.tsDocuments);
-    TabItem.Caption := Title;
-    TabItem.OnSelect := frmMain.OnTabSelect;
-    frmMain.tsDocuments.Items.Add(TabItem);
+    Started := False;
+    frmMain.tbDocs.AddTab(Title);
+    Started := True;
   end;
 end;
 
-procedure TDocCollection.Close(AIndex: Integer);
+procedure TDocCollection.Close(AIndex: Integer; RemoveTab: Boolean);
 var Collection: TDocCollection;
     i: integer;
 begin
-  case frmMain.tsMain.ActiveTabIndex of
+  case frmMain.stlIDEs.ItemIndex of
     0: Collection := PawnProjects;
     1: Collection := CPPProjects;
     else Collection := OtherProjects;
   end;
 
   if Collection = Self then begin
-    frmMain.tsDocuments.Items.Delete(AIndex);
-    frmMain.tsDocuments.Refresh;
+    if RemoveTab then
+      frmMain.tbDocs.Tabs.Delete(AIndex);
+    if ActiveDoc.Index = AIndex then
+      ActiveDoc := nil;
   end;
   
   Delete(AIndex);
   for i := 0 to Count -1 do
     TDocument(Items[i]).Title := '< ' + IntToStr(i +1) + #32 + ExtractFileName(TDocument(Items[i]).FileName) + ' >';
 
-  if Collection = Self then begin
-    for i := 0 to frmMain.tsDocuments.Items.Count -1 do
-      TSpTBXTabItem(frmMain.tsDocuments.Items[i]).Caption := TDocument(Items[i]).Title;
+  if (Collection = Self) then begin
+    try
+      for i := 0 to frmMain.tbDocs.Tabs.Count -1 do
+        TJvTabBarItem(frmMain.tbDocs.Tabs[i]).Caption := TDocument(Items[i]).Title;
+    except
+      // no idea how to fix this
+    end;
   end;
 
-  if Count = 0 then
-    Add('', '');
+  if Count = 0 then begin
+    with Add('', '') do begin
+      if Self = PawnProjects then begin
+        Code := '/* Plugin generated by AMXX-Studio */' + #13#10 + #13#10;
+        Code := Code + '#include <amxmodx>' + #13#10;
+        Code := Code + '#include <amxmisc>' + #13#10 + #13#10;
+        Code := Code + '#define PLUGIN "' + eConfig.ReadString('Misc', 'DefaultPluginName', 'New Plugin') + '"' + #13#10;
+        Code := Code + '#define VERSION "' + eConfig.ReadString('Misc', 'DefaultPluginVersion', '1.0') + '"' + #13#10;
+        Code := Code + '#define AUTHOR "' + eConfig.ReadString('Misc', 'DefaultPluginAuthor', 'Your name') + '"' + #13#10 + #13#10 + #13#10;
+        Code := Code + 'public plugin_init() {' + #13#10;
+        Code := Code + '	register_plugin(PLUGIN, VERSION, AUTHOR)' + #13#10;
+        Code := Code + '	' + #13#10;
+        Code := Code + '	// Add your code here...' + #13#10;
+        Code := Code + '}' + #13#10;
+      end;
+    end;
+  end;
 
   if (AIndex -1 < Count) and (AIndex <> 0) then
     Activate(AIndex -1, True, False)

@@ -122,22 +122,22 @@ begin
   eCache.Free;
 
   i := 0;
-  if PAWNProjects.Count > 1 then begin
-    PAWNProjects.Close(0);
+  if PawnProjects.Count > 1 then begin
+    PawnProjects.Close(0, True);
     i := 1;
   end;
   if CPPProjects.Count > 1 then begin
-    CPPProjects.Close(0);
+    CPPProjects.Close(0, True);
     i := 1;
   end;
   if OtherProjects.Count > 1 then begin
-    OtherProjects.Close(0);
+    OtherProjects.Close(0, True);
     i := 1;
   end;
 
   if i = 1 then begin
     ActivateProjects(0, False); // Started := True is already set here
-    PAWNProjects.Activate(PAWNProjects.Count -1, False, False);
+    PAWNProjects.Activate(PawnProjects.Count -1, False, False);
   end;
   UpdateCI(frmMain.sciEditor.GetCurrentLineNumber);
 

@@ -20,7 +20,8 @@ uses
   ShellAPI, IdFTPCommon, IdAntiFreezeBase, IdAntiFreeze, JvComponent,
   JvInspector, JvExControls, JvPluginManager, JvgLanguageLoader,
   JvWndProcHook, CommCtrl, JvPageList, JvPageListTreeView,
-  SciSearchReplaceBase, SpTBXControls;
+  SciSearchReplaceBase, SpTBXControls, JvTabBar, TB2ExtItems, SpTBXEditors,
+  TBXLists, SpTBXLists;
 
 type
   TfrmMain = class(TForm)
@@ -129,13 +130,6 @@ type
     mnuTPaste: TSpTBXItem;
     sepTEdit2: TSpTBXSeparatorItem;
     mnuTSelectAll: TSpTBXItem;
-    tsMain: TSpTBXTabSet;
-    tiPawn: TSpTBXTabItem;
-    tiCPP: TSpTBXTabItem;
-    tsDocuments: TSpTBXTabSet;
-    tiDocument1: TSpTBXTabItem;
-    spcLeft1: TImage;
-    spcRight1: TImage;
     sciCallTips: TSciCallTips;
     sbStatus: TSpTBXStatusBar;
     sepGenerators1: TSpTBXSeparatorItem;
@@ -143,7 +137,6 @@ type
     infoNewCPP: TSpTBXRightAlignSpacerItem;
     sepNew1: TSpTBXSeparatorItem;
     mnuPaster: TSpTBXItem;
-    tiOther: TSpTBXTabItem;
     sciPropertyLoader: TSciPropertyLoader;
     odOpen: TOpenDialog;
     sdSave: TSaveDialog;
@@ -166,9 +159,41 @@ type
     mnuFoldAll: TSpTBXItem;
     sepView1: TSpTBXSeparatorItem;
     sciPrinter: TSciPrinter;
-    pnlParent: TPanel;
-    sciEditor: TScintilla;
-    splRight: TSplitter;
+    mnuCopyMessage: TSpTBXItem;
+    mnuCopyAll: TSpTBXItem;
+    mnuSaveToFile: TSpTBXItem;
+    sepOutput: TSpTBXSeparatorItem;
+    ppmEditor: TSpTBXPopupMenu;
+    mnuEditorCopy: TSpTBXItem;
+    mnuEditorPaste: TSpTBXItem;
+    mnuEditorCut: TSpTBXItem;
+    sepEditorMenu2: TSpTBXSeparatorItem;
+    mnuEditorUndo: TSpTBXItem;
+    mnuEditorRedo: TSpTBXItem;
+    sepEditorMenu3: TSpTBXSeparatorItem;
+    mnuToogleBookmark: TSpTBXItem;
+    mnuGoToBookmark: TSpTBXItem;
+    mnuEditorDelete: TSpTBXItem;
+    sepEditorMenu1: TSpTBXSeparatorItem;
+    mnuEditorSelectAll: TSpTBXItem;
+    sciSearchReplace: TSciSearchReplace;
+    IdFTP: TIdFTP;
+    sciAutoComplete: TSciAutoComplete;
+    mnuHTML: TSpTBXItem;
+    ppmDocuments: TSpTBXPopupMenu;
+    mnuPClose: TSpTBXItem;
+    mnuPSave: TSpTBXItem;
+    sepDocuments: TSpTBXSeparatorItem;
+    mnuPCloseAllFiles: TSpTBXItem;
+    mnuMenuGenerator: TSpTBXItem;
+    JvInspectorDotNETPainter: TJvInspectorDotNETPainter;
+    mnuConnectionGen: TSpTBXItem;
+    sepView3: TSpTBXSeparatorItem;
+    mnuShowCodeExplorer: TSpTBXItem;
+    mnuShowCodeInspector: TSpTBXItem;
+    mnuRestoreBackup: TSpTBXItem;
+    tbDocs: TJvTabBar;
+    mtpDocuments: TJvModernTabBarPainter;
     tcTools: TSpTBXTabControl;
     tiTools: TSpTBXTabItem;
     tiNotes: TSpTBXTabItem;
@@ -189,49 +214,24 @@ type
     spcBottom2: TImage;
     spcLeft2: TImage;
     spcRight2: TImage;
-    lstOutput: TListBox;
-    splOutput: TSplitter;
-    mnuCopyMessage: TSpTBXItem;
-    mnuCopyAll: TSpTBXItem;
-    mnuSaveToFile: TSpTBXItem;
-    sepOutput: TSpTBXSeparatorItem;
-    ppmEditor: TSpTBXPopupMenu;
-    mnuEditorCopy: TSpTBXItem;
-    mnuEditorPaste: TSpTBXItem;
-    mnuEditorCut: TSpTBXItem;
-    sepEditorMenu2: TSpTBXSeparatorItem;
-    mnuEditorUndo: TSpTBXItem;
-    mnuEditorRedo: TSpTBXItem;
-    sepEditorMenu3: TSpTBXSeparatorItem;
-    mnuToogleBookmark: TSpTBXItem;
-    mnuGoToBookmark: TSpTBXItem;
-    mnuEditorDelete: TSpTBXItem;
-    sepEditorMenu1: TSpTBXSeparatorItem;
-    mnuEditorSelectAll: TSpTBXItem;
-    sciSearchReplace: TSciSearchReplace;
-    IdFTP: TIdFTP;
-    pnlLoading: TSpTBXPanel;
-    pbLoading: TSpTBXProgressBar;
-    cmdCancel: TSpTBXButton;
-    sciAutoComplete: TSciAutoComplete;
-    mnuHTML: TSpTBXItem;
-    ppmDocuments: TSpTBXPopupMenu;
-    mnuPClose: TSpTBXItem;
-    mnuPSave: TSpTBXItem;
-    sepDocuments: TSpTBXSeparatorItem;
-    mnuPCloseAllFiles: TSpTBXItem;
-    mnuMenuGenerator: TSpTBXItem;
     pnlDock: TSpTBXMultiDock;
     pnlCodeExplorer: TSpTBXDockablePanel;
     trvExplorer: TTreeView;
     pnlCodeInspector: TSpTBXDockablePanel;
-    JvInspectorDotNETPainter: TJvInspectorDotNETPainter;
     jviCode: TJvInspector;
-    mnuConnectionGen: TSpTBXItem;
-    sepView3: TSpTBXSeparatorItem;
-    mnuShowCodeExplorer: TSpTBXItem;
-    mnuShowCodeInspector: TSpTBXItem;
-    mnuRestoreBackup: TSpTBXItem;
+    splRight: TSplitter;
+    spcRight1: TImage;
+    spcLeft1: TImage;
+    pnlParent: TPanel;
+    splOutput: TSplitter;
+    sciEditor: TScintilla;
+    lstOutput: TListBox;
+    pnlLoading: TSpTBXPanel;
+    pbLoading: TSpTBXProgressBar;
+    cmdCancel: TSpTBXButton;
+    sepStatus0: TSpTBXSeparatorItem;
+    cboCurrentIDE: TSpTBXDropDownItem;
+    stlIDEs: TSpTBXStringList;
     procedure FormConstrainedResize(Sender: TObject; var MinWidth,
       MinHeight, MaxWidth, MaxHeight: Integer);
     procedure mnuExitClick(Sender: TObject);
@@ -247,9 +247,6 @@ type
     procedure trvExplorerCollapsed(Sender: TObject; Node: TTreeNode);
     procedure trvExplorerExpanded(Sender: TObject; Node: TTreeNode);
     procedure mnuSettingsClick(Sender: TObject);
-    procedure tsMainActiveTabChange(Sender: TObject; ItemIndex: Integer);
-    procedure tsDocumentsActiveTabChange(Sender: TObject;
-      ItemIndex: Integer);
     procedure FormShow(Sender: TObject);
     procedure mnuTOpenClick(Sender: TObject);
     procedure mnuTSaveClick(Sender: TObject);
@@ -348,8 +345,6 @@ type
       var CancelDisplay: Boolean);
     procedure mnuMOTDGeneratorClick(Sender: TObject);
     procedure mnuHeaderPawnClick(Sender: TObject);
-    procedure OnTabSelect(Sender: TTBCustomItem; Viewer: TTBItemViewer;
-      Selecting: Boolean);
     procedure mnuPCloseClick(Sender: TObject);
     procedure mnuPCloseAllFilesClick(Sender: TObject);
     procedure mnuTNewClick(Sender: TObject);
@@ -380,12 +375,18 @@ type
       Item: TJvCustomInspectorItem);
     procedure mnuRestoreBackupClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure stlIDEsClick(Sender: TObject);
+    procedure tbDocsTabSelected(Sender: TObject; Item: TJvTabBarItem);
+    procedure tbDocsMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure tbDocsTabClosing(Sender: TObject; Item: TJvTabBarItem;
+      var AllowClose: Boolean);
   private
     procedure UpdateNotes;
   public
     IRCPasterStop: Boolean;
     eErrorLine: Integer;
-    SelectedTab: TSpTBXTabItem;
+    SelectedTab: TJvTabBarItem;
     procedure OnCodeSnippetClick(Sender: TObject);
     procedure OnCustomClick(Sender: TObject);
     procedure SetErrorLine(eLine: Integer);
@@ -415,7 +416,7 @@ procedure TfrmMain.FormConstrainedResize(Sender: TObject; var MinWidth,
   MinHeight, MaxWidth, MaxHeight: Integer);
 begin
   pnlLoading.Left := sciEditor.Left + 3 + (sciEditor.Width div 2) - (pnlLoading.Width div 2);
-  pnlLoading.Top := tsDocuments.Top + sciEditor.Top + ((sciEditor.Height * 5) div 6) - (pnlLoading.Height div 2);
+  pnlLoading.Top := tbDocs.Top + sciEditor.Top + ((sciEditor.Height * 5) div 6) - (pnlLoading.Height div 2);
 
   if (Canvas.TextWidth(ActiveDoc.FileName) + 10 > mnuFilename.CustomWidth) then
     mnuFilename.Caption := ExtractFileName(ActiveDoc.FileName)
@@ -645,65 +646,7 @@ begin
   sciEditor.Gutter1.Width := 40;
 end;
 
-{ Change Tab -> }
-
-procedure TfrmMain.tsMainActiveTabChange(Sender: TObject;
-  ItemIndex: Integer);
-begin
-  if (not Started) or (frmMain.pnlLoading.Visible) then exit;
-
-  if (lstOutput.Visible) then begin
-    if Plugin_VisibleControlChange(CTRL_OUTPUT, False) then begin
-      splOutput.Hide;
-      lstOutput.Hide;
-      Plugin_VisibleControlChange(CTRL_OUTPUT, False);
-    end;
-  end;
-
-  case tsMain.ActiveTabIndex of
-    0: begin
-        mnuTNew.Caption := 'New Plugin';
-      end;
-    1: begin
-        mnuTNew.Caption := 'New Unit';
-        sciCallTips.ApiStrings.Clear;
-        sciAutoComplete.AStrings.Clear;
-      end;
-    2: begin
-        mnuTNew.Caption := 'New Textfile';
-        sciCallTips.ApiStrings.Clear;
-        sciAutoComplete.AStrings.Clear;
-      end;
-  end;
-  ActivateProjects(ItemIndex, True);
-
-  trvExplorer.Items.Clear;
-  FillCodeExplorer(GetCurrLang.Name);
-end;
-
-procedure TfrmMain.tsDocumentsActiveTabChange(Sender: TObject;
-  ItemIndex: Integer);
-var Collection: TDocCollection;
-begin
-  if (not Started) or (pnlLoading.Visible) then exit;
-
-  if (lstOutput.Visible) then begin
-    if Plugin_VisibleControlChange(CTRL_OUTPUT, False) then begin
-      splOutput.Hide;
-      lstOutput.Hide;
-      Plugin_VisibleControlChange(CTRL_OUTPUT, False);
-    end;
-  end;
-
-  case tsMain.ActiveTabIndex of
-    0: Collection := PawnProjects; // Pawn
-    1: Collection := CPPProjects; // C++
-    else Collection := OtherProjects; // Other
-  end;
-  Collection.Activate(ItemIndex, True);
-end;
-
-{ <- Change Tab | Settings -> }
+{ Settings -> }
 
 procedure TfrmMain.FormShow(Sender: TObject);
 begin
@@ -770,7 +713,7 @@ procedure TfrmMain.mnuEmptyPluginClick(Sender: TObject);
 begin
   if not Plugin_CreateNewFile(NEW_Pawn_EMPTYPLUGIN, True) then exit;
 
-  if tsMain.ActiveTabIndex <> 0 then
+  if stlIDEs.ItemIndex <> 0 then
     ActivateProjects(0, False);
 
   PawnProjects.Activate(PawnProjects.Add(''), True);
@@ -781,7 +724,7 @@ procedure TfrmMain.mnuNewPluginClick(Sender: TObject);
 begin
   if not Plugin_CreateNewFile(NEW_Pawn_PLUGIN, True) then exit;
 
-  if tsMain.ActiveTabIndex <> 0 then
+  if stlIDEs.ItemIndex <> 0 then
     ActivateProjects(0, False);
 
   PawnProjects.Activate(PawnProjects.Add(''), False);
@@ -825,7 +768,7 @@ begin
   eExt := ExtractFileExt(odOpen.FileName);
   eExt := LowerCase(eExt);
   if (eExt = '.sma') or (eExt = '.inc') or (eExt = '.inl') then begin // Pawn files
-    if tsMain.ActiveTabIndex <> 0 then
+    if stlIDEs.ItemIndex <> 0 then
       ActivateProjects(0, False);
     PawnProjects.Open(odOpen.FileName);
   end
@@ -833,28 +776,28 @@ begin
     if not eCPP then
       MessageBox(Handle, PChar(lNoCPP), PChar(Application.Title), MB_ICONWARNING)
     else begin
-      if tsMain.ActiveTabIndex <> 1 then
+      if stlIDEs.ItemIndex <> 1 then
         ActivateProjects(1, False);
       CPPProjects.Open(odOpen.FileName);
     end;
   end
   else if (eExt = '.htm') or (eExt = '.html') then begin // HTML files
-    if tsMain.ActiveTabIndex <> 2 then
+    if stlIDEs.ItemIndex <> 2 then
       ActivateProjects(2, False);
     OtherProjects.Open(odOpen.FileName, 'HTML');
   end
   else if (eExt = '.sql') then begin // SQL databases
-    if tsMain.ActiveTabIndex <> 2 then
+    if stlIDEs.ItemIndex <> 2 then
       ActivateProjects(2, False);
     OtherProjects.Open(odOpen.FileName, 'SQL');
   end
   else if (eExt = '.xml') then begin // XML files
-    if tsMain.ActiveTabIndex <> 2 then
+    if stlIDEs.ItemIndex <> 2 then
       ActivateProjects(2, False);
     OtherProjects.Open(odOpen.FileName, 'XML');
   end
   else begin // Other files and/or Textfiles
-    if tsMain.ActiveTabIndex <> 2 then
+    if stlIDEs.ItemIndex <> 2 then
       ActivateProjects(2, False);
     OtherProjects.Open(odOpen.FileName, 'null');
   end;
@@ -864,7 +807,7 @@ procedure TfrmMain.mnuNewTextfileClick(Sender: TObject);
 begin
   if not Plugin_CreateNewFile(NEW_OTHER_TEXTFILE, True) then exit;
 
-  if tsMain.ActiveTabIndex <> 2 then
+  if stlIDEs.ItemIndex <> 2 then
     ActivateProjects(2, False);
 
   OtherProjects.Activate(OtherProjects.Add(''), True);
@@ -876,7 +819,7 @@ procedure TfrmMain.mnuNewHTMLClick(Sender: TObject);
 begin
   if not Plugin_CreateNewFile(NEW_OTHER_HTML, True) then exit;
 
-  if tsMain.ActiveTabIndex <> 2 then
+  if stlIDEs.ItemIndex <> 2 then
     ActivateProjects(2, True);
 
   OtherProjects.Activate(OtherProjects.Add('', 'HTML'), True);
@@ -896,7 +839,7 @@ procedure TfrmMain.mnuNewSQLClick(Sender: TObject);
 begin
   if not Plugin_CreateNewFile(NEW_OTHER_SQL, True) then exit;
 
-  if tsMain.ActiveTabIndex <> 2 then
+  if stlIDEs.ItemIndex <> 2 then
     ActivateProjects(2, False);
 
   OtherProjects.Activate(OtherProjects.Add('', 'SQL'), True);
@@ -908,7 +851,7 @@ procedure TfrmMain.mnuNewXMLClick(Sender: TObject);
 begin
   if not Plugin_CreateNewFile(NEW_OTHER_XML, True) then exit;
 
-  if tsMain.ActiveTabIndex <> 2 then
+  if stlIDEs.ItemIndex <> 2 then
     ActivateProjects(2, False);
 
   OtherProjects.Activate(OtherProjects.Add('', 'XML'), True);
@@ -939,8 +882,7 @@ begin
   if sdSave.Execute then begin
     ActiveDoc.FileName := AddExtension(sdSave.FileName, ActiveDoc.Highlighter);
     ActiveDoc.Save;
-    // Don't know why tsDocuments.Items[0].Caption := '???'; not works, but this does:
-    TSpTBXTabItem(tsDocuments.Items[ActiveDoc.Index]).Caption := ActiveDoc.Title;
+    tbDocs.Tabs[ActiveDoc.Index].Caption := ActiveDoc.Title;
   end;
 end;
 
@@ -999,7 +941,7 @@ end;
 
 procedure TfrmMain.mnuCloseClick(Sender: TObject);
 begin
-  CloseDocument(ActiveDoc);
+  CloseDocument(ActiveDoc, True, True);
 end;
 
 procedure TfrmMain.mnuShowCodeToolsClick(Sender: TObject);
@@ -1287,10 +1229,10 @@ procedure TfrmMain.mnuSaveAllFilesClick(Sender: TObject);
 var a, b: integer;
   Collection: TDocCollection;
 begin
-  case tsMain.ActiveTabIndex of
+  case stlIDEs.ItemIndex of
     0: Collection := PawnProjects;
     1: Collection := CPPProjects;
-  else Collection := OtherProjects;
+    else Collection := OtherProjects;
   end;
 
   frmAllFilesForm.Caption := lSaveAllCaption1;
@@ -1315,7 +1257,7 @@ begin
           if sdSave.Execute then begin
             TDocument(Collection.Items[b]).FileName := AddExtension(sdSave.FileName, TDocument(Collection.Items[b]).Highlighter);
             TDocument(Collection.Items[b]).Save;
-            TSpTBXTabItem(tsDocuments.Items[b]).Caption := TDocument(Collection.Items[b]).Title;
+            TJvTabBarItem(tbDocs.Tabs[b]).Caption := TDocument(Collection.Items[b]).Title;
           end
           else
             exit;
@@ -1355,7 +1297,7 @@ procedure TfrmMain.mnuCloseAllFilesClick(Sender: TObject);
 var i: integer;
   Collection: TDocCollection;
 begin
-  case tsMain.ActiveTabIndex of
+  case stlIDEs.ItemIndex of
     0: Collection := PawnProjects;
     1: Collection := CPPProjects;
     else Collection := OtherProjects;
@@ -1370,7 +1312,7 @@ begin
 
   if frmAllFilesForm.ShowModal = mrOk then begin
     for i := Collection.Count - 1 downto 0 do begin
-      if not CloseDocument(TDocument(Collection.Items[i])) then
+      if not CloseDocument(TDocument(Collection.Items[i]), True, True) then
         exit;
     end;
   end;
@@ -1500,7 +1442,7 @@ begin
   ActiveDoc.Code := sciEditor.Lines.Text;
   frmClose.trvFiles.Items.Clear;
   { Pawn Projects }
-  eRoot := frmClose.trvFiles.Items.Add(nil, tsMain.Items[0].Caption);
+  eRoot := frmClose.trvFiles.Items.Add(nil, stlIDEs.Strings[0]);
   for i := 0 to PawnProjects.Count - 1 do begin
     if TDocument(PawnProjects.Items[i]).Modified then
       frmClose.trvFiles.Items.AddChild(eRoot, IntToStr(i + 1) + '. ' + ExtractFileName(TDocument(PawnProjects.Items[i]).FileName));
@@ -1510,7 +1452,7 @@ begin
   else
     eRoot.Expand(False);
   { C++ Projects }
-  eRoot := frmClose.trvFiles.Items.Add(nil, tsMain.Items[1].Caption);
+  eRoot := frmClose.trvFiles.Items.Add(nil, stlIDEs.Strings[1]);
   for i := 0 to CPPProjects.Count - 1 do begin
     if TDocument(CPPProjects.Items[i]).Modified then
       frmClose.trvFiles.Items.AddChild(eRoot, IntToStr(i + 1) + '. ' + ExtractFileName(TDocument(CPPProjects.Items[i]).FileName));
@@ -1520,7 +1462,7 @@ begin
   else
     eRoot.Expand(False);
   { Other Projects }
-  eRoot := frmClose.trvFiles.Items.Add(nil, tsMain.Items[2].Caption);
+  eRoot := frmClose.trvFiles.Items.Add(nil, stlIDEs.Strings[2]);
   for i := 0 to OtherProjects.Count - 1 do begin
     if TDocument(OtherProjects.Items[i]).Modified then
       frmClose.trvFiles.Items.AddChild(eRoot, IntToStr(i + 1) + '. ' + ExtractFileName(TDocument(OtherProjects.Items[i]).FileName));
@@ -1547,7 +1489,7 @@ begin
       if frmClose.cmdSave.Caption = lSaveCaption then begin
         for i := 0 to frmClose.trvFiles.Items.Count - 1 do begin
           { Pawn Projects }
-          if frmClose.trvFiles.Items[i].Text = tsMain.Items[0].Caption then begin
+          if frmClose.trvFiles.Items[i].Text = stlIDEs.Strings[0] then begin
             with frmClose.trvFiles.Items[i] do begin
               for k := 0 to Count - 1 do begin
                 if frmClose.trvFiles.Checked[Item[k]] then begin
@@ -1571,7 +1513,7 @@ begin
             end;
           end;
           { C++ Projects }
-          if frmClose.trvFiles.Items[i].Text = tsMain.Items[1].Caption then begin
+          if frmClose.trvFiles.Items[i].Text = stlIDEs.Items[1].Caption then begin
             with frmClose.trvFiles.Items[i] do begin
               for k := 0 to Count - 1 do begin
                 if frmClose.trvFiles.Checked[Item[k]] then begin
@@ -1595,7 +1537,7 @@ begin
             end;
           end;
           { Other Projects }
-          if frmClose.trvFiles.Items[i].Text = tsMain.Items[2].Caption then begin
+          if frmClose.trvFiles.Items[i].Text = stlIDEs.Strings[2] then begin
             with frmClose.trvFiles.Items[i] do begin
               for k := 0 to Count - 1 do begin
                 if frmClose.trvFiles.Checked[Item[k]] then begin
@@ -1747,7 +1689,7 @@ begin
 
   if (LowerCase(ExtractFileExt(ActiveDoc.FileName)) = '.inl') or (LowerCase(ExtractFileExt(ActiveDoc.FileName)) = '.inc') or (LowerCase(ExtractFileExt(ActiveDoc.FileName)) = '.h') then exit;
 
-  if tsMain.ActiveTabIndex = 0 then
+  if stlIDEs.ItemIndex = 0 then
     DoCompilePawn(COMP_DEFAULT)
   else if (LowerCase(ExtractFileExt(ActiveDoc.FileName)) = '.htm') or (LowerCase(ExtractFileExt(ActiveDoc.FileName)) = '.html') then begin
     if IEInstalled then
@@ -1850,7 +1792,7 @@ begin
   if not Plugin_Compile(COMP_STARTHL, GetCurrLang.Name, ActiveDoc.FileName, True) then
     exit;
 
-  if tsMain.ActiveTabIndex = 0 then
+  if stlIDEs.ItemIndex = 0 then
     DoCompilePawn(COMP_STARTHL);
 end;
 
@@ -1859,7 +1801,7 @@ begin
   if not Plugin_Compile(COMP_UPLOAD, GetCurrLang.Name, ActiveDoc.FileName, True) then
     exit;
 
-  if tsMain.ActiveTabIndex = 0 then
+  if stlIDEs.ItemIndex = 0 then
     DoCompilePawn(COMP_UPLOAD);
 end;
 
@@ -2129,7 +2071,7 @@ procedure TfrmMain.mnuHeaderPawnClick(Sender: TObject);
 begin
   if not Plugin_CreateNewFile(NEW_Pawn_HEADER, True) then exit;
 
-  if tsMain.ActiveTabIndex <> 0 then
+  if stlIDEs.ItemIndex <> 0 then
     ActivateProjects(0, False);
 
   PawnProjects.Activate(PawnProjects.Add('Untitled.inc'), False);
@@ -2138,27 +2080,18 @@ begin
   Plugin_CreateNewFile(NEW_Pawn_HEADER, False);
 end;
 
-procedure TfrmMain.OnTabSelect(Sender: TTBCustomItem;
-  Viewer: TTBItemViewer; Selecting: Boolean);
-begin
-  if (GetAsyncKeyState(VK_RBUTTON) <> 0) and (not pnlLoading.Visible) and (not Selecting) then begin
-    SelectedTab := TSpTBXTabItem(Sender);
-    ppmDocuments.Popup(Mouse.CursorPos.X, Mouse.CursorPos.Y);
-  end;
-end;
-
 procedure TfrmMain.mnuPCloseClick(Sender: TObject);
 var Collection: TDocCollection;
 begin
   try
-    case tsMain.ActiveTabIndex of
+    case stlIDEs.ItemIndex of
       0: Collection := PawnProjects; // Pawn
       1: Collection := CPPProjects; // C++
-    else Collection := OtherProjects; // Other
+      else Collection := OtherProjects; // Other
     end;
 
-    if tsDocuments.Items.IndexOf(SelectedTab) <> -1 then
-      CloseDocument(TDocument(Collection.Items[tsDocuments.Items.IndexOf(SelectedTab)]));
+    if tbDocs.Tabs.IndexOf(SelectedTab) <> -1 then
+      CloseDocument(TDocument(Collection.Items[tbDocs.Tabs.IndexOf(SelectedTab)]), True, True);
   except
     Application.ProcessMessages; // :o
   end;
@@ -2171,7 +2104,7 @@ end;
 
 procedure TfrmMain.mnuTNewClick(Sender: TObject);
 begin
-  case tsMain.ActiveTabIndex of
+  case stlIDEs.ItemIndex of
     0: mnuNewPlugin.Click;
     1: mnuNewUnit.Click;
     2: mnuNewTextfile.Click;
@@ -2453,7 +2386,7 @@ begin
           mnuOpenClick(nil);
           odOpen.FileName := eTemp;
         end;
-      SCM_CURRPROJECTS: Msg.Result := tsMain.ActiveTabIndex;
+      SCM_CURRPROJECTS: Msg.Result := stlIDEs.ItemIndex;
       SCM_COMPILE: mnuDoCompile.Click;
       SCM_COMPILE_UPLOAD: mnuCompileAndUpload.Click;
       SCM_COMPILE_STARTHL: mnuCompileAndStartHL.Click;
@@ -2660,7 +2593,7 @@ begin
           else
             PawnProjects.Save(eIntData, eData);
         end;
-      SCM_Pawn_CLOSEFILE: PawnProjects.Close(eIntData);
+      SCM_Pawn_CLOSEFILE: PawnProjects.Close(eIntData, True);
       SCM_Pawn_ISUNTITLED: begin
           try
             if TDocument(PawnProjects.Items[eIntData]).Untitled then
@@ -2672,28 +2605,28 @@ begin
           end;
         end;
       SCM_Pawn_ACTIVATE: begin
-          if tsMain.ActiveTabIndex <> 0 then
+          if stlIDEs.ItemIndex <> 0 then
             ActivateProjects(0, eIntData = 1)
           else
             Msg.Result := 0;
         end;
       SCM_Pawn_ACTIVATEDOC: PawnProjects.Activate(eIntData, Pos('r', eData) <> 0, Pos('s', eData) <> 0);
       SCM_Pawn_GETNOTES: begin
-          if (tsMain.ActiveTabIndex = 0) and (tsDocuments.ActiveTabIndex = eIntData) then
+          if (stlIDEs.ItemIndex = 0) and (tbDocs.SelectedTab.Index = eIntData) then
             Msg.Result := Integer(PChar(GetRTFText(rtfNotes)))
           else
             Msg.Result := Integer(PChar(TDocument(PawnProjects.Items[eIntData]).NotesText));
         end;
       SCM_Pawn_SETNOTES: begin
-          if (tsMain.ActiveTabIndex = 0) and (tsDocuments.ActiveTabIndex = eIntData) then
+          if (stlIDEs.ItemIndex = 0) and (tbDocs.SelectedTab.Index = eIntData) then
             SetRTFText(rtfNotes, eData)
           else
             TDocument(PawnProjects.Items[eIntData]).NotesText := eData;
-        end;
+        end;  
       SCM_Pawn_GETFILENAME: Msg.Result := Integer(PChar(TDocument(PawnProjects.Items[eIntData]).FileName));
       SCM_Pawn_FILECOUNT: Msg.Result := PawnProjects.Count;
       SCM_Pawn_GETTEXT: begin
-          if (tsMain.ActiveTabIndex = 0) and (tsDocuments.ActiveTabIndex = eIntData) then
+          if (stlIDEs.ItemIndex = 0) and (tbDocs.SelectedTab.Index = eIntData) then
             Msg.Result := Integer(sciEditor.Lines.GetText)
           else
             Msg.Result := Integer(PChar(TDocument(PawnProjects.Items[eIntData]).Code));
@@ -2714,7 +2647,7 @@ begin
         end;
       SCM_CPP_CLOSEFILE: begin
           if eCPP then
-            CPPProjects.Close(eIntData)
+            CPPProjects.Close(eIntData, True)
           else
             Msg.Result := 0;
         end;
@@ -2729,11 +2662,11 @@ begin
           end;
         end;
       SCM_CPP_ACTIVATE: begin
-          if (eCPP) and (tsMain.ActiveTabIndex <> 1) then
+          if (eCPP) and (stlIDEs.ItemIndex <> 1) then
             ActivateProjects(1, eIntData = 1)
           else
             Msg.Result := 0;
-        end;
+        end;      
       SCM_CPP_ACTIVATEDOC: begin
           if eCPP then
             CPPProjects.Activate(eIntData, Pos('r', eData) <> 0, Pos('s', eData) <> 0)
@@ -2743,26 +2676,24 @@ begin
       SCM_CPP_ACTIVATEIDE: begin
           eCPP := eIntData = 1;
           if eCPP then begin
-            tiCPP.Enabled := True;
             mnuNewHeaderCPP.Enabled := True;
             mnuNewModule.Enabled := True;
             mnuNewUnit.Enabled := True;
           end
           else begin
-            tiCPP.Enabled := False;
             mnuNewHeaderCPP.Enabled := False;
             mnuNewModule.Enabled := False;
             mnuNewUnit.Enabled := False;
           end;
         end;
       SCM_CPP_GETNOTES: begin
-          if (tsMain.ActiveTabIndex = 1) and (tsDocuments.ActiveTabIndex = eIntData) then
+          if (stlIDEs.ItemIndex = 1) and (tbDocs.SelectedTab.Index = eIntData) then
             Msg.Result := Integer(PChar(GetRTFText(rtfNotes)))
           else
             Msg.Result := Integer(PChar(TDocument(CPPProjects.Items[eIntData]).NotesText));
         end;
       SCM_CPP_SETNOTES: begin
-          if (tsMain.ActiveTabIndex = 1) and (tsDocuments.ActiveTabIndex = eIntData) then
+          if (stlIDEs.ItemIndex = 1) and (tbDocs.SelectedTab.Index = eIntData) then
             SetRTFText(rtfNotes, eData)
           else
             TDocument(CPPProjects.Items[eIntData]).NotesText := eData;
@@ -2770,7 +2701,7 @@ begin
       SCM_CPP_GETFILENAME: Msg.Result := Integer(PChar(TDocument(CPPProjects.Items[eIntData]).FileName));
       SCM_CPP_FILECOUNT: Msg.Result := CPPProjects.Count;
       SCM_CPP_GETTEXT: begin
-          if (tsMain.ActiveTabIndex = 1) and (tsDocuments.ActiveTabIndex = eIntData) then
+          if (stlIDEs.ItemIndex = 1) and (tbDocs.SelectedTab.Index = eIntData) then
             Msg.Result := Integer(sciEditor.Lines.GetText)
           else
             Msg.Result := Integer(PChar(TDocument(CPPProjects.Items[eIntData]).Code));
@@ -2794,20 +2725,20 @@ begin
           end;
         end;
       SCM_OTHER_ACTIVATE: begin
-          if tsMain.ActiveTabIndex <> 2 then
+          if stlIDEs.ItemIndex <> 2 then
             ActivateProjects(2, eIntData = 1)
           else
             Msg.Result := 0;
         end;
       SCM_OTHER_ACTIVATEDOC: OtherProjects.Activate(eIntData, Pos('r', eData) <> 0, Pos('s', eData) <> 0);
       SCM_OTHER_GETNOTES: begin
-          if (tsMain.ActiveTabIndex = 2) and (tsDocuments.ActiveTabIndex = eIntData) then
+          if (stlIDEs.ItemIndex = 2) and (tbDocs.SelectedTab.Index = eIntData) then
             Msg.Result := Integer(PChar(GetRTFText(rtfNotes)))
           else
             Msg.Result := Integer(PChar(TDocument(OtherProjects.Items[eIntData]).NotesText));
         end;
       SCM_OTHER_SETNOTES: begin
-          if (tsMain.ActiveTabIndex = 2) and (tsDocuments.ActiveTabIndex = eIntData) then
+          if (stlIDEs.ItemIndex = 2) and (tbDocs.SelectedTab.Index = eIntData) then
             SetRTFText(rtfNotes, eData)
           else
             TDocument(OtherProjects.Items[eIntData]).NotesText := eData;
@@ -2815,7 +2746,7 @@ begin
       SCM_OTHER_GETFILENAME: Msg.Result := Integer(PChar(TDocument(OtherProjects.Items[eIntData]).FileName));
       SCM_OTHER_FILECOUNT: Msg.Result := OtherProjects.Count;
       SCM_OTHER_GETTEXT: begin
-          if (tsMain.ActiveTabIndex = 2) and (tsDocuments.ActiveTabIndex = eIntData) then
+          if (stlIDEs.ItemIndex = 2) and (tbDocs.SelectedTab.Index = eIntData) then
             Msg.Result := Integer(sciEditor.Lines.GetText)
           else
             Msg.Result := Integer(PChar(TDocument(OtherProjects.Items[eIntData]).Code));
@@ -2840,8 +2771,8 @@ begin
           end;
         end;
       SCM_OUTPUT_INDEXOF: Msg.Result := lstOutput.Items.IndexOf(eData);
-      SCM_ACTIVE_DOCUMENT: Msg.Result := tsDocuments.ActiveTabIndex;
-      SCM_ACTIVE_PROJECTS: Msg.Result := tsMain.ActiveTabIndex;
+      SCM_ACTIVE_DOCUMENT: Msg.Result := tbDocs.SelectedTab.Index;
+      SCM_ACTIVE_PROJECTS: Msg.Result := stlIDEs.ItemIndex;
       SCM_EDITOR_SETTEXT: sciEditor.Lines.SetText(Msg.CopyDataStruct.lpData);
       SCM_EDITOR_GETTEXT: Msg.Result := Integer(sciEditor.Lines.GetText);
       SCM_EDTIOR_SETCALLTIPS: sciCallTips.ApiStrings.Text := eData;
@@ -3035,11 +2966,105 @@ end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
+  stlIDEs.ItemIndex := 0;
+  
   sciEditor.StreamClass := TSciMyStream;
   sciEditor.OnCallTipClick := sciEditorCallTipClick; // god why doesn't delphi save this
   eACList := TmxJsCollection.Create(TACFunction);
   eACList.Collectionname := 'Autocomplete_List';
   eACList.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'config\ACList.cfg');
+end;
+
+procedure TfrmMain.stlIDEsClick(Sender: TObject);
+begin
+  if (stlIDEs.Strings[stlIDEs.ItemIndex] = 'C++') and (not eCPP) then begin
+    stlIDEs.ItemIndex := CurrProjects;
+    MessageBox(Handle, 'C++ IDE is currenty not implemented!', 'Error', MB_ICONERROR);
+    exit;
+  end;
+
+  cboCurrentIDE.Text := stlIDEs.Strings[stlIDEs.ItemIndex];
+  if (not Started) or (frmMain.pnlLoading.Visible) then exit;
+
+  if (lstOutput.Visible) then begin
+    if Plugin_VisibleControlChange(CTRL_OUTPUT, False) then begin
+      splOutput.Hide;
+      lstOutput.Hide;
+      Plugin_VisibleControlChange(CTRL_OUTPUT, False);
+    end;
+  end;
+
+  case stlIDEs.ItemIndex of
+    0: begin
+        mnuTNew.Caption := 'New Plugin';
+      end;
+    1: begin
+        mnuTNew.Caption := 'New Unit';
+        sciCallTips.ApiStrings.Clear;
+        sciAutoComplete.AStrings.Clear;
+      end;
+    2: begin
+        mnuTNew.Caption := 'New Textfile';
+        sciCallTips.ApiStrings.Clear;
+        sciAutoComplete.AStrings.Clear;
+      end;
+  end;
+  ActivateProjects(stlIDEs.ItemIndex, True);
+
+  trvExplorer.Items.Clear;
+  FillCodeExplorer(GetCurrLang.Name);
+end;
+
+procedure TfrmMain.tbDocsTabSelected(Sender: TObject; Item: TJvTabBarItem);
+var Collection: TDocCollection;
+begin
+  if (not Started) or (pnlLoading.Visible) or (not Assigned(Item)) or (Screen.Cursor <> crDefault) then exit;
+
+  if (lstOutput.Visible) then begin
+    if Plugin_VisibleControlChange(CTRL_OUTPUT, False) then begin
+      splOutput.Hide;
+      lstOutput.Hide;
+      Plugin_VisibleControlChange(CTRL_OUTPUT, False);
+    end;
+  end;
+
+  case stlIDEs.ItemIndex of
+    0: Collection := PawnProjects; // Pawn
+    1: Collection := CPPProjects; // C++
+    else Collection := OtherProjects; // Other
+  end;
+  Collection.Activate(Item.Index, True);
+end;
+
+procedure TfrmMain.tbDocsMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if Button = mbRight then begin
+    SelectedTab := tbDocs.TabAt(X, Y);
+    if Assigned(SelectedTab) then
+      ppmDocuments.Popup(Mouse.CursorPos.X, Mouse.CursorPos.Y);
+  end;
+end;
+
+procedure TfrmMain.tbDocsTabClosing(Sender: TObject; Item: TJvTabBarItem;
+  var AllowClose: Boolean);
+var Collection: TDocCollection;
+begin
+  AllowClose := False;
+  if (Started) and (Screen.Cursor = crDefault) and (not pnlLoading.Visible) then begin
+    Screen.Cursor := crHourGlass;
+    case stlIDEs.ItemIndex of
+      0: Collection := PawnProjects; // Pawn
+      1: Collection := CPPProjects; // C++
+      else Collection := OtherProjects; // Other
+    end;
+
+    if tbDocs.Tabs.IndexOf(Item) <> -1 then begin
+      if CloseDocument(TDocument(Collection.Items[tbDocs.Tabs.IndexOf(Item)]), True, False) then
+        tbDocs.Tabs.Delete(tbDocs.Tabs.IndexOf(Item));
+    end;
+    Screen.Cursor := crDefault;
+  end;
 end;
 
 end.

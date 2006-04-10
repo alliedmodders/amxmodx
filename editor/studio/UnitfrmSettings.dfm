@@ -64,7 +64,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 351
     Height = 260
-    ActivePage = jspAutocompleteCheck
+    ActivePage = jspHighlighter
     PropagateEnable = False
     Align = alClient
     OnChange = jplSettingsChange

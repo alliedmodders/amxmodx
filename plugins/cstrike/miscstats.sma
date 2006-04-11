@@ -78,7 +78,6 @@ new g_doubleKillId
 new g_friend[33]
 new g_firstBlood
 new g_center1_sync
-new g_center2_sync
 new g_announce_sync
 new g_status_sync
 new g_left_sync
@@ -194,7 +193,6 @@ public plugin_init()
 	}
 	
 	g_center1_sync = CreateHudSyncObj()
-	g_center2_sync = CreateHudSyncObj()
 	g_announce_sync = CreateHudSyncObj()
 	g_status_sync = CreateHudSyncObj()
 	g_left_sync = CreateHudSyncObj()
@@ -449,7 +447,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				replace(message, 127, "$kn", killer_name)
 				
 				set_hudmessage(100, 100, 255, -1.0, 0.29, 0, 6.0, 6.0, 0.5, 0.15, -1)
-				ShowSyncHudMsg(players[i], g_center2_sync, "%s", message)
+				ShowSyncHudMsg(players[i], g_announce_sync, "%s", message)
 			}
 		}
 		

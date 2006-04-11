@@ -36,11 +36,12 @@
 #include <amxmisc>
 
 #define SPEED 0.3
+#define SCROLLMSG_SIZE	512
 
 new g_startPos
 new g_endPos
-new g_scrollMsg[384]
-new g_displayMsg[384]
+new g_scrollMsg[SCROLLMSG_SIZE]
+new g_displayMsg[SCROLLMSG_SIZE]
 new Float:g_xPos
 new g_Length
 new g_Frequency
@@ -90,12 +91,12 @@ public msgInit()
 public setMessage()
 {
 	remove_task(123)		/* remove current messaging */
-	read_argv(1, g_scrollMsg, 380)
+	read_argv(1, g_scrollMsg, SCROLLMSG_SIZE-1)
 	
 	new hostname[64]
 	
 	get_cvar_string("hostname", hostname, 63)
-	replace(g_scrollMsg, 380, "%hostname%", hostname)
+	replace(g_scrollMsg, SCROLLMSG_SIZE-1, "%hostname%", hostname)
 	g_Length = strlen(g_scrollMsg)
 	
 	new mytime[32]

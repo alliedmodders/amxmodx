@@ -229,7 +229,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Sqlite Source"
+			Name="SQLite Source"
 			>
 			<File
 				RelativePath="..\sqlite-source\alter.c"
@@ -377,10 +377,6 @@
 			</File>
 			<File
 				RelativePath="..\sqlite-source\table.c"
-				>
-			</File>
-			<File
-				RelativePath="..\sqlite-source\tclsqlite.c"
 				>
 			</File>
 			<File

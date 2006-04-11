@@ -16,7 +16,7 @@ OBJECTS = meta_api.cpp CFile.cpp CVault.cpp vault.cpp float.cpp file.cpp modules
 	srvcmd.cpp strptime.cpp amxcore.cpp amxtime.cpp power.cpp amxxlog.cpp fakemeta.cpp \
 	amxxfile.cpp CLang.cpp md5.cpp emsg.cpp CForward.cpp CPlugin.cpp CModule.cpp \
 	CMenu.cpp util.cpp amx.cpp amxdbg.cpp natives.cpp newmenus.cpp debugger.cpp \
-	optimizer.cpp format.cpp
+	optimizer.cpp format.cpp binlog.cpp
 
 LINK = -lz /lib/libstdc++.a
 
@@ -46,7 +46,7 @@ else
 	BINARY = $(NAME)_i386.so
 	OBJECTS += JIT/amxexecn.o JIT/amxjitsn.o JIT/natives-x86.o
 	OBJECTS += JIT/helpers-x86.o
-	CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32
+	CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32 -DBINLOG_ENABLED
 	OPT_FLAGS += -march=i586
 endif
 

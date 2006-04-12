@@ -39,7 +39,7 @@ inline edict_t* INDEXENT2( int iEdictNum )
 	}
 #endif
 
-#define CHECK_ENTITY(x) if (x != 0 && (FNullEnt(INDEXENT2(x)) || x < 0 || x > gpGlobals->maxEntities)) { MF_RaiseAmxError(amx,AMX_ERR_NATIVE); return 0; }
+#define CHECK_ENTITY(x) if (x != 0 && (FNullEnt(INDEXENT2(x)) || x < 0 || x > gpGlobals->maxEntities)) { MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity"); return 0; }
 extern AMX_NATIVE_INFO engfunc_natives[];
 extern AMX_NATIVE_INFO dllfunc_natives[];
 extern AMX_NATIVE_INFO forward_natives[];

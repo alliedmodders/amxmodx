@@ -122,7 +122,7 @@ static cell AMX_NATIVE_CALL ns_set_player_model(AMX *amx, cell *params)
 	// Params: set_player_model(id,szModel[])
 	if (!(params[1] > 0 && params[1] <= gpGlobals->maxClients))
 	{
-		MF_Log("Can't set player model for a non-player entity.",MODULE_LOGTAG);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Can't set player model for a non-player entity");
 		return 0;
 	}
 	int len;
@@ -144,7 +144,7 @@ static cell AMX_NATIVE_CALL ns_set_player_skin(AMX *amx, cell *params)
 	// Params: set_player_skin(id,skin=-1)
 	if (!(params[1] > 0 && params[1] <= gpGlobals->maxClients))
 	{
-		LOG_ERROR(PLID,"[%s] Can't set player skin for a non-player entity.",MODULE_LOGTAG);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Can't set player skin for a non-player entity");
 		return 0;
 	}
 	CPlayer *player = GET_PLAYER_I(params[1]);
@@ -166,7 +166,7 @@ static cell AMX_NATIVE_CALL ns_set_player_body(AMX *amx, cell *params)
 	// Params: set_player_body(id,body=-1)
 	if (!(params[1] > 0 && params[1] <= gpGlobals->maxClients))
 	{
-		LOG_ERROR(PLID,"[%s] Can't set player body for a non-player entity.",MODULE_LOGTAG);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Can't set player body for a non-player entity");
 		return 0;
 	}
 	CPlayer *player = GET_PLAYER_I(params[1]);
@@ -311,7 +311,7 @@ static cell AMX_NATIVE_CALL ns_giveitem(AMX *amx, cell *params)
 	edict_t *object=CREATE_NAMED_ENTITY(ALLOC_STRING(classname));	//create
 	if (!object)
 	{
-		MF_Log("Error creating entity `%s`",classname);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Error creating entity \"%s\"", classname);
 		return 0;
 	}
 	SET_ORIGIN(object,player->v.origin);							// move to player

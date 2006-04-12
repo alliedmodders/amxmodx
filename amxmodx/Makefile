@@ -9,16 +9,19 @@ MM_ROOT = ../metamod/metamod
 OPT_FLAGS = -O2 -funroll-loops -s -fomit-frame-pointer -pipe
 DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
-NAME = amxmodx_mm
+NAME = amxmodx
+
+SUFFIX_32 = mm_i386.so
+SUFFIX_64 = mm_amd64.so
 
 OBJECTS = meta_api.cpp CFile.cpp CVault.cpp vault.cpp float.cpp file.cpp modules.cpp \
 	CMisc.cpp CTask.cpp string.cpp amxmodx.cpp CEvent.cpp CCmd.cpp CLogEvent.cpp \
 	srvcmd.cpp strptime.cpp amxcore.cpp amxtime.cpp power.cpp amxxlog.cpp fakemeta.cpp \
 	amxxfile.cpp CLang.cpp md5.cpp emsg.cpp CForward.cpp CPlugin.cpp CModule.cpp \
 	CMenu.cpp util.cpp amx.cpp amxdbg.cpp natives.cpp newmenus.cpp debugger.cpp \
-	optimizer.cpp format.cpp binlog.cpp
+	optimizer.cpp format.cpp
 
-LINK = -lz /lib/libstdc++.a
+LINK = /lib/libstdc++.a
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
 	-I$(MM_ROOT) -Lzlib -I$(HLSDK)/common
@@ -31,22 +34,26 @@ else
 	CFLAGS = $(OPT_FLAGS)
 endif
 
-ifeq "$(MMGR)" "true"
-	OBJECTS += mmgr/mmgr.cpp
-	CFLAGS += -DMEMORY_TEST
+ifeq "$(BINLOG)" "true"
+	NAME := $(NAME)_bl
+	BIN_DIR := $(BIN_DIR)BinLog
+	OBJECTS += binlog.cpp
+	CFLAGS += -DBINLOG_ENABLED
 endif
 
 CFLAGS += -DLINUX -DNDEBUG -fPIC -Wno-deprecated -DHAVE_STDINT_H -static-libgcc -fno-rtti -fno-exceptions
 
 ifeq "$(AMD64)" "true"
-	BINARY = $(NAME)_amd64.so
-	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -DAMD64 -m64 
+	BINARY = $(NAME)_$(SUFFIX_64)
+	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -DAMD64 -m64
+	LINK += -lz64
 	OBJECTS += JIT/natives-amd64.o
 else
-	BINARY = $(NAME)_i386.so
+	BINARY = $(NAME)_$(SUFFIX_32)
 	OBJECTS += JIT/amxexecn.o JIT/amxjitsn.o JIT/natives-x86.o
 	OBJECTS += JIT/helpers-x86.o
-	CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32 -DBINLOG_ENABLED
+	CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32
+	LINK += -lz
 	OPT_FLAGS += -march=i586
 endif
 
@@ -63,23 +70,23 @@ amd64:
 	rm -f zlib/libz.a
 	$(MAKE) all AMD64=true
 
-amd64_mmgr:
-	rm -f zlib/libz.a
-	$(MAKE) all AMD64=true MMGR=true
-
-amd64_debug_mmgr:
-	rm -f zlib/libz.a
-	$(MAKE) all AMD64=true DEBUG=true MMGR=true
-
 amd64_debug:
 	rm -f zlib/libz.a
 	$(MAKE) all AMD64=true DEBUG=true
 
-mmgr:
-	$(MAKE) all MMGR=true
+amd64_binlog:
+	rm -f zlib/libz.a
+	$(MAKE) all AMD64=true BINLOG=true
 
-debug_mmgr:
-	$(MAKE) all MMGR=true DEBUG=true
+amd64_binlog_debug:
+	rm -f zlib/libz.a
+	$(MAKE) all AMD64=true BINLOG=true DEBUG=true
+	
+binlog:
+	$(MAKE) all BINLOG=true
+	
+binlog_debug:
+	$(MAKE) all BINLOG=true DEBUG=true
 
 amxmodx: $(OBJ_LINUX)
 	$(CPP) $(INCLUDE) $(CFLAGS) $(OBJ_LINUX) $(LINK) -shared -ldl -lm -o$(BIN_DIR)/$(BINARY)
@@ -91,7 +98,14 @@ default: all
 
 clean:
 	rm -rf Release/*.o
-	rm -rf Release/$(BINARY)
+	rm -rf Release/$(NAME)_$(SUFFIX_32)
+	rm -rf Release/$(NAME)_$(SUFFIX_64)
+	rm -rf ReleaseBinLog/*.o
+	rm -rf ReleaseBinLog/$(NAME)_bl_$(SUFFIX_32)
+	rm -rf ReleaseBinLog/$(NAME)_bl_$(SUFFIX_64)
 	rm -rf Debug/*.o
-	rm -rf Debug/$(BINARY)
-
+	rm -rf Debug/$(NAME)_$(SUFFIX_32)
+	rm -rf Debug/$(NAME)_$(SUFFIX_64)
+	rm -rf DebugBinLog/*.o
+	rm -rf DebugBinLog/$(NAME)_bl_$(SUFFIX_32)
+	rm -rf DebugBinLog/$(NAME)_bl_$(SUFFIX_64)

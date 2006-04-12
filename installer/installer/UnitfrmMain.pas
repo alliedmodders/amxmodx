@@ -39,10 +39,6 @@ type
     lblSubTitle2: TLabel;
     lblInstallMethod: TLabel;
     pnlInstallMethod: TPanel;
-    frbDedicatedServer: TFlatRadioButton;
-    frbListenServer: TFlatRadioButton;
-    frbSelectMod: TFlatRadioButton;
-    frbFTP: TFlatRadioButton;
     cmdBack: TFlatButton;
     jspFTP: TJvStandardPage;
     pnlHeader3: TPanel;
@@ -99,10 +95,21 @@ type
     IdAntiFreeze: TIdAntiFreeze;
     lblStep4: TLabel;
     cboGameAddon: TFlatComboBox;
-    frbStandaloneServer: TFlatRadioButton;
     tmrSpeed: TTimer;
     IdLogFile: TIdLogFile;
     lblInfo4: TLabel;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    pnlLocal: TPanel;
+    frbDedicatedServer: TFlatRadioButton;
+    frbListenServer: TFlatRadioButton;
+    frbStandaloneServer: TFlatRadioButton;
+    frbSelectMod: TFlatRadioButton;
+    Label5: TLabel;
+    pnlRemote: TPanel;
+    frbFTP: TFlatRadioButton;
     procedure jvwStepsCancelButtonClick(Sender: TObject);
     procedure cmdCancelClick(Sender: TObject);
     procedure cmdNextClick(Sender: TObject);
@@ -126,6 +133,8 @@ type
     procedure trvDirectoriesCollapsing(Sender: TObject; Node: TTreeNode;
       var AllowCollapse: Boolean);
     procedure jspFTPShow(Sender: TObject);
+    procedure frbFTPClick(Sender: TObject);
+    procedure frbLocalClick(Sender: TObject);
   private
     OldProgress: Integer;
     CurrProgress: Integer;
@@ -785,6 +794,19 @@ end;
 procedure TfrmMain.jspFTPShow(Sender: TObject);
 begin
   Cancel := False;
+end;
+
+procedure TfrmMain.frbFTPClick(Sender: TObject);
+begin
+  frbDedicatedServer.Checked := False;
+  frbListenServer.Checked := False;
+  frbStandaloneServer.Checked := False;
+  frbSelectMod.Checked := False;
+end;
+
+procedure TfrmMain.frbLocalClick(Sender: TObject);
+begin
+  frbFTP.Checked := False;
 end;
 
 end.

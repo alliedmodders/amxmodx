@@ -512,17 +512,17 @@ begin
     if OS = osWindows then begin
       eStr.Add('win32   addons\amxmodx\dlls\amxmodx_mm.dll');
       eStr.Add('; Enable this instead for binary logging');
-      eStr.Add('; win32   addons\amxmodx\dlls\amxmodx_mm_bl.dll');
+      eStr.Add('; win32   addons\amxmodx\dlls\amxmodx_bl_mm.dll');
     end
     else if OS = osLinux32 then begin
       eStr.Add('linux   addons/amxmodx/dlls/amxmodx_mm_i386.so');
       eStr.Add('; Enable this instead for binary logging');
-      eStr.Add('; linux   addons\amxmodx\dlls\amxmodx_mm_bli386.so');
+      eStr.Add('; linux   addons/amxmodx/dlls/amxmodx_bl_mm_i386.so');
     end
     else begin
       eStr.Add('linux   addons/amxmodx/dlls/amxmodx_mm_amd64.so');
       eStr.Add('; Enable this instead for binary logging');
-      eStr.Add('; linux   addons\amxmodx\dlls\amxmodx_mm_blamd46.so');
+      eStr.Add('; linux   addons/amxmodx/dlls/amxmodx_bl_mm_amd64.so');
     end;
     eStr.SaveToFile(ePath + 'addons\metamod\plugins.ini');
     eStr.Free;

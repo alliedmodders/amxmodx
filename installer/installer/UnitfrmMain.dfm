@@ -1,6 +1,6 @@
 object frmMain: TfrmMain
-  Left = 160
-  Top = 182
+  Left = 423
+  Top = 274
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'AMX Mod X Installer'
@@ -57,7 +57,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 527
     Height = 314
-    ActivePage = jspWelcome
+    ActivePage = jspInstallMethod
     PropagateEnable = False
     Align = alClient
     OnChange = jplWizardChange
@@ -5762,10 +5762,10 @@ object frmMain: TfrmMain
       Height = 314
       object lblInstallMethod: TLabel
         Left = 124
-        Top = 124
-        Width = 144
+        Top = 104
+        Width = 223
         Height = 13
-        Caption = 'Please select a install method:'
+        Caption = 'Please select an install method for AMX Mod X:'
       end
       object pnlHeader2: TPanel
         Left = 0
@@ -5825,9 +5825,9 @@ object frmMain: TfrmMain
         object lblSubTitle2: TLabel
           Left = 22
           Top = 28
-          Width = 235
+          Width = 241
           Height = 13
-          Caption = 'Choose a install method for installing AMX Mod X.'
+          Caption = 'Choose an install method for installing AMX Mod X.'
         end
         object bvlSpacer2: TBevel
           Left = 0
@@ -5840,52 +5840,138 @@ object frmMain: TfrmMain
       end
       object pnlInstallMethod: TPanel
         Left = 122
-        Top = 142
+        Top = 120
         Width = 267
-        Height = 97
+        Height = 153
         BevelOuter = bvLowered
         TabOrder = 1
-        object frbDedicatedServer: TFlatRadioButton
+        object Label1: TLabel
           Left = 4
-          Top = 4
-          Width = 135
-          Height = 17
-          Caption = 'Steam Dedicated Server'
-          Checked = True
+          Top = 16
+          Width = 243
+          Height = 11
+          Caption = 'Use this if your server has been installed on your own PC:'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -9
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object Label2: TLabel
+          Left = 209
+          Top = 16
+          Width = 18
+          Height = 11
+          Caption = 'own'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -9
+          Font.Name = 'Tahoma'
+          Font.Style = [fsItalic]
+          ParentFont = False
+        end
+        object Label3: TLabel
+          Left = 4
+          Top = 100
+          Width = 91
+          Height = 13
+          Caption = 'Remote installation'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsUnderline]
+          ParentFont = False
+        end
+        object Label4: TLabel
+          Left = 4
+          Top = 2
+          Width = 78
+          Height = 13
+          Caption = 'Local installation'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsUnderline]
+          ParentFont = False
+        end
+        object Label5: TLabel
+          Left = 4
+          Top = 114
+          Width = 209
+          Height = 11
+          Caption = 'Use this if you (for example) rented a gameserver:'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -9
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object pnlLocal: TPanel
+          Left = 4
+          Top = 28
+          Width = 259
+          Height = 65
+          BevelOuter = bvLowered
           TabOrder = 0
-          TabStop = True
+          object frbDedicatedServer: TFlatRadioButton
+            Left = 4
+            Top = 4
+            Width = 135
+            Height = 17
+            Caption = 'Steam Dedicated Server'
+            Checked = True
+            TabOrder = 0
+            TabStop = True
+            OnClick = frbLocalClick
+          end
+          object frbListenServer: TFlatRadioButton
+            Left = 4
+            Top = 18
+            Width = 115
+            Height = 17
+            Caption = 'Steam Listen Server'
+            TabOrder = 1
+            OnClick = frbLocalClick
+          end
+          object frbStandaloneServer: TFlatRadioButton
+            Left = 4
+            Top = 32
+            Width = 107
+            Height = 17
+            Caption = 'Standalone Server'
+            TabOrder = 2
+            OnClick = frbLocalClick
+          end
+          object frbSelectMod: TFlatRadioButton
+            Left = 4
+            Top = 46
+            Width = 117
+            Height = 17
+            Caption = 'Select mod directory'
+            TabOrder = 3
+            OnClick = frbLocalClick
+          end
         end
-        object frbListenServer: TFlatRadioButton
+        object pnlRemote: TPanel
           Left = 4
-          Top = 22
-          Width = 115
-          Height = 17
-          Caption = 'Steam Listen Server'
+          Top = 126
+          Width = 259
+          Height = 23
+          BevelOuter = bvLowered
           TabOrder = 1
-        end
-        object frbSelectMod: TFlatRadioButton
-          Left = 4
-          Top = 58
-          Width = 117
-          Height = 17
-          Caption = 'Select mod directory'
-          TabOrder = 3
-        end
-        object frbFTP: TFlatRadioButton
-          Left = 4
-          Top = 76
-          Width = 35
-          Height = 17
-          Caption = 'FTP'
-          TabOrder = 4
-        end
-        object frbStandaloneServer: TFlatRadioButton
-          Left = 4
-          Top = 40
-          Width = 107
-          Height = 17
-          Caption = 'Standalone Server'
-          TabOrder = 2
+          object frbFTP: TFlatRadioButton
+            Left = 4
+            Top = 4
+            Width = 35
+            Height = 17
+            Caption = 'FTP'
+            TabOrder = 0
+            OnClick = frbFTPClick
+          end
         end
       end
     end

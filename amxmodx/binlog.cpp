@@ -1,8 +1,8 @@
+#if defined BINLOG_ENABLED
+
 #include <time.h>
 #include "amxmodx.h"
 #include "binlog.h"
-
-#if defined BINLOG_ENABLED
 
 BinLog g_BinLog;
 int g_binlog_level = 0;

@@ -9,7 +9,10 @@ MM_ROOT = ../../../metamod/metamod
 OPT_FLAGS = -O2 -funroll-loops -s -pipe
 DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
-NAME = tsx_amxx
+NAME = tsx
+
+BIN_SUFFIX_32 = amxx_i386.so
+BIN_SUFFIX_64 = amxx_amd64.so
 
 OBJECTS = CMisc.cpp CRank.cpp NBase.cpp NRank.cpp \
 	Utils.cpp amxxmodule.cpp moduleconfig.cpp \
@@ -18,7 +21,7 @@ OBJECTS = CMisc.cpp CRank.cpp NBase.cpp NRank.cpp \
 LINK = 
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
-	-I$(MM_ROOT) -Lzlib -I$(HLSDK)/common
+	-I$(MM_ROOT) -I$(HLSDK)/common
 
 ifeq "$(DEBUG)" "true"
 	BIN_DIR = Debug
@@ -31,10 +34,10 @@ endif
 CFLAGS += -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H -static-libgcc -fno-rtti
 
 ifeq "$(AMD64)" "true"
-	BINARY = $(NAME)_amd64.so
+	BINARY = $(NAME)_$(BIN_SUFFIX_64)
 	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -m64 
 else
-	BINARY = $(NAME)_i386.so
+	BINARY = $(NAME)_$(BIN_SUFFIX_32)
 	CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32
 	OPT_FLAGS += -march=i586
 endif
@@ -61,7 +64,8 @@ default: all
 
 clean:
 	rm -rf Release/*.o
-	rm -rf Release/$(BINARY)
+	rm -rf Release/$(NAME)_$(BIN_SUFFIX_32)
+	rm -rf Release/$(NAME)_$(BIN_SUFFIX_64)
 	rm -rf Debug/*.o
-	rm -rf Debug/$(BINARY)
-
+	rm -rf Debug/$(NAME)_$(BIN_SUFFIX_32)
+	rm -rf Debug/$(NAME)_$(BIN_SUFFIX_64)

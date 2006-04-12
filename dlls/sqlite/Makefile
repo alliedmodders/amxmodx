@@ -10,8 +10,11 @@ OPT_FLAGS = -O3 -funroll-loops -s -pipe -fomit-frame-pointer
 DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
 CC = cc
-NAME = sqlite_amxx
+NAME = sqlite
 SQL = sqlite-source
+
+BIN_SUFFIX_32 = amxx_i386.so
+BIN_SUFFIX_64 = amxx_amd64.so
 
 CPP_OBJECTS = sqlite.cpp sqlite_amx.cpp amxxmodule.cpp
 C_OBJECTS = $(SQL)/attach.c $(SQL)/auth.c $(SQL)/btree.c $(SQL)/build.c \
@@ -44,12 +47,12 @@ CPPFLAGS += -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H -fno-
 CFLAGS += -DNDEBUG -fPIC -DHAVE_STDINT_H
 
 ifeq "$(AMD64)" "true"
-	BINARY = $(NAME)_amd64.so
+	BINARY = $(NAME)_$(BIN_SUFFIX_64)
 	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -m64
 else
-	BINARY = $(NAME)_i386.so
+	BINARY = $(NAME)_$(BIN_SUFFIX_32)
 	CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32
-	OPT_FLAGS += -march=i686
+	OPT_FLAGS += -march=i586
 endif
 
 OBJ_LINUX_CPP := $(CPP_OBJECTS:%.cpp=$(BIN_DIR)/%.o)
@@ -80,9 +83,9 @@ debug:
 default: all
 
 clean:
-	rm -rf Release/$(SQL)/*.o
 	rm -rf Release/*.o
-	rm -rf Release/$(BINARY)
+	rm -rf Release/$(NAME)_$(BIN_SUFFIX_32)
+	rm -rf Release/$(NAME)_$(BIN_SUFFIX_64)
 	rm -rf Debug/*.o
-	rm -rf Debug/$(BINARY)
-
+	rm -rf Debug/$(NAME)_$(BIN_SUFFIX_32)
+	rm -rf Debug/$(NAME)_$(BIN_SUFFIX_64)

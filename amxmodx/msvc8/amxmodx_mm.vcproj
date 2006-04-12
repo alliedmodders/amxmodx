@@ -89,7 +89,7 @@
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\jitdebug/amxx_mm.pdb"
-				ImportLibrary=".\jitdebug/amxx_mm.lib"
+				ImportLibrary=".\jitdebug/amxmodx_mm.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -197,7 +197,7 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\jitrelease/amxmodx_mm.pdb"
 				GenerateMapFile="true"
-				ImportLibrary=".\jitrelease/amxx_mm.lib"
+				ImportLibrary=".\jitrelease/amxmodx_mm.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -290,7 +290,7 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="..\zlib\zlib.lib ..\JIT\amxjitsn.obj ..\JIT\amxexecn.obj ..\JIT\natives-x86.obj"
-				OutputFile="jitdebugbinlog/amxmodx_mm.dll"
+				OutputFile="jitdebugbinlog/amxmodx_bl_mm.dll"
 				Version="0.1"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -298,8 +298,8 @@
 				IgnoreDefaultLibraryNames="MSVCRT;LIBC"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\jitdebugbinlog/amxx_mm.pdb"
-				ImportLibrary=".\jitdebugbinlog/amxx_mm.lib"
+				ProgramDatabaseFile=".\jitdebugbinlog/amxmodx_bl_mm.pdb"
+				ImportLibrary=".\jitdebugbinlog/amxmodx_bl_mm.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -397,16 +397,16 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="..\zlib\zlib.lib ..\JIT\amxjitsn.obj ..\JIT\amxexecn.obj ..\JIT\natives-x86.obj"
-				OutputFile="jitreleasebinlog/amxmodx_mm.dll"
+				OutputFile="jitreleasebinlog/amxmodx_bl_mm.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\extra\lib_win32"
 				IgnoreDefaultLibraryNames="MSVCRT;LIBC"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\jitreleasebinlog/amxmodx_mm.pdb"
+				ProgramDatabaseFile=".\jitreleasebinlog/amxmodx_bl_mm.pdb"
 				GenerateMapFile="true"
-				ImportLibrary=".\jitreleasebinlog/amxx_mm.lib"
+				ImportLibrary=".\jitreleasebinlog/amxmodx_bl_mm.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -472,6 +472,22 @@
 			<File
 				RelativePath="..\binlog.cpp"
 				>
+				<FileConfiguration
+					Name="JITDebug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="JITRelease|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\CCmd.cpp"
@@ -516,22 +532,6 @@
 			<File
 				RelativePath="..\CTask.cpp"
 				>
-				<FileConfiguration
-					Name="JITRelease|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="JITReleaseBinLog|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="0"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\CVault.cpp"

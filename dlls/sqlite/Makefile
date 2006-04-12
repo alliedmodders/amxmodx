@@ -67,7 +67,6 @@ $(BIN_DIR)/%.o: %.c
 
 all:
 	mkdir -p $(BIN_DIR)
-	mkdir -p $(BIN_DIR)/sdk
 	mkdir -p $(BIN_DIR)/$(SQL)
 	$(MAKE) sqlite
 
@@ -83,9 +82,11 @@ debug:
 default: all
 
 clean:
+	rm -rf Release/$(SQL)/*.o
 	rm -rf Release/*.o
 	rm -rf Release/$(NAME)_$(BIN_SUFFIX_32)
 	rm -rf Release/$(NAME)_$(BIN_SUFFIX_64)
+	rm -rf Debug/$(SQL)/*.o
 	rm -rf Debug/*.o
 	rm -rf Debug/$(NAME)_$(BIN_SUFFIX_32)
 	rm -rf Debug/$(NAME)_$(BIN_SUFFIX_64)

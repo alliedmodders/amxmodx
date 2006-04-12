@@ -11,8 +11,8 @@ DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
 NAME = amxmodx
 
-SUFFIX_32 = mm_i386.so
-SUFFIX_64 = mm_amd64.so
+BIN_SUFFIX_32 = mm_i386.so
+BIN_SUFFIX_64 = mm_amd64.so
 
 OBJECTS = meta_api.cpp CFile.cpp CVault.cpp vault.cpp float.cpp file.cpp modules.cpp \
 	CMisc.cpp CTask.cpp string.cpp amxmodx.cpp CEvent.cpp CCmd.cpp CLogEvent.cpp \
@@ -44,12 +44,12 @@ endif
 CFLAGS += -DLINUX -DNDEBUG -fPIC -Wno-deprecated -DHAVE_STDINT_H -static-libgcc -fno-rtti -fno-exceptions
 
 ifeq "$(AMD64)" "true"
-	BINARY = $(NAME)_$(SUFFIX_64)
+	BINARY = $(NAME)_$(BIN_SUFFIX_64)
 	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -DAMD64 -m64
 	LINK += -lz64
 	OBJECTS += JIT/natives-amd64.o
 else
-	BINARY = $(NAME)_$(SUFFIX_32)
+	BINARY = $(NAME)_$(BIN_SUFFIX_32)
 	OBJECTS += JIT/amxexecn.o JIT/amxjitsn.o JIT/natives-x86.o
 	OBJECTS += JIT/helpers-x86.o
 	CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32
@@ -98,14 +98,14 @@ default: all
 
 clean:
 	rm -rf Release/*.o
-	rm -rf Release/$(NAME)_$(SUFFIX_32)
-	rm -rf Release/$(NAME)_$(SUFFIX_64)
+	rm -rf Release/$(NAME)_$(BIN_SUFFIX_32)
+	rm -rf Release/$(NAME)_$(BIN_SUFFIX_64)
 	rm -rf ReleaseBinLog/*.o
-	rm -rf ReleaseBinLog/$(NAME)_bl_$(SUFFIX_32)
-	rm -rf ReleaseBinLog/$(NAME)_bl_$(SUFFIX_64)
+	rm -rf ReleaseBinLog/$(NAME)_bl_$(BIN_SUFFIX_32)
+	rm -rf ReleaseBinLog/$(NAME)_bl_$(BIN_SUFFIX_64)
 	rm -rf Debug/*.o
-	rm -rf Debug/$(NAME)_$(SUFFIX_32)
-	rm -rf Debug/$(NAME)_$(SUFFIX_64)
+	rm -rf Debug/$(NAME)_$(BIN_SUFFIX_32)
+	rm -rf Debug/$(NAME)_$(BIN_SUFFIX_64)
 	rm -rf DebugBinLog/*.o
-	rm -rf DebugBinLog/$(NAME)_bl_$(SUFFIX_32)
-	rm -rf DebugBinLog/$(NAME)_bl_$(SUFFIX_64)
+	rm -rf DebugBinLog/$(NAME)_bl_$(BIN_SUFFIX_32)
+	rm -rf DebugBinLog/$(NAME)_bl_$(BIN_SUFFIX_64)

@@ -57,7 +57,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 527
     Height = 314
-    ActivePage = jspInstallMethod
+    ActivePage = jspWelcome
     PropagateEnable = False
     Align = alClient
     OnChange = jplWizardChange
@@ -5825,9 +5825,9 @@ object frmMain: TfrmMain
         object lblSubTitle2: TLabel
           Left = 22
           Top = 28
-          Width = 241
+          Width = 197
           Height = 13
-          Caption = 'Choose an install method for installing AMX Mod X.'
+          Caption = 'Choose an install method for AMX Mod X.'
         end
         object bvlSpacer2: TBevel
           Left = 0
@@ -5900,9 +5900,11 @@ object frmMain: TfrmMain
         object Label5: TLabel
           Left = 4
           Top = 114
-          Width = 209
+          Width = 257
           Height = 11
-          Caption = 'Use this if you (for example) rented a gameserver:'
+          Caption = 
+            'Use this if you rent a server or if you run it on another server' +
+            ':'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -9

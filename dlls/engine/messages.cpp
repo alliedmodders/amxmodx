@@ -357,7 +357,7 @@ static cell AMX_NATIVE_CALL set_msg_block(AMX *amx, cell *params)
 	int block = params[2];
 
 	if (msgid < 1 || msgid > 255) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid message id");
 		return 0;
 	}
 
@@ -371,7 +371,7 @@ static cell AMX_NATIVE_CALL get_msg_block(AMX *amx, cell *params)
 	int msgid = params[1];
 
 	if (msgid < 1 || msgid > 255) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid message id");
 		return 0;
 	}
 
@@ -490,7 +490,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_string(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_msg_origin(AMX *amx, cell *params)
 {
 	if (!inhook) {
-		MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Not in a message hook");
 		return 0;
 	}
 

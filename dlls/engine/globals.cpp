@@ -50,7 +50,7 @@ static cell AMX_NATIVE_CALL get_global_float(AMX *amx, cell *params)
 			returnValue = gpGlobals->trace_startsolid;
 			break;
 		default:
-			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+			MF_LogError(amx, AMX_ERR_NATIVE, "Undefined global_float index %d", params[1]);
 			return 0;
 	}
 
@@ -81,7 +81,7 @@ static cell AMX_NATIVE_CALL get_global_int(AMX *amx, cell *params)
 			returnValue = gpGlobals->trace_hitgroup;
 			break;
 		default:
-			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+			MF_LogError(amx, AMX_ERR_NATIVE, "Undefined global_int index %d", params[1]);
 			return 0;
 	}
 
@@ -103,7 +103,7 @@ static cell AMX_NATIVE_CALL get_global_string(AMX *amx, cell *params)
 			returnValue = &(gpGlobals->startspot);
 			break;
 		default:
-			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+			MF_LogError(amx, AMX_ERR_NATIVE, "Undefined global_string index %d", params[1]);
 			return 0;
 	}
 
@@ -135,7 +135,7 @@ static cell AMX_NATIVE_CALL get_global_vector(AMX *amx, cell *params) // globals
 			fetchedVector = gpGlobals->vecLandmarkOffset;
 			break;
 		default:
-			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+			MF_LogError(amx, AMX_ERR_NATIVE, "Undefined global_vector index %d", params[1]);
 			return 0;
 	}
 
@@ -155,7 +155,7 @@ static cell AMX_NATIVE_CALL get_global_edict(AMX *amx, cell *params) // globals_
 			pReturnEntity = gpGlobals->trace_ent;
 			break;
 		default:
-			MF_RaiseAmxError(amx, AMX_ERR_NATIVE);
+			MF_LogError(amx, AMX_ERR_NATIVE, "Undefined global_edict index %d", params[1]);
 			return 0;
 	}
 

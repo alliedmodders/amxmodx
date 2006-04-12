@@ -1,2 +1,0 @@
-; dlltool --base-file C:\DOCUME~1\DVANDE~1.ACA\LOCALS~1\Temp/cca04056.base --output-exp Geolib.exp --dllname Geolib.dll --output-def libGeolib.def --no-export-all-symbols --add-stdcall-alias --exclude-symbol=DllMainCRTStartup@12 --def C:\DOCUME~1\DVANDE~1.ACA\LOCALS~1\Temp/cca04056.def --output-lib libGeolib.a
-EXPORTS

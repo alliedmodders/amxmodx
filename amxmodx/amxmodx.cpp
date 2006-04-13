@@ -59,7 +59,7 @@ static cell AMX_NATIVE_CALL set_xvar_num(AMX *amx, cell *params)
 {
 	if (g_xvars.setValue(params[1], params[2]))
 	{
-		amx_RaiseError(amx, AMX_ERR_NATIVE);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid xvar id");
 		return 0;
 	}
 
@@ -1104,7 +1104,7 @@ static cell AMX_NATIVE_CALL amx_md5_file(AMX *amx, cell *params)
 	
 	if (!fp)
 	{
-		amx_RaiseError(amx, AMX_ERR_NATIVE);
+		LogError(amx, AMX_ERR_NATIVE, "Cant open file \"%s\"", file);
 		return 0;
 	}
 
@@ -1311,8 +1311,7 @@ static cell AMX_NATIVE_CALL register_event(AMX *amx, cell *params) /* 2 param */
 
 	if ((pos = g_events.getEventId(sTemp)) == 0)
 	{
-		AMXXLOG_Log("[AMXX] Invalid event (name \"%s\") (plugin \"%s\")", sTemp, plugin->getName());
-		amx_RaiseError(amx, AMX_ERR_NATIVE);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid event (name \"%s\") (plugin \"%s\")", sTemp, plugin->getName());
 		return 0;
 	}
 
@@ -1611,9 +1610,7 @@ static cell AMX_NATIVE_CALL message_begin(AMX *amx, cell *params) /* 4 param */
 	if (params[2] < 1 || ((params[2] > 63)		// maximal number of engine messages
 		&& !GET_USER_MSG_NAME(PLID, params[2], NULL)))
 	{
-		AMXXLOG_Log("[AMXX] Plugin called message_begin with an invalid message id (%d).", params[2]);
-		amx_RaiseError(amx, AMX_ERR_NATIVE);
-		
+		LogError(amx, AMX_ERR_NATIVE, "Plugin called message_begin with an invalid message id (%d).", params[2]);
 		return 0;
 	}
 	
@@ -1628,7 +1625,7 @@ static cell AMX_NATIVE_CALL message_begin(AMX *amx, cell *params) /* 4 param */
 		case MSG_PVS_R: case MSG_PAS_R:
 			if (numparam < 3)
 			{
-				amx_RaiseError(amx, AMX_ERR_NATIVE);
+				LogError(amx, AMX_ERR_NATIVE, "Invalid number of parameters passed");
 				return 0;
 			}
 			
@@ -1645,7 +1642,7 @@ static cell AMX_NATIVE_CALL message_begin(AMX *amx, cell *params) /* 4 param */
 		case MSG_ONE:
 			if (numparam < 4)
 			{
-				amx_RaiseError(amx, AMX_ERR_NATIVE);
+				LogError(amx, AMX_ERR_NATIVE, "Invalid number of parameters passed");
 				return 0;
 			}
 		
@@ -1806,12 +1803,6 @@ static cell AMX_NATIVE_CALL get_time(AMX *amx, cell *params) /* 3 param */
 	time_t td = time(NULL);
 	tm* lt = localtime(&td);
 	
-	if (lt == 0)
-	{
-		amx_RaiseError(amx, AMX_ERR_NATIVE);
-		return 0;
-	}
-	
 	char szDate[512];
 	strftime(szDate, 511, sptemp, lt);
 	
@@ -1828,7 +1819,7 @@ static cell AMX_NATIVE_CALL format_time(AMX *amx, cell *params) /* 3 param */
 	
 	if (lt == 0)
 	{
-		amx_RaiseError(amx, AMX_ERR_NATIVE);
+		LogError(amx, AMX_ERR_NATIVE, "Couldn't get localtime");
 		return 0;
 	}
 	
@@ -1854,7 +1845,7 @@ static cell AMX_NATIVE_CALL parse_time(AMX *amx, cell *params) /* 3 param */
 		
 		if (mytime == 0)
 		{
-			amx_RaiseError(amx, AMX_ERR_NATIVE);
+			LogError(amx, AMX_ERR_NATIVE, "Couldn't get localtime");
 			return 0;
 		}
 		
@@ -1865,7 +1856,7 @@ static cell AMX_NATIVE_CALL parse_time(AMX *amx, cell *params) /* 3 param */
 		
 		if (mytime == 0)
 		{
-			amx_RaiseError(amx, AMX_ERR_NATIVE);
+			LogError(amx, AMX_ERR_NATIVE, "Couldn't get localtime");
 			return 0;
 		}
 		
@@ -2217,9 +2208,7 @@ static cell AMX_NATIVE_CALL set_task(AMX *amx, cell *params) /* 2 param */
 	
 	if (iFunc == -1)
 	{
-		AMXXLOG_Log("[AMXX] Function is not present (function \"%s\") (plugin \"%s\")", stemp, plugin->getName());
-		amx_RaiseError(amx, AMX_ERR_NATIVE);
-		
+		LogError(amx, AMX_ERR_NATIVE, "Function is not present (function \"%s\") (plugin \"%s\")", stemp, plugin->getName());
 		return 0;
 	}
 
@@ -2385,7 +2374,7 @@ static cell AMX_NATIVE_CALL pause(AMX *amx, cell *params) /* 3 param */
 
 	if (flags & 2)		// pause function
 	{
-		AMXXLOG_Log("[AMXX] This usage of the native pause() has been deprecated!");
+		LogError(amx, AMX_ERR_NATIVE, "This usage of the native pause() has been deprecated!");
 		return 1;
 	}
 	else if (flags & 4)
@@ -2421,7 +2410,7 @@ static cell AMX_NATIVE_CALL unpause(AMX *amx, cell *params) /* 3 param */
 	
 	if (flags & 2)
 	{
-		AMXXLOG_Log("[AMXX] This usage of the native pause() has been deprecated!");
+		LogError(amx, AMX_ERR_NATIVE, "This usage of the native pause() has been deprecated!");
 		return 1;
 	}
 	else if (flags & 4)
@@ -2576,7 +2565,7 @@ static cell AMX_NATIVE_CALL precache_sound(AMX *amx, cell *params) /* 1 param */
 {
 	if (g_dontprecache)
 	{
-		amx_RaiseError(amx, AMX_ERR_NATIVE);
+		LogError(amx, AMX_ERR_NATIVE, "Precaching not allowed");
 		return 0;
 	}
 	
@@ -2592,7 +2581,7 @@ static cell AMX_NATIVE_CALL precache_model(AMX *amx, cell *params) /* 1 param */
 {
 	if (g_dontprecache)
 	{
-		amx_RaiseError(amx, AMX_ERR_NATIVE);
+		LogError(amx, AMX_ERR_NATIVE, "Precaching not allowed");
 		return 0;
 	}
 	
@@ -2844,7 +2833,7 @@ static cell AMX_NATIVE_CALL parse_loguser(AMX *amx, cell *params)
 	
 	if (len < 6)	// no user to parse!?
 	{
-		amx_RaiseError(amx, AMX_ERR_NATIVE);
+		LogError(amx, AMX_ERR_NATIVE, "No user name specified");
 		return 0;
 	}
 
@@ -2868,7 +2857,7 @@ static cell AMX_NATIVE_CALL parse_loguser(AMX *amx, cell *params)
 	/******** GET AUTHID **********/
 	if (len <= 0)
 	{
-		amx_RaiseError(amx, AMX_ERR_NATIVE);
+		LogError(amx, AMX_ERR_NATIVE, "No Authid found");
 		return 0;
 	}
 	
@@ -2891,7 +2880,7 @@ static cell AMX_NATIVE_CALL parse_loguser(AMX *amx, cell *params)
 	/******** GET USERID **********/
 	if (len <= 0)
 	{
-		amx_RaiseError(amx, AMX_ERR_NATIVE);
+		LogError(amx, AMX_ERR_NATIVE, "No Userid found");
 		return 0;
 	}
 	
@@ -3364,8 +3353,7 @@ static cell AMX_NATIVE_CALL callfunc_push_byval(AMX *amx, cell *params)
 
 	if (g_CallFunc_CurParam == CALLFUNC_MAXPARAMS)
 	{
-		AMXXLOG_Log("[AMXX] callfunc_push_xxx: maximal parameters num: %d", CALLFUNC_MAXPARAMS);
-		amx_RaiseError(amx, AMX_ERR_NATIVE);
+		LogError(amx, AMX_ERR_NATIVE, "Callfunc_push_xxx: maximal parameters num: %d", CALLFUNC_MAXPARAMS);
 		return 0;
 	}
 

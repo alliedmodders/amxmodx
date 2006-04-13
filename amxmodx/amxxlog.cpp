@@ -48,6 +48,7 @@ CLog::CLog()
 {
 	m_LogType = 0;
 	m_LogFile.clear();
+	m_FoundError = false;
 }
 
 CLog::~CLog()
@@ -225,4 +226,45 @@ void CLog::Log(const char *fmt, ...)
 		va_end(arglst);
 		ALERT(at_logged, "%s\n", msg_);
 	}
+}
+
+void CLog::LogError(const char *fmt, ...)
+{
+	static char file[256];
+
+	if (m_FoundError)
+		return;
+
+	// get time
+	time_t td;
+	time(&td);
+	tm *curTime = localtime(&td);
+
+	char date[32];
+	strftime(date, 31, "%m/%d/%Y - %H:%M:%S", curTime);
+
+	// msg
+	static char msg[3072];
+
+	va_list arglst;
+	va_start(arglst, fmt);
+	vsnprintf(msg, 3071, fmt, arglst);
+	va_end(arglst);
+
+	FILE *pF = NULL;
+	build_pathname_r(file, sizeof(file)-1, "%s/error_%02d%02d%02d.log", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday, 100 - curTime->tm_year);
+	pF = fopen(file, "a+");
+
+	if (pF)
+	{
+		fprintf(pF, "L %s: %s\n", date, msg);
+		fclose(pF);
+	} else {
+		ALERT(at_logged, "[AMXX] Unexpected fatal logging error (couldn't open %s for a+). AMXX Error Logging disabled for this map.\n", file);
+		m_FoundError = true;
+		return;
+	}
+
+	// print on server console
+	print_srvconsole("L %s: %s\n", date, msg);
 }

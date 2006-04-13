@@ -1474,10 +1474,10 @@ extern "C" void LogError(AMX *amx, int err, const char *fmt, ...)
 	if (!pDebugger)
 	{
 		if (fmt)
-			AMXXLOG_Log("%s", msg_buffer);
+			AMXXLOG_Error("%s", msg_buffer);
 		
 		Debugger::GenericMessage(amx, err);
-		AMXXLOG_Log("[AMXX] To enable debug mode, add \"debug\" after the plugin name in plugins.ini (without quotes).");
+		AMXXLOG_Error("[AMXX] To enable debug mode, add \"debug\" after the plugin name in plugins.ini (without quotes).");
 		//destroy original error code so the original is not displayed again
 	} else {
 		pDebugger->SetTracedError(err);

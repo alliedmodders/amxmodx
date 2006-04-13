@@ -832,7 +832,7 @@ static cell AMX_NATIVE_CALL format_args(AMX *amx, cell *params)
 	
 	if (pos < 0)
 	{
-		amx_RaiseError(amx, AMX_ERR_NATIVE);
+		LogError(amx, AMX_ERR_NATIVE, "Pos has to be a positive number");
 		return 0;
 	}
 

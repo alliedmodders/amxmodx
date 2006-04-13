@@ -556,15 +556,15 @@ void Debugger::Clear()
 void Debugger::DisplayTrace(const char *message)
 {
 	if (message != NULL)
-		AMXXLOG_Log("%s", message);
+		AMXXLOG_Error("%s", message);
 
 	char buffer[512];
 	FormatError(buffer, sizeof(buffer)-1);
 
 	const char *filename = _GetFilename();
 
-	AMXXLOG_Log("[AMXX] Displaying debug trace (plugin \"%s\")", filename);
-	AMXXLOG_Log("[AMXX] %s", buffer);
+	AMXXLOG_Error("[AMXX] Displaying debug trace (plugin \"%s\")", filename);
+	AMXXLOG_Error("[AMXX] %s", buffer);
 	
 	int count = 0;
 	long lLine;
@@ -573,7 +573,7 @@ void Debugger::DisplayTrace(const char *message)
 	while (pTrace)
 	{
 		GetTraceInfo(pTrace, lLine, function, file);
-		AMXXLOG_Log(
+		AMXXLOG_Error(
 			"[AMXX]    [%d] %s::%s (line %d)",
 			count,
 			file,
@@ -633,7 +633,7 @@ void Debugger::GenericMessage(AMX *amx, int err)
 	Debugger::FmtGenericMsg(amx, err, buffer, sizeof(buffer)-1);
 
 	if (buffer[0] != '\0')
-		AMXXLOG_Log("[AMXX] %s", buffer);
+		AMXXLOG_Error("[AMXX] %s", buffer);
 }
 
 Debugger::~Debugger()
@@ -762,7 +762,7 @@ int Handler::HandleNative(const char *native, int index, int trap)
 		}
 		if (!trap)
 		{
-			AMXXLOG_Log("[AMXX] Runtime failure %d occurred in native filter.  Aborting plugin load.", err);
+			AMXXLOG_Error("[AMXX] Runtime failure %d occurred in native filter.  Aborting plugin load.", err);
 			return 0;
 		}
 		//handle this manually.
@@ -773,7 +773,7 @@ int Handler::HandleNative(const char *native, int index, int trap)
 		} else if (err != -1) {
 			LogError(m_pAmx, err, NULL);
 		}
-		AMXXLOG_Log("[AMXX] NOTE: Runtime failures in native filters are not good!");
+		AMXXLOG_Error("[AMXX] NOTE: Runtime failures in native filters are not good!");
 		retval = 0;
 	}
 	if (!trap)
@@ -833,10 +833,10 @@ int Handler::HandleError(const char *msg)
 			pDebugger->DisplayTrace(msg);
 		} else {
 			if (GetLastMsg())
-				AMXXLOG_Log("%s", GetLastMsg());
+				AMXXLOG_Error("%s", GetLastMsg());
 			Debugger::GenericMessage(m_pAmx, err);
 		}
-		AMXXLOG_Log("[AMXX] NOTE: Runtime failures in an error filter are not good!");
+		AMXXLOG_Error("[AMXX] NOTE: Runtime failures in an error filter are not good!");
 	}
 
 	if (pDebugger)
@@ -864,7 +864,7 @@ static cell AMX_NATIVE_CALL set_error_filter(AMX *amx, cell *params)
 	if (!pHandler)
 	{
 		Debugger::GenericMessage(amx, AMX_ERR_NOTFOUND);
-		AMXXLOG_Log("[AMXX] Plugin not initialized correctly.");
+		AMXXLOG_Error("[AMXX] Plugin not initialized correctly.");
 		return 0;
 	}
 
@@ -872,7 +872,7 @@ static cell AMX_NATIVE_CALL set_error_filter(AMX *amx, cell *params)
 	if (err != AMX_ERR_NONE)
 	{
 		Debugger::GenericMessage(amx, AMX_ERR_NOTFOUND);
-		AMXXLOG_Log("[AMXX] Function not found: %s", function);
+		AMXXLOG_Error("[AMXX] Function not found: %s", function);
 		return 0;
 	}
 
@@ -952,7 +952,7 @@ static cell AMX_NATIVE_CALL set_native_filter(AMX *amx, cell *params)
 	if (!pHandler)
 	{
 		Debugger::GenericMessage(amx, AMX_ERR_NOTFOUND);
-		AMXXLOG_Log("[AMXX] Plugin not initialized correctly.");
+		AMXXLOG_Error("[AMXX] Plugin not initialized correctly.");
 		return 0;
 	}
 
@@ -971,7 +971,7 @@ static cell AMX_NATIVE_CALL set_native_filter(AMX *amx, cell *params)
 	if (err != AMX_ERR_NONE)
 	{
 		Debugger::GenericMessage(amx, AMX_ERR_NOTFOUND);
-		AMXXLOG_Log("[AMXX] Function not found: %s", function);
+		AMXXLOG_Error("[AMXX] Function not found: %s", function);
 		return 0;
 	}
 

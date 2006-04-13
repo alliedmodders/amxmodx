@@ -139,7 +139,7 @@ static cell AMX_NATIVE_CALL read_file(AMX *amx, cell *params) /* 5 param */
 	
 	if ((fp =fopen(build_pathname("%s", szFile), "r")) == NULL)
 	{
-		amx_RaiseError(amx, AMX_ERR_NATIVE);
+		LogError(amx, AMX_ERR_NATIVE, "Couldn't read file \"%s\"", szFile);
 		return 0;
 	}
 
@@ -183,7 +183,7 @@ static cell AMX_NATIVE_CALL write_file(AMX *amx, cell *params) /* 3 param */
 	{
 		if ((pFile = fopen(sFile, "a")) == NULL)
 		{
-			amx_RaiseError(amx, AMX_ERR_NATIVE);
+			LogError(amx, AMX_ERR_NATIVE, "Couldn't write file \"%s\"", sFile);
 			return 0;
 		}
 		
@@ -199,7 +199,7 @@ static cell AMX_NATIVE_CALL write_file(AMX *amx, cell *params) /* 3 param */
 	{
 		if ((pFile = fopen(sFile, "w")) == NULL)
 		{
-			amx_RaiseError(amx, AMX_ERR_NATIVE);
+			LogError(amx, AMX_ERR_NATIVE, "Couldn't write file \"%s\"", sFile);
 			return 0;
 		}
 		
@@ -219,7 +219,7 @@ static cell AMX_NATIVE_CALL write_file(AMX *amx, cell *params) /* 3 param */
 
 	if ((pTemp = tmpfile()) == NULL)
 	{
-		amx_RaiseError(amx, AMX_ERR_NATIVE);
+		LogError(amx, AMX_ERR_NATIVE, "Couldn't create temp file");
 		return 0;
 	}
 
@@ -249,7 +249,7 @@ static cell AMX_NATIVE_CALL write_file(AMX *amx, cell *params) /* 3 param */
 	// now rewrite because file can be now smaller...
 	if ((pFile = fopen(sFile, "w")) == NULL)
 	{
-		amx_RaiseError(amx, AMX_ERR_NATIVE);
+		LogError(amx, AMX_ERR_NATIVE, "Couldn't write file \"%s\"", sFile);
 		return 0;
 	}
 

@@ -36,6 +36,7 @@ class CLog
 private:
 	String m_LogFile;
 	int m_LogType;
+	bool m_FoundError;
 
 	void GetLastFile(int &outMonth, int &outDay, String &outFilename);
 	void UseFile(const String &fileName);
@@ -47,6 +48,7 @@ public:
 	void CloseFile();
 	void MapChange();
 	void Log(const char *fmt, ...);
+	void LogError(const char *fmt, ...);
 };
 
 #endif // __AMXXLOG_H__

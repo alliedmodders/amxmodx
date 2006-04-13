@@ -80,14 +80,14 @@ const char *translate(AMX *amx, cell amxaddr, const char *key)
 		const char *testlang = amx_mldebug->string;
 		if (!g_langMngr.LangExists(testlang))
 		{
-			AMXXLOG_Log("[AMXX] \"%s\" is an invalid debug language", testlang);
+			AMXXLOG_Error("[AMXX] \"%s\" is an invalid debug language", testlang);
 			validlang = false;
 		}
 				
 		g_langMngr.GetDef(testlang, key, debug_status);
 				
 		if (validlang && debug_status == ERR_BADKEY)
-			AMXXLOG_Log("[AMXX] Language key \"%s\" not found for language \"%s\", check \"%s\"", key, testlang, GetFileName(amx));
+			AMXXLOG_Error("[AMXX] Language key \"%s\" not found for language \"%s\", check \"%s\"", key, testlang, GetFileName(amx));
 	}
 				
 	if (def == NULL)
@@ -96,7 +96,7 @@ const char *translate(AMX *amx, cell amxaddr, const char *key)
 		{
 			if (status == ERR_BADLANG && (BadLang_Table.AltFindOrInsert(pLangName).last + 120.0f < gpGlobals->time))
 			{
-				AMXXLOG_Log("[AMXX] Language \"%s\" not found", pLangName);
+				AMXXLOG_Error("[AMXX] Language \"%s\" not found", pLangName);
 				BadLang_Table.AltFindOrInsert(pLangName).last = gpGlobals->time;
 			}
 		}

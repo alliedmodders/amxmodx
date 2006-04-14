@@ -231,6 +231,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\WinCSX.exe.manifest"
+				>
+			</File>
+			<File
 				RelativePath="..\WinCSX.ico"
 				>
 			</File>

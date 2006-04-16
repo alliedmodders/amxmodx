@@ -5760,12 +5760,72 @@ object frmMain: TfrmMain
       Top = 0
       Width = 527
       Height = 314
-      object lblInstallMethod: TLabel
-        Left = 124
-        Top = 104
-        Width = 223
+      object lblLocalHint: TLabel
+        Left = 136
+        Top = 118
+        Width = 243
+        Height = 11
+        Caption = 'Use this if your server has been installed on your own PC:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -9
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+      end
+      object lblRemoteInstallation: TLabel
+        Left = 136
+        Top = 204
+        Width = 91
         Height = 13
-        Caption = 'Please select an install method for AMX Mod X:'
+        Caption = 'Remote installation'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsUnderline]
+        ParentFont = False
+      end
+      object lblRemoteHint: TLabel
+        Left = 136
+        Top = 218
+        Width = 257
+        Height = 11
+        Caption = 
+          'Use this if you rent a server or if you run it on another server' +
+          ':'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -9
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+      end
+      object lblLocalInstallation: TLabel
+        Left = 136
+        Top = 104
+        Width = 78
+        Height = 13
+        Caption = 'Local installation'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsUnderline]
+        ParentFont = False
+      end
+      object lblLocalHintItalic: TLabel
+        Left = 341
+        Top = 118
+        Width = 18
+        Height = 11
+        Caption = 'own'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -9
+        Font.Name = 'Tahoma'
+        Font.Style = [fsItalic]
+        ParentFont = False
       end
       object pnlHeader2: TPanel
         Left = 0
@@ -5838,142 +5898,67 @@ object frmMain: TfrmMain
           Shape = bsBottomLine
         end
       end
-      object pnlInstallMethod: TPanel
-        Left = 122
-        Top = 120
-        Width = 267
-        Height = 153
+      object pnlRemote: TPanel
+        Left = 136
+        Top = 230
+        Width = 255
+        Height = 23
         BevelOuter = bvLowered
         TabOrder = 1
-        object Label1: TLabel
+        object frbFTP: TFlatRadioButton
           Left = 4
-          Top = 16
-          Width = 243
-          Height = 11
-          Caption = 'Use this if your server has been installed on your own PC:'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -9
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-        end
-        object Label2: TLabel
-          Left = 209
-          Top = 16
-          Width = 18
-          Height = 11
-          Caption = 'own'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -9
-          Font.Name = 'Tahoma'
-          Font.Style = [fsItalic]
-          ParentFont = False
-        end
-        object Label3: TLabel
-          Left = 4
-          Top = 100
-          Width = 91
-          Height = 13
-          Caption = 'Remote installation'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = [fsUnderline]
-          ParentFont = False
-        end
-        object Label4: TLabel
-          Left = 4
-          Top = 2
-          Width = 78
-          Height = 13
-          Caption = 'Local installation'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = [fsUnderline]
-          ParentFont = False
-        end
-        object Label5: TLabel
-          Left = 4
-          Top = 114
-          Width = 257
-          Height = 11
-          Caption = 
-            'Use this if you rent a server or if you run it on another server' +
-            ':'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -9
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-        end
-        object pnlLocal: TPanel
-          Left = 4
-          Top = 28
-          Width = 259
-          Height = 65
-          BevelOuter = bvLowered
+          Top = 4
+          Width = 35
+          Height = 17
+          Caption = 'FTP'
           TabOrder = 0
-          object frbDedicatedServer: TFlatRadioButton
-            Left = 4
-            Top = 4
-            Width = 135
-            Height = 17
-            Caption = 'Steam Dedicated Server'
-            Checked = True
-            TabOrder = 0
-            TabStop = True
-            OnClick = frbLocalClick
-          end
-          object frbListenServer: TFlatRadioButton
-            Left = 4
-            Top = 18
-            Width = 115
-            Height = 17
-            Caption = 'Steam Listen Server'
-            TabOrder = 1
-            OnClick = frbLocalClick
-          end
-          object frbStandaloneServer: TFlatRadioButton
-            Left = 4
-            Top = 32
-            Width = 107
-            Height = 17
-            Caption = 'Standalone Server'
-            TabOrder = 2
-            OnClick = frbLocalClick
-          end
-          object frbSelectMod: TFlatRadioButton
-            Left = 4
-            Top = 46
-            Width = 117
-            Height = 17
-            Caption = 'Select mod directory'
-            TabOrder = 3
-            OnClick = frbLocalClick
-          end
+          OnClick = frbFTPClick
         end
-        object pnlRemote: TPanel
+      end
+      object pnlLocal: TPanel
+        Left = 136
+        Top = 130
+        Width = 255
+        Height = 65
+        BevelOuter = bvLowered
+        TabOrder = 2
+        object frbDedicatedServer: TFlatRadioButton
           Left = 4
-          Top = 126
-          Width = 259
-          Height = 23
-          BevelOuter = bvLowered
+          Top = 4
+          Width = 135
+          Height = 17
+          Caption = 'Steam Dedicated Server'
+          Checked = True
+          TabOrder = 0
+          TabStop = True
+          OnClick = frbLocalClick
+        end
+        object frbListenServer: TFlatRadioButton
+          Left = 4
+          Top = 18
+          Width = 115
+          Height = 17
+          Caption = 'Steam Listen Server'
           TabOrder = 1
-          object frbFTP: TFlatRadioButton
-            Left = 4
-            Top = 4
-            Width = 35
-            Height = 17
-            Caption = 'FTP'
-            TabOrder = 0
-            OnClick = frbFTPClick
-          end
+          OnClick = frbLocalClick
+        end
+        object frbStandaloneServer: TFlatRadioButton
+          Left = 4
+          Top = 32
+          Width = 107
+          Height = 17
+          Caption = 'Standalone Server'
+          TabOrder = 2
+          OnClick = frbLocalClick
+        end
+        object frbSelectMod: TFlatRadioButton
+          Left = 4
+          Top = 46
+          Width = 117
+          Height = 17
+          Caption = 'Select mod directory'
+          TabOrder = 3
+          OnClick = frbLocalClick
         end
       end
     end
@@ -5984,12 +5969,35 @@ object frmMain: TfrmMain
       Height = 314
       object lblInfo: TLabel
         Left = 134
-        Top = 114
+        Top = 110
         Width = 255
         Height = 26
         Caption = 
           'The following mods were detected. Please select the mod you want' +
           ' to install AMX Mod X to:'
+        WordWrap = True
+      end
+      object Shape1: TShape
+        Left = 134
+        Top = 140
+        Width = 255
+        Height = 119
+        Pen.Color = clBtnShadow
+      end
+      object Label1: TLabel
+        Left = 134
+        Top = 262
+        Width = 234
+        Height = 22
+        Caption = 
+          'Note: If your game isn'#39't listed here use the "Select mod directo' +
+          'ry" function in the "Select install method" page'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -9
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
         WordWrap = True
       end
       object pnlSelectMod: TPanel
@@ -6063,19 +6071,19 @@ object frmMain: TfrmMain
           Shape = bsBottomLine
         end
       end
-      object lstMods: TmxFlatListBox
-        Left = 134
-        Top = 144
+      object trvMods: TTreeView
+        Left = 135
+        Top = 141
         Width = 253
-        Height = 97
-        ItemHeight = 13
+        Height = 117
+        BorderStyle = bsNone
+        Indent = 19
+        MultiSelectStyle = []
+        ReadOnly = True
+        RightClickSelect = True
+        RowSelect = True
         TabOrder = 1
-        OnClick = lstModsClick
-        Activate = True
-        BorderColor = clBtnShadow
-        Flat = True
-        ShowBorder = True
-        Version = '1.26'
+        OnClick = trvModsClick
       end
     end
     object jspFTP: TJvStandardPage

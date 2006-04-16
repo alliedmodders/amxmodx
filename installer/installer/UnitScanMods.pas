@@ -4,7 +4,7 @@ interface
 
 uses SysUtils, Classes, Dialogs;
 
-function GetAllMods(eBaseDir: String; eSearchNames: Boolean): String;
+function GetAllMods(eBaseDir: String; eSearchNames: Boolean): TStringList;
 function GetModPathName(eMod: String): String;
 function ModIndex(Name: String; CheckName: Boolean): Integer;
 
@@ -17,7 +17,7 @@ uses UnitFunctions;
 
 // functions
 
-function GetAllMods(eBaseDir: String; eSearchNames: Boolean): String;
+function GetAllMods(eBaseDir: String; eSearchNames: Boolean): TStringList;
 var i: integer;
     eDirectories: TStringList;
 begin
@@ -31,11 +31,10 @@ begin
       else
         eDirectories[i] := eMods[ModIndex(eDirectories[i], True)];
     end;
-    Result := eDirectories.Text;
+    Result := eDirectories;
   end
   else
-    Result := ''; 
-  eDirectories.Free;
+    Result := nil; 
 end;
 
 function GetModPathName(eMod: String): String;

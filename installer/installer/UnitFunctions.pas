@@ -2,11 +2,13 @@ unit UnitFunctions;
 
 interface
 
-uses SysUtils, Classes, Windows, IdFTPList, Math;
+uses SysUtils, Classes, Windows, IdFTPList, Math, Registry;
 
 function CalcSpeed(eOld, eNew: Integer): String;
 // local
 function GetAllFiles(Mask: String; Attr: Integer; Recursive: Boolean; ShowDirs: Boolean; ShowPath: Boolean = True): TStringList;
+function GetSteamAppsDir: String;
+function GetSteamAccounts: TStringList;
 // ftp
 function GetAllDirs: TStringList;
 
@@ -30,8 +32,7 @@ begin
   Result := TStringList.Create;
 
   // Find all files
-  if FindFirst(Mask, Attr, eSearch) = 0 then
-  begin
+  if FindFirst(Mask, Attr, eSearch) = 0 then begin
     repeat
       if eSearch.Name[1] <> '.' then begin
         if ShowPath then begin
@@ -58,6 +59,38 @@ begin
   end;
 end;
 
+function GetSteamAppsDir: String;
+var eRegistry: TRegistry;
+begin
+  eRegistry := TRegistry.Create(KEY_READ);
+  try
+    eRegistry.RootKey := HKEY_CURRENT_USER;
+    if eRegistry.OpenKey('Software\Valve\Steam', False) then
+      Result := ExtractFilePath(StringReplace(eRegistry.ReadString('SteamExe'), '/', '\', [rfReplaceAll])) + 'SteamApps\'
+    else
+      Result := '';
+  except
+    Result := '';
+  end;
+  eRegistry.Free;
+end;
+
+function GetSteamAccounts: TStringList;
+var eSearch: TSearchRec;
+    ePath: String;
+begin
+  Result := TStringList.Create;
+  ePath := GetSteamAppsDir;
+  if DirectoryExists(ePath) then begin
+    if FindFirst(ePath + '*.*', faDirectory, eSearch) = 0 then begin
+      repeat
+        if (Pos('@', eSearch.Name) <> 0) then
+          Result.Add(eSearch.Name)
+      until FindNext(eSearch) <> 0;
+    end;
+  end;
+end;
+
 function GetAllDirs: TStringList;
 var eList: TStringList;
     i: integer;
@@ -73,7 +106,7 @@ begin
   Result := eList;
 end;
 
-{ This is another possibility I coded because I couldn't find another bug...
+{ This is another possibility I wrote because I couldn't find another bug...
 
 function GetAllDirs: TStringList;
 var eList: TStringList;

@@ -37,8 +37,6 @@ type
     imgIcon2: TImage;
     lblTitle2: TLabel;
     lblSubTitle2: TLabel;
-    lblInstallMethod: TLabel;
-    pnlInstallMethod: TPanel;
     cmdBack: TFlatButton;
     jspFTP: TJvStandardPage;
     pnlHeader3: TPanel;
@@ -83,7 +81,6 @@ type
     lblSelectModInfo: TLabel;
     bvlSelectMod: TBevel;
     lblInfo: TLabel;
-    lstMods: TmxFlatListBox;
     chkPassive: TFlatCheckBox;
     lblStep3: TLabel;
     pnlOS: TPanel;
@@ -98,18 +95,21 @@ type
     tmrSpeed: TTimer;
     IdLogFile: TIdLogFile;
     lblInfo4: TLabel;
-    Label1: TLabel;
-    Label2: TLabel;
-    Label3: TLabel;
-    Label4: TLabel;
+    trvMods: TTreeView;
+    lblRemoteInstallation: TLabel;
+    lblRemoteHint: TLabel;
+    pnlRemote: TPanel;
+    frbFTP: TFlatRadioButton;
+    lblLocalHint: TLabel;
+    lblLocalInstallation: TLabel;
+    lblLocalHintItalic: TLabel;
     pnlLocal: TPanel;
     frbDedicatedServer: TFlatRadioButton;
     frbListenServer: TFlatRadioButton;
     frbStandaloneServer: TFlatRadioButton;
     frbSelectMod: TFlatRadioButton;
-    Label5: TLabel;
-    pnlRemote: TPanel;
-    frbFTP: TFlatRadioButton;
+    Shape1: TShape;
+    Label1: TLabel;
     procedure jvwStepsCancelButtonClick(Sender: TObject);
     procedure cmdCancelClick(Sender: TObject);
     procedure cmdNextClick(Sender: TObject);
@@ -118,7 +118,6 @@ type
     procedure cmdConnectClick(Sender: TObject);
     procedure jplWizardChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure lstModsClick(Sender: TObject);
     procedure cmdProxySettingsClick(Sender: TObject);
     procedure txtPortChange(Sender: TObject);
     procedure trvDirectoriesExpanded(Sender: TObject; Node: TTreeNode);
@@ -135,6 +134,7 @@ type
     procedure jspFTPShow(Sender: TObject);
     procedure frbFTPClick(Sender: TObject);
     procedure frbLocalClick(Sender: TObject);
+    procedure trvModsClick(Sender: TObject);
   private
     OldProgress: Integer;
     CurrProgress: Integer;
@@ -144,6 +144,7 @@ type
 
 var
   frmMain: TfrmMain;
+  gMultiAccount: Boolean;
 
 const VERSION = '1.72';
 
@@ -194,6 +195,7 @@ var ePath: String;
     eStr: TStringList;
     CurNode: TTreeNode;
     eOS: TOS;
+    i, k: integer;
 begin
   if jplWizard.ActivePage = jspFTP then begin
     if not IdFTP.Connected then
@@ -275,7 +277,9 @@ begin
     if (frbDedicatedServer.Checked) or (frbStandaloneServer.Checked) then begin
       jspInstallProgress.Show;
       ChosenMod := modNone;
-      ePath := LowerCase(GetModPathName(lstMods.Items[lstMods.ItemIndex]));
+      ePath := LowerCase(GetModPathName(trvMods.Selected.Text));
+      if gMultiAccount then
+        SteamPath := GetSteamAppsDir + trvMods.Selected.Parent.Text + '\dedicated server\'; // setting this path for a user with only one account is not neccessary
       // ask for additional mods...
       if (ePath = 'cstrike') or (ePath = 'czero') then begin
         if MessageBox(Handle, 'Install Counter-Strike addon?', PChar(Application.Title), MB_ICONQUESTION + MB_YESNO) = mrYes then
@@ -324,7 +328,9 @@ begin
     { Listen Server }
     if frbListenServer.Checked then begin
       ChosenMod := modNone;
-      ePath := lstMods.Items[lstMods.ItemIndex];
+      if gMultiAccount then
+        SteamPath := GetSteamAppsDir + trvMods.Selected.Parent.Text + '\'; // setting this path for a user with only one account is not neccessary
+      ePath := trvMods.Selected.Text;
       if DirectoryExists(SteamPath + ePath + '\' + GetModPathName(ePath)) then
         ePath := SteamPath + ePath + '\' + GetModPathName(ePath)
       else if DirectoryExists(SteamPath + 'half-life\' + ePath) then
@@ -377,57 +383,108 @@ begin
     jplWizard.NextPage
   else begin
     if frbDedicatedServer.Checked then begin    // Dedicated Server
-      eRegistry := TRegistry.Create(KEY_READ);
-      try
-        eRegistry.RootKey := HKEY_CURRENT_USER;
-        if eRegistry.OpenKey('Software\Valve\Steam', False) then begin
-          ePath := eRegistry.ReadString('ModInstallPath');
-          ePath := Copy(ePath, 1, Length(ePath) -10) + '\dedicated server\';
-          if DirectoryExists(ePath) then begin
-            SteamPath := ePath;
-            lstMods.Clear;
-            // Check Mods
-            lstMods.Items.Text := GetAllMods(ePath, False);
-            // Misc
-            jspSelectMod.Show;
-            lstMods.ItemIndex := -1;
-            cmdNext.Enabled := False;
+      ePath := GetSteamAppsDir;
+      if ePath = '' then
+        MessageBox(Handle, 'You haven''t installed Steam yet! Download it at www.steampowered.com, install Dedicated Server and try again.', 'Error', MB_ICONWARNING)
+      else begin
+        trvMods.Items.Clear;
+
+        with GetSteamAccounts do begin
+          if Count = 1 then begin
+            gMultiAccount := False;
+            SteamPath := ePath + Strings[0] + '\dedicated server\';
+            
+            eStr := GetAllMods(SteamPath, False);
+            for i := 0 to eStr.Count -1 do
+              trvMods.Items.Add(nil, eStr[i]);
+            eStr.Free;
           end
-          else
-            MessageBox(Handle, 'You have to run Dedicated Server once before installing AMX Mod X!', 'Error', MB_ICONWARNING);
-        end
-        else
-          MessageBox(Handle, 'You haven''t installed Steam yet! Download it at www.steampowered.com, install Dedicated Server and try again.', 'Error', MB_ICONWARNING);
-      finally
-        eRegistry.Free;
+          else begin
+            gMultiAccount := True;
+            for i := 0 to Count -1 do begin
+              SteamPath := ePath + Strings[i] + '\dedicated server\';
+              if DirectoryExists(SteamPath) then begin
+                CurNode := trvMods.Items.Add(nil, Strings[i]);
+
+                eStr := GetAllMods(SteamPath, False);
+                for k := 0 to eStr.Count -1 do
+                  trvMods.Items.AddChild(CurNode, eStr[k]);
+                eStr.Free;
+
+                CurNode.Expand(False);
+              end;
+            end;
+          end;
+          
+          Free;
+        end;
+
+        if trvMods.Items.Count = 0 then
+          MessageBox(Handle, 'You haven''t used dedicated server yet. Please start it once before installing AMX Mod X.', 'Error', MB_ICONERROR)
+        else begin
+          jspSelectMod.Show;
+          trvMods.Selected := nil;
+          cmdNext.Enabled := False;
+        end;
       end;
     end
     else if frbListenServer.Checked then begin  // Listen Server
-      eRegistry := TRegistry.Create(KEY_READ);
-      try
-        eRegistry.RootKey := HKEY_CURRENT_USER;
-        if eRegistry.OpenKey('Software\Valve\Steam', False) then begin
-          ePath := eRegistry.ReadString('ModInstallPath') + '\';
-          lstMods.Clear;
-          ePath := Copy(ePath, 1, Length(ePath) -10);
-          if DirectoryExists(ePath) then begin
-            SteamPath := ePath;
-            // Check Mods         
-            lstMods.Items.Text := GetAllMods(ePath, True);
-            if DirectoryExists(ePath + 'half-life') then
-              lstMods.Items.Text := lstMods.Items.Text + GetAllMods(ePath + 'half-life', False);
-            // Misc
-            jspSelectMod.Show;
-            lstMods.ItemIndex := -1;
-            cmdNext.Enabled := False;
+      ePath := GetSteamAppsDir;
+      if ePath = '' then
+        MessageBox(Handle, 'You haven''t installed Steam yet! Download it at www.steampowered.com, install Dedicated Server and try again.', 'Error', MB_ICONWARNING)
+      else begin
+        trvMods.Items.Clear;
+
+        with GetSteamAccounts do begin
+          if Count = 1 then begin
+            gMultiAccount := False;
+            SteamPath := ePath + Strings[0] + '\';
+            eStr := GetAllMods(SteamPath, True);
+            for i := 0 to eStr.Count -1 do
+              trvMods.Items.Add(nil, eStr[i]);
+            eStr.Free;
+
+            if DirectoryExists(SteamPath + 'half-life') then begin
+              eStr := GetAllMods(SteamPath + 'half-life\', False);
+              for i := 0 to eStr.Count -1 do
+                trvMods.Items.Add(nil, eStr[i]);
+              eStr.Free;
+            end;
           end
-          else
-            MessageBox(Handle, 'You haven''t installed Steam yet! Download it at www.steampowered.com, install Dedicated Server and try again.', 'Error', MB_ICONWARNING);
-        end
-        else
-          MessageBox(Handle, 'You haven''t installed Steam yet! Download it at www.steampowered.com, install Dedicated Server and try again.', 'Error', MB_ICONWARNING);
-      finally
-        eRegistry.Free;
+          else begin
+            gMultiAccount := True;
+            for i := 0 to Count -1 do begin
+              SteamPath := ePath + Strings[i] + '\';
+              if DirectoryExists(SteamPath) then begin
+                CurNode := trvMods.Items.Add(nil, Strings[i]);
+
+                eStr := GetAllMods(SteamPath, False);
+                for k := 0 to eStr.Count -1 do
+                  trvMods.Items.AddChild(CurNode, eStr[k]);
+                eStr.Free;
+
+                CurNode.Expand(False);
+
+                if DirectoryExists(SteamPath + 'half-life') then begin
+                  eStr := GetAllMods(SteamPath + 'half-life', False);
+                  for k := 0 to eStr.Count -1 do
+                    trvMods.Items.AddChild(CurNode, eStr[k]);
+                  eStr.Free;
+                end;
+              end;
+            end;
+          end;
+          
+          Free;
+        end;
+
+        if trvMods.Items.Count = 0 then
+          MessageBox(Handle, 'You haven''t installed any Steam games yet. It is neccessary to do that if you want to install AMX Mod X on a listen server.', 'Error', MB_ICONERROR)
+        else begin
+          jspSelectMod.Show;
+          trvMods.Selected := nil;
+          cmdNext.Enabled := False;
+        end;
       end;
     end
     else if frbStandaloneServer.Checked then begin // Standalone Server
@@ -436,8 +493,16 @@ begin
         eRegistry.RootKey := HKEY_CURRENT_USER;
         if eRegistry.OpenKey('Software\Valve\HLServer', False) then begin
           StandaloneServer := IncludeTrailingPathDelimiter(eRegistry.ReadString('InstallPath'));
-          lstMods.Items.Text := GetAllMods(StandaloneServer, False);
-          jspSelectMod.Show;
+          if DirectoryExists(StandaloneServer) then begin
+            with GetAllMods(StandaloneServer, False) do begin
+              gMultiAccount := False;
+              for i := 0 to Count -1 do
+                trvMods.Items.Add(nil, Strings[i]);
+            end;
+            jspSelectMod.Show;
+          end
+          else
+            MessageBox(Handle, 'You haven''t installed Half-Life Dedicated Server yet!',  'Error', MB_ICONWARNING);
         end
         else
           MessageBox(Handle, 'You haven''t installed Half-Life Dedicated Server yet!',  'Error', MB_ICONWARNING);
@@ -649,11 +714,6 @@ begin
   end;
 end;
 
-procedure TfrmMain.lstModsClick(Sender: TObject);
-begin
-  cmdNext.Enabled := lstMods.ItemIndex <> -1;
-end;
-
 procedure TfrmMain.cmdProxySettingsClick(Sender: TObject);
 begin
   frmProxy.ShowModal;
@@ -807,6 +867,14 @@ end;
 procedure TfrmMain.frbLocalClick(Sender: TObject);
 begin
   frbFTP.Checked := False;
+end;
+
+procedure TfrmMain.trvModsClick(Sender: TObject);
+begin
+  if gMultiAccount then
+    cmdNext.Enabled := (Assigned(trvMods.Selected)) and (Assigned(trvMods.Selected.Parent))
+  else
+    cmdNext.Enabled := (Assigned(trvMods.Selected));
 end;
 
 end.

@@ -344,8 +344,13 @@ begin
         MessageBox(Handle, 'An error occured. Please report this bug to the AMX Mod X team and post a new thread on the forums of www.amxmodx.org.', PChar(Application.Title), MB_ICONSTOP)
       else begin
         if not FileExists(ePath + '\liblist.gam') then begin
-          MessageBox(Handle, 'You have to play this game once before installing AMX Mod X. Do this and try again.', PChar(Application.Title), MB_ICONWARNING);
-          exit;
+          // added for HLDM
+          if FileExists(ExtractFilePath(ePath) + 'liblist.gam') then
+            ePath := ExtractFilePath(ePath)
+          else begin
+            MessageBox(Handle, 'You have to play this game once before installing AMX Mod X. Do that and try again.', PChar(Application.Title), MB_ICONWARNING);
+            exit;
+          end;
         end;
 
         jspInstallProgress.Show;

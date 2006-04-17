@@ -13,151 +13,148 @@
 #define FMRES_OVERRIDE	3
 
 enum {
-  FM_FIRST_DONT_USE_ME = 0,
-	FM_PrecacheModel = 1,	// done
-	FM_PrecacheSound,	// done
-	FM_SetModel,		// done
-	FM_ModelIndex,		// done
-	FM_ModelFrames,	// done
-	FM_SetSize,		// done
-	FM_ChangeLevel,			// done
-	FM_VecToYaw,			// done
-	FM_VecToAngles,			// done
-	FM_MoveToOrigin,		// done
-	FM_ChangeYaw,			// done
-	FM_ChangePitch,			// done
-	FM_FindEntityByString,	// done
-	FM_GetEntityIllum,		// done
-	FM_FindEntityInSphere,	// done
-	FM_FindClientInPVS,		// done
-	FM_EntitiesInPVS,		// done
-	FM_MakeVectors,			// done
-	FM_AngleVectors,		// done
-	FM_CreateEntity,		// done
-	FM_RemoveEntity,		// done
-	FM_CreateNamedEntity,	// done
-	FM_MakeStatic,			// done
-	FM_EntIsOnFloor,		// done
-	FM_DropToFloor,			// done
-	FM_WalkMove,			// int  )				(edict_t *ent, float yaw, float dist, int iMode);
-	FM_SetOrigin,			// done
-	FM_EmitSound,			// done
-	FM_EmitAmbientSound,	// done
-	FM_TraceLine,			// void )				(const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr);
-	FM_TraceToss,			// void )				(edict_t* pent, edict_t* pentToIgnore, TraceResult *ptr);
-	FM_TraceMonsterHull,	// int  )		(edict_t *pEdict, const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr);
-	FM_TraceHull,			// void )				(const float *v1, const float *v2, int fNoMonsters, int hullNumber, edict_t *pentToSkip, TraceResult *ptr);
-	FM_TraceModel,			// void )			(const float *v1, const float *v2, int hullNumber, edict_t *pent, TraceResult *ptr);
-	FM_TraceTexture,		// const char *)			(edict_t *pTextureEntity, const float *v1, const float *v2 );
-	FM_TraceSphere,			// void )			(const float *v1, const float *v2, int fNoMonsters, float radius, edict_t *pentToSkip, TraceResult *ptr);
-	FM_GetAimVector,		// void )			(edict_t* ent, float speed, float *rgflReturn);
-	FM_ParticleEffect,		// done
-	FM_LightStyle,			// done
-	FM_DecalIndex,			// done
-	FM_PointContents,		// done
-	FM_MessageBegin,		// done
-	FM_MessageEnd,			// done
-	FM_WriteByte,			// done
-	FM_WriteChar,			// done
-	FM_WriteShort,			// done
-	FM_WriteLong,			// done
-	FM_WriteAngle,			// done
-	FM_WriteCoord,			// done
-	FM_WriteString,			// done
-	FM_WriteEntity,			// done
-	FM_CVarGetFloat,		// done
-	FM_CVarGetString,		// done
-	FM_CVarSetFloat,		// done
-	FM_CVarSetString,		// done
-	FM_FreeEntPrivateData,	// done
-	FM_SzFromIndex,			// done
-	FM_AllocString,			// done
-	FM_RegUserMsg,			// done
-	FM_AnimationAutomove,	// done
-	FM_GetBonePosition,		// void )		(const edict_t* pEdict, int iBone, float *rgflOrigin, float *rgflAngles );
-	FM_GetAttachment,		// void	)			(const edict_t *pEdict, int iAttachment, float *rgflOrigin, float *rgflAngles );
-	FM_SetView,				// done
-	FM_Time,				// done
-	FM_CrosshairAngle,		// done
-	FM_FadeClientVolume,	// void )      (const edict_t *pEdict, int fadePercent, int fadeOutSeconds, int holdTime, int fadeInSeconds);
-	FM_SetClientMaxspeed,	// done
-	FM_CreateFakeClient,	// done
-	FM_RunPlayerMove,		// void )			(edict_t *fakeclient, const float *viewangles, float forwardmove, float sidemove, float upmove, unsigned short buttons, byte impulse, byte msec );
-	FM_NumberOfEntities,	// done
-	FM_StaticDecal,			// void )			( const float *origin, int decalIndex, int entityIndex, int modelIndex );
-	FM_PrecacheGeneric,		// done
-	FM_BuildSoundMsg,		// void )			(edict_t *entity, int channel, const char *sample, /*int*/float volume, float attenuation, int fFlags, int pitch, int msg_dest, int msg_type, const float *pOrigin, edict_t *ed);
-	FM_GetPhysicsKeyValue,	// done
-	FM_SetPhysicsKeyValue,	// done
-	FM_GetPhysicsInfoString,// done
-	FM_PrecacheEvent,		// done
-	FM_PlaybackEvent,		// done
-	FM_CheckVisibility,			//)		( const edict_t *entity, unsigned char *pset );
-	FM_GetCurrentPlayer,			// done
-	FM_CanSkipPlayer,			// done
-	FM_SetGroupMask,				//done
-	FM_Voice_GetClientListening,	// done
-	FM_Voice_SetClientListening,	// done
-	FM_InfoKeyValue,	// done
-	FM_SetKeyValue,	// done
-	FM_SetClientKeyValue,	 // done
-	FM_GetPlayerAuthId,	// done
-	FM_GetPlayerWONId,	// done
-	FM_IsMapValid,	// done
+	FM_FIRST_DONT_USE_ME = 0,
+	FM_PrecacheModel ,
+	FM_PrecacheSound,
+	FM_SetModel,	
+	FM_ModelIndex,
+	FM_ModelFrames,
+	FM_SetSize,
+	FM_ChangeLevel,
+	FM_VecToYaw,
+	FM_VecToAngles,
+	FM_MoveToOrigin,
+	FM_ChangeYaw,
+	FM_ChangePitch,
+	FM_FindEntityByString,
+	FM_GetEntityIllum,
+	FM_FindEntityInSphere,
+	FM_FindClientInPVS,
+	FM_EntitiesInPVS,
+	FM_MakeVectors,
+	FM_AngleVectors,
+	FM_CreateEntity,
+	FM_RemoveEntity,
+	FM_CreateNamedEntity,
+	FM_MakeStatic,
+	FM_EntIsOnFloor,
+	FM_DropToFloor,
+	FM_WalkMove,
+	FM_SetOrigin,
+	FM_EmitSound,
+	FM_EmitAmbientSound,
+	FM_TraceLine,
+	FM_TraceToss,
+	FM_TraceMonsterHull,
+	FM_TraceHull,
+	FM_TraceModel,
+	FM_TraceTexture,
+	FM_TraceSphere,
+	FM_GetAimVector,
+	FM_ParticleEffect,
+	FM_LightStyle,
+	FM_DecalIndex,
+	FM_PointContents,
+	FM_MessageBegin,
+	FM_MessageEnd,
+	FM_WriteByte,
+	FM_WriteChar,
+	FM_WriteShort,
+	FM_WriteLong,
+	FM_WriteAngle,
+	FM_WriteCoord,
+	FM_WriteString,
+	FM_WriteEntity,
+	FM_CVarGetFloat,
+	FM_CVarGetString,
+	FM_CVarSetFloat,
+	FM_CVarSetString,
+	FM_FreeEntPrivateData,
+	FM_SzFromIndex,
+	FM_AllocString,
+	FM_RegUserMsg,
+	FM_AnimationAutomove,
+	FM_GetBonePosition,
+	FM_GetAttachment,
+	FM_SetView,
+	FM_Time,
+	FM_CrosshairAngle,
+	FM_FadeClientVolume,
+	FM_SetClientMaxspeed,
+	FM_CreateFakeClient,
+	FM_RunPlayerMove,
+	FM_NumberOfEntities,
+	FM_StaticDecal,
+	FM_PrecacheGeneric,
+	FM_BuildSoundMsg,
+	FM_GetPhysicsKeyValue,
+	FM_SetPhysicsKeyValue,
+	FM_GetPhysicsInfoString,
+	FM_PrecacheEvent,
+	FM_PlaybackEvent,
+	FM_CheckVisibility,
+	FM_GetCurrentPlayer,
+	FM_CanSkipPlayer,
+	FM_SetGroupMask,
+	FM_Voice_GetClientListening,
+	FM_Voice_SetClientListening,
+	FM_InfoKeyValue,
+	FM_SetKeyValue,
+	FM_SetClientKeyValue,
+	FM_GetPlayerAuthId,
+	FM_GetPlayerWONId,
+	FM_IsMapValid,
 
+	FM_Spawn,
+	FM_Think,
+	FM_Use,
+	FM_Touch,
+	FM_Blocked,
+	FM_KeyValue,
+	FM_SetAbsBox,
+	FM_ClientConnect,
 
-	// FM_GameInit,	// Removed -- it will *never* be called after plugins are loaded
-	FM_Spawn,	// done
-	FM_Think,	// done
-	FM_Use,	// done
-	FM_Touch,	// done
-	FM_Blocked,	// done
-	FM_KeyValue,	// void )			( edict_t *pentKeyvalue, KeyValueData *pkvd );
-	FM_SetAbsBox,			// done
-	FM_ClientConnect,		// done
-	
-	FM_ClientDisconnect,	// done
-	FM_ClientKill,		// done
-	FM_ClientPutInServer,	// done
-	FM_ClientCommand,		// done
+	FM_ClientDisconnect,
+	FM_ClientKill,
+	FM_ClientPutInServer,
+	FM_ClientCommand,
 
-	FM_ServerDeactivate,	// done
+	FM_ServerDeactivate,
 
-	FM_PlayerPreThink,		// done
-	FM_PlayerPostThink,		// done
+	FM_PlayerPreThink,
+	FM_PlayerPostThink,
 
-	FM_StartFrame,		// done
-	FM_ParmsNewLevel,		// done
-	FM_ParmsChangeLevel,	// done
+	FM_StartFrame,
+	FM_ParmsNewLevel,
+	FM_ParmsChangeLevel,
 
-	 // Returns string describing current .dll.  E.g., TeamFotrress 2, Half-Life
-	FM_GetGameDescription,	 // done
+	// Returns string describing current .dll.  E.g., TeamFotrress 2, Half-Life
+	// This also gets called when the server is queried for information (for example, by a server browser tool)
+	FM_GetGameDescription,
 
 	// Spectator funcs
-	FM_SpectatorConnect,	// done
-	FM_SpectatorDisconnect,	// done
-	FM_SpectatorThink,		// done
+	FM_SpectatorConnect,
+	FM_SpectatorDisconnect,
+	FM_SpectatorThink,
 
 	// Notify game .dll that engine is going to shut down.  Allows mod authors to set a breakpoint.
-	FM_Sys_Error,		// done
+	FM_Sys_Error,
 
-	FM_PM_FindTextureType,	// done
-	FM_RegisterEncoders,	// done
-
-	// Enumerates player hulls.  Returns 0 if the hull number doesn't exist, 1 otherwise
+	FM_PM_FindTextureType,
+	FM_RegisterEncoders,
 
 	// Create baselines for certain "unplaced" items.
-	FM_CreateInstancedBaselines,	// done 
-	FM_AllowLagCompensation,	// done
+	FM_CreateInstancedBaselines,
+
+	FM_AllowLagCompensation,
 	FM_AlertMessage,
 
-	// NEW_DLL_FUNCTIONS
+	// NEW_DLL_FUNCTIONS:
 	FM_OnFreeEntPrivateData,
 	FM_GameShutdown,
 	FM_ShouldCollide,
-	// FM_CvarValue
-	FM_ClientInfoChanged,
-	FM_LAST_DONT_USE_ME,
+	FM_ClientInfoChanged,	//passes id only
+	FM_LAST_DONT_USE_ME
 };
 
 extern CVector<int> Engine[];

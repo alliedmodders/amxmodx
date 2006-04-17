@@ -13,6 +13,10 @@ int retType = 0;
 int lastFmRes = FMRES_IGNORED;
 KVD_Wrapper g_kvd_hook;
 
+cell origCellRet;
+float origFloatRet;
+const char *origStringRet;
+
 #include "forwardmacros.h"
 
 META_RES mswi(int fmres)
@@ -124,6 +128,110 @@ void TraceLine_post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 	RETURN_META(MRES_IGNORED);
 }
 
+void TraceToss(edict_t* pent, edict_t* pentToIgnore, TraceResult *ptr)
+{
+	gfm_tr = ptr;
+	FM_ENG_HANDLE(FM_TraceToss, (Engine[FM_TraceToss].at(i), ENTINDEX(pent), ENTINDEX(pentToIgnore), (cell)ptr));
+	RETURN_META(mswi(lastFmRes));
+}
+
+void TraceToss_post(edict_t* pent, edict_t* pentToIgnore, TraceResult *ptr)
+{
+	gfm_tr = ptr;
+	FM_ENG_HANDLE_POST(FM_TraceToss, (EnginePost[FM_TraceToss].at(i), ENTINDEX(pent), ENTINDEX(pentToIgnore), (cell)ptr));
+	RETURN_META(MRES_IGNORED);
+}
+
+int TraceMonsterHull(edict_t *pEdict, const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr)
+{
+	gfm_tr = ptr;
+	PREPARE_VECTOR(v1);
+	PREPARE_VECTOR(v2);
+	FM_ENG_HANDLE(FM_TraceMonsterHull, (Engine[FM_TraceMonsterHull].at(i), ENTINDEX(pEdict), p_v1, p_v2, fNoMonsters, ENTINDEX(pentToSkip), (cell)ptr));
+	RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult);
+}
+
+int TraceMonsterHull_post(edict_t *pEdict, const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr)
+{
+	gfm_tr = ptr;
+	PREPARE_VECTOR(v1);
+	PREPARE_VECTOR(v2);
+	origCellRet = META_RESULT_ORIG_RET(int);
+	FM_ENG_HANDLE_POST(FM_TraceMonsterHull, (EnginePost[FM_TraceMonsterHull].at(i), ENTINDEX(pEdict), p_v1, p_v2, fNoMonsters, ENTINDEX(pentToSkip), (cell)ptr));
+	RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult);
+}
+
+void TraceHull(const float *v1, const float *v2, int fNoMonsters, int hullNumber, edict_t *pentToSkip, TraceResult *ptr)
+{
+	gfm_tr = ptr;
+	PREPARE_VECTOR(v1);
+	PREPARE_VECTOR(v2);
+	FM_ENG_HANDLE(FM_TraceHull, (Engine[FM_TraceHull].at(i), p_v1, p_v2, fNoMonsters, hullNumber, ENTINDEX(pentToSkip), (cell)ptr));
+	RETURN_META(mswi(lastFmRes));
+}
+
+void TraceHull_post(const float *v1, const float *v2, int fNoMonsters, int hullNumber, edict_t *pentToSkip, TraceResult *ptr)
+{
+	gfm_tr = ptr;
+	PREPARE_VECTOR(v1);
+	PREPARE_VECTOR(v2);
+	FM_ENG_HANDLE_POST(FM_TraceHull, (EnginePost[FM_TraceHull].at(i), p_v1, p_v2, fNoMonsters, hullNumber, ENTINDEX(pentToSkip), (cell)ptr));
+	RETURN_META(MRES_IGNORED);
+}
+
+void TraceModel(const float *v1, const float *v2, int hullNumber, edict_t *pent, TraceResult *ptr)
+{
+	gfm_tr = ptr;
+	PREPARE_VECTOR(v1);
+	PREPARE_VECTOR(v2);
+	FM_ENG_HANDLE(FM_TraceModel, (Engine[FM_TraceModel].at(i), p_v1, p_v2, hullNumber, ENTINDEX(pent), ptr));
+	RETURN_META(mswi(lastFmRes));
+}
+
+void TraceModel_post(const float *v1, const float *v2, int hullNumber, edict_t *pent, TraceResult *ptr)
+{
+	gfm_tr = ptr;
+	PREPARE_VECTOR(v1);
+	PREPARE_VECTOR(v2);
+	FM_ENG_HANDLE_POST(FM_TraceModel, (EnginePost[FM_TraceModel].at(i), p_v1, p_v2, hullNumber, ENTINDEX(pent), ptr));
+	RETURN_META(MRES_IGNORED);
+}
+
+const char *TraceTexture(edict_t *pTextureEntity, const float *v1, const float *v2)
+{
+	PREPARE_VECTOR(v1);
+	PREPARE_VECTOR(v2);
+	FM_ENG_HANDLE(FM_TraceTexture, (Engine[FM_TraceTexture].at(i), ENTINDEX(pTextureEntity), p_v1, p_v2));
+	RETURN_META_VALUE(mswi(lastFmRes), mlStringResult);
+}
+
+const char *TraceTexture_post(edict_t *pTextureEntity, const float *v1, const float *v2)
+{
+	PREPARE_VECTOR(v1);
+	PREPARE_VECTOR(v2);
+	origStringRet = META_RESULT_ORIG_RET(const char *);
+	FM_ENG_HANDLE_POST(FM_TraceTexture, (EnginePost[FM_TraceTexture].at(i), ENTINDEX(pTextureEntity), p_v1, p_v2));
+	RETURN_META_VALUE(MRES_IGNORED, mlStringResult);
+}
+
+void TraceSphere(const float *v1, const float *v2, int fNoMonsters, float radius, edict_t *pentToSkip, TraceResult *ptr)
+{
+	gfm_tr = ptr;
+	PREPARE_VECTOR(v1);
+	PREPARE_VECTOR(v2);
+	FM_ENG_HANDLE(FM_TraceSphere, (Engine[FM_TraceSphere].at(i), p_v1, p_v2, fNoMonsters, radius, ENTINDEX(pentToSkip), (cell)ptr));
+	RETURN_META(mswi(lastFmRes));
+}
+
+void TraceSphere_post(const float *v1, const float *v2, int fNoMonsters, float radius, edict_t *pentToSkip, TraceResult *ptr)
+{
+	gfm_tr = ptr;
+	PREPARE_VECTOR(v1);
+	PREPARE_VECTOR(v2);
+	FM_ENG_HANDLE_POST(FM_TraceSphere, (EnginePost[FM_TraceSphere].at(i), p_v1, p_v2, fNoMonsters, radius, ENTINDEX(pentToSkip), (cell)ptr));
+	RETURN_META(MRES_IGNORED);
+}
+
 
 /*
 // Passed to pfnKeyValue
@@ -188,36 +296,30 @@ SIMPLE_FLOAT_HOOK_CONSTVECT(VecToYaw);
 
 void VecToAngles(const float *rgflVectorIn, float *rgflVectorOut)
 {
-	cell vec1[3] = {amx_ftoc(rgflVectorIn[0]), amx_ftoc(rgflVectorIn[1]), amx_ftoc(rgflVectorIn[2])};
-	cell vec2[3] = {amx_ftoc(rgflVectorOut[0]), amx_ftoc(rgflVectorOut[1]), amx_ftoc(rgflVectorOut[2])};;
-	cell retvec1 = MF_PrepareCellArray(vec1, 3);
-	cell retvec2 = MF_PrepareCellArray(vec2, 3);
-	FM_ENG_HANDLE(FM_VecToAngles, (Engine[FM_VecToAngles].at(i),  retvec1, retvec2));
+	PREPARE_VECTOR(rgflVectorIn);
+	PREPARE_VECTOR(rgflVectorOut);
+	FM_ENG_HANDLE(FM_VecToAngles, (Engine[FM_VecToAngles].at(i), p_rgflVectorIn, p_rgflVectorOut));
 	RETURN_META(mswi(lastFmRes));
 }
 void VecToAngles_post(const float *rgflVectorIn, float *rgflVectorOut)
 {
-	cell vec1[3] = {amx_ftoc(rgflVectorIn[0]), amx_ftoc(rgflVectorIn[1]), amx_ftoc(rgflVectorIn[2])};
-	cell vec2[3] = {amx_ftoc(rgflVectorOut[0]), amx_ftoc(rgflVectorOut[1]), amx_ftoc(rgflVectorOut[2])};;
-	cell retvec1 = MF_PrepareCellArray(vec1, 3);
-	cell retvec2 = MF_PrepareCellArray(vec2, 3);
-	FM_ENG_HANDLE_POST(FM_VecToAngles, (EnginePost[FM_VecToAngles].at(i),  retvec1, retvec2));
+	PREPARE_VECTOR(rgflVectorIn);
+	PREPARE_VECTOR(rgflVectorOut);
+	FM_ENG_HANDLE_POST(FM_VecToAngles, (EnginePost[FM_VecToAngles].at(i), p_rgflVectorIn, p_rgflVectorOut));
 	RETURN_META(MRES_IGNORED);
 }
 
 void MoveToOrigin(edict_t *ent, const float *pflGoal, float dist, int iMoveType)
 {
-	cell vec[3] = {amx_ftoc(pflGoal[0]), amx_ftoc(pflGoal[1]), amx_ftoc(pflGoal[2])};
-	cell retvec = MF_PrepareCellArray(vec, 3);
-	FM_ENG_HANDLE(FM_MoveToOrigin, (Engine[FM_MoveToOrigin].at(i),  ENTINDEX(ent), retvec, dist, iMoveType));
+	PREPARE_VECTOR(pflGoal);
+	FM_ENG_HANDLE(FM_MoveToOrigin, (Engine[FM_MoveToOrigin].at(i),  ENTINDEX(ent), p_pflGoal, dist, iMoveType));
 	RETURN_META(mswi(lastFmRes));
 }
 
 void MoveToOrigin_post(edict_t *ent, const float *pflGoal, float dist, int iMoveType)
 {
-	cell vec[3] = {amx_ftoc(pflGoal[0]), amx_ftoc(pflGoal[1]), amx_ftoc(pflGoal[2])};
-	cell retvec = MF_PrepareCellArray(vec, 3);
-	FM_ENG_HANDLE_POST(FM_MoveToOrigin, (EnginePost[FM_MoveToOrigin].at(i),  ENTINDEX(ent), retvec, dist, iMoveType));
+	PREPARE_VECTOR(pflGoal);
+	FM_ENG_HANDLE_POST(FM_MoveToOrigin, (EnginePost[FM_MoveToOrigin].at(i),  ENTINDEX(ent), p_pflGoal, dist, iMoveType));
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -229,6 +331,7 @@ edict_t *FindEntityByString(edict_t *pEdictStartSearchAfter, const char *pszFiel
 
 edict_t *FindEntityByString_post(edict_t *pEdictStartSearchAfter, const char *pszField, const char *pszValue)
 {
+	origCellRet = ENTINDEX(META_RESULT_ORIG_RET(edict_t *));
 	FM_ENG_HANDLE_POST(FM_FindEntityByString, (EnginePost[FM_FindEntityByString].at(i),  ENTINDEX(pEdictStartSearchAfter), pszField, pszValue));
 	RETURN_META_VALUE(MRES_IGNORED, INDEXENT2((int)mlCellResult));
 }
@@ -273,6 +376,9 @@ SIMPLE_INT_HOOK_EDICT(EntIsOnFloor);
 
 // pfnDropToFloor
 SIMPLE_INT_HOOK_EDICT(DropToFloor);
+
+// pfnWalkMove
+SIMPLE_INT_HOOK_EDICT_FLOAT_FLOAT_INT(WalkMove);
 
 // pfnSetOrigin
 SIMPLE_VOID_HOOK_EDICT_CONSTVECT(SetOrigin);
@@ -350,6 +456,38 @@ SIMPLE_INT_HOOK_CONSTSTRING_INT(RegUserMsg);
 // pfnAnimationAutomove
 SIMPLE_VOID_HOOK_CONSTEDICT_FLOAT(AnimationAutomove);
 
+void GetBonePosition(const edict_t* pEdict, int iBone, float *rgflOrigin, float *rgflAngles)
+{
+	PREPARE_VECTOR(rgflOrigin);
+	PREPARE_VECTOR(rgflAngles);
+	FM_ENG_HANDLE(FM_GetBonePosition, (Engine[FM_GetBonePosition].at(i), ENTINDEX(pEdict), iBone, p_rgflOrigin, p_rgflAngles));
+	RETURN_META(mswi(lastFmRes));
+}
+
+void GetBonePosition_post(const edict_t* pEdict, int iBone, float *rgflOrigin, float *rgflAngles)
+{
+	PREPARE_VECTOR(rgflOrigin);
+	PREPARE_VECTOR(rgflAngles);
+	FM_ENG_HANDLE_POST(FM_GetBonePosition, (EnginePost[FM_GetBonePosition].at(i), ENTINDEX(pEdict), iBone, p_rgflOrigin, p_rgflAngles));
+	RETURN_META(MRES_IGNORED);
+}
+
+void GetAttachment(const edict_t *pEdict, int iAttachment, float *rgflOrigin, float *rgflAngles)
+{
+	PREPARE_VECTOR(rgflOrigin);
+	PREPARE_VECTOR(rgflAngles);
+	FM_ENG_HANDLE(FM_GetAttachment, (Engine[FM_GetAttachment].at(i), ENTINDEX(pEdict), iAttachment, p_rgflOrigin, p_rgflAngles));
+	RETURN_META(mswi(lastFmRes));
+}
+
+void GetAttachment_post(const edict_t *pEdict, int iAttachment, float *rgflOrigin, float *rgflAngles)
+{
+	PREPARE_VECTOR(rgflOrigin);
+	PREPARE_VECTOR(rgflAngles);
+	FM_ENG_HANDLE_POST(FM_GetAttachment, (EnginePost[FM_GetAttachment].at(i), ENTINDEX(pEdict), iAttachment, p_rgflOrigin, p_rgflAngles));
+	RETURN_META(MRES_IGNORED);
+}
+
 // pfnSetView
 SIMPLE_VOID_HOOK_CONSTEDICT_CONSTEDICT(SetView);
 
@@ -385,8 +523,63 @@ HOOK_PLAYBACK_EVENT(PlaybackEvent);
 // pfnCreateFakeClient
 SIMPLE_EDICT_HOOK_CONSTSTRING(CreateFakeClient);
 
+void RunPlayerMove(edict_t *fakeclient, const float *viewangles, float forwardmove, float sidemove, float upmove, unsigned short buttons, byte impulse, byte msec)
+{
+	PREPARE_VECTOR(viewangles);
+	FM_ENG_HANDLE(FM_RunPlayerMove, (Engine[FM_RunPlayerMove].at(i), ENTINDEX(fakeclient), p_viewangles, forwardmove, sidemove, upmove, buttons, impulse, msec));
+	RETURN_META(mswi(lastFmRes));
+}
+
+void RunPlayerMove_post(edict_t *fakeclient, const float *viewangles, float forwardmove, float sidemove, float upmove, unsigned short buttons, byte impulse, byte msec)
+{
+	PREPARE_VECTOR(viewangles);
+	FM_ENG_HANDLE_POST(FM_RunPlayerMove, (EnginePost[FM_RunPlayerMove].at(i), ENTINDEX(fakeclient), p_viewangles, forwardmove, sidemove, upmove, buttons, impulse, msec));
+	RETURN_META(MRES_IGNORED);
+}
+
 // pfnNumberOfEntities
 SIMPLE_INT_HOOK_VOID(NumberOfEntities);
+
+void StaticDecal(const float *origin, int decalIndex, int entityIndex, int modelIndex)
+{
+	PREPARE_VECTOR(origin);
+	FM_ENG_HANDLE(FM_StaticDecal, (Engine[FM_StaticDecal].at(i), p_origin, decalIndex, entityIndex, modelIndex));
+	RETURN_META(mswi(lastFmRes));
+}
+
+void StaticDecal_post(const float *origin, int decalIndex, int entityIndex, int modelIndex)
+{
+	PREPARE_VECTOR(origin);
+	FM_ENG_HANDLE_POST(FM_StaticDecal, (EnginePost[FM_StaticDecal].at(i), p_origin, decalIndex, entityIndex, modelIndex));
+	RETURN_META(MRES_IGNORED);
+}
+
+void BuildSoundMsg(edict_t *entity, int channel, const char *sample, float volume, float attenuation, int fFlags, int pitch, int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
+{
+	PREPARE_VECTOR(pOrigin);
+	FM_ENG_HANDLE(FM_BuildSoundMsg, (Engine[FM_BuildSoundMsg].at(i), ENTINDEX(entity), channel, sample, volume, attenuation, fFlags, pitch, msg_dest, msg_type, p_pOrigin, ENTINDEX(ed)));
+	RETURN_META(mswi(lastFmRes));
+}
+
+void BuildSoundMsg_post(edict_t *entity, int channel, const char *sample, float volume, float attenuation, int fFlags, int pitch, int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
+{
+	PREPARE_VECTOR(pOrigin);
+	FM_ENG_HANDLE_POST(FM_BuildSoundMsg, (EnginePost[FM_BuildSoundMsg].at(i), ENTINDEX(entity), channel, sample, volume, attenuation, fFlags, pitch, msg_dest, msg_type, p_pOrigin, ENTINDEX(ed)));
+	RETURN_META(MRES_IGNORED);
+}
+
+int CheckVisibility(const edict_t *entity, unsigned char *pset)
+{
+	FM_ENG_HANDLE(FM_CheckVisibility, (Engine[FM_CheckVisibility].at(i), ENTINDEX(entity), pset));
+	RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult);
+}
+
+int CheckVisibility_post(const edict_t *entity, unsigned char *pset)
+{
+	origCellRet = META_RESULT_ORIG_RET(int);
+	FM_ENG_HANDLE(FM_CheckVisibility, (Engine[FM_CheckVisibility].at(i), ENTINDEX(entity), pset));
+	RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult);
+}
 
 // pfnGetCurrentPlayer
 SIMPLE_INT_HOOK_VOID(GetCurrentPlayer);
@@ -507,7 +700,6 @@ SIMPLE_VOID_HOOK_EDICT(OnFreeEntPrivateData);
 SIMPLE_VOID_HOOK_VOID(GameShutdown);
 // pfnShouldCollide
 SIMPLE_INT_HOOK_EDICT_EDICT(ShouldCollide);
-
 
 
 static cell AMX_NATIVE_CALL unregister_forward(AMX *amx, cell *params)
@@ -683,7 +875,7 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 		break;
 	case FM_WalkMove:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_FLOAT, FP_FLOAT, FP_CELL, FP_DONE);
-//		ENGHOOK(WalkMove);
+		ENGHOOK(WalkMove);
 		break;
 	case FM_SetOrigin:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_ARRAY, FP_DONE);
@@ -703,27 +895,27 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 		break;
 	case FM_TraceToss:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
-//		ENGHOOK(TraceToss);
+		ENGHOOK(TraceToss);
 		break;
 	case FM_TraceMonsterHull:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_ARRAY, FP_ARRAY, FP_CELL, FP_CELL, FP_DONE);
-//		ENGHOOK(TraceMonsterHull);
+		ENGHOOK(TraceMonsterHull);
 		break;
 	case FM_TraceHull:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_ARRAY, FP_ARRAY, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
-//		ENGHOOK(TraceHull);
+		ENGHOOK(TraceHull);
 		break;
 	case FM_TraceModel:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_ARRAY, FP_ARRAY, FP_CELL, FP_CELL, FP_DONE);
-//		ENGHOOK(TraceModel);
+		ENGHOOK(TraceModel);
 		break;
 	case FM_TraceTexture:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_ARRAY, FP_ARRAY, FP_DONE);
-//		ENGHOOK(TraceTexture);
+		ENGHOOK(TraceTexture);
 		break;
 	case FM_TraceSphere:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_ARRAY, FP_ARRAY, FP_CELL, FP_FLOAT, FP_CELL, FP_DONE);
-//		ENGHOOK(TraceSphere);
+		ENGHOOK(TraceSphere);
 		break;
 	case FM_GetAimVector:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_FLOAT, FP_ARRAY, FP_DONE);
@@ -843,12 +1035,12 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 
 	case FM_GetBonePosition:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_ARRAY, FP_ARRAY, FP_DONE);
-//		ENGHOOK(GetBonePosition);
+		ENGHOOK(GetBonePosition);
 		break;
 
 	case FM_GetAttachment:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_ARRAY, FP_ARRAY, FP_DONE);
-//		ENGHOOK(GetAttachment);
+		ENGHOOK(GetAttachment);
 		break;
 
 	case FM_SetView:
@@ -882,7 +1074,7 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 
 	case FM_RunPlayerMove:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_ARRAY, FP_FLOAT, FP_FLOAT, FP_FLOAT, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
-//		ENGHOOK(RunPlayerMove);
+		ENGHOOK(RunPlayerMove);
 		break;
 
 	case FM_NumberOfEntities:
@@ -891,7 +1083,7 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 		break;
 	case FM_StaticDecal:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_ARRAY, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
-//		ENGHOOK(StaticDecal);
+		ENGHOOK(StaticDecal);
 		break;
 
 	case FM_PrecacheGeneric:
@@ -900,7 +1092,7 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 		break;
 	case FM_BuildSoundMsg:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_STRING, FP_FLOAT, FP_FLOAT, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_ARRAY, FP_CELL, FP_DONE);
-//		ENGHOOK(BuildSoundMsg);
+		ENGHOOK(BuildSoundMsg);
 		break;
 	case FM_GetPhysicsKeyValue:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_STRING, FP_DONE);
@@ -925,7 +1117,7 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	//EngFunc_CheckVisibility,			//)		( const edict_t *entity, unsigned char *pset );
 	case FM_CheckVisibility:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_STRING, FP_DONE);
-//		ENGHOOK(CheckVisibility);
+		ENGHOOK(CheckVisibility);
 		break;
 
 	case FM_GetCurrentPlayer:
@@ -1171,9 +1363,32 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	return fId;
 }
 
+static cell AMX_NATIVE_CALL get_orig_retval(AMX *amx, cell *params)
+{
+	int paramCount = params[0] / sizeof(cell);
+	cell *refFloatRet = 0;
+
+	switch (paramCount)
+	{
+	case 0:
+		return origCellRet;
+	case 1:
+		refFloatRet = MF_GetAmxAddr(amx, params[1]);
+		*refFloatRet = amx_ftoc(origFloatRet);
+		return 1;
+	case 2:
+		MF_SetAmxString(amx, params[1], origStringRet, params[2]);
+		return 1;
+	default:
+		MF_LogError(amx, AMX_ERR_NATIVE, "Too many parameters passed");
+		return 0;
+	}
+}
+
 AMX_NATIVE_INFO forward_natives[] = {
 	{ "register_forward",	register_forward },
 	{ "unregister_forward", unregister_forward },
 	{ "forward_return",		fm_return },
+	{ "get_orig_retval",	get_orig_retval },
 	{ NULL,					NULL }
 };

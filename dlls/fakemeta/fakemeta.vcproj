@@ -4,6 +4,7 @@
 	Version="7.10"
 	Name="fakemeta"
 	ProjectGUID="{5E393C37-22F2-4CA2-9022-6400DC582447}"
+	RootNamespace="fakemeta"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -150,7 +151,7 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="engfunc"
+			Name="Engine Funcs"
 			Filter="">
 			<File
 				RelativePath=".\dllfunc.cpp">
@@ -166,7 +167,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="pev"
+			Name="PEV"
 			Filter="">
 			<File
 				RelativePath=".\pev.cpp">
@@ -181,7 +182,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="forward"
+			Name="Forwards"
 			Filter="">
 			<File
 				RelativePath=".\forward.cpp">
@@ -194,11 +195,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="hlsdk"
-			Filter="">
-		</Filter>
-		<Filter
-			Name="Pawn includes"
+			Name="Pawn Includes"
 			Filter="">
 			<File
 				RelativePath="..\..\plugins\include\fakemeta.inc">
@@ -211,7 +208,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="global"
+			Name="Globals"
 			Filter="">
 			<File
 				RelativePath=".\glb.cpp">

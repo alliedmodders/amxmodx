@@ -10,6 +10,7 @@
 	} \
 	const char* call##_post () \
 	{ \
+		origStringRet = META_RESULT_ORIG_RET(const char *); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i))); \
 		RETURN_META_VALUE(MRES_IGNORED, mlStringResult); \
 	}
@@ -22,6 +23,7 @@
 	} \
 	const char* call##_post (int v) \
 	{ \
+		origStringRet = META_RESULT_ORIG_RET(const char *); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),(cell)v)); \
 		RETURN_META_VALUE(MRES_IGNORED, mlStringResult); \
 	}
@@ -34,6 +36,7 @@
 	} \
 	const char* call##_post (const edict_t *e) \
 	{ \
+		origStringRet = META_RESULT_ORIG_RET(const char *); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),(cell)ENTINDEX((edict_t*)e))); \
 		RETURN_META_VALUE(MRES_IGNORED, mlStringResult); \
 	}
@@ -45,6 +48,7 @@
 	} \
 	const char* call##_post (const edict_t *e, const char *c) \
 	{ \
+		origStringRet = META_RESULT_ORIG_RET(const char *); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),(cell)ENTINDEX((edict_t*)e),c)); \
 		RETURN_META_VALUE(MRES_IGNORED, mlStringResult); \
 	}
@@ -91,6 +95,7 @@
 	} \
 	char* call##_post (char *c, char *cb) \
 	{ \
+		origStringRet = META_RESULT_ORIG_RET(char *); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),c,cb)); \
 		RETURN_META_VALUE(MRES_IGNORED, (char*)mlStringResult); \
 	}
@@ -102,6 +107,7 @@
 	} \
 	const char* call##_post (edict_t *e) \
 	{ \
+		origStringRet = META_RESULT_ORIG_RET(const char *); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),(cell)ENTINDEX(e))); \
 		RETURN_META_VALUE(MRES_IGNORED, mlStringResult); \
 	}
@@ -127,6 +133,7 @@
 	} \
 	int call##_post (char *s) \
 	{ \
+		origCellRet = META_RESULT_ORIG_RET(int); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i), s)); \
 		RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult); \
 	} 
@@ -139,6 +146,7 @@
 	} \
 	int call##_post (const char *s) \
 	{ \
+		origCellRet = META_RESULT_ORIG_RET(int); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i), s)); \
 		RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult); \
 	}
@@ -151,6 +159,7 @@
 	} \
 	edict_t* call##_post (const char *s) \
 	{ \
+		origCellRet = ENTINDEX(META_RESULT_ORIG_RET(edict_t *)); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i), s)); \
 		RETURN_META_VALUE(MRES_IGNORED, INDEXENT2((int)mlCellResult)); \
 	}
@@ -162,6 +171,7 @@
 	} \
 	char call##_post (char *s) \
 	{ \
+		origCellRet = META_RESULT_ORIG_RET(char); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i), s)); \
 		RETURN_META_VALUE(MRES_IGNORED, (char)mlCellResult); \
 	}
@@ -221,6 +231,7 @@
 	} \
 	int call##_post (const char *s, int v) \
 	{ \
+		origCellRet = META_RESULT_ORIG_RET(int); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i), s, (cell)v)); \
 		RETURN_META_VALUE(MRES_IGNORED,(int)mlCellResult); \
 	}
@@ -246,6 +257,7 @@
 	} \
 	unsigned short call##_post (int v,const char *s) \
 	{ \
+		origCellRet = META_RESULT_ORIG_RET(unsigned short); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),(cell)v, s)); \
 		RETURN_META_VALUE(MRES_IGNORED,(unsigned short)mlCellResult); \
 	}
@@ -333,6 +345,7 @@
 	} \
 	edict_t* call##_post () \
 	{ \
+		origCellRet = ENTINDEX(META_RESULT_ORIG_RET(edict_t *)); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i))); \
 		RETURN_META_VALUE(MRES_IGNORED,INDEXENT2((int)mlCellResult)); \
 	} 
@@ -344,6 +357,7 @@
 	} \
 	edict_t* call##_post (int v) \
 	{ \
+		origCellRet = ENTINDEX(META_RESULT_ORIG_RET(edict_t *)); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),v)); \
 		RETURN_META_VALUE(MRES_IGNORED,INDEXENT2((int)mlCellResult)); \
 	} 
@@ -356,6 +370,7 @@
 	} \
 	edict_t* call##_post (edict_t *e) \
 	{ \
+		origCellRet = ENTINDEX(META_RESULT_ORIG_RET(edict_t *)); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),(cell)ENTINDEX(e))); \
 		RETURN_META_VALUE(MRES_IGNORED,INDEXENT2((int)mlCellResult)); \
 	} 
@@ -370,6 +385,7 @@
 	edict_t* call##_post (edict_t *ed, const float *vec, float fla) \
 	{ \
 		PREPARE_VECTOR(vec); \
+		origCellRet = ENTINDEX(META_RESULT_ORIG_RET(edict_t *)); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX(ed), p_vec, fla)); \
 		RETURN_META_VALUE(MRES_IGNORED, INDEXENT2((int)mlCellResult)); \
 	}
@@ -419,6 +435,7 @@
 	} \
 	int call##_post (edict_t *pent) \
 	{ \
+		origCellRet = META_RESULT_ORIG_RET(int); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX(pent))); \
 		RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult); \
 	}
@@ -430,6 +447,7 @@
 	} \
 	unsigned int call##_post (edict_t *pent) \
 	{ \
+		origCellRet = META_RESULT_ORIG_RET(unsigned int); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX(pent))); \
 		RETURN_META_VALUE(MRES_IGNORED, (unsigned int)mlCellResult); \
 	}
@@ -442,6 +460,7 @@
 	} \
 	int call##_post (const edict_t *pent) \
 	{ \
+		origCellRet = META_RESULT_ORIG_RET(int); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX((edict_t*)pent))); \
 		RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult); \
 	}
@@ -454,6 +473,7 @@
 	} \
 	int call##_post (int v) \
 	{ \
+		origCellRet = META_RESULT_ORIG_RET(int); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)v)); \
 		RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult); \
 	}
@@ -478,6 +498,7 @@
 	} \
 	qboolean call##_post (int v, int vb) \
 	{ \
+		origCellRet = META_RESULT_ORIG_RET(qboolean); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)v, (cell)vb)); \
 		RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult > 0 ? 1 : 0); \
 	}
@@ -490,6 +511,7 @@
 	} \
 	qboolean call##_post (int v, int vb, qboolean bah) \
 	{ \
+		origCellRet = META_RESULT_ORIG_RET(qboolean); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i), (cell)v, (cell)vb, (cell)(bah > 0 ? 1 : 0))); \
 		RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult > 0 ? 1 : 0); \
 	}
@@ -502,6 +524,7 @@
 	} \
 	int call##_post () \
 	{ \
+		origCellRet = META_RESULT_ORIG_RET(int); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i))); \
 		RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult); \
 	}
@@ -513,6 +536,7 @@
 	} \
 	float call##_post () \
 	{ \
+		origFloatRet = META_RESULT_ORIG_RET(float); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i))); \
 		RETURN_META_VALUE(MRES_IGNORED, (float)mFloatResult); \
 	}
@@ -528,6 +552,7 @@
 	int call##_post (const float *vec) \
 	{ \
 		PREPARE_VECTOR(vec); \
+		origCellRet = META_RESULT_ORIG_RET(int); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  p_vec)); \
 		RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult); \
 	}
@@ -621,6 +646,7 @@
 	float call##_post (const float *vec) \
 	{ \
 		PREPARE_VECTOR(vec); \
+		origFloatRet = META_RESULT_ORIG_RET(float); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  p_vec)); \
 		RETURN_META_VALUE(MRES_IGNORED,mlFloatResult); \
 	}
@@ -632,6 +658,7 @@
 	} \
 	float call##_post (const char *s) \
 	{ \
+		origFloatRet = META_RESULT_ORIG_RET(float); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  s)); \
 		RETURN_META_VALUE(MRES_IGNORED,mlFloatResult); \
 	}
@@ -644,6 +671,7 @@
 	} \
 	const char* call##_post (const char *s) \
 	{ \
+		origStringRet = META_RESULT_ORIG_RET(const char *); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  s)); \
 		RETURN_META_VALUE(MRES_IGNORED,mlStringResult); \
 	}
@@ -681,6 +709,7 @@
 	} \
 	qboolean call##_post (edict_t *e, const char *sza, const char *szb, char blah[128]) \
 	{ \
+		origCellRet = META_RESULT_ORIG_RET(qboolean); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX(e), sza, szb, blah)); \
 		RETURN_META_VALUE(MRES_IGNORED,(int)mlCellResult > 0 ? 0 : 1); \
 	}
@@ -743,20 +772,6 @@
 		RETURN_META(MRES_IGNORED); \
 	}
 
-/*
-#define SIMPLE_INT_HOOK_EDICT(call) \
-	int call (edict_t *pent) \
-	{ \
-		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  ENTINDEX(pent))); \
-		RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult); \
-	} \
-	int call##_post (edict_t *pent) \
-	{ \
-		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  ENTINDEX(pent))); \
-		RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult); \
-	}
-*/
-
 #define SIMPLE_INT_HOOK_EDICT_EDICT(call) \
 	int call (edict_t *pent,edict_t *pentb) \
 	{ \
@@ -765,9 +780,23 @@
 	} \
 	int call##_post (edict_t *pent,edict_t *pentb) \
 	{ \
+		origCellRet = META_RESULT_ORIG_RET(int); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX(pent), (cell)ENTINDEX(pentb))); \
 		RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult); \
 	}
+
+#define SIMPLE_INT_HOOK_EDICT_FLOAT_FLOAT_INT(call) \
+	int call (edict_t *pent, float f, float fb, int v) \
+	{ \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i), (cell)ENTINDEX(pent), f, fb, (cell)v)); \
+		RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult); \
+	} \
+	int call##_post (edict_t *pent, float f, float fb, int v) \
+	{ \
+		origCellRet = META_RESULT_ORIG_RET(int); \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i), (cell)ENTINDEX(pent), f, fb, (cell)v)); \
+		RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult); \
+	} \
 
 #define ENGHOOK(pfnCall) \
 	if (post) \
@@ -848,7 +877,10 @@
 				mlFloatResult = mFloatResult; \
 			lastFmRes = fmres; \
 		} \
-	}
+	} \
+	origCellRet = 0; \
+	origFloatRet = 0.0; \
+	origStringRet = "";
 
 
 

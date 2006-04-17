@@ -913,6 +913,14 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		(*g_engfuncs.pfnPlaybackEvent)(iparam1,INDEXENT2(index),iparam2,fparam1,Vec1,Vec2,fparam2,fparam3,iparam3,iparam4,iparam5,iparam6);
 		return 1;
 
+		//pfnCheckVisibility
+	case	EngFunc_CheckVisibility:			// int )		( const edict_t *entity, unsigned char *pset );
+		cRet = MF_GetAmxAddr(amx, params[2]);
+		index = cRet[0];
+		CHECK_ENTITY(index);
+		temp = MF_GetAmxString(amx,params[3],0,&len);
+		return (*g_engfuncs.pfnCheckVisibility)(INDEXENT2(index), (unsigned char *)STRING(ALLOC_STRING(temp)));
+
 		// pfnGetCurrentPlayer
 	case	EngFunc_GetCurrentPlayer:			// int )		( void );
 		return (*g_engfuncs.pfnGetCurrentPlayer)();

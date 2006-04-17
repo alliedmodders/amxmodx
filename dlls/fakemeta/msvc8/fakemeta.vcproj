@@ -228,7 +228,7 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="engfunc"
+			Name="Engine Funcs"
 			>
 			<File
 				RelativePath="..\dllfunc.cpp"
@@ -248,7 +248,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="pev"
+			Name="PEV"
 			>
 			<File
 				RelativePath="..\pev.cpp"
@@ -267,7 +267,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="forward"
+			Name="Forwards"
 			>
 			<File
 				RelativePath="..\forward.cpp"
@@ -283,11 +283,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="hlsdk"
-			>
-		</Filter>
-		<Filter
-			Name="Pawn includes"
+			Name="Pawn Includes"
 			>
 			<File
 				RelativePath="..\..\..\plugins\include\fakemeta.inc"
@@ -303,7 +299,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="global"
+			Name="Globals"
 			>
 			<File
 				RelativePath="..\glb.cpp"

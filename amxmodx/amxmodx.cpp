@@ -1032,7 +1032,7 @@ static cell AMX_NATIVE_CALL register_plugin(AMX *amx, cell *params) /* 3 param *
 	a->setVersion(vers);
 	a->setAuthor(author);
 	
-	return 1;
+	return a->getId();
 }
 
 static cell AMX_NATIVE_CALL register_menucmd(AMX *amx, cell *params) /* 3 param */

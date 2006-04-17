@@ -52,6 +52,15 @@ native unregister_forward(_forwardType, registerId, post=0);
 /* Returns data for metamod */
 native forward_return(type,{Float,Sql,Result,_}:...);
 
+/* Returns the original return value of an engine function. 
+ * This is only valid in forwards that were registered as post.
+ *
+ * get_orig_retval() - no params, retrieves integer return value
+ * get_orig_retval(&Float:value) - retrieves float return value by reference
+ * get_orig_retval(value[], len) - retrives string return value
+ */
+native get_orig_retval({Float,_}:...)
+
 native engfunc(type,{Float,Sql,Result,_}:...);
 native dllfunc(type,{Float,Sql,Result,_}:...);
 

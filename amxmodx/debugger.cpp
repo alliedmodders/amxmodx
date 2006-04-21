@@ -639,6 +639,8 @@ void Debugger::GenericMessage(AMX *amx, int err)
 Debugger::~Debugger()
 {
 	Clear();
+	dbg_FreeInfo(m_pAmxDbg);
+	delete m_pAmxDbg;
 }
 
 int Handler::SetErrorHandler(const char *function)

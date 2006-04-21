@@ -252,7 +252,7 @@ void CLog::LogError(const char *fmt, ...)
 	va_end(arglst);
 
 	FILE *pF = NULL;
-	build_pathname_r(file, sizeof(file)-1, "%s/error_%02d%02d%02d.log", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday, 100 - curTime->tm_year);
+	build_pathname_r(file, sizeof(file)-1, "%s/error_%02d%02d%02d.log", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday, curTime->tm_year - 100);
 	pF = fopen(file, "a+");
 
 	if (pF)

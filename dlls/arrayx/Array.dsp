@@ -130,10 +130,6 @@ SOURCE=.\MapNatives.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\BinTrieNativeFunctions.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\Capsule.h
 # End Source File
 # Begin Source File
@@ -170,15 +166,7 @@ SOURCE=.\ComboTable.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\GenericNatives.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\JudyIncludes.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\MapNativeFunctions.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
@@ -191,6 +179,14 @@ SOURCE=.\amxxmodule.cpp
 # Begin Source File
 
 SOURCE=.\amxxmodule.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\BinTrieNativeFunctions.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\GenericNatives.h
 # End Source File
 # Begin Source File
 
@@ -215,6 +211,10 @@ SOURCE=.\JudyVec.h
 # Begin Source File
 
 SOURCE=.\ListNativeFunctions.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\MapNativeFunctions.h
 # End Source File
 # Begin Source File
 

@@ -66,14 +66,14 @@ bool Capsule::GetBool( void )
 {
 	if (type != capsule_type_bool) ThrowTypeError(capsule_type_bool);
 
-	return reinterpret_cast<bool>(data);
+	return (data != NULL);
 }
 
 void Capsule::SetBool(bool Value)
 {
 	CheckEmpty(true);
 	type = capsule_type_bool;
-	data = reinterpret_cast<void*>(Value);
+	if(Value == true) data = reinterpret_cast<Pvoid_t>(1);
 };
 
 cell Capsule::GetInt( void )

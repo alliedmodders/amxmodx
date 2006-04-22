@@ -26,6 +26,11 @@
 #define LINUX
 #endif
 
+#ifndef _SIZE_T_DEFINED
+typedef unsigned int size_t;
+#define _SIZE_T_DEFINED
+#endif
+
 #undef C_DLLEXPORT
 #define C_DLLEXPORT extern "C" DLLEXPORT
 
@@ -1927,6 +1932,30 @@ enum ForwardParam
 	FP_ARRAY,						// array; use the return value of prepareArray.
 };
 
+enum PlayerProp
+{
+	Player_Name,		//String
+	Player_Ip,			//String
+	Player_Team,		//String
+	Player_Ingame,		//bool
+	Player_Authorized,	//bool
+	Player_Vgui,		//bool
+	Player_Time,		//float
+	Player_Playtime,	//float
+	Player_MenuExpire,	//float
+	Player_Weapons,		//struct{int,int}[32]
+	Player_CurrentWeapon,	//int
+	Player_TeamID,			//int
+	Player_Deaths,			//int
+	Player_Aiming,			//int
+	Player_Menu,			//int
+	Player_Keys,			//int
+	Player_Flags,			//int[32]
+	Player_Newmenu,			//int
+	Player_NewmenuPage,		//int
+};
+
+typedef void (*AUTHORIZEFUNC)(int player, const char *authstring);
 
 typedef int				(*PFN_ADD_NATIVES)				(const AMX_NATIVE_INFO * /*list*/);
 typedef char *			(*PFN_BUILD_PATHNAME)			(const char * /*format*/, ...);
@@ -1978,6 +2007,7 @@ typedef edict_t *		(*PFN_GET_PLAYER_EDICT)			(int /*id*/);
 #else
 typedef void *			(*PFN_GET_PLAYER_EDICT)			(int /*id*/);
 #endif
+typedef void *			(*PFN_PLAYER_PROP_ADDR)			(int /*id*/, int /*prop*/);
 
 #ifdef MEMORY_TEST
 typedef void *			(*PFN_ALLOCATOR)				(const char* /*filename*/, const unsigned int /*line*/, const char* /*func*/,
@@ -2003,6 +2033,9 @@ typedef	void			(*PFN_MERGEDEFINITION_FILE)		(const char * /*filename*/);
 typedef const char *	(*PFN_FORMAT)					(const char * /*fmt*/, ... /*params*/);
 typedef void			(*PFN_REGISTERFUNCTION)			(void * /*pfn*/, const char * /*desc*/);
 typedef	int				(*PFN_AMX_PUSH)					(AMX * /*amx*/, cell /*value*/);
+typedef	int				(*PFN_SET_TEAM_INFO)			(int /*player */, int /*teamid */, const char * /*name */);
+typedef void			(*PFN_REG_AUTH_FUNC)			(AUTHORIZEFUNC);
+typedef void			(*PFN_UNREG_AUTH_FUNC)			(AUTHORIZEFUNC);
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
 extern PFN_BUILD_PATHNAME			g_fn_BuildPathname;
@@ -2066,6 +2099,10 @@ extern PFN_GET_PLAYER_TEAM			g_fn_GetPlayerTeam;
 extern PFN_REGISTERFUNCTION			g_fn_RegisterFunction;
 extern PFN_REQ_FNPTR				g_fn_RequestFunction;
 extern PFN_AMX_PUSH					g_fn_AmxPush;
+extern PFN_SET_TEAM_INFO			g_fn_SetTeamInfo;
+extern PFN_PLAYER_PROP_ADDR			g_fn_PlayerPropAddr;
+extern PFN_REG_AUTH_FUNC			g_fn_RegAuthFunc;
+extern PFN_UNREG_AUTH_FUNC			g_fn_UnregAuthFunc;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2126,6 +2163,10 @@ void			MF_RegisterFunction			(void *pfn, const char *description) { }
 void *			MF_RequestFunction			(const char *description) { }
 int				MF_AmxPush					(AMX *amx, cell *params) { }
 int				MF_AmxExec					(AMX *amx, cell *retval, int idx) { }
+int				MF_SetPlayerTeamInfo		(int id, int teamid, const char *teamname) { }
+void *			MF_PlayerPropAddr			(int id, int prop) { }
+void			MF_RegAuthFunc				(AUTHORIZEFUNC fn) { }
+void			MF_UnregAuthFunc			(AUTHORIZEFUNC fn) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
@@ -2189,8 +2230,12 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...);
 #define MF_GetPlayerEdict g_fn_GetPlayerEdict
 #define MF_Format g_fn_Format
 #define MF_RegisterFunction g_fn_RegisterFunction
-#define MF_RequestFunction g_fn_RequestFunction;
+#define MF_RequestFunction g_fn_RequestFunction
 #define MF_AmxPush g_fn_AmxPush
+#define	MF_SetPlayerTeamInfo g_fn_SetTeamInfo
+#define MF_PlayerPropAddr g_fn_PlayerPropAddr
+#define MF_RegAuthFunc g_fn_RegAuthFunc
+#define MF_UnregAuthFunc g_fn_UnregAuthFunc
 
 #ifdef MEMORY_TEST
 /*** Memory ***/

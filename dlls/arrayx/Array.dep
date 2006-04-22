@@ -1,0 +1,175 @@
+# Microsoft Developer Studio Generated Dependency File, included by Array.mak
+
+.\Array.cpp : \
+	"..\..\..\..\..\..\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	".\amxxmodule.h"\
+	".\Capsule.h"\
+	".\CArray.h"\
+	".\CBaseList.h"\
+	".\CBaseMap.h"\
+	".\CBinTrie.h"\
+	".\ComboArray.h"\
+	".\Judy.h"\
+	".\JudyEx.h"\
+	".\JudyExtra.h"\
+	".\JudyIncludes.h"\
+	".\JudyVar.h"\
+	".\JudyVec.h"\
+	".\moduleconfig.h"\
+	".\osdefs.h"\
+	
+
+.\BinTrieNatives.cpp : \
+	"..\..\..\..\..\..\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	".\amxxmodule.h"\
+	".\BinTrieNativeFunctions.h"\
+	".\Capsule.h"\
+	".\CArray.h"\
+	".\CBaseList.h"\
+	".\CBaseMap.h"\
+	".\CBinTrie.h"\
+	".\ComboArray.h"\
+	".\GenericNatives.h"\
+	".\Judy.h"\
+	".\JudyEx.h"\
+	".\JudyExtra.h"\
+	".\JudyIncludes.h"\
+	".\JudyVar.h"\
+	".\JudyVec.h"\
+	".\moduleconfig.h"\
+	".\NativeIncludes.h"\
+	".\osdefs.h"\
+	
+
+.\Capsule.cpp : \
+	"..\..\..\..\..\..\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	".\amxxmodule.h"\
+	".\Capsule.h"\
+	".\Judy.h"\
+	".\JudyEx.h"\
+	".\JudyIncludes.h"\
+	".\JudyVar.h"\
+	".\JudyVec.h"\
+	".\moduleconfig.h"\
+	".\osdefs.h"\
+	
+
+.\CArray.cpp : \
+	"..\..\..\..\..\..\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	".\amxxmodule.h"\
+	".\Capsule.h"\
+	".\CArray.h"\
+	".\CBaseList.h"\
+	".\CBaseMap.h"\
+	".\Judy.h"\
+	".\JudyEx.h"\
+	".\JudyExtra.h"\
+	".\JudyIncludes.h"\
+	".\JudyVar.h"\
+	".\JudyVec.h"\
+	".\moduleconfig.h"\
+	".\osdefs.h"\
+	
+
+.\CBinTrie.cpp : \
+	"..\..\..\..\..\..\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	".\amxxmodule.h"\
+	".\Capsule.h"\
+	".\CBaseList.h"\
+	".\CBaseMap.h"\
+	".\CBinTrie.h"\
+	".\Judy.h"\
+	".\JudyEx.h"\
+	".\JudyExtra.h"\
+	".\JudyIncludes.h"\
+	".\JudyVar.h"\
+	".\JudyVec.h"\
+	".\moduleconfig.h"\
+	".\osdefs.h"\
+	
+
+.\CKeytable.cpp : \
+	"..\..\..\..\..\..\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	".\amxxmodule.h"\
+	".\Capsule.h"\
+	".\CBaseList.h"\
+	".\CBaseMap.h"\
+	".\CKeytable.h"\
+	".\Judy.h"\
+	".\JudyEx.h"\
+	".\JudyExtra.h"\
+	".\JudyIncludes.h"\
+	".\JudyVar.h"\
+	".\JudyVec.h"\
+	".\moduleconfig.h"\
+	".\osdefs.h"\
+	
+
+.\JudyExtra.cpp : \
+	"..\..\..\..\..\..\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	".\amxxmodule.h"\
+	".\Capsule.h"\
+	".\CBaseList.h"\
+	".\CBaseMap.h"\
+	".\CBinTrie.h"\
+	".\Judy.h"\
+	".\JudyEx.h"\
+	".\JudyExtra.h"\
+	".\JudyIncludes.h"\
+	".\JudyVar.h"\
+	".\JudyVec.h"\
+	".\moduleconfig.h"\
+	".\osdefs.h"\
+	
+
+.\ListNatives.cpp : \
+	"..\..\..\..\..\..\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	".\amxxmodule.h"\
+	".\Capsule.h"\
+	".\CArray.h"\
+	".\CBaseList.h"\
+	".\CBaseMap.h"\
+	".\CBinTrie.h"\
+	".\ComboArray.h"\
+	".\GenericNatives.h"\
+	".\Judy.h"\
+	".\JudyEx.h"\
+	".\JudyExtra.h"\
+	".\JudyIncludes.h"\
+	".\JudyVar.h"\
+	".\JudyVec.h"\
+	".\ListNativeFunctions.h"\
+	".\moduleconfig.h"\
+	".\NativeIncludes.h"\
+	".\osdefs.h"\
+	
+
+.\MapNatives.cpp : \
+	"..\..\..\..\..\..\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	".\amxxmodule.h"\
+	".\Capsule.h"\
+	".\CArray.h"\
+	".\CBaseList.h"\
+	".\CBaseMap.h"\
+	".\CBinTrie.h"\
+	".\CHashtable.h"\
+	".\CKeytable.h"\
+	".\ComboArray.h"\
+	".\ComboTable.h"\
+	".\GenericNatives.h"\
+	".\Judy.h"\
+	".\JudyEx.h"\
+	".\JudyExtra.h"\
+	".\JudyIncludes.h"\
+	".\JudyVar.h"\
+	".\JudyVec.h"\
+	".\MapNativeFunctions.h"\
+	".\moduleconfig.h"\
+	".\NativeIncludes.h"\
+	".\osdefs.h"\
+	
+
+.\amxxmodule.cpp : \
+	".\amxxmodule.h"\
+	".\moduleconfig.h"\
+	

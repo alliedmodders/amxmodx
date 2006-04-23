@@ -562,6 +562,7 @@ begin
   if not Plugin_ProjectsChange(CurrProjects, Index, True) then begin
     Started := False;
     frmMain.stlIDEs.ItemIndex := CurrProjects;
+    frmMain.cboCurrentIDE.Text := frmMain.stlIDEs.Strings[CurrProjects];
     Started := True;
     exit;
   end;
@@ -580,6 +581,7 @@ begin
 
     Started := False; // dont run this command twice
     frmMain.stlIDEs.ItemIndex := Index;
+    cboCurrentIDE.Text := stlIDEs.Strings[Index];
     CurrProjects := Index;
 
     tbDocs.Tabs.Clear;

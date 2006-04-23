@@ -2967,7 +2967,8 @@ end;
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   stlIDEs.ItemIndex := 0;
-  
+  cboCurrentIDE.Text := stlIDEs.Strings[0];
+
   sciEditor.StreamClass := TSciMyStream;
   sciEditor.OnCallTipClick := sciEditorCallTipClick; // god why doesn't delphi save this
   eACList := TmxJsCollection.Create(TACFunction);
@@ -2979,6 +2980,7 @@ procedure TfrmMain.stlIDEsClick(Sender: TObject);
 begin
   if (stlIDEs.Strings[stlIDEs.ItemIndex] = 'C++') and (not eCPP) then begin
     stlIDEs.ItemIndex := CurrProjects;
+    cboCurrentIDE.Text := stlIDEs.Strings[CurrProjects];
     MessageBox(Handle, 'C++ IDE is currenty not implemented!', 'Error', MB_ICONERROR);
     exit;
   end;

@@ -4547,7 +4547,7 @@ object frmMain: TfrmMain
   object TBXSwitcher: TTBXSwitcher
     Theme = 'OfficeXP'
     Left = 813
-    Top = 5
+    Top = 7
   end
   object ilImages: TImageList
     Left = 722
@@ -6470,6 +6470,7 @@ object frmMain: TfrmMain
     Top = 36
   end
   object sciPrinter: TSciPrinter
+    Editor = sciEditor
     Title = 'DelphiSci'
     HeaderFont.Charset = DEFAULT_CHARSET
     HeaderFont.Color = clBlack
@@ -6552,6 +6553,7 @@ object frmMain: TfrmMain
   end
   object sciSearchReplace: TSciSearchReplace
     SearchForSelWord = False
+    Editor = sciEditor
     Left = 692
     Top = 36
   end
@@ -7777,7 +7779,7 @@ object frmMain: TfrmMain
       'XS_AMX'
       'XS_AMXX'
       'xvar_exists - BLA blubb XD')
-    IgnoreCase = False
+    IgnoreCase = True
     ChooseSingle = False
     AutoHide = True
     DropRestOfWord = False
@@ -7788,8 +7790,8 @@ object frmMain: TfrmMain
     OnBeforeShow = sciAutoCompleteBeforeShow
     MaxWidth = 0
     MaxHeight = 5
-    Left = 844
-    Top = 6
+    Left = 842
+    Top = 8
   end
   object ppmDocuments: TSpTBXPopupMenu
     Images = ilImages

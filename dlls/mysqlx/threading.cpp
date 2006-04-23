@@ -244,7 +244,7 @@ void MysqlThread::Execute()
 			(cell)0,
 			(cell)hndl,
 			"",
-			0,
+			(cell)0,
 			data_addr,
 			m_datalen);
 		FreeHandle(hndl);

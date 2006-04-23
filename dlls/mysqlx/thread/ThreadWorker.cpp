@@ -126,7 +126,7 @@ void ThreadWorker::AddThreadToQueue(SWThreadHandle *pHandle)
 		return;
 
 	m_QueueLock->Lock();
-    BaseWorker::AddThreadToQueue(pHandle);
+	BaseWorker::AddThreadToQueue(pHandle);
 	if (m_Waiting)
 	{
 		m_AddSignal->Signal();

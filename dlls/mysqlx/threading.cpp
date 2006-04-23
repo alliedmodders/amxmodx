@@ -330,6 +330,10 @@ AtomicResult::AtomicResult()
 {
 	m_IsFree = true;
 	m_CurRow = 0;
+	m_AllocFields = 0;
+	m_AllocRows = 0;
+	m_Rows = NULL;
+	m_Fields = NULL;
 }
 
 AtomicResult::~AtomicResult()
@@ -337,6 +341,21 @@ AtomicResult::~AtomicResult()
 	if (!m_IsFree)
 	{
 		FreeHandle();
+	}
+
+	if (m_AllocFields)
+	{
+		delete [] m_Fields;
+		m_AllocFields = 0;
+		m_Fields = NULL;
+	}
+	if (m_AllocRows)
+	{
+		for (unsigned int i=0; i<m_AllocRows; i++)
+			delete [] m_Rows[i];
+		delete [] m_Rows;
+		m_Rows = NULL;
+		m_AllocRows = NULL;
 	}
 }
 
@@ -442,13 +461,12 @@ void AtomicResult::_InternalClear()
 
 	g_StringPool.StartHardLock();
 
-	for (size_t i=0; i<m_Fields.size(); i++)
+	for (unsigned int i=0; i<m_FieldCount; i++)
 		g_StringPool.FreeString(m_Fields[i]);
 
-	for (size_t i=0; i<m_Rows.size(); i++)
+	for (unsigned int i=0; i<m_RowCount; i++)
 	{
-		size_t maxi = m_Rows[i].size();
-		for (size_t j=0; j<maxi; j++)
+		for (unsigned int j=0; j<m_FieldCount; j++)
 			g_StringPool.FreeString(m_Rows[i][j]);
 	}
 
@@ -471,8 +489,37 @@ void AtomicResult::CopyFrom(IResultSet *rs)
 
 	m_FieldCount = rs->FieldCount();
 	m_RowCount = rs->RowCount();
-	m_Fields.resize(m_FieldCount);
-	m_Rows.resize(m_RowCount);
+	if (m_RowCount > m_AllocRows)
+	{
+		/** allocate new array, zero it */
+		stridx_t **newRows = new stridx_t *[m_RowCount];
+		memset(newRows, 0, m_RowCount * sizeof(stridx_t *));
+		/** if we have a new field count, just delete all the old stuff. */
+		if (m_FieldCount > m_AllocFields)
+		{
+			for (unsigned int i=0; i<m_AllocRows; i++)
+			{
+				delete [] m_Rows[i];
+				newRows[i] = new stridx_t[m_FieldCount];
+			}
+			for (unsigned int i=m_AllocRows; i<m_RowCount; i++)
+				newRows[i] = new stridx_t[m_FieldCount];
+		} else {
+			/** copy the old pointers */
+			memcpy(newRows, m_Rows, m_AllocRows * sizeof(stridx_t *));
+			for (unsigned int i=m_AllocRows; i<m_RowCount; i++)
+				newRows[i] = new stridx_t[m_AllocFields];
+		}
+		delete [] m_Rows;
+		m_Rows = newRows;
+		m_AllocRows = m_RowCount;
+	}
+	if (m_FieldCount > m_AllocFields)
+	{
+		delete [] m_Fields;
+		m_Fields = new stridx_t[m_FieldCount];
+		m_AllocFields = m_FieldCount;
+	}
 	m_CurRow = 0;
 
 	g_StringPool.StartHardLock();
@@ -482,7 +529,6 @@ void AtomicResult::CopyFrom(IResultSet *rs)
 	while (!rs->IsDone())
 	{
 		row = rs->GetRow();
-		m_Rows[idx].resize(m_FieldCount);
 		for (size_t i=0; i<m_FieldCount; i++)
 			m_Rows[idx][i] = g_StringPool.MakeString(row->GetString(i));
 		rs->NextRow();

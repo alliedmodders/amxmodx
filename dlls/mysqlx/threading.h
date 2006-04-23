@@ -25,11 +25,11 @@ public:
 	void UnsetMutex();
 	bool IsThreadable();
 public:
-	virtual stridx_t MakeString(const char *str);
-	virtual void FreeString(stridx_t idx);
-	virtual const char *GetString(stridx_t idx);
-	virtual void StartHardLock();
-	virtual void StopHardLock();
+	stridx_t MakeString(const char *str);
+	void FreeString(stridx_t idx);
+	const char *GetString(stridx_t idx);
+	void StartHardLock();
+	void StopHardLock();
 public:
 	static const int NullString = -1;
 private:
@@ -73,8 +73,10 @@ private:
 private:
 	unsigned int m_RowCount;
 	unsigned int m_FieldCount;
-	CVector<stridx_t> m_Fields;
-	CVector<CVector<stridx_t> > m_Rows;
+	unsigned int m_AllocFields;
+	unsigned int m_AllocRows;
+	stridx_t *m_Fields;
+	stridx_t **m_Rows;
 	unsigned int m_CurRow;
 	bool m_IsFree;
 };

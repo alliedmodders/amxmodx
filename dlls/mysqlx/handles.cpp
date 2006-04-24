@@ -78,3 +78,30 @@ bool FreeHandle(unsigned int num)
 
 	return true;
 }
+
+void FreeAllHandles(HandleType type)
+{
+	QHandle *q;
+	for (size_t i = 0; i < g_Handles.size(); i++)
+	{
+		q = g_Handles[i];
+		if (q && !q->isfree && q->type == type)
+		{
+			FreeHandle((unsigned int)i);
+		}
+	}
+}
+
+void FreeHandleTable()
+{
+	QHandle *q;
+	for (size_t i = 0; i < g_Handles.size(); i++)
+	{
+		q = g_Handles[i];
+		if (q && !q->isfree)
+			FreeHandle((unsigned int)i);
+	}
+	g_Handles.clear();
+	while (!g_FreeHandles.empty())
+		g_FreeHandles.pop();
+}

@@ -6,7 +6,6 @@ using namespace SourceMod;
 using namespace SourceHook;
 
 MysqlDriver g_Mysql;
-List<unsigned int> g_ConnectionInfo;
 
 void FreeConnection(void *p, unsigned int num)
 {
@@ -16,8 +15,6 @@ void FreeConnection(void *p, unsigned int num)
 	free(cn->user);
 	free(cn->pass);
 	free(cn->db);
-
-	g_ConnectionInfo.remove(num);
 
 	delete cn;
 }
@@ -59,8 +56,6 @@ static cell AMX_NATIVE_CALL SQL_MakeDbTuple(AMX *amx, cell *params)
 	sql->db = strdup(MF_GetAmxString(amx, params[4], 0, &len));
 
 	unsigned int num = MakeHandle(sql, Handle_Connection, FreeConnection);
-
-	g_ConnectionInfo.push_back(num);
 
 	return num;
 }

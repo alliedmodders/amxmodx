@@ -36,6 +36,8 @@ void OnAmxxDetach()
 	}
 	g_QueueLock->Unlock();
 	g_QueueLock->DestroyThis();
+
+	FreeHandleTable();
 }
 
 //public QueryHandler(state, Handle:query, error[], errnum, data[], size)

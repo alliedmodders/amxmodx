@@ -127,6 +127,9 @@
 				RelativePath=".\module.cpp">
 			</File>
 			<File
+				RelativePath=".\oldcompat_sql.cpp">
+			</File>
+			<File
 				RelativePath=".\threading.cpp">
 			</File>
 		</Filter>

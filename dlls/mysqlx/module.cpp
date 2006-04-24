@@ -17,4 +17,7 @@ void ServerDeactivate_Post()
 	FreeAllHandles(Handle_OldResult);
 	FreeAllHandles(Handle_OldDb);
 	FreeAllHandles(Handle_Connection);
+
+	RETURN_META(MRES_IGNORED);
 }
+

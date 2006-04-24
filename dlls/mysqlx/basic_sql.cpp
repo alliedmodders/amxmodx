@@ -418,3 +418,4 @@ extern AMX_NATIVE_INFO g_BaseSqlNatives[] =
 
 	{NULL,					NULL},
 };
+

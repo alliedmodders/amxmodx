@@ -46,3 +46,4 @@ extern ThreadWorker *g_pWorker;
 extern SourceMod::MysqlDriver g_Mysql;
 
 #endif //_INCLUDE_AMXMODX_MYSQL2_HEADER_H
+

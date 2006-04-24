@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "MysqlDriver.h"
 #include "MysqlDatabase.h"
 #include "MysqlQuery.h"

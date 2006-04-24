@@ -354,8 +354,8 @@ AtomicResult::~AtomicResult()
 		for (unsigned int i=0; i<m_AllocRows; i++)
 			delete [] m_Rows[i];
 		delete [] m_Rows;
+		m_AllocRows = 0;
 		m_Rows = NULL;
-		m_AllocRows = NULL;
 	}
 }
 

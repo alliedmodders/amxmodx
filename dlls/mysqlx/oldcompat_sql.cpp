@@ -1,4 +1,8 @@
+#include <stdio.h>
+#include "sh_list.h"
 #include "mysql2_header.h"
+
+using namespace SourceMod;
 
 struct olddb_s
 {
@@ -258,7 +262,6 @@ static cell AMX_NATIVE_CALL dbi_result(AMX *amx, cell *params)
 	unsigned int fields = rs->FieldCount();
 	int len;
 	char *field = MF_GetAmxString(amx, params[2], 0, &len);
-	num = -1;
 	for (unsigned int i=0; i<fields; i++)
 	{
 		if (strcmp(field, rs->FieldNumToName(i)) == 0)

@@ -317,7 +317,7 @@ static cell AMX_NATIVE_CALL SQL_NumResults(AMX *amx, cell *params)
 
 	IResultSet *rs = qInfo->info.rs;
 
-	if (!rs || rs->IsDone())
+	if (!rs)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "No result set in this query!");
 		return 0;
@@ -337,7 +337,7 @@ static cell AMX_NATIVE_CALL SQL_NumColumns(AMX *amx, cell *params)
 
 	IResultSet *rs = qInfo->info.rs;
 
-	if (!rs || rs->IsDone())
+	if (!rs)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "No result set in this query!");
 		return 0;
@@ -357,7 +357,7 @@ static cell AMX_NATIVE_CALL SQL_FieldNumToName(AMX *amx, cell *params)
 
 	IResultSet *rs = qInfo->info.rs;
 
-	if (!rs || rs->IsDone())
+	if (!rs)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "No result set in this query!");
 		return 0;
@@ -388,7 +388,7 @@ static cell AMX_NATIVE_CALL SQL_FieldNameToNum(AMX *amx, cell *params)
 
 	IResultSet *rs = qInfo->info.rs;
 
-	if (!rs || rs->IsDone())
+	if (!rs)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "No result set in this query!");
 		return 0;

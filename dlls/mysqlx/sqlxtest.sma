@@ -12,6 +12,7 @@ public plugin_init()
 	register_srvcmd("sqlx_test_normal", "SqlxTest_Normal")
 	register_srvcmd("sqlx_test_thread", "SqlxTest_Thread")
 	register_srvcmd("sqlx_test_old1", "SqlxTest_Old1")
+	register_srvcmd("sqlx_test_old2", "SqlxTest_Old2")
 	
 	new configsDir[64]
 	get_configsdir(configsDir, 63)
@@ -175,9 +176,13 @@ public SqlxTest_Old1()
 	} else {
 		new cols[2][32]
 		new str[32]
+		new row, num
+		new rows = dbi_num_rows(res)
+		new columns = dbi_num_fields(res)
+		
 		dbi_field_name(res, 1, cols[0], 31)
 		dbi_field_name(res, 2, cols[1], 31)
-		new row, num
+		server_print("Query columns: %d rows: %d", columns, rows)
 		while (dbi_nextrow(res) > 0)
 		{
 			num = dbi_field(res, 1)
@@ -190,6 +195,49 @@ public SqlxTest_Old1()
 		
 	dbi_close(sql)
 }
+
+
+/**
+ * Tests name-based lookup
+ */
+public SqlxTest_Old2()
+{
+	new Sql:sql = OldInitDatabase()
+	if (sql < SQL_OK)
+		return
+		
+	new Result:res = dbi_query(sql, "SELECT * FROM gaben")
+	
+	if (res == RESULT_FAILED)
+	{
+		new error[255]
+		new code = dbi_error(sql, error, 254)
+		server_print("Result failed! [%d]: %s", code, error)
+	} else if (res == RESULT_NONE) {
+		server_print("No result set returned.")
+	} else {
+		new cols[2][32]
+		new str[32]
+		new row, num
+		new rows = dbi_num_rows(res)
+		new columns = dbi_num_fields(res)
+		
+		dbi_field_name(res, 1, cols[0], 31)
+		dbi_field_name(res, 2, cols[1], 31)
+		server_print("Query columns: %d rows: %d", columns, rows)
+		while (dbi_nextrow(res) > 0)
+		{
+			num = dbi_result(res, cols[0])
+			dbi_result(res, cols[1], str, 31)
+			server_print("[%d]: %s=%d, %s=%s", row, cols[0], num, cols[1], str)
+			row++
+		}
+		dbi_free_result(res)
+	}
+		
+	dbi_close(sql)
+}
+
 
 public plugin_end()
 {

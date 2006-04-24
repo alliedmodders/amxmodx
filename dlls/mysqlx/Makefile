@@ -70,8 +70,14 @@ debug:
 default: all
 
 clean:
+	rm -rf Release/thread/*.o
+	rm -rf Release/mysql/*.o
+	rm -rf Release/sdk/*.o
 	rm -rf Release/*.o
 	rm -rf Release/$(BINARY)
+	rm -rf Debug/thread/*.o
+	rm -rf Debug/mysql/*.o
+	rm -rf Debug/sdk/*.o
 	rm -rf Debug/*.o
 	rm -rf Debug/$(BINARY)
 

@@ -4,11 +4,11 @@
 #define __MODULECONFIG_H__
 
 // Module info
-#define MODULE_NAME "MySQL X"
-#define MODULE_VERSION "1.00"
-#define MODULE_AUTHOR "AMX Mod X Dev Team"
-#define MODULE_URL "http://www.amxmodx.org/"
-#define MODULE_LOGTAG "MySQLX"
+#define MODULE_NAME 	"MySQL X"
+#define MODULE_VERSION	"1.00"
+#define MODULE_AUTHOR	"AMX Mod X Dev Team"
+#define MODULE_URL 	"http://www.amxmodx.org/"
+#define MODULE_LOGTAG	"SQLX"
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line
 //#define MODULE_RELOAD_ON_MAPCHANGE
 

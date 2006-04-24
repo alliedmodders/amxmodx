@@ -1,5 +1,13 @@
+/**
+ * SQLX - Newer version of SQL stuff
+ */
 
-//NOTE: no pragma library yet...
+#if defined _sqlx_included
+  #endinput
+#endif
+#define _sqlx_included
+
+#pragma library sqlx
 
 enum Handle
 {

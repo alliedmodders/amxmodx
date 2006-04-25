@@ -639,7 +639,6 @@ begin
     sciPropertyLoader.Load;
   ReloadIni;
 
-  sciEditor.Modified := eModified;
   ActiveDoc.Modified := eModified;
   if eModified then
     mnuModified.Caption := lModified
@@ -737,9 +736,9 @@ begin
   sciEditor.Lines.Add('#include <amxmodx>');
   sciEditor.Lines.Add('#include <amxmisc>');
   sciEditor.Lines.Add('');
-  sciEditor.Lines.Add('#define PLUGIN "' + eConfig.ReadString('Misc', 'DefaultPluginName', 'New Plugin') + '"');
+  sciEditor.Lines.Add('#define PLUGIN "' + eConfig.ReadString('Misc', 'DefaultPluginName', 'New Plug-In') + '"');
   sciEditor.Lines.Add('#define VERSION "' + eConfig.ReadString('Misc', 'DefaultPluginVersion', '1.0') + '"');
-  sciEditor.Lines.Add('#define AUTHOR "' + eConfig.ReadString('Misc', 'DefaultPluginAuthor', 'Your name') + '"');
+  sciEditor.Lines.Add('#define AUTHOR "' + eConfig.ReadString('Misc', 'DefaultPluginAuthor', 'Your Name') + '"');
   sciEditor.Lines.Add('');
   sciEditor.Lines.Add('');
   sciEditor.Lines.Add('public plugin_init() {');
@@ -747,6 +746,7 @@ begin
   sciEditor.Lines.Add('	');
   sciEditor.Lines.Add('	// Add your code here...');
   sciEditor.Lines.Add('}');
+  ActiveDoc.Modified := False;
 
   Plugin_CreateNewFile(NEW_Pawn_PLUGIN, False);
 end;

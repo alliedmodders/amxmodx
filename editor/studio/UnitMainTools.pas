@@ -963,7 +963,6 @@ begin
     ActiveDoc.SelStart := frmMain.sciEditor.SelStart;
     ActiveDoc.SelLength := frmMain.sciEditor.SelLength;
     ActiveDoc.TopLine := frmMain.sciEditor.GetFirstVisibleLine;
-    ActiveDoc.Modified := frmMain.sciEditor.Modified;
     ActiveDoc.NotesText := GetRTFText(frmMain.rtfNotes);
     ActiveDoc.Keywords := TSciKeywords(TSciLangItem(frmMain.sciEditor.LanguageManager.LanguageList.Find('Pawn').Keywords.Items[1])).Keywords.Text;
     ActiveDoc.CallTips := frmMain.sciCallTips.ApiStrings.Text;
@@ -998,7 +997,6 @@ begin
     frmMain.mnuModified.Caption := lModified
   else
     frmMain.mnuModified.Caption := '';
-  frmMain.sciEditor.Modified := Document.Modified;
 
   if RestoreCaret then begin
     frmMain.sciEditor.SelStart := Document.SelStart;
@@ -1162,7 +1160,6 @@ begin
     ActiveDoc.SelStart := frmMain.sciEditor.SelStart;
     ActiveDoc.SelLength := frmMain.sciEditor.SelLength;
     ActiveDoc.TopLine := frmMain.sciEditor.GetFirstVisibleLine;
-    ActiveDoc.Modified := frmMain.sciEditor.Modified;
     ActiveDoc.NotesText := GetRTFText(frmMain.rtfNotes);
   end;
 

@@ -988,7 +988,7 @@ object frmMain: TfrmMain
         '#include <amxmodx>'
         '#include <amxmisc>'
         ''
-        '#define PLUGIN "New Plugin"'
+        '#define PLUGIN "New Plug-In"'
         '#define VERSION "1.0"'
         '#define AUTHOR "Author"'
         ''

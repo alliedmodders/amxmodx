@@ -534,6 +534,11 @@ static cell AMX_NATIVE_CALL is_user_alive(AMX *amx, cell *params) /* 1 param */
 	return ((pPlayer->ingame && pPlayer->IsAlive()) ? 1 : 0);
 }
 
+static cell AMX_NATIVE_CALL get_amxx_verstring(AMX *amx, cell *params) /* 2 params */
+{
+	return set_amxstring(amx, params[1], AMX_VERSION, params[2]);
+}
+
 static cell AMX_NATIVE_CALL get_user_frags(AMX *amx, cell *params) /* 1 param */
 {
 	int index = params[1];
@@ -4106,6 +4111,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"get_systime",				get_systime},
 	{"get_time",				get_time},
 	{"get_timeleft",			get_timeleft},
+	{"get_amxx_verstring",		get_amxx_verstring},
 	{"get_user_aiming",			get_user_aiming},
 	{"get_user_ammo",			get_user_ammo},
 	{"get_user_armor",			get_user_armor},

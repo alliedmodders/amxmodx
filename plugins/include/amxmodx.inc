@@ -194,6 +194,9 @@ native is_linux_server();
 /* Returns 1 or 0. */
 native is_jit_enabled();
 
+/* Returns AMXX's version string of the current gameserver */
+native get_amxx_verstring(buffer[], length);
+
 /* If player is not attacked function returns 0, in other
 * case returns index of attacking player. On second and third
 * parameter you may get info about weapon and body hit place. */

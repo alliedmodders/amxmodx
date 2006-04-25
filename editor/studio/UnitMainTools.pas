@@ -24,6 +24,7 @@ type TDocument = class(TCollectionItem)
     FKeywords: String;
     FCallTips: String;
     procedure SetFileName(const Value: String);
+    procedure SetModified(const Value: Boolean);
   published
     property FileName: String read FFileName write SetFileName;
     property Title: String read FTitle write FTitle;
@@ -33,7 +34,7 @@ type TDocument = class(TCollectionItem)
     property Highlighter: String read FHighlighter write FHighlighter;
     property ReadOnly: Boolean read FReadOnly write FReadOnly;
     property TopLine: Integer read FTopLine write FTopLine;
-    property Modified: Boolean read FModified write FModified;
+    property Modified: Boolean read FModified write SetModified;
     property NotesText: String read FNotesText write FNotesText;
     property Keywords: String read FKeywords write FKeywords;
     property CallTips: String read FCallTips write FCallTips;
@@ -586,7 +587,7 @@ begin
 
     tbDocs.Tabs.Clear;
     for i := 0 to Collection.Count -1 do
-      tbDocs.AddTab(TDocument(Collection.Items[i]).Title);
+      tbDocs.AddTab(TDocument(Collection.Items[i]).Title).Modified := TDocument(Collection.Items[i]).Modified;
     Started := True;
     
     if JumpToLastDoc then begin
@@ -935,6 +936,22 @@ begin
   FTitle := '< ' + IntToStr(Index +1) + #32 + ExtractFileName(Value) + ' >';
 end;
 
+procedure TDocument.SetModified(const Value: Boolean);
+var Collection: TCollection;
+begin
+  FModified := Value;
+  if not Started then exit;
+
+  case CurrProjects of
+      0: Collection := PawnProjects; // Pawn
+      1: Collection := CPPProjects;   // C++
+    else Collection := OtherProjects; // Other
+  end;
+
+  if Collection = Self.Collection then
+    frmMain.tbDocs.Tabs[Index].Modified := Value;
+end;
+
 function TDocument.Untitled: Boolean;
 begin
   Result := Pos('\', FFilename) = 0;
@@ -1094,8 +1111,10 @@ begin
 
   if (Collection = Self) then begin
     try
-      for i := 0 to frmMain.tbDocs.Tabs.Count -1 do
+      for i := 0 to frmMain.tbDocs.Tabs.Count -1 do begin
         TJvTabBarItem(frmMain.tbDocs.Tabs[i]).Caption := TDocument(Items[i]).Title;
+        TJvTabBarItem(frmMain.tbDocs.Tabs[i]).Modified := TDocument(Items[i]).Modified;
+      end;
     except
       // no idea how to fix this
     end;

@@ -417,6 +417,7 @@ procedure TfrmMain.FormConstrainedResize(Sender: TObject; var MinWidth,
 begin
   pnlLoading.Left := sciEditor.Left + 3 + (sciEditor.Width div 2) - (pnlLoading.Width div 2);
   pnlLoading.Top := tbDocs.Top + sciEditor.Top + ((sciEditor.Height * 5) div 6) - (pnlLoading.Height div 2);
+  pnlLoading.BringToFront;
 
   if (Canvas.TextWidth(ActiveDoc.FileName) + 10 > mnuFilename.CustomWidth) then
     mnuFilename.Caption := ExtractFileName(ActiveDoc.FileName)

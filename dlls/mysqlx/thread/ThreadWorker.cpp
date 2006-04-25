@@ -46,7 +46,7 @@ void ThreadWorker::OnTerminate(IThreadHandle *pHandle, bool cancel)
 
 void ThreadWorker::RunThread(IThreadHandle *pHandle)
 {
-	WorkerState this_state;
+	WorkerState this_state = Worker_Running;
 	size_t num;
     
 	while (true)
@@ -54,44 +54,44 @@ void ThreadWorker::RunThread(IThreadHandle *pHandle)
 		/**
 		 * Check number of items in the queue
 		 */
-		m_QueueLock->Lock();
-		num = m_ThreadQueue.size();
-		if (!num)
+		if (this_state != Worker_Stopped)
 		{
-			/** 
-			 * if none, wait for an item
-			 */
-			m_Waiting = true;
-			m_QueueLock->Unlock();
-			m_AddSignal->Wait();
-			m_Waiting = false;
-		} else {
-			m_QueueLock->Unlock();
+			m_QueueLock->Lock();
+			num = m_ThreadQueue.size();
+			if (!num)
+			{
+				/** 
+				 * if none, wait for an item
+				 */
+				m_Waiting = true;
+				m_QueueLock->Unlock();
+				m_AddSignal->Wait();
+				m_Waiting = false;
+			} else {
+				m_QueueLock->Unlock();
+			}
 		}
-		/**
-		 * Pause in the case of .. pausing!
-		 */
 		m_StateLock->Lock();
 		this_state = m_state;
 		m_StateLock->Unlock();
 		if (this_state != Worker_Running)
 		{
-			if (this_state == Worker_Stopped)
-			{
-				//if we're supposed to flush cleanly, 
-				// run all of the remaining frames first.
-				// also, don't sleep.
-				if (!m_FlushType)
-				{
-					while (m_ThreadQueue.size())
-						RunFrame();
-				}
-				break;
-			}
-			if (this_state == Worker_Paused)
+			if (this_state == Worker_Paused || this_state == Worker_Stopped)
 			{
 				//wait until the lock is cleared.
-				m_PauseSignal->Wait();
+				if (this_state == Worker_Paused)
+					m_PauseSignal->Wait();
+				if (this_state == Worker_Stopped)
+				{
+					//if we're supposed to flush cleanrly, 
+					// run all of the remaining frames first.
+					if (!m_FlushType)
+					{
+						while (m_ThreadQueue.size())
+							RunFrame();
+					}
+					break;
+				}
 			}
 		}
 		/**
@@ -174,24 +174,24 @@ bool ThreadWorker::Stop(bool flush_cancel)
 	if (m_state == Worker_Invalid || m_state == Worker_Stopped)
 		return false;
 
-	if (m_state == Worker_Paused)
-	{
-		if (!Unpause())
-			return false;
-	}
+	WorkerState oldstate;
 
 	//set new state
 	m_StateLock->Lock();
+	oldstate = m_state;
 	m_state = Worker_Stopped;
+	m_FlushType = flush_cancel;
 	m_StateLock->Unlock();
 
-	m_FlushType = flush_cancel;
-
-	//wait for thread to catch up
-	if (m_Waiting)
+	if (oldstate == Worker_Paused)
 	{
+		Unpause();
+	} else {
 		m_AddSignal->Signal();
+		Pause();
+		Unpause();
 	}
+
 	me->WaitForThread();
 	//destroy it
 	me->DestroyThis();

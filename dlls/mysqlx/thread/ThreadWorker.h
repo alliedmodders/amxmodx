@@ -33,8 +33,8 @@ protected:
 	IEventSignal *m_AddSignal;
 	IThreadHandle *me;
 	unsigned int m_think_time;
-	bool m_Waiting;
-	bool m_FlushType;
+	volatile bool m_Waiting;
+	volatile bool m_FlushType;
 };
 
 #endif //_INCLUDE_SOURCEMOD_THREADWORKER_H

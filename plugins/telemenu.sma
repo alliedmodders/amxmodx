@@ -147,7 +147,7 @@ displayTelMenu(id, pos)
 		i = g_menuPlayers[id][a]
 		get_user_name(i, name, 31)
 
-		if (blockMenu || !is_user_alive(i) || (get_user_flags(i) & ADMIN_IMMUNITY))
+		if (blockMenu || !is_user_alive(i) || (id != i && get_user_flags(i) & ADMIN_IMMUNITY))
 		{
 			++b
 		

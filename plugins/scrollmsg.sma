@@ -84,6 +84,13 @@ public msgInit()
 	g_startPos = 0
 	g_xPos = 0.65
 	
+	new hostname[64]
+	
+	get_cvar_string("hostname", hostname, 63)
+	replace(g_scrollMsg, SCROLLMSG_SIZE-1, "%hostname%", hostname)
+	
+	g_Length = strlen(g_scrollMsg)
+	
 	set_task(SPEED, "showMsg", 123, "", 0, "a", g_Length + 48)
 	client_print(0, print_console, "%s", g_scrollMsg)
 }
@@ -93,10 +100,6 @@ public setMessage()
 	remove_task(123)		/* remove current messaging */
 	read_argv(1, g_scrollMsg, SCROLLMSG_SIZE-1)
 	
-	new hostname[64]
-	
-	get_cvar_string("hostname", hostname, 63)
-	replace(g_scrollMsg, SCROLLMSG_SIZE-1, "%hostname%", hostname)
 	g_Length = strlen(g_scrollMsg)
 	
 	new mytime[32]

@@ -63,6 +63,11 @@ public infoMessage()
 {
 	if (g_Current >= g_MessagesNum)
 		g_Current = 0
+		
+	new hostname[64]
+	
+	get_cvar_string("hostname", hostname, 63)
+	replace(g_Messages[g_Current], 380, "%hostname%", hostname)
 	
 	set_hudmessage(g_Values[g_Current][0], g_Values[g_Current][1], g_Values[g_Current][2], X_POS, Y_POS, 0, 0.5, HOLD_TIME, 2.0, 2.0, -1)
 	show_hudmessage(0, "%s", g_Messages[g_Current])
@@ -85,11 +90,6 @@ public setMessage()
 
 	remove_task(12345)
 	read_argv(1, g_Messages[g_MessagesNum], 380)
-	
-	new hostname[64]
-	
-	get_cvar_string("hostname", hostname, 63)
-	replace(g_Messages[g_MessagesNum], 380, "%hostname%", hostname)
 	
 	while (replace(g_Messages[g_MessagesNum], 380, "\n", "^n")) {}
 	

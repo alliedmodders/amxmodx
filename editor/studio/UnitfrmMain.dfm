@@ -4498,8 +4498,8 @@ object frmMain: TfrmMain
       OnMouseMove = lstOutputMouseMove
     end
     object pnlLoading: TSpTBXPanel
-      Left = 268
-      Top = 278
+      Left = 206
+      Top = 306
       Width = 253
       Height = 57
       Caption = 'pnlLoading'

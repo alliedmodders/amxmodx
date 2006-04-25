@@ -488,6 +488,9 @@ procedure TfrmMain.rtfNotesKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   UpdateNotes;
+  
+  mnuModified.Caption := lModified;
+  ActiveDoc.Modified := True;
 end;
 
 { <- Notes - Code-Explorer -> }

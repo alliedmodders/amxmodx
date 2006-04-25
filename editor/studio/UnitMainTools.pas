@@ -828,7 +828,6 @@ end;
 
 function TDocument.Save: Boolean;
 var i: integer;
-    F: Textfile;
     sLines: TStringList;
     sNotes: String;
     eFound: Boolean;
@@ -840,8 +839,8 @@ begin
 
   Result := True;
   Cancel := False;
+  Screen.Cursor := crHourGlass;
 
-  ShowProgress(True);
   if (FileExists(FFileName)) and (frmSettings.chkMakeBaks.Checked) then begin
     try
       CopyFile(PChar(FFileName), PChar(FFileName + '.bak'), False);
@@ -855,51 +854,32 @@ begin
   end;
 
   try
-    AssignFile(F, FFilename);
-    Rewrite(F);
+    sLines := TStringList.Create;
     if ActiveDoc = Self then begin
-      sLines := TStringList(frmMain.sciEditor.Lines);
+      sLines.Assign(frmMain.sciEditor.Lines);
       sNotes := GetRTFText(frmMain.rtfNotes);
     end
     else begin
-      sLines := TStringList.Create;
       sLines.Text := Code;
       sNotes := NotesText;
     end;
 
-    frmMain.pbLoading.Max := sLines.Count -1;
-    frmMain.pbLoading.Position := 0;
-    // ... save file...
-    for i := 0 to sLines.Count -1 do begin
-      if Cancel then begin
-        CloseFile(F);
-        Cancel := False;
-        exit;
-      end;
-
-      WriteLn(F, sLines[i]);
-      frmMain.pbLoading.Position := i;
-      SetProgressStatus('Saving File...');
-      Application.ProcessMessages;
-    end;
-    // ... and notes ...
+    // ... save file and append notes if neccessary ...
     if frmSettings.optFileComment.Checked then begin
-      WriteLn(F, GetCurrLang.CommentBoxStart + ' AMXX-Studio Notes - DO NOT MODIFY BELOW HERE');
-      WriteLn(F, GetCurrLang.CommentBoxMiddle + sNotes);
-      WriteLn(F, GetCurrLang.CommentBoxEnd);
-      CloseFile(F);
-    end
-    else begin
-      CloseFile(F);
-      sLines := TStringList.Create;
+      sLines.Add(GetCurrLang.CommentBoxStart + ' AMXX-Studio Notes - DO NOT MODIFY BELOW HERE');
+      sLines.Add(GetCurrLang.CommentBoxMiddle + sNotes);
+      sLines.Add(GetCurrLang.CommentBoxEnd);
+    end;
+    sLines.SaveToFile(FFileName);
+    // ... and if the user stores their notes somewhere else save them now ...
+    if not frmSettings.optFileComment.Checked then begin
+      sLines := TStringList.Create; // don't overwrite our .Lines object
       
       i := 0; // line 1 should be a comment
       if FileExists(ParamStr(0) + 'config\Notes.dat') then
         sLines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'config\Notes.dat')
-      else begin
-        sLines.Clear; // something must be wrong, clear
+      else
         sLines.Add('AMXX-Studio Notes - DO NOT MODIFY THIS FILE');
-      end;
 
       eFound := False;
       if sLines.Count > 2 then begin
@@ -918,15 +898,15 @@ begin
         sLines.Add(sNotes);
       end;
       sLines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'config\Notes.dat');
-      sLines.Destroy;
+      sLines.Free;
     end;
-    
-    FModified := False;
+
+    Modified := False;
   except
     Result := False;
   end;
 
-  HideProgress;
+  Screen.Cursor := crDefault;
   Plugin_FileSave(FFilename, False);
 end;
 
@@ -1152,10 +1132,9 @@ begin
 end;
 
 function TDocCollection.Open(AFilename: String; AHighlighter: String = ''): Integer;
-var F: TextFile;
+var eLines: TStringList;
+    eFound: Boolean;
     i: integer;
-    eString: String;
-    eLines: TStringList;
 begin
   Result := -1;
 
@@ -1189,71 +1168,36 @@ begin
 
   Screen.Cursor := crHourGlass;
   Cancel := False;
-  ShowProgress(True);
-
-  AssignFile(F, AFilename);
-  { ... count lines ... }
-  i := 0;
-  Reset(F);
-
-  while not EOF(F) do begin
-    ReadLn(F, eString);
-    Inc(i, 1);
-  end;
   { ... read lines ... }
-  Reset(F);
+  eLines := TStringList.Create;
+  eLines.LoadFromFile(AFilename);
+  eFound := False;
+  // ... add the doc and load notes ...
   with Add(AFilename, AHighlighter) do begin
-    ShowProgress(True);
-    frmMain.pbLoading.Max := i;
-    i := 0;
-    while not EOF(F) do begin
-      if Cancel then begin
-        Cancel := False;
-        CloseFile(F);
-        exit;
-      end;
-      ReadLn(F, eString);
-      if Assigned(GetCurrLang(AFilename)) then begin
-         if (eString = GetCurrLang(AFilename).CommentBoxStart + ' AMXX-Studio Notes - DO NOT MODIFY BELOW HERE') and (frmSettings.optFileComment.Checked) then begin
-           try
-             ReadLn(F, eString);
-             eString := Copy(eString, Length(GetCurrLang(AFilename).CommentBoxMiddle) +1, Length(eString));
-             NotesText := eString;
-             ReadLn(F, eString);
-           except
-            MessageBox(frmMain.Handle, PChar(lFailedLoadNotes), PChar(Application.Title), MB_ICONERROR);
-          end;
-        end
-        else begin
-          if i = 0 then
-            Code := eString
-          else
-            Code := Code + #13#10 + eString;
-        end;
-      end
-      else begin
-        if i = 0 then
-          Code := eString
-        else
-          Code := Code + #13#10 + eString;
-      end;
-      
-      frmMain.pbLoading.Position := i;
-      SetProgressStatus('Loading file...');
-      Inc(i, 1);
-      Application.ProcessMessages;
-    end;
-    HideProgress;
     Result := Index;
+    { notes, zomg! }
+    if eLines.Count > 3 then begin
+      if eLines[eLines.Count -3] = GetCurrLang(AFilename).CommentBoxStart + ' AMXX-Studio Notes - DO NOT MODIFY BELOW HERE' then begin
+        try
+          NotesText := Copy(eLines[eLines.Count -2], Length(GetCurrLang(AFilename).CommentBoxMiddle) +1, Length(eLines[eLines.Count -2]));
 
-    CloseFile(F);
+          eLines.Delete(eLines.Count -1);
+          eLines.Delete(eLines.Count -1);
+          eLines.Delete(eLines.Count -1);
 
-    if frmSettings.optConfig.Checked then begin
-      eLines := TStringList.Create;
+          eFound := True;
+        except
+          MessageBox(frmMain.Handle, PChar(lFailedLoadNotes), PChar(Application.Title), MB_ICONERROR);
+        end;
+      end;
+    end;
+    Code := eLines.Text;
+
+    if (frmSettings.optConfig.Checked) and (not eFound) then begin
+      eLines.Clear;
       if FileExists(ExtractFilePath(ParamStr(0)) + 'config\Notes.dat') then
         eLines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'config\Notes.dat')
       else begin
-        eLines.Clear; // something must be wrong, clear
         eLines.Add('AMXX-Studio Notes - DO NOT MODIFY THIS FILE');
         eLines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'config\Notes.dat');
       end;
@@ -1266,11 +1210,10 @@ begin
           break;
         end;
       end;
-
-      eLines.Destroy;
     end;
   end;
   Screen.Cursor := crDefault;
+  eLines.Free;
 
   if not Plugin_FileLoad(AFilename, False) then exit;
   

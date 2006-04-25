@@ -86,13 +86,13 @@ SIMPLE_INT_HOOK_STRING(PrecacheSound);
 
 void ClientUserInfoChanged(edict_t *e, char *infobuffer)
 {
-	FM_ENG_HANDLE(FM_ClientInfoChanged, ((cell)ENTINDEX(e)));
+	FM_ENG_HANDLE(FM_ClientInfoChanged, (Engine[FM_ClientInfoChanged].at(i), (cell)ENTINDEX(e)));
 	RETURN_META(mswi(lastFmRes));
 }
 
 void ClientUserInfoChanged_post(edict_t *e, char *infobuffer)
 {
-	FM_ENG_HANDLE_POST(FM_ClientInfoChanged, ((cell)ENTINDEX(e)));
+	FM_ENG_HANDLE_POST(FM_ClientInfoChanged, (EnginePost[FM_ClientInfoChanged].at(i), (cell)ENTINDEX(e))); 
 	RETURN_META(mswi(lastFmRes));
 }
 

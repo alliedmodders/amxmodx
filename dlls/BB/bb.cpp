@@ -31,7 +31,7 @@ static cell AMX_NATIVE_CALL get_user_level(AMX *amx,cell *params)
 
 static cell AMX_NATIVE_CALL set_user_level(AMX *amx,cell *params)
 {
-	if(GetUserLevel(params[0]) > params[2])
+	if(GetUserLevel(params[1]) > params[2])
 	{
 		MF_LogError(amx,AMX_ERR_NATIVE,"Must set to a level higher than current one!");
 		return 0;

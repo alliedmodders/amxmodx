@@ -187,6 +187,22 @@ static cell AMX_NATIVE_CALL nvault_prune(AMX *amx, cell *params)
 	return pVault->Prune(start, end);
 }
 
+static cell AMX_NATIVE_CALL nvault_remove(AMX *amx, cell *params)
+{
+	unsigned int id = params[1];
+	if (id >= g_Vaults.size() || !g_Vaults.at(id))
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid vault id: %d\n", id);
+		return 0;
+	}
+	NVault *pVault = g_Vaults.at(id);
+	int len;
+	const char *key = MF_GetAmxString(amx, params[2], 0, &len);
+	pVault->Remove(key);
+
+	return 1;
+}
+
 IVaultMngr *GetVaultMngr()
 {
 	return static_cast<IVaultMngr *>(&g_VaultMngr);
@@ -220,5 +236,6 @@ AMX_NATIVE_INFO nVault_natives[] = {
 	{"nvault_pset",				nvault_pset},
 	{"nvault_close",			nvault_close},
 	{"nvault_prune",			nvault_prune},
+	{"nvault_remove",			nvault_remove},
 	{NULL,				NULL},
 };

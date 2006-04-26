@@ -37,3 +37,7 @@ native nvault_prune(vault, start, end);
 
 //Closes a vault
 native nvault_close(vault);
+
+//Removes a key from the vault
+native nvault_remove(vault, const key[]);
+

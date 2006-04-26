@@ -2657,11 +2657,10 @@ C_DLLEXPORT int AMXX_PluginsLoaded()
 // Advanced MF functions
 void MF_Log(const char *fmt, ...)
 {
-	// :TODO: Overflow possible here
 	char msg[3072];
 	va_list arglst;
 	va_start(arglst, fmt);
-	vsprintf(msg, fmt, arglst);
+	vsnprintf(msg, sizeof(msg) - 1, fmt, arglst);
 	va_end(arglst);
 
 	g_fn_Log("[%s] %s", MODULE_LOGTAG, msg);
@@ -2669,11 +2668,10 @@ void MF_Log(const char *fmt, ...)
 
 void MF_LogError(AMX *amx, int err, const char *fmt, ...)
 {
-	// :TODO: Overflow possible here
 	char msg[3072];
 	va_list arglst;
 	va_start(arglst, fmt);
-	vsprintf(msg, fmt, arglst);
+	vsnprintf(msg, sizeof(msg) - 1, fmt, arglst);
 	va_end(arglst);
 
 	g_fn_LogErrorFunc(amx, err, "[%s] %s", MODULE_LOGTAG, msg);

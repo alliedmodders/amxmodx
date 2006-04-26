@@ -5,9 +5,9 @@
 
 // Module info
 #define MODULE_NAME 	"MySQL X"
-#define MODULE_VERSION	"1.01"
+#define MODULE_VERSION	"1.72"
 #define MODULE_AUTHOR	"AMX Mod X Dev Team"
-#define MODULE_URL 	"http://www.amxmodx.org/"
+#define MODULE_URL 		"http://www.amxmodx.org/"
 #define MODULE_LOGTAG	"SQLX"
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line
 //#define MODULE_RELOAD_ON_MAPCHANGE
@@ -30,6 +30,9 @@
 // Unless you use STL or exceptions, keep this commented.
 // It allows you to compile without libstdc++.so as a dependency
 // #define NO_ALLOC_OVERRIDES
+
+// Uncomment this if you are using MSVC8 or greater and want to fix some of the compatibility issues yourself 
+// #define NO_MSVC8_AUTO_COMPAT
 
 // - AMXX Init functions
 // Also consider using FN_META_*
@@ -85,10 +88,10 @@
 // #define FN_ClientCommand				ClientCommand				/* pfnClientCommand()			(wd) Player has sent a command (typed or from a bind) */
 // #define FN_ClientUserInfoChanged		ClientUserInfoChanged		/* pfnClientUserInfoChanged()	(wd) Client has updated their setinfo structure */
 // #define FN_ServerActivate			ServerActivate				/* pfnServerActivate()			(wd) Server is starting a new map */
-#define FN_ServerDeactivate			ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
+#define FN_ServerDeactivate				ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
 // #define FN_PlayerPreThink			PlayerPreThink				/* pfnPlayerPreThink() */
 // #define FN_PlayerPostThink			PlayerPostThink				/* pfnPlayerPostThink() */
-#define FN_StartFrame				StartFrame					/* pfnStartFrame() */
+#define FN_StartFrame					StartFrame					/* pfnStartFrame() */
 // #define FN_ParmsNewLevel				ParmsNewLevel				/* pfnParmsNewLevel() */
 // #define FN_ParmsChangeLevel			ParmsChangeLevel			/* pfnParmsChangeLevel() */
 // #define FN_GetGameDescription		GetGameDescription			/* pfnGetGameDescription()		Returns string describing current .dll.  E.g. "TeamFotrress 2" "Half-Life" */

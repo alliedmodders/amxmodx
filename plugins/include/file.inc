@@ -28,6 +28,10 @@ native delete_file(const file[]);
 /* Checks for file. If file exists function returns 1, in other case 0. */
 native file_exists(const file[]);
 
+/* renames a file.  returns 0 on failure, 1 on success.
+ */
+native rename_file(const oldname[], const newname[]);
+
 /* Checks if a directory exists */
 native dir_exists(const dir[]);
 
@@ -71,6 +75,9 @@ native feof(file);
 
 //Reads a line from a text file -- includes newline!
 native fgets(file, buffer[], maxlength);
+
+//Writes a line to a text file.  Returns # of characters written.
+native fputs(file, const text[]);
 
 //Writes a line to the file
 native fprintf(file, const fmt[], {Float,Sql,Result,_}:...);

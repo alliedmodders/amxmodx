@@ -554,6 +554,18 @@ static cell AMX_NATIVE_CALL amx_fread_blocks(AMX *amx, cell *params)
 	return 0;
 }
 
+static cell AMX_NATIVE_CALL amx_fputs(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+
+	if (!fp)
+		return 0;
+
+	int len;
+	char *str = get_amxstring(amx, params[2], 0, len);
+	return fputs(str, fp);
+}
+
 static cell AMX_NATIVE_CALL amx_fgets(AMX *amx, cell *params)
 {
 	FILE *fp = (FILE *)params[1];
@@ -787,6 +799,19 @@ static cell AMX_NATIVE_CALL amx_rmdir(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL amx_rename(AMX *amx, cell *params)
+{
+	int len;
+	char *fold = get_amxstring(amx, params[1], 0, len);
+	char *fnew = get_amxstring(amx, params[2], 1, len);
+
+#if defined __linux__
+	return (rename(fold, fnew) == 0);
+#elif defined WIN32
+	return MoveFileA(fold, fnew);
+#endif
+}
+
 AMX_NATIVE_INFO file_Natives[] =
 {
 	{"delete_file",		delete_file},
@@ -820,5 +845,7 @@ AMX_NATIVE_INFO file_Natives[] =
 	{"fputc",			amx_fputc},
 	{"fungetc",			amx_ungetc},
 	{"rmdir",			amx_rmdir},
+	{"fputs",			amx_fputs},
+	{"rename_file",		amx_rename},
 	{NULL,				NULL}
 };

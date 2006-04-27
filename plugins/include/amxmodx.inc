@@ -263,7 +263,17 @@ native get_user_ping(index, &ping, &loss);
 native get_user_origin(index, origin[3], mode = 0);
 
 /* Returns all carried weapons as bit sum. Gets
-* also theirs indexes. */
+ *  also theirs indexes.
+ * Note that num is incremental - if you pass 0, you get
+ *  32 weapons towards the total.  Afterwards, num will 
+ *  will contain the number of weapons retrieved.
+ * However, subsequent calls to get_user_weapons() will
+ *  return the next batch of weapons, in case the mod 
+ *  supports more than 32 weapons.
+ * This means to call get_user_weapons() on the same
+ *  inputs twice, you must reset num to 0 to get the
+ *  original output again.
+ */
 native get_user_weapons(index,weapons[32],&num);
 
 /* Returns weapon name. */

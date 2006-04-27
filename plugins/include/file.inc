@@ -45,7 +45,7 @@ native file_size(const file[], flag=0);
 #define SEEK_CUR 1
 #define SEEK_END 2
 
-//Open a file, returns a handle or 0 on vailure
+//Open a file, returns a handle or 0 on failure
 native fopen(const filename[],const mode[]);
 
 //Closes a file handle

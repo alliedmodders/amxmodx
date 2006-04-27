@@ -189,23 +189,23 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\basic_sql.cpp"
+				RelativePath="..\basic_sql.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\handles.cpp"
+				RelativePath="..\handles.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\module.cpp"
+				RelativePath="..\module.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\oldcompat_sql.cpp"
+				RelativePath="..\oldcompat_sql.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\threading.cpp"
+				RelativePath="..\threading.cpp"
 				>
 			</File>
 		</Filter>
@@ -215,11 +215,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\mysql2_header.h"
+				RelativePath="..\mysql2_header.h"
 				>
 			</File>
 			<File
-				RelativePath=".\threading.h"
+				RelativePath="..\threading.h"
 				>
 			</File>
 		</Filter>
@@ -233,22 +233,22 @@
 			Name="Threader"
 			>
 			<File
-				RelativePath=".\thread\IThreader.h"
+				RelativePath="..\thread\IThreader.h"
 				>
 			</File>
 			<Filter
 				Name="Source Files"
 				>
 				<File
-					RelativePath=".\thread\BaseWorker.cpp"
+					RelativePath="..\thread\BaseWorker.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\thread\ThreadWorker.cpp"
+					RelativePath="..\thread\ThreadWorker.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\thread\WinThreads.cpp"
+					RelativePath="..\thread\WinThreads.cpp"
 					>
 				</File>
 			</Filter>
@@ -256,19 +256,19 @@
 				Name="Header Files"
 				>
 				<File
-					RelativePath=".\thread\BaseWorker.h"
+					RelativePath="..\thread\BaseWorker.h"
 					>
 				</File>
 				<File
-					RelativePath=".\thread\ThreadSupport.h"
+					RelativePath="..\thread\ThreadSupport.h"
 					>
 				</File>
 				<File
-					RelativePath=".\thread\ThreadWorker.h"
+					RelativePath="..\thread\ThreadWorker.h"
 					>
 				</File>
 				<File
-					RelativePath=".\thread\WinThreads.h"
+					RelativePath="..\thread\WinThreads.h"
 					>
 				</File>
 			</Filter>
@@ -277,30 +277,30 @@
 			Name="Database"
 			>
 			<File
-				RelativePath=".\mysql\ISQLDriver.h"
+				RelativePath="..\mysql\ISQLDriver.h"
 				>
 			</File>
 			<Filter
 				Name="Header Files"
 				>
 				<File
-					RelativePath=".\mysql\MysqlDatabase.h"
+					RelativePath="..\mysql\MysqlDatabase.h"
 					>
 				</File>
 				<File
-					RelativePath=".\mysql\MysqlDriver.h"
+					RelativePath="..\mysql\MysqlDriver.h"
 					>
 				</File>
 				<File
-					RelativePath=".\mysql\MysqlHeaders.h"
+					RelativePath="..\mysql\MysqlHeaders.h"
 					>
 				</File>
 				<File
-					RelativePath=".\mysql\MysqlQuery.h"
+					RelativePath="..\mysql\MysqlQuery.h"
 					>
 				</File>
 				<File
-					RelativePath=".\mysql\MysqlResultSet.h"
+					RelativePath="..\mysql\MysqlResultSet.h"
 					>
 				</File>
 			</Filter>
@@ -308,19 +308,19 @@
 				Name="Source Files"
 				>
 				<File
-					RelativePath=".\mysql\MysqlDatabase.cpp"
+					RelativePath="..\mysql\MysqlDatabase.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\mysql\MysqlDriver.cpp"
+					RelativePath="..\mysql\MysqlDriver.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\mysql\MysqlQuery.cpp"
+					RelativePath="..\mysql\MysqlQuery.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\mysql\MysqlResultSet.cpp"
+					RelativePath="..\mysql\MysqlResultSet.cpp"
 					>
 				</File>
 			</Filter>
@@ -329,27 +329,27 @@
 			Name="SDK"
 			>
 			<File
-				RelativePath=".\sdk\amxxmodule.cpp"
+				RelativePath="..\sdk\amxxmodule.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\sdk\amxxmodule.h"
+				RelativePath="..\sdk\amxxmodule.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sdk\CVector.h"
+				RelativePath="..\sdk\CVector.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sdk\moduleconfig.h"
+				RelativePath="..\sdk\moduleconfig.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sdk\sh_list.h"
+				RelativePath="..\sdk\sh_list.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sdk\sh_stack.h"
+				RelativePath="..\sdk\sh_stack.h"
 				>
 			</File>
 		</Filter>

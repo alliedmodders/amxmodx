@@ -9,17 +9,20 @@ MM_ROOT = ../../metamod/metamod
 OPT_FLAGS = -O2 -funroll-loops -s -pipe -fomit-frame-pointer
 DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
-NAME = mysqlx_amxx
+NAME = mysqlx
 MYSQL_DIR = m_inc
+
+BIN_SUFFIX_32 = amxx_i386.so
+BIN_SUFFIX_64 = amxx_amd64.so
 
 OBJECTS = basic_sql.cpp handles.cpp module.cpp threading.cpp sdk/amxxmodule.cpp oldcompat_sql.cpp
 OBJECTS += thread/BaseWorker.cpp thread/ThreadWorker.cpp thread/PosixThreads.cpp
 OBJECTS += mysql/MysqlQuery.cpp mysql/MysqlResultSet.cpp mysql/MysqlDatabase.cpp mysql/MysqlDriver.cpp 
 
-LINK = -lmysqlclient -lz -lpthread
+LINK = -lmysqlclient -lz -lpthread /lib/libgcc_eh.a /lib/libstdc++.a
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
-	-I$(MM_ROOT) -Lzlib -I$(HLSDK)/common -I$(MYSQL_DIR)/include -L$(MYSQL_DIR)/lib -Ithread \
+	-I$(MM_ROOT) -I$(HLSDK)/common -I$(MYSQL_DIR)/include -L$(MYSQL_DIR)/lib -Ithread \
 	-Imysql -Isdk
 
 ifeq "$(DEBUG)" "true"
@@ -34,16 +37,14 @@ CFLAGS += -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H -Dstric
 CFLAGS += -DSM_DEFAULT_THREADER
 
 ifeq "$(AMD64)" "true"
-	BINARY = $(NAME)_amd64.so
+	BINARY = $(NAME)_$(BIN_SUFFIX_64)
 	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -m64 
 	INCLUDE += -Lextra/lib_linux64
-	LINK += /lib/libgcc_eh.a /lib/libstdc++.a
 else
-	BINARY = $(NAME)_i386.so
+	BINARY = $(NAME)_$(BIN_SUFFIX_32)
 	CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32
 	OPT_FLAGS += -march=i686
 	INCLUDE += -Lextra/lib_linux
-	LINK += /lib/libgcc_eh.a /lib/libstdc++.a
 endif
 
 OBJ_LINUX := $(OBJECTS:%.cpp=$(BIN_DIR)/%.o)
@@ -74,10 +75,11 @@ clean:
 	rm -rf Release/mysql/*.o
 	rm -rf Release/sdk/*.o
 	rm -rf Release/*.o
-	rm -rf Release/$(BINARY)
+	rm -rf Release/$(NAME)_$(BIN_SUFFIX_32)
+	rm -rf Release/$(NAME)_$(BIN_SUFFIX_64)
 	rm -rf Debug/thread/*.o
 	rm -rf Debug/mysql/*.o
 	rm -rf Debug/sdk/*.o
 	rm -rf Debug/*.o
-	rm -rf Debug/$(BINARY)
-
+	rm -rf Debug/$(NAME)_$(BIN_SUFFIX_32)
+	rm -rf Debug/$(NAME)_$(BIN_SUFFIX_64)

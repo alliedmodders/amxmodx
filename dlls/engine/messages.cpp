@@ -307,7 +307,7 @@ void MessageEnd(void)
 	} else if (inhook) {
 		for (i=0; i<msgHooks[msgType].size(); i++)
 		{
-				mresB = MF_ExecuteForward(msgHooks[msgType].at(i), msgType, msgDest, ENTINDEX(msgpEntity));
+				mresB = MF_ExecuteForward(msgHooks[msgType].at(i), (cell)msgType, (cell)msgDest, (cell)ENTINDEX(msgpEntity));
 				if (mresB > mres)
 						mres = mresB;
 		}

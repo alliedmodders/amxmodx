@@ -238,8 +238,8 @@ CPluginMngr::CPlugin::CPlugin(int i, const char* p, const char* n, char* e, int 
 	
 	if (status == ps_running)
 	{
-		m_PauseFwd = registerSPForwardByName(&amx, "plugin_pause");
-		m_UnpauseFwd = registerSPForwardByName(&amx, "plugin_unpause");
+		m_PauseFwd = registerSPForwardByName(&amx, "plugin_pause", FP_DONE);
+		m_UnpauseFwd = registerSPForwardByName(&amx, "plugin_unpause", FP_DONE);
 		
 		if (amx.flags & AMX_FLAG_DEBUG)
 		{

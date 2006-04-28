@@ -835,22 +835,25 @@ static cell AMX_NATIVE_CALL is_visible(AMX *amx, cell *params)
 	CHECK_ENTITY(src);
 	CHECK_ENTITY(dest);
 
-	edict_t *pEntity = MF_GetPlayerEdict(src);
-	edict_t *pTarget = MF_GetPlayerEdict(dest);
+	edict_t *pEntity = INDEXENT2(src);
+	edict_t *pTarget = INDEXENT2(dest);
 
-	Vector vLooker = ((pEntity->v.absmin + pEntity->v.absmax) * pEntity->v.fov) + pEntity->v.view_ofs;
-	Vector vTarget = (pTarget->v.absmin + pTarget->v.absmax) * pTarget->v.fov;
+	if (pTarget->v.flags & FL_NOTARGET)
+		return 0;
+
+	Vector vLooker = pEntity->v.origin + pEntity->v.view_ofs;
+	Vector vTarget = pTarget->v.origin + pTarget->v.view_ofs;
 
     TraceResult tr;
 
 	TRACE_LINE(vLooker, vTarget, FALSE, pEntity, &tr);
 
-	if (tr.flFraction != 1.0)
-	{
+	if (tr.fInOpen && tr.fInWater)
 		return 0;
-	} else {
+	else if (tr.flFraction == 1.0)
 		return 1;
-	}
+	
+	return 0;
 }
 
 //taken from dlls\combat.cpp
@@ -880,12 +883,11 @@ static cell AMX_NATIVE_CALL in_view_cone(AMX *amx, cell *params)
 
 	flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
 
-	if (flDot > pEdictSrc->v.fov)
-	{
+	if (flDot >= cos(pEdictSrc->v.fov * (M_PI / 360)))
 		return 1;
-	} else{
+	else
 		return 0;
-	}
+
 }
 
 static cell AMX_NATIVE_CALL traceresult(AMX *amx, cell *params)

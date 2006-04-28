@@ -86,13 +86,13 @@ SIMPLE_INT_HOOK_STRING(PrecacheSound);
 
 void ClientUserInfoChanged(edict_t *e, char *infobuffer)
 {
-	FM_ENG_HANDLE(FM_ClientInfoChanged, (Engine[FM_ClientInfoChanged].at(i), (cell)ENTINDEX(e)));
+	FM_ENG_HANDLE(FM_ClientUserInfoChanged, (Engine[FM_ClientUserInfoChanged].at(i), (cell)ENTINDEX(e)));
 	RETURN_META(mswi(lastFmRes));
 }
 
 void ClientUserInfoChanged_post(edict_t *e, char *infobuffer)
 {
-	FM_ENG_HANDLE_POST(FM_ClientInfoChanged, (EnginePost[FM_ClientInfoChanged].at(i), (cell)ENTINDEX(e))); 
+	FM_ENG_HANDLE_POST(FM_ClientUserInfoChanged, (EnginePost[FM_ClientUserInfoChanged].at(i), (cell)ENTINDEX(e))); 
 	RETURN_META(mswi(lastFmRes));
 }
 
@@ -1332,7 +1332,7 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
 		NEWDLLHOOK(ShouldCollide);
 		break;
-	case FM_ClientInfoChanged:
+	case FM_ClientUserInfoChanged:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
 		DLLHOOK(ClientUserInfoChanged);
 		break;

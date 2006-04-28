@@ -166,6 +166,7 @@ void OnPluginsLoaded()
 	RESETD(RegisterEncoders);
 	RESETD(CreateInstancedBaselines);
 	RESETD(AllowLagCompensation);
+	RESETD(ClientUserInfoChanged);
 
 	RESETN(OnFreeEntPrivateData);
 	RESETN(GameShutdown);

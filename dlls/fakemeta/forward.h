@@ -153,7 +153,7 @@ enum {
 	FM_OnFreeEntPrivateData,
 	FM_GameShutdown,
 	FM_ShouldCollide,
-	FM_ClientInfoChanged,	//passes id only
+	FM_ClientUserInfoChanged,	//passes id only
 	FM_LAST_DONT_USE_ME
 };
 

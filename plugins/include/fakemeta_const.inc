@@ -504,7 +504,7 @@ enum {
 	FM_ShouldCollide,
 	
 	//LATE ADDITIONS (v1.71)
-	FM_ClientInfoChanged	//passes id only
+	FM_ClientUserInfoChanged	//passes id only
 };
 
 enum TraceResult

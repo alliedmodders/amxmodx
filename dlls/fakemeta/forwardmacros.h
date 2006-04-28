@@ -129,7 +129,7 @@
 	int call (char *s) \
 	{ \
 		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i), s)); \
-		RETURN_META_VALUE(mswi(lastFmRes), mlCellResult); \
+		RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult); \
 	} \
 	int call##_post (char *s) \
 	{ \
@@ -289,15 +289,12 @@
 #define SIMPLE_VOID_HOOK_FLOAT(call) \
 	void call (float v) \
 	{ \
-		PREPARE_FLOAT(v); \
-		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i), c_v)); \
-		BYREF_FLOAT(v); \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i), v)); \
 		RETURN_META(mswi(lastFmRes)); \
 	} \
 	void call##_post (float v) \
 	{ \
-		PREPARE_FLOAT(v); \
-		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i), c_v)); \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i), v)); \
 		RETURN_META(MRES_IGNORED); \
 	}
 
@@ -352,13 +349,13 @@
 #define SIMPLE_EDICT_HOOK_INT(call) \
 	edict_t* call (int v) \
 	{ \
-		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),v)); \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),(cell)v)); \
 		RETURN_META_VALUE(mswi(lastFmRes),INDEXENT2((int)mlCellResult)); \
 	} \
 	edict_t* call##_post (int v) \
 	{ \
 		origCellRet = ENTINDEX(META_RESULT_ORIG_RET(edict_t *)); \
-		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),v)); \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),(cell)v)); \
 		RETURN_META_VALUE(MRES_IGNORED,INDEXENT2((int)mlCellResult)); \
 	} 
 
@@ -394,12 +391,12 @@
 #define SIMPLE_VOID_HOOK_EDICT_EDICT(call) \
 	void call (edict_t *ent,edict_t *entb) \
 	{ \
-		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  ENTINDEX(ent), ENTINDEX(entb))); \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)ENTINDEX(ent), (cell)ENTINDEX(entb))); \
 		RETURN_META(mswi(lastFmRes)); \
 	} \
 	void call##_post (edict_t *ent,edict_t *entb) \
 	{ \
-		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  ENTINDEX(ent), ENTINDEX(entb))); \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX(ent), (cell)ENTINDEX(entb))); \
 		RETURN_META(MRES_IGNORED); \
 	} 
 
@@ -685,7 +682,7 @@
 		} else { \
 			const float b[3]={0.0,0.0,0.0}; \
 			PREPARE_VECTOR(b); \
-			FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)v, vb, p_b, (cell)ENTINDEX(e))); \
+			FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)v, (cell)vb, p_b, (cell)ENTINDEX(e))); \
 		} \
 		RETURN_META(mswi(lastFmRes)); \
 	} \

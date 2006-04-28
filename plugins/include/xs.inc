@@ -604,6 +604,13 @@
 		xs_vec_sub(tmp1, tmp2, out);
 	}
 	
+	// Turn a 3D vector into a 2D vector
+	XS_LIBFUNC_ATTRIB xs_vec_make2d(const Float:vec[3], Float:out[2])
+	{
+		out[0] = vec[0];
+		out[1] = vec[1];
+	}
+	
 	// *** planes
 	
 	// normal
@@ -1017,20 +1024,20 @@
 	// Returns max number of messages for mod
 	XS_LIBFUNC_ATTRIB xs_get_maxmessages()
 	{
-		new name[32];
+		new name[2];
 		
 		for (new i = XS__MAX_ENGINE_MESSAGES + 1; i <= XS__MAX_POSSIBLE_MESSAGES; i++)
-			if (!get_user_msgname(i, name, 31))
+			if (!get_user_msgname(i, name, 1))
 				return i - 1;
 		    
-		return XS__MAX_ENGINE_MESSAGES;
+		return XS__MAX_POSSIBLE_MESSAGES;
 	}
 
 	// Returns true if msgid is a valid message
 	XS_LIBFUNC_ATTRIB bool:xs_is_msg_valid(msgid)
 	{
-		new name[32];
-		new retval = get_user_msgname(msgid, name, 31);
+		new name[2];
+		new retval = get_user_msgname(msgid, name, 1);
 		
 		if (msgid < 1 || (msgid > XS__MAX_ENGINE_MESSAGES && !retval))
 			return false;

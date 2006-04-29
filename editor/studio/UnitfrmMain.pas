@@ -419,6 +419,8 @@ begin
   pnlLoading.Top := tbDocs.Top + sciEditor.Top + ((sciEditor.Height * 5) div 6) - (pnlLoading.Height div 2);
   pnlLoading.BringToFront;
 
+  if not Assigned(ActiveDoc) then exit;
+
   if (Canvas.TextWidth(ActiveDoc.FileName) + 10 > mnuFilename.CustomWidth) then
     mnuFilename.Caption := ExtractFileName(ActiveDoc.FileName)
   else
@@ -3067,7 +3069,7 @@ begin
 
     if tbDocs.Tabs.IndexOf(Item) <> -1 then begin
       if CloseDocument(TDocument(Collection.Items[tbDocs.Tabs.IndexOf(Item)]), True, False) then
-        tbDocs.Tabs.Delete(tbDocs.Tabs.IndexOf(Item));
+        tbDocs.Tabs.Delete(Item.Index);
     end;
     Screen.Cursor := crDefault;
   end;

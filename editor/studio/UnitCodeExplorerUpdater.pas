@@ -125,8 +125,10 @@ end;
 
 procedure TCodeExplorerUpdater.GetCode;
 begin
-  eCode.Assign(frmMain.sciEditor.Lines);
-  eActive := ActiveDoc.Index;
+  if Assigned(ActiveDoc) then begin
+    eCode.Assign(frmMain.sciEditor.Lines);
+    eActive := ActiveDoc.Index;
+  end;
 end;
 
 function GetNode(eText: string): TTreeNode;

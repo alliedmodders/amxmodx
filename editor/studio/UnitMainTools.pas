@@ -1082,19 +1082,13 @@ begin
     if ActiveDoc.Index = AIndex then
       ActiveDoc := nil;
   end;
-  
   Delete(AIndex);
-  for i := 0 to Count -1 do
+  
+  for i := 0 to Count -1 do begin
     TDocument(Items[i]).Title := '< ' + IntToStr(i +1) + #32 + ExtractFileName(TDocument(Items[i]).FileName) + ' >';
-
-  if (Collection = Self) then begin
-    try
-      for i := 0 to frmMain.tbDocs.Tabs.Count -1 do begin
-        TJvTabBarItem(frmMain.tbDocs.Tabs[i]).Caption := TDocument(Items[i]).Title;
-        TJvTabBarItem(frmMain.tbDocs.Tabs[i]).Modified := TDocument(Items[i]).Modified;
-      end;
-    except
-      // no idea how to fix this
+    if (Collection = Self) and (Started) then begin
+      TJvTabBarItem(frmMain.tbDocs.Tabs[i]).Caption := TDocument(Items[i]).Title;
+      TJvTabBarItem(frmMain.tbDocs.Tabs[i]).Modified := TDocument(Items[i]).Modified;
     end;
   end;
 

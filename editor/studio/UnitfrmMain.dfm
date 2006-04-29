@@ -729,6 +729,7 @@ object frmMain: TfrmMain
     Left = 0
     Top = 72
     Width = 880
+    RightClickSelect = False
     Tabs = <
       item
         Caption = '< 1 Untitled.sma >'

@@ -45,7 +45,7 @@
 //#define FN_AMXX_DETACH OnAmxxDetach
 // All plugins loaded
 //   Do forward functions init here (MF_RegisterForward)
-#define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
+// #define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
 
 /**** METAMOD ****/
 // If your module doesn't use metamod, you may close the file now :)
@@ -88,7 +88,7 @@
 // #define FN_ClientCommand				ClientCommand				/* pfnClientCommand()			(wd) Player has sent a command (typed or from a bind) */
 // #define FN_ClientUserInfoChanged		ClientUserInfoChanged		/* pfnClientUserInfoChanged()	(wd) Client has updated their setinfo structure */
 #define FN_ServerActivate				ServerActivate				/* pfnServerActivate()			(wd) Server is starting a new map */
-// #define FN_ServerDeactivate			ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
+#define FN_ServerDeactivate			FMH_ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
 // #define FN_PlayerPreThink			PlayerPreThink				/* pfnPlayerPreThink() */
 // #define FN_PlayerPostThink			PlayerPostThink				/* pfnPlayerPostThink() */
 // #define FN_StartFrame				StartFrame					/* pfnStartFrame() */

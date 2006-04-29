@@ -174,4 +174,6 @@ void FMH_ServerDeactivate()
 	RESETN(ShouldCollide);
 
 	g_pFunctionTable->pfnServerActivate = ServerActivate;
+
+	RETURN_META(MRES_IGNORED);
 }

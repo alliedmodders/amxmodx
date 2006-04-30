@@ -6,12 +6,15 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 	int type;
 	int index;
 	int indexb;
+	unsigned char *pset;
 	char *temp = "";
 	char *temp2 = "";
 	char *temp3 = "";
 	vec3_t Vec1;
 	vec3_t Vec2;
 	int iparam1;
+	int iparam2;
+	int iparam3;
 	int len;
 	cell *cRet;
 	type = params[1];
@@ -219,7 +222,7 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 
 	case	DLLFunc_pfnAllowLagCompensation:	// int )( void );
 		return gpGamedllFuncs->dllapi_table->pfnAllowLagCompensation();
-		// I know this doesn't fit with dllfunc, but I dont want to create another native JUST for this.
+		// I know this doesn't fit with dllfunc, but I don't want to create another native JUST for this.
 	case	MetaFunc_CallGameEntity:	// bool	(plid_t plid, const char *entStr,entvars_t *pev);
 		temp = MF_GetAmxString(amx,params[2],0,&len);
 		cRet = MF_GetAmxAddr(amx,params[3]);
@@ -228,13 +231,100 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		iparam1 = gpMetaUtilFuncs->pfnCallGameEntity(PLID,STRING(ALLOC_STRING(temp)),VARS(INDEXENT2(index)));
 		return iparam1;
 	case	DLLFunc_ClientUserInfoChanged: // void ) (edict_t *pEntity, char *infobuffer)
-		cRet = MF_GetAmxAddr(amx,params[1]);
+		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
 		CHECK_ENTITY(index);
 		gpGamedllFuncs->dllapi_table->pfnClientUserInfoChanged(INDEXENT2(index),(*g_engfuncs.pfnGetInfoKeyBuffer)(INDEXENT2(index)));
 		return 1;
+	case	DLLFunc_UpdateClientData:		// void ) (const struct edict_s *ent, int sendweapons, struct clientdata_s *cd)
+		cRet = MF_GetAmxAddr(amx, params[2]);
+		index = cRet[0];
+		CHECK_ENTITY(index);
+		cRet = MF_GetAmxAddr(amx, params[3]);
+		iparam1 = cRet[0];
+		
+		clientdata_t *cd;
+
+		if ((params[0] / sizeof(cell)) == 4)
+		{
+			cell *ptr = MF_GetAmxAddr(amx, params[4]);
+			if (*ptr == 0)
+				cd = &g_cd_glb;
+			else
+				cd = reinterpret_cast<clientdata_s *>(*ptr);
+		}
+		else
+			cd = &g_cd_glb;
 
 
+		gpGamedllFuncs->dllapi_table->pfnUpdateClientData(INDEXENT2(index), iparam1, cd);
+
+		return 1;
+	case	DLLFunc_AddToFullPack:		// int ) (struct entity_state_s *state, int e, edict_t *ent, edict_t *host, int hostflags, int player, unsigned char *pSet)
+		entity_state_t *es;	
+
+		cRet = MF_GetAmxAddr(amx, params[2]);
+
+		if (*cRet == 0)
+			es = &g_es_glb;
+		else
+			es = reinterpret_cast<entity_state_t *>(*cRet);
+
+		// int e
+		cRet = MF_GetAmxAddr(amx, params[3]);
+		iparam1 = cRet[0];
+
+		// edict_t *ent
+		cRet = MF_GetAmxAddr(amx, params[4]);
+		index = cRet[0];
+		CHECK_ENTITY(index);
+
+		// edict_t *host
+		cRet = MF_GetAmxAddr(amx, params[5]);
+		indexb = cRet[0];
+		CHECK_ENTITY(indexb);
+
+		// int hostflags
+		cRet = MF_GetAmxAddr(amx, params[6]);
+		iparam2 = cRet[0];
+
+		// int player
+		cRet = MF_GetAmxAddr(amx, params[7]);
+		iparam3 = cRet[0];
+
+		// unsigned char *pSet
+		cRet = MF_GetAmxAddr(amx, params[8]);
+		pset = reinterpret_cast<unsigned char *>(*cRet);
+
+		return gpGamedllFuncs->dllapi_table->pfnAddToFullPack(es, iparam1, INDEXENT2(index), INDEXENT2(indexb), iparam2, iparam3, pset);
+	case DLLFunc_CmdStart:			// void ) (const edict_t *player, const struct usercmd_s *cmd, unsigned int random_seed)
+		cRet = MF_GetAmxAddr(amx, params[2]);
+		index = cRet[0];
+		CHECK_ENTITY(index);
+
+		usercmd_t *uc;
+		cRet = MF_GetAmxAddr(amx, params[3]);
+
+		if (*cRet == 0)
+			uc = &g_uc_glb;
+		else
+			uc = reinterpret_cast<usercmd_t *>(*cRet);
+
+
+		cRet = MF_GetAmxAddr(amx, params[4]);
+		iparam1 = cRet[0];
+
+		gpGamedllFuncs->dllapi_table->pfnCmdStart(INDEXENT2(index), uc, iparam1);
+
+		return 1;
+	case DLLFunc_CmdEnd:			// void ) (const edict_t *player)
+		cRet = MF_GetAmxAddr(amx, params[2]);
+		index = cRet[0];
+		CHECK_ENTITY(index);
+
+		gpGamedllFuncs->dllapi_table->pfnCmdEnd(INDEXENT2(index));
+
+		return 1;
 	default:
 		MF_LogError(amx, AMX_ERR_NATIVE, "Unknown dllfunc entry %d", type);
 		return 0;

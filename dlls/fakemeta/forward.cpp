@@ -1,6 +1,5 @@
 #include "fakemeta_amxx.h"
 
-
 CVector<int> Engine[ENGFUNC_NUM+10];
 CVector<int> EnginePost[ENGFUNC_NUM+10];
 cell mCellResult;
@@ -12,6 +11,9 @@ const char *mlStringResult;
 int retType = 0;
 int lastFmRes = FMRES_IGNORED;
 KVD_Wrapper g_kvd_hook;
+clientdata_t *g_cd_hook;
+entity_state_t *g_es_hook;
+usercmd_t *g_uc_hook;
 
 cell origCellRet;
 float origFloatRet;
@@ -690,6 +692,51 @@ SIMPLE_VOID_HOOK_VOID(CreateInstancedBaselines);
 // pfnAllowLagCompensation
 SIMPLE_INT_HOOK_VOID(AllowLagCompensation);
 
+void UpdateClientData(const struct edict_s *ent, int sendweapons, struct clientdata_s *cd)
+{
+	g_cd_hook = cd;
+	FM_ENG_HANDLE(FM_UpdateClientData, (Engine[FM_UpdateClientData].at(i), (cell)ENTINDEX(ent), (cell)sendweapons, (cell)cd));
+	RETURN_META(mswi(lastFmRes));
+}
+
+void UpdateClientData_post(const struct edict_s *ent, int sendweapons, struct clientdata_s *cd)
+{
+	g_cd_hook = cd;
+	FM_ENG_HANDLE_POST(FM_UpdateClientData, (EnginePost[FM_UpdateClientData].at(i), (cell)ENTINDEX(ent), (cell)sendweapons, (cell)cd));
+	RETURN_META(MRES_IGNORED);
+}
+
+int AddToFullPack(struct entity_state_s *state, int e, edict_t *ent, edict_t *host, int hostflags, int player, unsigned char *pSet)
+{
+	g_es_hook = state;
+	FM_ENG_HANDLE(FM_AddToFullPack, (Engine[FM_AddToFullPack].at(i), (cell)state, (cell)e, (cell)ENTINDEX(ent), (cell)ENTINDEX(host), (cell)hostflags, (cell)player, (cell)pSet));
+	RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult);
+}
+
+int AddToFullPack_post(struct entity_state_s *state, int e, edict_t *ent, edict_t *host, int hostflags, int player, unsigned char *pSet)
+{
+	g_es_hook = state;
+	origCellRet = META_RESULT_ORIG_RET(int);
+	FM_ENG_HANDLE_POST(FM_AddToFullPack, (EnginePost[FM_AddToFullPack].at(i), (cell)state, (cell)e, (cell)ENTINDEX(ent), (cell)ENTINDEX(host), (cell)hostflags, (cell)player, (cell)pSet));
+	RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult);
+}
+
+void CmdStart(const edict_t *player, const struct usercmd_s *cmd, unsigned int random_seed)
+{
+	g_uc_hook = const_cast<usercmd_t *>(cmd);
+	FM_ENG_HANDLE(FM_CmdStart, (Engine[FM_CmdStart].at(i), (cell)ENTINDEX(player), (cell)cmd, (cell)random_seed));
+	RETURN_META(mswi(lastFmRes));
+}
+
+void CmdStart_post(const edict_t *player, const struct usercmd_s *cmd, unsigned int random_seed)
+{
+	g_uc_hook = const_cast<usercmd_t *>(cmd);
+	FM_ENG_HANDLE_POST(FM_CmdStart, (EnginePost[FM_CmdStart].at(i), (cell)ENTINDEX(player), (cell)cmd, (cell)random_seed));
+	RETURN_META(MRES_IGNORED);
+}
+
+// pfnCmdEnd
+SIMPLE_VOID_HOOK_CONSTEDICT(CmdEnd);
 
 /*
  * NEW_DLL_FUNCTIONS
@@ -1116,7 +1163,7 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 		break;
 	//EngFunc_CheckVisibility,			//)		( const edict_t *entity, unsigned char *pset );
 	case FM_CheckVisibility:
-		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_STRING, FP_DONE);
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
 		ENGHOOK(CheckVisibility);
 		break;
 
@@ -1335,6 +1382,22 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	case FM_ClientUserInfoChanged:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
 		DLLHOOK(ClientUserInfoChanged);
+		break;
+	case FM_UpdateClientData:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+		DLLHOOK(UpdateClientData);
+		break;
+	case FM_AddToFullPack:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+		DLLHOOK(AddToFullPack);
+		break;
+	case FM_CmdStart:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+		DLLHOOK(CmdStart);
+		break;
+	case FM_CmdEnd:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		DLLHOOK(CmdEnd);
 		break;
 #if 0
 

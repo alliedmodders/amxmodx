@@ -1,7 +1,7 @@
 #ifndef _INCLUDE_FORWARD_H
 #define _INCLUDE_FORWARD_H
 
-#define ENGFUNC_NUM		FM_LAST_DONT_USE_ME // 118
+#define ENGFUNC_NUM		FM_LAST_DONT_USE_ME // 127
 
 #define	FMV_STRING		1
 #define FMV_FLOAT		2
@@ -153,7 +153,13 @@ enum {
 	FM_OnFreeEntPrivateData,
 	FM_GameShutdown,
 	FM_ShouldCollide,
+
 	FM_ClientUserInfoChanged,	//passes id only
+
+	FM_UpdateClientData,
+	FM_AddToFullPack,
+	FM_CmdStart,
+	FM_CmdEnd,
 	FM_LAST_DONT_USE_ME
 };
 

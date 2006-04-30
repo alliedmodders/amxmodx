@@ -168,6 +168,10 @@ void FMH_ServerDeactivate()
 	RESETD(CreateInstancedBaselines);
 	RESETD(AllowLagCompensation);
 	RESETD(ClientUserInfoChanged);
+	RESETD(UpdateClientData);
+	RESETD(AddToFullPack);
+	RESETD(CmdStart);
+	RESETD(CmdEnd);
 
 	RESETN(OnFreeEntPrivateData);
 	RESETN(GameShutdown);

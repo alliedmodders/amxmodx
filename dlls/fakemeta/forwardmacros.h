@@ -298,6 +298,18 @@
 		RETURN_META(MRES_IGNORED); \
 	}
 
+#define SIMPLE_VOID_HOOK_CONSTEDICT(call) \
+	void call (const edict_t *ent) \
+	{ \
+	FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)ENTINDEX(ent))); \
+	RETURN_META(mswi(lastFmRes)); \
+	} \
+	void call##_post (const edict_t *ent) \
+	{ \
+	FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX(ent))); \
+	RETURN_META(MRES_IGNORED); \
+	}
+
 #define SIMPLE_VOID_HOOK_CONSTEDICT_FLOAT(call) \
 	void call (const edict_t *ent, float blah) \
 	{ \

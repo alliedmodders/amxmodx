@@ -50,9 +50,16 @@ enum
 	// Create baselines for certain "unplaced" items.
 	DLLFunc_CreateInstancedBaselines,	// void )			( void );
 	DLLFunc_pfnAllowLagCompensation,	// int  )			( void );
-	// I know this does not fit with DLLFUNC(), but I dont want another native just for it.
+	// I know this does not fit with DLLFUNC(), but I don't want another native just for it.
 	MetaFunc_CallGameEntity,			// bool	)			(plid_t plid, const char *entStr,entvars_t *pev);
-	DLLFunc_ClientUserInfoChanged		// void	)			(idplayer)
+	DLLFunc_ClientUserInfoChanged,		// void	)			(idplayer)
+	// You can pass in 0 for global client data handle or another client data handle here
+	DLLFunc_UpdateClientData,			// void )			(const struct edict_s *ent, int sendweapons, struct clientdata_s *cd);
+	// You can pass in 0 for global entity state handle or another entity state handle here
+	DLLFunc_AddToFullPack,				// int  )			(struct entity_state_s *state, int e, edict_t *ent, edict_t *host, int hostflags, int player, unsigned char *pSet);
+	// You can pass in 0 for global usercmd handle or another usercmd handle here
+	DLLFunc_CmdStart,					// void )			(const edict_t *player, const struct usercmd_s *cmd, unsigned int random_seed);
+	DLLFunc_CmdEnd						// void )			(const edict_t *player);
 };
 
 #endif //_INCLUDE_DLLFUNC_H

@@ -28,6 +28,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	float fparam3;
 //	float fTemp[3];
 	int index;
+	unsigned char *pset;
 	edict_t *pRet=NULL;
 	// Now start calling.. :/
 	switch (type)
@@ -918,8 +919,9 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		cRet = MF_GetAmxAddr(amx, params[2]);
 		index = cRet[0];
 		CHECK_ENTITY(index);
-		temp = MF_GetAmxString(amx,params[3],0,&len);
-		return (*g_engfuncs.pfnCheckVisibility)(INDEXENT2(index), (unsigned char *)STRING(ALLOC_STRING(temp)));
+		cRet = MF_GetAmxAddr(amx, params[3]);
+		pset = (unsigned char *)cRet[0];
+		return (*g_engfuncs.pfnCheckVisibility)(INDEXENT2(index), pset);
 
 		// pfnGetCurrentPlayer
 	case	EngFunc_GetCurrentPlayer:			// int )		( void );

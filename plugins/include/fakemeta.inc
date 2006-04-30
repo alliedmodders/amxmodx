@@ -85,6 +85,27 @@ native get_kvd(kvd_handle, KeyValueData:member, {Float,_}:...);
 // keyvalues structure rather than changing the internal engine strings.
 native set_kvd(kvd_handle, KeyValueData:member, {Float,_}:...);
 
+// These functions are used with the clientdata data structure (FM_UpdateClientData)
+// Get: 0 extra params - Return integer; 1 extra param - by ref float or vector; 2 extra params - string and length
+// Set: Use anything
+// Use 0 for cd_handle to specify the global clientdata handle
+native get_cd(cd_handle, ClientData:member, {Float,_}:...);
+native set_cd(cd_handle, ClientData:member, {Float,_}:...);
+
+// These functions are used with the entity_state data structure (FM_AddToFullPack)
+// Get: 0 extra params - Return integer; 1 extra param - by ref float or vector or array
+// Set: Use anything
+// Use 0 for es_handle to specify the global entity_state handle
+native get_es(es_handle, EntityState:member, {Float,_}:...);
+native set_es(es_handle, EntityState:member, {Float,_}:...);
+
+// These functions are used with the usercmd data structure (FM_CmdStart)
+// Get: 0 extra params - Return integer; 1 extra param - by ref float or vector
+// Set: Use anything
+// Use 0 for uc_handle to specify the global usercmd handle
+native get_uc(uc_handle, UserCmd:member, {Float,_}:...);
+native set_uc(uc_handle, UserCmd:member, {Float,_}:...);
+
 //NOTE that for the string offsets below, on AMD64, a byref (char **) offset is NOT the same as an int offset
 //In fact it's QWORD aligned rather than DWORD aligned, so the offset will be exactly half.
 //Gets a string from a private offset.  If byref is false, the string is treated as static rather than dynamic.

@@ -216,9 +216,6 @@ native get_user_armor(index);
 /* Returns player deaths. */
 native get_user_deaths(index);
 
-/* Sets player deaths. */
-native set_user_deaths(index, newdeaths);
-
 /* Returns player health. */
 native get_user_health(index);
 

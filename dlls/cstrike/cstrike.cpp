@@ -414,11 +414,13 @@ static cell AMX_NATIVE_CALL cs_get_user_vip(AMX *amx, cell *params) // cs_get_us
 	return 0;
 }
 
-static cell AMX_NATIVE_CALL cs_set_user_vip(AMX *amx, cell *params) // cs_set_user_vip(index, vip = 1); = 2 params
+static cell AMX_NATIVE_CALL cs_set_user_vip(AMX *amx, cell *params) // cs_set_user_vip(index, vip = 1, model = 1, scoreboard = 1); = 4 params
 {
 	// Set user vip
 	// params[1] = user index
 	// params[2] = if 1, activate vip, else deactivate vip.
+	// params[3] = if 1, update model
+	// params[4] = if 1, update scoreboard with vip information
 
 	// Valid entity should be within range
 	CHECK_PLAYER(params[1]);
@@ -426,42 +428,66 @@ static cell AMX_NATIVE_CALL cs_set_user_vip(AMX *amx, cell *params) // cs_set_us
 	// Make into edict pointer
 	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
-	if (params[2] == 1) {
+	// Backwards compatibility with older version of native that only took two params
+	if (params[0] / sizeof(cell) == 2)
+	{
+		// Default last two params to 1 to give same functionality as older native
+		params[3] = 1;
+		params[4] = 1;
+	}
+
+	if (params[2] == 1)
+	{
 		// Set to "be" vip.
 		*((int *)pPlayer->pvPrivateData + OFFSET_VIP) |= PLAYER_IS_VIP;
 
-		// Set vip model
-		*((int *)pPlayer->pvPrivateData + OFFSET_INTERNALMODEL) = CS_CT_VIP;
-		// This makes the model get updated right away.
-		MDLL_ClientUserInfoChanged(pPlayer, GETINFOKEYBUFFER(pPlayer)); //  If this causes any problems for WON, do this line only in STEAM builds.
+		if (params[3] == 1)
+		{
+			// Set vip model
+			*((int *)pPlayer->pvPrivateData + OFFSET_INTERNALMODEL) = CS_CT_VIP;
+			// This makes the model get updated right away.
+			MDLL_ClientUserInfoChanged(pPlayer, GETINFOKEYBUFFER(pPlayer)); //  If this causes any problems for WON, do this line only in STEAM builds.
+		}
 
-		// Set VIP on scoreboard. Probably doesn't work for terrorist team.
-		MESSAGE_BEGIN(MSG_ALL, GET_USER_MSG_ID(PLID, "ScoreAttrib", NULL));
-		WRITE_BYTE(params[1]);
-		WRITE_BYTE(SCOREATTRIB_VIP);
-		MESSAGE_END();
+		if (params[4] == 1)
+		{
+			// Set VIP on scoreboard. Probably doesn't work for terrorist team.
+			MESSAGE_BEGIN(MSG_ALL, GET_USER_MSG_ID(PLID, "ScoreAttrib", NULL));
+			WRITE_BYTE(params[1]);
+			WRITE_BYTE(SCOREATTRIB_VIP);
+			MESSAGE_END();
+		}
 	}
-	else {
+	else
+	{
 		// Set to not be vip.
 		*((int *)pPlayer->pvPrivateData + OFFSET_VIP) &= ~PLAYER_IS_VIP;
 
-		// Set a random CT model.
-		CS_Internal_Models CTmodels[4] = {CS_CT_URBAN, CS_CT_GSG9, CS_CT_GIGN, CS_CT_SAS};
-		CS_Internal_Models ct_model = CTmodels[RANDOM_LONG(0, 3)];
-		*((int *)pPlayer->pvPrivateData + OFFSET_INTERNALMODEL) = ct_model;
-		// This makes the model get updated right away.
-		MDLL_ClientUserInfoChanged(pPlayer, GETINFOKEYBUFFER(pPlayer)); //  If this causes any problems for WON, do this line only in STEAM builds.
+		if (params[3] == 1)
+		{
+			// Set a random CT model.
+			CS_Internal_Models CTmodels[4] = {CS_CT_URBAN, CS_CT_GSG9, CS_CT_GIGN, CS_CT_SAS};
+			CS_Internal_Models ct_model = CTmodels[RANDOM_LONG(0, 3)];
+			*((int *)pPlayer->pvPrivateData + OFFSET_INTERNALMODEL) = ct_model;
+			// This makes the model get updated right away.
+			MDLL_ClientUserInfoChanged(pPlayer, GETINFOKEYBUFFER(pPlayer)); //  If this causes any problems for WON, do this line only in STEAM builds.
+		}
 
-		// Set nothing/dead on scoreboard.
-		int scoreattrib;
-		if (pPlayer->v.deadflag == DEAD_NO && pPlayer->v.health > 0)
-			scoreattrib = SCOREATTRIB_NOTHING; // cts can't have bombs anyway
-		else
-			scoreattrib = SCOREATTRIB_DEAD;
-		MESSAGE_BEGIN(MSG_ALL, GET_USER_MSG_ID(PLID, "ScoreAttrib", NULL));
-		WRITE_BYTE(params[1]);
-		WRITE_BYTE(scoreattrib);
-		MESSAGE_END();
+		if (params[4] == 1)
+		{
+			// Set nothing/dead on scoreboard.
+			int scoreattrib;
+
+			if (pPlayer->v.deadflag == DEAD_NO && pPlayer->v.health > 0)
+				scoreattrib = SCOREATTRIB_NOTHING; // cts can't have bombs anyway
+			else
+				scoreattrib = SCOREATTRIB_DEAD;
+
+			MESSAGE_BEGIN(MSG_ALL, GET_USER_MSG_ID(PLID, "ScoreAttrib", NULL));
+			WRITE_BYTE(params[1]);
+			WRITE_BYTE(scoreattrib);
+			MESSAGE_END();
+		}
 	}
 
 	return 1;

@@ -428,12 +428,18 @@ static cell AMX_NATIVE_CALL cs_set_user_vip(AMX *amx, cell *params) // cs_set_us
 	// Make into edict pointer
 	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
+	bool updateModel, updateScoreboard;
+
 	// Backwards compatibility with older version of native that only took two params
 	if (params[0] / sizeof(cell) == 2)
 	{
-		// Default last two params to 1 to give same functionality as older native
-		params[3] = 1;
-		params[4] = 1;
+		updateModel = true;
+		updateScoreboard = true;
+	}
+	else
+	{
+		updateModel = (params[3] == 1);
+		updateScoreboard = (params[4] == 1);
 	}
 
 	if (params[2] == 1)
@@ -441,7 +447,7 @@ static cell AMX_NATIVE_CALL cs_set_user_vip(AMX *amx, cell *params) // cs_set_us
 		// Set to "be" vip.
 		*((int *)pPlayer->pvPrivateData + OFFSET_VIP) |= PLAYER_IS_VIP;
 
-		if (params[3] == 1)
+		if (updateModel)
 		{
 			// Set vip model
 			*((int *)pPlayer->pvPrivateData + OFFSET_INTERNALMODEL) = CS_CT_VIP;
@@ -449,7 +455,7 @@ static cell AMX_NATIVE_CALL cs_set_user_vip(AMX *amx, cell *params) // cs_set_us
 			MDLL_ClientUserInfoChanged(pPlayer, GETINFOKEYBUFFER(pPlayer)); //  If this causes any problems for WON, do this line only in STEAM builds.
 		}
 
-		if (params[4] == 1)
+		if (updateScoreboard)
 		{
 			// Set VIP on scoreboard. Probably doesn't work for terrorist team.
 			MESSAGE_BEGIN(MSG_ALL, GET_USER_MSG_ID(PLID, "ScoreAttrib", NULL));
@@ -463,7 +469,7 @@ static cell AMX_NATIVE_CALL cs_set_user_vip(AMX *amx, cell *params) // cs_set_us
 		// Set to not be vip.
 		*((int *)pPlayer->pvPrivateData + OFFSET_VIP) &= ~PLAYER_IS_VIP;
 
-		if (params[3] == 1)
+		if (updateModel)
 		{
 			// Set a random CT model.
 			CS_Internal_Models CTmodels[4] = {CS_CT_URBAN, CS_CT_GSG9, CS_CT_GIGN, CS_CT_SAS};
@@ -473,7 +479,7 @@ static cell AMX_NATIVE_CALL cs_set_user_vip(AMX *amx, cell *params) // cs_set_us
 			MDLL_ClientUserInfoChanged(pPlayer, GETINFOKEYBUFFER(pPlayer)); //  If this causes any problems for WON, do this line only in STEAM builds.
 		}
 
-		if (params[4] == 1)
+		if (updateScoreboard)
 		{
 			// Set nothing/dead on scoreboard.
 			int scoreattrib;

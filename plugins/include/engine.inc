@@ -21,7 +21,7 @@ native traceresult(type,{Float,Sql,Result,_}:...);
 native register_impulse(impulse, function[]);
 
 /* Registers a touch action to a function by classnames.  Use * to specify any classname. */
-native register_touch(Toucher[], Touched[], function[]);
+native register_touch(Touched[], Toucher[], function[]);
 
 /* Registers a think action to a function by classname. */
 native register_think(Classname[], function[]);

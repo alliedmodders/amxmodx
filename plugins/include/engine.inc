@@ -150,11 +150,8 @@ native remove_entity(iIndex);
 /* Return current number of entities in the map */
 native entity_count();
 
-/* Simulate two entities colliding/touching.
- * ptr - touched entity
- * ptd - toucher entity
- */
-native fake_touch(ptr, ptd);
+/* Simulate two entities colliding/touching. */
+native fake_touch(entTouched, entToucher);
 
 /* 2 formats.
    Format: DispatchKeyValue("KeyName","Value") - sets keyvalues for the entity specified in the keyvalue() forward.

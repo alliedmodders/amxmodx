@@ -151,7 +151,7 @@ native remove_entity(iIndex);
 native entity_count();
 
 /* Simulate two entities colliding/touching. */
-native fake_touch(iTouched, iToucher);
+native fake_touch(entTouched, entToucher);
 
 /* 2 formats.
    Format: DispatchKeyValue("KeyName","Value") - sets keyvalues for the entity specified in the keyvalue() forward.
@@ -235,7 +235,7 @@ native eng_get_string(_string, _returnString[], _len);
  **********/
 
 /* Called when 2 entities touch. */
-forward pfn_touch(iTouched, iToucher);
+forward pfn_touch(entTouched, entToucher);
 
 /* Called once every server frame. May cause lag. */
 forward server_frame();

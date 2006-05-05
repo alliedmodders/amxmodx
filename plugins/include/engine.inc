@@ -82,8 +82,8 @@ native drop_to_floor(entity)
 /* Get whole buffer containing keys and their data. */
 native get_info_keybuffer(id, buffer[], length);
 
-/* Use an entity with another entity. "used" could be a hostage, "user" a player. */
-native force_use(used, user);
+/* Use an entity with another entity. "entUsed" could be a hostage, "entUser" a player. */
+native force_use(entUsed, entUser);
 
 /* Get globals from server. */
 native Float:get_global_float(variable);

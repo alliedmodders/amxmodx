@@ -83,7 +83,7 @@ native drop_to_floor(entity)
 native get_info_keybuffer(id, buffer[], length);
 
 /* Use an entity with another entity. "used" could be a hostage, "user" a player. */
-native force_use(pPlayer, pEntity);
+native force_use(used, user);
 
 /* Get globals from server. */
 native Float:get_global_float(variable);

@@ -139,6 +139,7 @@ void FMH_ServerDeactivate()
 	RESETE(CVarSetFloat);
 	RESETE(CVarSetString);
 	RESETE(AlertMessage);
+	RESETE(CreateInstancedBaseline);
 
 	RESETD(Spawn);
 	RESETD(Think);
@@ -172,6 +173,7 @@ void FMH_ServerDeactivate()
 	RESETD(AddToFullPack);
 	RESETD(CmdStart);
 	RESETD(CmdEnd);
+	RESETD(CreateBaseline);
 
 	RESETN(OnFreeEntPrivateData);
 	RESETN(GameShutdown);

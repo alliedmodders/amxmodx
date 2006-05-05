@@ -59,7 +59,8 @@ enum
 	DLLFunc_AddToFullPack,				// int  )			(struct entity_state_s *state, int e, edict_t *ent, edict_t *host, int hostflags, int player, unsigned char *pSet);
 	// You can pass in 0 for global usercmd handle or another usercmd handle here
 	DLLFunc_CmdStart,					// void )			(const edict_t *player, const struct usercmd_s *cmd, unsigned int random_seed);
-	DLLFunc_CmdEnd						// void )			(const edict_t *player);
+	DLLFunc_CmdEnd,						// void )			(const edict_t *player);
+	DLLFunc_CreateBaseline				// void )			(int player, int eindex, struct entity_state_s *baseline, struct edict_s *entity, int playermodelindex, vec3_t player_mins, vec3_t player_maxs);
 };
 
 #endif //_INCLUDE_DLLFUNC_H

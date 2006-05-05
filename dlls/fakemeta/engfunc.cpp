@@ -1017,13 +1017,27 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		return 1;
 
 	case	EngFunc_SetClientKeyValue:	 // void )		(int clientIndex, char *infobuffer, char *key, char *value);
-		cRet = MF_GetAmxAddr(amx,params[2]);
+		cRet = MF_GetAmxAddr(amx, params[2]);
 		index = cRet[0];
 		CHECK_ENTITY(index);
-		temp = MF_GetAmxString(amx,params[3],0,&len);
-		temp2 = MF_GetAmxString(amx,params[4],1,&len);
+		temp = MF_GetAmxString(amx, params[3], 0, &len);
+		temp2 = MF_GetAmxString(amx, params[4], 1, &len);
 		(*g_engfuncs.pfnSetClientKeyValue)(index,(*g_engfuncs.pfnGetInfoKeyBuffer)(INDEXENT2(index)),temp,temp2);
 		return 1;
+	case EngFunc_CreateInstancedBaseline:	// int )		(int classname, struct entity_state_s *baseline);
+		cRet = MF_GetAmxAddr(amx, params[2]);
+		iparam1 = cRet[0];
+
+		entity_state_t *es;	
+
+		cRet = MF_GetAmxAddr(amx, params[3]);
+
+		if (*cRet == 0)
+			es = &g_es_glb;
+		else
+			es = reinterpret_cast<entity_state_t *>(*cRet);
+
+		return (*g_engfuncs.pfnCreateInstancedBaseline)(iparam1, es);
 	default:
 		MF_LogError(amx, AMX_ERR_NATIVE, "Unknown engfunc type %d", type);
 		return 0;

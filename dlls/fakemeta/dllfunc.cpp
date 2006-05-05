@@ -15,6 +15,7 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 	int iparam1;
 	int iparam2;
 	int iparam3;
+	entity_state_t *es;
 	int len;
 	cell *cRet;
 	type = params[1];
@@ -216,7 +217,7 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		return iparam1;
 
 	// Create baselines for certain "unplaced" items.
-	case	DLLFunc_CreateInstancedBaselines:	// void ) ( void );
+	case	DLLFunc_CreateInstancedBaselines:		// void ) ( void );
 		gpGamedllFuncs->dllapi_table->pfnCreateInstancedBaselines();
 		return 1;
 
@@ -261,8 +262,6 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 
 		return 1;
 	case	DLLFunc_AddToFullPack:		// int ) (struct entity_state_s *state, int e, edict_t *ent, edict_t *host, int hostflags, int player, unsigned char *pSet)
-		entity_state_t *es;	
-
 		cRet = MF_GetAmxAddr(amx, params[2]);
 
 		if (*cRet == 0)
@@ -323,6 +322,41 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		CHECK_ENTITY(index);
 
 		gpGamedllFuncs->dllapi_table->pfnCmdEnd(INDEXENT2(index));
+
+		return 1;
+
+	case DLLFunc_CreateBaseline:	// void )	(int player, int eindex, struct entity_state_s *baseline, struct edict_s *entity, int playermodelindex, vec3_t player_mins, vec3_t player_maxs);
+		cRet = MF_GetAmxAddr(amx, params[2]);
+		iparam1 = cRet[0];
+		cRet = MF_GetAmxAddr(amx, params[3]);
+		iparam2 = cRet[0];	
+
+		cRet = MF_GetAmxAddr(amx, params[4]);
+
+		if (*cRet == 0)
+			es = &g_es_glb;
+		else
+			es = reinterpret_cast<entity_state_t *>(*cRet);
+
+		cRet = MF_GetAmxAddr(amx, params[5]);
+		index = cRet[0];
+
+		cRet = MF_GetAmxAddr(amx, params[6]);
+		iparam3 = cRet[0];
+
+		CHECK_ENTITY(index);
+
+		cRet = MF_GetAmxAddr(amx, params[7]);
+		Vec1.x = amx_ctof(cRet[0]);
+		Vec1.y = amx_ctof(cRet[1]);
+		Vec1.z = amx_ctof(cRet[2]);
+
+		cRet = MF_GetAmxAddr(amx, params[8]);
+		Vec2.x = amx_ctof(cRet[0]);
+		Vec2.y = amx_ctof(cRet[1]);
+		Vec2.z = amx_ctof(cRet[2]);
+		
+		gpGamedllFuncs->dllapi_table->pfnCreateBaseline(iparam1, iparam2, es, INDEXENT2(index), iparam3, Vec1, Vec2);
 
 		return 1;
 	default:

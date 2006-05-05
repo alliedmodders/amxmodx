@@ -66,9 +66,9 @@ enum {
 	EngFunc_GetPhysicsInfoString,		// const char *)	(const edict_t *pClient);
 	EngFunc_PrecacheEvent,				// unsigned short)	(int type, const char*psz);
 	EngFunc_PlaybackEvent,				// void )			(int flags, const edict_t *pInvoker, unsigned short eventindex, float delay, float *origin, float *angles, float fparam1, float fparam2, int iparam1, int iparam2, int bparam1, int bparam2);
-	EngFunc_CheckVisibility,			// int )			(const edict_t *entity, unsigned char *pset);
-	EngFunc_GetCurrentPlayer,			// int )			( void );
-	EngFunc_CanSkipPlayer,				// int )			(const edict_t *player);
+	EngFunc_CheckVisibility,			// int  )			(const edict_t *entity, unsigned char *pset);
+	EngFunc_GetCurrentPlayer,			// int  )			( void );
+	EngFunc_CanSkipPlayer,				// int  )			(const edict_t *player);
 	EngFunc_SetGroupMask,				// void )			(int mask, int op);
 	EngFunc_GetClientListening,			// bool )			(int iReceiver, int iSender)
 	EngFunc_SetClientListening,			// bool )			(int iReceiver, int iSender, bool Listen)
@@ -77,7 +77,8 @@ enum {
 	EngFunc_WriteAngle,					// void )			(float flValue)
 	EngFunc_InfoKeyValue,				// char*)			(char *infobuffer, char *key);
 	EngFunc_SetKeyValue,				// void )			(char *infobuffer, char *key, char *value);
-	EngFunc_SetClientKeyValue			// void )			(int clientIndex, char *infobuffer, char *key, char *value);
+	EngFunc_SetClientKeyValue,			// void )			(int clientIndex, char *infobuffer, char *key, char *value);
+	EngFunc_CreateInstancedBaseline		// int  )			(int classname, struct entity_state_s *baseline);
 };
 
 #endif //_ENGFUNC_INCLUDE_H

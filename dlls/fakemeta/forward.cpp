@@ -610,6 +610,21 @@ SIMPLE_UINT_HOOK_EDICT(GetPlayerWONId);
 
 SIMPLE_INT_HOOK_STRING(IsMapValid);
 
+int CreateInstancedBaseline(int classname, struct entity_state_s *baseline)
+{
+	g_es_hook = baseline;
+	FM_ENG_HANDLE(FM_CreateInstancedBaseline, (Engine[FM_CreateInstancedBaseline].at(i), (cell)classname, (cell)baseline));
+	RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult);
+}
+
+int CreateInstancedBaseline_post(int classname, struct entity_state_s *baseline)
+{
+	g_es_hook = baseline;
+	origCellRet = META_RESULT_ORIG_RET(int);
+	FM_ENG_HANDLE_POST(FM_CreateInstancedBaseline, (EnginePost[FM_CreateInstancedBaseline].at(i), (cell)classname, (cell)baseline));
+	RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult);
+}
+
 /*
  * Beginning of Engine->Game DLL hooks
  */
@@ -732,6 +747,24 @@ void CmdStart_post(const edict_t *player, const struct usercmd_s *cmd, unsigned 
 {
 	g_uc_hook = const_cast<usercmd_t *>(cmd);
 	FM_ENG_HANDLE_POST(FM_CmdStart, (EnginePost[FM_CmdStart].at(i), (cell)ENTINDEX(player), (cell)cmd, (cell)random_seed));
+	RETURN_META(MRES_IGNORED);
+}
+
+void CreateBaseline(int player, int eindex, struct entity_state_s *baseline, struct edict_s *entity, int playermodelindex, vec3_t player_mins, vec3_t player_maxs)
+{
+	g_es_hook = baseline;
+	PREPARE_VECTOR(player_mins);
+	PREPARE_VECTOR(player_maxs);
+	FM_ENG_HANDLE(FM_CreateBaseline, (Engine[FM_CreateBaseline].at(i), (cell)player, (cell)eindex, (cell)baseline, (cell)ENTINDEX(entity), (cell)playermodelindex, p_player_mins, p_player_maxs));
+	RETURN_META(mswi(lastFmRes));
+}
+
+void CreateBaseline_post(int player, int eindex, struct entity_state_s *baseline, struct edict_s *entity, int playermodelindex, vec3_t player_mins, vec3_t player_maxs)
+{
+	g_es_hook = baseline;
+	PREPARE_VECTOR(player_mins);
+	PREPARE_VECTOR(player_maxs);
+	FM_ENG_HANDLE_POST(FM_CreateBaseline, (EnginePost[FM_CreateBaseline].at(i), (cell)player, (cell)eindex, (cell)baseline, (cell)ENTINDEX(entity), (cell)playermodelindex, p_player_mins, p_player_maxs));
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -1398,6 +1431,14 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	case FM_CmdEnd:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
 		DLLHOOK(CmdEnd);
+		break;
+	case FM_CreateInstancedBaseline:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
+		ENGHOOK(CreateInstancedBaseline);
+		break;
+	case FM_CreateBaseline:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_ARRAY, FP_ARRAY, FP_DONE);
+		DLLHOOK(CreateBaseline);
 		break;
 #if 0
 

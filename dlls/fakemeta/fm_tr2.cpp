@@ -170,7 +170,7 @@ static cell AMX_NATIVE_CALL get_tr2(AMX *amx, cell *params)
 		}
 	case TR_pHit:
 		{
-			if (gfm_tr->pHit == NULL || FNullEnt(gfm_tr->pHit))
+			if (tr->pHit == NULL || FNullEnt(tr->pHit))
 				return -1;
 			return ENTINDEX(tr->pHit);
 			break;

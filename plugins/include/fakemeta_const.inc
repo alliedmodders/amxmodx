@@ -93,9 +93,9 @@ enum {
 	EngFunc_GetPhysicsInfoString,		// const char *)	(const edict_t *pClient);
 	EngFunc_PrecacheEvent,				// unsigned short)	(int type, const char*psz);
 	EngFunc_PlaybackEvent,				// void )			(int flags, const edict_t *pInvoker, unsigned short eventindex, float delay, float *origin, float *angles, float fparam1, float fparam2, int iparam1, int iparam2, int bparam1, int bparam2);
-	EngFunc_CheckVisibility,			// int )			(const edict_t *entity, unsigned char *pset);
-	EngFunc_GetCurrentPlayer,			// int )			( void );
-	EngFunc_CanSkipPlayer,				// int )			(const edict_t *player);
+	EngFunc_CheckVisibility,			// int  )			(const edict_t *entity, unsigned char *pset);
+	EngFunc_GetCurrentPlayer,			// int  )			( void );
+	EngFunc_CanSkipPlayer,				// int  )			(const edict_t *player);
 	EngFunc_SetGroupMask,				// void )			(int mask, int op);
 	EngFunc_GetClientListening,			// bool )			(int iReceiver, int iSender)
 	EngFunc_SetClientListening,			// bool )			(int iReceiver, int iSender, bool Listen)
@@ -105,6 +105,7 @@ enum {
 	EngFunc_InfoKeyValue,				// char*)			(char *infobuffer, char *key);
 	EngFunc_SetKeyValue,				// void )			(char *infobuffer, char *key, char *value);
 	EngFunc_SetClientKeyValue,			// void )			(int clientIndex, char *infobuffer, char *key, char *value);
+	EngFunc_CreateInstBaseline			// int  )			(int classname, struct entity_state_s *baseline);
 };
 
 /* Used with dllfunc()
@@ -156,7 +157,7 @@ enum
 	DLLFunc_GetHullBounds,				// int  )			(int hullnumber, float *mins, float *maxs);
 
 	// Create baselines for certain "unplaced" items.
-	DLLFunc_CreateInstancedBaseline,	// void )			( void );
+	DLLFunc_CreateInstBaselines,		// void )			( void );
 	DLLFunc_pfnAllowLagCompensation,	// int  )			( void );
 	// I know this does not fit with DLLFUNC(), but I don't want another native just for it.
 	MetaFunc_CallGameEntity,			// bool	)			(plid_t plid, const char *entStr,entvars_t *pev);
@@ -167,7 +168,8 @@ enum
 	DLLFunc_AddToFullPack,				// int  )			(struct entity_state_s *state, int e, edict_t *ent, edict_t *host, int hostflags, int player, unsigned char *pSet);
 	// You can pass in 0 for global usercmd handle or another usercmd handle here
 	DLLFunc_CmdStart,					// void )			(const edict_t *player, const struct usercmd_s *cmd, unsigned int random_seed);
-	DLLFunc_CmdEnd						// void )			(const edict_t *player);
+	DLLFunc_CmdEnd,						// void )			(const edict_t *player);
+	DLLFunc_CreateBaseline				// void )			(int player, int eindex, struct entity_state_s *baseline, struct edict_s *entity, int playermodelindex, vec3_t player_mins, vec3_t player_maxs);
 };
 
 enum {
@@ -500,7 +502,7 @@ enum {
 	FM_RegisterEncoders,
 
 	// Create baselines for certain "unplaced" items.
-	FM_CreateInstancedBaselines,
+	FM_CreateInstBaselines,
 	
 	FM_AllowLagCompensation,
 	FM_AlertMessage,
@@ -516,186 +518,198 @@ enum {
 	FM_UpdateClientData,
 	FM_AddToFullPack,
 	FM_CmdStart,
-	FM_CmdEnd
+	FM_CmdEnd,
+	FM_CreateInstBaseline,
+	FM_CreateBaseline
 };
 
 enum TraceResult
 {
-	TR_AllSolid,
-	TR_StartSolid,
-	TR_InOpen,
-	TR_InWater,
-	TR_flFraction,
-	TR_vecEndPos,
-	TR_flPlaneDist,
-	TR_vecPlaneNormal,
-	TR_pHit,
-	TR_iHitgroup,
+	TR_AllSolid,		// int
+	TR_StartSolid,		// int
+	TR_InOpen,			// int
+	TR_InWater,			// int
+	TR_flFraction,		// float
+	TR_vecEndPos,		// float array[3]
+	TR_flPlaneDist,		// float
+	TR_vecPlaneNormal,	// float array[3]
+	TR_pHit,			// int (edict_t*)
+	TR_iHitgroup,		// int
 };
 
 enum KeyValueData
 {
-	KV_ClassName,
-	KV_KeyName,
-	KV_Value,
-	KV_fHandled
+	KV_ClassName,		// string
+	KV_KeyName,			// string
+	KV_Value,			// string
+	KV_fHandled			// int
 };
 
 enum ClientData
 {
-	CD_Origin,
-	CD_Velocity,
-	CD_ViewModel,
-	CD_PunchAngle,
-	CD_Flags,
-	CD_WaterLevel,
-	CD_WaterType,
-	CD_ViewOfs,
-	CD_Health,
-	CD_bInDuck,
-	CD_Weapons,
-	CD_flTimeStepSound,
-	CD_flDuckTime,
-	CD_flSwimTime,
-	CD_WaterJumpTime,
-	CD_MaxSpeed,
-	CD_FOV,
-	CD_WeaponAnim,
-	CD_ID,
-	CD_AmmoShells,
-	CD_AmmoNails,
-	CD_AmmoCells,
-	CD_AmmoRockets,
-	CD_flNextAttack,
-	CD_tfState,
-	CD_PushMsec,
-	CD_DeadFlag,
-	CD_PhysInfo,
-	CD_iUser1,
-	CD_iUser2,
-	CD_iUser3,
-	CD_iUser4,
-	CD_fUser1,
-	CD_fUser2,
-	CD_fUser3,
-	CD_fUser4,
-	CD_vUser1,
-	CD_vUser2,
-	CD_vUser3,
-	CD_vUser4
+	CD_Origin,			// float array[3]
+	CD_Velocity,		// float array[3]
+	CD_ViewModel,		// int
+	CD_PunchAngle,		// float array[3]
+	CD_Flags,			// int
+	CD_WaterLevel,		// int
+	CD_WaterType,		// int
+	CD_ViewOfs,			// float array[3]
+	CD_Health,			// float
+	CD_bInDuck,			// int
+	CD_Weapons,			// int
+	CD_flTimeStepSound,	// int
+	CD_flDuckTime,		// int
+	CD_flSwimTime,		// int
+	CD_WaterJumpTime,	// int
+	CD_MaxSpeed,		// float
+	CD_FOV,				// float
+	CD_WeaponAnim,		// int
+	CD_ID,				// int
+	CD_AmmoShells,		// int
+	CD_AmmoNails,		// int
+	CD_AmmoCells,		// int
+	CD_AmmoRockets,		// int
+	CD_flNextAttack,	// float
+	CD_tfState,			// int
+	CD_PushMsec,		// int
+	CD_DeadFlag,		// int
+	CD_PhysInfo,		// string[256]
+	CD_iUser1,			// int
+	CD_iUser2,			// int
+	CD_iUser3,			// int
+	CD_iUser4,			// int
+	CD_fUser1,			// float
+	CD_fUser2,			// float
+	CD_fUser3,			// float
+	CD_fUser4,			// float
+	CD_vUser1,			// float array[3]
+	CD_vUser2,			// float array[3]
+	CD_vUser3,			// float array[3]
+	CD_vUser4			// float array[3]
 };
 
 enum EntityState
 {
 	// Fields which are filled in by routines outside of delta compression
-	ES_EntityType,
+	ES_EntityType,		// int
 	// Index into cl_entities array for this entity
-	ES_Number,
-	ES_MsgTime,
+	ES_Number,			// int
+	ES_MsgTime,			// float
 	
 	// Message number last time the player/entity state was updated
-	ES_MessageNum,
+	ES_MessageNum,		// int
 	
 	// Fields which can be transitted and reconstructed over the network stream
-	ES_Origin,
-	ES_Angles,
+	ES_Origin,			// float array[3]
+	ES_Angles,			// float array[3]
 	
-	ES_ModelIndex,
-	ES_Sequence,
-	ES_Frame,
-	ES_ColorMap,
-	ES_Skin,
-	ES_Solid,
-	ES_Effects,
-	ES_Scale,
-	ES_eFlags,
+	ES_ModelIndex,		// int
+	ES_Sequence,		// int
+	ES_Frame,			// float
+	ES_ColorMap,		// int
+	ES_Skin,			// short
+	ES_Solid,			// short
+	ES_Effects,			// int 
+	ES_Scale,			// float
+	ES_eFlags,			// byte
 	
 	// Render information
-	ES_RenderMode,
-	ES_RenderAmt,
-	ES_RenderColor,
-	ES_RenderFx,
+	ES_RenderMode,		// int
+	ES_RenderAmt,		// int
+	ES_RenderColor,		// byte array[3], RGB value
+	ES_RenderFx,		// int
 	
-	ES_MoveType,
-	ES_AnimTime,
-	ES_FrameRate,
-	ES_Body,
-	ES_Controller,
-	ES_Blending,
-	ES_Velocity,
+	ES_MoveType,		// int
+	ES_AnimTime,		// float
+	ES_FrameRate,		// float
+	ES_Body,			// int
+	ES_Controller,		// byte array[4]
+	ES_Blending,		// byte array[4]
+	ES_Velocity,		// float array[3]
 	
 	// Send bbox down to client for use during prediction
-	ES_Mins,
-	ES_Maxs,
+	ES_Mins,			// float array[3]
+	ES_Maxs,			// float array[3]
 	
-	ES_AimEnt,
+	ES_AimEnt,			// int
 	// If owned by a player, the index of that player (for projectiles)
-	ES_Owner,
+	ES_Owner,			// int
 	
 	// Friction, for prediction
-	ES_Friction,
+	ES_Friction,		// float
 	// Gravity multiplier
-	ES_Gravity,
+	ES_Gravity,			// float
 	
 	// PLAYER SPECIFIC
-	ES_Team,
-	ES_PlayerClass,
-	ES_Health,
-	ES_Spectator,
-	ES_WeaponModel,
-	ES_GaitSequence,
+	ES_Team,			// int
+	ES_PlayerClass,		// int
+	ES_Health,			// int
+	ES_Spectator,		// bool
+	ES_WeaponModel,		// int
+	ES_GaitSequence,	// int
 	// If standing on conveyor, e.g.
-	ES_BaseVelocity,
+	ES_BaseVelocity,	// float array[3]
 	// Use the crouched hull, or the regular player hull
-	ES_UseHull,
+	ES_UseHull,			// int
 	// Latched buttons last time state updated
-	ES_OldButtons,
+	ES_OldButtons,		// int
 	// -1 = in air, else pmove entity number
-	ES_OnGround,
-	ES_iStepLeft,
+	ES_OnGround,		// int
+	ES_iStepLeft,		// int
 	// How fast we are falling
-	ES_flFallVelocity,
+	ES_flFallVelocity,	// float
 	
-	ES_FOV,
-	ES_WeaponAnim,
+	ES_FOV,				// float
+	ES_WeaponAnim,		// int	
 	
 	// Parametric movement overrides
-	ES_StartPos,
-	ES_EndPos,
-	ES_ImpactTime,
-	ES_StartTime,
+	ES_StartPos,		// float array[3]
+	ES_EndPos,			// float array[3]
+	ES_ImpactTime,		// float
+	ES_StartTime,		// float
 	
 	// For mods
-	ES_iUser1,
-	ES_iUser2,
-	ES_iUser3,
-	ES_iUser4,
-	ES_fUser1,
-	ES_fUser2,
-	ES_fUser3,
-	ES_fUser4,
-	ES_vUser1,
-	ES_vUser2,
-	ES_vUser3,
-	ES_vUser4
+	ES_iUser1,			// int
+	ES_iUser2,			// int
+	ES_iUser3,			// int
+	ES_iUser4,			// int
+	ES_fUser1,			// float
+	ES_fUser2,			// float
+	ES_fUser3,			// float
+	ES_fUser4,			// float
+	ES_vUser1,			// float array[3]
+	ES_vUser2,			// float array[3]
+	ES_vUser3,			// float array[3]
+	ES_vUser4			// float array[3]
 };
 
 enum UserCmd
 {
-	UC_LerpMsec,		// Interpolation time on client
-	UC_Msec,			// Duration in ms of command
-	UC_ViewAngles,		// Command view angles
+	// Interpolation time on client
+	UC_LerpMsec,		// short
+	// Duration in ms of command
+	UC_Msec,			// byte
+	// Command view angles
+	UC_ViewAngles,		// float array[3]
 	
 	// Intended velocities
-	UC_ForwardMove,		// Forward velocity
-	UC_SideMove,		// Sideways velocity
-	UC_UpMove,			// Upward velocity
-	UC_LightLevel,		// Light level at spot where we are standing
-	UC_Buttons,			// Attack buttons
-	UC_Impulse,			// Impulse command issued
-	UC_WeaponSelect,	// Current weapon id
+	// Forward velocity
+	UC_ForwardMove,		// float
+	// Sideways velocity
+	UC_SideMove,		// float
+	// Upward velocity
+	UC_UpMove,			// float
+	// Light level at spot where we are standing
+	UC_LightLevel,		// byte
+	// Attack buttons
+	UC_Buttons,			// unsigned short
+	// Impulse command issued
+	UC_Impulse,			// byte
+	// Current weapon id
+	UC_WeaponSelect,	// byte
 	
 	// Experimental player impact stuff
-	UC_ImpactIndex,
-	UC_ImpactPosition
+	UC_ImpactIndex,		// int
+	UC_ImpactPosition	// float array[3]
 };

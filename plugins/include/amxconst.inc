@@ -316,3 +316,8 @@ enum {
 #define MPROP_NOCOLORS	8	//NUM - sets whether colors are not auto (0=default)
 #define MPROP_PADMENU	9	//NUM - sets how the ending portions of a menu are padded
 				//i.e. 2 items, 7 per page, with endings at slots 5/6/7.
+
+#define SND_SPAWNING		(1<<8)		// we're spawing, used in some cases for ambients 
+#define SND_STOP		(1<<5)		// stop sound
+#define SND_CHANGE_VOL		(1<<6)		// change sound vol
+#define SND_CHANGE_PITCH	(1<<7)		// change sound pitch

@@ -5,7 +5,7 @@
 
 // Module info
 #define MODULE_NAME "Sockets"
-#define MODULE_VERSION "1.71"
+#define MODULE_VERSION "1.72"
 #define MODULE_AUTHOR "HLSW Dev Team"
 #define MODULE_URL "http://www.hlsw.net/"
 #define MODULE_LOGTAG "SOCKET"

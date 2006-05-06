@@ -56,6 +56,8 @@ CForward::CForward(const char *name, ForwardExecType et, int numParams, const Fo
 			m_Funcs.push_back(tmp);
 		}
 	}
+
+	m_Name.assign(name);
 }
 
 cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
@@ -210,12 +212,16 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 
 void CSPForward::Set(int func, AMX *amx, int numParams, const ForwardParam *paramTypes)
 {
+	char name[sNAMEMAX];
 	m_Func = func;
 	m_Amx = amx;
 	m_NumParams = numParams;
 	memcpy((void *)m_ParamTypes, paramTypes, numParams * sizeof(ForwardParam));
 	m_HasFunc = true;
 	isFree = false;
+	name[0] = '\0';
+	amx_GetPublic(amx, func, name);
+	m_Name.assign(name);
 }
 
 void CSPForward::Set(const char *funcName, AMX *amx, int numParams, const ForwardParam *paramTypes)
@@ -225,6 +231,7 @@ void CSPForward::Set(const char *funcName, AMX *amx, int numParams, const Forwar
 	memcpy((void *)m_ParamTypes, paramTypes, numParams * sizeof(ForwardParam));
 	m_HasFunc = (amx_FindPublic(amx, funcName, &m_Func) == AMX_ERR_NONE);
 	isFree = false;
+	m_Name.assign(funcName);
 }
 
 cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
@@ -443,6 +450,11 @@ cell CForwardMngr::executeForwards(int id, cell *params)
 	m_TmpArraysNum = 0;
 	
 	return retVal;
+}
+
+const char *CForwardMngr::getFuncName(int id) const
+{
+	return (id & 1) ? m_SPForwards[id >> 1]->getFuncName() : m_Forwards[id >> 1]->getFuncName();
 }
 
 int CForwardMngr::getParamsNum(int id) const

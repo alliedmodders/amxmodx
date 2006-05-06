@@ -93,6 +93,7 @@ class CForward
 	const char *m_FuncName;
 	ForwardExecType m_ExecType;
 	int m_NumParams;
+	String m_Name;
 	
 	struct AMXForward
 	{
@@ -120,6 +121,11 @@ public:
 	{
 		return m_Funcs.size();
 	}
+
+	const char *getFuncName() const
+	{
+		return m_Name.c_str();
+	}
 	
 	ForwardParam getParamType(int paramId) const
 	{
@@ -141,6 +147,7 @@ class CSPForward
 	
 	int m_Func;
 	bool m_HasFunc;
+	String m_Name;
 
 public:
 	bool isFree;
@@ -159,6 +166,11 @@ public:
 	int getFuncsNum() const
 	{
 		return (m_HasFunc) ? 1 : 0;
+	}
+
+	const char *getFuncName() const
+	{
+		return m_Name.c_str();
 	}
 	
 	ForwardParam getParamType(int paramId) const
@@ -207,6 +219,7 @@ public:
 	bool isSPForward(int id) const;			// check whether forward is single plugin
 	int getParamsNum(int id) const;			// get num of params of a forward
 	int getFuncsNum(int id) const;			// get num of found functions of a forward
+	const char *getFuncName(int id) const;	// get the function name
 	
 	ForwardParam getParamType(int id, int paramId) const;
 	cell prepareArray(void *ptr, unsigned int size, ForwardArrayElemType type, bool copyBack);		// prepare array

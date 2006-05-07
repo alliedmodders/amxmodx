@@ -61,9 +61,7 @@ extern "C" int amxx_DynaFunc(AMX *amx, cell *params);
 extern "C" int amxx_DynaCodesize();
 
 AMX_NATIVE_INFO *BuildNativeTable();
-void AddPluginLibrary(const char *name);
 void ClearPluginLibraries();
-bool LibraryExists(const char *name);
 
 //I couldn't resist :)
 extern AMX_NATIVE_INFO g_NativeNatives[];

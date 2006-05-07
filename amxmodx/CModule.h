@@ -59,6 +59,8 @@ struct amxx_module_info_s
 	const char *version;
 	int reload;				// reload on mapchange when nonzero
 	const char *logtag;		//added in version 2
+	const char *library;	// added in version 4
+	const char *libclass;	// added in version 4
 };
 
 #define AMXX_OK					0			/* no error */
@@ -66,7 +68,7 @@ struct amxx_module_info_s
 #define AMXX_PARAM				2			/* Invalid parameter */
 #define AMXX_FUNC_NOT_PRESENT	3			/* Function not present */
 
-#define AMXX_INTERFACE_VERSION	3
+#define AMXX_INTERFACE_VERSION	4
 
 class CModule 
 {
@@ -110,6 +112,8 @@ public:
 	inline bool IsMetamod() { return m_Metamod; }
 	
 	void CallPluginsLoaded();
+	void CallPluginsUnloaded();
+	void CallPluginsUnloading();
 
 	CList<AMX_NATIVE_INFO*> m_Natives;
 };

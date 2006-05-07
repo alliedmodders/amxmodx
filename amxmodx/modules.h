@@ -72,6 +72,7 @@ typedef enum
 }  PlayerProp;
 
 int CheckModules(AMX *amx, char error[128]);
+bool LoadModule(const char *shortname, PLUG_LOADTIME now);
 const char *StrCaseStr(const char *as, const char *bs);
 
 class Debugger;
@@ -79,7 +80,6 @@ Debugger *DisableDebugHandler(AMX *amx);
 void EnableDebugHandler(AMX *amx, Debugger *pd);
 
 bool DirExists(const char *dir);
-
 const char* GetFileName(AMX *amx);
 
 #endif // __MODULES_H__

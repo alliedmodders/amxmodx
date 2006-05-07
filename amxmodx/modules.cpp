@@ -46,6 +46,7 @@
 #include "debugger.h"
 #include "optimizer.h"
 #include "binlog.h"
+#include "libraries.h"
 
 CList<CModule, const char*> g_modules;
 CList<CScript, AMX*> g_loadedscripts;
@@ -427,68 +428,61 @@ const char *StrCaseStr(const char *as, const char *bs)
 int CheckModules(AMX *amx, char error[128])
 {
 	int numLibraries = amx_GetLibraries(amx);
-	char buffer[32];
-	
-	bool found = false;
-	bool isdbi = false;
-	
-	CList<CModule, const char *>::iterator a;
-	
-	const amxx_module_info_s *info;
+	char buffer[64];
 	
 	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
 
 	for (int i = 0; i < numLibraries; i++)
 	{
 		amx_GetLibrary(amx, i, buffer, sizeof(buffer) - 1);
-		found = false;
 		
 		if (stricmp(buffer, "float") == 0)
 			continue;
-		
-		isdbi = false;
-		
-		if (stricmp(buffer, "dbi") == 0)
-			isdbi = true;
-		
-		for (a = g_modules.begin(); a; ++a)
+
+		LibDecoder dcd;
+		LibType expect;
+		bool found = false;
+		const char *search = NULL;
+
+		DecodeLibCmdString(buffer, dcd);
+
+		switch (dcd.cmd)
 		{
-			if ((*a).getStatusValue() == MODULE_LOADED)
-			{
-				info = (*a).getInfoNew();
-				
-				if (info)
-				{
-					if (isdbi)
-					{
-						if (info->logtag && (StrCaseStr(info->logtag, "sql") || StrCaseStr(info->logtag, "dbi")))
-						{
-							found = true;
-							break;
-						}
-					} else {
-						if (info->logtag && (stricmp(info->logtag, buffer) == 0))
-						{
-							found = true;
-							break;
-						}
-					}
-				}
-			}
+		case LibCmd_ReqLib:
+			search = dcd.param1;
+			expect = LibType_Library;
+			break;
+		case LibCmd_ExpectLib:
+			search = dcd.param2;
+			expect = LibType_Library;
+			break;
+		case LibCmd_ReqClass:
+			search = dcd.param1;
+			expect = LibType_Class;
+			break;
+		case LibCmd_ExpectClass:
+			search = dcd.param2;
+			expect = LibType_Class;
+			break;
 		}
-		
-		if (!found)
-			found = LibraryExists(buffer);
+
+		if (!search)
+			continue;
+
+		found = FindLibrary(search, expect);
 		
 		if (!found)
 		{
-			if (pHandler->HandleModule(buffer))
+			if (pHandler->HandleModule(search))
 				found = true;
 		}
 		
 		if (!found)
 		{
-			sprintf(error, "Module \"%s\" required for plugin. Check modules.ini.", buffer);
+			const char *type = "Module/Library";
+			if (expect == LibType_Class)
+				type = "Module/Library Class";
+			sprintf(error, "%s \"%s\" required for plugin. Check modules.ini.", type, search);
 			return 0;
 		}
 	}
@@ -735,130 +729,202 @@ char* build_pathname_addons(char *fmt, ...)
 	return string;
 }
 
-bool validFile(const char* file)
-{
-	const char* a = 0;
-	
-	while (*file)
-		if (*file++ == '.')
-			a = file;
-#ifndef __linux__
-	return (a && !strcmp(a, "dll"));
-#else
-	return (a && !strcmp(a, "so"));
+#if defined WIN32
+#define SEPCHAR '\\'
+#elif defined __linux__
+#define SEPCHAR '/'
 #endif
+
+bool ConvertModuleName(const char *pathString, String &path)
+{
+	String local;
+
+	local.assign(pathString);
+	char *tmpname = const_cast<char *>(local.c_str());
+	char *orig_path = tmpname;
+
+	path.clear();
+
+	size_t len = local.size();
+	if (!len)
+		return false;
+
+	/* run to filename instead of dir */
+	char *ptr = tmpname;
+	ptr = tmpname + len - 1;
+	while (ptr >= tmpname && *ptr != SEPCHAR)
+		ptr--;
+	if (ptr >= tmpname)
+	{
+		*ptr++ = '\0';
+		tmpname = ptr;
+	}
+
+	bool foundAmxx = false;
+	int iDigit = '3';
+	ptr = tmpname;
+	while (*ptr)
+	{
+		while (*ptr && *ptr != '_')
+			ptr++;
+		if (strncmp(ptr, "_amxx", 5) == 0)
+		{
+			char *p = ptr + 5;
+			if (strncmp(p, ".dll", 4) == 0)
+			{
+				foundAmxx = true;
+				break;
+			} else if (p[0] == '_') {
+				p++;
+				if (strncmp(p, "amd64.so", 8) == 0)
+				{
+					foundAmxx = true;
+					break;
+				} else if (p[0] == 'i') {
+					p++;
+					if (isdigit(p[0]) && p[1] == '8' && p[2] == '6')
+					{
+						iDigit = p[0];
+						foundAmxx = true;
+						break;
+					}
+				}
+			} else if (p[0] == '\0') {
+				foundAmxx = true;
+				break;
+			}
+		} else {
+			while (*ptr && *ptr == '_')
+				ptr++;
+		}
+	}
+
+	if (!foundAmxx)
+	{
+		ptr = tmpname + strlen(tmpname); - 1;
+		while (ptr >= tmpname && *ptr != '.')
+			ptr--;
+		if (ptr > tmpname && *ptr == '.')
+		{
+			*ptr = '\0';
+		}
+	} else {
+		*ptr = '\0';
+	}
+
+	path.assign(orig_path);
+	path.append(SEPCHAR);
+	path.append(tmpname);
+	path.append("_amxx");
+#if defined __linux__
+ #if defined AMD64 || PAWN_CELL_SIZE==64
+	path.append("amd64");
+ #else
+	path.append("i");
+	path.append(iDigit);
+	path.append("86");
+ #endif
+#endif
+#if defined WIN32
+	path.append(".dll");
+#elif defined __linux__
+	path.append(".so");
+#endif
+
+	FILE *fp = fopen(path.c_str(), "rb");
+	if (!fp)
+		return false;
+	fclose(fp);
+
+	return true;
 }
 
-void ConvertModuleName(const char *pathString, String &path)
+bool LoadModule(const char *shortname, PLUG_LOADTIME now)
 {
-#if PAWN_CELL_SIZE==64
-	char *ptr = strstr(pathString, "i386");
-	
-	if (ptr)
-	{
-		//attempt to fix the binary name
-		*ptr = 0;
-		path.assign(pathString);
-		path.append("amd64.so");
-	} else {
-		ptr = strstr(pathString, ".dll");
-		
-		if (ptr)
-		{
-			*ptr = 0;
-			path.assign(pathString);
-			path.append("_amd64.so");
-		} else {
-			ptr = strstr(pathString, ".so");
-			
-			if (ptr)
-			{
-				path.assign(pathString);
-			} else {
-				//no extension at all
-				path.assign(pathString);
-				path.append("_amd64.so");
-			}
-		}
-	}
-#else
+	char pathString[512];
+	String path;
 
-#ifdef __linux__
-	char *ptr = strstr(pathString, "amd64");
-	
-	if (ptr) 
+	build_pathname_r(
+		pathString, 
+		sizeof(pathString)-1, 
+		"%s/%s",
+		get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"),
+		shortname);
+
+	if (!ConvertModuleName(pathString, path))
+		return false;
+
+	CList<CModule, const char *>::iterator a = g_modules.find(path.c_str());
+
+	if (a)
+		return false;
+
+	CModule* cc = new CModule(path.c_str());
+
+	cc->queryModule();
+
+	switch (cc->getStatusValue())
 	{
-		//attempt to fix the binary name
-		*ptr = 0;
-		path.assign(pathString);
-		path.append("i386.so");
-	} else {
-		ptr = strstr(pathString, ".dll");
-		
-		if (ptr)
-		{
-			*ptr = 0;
-			path.assign(pathString);
-			path.append("_i386.so");
-		} else {
-			//check to see if this file even has an extension
-			ptr = strstr(pathString, ".so");
-			
-			if (ptr)
-			{
-				path.assign(pathString);
-			} else {
-				path.assign(pathString);
-				path.append("_i386.so");
-			}
-		}
+	case MODULE_BADLOAD:
+		report_error(1, "[AMXX] Module is not a valid library (file \"%s\")", path.c_str());
+		break;
+	case MODULE_NOINFO:
+		report_error(1, "[AMXX] Couldn't find info about module (file \"%s\")", path.c_str());
+		break;
+	case MODULE_NOQUERY:
+		report_error(1, "[AMXX] Couldn't find \"AMX_Query\" or \"AMXX_Query\" (file \"%s\")", path.c_str());
+		break;
+	case MODULE_NOATTACH:
+		report_error(1, "[AMXX] Couldn't find \"%s\" (file \"%s\")", cc->isAmxx() ? "AMXX_Attach" : "AMX_Attach", path.c_str());
+		break;
+	case MODULE_OLD:
+		report_error(1, "[AMXX] Module has a different interface version (file \"%s\")", path.c_str());
+		break;
+	case MODULE_NEWER:
+		report_error(1, "[AMXX] Module has a newer interface version (file \"%s\"). Please download a new amxmodx.", path.c_str());
+		break;
+	case MODULE_INTERROR:
+		report_error(1, "[AMXX] Internal error during module load (file \"%s\")", path.c_str());
+		break;
+	case MODULE_NOT64BIT:
+		report_error(1, "[AMXX] Module \"%s\" is not 64 bit compatible.", path.c_str());
+		break;
 	}
-#else
-	char *ptr = const_cast<char*>(strstr(pathString, ".dll"));
-	
-	if (ptr)
+
+	g_modules.put(cc);
+
+	if (cc->IsMetamod())
 	{
-		path.assign(pathString);
-	} else {
-		//prevent this from loading .so too
-		ptr = const_cast<char*>(strstr(pathString, ".so"));
-		
-		if (ptr)
-		{
-			int i = 0, len = strlen(pathString), c = -1;
-			
-			for (i = len - 1; i >= 0; i--)
-			{
-				//cut off at first _
-				if (pathString[i] == '_')
-				{
-					//make sure this is a valid _
-					if (i == len - 1 || strncmp(&(pathString[i + 1]), "amxx", 4) == 0)
-						break;
-					
-					c = i;
-					break;
-				}
-			}
-			*ptr = 0;
-			
-			if (c == -1)
-			{
-				path.assign(pathString);
-				path.append(".dll");
-			} else {
-				ptr = (char *)&(pathString[c]);
-				*ptr = 0;
-				path.assign(pathString);
-				path.append(".dll");
-			}
-		} else {
-			path.assign(pathString);
-			path.append(".dll");
-		}
+		char *mmpathname = build_pathname_addons(
+							"%s/%s", 
+							get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"), 
+							shortname);
+		ConvertModuleName(mmpathname, path);
+		cc->attachMetamod(path.c_str(), now);
 	}
-#endif //__linux__
-#endif //PAWN_CELL_SIZE==64
+
+	bool retVal = cc->attachModule();
+
+	if (cc->isAmxx() && !retVal)
+	{
+		switch (cc->getStatusValue())
+		{
+		case MODULE_FUNCNOTPRESENT:
+			report_error(1, "[AMXX] Module requested a not exisitng function (file \"%s\")%s%s%s", cc->getFilename(), cc->getMissingFunc() ? " (func \"" : "", 
+				cc->getMissingFunc() ? cc->getMissingFunc() : "", cc->getMissingFunc() ? "\")" : "");
+			break;
+		case MODULE_INTERROR:
+			report_error(1, "[AMXX] Internal error during module load (file \"%s\")", cc->getFilename());
+			break;
+		case MODULE_BADLOAD:
+			report_error(1, "[AMXX] Module is not a valid library (file \"%s\")", cc->getFilename());
+			break;
+		}
+
+		return false;
+	}
+
+	return true;
 }
 
 int loadModules(const char* filename, PLUG_LOADTIME now)
@@ -872,7 +938,6 @@ int loadModules(const char* filename, PLUG_LOADTIME now)
 	}
 
 	char moduleName[256];
-	char pathString[512];
 	String line;
 	int loaded = 0;
 
@@ -892,91 +957,8 @@ int loadModules(const char* filename, PLUG_LOADTIME now)
 		if (moduleName[0] == ';')
 			continue;
 
-		char* pathname = build_pathname("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"), moduleName);
-		strcpy(pathString, pathname);
-
-		path.assign("");
-
-		ConvertModuleName(pathString, path);
-
-		if (!validFile(path.c_str()))
-			continue;
-
-		CList<CModule, const char *>::iterator a = g_modules.find(path.c_str());
-
-		if (a)
-			continue; // already loaded
-
-		CModule* cc = new CModule(path.c_str());
-
-		if (cc == 0)
-		{
-			fclose(fp);
-			return loaded;
-		}
-
-		cc->queryModule();
-
-		switch (cc->getStatusValue())
-		{
-			case MODULE_BADLOAD:
-				report_error(1, "[AMXX] Module is not a valid library (file \"%s\")", path.c_str());
-				break;
-			case MODULE_NOINFO:
-				report_error(1, "[AMXX] Couldn't find info. about module (file \"%s\")", path.c_str());
-				break;
-			case MODULE_NOQUERY:
-				report_error(1, "[AMXX] Couldn't find \"AMX_Query\" or \"AMXX_Query\" (file \"%s\")", path.c_str());
-				break;
-			case MODULE_NOATTACH:
-				report_error(1, "[AMXX] Couldn't find \"%s\" (file \"%s\")", cc->isAmxx() ? "AMXX_Attach" : "AMX_Attach", path.c_str());
-				break;
-			case MODULE_OLD:
-				report_error(1, "[AMXX] Module has a different interface version (file \"%s\")", path.c_str());
-				break;
-			case MODULE_NEWER:
-				report_error(1, "[AMXX] Module has a newer interface version (file \"%s\"). Please download a new amxmodx.", path.c_str());
-				break;
-			case MODULE_INTERROR:
-				report_error(1, "[AMXX] Internal error during module load (file \"%s\")", path.c_str());
-				break;
-			case MODULE_NOT64BIT:
-				report_error(1, "[AMXX] Module \"%s\" is not 64 bit compatible.", path.c_str());
-				break;
-			default:
-				++loaded; 
-		}
-
-		g_modules.put(cc);
-
-		if (cc->IsMetamod())
-		{
-			char* mmpathname = build_pathname_addons("%s/%s", get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"), line.c_str());
-			
-			ConvertModuleName(mmpathname, path);
-			cc->attachMetamod(path.c_str(), now);
-		}
-
-		bool retVal = cc->attachModule();
-		
-		if (cc->isAmxx() && !retVal)
-		{
-			switch (cc->getStatusValue())
-			{
-				case MODULE_FUNCNOTPRESENT:
-					report_error(1, "[AMXX] Module requested a not exisitng function (file \"%s\")%s%s%s", cc->getFilename(), cc->getMissingFunc() ? " (func \"" : "", 
-							cc->getMissingFunc() ? cc->getMissingFunc() : "", cc->getMissingFunc() ? "\")" : "");
-					break;
-				case MODULE_INTERROR:
-					report_error(1, "[AMXX] Internal error during module load (file \"%s\")", cc->getFilename());
-					break;
-				case MODULE_BADLOAD:
-					report_error(1, "[AMXX] Module is not a valid library (file \"%s\")", cc->getFilename());
-					break;
-				default:
-					break;
-			}
-		}
+		if (LoadModule(moduleName, now))
+			loaded++;
 	}
 
 	fclose(fp);
@@ -1076,6 +1058,29 @@ void modules_callPluginsLoaded()
 	while (iter)
 	{
 		(*iter).CallPluginsLoaded();
+		++iter;
+	}
+}
+
+//same for unloaded
+void modules_callPluginsUnloaded()
+{
+	CList<CModule, const char *>::iterator iter = g_modules.begin();
+
+	while (iter)
+	{
+		(*iter).CallPluginsUnloaded();
+		++iter;
+	}
+}
+
+void modules_callPluginsUnloading()
+{
+	CList<CModule, const char *>::iterator iter = g_modules.begin();
+
+	while (iter)
+	{
+		(*iter).CallPluginsUnloading();
 		++iter;
 	}
 }
@@ -1493,6 +1498,21 @@ void MNF_MergeDefinitionFile(const char *file)
 	g_langMngr.MergeDefinitionFile(file);
 }
 
+int MNF_FindLibrary(const char *name, LibType type)
+{
+	return FindLibrary(name, type) ? 1 : 0;
+}
+
+size_t MFN_AddLibraries(const char *name, LibType type, void *parent)
+{
+	return AddLibrariesFromString(name, type, LibSource_Module, parent) ? 1 : 0;
+}
+
+size_t MNF_RemoveLibraries(void *parent)
+{
+	return RemoveLibraries(parent);
+}
+
 edict_t* MNF_GetPlayerEdict(int id)
 {
 	if (id < 1 || id > gpGlobals->maxClients)
@@ -1731,6 +1751,10 @@ void Module_CacheFunctions()
 
 	REGISTER_FUNC("RegAuthFunc", MNF_RegAuthorizeFunc);
 	REGISTER_FUNC("UnregAuthFunc", MNF_UnregAuthorizeFunc);
+
+	REGISTER_FUNC("FindLibrary", MNF_FindLibrary);
+	REGISTER_FUNC("AddLibraries", MFN_AddLibraries);
+	REGISTER_FUNC("RemoveLibraries", MNF_RemoveLibraries);
 
 #ifdef MEMORY_TEST
 	REGISTER_FUNC("Allocator", m_allocator)

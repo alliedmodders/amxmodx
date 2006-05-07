@@ -34,6 +34,7 @@
 #include "natives.h"
 #include "debugger.h"
 #include "binlog.h"
+#include "libraries.h"
 
 static cell AMX_NATIVE_CALL get_xvar_id(AMX *amx, cell *params)
 {
@@ -3716,43 +3717,18 @@ static cell AMX_NATIVE_CALL module_exists(AMX *amx, cell *params)
 	int len;
 	char *module = get_amxstring(amx, params[1], 0, len);
 
-	CList<CModule, const char *>::iterator a;
+	if (!FindLibrary(module, LibType_Library))
+		return FindLibrary(module, LibType_Class);
 
-	bool isdbi = false, found = false;
-	const amxx_module_info_s *info;
-	
-	if (stricmp(module, "dbi") == 0)
-		isdbi = true;
+	return true;
+}
 
-	for (a = g_modules.begin(); a; ++a)
-	{
-		if ((*a).getStatusValue() == MODULE_LOADED)
-		{
-			info = (*a).getInfoNew();
-			if (info)
-			{
-				if (isdbi)
-				{
-					if (info->logtag && (StrCaseStr(info->logtag, "sql") || StrCaseStr(info->logtag, "dbi")))
-					{
-						found = true;
-						break;
-					}
-				} else {
-					if (info->logtag && (stricmp(info->logtag, module) == 0))
-					{
-						found = true;
-						break;
-					}
-				}
-			}
-		}
-	}
-	
-	if (!found)
-		found = LibraryExists(module);
+static cell AMX_NATIVE_CALL LibraryExists(AMX *amx, cell *params)
+{
+	int len;
+	char *library = get_amxstring(amx, params[1], 0, len);
 
-	return (found ? 1 : 0);
+	return FindLibrary(library, static_cast<LibType>(params[2]));
 }
 
 static cell AMX_NATIVE_CALL set_fail_state(AMX *amx, cell *params)
@@ -4242,5 +4218,6 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"ExecuteForward",			ExecuteForward},
 	{"PrepareArray",			PrepareArray},
 	{"ShowSyncHudMsg",			ShowSyncHudMsg},
+	{"LibraryExists",			LibraryExists},
 	{NULL,						NULL}
 };

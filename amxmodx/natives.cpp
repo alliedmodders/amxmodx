@@ -32,6 +32,7 @@
 #include "sh_stack.h"
 #include "natives.h"
 #include "debugger.h"
+#include "libraries.h"
 
 #ifdef __linux__
 #include <malloc.h>
@@ -47,7 +48,6 @@
 CStack<int> g_ErrorStk;
 CVector<regnative *> g_RegNatives;
 CStack<regnative *> g_NativeStack;
-CVector<String> g_Libraries;
 static char g_errorStr[512] = {0};
 bool g_Initialized = false;
 
@@ -343,7 +343,7 @@ static cell AMX_NATIVE_CALL register_library(AMX *amx, cell *params)
 	int len;
 	char *lib = get_amxstring(amx, params[1], 0, len);
 
-	AddPluginLibrary(lib);
+	AddLibrary(lib, LibType_Library, LibSource_Plugin, g_plugins.findPluginFast(amx));
 
 	return 1;
 }
@@ -396,27 +396,9 @@ static cell AMX_NATIVE_CALL register_native(AMX *amx, cell *params)
 	return 1;
 }
 
-bool LibraryExists(const char *name)
-{
-	for (size_t i=0; i<g_Libraries.size(); i++)
-	{
-		if (stricmp(g_Libraries[i].c_str(), name)==0)
-			return true;
-	}
-
-	return false;
-}
-
-void AddPluginLibrary(const char *name)
-{
-	String f(name);
-	g_Libraries.push_back(f);
-}
-
 void ClearPluginLibraries()
 {
-	g_Libraries.clear();
-
+	ClearLibraries(LibSource_Plugin);
 	for (size_t i=0; i<g_RegNatives.size(); i++)
 	{
 		delete [] g_RegNatives[i]->pfn;

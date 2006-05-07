@@ -263,6 +263,8 @@ enum CountModulesMode
 
 int countModules(CountModulesMode mode);
 void modules_callPluginsLoaded();
+void modules_callPluginsUnloaded();
+void modules_callPluginsUnloading();
 
 cell* get_amxaddr(AMX *amx, cell amx_addr);
 char* build_pathname(char *fmt, ...);

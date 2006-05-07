@@ -30,6 +30,7 @@
 */
 
 #include "amxmodx.h"
+#include "libraries.h"
 
 #ifndef FAR
 	#define FAR
@@ -41,6 +42,8 @@ typedef int (FAR *QUERYMOD_NEW)(int * /*ifvers*/, amxx_module_info_s * /*modInfo
 typedef int (FAR *ATTACHMOD_NEW)(PFN_REQ_FNPTR /*reqFnptrFunc*/);
 typedef int (FAR *DETACHMOD_NEW)(void);
 typedef void (FAR *PLUGINSLOADED_NEW)(void);
+typedef void (*PLUGINSUNLOADED_NEW)(void);
+typedef void (*PLUGINSUNLOADING_NEW)(void);
 
 // *****************************************************
 // class CModule
@@ -126,7 +129,7 @@ bool CModule::attachModule()
 		{
 			case AMXX_OK:
 				m_Status = MODULE_LOADED;
-				return true;
+				break;
 			case AMXX_PARAM:
 				AMXXLOG_Log("[AMXX] Internal Error: Module \"%s\" (version \"%s\") retured \"Invalid parameter\" from Attach func.", m_Filename.c_str(), getVersion());
 				m_Status = MODULE_INTERROR;
@@ -142,6 +145,13 @@ bool CModule::attachModule()
 		}
 	} else {
 		m_Status = MODULE_BADLOAD;
+	}
+
+	if (m_Status == MODULE_LOADED)
+	{
+		AddLibrariesFromString(m_InfoNew.library, LibType_Library, LibSource_Module, this);
+		AddLibrariesFromString(m_InfoNew.libclass, LibType_Class, LibSource_Module, this);
+		return true;
 	}
 
 	return false;
@@ -184,10 +194,36 @@ bool CModule::queryModule()
 				return false;
 			case AMXX_IFVERS:
 				if (ifVers < AMXX_INTERFACE_VERSION)
-					m_Status = MODULE_OLD;
-				else
+				{
+					//backwards compat for new defs
+					if (ifVers == 3)
+					{
+						g_ModuleCallReason = ModuleCall_Query;
+						g_CurrentlyCalledModule = this;
+						retVal = (*queryFunc_New)(&ifVers, &m_InfoNew);
+                        g_CurrentlyCalledModule = NULL;
+						g_ModuleCallReason = ModuleCall_NotCalled;
+						if (retVal == AMXX_OK)
+						{
+							m_InfoNew.library = m_InfoNew.logtag;
+							if (StrCaseStr(m_InfoNew.library, "sql") 
+								|| StrCaseStr(m_InfoNew.library, "dbi"))
+							{
+								m_InfoNew.libclass = "DBI";
+							} else {
+								m_InfoNew.libclass = "";
+							}
+							break;
+						}
+						return false;
+					} else {
+						m_Status = MODULE_OLD;
+						return false;
+					}
+				} else {
 					m_Status = MODULE_NEWER;
-				return false;
+					return false;
+				}
 			case AMXX_OK:
 				break;
 			default:
@@ -217,6 +253,8 @@ bool CModule::detachModule()
 	if (m_Status != MODULE_LOADED)
 		return false;
 
+	RemoveLibraries(this);
+
 	if (m_Amxx)
 	{
 		DETACHMOD_NEW detachFunc_New = (DETACHMOD_NEW)DLPROC(m_Handle, "AMXX_Detach");
@@ -242,6 +280,38 @@ bool CModule::detachModule()
 	clear();
 	
 	return true;
+}
+
+void CModule::CallPluginsUnloaded()
+{
+	if (m_Status != MODULE_LOADED)
+		return;
+
+	if (!m_Handle)
+		return;
+
+	PLUGINSUNLOADED_NEW func = (PLUGINSUNLOADED_NEW)DLPROC(m_Handle, "AMXX_PluginsUnloaded");
+
+	if (!func)
+		return;
+
+	func();
+}
+
+void CModule::CallPluginsUnloading()
+{
+	if (m_Status != MODULE_LOADED)
+		return;
+
+	if (!m_Handle)
+		return;
+
+	PLUGINSUNLOADING_NEW func = (PLUGINSUNLOADING_NEW)DLPROC(m_Handle, "AMXX_PluginsUnloading");
+
+	if (!func)
+		return;
+
+	func();
 }
 
 void CModule::CallPluginsLoaded()

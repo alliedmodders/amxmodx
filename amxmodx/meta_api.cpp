@@ -506,6 +506,7 @@ void C_ServerDeactivate_Post()
 	g_xvars.clear();
 	g_plugins.clear();
 	ClearPluginLibraries();
+	modules_callPluginsUnloaded();
 	
 	for (unsigned int i=0; i<g_hudsync.size(); i++)
 		delete [] g_hudsync[i];
@@ -1295,11 +1296,16 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)
 	g_cvars.clear();
 	g_langMngr.Clear();
 
+	modules_callPluginsUnloaded();
+
 	detachModules();
 
 	g_log.CloseFile();
 
 	Module_UncacheFunctions();
+
+	ClearLibraries(LibSource_Plugin);
+	ClearLibraries(LibSource_Module);
 
 	return (TRUE);
 }

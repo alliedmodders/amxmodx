@@ -3,12 +3,24 @@
 #ifndef __MODULECONFIG_H__
 #define __MODULECONFIG_H__
 
-// Module info
+/** Module info
+ * -The logtag is the tag that the module's log messages will be
+ *   prepended with.
+ * -The library is the name that the #pragma library
+ *   message will have prepended.
+ * -The library class is the class of libraries that 
+ *   a module belongs to (like DBI).  Keep it "" to 
+ *   ignore.
+ * -For both library and library class, you can use a comma
+ *   to add multiple entries.
+ */
 #define MODULE_NAME "--ENTER NAME HERE--"
 #define MODULE_VERSION "--ENTER VERSION HERE--"
 #define MODULE_AUTHOR "--ENTER AUTHOR HERE--"
 #define MODULE_URL "--ENTER URL HERE--"
 #define MODULE_LOGTAG "--ENTER LOGTAG HERE--"
+#define MODULE_LIBRARY "--ENTER LIBRARY HERE--"
+#define MODULE_LIBCLASS ""
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line
 #define MODULE_RELOAD_ON_MAPCHANGE
 
@@ -34,18 +46,32 @@
 // Uncomment this if you are using MSVC8 or greater and want to fix some of the compatibility issues yourself 
 // #define NO_MSVC8_AUTO_COMPAT
 
-// - AMXX Init functions
-// Also consider using FN_META_*
-// AMXX query
+/** 
+ * AMXX Init functions
+ * Also consider using FN_META_*
+ */
+
+/** AMXX query */
 //#define FN_AMXX_QUERY OnAmxxQuery
-// AMXX attach
-//   Do native functions init here (MF_AddNatives)
+
+/** AMXX attach
+ * Do native functions init here (MF_AddNatives)
+ */
 //#define FN_AMXX_ATTACH OnAmxxAttach
-// AMXX detach
+
+/** AMXX Detach (unload) */
 //#define FN_AMXX_DETACH OnAmxxDetach
-// All plugins loaded
-//   Do forward functions init here (MF_RegisterForward)
-// #define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
+
+/** All plugins loaded
+ * Do forward functions init here (MF_RegisterForward)
+ */
+//#define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
+
+/** All plugins are about to be unloaded */
+//#define FN_AMXX_PLUGINSUNLOADING OnPluginsUnloading
+
+/** All plguins are now unloaded */
+//#define FN_AMXX_PLUGINSUNLOADED OnPluginsUnloaded
 
 /**** METAMOD ****/
 // If your module doesn't use metamod, you may close the file now :)

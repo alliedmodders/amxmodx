@@ -47,6 +47,17 @@ native format(output[] ,len ,const format[] , {Float,Sql,Result,_}:...);
  */
 native formatex(output[] ,len ,const format[] , {Float,Sql,Result,_}:...);
 
+/* Replacement for format_args.  Much faster and %L compatible.
+ * This works exactly like vsnprintf() from C.
+ * You must pass in the output buffer and its size,
+ *  the string to format, and the number of the FIRST variable
+ *  argument parameter.  For example, for:
+ *  function (a, b, c, ...)
+ *  You would pass 4 (a is 1, b is 2, c is 3, et cetera).
+ * There is no vformatex().
+ */
+native vformat(buffer[], len, const fmt[], vararg);
+
 /* Gets parameters from function as formated string. */
 native format_args(output[] ,len ,pos = 0);
 

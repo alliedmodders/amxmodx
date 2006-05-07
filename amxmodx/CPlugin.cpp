@@ -404,6 +404,7 @@ char *CPluginMngr::ReadIntoOrFromCache(const char *file, size_t &bufsize)
 	pl = new plcache_entry;
 
 	pl->file = new CAmxxReader(file, sizeof(cell));
+	pl->buffer = NULL;
 	if (pl->file->GetStatus() != CAmxxReader::Err_None)
 	{
 		delete pl->file;
@@ -411,15 +412,14 @@ char *CPluginMngr::ReadIntoOrFromCache(const char *file, size_t &bufsize)
 		return NULL;
 	}
 
-	pl->bufsize =pl->file->GetBufferSize();
-	pl->buffer = NULL;
+	pl->bufsize = pl->file->GetBufferSize();
 	if (pl->bufsize)
 	{
 		pl->buffer = new char[pl->bufsize];
 		pl->file->GetSection(pl->buffer);
 	}
 
-	if (!pl->bufsize || pl->file->GetStatus() != CAmxxReader::Err_None)
+	if (!pl->buffer || pl->file->GetStatus() != CAmxxReader::Err_None)
 	{
 		delete [] pl->buffer;
 		delete pl->file;

@@ -839,7 +839,7 @@ bool ConvertModuleName(const char *pathString, String &path)
 	return true;
 }
 
-bool LoadModule(const char *shortname, PLUG_LOADTIME now)
+bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify)
 {
 	char pathString[512];
 	String path;
@@ -851,8 +851,17 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now)
 		get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"),
 		shortname);
 
-	if (!ConvertModuleName(pathString, path))
-		return false;
+	if (simplify)
+	{
+		if (!ConvertModuleName(pathString, path))
+			return false;
+	} else {
+		path.assign(pathString);
+		FILE *fp = fopen(path.c_str(), "rb");
+		if (!fp)
+			return false;
+		fclose(fp);
+	}
 
 	CList<CModule, const char *>::iterator a = g_modules.find(path.c_str());
 
@@ -937,27 +946,37 @@ int loadModules(const char* filename, PLUG_LOADTIME now)
 		return 0;
 	}
 
-	char moduleName[256];
 	String line;
+	char moduleName[256];
+	char buffer[255];
 	int loaded = 0;
 
 	String path;
 
 	while (!feof(fp))
 	{
-		if (!line._fread(fp) || line.size() < 1)
+		fgets(buffer, sizeof(buffer)-1, fp);
+
+		if (buffer[0] == ';' || buffer[0] == '\n')
 			continue;
+
+		bool simplify = true;
+		if (buffer[0] == '>')
+		{
+			simplify = false;
+			line.assign(&buffer[1]);
+		} else {
+			line.assign(buffer);
+		}
 		
 		line.trim();
+
 		*moduleName = 0;
 		
 		if (sscanf(line.c_str(), "%s", moduleName) == EOF)
 			continue;
 		
-		if (moduleName[0] == ';')
-			continue;
-
-		if (LoadModule(moduleName, now))
+		if (LoadModule(moduleName, now, simplify))
 			loaded++;
 	}
 

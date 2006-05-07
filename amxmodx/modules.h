@@ -72,7 +72,7 @@ typedef enum
 }  PlayerProp;
 
 int CheckModules(AMX *amx, char error[128]);
-bool LoadModule(const char *shortname, PLUG_LOADTIME now);
+bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify=true);
 const char *StrCaseStr(const char *as, const char *bs);
 
 class Debugger;

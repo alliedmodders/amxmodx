@@ -41,6 +41,7 @@
 #include "natives.h"
 #include "binlog.h"
 #include "optimizer.h"
+#include "libraries.h"
 
 plugin_info_t Plugin_info = 
 {
@@ -488,6 +489,8 @@ void C_ServerDeactivate_Post()
 {
 	if (!g_initialized)
 		RETURN_META(MRES_IGNORED);
+
+	modules_callPluginsUnloading();
 	
 	detachReloadModules();
 	g_auth.clear();
@@ -1277,6 +1280,8 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)
 		LOG_ERROR(PLID,	"Can't unload plugin right now");
 		return (FALSE);
 	}
+
+	modules_callPluginsUnloading();
 
 	g_auth.clear();
 	g_forwards.clear();

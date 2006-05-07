@@ -130,6 +130,8 @@ int CPluginMngr::loadPluginsFromFile(const char* filename)
 
 	fclose(fp);
 
+	InvalidateCache();
+
 	return pCounter;
 }
 
@@ -383,3 +385,88 @@ void CPluginMngr::CPlugin::unpausePlugin()
 			executeForwards(m_UnpauseFwd);
 	}
 }
+
+char *CPluginMngr::ReadIntoOrFromCache(const char *file, size_t &bufsize)
+{
+	List<plcache_entry *>::iterator iter;
+	plcache_entry *pl;
+
+	for (iter=m_plcache.begin(); iter!=m_plcache.end(); iter++)
+	{
+		pl = (*iter);
+		if (pl->path.compare(file) == 0)
+		{
+			bufsize = pl->bufsize;
+			return pl->buffer;
+		}
+	}
+
+	pl = new plcache_entry;
+
+	pl->file = new CAmxxReader(file, sizeof(cell));
+	if (pl->file->GetStatus() != CAmxxReader::Err_None)
+	{
+		delete pl->file;
+		delete pl;
+		return NULL;
+	}
+
+	pl->bufsize =pl->file->GetBufferSize();
+	pl->buffer = NULL;
+	if (pl->bufsize)
+	{
+		pl->buffer = new char[pl->bufsize];
+		pl->file->GetSection(pl->buffer);
+	}
+
+	if (!pl->bufsize || pl->file->GetStatus() != CAmxxReader::Err_None)
+	{
+		delete [] pl->buffer;
+		delete pl->file;
+		delete pl;
+		return NULL;
+	}
+
+	pl->path.assign(file);
+
+	bufsize = pl->bufsize;
+
+	return pl->buffer;
+}
+
+void CPluginMngr::InvalidateCache()
+{
+	List<plcache_entry *>::iterator iter;
+	plcache_entry *pl;
+
+	for (iter=m_plcache.begin(); iter!=m_plcache.end(); iter++)
+	{
+		pl = (*iter);
+		delete [] pl->buffer;
+		delete pl->file;
+		delete pl;
+	}
+
+	m_plcache.clear();
+}
+
+void CPluginMngr::InvalidateFileInCache(const char *file, bool freebuf)
+{
+	List<plcache_entry *>::iterator iter;
+	plcache_entry *pl;
+
+	for (iter=m_plcache.begin(); iter!=m_plcache.end(); iter++)
+	{
+		pl = (*iter);
+		if (pl->path.compare(file) == 0)
+		{
+			if (freebuf)
+				delete [] pl->buffer;
+			delete pl->file;
+			delete pl;
+			m_plcache.erase(iter);
+			return;
+		}
+	}
+}
+

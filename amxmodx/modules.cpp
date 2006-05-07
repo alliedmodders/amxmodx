@@ -162,56 +162,63 @@ static binlogfuncs_t logfuncs =
 int load_amxscript(AMX *amx, void **program, const char *filename, char error[64], int debug)
 {
 	*error = 0;
-	CAmxxReader reader(filename, PAWN_CELL_SIZE / 8);
-	
-	if (reader.GetStatus() == CAmxxReader::Err_None)
+	size_t bufSize;
+	*program = (void *)g_plugins.ReadIntoOrFromCache(filename, bufSize);
+	if (!*program)
 	{
-		size_t bufSize = reader.GetBufferSize();
+		CAmxxReader reader(filename, PAWN_CELL_SIZE / 8);
 		
-		if (bufSize != 0)
+		if (reader.GetStatus() == CAmxxReader::Err_None)
 		{
-			*program = (void*) (new char[bufSize]);
+			bufSize = reader.GetBufferSize();
 			
-			if (!*program)
+			if (bufSize != 0)
 			{
-				strcpy(error, "Failed to allocate memory");
-				return (amx->error = AMX_ERR_MEMORY);
+				*program = (void*) (new char[bufSize]);
+				
+				if (!*program)
+				{
+					strcpy(error, "Failed to allocate memory");
+					return (amx->error = AMX_ERR_MEMORY);
+				}
+				
+				reader.GetSection(*program);
 			}
-			
-			reader.GetSection(*program);
 		}
-	}
-
-	switch (reader.GetStatus())
-	{
-		case CAmxxReader::Err_None:
-			break;
-		case CAmxxReader::Err_FileOpen:
-			strcpy(error, "Plugin file open error");
-			return (amx->error = AMX_ERR_NOTFOUND);
-		case CAmxxReader::Err_FileRead:
-			strcpy(error, "Plugin file read error");
-			return (amx->error = AMX_ERR_NOTFOUND);
-		case CAmxxReader::Err_InvalidParam:
-			strcpy(error, "Internal error: Invalid parameter");
-			return (amx->error = AMX_ERR_NOTFOUND);
-		case CAmxxReader::Err_FileInvalid:
-			strcpy(error, "Invalid Plugin");
-			return (amx->error = AMX_ERR_FORMAT);
-		case CAmxxReader::Err_SectionNotFound:
-			strcpy(error, "Searched section not found (.amxx)");
-			return (amx->error = AMX_ERR_NOTFOUND);
-		case CAmxxReader::Err_DecompressorInit:
-			strcpy(error, "Decompressor initialization failed");
-			return (amx->error = AMX_ERR_INIT);
-		case CAmxxReader::Err_Decompress:
-			strcpy(error, "Internal error: Decompress");
-			return (amx->error = AMX_ERR_NOTFOUND);
-		case CAmxxReader::Err_OldFile:
-			strcpy(error, "Plugin uses deprecated format. Update compiler");
-		default:
-			strcpy(error, "Unknown error");
-			return (amx->error = AMX_ERR_NOTFOUND);
+	
+		switch (reader.GetStatus())
+		{
+			case CAmxxReader::Err_None:
+				break;
+			case CAmxxReader::Err_FileOpen:
+				strcpy(error, "Plugin file open error");
+				return (amx->error = AMX_ERR_NOTFOUND);
+			case CAmxxReader::Err_FileRead:
+				strcpy(error, "Plugin file read error");
+				return (amx->error = AMX_ERR_NOTFOUND);
+			case CAmxxReader::Err_InvalidParam:
+				strcpy(error, "Internal error: Invalid parameter");
+				return (amx->error = AMX_ERR_NOTFOUND);
+			case CAmxxReader::Err_FileInvalid:
+				strcpy(error, "Invalid Plugin");
+				return (amx->error = AMX_ERR_FORMAT);
+			case CAmxxReader::Err_SectionNotFound:
+				strcpy(error, "Searched section not found (.amxx)");
+				return (amx->error = AMX_ERR_NOTFOUND);
+			case CAmxxReader::Err_DecompressorInit:
+				strcpy(error, "Decompressor initialization failed");
+				return (amx->error = AMX_ERR_INIT);
+			case CAmxxReader::Err_Decompress:
+				strcpy(error, "Internal error: Decompress");
+				return (amx->error = AMX_ERR_NOTFOUND);
+			case CAmxxReader::Err_OldFile:
+				strcpy(error, "Plugin uses deprecated format. Update compiler");
+			default:
+				strcpy(error, "Unknown error");
+				return (amx->error = AMX_ERR_NOTFOUND);
+		}
+	} else {
+		g_plugins.InvalidateFileInCache(filename, false);
 	}
 
 	// check for magic
@@ -337,12 +344,12 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 			if (amx->base)
 				memcpy(amx->base, np, amx->code_size);
 			
-			delete[] np;
-			delete[] rt;
+			delete [] np;
+			delete [] rt;
 			
 			char *prg = (char *)(*program);
 			
-			delete[] prg;
+			delete [] prg;
 			(*program) = amx->base;
 			
 			if (*program == 0)
@@ -362,12 +369,6 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 #endif
 
 	CScript* aa = new CScript(amx, *program, filename);
-
-	if (aa == 0)
-	{
-		strcpy(error, "Failed to allocate memory");
-		return (amx->error = AMX_ERR_MEMORY);
-	}
 
 	g_loadedscripts.put(aa);
 

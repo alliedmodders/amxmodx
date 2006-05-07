@@ -68,10 +68,27 @@ int amxx_DynaCallback(int idx, AMX *amx, cell *params)
 		return 0;
 	}
 
-	//parameter stack
-	pNative->caller = amx;
-
 	CPluginMngr::CPlugin *pPlugin = g_plugins.findPluginFast(amx);
+	CPluginMngr::CPlugin *pNativePlugin = g_plugins.findPluginFast(pNative->amx);
+
+	if (!pNativePlugin->isExecutable(pNative->func))
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Called dynanative into a paused plugin.");
+		pPlugin->setStatus(ps_paused);
+		return 0;
+	}
+
+	if (pNative->caller)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Bug caught! Please contact the AMX Mod X Dev Team.");
+		return 0;
+	}
+
+	//parameter stack
+	//NOTE: it is possible that recursive register native calling
+	// could potentially be somehow damaged here.
+	//so, a :TODO: - make the stack unique, rather than a known ptr
+	pNative->caller = amx;
 
 	int err = 0;
 	cell ret = 0;
@@ -111,6 +128,8 @@ int amxx_DynaCallback(int idx, AMX *amx, cell *params)
 		pDebugger->EndExec();
 	g_NativeStack.pop();
 	g_ErrorStk.pop();
+
+	pNative->caller = NULL;
 
 	return ret;
 }
@@ -370,6 +389,7 @@ static cell AMX_NATIVE_CALL register_native(AMX *amx, cell *params)
 	regnative *pNative = new regnative;
 	pNative->amx = amx;
 	pNative->func = idx;
+	pNative->caller = NULL;
 	
 	//we'll apply a safety buffer too
 	//make our function

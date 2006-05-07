@@ -32,6 +32,11 @@
 #ifndef PLUGIN_H
 #define PLUGIN_H
 
+#include "CString.h"
+#include "sh_list.h"
+#include "amx.h"
+#include "amxxfile.h"
+
 // *****************************************************
 // class CPluginMngr
 // *****************************************************
@@ -111,7 +116,7 @@ private:
 	int pCounter;
 public:
 	CPluginMngr() { head = 0; pCounter = 0; pNatives = NULL; m_Finalized=false;}
-	~CPluginMngr() { clear(); }
+	~CPluginMngr() { clear(); InvalidateCache(); }
 
 	bool m_Finalized;
 	AMX_NATIVE_INFO *pNatives;
@@ -145,6 +150,19 @@ public:
 	
 	inline iterator begin() const { return iterator(head); }
 	inline iterator end() const { return iterator(0); }
+public:
+	struct plcache_entry
+	{
+		CAmxxReader *file;
+		size_t bufsize;
+		char *buffer;
+		String path;
+	};
+	char *ReadIntoOrFromCache(const char *file, size_t &bufsize);
+	void InvalidateCache();
+	void InvalidateFileInCache(const char *file, bool freebuf);
+private:
+	List<plcache_entry *> m_plcache;
 };
 
 #endif //PLUGIN_H

@@ -801,7 +801,7 @@ bool ConvertModuleName(const char *pathString, String &path)
 
 	if (!foundAmxx)
 	{
-		ptr = tmpname + strlen(tmpname); - 1;
+		ptr = tmpname + strlen(tmpname) - 1;
 		while (ptr >= tmpname && *ptr != '.')
 			ptr--;
 		if (ptr > tmpname && *ptr == '.')

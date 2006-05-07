@@ -431,6 +431,8 @@ char *CPluginMngr::ReadIntoOrFromCache(const char *file, size_t &bufsize)
 
 	bufsize = pl->bufsize;
 
+	m_plcache.push_back(pl);
+
 	return pl->buffer;
 }
 

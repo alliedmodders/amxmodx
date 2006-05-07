@@ -973,6 +973,67 @@ static cell AMX_NATIVE_CALL n_strfind(AMX *amx, cell *params)
 	return (find - str);
 }
 
+static cell AMX_NATIVE_CALL vformat(AMX *amx, cell *params)
+{
+	int vargPos = static_cast<int>(params[4]);
+
+	/** get the parent parameter array */
+	AMX_HEADER *hdr = (AMX_HEADER *)amx->base;
+	cell *local_params = (cell *)(
+		(char *)amx->base + (cell)hdr->dat +
+		(cell)amx->frm + (2 * sizeof(cell))
+		);
+
+	cell max = local_params[0] / sizeof(cell);
+	if (vargPos > (int)max + 1)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid vararg parameter passed: %d", vargPos);
+		return 0;
+	}
+	
+	/**
+	 * check for bounds clipping
+	 */
+	cell addr_start = params[1];
+	cell addr_end = addr_start + params[2];
+	bool copy = false;
+	for (int i = vargPos; i <= max; i++)
+	{
+		//does this clip the bounds?
+		if ( (local_params[i] >= addr_start)
+			&& (local_params[i] <= addr_end) )
+		{
+			copy = true;
+			break;
+		}
+	}
+
+	/* get destination info */
+	cell *fmt = get_amxaddr(amx, params[3]);
+	cell *realdest = get_amxaddr(amx, params[1]);
+	size_t maxlen = static_cast<size_t>(params[2]);
+	cell *dest = realdest;
+
+	/* if this is necessary... */
+	static cell cpbuf[4096];
+	if (copy)
+		dest = cpbuf;
+
+	/* perform format */
+	size_t total = atcprintf(dest, maxlen, fmt, amx, local_params, &vargPos);
+
+	/* copy back */
+	if (copy)
+	{
+		memcpy(realdest, dest, (total+1) * sizeof(cell));
+	}
+
+	return total;
+}
+
+
+
+
 AMX_NATIVE_INFO string_Natives[] =
 {
 	{"add",				add},
@@ -1008,5 +1069,6 @@ AMX_NATIVE_INFO string_Natives[] =
 	{"strcmp",			n_strcmp},
 	{"str_to_float",	str_to_float},
 	{"float_to_str",	float_to_str},
+	{"vformat",			vformat},
 	{NULL,				NULL}
 };

@@ -14,7 +14,7 @@ CStack<MysqlThread *> g_ThreadQueue;
 CStack<MysqlThread *> g_FreeThreads;
 float g_lasttime = 0.0f;
 
-void OnAmxxDetach()
+void ShutdownThreading()
 {
 	if (g_pWorker)
 	{
@@ -257,11 +257,11 @@ void MysqlThread::Execute()
  * METAMOD STUFF *
  *****************/
 
-int DispatchSpawn(edict_t *pEnt)
+void OnPluginsLoaded()
 {
 	if (g_pWorker)
 	{
-		RETURN_META_VALUE(MRES_IGNORED, 0);
+		return;
 	}
 
 	if (!g_StringPool.IsThreadable())
@@ -279,7 +279,7 @@ int DispatchSpawn(edict_t *pEnt)
 
 	g_lasttime = 0.0f;
 
-	RETURN_META_VALUE(MRES_IGNORED, 0);
+	return;
 }
 
 void StartFrame()
@@ -310,18 +310,14 @@ void StartFrame()
 	RETURN_META(MRES_IGNORED);
 }
 
-void ServerDeactivate()
+void OnPluginsUnloading()
 {
-	g_pFunctionTable->pfnSpawn = DispatchSpawn;
-
 	if (!g_pWorker)
-		RETURN_META(MRES_IGNORED);
+		return;
 
 	g_pWorker->Stop(false);
 	delete g_pWorker;
 	g_pWorker = NULL;
-
-	RETURN_META(MRES_IGNORED);
 }
 
 /***********************

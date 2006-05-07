@@ -3,14 +3,26 @@
 #ifndef __MODULECONFIG_H__
 #define __MODULECONFIG_H__
 
-// Module info
-#define MODULE_NAME 	"MySQL X"
-#define MODULE_VERSION	"1.01"
-#define MODULE_AUTHOR	"AMX Mod X Dev Team"
-#define MODULE_URL 		"http://www.amxmodx.org/"
-#define MODULE_LOGTAG	"SQLX"
+/** Module info
+ * -The logtag is the tag that the module's log messages will be
+ *   prepended with.
+ * -The library is the name that the #pragma library
+ *   message will have prepended.
+ * -The library class is the class of libraries that 
+ *   a module belongs to (like DBI).  Keep it "" to 
+ *   ignore.
+ * -For both library and library class, you can use a comma
+ *   to add multiple entries.
+ */
+#define MODULE_NAME "MySQLX"
+#define MODULE_VERSION "1.75"
+#define MODULE_AUTHOR "AMX Mod X Dev Team"
+#define MODULE_URL "http://www.amxmodx.org/"
+#define MODULE_LOGTAG "MySQLX"
+#define MODULE_LIBRARY "mysqlx"
+#define MODULE_LIBCLASS "sqlx"
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line
-//#define MODULE_RELOAD_ON_MAPCHANGE
+#define MODULE_RELOAD_ON_MAPCHANGE
 
 #ifdef __DATE__
 #define MODULE_DATE __DATE__
@@ -34,18 +46,32 @@
 // Uncomment this if you are using MSVC8 or greater and want to fix some of the compatibility issues yourself 
 // #define NO_MSVC8_AUTO_COMPAT
 
-// - AMXX Init functions
-// Also consider using FN_META_*
-// AMXX query
+/** 
+ * AMXX Init functions
+ * Also consider using FN_META_*
+ */
+
+/** AMXX query */
 //#define FN_AMXX_QUERY OnAmxxQuery
-// AMXX attach
-//   Do native functions init here (MF_AddNatives)
+
+/** AMXX attach
+ * Do native functions init here (MF_AddNatives)
+ */
 #define FN_AMXX_ATTACH OnAmxxAttach
-// AMXX detach
+
+/** AMXX Detach (unload) */
 #define FN_AMXX_DETACH OnAmxxDetach
-// All plugins loaded
-//   Do forward functions init here (MF_RegisterForward)
-// #define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
+
+/** All plugins loaded
+ * Do forward functions init here (MF_RegisterForward)
+ */
+#define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
+
+/** All plugins are about to be unloaded */
+#define FN_AMXX_PLUGINSUNLOADING OnPluginsUnloading
+
+/** All plguins are now unloaded */
+#define FN_AMXX_PLUGINSUNLOADED OnPluginsUnloaded
 
 /**** METAMOD ****/
 // If your module doesn't use metamod, you may close the file now :)
@@ -67,7 +93,7 @@
 // (wd) are Will Day's notes
 // - GetEntityAPI2 functions
 // #define FN_GameDLLInit				GameDLLInit					/* pfnGameInit() */
-#define FN_DispatchSpawn				DispatchSpawn				/* pfnSpawn() */
+// #define FN_DispatchSpawn				DispatchSpawn				/* pfnSpawn() */
 // #define FN_DispatchThink				DispatchThink				/* pfnThink() */
 // #define FN_DispatchUse				DispatchUse					/* pfnUse() */
 // #define FN_DispatchTouch				DispatchTouch				/* pfnTouch() */
@@ -88,10 +114,10 @@
 // #define FN_ClientCommand				ClientCommand				/* pfnClientCommand()			(wd) Player has sent a command (typed or from a bind) */
 // #define FN_ClientUserInfoChanged		ClientUserInfoChanged		/* pfnClientUserInfoChanged()	(wd) Client has updated their setinfo structure */
 // #define FN_ServerActivate			ServerActivate				/* pfnServerActivate()			(wd) Server is starting a new map */
-#define FN_ServerDeactivate				ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
+// #define FN_ServerDeactivate			ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
 // #define FN_PlayerPreThink			PlayerPreThink				/* pfnPlayerPreThink() */
 // #define FN_PlayerPostThink			PlayerPostThink				/* pfnPlayerPostThink() */
-#define FN_StartFrame					StartFrame					/* pfnStartFrame() */
+#define FN_StartFrame				StartFrame					/* pfnStartFrame() */
 // #define FN_ParmsNewLevel				ParmsNewLevel				/* pfnParmsNewLevel() */
 // #define FN_ParmsChangeLevel			ParmsChangeLevel			/* pfnParmsChangeLevel() */
 // #define FN_GetGameDescription		GetGameDescription			/* pfnGetGameDescription()		Returns string describing current .dll.  E.g. "TeamFotrress 2" "Half-Life" */
@@ -140,7 +166,7 @@
 // #define FN_ClientCommand_Post				ClientCommand_Post
 // #define FN_ClientUserInfoChanged_Post		ClientUserInfoChanged_Post
 // #define FN_ServerActivate_Post				ServerActivate_Post
-#define FN_ServerDeactivate_Post				ServerDeactivate_Post
+// #define FN_ServerDeactivate_Post				ServerDeactivate_Post
 // #define FN_PlayerPreThink_Post				PlayerPreThink_Post
 // #define FN_PlayerPostThink_Post				PlayerPostThink_Post
 // #define FN_StartFrame_Post					StartFrame_Post

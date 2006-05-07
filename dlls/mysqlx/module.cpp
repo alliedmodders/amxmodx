@@ -1,6 +1,8 @@
 #include "amxxmodule.h"
 #include "mysql2_header.h"
 
+static g_ident = 0;
+
 void OnAmxxAttach()
 {
 	MF_AddNatives(g_BaseSqlNatives);
@@ -9,15 +11,20 @@ void OnAmxxAttach()
 	if (!MF_RequestFunction("GetDbDriver"))
 	{
 		MF_AddNatives(g_OldCompatNatives);
+		MF_AddLibraries("dbi", LibType_Class, &g_ident);
 	}
 }
 
-void ServerDeactivate_Post()
+void OnAmxxDetach()
+{
+	ShutdownThreading();
+	MF_RemoveLibraries(&g_ident);
+}
+
+void OnPluginsUnloaded()
 {
 	FreeAllHandles(Handle_OldResult);
 	FreeAllHandles(Handle_OldDb);
 	FreeAllHandles(Handle_Connection);
-
-	RETURN_META(MRES_IGNORED);
 }
 

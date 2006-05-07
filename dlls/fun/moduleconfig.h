@@ -5,10 +5,12 @@
 
 // Module info
 #define MODULE_NAME "Fun"
-#define MODULE_VERSION "1.72"
+#define MODULE_VERSION "1.75"
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "http://www.amxmodx.org"
 #define MODULE_LOGTAG "FUN"
+#define MODULE_LIBRARY "fun"
+#define MODULE_LIBCLASS ""
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line
 #define MODULE_RELOAD_ON_MAPCHANGE
 
@@ -20,6 +22,7 @@
 
 // metamod plugin?
 #define USE_METAMOD
+
 
 // use memory manager/tester?
 // note that if you use this, you cannot construct/allocate 
@@ -34,18 +37,32 @@
 // Uncomment this if you are using MSVC8 or greater and want to fix some of the compatibility issues yourself 
 // #define NO_MSVC8_AUTO_COMPAT
 
-// - AMXX Init functions
-// Also consider using FN_META_*
-// AMXX query
+/** 
+* AMXX Init functions
+* Also consider using FN_META_*
+*/
+
+/** AMXX query */
 //#define FN_AMXX_QUERY OnAmxxQuery
-// AMXX attach
-//   Do native functions init here (MF_AddNatives)
+
+/** AMXX attach
+* Do native functions init here (MF_AddNatives)
+*/
 #define FN_AMXX_ATTACH OnAmxxAttach
-// AMXX detach
+
+/** AMXX Detach (unload) */
 //#define FN_AMXX_DETACH OnAmxxDetach
-// All plugins loaded
-//   Do forward functions init here (MF_RegisterForward)
+
+/** All plugins loaded
+* Do forward functions init here (MF_RegisterForward)
+*/
 #define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
+
+/** All plugins are about to be unloaded */
+//#define FN_AMXX_PLUGINSUNLOADING OnPluginsUnloading
+
+/** All plguins are now unloaded */
+//#define FN_AMXX_PLUGINSUNLOADED OnPluginsUnloaded
 
 /**** METAMOD ****/
 // If your module doesn't use metamod, you may close the file now :)
@@ -61,8 +78,8 @@
 //#define FN_META_QUERY OnMetaQuery
 // Meta attach
 //#define FN_META_ATTACH OnMetaAttach
-// Meta detach
-//#define FN_META_DETACH OnMetaDetach
+// Meta dettach
+//#define FN_META_DETTACH OnMetaDettach
 
 // (wd) are Will Day's notes
 // - GetEntityAPI2 functions
@@ -89,7 +106,7 @@
 // #define FN_ClientUserInfoChanged		ClientUserInfoChanged		/* pfnClientUserInfoChanged()	(wd) Client has updated their setinfo structure */
 // #define FN_ServerActivate			ServerActivate				/* pfnServerActivate()			(wd) Server is starting a new map */
 // #define FN_ServerDeactivate			ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
-#define FN_PlayerPreThink				PlayerPreThink				/* pfnPlayerPreThink() */
+#define FN_PlayerPreThink			PlayerPreThink				/* pfnPlayerPreThink() */
 // #define FN_PlayerPostThink			PlayerPostThink				/* pfnPlayerPostThink() */
 // #define FN_StartFrame				StartFrame					/* pfnStartFrame() */
 // #define FN_ParmsNewLevel				ParmsNewLevel				/* pfnParmsNewLevel() */
@@ -473,3 +490,4 @@
 #endif // USE_METAMOD
 
 #endif // __MODULECONFIG_H__
+

@@ -831,11 +831,6 @@ bool ConvertModuleName(const char *pathString, String &path)
 	path.append(".so");
 #endif
 
-	FILE *fp = fopen(path.c_str(), "rb");
-	if (!fp)
-		return false;
-	fclose(fp);
-
 	return true;
 }
 
@@ -857,10 +852,6 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify)
 			return false;
 	} else {
 		path.assign(pathString);
-		FILE *fp = fopen(path.c_str(), "rb");
-		if (!fp)
-			return false;
-		fclose(fp);
 	}
 
 	CList<CModule, const char *>::iterator a = g_modules.find(path.c_str());

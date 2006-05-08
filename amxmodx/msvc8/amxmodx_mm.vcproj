@@ -578,6 +578,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\libraries.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\md5.cpp"
 				>
 			</File>
@@ -744,6 +748,10 @@
 			</File>
 			<File
 				RelativePath="..\format.h"
+				>
+			</File>
+			<File
+				RelativePath="..\libraries.h"
 				>
 			</File>
 			<File

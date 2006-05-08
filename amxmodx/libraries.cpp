@@ -68,9 +68,9 @@ bool DecodeLibCmdString(const char *str, LibDecoder &dec)
 			dec.param2 = NULL;
 		} else {
 			dec.buffer = strdup(str);
-			char *p = strchr(str, '_');
+			char *p = const_cast<char *>(strchr(str, '_'));
 			while (p && (*(p+1) != '_'))
-				p = strchr(str, '_');
+				p = const_cast<char *>(strchr(str, '_'));
 			if (!p || !*(p+1))
 				return false;
 			*p = '\0';

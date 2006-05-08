@@ -1023,7 +1023,7 @@ native PrepareArray(array[], size, copyback=0);
  * executes a forward.  returns result in ret.
  * returns 1 for success, 0 for failure.
  */
-native ExecuteForward(forward_handle, &ret, ...);
+native ExecuteForward(forward_handle, &ret, {Float,_}:...);
 
 /**
  * Destroys/deallocates any type of forward

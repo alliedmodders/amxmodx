@@ -1473,11 +1473,23 @@ OP_FLOAT_ROUND:
 		mov     [ebp], eax
 		fldcw   [ebp]
 		;calculate
-		push    0
+		sub     esp,4
 		fld     dword [edi+ecx+4]
+		test    edx,edx
+		jz      .correct
+		jmp     .skip_correct
+	.correct:
+		fadd    st0
+		fadd    dword [g_round_nearest]
+		fistp   dword [esp]
+		pop     eax
+		sar     eax,1
+		jmp     .done
+	.skip_correct:
 		frndint
 		fistp   dword [esp]
 		pop     eax
+	.done:
 		pop     edx
 		;restore bits
 		pop     ebp
@@ -1592,6 +1604,8 @@ Start_DATA
         ALIGN   4       ; This is essential to avoid misalignment stalls.
 
 lodb_and DD     0ffh, 0ffffh, 0, 0ffffffffh
+
+g_round_nearest	DD	0.5
 
 		GLOBAL g_flags
 g_flags:
@@ -1740,10 +1754,10 @@ _amx_opcodelist DD OP_INVALID
         DD      OP_SYSREQ_D
         DD      OP_SYMTAG
         DD      OP_BREAK
-        DD		OP_FLOAT_MUL
-        DD		OP_FLOAT_DIV
-		DD		OP_FLOAT_ADD
-		DD		OP_FLOAT_SUB
-		DD		OP_FLOAT_TO
-		DD		OP_FLOAT_ROUND
-		DD		OP_FLOAT_CMP
+        DD      OP_FLOAT_MUL
+        DD      OP_FLOAT_DIV
+        DD      OP_FLOAT_ADD
+        DD      OP_FLOAT_SUB
+        DD      OP_FLOAT_TO
+        DD      OP_FLOAT_ROUND
+        DD      OP_FLOAT_CMP

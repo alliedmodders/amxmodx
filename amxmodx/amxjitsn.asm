@@ -1962,11 +1962,23 @@ OP_FLOAT_ROUND:
 		mov     [ebp], eax
 		fldcw   [ebp]
 		;calculate
-		push    0
+		sub     esp,4
 		fld     dword [esi+4]
+		test    edx,edx
+		jz      .correct
+		jmp     .skip_correct
+	.correct:
+		fadd    st0
+		fadd    dword [g_round_nearest]
+		fistp   dword [esp]
+		pop     eax
+		sar     eax,1
+		jmp     .done
+	.skip_correct:
 		frndint
 		fistp   dword [esp]
 		pop     eax
+	.done:
 		pop     edx
 		;restore bits
 		pop     ebp
@@ -2422,6 +2434,10 @@ g_flagsjit:
 		DD		-1
 		DD		0
 		DD		1
+		
+global g_round_nearest
+g_round_nearest:
+		DD		0.5
 
 global amx_opcodelist_jit, _amx_opcodelist_jit
 

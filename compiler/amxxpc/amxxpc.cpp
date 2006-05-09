@@ -62,7 +62,7 @@ int main(int argc, char **argv)
 	}
 
 	pc_printf("Welcome to the AMX Mod X %s Compiler.\n", VERSION_STRING);
-	pc_printf("Copyright (c) 1997-2005 ITB CompuPhase, AMX Mod X Team\n\n");
+	pc_printf("Copyright (c) 1997-2006 ITB CompuPhase, AMX Mod X Team\n\n");
 	
 	if (argc < 2)
 	{

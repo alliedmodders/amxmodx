@@ -1016,8 +1016,28 @@ static int command(void)
           } /* if */
         } else if (strcmp(str,"dynamic")==0) {
           preproc_expr(&sc_stksize,NULL);
-        } else if (strcmp(str,"library")==0) {
-          char name[sNAMEMAX+1];
+		} else if ( !strcmp(str,"library") ||
+                    !strcmp(str, "reqlib") ||
+                    !strcmp(str, "reqclass") ||
+                    !strcmp(str, "loadlib") ||
+                    !strcmp(str, "explib") || 
+                    !strcmp(str, "expclass") || 
+                    !strcmp(str, "defclasslib") ) {
+          char name[sNAMEMAX+1],sname[sNAMEMAX+1];
+          const char *prefix = "";
+          sname[0] = '\0';
+          if (!strcmp(str, "reqlib"))
+            prefix = "?rl_";
+          else if (!strcmp(str, "reqclass"))
+            prefix = "?rc_";
+          else if (!strcmp(str, "loadlib"))
+            prefix = "?f_";
+          else if (!strcmp(str, "explib"))
+            prefix = "?el_";
+          else if (!strcmp(str, "expclass"))
+            prefix = "?ec_";
+          else if (!strcmp(str, "defclasslib"))
+            prefix = "?d_";
           while (*lptr<=' ' && *lptr!='\0')
             lptr++;
           if (*lptr=='"') {
@@ -1027,6 +1047,20 @@ static int command(void)
             for (i=0; i<sizeof name && (alphanum(*lptr) || *lptr=='-'); i++,lptr++)
               name[i]=*lptr;
             name[i]='\0';
+            if (!strncmp(str, "exp", 3) || !strncmp(str, "def", 3))
+			{
+              while (*lptr && isalpha(*lptr))
+                lptr++;
+              for (i=1; i<sizeof sname && alphanum(*lptr); i++,lptr++)
+                sname[i]=*lptr;
+              sname[i] = '\0';
+              if (!sname[1])
+			  {
+                error(28);
+			  } else {
+                sname[0] = '_';
+              }
+			}
           } /* if */
           if (strlen(name)==0) {
             curlibrary=NULL;
@@ -1034,8 +1068,22 @@ static int command(void)
             pc_addlibtable=FALSE;
           } else {
             /* add the name if it does not yet exist in the table */
-            if (find_constval(&libname_tab,name,0)==NULL)
-              curlibrary=append_constval(&libname_tab,name,0,0);
+            char newname[sNAMEMAX+1];
+            if (strlen(name) + strlen(prefix) + strlen(sname) <= sNAMEMAX)
+			{
+              strcpy(newname, prefix);
+              strcat(newname, name);
+              strcat(newname, sname);
+              if (newname[0] != '?')
+			  {
+                if (find_constval(&libname_tab,newname,0)==NULL)
+			    {
+                  curlibrary=append_constval(&libname_tab,newname,0,0);
+			    }
+			  } else {
+                exporttag(pc_addtag(newname));
+			  }
+			}
           } /* if */
         } else if (strcmp(str,"pack")==0) {
           cell val;

@@ -61,6 +61,8 @@
   #include <windows.h>
 #endif
 
+#include <time.h>
+
 #include "sc.h"
 #define VERSION_STR "3.0.3367-amxx"
 #define VERSION_INT 0x300
@@ -125,6 +127,7 @@ static void dostate(void);
 static void addwhile(int *ptr);
 static void delwhile(void);
 static int *readwhile(void);
+static void inst_datetime_defines(void);
 
 static int lastst     = 0;      /* last executed statement type */
 static int nestlevel  = 0;      /* number of active (open) compound statements */
@@ -382,6 +385,23 @@ long pc_lengthbin(void *handle)
 
 #endif  /* !defined NO_MAIN */
 
+void inst_datetime_defines()
+{
+  char date[64];
+  char ltime[64];
+  time_t td;
+  struct tm *curtime;
+
+  time(&td);
+  curtime = localtime(&td);
+
+  strftime(date, 31, "\"%m/%d/%Y\"", curtime);
+  strftime(ltime, 31, "\"%H:%M:%S\"", curtime);
+
+  insert_subst("__DATE__", date, 8);
+  insert_subst("__TIME__", ltime, 8);
+}
+
 
 /*  "main" of the compiler
  */
@@ -531,7 +551,7 @@ int pc_compile(int argc, char *argv[])
     delete_symbols(&glbtab,0,TRUE,FALSE);
     #if !defined NO_DEFINE
       delete_substtable();
-      insert_subst("__DATE__", "\"" __DATE__ "\"", 8);
+      inst_datetime_defines();
     #endif
     resetglobals();
     sc_ctrlchar=sc_ctrlchar_org;
@@ -595,7 +615,7 @@ int pc_compile(int argc, char *argv[])
   delete_symbols(&glbtab,0,TRUE,FALSE);
   #if !defined NO_DEFINE
     delete_substtable();
-    insert_subst("__DATE__", "\"" __DATE__ "\"", 8);
+    inst_datetime_defines();
   #endif
   resetglobals();
   sc_ctrlchar=sc_ctrlchar_org;

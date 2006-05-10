@@ -23,7 +23,6 @@
 // metamod plugin?
 #define USE_METAMOD
 
-
 // use memory manager/tester?
 // note that if you use this, you cannot construct/allocate 
 // anything before the module attached (OnAmxxAttach).
@@ -38,24 +37,24 @@
 // #define NO_MSVC8_AUTO_COMPAT
 
 /** 
-* AMXX Init functions
-* Also consider using FN_META_*
-*/
+ * AMXX Init functions
+ * Also consider using FN_META_*
+ */
 
 /** AMXX query */
 //#define FN_AMXX_QUERY OnAmxxQuery
 
 /** AMXX attach
-* Do native functions init here (MF_AddNatives)
-*/
+ * Do native functions init here (MF_AddNatives)
+ */
 #define FN_AMXX_ATTACH OnAmxxAttach
 
 /** AMXX Detach (unload) */
 //#define FN_AMXX_DETACH OnAmxxDetach
 
 /** All plugins loaded
-* Do forward functions init here (MF_RegisterForward)
-*/
+ * Do forward functions init here (MF_RegisterForward)
+ */
 #define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
 
 /** All plugins are about to be unloaded */
@@ -63,6 +62,7 @@
 
 /** All plguins are now unloaded */
 //#define FN_AMXX_PLUGINSUNLOADED OnPluginsUnloaded
+
 
 /**** METAMOD ****/
 // If your module doesn't use metamod, you may close the file now :)
@@ -78,8 +78,8 @@
 //#define FN_META_QUERY OnMetaQuery
 // Meta attach
 //#define FN_META_ATTACH OnMetaAttach
-// Meta detach
-//#define FN_META_DETACH OnMetaDetach
+// Meta dettach
+//#define FN_META_DETTACH OnMetaDettach
 
 // (wd) are Will Day's notes
 // - GetEntityAPI2 functions

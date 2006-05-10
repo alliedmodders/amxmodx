@@ -5,10 +5,12 @@
 
 // Module info
 #define MODULE_NAME "TSX"
-#define MODULE_VERSION "1.72"
+#define MODULE_VERSION "1.75"
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "http://www.amxmodx.org/"
 #define MODULE_LOGTAG "TSX"
+#define MODULE_LIBRARY "tsx"
+#define MODULE_LIBCLASS "XSTATS"
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line
 #define MODULE_RELOAD_ON_MAPCHANGE
 
@@ -34,18 +36,32 @@
 // Uncomment this if you are using MSVC8 or greater and want to fix some of the compatibility issues yourself 
 // #define NO_MSVC8_AUTO_COMPAT
 
-// - AMXX Init functions
-// Also consider using FN_META_*
-// AMXX query
+/** 
+ * AMXX Init functions
+ * Also consider using FN_META_*
+ */
+
+/** AMXX query */
 //#define FN_AMXX_QUERY OnAmxxQuery
-// AMXX attach
-//   Do native functions init here (MF_AddNatives)
+
+/** AMXX attach
+ * Do native functions init here (MF_AddNatives)
+ */
 #define FN_AMXX_ATTACH OnAmxxAttach
-// AMXX detach
+
+/** AMXX Detach (unload) */
 #define FN_AMXX_DETACH OnAmxxDetach
-// All plugins loaded
-//   Do forward functions init here (MF_RegisterForward)
+
+/** All plugins loaded
+ * Do forward functions init here (MF_RegisterForward)
+ */
 #define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
+
+/** All plugins are about to be unloaded */
+//#define FN_AMXX_PLUGINSUNLOADING OnPluginsUnloading
+
+/** All plguins are now unloaded */
+//#define FN_AMXX_PLUGINSUNLOADED OnPluginsUnloaded
 
 /**** METAMOD ****/
 // If your module doesn't use metamod, you may close the file now :)
@@ -82,13 +98,13 @@
 // #define FN_RestoreGlobalState		RestoreGlobalState			/* pfnRestoreGlobalState() */
 // #define FN_ResetGlobalState			ResetGlobalState			/* pfnResetGlobalState() */
 // #define FN_ClientConnect				ClientConnect				/* pfnClientConnect()			(wd) Client has connected */
-#define FN_ClientDisconnect				ClientDisconnect			/* pfnClientDisconnect()		(wd) Player has left the game */
+#define FN_ClientDisconnect			ClientDisconnect			/* pfnClientDisconnect()		(wd) Player has left the game */
 // #define FN_ClientKill				ClientKill					/* pfnClientKill()				(wd) Player has typed "kill" */
 // #define FN_ClientPutInServer			ClientPutInServer			/* pfnClientPutInServer()		(wd) Client is entering the game */
 // #define FN_ClientCommand				ClientCommand				/* pfnClientCommand()			(wd) Player has sent a command (typed or from a bind) */
 // #define FN_ClientUserInfoChanged		ClientUserInfoChanged		/* pfnClientUserInfoChanged()	(wd) Client has updated their setinfo structure */
 // #define FN_ServerActivate			ServerActivate				/* pfnServerActivate()			(wd) Server is starting a new map */
-#define FN_ServerDeactivate				ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
+#define FN_ServerDeactivate			ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
 // #define FN_PlayerPreThink			PlayerPreThink				/* pfnPlayerPreThink() */
 // #define FN_PlayerPostThink			PlayerPostThink				/* pfnPlayerPostThink() */
 // #define FN_StartFrame				StartFrame					/* pfnStartFrame() */
@@ -347,7 +363,7 @@
 // #define FN_SetOrigin_Post					SetOrigin_Post
 // #define FN_EmitSound_Post					EmitSound_Post
 // #define FN_EmitAmbientSound_Post				EmitAmbientSound_Post
-#define FN_TraceLine_Post						TraceLine_Post
+#define FN_TraceLine_Post					TraceLine_Post
 // #define FN_TraceToss_Post					TraceToss_Post
 // #define FN_TraceMonsterHull_Post				TraceMonsterHull_Post
 // #define FN_TraceHull_Post					TraceHull_Post
@@ -363,15 +379,15 @@
 // #define FN_DecalIndex_Post					DecalIndex_Post
 // #define FN_PointContents_Post				PointContents_Post
 #define FN_MessageBegin_Post					MessageBegin_Post
-#define FN_MessageEnd_Post						MessageEnd_Post
-#define FN_WriteByte_Post						WriteByte_Post
-#define FN_WriteChar_Post						WriteChar_Post
-#define FN_WriteShort_Post						WriteShort_Post
-#define FN_WriteLong_Post						WriteLong_Post
-#define FN_WriteAngle_Post						WriteAngle_Post
-#define FN_WriteCoord_Post						WriteCoord_Post
-#define FN_WriteString_Post						WriteString_Post
-#define FN_WriteEntity_Post						WriteEntity_Post
+#define FN_MessageEnd_Post					MessageEnd_Post
+#define FN_WriteByte_Post					WriteByte_Post
+#define FN_WriteChar_Post					WriteChar_Post
+#define FN_WriteShort_Post					WriteShort_Post
+#define FN_WriteLong_Post					WriteLong_Post
+#define FN_WriteAngle_Post					WriteAngle_Post
+#define FN_WriteCoord_Post					WriteCoord_Post
+#define FN_WriteString_Post					WriteString_Post
+#define FN_WriteEntity_Post					WriteEntity_Post
 // #define FN_CVarRegister_Post					CVarRegister_Post
 // #define FN_CVarGetFloat_Post					CVarGetFloat_Post
 // #define FN_CVarGetString_Post				CVarGetString_Post
@@ -391,7 +407,7 @@
 // #define FN_PEntityOfEntIndex_Post			PEntityOfEntIndex_Post
 // #define FN_FindEntityByVars_Post				FindEntityByVars_Post
 // #define FN_GetModelPtr_Post					GetModelPtr_Post
-#define FN_RegUserMsg_Post						RegUserMsg_Post
+#define FN_RegUserMsg_Post					RegUserMsg_Post
 // #define FN_AnimationAutomove_Post			AnimationAutomove_Post
 // #define FN_GetBonePosition_Post				GetBonePosition_Post
 // #define FN_FunctionFromName_Post				FunctionFromName_Post

@@ -2430,7 +2430,9 @@ static amxx_module_info_s g_ModuleInfo =
 #else // MODULE_RELOAD_ON_MAPCHANGE
 	0,
 #endif // MODULE_RELOAD_ON_MAPCHANGE
-	MODULE_LOGTAG
+	MODULE_LOGTAG,
+	MODULE_LIBRARY,
+	MODULE_LIBCLASS
 };
 
 // Storage for the requested functions
@@ -2506,6 +2508,11 @@ PFN_SET_TEAM_INFO			g_fn_SetTeamInfo;
 PFN_PLAYER_PROP_ADDR		g_fn_PlayerPropAddr;
 PFN_REG_AUTH_FUNC			g_fn_RegAuthFunc;
 PFN_UNREG_AUTH_FUNC			g_fn_UnregAuthFunc;
+PFN_FINDLIBRARY				g_fn_FindLibrary;
+PFN_ADDLIBRARIES			g_fn_AddLibraries;
+PFN_REMOVELIBRARIES			g_fn_RemoveLibraries;
+PFN_OVERRIDENATIVES			g_fn_OverrideNatives;
+PFN_GETLOCALINFO			g_fn_GetLocalInfo;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2620,6 +2627,12 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("RegAuthFunc", g_fn_RegAuthFunc, PFN_REG_AUTH_FUNC);
 	REQFUNC("UnregAuthFunc", g_fn_UnregAuthFunc, PFN_UNREG_AUTH_FUNC);
 
+	REQFUNC("FindLibrary", g_fn_FindLibrary, PFN_FINDLIBRARY);
+	REQFUNC("AddLibraries", g_fn_AddLibraries, PFN_ADDLIBRARIES);
+	REQFUNC("RemoveLibraries", g_fn_RemoveLibraries, PFN_REMOVELIBRARIES);
+	REQFUNC("OverrideNatives", g_fn_OverrideNatives, PFN_OVERRIDENATIVES);
+	REQFUNC("GetLocalInfo", g_fn_GetLocalInfo, PFN_GETLOCALINFO);
+
 #ifdef MEMORY_TEST
 	// Memory
 	REQFUNC_OPT("Allocator", g_fn_Allocator, PFN_ALLOCATOR);
@@ -2652,6 +2665,20 @@ C_DLLEXPORT int AMXX_PluginsLoaded()
 	FN_AMXX_PLUGINSLOADED();
 #endif // FN_AMXX_PLUGINSLOADED
 	return AMXX_OK;
+}
+
+C_DLLEXPORT void AMXX_PluginsUnloaded()
+{
+#ifdef FN_AMXX_PLUGINSUNLOADED
+	FN_AMXX_PLUGINSUNLOADED();
+#endif // FN_AMXX_PLUGINSUNLOADED
+}
+
+C_DLLEXPORT void AMXX_PluginsUnloading()
+{
+#ifdef FN_AMXX_PLUGINSUNLOADING
+	FN_AMXX_PLUGINSUNLOADING();
+#endif // FN_AMXX_PLUGINSUNLOADING
 }
 
 // Advanced MF functions
@@ -2743,6 +2770,10 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_PlayerPropAddr(0, 0);
 	MF_RegAuthFunc(NULL);
 	MF_UnregAuthFunc(NULL);
+	MF_FindLibrary(NULL, LibType_Class);
+	MF_AddLibraries(NULL, LibType_Class, NULL);
+	MF_RemoveLibraries(NULL);
+	MF_OverrideNatives(NULL);
 }
 #endif
 

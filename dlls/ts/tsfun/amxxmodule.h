@@ -2179,6 +2179,7 @@ typedef void			(*PFN_UNREG_AUTH_FUNC)			(AUTHORIZEFUNC);
 typedef int				(*PFN_FINDLIBRARY)				(const char * /*name*/, LibType /*type*/);
 typedef size_t			(*PFN_ADDLIBRARIES)				(const char * /*name*/, LibType /*type*/, void * /*parent*/);
 typedef size_t			(*PFN_REMOVELIBRARIES)			(void * /*parent*/);
+typedef void			(*PFN_OVERRIDENATIVES)			(AMX_NATIVE_INFO * /*natives*/);
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
 extern PFN_BUILD_PATHNAME			g_fn_BuildPathname;
@@ -2249,6 +2250,7 @@ extern PFN_UNREG_AUTH_FUNC			g_fn_UnregAuthFunc;
 extern PFN_FINDLIBRARY				g_fn_FindLibrary;
 extern PFN_ADDLIBRARIES				g_fn_AddLibraries;
 extern PFN_REMOVELIBRARIES			g_fn_RemoveLibraries;
+extern PFN_OVERRIDENATIVES			g_fn_OverrideNatives;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2316,6 +2318,7 @@ void			MF_UnregAuthFunc			(AUTHORIZEFUNC fn) { }
 int				MF_FindLibrary				(const char *name, LibType type) { }
 size_t			MF_AddLibraries				(const char *name, LibType type, void *parent) { }
 size_t			MF_RemoveLibraries			(void *parent) { }
+void			MF_OverrideNatives			(AMX_NATIVE_INFO *natives) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
@@ -2388,6 +2391,7 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...);
 #define MF_FindLibrary g_fn_FindLibrary;
 #define MF_AddLibraries g_fn_AddLibraries;
 #define MF_RemoveLibraries g_fn_RemoveLibraries;
+#define MF_OverrideNatives g_fn_OverrideNatives;
 
 #ifdef MEMORY_TEST
 /*** Memory ***/

@@ -34,7 +34,8 @@
 // module interface version was 1
 // 2 - added logtag to struct (amxx1.1-rc1)
 // 3 - added new tagAMX structure (amxx1.5)
-#define AMXX_INTERFACE_VERSION 3
+// 4 - added new 'library' setting for direct loading
+#define AMXX_INTERFACE_VERSION 4
 
 // amxx module info
 struct amxx_module_info_s
@@ -44,6 +45,8 @@ struct amxx_module_info_s
 	const char *version;
 	int reload;				// reload on mapchange when nonzero
 	const char *logtag;		// added in version 2
+	const char *library;	// added in version 4
+	const char *libclass;	// added in version 4
 };
 
 // return values from functions called by amxx
@@ -2032,6 +2035,14 @@ void FN_AMXX_DETACH(void);
 void FN_AMXX_PLUGINSLOADED(void);
 #endif // FN_AMXX_PLUGINSLOADED
 
+#ifdef FN_AMXX_PLUGINSUNLOADING
+void FN_AMXX_PLUGINSUNLOADING(void);
+#endif // FN_AMXX_PLUGINSUNLOADING
+
+#ifdef FN_AMXX_PLUGINSUNLOADED
+void FN_AMXX_PLUGINSUNLOADED(void);
+#endif // FN_AMXX_PLUGINSUNLOADED
+
 // *** Types ***
 typedef void* (*PFN_REQ_FNPTR)(const char * /*name*/);
 
@@ -2076,6 +2087,12 @@ enum PlayerProp
 	Player_Flags,			//int[32]
 	Player_Newmenu,			//int
 	Player_NewmenuPage,		//int
+};
+
+enum LibType
+{
+	LibType_Library,
+	LibType_Class
 };
 
 typedef void (*AUTHORIZEFUNC)(int player, const char *authstring);
@@ -2159,6 +2176,10 @@ typedef	int				(*PFN_AMX_PUSH)					(AMX * /*amx*/, cell /*value*/);
 typedef	int				(*PFN_SET_TEAM_INFO)			(int /*player */, int /*teamid */, const char * /*name */);
 typedef void			(*PFN_REG_AUTH_FUNC)			(AUTHORIZEFUNC);
 typedef void			(*PFN_UNREG_AUTH_FUNC)			(AUTHORIZEFUNC);
+typedef int				(*PFN_FINDLIBRARY)				(const char * /*name*/, LibType /*type*/);
+typedef size_t			(*PFN_ADDLIBRARIES)				(const char * /*name*/, LibType /*type*/, void * /*parent*/);
+typedef size_t			(*PFN_REMOVELIBRARIES)			(void * /*parent*/);
+typedef void			(*PFN_OVERRIDENATIVES)			(AMX_NATIVE_INFO * /*natives*/);
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
 extern PFN_BUILD_PATHNAME			g_fn_BuildPathname;
@@ -2226,6 +2247,10 @@ extern PFN_SET_TEAM_INFO			g_fn_SetTeamInfo;
 extern PFN_PLAYER_PROP_ADDR			g_fn_PlayerPropAddr;
 extern PFN_REG_AUTH_FUNC			g_fn_RegAuthFunc;
 extern PFN_UNREG_AUTH_FUNC			g_fn_UnregAuthFunc;
+extern PFN_FINDLIBRARY				g_fn_FindLibrary;
+extern PFN_ADDLIBRARIES				g_fn_AddLibraries;
+extern PFN_REMOVELIBRARIES			g_fn_RemoveLibraries;
+extern PFN_OVERRIDENATIVES			g_fn_OverrideNatives;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2290,6 +2315,10 @@ int				MF_SetPlayerTeamInfo		(int id, int teamid, const char *teamname) { }
 void *			MF_PlayerPropAddr			(int id, int prop) { }
 void			MF_RegAuthFunc				(AUTHORIZEFUNC fn) { }
 void			MF_UnregAuthFunc			(AUTHORIZEFUNC fn) { }
+int				MF_FindLibrary				(const char *name, LibType type) { }
+size_t			MF_AddLibraries				(const char *name, LibType type, void *parent) { }
+size_t			MF_RemoveLibraries			(void *parent) { }
+void			MF_OverrideNatives			(AMX_NATIVE_INFO *natives) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
@@ -2359,6 +2388,10 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...);
 #define MF_PlayerPropAddr g_fn_PlayerPropAddr
 #define MF_RegAuthFunc g_fn_RegAuthFunc
 #define MF_UnregAuthFunc g_fn_UnregAuthFunc
+#define MF_FindLibrary g_fn_FindLibrary;
+#define MF_AddLibraries g_fn_AddLibraries;
+#define MF_RemoveLibraries g_fn_RemoveLibraries;
+#define MF_OverrideNatives g_fn_OverrideNatives;
 
 #ifdef MEMORY_TEST
 /*** Memory ***/

@@ -433,6 +433,7 @@ void OnAmxxAttach()
 	SQLResult *Dump = new SQLResult;
 	Dump->isFree = false;
 	Results.push_back(Dump);
+	MF_OverrideNatives(mysql_Natives);
 	MF_AddNatives(mysql_Natives);
 }
 

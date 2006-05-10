@@ -2511,6 +2511,7 @@ PFN_UNREG_AUTH_FUNC			g_fn_UnregAuthFunc;
 PFN_FINDLIBRARY				g_fn_FindLibrary;
 PFN_ADDLIBRARIES			g_fn_AddLibraries;
 PFN_REMOVELIBRARIES			g_fn_RemoveLibraries;
+PFN_OVERRIDENATIVES			g_fn_OverrideNatives;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2628,6 +2629,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("FindLibrary", g_fn_FindLibrary, PFN_FINDLIBRARY);
 	REQFUNC("AddLibraries", g_fn_AddLibraries, PFN_ADDLIBRARIES);
 	REQFUNC("RemoveLibraries", g_fn_RemoveLibraries, PFN_REMOVELIBRARIES);
+	REQFUNC("OverrideNatives", g_fn_OverrideNatives, PFN_OVERRIDENATIVES);
 
 #ifdef MEMORY_TEST
 	// Memory
@@ -2769,6 +2771,7 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_FindLibrary(NULL, LibType_Class);
 	MF_AddLibraries(NULL, LibType_Class, NULL);
 	MF_RemoveLibraries(NULL);
+	MF_OverrideNatives(NULL);
 }
 #endif
 

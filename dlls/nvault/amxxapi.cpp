@@ -25,7 +25,7 @@ static cell nvault_open(AMX *amx, cell *params)
 	int len, id=-1;
 	char *name = MF_GetAmxString(amx, params[1], 0, &len);
 	char path[255], file[255];
-	MF_BuildPathnameR(path, sizeof(path)-1, "%s/vault", LOCALINFO("amxx_datadir"));
+	MF_BuildPathnameR(path, sizeof(path)-1, "%s/vault", MF_GetLocalInfo("amxx_datadir", "addons/amxmodx/data"));
 	sprintf(file, "%s/%s.vault", path, name);
 	for (size_t i=0; i<g_Vaults.size(); i++)
 	{
@@ -211,12 +211,12 @@ IVaultMngr *GetVaultMngr()
 void OnAmxxAttach()
 {
 	//create the dir if it doesn't exist
-	MKDIR(MF_BuildPathname("%s/vault", LOCALINFO("amxx_datadir")));
+	MKDIR(MF_BuildPathname("%s/vault", MF_GetLocalInfo("amxx_datadir", "addons/amxmodx/data")));
 	MF_AddNatives(nVault_natives);
 	MF_RegisterFunction((void *)GetVaultMngr, "GetVaultMngr");
 }
 
-void ServerDeactivate_Post()
+void OnPluginsUnloaded()
 {
 	for (size_t i=0; i<g_Vaults.size(); i++)
 	{

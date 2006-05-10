@@ -191,9 +191,6 @@
 			<File
 				RelativePath=".\moduleconfig.h">
 			</File>
-			<File
-				RelativePath=".\sdk\moduleconfig.h">
-			</File>
 		</Filter>
 	</Files>
 	<Globals>

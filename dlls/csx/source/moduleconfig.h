@@ -5,10 +5,12 @@
 
 // Module info
 #define MODULE_NAME "CSX"
-#define MODULE_VERSION "1.72"
+#define MODULE_VERSION "1.75"
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "http://www.amxmodx.org/"
 #define MODULE_LOGTAG "CSX"
+#define MODULE_LIBRARY "csx"
+#define MODULE_LIBCLASS "xstats"
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line
 #define MODULE_RELOAD_ON_MAPCHANGE
 
@@ -34,18 +36,33 @@
 // Uncomment this if you are using MSVC8 or greater and want to fix some of the compatibility issues yourself 
 // #define NO_MSVC8_AUTO_COMPAT
 
-// - AMXX Init functions
-// Also consider using FN_META_*
-// AMXX query
+/** 
+ * AMXX Init functions
+ * Also consider using FN_META_*
+ */
+
+/** AMXX query */
 //#define FN_AMXX_QUERY OnAmxxQuery
-// AMXX attach
-//   Do native functions init here (MF_AddNatives)
+
+/** AMXX attach
+ * Do native functions init here (MF_AddNatives)
+ */
 #define FN_AMXX_ATTACH OnAmxxAttach
-// AMXX detach
+
+/** AMXX Detach (unload) */
 #define FN_AMXX_DETACH OnAmxxDetach
-// All plugins loaded
-//   Do forward functions init here (MF_RegisterForward)
+
+/** All plugins loaded
+ * Do forward functions init here (MF_RegisterForward)
+ */
 #define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
+
+/** All plugins are about to be unloaded */
+//#define FN_AMXX_PLUGINSUNLOADING OnPluginsUnloading
+
+/** All plguins are now unloaded */
+//#define FN_AMXX_PLUGINSUNLOADED OnPluginsUnloaded
+
 
 /**** METAMOD ****/
 // If your module doesn't use metamod, you may close the file now :)

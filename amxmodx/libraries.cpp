@@ -68,9 +68,9 @@ bool DecodeLibCmdString(const char *str, LibDecoder *dec)
 			dec->param2 = NULL;
 		} else {
 			dec->buffer = strdup(str);
-			char *p = strchr(str, '_');
-			while (p && (*(p+1) != '_'))
-				p = strchr(str, '_');
+			char *p = strchr(dec->buffer, '_');
+			while (p && (*(p+1) == '_'))
+				p = strchr(p+2, '_');
 			if (!p || !*(p+1))
 				return false;
 			*p = '\0';
@@ -220,6 +220,8 @@ LibError RunLibCommand(const LibDecoder *enc)
 			expect = LibType_Library;
 		else if (enc->cmd == LibCmd_ExpectClass)
 			expect = LibType_Class;
+		else
+			expect = LibType_Library;
 
 		/** see if it exists */
 		for (; iter != end; iter++)

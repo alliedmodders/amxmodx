@@ -12,7 +12,14 @@
 #include <tfcconst>
 #include <tfcstats>
 
-#pragma library tfcx
+#if AMXX_VERSION_NUM >= 175
+ #pragma reqclass xstats
+ #if !defined AMXMODX_NOAUTOLOAD
+  #pragma defclasslib xstats tfcx
+ #endif
+#else
+ #pragma library tfcx
+#endif
 
 /************* Shared Natives Start ********************************/
 

@@ -8,7 +8,14 @@
 #endif
 #define _geoip_included
 
-#pragma library geoip
+#if AMXX_VERSION_NUM >= 175
+ #pragma reqlib geoip
+ #if !defined AMXMODX_NOAUTOLOAD
+  #pragma loadlib geoip
+ #endif
+#else
+ #pragma library geoip
+#endif
 
 //IP address can contain ports, the ports will be stripped out
 

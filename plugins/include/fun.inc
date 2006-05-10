@@ -10,7 +10,14 @@
 #endif
 #define _fun_included
 
-#pragma library fun
+#if AMXX_VERSION_NUM >= 175
+ #pragma reqlib fun
+ #if !defined AMXMODX_NOAUTOLOAD
+  #pragma loadlib fun
+ #endif
+#else
+ #pragma library fun
+#endif
 
 /* Returns 1 if receiver hears sender via voice communication. */
 native get_client_listen(receiver, sender);

@@ -13,7 +13,14 @@
 
 #include <engine_const>
 
-#pragma library engine
+#if AMXX_VERSION_NUM >= 175
+ #pragma reqlib engine
+ #if !defined AMXMODX_NOAUTOLOAD
+  #pragma loadlib engine
+ #endif
+#else
+ #pragma library engine
+#endif
 
 native traceresult(type,{Float,Sql,Result,_}:...);
 

@@ -12,7 +12,14 @@
 #include <dodconst>
 #include <dodstats>
 
-#pragma library dodx
+#if AMXX_VERSION_NUM >= 175
+ #pragma reqclass xstats
+ #if !defined AMXMODX_NOAUTOLOAD
+  #pragma defclasslib xstats dodx
+ #endif
+#else
+ #pragma library dodx
+#endif
 
 /************* Shared Natives Start ********************************/
 

@@ -9,7 +9,14 @@
 #endif
 #define _regex_included
 
-#pragma library regex
+#if AMXX_VERSION_NUM >= 175
+ #pragma reqlib regex
+ #if !defined AMXMODX_NOAUTOLOAD
+  #pragma loadlib regex
+ #endif
+#else
+ #pragma library regex
+#endif
 
 enum Regex
 {

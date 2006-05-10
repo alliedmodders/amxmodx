@@ -11,7 +11,14 @@
 
 #include <tsstats>
 
-#pragma library tsx
+#if AMXX_VERSION_NUM >= 175
+ #pragma reqclass xstats
+ #if !defined AMXMODX_NOAUTOLOAD
+  #pragma defclasslib xstats tsx
+ #endif
+#else
+ #pragma library tsx
+#endif
 
 /************* Shared Natives Start ********************************/
 

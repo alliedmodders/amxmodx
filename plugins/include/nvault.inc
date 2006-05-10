@@ -10,7 +10,14 @@
 #endif
 #define _nvault_included
 
-#pragma library nvault
+#if AMXX_VERSION_NUM >= 175
+ #pragma reqlib nvault
+ #if !defined AMXMODX_NOAUTOLOAD
+  #pragma loadlib nvault
+ #endif
+#else
+ #pragma library nvault
+#endif
 
 //Opens a vault by name (such as "myvault")
 //Returns a vault id, INVALID_HANDLE otherwise (-1)

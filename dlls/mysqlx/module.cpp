@@ -8,7 +8,7 @@ void OnAmxxAttach()
 	MF_AddNatives(g_BaseSqlNatives);
 	MF_AddNatives(g_ThreadSqlNatives);
 	MF_RegisterFunction(&g_Mysql, "GetSqlDriver");
-	if (!MF_RequestFunction("GetDbDriver"))
+	if (!MF_RequestFunction("GetDbDriver") || !MF_FindLibrary("SQLITE", LibType_Library))
 	{
 		MF_AddNatives(g_OldCompatNatives);
 		MF_AddLibraries("dbi", LibType_Class, &g_ident);

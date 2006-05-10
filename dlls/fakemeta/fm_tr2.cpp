@@ -96,7 +96,7 @@ static cell AMX_NATIVE_CALL set_tr2(AMX *amx, cell *params)
 		}
 	default:
 		{
-			MF_LogError(amx, AMX_ERR_NATIVE, "Unknown traceresult member %d", params[2]);
+			MF_LogError(amx, AMX_ERR_NATIVE, "Unknown TraceResult member %d", params[2]);
 			return 0;
 		}
 	}
@@ -182,7 +182,7 @@ static cell AMX_NATIVE_CALL get_tr2(AMX *amx, cell *params)
 		}
 	default:
 		{
-			MF_LogError(amx, AMX_ERR_NATIVE, "Unknown traceresult member %d", params[2]);
+			MF_LogError(amx, AMX_ERR_NATIVE, "Unknown TraceResult member %d", params[2]);
 			return 0;
 		}
 	}

@@ -997,20 +997,21 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		(*g_engfuncs.pfnWriteAngle)(fparam1);
 		return 1;
 	case	EngFunc_InfoKeyValue:	// char*	)			(char *infobuffer, char *key);
-		// Modify the syntax a bit.
-		// index, key
 		cRet = MF_GetAmxAddr(amx,params[2]);
-		index = cRet[0];
+		temp = reinterpret_cast<char *>(cRet[0]);
+		temp2 = MF_GetAmxString(amx,params[3],0,&len);
+
+		temp = (*g_engfuncs.pfnInfoKeyValue)(temp, temp2);
+
 		cRet = MF_GetAmxAddr(amx,params[5]);
 		iparam1 = cRet[0];
-		CHECK_ENTITY(index);
-		temp2 = MF_GetAmxString(amx,params[3],0,&len);
-		temp = (*g_engfuncs.pfnInfoKeyValue)((*g_engfuncs.pfnGetInfoKeyBuffer)(INDEXENT2(index)),temp2);
 		MF_SetAmxString(amx,params[4],temp,iparam1);
+
 		return 1;
 
 	case	EngFunc_SetKeyValue:	// void )			(char *infobuffer, char *key, char *value);
-		temp3 = MF_GetAmxString(amx, params[2], 0, &len);
+		cRet = MF_GetAmxAddr(amx, params[2]);
+		temp3 = reinterpret_cast<char *>(cRet[0]);
 		temp = MF_GetAmxString(amx, params[3], 1, &len);
 		temp2 = MF_GetAmxString(amx, params[4], 2, &len);
 		(*g_engfuncs.pfnSetKeyValue)(temp3, temp, temp2);
@@ -1020,9 +1021,13 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		cRet = MF_GetAmxAddr(amx, params[2]);
 		index = cRet[0];
 		CHECK_ENTITY(index);
-		temp = MF_GetAmxString(amx, params[3], 0, &len);
-		temp2 = MF_GetAmxString(amx, params[4], 1, &len);
-		(*g_engfuncs.pfnSetClientKeyValue)(index,(*g_engfuncs.pfnGetInfoKeyBuffer)(INDEXENT2(index)),temp,temp2);
+
+		cRet = MF_GetAmxAddr(amx, params[3]);
+		temp = reinterpret_cast<char *>(cRet[0]);
+
+		temp2 = MF_GetAmxString(amx, params[3], 0, &len);
+		temp3 = MF_GetAmxString(amx, params[4], 1, &len);
+		(*g_engfuncs.pfnSetClientKeyValue)(index, temp, temp2, temp3);
 		return 1;
 	case EngFunc_CreateInstancedBaseline:	// int )		(int classname, struct entity_state_s *baseline);
 		cRet = MF_GetAmxAddr(amx, params[2]);
@@ -1038,6 +1043,17 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 			es = reinterpret_cast<entity_state_t *>(*cRet);
 
 		return (*g_engfuncs.pfnCreateInstancedBaseline)(iparam1, es);
+	case EngFunc_GetInfoKeyBuffer:		// char *)			(edict_t *e);
+		cRet = MF_GetAmxAddr(amx, params[2]);
+		index = cRet[0];
+
+		if (index != -1)
+		{
+			CHECK_ENTITY(index);
+		}
+
+		temp = (*g_engfuncs.pfnGetInfoKeyBuffer)((index == -1) ? NULL : INDEXENT2(index));
+		return reinterpret_cast<cell>(temp);
 	default:
 		MF_LogError(amx, AMX_ERR_NATIVE, "Unknown engfunc type %d", type);
 		return 0;

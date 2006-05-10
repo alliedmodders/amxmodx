@@ -15,7 +15,7 @@ BIN_SUFFIX_32 = amxx_i386.so
 BIN_SUFFIX_64 = amxx_amd64.so
 
 OBJECTS = sdk/amxxmodule.cpp dllfunc.cpp engfunc.cpp fakemeta_amxx.cpp pdata.cpp forward.cpp \
-	fm_tr.cpp pev.cpp glb.cpp fm_tr2.cpp
+	fm_tr.cpp pev.cpp glb.cpp fm_tr2.cpp misc.cpp
 
 LINK =
 

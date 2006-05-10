@@ -14,6 +14,7 @@ void OnAmxxAttach()
 	MF_AddNatives(tr_Natives);
 	MF_AddNatives(glb_natives);
 	MF_AddNatives(ext2_natives);
+	MF_AddNatives(misc_natives);
 	g_kvd_2.szClassName = "";
 	g_kvd_2.szKeyName = "";
 	g_kvd_2.szValue = "";
@@ -140,6 +141,7 @@ void FMH_ServerDeactivate()
 	RESETE(CVarSetString);
 	RESETE(AlertMessage);
 	RESETE(CreateInstancedBaseline);
+	RESETE(GetInfoKeyBuffer);
 
 	RESETD(Spawn);
 	RESETD(Think);

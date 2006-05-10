@@ -207,6 +207,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\misc.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\pdata.cpp"
 				>
 			</File>

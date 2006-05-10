@@ -134,6 +134,9 @@
 				RelativePath=".\fm_tr2.cpp">
 			</File>
 			<File
+				RelativePath=".\misc.cpp">
+			</File>
+			<File
 				RelativePath=".\pdata.cpp">
 			</File>
 			<Filter

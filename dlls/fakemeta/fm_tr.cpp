@@ -6,10 +6,12 @@ KeyValueData *g_fm_keyValueData;
 static cell AMX_NATIVE_CALL set_tr(AMX *amx, cell *params)
 {
 	int type = params[1];
-	//TraceResult *tr = (TraceResult*)((void *)cPtr);
 
 	if (*params / sizeof(cell) < 2)
-		return 0;	//TODO: Error
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "No data passed");
+		return 0;
+	}
 	
 	cell *ptr = MF_GetAmxAddr(amx, params[2]);
 	edict_t *e = 0;
@@ -79,7 +81,7 @@ static cell AMX_NATIVE_CALL set_tr(AMX *amx, cell *params)
 		}
 	default:
 		{
-			//TODO: error
+			MF_LogError(amx, AMX_ERR_NATIVE, "Unknown TraceResult member %d", params[2]);
 			return 0;
 		}
 	}
@@ -153,7 +155,7 @@ static cell AMX_NATIVE_CALL get_tr(AMX *amx, cell *params)
 		}
 	default:
 		{
-			//TODO: error
+			MF_LogError(amx, AMX_ERR_NATIVE, "Unknown TraceResult member %d", params[2]);
 			return 0;
 		}
 	}

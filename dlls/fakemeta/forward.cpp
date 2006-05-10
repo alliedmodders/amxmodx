@@ -88,13 +88,13 @@ SIMPLE_INT_HOOK_STRING(PrecacheSound);
 
 void ClientUserInfoChanged(edict_t *e, char *infobuffer)
 {
-	FM_ENG_HANDLE(FM_ClientUserInfoChanged, (Engine[FM_ClientUserInfoChanged].at(i), (cell)ENTINDEX(e)));
+	FM_ENG_HANDLE(FM_ClientUserInfoChanged, (Engine[FM_ClientUserInfoChanged].at(i), (cell)ENTINDEX(e), (cell)infobuffer));
 	RETURN_META(mswi(lastFmRes));
 }
 
 void ClientUserInfoChanged_post(edict_t *e, char *infobuffer)
 {
-	FM_ENG_HANDLE_POST(FM_ClientUserInfoChanged, (EnginePost[FM_ClientUserInfoChanged].at(i), (cell)ENTINDEX(e))); 
+	FM_ENG_HANDLE_POST(FM_ClientUserInfoChanged, (EnginePost[FM_ClientUserInfoChanged].at(i), (cell)ENTINDEX(e), (cell)infobuffer)); 
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -623,6 +623,19 @@ int CreateInstancedBaseline_post(int classname, struct entity_state_s *baseline)
 	origCellRet = META_RESULT_ORIG_RET(int);
 	FM_ENG_HANDLE_POST(FM_CreateInstancedBaseline, (EnginePost[FM_CreateInstancedBaseline].at(i), (cell)classname, (cell)baseline));
 	RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult);
+}
+
+char *GetInfoKeyBuffer(edict_t *e)
+{
+	FM_ENG_HANDLE(FM_GetInfoKeyBuffer, (Engine[FM_GetInfoKeyBuffer].at(i), (cell)ENTINDEX(e)));
+	RETURN_META_VALUE(mswi(lastFmRes), reinterpret_cast<char *>(mlCellResult));
+}
+
+char *GetInfoKeyBuffer_post(edict_t *e)
+{
+	origCellRet = reinterpret_cast<cell>(META_RESULT_ORIG_RET(char *));
+	FM_ENG_HANDLE(FM_GetInfoKeyBuffer, (Engine[FM_GetInfoKeyBuffer].at(i), (cell)ENTINDEX(e)));
+	RETURN_META_VALUE(MRES_IGNORED, reinterpret_cast<char *>(mlCellResult));
 }
 
 /*
@@ -1165,7 +1178,6 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_ARRAY, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 		ENGHOOK(StaticDecal);
 		break;
-
 	case FM_PrecacheGeneric:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_STRING, FP_DONE);
 		ENGHOOK(PrecacheGeneric);
@@ -1199,7 +1211,6 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
 		ENGHOOK(CheckVisibility);
 		break;
-
 	case FM_GetCurrentPlayer:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_DONE);
 		ENGHOOK(GetCurrentPlayer);
@@ -1413,7 +1424,7 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 		NEWDLLHOOK(ShouldCollide);
 		break;
 	case FM_ClientUserInfoChanged:
-		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
 		DLLHOOK(ClientUserInfoChanged);
 		break;
 	case FM_UpdateClientData:
@@ -1439,6 +1450,10 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	case FM_CreateBaseline:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_ARRAY, FP_ARRAY, FP_DONE);
 		DLLHOOK(CreateBaseline);
+		break;
+	case FM_GetInfoKeyBuffer:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
+		ENGHOOK(GetInfoKeyBuffer);
 		break;
 #if 0
 

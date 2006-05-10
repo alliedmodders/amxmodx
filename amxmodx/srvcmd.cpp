@@ -39,7 +39,7 @@ void amx_command()
 	{
 
 		print_srvconsole("Currently loaded plugins:\n");
-		print_srvconsole("       %-18.17s %-8.7s %-17.16s %-16.15s %-9.8s\n", "name", "version", "author", "file", "status");
+		print_srvconsole("       %-23.22s %-8.7s %-17.16s %-16.15s %-9.8s\n", "name", "version", "author", "file", "status");
 
 		int plugins = 0;
 		int	running = 0;
@@ -52,7 +52,7 @@ void amx_command()
 			if ((*a).isValid() && !(*a).isPaused()) 
 				++running;
 
-			print_srvconsole(" [%3d] %-18.17s %-8.7s %-17.16s %-16.15s %-9.8s\n", plugins, (*a).getTitle(), (*a).getVersion(), (*a).getAuthor(), (*a).getName(), (*a).getStatus());
+			print_srvconsole(" [%3d] %-23.22s %-8.7s %-17.16s %-16.15s %-9.8s\n", plugins, (*a).getTitle(), (*a).getVersion(), (*a).getAuthor(), (*a).getName(), (*a).getStatus());
 			++a;
 		}
 

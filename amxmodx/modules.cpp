@@ -430,9 +430,12 @@ int CheckModules(AMX *amx, char error[128])
 {
 	int numLibraries = amx_GetLibraries(amx);
 	char buffer[64];
+	LibType expect;
+	bool found;
 	
 	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
 
+	/** decode old style plugins */
 	for (int i = 0; i < numLibraries; i++)
 	{
 		amx_GetLibrary(amx, i, buffer, sizeof(buffer) - 1);
@@ -440,41 +443,18 @@ int CheckModules(AMX *amx, char error[128])
 		if (stricmp(buffer, "float") == 0)
 			continue;
 
-		LibDecoder dcd;
-		LibType expect;
-		bool found = false;
-		const char *search = NULL;
-
-		DecodeLibCmdString(buffer, dcd);
-
-		switch (dcd.cmd)
+		if (stricmp(buffer, "dbi") == 0)
 		{
-		case LibCmd_ReqLib:
-			search = dcd.param1;
-			expect = LibType_Library;
-			break;
-		case LibCmd_ExpectLib:
-			search = dcd.param2;
-			expect = LibType_Library;
-			break;
-		case LibCmd_ReqClass:
-			search = dcd.param1;
 			expect = LibType_Class;
-			break;
-		case LibCmd_ExpectClass:
-			search = dcd.param2;
-			expect = LibType_Class;
-			break;
+		} else {
+			expect = LibType_Library;
 		}
 
-		if (!search)
-			continue;
-
-		found = FindLibrary(search, expect);
+		found = FindLibrary(buffer, expect);
 		
 		if (!found)
 		{
-			if (pHandler->HandleModule(search))
+			if (pHandler->HandleModule(buffer))
 				found = true;
 		}
 		
@@ -483,10 +463,40 @@ int CheckModules(AMX *amx, char error[128])
 			const char *type = "Module/Library";
 			if (expect == LibType_Class)
 				type = "Module/Library Class";
-			sprintf(error, "%s \"%s\" required for plugin. Check modules.ini.", type, search);
+			sprintf(error, "%s \"%s\" required for plugin. Check modules.ini.", type, buffer);
 			return 0;
 		}
 	}
+
+	/** decode new style plugins */
+	amx_NumTags(amx, &numLibraries);
+	cell notused;
+	LibDecoder dec;
+	LibError err;
+	for (int i=0; i<numLibraries; i++)
+	{
+		amx_GetTag(amx, i, buffer, &notused);
+		if (buffer[0] != '?')
+			continue;
+		if (DecodeLibCmdString(buffer, &dec))
+		{
+			if (dec.cmd == LibCmd_ReqClass || dec.cmd == LibCmd_ReqLib)
+			{
+				if ( (err=RunLibCommand(&dec)) != LibErr_None )
+				{
+					if (!pHandler->HandleModule(buffer))
+					{
+						const char *type = "Module/Library";
+						if (err == LibErr_NoClass)
+							type = "Module/Library Class";
+						sprintf(error, "%s \"%s\" required for plugin.  Check modules.ini.", type, buffer);
+						return 0;
+					}
+				}
+			}
+		}
+	}
+
 
 	return 1;
 }

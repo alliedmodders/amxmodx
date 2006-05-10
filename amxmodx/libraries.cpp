@@ -20,62 +20,62 @@ bool AddLibrary(const char *name, LibType type, LibSource src, void *parent)
 	return true;
 }
 
-bool DecodeLibCmdString(const char *str, LibDecoder &dec)
+bool DecodeLibCmdString(const char *str, LibDecoder *dec)
 {
-	if (str[0] != '_')
+	if (dec->buffer)
 	{
-		dec.cmd = LibCmd_ReqLib;
-		dec.buffer = strdup(str);
-		if (strcmp(str, "dbi") == 0)
-			dec.cmd = LibCmd_ReqClass;
-		dec.param1 = dec.buffer;
-		dec.param2 = NULL;
+		free(dec->buffer);
+		dec->buffer = NULL;
+	}
+	if (str[0] != '?')
+	{
+		return false;
 	} else {
 		str++;
 		if (*str == 'r')
 		{
 			str++;
 			if (*str == 'c')
-				dec.cmd = LibCmd_ReqClass;
+				dec->cmd = LibCmd_ReqClass;
 			else if (*str == 'l')
-				dec.cmd = LibCmd_ReqLib;
+				dec->cmd = LibCmd_ReqLib;
 			else
 				return false;
 			str++;
 		} else if (*str == 'f') {
 			str++;
-			dec.cmd = LibCmd_ForceLib;
+			dec->cmd = LibCmd_ForceLib;
 		} else if (*str == 'e') {
 			str++;
 			if (*str == 'c')
-				dec.cmd = LibCmd_ExpectClass;
+				dec->cmd = LibCmd_ExpectClass;
 			else if (*str == 'l')
-				dec.cmd = LibCmd_ExpectLib;
+				dec->cmd = LibCmd_ExpectLib;
 			else
 				return false;
 			str++;
 		} else if (*str == 'd') {
 			str++;
-			dec.cmd = LibCmd_DefaultLib;
+			dec->cmd = LibCmd_DefaultLib;
 		}
 		if (*str != '_')
 			return false;
 		str++;
-		if (dec.cmd < LibCmd_ExpectLib)
+		if (dec->cmd < LibCmd_ExpectLib)
 		{
-			dec.buffer = strdup(str);
-			dec.param1 = dec.buffer;
-			dec.param2 = NULL;
+			dec->buffer = strdup(str);
+			dec->param1 = dec->buffer;
+			dec->param2 = NULL;
 		} else {
-			dec.buffer = strdup(str);
-			char *p = const_cast<char *>(strchr(str, '_'));
+			dec->buffer = strdup(str);
+			char *p = strchr(str, '_');
 			while (p && (*(p+1) != '_'))
-				p = const_cast<char *>(strchr(str, '_'));
+				p = strchr(str, '_');
 			if (!p || !*(p+1))
 				return false;
 			*p = '\0';
-			dec.param1 = dec.buffer;
-			dec.param2 = p+1;
+			dec->param1 = dec->buffer;
+			dec->param2 = p+1;
 		}
 	}
 

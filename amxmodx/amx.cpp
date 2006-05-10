@@ -844,19 +844,6 @@ int AMXAPI amx_Init(AMX *amx, void *program)
 {
   AMX_HEADER *hdr;
   BROWSEHOOK hook = NULL;
-  #if (defined _Windows || defined LINUX || defined __FreeBSD__ || defined __OpenBSD__) && !defined AMX_NODYNALOAD
-    char libname[sNAMEMAX+8];  /* +1 for '\0', +3 for 'amx' prefix, +4 for extension */
-    #if defined _Windows
-      typedef int (FAR WINAPI *AMX_ENTRY)(AMX _FAR *amx);
-      HINSTANCE hlib;
-    #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
-      typedef int (*AMX_ENTRY)(AMX *amx);
-      void *hlib;
-    #endif
-    int numlibraries,i;
-    AMX_FUNCSTUB *lib;
-    AMX_ENTRY libinit;
-  #endif
 
   if ((amx->flags & AMX_FLAG_RELOC)!=0)
     return AMX_ERR_INIT;  /* already initialized (may not do so twice) */
@@ -866,22 +853,6 @@ int AMXAPI amx_Init(AMX *amx, void *program)
    * multi-byte words
    */
   assert(check_endian());
-  #if BYTE_ORDER==BIG_ENDIAN
-    amx_Align32((uint32_t*)&hdr->size);
-    amx_Align16(&hdr->magic);
-    amx_Align16((uint16_t*)&hdr->flags);
-    amx_Align16((uint16_t*)&hdr->defsize);
-    amx_Align32((uint32_t*)&hdr->cod);
-    amx_Align32((uint32_t*)&hdr->dat);
-    amx_Align32((uint32_t*)&hdr->hea);
-    amx_Align32((uint32_t*)&hdr->stp);
-    amx_Align32((uint32_t*)&hdr->cip);
-    amx_Align32((uint32_t*)&hdr->publics);
-    amx_Align32((uint32_t*)&hdr->natives);
-    amx_Align32((uint32_t*)&hdr->libraries);
-    amx_Align32((uint32_t*)&hdr->pubvars);
-    amx_Align32((uint32_t*)&hdr->tags);
-  #endif
 
   if (hdr->magic!=AMX_MAGIC)
     return AMX_ERR_FORMAT;
@@ -902,13 +873,7 @@ int AMXAPI amx_Init(AMX *amx, void *program)
   } /* if */
   if (hdr->stp<=0)
     return AMX_ERR_FORMAT;
-  #if BYTE_ORDER==BIG_ENDIAN
-    if ((hdr->flags & AMX_FLAG_COMPACT)==0) {
-      ucell *code=(ucell *)((unsigned char *)program+(int)hdr->cod);
-      while (code<(ucell *)((unsigned char *)program+(int)hdr->hea))
-        swapcell(code++);
-    } /* if */
-  #endif
+
   assert((hdr->flags & AMX_FLAG_COMPACT)!=0 || hdr->hea == hdr->size);
   if ((hdr->flags & AMX_FLAG_COMPACT)!=0) {
     #if AMX_COMPACTMARGIN > 2
@@ -935,107 +900,11 @@ int AMXAPI amx_Init(AMX *amx, void *program)
     amx->callback=amx_Callback;
   amx->data=NULL;
 
-  /* also align all addresses in the public function, public variable,
-   * public tag and native function tables --offsets into the name table
-   * (if present) must also be swapped.
-   */
-  #if BYTE_ORDER==BIG_ENDIAN
-  { /* local */
-    AMX_FUNCSTUB *fs;
-    int i,num;
-
-    fs=GETENTRY(hdr,natives,0);
-    num=NUMENTRIES(hdr,natives,libraries);
-    for (i=0; i<num; i++) {
-      amx_AlignCell(&fs->address);      /* redundant, because it should be zero */
-      if (USENAMETABLE(hdr))
-        amx_AlignCell(&((AMX_FUNCSTUBNT*)fs)->nameofs);
-      fs=(AMX_FUNCSTUB*)((unsigned char *)fs+hdr->defsize);
-    } /* for */
-
-    fs=GETENTRY(hdr,publics,0);
-    assert(hdr->publics<=hdr->natives);
-    num=NUMENTRIES(hdr,publics,natives);
-    for (i=0; i<num; i++) {
-      amx_AlignCell(&fs->address);
-      if (USENAMETABLE(hdr))
-        amx_AlignCell(&((AMX_FUNCSTUBNT*)fs)->nameofs);
-      fs=(AMX_FUNCSTUB*)((unsigned char *)fs+hdr->defsize);
-    } /* for */
-
-    fs=GETENTRY(hdr,pubvars,0);
-    assert(hdr->pubvars<=hdr->tags);
-    num=NUMENTRIES(hdr,pubvars,tags);
-    for (i=0; i<num; i++) {
-      amx_AlignCell(&fs->address);
-      if (USENAMETABLE(hdr))
-        amx_AlignCell(&((AMX_FUNCSTUBNT*)fs)->nameofs);
-      fs=(AMX_FUNCSTUB*)((unsigned char *)fs+hdr->defsize);
-    } /* for */
-
-    fs=GETENTRY(hdr,tags,0);
-    if (hdr->file_version<7) {
-      assert(hdr->tags<=hdr->cod);
-      num=NUMENTRIES(hdr,tags,cod);
-    } else {
-      assert(hdr->tags<=hdr->nametable);
-      num=NUMENTRIES(hdr,tags,nametable);
-    } /* if */
-    for (i=0; i<num; i++) {
-      amx_AlignCell(&fs->address);
-      if (USENAMETABLE(hdr))
-        amx_AlignCell(&((AMX_FUNCSTUBNT*)fs)->nameofs);
-      fs=(AMX_FUNCSTUB*)((unsigned char *)fs+hdr->defsize);
-    } /* for */
-  } /* local */
-  #endif
-
   /* relocate call and jump instructions */
   hook = (BROWSEHOOK)amx->usertags[UT_BROWSEHOOK];
   if (hook)
 	  hook(amx, NULL, NULL);
   amx_BrowseRelocate(amx);
-
-  /* load any extension modules that the AMX refers to */
-  #if (defined _Windows || defined LINUX || defined __FreeBSD__ || defined __OpenBSD__) && !defined AMX_NODYNALOAD
-    hdr=(AMX_HEADER *)amx->base;
-    numlibraries=NUMENTRIES(hdr,libraries,pubvars);
-    for (i=0; i<numlibraries; i++) {
-      lib=GETENTRY(hdr,libraries,i);
-      strcpy(libname,"amx");
-      strcat(libname,GETENTRYNAME(hdr,lib));
-      #if defined _Windows
-        strcat(libname,".dll");
-        #if defined __WIN32__
-          hlib=LoadLibraryA(libname);
-        #else
-          hlib=LoadLibrary(libname);
-          if (hlib<=HINSTANCE_ERROR)
-            hlib=NULL;
-        #endif
-      #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
-        strcat(libname,".so");
-        hlib=dlopen(libname,RTLD_NOW);
-      #endif
-      if (hlib!=NULL) {
-        /* a library that cannot be loaded or that does not have the required
-         * initialization function is simply ignored
-         */
-        char funcname[sNAMEMAX+9]; /* +1 for '\0', +4 for 'amx_', +4 for 'Init' */
-        strcpy(funcname,"amx_");
-        strcat(funcname,GETENTRYNAME(hdr,lib));
-        strcat(funcname,"Init");
-        #if defined _Windows
-          libinit=(AMX_ENTRY)GetProcAddress(hlib,funcname);
-        #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
-          libinit=(AMX_ENTRY)dlsym(hlib,funcname);
-        #endif
-        if (libinit!=NULL)
-          libinit(amx);
-      } /* if */
-      lib->address=(ucell)hlib;
-    } /* for */
-  #endif
 
   return AMX_ERR_NONE;
 }

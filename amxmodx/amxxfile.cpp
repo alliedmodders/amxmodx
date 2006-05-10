@@ -109,7 +109,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 	{
 		DATAREAD(&m_Bh.version, sizeof(int16_t), 1);
 		
-		if (m_Bh.version != MAGIC_VERSION)
+		if (m_Bh.version > MAGIC_VERSION)
 		{
 			m_Status = Err_OldFile;
 			fclose(m_pFile);

@@ -262,6 +262,7 @@ int	C_Spawn(edict_t *pent)
 
 	// ###### Load modules
 	loadModules(get_localinfo("amxx_modules", "addons/amxmodx/configs/modules.ini"), PT_ANYTIME);
+	g_plugins.CALMFromFile(get_localinfo("amxx_plugins", "addons/amxmodx/configs/plugins.ini"));
 	int loaded = countModules(CountModules_Running); // Call after attachModules so all modules don't have pending stat
 	
 	// Set some info about amx version and modules

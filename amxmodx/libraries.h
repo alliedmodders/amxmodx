@@ -58,7 +58,7 @@ struct LibDecoder
 };
 
 bool AddLibrary(const char *name, LibType type, LibSource src, void *parent=NULL);
-bool DecodeLibCmdString(const char *str, LibDecoder &cmd);
+bool DecodeLibCmdString(const char *str, LibDecoder *cmd);
 size_t AddLibrariesFromString(const char *name, LibType type, LibSource src, void *parent=NULL);
 size_t ClearLibraries(LibSource src);
 LibError RunLibCommand(const LibDecoder *enc);

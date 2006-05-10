@@ -161,6 +161,8 @@ public:
 	char *ReadIntoOrFromCache(const char *file, size_t &bufsize);
 	void InvalidateCache();
 	void InvalidateFileInCache(const char *file, bool freebuf);
+	void CacheAndLoadModules(const char *plugin);
+	void CALMFromFile(const char *file);
 private:
 	List<plcache_entry *> m_plcache;
 };

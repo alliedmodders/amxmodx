@@ -36,6 +36,7 @@
 #include "amx.h"
 #include "natives.h"
 #include "debugger.h"
+#include "libraries.h"
 
 extern const char *no_function;
 
@@ -472,3 +473,133 @@ void CPluginMngr::InvalidateFileInCache(const char *file, bool freebuf)
 	}
 }
 
+void CPluginMngr::CacheAndLoadModules(const char *plugin)
+{
+	size_t progsize;
+	char *prog = ReadIntoOrFromCache(plugin, progsize);
+
+	if (!prog)
+		return;
+
+	AMX_HEADER hdr;
+	memcpy(&hdr, prog, sizeof(AMX_HEADER));
+
+	uint16_t magic = hdr.magic;
+	amx_Align16(&magic);
+
+	if (magic != AMX_MAGIC)
+	{
+		return;
+	}
+
+	if (hdr.file_version < MIN_FILE_VERSION ||
+		hdr.file_version > CUR_FILE_VERSION)
+	{
+		return;
+	}
+	if ((hdr.defsize != sizeof(AMX_FUNCSTUB)) && 
+		(hdr.defsize != sizeof(AMX_FUNCSTUBNT)))
+	{
+		return;
+	}
+
+	amx_Align32((uint32_t*)&hdr.nametable);
+	uint16_t *namelength=(uint16_t*)((unsigned char*)prog + (unsigned)hdr.nametable);
+	amx_Align16(namelength);
+	if (*namelength>sNAMEMAX)
+	{
+		return;
+	}
+	
+	if (hdr.stp <= 0)
+	{
+		return;
+	}
+
+	AMX amx;
+	memset(&amx, 0, sizeof(AMX));
+	amx.base = (unsigned char *)prog;
+
+	int num;
+	char name[sNAMEMAX+1];
+	cell tag_id;
+	amx_NumTags(&amx, &num);
+
+	CVector<LibDecoder *> expects;
+	CVector<LibDecoder *> defaults;
+	for (int i=0; i<num; i++)
+	{
+		amx_GetTag(&amx, i, name, &tag_id);
+		if (name[0] == '?')
+		{
+			LibDecoder *dc = new LibDecoder;
+			if (DecodeLibCmdString(name, dc))
+			{
+				if (dc->cmd == LibCmd_ForceLib)
+				{
+					RunLibCommand(dc);
+					delete dc;
+				} else if ( (dc->cmd == LibCmd_ExpectClass) ||
+							(dc->cmd == LibCmd_ExpectLib) ) 
+				{
+					expects.push_back(dc);
+				} else if (dc->cmd == LibCmd_DefaultLib) {
+					defaults.push_back(dc);
+				}
+			} else {
+				delete dc;
+			}
+		}
+	}
+
+	for (size_t i=0; i<expects.size(); i++)
+	{
+		RunLibCommand(expects[i]);
+		delete expects[i];
+	}
+	for (size_t i=0; i<defaults.size(); i++)
+	{
+		RunLibCommand(defaults[i]);
+		delete defaults[i];
+	}
+
+	return;
+}
+
+void CPluginMngr::CALMFromFile(const char *file)
+{
+	char filename[256];
+	FILE *fp = fopen(build_pathname_r(filename, sizeof(filename) - 1, "%s", file), "rt");
+
+	if (!fp) 
+	{
+		return;
+	}
+
+	// Find now folder
+	char pluginName[256];
+	char line[256];
+	const char *pluginsDir = get_localinfo("amxx_pluginsdir", "addons/amxmodx/plugins");
+	String rline;
+
+	while (!feof(fp)) 
+	{
+		fgets(line, sizeof(line)-1, fp);
+		if (line[0] == ';' || line[0] == '\n' || line[0] == '\0')
+			continue;
+
+		rline.assign(line);
+		rline.trim();
+		pluginName[0] = '\0';
+		sscanf(rline.c_str(), "%s", pluginName);
+
+		if (!isalnum(*pluginName))
+			continue;
+
+		build_pathname_r(filename, sizeof(filename)-1, "%s/%s", pluginsDir, pluginName);
+
+		CacheAndLoadModules(filename);
+	}
+
+	fclose(fp);
+}

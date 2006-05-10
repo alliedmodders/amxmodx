@@ -489,14 +489,13 @@ int CheckModules(AMX *amx, char error[128])
 						const char *type = "Module/Library";
 						if (err == LibErr_NoClass)
 							type = "Module/Library Class";
-						sprintf(error, "%s \"%s\" required for plugin.  Check modules.ini.", type, buffer);
+						sprintf(error, "%s \"%s\" required for plugin.  Check modules.ini.", type, dec.param1);
 						return 0;
 					}
 				}
 			}
 		}
 	}
-
 
 	return 1;
 }

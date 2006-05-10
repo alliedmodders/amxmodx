@@ -9,14 +9,7 @@
 
 #include <fakemeta_const> 
 
-#if AMXX_VERSION_NUM >= 175
- #pragma reqlib fakemeta
- #if !defined AMXMODX_NOAUTOLOAD
-  #pragma loadlib fakemeta
- #endif
-#else
- #pragma library fakemeta
-#endif
+#pragma library fakemeta
 
 /* Returns entvar data from an entity   Use the pev_* enum to specify which form of data you want returned. */
 native pev(_index,_value,{Float,Sql,Result,_}:...);
@@ -124,3 +117,7 @@ native get_pdata_string(entity, offset, dest[], maxlength, byref=1, linux=-5);
 //realloc = 1 - reallocate new string with free+malloc
 //realloc = 2 - reallocate new string with delete[]+new[]
 native set_pdata_string(entity, offset, const source[], realloc=2, linux=-5);
+
+// Copies the given infoBuffer pointer into out[]
+// An infoBuffer pointer is returned by EngFunc_GetInfoKeyBuffer
+native copy_infokey_buffer(infoBuffer, out[], maxlen);

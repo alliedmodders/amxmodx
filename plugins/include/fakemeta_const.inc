@@ -20,6 +20,9 @@
 #define FMRES_IGNORED	1
 #define FMRES_OVERRIDE	3
 
+// Use this with GetInfoKeyBuffer if you want the server's localinfo buffer
+#define FM_NULLENT		-1
+
 
 /* Used with engfunc()
  */
@@ -105,7 +108,8 @@ enum {
 	EngFunc_InfoKeyValue,				// char*)			(char *infobuffer, char *key);
 	EngFunc_SetKeyValue,				// void )			(char *infobuffer, char *key, char *value);
 	EngFunc_SetClientKeyValue,			// void )			(int clientIndex, char *infobuffer, char *key, char *value);
-	EngFunc_CreateInstBaseline			// int  )			(int classname, struct entity_state_s *baseline);
+	EngFunc_CreateInstBaseline,			// int  )			(int classname, struct entity_state_s *baseline);
+	EngFunc_GetInfoKeyBuffer			// char*)			(edict_t *e);
 };
 
 /* Used with dllfunc()
@@ -513,14 +517,16 @@ enum {
 	FM_ShouldCollide,
 	
 	//LATE ADDITIONS (v1.71)
-	FM_ClientUserInfoChanged,	//passes id only
+	FM_ClientUserInfoChanged,
 	
+	// LATE ADDITIONS (v1.75)
 	FM_UpdateClientData,
 	FM_AddToFullPack,
 	FM_CmdStart,
 	FM_CmdEnd,
 	FM_CreateInstBaseline,
-	FM_CreateBaseline
+	FM_CreateBaseline,
+	FM_GetInfoKeyBuffer
 };
 
 enum TraceResult

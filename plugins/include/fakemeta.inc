@@ -9,7 +9,14 @@
 
 #include <fakemeta_const> 
 
-#pragma library fakemeta
+#if AMXX_VERSION_NUM >= 175
+ #pragma reqlib fakemeta
+ #if !defined AMXMODX_NOAUTOLOAD
+  #pragma loadlib fakemeta
+ #endif
+#else
+ #pragma library fakemeta
+#endif
 
 /* Returns entvar data from an entity   Use the pev_* enum to specify which form of data you want returned. */
 native pev(_index,_value,{Float,Sql,Result,_}:...);

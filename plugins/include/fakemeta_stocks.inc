@@ -185,6 +185,9 @@ stock EF_SetClientKeyValue(const ID, const INFOBUFFER, const KEY[], const VALUE[
 
 stock EF_CreateInstBaseline(CLASSNAME, baseline)
 	return engfunc(EngFunc_CreateInstBaseline, CLASSNAME, baseline)
+
+// Returns pointer to info buffer that can be used with the INFOBUFFER param
+// of EF_InfoKeyValue, EF_SetKeyValue, and EF_SetClientKeyValue
 stock EF_GetInfoKeyBuffer(const ENTITY)
 	return engfunc(EngFunc_GetInfoKeyBuffer, ENTITY)
 

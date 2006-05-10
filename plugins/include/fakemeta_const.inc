@@ -109,6 +109,8 @@ enum {
 	EngFunc_SetKeyValue,				// void )			(char *infobuffer, char *key, char *value);
 	EngFunc_SetClientKeyValue,			// void )			(int clientIndex, char *infobuffer, char *key, char *value);
 	EngFunc_CreateInstBaseline,			// int  )			(int classname, struct entity_state_s *baseline);
+	
+	// Returns pointer to info buffer that can be used with the infobuffer param of InfoKeyValue, SetKeyValue, and SetClientKeyValue
 	EngFunc_GetInfoKeyBuffer			// char*)			(edict_t *e);
 };
 

@@ -1026,6 +1026,7 @@ static int command(void)
           char name[sNAMEMAX+1],sname[sNAMEMAX+1];
           const char *prefix = "";
           sname[0] = '\0';
+          sname[1] = '\0';
           if (!strcmp(str, "reqlib"))
             prefix = "?rl_";
           else if (!strcmp(str, "reqclass"))
@@ -1048,16 +1049,16 @@ static int command(void)
               name[i]=*lptr;
             name[i]='\0';
             if (!strncmp(str, "exp", 3) || !strncmp(str, "def", 3))
-			{
-              while (*lptr && isalpha(*lptr))
+            {
+              while (*lptr && isspace(*lptr))
                 lptr++;
               for (i=1; i<sizeof sname && alphanum(*lptr); i++,lptr++)
                 sname[i]=*lptr;
               sname[i] = '\0';
               if (!sname[1])
-			  {
-                error(28);
-			  } else {
+              {
+                error(45);
+              } else {
                 sname[0] = '_';
               }
 			}

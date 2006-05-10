@@ -451,7 +451,25 @@ int CheckModules(AMX *amx, char error[128])
 		}
 
 		found = FindLibrary(buffer, expect);
-		
+
+		/* for binary compat */
+		if (!found)
+		{
+			CList<CModule, const char *>::iterator a = g_modules.begin();
+			while (a)
+			{
+				CModule &cm = (*a);
+				if (cm.getInfoNew() && 
+					cm.getInfoNew()->logtag && 
+					!strcasecmp(cm.getInfoNew()->logtag, buffer))
+				{
+					found = true;
+					break;
+				}
+				++a;
+			}
+		}
+			
 		if (!found)
 		{
 			if (pHandler->HandleModule(buffer))
@@ -1641,6 +1659,11 @@ int MNF_SetPlayerTeamInfo(int player, int teamid, const char *teamname)
 	return 1;
 }
 
+const char *MNF_GetLocalInfo(char *name, const char *def)
+{
+	return get_localinfo(name, def);
+}
+
 void *MNF_PlayerPropAddr(int id, int prop)
 {
 	if (id < 1 || id > gpGlobals->maxClients)
@@ -1786,6 +1809,7 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("AddLibraries", MFN_AddLibraries);
 	REGISTER_FUNC("RemoveLibraries", MNF_RemoveLibraries);
 	REGISTER_FUNC("OverrideNatives", MNF_OverrideNatives);
+	REGISTER_FUNC("GetLocalInfo", MNF_GetLocalInfo);
 
 #ifdef MEMORY_TEST
 	REGISTER_FUNC("Allocator", m_allocator)

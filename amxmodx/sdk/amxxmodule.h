@@ -2180,6 +2180,7 @@ typedef int				(*PFN_FINDLIBRARY)				(const char * /*name*/, LibType /*type*/);
 typedef size_t			(*PFN_ADDLIBRARIES)				(const char * /*name*/, LibType /*type*/, void * /*parent*/);
 typedef size_t			(*PFN_REMOVELIBRARIES)			(void * /*parent*/);
 typedef void			(*PFN_OVERRIDENATIVES)			(AMX_NATIVE_INFO * /*natives*/);
+typedef const char *	(*PFN_GETLOCALINFO)				(const char * /*name*/, const char * /*def*/);
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
 extern PFN_BUILD_PATHNAME			g_fn_BuildPathname;
@@ -2251,6 +2252,7 @@ extern PFN_FINDLIBRARY				g_fn_FindLibrary;
 extern PFN_ADDLIBRARIES				g_fn_AddLibraries;
 extern PFN_REMOVELIBRARIES			g_fn_RemoveLibraries;
 extern PFN_OVERRIDENATIVES			g_fn_OverrideNatives;
+extern PFN_GETLOCALINFO				g_fn_GetLocalInfo;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2319,6 +2321,7 @@ int				MF_FindLibrary				(const char *name, LibType type) { }
 size_t			MF_AddLibraries				(const char *name, LibType type, void *parent) { }
 size_t			MF_RemoveLibraries			(void *parent) { }
 void			MF_OverrideNatives			(AMX_NATIVE_INFO *natives) { }
+const char *	MF_GetLocalInfo				(const char *name, const char *def) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
@@ -2392,6 +2395,7 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...);
 #define MF_AddLibraries g_fn_AddLibraries
 #define MF_RemoveLibraries g_fn_RemoveLibraries
 #define MF_OverrideNatives g_fn_OverrideNatives
+#define MF_GetLocalInfo g_fn_GetLocalInfo
 
 #ifdef MEMORY_TEST
 /*** Memory ***/

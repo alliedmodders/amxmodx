@@ -2512,6 +2512,7 @@ PFN_FINDLIBRARY				g_fn_FindLibrary;
 PFN_ADDLIBRARIES			g_fn_AddLibraries;
 PFN_REMOVELIBRARIES			g_fn_RemoveLibraries;
 PFN_OVERRIDENATIVES			g_fn_OverrideNatives;
+PFN_GETLOCALINFO			g_fn_GetLocalInfo;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2630,6 +2631,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("AddLibraries", g_fn_AddLibraries, PFN_ADDLIBRARIES);
 	REQFUNC("RemoveLibraries", g_fn_RemoveLibraries, PFN_REMOVELIBRARIES);
 	REQFUNC("OverrideNatives", g_fn_OverrideNatives, PFN_OVERRIDENATIVES);
+	REQFUNC("GetLocalInfo", g_fn_GetLocalInfo, PFN_GETLOCALINFO);
 
 #ifdef MEMORY_TEST
 	// Memory

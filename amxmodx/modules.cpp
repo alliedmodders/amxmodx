@@ -502,10 +502,14 @@ int CheckModules(AMX *amx, char error[128])
 
 int set_amxnatives(AMX* amx, char error[128])
 {
+	CModule *cm;
 	for (CList<CModule, const char *>::iterator a = g_modules.begin(); a ; ++a)
 	{
-		for (CList<AMX_NATIVE_INFO*>::iterator cc = (*a).m_Natives.begin(); cc; ++cc)
-			amx_Register(amx, *cc, -1);
+		cm = &(*a);
+		for (size_t i=0; i<cm->m_Natives.size(); i++)
+		{
+			amx_Register(amx, cm->m_Natives[i], -1);
+		}
 	}
 
 	amx_Register(amx, string_Natives, -1);
@@ -1113,12 +1117,7 @@ int MNF_AddNatives(AMX_NATIVE_INFO* natives)
 	if (!g_CurrentlyCalledModule || g_ModuleCallReason != ModuleCall_Attach)
 		return FALSE;				// may only be called from attach
 
-	// This is needed so that CList can free it ;]
-	AMX_NATIVE_INFO** pPtr = new AMX_NATIVE_INFO*(natives);
-	if (!pPtr)
-		return FALSE;
-
-	g_CurrentlyCalledModule->m_Natives.put(pPtr);
+	g_CurrentlyCalledModule->m_Natives.push_back(natives);
 	
 	return TRUE;
 }
@@ -1282,6 +1281,17 @@ const char * MNF_GetPlayerName(int id)
 		return NULL;
 	
 	return GET_PLAYER_POINTER_I(id)->name.c_str();
+}
+
+void MNF_OverrideNatives(AMX_NATIVE_INFO *natives)
+{
+	//HACKHACK - we should never have had to do this
+	//find a better solution for SourceMod!!!
+	for (CList<CModule, const char *>::iterator a = g_modules.begin(); a ; ++a)
+	{
+		CModule &cm = (*a);
+		cm.rewriteNativeLists(natives);
+	}
 }
 
 const char * MNF_GetPlayerIP(int id)
@@ -1775,6 +1785,7 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("FindLibrary", MNF_FindLibrary);
 	REGISTER_FUNC("AddLibraries", MFN_AddLibraries);
 	REGISTER_FUNC("RemoveLibraries", MNF_RemoveLibraries);
+	REGISTER_FUNC("OverrideNatives", MNF_OverrideNatives);
 
 #ifdef MEMORY_TEST
 	REGISTER_FUNC("Allocator", m_allocator)

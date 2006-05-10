@@ -82,6 +82,12 @@ void CModule::clear(bool clearFilename)
 	m_InfoNew.reload = 0;
 	m_MissingFunc = NULL;
 
+	for (size_t i=0; i<m_DestroyableIndexes.size(); i++)
+	{
+		delete [] m_Natives[m_DestroyableIndexes[i]];
+	}
+
+	m_DestroyableIndexes.clear();
 	m_Natives.clear();
 }
 
@@ -103,6 +109,53 @@ bool CModule::attachMetamod(const char *mmfile, PLUG_LOADTIME now)
 	}
 
 	return true;
+}
+
+//this ugly function is ultimately something like O(n^4).
+//sigh.  it shouldn't be needed.
+void CModule::rewriteNativeLists(AMX_NATIVE_INFO *list)
+{
+	AMX_NATIVE_INFO *curlist;
+	for (size_t i=0; i<m_Natives.size(); i++)
+	{
+		curlist = m_Natives[i];
+		bool changed = false;
+		bool found = false;
+		CVector<size_t> newlist;
+		for (size_t j=0; curlist[j].func != NULL; j++)
+		{
+			found = false;
+			for (size_t k=0; list[k].func != NULL; k++)
+			{
+				if (strcmp(curlist[j].name, list[k].name) == 0)
+				{
+					found = true;
+					break;
+				}
+			}
+			if (found)
+			{
+				changed = true;
+				//don't break, we have to search it all
+			} else {
+				newlist.push_back(j);
+			}
+		}
+		if (changed)
+		{
+			//now build the new list
+			AMX_NATIVE_INFO *rlist = new AMX_NATIVE_INFO[newlist.size()+1];
+			for (size_t j=0; j<newlist.size(); j++)
+			{
+				rlist[j].func = curlist[newlist[j]].func;
+				rlist[j].name = curlist[newlist[j]].name;
+			}
+			rlist[newlist.size()].func = NULL;
+			rlist[newlist.size()].name = NULL;
+			m_Natives[i] = rlist;
+			m_DestroyableIndexes.push_back(i);
+		}
+	}
 }
 
 bool CModule::attachModule()

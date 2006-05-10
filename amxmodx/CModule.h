@@ -92,6 +92,7 @@ public:
 	bool attachModule();
 	bool queryModule();
 	bool detachModule();
+	void rewriteNativeLists(AMX_NATIVE_INFO *list);
 
 #ifndef FAKEMETA
 	bool attachMetamod(const char *mmfile, PLUG_LOADTIME now);
@@ -115,7 +116,8 @@ public:
 	void CallPluginsUnloaded();
 	void CallPluginsUnloading();
 
-	CList<AMX_NATIVE_INFO*> m_Natives;
+	CVector<AMX_NATIVE_INFO*> m_Natives;
+	CVector<size_t> m_DestroyableIndexes;
 };
 
 #endif //CMODULE_H

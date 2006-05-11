@@ -213,6 +213,8 @@ begin
 
     if CountChars(eStr[i], '{') <> CountChars(eStr[i], '}') then
       eIndent := eIndent + CountChars(eStr[i], '{');
+    if (i+1 < eStr.Count) and (Trim(RemoveStringsAndComments(eStr[i +1], true, true)) = '{') then
+        eTempIndent := eTempIndent -1;
 
     frmMain.pbLoading.Position := frmMain.sciEditor.Lines.Count + i -1;
     SetProgressStatus('Indenting Code...');

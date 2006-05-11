@@ -1025,8 +1025,8 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		cRet = MF_GetAmxAddr(amx, params[3]);
 		temp = reinterpret_cast<char *>(cRet[0]);
 
-		temp2 = MF_GetAmxString(amx, params[3], 0, &len);
-		temp3 = MF_GetAmxString(amx, params[4], 1, &len);
+		temp2 = MF_GetAmxString(amx, params[4], 0, &len);
+		temp3 = MF_GetAmxString(amx, params[5], 1, &len);
 		(*g_engfuncs.pfnSetClientKeyValue)(index, temp, temp2, temp3);
 		return 1;
 	case EngFunc_CreateInstancedBaseline:	// int )		(int classname, struct entity_state_s *baseline);

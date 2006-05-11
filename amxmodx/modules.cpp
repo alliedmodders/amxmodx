@@ -473,7 +473,7 @@ int CheckModules(AMX *amx, char error[128])
 			
 		if (!found)
 		{
-			if (pHandler->HandleModule(buffer))
+			if (pHandler->HandleModule(buffer, (expect == LibType_Class)))
 				found = true;
 		}
 		
@@ -503,7 +503,7 @@ int CheckModules(AMX *amx, char error[128])
 			{
 				if ( (err=RunLibCommand(&dec)) != LibErr_None )
 				{
-					if (!pHandler->HandleModule(buffer))
+					if (!pHandler->HandleModule(buffer, (err == LibErr_NoClass)))
 					{
 						const char *type = "Module/Library";
 						if (err == LibErr_NoClass)

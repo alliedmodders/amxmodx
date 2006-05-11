@@ -167,7 +167,7 @@ public:
 public:
 	int HandleError(const char *msg);
 	int HandleNative(const char *native, int index, int trap);
-	int HandleModule(const char *module);
+	int HandleModule(const char *module, bool isClass=false);
 public:
 	bool IsHandling() const { return m_Handling; }
 	void SetErrorMsg(const char *msg);

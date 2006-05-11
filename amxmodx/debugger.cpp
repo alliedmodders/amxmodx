@@ -695,7 +695,7 @@ const char *Handler::GetLastMsg()
 	return m_MsgCache.c_str();
 }
 
-int Handler::HandleModule(const char *module)
+int Handler::HandleModule(const char *module, bool isClass)
 {
 	if (m_iModFunc < 0)
 		return 0;
@@ -711,6 +711,7 @@ int Handler::HandleModule(const char *module)
 
 	//temporarily set prenit
 	m_pAmx->flags |= AMX_FLAG_PRENIT;
+	amx_Push(m_pAmx, isClass ? 1 : 0);
 	amx_PushString(m_pAmx, &hea_addr, &phys_addr, module, 0, 0);
 	int err = amx_Exec(m_pAmx, &retval, m_iModFunc);
 	amx_Release(m_pAmx, hea_addr);

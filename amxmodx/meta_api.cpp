@@ -42,6 +42,7 @@
 #include "binlog.h"
 #include "optimizer.h"
 #include "libraries.h"
+#include "messages.h"
 
 plugin_info_t Plugin_info = 
 {
@@ -511,6 +512,8 @@ void C_ServerDeactivate_Post()
 	g_plugins.clear();
 	ClearPluginLibraries();
 	modules_callPluginsUnloaded();
+
+	ClearMessages();
 	
 	for (unsigned int i=0; i<g_hudsync.size(); i++)
 		delete [] g_hudsync[i];
@@ -1302,6 +1305,8 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)
 	g_cvars.clear();
 	g_langMngr.Clear();
 
+	ClearMessages();
+
 	modules_callPluginsUnloaded();
 
 	detachModules();
@@ -1447,6 +1452,18 @@ C_DLLEXPORT	int	GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
 	meta_engfuncs.pfnPrecacheModel = C_PrecacheModel;
 	meta_engfuncs.pfnPrecacheSound = C_PrecacheSound;
 	meta_engfuncs.pfnChangeLevel = C_ChangeLevel;
+
+	/* message stuff from messages.h/cpp */
+	meta_engfuncs.pfnMessageBegin = C_MessageBegin;
+	meta_engfuncs.pfnMessageEnd = C_MessageEnd;
+	meta_engfuncs.pfnWriteAngle = C_WriteAngle;
+	meta_engfuncs.pfnWriteByte = C_WriteByte;
+	meta_engfuncs.pfnWriteChar = C_WriteChar;
+	meta_engfuncs.pfnWriteCoord = C_WriteCoord;
+	meta_engfuncs.pfnWriteEntity = C_WriteEntity;
+	meta_engfuncs.pfnWriteLong = C_WriteLong;
+	meta_engfuncs.pfnWriteShort = C_WriteShort;
+	meta_engfuncs.pfnWriteString = C_WriteString;
 
 	memcpy(pengfuncsFromEngine, &meta_engfuncs, sizeof(enginefuncs_t));
 

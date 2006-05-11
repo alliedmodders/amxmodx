@@ -422,6 +422,9 @@
 				RelativePath="..\md5.cpp">
 			</File>
 			<File
+				RelativePath="..\messages.cpp">
+			</File>
+			<File
 				RelativePath="..\meta_api.cpp">
 			</File>
 			<File
@@ -553,6 +556,9 @@
 			</File>
 			<File
 				RelativePath="..\menus.h">
+			</File>
+			<File
+				RelativePath="..\messages.h">
 			</File>
 			<File
 				RelativePath="..\modules.h">

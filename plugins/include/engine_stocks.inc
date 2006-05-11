@@ -281,3 +281,31 @@ stock PointContents(Float:fCheckAt[3]) {
 stock set_size(index, Float:mins[3], Float:maxs[3]) {
   return entity_set_size(index,mins,maxs)
 }
+
+//by Twilight Suzuka, request addition at29428
+//"Lifted from HLSDK"
+stock IsInWorld( ent )
+{
+   new Float:origin[3]
+   entity_get_vector(ent,EV_VEC_origin,origin)
+
+   if (origin[0] >= 4096.0) return 0;
+   if (origin[1] >= 4096.0) return 0;
+   if (origin[2] >= 4096.0) return 0;
+   if (origin[0] <= -4096.0) return 0;
+   if (origin[1] <= -4096.0) return 0;
+   if (origin[2] <= -4096.0) return 0;
+
+   new Float:velocity[3]
+   entity_get_vector(ent,EV_VEC_velocity,velocity)
+
+   if (velocity[0] >= 2000) return 0;
+   if (velocity[1] >= 2000) return 0;
+   if (velocity[2] >= 2000) return 0;
+   if (velocity[0] <= -2000) return 0;
+   if (velocity[1] <= -2000) return 0;
+   if (velocity[2] <= -2000) return 0;
+
+   return 1;
+}
+

@@ -13,11 +13,7 @@ int AmxStringToEngine(AMX *amx, cell param, int &len)
 
 void ClearHooks()
 {
-	register unsigned int i = 0;
-	for (i=0; i<256; i++) {
-		msgHooks[i].clear();
-		msgBlocks[i] = 0;
-	}
+	size_t i;
 
 	for (i=0; i<Touches.size(); i++)
 		delete Touches[i];
@@ -25,9 +21,6 @@ void ClearHooks()
 		delete Impulses[i];
 	for (i=0; i<Thinks.size(); i++)
 		delete Thinks[i];
-
-	for (i=0; i<256; i++)
-		msgHooks[i].clear();
 
 	Touches.clear();
 	Impulses.clear();
@@ -43,7 +36,6 @@ void OnAmxxAttach()
 	ClientKillForward = 0;
 	CmdStartForward = 0;
 	StartFrameForward = 0;
-	MF_AddNatives(msg_Natives);
 	MF_AddNatives(ent_Natives);
 	MF_AddNatives(engine_Natives);
 	MF_AddNatives(global_Natives);

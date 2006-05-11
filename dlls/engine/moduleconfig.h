@@ -233,16 +233,16 @@
 #define FN_LightStyle						LightStyle
 // #define FN_DecalIndex						DecalIndex
 // #define FN_PointContents						PointContents
-#define FN_MessageBegin						MessageBegin
-#define FN_MessageEnd						MessageEnd
-#define FN_WriteByte							WriteByte
-#define FN_WriteChar							WriteChar
-#define FN_WriteShort						WriteShort
-#define FN_WriteLong							WriteLong
-#define FN_WriteAngle						WriteAngle
-#define FN_WriteCoord						WriteCoord
-#define FN_WriteString						WriteString
-#define FN_WriteEntity						WriteEntity
+// #define FN_MessageBegin						MessageBegin
+// #define FN_MessageEnd						MessageEnd
+// #define FN_WriteByte							WriteByte
+// #define FN_WriteChar							WriteChar
+// #define FN_WriteShort						WriteShort
+// #define FN_WriteLong							WriteLong
+// #define FN_WriteAngle						WriteAngle
+// #define FN_WriteCoord						WriteCoord
+// #define FN_WriteString						WriteString
+// #define FN_WriteEntity						WriteEntity
 // #define FN_CVarRegister						CVarRegister
 // #define FN_CVarGetFloat						CVarGetFloat
 // #define FN_CVarGetString						CVarGetString

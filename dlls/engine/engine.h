@@ -9,7 +9,6 @@
 #include "CVector.h"
 #include "CString.h"
 #include <usercmd.h>
-#include "messages.h"
 #include "entity.h"
 #include "gpglobals.h"
 

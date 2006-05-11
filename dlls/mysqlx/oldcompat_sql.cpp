@@ -327,6 +327,12 @@ static cell AMX_NATIVE_CALL dbi_free_result(AMX *amx, cell *params)
 {
 	cell *_r = MF_GetAmxAddr(amx, params[1]);
 	cell num = *_r;
+
+	if (!num)
+	{
+		return 1;
+	}
+
 	oldresult_s *oldrs = (oldresult_s *)GetHandle(num, Handle_OldResult);
 	if (!oldrs)
 	{

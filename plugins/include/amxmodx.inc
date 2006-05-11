@@ -901,7 +901,7 @@ native dbg_fmt_error(buffer[], maxLength);
 native set_native_filter(const handler[]);
 
 /**
- * This function sets a module filter.  It will let you intercept the automatic requirement 
+ * This function sets a module/library filter.  It will let you intercept the automatic requirement 
  *  of a module and return PLUGIN_CONTINUE to fail load or PLUGIN_HANDLED to imply that load
  *  can continue even without the module.  
  * 
@@ -911,8 +911,10 @@ native set_native_filter(const handler[]);
  *
  * Your handler will be called with this prototype:
  *
- * public module_filter(const module[]);
- *  module - logtag of the module required to load the plugin
+ * public module_filter(const library[], bool:isClass);
+ *  library - library or class name of the module that is required
+ *  isClass - true if the name is a library class, false if it's a normal module
+ * 
  *
  * set_module_filter() returns 0 on success (unlike most natives).
  */

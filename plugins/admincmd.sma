@@ -67,6 +67,7 @@ public plugin_init()
 	register_concmd("amx_cfg", "cmdCfg", ADMIN_CFG, "<filename>")
 	register_concmd("amx_nick", "cmdNick", ADMIN_SLAY, "<name or #userid> <new nick>")
 	register_clcmd("amx_rcon", "cmdRcon", ADMIN_RCON, "<command line>")
+	register_clcmd("amx_showrcon", "cmdShowRcon", ADMIN_RCON, "<command line>")
 	register_clcmd("pauseAck", "cmdLBack")
 }
 
@@ -718,6 +719,29 @@ public cmdPause(id, level, cid)
 	
 	return PLUGIN_HANDLED
 } 
+
+public cmdShowRcon(id, level, cid)
+{
+	if (!cmd_access(id, level, cid, 2))
+		return PLUGIN_HANDLED
+		
+	new password[64]
+	
+	get_cvar_string("rcon_password", password, 63)
+	
+	if (!password[0])
+	{
+		cmdRcon(id, level, cid)
+	} else {
+		new args[128]
+		
+		read_args(args, 127)
+		client_cmd(id, "rcon_password %s", password)
+		client_cmd(id, "rcon %s", args)
+	}
+	
+	return PLUGIN_HANDLED
+}
 
 public cmdRcon(id, level, cid)
 {

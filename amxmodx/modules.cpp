@@ -868,7 +868,7 @@ bool ConvertModuleName(const char *pathString, String &path)
 	return true;
 }
 
-bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify)
+bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool noFileBail)
 {
 	char pathString[512];
 	String path;
@@ -886,6 +886,14 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify)
 			return false;
 	} else {
 		path.assign(pathString);
+	}
+
+	if (noFileBail)
+	{
+		FILE *fp = fopen(path.c_str(), "rb");
+		if (!fp)
+			return false;
+		fclose(fp);
 	}
 
 	CList<CModule, const char *>::iterator a = g_modules.find(path.c_str());

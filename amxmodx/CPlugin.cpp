@@ -522,6 +522,20 @@ void CPluginMngr::CacheAndLoadModules(const char *plugin)
 
 	int num;
 	char name[sNAMEMAX+1];
+
+	num = amx_GetLibraries(&amx);
+	for (int i=0; i<num; i++)
+	{
+		amx_GetLibrary(&amx, i, name, sNAMEMAX);
+		if (stricmp(name, "Float")==0)
+			continue;
+		//awful backwards compat hack
+		if (stricmp(name, "socket")==0)
+			strcpy(name, "sockets");
+		//we don't want to report failed modules here...
+		LoadModule(name, PT_ANYTIME, true, true);
+	}
+
 	cell tag_id;
 	amx_NumTags(&amx, &num);
 

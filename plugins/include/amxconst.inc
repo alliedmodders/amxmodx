@@ -15,6 +15,8 @@
 #define AMXX_VERSION_NUM	175
 stock const AMXX_VERSION_STR[]="1.75"
 
+#define PI 3.1415926535
+
 #define ADMIN_ALL		0	/* everyone */
 #define ADMIN_IMMUNITY		(1<<0)	/* flag "a" */
 #define ADMIN_RESERVATION	(1<<1)	/* flag "b" */

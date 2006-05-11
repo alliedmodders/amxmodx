@@ -321,3 +321,4 @@ enum {
 #define SND_STOP		(1<<5)		// stop sound
 #define SND_CHANGE_VOL		(1<<6)		// change sound vol
 #define SND_CHANGE_PITCH	(1<<7)		// change sound pitch
+

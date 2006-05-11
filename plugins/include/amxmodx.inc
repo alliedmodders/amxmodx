@@ -911,9 +911,9 @@ native set_native_filter(const handler[]);
  *
  * Your handler will be called with this prototype:
  *
- * public module_filter(const library[], bool:isClass);
+ * public module_filter(const library[], LibType:type);
  *  library - library or class name of the module that is required
- *  isClass - true if the name is a library class, false if it's a normal module
+ *  libtype - The type of requirement being checked (library/module or class).
  * 
  *
  * set_module_filter() returns 0 on success (unlike most natives).
@@ -938,6 +938,11 @@ native abort(error, const fmt[]="", {Float,_}:...);
  *  module_exists("dbi")
  */
 native module_exists(const logtag[]);
+
+/**
+ * Checks if a library/class is loaded.  This is the newer version of module_exists.
+ */
+native LibraryExists(const library[], LibType:type);
 
 /**
  * Returns the next valid hudchannel for a user, from 1-4.

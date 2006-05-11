@@ -322,3 +322,8 @@ enum {
 #define SND_CHANGE_VOL		(1<<6)		// change sound vol
 #define SND_CHANGE_PITCH	(1<<7)		// change sound pitch
 
+enum LibType
+{
+	LibType_Library,
+	LibType_Class
+};

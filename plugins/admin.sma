@@ -42,13 +42,13 @@
 #endif
 
 #define MAX_ADMINS 64
-#define PLUGINNAME	"AMX Mod X"
+new PLUGINNAME[] = "AMX Mod X"
 
-#define	ADMIN_LOOKUP	(1<<0)
-#define	ADMIN_NORMAL	(1<<1)
+#define ADMIN_LOOKUP	(1<<0)
+#define ADMIN_NORMAL	(1<<1)
 #define ADMIN_STEAM		(1<<2)
 #define ADMIN_IPADDR	(1<<3)
-#define	ADMIN_NAME		(1<<4)
+#define ADMIN_NAME		(1<<4)
 
 new g_aPassword[MAX_ADMINS][32]
 new g_aName[MAX_ADMINS][32]
@@ -152,6 +152,22 @@ public addadminfn(id, level, cid)
 		{
 			idtype |= ADMIN_LOOKUP
 			player = cmd_target(id, arg, 10)
+		} else {
+			new _steamid[24]
+			static _players[32], _num, _pv
+			get_players(_players, _num)
+			for (new _i=0; _i<_num; _i++)
+			{
+				_pv = _players[_i]
+				get_user_authid(_pv, _steamid, 23)
+				if (!_steamid[0])
+					continue
+				if (equal(_steamid, arg))
+				{
+					player = _pv
+					break
+				}
+			}			
 		}
 	}
 	else if (idtype & ADMIN_NAME)
@@ -334,8 +350,8 @@ AddAdmin(id, auth[], accessflags[], password[], flags[])
 	dbi_query(sql, "REPLACE INTO `%s` (`auth`, `password`, `access`, `flags`) VALUES ('%s', '%s', '%s', '%s')", table, auth, password, accessflags, flags)
 	dbi_close(sql)
 #endif
-}
 
+}
 public plugin_cfg()
 {
 	new configFile[64], curMap[32]
@@ -510,6 +526,16 @@ public cmdReload(id, level, cid)
 			console_print(id, "[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMINS", g_aNum)
 	}
 #endif
+
+	new players[32], num, pv
+	new name[32]
+	get_players(players, num)
+	for (new i=0; i<num; i++)
+	{
+		pv = players[i]
+		get_user_name(pv, name, 31)
+		accessUser(pv, name)
+	}
 
 	return PLUGIN_HANDLED
 }

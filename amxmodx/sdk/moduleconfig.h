@@ -70,7 +70,7 @@
 /** All plugins are about to be unloaded */
 //#define FN_AMXX_PLUGINSUNLOADING OnPluginsUnloading
 
-/** All plguins are now unloaded */
+/** All plugins are now unloaded */
 //#define FN_AMXX_PLUGINSUNLOADED OnPluginsUnloaded
 
 /**** METAMOD ****/

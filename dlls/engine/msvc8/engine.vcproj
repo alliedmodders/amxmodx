@@ -205,10 +205,6 @@
 				RelativePath="..\globals.cpp"
 				>
 			</File>
-			<File
-				RelativePath="..\messages.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -233,10 +229,6 @@
 			</File>
 			<File
 				RelativePath="..\gpglobals.h"
-				>
-			</File>
-			<File
-				RelativePath="..\messages.h"
 				>
 			</File>
 		</Filter>

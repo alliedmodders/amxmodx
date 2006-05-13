@@ -96,7 +96,11 @@ var eList: TStringList;
     i: integer;
 begin
   eList := TStringList.Create;
-  frmMain.IdFTP.List(eList);
+  try
+    frmMain.IdFTP.List(eList);
+  except
+    // nothing, not an exception?!
+  end;
   frmMain.IdFTP.DirectoryListing.LoadList(eList);
   eList.Clear;
   for i := 0 to frmMain.IdFTP.DirectoryListing.Count -1 do begin
@@ -113,7 +117,11 @@ var eList: TStringList;
     i, eStart: integer;
 begin
   eList := TStringList.Create;
-  frmMain.IdFTP.List(eList, '', True);
+  try
+    frmMain.IdFTP.List(eList, '', True);
+  except
+    // nothing
+  end;
   eStart := 0;
   
 

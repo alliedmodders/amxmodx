@@ -209,8 +209,14 @@ begin
       ePath := '/' + CurNode.Text + ePath;
       CurNode := CurNode.Parent;
     until (not Assigned(CurNode));
-    IdFTP.ChangeDir(ePath); 
-    IdFTP.List(eStr, '', False);
+    IdFTP.ChangeDir(ePath);
+
+    try
+      IdFTP.List(eStr, '', False);
+    except
+      // worst "exception" ever. bad indy!
+    end;
+
     if eStr.IndexOf('liblist.gam') = -1 then begin
       MessageBox(Handle, 'Invalid directory. Please select your mod directory and try again.', PChar(Application.Title), MB_ICONWARNING);
       eStr.Free;

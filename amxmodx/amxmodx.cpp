@@ -634,6 +634,20 @@ static cell AMX_NATIVE_CALL get_weaponname(AMX *amx, cell *params) /* 3 param */
 	return set_amxstring(amx, params[2], g_weaponsData[index].fullName.c_str(), params[3]);
 }
 
+static cell AMX_NATIVE_CALL get_weaponid(AMX *amx, cell *params)
+{
+	int ilen;
+	const char *name = get_amxstring(amx, params[1], 0, ilen);
+
+	for (int i = 0; i < MAX_WEAPONS; i++)
+	{
+		if (!strcmp(g_weaponsData[i].fullName.c_str(), name))
+			return g_weaponsData[i].iId;
+	}
+
+	return -1;
+}
+
 static cell AMX_NATIVE_CALL get_user_weapons(AMX *amx, cell *params) /* 3 param */
 {
 	int index = params[1];
@@ -4112,6 +4126,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"hcsardhnexsnu",			register_byval},
 	{"get_user_weapon",			get_user_weapon},
 	{"get_user_weapons",		get_user_weapons},
+	{"get_weaponid",			get_weaponid},
 	{"get_weaponname",			get_weaponname},
 	{"get_xvar_float",			get_xvar_num},
 	{"get_xvar_id",				get_xvar_id},

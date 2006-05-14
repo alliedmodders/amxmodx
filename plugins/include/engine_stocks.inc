@@ -84,16 +84,12 @@ stock get_entity_flags(ent)
 /* Get the distance between two entities */
 stock get_entity_distance(ent1, ent2)
 {
-	new Float:orig1[3], Float:orig2[3], origin1[3], origin2[3]
+	new Float:orig1[3], Float:orig2[3]
+
 	entity_get_vector(ent1, EV_VEC_origin, orig1)
-	for(new a = 0; a < 3; a++)
-		origin1[a] = floatround(orig1[a])
-
 	entity_get_vector(ent2, EV_VEC_origin, orig2)
-	for(new b = 0; b < 3; b++)
-		origin2[b] = floatround(orig2[b])
 
-	return get_distance(origin1, origin2)
+	return floatround(get_distance_f(orig1, orig2))
 }
 
 /* Get grenade thrown by this user */

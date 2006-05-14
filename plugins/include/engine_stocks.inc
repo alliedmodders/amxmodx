@@ -149,12 +149,10 @@ stock ViewContents(id)
 
 stock get_speed(ent)
 {
-	new Float:Vel[3], rVel[3]
+	new Float:Vel[3]
 	entity_get_vector(ent, EV_VEC_velocity, Vel)
-	for(new i = 0; i < 3; i++)
-		rVel[i] = floatround(Vel[i])
 
-	return sqroot(rVel[0] * rVel[0] + rVel[1] * rVel[1] + rVel[2] * rVel[2])
+	return floatround(vector_length(Vel))
 }
 
 /* Creates a death message. */

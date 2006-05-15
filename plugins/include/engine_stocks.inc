@@ -113,10 +113,12 @@ stock get_brush_entity_origin(ent, Float:orig[3])
 	new Float:Min[3], Float:Max[3]
 	entity_get_vector(ent, EV_VEC_mins, Min)
 	entity_get_vector(ent, EV_VEC_maxs, Max)
-	for(new a = 0; a < 3; a++)
-		orig[a] = (Min[a] + Max[a]) / 2
+	
+	orig[0] = (Min[0] + Max[0]) * 0.5
+	orig[1] = (Min[1] + Max[1]) * 0.5
+	orig[2] = (Min[2] + Max[2]) * 0.5
 
-	return orig[0] && orig[1] && orig[2]
+	return 1
 }
 
 /* Remove entity by name */
@@ -135,12 +137,13 @@ stock remove_entity_name(eName[])
 /* Get the contents of the point a user is aiming at */
 stock ViewContents(id)
 {
-	new origin[3],Float:Orig[3]
-	get_user_origin( id, origin, 3 )
-	for(new a = 0; a < 3; a++)
-		Orig[a] = float(origin[a])
+	new origin[3], Float:Orig[3]
+	get_user_origin(id, origin, 3)
+	Orig[0] = float(origin[0])
+	Orig[1] = float(origin[1])
+	Orig[2] = float(origin[2])
 
-	return PointContents( Orig )
+	return point_contents(Orig)
 }
 
 stock get_speed(ent)

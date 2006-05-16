@@ -11,6 +11,7 @@
 #define FMV_FLOAT		2
 #define FMV_CELL		3
 
+#include <hlsdk_const>
 
 /* The actual return value of the function, use these instead of PLUGIN_HANDLED etc when
  * returning from registered forwards.

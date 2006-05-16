@@ -34,16 +34,6 @@
 
 /*********************** CTask ***********************/
 
-int CTaskMngr::CTask::getTaskId() const
-{
-	return m_iId;
-}
-
-CPluginMngr::CPlugin *CTaskMngr::CTask::getPlugin() const
-{
-	return m_pPlugin;
-}
-
 void CTaskMngr::CTask::set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, cell iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat, float fCurrentTime)
 {
 	clear();
@@ -53,6 +43,7 @@ void CTaskMngr::CTask::set(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags,
 	m_iFunc = iFunc;
 	m_iId = iId;
 	m_fBase = fBase;
+	m_bInExecute = false;
 
 	if (iFlags & 2)
 	{
@@ -150,6 +141,7 @@ void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, f
 		//only bother calling if we have something to call
 		if (!(m_bLoop && !m_iRepeat))
 		{
+			m_bInExecute = true;
 			if (m_iParamLen)	// call with parameters
 			{
 				cell arr = prepareCellArray(m_pParams, m_iParamLen);
@@ -157,6 +149,7 @@ void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, f
 			} else {
 				executeForwards(m_iFunc, m_iId);
 			}
+			m_bInExecute = false;
 		}
 	
 		if (isFree())
@@ -193,6 +186,7 @@ CTaskMngr::CTask::CTask()
 	m_bLoop = false;
 	m_bAfterStart =	false;
 	m_bBeforeEnd = false;
+	m_bInExecute = false;
 
 	m_fNextExecTime = 0.0f;
 

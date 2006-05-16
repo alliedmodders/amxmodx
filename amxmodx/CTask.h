@@ -45,6 +45,7 @@ private:
 		int m_iFunc;
 		int m_iRepeat;
 		
+		bool m_bInExecute;
 		bool m_bLoop;
 		bool m_bAfterStart;
 		bool m_bBeforeEnd;
@@ -61,13 +62,15 @@ private:
 		void clear();
 		bool isFree() const;
 
-		CPluginMngr::CPlugin *getPlugin() const;
-		int getTaskId() const;
+		inline CPluginMngr::CPlugin *getPlugin() const { return m_pPlugin; }
+		inline AMX *getAMX() const { return m_pPlugin->getAMX(); }
+		inline int getTaskId() const { return m_iId; }
 
 		void executeIfRequired(float fCurrentTime, float fTimeLimit, float fTimeLeft);	// also removes the task if needed
 
 		void changeBase(float fNewBase);
 		void resetNextExecTime(float fCurrentTime);
+		inline bool inExecute() const { return m_bInExecute; }
 
 		bool shouldRepeat();
 
@@ -92,9 +95,11 @@ private:
 		friend bool operator == (const CTask &left, const CTaskDescriptor &right)
 		{
 			if (right.m_bFree)
-				return left.isFree();
+				return (left.isFree() && !left.inExecute());
 			
-			return !left.isFree() && (right.m_pAmx ? left.getPlugin()->getAMX() == right.m_pAmx : true) && left.getTaskId() == right.m_iId;
+			return (!left.isFree()) && 
+					(right.m_pAmx ? left.getAMX() == right.m_pAmx : true) && 
+					(left.getTaskId() == right.m_iId);
 		}
 	};
 

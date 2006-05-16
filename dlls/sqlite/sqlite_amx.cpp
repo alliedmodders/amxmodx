@@ -229,7 +229,9 @@ const char *SQLResult::GetField(unsigned int field)
 		return NULL;
 	}
 
-	return m_data[(m_currentRow + 1) * m_columnCount + field];
+	char *data = m_data[(m_currentRow + 1) * m_columnCount + field];
+
+	return (data ? data : "");
 }
 
 const char *SQLResult::GetField(const char *field)

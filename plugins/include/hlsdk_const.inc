@@ -432,3 +432,6 @@
 #define SF_WORLD_DARK                   0x0001      // Fade from black at startup
 #define SF_WORLD_TITLE                  0x0002      // Display game title at startup
 #define SF_WORLD_FORCETEAM              0x0004      // Force teams
+
+// Set this bit on guns and stuff that should never respawn
+#define SF_NORESPAWN                    (1<<30)

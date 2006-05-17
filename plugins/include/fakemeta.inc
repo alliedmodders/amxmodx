@@ -1,6 +1,9 @@
 /* FakeMeta functions
- * This file is provided as-is with no warrenties.
- */
+*
+* by the AMX Mod X Development Team
+*
+* This file is provided as is (no warranties).
+*/
 
 #if defined _fakemeta_included
 	#endinput

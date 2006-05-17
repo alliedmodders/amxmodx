@@ -1,4 +1,4 @@
-/* Fakemeta stocks
+/* FakeMeta stocks
 *
 * by the AMX Mod X Development Team
 *

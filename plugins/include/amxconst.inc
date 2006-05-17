@@ -11,6 +11,8 @@
 #endif
 #define _amxconst_included
 
+#include <message_const>
+
 #define AMXX_VERSION		1.75
 #define AMXX_VERSION_NUM	175
 stock const AMXX_VERSION_STR[]="1.75"

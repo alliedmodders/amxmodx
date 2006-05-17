@@ -1,6 +1,10 @@
-/* Fake meta constants
- * This file is provided as-is (no warrenties)
- */
+/* FakeMeta constants
+*
+* by the AMX Mod X Development Team
+*
+* This file is provided as is (no warranties).
+*/
+
 #if defined _fakemeta_const_included
   #endinput
 #endif
@@ -328,7 +332,7 @@ enum {
 	pev_absolute_end
 };
 
-/* Used with get_global()
+/* Used with global_get()
  */
 enum
 {

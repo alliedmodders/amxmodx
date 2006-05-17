@@ -10,21 +10,20 @@
 #endif
 #define _coremsg_included
 
-
-#define BLOCK_NOT		0
-#define BLOCK_ONCE		1
-#define BLOCK_SET		2
+#define BLOCK_NOT       0
+#define BLOCK_ONCE      1
+#define BLOCK_SET       2
 
 enum
 {
-	ARG_BYTE = 1,		/* int */
-	ARG_CHAR,			/* int */
-	ARG_SHORT,		/* int */
-	ARG_LONG,			/* int */
-	ARG_ANGLE,		/* float */
-	ARG_COORD,		/* float */
-	ARG_STRING,		/* string */
-	ARG_ENTITY,		/* int */
+	ARG_BYTE = 1,       /* int */
+	ARG_CHAR,           /* int */
+	ARG_SHORT,          /* int */
+	ARG_LONG,           /* int */
+	ARG_ANGLE,          /* float */
+	ARG_COORD,          /* float */
+	ARG_STRING,         /* string */
+	ARG_ENTITY,         /* int */
 }
 
 /* Sets/Gets what engine messages are blocked. */

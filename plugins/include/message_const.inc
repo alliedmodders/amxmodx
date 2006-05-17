@@ -11,6 +11,47 @@
 #endif
 #define _message_const_included
 
+/* Destination types for message_begin() */
+#define	MSG_BROADCAST               0        // Unreliable to all
+#define	MSG_ONE                     1        // Reliable to one (msg_entity)
+#define	MSG_ALL                     2        // Reliable to all
+#define	MSG_INIT                    3        // Write to the init string
+#define MSG_PVS                     4        // Ents in PVS of org
+#define MSG_PAS                     5        // Ents in PAS of org
+#define MSG_PVS_R                   6        // Reliable to PVS
+#define MSG_PAS_R                   7        // Reliable to PAS
+#define MSG_ONE_UNRELIABLE          8        // Send to one client, but don't put in reliable stream, put in unreliable datagram (could be dropped)
+#define	MSG_SPEC                    9        // Sends to all spectator proxies
+
+/* Message types for message_begin() */
+#define SVC_TEMPENTITY              23
+#define SVC_INTERMISSION            30
+#define SVC_CDTRACK                 32
+#define SVC_WEAPONANIM              35
+#define SVC_ROOMTYPE                37
+#define SVC_ADDANGLE                38       // [vec3] add this angle to the view angle
+#define SVC_NEWUSERMSG              39
+#define	SVC_HLTV                    50
+
+/* Message flags for set_msg_block() */
+#define BLOCK_NOT                   0
+#define BLOCK_ONCE                  1
+#define BLOCK_SET                   2
+
+/* Used with get_msg_argtype() and set_msg_arg_*
+enum
+{
+	ARG_BYTE = 1,       /* int */
+	ARG_CHAR,           /* int */
+	ARG_SHORT,          /* int */
+	ARG_LONG,           /* int */
+	ARG_ANGLE,          /* float */
+	ARG_COORD,          /* float */
+	ARG_STRING,         /* string */
+	ARG_ENTITY,         /* int */
+}
+
+/* Temp entity message types for message_begin() */
 #define	TE_BEAMPOINTS               0        // Beam effect between two points
 // write_byte(TE_BEAMPOINTS)
 // write_coord(startposition.x)

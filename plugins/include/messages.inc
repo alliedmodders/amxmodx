@@ -10,21 +10,22 @@
 #endif
 #define _coremsg_included
 
-#define BLOCK_NOT       0
-#define BLOCK_ONCE      1
-#define BLOCK_SET       2
+#include <message_const>
 
-enum
-{
-	ARG_BYTE = 1,       /* int */
-	ARG_CHAR,           /* int */
-	ARG_SHORT,          /* int */
-	ARG_LONG,           /* int */
-	ARG_ANGLE,          /* float */
-	ARG_COORD,          /* float */
-	ARG_STRING,         /* string */
-	ARG_ENTITY,         /* int */
-}
+/* These functinos are used to generate client messages.
+ * You may generate menu, smoke, shockwaves, thunderlights,
+ * intermission and many many others messages.
+ * See HL SDK for more examples. */
+native message_begin(dest, msg_type, origin[3] = {0,0,0}, player = 0);
+native message_end();
+native write_byte(x);
+native write_char(x);
+native write_short(x);
+native write_long(x);
+native write_entity(x);
+native write_angle(x);
+native write_coord(x);
+native write_string(x[]);
 
 /* Sets/Gets what engine messages are blocked. */
 native set_msg_block(iMessage, iMessageFlags);

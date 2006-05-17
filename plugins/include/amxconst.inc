@@ -11,8 +11,6 @@
 #endif
 #define _amxconst_included
 
-#include <message_const>
-
 #define AMXX_VERSION		1.75
 #define AMXX_VERSION_NUM	175
 stock const AMXX_VERSION_STR[]="1.75"
@@ -53,28 +51,6 @@ stock const AMXX_VERSION_STR[]="1.75"
 #define PLUGIN_CONTINUE		0	/* Results returned by public functions */
 #define PLUGIN_HANDLED		1	/* stop other plugins */
 #define PLUGIN_HANDLED_MAIN	2	/* to use in client_command(), continue all plugins but stop the command */
-
-/* Destination types for message_begin() */
-#define	MSG_BROADCAST		0	/*  unreliable to all */
-#define	MSG_ONE			1	/* reliable to one (msg_entity) */
-#define	MSG_ALL			2	/* reliable to all */
-#define	MSG_INIT		3	/* write to the init string */
-#define MSG_PVS			4	/* Ents in PVS of org */
-#define MSG_PAS			5	/* Ents in PAS of org */
-#define MSG_PVS_R		6	/* Reliable to PVS */
-#define MSG_PAS_R		7	/* Reliable to PAS */
-#define MSG_ONE_UNRELIABLE	8	/*  Send to one client, but don't put in reliable stream, put in unreliable datagram ( could be dropped ) */
-#define	MSG_SPEC		9	/*  Sends to all spectator proxies */
-
-/* Message types for message_begin() */
-#define SVC_TEMPENTITY		23
-#define SVC_INTERMISSION	30
-#define SVC_CDTRACK		32
-#define SVC_WEAPONANIM		35
-#define SVC_ROOMTYPE		37
-#define SVC_ADDANGLE		38	/* [vec3] add this angle to the view angle */
-#define SVC_NEWUSERMSG     	39
-#define	SVC_HLTV		50
 
 /* Flags for register_cvar() */
 #define	FCVAR_ARCHIVE		1	/* set to cause it to be saved to vars.rc */

@@ -474,21 +474,6 @@ native register_concmd(const cmd[],const function[],flags=-1, info[]="");
 /* Registers function which will be called from server console. */
 native register_srvcmd(const server_cmd[],const function[],flags=-1, info[]="");
 
-/* These functinos are used to generate client messages.
-* You may generate menu, smoke, shockwaves, thunderlights,
-* intermission and many many others messages.
-* See HL SDK for more examples. */
-native message_begin( dest, msg_type, origin[3]={0,0,0},player=0);
-native message_end();
-native write_byte( x );
-native write_char( x );
-native write_short( x );
-native write_long( x );
-native write_entity( x );
-native write_angle( x );
-native write_coord( x );
-native write_string( x[] );
-
 /* Gets info about client command. */
 native get_clcmd(index, command[], len1, &flags, info[], len2, flag);
 

@@ -2,7 +2,7 @@
 ; Licensed under the GNU General Public License
 ; Written by -=HaXoMaTiC=-
 !define PRODUCT_NAME "AMX Mod X Installer"
-!define PRODUCT_VERSION "1.71"
+!define PRODUCT_VERSION "1.75"
 !define PRODUCT_PUBLISHER "AMX Mod X Dev Team"
 !define PRODUCT_WEB_SITE "http://www.amxmodx.org/"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\Installer.exe"
@@ -251,6 +251,7 @@ Section "MainSection" SEC01
   File "installer\files\base\scripting\include\hlsdk_const.inc"
   File "installer\files\base\scripting\include\lang.inc"
   File "installer\files\base\scripting\include\messages.inc"
+  File "installer\files\base\scripting\include\message_const.inc"
   File "installer\files\base\scripting\include\ns.inc"
   File "installer\files\base\scripting\include\ns2amx.inc"
   File "installer\files\base\scripting\include\ns_const.inc"
@@ -599,6 +600,7 @@ Section Uninstall
   Delete "$INSTDIR\files\base\scripting\include\ns2amx.inc"
   Delete "$INSTDIR\files\base\scripting\include\ns.inc"
   Delete "$INSTDIR\files\base\scripting\include\nvault.inc"
+  Delete "$INSTDIR\files\base\scripting\include\message_const.inc"
   Delete "$INSTDIR\files\base\scripting\include\messages.inc"
   Delete "$INSTDIR\files\base\scripting\include\lang.inc"
   Delete "$INSTDIR\files\base\scripting\include\hlsdk_const.inc"

@@ -74,7 +74,6 @@ void C_WriteString(const char *sz);
 void C_WriteEntity(int iValue);
 void C_MessageEnd(void);
 
-extern AMX_NATIVE_INFO msg_Natives[];
 extern CVector<int> msgHooks[256];
 extern int msgBlocks[256];
 

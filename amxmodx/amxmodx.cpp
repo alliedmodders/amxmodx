@@ -1621,114 +1621,6 @@ static cell AMX_NATIVE_CALL set_cvar_string(AMX *amx, cell *params) /* 2 param *
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL message_begin(AMX *amx, cell *params) /* 4 param */
-{
-	int numparam = *params / sizeof(cell);
-	float vecOrigin[3];
-	cell *cpOrigin;
-
-	if (params[2] < 1 || ((params[2] > 63)		// maximal number of engine messages
-		&& !GET_USER_MSG_NAME(PLID, params[2], NULL)))
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Plugin called message_begin with an invalid message id (%d).", params[2]);
-		return 0;
-	}
-	
-	switch (params[1])
-	{
-		case MSG_BROADCAST:
-		case MSG_ALL:
-		case MSG_SPEC:
-			MESSAGE_BEGIN(params[1], params[2], NULL);
-			break;
-		case MSG_PVS: case MSG_PAS:
-		case MSG_PVS_R: case MSG_PAS_R:
-			if (numparam < 3)
-			{
-				LogError(amx, AMX_ERR_NATIVE, "Invalid number of parameters passed");
-				return 0;
-			}
-			
-			cpOrigin = get_amxaddr(amx, params[3]);
-			
-			vecOrigin[0] = static_cast<float>(*cpOrigin);
-			vecOrigin[1] = static_cast<float>(*(cpOrigin + 1));
-			vecOrigin[2] = static_cast<float>(*(cpOrigin + 2));
-			
-			MESSAGE_BEGIN(params[1], params[2], vecOrigin);
-			
-			break;
-		case MSG_ONE_UNRELIABLE:
-		case MSG_ONE:
-			if (numparam < 4)
-			{
-				LogError(amx, AMX_ERR_NATIVE, "Invalid number of parameters passed");
-				return 0;
-			}
-		
-			MESSAGE_BEGIN(params[1], params[2], NULL, INDEXENT(params[4]));
-			break;
-	}
-
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL message_end(AMX *amx, cell *params)
-{
-	MESSAGE_END();
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL write_byte(AMX *amx, cell *params) /* 1 param */
-{
-	WRITE_BYTE(params[1]);
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL write_char(AMX *amx, cell *params) /* 1 param */
-{
-	WRITE_CHAR(params[1]);
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL write_short(AMX *amx, cell *params) /* 1 param */
-{
-	WRITE_SHORT(params[1]);
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL write_long(AMX *amx, cell *params) /* 1 param */
-{
-	WRITE_LONG(params[1]);
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL write_entity(AMX *amx, cell *params) /* 1 param */
-{
-	WRITE_ENTITY(params[1]);
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL write_angle(AMX *amx, cell *params) /* 1 param */
-{
-	WRITE_ANGLE(static_cast<float>(params[1]));
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL write_coord(AMX *amx, cell *params) /* 1 param */
-{
-	WRITE_COORD(static_cast<float>(params[1]));
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL write_string(AMX *amx, cell *params) /* 1 param */
-{
-	int a;
-	WRITE_STRING(get_amxstring(amx, params[1], 3, a));
-	
-	return 1;
-}
-
 static cell AMX_NATIVE_CALL log_message(AMX *amx, cell *params) /* 1 param */
 {
 	int len;
@@ -4151,8 +4043,6 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"log_to_file",				log_to_file},
 	{"md5",						amx_md5},
 	{"md5_file",				amx_md5_file},
-	{"message_begin",			message_begin},
-	{"message_end",				message_end},
 	{"module_exists",			module_exists},
 	{"mkdir",					amx_mkdir},
 	{"next_hudchannel",			next_hudchannel},
@@ -4216,14 +4106,6 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"user_has_weapon",			user_has_weapon},
 	{"user_kill",				user_kill},
 	{"user_slap",				user_slap},
-	{"write_angle",				write_angle},
-	{"write_byte",				write_byte},
-	{"write_char",				write_char},
-	{"write_coord",				write_coord},
-	{"write_entity",			write_entity},
-	{"write_long",				write_long},
-	{"write_short",				write_short},
-	{"write_string",			write_string},
 	{"xvar_exists",				xvar_exists},
 	{"ClearSyncHud",			ClearSyncHud},
 	{"CreateHudSyncObj",		CreateHudSyncObj},

@@ -1063,7 +1063,7 @@ native get_pcvar_string(pcvar, string[], maxlen);
 native arrayset(array[], value, size);
 
 /**
- * Returns the weapon id, otherwise -1 when no id found.
+ * Returns the weapon id, otherwise 0 when no id found.
  * The weapon name is case sensitive, and has the weapon_* form.
  */
 native get_weaponid(const name[]);

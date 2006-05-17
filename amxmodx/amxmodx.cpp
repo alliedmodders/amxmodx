@@ -639,13 +639,13 @@ static cell AMX_NATIVE_CALL get_weaponid(AMX *amx, cell *params)
 	int ilen;
 	const char *name = get_amxstring(amx, params[1], 0, ilen);
 
-	for (int i = 0; i < MAX_WEAPONS; i++)
+	for (int i = 1; i < MAX_WEAPONS; i++)
 	{
 		if (!strcmp(g_weaponsData[i].fullName.c_str(), name))
 			return g_weaponsData[i].iId;
 	}
 
-	return -1;
+	return 0;
 }
 
 static cell AMX_NATIVE_CALL get_user_weapons(AMX *amx, cell *params) /* 3 param */

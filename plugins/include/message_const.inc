@@ -38,7 +38,7 @@
 #define BLOCK_ONCE                  1
 #define BLOCK_SET                   2
 
-/* Used with get_msg_argtype() and set_msg_arg_*
+/* Used with get_msg_argtype() and set_msg_arg_ */
 enum
 {
 	ARG_BYTE = 1,       /* int */

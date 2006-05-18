@@ -740,6 +740,8 @@ format_top15(sBuffer[MAX_BUFFER_LENGTH + 1])
 	for (new i = 0; i < iMax && MAX_BUFFER_LENGTH - iLen > 0; i++)
 	{
 		get_stats(i, izStats, izBody, t_sName, MAX_NAME_LENGTH)
+		replace_all(t_sName, MAX_NAME_LENGTH, "<", "[")
+		replace_all(t_sName, MAX_NAME_LENGTH, ">", "]")
 		iLen += format(sBuffer[iLen], MAX_BUFFER_LENGTH - iLen, "%2d %-22.22s %6d %6d %6d %6d %4d %3.0f%% %3.0f%%^n", i + 1, t_sName, izStats[STATS_KILLS], 
 						izStats[STATS_DEATHS], izStats[STATS_HITS], izStats[STATS_SHOTS], izStats[STATS_HS], effec(izStats), accuracy(izStats))
 	}

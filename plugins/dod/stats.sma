@@ -1001,6 +1001,8 @@ getTop15_steam(id){
     imax = itmax
   for(new a = 0; a < imax; ++a){
     get_stats(a,stats,body,name,31);
+    replace_all(name, 31, "<", "[")
+    replace_all(name, 31, ">", "]")
     pos += format(g_Buffer[pos],2047-pos,"<tr><td>%d.</td><td>%s</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td></tr>^n",
 		a+1,name,stats[0],stats[1],stats[7],stats[3],stats[5],stats[4],stats[2])
   }

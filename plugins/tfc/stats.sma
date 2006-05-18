@@ -272,6 +272,8 @@ getTop15(){
   if (imax > 15) imax = 15
   for(new a = 0; a < imax; ++a){
     get_stats(a,stats,body,name,31)
+    replace_all(name, 31, "<", "[")
+    replace_all(name, 31, ">", "]")
     pos += format(g_Buffer[pos],2047-pos,"%2d.  %-28.27s    %d/%d         %d            %d/%d/%d^n",a+1,name,stats[0],stats[1],stats[3],stats[5],stats[4],stats[2])
   }
 }

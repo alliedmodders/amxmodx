@@ -248,7 +248,7 @@ stock set_entity_visibility(entity, visible = 1) {
 
 /* Returns 1 if entity is visible. */
 stock get_entity_visibility(entity) {
-	return (entity_get_int(entity, EV_INT_effects) & EF_NODRAW)
+	return !(entity_get_int(entity, EV_INT_effects) & EF_NODRAW)
 }
 
 stock set_user_velocity(entity, Float:vec[3])

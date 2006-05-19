@@ -102,10 +102,6 @@ native find_ent_in_sphere(start_from_ent, Float:origin[3], Float:radius);
 //this will CBaseEntity::Think() or something from the entity
 native call_think(entity)
 
-/* Mirrors CBaseEntity->TakeDamage() - Forces an entity to take damage.
-   Potential for crash.  If you have problems with this, I suggest using fakedamage(). */
-native take_damage(idVictim,idInflictor,idAttacker,Float:takedmgdamage,damagetype);
-
 /* Is entity valid? */
 native is_valid_ent(iIndex);
 

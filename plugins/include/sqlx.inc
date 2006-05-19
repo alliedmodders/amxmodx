@@ -51,7 +51,6 @@ native Handle:SQL_Connect(Handle:cn_tuple, &errcode, error[], maxlength);
  */
 native Handle:SQL_PrepareQuery(Handle:db, const fmt[], {Float,_}:...);
 
-
 #define TQUERY_CONNECT_FAILED	-2
 #define TQUERY_QUERY_FAILED	-1
 #define TQUERY_SUCCESS		0
@@ -165,10 +164,68 @@ native SQL_FieldNumToName(Handle:query, num, name[], maxlength);
  */
 native SQL_FieldNameToNum(Handle:query, const name[]);
 
+/**
+ * Returns which driver this plugin is currently bound to.
+ */
+native SQL_GetAffinity(driver[], maxlen);
 
 /**
- * Sets driver affinity (NOT IMPLEMENTED).
+ * Sets driver affinity.  You can use this to force a particular 
+ *  driver implementation.  This will automatically change all SQL
+ *  natives in your plugin to be "bound" to the module in question.
+ * If no such module is found, it will return 0.
+ * Note, that using this while you have open handles to another database 
+ *  type will cause problems.  I.e., you cannot open a handle, switch
+ *  affinity, then close the handle with a different driver.
+ * Switching affinity is an O(n*m) operation, where n is the number of
+ *  SQL natives and m is the number of used natives in total.
+ * Intuitive programmers will note that this causes problems for threaded queries.
+ *  You will have to either force your script to work under one affinity, or to 
+ *  pack the affinity type into the query data, check it against the current, then
+ *  set the new affinity if necessary.  Then, restore the old for safety.
  */
-// native SQL_SetAffinity(Handle:connection, const driver[]);
+native SQL_SetAffinity(const driver[]);
 
+/**
+ * This function can be used to find out if a table in a Sqlite database exists.
+ * (updated for newer API)
+ */
+stock bool:sqlite_TableExists(Handle:db, const table[])
+{
+	new Handle:query = SQL_PrepareQuery(
+					db,
+					"SELECT name FROM sqlite_master WHERE type='table' AND name='%s' LIMIT 1;", 
+					table);
+					
+	if (!SQL_Execute(query) || !SQL_NumResults(query))
+	{
+		SQL_FreeHandle(query);
+		return false;
+	}
+	
+	SQL_FreeHandle(query);
 
+	return true;
+}
+
+/**
+ * Use this for executing a query where you don't care about the result.
+ * Returns 0 on failure, 1 on success
+ */
+stock SQL_SimpleQuery(Handle:db, const query[], error[]="", maxlength=0, &rows=0)
+{
+	new Handle:hQuery = SQL_PrepareQuery(db, "%s", query);
+	
+	if (!SQL_Execute(hQuery))
+	{
+		SQL_QueryError(hQuery, error, maxlength);
+		SQL_FreeHandle(hQuery)
+		return 0;
+	}
+	
+	rows = SQL_NumResults(hQuery)
+	
+	SQL_FreeHandle(hQuery);
+	
+	return 1
+}

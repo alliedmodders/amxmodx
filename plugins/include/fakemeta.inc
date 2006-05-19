@@ -71,7 +71,7 @@ native forward_return(type,{Float,Sql,Result,_}:...);
  */
 native get_orig_retval({Float,_}:...)
 
-native engfunc(type,{Float,Sql,Result,_}:...);
+native engfunc(type,{Float,Sql,Result,AlertType,_}:...);
 native dllfunc(type,{Float,Sql,Result,_}:...);
 
 //only use this with functions that pass a Trace

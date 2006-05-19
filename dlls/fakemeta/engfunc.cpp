@@ -1054,6 +1054,13 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 
 		temp = (*g_engfuncs.pfnGetInfoKeyBuffer)((index == -1) ? NULL : INDEXENT2(index));
 		return reinterpret_cast<cell>(temp);
+	case EngFunc_AlertMessage:			// void )			(ALERT_TYPE atype, char *szFmt, ...);
+		cRet = MF_GetAmxAddr(amx, params[2]);
+		iparam1 = cRet[0];
+		temp = MF_FormatAmxString(amx, params, 3, &len);
+		
+		(*g_engfuncs.pfnAlertMessage)(static_cast<ALERT_TYPE>(iparam1), temp);
+		return 1;
 	default:
 		MF_LogError(amx, AMX_ERR_NATIVE, "Unknown engfunc type %d", type);
 		return 0;

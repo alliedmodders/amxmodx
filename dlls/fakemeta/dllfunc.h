@@ -52,7 +52,7 @@ enum
 	DLLFunc_pfnAllowLagCompensation,	// int  )			( void );
 	// I know this does not fit with DLLFUNC(), but I don't want another native just for it.
 	MetaFunc_CallGameEntity,			// bool	)			(plid_t plid, const char *entStr,entvars_t *pev);
-	DLLFunc_ClientUserInfoChanged,		// void	)			(idplayer)
+	DLLFunc_ClientUserInfoChanged,		// void	)			(edict *pEntity, char *infobuffer);
 	// You can pass in 0 for global client data handle or another client data handle here
 	DLLFunc_UpdateClientData,			// void )			(const struct edict_s *ent, int sendweapons, struct clientdata_s *cd);
 	// You can pass in 0 for global entity state handle or another entity state handle here

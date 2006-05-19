@@ -116,7 +116,8 @@ enum {
 	EngFunc_CreateInstBaseline,			// int  )			(int classname, struct entity_state_s *baseline);
 	
 	// Returns pointer to info buffer that can be used with the infobuffer param of InfoKeyValue, SetKeyValue, and SetClientKeyValue
-	EngFunc_GetInfoKeyBuffer			// char*)			(edict_t *e);
+	EngFunc_GetInfoKeyBuffer,			// char*)			(edict_t *e);
+	EngFunc_AlertMessage				// void )			(ALERT_TYPE atype, char *szFmt, ...);
 };
 
 /* Used with dllfunc()
@@ -172,7 +173,7 @@ enum
 	DLLFunc_pfnAllowLagCompensation,	// int  )			( void );
 	// I know this does not fit with DLLFUNC(), but I don't want another native just for it.
 	MetaFunc_CallGameEntity,			// bool	)			(plid_t plid, const char *entStr,entvars_t *pev);
-	DLLFunc_ClientUserInfoChanged,		// void	)			(idplayer)
+	DLLFunc_ClientUserInfoChanged,		// void	)			(edict *pEntity, char *infobuffer);
 	// You can pass in 0 for global cd handle or another cd handle here
 	DLLFunc_UpdateClientData,			// void )			(const struct edict_s *ent, int sendweapons, struct clientdata_s *cd);
 	// You can pass in 0 for global entity state handle or another entity state handle here
@@ -725,4 +726,14 @@ enum UserCmd
 	// Experimental player impact stuff
 	UC_ImpactIndex,		// int
 	UC_ImpactPosition	// float array[3]
+};
+
+enum AlertType
+{
+	at_notice = 0,
+	at_console,		// same as at_notice, but forces a ConPrintf, not a message box
+	at_aiconsole,	// same as at_console, but only shown if developer level is 2!
+	at_warning,
+	at_error,
+	at_logged		// Server print to console (only in multiplayer games)
 };

@@ -79,7 +79,8 @@ enum {
 	EngFunc_SetKeyValue,				// void )			(char *infobuffer, char *key, char *value);
 	EngFunc_SetClientKeyValue,			// void )			(int clientIndex, char *infobuffer, char *key, char *value);
 	EngFunc_CreateInstancedBaseline,	// int  )			(int classname, struct entity_state_s *baseline);
-	EngFunc_GetInfoKeyBuffer			// char*)			(edict_t *e);
+	EngFunc_GetInfoKeyBuffer,			// char*)			(edict_t *e);
+	EngFunc_AlertMessage				// void )			(ALERT_TYPE atype, char *szFmt, ...);
 };
 
 #endif //_ENGFUNC_INCLUDE_H

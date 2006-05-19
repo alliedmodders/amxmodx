@@ -66,7 +66,7 @@ begin
   try
     eRegistry.RootKey := HKEY_CURRENT_USER;
     if eRegistry.OpenKey('Software\Valve\Steam', False) then
-      Result := ExtractFilePath(StringReplace(eRegistry.ReadString('SteamExe'), '/', '\', [rfReplaceAll])) + 'SteamApps\'
+      Result := IncludeTrailingBackslash(StringReplace(eRegistry.ReadString('SteamPath'), '/', '\', [rfReplaceAll])) + 'SteamApps\'
     else
       Result := '';
   except
@@ -82,9 +82,9 @@ begin
   Result := TStringList.Create;
   ePath := GetSteamAppsDir;
   if DirectoryExists(ePath) then begin
-    if FindFirst(ePath + '*.*', faDirectory, eSearch) = 0 then begin
+    if FindFirst(ePath + '*.*', faAnyFile, eSearch) = 0 then begin
       repeat
-        if (Pos('@', eSearch.Name) <> 0) then
+        if (eSearch.Attr and faDirectory = faDirectory) and (eSearch.Name <> '.') and (eSearch.Name <> '..') and (LowerCase(eSearch.Name) <> 'sourcemods') then
           Result.Add(eSearch.Name)
       until FindNext(eSearch) <> 0;
     end;

@@ -415,14 +415,16 @@ begin
             for i := 0 to Count -1 do begin
               SteamPath := ePath + Strings[i] + '\dedicated server\';
               if DirectoryExists(SteamPath) then begin
-                CurNode := trvMods.Items.Add(nil, Strings[i]);
-
                 eStr := GetAllMods(SteamPath, False);
-                for k := 0 to eStr.Count -1 do
-                  trvMods.Items.AddChild(CurNode, eStr[k]);
-                eStr.Free;
+                if eStr.Count <> 0 then begin
+                  CurNode := trvMods.Items.Add(nil, Strings[i]);
 
-                CurNode.Expand(False);
+                  for k := 0 to eStr.Count -1 do
+                    trvMods.Items.AddChild(CurNode, eStr[k]);
+                  eStr.Free;
+
+                  CurNode.Expand(False);
+                end;
               end;
             end;
           end;
@@ -467,14 +469,14 @@ begin
             for i := 0 to Count -1 do begin
               SteamPath := ePath + Strings[i] + '\';
               if DirectoryExists(SteamPath) then begin
+                eStr := GetAllMods(SteamPath, False);
                 CurNode := trvMods.Items.Add(nil, Strings[i]);
 
-                eStr := GetAllMods(SteamPath, False);
                 for k := 0 to eStr.Count -1 do
                   trvMods.Items.AddChild(CurNode, eStr[k]);
                 eStr.Free;
 
-                CurNode.Expand(False);
+               CurNode.Expand(False);
 
                 if DirectoryExists(SteamPath + 'half-life') then begin
                   eStr := GetAllMods(SteamPath + 'half-life', False);
@@ -482,6 +484,9 @@ begin
                     trvMods.Items.AddChild(CurNode, eStr[k]);
                   eStr.Free;
                 end;
+
+                if CurNode.Count = 0 then
+                  CurNode.Free;
               end;
             end;
           end;

@@ -84,7 +84,7 @@ begin
   if DirectoryExists(ePath) then begin
     if FindFirst(ePath + '*.*', faAnyFile, eSearch) = 0 then begin
       repeat
-        if (eSearch.Attr and faDirectory = faDirectory) and (eSearch.Name <> '.') and (eSearch.Name <> '..') and (LowerCase(eSearch.Name) <> 'sourcemods') then
+        if (eSearch.Attr and faDirectory = faDirectory) and (eSearch.Name <> '.') and (eSearch.Name <> '..') then
           Result.Add(eSearch.Name)
       until FindNext(eSearch) <> 0;
     end;

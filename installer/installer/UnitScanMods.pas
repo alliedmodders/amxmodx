@@ -34,7 +34,7 @@ begin
     Result := eDirectories;
   end
   else
-    Result := nil; 
+    Result := TStringList.Create; // bad but prevents exception!
 end;
 
 function GetModPathName(eMod: String): String;

@@ -1481,6 +1481,36 @@ int AMXAPI amx_RegisterToAny(AMX *amx, AMX_NATIVE f)
   return err;
 }
 
+int AMXAPI amx_Reregister(AMX *amx, const AMX_NATIVE_INFO *list, int number)
+{
+  AMX_FUNCSTUB *func;
+  AMX_HEADER *hdr;
+  int i,numnatives,count=0;
+  AMX_NATIVE funcptr;
+
+  hdr=(AMX_HEADER *)amx->base;
+  assert(hdr!=NULL);
+  assert(hdr->magic==AMX_MAGIC);
+  assert(hdr->natives<=hdr->libraries);
+  numnatives=NUMENTRIES(hdr,natives,libraries);
+
+  count=0;
+  func=GETENTRY(hdr,natives,0);
+  for (i=0; i<numnatives; i++) {
+    if (func->address!=0) {
+      /* this function is located */
+      funcptr=(list!=NULL) ? findfunction(GETENTRYNAME(hdr,func),list,number) : NULL;
+      if (funcptr!=NULL)
+      {
+        func->address=(ucell)funcptr;
+        count++;
+      }
+    } /* if */
+    func=(AMX_FUNCSTUB*)((unsigned char*)func+hdr->defsize);
+  } /* for */
+  return count;
+}
+
 int AMXAPI amx_Register(AMX *amx, const AMX_NATIVE_INFO *list, int number)
 {
   AMX_FUNCSTUB *func;
@@ -1501,12 +1531,12 @@ int AMXAPI amx_Register(AMX *amx, const AMX_NATIVE_INFO *list, int number)
       /* this function is not yet located */
       funcptr=(list!=NULL) ? findfunction(GETENTRYNAME(hdr,func),list,number) : NULL;
       if (funcptr!=NULL)
-	  {
+      {
         func->address=(ucell)funcptr;
       } else {
         no_function = GETENTRYNAME(hdr,func);
         err=AMX_ERR_NOTFOUND;
-	  }
+       }
     } /* if */
     func=(AMX_FUNCSTUB*)((unsigned char*)func+hdr->defsize);
   } /* for */

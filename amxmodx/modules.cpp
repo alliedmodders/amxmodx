@@ -1647,6 +1647,25 @@ void MNF_RegisterFunction(void *pfn, const char *description)
 	REGISTER_FUNC(description, pfn);
 }
 
+void *MNF_RegisterFunctionEx(void *pfn, const char *description)
+{
+	func_s *pFunc;
+	CList<func_s, const char *>::iterator iter;
+
+	for (iter = g_functions.begin(); iter; ++iter)
+	{
+		pFunc = &(*iter);
+		if (strcmp(description, pFunc->desc) == 0)
+		{
+			void *pOld = pFunc->pfn;
+			pFunc->pfn = pfn;
+			return pOld;
+		}
+	}
+
+	return NULL;
+}
+
 void Module_UncacheFunctions()
 {
 	g_functions.clear();
@@ -1746,6 +1765,7 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("MergeDefinitionFile", MNF_MergeDefinitionFile)
 	REGISTER_FUNC("Format", MNF_Format)
 	REGISTER_FUNC("RegisterFunction", MNF_RegisterFunction);
+	REGISTER_FUNC("RegisterFunctionEx", MNF_RegisterFunctionEx);
 
 	// Amx scripts loading / unloading / managing
 	REGISTER_FUNC("GetAmxScript", MNF_GetAmxScript)
@@ -1762,6 +1782,7 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("FormatAmxString", MNF_FormatAmxString)
 	REGISTER_FUNC("CopyAmxMemory", MNF_CopyAmxMemory)
 	REGISTER_FUNC("GetAmxAddr", get_amxaddr)
+	REGISTER_FUNC("AmxReregister", amx_Reregister);
 
 	// other amx stuff
 	REGISTER_FUNC("amx_Exec", amx_Exec)

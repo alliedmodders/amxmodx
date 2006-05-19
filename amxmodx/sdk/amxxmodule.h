@@ -2181,6 +2181,8 @@ typedef size_t			(*PFN_ADDLIBRARIES)				(const char * /*name*/, LibType /*type*/
 typedef size_t			(*PFN_REMOVELIBRARIES)			(void * /*parent*/);
 typedef void			(*PFN_OVERRIDENATIVES)			(AMX_NATIVE_INFO * /*natives*/);
 typedef const char *	(*PFN_GETLOCALINFO)				(const char * /*name*/, const char * /*def*/);
+typedef int				(*PFN_AMX_REREGISTER)			(AMX * /*amx*/, AMX_NATIVE_INFO * /*list*/, int /*list*/);
+typedef void *			(*PFN_REGISTERFUNCTIONEX)		(void * /*pfn*/, const char * /*desc*/);
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
 extern PFN_BUILD_PATHNAME			g_fn_BuildPathname;
@@ -2253,6 +2255,8 @@ extern PFN_ADDLIBRARIES				g_fn_AddLibraries;
 extern PFN_REMOVELIBRARIES			g_fn_RemoveLibraries;
 extern PFN_OVERRIDENATIVES			g_fn_OverrideNatives;
 extern PFN_GETLOCALINFO				g_fn_GetLocalInfo;
+extern PFN_AMX_REREGISTER			g_fn_AmxReRegister;
+extern PFN_REGISTERFUNCTIONEX		g_fn_RegisterFunctionEx;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2322,6 +2326,8 @@ size_t			MF_AddLibraries				(const char *name, LibType type, void *parent) { }
 size_t			MF_RemoveLibraries			(void *parent) { }
 void			MF_OverrideNatives			(AMX_NATIVE_INFO *natives) { }
 const char *	MF_GetLocalInfo				(const char *name, const char *def) { }
+int				MF_AmxReRegister			(AMX *amx, AMX_NATIVE_INFO *list, int number) { return 0; }
+void *			MF_RegisterFunctionEx		(void *pfn, const char *description) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
@@ -2396,6 +2402,8 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...);
 #define MF_RemoveLibraries g_fn_RemoveLibraries
 #define MF_OverrideNatives g_fn_OverrideNatives
 #define MF_GetLocalInfo g_fn_GetLocalInfo
+#define MF_AmxReRegister g_fn_AmxReRegister
+#define MF_RegisterFunctionEx g_fn_RegisterFunctionEx
 
 #ifdef MEMORY_TEST
 /*** Memory ***/

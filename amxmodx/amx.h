@@ -410,6 +410,7 @@ int AMXAPI amx_PushArray(AMX *amx, cell *amx_addr, cell **phys_addr, const cell 
 int AMXAPI amx_PushString(AMX *amx, cell *amx_addr, cell **phys_addr, const char *string, int pack, int use_wchar);
 int AMXAPI amx_RaiseError(AMX *amx, int error);
 int AMXAPI amx_Register(AMX *amx, const AMX_NATIVE_INFO *nativelist, int number);
+int AMXAPI amx_Reregister(AMX *amx, const AMX_NATIVE_INFO *nativelist, int number);
 int AMXAPI amx_RegisterToAny(AMX *amx, AMX_NATIVE f);
 int AMXAPI amx_Release(AMX *amx, cell amx_addr);
 int AMXAPI amx_SetCallback(AMX *amx, AMX_CALLBACK callback);

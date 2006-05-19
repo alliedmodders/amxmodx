@@ -284,7 +284,7 @@ void OnPluginsLoaded()
 
 void StartFrame()
 {
-	if (g_lasttime < gpGlobals->time)
+	if (g_pWorker && (g_lasttime < gpGlobals->time))
 	{
         g_lasttime = gpGlobals->time + 0.3f;
 		g_QueueLock->Lock();

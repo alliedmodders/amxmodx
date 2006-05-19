@@ -1,13 +1,29 @@
 #include "amxxmodule.h"
 #include "mysql2_header.h"
+#include "sqlheaders.h"
 
 static g_ident = 0;
+
+SqlFunctions g_MysqlFuncs = 
+{
+	&g_Mysql,
+	SetMysqlAffinity,
+	NULL
+};
+
+int SetMysqlAffinity(AMX *amx)
+{
+	MF_AmxReRegister(amx, g_BaseSqlNatives, -1);
+	MF_AmxReRegister(amx, g_ThreadSqlNatives, -1);
+
+	return 0;
+}
 
 void OnAmxxAttach()
 {
 	MF_AddNatives(g_BaseSqlNatives);
 	MF_AddNatives(g_ThreadSqlNatives);
-	MF_RegisterFunction(&g_Mysql, "GetSqlDriver");
+	g_MysqlFuncs.prev = (SqlFunctions *)MF_RegisterFunctionEx(&g_MysqlFuncs, SQL_DRIVER_FUNC);
 	if (!MF_RequestFunction("GetDbDriver") && !MF_FindLibrary("SQLITE", LibType_Library))
 	{
 		MF_AddNatives(g_OldCompatNatives);

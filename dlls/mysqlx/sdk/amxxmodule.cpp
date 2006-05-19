@@ -2513,6 +2513,8 @@ PFN_ADDLIBRARIES			g_fn_AddLibraries;
 PFN_REMOVELIBRARIES			g_fn_RemoveLibraries;
 PFN_OVERRIDENATIVES			g_fn_OverrideNatives;
 PFN_GETLOCALINFO			g_fn_GetLocalInfo;
+PFN_AMX_REREGISTER			g_fn_AmxReRegister;
+PFN_REGISTERFUNCTIONEX		g_fn_RegisterFunctionEx;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2563,6 +2565,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("MergeDefinitionFile", g_fn_MergeDefinition_File, PFN_MERGEDEFINITION_FILE);
 	REQFUNC("Format", g_fn_Format, PFN_FORMAT);
 	REQFUNC("RegisterFunction", g_fn_RegisterFunction, PFN_REGISTERFUNCTION);
+	REQFUNC("RegisterFunctionEx", g_fn_RegisterFunctionEx, PFN_REGISTERFUNCTIONEX);
 
 	// Amx scripts
 	REQFUNC("GetAmxScript", g_fn_GetAmxScript, PFN_GET_AMXSCRIPT);
@@ -2627,11 +2630,13 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("RegAuthFunc", g_fn_RegAuthFunc, PFN_REG_AUTH_FUNC);
 	REQFUNC("UnregAuthFunc", g_fn_UnregAuthFunc, PFN_UNREG_AUTH_FUNC);
 
+	//Added in 1.75 
 	REQFUNC("FindLibrary", g_fn_FindLibrary, PFN_FINDLIBRARY);
 	REQFUNC("AddLibraries", g_fn_AddLibraries, PFN_ADDLIBRARIES);
 	REQFUNC("RemoveLibraries", g_fn_RemoveLibraries, PFN_REMOVELIBRARIES);
 	REQFUNC("OverrideNatives", g_fn_OverrideNatives, PFN_OVERRIDENATIVES);
 	REQFUNC("GetLocalInfo", g_fn_GetLocalInfo, PFN_GETLOCALINFO);
+	REQFUNC("AmxReregister", g_fn_AmxReRegister, PFN_AMX_REREGISTER);
 
 #ifdef MEMORY_TEST
 	// Memory
@@ -2766,6 +2771,7 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_GetPlayerEdict(0);
 	MF_Format("", 4, "str");
 	MF_RegisterFunction(NULL, "");
+	MF_RegisterFunctionEx(NULL, "");
 	MF_SetPlayerTeamInfo(0, 0, "");
 	MF_PlayerPropAddr(0, 0);
 	MF_RegAuthFunc(NULL);

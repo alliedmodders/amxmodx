@@ -42,6 +42,7 @@ bool FreeHandle(unsigned int num);
 void FreeAllHandles(HandleType type);
 void FreeHandleTable();
 void ShutdownThreading();
+int SetMysqlAffinity(AMX *amx);
 
 extern AMX_NATIVE_INFO g_BaseSqlNatives[];
 extern AMX_NATIVE_INFO g_ThreadSqlNatives[];

@@ -251,6 +251,9 @@
 			<File
 				RelativePath=".\sdk\sh_stack.h">
 			</File>
+			<File
+				RelativePath=".\sqlheaders.h">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

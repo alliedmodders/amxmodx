@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "sh_list.h"
 #include "mysql2_header.h"
+#include "sqlheaders.h"
 
 using namespace SourceMod;
 using namespace SourceHook;
@@ -314,7 +315,6 @@ static cell AMX_NATIVE_CALL SQL_NumResults(AMX *amx, cell *params)
 
 	if (!rs)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "No result set in this query!");
 		return 0;
 	}
 
@@ -398,6 +398,34 @@ static cell AMX_NATIVE_CALL SQL_FieldNameToNum(AMX *amx, cell *params)
 	return columnId;
 }
 
+static cell AMX_NATIVE_CALL SQL_GetAffinity(AMX *amx, cell *params)
+{
+	return MF_SetAmxString(amx, params[1], g_Mysql.NameString(), params[2]);
+}
+
+static cell AMX_NATIVE_CALL SQL_SetAffinity(AMX *amx, cell *params)
+{
+	int len;
+	char *str = MF_GetAmxString(amx, params[1], 0, &len);
+
+	if (stricmp(str, g_Mysql.NameString()) == 0)
+	{
+		return 1;
+	}
+
+	SqlFunctions *pFuncs = (SqlFunctions *)MF_RequestFunction(SQL_DRIVER_FUNC);
+	while (pFuncs)
+	{
+		if (pFuncs->driver->IsCompatDriver(str))
+		{
+			return pFuncs->set_affinity(amx);
+		}
+		pFuncs = pFuncs->prev;
+	}
+
+	return 0;
+}
+
 extern AMX_NATIVE_INFO g_BaseSqlNatives[] = 
 {
 	{"SQL_MakeDbTuple",		SQL_MakeDbTuple},
@@ -415,6 +443,8 @@ extern AMX_NATIVE_INFO g_BaseSqlNatives[] =
 	{"SQL_NumColumns",		SQL_NumColumns},
 	{"SQL_FieldNumToName",	SQL_FieldNumToName},
 	{"SQL_FieldNameToNum",	SQL_FieldNameToNum},
+	{"SQL_GetAffinity",		SQL_GetAffinity},
+	{"SQL_SetAffinity",		SQL_SetAffinity},
 
 	{NULL,					NULL},
 };

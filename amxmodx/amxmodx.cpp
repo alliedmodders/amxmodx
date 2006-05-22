@@ -357,8 +357,24 @@ static cell AMX_NATIVE_CALL show_hudmessage(AMX *amx, cell *params) /* 2 param *
 	int len = 0;
 	g_langMngr.SetDefLang(params[1]);
 	char* message = NULL;
+
+	/**
+	 * Earlier versions would ignore invalid bounds.
+	 * Now, bounds are only checked for internal operations.
+	 *  "channel" stores the valid channel that core uses.
+	 *  "g_hudset.channel" stores the direct channel passed to the engine.
+	 */
 	
 	bool aut = (g_hudset.channel == -1) ? true : false;
+	int channel = -1;
+	if (!aut)
+	{
+		/**
+		 * guarantee this to be between 0-4
+		 * if it's not auto, we don't care
+		 */
+		channel = abs(g_hudset.channel % 5);
+	}
 	if (params[1] == 0)
 	{
 		for (int i = 1; i <= gpGlobals->maxClients; ++i)
@@ -371,10 +387,12 @@ static cell AMX_NATIVE_CALL show_hudmessage(AMX *amx, cell *params) /* 2 param *
 				message = UTIL_SplitHudMessage(format_amxstring(amx, params, 2, len));
 				if (aut)
 				{
-					g_hudset.channel = pPlayer->NextHUDChannel();
-					pPlayer->channels[g_hudset.channel] = gpGlobals->time;
+					channel = pPlayer->NextHUDChannel();
+					pPlayer->channels[channel] = gpGlobals->time;
+					g_hudset.channel = channel;
 				}
-				pPlayer->hudmap[g_hudset.channel] = 0;
+				//don't need to set g_hudset!
+				pPlayer->hudmap[channel] = 0;
 				UTIL_HudMessage(pPlayer->pEdict, g_hudset, message);
 			}
 		}
@@ -394,10 +412,11 @@ static cell AMX_NATIVE_CALL show_hudmessage(AMX *amx, cell *params) /* 2 param *
 		{
 			if (aut)
 			{
-				g_hudset.channel = pPlayer->NextHUDChannel();
-				pPlayer->channels[g_hudset.channel] = gpGlobals->time;
+				channel = pPlayer->NextHUDChannel();
+				pPlayer->channels[channel] = gpGlobals->time;
+				g_hudset.channel = channel;
 			}
-			pPlayer->hudmap[g_hudset.channel] = 0;
+			pPlayer->hudmap[channel] = 0;
 			UTIL_HudMessage(pPlayer->pEdict, g_hudset, message);
 		}
 	}

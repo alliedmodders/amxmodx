@@ -117,7 +117,8 @@ enum {
 	
 	// Returns pointer to info buffer that can be used with the infobuffer param of InfoKeyValue, SetKeyValue, and SetClientKeyValue
 	EngFunc_GetInfoKeyBuffer,			// char*)			(edict_t *e);
-	EngFunc_AlertMessage				// void )			(ALERT_TYPE atype, char *szFmt, ...);
+	EngFunc_AlertMessage,				// void )			(ALERT_TYPE atype, char *szFmt, ...);
+	EngFunc_ClientPrintf				// void )			(edict_t* pEdict, PRINT_TYPE ptype, const char *szMsg);
 };
 
 /* Used with dllfunc()
@@ -534,7 +535,8 @@ enum {
 	FM_CmdEnd,
 	FM_CreateInstBaseline,
 	FM_CreateBaseline,
-	FM_GetInfoKeyBuffer
+	FM_GetInfoKeyBuffer,
+	FM_ClientPrintf
 };
 
 enum TraceResult

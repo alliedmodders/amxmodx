@@ -142,6 +142,7 @@ void FMH_ServerDeactivate()
 	RESETE(AlertMessage);
 	RESETE(CreateInstancedBaseline);
 	RESETE(GetInfoKeyBuffer);
+	RESETE(ClientPrintf);
 
 	RESETD(Spawn);
 	RESETD(Think);

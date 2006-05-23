@@ -638,6 +638,18 @@ char *GetInfoKeyBuffer_post(edict_t *e)
 	RETURN_META_VALUE(MRES_IGNORED, reinterpret_cast<char *>(mlCellResult));
 }
 
+void ClientPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char *szMsg)
+{
+	FM_ENG_HANDLE(FM_ClientPrintf, (Engine[FM_ClientPrintf].at(i), (cell)ENTINDEX(pEdict), (cell)ptype, szMsg));
+	RETURN_META(mswi(lastFmRes));
+}
+
+void ClientPrintf_post(edict_t* pEdict, PRINT_TYPE ptype, const char *szMsg)
+{
+	FM_ENG_HANDLE(FM_ClientPrintf, (Engine[FM_ClientPrintf].at(i), (cell)ENTINDEX(pEdict), (cell)ptype, szMsg));
+	RETURN_META(MRES_IGNORED);
+}
+
 /*
  * Beginning of Engine->Game DLL hooks
  */
@@ -1454,6 +1466,10 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	case FM_GetInfoKeyBuffer:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_DONE);
 		ENGHOOK(GetInfoKeyBuffer);
+		break;
+	case FM_ClientPrintf:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_STRING, FP_DONE);
+		ENGHOOK(ClientPrintf);
 		break;
 #if 0
 

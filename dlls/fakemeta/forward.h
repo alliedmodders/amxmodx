@@ -1,7 +1,7 @@
 #ifndef _INCLUDE_FORWARD_H
 #define _INCLUDE_FORWARD_H
 
-#define ENGFUNC_NUM		FM_LAST_DONT_USE_ME // 130
+#define ENGFUNC_NUM		FM_LAST_DONT_USE_ME // 131
 
 #define	FMV_STRING		1
 #define FMV_FLOAT		2
@@ -163,6 +163,7 @@ enum {
 	FM_CreateInstancedBaseline,
 	FM_CreateBaseline,
 	FM_GetInfoKeyBuffer,
+	FM_ClientPrintf,
 	FM_LAST_DONT_USE_ME
 };
 

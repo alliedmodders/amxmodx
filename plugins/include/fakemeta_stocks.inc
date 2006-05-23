@@ -190,6 +190,8 @@ stock EF_CreateInstBaseline(CLASSNAME, baseline)
 // of EF_InfoKeyValue, EF_SetKeyValue, and EF_SetClientKeyValue
 stock EF_GetInfoKeyBuffer(const ENTITY)
 	return engfunc(EngFunc_GetInfoKeyBuffer, ENTITY)
+stock EF_ClientPrintf(const ENTITY, const printType, const MESSAGE[])
+	return engfunc(EngFunc_ClientPrintf, ENTITY, printType, MESSAGE)
 
 // DLLFuncs
 stock DF_GameInit()

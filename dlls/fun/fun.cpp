@@ -545,11 +545,7 @@ static cell AMX_NATIVE_CALL strip_user_weapons(AMX *amx, cell *params) // index
 	MDLL_Use(pent, pPlayer);
 	REMOVE_ENTITY(pent);
 
-	void *_wpns = MF_PlayerPropAddr(params[1], Player_Weapons);
 	*reinterpret_cast<int *>(MF_PlayerPropAddr(params[1], Player_CurrentWeapon)) = 0;
-	
-	if (_wpns)
-		memset(_wpns, 0, sizeof(_wpns) * MAX_WEAPONS);
 
 	return 1;
 }

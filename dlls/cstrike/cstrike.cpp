@@ -580,9 +580,28 @@ static cell AMX_NATIVE_CALL cs_get_user_inside_buyzone(AMX *amx, cell *params) /
 
 	// Make into edict pointer
 	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+	
+	// This offset is 0 when outside, 1 when inside.
+	if ((int)*((int *)pPlayer->pvPrivateData + OFFSET_MAPZONE) & PLAYER_IN_BUYZONE)
+		return 1;
 
-	return (int)*((int *)pPlayer->pvPrivateData + OFFSET_BUYZONE); // This offset is 0 when outside, 1 when inside.
+	return 0;
 }
+
+static cell AMX_NATIVE_CALL cs_get_user_mapzones(AMX *amx, cell *params) // cs_get_user_mapzones(index); = 1 param
+{
+	// Is user inside a special zone?
+	// params[1] = user index
+
+	// Valid entity should be within range
+	CHECK_PLAYER(params[1]);
+
+	// Make into edict pointer
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+
+	return (int)*((int *)pPlayer->pvPrivateData + OFFSET_MAPZONE);
+}
+
 
 static cell AMX_NATIVE_CALL cs_get_user_plant(AMX *amx, cell *params) // cs_get_user_plant(index); = 1 param
 {
@@ -1404,6 +1423,7 @@ AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_get_user_team",			cs_get_user_team},
 	{"cs_set_user_team",			cs_set_user_team},
 	{"cs_get_user_buyzone",			cs_get_user_inside_buyzone},
+	{"cs_get_user_mapzones",		cs_get_user_mapzones},
 	{"cs_get_user_plant",			cs_get_user_plant},
 	{"cs_set_user_plant",			cs_set_user_plant},
 	{"cs_get_user_defuse",			cs_get_user_defusekit},

@@ -258,3 +258,14 @@ native cs_get_armoury_type(index);
  * CSW_G3SG1, CSW_AWP, CSW_M3, CSW_XM1014, CSW_M249, CSW_FLASHBANG, CSW_HEGRENADE, CSW_VEST, CSW_VESTHELM, CSW_SMOKEGRENADE
  */
 native cs_set_armoury_type(index, type);
+
+#define CS_MAPZONE_BUY 			(1<<0)
+#define CS_MAPZONE_BOMBTARGET 		(1<<1)
+#define CS_MAPZONE_HOSTAGE_RESCUE 	(1<<2)
+#define CS_MAPZONE_ESCAPE		(1<<3)
+#define CS_MAPZONE_VIP_SAFETY 		(1<<4)
+
+/* Returns in bitwise form if the user is in a specific map zone.
+ * NOTE: If user can't plant (cs_get_user_plant(index) is 0) then cs_get_user_mapzones(index) & CS_MAPZONE_BOMBTARGET will return 0 too.
+ */
+native cs_get_user_mapzones(index);

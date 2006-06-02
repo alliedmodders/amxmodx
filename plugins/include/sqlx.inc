@@ -125,7 +125,7 @@ native SQL_IsNull(Handle:query, column);
  *  SQL_ReadResult(query, 1, num2)
  *  SQL_ReadResult(query, 2, str, 31)
  */
-native SQL_ReadResult(Handle:query, column, {Float,_}...);
+native SQL_ReadResult(Handle:query, column, {Float,_}:...);
 
 
 /**

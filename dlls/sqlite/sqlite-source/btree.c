@@ -535,9 +535,9 @@ static int saveCursorPosition(BtCursor *pCur){
   ** data.
   */
   if( rc==SQLITE_OK && 0==pCur->pPage->intKey){
-    void *pKey = sqliteMalloc((int)pCur->nKey);
+    void *pKey = sqliteMalloc(pCur->nKey);
     if( pKey ){
-      rc = sqlite3BtreeKey(pCur, 0, (u32)pCur->nKey, pKey);
+      rc = sqlite3BtreeKey(pCur, 0, pCur->nKey, pKey);
       if( rc==SQLITE_OK ){
         pCur->pKey = pKey;
       }else{
@@ -2399,7 +2399,7 @@ static int autoVacuumCommit(BtShared *pBt, Pgno *nTrunc){
   }
   nPtrMap = (nFreeList-origSize+PTRMAP_PAGENO(pBt, origSize)+pgsz/5)/(pgsz/5);
   finSize = origSize - nFreeList - nPtrMap;
-  if( origSize>(Pgno)PENDING_BYTE_PAGE(pBt) && finSize<=(Pgno)PENDING_BYTE_PAGE(pBt) ){
+  if( origSize>PENDING_BYTE_PAGE(pBt) && finSize<=PENDING_BYTE_PAGE(pBt) ){
     finSize--;
   }
   while( PTRMAP_ISPAGE(pBt, finSize) || finSize==PENDING_BYTE_PAGE(pBt) ){
@@ -2987,13 +2987,13 @@ static int getPayload(
   if( pPage->intKey ){
     nKey = 0;
   }else{
-    nKey = (u32)pCur->info.nKey;
+    nKey = pCur->info.nKey;
   }
   assert( offset>=0 );
   if( skipKey ){
     offset += nKey;
   }
-  if( (u32)(offset+amt) > nKey+pCur->info.nData ){
+  if( offset+amt > nKey+pCur->info.nData ){
     return SQLITE_ERROR;
   }
   if( offset<pCur->info.nLocal ){
@@ -3126,14 +3126,14 @@ static const unsigned char *fetchPayload(
   if( pPage->intKey ){
     nKey = 0;
   }else{
-    nKey = (u32)pCur->info.nKey;
+    nKey = pCur->info.nKey;
   }
   if( skipKey ){
     aPayload += nKey;
     nLocal = pCur->info.nLocal - nKey;
   }else{
     nLocal = pCur->info.nLocal;
-    if( (u32)nLocal>nKey ){
+    if( nLocal>nKey ){
       nLocal = nKey;
     }
   }
@@ -3445,12 +3445,12 @@ int sqlite3BtreeMoveto(BtCursor *pCur, const void *pKey, i64 nKey, int *pRes){
         pCellKey = (void *)fetchPayload(pCur, &available, 0);
         nCellKey = pCur->info.nKey;
         if( available>=nCellKey ){
-          c = pCur->xCompare(pCur->pArg, (int)nCellKey, pCellKey, (int)nKey, pKey);
+          c = pCur->xCompare(pCur->pArg, nCellKey, pCellKey, nKey, pKey);
         }else{
-          pCellKey = sqliteMallocRaw( (int)nCellKey );
+          pCellKey = sqliteMallocRaw( nCellKey );
           if( pCellKey==0 ) return SQLITE_NOMEM;
-          rc = sqlite3BtreeKey(pCur, 0, (u32)nCellKey, (void *)pCellKey);
-          c = pCur->xCompare(pCur->pArg, (int)nCellKey, pCellKey, (int)nKey, pKey);
+          rc = sqlite3BtreeKey(pCur, 0, nCellKey, (void *)pCellKey);
+          c = pCur->xCompare(pCur->pArg, nCellKey, pCellKey, nKey, pKey);
           sqliteFree(pCellKey);
           if( rc ) return rc;
         }
@@ -3814,7 +3814,7 @@ static int allocatePage(
         iPage = get4byte(&aData[8+closest*4]);
         if( !searchList || iPage==nearby ){
           *pPgno = iPage;
-          if( *pPgno>(Pgno)sqlite3pager_pagecount(pBt->pPager) ){
+          if( *pPgno>sqlite3pager_pagecount(pBt->pPager) ){
             /* Free page off the end of the file */
             return SQLITE_CORRUPT_BKPT;
           }
@@ -3967,7 +3967,7 @@ static int clearCell(MemPage *pPage, unsigned char *pCell){
   ovflPgno = get4byte(&pCell[info.iOverflow]);
   while( ovflPgno!=0 ){
     MemPage *pOvfl;
-    if( ovflPgno>(Pgno)sqlite3pager_pagecount(pBt->pPager) ){
+    if( ovflPgno>sqlite3pager_pagecount(pBt->pPager) ){
       return SQLITE_CORRUPT_BKPT;
     }
     rc = getPage(pBt, ovflPgno, &pOvfl);
@@ -4035,9 +4035,9 @@ static int fillInCell(
     nSrc = nData;
     nData = 0;
   }else{
-    nPayload += (int)nKey;
+    nPayload += nKey;
     pSrc = pKey;
-    nSrc = (int)nKey;
+    nSrc = nKey;
   }
   *pnSize = info.nSize;
   spaceLeft = info.nLocal;
@@ -5588,7 +5588,7 @@ static int clearDatabasePage(
   unsigned char *pCell;
   int i;
 
-  if( pgno>(Pgno)sqlite3pager_pagecount(pBt->pPager) ){
+  if( pgno>sqlite3pager_pagecount(pBt->pPager) ){
     return SQLITE_CORRUPT_BKPT;
   }
 
@@ -6278,7 +6278,7 @@ static int checkTreePage(
     pCell = findCell(pPage,i);
     parseCellPtr(pPage, pCell, &info);
     sz = info.nData;
-    if( !pPage->intKey ) sz += (int)info.nKey;
+    if( !pPage->intKey ) sz += info.nKey;
     if( sz>info.nLocal ){
       int nPage = (sz - info.nLocal + usableSize - 5)/(usableSize - 4);
       Pgno pgnoOvfl = get4byte(&pCell[info.iOverflow]);

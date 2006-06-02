@@ -870,8 +870,8 @@ static int winWrite(OsFile *id, const void *pBuf, int amt){
 ** Move the read/write pointer in a file.
 */
 static int winSeek(OsFile *id, i64 offset){
-  LONG upperBits = (LONG)(offset>>32);
-  LONG lowerBits = (LONG)(offset) & 0xffffffff;
+  LONG upperBits = offset>>32;
+  LONG lowerBits = offset & 0xffffffff;
   DWORD rc;
   assert( id!=0 );
 #ifdef SQLITE_TEST
@@ -912,11 +912,11 @@ int sqlite3WinSyncDirectory(const char *zDirname){
 ** Truncate an open file to a specified size
 */
 static int winTruncate(OsFile *id, i64 nByte){
-  LONG upperBits = (LONG)(nByte>>32);
+  LONG upperBits = nByte>>32;
   assert( id!=0 );
   TRACE3("TRUNCATE %d %lld\n", ((winFile*)id)->h, nByte);
   SimulateIOError(SQLITE_IOERR);
-  SetFilePointer(((winFile*)id)->h, (LONG)nByte, &upperBits, FILE_BEGIN);
+  SetFilePointer(((winFile*)id)->h, nByte, &upperBits, FILE_BEGIN);
   SetEndOfFile(((winFile*)id)->h);
   return SQLITE_OK;
 }

@@ -316,7 +316,7 @@ double sqlite3VdbeRealValue(Mem *pMem){
 */
 void sqlite3VdbeIntegerAffinity(Mem *pMem){
   assert( pMem->flags & MEM_Real );
-  pMem->i = (i64)pMem->r;
+  pMem->i = pMem->r;
   if( ((double)pMem->i)==pMem->r ){
     pMem->flags |= MEM_Int;
   }
@@ -554,12 +554,12 @@ int sqlite3MemCompare(const Mem *pMem1, const Mem *pMem2, const CollSeq *pColl){
     if( (f1 & f2 & MEM_Int)==0 ){
       double r1, r2;
       if( (f1&MEM_Real)==0 ){
-        r1 = (double)pMem1->i;
+        r1 = pMem1->i;
       }else{
         r1 = pMem1->r;
       }
       if( (f2&MEM_Real)==0 ){
-        r2 = (double)pMem2->i;
+        r2 = pMem2->i;
       }else{
         r2 = pMem2->r;
       }

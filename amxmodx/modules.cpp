@@ -1670,6 +1670,8 @@ void *MNF_RegisterFunctionEx(void *pfn, const char *description)
 		}
 	}
 
+	MNF_RegisterFunction(pfn, description);
+
 	return NULL;
 }
 
@@ -1865,11 +1867,6 @@ void *Module_ReqFnptr(const char *funcName)
 	// code
 	// ^---- really? wow!
 	
-	if (!g_CurrentlyCalledModule)
-	{
-		return NULL;
-	}
-
 	g_LastRequestedFunc = funcName;
 
 	CList<func_s, const char *>::iterator iter;

@@ -146,7 +146,7 @@ var
   frmMain: TfrmMain;
   gMultiAccount: Boolean;
 
-const VERSION = '1.72';
+const VERSION = '1.75';
 
 implementation
 

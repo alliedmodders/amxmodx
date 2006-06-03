@@ -78,7 +78,6 @@ bool SqliteQuery::ExecuteR(QueryInfo *info, char *error, size_t maxlength)
 			data.results = results;
 
 			SqliteResultSet *pRes = new SqliteResultSet(data);
-			m_LastRes = pRes;
 			info->rs = static_cast<IResultSet *>(pRes);
 		} else {
 			info->rs = NULL;

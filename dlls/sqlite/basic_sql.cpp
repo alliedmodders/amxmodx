@@ -40,21 +40,26 @@ static cell AMX_NATIVE_CALL SQL_MakeDbTuple(AMX *amx, cell *params)
 	SQL_Connection *sql = new SQL_Connection;
 	int len;
 
-	char *host =  strdup(MF_GetAmxString(amx, params[1], 0, &len));
+	sql->port = 0;
+	sql->host = strdup("");
+	sql->user = strdup("");
+	sql->pass = strdup("");
 
-	char *p = strchr(host, ':');
-	if (p)
+	char *db = MF_GetAmxString(amx, params[4], 0, &len);
+	char path[255];
+	FILE *fp;
+
+	MF_BuildPathnameR(path, sizeof(path)-1, "%s", db);
+	if ((fp=fopen(path, "rb")))
 	{
-		sql->port = atoi(p+1);
-		*p = '\0';
+		fclose(fp);
+		sql->db = strdup(path);
 	} else {
-		sql->port = 0;
+		MF_BuildPathnameR(path, sizeof(path)-1, "%s/sqlite3/%s.sq3",
+			MF_GetLocalInfo("amxx_datadir", "addons/amxmodx/data"),
+			db);
+		sql->db = strdup(path);
 	}
-
-	sql->host = host;
-	sql->user = strdup(MF_GetAmxString(amx, params[2], 0, &len));
-	sql->pass = strdup(MF_GetAmxString(amx, params[3], 0, &len));
-	sql->db = strdup(MF_GetAmxString(amx, params[4], 0, &len));
 
 	unsigned int num = MakeHandle(sql, Handle_Connection, FreeConnection);
 

@@ -50,6 +50,7 @@ static cell AMX_NATIVE_CALL dbi_connect(AMX *amx, cell *params)
 	int len;
 	DatabaseInfo info;
 	char *name = MF_GetAmxString(amx, params[4], 3, &len);
+	char path[255];
 
 	info.host = "";
 	info.user = "";
@@ -58,6 +59,19 @@ static cell AMX_NATIVE_CALL dbi_connect(AMX *amx, cell *params)
 
 	int err;
 	char error[512];
+	/** if there is an older database, read there instead of the new path */
+	MF_BuildPathnameR(path, sizeof(path)-1, "%s", info.database);
+	FILE *fp = fopen(path, "rb");
+	if (fp)
+	{
+		fclose(fp);
+		info.database = path;
+	} else {
+		MF_BuildPathnameR(path, sizeof(path)-1, "%s/sqlite/%s.sq3",
+			MF_GetLocalInfo("amxx_datadir", "addons/amxmodx/data"),
+			info.database);
+		info.database = path;
+	}
 	IDatabase *pDatabase = g_Sqlite.Connect(&info, &err, error, sizeof(error)-1);
 	if (!pDatabase)
 	{

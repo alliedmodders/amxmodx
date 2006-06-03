@@ -2179,7 +2179,7 @@ typedef void			(*PFN_UNREG_AUTH_FUNC)			(AUTHORIZEFUNC);
 typedef int				(*PFN_FINDLIBRARY)				(const char * /*name*/, LibType /*type*/);
 typedef size_t			(*PFN_ADDLIBRARIES)				(const char * /*name*/, LibType /*type*/, void * /*parent*/);
 typedef size_t			(*PFN_REMOVELIBRARIES)			(void * /*parent*/);
-typedef void			(*PFN_OVERRIDENATIVES)			(AMX_NATIVE_INFO * /*natives*/);
+typedef void			(*PFN_OVERRIDENATIVES)			(AMX_NATIVE_INFO * /*natives*/, const char * /*myname*/);
 typedef const char *	(*PFN_GETLOCALINFO)				(const char * /*name*/, const char * /*def*/);
 typedef int				(*PFN_AMX_REREGISTER)			(AMX * /*amx*/, AMX_NATIVE_INFO * /*list*/, int /*list*/);
 typedef void *			(*PFN_REGISTERFUNCTIONEX)		(void * /*pfn*/, const char * /*desc*/);
@@ -2324,7 +2324,7 @@ void			MF_UnregAuthFunc			(AUTHORIZEFUNC fn) { }
 int				MF_FindLibrary				(const char *name, LibType type) { }
 size_t			MF_AddLibraries				(const char *name, LibType type, void *parent) { }
 size_t			MF_RemoveLibraries			(void *parent) { }
-void			MF_OverrideNatives			(AMX_NATIVE_INFO *natives) { }
+void			MF_OverrideNatives			(AMX_NATIVE_INFO *natives, const char *myname) { }
 const char *	MF_GetLocalInfo				(const char *name, const char *def) { }
 int				MF_AmxReRegister			(AMX *amx, AMX_NATIVE_INFO *list, int number) { return 0; }
 void *			MF_RegisterFunctionEx		(void *pfn, const char *description) { }

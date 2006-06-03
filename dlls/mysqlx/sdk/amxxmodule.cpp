@@ -2779,7 +2779,7 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_FindLibrary(NULL, LibType_Class);
 	MF_AddLibraries(NULL, LibType_Class, NULL);
 	MF_RemoveLibraries(NULL);
-	MF_OverrideNatives(NULL);
+	MF_OverrideNatives(NULL, NULL);
 }
 #endif
 

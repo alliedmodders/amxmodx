@@ -2513,7 +2513,7 @@ PFN_ADDLIBRARIES			g_fn_AddLibraries;
 PFN_REMOVELIBRARIES			g_fn_RemoveLibraries;
 PFN_OVERRIDENATIVES			g_fn_OverrideNatives;
 PFN_GETLOCALINFO			g_fn_GetLocalInfo;
-PFN_AMXREREGISTER			g_fn_AmxReRegister;
+PFN_AMX_REREGISTER			g_fn_AmxReRegister;
 PFN_REGISTERFUNCTIONEX		g_fn_RegisterFunctionEx;
 
 // *** Exports ***

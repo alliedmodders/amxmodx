@@ -269,4 +269,4 @@ stock DF_CmdStart(const PLAYER, const CMD = 0, randomSeed)
 stock DF_CmdEnd(const PLAYER)
 	return dllfunc(DLLFunc_CmdEnd, PLAYER)
 stock DF_CreateBaseline(PLAYER, eIndex, baseline, playerModelIndex, Float:playerMins[3], Float:playerMaxs[3])
-	return dllfunc(DLLFunc_CreateBaseline, PLAYER, eIndex, baseline, playerModelIndex, playerMins, playerMaxs)*/
+	return dllfunc(DLLFunc_CreateBaseline, PLAYER, eIndex, baseline, playerModelIndex, playerMins, playerMaxs)

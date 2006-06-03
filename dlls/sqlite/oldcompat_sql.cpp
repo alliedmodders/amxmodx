@@ -385,7 +385,7 @@ static cell AMX_NATIVE_CALL dbi_error(AMX *amx, cell *params)
 //native dbi_type(_type[], _len);
 static cell AMX_NATIVE_CALL dbi_type(AMX *amx, cell *params)
 {
-	return MF_SetAmxString(amx, params[1], "mysql", params[2]);
+	return MF_SetAmxString(amx, params[1], g_Sqlite.NameString(), params[2]);
 }
 
 //native dbi_num_fields(Result:result);

@@ -16,7 +16,7 @@ int SetMysqlAffinity(AMX *amx)
 	MF_AmxReRegister(amx, g_BaseSqlNatives, -1);
 	MF_AmxReRegister(amx, g_ThreadSqlNatives, -1);
 
-	return 0;
+	return 1;
 }
 
 bool DirExists(const char *dir)

@@ -218,10 +218,8 @@ LibError RunLibCommand(const LibDecoder *enc)
 
 		if (enc->cmd == LibCmd_ExpectLib)
 			expect = LibType_Library;
-		else if (enc->cmd == LibCmd_ExpectClass)
-			expect = LibType_Class;
 		else
-			expect = LibType_Library;
+			expect = LibType_Class;
 
 		/** see if it exists */
 		for (; iter != end; iter++)

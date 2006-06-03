@@ -1311,13 +1311,20 @@ const char * MNF_GetPlayerName(int id)
 	return GET_PLAYER_POINTER_I(id)->name.c_str();
 }
 
-void MNF_OverrideNatives(AMX_NATIVE_INFO *natives)
+void MNF_OverrideNatives(AMX_NATIVE_INFO *natives, const char *name)
 {
 	//HACKHACK - we should never have had to do this
 	//find a better solution for SourceMod!!!
 	for (CList<CModule, const char *>::iterator a = g_modules.begin(); a ; ++a)
 	{
 		CModule &cm = (*a);
+		if (cm.getStatusValue() != MODULE_LOADED)
+			continue;
+		const amxx_module_info_s *p = cm.getInfoNew();
+		if (!p || !p->name)
+			continue;
+		if (strcmp(p->name, name)==0)
+			continue;
 		cm.rewriteNativeLists(natives);
 	}
 }

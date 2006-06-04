@@ -593,7 +593,6 @@ void CPluginMngr::CALMFromFile(const char *file)
 	// Find now folder
 	char pluginName[256];
 	char line[256];
-	const char *pluginsDir = get_localinfo("amxx_pluginsdir", "addons/amxmodx/plugins");
 	String rline;
 
 	while (!feof(fp)) 
@@ -610,7 +609,7 @@ void CPluginMngr::CALMFromFile(const char *file)
 		if (!isalnum(*pluginName))
 			continue;
 
-		build_pathname_r(filename, sizeof(filename)-1, "%s/%s", pluginsDir, pluginName);
+		build_pathname_r(filename, sizeof(filename)-1, "%s/%s", get_localinfo("amxx_pluginsdir", "addons/amxmodx/plugins"), pluginName);
 
 		CacheAndLoadModules(filename);
 	}

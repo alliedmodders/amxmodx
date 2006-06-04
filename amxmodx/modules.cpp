@@ -852,9 +852,9 @@ bool ConvertModuleName(const char *pathString, String &path)
 	path.append("_amxx");
 #if defined __linux__
  #if defined AMD64 || PAWN_CELL_SIZE==64
-	path.append("amd64");
+	path.append("_amd64");
  #else
-	path.append("i");
+	path.append("_i");
 	path.append(iDigit);
 	path.append("86");
  #endif

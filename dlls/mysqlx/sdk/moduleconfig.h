@@ -14,12 +14,12 @@
  * -For both library and library class, you can use a comma
  *   to add multiple entries.
  */
-#define MODULE_NAME "MySQLX"
+#define MODULE_NAME "MySQL"
 #define MODULE_VERSION "1.75"
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "http://www.amxmodx.org/"
-#define MODULE_LOGTAG "MySQLX"
-#define MODULE_LIBRARY "mysqlx"
+#define MODULE_LOGTAG "MySQL"
+#define MODULE_LIBRARY "mysql"
 #define MODULE_LIBCLASS "sqlx"
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line
 #define MODULE_RELOAD_ON_MAPCHANGE

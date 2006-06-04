@@ -33,7 +33,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="wsock32.lib mysqlclient.lib"
-				OutputFile="$(OutDir)/mysqlx_amxx.dll"
+				OutputFile="$(OutDir)/mysql_amxx.dll"
 				LinkIncremental="2"
 				IgnoreDefaultLibraryNames="LIBCMT"
 				GenerateDebugInformation="TRUE"
@@ -82,7 +82,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="wsock32.lib mysqlclient.lib"
-				OutputFile="$(OutDir)/mysqlx_amxx.dll"
+				OutputFile="$(OutDir)/mysql_amxx.dll"
 				LinkIncremental="1"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="TRUE"

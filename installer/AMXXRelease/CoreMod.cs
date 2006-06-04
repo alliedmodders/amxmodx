@@ -116,12 +116,16 @@ namespace AMXXRelease
 			core.projname = "amxmodx_mm";
 			core.outdir = "dlls";
 
-			Module mysql = new Module();
+			Module mysqlx = new Module();
+			mysqlx.projname = "mysqlx_amxx";
+			mysqlx.sourcedir = "dlls\\" + "mysqlx";
+			mysqlx.vcproj = "mysql2";
 
-			mysql.sourcedir = "mysql";
-			mysql.projname = "mysql_amxx";
-			mysql.bindir = "mysql_amxx";
-			mysql.vcproj = "mysql_amxx";
+			Module sqlitex = new Module();
+			sqlitex.projname = "sqlitex_amxx";
+			sqlitex.sourcedir = "dlls\\" + "sqlite";
+			sqlitex.bindir = "msvc7";
+			sqlitex.vcproj = "sqlite_amxx";
 
 			Module engine = new Module();
 			engine.sourcedir = "engine";
@@ -140,7 +144,7 @@ namespace AMXXRelease
 			Module nvault = new Module("nvault");
 
 			m_Modules.Add(core);
-			m_Modules.Add(mysql);
+			m_Modules.Add(mysqlx);
 			m_Modules.Add(engine);
 			m_Modules.Add(fun);
 			m_Modules.Add(geoip);
@@ -148,6 +152,7 @@ namespace AMXXRelease
 			m_Modules.Add(sockets);
 			m_Modules.Add(regex);
 			m_Modules.Add(nvault);
+			m_Modules.Add(sqlitex);
 		}
 	}
 }

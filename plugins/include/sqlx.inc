@@ -7,6 +7,9 @@
 #endif
 #define _sqlx_included
 
+//eh..
+#define SQL_NumRows SQL_NumResults
+
 #if AMXX_VERSION_NUM >= 175
  #pragma reqclass sqlx
  #if !defined AMXMODX_NOAUTOLOAD
@@ -20,10 +23,13 @@ enum Handle
 };
 
 /**
- * Creates a connection tuple.
+ * Creates a connection information tuple.
  * This tuple must be passed into connection routines.
  * Freeing the tuple is not necessary, but is a good idea if you 
  *  create many of them.  You can cache these handles globally.
+ * !!NOTE!! I have seen most people think that this connects to the DB.
+ *   Nowhere does it say this, and in fact it does not.  It only caches
+ *   the connection information, the host/user/pass/etc.
  */
 native Handle:SQL_MakeDbTuple(const host[], const user[], const pass[], const db[]);
 
@@ -173,7 +179,9 @@ native SQL_GetAffinity(driver[], maxlen);
  * Sets driver affinity.  You can use this to force a particular 
  *  driver implementation.  This will automatically change all SQL
  *  natives in your plugin to be "bound" to the module in question.
- * If no such module is found, it will return 0.
+ * If no such module is found, it will return 0.  This isn't necessarily bad - 
+ *  the user might have typed the wrong driver.  Unless your plugin is built
+ *  to handle different driver types at once, you should let this error pass.
  * Note, that using this while you have open handles to another database 
  *  type will cause problems.  I.e., you cannot open a handle, switch
  *  affinity, then close the handle with a different driver.
@@ -228,4 +236,56 @@ stock SQL_SimpleQuery(Handle:db, const query[], error[]="", maxlength=0, &rows=0
 	SQL_FreeHandle(hQuery);
 	
 	return 1
+}
+
+/**
+ * Use this for executing a query and not caring about the error.
+ * Returns -1 on error, >=0 on success (with number of affected rows)
+ */
+stock SQL_QueryAndIgnore(Handle:db, const queryfmt[], {Float,_}:...)
+{
+	static query[4096]
+	new Handle:hQuery
+	new ret
+	
+	vformat(query, sizeof(query)-1, queryfmt, 3)
+	
+	server_print("simple query: %s", query)
+	
+	hQuery = SQL_PrepareQuery(db, "%s", query);
+	
+	if (SQL_Execute(hQuery))
+	{
+		ret = SQL_AffectedRows(hQuery)
+	} else {
+		ret = -1
+	}
+	
+	SQL_FreeHandle(hQuery)
+	
+	return ret
+}
+
+stock Handle:SQL_MakeStdTuple()
+{
+	static host[64], user[32], pass[32], db[128]
+	static get_type[12], set_type[12]
+	
+	get_cvar_string("amx_sql_host", host, 63)
+	get_cvar_string("amx_sql_user", user, 31)
+	get_cvar_string("amx_sql_pass", pass, 31)
+	get_cvar_string("amx_sql_type", set_type, 11)
+	get_cvar_string("amx_sql_db", db, 127)
+	
+	SQL_GetAffinity(get_type, 12)
+	
+	if (!equali(get_type, set_type))
+	{
+		if (!SQL_SetAffinity(set_type))
+		{
+			log_amx("Failed to set affinity from %s to %s.", get_type, set_type)
+		}
+	}
+	
+	return SQL_MakeDbTuple(host, user, pass, db)
 }

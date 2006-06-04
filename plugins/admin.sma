@@ -38,7 +38,7 @@
 #include <amxmodx>
 #include <amxmisc>
 #if defined USING_SQL
-#include <dbi>
+#include <sqlx>
 #endif
 
 #define MAX_ADMINS 64
@@ -90,6 +90,7 @@ public plugin_init()
 	register_cvar("amx_sql_user", "root")
 	register_cvar("amx_sql_pass", "")
 	register_cvar("amx_sql_db", "amx")
+	register_cvar("amx_sql_type", "mysql")
 
 	register_concmd("amx_reloadadmins", "cmdReload", ADMIN_CFG)
 	register_concmd("amx_addadmin", "addadminfn", ADMIN_RCON, "<playername|auth> <accessflags> [password] [authtype] - automatically add specified player as an admin to users.ini")
@@ -120,7 +121,7 @@ public addadminfn(id, level, cid)
 		
 	new idtype = ADMIN_STEAM | ADMIN_LOOKUP
 
-	if (read_argc() > 4)
+	if (read_argc() >= 5)
 	{
 		new t_arg[16]
 		read_argv(4, t_arg, 15)
@@ -136,6 +137,9 @@ public addadminfn(id, level, cid)
 		else if (equali(t_arg, "name") || equali(t_arg, "nick"))
 		{
 			idtype = ADMIN_NAME
+			
+			if (equali(t_arg, "name"))
+				idtype |= ADMIN_LOOKUP
 		} else {
 			console_print(id, "[%s] Unknown idtype ^"%s^", use one of: steamid, ip, name", PLUGINNAME, t_arg)
 			return PLUGIN_HANDLED
@@ -167,7 +171,11 @@ public addadminfn(id, level, cid)
 					player = _pv
 					break
 				}
-			}			
+			}	
+			if (player < 1)
+			{
+				idtype &= ~ADMIN_LOOKUP
+			}		
 		}
 	}
 	else if (idtype & ADMIN_NAME)
@@ -176,6 +184,8 @@ public addadminfn(id, level, cid)
 		
 		if (player)
 			idtype |= ADMIN_LOOKUP
+		else
+			idtype &= ~ADMIN_LOOKUP
 	}
 	else if (idtype & ADMIN_IPADDR)
 	{
@@ -215,7 +225,7 @@ public addadminfn(id, level, cid)
 	read_argv(2, flags, 63)
 
 	new password[64]
-	if (read_argc() == 4)
+	if (read_argc() >= 4)
 		read_argv(3, password, 63)
 
 	new auth[33]
@@ -265,18 +275,12 @@ public addadminfn(id, level, cid)
 AddAdmin(id, auth[], accessflags[], password[], flags[])
 {
 #if defined USING_SQL
-	new host[64], user[32], pass[32], db[128], table[32], error[128], dbType[7]
-	
-	dbi_type(dbType, 6)
-	get_cvar_string("amx_sql_host", host, 63)
-	get_cvar_string("amx_sql_user", user, 31)
-	get_cvar_string("amx_sql_pass", pass, 31)
-	get_cvar_string("amx_sql_db", db, 127)
-	get_cvar_string("amx_sql_table", table, 31)
+	new error[128], errno
 
-	new Sql:sql = dbi_connect(host, user, pass, db, error, 127)
+	new Handle:info = SQL_MakeStdTuple()
+	new Handle:sql = SQL_Connect(info, errno, error, 127)
 	
-	if (sql <= SQL_FAILED)
+	if (sql == Empty_Handle)
 	{
 		server_print("[AMXX] %L", LANG_SERVER, "SQL_CANT_CON", error)
 		//backup to users.ini
@@ -325,30 +329,29 @@ AddAdmin(id, auth[], accessflags[], password[], flags[])
 			console_print(id, "[%s] Failed writing to %s!", PLUGINNAME, configsDir)
 #if defined USING_SQL
 	}
-	new Result:Res = dbi_query(sql, "SELECT * FROM `%s` WHERE (`auth` = '%s')", table, auth)
+	
+	new table[32]
+	
+	get_cvar_string("amx_sql_table", table, 31)
+	
+	new Handle:query = SQL_PrepareQuery(sql, "SELECT * FROM `%s` WHERE (`auth` = '%s')", table, auth)
 
-	if (Res == RESULT_FAILED)
+	if (!SQL_Execute(query))
 	{
-		dbi_error(sql, error, 127)
+		SQL_QueryError(query, error, 127)
 		server_print("[AMXX] %L", LANG_SERVER, "SQL_CANT_LOAD_ADMINS", error)
 		console_print(id, "[AMXX] %L", LANG_SERVER, "SQL_CANT_LOAD_ADMINS", error)
-		dbi_close(sql)
-		
-		return
-	}
-	else if (Res > RESULT_NONE)
-	{
+	} else if (SQL_NumResults(query)) {
 		console_print(id, "[%s] %s already exists!", PLUGINNAME, auth)
-		dbi_free_result(Res)
-		dbi_close(sql)
-		
-		return
-	}
-
-	console_print(id, "Adding to database:^n^"%s^" ^"%s^" ^"%s^" ^"%s^"", auth, password, accessflags, flags)
+	} else {
+		console_print(id, "Adding to database:^n^"%s^" ^"%s^" ^"%s^" ^"%s^"", auth, password, accessflags, flags)
 	
-	dbi_query(sql, "REPLACE INTO `%s` (`auth`, `password`, `access`, `flags`) VALUES ('%s', '%s', '%s', '%s')", table, auth, password, accessflags, flags)
-	dbi_close(sql)
+		SQL_QueryAndIgnore(sql, "REPLACE INTO `%s` (`auth`, `password`, `access`, `flags`) VALUES ('%s', '%s', '%s', '%s')", table, auth, password, accessflags, flags)
+	}
+	
+	SQL_FreeHandle(query)
+	SQL_FreeHandle(sql)
+	SQL_FreeHandle(info)
 #endif
 
 }
@@ -402,19 +405,16 @@ loadSettings(szFilename[])
 #if defined USING_SQL
 public adminSql()
 {
-	new host[64], user[32], pass[32], db[128], table[32], error[128], dbType[7]
+	new table[32], error[128], type[12], errno
 	
-	dbi_type(dbType, 6)
+	new Handle:info = SQL_MakeStdTuple()
+	new Handle:sql = SQL_Connect(info, errno, error, 127)
 	
-	get_cvar_string("amx_sql_host", host, 63)
-	get_cvar_string("amx_sql_user", user, 31)
-	get_cvar_string("amx_sql_pass", pass, 31)
-	get_cvar_string("amx_sql_db", db, 127)
 	get_cvar_string("amx_sql_table", table, 31)
-
-	new Sql:sql = dbi_connect(host, user, pass, db, error, 127)
 	
-	if (sql <= SQL_FAILED)
+	SQL_GetAffinity(type, 11)
+	
+	if (sql == Empty_Handle)
 	{
 		server_print("[AMXX] %L", LANG_SERVER, "SQL_CANT_CON", error)
 		
@@ -428,63 +428,62 @@ public adminSql()
 		return PLUGIN_HANDLED
 	}
 
-	new Result:Res
+	new Handle:query
 	
-	if (equali(dbType, "sqlite"))
+	if (equali(type, "sqlite"))
 	{
-		if (!sqlite_table_exists(sql, table))
+		if (!sqlite_TableExists(sql, table))
 		{
-			dbi_query(sql, "CREATE TABLE %s ( auth TEXT NOT NULL DEFAULT '', password TEXT NOT NULL DEFAULT '', access TEXT NOT NULL DEFAULT '', flags TEXT NOT NULL DEFAULT '' )", table)
+			SQL_QueryAndIgnore(sql, "CREATE TABLE %s ( auth TEXT NOT NULL DEFAULT '', password TEXT NOT NULL DEFAULT '', access TEXT NOT NULL DEFAULT '', flags TEXT NOT NULL DEFAULT '' )", table)
 		}
 
-		Res = dbi_query(sql, "SELECT auth, password, access, flags FROM %s",table)
+		query = SQL_PrepareQuery(sql, "SELECT auth, password, access, flags FROM %s", table)
 	} else {
-		dbi_query(sql,"CREATE TABLE IF NOT EXISTS `%s` ( `auth` VARCHAR( 32 ) NOT NULL, `password` VARCHAR( 32 ) NOT NULL, `access` VARCHAR( 32 ) NOT NULL, `flags` VARCHAR( 32 ) NOT NULL ) COMMENT = 'AMX Mod X Admins'", table)
-		Res = dbi_query(sql,"SELECT `auth`,`password`,`access`,`flags` FROM `%s`", table)
+		SQL_QueryAndIgnore(sql, "CREATE TABLE IF NOT EXISTS `%s` ( `auth` VARCHAR( 32 ) NOT NULL, `password` VARCHAR( 32 ) NOT NULL, `access` VARCHAR( 32 ) NOT NULL, `flags` VARCHAR( 32 ) NOT NULL ) COMMENT = 'AMX Mod X Admins'", table)
+		query = SQL_PrepareQuery(sql,"SELECT `auth`,`password`,`access`,`flags` FROM `%s`", table)
 	}
 
-	if (Res == RESULT_FAILED)
+	if (!SQL_Execute(query))
 	{
-		dbi_error(sql, error, 127)
+		SQL_QueryError(query, error, 127)
 		server_print("[AMXX] %L", LANG_SERVER, "SQL_CANT_LOAD_ADMINS", error)
-		dbi_free_result(Res)
-		dbi_close(sql)
-		
-		return PLUGIN_HANDLED
-	}
-	else if (Res == RESULT_NONE)
-	{
+	} else if (!SQL_NumResults(query)) {
 		server_print("[AMXX] %L", LANG_SERVER, "NO_ADMINS")
-		dbi_free_result(Res)
-		dbi_close(sql)
+	} else {
+		new szFlags[32], szAccess[32]
 		
-		return PLUGIN_HANDLED
+		g_aNum = 0
+		
+		/** do this incase people change the query order and forget to modify below */
+		new qcolAuth = SQL_FieldNameToNum(query, "auth")
+		new qcolPass = SQL_FieldNameToNum(query, "password")
+		new qcolAccess = SQL_FieldNameToNum(query, "access")
+		new qcolFlags = SQL_FieldNameToNum(query, "flags")
+		
+		while (SQL_MoreResults(query))
+		{
+			SQL_ReadResult(query, qcolAuth, g_aName[g_aNum], 31)
+			SQL_ReadResult(query, qcolPass, g_aPassword[g_aNum], 31)
+			SQL_ReadResult(query, qcolAccess, szAccess, 31)
+			SQL_ReadResult(query, qcolFlags, szFlags, 31)
+	
+			g_aAccess[g_aNum] = read_flags(szAccess)
+	
+			g_aFlags[g_aNum] = read_flags(szFlags)
+			
+			++g_aNum
+			SQL_NextRow(query)
+		}
+	
+		if (g_aNum == 1)
+			server_print("[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMIN")
+		else
+			server_print("[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMINS", g_aNum)
+		
+		SQL_FreeHandle(query)
+		SQL_FreeHandle(sql)
+		SQL_FreeHandle(info)
 	}
-
-	new szFlags[32], szAccess[32]
-	
-	g_aNum = 0
-	
-	while (dbi_nextrow(Res) > 0)
-	{
-		dbi_result(Res, "auth", g_aName[g_aNum], 31)
-		dbi_result(Res, "password", g_aPassword[g_aNum], 31)
-		dbi_result(Res, "access", szAccess, 31)
-		dbi_result(Res, "flags", szFlags, 31)
-
-		g_aAccess[g_aNum] = read_flags(szAccess)
-
-		g_aFlags[g_aNum] = read_flags(szFlags)
-		++g_aNum
-	}
-
-	if (g_aNum == 1)
-		server_print("[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMIN")
-	else
-		server_print("[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMINS", g_aNum)
-	
-	dbi_free_result(Res)
-	dbi_close(sql)
 	
 	return PLUGIN_HANDLED
 }

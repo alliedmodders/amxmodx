@@ -1,4 +1,7 @@
 #include <stdio.h>
+#if defined __linux__
+#include <unistd.h>
+#endif
 #include "Journal.h"
 
 Journal::Journal(const char *file)

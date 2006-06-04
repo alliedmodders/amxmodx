@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "amxxmodule.h"
 #include "NVault.h"
 #include "Binary.h"

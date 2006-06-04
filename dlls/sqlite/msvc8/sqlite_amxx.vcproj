@@ -42,8 +42,8 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/D &quot;NO_TCL&quot;"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\sqlite-source&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;sqlite_EXPORTS"
+				AdditionalIncludeDirectories="&quot;..\sqlite-source&quot;;&quot;..\sqlitepp&quot;;&quot;..\thread&quot;;&quot;..\sdk&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;sqlite_EXPORTS;SM_DEFAULT_THREADER"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -65,7 +65,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/sqlite_amxx.dll"
+				OutputFile="$(OutDir)/sqlitex_amxx.dll"
 				LinkIncremental="2"
 				IgnoreDefaultLibraryNames=""
 				ModuleDefinitionFile=""
@@ -129,8 +129,8 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="&quot;..\sqlite-source&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;sqlite_EXPORTS"
+				AdditionalIncludeDirectories="&quot;..\sqlite-source&quot;;&quot;..\sqlitepp&quot;;&quot;..\thread&quot;;&quot;..\sdk&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;sqlite_EXPORTS;SM_DEFAULT_THREADER"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				StructMemberAlignment="3"
@@ -152,7 +152,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/sqlite_amxx.dll"
+				OutputFile="$(OutDir)/sqlitex_amxx.dll"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -195,11 +195,23 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
-				RelativePath="..\sqlite.cpp"
+				RelativePath="..\basic_sql.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\sqlite_amx.cpp"
+				RelativePath="..\handles.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\module.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\oldcompat_sql.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\threading.cpp"
 				>
 			</File>
 		</Filter>
@@ -208,25 +220,45 @@
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
 			<File
-				RelativePath="..\sqlite_amx.h"
+				RelativePath="..\sqlheaders.h"
+				>
+			</File>
+			<File
+				RelativePath="..\threading.h"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="amxx module sdk"
+			Name="Module SDK"
 			>
 			<File
-				RelativePath="..\amxxmodule.cpp"
+				RelativePath="..\sdk\moduleconfig.h"
 				>
 			</File>
 			<File
-				RelativePath="..\amxxmodule.h"
+				RelativePath="..\sqlite_header.h"
 				>
 			</File>
-			<File
-				RelativePath="..\moduleconfig.h"
+			<Filter
+				Name="AMXX STL"
 				>
-			</File>
+				<File
+					RelativePath="..\sdk\sh_list.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="SDK Base"
+				>
+				<File
+					RelativePath="..\sdk\amxxmodule.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\sdk\amxxmodule.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="SQLite Source"
@@ -435,6 +467,106 @@
 				RelativePath="..\sqlite-source\where.c"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="Database"
+			>
+			<File
+				RelativePath="..\sqlitepp\ISQLDriver.h"
+				>
+			</File>
+			<Filter
+				Name="Header Files"
+				>
+				<File
+					RelativePath="..\sqlitepp\SqliteDatabase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\sqlitepp\SqliteDriver.h"
+					>
+				</File>
+				<File
+					RelativePath="..\sqlitepp\SqliteHeaders.h"
+					>
+				</File>
+				<File
+					RelativePath="..\sqlitepp\SqliteQuery.h"
+					>
+				</File>
+				<File
+					RelativePath="..\sqlitepp\SqliteResultSet.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Source Files"
+				>
+				<File
+					RelativePath="..\sqlitepp\SqliteDatabase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\sqlitepp\SqliteDriver.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\sqlitepp\SqliteQuery.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\sqlitepp\SqliteResultSet.cpp"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Threader"
+			>
+			<Filter
+				Name="Header Files"
+				>
+				<File
+					RelativePath="..\thread\BaseWorker.h"
+					>
+				</File>
+				<File
+					RelativePath="..\thread\IThreader.h"
+					>
+				</File>
+				<File
+					RelativePath="..\thread\PosixThreads.h"
+					>
+				</File>
+				<File
+					RelativePath="..\thread\ThreadSupport.h"
+					>
+				</File>
+				<File
+					RelativePath="..\thread\ThreadWorker.h"
+					>
+				</File>
+				<File
+					RelativePath="..\thread\WinThreads.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Source Files"
+				>
+				<File
+					RelativePath="..\thread\BaseWorker.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\thread\ThreadWorker.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\thread\WinThreads.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

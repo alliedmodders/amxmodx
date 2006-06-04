@@ -541,29 +541,26 @@ void CPluginMngr::CacheAndLoadModules(const char *plugin)
 
 	CVector<LibDecoder *> expects;
 	CVector<LibDecoder *> defaults;
+	CStack<LibDecoder *> delstack;
 	for (int i=0; i<num; i++)
 	{
 		amx_GetTag(&amx, i, name, &tag_id);
 		if (name[0] == '?')
 		{
 			LibDecoder *dc = new LibDecoder;
+			delstack.push(dc);
 			if (DecodeLibCmdString(name, dc))
 			{
 				if (dc->cmd == LibCmd_ForceLib)
 				{
 					RunLibCommand(dc);
-					delete dc;
 				} else if ( (dc->cmd == LibCmd_ExpectClass) ||
 							(dc->cmd == LibCmd_ExpectLib) ) 
 				{
 					expects.push_back(dc);
 				} else if (dc->cmd == LibCmd_DefaultLib) {
 					defaults.push_back(dc);
-				} else {
-					delete dc;
 				}
-			} else {
-				delete dc;
 			}
 		}
 	}
@@ -571,12 +568,19 @@ void CPluginMngr::CacheAndLoadModules(const char *plugin)
 	for (size_t i=0; i<expects.size(); i++)
 	{
 		RunLibCommand(expects[i]);
-		delete expects[i];
 	}
 	for (size_t i=0; i<defaults.size(); i++)
 	{
 		RunLibCommand(defaults[i]);
-		delete defaults[i];
+	}
+
+	expects.clear();
+	defaults.clear();
+
+	while (!delstack.empty())
+	{
+		delete delstack.front();
+		delstack.pop();
 	}
 
 	return;

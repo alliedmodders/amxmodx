@@ -42,14 +42,18 @@ enum LibError
 	LibErr_NoClass,
 };
 
-struct LibDecoder
+class LibDecoder
 {
+public:
 	LibDecoder() : buffer(NULL)
 	{
-	};
+	}
 	~LibDecoder()
 	{
 		free(buffer);
+		buffer = NULL;
+		param1 = NULL;
+		param2 = NULL;
 	}
 	char *buffer;
 	char *param1;

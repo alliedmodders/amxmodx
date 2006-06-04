@@ -13,7 +13,7 @@
 #if AMXX_VERSION_NUM >= 175
  #pragma reqclass sqlx
  #if !defined AMXMODX_NOAUTOLOAD
-  #pragma defclasslib sqlx mysqlx
+  #pragma defclasslib sqlx mysql
  #endif //!defined AMXMODX_NOAUTOLOAD
 #endif //AMXX_VERSION_NUM
 

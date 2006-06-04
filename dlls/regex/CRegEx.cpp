@@ -45,8 +45,6 @@ bool RegEx::isFree(bool set, bool val)
 
 int RegEx::Compile(const char *pattern)
 {
-	int errno;
-
 	if (!mFree)
 		Clear();
 

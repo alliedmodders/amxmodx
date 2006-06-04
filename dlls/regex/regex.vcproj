@@ -31,7 +31,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="lib_win/pcre.lib lib_win/pcreposix.lib"
+				AdditionalDependencies="lib_win/pcre.lib"
 				OutputFile="$(OutDir)/regex_amxx.dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
@@ -78,7 +78,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="lib_win/pcre.lib lib_win/pcreposix.lib"
+				AdditionalDependencies="lib_win/pcre.lib"
 				OutputFile="$(OutDir)/regex_amxx.dll"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"

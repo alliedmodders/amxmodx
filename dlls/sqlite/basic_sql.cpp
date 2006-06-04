@@ -431,7 +431,7 @@ static cell AMX_NATIVE_CALL SQL_SetAffinity(AMX *amx, cell *params)
 	return 0;
 }
 
-extern AMX_NATIVE_INFO g_BaseSqlNatives[] = 
+AMX_NATIVE_INFO g_BaseSqlNatives[] = 
 {
 	{"SQL_MakeDbTuple",		SQL_MakeDbTuple},
 	{"SQL_FreeHandle",		SQL_FreeHandle},

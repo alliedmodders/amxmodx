@@ -16,7 +16,10 @@ SQL = sqlite-source
 BIN_SUFFIX_32 = amxx_i386.so
 BIN_SUFFIX_64 = amxx_amd64.so
 
-CPP_OBJECTS = sqlite.cpp sqlite_amx.cpp amxxmodule.cpp
+CPP_OBJECTS = basic_sql.cpp handles.cpp module.cpp threading.cpp sdk/amxxmodule.cpp oldcompat_sql.cpp
+CPP_OBJECTS += thread/BaseWorker.cpp thread/ThreadWorker.cpp thread/PosixThreads.cpp
+CPP_OBJECTS += sqlitepp/SqliteQuery.cpp sqlitepp/SqliteResultSet.cpp sqlitepp/SqliteDatabase.cpp sqlitepp/SqliteDriver.cpp
+
 C_OBJECTS = $(SQL)/attach.c $(SQL)/auth.c $(SQL)/btree.c $(SQL)/build.c \
 	$(SQL)/date.c $(SQL)/delete.c $(SQL)/func.c $(SQL)/hash.c \
 	$(SQL)/insert.c $(SQL)/legacy.c $(SQL)/main.c $(SQL)/opcodes.c \
@@ -28,10 +31,10 @@ C_OBJECTS = $(SQL)/attach.c $(SQL)/auth.c $(SQL)/btree.c $(SQL)/build.c \
 	$(SQL)/prepare.c $(SQL)/expr.c $(SQL)/callback.c $(SQL)/alter.c \
 	$(SQL)/vdbefifo.c $(SQL)/complete.c $(SQL)/analyze.c
 
-LINK = -static-libgcc
+LINK = -static-libgcc -lpthread /lib/libgcc_eh.a /lib/libstdc++.a
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
-	-I$(MM_ROOT) -I$(HLSDK)/common -I$(SQL)
+	-I$(MM_ROOT) -I$(HLSDK)/common -I$(SQL) -I./sqlitepp -I./sdk -I./thread
 
 ifeq "$(DEBUG)" "true"
 	BIN_DIR = Debug
@@ -44,7 +47,8 @@ else
 endif
 
 CPPFLAGS += -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H -fno-rtti
-CFLAGS += -DNDEBUG -fPIC -DHAVE_STDINT_H
+CPPFLAGS += -DSM_DEFAULT_THREADER -Dstricmp=strcasecmp
+CFLAGS += -DNDEBUG -fPIC -DHAVE_STDINT_H -DSM_DEFAULT_THREADER -Dstricmp=strcasecmp
 
 ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_$(BIN_SUFFIX_64)
@@ -66,6 +70,9 @@ $(BIN_DIR)/%.o: %.c
 	$(CC) $(INCLUDE) $(CFLAGS) -c -o $@ $<
 
 all:
+	mkdir -p $(BIN_DIR)/thread
+	mkdir -p $(BIN_DIR)/sqlitepp
+	mkdir -p $(BIN_DIR)/sdk
 	mkdir -p $(BIN_DIR)
 	mkdir -p $(BIN_DIR)/$(SQL)
 	$(MAKE) sqlite

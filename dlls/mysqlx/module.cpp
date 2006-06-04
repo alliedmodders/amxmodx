@@ -2,7 +2,7 @@
 #include "mysql2_header.h"
 #include "sqlheaders.h"
 
-static g_ident = 0;
+static int g_ident = 0;
 
 SqlFunctions g_MysqlFuncs = 
 {

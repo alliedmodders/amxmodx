@@ -16,6 +16,10 @@
 #ifndef _SQLITEINT_H_
 #define _SQLITEINT_H_
 
+#if defined _MSC_VER && _MSC_VER >= 1400
+	#define _CRT_SECURE_NO_DEPRECATE
+#endif
+
 /*
 ** Extra interface definitions for those who need them
 */

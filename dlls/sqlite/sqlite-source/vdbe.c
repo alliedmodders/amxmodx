@@ -1928,7 +1928,7 @@ case OP_Column: {
     }else if( pC->isIndex ){
       i64 payloadSize64;
       sqlite3BtreeKeySize(pCrsr, &payloadSize64);
-      payloadSize = payloadSize64;
+      payloadSize = (u32)payloadSize64;
     }else{
       sqlite3BtreeDataSize(pCrsr, &payloadSize);
     }
@@ -1994,7 +1994,7 @@ case OP_Column: {
       ** having to make additional calls to fetch the content portion of
       ** the record.
       */
-      if( avail>=payloadSize ){
+      if( (u32)avail>=payloadSize ){
         zRec = zData;
         pC->aRow = (u8*)zData;
       }else{
@@ -2010,7 +2010,7 @@ case OP_Column: {
     ** in the B-Tree.  When that happens, use sqlite3VdbeMemFromBtree() to
     ** acquire the complete header text.
     */
-    if( !zRec && avail<offset ){
+    if( !zRec && (u32)avail<offset ){
       rc = sqlite3VdbeMemFromBtree(pCrsr, 0, offset, pC->isIndex, &sMem);
       if( rc!=SQLITE_OK ){
         goto op_column_out;
@@ -2025,7 +2025,7 @@ case OP_Column: {
     ** column and aOffset[i] will contain the offset from the beginning
     ** of the record to the start of the data for the i-th column
     */
-    for(i=0; i<nField; i++){
+    for(i=0; (u32)i<nField; i++){
       if( zIdx<zEndHdr ){
         aOffset[i] = offset;
         zIdx += GetVarint(zIdx, aType[i]);
@@ -2447,11 +2447,11 @@ case OP_SetCookie: {       /* no-push */
   rc = sqlite3BtreeUpdateMeta(pDb->pBt, 1+pOp->p2, (int)pTos->i);
   if( pOp->p2==0 ){
     /* When the schema cookie changes, record the new cookie internally */
-    pDb->pSchema->schema_cookie = pTos->i;
+    pDb->pSchema->schema_cookie = (int)pTos->i;
     db->flags |= SQLITE_InternChanges;
   }else if( pOp->p2==1 ){
     /* Record changes in the file format */
-    pDb->pSchema->file_format = pTos->i;
+    pDb->pSchema->file_format = (u8)pTos->i;
   }
   assert( (pTos->flags & MEM_Dyn)==0 );
   pTos--;
@@ -2551,7 +2551,7 @@ case OP_OpenWrite: {       /* no-push */
   
   assert( pTos>=p->aStack );
   sqlite3VdbeMemIntegerify(pTos);
-  iDb = pTos->i;
+  iDb = (int)pTos->i;
   assert( (pTos->flags & MEM_Dyn)==0 );
   pTos--;
   assert( iDb>=0 && iDb<db->nDb );
@@ -2569,7 +2569,7 @@ case OP_OpenWrite: {       /* no-push */
   if( p2<=0 ){
     assert( pTos>=p->aStack );
     sqlite3VdbeMemIntegerify(pTos);
-    p2 = pTos->i;
+    p2 = (int)pTos->i;
     assert( (pTos->flags & MEM_Dyn)==0 );
     pTos--;
     assert( p2>=2 );
@@ -3442,7 +3442,7 @@ case OP_RowData: {
       i64 n64;
       assert( !pC->isTable );
       sqlite3BtreeKeySize(pCrsr, &n64);
-      n = n64;
+      n = (u32)n64;
     }else{
       sqlite3BtreeDataSize(pCrsr, &n);
     }
@@ -4115,7 +4115,7 @@ case OP_IntegrityCk: {
   if( aRoot==0 ) goto no_mem;
   for(j=0; j<nRoot; j++){
     Mem *pMem = &pTos[-j];
-    aRoot[j] = pMem->i;
+    aRoot[j] = (int)pMem->i;
   }
   aRoot[j] = 0;
   popStack(&pTos, nRoot);

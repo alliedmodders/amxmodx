@@ -52,7 +52,7 @@ double sqlite3_value_double(sqlite3_value *pVal){
   return sqlite3VdbeRealValue((Mem*)pVal);
 }
 int sqlite3_value_int(sqlite3_value *pVal){
-  return sqlite3VdbeIntValue((Mem*)pVal);
+  return (int)sqlite3VdbeIntValue((Mem*)pVal);
 }
 sqlite_int64 sqlite3_value_int64(sqlite3_value *pVal){
   return sqlite3VdbeIntValue((Mem*)pVal);
@@ -198,7 +198,7 @@ int sqlite3_step(sqlite3_stmt *pStmt){
     if( db->xProfile && !db->init.busy ){
       double rNow;
       sqlite3OsCurrentTime(&rNow);
-      p->startTime = (rNow - (int)rNow)*3600.0*24.0*1000000000.0;
+      p->startTime = (int)((rNow - (int)rNow)*3600.0*24.0*1000000000.0);
     }
 #endif
 
@@ -235,7 +235,7 @@ int sqlite3_step(sqlite3_stmt *pStmt){
     u64 elapseTime;
 
     sqlite3OsCurrentTime(&rNow);
-    elapseTime = (rNow - (int)rNow)*3600.0*24.0*1000000000.0 - p->startTime;
+    elapseTime = (u64)((rNow - (int)rNow)*3600.0*24.0*1000000000.0 - p->startTime);
     assert( p->nOp>0 );
     assert( p->aOp[p->nOp-1].opcode==OP_Noop );
     assert( p->aOp[p->nOp-1].p3!=0 );

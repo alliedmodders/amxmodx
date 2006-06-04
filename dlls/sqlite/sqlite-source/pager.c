@@ -551,7 +551,7 @@ static int readMasterJournal(OsFile *pJrnl, char **pzMaster){
   }
 
   /* See if the checksum matches the master journal name */
-  for(i=0; i<len; i++){
+  for(i=0; (u32)i<len; i++){
     cksum -= (*pzMaster)[i];
   }
   if( cksum ){
@@ -1072,12 +1072,12 @@ static int pager_delmaster(const char *zMaster){
     /* Load the entire master journal file into space obtained from
     ** sqliteMalloc() and pointed to by zMasterJournal. 
     */
-    zMasterJournal = (char *)sqliteMalloc(nMasterJournal);
+    zMasterJournal = (char *)sqliteMalloc((int)nMasterJournal);
     if( !zMasterJournal ){
       rc = SQLITE_NOMEM;
       goto delmaster_out;
     }
-    rc = sqlite3OsRead(master, zMasterJournal, nMasterJournal);
+    rc = sqlite3OsRead(master, zMasterJournal, (int)nMasterJournal);
     if( rc!=SQLITE_OK ) goto delmaster_out;
 
     zJournal = zMasterJournal;
@@ -1286,7 +1286,7 @@ static int pager_playback(Pager *pPager){
     */
     if( nRec==0xffffffff ){
       assert( pPager->journalOff==JOURNAL_HDR_SZ(pPager) );
-      nRec = (szJ - JOURNAL_HDR_SZ(pPager))/JOURNAL_PG_SZ(pPager);
+      nRec = (u32)((szJ - JOURNAL_HDR_SZ(pPager))/JOURNAL_PG_SZ(pPager));
     }
 
     /* If this is the first header read from the journal, truncate the
@@ -1304,7 +1304,7 @@ static int pager_playback(Pager *pPager){
 
     /* Copy original pages out of the journal and back into the database file.
     */
-    for(i=0; i<nRec; i++){
+    for(i=0; (u32)i<nRec; i++){
       rc = pager_playback_one_page(pPager, pPager->jfd, 1);
       if( rc!=SQLITE_OK ){
         if( rc==SQLITE_DONE ){
@@ -1420,7 +1420,7 @@ static int pager_stmt_playback(Pager *pPager){
     goto end_stmt_playback;
   }
   pPager->journalOff = pPager->stmtJSize;
-  pPager->cksumInit = pPager->stmtCksum;
+  pPager->cksumInit = (u32)pPager->stmtCksum;
   assert( JOURNAL_HDR_SZ(pPager)<(pPager->pageSize+8) );
   while( pPager->journalOff <= (hdrOff-(pPager->pageSize+8)) ){
     rc = pager_playback_one_page(pPager, pPager->jfd, 1);
@@ -1437,7 +1437,7 @@ static int pager_stmt_playback(Pager *pPager){
       goto end_stmt_playback;
     }
     if( nJRec==0 ){
-      nJRec = (szJ - pPager->journalOff) / (pPager->pageSize+8);
+      nJRec = (u32)((szJ - pPager->journalOff) / (pPager->pageSize+8));
     }
     for(i=nJRec-1; i>=0 && pPager->journalOff < szJ; i--){
       rc = pager_playback_one_page(pPager, pPager->jfd, 1);
@@ -1796,13 +1796,13 @@ int sqlite3pager_pagecount(Pager *pPager){
       n /= pPager->pageSize;
     }
     if( pPager->state!=PAGER_UNLOCK ){
-      pPager->dbSize = n;
+      pPager->dbSize = (int)n;
     }
   }
   if( n==(PENDING_BYTE/pPager->pageSize) ){
     n++;
   }
-  return n;
+  return (int)n;
 }
 
 /*
@@ -1887,7 +1887,7 @@ static void memoryTruncate(Pager *pPager){
 
   ppPg = &pPager->pAll;
   while( (pPg = *ppPg)!=0 ){
-    if( pPg->pgno<=dbSize ){
+    if( pPg->pgno<=(Pgno)dbSize ){
       ppPg = &pPg->pNextAll;
     }else if( pPg->nRef>0 ){
       memset(PGHDR_TO_DATA(pPg), 0, pPager->pageSize);
@@ -2265,7 +2265,7 @@ static int pager_write_pagelist(PgHdr *pList){
     ** make the file smaller (presumably by auto-vacuum code). Do not write
     ** any such pages to the file.
     */
-    if( pList->pgno<=pPager->dbSize ){
+    if( pList->pgno<=(Pgno)pPager->dbSize ){
       char *pData = CODEC2(pPager, PGHDR_TO_DATA(pList), pList->pgno, 6);
       TRACE3("STORE %d page %d\n", PAGERID(pPager), pList->pgno);
       rc = sqlite3OsWrite(pPager->fd, pData, pPager->pageSize);
@@ -3625,7 +3625,7 @@ int sqlite3pager_sync(Pager *pPager, const char *zMaster, Pgno nTrunc){
         Pgno i;
         void *pPage;
         int iSkip = PAGER_MJ_PGNO(pPager);
-        for( i=nTrunc+1; i<=pPager->origDbSize; i++ ){
+        for( i=nTrunc+1; i<=(Pgno)pPager->origDbSize; i++ ){
           if( !(pPager->aInJournal[i/8] & (1<<(i&7))) && i!=iSkip ){
             rc = sqlite3pager_get(pPager, i, &pPage);
             if( rc!=SQLITE_OK ) goto sync_exit;

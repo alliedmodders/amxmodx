@@ -561,7 +561,7 @@ static char *displayP3(Op *pOp, char *zTemp, int nTemp){
       char zNum[30];
       sprintf(zTemp, "%.*s", nTemp, pDef->zName);
       sprintf(zNum,"(%d)", pDef->nArg);
-      if( strlen(zTemp)+strlen(zNum)+1<=nTemp ){
+      if( strlen(zTemp)+strlen(zNum)+1<=(size_t)nTemp ){
         strcat(zTemp, zNum);
       }
       zP3 = zTemp;
@@ -1592,7 +1592,7 @@ u32 sqlite3VdbeSerialType(Mem *pMem, int file_format){
     i64 i = pMem->i;
     u64 u;
     if( file_format>=4 && (i&1)==i ){
-      return 8+i;
+      return 8+(u32)i;
     }
     u = i<0 ? -i : i;
     if( u<=127 ) return 1;
@@ -1648,7 +1648,7 @@ int sqlite3VdbeSerialPut(unsigned char *buf, Mem *pMem, int file_format){
     }
     len = i = sqlite3VdbeSerialTypeLen(serial_type);
     while( i-- ){
-      buf[i] = (v&0xFF);
+      buf[i] = (char)(v&0xFF);
       v >>= 8;
     }
     return len;
@@ -1810,9 +1810,9 @@ int sqlite3VdbeRecordCompare(
 
     /* Read the serial types for the next element in each key. */
     idx1 += GetVarint( aKey1+idx1, serial_type1 );
-    if( d1>=nKey1 && sqlite3VdbeSerialTypeLen(serial_type1)>0 ) break;
+    if( d1>=(u32)nKey1 && sqlite3VdbeSerialTypeLen(serial_type1)>0 ) break;
     idx2 += GetVarint( aKey2+idx2, serial_type2 );
-    if( d2>=nKey2 && sqlite3VdbeSerialTypeLen(serial_type2)>0 ) break;
+    if( d2>=(u32)nKey2 && sqlite3VdbeSerialTypeLen(serial_type2)>0 ) break;
 
     /* Assert that there is enough space left in each key for the blob of
     ** data to go with the serial type just read. This assert may fail if
@@ -1838,9 +1838,9 @@ int sqlite3VdbeRecordCompare(
   if( rc==0 ){
     if( pKeyInfo->incrKey ){
       rc = -1;
-    }else if( d1<nKey1 ){
+    }else if( d1<(u32)nKey1 ){
       rc = 1;
-    }else if( d2<nKey2 ){
+    }else if( d2<(u32)nKey2 ){
       rc = -1;
     }
   }else if( pKeyInfo->aSortOrder && i<pKeyInfo->nField
@@ -1884,7 +1884,7 @@ int sqlite3VdbeIdxRowid(BtCursor *pCur, i64 *rowid){
   if( nCellKey<=0 ){
     return SQLITE_CORRUPT_BKPT;
   }
-  rc = sqlite3VdbeMemFromBtree(pCur, 0, nCellKey, 1, &m);
+  rc = sqlite3VdbeMemFromBtree(pCur, 0, (int)nCellKey, 1, &m);
   if( rc ){
     return rc;
   }
@@ -1923,7 +1923,7 @@ int sqlite3VdbeIdxKeyCompare(
     *res = 0;
     return SQLITE_OK;
   }
-  rc = sqlite3VdbeMemFromBtree(pC->pCursor, 0, nCellKey, 1, &m);
+  rc = sqlite3VdbeMemFromBtree(pC->pCursor, 0, (int)nCellKey, 1, &m);
   if( rc ){
     return rc;
   }

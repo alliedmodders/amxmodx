@@ -230,8 +230,8 @@ static void computeJD(DateTime *p){
   }
   A = Y/100;
   B = 2 - A + (A/4);
-  X1 = 365.25*(Y+4716);
-  X2 = 30.6001*(M+1);
+  X1 = (int)(365.25*(Y+4716));
+  X2 = (int)30.6001*(M+1);
   p->rJD = X1 + X2 + D + B - 1524.5;
   p->validJD = 1;
   p->validYMD = 0;
@@ -336,14 +336,14 @@ static void computeYMD(DateTime *p){
     p->M = 1;
     p->D = 1;
   }else{
-    Z = p->rJD + 0.5;
-    A = (Z - 1867216.25)/36524.25;
+    Z = (int)(p->rJD + 0.5);
+    A = (int)((Z - 1867216.25)/36524.25);
     A = Z + 1 + A - (A/4);
     B = A + 1524;
-    C = (B - 122.1)/365.25;
-    D = 365.25*C;
-    E = (B-D)/30.6001;
-    X1 = 30.6001*E;
+    C = (int)((B - 122.1)/365.25);
+    D = (int)(365.25*C);
+    E = (int)((B-D)/30.6001);
+    X1 = (int)(30.6001*E);
     p->D = B - D - X1;
     p->M = E<14 ? E-1 : E-13;
     p->Y = p->M>2 ? C - 4716 : C - 4715;
@@ -357,10 +357,10 @@ static void computeYMD(DateTime *p){
 static void computeHMS(DateTime *p){
   int Z, s;
   if( p->validHMS ) return;
-  Z = p->rJD + 0.5;
-  s = (p->rJD + 0.5 - Z)*86400000.0 + 0.5;
+  Z = (int)(p->rJD + 0.5);
+  s = (int)((p->rJD + 0.5 - Z)*86400000.0 + 0.5);
   p->s = 0.001*s;
-  s = p->s;
+  s = (int)(p->s);
   p->s -= s;
   p->h = s/3600;
   s -= p->h*3600;
@@ -404,13 +404,13 @@ static double localtimeOffset(DateTime *p){
     x.m = 0;
     x.s = 0.0;
   } else {
-    int s = x.s + 0.5;
+    int s = (int)(x.s + 0.5);
     x.s = s;
   }
   x.tz = 0;
   x.validJD = 0;
   computeJD(&x);
-  t = (x.rJD-2440587.5)*86400.0 + 0.5;
+  t = (time_t)((x.rJD-2440587.5)*86400.0 + 0.5);
   sqlite3OsEnterMutex();
   pTm = localtime(&t);
   y.Y = pTm->tm_year + 1900;
@@ -505,13 +505,13 @@ static int parseModifier(const char *zMod, DateTime *p){
       ** date is already on the appropriate weekday, this is a no-op.
       */
       if( strncmp(z, "weekday ", 8)==0 && getValue(&z[8],&r)>0
-                 && (n=r)==r && n>=0 && r<7 ){
+                 && (n=(int)r)==r && n>=0 && r<7 ){
         int Z;
         computeYMD_HMS(p);
         p->validTZ = 0;
         p->validJD = 0;
         computeJD(p);
-        Z = p->rJD + 1.5;
+        Z = (int)(p->rJD + 1.5);
         Z %= 7;
         if( Z>n ) Z -= 7;
         p->rJD += n - Z;
@@ -603,19 +603,19 @@ static int parseModifier(const char *zMod, DateTime *p){
       }else if( n==5 && strcmp(z,"month")==0 ){
         int x, y;
         computeYMD_HMS(p);
-        p->M += r;
+        p->M += (int)r;
         x = p->M>0 ? (p->M-1)/12 : (p->M-12)/12;
         p->Y += x;
         p->M -= x*12;
         p->validJD = 0;
         computeJD(p);
-        y = r;
+        y = (int)r;
         if( y!=r ){
           p->rJD += (r - y)*30.0;
         }
       }else if( n==4 && strcmp(z,"year")==0 ){
         computeYMD_HMS(p);
-        p->Y += r;
+        p->Y += (int)r;
         p->validJD = 0;
         computeJD(p);
       }else{
@@ -809,8 +809,8 @@ static void strftimeFunc(
       switch( zFmt[i] ){
         case 'd':  sprintf(&z[j],"%02d",x.D); j+=2; break;
         case 'f': {
-          int s = x.s;
-          int ms = (x.s - s)*1000.0;
+          int s = (int)x.s;
+          int ms = (int)((x.s - s)*1000.0);
           sprintf(&z[j],"%02d.%03d",s,ms);
           j += strlen(&z[j]);
           break;
@@ -824,7 +824,7 @@ static void strftimeFunc(
           y.M = 1;
           y.D = 1;
           computeJD(&y);
-          nDay = x.rJD - y.rJD;
+          nDay = (int)(x.rJD - y.rJD);
           if( zFmt[i]=='W' ){
             int wd;   /* 0=Monday, 1=Tuesday, ... 6=Sunday */
             wd = ((int)(x.rJD+0.5)) % 7;

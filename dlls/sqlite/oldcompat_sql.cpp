@@ -67,7 +67,7 @@ static cell AMX_NATIVE_CALL dbi_connect(AMX *amx, cell *params)
 		fclose(fp);
 		info.database = path;
 	} else {
-		MF_BuildPathnameR(path, sizeof(path)-1, "%s/sqlite/%s.sq3",
+		MF_BuildPathnameR(path, sizeof(path)-1, "%s/sqlite3/%s.sq3",
 			MF_GetLocalInfo("amxx_datadir", "addons/amxmodx/data"),
 			info.database);
 		info.database = path;

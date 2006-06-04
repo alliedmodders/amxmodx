@@ -559,6 +559,8 @@ void CPluginMngr::CacheAndLoadModules(const char *plugin)
 					expects.push_back(dc);
 				} else if (dc->cmd == LibCmd_DefaultLib) {
 					defaults.push_back(dc);
+				} else {
+					delete dc;
 				}
 			} else {
 				delete dc;

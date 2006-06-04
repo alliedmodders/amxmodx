@@ -166,3 +166,29 @@ COL_ORANGE = oranssi
 COL_OCEAN = merensininen
 COL_MAROON = viininpunainen
 PRINT_ALL = (KAIKKI) %s :   %s
+
+[ls]
+COL_WHITE = \/\/hi73
+COL_RED = r3d
+COL_GREEN = gr33n
+COL_BLUE = b|u3
+COL_YELLOW = y3||0w
+COL_MAGENTA = m4g3nt4
+COL_CYAN = <y4n
+COL_ORANGE = 0r4ng3
+COL_OCEAN = 0c34n
+COL_MAROON = m4r00n
+PRINT_ALL = (@||) %s : %s
+
+[bg]
+COL_WHITE = Bql
+COL_RED = 4erven
+COL_GREEN = zelen
+COL_BLUE = sin
+COL_YELLOW = jalt
+COL_MAGENTA = magenta
+COL_CYAN = cyan
+COL_ORANGE = orangev
+COL_OCEAN = okeanski
+COL_MAROON = maroon
+PRINT_ALL = (ALL) %s :   %s

@@ -62,3 +62,13 @@ FRIEND_FIRE = Friendly fire
 NEXT_MAP = Seuraava mappi:
 PLAYED_MAP = Pelattu map
 FRIEND_FIRE = Friendly fire
+
+[ls]
+NEXT_MAP = N3xt M4p:
+PLAYED_MAP = P|4y3d m4p
+FRIEND_FIRE = |=r!3nd|y f!r3
+
+[bg]
+NEXT_MAP = Sledva6tata karta:
+PLAYED_MAP = Igrana karta
+FRIEND_FIRE = Friendly fire

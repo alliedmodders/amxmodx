@@ -231,3 +231,39 @@ STATS_SET = Tilastoasetuksia ^n
 PAUSE_PLUG = Pysayta plugineja
 RES_WEAP = Kiella aseita
 TELE_PLAYER = Teleporttaa pelaaja
+
+[ls]
+KICK_PLAYER = |<!c|< n00b
+BAN_PLAYER = |3@n n00b
+SLAP_SLAY = $|@p/$|@y n00b
+TEAM_PLAYER = T34m n00b ^n
+CHANGEL = Ch4ng3|3\/3|
+VOTE_MAPS = V0t3 f0|2 m4ps ^n
+SPECH_STUFF = Sp33ch Stuff
+CLIENT_COM = Cli3nt C0m@ndz
+SERVER_COM = S3|2\/3|2 C0m@ndz
+CVARS_SET = C\/4|2s |200t c0n|=igz
+CONFIG = C0nf!gu|24ti0n
+LANG_SET = |_4ngu4g3 |200t c0n|=igz
+STATS_SET = St4ts |200t c0n|=igz ^n
+PAUSE_PLUG = P4us3 Plugins
+RES_WEAP = R3st|2ict W34p0ns
+TELE_PLAYER = T3l3p0|2t n00b
+
+[bg]
+KICK_PLAYER = Kickni Igra4
+BAN_PLAYER = Banni Igra4
+SLAP_SLAY = Slapni/Slayni Igra4
+TEAM_PLAYER = Smeni Otbora na Igra4 ^n
+CHANGEL = Smeni karta
+VOTE_MAPS = Glasuvai za karta ^n
+SPECH_STUFF = Ne6ta za govorene
+CLIENT_COM = klient Comandi
+SERVER_COM = Server Comandi
+CVARS_SET = Nastroiki za Cvars
+CONFIG = Configuracia
+LANG_SET = Ezikovi nastroiki
+STATS_SET = Nastroiki za Statistikite ^n
+PAUSE_PLUG = Pause Plugini
+RES_WEAP = Blokirai Orajia
+TELE_PLAYER = Teleportirai Igra4i

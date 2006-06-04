@@ -302,3 +302,52 @@ COM_STATS_LIST = ^tlist [id] - Listaa tilastojen tila
 COM_STATS_ADD = ^tadd <nimi> <muuttuja> - Lisaa tilastoja listaan
 NO_STATS = Tilastopluginit eivat ole asennettuna talla palvelimellar^n
 SAVE_CONF = Tallenna saadot
+
+
+[ls]
+NO_OPTION = C0|_|ld|\|'t f!|\|d 0pt!0|\|(s) w!th s|_|(h v4r!4bl3 (|\|4m3 "%s")
+STATS_CONF_SAVED = $t4tz0|2 (0|\|f!g|_|r4t!0|\| s4v3d s|_|((3ssf|_|lly
+STATS_CONF_FAILED = F4!l3d t0 s4v3 $t4tz0|2 (0|\|f!g|_|r4t!0|\|!!!
+STATS_CONF_LOADED = $t4tz0|2 (0|\|f!g|_|r4t!0|\| l04d3d s|_|((3ssf|_|lly
+STATS_CONF_FAIL_LOAD = F4!l3d t0 l04d $t4tz0|2 (0|\|f!g|_|r4t!0|\|!!!
+STATS_CONF = $t4tz0|2 C0|\|f!g|_|r4t!0|\|
+STATS_ENTRIES_OF = E|\|tr!3s %i - %i 0f %i
+STATS_USE_MORE = Us3 'amx_statscfg list %i' f0r m0r3
+STATS_USE_BEGIN = Us3 'amx_statscfg list 1' f0r b3g!|\|
+STATS_ENABLED = $t4tz0|2 3|\|4bl3d
+STATS_DISABLED = $t4tz0|2 d!s4bl3d
+CANT_ADD_STATS = C4|\|'t 4dd $t4tz0|2 t0 th3 l!st, l!m!t r34(h3d!
+COM_STATS_USAGE = Us4g3: amx_statscfg <command> [parameters] ...
+COM_STATS_COM = C0mm4|\|ds:
+COM_STATS_ON = ^ton <variable> - 3|\|4bl3 sp3(!f!3d 0pt!0|\|
+COM_STATS_OFF = ^toff <variable> - d!s4bl3 sp3(!f!3d 0pt!0|\|
+COM_STATS_SAVE = ^tsave - s4v3 $t4tz0|2 (0|\|f!g|_|r4t!0|\|
+COM_STATS_LOAD = ^tload - l04d $t4tz0|2 (0|\|f!g|_|r4t!0|\|
+COM_STATS_LIST = ^tlist [id] - l!st $t4tz0|2 st4t|_|s
+COM_STATS_ADD = ^tadd <name> <variable> - 4dd $t4tz0|2 t0 th3 l!st
+NO_STATS = $t4tz0|2 pl|_|g!|\|s 4r3 |\|0t^n!|\|st4ll3d 0|\| th!s s3rv3r^n
+SAVE_CONF = S4v3 (0|\|f!g|_|r4t!0|\|
+
+[bg]
+NO_OPTION = Neuspe6no namerena opcia(i) s takav variable (ime "%s")
+STATS_CONF_SAVED = configuraciata na statisticata e zapametena uspe6no
+STATS_CONF_FAILED = configuraciata na statisticata ne e zapametena uspe6no!!!
+STATS_CONF_LOADED = configuraciata na statisticata e prika4ena uspe6no
+STATS_CONF_FAIL_LOAD = configuraciata na statisticata ne e prika4ena uspe6no!!!
+STATS_CONF = configuraciata na statisticata
+STATS_ENTRIES_OF = Vkarani %i - %i ot %i
+STATS_USE_MORE = Izpolzvai 'amx_statscfg list %i' za pove4e
+STATS_USE_BEGIN = Izpolzvai 'amx_statscfg list 1' za na4alo
+STATS_ENABLED =  statisticata e vklu4ena
+STATS_DISABLED = statisticata e izklu4ena
+CANT_ADD_STATS = Nemoje da se dobavi statisticata kam tozi list, limita e dostignat!
+COM_STATS_USAGE = Izpolzvano:  amx_statscfg <comanda> [parametri] ...
+COM_STATS_COM = Comandi:
+COM_STATS_ON = ^ton <variable> - vklu4ena e specifi4nata opcia
+COM_STATS_OFF = ^toff <variable> - izklu4ena e specifi4nata opcia
+COM_STATS_SAVE = ^tsave - zapameti configuraciata na statistikata
+COM_STATS_LOAD = ^tload - prika4i configuraciata na statistikata
+COM_STATS_LIST = ^tlist [id] - list na statusa na statistikata
+COM_STATS_ADD = ^tadd <name> <variable> - dobavi statistikata kam lista
+NO_STATS = pluginite za statistikata ne sa^ninstalirani na tozi server^n
+SAVE_CONF = Zapameti configuraciata

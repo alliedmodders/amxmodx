@@ -439,3 +439,71 @@ VOTE = Vote
 ACTION_PERFORMED = Botille "%s" ei voida suorittaa tuota toimintoa
 ADMIN_VOTE_FOR_1 = %s: votea %s %s:n puolesta
 ADMIN_VOTE_FOR_2 = %s %s: votea %s %s:n puolesta
+
+[ls]
+ADMIN_CANC_VOTE_1 = %s: |\|03z \/0+3
+ADMIN_CANC_VOTE_2 = %s %s: |\|03z \/0+3
+VOTING_CANC = pwn@g3 |\|03zed
+NO_VOTE_CANC =  |\|03z \/073z0rin' |3!tc|-|
+RES_REF = PWNT
+RES_ACCEPTED = 0k 0k, nubz, ju$7 t|-|!$ 0nc3
+VOTING_FAILED = PWNT
+VOTING_RES_1 = %s (yes "%d") (|\|03z "%d") (|\|33|)3|) "%d")
+VOTING_RES_2 = %s (|200T "%d") (|\|33|)3|) "%d")
+VOTING_SUCCESS = W!N
+VOTING_RES_3 = %s (|200T "%d") (|\|33|)3|) "%d"). L3w$3|2z: %s
+THE_RESULT = 3xp3|2!m3n7 r3su|_tz@
+WANT_CONTINUE = j00 $ur3?
+VOTED_FOR = %s \/0+3d |=0|2
+VOTED_AGAINST = %s \/0+3d @$$
+VOTED_FOR_OPT = %s \/0+3d |=0|2 option #%d
+ALREADY_VOTING =  N03z, \/073 !|\| |>|20g|23$$
+VOTING_NOT_ALLOW = W00t! \/0t3 |3!tch3z
+GIVEN_NOT_VALID = N03 w@y |3itch
+MAP_IS = |\/|@|> !$
+MAPS_ARE = |\/|@|>s @|23
+CHOOSE_MAP = Ch00s3 |\/|@|>
+ADMIN_VOTE_MAP_1 = %s: \/0+3 |\/|@|>(s)
+ADMIN_VOTE_MAP_2 = %s %s: \/0+3 |\/|@|>(s)
+VOTING_STARTED = pwn@g3 h@z c0mm3nc3d
+VOTING_FORBIDDEN = pwn@g3  |=0|2bidden
+ADMIN_VOTE_CUS_1 = %s: \/0+3 cust0m
+ADMIN_VOTE_CUS_2 = %s %s: \/0+3 cust0m
+VOTE = Vote
+ACTION_PERFORMED = No3z! bot! "%s"
+ADMIN_VOTE_FOR_1 = %s: \/0+3 %s |=0|2 %s
+ADMIN_VOTE_FOR_2 = %s %s: \/0+3 %s |=0|2 %s
+
+[bg]
+ADMIN_CANC_VOTE_1 = %s: kanselira glasuvaneto
+ADMIN_CANC_VOTE_2 = %s %s: kanselira glasuvaneto
+VOTING_CANC = Glasuvaneto e kanselirano
+NO_VOTE_CANC = Nqma nikakvo glasuvane za kanselirane ili glasuvaneto nemoje da se kanselira s tazi camanda
+RES_REF = Resultata ne e priet
+RES_ACCEPTED = Resultata e priet
+VOTING_FAILED = Glasivaneto se e provalilo
+VOTING_RES_1 = %s (da "%d") (ne "%d") (nujni "%d")
+VOTING_RES_2 = %s (polu4eni "%d") (nujni "%d")
+VOTING_SUCCESS = Glasuvaneto e uspe6no
+VOTING_RES_3 = %s (polu4eni "%d") (nujni "%d"). Resultata: %s
+THE_RESULT = Resultata
+WANT_CONTINUE = Iskateli da produljite?
+VOTED_FOR = %s glasuva za
+VOTED_AGAINST = %s glasuva protiv
+VOTED_FOR_OPT = %s glasuva za #%d
+ALREADY_VOTING = V momenta ima edno glasuvane...
+VOTING_NOT_ALLOW = Ne e pozvoleno da se glasuva v momenta
+GIVEN_NOT_VALID = Davaneto %s ne e validno
+MAP_IS = kartata e
+MAPS_ARE = kartite sa
+CHOOSE_MAP = Izbirane na karta
+ADMIN_VOTE_MAP_1 = %s: glasuvane za karta(i)
+ADMIN_VOTE_MAP_2 = %s %s: glasuvane za karta(i)
+VOTING_STARTED = Glasuvaneto zapo4na...
+VOTING_FORBIDDEN = Glasuvaneto za tova e zabraneno
+ADMIN_VOTE_CUS_1 = %s: vote custom
+ADMIN_VOTE_CUS_2 = %s %s: vote custom
+VOTE = Glasuvane
+ACTION_PERFORMED = tazi commanda nemoje da se izpolzva varhu bota "%s"
+ADMIN_VOTE_FOR_1 = %s: glasuva %s za %s
+ADMIN_VOTE_FOR_2 = %s %s: glasuva %s za %s

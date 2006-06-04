@@ -309,3 +309,51 @@ ADMIN_V_MAP_2 = ADMIN %s: vote mapista/mapeista
 ADMIN_CHANGEL_1 = ADMIN: vaihtoi mapin %s
 ADMIN_CHANGEL_2 = ADMIN %s: vaihtoi mapin %s
 CHANGLE_MENU = Mapinvaihtovalikko
+
+[ls]
+RESULT_REF = N0
+RESULT_ACC = 0|<
+VOTE_SUCCESS = Yush! n3w m@p! 
+VOTE_FAILED = N03Z!
+THE_WINNER = W!n4r!
+WANT_CONT = j00 sur3?
+VOT_CANC = F4C3!
+X_VOTED_FOR = %s = #%d
+VOTEMAP_MENU = \/0t3 M3nu
+START_VOT = g0! f0r gr34t h0n0r
+SEL_MAPS = m@pz
+ALREADY_VOT = t00 $|0w
+NO_MAPS_MENU = n0 m@pz f0 j00
+VOT_NOW_ALLOW = n0 \/0t!n' |3!tch
+WHICH_MAP = w@ j00 w@nt?
+CHANGE_MAP_TO = m@p ->
+CANC_VOTE = $t0p!
+ADMIN_V_MAP_1 = l33t s3rv3r 0P: \/0t3 m@p(z)
+ADMIN_V_MAP_2 = l33t s3rv3r 0P %s: \/0t3 m@p(z)
+ADMIN_CHANGEL_1 = l33t s3rv3r 0P: Ch4ng3l3v3l %s
+ADMIN_CHANGEL_2 = l33t s3rv3r 0P %s: Ch4ng3l3v3l %s
+CHANGLE_MENU = Ch4ng3l3v3l M3nu
+
+[bg]
+RESULT_REF = Resultata ne e priet
+RESULT_ACC = Resultata e priet
+VOTE_SUCCESS = Glasuvaneto e spolo4livo. Karta 6te e smenena na
+VOTE_FAILED = Glasuvaneto ne e spolo4livo
+THE_WINNER = Pobeditelq
+WANT_CONT = Jelaete li da prodaljite?
+VOT_CANC = Glasuvaneto be6e sprqno
+X_VOTED_FOR = %s glasuva za opcia #%d
+VOTEMAP_MENU = Karto Glasuva6to Menu
+START_VOT = Sapo4ni glasuvaneto
+SEL_MAPS = Izbrani karti
+ALREADY_VOT = Ve4e ima edno glasuvane...
+NO_MAPS_MENU = Nqma karti v menuto
+VOT_NOW_ALLOW = Glasuvaneto ne e pozvoleno po tova vreme
+WHICH_MAP = Koq karta jelaete?
+CHANGE_MAP_TO = Smeni kartata na
+CANC_VOTE = Glasuvaneto be6e sprqno
+ADMIN_V_MAP_1 = ADMINISTRATOR: Glasuvane za Karta(i)
+ADMIN_V_MAP_2 = ADMINISTRATOR %s: Glasuvane za Karta(i)
+ADMIN_CHANGEL_1 = ADMINISTRATOR: smeni karta na %s
+ADMIN_CHANGEL_2 = ADMINISTRATOR %s: smeni karta na %s
+CHANGLE_MENU = Smenqne na karta Menu

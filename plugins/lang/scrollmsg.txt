@@ -62,3 +62,13 @@ MSG_DISABLED = Skrolovaci zpravy vyple
 MIN_FREQ = Minimitaajuus talle viestille on %d sekuntia
 MSG_FREQ = Vierivan tekstin taajuus on: %d:%02d minuuttia
 MSG_DISABLED = Vieriva teksti poissa kaytosta
+
+[ls]
+MIN_FREQ = M!n!m4| fr3qu3ncy f0r th!s m3ss4ge !s %d s3c0ndz
+MSG_FREQ = $cr0||!ng m3ss4g3 d!spl4y!ng fr3qu3ncy: %d:%02d m!nut3z
+MSG_DISABLED = |N0T 3NUFF M4N4!| - $cr0||!ng m3ss4g3 d!s4bl3d
+
+[bg]
+MIN_FREQ = Minimalnoto povtarq6to vreme za tova saob6tenie e %d secundi
+MSG_FREQ = Scrolling saob6tenieto se pokazva vseki: %d:%02d minuti
+MSG_DISABLED = Scrolling saob6tenieto e isklu4eno

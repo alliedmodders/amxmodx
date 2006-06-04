@@ -218,3 +218,37 @@ TEAM_MENU = Joukkuevalikko
 TRANSF_TO = Siirra %s.ksi
 CL_CMD_MENU = Clientkomentovalikko
 NO_CMDS = Ei komentoja kaytettavissa
+
+[ls]
+ADMIN_BAN_1 = ADMIN: b4nz0|2 %s
+ADMIN_BAN_2 = ADMIN %s: b4nz0|2 %s
+BAN_MENU = |34nz0|2 M3nu
+BAN_FOR_MIN = |34nz0|2 for %d minut3s
+BAN_PERM = |34nz0|2 p3rm4n3ntly
+SLAP_SLAY_MENU = Sl4p/Sl4y M3nu
+SLAP_WITH_DMG = Sl4p \/\/I7|-| %d d4m4g3
+SLAY = Sl4y
+KICK_MENU = |<ic|< M3nu
+ADMIN_TRANSF_1 = ADMIN: tr4nsf3r %s to %s
+ADMIN_TRANSF_2 = ADMIN %s: tr4nsf3r %s to %s
+TEAM_MENU = T34m M3nu
+TRANSF_TO = Tr4nsf3r t0 %s
+CL_CMD_MENU = (li3nt (mds M3nu
+NO_CMDS = |\|0 cmds 4v4il4bl3
+
+[bg]
+ADMIN_BAN_1 = ADMINISTRATOR: banna %s
+ADMIN_BAN_2 = ADMINISTRATOR %s: banna %s
+BAN_MENU = Ban Menu
+BAN_FOR_MIN = Ban za %d minuti
+BAN_PERM = Banni za vinagi
+SLAP_SLAY_MENU = Slap/Slay Menu
+SLAP_WITH_DMG = Slapni s %d damage
+SLAY = Slay
+KICK_MENU = Kick Menu
+ADMIN_TRANSF_1 = ADMINISTRATOR: transferira %s kam %s
+ADMIN_TRANSF_2 = ADMINISTRATOR %s: transferira %s kam %s
+TEAM_MENU = Otborno Menu
+TRANSF_TO = Transferirai kam %s
+CL_CMD_MENU = Klient Comandno Menu
+NO_CMDS = Nqma nikakvi pozvoleni comandi

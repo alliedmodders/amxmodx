@@ -36,3 +36,9 @@ DROPPED_RES = Vyhozen, slot je rezervovan
 
 [fi]
 DROPPED_RES = Pudotettiin palvelimelta slotvarauksen takia (adminslot)
+
+[ls]
+DROPPED_RES = j00 r n0t l33t 3uff, s0z
+
+[bg]
+DROPPED_RES = Izklu4en poneje mqstoto e rezervirano

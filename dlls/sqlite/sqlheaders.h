@@ -15,3 +15,4 @@ struct SqlFunctions
 };
 
 #endif //_INCLUDE_SQLHEADERS_H
+

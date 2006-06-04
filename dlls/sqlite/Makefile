@@ -10,7 +10,7 @@ OPT_FLAGS = -O3 -funroll-loops -s -pipe -fomit-frame-pointer
 DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
 CC = cc
-NAME = sqlite
+NAME = sqlitex
 SQL = sqlite-source
 
 BIN_SUFFIX_32 = amxx_i386.so
@@ -53,9 +53,11 @@ CFLAGS += -DNDEBUG -fPIC -DHAVE_STDINT_H -DSM_DEFAULT_THREADER -Dstricmp=strcase
 ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_$(BIN_SUFFIX_64)
 	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -m64
+	CPPFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -m64
 else
 	BINARY = $(NAME)_$(BIN_SUFFIX_32)
 	CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32
+	CPPFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -m64
 	OPT_FLAGS += -march=i586
 endif
 

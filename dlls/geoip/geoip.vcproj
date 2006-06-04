@@ -137,10 +137,10 @@
 				Name="GeoIP"
 				Filter="">
 				<File
-					RelativePath=".\geolib\libGeoIP\GeoIP.c">
+					RelativePath=".\GeoIP.c">
 				</File>
 				<File
-					RelativePath=".\geolib\libGeoIP\GeoIP.h">
+					RelativePath=".\GeoIP.h">
 				</File>
 			</Filter>
 		</Filter>

@@ -10,7 +10,7 @@ OPT_FLAGS = -O2 -funroll-loops -s -pipe -fomit-frame-pointer
 DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
 NAME = mysqlx
-MYSQL_DIR = m_inc
+MYSQL_DIR = ../../../mysql
 
 BIN_SUFFIX_32 = amxx_i386.so
 BIN_SUFFIX_64 = amxx_amd64.so

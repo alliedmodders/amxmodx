@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "geoip_amxx.h"
 
 GeoIP *gi = NULL;

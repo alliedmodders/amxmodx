@@ -413,6 +413,11 @@ static cell AMX_NATIVE_CALL SQL_SetAffinity(AMX *amx, cell *params)
 	int len;
 	char *str = MF_GetAmxString(amx, params[1], 0, &len);
 
+	if (!str[0])
+	{
+		return 1;
+	}
+
 	if (stricmp(str, g_Sqlite.NameString()) == 0)
 	{
 		return 1;

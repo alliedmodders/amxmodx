@@ -14,32 +14,6 @@ struct QueuedResultInfo
 	bool query_success;
 };
 
-typedef int stridx_t;
-
-class StringPool
-{
-public:
-	StringPool();
-	~StringPool();
-	void SetMutex(IMutex *m);
-	void UnsetMutex();
-	bool IsThreadable();
-public:
-	stridx_t MakeString(const char *str);
-	void FreeString(stridx_t idx);
-	const char *GetString(stridx_t idx);
-	void StartHardLock();
-	void StopHardLock();
-public:
-	static const int NullString = -1;
-private:
-	CStack<stridx_t> m_FreeStrings;
-	CVector<stridx_t> m_UseTable;
-	CVector<SourceHook::String *> m_Strings;
-	IMutex *m_mutex;
-	bool m_stoplock;
-};
-
 class AtomicResult : 
 	public IResultSet,
 	public IResultRow
@@ -73,10 +47,8 @@ private:
 private:
 	unsigned int m_RowCount;
 	unsigned int m_FieldCount;
-	unsigned int m_AllocFields;
-	unsigned int m_AllocRows;
-	stridx_t *m_Fields;
-	stridx_t **m_Rows;
+	size_t m_AllocSize;
+	SourceHook::String **m_Table;
 	unsigned int m_CurRow;
 	bool m_IsFree;
 };

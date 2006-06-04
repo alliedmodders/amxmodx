@@ -4,12 +4,12 @@
 #define __MODULECONFIG_H__
 
 // Module info
-#define MODULE_NAME "SQLiteX"
+#define MODULE_NAME "SQLite"
 #define MODULE_VERSION "1.75"
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "http://www.amxmodx.org/"
-#define MODULE_LOGTAG "SQLITEX"
-#define MODULE_LIBRARY "sqlitex"
+#define MODULE_LOGTAG "SQLITE"
+#define MODULE_LIBRARY "sqlite"
 #define MODULE_LIBCLASS "sqlx"
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line
 #define MODULE_RELOAD_ON_MAPCHANGE

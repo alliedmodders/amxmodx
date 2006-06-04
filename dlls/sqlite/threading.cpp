@@ -8,7 +8,6 @@ using namespace SourceHook;
 MainThreader g_Threader;
 ThreadWorker *g_pWorker = NULL;
 extern DLL_FUNCTIONS *g_pFunctionTable;
-StringPool g_StringPool;
 IMutex *g_QueueLock = NULL;
 CStack<MysqlThread *> g_ThreadQueue;
 CStack<MysqlThread *> g_FreeThreads;
@@ -260,9 +259,8 @@ void OnPluginsLoaded()
 		return;
 	}
 
-	if (!g_StringPool.IsThreadable())
+	if (!g_QueueLock)
 	{
-		g_StringPool.SetMutex(g_Threader.MakeMutex());
 		g_QueueLock = g_Threader.MakeMutex();
 	}
 	g_pWorker = new ThreadWorker(&g_Threader, 250);
@@ -317,17 +315,16 @@ void OnPluginsUnloading()
 }
 
 /***********************
- * ATOMIC RESULT STUFF *
- ***********************/
+* ATOMIC RESULT STUFF *
+***********************/
 
 AtomicResult::AtomicResult()
 {
 	m_IsFree = true;
-	m_CurRow = 0;
-	m_AllocFields = 0;
-	m_AllocRows = 0;
-	m_Rows = NULL;
-	m_Fields = NULL;
+	m_CurRow = 1;
+	m_RowCount = NULL;
+	m_Table = NULL;
+	m_AllocSize = 0;
 }
 
 AtomicResult::~AtomicResult()
@@ -337,20 +334,15 @@ AtomicResult::~AtomicResult()
 		FreeHandle();
 	}
 
-	if (m_AllocFields)
+	for (size_t i=0; i<=m_AllocSize; i++)
 	{
-		delete [] m_Fields;
-		m_AllocFields = 0;
-		m_Fields = NULL;
+		delete m_Table[i];
 	}
-	if (m_AllocRows)
-	{
-		for (unsigned int i=0; i<m_AllocRows; i++)
-			delete [] m_Rows[i];
-		delete [] m_Rows;
-		m_AllocRows = 0;
-		m_Rows = NULL;
-	}
+
+	delete [] m_Table;
+
+	m_Table = NULL;
+	m_IsFree = true;
 }
 
 unsigned int AtomicResult::RowCount()
@@ -372,12 +364,20 @@ bool AtomicResult::FieldNameToNum(const char *name, unsigned int *columnId)
 {
 	for (unsigned int i=0; i<m_FieldCount; i++)
 	{
-		if (strcmp(g_StringPool.GetString(m_Fields[i]), name) == 0)
+		assert(m_Table[i] != NULL);
+		if (strcmp(m_Table[i]->c_str(), name) == 0)
 		{
-			if (*columnId)
+			if (columnId)
+			{
 				*columnId = i;
+			}
 			return true;
 		}
+	}
+
+	if (columnId)
+	{
+		*columnId = -1;
 	}
 
 	return false;
@@ -388,7 +388,9 @@ const char *AtomicResult::FieldNumToName(unsigned int num)
 	if (num >= m_FieldCount)
 		return NULL;
 
-	return g_StringPool.GetString(m_Fields[num]);
+	assert(m_Table[num] != NULL);
+
+	return m_Table[num]->c_str();
 }
 
 double AtomicResult::GetDouble(unsigned int columnId)
@@ -416,7 +418,7 @@ const char *AtomicResult::GetRaw(unsigned int columnId, size_t *length)
 const char *AtomicResult::GetStringSafe(unsigned int columnId)
 {
 	const char *str = GetString(columnId);
-	
+
 	return str ? str : "";
 }
 
@@ -425,7 +427,11 @@ const char *AtomicResult::GetString(unsigned int columnId)
 	if (columnId >= m_FieldCount)
 		return NULL;
 
-	return g_StringPool.GetString(m_Rows[m_CurRow][columnId]);
+	size_t idx = (m_CurRow * m_FieldCount) + columnId;
+
+	assert(m_Table[idx] != NULL);
+
+	return m_Table[idx]->c_str();
 }
 
 IResultRow *AtomicResult::GetRow()
@@ -435,7 +441,7 @@ IResultRow *AtomicResult::GetRow()
 
 bool AtomicResult::IsDone()
 {
-	if (m_CurRow >= m_RowCount)
+	if (m_CurRow > m_RowCount)
 		return true;
 
 	return false;
@@ -452,19 +458,6 @@ void AtomicResult::_InternalClear()
 		return;
 
 	m_IsFree = true;
-
-	g_StringPool.StartHardLock();
-
-	for (unsigned int i=0; i<m_FieldCount; i++)
-		g_StringPool.FreeString(m_Fields[i]);
-
-	for (unsigned int i=0; i<m_RowCount; i++)
-	{
-		for (unsigned int j=0; j<m_FieldCount; j++)
-			g_StringPool.FreeString(m_Rows[i][j]);
-	}
-
-	g_StringPool.StopHardLock();
 }
 
 void AtomicResult::FreeHandle()
@@ -483,176 +476,50 @@ void AtomicResult::CopyFrom(IResultSet *rs)
 
 	m_FieldCount = rs->FieldCount();
 	m_RowCount = rs->RowCount();
-	if (m_RowCount > m_AllocRows)
+	m_CurRow = 1;
+
+	size_t newTotal = (m_RowCount * m_FieldCount) + m_FieldCount;
+	if (newTotal > m_AllocSize)
 	{
-		/** allocate new array, zero it */
-		stridx_t **newRows = new stridx_t *[m_RowCount];
-		memset(newRows, 0, m_RowCount * sizeof(stridx_t *));
-		/** if we have a new field count, just delete all the old stuff. */
-		if (m_FieldCount > m_AllocFields)
+		SourceHook::String **table = new SourceHook::String *[newTotal];
+		memset(table, 0, newTotal * sizeof(SourceHook::String *));
+		if (m_Table)
 		{
-			for (unsigned int i=0; i<m_AllocRows; i++)
-			{
-				delete [] m_Rows[i];
-				newRows[i] = new stridx_t[m_FieldCount];
-			}
-			for (unsigned int i=m_AllocRows; i<m_RowCount; i++)
-				newRows[i] = new stridx_t[m_FieldCount];
-		} else {
-			/** copy the old pointers */
-			memcpy(newRows, m_Rows, m_AllocRows * sizeof(stridx_t *));
-			for (unsigned int i=m_AllocRows; i<m_RowCount; i++)
-				newRows[i] = new stridx_t[m_AllocFields];
+			memcpy(table, m_Table, m_AllocSize * sizeof(SourceHook::String *));
+			delete [] m_Table;
 		}
-		delete [] m_Rows;
-		m_Rows = newRows;
-		m_AllocRows = m_RowCount;
-	}
-	if (m_FieldCount > m_AllocFields)
-	{
-		delete [] m_Fields;
-		m_Fields = new stridx_t[m_FieldCount];
-		m_AllocFields = m_FieldCount;
-	}
-	m_CurRow = 0;
-
-	g_StringPool.StartHardLock();
-
-	IResultRow *row;
-	unsigned int idx = 0;
-	while (!rs->IsDone())
-	{
-		row = rs->GetRow();
-		for (size_t i=0; i<m_FieldCount; i++)
-			m_Rows[idx][i] = g_StringPool.MakeString(row->GetString(i));
-		rs->NextRow();
-		idx++;
+		m_Table = table;
+		m_AllocSize = newTotal;
 	}
 
 	for (unsigned int i=0; i<m_FieldCount; i++)
-		m_Fields[i] = g_StringPool.MakeString(rs->FieldNumToName(i));
-
-	g_StringPool.StopHardLock();
-}
-
-/*********************
- * STRING POOL STUFF *
- *********************/
-
-StringPool::StringPool()
-{
-	m_mutex = NULL;
-	m_stoplock = false;
-}
-
-StringPool::~StringPool()
-{
-	if (m_stoplock)
-		StopHardLock();
-
-	if (m_mutex)
-		UnsetMutex();
-
-	for (size_t i=0; i<m_Strings.size(); i++)
-		delete m_Strings[i];
-
-	m_Strings.clear();
-	m_UseTable.clear();
-	while (!m_FreeStrings.empty())
-		m_FreeStrings.pop();
-}
-
-bool StringPool::IsThreadable()
-{
-	return (m_mutex != NULL);
-}
-
-const char *StringPool::GetString(stridx_t idx)
-{
-	if (idx < 0 || idx >= (int)m_Strings.size() || !m_UseTable[idx])
-		return NULL;
-
-	return m_Strings[idx]->c_str();
-}
-
-void StringPool::FreeString(stridx_t idx)
-{
-	if (idx < 0 || idx >= (int)m_Strings.size())
-		return;
-
-	if (!m_stoplock && m_mutex)
-		m_mutex->Lock();
-
-	if (m_UseTable[idx])
 	{
-		m_FreeStrings.push(idx);
-		m_UseTable[idx] = 0;
+		if (m_Table[i])
+		{
+			m_Table[i]->assign(rs->FieldNumToName(i));
+		} else {
+			m_Table[i] = new SourceHook::String(rs->FieldNumToName(i));
+		}
 	}
 
-	if (!m_stoplock && m_mutex)
-		m_mutex->Unlock();
-}
-
-stridx_t StringPool::MakeString(const char *str)
-{
-	if (!str)
-		return StringPool::NullString;
-
-	if (!m_stoplock && m_mutex)
-		m_mutex->Lock();
-
-	stridx_t idx;
-
-	if (m_FreeStrings.empty())
+	IResultRow *row;
+	unsigned int idx = m_FieldCount;
+	while (!rs->IsDone())
 	{
-		idx = static_cast<stridx_t>(m_Strings.size());
-		SourceHook::String *shString = new SourceHook::String(str);
-		m_Strings.push_back(shString);
-		m_UseTable.push_back(1);
-	} else {
-		idx = m_FreeStrings.front();
-		m_FreeStrings.pop();
-		m_UseTable[idx] = 1;
-		m_Strings[idx]->assign(str);
-	}
-
-	if (!m_stoplock && m_mutex)
-		m_mutex->Unlock();
-
-	return idx;
-}
-
-void StringPool::SetMutex(IMutex *m)
-{
-	m_mutex = m;
-}
-
-void StringPool::UnsetMutex()
-{
-	if (m_mutex)
-	{
-		m_mutex->DestroyThis();
-		m_mutex = NULL;
+		row = rs->GetRow();
+		for (unsigned int i=0; i<m_FieldCount; i++,idx++)
+		{
+			if (m_Table[idx])
+			{
+				m_Table[idx]->assign(row->GetString(i));
+			} else {
+				m_Table[idx] = new SourceHook::String(row->GetString(i));
+			}
+		}
+		rs->NextRow();
 	}
 }
 
-void StringPool::StartHardLock()
-{
-	if (m_stoplock)
-		return;
-
-	m_mutex->Lock();
-	m_stoplock = true;
-}
-
-void StringPool::StopHardLock()
-{
-	if (!m_stoplock)
-		return;
-
-	m_mutex->Unlock();
-	m_stoplock = false;
-}
 
 AMX_NATIVE_INFO g_ThreadSqlNatives[] =
 {

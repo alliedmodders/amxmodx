@@ -64,7 +64,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="wsock32.lib mysqlclient.lib"
-				OutputFile="$(OutDir)/mysqlx_amxx.dll"
+				OutputFile="$(OutDir)/mysql_amxx.dll"
 				LinkIncremental="2"
 				IgnoreDefaultLibraryNames="LIBCMT"
 				GenerateDebugInformation="true"
@@ -144,7 +144,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="wsock32.lib mysqlclient.lib"
-				OutputFile="$(OutDir)/mysqlx_amxx.dll"
+				OutputFile="$(OutDir)/mysql_amxx.dll"
 				LinkIncremental="1"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
@@ -350,6 +350,10 @@
 			</File>
 			<File
 				RelativePath="..\sdk\sh_stack.h"
+				>
+			</File>
+			<File
+				RelativePath="..\sqlheaders.h"
 				>
 			</File>
 		</Filter>

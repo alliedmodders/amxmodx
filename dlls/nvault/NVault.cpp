@@ -144,7 +144,7 @@ bool NVault::_SaveToFile()
 			key = (*iter).key;
 			val = (*iter).val;
 			stamp = (*iter).stamp;
-			bw.WriteInt32(stamp);
+			bw.WriteInt32(static_cast<int32_t>(stamp));
 			bw.WriteUInt8( key.size() );
 			bw.WriteUInt16( val.size() );
 			bw.WriteChars( key.c_str(), key.size() );

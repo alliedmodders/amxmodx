@@ -57,7 +57,6 @@ type
     cmdConnect: TFlatButton;
     pnlDirectory: TPanel;
     trvDirectories: TTreeView;
-    lblStep5: TLabel;
     jspInstallProgress: TJvStandardPage;
     pnlHeader5: TPanel;
     imgIcon5: TImage;
@@ -82,11 +81,6 @@ type
     bvlSelectMod: TBevel;
     lblInfo: TLabel;
     chkPassive: TFlatCheckBox;
-    lblStep3: TLabel;
-    pnlOS: TPanel;
-    optWindows: TFlatRadioButton;
-    optLinux32: TFlatRadioButton;
-    optLinux64: TFlatRadioButton;
     IdFTP: TIdFTP;
     cmdProxySettings: TFlatButton;
     IdAntiFreeze: TIdAntiFreeze;
@@ -109,7 +103,14 @@ type
     frbStandaloneServer: TFlatRadioButton;
     frbSelectMod: TFlatRadioButton;
     Shape1: TShape;
-    Label1: TLabel;
+    lblSelectModNote: TLabel;
+    lblStep3: TLabel;
+    pnlOS: TPanel;
+    optWindows: TFlatRadioButton;
+    optLinux32: TFlatRadioButton;
+    optLinux64: TFlatRadioButton;
+    lblOSNote: TLabel;
+    lblStep5: TLabel;
     procedure jvwStepsCancelButtonClick(Sender: TObject);
     procedure cmdCancelClick(Sender: TObject);
     procedure cmdNextClick(Sender: TObject);
@@ -198,9 +199,16 @@ var ePath: String;
     i, k: integer;
 begin
   if jplWizard.ActivePage = jspFTP then begin
-    if not IdFTP.Connected then
-      IdFTP.Connect;
-    
+    Screen.Cursor := crHourGlass;
+    try
+      if not IdFTP.Connected then
+        IdFTP.Connect;
+    except
+      MessageBox(Handle, 'Cannot connect to server. Please check your connection and try again.', 'Error', MB_ICONWARNING);
+      Screen.Cursor := crDefault;
+      exit;
+    end;
+
     { FTP }
     eStr := TStringList.Create;
     ePath := '/';
@@ -209,7 +217,14 @@ begin
       ePath := '/' + CurNode.Text + ePath;
       CurNode := CurNode.Parent;
     until (not Assigned(CurNode));
-    IdFTP.ChangeDir(ePath);
+
+    try
+      IdFTP.ChangeDir(ePath);
+    except
+      MessageBox(Handle, PChar('Cannot change directory to "' + ePath + '". Please check your settings and try again.'), 'Error', MB_ICONWARNING);
+      Screen.Cursor := crDefault;
+      exit;
+    end;
 
     try
       IdFTP.List(eStr, '', False);
@@ -236,7 +251,6 @@ begin
     DelDir(ExtractFilePath(ParamStr(0)) + 'temp');
     MakeDir(ExtractFilePath(ParamStr(0)) + 'temp');
     DownloadFile('liblist.gam', ExtractFilePath(ParamStr(0)) + 'temp\liblist.gam');
-    Screen.Cursor := crHourGlass;
     ChosenMod := modNone;
     case cboGameAddon.ItemIndex of
       1: ChosenMod := modCS;
@@ -256,6 +270,7 @@ begin
       eOS := osLinux64;
 
     jspInstallProgress.Show;
+    frmMain.Height := 382;
     rtfDetails.Lines.Text := 'Starting Pre-Installation, this may take a few minutes...';
     rtfDetails.Lines.Add('');
     Sleep(1500);
@@ -545,6 +560,7 @@ begin
       end;
     end
     else if frbFTP.Checked then begin // FTP
+      frmMain.Height := 445;
       jspFTP.Show;
     end;
   end;
@@ -557,8 +573,10 @@ end;
 
 procedure TfrmMain.cmdBackClick(Sender: TObject);
 begin
-  if jplWizard.ActivePage = jspFTP then
-    jspInstallMethod.Show
+  if jplWizard.ActivePage = jspFTP then begin
+    frmMain.Height := 382;
+    jspInstallMethod.Show;
+  end
   else begin
     jplWizard.PrevPage;
     cmdBack.Visible := jplWizard.ActivePageIndex <> 0;

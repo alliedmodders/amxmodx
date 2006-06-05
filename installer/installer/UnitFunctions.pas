@@ -104,7 +104,7 @@ begin
   frmMain.IdFTP.DirectoryListing.LoadList(eList);
   eList.Clear;
   for i := 0 to frmMain.IdFTP.DirectoryListing.Count -1 do begin
-    if frmMain.IdFTP.DirectoryListing.Items[i].ItemType = ditDirectory then
+    if (frmMain.IdFTP.DirectoryListing.Items[i].FileName <> '.') and (frmMain.IdFTP.DirectoryListing.Items[i].FileName <> '..') and (frmMain.IdFTP.DirectoryListing.Items[i].ItemType = ditDirectory) then
       eList.Add(frmMain.IdFTP.DirectoryListing.Items[i].FileName);
   end;
   Result := eList;

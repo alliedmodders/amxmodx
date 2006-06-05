@@ -5984,7 +5984,7 @@ object frmMain: TfrmMain
         Height = 119
         Pen.Color = clBtnShadow
       end
-      object Label1: TLabel
+      object lblSelectModNote: TLabel
         Left = 134
         Top = 262
         Width = 234
@@ -6094,38 +6094,38 @@ object frmMain: TfrmMain
       OnShow = jspFTPShow
       object lblStep1: TLabel
         Left = 44
-        Top = 60
+        Top = 56
         Width = 100
         Height = 13
         Caption = '1. Set your FTP data'
       end
       object lblStep2: TLabel
         Left = 44
-        Top = 148
+        Top = 254
         Width = 244
         Height = 13
-        Caption = '2. Connect to server and select the mod directory:'
+        Caption = '4. Connect to server and select the mod directory:'
       end
-      object lblStep5: TLabel
+      object lblStep4: TLabel
         Left = 44
-        Top = 295
-        Width = 64
+        Top = 214
+        Width = 117
         Height = 13
-        Caption = '5. Click Next.'
+        Caption = '3. Select a game addon:'
       end
       object lblStep3: TLabel
         Left = 44
-        Top = 254
+        Top = 142
         Width = 223
         Height = 13
-        Caption = '3. Select the operating system of your server:'
+        Caption = '2. Select the operating system of your server:'
       end
-      object lblStep4: TLabel
-        Left = 288
-        Top = 254
-        Width = 117
+      object lblStep5: TLabel
+        Left = 44
+        Top = 358
+        Width = 64
         Height = 13
-        Caption = '4. Select a game addon:'
+        Caption = '5. Click Next.'
       end
       object pnlHeader3: TPanel
         Left = 0
@@ -6200,7 +6200,7 @@ object frmMain: TfrmMain
       end
       object pnlFTPData: TPanel
         Left = 44
-        Top = 76
+        Top = 72
         Width = 441
         Height = 64
         BevelOuter = bvLowered
@@ -6299,7 +6299,7 @@ object frmMain: TfrmMain
       end
       object cmdConnect: TFlatButton
         Left = 416
-        Top = 165
+        Top = 269
         Width = 71
         Height = 20
         ColorFocused = 16245198
@@ -6313,7 +6313,7 @@ object frmMain: TfrmMain
       end
       object pnlDirectory: TPanel
         Left = 44
-        Top = 164
+        Top = 270
         Width = 367
         Height = 83
         BevelOuter = bvLowered
@@ -6334,44 +6334,10 @@ object frmMain: TfrmMain
           OnExpanded = trvDirectoriesExpanded
         end
       end
-      object pnlOS: TPanel
-        Left = 44
-        Top = 270
-        Width = 237
-        Height = 21
-        BevelOuter = bvLowered
-        TabOrder = 4
-        object optWindows: TFlatRadioButton
-          Left = 1
-          Top = 3
-          Width = 62
-          Height = 14
-          Caption = 'Windows'
-          Checked = True
-          TabOrder = 0
-          TabStop = True
-        end
-        object optLinux32: TFlatRadioButton
-          Left = 67
-          Top = 3
-          Width = 84
-          Height = 14
-          Caption = 'Linux (32-bit)'
-          TabOrder = 1
-        end
-        object optLinux64: TFlatRadioButton
-          Left = 153
-          Top = 3
-          Width = 82
-          Height = 14
-          Caption = 'Linux (64-bit)'
-          TabOrder = 2
-        end
-      end
       object cboGameAddon: TFlatComboBox
-        Left = 286
-        Top = 270
-        Width = 125
+        Left = 44
+        Top = 230
+        Width = 443
         Height = 21
         Style = csDropDownList
         Color = clWindow
@@ -6385,9 +6351,61 @@ object frmMain: TfrmMain
           'The Specialists'
           'Condition Zero'
           'Earth'#39's Special Forces')
-        TabOrder = 5
+        TabOrder = 4
         Text = 'None'
         ItemIndex = 0
+      end
+      object pnlOS: TPanel
+        Left = 44
+        Top = 158
+        Width = 441
+        Height = 50
+        BevelOuter = bvLowered
+        TabOrder = 5
+        object lblOSNote: TLabel
+          Left = 4
+          Top = 24
+          Width = 435
+          Height = 22
+          Caption = 
+            'Note: Most linux servers run on a 32-bit platform. If you are no' +
+            't sure what platform your server is using, you can still ask you' +
+            'r provider for further information about this topic.'
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -9
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          WordWrap = True
+        end
+        object optWindows: TFlatRadioButton
+          Left = 5
+          Top = 5
+          Width = 62
+          Height = 14
+          Caption = 'Windows'
+          Checked = True
+          TabOrder = 0
+          TabStop = True
+        end
+        object optLinux32: TFlatRadioButton
+          Left = 171
+          Top = 5
+          Width = 84
+          Height = 14
+          Caption = 'Linux (32-bit)'
+          TabOrder = 1
+        end
+        object optLinux64: TFlatRadioButton
+          Left = 353
+          Top = 5
+          Width = 82
+          Height = 14
+          Caption = 'Linux (64-bit)'
+          TabOrder = 2
+        end
       end
     end
     object jspInstallProgress: TJvStandardPage

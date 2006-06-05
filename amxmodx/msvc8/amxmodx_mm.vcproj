@@ -649,6 +649,10 @@
 				RelativePath="..\vault.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\vector.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"

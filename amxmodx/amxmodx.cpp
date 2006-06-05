@@ -2500,8 +2500,8 @@ static cell AMX_NATIVE_CALL precache_sound(AMX *amx, cell *params) /* 1 param */
 		return 0;
 	}
 	
-	int ilen;
-	char* sptemp = get_amxstring(amx, params[1], 0, ilen);
+	int len;
+	char* sptemp = get_amxstring(amx, params[1], 0, len);
 	
 	PRECACHE_SOUND((char*)STRING(ALLOC_STRING(sptemp)));
 	
@@ -2516,36 +2516,24 @@ static cell AMX_NATIVE_CALL precache_model(AMX *amx, cell *params) /* 1 param */
 		return 0;
 	}
 	
-	int ilen;
-	char* sptemp = get_amxstring(amx, params[1], 0, ilen);
+	int len;
+	char* sptemp = get_amxstring(amx, params[1], 0, len);
 	
 	return PRECACHE_MODEL((char*)STRING(ALLOC_STRING(sptemp)));
 }
 
-static cell AMX_NATIVE_CALL get_distance(AMX *amx, cell *params) /* 2 param */
+static cell AMX_NATIVE_CALL precache_generic(AMX *amx, cell *params)
 {
-	cell *cpVec1 = get_amxaddr(amx, params[1]);
-	cell *cpVec2 = get_amxaddr(amx, params[2]);
-	
-	Vector vec1 = Vector((float)cpVec1[0], (float)cpVec1[1], (float)cpVec1[2]);
-	Vector vec2 = Vector((float)cpVec2[0], (float)cpVec2[1], (float)cpVec2[2]);
-	
-	int iDist = (int)((vec1 - vec2).Length());
-	
-	return iDist;
-}
+	if (g_dontprecache)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Precaching not allowed");
+		return 0;
+	}
 
-static cell AMX_NATIVE_CALL get_distance_f(AMX *amx, cell *params)
-{
-	cell *cpVec1 = get_amxaddr(amx, params[1]);
-	cell *cpVec2 = get_amxaddr(amx, params[2]);
-	
-	Vector vec1 = Vector((float)amx_ctof(cpVec1[0]), (float)amx_ctof(cpVec1[1]), (float)amx_ctof(cpVec1[2]));
-	Vector vec2 = Vector((float)amx_ctof(cpVec2[0]), (float)amx_ctof(cpVec2[1]), (float)amx_ctof(cpVec2[2]));
+	int len;
+	char* sptemp = get_amxstring(amx, params[1], 0, len);
 
-	REAL fDist = (REAL) (vec1 - vec2).Length();
-
-	return amx_ftoc(fDist);
+	return PRECACHE_GENERIC((char*)STRING(ALLOC_STRING(sptemp)));
 }
 
 static cell AMX_NATIVE_CALL random_float(AMX *amx, cell *params) /* 2 param */
@@ -3986,8 +3974,6 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"get_cvar_num",			get_cvar_num},
 	{"get_cvar_pointer",		get_cvar_pointer},
 	{"get_cvar_string",			get_cvar_string},
-	{"get_distance",			get_distance},
-	{"get_distance_f",			get_distance_f},
 	{"get_flags",				get_flags},
 	{"get_func_id",				get_func_id},
 	{"get_gametime",			get_gametime},
@@ -4072,6 +4058,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"plugin_flags",			plugin_flags},
 	{"precache_model",			precache_model},
 	{"precache_sound",			precache_sound},
+	{"precache_generic",		precache_generic},
 	{"query_client_cvar",		query_client_cvar},
 	{"random_float",			random_float},
 	{"random_num",				random_num},

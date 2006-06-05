@@ -48,10 +48,6 @@ extern int VexdServerForward;
 #define CAMERA_UPLEFT 2
 #define CAMERA_TOPDOWN 3
 
-#define ANGLEVECTORS_FORWARD	1
-#define ANGLEVECTORS_RIGHT		2
-#define ANGLEVECTORS_UP			3
-
 enum
 {
 	usercmd_float_start,

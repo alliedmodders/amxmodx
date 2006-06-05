@@ -38,8 +38,6 @@ native register_think(Classname[], function[]);
  * The module will automatically add +5 for Linux.
  */
 
-/* Precaches any file. */
-native precache_generic(szFile[]);
 /* Precaches an event. */
 native precache_event(type, Name[], {Float,Sql,Result,_}:...);
 
@@ -151,17 +149,6 @@ native trace_hull(Float:origin[3],hull,ignoredent=0,ignoremonsters=0);
 /* Traces a line, and returns the normal to the plane hit in vReturn.
  * Returns 0 if theres no normal. */
 native trace_normal(iIgnoreEnt, Float:fStart[3], Float:fEnd[3], Float:vReturn[3]);
-
-/* Changes a Vector to an Angle vector. */
-native vector_to_angle(Float:fVector[3], Float:vReturn[3]);
-
-native angle_vector(Float:vector[3],FRU,Float:ret[3])
-
-/* Gets the length of a vector (float[3]). */
-native Float:vector_length(Float:vVector[3]);
-
-/* Gets the distance between 2 vectors (float[3]). */
-native Float:vector_distance(Float:vVector[3], Float:vVector2[3]);
 
 /* Gets the ID of a grenade. */
 native get_grenade_id(id, model[], len, grenadeid = 0);

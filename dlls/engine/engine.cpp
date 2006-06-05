@@ -97,27 +97,6 @@ static cell AMX_NATIVE_CALL halflife_time(AMX *amx, cell *params)
 	return amx_ftoc(fVal);
 }
 
-static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params)
-{
-	int iEnt = params[1];
-	int iVelocity = params[2];
-	cell *vRet = MF_GetAmxAddr(amx, params[3]);
-	Vector vVector = Vector(0, 0, 0);
-
-	CHECK_ENTITY(iEnt);
-
-	edict_t *pEnt = INDEXENT2(iEnt);
-
-	MAKE_VECTORS(pEnt->v.v_angle);
-	vVector = gpGlobals->v_forward * iVelocity;
-
-	vRet[0] = amx_ftoc(vVector.x);
-	vRet[1] = amx_ftoc(vVector.y);
-	vRet[2] = amx_ftoc(vVector.z);
-
-	return 1;
-}
-
 // RadiusDamage. Damages players within a certain radius. ToDo: add the
 // damage messaging so players know where the damage is coming from
 // (the red arrow-like things on the screen).
@@ -196,61 +175,6 @@ static cell AMX_NATIVE_CALL PointContents(AMX *amx, cell *params)
 	Vector vPoint = Vector(fX, fY, fZ);
 
 	return POINT_CONTENTS(vPoint);
-}
-
-static cell AMX_NATIVE_CALL vector_to_angle(AMX *amx, cell *params)
-{
-	cell *cAddr = MF_GetAmxAddr(amx, params[1]);
-
-	REAL fX = amx_ctof(cAddr[0]);
-	REAL fY = amx_ctof(cAddr[1]);
-	REAL fZ = amx_ctof(cAddr[2]);
-
-	Vector vVector = Vector(fX, fY, fZ);
-	Vector vAngle = Vector(0, 0, 0);
-	VEC_TO_ANGLES(vVector, vAngle);
-
-	cell *vRet = MF_GetAmxAddr(amx, params[2]);
-	vRet[0] = amx_ftoc(vAngle.x);
-	vRet[1] = amx_ftoc(vAngle.y);
-	vRet[2] = amx_ftoc(vAngle.z);
-
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL vector_length(AMX *amx, cell *params)
-{
-	cell *cAddr = MF_GetAmxAddr(amx, params[1]);
-
-	REAL fX = amx_ctof(cAddr[0]);
-	REAL fY = amx_ctof(cAddr[1]);
-	REAL fZ = amx_ctof(cAddr[2]);
-
-	Vector vVector = Vector(fX, fY, fZ);
-
-	REAL fLength = vVector.Length();
-
-	return amx_ftoc(fLength);
-}
-
-static cell AMX_NATIVE_CALL vector_distance(AMX *amx, cell *params)
-{
-	cell *cAddr = MF_GetAmxAddr(amx, params[1]);
-	cell *cAddr2 = MF_GetAmxAddr(amx, params[2]);
-
-	REAL fX = amx_ctof(cAddr[0]);
-	REAL fY = amx_ctof(cAddr[1]);
-	REAL fZ = amx_ctof(cAddr[2]);
-	REAL fX2 = amx_ctof(cAddr2[0]);
-	REAL fY2 = amx_ctof(cAddr2[1]);
-	REAL fZ2 = amx_ctof(cAddr2[2]);
-
-	Vector vVector = Vector(fX, fY, fZ);
-	Vector vVector2 = Vector(fX2, fY2, fZ2);
-
-	REAL fLength = (vVector - vVector2).Length();
-
-	return amx_ftoc(fLength);
 }
 
 static cell AMX_NATIVE_CALL trace_normal(AMX *amx, cell *params)
@@ -385,14 +309,6 @@ static cell AMX_NATIVE_CALL drop_to_floor(AMX *amx, cell *params)
 	edict_t *e = INDEXENT2(iEnt);
 
 	return DROP_TO_FLOOR(e);
-}
-
-static cell AMX_NATIVE_CALL precache_generic(AMX *amx, cell *params)
-{
-	int len;
-	char* szPreCache = MF_GetAmxString(amx,params[1],0,&len);
-	PRECACHE_GENERIC((char*)STRING(ALLOC_STRING(szPreCache)));
-	return 1;
 }
 
 // Attachview, this allows you to attach a player's view to an entity.
@@ -653,28 +569,6 @@ static cell AMX_NATIVE_CALL playback_event(AMX *amx, cell *params)
 	bparam1=params[11];
 	bparam2=params[12];
 	PLAYBACK_EVENT_FULL(flags, pInvoker,eventindex, delay, origin, angles, fparam1, fparam2, iparam1, iparam2, bparam1, bparam2);
-	return 1;
-}
-
-//(mahnsawce)
-static cell AMX_NATIVE_CALL angle_vector(AMX *amx, cell *params)
-{
-	Vector v_angles,v_forward,v_right,v_up,v_return;
-	cell *vCell = MF_GetAmxAddr(amx, params[1]);
-	v_angles.x = amx_ctof(vCell[0]);
-	v_angles.y = amx_ctof(vCell[1]);
-	v_angles.z = amx_ctof(vCell[2]);
-	g_engfuncs.pfnAngleVectors(v_angles,v_forward,v_right,v_up);
-	if (params[2] == ANGLEVECTORS_FORWARD)
-		v_return = v_forward;
-	if (params[2] == ANGLEVECTORS_RIGHT)
-		v_return = v_right;
-	if (params[2] == ANGLEVECTORS_UP)
-		v_return = v_up;
-	vCell = MF_GetAmxAddr(amx,params[3]);
-	vCell[0] = amx_ftoc(v_return.x);
-	vCell[1] = amx_ftoc(v_return.y);
-	vCell[2] = amx_ftoc(v_return.z);
 	return 1;
 }
 
@@ -1038,13 +932,8 @@ AMX_NATIVE_INFO engine_Natives[] = {
 
 	//These are mostly from original VexD
 
-	{"velocity_by_aim",		VelocityByAim},
 	{"radius_damage",		RadiusDamage},
 	{"point_contents",		PointContents},
-	{"vector_to_angle",		vector_to_angle},
-	{"angle_vector",		angle_vector},
-	{"vector_length",		vector_length},
-	{"vector_distance",		vector_distance},
 	{"trace_normal",		trace_normal},
 	{"trace_line",			trace_line},
 	{"trace_hull",			trace_hull},
@@ -1054,7 +943,6 @@ AMX_NATIVE_INFO engine_Natives[] = {
 	{"get_speak",			get_speak},
 
 	{"precache_event",		precache_event},
-	{"precache_generic",	precache_generic},
 	{"playback_event",		playback_event},
 
 	{"set_view",			set_view},

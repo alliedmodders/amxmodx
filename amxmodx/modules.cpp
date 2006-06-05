@@ -542,6 +542,7 @@ int set_amxnatives(AMX* amx, char error[128])
 	amx_Register(amx, g_NativeNatives, -1);
 	amx_Register(amx, g_DebugNatives, -1);
 	amx_Register(amx, msg_Natives, -1);
+	amx_Register(amx, vector_Natives, -1);
 
 	//we're not actually gonna check these here anymore
 	amx->flags |= AMX_FLAG_PRENIT;

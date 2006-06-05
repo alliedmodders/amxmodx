@@ -19,6 +19,7 @@
 #include <vault>
 #include <lang>
 #include <messages>
+#include <vector>
 
 /* Function is called just after server activation.
 * Good place for configuration loading, commands and cvars registration. */
@@ -73,6 +74,9 @@ native precache_model(const name[]);
 
 /* Precache sound. Can be used only in plugin_precache() function.*/
 native precache_sound(const name[]);
+
+/* Precaches any file. */
+native precache_generic(szFile[]);
 
 /* Sets info for player. */
 native set_user_info(index,const info[],const value[]);
@@ -513,9 +517,6 @@ native server_exec();
 /* Emits sound. Sample must be precached. */
 native emit_sound(index, channel, sample[], Float:vol, Float:att,flags, pitch);
 
-/* Returns distance between two vectors. */
-native get_distance(origin1[3],origin2[3]);
-
 /* Registers new cvar for HL engine.
  * Returns the cvar pointer for get/set_pcvar functions.
  */
@@ -808,9 +809,6 @@ native menu_setprop(menu, prop, ...);
 //The menu will still exist on their screen but any results are invalidated,
 //and the callback is invoked.
 native menu_cancel(player);
-
-// Gets distance between two origins (float)
-native Float:get_distance_f( Float:Origin1[3], Float:Origin2[3] ); 
 
 // Dispatches a client cvar query
 //  id: Player id

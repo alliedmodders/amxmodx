@@ -511,7 +511,7 @@ int CheckModules(AMX *amx, char error[128])
 			{
 				if ( (err=RunLibCommand(&dec)) != LibErr_None )
 				{
-					if (!pHandler->HandleModule(buffer, (err == LibErr_NoClass)))
+					if (!pHandler->HandleModule(dec.param1, (err == LibErr_NoClass)))
 					{
 						const char *type = "Module/Library";
 						if (err == LibErr_NoClass)

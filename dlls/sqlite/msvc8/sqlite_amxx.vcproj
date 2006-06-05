@@ -65,7 +65,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/sqlitex_amxx.dll"
+				OutputFile="$(OutDir)/sqlite_amxx.dll"
 				LinkIncremental="2"
 				IgnoreDefaultLibraryNames=""
 				ModuleDefinitionFile=""
@@ -152,7 +152,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/sqlitex_amxx.dll"
+				OutputFile="$(OutDir)/sqlite_amxx.dll"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="2"

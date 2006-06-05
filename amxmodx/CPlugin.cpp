@@ -108,6 +108,17 @@ int CPluginMngr::loadPluginsFromFile(const char* filename)
 		
 		line.clear();
 		line._fread(fp);
+		/** quick hack */
+		char *ptr = const_cast<char *>(line.c_str());
+		while (*ptr)
+		{
+			if (*ptr == ';')
+			{
+				*ptr = '\0';
+			} else {
+				ptr++;
+			}
+		}
 		sscanf(line.c_str(), "%s %s", pluginName, debug);
 		
 		if (!isalnum(*pluginName))
@@ -606,6 +617,18 @@ void CPluginMngr::CALMFromFile(const char *file)
 		fgets(line, sizeof(line)-1, fp);
 		if (line[0] == ';' || line[0] == '\n' || line[0] == '\0')
 			continue;
+
+		/** quick hack */
+		char *ptr = line;
+		while (*ptr)
+		{
+			if (*ptr == ';')
+			{
+				*ptr = '\0';
+			} else {
+				ptr++;
+			}
+		}
 
 		rline.assign(line);
 		rline.trim();

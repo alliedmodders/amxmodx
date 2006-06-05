@@ -117,12 +117,12 @@ namespace AMXXRelease
 			core.outdir = "dlls";
 
 			Module mysqlx = new Module();
-			mysqlx.projname = "mysqlx_amxx";
+			mysqlx.projname = "mysql_amxx";
 			mysqlx.sourcedir = "dlls\\" + "mysqlx";
 			mysqlx.vcproj = "mysql2";
 
 			Module sqlitex = new Module();
-			sqlitex.projname = "sqlitex_amxx";
+			sqlitex.projname = "sqlite_amxx";
 			sqlitex.sourcedir = "dlls\\" + "sqlite";
 			sqlitex.bindir = "msvc7";
 			sqlitex.vcproj = "sqlite_amxx";

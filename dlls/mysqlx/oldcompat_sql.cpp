@@ -178,6 +178,12 @@ static cell AMX_NATIVE_CALL dbi_query2(AMX *amx, cell *params)
 //native dbi_nextrow(Result:_result);
 static cell AMX_NATIVE_CALL dbi_nextrow(AMX *amx, cell *params)
 {
+	//special case, fall out!
+	if (params[1] == 0)
+	{
+		return 0;
+	}
+
 	oldresult_s *oldrs = (oldresult_s *)GetHandle(params[1], Handle_OldResult);
 	if (!oldrs)
 	{
@@ -356,7 +362,7 @@ static cell AMX_NATIVE_CALL dbi_close(AMX *amx, cell *params)
 	if (!old)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid DBI handle %d", num);
-		return -1;
+		return 0;
 	}
 
 	FreeHandle(num);

@@ -34,6 +34,9 @@
 
 #include <amxmodx>
 #include <amxmisc>
+
+/** skip autoloading since it's optional */
+#define AMXMODX_NOAUTOLOAD
 #include <cstrike>
 
 new g_menuPosition[33]

@@ -10,7 +10,7 @@ OPT_FLAGS = -O3 -funroll-loops -s -pipe -fomit-frame-pointer
 DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
 CC = cc
-NAME = sqlitex
+NAME = sqlite
 SQL = sqlite-source
 
 BIN_SUFFIX_32 = amxx_i386.so

@@ -31,7 +31,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib zlib.lib"
+				AdditionalDependencies="ws2_32.lib"
 				OutputFile="$(OutDir)/geoip_amxx.dll"
 				LinkIncremental="2"
 				IgnoreDefaultLibraryNames="LIBCMT"
@@ -79,7 +79,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib zlib.lib"
+				AdditionalDependencies="ws2_32.lib"
 				OutputFile="$(OutDir)/geoip_amxx.dll"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"

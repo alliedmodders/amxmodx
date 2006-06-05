@@ -460,6 +460,11 @@ int CheckModules(AMX *amx, char error[128])
 			while (a)
 			{
 				CModule &cm = (*a);
+				if (cm.getStatusValue() != MODULE_LOADED)
+				{
+					++a;
+					continue;
+				}
 				if (cm.getInfoNew() && 
 					cm.getInfoNew()->logtag && 
 					!strcasecmp(cm.getInfoNew()->logtag, buffer))

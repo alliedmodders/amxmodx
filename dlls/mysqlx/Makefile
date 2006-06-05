@@ -9,8 +9,9 @@ MM_ROOT = ../../metamod/metamod
 OPT_FLAGS = -O2 -funroll-loops -s -pipe -fomit-frame-pointer
 DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
-NAME = mysqlx
-MYSQL_DIR = ../../../mysql
+NAME = mysql
+#MYSQL_DIR = ../../../mysql-5.0.22
+MYSQL_DIR = ../../../mysql-5.0
 
 BIN_SUFFIX_32 = amxx_i386.so
 BIN_SUFFIX_64 = amxx_amd64.so
@@ -19,7 +20,7 @@ OBJECTS = basic_sql.cpp handles.cpp module.cpp threading.cpp sdk/amxxmodule.cpp 
 OBJECTS += thread/BaseWorker.cpp thread/ThreadWorker.cpp thread/PosixThreads.cpp
 OBJECTS += mysql/MysqlQuery.cpp mysql/MysqlResultSet.cpp mysql/MysqlDatabase.cpp mysql/MysqlDriver.cpp 
 
-LINK = -lmysqlclient -lz -lpthread /lib/libgcc_eh.a /lib/libstdc++.a
+LINK = -static-libgcc -lmysqlclient_r -lz -lpthread /lib/libgcc_eh.a /lib/libstdc++.a
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
 	-I$(MM_ROOT) -I$(HLSDK)/common -I$(MYSQL_DIR)/include -L$(MYSQL_DIR)/lib -Ithread \

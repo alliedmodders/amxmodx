@@ -21,6 +21,9 @@ native get_distance(origin1[3],origin2[3]);
 /* Gets distance between two origins (float). */
 native Float:get_distance_f(Float:Origin1[3], Float:Origin2[3]);
 
+/* Gives you a velocity in the direction a player is looking, iVelocity is the multiplier. */
+native velocity_by_aim(iIndex, iVelocity, Float:vRetValue[3]);
+
 /* Changes a vector into an angle vector. */
 native vector_to_angle(Float:fVector[3], Float:vReturn[3]);
 

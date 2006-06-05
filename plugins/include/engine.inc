@@ -133,9 +133,6 @@ native DispatchSpawn(iIndex);
 /* Hurts/Kills players in a sphere, like an explosion, Multiplier determines damage. */
 native radius_damage(Float:fExplodeAt[3], iDamageMultiplier, iRadiusMultiplier);
 
-/* Gives you a velocity in the direction a player is looking, iVelocity is the multiplier. */
-native velocity_by_aim(iIndex, iVelocity, Float:vRetValue[3]);
-
 /* Will return the contents of a point (inside map? in sky? outside map? etc.). */
 native point_contents(Float:fCheckAt[3]);
 

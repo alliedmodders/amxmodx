@@ -157,7 +157,11 @@ displayTelMenu(id, pos)
 				len += format(menuBody[len], 511-len, "#. %s^n", name)
 		} else {
 			keys |= (1<<b)
-			len += format(menuBody[len], 511-len, "%d. %s^n", ++b, name)
+			
+			if (is_user_admin(i))
+				len += format(menuBody[len], 511-len, g_coloredMenus ? "%d. %s \r*^n\w" : "%d. %s *^n", ++b, name)
+			else
+				len += format(menuBody[len], 511-len, "%d. %s^n", ++b, name)
 		}
 	}
 

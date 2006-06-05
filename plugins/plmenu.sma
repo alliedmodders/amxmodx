@@ -34,9 +34,6 @@
 
 #include <amxmodx>
 #include <amxmisc>
-
-/** skip autoloading since it's optional */
-#define AMXMODX_NOAUTOLOAD
 #include <cstrike>
 
 new g_menuPosition[33]
@@ -221,7 +218,11 @@ displayBanMenu(id, pos)
 			else
 				len += format(menuBody[len], 511-len, "#. %s^n", name)
 		} else {
-				keys |= (1<<b)
+			keys |= (1<<b)
+				
+			if (is_user_admin(i))
+				len += format(menuBody[len], 511-len, g_coloredMenus ? "%d. %s \r*^n\w" : "%d. %s *^n", ++b, name)
+			else
 				len += format(menuBody[len], 511-len, "%d. %s^n", ++b, name)
 		}
 	}
@@ -378,10 +379,14 @@ displaySlapMenu(id, pos)
 			if (g_coloredMenus)
 				len += format(menuBody[len], 511-len, "\d%d. %s\R%s^n\w", b, name, team)
 			else
-				len += format(menuBody[len], 511-len, "#. %s   %s^n", name, team)
+				len += format(menuBody[len], 511-len, "#. %s   %s^n", name, team)		
 		} else {
 			keys |= (1<<b)
-			len += format(menuBody[len], 511-len, g_coloredMenus ? "%d. %s\y\R%s^n\w" : "%d. %s   %s^n", ++b, name, team)
+				
+			if (is_user_admin(i))
+				len += format(menuBody[len], 511-len, g_coloredMenus ? "%d. %s \r*\y\R%s^n\w" : "%d. %s *   %s^n", ++b, name, team)
+			else
+				len += format(menuBody[len], 511-len, g_coloredMenus ? "%d. %s\y\R%s^n\w" : "%d. %s   %s^n", ++b, name, team)
 		}
 	}
 
@@ -490,7 +495,11 @@ displayKickMenu(id, pos)
 				len += format(menuBody[len], 511-len, "#. %s^n", name)
 		} else {
 			keys |= (1<<b)
-			len += format(menuBody[len], 511-len, "%d. %s^n", ++b, name)
+				
+			if (is_user_admin(i))
+				len += format(menuBody[len], 511-len, g_coloredMenus ? "%d. %s \r*^n\w" : "%d. %s *^n", ++b, name)
+			else
+				len += format(menuBody[len], 511-len, "%d. %s^n", ++b, name)
 		}
 	}
 
@@ -623,10 +632,14 @@ displayTeamMenu(id, pos)
 			if (g_coloredMenus)
 				len += format(menuBody[len], 511-len, "\d%d. %s\R%s^n\w", b, name, team)
 			else
-				len += format(menuBody[len], 511-len, "#. %s   %s^n", name, team)
+				len += format(menuBody[len], 511-len, "#. %s   %s^n", name, team)		
 		} else {
 			keys |= (1<<b)
-			len += format(menuBody[len], 511-len, g_coloredMenus ? "%d. %s\y\R%s^n\w" : "%d. %s   %s^n", ++b, name, team)
+				
+			if (is_user_admin(i))
+				len += format(menuBody[len], 511-len, g_coloredMenus ? "%d. %s \r*\y\R%s^n\w" : "%d. %s *   %s^n", ++b, name, team)
+			else
+				len += format(menuBody[len], 511-len, g_coloredMenus ? "%d. %s\y\R%s^n\w" : "%d. %s   %s^n", ++b, name, team)
 		}
 	}
 
@@ -740,10 +753,14 @@ displayClcmdMenu(id, pos)
 			if (g_coloredMenus)
 				len += format(menuBody[len], 511-len, "\d%d. %s^n\w", b, name)
 			else
-				len	+= format(menuBody[len], 511-len, "#. %s^n", name)
+				len += format(menuBody[len], 511-len, "#. %s^n", name)		
 		} else {
 			keys |= (1<<b)
-			len += format(menuBody[len], 511-len, "%d. %s^n", ++b, name)
+				
+			if (is_user_admin(i))
+				len += format(menuBody[len], 511-len, g_coloredMenus ? "%d. %s \r*^n\w" : "%d. %s *^n", ++b, name)
+			else
+				len += format(menuBody[len], 511-len, "%d. %s^n", ++b, name)
 		}
 	}
 

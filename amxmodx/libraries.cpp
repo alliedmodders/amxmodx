@@ -207,7 +207,7 @@ LibError RunLibCommand(const LibDecoder *enc)
 
 		return LibErr_NoLibrary;
 	} else if (enc->cmd == LibCmd_ForceLib) {
-		if (!LoadModule(enc->param1, PT_ANYTIME))
+		if (!LoadModule(enc->param1, PT_ANYTIME, true, true))
 		{
 			return LibErr_NoLibrary;
 		}
@@ -231,7 +231,7 @@ LibError RunLibCommand(const LibDecoder *enc)
 				return LibErr_None;
 		}
 
-		if (!LoadModule(enc->param2, PT_ANYTIME))
+		if (!LoadModule(enc->param2, PT_ANYTIME, true, true))
 		{
 			return LibErr_NoLibrary;
 		}

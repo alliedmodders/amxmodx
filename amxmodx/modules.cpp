@@ -997,6 +997,7 @@ int loadModules(const char* filename, PLUG_LOADTIME now)
 
 	while (!feof(fp))
 	{
+		buffer[0] = '\0';
 		fgets(buffer, sizeof(buffer)-1, fp);
 
 		if (buffer[0] == ';' || buffer[0] == '\n')

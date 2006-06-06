@@ -151,7 +151,7 @@ int Menu::PagekeyToItem(page_t page, item_t key)
 
 	if (num_pages == 1 || !items_per_page)
 	{
-		if (m_AlwaysExit && key > m_Items.size())
+		if (m_AlwaysExit || key >= m_Items.size())
 			return MENU_EXIT;
 		else
 			return key-1;

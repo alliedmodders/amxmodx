@@ -33,6 +33,8 @@
 
 #if defined WIN32
 #include <direct.h>
+#else
+#include <dirent.h>
 #endif
 
 #include "amxmodx.h"
@@ -187,7 +189,7 @@ void BuildPluginFileList(CStack<String *> & files)
 	if ((dp = opendir(pluginsDir)) == NULL)
 		return;
 
-	while ( (ep=readdir(dp) != NULL )
+	while ( (ep=readdir(dp)) != NULL )
 	{
 		ParseAndOrAdd(files, ep->d_name);
 	}

@@ -268,3 +268,4 @@ void CLog::LogError(const char *fmt, ...)
 	// print on server console
 	print_srvconsole("L %s: %s\n", date, msg);
 }
+

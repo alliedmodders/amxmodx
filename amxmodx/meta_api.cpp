@@ -151,6 +151,51 @@ int FF_InconsistentFile = -1;
 int FF_ClientAuthorized = -1;
 int FF_ChangeLevel = -1;
 
+void ParseAndOrAdd(CStack<String *> & files, const char *name)
+{
+	if (strncmp(name, "plugins-", 8) == 0)
+	{
+		size_t len = strlen(name);
+		if (strcmp(&name[len-4], ".ini") == 0)
+		{
+			String *pString = new String(name);
+			files.push(pString);
+		}
+	}
+}
+
+void BuildPluginFileList(CStack<String *> & files)
+{
+	const char *pluginsDir = get_localinfo("amxx_configsdir", "addons/amxmodx/configs");
+#if defined WIN32
+	_finddata_t fd;
+	intptr_t handle = _findfirst(pluginsDir, &fd);
+
+	if (handle < 0)
+		return;
+
+	while (_findnext(handle, &fd) < 0)
+	{
+		ParseAndOrAdd(files, fd.name);
+	}
+
+	_findclose(handle);
+#elif defined __linux__
+	struct dirent *ep;
+	DIR *dp;
+
+	if ((dp = opendir(pluginsDir)) == NULL)
+		return;
+
+	while ( (ep=readdir(dp) != NULL )
+	{
+		ParseAndOrAdd(files, ep->d_name);
+	}
+
+	closedir (dp);
+#endif
+}
+
 // Precache	stuff from force consistency calls
 // or check	for	pointed	files won't	be done
 int	C_PrecacheModel(char *s)
@@ -264,6 +309,17 @@ int	C_Spawn(edict_t *pent)
 	// ###### Load modules
 	loadModules(get_localinfo("amxx_modules", "addons/amxmodx/configs/modules.ini"), PT_ANYTIME);
 	g_plugins.CALMFromFile(get_localinfo("amxx_plugins", "addons/amxmodx/configs/plugins.ini"));
+	CStack<String *> files;
+	BuildPluginFileList(files);
+	char path[255];
+	while (!files.empty())
+	{
+		String *pString = files.front();
+		snprintf(path, sizeof(path)-1, "%s/%s", get_localinfo("amxx_configsdir", "addons/amxmodx/configs"));
+		g_plugins.CALMFromFile(path);
+		delete pString;
+		files.pop();
+	}
 	int loaded = countModules(CountModules_Running); // Call after attachModules so all modules don't have pending stat
 	
 	// Set some info about amx version and modules
@@ -301,6 +357,15 @@ int	C_Spawn(edict_t *pent)
 
 	// ###### Load AMX scripts
 	g_plugins.loadPluginsFromFile(get_localinfo("amxx_plugins", "addons/amxmodx/configs/plugins.ini"));
+	BuildPluginFileList(files);
+	while (!files.empty())
+	{
+		String *pString = files.front();
+		snprintf(path, sizeof(path)-1, "%s/%s", get_localinfo("amxx_configsdir", "addons/amxmodx/configs"));
+		g_plugins.loadPluginsFromFile(path);
+		delete pString;
+		files.pop();
+	}
 	g_plugins.Finalize();
 
 	// Register forwards

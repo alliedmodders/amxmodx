@@ -168,10 +168,11 @@ void ParseAndOrAdd(CStack<String *> & files, const char *name)
 
 void BuildPluginFileList(CStack<String *> & files)
 {
-	const char *pluginsDir = get_localinfo("amxx_configsdir", "addons/amxmodx/configs");
+	char path[255];
+	build_pathname_r(path, sizeof(path)-1, "%s/", get_localinfo("amxx_configsdir", "addons/amxmodx/configs"));
 #if defined WIN32
 	_finddata_t fd;
-	intptr_t handle = _findfirst(pluginsDir, &fd);
+	intptr_t handle = _findfirst(path, &fd);
 
 	if (handle < 0)
 		return;
@@ -186,7 +187,7 @@ void BuildPluginFileList(CStack<String *> & files)
 	struct dirent *ep;
 	DIR *dp;
 
-	if ((dp = opendir(pluginsDir)) == NULL)
+	if ((dp = opendir(path)) == NULL)
 		return;
 
 	while ( (ep=readdir(dp)) != NULL )
@@ -317,7 +318,9 @@ int	C_Spawn(edict_t *pent)
 	while (!files.empty())
 	{
 		String *pString = files.front();
-		snprintf(path, sizeof(path)-1, "%s/%s", get_localinfo("amxx_configsdir", "addons/amxmodx/configs"));
+		snprintf(path, sizeof(path)-1, "%s/%s", 
+			get_localinfo("amxx_configsdir", "addons/amxmodx/configs"),
+			pString->c_str());
 		g_plugins.CALMFromFile(path);
 		delete pString;
 		files.pop();
@@ -363,7 +366,9 @@ int	C_Spawn(edict_t *pent)
 	while (!files.empty())
 	{
 		String *pString = files.front();
-		snprintf(path, sizeof(path)-1, "%s/%s", get_localinfo("amxx_configsdir", "addons/amxmodx/configs"));
+		snprintf(path, sizeof(path)-1, "%s/%s", 
+			get_localinfo("amxx_configsdir", "addons/amxmodx/configs"),
+			pString->c_str());
 		g_plugins.loadPluginsFromFile(path);
 		delete pString;
 		files.pop();

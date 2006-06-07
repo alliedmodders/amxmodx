@@ -250,8 +250,6 @@ stock SQL_QueryAndIgnore(Handle:db, const queryfmt[], {Float,_}:...)
 	
 	vformat(query, sizeof(query)-1, queryfmt, 3)
 	
-	server_print("simple query: %s", query)
-	
 	hQuery = SQL_PrepareQuery(db, "%s", query);
 	
 	if (SQL_Execute(hQuery))

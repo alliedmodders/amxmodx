@@ -37,7 +37,7 @@
 
 #define MAX_MESSAGES  6
 #define X_POS         -1.0
-#define Y_POS         0.30
+#define Y_POS         0.20
 #define HOLD_TIME     12.0
 
 new g_Values[MAX_MESSAGES][3]

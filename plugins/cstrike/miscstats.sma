@@ -277,7 +277,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				
 				if (KillingStreak)
 				{
-					set_hudmessage(0, 100, 255, 0.05, 0.55, 2, 0.02, 6.0, 0.01, 0.1, -1)
+					set_hudmessage(0, 100, 255, 0.05, 0.50, 2, 0.02, 6.0, 0.01, 0.1, -1)
 					ShowSyncHudMsg(0, g_left_sync, g_KillingMsg[a], name)
 				}
 				
@@ -446,7 +446,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				replace(message, 127, "$wn", weapon_name)
 				replace(message, 127, "$kn", killer_name)
 				
-				set_hudmessage(100, 100, 255, -1.0, 0.29, 0, 6.0, 6.0, 0.5, 0.15, -1)
+				set_hudmessage(100, 100, 255, -1.0, 0.30, 0, 6.0, 6.0, 0.5, 0.15, -1)
 				ShowSyncHudMsg(players[i], g_announce_sync, "%s", message)
 			}
 		}
@@ -591,7 +591,7 @@ public checkKills(param[])
 				new name[32]
 				
 				get_user_name(id, name, 31)
-				set_hudmessage(255, 0, 100, 0.05, 0.65, 2, 0.02, 6.0, 0.01, 0.1, -1)
+				set_hudmessage(255, 0, 100, 0.05, 0.50, 2, 0.02, 6.0, 0.01, 0.1, -1)
 				
 				if (a > 6)
 					a = 6

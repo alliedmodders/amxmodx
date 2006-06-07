@@ -480,7 +480,7 @@ int CheckModules(AMX *amx, char error[128])
 		{
 			if (expect == LibType_Library)
 			{
-				if (!LoadModule(buffer, PT_ANYTIME))
+				if (!LoadModule(buffer, PT_ANYTIME, true, true))
 				{
 					if (pHandler->HandleModule(buffer, (expect == LibType_Class)))
 						found = true;

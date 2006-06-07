@@ -157,33 +157,38 @@ void ParseAndOrAdd(CStack<String *> & files, const char *name)
 {
 	if (strncmp(name, "plugins-", 8) == 0)
 	{
+#if !defined WIN32
 		size_t len = strlen(name);
 		if (strcmp(&name[len-4], ".ini") == 0)
 		{
+#endif
 			String *pString = new String(name);
 			files.push(pString);
+#if !defined WIN32
 		}
+#endif
 	}
 }
 
 void BuildPluginFileList(CStack<String *> & files)
 {
 	char path[255];
-	build_pathname_r(path, sizeof(path)-1, "%s/", get_localinfo("amxx_configsdir", "addons/amxmodx/configs"));
 #if defined WIN32
+	build_pathname_r(path, sizeof(path)-1, "%s/*.ini", get_localinfo("amxx_configsdir", "addons/amxmodx/configs"));
 	_finddata_t fd;
 	intptr_t handle = _findfirst(path, &fd);
 
 	if (handle < 0)
 		return;
 
-	while (_findnext(handle, &fd) < 0)
+	while (!_findnext(handle, &fd))
 	{
 		ParseAndOrAdd(files, fd.name);
 	}
 
 	_findclose(handle);
 #elif defined __linux__
+	build_pathname_r(path, sizeof(path)-1, "%s/", get_localinfo("amxx_configsdir", "addons/amxmodx/configs"));
 	struct dirent *ep;
 	DIR *dp;
 

@@ -478,10 +478,15 @@ int CheckModules(AMX *amx, char error[128])
 			
 		if (!found)
 		{
-			if ((expect != LibType_Library) || !LoadModule(buffer, PT_ANYTIME))
+			if (expect == LibType_Library)
 			{
-				if (pHandler->HandleModule(buffer, (expect == LibType_Class)))
+				if (!LoadModule(buffer, PT_ANYTIME))
+				{
+					if (pHandler->HandleModule(buffer, (expect == LibType_Class)))
+						found = true;
+				} else {
 					found = true;
+				}
 			}
 		}
 		
@@ -914,6 +919,8 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 
 	cc->queryModule();
 
+	bool error = true;
+
 	switch (cc->getStatusValue())
 	{
 	case MODULE_BADLOAD:
@@ -940,9 +947,17 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 	case MODULE_NOT64BIT:
 		report_error(1, "[AMXX] Module \"%s\" is not 64 bit compatible.", path.c_str());
 		break;
+	default:
+		error = false;
+		break;
 	}
 
 	g_modules.put(cc);
+
+	if (error)
+	{
+		return false;
+	}
 
 	if (cc->IsMetamod())
 	{

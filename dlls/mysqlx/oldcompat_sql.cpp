@@ -117,6 +117,7 @@ static cell AMX_NATIVE_CALL dbi_query(AMX *amx, cell *params)
 
 			oldrs->info = info;
 			oldrs->pQuery = pQuery;
+			oldrs->firstCall = true;
 			hndl = MakeHandle(oldrs, Handle_OldResult, FreeOldResult);
 			return hndl;
 		} else {

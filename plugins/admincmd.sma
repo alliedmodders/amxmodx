@@ -218,7 +218,6 @@ public cmdBan(id, level, cid)
 	get_user_authid(id, authid, 31)
 	get_user_name(player, name2, 31)
 	get_user_name(id, name, 31)
-	userid2 = get_user_userid(player)
 	
 	log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%s^") (reason ^"%s^")", name, get_user_userid(id), authid, name2, userid2, authid2, minutes, reason)
 	
@@ -289,7 +288,6 @@ public cmdBanIP(id, level, cid)
 	get_user_authid(id, authid, 31)
 	get_user_name(player, name2, 31)
 	get_user_name(id, name, 31)
-	userid2 = get_user_userid(player)
 	
 	log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%s^") (reason ^"%s^")", name, get_user_userid(id), authid, name2, userid2, authid2, minutes, reason)
 

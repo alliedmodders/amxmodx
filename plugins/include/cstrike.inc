@@ -269,3 +269,24 @@ native cs_set_armoury_type(index, type);
  * NOTE: If user can't plant (cs_get_user_plant(index) is 0) then cs_get_user_mapzones(index) & CS_MAPZONE_BOMBTARGET will return 0 too.
  */
 native cs_get_user_mapzones(index);
+
+/* Zoom type enum. Used for get/set_user_zoom() natives.
+enum
+{
+	CS_RESET_ZOOM = 0,		// Reset any zoom blocking (when using this type, mode has no effect)
+	CS_SET_NO_ZOOM,			// Disable any sort of zoom (ie: to disable zoom in all weapons use this with mode=0)
+	CS_SET_FIRST_ZOOM,		// Set first zoom (awp style) 
+	CS_SET_SECOND_ZOOM,		// Set second zoom (awp style)
+	CS_SET_AUGSG552_ZOOM,		// Set aug/sg552 zoom style
+};
+/* Sets a weapon zoom type on a player, any zoom type will work for all weapons, so you can even set an awp zoom to pistols :D
+ * The 2nd param has to be one of the above zoom types in the enum. Mode can only be 0 or 1.
+ * If mode=0 (blocking mode), the user will be forced to use the zoom type set by the native, and wont be able to change it (even by changing weapon)
+ * until the native resets the zoom with CS_RESET_ZOOM.
+ * If mode=1 the user will be able to restore back to a normal view by changing weapon.
+ */
+native cs_set_user_zoom(index, type, mode);
+
+/* Returns how a user is zooming during the native call. Values correspond to the above enum, but will return 0 if an error occurred.
+ */
+native cs_get_user_zoom(index);

@@ -140,8 +140,7 @@ static cell AMX_NATIVE_CALL cs_set_user_deaths(AMX *amx, cell *params) // cs_set
 	WRITE_SHORT(*((int *)pPlayer->pvPrivateData + OFFSET_TEAM)); // should these be byte?
 	MESSAGE_END();
 
-	int *deaths = static_cast<int *>(MF_PlayerPropAddr(params[1], Player_Deaths));
-	*deaths = params[2];
+	*static_cast<int *>(MF_PlayerPropAddr(params[1], Player_Deaths)) = params[2];
 
 	return 1;
 }
@@ -1408,6 +1407,87 @@ static cell AMX_NATIVE_CALL cs_set_armoury_type(AMX *amx, cell *params)
 #endif
 }
 
+static cell AMX_NATIVE_CALL cs_set_user_zoom(AMX *amx, cell *params)
+{
+	// Set the weapon zoom type of a user
+	// params[1] = user index
+	// params[2] = zoom type
+	// params[3] = mode (0=blocking mode, 1=player will loose the zoom set by changing weapon)
+
+	int index = params[1];
+	// Check index 
+	CHECK_PLAYER(index);
+
+	int value, type = params[2];
+	int curweap = *static_cast<int *>(MF_PlayerPropAddr(index, Player_CurrentWeapon));
+	
+	// Fetch player pointer 
+	edict_t *pPlayer = MF_GetPlayerEdict(index);
+	// Reset any previous zooming
+	g_zooming[index] = 0;
+
+	if (type == CS_RESET_ZOOM)
+	{
+		*((int *)pPlayer->pvPrivateData + OFFSET_ZOOMTYPE) = CS_NO_ZOOM;
+		return 1;
+	}
+
+	switch (type)
+	{
+	case CS_SET_NO_ZOOM:
+		value = CS_NO_ZOOM;
+		break;
+	case CS_SET_FIRST_ZOOM:
+		value = CS_FIRST_ZOOM;
+		break;
+	case CS_SET_SECOND_ZOOM:
+		if (curweap == CSW_G3SG1 || curweap == CSW_SG550 || curweap == CSW_SCOUT)
+			value = CS_SECOND_NONAWP_ZOOM;
+		else
+			value = CS_SECOND_AWP_ZOOM;
+		break;
+	case CS_SET_AUGSG552_ZOOM:
+		value = CS_AUGSG552_ZOOM;
+		break;
+	default:
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid zoom type %d", type);
+		return 0;
+	}
+
+	if (!params[3])
+		g_zooming[index] = value;
+	*((int *)pPlayer->pvPrivateData + OFFSET_ZOOMTYPE) = value;
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL cs_get_user_zoom(AMX *amx, cell *params)
+{
+	// Returns the zoom type of a player
+	// params[1] = user id
+
+	// Check Player
+	CHECK_PLAYER(params[1]);
+	// Fetch player pointer 
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+	int value = *((int *)pPlayer->pvPrivateData + OFFSET_ZOOMTYPE);
+
+	switch (value)
+	{
+	case CS_NO_ZOOM:
+		return CS_SET_NO_ZOOM;
+	case CS_FIRST_ZOOM:
+		return CS_SET_FIRST_ZOOM;
+	case CS_SECOND_AWP_ZOOM:
+	case CS_SECOND_NONAWP_ZOOM:
+		return CS_SET_SECOND_ZOOM;
+	case CS_AUGSG552_ZOOM:
+		return CS_SET_AUGSG552_ZOOM;
+	}
+
+	return 0;
+}
+
 AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_user_money",			cs_set_user_money},
 	{"cs_get_user_money",			cs_get_user_money},
@@ -1453,6 +1533,8 @@ AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_user_spawn",				cs_user_spawn},
 	{"cs_get_armoury_type",			cs_get_armoury_type},
 	{"cs_set_armoury_type",			cs_set_armoury_type},
+	{"cs_get_user_zoom",			cs_get_user_zoom},
+	{"cs_set_user_zoom",			cs_set_user_zoom},
 	//------------------- <-- max 19 characters!
 	{NULL,							NULL}
 };
@@ -1481,6 +1563,8 @@ void MessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
 	// Reset player model a short while (MODELRESETTIME) after this if they are using an edited model.
 	if(msg_type == GET_USER_MSG_ID(PLID, "ResetHUD", NULL)) {
 		int entityIndex = ENTINDEX(ed);
+		if (g_zooming[entityIndex])
+			g_zooming[entityIndex] = 0;
 		if(g_players[entityIndex].GetModelled())
 			g_players[entityIndex].SetInspectModel(true);
 			//g_players[ENTINDEX(ed)].SetTime(gpGlobals->time + MODELRESETTIME);
@@ -1494,6 +1578,7 @@ void MessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
 void ClientDisconnect(edict_t *pEntity) {
 	int index = ENTINDEX(pEntity);
 	g_players[index].SetModelled(false);
+	g_zooming[index] = 0;
 
 	RETURN_META(MRES_IGNORED);
 }
@@ -1521,7 +1606,16 @@ void PlayerPostThink(edict_t* pPlayer) {
 	RETURN_META(MRES_IGNORED);
 }
 
+void PlayerPreThink(edict_t *pPlayer)
+{
+	int entityIndex = ENTINDEX(pPlayer);
+	if (g_zooming[entityIndex])
+	{
+		*((int *)pPlayer->pvPrivateData + OFFSET_ZOOMTYPE) = g_zooming[entityIndex];
+	}
 
+	RETURN_META(MRES_IGNORED);
+}
 
 void OnAmxxAttach()
 {

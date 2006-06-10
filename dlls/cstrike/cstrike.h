@@ -77,6 +77,7 @@
 	#define OFFSET_MAPZONE				235 + EXTRAOFFSET
 	#define OFFSET_ISDRIVING			350 + EXTRAOFFSET // 040926
 	#define OFFSET_STATIONARY			362 + EXTRAOFFSET // 040927 (363 works also!)
+	#define OFFSET_ZOOMTYPE				363 + EXTRAOFFSET
 
 	#define OFFSET_AWM_AMMO				377 + EXTRAOFFSET // 041029: All of these *_AMMO:s were changed -5
 	#define OFFSET_SCOUT_AMMO			378 + EXTRAOFFSET
@@ -118,6 +119,7 @@
 	#define OFFSET_MAPZONE				268 + EXTRAOFFSET // +27
 	#define OFFSET_ISDRIVING			386 + EXTRAOFFSET // 040927
 	#define OFFSET_STATIONARY			400 + EXTRAOFFSET // 040927 (401 works also)
+	#define OFFSET_ZOOMTYPE				402 + EXTRAOFFSET
 
 	#define OFFSET_AWM_AMMO				426 + EXTRAOFFSET // +44
 	#define OFFSET_SCOUT_AMMO			427 + EXTRAOFFSET // +44
@@ -242,6 +244,12 @@
 #define CS_ARMOR_KEVLAR					1
 #define CS_ARMOR_ASSAULTSUIT			2
 
+#define CS_FIRST_ZOOM					0x28
+#define CS_SECOND_AWP_ZOOM				0xA
+#define CS_SECOND_NONAWP_ZOOM			0xF
+#define CS_AUGSG552_ZOOM				0x37
+#define CS_NO_ZOOM						0x5A
+
 enum CS_Internal_Models {
 	CS_DONTCHANGE = 0,
 	CS_CT_URBAN = 1,
@@ -254,9 +262,19 @@ enum CS_Internal_Models {
 	CS_T_GUERILLA = 8,
 	CS_CT_VIP = 9
 };
+
+enum
+{
+	CS_RESET_ZOOM = 0,
+	CS_SET_NO_ZOOM,
+	CS_SET_FIRST_ZOOM,
+	CS_SET_SECOND_ZOOM,
+	CS_SET_AUGSG552_ZOOM,
+};
 // cstrike-specific defines above
 
 CCstrikePlayer g_players[33];
+int g_zooming[33] = {0};
 bool g_precachedknife = false;
 bool g_noknives = false;
 // Globals above

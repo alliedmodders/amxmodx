@@ -1556,7 +1556,9 @@ static cell AMX_NATIVE_CALL get_pcvar_float(AMX *amx, cell *params)
 		return 0;
 	}
 
-	return amx_ftoc(ptr->value);
+	REAL val = (REAL)ptr->value;
+
+	return amx_ftoc(val);
 }
 
 static cell AMX_NATIVE_CALL get_cvar_float(AMX *amx, cell *params) /* 1 param */

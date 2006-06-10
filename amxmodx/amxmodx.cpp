@@ -1827,7 +1827,7 @@ static cell AMX_NATIVE_CALL read_data(AMX *amx, cell *params) /* 3 param */
 			return set_amxstring(amx, params[2], g_events.getArgString(params[1]), *get_amxaddr(amx, params[3]));
 		default:
 			cell *fCell = get_amxaddr(amx, params[2]);
-			float fparam = g_events.getArgFloat(params[1]);
+			REAL fparam = (REAL)g_events.getArgFloat(params[1]);
 			fCell[0] = amx_ftoc(fparam);
 			return (int)fparam;
 	}
@@ -2003,7 +2003,7 @@ static cell AMX_NATIVE_CALL get_maxplayers(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_gametime(AMX *amx, cell *params)
 {
-	REAL pFloat = gpGlobals->time;
+	REAL pFloat = (REAL)gpGlobals->time;
 	return amx_ftoc(pFloat);
 }
 

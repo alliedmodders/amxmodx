@@ -82,4 +82,10 @@ void EnableDebugHandler(AMX *amx, Debugger *pd);
 bool DirExists(const char *dir);
 const char* GetFileName(AMX *amx);
 
+inline cell FloatToCell(float input)
+{
+	double output = input;
+	return *(cell *)&output;
+}
+
 #endif // __MODULES_H__

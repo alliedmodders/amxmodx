@@ -35,12 +35,6 @@
 #define ANGLEVECTORS_RIGHT		2
 #define ANGLEVECTORS_UP			3
 
-inline cell FloatToCell(float input)
-{
-	double output = input;
-	return *(cell *)&output;
-}
-
 static cell AMX_NATIVE_CALL get_distance(AMX *amx, cell *params)
 {
 	cell *cpVec1 = get_amxaddr(amx, params[1]);

@@ -3725,7 +3725,7 @@ static cell AMX_NATIVE_CALL CreateOneForward(AMX *amx, cell *params)
 	for (cell i=3; i<=count; i++)
 		ps[i-3] = *get_amxaddr(amx, params[i]);
 	
-	return registerSPForwardByNameC(amx, funcname, ps, count-2);
+	return registerSPForwardByNameC(p->getAMX(), funcname, ps, count-2);
 }
 
 static cell AMX_NATIVE_CALL PrepareArray(AMX *amx, cell *params)

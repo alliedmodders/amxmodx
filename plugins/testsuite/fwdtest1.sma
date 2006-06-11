@@ -21,8 +21,17 @@ public test_createforward_handler(pluginid, numparams)
 	
 	new function[32]
 	get_string(1, function, 31)
+	
+	if (g_forward > 0)
+	{
+		DestroyForward(g_forward)
+	}
 
 	g_forward = CreateOneForward(pluginid, function)
+	if (g_forward < 0)
+	{
+		server_print("Failed to create forward!")
+	}
 }
 
 //test_executeforward()
@@ -35,5 +44,11 @@ public test_executeforward_handler(pluginid, numparams)
 	if (!ExecuteForward(g_forward, retval))
 	{
 		server_print("failed to execute forward (I'm %d)", g_id)
+	}
+	
+	if (g_forward > 0)
+	{
+		DestroyForward(g_forward)
+		g_forward = -1
 	}
 }

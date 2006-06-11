@@ -1,5 +1,5 @@
 /*
- * DoDX 
+ * DoDX
  * Copyright (c) 2004 Lukasz Wlasinski
  *
  *
@@ -110,6 +110,24 @@ public:
 	void restartStats(bool all = true);
 	void killPlayer();
 
+	// Zors
+	int oldteam;
+	int olddeadflag;
+	int oldplayerclass;
+
+	bool is_model_set;
+	char* newmodel;
+	int body_num;
+
+	int position;
+
+	void initModel(char*);
+	void clearModel();
+	bool setModel();
+	void setBody(int);
+	void checkStatus();
+	// Zors
+
 	inline bool IsBot(){
 		const char* auth= (*g_engfuncs.pfnGetPlayerAuthId)(pEdict);
 		return ( auth && !strcmp( auth , "BOT" ) );
@@ -125,7 +143,7 @@ public:
 
 class Grenades
 {
-  struct Obj 
+  struct Obj
   {
     CPlayer* player;
     edict_t* grenade;

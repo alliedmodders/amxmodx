@@ -343,7 +343,50 @@ static cell AMX_NATIVE_CALL get_user_team(AMX *amx, cell *params){ // player,wid
 		MF_SetAmxString(amx,params[2],szTeam,params[3]); 
 	} 
 	return iTeam; 
-} 
+}
+
+static cell AMX_NATIVE_CALL dod_set_model(AMX *amx, cell *params) // player,model
+{
+	int index = params[1];
+	CHECK_PLAYER(index);
+
+	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	if(!pPlayer->ingame)
+		return false;
+
+	int length;
+	pPlayer->initModel((char*)STRING(ALLOC_STRING(MF_GetAmxString(amx, params[2], 1, &length))));
+
+	return true;
+}
+
+static cell AMX_NATIVE_CALL dod_set_body(AMX *amx, cell *params) // player,bodynumber
+{
+	int index = params[1];
+	CHECK_PLAYER(index);
+
+	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	if(!pPlayer->ingame)
+		return false;
+
+	pPlayer->setBody(params[2]);
+
+	return true;
+}
+
+static cell AMX_NATIVE_CALL dod_clear_model(AMX *amx, cell *params) // player
+{
+	int index = params[1];
+	CHECK_PLAYER(index);
+
+	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	if(!pPlayer->ingame)
+		return false;
+
+	pPlayer->clearModel();
+
+	return true;
+}
 
 AMX_NATIVE_INFO base_Natives[] = {
 
@@ -382,6 +425,11 @@ AMX_NATIVE_INFO base_Natives[] = {
 	{ "dod_get_wpnname", get_weapon_name },
 	{ "dod_get_wpnlogname", get_weapon_logname },
 	{ "dod_is_melee", is_melee },
+
+	// Zors
+	{"dod_set_model",		dod_set_model},
+	{"dod_set_body_number",	dod_set_body},
+	{"dod_clear_model",		dod_clear_model},
 
 	///*******************
 	{ NULL, NULL } 

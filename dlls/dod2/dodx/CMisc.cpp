@@ -1,5 +1,5 @@
 /*
- * DoDx 
+ * DoDx
  * Copyright (c) 2004 Lukasz Wlasinski
  *
  *
@@ -93,6 +93,14 @@ void CPlayer::Disconnect(){
 	bot = false;
 	savedScore = 0;
 
+	// Zors
+	olddeadflag=0;
+	oldteam=0;
+	oldplayerclass=0;
+	is_model_set=false;
+	body_num=0;
+	position = 0;
+
 	if ( ignoreBots(pEdict) || !isModuleActive() ) // ignore if he is bot and bots rank is disabled or module is paused
 		return;
 
@@ -108,18 +116,18 @@ void CPlayer::PutInServer(){
 		return;
 
 	restartStats();
-	
+
 	const char* unique;
 	const char* name = STRING(pEdict->v.netname);
 	switch((int)dodstats_rank->value) {
-	case 1: 
+	case 1:
 		if ( (unique = GETPLAYERAUTHID(pEdict)) == 0 )
 			unique = name; // failed to get authid
 		break;
-	case 2: 
-		unique = ip; 
+	case 2:
+		unique = ip;
 		break;
-	default: 
+	default:
 		unique = name;
 	}
 	if ( ( rank = g_rank.findEntryInRank( unique , name ) ) == 0 )
@@ -153,6 +161,14 @@ void CPlayer::Init( int pi, edict_t* pe )
 	ingame =  false;
 	bot = false;
 	savedScore = 0;
+
+	// Zors
+	olddeadflag=0;
+	oldteam=0;
+	oldplayerclass=0;
+	is_model_set=false;
+	body_num=0;
+	position = 0;
 }
 
 void CPlayer::saveKill(CPlayer* pVictim, int wweapon, int hhs, int ttk){
@@ -182,13 +198,13 @@ void CPlayer::saveKill(CPlayer* pVictim, int wweapon, int hhs, int ttk){
 	pVictim->weapons[0].deaths++;
 	pVictim->life.deaths++;
 	pVictim->round.deaths++;
-	
-	
+
+
 	pVictim->weaponsLife[vw].deaths++; // DEC-Weapon (life) stats
 	pVictim->weaponsLife[0].deaths++;                // DEC-Weapon (life) stats
 	pVictim->weaponsRnd[vw].deaths++; // DEC-Weapon (round) stats
 	pVictim->weaponsRnd[0].deaths++;                // DEC-Weapon (round) stats
-	
+
 	int vi = pVictim->index;
 	victims[vi].name = (char*)weaponData[wweapon].name;
 	victims[vi].deaths++;
@@ -197,8 +213,8 @@ void CPlayer::saveKill(CPlayer* pVictim, int wweapon, int hhs, int ttk){
 	victims[0].deaths++;
 	victims[0].hs += hhs;
 	victims[0].tks += ttk;
-	
-	
+
+
 	weaponsLife[wweapon].kills++;                // DEC-Weapon (life) stats
 	weaponsLife[wweapon].hs += hhs;         // DEC-Weapon (life) stats
 	weaponsLife[wweapon].tks += ttk;     // DEC-Weapon (life) stats
@@ -212,7 +228,7 @@ void CPlayer::saveKill(CPlayer* pVictim, int wweapon, int hhs, int ttk){
 	weaponsRnd[0].kills++;                     // DEC-Weapon (round) stats
 	weaponsRnd[0].hs += hhs;              // DEC-Weapon (round) stats
 	weaponsRnd[0].tks += ttk;          // DEC-Weapon (round) stats
-	
+
 	weapons[wweapon].kills++;
 	weapons[wweapon].hs += hhs;
 	weapons[wweapon].tks += ttk;
@@ -317,11 +333,67 @@ void CPlayer::killPlayer(){
 	pEdict->v.weapons = 0;
 }
 
+void CPlayer::initModel(char* model)
+{
+	newmodel = model;
+	is_model_set = true;
+}
+
+void CPlayer::clearModel()
+{
+	is_model_set = false;
+}
+
+bool CPlayer::setModel()
+{
+	if(!ingame || ignoreBots(pEdict))
+		return false;
+
+	if(is_model_set)
+	{
+		ENTITY_SET_KEYVALUE(pEdict, "model", newmodel);
+		pEdict->v.body = body_num;
+		return true;
+	}
+
+	return false;
+}
+
+void CPlayer::setBody(int bn)
+{
+	if(!ingame || ignoreBots(pEdict))
+		return;
+
+	body_num = bn;
+
+	return;
+}
+
+void CPlayer::checkStatus()
+{
+	if(!ingame || ignoreBots(pEdict))
+		return;
+
+	if(olddeadflag != 0 && pEdict->v.deadflag == 0 && iFSpawnForward != -1)
+		MF_ExecuteForward(iFSpawnForward, index);
+
+	if(oldteam != pEdict->v.team && iFTeamForward != -1)
+		MF_ExecuteForward(iFTeamForward, index, pEdict->v.team, oldteam);
+
+	if(oldplayerclass != pEdict->v.playerclass)
+		MF_ExecuteForward(iFClassForward, index, pEdict->v.playerclass, oldplayerclass);
+
+	olddeadflag = pEdict->v.deadflag;
+	oldteam = pEdict->v.team;
+	oldplayerclass = pEdict->v.playerclass;
+}
+
 // *****************************************************
 // class CMapInfo
 // *****************************************************
 
-void CMapInfo::Init(){
+void CMapInfo::Init()
+{
 	pEdict = 0;
 	initialized = false;
 

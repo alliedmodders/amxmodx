@@ -1,5 +1,5 @@
 /*
- * DoDX 
+ * DoDX
  * Copyright (c) 2004 Lukasz Wlasinski
  *
  *
@@ -47,26 +47,32 @@ int mPlayerIndex;
 int AlliesScore;
 int AxisScore;
 
-int iFDamage;
-int iFDeath;
-int iFScore;
+int iFDamage = -1;
+int iFDeath = -1;
+int iFScore = -1;
+
+// Zors
+int iFSpawnForward = -1;
+int iFTeamForward = -1;
+int iFClassForward = -1;
 
 int gmsgCurWeapon;
 int gmsgHealth;
 int gmsgResetHUD;
 int gmsgObjScore;
 int gmsgRoundState;
-
 int gmsgTeamScore;
 int gmsgScoreShort;
 int gmsgPTeam;
-
 int gmsgAmmoX;
 int gmsgAmmoShort;
 
+// Zors
+//int gmsgWeaponList;
+//int gmsgWeaponList_End;
+
 RankSystem g_rank;
 Grenades g_grenades;
-
 
 cvar_t init_dodstats_maxsize ={"dodstats_maxsize","3500", 0 , 3500.0 };
 cvar_t init_dodstats_reset ={"dodstats_reset","0"};
@@ -90,13 +96,16 @@ struct sUserMsg {
 	{ "RoundState",&gmsgRoundState,Client_RoundState,false },
 	{ "Health",&gmsgHealth,Client_Health_End,true },
 	{ "ResetHUD",&gmsgResetHUD,Client_ResetHUD_End,true },
-
 	{ "TeamScore",&gmsgTeamScore,Client_TeamScore,false },
 	{ "ScoreShort",&gmsgScoreShort,NULL,false },
 	{ "PTeam",&gmsgPTeam,NULL,false },
-
 	{ "AmmoX",&gmsgAmmoX,Client_AmmoX,false},
 	{ "AmmoShort",&gmsgAmmoShort,Client_AmmoShort,false},
+	{ "ScoreShort",&gmsgScoreShort,NULL,false },
+	
+	//Zors
+	//{ "WeaponList",&gmsgWeaponList,WeaponList,true },
+	//{ "WeaponList",&gmsgWeaponList_End,WeaponList_End,true },
 
 	{ 0,0,0,false }
 };
@@ -115,7 +124,7 @@ int RegUserMsg_Post(const char *pszName, int iSize){
 			int id = META_RESULT_ORIG_RET( int );
 
 			*g_user_msg[ i ].id = id;
-		
+
 			if ( g_user_msg[ i ].endmsg )
 				modMsgsEnd[ id  ] = g_user_msg[ i ].func;
 			else
@@ -129,7 +138,7 @@ int RegUserMsg_Post(const char *pszName, int iSize){
 }
 
 void ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax ){
-	
+
 	rankBots = (int)dodstats_rankbots->value ? true:false;
 
 	for( int i = 1; i <= gpGlobals->maxClients; ++i )
@@ -140,12 +149,15 @@ void ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax ){
 }
 
 void PlayerPreThink_Post( edict_t *pEntity ) {
-	if ( !isModuleActive() ) 
+	if ( !isModuleActive() )
 		RETURN_META(MRES_IGNORED);
 
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
 	if ( !pPlayer->ingame )
 		RETURN_META(MRES_IGNORED);
+
+	// Zors
+	pPlayer->checkStatus();
 
 	if (pPlayer->clearStats && pPlayer->clearStats < gpGlobals->time){
 		if ( !ignoreBots(pEntity) ){
@@ -165,7 +177,7 @@ void PlayerPreThink_Post( edict_t *pEntity ) {
 		pPlayer->sendScore = 0.0f;
 		MF_ExecuteForward( iFScore,pPlayer->index, pPlayer->lastScore, pPlayer->savedScore );
 	}
-
+	
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -180,7 +192,7 @@ void ServerDeactivate() {
 		CVAR_SET_FLOAT("dodstats_reset",0.0);
 		g_rank.clear();
 	}
-	
+
 	g_rank.saveRank( MF_BuildPathname("%s",get_localinfo("dodstats") ) );
 
 	// clear custom weapons info
@@ -323,7 +335,8 @@ void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 	RETURN_META(MRES_IGNORED);
 }
 
-void DispatchKeyValue_Post( edict_t *pentKeyvalue, KeyValueData *pkvd ){
+void DispatchKeyValue_Post( edict_t *pentKeyvalue, KeyValueData *pkvd )
+{
 
 	if ( !pkvd->szClassName ){ 
 		// info_doddetect
@@ -338,22 +351,48 @@ void DispatchKeyValue_Post( edict_t *pentKeyvalue, KeyValueData *pkvd ){
 		if ( pkvd->szKeyName[0]=='d' && pkvd->szKeyName[7]=='a' ){
 			if ( pkvd->szKeyName[8]=='l' ){
 				switch ( pkvd->szKeyName[14] ){
-				case 'c': 
-					g_map.detect_allies_country=atoi(pkvd->szValue); 
+				case 'c':
+					g_map.detect_allies_country=atoi(pkvd->szValue);
 					break;
-				case 'p': 
-					g_map.detect_allies_paras=atoi(pkvd->szValue); 
+				case 'p':
+					g_map.detect_allies_paras=atoi(pkvd->szValue);
 					break;
 				}
-			} 
-			else if ( pkvd->szKeyName[12]=='p' ) g_map.detect_axis_paras=atoi(pkvd->szValue); 
+			}
+			else if ( pkvd->szKeyName[12]=='p' ) g_map.detect_axis_paras=atoi(pkvd->szValue);
 		}
 	}
 	RETURN_META(MRES_IGNORED);
 }
 
-void OnMetaAttach() {
-	
+void SetClientKeyValue(int id, char *protocol, char *type, char *var)
+{
+	// ID: Number
+	// protocol: \name\Sgt.MEOW\topcolor\1\bottomcolor\1\cl_lw\1\team\axis\model\axis-inf 
+	// type: model
+	// var: axis-inf
+
+	// Check to see if its a player and we are setting a model
+	if(strcmp(type, "model") == 0 && 
+		(strcmp(var, "axis-inf") == 0 ||
+		 strcmp(var, "axis-para") == 0 || 
+		 strcmp(var, "us-inf") == 0 ||
+		 strcmp(var, "us-para") == 0 || 
+		 strcmp(var, "brit-inf") == 0))
+	{
+		CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
+		if(!pPlayer->ingame)
+			RETURN_META(MRES_IGNORED);
+
+		if(pPlayer->setModel())
+			RETURN_META(MRES_SUPERCEDE);
+	}
+
+	RETURN_META(MRES_IGNORED);
+}
+
+void OnMetaAttach()
+{
 	CVAR_REGISTER (&init_dodstats_maxsize);
 	CVAR_REGISTER (&init_dodstats_reset);
 	CVAR_REGISTER (&init_dodstats_rank);
@@ -366,34 +405,45 @@ void OnMetaAttach() {
 	dodstats_pause = CVAR_GET_POINTER(init_dodstats_pause.name);
 }
 
-void OnAmxxAttach() {
+void OnAmxxAttach()
+{
 
 	MF_AddNatives( stats_Natives );
 	MF_AddNatives( base_Natives );
 
 	const char* path =  get_localinfo("dodstats_score","addons/amxmodx/data/dodstats.amxx");
-	if ( path && *path ) {
+
+	if ( path && *path )
+	{
 		char error[128];
 		g_rank.loadCalc( MF_BuildPathname("%s",path) , error  );
 	}
-	
-	if ( !g_rank.begin() ){		
+
+	if ( !g_rank.begin() )
+	{
 		g_rank.loadRank( MF_BuildPathname("%s",
-			get_localinfo("dodstats","addons/amxmodx/data/dodstats.dat") ) );
+		get_localinfo("dodstats","addons/amxmodx/data/dodstats.dat") ) );
 	}
 
 	g_map.Init();
 }
 
-void OnAmxxDetach() {
+void OnAmxxDetach()
+{
 	g_rank.clear();
 	g_grenades.clear();
 	g_rank.unloadCalc();
 }
 
-void OnPluginsLoaded(){
+void OnPluginsLoaded()
+{
 	iFDeath = MF_RegisterForward("client_death",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
 	iFDamage = MF_RegisterForward("client_damage",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
 	iFScore = MF_RegisterForward("client_score",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
+	
+	// Zors
+	iFTeamForward = MF_RegisterForward("dod_client_changeteam",ET_IGNORE,FP_CELL/*id*/,FP_CELL/*team*/,FP_CELL/*oldteam*/,FP_DONE);
+	iFSpawnForward = MF_RegisterForward("dod_client_spawn",ET_IGNORE,FP_CELL/*id*/,FP_DONE);
+	iFClassForward = MF_RegisterForward("dod_client_changeclass",ET_IGNORE,FP_CELL/*id*/,FP_CELL/*class*/,FP_CELL/*oldclass*/,FP_DONE);
 }
 

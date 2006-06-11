@@ -1,5 +1,5 @@
 /*
- * DoDX 
+ * DoDX
  * Copyright (c) 2004 Lukasz Wlasinski
  *
  *
@@ -40,7 +40,7 @@
 #define GET_PLAYER_POINTER_I(i) (&players[i])
 
 #ifndef GETPLAYERAUTHID
-#define GETPLAYERAUTHID   (*g_engfuncs.pfnGetPlayerAuthId)
+	#define GETPLAYERAUTHID		(*g_engfuncs.pfnGetPlayerAuthId)
 #endif
 
 extern AMX_NATIVE_INFO stats_Natives[];
@@ -68,19 +68,34 @@ void Client_RoundState(void*);
 void Client_AmmoX(void*);
 void Client_AmmoShort(void*);
 
+// Zors
+//void WeaponList(void*);
+//void WeaponList_End(void*);
+
 typedef void (*funEventCall)(void*);
 
 extern int AlliesScore;
 extern int AxisScore;
 
+extern int gmsgCurWeapon;
+extern int gmsgHealth;
+extern int gmsgResetHUD;
+extern int gmsgObjScore;
+extern int gmsgRoundState;
+extern int gmsgTeamScore;
 extern int gmsgScoreShort;
 extern int gmsgPTeam;
-
+extern int gmsgAmmoX;
+extern int gmsgAmmoShort;
 
 extern int iFDamage;
 extern int iFDeath;
 extern int iFScore;
 
+// Zors
+extern int iFSpawnForward;
+extern int iFTeamForward;
+extern int iFClassForward;
 
 extern cvar_t* dodstats_maxsize;
 extern cvar_t* dodstats_rank;

@@ -35,6 +35,12 @@
 #define ANGLEVECTORS_RIGHT		2
 #define ANGLEVECTORS_UP			3
 
+inline cell FloatToCell(float input)
+{
+	double output = input;
+	return *(cell *)&output;
+}
+
 static cell AMX_NATIVE_CALL get_distance(AMX *amx, cell *params)
 {
 	cell *cpVec1 = get_amxaddr(amx, params[1]);
@@ -97,9 +103,9 @@ static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params)
 	MAKE_VECTORS(pEnt->v.v_angle);
 	vVector = gpGlobals->v_forward * iVelocity;
 
-	vRet[0] = amx_ftoc(vVector.x);
-	vRet[1] = amx_ftoc(vVector.y);
-	vRet[2] = amx_ftoc(vVector.z);
+	vRet[0] = FloatToCell(vVector.x);
+	vRet[1] = FloatToCell(vVector.y);
+	vRet[2] = FloatToCell(vVector.z);
 
 	return 1;
 }
@@ -117,9 +123,10 @@ static cell AMX_NATIVE_CALL vector_to_angle(AMX *amx, cell *params)
 	VEC_TO_ANGLES(vVector, vAngle);
 
 	cell *vRet = get_amxaddr(amx, params[2]);
-	vRet[0] = amx_ftoc(vAngle.x);
-	vRet[1] = amx_ftoc(vAngle.y);
-	vRet[2] = amx_ftoc(vAngle.z);
+
+	vRet[0] = FloatToCell(vAngle.x);
+	vRet[1] = FloatToCell(vAngle.y);
+	vRet[2] = FloatToCell(vAngle.z);
 
 	return 1;
 }
@@ -146,9 +153,9 @@ static cell AMX_NATIVE_CALL angle_vector(AMX *amx, cell *params)
 	}
 
 	vCell = get_amxaddr(amx,params[3]);
-	vCell[0] = amx_ftoc(v_return.x);
-	vCell[1] = amx_ftoc(v_return.y);
-	vCell[2] = amx_ftoc(v_return.z);
+	vCell[0] = FloatToCell(v_return.x);
+	vCell[1] = FloatToCell(v_return.y);
+	vCell[2] = FloatToCell(v_return.z);
 
 	return 1;
 }

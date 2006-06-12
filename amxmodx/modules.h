@@ -84,7 +84,7 @@ const char* GetFileName(AMX *amx);
 
 inline cell FloatToCell(float input)
 {
-	double output = input;
+	REAL output = input;
 	return *(cell *)&output;
 }
 

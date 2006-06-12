@@ -271,6 +271,7 @@ native cs_set_armoury_type(index, type);
 native cs_get_user_mapzones(index);
 
 /* Zoom type enum. Used for get/set_user_zoom() natives.
+ */
 enum
 {
 	CS_RESET_ZOOM = 0,		// Reset any zoom blocking (when using this type, mode has no effect)

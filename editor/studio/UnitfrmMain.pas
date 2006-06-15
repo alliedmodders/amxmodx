@@ -3057,6 +3057,7 @@ end;
 procedure TfrmMain.tbDocsTabClosing(Sender: TObject; Item: TJvTabBarItem;
   var AllowClose: Boolean);
 var Collection: TDocCollection;
+    i: integer;
 begin
   AllowClose := False;
   if (Started) and (Screen.Cursor = crDefault) and (not pnlLoading.Visible) then begin
@@ -3068,8 +3069,12 @@ begin
     end;
 
     if tbDocs.Tabs.IndexOf(Item) <> -1 then begin
-      if CloseDocument(TDocument(Collection.Items[tbDocs.Tabs.IndexOf(Item)]), True, False) then
+      if CloseDocument(TDocument(Collection.Items[tbDocs.Tabs.IndexOf(Item)]), True, False) then begin
         tbDocs.Tabs.Delete(Item.Index);
+        
+        for i := 0 to tbDocs.Tabs.Count -1 do
+          tbDocs.Tabs[i].Caption := TDocument(Collection.Items[i]).Title;
+      end;
     end;
     Screen.Cursor := crDefault;
   end;

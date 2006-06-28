@@ -27,6 +27,25 @@ native write_angle(x);
 native write_coord(x);
 native write_string(x[]);
 
+/* These are the same as above, except that the messages sent
+ *  are also sent to all other plugins and Metamod plugins.
+ * This means that if you send one of these messages, other plugins will
+ *  be notified, which was previously impossible.  
+ * BE CAREFUL! Using these incorrectly, or not for their intended purpose,
+ *  could cause infinite recursion or something just as bad. 
+ * NOTE! These natives are experimental.
+ */
+native emessage_begin(dest, msg_type, origin[3] = {0,0,0}, player = 0);
+native emessage_end();
+native ewrite_byte(x);
+native ewrite_char(x);
+native ewrite_short(x);
+native ewrite_long(x);
+native ewrite_entity(x);
+native ewrite_angle(x);
+native ewrite_coord(x);
+native ewrite_string(x[]);
+
 /* Sets/Gets what engine messages are blocked. */
 native set_msg_block(iMessage, iMessageFlags);
 native get_msg_block(iMessage);

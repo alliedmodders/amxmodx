@@ -67,6 +67,7 @@ static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params)
 	int iVelocity = params[2];
 	cell *vRet = get_amxaddr(amx, params[3]);
 	Vector vVector = Vector(0, 0, 0);
+	edict_t *pEnt = NULL;
 
 	if (iEnt < 0 || iEnt > gpGlobals->maxEntities)
 	{
@@ -75,24 +76,24 @@ static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params)
 	}
 	else
 	{
-		if (iEnt <= gpGlobals->maxClients && !GET_PLAYER_POINTER_I(iEnt)->ingame)
+		if (iEnt > 0 && iEnt <= gpGlobals->maxClients)
 		{
-			LogError(amx, AMX_ERR_NATIVE, "Invalid player %d (not in-game)", iEnt);
-			return 0;
-		}
-		else if (iEnt != 0 && FNullEnt(INDEXENT(iEnt)))
-		{
-			LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", iEnt);
-			return 0;
+			if (!GET_PLAYER_POINTER_I(iEnt)->ingame)
+			{
+				LogError(amx, AMX_ERR_NATIVE, "Invalid player %d (not ingame)", iEnt);
+				return 0;
+			}
+			pEnt = GET_PLAYER_POINTER_I(iEnt)->pEdict;
+		} else {
+			pEnt = INDEXENT(iEnt);
 		}
 	}
 
-	edict_t *pEnt;
-
-	if (iEnt >= 1 || iEnt <= gpGlobals->maxClients)
-		pEnt = GET_PLAYER_POINTER_I(iEnt)->pEdict;
-	else
-		pEnt = INDEXENT(iEnt);
+	if (!pEnt)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d (nullent)", iEnt);
+		return 0;
+	}
 
 	MAKE_VECTORS(pEnt->v.v_angle);
 	vVector = gpGlobals->v_forward * iVelocity;

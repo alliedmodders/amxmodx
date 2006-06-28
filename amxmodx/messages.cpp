@@ -10,6 +10,7 @@ float *msgOrigin;
 edict_t *msgpEntity;
 bool inhook = false;
 bool inblock = false;
+enginefuncs_t *g_pEngTable = NULL;
 
 void ClearMessages()
 {
@@ -651,6 +652,114 @@ static cell AMX_NATIVE_CALL get_msg_origin(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL emessage_begin(AMX *amx, cell *params) /* 4 param */
+{
+	int numparam = *params / sizeof(cell);
+	float vecOrigin[3];
+	cell *cpOrigin;
+
+	if (params[2] < 1 || ((params[2] > 63)		// maximal number of engine messages
+		&& !GET_USER_MSG_NAME(PLID, params[2], NULL)))
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Plugin called message_begin with an invalid message id (%d).", params[2]);
+		return 0;
+	}
+
+	switch (params[1])
+	{
+	case MSG_BROADCAST:
+	case MSG_ALL:
+	case MSG_SPEC:
+		g_pEngTable->pfnMessageBegin(params[1], params[2], NULL, NULL);
+		break;
+	case MSG_PVS: case MSG_PAS:
+	case MSG_PVS_R: case MSG_PAS_R:
+		if (numparam < 3)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Invalid number of parameters passed");
+			return 0;
+		}
+
+		cpOrigin = get_amxaddr(amx, params[3]);
+
+		vecOrigin[0] = static_cast<float>(*cpOrigin);
+		vecOrigin[1] = static_cast<float>(*(cpOrigin + 1));
+		vecOrigin[2] = static_cast<float>(*(cpOrigin + 2));
+
+		g_pEngTable->pfnMessageBegin(params[1], params[2], vecOrigin, NULL);
+
+		break;
+	case MSG_ONE_UNRELIABLE:
+	case MSG_ONE:
+		if (numparam < 4)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Invalid number of parameters passed");
+			return 0;
+		}
+
+		g_pEngTable->pfnMessageBegin(params[1], params[2], NULL, INDEXENT(params[4]));
+		break;
+	}
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL emessage_end(AMX *amx, cell *params)
+{
+	g_pEngTable->pfnMessageEnd();
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL ewrite_byte(AMX *amx, cell *params) /* 1 param */
+{
+	g_pEngTable->pfnWriteByte(params[1]);
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL ewrite_char(AMX *amx, cell *params) /* 1 param */
+{
+	g_pEngTable->pfnWriteChar(params[1]);
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL ewrite_short(AMX *amx, cell *params) /* 1 param */
+{
+	g_pEngTable->pfnWriteShort(params[1]);
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL ewrite_long(AMX *amx, cell *params) /* 1 param */
+{
+	g_pEngTable->pfnWriteLong(params[1]);
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL ewrite_entity(AMX *amx, cell *params) /* 1 param */
+{
+	g_pEngTable->pfnWriteEntity(params[1]);
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL ewrite_angle(AMX *amx, cell *params) /* 1 param */
+{
+	g_pEngTable->pfnWriteAngle(static_cast<float>(params[1]));
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL ewrite_coord(AMX *amx, cell *params) /* 1 param */
+{
+	g_pEngTable->pfnWriteCoord(static_cast<float>(params[1]));
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL ewrite_string(AMX *amx, cell *params) /* 1 param */
+{
+	int a;
+	g_pEngTable->pfnWriteString(get_amxstring(amx, params[1], 3, a));
+
+	return 1;
+}
+
 AMX_NATIVE_INFO msg_Natives[] =
 {
 	{"message_begin",		message_begin},
@@ -679,6 +788,18 @@ AMX_NATIVE_INFO msg_Natives[] =
 	{"get_msg_arg_string",	get_msg_arg_string},
 	{"set_msg_arg_string",	set_msg_arg_string},
 	{"get_msg_origin",		get_msg_origin},
+
+	{"emessage_begin",		emessage_begin},
+	{"emessage_end",		emessage_end},
+
+	{"ewrite_angle",		ewrite_angle},
+	{"ewrite_byte",			ewrite_byte},
+	{"ewrite_char",			ewrite_char},
+	{"ewrite_coord",		ewrite_coord},
+	{"ewrite_entity",		ewrite_entity},
+	{"ewrite_long",			ewrite_long},
+	{"ewrite_short",		ewrite_short},
+	{"ewrite_string",		ewrite_string},
 
 	{NULL,					NULL},
 };

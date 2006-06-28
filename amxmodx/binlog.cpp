@@ -227,32 +227,43 @@ void BinLog::WritePluginDB(FILE *fp)
 		if (c && pl->isDebug())
 			c = 2;
 		fwrite(&c, sizeof(char), 1, fp);
-		len = (char)strlen(pl->getName());
-		fwrite(&len, sizeof(char), 1, fp);
-		len++;
-		fwrite(pl->getName(), sizeof(char), len, fp);
-		int natives, publics;
-		AMX *amx = pl->getAMX();
-		amx_NumNatives(amx, &natives);
-		amx_NumPublics(amx, &publics);
-		fwrite(&natives, sizeof(int), 1, fp);
-		fwrite(&publics, sizeof(int), 1, fp);
-		char name[34];
-		for (int i=0; i<natives; i++)
+		if (c)
 		{
-			amx_GetNative(amx, i, name);
-			len = (char)strlen(name);
+			len = (char)strlen(pl->getName());
 			fwrite(&len, sizeof(char), 1, fp);
 			len++;
-			fwrite(name, sizeof(char), len, fp);
-		}
-		for (int i=0; i<publics; i++)
-		{
-			amx_GetPublic(amx, i, name);
-			len = (char)strlen(name);
+			fwrite(pl->getName(), sizeof(char), len, fp);
+			int natives, publics;
+			AMX *amx = pl->getAMX();
+			amx_NumNatives(amx, &natives);
+			amx_NumPublics(amx, &publics);
+			fwrite(&natives, sizeof(int), 1, fp);
+			fwrite(&publics, sizeof(int), 1, fp);
+			char name[34];
+			for (int i=0; i<natives; i++)
+			{
+				amx_GetNative(amx, i, name);
+				len = (char)strlen(name);
+				fwrite(&len, sizeof(char), 1, fp);
+				len++;
+				fwrite(name, sizeof(char), len, fp);
+			}
+			for (int i=0; i<publics; i++)
+			{
+				amx_GetPublic(amx, i, name);
+				len = (char)strlen(name);
+				fwrite(&len, sizeof(char), 1, fp);
+				len++;
+				fwrite(name, sizeof(char), len, fp);
+			}
+		} else {
+			char empty[] = " ";
+			len = 1;
 			fwrite(&len, sizeof(char), 1, fp);
-			len++;
-			fwrite(name, sizeof(char), len, fp);
+			fwrite(empty, sizeof(char), len, fp);
+			int no = 0;
+			fwrite(&no, sizeof(int), 1, fp);
+			fwrite(&no, sizeof(int), 1, fp);
 		}
 	}
 }

@@ -338,4 +338,6 @@ struct func_s
 	const char *desc;
 };
 
+extern enginefuncs_t *g_pEngTable;
+
 #endif // AMXMODX_H

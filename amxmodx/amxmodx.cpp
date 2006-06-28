@@ -3932,9 +3932,35 @@ static cell AMX_NATIVE_CALL ShowSyncHudMsg(AMX *amx, cell *params)
 	return len;
 }
 
+static cell AMX_NATIVE_CALL is_user_hacking(AMX *amx, cell *params)
+{
+	return g_bmod_cstrike ? 1 : 0;
+}
+
 static cell AMX_NATIVE_CALL arrayset(AMX *amx, cell *params)
 {
 	memset(get_amxaddr(amx, params[1]), params[2], params[3] * sizeof(cell));
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL amxx_setpl_curweap(AMX *amx, cell *params)
+{
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid client %d", params[1]);
+		return 0;
+	}
+
+	CPlayer *p = GET_PLAYER_POINTER_I(params[1]);
+
+	if (!p->ingame)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player %d not ingame", params[1]);
+		return 0;
+	}
+
+	p->current = params[2];
 
 	return 1;
 }
@@ -4043,6 +4069,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"is_user_bot",				is_user_bot},
 	{"is_user_connected",		is_user_connected},
 	{"is_user_connecting",		is_user_connecting},
+	{"is_user_hacking",			is_user_hacking},
 	{"is_user_hltv",			is_user_hltv},
 	{"lang_exists",				lang_exists},
 	{"log_amx",					log_amx},

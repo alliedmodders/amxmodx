@@ -1351,6 +1351,8 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	// This will also call modules Meta_Query and Meta_Attach functions
 	loadModules(get_localinfo("amxx_modules", "addons/amxmodx/configs/modules.ini"), now);
 
+	GET_HOOK_TABLES(PLID, &g_pEngTable, NULL, NULL);
+
 	return (TRUE);
 }
 

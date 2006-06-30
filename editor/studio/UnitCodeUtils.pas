@@ -155,7 +155,7 @@ begin
 
     for k := 1 to eIndent + eTempIndent do
       frmMain.sciEditor.Lines[i] := '	' + frmMain.sciEditor.Lines[i];
-    if eTempIndent <> 0 then
+    if eTempIndent > 0 then
       eTempIndent := eTempIndent -1;
 
     if (IsAtStart('if', eStr[i], True)) and (Pos('{', eStr[i]) = 0) and (Length(eStr[i]) > 3) then begin

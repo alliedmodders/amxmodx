@@ -56,7 +56,7 @@ type
     cmdOldBack1: TSpTBXButton;
     lblHelp: TLabel;
     jspOldMenuAdd2: TJvStandardPage;
-    Panel1: TPanel;
+    pnlSettings: TPanel;
     txtKeys: TFlatEdit;
     lblKeys: TLabel;
     txtMenuName: TFlatEdit;
@@ -65,7 +65,7 @@ type
     chkRegisterMenuCommand: TFlatCheckBox;
     chkUseTime: TFlatCheckBox;
     txtTime: TFlatEdit;
-    Label1: TLabel;
+    lblSettings: TLabel;
     cmdOldNext2: TSpTBXButton;
     cmdOldBack2: TSpTBXButton;
     procedure mnuAddClick(Sender: TObject);
@@ -290,11 +290,15 @@ end;
 
 procedure TfrmMenuGenerator.cmdOldNext2Click(Sender: TObject);
 begin
-  if optSimpleOldMenu.Checked then
-    AddOldMenu
-  else
-    AddOldPlayerMenu;
-  ModalResult := mrOk;
+  if (StrToIntDef(txtKeys.Text, -1) = -1) then
+    MessageBox(Handle, 'Invalid Keys (only keys between 0 and 9 allowed', 'Error', MB_ICONWARNING)
+  else begin
+    if optSimpleOldMenu.Checked then
+      AddOldMenu
+    else
+      AddOldPlayerMenu;
+    ModalResult := mrOk;
+  end;
 end;
 
 procedure TfrmMenuGenerator.lblHelpClick(Sender: TObject);

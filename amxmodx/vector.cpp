@@ -141,13 +141,16 @@ static cell AMX_NATIVE_CALL angle_vector(AMX *amx, cell *params)
 	{
 	case ANGLEVECTORS_FORWARD:
 		v_return = v_forward;
+		break;
 	case ANGLEVECTORS_RIGHT:
 		v_return = v_right;
+		break;
 	case ANGLEVECTORS_UP:
 		v_return = v_up;
+		break;
 	}
 
-	vCell = get_amxaddr(amx,params[3]);
+	vCell = get_amxaddr(amx, params[3]);
 	vCell[0] = FloatToCell(v_return.x);
 	vCell[1] = FloatToCell(v_return.y);
 	vCell[2] = FloatToCell(v_return.z);

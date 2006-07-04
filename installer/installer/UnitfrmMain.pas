@@ -102,7 +102,7 @@ type
     frbListenServer: TFlatRadioButton;
     frbStandaloneServer: TFlatRadioButton;
     frbSelectMod: TFlatRadioButton;
-    Shape1: TShape;
+    shpMods: TShape;
     lblSelectModNote: TLabel;
     lblStep3: TLabel;
     pnlOS: TPanel;
@@ -111,6 +111,7 @@ type
     optLinux64: TFlatRadioButton;
     lblOSNote: TLabel;
     lblStep5: TLabel;
+    lblFTP: TLabel;
     procedure jvwStepsCancelButtonClick(Sender: TObject);
     procedure cmdCancelClick(Sender: TObject);
     procedure cmdNextClick(Sender: TObject);
@@ -147,7 +148,7 @@ var
   frmMain: TfrmMain;
   gMultiAccount: Boolean;
 
-const VERSION = '1.75';
+const VERSION = '1.75a';
 
 implementation
 

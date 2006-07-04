@@ -5977,7 +5977,7 @@ object frmMain: TfrmMain
           ' to install AMX Mod X to:'
         WordWrap = True
       end
-      object Shape1: TShape
+      object shpMods: TShape
         Left = 134
         Top = 140
         Width = 255
@@ -6126,6 +6126,19 @@ object frmMain: TfrmMain
         Width = 64
         Height = 13
         Caption = '5. Click Next.'
+      end
+      object lblFTP: TLabel
+        Left = 101
+        Top = 56
+        Width = 18
+        Height = 13
+        Caption = 'FTP'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsUnderline]
+        ParentFont = False
       end
       object pnlHeader3: TPanel
         Left = 0

@@ -178,7 +178,7 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
 			<File
-				RelativePath="..\plugins\include\fun.inc">
+				RelativePath="..\..\plugins\include\fun.inc">
 			</File>
 		</Filter>
 		<Filter

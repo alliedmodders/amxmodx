@@ -260,7 +260,9 @@ enum CS_Internal_Models {
 	CS_CT_GIGN = 6,
 	CS_CT_SAS = 7,
 	CS_T_GUERILLA = 8,
-	CS_CT_VIP = 9
+	CS_CT_VIP = 9,
+	CZ_T_MILITIA = 10,
+	CZ_CT_SPETSNAZ = 11
 };
 
 enum

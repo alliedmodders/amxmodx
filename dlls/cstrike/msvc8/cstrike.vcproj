@@ -298,7 +298,7 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\..\plugins\include\cstrike.inc"
+			RelativePath="..\..\..\plugins\include\cstrike.inc"
 			>
 		</File>
 	</Files>

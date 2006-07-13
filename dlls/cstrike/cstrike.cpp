@@ -471,8 +471,8 @@ static cell AMX_NATIVE_CALL cs_set_user_vip(AMX *amx, cell *params) // cs_set_us
 		if (updateModel)
 		{
 			// Set a random CT model.
-			CS_Internal_Models CTmodels[4] = {CS_CT_URBAN, CS_CT_GSG9, CS_CT_GIGN, CS_CT_SAS};
-			CS_Internal_Models ct_model = CTmodels[RANDOM_LONG(0, 3)];
+			CS_Internal_Models CTmodels[5] = {CS_CT_URBAN, CS_CT_GSG9, CS_CT_GIGN, CS_CT_SAS, CZ_CT_SPETSNAZ};
+			CS_Internal_Models ct_model = CTmodels[RANDOM_LONG(0, 4)];
 			*((int *)pPlayer->pvPrivateData + OFFSET_INTERNALMODEL) = ct_model;
 			// This makes the model get updated right away.
 			MDLL_ClientUserInfoChanged(pPlayer, GETINFOKEYBUFFER(pPlayer)); //  If this causes any problems for WON, do this line only in STEAM builds.

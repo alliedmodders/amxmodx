@@ -9,7 +9,8 @@ CPP = gcc
 NAME = amxxpc
 
 OBJECTS = sc1.c sc2.c sc3.c sc4.c sc5.c sc6.c sc7.c scvars.c scmemfil.c \
-	scstate.c sclist.c sci18n.c scexpand.c pawncc.c libpawnc.c prefix.c
+	scstate.c sclist.c sci18n.c scexpand.c pawncc.c libpawnc.c prefix.c \
+	memfile.c
 
 LINK = -lpthread
 

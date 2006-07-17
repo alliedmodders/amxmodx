@@ -66,6 +66,11 @@
 *   If you have any useful functions / ideas for functions, please tell me.
 */
 
+#if defined _xs_included
+  #endinput
+#endif
+#define _xs_included
+
 // **** CONFIG CHECK
 
 #if !defined XS_FLEQ_TOLERANCE

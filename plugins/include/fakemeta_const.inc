@@ -331,6 +331,9 @@ enum {
 	pev_string2_begin,	/* anything after here are string corrections */
 	pev_weaponmodel2,
 	pev_viewmodel2,
+	pev_string2_end,
+	pev_edict2_start,	/* edict corrections */
+	pev_pContainingEntity,
 	pev_absolute_end
 };
 

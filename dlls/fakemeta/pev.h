@@ -148,7 +148,10 @@ enum pev_pointers
 	pev_string2_begin,	/* anything after here are string corrections */
 	pev_weaponmodel2,
 	pev_viewmodel2,
-	pev_absolute_end,
+	pev_string2_end,
+	pev_edict2_start,	/* edict corrections */
+	pContainingEntity,
+	pev_absolute_end
 };
 
 void initialze_offsets();

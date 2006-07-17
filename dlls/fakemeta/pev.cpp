@@ -40,6 +40,7 @@ void initialze_offsets()
 	DO_OFFSET(bInDuck);
 	DO_OFFSET(flTimeStepSound);
 	DO_OFFSET(flSwimTime);
+	DO_OFFSET(flDuckTime);
 	DO_OFFSET(iStepLeft);
 	DO_OFFSET(gamestate);
 	DO_OFFSET(oldbuttons);
@@ -110,6 +111,7 @@ void initialze_offsets()
 	DO_OFFSET(oldorigin);
 	DO_OFFSET(velocity);
 	DO_OFFSET(basevelocity);
+	DO_OFFSET(clbasevelocity);
 	DO_OFFSET(movedir);
 	DO_OFFSET(angles);
 	DO_OFFSET(avelocity);
@@ -138,6 +140,7 @@ void initialze_offsets()
 	DO_OFFSET_R(blending_1, blending, 1);
 	DO_OFFSET_R(pev_weaponmodel2, weaponmodel, 0);
 	DO_OFFSET_R(pev_viewmodel2, viewmodel, 0);
+	DO_OFFSET(pContainingEntity);
 }
 
 #define EDICT_OFFS(v,o) ((char *)v + o)
@@ -220,10 +223,11 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 		rets.b = *(byte *)EDICT_OFFS(v, offs);
 		ValType = Ret_Int;
 	} else if ( (iSwitch > pev_string_start && iSwitch < pev_string_end)
-				|| (iSwitch > pev_string2_begin && iSwitch < pev_absolute_end) ) {
+				|| (iSwitch > pev_string2_begin && iSwitch < pev_string2_end) ) {
 		rets.s = *(string_t *)EDICT_OFFS(v, offs);
 		ValType = Ret_String;
-	} else if (iSwitch > pev_edict_start && iSwitch < pev_edict_end) {
+	} else if ( (iSwitch > pev_edict_start && iSwitch < pev_edict_end)
+				|| (iSwitch > pev_edict2_start && iSwitch < pev_absolute_end) ) {
 		edict_t *e = *(edict_t **)EDICT_OFFS(v, offs);
 		rets.i = ENTINDEX(e);
 		ValType = Ret_Int;
@@ -343,12 +347,13 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 	} else if (iSwitch > pev_float_start && iSwitch < pev_float_end) {
 		*(float *)EDICT_OFFS(v, offs) = (float)amx_ctof(blah[0]);
 	} else if ( (iSwitch > pev_string_start && iSwitch < pev_string_end)
-				|| (iSwitch > pev_string2_begin && iSwitch < pev_absolute_end) ) {
+				|| (iSwitch > pev_string2_begin && iSwitch < pev_string2_end) ) {
 		int len;
 		char *string = MF_GetAmxString(amx, params[3], 0, &len);
 		string_t value = ALLOC_STRING(string);
 		*(string_t *)EDICT_OFFS(v, offs) = value;
-	} else if (iSwitch > pev_edict_start && iSwitch < pev_edict_end) {
+	} else if ( (iSwitch > pev_edict_start && iSwitch < pev_edict_end)
+				|| (iSwitch > pev_edict2_start && iSwitch < pev_absolute_end) ) {
 		edict_t *e = INDEXENT((int)*blah);
 		*(edict_t **)EDICT_OFFS(v, offs) = e;
 	} else if (iSwitch > pev_vecarray_start && iSwitch < pev_vecarray_end) {

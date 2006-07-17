@@ -28,7 +28,6 @@ void initialze_offsets()
 	DO_OFFSET(button);
 	DO_OFFSET(impulse);
 	DO_OFFSET(spawnflags);
-	DO_OFFSET(impulse);
 	DO_OFFSET(flags);
 	DO_OFFSET(colormap);
 	DO_OFFSET(team);

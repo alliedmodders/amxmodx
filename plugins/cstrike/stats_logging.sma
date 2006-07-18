@@ -60,12 +60,13 @@ public client_disconnect(id)
 	
 	new szTeam[16], szName[32], szAuthid[32], iStats[8], iHits[8], szWeapon[24]
 	new iUserid = get_user_userid(id)
+	new _max = xmod_get_maxweapons()
 	
 	get_user_team(id, szTeam, 15)
 	get_user_name(id, szName, 31)
 	get_user_authid(id, szAuthid, 31)
 
-	for (new i = 1 ; i < 31 ; ++i)
+	for (new i = 1 ; i < _max ; ++i)
 	{
 		if (get_user_wstats(id, i, iStats, iHits))
 		{

@@ -541,7 +541,7 @@ displayTeamMenu(id, pos)
 		}
 	}
 
-	len += format(menuBody[len], 511-len, "^n8. %L^n", id, "TRANSF_TO", g_menuOption[id] ? "TERRORIST" : "CT")
+	len += format(menuBody[len], 511-len, "^n8. %L^n", id, "TRANSF_TO", g_teamNames[g_menuOption[id]])
 
 	if (end != g_menuPlayersNum[id])
 	{
@@ -559,7 +559,7 @@ public cmdTeamMenu(id, level, cid)
 	if (!cmd_access(id, level, cid, 1))
 		return PLUGIN_HANDLED
 
-	g_menuOption[id] = 0
+	g_menuOption[id] = 1
 
 	displayTeamMenu(id, g_menuPosition[id] = 0)
 

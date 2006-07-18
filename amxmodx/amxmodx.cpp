@@ -3767,7 +3767,6 @@ static cell AMX_NATIVE_CALL ExecuteForward(AMX *amx, cell *params)
 		{
 			char *tmp = get_amxstring(amx, params[i], 0, len);
 			cell num = len / sizeof(cell) + 1;
-			num += 4 - (num % 4);
 			if ((err=amx_Allot(amx, num, &allots[i-3].amx_addr, &allots[i-3].phys_addr)) != AMX_ERR_NONE)
 			{
 				LogError(amx, err, NULL);

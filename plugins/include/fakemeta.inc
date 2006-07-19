@@ -21,7 +21,16 @@
  #pragma library fakemeta
 #endif
 
-/* Returns entvar data from an entity   Use the pev_* enum to specify which form of data you want returned. */
+/* Returns entvar data from an entity   Use the pev_* enum to specify which form of data you want returned.
+ *
+ * If retrieving strings, you may optionally get a pointer into the global string table. Depending on
+ * your situation, there are two ways to do this.
+ * 1: This simply gets the pointer.
+ *    new ptr = pev(entid, pev_classname)
+ * 2: The pointer will be stored in ptr AND the actual string is retrieved.
+ *    new ptr, classname[32]
+ *    pev(entid, pev_classname, ptr, classname, 31)
+ */
 native pev(_index,_value,{Float,Sql,Result,_}:...);
 
 /* Sets entvar data for an entity.  Use the pev_* enum */
@@ -32,7 +41,15 @@ native set_pev(_index,_value,{Float,Sql,Result,_}:...);
  */
 native pev_valid(entindex);
 
-/* Returns any global variable inside globalvars_t structure. Use the glb_* enum. */
+/* Returns any global variable inside globalvars_t structure. Use the glb_* enum.
+ *
+ * When returning data from glb_pStringBase (the global string table), you may give a pointer into that table
+ * in order to get different strings.
+ * Example:
+ * new model[128]
+ * new ptr = pev(id, pev_viewmodel)
+ * global_get(glb_pStringBase, ptr, model, 127)
+ */
 native global_get(_value, {Float,Sql,Result,_}:...);
 
 /* Returns an integer from private data.  _linuxdiff is added into the _Offset if it's used on a linux server. */

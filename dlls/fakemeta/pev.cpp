@@ -243,6 +243,8 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 			return rets.i;
 		} else if (ValType == Ret_Float) {
 			return (cell)rets.f;
+		} else if (ValType == Ret_String) {
+			return (cell)rets.s;
 		} else {
 			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid return type");
 			return 0;
@@ -302,6 +304,20 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 			char temp[32];
 			snprintf(temp, 31, "%d %d %d %d", rets.ba[0], rets.ba[1], rets.ba[2], rets.ba[3]);
 			return MF_SetAmxString(amx, params[3], temp, size);
+		}
+
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid return type");
+	} else if (count == 3) {
+		cell size = *(MF_GetAmxAddr(amx, params[5]));
+		if (ValType == Ret_String)
+		{
+			const char *str = STRING(rets.s);
+			cell *addr = MF_GetAmxAddr(amx, params[3]);
+			*addr = (cell)rets.s;
+			if (!str)
+				str = "";
+			int num = MF_SetAmxString(amx, params[4], str, size);
+			return num;
 		}
 
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid return type");

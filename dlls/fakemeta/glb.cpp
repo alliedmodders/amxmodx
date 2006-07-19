@@ -152,6 +152,16 @@ static cell AMX_NATIVE_CALL amx_glb(AMX *amx, cell *params)
 		}
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid return type");
 	}
+	else if (paramnum == 3)
+	{
+		cell size = *(MF_GetAmxAddr(amx, params[4]));
+		if (Valtype == Ret_PChar)
+		{
+			cell *str = MF_GetAmxAddr(amx, params[2]);
+			return MF_SetAmxString(amx, params[3], STRING((int)*str), size);
+		}
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid return type");
+	}
 
 	//if we got here, something happened
 	MF_LogError(amx, AMX_ERR_NATIVE, "Unknown global index or return combination %d", iSwitch);

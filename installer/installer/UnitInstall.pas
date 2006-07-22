@@ -486,7 +486,7 @@ begin
         end;
         modESF: begin
           if Pos('esf', FileList[i]) = 1 then begin
-            AddStatus('Copying file: addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), clBlack);
+            AddStatus('Copying file: addons\amxmodx\' + Copy(FileList[i], 5, Length(FileList[i])), clBlack);
             FileCopy(ExtractFilePath(ParamStr(0)) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), CopyConfig);
           end;
         end;
@@ -596,6 +596,8 @@ var eStr: TStringList;
     CopyConfig: Boolean;
     eGoBack: Boolean;
 begin
+  eGoBack := False;
+
   Screen.Cursor := crAppStart;
   frmMain.cmdCancel.Show;
   frmMain.cmdCancel.Caption := '&Cancel';

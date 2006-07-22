@@ -66,7 +66,7 @@ begin
   try
     eRegistry.RootKey := HKEY_CURRENT_USER;
     if eRegistry.OpenKey('Software\Valve\Steam', False) then
-      Result := IncludeTrailingBackslash(StringReplace(eRegistry.ReadString('SteamPath'), '/', '\', [rfReplaceAll])) + 'SteamApps\'
+      Result := IncludeTrailingPathDelimiter(StringReplace(eRegistry.ReadString('SteamPath'), '/', '\', [rfReplaceAll])) + 'SteamApps\'
     else
       Result := '';
   except

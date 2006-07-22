@@ -308,7 +308,7 @@ begin
   frmMain.ggeAll.MaxValue := DirList.Count + FileList.Count;
   frmMain.ggeItem.MaxValue := DirList.Count;
 
-  if (GetProcessID('Steam.exe') <> -1) and (SteamInstall) then begin
+  if (SteamInstall) and (GetProcessID('Steam.exe') <> -1) then begin
     if MessageBox(frmMain.Handle, 'Steam is still running. It is necersarry to shut it down before you install AMX Mod X. Shut it down now?', PChar(frmMain.Caption), MB_ICONQUESTION + MB_YESNO) = mrYes then begin
       AddStatus('Shutting down Steam...', clBlack, False);
       if GetProcessID('Steam.exe') = -1 then
@@ -426,7 +426,7 @@ begin
         end;
       end;
       modESF: begin
-        if Pos('esforce', DirList[i]) = 1 then begin
+        if Pos('esf', DirList[i]) = 1 then begin
           MakeDir(ePath + 'addons\amxmodx\' + Copy(DirList[i], 4, Length(DirList[i])));
           AddStatus('Created directory: addons\amxmodx\' + Copy(DirList[i], 4, Length(DirList[i])), clBlack);
         end;
@@ -485,7 +485,7 @@ begin
           end;
         end;
         modESF: begin
-          if Pos('esforce', FileList[i]) = 1 then begin
+          if Pos('esf', FileList[i]) = 1 then begin
             AddStatus('Copying file: addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), clBlack);
             FileCopy(ExtractFilePath(ParamStr(0)) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), CopyConfig);
           end;
@@ -649,7 +649,7 @@ begin
     eStr.SaveToFile(ExtractFilePath(ParamStr(0)) + 'temp\liblist.gam');
   end
   else begin
-    case MessageBox(frmMain.Handle, 'An AMX Mod X installation was already detected. If you choose to reinstall, your configuration files will be erased. Click Yes to continue, No to Upgrade, or Cancel to abort the install.', PChar(frmMain.Caption), MB_ICONQUESTION + MB_YESNOCANCEL) of
+    case MessageBox(frmMain.Handle, 'An AMX Mod X installation was already detected. If you choose to reinstall, your configuration files will be erased. Click Yes to continue, No to Upgrade, or Cancel to abort the installation.', PChar(frmMain.Caption), MB_ICONQUESTION + MB_YESNOCANCEL) of
       mrNo: CopyConfig := False;
       mrCancel: begin
         Application.Terminate;

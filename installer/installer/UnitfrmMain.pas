@@ -365,6 +365,8 @@ begin
       if Pos(SteamPath, ePath) = 0 then
         MessageBox(Handle, 'An error occured. Please report this bug to the AMX Mod X team and post a new thread on the forums of www.amxmodx.org.', PChar(Application.Title), MB_ICONSTOP)
       else begin
+        ePath := LowerCase(ePath); // fixes case-sensivity bug
+
         if not FileExists(ePath + '\liblist.gam') then begin
           // added for HLDM
           if FileExists(ExtractFilePath(ePath) + 'liblist.gam') then
@@ -396,10 +398,11 @@ begin
           if MessageBox(Handle, 'Install Natural Selection addon?', PChar(Application.Title), MB_ICONQUESTION + MB_YESNO) = mrYes then
             ChosenMod := modNS;
         end
-        else if Pos('half-life\ns', ePath) <> 0 then begin // Natural Selection
+        else if Pos('half-life\esf', ePath) <> 0 then begin // Natural Selection
           if MessageBox(Handle, 'Install Earth''s Special Forces addon?', PChar(Application.Title), MB_ICONQUESTION + MB_YESNO) = mrYes then
             ChosenMod := modESF;
         end;
+
         ePath := ePath + '\';
         InstallListen(ePath, ChosenMod);
       end;

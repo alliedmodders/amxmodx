@@ -143,6 +143,9 @@ void FMH_ServerDeactivate()
 	RESETE(CreateInstancedBaseline);
 	RESETE(GetInfoKeyBuffer);
 	RESETE(ClientPrintf);
+	RESETE(GetPlayerAuthId);
+	RESETE(GetPlayerWONId);
+	RESETE(IsMapValid);
 
 	RESETD(Spawn);
 	RESETD(Think);

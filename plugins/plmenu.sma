@@ -552,8 +552,8 @@ public actionTeamMenu(id, key)
 
 			switch (get_cvar_num("amx_show_activity"))
 			{
-				case 2: client_print(0, print_chat, "%L", id, "ADMIN_TRANSF_2", name, name2, g_menuOption[id] ? "TERRORIST" : "CT")
-				case 1: client_print(0, print_chat, "%L", id, "ADMIN_TRANSF_1", name2, g_menuOption[id] ? "TERRORIST" : "CT")
+				case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_TRANSF_2", name, name2, g_menuOption[id] ? "TERRORIST" : "CT")
+				case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_TRANSF_1", name2, g_menuOption[id] ? "TERRORIST" : "CT")
 			}
 
 			if (g_cstrike)

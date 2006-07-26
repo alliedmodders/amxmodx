@@ -477,8 +477,8 @@ public actionTeamMenu(id,key) {
           name,get_user_userid(id),authid, name2,get_user_userid(player),authid2, g_menuOption[id] ? "Allies" : "Axis"  )
 
       switch (get_cvar_num("amx_show_activity")) {
-        case 2: client_print(0,print_chat,"%L",id,"ADMIN_TRANSF_2",name,name2,g_menuOption[id] ? "Allies" : "Axis" )
-        case 1: client_print(0,print_chat,"%L",id,"ADMIN_TRANSF_1",name2,g_menuOption[id] ? "Allies" : "Axis" )
+        case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_TRANSF_2", name, name2, g_menuOption[id] ? "Allies" : "Axis")
+        case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_TRANSF_1", name2, g_menuOption[id] ? "Allies" : "Axis")
       }
 
       dod_user_kill(player)

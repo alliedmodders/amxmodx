@@ -478,8 +478,8 @@ public actionTeamMenu(id,key) {
       log_amx("Cmd: ^"%s<%d><%s><>^" transfer ^"%s<%d><%s><>^" (team ^"%s^")", 
           name,get_user_userid(id),authid, name2,get_user_userid(player),authid2, g_teamNames[g_menuOption[id]] )
       switch (get_cvar_num("amx_show_activity")) {
-        case 2: client_print(0,print_chat,"%L",id,"ADMIN_TRANSF_2",name,name2, g_teamNames[g_menuOption[id]] )
-        case 1: client_print(0,print_chat,"%L",id,"ADMIN_TRANSF_1",name2, g_teamNames[g_menuOption[id]] )
+        case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_TRANSF_2", name, name2, g_teamNames[g_menuOption[id]])
+        case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_TRANSF_1", name2, g_teamNames[g_menuOption[id]])
       }
 
       new szCmd[2]
@@ -523,7 +523,7 @@ displayTeamMenu(id, pos)
 		get_user_name(i, name, 31)
 		iteam = get_user_team(i)
 
-		if ((iteam == (g_menuOption[id] ? 1 : 2)) || access(i, ADMIN_IMMUNITY))
+		if ((iteam == g_menuOption[id]) || access(i, ADMIN_IMMUNITY))
 		{
 			++b
 			

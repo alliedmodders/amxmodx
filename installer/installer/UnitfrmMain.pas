@@ -278,6 +278,8 @@ begin
     ggeAll.Progress := 0;
     ggeItem.Progress := 0;
     cmdNext.Hide;
+    if DirectoryExists(ExtractFilePath(ParamStr(0)) + 'temp\') then
+      DelDir(ExtractFilePath(ParamStr(0)) + 'temp\');
     InstallCustom(ExtractFilePath(ParamStr(0)) + 'temp\', ChosenMod, eOS);
     if Cancel then
       exit;

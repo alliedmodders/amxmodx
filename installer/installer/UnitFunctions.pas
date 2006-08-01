@@ -22,7 +22,7 @@ begin
   if (eOld < eNew) and (eOld <> 0) then begin
     eOld := eNew - eOld;
     //eOld := eOld *2; // this is only used for faster updates...
-    Result := 'AMX Mod X Installer - Uploading with ' + FloatToStr(RoundTo(eOld / 1024, -2)) + ' kb/s';
+    Result := 'AMX Mod X Installer - Uploading at ' + FloatToStr(RoundTo(eOld / 1024, -2)) + ' kb/s';
   end;
 end;
 

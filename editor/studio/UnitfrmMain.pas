@@ -563,6 +563,13 @@ begin
     eConfig.WriteBool('Editor', 'IndentOpeningBrace', frmAutoIndent.chkIndentOpeningBrace.Checked);
     eConfig.WriteBool('Editor', 'UnindentClosingBrace', frmAutoIndent.chkUnindentPressingClosingBrace.Checked);
     eConfig.WriteBool('Editor', 'UnindentEmptyLine', frmAutoIndent.chkUnindentLine.Checked);
+    if (frmAutoIndent.optTabs.Checked) then
+      eConfig.WriteInteger('Editor', 'IndentStyle', 0)
+    else if (frmAutoIndent.optTwoSpaces.Checked) then
+      eConfig.WriteInteger('Editor', 'IndentStyle', 1)
+    else
+      eConfig.WriteInteger('Editor', 'IndentStyle', 2);
+    eConfig.WriteString('Editor', 'IndentSomethingElse', frmAutoIndent.txtSomethingElse.Text);
     eConfig.WriteBool('Editor', 'Disable_AC', frmSettings.chkDisableAC.Checked);
     eConfig.WriteBool('Editor', 'Disable_CT', frmSettings.chkDisableCT.Checked);
     eConfig.WriteBool('Editor', 'AutoHideCT', frmSettings.chkAutoHideCT.Checked);
@@ -570,6 +577,7 @@ begin
       eConfig.WriteString('Editor', 'AutoDisable', frmSettings.txtAUDisable.Text)
     else
       eConfig.WriteString('Editor', 'AutoDisable', '-1');
+
     { Editor }
     if FileExists(sciPropertyLoader.FileName) then
       sciPropertyLoader.Save;
@@ -1006,8 +1014,14 @@ begin
   if (Key = 13) and (frmSettings.chkAutoIndent.Checked) and (Trim(sciEditor.Lines[sciEditor.GetCurrentLineNumber]) = '') then begin
     if (sciEditor.LanguageManager.SelectedLanguage = 'Pawn') or (sciEditor.LanguageManager.SelectedLanguage = 'C++') then begin
       eStr := Trim(RemoveStringsAndComments(sciEditor.Lines[sciEditor.GetCurrentLineNumber - 1], True, True));
-      if (Copy(eStr, Length(eStr), 1) = '{') and (frmAutoIndent.chkIndentOpeningBrace.Checked) then
-        sciEditor.SelText := #9;
+      if (Copy(eStr, Length(eStr), 1) = '{') and (frmAutoIndent.chkIndentOpeningBrace.Checked) then begin
+        if (frmAutoIndent.optTabs.Checked) then
+          sciEditor.SelText := #9
+        else if (frmAutoIndent.optTwoSpaces.Checked) then
+          sciEditor.SelText := '  '
+        else
+          sciEditor.SelText := frmAutoIndent.txtSomethingElse.Text;
+      end;
       if (eStr = '') and (frmAutoIndent.chkUnindentLine.Checked) then begin
         sciEditor.Lines[sciEditor.GetCurrentLineNumber] := Copy(sciEditor.Lines[sciEditor.GetCurrentLineNumber], 1, Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber]) - 1); // remove last indent..
         sciEditor.SelStart := sciEditor.SelStart + Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber]); // and jump to last position
@@ -1291,7 +1305,13 @@ begin
     if (Key = '}') and (frmSettings.chkAutoIndent.Checked) then begin
       if (Trim(sciEditor.Lines[sciEditor.GetCurrentLineNumber]) = '') and (frmAutoIndent.chkUnindentPressingClosingBrace.Checked) then begin
         if (sciEditor.LanguageManager.SelectedLanguage = 'Pawn') or (sciEditor.LanguageManager.SelectedLanguage = 'C++') then begin
-          sciEditor.Lines[sciEditor.GetCurrentLineNumber] := Copy(sciEditor.Lines[sciEditor.GetCurrentLineNumber], 1, Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber]) - 1); // remove last indent..
+          // remove last indentation..
+          if (frmAutoIndent.optTabs.Checked)then
+            sciEditor.Lines[sciEditor.GetCurrentLineNumber] := Copy(sciEditor.Lines[sciEditor.GetCurrentLineNumber], 1, Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber]) - 1)
+          else if (frmAutoIndent.optTwoSpaces.Checked) then
+            sciEditor.Lines[sciEditor.GetCurrentLineNumber] := Copy(sciEditor.Lines[sciEditor.GetCurrentLineNumber], 1, Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber]) - 2)
+          else
+            sciEditor.Lines[sciEditor.GetCurrentLineNumber] := Copy(sciEditor.Lines[sciEditor.GetCurrentLineNumber], 1, Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber]) - Length(frmAutoIndent.txtSomethingElse.Text));
           sciEditor.SelStart := sciEditor.SelStart + Length(sciEditor.Lines[sciEditor.GetCurrentLineNumber]); // and jump to last position
         end;
       end;
@@ -1519,7 +1539,7 @@ begin
             end;
           end;
           { C++ Projects }
-          if frmClose.trvFiles.Items[i].Text = stlIDEs.Items[1].Caption then begin
+          if frmClose.trvFiles.Items[i].Text = stlIDEs.Strings[1] then begin
             with frmClose.trvFiles.Items[i] do begin
               for k := 0 to Count - 1 do begin
                 if frmClose.trvFiles.Checked[Item[k]] then begin

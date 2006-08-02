@@ -636,6 +636,12 @@ begin
   frmSettings.chkDontLoadFilesTwice.Checked := eConfig.ReadBool('Editor', 'DontLoadFilesTwice', True);
   frmSettings.chkAutoIndent.Checked := eConfig.ReadBool('Editor', 'Auto-Indent', True);
   frmAutoIndent.chkIndentOpeningBrace.Checked := eConfig.ReadBool('Editor', 'IndentOpeningBrace', True);
+  case eConfig.ReadInteger('Editor', 'IndentStyle', 0) of
+    0: frmAutoIndent.optTabs.Checked := True;
+    1: frmAutoIndent.optTwoSpaces.Checked := True;
+    2: frmAutoIndent.optSomethingElse.Checked := True;
+  end;
+  frmAutoIndent.txtSomethingElse.Text := eConfig.ReadString('Editor', 'IndentSomethingElse', '');
   frmAutoIndent.chkUnindentPressingClosingBrace.Checked := eConfig.ReadBool('Editor', 'UnindentClosingBrace', True);
   frmAutoIndent.chkUnindentLine.Checked := eConfig.ReadBool('Editor', 'UnindentEmptyLine', False);
   frmSettings.chkAUDisable.Checked := eConfig.ReadString('Editor', 'AutoDisable', '1500') <> '-1';

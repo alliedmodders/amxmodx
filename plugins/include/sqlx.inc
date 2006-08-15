@@ -65,7 +65,7 @@ native Handle:SQL_PrepareQuery(Handle:db, const fmt[], {Float,_}:...);
  * This will not interrupt gameplay in the event of a poor/lossed 
  *  connection, however, the interface is more complicated and 
  *  asynchronous.  Furthermore, a new connection/disconnection is 
- *  made each time.
+ *  made for each query to simplify driver support.
  * The handler should look like:
  *
  * @param failstate - One of the three TQUERY_ defines.
@@ -77,14 +77,14 @@ native Handle:SQL_PrepareQuery(Handle:db, const fmt[], {Float,_}:...);
  * 
  * public QueryHandler(failstate, Handle:query, error[], errnum, data[], size)
  *
+ * Note! The handle you pass in is a DB Tuple, NOT an active connection!
  * Note! The handle does not need to be freed.
  * Also note: This function is not guaranteed to be in another thread
  *  (in fact - it's not).  You're seeing data "after the fact", 
  *  and as such to execute another query you should run 
- *  SQL_ThreadQuery again.
- * 
+ *  SQL_ThreadQuery again with new data.
  */
-native SQL_ThreadQuery(Handle:cn_tuple, const handler[], const query[], const data[]="", dataSize=0);
+native SQL_ThreadQuery(Handle:db_tuple, const handler[], const query[], const data[]="", dataSize=0);
 
 
 /**

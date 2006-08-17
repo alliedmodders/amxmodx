@@ -53,7 +53,7 @@
 
 struct TableEntry
 {
-	mint8_t cellSize PACKED;
+	mint8_t cellSize ;
 	mint32_t origSize PACKED;			// contains AMX_HEADER->stp
 	mint32_t offset PACKED;
 };

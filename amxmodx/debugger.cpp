@@ -388,9 +388,9 @@ int Debugger::FormatError(char *buffer, size_t maxLength)
 	int error = pTracer->m_Error;
 	const char *gen_err = GenericError(error);
 	int size = 0;
-	trace_info_t *pTrace = pTracer->GetEnd();
-	cell cip = _CipAsVa(m_pAmx->cip);
-	cell *p_cip = NULL;
+	//trace_info_t *pTrace = pTracer->GetEnd();
+	//cell cip = _CipAsVa(m_pAmx->cip);
+	//cell *p_cip = NULL;
 	int amx_err = AMX_ERR_NONE;
 
 	size += _snprintf(buffer, maxLength, "Run time error %d: %s ", error, gen_err);

@@ -43,7 +43,6 @@ CForward::CForward(const char *name, ForwardExecType et, int numParams, const Fo
 	
 	// find funcs
 	int func;
-	AMXForward *tmp = NULL;
 	m_Funcs.clear();
 	
 	for (CPluginMngr::iterator iter = g_plugins.begin(); iter; ++iter)
@@ -69,8 +68,6 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 
 	cell globRetVal = 0;
 
-	unsigned int id = 0;
-
 	AMXForwardList::iterator iter;
 
 	for (iter = m_Funcs.begin(); iter != m_Funcs.end(); iter++)
@@ -85,7 +82,7 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 				pDebugger->BeginExec();
 			
 			// handle strings & arrays
-			int i, ax = 0;
+			int i;
 			
 			for (i = 0; i < m_NumParams; ++i)
 			{

@@ -184,7 +184,7 @@ LibError RunLibCommand(const LibDecoder *enc)
 
 	if ( (enc->cmd == LibCmd_ReqLib) || (enc->cmd == LibCmd_ReqClass) )
 	{
-		LibType expect;
+		LibType expect = LibType_Library;
 
 		if (enc->cmd == LibCmd_ReqLib)
 			expect = LibType_Library;
@@ -202,7 +202,7 @@ LibError RunLibCommand(const LibDecoder *enc)
 		}
 		if (expect == LibType_Library)
 			return LibErr_NoLibrary;
-		else if (expect = LibType_Class)
+		else if (expect == LibType_Class)
 			return LibErr_NoClass;
 
 		return LibErr_NoLibrary;

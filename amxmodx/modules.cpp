@@ -313,7 +313,7 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 		//set this again because amx_Init() erases it!
 		amx->flags |= AMX_FLAG_JITC;
 		amx->flags &= (~AMX_FLAG_DEBUG);
-		amx->sysreq_d = NULL;
+		amx->sysreq_d = 0;
 #endif
 	}
 

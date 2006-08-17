@@ -253,7 +253,6 @@ void amx_command()
 
 void plugin_srvcmd()
 {
-	cell ret = 0;
 	const char* cmd = CMD_ARGV(0);
 				
 	CmdMngr::iterator a = g_commands.srvcmdbegin();

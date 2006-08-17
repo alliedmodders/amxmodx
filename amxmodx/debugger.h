@@ -50,7 +50,7 @@ public:
 		
 		struct trace_info
 		{
-			trace_info() : cip(0), frm(0), used(false), next(NULL), prev(NULL) {};
+			trace_info() : cip(0), frm(0), next(NULL), prev(NULL), used(false) {};
 			
 			cell cip;
 			cell frm;

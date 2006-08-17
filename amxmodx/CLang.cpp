@@ -65,7 +65,10 @@ int HashFunction<String>(const String &k)
 	unsigned long hash = 5381;
 	register const char *str = k.c_str();
 	register char c;
-	while (c = *str++) hash = ((hash << 5) + hash) + c; // hash*33 + c
+	while ((c = *str++)) 
+	{
+		hash = ((hash << 5) + hash) + c; // hash*33 + c
+	}
 	return hash;
 }
 
@@ -75,7 +78,10 @@ int HashAlt<const char *>(char const * const &k)
 	unsigned long hash = 5381;
 	register const char *str = k;
 	register char c;
-	while (c = *str++) hash = ((hash << 5) + hash) + c; // hash*33 + c
+	while ((c = *str++)) 
+	{
+		hash = ((hash << 5) + hash) + c; // hash*33 + c
+	}
 	return hash;
 }
 
@@ -353,7 +359,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 	CQueue<sKeyDef> Defq;
 	String buf;
 	char language[3];
-	sKeyDef tmpEntry;
+	sKeyDef tmpEntry = {NULL, 0};
 
 	while (!feof(fp))
 	{
@@ -570,7 +576,7 @@ bool CLangMngr::LangExists(const char *langName)
 	char buf[3] = {0};
 	int i = 0;
 	
-	while (buf[i] = tolower(*langName++))
+	while ((buf[i] = tolower(*langName++)))
 	{	
 		if (++i == 2)
 			break;

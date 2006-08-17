@@ -863,7 +863,6 @@ static cell AMX_NATIVE_CALL is_alpha(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL amx_ucfirst(AMX *amx, cell *params)
 {
-	int len = 0;
 	cell *str = get_amxaddr(amx, params[1]);
 	
 	if (!isalpha((char)str[0]) || !(str[0] & (1<<5)))
@@ -944,7 +943,6 @@ static cell AMX_NATIVE_CALL n_strfind(AMX *amx, cell *params)
 	int sublen;
 	char *sub = get_amxstring(amx, params[2], 1, sublen);
 
-	bool found = false;
 	bool igcase = params[3] ? true : false;
 	
 	if (igcase)
@@ -964,7 +962,6 @@ static cell AMX_NATIVE_CALL n_strfind(AMX *amx, cell *params)
 	if (params[4] > len)
 		return -1;
 
-	char *pos = &(str[params[4]]);
 	char *find = strstr(str, sub);
 
 	if (!find)

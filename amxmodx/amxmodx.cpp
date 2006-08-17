@@ -3258,8 +3258,6 @@ static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 // native callfunc_push_float(Float: value);
 static cell AMX_NATIVE_CALL callfunc_push_byval(AMX *amx, cell *params)
 {
-	CPluginMngr::CPlugin *curPlugin = g_plugins.findPluginFast(amx);
-	
 	if (!g_CallFunc_Plugin)
 	{
 		// scripter's fault
@@ -3339,8 +3337,6 @@ static cell AMX_NATIVE_CALL callfunc_push_byref(AMX *amx, cell *params)
 // native callfunc_push_str(value[]);
 static cell AMX_NATIVE_CALL callfunc_push_str(AMX *amx, cell *params)
 {
-	CPluginMngr::CPlugin *curPlugin = g_plugins.findPluginFast(amx);
-	
 	if (!g_CallFunc_Plugin)
 	{
 		// scripter's fault
@@ -3500,7 +3496,9 @@ static cell AMX_NATIVE_CALL int3(AMX *amx, cell *params)
 
 /*********************************************************************/
 
+#if defined AMD64
 static bool g_warned_ccqv = false;
+#endif
 // native query_client_cvar(id, const cvar[], const resultfunc[])
 static cell AMX_NATIVE_CALL query_client_cvar(AMX *amx, cell *params)
 {
@@ -3735,7 +3733,6 @@ static cell AMX_NATIVE_CALL PrepareArray(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL ExecuteForward(AMX *amx, cell *params)
 {
 	int id = static_cast<int>(params[1]);
-	int str_id = 0;
 	int len, err;
 	cell *addr = get_amxaddr(amx, params[2]);
 
@@ -3829,7 +3826,7 @@ void CheckAndClearPlayerHUD(CPlayer *player, int &channel, unsigned int sync_obj
 	//get the last channel this message class was displayed on.
 	cell last_channel = plist[player->index];
 	//check if the last sync on this channel was this sync obj
-	if (player->hudmap[last_channel] == sync_obj + 1)
+	if ((unsigned int)player->hudmap[last_channel] == sync_obj + 1)
 	{
 		//if so, we can safely REUSE it
 		channel = (int)last_channel;

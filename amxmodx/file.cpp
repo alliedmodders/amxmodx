@@ -358,7 +358,7 @@ static cell AMX_NATIVE_CALL file_size(AMX *amx, cell *params) /* 1 param */
 
 static cell AMX_NATIVE_CALL amx_fopen(AMX *amx, cell *params)
 {
-	int len, j = -1;
+	int len;
 	char *file = build_pathname("%s", get_amxstring(amx, params[1], 1, len));
 	char *flags = get_amxstring(amx, params[2], 0, len);
 
@@ -383,7 +383,6 @@ static cell AMX_NATIVE_CALL amx_fwrite_blocks(AMX *amx, cell *params)
 	case 1:
 		{
 			char *a = new char[blocks];
-			char *ptr = a;
 			while (btmp--)
 				*a++ = static_cast<char>(*addr++);
 			size_t res = fwrite(a, sizeof(char), blocks, fp);
@@ -393,7 +392,6 @@ static cell AMX_NATIVE_CALL amx_fwrite_blocks(AMX *amx, cell *params)
 	case 2:
 		{
 			short *a = new short[blocks];
-			short *ptr = a;
 			while (btmp--)
 				*a++ = static_cast<short>(*addr++);
 			size_t res = fwrite(a, sizeof(short), blocks, fp);
@@ -403,7 +401,6 @@ static cell AMX_NATIVE_CALL amx_fwrite_blocks(AMX *amx, cell *params)
 	case 4:
 		{
 			int *a = new int[blocks];
-			int *ptr = a;
 			while (btmp--)
 				*a++ = static_cast<int>(*addr++);
 			size_t res = fwrite(a, sizeof(int), blocks, fp);
@@ -682,13 +679,13 @@ static cell AMX_NATIVE_CALL amx_open_dir(AMX *amx, cell *params)
 	DIR *dp = opendir(dirname);
 	
 	if (!dp)
-		return NULL;
+		return 0;
 	struct dirent *ep = readdir(dp);
 	
 	if (!ep)
 	{
 		closedir(dp);
-		return NULL;
+		return 0;
 	}
 	
 	set_amxstring(amx, params[2], ep->d_name, params[3]);

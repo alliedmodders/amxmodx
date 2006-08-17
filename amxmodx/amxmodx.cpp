@@ -2595,18 +2595,16 @@ static cell AMX_NATIVE_CALL get_user_aiming(AMX *amx, cell *params) /* 4 param *
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	cell *cpId = get_amxaddr(amx, params[2]);
 	cell *cpBody = get_amxaddr(amx, params[3]);
-	cell fCell;
 	
-	REAL *pFloat = (REAL *)((void *)&fCell);
-	*pFloat = 0.0;
-	
+	REAL pfloat = 0.0f;
+
 	if (pPlayer->ingame)
 	{
 		edict_t* edict = pPlayer->pEdict;
 		
 		Vector v_forward;
 		Vector v_src = edict->v.origin + edict->v.view_ofs;
-		
+
 		ANGLEVECTORS(edict->v.v_angle, v_forward, NULL, NULL);
 		TraceResult trEnd;
 		Vector v_dest = v_src + v_forward * static_cast<float>(params[4]);
@@ -2617,17 +2615,14 @@ static cell AMX_NATIVE_CALL get_user_aiming(AMX *amx, cell *params) /* 4 param *
 		
 		if (trEnd.flFraction < 1.0)
 		{
-			*pFloat = (trEnd.vecEndPos - v_src).Length();
-			return fCell;
-		} else {
-			return fCell;
+			pfloat = (trEnd.vecEndPos - v_src).Length();
 		}
 	}
 
 	*cpId = 0;
 	*cpBody = 0;
 	
-	return fCell;
+	return amx_ftoc(pfloat);
 }
 
 static cell AMX_NATIVE_CALL remove_cvar_flags(AMX *amx, cell *params)

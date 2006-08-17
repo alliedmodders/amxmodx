@@ -6,9 +6,9 @@ MM_ROOT = ../metamod/metamod
 
 ### EDIT BELOW FOR OTHER PROJECTS ###
 
-OPT_FLAGS = -O2 -funroll-loops -s -fomit-frame-pointer -pipe
+OPT_FLAGS = -O2 -fno-strict-aliasing -funroll-loops -s -fomit-frame-pointer -pipe 
 DEBUG_FLAGS = -g -ggdb3
-CPP = gcc
+CPP = gcc-4.1
 NAME = amxmodx
 
 BIN_SUFFIX_32 = mm_i386.so
@@ -25,6 +25,12 @@ LINK = /lib/libstdc++.a
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
 	-I$(MM_ROOT) -Lzlib -I$(HLSDK)/common
+
+GCC_VERSION := $(shell $(CPP) -dumpversion >&1 | cut -b1)
+
+ifeq "$(GCC_VERSION)" "4"
+	OPT_FLAGS += -fvisibility=hidden -fvisibility-inlines-hidden
+endif
 
 ifeq "$(DEBUG)" "true"
 	BIN_DIR = Debug

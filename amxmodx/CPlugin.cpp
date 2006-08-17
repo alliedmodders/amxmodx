@@ -81,14 +81,17 @@ void CPluginMngr::Finalize()
 	m_Finalized = true;
 }
 
-int CPluginMngr::loadPluginsFromFile(const char* filename)
+int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 {
 	char file[256];
 	FILE *fp = fopen(build_pathname_r(file, sizeof(file) - 1, "%s", filename), "rt");
 
 	if (!fp) 
 	{
-		AMXXLOG_Log("[AMXX] Plugins list not found (file \"%s\")", filename);
+		if (warn)
+		{
+			AMXXLOG_Log("[AMXX] Plugins list not found (file \"%s\")", filename);
+		}
 		return 1;
 	}
 	

@@ -170,16 +170,18 @@ void ParseAndOrAdd(CStack<String *> & files, const char *name)
 	}
 }
 
-void BuildPluginFileList(CStack<String *> & files)
+void BuildPluginFileList(const char *initialdir, CStack<String *> & files)
 {
 	char path[255];
 #if defined WIN32
-	build_pathname_r(path, sizeof(path)-1, "%s/*.ini", get_localinfo("amxx_configsdir", "addons/amxmodx/configs"));
+	build_pathname_r(path, sizeof(path)-1, "%s/*.ini", initialdir);
 	_finddata_t fd;
 	intptr_t handle = _findfirst(path, &fd);
 
 	if (handle < 0)
+	{
 		return;
+	}
 
 	while (!_findnext(handle, &fd))
 	{
@@ -188,12 +190,14 @@ void BuildPluginFileList(CStack<String *> & files)
 
 	_findclose(handle);
 #elif defined __linux__
-	build_pathname_r(path, sizeof(path)-1, "%s/", get_localinfo("amxx_configsdir", "addons/amxmodx/configs"));
+	build_pathname_r(path, sizeof(path)-1, "%s/", initialdir);
 	struct dirent *ep;
 	DIR *dp;
 
 	if ((dp = opendir(path)) == NULL)
+	{
 		return;
+	}
 
 	while ( (ep=readdir(dp)) != NULL )
 	{
@@ -202,6 +206,41 @@ void BuildPluginFileList(CStack<String *> & files)
 
 	closedir (dp);
 #endif
+}
+
+//Loads a plugin list into the Plugin Cache and Load Modules cache
+void LoadExtraPluginsToPCALM(const char *initialdir)
+{
+	CStack<String *> files;
+	BuildPluginFileList(initialdir, files);
+	char path[255];
+	while (!files.empty())
+	{
+		String *pString = files.front();
+		snprintf(path, sizeof(path)-1, "%s/%s", 
+			initialdir,
+			pString->c_str());
+		g_plugins.CALMFromFile(path);
+		delete pString;
+		files.pop();
+	}
+}
+
+void LoadExtraPluginsFromDir(const char *initialdir)
+{
+	CStack<String *> files;
+	char path[255];
+	BuildPluginFileList(initialdir, files);
+	while (!files.empty())
+	{
+		String *pString = files.front();
+		snprintf(path, sizeof(path)-1, "%s/%s", 
+			initialdir,
+			pString->c_str());
+		g_plugins.loadPluginsFromFile(path);
+		delete pString;
+		files.pop();
+	}
 }
 
 // Precache	stuff from force consistency calls
@@ -318,22 +357,18 @@ int	C_Spawn(edict_t *pent)
 	get_localinfo("amxx_configsdir", "addons/amxmodx/configs");
 	get_localinfo("amxx_customdir", "addons/amxmodx/custom");
 
+	char map_pluginsfile_path[256];
+
 	// ###### Load modules
 	loadModules(get_localinfo("amxx_modules", "addons/amxmodx/configs/modules.ini"), PT_ANYTIME);
 	g_plugins.CALMFromFile(get_localinfo("amxx_plugins", "addons/amxmodx/configs/plugins.ini"));
-	CStack<String *> files;
-	BuildPluginFileList(files);
-	char path[255];
-	while (!files.empty())
-	{
-		String *pString = files.front();
-		snprintf(path, sizeof(path)-1, "%s/%s", 
-			get_localinfo("amxx_configsdir", "addons/amxmodx/configs"),
-			pString->c_str());
-		g_plugins.CALMFromFile(path);
-		delete pString;
-		files.pop();
-	}
+	LoadExtraPluginsToPCALM(get_localinfo("amxx_configsdir", "addons/amxmodx/configs"));
+	snprintf(map_pluginsfile_path, sizeof(map_pluginsfile_path)-1,
+					"%s/maps/plugins-%s.ini",
+					get_localinfo("amxx_configsdir", "addons/amxmodx/configs"),
+					STRING(gpGlobals->mapname));
+	g_plugins.CALMFromFile(map_pluginsfile_path);
+
 	int loaded = countModules(CountModules_Running); // Call after attachModules so all modules don't have pending stat
 	
 	// Set some info about amx version and modules
@@ -371,17 +406,8 @@ int	C_Spawn(edict_t *pent)
 
 	// ###### Load AMX Mod X plugins
 	g_plugins.loadPluginsFromFile(get_localinfo("amxx_plugins", "addons/amxmodx/configs/plugins.ini"));
-	BuildPluginFileList(files);
-	while (!files.empty())
-	{
-		String *pString = files.front();
-		snprintf(path, sizeof(path)-1, "%s/%s", 
-			get_localinfo("amxx_configsdir", "addons/amxmodx/configs"),
-			pString->c_str());
-		g_plugins.loadPluginsFromFile(path);
-		delete pString;
-		files.pop();
-	}
+	LoadExtraPluginsFromDir(get_localinfo("amxx_configsdir", "addons/amxmodx/configs"));
+	g_plugins.loadPluginsFromFile(map_pluginsfile_path, false);
 	g_plugins.Finalize();
 	g_plugins.InvalidateCache();
 

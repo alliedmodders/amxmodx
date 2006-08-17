@@ -165,6 +165,7 @@ public:
 	void CALMFromFile(const char *file);
 private:
 	List<plcache_entry *> m_plcache;
+	List<String *> m_BlockList;
 };
 
 #endif //PLUGIN_H

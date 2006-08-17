@@ -268,7 +268,9 @@ const char*	get_localinfo(const char* name, const char* def)
 	const char* b = LOCALINFO((char*)name);
 
 	if (b == 0 || *b == 0)
+	{
 		SET_LOCALINFO((char*)name, (char*)(b = def));
+	}
 
 	return b;
 }
@@ -280,7 +282,9 @@ const char*	get_localinfo(const char* name, const char* def)
 int	C_Spawn(edict_t *pent)
 {
 	if (g_initialized)
+	{
 		RETURN_META_VALUE(MRES_IGNORED, 0);
+	}
 
 	g_activated = false;
 	g_initialized = true;
@@ -365,7 +369,7 @@ int	C_Spawn(edict_t *pent)
 	if (!g_opt_level)
 		g_opt_level = 7;
 
-	// ###### Load AMX scripts
+	// ###### Load AMX Mod X plugins
 	g_plugins.loadPluginsFromFile(get_localinfo("amxx_plugins", "addons/amxmodx/configs/plugins.ini"));
 	BuildPluginFileList(files);
 	while (!files.empty())
@@ -379,6 +383,7 @@ int	C_Spawn(edict_t *pent)
 		files.pop();
 	}
 	g_plugins.Finalize();
+	g_plugins.InvalidateCache();
 
 	// Register forwards
 	FF_PluginInit = registerForward("plugin_init", ET_IGNORE, FP_DONE);

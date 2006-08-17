@@ -99,6 +99,8 @@ int CPluginMngr::loadPluginsFromFile(const char* filename)
 	
 	String line;
 
+	List<String *>::iterator block_iter;
+
 	while (!feof(fp)) 
 	{
 		pluginName[0] = '\0';
@@ -122,11 +124,30 @@ int CPluginMngr::loadPluginsFromFile(const char* filename)
 		sscanf(line.c_str(), "%s %s", pluginName, debug);
 		
 		if (!isalnum(*pluginName))
+		{
 			continue;
+		}
 
-		if (isalnum(*debug) && strcmp(debug, "debug") == 0)
+		if (isalnum(*debug) && !strcmp(debug, "debug"))
 		{
 			debugFlag = 1;
+		}
+
+		bool skip = false;
+		for (block_iter = m_BlockList.begin();
+			 block_iter != m_BlockList.end();
+			 block_iter++)
+		{
+			if ((*block_iter)->compare(pluginName) == 0)
+			{
+				skip = true;
+				break;
+			}
+		}
+
+		if (skip || !strcmp(debug, "disabled"))
+		{
+			continue;
 		}
 
 		CPlugin* plugin = loadPlugin(pluginsDir, pluginName, error, debugFlag);
@@ -141,8 +162,6 @@ int CPluginMngr::loadPluginsFromFile(const char* filename)
 	}
 
 	fclose(fp);
-
-	InvalidateCache();
 
 	return pCounter;
 }
@@ -161,6 +180,14 @@ void CPluginMngr::clear()
 		delete [] pNatives;
 		pNatives = NULL;
 	}
+
+	List<String *>::iterator iter = m_BlockList.begin();
+	while (iter != m_BlockList.end())
+	{
+		delete (*iter);
+		iter = m_BlockList.erase(iter);
+	}
+	m_BlockList.clear();
 }
 
 CPluginMngr::CPlugin* CPluginMngr::findPlugin(AMX *amx)
@@ -616,7 +643,9 @@ void CPluginMngr::CALMFromFile(const char *file)
 	{
 		fgets(line, sizeof(line)-1, fp);
 		if (line[0] == ';' || line[0] == '\n' || line[0] == '\0')
+		{
 			continue;
+		}
 
 		/** quick hack */
 		char *ptr = line;
@@ -635,8 +664,28 @@ void CPluginMngr::CALMFromFile(const char *file)
 		pluginName[0] = '\0';
 		sscanf(rline.c_str(), "%s", pluginName);
 
+		/* HACK: see if there's a 'disabled' coming up
+		 * new block for scopying flexibility
+		 */
+		if (1)
+		{
+			const char *_ptr = rline.c_str() + strlen(pluginName);
+			while (*_ptr != '\0'  && isspace(*_ptr))
+			{
+				_ptr++;
+			}
+			if ((*_ptr != '\0') && !strcmp(_ptr, "disabled"))
+			{
+				String *pString = new String(pluginName);
+				m_BlockList.push_back(pString);
+				continue;
+			}
+		}
+
 		if (!isalnum(*pluginName))
+		{
 			continue;
+		}
 
 		build_pathname_r(filename, sizeof(filename)-1, "%s/%s", get_localinfo("amxx_pluginsdir", "addons/amxmodx/plugins"), pluginName);
 

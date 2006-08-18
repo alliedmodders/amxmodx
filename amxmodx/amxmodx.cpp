@@ -4055,6 +4055,7 @@ static cell AMX_NATIVE_CALL amxx_setpl_curweap(AMX *amx, cell *params)
 AMX_NATIVE_INFO amxmodx_Natives[] =
 {
 	{"abort",					amx_abort},
+	{"amxx_setpl_curweap",		amxx_setpl_curweap},
 	{"arrayset",				arrayset},
 	{"get_addr_val",			get_addr_val},
 	{"get_var_addr",			get_var_addr},

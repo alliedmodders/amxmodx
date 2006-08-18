@@ -78,7 +78,11 @@ PrintQueryData(Handle:query)
 {
 	new columns = SQL_NumColumns(query)
 	new rows = SQL_NumResults(query)
+	static querystring[2048]
 	
+	SQL_GetQueryString(query, querystring, 2047)
+	
+	server_print("Original query string: %s", querystring)
 	server_print("Query columns: %d rows: %d", columns, rows)
 	
 	new num

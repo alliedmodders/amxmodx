@@ -116,7 +116,7 @@ static cell AMX_NATIVE_CALL SQL_PrepareQuery(AMX *amx, cell *params)
 	IDatabase *pDb = (IDatabase *)GetHandle(params[1], Handle_Database);
 	if (!pDb)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid handle: %d", params[1]);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid database handle: %d", params[1]);
 		return 0;
 	}
 
@@ -140,7 +140,7 @@ static cell AMX_NATIVE_CALL SQL_Execute(AMX *amx, cell *params)
 	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid handle: %d", params[1]);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
 		return 0;
 	}
 
@@ -149,7 +149,9 @@ static cell AMX_NATIVE_CALL SQL_Execute(AMX *amx, cell *params)
 	memset(&qInfo->info, 0, sizeof(QueryInfo));
 
 	if (!qInfo->pQuery->Execute(&qInfo->info, qInfo->error, 254))
+	{
 		return 0;
+	}
 
 	return 1;
 }
@@ -159,7 +161,7 @@ static cell AMX_NATIVE_CALL SQL_QueryError(AMX *amx, cell *params)
 	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid handle: %d", params[1]);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
 		return 0;
 	}
 
@@ -173,7 +175,7 @@ static cell AMX_NATIVE_CALL SQL_MoreResults(AMX *amx, cell *params)
 	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid handle: %d", params[1]);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
 		return 0;
 	}
 
@@ -188,7 +190,7 @@ static cell AMX_NATIVE_CALL SQL_IsNull(AMX *amx, cell *params)
 	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid handle: %d", params[1]);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
 		return 0;
 	}
 
@@ -217,7 +219,7 @@ static cell AMX_NATIVE_CALL SQL_ReadResult(AMX *amx, cell *params)
 	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid handle: %d", params[1]);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
 		return 0;
 	}
 
@@ -278,7 +280,7 @@ static cell AMX_NATIVE_CALL SQL_NextRow(AMX *amx, cell *params)
 	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid handle: %d", params[1]);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
 		return 0;
 	}
 
@@ -300,7 +302,7 @@ static cell AMX_NATIVE_CALL SQL_AffectedRows(AMX *amx, cell *params)
 	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid handle: %d", params[1]);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
 		return 0;
 	}
 
@@ -312,7 +314,7 @@ static cell AMX_NATIVE_CALL SQL_NumResults(AMX *amx, cell *params)
 	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid handle: %d", params[1]);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
 		return 0;
 	}
 
@@ -331,7 +333,7 @@ static cell AMX_NATIVE_CALL SQL_NumColumns(AMX *amx, cell *params)
 	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid handle: %d", params[1]);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
 		return 0;
 	}
 
@@ -351,7 +353,7 @@ static cell AMX_NATIVE_CALL SQL_FieldNumToName(AMX *amx, cell *params)
 	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid handle: %d", params[1]);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
 		return 0;
 	}
 
@@ -377,12 +379,24 @@ static cell AMX_NATIVE_CALL SQL_FieldNumToName(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL SQL_GetQueryString(AMX *amx, cell *params)
+{
+	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
+	if (!qInfo)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
+		return 0;
+	}
+
+	return MF_SetAmxString(amx, params[2], qInfo->pQuery->GetQueryString(), params[3]);
+}
+
 static cell AMX_NATIVE_CALL SQL_FieldNameToNum(AMX *amx, cell *params)
 {
 	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid handle: %d", params[1]);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
 		return 0;
 	}
 
@@ -398,7 +412,9 @@ static cell AMX_NATIVE_CALL SQL_FieldNameToNum(AMX *amx, cell *params)
 	char *namewa = MF_GetAmxString(amx, params[2], 0, &len);
 	unsigned int columnId;
 	if (!rs->FieldNameToNum(namewa, &columnId))
+	{
 		return -1;
+	}
 
 	return columnId;
 }
@@ -455,6 +471,7 @@ AMX_NATIVE_INFO g_BaseSqlNatives[] =
 	{"SQL_FieldNameToNum",	SQL_FieldNameToNum},
 	{"SQL_GetAffinity",		SQL_GetAffinity},
 	{"SQL_SetAffinity",		SQL_SetAffinity},
+	{"SQL_GetQueryString",	SQL_GetQueryString},
 
 	{NULL,					NULL},
 };

@@ -52,7 +52,7 @@ static cell AMX_NATIVE_CALL SQL_ThreadQuery(AMX *amx, cell *params)
 	SQL_Connection *cn = (SQL_Connection *)GetHandle(params[1], Handle_Connection);
 	if (!cn)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid handle: %d", params[1]);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid info tuple handle: %d", params[1]);
 		return 0;
 	}
 

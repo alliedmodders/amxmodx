@@ -195,6 +195,11 @@ native SQL_GetAffinity(driver[], maxlen);
 native SQL_SetAffinity(const driver[]);
 
 /**
+ * Returns the original query string that a query handle used.
+ */
+native SQL_GetQueryString(Handle:query, buffer[], maxlength);
+
+/**
  * This function can be used to find out if a table in a Sqlite database exists.
  * (updated for newer API)
  */

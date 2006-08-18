@@ -46,6 +46,11 @@ bool MysqlQuery::Execute(QueryInfo *info, char *error, size_t maxlength)
 	return res;
 }
 
+const char *MysqlQuery::GetQueryString()
+{
+	return m_QueryString;
+}
+
 bool MysqlQuery::ExecuteR(QueryInfo *info, char *error, size_t maxlength)
 {
 	int err;

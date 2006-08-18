@@ -84,6 +84,10 @@ namespace SourceMod
 		 * Same as above, except result handles are not freed for you.
 		 */
 		virtual bool ExecuteR(QueryInfo *info, char *error, size_t maxlength) =0;
+		/**
+		 * Returns the query string.
+		 */
+		virtual const char *GetQueryString() =0;
 	};
 
 	class ISQLDriver;

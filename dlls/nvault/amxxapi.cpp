@@ -36,8 +36,8 @@ static cell nvault_open(AMX *amx, cell *params)
 		if (strcmp(g_Vaults.at(i)->GetFilename(), file) == 0) 
 			return i;
 	}
-	NVault *v = new NVault(file);
-	if (!v->Open())
+	NVault *v = (NVault *)g_VaultMngr.OpenVault(file);
+	if (v == NULL || !v->Open())
 	{
 		delete v;
 		return -1;

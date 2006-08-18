@@ -32,6 +32,18 @@ NVault::NVault(const char *file)
 	m_File.assign(file);
 	m_Journal = NULL;
 	m_Open = false;
+
+	FILE *fp = fopen(m_File.c_str(), "rb");
+	if (!fp)
+	{
+		fp = fopen(m_File.c_str(), "wb");
+		if (!fp)
+		{
+			throw Vault_NoFile;
+		}
+	}
+
+	fclose(fp);
 }
 
 NVault::~NVault()
@@ -44,7 +56,9 @@ VaultError NVault::_ReadFromFile()
 	FILE *fp = fopen(m_File.c_str(), "rb");
 
 	if (!fp)
+	{
 		return Vault_NoFile;
+	}
 	//this is a little more optimized than the other version in the journal <_<
 	//I could optimize this more by embedding the position in the hash table but...
 	// the hash function can be changed.  this could be fixed by storing a string and its
@@ -123,7 +137,9 @@ bool NVault::_SaveToFile()
 	FILE *fp = fopen(m_File.c_str(), "wb");
 
 	if (!fp)
+	{
 		return false;
+	}
 
 	BinaryWriter bw(fp);
 
@@ -195,7 +211,11 @@ bool NVault::Open()
 
 	m_Journal->Replay(&m_Hash);
 	m_Journal->Erase();
-	m_Journal->Begin();
+	if (!m_Journal->Begin())
+	{
+		delete m_Journal;
+		m_Journal = NULL;
+	}
 	
 	m_Open = true;
 
@@ -285,8 +305,14 @@ bool NVault::GetValue(const char *key, time_t &stamp, char buffer[], size_t len)
 
 IVault *VaultMngr::OpenVault(const char *file)
 {
-	NVault *pVault = new NVault(file);
-	
+	NVault *pVault;
+	try
+	{
+		pVault = new NVault(file);
+	} catch (...) {
+		pVault = NULL;
+	}
+
 	return static_cast<IVault *>(pVault);
 }
 

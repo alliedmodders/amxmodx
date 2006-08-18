@@ -20,6 +20,9 @@ public:
 class IVaultMngr
 {
 public:
+	/**
+	 * Note: Will return NULL if the vault failed to create.
+	 */
 	virtual IVault *OpenVault(const char *name) =0;
 };
 

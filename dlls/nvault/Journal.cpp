@@ -18,7 +18,9 @@ int Journal::Replay(VaultMap *pMap)
 {
 	m_fp = fopen(m_File.c_str(), "rb");
 	if (!m_fp)
+	{
 		return -1;
+	}
 	
 	BinaryReader br(m_fp);
 

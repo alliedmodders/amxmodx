@@ -204,7 +204,7 @@ END_USER_FUNC()
 
 BEGIN_USER_FUNC(is_in_slowmo)
 	if (pPlayer->GetOffsetF(TSX_ISSLO_OFFSET))
-		return pPlayer->GetOffsetF(TSX_SLOMO2_OFFSET);
+		return amx_ftoc(pPlayer->GetOffsetF(TSX_SLOMO2_OFFSET));
 	return 0;
 END_USER_FUNC()
 

@@ -88,10 +88,10 @@ void Client_ObjScore(void* mValue)
 		break;
 	case 1:
 		score = *(int*)mValue;
-		if ( (pPlayer->lastScore = score - pPlayer->savedScore) && isModuleActive() )
+		if ( (pPlayer->lastScore = score - (int)(pPlayer->savedScore)) && isModuleActive() )
 		{
 			pPlayer->updateScore(pPlayer->current,pPlayer->lastScore);
-			pPlayer->sendScore = gpGlobals->time + 0.25f;
+			pPlayer->sendScore = (int)(gpGlobals->time + 0.25f);
 		}
 		pPlayer->savedScore = score;
 		break;

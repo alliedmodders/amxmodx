@@ -239,7 +239,7 @@ bool SWThreadHandle::WaitForThread()
 }
 
 SWThreadHandle::SWThreadHandle(IThreadCreator *parent, const ThreadParams *p, IThread *thread) : 
-	m_parent(parent), m_params(*p), pThread(thread), m_state(Thread_Paused)
+	m_state(Thread_Paused), m_params(*p), m_parent(parent), pThread(thread)
 {
 }
 

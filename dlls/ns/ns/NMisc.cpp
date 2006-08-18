@@ -95,7 +95,7 @@ static cell AMX_NATIVE_CALL ns_get_speedchange(AMX *amx, cell *params)
 {
 	// Params: get_speedchange(index)
 	int index=params[1];
-	if (!(params[1]>0 && params[1]<=gpGlobals->maxClients))
+	if (!(index>0 && index<=gpGlobals->maxClients))
 		return 0;
 	CPlayer *player = GET_PLAYER_I(params[1]);
 	return player->speedchange;

@@ -114,7 +114,7 @@ edict_t *FindEntityByString(edict_t *pentStart, const char *szKeyword, const cha
 #define GET_CAPTURE_AREA(x) \
 	if ( mObjects.obj[x].areaflags == 0 ){\
 		mObjects.obj[x].areaflags = 1;\
-		while ( mObjects.obj[x].pAreaEdict = FindEntityByString(mObjects.obj[x].pAreaEdict,"target",STRING(mObjects.obj[x].pEdict->v.targetname)) )\
+		while ( (mObjects.obj[x].pAreaEdict = FindEntityByString(mObjects.obj[x].pAreaEdict,"target",STRING(mObjects.obj[x].pEdict->v.targetname))) )\
 			if ( strcmp( STRING(mObjects.obj[x].pAreaEdict->v.classname),"dod_capture_area" )==0){\
 				mObjects.obj[x].areaflags = 2;\
 				break;\

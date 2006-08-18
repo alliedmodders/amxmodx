@@ -5,7 +5,7 @@
 using namespace SourceMod;
 
 MysqlResultRow::MysqlResultRow() : 
-	m_Columns(0), m_CurRow(NULL)
+	m_CurRow(NULL), m_Columns(0)
 {
 }
 

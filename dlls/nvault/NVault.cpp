@@ -14,7 +14,10 @@ int HashFunction<String>(const String & k)
 	unsigned long hash = 5381;
 	const char *str = k.c_str();
 	char c;
-	while (c = *str++) hash = ((hash << 5) + hash) + c; // hash*33 + c
+	while ((c = *str++))
+	{
+		hash = ((hash << 5) + hash) + c; // hash*33 + c
+	}
 	return hash;
 }
 

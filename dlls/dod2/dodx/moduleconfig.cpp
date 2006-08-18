@@ -174,7 +174,7 @@ void PlayerPreThink_Post( edict_t *pEntity ) {
 	}
 
 	if (pPlayer->sendScore && pPlayer->sendScore < gpGlobals->time){
-		pPlayer->sendScore = 0.0f;
+		pPlayer->sendScore = 0;
 		MF_ExecuteForward( iFScore,pPlayer->index, pPlayer->lastScore, pPlayer->savedScore );
 	}
 	

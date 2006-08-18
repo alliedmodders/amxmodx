@@ -327,7 +327,7 @@ AtomicResult::AtomicResult()
 {
 	m_IsFree = true;
 	m_CurRow = 1;
-	m_RowCount = NULL;
+	m_RowCount = 0;
 	m_Table = NULL;
 	m_AllocSize = 0;
 }

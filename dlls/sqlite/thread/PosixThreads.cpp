@@ -146,7 +146,7 @@ void PosixThreader::PosixMutex::DestroyThis()
 ******************/
 
 PosixThreader::ThreadHandle::ThreadHandle(IThreader *parent, IThread *run, const ThreadParams *params) : 
-	m_parent(parent), m_run(run), m_params(*params), m_state(Thread_Paused)
+	m_parent(parent), m_params(*params), m_run(run), m_state(Thread_Paused)
 {
 	pthread_mutex_init(&m_runlock, NULL);
 	pthread_mutex_init(&m_statelock, NULL);

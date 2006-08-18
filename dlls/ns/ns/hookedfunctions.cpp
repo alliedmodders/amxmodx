@@ -401,8 +401,7 @@ int LogToIndex(char logline[128])
 	}
 	cindex[x]='\0';
 	// Now we have their name, now cycle through all players to find which index it is
-	x=1;
-	for (x;x<=gpGlobals->maxClients;x++)
+	for (x=1;x<=gpGlobals->maxClients;x++)
 	{
 		cname=strdup(cindex);
 		if (!FNullEnt(INDEXENT2(x)))
@@ -418,7 +417,7 @@ int LogToIndex(char logline[128])
 int Find_Building_Hive(void)
 {
 	edict_t *pEntity=NULL;
-	while (pEntity = UTIL_FindEntityByString(pEntity,"classname","team_hive"))
+	while ((pEntity = UTIL_FindEntityByString(pEntity,"classname","team_hive")))
 	{
 		if (pEntity->v.health > 0 && pEntity->v.solid > 0 && pEntity->v.fuser1 < 1000)
 		{

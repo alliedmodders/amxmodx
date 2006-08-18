@@ -222,7 +222,7 @@ native cs_get_weapon_silen(index);
 
 /* If silence = 1, weapon will be silenced, 0 and silencer will be removed. Only USP and M4A1 can be silenced.
  */
-native cs_set_weapon_silen(index, silence = 1);
+native cs_set_weapon_silen(index, silence = 1, draw_animation = 1);
 
 /* Returns amount of ammo in weapon's clip.
  */

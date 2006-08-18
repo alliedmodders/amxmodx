@@ -3054,6 +3054,7 @@ struct CallFunc_ParamInfo
 	unsigned char flags;											// flags
 	cell byrefAddr;													// byref address in caller plugin
 	cell size;														// byref size
+	cell *alloc;													// allocated block
 };
 
 #if !defined CALLFUNC_MAXPARAMS
@@ -3204,7 +3205,32 @@ static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 	Debugger *pDebugger = (Debugger *)pAmx->userdata[UD_DEBUGGER];
 
 	if (pDebugger)
+	{
 		pDebugger->BeginExec();
+	}
+
+	// first pass over byref things
+	for (int i = curParam - 1; i >= 0; i--)
+	{
+		if (gparamInfo[i].flags & CALLFUNC_FLAG_BYREF)
+		{
+			cell amx_addr, *phys_addr;
+			amx_Allot(pAmx, gparamInfo[i].size, &amx_addr, &phys_addr);
+			memcpy(phys_addr, gparamInfo[i].alloc, gparamInfo[i].size * sizeof(cell));
+			gparams[i] = amx_addr;
+			delete [] gparamInfo[i].alloc;
+			gparamInfo[i].alloc = NULL;
+		}
+	}
+
+	// second pass, link in reused byrefs
+	for (int i = curParam - 1; i >= 0; i--)
+	{
+		if (gparamInfo[i].flags & CALLFUNC_FLAG_BYREF_REUSED)
+		{
+			gparams[i] = gparams[gparams[i]];
+		}
+	}
 
 	// actual call
 	// Pawn - push parameters in reverse order
@@ -3226,7 +3252,9 @@ static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 	}
 
 	if (pDebugger)
+	{
 		pDebugger->EndExec();
+	}
 
 	// process byref params (not byref_reused)
 	for (int i = 0; i < curParam; ++i)
@@ -3305,20 +3333,13 @@ static cell AMX_NATIVE_CALL callfunc_push_byref(AMX *amx, cell *params)
 			g_CallFunc_ParamInfo[g_CallFunc_CurParam].flags = CALLFUNC_FLAG_BYREF_REUSED;
 			g_CallFunc_ParamInfo[g_CallFunc_CurParam].byrefAddr = params[1];
 			g_CallFunc_ParamInfo[g_CallFunc_CurParam].size = 1;
-			g_CallFunc_Params[g_CallFunc_CurParam++] = g_CallFunc_Params[i];
-			// we are done
+			g_CallFunc_ParamInfo[g_CallFunc_CurParam].alloc = NULL;
+			g_CallFunc_Params[g_CallFunc_CurParam++] = i;		/* referenced parameter */
 			return 0;
 		}
 	}
 
-	// not found; create an own copy
-	// allocate memory
-	cell *phys_addr;
-	cell amx_addr;
-	amx_Allot(g_CallFunc_Plugin->getAMX(), 
-		1, 				// 1 cell
-		&amx_addr, 
-		&phys_addr);
+	cell *phys_addr = new cell[1];
 
 	// copy the value to the allocated memory
 	cell *phys_addr2;
@@ -3329,7 +3350,59 @@ static cell AMX_NATIVE_CALL callfunc_push_byref(AMX *amx, cell *params)
 	g_CallFunc_ParamInfo[g_CallFunc_CurParam].flags = CALLFUNC_FLAG_BYREF;
 	g_CallFunc_ParamInfo[g_CallFunc_CurParam].byrefAddr = params[1];
 	g_CallFunc_ParamInfo[g_CallFunc_CurParam].size = 1;
-	g_CallFunc_Params[g_CallFunc_CurParam++] = amx_addr;
+	g_CallFunc_ParamInfo[g_CallFunc_CurParam].alloc = phys_addr;
+	g_CallFunc_Params[g_CallFunc_CurParam++] = 0;
+
+	return 0;
+}
+
+// native callfunc_push_array(array[], size)
+static cell AMX_NATIVE_CALL callfunc_push_array(AMX *amx, cell *params)
+{
+	if (!g_CallFunc_Plugin)
+	{
+		// scripter's fault
+		LogError(amx, AMX_ERR_NATIVE, "callfunc_push_xxx called without callfunc_begin");
+		return 0;
+	}
+
+	if (g_CallFunc_CurParam == CALLFUNC_MAXPARAMS)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "callfunc_push_xxx: maximal parameters num: %d", CALLFUNC_MAXPARAMS);
+		return 0;
+	}
+
+	// search for the address; if it is found, dont create a new copy
+	for (int i = 0; i < g_CallFunc_CurParam; ++i)
+	{
+		if ((g_CallFunc_ParamInfo[i].flags & CALLFUNC_FLAG_BYREF) && (g_CallFunc_ParamInfo[i].byrefAddr == params[1]))
+		{
+			// the byrefAddr and size params should not be used; set them anyways...
+			g_CallFunc_ParamInfo[g_CallFunc_CurParam].flags = CALLFUNC_FLAG_BYREF_REUSED;
+			g_CallFunc_ParamInfo[g_CallFunc_CurParam].byrefAddr = params[1];
+			g_CallFunc_ParamInfo[g_CallFunc_CurParam].size = 1;
+			g_CallFunc_ParamInfo[g_CallFunc_CurParam].alloc = NULL;
+			g_CallFunc_Params[g_CallFunc_CurParam++] = i;		/* referenced parameter */
+			return 0;
+		}
+	}
+
+	// not found; create an own copy
+	// get the string and its length
+	cell *pArray = get_amxaddr(amx, params[1]);
+	cell array_size = params[2];
+
+	// allocate enough memory for the array
+	cell *phys_addr = new cell[array_size];
+
+	memcpy(phys_addr, pArray, array_size * sizeof(cell));
+
+	// push the address and set the reference flag so that memory is released after function call.
+	g_CallFunc_ParamInfo[g_CallFunc_CurParam].flags = CALLFUNC_FLAG_BYREF;
+	g_CallFunc_ParamInfo[g_CallFunc_CurParam].byrefAddr = params[1];
+	g_CallFunc_ParamInfo[g_CallFunc_CurParam].size = array_size;
+	g_CallFunc_ParamInfo[g_CallFunc_CurParam].alloc = phys_addr;
+	g_CallFunc_Params[g_CallFunc_CurParam++] = 0;
 
 	return 0;
 }
@@ -3359,7 +3432,8 @@ static cell AMX_NATIVE_CALL callfunc_push_str(AMX *amx, cell *params)
 			g_CallFunc_ParamInfo[g_CallFunc_CurParam].flags = CALLFUNC_FLAG_BYREF_REUSED;
 			g_CallFunc_ParamInfo[g_CallFunc_CurParam].byrefAddr = params[1];
 			g_CallFunc_ParamInfo[g_CallFunc_CurParam].size = 1;
-			g_CallFunc_Params[g_CallFunc_CurParam++] = g_CallFunc_Params[i];
+			g_CallFunc_ParamInfo[g_CallFunc_CurParam].alloc = NULL;
+			g_CallFunc_Params[g_CallFunc_CurParam++] = i;
 			// we are done
 			return 0;
 		}
@@ -3371,12 +3445,7 @@ static cell AMX_NATIVE_CALL callfunc_push_str(AMX *amx, cell *params)
 	char *str = get_amxstring(amx, params[1], 0, len);
 	
 	// allocate enough memory for the string
-	cell *phys_addr;
-	cell amx_addr;
-	amx_Allot(g_CallFunc_Plugin->getAMX(),
-		len + 1, 			// length + terminator
-		&amx_addr, 
-		&phys_addr);
+	cell *phys_addr = new cell[len+1];
 
 	// copy it to the allocated memory
 	// we assume it's unpacked
@@ -3387,7 +3456,8 @@ static cell AMX_NATIVE_CALL callfunc_push_str(AMX *amx, cell *params)
 	g_CallFunc_ParamInfo[g_CallFunc_CurParam].flags = CALLFUNC_FLAG_BYREF;
 	g_CallFunc_ParamInfo[g_CallFunc_CurParam].byrefAddr = params[1];
 	g_CallFunc_ParamInfo[g_CallFunc_CurParam].size = len + 1;
-	g_CallFunc_Params[g_CallFunc_CurParam++] = amx_addr;
+	g_CallFunc_ParamInfo[g_CallFunc_CurParam].alloc = phys_addr;
+	g_CallFunc_Params[g_CallFunc_CurParam++] = 0;
 
 	return 0;
 }
@@ -3997,6 +4067,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"callfunc_push_intrf",		callfunc_push_byref},
 	{"callfunc_push_floatrf",	callfunc_push_byref},
 	{"callfunc_push_str",		callfunc_push_str},
+	{"callfunc_push_array",		callfunc_push_array},
 	{"change_task",				change_task},
 	{"client_cmd",				client_cmd},
 	{"client_print",			client_print},

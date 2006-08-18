@@ -647,6 +647,7 @@ native callfunc_push_str(const VALUE[]);
 native callfunc_push_float(Float: value);
 native callfunc_push_intrf(&value);
 native callfunc_push_floatrf(& Float: value);
+native callfunc_push_array(const VALUE[], array_size);
 
 /* Make the actual call.
 * Return value of the function called. */

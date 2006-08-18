@@ -878,7 +878,6 @@ static cell AMX_NATIVE_CALL trace_forward(AMX *amx, cell *params)
    Vector forwardVector = gpGlobals->v_forward;
    REAL fEndX = forwardVector[0] * 4000;
    REAL fEndY = forwardVector[1] * 4000;
-   REAL fEndZ = fStartZ;   
 
    REAL fClosestDist = 999999.9;
    REAL fClosestLow = 0.0;

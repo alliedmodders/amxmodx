@@ -2,8 +2,6 @@
 
 static cell AMX_NATIVE_CALL get_global_float(AMX *amx, cell *params)
 {
-	int global = params[1];
-
 	REAL returnValue;
 
 	switch (params[1]) {

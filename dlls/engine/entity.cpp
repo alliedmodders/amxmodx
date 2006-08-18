@@ -164,7 +164,6 @@ static cell AMX_NATIVE_CALL get_keyvalue(AMX *amx, cell *params)
 	int idx = params[1];
 	CHECK_ENTITY(idx);
 	edict_t *pEntity = INDEXENT2(idx);
-	char *test = INFO_KEY_BUFFER(pEntity);
 	int iLength=0;
 	char *char1 = MF_GetAmxString(amx, params[2], 1, &iLength);
 	return MF_SetAmxString(amx, params[3], INFO_KEY_VALUE(INFO_KEY_BUFFER(pEntity),char1), params[4]); 

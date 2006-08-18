@@ -40,7 +40,7 @@ int Spawn(edict_t *pEntity)
 {
 	if (!g_precachedStuff) {
 		// Used for SetView, added by JGHG
-		int returnValue = PRECACHE_MODEL("models/rpgrocket.mdl");
+		PRECACHE_MODEL("models/rpgrocket.mdl");
 		g_precachedStuff = true;
 	}
 	if (SpawnForward != -1) {

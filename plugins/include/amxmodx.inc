@@ -641,13 +641,17 @@ native callfunc_begin_i(func, plugin = -1);
 */
 native get_func_id(const funcName[], pluginId = -1);
 
-/* Push a parameter (integer, string, float) */
+/* Push a parameter (integer, string, float)
+ * Note that none of these values are const.
+ * Anything pushed by intrf, floatrf, array, or str
+ *  can be modified by the called function.
+ */
 native callfunc_push_int(value);
-native callfunc_push_str(const VALUE[]);
+native callfunc_push_str(VALUE[]);
 native callfunc_push_float(Float: value);
 native callfunc_push_intrf(&value);
 native callfunc_push_floatrf(& Float: value);
-native callfunc_push_array(const VALUE[], array_size);
+native callfunc_push_array(VALUE[], array_size);
 
 /* Make the actual call.
 * Return value of the function called. */

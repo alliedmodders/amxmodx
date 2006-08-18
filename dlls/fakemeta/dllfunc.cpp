@@ -199,7 +199,7 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		return gpGamedllFuncs->dllapi_table->pfnPM_FindTextureType(temp);
 
 	case	DLLFunc_RegisterEncoders:	// void )	( void );
-		gpGamedllFuncs->dllapi_table->pfnRegisterEncoders;
+		gpGamedllFuncs->dllapi_table->pfnRegisterEncoders();
 		return 1;
 
 	// Enumerates player hulls.  Returns 0 if the hull number doesn't exist, 1 otherwise

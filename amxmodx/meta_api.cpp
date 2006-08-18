@@ -1192,10 +1192,12 @@ void C_TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t
 	RETURN_META(MRES_IGNORED);
 }
 
-void C_AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...)
+void C_AlertMessage(ALERT_TYPE atype, char *szFmt, ...)
 {
 	if (atype != at_logged)
+	{
 		RETURN_META(MRES_IGNORED);
+	}
 
 	/* There are also more messages but we want only logs
 	at_notice,
@@ -1207,7 +1209,7 @@ void C_AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...)
 	*/
 
 	// execute logevents and plugin_log forward
-	if (g_logevents.logEventsExist() || FF_PluginLog >= 0)
+	if (g_logevents.logEventsExist())
 	{
 		va_list	logArgPtr;
 		va_start(logArgPtr, szFmt);
@@ -1216,12 +1218,16 @@ void C_AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...)
 		g_logevents.parseLogString();
 
 		if (g_logevents.logEventsExist())
+		{
 			g_logevents.executeLogEvents();
+		}
 		
 		cell retVal = executeForwards(FF_PluginLog);
 		
 		if (retVal)
+		{
 			RETURN_META(MRES_HANDLED);
+		}
 	}
 
 	RETURN_META(MRES_IGNORED);
@@ -1575,6 +1581,8 @@ C_DLLEXPORT	int	GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
 	meta_engfuncs.pfnWriteShort = C_WriteShort;
 	meta_engfuncs.pfnWriteString = C_WriteString;
 
+	meta_engfuncs.pfnAlertMessage = C_AlertMessage;
+
 	memcpy(pengfuncsFromEngine, &meta_engfuncs, sizeof(enginefuncs_t));
 
 	return 1;
@@ -1596,7 +1604,6 @@ C_DLLEXPORT	int	GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine,	int	
 	meta_engfuncs_post.pfnWriteCoord = C_WriteCoord_Post;
 	meta_engfuncs_post.pfnWriteString = C_WriteString_Post;
 	meta_engfuncs_post.pfnWriteEntity = C_WriteEntity_Post;
-	meta_engfuncs_post.pfnAlertMessage = C_AlertMessage_Post;
 	meta_engfuncs_post.pfnRegUserMsg = C_RegUserMsg_Post;
 
 	memcpy(pengfuncsFromEngine, &meta_engfuncs_post, sizeof(enginefuncs_t));

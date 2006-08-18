@@ -27,7 +27,7 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 {
 	for(int i = 1; i <= gpGlobals->maxClients;i++) 
 		g_player_edicts[i]=pEdictList + i;
-	g_pFunctionTable->pfnServerDeactivate = FMH_ServerDeactivate;
+	g_pFunctionTable_Post->pfnServerDeactivate = FMH_ServerDeactivate_Post;
 	RETURN_META(MRES_IGNORED);
 }
 #define RESETD(tcall) \
@@ -48,7 +48,7 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 	Engine[FM_##call].clear(); \
 	EnginePost[FM_##call].clear();
 
-void FMH_ServerDeactivate()
+void FMH_ServerDeactivate_Post()
 {
 	// Reset all call lists here.
 	// NULL all function tables

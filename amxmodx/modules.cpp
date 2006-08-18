@@ -1537,7 +1537,9 @@ extern "C" void LogError(AMX *amx, int err, const char *fmt, ...)
 #if defined BINLOG_ENABLED
 	CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(amx);
 	if (pl)
+	{
 		g_BinLog.WriteOp(BinLog_NativeError, pl->getId(), err, msg_buffer);
+	}
 #endif
 
 	//give the plugin first chance to handle any sort of error
@@ -1546,14 +1548,19 @@ extern "C" void LogError(AMX *amx, int err, const char *fmt, ...)
 	if (pHandler->InNativeFilter())
 	{
 		if (pDebugger)
+		{
 			pDebugger->EndExec();
+		}
 	} else {
 		if (pHandler)
 		{
 			if (pHandler->IsHandling())
 			{
 				if (fmt != NULL)
+				{
 					pHandler->SetErrorMsg(msg_buffer);
+				}
+
 				return;
 			}
 			
@@ -1569,10 +1576,15 @@ extern "C" void LogError(AMX *amx, int err, const char *fmt, ...)
 	if (!pDebugger)
 	{
 		if (fmt)
+		{
 			AMXXLOG_Error("%s", msg_buffer);
+		}
 		
 		Debugger::GenericMessage(amx, err);
-		AMXXLOG_Error("[AMXX] To enable debug mode, add \"debug\" after the plugin name in plugins.ini (without quotes).");
+		if (err != AMX_ERR_EXIT)
+		{
+			AMXXLOG_Error("[AMXX] To enable debug mode, add \"debug\" after the plugin name in plugins.ini (without quotes).");
+		}
 		//destroy original error code so the original is not displayed again
 	} else {
 		pDebugger->SetTracedError(err);

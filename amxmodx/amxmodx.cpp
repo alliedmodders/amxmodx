@@ -3719,6 +3719,11 @@ static cell AMX_NATIVE_CALL set_fail_state(AMX *amx, cell *params)
 	pPlugin->setStatus(ps_error);
 	pPlugin->setError(str);
 
+	AMXXLOG_Error("[AMXX] Plugin (\"%s\") is setting itself as failed.", pPlugin->getName());
+	AMXXLOG_Error("[AMXX] Plugin says: %s", str);
+	
+	LogError(amx, AMX_ERR_EXIT, NULL);
+
 	//plugin dies once amx_Exec concludes
 	return 0;
 }

@@ -622,7 +622,12 @@ void Debugger::FmtGenericMsg(AMX *amx, int error, char buffer[], size_t maxLengt
 		}
 	}
 
-	_snprintf(buffer, maxLength, "Run time error %d (plugin \"%s\") - debug not enabled!", error, filename);
+	if (error == AMX_ERR_EXIT)
+	{
+		_snprintf(buffer, maxLength, "Run time error %d (plugin \"%s\") - %s", error, filename, GenericError(AMX_ERR_EXIT));
+	} else {
+		_snprintf(buffer, maxLength, "Run time error %d (plugin \"%s\") - debug not enabled!", error, filename);
+	}
 }
 
 void Debugger::GenericMessage(AMX *amx, int err)

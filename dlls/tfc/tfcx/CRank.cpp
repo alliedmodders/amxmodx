@@ -229,35 +229,56 @@ void RankSystem::updatePos(  RankStats* rr ,  Stats* s )
 
 }
 
-void RankSystem::loadRank( const char* filename )
+
+/** 
+ * Who put these backwards...
+ */
+#define TRYREAD(t_var, t_num, t_size, t_file) \
+	if (fread(t_var, t_size, t_num, t_file) != t_num) { \
+		break; \
+	}
+
+void RankSystem::loadRank(const char* filename)
 {
-	FILE *bfp = fopen( filename , "rb" );
+	FILE *bfp = fopen(filename , "rb");
 	
-	if ( !bfp ) return;
+	if (!bfp)
+	{
+		MF_Log("Could not load stats file: %s", filename);
+		return;
+	}
 	
 	short int i = 0;
-	fread(&i, 1 , sizeof(short int) , bfp);
+	if (fread(&i, sizeof(short int), 1, bfp) != 1)
+	{
+		fclose(bfp);
+		return;
+	}
 	
 	if (i == RANK_VERSION)
 	{
 		Stats d;
 		char unique[64], name[64];
-		fread(&i , 1, sizeof(short int), bfp);
-
-		while( i )
+		if (fread(&i, sizeof(short int), 1, bfp) != 1)
 		{
-			fread(name , i,sizeof(char) , bfp);
-			fread(&i , 1, sizeof(short int), bfp);
-			fread(unique , i,sizeof(char) , bfp);
-			fread(&d.tks, 1,sizeof(int), bfp);
-			fread(&d.damage, 1,sizeof(int), bfp);
-			fread(&d.deaths, 1,sizeof(int), bfp);
-			fread(&d.kills, 1,sizeof(int), bfp);
-			fread(&d.shots, 1,sizeof(int), bfp);
-			fread(&d.hits, 1,sizeof(int), bfp);
-			fread(&d.hs, 1,sizeof(int), bfp);
-			fread(d.bodyHits, 1,sizeof(d.bodyHits), bfp);
-			fread(&i , 1, sizeof(short int), bfp);
+			fclose(bfp);
+			return;
+		}
+
+		while(i && !feof(bfp))
+		{
+			TRYREAD(name, i, sizeof(char), bfp);
+			TRYREAD(&i, 1, sizeof(short int), bfp);
+			TRYREAD(unique, i, sizeof(char), bfp);
+			TRYREAD(&d.tks, 1, sizeof(int), bfp);
+			TRYREAD(&d.damage, 1, sizeof(int), bfp);
+			TRYREAD(&d.deaths, 1, sizeof(int), bfp);
+			TRYREAD(&d.kills, 1, sizeof(int), bfp);
+			TRYREAD(&d.shots, 1, sizeof(int), bfp);
+			TRYREAD(&d.hits, 1, sizeof(int), bfp);
+			TRYREAD(&d.hs, 1, sizeof(int), bfp);
+			TRYREAD(d.bodyHits, 1, sizeof(d.bodyHits), bfp);
+			TRYREAD(&i, 1, sizeof(short int), bfp);
 
 			RankSystem::RankStats* a = findEntryInRank( unique , name );
 			if ( a ) a->updatePosition( &d );

@@ -435,3 +435,28 @@
 
 // Set this bit on guns and stuff that should never respawn
 #define SF_NORESPAWN                    (1<<30)
+
+// Valve Mod Weapon Constants
+#define HLI_HEALTHKIT			1
+#define HLI_ANTIDOTE			2
+#define HLI_SECURITY			3
+#define HLI_BATTERY			4
+
+#define HLW_NONE			0
+#define HLW_CROWBAR			1
+#define HLW_GLOCK			2
+#define HLW_PYTHON			3
+#define HLW_MP5				4
+#define HLW_CHAINGUN			5
+#define HLW_CROSSBOW			6
+#define HLW_SHOTGUN			7
+#define HLW_RPG				8
+#define HLW_GAUSS			9
+#define HLW_EGON			10
+#define HLW_HORNETGUN			11
+#define HLW_HANDGRENADE			12
+#define HLW_TRIPMINE			13
+#define HLW_SATCHEL			14
+#define HLW_SNARK			15
+#define HLW_SUIT			31
+#define HLW_ALLWEAPONS			(~(1<<HLW_SUIT))

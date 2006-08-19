@@ -5,6 +5,7 @@
 
 new Handle:g_DbInfo
 new g_QueryNum
+new bool:g_TestEnd = false
 
 public plugin_init()
 {
@@ -13,6 +14,7 @@ public plugin_init()
 	register_srvcmd("sqlx_test_thread", "SqlxTest_Thread")
 	register_srvcmd("sqlx_test_old1", "SqlxTest_Old1")
 	register_srvcmd("sqlx_test_old2", "SqlxTest_Old2")
+	register_srvcmd("sqlx_test_thread_end", "SqlxTest_ThreadEnd")
 	
 	new configsDir[64]
 	get_configsdir(configsDir, 63)
@@ -283,8 +285,34 @@ public SqlxTest_Old2()
 	dbi_close(sql)
 }
 
+public SqlxTest_ThreadEnd()
+{
+	if (read_argc() < 2)
+	{
+		server_print("Requires mapname!")
+	} else {
+		new mapname[64]
+		
+		read_argv(1, mapname, 63)
+		if (!is_map_valid(mapname))
+		{
+			server_print("Invalid map: %s", mapname)
+		} else {
+			g_TestEnd = true
+			server_cmd("changelevel %s", mapname)
+		}
+	}
+	
+	return PLUGIN_HANDLED
+}
+
 
 public plugin_end()
 {
-	SQL_FreeHandle(g_DbInfo)
+	if (g_TestEnd)
+	{
+		SqlxTest_Thread()
+	} else {
+		SQL_FreeHandle(g_DbInfo)
+	}
 }

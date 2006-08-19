@@ -225,21 +225,72 @@ void AddFloat(U **buf_p, size_t &maxlen, double fval, int width, int prec)
 }
 
 template <typename U>
+void AddUInt(U **buf_p, size_t &maxlen, unsigned int val, int width, int flags)
+{
+	U		text[32];
+	int		digits;
+	U		*buf;
+
+	digits = 0;
+	do {
+		text[digits++] = '0' + val % 10;
+		val /= 10;
+	} while (val);
+
+	buf = *buf_p;
+
+	if( !(flags & LADJUST) )
+	{
+		while (digits < width && maxlen)
+		{
+			*buf++ = (flags & ZEROPAD) ? '0' : ' ';
+			width--;
+			maxlen--;
+		}
+	}
+
+	while (digits-- && maxlen)
+	{
+		*buf++ = text[digits];
+		width--;
+		maxlen--;
+	}
+
+	if (flags & LADJUST)
+	{
+		while (width-- && maxlen)
+		{
+			*buf++ = (flags & ZEROPAD) ? '0' : ' ';
+			maxlen--;
+		}
+	}
+
+	*buf_p = buf;
+}
+
+template <typename U>
 void AddInt(U **buf_p, size_t &maxlen, int val, int width, int flags)
 {
 	U		text[32];
 	int		digits;
 	int		signedVal;
 	U		*buf;
+	unsigned int unsignedVal;
 
 	digits = 0;
 	signedVal = val;
 	if (val < 0)
-		val = -val;
+	{
+		/* we want the unsigned version */
+		val--;
+		unsignedVal = ~val;
+	} else {
+		unsignedVal = val;
+	}
 	do {
-		text[digits++] = '0' + val % 10;
-		val /= 10;
-	} while (val);
+		text[digits++] = '0' + unsignedVal % 10;
+		unsignedVal /= 10;
+	} while (unsignedVal);
 
 	if (signedVal < 0)
 		text[digits++] = '-';
@@ -358,6 +409,11 @@ reswitch:
 		case 'i':
 			CHECK_ARGS(0);
 			AddInt(&buf_p, llen, *get_amxaddr(amx, params[arg]), width, flags);
+			arg++;
+			break;
+		case 'u':
+			CHECK_ARGS(0);
+			AddUInt(&buf_p, llen, static_cast<unsigned int>(*get_amxaddr(amx, params[arg])), width, flags);
 			arg++;
 			break;
 		case 'f':

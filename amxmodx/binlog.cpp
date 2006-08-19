@@ -21,7 +21,7 @@ int LookupFile(AMX_DBG *amxdbg, ucell address)
 	while (high - low > 1)
 	{
 		mid = USHR(low + high);
-		if (amxdbg->filetbl[mid]->address < address)
+		if (amxdbg->filetbl[mid]->address <= address)
 		{
 			low = mid;
 		} else {

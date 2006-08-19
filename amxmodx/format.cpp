@@ -282,8 +282,7 @@ void AddInt(U **buf_p, size_t &maxlen, int val, int width, int flags)
 	if (val < 0)
 	{
 		/* we want the unsigned version */
-		val--;
-		unsignedVal = ~val;
+		unsignedVal = abs(val);
 	} else {
 		unsignedVal = val;
 	}

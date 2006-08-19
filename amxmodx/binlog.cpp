@@ -3,10 +3,39 @@
 #include <time.h>
 #include "amxmodx.h"
 #include "binlog.h"
+#include "debugger.h"
 
 BinLog g_BinLog;
 int g_binlog_level = 0;
 int g_binlog_maxsize = 0;
+
+// Helper function to get a filename index
+#define USHR(x) ((unsigned int)(x)>>1)
+int LookupFile(AMX_DBG *amxdbg, ucell address)
+{
+	int high, low, mid;
+
+	high = amxdbg->hdr->files;
+	low = -1;
+
+	while (high - low > 1)
+	{
+		mid = USHR(low + high);
+		if (amxdbg->filetbl[mid]->address < address)
+		{
+			low = mid;
+		} else {
+			high = mid;
+		}
+	}
+
+	if (low == -1)
+	{
+		return -1;
+	}
+
+	return low;
+}
 
 bool BinLog::Open()
 {
@@ -110,6 +139,21 @@ void BinLog::WriteOp(BinLogOp op, int plug, ...)
 	va_list ap;
 	va_start(ap, plug);
 
+	AMX *amx;
+	bool debug = false;
+	AMX_DBG *dbg = NULL;
+	CPluginMngr::CPlugin *pl = NULL;
+
+	if (plug != -1)
+	{
+		pl = g_plugins.findPlugin(plug);
+		if ((debug = pl->isDebug()))
+		{
+			amx = pl->getAMX();
+			dbg = static_cast<Debugger *>(amx->userdata[UD_DEBUGGER])->m_pAmxDbg;
+		}
+	}
+
 	switch (c)
 	{
 	case BinLog_Registered:
@@ -126,32 +170,68 @@ void BinLog::WriteOp(BinLogOp op, int plug, ...)
 		}
 	case BinLog_NativeCall:
 		{
+			int file;
 			int native = va_arg(ap, int);
 			int params = va_arg(ap, int);
 			fwrite(&native, sizeof(int), 1, fp);
 			fwrite(&params, sizeof(int), 1, fp);
+			if (debug)
+			{
+				file = LookupFile(dbg, amx->cip);
+				fwrite(&file, sizeof(int), 1, fp);
+			} else {
+				file = 0;
+				fwrite(&file, sizeof(int), 1, fp);
+			}
 			break;
 		}
 	case BinLog_NativeRet:
 		{
+			int file;
 			cell retval = va_arg(ap, cell);
 			fwrite(&retval, sizeof(cell), 1, fp);
+			if (debug)
+			{
+				file = LookupFile(dbg, amx->cip);
+				fwrite(&file, sizeof(int), 1, fp);
+			} else {
+				file = 0;
+				fwrite(&file, sizeof(int), 1, fp);
+			}
 			break;
 		}
 	case BinLog_NativeError:
 		{
+			int file;
 			int err = va_arg(ap, int);
 			const char *msg = va_arg(ap, const char *);
 			short len = (short)strlen(msg);
 			fwrite(&err, sizeof(int), 1, fp);
 			fwrite(&len, sizeof(short), 1, fp);
 			fwrite(msg, sizeof(char), len+1, fp);
+			if (debug)
+			{
+				file = LookupFile(dbg, amx->cip);
+				fwrite(&file, sizeof(int), 1, fp);
+			} else {
+				file = 0;
+				fwrite(&file, sizeof(int), 1, fp);
+			}
 			break;
 		}
 	case BinLog_CallPubFunc:
 		{
+			int file;
 			int num = va_arg(ap, int);
 			fwrite(&num, sizeof(int), 1, fp);
+			if (debug)
+			{
+				file = LookupFile(dbg, amx->cip);
+				fwrite(&file, sizeof(int), 1, fp);
+			} else {
+				file = 0;
+				fwrite(&file, sizeof(int), 1, fp);
+			}
 			break;
 		}
 	case BinLog_SetLine:
@@ -162,6 +242,7 @@ void BinLog::WriteOp(BinLogOp op, int plug, ...)
 		}
 	case BinLog_FormatString:
 		{
+			int file;
 			int param = va_arg(ap, int);
 			int maxlen = va_arg(ap, int);
 			const char *str = va_arg(ap, const char *);
@@ -170,29 +251,56 @@ void BinLog::WriteOp(BinLogOp op, int plug, ...)
 			fwrite(&maxlen, sizeof(int), 1, fp);
 			fwrite(&len, sizeof(short), 1, fp);
 			fwrite(str, sizeof(char), len+1, fp);
+			if (debug)
+			{
+				file = LookupFile(dbg, amx->cip);
+				fwrite(&file, sizeof(int), 1, fp);
+			} else {
+				file = 0;
+				fwrite(&file, sizeof(int), 1, fp);
+			}
 			break;
 		}
 	case BinLog_NativeParams:
 		{
+			int file;
 			cell *params = va_arg(ap, cell *);
 			cell num = params[0] / sizeof(cell);
 			fwrite(&num, sizeof(cell), 1, fp);
 			for (cell i=1; i<=num; i++)
 				fwrite(&(params[i]), sizeof(cell), 1, fp);
+			if (debug)
+			{
+				file = LookupFile(dbg, amx->cip);
+				fwrite(&file, sizeof(int), 1, fp);
+			} else {
+				file = 0;
+				fwrite(&file, sizeof(int), 1, fp);
+			}
 			break;
 		}
 	case BinLog_GetString:
 		{
+			int file;
 			cell addr = va_arg(ap, cell);
 			const char *str = va_arg(ap, const char *);
 			short len = (short)strlen(str);
 			fwrite(&addr, sizeof(cell), 1, fp);
 			fwrite(&len, sizeof(short), 1, fp);
 			fwrite(str, sizeof(char), len+1, fp);
+			if (debug)
+			{
+				file = LookupFile(dbg, amx->cip);
+				fwrite(&file, sizeof(int), 1, fp);
+			} else {
+				file = 0;
+				fwrite(&file, sizeof(int), 1, fp);
+			}
 			break;
 		}
 	case BinLog_SetString:
 		{
+			int file;
 			cell addr = va_arg(ap, cell);
 			int maxlen = va_arg(ap, int);
 			const char *str = va_arg(ap, const char *);
@@ -201,6 +309,14 @@ void BinLog::WriteOp(BinLogOp op, int plug, ...)
 			fwrite(&maxlen, sizeof(int), 1, fp);
 			fwrite(&len, sizeof(short), 1, fp);
 			fwrite(str, sizeof(char), len+1, fp);
+			if (debug)
+			{
+				file = LookupFile(dbg, amx->cip);
+				fwrite(&file, sizeof(int), 1, fp);
+			} else {
+				file = 0;
+				fwrite(&file, sizeof(int), 1, fp);
+			}
 			break;
 		}
 	};
@@ -229,17 +345,37 @@ void BinLog::WritePluginDB(FILE *fp)
 		fwrite(&c, sizeof(char), 1, fp);
 		if (c)
 		{
+			Debugger *pd = NULL;
 			len = (char)strlen(pl->getName());
 			fwrite(&len, sizeof(char), 1, fp);
 			len++;
 			fwrite(pl->getName(), sizeof(char), len, fp);
-			int natives, publics;
+			int natives, publics, files;
 			AMX *amx = pl->getAMX();
+			// Write the number of Filenames
+			if (c == 2)
+			{
+				pd = static_cast<Debugger *>(amx->userdata[UD_DEBUGGER]);
+				files = pd->m_pAmxDbg->hdr->files;
+				fwrite(&files, sizeof(int), 1, fp);
+			}
 			amx_NumNatives(amx, &natives);
 			amx_NumPublics(amx, &publics);
 			fwrite(&natives, sizeof(int), 1, fp);
 			fwrite(&publics, sizeof(int), 1, fp);
 			char name[34];
+			// Write the Filenames to the binfile
+			if (c == 2)
+			{
+				AMX_DBG_FILE **ftable = pd->m_pAmxDbg->filetbl;
+				for (int i=0; i<files; i++)
+				{
+					len = (char)strlen(ftable[i]->name);
+					fwrite(&len, sizeof(char), 1, fp);
+					len++;
+					fwrite(ftable[i]->name, sizeof(char), len, fp);
+				}
+			}
 			for (int i=0; i<natives; i++)
 			{
 				amx_GetNative(amx, i, name);

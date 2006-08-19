@@ -1055,3 +1055,6 @@ native arrayset(array[], value, size);
  * The weapon name is case sensitive, and has the weapon_* form.
  */
 native get_weaponid(const name[]);
+
+// Keep this always at the bottom of this file
+#include <message_stocks>

@@ -263,6 +263,7 @@ void OnPluginsLoaded()
 	{
 		g_QueueLock = g_Threader.MakeMutex();
 	}
+
 	g_pWorker = new ThreadWorker(&g_Threader, 250);
 	if (!g_pWorker->Start())
 	{
@@ -307,16 +308,37 @@ void StartFrame()
 void OnPluginsUnloading()
 {
 	if (!g_pWorker)
+	{
 		return;
+	}
 
 	g_pWorker->Stop(false);
 	delete g_pWorker;
 	g_pWorker = NULL;
+
+	g_QueueLock->Lock();
+	size_t remaining = g_ThreadQueue.size();
+	if (remaining)
+	{
+		MysqlThread *kmThread;
+		do 
+		{
+			kmThread = g_ThreadQueue.front();
+			g_ThreadQueue.pop();
+			g_QueueLock->Unlock();
+			kmThread->Execute();
+			kmThread->Invalidate();
+			g_FreeThreads.push(kmThread);
+			g_QueueLock->Lock();
+		} while (!g_ThreadQueue.empty());
+	}
+
+	g_QueueLock->Unlock();
 }
 
 /***********************
-* ATOMIC RESULT STUFF *
-***********************/
+ * ATOMIC RESULT STUFF *
+ ***********************/
 
 AtomicResult::AtomicResult()
 {
@@ -418,7 +440,7 @@ const char *AtomicResult::GetRaw(unsigned int columnId, size_t *length)
 const char *AtomicResult::GetStringSafe(unsigned int columnId)
 {
 	const char *str = GetString(columnId);
-
+	
 	return str ? str : "";
 }
 

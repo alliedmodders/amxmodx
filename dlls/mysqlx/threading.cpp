@@ -17,7 +17,7 @@ void ShutdownThreading()
 {
 	if (g_pWorker)
 	{
-		g_pWorker->Stop(false);
+		g_pWorker->Stop(true);
 		delete g_pWorker;
 		g_pWorker = NULL;
 	}

@@ -17,7 +17,7 @@ void ShutdownThreading()
 {
 	if (g_pWorker)
 	{
-		g_pWorker->Stop(true);
+		g_pWorker->Stop(false);
 		delete g_pWorker;
 		g_pWorker = NULL;
 	}
@@ -312,11 +312,32 @@ void StartFrame()
 void OnPluginsUnloading()
 {
 	if (!g_pWorker)
+	{
 		return;
+	}
 
 	g_pWorker->Stop(false);
 	delete g_pWorker;
 	g_pWorker = NULL;
+
+	g_QueueLock->Lock();
+	size_t remaining = g_ThreadQueue.size();
+	if (remaining)
+	{
+		MysqlThread *kmThread;
+		do 
+		{
+			kmThread = g_ThreadQueue.front();
+			g_ThreadQueue.pop();
+			g_QueueLock->Unlock();
+			kmThread->Execute();
+			kmThread->Invalidate();
+			g_FreeThreads.push(kmThread);
+			g_QueueLock->Lock();
+		} while (!g_ThreadQueue.empty());
+	}
+
+	g_QueueLock->Unlock();
 }
 
 /***********************

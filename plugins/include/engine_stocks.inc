@@ -84,12 +84,7 @@ stock get_entity_flags(ent)
 /* Get the distance between two entities */
 stock get_entity_distance(ent1, ent2)
 {
-	new Float:orig1[3], Float:orig2[3]
-
-	entity_get_vector(ent1, EV_VEC_origin, orig1)
-	entity_get_vector(ent2, EV_VEC_origin, orig2)
-
-	return floatround(get_distance_f(orig1, orig2))
+	return floatround(entity_range(ent1, ent2))
 }
 
 /* Get grenade thrown by this user */
@@ -152,45 +147,6 @@ stock get_speed(ent)
 	entity_get_vector(ent, EV_VEC_velocity, Vel)
 
 	return floatround(vector_length(Vel))
-}
-
-/* Creates a death message. */
-stock make_deathmsg(killer,victim,headshot,weapon[])
-{
-	message_begin(MSG_ALL,get_user_msgid("DeathMsg"),{0,0,0},0)
-	write_byte( killer )
-	write_byte( victim )
-
-	new mod_name[32]
-	get_modname(mod_name,31)
-	if (equal(mod_name,"cstrike") || equal(mod_name,"czero") || equal(mod_name,"csv15") || equal(mod_name,"cs13"))
-		write_byte( headshot )
-	write_string( weapon )
-	message_end()
-
-	return 1
-}
-
-/* Creates a death message. */
-stock dod_make_deathmsg(killer,victim,weaponNUM)
-{
-
-    message_begin(MSG_ALL,get_user_msgid("DeathMsg"),{0,0,0},0)
-    write_byte( killer )
-    write_byte( victim )
-    write_byte( weaponNUM)
-    message_end()
-
-    return 1
-}
-
-/* Kills a user without a message. */
-stock user_silentkill(index)
-{
-	set_msg_block(get_user_msgid("DeathMsg"),BLOCK_ONCE)
-	user_kill(index,1)
-
-	return 1
 }
 
 /*  Set rendering of an entity */

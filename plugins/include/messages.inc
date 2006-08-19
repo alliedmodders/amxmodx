@@ -11,6 +11,7 @@
 #define _coremsg_included
 
 #include <message_const>
+#include <message_stocks>
 
 /* These functinos are used to generate client messages.
  * You may generate menu, smoke, shockwaves, thunderlights,

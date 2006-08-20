@@ -245,7 +245,7 @@ static cell AMX_NATIVE_CALL SortCustom1D(AMX *amx, cell *params)
 	int len;
 	const char *funcname = get_amxstring(amx, params[3], 0, len);
 
-	int pfn = registerSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL);
+	int pfn = registerSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 	if (pfn < 0)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "The public function \"%s\" was not found.", funcname);
@@ -301,7 +301,7 @@ static cell AMX_NATIVE_CALL SortCustom2D(AMX *amx, cell *params)
 		return 0;
 	}
 
-	int pfn = registerSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL);
+	int pfn = registerSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 	if (pfn < 0)
 	{
 		amx_Release(amx, amx_addr);

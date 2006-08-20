@@ -85,6 +85,7 @@ extern AMX_NATIVE_INFO string_Natives[];
 extern AMX_NATIVE_INFO vault_Natives[];
 extern AMX_NATIVE_INFO msg_Natives[];
 extern AMX_NATIVE_INFO vector_Natives[];
+extern AMX_NATIVE_INFO g_SortNatives[];
 
 #ifndef __linux__
 #define DLLOAD(path) (DLHANDLE)LoadLibrary(path)

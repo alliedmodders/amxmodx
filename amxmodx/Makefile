@@ -19,7 +19,7 @@ OBJECTS = meta_api.cpp CFile.cpp CVault.cpp vault.cpp float.cpp file.cpp modules
 	srvcmd.cpp strptime.cpp amxcore.cpp amxtime.cpp power.cpp amxxlog.cpp fakemeta.cpp \
 	amxxfile.cpp CLang.cpp md5.cpp emsg.cpp CForward.cpp CPlugin.cpp CModule.cpp \
 	CMenu.cpp util.cpp amx.cpp amxdbg.cpp natives.cpp newmenus.cpp debugger.cpp \
-	optimizer.cpp format.cpp messages.cpp libraries.cpp vector.cpp
+	optimizer.cpp format.cpp messages.cpp libraries.cpp vector.cpp sorting.cpp
 
 LINK = /lib/libstdc++.a
 

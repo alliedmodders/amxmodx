@@ -8,6 +8,12 @@
 #define _snprintf snprintf
 #endif
 
+/** 
+ * :TODO: This beast calls strcpy()/new() way too much by creating new strings on the stack.
+ *		  That's easily remedied and it should be fixed?
+ *         ---bail
+ */
+
 template <>
 int HashFunction<String>(const String & k)
 {
@@ -282,6 +288,18 @@ size_t NVault::Prune(time_t start, time_t end)
 	if (m_Journal)
 		m_Journal->Write_Prune(start, end);
 	return m_Hash.Prune(start, end);
+}
+
+void NVault::Touch(const char *key, time_t stamp)
+{
+	String sKey(key);
+
+	if (!m_Hash.Exists(sKey))
+	{
+		SetValue(key, "", time(NULL));
+	}
+
+	m_Hash.Touch(key, stamp);
 }
 
 bool NVault::GetValue(const char *key, time_t &stamp, char buffer[], size_t len)

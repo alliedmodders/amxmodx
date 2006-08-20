@@ -109,6 +109,11 @@ public:
 		stamp = pNode->stamp;
 		return pNode->val;
 	}
+	void Touch(const K & k, time_t stamp)
+	{
+		THashNode *pNode = _FindOrInsert(k);
+		pNode->stamp = stamp;
+	}
 	V & Retrieve(const K & k)
 	{
 		time_t stamp;

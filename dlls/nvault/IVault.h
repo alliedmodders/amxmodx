@@ -15,6 +15,7 @@ public:
 	virtual void Clear() =0;
 	virtual void Remove(const char *key) =0;
 	virtual size_t Items() =0;
+	virtual void Touch(const char *key, time_t stamp) =0;
 };
 
 class IVaultMngr

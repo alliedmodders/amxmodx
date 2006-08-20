@@ -41,6 +41,7 @@ public:
 	const char *GetValue(const char *key);
 	void SetValue(const char *key, const char *val);
 	void SetValue(const char *key, const char *val, time_t stamp);
+	void Touch(const char *key, time_t stamp);
 	size_t Prune(time_t start, time_t end);
 	void Clear();
 	void Remove(const char *key);

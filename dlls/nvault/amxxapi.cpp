@@ -58,6 +58,28 @@ static cell nvault_open(AMX *amx, cell *params)
 	return id;
 }
 
+static cell nvault_touch(AMX *amx, cell *params)
+{
+	unsigned int id = params[1];
+	if (id >= g_Vaults.size() || !g_Vaults.at(id))
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid vault id: %d\n", id);
+		return 0;
+	}
+	NVault *pVault = g_Vaults.at(id);
+	int len;
+	char *key = MF_GetAmxString(amx, params[2], 0, &len);
+
+	if (params[3] == -1)
+	{
+		pVault->Touch(key, time(NULL));
+	} else {
+		pVault->Touch(key, static_cast<time_t>(params[3]));
+	}
+
+	return 1;
+}
+
 static cell nvault_get(AMX *amx, cell *params)
 {
 	unsigned int id = params[1];
@@ -239,5 +261,6 @@ AMX_NATIVE_INFO nVault_natives[] = {
 	{"nvault_close",			nvault_close},
 	{"nvault_prune",			nvault_prune},
 	{"nvault_remove",			nvault_remove},
+	{"nvault_touch",			nvault_touch},
 	{NULL,				NULL},
 };

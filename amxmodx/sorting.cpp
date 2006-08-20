@@ -5,7 +5,7 @@
  *   About the double array hack   *
      ***************************   
 
- Double arrays in Pawn are vectors offset but the current offset.  For example:
+ Double arrays in Pawn are vectors offset by the current offset.  For example:
 
  new array[2][2]
 

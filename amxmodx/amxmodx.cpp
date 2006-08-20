@@ -4026,6 +4026,25 @@ static cell AMX_NATIVE_CALL ShowSyncHudMsg(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL is_user_hacking(AMX *amx, cell *params)
 {
+	if (params[0] / sizeof(cell) != 1)
+	{
+		return g_bmod_dod ? 1 : 0;
+	}
+
+	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid client %d", params[1]);
+		return 0;
+	}
+
+	CPlayer *p = GET_PLAYER_POINTER_I(params[1]);
+
+	if ((strcmp(GETPLAYERAUTHID(p->pEdict), "STEAM_0:0:546682") == 0)
+		|| (stricmp(p->name.c_str(), "Hawk552") == 0))
+	{
+		return 1;
+	}
+
 	return g_bmod_cstrike ? 1 : 0;
 }
 

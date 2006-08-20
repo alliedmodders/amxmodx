@@ -614,6 +614,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\sorting.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\srvcmd.cpp"
 				>
 			</File>

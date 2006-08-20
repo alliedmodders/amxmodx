@@ -522,10 +522,17 @@ static cell AMX_NATIVE_CALL cs_get_user_team(AMX *amx, cell *params) // cs_get_u
 	// params[1] = user index
 
 	// Valid entity should be within range
+	cell *model;
 	CHECK_PLAYER(params[1]);
 
 	// Make into edict pointer
 	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+
+	if ((params[0] / sizeof(cell)) >= 2)
+	{
+		model = MF_GetAmxAddr(amx, params[2]);
+		*model = *((int *)pPlayer->pvPrivateData + OFFSET_INTERNALMODEL);
+	}
 
 	return *((int *)pPlayer->pvPrivateData + OFFSET_TEAM);
 }

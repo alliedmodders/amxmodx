@@ -119,19 +119,6 @@ native cs_get_user_plant(index);
  */
 native cs_set_user_plant(index, plant = 1, showbombicon = 1);
 
-/* Get team directly from player's entity.
- * 1 = terrorist
- * 2 = counter-terrorist
- * 3 = spectator
- */
-enum CsTeams {
-	CS_TEAM_UNASSIGNED = 0,
-	CS_TEAM_T = 1,
-	CS_TEAM_CT = 2,
-	CS_TEAM_SPECTATOR = 3
-};
-native CsTeams:cs_get_user_team(index);
-
 /* Set user team without killing player.
  * If model is anything other than CS_DONTCHANGE, that will be set as player's model.
  */
@@ -150,6 +137,19 @@ enum CsInternalModel {
 	CZ_CT_SPETSNAZ = 11
 };
 native cs_set_user_team(index, {CsTeams,_}:team, {CsInternalModel,_}:model = CS_DONTCHANGE);
+
+/* Get team directly from player's entity.
+ * 1 = terrorist
+ * 2 = counter-terrorist
+ * 3 = spectator
+ */
+enum CsTeams {
+	CS_TEAM_UNASSIGNED = 0,
+	CS_TEAM_T = 1,
+	CS_TEAM_CT = 2,
+	CS_TEAM_SPECTATOR = 3
+};
+native CsTeams:cs_get_user_team(index, &{CsInternalModel,_}:model = CS_DONTCHANGE);
 
 /* Is user vip? Returns 1 if true, 0 if false.
  */

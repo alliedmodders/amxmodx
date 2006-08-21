@@ -202,21 +202,12 @@ void BinLog::WriteOp(BinLogOp op, int plug, ...)
 		}
 	case BinLog_NativeError:
 		{
-			int file;
 			int err = va_arg(ap, int);
 			const char *msg = va_arg(ap, const char *);
 			short len = (short)strlen(msg);
 			fwrite(&err, sizeof(int), 1, fp);
 			fwrite(&len, sizeof(short), 1, fp);
 			fwrite(msg, sizeof(char), len+1, fp);
-			if (debug)
-			{
-				file = LookupFile(dbg, amx->cip);
-				fwrite(&file, sizeof(int), 1, fp);
-			} else {
-				file = 0;
-				fwrite(&file, sizeof(int), 1, fp);
-			}
 			break;
 		}
 	case BinLog_CallPubFunc:
@@ -236,13 +227,21 @@ void BinLog::WriteOp(BinLogOp op, int plug, ...)
 		}
 	case BinLog_SetLine:
 		{
+			int file;
 			int line = va_arg(ap, int);
 			fwrite(&line, sizeof(int), 1, fp);
+			if (debug)
+			{
+				file = LookupFile(dbg, amx->cip);
+				fwrite(&file, sizeof(int), 1, fp);
+			} else {
+				file = 0;
+				fwrite(&file, sizeof(int), 1, fp);
+			}
 			break;
 		}
 	case BinLog_FormatString:
 		{
-			int file;
 			int param = va_arg(ap, int);
 			int maxlen = va_arg(ap, int);
 			const char *str = va_arg(ap, const char *);
@@ -251,56 +250,29 @@ void BinLog::WriteOp(BinLogOp op, int plug, ...)
 			fwrite(&maxlen, sizeof(int), 1, fp);
 			fwrite(&len, sizeof(short), 1, fp);
 			fwrite(str, sizeof(char), len+1, fp);
-			if (debug)
-			{
-				file = LookupFile(dbg, amx->cip);
-				fwrite(&file, sizeof(int), 1, fp);
-			} else {
-				file = 0;
-				fwrite(&file, sizeof(int), 1, fp);
-			}
 			break;
 		}
 	case BinLog_NativeParams:
 		{
-			int file;
 			cell *params = va_arg(ap, cell *);
 			cell num = params[0] / sizeof(cell);
 			fwrite(&num, sizeof(cell), 1, fp);
 			for (cell i=1; i<=num; i++)
 				fwrite(&(params[i]), sizeof(cell), 1, fp);
-			if (debug)
-			{
-				file = LookupFile(dbg, amx->cip);
-				fwrite(&file, sizeof(int), 1, fp);
-			} else {
-				file = 0;
-				fwrite(&file, sizeof(int), 1, fp);
-			}
 			break;
 		}
 	case BinLog_GetString:
 		{
-			int file;
 			cell addr = va_arg(ap, cell);
 			const char *str = va_arg(ap, const char *);
 			short len = (short)strlen(str);
 			fwrite(&addr, sizeof(cell), 1, fp);
 			fwrite(&len, sizeof(short), 1, fp);
 			fwrite(str, sizeof(char), len+1, fp);
-			if (debug)
-			{
-				file = LookupFile(dbg, amx->cip);
-				fwrite(&file, sizeof(int), 1, fp);
-			} else {
-				file = 0;
-				fwrite(&file, sizeof(int), 1, fp);
-			}
 			break;
 		}
 	case BinLog_SetString:
 		{
-			int file;
 			cell addr = va_arg(ap, cell);
 			int maxlen = va_arg(ap, int);
 			const char *str = va_arg(ap, const char *);
@@ -309,14 +281,6 @@ void BinLog::WriteOp(BinLogOp op, int plug, ...)
 			fwrite(&maxlen, sizeof(int), 1, fp);
 			fwrite(&len, sizeof(short), 1, fp);
 			fwrite(str, sizeof(char), len+1, fp);
-			if (debug)
-			{
-				file = LookupFile(dbg, amx->cip);
-				fwrite(&file, sizeof(int), 1, fp);
-			} else {
-				file = 0;
-				fwrite(&file, sizeof(int), 1, fp);
-			}
 			break;
 		}
 	};

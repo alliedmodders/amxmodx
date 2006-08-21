@@ -38,28 +38,19 @@
  *  float		gametime
  *  int32		plugin id
  *  <extra info>
- *  Following operation codes will have an extra int for filename
- *  If filename is 0 skip as plugin was not in debug mode, if -1 there was an error.
- *   NativeCall
- *   NativeRet
- *   NativeError
- *   CallPubFunc
- *   FormatString
- *   NativeParams
- *   GetString
- *   SetString   
  * ]
+ * If filename id is 0 skip as plugin was not in debug mode, if -1 there was an error.
  */
 
 enum BinLogOp
 {
 	BinLog_Start=1,
 	BinLog_End,
-	BinLog_NativeCall,	//<int32 native id> <int32_t num_params>
+	BinLog_NativeCall,	//<int32 native id> <int32_t num_params> <int32_t filename id>
 	BinLog_NativeError, //<int32 errornum> <str[int16] string>
-	BinLog_NativeRet,	//<cell value>
-	BinLog_CallPubFunc,	//<int32 public id>
-	BinLog_SetLine,		//<int32 line no#>
+	BinLog_NativeRet,	//<cell value> <int32_t filename id>
+	BinLog_CallPubFunc,	//<int32 public id> <int32_t filename id>
+	BinLog_SetLine,		//<int32 line no#> <int32_t filename id>
 	BinLog_Registered,	//<string title> <string version>
 	BinLog_FormatString, //<int32 param#> <int32 maxlen> <str[int16] string>
 	BinLog_NativeParams, //<int32 num> <cell ...>

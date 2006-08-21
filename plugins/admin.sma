@@ -322,7 +322,7 @@ AddAdmin(id, auth[], accessflags[], password[], flags[])
 		// If we came here, steamid doesn't exist in users.ini. Add it.
 		new linetoadd[512]
 		
-		format(linetoadd, 511, "^"%s^" ^"%s^" ^"%s^" ^"%s^"", auth, password, accessflags, flags)
+		formatex(linetoadd, 511, "^r^n^"%s^" ^"%s^" ^"%s^" ^"%s^"", auth, password, accessflags, flags)
 		console_print(id, "Adding:^n%s", linetoadd)
 
 		if (!write_file(configsDir, linetoadd))

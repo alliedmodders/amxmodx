@@ -11,7 +11,8 @@ namespace BinLogReader
 	public class BinLog
 	{
 		private static uint BINLOG_MAGIC = 0x414D424C;
-		private static short BINLOG_VERSION = 0x0200;
+		private static short BINLOG_VERSION = 0x0300;
+		private static short BINLOG_MIN_VERSION = 0x0300;
 
 		private ArrayList oplist;
 		private PluginDb plugdb;
@@ -60,7 +61,7 @@ namespace BinLogReader
 					throw new Exception("Invalid magic log number");
 
 				ushort version = br.ReadUInt16();
-				if (version > BINLOG_VERSION)
+				if (version > BINLOG_VERSION || version < BINLOG_MIN_VERSION)
 					throw new Exception("Unknown log version number");
 
 				byte timesize = br.ReadByte();
@@ -182,19 +183,22 @@ namespace BinLogReader
 						case BinLogOp.BinLog_SetLine:
 						{
 							int line = br.ReadInt32();
+							int file = br.ReadInt32();
 							BinLogSetLine bsl = 
-								new BinLogSetLine(line, gametime, realtime, pl);
+								new BinLogSetLine(line, gametime, realtime, pl, file);
 							bl.OpList.Add(bsl);
 							break;
 						}
 						case BinLogOp.BinLog_CallPubFunc:
 						{
 							int pubidx = br.ReadInt32();
+							int fileid = br.ReadInt32();
 							BinLogPublic bp = 
 								new BinLogPublic(pubidx,
 									gametime,
 									realtime,
-									pl);
+									pl,
+									fileid);
 							bl.OpList.Add(bp);
 							break;
 						}
@@ -214,12 +218,14 @@ namespace BinLogReader
 						{
 							int native = br.ReadInt32();
 							int parms = br.ReadInt32();
+							int file = br.ReadInt32();
 							BinLogNativeCall bn = 
 								new BinLogNativeCall(native,
 									parms,
 									gametime,
 									realtime,
-									pl);
+									pl,
+									file);
 							bl.OpList.Add(bn);			
 							break;
 						}

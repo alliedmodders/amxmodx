@@ -22,11 +22,10 @@ namespace BinLogReader
 		private System.Windows.Forms.OpenFileDialog ofd;
 		private System.Windows.Forms.MenuItem MenuFileOpen;
 		private System.Windows.Forms.TabPage PluginsTab;
-		private System.Windows.Forms.TabPage LogTextTab;
-		private System.Windows.Forms.TabPage ViewTab;
-		private System.Windows.Forms.TabPage LogListTab;
 		private System.Windows.Forms.ListView PluginList;
+		private System.Windows.Forms.TabPage LogTextTab;
 		private System.Windows.Forms.RichTextBox TextLog;
+		private System.Windows.Forms.TabPage LogListTab;
 		private System.Windows.Forms.TabControl MainTab;
 		/// <summary>
 		/// Required designer variable.
@@ -77,16 +76,15 @@ namespace BinLogReader
 			this.menuItem5 = new System.Windows.Forms.MenuItem();
 			this.menuItem6 = new System.Windows.Forms.MenuItem();
 			this.ofd = new System.Windows.Forms.OpenFileDialog();
-			this.MainTab = new System.Windows.Forms.TabControl();
 			this.PluginsTab = new System.Windows.Forms.TabPage();
 			this.PluginList = new System.Windows.Forms.ListView();
 			this.LogTextTab = new System.Windows.Forms.TabPage();
 			this.TextLog = new System.Windows.Forms.RichTextBox();
 			this.LogListTab = new System.Windows.Forms.TabPage();
-			this.ViewTab = new System.Windows.Forms.TabPage();
-			this.MainTab.SuspendLayout();
+			this.MainTab = new System.Windows.Forms.TabControl();
 			this.PluginsTab.SuspendLayout();
 			this.LogTextTab.SuspendLayout();
+			this.MainTab.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// mainMenu1
@@ -137,22 +135,6 @@ namespace BinLogReader
 			// 
 			this.ofd.Filter = "Binary Log Files|*.blg";
 			// 
-			// MainTab
-			// 
-			this.MainTab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-				| System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
-			this.MainTab.Controls.Add(this.PluginsTab);
-			this.MainTab.Controls.Add(this.LogTextTab);
-			this.MainTab.Controls.Add(this.LogListTab);
-			this.MainTab.Controls.Add(this.ViewTab);
-			this.MainTab.Location = new System.Drawing.Point(8, 12);
-			this.MainTab.Name = "MainTab";
-			this.MainTab.SelectedIndex = 0;
-			this.MainTab.Size = new System.Drawing.Size(656, 372);
-			this.MainTab.TabIndex = 0;
-			this.MainTab.SelectedIndexChanged += new System.EventHandler(this.MainTab_SelectedIndexChanged);
-			// 
 			// PluginsTab
 			// 
 			this.PluginsTab.Controls.Add(this.PluginList);
@@ -187,7 +169,7 @@ namespace BinLogReader
 			// TextLog
 			// 
 			this.TextLog.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.TextLog.Font = new System.Drawing.Font("Lucida Sans Typewriter", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
+			this.TextLog.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
 			this.TextLog.Location = new System.Drawing.Point(0, 0);
 			this.TextLog.Name = "TextLog";
 			this.TextLog.Size = new System.Drawing.Size(648, 346);
@@ -202,13 +184,21 @@ namespace BinLogReader
 			this.LogListTab.TabIndex = 3;
 			this.LogListTab.Text = "Event Log (List)";
 			// 
-			// ViewTab
+			// MainTab
 			// 
-			this.ViewTab.Location = new System.Drawing.Point(4, 22);
-			this.ViewTab.Name = "ViewTab";
-			this.ViewTab.Size = new System.Drawing.Size(648, 346);
-			this.ViewTab.TabIndex = 2;
-			this.ViewTab.Text = "View Configuration";
+			this.MainTab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+				| System.Windows.Forms.AnchorStyles.Left) 
+				| System.Windows.Forms.AnchorStyles.Right)));
+			this.MainTab.Controls.Add(this.PluginsTab);
+			this.MainTab.Controls.Add(this.LogTextTab);
+			this.MainTab.Controls.Add(this.LogListTab);
+			this.MainTab.ItemSize = new System.Drawing.Size(46, 18);
+			this.MainTab.Location = new System.Drawing.Point(8, 12);
+			this.MainTab.Name = "MainTab";
+			this.MainTab.SelectedIndex = 0;
+			this.MainTab.Size = new System.Drawing.Size(656, 372);
+			this.MainTab.TabIndex = 0;
+			this.MainTab.SelectedIndexChanged += new System.EventHandler(this.MainTab_SelectedIndexChanged);
 			// 
 			// Form1
 			// 
@@ -219,9 +209,9 @@ namespace BinLogReader
 			this.Name = "Form1";
 			this.Text = "AMX Mod X BinLogReader";
 			this.Load += new System.EventHandler(this.Form1_Load);
-			this.MainTab.ResumeLayout(false);
 			this.PluginsTab.ResumeLayout(false);
 			this.LogTextTab.ResumeLayout(false);
+			this.MainTab.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}

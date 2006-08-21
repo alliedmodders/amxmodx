@@ -48,7 +48,7 @@ enum BinLogOp
 	BinLog_End,
 	BinLog_NativeCall,	//<int32 native id> <int32_t num_params> <int32_t filename id>
 	BinLog_NativeError, //<int32 errornum> <str[int16] string>
-	BinLog_NativeRet,	//<cell value> <int32_t filename id>
+	BinLog_NativeRet,	//<cell value>
 	BinLog_CallPubFunc,	//<int32 public id> <int32_t filename id>
 	BinLog_SetLine,		//<int32 line no#> <int32_t filename id>
 	BinLog_Registered,	//<string title> <string version>

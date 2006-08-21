@@ -187,17 +187,8 @@ void BinLog::WriteOp(BinLogOp op, int plug, ...)
 		}
 	case BinLog_NativeRet:
 		{
-			int file;
 			cell retval = va_arg(ap, cell);
 			fwrite(&retval, sizeof(cell), 1, fp);
-			if (debug)
-			{
-				file = LookupFile(dbg, amx->cip);
-				fwrite(&file, sizeof(int), 1, fp);
-			} else {
-				file = 0;
-				fwrite(&file, sizeof(int), 1, fp);
-			}
 			break;
 		}
 	case BinLog_NativeError:

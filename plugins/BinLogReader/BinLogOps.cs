@@ -10,16 +10,16 @@ namespace BinLogReader
 		BinLog_Invalid=0,
 		BinLog_Start=1,
 		BinLog_End,
-		BinLog_NativeCall,	//<int16_t native id>
-		BinLog_NativeError,
-		BinLog_NativeRet,
-		BinLog_CallPubFunc,	//<int16_t public id>
-		BinLog_SetLine,		//<int16_t line no#>
+		BinLog_NativeCall,	//<int32 native id> <int32_t num_params> <int32_t filename id>
+		BinLog_NativeError, //<int32 errornum> <str[int16] string>
+		BinLog_NativeRet,	//<cell value>
+		BinLog_CallPubFunc,	//<int32 public id> <int32_t filename id>
+		BinLog_SetLine,		//<int32 line no#> <int32_t filename id>
 		BinLog_Registered,	//<string title> <string version>
-		BinLog_FormatString,
-		BinLog_NativeParams,
-		BinLog_GetString,
-		BinLog_SetString,
+		BinLog_FormatString, //<int32 param#> <int32 maxlen> <str[int16] string>
+		BinLog_NativeParams, //<int32 num> <cell ...>
+		BinLog_GetString,	//<cell addr> <string[int16]>
+		BinLog_SetString,	//<cell addr> <int maxlen> <string[int16]>
 	};
 
 	public enum BinLogFlags
@@ -68,6 +68,40 @@ namespace BinLogReader
 			{
 				sb.Append("\"");
 				sb.Append(pl.File);
+				sb.Append("\"");
+			}
+		}
+
+		public static void PluginText(StringBuilder sb, Plugin pl, BinLogFlags flags, int fileid)
+		{
+			if (HasFlag(flags, BinLogFlags.Show_PlugId)
+				&& HasFlag(flags, BinLogFlags.Show_PlugFile))
+			{
+				sb.Append("\"");
+				sb.Append(pl.File);
+				if (pl.IsDebug())
+				{
+					sb.Append(", ");
+					sb.Append(pl.FindFile(fileid));
+				}
+				sb.Append("\"");
+				sb.Append(" (");
+				sb.Append(pl.Index);
+				sb.Append(")");
+			} 
+			else if (HasFlag(flags, BinLogFlags.Show_PlugId))
+			{
+				sb.Append(pl.Index);
+			} 
+			else if (HasFlag(flags, BinLogFlags.Show_PlugFile))
+			{
+				sb.Append("\"");
+				sb.Append(pl.File);
+				if (pl.IsDebug())
+				{
+					sb.Append(", ");
+					sb.Append(pl.FindFile(fileid));
+				}
 				sb.Append("\"");
 			}
 		}
@@ -130,6 +164,7 @@ namespace BinLogReader
 	public class BinLogSetLine : BinLogEntry
 	{
 		private int line;
+		private int fileid;
 
 		public int Line
 		{
@@ -139,16 +174,17 @@ namespace BinLogReader
 			}
 		}
 
-		public BinLogSetLine(int _line, float gt, long rt, Plugin _pl)
+		public BinLogSetLine(int _line, float gt, long rt, Plugin _pl, int file)
 			: base(gt, rt, _pl)
 		{
 			line = _line;
+			fileid = file;
 		}
 
 		public override void ToLogString(StringBuilder sb, BinLogFlags flags)
 		{
 			sb.Append("Plugin ");
-			BinLogEntry.PluginText(sb, plugin, flags);
+			BinLogEntry.PluginText(sb, plugin, flags, fileid);
 			sb.Append(" hit line ");
 			sb.Append(Line);
 			sb.Append(".");
@@ -163,6 +199,7 @@ namespace BinLogReader
 	public class BinLogPublic : BinLogEntry
 	{
 		private int pubidx;
+		private int fileid;
 
 		public string Public
 		{
@@ -172,16 +209,17 @@ namespace BinLogReader
 			}
 		}
 
-		public BinLogPublic(int pi, float gt, long rt, Plugin _pl)
+		public BinLogPublic(int pi, float gt, long rt, Plugin _pl, int _file)
 			: base(gt, rt, _pl)
 		{
 			pubidx = pi;
+			fileid = _file;
 		}
 
 		public override void ToLogString(StringBuilder sb, BinLogFlags flags)
 		{
 			sb.Append("Plugin ");
-			BinLogEntry.PluginText(sb, plugin, flags);
+			BinLogEntry.PluginText(sb, plugin, flags, fileid);
 			sb.Append(" had public function \"");
 			sb.Append(Public);
 			sb.Append("\" (");
@@ -283,6 +321,7 @@ namespace BinLogReader
 	{
 		private int nativeidx;
 		private int numparams;
+		private int fileid;
 
 		public string Native
 		{
@@ -292,17 +331,18 @@ namespace BinLogReader
 			}
 		}
 
-		public BinLogNativeCall(int na, int nu, float gt, long rt, Plugin _pl)
+		public BinLogNativeCall(int na, int nu, float gt, long rt, Plugin _pl, int _file)
 			: base(gt, rt, _pl)
 		{
 			nativeidx = na;
 			numparams = nu;
+			fileid = _file;
 		}
 
 		public override void ToLogString(StringBuilder sb, BinLogFlags flags)
 		{
 			sb.Append("Plugin ");
-			BinLogEntry.PluginText(sb, plugin, flags);
+			BinLogEntry.PluginText(sb, plugin, flags, fileid);
 			sb.Append(" called native \"");
 			sb.Append(Native); 
 			sb.Append("\" (");

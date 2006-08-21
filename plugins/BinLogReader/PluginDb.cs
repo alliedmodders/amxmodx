@@ -47,16 +47,32 @@ namespace BinLogReader
 			{
 				byte status = br.ReadByte();
 				byte length = br.ReadByte();
+				uint files = 0;
 				byte [] name = br.ReadBytes(length + 1);
+				if (status == 2)
+				{
+					files = br.ReadUInt32();
+				}
 				uint natives = br.ReadUInt32();
 				uint publics = br.ReadUInt32();
 				int id = db.CreatePlugin(
 					Encoding.ASCII.GetString(name, 0, length), 
 					(int)natives,
-					(int)publics, 
+					(int)publics,
+					(int)files,
 					status,
 					(int)i);
 				Plugin pl = db.GetPluginById(id);
+				for (uint j=0; j<files; j++)
+				{
+					length = br.ReadByte();
+					name = br.ReadBytes(length + 1);
+					pl.AddFile(Encoding.ASCII.GetString(name, 0, length));
+				}
+				if (files == 0)
+				{
+					pl.AddFile(pl.File);
+				}
 				for (uint j=0; j<natives; j++)
 				{
 					length = br.ReadByte();
@@ -74,9 +90,9 @@ namespace BinLogReader
 			return db;
 		}
 
-		private int CreatePlugin(string file, int natives, int publics, byte status, int index)
+		private int CreatePlugin(string file, int natives, int publics, int files, byte status, int index)
 		{
-			Plugin pl = new Plugin(file, natives, publics, status, index);
+			Plugin pl = new Plugin(file, natives, publics, files, status, index);
 			PluginList.Add(pl);
 			return PluginList.Count - 1;
 		}

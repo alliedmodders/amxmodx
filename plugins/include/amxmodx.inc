@@ -324,6 +324,7 @@ native get_playersnum(flag=0);
 * "e" - match with team.
 * "f" - match with part of name.
 * "g" - ignore case sensitivity.
+* "h" - skip HLTV.
 * Example: Get all alive CTs: get_players(players,num,"ae","CT") */
 native get_players(players[32], &num ,const flags[]="", const team[]="");
 

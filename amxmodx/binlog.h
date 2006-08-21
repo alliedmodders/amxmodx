@@ -6,7 +6,7 @@
 #include "CString.h"
 
 #define BINLOG_MAGIC	0x414D424C
-#define BINLOG_VERSION	0x0200
+#define BINLOG_VERSION	0x0300
 
 /**
  * Format of binlog:
@@ -17,8 +17,14 @@
  * [
  *  uint8		status codes
  *  str[int8]	filename
+ *  if(status==2)
+ *    uint32	num filenames
  *  uint32		num natives
  *  uint32		num publics
+ *  if (status==2)
+ *    [
+ *     str[uint8] file name
+ *    ]
  *  [
  *   str[uint8] native name
  *  ]
@@ -32,6 +38,16 @@
  *  float		gametime
  *  int32		plugin id
  *  <extra info>
+ *  Following operation codes will have an extra int for filename
+ *  If filename is 0 skip as plugin was not in debug mode, if -1 there was an error.
+ *   NativeCall
+ *   NativeRet
+ *   NativeError
+ *   CallPubFunc
+ *   FormatString
+ *   NativeParams
+ *   GetString
+ *   SetString   
  * ]
  */
 

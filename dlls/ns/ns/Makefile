@@ -11,8 +11,7 @@ DEBUG_FLAGS = -g -ggdb3
 CPP = gcc
 NAME = ns
 
-BIN_SUFFIX_32 = amxx_i386.so
-BIN_SUFFIX_64 = amxx_amd64.so
+BIN_SUFFIX = amxx_i386.so
 
 OBJECTS = amxxmodule.cpp CPlayer.cpp CSpawn.cpp NMisc.cpp NPData.cpp hookedfunctions.cpp
 
@@ -31,14 +30,9 @@ endif
 
 CFLAGS += -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H -static-libgcc -fno-rtti
 
-ifeq "$(AMD64)" "true"
-	BINARY = $(NAME)_$(BIN_SUFFIX_64)
-	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -m64 
-else
-	BINARY = $(NAME)_$(BIN_SUFFIX_32)
-	CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32
-	OPT_FLAGS += -march=i586
-endif
+BINARY = $(NAME)_$(BIN_SUFFIX)
+CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32
+OPT_FLAGS += -march=i586
 
 OBJ_LINUX := $(OBJECTS:%.cpp=$(BIN_DIR)/%.o)
 
@@ -50,9 +44,6 @@ all:
 	mkdir -p $(BIN_DIR)/sdk
 	$(MAKE) ns
 
-amd64:
-	$(MAKE) all AMD64=true
-
 ns: $(OBJ_LINUX)
 	$(CPP) $(INCLUDE) $(CFLAGS) $(OBJ_LINUX) $(LINK) -shared -ldl -lm -o$(BIN_DIR)/$(BINARY)
 
@@ -63,9 +54,7 @@ default: all
 
 clean:
 	rm -rf Release/*.o
-	rm -rf Release/$(NAME)_$(BIN_SUFFIX_32)
-	rm -rf Release/$(NAME)_$(BIN_SUFFIX_64)
+	rm -rf Release/$(NAME)_$(BIN_SUFFIX)
 	rm -rf Debug/*.o
-	rm -rf Debug/$(NAME)_$(BIN_SUFFIX_32)
-	rm -rf Debug/$(NAME)_$(BIN_SUFFIX_64)
+	rm -rf Debug/$(NAME)_$(BIN_SUFFIX)
 	

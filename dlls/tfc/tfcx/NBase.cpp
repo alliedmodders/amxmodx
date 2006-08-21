@@ -320,6 +320,28 @@ static cell AMX_NATIVE_CALL TFC_SetWeaponBAmmo(AMX *amx, cell *params) {
 }
 // AssKicR end :)
 
+static cell AMX_NATIVE_CALL TFC_GetWeaponAmmo(AMX *amx, cell *params)
+{
+	int index = params[1];
+
+	CHECK_NONPLAYER(index);
+	edict_t *weapon = INDEXENT(index);
+
+	return *((int *)weapon->pvPrivateData + PD_WEAPON_AMMO);
+}
+
+static cell AMX_NATIVE_CALL TFC_SetWeaponAmmo(AMX *amx, cell *params)
+{
+	int index = params[1];
+
+	CHECK_NONPLAYER(index);
+	edict_t *weapon = INDEXENT(index);
+
+	*((int *)weapon->pvPrivateData + PD_WEAPON_AMMO) = params[2];
+
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL TFC_GetWpnName(AMX *amx, cell *params) { 
 	int iIndex = params[1];
 	if ( iIndex < 1 || iIndex > TFCMAX_WEAPONS ){
@@ -401,6 +423,8 @@ AMX_NATIVE_INFO base_Natives[] = {
 	{"tfc_getbammo", TFC_GetBAmmo},
 	{"tfc_getweaponbammo", TFC_GetWeaponBAmmo},
 	{"tfc_setweaponbammo", TFC_SetWeaponBAmmo},
+	{"tfc_getweaponammo", TFC_GetWeaponAmmo},
+	{"tfc_setweaponammo", TFC_SetWeaponAmmo},
 
 	{"xmod_get_wpnname", TFC_GetWpnName},
 	{"xmod_get_wpnlogname", TFC_GetWpnLogName},

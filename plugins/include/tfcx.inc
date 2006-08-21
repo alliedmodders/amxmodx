@@ -119,3 +119,11 @@ native tfc_getweaponbammo(index, weapon);
 
 /* Sets amount of ammo in weapon's clip (backpack) */
 native tfc_setweaponbammo(index, weapon, value);
+
+/* Returns amount of ammo in weapon's clip */
+/* Index must be weapon's entity index */
+native tfc_getweaponammo(index);
+
+/* Sets amount of ammo in weapon's clip */
+/* Index must be weapon's entity index */
+native tfc_setweaponammo(index, value);

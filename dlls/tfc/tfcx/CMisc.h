@@ -8,14 +8,12 @@
 
 #ifndef __linux__
 	#define LINUXOFFSET 0
+	#define WEAP_LINUXOFFSET 0
+	#define CLIP_LINUXOFFSET 0
 #else
 	#define LINUXOFFSET 5
-#endif
-
-#ifndef __linux__
-	#define WEAP_LINUXOFFSET 0
-#else
 	#define WEAP_LINUXOFFSET 3
+	#define CLIP_LINUXOFFSET 4
 #endif
 
 #define TFCMAX_CUSTOMWPNS	5
@@ -38,6 +36,8 @@
 #define PD_AMMO_ROCKETS		59	+ WEAP_LINUXOFFSET
 #define PD_AMMO_NADE1		14	+ WEAP_LINUXOFFSET
 #define PD_AMMO_NADE2		15	+ WEAP_LINUXOFFSET
+
+#define PD_WEAPON_AMMO		307 + CLIP_LINUXOFFSET
 
 enum {
 	TFC_AMMO_SHELLS = 0,

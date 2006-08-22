@@ -342,6 +342,20 @@ static cell AMX_NATIVE_CALL TFC_SetWeaponAmmo(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL TFC_GetUserGoalItem(AMX *amx, cell *params)
+{
+	int index = params[1];
+	
+	CHECK_PLAYER(index);
+
+	edict_t *pPlayer = MF_GetPlayerEdict(index);
+	cell *team = MF_GetAmxAddr(amx, params[2]);
+
+	*team = *((int *)pPlayer->pvPrivateData + PD_GOALITEM_TEAM);
+
+	return *((int *)pPlayer->pvPrivateData + PD_HAS_GOALITEM) & CARRYING_GOALITEM;
+}
+
 static cell AMX_NATIVE_CALL TFC_GetWpnName(AMX *amx, cell *params) { 
 	int iIndex = params[1];
 	if ( iIndex < 1 || iIndex > TFCMAX_WEAPONS ){
@@ -425,6 +439,8 @@ AMX_NATIVE_INFO base_Natives[] = {
 	{"tfc_setweaponbammo", TFC_SetWeaponBAmmo},
 	{"tfc_getweaponammo", TFC_GetWeaponAmmo},
 	{"tfc_setweaponammo", TFC_SetWeaponAmmo},
+
+	{"tfc_get_user_goalitem", TFC_GetUserGoalItem},
 
 	{"xmod_get_wpnname", TFC_GetWpnName},
 	{"xmod_get_wpnlogname", TFC_GetWpnLogName},

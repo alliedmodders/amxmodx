@@ -54,7 +54,7 @@ namespace AMXXRelease
 			csx.vcproj = "csx";
 
 			Module cstrike = new Module();
-			cstrike.sourcedir = "cstrike";
+			cstrike.sourcedir = "dlls\\cstrike";
 			cstrike.projname = "cstrike_amxx";
 			cstrike.vcproj = "cstrike";
 

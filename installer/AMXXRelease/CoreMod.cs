@@ -128,12 +128,12 @@ namespace AMXXRelease
 			sqlitex.vcproj = "sqlite_amxx";
 
 			Module engine = new Module();
-			engine.sourcedir = "engine";
+			engine.sourcedir = "dlls\\engine";
 			engine.projname = "engine_amxx";
 			engine.vcproj = "engine";
 
 			Module fun = new Module();
-			fun.sourcedir = "fun";
+			fun.sourcedir = "dlls\\fun";
 			fun.projname = "fun_amxx";
 			fun.vcproj = "fun";
 

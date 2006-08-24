@@ -22,7 +22,7 @@
 #ifndef __linux__
 #define DLLEXPORT __declspec(dllexport)
 #else
-#define DLLEXPORT
+#define DLLEXPORT __attribute__((visibility("default")))
 #define LINUX
 #endif
 

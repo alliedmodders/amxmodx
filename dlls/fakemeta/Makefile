@@ -6,9 +6,9 @@ MM_ROOT = ../../metamod/metamod
 
 ### EDIT BELOW FOR OTHER PROJECTS ###
 
-OPT_FLAGS = -O3 -funroll-loops -s -pipe
+OPT_FLAGS = -O3 -funroll-loops -s -pipe -fno-strict-aliasing -fomit-frame-pointer
 DEBUG_FLAGS = -g -ggdb3
-CPP = gcc
+CPP = gcc-4.1
 NAME = fakemeta
 
 BIN_SUFFIX_32 = amxx_i386.so
@@ -22,6 +22,13 @@ LINK =
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
 	-I$(MM_ROOT) -I$(HLSDK)/common -I$(HLSDK)/pm_shared
 
+GCC_VERSION := $(shell $(CPP) -dumpversion >&1 | cut -b1)
+
+ifeq "$(GCC_VERSION)" "4"
+        OPT_FLAGS += -fvisibility=hidden -fvisibility-inlines-hidden
+endif
+
+
 ifeq "$(DEBUG)" "true"
 	BIN_DIR = Debug
 	CFLAGS = $(DEBUG_FLAGS)
@@ -30,7 +37,7 @@ else
 	CFLAGS = $(OPT_FLAGS)
 endif
 
-CFLAGS += -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H -static-libgcc -fno-rtti
+CFLAGS += -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H -static-libgcc -fno-rtti -Wno-invalid-offsetof
 
 ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_$(BIN_SUFFIX_64)

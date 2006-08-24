@@ -6,10 +6,10 @@ MM_ROOT = ../../metamod/metamod
 
 ### EDIT BELOW FOR OTHER PROJECTS ###
 
-OPT_FLAGS = -O3 -funroll-loops -s -pipe -fomit-frame-pointer
+OPT_FLAGS = -O3 -funroll-loops -s -pipe -fomit-frame-pointer -fno-strict-aliasing
 DEBUG_FLAGS = -g -ggdb3
-CPP = gcc
-CC = cc
+CPP = gcc-4.1
+CC = gcc-4.1
 NAME = sqlite
 SQL = sqlite-source
 
@@ -35,6 +35,12 @@ LINK = -static-libgcc -lpthread /lib/libgcc_eh.a /lib/libstdc++.a
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
 	-I$(MM_ROOT) -I$(HLSDK)/common -I$(SQL) -I./sqlitepp -I./sdk -I./thread
+
+GCC_VERSION := $(shell $(CPP) -dumpversion >&1 | cut -b1)
+
+ifeq "$(GCC_VERSION)" "4"
+        OPT_FLAGS += -fvisibility=hidden -fvisibility-inlines-hidden
+endif
 
 ifeq "$(DEBUG)" "true"
 	BIN_DIR = Debug

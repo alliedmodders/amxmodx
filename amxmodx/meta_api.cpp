@@ -693,7 +693,7 @@ void C_ServerDeactivate_Post()
 BOOL C_ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[128])
 {
 	CPlayer* pPlayer = GET_PLAYER_POINTER(pEntity);
-	if (!pPlayer->bot)
+	if (!pPlayer->IsBot())
 	{
 		bool a = pPlayer->Connect(pszName, pszAddress);
 		executeForwards(FF_ClientConnect, static_cast<cell>(pPlayer->index));
@@ -741,7 +741,7 @@ void C_ClientDisconnect(edict_t *pEntity)
 void C_ClientPutInServer_Post(edict_t *pEntity)
 {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-	if (!pPlayer->bot)
+	if (!pPlayer->IsBot())
 	{
 		pPlayer->PutInServer();
 		++g_players_num;
@@ -761,9 +761,7 @@ void C_ClientUserInfoChanged_Post(edict_t *pEntity, char *infobuffer)
 	if (pPlayer->ingame)
 	{
 		pPlayer->name.assign(name);			//	Make sure player have name up to date
-	}
-	else if (pPlayer->IsBot())
-	{
+	} else if (pPlayer->IsBot()) {
 		pPlayer->Connect(name, "127.0.0.1"/*CVAR_GET_STRING("net_address")*/);
 
 		executeForwards(FF_ClientConnect, static_cast<cell>(pPlayer->index));

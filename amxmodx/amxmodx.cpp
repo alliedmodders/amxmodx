@@ -177,7 +177,7 @@ static cell AMX_NATIVE_CALL console_cmd(AMX *amx, cell *params) /* 2 param */
 	} else {
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 		
-		if (!pPlayer->bot && pPlayer->initialized)
+		if (!pPlayer->IsBot() && pPlayer->initialized)
 			CLIENT_COMMAND(pPlayer->pEdict, "%s", cmd);
 	}
 
@@ -516,7 +516,7 @@ static cell AMX_NATIVE_CALL is_user_bot(AMX *amx, cell *params) /* 1 param */
 	if (index < 1 || index > gpGlobals->maxClients)
 		return 0;
 	
-	return (GET_PLAYER_POINTER_I(index)->bot ? 1 : 0);
+	return (GET_PLAYER_POINTER_I(index)->IsBot() ? 1 : 0);
 }
 
 static cell AMX_NATIVE_CALL is_user_hltv(AMX *amx, cell *params) /* 1 param */
@@ -1506,7 +1506,7 @@ static cell AMX_NATIVE_CALL client_cmd(AMX *amx, cell *params) /* 2 param */
 		for (int i = 1; i <= gpGlobals->maxClients; ++i)
 		{
 			CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
-			if (!pPlayer->bot && pPlayer->initialized /*&& pPlayer->ingame*/)
+			if (!pPlayer->IsBot() && pPlayer->initialized /*&& pPlayer->ingame*/)
 				CLIENT_COMMAND(pPlayer->pEdict, "%s", cmd);
 		}
 	} else {
@@ -1520,7 +1520,7 @@ static cell AMX_NATIVE_CALL client_cmd(AMX *amx, cell *params) /* 2 param */
 		
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 		
-		if (!pPlayer->bot && pPlayer->initialized /*&& pPlayer->ingame*/)
+		if (!pPlayer->IsBot() && pPlayer->initialized /*&& pPlayer->ingame*/)
 			CLIENT_COMMAND(pPlayer->pEdict, "%s", cmd);
 	}
 	
@@ -1883,7 +1883,7 @@ static cell AMX_NATIVE_CALL get_players(AMX *amx, cell *params) /* 4 param */
 		{
 			if (pPlayer->IsAlive() ? (flags & 2) : (flags & 1))
 				continue;
-			if (pPlayer->bot ? (flags & 4) : (flags & 8))
+			if (pPlayer->IsBot() ? (flags & 4) : (flags & 8))
 				continue;
 			if ((flags & 16) && (pPlayer->teamId != team))
 				continue;
@@ -1940,7 +1940,7 @@ static cell AMX_NATIVE_CALL find_player(AMX *amx, cell *params) /* 1 param */
 			if (pPlayer->IsAlive() ? (flags & 64) : (flags & 32))
 				continue;
 			
-			if (pPlayer->bot ? (flags & 128) : (flags & 256))
+			if (pPlayer->IsBot() ? (flags & 128) : (flags & 256))
 				continue;
 			
 			if (flags & 1)
@@ -3606,7 +3606,7 @@ static cell AMX_NATIVE_CALL query_client_cvar(AMX *amx, cell *params)
 
 	CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
 
-	if (!pPlayer->initialized || pPlayer->bot)
+	if (!pPlayer->initialized || pPlayer->IsBot())
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Player %d is either not connected or a bot", id);
 		return 0;
@@ -4261,8 +4261,8 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"CreateOneForward",		CreateOneForward},
 	{"DestroyForward",			DestroyForward},
 	{"ExecuteForward",			ExecuteForward},
+	{"LibraryExists",			LibraryExists},
 	{"PrepareArray",			PrepareArray},
 	{"ShowSyncHudMsg",			ShowSyncHudMsg},
-	{"LibraryExists",			LibraryExists},
 	{NULL,						NULL}
 };

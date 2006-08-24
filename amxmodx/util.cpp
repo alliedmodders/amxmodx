@@ -347,3 +347,4 @@ void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1, 
 	// unset the global "fake" flag
 	g_fakecmd.fake = false;
 }
+

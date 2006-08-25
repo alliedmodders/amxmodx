@@ -9,10 +9,10 @@
  * For more info, see: http://linux.wku.edu/~lamonml/algor/sort/sort.html
  */
 
-#if defined _time_included
+#if defined _sorting_included
   #endinput
 #endif
-#define _time_included
+#define _sorting_included
 
 enum SortMethod
 {

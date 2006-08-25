@@ -446,7 +446,7 @@ int pc_enablewarning(int number,int enable);
  __declspec (dllexport)
 int pc_printf(const char *message,...);
 #else
-extern int pc_printf(const char *message,...);
+extern int __attribute__((visibility("default"))) pc_printf(const char *message,...);
 #endif
 #else
 int pc_printf(const char *message, ...) INVISIBLE;

@@ -52,7 +52,7 @@
   __declspec (dllexport)
   void EXCOMPILER(int argc, char **argv)
 # else
-  void extern EXCOMPILER(int argc, char **argv)
+  void extern __attribute__((visibility("default"))) EXCOMPILER(int argc, char **argv)
 # endif
   {
 	  pc_compile(argc, argv);
@@ -70,7 +70,7 @@
  __declspec (dllexport)
 int pc_printf(const char *message,...)
 #else
-extern int pc_printf(const char *message,...)
+extern int __attribute__((visibility("default"))) pc_printf(const char *message,...)
 #endif
 #else
 int pc_printf(const char *message, ...)

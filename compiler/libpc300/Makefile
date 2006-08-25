@@ -3,9 +3,9 @@
 
 ### EDIT BELOW FOR OTHER PROJECTS ###
 
-OPT_FLAGS = -O3 -funroll-loops -s -pipe
+OPT_FLAGS = -O3 -funroll-loops -s -pipe -fno-strict-aliasing -fvisibility=hidden
 DEBUG_FLAGS = -g -ggdb3
-CPP = gcc
+CPP = gcc-4.1
 NAME = amxxpc
 
 OBJECTS = sc1.c sc2.c sc3.c sc4.c sc5.c sc6.c sc7.c scvars.c scmemfil.c \

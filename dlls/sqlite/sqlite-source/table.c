@@ -146,7 +146,7 @@ int sqlite3_get_table(
   rc = sqlite3_exec(db, zSql, sqlite3_get_table_cb, &res, pzErrMsg);
   if( res.azResult ){
     assert( sizeof(res.azResult[0])>= sizeof(res.nData) );
-    res.azResult[0] = (char*)res.nData;
+    res.azResult[0] = (void *)(long)res.nData;
   }
   if( rc==SQLITE_ABORT ){
     sqlite3_free_table(&res.azResult[1]);
@@ -191,7 +191,7 @@ void sqlite3_free_table(
     int i, n;
     azResult--;
     if( azResult==0 ) return;
-    n = (int)azResult[0];
+    n = (int)(long)azResult[0];
     for(i=1; i<n; i++){ if( azResult[i] ) free(azResult[i]); }
     free(azResult);
   }

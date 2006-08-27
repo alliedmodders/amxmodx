@@ -584,9 +584,7 @@ int set_amxnatives(AMX* amx, char error[128])
 }
 
 int unload_amxscript(AMX* amx, void** program)
-{
-	int flags = amx->flags;
-	
+{	
 	Debugger *pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
 	if (pDebugger)
 		delete pDebugger;

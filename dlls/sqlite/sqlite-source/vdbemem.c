@@ -776,7 +776,7 @@ const void *sqlite3ValueText(sqlite3_value* pVal, u8 enc){
   pVal->flags |= (pVal->flags & MEM_Blob)>>3;
   if( pVal->flags&MEM_Str ){
     sqlite3VdbeChangeEncoding(pVal, enc & ~SQLITE_UTF16_ALIGNED);
-    if( (enc & SQLITE_UTF16_ALIGNED)!=0 && 1==(1&(int)pVal->z) ){
+    if( (enc & SQLITE_UTF16_ALIGNED)!=0 && 1==(1&(long)pVal->z) ){
       assert( (pVal->flags & (MEM_Ephem|MEM_Static))!=0 );
       if( sqlite3VdbeMemMakeWriteable(pVal)!=SQLITE_OK ){
         return 0;

@@ -22,9 +22,9 @@
  */
 
 #define AMX_NODYNALOAD
-#define	AMX_ANSIONLY
+#define AMX_ANSIONLY
 
-#if BUILD_PLATFORM == WINDOWS && BUILD_TYPE == RELEASE && BUILD_COMPILER == MSVC && PAWN_CELL_SIZE == 64
+#if !defined __linux__ && BUILD_PLATFORM == WINDOWS && BUILD_TYPE == RELEASE && BUILD_COMPILER == MSVC && PAWN_CELL_SIZE == 64
   /* bad bad workaround but we have to prevent a compiler crash :/ */
   #pragma optimize("g",off)
 #endif

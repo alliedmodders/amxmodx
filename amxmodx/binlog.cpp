@@ -139,7 +139,7 @@ void BinLog::WriteOp(BinLogOp op, int plug, ...)
 	va_list ap;
 	va_start(ap, plug);
 
-	AMX *amx;
+	AMX *amx = NULL;
 	bool debug = false;
 	AMX_DBG *dbg = NULL;
 	CPluginMngr::CPlugin *pl = NULL;

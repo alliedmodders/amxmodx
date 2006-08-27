@@ -8,6 +8,8 @@ namespace SourceMod
 	class IResultRow
 	{
 	public:
+		virtual ~IResultRow() { };
+	public:
 		/**
 		 * This will return NULL if the entry is NULL.
 		 * Remember that in SQL, a field can have NULL 
@@ -26,6 +28,8 @@ namespace SourceMod
 
 	class IResultSet
 	{
+	public:
+		virtual ~IResultSet() { };
 	public:
 		//free the handle if necessary (see IQuery).
 		virtual void FreeHandle() =0;
@@ -66,6 +70,8 @@ namespace SourceMod
 	class IQuery
 	{
 	public:
+		virtual ~IQuery() { };
+	public:
 		//you must free the handle when done
 		virtual void FreeHandle() =0;
 	public:
@@ -94,6 +100,8 @@ namespace SourceMod
 
 	class IDatabase
 	{
+	public:
+		virtual ~IDatabase() { };
 	public:
 		/** 
 		 * Closes the database and frees the handle.
@@ -130,6 +138,8 @@ namespace SourceMod
 
 	class ISQLDriver
 	{
+	public:
+		virtual ~ISQLDriver() { };
 	public:
 		virtual IDatabase *Connect(DatabaseInfo *info, int *errcode, char *error, size_t maxlength) =0;
 		virtual const char *NameString() =0;

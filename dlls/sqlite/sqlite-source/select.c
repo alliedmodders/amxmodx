@@ -688,7 +688,7 @@ static void generateSortTail(
   int cont = sqlite3VdbeMakeLabel(v);
   int addr;
   int iTab;
-  int pseudoTab;
+  int pseudoTab = 0;
   ExprList *pOrderBy = p->pOrderBy;
 
   iTab = pOrderBy->iECursor;

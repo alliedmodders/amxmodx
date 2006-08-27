@@ -214,7 +214,7 @@ typedef struct tagAMX_NATIVE_INFO {
 
 typedef struct tagAMX_FUNCSTUB {
   ucell address         PACKED;
-  char name[sEXPMAX+1]  PACKED;
+  char name[sEXPMAX+1];
 } PACKED AMX_FUNCSTUB;
 
 typedef struct tagFUNCSTUBNT {
@@ -265,8 +265,8 @@ typedef struct tagAMX {
 typedef struct tagAMX_HEADER {
   int32_t size          PACKED; /* size of the "file" */
   uint16_t magic        PACKED; /* signature */
-  char    file_version  PACKED; /* file format version */
-  char    amx_version   PACKED; /* required version of the AMX */
+  char    file_version;         /* file format version */
+  char    amx_version;          /* required version of the AMX */
   int16_t flags         PACKED;
   int16_t defsize       PACKED; /* size of a definition record */
   int32_t cod           PACKED; /* initial value of COD - code block */

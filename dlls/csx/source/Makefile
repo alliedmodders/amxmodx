@@ -6,7 +6,7 @@ MM_ROOT = ../../../metamod/metamod
 
 ### EDIT BELOW FOR OTHER PROJECTS ###
 
-OPT_FLAGS = -O3 -funroll-loops -s -pipe -fomit-frame-pointer -Wall -fno-strict-aliasing
+OPT_FLAGS = -O3 -funroll-loops -s -pipe -fomit-frame-pointer -fno-strict-aliasing
 DEBUG_FLAGS = -g -ggdb3
 CPP = gcc-4.1
 NAME = csx
@@ -35,7 +35,7 @@ else
 	CFLAGS = $(OPT_FLAGS)
 endif
 
-CFLAGS += -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H -static-libgcc -fno-rtti
+CFLAGS += -DNDEBUG -fPIC -Wall -Wno-non-virtual-dtor -Werror -fno-exceptions -DHAVE_STDINT_H -static-libgcc -fno-rtti
 
 ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_$(BIN_SUFFIX_64)

@@ -21,6 +21,8 @@ public:
 class IVaultMngr
 {
 public:
+	virtual ~IVaultMngr() { }
+public:
 	/**
 	 * Note: Will return NULL if the vault failed to create.
 	 */

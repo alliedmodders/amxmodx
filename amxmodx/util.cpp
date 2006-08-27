@@ -32,7 +32,7 @@
 #include <time.h>
 #include "amxmodx.h"
 
-#ifdef __linux__
+#if defined __linux__ && !defined _vsnprintf
 	#define _vsnprintf vsnprintf
 #endif
 

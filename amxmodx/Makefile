@@ -6,9 +6,9 @@ MM_ROOT = ../metamod/metamod
 
 ### EDIT BELOW FOR OTHER PROJECTS ###
 
-OPT_FLAGS = -O2 -fno-strict-aliasing -funroll-loops -s -fomit-frame-pointer -pipe 
+OPT_FLAGS = -O2 -fno-strict-aliasing -funroll-loops -s -fomit-frame-pointer -pipe
 DEBUG_FLAGS = -g -ggdb3
-CPP = gcc-4.1
+CPP = gcc-3.4
 NAME = amxmodx
 
 BIN_SUFFIX_32 = mm_i386.so
@@ -47,7 +47,7 @@ ifeq "$(BINLOG)" "true"
 	CFLAGS += -DBINLOG_ENABLED
 endif
 
-CFLAGS += -DLINUX -DNDEBUG -fPIC -Wno-deprecated -DHAVE_STDINT_H -static-libgcc -fno-rtti -fno-exceptions
+CFLAGS += -DLINUX -DNDEBUG -DAMX_NOPROPLIST -fPIC -Wall -Werror -DHAVE_STDINT_H -static-libgcc -fno-rtti -fno-exceptions
 
 ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_$(BIN_SUFFIX_64)

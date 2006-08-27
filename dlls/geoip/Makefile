@@ -35,7 +35,10 @@ else
 	CFLAGS = $(OPT_FLAGS)
 endif
 
-CFLAGS += -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H -static-libgcc -fno-rtti
+CFLAGS += -DNDEBUG -fPIC -Wall -Werror -fno-exceptions -DHAVE_STDINT_H -static-libgcc -fno-rtti
+
+# Strip C++ options for compiling *.c files
+C_CFLAGS := $(shell echo $(CFLAGS) | sed -e 's/-fvisibility-inlines-hidden//' | sed -e 's/-fno-rtti//')
 
 ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_$(BIN_SUFFIX_64)
@@ -47,19 +50,23 @@ else
 endif
 
 OBJ_LINUX := $(OBJECTS:%.cpp=$(BIN_DIR)/%.o)
+OBJ_LINUX := $(OBJ_LINUX:%.c=$(BIN_DIR)/%.o)
 
 $(BIN_DIR)/%.o: %.cpp
 	$(CPP) $(INCLUDE) $(CFLAGS) -o $@ -c $<
 
+$(BIN_DIR)/%.o: %.c
+	$(CPP) $(INCLUDE) $(C_CFLAGS) -o $@ -c $<
+
 all:
 	mkdir -p $(BIN_DIR)
-	mkdir -p $(BIN_DIR)/sdk
 	$(MAKE) geoip
 
 amd64:
 	$(MAKE) all AMD64=true
 
 geoip: $(OBJ_LINUX)
+	echo ZUMBAWUMBA $(OBJ_LINUX)
 	$(CPP) $(INCLUDE) $(CFLAGS) $(OBJ_LINUX) $(LINK) -shared -ldl -lm -o$(BIN_DIR)/$(BINARY)
 
 debug:	
@@ -74,4 +81,4 @@ clean:
 	rm -rf Debug/*.o
 	rm -rf Debug/$(NAME)_$(BIN_SUFFIX_32)
 	rm -rf Debug/$(NAME)_$(BIN_SUFFIX_64)
-	
+

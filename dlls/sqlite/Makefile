@@ -31,25 +31,29 @@ C_OBJECTS = $(SQL)/attach.c $(SQL)/auth.c $(SQL)/btree.c $(SQL)/build.c \
 	$(SQL)/prepare.c $(SQL)/expr.c $(SQL)/callback.c $(SQL)/alter.c \
 	$(SQL)/vdbefifo.c $(SQL)/complete.c $(SQL)/analyze.c
 
+CFLAGS = -Wall -Werror
+CPPFLAGS = -Wall -Wno-non-virtual-dtor -Werror
+
 LINK = -static-libgcc -lpthread /lib/libgcc_eh.a /lib/libstdc++.a
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
 	-I$(MM_ROOT) -I$(HLSDK)/common -I$(SQL) -I./sqlitepp -I./sdk -I./thread
 
+ifeq "$(DEBUG)" "true"
+	BIN_DIR = Debug
+	CFLAGS += $(DEBUG_FLAGS)
+	CPPFLAGS += $(DEBUG_FLAGS)
+else
+	BIN_DIR = Release
+	CFLAGS += $(OPT_FLAGS)
+	CPPFLAGS += $(OPT_FLAGS)
+endif
+
 GCC_VERSION := $(shell $(CPP) -dumpversion >&1 | cut -b1)
 
 ifeq "$(GCC_VERSION)" "4"
-        OPT_FLAGS += -fvisibility=hidden -fvisibility-inlines-hidden
-endif
-
-ifeq "$(DEBUG)" "true"
-	BIN_DIR = Debug
-	CFLAGS = $(DEBUG_FLAGS)
-	CPPFLAGS = $(DEBUG_FLAGS)
-else
-	BIN_DIR = Release
-	CFLAGS = $(OPT_FLAGS)
-	CPPFLAGS = $(OPT_FLAGS)
+	CFLAGS += -fvisibility=hidden
+	CPPFLAGS += -fvisibility=hidden -fvisibility-inlines-hidden
 endif
 
 CPPFLAGS += -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H -fno-rtti

@@ -279,8 +279,8 @@ int sort2d_amx_custom(const void *elem1, const void *elem2)
 	cell c1_addr = pInfo->array_addr + (c1 * sizeof(cell)) + pInfo->array_remap[c1];
 	cell c2_addr = pInfo->array_addr + (c2 * sizeof(cell)) + pInfo->array_remap[c2];
 
-	cell *c1_r = get_amxaddr(pInfo->amx, c1_addr);
-	cell *c2_r = get_amxaddr(pInfo->amx, c2_addr);
+	//cell *c1_r = get_amxaddr(pInfo->amx, c1_addr);
+	//cell *c2_r = get_amxaddr(pInfo->amx, c2_addr);
 
 	return executeForwards(pInfo->pfn, c1_addr, c2_addr, pInfo->array_addr, pInfo->data_addr, pInfo->data_size);
 }

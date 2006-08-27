@@ -53,7 +53,7 @@
 
 struct TableEntry
 {
-	mint8_t cellSize ;
+	mint8_t cellSize;
 	mint32_t origSize PACKED;			// contains AMX_HEADER->stp
 	mint32_t offset PACKED;
 };
@@ -300,7 +300,7 @@ size_t CAmxxReader::GetBufferSize()
 
 #undef DATAREAD
 #define DATAREAD(addr, itemsize, itemcount) \
-	if (fread(addr, itemsize, itemcount, m_pFile) != itemcount) \
+	if (fread(addr, itemsize, itemcount, m_pFile) != static_cast<size_t>(itemcount)) \
 	{ \
 		if (feof(m_pFile)) \
 			m_Status = Err_FileInvalid; \

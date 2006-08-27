@@ -234,7 +234,7 @@ void RankSystem::updatePos(  RankStats* rr ,  Stats* s )
  * Who put these backwards...
  */
 #define TRYREAD(t_var, t_num, t_size, t_file) \
-	if (fread(t_var, t_size, t_num, t_file) != t_num) { \
+	if (fread(t_var, t_size, t_num, t_file) != static_cast<size_t>(t_num)) { \
 		break; \
 	}
 

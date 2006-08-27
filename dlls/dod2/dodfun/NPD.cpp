@@ -538,6 +538,9 @@ static cell AMX_NATIVE_CALL objective_set_data(AMX *amx, cell *params){ // index
 		case CP_model_axis :
 			strcpy(GET_CP_PD(pent).model_axis,szValue);
 			return 1;
+
+		default:
+			break;
 	}
 
 	return 1;
@@ -638,6 +641,9 @@ static cell AMX_NATIVE_CALL objective_get_data(AMX *amx, cell *params){ // flagi
 				MF_SetAmxString(amx,params[3],GET_CP_PD(mObjects.obj[index].pEdict).model_axis,len);
 			}
 			return 1;
+
+		default:
+			break;
 	}
 	return 1;
 }
@@ -729,6 +735,9 @@ static cell AMX_NATIVE_CALL area_set_data(AMX *amx, cell *params){ // index, key
 		case CA_sprite:
 			strcpy(GET_CA_PD( mObjects.obj[index].pAreaEdict ).hud_sprite,szValue);
 			return 1;
+
+		default:
+			break;
 	}
 	return 1;
 }

@@ -2912,7 +2912,7 @@ static cell AMX_NATIVE_CALL register_byval(AMX *amx, cell *params)
 	
 	//get the destination string
 	char *data = get_amxstring(amx, params[2], 0, len);
-	void *PT;
+	void *PT = NULL;
 
 	//copy
 	ucy(p, dtr);

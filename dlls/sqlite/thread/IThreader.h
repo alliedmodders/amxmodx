@@ -93,6 +93,8 @@ namespace SourceMod
 	class IThread
 	{
 	public:
+		virtual ~IThread() { };
+	public:
 		//Called when the thread runs
 		virtual void RunThread(IThreadHandle *pHandle) =0;
 		//Called when the thread terminates.
@@ -107,6 +109,8 @@ namespace SourceMod
 	 */
 	class IThreadCreator
 	{
+	public:
+		virtual ~IThreadCreator() { };
 	public:
 		//Makes a thread and cleans up the handle for you
 		virtual void MakeThread(IThread *pThread) =0;
@@ -147,6 +151,8 @@ namespace SourceMod
 
 	class IEventSignal
 	{
+	public:
+		virtual ~IEventSignal() { };
 	public:
 		/**
 		 * Waits for the signal.

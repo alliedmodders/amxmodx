@@ -110,7 +110,7 @@ void _Setup_Optimizer_Stage2(AMX *amx, cell *oplist, cell *cip)
 		}
 #endif
 	}
-	//we don't do these yet because of radix stuff >:\
+	/* we don't do these yet because of radix stuff >:\ */
 	//FIND_NATIVE("floatsin", N_Float_Sin);
 	//FIND_NATIVE("floatcos", N_Float_Cos);
 	//FIND_NATIVE("floattan", N_Float_Tan);

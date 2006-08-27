@@ -8,7 +8,7 @@ MM_ROOT = ../metamod/metamod
 
 OPT_FLAGS = -O2 -fno-strict-aliasing -funroll-loops -s -fomit-frame-pointer -pipe
 DEBUG_FLAGS = -g -ggdb3
-CPP = gcc-3.4
+CPP = gcc-4.1
 NAME = amxmodx
 
 BIN_SUFFIX_32 = mm_i386.so

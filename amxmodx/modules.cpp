@@ -585,6 +585,10 @@ int set_amxnatives(AMX* amx, char error[128])
 
 int unload_amxscript(AMX* amx, void** program)
 {	
+#if defined WIN32
+	int flags = amx->flags;
+#endif
+
 	Debugger *pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
 	if (pDebugger)
 		delete pDebugger;

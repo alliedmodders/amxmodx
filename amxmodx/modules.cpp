@@ -585,7 +585,7 @@ int set_amxnatives(AMX* amx, char error[128])
 
 int unload_amxscript(AMX* amx, void** program)
 {	
-#if defined WIN32
+#if !defined AMD64
 	int flags = amx->flags;
 #endif
 

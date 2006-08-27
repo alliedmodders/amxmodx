@@ -2617,10 +2617,10 @@ static cell AMX_NATIVE_CALL get_user_aiming(AMX *amx, cell *params) /* 4 param *
 		{
 			pfloat = (trEnd.vecEndPos - v_src).Length();
 		}
+	} else {
+		*cpId = 0;
+		*cpBody = 0;
 	}
-
-	*cpId = 0;
-	*cpBody = 0;
 	
 	return amx_ftoc(pfloat);
 }

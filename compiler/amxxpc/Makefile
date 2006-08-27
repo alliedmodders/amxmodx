@@ -3,7 +3,7 @@
 
 ### EDIT BELOW FOR OTHER PROJECTS ###
 
-OPT_FLAGS = -g -ggdb3 #-O3 -funroll-loops -s -pipe -fno-strict-aliasing
+OPT_FLAGS = -O3 -funroll-loops -s -pipe -fno-strict-aliasing
 DEBUG_FLAGS = -g -ggdb3
 CPP = gcc-4.1
 BINARY = amxxpc

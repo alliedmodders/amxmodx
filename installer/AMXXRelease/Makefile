@@ -3,10 +3,10 @@
 
 ### EDIT BELOW FOR OTHER PROJECTS ###
 
-CS = mcs
+CS = /usr/mono/bin/mcs
 NAME = amxxrelease
 BINARY = $(NAME).bin
-OUTPATH = /tmp/
+OUTPATH = .
 
 OBJECTS = Main.cs Config.cs ABuilder.cs AMod.cs Build.cs Win32Builder.cs LinuxBuilder.cs \
 	CoreMod.cs ModDoD.cs ModEsf.cs ModCstrike.cs ModTFC.cs \
@@ -15,7 +15,7 @@ OBJECTS = Main.cs Config.cs ABuilder.cs AMod.cs Build.cs Win32Builder.cs LinuxBu
 default: all
 
 all:	$(OBJECTS)
-	mcs $(OBJECTS) -o $(OUTPATH)/$(BINARY)
+	$(CS) $(OBJECTS) -o $(OUTPATH)/$(BINARY)
 
 clean:
 	rm -rf amxxrelease

@@ -66,7 +66,6 @@ amd64:
 	$(MAKE) all AMD64=true
 
 geoip: $(OBJ_LINUX)
-	echo ZUMBAWUMBA $(OBJ_LINUX)
 	$(CPP) $(INCLUDE) $(CFLAGS) $(OBJ_LINUX) $(LINK) -shared -ldl -lm -o$(BIN_DIR)/$(BINARY)
 
 debug:	

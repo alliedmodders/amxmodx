@@ -21,7 +21,7 @@ OBJECTS = meta_api.cpp CFile.cpp CVault.cpp vault.cpp float.cpp file.cpp modules
 	CMenu.cpp util.cpp amx.cpp amxdbg.cpp natives.cpp newmenus.cpp debugger.cpp \
 	optimizer.cpp format.cpp messages.cpp libraries.cpp vector.cpp sorting.cpp
 
-LINK = /lib/libstdc++.a
+LINK = -lgcc -static-libgcc
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
 	-I$(MM_ROOT) -Lzlib -I$(HLSDK)/common

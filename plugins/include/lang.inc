@@ -24,3 +24,13 @@ native register_dictionary(const filename[]);
 
 //returns 1 if the language is loaded, 0 otherwise.
 native lang_exists(const name[]);
+
+/**
+ * Adds or finds a translation key.
+ */
+native TransKey:CreateLangKey(const key[]);
+
+/**
+ * Adds a translation.
+ */
+native AddTranslation(const lang[3], TransKey:key, const phrase[]);

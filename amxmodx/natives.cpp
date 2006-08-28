@@ -33,6 +33,7 @@
 #include "natives.h"
 #include "debugger.h"
 #include "libraries.h"
+#include "format.h"
 
 #ifdef __linux__
 #include <malloc.h>
@@ -98,7 +99,7 @@ int amxx_DynaCallback(int idx, AMX *amx, cell *params)
 	{
 		amx_Push(pNative->amx, numParams);
 		amx_Push(pNative->amx, pPlugin->getId());
-		for (int i=numParams; i>=1; i--)
+		for (int i=numParams; i>=0; i--)
 			pNative->params[i] = params[i];
 	} else if (pNative->style == 1) {
 		//use dJeyL's system .. very clever!
@@ -328,6 +329,70 @@ static cell AMX_NATIVE_CALL set_array(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL vdformat(AMX *amx, cell *params)
+{
+	if (!g_NativeStack.size())
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
+		return 0;
+	}
+
+	regnative *pNative = g_NativeStack.front();
+
+	if (pNative->style)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
+		return 0;
+	}
+
+    int vargPos = static_cast<int>(params[4]);
+	int fargPos = static_cast<int>(params[3]);
+
+	/** get the parent parameter array */
+	cell *local_params = pNative->params;
+
+	cell max = local_params[0] / sizeof(cell);
+	if (vargPos > (int)max + 1)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid vararg parameter passed: %d", vargPos);
+		return 0;
+	}
+	if (fargPos > (int)max + 1)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid fmtarg parameter passed: %d", fargPos);
+		return 0;
+	}
+
+	/* get destination info */
+	cell *fmt;
+	if (fargPos == 0)
+	{
+		if (params[0] / sizeof(cell) != 5)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Expected fmtarg as fifth parameter, found none");
+			return 0;
+		}
+		fmt = get_amxaddr(amx, params[5]);
+	} else {
+		fmt = get_amxaddr(pNative->caller, pNative->params[fargPos]);
+	}
+	cell *realdest = get_amxaddr(amx, params[1]);
+	size_t maxlen = static_cast<size_t>(params[2]);
+	cell *dest = realdest;
+
+	/* if this is necessary... */
+	static cell cpbuf[4096];
+	dest = cpbuf;
+
+	/* perform format */
+	size_t total = atcprintf(dest, maxlen, fmt, pNative->caller, local_params, &vargPos);
+
+	/* copy back */
+	memcpy(realdest, dest, (total+1) * sizeof(cell));
+
+	return total;
+}
+
 //This is basically right from dJeyL's lib_convert function
 //This awesome hack modifies the stack frame to have an address offset
 // that will align to the other plugin's memory.
@@ -444,6 +509,7 @@ AMX_NATIVE_INFO g_NativeNatives[] = {
 	{"set_float_byref", set_param_byref},
 	{"get_array_f",		get_array},
 	{"set_array_f",		set_array},
+	{"vdformat",		vdformat},
 	{"param_convert",	param_convert},
 	//////////////////////////
 	{NULL,				NULL},

@@ -4076,6 +4076,40 @@ static cell AMX_NATIVE_CALL amxx_setpl_curweap(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL CreateLangKey(AMX *amx, cell *params)
+{
+	int len;
+	const char *key = get_amxstring(amx, params[1], 0, len);
+	int suki = g_langMngr.GetKeyEntry(key);
+
+	if (suki != -1)
+	{
+		return suki;
+	}
+
+	return g_langMngr.AddKeyEntry(key);
+}
+
+static cell AMX_NATIVE_CALL AddTranslation(AMX *amx, cell *params)
+{
+	int len;
+	const char *lang = get_amxstring(amx, params[1], 0, len);
+	int suki = params[2];
+	const char *phrase = get_amxstring(amx, params[3], 1, len);
+
+	CQueue<sKeyDef> queue;
+	sKeyDef def;
+
+	def.definition = new String(phrase);
+	def.key = suki;
+
+	queue.push(def);
+
+	g_langMngr.MergeDefinitions(lang, queue);
+
+	return 1;
+}
+
 AMX_NATIVE_INFO amxmodx_Natives[] =
 {
 	{"abort",					amx_abort},
@@ -4255,8 +4289,10 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"user_kill",				user_kill},
 	{"user_slap",				user_slap},
 	{"xvar_exists",				xvar_exists},
+	{"AddTranslation",			AddTranslation},
 	{"ClearSyncHud",			ClearSyncHud},
 	{"CreateHudSyncObj",		CreateHudSyncObj},
+	{"CreateLangKey",			CreateLangKey},
 	{"CreateMultiForward",		CreateMultiForward},
 	{"CreateOneForward",		CreateOneForward},
 	{"DestroyForward",			DestroyForward},

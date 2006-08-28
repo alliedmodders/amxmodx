@@ -92,6 +92,7 @@ public:
 	Error GetStatus();						// Get the current status
 	size_t GetBufferSize();					// Get the size for the buffer
 	Error GetSection(void *buffer);			// Copy the currently selected section to the buffer
+	inline bool IsOldFile() const { return m_OldFile; }
 };
 
 #endif // __AMXXFILE_H__

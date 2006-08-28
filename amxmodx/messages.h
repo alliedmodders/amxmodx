@@ -9,6 +9,8 @@
 
 #define MAX_MESSAGES 255
 
+#define MSGBLOCK_SET	0
+#define MSGBLOCK_GET	1
 #define BLOCK_NOT 0
 #define BLOCK_ONCE 1
 #define BLOCK_SET 2

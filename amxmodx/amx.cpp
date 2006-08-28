@@ -990,6 +990,7 @@ int AMXAPI amx_InitJIT(AMX *amx, void *reloc_table, void *native_code)
     amx->cip = hdr->cip;
     amx->hea = hdr->hea;
     amx->stp = hdr->stp - sizeof(cell);
+	amx->hlw = hdr->hea;
     /* also put a sentinel for strings at the top the stack */
     *(cell *)((char*)native_code + hdr->dat + hdr->stp - sizeof(cell)) = 0;
     amx->stk = amx->stp;

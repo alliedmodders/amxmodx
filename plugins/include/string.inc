@@ -58,6 +58,15 @@ native formatex(output[] ,len ,const format[] , {Float,Sql,Result,_}:...);
  */
 native vformat(buffer[], len, const fmt[], vararg);
 
+/*
+ * Same as vformat(), except works in normal style dynamic natives.
+ * Instead of passing the format arg string, you can only pass the 
+ *  actual format argument number itself.
+ * If you pass 0, it will read the format string from an optional 
+ *  fifth parameter.
+ */
+native vdformat(buffer[], len, fmt_arg, vararg, ...);
+
 /* Gets parameters from function as formated string. */
 native format_args(output[] ,len ,pos = 0);
 

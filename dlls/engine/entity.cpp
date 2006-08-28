@@ -338,7 +338,7 @@ static cell AMX_NATIVE_CALL entity_set_float(AMX *amx, cell *params)
 	int idx = params[2];
 	REAL fVal = amx_ctof(params[3]);
 
-	CHECK_ENTITY(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt);
 
 	edict_t *pEnt = INDEXENT2(iEnt);
 
@@ -469,7 +469,7 @@ static cell AMX_NATIVE_CALL entity_get_int(AMX *amx, cell *params)
 	int idx = params[2];
 	int iRetValue = 0;
 
-	CHECK_ENTITY(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt);
 
 	edict_t *pEnt = INDEXENT2(iEnt);
 
@@ -601,7 +601,7 @@ static cell AMX_NATIVE_CALL entity_set_int(AMX *amx, cell *params)
 	int idx = params[2];
 	int iNewValue = params[3];
 
-	CHECK_ENTITY(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt);
 
 	edict_t *pEnt = INDEXENT2(iEnt);
 
@@ -733,7 +733,7 @@ static cell AMX_NATIVE_CALL entity_get_vector(AMX *amx, cell *params)
 	cell *vRet = MF_GetAmxAddr(amx, params[3]);
 	Vector vRetValue = Vector(0, 0, 0);
 
-	CHECK_ENTITY(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt);
 
 	edict_t *pEnt = INDEXENT2(iEnt);
 
@@ -826,7 +826,7 @@ static cell AMX_NATIVE_CALL entity_set_vector(AMX *amx, cell *params)
 	int idx = params[2];
 	cell *vAmx = MF_GetAmxAddr(amx, params[3]);
 
-	CHECK_ENTITY(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt);
 
 	REAL fX = amx_ctof(vAmx[0]);
 	REAL fY = amx_ctof(vAmx[1]);
@@ -920,7 +920,7 @@ static cell AMX_NATIVE_CALL entity_get_string(AMX *amx, cell *params)
 	int iszString = 0;
 	const char *szRet = NULL;
 
-	CHECK_ENTITY(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt);
 
 	edict_t *pEnt = INDEXENT2(iEnt);
 
@@ -982,7 +982,7 @@ static cell AMX_NATIVE_CALL entity_set_string(AMX *amx, cell *params)
 	int iLen;
 	int iszString = AmxStringToEngine(amx, params[3], iLen);
 
-	CHECK_ENTITY(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt);
 
 	edict_t *pEnt = INDEXENT2(iEnt);
 	
@@ -1041,7 +1041,7 @@ static cell AMX_NATIVE_CALL entity_get_edict(AMX *amx, cell *params)
 	int idx = params[2];
 	edict_t *pRet;
 
-	CHECK_ENTITY(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt);
 
 	edict_t *pEnt = INDEXENT2(iEnt);
 
@@ -1097,7 +1097,7 @@ static cell AMX_NATIVE_CALL entity_set_edict(AMX *amx, cell *params)
 	int idx = params[2];
 	int iSetEnt = params[3];
 
-	CHECK_ENTITY(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt);
 
 	edict_t *pEnt = INDEXENT2(iEnt);
 	edict_t *pSetEnt = INDEXENT2(iSetEnt);
@@ -1151,7 +1151,7 @@ static cell AMX_NATIVE_CALL entity_get_byte(AMX *amx, cell *params)
 	int idx = params[2];
 	int iRetValue = 0;
 
-	CHECK_ENTITY(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt);
 
 	edict_t *pEnt = INDEXENT2(iEnt);
 
@@ -1189,7 +1189,7 @@ static cell AMX_NATIVE_CALL entity_set_byte(AMX *amx, cell *params)
 	int idx = params[2];
 	int iNewValue = params[3];
 
-	CHECK_ENTITY(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt);
 
 	if(iNewValue > 255)
 			iNewValue = 255;
@@ -1230,7 +1230,7 @@ static cell AMX_NATIVE_CALL entity_set_origin(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
 
-	CHECK_ENTITY(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt);
 	
 	edict_t *pEnt = INDEXENT2(iEnt);
 	cell *vVector = MF_GetAmxAddr(amx, params[2]);
@@ -1249,7 +1249,7 @@ static cell AMX_NATIVE_CALL entity_set_model(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
 
-	CHECK_ENTITY(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt);
 	
 	edict_t *pEnt = INDEXENT2(iEnt);
 	int iLen;
@@ -1265,7 +1265,7 @@ static cell AMX_NATIVE_CALL entity_set_size(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
 
-	CHECK_ENTITY(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt);
 	
 	edict_t *pEnt = INDEXENT2(iEnt);
 

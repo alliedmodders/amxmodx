@@ -1742,6 +1742,33 @@ const char *MNF_GetLocalInfo(char *name, const char *def)
 	return get_localinfo(name, def);
 }
 
+void MNF_MessageBlock(int mode, int msg, int *opt)
+{
+	switch (mode)
+	{
+	case MSGBLOCK_SET:
+		{
+			if (msg < 0 || msg > MAX_MESSAGES || opt == NULL)
+			{
+				return;
+			}
+			int _opt = msgBlocks[msg];
+			msgBlocks[msg] = *opt;
+			*opt = _opt;
+			break;
+		}
+	case MSGBLOCK_GET:
+		{
+			if (msg < 0 || msg > MAX_MESSAGES || opt == NULL)
+			{
+				return;
+			}
+			*opt = msgBlocks[msg];
+			break;
+		}
+	}
+}
+
 void *MNF_PlayerPropAddr(int id, int prop)
 {
 	if (id < 1 || id > gpGlobals->maxClients)
@@ -1890,6 +1917,8 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("RemoveLibraries", MNF_RemoveLibraries);
 	REGISTER_FUNC("OverrideNatives", MNF_OverrideNatives);
 	REGISTER_FUNC("GetLocalInfo", MNF_GetLocalInfo);
+
+	REGISTER_FUNC("MessageBlock", MNF_MessageBlock);
 
 #ifdef MEMORY_TEST
 	REGISTER_FUNC("Allocator", m_allocator)

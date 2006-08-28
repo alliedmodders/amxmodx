@@ -127,9 +127,11 @@ class CLangMngr
 	public:
 		void AddEntry(int key, const char *definition);
 	};
-
+public:
 	// Merge definitions into a language
 	void MergeDefinitions(const char *lang, CQueue <sKeyDef> &tmpVec);
+
+private:
 	// strip lowercase; make lower if needed
 	static size_t strip(char *str, char *newstr, bool makelower = false);
 
@@ -160,11 +162,11 @@ public:
 	// Get index
 	int GetKeyEntry(String &key);
 	int GetKeyEntry(const char *key);
-	int GetKeyIndex(const char *key);
 	// Get key from index
 	const char *GetKey(int key);
 	// Add key
 	int AddKeyEntry(String &key);
+	int AddKeyEntry(const char *key);
 
 	// Get the number of languages
 	int GetLangsNum();

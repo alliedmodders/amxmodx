@@ -2122,7 +2122,9 @@ err_heaplow:
 _CHKMARGIN_HEAP:
         cmp     esi,stp
         jg      err_stacklow
-        cmp     dword hea,0
+        mov     ebp,amx
+        mov     ebp,[ebp+_hlw]
+        cmp     dword hea,ebp
         jl      err_heaplow
         ret
 

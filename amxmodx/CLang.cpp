@@ -256,9 +256,9 @@ int CLangMngr::GetKeyEntry(const char *key)
 	return val.index;
 }
 
-int CLangMngr::AddKeyEntry(String &key)
+int CLangMngr::AddKeyEntry(const char *key)
 {
-    keytbl_val val;
+	keytbl_val val;
 	val.index = static_cast<int>(KeyList.size());
 
 	String *pString = new String(key);
@@ -267,6 +267,11 @@ int CLangMngr::AddKeyEntry(String &key)
 	KeyTable[key] = val;
 
 	return val.index;
+}
+
+int CLangMngr::AddKeyEntry(String &key)
+{
+    return AddKeyEntry(key.c_str());
 }
 
 int CLangMngr::GetKeyEntry(String &key)

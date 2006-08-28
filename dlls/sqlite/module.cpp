@@ -80,3 +80,7 @@ void OnPluginsUnloaded()
 	FreeAllHandles(Handle_Connection);
 }
 
+extern "C" void __cxa_pure_virtual(void)
+{
+}
+

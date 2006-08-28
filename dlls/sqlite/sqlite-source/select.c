@@ -2775,8 +2775,8 @@ int sqlite3Select(
   WhereInfo *pWInfo;     /* Return from sqlite3WhereBegin() */
   Vdbe *v;               /* The virtual machine under construction */
   int isAgg;             /* True for select lists like "count(*)" */
-  ExprList *pEList;      /* List of columns to extract. */
-  SrcList *pTabList;     /* List of tables to select from */
+  ExprList *pEList=NULL;      /* List of columns to extract. */
+  SrcList *pTabList=NULL;     /* List of tables to select from */
   Expr *pWhere;          /* The WHERE clause.  May be NULL */
   ExprList *pOrderBy;    /* The ORDER BY clause.  May be NULL */
   ExprList *pGroupBy;    /* The GROUP BY clause.  May be NULL */

@@ -8,8 +8,8 @@ MM_ROOT = ../../metamod/metamod
 
 OPT_FLAGS = -O3 -funroll-loops -s -pipe -fomit-frame-pointer -fno-strict-aliasing
 DEBUG_FLAGS = -g -ggdb3
-CPP = gcc-4.1
-CC = gcc-4.1
+CPP = gcc-3.4
+CC = gcc-3.4
 NAME = sqlite
 SQL = sqlite-source
 
@@ -34,7 +34,7 @@ C_OBJECTS = $(SQL)/attach.c $(SQL)/auth.c $(SQL)/btree.c $(SQL)/build.c \
 CFLAGS = -Wall -Werror
 CPPFLAGS = -Wall -Wno-non-virtual-dtor -Werror
 
-LINK = -static-libgcc -lpthread /lib/libgcc_eh.a /lib/libstdc++.a
+LINK = -lgcc -static-libgcc -lpthread 
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
 	-I$(MM_ROOT) -I$(HLSDK)/common -I$(SQL) -I./sqlitepp -I./sdk -I./thread

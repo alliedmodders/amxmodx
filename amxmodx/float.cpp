@@ -368,7 +368,6 @@ static cell AMX_NATIVE_CALL n_floatatan(AMX *amx, cell *params)
 	 * params[2] = radix
 	 */
 	REAL fA = amx_ctof(params[1]);
-	fA = ToRadians(fA, params[2]);
 	fA = atan(fA);
 	fA = FromRadians(fA, params[2]);
 	return amx_ftoc(fA);

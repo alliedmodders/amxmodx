@@ -207,7 +207,7 @@ static cell AMX_NATIVE_CALL entity_get_float(AMX *amx, cell *params)
 	int idx = params[2];
 	REAL fVal = 0;
 
-	CHECK_ENTITY(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt);
 
 	edict_t *pEnt = INDEXENT2(iEnt);
 

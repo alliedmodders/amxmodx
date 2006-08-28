@@ -39,6 +39,9 @@ namespace AMXXRelease
 				return;
 			}
 
+			if (!ValidateConfigPaths())
+				return;
+
 			ABuilder builder = null;
 			if ((int)System.Environment.OSVersion.Platform == 128)
 			{
@@ -52,6 +55,41 @@ namespace AMXXRelease
 			Build build = new Build();
 
 			builder.Build(m_Cfg, build);
+		}
+
+		private bool ValidateConfigPaths()
+		{
+			if ( !File.Exists( ABuilder.PropSlashes(m_Cfg.CompressPath()) ) )
+			{
+				Console.WriteLine("Failed to find compression program! Check 'compress' option in config.");
+				return false;
+			}
+
+			string source = ABuilder.PropSlashes(m_Cfg.GetSourceTree());
+
+			if (!Directory.Exists(source))
+			{
+				Console.WriteLine("Failed to find source tree! Check 'source' option in config.");
+				return false;
+			} else {
+				// Check subdirectories of source tree to make sure they contain necessary directories
+				if (!Directory.Exists(ABuilder.PropSlashes(source + "\\amxmodx")) || 
+					!Directory.Exists(ABuilder.PropSlashes(source + "\\configs")) ||
+					!Directory.Exists(ABuilder.PropSlashes(source + "\\dlls"))    ||
+					!Directory.Exists(ABuilder.PropSlashes(source + "\\plugins")))
+				{
+					Console.WriteLine("Source tree appears invalid! Check 'source' option in config.");
+					return false;
+				}
+			}
+
+			if ( !File.Exists( ABuilder.PropSlashes(m_Cfg.DevenvPath()) ) )
+			{
+				Console.WriteLine("Failed to find compilation program! Check 'devenv' option in config.");
+				return false;
+			}
+
+			return true;
 		}
 	}
 }

@@ -20,7 +20,7 @@ namespace AMXXRelease
 
 			info.FileName = m_Cfg.CompressPath();
 			info.WorkingDirectory = dir;
-			info.Arguments = "-r " + target + ".zip " + "*.*";
+			info.Arguments = "-r \"" + target + ".zip\" " + "*.*";
 			info.UseShellExecute = false;
 
 			Process p = Process.Start(info);

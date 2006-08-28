@@ -157,7 +157,7 @@ void MysqlThread::RunThread(IThreadHandle *pHandle)
 	} else {
 		m_qrInfo.connect_success = true;
 		pQuery = pDatabase->PrepareQuery(m_query.c_str());
-		if (!pQuery->Execute(&m_qrInfo.amxinfo.info, m_qrInfo.amxinfo.error, 254))
+		if (!pQuery->Execute2(&m_qrInfo.amxinfo.info, m_qrInfo.amxinfo.error, 254))
 		{
 			m_qrInfo.query_success = false;
 		} else {

@@ -170,6 +170,14 @@ native SQL_FieldNumToName(Handle:query, num, name[], maxlength);
  */
 native SQL_FieldNameToNum(Handle:query, const name[]);
 
+
+/**
+ * Returns the insert id of the last INSERT query. 
+ * Returns 0 otherwise.
+ */
+native SQL_GetInsertId(Handle:query);
+
+
 /**
  * Returns which driver this plugin is currently bound to.
  */

@@ -148,7 +148,7 @@ static cell AMX_NATIVE_CALL SQL_Execute(AMX *amx, cell *params)
 
 	memset(&qInfo->info, 0, sizeof(QueryInfo));
 
-	if (!qInfo->pQuery->Execute(&qInfo->info, qInfo->error, 254))
+	if (!qInfo->pQuery->Execute2(&qInfo->info, qInfo->error, 254))
 	{
 		return 0;
 	}
@@ -419,6 +419,18 @@ static cell AMX_NATIVE_CALL SQL_FieldNameToNum(AMX *amx, cell *params)
 	return columnId;
 }
 
+static cell AMX_NATIVE_CALL SQL_GetInsertId(AMX *amx, cell *params)
+{
+	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
+	if (!qInfo)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
+		return 0;
+	}
+
+	return qInfo->info.insert_id;
+}
+
 static cell AMX_NATIVE_CALL SQL_GetAffinity(AMX *amx, cell *params)
 {
 	return MF_SetAmxString(amx, params[1], g_Sqlite.NameString(), params[2]);
@@ -471,6 +483,7 @@ AMX_NATIVE_INFO g_BaseSqlNatives[] =
 	{"SQL_FieldNameToNum",	SQL_FieldNameToNum},
 	{"SQL_GetAffinity",		SQL_GetAffinity},
 	{"SQL_SetAffinity",		SQL_SetAffinity},
+	{"SQL_GetInsertId",		SQL_GetInsertId},
 	{"SQL_GetQueryString",	SQL_GetQueryString},
 
 	{NULL,					NULL},

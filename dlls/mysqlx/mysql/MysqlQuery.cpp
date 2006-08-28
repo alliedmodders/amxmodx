@@ -46,6 +46,25 @@ bool MysqlQuery::Execute(QueryInfo *info, char *error, size_t maxlength)
 	return res;
 }
 
+bool MysqlQuery::Execute2(QueryInfo *info, char *error, size_t maxlength)
+{
+	bool res = ExecuteR(info, error, maxlength);
+
+	if (m_LastRes)
+		m_LastRes->FreeHandle();
+
+	m_LastRes = (MysqlResultSet *)info->rs;
+
+	if (info->success)
+	{
+		info->insert_id = mysql_insert_id(m_pDatabase->m_pMysql);
+	} else {
+		info->insert_id = 0;
+	}
+
+	return res;
+}
+
 const char *MysqlQuery::GetQueryString()
 {
 	return m_QueryString;
@@ -89,11 +108,6 @@ bool MysqlQuery::ExecuteR(QueryInfo *info, char *error, size_t maxlength)
 			MysqlResultSet *rs = new MysqlResultSet(res);
 			info->rs = rs;
 		}
-	}
-
-	if (info->success && error && maxlength)
-	{
-		*error = '\0';
 	}
 
 	return info->success;

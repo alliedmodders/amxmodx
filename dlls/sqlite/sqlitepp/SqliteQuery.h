@@ -24,6 +24,7 @@ namespace SourceMod
 		void FreeHandle();
 		bool Execute(QueryInfo *info, char *error, size_t maxlength);
 		bool ExecuteR(QueryInfo *info, char *error, size_t maxlength);
+		bool Execute2(QueryInfo *info, char *error, size_t maxlength);
 		const char *GetQueryString();
 	private:
 		SqliteDatabase *m_pDatabase;

@@ -107,7 +107,7 @@ static cell AMX_NATIVE_CALL dbi_query(AMX *amx, cell *params)
 	old->error[0] = '\0';
 	old->errcode = 0;
 
-	if (!pQuery->Execute(&info, old->error, 254))
+	if (!pQuery->Execute2(&info, old->error, 254))
 	{
 		old->errcode = info.errorcode;
 		return -1;
@@ -151,7 +151,7 @@ static cell AMX_NATIVE_CALL dbi_query2(AMX *amx, cell *params)
 	old->error[0] = '\0';
 	old->errcode = 0;
 
-	if (!pQuery->Execute(&info, old->error, 254))
+	if (!pQuery->Execute2(&info, old->error, 254))
 	{
 		old->errcode = info.errorcode;
 		return -1;

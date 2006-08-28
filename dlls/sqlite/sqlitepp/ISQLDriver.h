@@ -65,6 +65,7 @@ namespace SourceMod
 		unsigned long long affected_rows;
 		int errorcode;
 		bool success;
+		unsigned long long insert_id;
 	};
 
 	class IQuery
@@ -94,6 +95,10 @@ namespace SourceMod
 		 * Returns the query string.
 		 */
 		virtual const char *GetQueryString() =0;
+		/**
+		 * Same as execute, but supports insert_id
+		 */
+		virtual bool Execute2(QueryInfo *info, char *error, size_t maxlength) =0;
 	};
 
 	class ISQLDriver;

@@ -47,6 +47,25 @@ bool SqliteQuery::Execute(QueryInfo *info, char *error, size_t maxlength)
 	return res;
 }
 
+bool SqliteQuery::Execute2(QueryInfo *info, char *error, size_t maxlength)
+{
+	bool res = ExecuteR(info, error, maxlength);
+
+	if (m_LastRes)
+		m_LastRes->FreeHandle();
+
+	m_LastRes = (SqliteResultSet *)info->rs;
+
+	if (info->success)
+	{
+		info->insert_id = sqlite3_last_insert_rowid(m_pDatabase->m_pSql);
+	} else {
+		info->insert_id = 0;
+	}
+
+	return res;
+}
+
 const char *SqliteQuery::GetQueryString()
 {
 	return m_QueryString;

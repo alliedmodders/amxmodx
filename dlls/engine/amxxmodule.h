@@ -2095,9 +2095,16 @@ enum LibType
 	LibType_Class
 };
 
+#define MSGBLOCK_SET	0
+#define MSGBLOCK_GET	1
+#define BLOCK_NOT 0
+#define BLOCK_ONCE 1
+#define BLOCK_SET 2
+
 typedef void (*AUTHORIZEFUNC)(int player, const char *authstring);
 
 typedef int				(*PFN_ADD_NATIVES)				(const AMX_NATIVE_INFO * /*list*/);
+typedef int				(*PFN_ADD_NEW_NATIVES)			(const AMX_NATIVE_INFO * /*list*/);
 typedef char *			(*PFN_BUILD_PATHNAME)			(const char * /*format*/, ...);
 typedef char *			(*PFN_BUILD_PATHNAME_R)			(char * /*buffer*/, size_t /* maxlen */, const char * /* format */, ...);
 typedef cell *			(*PFN_GET_AMXADDR)				(AMX * /*amx*/, cell /*offset*/);
@@ -2183,8 +2190,10 @@ typedef void			(*PFN_OVERRIDENATIVES)			(AMX_NATIVE_INFO * /*natives*/, const ch
 typedef const char *	(*PFN_GETLOCALINFO)				(const char * /*name*/, const char * /*def*/);
 typedef int				(*PFN_AMX_REREGISTER)			(AMX * /*amx*/, AMX_NATIVE_INFO * /*list*/, int /*list*/);
 typedef void *			(*PFN_REGISTERFUNCTIONEX)		(void * /*pfn*/, const char * /*desc*/);
+typedef void			(*PFN_MESSAGE_BLOCK)			(int /* mode */, int /* message */, int * /* opt */);
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
+extern PFN_ADD_NEW_NATIVES			g_fn_AddNewNatives;
 extern PFN_BUILD_PATHNAME			g_fn_BuildPathname;
 extern PFN_BUILD_PATHNAME_R			g_fn_BuildPathnameR;
 extern PFN_GET_AMXADDR				g_fn_GetAmxAddr;
@@ -2257,11 +2266,13 @@ extern PFN_OVERRIDENATIVES			g_fn_OverrideNatives;
 extern PFN_GETLOCALINFO				g_fn_GetLocalInfo;
 extern PFN_AMX_REREGISTER			g_fn_AmxReRegister;
 extern PFN_REGISTERFUNCTIONEX		g_fn_RegisterFunctionEx;
+extern PFN_MESSAGE_BLOCK			g_fn_MessageBlock;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
 // They understand #if 0 so we use #ifdef MAY_NEVER_BE_DEFINED
 int				MF_AddNatives				(const AMX_NATIVE_INFO *list) { }
+int				MF_AddNewNatives			(const AMX_NATIVE_INFO *list) { }
 char *			MF_BuildPathname			(const char * format, ...) { }
 char *			MF_BuildPathnameR			(char *buffer, size_t maxlen, const char *fmt, ...) { }
 cell *			MF_GetAmxAddr				(AMX * amx, cell offset) { }
@@ -2328,9 +2339,11 @@ void			MF_OverrideNatives			(AMX_NATIVE_INFO *natives, const char *myname) { }
 const char *	MF_GetLocalInfo				(const char *name, const char *def) { }
 int				MF_AmxReRegister			(AMX *amx, AMX_NATIVE_INFO *list, int number) { return 0; }
 void *			MF_RegisterFunctionEx		(void *pfn, const char *description) { }
+void *			MF_MessageBlock				(int mode, int msg, int *opt) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
+#define MF_AddNewNatives g_fn_AddNewNatives
 #define MF_BuildPathname g_fn_BuildPathname
 #define MF_BuildPathnameR g_fn_BuildPathnameR
 #define MF_FormatAmxString g_fn_FormatAmxString
@@ -2404,6 +2417,7 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...);
 #define MF_GetLocalInfo g_fn_GetLocalInfo
 #define MF_AmxReRegister g_fn_AmxReRegister
 #define MF_RegisterFunctionEx g_fn_RegisterFunctionEx
+#define MF_MessageBlock g_fn_MessageBlock
 
 #ifdef MEMORY_TEST
 /*** Memory ***/

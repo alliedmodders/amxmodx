@@ -1,4 +1,5 @@
 #include "engine.h"
+#include "amxmod_compat.h"
 
 struct usercmd_s *g_cmd;
 struct PlayerInfo plinfo[33];
@@ -97,11 +98,33 @@ static cell AMX_NATIVE_CALL halflife_time(AMX *amx, cell *params)
 	return amx_ftoc(fVal);
 }
 
-// RadiusDamage. Damages players within a certain radius. ToDo: add the
-// damage messaging so players know where the damage is coming from
-// (the red arrow-like things on the screen).
-//(vexd)
-static cell AMX_NATIVE_CALL RadiusDamage(AMX *amx, cell *params) {
+//This is not exposed, and is only provided as a compatibility helper.
+static cell AMX_NATIVE_CALL RadiusDamage_AMXMod(AMX *amx, cell *params)
+{
+	int ent = params[1];
+	CHECK_ENTITY_SIMPLE(ent);
+	edict_t* pEntity = INDEXENT(ent);
+	float dmg = amx_ctof(params[2]);
+	cell *vInput = MF_GetAmxAddr(amx, params[3]);
+	float vOrig[3];
+
+	vOrig[0] = amx_ctof(vInput[0]);
+	vOrig[1] = amx_ctof(vInput[1]);
+	vOrig[2] = amx_ctof(vInput[2]);
+
+	float rad = amx_ctof(params[4]);
+	int bit = params[5];
+	int iLen;
+	char *vxWeapon = MF_GetAmxString(amx, params[6], 0, &iLen);
+	int hs = params[7];
+
+	RadiusDamage_AMXMod_Base(pEntity, dmg, vOrig, rad, bit, vxWeapon, hs);
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL RadiusDamage_AMXModX(AMX *amx, cell *params)
+{
 	cell *cAddr = MF_GetAmxAddr(amx,params[1]);
 
 	REAL fCurrentX = amx_ctof(cAddr[0]);
@@ -162,6 +185,24 @@ static cell AMX_NATIVE_CALL RadiusDamage(AMX *amx, cell *params) {
 	}
 
 	return 1;
+}
+
+// RadiusDamage. Damages players within a certain radius. ToDo: add the
+// damage messaging so players know where the damage is coming from
+// (the red arrow-like things on the screen).
+//(vexd)
+static cell AMX_NATIVE_CALL RadiusDamage(AMX *amx, cell *params)
+{
+	cell numParams = params[0] / sizeof(cell);
+
+	if (numParams == 3)
+	{
+		return RadiusDamage_AMXModX(amx, params);
+	} else if (numParams == 7) {
+		return RadiusDamage_AMXMod(amx, params);
+	}
+
+	return 0;
 }
 
 static cell AMX_NATIVE_CALL PointContents(AMX *amx, cell *params)
@@ -926,6 +967,12 @@ static cell AMX_NATIVE_CALL trace_forward(AMX *amx, cell *params)
    return 1;
 }
 
+AMX_NATIVE_INFO engine_NewNatives[] = 
+{
+	{"trace_line",			trace_line},
+	{NULL,					NULL}
+};
+
 AMX_NATIVE_INFO engine_Natives[] = {
 	{"halflife_time",		halflife_time},
 
@@ -934,7 +981,6 @@ AMX_NATIVE_INFO engine_Natives[] = {
 	{"radius_damage",		RadiusDamage},
 	{"point_contents",		PointContents},
 	{"trace_normal",		trace_normal},
-	{"trace_line",			trace_line},
 	{"trace_hull",			trace_hull},
 	{"traceresult",			traceresult},
 
@@ -965,6 +1011,6 @@ AMX_NATIVE_INFO engine_Natives[] = {
 	{"is_visible",			is_visible},
 	{"trace_forward",		trace_forward},
 
-	{NULL,					NULL},
+	{NULL,					NULL}
 	 ///////////////////
 };

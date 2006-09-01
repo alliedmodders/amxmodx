@@ -14,7 +14,8 @@ NAME = engine
 BIN_SUFFIX_32 = amxx_i386.so
 BIN_SUFFIX_64 = amxx_amd64.so
 
-OBJECTS = amxxmodule.cpp amxxapi.cpp engine.cpp entity.cpp globals.cpp forwards.cpp 
+OBJECTS = amxxmodule.cpp amxxapi.cpp engine.cpp entity.cpp globals.cpp forwards.cpp \
+	amxmod_compat.cpp
 
 LINK = 
 

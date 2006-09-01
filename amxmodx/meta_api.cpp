@@ -45,6 +45,7 @@
 #include "optimizer.h"
 #include "libraries.h"
 #include "messages.h"
+#include "amxmod_compat.h"
 
 plugin_info_t Plugin_info = 
 {
@@ -357,6 +358,14 @@ int	C_Spawn(edict_t *pent)
 	get_localinfo("amxx_configsdir", "addons/amxmodx/configs");
 	get_localinfo("amxx_customdir", "addons/amxmodx/custom");
 
+	// make sure bcompat localinfos are set
+	get_localinfo("amx_basedir", "addons/amxmodx");
+	get_localinfo("amx_configdir", "addons/amxmodx/configs");
+	get_localinfo("amx_langdir", "addons/amxmodx/data/amxmod-lang");
+	get_localinfo("amx_modulesdir", "addons/amxmodx/modules");
+	get_localinfo("amx_pluginsdir", "addons/amxmodx/plugins");
+	get_localinfo("amx_logdir", "addons/amxmodx/logs");
+
 	char map_pluginsfile_path[256];
 
 	// ###### Load modules
@@ -619,6 +628,7 @@ void C_ServerDeactivate_Post()
 	g_xvars.clear();
 	g_plugins.clear();
 	ClearPluginLibraries();
+	ClearTransCache();
 	modules_callPluginsUnloaded();
 
 	ClearMessages();

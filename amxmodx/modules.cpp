@@ -48,6 +48,7 @@
 #include "binlog.h"
 #include "libraries.h"
 #include "messages.h"
+#include "amxmod_compat.h"
 
 CList<CModule, const char*> g_modules;
 CList<CScript, AMX*> g_loadedscripts;
@@ -165,6 +166,7 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 	*error = 0;
 	size_t bufSize;
 	*program = (void *)g_plugins.ReadIntoOrFromCache(filename, bufSize);
+	bool oldfile = false;
 	if (!*program)
 	{
 		CAmxxReader reader(filename, PAWN_CELL_SIZE / 8);
@@ -218,6 +220,8 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 				strcpy(error, "Unknown error");
 				return (amx->error = AMX_ERR_NOTFOUND);
 		}
+
+		oldfile = reader.IsOldFile();
 	} else {
 		g_plugins.InvalidateFileInCache(filename, false);
 	}
@@ -368,6 +372,17 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 		}
 	}
 #endif
+
+	if (oldfile)
+	{
+		amx->flags |= AMX_FLAG_OLDFILE;
+	} else {
+		cell addr;
+		if (amx_FindPubVar(amx, "__b_old_plugin", &addr) == AMX_ERR_NONE)
+		{
+			amx->flags |= AMX_FLAG_OLDFILE;
+		}
+	}
 
 	CScript* aa = new CScript(amx, *program, filename);
 
@@ -542,6 +557,12 @@ int set_amxnatives(AMX* amx, char error[128])
 		{
 			amx_Register(amx, cm->m_Natives[i], -1);
 		}
+
+		for (size_t i = 0; i < cm->m_NewNatives.size(); i++)
+		{
+			if (!(amx->flags & AMX_FLAG_OLDFILE))
+				amx_Register(amx, cm->m_NewNatives[i], -1);
+		}
 	}
 
 	amx_Register(amx, string_Natives, -1);
@@ -557,6 +578,11 @@ int set_amxnatives(AMX* amx, char error[128])
 	amx_Register(amx, msg_Natives, -1);
 	amx_Register(amx, vector_Natives, -1);
 	amx_Register(amx, g_SortNatives, -1);
+	
+	if (amx->flags & AMX_FLAG_OLDFILE)
+	{
+		amx_Register(amx, g_BcompatNatives, -1);
+	}
 
 	//we're not actually gonna check these here anymore
 	amx->flags |= AMX_FLAG_PRENIT;
@@ -1175,6 +1201,18 @@ int MNF_AddNatives(AMX_NATIVE_INFO* natives)
 
 	g_CurrentlyCalledModule->m_Natives.push_back(natives);
 	
+	return TRUE;
+}
+
+int MNF_AddNewNatives(AMX_NATIVE_INFO *natives)
+{
+	CList<CModule, const char *>::iterator a = g_modules.begin();
+
+	if (!g_CurrentlyCalledModule || g_ModuleCallReason != ModuleCall_Attach)
+		return FALSE;				// may only be called from attach
+
+	g_CurrentlyCalledModule->m_NewNatives.push_back(natives);
+
 	return TRUE;
 }
 
@@ -1870,6 +1908,7 @@ void Module_CacheFunctions()
 
 	// Natives / Forwards
 	REGISTER_FUNC("AddNatives", MNF_AddNatives)
+	REGISTER_FUNC("AddNewNatives", MNF_AddNewNatives)
 	REGISTER_FUNC("RaiseAmxError", amx_RaiseError)
 	REGISTER_FUNC("RegisterForward", registerForward)
 	REGISTER_FUNC("RegisterSPForward", registerSPForward)

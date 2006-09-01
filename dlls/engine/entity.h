@@ -151,6 +151,7 @@ enum {
 void UTIL_SetSize(edict_t *pev, const Vector &vecMin, const Vector &vecMax);
 
 extern AMX_NATIVE_INFO ent_Natives[];
+extern AMX_NATIVE_INFO ent_NewNatives[];
 
 #endif //_INCLUDE_ENGINE_ENTSTUFF
 

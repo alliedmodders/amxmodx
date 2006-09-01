@@ -1509,6 +1509,12 @@ static cell AMX_NATIVE_CALL get_grenade_id(AMX *amx, cell *params)  /* 4 param *
 	return 0;
 }
 
+AMX_NATIVE_INFO ent_NewNatives[] =
+{
+	{"DispatchKeyValue",	DispatchKeyValue},
+	{NULL,					NULL}
+};
+
 AMX_NATIVE_INFO ent_Natives[] = {
 	{"create_entity",		create_entity},
 	{"remove_entity",		remove_entity},
@@ -1532,7 +1538,6 @@ AMX_NATIVE_INFO ent_Natives[] = {
 	{"entity_set_origin",	entity_set_origin},
 	{"entity_set_model",	entity_set_model},
 	{"entity_set_size",		entity_set_size},
-	{"DispatchKeyValue",	DispatchKeyValue},
 	{"DispatchSpawn",		DispatchSpawn},
 
 	{"call_think",			call_think},
@@ -1554,7 +1559,7 @@ AMX_NATIVE_INFO ent_Natives[] = {
 
 	{"copy_keyvalue",		copy_keyvalue},
 
-	{NULL,					NULL},
+	{NULL,					NULL}
 	 ///////////////////
 };
 

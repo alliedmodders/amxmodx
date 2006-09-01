@@ -159,6 +159,12 @@
 #define DMG_MORTAR                      (1<<23)     // Hit by air raid (done to distinguish grenade from mortar)
 #define DMG_TIMEBASED                   (~(0x3fff)) // Mask for time-based damage
 
+// The fNoMonsters parameter of EngFunc_TraceLine, EngFunc_TraceMonsterHull, EngFunc_TraceHull, and EngFunc_TraceSphere
+#define DONT_IGNORE_MONSTERS            0
+#define IGNORE_MONSTERS                 1
+#define IGNORE_MISSILE                  2
+#define IGNORE_GLASS                    0x100
+
 // The hullnumber paramater of EngFunc_TraceHull, EngFunc_TraceModel and DLLFunc_GetHullBounds
 #define HULL_POINT                      0
 #define HULL_HUMAN                      1

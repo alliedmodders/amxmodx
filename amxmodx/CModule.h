@@ -117,6 +117,7 @@ public:
 	void CallPluginsUnloading();
 
 	CVector<AMX_NATIVE_INFO*> m_Natives;
+	CVector<AMX_NATIVE_INFO*> m_NewNatives; // Natives for new (AMXX, not AMX) plugins only
 	CVector<size_t> m_DestroyableIndexes;
 };
 

@@ -11,6 +11,14 @@
 #endif
 #define _amxmisc_included
 
+#if defined AMXMOD_BCOMPAT
+#if defined _translator_included
+#define SIMPLE_T(%1)	_T(%1)
+#else
+#define SIMPLE_T(%1)	%1
+#endif
+#endif
+
 stock is_user_admin(id)
 {
   return ( get_user_flags(id)>0 && !(get_user_flags(id)&ADMIN_USER) )
@@ -30,13 +38,21 @@ stock cmd_access(id,level,cid,num) {
   }
 
   if ( has_access==0 ) {
+#if defined AMXMOD_BCOMPAT
+    console_print(id, SIMPLE_T("You have no access to that command."))
+#else
     console_print(id,"%L",id,"NO_ACC_COM")
+#endif
     return 0
   }
   if (read_argc() < num) {
     new hcmd[32], hinfo[128], hflag
     get_concmd(cid,hcmd,31,hflag,hinfo,127,level)
+#if defined AMXMOD_BCOMPAT
+    console_print(id, SIMPLE_T("Usage:  %s %s"), hcmd, SIMPLE_T(hinfo))
+#else
     console_print(id,"%L:  %s %s",id,"USAGE",hcmd,hinfo)
+#endif
     return 0
   }
   return 1
@@ -58,21 +74,33 @@ stock cmd_target(id,const arg[],flags = 1) {
   new player = find_player("bl",arg)
   if (player) {
     if ( player != find_player("blj",arg) ) {
+#if defined AMXMOD_BCOMPAT
+      console_print(id, SIMPLE_T("There are more clients matching to your argument"))
+#else
       console_print(id,"%L",id,"MORE_CL_MATCHT")
+#endif
       return 0
     }
   }
   else if ( ( player = find_player("c",arg) )==0 && arg[0]=='#' && arg[1] )
     player = find_player("k",str_to_num(arg[1]))
   if (!player) {
+#if defined AMXMOD_BCOMPAT
+    console_print(id, SIMPLE_T("Client with that name or userid not found"))
+#else
     console_print(id,"%L",id,"CL_NOT_FOUND")
+#endif
     return 0
   }
   if (flags & 1) {
     if ((get_user_flags(player)&ADMIN_IMMUNITY) && ((flags&2)?(id!=player):true) ) {
       new imname[32]
       get_user_name(player,imname,31)
+#if defined AMXMOD_BCOMPAT
+      console_print(id, SIMPLE_T("Client ^"%s^" has immunity"), imname)
+#else
       console_print(id,"%L",id,"CLIENT_IMM",imname)
+#endif
       return 0
     }
   }
@@ -80,7 +108,11 @@ stock cmd_target(id,const arg[],flags = 1) {
     if (!is_user_alive(player)) {
       new imname[32]
       get_user_name(player,imname,31)
+#if defined AMXMOD_BCOMPAT
+      console_print(id, SIMPLE_T("That action can't be performed on dead client ^"%s^""), imname)
+#else
       console_print(id,"%L",id,"CANT_PERF_DEAD",imname)
+#endif
       return 0
     }
   }
@@ -88,7 +120,11 @@ stock cmd_target(id,const arg[],flags = 1) {
     if (is_user_bot(player)) {
       new imname[32]
       get_user_name(player,imname,31)
+#if defined AMXMOD_BCOMPAT
+      console_print(id, SIMPLE_T("That action can't be performed on bot ^"%s^""), imname)
+#else
       console_print(id,"%L",id,"CANT_PERF_BOT",imname)
+#endif
       return 0
     }
   }
@@ -98,11 +134,20 @@ stock cmd_target(id,const arg[],flags = 1) {
 stock show_activity( id, const name[], {Float,_}: ... ) {
   new buffer[128]
   format_args( buffer , 127 , 2 )
-  switch(get_cvar_num("amx_show_activity")) {
-    case 2: client_print(0,print_chat,"%L %s: %s",
-      id, is_user_admin(id) ? "ADMIN" : "PLAYER" , name , buffer )
-    case 1: client_print(0,print_chat,"%L: %s",
-      id, is_user_admin(id) ? "ADMIN" : "PLAYER", buffer )
+  switch(get_cvar_num("amx_show_activity"))
+  {
+    case 2:
+#if defined AMXMOD_BCOMPAT
+       client_print(0, print_chat, "%s %s: %s", is_user_admin(id) ? SIMPLE_T("ADMIN") : SIMPLE_T("PLAYER"), name, buffer)
+#else
+       client_print(0, print_chat, "%L %s: %s", id, is_user_admin(id) ? "ADMIN" : "PLAYER" , name , buffer )
+#endif
+    case 1: 
+#if defined AMXMOD_BCOMPAT
+       client_print(0, print_chat, "%s: %s", is_user_admin(id) ? SIMPLE_T("ADMIN") : SIMPLE_T("PLAYER"), buffer)
+#else
+       client_print(0, print_chat, "%L: %s", id, is_user_admin(id) ? "ADMIN" : "PLAYER", buffer )
+#endif
   }
 }
 

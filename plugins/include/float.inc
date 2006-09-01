@@ -66,14 +66,22 @@ native Float:floatpower(Float:value, Float:exponent);
 native Float:floatlog(Float:value, Float:base=10.0);
 
 /* Return the sine, cosine or tangent.
-* The input angle may be in radian, degrees or grades. */
+ * The input angle may be in radians, degrees or grades. */
 native Float:floatsin(Float:value, anglemode:mode=radian);
 native Float:floatcos(Float:value, anglemode:mode=radian);
 native Float:floattan(Float:value, anglemode:mode=radian);
 
+/* Return the hyperbolic sine, cosine or tangent.
+ * The input angle may be in radians, degrees or grades. */
+native Float:floatsinh(Float:angle, anglemode:mode=radian);
+native Float:floatcosh(Float:angle, anglemode:mode=radian);
+native Float:floattanh(Float:angle, anglemode:mode=radian);
+
 /* Return the absolute value */
 native Float:floatabs(Float:value);
 
+/* Return the angle of a sine, cosine or tangent.
+ * The output angle may be in radians, degrees, or grades. */
 native Float:floatatan(Float:angle, radix);
 native Float:floatacos(Float:angle, radix);
 native Float:floatasin(Float:angle, radix);

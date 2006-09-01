@@ -608,6 +608,7 @@ const char *Debugger::_GetFilename()
 void Debugger::FmtGenericMsg(AMX *amx, int error, char buffer[], size_t maxLength)
 {
 	const char *filename = "";
+	char native[sNAMEMAX+1];
 
 	CList<CScript,AMX*>::iterator a = g_loadedscripts.find(amx);
 	if (a)
@@ -625,6 +626,9 @@ void Debugger::FmtGenericMsg(AMX *amx, int error, char buffer[], size_t maxLengt
 	if (error == AMX_ERR_EXIT)
 	{
 		_snprintf(buffer, maxLength, "Run time error %d (plugin \"%s\") - %s", error, filename, GenericError(AMX_ERR_EXIT));
+	} else if (error == AMX_ERR_NATIVE) {
+		amx_GetNative(amx, (int)amx->usertags[UT_NATIVE], native);
+		_snprintf(buffer, maxLength, "Run time error %d (plugin \"%s\") (native \"%s\") - debug not enabled!", error, filename, native);
 	} else {
 		_snprintf(buffer, maxLength, "Run time error %d (plugin \"%s\") - debug not enabled!", error, filename);
 	}

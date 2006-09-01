@@ -33,6 +33,7 @@
 #include "amxmodx.h"
 #include "CLang.h"
 #include "format.h"
+#include "amxmod_compat.h"
 
 #ifdef __linux__
 #define _snprintf snprintf
@@ -287,7 +288,23 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 	static char outbuf[4096];
 	cell *addr = get_amxaddr(amx, params[parm++]);
 
-	len = atcprintf(outbuf, sizeof(outbuf)-1, addr, amx, params, &parm);
+	if (amx->flags & AMX_FLAG_OLDFILE)
+	{
+		if (*addr & BCOMPAT_TRANSLATE_BITS)
+		{
+			const char *key, *def;
+			if (!translate_bcompat(amx, addr, &key, &def))
+			{
+				goto normal_string;
+			}
+			len = atcprintf(outbuf, sizeof(outbuf)-1, def, amx, params, &parm);
+		} else {
+			goto normal_string;
+		}
+	} else {
+normal_string:
+		len = atcprintf(outbuf, sizeof(outbuf)-1, addr, amx, params, &parm);
+	}
 
 	return outbuf;
 }

@@ -89,6 +89,7 @@ void CModule::clear(bool clearFilename)
 
 	m_DestroyableIndexes.clear();
 	m_Natives.clear();
+	m_NewNatives.clear();
 }
 
 bool CModule::attachMetamod(const char *mmfile, PLUG_LOADTIME now)

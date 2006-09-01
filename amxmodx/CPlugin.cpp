@@ -447,7 +447,8 @@ char *CPluginMngr::ReadIntoOrFromCache(const char *file, size_t &bufsize)
 
 	pl->file = new CAmxxReader(file, sizeof(cell));
 	pl->buffer = NULL;
-	if (pl->file->GetStatus() != CAmxxReader::Err_None)
+	if (pl->file->GetStatus() != CAmxxReader::Err_None ||
+		pl->file->IsOldFile())
 	{
 		delete pl->file;
 		delete pl;

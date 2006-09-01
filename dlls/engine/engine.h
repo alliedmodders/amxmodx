@@ -210,6 +210,7 @@ extern struct usercmd_s *g_cmd;
 extern struct PlayerInfo plinfo[33];
 extern struct GlobalInfo glinfo;
 extern AMX_NATIVE_INFO engine_Natives[];
+extern AMX_NATIVE_INFO engine_NewNatives[];
 extern CVector<Impulse *> Impulses;
 extern CVector<EntClass *> Thinks;
 extern CVector<Touch *> Touches;

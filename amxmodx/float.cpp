@@ -427,6 +427,54 @@ static cell AMX_NATIVE_CALL n_floatatan2(AMX *amx, cell *params)
 #if defined __BORLANDC__ || defined __WATCOMC__
   #pragma argsused
 #endif
+/* Added by DS */
+static cell AMX_NATIVE_CALL n_floatsinh(AMX *amx, cell *params)
+{
+	/*
+	 * params[1] = angle
+	 * params[2] = radix
+	 */
+	REAL fA = amx_ctof(params[1]);
+	fA = ToRadians(fA, params[2]);
+	fA = sinh(fA);
+	return amx_ftoc(fA);
+}
+
+#if defined __BORLANDC__ || defined __WATCOMC__
+  #pragma argsused
+#endif
+/* Added by DS */
+static cell AMX_NATIVE_CALL n_floatcosh(AMX *amx, cell *params)
+{
+	/*
+	 * params[1] = angle
+	 * params[2] = radix
+	 */
+	REAL fA = amx_ctof(params[1]);
+	fA = ToRadians(fA, params[2]);
+	fA = cosh(fA);
+	return amx_ftoc(fA);
+}
+
+#if defined __BORLANDC__ || defined __WATCOMC__
+  #pragma argsused
+#endif
+/* Added by DS */
+static cell AMX_NATIVE_CALL n_floattanh(AMX *amx, cell *params)
+{
+	/*
+	 * params[1] = angle
+	 * params[2] = radix
+	 */
+	REAL fA = amx_ctof(params[1]);
+	fA = ToRadians(fA, params[2]);
+	fA = tanh(fA);
+	return amx_ftoc(fA);
+}
+
+#if defined __BORLANDC__ || defined __WATCOMC__
+  #pragma argsused
+#endif
 /******************************************************************/
 static cell AMX_NATIVE_CALL n_floatabs(AMX *amx,cell *params)
 {
@@ -456,6 +504,9 @@ AMX_NATIVE_INFO float_Natives[] = {
   { "floatacos",   n_floatacos  },
   { "floatatan",   n_floatatan  },
   { "floatatan2",  n_floatatan2 },
+  { "floatsinh",   n_floatsinh  },
+  { "floatcosh",   n_floatcosh  },
+  { "floattanh",   n_floattanh  },
   { NULL, NULL }        /* terminator */
 };
 

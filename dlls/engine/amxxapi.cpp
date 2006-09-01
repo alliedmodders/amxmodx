@@ -37,7 +37,9 @@ void OnAmxxAttach()
 	CmdStartForward = 0;
 	StartFrameForward = 0;
 	MF_AddNatives(ent_Natives);
+	MF_AddNewNatives(ent_NewNatives);
 	MF_AddNatives(engine_Natives);
+	MF_AddNewNatives(engine_NewNatives);
 	MF_AddNatives(global_Natives);
 	memset(glinfo.szLastLights, 0x0, 128);
 	memset(glinfo.szRealLights, 0x0, 128);

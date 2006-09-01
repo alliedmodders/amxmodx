@@ -138,14 +138,15 @@ public:
 			if (pEdict->v.flags & FL_FAKECLIENT)
 			{
 				bot_value = true;
+				bot_cached = true;
 			} else {
 				const char *auth = GETPLAYERAUTHID(pEdict);
 				if (auth && (strcmp(auth, "BOT") == 0))
 				{
 					bot_value = true;
+					bot_cached = true;
 				}
 			}
-			bot_cached = true;
 		}
 
 		return bot_value;

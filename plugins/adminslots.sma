@@ -53,15 +53,18 @@ public plugin_init()
 
 public plugin_cfg()
 {
+	set_task(3.0, "MapLoaded")
+}
+
+public MapLoaded()
+{
 	if (!get_pcvar_num(g_HidePtr))
-		return PLUGIN_CONTINUE
+		return
 
 	new maxplayers = get_maxplayers()
 	new players = get_playersnum(1)
 	new limit = maxplayers - get_pcvar_num(g_ResPtr)
 	setVisibleSlots(players, maxplayers, limit)
-
-	return PLUGIN_CONTINUE
 }
 
 public ackSignal(id)

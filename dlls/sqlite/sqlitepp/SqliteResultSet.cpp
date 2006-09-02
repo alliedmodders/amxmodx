@@ -138,7 +138,7 @@ bool SqliteResultSet::FieldNameToNum(const char *name, unsigned int *columnId)
 
 	if (columnId)
 	{
-		*columnId = -1;
+		*reinterpret_cast<int *>(columnId) = -1;
 	}
 
 	return false;

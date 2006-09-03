@@ -1,6 +1,5 @@
 #include "amxmodx.h"
 #include "format.h"
-#include "amxmod_compat.h"
 
 //Adapted from Quake3's vsprintf
 // thanks to cybermind for linking me to this :)
@@ -423,24 +422,6 @@ reswitch:
 			break;
 		case 's':
 			CHECK_ARGS(0);
-			if (amx->flags & AMX_FLAG_OLDFILE)
-			{
-				cell *addr = get_amxaddr(amx, params[arg]);
-				if (*addr & BCOMPAT_TRANSLATE_BITS)
-				{
-					const char *key, *def;
-					if (!translate_bcompat(amx, addr, &key, &def))
-					{
-						goto break_to_normal_string;
-					}
-					arg++;
-					size_t written = atcprintf(buf_p, llen, def, amx, params, &arg);
-					buf_p += written;
-					llen -= written;
-					break;
-				}
-			}
-break_to_normal_string:
 			AddString(&buf_p, llen, get_amxaddr(amx, params[arg]), width, prec);
 			arg++;
 			break;

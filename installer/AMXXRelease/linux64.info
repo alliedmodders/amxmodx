@@ -3,4 +3,4 @@ source = /home/dvander/code/amxx
 makeopts = amd64 
 output = /home/dvander/done
 devenv = /usr/bin/make
-release = amxmodx-1.75
+release = amxmodx-1.76

@@ -52,7 +52,7 @@ namespace AMXXRelease
 				Releaser.IsWindows = true;
 			}
 
-			Build build = new Build();
+			Build build = new Build(m_Cfg);
 
 			builder.Build(m_Cfg, build);
 		}

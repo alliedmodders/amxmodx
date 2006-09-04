@@ -8,7 +8,7 @@ MM_ROOT = ../../metamod/metamod
 
 OPT_FLAGS = -O2 -funroll-loops -s -pipe -fomit-frame-pointer -fno-strict-aliasing
 DEBUG_FLAGS = -g -ggdb3
-CPP = gcc-3.4
+CPP = gcc-4.1
 NAME = mysql
 #MYSQL_DIR = ../../../mysql-5.0.22
 MYSQL_DIR = ../../../mysql-5.0

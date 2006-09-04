@@ -8,8 +8,8 @@ MM_ROOT = ../../metamod/metamod
 
 OPT_FLAGS = -O3 -funroll-loops -s -pipe -fomit-frame-pointer -fno-strict-aliasing
 DEBUG_FLAGS = -g -ggdb3
-CPP = gcc-3.4
-CC = gcc-3.4
+CPP = gcc-4.1
+CC = gcc-4.1
 NAME = sqlite
 SQL = sqlite-source
 

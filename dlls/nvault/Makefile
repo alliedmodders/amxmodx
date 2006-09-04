@@ -16,7 +16,7 @@ BIN_SUFFIX_64 = amxx_amd64.so
 
 OBJECTS = amxxmodule.cpp amxxapi.cpp Binary.cpp Journal.cpp NVault.cpp
 
-LINK = /lib/libgcc_eh.a /lib/libstdc++.a
+LINK = /lib/libgcc_eh.a /lib/libstdc++-3.4.a
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
 	-I$(MM_ROOT) -I$(HLSDK)/common

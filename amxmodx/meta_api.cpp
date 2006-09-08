@@ -628,6 +628,7 @@ void C_ServerDeactivate_Post()
 	g_xvars.clear();
 	g_plugins.clear();
 	ClearPluginLibraries();
+	ClearTransCache();
 	modules_callPluginsUnloaded();
 
 	ClearMessages();

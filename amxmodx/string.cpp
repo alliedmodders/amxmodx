@@ -33,6 +33,7 @@
 #include "amxmodx.h"
 #include "format.h"
 #include "binlog.h"
+#include "amxmod_compat.h"
 
 const char* stristr(const char* str, const char* substr)
 {
@@ -115,8 +116,21 @@ extern "C" size_t get_amxstring_r(AMX *amx, cell amx_addr, char *destination, in
 	register char *dest = destination;
 	char *start = dest;
 
-	while (maxlen-- && *source)
-		*dest++=(char)(*source++);
+	if ( (amx->flags & AMX_FLAG_OLDFILE) &&
+		(*source & BCOMPAT_TRANSLATE_BITS) )
+	{
+		const char *def, *key;
+		if (!translate_bcompat(amx, source, &key, &def))
+		{
+			goto normal_string;
+		}
+		while (maxlen-- && *def)
+			*dest++=(*source++);
+	} else {
+normal_string:
+		while (maxlen-- && *source)
+			*dest++=(char)(*source++);
+	}
 
 	*dest = '\0';
 
@@ -139,9 +153,22 @@ char *get_amxstring(AMX *amx, cell amx_addr, int id, int& len)
 	register char* dest = buffor[id];
 	char* start = dest;
 
-	while ((*dest++=(char)(*source++)));
+	if ( (amx->flags & AMX_FLAG_OLDFILE) &&
+		 (*source & BCOMPAT_TRANSLATE_BITS) )
+	{
+		const char *def, *key;
+		if (!translate_bcompat(amx, source, &key, &def))
+		{
+			goto normal_string;
+		}
+		while ( (*dest++ = (*def++)) );
+		len = --dest - start;
+	} else {
+normal_string:
+		while ((*dest++=(char)(*source++)));
 
-	len = --dest - start;
+		len = --dest - start;
+	}
 
 #if defined BINLOG_ENABLED
 	if (g_binlog_level & 2)

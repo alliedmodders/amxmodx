@@ -345,7 +345,7 @@ static cell AMX_NATIVE_CALL vdformat(AMX *amx, cell *params)
 		return 0;
 	}
 
-    int vargPos = static_cast<int>(params[4]);
+	int vargPos = static_cast<int>(params[4]);
 	int fargPos = static_cast<int>(params[3]);
 
 	/** get the parent parameter array */

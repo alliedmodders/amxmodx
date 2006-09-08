@@ -323,6 +323,9 @@
 				RelativePath="..\amxdbg.cpp">
 			</File>
 			<File
+				RelativePath="..\amxmod_compat.cpp">
+			</File>
+			<File
 				RelativePath="..\amxmodx.cpp">
 			</File>
 			<File
@@ -484,6 +487,9 @@
 			</File>
 			<File
 				RelativePath="..\amxdbg.h">
+			</File>
+			<File
+				RelativePath="..\amxmod_compat.h">
 			</File>
 			<File
 				RelativePath="..\amxmodx.h">

@@ -41,7 +41,7 @@ static cell AMX_NATIVE_CALL amx_geoip_country(AMX *amx, cell *params)
 void OnAmxxAttach()
 {
 	char *path = MF_BuildPathname("%s/GeoIP.dat",MF_GetLocalInfo("amxx_datadir", "addons/amxmodx/data"));
-	gi = GeoIP_open(path, GEOIP_STANDARD);
+	gi = GeoIP_open(path, GEOIP_MEMORY_CACHE);
 	if (gi == NULL) {
 		MF_Log("Failed to instantiate GeoIP!");
 		return;

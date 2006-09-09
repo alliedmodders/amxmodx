@@ -84,6 +84,10 @@ namespace AMXXRelease
 			admin_sql.options = "USING_SQL=1 -oadmin_sql.amx";
 			m_Plugins.Add(admin_sql);
 
+			Plugin bcompat = new Plugin("amxmod_compat");
+			bcompat.source = "amxmod_compat/amxmod_compat.sma";
+			m_Plugins.Add(bcompat);
+
 			AddPlugin("adminchat");
 			AddPlugin("admincmd");
 			AddPlugin("adminhelp");

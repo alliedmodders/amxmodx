@@ -486,10 +486,10 @@ unsigned long _GeoIP_lookupaddress (const char *host) {
 	struct hostent phe2;
 	struct hostent * phe = &phe2;
 	char *buf = NULL;
-	int buflength = 16384;
-	int herr = 0;
 	int result = 0;
 #ifdef HAVE_GETHOSTBYNAME_R
+	int buflength = 16384;
+	int herr = 0;
 	buf = malloc(buflength);
 #endif
 	if (addr == INADDR_NONE) {

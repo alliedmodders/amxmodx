@@ -25,17 +25,15 @@
 extern "C" {
 #endif
 
-#ifdef _MSC_VER
-	#if _MSC_VER >= 1400
-		/* Disable deprecation warnings concerning unsafe CRT functions */
-		#define _CRT_SECURE_NO_DEPRECATE
+#if defined _MSC_VER && _MSC_VER >= 1400
+	/* Disable deprecation warnings concerning unsafe CRT functions */
+	#define _CRT_SECURE_NO_DEPRECATE
 
-		/* Replace the POSIX function with ISO C++ conformant one as it is now deprecated */
-		#define fileno _fileno
+	/* Replace the POSIX function with ISO C++ conformant one as it is now deprecated */
+	#define fileno _fileno
 
-		/* Disable deprecation warnings because MSVC8 seemingly thinks ISO C++ conformant functions are deprecated. */
-		#pragma warning (disable : 4996)
-	#endif
+	/* Disable deprecation warnings because MSVC8 seemingly thinks ISO C++ conformant functions are deprecated. */
+	#pragma warning (disable : 4996)
 #endif
 
 #include<stdio.h>

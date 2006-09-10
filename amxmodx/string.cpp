@@ -443,15 +443,42 @@ static cell AMX_NATIVE_CALL add(AMX *amx, cell *params) /* 4 param */
 static cell AMX_NATIVE_CALL copy(AMX *amx, cell *params) /* 4 param */
 {
 	cell *src = get_amxaddr(amx, params[3]);
-	cell *dest = get_amxaddr(amx, params[1]);
-	cell *start = dest;
 	int c = params[2];
-	
-	while (c-- && *src)
-		*dest++ =* src++;
-	*dest = 0;
-	
-	return (dest - start);
+
+	if (amx->flags & AMX_FLAG_OLDFILE)
+	{
+		if (*src & BCOMPAT_TRANSLATE_BITS)
+		{
+			const char *key, *def;
+			if (!translate_bcompat(amx, src, &key, &def))
+			{
+				goto normal_string;
+			}
+			cell *dest = get_amxaddr(amx, params[1]);
+			cell *start = dest;
+			while (c-- && *def)
+			{
+				*dest++ = static_cast<cell>(*def++);
+			}
+			*dest = '\0';
+
+			return dest-start;
+		} else {
+			goto normal_string;
+		}
+	} else {
+normal_string:
+		cell *dest = get_amxaddr(amx, params[1]);
+		cell *start = dest;
+		
+		while (c-- && *src)
+		{
+			*dest++ = *src++;
+		}
+		*dest = '\0';
+
+		return (dest - start);
+	}
 }
 
 static cell AMX_NATIVE_CALL copyc(AMX *amx, cell *params) /* 4 param */
@@ -568,7 +595,26 @@ static cell AMX_NATIVE_CALL format(AMX *amx, cell *params) /* 3 param */
 	if (copy)
 		buf = g_cpbuf;
 	int param = 4;
-	size_t total = atcprintf(buf, maxlen, fmt, amx, params, &param);
+	size_t total = 0;
+
+	if (amx->flags & AMX_FLAG_OLDFILE)
+	{
+		if (*fmt & BCOMPAT_TRANSLATE_BITS)
+		{
+			const char *key, *def;
+			if (!translate_bcompat(amx, fmt, &key, &def))
+			{
+				goto normal_string;
+			}
+			total = atcprintf(buf, maxlen, def, amx, params, &param);
+		} else {
+			goto normal_string;
+		}
+	} else {
+normal_string:
+		total = atcprintf(buf, maxlen, fmt, amx, params, &param);
+	}
+
 	if (copy)
 	{
 		/* copy back */

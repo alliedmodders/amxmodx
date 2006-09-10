@@ -22,6 +22,10 @@
 
 stock AMX_VERSION[] = 	"1.76-BC"
 
+#define ADMIN_PERMBAN       ADMIN_BAN		//AMX Mod admin flag for permanent ban
+#define ADMIN_UNBAN         ADMIN_BAN		//AMX Mod admin flag for unbanning
+#define ADMIN_SUPREME       ADMIN_IMMUNITY	//AMX Mod admin flag for "super admin" (can kick, slap, ban, slay admins with Immunity)
+
 /* Core will identify us as an "old plugin" this way. */
 public __b_old_plugin = 1;
 

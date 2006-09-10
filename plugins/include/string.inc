@@ -20,7 +20,7 @@ native contain(const source[],const string[]);
 native containi(const source[],const string[]);
 
 /* Replaces given string to another in given text. */
-native replace(text[],len,const what[],const with[]);
+native replace(text[], len, const what[], const with[]);
 
 /* Adds one string to another. Last parameter different from 0, specifies
 * how many chars we want to add. Function returns number of all merged chars. */
@@ -215,19 +215,50 @@ stock remove_filepath(szFilePath[], szFile[], pMax)
 	return;
 }
 
-/* Replaces a contained string
-   By jtp10181
-*/
+/* Replaces a contained string iteratively.
+ * This ensures that no infinite replacements will take place by
+ *  intelligently moving to the next string position each iteration.
+ */
 stock replace_all(string[], len, what[], with[])
 {
-	new withlen, charnum = 0;
-	new total = 0;
+	new pos = 0;
 	
-	withlen = strlen(with);
-	
-	while (replace(string[charnum], len, what, with) != 0)
+	if ((pos = contain(string, what)) == -1)
 	{
-		charnum += contain(string[charnum], what) + withlen;
+		return 0;
+	}
+	
+	new total = 0;
+	new with_len = strlen(with);
+	new diff = strlen(what) - with_len;
+	new total_len = strlen(string);
+	new temp_pos = 0
+	
+	while (replace(string[pos], len, what, with) != 0)
+	{
+		/* jump to position after replacement */
+		pos += with_len;
+		
+		/* update cached length of string */
+		total_len -= diff;
+		
+		/* will the next call be operating on the last character? */
+		if (pos >= total_len)
+		{
+			break;
+		}
+		
+		/* find the next position from our offset */
+		temp_pos = contain(string[pos], what);
+		
+		/* if it's invalid, we're done */
+		if (temp_pos == -1)
+		{
+			break;
+		}
+		
+		/* otherwise, reposition and update counters */
+		pos += temp_pos;
 		total++;
 	}
 	

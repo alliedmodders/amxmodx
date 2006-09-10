@@ -8,6 +8,14 @@ public plugin_init()
 	register_srvcmd("test_replace", "Command_TestReplace")
 }
 
+public gabprint(const fmt[], ...)
+{
+	static buffer[2048]
+	vformat(buffer, 2047, fmt, 2)
+	
+	server_print("%s", buffer)
+}
+
 public Command_TestFormat()
 {
 	server_print("Printing -1 with d: %d", -1)
@@ -22,9 +30,29 @@ public Command_TestReplace()
 {
 	new message[192] = "^"@test^""
 	
-	server_print("orig message: %s", message)
-	
 	replace_all(message, 191, "^"", "")
+	server_print("Got: %s (expected: %s)", message, "@test")
 	
-	server_print("new message: %s", message)
+	copy(message, 191, "test")
+	replace_all(message, 191, "t", "tt")
+	server_print("Got: %s (expected: %s)", message, "ttestt")
+	
+	replace_all(message, 191, "tt", "")
+	server_print("Got: %s (expected: %s)", message, "es")
+	
+	copy(message, 191, "good boys do fine always")
+	replace_all(message, 191, " ", "-----")
+	server_print("Got %s (expected: %s)", message, "good-----boys-----do-----fine-----always")
+	
+	copy(message, 191, "-----")
+	replace_all(message, 191, "-", "")
+	server_print("Got ^"%s%^" (expected: ^"%s%^")", message, "")
+	
+	copy(message, 191, "-----")
+	replace_all(message, 191, "--", "")
+	server_print("Got ^"%s%^" (expected: ^"%s%^")", message, "-")
+	
+	copy(message, 191, "aaaa")
+	replace_all(message, 191, "a", "Aaa")
+	server_print("Got %s (expected: %s)", message, "AaaAaaAaaAaa")
 }

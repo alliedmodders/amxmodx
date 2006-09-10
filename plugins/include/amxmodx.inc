@@ -649,11 +649,16 @@ native get_func_id(const funcName[], pluginId = -1);
  *  can be modified by the called function.
  */
 native callfunc_push_int(value);
-native callfunc_push_str(VALUE[]);
 native callfunc_push_float(Float: value);
 native callfunc_push_intrf(&value);
 native callfunc_push_floatrf(& Float: value);
-native callfunc_push_array(VALUE[], array_size);
+
+/* If copyback is 1 (default), any changes are copied back.
+ * Note that this will defy the 'const' specifier for push_str(), 
+ *  which is only kept for special backwards compatibility.
+ */
+native callfunc_push_str(const VALUE[], bool:copyback=true);
+native callfunc_push_array(VALUE[], array_size, bool:copyback=true);
 
 /* Make the actual call.
 * Return value of the function called. */

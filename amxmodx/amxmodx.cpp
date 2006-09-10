@@ -3055,6 +3055,7 @@ struct CallFunc_ParamInfo
 	cell byrefAddr;													// byref address in caller plugin
 	cell size;														// byref size
 	cell *alloc;													// allocated block
+	bool copyback;													// copy back?
 };
 
 #if !defined CALLFUNC_MAXPARAMS
@@ -3262,17 +3263,20 @@ static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 		if (gparamInfo[i].flags & CALLFUNC_FLAG_BYREF)
 		{
 			// copy back so that references work
-			AMX *amxCaller = curPlugin->getAMX();
 			AMX *amxCalled = plugin->getAMX();
-			AMX_HEADER *hdrCaller = (AMX_HEADER *)amxCaller->base;
-			AMX_HEADER *hdrCalled = (AMX_HEADER *)amxCalled->base;
-			
-			memcpy(	/** DEST ADDR **/
-				(amxCaller->data ? amxCaller->data : (amxCaller->base + hdrCaller->dat)) + gparamInfo[i].byrefAddr, 
-				/** SOURCE ADDR **/
-				(amxCalled->data ? amxCalled->data : (amxCalled->base + hdrCalled->dat)) + gparams[i], 
-				/** SIZE **/
-				gparamInfo[i].size * sizeof(cell));
+
+			if (gparamInfo[i].copyback)
+			{
+				AMX *amxCaller = curPlugin->getAMX();
+				AMX_HEADER *hdrCaller = (AMX_HEADER *)amxCaller->base;
+				AMX_HEADER *hdrCalled = (AMX_HEADER *)amxCalled->base;
+					memcpy(	/** DEST ADDR **/
+					(amxCaller->data ? amxCaller->data : (amxCaller->base + hdrCaller->dat)) + gparamInfo[i].byrefAddr, 
+					/** SOURCE ADDR **/
+					(amxCalled->data ? amxCalled->data : (amxCalled->base + hdrCalled->dat)) + gparams[i], 
+					/** SIZE **/
+					gparamInfo[i].size * sizeof(cell));
+			}
 
 			// free memory used for params passed by reference
 			amx_Release(amxCalled, gparams[i]);
@@ -3334,6 +3338,7 @@ static cell AMX_NATIVE_CALL callfunc_push_byref(AMX *amx, cell *params)
 			g_CallFunc_ParamInfo[g_CallFunc_CurParam].byrefAddr = params[1];
 			g_CallFunc_ParamInfo[g_CallFunc_CurParam].size = 1;
 			g_CallFunc_ParamInfo[g_CallFunc_CurParam].alloc = NULL;
+			g_CallFunc_ParamInfo[g_CallFunc_CurParam].copyback = true;
 			g_CallFunc_Params[g_CallFunc_CurParam++] = i;		/* referenced parameter */
 			return 0;
 		}
@@ -3351,12 +3356,13 @@ static cell AMX_NATIVE_CALL callfunc_push_byref(AMX *amx, cell *params)
 	g_CallFunc_ParamInfo[g_CallFunc_CurParam].byrefAddr = params[1];
 	g_CallFunc_ParamInfo[g_CallFunc_CurParam].size = 1;
 	g_CallFunc_ParamInfo[g_CallFunc_CurParam].alloc = phys_addr;
+	g_CallFunc_ParamInfo[g_CallFunc_CurParam].copyback = true;
 	g_CallFunc_Params[g_CallFunc_CurParam++] = 0;
 
 	return 0;
 }
 
-// native callfunc_push_array(array[], size)
+// native callfunc_push_array(array[], size, [copyback])
 static cell AMX_NATIVE_CALL callfunc_push_array(AMX *amx, cell *params)
 {
 	if (!g_CallFunc_Plugin)
@@ -3382,6 +3388,7 @@ static cell AMX_NATIVE_CALL callfunc_push_array(AMX *amx, cell *params)
 			g_CallFunc_ParamInfo[g_CallFunc_CurParam].byrefAddr = params[1];
 			g_CallFunc_ParamInfo[g_CallFunc_CurParam].size = 1;
 			g_CallFunc_ParamInfo[g_CallFunc_CurParam].alloc = NULL;
+			g_CallFunc_ParamInfo[g_CallFunc_CurParam].copyback = g_CallFunc_ParamInfo[i].copyback;
 			g_CallFunc_Params[g_CallFunc_CurParam++] = i;		/* referenced parameter */
 			return 0;
 		}
@@ -3402,6 +3409,14 @@ static cell AMX_NATIVE_CALL callfunc_push_array(AMX *amx, cell *params)
 	g_CallFunc_ParamInfo[g_CallFunc_CurParam].byrefAddr = params[1];
 	g_CallFunc_ParamInfo[g_CallFunc_CurParam].size = array_size;
 	g_CallFunc_ParamInfo[g_CallFunc_CurParam].alloc = phys_addr;
+
+	if (params[0] / sizeof(cell) >= 3)
+	{
+		g_CallFunc_ParamInfo[g_CallFunc_CurParam].copyback = params[3] ? true : false;
+	} else {
+		g_CallFunc_ParamInfo[g_CallFunc_CurParam].copyback = true;
+	}
+
 	g_CallFunc_Params[g_CallFunc_CurParam++] = 0;
 
 	return 0;
@@ -3433,6 +3448,7 @@ static cell AMX_NATIVE_CALL callfunc_push_str(AMX *amx, cell *params)
 			g_CallFunc_ParamInfo[g_CallFunc_CurParam].byrefAddr = params[1];
 			g_CallFunc_ParamInfo[g_CallFunc_CurParam].size = 1;
 			g_CallFunc_ParamInfo[g_CallFunc_CurParam].alloc = NULL;
+			g_CallFunc_ParamInfo[g_CallFunc_CurParam].copyback = g_CallFunc_ParamInfo[i].copyback;
 			g_CallFunc_Params[g_CallFunc_CurParam++] = i;
 			// we are done
 			return 0;
@@ -3457,6 +3473,14 @@ static cell AMX_NATIVE_CALL callfunc_push_str(AMX *amx, cell *params)
 	g_CallFunc_ParamInfo[g_CallFunc_CurParam].byrefAddr = params[1];
 	g_CallFunc_ParamInfo[g_CallFunc_CurParam].size = len + 1;
 	g_CallFunc_ParamInfo[g_CallFunc_CurParam].alloc = phys_addr;
+
+	if (params[0] / sizeof(cell) >= 3)
+	{
+		g_CallFunc_ParamInfo[g_CallFunc_CurParam].copyback = params[3] ? true : false;
+	} else {
+		g_CallFunc_ParamInfo[g_CallFunc_CurParam].copyback = true;
+	}
+
 	g_CallFunc_Params[g_CallFunc_CurParam++] = 0;
 
 	return 0;

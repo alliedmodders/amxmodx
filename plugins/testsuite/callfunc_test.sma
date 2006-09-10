@@ -7,7 +7,7 @@ public plugin_init()
 	register_srvcmd("test_callfunc", "Command_Callfunc")
 }
 
-public OnCallfuncReceived(num, str[], &val, array[], array2[], size)
+public OnCallfuncReceived(num, str[], &val, array[], array2[], size, hello2[1])
 {
 	server_print("num = %d (expected: %d)", num, 5)
 	server_print("str[] = ^"%s^" (expected: %s)", str, "Gaben")
@@ -25,12 +25,14 @@ public OnCallfuncReceived(num, str[], &val, array[], array2[], size)
 	}
 	array[0] = 5
 	array2[1] = 6
+	hello2[0] = 25
 }
 
 public Command_Callfunc()
 {
 	new a = 62
 	new hello[] = {0,1,2,3,4,5}
+	new hello2[] = {9}
 	new pm = 6
 	new err
 	
@@ -46,11 +48,13 @@ public Command_Callfunc()
 	callfunc_push_array(hello, pm)
 	callfunc_push_array(hello, pm)
 	callfunc_push_int(pm)
+	callfunc_push_array(hello2, 1, false)
 	callfunc_end()
 	
 	server_print("a = %d (expected: %d)", a, 15)
 	server_print("hello[0] = %d (expected: %d)", hello[0], 5)
 	server_print("hello[1] = %d (expected: %d)", hello[1], 6)
+	server_print("hello2[0] = %d (expected: %d)", hello2[0], 9)
 	
 	return PLUGIN_HANDLED
 }

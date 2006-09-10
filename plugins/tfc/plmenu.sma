@@ -54,7 +54,7 @@ new g_clcmdNum
 
 new g_coloredMenus
 
-new g_teamNames[5][] = {"", "Blue", "Red", "Yellow", "Green"}
+new g_teamNames[6][] = {"", "Blue", "Red", "Yellow", "Green", "Spectator"}
 
 public plugin_init()
 {
@@ -461,7 +461,7 @@ public actionTeamMenu(id,key) {
   switch (key) {
     case 7:{
       g_menuOption[id]++
-      if( g_menuOption[id] > 4 )
+      if (g_menuOption[id] > 5)
         g_menuOption[id] = 1
       displayTeamMenu(id,g_menuPosition[id])
     }
@@ -485,7 +485,12 @@ public actionTeamMenu(id,key) {
       new szCmd[2]
       format(szCmd,2,"%d",g_menuOption[id])
       tfc_userkill(player)
-      engclient_cmd(player,"jointeam" , szCmd )
+      if (g_menuOption[id] == 5)
+      {
+        engclient_cmd(player, "spectate")
+      } else {
+        engclient_cmd(player, "jointeam", szCmd )
+      }
 
 
       displayTeamMenu(id,g_menuPosition[id])

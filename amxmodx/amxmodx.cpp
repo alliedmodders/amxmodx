@@ -3777,7 +3777,9 @@ static cell AMX_NATIVE_CALL CreateMultiForward(AMX *amx, cell *params)
 	cell ps[FORWARD_MAX_PARAMS];
 	cell count = params[0] / sizeof(cell);
 	for (cell i=3; i<=count; i++)
+	{
 		ps[i-3] = *get_amxaddr(amx, params[i]);
+	}
 	
 	return registerForwardC(funcname, static_cast<ForwardExecType>(params[2]), ps, count-2);
 }
@@ -3785,13 +3787,24 @@ static cell AMX_NATIVE_CALL CreateMultiForward(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL CreateOneForward(AMX *amx, cell *params)
 {
 	CPluginMngr::CPlugin *p = g_plugins.findPlugin(params[1]);
+
+	if (!p)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid plugin id: %d", params[1]);
+		return -1;
+	} else if (!p->isExecutable(0)) {
+		return -1;
+	}
+
 	int len;
 	char *funcname = get_amxstring(amx, params[2], 0, len);
 
 	cell ps[FORWARD_MAX_PARAMS];
 	cell count = params[0] / sizeof(cell);
 	for (cell i=3; i<=count; i++)
+	{
 		ps[i-3] = *get_amxaddr(amx, params[i]);
+	}
 	
 	return registerSPForwardByNameC(p->getAMX(), funcname, ps, count-2);
 }

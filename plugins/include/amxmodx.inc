@@ -1004,10 +1004,10 @@ native set_addr_val(addr, val);
 native CreateMultiForward(const name[], stop_type, ...);
 
 /**
- * creates a forward for one plugin.
- * results will be > 0 for success
- * id can be returned from find_plugin_byfile or
- * anything get_plugin is compatible with.
+ * Creates a forward for one plugin.
+ * Results will be > 0 for success.
+ * id should be an id such as returned by find_plugin_byfile.
+ * Unlike get_plugin(), negative numbers will not work.
  */
 native CreateOneForward(plugin_id, const name[], ...);
 

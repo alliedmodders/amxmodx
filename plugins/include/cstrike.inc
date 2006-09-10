@@ -28,10 +28,12 @@ native cs_get_user_deaths(index);
 native cs_set_user_deaths(index, newdeaths);
 
 /* Returns index of entity (does not have to be a player) which hostage is following. 0 is hostage doesn't follow anything.
+ * Note: this native does not work on Condition Zero, which has a different hostage AI than CS.
  */
 native cs_get_hostage_foll(index);
 
 /* Set hostage to follow entity specified in followedindex. Does not have to be a player. If followedindex is 0 the hostage will stop following.
+ * Note: this native does not work on Condition Zero, which has a different hostage AI than CS.
  */
 native cs_set_hostage_foll(index, followedindex = 0);
 

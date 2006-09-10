@@ -72,6 +72,14 @@ namespace AMXXRelease
 				ABuilder.PropSlashes(source + "\\plugins\\include"), 
 				ABuilder.PropSlashes(basedir + "\\scripting\\include"));
 
+			ABuilder.CopyNormal(ab,
+				ABuilder.PropSlashes(source + "\\plugins\\include\\amxmod_compat"), 
+				ABuilder.PropSlashes(basedir + "\\scripting\\include\\amxmod_compat"));
+
+			ABuilder.CopyNormal(ab,
+				ABuilder.PropSlashes(source + "\\plugins\\amxmod_compat"),
+				ABuilder.PropSlashes(basedir + "\\scripting\\amxmod_compat"));
+
 			return true;
 		}
 
@@ -85,7 +93,7 @@ namespace AMXXRelease
 			m_Plugins.Add(admin_sql);
 
 			Plugin bcompat = new Plugin("amxmod_compat");
-			bcompat.source = "amxmod_compat/amxmod_compat.sma";
+			bcompat.source = "amxmod_compat/amxmod_compat";
 			m_Plugins.Add(bcompat);
 
 			AddPlugin("adminchat");

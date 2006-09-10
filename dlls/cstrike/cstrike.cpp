@@ -728,20 +728,27 @@ static cell AMX_NATIVE_CALL cs_set_user_defusekit(AMX *amx, cell *params) // cs_
 	
 	int* defusekit = ((int *)pPlayer->pvPrivateData + OFFSET_DEFUSE_PLANT);
 
-	if (params[2]) {
+	if (params[2])
+	{
 		int colour[3] = {DEFUSER_COLOUR_R, DEFUSER_COLOUR_G, DEFUSER_COLOUR_B};
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 3; i++)
+		{
 			if (params[i + 3] != -1)
+			{
 				colour[i] = params[i + 3];
+			}
 		}
 
+		pPlayer->v.body = 1;
+
 		char* icon;
-		if (params[6] != -1) {
+		if (params[6] != -1)
+		{
 			int len;
 			icon = MF_GetAmxString(amx, params[6], 1, &len);
-		}
-		else
+		} else {
 			icon = "defuser";
+		}
 
 		*defusekit |= HAS_DEFUSE_KIT;
 		MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "StatusIcon", NULL), NULL, pPlayer);
@@ -758,6 +765,7 @@ static cell AMX_NATIVE_CALL cs_set_user_defusekit(AMX *amx, cell *params) // cs_
 		WRITE_BYTE(0); // hide
 		WRITE_STRING("defuser");
 		MESSAGE_END();
+		pPlayer->v.body = 0;
 	}
 
 	/*

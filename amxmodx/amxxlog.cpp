@@ -249,7 +249,7 @@ void CLog::LogError(const char *fmt, ...)
 
 	va_list arglst;
 	va_start(arglst, fmt);
-	vsnprintf(msg, 3071, fmt, arglst);
+	vsnprintf(msg, sizeof(msg)-1, fmt, arglst);
 	va_end(arglst);
 
 	FILE *pF = NULL;
@@ -261,14 +261,7 @@ void CLog::LogError(const char *fmt, ...)
 		if (!m_LoggedErrMap)
 		{
 			fprintf(pF, "L %s: Start of error session.\n", date);
-			if (m_LogType == 1)
-			{
-				fprintf(pF, "L %s: Info (map \"%s\") (logfile \"L%02d%02d.log\")\n", date, STRING(gpGlobals->mapname), curTime->tm_mon + 1, curTime->tm_mday);
-			} else if (m_LogType == 2) {
-				fprintf(pF, "L %s: Info (map \"%s\") (logfile \"%s\")\n", date, STRING(gpGlobals->mapname), m_LogFile.c_str());
-			} else if (m_LogType == 3) {
-				fprintf(pF, "L %s: Info (map \"%s\") (logfile \"hl\")\n", date, STRING(gpGlobals->mapname));
-			}
+			fprintf(pF, "L %s: Info (map \"%s\") (logfile \"error_%02d%02d%02d.log\")\n", date, STRING(gpGlobals->mapname), curTime->tm_mon + 1, curTime->tm_mday, curTime->tm_year - 100);
 			m_LoggedErrMap = true;
 		}
 		fprintf(pF, "L %s: %s\n", date, msg);

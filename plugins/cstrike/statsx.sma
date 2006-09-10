@@ -163,7 +163,7 @@ new g_izTeamGameStats[MAX_TEAMS][8]
 new g_izUserUserID[MAX_PLAYERS]                     = {0, ...}
 new g_izUserAttackerDistance[MAX_PLAYERS]           = {0, ...}
 new g_izUserVictimDistance[MAX_PLAYERS][MAX_PLAYERS]
-new g_izUserRndName[MAX_PLAYERS][MAX_NAME_LENGTH]
+new g_izUserRndName[MAX_PLAYERS][MAX_NAME_LENGTH + 1]
 new g_izUserRndStats[MAX_PLAYERS][8]
 new g_izUserGameStats[MAX_PLAYERS][8]
 
@@ -389,7 +389,7 @@ get_attackers(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 		if (get_user_astats(id, iAttacker, izStats, izBody, t_sWpn, MAX_WEAPON_LENGTH))
 		{
 			iFound = 1
-			get_user_name(iAttacker, t_sName, 32)
+			get_user_name(iAttacker, t_sName, MAX_NAME_LENGTH)
 			
 			if (izStats[STATS_KILLS])
 			{

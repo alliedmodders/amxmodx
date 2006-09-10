@@ -80,6 +80,10 @@ namespace AMXXRelease
 				ABuilder.PropSlashes(source + "\\plugins\\amxmod_compat"),
 				ABuilder.PropSlashes(basedir + "\\scripting\\amxmod_compat"));
 
+			ABuilder.CopyNormal(ab,
+				ABuilder.PropSlashes(source + "\\plugins\\testsuite"),
+				ABuilder.PropSlashes(basedir + "\\scripting\\testsuite"));
+
 			return true;
 		}
 

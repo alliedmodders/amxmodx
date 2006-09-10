@@ -252,6 +252,31 @@ stock SQL_SimpleQuery(Handle:db, const query[], error[]="", maxlength=0, &rows=0
 }
 
 /**
+ * Use this for executing a query where you don't care about the result.
+ * Returns 0 on failure, 1 on success
+ */
+stock SQL_SimpleQueryFmt(Handle:db, error[]="", maxlength=0, &rows=0, const fmt[], ...)
+{
+	static query_buf[2048];
+	vformat(query_buf, 2047, fmt, 6)
+	
+	new Handle:hQuery = SQL_PrepareQuery(db, "%s", query_buf);
+	
+	if (!SQL_Execute(hQuery))
+	{
+		SQL_QueryError(hQuery, error, maxlength);
+		SQL_FreeHandle(hQuery)
+		return 0;
+	}
+	
+	rows = SQL_NumResults(hQuery)
+	
+	SQL_FreeHandle(hQuery);
+	
+	return 1
+}
+
+/**
  * Use this for executing a query and not caring about the error.
  * Returns -1 on error, >=0 on success (with number of affected rows)
  */

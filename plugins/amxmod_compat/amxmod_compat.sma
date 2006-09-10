@@ -34,6 +34,7 @@ public plugin_init()
 public plugin_natives()
 {
 	set_module_filter("Plugin_ModuleFilter")
+	set_native_filter("Plugin_NativeFilter")
 	
 	new modname[32]
 	get_modname(modname, 31)
@@ -49,7 +50,17 @@ public plugin_natives()
 
 public Plugin_ModuleFilter(const module[])
 {
-	if (equali(module, "sqlx"))
+	if (equali(module, "sqlx") || equali(module, "cstrike"))
+	{
+		return PLUGIN_HANDLED
+	}
+	
+	return PLUGIN_CONTINUE
+}
+
+public Plugin_NativeFilter(const name[], index, trap)
+{
+	if (!trap)
 	{
 		return PLUGIN_HANDLED
 	}

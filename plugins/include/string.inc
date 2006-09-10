@@ -221,11 +221,15 @@ stock remove_filepath(szFilePath[], szFile[], pMax)
 stock replace_all(string[], len, what[], with[])
 {
 	new withlen, charnum = 0;
+	new total = 0;
 	
 	withlen = strlen(with);
 	
 	while (replace(string[charnum], len, what, with) != 0)
 	{
 		charnum += contain(string[charnum], with) + withlen;
+		total++;
 	}
+	
+	return total;
 }

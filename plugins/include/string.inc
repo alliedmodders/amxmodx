@@ -227,7 +227,7 @@ stock replace_all(string[], len, what[], with[])
 	
 	while (replace(string[charnum], len, what, with) != 0)
 	{
-		charnum += contain(string[charnum], with) + withlen;
+		charnum += contain(string[charnum], what) + withlen;
 		total++;
 	}
 	

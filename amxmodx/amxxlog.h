@@ -37,6 +37,7 @@ private:
 	String m_LogFile;
 	int m_LogType;
 	bool m_FoundError;
+	bool m_LoggedErrMap;
 
 	void GetLastFile(int &outMonth, int &outDay, String &outFilename);
 	void UseFile(const String &fileName);

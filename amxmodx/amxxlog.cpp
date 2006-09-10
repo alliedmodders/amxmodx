@@ -49,6 +49,7 @@ CLog::CLog()
 	m_LogType = 0;
 	m_LogFile.clear();
 	m_FoundError = false;
+	m_LoggedErrMap = false;
 }
 
 CLog::~CLog()
@@ -147,17 +148,17 @@ void CLog::MapChange()
 		print_srvconsole("[AMXX] Invalid amxx_logging value; setting back to 1...");
 	}
 
+	m_LoggedErrMap = false;
+
 	if (m_LogType == 2)
 	{
 		// create new logfile
 		CreateNewFile();
-	}
-	else if (m_LogType == 1)
-	{
+	} else if (m_LogType == 1) {
 		Log("-------- Mapchange to %s --------", STRING(gpGlobals->mapname));
-	}
-	else
+	} else {
 		return;
+	}
 }
 
 void CLog::Log(const char *fmt, ...)
@@ -215,9 +216,7 @@ void CLog::Log(const char *fmt, ...)
 
 		// print on server console
 		print_srvconsole("L %s: %s\n", date, msg);
-	}
-	else if (m_LogType == 3)
-	{
+	} else if (m_LogType == 3) {
 		// build message
 		static char msg_[3072];
 		va_list arglst;
@@ -233,7 +232,9 @@ void CLog::LogError(const char *fmt, ...)
 	static char file[256];
 
 	if (m_FoundError)
+	{
 		return;
+	}
 
 	// get time
 	time_t td;
@@ -257,6 +258,19 @@ void CLog::LogError(const char *fmt, ...)
 
 	if (pF)
 	{
+		if (!m_LoggedErrMap)
+		{
+			fprintf(pF, "L %s: Start of error session.\n", date);
+			if (m_LogType == 1)
+			{
+				fprintf(pF, "L %s: Info (map \"%s\") (logfile \"L%02d%02d.log\")\n", date, STRING(gpGlobals->mapname), curTime->tm_mon + 1, curTime->tm_mday);
+			} else if (m_LogType == 2) {
+				fprintf(pF, "L %s: Info (map \"%s\") (logfile \"%s\")\n", date, STRING(gpGlobals->mapname), m_LogFile.c_str());
+			} else if (m_LogType == 3) {
+				fprintf(pF, "L %s: Info (map \"%s\") (logfile \"hl\")\n", date, STRING(gpGlobals->mapname));
+			}
+			m_LoggedErrMap = true;
+		}
 		fprintf(pF, "L %s: %s\n", date, msg);
 		fclose(pF);
 	} else {

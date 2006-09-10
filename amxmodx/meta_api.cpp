@@ -1229,16 +1229,16 @@ void C_AlertMessage(ALERT_TYPE atype, char *szFmt, ...)
 		{
 			g_logevents.executeLogEvents();
 		}
-		
-		cell retVal = executeForwards(FF_PluginLog);
-		
-		if (retVal)
-		{
-			RETURN_META(MRES_HANDLED);
-		}
 	}
 
-	RETURN_META(MRES_IGNORED);
+	cell retVal = executeForwards(FF_PluginLog);
+
+	if (retVal)
+	{
+		RETURN_META(MRES_SUPERCEDE);
+	}
+
+    RETURN_META(MRES_IGNORED);
 }
 
 void C_ChangeLevel(char *map, char *what)

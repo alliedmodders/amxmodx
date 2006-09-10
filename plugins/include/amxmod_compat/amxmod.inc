@@ -52,56 +52,87 @@ stock numtostr(num,string[],len)
 stock strtonum(const string[])
   return str_to_num(string);
   
-stock build_path(path[], len, {Float,_}:... ) {
+stock build_path(path[], len, {Float,_}:... )
+{
   format_args(path, len, 2)
-  new pathlen = strlen(path)
-  new basedir[32]
-  if(containi(path, "$basedir") != -1) {
-    get_localinfo("amxx_basedir", basedir, 31)
-    if(!basedir[0]) copy(basedir, 31, "addons/amxmodx")
-    if((pathlen+strlen(basedir)-strlen("$basedir")) < len) {
-      replace(path, len, "$basedir", basedir)
+  new pathlen = strlen(path);
+  new basedir[32];
+  if (containi(path, "$basedir") != -1)
+  {
+    get_localinfo("amxx_basedir", basedir, 31);
+    if (!basedir[0])
+    {
+	    copy(basedir, 31, "addons/amxmodx");
+    }
+    if ((pathlen+strlen(basedir)-strlen("$basedir")) < len)
+    {
+    	replace(path, len, "$basedir", basedir)
     }
   }
-  new dir[64], subdir[63]
-  if(containi(path, "$configdir") != -1) {
-    get_localinfo("amxx_configsdir", dir, 63)
-    if(!dir[0]) format(dir, 63, "%s/configs", basedir)
-    if((pathlen+strlen(basedir)-strlen("$configdir")) < len) {
-      replace(path, len, "$configdir", dir)
+  new dir[64], subdir[63];
+  if (containi(path, "$configdir") != -1)
+  {
+  	get_localinfo("amxx_configsdir", dir, 63)
+    if (!dir[0])
+    {
+	    format(dir, 63, "%s/configs", basedir)
     }
-    dir[0] = '^0'
-  }
-  if(containi(path, "$langdir") != -1) {
-    get_localinfo("amxx_datadir", subdir, 63)
-    if(!subdir[0]) format(subdir, 63, "%s/data", basedir)
-    format(dir, 63, "%s/amxmod-lang", subdir)
-    if((pathlen+strlen(basedir)-strlen("$langdir")) < len) {
-      replace(path, len, "$langdir", dir)
-    }
-    dir[0] = '^0'
-  }
-  if(containi(path, "$modulesdir") != -1) {
-    get_localinfo("amxx_modules", dir, 63)
-    if(!dir[0]) format(dir, 63, "%s/modules", basedir)
-    if((pathlen+strlen(basedir)-strlen("$modulesdir")) < len) {
-      replace(path, len, "$modulesdir", dir)
+    if ((pathlen+strlen(basedir)-strlen("$configdir")) < len)
+    {
+    	replace(path, len, "$configdir", dir)
     }
     dir[0] = '^0'
   }
-  if(containi(path, "$pluginsdir") != -1) {
-    get_localinfo("amx_pluginsdir", dir, 63)
-    if(!dir[0]) format(dir, 63, "%s/plugins", basedir)
-    if((pathlen+strlen(basedir)-strlen("$pluginsdir")) < len) {
-      replace(path, len, "$pluginsdir", dir)
+  if (containi(path, "$langdir") != -1)
+  {
+    get_localinfo("amxx_datadir", subdir, 63);
+    if (!subdir[0])
+    {
+	    format(subdir, 63, "%s/data", basedir);
     }
-    dir[0] = '^0'
+    format(dir, 63, "%s/amxmod-lang", subdir);
+    if ((pathlen+strlen(basedir)-strlen("$langdir")) < len)
+    {
+      replace(path, len, "$langdir", dir);
+    }
+    dir[0] = '^0''
   }
-  if(containi(path, "$logdir") != -1) {
-    get_localinfo("amx_logs", dir, 63)
-    if(!dir[0]) format(dir, 63, "%s/logs", basedir)
-    if((pathlen+strlen(basedir)-strlen("$logdir")) < len) {
-      replace(path, len, "$logdir", dir)
+  if (containi(path, "$modulesdir") != -1)
+  {
+    get_localinfo("amxx_modules", dir, 63);
+    if (!dir[0])
+    {
+	    format(dir, 63, "%s/modules", basedir);
+    }
+    if ((pathlen+strlen(basedir)-strlen("$modulesdir")) < len)
+    {
+		replace(path, len, "$modulesdir", dir);
+    }
+    dir[0] = '^0';
+  }
+  if (containi(path, "$pluginsdir") != -1)
+  {
+    get_localinfo("amx_pluginsdir", dir, 63);
+    if( !dir[0])
+    {
+	    format(dir, 63, "%s/plugins", basedir);
+    }
+    if ((pathlen+strlen(basedir)-strlen("$pluginsdir")) < len)
+    {
+    	replace(path, len, "$pluginsdir", dir);
+    }
+    dir[0] = '^0';
+  }
+  if (containi(path, "$logdir") != -1)
+  {
+    get_localinfo("amx_logs", dir, 63);
+    if (!dir[0])
+    {
+	    format(dir, 63, "%s/logs", basedir)
+    }
+    if ((pathlen+strlen(basedir)-strlen("$logdir")) < len)
+    {
+    	replace(path, len, "$logdir", dir);
     }
   }
   return 1
@@ -127,5 +158,24 @@ stock is_user_authorized(id)
 
 stock angle_to_vector(Float:vector[3], FRU, Float:ret[3])
 {
-	return angle_vector(vector, FRU, ret)
+	return angle_vector(vector, FRU, ret);
+}
+
+get_cmdaccess(cmd[], accessflags[], len)
+{
+	new num = get_concmdsnum(-1);
+	new command[32], info[3];
+	new flags;
+	
+	for (new i=0; i<num; i++)
+	{
+		get_concmd(i, command, 31, flags, info, 2, -1);
+		if (equal(command, cmd))
+		{
+			get_flags(flags, accessflags, len);
+			return 1;
+		}
+	}
+	
+	return 0;
 }

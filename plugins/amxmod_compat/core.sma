@@ -26,6 +26,7 @@ Core_Natives()
 	register_native("fsqroot",				"__fsqroot")
 	register_native("fpower",				"__fpower")
 	register_native("flog",					"__flog")
+	register_native("get_cmdaccess",		"__get_cmdaccess")
 }
 
 public __VelocityByAim(plid, num)
@@ -179,4 +180,20 @@ public Float:__flog(plid, num)
 	new Float:base = get_param_f(2)
 	
 	return floatlog(value, base)
+}
+
+//get_cmdaccess(cmd[], accessflags[], len)
+public __get_cmdaccess(plid, num)
+{
+	new command[32], accessflags[32]
+	new ret
+	
+	get_string(1, command, 31)
+
+	if ((ret=get_cmdaccess(command, accessflags, 31)))
+	{
+		set_string(2, accessflags, get_param(3))
+	}
+	
+	return ret
 }

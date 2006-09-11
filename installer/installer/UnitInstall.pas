@@ -797,7 +797,7 @@ begin
     frmMain.ggeItem.Progress := 0;
   end;
   AddStatus('', clBlack, False);
-  AddStatus('Cleaning installation...', clBlack);
+  AddStatus('Cleaning installation...', clBlack, False);
   DelTree(ExtractFilePath(ParamStr(0)) + 'temp');
   AddDone;
 

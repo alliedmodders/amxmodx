@@ -249,9 +249,21 @@ begin
     optLinux64.Enabled := False;
     cboGameAddon.Enabled := False;
     // preinstall...
-    DelDir(ExtractFilePath(ParamStr(0)) + 'temp');
     MakeDir(ExtractFilePath(ParamStr(0)) + 'temp');
     DownloadFile('liblist.gam', ExtractFilePath(ParamStr(0)) + 'temp\liblist.gam');
+    try
+      IdFTP.ChangeDir(ePath + 'addons/metamod/');
+      ForceDirectories(ExtractFilePath(ParamStr(0)) + 'temp\addons\metamod\');
+      DownloadFile('plugins.ini', ExtractFilePath(ParamStr(0)) + 'temp\addons\metamod\plugins.ini');
+    except
+      try
+        IdFTP.ChangeDir(ePath);
+      except
+        MessageBox(Handle, PChar('Cannot change directory to "' + ePath + '". Please check your settings and try again.'), 'Error', MB_ICONWARNING);
+        Screen.Cursor := crDefault;
+        exit;
+      end;
+    end;
     ChosenMod := modNone;
     case cboGameAddon.ItemIndex of
       1: ChosenMod := modCS;
@@ -278,8 +290,6 @@ begin
     ggeAll.Progress := 0;
     ggeItem.Progress := 0;
     cmdNext.Hide;
-    if DirectoryExists(ExtractFilePath(ParamStr(0)) + 'temp\') then
-      DelDir(ExtractFilePath(ParamStr(0)) + 'temp\');
     InstallCustom(ExtractFilePath(ParamStr(0)) + 'temp\', ChosenMod, eOS);
     if Cancel then
       exit;

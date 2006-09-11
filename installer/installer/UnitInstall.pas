@@ -3,7 +3,7 @@ unit UnitInstall;
 interface
 
 uses SysUtils, Classes, Windows, Graphics, Forms, ShellAPI, Controls, Messages,
-     TlHelp32, IdFTPCommon, ComCtrls;
+     TlHelp32, IdFTPCommon, ComCtrls, JclFileUtils;
 
 type TMod = (modNone, modCS, modDoD, modTFC, modNS, modTS, modESF);
 type TOS = (osWindows, osLinux32, osLinux64);
@@ -12,7 +12,6 @@ procedure AddStatus(Text: String; Color: TColor; ShowTime: Boolean = True);
 procedure AddDone(Additional: String = '');
 procedure AddSkipped;
 procedure AddNotFound;
-function DelDir(Dir: string): Boolean;
 procedure MakeDir(Dir: String);
 procedure DownloadFile(eFile: String; eDestination: String);
 
@@ -98,18 +97,6 @@ begin
 
   frmMain.Repaint;
   Application.ProcessMessages;
-end;
-
-function DelDir(Dir: string): Boolean;
-var Fos: TSHFileOpStruct;
-begin 
-  ZeroMemory(@Fos, SizeOf(Fos)); 
-  with Fos do begin 
-    wFunc  := FO_DELETE; 
-    fFlags := FOF_SILENT or FOF_NOCONFIRMATION; 
-    pFrom  := PChar(Dir + #0); 
-  end; 
-  Result := (ShFileOperation(fos) = 0); 
 end;
 
 procedure MakeDir(Dir: String);
@@ -290,6 +277,7 @@ procedure BasicInstallation(ePath: String; eMod: TMod; SteamInstall: Boolean; OS
 var eStr: TStringList;
     i: integer;
     CopyConfig: Boolean;
+    UpdatePluginsIni: Boolean;
 begin
   AddStatus('Scanning for directories...', clBlack);
   with GetAllFiles(ExtractFilePath(ParamStr(0)) + 'files\*.*', faDirectory, True, True) do begin
@@ -506,25 +494,48 @@ begin
     if FileExists(ePath + '\addons\amxmodx\dlls\metamod_amd64.so') then DeleteFile(PChar(ePath + '\addons\amxmodx\dlls\metamod_amd64.so'));
     if FileExists(ePath + '\addons\amxmodx\dlls\metamod_i386.so')  then DeleteFile(PChar(ePath + '\addons\amxmodx\dlls\metamod_i386.so'));
   finally
+    UpdatePluginsIni := True;
     eStr := TStringList.Create;
-    eStr.Add(';; Metamod plugins.ini');
-    eStr.Add('; AMX Mod X ' + VERSION);
-    if OS = osWindows then begin
-      eStr.Add('win32   addons\amxmodx\dlls\amxmodx_mm.dll');
-      eStr.Add('; Enable this instead for binary logging');
-      eStr.Add('; win32   addons\amxmodx\dlls\amxmodx_bl_mm.dll');
+    // check if we need to modify mm's plugins.ini
+    if (FileExists(ePath + '\addons\metamod\plugins.ini')) then begin
+      eStr.LoadFromFile(ePath + '\addons\metamod\plugins.ini');
+      if OS = osWindows then begin
+        if (Pos(eStr.Text, 'addons\amxmodx\dlls\amxmodx_mm.dll') <> 0) then
+          UpdatePluginsIni := False;
+      end
+      else if OS = osLinux32 then begin
+        if (Pos(eStr.Text, 'addons\amxmodx\dlls\amxmodx_mm.dll') <> 0) then
+          UpdatePluginsIni := False;
+      end
+      else begin
+        if (Pos(eStr.Text, 'addons\amxmodx\dlls\amxmodx_mm.dll') <> 0) then
+          UpdatePluginsIni := False;
+      end;
     end
-    else if OS = osLinux32 then begin
-      eStr.Add('linux   addons/amxmodx/dlls/amxmodx_mm_i386.so');
-      eStr.Add('; Enable this instead for binary logging');
-      eStr.Add('; linux   addons/amxmodx/dlls/amxmodx_bl_mm_i386.so');
-    end
+    // create a header :o
     else begin
-      eStr.Add('linux   addons/amxmodx/dlls/amxmodx_mm_amd64.so');
-      eStr.Add('; Enable this instead for binary logging');
-      eStr.Add('; linux   addons/amxmodx/dlls/amxmodx_bl_mm_amd64.so');
+      eStr.Add(';; Metamod plugins.ini');
+      eStr.Add('; AMX Mod X ' + VERSION);
     end;
-    eStr.SaveToFile(ePath + 'addons\metamod\plugins.ini');
+    // if there's no
+    if (not UpdatePluginsIni) then begin
+      if OS = osWindows then begin
+        eStr.Add('win32   addons\amxmodx\dlls\amxmodx_mm.dll');
+        eStr.Add('; Enable this instead for binary logging');
+        eStr.Add('; win32   addons\amxmodx\dlls\amxmodx_bl_mm.dll');
+      end
+      else if OS = osLinux32 then begin
+        eStr.Add('linux   addons/amxmodx/dlls/amxmodx_mm_i386.so');
+        eStr.Add('; Enable this instead for binary logging');
+        eStr.Add('; linux   addons/amxmodx/dlls/amxmodx_bl_mm_i386.so');
+      end
+      else begin
+        eStr.Add('linux   addons/amxmodx/dlls/amxmodx_mm_amd64.so');
+        eStr.Add('; Enable this instead for binary logging');
+        eStr.Add('; linux   addons/amxmodx/dlls/amxmodx_bl_mm_amd64.so');
+      end;
+      eStr.SaveToFile(ePath + 'addons\metamod\plugins.ini');
+    end;
     eStr.Free;
   end;
   AddDone;
@@ -785,12 +796,16 @@ begin
     frmMain.ggeAll.Progress := frmMain.ggeAll.Progress + 1;
     frmMain.ggeItem.Progress := 0;
   end;
+  AddStatus('', clBlack, False);
+  AddStatus('Cleaning installation...', clBlack);
+  DelTree(ExtractFilePath(ParamStr(0)) + 'temp');
+  AddDone;
+
   frmMain.ggeAll.Progress := frmMain.ggeAll.MaxValue;
   frmMain.ggeItem.Progress := frmMain.ggeItem.MaxValue;
 
   AddStatus('', clBlack, False);
   AddStatus('Finished installation!', clBlack, False);
-  DelDir(ExtractFilePath(ParamStr(0)) + 'temp');
   frmMain.tmrSpeed.Enabled := False;
 
   Screen.Cursor := crDefault;

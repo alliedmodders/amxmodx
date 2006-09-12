@@ -234,7 +234,7 @@ stock replace_all(string[], len, what[], with[])
 	new total_len = strlen(string);
 	new temp_pos = 0
 	
-	while (replace(string[pos], len, what, with) != 0)
+	while (replace(string[pos], len - pos, what, with) != 0)
 	{
 		/* jump to position after replacement */
 		pos += with_len;

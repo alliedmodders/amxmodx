@@ -25,10 +25,21 @@ native register_dictionary(const filename[]);
 //returns 1 if the language is loaded, 0 otherwise.
 native lang_exists(const name[]);
 
+enum TransKey
+{
+	TransKey_Bad = -1,
+};
+
 /**
  * Adds or finds a translation key.
  */
 native TransKey:CreateLangKey(const key[]);
+
+/**
+ * Finds a translation key id without adding on failure.
+ * Returns -1 on not found.
+ */
+native TransKey:GetLangTransKey(const key[]);
 
 /**
  * Adds a translation.

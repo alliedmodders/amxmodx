@@ -24,7 +24,7 @@ new g_MaxPlayers
 
 public plugin_init()
 {
-	register_plugin("AMX Mod Compat Engine", AMXX_VERSION_STR, "AMXX Dev Team")
+	register_plugin("AMX Mod Compat Engine", "1.76.rc4", "AMXX Dev Team")
 	
 	g_MaxPlayers = get_maxplayers()
 	

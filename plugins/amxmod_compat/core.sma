@@ -27,6 +27,11 @@ Core_Natives()
 	register_native("fpower",				"__fpower")
 	register_native("flog",					"__flog")
 	register_native("get_cmdaccess",		"__get_cmdaccess")
+	register_native("is_translated",		"__is_translated")
+	register_native("get_plugincmdsnum",	"__get_plugincmdsnum")
+	register_native("get_plugincmd",		"__get_plugincmd")
+	register_native("get_plugincvarsnum",	"__get_plugincvarsnum")
+	register_native("get_plugincvar",		"__get_plugincvar")
 }
 
 public __VelocityByAim(plid, num)
@@ -185,7 +190,7 @@ public Float:__flog(plid, num)
 //get_cmdaccess(cmd[], accessflags[], len)
 public __get_cmdaccess(plid, num)
 {
-	new command[32], accessflags[32]
+	static command[32], accessflags[32]
 	new ret
 	
 	get_string(1, command, 31)
@@ -196,4 +201,81 @@ public __get_cmdaccess(plid, num)
 	}
 	
 	return ret
+}
+
+public __is_translated(plid, num)
+{
+	static string[512]
+	
+	get_string(1, string, 511)
+	
+	return is_translated(string)
+}
+
+public __get_plugincmdsnum(plid, num)
+{
+	static plugin[64]
+	
+	get_string(1, plugin, 63)
+	
+	return get_plugincmdsnum(plugin, get_param(2))
+}
+
+public __get_plugincmd(plid, num)
+{
+	static plugin[64]
+	static command[32]
+	static accessflags[32]
+	static info[512]
+	
+	get_string(1, plugin, 63)
+	
+	if (get_plugincmd(plugin, 
+					  get_param(2), 
+					  command,
+					  31,
+					  accessflags,
+					  31,
+					  info,
+					  511,
+					  get_param(9),
+					  get_param(10)))
+	{
+		set_string(3, command, get_param(4))
+		set_string(5, accessflags, get_param(6))
+		set_string(7, info, get_param(8))
+		
+		return 1
+	}
+	
+	return 0
+}
+
+public __get_plugincvarsnum(plid, num)
+{
+	static plugin[64]
+	
+	get_string(1, plugin, 63)
+	
+	return get_plugincvarsnum(plugin, get_param(2))
+}
+
+//stock get_plugincvar(plugin[], index, cvar[], len1, value[], len2, flags=0)
+public __get_plugincvar(plid, num)
+{
+	static plugin[64]
+	static cvar[32]
+	static value[512]
+	
+	get_string(1, plugin, 63)
+	
+	if (get_plugincvar(plugin, get_param(2), cvar, 31, value, 511, get_param(7)))
+	{
+		set_string(3, cvar, get_param(4))
+		set_string(5, value, get_param(6))
+		
+		return 1
+	}
+	
+	return 0
 }

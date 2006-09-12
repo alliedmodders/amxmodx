@@ -58,6 +58,7 @@ public:
 	inline const char* getPluginName() { return plugin.c_str(); }
 	inline const char* getName() { return name.c_str(); }
 	inline bool operator == (const char* string) { return (strcmp(name.c_str(), string) == 0); }
+	int plugin_id;
 };
 
 // *****************************************************

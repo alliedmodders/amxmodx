@@ -1112,6 +1112,16 @@ static cell AMX_NATIVE_CALL get_plugin(AMX *amx, cell *params) /* 11 param */
 		
 		return a->getId();
 	}
+
+	if (params[0] / sizeof(cell) >= 12)
+	{
+		cell *jit_info = get_amxaddr(amx, params[12]);
+#if defined AMD64 || !defined JIT
+		*jit_info = 0;
+#else
+		*jit_info = a->isDebug() ? 0 : 1;
+#endif
+	}
 	
 	return -1;
 }
@@ -1286,6 +1296,28 @@ static cell AMX_NATIVE_CALL get_concmd(AMX *amx, cell *params) /* 7 param */
 	*cpFlags = cmd->getFlags();
 	
 	return 1;
+}
+
+static cell AMX_NATIVE_CALL get_concmd_plid(AMX *amx, cell *params)
+{
+	int who = params[3];
+	if (who > 0)
+	{
+		who = CMD_ClientCommand;
+	} else if (who == 0) {
+		who = CMD_ServerCommand;
+	} else {
+		who = CMD_ConsoleCommand;
+	}
+
+	CmdMngr::Command *cmd = g_commands.getCmd(params[1], who, params[2]);
+
+	if (cmd == NULL)
+	{
+		return -1;
+	}
+
+	return cmd->getPlugin()->getId();
 }
 
 static cell AMX_NATIVE_CALL get_clcmd(AMX *amx, cell *params) /* 7 param */
@@ -2189,8 +2221,7 @@ static cell AMX_NATIVE_CALL register_cvar(AMX *amx, cell *params) /* 3 param */
 		CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
 		CCVar* cvar = new CCVar(temp, plugin->getName(), params[3], amx_ctof(params[4]));
 
-		if (cvar == 0)
-			return 0;
+		cvar->plugin_id = plugin->getId();
 
 		g_cvars.put(cvar);
 
@@ -2580,6 +2611,43 @@ static cell AMX_NATIVE_CALL remove_quotes(AMX *amx, cell *params) /* 1 param */
 	}
 	
 	return 0;
+}
+
+//native get_plugins_cvar(id, name[], namelen, &flags=0, &plugin_id=0, &pcvar_handle=0);
+static cell AMX_NATIVE_CALL get_plugins_cvar(AMX *amx, cell *params)
+{
+	int id = params[1];
+	int iter_id = 0;
+
+	for (CList<CCVar>::iterator iter=g_cvars.begin(); iter; ++iter)
+	{
+		if (id == iter_id)
+		{
+			CCVar *var = &(*iter);
+			set_amxstring(amx, params[2], var->getName(), params[3]);
+			cvar_t *ptr = CVAR_GET_POINTER(var->getName());
+			if (!ptr)
+			{
+				return 0;
+			}
+			cell *addr = get_amxaddr(amx, params[4]);
+			*addr = ptr->flags;
+			addr = get_amxaddr(amx, params[5]);
+			*addr = var->plugin_id;
+			addr = get_amxaddr(amx, params[6]);
+			*addr = (cell)ptr;
+			return 1;
+		}
+		iter_id++;
+	}
+
+	return 0;
+}
+
+//native get_plugins_cvarsnum();
+static cell AMX_NATIVE_CALL get_plugins_cvarsnum(AMX *amx, cell *params)
+{
+	return g_cvars.size();
 }
 
 static cell AMX_NATIVE_CALL get_user_aiming(AMX *amx, cell *params) /* 4 param */
@@ -4147,6 +4215,14 @@ static cell AMX_NATIVE_CALL AddTranslation(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL GetLangTransKey(AMX *amx, cell *params)
+{
+	int len;
+	const char *key = get_amxstring(amx, params[1], 0, len);
+
+	return g_langMngr.GetKeyEntry(key);
+}
+
 AMX_NATIVE_INFO amxmodx_Natives[] =
 {
 	{"abort",					amx_abort},
@@ -4181,6 +4257,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"get_clcmdsnum",			get_clcmdsnum},
 	{"get_concmd",				get_concmd},
 	{"get_concmdsnum",			get_concmdsnum},
+	{"get_concmd_plid",			get_concmd_plid},
 	{"get_cvar_flags",			get_cvar_flags},
 	{"get_cvar_float",			get_cvar_float},
 	{"get_cvar_num",			get_cvar_num},
@@ -4205,6 +4282,8 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"get_playersnum",			get_playersnum},
 	{"get_plugin",				get_plugin},
 	{"get_pluginsnum",			get_pluginsnum},
+	{"get_plugins_cvar",		get_plugins_cvar},
+	{"get_plugins_cvarsnum",	get_plugins_cvarsnum},
 	{"get_srvcmd",				get_srvcmd},
 	{"get_srvcmdsnum",			get_srvcmdsnum},
 	{"get_systime",				get_systime},
@@ -4334,6 +4413,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"CreateOneForward",		CreateOneForward},
 	{"DestroyForward",			DestroyForward},
 	{"ExecuteForward",			ExecuteForward},
+	{"GetLangTransKey",			GetLangTransKey},
 	{"LibraryExists",			LibraryExists},
 	{"PrepareArray",			PrepareArray},
 	{"ShowSyncHudMsg",			ShowSyncHudMsg},

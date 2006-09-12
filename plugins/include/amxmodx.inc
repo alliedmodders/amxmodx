@@ -497,8 +497,17 @@ then function returns only server cmds, if positive then
 returns only client cmds. in other case returns all console commands. */
 native get_concmd(index,cmd[],len1,&flags, info[],len2, flag, id = -1);
 
+/* Gets the parent plugin id of a console command. */
+native get_concmd_plid(cid, flag_mask, id_type);
+
 /* Returns number of registered console commands. */
 native get_concmdsnum(flag,id = -1);
+
+/* Returns the number of plugin-registered cvars. */
+native get_plugins_cvarsnum();
+
+/* Returns information about a plugin-registered cvar. */
+native get_plugins_cvar(num, name[], namelen, &flags=0, &plugin_id=0, &pcvar_handle=0);
 
 /* Gets unique id of menu. Outside set to 1 allows
 * to catch menus outside a plugin where register_menuid is called. */
@@ -588,8 +597,10 @@ native get_modulesnum();
 native is_plugin_loaded(const name[]);
 
 /* Gets info about plugin by given index.
-* Function returns -1 if plugin doesn't exist with given index. */
-native get_plugin(index,filename[],len1,name[],len2,version[],len3,author[],len4,status[],len5);
+ * Function returns -1 if plugin doesn't exist with given index. 
+ * Note: the [...] portion should not be used, and is only for backward compatibility.
+ */
+native get_plugin(index,filename[],len1,name[],len2,version[],len3,author[],len4,status[],len5,...);
 
 /* Returns number of all loaded plugins. */
 native get_pluginsnum();

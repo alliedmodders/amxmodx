@@ -54,7 +54,7 @@ stock strtonum(const string[])
   
 stock build_path(path[], len, {Float,_}:... )
 {
-  format_args(path, len, 2)
+  format_args(path, len, 2);
   new pathlen = strlen(path);
   new basedir[32];
   if (containi(path, "$basedir") != -1)
@@ -66,22 +66,22 @@ stock build_path(path[], len, {Float,_}:... )
     }
     if ((pathlen+strlen(basedir)-strlen("$basedir")) < len)
     {
-    	replace(path, len, "$basedir", basedir)
+    	replace(path, len, "$basedir", basedir);
     }
   }
   new dir[64], subdir[63];
   if (containi(path, "$configdir") != -1)
   {
-  	get_localinfo("amxx_configsdir", dir, 63)
+    get_localinfo("amxx_configsdir", dir, 63);
     if (!dir[0])
     {
-	    format(dir, 63, "%s/configs", basedir)
+	    format(dir, 63, "%s/configs", basedir);
     }
     if ((pathlen+strlen(basedir)-strlen("$configdir")) < len)
     {
-    	replace(path, len, "$configdir", dir)
+    	replace(path, len, "$configdir", dir);
     }
-    dir[0] = '^0'
+    dir[0] = '^0';
   }
   if (containi(path, "$langdir") != -1)
   {
@@ -95,7 +95,7 @@ stock build_path(path[], len, {Float,_}:... )
     {
       replace(path, len, "$langdir", dir);
     }
-    dir[0] = '^0''
+    dir[0] = '^0';
   }
   if (containi(path, "$modulesdir") != -1)
   {
@@ -128,14 +128,14 @@ stock build_path(path[], len, {Float,_}:... )
     get_localinfo("amx_logs", dir, 63);
     if (!dir[0])
     {
-	    format(dir, 63, "%s/logs", basedir)
+	    format(dir, 63, "%s/logs", basedir);
     }
     if ((pathlen+strlen(basedir)-strlen("$logdir")) < len)
     {
     	replace(path, len, "$logdir", dir);
     }
   }
-  return 1
+  return 1;
 }
 
 stock is_user_authorized(id)
@@ -161,7 +161,7 @@ stock angle_to_vector(Float:vector[3], FRU, Float:ret[3])
 	return angle_vector(vector, FRU, ret);
 }
 
-get_cmdaccess(cmd[], accessflags[], len)
+stock get_cmdaccess(cmd[], accessflags[], len)
 {
 	new num = get_concmdsnum(-1);
 	new command[32], info[3];
@@ -178,4 +178,121 @@ get_cmdaccess(cmd[], accessflags[], len)
 	}
 	
 	return 0;
+}
+
+stock is_translated(const sentence[])
+{
+	return (GetLangTransKey(sentence) != TransKey_Bad);
+}
+
+stock get_plugincmdsnum(plugin[], type=7)
+{
+	new plid = find_plugin_byfile(plugin);
+	new our_type;
+
+	/** 
+	 * Whoever wrote this was a bit confused about the type stuff...
+	 */	
+	if (type == 1) {
+		our_type = 1;
+	} else if (type == 4) {
+		our_type = 0;
+	} else {
+		our_type = -1;
+	}
+	
+	new found = 0;
+	new total = get_concmdsnum(-1, our_type);
+	for (new i=0; i<total; i++)
+	{
+		if (plid == get_concmd_plid(i, -1, our_type))
+		{
+			found++;
+		}
+	}
+	
+	return found;
+}
+
+stock get_plugincmd(plugin[], index, cmd[], len1, accessflags[], len2, info[], len3, destid=-1, type=7)
+{
+	new plid = find_plugin_byfile(plugin);
+	new our_type;
+
+	/** 
+	 * Whoever wrote this was a bit confused about the type stuff...
+	 */	
+	if (type == 1) {
+		our_type = 1;
+	} else if (type == 4) {
+		our_type = 0;
+	} else {
+		our_type = -1;
+	}
+	
+	new found_iter = 0;
+	new total = get_concmdsnum(-1, our_type);
+	for (new i=0; i<total; i++)
+	{
+		if (plid == get_concmd_plid(i, -1, our_type))
+		{
+			if (found_iter == index)
+			{
+				new flags, result;
+				result = get_concmd(i, cmd, len1, flags, info, len3, -1, our_type);
+				get_flags(flags, accessflags, len2);
+				return result;
+			}
+			found_iter++;
+		}
+	}
+	
+	/* get rid of a compiler warning */
+	destid = -1;
+	return (++destid);
+}
+
+stock get_plugincvar(plugin[], index, cvar[], len1, value[], len2, flags=0)
+{
+	new plid = find_plugin_byfile(plugin);
+	
+	new total = get_plugins_cvarsnum();
+	new cvar_flags, plugin_id, pcvar_handle;
+	new iter_id = 0;
+	for (new i=0; i<total; i++)
+	{
+		get_plugins_cvar(i, cvar, len1, cvar_flags, plugin_id, pcvar_handle);
+		if ((plugin_id == plid)
+			&& (!flags || (cvar_flags & flags)))
+		{
+			if (iter_id == index)
+			{
+				get_pcvar_string(pcvar_handle, value, len2);
+				return 1;
+			}
+			iter_id++;
+		}
+	}
+	
+	return 0;
+}
+
+stock get_plugincvarsnum(plugin[], flags=0)
+{
+	new plid = find_plugin_byfile(plugin);
+	
+	new total = get_plugins_cvarsnum();
+	new cvar_flags, plugin_id;
+	new cvars_total = 0;
+	for (new i=0; i<total; i++)
+	{
+		get_plugins_cvar(i, "", 0, cvar_flags, plugin_id);
+		if ((plugin_id == plid)
+			&& (!flags || (cvar_flags & flags)))
+		{
+			cvars_total++;
+		}
+	}
+	
+	return cvars_total;
 }

@@ -993,6 +993,8 @@ static int hier13(value *lval)
     value lval2 = {0};
     int array1,array2;
 
+    int orig_heap=decl_heap;
+    int diff1=0,diff2=0;
     if (lvalue) {
       rvalue(lval);
     } else if (lval->ident==iCONSTEXPR) {
@@ -1009,6 +1011,10 @@ static int hier13(value *lval)
     sc_allowtags=(short)POPSTK_I();     /* restore */
     jumplabel(flab2);
     setlabel(flab1);
+    if (orig_heap!=decl_heap) {
+      diff1=abs(decl_heap-orig_heap);
+      decl_heap=orig_heap;
+    }
     needtoken(':');
     if (hier13(&lval2))
       rvalue(&lval2);
@@ -1031,6 +1037,15 @@ static int hier13(value *lval)
       lval->ident=iREFARRAY;    /* iARRAY becomes iREFARRAY */
     else if (lval->ident!=iREFARRAY)
       lval->ident=iEXPRESSION;  /* iREFARRAY stays iREFARRAY, rest becomes iEXPRESSION */
+	if (orig_heap!=decl_heap) {
+		diff2=abs(decl_heap-orig_heap);
+		decl_heap=orig_heap;
+	}
+    if (diff1==diff2) {
+      decl_heap+=(diff1/2);
+	} else {
+      decl_heap+=(diff1+diff2);
+    }
     return FALSE;               /* conditional expression is no lvalue */
   } else {
     return lvalue;

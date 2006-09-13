@@ -451,11 +451,19 @@ cell CForwardMngr::executeForwards(int id, cell *params)
 
 const char *CForwardMngr::getFuncName(int id) const
 {
+	if (!isIdValid(id))
+	{
+		return "";
+	}
 	return (id & 1) ? m_SPForwards[id >> 1]->getFuncName() : m_Forwards[id >> 1]->getFuncName();
 }
 
 int CForwardMngr::getFuncsNum(int id) const
 {
+	if (!isIdValid(id))
+	{
+		return 0;
+	}
 	return (id & 1) ? m_SPForwards[id >> 1]->getFuncsNum() : m_Forwards[id >> 1]->getFuncsNum();
 }
 
@@ -466,6 +474,10 @@ int CForwardMngr::getParamsNum(int id) const
 
 ForwardParam CForwardMngr::getParamType(int id, int paramNum) const
 {
+	if (!isIdValid(id))
+	{
+		return FP_DONE;
+	}
 	return (id & 1) ? m_SPForwards[id >> 1]->getParamType(paramNum) : m_Forwards[id >> 1]->getParamType(paramNum);
 }
 

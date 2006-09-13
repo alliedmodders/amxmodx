@@ -9,7 +9,7 @@ uses
   TFlatGaugeUnit, ImgList, FileCtrl, Registry, CheckLst, TFlatComboBoxUnit,
   TFlatCheckBoxUnit, IdBaseComponent, IdComponent, IdTCPConnection,
   IdTCPClient, IdFTP, IdException, IdAntiFreezeBase, IdAntiFreeze,
-  IdIntercept, IdLogBase, IdLogFile;
+  IdIntercept, IdLogBase, IdLogFile, JclFileUtils;
 
 type
   TfrmMain = class(TForm)
@@ -762,6 +762,9 @@ begin
     DirList := TStringList.Create;
     rtfDetails.Clear;
   end;
+
+  if (DirectoryExists(ExtractFilePath(ParamStr(0)) + 'temp')) then
+    DelTree(ExtractFilePath(ParamStr(0)) + 'temp');
 end;
 
 procedure TfrmMain.cmdProxySettingsClick(Sender: TObject);

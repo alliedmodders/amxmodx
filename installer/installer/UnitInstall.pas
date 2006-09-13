@@ -497,18 +497,18 @@ begin
     UpdatePluginsIni := True;
     eStr := TStringList.Create;
     // check if we need to modify mm's plugins.ini
-    if (FileExists(ePath + '\addons\metamod\plugins.ini')) then begin
-      eStr.LoadFromFile(ePath + '\addons\metamod\plugins.ini');
+    if (FileExists(ePath + 'addons\metamod\plugins.ini')) then begin
+      eStr.LoadFromFile(ePath + 'addons\metamod\plugins.ini');
       if OS = osWindows then begin
         if (Pos(eStr.Text, 'addons\amxmodx\dlls\amxmodx_mm.dll') <> 0) then
           UpdatePluginsIni := False;
       end
       else if OS = osLinux32 then begin
-        if (Pos(eStr.Text, 'addons\amxmodx\dlls\amxmodx_mm.dll') <> 0) then
+        if (Pos(eStr.Text, 'addons/amxmodx/dlls/amxmodx_mm_i386.so') <> 0) then
           UpdatePluginsIni := False;
       end
       else begin
-        if (Pos(eStr.Text, 'addons\amxmodx\dlls\amxmodx_mm.dll') <> 0) then
+        if (Pos(eStr.Text, 'addons/amxmodx/dlls/amxmodx_mm_amd64.so') <> 0) then
           UpdatePluginsIni := False;
       end;
     end
@@ -518,24 +518,27 @@ begin
       eStr.Add('; AMX Mod X ' + VERSION);
     end;
     // if there's no
-    if (not UpdatePluginsIni) then begin
+    if (UpdatePluginsIni) then begin
       if OS = osWindows then begin
+        eStr.Add('');
         eStr.Add('win32   addons\amxmodx\dlls\amxmodx_mm.dll');
         eStr.Add('; Enable this instead for binary logging');
         eStr.Add('; win32   addons\amxmodx\dlls\amxmodx_bl_mm.dll');
       end
       else if OS = osLinux32 then begin
+        eStr.Add('');
         eStr.Add('linux   addons/amxmodx/dlls/amxmodx_mm_i386.so');
         eStr.Add('; Enable this instead for binary logging');
         eStr.Add('; linux   addons/amxmodx/dlls/amxmodx_bl_mm_i386.so');
       end
       else begin
+        eStr.Add('');
         eStr.Add('linux   addons/amxmodx/dlls/amxmodx_mm_amd64.so');
         eStr.Add('; Enable this instead for binary logging');
         eStr.Add('; linux   addons/amxmodx/dlls/amxmodx_bl_mm_amd64.so');
       end;
-      eStr.SaveToFile(ePath + 'addons\metamod\plugins.ini');
     end;
+    eStr.SaveToFile(ePath + 'addons\metamod\plugins.ini');
     eStr.Free;
   end;
   AddDone;
@@ -609,6 +612,13 @@ var eStr: TStringList;
 begin
   eGoBack := False;
 
+  ePath := '/';
+  CurNode := frmMain.trvDirectories.Selected;
+  repeat
+    ePath := '/' + CurNode.Text + ePath;
+    CurNode := CurNode.Parent;
+  until (not Assigned(CurNode));
+
   Screen.Cursor := crAppStart;
   frmMain.cmdCancel.Show;
   frmMain.cmdCancel.Caption := '&Cancel';
@@ -636,8 +646,22 @@ begin
   for i := 0 to FileList.Count -1 do
     FileList[i] := Copy(FileList[i], Length(ExtractFilePath(ParamStr(0))) + 6, Length(FileList[i]));
 
-  // liblist.gam
   CopyConfig := True;
+  AddStatus('Checking for previous AMX Mod X installation...', clBlack);
+  // well, check it
+  try
+    frmMain.IdFTP.ChangeDir(ePath + 'addons/amxmodx/');
+    case MessageBox(frmMain.Handle, 'An AMX Mod X installation was already detected. If you choose to reinstall, your configuration files will be erased. Click Yes to continue, No to Upgrade, or Cancel to abort the installation.', PChar(frmMain.Caption), MB_ICONQUESTION + MB_YESNOCANCEL) of
+      mrNo: CopyConfig := False;
+      mrCancel: begin
+        Application.Terminate;
+        exit;
+      end;
+    end;
+  except
+    // nope, no installation found
+  end;
+  // liblist.gam
   AddStatus('Editing liblist.gam...', clBlack);
   eStr := TStringList.Create;
   eStr.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'temp\liblist.gam');
@@ -660,26 +684,9 @@ begin
       eStr.Add('gamedll_linux "addons/metamod/dlls/metamod_amd64.so"');
     FileSetAttr(ExtractFilePath(ParamStr(0)) + 'temp\liblist.gam', 0);
     eStr.SaveToFile(ExtractFilePath(ParamStr(0)) + 'temp\liblist.gam');
-  end
-  else begin
-    case MessageBox(frmMain.Handle, 'An AMX Mod X installation was already detected. If you choose to reinstall, your configuration files will be erased. Click Yes to continue, No to Upgrade, or Cancel to abort the installation.', PChar(frmMain.Caption), MB_ICONQUESTION + MB_YESNOCANCEL) of
-      mrNo: CopyConfig := False;
-      mrCancel: begin
-        Application.Terminate;
-        exit;
-      end;
-    end;
   end;
-  
   eStr.Free;
   AddDone;
-
-  ePath := '/';
-  CurNode := frmMain.trvDirectories.Selected;
-  repeat
-    ePath := '/' + CurNode.Text + ePath;
-    CurNode := CurNode.Parent;
-  until (not Assigned(CurNode));
 
   { create directories }
   AddStatus('Creating directories...', clBlack);   

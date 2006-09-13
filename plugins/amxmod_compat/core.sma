@@ -32,6 +32,8 @@ Core_Natives()
 	register_native("get_plugincmd",		"__get_plugincmd")
 	register_native("get_plugincvarsnum",	"__get_plugincvarsnum")
 	register_native("get_plugincvar",		"__get_plugincvar")
+	register_native("is_module_running",	"__is_module_running")
+	register_native("is_plugin_running",	"__is_plugin_running")
 }
 
 public __VelocityByAim(plid, num)
@@ -278,4 +280,22 @@ public __get_plugincvar(plid, num)
 	}
 	
 	return 0
+}
+
+public __is_module_running(plid, num)
+{
+	static module[64]
+	
+	get_string(1, module, 63)
+	
+	return is_module_loaded(module)
+}
+
+public __is_plugin_running(plid, num)
+{
+	static plugin[64]
+	
+	get_string(1, plugin, 63)
+	
+	return is_plugin_loaded(plugin)
 }

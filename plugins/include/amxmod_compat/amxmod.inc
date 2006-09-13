@@ -296,3 +296,13 @@ stock get_plugincvarsnum(plugin[], flags=0)
 	
 	return cvars_total;
 }
+
+stock is_module_running(const plugin[])
+{
+	return is_module_loaded(plugin);
+}
+
+stock is_plugin_running(const plugin[])
+{
+	return is_plugin_loaded(plugin);
+}

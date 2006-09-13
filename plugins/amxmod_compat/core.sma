@@ -288,7 +288,7 @@ public __is_module_running(plid, num)
 	
 	get_string(1, module, 63)
 	
-	return is_module_loaded(module)
+	return is_module_running(module)
 }
 
 public __is_plugin_running(plid, num)
@@ -297,5 +297,5 @@ public __is_plugin_running(plid, num)
 	
 	get_string(1, plugin, 63)
 	
-	return is_plugin_loaded(plugin)
+	return is_plugin_running(plugin)
 }

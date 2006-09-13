@@ -297,12 +297,22 @@ stock get_plugincvarsnum(plugin[], flags=0)
 	return cvars_total;
 }
 
-stock is_module_running(const plugin[])
+stock is_module_running(const module[])
 {
-	return is_module_loaded(plugin);
+	if (strcmp(module, "MySQL Access") == 0)
+		return LibraryExists("sqlx", LibType_Class);
+	
+	return is_module_loaded(module) == -1 ? 0 : 1;
 }
 
 stock is_plugin_running(const plugin[])
 {
-	return is_plugin_loaded(plugin);
+	new status[8]
+	new id, filename[1], name[1], version[1], author[1]
+	
+	id = is_plugin_loaded(plugin)
+	
+	get_plugin(id, filename, 0, name, 0, version, 0, author, 0, status, 7)
+	
+	return strcmp(status, "running") == 0 ? id + 1 : 0
 }

@@ -1216,8 +1216,11 @@ void C_AlertMessage(ALERT_TYPE atype, char *szFmt, ...)
 	at_logged		// Server print to console ( only in multiplayer games ).
 	*/
 
+	cell retVal = 0;
+
 	// execute logevents and plugin_log forward
-	if (g_logevents.logEventsExist())
+	if (g_logevents.logEventsExist()
+		|| g_forwards.getFuncsNum(FF_PluginLog))
 	{
 		va_list	logArgPtr;
 		va_start(logArgPtr, szFmt);
@@ -1229,9 +1232,9 @@ void C_AlertMessage(ALERT_TYPE atype, char *szFmt, ...)
 		{
 			g_logevents.executeLogEvents();
 		}
-	}
 
-	cell retVal = executeForwards(FF_PluginLog);
+		retVal = executeForwards(FF_PluginLog);
+	}
 
 	if (retVal)
 	{

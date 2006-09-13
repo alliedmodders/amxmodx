@@ -454,6 +454,11 @@ const char *CForwardMngr::getFuncName(int id) const
 	return (id & 1) ? m_SPForwards[id >> 1]->getFuncName() : m_Forwards[id >> 1]->getFuncName();
 }
 
+int CForwardMngr::getFuncsNum(int id) const
+{
+	return (id & 1) ? m_SPForwards[id >> 1]->getFuncsNum() : m_Forwards[id >> 1]->getFuncsNum();
+}
+
 int CForwardMngr::getParamsNum(int id) const
 {
 	return (id & 1) ? m_SPForwards[id >> 1]->getParamsNum() : m_Forwards[id >> 1]->getParamsNum();

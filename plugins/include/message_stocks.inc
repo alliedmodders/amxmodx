@@ -27,7 +27,7 @@ stock dod_make_deathmsg(killer, victim, weaponNUM)
 stock user_silentkill(index)
 {
 	static msgid = 0;
-	new msgblock
+	new msgblock;
 	if (!msgid)
 	{
 		msgid = get_user_msgid("DeathMsg");

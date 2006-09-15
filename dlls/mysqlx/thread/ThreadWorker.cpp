@@ -54,6 +54,9 @@ void ThreadWorker::RunThread(IThreadHandle *pHandle)
 		/**
 		 * Check number of items in the queue
 		 */
+		m_StateLock->Lock();
+		this_state = m_state;
+		m_StateLock->Unlock();
 		if (this_state != Worker_Stopped)
 		{
 			m_QueueLock->Lock();
@@ -65,6 +68,11 @@ void ThreadWorker::RunThread(IThreadHandle *pHandle)
 				 */
 				m_Waiting = true;
 				m_QueueLock->Unlock();
+				/* first check if we should end again */
+				if (this_state == Worker_Stopped)
+				{
+					break;
+				}
 				m_AddSignal->Wait();
 				m_Waiting = false;
 			} else {
@@ -80,7 +88,9 @@ void ThreadWorker::RunThread(IThreadHandle *pHandle)
 			{
 				//wait until the lock is cleared.
 				if (this_state == Worker_Paused)
+				{
 					m_PauseSignal->Wait();
+				}
 				if (this_state == Worker_Stopped)
 				{
 					//if we're supposed to flush cleanrly, 
@@ -187,9 +197,12 @@ bool ThreadWorker::Stop(bool flush_cancel)
 	{
 		Unpause();
 	} else {
-		m_AddSignal->Signal();
-		Pause();
-		Unpause();
+		m_QueueLock->Lock();
+		if (m_Waiting)
+		{
+			m_AddSignal->Signal();
+		}
+		m_QueueLock->Unlock();
 	}
 
 	me->WaitForThread();

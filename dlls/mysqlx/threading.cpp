@@ -172,15 +172,13 @@ void MysqlThread::RunThread(IThreadHandle *pHandle)
 	if (m_qrInfo.query_success && m_qrInfo.amxinfo.info.rs)
 	{
 		m_atomicResult.CopyFrom(m_qrInfo.amxinfo.info.rs);
-		m_qrInfo.amxinfo.pQuery = NULL;
+		m_qrInfo.amxinfo.pQuery = pQuery;
 		m_qrInfo.amxinfo.info.rs = &m_atomicResult;
-	}
-
-	if (pQuery)
-	{
+	} else {
 		pQuery->FreeHandle();
 		pQuery = NULL;
 	}
+
 	if (pDatabase)
 	{
 		pDatabase->FreeHandle();
@@ -248,6 +246,11 @@ void MysqlThread::Execute()
 			(cell)0,
 			data_addr,
 			m_datalen);
+		/* this should always be true I think */
+		if (m_qrInfo.amxinfo.pQuery)
+		{
+			m_qrInfo.amxinfo.pQuery->FreeHandle();
+		}
 		FreeHandle(hndl);
 	}
 }

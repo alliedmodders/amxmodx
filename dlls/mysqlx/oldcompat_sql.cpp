@@ -213,6 +213,10 @@ static cell AMX_NATIVE_CALL dbi_field(AMX *amx, cell *params)
 	}
 
 	IResultSet *rs = oldrs->info.rs;
+	if (rs->IsDone())
+	{
+		return 0;
+	}
 	IResultRow *rr = rs->GetRow();
 	unsigned int num = (unsigned int)params[2] - 1;
 	if (num >= rs->FieldCount())
@@ -263,6 +267,10 @@ static cell AMX_NATIVE_CALL dbi_result(AMX *amx, cell *params)
 	}
 
 	IResultSet *rs = oldrs->info.rs;
+	if (rs->IsDone())
+	{
+		return 0;
+	}
 	IResultRow *rr = rs->GetRow();
 	unsigned int num;
 	bool found = false;

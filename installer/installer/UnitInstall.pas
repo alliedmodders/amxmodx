@@ -3,7 +3,7 @@ unit UnitInstall;
 interface
 
 uses SysUtils, Classes, Windows, Graphics, Forms, ShellAPI, Controls, Messages,
-     TlHelp32, IdFTPCommon, ComCtrls, JclFileUtils;
+     TlHelp32, IdFTPCommon, ComCtrls, JclFileUtils, Dialogs;
 
 type TMod = (modNone, modCS, modDoD, modTFC, modNS, modTS, modESF);
 type TOS = (osWindows, osLinux32, osLinux64);
@@ -500,15 +500,15 @@ begin
     if (FileExists(ePath + 'addons\metamod\plugins.ini')) then begin
       eStr.LoadFromFile(ePath + 'addons\metamod\plugins.ini');
       if OS = osWindows then begin
-        if (Pos(eStr.Text, 'addons\amxmodx\dlls\amxmodx_mm.dll') <> 0) then
+        if (Pos('addons\amxmodx\dlls\amxmodx_mm.dll', eStr.Text) <> 0) then
           UpdatePluginsIni := False;
       end
       else if OS = osLinux32 then begin
-        if (Pos(eStr.Text, 'addons/amxmodx/dlls/amxmodx_mm_i386.so') <> 0) then
+        if (Pos('addons/amxmodx/dlls/amxmodx_mm_i386.so', eStr.Text) <> 0) then
           UpdatePluginsIni := False;
       end
       else begin
-        if (Pos(eStr.Text, 'addons/amxmodx/dlls/amxmodx_mm_amd64.so') <> 0) then
+        if (Pos('addons/amxmodx/dlls/amxmodx_mm_amd64.so', eStr.Text) <> 0) then
           UpdatePluginsIni := False;
       end;
     end
@@ -804,8 +804,9 @@ begin
     frmMain.ggeItem.Progress := 0;
   end;
   AddStatus('', clBlack, False);
-  AddStatus('Cleaning installation...', clBlack, False);
-  DelTree(ExtractFilePath(ParamStr(0)) + 'temp');
+  AddStatus('Cleaning up installation...', clBlack, False);
+  if (DirectoryExists(ExtractFilePath(ParamStr(0)) + 'temp')) then
+    DelTree(ExtractFilePath(ParamStr(0)) + 'temp');
   AddDone;
 
   frmMain.ggeAll.Progress := frmMain.ggeAll.MaxValue;

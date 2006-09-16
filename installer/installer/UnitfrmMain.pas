@@ -763,6 +763,7 @@ begin
     rtfDetails.Clear;
   end;
 
+  // delete files, then directories
   if (DirectoryExists(ExtractFilePath(ParamStr(0)) + 'temp')) then
     DelTree(ExtractFilePath(ParamStr(0)) + 'temp');
 end;
@@ -874,9 +875,14 @@ begin
       if IdFTP.Connected then
         IdFTP.Quit;
     end
-    else
+    else begin
       Action := caNone;
+      exit;
+    end;
   end;
+
+  if (DirectoryExists(ExtractFilePath(ParamStr(0)) + 'temp')) then
+    DelTree(ExtractFilePath(ParamStr(0)) + 'temp');
 end;
 
 procedure TfrmMain.ExceptionHandler(Sender: TObject; E: Exception);

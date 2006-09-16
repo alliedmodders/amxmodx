@@ -6433,6 +6433,8 @@ object frmMain: TfrmMain
         Width = 509
         Height = 24
         AdvColorBorder = 0
+        Color = clBtnFace
+        ColorBorder = 8623776
         Progress = 0
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -6455,6 +6457,8 @@ object frmMain: TfrmMain
         Width = 509
         Height = 24
         AdvColorBorder = 0
+        Color = clBtnFace
+        ColorBorder = 8623776
         Progress = 0
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText

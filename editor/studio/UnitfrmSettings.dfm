@@ -1,6 +1,6 @@
 object frmSettings: TfrmSettings
-  Left = 413
-  Top = 547
+  Left = 379
+  Top = 206
   BorderStyle = bsDialog
   Caption = 'AMXX-Studio - Settings'
   ClientHeight = 297
@@ -64,7 +64,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 351
     Height = 260
-    ActivePage = jspHighlighter
+    ActivePage = jspCTSettings
     PropagateEnable = False
     Align = alClient
     OnChange = jplSettingsChange
@@ -725,6 +725,7 @@ object frmSettings: TfrmSettings
           'C++'
           'HTML'
           'Other')
+        TabOrder = 0
         OnTabChanged = ftcCodeSnippetsTabChanged
         object shpCodeSnippets: TShape
           Left = 6
@@ -1873,8 +1874,8 @@ object frmSettings: TfrmSettings
       ColorHighLight = 8623776
       ColorShadow = 8623776
       Caption = '&OK'
-      ModalResult = 1
       TabOrder = 0
+      ModalResult = 1
     end
     object cmdCancel: TFlatButton
       Left = 326
@@ -1886,8 +1887,8 @@ object frmSettings: TfrmSettings
       ColorHighLight = 8623776
       ColorShadow = 8623776
       Caption = '&Cancel'
-      ModalResult = 2
       TabOrder = 1
+      ModalResult = 2
     end
   end
   object odBrowse: TOpenDialog

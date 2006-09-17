@@ -340,9 +340,6 @@ type
     procedure mnuCompileAndUploadClick(Sender: TObject);
     procedure mnuRegisterPluginsIniLocalClick(Sender: TObject);
     procedure mnuRegisterPluginsIniWebClick(Sender: TObject);
-    procedure sciAutoCompleteBeforeShow(Sender: TObject;
-      const Position: Integer; ListToDisplay: TStrings;
-      var CancelDisplay: Boolean);
     procedure mnuMOTDGeneratorClick(Sender: TObject);
     procedure mnuHeaderPawnClick(Sender: TObject);
     procedure mnuPCloseClick(Sender: TObject);
@@ -381,6 +378,9 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure tbDocsTabClosing(Sender: TObject; Item: TJvTabBarItem;
       var AllowClose: Boolean);
+    procedure sciAutoCompleteBeforeShow(Sender: TObject; const Position,
+      TypedLen: Integer; ListToDisplay: TStrings;
+      var CancelDisplay: Boolean);
   private
     procedure UpdateNotes;
   public
@@ -1966,105 +1966,6 @@ begin
   Screen.Cursor := crDefault;
 end;
 
-procedure TfrmMain.sciAutoCompleteBeforeShow(Sender: TObject;
-  const Position: Integer; ListToDisplay: TStrings;
-  var CancelDisplay: Boolean);
-function Matchstrings(Source, pattern: string): Boolean;
-var pSource: array [0..255] of Char;
-    pPattern: array [0..255] of Char;
-
-function MatchPattern(element, pattern: PChar): Boolean;
-  function IsPatternWild(pattern: PChar): Boolean;
-  begin
-    Result := StrScan(pattern, '*') <> nil;
-    if not Result then Result := StrScan(pattern, '?') <> nil;
-  end;
-begin
-  if 0 = StrComp(pattern, '*') then
-    Result := True
-  else if (element^ = Chr(0)) and (pattern^ <> Chr(0)) then
-    Result := False
-  else if element^ = Chr(0) then
-    Result := True
-  else
-  begin
-    case pattern^ of
-      '*': if MatchPattern(element, @pattern[1]) then
-          Result := True
-        else
-          Result := MatchPattern(@element[1], pattern);
-        '?': Result := MatchPattern(@element[1], @pattern[1]);
-      else
-        if element^ = pattern^ then
-          Result := MatchPattern(@element[1], @pattern[1])
-        else
-          Result := False;
-    end;
-  end;
-end;
-
-begin
-  StrPCopy(pSource, Source);
-  StrPCopy(pPattern, pattern);
-  Result := MatchPattern(pSource, pPattern);
-end;
-
-var eCurrStyle: Integer;
-    eFunction: String;
-    eCmpList: TStringList;
-    i, k, j: integer;
-begin
-  if not Plugin_AutoCompleteShow(ListToDisplay.GetText) then begin
-    CancelDisplay := True;
-    exit;
-  end;
-
-  if (Started) and (Assigned(GetStyleAt(sciEditor.SelStart))) then begin
-    eCurrStyle := GetStyleAt(sciEditor.SelStart).StyleNumber;
-
-    if (ActiveDoc.Highlighter = 'Pawn') then begin
-      eFunction := LowerCase(GetCurrFunc);
-      if eFunction <> '' then begin
-        for i := 0 to eACList.Count -1 do begin
-          if eFunction = LowerCase(Trim(TACFunction(eACList.Items[i]).Name)) then begin
-            if TACFunction(eACList.Items[i]).Items.Count > GetFunctionPos then begin
-              if (Trim(TACFunction(eACList.Items[i]).Items[GetFunctionPos]) <> '') then begin
-                if (Pos('*', TACFunction(eACList.Items[i]).Items[GetFunctionPos]) = 0) and (Pos('?', TACFunction(eACList.Items[i]).Items[GetFunctionPos]) = 0) then
-                  ListToDisplay.Text := StringReplace(TACFunction(eACList.Items[i]).Items[GetFunctionPos], '; ', #13, [rfReplaceAll])
-                else begin
-                  eCmpList := TStringList.Create;
-                  eCmpList.Text := StringReplace(TACFunction(eACList.Items[i]).Items[GetFunctionPos], '; ', #13, [rfReplaceAll]);
-                  for k := eCmpList.Count -1 downto 0 do begin
-                    if (Pos('*', eCmpList[k]) <> 0) or (Pos('?', eCmpList[k]) <> 0) then begin
-                      for j := 0 to ListToDisplay.Count -1 do begin
-                        if Trim(ListToDisplay[j]) <> '' then begin
-                          if (LowerCase(ListToDisplay[j][1]) = LowerCase(eCmpList[k][1])) then begin
-                            if (MatchStrings(LowerCase(ListToDisplay[j]), LowerCase(eCmpList[k]))) then
-                              eCmpList.Add(ListToDisplay[j]);
-                          end;
-                        end;
-                      end;
-                      eCmpList.Delete(k);
-                    end;
-                  end;
-                  ListToDisplay.Assign(eCmpList);
-                  eCmpList.Free;
-                end;
-              end;
-              break;
-            end;
-          end;
-        end;
-      end;
-      
-      if (eCurrStyle = 11) or (eCurrStyle = 10) or (eCurrStyle = 9) or (eCurrStyle = 8) or (eCurrStyle = 5) or (eCurrStyle = 4) or (eCurrStyle = 0) or (eCurrStyle >= 34) then
-        CancelDisplay := False
-      else
-        CancelDisplay := True;
-    end;
-  end;
-end;
-
 procedure TfrmMain.mnuMOTDGeneratorClick(Sender: TObject);
 var eStr: TStringList;
   i: integer;
@@ -3097,6 +2998,105 @@ begin
       end;
     end;
     Screen.Cursor := crDefault;
+  end;
+end;
+
+procedure TfrmMain.sciAutoCompleteBeforeShow(Sender: TObject;
+  const Position, TypedLen: Integer; ListToDisplay: TStrings;
+  var CancelDisplay: Boolean);
+function Matchstrings(Source, pattern: string): Boolean;
+var pSource: array [0..255] of Char;
+    pPattern: array [0..255] of Char;
+
+function MatchPattern(element, pattern: PChar): Boolean;
+  function IsPatternWild(pattern: PChar): Boolean;
+  begin
+    Result := StrScan(pattern, '*') <> nil;
+    if not Result then Result := StrScan(pattern, '?') <> nil;
+  end;
+begin
+  if 0 = StrComp(pattern, '*') then
+    Result := True
+  else if (element^ = Chr(0)) and (pattern^ <> Chr(0)) then
+    Result := False
+  else if element^ = Chr(0) then
+    Result := True
+  else
+  begin
+    case pattern^ of
+      '*': if MatchPattern(element, @pattern[1]) then
+          Result := True
+        else
+          Result := MatchPattern(@element[1], pattern);
+        '?': Result := MatchPattern(@element[1], @pattern[1]);
+      else
+        if element^ = pattern^ then
+          Result := MatchPattern(@element[1], @pattern[1])
+        else
+          Result := False;
+    end;
+  end;
+end;
+
+begin
+  StrPCopy(pSource, Source);
+  StrPCopy(pPattern, pattern);
+  Result := MatchPattern(pSource, pPattern);
+end;
+
+var eCurrStyle: Integer;
+    eFunction: String;
+    eCmpList: TStringList;
+    i, k, j: integer;
+begin
+  if not Plugin_AutoCompleteShow(ListToDisplay.GetText) then begin
+    CancelDisplay := True;
+    exit;
+  end;
+
+  if (Started) and (Assigned(GetStyleAt(sciEditor.SelStart))) then begin
+    eCurrStyle := GetStyleAt(sciEditor.SelStart).StyleNumber;
+
+    if (ActiveDoc.Highlighter = 'Pawn') then begin
+      eFunction := LowerCase(GetCurrFunc);
+      if eFunction <> '' then begin
+        for i := 0 to eACList.Count -1 do begin
+          if eFunction = LowerCase(Trim(TACFunction(eACList.Items[i]).Name)) then begin
+            if TACFunction(eACList.Items[i]).Items.Count > GetFunctionPos then begin
+              if (Trim(TACFunction(eACList.Items[i]).Items[GetFunctionPos]) <> '') then begin
+                if (Pos('*', TACFunction(eACList.Items[i]).Items[GetFunctionPos]) = 0) and (Pos('?', TACFunction(eACList.Items[i]).Items[GetFunctionPos]) = 0) then
+                  ListToDisplay.Text := StringReplace(TACFunction(eACList.Items[i]).Items[GetFunctionPos], '; ', #13, [rfReplaceAll])
+                else begin
+                  eCmpList := TStringList.Create;
+                  eCmpList.Text := StringReplace(TACFunction(eACList.Items[i]).Items[GetFunctionPos], '; ', #13, [rfReplaceAll]);
+                  for k := eCmpList.Count -1 downto 0 do begin
+                    if (Pos('*', eCmpList[k]) <> 0) or (Pos('?', eCmpList[k]) <> 0) then begin
+                      for j := 0 to ListToDisplay.Count -1 do begin
+                        if Trim(ListToDisplay[j]) <> '' then begin
+                          if (LowerCase(ListToDisplay[j][1]) = LowerCase(eCmpList[k][1])) then begin
+                            if (MatchStrings(LowerCase(ListToDisplay[j]), LowerCase(eCmpList[k]))) then
+                              eCmpList.Add(ListToDisplay[j]);
+                          end;
+                        end;
+                      end;
+                      eCmpList.Delete(k);
+                    end;
+                  end;
+                  ListToDisplay.Assign(eCmpList);
+                  eCmpList.Free;
+                end;
+              end;
+              break;
+            end;
+          end;
+        end;
+      end;
+      
+      if (eCurrStyle = 11) or (eCurrStyle = 10) or (eCurrStyle = 9) or (eCurrStyle = 8) or (eCurrStyle = 5) or (eCurrStyle = 4) or (eCurrStyle = 0) or (eCurrStyle >= 34) then
+        CancelDisplay := False
+      else
+        CancelDisplay := True;
+    end;
   end;
 end;
 

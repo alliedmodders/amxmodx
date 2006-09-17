@@ -1,6 +1,6 @@
 object frmMain: TfrmMain
-  Left = 240
-  Top = 291
+  Left = 189
+  Top = 114
   Width = 888
   Height = 648
   Caption = 'AMXX-Studio'
@@ -79,470 +79,470 @@ object frmMain: TfrmMain
       Images = ilImages
       TabOrder = 0
       object mnuFile: TSpTBXSubmenuItem
-        CaptionW = 'File'
+        Caption = 'File'
         object mnuNew: TSpTBXSubmenuItem
+          Caption = 'New'
           ImageIndex = 32
           Images = ilImages
-          CaptionW = 'New'
           object infoNewAMXX: TSpTBXRightAlignSpacerItem
+            Caption = 'AMXX Scripts / Pawn'
             FontSettings.Bold = tsTrue
             FontSettings.Color = clWindowText
-            CaptionW = 'AMXX Scripts / Pawn'
           end
           object mnuEmptyPlugin: TSpTBXItem
+            Caption = 'Empty Plugin'
             ImageIndex = 0
             Images = ilImages
             OnClick = mnuEmptyPluginClick
-            CaptionW = 'Empty Plugin'
           end
           object mnuNewPlugin: TSpTBXItem
+            Caption = 'Plugin'
             ImageIndex = 18
             Images = ilImages
             OnClick = mnuNewPluginClick
-            CaptionW = 'Plugin'
           end
           object mnuHeaderPAWN: TSpTBXItem
+            Caption = 'Header'
             ImageIndex = 33
             Images = ilImages
             OnClick = mnuHeaderPAWNClick
-            CaptionW = 'Header'
           end
           object sepNew1: TSpTBXSeparatorItem
             Blank = True
           end
           object infoNewCPP: TSpTBXRightAlignSpacerItem
+            Caption = 'C++'
             FontSettings.Bold = tsTrue
             FontSettings.Color = clWindowText
-            CaptionW = 'C++'
           end
           object mnuNewModule: TSpTBXItem
+            Caption = 'Module'
             Enabled = False
             ImageIndex = 35
             Images = ilImages
             OnClick = mnuNewModuleClick
-            CaptionW = 'Module'
           end
           object mnuNewUnit: TSpTBXItem
+            Caption = 'Unit'
             Enabled = False
             ImageIndex = 34
             Images = ilImages
             OnClick = mnuNewUnitClick
-            CaptionW = 'Unit'
           end
           object mnuNewHeaderCPP: TSpTBXItem
+            Caption = 'Header'
             Enabled = False
             ImageIndex = 48
             Images = ilImages
             OnClick = mnuNewHeaderCPPClick
-            CaptionW = 'Header'
           end
           object sepNew3: TSpTBXSeparatorItem
             Blank = True
           end
           object infoNewOther: TSpTBXRightAlignSpacerItem
+            Caption = 'Other'
             FontSettings.Bold = tsTrue
             FontSettings.Color = clWindowText
-            CaptionW = 'Other'
           end
           object mnuNewTextfile: TSpTBXItem
+            Caption = 'Textfile'
             ImageIndex = 34
             Images = ilImages
             OnClick = mnuNewTextfileClick
-            CaptionW = 'Textfile'
           end
           object mnuNewHTML: TSpTBXItem
+            Caption = 'HTML Page'
             ImageIndex = 25
             Images = ilImages
             OnClick = mnuNewHTMLClick
-            CaptionW = 'HTML Page'
           end
           object mnuNewSQL: TSpTBXItem
+            Caption = 'SQL Database'
             ImageIndex = 44
             Images = ilImages
             OnClick = mnuNewSQLClick
-            CaptionW = 'SQL Database'
           end
           object mnuNewXML: TSpTBXItem
+            Caption = 'XML File'
             ImageIndex = 34
             OnClick = mnuNewXMLClick
-            CaptionW = 'XML File'
           end
         end
         object sepFile1: TSpTBXSeparatorItem
         end
         object mnuOpen: TSpTBXItem
+          Caption = 'Open...'
           ImageIndex = 3
           Images = ilImages
           ShortCut = 16463
           OnClick = mnuOpenClick
-          CaptionW = 'Open...'
         end
         object sepFile2: TSpTBXSeparatorItem
         end
         object mnuSave: TSpTBXItem
+          Caption = 'Save'
           ImageIndex = 1
           Images = ilImages
           ShortCut = 16467
           OnClick = mnuSaveClick
-          CaptionW = 'Save'
         end
         object mnuSaveAs: TSpTBXItem
+          Caption = 'Save as...'
           OnClick = mnuSaveAsClick
-          CaptionW = 'Save as...'
         end
         object mnuSaveAllFiles: TSpTBXItem
+          Caption = 'Save all files'
           ImageIndex = 2
           Images = ilImages
           ShortCut = 24659
           OnClick = mnuSaveAllFilesClick
-          CaptionW = 'Save all files'
         end
         object sepFile3: TSpTBXSeparatorItem
         end
         object mnuClose: TSpTBXItem
+          Caption = 'Close'
           ImageIndex = 46
           ShortCut = 16430
           OnClick = mnuCloseClick
-          CaptionW = 'Close'
         end
         object mnuCloseAllFiles: TSpTBXItem
+          Caption = 'Close all files'
           OnClick = mnuCloseAllFilesClick
-          CaptionW = 'Close all files'
         end
         object sepFile4: TSpTBXSeparatorItem
         end
         object mnuPrint: TSpTBXItem
+          Caption = 'Print'
           ImageIndex = 4
           Images = ilImages
           ShortCut = 16464
           OnClick = mnuPrintClick
-          CaptionW = 'Print'
         end
         object sepFile5: TSpTBXSeparatorItem
         end
         object mnuExit: TSpTBXItem
+          Caption = 'Exit'
           ImageIndex = 45
           Images = ilImages
           ShortCut = 32883
           OnClick = mnuExitClick
-          CaptionW = 'Exit'
         end
       end
       object mnuEdit: TSpTBXSubmenuItem
-        CaptionW = 'Edit'
+        Caption = 'Edit'
         object mnuUndo: TSpTBXItem
+          Caption = 'Undo'
           ImageIndex = 6
           Images = ilImages
           ShortCut = 16474
           OnClick = mnuUndoClick
-          CaptionW = 'Undo'
         end
         object mnuRedo: TSpTBXItem
+          Caption = 'Redo'
           ImageIndex = 7
           Images = ilImages
           ShortCut = 24666
           OnClick = mnuRedoClick
-          CaptionW = 'Redo'
         end
         object sepEdit1: TSpTBXSeparatorItem
         end
         object mnuCut: TSpTBXItem
+          Caption = 'Cut'
           ImageIndex = 8
           Images = ilImages
           ShortCut = 16472
           OnClick = mnuCutClick
-          CaptionW = 'Cut'
         end
         object mnuCopy: TSpTBXItem
+          Caption = 'Copy'
           ImageIndex = 9
           Images = ilImages
           ShortCut = 16451
           OnClick = mnuCopyClick
-          CaptionW = 'Copy'
         end
         object mnuPaste: TSpTBXItem
+          Caption = 'Paste'
           ImageIndex = 10
           Images = ilImages
           ShortCut = 16470
           OnClick = mnuPasteClick
-          CaptionW = 'Paste'
         end
         object sepEdit2: TSpTBXSeparatorItem
         end
         object mnuSelectAll: TSpTBXItem
+          Caption = 'Select all'
           ImageIndex = 11
           Images = ilImages
           ShortCut = 16449
           OnClick = mnuSelectAllClick
-          CaptionW = 'Select all'
         end
       end
       object mnuSearch: TSpTBXSubmenuItem
-        CaptionW = 'Search'
+        Caption = 'Search'
         object mnuSearchDialog: TSpTBXItem
+          Caption = 'Search'
           ImageIndex = 13
           Images = ilImages
           ShortCut = 16454
           OnClick = mnuSearchDialogClick
-          CaptionW = 'Search'
         end
         object mnuSearchAgain: TSpTBXItem
+          Caption = 'Search again'
           ShortCut = 114
           OnClick = mnuSearchAgainClick
-          CaptionW = 'Search again'
         end
         object sepSearch1: TSpTBXSeparatorItem
         end
         object mnuReplace: TSpTBXItem
+          Caption = 'Replace'
           ImageIndex = 39
           Images = ilImages
           ShortCut = 16466
           OnClick = mnuReplaceClick
-          CaptionW = 'Replace'
         end
         object sepSearch2: TSpTBXSeparatorItem
         end
         object mnuGoToLine: TSpTBXItem
+          Caption = 'Go to line...'
           ImageIndex = 14
           Images = ilImages
           ShortCut = 16455
           OnClick = mnuGoToLineClick
-          CaptionW = 'Go to line...'
         end
       end
       object mnuView: TSpTBXSubmenuItem
-        CaptionW = 'View'
+        Caption = 'View'
         object mnuChangeTheme: TSpTBXSubmenuItem
-          CaptionW = 'Change Theme'
+          Caption = 'Change Theme'
           object mnuThemes: TSpTBXThemeGroupItem
             OnClick = mnuThemesClick
           end
         end
         object mnuSelectHighlighter: TSpTBXSubmenuItem
+          Caption = 'Set Highlighter'
           ImageIndex = 15
           Images = ilImages
-          CaptionW = 'Set Highlighter'
           object mnuHPAWN: TSpTBXItem
+            Caption = 'Pawn'
             AutoCheck = True
             Checked = True
             OnClick = mnuHXMLClick
-            CaptionW = 'Pawn'
           end
           object mnuHCPP: TSpTBXItem
+            Caption = 'C++'
             AutoCheck = True
             OnClick = mnuHXMLClick
-            CaptionW = 'C++'
           end
           object mnuHHTML: TSpTBXItem
+            Caption = 'HTML'
             AutoCheck = True
             OnClick = mnuHXMLClick
-            CaptionW = 'HTML'
           end
           object mnuHSQL: TSpTBXItem
+            Caption = 'SQL'
             AutoCheck = True
             OnClick = mnuHXMLClick
-            CaptionW = 'SQL'
           end
           object mnuHXML: TSpTBXItem
+            Caption = 'XML'
             AutoCheck = True
             OnClick = mnuHXMLClick
-            CaptionW = 'XML'
           end
           object sepHighlighter: TSpTBXSeparatorItem
           end
           object mnuHNone: TSpTBXItem
+            Caption = 'None'
             AutoCheck = True
             OnClick = mnuHNoneClick
-            CaptionW = 'None'
           end
         end
         object sepView1: TSpTBXSeparatorItem
         end
         object mnuFoldAll: TSpTBXItem
+          Caption = 'Fold all'
           OnClick = mnuFoldAllClick
-          CaptionW = 'Fold all'
         end
         object sepView2: TSpTBXSeparatorItem
         end
         object mnuShowFileTB: TSpTBXItem
+          Caption = 'Show File-Toolbar'
           AutoCheck = True
           Checked = True
           OnClick = mnuShowFileTBClick
-          CaptionW = 'Show File-Toolbar'
         end
         object mnuShowEditTB: TSpTBXItem
+          Caption = 'Show Edit-Toolbar'
           AutoCheck = True
           Checked = True
           OnClick = mnuShowEditTBClick
-          CaptionW = 'Show Edit-Toolbar'
         end
         object mnuShowCodeSnippets: TSpTBXItem
+          Caption = 'Show Code-Snippets'
           AutoCheck = True
           Checked = True
           OnClick = mnuShowCodeSnippetsClick
-          CaptionW = 'Show Code-Snippets'
         end
         object mnuShowCodeToolsWindow: TSpTBXItem
+          Caption = 'Show Code-Explorer and Notes'
           AutoCheck = True
           Checked = True
           OnClick = mnuShowCodeToolsClick
-          CaptionW = 'Show Code-Explorer and Notes'
         end
         object sepView3: TSpTBXSeparatorItem
         end
         object mnuShowCodeExplorer: TSpTBXItem
+          Caption = 'Show Code-Explorer'
           AutoCheck = True
           Checked = True
           OnClick = mnuShowCodeExplorerClick
-          CaptionW = 'Show Code-Explorer'
         end
         object mnuShowCodeInspector: TSpTBXItem
+          Caption = 'Show Code-Inspector'
           AutoCheck = True
           Checked = True
           OnClick = mnuShowCodeInspectorClick
-          CaptionW = 'Show Code-Inspector'
         end
       end
       object mnuCompile: TSpTBXSubmenuItem
-        CaptionW = 'Compile'
+        Caption = 'Compile'
         object mnuDoCompile: TSpTBXItem
+          Caption = 'Compile'
           ImageIndex = 22
           Images = ilImages
           ShortCut = 120
           OnClick = mnuDoCompileClick
-          CaptionW = 'Compile'
         end
         object sepCompile1: TSpTBXSeparatorItem
         end
         object mnuCompileAndStartHL: TSpTBXItem
+          Caption = 'Compile and start Half-Life'
           ImageIndex = 22
           Images = ilImages
           OnClick = mnuCompileAndStartHLClick
-          CaptionW = 'Compile and start Half-Life'
         end
         object mnuCompileAndUpload: TSpTBXItem
+          Caption = 'Compile and upload'
           ImageIndex = 37
           Images = ilImages
           OnClick = mnuCompileAndUploadClick
-          CaptionW = 'Compile and upload'
         end
         object sepCompile2: TSpTBXSeparatorItem
         end
         object mnuRegisterPluginsIniLocal: TSpTBXItem
+          Caption = 'Register in plugins.ini (local)'
           OnClick = mnuRegisterPluginsIniLocalClick
-          CaptionW = 'Register in plugins.ini (local)'
         end
         object mnuRegisterPluginsIniWeb: TSpTBXItem
+          Caption = 'Register in plugins.ini (FTP)'
           OnClick = mnuRegisterPluginsIniWebClick
-          CaptionW = 'Register in plugins.ini (FTP)'
         end
       end
       object mnuTools: TSpTBXSubmenuItem
-        CaptionW = 'Tools'
+        Caption = 'Tools'
         object mnuIndenter: TSpTBXItem
+          Caption = 'Indenter'
           ImageIndex = 16
           Images = ilImages
           ShortCut = 16457
           OnClick = mnuIndenterClick
-          CaptionW = 'Indenter'
         end
         object mnuUnindenter: TSpTBXItem
+          Caption = 'Unindenter'
           ImageIndex = 17
           Images = ilImages
           ShortCut = 24649
           OnClick = mnuUnindenterClick
-          CaptionW = 'Unindenter'
         end
         object sepTools1: TSpTBXSeparatorItem
         end
         object mnuSocketTerminal: TSpTBXItem
+          Caption = 'Socket Terminal'
           ImageIndex = 40
           Images = ilImages
           OnClick = mnuSocketTerminalClick
-          CaptionW = 'Socket Terminal'
         end
         object sepTools2: TSpTBXSeparatorItem
         end
         object mnuPluginsIniEditor: TSpTBXItem
+          Caption = 'Plugins.ini Editor'
           ImageIndex = 19
           Images = ilImages
           OnClick = mnuPluginsIniEditorClick
-          CaptionW = 'Plugins.ini Editor'
         end
         object mnuPaster: TSpTBXItem
+          Caption = 'IRC Paster'
           ImageIndex = 10
           Images = ilImages
           OnClick = mnuPasterClick
-          CaptionW = 'IRC Paster'
         end
         object mnuRestoreBackup: TSpTBXItem
+          Caption = 'Restore from backup'
           Enabled = False
           ImageIndex = 46
           Images = ilImages
           OnClick = mnuRestoreBackupClick
-          CaptionW = 'Restore from backup'
         end
         object sepTools3: TSpTBXSeparatorItem
         end
         object mnuSettings: TSpTBXItem
+          Caption = 'Settings'
           ImageIndex = 41
           Images = ilImages
           ShortCut = 123
           OnClick = mnuSettingsClick
-          CaptionW = 'Settings'
         end
       end
       object mnuGenerators: TSpTBXSubmenuItem
-        CaptionW = 'Generators'
+        Caption = 'Generators'
         object mnuMenuGenerator: TSpTBXItem
+          Caption = 'Menu Generator'
           ImageIndex = 20
           Images = ilImages
           OnClick = mnuMenuGeneratorClick
-          CaptionW = 'Menu Generator'
         end
         object sepGenerators1: TSpTBXSeparatorItem
         end
         object mnuHudmessage: TSpTBXItem
+          Caption = 'Hudmessage Generator'
           OnClick = mnuHudmessageClick
-          CaptionW = 'Hudmessage Generator'
         end
         object mnuMOTDGenerator: TSpTBXItem
+          Caption = 'MOTD Generator'
           ImageIndex = 36
           Images = ilImages
           OnClick = mnuMOTDGeneratorClick
-          CaptionW = 'MOTD Generator'
         end
         object mnuConnectionGen: TSpTBXItem
+          Caption = 'Create connection'
           ImageIndex = 18
           Images = ilImages
           OnClick = mnuConnectionGenClick
-          CaptionW = 'Create connection'
         end
       end
       object mnuHelp: TSpTBXSubmenuItem
-        CaptionW = 'Help'
+        Caption = 'Help'
         object mnuOpenHelp: TSpTBXItem
+          Caption = 'Open help'
           ImageIndex = 21
           Images = ilImages
           ShortCut = 112
           OnClick = mnuOpenHelpClick
-          CaptionW = 'Open help'
         end
         object sepHelp1: TSpTBXSeparatorItem
         end
         object mnuSearchForums: TSpTBXItem
+          Caption = 'Search on AMX Mod X forums'
           OnClick = mnuSearchForumsClick
-          CaptionW = 'Search on AMX Mod X forums'
         end
         object mnuOpenScriptingForum: TSpTBXItem
+          Caption = 'Open AMXX Scripting Forum'
           OnClick = mnuOpenScriptingForumClick
-          CaptionW = 'Open AMXX Scripting Forum'
         end
         object sepHelp2: TSpTBXSeparatorItem
         end
         object mnuInfo: TSpTBXItem
+          Caption = 'About AMXX-Studio...'
           OnClick = mnuInfoClick
-          CaptionW = 'About AMXX-Studio...'
         end
       end
     end
@@ -556,39 +556,39 @@ object frmMain: TfrmMain
       TabOrder = 1
       OnVisibleChanged = tbxToolbarVisibleChanged
       object mnuTNew: TSpTBXItem
+        Caption = 'New'
         ImageIndex = 0
         Images = ilImages
         ShortCut = 16462
         OnClick = mnuTNewClick
-        CaptionW = 'New'
       end
       object mnuTOpen: TSpTBXItem
+        Caption = 'Open'
         ImageIndex = 3
         Images = ilImages
         OnClick = mnuTOpenClick
-        CaptionW = 'Open'
       end
       object mnuTSave: TSpTBXItem
+        Caption = 'Save'
         ImageIndex = 1
         Images = ilImages
         OnClick = mnuTSaveClick
-        CaptionW = 'Save'
       end
       object sepToolbar1: TSpTBXSeparatorItem
       end
       object mnuTSearch: TSpTBXItem
+        Caption = 'Search'
         ImageIndex = 13
         Images = ilImages
         OnClick = mnuTSearchClick
-        CaptionW = 'Search'
       end
       object sepToolbar2: TSpTBXSeparatorItem
       end
       object mnuTCompile: TSpTBXItem
+        Caption = 'Compile'
         ImageIndex = 22
         Images = ilImages
         OnClick = mnuTCompileClick
-        CaptionW = 'Compile'
       end
     end
     object tbxCodeSnippets: TSpTBXToolbar
@@ -601,27 +601,27 @@ object frmMain: TfrmMain
       TabOrder = 3
       OnVisibleChanged = tbxCodeSnippetsVisibleChanged
       object mnuCodeSnippets: TSpTBXRightAlignSpacerItem
-        CaptionW = 'Code-Snippets:'
+        Caption = 'Code-Snippets:'
       end
       object mnuPawn: TSpTBXItem
+        Caption = 'Pawn'
         AutoCheck = True
         Checked = True
         OnClick = OnCodeSnippetSelect
-        CaptionW = 'Pawn'
       end
       object mnuCPP: TSpTBXItem
+        Caption = 'C++'
         AutoCheck = True
         OnClick = OnCodeSnippetSelect
-        CaptionW = 'C++'
       end
       object mnuHTML: TSpTBXItem
+        Caption = 'HTML'
         OnClick = OnCodeSnippetSelect
-        CaptionW = 'HTML'
       end
       object mnuOther: TSpTBXItem
+        Caption = 'Other'
         AutoCheck = True
         OnClick = OnCodeSnippetSelect
-        CaptionW = 'Other'
       end
       object sepCodeSnippets: TSpTBXSeparatorItem
       end
@@ -636,44 +636,44 @@ object frmMain: TfrmMain
       TabOrder = 2
       OnVisibleChanged = tbxEditVisibleChanged
       object mnuTUndo: TSpTBXItem
+        Caption = 'Undo'
         ImageIndex = 23
         Images = ilImages
         OnClick = mnuTUndoClick
-        CaptionW = 'Undo'
       end
       object mnuTRedo: TSpTBXItem
+        Caption = 'Redo'
         ImageIndex = 24
         Images = ilImages
         OnClick = mnuTRedoClick
-        CaptionW = 'Redo'
       end
       object sepTEdit1: TSpTBXSeparatorItem
       end
       object mnuTCopy: TSpTBXItem
+        Caption = 'Copy'
         ImageIndex = 9
         Images = ilImages
         OnClick = mnuTCopyClick
-        CaptionW = 'Copy'
       end
       object mnuTCut: TSpTBXItem
+        Caption = 'Cut'
         ImageIndex = 8
         Images = ilImages
         OnClick = mnuTCutClick
-        CaptionW = 'Cut'
       end
       object mnuTPaste: TSpTBXItem
+        Caption = 'Paste'
         ImageIndex = 10
         Images = ilImages
         OnClick = mnuTPasteClick
-        CaptionW = 'Paste'
       end
       object sepTEdit2: TSpTBXSeparatorItem
       end
       object mnuTSelectAll: TSpTBXItem
+        Caption = 'Select all'
         ImageIndex = 11
         Images = ilImages
         OnClick = mnuTSelectAllClick
-        CaptionW = 'Select all'
       end
     end
   end
@@ -683,8 +683,8 @@ object frmMain: TfrmMain
     Width = 880
     Height = 25
     object mnuFilename: TSpTBXRightAlignSpacerItem
+      Caption = 'Untitled.sma'
       CustomWidth = 542
-      CaptionW = 'Untitled.sma'
     end
     object sepStatus0: TSpTBXSeparatorItem
     end
@@ -707,10 +707,10 @@ object frmMain: TfrmMain
     object sepStatus1: TSpTBXSeparatorItem
     end
     object mnuShowCodeTools: TSpTBXItem
+      Caption = 'Show Code-Tools'
       AutoCheck = True
       Checked = True
       OnClick = mnuShowCodeToolsClick
-      CaptionW = 'Show Code-Tools'
     end
     object sepStatus2: TSpTBXSeparatorItem
     end
@@ -720,9 +720,9 @@ object frmMain: TfrmMain
     object sepStatus3: TSpTBXSeparatorItem
     end
     object mnuCaret: TSpTBXRightAlignSpacerItem
+      Caption = 'Ln 0 Ch 0'
       Alignment = taCenter
       CustomWidth = 80
-      CaptionW = 'Ln 0 Ch 0'
     end
   end
   object tbDocs: TJvTabBar
@@ -745,21 +745,22 @@ object frmMain: TfrmMain
     Width = 205
     Height = 501
     Align = alRight
+    Color = clBtnFace
     ActiveTabIndex = 0
     TabPosition = ttpBottom
     ThemeType = tttTBX
     OnActiveTabChange = tcToolsActiveTabChange
     HiddenItems = <>
     object tiTools: TSpTBXTabItem
+      Caption = 'Code-Tools'
       Checked = True
       TabPosition = ttpBottom
       ThemeType = tttTBX
-      CaptionW = 'Code-Tools'
     end
     object tiNotes: TSpTBXTabItem
+      Caption = 'Notes'
       TabPosition = ttpBottom
       ThemeType = tttTBX
-      CaptionW = 'Notes'
     end
     object tsNotes: TSpTBXTabSheet
       Left = 0
@@ -807,28 +808,28 @@ object frmMain: TfrmMain
         Images = ilImages
         TabOrder = 0
         object mnuBold: TSpTBXItem
+          Caption = 'Bold'
           AutoCheck = True
           ImageIndex = 29
           OnClick = mnuBoldClick
-          CaptionW = 'Bold'
         end
         object mnuItalic: TSpTBXItem
+          Caption = 'Italic'
           AutoCheck = True
           ImageIndex = 27
           OnClick = mnuItalicClick
-          CaptionW = 'Italic'
         end
         object mnuUnderline: TSpTBXItem
+          Caption = 'Underline'
           AutoCheck = True
           ImageIndex = 28
           OnClick = mnuUnderlineClick
-          CaptionW = 'Underline'
         end
         object sepNotes: TSpTBXSeparatorItem
         end
         object mnuSelectColor: TSpTBXSubmenuItem
+          Caption = 'Select color'
           ImageIndex = 26
-          CaptionW = 'Select color'
           object cpNotes: TTBXColorPalette
             Color = clBlack
             PaletteOptions = [tpoCustomImages]
@@ -1010,6 +1011,7 @@ object frmMain: TfrmMain
       Caret.LineVisible = True
       Caret.Width = 1
       Caret.Period = 1024
+      Caret.LineBackAlpha = 0
       DivOptions.ViewWSpace = sciWsInvisible
       DivOptions.UsePalette = False
       DivOptions.OverType = False
@@ -1041,6 +1043,12 @@ object frmMain: TfrmMain
       Gutter2.Width = 14
       Gutter2.MarginType = gutSymbol
       Gutter2.Sensitive = True
+      Gutter3.Width = 0
+      Gutter3.MarginType = gutSymbol
+      Gutter3.Sensitive = False
+      Gutter4.Width = 0
+      Gutter4.MarginType = gutSymbol
+      Gutter4.Sensitive = False
       WordWrapVisualFlags = []
       WordWrapVisualFlagsLocation = []
       LayoutCache = sciCacheCaret
@@ -4536,6 +4544,7 @@ object frmMain: TfrmMain
         TabOrder = 1
         OnClick = cmdCancelClick
         CaptionGlowColor = clBtnFace
+        DropDownArrow = True
         LinkFont.Charset = DEFAULT_CHARSET
         LinkFont.Color = clBlue
         LinkFont.Height = -11
@@ -4546,7 +4555,7 @@ object frmMain: TfrmMain
     end
   end
   object TBXSwitcher: TTBXSwitcher
-    Theme = 'OfficeXP'
+    Theme = 'Default'
     Left = 813
     Top = 7
   end
@@ -6414,18 +6423,18 @@ object frmMain: TfrmMain
     Left = 783
     Top = 7
     object mnuCopyMessage: TSpTBXItem
+      Caption = 'Copy message'
       OnClick = mnuCopyMessageClick
-      CaptionW = 'Copy message'
     end
     object mnuCopyAll: TSpTBXItem
+      Caption = 'Copy all'
       OnClick = mnuCopyAllClick
-      CaptionW = 'Copy all'
     end
     object sepOutput: TSpTBXSeparatorItem
     end
     object mnuSaveToFile: TSpTBXItem
+      Caption = 'Save to file...'
       OnClick = mnuSaveToFileClick
-      CaptionW = 'Save to file...'
     end
   end
   object sciCallTips: TSciCallTips
@@ -6494,62 +6503,62 @@ object frmMain: TfrmMain
     Left = 782
     Top = 36
     object mnuEditorCopy: TSpTBXItem
+      Caption = 'Copy'
       ImageIndex = 9
       Images = ilImages
       OnClick = mnuEditorCopyClick
-      CaptionW = 'Copy'
     end
     object mnuEditorCut: TSpTBXItem
+      Caption = 'Cut'
       ImageIndex = 8
       Images = ilImages
       OnClick = mnuEditorCutClick
-      CaptionW = 'Cut'
     end
     object mnuEditorPaste: TSpTBXItem
+      Caption = 'Paste'
       ImageIndex = 10
       Images = ilImages
       OnClick = mnuEditorPasteClick
-      CaptionW = 'Paste'
     end
     object mnuEditorDelete: TSpTBXItem
+      Caption = 'Delete'
       ImageIndex = 5
       Images = ilImages
       OnClick = mnuEditorDeleteClick
-      CaptionW = 'Delete'
     end
     object sepEditorMenu1: TSpTBXSeparatorItem
     end
     object mnuEditorSelectAll: TSpTBXItem
+      Caption = 'Select all'
       ImageIndex = 11
       Images = ilImages
       OnClick = mnuEditorSelectAllClick
-      CaptionW = 'Select all'
     end
     object sepEditorMenu2: TSpTBXSeparatorItem
     end
     object mnuEditorUndo: TSpTBXItem
+      Caption = 'Undo'
       ImageIndex = 6
       Images = ilImages
       OnClick = mnuEditorUndoClick
-      CaptionW = 'Undo'
     end
     object mnuEditorRedo: TSpTBXItem
+      Caption = 'Redo'
       ImageIndex = 7
       Images = ilImages
       OnClick = mnuEditorRedoClick
-      CaptionW = 'Redo'
     end
     object sepEditorMenu3: TSpTBXSeparatorItem
     end
     object mnuToogleBookmark: TSpTBXItem
+      Caption = 'Toogle Bookmark'
       ShortCut = 49218
       OnClick = mnuToogleBookmarkClick
-      CaptionW = 'Toogle Bookmark'
     end
     object mnuGoToBookmark: TSpTBXItem
+      Caption = 'Go to next Bookmark'
       ShortCut = 16450
       OnClick = mnuGoToBookmarkClick
-      CaptionW = 'Go to next Bookmark'
     end
   end
   object sciSearchReplace: TSciSearchReplace
@@ -7799,21 +7808,21 @@ object frmMain: TfrmMain
     Left = 662
     Top = 6
     object mnuPClose: TSpTBXItem
+      Caption = 'Close file'
       ImageIndex = 46
       Images = ilImages
       OnClick = mnuPCloseClick
-      CaptionW = 'Close file'
     end
     object mnuPCloseAllFiles: TSpTBXItem
+      Caption = 'Close all files'
       OnClick = mnuPCloseAllFilesClick
-      CaptionW = 'Close all files'
     end
     object sepDocuments: TSpTBXSeparatorItem
     end
     object mnuPSave: TSpTBXItem
+      Caption = 'Save file'
       ImageIndex = 1
       Images = ilImages
-      CaptionW = 'Save file'
     end
   end
   object JvInspectorDotNETPainter: TJvInspectorDotNETPainter

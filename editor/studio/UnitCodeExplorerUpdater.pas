@@ -325,7 +325,7 @@ begin
   end;
   frmMain.trvExplorer.Items.EndUpdate;
 
-  if (not frmMain.pnlLoading.Visible) and (not frmMain.sciEditor.AutoCActive) and (not frmMain.sciEditor.CallTipActive) then begin
+  if (not frmMain.sciEditor.Lines.Count > StrToIntDef(frmSettings.txtAUDisable.Text, 1500)) or ((not frmMain.pnlLoading.Visible) and (not frmMain.sciEditor.AutoCActive) and (not frmMain.sciEditor.CallTipActive)) then begin
     frmMain.sciAutoComplete.AStrings.Text := eAutoComplete;
     for i := frmMain.sciAutoComplete.AStrings.Count - 1 downto 0 do begin
       if Length(Trim(frmMain.sciAutoComplete.AStrings[i])) <= 1 then

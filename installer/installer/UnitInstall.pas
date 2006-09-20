@@ -766,7 +766,7 @@ begin
 
           try
             if FileList[i] = 'liblist.gam' then
-              frmMain.IdFTP.Size('CHMOD 444 liblist.gam');
+              frmMain.IdFTP.Site('CHMOD 444 liblist.gam');
           except
             AddStatus('Warning: CHMOD not supported.', clMaroon);
           end;

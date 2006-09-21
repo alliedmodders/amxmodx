@@ -175,7 +175,10 @@ void MysqlThread::RunThread(IThreadHandle *pHandle)
 		m_qrInfo.amxinfo.pQuery = pQuery;
 		m_qrInfo.amxinfo.info.rs = &m_atomicResult;
 	} else {
-		pQuery->FreeHandle();
+		if (pQuery)
+		{
+			pQuery->FreeHandle();
+		}
 		pQuery = NULL;
 	}
 

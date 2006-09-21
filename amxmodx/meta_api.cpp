@@ -315,6 +315,20 @@ const char*	get_localinfo(const char* name, const char* def)
 	return b;
 }
 
+const char*	get_localinfo_r(const char *name, const char *def, char buffer[], size_t maxlength)
+{
+	const char* b = LOCALINFO((char*)name);
+
+	if (b == 0 || *b == 0)
+	{
+		SET_LOCALINFO((char*)name, (char*)(b = def));
+	}
+
+	snprintf(buffer, maxlength, "%s", b);
+
+	return buffer;
+}
+
 // Very	first point	at map load
 // Load	AMX	modules	for	new	native functions
 // Initialize AMX stuff	and	load it's plugins from plugins.ini list
@@ -367,14 +381,17 @@ int	C_Spawn(edict_t *pent)
 	get_localinfo("amx_logdir", "addons/amxmodx/logs");
 
 	char map_pluginsfile_path[256];
+	char configs_dir[256];
 
 	// ###### Load modules
 	loadModules(get_localinfo("amxx_modules", "addons/amxmodx/configs/modules.ini"), PT_ANYTIME);
+
+	get_localinfo_r("amxx_configsdir", "addons/amxmodx/configs", configs_dir, sizeof(configs_dir)-1);
 	g_plugins.CALMFromFile(get_localinfo("amxx_plugins", "addons/amxmodx/configs/plugins.ini"));
-	LoadExtraPluginsToPCALM(get_localinfo("amxx_configsdir", "addons/amxmodx/configs"));
+	LoadExtraPluginsToPCALM(configs_dir);
 	snprintf(map_pluginsfile_path, sizeof(map_pluginsfile_path)-1,
 					"%s/maps/plugins-%s.ini",
-					get_localinfo("amxx_configsdir", "addons/amxmodx/configs"),
+					configs_dir,
 					STRING(gpGlobals->mapname));
 	g_plugins.CALMFromFile(map_pluginsfile_path);
 
@@ -415,7 +432,7 @@ int	C_Spawn(edict_t *pent)
 
 	// ###### Load AMX Mod X plugins
 	g_plugins.loadPluginsFromFile(get_localinfo("amxx_plugins", "addons/amxmodx/configs/plugins.ini"));
-	LoadExtraPluginsFromDir(get_localinfo("amxx_configsdir", "addons/amxmodx/configs"));
+	LoadExtraPluginsFromDir(configs_dir);
 	g_plugins.loadPluginsFromFile(map_pluginsfile_path, false);
 	g_plugins.Finalize();
 	g_plugins.InvalidateCache();

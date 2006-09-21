@@ -96,6 +96,7 @@ String g_log_dir;
 String g_mod_name;
 XVars g_xvars;
 
+bool g_bmod_tfc;
 bool g_bmod_cstrike;
 bool g_bmod_dod;
 bool g_dontprecache;
@@ -1588,6 +1589,7 @@ C_DLLEXPORT	int	GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
 	} else {
 		g_bmod_cstrike = false;
 		g_bmod_dod = !stricmp(g_mod_name.c_str(), "dod");
+		g_bmod_tfc = !stricmp(g_mod_name.c_str(), "tfc");
 	}
 
 	meta_engfuncs.pfnCmd_Argc = C_Cmd_Argc;

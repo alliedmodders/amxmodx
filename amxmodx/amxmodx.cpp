@@ -542,14 +542,27 @@ static cell AMX_NATIVE_CALL is_user_hltv(AMX *amx, cell *params) /* 1 param */
 	return 0;
 }
 
+extern bool g_bmod_tfc;
 static cell AMX_NATIVE_CALL is_user_alive(AMX *amx, cell *params) /* 1 param */
 {
 	int index = params[1];
 	
 	if (index < 1 || index > gpGlobals->maxClients)
+	{
 		return 0;
+	}
 	
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+
+	if (g_bmod_tfc)
+	{
+		edict_t *e = pPlayer->pEdict;
+		if (e->v.flags & FL_SPECTATOR || 
+			(!e->v.team || !e->v.playerclass))
+		{
+			return 0;
+		}
+	}
 	
 	return ((pPlayer->ingame && pPlayer->IsAlive()) ? 1 : 0);
 }

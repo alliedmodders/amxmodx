@@ -303,7 +303,6 @@ COM_STATS_ADD = ^tadd <nimi> <muuttuja> - Lisaa tilastoja listaan
 NO_STATS = Tilastopluginit eivat ole asennettuna talla palvelimellar^n
 SAVE_CONF = Tallenna saadot
 
-
 [ls]
 NO_OPTION = C0|_|ld|\|'t f!|\|d 0pt!0|\|(s) w!th s|_|(h v4r!4bl3 (|\|4m3 "%s")
 STATS_CONF_SAVED = $t4tz0|2 (0|\|f!g|_|r4t!0|\| s4v3d s|_|((3ssf|_|lly

@@ -353,7 +353,7 @@ public actionVoteMapMenu(id, key)
 				}
 				
 				keys |= (1<<8)
-				len += format(menuBody[len], 511, "^n9. None^n")
+				len += format(menuBody[len], 511, "^n9. %L^n", id, "NONE")
 			} else {
 				len = format(menuBody, 511, g_coloredMenus ? "\y%L^n%s?^n\w^n1. %L^n2. %L^n" : "%L^n%s?^n^n1. %L^n2. %L^n", id, "CHANGE_MAP_TO", g_mapName[g_voteSelected[id][0]], id, "YES", id, "NO")
 				keys = MENU_KEY_1|MENU_KEY_2

@@ -11,6 +11,7 @@
 #define CSW_HEGRENADE		4
 #define CSW_C4				6
 #define CSW_SMOKEGRENADE	9
+#define CSW_KNIFE			29
 #define CSW_FLASHBANG		25
 
 // *****************************************************

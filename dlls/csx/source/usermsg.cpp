@@ -17,6 +17,44 @@ void Client_ResetHUD(void* mValue){
 	}
 }
 
+void Client_DeathMsg(void *mValue)
+{
+	static int killer_id;
+	static int victim_id;
+	static int is_headshot;
+	const char *name;
+
+	switch (mState++)
+	{
+	case 0:
+		{
+			killer_id = *(int *)mValue;
+			break;
+		}
+	case 1:
+		{
+			victim_id = *(int *)mValue;
+			break;
+		}
+	case 2:
+		{
+			is_headshot = *(int *)mValue;
+			break;
+		}
+	case 3:
+		{
+			name = (const char *)mValue;
+			if (killer_id 
+				&& (strcmp(name, "knife") == 0))
+			{
+				CPlayer *pPlayer = GET_PLAYER_POINTER_I(killer_id);
+				pPlayer->aiming = is_headshot ? 1 : 0;
+			}
+			break;
+		}
+	}
+}
+
 void Client_WeaponList(void* mValue){
   static int wpnList;
   static int iSlot;

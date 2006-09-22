@@ -88,10 +88,10 @@ void Client_AmmoPickup(void*);
 void Client_Damage_End(void*);
 void Client_ScoreInfo(void*);
 void Client_ResetHUD(void*);
-
 void Client_SendAudio(void*);
 void Client_TextMsg(void*);
 void Client_BarTime(void*);
+void Client_DeathMsg(void*);
 
 bool ignoreBots (edict_t *pEnt, edict_t *pOther = NULL );
 bool isModuleActive();

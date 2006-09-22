@@ -367,7 +367,7 @@
 #define FN_TraceLine_Post						TraceLine_Post
 // #define FN_TraceToss_Post					TraceToss_Post
 // #define FN_TraceMonsterHull_Post				TraceMonsterHull_Post
-// #define FN_TraceHull_Post					TraceHull_Post
+// #define FN_TraceHull_Post						TraceHull_Post
 // #define FN_TraceModel_Post					TraceModel_Post
 // #define FN_TraceTexture_Post					TraceTexture_Post
 // #define FN_TraceSphere_Post					TraceSphere_Post

@@ -43,7 +43,6 @@ int gmsgResetHUD;
 int gmsgAmmoX;
 int gmsgScoreInfo;
 int gmsgAmmoPickup;
-
 int gmsgSendAudio;
 int gmsgTextMsg;
 int gmsgBarTime;
@@ -62,26 +61,27 @@ cvar_t* csstats_pause;
 cvar_t init_csstats_rankbots ={"csstats_rankbots","1"};
 cvar_t init_csstats_pause = {"csstats_pause","0"};
 
-struct sUserMsg {
+struct sUserMsg
+{
 	const char* name;
 	int* id;
 	funEventCall func;
 	bool endmsg;
 } g_user_msg[] = {
-	{ "CurWeapon" , &gmsgCurWeapon , Client_CurWeapon, false },
-	{ "Damage" , &gmsgDamage,Client_Damage, false  },	
-	{ "Damage" , &gmsgDamageEnd, Client_Damage_End, true },
-	{ "WeaponList" , &gmsgWeaponList, Client_WeaponList, false },
-	{ "ResetHUD" , &gmsgResetHUD,Client_ResetHUD, true },
-	{ "AmmoX" , &gmsgAmmoX, Client_AmmoX , false },
-	{ "ScoreInfo" , &gmsgScoreInfo, Client_ScoreInfo, false },
-	{ "AmmoPickup" , &gmsgAmmoPickup, Client_AmmoPickup , false },
+	{"CurWeapon",	&gmsgCurWeapon,		Client_CurWeapon,	false},
+	{"Damage",		&gmsgDamage,		Client_Damage,		false},	
+	{"Damage",		&gmsgDamageEnd,		Client_Damage_End,	true},
+	{"WeaponList",	&gmsgWeaponList,	Client_WeaponList,	false},
+	{"ResetHUD",	&gmsgResetHUD,		Client_ResetHUD,	true},
+	{"AmmoX",		&gmsgAmmoX,			Client_AmmoX,		false},
+	{"ScoreInfo",	&gmsgScoreInfo,		Client_ScoreInfo,	false},
+	{"AmmoPickup",	&gmsgAmmoPickup,	Client_AmmoPickup,	false},
+	{"SendAudio",	&gmsgSendAudio,		Client_SendAudio,	false},
+	{"TextMsg",		&gmsgTextMsg,		Client_TextMsg,		false},
+	{"BarTime",		&gmsgBarTime,		Client_BarTime,		false},
+	{"DeathMsg",	&gmsgDeathMsg,		Client_DeathMsg,	false},
 
-	{ "SendAudio" , &gmsgSendAudio , Client_SendAudio , false },
-	{ "TextMsg" , &gmsgTextMsg , Client_TextMsg , false },
-	{ "BarTime" , &gmsgBarTime , Client_BarTime , false },
-
-	{ 0 , 0,0,false }
+	{0, 0, 0, false}
 };
 
 int RegUserMsg_Post(const char *pszName, int iSize)
@@ -330,10 +330,20 @@ void EmitSound_Post(edict_t *entity, int channel, const char *sample, /*int*/flo
 	RETURN_META(MRES_IGNORED);
 }
 
-void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *e, TraceResult *ptr) {
-	if (ptr->pHit&&(ptr->pHit->v.flags& (FL_CLIENT | FL_FAKECLIENT) )&&
-		e&&(e->v.flags& (FL_CLIENT | FL_FAKECLIENT) )&&ptr->iHitgroup)
-		GET_PLAYER_POINTER(e)->aiming = ptr->iHitgroup;
+void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *e, TraceResult *ptr)
+{
+	if (ptr->pHit && (ptr->pHit->v.flags & (FL_CLIENT|FL_FAKECLIENT))
+		&& e 
+		&& (e->v.flags & (FL_CLIENT|FL_FAKECLIENT)) 
+		&& ptr->iHitgroup)
+	{
+		CPlayer *pPlayer = GET_PLAYER_POINTER(e);
+		if (pPlayer->current != CSW_KNIFE)
+		{
+			pPlayer->aiming = ptr->iHitgroup;
+		}
+	}
+
 	RETURN_META(MRES_IGNORED);
 }
 

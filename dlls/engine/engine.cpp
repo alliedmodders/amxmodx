@@ -798,7 +798,7 @@ static cell AMX_NATIVE_CALL in_view_cone(AMX *amx, cell *params)
 	
 	CHECK_ENTITY(src);
 
-	Vector2D vec2LOS;
+	Vector vecLOS;
 	float flDot;
 
 	edict_t *pEdictSrc = INDEXENT(src);
@@ -811,12 +811,12 @@ static cell AMX_NATIVE_CALL in_view_cone(AMX *amx, cell *params)
 
 	Vector origin(vecOrigin[0], vecOrigin[1], vecOrigin[2]);
 
-	MAKE_VECTORS(pEdictSrc->v.angles);
+	MAKE_VECTORS(pEdictSrc->v.v_angle);
 
-	vec2LOS = (origin - pEdictSrc->v.origin).Make2D();
-	vec2LOS = vec2LOS.Normalize();
+	vecLOS = origin - (pEdictSrc->v.origin + pEdictSrc->v.view_ofs);
+	vecLOS = vecLOS.Normalize();
 
-	flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
+	flDot = DotProduct(vecLOS, gpGlobals->v_forward);
 
 	if (flDot >= cos(pEdictSrc->v.fov * (M_PI / 360)))
 		return 1;

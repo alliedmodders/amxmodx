@@ -841,7 +841,7 @@ Section Uninstall
 
   Delete "$SMPROGRAMS\$ICONS_GROUP\Uninstall.lnk"
   Delete "$SMPROGRAMS\$ICONS_GROUP\Website.lnk"
-  Delete "$DESKTOP\AMX Mod X Editor.lnk"
+  Delete "$DESKTOP\AMX Mod X Studio.lnk"
   Delete "$SMPROGRAMS\$ICONS_GROUP\AMXX Studio.lnk"
   Delete "$SMPROGRAMS\$ICONS_GROUP\Documentation.lnk"
   Delete "$SMPROGRAMS\$ICONS_GROUP\AMX Mod X.lnk"

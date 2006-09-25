@@ -11,9 +11,9 @@
 #endif
 #define _amxconst_included
 
-#define AMXX_VERSION		1.76
+#define AMXX_VERSION		1.761
 #define AMXX_VERSION_NUM	176
-stock const AMXX_VERSION_STR[]="1.76"
+stock const AMXX_VERSION_STR[]="1.76a"
 
 #define M_PI 3.1415926535
 

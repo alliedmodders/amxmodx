@@ -82,6 +82,7 @@ new g_announce_sync
 new g_status_sync
 new g_left_sync
 new g_bottom_sync
+new g_he_sync
 
 new g_MultiKillMsg[7][] =
 {
@@ -197,6 +198,7 @@ public plugin_init()
 	g_status_sync = CreateHudSyncObj()
 	g_left_sync = CreateHudSyncObj()
 	g_bottom_sync = CreateHudSyncObj()
+	g_he_sync = CreateHudSyncObj()
 }
 
 public plugin_cfg()
@@ -402,7 +404,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 			get_user_name(victim, victim_name, 31)
 			
 			set_hudmessage(255, 100, 100, -1.0, 0.25, 1, 6.0, 6.0, 0.5, 0.15, -1)
-			show_hudmessage(0, "%L", LANG_PLAYER, g_KinfeMsg[random_num(0, 3)], killer_name, victim_name)
+			ShowSyncHudMsg(0, g_he_sync, "%L", LANG_PLAYER, g_KinfeMsg[random_num(0, 3)], killer_name, victim_name)
 		}
 		
 		if (KnifeKillSound)
@@ -421,10 +423,10 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 		if (!selfkill)
 		{
 			if (GrenadeKill)
-				show_hudmessage(0, "%L", LANG_PLAYER, g_HeMessages[random_num(0, 3)], killer_name, victim_name)
+				ShowSyncHudMsg(0, g_he_sync, "%L", LANG_PLAYER, g_HeMessages[random_num(0, 3)], killer_name, victim_name)
 		}
 		else if (GrenadeSuicide)
-			show_hudmessage(0, "%L", LANG_PLAYER, g_SHeMessages[random_num(0, 3)], victim_name)
+			ShowSyncHudMsg(0, g_he_sync, "%L", LANG_PLAYER, g_SHeMessages[random_num(0, 3)], victim_name)
 	}
 
 	if (headshot && (HeadShotKill || HeadShotKillSound))

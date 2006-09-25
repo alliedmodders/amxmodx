@@ -1420,7 +1420,15 @@ kill_stats(id)
 	// Bail out if user stats timer is non-zero, 
 	// ie function already called.
 	if (g_fzShowUserStatsTime[id] > 0.0)
+	{
 		return
+	}
+		
+	new team = get_user_team(id)
+	if (team < 1 || team > 2)
+	{
+		return
+	}
 
 	// Flag kill stats displayed for this player.
 	g_fzShowUserStatsTime[id] = get_gametime()
@@ -1546,7 +1554,9 @@ endround_stats()
 		id = iaPlayers[iPlayer]
 		
 		if (g_fzShowUserStatsTime[id] == 0.0)
+		{
 			kill_stats(id)
+		}
 	}
 
 	g_sAwardAndScore[0] = 0

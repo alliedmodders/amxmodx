@@ -176,7 +176,7 @@ begin
           eTempIndent := eTempIndent +1;
       end;
     end
-    else if (eStr[i] = 'else') or (Pos('else if', eStr[i]) = 1) and (Pos('{', eStr[i]) = 0) then
+    else if (eStr[i] = 'else') or ((Pos('else if', eStr[i]) = 1) or (Pos('case', eStr[i]) = 1) or (Pos('switch', eStr[i]) = 1)) and (Pos('{', eStr[i]) = 0) then
         eTempIndent := eTempIndent +1
     else if (Pos('{', eStr[i]) = 0) and (Length(eStr[i]) > 6) then begin
       if (IsAtStart('stock', eStr[i], False)) or (IsAtStart('while', eStr[i], True)) then begin

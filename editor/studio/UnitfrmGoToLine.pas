@@ -9,13 +9,14 @@ uses
 
 type
   TfrmGoToLine = class(TForm)
+    pnlBG: TSpTBXPanel;
     lblCaption: TLabel;
-    txtGoToLine: TSpTBXEdit;
-    cmdOK: TSpTBXButton;
     cmdCancel: TSpTBXButton;
-    procedure txtGoToLineChange(Sender: TObject);
+    cmdOK: TSpTBXButton;
+    txtGoToLine: TSpTBXEdit;
     procedure txtGoToLineKeyPress(Sender: TObject; var Key: Char);
     procedure FormShow(Sender: TObject);
+    procedure txtGoToLineChange(Sender: TObject);
   end;
 
 var
@@ -26,14 +27,6 @@ implementation
 uses UnitMainTools;
 
 {$R *.DFM}
-
-procedure TfrmGoToLine.txtGoToLineChange(Sender: TObject);
-begin
-  if not IsNumeric(txtGoToLine.Text) then
-    txtGoToLine.Text := '1'
-  else if txtGoToLine.Text = '0' then
-    txtGoToLine.Text := '1';
-end;
 
 procedure TfrmGoToLine.txtGoToLineKeyPress(Sender: TObject; var Key: Char);
 begin
@@ -46,6 +39,12 @@ end;
 procedure TfrmGoToLine.FormShow(Sender: TObject);
 begin
   txtGoToLine.SetFocus;
+  txtGoToLine.SelectAll;
+end;
+
+procedure TfrmGoToLine.txtGoToLineChange(Sender: TObject);
+begin
+  cmdOK.Enabled := StrToIntDef(txtGoToLine.Text, -1) > 0;
 end;
 
 end.

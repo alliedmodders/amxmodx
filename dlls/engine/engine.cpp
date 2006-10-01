@@ -798,31 +798,42 @@ static cell AMX_NATIVE_CALL in_view_cone(AMX *amx, cell *params)
 	
 	CHECK_ENTITY(src);
 
-	Vector vecLOS;
+	edict_t *pEdictSrc = INDEXENT(src);
+
+	Vector vecLOS, vecForward;
 	float flDot;
 
-	edict_t *pEdictSrc = INDEXENT(src);
 	cell *addr = MF_GetAmxAddr(amx, params[2]);
-	float vecOrigin[3];
+	Vector origin(amx_ctof(addr[0]), amx_ctof(addr[1]), amx_ctof(addr[2]));
 
-	vecOrigin[0] = amx_ctof(addr[0]);
-	vecOrigin[1] = amx_ctof(addr[1]);
-	vecOrigin[2] = amx_ctof(addr[2]);
+	bool use2D = (params[0] / sizeof(cell)) == 2 || params[3] == 0;
 
-	Vector origin(vecOrigin[0], vecOrigin[1], vecOrigin[2]);
+	if (use2D)
+	{
+		MAKE_VECTORS(pEdictSrc->v.angles);
+		vecForward = gpGlobals->v_forward;
 
-	MAKE_VECTORS(pEdictSrc->v.v_angle);
+		vecLOS = origin - pEdictSrc->v.origin;
 
-	vecLOS = origin - (pEdictSrc->v.origin + pEdictSrc->v.view_ofs);
+		vecForward.z = 0;
+		vecLOS.z = 0;
+	} 
+	else 
+	{
+		MAKE_VECTORS(pEdictSrc->v.v_angle);
+		vecForward = gpGlobals->v_forward;
+
+		vecLOS = origin - (pEdictSrc->v.origin + pEdictSrc->v.view_ofs);
+	}
+
 	vecLOS = vecLOS.Normalize();
 
-	flDot = DotProduct(vecLOS, gpGlobals->v_forward);
+	flDot = DotProduct(vecLOS, vecForward);
 
 	if (flDot >= cos(pEdictSrc->v.fov * (M_PI / 360)))
 		return 1;
 	else
 		return 0;
-
 }
 
 static cell AMX_NATIVE_CALL traceresult(AMX *amx, cell *params)

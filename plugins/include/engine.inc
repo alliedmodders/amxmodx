@@ -226,8 +226,10 @@ forward pfn_spawn(entid);
  */
 native find_sphere_class(aroundent, _lookforclassname[], Float:radius, entlist[], maxents, Float:origin[3] = {0.0, 0.0, 0.0});
 
-//SDK function - checks if an origin is in an entity's view cone
-native is_in_viewcone(entity, Float:origin[3]);
+/* SDK function - checks if an origin is in an entity's view cone
+ * Set use3d to 1 to do the calculation in 3D. Otherwise it will be in 2D.
+ */
+native is_in_viewcone(entity, Float:origin[3], use3d = 0);
 
 //SDK function - checks if an entity is visible to an entity
 native is_visible(entity, target);

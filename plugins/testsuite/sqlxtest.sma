@@ -15,6 +15,7 @@ public plugin_init()
 	register_srvcmd("sqlx_test_old1", "SqlxTest_Old1")
 	register_srvcmd("sqlx_test_old2", "SqlxTest_Old2")
 	register_srvcmd("sqlx_test_thread_end", "SqlxTest_ThreadEnd")
+	register_srvcmd("sqlx_test_bad", "SqlxTest_Bad")
 	
 	new configsDir[64]
 	get_configsdir(configsDir, 63)
@@ -71,6 +72,22 @@ public plugin_cfg()
 	get_cvar_string("amx_sql_db", db, 63)
 	
 	g_DbInfo = SQL_MakeDbTuple(host, user, pass, db)
+}
+
+public SqlxTest_Bad()
+{
+	new errnum, error[255]
+	new Handle:tempinfo = SQL_MakeDbTuple("1.2.3.4", "asdf", "gasdf", "gaben", 2)
+	new Handle:db = SQL_Connect(tempinfo, errnum, error, 254)
+	
+	if (db == Empty_Handle)
+	{
+		server_print(" --> Errored out! %d, %s", errnum, error)
+	} else {
+		server_print(" --> Something is wrong here.")
+	}
+	
+	return PLUGIN_HANDLED
 }
 
 /**

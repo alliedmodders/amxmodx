@@ -118,6 +118,10 @@ public GetMyStuff(failstate, Handle:query, error[], errnum, data[], size)
 			server_print("Query failed!")
 		}
 		server_print("Error code: %d (Message: ^"%s^")", errnum, error)
+		
+		new querystring[1024]
+		SQL_GetQueryString(query, querystring, 1023)
+		server_print("Original query: %s", querystring)
 	} else {
 		PrintQueryData(query)
 	}

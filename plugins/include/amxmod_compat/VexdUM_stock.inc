@@ -71,8 +71,8 @@ stock can_see(ent1, ent2)
 			return 0;
 		} else {
 			new Float:flFraction;
-			get_tr2(0, TraceResult:TR_Fraction, flFraction);
-			if (flFraction == 1.0 || (get_tr2(0, TraceResult:TR_Hit) == ent2))
+			get_tr2(0, TraceResult:TR_flFraction, flFraction);
+			if (flFraction == 1.0 || (get_tr2(0, TraceResult:TR_pHit) == ent2))
 			{
 				return 1;
 			}

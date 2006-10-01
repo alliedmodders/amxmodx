@@ -382,13 +382,16 @@ static cell AMX_NATIVE_CALL SQL_FieldNumToName(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL SQL_GetQueryString(AMX *amx, cell *params)
 {
 	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
-	if (!qInfo)
+
+	if (!qInfo || (!qInfo->pQuery && !qInfo->opt_ptr))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
 		return 0;
 	}
 
-	return MF_SetAmxString(amx, params[2], qInfo->pQuery->GetQueryString(), params[3]);
+	const char *ptr = qInfo->pQuery ? qInfo->pQuery->GetQueryString() : qInfo->opt_ptr;
+
+	return MF_SetAmxString(amx, params[2], ptr, params[3]);
 }
 
 static cell AMX_NATIVE_CALL SQL_FieldNameToNum(AMX *amx, cell *params)

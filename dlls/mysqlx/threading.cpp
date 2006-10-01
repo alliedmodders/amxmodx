@@ -58,7 +58,7 @@ static cell AMX_NATIVE_CALL SQL_ThreadQuery(AMX *amx, cell *params)
 
 	int len;
 	const char *handler = MF_GetAmxString(amx, params[2], 0, &len);
-	int fwd = MF_RegisterSPForwardByName(amx, handler, FP_CELL, FP_CELL, FP_STRING, FP_CELL, FP_ARRAY, FP_CELL, FP_DONE);
+	int fwd = MF_RegisterSPForwardByName(amx, handler, FP_CELL, FP_CELL, FP_STRING, FP_CELL, FP_ARRAY, FP_CELL, FP_CELL, FP_DONE);
 	if (fwd < 1)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Function not found: %s", handler);
@@ -76,7 +76,7 @@ static cell AMX_NATIVE_CALL SQL_ThreadQuery(AMX *amx, cell *params)
 	}
 	g_QueueLock->Unlock();
 
-	kmThread->SetInfo(cn->host, cn->user, cn->pass, cn->db, cn->port);
+	kmThread->SetInfo(cn->host, cn->user, cn->pass, cn->db, cn->port, cn->max_timeout);
 	kmThread->SetForward(fwd);
 	kmThread->SetQuery(MF_GetAmxString(amx, params[3], 1, &len));
 	kmThread->SetCellData(MF_GetAmxAddr(amx, params[4]), (ucell)params[5]);
@@ -126,13 +126,15 @@ void MysqlThread::SetForward(int forward)
 	m_fwd = forward;
 }
 
-void MysqlThread::SetInfo(const char *host, const char *user, const char *pass, const char *db, int port)
+void MysqlThread::SetInfo(const char *host, const char *user, const char *pass, const char *db, int port, unsigned int max_timeout)
 {
 	m_host.assign(host);
 	m_user.assign(user);
 	m_pass.assign(pass);
 	m_db.assign(db);
+	m_max_timeout = m_max_timeout;
 	m_port = port;
+	m_qrInfo.queue_time = gpGlobals->time;
 }
 
 void MysqlThread::SetQuery(const char *query)
@@ -149,10 +151,15 @@ void MysqlThread::RunThread(IThreadHandle *pHandle)
 	info.user = m_user.c_str();
 	info.host = m_host.c_str();
 	info.port = m_port;
+	info.max_timeout = m_max_timeout;
+
+	float save_time = m_qrInfo.queue_time;
 
 	memset(&m_qrInfo, 0, sizeof(m_qrInfo));
 
-	IDatabase *pDatabase = g_Mysql.Connect(&info, &m_qrInfo.amxinfo.info.errorcode, m_qrInfo.amxinfo.error, 254);
+	m_qrInfo.queue_time = save_time;
+
+	IDatabase *pDatabase = g_Mysql.Connect2(&info, &m_qrInfo.amxinfo.info.errorcode, m_qrInfo.amxinfo.error, 254);
 	IQuery *pQuery = NULL;
 	if (!pDatabase)
 	{
@@ -172,14 +179,15 @@ void MysqlThread::RunThread(IThreadHandle *pHandle)
 	if (m_qrInfo.query_success && m_qrInfo.amxinfo.info.rs)
 	{
 		m_atomicResult.CopyFrom(m_qrInfo.amxinfo.info.rs);
-		m_qrInfo.amxinfo.pQuery = pQuery;
 		m_qrInfo.amxinfo.info.rs = &m_atomicResult;
+	}
+
+	if (pQuery)
+	{
+		m_qrInfo.amxinfo.pQuery = pQuery;
 	} else {
-		if (pQuery)
-		{
-			pQuery->FreeHandle();
-		}
-		pQuery = NULL;
+		m_qrInfo.amxinfo.opt_ptr = new char[m_query.size() + 1];
+		strcpy(m_qrInfo.amxinfo.opt_ptr, m_query.c_str());
 	}
 
 	if (pDatabase)
@@ -231,31 +239,37 @@ void MysqlThread::Execute()
 	} else if (!m_qrInfo.query_success) {
 		state = -1;
 	}
+	float diff = gpGlobals->time - m_qrInfo.queue_time;
+	cell c_diff = amx_ftoc(diff);
+	unsigned int hndl = MakeHandle(&m_qrInfo.amxinfo, Handle_Query, NullFunc);
 	if (state != 0)
 	{
 		MF_ExecuteForward(m_fwd, 
 			(cell)state, 
-			(cell)0, 
+			(cell)hndl, 
 			m_qrInfo.amxinfo.error, 
 			m_qrInfo.amxinfo.info.errorcode,
 			data_addr,
-			m_datalen);
+			m_datalen,
+			c_diff);
 	} else {
-		unsigned int hndl = MakeHandle(&m_qrInfo.amxinfo, Handle_Query, NullFunc);
 		MF_ExecuteForward(m_fwd,
 			(cell)0,
 			(cell)hndl,
 			"",
 			(cell)0,
 			data_addr,
-			m_datalen);
-		/* this should always be true I think */
-		if (m_qrInfo.amxinfo.pQuery)
-		{
-			m_qrInfo.amxinfo.pQuery->FreeHandle();
-		}
-		FreeHandle(hndl);
+			m_datalen,
+			c_diff);
 	}
+	FreeHandle(hndl);
+	if (m_qrInfo.amxinfo.pQuery)
+	{
+		m_qrInfo.amxinfo.pQuery->FreeHandle();
+		m_qrInfo.amxinfo.pQuery = NULL;
+	}
+	delete [] m_qrInfo.amxinfo.opt_ptr;
+	m_qrInfo.amxinfo.opt_ptr = NULL;
 }
 
 /*****************

@@ -23,6 +23,7 @@
 
 namespace SourceHook
 {
+
 	//This class is from CSDM for AMX Mod X
 	/*
 		A circular, doubly-linked list with one sentinel node

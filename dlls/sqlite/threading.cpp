@@ -129,6 +129,7 @@ void MysqlThread::SetForward(int forward)
 void MysqlThread::SetInfo(const char *db)
 {
 	m_db.assign(db);
+	m_qrInfo.queue_time = gpGlobals->time;
 }
 
 void MysqlThread::SetQuery(const char *query)
@@ -146,7 +147,11 @@ void MysqlThread::RunThread(IThreadHandle *pHandle)
 	info.host = "";
 	info.port = 0;
 
+	float save_time = m_qrInfo.queue_time;
+
 	memset(&m_qrInfo, 0, sizeof(m_qrInfo));
+
+	m_qrInfo.queue_time = save_time;
 
 	IDatabase *pDatabase = g_Sqlite.Connect(&info, &m_qrInfo.amxinfo.info.errorcode, m_qrInfo.amxinfo.error, 254);
 	IQuery *pQuery = NULL;
@@ -168,15 +173,17 @@ void MysqlThread::RunThread(IThreadHandle *pHandle)
 	if (m_qrInfo.query_success && m_qrInfo.amxinfo.info.rs)
 	{
 		m_atomicResult.CopyFrom(m_qrInfo.amxinfo.info.rs);
-		m_qrInfo.amxinfo.pQuery = NULL;
 		m_qrInfo.amxinfo.info.rs = &m_atomicResult;
 	}
 
 	if (pQuery)
 	{
-		pQuery->FreeHandle();
-		pQuery = NULL;
+		m_qrInfo.amxinfo.pQuery = pQuery;
+	} else {
+		m_qrInfo.amxinfo.opt_ptr = new char[m_query.size() + 1];
+		strcpy(m_qrInfo.amxinfo.opt_ptr, m_query.c_str());
 	}
+
 	if (pDatabase)
 	{
 		pDatabase->FreeHandle();
@@ -226,26 +233,37 @@ void MysqlThread::Execute()
 	} else if (!m_qrInfo.query_success) {
 		state = -1;
 	}
+	float diff = gpGlobals->time - m_qrInfo.queue_time;
+	cell c_diff = amx_ftoc(diff);
+	unsigned int hndl = MakeHandle(&m_qrInfo.amxinfo, Handle_Query, NullFunc);
 	if (state != 0)
 	{
 		MF_ExecuteForward(m_fwd, 
 			(cell)state, 
-			(cell)0, 
+			(cell)hndl, 
 			m_qrInfo.amxinfo.error, 
 			m_qrInfo.amxinfo.info.errorcode,
 			data_addr,
-			m_datalen);
+			m_datalen,
+			c_diff);
 	} else {
-		unsigned int hndl = MakeHandle(&m_qrInfo.amxinfo, Handle_Query, NullFunc);
 		MF_ExecuteForward(m_fwd,
 			(cell)0,
 			(cell)hndl,
 			"",
 			(cell)0,
 			data_addr,
-			m_datalen);
-		FreeHandle(hndl);
+			m_datalen,
+			c_diff);
 	}
+		FreeHandle(hndl);
+	if (m_qrInfo.amxinfo.pQuery)
+	{
+		m_qrInfo.amxinfo.pQuery->FreeHandle();
+		m_qrInfo.amxinfo.pQuery = NULL;
+	}
+	delete [] m_qrInfo.amxinfo.opt_ptr;
+	m_qrInfo.amxinfo.opt_ptr = NULL;
 }
 
 /*****************

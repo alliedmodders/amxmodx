@@ -12,6 +12,7 @@ struct QueuedResultInfo
 	AmxQueryInfo amxinfo;
 	bool connect_success;
 	bool query_success;
+	float queue_time;
 };
 
 class AtomicResult : 

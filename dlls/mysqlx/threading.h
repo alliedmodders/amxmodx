@@ -12,6 +12,7 @@ struct QueuedResultInfo
 	AmxQueryInfo amxinfo;
 	bool connect_success;
 	bool query_success;
+	float queue_time;
 };
 
 class AtomicResult : 
@@ -59,7 +60,7 @@ public:
 	MysqlThread();
 	~MysqlThread();
 public:
-	void SetInfo(const char *host, const char *user, const char *pass, const char *db, int port);
+	void SetInfo(const char *host, const char *user, const char *pass, const char *db, int port, unsigned int max_timeout);
 	void SetQuery(const char *query);
 	void SetCellData(cell data[], ucell len);
 	void SetForward(int forward);
@@ -74,6 +75,7 @@ private:
 	SourceHook::String m_user;
 	SourceHook::String m_pass;
 	SourceHook::String m_db;
+	unsigned int m_max_timeout;
 	int m_port;
 	cell *m_data;
 	ucell m_datalen;

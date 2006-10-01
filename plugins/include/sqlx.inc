@@ -30,8 +30,12 @@ enum Handle
  * !!NOTE!! I have seen most people think that this connects to the DB.
  *   Nowhere does it say this, and in fact it does not.  It only caches
  *   the connection information, the host/user/pass/etc.
+ *
+ * The optional timeout parameter specifies how long connections should wait before
+ * giving up.  If 0, the default (which is undefined) is used.
+ *
  */
-native Handle:SQL_MakeDbTuple(const host[], const user[], const pass[], const db[]);
+native Handle:SQL_MakeDbTuple(const host[], const user[], const pass[], const db[], timeout=0);
 
 
 /**
@@ -74,8 +78,9 @@ native Handle:SQL_PrepareQuery(Handle:db, const fmt[], {Float,_}:...);
  * @param errnum - An error code, if any.
  * @param data - Data array you passed in.
  * @param size - Size of the data array you passed in.
+ * @param queuetime - Amount of gametime that passed while the query was resolving.
  * 
- * public QueryHandler(failstate, Handle:query, error[], errnum, data[], size)
+ * public QueryHandler(failstate, Handle:query, error[], errnum, data[], size, Float:queuetime)
  *
  * Note! The handle you pass in is a DB Tuple, NOT an active connection!
  * Note! The handle does not need to be freed.

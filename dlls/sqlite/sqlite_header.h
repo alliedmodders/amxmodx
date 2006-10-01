@@ -10,9 +10,11 @@
 
 struct AmxQueryInfo
 {
+	AmxQueryInfo() : opt_ptr(NULL) { };
 	IQuery *pQuery;
 	QueryInfo info;
 	char error[255];
+	char *opt_ptr;
 };
 
 enum HandleType

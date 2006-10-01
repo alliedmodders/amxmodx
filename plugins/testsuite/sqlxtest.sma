@@ -106,22 +106,22 @@ PrintQueryData(Handle:query)
 /**
  * Handler for when a threaded query is resolved.
  */
-public GetMyStuff(failstate, Handle:query, error[], errnum, data[], size)
+public GetMyStuff(failstate, Handle:query, error[], errnum, data[], size, Float:queuetime)
 {
-	server_print("Resolved query %d at: %f", data[0], get_gametime())
+	server_print(" --> Resolved query %d, took %f seconds", data[0], queuetime)
 	if (failstate)
 	{
 		if (failstate == TQUERY_CONNECT_FAILED)
 		{
-			server_print("Connection failed!")
+			server_print(" --> Connection failed!")
 		} else if (failstate == TQUERY_QUERY_FAILED) {
-			server_print("Query failed!")
+			server_print(" --> Query failed!")
 		}
-		server_print("Error code: %d (Message: ^"%s^")", errnum, error)
+		server_print(" --> Error code: %d (Message: ^"%s^")", errnum, error)
 		
 		new querystring[1024]
 		SQL_GetQueryString(query, querystring, 1023)
-		server_print("Original query: %s", querystring)
+		server_print(" --> Original query: %s", querystring)
 	} else {
 		PrintQueryData(query)
 	}

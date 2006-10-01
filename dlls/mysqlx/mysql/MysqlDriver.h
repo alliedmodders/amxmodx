@@ -9,8 +9,11 @@ namespace SourceMod
 	{
 	public:
 		IDatabase *Connect(DatabaseInfo *info, int *errcode, char *error, size_t maxlength);
+		IDatabase *Connect2(DatabaseInfo *info, int *errcode, char *error, size_t maxlength);
 		const char *NameString();
 		bool IsCompatDriver(const char *namestring);
+	public:
+		IDatabase *_Connect(DatabaseInfo *info, int *errcode, char *error, size_t maxlength, bool do_timeout);
 	};
 };
 

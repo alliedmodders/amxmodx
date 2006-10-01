@@ -97,7 +97,7 @@ IThreadHandle *WinThreader::MakeThread(IThread *pThread, const ThreadParams *par
 
 IEventSignal *WinThreader::MakeEventSignal()
 {
-	HANDLE event = CreateEventA(NULL, TRUE, TRUE, NULL);
+	HANDLE event = CreateEventA(NULL, FALSE, FALSE, NULL);
 
 	if (!event)
 		return NULL;
@@ -275,7 +275,6 @@ WinThreader::WinEvent::~WinEvent()
 void WinThreader::WinEvent::Wait()
 {
 	WaitForSingleObject(m_event, INFINITE);
-	ResetEvent(m_event);
 }
 
 void WinThreader::WinEvent::Signal()

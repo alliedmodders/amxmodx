@@ -55,6 +55,10 @@ static cell AMX_NATIVE_CALL SQL_MakeDbTuple(AMX *amx, cell *params)
 	sql->user = strdup(MF_GetAmxString(amx, params[2], 0, &len));
 	sql->pass = strdup(MF_GetAmxString(amx, params[3], 0, &len));
 	sql->db = strdup(MF_GetAmxString(amx, params[4], 0, &len));
+	if (params[0] / sizeof(cell) >= 5)
+	{
+		sql->max_timeout = static_cast<unsigned int>(params[5]);
+	}
 
 	unsigned int num = MakeHandle(sql, Handle_Connection, FreeConnection);
 
@@ -87,11 +91,12 @@ static cell AMX_NATIVE_CALL SQL_Connect(AMX *amx, cell *params)
 	nfo.pass = sql->pass;
 	nfo.port = sql->port;
 	nfo.host = sql->host;
+	nfo.max_timeout = sql->max_timeout;
 
 	char buffer[512];
 	int errcode;
 
-	IDatabase *pDb = g_Mysql.Connect(&nfo, &errcode, buffer, sizeof(buffer)-1);
+	IDatabase *pDb = g_Mysql.Connect2(&nfo, &errcode, buffer, sizeof(buffer)-1);
 
 	if (!pDb)
 	{
@@ -378,13 +383,15 @@ static cell AMX_NATIVE_CALL SQL_GetQueryString(AMX *amx, cell *params)
 {
 	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 
-	if (!qInfo || !qInfo->pQuery)
+	if (!qInfo || (!qInfo->pQuery && !qInfo->opt_ptr))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
 		return 0;
 	}
 
-	return MF_SetAmxString(amx, params[2], qInfo->pQuery->GetQueryString(), params[3]);
+	const char *ptr = qInfo->pQuery ? qInfo->pQuery->GetQueryString() : qInfo->opt_ptr;
+
+	return MF_SetAmxString(amx, params[2], ptr, params[3]);
 }
 
 static cell AMX_NATIVE_CALL SQL_FieldNameToNum(AMX *amx, cell *params)

@@ -10,9 +10,11 @@
 
 struct AmxQueryInfo
 {
+	AmxQueryInfo() : opt_ptr(NULL) { };
 	IQuery *pQuery;
 	QueryInfo info;
 	char error[255];
+	char *opt_ptr;
 };
 
 enum HandleType
@@ -32,6 +34,7 @@ struct SQL_Connection
 	char *pass;
 	char *db;
 	int port;
+	unsigned int max_timeout;
 };
 
 typedef void (*FREEHANDLE)(void *, unsigned int);

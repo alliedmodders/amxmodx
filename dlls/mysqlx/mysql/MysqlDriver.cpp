@@ -22,6 +22,16 @@ const char *MysqlDriver::NameString()
 
 IDatabase *MysqlDriver::Connect(DatabaseInfo *info, int *errcode, char *error, size_t maxlength)
 {
+	return _Connect(info, errcode, error, maxlength, false);
+}
+
+IDatabase *MysqlDriver::Connect2(DatabaseInfo *info, int *errcode, char *error, size_t maxlength)
+{
+	return _Connect(info, errcode, error, maxlength, true);
+}
+
+IDatabase *MysqlDriver::_Connect(DatabaseInfo *info, int *errcode, char *error, size_t maxlength, bool do_timeout)
+{
 	MYSQL *mysql = mysql_init(NULL);
 
 	if (!mysql)
@@ -35,6 +45,11 @@ IDatabase *MysqlDriver::Connect(DatabaseInfo *info, int *errcode, char *error, s
 		return false;
 	}
 
+	if (do_timeout && info->max_timeout)
+	{
+		mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, (const char *)&(info->max_timeout));
+	}
+
 	if (mysql_real_connect(mysql, 
 							info->host, 
 							info->user, 
@@ -45,9 +60,13 @@ IDatabase *MysqlDriver::Connect(DatabaseInfo *info, int *errcode, char *error, s
 							0) == NULL)
 	{
 		if (errcode)
+		{
 			*errcode = mysql_errno(mysql);
+		}
 		if (error && maxlength)
+		{
 			snprintf(error, maxlength, "%s", mysql_error(mysql));
+		}
 		return false;
 	}
 

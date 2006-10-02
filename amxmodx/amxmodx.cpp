@@ -3301,19 +3301,30 @@ static cell AMX_NATIVE_CALL get_func_id(AMX *amx, cell *params)
 	CPluginMngr::CPlugin *plugin;
 	
 	if (params[2] < 0)
+	{
 		plugin = g_plugins.findPluginFast(amx);
-	else
+	} else {
 		plugin = g_plugins.findPlugin(params[2]);
+	}
 
 	if (!plugin)
+	{
 		return -1;
+	}
+
+	if (!plugin->isValid())
+	{
+		return -1;
+	}
 
 	int len;
 	const char *funcName = get_amxstring(amx, params[1], 0, len);
 	int index, err;
 	
 	if ((err = amx_FindPublic(plugin->getAMX(), funcName, &index)) != AMX_ERR_NONE)
+	{
 		index = -1;
+	}
 
 	return index;
 }

@@ -36,6 +36,8 @@
 #include "binlog.h"
 #include "libraries.h"
 
+const char *invis_cvar_list[5] = {"amxmodx_version", "amxmodx_modules", "amx_debug", "amx_mldebug", "amx_client_languages"};
+
 static cell AMX_NATIVE_CALL get_xvar_id(AMX *amx, cell *params)
 {
 	int len;
@@ -1588,6 +1590,19 @@ static cell AMX_NATIVE_CALL get_cvar_string(AMX *amx, cell *params) /* 3 param *
 {
 	int ilen;
 	char* sptemp = get_amxstring(amx, params[1], 0, ilen);
+
+	if (amx->flags & AMX_FLAG_OLDFILE)
+	{
+		/* :HACKHACK: Pretend we're invisible to old plugins for backward compatibility */
+		char *cvar = sptemp;
+		for (unsigned int i=0; i<5; i++)
+		{
+			if (strcmp(cvar, invis_cvar_list[i]) == 0)
+			{
+				return 0;
+			}
+		}
+	}
 	
 	return set_amxstring(amx, params[2], CVAR_GET_STRING(sptemp), params[3]);
 }
@@ -1609,6 +1624,20 @@ static cell AMX_NATIVE_CALL get_pcvar_float(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_cvar_float(AMX *amx, cell *params) /* 1 param */
 {
 	int ilen;
+
+	if (amx->flags & AMX_FLAG_OLDFILE)
+	{
+		/* :HACKHACK: Pretend we're invisible to old plugins for backward compatibility */
+		char *cvar = get_amxstring(amx, params[1], 0, ilen);
+		for (unsigned int i=0; i<5; i++)
+		{
+			if (strcmp(cvar, invis_cvar_list[i]) == 0)
+			{
+				return 0;
+			}
+		}
+	}
+
 	REAL pFloat = CVAR_GET_FLOAT(get_amxstring(amx, params[1], 0, ilen));
 	
 	return amx_ftoc(pFloat);
@@ -1651,6 +1680,18 @@ static cell AMX_NATIVE_CALL get_pcvar_num(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_cvar_num(AMX *amx, cell *params) /* 1 param */
 {
 	int ilen;
+	if (amx->flags & AMX_FLAG_OLDFILE)
+	{
+		/* :HACKHACK: Pretend we're invisible to old plugins for backward compatibility */
+		char *cvar = get_amxstring(amx, params[1], 0, ilen);
+		for (unsigned int i=0; i<5; i++)
+		{
+			if (strcmp(cvar, invis_cvar_list[i]) == 0)
+			{
+				return 0;
+			}
+		}
+	}
 	return (int)CVAR_GET_FLOAT(get_amxstring(amx, params[1], 0, ilen));
 }
 
@@ -2221,6 +2262,18 @@ static cell AMX_NATIVE_CALL task_exists(AMX *amx, cell *params) /* 1 param */
 static cell AMX_NATIVE_CALL cvar_exists(AMX *amx, cell *params) /* 1 param */
 {
 	int ilen;
+	if (amx->flags & AMX_FLAG_OLDFILE)
+	{
+		/* :HACKHACK: Pretend we're invisible to old plugins for backward compatibility */
+		char *cvar = get_amxstring(amx, params[1], 0, ilen);
+		for (unsigned int i=0; i<5; i++)
+		{
+			if (strcmp(cvar, invis_cvar_list[i]) == 0)
+			{
+				return 0;
+			}
+		}
+	}
 	return (CVAR_GET_POINTER(get_amxstring(amx, params[1], 0, ilen)) ? 1 : 0);
 }
 
@@ -2741,6 +2794,20 @@ static cell AMX_NATIVE_CALL get_cvar_flags(AMX *amx, cell *params)
 {
 	int ilen;
 	char* sCvar = get_amxstring(amx, params[1], 0, ilen);
+
+	if (amx->flags & AMX_FLAG_OLDFILE)
+	{
+		/* :HACKHACK: Pretend we're invisible to old plugins for backward compatibility */
+		char *cvar = sCvar;
+		for (unsigned int i=0; i<5; i++)
+		{
+			if (strcmp(cvar, invis_cvar_list[i]) == 0)
+			{
+				return 0;
+			}
+		}
+	}
+
 	cvar_t* pCvar = CVAR_GET_POINTER(sCvar);
 	
 	return pCvar ? pCvar->flags : 0;

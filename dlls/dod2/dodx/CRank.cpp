@@ -251,7 +251,7 @@ void RankSystem::loadRank(const char* filename)
 	}
 	
 	short int i = 0;
-	if (!fread(&i, sizeof(short int), 1, bfp) != 1)
+	if (fread(&i, sizeof(short int), 1, bfp) != 1)
 	{
 		fclose(bfp);
 		return;

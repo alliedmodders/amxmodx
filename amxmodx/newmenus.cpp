@@ -37,11 +37,15 @@ CStack<int> g_MenuFreeStack;
 void ClearMenus()
 {
 	for (size_t i = 0; i < g_NewMenus.size(); i++)
+	{
 		delete g_NewMenus[i];
+	}
 	
 	g_NewMenus.clear();
 	while (!g_MenuFreeStack.empty())
+	{
 		g_MenuFreeStack.pop();
+	}
 }
 
 void validate_menu_text(char *str)
@@ -64,11 +68,15 @@ void validate_menu_text(char *str)
 				}
 			}
 			if (offs)
+			{
 				*(str-offs) = *str;
+			}
 			str++;
 		}
 		if (offs)
+		{
 			*(str-offs) = '\0';
+		}
 	}
 }
 
@@ -99,7 +107,9 @@ Menu::Menu(const char *title, int mid, int tid)
 Menu::~Menu()
 {
 	for (size_t i = 0; i < m_Items.size(); i++)
+	{
 		delete m_Items[i];
+	}
 
 	unregisterSPForward(this->func);
 	
@@ -139,7 +149,9 @@ size_t Menu::GetPageCount()
 {
 	size_t items = GetItemCount();
 	if (items_per_page == 0)
+	{
 		return 1;
+	}
 
 	return ((items/items_per_page) + ((items % items_per_page) ? 1 : 0));
 }
@@ -159,15 +171,49 @@ int Menu::PagekeyToItem(page_t page, item_t key)
 		//first page
 		if (page == 0)
 		{
+			/* The algorithm for spaces here is same as a middle page. */
+			item_t new_key = key;
+			for (size_t i=start; i<(start+key-1) && i<m_Items.size(); i++)
+			{
+				for (size_t j=0; j<m_Items[i]->blanks.size(); j++)
+				{
+					if (m_Items[i]->blanks[j] == 1)
+					{
+						if (!new_key)
+						{
+							break;
+						}
+						new_key--;
+					}
+					if (!new_key)
+					{
+						break;
+					}
+				}
+			}
+			key = new_key;
 			if (key == items_per_page + 1)
+			{
 				return MENU_MORE;
-			else if (key == items_per_page + 2)
+			} else if (key == items_per_page + 2) {
 				return MENU_EXIT;
-			else
+			} else {
 				return (start + key - 1);
+			}
 		} else if (page == num_pages - 1) {
 			//last page
 			size_t remaining = m_Items.size() - start;
+			/* We have to add one remaining for each "bumping" space */
+			for (size_t i=m_Items.size() - remaining; i<m_Items.size(); i++)
+			{
+				for (size_t j=0; j<m_Items[i]->blanks.size(); j++)
+				{
+					if (m_Items[i]->blanks[j] == 1)
+					{
+						remaining++;
+					}
+				}
+			}
 			if (key == remaining + 1)
 			{
 				return MENU_BACK;
@@ -177,6 +223,29 @@ int Menu::PagekeyToItem(page_t page, item_t key)
 				return (start + key - 1);
 			}
 		} else {
+			/* The algorithm for spaces here is a bit harder.  We have to subtract 
+			 * one from the key for each space we find along the way.
+			 */
+			item_t new_key = key;
+			for (size_t i=start; i<(start+key-1) && i<m_Items.size(); i++)
+			{
+				for (size_t j=0; j<m_Items[i]->blanks.size(); j++)
+				{
+					if (m_Items[i]->blanks[j] == 1)
+					{
+						if (!new_key)
+						{
+							break;
+						}
+						new_key--;
+					}
+					if (!new_key)
+					{
+						break;
+					}
+				}
+			}
+			key = new_key;
 			if (key > items_per_page && (key-items_per_page<=3))
 			{
 				return m_OptOrders[key-items_per_page-1];
@@ -286,27 +355,33 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 		{
 			ret = executeForwards(pItem->handler, static_cast<cell>(player), static_cast<cell>(thisId), static_cast<cell>(i));
 			if (ret == ITEM_ENABLED)
+			{
 				enabled = true;
-			else if (ret == ITEM_DISABLED)
+			} else if (ret == ITEM_DISABLED) {
 				enabled = false;
+			}
 		}
 		
 		if (pItem->pfn)
 		{
 			ret = (pItem->pfn)(player, thisId, i);
 			if (ret == ITEM_ENABLED)
+			{
 				enabled = true;
-			else if (ret == ITEM_DISABLED)
+			} else if (ret == ITEM_DISABLED) {
 				enabled = false;
+			}
 		}
 		
 		if (enabled)
 		{
 			keys |= (1<<option);
 			if (m_AutoColors) 
+			{
 				_snprintf(buffer, sizeof(buffer)-1, "\\r%d.\\w %s\n", ++option, pItem->name.c_str());
-			else
+			} else {
 				_snprintf(buffer, sizeof(buffer)-1, "%d. %s\n", ++option, pItem->name.c_str());
+			}
 		} else {
 			if (m_AutoColors)
 			{
@@ -326,7 +401,9 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 			for (size_t j=0; j<pItem->blanks.size(); j++)
 			{
 				if (pItem->blanks[j] == 1)
+				{
 					option++;
+				}
 				m_Text.append("\n");
 				slots++;
 			}
@@ -337,11 +414,17 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	{
 		int pad = items_per_page;
 		if (flags & Display_Back)
+		{
 			pad--;
+		}
 		if (flags & Display_Next)
+		{
 			pad--;
+		}
 		if (flags & Display_Exit)
+		{
 			pad--;
+		}
 		for (int i=slots+1; i<=pad; i++)
 		{
 			m_Text.append("\n");

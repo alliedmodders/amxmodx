@@ -417,14 +417,16 @@ void CPluginMngr::CPlugin::pausePlugin()
 // Unpause a plugin
 void CPluginMngr::CPlugin::unpausePlugin()
 {
-	if (isValid())
+	if (isValid() && (getStatusCode() != ps_stopped))
 	{
 		// set status first so the function will be marked executable
 		setStatus(ps_running);
 		
 		// call plugin_unpause if provided
 		if (m_UnpauseFwd != -1)
+		{
 			executeForwards(m_UnpauseFwd);
+		}
 	}
 }
 

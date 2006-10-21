@@ -204,8 +204,10 @@ native is_jit_enabled();
 native get_amxx_verstring(buffer[], length);
 
 /* If player is not attacked function returns 0, in other
-* case returns index of attacking player. On second and third
-* parameter you may get info about weapon and body hit place. */
+ * case returns index of attacking player. On second and third
+ * parameter you may get info about weapon and body hit place.
+ * As of 1.75, get_user_attacker can return a non-player index if the player was attacked by a non-player entity. 
+ */
 native get_user_attacker(index,...);
 
 /* If player doesn't hit at anything function returns 0.0,

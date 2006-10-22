@@ -63,6 +63,7 @@ var i, k: integer;
     eTempResult: TPawnParseResult;
     eProcedureAdded: Boolean;
     eCActive: Boolean;
+    eTempBool: Boolean;
 begin
   Result := TPawnParseResult.Create;
   if not IsRecursive then
@@ -101,17 +102,15 @@ begin
     end;
 
     { Constants and Variables }
-    if (IsAtStart('new', eString, False)) or (IsAtStart('stock', eString, False)) then begin // const or variable
+    if (IsAtStart('new', eString, False)) or (IsAtStart('const', eString, False)) or (IsAtStart('stock', eString, False)) then begin // const or variable
       if (eBracesOpen = 0) and (not IsRecursive) and (Pos('(', eString) = Pos(')', eString)) then begin
-        Delete(eString, 1, Pos(#32, eString));
-        eString := Trim(eString);
         // we don't need braces so delete them...
         while (CountChars(eString, '{') <> 0) and (CountChars(eString, '}') <> 0) and (Pos('{', eString) < Pos('}', eString)) do
           eString := StringReplace(eString, '{' + Between(eString, '{', '}') + '}', '', [rfReplaceAll]);
         while (CountChars(eString, '[') <> 0) and (CountChars(eString, ']') <> 0) and (Pos('[', eString) < Pos(']', eString)) do
           eString := StringReplace(eString, '[' + Between(eString, '[', ']') + ']', '', [rfReplaceAll]);
         // done? okay, split all items if there are more than one; and if not, it's okay...
-        eStr.Text := StringReplace(eString, ',', #13, [rfReplaceAll]);
+        eStr.Text := StringReplace(Copy(eString, Pos(#32, eString)+1, Length(eString)), ',', #13, [rfReplaceAll]);
         for k := 0 to eStr.Count - 1 do begin
           if (Trim(eStr[k]) <> '') and (eStr[k] <> '}') then begin
             eTemp := Trim(RemoveSemicolon(eStr[k]));
@@ -119,17 +118,23 @@ begin
             if (IsAtStart('const', eTemp, False)) then begin
               Delete(eTemp, 1, 5);
               eTemp := Trim(eTemp);
-            end;
+              eTempBool := True;
+            end
+            else
+              eTempBool := (IsAtStart('const', eString, False));
             
-            if Pos(':', eTemp) <> 0 then
+            if (Pos(':', eTemp) <> 0) then
               eTemp := Copy(eTemp, Pos(':', eTemp) + 1, Length(eTemp));
 
-            if Pos('=', eTemp) <> 0 then begin // constant
+            if (Pos('=', eTemp) <> 0) then begin // constant
               Result.Constants.AddObject(Copy(eTemp, 1, Pos('=', eTemp) - 1), TObject(i));
               Result.AutoComplete.Add(Copy(eTemp, 1, Pos('=', eTemp) - 1));
             end
             else begin // variable
-              Result.Variables.AddObject(eTemp, TObject(i));
+              if (eTempBool) then
+                Result.Constants.AddObject(eTemp, TObject(i))
+              else
+                Result.Variables.AddObject(eTemp, TObject(i));
               Result.AutoComplete.Add(eTemp);
             end;
           end;

@@ -32,6 +32,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="comctl32.lib"
 				OutputFile="$(OutDir)/WinCSX.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
@@ -77,6 +78,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="comctl32.lib"
 				OutputFile="$(OutDir)/WinCSX.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"

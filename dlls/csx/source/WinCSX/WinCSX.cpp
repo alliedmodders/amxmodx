@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "WinCSX.h"
 #include <stdio.h>
+#include "commctrl.h"
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
@@ -25,6 +26,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	{
 		return FALSE;
 	}
+
+	InitCommonControls();
 
 	hAccelTable = LoadAccelerators(hInstance, (LPCTSTR)IDC_WINCSX);
 

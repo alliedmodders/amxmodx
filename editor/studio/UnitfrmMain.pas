@@ -1071,9 +1071,30 @@ begin
 end;
 
 procedure TfrmMain.OnCodeSnippetClick(Sender: TObject);
+var Snippet, Indentation: String;
+    Line: Integer;
 begin
-  if Plugin_CodeSnippetClick(TSpTBXItem(Sender).Caption, GetCat, GetSnippet(GetCat, (Sender as TSpTBXItem).Caption)) then
-    sciEditor.SelText := GetSnippet(GetCat, (Sender as TSpTBXItem).Caption);
+  if Plugin_CodeSnippetClick(TSpTBXItem(Sender).Caption, GetCat, GetSnippet(GetCat, (Sender as TSpTBXItem).Caption)) then begin
+    Snippet := GetSnippet(GetCat, (Sender as TSpTBXItem).Caption);
+    if (Pos('!APPEND!' + #13, Snippet) = 1) then begin
+      Snippet := Copy(Snippet, Pos(#10, Snippet)+1, Length(Snippet));
+      Line := sciEditor.Lines.Add(Snippet);
+    end
+    else if (Pos('!INSERT!' + #13, Snippet) = 1) then begin
+      Indentation := sciEditor.Lines[sciEditor.GetCurrentLineNumber];
+      if (Trim(Indentation) <> '') then
+        Indentation := Copy(Indentation, 1, Pos(Copy(TrimLeft(Indentation), 1, 1), Indentation)-1);
+      Snippet := StringReplace(Snippet, #10, #10 + Indentation, [rfReplaceAll]);
+      Line := sciEditor.GetCurrentLineNumber;
+      sciEditor.Lines.Insert(Line, Copy(Snippet, Pos(#10, Snippet)+1, Length(Snippet)));
+    end
+    else begin
+      sciEditor.SelText := Snippet;
+      Line := sciEditor.GetCurrentLineNumber;
+    end;
+
+    sciEditor.GoToLine(Line);
+  end;
 end;
 
 procedure TfrmMain.mnuCopyMessageClick(Sender: TObject);

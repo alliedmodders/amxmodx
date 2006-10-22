@@ -64,7 +64,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 351
     Height = 260
-    ActivePage = jspCTSettings
+    ActivePage = jspCodeSnippets
     PropagateEnable = False
     Align = alClient
     OnChange = jplSettingsChange
@@ -760,6 +760,9 @@ object frmSettings: TfrmSettings
           ScrollBars = ssBoth
           TabOrder = 1
           WantTabs = True
+          OnChange = txtCodeSnippetChange
+          OnEnter = txtCodeSnippetEnter
+          OnExit = txtCodeSnippetExit
           OnKeyUp = txtCodeSnippetKeyUp
         end
         object cmdCSAdd: TFlatButton

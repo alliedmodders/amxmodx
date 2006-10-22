@@ -116,6 +116,11 @@ begin
           if (Trim(eStr[k]) <> '') and (eStr[k] <> '}') then begin
             eTemp := Trim(RemoveSemicolon(eStr[k]));
 
+            if (IsAtStart('const', eTemp, False)) then begin
+              Delete(eTemp, 1, 5);
+              eTemp := Trim(eTemp);
+            end;
+            
             if Pos(':', eTemp) <> 0 then
               eTemp := Copy(eTemp, Pos(':', eTemp) + 1, Length(eTemp));
 
@@ -229,7 +234,7 @@ begin
             eStartLine := eStartLine - 1;
           eTemp := Trim(RemoveSemicolon(Trim(eCode[eStartLine])));
 
-        // Analyze type
+          // Analyze type
           k := 0;
           if IsAtStart('public', eTemp) then
             k := 1
@@ -243,7 +248,7 @@ begin
             k := 5;
 
 
-        // Remove type
+          // Remove type
           if Pos('@', eTemp) = 1 then begin
             eTemp := Copy(eTemp, 2, Length(eTemp));
             k := 1;
@@ -258,7 +263,7 @@ begin
           if eTemp[Length(eTemp)] = '{' then
             eTemp := Trim(Copy(eTemp, 1, Length(eTemp) - 1));
 
-        // Remove return-type
+          // Remove return-type
           if (Pos(':', eTemp) <> 0) and (Pos(':', eTemp) < Pos('(', eTemp)) then
             Delete(eTemp, 1, Pos(':', eTemp));
 
@@ -275,7 +280,7 @@ begin
               4: Result.CallTips.Add(eTemp + '-> ' + FileName + ', forward');
             end;
           end;
-        // Copy function-name
+          // Copy function-name
           if Pos('(', eTemp) <> 0 then
             eTemp := Copy(eTemp, 1, Pos('(', eTemp) - 1);
           eTemp := Trim(eTemp);

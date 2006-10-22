@@ -800,6 +800,8 @@ begin
         eCurrLine := Between(eCurrLine, '(', ')', True);
       HideBracesAndStrings(eCurrLine, True);
       eStr2.Text := StringReplace(eCurrLine, ',', #13, [rfReplaceAll]);
+      if (Trim(eStr2.Text) = ')') then
+        eStr2.Clear;
 
       CreateCategory('Function Call');
       AddField('Function', 'Function Call', eVarName);

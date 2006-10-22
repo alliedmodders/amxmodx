@@ -277,6 +277,9 @@ type
     procedure lvParamsDblClick(Sender: TObject);
     procedure cmdAddFunctionClick(Sender: TObject);
     procedure lstFunctionsClick(Sender: TObject);
+    procedure txtCodeSnippetEnter(Sender: TObject);
+    procedure txtCodeSnippetExit(Sender: TObject);
+    procedure txtCodeSnippetChange(Sender: TObject);
   public
     Foreground, Background: TColor;
     CaretFore, CaretBack: TColor;
@@ -339,9 +342,14 @@ begin
       eReg.OpenKey('SOFTWARE\Microsoft\Windows\CurrentVersion', False);
       { AMXX }
       AMXXDir := eReg.ReadString('ProgramFilesDir') + '\AMX Mod X\';
-      if not DirectoryExists(AMXXDir) then
+      if DirectoryExists(AMXXDir) then
+        AMXXDir := IncludeTrailingPathDelimiter(AMXXDir)
+      else
         AMXXDir := '';
       eReg.CloseKey;
+      { Language Files }
+      if (DirectoryExists(AMXXDir + 'files\base\data\lang')) then
+        txtLangDir.Text := AMXXDir + 'files\base\data\lang';
       { Steam }
       if eReg.KeyExists('SOFTWARE\Valve\Steam') then begin
         eReg.OpenKey('SOFTWARE\Valve\Steam', False);
@@ -421,7 +429,7 @@ begin
     eConfig.WriteString('Misc', 'DefaultPluginAuthor', GetUser);
     eConfig.WriteInteger('Misc', 'SaveNotesTo', 0);
     eConfig.WriteInteger('Misc', 'CPUSpeed', 5);
-    eConfig.WriteString('Misc', 'LangDir', '');
+    eConfig.WriteString('Misc', 'LangDir', txtLangDir.Text);
     eConfig.WriteInteger('Misc', 'ShowStatusbar', 1);
     eConfig.WriteInteger('Misc', 'WindowState', 0);
   end;
@@ -433,6 +441,8 @@ begin
     1: frmMain.WindowState := wsMaximized;
     2: frmMain.WindowState := wsMinimized;
   end;
+
+  txtCodeSnippetExit(Sender);
 
   PaintForeground(clBlack);
   PaintBackground(clBlack);
@@ -778,6 +788,7 @@ begin
         lstCodeSnippets.ItemIndex := lstCodeSnippets.Items.Add(eStr);
         AddSnippet(ftcCodeSnippets.Tabs[ftcCodeSnippets.ActiveTab], eStr, '');
         txtCodeSnippet.Enabled := True;
+        lstCodeSnippets.SetFocus;
         lstCodeSnippetsClick(Sender);
       end
       else
@@ -805,7 +816,9 @@ procedure TfrmSettings.lstCodeSnippetsClick(Sender: TObject);
 begin
   cmdCSRemove.Enabled := lstCodeSnippets.ItemIndex <> -1;
   if cmdCSRemove.Enabled then
-    txtCodeSnippet.Lines.Text := GetSnippet(ftcCodeSnippets.Tabs[ftcCodeSnippets.ActiveTab], lstCodeSnippets.Items[lstCodeSnippets.ItemIndex]);
+    txtCodeSnippet.Lines.Text := GetSnippet(ftcCodeSnippets.Tabs[ftcCodeSnippets.ActiveTab], lstCodeSnippets.Items[lstCodeSnippets.ItemIndex])
+  else
+    txtCodeSnippetExit(Sender);
 end;
 
 procedure TfrmSettings.ftcCodeSnippetsTabChanged(Sender: TObject);
@@ -815,8 +828,8 @@ begin
     lstCodeSnippets.ItemIndex := 0
   else
     txtCodeSnippet.Clear;
-  lstCodeSnippetsClick(Sender);
   txtCodeSnippet.Enabled := lstCodeSnippets.Items.Count > 0;
+  lstCodeSnippetsClick(Sender);
   cmdCSRemove.Enabled := lstCodeSnippets.ItemIndex <> -1;
 end;
 
@@ -1248,6 +1261,30 @@ begin
       end;
     end;
   end;
+end;
+
+procedure TfrmSettings.txtCodeSnippetEnter(Sender: TObject);
+begin
+  if (txtCodeSnippet.Font.Color = $008396A0) and ((ActiveControl = txtCodeSnippet) or (txtCodeSnippet.Enabled)) then begin
+    txtCodeSnippet.Font.Color := clWindowText;
+    txtCodeSnippet.Text := '';
+  end;
+end;
+
+procedure TfrmSettings.txtCodeSnippetExit(Sender: TObject);
+begin
+  if (txtCodeSnippet.Text = '') then begin
+    txtCodeSnippet.Lines.Text := 'Use "!APPEND!" to append or'#13'"!INSERT!" to insert the code'#13'snippet into a new line on click...';
+    txtCodeSnippet.Font.Color := $008396A0;
+  end;
+end;
+
+procedure TfrmSettings.txtCodeSnippetChange(Sender: TObject);
+begin
+  if (txtCodeSnippet.Font.Color = $008396A0) then
+    txtCodeSnippet.Font.Color := clWindowText
+  else if (txtCodeSnippet.Text = '') and (ActiveControl <> txtCodeSnippet) then
+    txtCodeSnippetExit(Sender);
 end;
 
 end.

@@ -1,7 +1,7 @@
 object frmMain: TfrmMain
-  Left = 189
-  Top = 114
-  Width = 888
+  Left = 184
+  Top = 77
+  Width = 893
   Height = 648
   Caption = 'AMXX-Studio'
   Color = clBtnFace
@@ -45,13 +45,13 @@ object frmMain: TfrmMain
   PixelsPerInch = 96
   TextHeight = 13
   object splRight: TSplitter
-    Left = 669
+    Left = 674
     Top = 95
     Height = 501
     Align = alRight
   end
   object spcRight1: TImage
-    Left = 877
+    Left = 882
     Top = 95
     Width = 3
     Height = 501
@@ -67,7 +67,7 @@ object frmMain: TfrmMain
   object tbxTopDock: TSpTBXDock
     Left = 0
     Top = 0
-    Width = 880
+    Width = 885
     Height = 72
     object tbxMenu: TSpTBXToolbar
       Left = 0
@@ -680,11 +680,11 @@ object frmMain: TfrmMain
   object sbStatus: TSpTBXStatusBar
     Left = 0
     Top = 596
-    Width = 880
+    Width = 885
     Height = 25
     object mnuFilename: TSpTBXRightAlignSpacerItem
       Caption = 'Untitled.sma'
-      CustomWidth = 542
+      CustomWidth = 547
     end
     object sepStatus0: TSpTBXSeparatorItem
     end
@@ -728,7 +728,7 @@ object frmMain: TfrmMain
   object tbDocs: TJvTabBar
     Left = 0
     Top = 72
-    Width = 880
+    Width = 885
     RightClickSelect = False
     Tabs = <
       item
@@ -740,7 +740,7 @@ object frmMain: TfrmMain
     OnMouseDown = tbDocsMouseDown
   end
   object tcTools: TSpTBXTabControl
-    Left = 672
+    Left = 677
     Top = 95
     Width = 205
     Height = 501
@@ -950,7 +950,7 @@ object frmMain: TfrmMain
   object pnlParent: TPanel
     Left = 3
     Top = 95
-    Width = 666
+    Width = 671
     Height = 501
     Align = alClient
     BevelOuter = bvNone
@@ -958,7 +958,7 @@ object frmMain: TfrmMain
     object splOutput: TSplitter
       Left = 0
       Top = 416
-      Width = 666
+      Width = 671
       Height = 3
       Cursor = crVSplit
       Align = alBottom
@@ -967,7 +967,7 @@ object frmMain: TfrmMain
     object sciEditor: TScintilla
       Left = 0
       Top = 0
-      Width = 666
+      Width = 671
       Height = 416
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
@@ -4493,7 +4493,7 @@ object frmMain: TfrmMain
     object lstOutput: TListBox
       Left = 0
       Top = 419
-      Width = 666
+      Width = 671
       Height = 82
       Align = alBottom
       ItemHeight = 13

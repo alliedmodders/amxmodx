@@ -751,6 +751,8 @@ begin
   else
     eCPUSpeed := 1; // otherwise the program would hang up
   frmSettings.txtLangDir.Text := IncludeTrailingPathDelimiter(eConfig.ReadString('Misc', 'LangDir', ''));
+  if (frmSettings.txtLangDir.Text = '\') then
+    frmSettings.txtLangDir.Text := '';
   frmSettings.chkShowStatusbar.Checked := eConfig.ReadBool('Misc', 'ShowStatusbar', True);
   frmMain.sbStatus.Visible := frmSettings.chkShowStatusbar.Checked;
 end;

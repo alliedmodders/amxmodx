@@ -51,6 +51,10 @@
 
 const int FORWARD_MAX_PARAMS = 32;
 
+#define FORWARD_ONLY_OLD	1
+#define FORWARD_ONLY_NEW	2
+#define FORWARD_ALL			3
+
 enum ForwardExecType
 {
 	ET_IGNORE = 0,					// Ignore return vaue
@@ -107,7 +111,7 @@ class CForward
 	ForwardParam m_ParamTypes[FORWARD_MAX_PARAMS];
 
 public:
-	CForward(const char *name, ForwardExecType et, int numParams, const ForwardParam * paramTypes);
+	CForward(const char *name, ForwardExecType et, int numParams, const ForwardParam * paramTypes, int fwd_type=FORWARD_ALL);
 	CForward() {}		// leaves everything unitialized'
 	
 	cell execute(cell *params, ForwardPreparedArray *preparedArrays);
@@ -203,7 +207,7 @@ public:
 
 	// Interface
 	// Register normal forward
-	int registerForward(const char *funcName, ForwardExecType et, int numParams, const ForwardParam *paramTypes);
+	int registerForward(const char *funcName, ForwardExecType et, int numParams, const ForwardParam *paramTypes, int fwd_type=FORWARD_ALL);
 	// Register single plugin forward
 	int registerSPForward(const char *funcName, AMX *amx, int numParams, const ForwardParam * paramTypes);
 	int registerSPForward(int func, AMX *amx, int numParams, const ForwardParam * paramTypes);
@@ -227,7 +231,7 @@ public:
 
 // (un)register forward
 int registerForward(const char *funcName, ForwardExecType et, ...);
-int registerForwardC(const char *funcName, ForwardExecType et, cell *list, size_t num);
+int registerForwardC(const char *funcName, ForwardExecType et, cell *list, size_t num, int fwd_type=FORWARD_ALL);
 int registerSPForwardByName(AMX *amx, const char *funcName, ...);
 int registerSPForwardByNameC(AMX *amx, const char *funcName, cell *list, size_t num);
 int registerSPForward(AMX *amx, int func, ...);

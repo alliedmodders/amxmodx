@@ -3967,6 +3967,21 @@ static cell AMX_NATIVE_CALL CreateMultiForward(AMX *amx, cell *params)
 	return registerForwardC(funcname, static_cast<ForwardExecType>(params[2]), ps, count-2);
 }
 
+static cell AMX_NATIVE_CALL CreateMultiForwardEx(AMX *amx, cell *params)
+{
+	int len;
+	char *funcname = get_amxstring(amx, params[1], 0, len);
+
+	cell ps[FORWARD_MAX_PARAMS];
+	cell count = params[0] / sizeof(cell);
+	for (cell i=4; i<=count; i++)
+	{
+		ps[i-4] = *get_amxaddr(amx, params[i]);
+	}
+
+	return registerForwardC(funcname, static_cast<ForwardExecType>(params[2]), ps, count-3, params[3]);
+}
+
 static cell AMX_NATIVE_CALL CreateOneForward(AMX *amx, cell *params)
 {
 	CPluginMngr::CPlugin *p = g_plugins.findPlugin(params[1]);
@@ -4501,6 +4516,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"CreateHudSyncObj",		CreateHudSyncObj},
 	{"CreateLangKey",			CreateLangKey},
 	{"CreateMultiForward",		CreateMultiForward},
+	{"CreateMultiForwardEx",	CreateMultiForwardEx},
 	{"CreateOneForward",		CreateOneForward},
 	{"DestroyForward",			DestroyForward},
 	{"ExecuteForward",			ExecuteForward},

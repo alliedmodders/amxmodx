@@ -33,7 +33,7 @@
 #include "debugger.h"
 #include "binlog.h"
 
-CForward::CForward(const char *name, ForwardExecType et, int numParams, const ForwardParam *paramTypes)
+CForward::CForward(const char *name, ForwardExecType et, int numParams, const ForwardParam *paramTypes, int fwd_type)
 {
 	m_FuncName = name;
 	m_ExecType = et;
@@ -47,6 +47,13 @@ CForward::CForward(const char *name, ForwardExecType et, int numParams, const Fo
 	
 	for (CPluginMngr::iterator iter = g_plugins.begin(); iter; ++iter)
 	{
+		if ((fwd_type != FORWARD_ALL) &&
+			((fwd_type == FORWARD_ONLY_NEW && ((*iter).getAMX()->flags & AMX_FLAG_OLDFILE))
+			|| (fwd_type == FORWARD_ONLY_OLD && !((*iter).getAMX()->flags & AMX_FLAG_OLDFILE))
+			))
+		{
+			continue;
+		}
 		if ((*iter).isValid() && amx_FindPublic((*iter).getAMX(), name, &func) == AMX_ERR_NONE)
 		{
 			AMXForward tmp;
@@ -352,13 +359,15 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 	return retVal;
 }
 
-int CForwardMngr::registerForward(const char *funcName, ForwardExecType et, int numParams, const ForwardParam * paramTypes)
+int CForwardMngr::registerForward(const char *funcName, ForwardExecType et, int numParams, const ForwardParam * paramTypes, int fwd_type)
 {
 	int retVal = m_Forwards.size() << 1;
-	CForward *tmp = new CForward(funcName, et, numParams, paramTypes);
+	CForward *tmp = new CForward(funcName, et, numParams, paramTypes, fwd_type);
 	
 	if (!tmp)
+	{
 		return -1;				// should be invalid
+	}
 	
 	m_Forwards.push_back(tmp);
 	
@@ -519,14 +528,16 @@ void CForwardMngr::unregisterSPForward(int id)
 	m_FreeSPForwards.push(id);
 }
 
-int registerForwardC(const char *funcName, ForwardExecType et, cell *list, size_t num)
+int registerForwardC(const char *funcName, ForwardExecType et, cell *list, size_t num, int fwd_type)
 {
 	ForwardParam params[FORWARD_MAX_PARAMS];
 	
 	for (size_t i=0; i<num; i++)
+	{
 		params[i] = static_cast<ForwardParam>(list[i]);
+	}
 	
-	return g_forwards.registerForward(funcName, et, num, params);
+	return g_forwards.registerForward(funcName, et, num, params, fwd_type);
 }
 
 int registerForward(const char *funcName, ForwardExecType et, ...)

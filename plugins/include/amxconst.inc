@@ -277,6 +277,10 @@ enum {
 #define FP_STRING		2
 #define FP_ARRAY		4
 
+#define FORWARD_ONLY_OLD	1
+#define FORWARD_ONLY_NEW	2
+#define FORWARD_ALL		3
+
 #define MEXIT_ALL	1
 #define MEXIT_NORMAL	0
 #define MEXIT_NEVER	-1

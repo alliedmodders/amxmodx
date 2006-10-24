@@ -34,6 +34,7 @@
 
 #include <amxmodx>
 #include <csx>
+#include <cstrike>
 
 public MultiKill
 public MultiKillSound
@@ -311,33 +312,49 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 
 	if (EnemyRemaining)
 	{
-		new ppl[32], pplnum = 0
-		new team = get_user_team(victim) - 1
+		new ppl[32], pplnum = 0, maxplayers = get_maxplayers()
+		new epplnum = 0
+		new CsTeams:team = cs_get_user_team(victim)
+		new CsTeams:other_team
+		new CsTeams:enemy_team = (team == CS_TEAM_T) ? CS_TEAM_CT : CS_TEAM_T
 		
-		if (team >= 0 && team < 4)
-			get_players(ppl, pplnum, "e", g_teamsNames[1 - team])
-		
-		if (pplnum)
+		if (team == CS_TEAM_T || team == CS_TEAM_CT)
 		{
-			new eppl[32], epplnum
-			
-			if (team >= 0 && team < 4)
+			for (new i=1; i<=maxplayers; i++)
 			{
-				get_players(eppl, epplnum, "ae", g_teamsNames[team])
-
-				if (epplnum)
+				if (i == victim)
 				{
-					new message[128], team_name[32]
+					continue
+				}
+				other_team = cs_get_user_team(i)
+				if (other_team == team && is_user_alive(i))
+				{
+					epplnum++
+				} else if (other_team == enemy_team) {
+					ppl[pplnum++] = i
+				}
+			}
+			
+			if (pplnum && epplnum)
+			{
+				new message[128], team_name[32]
 
-					set_hudmessage(255, 255, 255, 0.02, 0.85, 2, 0.05, 0.1, 0.02, 3.0, -1)
+				set_hudmessage(255, 255, 255, 0.02, 0.85, 2, 0.05, 0.1, 0.02, 3.0, -1)
+				
+				/* This is a pretty stupid thing to translate, but whatever */
+				new _teamname[32]
+				if (team == CS_TEAM_T)
+				{
+					format(_teamname, 31, "TERRORIST%s", (epplnum == 1) ? "" : "s")
+				} else if (team == CS_TEAM_CT) {
+					format(_teamname, 31, "CT%s", (epplnum == 1) ? "" : "s")
+				}
 
-					for (new a = 0; a < pplnum; ++a)
-					{
-						format(team_name, 31, "%L", ppl[a], (epplnum == 1) ? g_teamsNames[team] : g_teamsNames[team + 2])
-						format(message, 127, "%L", ppl[a], "REMAINING", epplnum, team_name)
-
-						ShowSyncHudMsg(ppl[a], g_bottom_sync, "%s", message)
-					}
+				for (new a = 0; a < pplnum; ++a)
+				{
+					format(team_name, 31, "%L", ppl[a], _teamname)
+					format(message, 127, "%L", ppl[a], "REMAINING", epplnum, team_name)
+					ShowSyncHudMsg(ppl[a], g_bottom_sync, "%s", message)
 				}
 			}
 		}

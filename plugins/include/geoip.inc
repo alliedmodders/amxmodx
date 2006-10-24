@@ -3,7 +3,7 @@
    (C)Copyrighted under the GNU General Public License, Version 2
  */
 
-#if defined geoip_included
+#if defined _geoip_included
   #endinput
 #endif
 #define _geoip_included

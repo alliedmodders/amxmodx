@@ -92,9 +92,10 @@ void Client_ShowMenu(void* mValue)
 	}
 }
 
+extern bool g_bmod_tfc;
 void Client_TeamInfo(void* mValue)
 {
-	if (mPlayer) return;
+	if (mPlayer && !g_bmod_tfc) return;
 	static int index;
 
 	switch (mState++)
@@ -107,6 +108,7 @@ void Client_TeamInfo(void* mValue)
 			char* msg = (char*)mValue;
 			g_players[index].team.assign(msg);
 			g_teamsIds.registerTeam(msg, -1);
+			break;
 	}
 }
 

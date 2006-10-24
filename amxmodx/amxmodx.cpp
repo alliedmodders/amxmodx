@@ -991,7 +991,9 @@ static cell AMX_NATIVE_CALL get_user_team(AMX *amx, cell *params) /* 3 param */
 		}
 		//
 		if (params[3])
+		{
 			set_amxstring(amx, params[2], pPlayer->team.c_str(), params[3]);
+		}
 
 		return pPlayer->teamId;
 	}

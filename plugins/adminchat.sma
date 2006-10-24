@@ -60,22 +60,28 @@ public plugin_init()
 public cmdSayChat(id)
 {
 	if (!access(id, ADMIN_CHAT))
+	{
 		return PLUGIN_CONTINUE
+	}
 	
 	new said[6], i = 0
 	read_argv(1, said, 5)
 	
 	while (said[i] == '@')
+	{
 		i++
+	}
 	
 	if (!i || i > 3)
+	{
 		return PLUGIN_CONTINUE
+	}
 	
 	new message[192], a = 0
 	read_args(message, 191)
 	remove_quotes(message)
 	
-	switch(said[i])
+	switch (said[i])
 	{
 		case 'r': a = 1
 		case 'g': a = 2
@@ -85,6 +91,19 @@ public cmdSayChat(id)
 		case 'c': a = 6
 		case 'o': a = 7
 	}
+	
+	new n, s = i
+	if (a)
+	{
+		n++
+		s++
+	}
+	while (said[s] && isspace(said[s]))
+	{
+		n++
+		s++
+	}
+	
 
 	new name[32], authid[32], userid
 	
@@ -92,11 +111,13 @@ public cmdSayChat(id)
 	get_user_name(id, name, 31)
 	userid = get_user_userid(id)
 	
-	log_amx("Chat: ^"%s<%d><%s><>^" tsay ^"%s^"", name, userid, authid, message[i + 1])
-	log_message("^"%s<%d><%s><>^" triggered ^"amx_tsay^" (text ^"%s^") (color ^"%L^")", name, userid, authid, message[i + 1], "en", g_Colors[a])
+	log_amx("Chat: ^"%s<%d><%s><>^" tsay ^"%s^"", name, userid, authid, message[i + n])
+	log_message("^"%s<%d><%s><>^" triggered ^"amx_tsay^" (text ^"%s^") (color ^"%L^")", name, userid, authid, message[i + n], "en", g_Colors[a])
 	
 	if (++g_msgChannel > 6 || g_msgChannel < 3)
+	{
 		g_msgChannel = 3
+	}
 	
 	new Float:verpos = g_Pos[i][1] + float(g_msgChannel) / 35.0
 	
@@ -104,11 +125,11 @@ public cmdSayChat(id)
 
 	if (get_cvar_num("amx_show_activity") == 2)
 	{
-		show_hudmessage(0, "%s :   %s", name, message[i + 1])
-		client_print(0, print_notify, "%s :   %s", name, message[i + 1])
+		show_hudmessage(0, "%s :   %s", name, message[i + n])
+		client_print(0, print_notify, "%s :   %s", name, message[i + n])
 	} else {
-		show_hudmessage(0, "%s", message[i + 1])
-		client_print(0, print_notify, "%s", message[i + 1])
+		show_hudmessage(0, "%s", message[i + n])
+		client_print(0, print_notify, "%s", message[i + n])
 	}
 
 	return PLUGIN_HANDLED

@@ -821,9 +821,9 @@ static cell AMX_NATIVE_CALL unregister_forward(AMX *amx, cell *params)
 
 	CVector<int> *peng = NULL;
 	if (post)
-		peng = &(Engine[func]);
-	else
 		peng = &(EnginePost[func]);
+	else
+		peng = &(Engine[func]);
 
 	CVector<int>::iterator begin, end=peng->end();
 

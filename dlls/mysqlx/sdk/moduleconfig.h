@@ -15,7 +15,7 @@
  *   to add multiple entries.
  */
 #define MODULE_NAME "MySQL"
-#define MODULE_VERSION "1.76a"
+#define MODULE_VERSION "1.76b"
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "http://www.amxmodx.org/"
 #define MODULE_LOGTAG "MySQL"

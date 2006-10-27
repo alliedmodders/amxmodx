@@ -322,6 +322,10 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 		{
 			for (new i=1; i<=maxplayers; i++)
 			{
+				if (!is_user_connected(i))
+				{
+					continue
+				}
 				if (i == victim)
 				{
 					continue
@@ -368,7 +372,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 		
 		for (new i=1; i<=maxplayers; i++)
 		{
-			if (!is_user_alive(i))
+			if (!is_user_connected(i) || !is_user_alive(i))
 			{
 				continue
 			}

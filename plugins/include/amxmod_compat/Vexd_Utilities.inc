@@ -11,6 +11,11 @@
 #define _Vexd_Utilities_included
 
 #include <engine>
+#if defined AMXMOD_BCOMPAT
+#if !defined _vexd_bcompat_included
+#include <VexdUM>
+#endif
+#endif
 
 stock Entvars_Get_Int(iIndex, iVariable)
 	return entity_get_int(iIndex, iVariable)

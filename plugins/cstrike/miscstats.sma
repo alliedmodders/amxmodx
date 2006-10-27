@@ -363,9 +363,23 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 	if (LastMan)
 	{
 		new cts[32], ts[32], ctsnum, tsnum
+		new maxplayers = get_maxplayers()
+		new CsTeams:team
 		
-		get_players(cts, ctsnum, "ae", g_teamsNames[1])
-		get_players(ts, tsnum, "ae", g_teamsNames[0])
+		for (new i=1; i<=maxplayers; i++)
+		{
+			if (!is_user_alive(i))
+			{
+				continue
+			}
+			team = cs_get_user_team(i)
+			if (team == CS_TEAM_T)
+			{
+				ts[tsnum++] = i
+			} else if (team == CS_TEAM_CT) {
+				cts[ctsnum++] = i
+			}
+		}
 		
 		if (ctsnum == 1 && tsnum == 1)
 		{
@@ -381,19 +395,19 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 		}
 		else if (!g_LastAnnounce)
 		{
-			new oposite = 0, team = 0
+			new oposite = 0, _team = 0
 			
 			if (ctsnum == 1 && tsnum > 1)
 			{
 				g_LastAnnounce = cts[0]
 				oposite = tsnum
-				team = 0
+				_team = 0
 			}
 			else if (tsnum == 1 && ctsnum > 1)
 			{
 				g_LastAnnounce = ts[0]
 				oposite = ctsnum
-				team = 1
+				_team = 1
 			}
 
 			if (g_LastAnnounce)
@@ -403,10 +417,12 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				get_user_name(g_LastAnnounce, name, 31)
 				
 				set_hudmessage(0, 255, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, -1)
-				ShowSyncHudMsg(0, g_center1_sync, "%s (%d HP) vs. %d %s%s: %L", name, get_user_health(g_LastAnnounce), oposite, g_teamsNames[team], (oposite == 1) ? "" : "S", LANG_PLAYER, g_LastMessages[random_num(0, 3)])
+				ShowSyncHudMsg(0, g_center1_sync, "%s (%d HP) vs. %d %s%s: %L", name, get_user_health(g_LastAnnounce), oposite, g_teamsNames[_team], (oposite == 1) ? "" : "S", LANG_PLAYER, g_LastMessages[random_num(0, 3)])
 				
 				if (!is_user_connecting(g_LastAnnounce))
+				{
 					client_cmd(g_LastAnnounce, "spk misc/oneandonly")
+				}
 			}
 		}
 	}

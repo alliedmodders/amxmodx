@@ -29,8 +29,11 @@ native delete_file(const file[]);
 native file_exists(const file[]);
 
 /* renames a file.  returns 0 on failure, 1 on success.
+ * if relative true, rename_file will act like other natives which 
+ * use the moddir as a base directory.  otherwise, the current directory is 
+ * undefined (but assumed to be hlds).
  */
-native rename_file(const oldname[], const newname[]);
+native rename_file(const oldname[], const newname[], relative=0);
 
 /* Checks if a directory exists */
 native dir_exists(const dir[]);

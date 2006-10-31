@@ -799,13 +799,25 @@ static cell AMX_NATIVE_CALL amx_rmdir(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amx_rename(AMX *amx, cell *params)
 {
 	int len;
+	char f_old_r[260];
+	char f_new_r[260];
+
 	char *fold = get_amxstring(amx, params[1], 0, len);
 	char *fnew = get_amxstring(amx, params[2], 1, len);
 
+	if (params[0] / sizeof(cell) == 3 && params[3])
+	{
+		build_pathname_r(f_old_r, sizeof(f_old_r)-1, "%s", fold);
+		build_pathname_r(f_new_r, sizeof(f_new_r)-1, "%s", fnew);
+	} else {
+		snprintf(f_old_r, sizeof(f_old_r)-1, "%s", fold);
+		snprintf(f_new_r, sizeof(f_new_r)-1, "%s", fnew);
+	}
+
 #if defined __linux__
-	return (rename(fold, fnew) == 0);
+	return (rename(f_old_r, f_new_r) == 0);
 #elif defined WIN32
-	return MoveFileA(fold, fnew);
+	return MoveFileA(f_old_r, f_new_r);
 #endif
 }
 

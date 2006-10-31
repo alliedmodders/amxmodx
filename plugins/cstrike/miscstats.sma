@@ -625,15 +625,17 @@ public checkKills(param[])
 		
 		if (a > -1)
 		{
+			if (a > 6)
+			{
+				a = 6
+			}
+			
 			if (MultiKill)
 			{
 				new name[32]
 				
 				get_user_name(id, name, 31)
 				set_hudmessage(255, 0, 100, 0.05, 0.50, 2, 0.02, 6.0, 0.01, 0.1, -1)
-				
-				if (a > 6)
-					a = 6
 				
 				ShowSyncHudMsg(0, g_left_sync, g_MultiKillMsg[a], name, LANG_PLAYER, "WITH", g_multiKills[id][0], LANG_PLAYER, "KILLS", g_multiKills[id][1], LANG_PLAYER, "HS")
 			}

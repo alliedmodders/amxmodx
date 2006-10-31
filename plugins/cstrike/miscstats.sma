@@ -310,7 +310,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 		}
 	}
 
-	if (EnemyRemaining)
+	if (EnemyRemaining && is_user_connected(victim))
 	{
 		new ppl[32], pplnum = 0, maxplayers = get_maxplayers()
 		new epplnum = 0

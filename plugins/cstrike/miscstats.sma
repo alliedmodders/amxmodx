@@ -349,9 +349,9 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				new _teamname[32]
 				if (team == CS_TEAM_T)
 				{
-					format(_teamname, 31, "TERRORIST%s", (epplnum == 1) ? "" : "s")
+					format(_teamname, 31, "TERRORIST%s", (epplnum == 1) ? "" : "S")
 				} else if (team == CS_TEAM_CT) {
-					format(_teamname, 31, "CT%s", (epplnum == 1) ? "" : "s")
+					format(_teamname, 31, "CT%s", (epplnum == 1) ? "" : "S")
 				}
 
 				for (new a = 0; a < pplnum; ++a)

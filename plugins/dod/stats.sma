@@ -425,7 +425,7 @@ showStatsMenu(id,pos){
   }
 
   else len += format(menu_body[len],511-len,"^n0. %s" , pos ? "Back" : "Exit" )
-  show_menu(id,keys,menu_body)
+  show_menu(id,keys,menu_body,-1,"Server Stats")
   return PLUGIN_HANDLED
 }
 

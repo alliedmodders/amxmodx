@@ -598,7 +598,7 @@ int set_amxnatives(AMX* amx, char error[128])
 		if ((err = amx_Exec(amx, &retval, idx)) != AMX_ERR_NONE)
 		{
 			Debugger::GenericMessage(amx, err);
-			AMXXLOG_Log("An error occurred in plugins_native. This is dangerous!");
+			AMXXLOG_Log("An error occurred in plugin_natives. This is dangerous!");
 		}
 	}
 

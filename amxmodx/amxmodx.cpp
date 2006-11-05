@@ -4263,7 +4263,19 @@ static cell AMX_NATIVE_CALL is_user_hacking(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL arrayset(AMX *amx, cell *params)
 {
-	memset(get_amxaddr(amx, params[1]), params[2], params[3] * sizeof(cell));
+	cell value = params[2];
+
+	if (!value)
+	{
+		memset(get_amxaddr(amx, params[1]), 0, params[3] * sizeof(cell));
+	} else {
+		int size = params[3];
+		cell *addr = get_amxaddr(amx, params[1]);
+		for (int i=0; i<size; i++)
+		{
+			addr[i] = value;
+		}
+	}
 
 	return 1;
 }

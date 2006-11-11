@@ -460,7 +460,7 @@ public adminSql()
 		new qcolAccess = SQL_FieldNameToNum(query, "access")
 		new qcolFlags = SQL_FieldNameToNum(query, "flags")
 		
-		while (SQL_MoreResults(query))
+		while ((g_aNum < MAX_ADMINS) && (SQL_MoreResults(query)))
 		{
 			SQL_ReadResult(query, qcolAuth, g_aName[g_aNum], 31)
 			SQL_ReadResult(query, qcolPass, g_aPassword[g_aNum], 31)

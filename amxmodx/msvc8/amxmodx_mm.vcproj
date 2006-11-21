@@ -779,10 +779,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\menus.h"
-				>
-			</File>
-			<File
 				RelativePath="..\messages.h"
 				>
 			</File>

@@ -87,6 +87,10 @@ void MenuMngr::removeMenuId(int id)
 	{
 		if (c->menuid == id)
 		{
+			if (m_watch_iter.a == c)
+			{
+				++m_watch_iter;
+			}
 			if (lc)
 				lc->next = c->next;
 			else
@@ -138,6 +142,15 @@ void MenuMngr::clear()
 		delete headcmd;
 		headcmd = a;
 	}
+}
+
+MenuMngr::iterator MenuMngr::SetWatchIter(MenuMngr::iterator iter)
+{
+	MenuMngr::iterator old = m_watch_iter;
+
+	m_watch_iter = iter;
+
+	return old;
 }
 
 int MenuMngr::MenuIdEle::uniqueid = 0;

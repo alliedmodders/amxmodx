@@ -901,6 +901,7 @@ void C_ClientCommand(edict_t *pEntity)
 			pPlayer->menu = 0;
 
 			MenuMngr::iterator a = g_menucmds.begin();
+			MenuMngr::iterator old = g_menucmds.SetWatchIter(a);
 
 			while (a)
 			{
@@ -940,8 +941,15 @@ void C_ClientCommand(edict_t *pEntity)
 						if (ret & 1) RETURN_META(MRES_SUPERCEDE);
 					}
 				}
-				++a;
+				if (g_menucmds.GetWatchIter() != a)
+				{
+					a = g_menucmds.GetWatchIter();
+				} else {
+					++a;
+				}
 			}
+
+			g_menucmds.SetWatchIter(old);
 		}
 	}
 

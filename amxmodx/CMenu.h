@@ -76,7 +76,8 @@ private:
 	} *headcmd;
 	
 public:
-	MenuMngr() { headid = 0; headcmd = 0; }
+	MenuMngr() : m_watch_iter(end())
+		{ headid = NULL; headcmd = NULL; }
 	~MenuMngr();
 
 	// Interface
@@ -89,6 +90,7 @@ public:
 
 	class iterator
 	{
+		friend class MenuMngr;
 		MenuCommand* a;
 	public:
 		iterator(MenuCommand*aa) : a(aa) {}
@@ -101,6 +103,11 @@ public:
 	
 	inline iterator begin() const { return iterator(headcmd); }
 	inline iterator end() const { return iterator(0); }
+
+	MenuMngr::iterator SetWatchIter(MenuMngr::iterator iter);
+	inline MenuMngr::iterator GetWatchIter() { return m_watch_iter; }
+private:
+	MenuMngr::iterator m_watch_iter;
 };
 
 #endif //MENUS_H

@@ -226,6 +226,8 @@ void CSPForward::Set(int func, AMX *amx, int numParams, const ForwardParam *para
 	name[0] = '\0';
 	amx_GetPublic(amx, func, name);
 	m_Name.assign(name);
+	m_ToDelete = false;
+	m_InExec = false;
 }
 
 void CSPForward::Set(const char *funcName, AMX *amx, int numParams, const ForwardParam *paramTypes)
@@ -236,6 +238,8 @@ void CSPForward::Set(const char *funcName, AMX *amx, int numParams, const Forwar
 	m_HasFunc = (amx_FindPublic(amx, funcName, &m_Func) == AMX_ERR_NONE);
 	isFree = false;
 	m_Name.assign(funcName);
+	m_ToDelete = false;
+	m_InExec = false;
 }
 
 cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
@@ -248,12 +252,14 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 	cell realParams[FORWARD_MAX_PARAMS];
 	cell *physAddrs[FORWARD_MAX_PARAMS];
 
-	if (!m_HasFunc)
+	if (!m_HasFunc || m_ToDelete)
 		return 0;
-	
+
 	CPluginMngr::CPlugin *pPlugin = g_plugins.findPluginFast(m_Amx);
 	if (!pPlugin->isExecutable(m_Func))
 		return 0;
+
+	m_InExec = true;
 
 	Debugger *pDebugger = (Debugger *)m_Amx->userdata[UD_DEBUGGER];
 	if (pDebugger)
@@ -356,6 +362,8 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 		}
 	}
 
+	m_InExec = false;
+
 	return retVal;
 }
 
@@ -452,7 +460,20 @@ bool CForwardMngr::isIdValid(int id) const
 
 cell CForwardMngr::executeForwards(int id, cell *params)
 {
-	int retVal = (id & 1) ? m_SPForwards[id >> 1]->execute(params, m_TmpArrays) : m_Forwards[id >> 1]->execute(params, m_TmpArrays);
+	int retVal;
+	if (id & 1)
+	{
+		CSPForward *fwd = m_SPForwards[id >> 1];
+		retVal = fwd->execute(params, m_TmpArrays);
+		if (fwd->m_ToDelete)
+		{
+			fwd->m_ToDelete = false;
+			unregisterSPForward(id);
+		}
+	} else {
+		retVal = m_Forwards[id >> 1]->execute(params, m_TmpArrays);
+	}
+
 	m_TmpArraysNum = 0;
 	
 	return retVal;
@@ -524,8 +545,15 @@ void CForwardMngr::unregisterSPForward(int id)
 	if (!isIdValid(id) || m_SPForwards.at(id >> 1)->isFree)
 		return;
 
-	m_SPForwards.at(id >> 1)->isFree = true;
-	m_FreeSPForwards.push(id);
+	CSPForward *fwd = m_SPForwards.at(id >> 1);
+
+	if (fwd->m_InExec)
+	{
+		fwd->m_ToDelete = true;
+	} else {
+		fwd->isFree = true;
+		m_FreeSPForwards.push(id);
+	}
 }
 
 int registerForwardC(const char *funcName, ForwardExecType et, cell *list, size_t num, int fwd_type)

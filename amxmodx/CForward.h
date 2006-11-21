@@ -143,6 +143,7 @@ public:
 // Single plugin forward
 class CSPForward
 {
+	friend class CForwardMngr;
 	const char *m_FuncName;
 	int m_NumParams;
 	
@@ -152,6 +153,8 @@ class CSPForward
 	int m_Func;
 	bool m_HasFunc;
 	String m_Name;
+	bool m_InExec;
+	bool m_ToDelete;
 
 public:
 	bool isFree;

@@ -146,11 +146,6 @@ public actionMenu(id, key)
 				case 'p':
 				{
 					g_Modified = 1
-					pause("dc", file)
-				}
-				case 's':
-				{
-					g_Modified = 1
 					unpause("ac", file)
 				}
 			}

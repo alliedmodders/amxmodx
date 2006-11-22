@@ -1219,7 +1219,7 @@ static cell AMX_NATIVE_CALL register_concmd(AMX *amx, cell *params) /* 4 param *
 	cmd->setCmdType(CMD_ConsoleCommand);
 	REG_SVR_COMMAND((char*)cmd->getCommand(), plugin_srvcmd);
 	
-	return 1;
+	return cmd->getId();
 }
 
 static cell AMX_NATIVE_CALL register_clcmd(AMX *amx, cell *params) /* 4 param */
@@ -1253,7 +1253,7 @@ static cell AMX_NATIVE_CALL register_clcmd(AMX *amx, cell *params) /* 4 param */
 	
 	cmd->setCmdType(CMD_ClientCommand);
 	
-	return 1;
+	return cmd->getId();
 }
 
 static cell AMX_NATIVE_CALL register_srvcmd(AMX *amx, cell *params) /* 2 param */
@@ -1288,7 +1288,7 @@ static cell AMX_NATIVE_CALL register_srvcmd(AMX *amx, cell *params) /* 2 param *
 	cmd->setCmdType(CMD_ServerCommand);
 	REG_SVR_COMMAND((char*)cmd->getCommand(), plugin_srvcmd);
 	
-	return 0;
+	return cmd->getId();
 }
 
 static cell AMX_NATIVE_CALL get_concmd(AMX *amx, cell *params) /* 7 param */

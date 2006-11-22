@@ -57,7 +57,7 @@ public plugin_init()
 	register_dictionary("common.txt")
 	register_dictionary("admincmd.txt")
 	
-	register_concmd("amx_pausecfg", "cmdPlugin", ADMIN_CFG, "- list commands for pause/unpause managment")
+	register_concmd("amx_pausecfg", "cmdPlugin", ADMIN_CFG, "- list commands for pause/unpause management")
 	register_clcmd("amx_pausecfgmenu", "cmdMenu", ADMIN_CFG, "- pause/unpause plugins with menu")
 #if defined DIRECT_ONOFF
 	register_concmd("amx_off", "cmdOFF", ADMIN_CFG, "- pauses some plugins")

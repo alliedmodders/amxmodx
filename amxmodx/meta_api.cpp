@@ -901,10 +901,10 @@ void C_ClientCommand(edict_t *pEntity)
 			pPlayer->menu = 0;
 
 			MenuMngr::iterator a = g_menucmds.begin();
-			MenuMngr::iterator old = g_menucmds.SetWatchIter(a);
 
 			while (a)
 			{
+				g_menucmds.SetWatchIter(a);
 				if ((*a).matchCommand(menuid, bit_key) && (*a).getPlugin()->isExecutable((*a).getFunction()))
 				{
 					if (pPlayer->newmenu != -1)
@@ -948,8 +948,6 @@ void C_ClientCommand(edict_t *pEntity)
 					++a;
 				}
 			}
-
-			g_menucmds.SetWatchIter(old);
 		}
 	}
 

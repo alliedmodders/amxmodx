@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdarg.h>
 #if defined __linux__
 #include <unistd.h>
 #endif
@@ -24,8 +25,8 @@ int Journal::Replay(VaultMap *pMap)
 	
 	BinaryReader br(m_fp);
 
-	int8_t len8;
-	int16_t len16;
+	uint8_t len8;
+	uint16_t len16;
 	char *key = NULL;
 	char *val = NULL;
 	String sKey;

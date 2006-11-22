@@ -473,13 +473,19 @@ native get_user_flags(index,id=0);
 /* Removes flags for player. */
 native remove_user_flags(index,flags=-1,id=0);
 
-/* Registers function which will be called from client console. */
+/* Registers function which will be called from client console. 
+ * Returns the command ID.
+ */
 native register_clcmd(const client_cmd[],const function[],flags=-1, info[]="");
 
-/* Registers function which will be called from any console. */
+/* Registers function which will be called from any console. 
+ * Returns the command ID.
+ */
 native register_concmd(const cmd[],const function[],flags=-1, info[]="");
 
-/* Registers function which will be called from server console. */
+/* Registers function which will be called from server console. 
+ * Returns the command ID.
+ */
 native register_srvcmd(const server_cmd[],const function[],flags=-1, info[]="");
 
 /* Gets info about client command. */

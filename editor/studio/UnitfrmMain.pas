@@ -2231,7 +2231,7 @@ begin
     sciEditor.Lines.Add(#9 + 'if (socket_change(sck' + frmConnGen.txtName.Text + ', 100)) {');
     sciEditor.Lines.Add(#9 + #9 + 'new buf[512], lines[30][100], count = 0');
     sciEditor.Lines.Add(#9 + #9 + 'socket_recv(sck' + frmConnGen.txtName.Text + ', buf, 511)');
-    sciEditor.Lines.Add(#9 + #9 + 'count = ExplodeString(lines, 50, 119, buf, 13)');
+    sciEditor.Lines.Add(#9 + #9 + 'count = ExplodeString(lines, 29, 99, buf, 13)');
     sciEditor.Lines.Add(#9 + #9 + 'for(new i=0;i<count;i++) {');
     sciEditor.Lines.Add(#9 + #9 + #9 + '/* Process items here */');
     sciEditor.Lines.Add(#9 + #9 + '}');

@@ -140,7 +140,7 @@ AddDefaultMenus()
 	AddMenuLang("STATS_SET", "amx_statscfgmenu", ADMIN_CFG, "Stats Configuration")
 	AddMenuLang("PAUSE_PLUG", "amx_pausecfgmenu", ADMIN_CFG, "Pause Plugins")
 	AddMenuLang("RES_WEAP", "amx_restmenu", ADMIN_CFG, "Restrict Weapons")
-	AddMenuLang("TELE_PLAYER", "amx_teleportmenu", ADMIN_LEVEL_A, "Teleport Menu")
+	AddMenuLang("TELE_PLAYER", "amx_teleportmenu", ADMIN_CFG, "Teleport Menu")
 }
 
 public actionMenu(id, key)

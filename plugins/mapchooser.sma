@@ -83,11 +83,20 @@ public plugin_init()
 
 public checkVotes()
 {
-	new b = 0
+	new b = 0, smap[32]
 	
 	for (new a = 0; a < g_mapVoteNum; ++a)
 		if (g_voteCount[b] < g_voteCount[a])
 			b = a
+
+	if (g_voteCount[SELECTMAPS] == g_voteCount[b])
+	{
+		get_cvar_string("amx_nextmap", smap, 31)
+		client_print(0, print_chat, "%L", LANG_PLAYER, "CHO_FIN_NEXT", smap)
+		log_amx("Vote: Voting for the nextmap finished. The nextmap will be %s", smap)
+
+		return
+	}
 	
 	if (g_voteCount[SELECTMAPS] > g_voteCount[b])
 	{
@@ -104,8 +113,6 @@ public checkVotes()
 	
 	if (g_voteCount[b] && g_voteCount[SELECTMAPS + 1] <= g_voteCount[b])
 		set_cvar_string("amx_nextmap", g_mapName[g_nextName[b]])
-	
-	new smap[32]
 	
 	get_cvar_string("amx_nextmap", smap, 31)
 	client_print(0, print_chat, "%L", LANG_PLAYER, "CHO_FIN_NEXT", smap)

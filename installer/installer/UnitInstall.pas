@@ -3,7 +3,7 @@ unit UnitInstall;
 interface
 
 uses SysUtils, Classes, Windows, Graphics, Forms, ShellAPI, Controls, Messages,
-     TlHelp32, IdFTPCommon, ComCtrls, JclFileUtils, Dialogs;
+     TlHelp32, IdFTPCommon, ComCtrls, Dialogs, JclFileUtils;
 
 type TMod = (modNone, modCS, modDoD, modTFC, modNS, modTS, modESF);
 type TOS = (osWindows, osLinux32, osLinux64);
@@ -614,11 +614,13 @@ begin
 
   ePath := '/';
   CurNode := frmMain.trvDirectories.Selected;
-  repeat
-    ePath := '/' + CurNode.Text + ePath;
-    CurNode := CurNode.Parent;
-  until (not Assigned(CurNode));
-
+  if (Assigned(CurNode)) then begin
+    repeat
+      ePath := '/' + CurNode.Text + ePath;
+      CurNode := CurNode.Parent;
+    until (not Assigned(CurNode));
+  end;
+  
   Screen.Cursor := crAppStart;
   frmMain.cmdCancel.Show;
   frmMain.cmdCancel.Caption := '&Cancel';

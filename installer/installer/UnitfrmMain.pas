@@ -123,7 +123,6 @@ type
     procedure cmdProxySettingsClick(Sender: TObject);
     procedure txtPortChange(Sender: TObject);
     procedure trvDirectoriesExpanded(Sender: TObject; Node: TTreeNode);
-    procedure trvDirectoriesChange(Sender: TObject; Node: TTreeNode);
     procedure FormDestroy(Sender: TObject);
     procedure IdFTPWork(Sender: TObject; AWorkMode: TWorkMode;
       const AWorkCount: Integer);
@@ -137,6 +136,8 @@ type
     procedure frbFTPClick(Sender: TObject);
     procedure frbLocalClick(Sender: TObject);
     procedure trvModsClick(Sender: TObject);
+    procedure trvDirectoriesMouseDown(Sender: TObject;
+      Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
   private
     OldProgress: Integer;
     CurrProgress: Integer;
@@ -214,11 +215,13 @@ begin
     eStr := TStringList.Create;
     ePath := '/';
     CurNode := trvDirectories.Selected;
-    repeat
-      ePath := '/' + CurNode.Text + ePath;
-      CurNode := CurNode.Parent;
-    until (not Assigned(CurNode));
-
+    if (Assigned(CurNode)) then begin
+      repeat
+        ePath := '/' + CurNode.Text + ePath;
+        CurNode := CurNode.Parent;
+      until (not Assigned(CurNode));
+    end;
+    
     try
       IdFTP.ChangeDir(ePath);
     except
@@ -236,6 +239,7 @@ begin
     if eStr.IndexOf('liblist.gam') = -1 then begin
       MessageBox(Handle, 'Invalid directory. Please select your mod directory and try again.', PChar(Application.Title), MB_ICONWARNING);
       eStr.Free;
+      Screen.Cursor := crDefault;
       exit;
     end
     else
@@ -639,6 +643,7 @@ begin
       cmdConnect.Enabled := True;
       cmdConnect.Caption := 'Disconnect';
       cmdCancel.Caption := '&Close';
+      cmdNext.Enabled := True;
 
       CurNode := nil;
       if eStr.Count <> 0 then begin
@@ -816,10 +821,12 @@ begin
     // get complete path
     ePath := '/';
     CurNode := Node;
-    repeat
-      ePath := '/' + CurNode.Text + ePath;
-      CurNode := CurNode.Parent;
-    until (not Assigned(CurNode));
+    if (Assigned(CurNode)) then begin
+      repeat
+        ePath := '/' + CurNode.Text + ePath;
+        CurNode := CurNode.Parent;
+      until (not Assigned(CurNode));
+    end;
     // change dir and add directories in it
     try
       Repaint;
@@ -836,11 +843,6 @@ begin
     end;
     Screen.Cursor := crDefault;
   end;
-end;
-
-procedure TfrmMain.trvDirectoriesChange(Sender: TObject; Node: TTreeNode);
-begin
-  cmdNext.Enabled := Assigned(trvDirectories.Selected);
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -934,6 +936,17 @@ begin
     cmdNext.Enabled := (Assigned(trvMods.Selected)) and (Assigned(trvMods.Selected.Parent))
   else
     cmdNext.Enabled := (Assigned(trvMods.Selected));
+end;
+
+procedure TfrmMain.trvDirectoriesMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var Node: TTreeNode;
+begin
+  Node := trvDirectories.GetNodeAt(X, Y);
+  if (Assigned(Node)) then begin
+    if (Node.DisplayRect(True).Right < X) then
+      trvDirectories.Selected := nil;
+  end;
 end;
 
 end.

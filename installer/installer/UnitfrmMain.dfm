@@ -6340,11 +6340,12 @@ object frmMain: TfrmMain
           BorderStyle = bsNone
           Images = ilImages
           Indent = 19
+          ReadOnly = True
           TabOrder = 0
-          OnChange = trvDirectoriesChange
           OnCollapsing = trvDirectoriesCollapsing
           OnExpanding = trvDirectoriesExpanding
           OnExpanded = trvDirectoriesExpanded
+          OnMouseDown = trvDirectoriesMouseDown
         end
       end
       object cboGameAddon: TFlatComboBox
@@ -6769,6 +6770,7 @@ object frmMain: TfrmMain
   object IdFTP: TIdFTP
     Intercept = IdLogFile
     MaxLineAction = maException
+    ReadTimeout = 0
     RecvBufferSize = 1024
     SendBufferSize = 1024
     OnWork = IdFTPWork

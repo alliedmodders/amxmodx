@@ -4544,7 +4544,6 @@ object frmMain: TfrmMain
         TabOrder = 1
         OnClick = cmdCancelClick
         CaptionGlowColor = clBtnFace
-        DropDownArrow = True
         LinkFont.Charset = DEFAULT_CHARSET
         LinkFont.Color = clBlue
         LinkFont.Height = -11
@@ -6569,6 +6568,7 @@ object frmMain: TfrmMain
   end
   object IdFTP: TIdFTP
     MaxLineAction = maSplit
+    ReadTimeout = 0
     ProxySettings.ProxyType = fpcmNone
     ProxySettings.Port = 0
     Left = 722

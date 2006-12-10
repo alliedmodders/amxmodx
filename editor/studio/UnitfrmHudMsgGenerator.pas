@@ -169,7 +169,7 @@ procedure TfrmHudMsgGenerator.txtTextKeyPress(Sender: TObject;
   var Key: Char);
 begin
   if Key = #13 then begin
-    txtText.SelText := '\n';
+    txtText.SelText := '^n';
     Key := #0;
   end;
 end;
@@ -195,7 +195,7 @@ begin
   if txtText.Text = '' then
     lblHudMsg.Caption := 'Custom Hudmessage'
   else
-    lblHudMsg.Caption := StringReplace(txtText.Text, '\n', #13, [rfReplaceAll]);
+    lblHudMsg.Caption := StringReplace(txtText.Text, '^n', #13, [rfReplaceAll]);
 
   if chkXCenter.Checked then
     CenterX;
@@ -267,10 +267,8 @@ var eVal: Real;
 begin
   try
     eVal := Round(StrToFloat(txtTimeToShow.Text));
-    if eVal < 0 then begin
-      eVal := 0.0;
+    if eVal < 0 then
       txtTimeToShow.Text := '0,0';
-    end;
   except
     txtTimeToShow.Text := '12,0';
   end;

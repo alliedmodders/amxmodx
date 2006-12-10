@@ -7375,8 +7375,8 @@ object frmHudMsgGenerator: TfrmHudMsgGenerator
     ColorHighLight = 8623776
     ColorShadow = 8623776
     Caption = 'Generate'
-    ModalResult = 1
     TabOrder = 4
+    ModalResult = 1
   end
   object cmdCancel: TFlatButton
     Left = 334
@@ -7388,8 +7388,8 @@ object frmHudMsgGenerator: TfrmHudMsgGenerator
     ColorHighLight = 8623776
     ColorShadow = 8623776
     Caption = 'Cancel'
-    ModalResult = 2
     TabOrder = 5
+    ModalResult = 2
   end
   object pnlText: TPanel
     Left = 6
@@ -7430,7 +7430,7 @@ object frmHudMsgGenerator: TfrmHudMsgGenerator
       ColorFlat = clWhite
       TabOrder = 1
       Text = '12,0'
-      OnChange = txtTimeToShowChange
+      OnExit = txtTimeToShowExit
       OnKeyPress = txtTimeToShowKeyPress
     end
   end

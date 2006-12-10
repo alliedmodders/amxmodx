@@ -47,10 +47,10 @@ type
     procedure cmdSelectColorClick(Sender: TObject);
     procedure txtTextChange(Sender: TObject);
     procedure txtTimeToShowKeyPress(Sender: TObject; var Key: Char);
-    procedure txtTimeToShowChange(Sender: TObject);
     procedure chkXCenterClick(Sender: TObject);
     procedure chkYCenterClick(Sender: TObject);
     procedure txtPosExit(Sender: TObject);
+    procedure txtTimeToShowExit(Sender: TObject);
   private
     eDown: Boolean;
     eStartPos: TPoint;
@@ -210,20 +210,6 @@ begin
     Key := ',';
 end;
 
-procedure TfrmHudMsgGenerator.txtTimeToShowChange(Sender: TObject);
-var eVal: Real;
-begin
-  try
-    eVal := Round(StrToFloat(txtTimeToShow.Text));
-    if eVal < 0 then begin
-      eVal := 0.0;
-      txtTimeToShow.Text := FloatToStr(eVal);
-    end;
-  except
-    txtTimeToShow.Text := '12,0';
-  end;
-end;
-
 procedure TfrmHudMsgGenerator.chkXCenterClick(Sender: TObject);
 var eChar: Char;
 begin
@@ -274,6 +260,20 @@ begin
     txtXPos.OnKeyPress(txtXPos, eChar)
   else
     txtYPos.OnKeyPress(txtXPos, eChar);
+end;
+
+procedure TfrmHudMsgGenerator.txtTimeToShowExit(Sender: TObject);
+var eVal: Real;
+begin
+  try
+    eVal := Round(StrToFloat(txtTimeToShow.Text));
+    if eVal < 0 then begin
+      eVal := 0.0;
+      txtTimeToShow.Text := '0,0';
+    end;
+  except
+    txtTimeToShow.Text := '12,0';
+  end;
 end;
 
 end.

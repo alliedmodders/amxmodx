@@ -1706,7 +1706,7 @@ procedure TfrmMain.mnuHudmessageClick(Sender: TObject);
   function Dot(eIn: string): string;
   begin
     Result := StringReplace(eIn, ',', '.', [rfReplaceAll]);
-    Result := StringReplace(eIn, '.00', '.0', [rfReplaceAll]);
+    Result := StringReplace(Result, '.00', '.0', [rfReplaceAll]);
   end;
 
 var eStr: string;

@@ -89,7 +89,7 @@ begin
         lblHudMsg.Left := 0
       else if lblHudMsg.Left > pnlHudmessage.Width then
         lblHudMsg.Left := pnlHudmessage.Width;
-      txtXPos.Text := FloatToStr(RoundTo(lblHudMsg.Left / pnlHudmessage.Width, -2));
+      txtXPos.Text := FloatToStrF(lblHudMsg.Left / pnlHudmessage.Width, ffFixed, -2, 2);
     end;
     
     { Y Pos }
@@ -99,7 +99,7 @@ begin
         lblHudMsg.Top := 0
       else if lblHudMsg.Top > pnlHudmessage.Height then
         lblHudMsg.Top := pnlHudmessage.Height;
-      txtYPos.Text := FloatToStr(RoundTo(lblHudMsg.Top / pnlHudmessage.Height, -2));
+      txtYPos.Text := FloatToStrF(lblHudMsg.Top / pnlHudmessage.Height, ffFixed, -2, 2);
     end;
   end;
 end;

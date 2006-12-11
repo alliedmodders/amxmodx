@@ -22,7 +22,7 @@
 //get a two character country code (eg US, CA etc)
 native geoip_code2(ip[], ccode[3]);
 
-//get a three character country code (eg USA, cAN etc)
+//get a three character country code (eg USA, CAN etc)
 native geoip_code3(ip[], result[4]);
 
 //get a full country name.  max name is 45 chars

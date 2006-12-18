@@ -894,7 +894,7 @@ end;
 procedure TfrmMain.mnuSaveAsClick(Sender: TObject);
 begin
   if sdSave.Execute then begin
-    ActiveDoc.FileName := AddExtension(sdSave.FileName, ActiveDoc.Highlighter);
+    ActiveDoc.FileName := AddExtension(sdSave.FileName, ActiveDoc.Highlighter, ActiveDoc);
     ActiveDoc.Save;
     tbDocs.Tabs[ActiveDoc.Index].Caption := ActiveDoc.Title;
   end;
@@ -1296,7 +1296,7 @@ begin
         b := Integer(frmAllFilesForm.lstFiles.Items.Objects[a]);
         if TDocument(Collection.Items[b]).Untitled then begin
           if sdSave.Execute then begin
-            TDocument(Collection.Items[b]).FileName := AddExtension(sdSave.FileName, TDocument(Collection.Items[b]).Highlighter);
+            TDocument(Collection.Items[b]).FileName := AddExtension(sdSave.FileName, TDocument(Collection.Items[b]).Highlighter, TDocument(Collection.Items[b]));
             TDocument(Collection.Items[b]).Save;
             TJvTabBarItem(tbDocs.Tabs[b]).Caption := TDocument(Collection.Items[b]).Title;
           end
@@ -1547,7 +1547,7 @@ begin
                   else begin
                     frmMain.sdSave.FilterIndex := 1;
                     if frmMain.sdSave.Execute then begin
-                      eItem.FileName := AddExtension(frmMain.sdSave.FileName, eItem.Highlighter);
+                      eItem.FileName := AddExtension(frmMain.sdSave.FileName, eItem.Highlighter, eItem);
                       eItem.Save;
                     end
                     else begin
@@ -1571,7 +1571,7 @@ begin
                   else begin
                     frmMain.sdSave.FilterIndex := 2;
                     if frmMain.sdSave.Execute then begin
-                      eItem.FileName := AddExtension(frmMain.sdSave.FileName, eItem.Highlighter);
+                      eItem.FileName := AddExtension(frmMain.sdSave.FileName, eItem.Highlighter, eItem);
                       eItem.Save;
                     end
                     else begin
@@ -1595,7 +1595,7 @@ begin
                   else begin
                     frmMain.sdSave.FilterIndex := 0;
                     if frmMain.sdSave.Execute then begin
-                      eItem.FileName := AddExtension(frmMain.sdSave.FileName, eItem.Highlighter);
+                      eItem.FileName := AddExtension(frmMain.sdSave.FileName, eItem.Highlighter, eItem);
                       eItem.Save;
                     end
                     else begin

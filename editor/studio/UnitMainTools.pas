@@ -80,7 +80,7 @@ function IEInstalled: Boolean;
 function GetAMXXDir(ListenServer: Boolean): String;
 
 function CloseDocument(eDocument: TDocument; SaveActiveDoc, RemoveTab: Boolean): Boolean;
-function AddExtension(eFilename, eHighlighter: String): String;
+function AddExtension(eFilename, eHighlighter: String; Document: TDocument): String;
 
 function ShowColorDialog(var Color: TColor; ePaintImage: TImage): Boolean;
 
@@ -468,11 +468,15 @@ begin
     Collection.Close(eDocument.Index, RemoveTab);
 end;
 
-function AddExtension(eFilename, eHighlighter: String): String;
+function AddExtension(eFilename, eHighlighter: String; Document: TDocument): String;
 begin
   if ExtractFileExt(eFilename) = '' then begin
-    if eHighlighter = 'Pawn' then
-      Result := eFilename + '.sma';
+    if eHighlighter = 'Pawn' then begin
+      if (ExtractFileExt(Document.Title) = '.inc') then
+        Result := eFilename + '.inc'
+      else
+        Result := eFilename + '.sma';
+    end;
     if eHighlighter = 'C++' then
       Result := eFilename + '.cpp';
     if eHighlighter = 'HTML' then

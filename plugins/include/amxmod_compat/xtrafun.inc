@@ -81,6 +81,7 @@ enum {
    targetname
 }
 
+#if !defined _vexd_bcompat_included
 /* Find an entity ID from start_from_ent id (use 0 to start from
  * the beginning, category is either "classname", "target" or
  * "targetname", value is the name you are searching for */
@@ -91,5 +92,6 @@ stock find_entity(start_from_ent, category, value[]) {
 	}
 	return find_ent_by_class(start_from_ent, value)
 }
+#endif
 
 #endif // _xtrafun_included

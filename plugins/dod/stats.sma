@@ -758,6 +758,8 @@ public client_death(killer,victim,wpnindex,hitplace,TK)
 }
 
 public showDoubleKill(){ 
+  if (g_KillCount < 2)
+    return
   new pos = g_KillCount - 2
   if ( pos > 2 ) pos = 2
   if ( DoubleKill ) {

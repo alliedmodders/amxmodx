@@ -58,7 +58,7 @@ cvar_t *csstats_rank;
 
 cvar_t* csstats_rankbots;
 cvar_t* csstats_pause;
-cvar_t init_csstats_rankbots ={"csstats_rankbots","1"};
+cvar_t init_csstats_rankbots ={"csstats_rankbots","0"};
 cvar_t init_csstats_pause = {"csstats_pause","0"};
 
 struct sUserMsg

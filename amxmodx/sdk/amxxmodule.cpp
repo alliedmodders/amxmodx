@@ -2327,7 +2327,7 @@ C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason)
 	}
 
 #ifdef FN_META_DETACH
-	return FN_META_DETACH();
+	FN_META_DETACH();
 #endif	// FN_META_DETACH
 	return TRUE;
 }

@@ -42,6 +42,7 @@ new g_ReadyRoomAck[12];
 new g_AutoAssignAck[12];
 new g_StopCommAck[12];
 
+
 enum {
   PLAYERCLASS_NONE = 0,
   PLAYERCLASS_ALIVE_MARINE,
@@ -72,6 +73,10 @@ enum {
 
 new g_Class[33]; // stored info from the "ScoreInfo" message
 new g_Team[33];
+
+new g_ScoreInfo_Class;
+new g_ScoreInfo_Team;
+
 public plugin_init() {
   register_plugin("NS Commands",AMXX_VERSION_STR,"AMXX Dev Team");
   // create our semi-random acknowledgement commands
@@ -103,6 +108,19 @@ public plugin_init() {
     i++;
   }
   
+  if (cvar_exists("sv_structurelimit"))
+  {
+    // ns 3.2 beta
+    g_ScoreInfo_Class=6;
+    g_ScoreInfo_Team=8;
+  }
+  else
+  {
+    // ns 3.1
+    g_ScoreInfo_Class=5;
+    g_ScoreInfo_Team=7;
+  }
+  
   // register ScoreInfo message..
   register_event("ScoreInfo","msgScoreInfo","a")
 }
@@ -112,8 +130,8 @@ public msgScoreInfo() {
     // just incase..
     return;
   }
-  g_Class[id]=read_data(5);
-  g_Team[id]=read_data(7);
+  g_Class[id]=read_data(g_ScoreInfo_Class);
+  g_Team[id]=read_data(g_ScoreInfo_Team);
 }
 public client_disconnect(id) {
   g_Class[id]=0;

@@ -90,7 +90,8 @@ public checkVotes()
 			b = a
 
 	
-	if (g_voteCount[SELECTMAPS] > g_voteCount[b])
+	if (g_voteCount[SELECTMAPS] > g_voteCount[b]
+	    && g_voteCount[SELECTMAPS] > g_voteCount[SELECTMAPS+1])
 	{
 		new mapname[32]
 		
@@ -104,7 +105,9 @@ public checkVotes()
 	}
 	
 	if (g_voteCount[b] && g_voteCount[SELECTMAPS + 1] <= g_voteCount[b])
+	{
 		set_cvar_string("amx_nextmap", g_mapName[g_nextName[b]])
+	}
 
 	new smap[32]
 	

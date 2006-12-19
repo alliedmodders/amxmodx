@@ -318,7 +318,7 @@ stock Handle:SQL_MakeStdTuple()
 	get_cvar_string("amx_sql_type", set_type, 11)
 	get_cvar_string("amx_sql_db", db, 127)
 	
-	SQL_GetAffinity(get_type, 12)
+	SQL_GetAffinity(get_type, 11)
 	
 	if (!equali(get_type, set_type))
 	{

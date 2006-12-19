@@ -244,9 +244,14 @@ void CPlayer::saveBDefused(){
 
 // *****************************************************
 
-bool ignoreBots (edict_t *pEnt, edict_t *pOther){
-	if ( !rankBots && ( pEnt->v.flags & FL_FAKECLIENT || ( pOther && pOther->v.flags & FL_FAKECLIENT ) ) )
+bool ignoreBots(edict_t *pEnt, edict_t *pOther)
+{
+	rankBots = (int)csstats_rankbots->value ? true : false;
+	if (!rankBots && (pEnt->v.flags & FL_FAKECLIENT || (pOther && pOther->v.flags & FL_FAKECLIENT)))
+	{
 		return true;
+	}
+
 	return false;
 }
 

@@ -343,13 +343,16 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	bool enabled = true;
 	int ret = 0;
 	int slots = 0;
+	int option_display = 0;
 	
 	for (item_t i = start; i <= end; i++)
 	{
 		pItem = m_Items[i];
 		
 		if (pItem->access && !(pItem->access & g_players[player].flags[0]))
+		{
 			enabled = false;
+		}
 		
 		if (pItem->handler != -1)
 		{
@@ -372,23 +375,33 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 				enabled = false;
 			}
 		}
+
+		if (enabled)
+		{
+			keys |= (1<<option);
+		}
 		
+		option_display = ++option;
+		if (option_display == 10)
+		{
+			option_display = 0;
+		}
+
 		if (enabled)
 		{
 			keys |= (1<<option);
 			if (m_AutoColors) 
 			{
-				_snprintf(buffer, sizeof(buffer)-1, "\\r%d.\\w %s\n", ++option, pItem->name.c_str());
+				_snprintf(buffer, sizeof(buffer)-1, "\\r%d.\\w %s\n", option_display, pItem->name.c_str());
 			} else {
-				_snprintf(buffer, sizeof(buffer)-1, "%d. %s\n", ++option, pItem->name.c_str());
+				_snprintf(buffer, sizeof(buffer)-1, "%d. %s\n", option_display, pItem->name.c_str());
 			}
 		} else {
 			if (m_AutoColors)
 			{
-				_snprintf(buffer, sizeof(buffer)-1, "\\d%d. %s\n\\w", ++option, pItem->name.c_str());
+				_snprintf(buffer, sizeof(buffer)-1, "\\d%d. %s\n\\w", option_display, pItem->name.c_str());
 			} else {
 				_snprintf(buffer, sizeof(buffer)-1, "#. %s\n", pItem->name.c_str());
-				option++;
 			}
 		}
 		slots++;

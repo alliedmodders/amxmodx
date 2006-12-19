@@ -7,6 +7,7 @@ public plugin_init()
 	register_clcmd("menu_test1", "Test_Menu1")
 	register_clcmd("menu_test2", "Test_Menu2")
 	register_clcmd("menu_test3", "Test_Menu3")
+	register_clcmd("menu_test4", "Test_Menu4")
 }
 
 public Test_Menu1(id, level, cid)
@@ -77,6 +78,41 @@ public Test_Menu3(id)
 }
 
 public Test_Menu3_Handler(id, menu, item)
+{
+   if (item == MENU_EXIT)
+   {
+	   menu_destroy(menu)
+	   return PLUGIN_HANDLED
+   }
+   
+   client_print(id, print_chat, "item = %d", item)
+   
+   menu_destroy(menu)
+   
+   return PLUGIN_HANDLED
+}
+
+public Test_Menu4(id)
+{
+   new mHandleID = menu_create("Test Menu 4", "Test_Menu4_Handler")
+   menu_setprop(mHandleID, MPROP_PERPAGE, 0)
+   menu_additem(mHandleID, "test1", "1", 0)
+   menu_additem(mHandleID, "test2", "2", 0)
+   menu_additem(mHandleID, "test3", "3", 0)
+   menu_additem(mHandleID, "test4", "4", 0)
+   menu_additem(mHandleID, "test5", "5", 0)
+   menu_additem(mHandleID, "test6", "6", 0)
+   menu_additem(mHandleID, "test7", "7", 0)
+   menu_additem(mHandleID, "test8", "8", 0)
+   menu_additem(mHandleID, "test9", "9", 0)
+   menu_additem(mHandleID, "test10", "10", 0)
+
+   menu_display(id, mHandleID, 0)
+   
+   return PLUGIN_HANDLED
+}
+
+public Test_Menu4_Handler(id, menu, item)
 {
    if (item == MENU_EXIT)
    {

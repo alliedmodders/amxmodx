@@ -5,7 +5,7 @@
 
 // Module info
 #define MODULE_NAME "nVault"
-#define MODULE_VERSION "1.76"
+#define MODULE_VERSION "1.76c"
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "http://www.amxmodx.org/"
 #define MODULE_LOGTAG "nVault"

@@ -56,7 +56,7 @@ public plugin_init()
 	register_dictionary("mapsmenu.txt")
 	register_dictionary("common.txt")
 	register_clcmd("amx_mapmenu", "cmdMapsMenu", ADMIN_MAP, "- displays changelevel menu")
-	register_clcmd("amx_votemapmenu", "cmdVoteMapMenu", ADMIN_MAP, "- displays votemap menu")
+	register_clcmd("amx_votemapmenu", "cmdVoteMapMenu", ADMIN_VOTE, "- displays votemap menu")
 
 	register_menucmd(register_menuid("Changelevel Menu"), 1023, "actionMapsMenu")
 	register_menucmd(register_menuid("Which map do you want?"), 527, "voteCount")

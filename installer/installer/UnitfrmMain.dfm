@@ -6101,14 +6101,14 @@ object frmMain: TfrmMain
       end
       object lblStep2: TLabel
         Left = 44
-        Top = 254
+        Top = 230
         Width = 244
         Height = 13
         Caption = '4. Connect to server and select the mod directory:'
       end
       object lblStep4: TLabel
         Left = 44
-        Top = 214
+        Top = 188
         Width = 117
         Height = 13
         Caption = '3. Select a game addon:'
@@ -6122,7 +6122,7 @@ object frmMain: TfrmMain
       end
       object lblStep5: TLabel
         Left = 44
-        Top = 358
+        Top = 334
         Width = 64
         Height = 13
         Caption = '5. Click Next.'
@@ -6312,7 +6312,7 @@ object frmMain: TfrmMain
       end
       object cmdConnect: TFlatButton
         Left = 416
-        Top = 269
+        Top = 247
         Width = 71
         Height = 20
         ColorFocused = 16245198
@@ -6326,17 +6326,20 @@ object frmMain: TfrmMain
       end
       object pnlDirectory: TPanel
         Left = 44
-        Top = 270
+        Top = 246
         Width = 367
         Height = 83
         BevelOuter = bvLowered
         TabOrder = 2
+        DesignSize = (
+          367
+          83)
         object trvDirectories: TTreeView
           Left = 1
           Top = 1
           Width = 365
           Height = 81
-          Align = alClient
+          Anchors = [akLeft, akTop, akRight, akBottom]
           BorderStyle = bsNone
           Images = ilImages
           Indent = 19
@@ -6350,7 +6353,7 @@ object frmMain: TfrmMain
       end
       object cboGameAddon: TFlatComboBox
         Left = 44
-        Top = 230
+        Top = 204
         Width = 443
         Height = 21
         Style = csDropDownList
@@ -6373,27 +6376,9 @@ object frmMain: TfrmMain
         Left = 44
         Top = 158
         Width = 441
-        Height = 50
+        Height = 25
         BevelOuter = bvLowered
         TabOrder = 5
-        object lblOSNote: TLabel
-          Left = 4
-          Top = 24
-          Width = 435
-          Height = 22
-          Caption = 
-            'Note: Most linux servers run on a 32-bit platform. If you are no' +
-            't sure what platform your server is using, you can still ask you' +
-            'r provider for further information about this topic.'
-          Enabled = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -9
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          WordWrap = True
-        end
         object optWindows: TFlatRadioButton
           Left = 5
           Top = 5
@@ -6418,6 +6403,7 @@ object frmMain: TfrmMain
           Width = 82
           Height = 14
           Caption = 'Linux (64-bit)'
+          Enabled = False
           TabOrder = 2
         end
       end

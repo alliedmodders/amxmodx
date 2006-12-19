@@ -108,10 +108,9 @@ type
     pnlOS: TPanel;
     optWindows: TFlatRadioButton;
     optLinux32: TFlatRadioButton;
-    optLinux64: TFlatRadioButton;
-    lblOSNote: TLabel;
     lblStep5: TLabel;
     lblFTP: TLabel;
+    optLinux64: TFlatRadioButton;
     procedure jvwStepsCancelButtonClick(Sender: TObject);
     procedure cmdCancelClick(Sender: TObject);
     procedure cmdNextClick(Sender: TObject);
@@ -250,7 +249,7 @@ begin
     cmdConnect.Enabled := False;
     optWindows.Enabled := False;
     optLinux32.Enabled := False;
-    optLinux64.Enabled := False;
+    //optLinux64.Enabled := False;
     cboGameAddon.Enabled := False;
     // preinstall...
     MakeDir(ExtractFilePath(ParamStr(0)) + 'temp');
@@ -281,10 +280,10 @@ begin
 
     if optWindows.Checked then
       eOS := osWindows
-    else if optLinux32.Checked then
-      eOS := osLinux32
-    else
-      eOS := osLinux64;
+    else //if optLinux32.Checked then
+      eOS := osLinux32;
+    //else
+    //  eOS := osLinux64;
 
     jspInstallProgress.Show;
     frmMain.Height := 382;
@@ -580,7 +579,7 @@ begin
       end;
     end
     else if frbFTP.Checked then begin // FTP
-      frmMain.Height := 445;
+      frmMain.Height := 421;
       jspFTP.Show;
     end;
   end;

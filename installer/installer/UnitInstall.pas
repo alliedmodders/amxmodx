@@ -6,7 +6,7 @@ uses SysUtils, Classes, Windows, Graphics, Forms, ShellAPI, Controls, Messages,
      TlHelp32, IdFTPCommon, ComCtrls, Dialogs, JclFileUtils;
 
 type TMod = (modNone, modCS, modDoD, modTFC, modNS, modTS, modESF);
-type TOS = (osWindows, osLinux32, osLinux64);
+type TOS = (osWindows, osLinux32{, osLinux64});
 
 procedure AddStatus(Text: String; Color: TColor; ShowTime: Boolean = True);
 procedure AddDone(Additional: String = '');
@@ -213,7 +213,7 @@ begin
       if Pos('_amd64', ExtractFileName(eFile)) <> 0 then
         Result := True;
     end;
-    osLinux64: begin
+    {osLinux64: begin
       if ExtractFileExt(eFile) = '.dll' then
         Result := True;
       if ExtractFileExt(eFile) = '.exe' then
@@ -221,7 +221,7 @@ begin
 
       if Pos('_i386', ExtractFileName(eFile)) <> 0 then
         Result := True;
-    end;
+    end;}
   end;
 end;
 
@@ -350,10 +350,10 @@ begin
           eStr[i] := '//' + eStr[i];
       end;
       eStr.Add('gamedll "addons\metamod\dlls\metamod.dll"');
-      if OS = osLinux64 then
-        eStr.Add('gamedll_linux "addons/metamod/dlls/metamod_amd64.so"')
-      else
-        eStr.Add('gamedll_linux "addons/metamod/dlls/metamod_i386.so"');
+      //if OS = osLinux64 then
+      //  eStr.Add('gamedll_linux "addons/metamod/dlls/metamod_amd64.so"')
+      //else
+      eStr.Add('gamedll_linux "addons/metamod/dlls/metamod_i386.so"');
       FileSetAttr(ePath + 'liblist.gam', 0);
       eStr.SaveToFile(ePath + 'liblist.gam');
       FileSetAttr(ePath + 'liblist.gam', faReadOnly); // important for listen servers

@@ -169,6 +169,8 @@ public:
 					} else {
 						iter++;
 					}
+				} else {
+					iter++;
 				}
 			}
 		}

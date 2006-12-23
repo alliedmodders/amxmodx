@@ -634,7 +634,7 @@ public client_command(id)
 			return PLUGIN_CONTINUE
 		}
 		
-		if (equali(arg, "menuselect"))
+		if (equali(arg, "menuselect") && is_user_connected(id))
 		{
 			new menu, newmenu
 			new inMenu = player_menu_info(id, menu, newmenu)

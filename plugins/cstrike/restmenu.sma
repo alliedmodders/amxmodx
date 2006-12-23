@@ -45,7 +45,7 @@ new g_Modified
 new g_blockPos[112]
 new g_saveFile[64]
 new g_Restricted[] = "* This item is restricted *"
-new g_szWeapRestr[27] = "0000000000000000000000000"
+new g_szWeapRestr[27] = "00000000000000000000000000"
 new g_szEquipAmmoRestr[10] = "000000000"
 new g_InBuyMenu[33]
 new g_RegisteredMenus[10]

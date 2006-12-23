@@ -679,7 +679,9 @@ public blockcommand(id)
 public cmdMenu(id, level, cid)
 {
 	if (cmd_access(id, level, cid, 1))
-			displayMenu(id, g_Position[id] = 0)
+	{
+		displayMenu(id, g_Position[id] = 0)
+	}
 	
 	return PLUGIN_HANDLED
 }
@@ -689,9 +691,18 @@ checkRest(id, menu, key)
 	new team = get_user_team(id)
 	
 	if (team != 1 && team != 2)
+	{
 		return PLUGIN_HANDLED
+	}
+		
+	new pos = (menu * 8 + key) + (get_user_team(id) - 1) * 56
 	
-	if (g_blockPos[(menu * 8 + key) + (get_user_team(id) - 1) * 56])
+	if (pos < 0 || pos >= 112)
+	{
+		return PLUGIN_CONTINUE
+	}
+	
+	if (g_blockPos[pos])
 	{
 		engclient_cmd(id, "menuselect", "10")
 		client_print(id, print_center, "%s", g_Restricted)

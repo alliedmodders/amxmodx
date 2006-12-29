@@ -57,7 +57,6 @@ int iFTeamForward = -1;
 int iFClassForward = -1;
 
 int gmsgCurWeapon;
-int gmsgHealth;
 int gmsgResetHUD;
 int gmsgObjScore;
 int gmsgRoundState;
@@ -66,6 +65,7 @@ int gmsgScoreShort;
 int gmsgPTeam;
 int gmsgAmmoX;
 int gmsgAmmoShort;
+int gmsgHealth_End;
 
 // Zors
 //int gmsgWeaponList;
@@ -90,22 +90,23 @@ struct sUserMsg {
 	int* id;
 	funEventCall func;
 	bool endmsg;
-} g_user_msg[] = {
-	{ "CurWeapon",&gmsgCurWeapon,Client_CurWeapon,false },
-	{ "ObjScore",&gmsgObjScore,Client_ObjScore,false },
-	{ "RoundState",&gmsgRoundState,Client_RoundState,false },
-	{ "Health",&gmsgHealth,Client_Health_End,true },
-	{ "ResetHUD",&gmsgResetHUD,Client_ResetHUD_End,true },
-	{ "TeamScore",&gmsgTeamScore,Client_TeamScore,false },
-	{ "ScoreShort",&gmsgScoreShort,NULL,false },
-	{ "PTeam",&gmsgPTeam,NULL,false },
-	{ "AmmoX",&gmsgAmmoX,Client_AmmoX,false},
-	{ "AmmoShort",&gmsgAmmoShort,Client_AmmoShort,false},
-	{ "ScoreShort",&gmsgScoreShort,NULL,false },
+} g_user_msg[] = 
+{
+	{ "CurWeapon",		&gmsgCurWeapon,			Client_CurWeapon,		false },
+	{ "ObjScore",		&gmsgObjScore,			Client_ObjScore,		false },
+	{ "RoundState",		&gmsgRoundState,		Client_RoundState,		false },
+	{ "ResetHUD",		&gmsgResetHUD,			Client_ResetHUD_End,	true  },
+	{ "TeamScore",		&gmsgTeamScore,			Client_TeamScore,		false },
+	{ "AmmoX",			&gmsgAmmoX,				Client_AmmoX,			false },
+	{ "AmmoShort",		&gmsgAmmoShort,			Client_AmmoShort,		false },
+	{ "Health",			&gmsgHealth_End,		Client_Health_End,		true  },
 	
 	//Zors
-	//{ "WeaponList",&gmsgWeaponList,WeaponList,true },
-	//{ "WeaponList",&gmsgWeaponList_End,WeaponList_End,true },
+	//{ "WeaponList",	&gmsgWeaponList,		WeaponList,				true  },
+	//{ "WeaponList",	&gmsgWeaponList_End,	WeaponList_End,			true  },
+
+	{ "PTeam",			&gmsgPTeam,				NULL,					false },
+	{ "ScoreShort",		&gmsgScoreShort,		NULL,					false },
 
 	{ 0,0,0,false }
 };
@@ -440,8 +441,6 @@ void OnPluginsLoaded()
 	iFDeath = MF_RegisterForward("client_death",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
 	iFDamage = MF_RegisterForward("client_damage",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
 	iFScore = MF_RegisterForward("client_score",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
-	
-	// Zors
 	iFTeamForward = MF_RegisterForward("dod_client_changeteam",ET_IGNORE,FP_CELL/*id*/,FP_CELL/*team*/,FP_CELL/*oldteam*/,FP_DONE);
 	iFSpawnForward = MF_RegisterForward("dod_client_spawn",ET_IGNORE,FP_CELL/*id*/,FP_DONE);
 	iFClassForward = MF_RegisterForward("dod_client_changeclass",ET_IGNORE,FP_CELL/*id*/,FP_CELL/*class*/,FP_CELL/*oldclass*/,FP_DONE);

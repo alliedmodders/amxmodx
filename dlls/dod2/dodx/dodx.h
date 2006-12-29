@@ -60,13 +60,13 @@ extern int mState;
 extern int mPlayerIndex;
 
 void Client_CurWeapon(void*);
-void Client_Health_End(void*);
 void Client_ResetHUD_End(void*);
 void Client_ObjScore(void*);
 void Client_TeamScore(void*);
 void Client_RoundState(void*);
 void Client_AmmoX(void*);
 void Client_AmmoShort(void*);
+void Client_Health_End(void*);
 
 // Zors
 //void WeaponList(void*);
@@ -78,7 +78,6 @@ extern int AlliesScore;
 extern int AxisScore;
 
 extern int gmsgCurWeapon;
-extern int gmsgHealth;
 extern int gmsgResetHUD;
 extern int gmsgObjScore;
 extern int gmsgRoundState;
@@ -87,12 +86,11 @@ extern int gmsgScoreShort;
 extern int gmsgPTeam;
 extern int gmsgAmmoX;
 extern int gmsgAmmoShort;
+extern int gmsgHealth_End;
 
 extern int iFDamage;
 extern int iFDeath;
 extern int iFScore;
-
-// Zors
 extern int iFSpawnForward;
 extern int iFTeamForward;
 extern int iFClassForward;

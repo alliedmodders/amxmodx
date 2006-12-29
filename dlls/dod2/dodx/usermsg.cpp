@@ -141,67 +141,6 @@ void Client_CurWeapon(void* mValue)
   }
 }
 
-/*
-Nie ma damage event ...
-*/
-void Client_Health_End(void* mValue){
-
-    if ( !isModuleActive() )
-		return;
-
-	edict_t *enemy = mPlayer->pEdict->v.dmg_inflictor;
-	int damage = (int)mPlayer->pEdict->v.dmg_take;
-
-	if ( !mPlayer || !damage || !enemy )
-		return;
-	
-	int weapon = 0;
-	int aim = 0;
-		
-	mPlayer->pEdict->v.dmg_take = 0.0; 
-	
-	CPlayer* pAttacker = NULL;
-
-	if ( enemy->v.flags & (FL_CLIENT | FL_FAKECLIENT) )
-	{
-		pAttacker = GET_PLAYER_POINTER(enemy);
-		weapon = pAttacker->current;
-
-		if ( weaponData[weapon].needcheck )
-			weapon = get_weaponid(pAttacker);
-
-		aim = pAttacker->aiming;
-
-		if ( weaponData[weapon].melee )
-			pAttacker->saveShot(weapon);
-	}
-	else 
-		g_grenades.find( enemy , &pAttacker , weapon );
-
-	int TA = 0;
-	
-	if ( !pAttacker )
-	{
-		pAttacker = mPlayer;
-	}
-
-	if ( pAttacker->index != mPlayer->index )
-	{ 
-		pAttacker->saveHit( mPlayer , weapon , damage, aim );
-
-		if ( mPlayer->pEdict->v.team == pAttacker->pEdict->v.team )
-			TA = 1;
-	}
-
-	MF_ExecuteForward( iFDamage, pAttacker->index, mPlayer->index, damage, weapon, aim, TA );
-
-	if ( !mPlayer->IsAlive() )
-	{
-		pAttacker->saveKill(mPlayer,weapon,( aim == 1 ) ? 1:0 ,TA);
-		MF_ExecuteForward( iFDeath, pAttacker->index, mPlayer->index, weapon, aim, TA );
-	}
-}
-
 void Client_AmmoX(void* mValue)
 {
   static int iAmmo;
@@ -239,6 +178,67 @@ void Client_AmmoShort(void* mValue)
         mPlayer->weapons[i].ammo = *(int*)mValue;
 	}
   }
+}
+
+void Client_Health_End(void* mValue)
+{
+    if ( !isModuleActive() )
+		return;
+
+	CPlayer* pVictim = mPlayer;
+
+	edict_t *enemy = pVictim->pEdict->v.dmg_inflictor;
+	int damage = (int)pVictim->pEdict->v.dmg_take;
+
+	if(!pVictim || !damage || !enemy)
+		return;
+	
+	int weapon = 0;
+	int aim = 0;
+		
+	pVictim->pEdict->v.dmg_take = 0.0; 
+	
+	CPlayer* pAttacker = NULL;
+
+	if(enemy->v.flags & (FL_CLIENT | FL_FAKECLIENT))
+	{
+		pAttacker = GET_PLAYER_POINTER(enemy);
+		weapon = pAttacker->current;
+
+		if(weaponData[weapon].needcheck)
+			weapon = get_weaponid(pAttacker);
+
+		aim = pAttacker->aiming;
+
+		if(weaponData[weapon].melee)
+			pAttacker->saveShot(weapon);
+	}
+
+	else 
+		g_grenades.find(enemy , &pAttacker , weapon);
+
+	int TA = 0;
+	
+	if(!pAttacker)
+	{
+		pAttacker = pVictim;
+	}
+
+	if(pAttacker->index != pVictim->index)
+	{ 
+		pAttacker->saveHit(pVictim , weapon , damage, aim);
+
+		if(pVictim->pEdict->v.team == pAttacker->pEdict->v.team)
+			TA = 1;
+	}
+
+	MF_ExecuteForward(iFDamage, pAttacker->index, pVictim->index, damage, weapon, aim, TA);
+
+	if(!pVictim->IsAlive())
+	{
+		pAttacker->saveKill(pVictim, weapon, (aim == 1) ? 1:0 , TA);
+		MF_ExecuteForward(iFDeath, pAttacker->index, pVictim->index, weapon, aim, TA);
+	}
 }
 
 /*

@@ -618,13 +618,14 @@ native get_pluginsnum();
 * param2 name of plugin (all depends on flags).
 * Flags:
 * "a" - pause whole plugin.
-* "b" - pause function.
 * "c" - look outside the plugin (by given plugin name).
 * "d" - set "stopped" status when pausing whole plugin.
-* "e" - set "locked" status when pausing whole plugin.
 *       In this status plugin is unpauseable.
 * Example: pause("ac","myplugin.amxx") 
-*          pause("bc","myfunc","myplugin.amxx") */
+*
+* Note: There used to be the b and e flags as well,
+* which have been deprecated and are no longer used.
+*/
 native pause(flag[], const param1[]="",const param2[]="");
 
 /* Unpauses function or plugin.

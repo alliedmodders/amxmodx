@@ -159,8 +159,9 @@ displayCmdMenu(id, pos)
 
 	if (start >= g_menuSelectNum[id])
 		start = pos = g_menuPosition[id] = 0
-
-	new len = format(menuBody, 511, g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, g_cmdMenuName[g_menuLayer[id]], pos + 1, (g_menuSelectNum[id] / 8 + ((g_menuSelectNum[id] % 8) ? 1 : 0)))
+	
+	new limit = (g_menuSelectNum[id] / 8 + ((g_menuSelectNum[id] % 8)))
+	new len = format(menuBody, 511, g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, g_cmdMenuName[g_menuLayer[id]], pos + 1, (limit == 0) ? 1 : limit)
 	new end = start + 8
 	new keys = MENU_KEY_0
 

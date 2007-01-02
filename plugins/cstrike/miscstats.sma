@@ -420,7 +420,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				
 				get_user_name(g_LastAnnounce, name, 31)
 				
-				set_hudmessage(0, 255, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, -1)
+				set_hudmessage(0, 255, 255, -1.0, 0.38, 0, 6.0, 6.0, 0.5, 0.15, -1)
 				ShowSyncHudMsg(0, g_center1_sync, "%s (%d HP) vs. %d %s%s: %L", name, get_user_health(g_LastAnnounce), oposite, g_teamsNames[_team], (oposite == 1) ? "" : "S", LANG_PLAYER, g_LastMessages[random_num(0, 3)])
 				
 				if (!is_user_connecting(g_LastAnnounce))

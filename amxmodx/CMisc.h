@@ -120,7 +120,6 @@ public:
 	cell hudmap[5];
 	
 	Vector lastTrace;
-	Vector thisTrace;
 	Vector lastHit;
 	
 	List<ClientCvarQuery_Info *> queries;

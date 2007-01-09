@@ -1217,8 +1217,7 @@ void C_TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t
 		if (ptr->pHit && (ptr->pHit->v.flags & (FL_CLIENT | FL_FAKECLIENT)))
 			pPlayer->aiming = ptr->iHitgroup;
 			
-		pPlayer->lastTrace = pPlayer->thisTrace;
-		pPlayer->thisTrace = ptr->vecEndPos;
+		pPlayer->lastTrace = ptr->vecEndPos;
 	}
 
 	RETURN_META(MRES_IGNORED);

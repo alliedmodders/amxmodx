@@ -26,6 +26,8 @@ type TPAWNCompileThread = class(TThread)
 
 function DoCompilePAWN(eFlags: Integer): Boolean;
 
+var Compiling: Boolean;
+
 implementation
 
 uses UnitfrmSettings, UnitLanguages, UnitMainTools, UnitfrmMain,
@@ -35,12 +37,14 @@ function DoCompilePAWN(eFlags: Integer): Boolean;
 var eFile: string;
 begin
   Result := False;
+  if (Compiling) then exit;
   if not FileExists(frmSettings.txtPAWNCompilerPath.Text) then begin
     MessageBox(frmMain.Handle, PChar(lPAWNCompilerNotFound), PChar(Application.Title), MB_ICONERROR);
     exit;
   end;
 
   Screen.Cursor := crHourGlass;
+  Compiling := True;
   if (ActiveDoc.Untitled) then
     eFile := ExtractFilePath(ParamStr(0)) + 'Untitled.sma'
   else
@@ -226,6 +230,7 @@ begin
     CloseHandle(PipeErrorsWrite);
   end;
   Screen.Cursor := crDefault;
+  Compiling := False;
   Output.Free;
 end;
 

@@ -999,19 +999,19 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 		ENGHOOK(TraceLine);
 		break;
 	case FM_TraceToss:
-		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 		ENGHOOK(TraceToss);
 		break;
 	case FM_TraceMonsterHull:
-		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_ARRAY, FP_ARRAY, FP_CELL, FP_CELL, FP_DONE);
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_ARRAY, FP_ARRAY, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 		ENGHOOK(TraceMonsterHull);
 		break;
 	case FM_TraceHull:
-		fId = MF_RegisterSPForwardByName(amx, funcname, FP_ARRAY, FP_ARRAY, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_ARRAY, FP_ARRAY, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 		ENGHOOK(TraceHull);
 		break;
 	case FM_TraceModel:
-		fId = MF_RegisterSPForwardByName(amx, funcname, FP_ARRAY, FP_ARRAY, FP_CELL, FP_CELL, FP_DONE);
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_ARRAY, FP_ARRAY, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 		ENGHOOK(TraceModel);
 		break;
 	case FM_TraceTexture:

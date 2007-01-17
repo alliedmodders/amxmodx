@@ -30,6 +30,12 @@ static cell AMX_NATIVE_CALL set_tr(AMX *amx, cell *params)
 			return 1;
 			break;
 		}
+	case TR_InOpen:
+		{
+			gfm_tr->fInOpen = *ptr;
+			return 1;
+			break;
+		}
 	case TR_InWater:
 		{
 			gfm_tr->fInWater = *ptr;
@@ -102,6 +108,11 @@ static cell AMX_NATIVE_CALL get_tr(AMX *amx, cell *params)
 	case TR_StartSolid:
 		{
 			return gfm_tr->fStartSolid;
+			break;
+		}
+	case TR_InOpen:
+		{
+			return gfm_tr->fInOpen;
 			break;
 		}
 	case TR_InWater:

@@ -362,7 +362,6 @@ enum
 // write_byte(red)
 // write_byte(green)
 // write_byte(blue)
-// write_byte(brightness)
 // write_byte(life in 10's)
 // write_byte(decay rate in 10's)
 

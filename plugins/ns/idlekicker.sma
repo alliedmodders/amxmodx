@@ -44,22 +44,44 @@ new g_idletime[33]
 new bool:g_spawned[33] = {true, ...}
 new g_class[33]	// stored info from the "ScoreInfo" message
 
+new mp_tournamentmode;
+new amx_idle_time;
+new amx_idle_min_players;
+new amx_idle_ignore_immunity;
+
+new maxplayers;
+
 public plugin_init() {
 	register_plugin("Idle Player Remover",AMXX_VERSION_STR,"AMXX Dev Team") 
-	register_cvar("amx_idle_time", "120")				// Kick people idle longer than this time
-	register_cvar("amx_idle_min_players", "8")	// Only kick idle players when there is atleast this many players on the server
-	register_cvar("amx_idle_ignore_immunity", "1")	// Kick admins with immunity?
+	
+	amx_idle_time=register_cvar("amx_idle_time", "120")				// Kick people idle longer than this time
+	amx_idle_min_players=register_cvar("amx_idle_min_players", "8")	// Only kick idle players when there is atleast this many players on the server
+	amx_idle_ignore_immunity=register_cvar("amx_idle_ignore_immunity", "1")	// Kick admins with immunity?
+
+	mp_tournamentmode=get_cvar_pointer("mp_tournamentmode");
+	
 	set_task(float(CHECK_FREQ),"checkPlayers",_,_,_,"b")
 	register_event("ResetHUD", "playerSpawned", "be")
-	register_event("ScoreInfo","msgScoreInfo","a")
+	if (cvar_exists("sv_structurelimit"))
+	{
+		// need the NS 3.2 ScoreInfo parser
+		register_event("ScoreInfo","msgScoreInfo32","a")
+	}
+	else
+	{
+		register_event("ScoreInfo","msgScoreInfo","a")
+	}
+	
+	
+	maxplayers=get_maxplayers();
 }
 
 public checkPlayers() {
-	if (get_cvar_num("mp_tournamentmode")) return PLUGIN_HANDLED
+	if (get_pcvar_num(mp_tournamentmode)) return PLUGIN_HANDLED
 
-	for (new i = 1; i <= get_maxplayers(); i++) {
+	for (new i = 1; i <= maxplayers; i++) {
 		if (is_user_alive(i) && g_class[i]!=CLASS_GESTATE && is_user_connected(i) && !is_user_bot(i) && !is_user_hltv(i) && g_spawned[i]) {
-			if ( !get_cvar_num("amx_idle_ignore_immunity") ) {
+			if ( !get_pcvar_num(amx_idle_ignore_immunity) ) {
 				if ( access(i, ADMIN_IMMUNITY) ) continue
 			}
 			new newangle[3]
@@ -81,10 +103,9 @@ public checkPlayers() {
 
 check_idletime(id) {
 	new numplayers = get_playersnum()
-	new minplayers = get_cvar_num("amx_idle_min_players")
 					
-	if (numplayers >= minplayers) {
-		new maxidletime = get_cvar_num("amx_idle_time")
+	if (numplayers >= get_pcvar_num(amx_idle_min_players)) {
+		new maxidletime = get_pcvar_num(amx_idle_time)
 		if (maxidletime < MIN_IDLE_TIME) {
 			log_message("cvar amx_idle_time %d is too low. Minimum value is %d.", maxidletime, MIN_IDLE_TIME)
 			maxidletime = MIN_IDLE_TIME
@@ -138,4 +159,12 @@ public msgScoreInfo() {
     return;
   }
   g_class[id]=read_data(5);
+}
+public msgScoreInfo32() {
+  new id=read_data(1);
+  if (id>32||id<1) {
+    // just incase..
+    return;
+  }
+  g_class[id]=read_data(6);
 }

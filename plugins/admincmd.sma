@@ -571,7 +571,7 @@ public cmdPlugins(id, level, cid)
 		get_plugin(i, filename, 31, name, 31, version, 31, author, 31, status, 31)
 		console_print(id, "%-18.17s %-8.7s %-17.16s %-16.15s %-9.8s", name, version, author, filename, status)
 		
-		if (equal(status, "running"))
+		if (status[0]=='d' || status[0]=='r') // "debug" or "running"
 			running++
 	}
 	console_print(id, "%L", id, "PLUGINS_RUN", num, running)

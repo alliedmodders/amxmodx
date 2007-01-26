@@ -16,7 +16,7 @@
  * You may generate menu, smoke, shockwaves, thunderlights,
  * intermission and many many others messages.
  * See HL SDK for more examples. */
-native message_begin(dest, msg_type, origin[3] = {0,0,0}, player = 0);
+native message_begin(dest, msg_type, const origin[3] = {0,0,0}, player = 0);
 native message_end();
 native write_byte(x);
 native write_char(x);
@@ -25,7 +25,7 @@ native write_long(x);
 native write_entity(x);
 native write_angle(x);
 native write_coord(x);
-native write_string(x[]);
+native write_string(const x[]);
 
 /* These are the same as above, except that the messages sent
  *  are also sent to all other plugins and Metamod plugins.
@@ -35,7 +35,7 @@ native write_string(x[]);
  *  could cause infinite recursion or something just as bad. 
  * NOTE! These natives are experimental.
  */
-native emessage_begin(dest, msg_type, origin[3] = {0,0,0}, player = 0);
+native emessage_begin(dest, msg_type, const origin[3] = {0,0,0}, player = 0);
 native emessage_end();
 native ewrite_byte(x);
 native ewrite_char(x);
@@ -44,7 +44,7 @@ native ewrite_long(x);
 native ewrite_entity(x);
 native ewrite_angle(x);
 native ewrite_coord(x);
-native ewrite_string(x[]);
+native ewrite_string(const x[]);
 
 /* Sets/Gets what engine messages are blocked. */
 native set_msg_block(iMessage, iMessageFlags);
@@ -56,7 +56,7 @@ native get_msg_block(iMessage);
  * If you hook a message, the message is stored but not sent. You have the opportunity to
  * not only execute code, but to get/set the contents of the message, before you choose to 
  * either block it or let it go on its way. The hooked function will be passed a msg_id, msg_dest, and entity index. */
-native register_message(iMsgId, szFunction[]);
+native register_message(iMsgId, const szFunction[]);
 
 /* The get/set _msg commands will fail if used outside a hooked message scope.
  * They should never be used unless inside a registered message function.
@@ -81,7 +81,7 @@ native get_msg_arg_string(argn, szReturn[], iLength);
 /* sets the value of argn. */
 native set_msg_arg_int(argn, argtype, iValue);
 native set_msg_arg_float(argn, argtype, Float:fValue);
-native set_msg_arg_string(argn, szString[]);
+native set_msg_arg_string(argn, const szString[]);
 
 /* Gets the origin of a message */
-native get_msg_origin(Float:_Origin[3]);
+native get_msg_origin(const Float:_Origin[3]);

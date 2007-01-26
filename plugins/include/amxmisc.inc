@@ -181,7 +181,7 @@ stock get_configsdir(name[],len)
 stock get_datadir(name[],len)
   return get_localinfo("amxx_datadir",name,len)
 
-stock register_menu(title[],keys,function[],outside=0)
+stock register_menu(const title[],keys,const function[],outside=0)
   register_menucmd(register_menuid(title,outside),keys,function)
 
 /* Backwards Compatibility

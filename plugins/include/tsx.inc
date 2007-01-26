@@ -43,7 +43,7 @@ forward client_death(killer,victim,wpnindex,hitplace,TK);
 
 /* Custom Weapon Support */
 /* function will return index of new weapon */
-native custom_weapon_add( wpnname[],melee = 0,logname[]="" ); 
+native custom_weapon_add( const wpnname[],melee = 0,const logname[]="" ); 
 /* Function will pass damage done by this custom weapon to stats module and other plugins */
 native custom_weapon_dmg( weapon, att, vic, damage, hitplace=0 ); 
 /* Function will pass info about custom weapon shot to stats module */
@@ -70,7 +70,7 @@ native xmod_is_custom_wpn(wpnindex);
 /************* Shared Natives End ********************************/
 
 /* Spawns a Weapon */
-stock ts_weaponspawn(weaponid[], duration[], extraclip[], spawnflags[], Float:Origin[3])
+stock ts_weaponspawn(const weaponid[], const duration[], const extraclip[], const spawnflags[], const Float:Origin[3])
 {
 	new ent = create_entity("ts_groundweapon");
 

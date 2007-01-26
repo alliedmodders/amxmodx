@@ -77,7 +77,7 @@ native precache_model(const name[]);
 native precache_sound(const name[]);
 
 /* Precaches any file. */
-native precache_generic(szFile[]);
+native precache_generic(const szFile[]);
 
 /* Sets info for player. */
 native set_user_info(index,const info[],const value[]);
@@ -121,7 +121,7 @@ native console_cmd(id,const cmd[],{Float,Sql,Result,_}:...);
 * "3!4" - 3rd must be different from 4.
 * "2&Buy" - 2nd parameter of message must contain "Buy" substring.
 * "2!Buy" - 2nd parameter of message can't contain "Buy" substring. */
-native register_event(const event[],const function[],const flags[],cond[]="", ... );
+native register_event(const event[],const function[],const flags[],const cond[]="", ... );
 
 /* Registers log event on which the given function will be called
 * Examples for conditions:
@@ -144,7 +144,7 @@ native set_hudmessage(red=200, green=100, blue=0, Float:x=-1.0, Float:y=0.35, ef
 native show_hudmessage(index,const message[],{Float,Sql,Result,_}:...);
 
 /* Displays menu. Keys have bit values (key 1 is (1<<0), key 5 is (1<<4) etc.). */
-native show_menu(index,keys,const menu[], time = -1, title[] = "");
+native show_menu(index,keys,const menu[], time = -1, const title[] = "");
 
 /* Gets value from client messages.
 * When you are asking for string the array and length is needed (read_data(2,name,len)).
@@ -373,7 +373,7 @@ native client_cmd(index,const command[],{Float,Sql,Result,_}:...);
 * It allows to execute some commands on players and bots.
 * Function is excellent for forcing to do an action related to a game (not settings!).
 * The command must stand alone but in arguments you can use spaces. */
-native engclient_cmd(index,const command[],arg1[]="",arg2[]="");
+native engclient_cmd(index,const command[],const arg1[]="",const arg2[]="");
 
 /* Executes command on a server console. */
 native server_cmd(const command[],{Float,Sql,Result,_}:...);
@@ -450,7 +450,7 @@ native parse_time(const input[],const format[], time = -1);
 * "b" - loop task.
 * "c" - do task on time after a map timeleft.
 * "d" - do task on time before a map timelimit. */
-native set_task(Float:time,const function[],id = 0,parameter[]="",len = 0,flags[]="", repeat = 0);
+native set_task(Float:time,const function[],id = 0,const parameter[]="",len = 0,const flags[]="", repeat = 0);
 
 /* Removes all tasks with given id. If outside var is 
 * set then a task can be removed also when
@@ -476,17 +476,17 @@ native remove_user_flags(index,flags=-1,id=0);
 /* Registers function which will be called from client console. 
  * Returns the command ID.
  */
-native register_clcmd(const client_cmd[],const function[],flags=-1, info[]="");
+native register_clcmd(const client_cmd[],const function[],flags=-1, const info[]="");
 
 /* Registers function which will be called from any console. 
  * Returns the command ID.
  */
-native register_concmd(const cmd[],const function[],flags=-1, info[]="");
+native register_concmd(const cmd[],const function[],flags=-1, const info[]="");
 
 /* Registers function which will be called from server console. 
  * Returns the command ID.
  */
-native register_srvcmd(const server_cmd[],const function[],flags=-1, info[]="");
+native register_srvcmd(const server_cmd[],const function[],flags=-1, const info[]="");
 
 /* Gets info about client command. */
 native get_clcmd(index, command[], len1, &flags, info[], len2, flag);
@@ -534,7 +534,7 @@ native get_user_menu(index,&id,&keys);
 native server_exec();
 
 /* Emits sound. Sample must be precached. */
-native emit_sound(index, channel, sample[], Float:vol, Float:att,flags, pitch);
+native emit_sound(index, channel, const sample[], Float:vol, Float:att,flags, pitch);
 
 /* Registers new cvar for HL engine.
  * Returns the cvar pointer for get/set_pcvar functions.
@@ -626,14 +626,13 @@ native get_pluginsnum();
 * Note: There used to be the b and e flags as well,
 * which have been deprecated and are no longer used.
 */
-native pause(flag[], const param1[]="",const param2[]="");
+native pause(const flag[], const param1[]="",const param2[]="");
 
 /* Unpauses function or plugin.
 * Flags:
 * "a" - unpause whole plugin.
-* "b" - unpause function.
 * "c" - look outside the plugin (by given plugin name). */
-native unpause(flag[], const param1[]="",const param2[]="");
+native unpause(const flag[], const param1[]="",const param2[]="");
 
 /* Call a function in this / an another plugin by name.
 * Parameters:
@@ -678,7 +677,7 @@ native callfunc_push_floatrf(& Float: value);
  *  which is only kept for special backwards compatibility.
  */
 native callfunc_push_str(const VALUE[], bool:copyback=true);
-native callfunc_push_array(VALUE[], array_size, bool:copyback=true);
+native callfunc_push_array(const VALUE[], array_size, bool:copyback=true);
 
 /* Make the actual call.
 * Return value of the function called. */
@@ -690,7 +689,7 @@ forward inconsistent_file(id,const filename[], reason[64] );
 
 /* Forces the client and server to be running with the same
 * version of the specified file ( e.g., a player model ). */
-native force_unmodified(force_type, mins[3] , maxs[3], const filename[]);
+native force_unmodified(force_type, const mins[3] , const maxs[3], const filename[]);
 
 /* Calculates the md5 keysum of a string */
 native md5(const szString[], md5buffer[34]);
@@ -775,20 +774,20 @@ native set_float_byref(param, Float:value);
 // Or copies an array from you to the calling plugin
 native get_array(param, dest[], size);
 native get_array_f(param, Float:dest[], size);
-native set_array(param, source[], size);
-native set_array_f(param, Float:source[], size);
+native set_array(param, const source[], size);
+native set_array_f(param, const Float:source[], size);
 
 /** The new menu natives */
 //If you set ml to 1, everything will be preformatted
 // with the multi-lingual system.
 //NOTE: ml=1 currently is not enabled.
 //handler[] will be called when someone presses a key on your menu
-native menu_create(title[], handler[], ml=0);
+native menu_create(const title[], const handler[], ml=0);
 
 //Creates a menu item callback handler.  
 //The callback handler is passed the playerid, menuid, and itemid.
 //It can return either ITEM_IGNORE, ITEM_ENABLED, or ITEM_DISABLED.
-native menu_makecallback(function[]);
+native menu_makecallback(const function[]);
 
 //Adds an item to a menu.  When displayed, the name will be shown.
 //If the player does not have the access it is disabled.
@@ -815,8 +814,8 @@ native menu_find_id(menu, page, key);
 //Gets/sets info about a menu option
 native menu_item_getinfo(menu, item, &access, command[], cmdlen, name[]="", namelen=0, &callback);
 
-native menu_item_setname(menu, item, name[]);
-native menu_item_setcmd(menu, item, cmd[]);
+native menu_item_setname(menu, item, const name[]);
+native menu_item_setcmd(menu, item, const cmd[]);
 native menu_item_setcall(menu, item, callback=-1);
 
 //Destroys a menu - invalidates the handle
@@ -1049,7 +1048,7 @@ native CreateOneForward(plugin_id, const name[], ...);
  * prepares an array.  use this and pass the result into
  * ExecuteForward() instead of the array itself.
  */
-native PrepareArray(array[], size, copyback=0);
+native PrepareArray(const array[], size, copyback=0);
 
 /**
  * executes a forward.  returns result in ret.

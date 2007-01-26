@@ -16,30 +16,30 @@
 #define ANGLEVECTOR_UP           3
 
 /* Returns distance between two vectors. */
-native get_distance(origin1[3],origin2[3]);
+native get_distance(const origin1[3], const origin2[3]);
 
 /* Gets distance between two origins (float). */
-native Float:get_distance_f(Float:Origin1[3], Float:Origin2[3]);
+native Float:get_distance_f(const Float:Origin1[3], const Float:Origin2[3]);
 
 /* Gives you a velocity in the direction a player is looking, iVelocity is the multiplier. */
 native velocity_by_aim(iIndex, iVelocity, Float:vRetValue[3]);
 
 /* Changes a vector into an angle vector. */
-native vector_to_angle(Float:fVector[3], Float:vReturn[3]);
+native vector_to_angle(const Float:fVector[3], Float:vReturn[3]);
 
 /* Changes an angle vector into a vector. */
-native angle_vector(Float:vector[3], FRU, Float:ret[3]);
+native angle_vector(const Float:vector[3], FRU, Float:ret[3]);
 
 /* Gets the length of a vector (float[3]). */
-native Float:vector_length(Float:vVector[3]);
+native Float:vector_length(const Float:vVector[3]);
 
 /* Gets the distance between 2 vectors (float[3]). */
-native Float:vector_distance(Float:vVector[3], Float:vVector2[3]);
+native Float:vector_distance(const Float:vVector[3], const Float:vVector2[3]);
 
 /* Changes an integer vec to a floating vec
  * This is not a for loop because that's slower
  */
-stock IVecFVec(IVec[3], Float:FVec[3])
+stock IVecFVec(const IVec[3], Float:FVec[3])
 {
 	FVec[0] = float(IVec[0])
 	FVec[1] = float(IVec[1])
@@ -49,7 +49,7 @@ stock IVecFVec(IVec[3], Float:FVec[3])
 }
 
 /* Changes a float vec to an integer vec */
-stock FVecIVec(Float:FVec[3], IVec[3])
+stock FVecIVec(const Float:FVec[3], IVec[3])
 {
 	IVec[0] = floatround(FVec[0])
 	IVec[1] = floatround(FVec[1])

@@ -164,7 +164,7 @@ native strfind(const string[], const sub[], ignorecase=0, pos=0);
 native strcmp(const string1[], const string2[], ignorecase=0);
 
 /* Tests if given string contains only digits. Also, returns false for zero-length strings. */
-stock bool:is_str_num(sString[])
+stock bool:is_str_num(const sString[])
 {
 	new i = 0;
 	
@@ -179,7 +179,7 @@ stock bool:is_str_num(sString[])
    the right output , the max right length, and then the delimiter string.
    By Suicid3
 */
-stock split(szInput[], szLeft[], pL_Max, szRight[], pR_Max, szDelim[])
+stock split(const szInput[], szLeft[], pL_Max, szRight[], pR_Max, const szDelim[])
 {
 	new iEnd = contain(szInput, szDelim);
 	new iStart = iEnd + strlen(szDelim);
@@ -204,7 +204,7 @@ stock split(szInput[], szLeft[], pL_Max, szRight[], pR_Max, szDelim[])
 }
 
 /* Removes a path from szFilePath leaving the name of the file in szFile for a pMax length. */
-stock remove_filepath(szFilePath[], szFile[], pMax)
+stock remove_filepath(const szFilePath[], szFile[], pMax)
 {
 	new len = strlen(szFilePath);
 
@@ -219,7 +219,7 @@ stock remove_filepath(szFilePath[], szFile[], pMax)
  * This ensures that no infinite replacements will take place by
  *  intelligently moving to the next string position each iteration.
  */
-stock replace_all(string[], len, what[], with[])
+stock replace_all(string[], len, const what[], const with[])
 {
 	new pos = 0;
 	

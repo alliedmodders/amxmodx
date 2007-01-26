@@ -54,7 +54,7 @@ forward dod_client_changeclass(id, class, oldclass);
 forward dod_client_spawn(id);
 
 /* Sets the model for a player */
-native dod_set_model(id, model[]);
+native dod_set_model(id, const model[]);
 
 /* Sets the model for a player */
 native dod_set_body_number(id, bodynumber);
@@ -64,7 +64,7 @@ native dod_clear_model(id);
 
 /* Custom Weapon Support */
 /* function will return index of new weapon */
-native custom_weapon_add( wpnname[], melee = 0, logname[]="" ); 
+native custom_weapon_add( const wpnname[], melee = 0, const logname[]="" ); 
 
 /* Function will pass damage done by this custom weapon to stats module and other plugins */
 native custom_weapon_dmg( weapon, att, vic, damage, hitplace=0 ); 
@@ -93,10 +93,10 @@ native xmod_is_custom_wpn(wpnindex);
 /************* Shared Natives End ********************************/
 
 /* weapon logname to weapon name convertion */
-native dod_wpnlog_to_name(logname[],name[],len);
+native dod_wpnlog_to_name(const logname[],name[],len);
 
 /* weapon logname to weapon index convertion */
-native dod_wpnlog_to_id(logname[]);
+native dod_wpnlog_to_id(const logname[]);
 
 native dod_get_map_info( info );
 

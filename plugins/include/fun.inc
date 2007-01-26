@@ -39,7 +39,7 @@ native set_user_armor(index, armor);
 native set_user_health(index, health);
 
 /* Move player to origin. */
-native set_user_origin(index, origin[3]);
+native set_user_origin(index, const origin[3]);
 
 /* Sets player rendering mode. */
 native set_user_rendering(index, fx = kRenderFxNone, r = 255, g = 255, b = 255, render = kRenderNormal, amount = 16);

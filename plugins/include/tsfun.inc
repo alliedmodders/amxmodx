@@ -51,10 +51,10 @@ forward client_stunt(id,stunttype,UNAVAILABLE);
 forward client_powerup(id,powerup,UNAVAILABLE);
 
 /* weapon logname to weapon name convertion */
-native ts_wpnlogtoname(logname[],name[],len);
+native ts_wpnlogtoname(const logname[],name[],len);
 
 /* weapon logname to weapon index convertion */
-native ts_wpnlogtoid(logname[]);
+native ts_wpnlogtoid(const logname[]);
 
 //UNAVAILABLE IN 1.70
 //native Float:ts_getusertime( index );		//!

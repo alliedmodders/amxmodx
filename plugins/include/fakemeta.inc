@@ -68,7 +68,7 @@ native set_pdata_float(_index,_Offset,Float:_Value,_linuxdiff=5);
 /* Registers a forward.
  * Returns an id you can pass to unregister_forward
  */
-native register_forward(_forwardType,_function[],_post=0);
+native register_forward(_forwardType,const _function[],_post=0);
 
 /* Unregisters a forward.
  * The registerId must be from register_forward, and

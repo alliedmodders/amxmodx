@@ -41,7 +41,7 @@ stock user_silentkill(index)
 }
 
 /* Creates a death message. */
-stock make_deathmsg(killer, victim, headshot, weapon[])
+stock make_deathmsg(killer, victim, headshot, const weapon[])
 {
 	message_begin(MSG_ALL, get_user_msgid("DeathMsg"), {0,0,0}, 0);
 	write_byte(killer);

@@ -39,7 +39,7 @@
  * 3 - couldn't connect to given hostname:port 
 */
 
-native socket_open(_hostname[], _port, _protocol = SOCKET_TCP, &_error);
+native socket_open(const _hostname[], _port, _protocol = SOCKET_TCP, &_error);
 
 /* Closes a Socket */
 
@@ -51,11 +51,11 @@ native socket_recv(_socket, _data[], _length);
 
 /* Sends data to the Socket */
 
-native socket_send(_socket, _data[], _length);
+native socket_send(_socket, const _data[], _length);
 
 /* Same as socket_send but Data can contain null bytes */
 
-native socket_send2(_socket, _data[], _length);
+native socket_send2(_socket, const _data[], _length);
 
 /* This function will return true if the state (buffer content) have changed within the last recieve or
 * the timeout, where timeout is a value in µSeconds, (1 sec =1000000 µsec). 

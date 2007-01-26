@@ -15,9 +15,9 @@
 #define _fakemeta_stocks_included
 
 // EngFuncs
-stock EF_PrecacheModel(string[])
+stock EF_PrecacheModel(const string[])
 	return engfunc(EngFunc_PrecacheModel, string)
-stock EF_PrecacheSound(string[])
+stock EF_PrecacheSound(const string[])
 	return engfunc(EngFunc_PrecacheSound, string)
 stock EF_SetModel(const ID, const STRING[])
 	return engfunc(EngFunc_SetModel, ID, STRING)

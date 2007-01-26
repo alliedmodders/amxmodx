@@ -19,7 +19,7 @@
   #include <engine>
 #endif
 
-stock fakedamage(idvictim,szClassname[],Float:takedmgdamage,damagetype)
+stock fakedamage(idvictim,const szClassname[],Float:takedmgdamage,damagetype)
 {
 	new entity = create_entity("trigger_hurt")
 	if (entity)
@@ -43,7 +43,7 @@ stock fakedamage(idvictim,szClassname[],Float:takedmgdamage,damagetype)
 }
 
 //wrapper for find_ent_by_class
-stock find_ent(iStart, szClassname[])
+stock find_ent(iStart, const szClassname[])
 {
 	return find_ent_by_class(iStart, szClassname)
 }
@@ -95,7 +95,7 @@ stock get_brush_entity_origin(ent, Float:orig[3])
 }
 
 /* Remove entity by name */
-stock remove_entity_name(eName[])
+stock remove_entity_name(const eName[])
 {
 	new iEntity = find_ent_by_class(-1, eName)
 	while (iEntity > 0)
@@ -185,7 +185,7 @@ stock get_entity_visibility(entity) {
 	return !(entity_get_int(entity, EV_INT_effects) & EF_NODRAW)
 }
 
-stock set_user_velocity(entity, Float:vec[3])
+stock set_user_velocity(entity, const Float:vec[3])
 {
 	return entity_set_vector(entity, EV_VEC_velocity, vec)
 }
@@ -197,7 +197,7 @@ stock get_user_velocity(entity, Float:vec[3])
 
 /* Backwards compatible */
 /* Hurts/Kills players in a sphere, like an explosion, Multiplier determines damage. */
-stock RadiusDamage(Float:fExplodeAt[3], iDamageMultiplier, iRadiusMultiplier) {
+stock RadiusDamage(const Float:fExplodeAt[3], iDamageMultiplier, iRadiusMultiplier) {
   return radius_damage(fExplodeAt, iDamageMultiplier, iRadiusMultiplier)
 }
 /* Gives you a velocity in the direction a player is looking, iVelocity is the multiplier. */
@@ -205,11 +205,11 @@ stock VelocityByAim(iIndex,iVelocity, Float:vRetValue[3]) {
   return velocity_by_aim(iIndex,iVelocity,vRetValue)
 }
 /* Will return the contents of a point (inside map? in sky? outside map? etc.). */
-stock PointContents(Float:fCheckAt[3]) {
+stock PointContents(const Float:fCheckAt[3]) {
   return point_contents(fCheckAt);
 }
 
-stock set_size(index, Float:mins[3], Float:maxs[3]) {
+stock set_size(index, const Float:mins[3], const Float:maxs[3]) {
   return entity_set_size(index,mins,maxs)
 }
 

@@ -59,7 +59,7 @@ native dod_set_user_kills(index,value,refresh=1);
 native dod_set_user_score(index,value,refresh=1);
 
 /* Sets new team name for this player */
-native dod_set_pl_teamname(index,szName[]);
+native dod_set_pl_teamname(index,const szName[]);
 
 /* Gets player team name */
 native dod_get_pl_teamname(index,szName[],len);
@@ -122,7 +122,7 @@ native objectives_reinit( player=0 );
 native objective_get_data( index, CP_VALUE:key, szValue[]="", len=0 );
 
 /* use this function to change control point's data */
-native objective_set_data( index, CP_VALUE:key , iValue=-1, szValue[]="" );
+native objective_set_data( index, CP_VALUE:key , iValue=-1, const szValue[]="" );
 
 enum CA_VALUE {
 	CA_edict = 1,
@@ -140,4 +140,4 @@ enum CA_VALUE {
 native area_get_data( index, CA_VALUE:key, szValue[]="", len=0 );
 
 /* use this function to change control point's area data */
-native area_set_data( index, CA_VALUE:key , iValue=-1, szValue[]="" );
+native area_set_data( index, CA_VALUE:key , iValue=-1, const szValue[]="" );

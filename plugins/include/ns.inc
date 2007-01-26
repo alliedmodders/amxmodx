@@ -31,12 +31,12 @@ forward client_built(idPlayer,idStructure,type,impulse);
 /* Returns if the map's combat or not. */
 native ns_is_combat();
 
-/* Sends a popup to a player.  Set target to 0 to send to everybody. Message length is 188 characters.  The last parameter, if set to 1, will only display when the player has cl_autohelp set to 1. */
-native ns_popup(target,szMsg[180],ah=0)
+/* Sends a popup to a player.  Set target to 0 to send to everybody. Message length is 180 characters.  The last parameter, if set to 1, will only display when the player has cl_autohelp set to 1. */
+native ns_popup(target,const szMsg[180],ah=0)
 
 /* Sets a player model.  Omit the second parameter to return to default.
    Note: This does *not* change back on death, team switch, gestations, etc. */
-native ns_set_player_model(id,szModel[]="");
+native ns_set_player_model(id,const szModel[]="");
 
 /* Sets a player's skin.  Omit second parameter to return to default.
    Note: This does *not* change back on death, team switch, gestations, etc. */
@@ -73,7 +73,7 @@ native ns_set_mask(id,mask,value);
 		Number is any other value:
 			The index of the #th matching structure is returned.
 */
-native ns_get_build(classname[],builtOnly=1,Number=0);
+native ns_get_build(const classname[],builtOnly=1,Number=0);
 
 /* Returns if the player has the weapon or not in their pev->weapons field.
    set "setweapon" to 0 to turn the bit off, set to 1 to turn it on. Or omit it to just return the value. */

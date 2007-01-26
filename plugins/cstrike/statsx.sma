@@ -1272,7 +1272,7 @@ public eventStartRound()
 
 	iRoundTime = read_data(1)
 	
-	if (iRoundTime >= get_cvar_float("mp_roundtime") * 60)
+	if (read_data(1) == floatround(get_cvar_float("mp_roundtime") * 60.0,floatround_floor))
 	{
 #if defined STATSX_DEBUG
 		log_amx("Reset round stats")

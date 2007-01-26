@@ -566,7 +566,7 @@ public showStatus(id)
 
 public eNewRound()
 {
-	if (read_data(1) == floatround(get_cvar_float("mp_roundtime") * 60.0))
+	if (read_data(1) == floatround(get_cvar_float("mp_roundtime") * 60.0,floatround_floor))
 	{
 		g_firstBlood = 1
 		g_C4Timer = 0

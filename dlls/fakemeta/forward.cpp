@@ -57,12 +57,12 @@ static cell AMX_NATIVE_CALL fm_return(AMX *amx, cell *params)
 		}
 	case FMV_FLOAT:
 		{
-			mFloatResult = amx_ctof(params[2]);
+			mFloatResult = amx_ctof(*(MF_GetAmxAddr(amx,params[2])));
 			break;
 		}
 	case FMV_CELL:
 		{
-			mCellResult = params[2];
+			mCellResult = *(MF_GetAmxAddr(amx,params[2]));
 			break;
 		}
 	default:

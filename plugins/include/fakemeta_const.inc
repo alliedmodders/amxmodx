@@ -20,10 +20,11 @@
 /* The actual return value of the function, use these instead of PLUGIN_HANDLED etc when
  * returning from registered forwards.
  */
-#define FMRES_HANDLED	2
-#define FMRES_SUPERCEDE	4
-#define FMRES_IGNORED	1
-#define FMRES_OVERRIDE	3
+#define FMRES_IGNORED	1	// Calls target function, returns normal value
+#define FMRES_HANDLED	2	// Tells metamod you did something, still calls target function and returns normal value
+#define FMRES_OVERRIDE	3	// Supposed to still call the target function but return your value instead
+							// however this does not work properly with metamod; use supercede instead.
+#define FMRES_SUPERCEDE	4	// Block the target call, and use your return value (if applicable)
 
 // Use this with GetInfoKeyBuffer if you want the server's localinfo buffer
 #define FM_NULLENT		-1

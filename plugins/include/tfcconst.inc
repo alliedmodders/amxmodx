@@ -69,6 +69,8 @@ enum {
 	TFC_PC_CIVILIAN,
 };
 
+#define TFC_PC_ENGINEER TFC_PC_ENGENEER
+
 // Goal items
 #define TFC_GOALITEM_BLUE   (1 << 17)
 #define TFC_GOALITEM_RED    (1 << 18)

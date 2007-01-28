@@ -169,6 +169,8 @@ enum {
 
 extern CVector<int> Engine[];
 extern CVector<int> EnginePost[];
+extern void *EngineAddrs[ENGFUNC_NUM+10];
+extern void *EngineAddrsPost[ENGFUNC_NUM+10];
 extern cell mCellResult;
 extern float mFloatResult;
 extern const char *mStringResult;

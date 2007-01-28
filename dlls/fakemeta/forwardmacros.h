@@ -810,11 +810,13 @@
 #define ENGHOOK(pfnCall) \
 	if (post) \
 	{ \
+		EngineAddrsPost[FM_##pfnCall] = &engtable->pfn##pfnCall; \
 		if (engtable->pfn##pfnCall == NULL) \
 			engtable->pfn##pfnCall = pfnCall##_post; \
 	} \
 	else \
 	{ \
+		EngineAddrs[FM_##pfnCall] = &engtable->pfn##pfnCall; \
 		if (engtable->pfn##pfnCall == NULL) \
 			engtable->pfn##pfnCall = pfnCall; \
 	} 
@@ -822,11 +824,13 @@
 #define DLLHOOK(pfnCall) \
 	if (post) \
 	{ \
+		EngineAddrsPost[FM_##pfnCall] = &dlltable->pfn##pfnCall; \
 		if (dlltable->pfn##pfnCall == NULL) \
 			dlltable->pfn##pfnCall = pfnCall##_post; \
 	} \
 	else \
 	{ \
+		EngineAddrs[FM_##pfnCall] = &dlltable->pfn##pfnCall; \
 		if (dlltable->pfn##pfnCall == NULL) \
 			dlltable->pfn##pfnCall = pfnCall; \
 	} 

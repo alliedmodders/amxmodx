@@ -2,6 +2,8 @@
 
 CVector<int> Engine[ENGFUNC_NUM+10];
 CVector<int> EnginePost[ENGFUNC_NUM+10];
+void *EngineAddrs[ENGFUNC_NUM+10];
+void *EngineAddrsPost[ENGFUNC_NUM+10];
 cell mCellResult;
 cell mlCellResult;
 float mFloatResult;
@@ -819,11 +821,17 @@ static cell AMX_NATIVE_CALL unregister_forward(AMX *amx, cell *params)
 		return 0;
 	}
 
+	void *patchAddr = NULL;
+
 	CVector<int> *peng = NULL;
 	if (post)
+	{
 		peng = &(EnginePost[func]);
-	else
+		patchAddr = EngineAddrsPost[func];
+	} else {
 		peng = &(Engine[func]);
+		patchAddr = EngineAddrs[func];
+	}
 
 	CVector<int>::iterator begin, end=peng->end();
 
@@ -832,10 +840,12 @@ static cell AMX_NATIVE_CALL unregister_forward(AMX *amx, cell *params)
 		if ((*begin) == func_id)
 		{
 			peng->erase(begin);
-			if (!peng->size())
+			if (!peng->size() 
+				&& patchAddr != NULL
+				&& func != FM_ServerDeactivate)
 			{
-				//:TODO: we should probably clear this here!
-				//but, we have no reverse lookup possible.
+				/* Clear out this forward if we no longer need it */
+				*(void **)patchAddr = NULL;
 			}
 			return 1;
 		}

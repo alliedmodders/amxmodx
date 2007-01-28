@@ -34,19 +34,25 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 	g_pFunctionTable->pfn##tcall =0; \
 	g_pFunctionTable_Post->pfn##tcall =NULL; \
 	Engine[FM_##tcall].clear(); \
-	EnginePost[FM_##tcall].clear()
+	EnginePost[FM_##tcall].clear(); \
+	EngineAddrs[FM_##tcall] = NULL; \
+	EngineAddrsPost[FM_##tcall] = NULL;
 
 #define RESETE(call) \
 	g_pengfuncsTable->pfn##call = NULL; \
 	g_pengfuncsTable_Post->pfn##call = NULL; \
 	Engine[FM_##call].clear(); \
-	EnginePost[FM_##call].clear() 
+	EnginePost[FM_##call].clear(); \
+	EngineAddrs[FM_##call] = NULL; \
+	EngineAddrsPost[FM_##call] = NULL;
 
 #define RESETN(call) \
 	g_pNewFunctionsTable->pfn##call = NULL; \
 	g_pNewFunctionsTable_Post->pfn##call = NULL; \
 	Engine[FM_##call].clear(); \
-	EnginePost[FM_##call].clear();
+	EnginePost[FM_##call].clear(); \
+	EngineAddrs[FM_##call] = NULL; \
+	EngineAddrsPost[FM_##call] = NULL;
 
 void FMH_ServerDeactivate_Post()
 {

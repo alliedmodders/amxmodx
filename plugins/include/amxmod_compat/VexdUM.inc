@@ -22,7 +22,10 @@
 #include <VexdUM_const>
 
 native radius_damage(inflictor, Float:dmg, Float:orig[3], Float:rad, bit = DMG_BULLET, wpnName[]="", hs = 0);
+native take_damage(victim, attacker, Float:orig[3], Float:dmg, bit = DMG_BULLET, wpnName[]="", hs = 0);
 native set_user_model(id, const Model[]="");
+native entity_use(eUsed, eOther);
+native get_num_ents();
 
 native DispatchKeyValue(ent, szKey[], szValue[]);
 

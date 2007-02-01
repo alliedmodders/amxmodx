@@ -692,6 +692,8 @@ static cell AMX_NATIVE_CALL get_es(AMX *amx, cell *params)
 		ptr = MF_GetAmxAddr(amx, params[3]);
 		*ptr = amx_ftoc(es->framerate);
 		return 1;
+	case ES_Body:
+		return es->body;
 	case ES_Controller:
 		ptr = MF_GetAmxAddr(amx, params[3]);
 		ptr[0] = es->controller[0];
@@ -936,6 +938,9 @@ static cell AMX_NATIVE_CALL set_es(AMX *amx, cell *params)
 		return 1;
 	case ES_FrameRate:
 		es->framerate = amx_ctof(*ptr);
+		return 1;
+	case ES_Body:
+		es->body = *ptr;
 		return 1;
 	case ES_Controller:
 		es->controller[0] = ptr[0];

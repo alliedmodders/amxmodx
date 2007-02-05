@@ -4,12 +4,12 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, TFlatRadioButtonUnit, StdCtrls, ComCtrls, mxFlatControls, JvPageList,
+  Dialogs, StdCtrls, ComCtrls, mxFlatControls, JvPageList,
   ExtCtrls, JvExControls, JvComponent, TFlatButtonUnit, jpeg, TFlatEditUnit,
   TFlatGaugeUnit, ImgList, FileCtrl, Registry, CheckLst, TFlatComboBoxUnit,
   TFlatCheckBoxUnit, IdBaseComponent, IdComponent, IdTCPConnection,
   IdTCPClient, IdFTP, IdException, IdAntiFreezeBase, IdAntiFreeze,
-  IdIntercept, IdLogBase, IdLogFile, JclFileUtils;
+  IdIntercept, IdLogBase, IdLogFile, JclFileUtils, TFlatRadioButtonUnit;
 
 type
   TfrmMain = class(TForm)
@@ -148,7 +148,7 @@ var
   frmMain: TfrmMain;
   gMultiAccount: Boolean;
 
-const VERSION = '1.76c';
+const VERSION = '1.77';
 
 implementation
 

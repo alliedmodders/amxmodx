@@ -11,6 +11,7 @@ type TOS = (osWindows, osLinux32{, osLinux64});
 procedure AddStatus(Text: String; Color: TColor; ShowTime: Boolean = True);
 procedure AddDone(Additional: String = '');
 procedure AddSkipped;
+procedure AddFailed;
 procedure AddNotFound;
 procedure MakeDir(Dir: String);
 procedure DownloadFile(eFile: String; eDestination: String);
@@ -82,6 +83,17 @@ begin
   frmMain.rtfDetails.SelStart := Length(frmMain.rtfDetails.Text);
   frmMain.rtfDetails.SelAttributes.Color := $004080FF; // orange
   frmMain.rtfDetails.SelText := ' Skipped.';
+  frmMain.rtfDetails.Perform(WM_VSCROLL, SB_BOTTOM, 0);
+
+  frmMain.Repaint;
+  Application.ProcessMessages;
+end;
+
+procedure AddFailed;
+begin
+  frmMain.rtfDetails.SelStart := Length(frmMain.rtfDetails.Text);
+  frmMain.rtfDetails.SelAttributes.Color := clMaroon;
+  frmMain.rtfDetails.SelText := ' Failed.';
   frmMain.rtfDetails.Perform(WM_VSCROLL, SB_BOTTOM, 0);
 
   frmMain.Repaint;
@@ -173,8 +185,12 @@ begin
   if frmMain.IdFTP.TransferType <> TransferType then
     frmMain.IdFTP.TransferType := TransferType;
   // upload the file
-  frmMain.IdFTP.Put(eFile, eDestination);
-  AddDone;
+  try
+    frmMain.IdFTP.Put(eFile, eDestination);
+    AddDone;
+  except
+    AddFailed;
+  end;
 end;
 
 procedure FTPMakeDir(eDir: String);

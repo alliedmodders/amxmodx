@@ -7,7 +7,7 @@ program AMXInstaller;
 
   - Indy 9 (www.indyproject.org)
   - FlatStyle Components (www.torry.net)
-  - FlatPack Component Pack (www.torry.net)
+  - mxFlatPack Component Pack (www.maxcomponents.net/components.html)
   - JVCL Lib Pack 3.0 (jvcl.sourceforge.net)
 
   AMXX Installer for AMX Mod X is developed under GNU Public License

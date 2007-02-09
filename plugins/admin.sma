@@ -652,9 +652,13 @@ accessUser(id, name[] = "")
 	get_user_authid(id, userauthid, 31)
 	
 	if (name[0])
+	{
 		copy(username, 31, name)
+	}
 	else
+	{
 		get_user_name(id, username, 31)
+	}
 	
 	get_cvar_string("amx_password_field", passfield, 31)
 	get_user_info(id, passfield, password, 31)
@@ -662,7 +666,9 @@ accessUser(id, name[] = "")
 	new result = getAccess(id, username, userauthid, userip, password)
 	
 	if (result & 1)
+	{
 		client_cmd(id, "echo ^"* %L^"", id, "INV_PAS")
+	}
 	
 	if (result & 2)
 	{
@@ -671,10 +677,14 @@ accessUser(id, name[] = "")
 	}
 	
 	if (result & 4)
+	{
 		client_cmd(id, "echo ^"* %L^"", id, "PAS_ACC")
+	}
 	
 	if (result & 8)
+	{
 		client_cmd(id, "echo ^"* %L^"", id, "PRIV_SET")
+	}
 	
 	return PLUGIN_CONTINUE
 }
@@ -682,15 +692,19 @@ accessUser(id, name[] = "")
 public client_infochanged(id)
 {
 	if (!is_user_connected(id) || !get_cvar_num("amx_mode"))
+	{
 		return PLUGIN_CONTINUE
+	}
 
 	new newname[32], oldname[32]
 	
 	get_user_name(id, oldname, 31)
 	get_user_info(id, "name", newname, 31)
 
-	if (!equal(newname, oldname))
+	if (!equali(newname, oldname))
+	{
 		accessUser(id, newname)
+	}
 
 	return PLUGIN_CONTINUE
 }

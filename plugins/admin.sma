@@ -574,13 +574,13 @@ getAccess(id, name[], authid[], ip[], password[])
 		} else {
 			if (g_aFlags[i] & FLAG_TAG)
 			{
-				if (contain(name, g_aName[i]) != -1)
+				if (containi(name, g_aName[i]) != -1)
 				{
 					index = i
 					break
 				}
 			}
-			else if (equal(name, g_aName[i]))
+			else if (equali(name, g_aName[i]))
 			{
 				index = i
 				break

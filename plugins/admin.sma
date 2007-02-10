@@ -141,7 +141,7 @@ public addadminfn(id, level, cid)
 			if (equali(t_arg, "name"))
 				idtype |= ADMIN_LOOKUP
 		} else {
-			console_print(id, "[%s] Unknown idtype ^"%s^", use one of: steamid, ip, name", PLUGINNAME, t_arg)
+			console_print(id, "[%s] Unknown id type ^"%s^", use one of: steamid, ip, name", PLUGINNAME, t_arg)
 			return PLUGIN_HANDLED
 		}
 	}

@@ -651,21 +651,28 @@ begin
       // ... change to / and create all the directories ...
       CurNode := nil;
       if (Path <> '/') then begin
-        IdFTP.ChangeDir('/');
-        with GetAllDirs do begin
-          for i := 0 to Count -1 do begin
-            if (Assigned(CurNode)) then
-              trvDirectories.Items.AddChild(trvDirectories.Items.Add(nil, Strings[i]), 'Scanning...')
-            else begin
-              CurNode := trvDirectories.Items.Add(nil, Strings[i]);
-              trvDirectories.Items.AddChild(CurNode, 'Scanning...');
-              if (Pos('/' + CurNode.Text + '/', Path) = 0) then
-                CurNode := nil;
-            end
+        try
+          IdFTP.ChangeDir('/');
+          with GetAllDirs do begin
+            for i := 0 to Count -1 do begin
+              if (Assigned(CurNode)) then
+                trvDirectories.Items.AddChild(trvDirectories.Items.Add(nil, Strings[i]), 'Scanning...')
+              else begin
+                CurNode := trvDirectories.Items.Add(nil, Strings[i]);
+                trvDirectories.Items.AddChild(CurNode, 'Scanning...');
+                if (Pos('/' + CurNode.Text + '/', Path) = 0) then
+                  CurNode := nil;
+              end
+            end;
+            Free;
           end;
-          Free;
+          IdFTP.ChangeDir(Path);
+        except
+          if (IdFTP.Connected) then
+            IdFTP.ChangeDir(Path)
+          else
+            IdFTP.Connect;
         end;
-        IdFTP.ChangeDir(Path);
       end;
       // ... find directories in start path ...
       if eStr.Count <> 0 then begin

@@ -730,11 +730,12 @@ object frmMain: TfrmMain
     Top = 72
     Width = 885
     RightClickSelect = False
+    Painter = mtpDocuments
     Tabs = <
       item
         Caption = '< 1 Untitled.sma >'
+        Selected = True
       end>
-    Painter = mtpDocuments
     OnTabClosing = tbDocsTabClosing
     OnTabSelected = tbDocsTabSelected
     OnMouseDown = tbDocsMouseDown
@@ -937,6 +938,7 @@ object frmMain: TfrmMain
             Top = 26
             Width = 191
             Height = 199
+            Style = isItemPainter
             Align = alClient
             Divider = 110
             ItemHeight = 16
@@ -7826,7 +7828,32 @@ object frmMain: TfrmMain
     end
   end
   object JvInspectorDotNETPainter: TJvInspectorDotNETPainter
+    CategoryFont.Charset = DEFAULT_CHARSET
+    CategoryFont.Color = clBtnText
+    CategoryFont.Height = -11
+    CategoryFont.Name = 'MS Sans Serif'
+    CategoryFont.Style = []
+    NameFont.Charset = DEFAULT_CHARSET
+    NameFont.Color = clWindowText
+    NameFont.Height = -11
+    NameFont.Name = 'MS Sans Serif'
+    NameFont.Style = []
+    ValueFont.Charset = DEFAULT_CHARSET
+    ValueFont.Color = clWindowText
+    ValueFont.Height = -11
+    ValueFont.Name = 'MS Sans Serif'
+    ValueFont.Style = []
     DrawNameEndEllipsis = True
+    HideSelectFont.Charset = DEFAULT_CHARSET
+    HideSelectFont.Color = clHighlightText
+    HideSelectFont.Height = -11
+    HideSelectFont.Name = 'MS Sans Serif'
+    HideSelectFont.Style = []
+    SelectedFont.Charset = DEFAULT_CHARSET
+    SelectedFont.Color = clHighlightText
+    SelectedFont.Height = -11
+    SelectedFont.Name = 'MS Sans Serif'
+    SelectedFont.Style = []
     Left = 662
     Top = 36
   end

@@ -21,7 +21,7 @@ uses
   JvInspector, JvExControls, JvPluginManager, JvgLanguageLoader,
   JvWndProcHook, CommCtrl, JvPageList, JvPageListTreeView,
   SciSearchReplaceBase, SpTBXControls, JvTabBar, TB2ExtItems, SpTBXEditors,
-  TBXLists, SpTBXLists;
+  TBXLists, SpTBXLists, JvComponentBase;
 
 type
   TfrmMain = class(TForm)

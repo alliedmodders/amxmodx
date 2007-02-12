@@ -5056,6 +5056,7 @@ object frmMain: TfrmMain
             '2111-1307  USA'
           ' Everyone is permitted to copy and distribute verbatim copies'
           ' of this license document, but changing it is not allowed.'
+          ''
           #9#9#9'    Preamble'
           '  The licenses for most software are designed to take away your'
           

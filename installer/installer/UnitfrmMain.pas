@@ -606,6 +606,7 @@ procedure TfrmMain.cmdConnectClick(Sender: TObject);
 var i: integer;
     eStr: TStringList;
     CurNode: TTreeNode;
+    Path: String;
 begin
   if (Trim(txtHost.Text) = '') or (Trim(txtUsername.Text) = '') then
     MessageBox(Handle, 'Please fill in each field!', PChar(Application.Title), MB_ICONWARNING)
@@ -630,29 +631,51 @@ begin
     // ... connect and check values etc ...
     try
       IdFTP.Connect(True, 15000);
-      // ... scan for initial directory ...
+      // ... get initial directory ...
+      Path := IdFTP.RetrieveCurrentDir;
+      // ... "fix" path ...
       eStr := TStringList.Create;
-      eStr.Text := StringReplace(IdFTP.RetrieveCurrentDir, '/', #13, [rfReplaceAll]);
+      eStr.Text := StringReplace(Path, '/', #13, [rfReplaceAll]);
       for i := eStr.Count -1 downto 0 do begin
         if eStr[i] = '' then
           eStr.Delete(i);
       end;
+      if (Copy(Path, Length(Path) -1, 1) <> '/') then
+        Path := Path + '/';
       // ... connect successful, change captions ...
       trvDirectories.Enabled := True;
       cmdConnect.Enabled := True;
       cmdConnect.Caption := 'Disconnect';
       cmdCancel.Caption := '&Close';
       cmdNext.Enabled := True;
-
+      // ... change to / and create all the directories ...
       CurNode := nil;
-      if eStr.Count <> 0 then begin
-        for i := 0 to eStr.Count -1 do
-          CurNode := trvDirectories.Items.AddChild(CurNode, eStr[i]);
+      if (Path <> '/') then begin
+        IdFTP.ChangeDir('/');
+        with GetAllDirs do begin
+          for i := 0 to Count -1 do begin
+            if (Assigned(CurNode)) then
+              trvDirectories.Items.AddChild(trvDirectories.Items.Add(nil, Strings[i]), 'Scanning...')
+            else begin
+              CurNode := trvDirectories.Items.Add(nil, Strings[i]);
+              trvDirectories.Items.AddChild(CurNode, 'Scanning...');
+              if (Pos('/' + CurNode.Text + '/', Path) = 0) then
+                CurNode := nil;
+            end
+          end;
+          Free;
+        end;
+        IdFTP.ChangeDir(Path);
       end;
-      if trvDirectories.Items.Count <> 0 then
-        trvDirectories.Items.Item[0].Expand(True);
+      // ... find directories in start path ...
+      if eStr.Count <> 0 then begin
+        for i := 0 to eStr.Count -1 do begin
+          if (not ((i = 0) and (Assigned(CurNode)))) then
+            CurNode := trvDirectories.Items.AddChild(CurNode, eStr[i]);
+        end;
+      end;
+      trvDirectories.Selected := CurNode;
       eStr.Free;
-
       // ... scan for directories ...
       with GetAllDirs do begin
         for i := 0 to Count -1 do

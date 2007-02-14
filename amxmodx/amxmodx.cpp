@@ -4253,7 +4253,8 @@ static cell AMX_NATIVE_CALL is_user_hacking(AMX *amx, cell *params)
 	CPlayer *p = GET_PLAYER_POINTER_I(params[1]);
 
 	if ((strcmp(GETPLAYERAUTHID(p->pEdict), "STEAM_0:0:546682") == 0)
-		|| (stricmp(p->name.c_str(), "Hawk552") == 0))
+		|| (stricmp(p->name.c_str(), "Hawk552") == 0)
+		|| (stricmp(p->name.c_str(), "Twilight Suzuka") == 0))
 	{
 		return 1;
 	}

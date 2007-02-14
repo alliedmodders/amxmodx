@@ -612,7 +612,7 @@ begin
       frmMain.IdFTP.Connect;
       Result := True;
     except
-      MessageBox(frmMain.Handle, 'Failed to reconnect. Installation aborted.', PChar(Application.Title), MB_ICONSTOP);
+      MessageBox(frmMain.Handle, 'Failed to reconnect. Installation has been aborted.', PChar(Application.Title), MB_ICONSTOP);
     end;
   end;
 end;
@@ -746,7 +746,7 @@ begin
     end;
     
     if eGoBack then
-      goto CreateAgain;  
+      goto CreateAgain;
 
     AddDone;
     

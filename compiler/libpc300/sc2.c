@@ -1344,7 +1344,8 @@ static int command(void)
   case tpERROR:
     while (*lptr<=' ' && *lptr!='\0')
       lptr++;
-    error(111,lptr);    /* user error */
+	if (!SKIPPING)
+      error(111,lptr);    /* user error */
     break;
   default:
     error(31);          /* unknown compiler directive */

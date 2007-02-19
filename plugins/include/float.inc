@@ -102,7 +102,7 @@ stock Float:operator--(Float:oper)
 	return oper-1.0;
 
 stock Float:operator-(Float:oper)
-	return oper^Float:((-1)^((-1)/2)); /* IEEE values are sign/magnitude */
+    return oper^Float:cellmin; /* IEEE values are sign/magnitude */
 
 stock Float:operator*(Float:oper1, oper2)
 	return floatmul(oper1, float(oper2)); /* "*" is commutative */

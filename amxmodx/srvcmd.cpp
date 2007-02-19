@@ -83,11 +83,27 @@ void amx_command()
 
 		if (plugin && plugin->isValid()) 
 		{
-			plugin->pausePlugin();
-			print_srvconsole("Paused plugin \"%s\"\n", plugin->getName());
+			if (plugin->isPaused())
+			{
+				if (plugin->isStopped())
+				{
+					print_srvconsole("Plugin \"%s\" is stopped and may not be paused.\n",plugin->getName());
+				}
+				else
+				{
+					print_srvconsole("Plugin \"%s\" is already paused.\n",plugin->getName());
+				}
+			}
+			else
+			{
+				plugin->pausePlugin();
+				print_srvconsole("Paused plugin \"%s\"\n", plugin->getName());
+			}
 		}
 		else 
+		{
 			print_srvconsole("Couldn't find plugin matching \"%s\"\n", sPlugin);
+		}
 	}
 	else if (!strcmp(cmd, "unpause") && CMD_ARGC() > 2) 
 	{
@@ -97,14 +113,21 @@ void amx_command()
 
 		if (plugin && plugin->isValid() && plugin->isPaused()) 
 		{
-			plugin->unpausePlugin();
-			print_srvconsole("Unpaused plugin \"%s\"\n", plugin->getName());
+			if (plugin->isStopped())
+			{
+				print_srvconsole("Plugin \"%s\" is stopped and may not be unpaused.\n", plugin->getName());
+			}
+			else
+			{
+				plugin->unpausePlugin();
+				print_srvconsole("Unpaused plugin \"%s\"\n", plugin->getName());
+			}
 		}
 		else if (!plugin)
 		{
 			print_srvconsole("Couldn't find plugin matching \"%s\"\n", sPlugin);
 		} else {
-			print_srvconsole("Plugin %s can't be unpaused right now.", sPlugin);
+			print_srvconsole("Plugin %s can't be unpaused right now.\n", sPlugin);
 		}
 	}
 	else if (!strcmp(cmd, "cvars")) 

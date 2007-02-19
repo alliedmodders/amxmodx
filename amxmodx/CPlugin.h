@@ -98,6 +98,7 @@ public:
 		inline void setError(const char* n) { errorMsg.assign(n); }
 		inline bool isValid() const { return (status >= ps_paused); }
 		inline bool isPaused() const { return ((status == ps_paused) || (status == ps_stopped)); }
+		inline bool isStopped() const { return (status == ps_stopped); }
 		inline bool isExecutable(int id) const { return (isValid() && !isPaused());	}
 		
 		void Finalize();

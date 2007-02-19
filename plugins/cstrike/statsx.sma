@@ -1268,11 +1268,8 @@ public eventStartGame()
 public eventStartRound()
 {
 	new iTeam, id, i
-	new iRoundTime
-
-	iRoundTime = read_data(1)
 	
-	if (read_data(1) == floatround(get_cvar_float("mp_roundtime") * 60.0,floatround_floor))
+	if (read_data(1) >= floatround(get_cvar_float("mp_roundtime") * 60.0,floatround_floor))
 	{
 #if defined STATSX_DEBUG
 		log_amx("Reset round stats")

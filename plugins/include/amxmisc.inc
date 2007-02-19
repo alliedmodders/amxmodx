@@ -11,6 +11,14 @@
 #endif
 #define _amxmisc_included
 
+#if !defined _amxmodx_included
+	#if defined AMXMOD_BCOMPAT
+		#include <amxmod>
+	#else
+		#include <amxmodx>
+	#endif
+#endif
+
 #if defined AMXMOD_BCOMPAT
 #if defined _translator_included
 #define SIMPLE_T(%1)	_T(%1)

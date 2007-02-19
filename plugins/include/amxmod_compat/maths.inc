@@ -46,7 +46,7 @@ stock Float:cos(Float:value)
 
 stock Float:cosh(Float:value)
 {
-	retuen floatcosh(value, radian)
+	return floatcosh(value, radian)
 }
 
 stock Float:atan(Float:value)

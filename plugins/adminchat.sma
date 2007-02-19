@@ -236,6 +236,8 @@ public cmdPsay(id, level, cid)
 	if (!priv)
 		return PLUGIN_HANDLED
 	
+	get_user_name(priv, name, 31); 
+	
 	new length = strlen(name) + 1
 	new message[192], name2[32], authid[32], authid2[32], userid, userid2
 	

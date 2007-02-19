@@ -90,7 +90,7 @@ int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 	{
 		if (warn)
 		{
-			AMXXLOG_Log("[AMXX] Plugins list not found (file \"%s\")", filename);
+			AMXXLOG_Error("[AMXX] Plugins list not found (file \"%s\")", filename);
 		}
 		return 1;
 	}
@@ -160,7 +160,7 @@ int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 			char errorMsg[255];
 			sprintf(errorMsg, "%s (plugin \"%s\")", error, pluginName);
 			plugin->setError(errorMsg);
-			AMXXLOG_Log("[AMXX] %s", plugin->getError());
+			AMXXLOG_Error("[AMXX] %s", plugin->getError());
 		}
 	}
 

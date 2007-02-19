@@ -67,8 +67,7 @@ forward client_command(id);
 /* Called when client is entering to a game. */
 forward client_putinserver(id);
 
-/* Sets informations about plugin. */
-native register_plugin(const plugin_name[],const version[],const author[]);
+snative register_plugin(const plugin_name[],const version[],const author[]);
 
 /* Precache model. Can be used only in plugin_precache() function.*/
 native precache_model(const name[]);
@@ -607,6 +606,7 @@ native is_plugin_loaded(const name[]);
 /* Gets info about plugin by given index.
  * Function returns -1 if plugin doesn't exist with given index. 
  * Note: the [...] portion should not be used, and is only for backward compatibility.
+ * Use index of -1 to use the calling plugin's ID.
  */
 native get_plugin(index,filename[],len1,name[],len2,version[],len3,author[],len4,status[],len5,...);
 

@@ -67,6 +67,7 @@ forward client_command(id);
 /* Called when client is entering to a game. */
 forward client_putinserver(id);
 
+/* Sets informations about plugin. Returns the plugin id of the calling plugin. */
 native register_plugin(const plugin_name[],const version[],const author[]);
 
 /* Precache model. Can be used only in plugin_precache() function.*/

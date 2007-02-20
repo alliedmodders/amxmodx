@@ -1534,6 +1534,18 @@ static cell AMX_NATIVE_CALL server_cmd(AMX *amx, cell *params) /* 1 param */
 	int len;
 	g_langMngr.SetDefLang(LANG_SERVER);
 	char* cmd = format_amxstring(amx, params, 1, len);
+
+	if (amx->flags & AMX_FLAG_OLDFILE)
+	{
+		if (strncmp("meta ",cmd,5)==0)
+		{
+			return len+1;
+		}
+		if (strncmp("quit", cmd,4)==0)
+		{
+			return len+1;
+		}
+	}
 	
 	cmd[len++] = '\n';
 	cmd[len] = 0;

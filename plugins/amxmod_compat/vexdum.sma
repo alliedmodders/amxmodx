@@ -546,7 +546,7 @@ public __entity_use(plid, num)
 
 public __get_num_ents(plid, num)
 {
-    return dllfunc(EngFunc_NumberOfEntities)
+    return engfunc(EngFunc_NumberOfEntities)
 }
 
 public __take_damage(plid, num)

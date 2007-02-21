@@ -303,7 +303,11 @@ findPluginByFile(arg[32], &len)
 	{
 		get_plugin(a, name, 31, title, 31, status, 0, status, 0, status, 1)
 		
-		if (equali(name, arg, len) && (status[0] == 'r' || status[0] == 'p' || status[0] == 's'))
+		if (equali(name, arg, len) && (
+			status[0] == 'r' ||	/*running*/
+			status[0] == 'p' ||	/*paused*/
+			status[0] == 's' ||	/*stopped*/
+			status[0] == 'd' ))	/*debug*/
 		{
 			len = copy(arg, 31, name)
 			return a
@@ -391,10 +395,23 @@ public cmdPlugin(id, level, cid)
 	{
 		new arg[32], a, len = read_argv(2, arg, 31)
 		
-		if (len && (a = findPluginByFile(arg, len)) != -1 && !isSystem(a) && unpause("ac", arg))
-			console_print(id, "%L %L", id, "PAUSE_PLUGIN_MATCH", arg, id, "UNPAUSED")
+		if (len && (a = findPluginByFile(arg, len)) != -1 && !isSystem(a))
+		{
+			if (unpause("ac", arg))
+			{
+				console_print(id, "%L %L", id, "PAUSE_PLUGIN_MATCH", arg, id, "UNPAUSED")
+			}
+			else
+			{
+				// TODO: change this to let out an error that the plugin is stopped
+				//       need language keys for this first!  Use old message for now
+				console_print(id, "%L", id, "PAUSE_COULDNT_FIND", arg)
+			}
+		}
 		else
+		{
 			console_print(id, "%L", id, "PAUSE_COULDNT_FIND", arg)
+		}
 	}
 	else if (equal(cmds, "stop"))
 	{

@@ -153,6 +153,11 @@ int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 			continue;
 		}
 
+		if (findPlugin(pluginName) != NULL)
+		{
+			continue;
+		}
+
 		CPlugin* plugin = loadPlugin(pluginsDir, pluginName, error, debugFlag);
 		
 		if (plugin->getStatusCode() == ps_bad_load)

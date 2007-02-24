@@ -389,7 +389,6 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 
 		if (enabled)
 		{
-			keys |= (1<<option);
 			if (m_AutoColors) 
 			{
 				_snprintf(buffer, sizeof(buffer)-1, "\\r%d.\\w %s\n", option_display, pItem->name.c_str());

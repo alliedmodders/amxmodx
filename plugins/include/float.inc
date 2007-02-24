@@ -82,10 +82,10 @@ native Float:floatabs(Float:value);
 
 /* Return the angle of a sine, cosine or tangent.
  * The output angle may be in radians, degrees, or grades. */
-native Float:floatatan(Float:angle, radix);
-native Float:floatacos(Float:angle, radix);
-native Float:floatasin(Float:angle, radix);
-native Float:floatatan2(Float:x, Float:y, radix);
+native Float:floatatan(Float:angle, {anglemode,_}:radix);
+native Float:floatacos(Float:angle, {anglemode,_}:radix);
+native Float:floatasin(Float:angle, {anglemode,_}:radix);
+native Float:floatatan2(Float:x, Float:y, {anglemode,_}:radix);
 
 #pragma rational Float
 

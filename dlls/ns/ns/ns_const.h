@@ -6,56 +6,56 @@
 
 // Offsets (used in NPData.cpp)
 
-#define      OFFSET_WIN_RESOURCES		1816	//454 * 4
-#define      OFFSET_LIN_RESOURCES		1836	//459 * 4
+#define      OFFSET_WIN_RESOURCES		1816	//454 * 4 // est: 454 // CONFIRMED
+#define      OFFSET_LIN_RESOURCES		1836	//459 * 4 // no change
 
-#define      OFFSET_WIN_WEAPDMG			400		//100 * 4
-#define      OFFSET_LIN_WEAPDMG			416		//104 * 4
+#define      OFFSET_WIN_WEAPDMG			408		//100 * 4 // est: 102 // CONFIRMED
+#define      OFFSET_LIN_WEAPDMG			424		//106 * 4 // Changed + 8 Bytes
 
-#define      OFFSET_WIN_WEAPRANGE		396		//99 * 4
-#define      OFFSET_LIN_WEAPRANGE		412		//103 * 4
+#define      OFFSET_WIN_WEAPRANGE		404		//99 * 4 // est: 101 // CONFIRMED
+#define      OFFSET_LIN_WEAPRANGE		420		//105 * 4 // Changed + 8 Bytes
 
-#define      OFFSET_WIN_WEAPCLIP		364		//91 * 4
-#define      OFFSET_LIN_WEAPCLIP		380		//95 * 4
+#define      OFFSET_WIN_WEAPCLIP		364		//91 * 4 // est: 91 // CONFIRMED
+#define      OFFSET_LIN_WEAPCLIP		380		//95 * 4 // no change
 
-#define      OFFSET_WIN_HIVE_TRAIT		484		//121 * 4
-#define      OFFSET_LIN_HIVE_TRAIT		500		//125 * 4
+#define      OFFSET_WIN_HIVE_TRAIT		488		//121 * 4 // est: 122  // CONFIRMED
+#define      OFFSET_LIN_HIVE_TRAIT		504		//126 * 4 // Changed + 4 bytes
 
-#define      OFFSET_WIN_SCORE			6556	//1639 * 4
-#define      OFFSET_LIN_SCORE			6576	//1644 * 4
+#define      OFFSET_WIN_SCORE			6588	//1639 * 4 // est: 1647 // CONFIRMED
+#define      OFFSET_LIN_SCORE			6608	//1644 * 4 // Changed + 32 bytes
 
-#define      OFFSET_WIN_EXP				6480	//1620 * 4
-#define      OFFSET_LIN_EXP				6500	//1625 * 4
+#define      OFFSET_WIN_EXP				6512	//1620 * 4 // est: 1628 // CONFIRMED
+#define      OFFSET_LIN_EXP				6532	//1633 * 4 // Changed + 32 bytes
 
-#define      OFFSET_WIN_POINTS			6488	//1622 * 4
-#define      OFFSET_LIN_POINTS			6508	//1627 * 4
+#define      OFFSET_WIN_POINTS			6520	//1622 * 4 // est: 1630 // CONFIRMED
+#define      OFFSET_LIN_POINTS			6540	//1635 * 4 // Changed + 32 bytes
 
-#define      OFFSET_WIN_AMMO_LMG		1116	//279 * 4
-#define      OFFSET_LIN_AMMO_LMG		1136	//284 * 4
+#define      OFFSET_WIN_AMMO_LMG		1116	//279 * 4 // est: 279 // CONFIRMED
+#define      OFFSET_LIN_AMMO_LMG		1136	//284 * 4 // no change
 
-#define      OFFSET_WIN_AMMO_PISTOL		1120	//280 * 4
-#define      OFFSET_LIN_AMMO_PISTOL		1140	//285 * 4
+#define      OFFSET_WIN_AMMO_PISTOL		1120	//280 * 4 // est: 280 // CONFIRMED
+#define      OFFSET_LIN_AMMO_PISTOL		1140	//285 * 4 // no change
 
-#define      OFFSET_WIN_AMMO_SHOTGUN	1124	//281 * 4
-#define      OFFSET_LIN_AMMO_SHOTGUN	1144	//286 * 4
+#define      OFFSET_WIN_AMMO_SHOTGUN	1124	//281 * 4 // est: 281 // CONFIRMED
+#define      OFFSET_LIN_AMMO_SHOTGUN	1144	//286 * 4 // no change
 
-#define      OFFSET_WIN_AMMO_HMG		1128	//282 * 4
-#define      OFFSET_LIN_AMMO_HMG		1148	//287 * 4
+#define      OFFSET_WIN_AMMO_HMG		1128	//282 * 4 // est: 282 // CONFIRMED
+#define      OFFSET_LIN_AMMO_HMG		1148	//287 * 4 // no change
 
-#define      OFFSET_WIN_AMMO_GL			1132	//283 * 4
-#define      OFFSET_LIN_AMMO_GL			1152	//288 * 4
+#define      OFFSET_WIN_AMMO_GL			1132	//283 * 4 // est: 283 // CONFIRMED
+#define      OFFSET_LIN_AMMO_GL			1152	//288 * 4 // no change
 
-#define      OFFSET_WIN_AMMO_HG			1136	//284 * 4
-#define      OFFSET_LIN_AMMO_HG			1156	//289 * 4
+#define      OFFSET_WIN_AMMO_HG			1136	//284 * 4 // est: 284 // CONFIRMED
+#define      OFFSET_LIN_AMMO_HG			1156	//289 * 4 // no change
 
-#define      OFFSET_WIN_DEATHS			1380	//345 * 4
-#define      OFFSET_LIN_DEATHS			1400	//349 * 4
+#define      OFFSET_WIN_DEATHS			1380	//345 * 4 // est: 345 // CONFIRMED
+#define      OFFSET_LIN_DEATHS			1400	//350 * 4 // no change
 
-#define      OFFSET_WIN_STRUCTOWNER		324		//81 * 4
-#define      OFFSET_LIN_STRUCTOWNER		340		//85 * 4
+#define      OFFSET_WIN_STRUCTOWNER		324		//81 * 4 // est: 81 // CONFIRMED
+#define      OFFSET_LIN_STRUCTOWNER		340		//85 * 4 // no change
 
-#define      OFFSET_WIN_HIVEABILITY		6220	//1555 * 4
-#define      OFFSET_LIN_HIVEABILITY		6240	//1560 * 4
+#define      OFFSET_WIN_HIVEABILITY		6248	//1555 * 4 // est: 1562 // CONFIRMED
+#define      OFFSET_LIN_HIVEABILITY		6268	//1567 * 4 // Changed + 28 bytes
 
 enum
 {

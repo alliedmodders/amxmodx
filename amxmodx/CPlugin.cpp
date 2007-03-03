@@ -217,7 +217,7 @@ CPluginMngr::CPlugin* CPluginMngr::findPlugin(int index)
 	
 	return a;
 }
-	
+
 CPluginMngr::CPlugin* CPluginMngr::findPlugin(const char* name)
 {
 	if (!name)
@@ -234,6 +234,22 @@ CPluginMngr::CPlugin* CPluginMngr::findPlugin(const char* name)
 		a = a->next;
 	
 	return a;
+}
+
+void CPluginMngr::CPlugin::AddToFailCounter(unsigned int i)
+{
+	failcounter += i;
+	if ((failcounter >= 3)
+		&& (status == ps_paused
+		   || status == ps_running))
+	{
+		int allow_nongpl = atoi(get_localinfo("allow_nongpl", "0"));
+		if (!allow_nongpl)
+		{
+			errorMsg.assign("This plugin is non-GPL, violating AMX Mod X's license.  Edit core.ini to allow this.");
+			status = ps_bad_load;
+		}
+	}
 }
 
 const char* CPluginMngr::CPlugin::getStatus() const
@@ -263,6 +279,7 @@ CPluginMngr::CPlugin::CPlugin(int i, const char* p, const char* n, char* e, int 
 {
 	const char* unk = "unknown";
 	
+	failcounter = 0;
 	title.assign(unk);
 	author.assign(unk);
 	version.assign(unk);

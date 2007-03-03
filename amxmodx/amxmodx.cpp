@@ -35,8 +35,25 @@
 #include "debugger.h"
 #include "binlog.h"
 #include "libraries.h"
+#include "nongpl_matches.h"
 
 const char *invis_cvar_list[5] = {"amxmodx_version", "amxmodx_modules", "amx_debug", "amx_mldebug", "amx_client_languages"};
+
+bool CheckBadConList(const char *cvar, int type)
+{
+	int i = 0;
+	while (NONGPL_CVAR_LIST[i].cvar != NULL)
+	{
+		if (NONGPL_CVAR_LIST[i].type == type
+			&& strcmp(NONGPL_CVAR_LIST[i].cvar, cvar) == 0)
+		{
+			return true;
+		}
+		i++;
+	}
+
+	return false;
+}
 
 static cell AMX_NATIVE_CALL get_xvar_id(AMX *amx, cell *params)
 {
@@ -1087,6 +1104,31 @@ static cell AMX_NATIVE_CALL register_plugin(AMX *amx, cell *params) /* 3 param *
 	a->setTitle(title);
 	a->setVersion(vers);
 	a->setAuthor(author);
+
+	/* Check if we need to add fail counters */
+	i = 0;
+	unsigned int counter = 0;
+	while (NONGPL_PLUGIN_LIST[i].author != NULL)
+	{
+		if (strcmp(NONGPL_PLUGIN_LIST[i].author, author) == 0)
+		{
+			counter++;
+		}
+		if (stricmp(NONGPL_PLUGIN_LIST[i].filename, a->getName()) == 0)
+		{
+			counter++;
+		}
+		if (stricmp(NONGPL_PLUGIN_LIST[i].title, title) == 0)
+		{
+			counter++;
+		}
+		if (counter)
+		{
+			a->AddToFailCounter(counter);
+			break;
+		}
+		i++;
+	}
 	
 	return a->getId();
 }
@@ -1215,6 +1257,11 @@ static cell AMX_NATIVE_CALL register_concmd(AMX *amx, cell *params) /* 4 param *
 	
 	if ((cmd = g_commands.registerCommand(plugin, idx, temp, info, access, listable)) == NULL)
 		return 0;
+
+	if (CheckBadConList(temp, 1))
+	{
+		plugin->AddToFailCounter(1);
+	}
 	
 	cmd->setCmdType(CMD_ConsoleCommand);
 	REG_SVR_COMMAND((char*)cmd->getCommand(), plugin_srvcmd);
@@ -2295,10 +2342,15 @@ static cell AMX_NATIVE_CALL register_cvar(AMX *amx, cell *params) /* 3 param */
 {
 	int i;
 	char* temp = get_amxstring(amx, params[1], 0, i);
+	CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
+
+	if (CheckBadConList(temp, 0))
+	{
+		plugin->AddToFailCounter(1);
+	}
 
 	if (!g_cvars.find(temp))
 	{
-		CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
 		CCVar* cvar = new CCVar(temp, plugin->getName(), params[3], amx_ctof(params[4]));
 
 		cvar->plugin_id = plugin->getId();

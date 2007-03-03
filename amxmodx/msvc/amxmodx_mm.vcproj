@@ -440,6 +440,9 @@
 				RelativePath="..\newmenus.cpp">
 			</File>
 			<File
+				RelativePath="..\nongpl_matches.cpp">
+			</File>
+			<File
 				RelativePath="..\optimizer.cpp">
 			</File>
 			<File
@@ -580,6 +583,9 @@
 			</File>
 			<File
 				RelativePath="..\newmenus.h">
+			</File>
+			<File
+				RelativePath="..\nongpl_matches.h">
 			</File>
 			<File
 				RelativePath="..\optimizer.h">

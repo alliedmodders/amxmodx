@@ -240,15 +240,10 @@ void CPluginMngr::CPlugin::AddToFailCounter(unsigned int i)
 {
 	failcounter += i;
 	if ((failcounter >= 3)
-		&& (status == ps_paused
-		   || status == ps_running))
+		&& (status ))
 	{
-		int allow_nongpl = atoi(get_localinfo("allow_nongpl", "0"));
-		if (!allow_nongpl)
-		{
-			errorMsg.assign("This plugin is non-GPL, violating AMX Mod X's license.  Edit core.ini to allow this.");
-			status = ps_bad_load;
-		}
+		errorMsg.assign("This plugin is non-GPL which violates AMX Mod X's license.");
+		status = ps_bad_load;
 	}
 }
 

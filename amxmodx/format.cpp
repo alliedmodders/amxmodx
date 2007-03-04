@@ -403,6 +403,7 @@ reswitch:
 		case 'c':
 			CHECK_ARGS(0);
 			*buf_p++ = static_cast<D>(*get_amxaddr(amx, params[arg]));
+			llen--;
 			arg++;
 			break;
 		case 'd':

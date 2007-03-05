@@ -232,7 +232,7 @@ stock replace_all(string[], len, const what[], const with[])
 	new with_len = strlen(with);
 	new diff = strlen(what) - with_len;
 	new total_len = strlen(string);
-	new temp_pos = 0
+	new temp_pos = 0;
 	
 	while (replace(string[pos], len - pos, what, with) != 0)
 	{

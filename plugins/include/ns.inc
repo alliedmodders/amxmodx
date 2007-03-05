@@ -32,7 +32,7 @@ forward client_built(idPlayer,idStructure,type,impulse);
 native ns_is_combat();
 
 /* Sends a popup to a player.  Set target to 0 to send to everybody. Message length is 180 characters.  The last parameter, if set to 1, will only display when the player has cl_autohelp set to 1. */
-native ns_popup(target,const szMsg[180],ah=0)
+native ns_popup(target,const szMsg[180],ah=0);
 
 /* Sets a player model.  Omit the second parameter to return to default.
    Note: This does *not* change back on death, team switch, gestations, etc. */

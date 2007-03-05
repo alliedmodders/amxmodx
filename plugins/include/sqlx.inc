@@ -245,15 +245,15 @@ stock SQL_SimpleQuery(Handle:db, const query[], error[]="", maxlength=0, &rows=0
 	if (!SQL_Execute(hQuery))
 	{
 		SQL_QueryError(hQuery, error, maxlength);
-		SQL_FreeHandle(hQuery)
+		SQL_FreeHandle(hQuery);
 		return 0;
 	}
 	
-	rows = SQL_NumResults(hQuery)
+	rows = SQL_NumResults(hQuery);
 	
 	SQL_FreeHandle(hQuery);
 	
-	return 1
+	return 1;
 }
 
 /**
@@ -263,22 +263,22 @@ stock SQL_SimpleQuery(Handle:db, const query[], error[]="", maxlength=0, &rows=0
 stock SQL_SimpleQueryFmt(Handle:db, error[]="", maxlength=0, &rows=0, const fmt[], ...)
 {
 	static query_buf[2048];
-	vformat(query_buf, 2047, fmt, 6)
+	vformat(query_buf, 2047, fmt, 6);
 	
 	new Handle:hQuery = SQL_PrepareQuery(db, "%s", query_buf);
 	
 	if (!SQL_Execute(hQuery))
 	{
 		SQL_QueryError(hQuery, error, maxlength);
-		SQL_FreeHandle(hQuery)
+		SQL_FreeHandle(hQuery);
 		return 0;
 	}
 	
-	rows = SQL_NumResults(hQuery)
+	rows = SQL_NumResults(hQuery);
 	
 	SQL_FreeHandle(hQuery);
 	
-	return 1
+	return 1;
 }
 
 /**
@@ -287,46 +287,46 @@ stock SQL_SimpleQueryFmt(Handle:db, error[]="", maxlength=0, &rows=0, const fmt[
  */
 stock SQL_QueryAndIgnore(Handle:db, const queryfmt[], {Float,_}:...)
 {
-	static query[4096]
-	new Handle:hQuery
-	new ret
+	static query[4096];
+	new Handle:hQuery;
+	new ret;
 	
-	vformat(query, sizeof(query)-1, queryfmt, 3)
+	vformat(query, sizeof(query)-1, queryfmt, 3);
 	
 	hQuery = SQL_PrepareQuery(db, "%s", query);
 	
 	if (SQL_Execute(hQuery))
 	{
-		ret = SQL_AffectedRows(hQuery)
+		ret = SQL_AffectedRows(hQuery);
 	} else {
-		ret = -1
+		ret = -1;
 	}
 	
-	SQL_FreeHandle(hQuery)
+	SQL_FreeHandle(hQuery);
 	
-	return ret
+	return ret;
 }
 
 stock Handle:SQL_MakeStdTuple()
 {
-	static host[64], user[32], pass[32], db[128]
-	static get_type[12], set_type[12]
+	static host[64], user[32], pass[32], db[128];
+	static get_type[12], set_type[12];
 	
-	get_cvar_string("amx_sql_host", host, 63)
-	get_cvar_string("amx_sql_user", user, 31)
-	get_cvar_string("amx_sql_pass", pass, 31)
-	get_cvar_string("amx_sql_type", set_type, 11)
-	get_cvar_string("amx_sql_db", db, 127)
+	get_cvar_string("amx_sql_host", host, 63);
+	get_cvar_string("amx_sql_user", user, 31);
+	get_cvar_string("amx_sql_pass", pass, 31);
+	get_cvar_string("amx_sql_type", set_type, 11);
+	get_cvar_string("amx_sql_db", db, 127);
 	
-	SQL_GetAffinity(get_type, 12)
+	SQL_GetAffinity(get_type, 12);
 	
 	if (!equali(get_type, set_type))
 	{
 		if (!SQL_SetAffinity(set_type))
 		{
-			log_amx("Failed to set affinity from %s to %s.", get_type, set_type)
+			log_amx("Failed to set affinity from %s to %s.", get_type, set_type);
 		}
 	}
 	
-	return SQL_MakeDbTuple(host, user, pass, db)
+	return SQL_MakeDbTuple(host, user, pass, db);
 }

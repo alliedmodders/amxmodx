@@ -86,7 +86,7 @@ native forward_return(type,{Float,Sql,Result,_}:...);
  * get_orig_retval(&Float:value) - retrieves float return value by reference
  * get_orig_retval(value[], len) - retrives string return value
  */
-native get_orig_retval({Float,_}:...)
+native get_orig_retval({Float,_}:...);
 
 native engfunc(type,{Float,Sql,Result,AlertType,_}:...);
 native dllfunc(type,{Float,Sql,Result,_}:...);

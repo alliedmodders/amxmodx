@@ -42,11 +42,11 @@ native register_think(const Classname[], const function[]);
 native precache_event(type, const Name[], {Float,Sql,Result,_}:...);
 
 /* set/get a user's speak flags */
-native set_speak(iIndex, iSpeakFlags)
-native get_speak(iIndex)
+native set_speak(iIndex, iSpeakFlags);
+native get_speak(iIndex);
 
 /* Drops an entity to the floor (work?) */
-native drop_to_floor(entity)
+native drop_to_floor(entity);
 
 /* Get whole buffer containing keys and their data. */
 native get_info_keybuffer(id, buffer[], length);
@@ -98,7 +98,7 @@ native find_ent_by_model(iIndex, const szClass[], const szModel[]);
 native find_ent_in_sphere(start_from_ent, const Float:origin[3], Float:radius);
 
 //this will CBaseEntity::Think() or something from the entity
-native call_think(entity)
+native call_think(entity);
 
 /* Is entity valid? */
 native is_valid_ent(iIndex);

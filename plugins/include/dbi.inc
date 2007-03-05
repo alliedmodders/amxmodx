@@ -119,20 +119,27 @@ native dbi_field_name(Result:result, field, name[], maxLength);
 
 /* This function can be used to find out if a table in a Sqlite database exists.
  */
-stock bool:sqlite_table_exists(Sql:sql, table[]) {
-	new bool:exists
-	new query[128]
-	format(query, 127, "SELECT name FROM sqlite_master WHERE type='table' AND name='%s' LIMIT 1;", table)
+stock bool:sqlite_table_exists(Sql:sql, table[]) 
+{
+	new bool:exists;
+	new query[128];
+	format(query, 127, "SELECT name FROM sqlite_master WHERE type='table' AND name='%s' LIMIT 1;", table);
 
-	new Result:result = dbi_query(sql, query)
+	new Result:result = dbi_query(sql, query);
 
 	if (dbi_nextrow(result))
-		exists = true
+	{
+		exists = true;
+	}
 	else
-		exists = false
+	{
+		exists = false;
+	}
 
 	if (result > RESULT_NONE)
-		dbi_free_result(result)
+	{
+		dbi_free_result(result);
+	}
 
-	return exists
+	return exists;
 }

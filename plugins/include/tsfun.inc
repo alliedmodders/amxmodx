@@ -66,7 +66,7 @@ native ts_setusercash( index, money );
 native ts_getuserslots( index );
 native ts_setuserslots( index, slots );
 
-native ts_getuserstate( index )
+native ts_getuserstate( index );
 native ts_getuserwpn( index,&clip,&ammo,&mode,&extra );
 native ts_getuserspace( index );
 
@@ -98,30 +98,30 @@ native ts_setpddata( knifeoffset );
 // native ts_set_fuattack(id,Float:time,Float:damage);	//!
 
 // Changes board message
-native ts_set_message(id,message)
+native ts_set_message(id,message);
 
 // Gets the message board message
-native ts_get_message(id)
+native ts_get_message(id);
 
 stock ts_is_normal(id)
 {
-	new msg = ts_get_message(id)
+	new msg = ts_get_message(id);
 	if( (msg > 11) || (msg > 6 && msg < 10) ) return 1;
 	return 0;
 }
-stock ts_is_waiting(id) return (ts_get_message(id) == TSMSG_WAITING)
-stock ts_is_dead(id) return (ts_get_message(id) == TSMSG_DEAD)
-stock ts_is_killer(id) return (ts_get_message(id) == TSMSG_KILLER)
-stock ts_is_demolition(id) return (ts_get_message(id) == TSMSG_DEMOLITION)
-stock ts_is_specialist(id) return (ts_get_message(id) == TSMSG_SPECIALIST)
-stock ts_is_unstoppable(id) return (ts_get_message(id) == TSMSG_UNSTOPPABLE)
-stock ts_is_theone(id) return (ts_get_message(id) == TSMSG_THEONE)
+stock ts_is_waiting(id) return (ts_get_message(id) == TSMSG_WAITING);
+stock ts_is_dead(id) return (ts_get_message(id) == TSMSG_DEAD);
+stock ts_is_killer(id) return (ts_get_message(id) == TSMSG_KILLER);
+stock ts_is_demolition(id) return (ts_get_message(id) == TSMSG_DEMOLITION);
+stock ts_is_specialist(id) return (ts_get_message(id) == TSMSG_SPECIALIST);
+stock ts_is_unstoppable(id) return (ts_get_message(id) == TSMSG_UNSTOPPABLE);
+stock ts_is_theone(id) return (ts_get_message(id) == TSMSG_THEONE);
 
 // Return one on true, 0 on false
 // UNAVAILABLE IN 1.70
 native ts_has_superjump(id);					//!
 native ts_has_fupowerup(id);					//!
-native ts_is_in_slowmo(id)
+native ts_is_in_slowmo(id);
 
 // Get and set consecutive frags
 //UNAVAILABLE IN 1.70
@@ -132,23 +132,23 @@ native ts_is_in_slowmo(id)
 native ts_set_bullettrail(id,yesorno);
 
 // Sets fake versions of slow mo and slow pause. Use ts_set_speed for more options.
-native ts_set_fakeslowmo(id,Float:time)
-native ts_set_fakeslowpause(id,Float:time)
+native ts_set_fakeslowmo(id,Float:time);
+native ts_set_fakeslowpause(id,Float:time);
 
 /* Sets speed artificially. 1.0 is default, Go into fractions and decimals for slower
 * and put in higher numbers for higher speeds. Aura is how far things around you are effected
 * Time is the time until it wears off. 0.0 for speed will freeze people. Do not use negatives. */
 
-native ts_set_speed(id,Float:speed,Float:auradist,Float:time)
+native ts_set_speed(id,Float:speed,Float:auradist,Float:time);
 
 /* Sets physics speed artificially. Things like sparks and sounds will be effected.
 * Any negative number will render all physics paused. */
-native ts_set_physics_speed(id,Float:speed)
+native ts_set_physics_speed(id,Float:speed);
 
 // Returns 0 if no powerup is running. Returns the powerup type otherwise.
-native ts_is_running_powerup(id)
+native ts_is_running_powerup(id);
 
 // Highly experimental command which overrides powerup types.
 // Use if a powerup is already running, or if a powerup is not running.
 // Safe to use in powerup forward.
-native ts_force_run_powerup(id,PWUP_TYPE)
+native ts_force_run_powerup(id,PWUP_TYPE);

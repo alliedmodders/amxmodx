@@ -34,7 +34,7 @@ native nvault_get(vault, const key[], ...);
 /* Looks up a vault value for full information
  * Returns 0 if the entry is not found
  */
-native nvault_lookup(vault, const key[], value[], maxlen, &timestamp)
+native nvault_lookup(vault, const key[], value[], maxlen, &timestamp);
 
 /* Sets a vault value (with current timestamp) */
 native nvault_set(vault, const key[], const value[]);

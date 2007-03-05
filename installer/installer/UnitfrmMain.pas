@@ -252,12 +252,12 @@ begin
     //optLinux64.Enabled := False;
     cboGameAddon.Enabled := False;
     // preinstall...
-    MakeDir(ExtractFilePath(ParamStr(0)) + 'temp');
-    DownloadFile('liblist.gam', ExtractFilePath(ParamStr(0)) + 'temp\liblist.gam');
+    MakeDir(ExtractFilePath(Application.ExeName) + 'temp');
+    DownloadFile('liblist.gam', ExtractFilePath(Application.ExeName) + 'temp\liblist.gam');
     try
       IdFTP.ChangeDir(ePath + 'addons/metamod/');
-      ForceDirectories(ExtractFilePath(ParamStr(0)) + 'temp\addons\metamod\');
-      DownloadFile('plugins.ini', ExtractFilePath(ParamStr(0)) + 'temp\addons\metamod\plugins.ini');
+      ForceDirectories(ExtractFilePath(Application.ExeName) + 'temp\addons\metamod\');
+      DownloadFile('plugins.ini', ExtractFilePath(Application.ExeName) + 'temp\addons\metamod\plugins.ini');
     except
       try
         IdFTP.ChangeDir(ePath);
@@ -293,7 +293,7 @@ begin
     ggeAll.Progress := 0;
     ggeItem.Progress := 0;
     cmdNext.Hide;
-    InstallCustom(ExtractFilePath(ParamStr(0)) + 'temp\', ChosenMod, eOS);
+    InstallCustom(ExtractFilePath(Application.ExeName) + 'temp\', ChosenMod, eOS);
     if Cancel then
       exit;
     AddStatus('', clBlack, False);
@@ -783,11 +783,11 @@ procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   if LowerCase(ParamStr(1)) = '-logftp' then begin
     MessageBox(Handle, 'FTP installation will be logged to FTP.log!', PChar(Application.Title), MB_ICONINFORMATION);
-    IdLogFile.Filename := ExtractFilePath(ParamStr(0)) + 'FTP.log';
+    IdLogFile.Filename := ExtractFilePath(Application.ExeName) + 'FTP.log';
     IdLogFile.Active := True;
   end;
 
-  if not DirectoryExists(ExtractFilePath(ParamStr(0)) + 'files') then begin
+  if not DirectoryExists(ExtractFilePath(Application.ExeName) + 'files') then begin
     MessageBox(Handle, 'The files-folder couldn''t be found. Run the Pre-Installer of AMX Mod X and try again.', 'Error', MB_ICONERROR);
     Application.Terminate;
   end
@@ -798,8 +798,8 @@ begin
   end;
 
   // delete files, then directories
-  if (DirectoryExists(ExtractFilePath(ParamStr(0)) + 'temp')) then
-    DelTree(ExtractFilePath(ParamStr(0)) + 'temp');
+  if (DirectoryExists(ExtractFilePath(Application.ExeName) + 'temp')) then
+    DelTree(ExtractFilePath(Application.ExeName) + 'temp');
 end;
 
 procedure TfrmMain.cmdProxySettingsClick(Sender: TObject);
@@ -912,8 +912,8 @@ begin
     end;
   end;
 
-  if (DirectoryExists(ExtractFilePath(ParamStr(0)) + 'temp')) then
-    DelTree(ExtractFilePath(ParamStr(0)) + 'temp');
+  if (DirectoryExists(ExtractFilePath(Application.ExeName) + 'temp')) then
+    DelTree(ExtractFilePath(Application.ExeName) + 'temp');
 end;
 
 procedure TfrmMain.ExceptionHandler(Sender: TObject; E: Exception);

@@ -296,13 +296,13 @@ var eStr: TStringList;
     UpdatePluginsIni: Boolean;
 begin
   AddStatus('Scanning for directories...', clBlack);
-  with GetAllFiles(ExtractFilePath(ParamStr(0)) + 'files\*.*', faDirectory, True, True) do begin
+  with GetAllFiles(ExtractFilePath(Application.ExeName) + 'files\*.*', faDirectory, True, True) do begin
     DirList.Text := Text;
     Free;
   end;
   AddDone('found ' + IntToStr(DirList.Count) + ' directories..');
   AddStatus('Scanning for files...', clBlack);
-  with GetAllFiles(ExtractFilePath(ParamStr(0)) + 'files\*.*', faAnyFile, True, False) do begin
+  with GetAllFiles(ExtractFilePath(Application.ExeName) + 'files\*.*', faAnyFile, True, False) do begin
     FileList.Text := Text;
     Free;
   end;
@@ -343,9 +343,9 @@ begin
   end;
 
   for i := 0 to DirList.Count -1 do
-    DirList[i] := Copy(DirList[i], Length(ExtractFilePath(ParamStr(0))) + 7, Length(DirList[i]));
+    DirList[i] := Copy(DirList[i], Length(ExtractFilePath(Application.ExeName)) + 7, Length(DirList[i]));
   for i := 0 to FileList.Count -1 do
-    FileList[i] := Copy(FileList[i], Length(ExtractFilePath(ParamStr(0))) + 7, Length(FileList[i]));
+    FileList[i] := Copy(FileList[i], Length(ExtractFilePath(Application.ExeName)) + 7, Length(FileList[i]));
 
   { liblist.gam }
   if not FileExists(ePath + 'liblist.gam') then begin
@@ -454,44 +454,44 @@ begin
     if not IsForbidden(FileList[i], OS) then begin
       if Pos('base', FileList[i]) = 1 then begin
         AddStatus('Copying file: addons\amxmodx\' + Copy(FileList[i], 6, Length(FileList[i])), clBlack);
-        FileCopy(ExtractFilePath(ParamStr(0)) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 6, Length(FileList[i])), CopyConfig);
+        FileCopy(ExtractFilePath(Application.ExeName) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 6, Length(FileList[i])), CopyConfig);
       end;
       
       case eMod of
         modCS: begin
           if Pos('cstrike', FileList[i]) = 1 then begin
             AddStatus('Copying file: addons\amxmodx\' + Copy(FileList[i], 9, Length(FileList[i])), clBlack);
-            FileCopy(ExtractFilePath(ParamStr(0)) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 9, Length(FileList[i])), CopyConfig);
+            FileCopy(ExtractFilePath(Application.ExeName) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 9, Length(FileList[i])), CopyConfig);
           end;
         end;
         modDoD: begin
           if Pos('dod', FileList[i]) = 1 then begin
             AddStatus('Copying file: addons\amxmodx\' + Copy(FileList[i], 5, Length(FileList[i])), clBlack);
-            FileCopy(ExtractFilePath(ParamStr(0)) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 5, Length(FileList[i])), CopyConfig);
+            FileCopy(ExtractFilePath(Application.ExeName) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 5, Length(FileList[i])), CopyConfig);
           end;
         end;
         modTFC: begin
           if Pos('tfc', FileList[i]) = 1 then begin
             AddStatus('Copying file: addons\amxmodx\' + Copy(FileList[i], 5, Length(FileList[i])), clBlack);
-            FileCopy(ExtractFilePath(ParamStr(0)) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 5, Length(FileList[i])), CopyConfig);
+            FileCopy(ExtractFilePath(Application.ExeName) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 5, Length(FileList[i])), CopyConfig);
           end;
         end;
         modNS: begin
           if Pos('ns', FileList[i]) = 1 then begin
             AddStatus('Copying file: addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), clBlack);
-            FileCopy(ExtractFilePath(ParamStr(0)) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), CopyConfig);
+            FileCopy(ExtractFilePath(Application.ExeName) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), CopyConfig);
           end;
         end;
         modTS: begin
           if Pos('ts', FileList[i]) = 1 then begin
             AddStatus('Copying file: addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), clBlack);
-            FileCopy(ExtractFilePath(ParamStr(0)) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), CopyConfig);
+            FileCopy(ExtractFilePath(Application.ExeName) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), CopyConfig);
           end;
         end;
         modESF: begin
           if Pos('esf', FileList[i]) = 1 then begin
             AddStatus('Copying file: addons\amxmodx\' + Copy(FileList[i], 5, Length(FileList[i])), clBlack);
-            FileCopy(ExtractFilePath(ParamStr(0)) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), CopyConfig);
+            FileCopy(ExtractFilePath(Application.ExeName) + 'files\' + FileList[i], ePath + 'addons\amxmodx\' + Copy(FileList[i], 4, Length(FileList[i])), CopyConfig);
           end;
         end;
       end;
@@ -643,13 +643,13 @@ begin
   frmMain.cmdNext.Hide;
   Screen.Cursor := crHourGlass;
   AddStatus('Scanning for directories...', clBlack);
-  with GetAllFiles(ExtractFilePath(ParamStr(0)) + 'temp\*.*', faDirectory, True, True) do begin
+  with GetAllFiles(ExtractFilePath(Application.ExeName) + 'temp\*.*', faDirectory, True, True) do begin
     DirList.Text := Text;
     Free;
   end;
   AddDone('found ' + IntToStr(DirList.Count) + ' directories..');
   AddStatus('Scanning for files...', clBlack);
-  with GetAllFiles(ExtractFilePath(ParamStr(0)) + 'temp\*.*', faAnyFile, True, False) do begin
+  with GetAllFiles(ExtractFilePath(Application.ExeName) + 'temp\*.*', faAnyFile, True, False) do begin
     FileList.Text := Text;
     Free;
   end;
@@ -660,9 +660,9 @@ begin
   frmMain.ggeItem.MaxValue := DirList.Count;
 
   for i := 0 to DirList.Count -1 do
-    DirList[i] := Copy(DirList[i], Length(ExtractFilePath(ParamStr(0))) + 6, Length(DirList[i]));
+    DirList[i] := Copy(DirList[i], Length(ExtractFilePath(Application.ExeName)) + 6, Length(DirList[i]));
   for i := 0 to FileList.Count -1 do
-    FileList[i] := Copy(FileList[i], Length(ExtractFilePath(ParamStr(0))) + 6, Length(FileList[i]));
+    FileList[i] := Copy(FileList[i], Length(ExtractFilePath(Application.ExeName)) + 6, Length(FileList[i]));
 
   CopyConfig := True;
   AddStatus('Checking for previous AMX Mod X installation...', clBlack);
@@ -682,7 +682,7 @@ begin
   // liblist.gam
   AddStatus('Editing liblist.gam...', clBlack);
   eStr := TStringList.Create;
-  eStr.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'temp\liblist.gam');
+  eStr.LoadFromFile(ExtractFilePath(Application.ExeName) + 'temp\liblist.gam');
   if eStr.IndexOf('gamedll "addons\metamod\dlls\metamod.dll"') = -1 then begin
     if Cancel then begin
       AddStatus('', clBlack, False);
@@ -700,8 +700,8 @@ begin
       eStr.Add('gamedll_linux "addons/metamod/dlls/metamod_i386.so"')
     else
       eStr.Add('gamedll_linux "addons/metamod/dlls/metamod_amd64.so"');
-    FileSetAttr(ExtractFilePath(ParamStr(0)) + 'temp\liblist.gam', 0);
-    eStr.SaveToFile(ExtractFilePath(ParamStr(0)) + 'temp\liblist.gam');
+    FileSetAttr(ExtractFilePath(Application.ExeName) + 'temp\liblist.gam', 0);
+    eStr.SaveToFile(ExtractFilePath(Application.ExeName) + 'temp\liblist.gam');
   end;
   eStr.Free;
   AddDone;
@@ -767,8 +767,8 @@ begin
 
     if not IsForbidden(FileList[i], OS) then begin
       AddStatus('Uploading file: ' + FileList[i], clBlack);
-      if FileExists(ExtractFilePath(ParamStr(0)) + 'temp\' + FileList[i]) then begin
-        frmMain.ggeItem.MaxValue := FSize(ExtractFilePath(ParamStr(0)) + 'temp\' + FileList[i]);
+      if FileExists(ExtractFilePath(Application.ExeName) + 'temp\' + FileList[i]) then begin
+        frmMain.ggeItem.MaxValue := FSize(ExtractFilePath(Application.ExeName) + 'temp\' + FileList[i]);
         UploadAgain:
         try
           eGoBack := False;
@@ -780,7 +780,7 @@ begin
             AddStatus('Warning: CHMOD not supported.', clMaroon);
           end;
 
-          UploadFile(ExtractFilePath(ParamStr(0)) + 'temp\' + FileList[i], ePath + FileList[i], CopyConfig);
+          UploadFile(ExtractFilePath(Application.ExeName) + 'temp\' + FileList[i], ePath + FileList[i], CopyConfig);
 
           try
             if FileList[i] = 'liblist.gam' then
@@ -823,8 +823,8 @@ begin
   end;
   AddStatus('', clBlack, False);
   AddStatus('Cleaning up installation...', clBlack, False);
-  if (DirectoryExists(ExtractFilePath(ParamStr(0)) + 'temp')) then
-    DelTree(ExtractFilePath(ParamStr(0)) + 'temp');
+  if (DirectoryExists(ExtractFilePath(Application.ExeName) + 'temp')) then
+    DelTree(ExtractFilePath(Application.ExeName) + 'temp');
   AddDone;
 
   frmMain.ggeAll.Progress := frmMain.ggeAll.MaxValue;

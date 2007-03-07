@@ -435,7 +435,7 @@ static cell AMX_NATIVE_CALL amx_fwrite(AMX *amx, cell *params)
 	case 4:
 		{
 			int c = static_cast<int>(params[2]);
-			return fwrite(&c, sizeof(short), 1, fp);
+			return fwrite(&c, sizeof(int), 1, fp);
 		}
 	}
 

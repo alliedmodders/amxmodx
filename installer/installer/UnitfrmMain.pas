@@ -137,6 +137,7 @@ type
     procedure trvModsClick(Sender: TObject);
     procedure trvDirectoriesMouseDown(Sender: TObject;
       Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure trvDirectoriesChange(Sender: TObject; Node: TTreeNode);
   private
     OldProgress: Integer;
     CurrProgress: Integer;
@@ -605,7 +606,7 @@ end;
 procedure TfrmMain.cmdConnectClick(Sender: TObject);
 var i: integer;
     eStr: TStringList;
-    CurNode: TTreeNode;
+    CurNode, HomeNode, OldNode: TTreeNode;
     Path: String;
 begin
   if (Trim(txtHost.Text) = '') or (Trim(txtUsername.Text) = '') then
@@ -649,49 +650,66 @@ begin
       cmdCancel.Caption := '&Close';
       cmdNext.Enabled := True;
       // ... change to / and create all the directories ...
-      CurNode := nil;
-      if (Path <> '/') then begin
-        try
+      HomeNode := nil;
+      try
+        if (Path <> '/') then
           IdFTP.ChangeDir('/');
-          with GetAllDirs do begin
-            for i := 0 to Count -1 do begin
-              if (Assigned(CurNode)) then
-                trvDirectories.Items.AddChild(trvDirectories.Items.Add(nil, Strings[i]), 'Scanning...')
-              else begin
-                CurNode := trvDirectories.Items.Add(nil, Strings[i]);
-                trvDirectories.Items.AddChild(CurNode, 'Scanning...');
-                if (Pos('/' + CurNode.Text + '/', Path) = 0) then
-                  CurNode := nil;
-              end
+        
+        trvDirectories.Items.BeginUpdate;
+        with GetAllDirs do begin
+          for i := 0 to Count -1 do begin
+            CurNode := trvDirectories.Items.Add(nil, Strings[i]);
+            if (Pos('/' + CurNode.Text + '/', Path) = 0) then begin
+              trvDirectories.Items.AddChild(CurNode, 'Scanning...');
+              CurNode.Data := Pointer(2);
+            end
+            else begin
+              HomeNode := CurNode;
+              CurNode.Data := Pointer(1);
+              Repaint;
             end;
-            Free;
           end;
-          IdFTP.ChangeDir(Path);
-        except
-          if (IdFTP.Connected) then
-            IdFTP.ChangeDir(Path)
-          else
-            IdFTP.Connect;
+          Free;
         end;
+        trvDirectories.Items.EndUpdate;
+        trvDirectories.TopItem := HomeNode;
+        IdFTP.ChangeDir(Path);
+      except
+        trvDirectories.Items.EndUpdate;
+        if (IdFTP.Connected) then
+          IdFTP.ChangeDir(Path)
+        else
+          IdFTP.Connect;
       end;
       // ... find directories in start path ...
-      if eStr.Count <> 0 then begin
-        for i := 0 to eStr.Count -1 do begin
-          if (not ((i = 0) and (Assigned(CurNode)))) then
-            CurNode := trvDirectories.Items.AddChild(CurNode, eStr[i]);
+      CurNode := HomeNode;
+      OldNode := nil;
+      for i := 1 to eStr.Count -1 do begin
+        if (Assigned(CurNode)) then begin
+          CurNode := trvDirectories.Items.AddChild(CurNode, eStr[i]);
+          if (Assigned(OldNode)) then
+            OldNode.Expand(False);
+          CurNode.Data := Pointer(1);
+          OldNode := CurNode;
         end;
       end;
-      trvDirectories.Selected := CurNode;
-      eStr.Free;
-      // ... scan for directories ...
-      with GetAllDirs do begin
-        for i := 0 to Count -1 do
-          trvDirectories.Items.AddChild(trvDirectories.Items.AddChild(CurNode, Strings[i]), 'Scanning...');
-        Free;
-      end;
 
+      if (Assigned(CurNode)) then begin
+        trvDirectories.Items.AddChild(CurNode, 'Scanning...');
+        CurNode.Data := Pointer(2);
+      end;
+      // ... expand home node ...
+      if (Assigned(HomeNode)) and (HomeNode <> CurNode) then begin
+        HomeNode.Data := Pointer(0);
+        trvDirectories.TopItem := HomeNode;
+        HomeNode.Expand(False);
+        HomeNode.Data := Pointer(1);
+      end;
+      eStr.Free;
+      // ... scan for directories in home dir ...
       if Assigned(CurNode) then
         CurNode.Expand(False);
+      trvDirectories.TopItem := HomeNode;
     except
       on E: Exception do begin
         Screen.Cursor := crDefault;
@@ -841,11 +859,24 @@ end;
 
 procedure TfrmMain.trvDirectoriesExpanded(Sender: TObject;
   Node: TTreeNode);
+
+function NodeExists(const SNode: TTreeNode; const Text: String): Boolean;
+var i: integer;
+begin
+  Result := False;
+  for i := 0 to SNode.Count -1 do begin
+    if (SNode.Item[i].Text = Text) then begin
+      Result := True;
+      break;
+    end;
+  end;
+end;
+
 var ePath: String;
     CurNode: TTreeNode;
     i: integer;
 begin
-  if Node.Item[0].Text = 'Scanning...' then begin // no directories added yet
+  if (Integer(Node.Data) <> 0) then begin // no directories added yet
     Screen.Cursor := crHourGlass;
     // get complete path
     ePath := '/';
@@ -861,15 +892,23 @@ begin
       Repaint;
       IdFTP.ChangeDir(ePath);
       with GetAllDirs do begin
-        Node.Item[0].Free;
+        if (Integer(Node.Data) = 2) and (Node.Count > 0) then
+          Node.Item[0].Free;
         for i := 0 to Count -1 do begin
-          trvDirectories.Items.AddChild(trvDirectories.Items.AddChild(Node, Strings[i]), 'Scanning...');
+          if (not NodeExists(Node, Strings[i])) then begin
+            CurNode := trvDirectories.Items.AddChild(Node, Strings[i]);
+            trvDirectories.Items.AddChild(CurNode, 'Scanning...');
+            CurNode.Data := Pointer(2);
+          end;
         end;
         Free;
       end;
-    finally
+    except
+      if (Integer(Node.Data) = 2) and (Node.Count > 0) then
+        Node.Item[0].Free;
       Application.ProcessMessages;
     end;
+    Node.Data := Pointer(0); // scan done
     Screen.Cursor := crDefault;
   end;
 end;
@@ -976,6 +1015,12 @@ begin
     if (Node.DisplayRect(True).Right < X) then
       trvDirectories.Selected := nil;
   end;
+end;
+
+procedure TfrmMain.trvDirectoriesChange(Sender: TObject; Node: TTreeNode);
+begin
+  if (Screen.Cursor <> crHourGlass) and (Assigned(Node)) and (Integer(Node.Data) = 1) then
+    Node.Expand(False);
 end;
 
 end.

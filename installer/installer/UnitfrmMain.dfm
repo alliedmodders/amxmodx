@@ -4,7 +4,7 @@ object frmMain: TfrmMain
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'AMX Mod X Installer'
-  ClientHeight = 355
+  ClientHeight = 396
   ClientWidth = 527
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -46,7 +46,7 @@ object frmMain: TfrmMain
   TextHeight = 13
   object bvlSpace: TBevel
     Left = 0
-    Top = 314
+    Top = 355
     Width = 527
     Height = 3
     Align = alBottom
@@ -56,8 +56,8 @@ object frmMain: TfrmMain
     Left = 0
     Top = 0
     Width = 527
-    Height = 314
-    ActivePage = jspWelcome
+    Height = 355
+    ActivePage = jspFTP
     PropagateEnable = False
     Align = alClient
     OnChange = jplWizardChange
@@ -65,13 +65,13 @@ object frmMain: TfrmMain
       Left = 0
       Top = 0
       Width = 527
-      Height = 314
+      Height = 355
       Color = clWhite
       object imgInstall: TImage
         Left = 0
         Top = 0
         Width = 164
-        Height = 314
+        Height = 355
         Align = alLeft
         AutoSize = True
         Picture.Data = {
@@ -4968,7 +4968,7 @@ object frmMain: TfrmMain
       Left = 0
       Top = 0
       Width = 527
-      Height = 314
+      Height = 355
       object pnlLicense: TPanel
         Left = 0
         Top = 0
@@ -5760,7 +5760,7 @@ object frmMain: TfrmMain
       Left = 0
       Top = 0
       Width = 527
-      Height = 314
+      Height = 355
       object lblLocalHint: TLabel
         Left = 136
         Top = 118
@@ -5967,7 +5967,7 @@ object frmMain: TfrmMain
       Left = 0
       Top = 0
       Width = 527
-      Height = 314
+      Height = 355
       object lblInfo: TLabel
         Left = 134
         Top = 110
@@ -6091,7 +6091,7 @@ object frmMain: TfrmMain
       Left = 0
       Top = 0
       Width = 527
-      Height = 314
+      Height = 355
       OnShow = jspFTPShow
       object lblStep1: TLabel
         Left = 44
@@ -6346,6 +6346,7 @@ object frmMain: TfrmMain
           Indent = 19
           ReadOnly = True
           TabOrder = 0
+          OnChange = trvDirectoriesChange
           OnCollapsing = trvDirectoriesCollapsing
           OnExpanding = trvDirectoriesExpanding
           OnExpanded = trvDirectoriesExpanded
@@ -6413,7 +6414,7 @@ object frmMain: TfrmMain
       Left = 0
       Top = 0
       Width = 527
-      Height = 314
+      Height = 355
       Caption = 'jspInstallProgress'
       object ggeAll: TFlatGauge
         Left = 8
@@ -6559,7 +6560,7 @@ object frmMain: TfrmMain
   end
   object pnlButtons: TPanel
     Left = 0
-    Top = 317
+    Top = 358
     Width = 527
     Height = 38
     Align = alBottom

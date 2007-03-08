@@ -4,7 +4,7 @@ object frmMain: TfrmMain
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'AMX Mod X Installer'
-  ClientHeight = 396
+  ClientHeight = 355
   ClientWidth = 527
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -46,7 +46,7 @@ object frmMain: TfrmMain
   TextHeight = 13
   object bvlSpace: TBevel
     Left = 0
-    Top = 355
+    Top = 314
     Width = 527
     Height = 3
     Align = alBottom
@@ -56,8 +56,8 @@ object frmMain: TfrmMain
     Left = 0
     Top = 0
     Width = 527
-    Height = 355
-    ActivePage = jspFTP
+    Height = 314
+    ActivePage = jspWelcome
     PropagateEnable = False
     Align = alClient
     OnChange = jplWizardChange
@@ -65,13 +65,13 @@ object frmMain: TfrmMain
       Left = 0
       Top = 0
       Width = 527
-      Height = 355
+      Height = 314
       Color = clWhite
       object imgInstall: TImage
         Left = 0
         Top = 0
         Width = 164
-        Height = 355
+        Height = 314
         Align = alLeft
         AutoSize = True
         Picture.Data = {
@@ -4968,7 +4968,7 @@ object frmMain: TfrmMain
       Left = 0
       Top = 0
       Width = 527
-      Height = 355
+      Height = 314
       object pnlLicense: TPanel
         Left = 0
         Top = 0
@@ -5760,7 +5760,7 @@ object frmMain: TfrmMain
       Left = 0
       Top = 0
       Width = 527
-      Height = 355
+      Height = 314
       object lblLocalHint: TLabel
         Left = 136
         Top = 118
@@ -5967,7 +5967,7 @@ object frmMain: TfrmMain
       Left = 0
       Top = 0
       Width = 527
-      Height = 355
+      Height = 314
       object lblInfo: TLabel
         Left = 134
         Top = 110
@@ -6091,7 +6091,7 @@ object frmMain: TfrmMain
       Left = 0
       Top = 0
       Width = 527
-      Height = 355
+      Height = 314
       OnShow = jspFTPShow
       object lblStep1: TLabel
         Left = 44
@@ -6414,7 +6414,7 @@ object frmMain: TfrmMain
       Left = 0
       Top = 0
       Width = 527
-      Height = 355
+      Height = 314
       Caption = 'jspInstallProgress'
       object ggeAll: TFlatGauge
         Left = 8
@@ -6560,7 +6560,7 @@ object frmMain: TfrmMain
   end
   object pnlButtons: TPanel
     Left = 0
-    Top = 358
+    Top = 317
     Width = 527
     Height = 38
     Align = alBottom

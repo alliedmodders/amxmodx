@@ -20,7 +20,7 @@ OBJECTS = meta_api.cpp CFile.cpp CVault.cpp vault.cpp float.cpp file.cpp modules
 	amxxfile.cpp CLang.cpp md5.cpp emsg.cpp CForward.cpp CPlugin.cpp CModule.cpp \
 	CMenu.cpp util.cpp amx.cpp amxdbg.cpp natives.cpp newmenus.cpp debugger.cpp \
 	optimizer.cpp format.cpp messages.cpp libraries.cpp vector.cpp sorting.cpp \
-	amxmod_compat.cpp
+	amxmod_compat.cpp nongpl_matches.cpp
 
 LINK = -lgcc -static-libgcc
 

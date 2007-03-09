@@ -88,7 +88,7 @@
 // #define FN_DispatchUse				DispatchUse					/* pfnUse() */
 // #define FN_DispatchTouch				DispatchTouch				/* pfnTouch() */
 // #define FN_DispatchBlocked			DispatchBlocked				/* pfnBlocked() */
-// #define FN_DispatchKeyValue			DispatchKeyValue			/* pfnKeyValue() */
+#define FN_DispatchKeyValue				DispatchKeyValue			/* pfnKeyValue() */
 // #define FN_DispatchSave				DispatchSave				/* pfnSave() */
 // #define FN_DispatchRestore			DispatchRestore				/* pfnRestore() */
 // #define FN_DispatchObjectCollsionBox	DispatchObjectCollsionBox	/* pfnSetAbsBox() */

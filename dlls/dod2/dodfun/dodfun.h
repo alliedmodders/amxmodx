@@ -57,6 +57,7 @@ extern int gmsgInitObj;
 extern int gmsgSetObj;
 
 extern int iFGrenade;
+extern int iFRocket;
 extern int iFInitCP;
 
 extern CPlayer players[33];

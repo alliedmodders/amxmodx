@@ -29,6 +29,7 @@
  *
  */
 
+#include <string.h>
 #include "amxxmodule.h"
 #include "dodfun.h"
 
@@ -37,6 +38,7 @@ funEventCall modMsgs[MAX_REG_MSGS];
 void (*function)(void*);
 void (*endfunction)(void*);
 CPlayer* mPlayer;
+CPlayer* gPlayerRocket;
 CPlayer players[33];
 
 CObjective mObjects;
@@ -46,6 +48,7 @@ int mDest;
 int mPlayerIndex;
 
 int iFGrenade;
+int iFRocket;
 int iFInitCP;
 
 int gmsgCurWeapon;
@@ -92,20 +95,6 @@ void ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax ){
 
 	for( int i = 1; i <= gpGlobals->maxClients; ++i )
 		GET_PLAYER_POINTER_I(i)->Init( i , pEdictList + i );
-
-	RETURN_META(MRES_IGNORED);
-}
-
-void PlayerPreThink_Post( edict_t *pEntity ) {
-
-	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-
-	if ( pPlayer->staminaSet ) {
-		if ( (int)pEntity->v.fuser4 > pPlayer->staminaMax )
-			pEntity->v.fuser4 = (float)pPlayer->staminaMax;
-		else if ( (int)pEntity->v.fuser4 < pPlayer->staminaMin )
-			pEntity->v.fuser4 = (float)pPlayer->staminaMin;
-	}
 
 	RETURN_META(MRES_IGNORED);
 }
@@ -208,55 +197,108 @@ void WriteEntity_Post(int iValue) {
 	RETURN_META(MRES_IGNORED);
 }
 
-void SetModel_Post(edict_t *e, const char *m){
-	if ( !e->v.owner || !e->v.dmgtime )
-		RETURN_META(MRES_IGNORED);
+void PlayerPreThink_Post(edict_t *pEntity) 
+{
+	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
 
-	int owner = ENTINDEX(e->v.owner);
-	if ( owner && owner<33 && m[7]=='w' && m[8]=='_' ){
+	// Stamina
+	if(pPlayer->staminaSet) 
+	{
+		if ( (int)pEntity->v.fuser4 > pPlayer->staminaMax)
+			pEntity->v.fuser4 = (float)pPlayer->staminaMax;
 
-		int w_id = 0;
-
-		CPlayer* pPlayer = GET_PLAYER_POINTER_I(owner);
-		bool newNade = ( pPlayer->current == 13 || pPlayer->current == 14 ) ? true:false;
-		
-		if ( m[9]=='g' && m[10]=='r' && m[11]=='e' && m[12]=='n' )
-			newNade ? w_id = 13 : w_id = 16; // grenade
-		else if ( m[9]=='m' && m[10]=='i' )
-			newNade ? w_id = 36 : w_id = 16 ; // mills ; should I add mills_grenade_ex weapon ?
-		else if ( m[9]=='s' && m[10]=='t' && m[11]=='i')
-			newNade ? w_id = 14 : w_id = 15; // stick
-
-		if ( !w_id )
-			RETURN_META(MRES_IGNORED);
-
-		MF_ExecuteForward( iFGrenade, pPlayer->index, ENTINDEX(e) ,w_id );
-		/* fuse start */
-		if ( pPlayer->fuseSet ){
-			if ( newNade ){
-				if ( pPlayer->fuseType & 1<<0 ){
-					e->v.dmgtime += pPlayer->nadeFuse - 5.0;
-				}
-			}
-			else{ // cought
-				bool ownNade = ( (pPlayer->pEdict->v.team == 1 && pPlayer->current == 16) || (pPlayer->pEdict->v.team == 2 && pPlayer->current == 15) ) ? true:false;
-				if ( ownNade ){
-					float fExp = e->v.dmgtime - gpGlobals->time;
-					e->v.dmgtime += pPlayer->nadeFuse - fExp;
-				}
-			}
-		}
-		/* fuse end */
+		else if ( (int)pEntity->v.fuser4 < pPlayer->staminaMin)
+			pEntity->v.fuser4 = (float)pPlayer->staminaMin;
 	}
+
+	if(pPlayer->current == 29 || pPlayer->current == 30 || pPlayer->current == 31)
+	{
+		if(!(pPlayer->pEdict->v.oldbuttons&IN_ATTACK) && (pPlayer->pEdict->v.button&IN_ATTACK))
+			gPlayerRocket = GET_PLAYER_POINTER(pEntity);
+	}
+
 	RETURN_META(MRES_IGNORED);
 }
 
-void OnAmxxAttach() {
+void SetModel_Post(edict_t *e, const char *m)
+{
+	int w_id = 0;
+
+	if(!e->v.owner || !e->v.dmgtime)
+	{
+		int owner = ENTINDEX(e->v.owner);
+
+		if(owner && owner < 33 && m[7]=='w' && m[8]=='_')
+		{
+			CPlayer* pPlayer = GET_PLAYER_POINTER_I(owner);
+			bool newNade = (pPlayer->current == 13 || pPlayer->current == 14) ? true : false;
+			
+			if(m[9]=='g' && m[10]=='r' && m[11]=='e' && m[12]=='n')
+				w_id = newNade ? 13 : 16; // grenade
+
+			else if(m[9]=='m' && m[10]=='i')
+				w_id = newNade ? 36 : 16 ; // mills ; should I add mills_grenade_ex weapon ?
+
+			else if(m[9]=='s' && m[10]=='t' && m[11]=='i')
+				w_id = newNade ? 14 : 15; // stick
+			
+			if(!w_id)
+				RETURN_META(MRES_IGNORED);
+
+			if(w_id == 13 || w_id == 14 || w_id == 15 || w_id == 16 || w_id == 36)
+			{
+				MF_ExecuteForward(iFGrenade, pPlayer->index, ENTINDEX(e), w_id);
+
+				/* fuse start */
+				if(pPlayer->fuseSet)
+				{
+					if(newNade)
+					{
+						if(pPlayer->fuseType & 1<<0)
+						{
+							e->v.dmgtime += pPlayer->nadeFuse - 5.0;
+						}
+					}
+
+					else
+					{ 
+						float fExp = e->v.dmgtime - gpGlobals->time;
+						e->v.dmgtime += pPlayer->nadeFuse - fExp;
+					}
+				}
+				/* fuse end */
+			}
+		}
+
+		else if(strstr(m, "rocket") && gPlayerRocket)
+		{
+			if(strstr(m, "bazooka"))
+				w_id = 29;
+
+			else if(strstr(m, "piat"))
+				w_id = 30;
+
+			else if(strstr(m, "pschreck"))
+				w_id = 31;
+			
+			MF_ExecuteForward(iFRocket, gPlayerRocket->index, ENTINDEX(e), w_id);
+
+			gPlayerRocket = NULL;
+		}
+	}
+
+	RETURN_META(MRES_IGNORED);
+}
+
+void OnAmxxAttach() 
+{
 	MF_AddNatives( base_Natives );
 	MF_AddNatives( pd_Natives );
 }
 
-void OnPluginsLoaded(){
-	iFGrenade = MF_RegisterForward("grenade_throw",ET_IGNORE,FP_CELL,FP_CELL,FP_CELL,FP_DONE);
+void OnPluginsLoaded()
+{
+	iFGrenade = MF_RegisterForward("grenade_throw",ET_IGNORE,FP_CELL/*id*/,FP_CELL/*Grenade Ent*/,FP_CELL/*Weapon ID*/,FP_DONE);
+	iFRocket = MF_RegisterForward("rocket_shoot",ET_IGNORE,FP_CELL/*id*/,FP_CELL/*Rocket Ent*/,FP_CELL/*Weapon ID*/,FP_DONE);
 	iFInitCP = MF_RegisterForward("controlpoints_init",ET_IGNORE,FP_DONE);
 }

@@ -42,6 +42,8 @@ CMapInfo g_map;
 
 bool rankBots;
 int mState;
+int mDest;
+int mCurWpnEnd;
 int mPlayerIndex;
 
 int AlliesScore;
@@ -50,13 +52,21 @@ int AxisScore;
 int iFDamage = -1;
 int iFDeath = -1;
 int iFScore = -1;
-
-// Zors
 int iFSpawnForward = -1;
 int iFTeamForward = -1;
 int iFClassForward = -1;
+int iFScopeForward = -1;
+int iFProneForward = -1;
+int iFWpnPickupForward = -1;
+int iFCurWpnForward = -1;
+int iFGrenadeExplode = -1;
+int iFRocketExplode = -1;
+int iFObjectTouched = -1;
+int iFStaminaForward = -1;
 
 int gmsgCurWeapon;
+int gmsgCurWeaponEnd;
+int gmsgHealth;
 int gmsgResetHUD;
 int gmsgObjScore;
 int gmsgRoundState;
@@ -65,11 +75,10 @@ int gmsgScoreShort;
 int gmsgPTeam;
 int gmsgAmmoX;
 int gmsgAmmoShort;
-int gmsgHealth_End;
-
-// Zors
-//int gmsgWeaponList;
-//int gmsgWeaponList_End;
+int gmsgSetFOV;
+int gmsgSetFOV_End;
+int gmsgObject;
+int gmsgObject_End;
 
 RankSystem g_rank;
 Grenades g_grenades;
@@ -85,29 +94,31 @@ cvar_t *dodstats_rank;
 cvar_t *dodstats_rankbots;
 cvar_t *dodstats_pause;
 
-struct sUserMsg {
+// User Messages
+struct sUserMsg 
+{
 	const char *name;
 	int* id;
 	funEventCall func;
 	bool endmsg;
-} g_user_msg[] = 
+}
+g_user_msg[] = 
 {
-	{ "CurWeapon",		&gmsgCurWeapon,			Client_CurWeapon,		false },
-	{ "ObjScore",		&gmsgObjScore,			Client_ObjScore,		false },
-	{ "RoundState",		&gmsgRoundState,		Client_RoundState,		false },
-	{ "ResetHUD",		&gmsgResetHUD,			Client_ResetHUD_End,	true  },
-	{ "TeamScore",		&gmsgTeamScore,			Client_TeamScore,		false },
-	{ "AmmoX",			&gmsgAmmoX,				Client_AmmoX,			false },
-	{ "AmmoShort",		&gmsgAmmoShort,			Client_AmmoShort,		false },
-	{ "Health",			&gmsgHealth_End,		Client_Health_End,		true  },
-	
-	//Zors
-	//{ "WeaponList",	&gmsgWeaponList,		WeaponList,				true  },
-	//{ "WeaponList",	&gmsgWeaponList_End,	WeaponList_End,			true  },
-
-	{ "PTeam",			&gmsgPTeam,				NULL,					false },
-	{ "ScoreShort",		&gmsgScoreShort,		NULL,					false },
-
+	{ "CurWeapon",	&gmsgCurWeapon,			Client_CurWeapon,		false },
+	{ "CurWeapon",	&gmsgCurWeaponEnd,		Client_CurWeapon_End,	true  },
+	{ "ObjScore",	&gmsgObjScore,			Client_ObjScore,		false },
+	{ "RoundState",	&gmsgRoundState,		Client_RoundState,		false },
+	{ "Health",		&gmsgHealth,			Client_Health_End,		true  },
+	{ "ResetHUD",	&gmsgResetHUD,			Client_ResetHUD_End,	true  },
+	{ "TeamScore",	&gmsgTeamScore,			Client_TeamScore,		false },
+	{ "AmmoX",		&gmsgAmmoX,				Client_AmmoX,			false },
+	{ "AmmoShort",	&gmsgAmmoShort,			Client_AmmoShort,		false },
+	{ "SetFOV",		&gmsgSetFOV,			Client_SetFOV,			false },
+	{ "SetFOV",		&gmsgSetFOV_End,		Client_SetFOV_End,		true  },
+	{ "Object",		&gmsgObject,			Client_Object,			false },
+	{ "Object",		&gmsgObject_End,		Client_Object_End,		true  },
+	{ "ScoreShort",	&gmsgScoreShort,		NULL,					false },
+	{ "PTeam",		&gmsgPTeam,				NULL,					false },
 	{ 0,0,0,false }
 };
 
@@ -119,18 +130,20 @@ const char* get_localinfo( const char* name , const char* def = 0 )
 	return b;
 }
 
-int RegUserMsg_Post(const char *pszName, int iSize){
-	for (int i = 0; g_user_msg[ i ].name; ++i ){
-		if ( !*g_user_msg[i].id && strcmp( g_user_msg[ i ].name , pszName  ) == 0 ){
-			int id = META_RESULT_ORIG_RET( int );
+int RegUserMsg_Post(const char *pszName, int iSize)
+{
+	for (int i = 0; g_user_msg[i].name; ++i )
+	{
+		if(!*g_user_msg[i].id && strcmp(g_user_msg[i].name, pszName) == 0)
+		{
+			int id = META_RESULT_ORIG_RET(int);
 
-			*g_user_msg[ i ].id = id;
+			*g_user_msg[i].id = id;
 
-			if ( g_user_msg[ i ].endmsg )
-				modMsgsEnd[ id  ] = g_user_msg[ i ].func;
+			if(g_user_msg[i].endmsg)
+				modMsgsEnd[id] = g_user_msg[i].func;
 			else
-				modMsgs[ id  ] = g_user_msg[ i ].func;
-
+				modMsgs[id] = g_user_msg[i].func;
 			break;
 		}
 	}
@@ -149,47 +162,55 @@ void ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax ){
 	RETURN_META(MRES_IGNORED);
 }
 
-void PlayerPreThink_Post( edict_t *pEntity ) {
+void PlayerPreThink_Post(edict_t *pEntity) 
+{
 	if ( !isModuleActive() )
 		RETURN_META(MRES_IGNORED);
 
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-	if ( !pPlayer->ingame )
+	if (!pPlayer->ingame)
 		RETURN_META(MRES_IGNORED);
 
 	// Zors
-	pPlayer->checkStatus();
+	pPlayer->PreThink();
 
-	if (pPlayer->clearStats && pPlayer->clearStats < gpGlobals->time){
-		if ( !ignoreBots(pEntity) ){
+	if(pPlayer->clearStats && pPlayer->clearStats < gpGlobals->time)
+	{
+		if(!ignoreBots(pEntity))
+		{
 			pPlayer->clearStats = 0.0f;
 			pPlayer->rank->updatePosition( &pPlayer->life );
 			pPlayer->restartStats(false);
 		}
 	}
 
-	if (pPlayer->clearRound && pPlayer->clearRound < gpGlobals->time){
+	if(pPlayer->clearRound && pPlayer->clearRound < gpGlobals->time)
+	{
 		pPlayer->clearRound = 0.0f;
 		memset(&pPlayer->round,0,sizeof(pPlayer->round));
 		memset(pPlayer->weaponsRnd,0,sizeof(pPlayer->weaponsRnd));
 	}
 
-	if (pPlayer->sendScore && pPlayer->sendScore < gpGlobals->time){
+	if (pPlayer->sendScore && pPlayer->sendScore < gpGlobals->time)
+	{
 		pPlayer->sendScore = 0;
-		MF_ExecuteForward( iFScore,pPlayer->index, pPlayer->lastScore, pPlayer->savedScore );
+		MF_ExecuteForward(iFScore, pPlayer->index, pPlayer->lastScore, pPlayer->savedScore);
 	}
-	
+
 	RETURN_META(MRES_IGNORED);
 }
 
-void ServerDeactivate() {
+void ServerDeactivate() 
+{
 	int i;
-	for( i = 1;i<=gpGlobals->maxClients; ++i){
+	for( i = 1;i<=gpGlobals->maxClients; ++i)
+	{
 		CPlayer *pPlayer = GET_PLAYER_POINTER_I(i);
 		if (pPlayer->ingame) pPlayer->Disconnect();
 	}
 
-	if ( (g_rank.getRankNum() >= (int)dodstats_maxsize->value) || ((int)dodstats_reset->value == 1) ) {
+	if ( (g_rank.getRankNum() >= (int)dodstats_maxsize->value) || ((int)dodstats_reset->value == 1) ) 
+	{
 		CVAR_SET_FLOAT("dodstats_reset",0.0);
 		g_rank.clear();
 	}
@@ -205,13 +226,15 @@ void ServerDeactivate() {
 	RETURN_META(MRES_IGNORED);
 }
 
-BOOL ClientConnect_Post( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ]  ){
+BOOL ClientConnect_Post( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ]  )
+{
 	GET_PLAYER_POINTER(pEntity)->Connect(pszName,pszAddress);
 
 	RETURN_META_VALUE(MRES_IGNORED, TRUE);
 }
 
-void ClientDisconnect( edict_t *pEntity ) {
+void ClientDisconnect( edict_t *pEntity ) 
+{
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
 
 	if (pPlayer->ingame)
@@ -220,27 +243,33 @@ void ClientDisconnect( edict_t *pEntity ) {
 	RETURN_META(MRES_IGNORED);
 }
 
-void ClientPutInServer_Post( edict_t *pEntity ) {
+void ClientPutInServer_Post( edict_t *pEntity ) 
+{
 	GET_PLAYER_POINTER(pEntity)->PutInServer();
 
 	RETURN_META(MRES_IGNORED);
 }
 
-void ClientUserInfoChanged_Post( edict_t *pEntity, char *infobuffer ) {
+void ClientUserInfoChanged_Post( edict_t *pEntity, char *infobuffer ) 
+{
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
 
 	const char* name = INFOKEY_VALUE(infobuffer,"name");
 	const char* oldname = STRING(pEntity->v.netname);
 
-	if ( pPlayer->ingame){
-		if ( strcmp(oldname,name) ) {
+	if ( pPlayer->ingame)
+	{
+		if ( strcmp(oldname,name) ) 
+		{
 			if (!dodstats_rank->value)
 				pPlayer->rank = g_rank.findEntryInRank( name, name );
 			else
 				pPlayer->rank->setName( name );
 		}
 	}
-	else if ( pPlayer->IsBot() ) {
+
+	else if ( pPlayer->IsBot() ) 
+	{
 		pPlayer->Connect( name , "127.0.0.1" );
 		pPlayer->PutInServer();
 	}
@@ -248,17 +277,26 @@ void ClientUserInfoChanged_Post( edict_t *pEntity, char *infobuffer ) {
 	RETURN_META(MRES_IGNORED);
 }
 
-void MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed) {
-	if (ed){
+void MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed) 
+{
+	if(ed)
+	{
 		mPlayerIndex = ENTINDEX(ed);
 		mPlayer = GET_PLAYER_POINTER_I(mPlayerIndex);
-	} else {
+	} 
+	
+	else 
+	{
 		mPlayerIndex = 0;
 		mPlayer = NULL;
 	}
+
+	mDest = msg_dest;
 	mState = 0;
+
 	if ( msg_type < 0 || msg_type >= MAX_REG_MSGS )
 		msg_type = 0;
+
 	function=modMsgs[msg_type];
 	endfunction=modMsgsEnd[msg_type];
 	RETURN_META(MRES_IGNORED);
@@ -309,26 +347,48 @@ void WriteEntity_Post(int iValue) {
 	RETURN_META(MRES_IGNORED);
 }
 
-void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *e, TraceResult *ptr) {
-	if (ptr->pHit&&(ptr->pHit->v.flags& (FL_CLIENT | FL_FAKECLIENT) )&&
-		e && (e->v.flags&(FL_CLIENT | FL_FAKECLIENT) )){
+void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *e, TraceResult *ptr) 
+{
+	if(ptr->pHit && (ptr->pHit->v.flags&(FL_CLIENT | FL_FAKECLIENT)) &&	e && (e->v.flags&(FL_CLIENT | FL_FAKECLIENT)))
+	{
 		GET_PLAYER_POINTER(e)->aiming = ptr->iHitgroup;
 		RETURN_META(MRES_IGNORED);
 	}
 
-	if ( e && e->v.owner && e->v.owner->v.flags& (FL_CLIENT | FL_FAKECLIENT) ){
+	if(e && e->v.owner && e->v.owner->v.flags&(FL_CLIENT | FL_FAKECLIENT))
+	{
 		CPlayer *pPlayer = GET_PLAYER_POINTER(e->v.owner);
-		for ( int i=0;i<MAX_TRACE;i++){
-			if ( strcmp( traceData[i].szName,STRING(e->v.classname)) == 0 ){
-				if ( traceData[i].iAction & ACT_NADE_SHOT  ){
-					if ( traceData[i].iId == 13 && g_map.detect_allies_country )
-						pPlayer->saveShot(36);
+
+		for(int i = 0;i < MAX_TRACE; i++)
+		{
+			if(strcmp(traceData[i].szName, STRING(e->v.classname)) == 0)
+			{
+				int grenId = (traceData[i].iId == 13 && g_map.detect_allies_country) ? 36 : traceData[i].iId;
+				int rocketId = traceData[i].iId;
+
+				if(traceData[i].iAction&ACT_NADE_SHOT)
+				{
+					if(traceData[i].iId == 13 && g_map.detect_allies_country)
+						pPlayer->saveShot(grenId);
 					else
 						pPlayer->saveShot(traceData[i].iId);
 				}
-				if ( traceData[i].iAction & ACT_NADE_PUT ){
-					g_grenades.put(e,traceData[i].fDel, (traceData[i].iId == 13 && g_map.detect_allies_country )?36:traceData[i].iId ,GET_PLAYER_POINTER(e->v.owner));
+				
+				else if(traceData[i].iAction&ACT_ROCKET_SHOT)
+						pPlayer->saveShot(traceData[i].iId);
+
+				cell position[3] = {v2[0], v2[1], v2[2]};
+				cell pos = MF_PrepareCellArray(position, 3);
+
+				if(traceData[i].iAction&ACT_NADE_PUT)
+				{
+					g_grenades.put(e, traceData[i].fDel, grenId, GET_PLAYER_POINTER(e->v.owner));
+					MF_ExecuteForward(iFGrenadeExplode, GET_PLAYER_POINTER(e->v.owner)->index, pos, grenId);
 				}
+
+				if(traceData[i].iAction&ACT_ROCKET_PUT)
+					MF_ExecuteForward(iFRocketExplode, pPlayer->index, pos, rocketId);
+
 				break;
 			}
 		}
@@ -338,7 +398,6 @@ void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 
 void DispatchKeyValue_Post( edict_t *pentKeyvalue, KeyValueData *pkvd )
 {
-
 	if ( !pkvd->szClassName ){ 
 		// info_doddetect
 		if ( pkvd->szValue[0]=='i' && pkvd->szValue[5]=='d' ){
@@ -392,6 +451,7 @@ void SetClientKeyValue(int id, char *protocol, char *type, char *var)
 	RETURN_META(MRES_IGNORED);
 }
 
+
 void OnMetaAttach()
 {
 	CVAR_REGISTER (&init_dodstats_maxsize);
@@ -408,7 +468,6 @@ void OnMetaAttach()
 
 void OnAmxxAttach()
 {
-
 	MF_AddNatives( stats_Natives );
 	MF_AddNatives( base_Natives );
 
@@ -444,5 +503,12 @@ void OnPluginsLoaded()
 	iFTeamForward = MF_RegisterForward("dod_client_changeteam",ET_IGNORE,FP_CELL/*id*/,FP_CELL/*team*/,FP_CELL/*oldteam*/,FP_DONE);
 	iFSpawnForward = MF_RegisterForward("dod_client_spawn",ET_IGNORE,FP_CELL/*id*/,FP_DONE);
 	iFClassForward = MF_RegisterForward("dod_client_changeclass",ET_IGNORE,FP_CELL/*id*/,FP_CELL/*class*/,FP_CELL/*oldclass*/,FP_DONE);
+	iFScopeForward = MF_RegisterForward("dod_client_scope",ET_IGNORE,FP_CELL/*id*/,FP_CELL/*value*/,FP_DONE);
+	iFWpnPickupForward = MF_RegisterForward("dod_client_weaponpickup",ET_IGNORE,FP_CELL/*id*/,FP_CELL/*weapon*/,FP_CELL/*value*/,FP_DONE);
+	iFProneForward = MF_RegisterForward("dod_client_prone",ET_IGNORE,FP_CELL/*id*/,FP_CELL/*value*/,FP_DONE);
+	iFCurWpnForward = MF_RegisterForward("dod_client_weaponswitch",ET_IGNORE,FP_CELL/*id*/,FP_CELL/*wpnold*/,FP_CELL/*wpnew*/,FP_DONE);
+	iFGrenadeExplode = MF_RegisterForward("dod_grenade_explosion",ET_IGNORE,FP_CELL/*id*/,FP_ARRAY/*pos[3]*/,FP_CELL/*wpnid*/,FP_DONE);
+	iFRocketExplode = MF_RegisterForward("dod_rocket_explosion",ET_IGNORE,FP_CELL/*id*/,FP_ARRAY/*pos[3]*/,FP_CELL/*wpnid*/,FP_DONE);
+	iFObjectTouched = MF_RegisterForward("dod_client_objectpickup",ET_IGNORE,FP_CELL/*id*/,FP_CELL/*object*/,FP_ARRAY/*pos[3]*/,FP_CELL/*value*/,FP_DONE);
+	iFStaminaForward = MF_RegisterForward("dod_client_stamina",ET_IGNORE,FP_CELL/*id*/,FP_CELL/*stamina*/,FP_DONE);
 }
-

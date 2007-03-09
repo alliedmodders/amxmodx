@@ -22,7 +22,7 @@
 #ifndef __linux__
 #define DLLEXPORT __declspec(dllexport)
 #else
-#define DLLEXPORT
+#define DLLEXPORT __attribute__((visibility("default")))
 #define LINUX
 #endif
 
@@ -34,7 +34,8 @@
 // module interface version was 1
 // 2 - added logtag to struct (amxx1.1-rc1)
 // 3 - added new tagAMX structure (amxx1.5)
-#define AMXX_INTERFACE_VERSION 3
+// 4 - added new 'library' setting for direct loading
+#define AMXX_INTERFACE_VERSION 4
 
 // amxx module info
 struct amxx_module_info_s
@@ -44,6 +45,8 @@ struct amxx_module_info_s
 	const char *version;
 	int reload;				// reload on mapchange when nonzero
 	const char *logtag;		// added in version 2
+	const char *library;	// added in version 4
+	const char *libclass;	// added in version 4
 };
 
 // return values from functions called by amxx
@@ -153,9 +156,137 @@ typedef int (AMXAPI *AMX_DEBUG)(struct tagAMX *amx);
 #endif
 
 #if defined _MSC_VER
-  #pragma warning(disable:4103)  /* disable warning message 4103 that complains
-                                  * about pragma pack in a header file */
-  #pragma warning(disable:4100)  /* "'%$S' : unreferenced formal parameter" */
+	#pragma warning(disable:4103)  /* disable warning message 4103 that complains
+	                                * about pragma pack in a header file */
+	#pragma warning(disable:4100)  /* "'%$S' : unreferenced formal parameter" */
+
+	#if _MSC_VER >= 1400
+		#if !defined NO_MSVC8_AUTO_COMPAT
+
+			/* Disable deprecation warnings concerning unsafe CRT functions */
+			#if !defined _CRT_SECURE_NO_DEPRECATE
+				#define _CRT_SECURE_NO_DEPRECATE
+			#endif
+
+			/* Replace the POSIX function with ISO C++ conformant ones as they are now deprecated */
+			#define access _access
+			#define cabs _cabs
+			#define cgets _cgets
+			#define chdir _chdir
+			#define chmod _chmod
+			#define chsize _chsize
+			#define close _close
+			#define cprintf _cprintf
+			#define cputs _cputts
+			#define creat _creat
+			#define cscanf _cscanf
+			#define cwait _cwait
+			#define dup _dup
+			#define dup2 _dup2
+			#define ecvt _ecvt
+			#define eof _eof
+			#define execl _execl
+			#define execle _execle
+			#define execlp _execlp
+			#define execlpe _execlpe
+			#define execv _execv
+			#define execve _execv
+			#define execvp _execvp
+			#define execvpe _execvpe
+			#define fcloseall _fcloseall
+			#define fcvt _fcvt
+			#define fdopen _fdopen
+			#define fgetchar _fgetchar
+			#define filelength _filelength
+			#define fileno _fileno
+			#define flushall _flushall
+			#define fputchar _fputchar
+			#define gcvt _gcvt
+			#define getch _getch
+			#define getche _getche
+			#define getcwd _getcwd
+			#define getpid _getpid
+			#define getw _getw
+			#define hypot _hypot
+			#define inp _inp
+			#define inpw _inpw
+			#define isascii __isascii
+			#define isatty _isatty
+			#define iscsym __iscsym
+			#define iscsymf __iscsymf
+			#define itoa _itoa
+			#define j0 _j0
+			#define j1 _j1
+			#define jn _jn
+			#define kbhit _kbhit
+			#define lfind _lfind
+			#define locking _locking
+			#define lsearch _lsearch
+			#define lseek _lseek
+			#define ltoa _ltoa
+			#define memccpy _memccpy
+			#define memicmp _memicmp
+			#define mkdir _mkdir
+			#define mktemp _mktemp
+			#define open _open
+			#define outp _outp
+			#define outpw _outpw
+			#define putch _putch
+			#define putenv _putenv
+			#define putw _putw
+			#define read _read
+			#define rmdir _rmdir
+			#define rmtmp _rmtmp
+			#define setmode _setmode
+			#define sopen _sopen
+			#define spawnl _spawnl
+			#define spawnle _spawnle
+			#define spawnlp _spawnlp
+			#define spawnlpe _spawnlpe
+			#define spawnv _spawnv
+			#define spawnve _spawnve
+			#define spawnvp _spawnvp
+			#define spawnvpe _spawnvpe
+			#define strcmpi _strcmpi
+			#define strdup _strdup
+			#define stricmp _stricmp
+			#define strlwr _strlwr
+			#define strnicmp _strnicmp
+			#define strnset _strnset
+			#define strrev _strrev
+			#define strset _strset
+			#define strupr _strupr
+			#define swab _swab
+			#define tell _tell
+			#define tempnam _tempnam
+			#define toascii __toascii
+			#define tzset _tzset
+			#define ultoa _ultoa
+			#define umask _umask
+			#define ungetch _ungetch
+			#define unlink _unlink
+			#define wcsdup _wcsdup
+			#define wcsicmp _wcsicmp
+			#define wcsicoll _wcsicoll
+			#define wcslwr _wcslwr
+			#define wcsnicmp _wcsnicmp
+			#define wcsnset _wcsnset
+			#define wcsrev _wcsrev
+			#define wcsset _wcsset
+			#define wcsupr _wcsupr
+			#define write _write
+			#define y0 _y0
+			#define y1 _y1
+			#define yn _yn
+
+			/* Disable deprecation warnings because MSVC8 seemingly thinks the ISO C++ conformant 
+			 * functions above are deprecated. */
+			#pragma warning (disable:4996)
+				
+		#endif
+	#else
+		#define vsnprintf _vsnprintf
+	#endif
 #endif
 
 
@@ -1904,6 +2035,14 @@ void FN_AMXX_DETACH(void);
 void FN_AMXX_PLUGINSLOADED(void);
 #endif // FN_AMXX_PLUGINSLOADED
 
+#ifdef FN_AMXX_PLUGINSUNLOADING
+void FN_AMXX_PLUGINSUNLOADING(void);
+#endif // FN_AMXX_PLUGINSUNLOADING
+
+#ifdef FN_AMXX_PLUGINSUNLOADED
+void FN_AMXX_PLUGINSUNLOADED(void);
+#endif // FN_AMXX_PLUGINSUNLOADED
+
 // *** Types ***
 typedef void* (*PFN_REQ_FNPTR)(const char * /*name*/);
 
@@ -1950,7 +2089,22 @@ enum PlayerProp
 	Player_NewmenuPage,		//int
 };
 
+enum LibType
+{
+	LibType_Library,
+	LibType_Class
+};
+
+#define MSGBLOCK_SET	0
+#define MSGBLOCK_GET	1
+#define BLOCK_NOT 0
+#define BLOCK_ONCE 1
+#define BLOCK_SET 2
+
+typedef void (*AUTHORIZEFUNC)(int player, const char *authstring);
+
 typedef int				(*PFN_ADD_NATIVES)				(const AMX_NATIVE_INFO * /*list*/);
+typedef int				(*PFN_ADD_NEW_NATIVES)			(const AMX_NATIVE_INFO * /*list*/);
 typedef char *			(*PFN_BUILD_PATHNAME)			(const char * /*format*/, ...);
 typedef char *			(*PFN_BUILD_PATHNAME_R)			(char * /*buffer*/, size_t /* maxlen */, const char * /* format */, ...);
 typedef cell *			(*PFN_GET_AMXADDR)				(AMX * /*amx*/, cell /*offset*/);
@@ -2027,8 +2181,19 @@ typedef const char *	(*PFN_FORMAT)					(const char * /*fmt*/, ... /*params*/);
 typedef void			(*PFN_REGISTERFUNCTION)			(void * /*pfn*/, const char * /*desc*/);
 typedef	int				(*PFN_AMX_PUSH)					(AMX * /*amx*/, cell /*value*/);
 typedef	int				(*PFN_SET_TEAM_INFO)			(int /*player */, int /*teamid */, const char * /*name */);
+typedef void			(*PFN_REG_AUTH_FUNC)			(AUTHORIZEFUNC);
+typedef void			(*PFN_UNREG_AUTH_FUNC)			(AUTHORIZEFUNC);
+typedef int				(*PFN_FINDLIBRARY)				(const char * /*name*/, LibType /*type*/);
+typedef size_t			(*PFN_ADDLIBRARIES)				(const char * /*name*/, LibType /*type*/, void * /*parent*/);
+typedef size_t			(*PFN_REMOVELIBRARIES)			(void * /*parent*/);
+typedef void			(*PFN_OVERRIDENATIVES)			(AMX_NATIVE_INFO * /*natives*/, const char * /*myname*/);
+typedef const char *	(*PFN_GETLOCALINFO)				(const char * /*name*/, const char * /*def*/);
+typedef int				(*PFN_AMX_REREGISTER)			(AMX * /*amx*/, AMX_NATIVE_INFO * /*list*/, int /*list*/);
+typedef void *			(*PFN_REGISTERFUNCTIONEX)		(void * /*pfn*/, const char * /*desc*/);
+typedef void			(*PFN_MESSAGE_BLOCK)			(int /* mode */, int /* message */, int * /* opt */);
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
+extern PFN_ADD_NEW_NATIVES			g_fn_AddNewNatives;
 extern PFN_BUILD_PATHNAME			g_fn_BuildPathname;
 extern PFN_BUILD_PATHNAME_R			g_fn_BuildPathnameR;
 extern PFN_GET_AMXADDR				g_fn_GetAmxAddr;
@@ -2092,11 +2257,22 @@ extern PFN_REQ_FNPTR				g_fn_RequestFunction;
 extern PFN_AMX_PUSH					g_fn_AmxPush;
 extern PFN_SET_TEAM_INFO			g_fn_SetTeamInfo;
 extern PFN_PLAYER_PROP_ADDR			g_fn_PlayerPropAddr;
+extern PFN_REG_AUTH_FUNC			g_fn_RegAuthFunc;
+extern PFN_UNREG_AUTH_FUNC			g_fn_UnregAuthFunc;
+extern PFN_FINDLIBRARY				g_fn_FindLibrary;
+extern PFN_ADDLIBRARIES				g_fn_AddLibraries;
+extern PFN_REMOVELIBRARIES			g_fn_RemoveLibraries;
+extern PFN_OVERRIDENATIVES			g_fn_OverrideNatives;
+extern PFN_GETLOCALINFO				g_fn_GetLocalInfo;
+extern PFN_AMX_REREGISTER			g_fn_AmxReRegister;
+extern PFN_REGISTERFUNCTIONEX		g_fn_RegisterFunctionEx;
+extern PFN_MESSAGE_BLOCK			g_fn_MessageBlock;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
 // They understand #if 0 so we use #ifdef MAY_NEVER_BE_DEFINED
 int				MF_AddNatives				(const AMX_NATIVE_INFO *list) { }
+int				MF_AddNewNatives			(const AMX_NATIVE_INFO *list) { }
 char *			MF_BuildPathname			(const char * format, ...) { }
 char *			MF_BuildPathnameR			(char *buffer, size_t maxlen, const char *fmt, ...) { }
 cell *			MF_GetAmxAddr				(AMX * amx, cell offset) { }
@@ -2154,9 +2330,20 @@ int				MF_AmxPush					(AMX *amx, cell *params) { }
 int				MF_AmxExec					(AMX *amx, cell *retval, int idx) { }
 int				MF_SetPlayerTeamInfo		(int id, int teamid, const char *teamname) { }
 void *			MF_PlayerPropAddr			(int id, int prop) { }
+void			MF_RegAuthFunc				(AUTHORIZEFUNC fn) { }
+void			MF_UnregAuthFunc			(AUTHORIZEFUNC fn) { }
+int				MF_FindLibrary				(const char *name, LibType type) { }
+size_t			MF_AddLibraries				(const char *name, LibType type, void *parent) { }
+size_t			MF_RemoveLibraries			(void *parent) { }
+void			MF_OverrideNatives			(AMX_NATIVE_INFO *natives, const char *myname) { }
+const char *	MF_GetLocalInfo				(const char *name, const char *def) { }
+int				MF_AmxReRegister			(AMX *amx, AMX_NATIVE_INFO *list, int number) { return 0; }
+void *			MF_RegisterFunctionEx		(void *pfn, const char *description) { }
+void *			MF_MessageBlock				(int mode, int msg, int *opt) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
+#define MF_AddNewNatives g_fn_AddNewNatives
 #define MF_BuildPathname g_fn_BuildPathname
 #define MF_BuildPathnameR g_fn_BuildPathnameR
 #define MF_FormatAmxString g_fn_FormatAmxString
@@ -2217,10 +2404,20 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...);
 #define MF_GetPlayerEdict g_fn_GetPlayerEdict
 #define MF_Format g_fn_Format
 #define MF_RegisterFunction g_fn_RegisterFunction
-#define MF_RequestFunction g_fn_RequestFunction;
+#define MF_RequestFunction g_fn_RequestFunction
 #define MF_AmxPush g_fn_AmxPush
 #define	MF_SetPlayerTeamInfo g_fn_SetTeamInfo
 #define MF_PlayerPropAddr g_fn_PlayerPropAddr
+#define MF_RegAuthFunc g_fn_RegAuthFunc
+#define MF_UnregAuthFunc g_fn_UnregAuthFunc
+#define MF_FindLibrary g_fn_FindLibrary
+#define MF_AddLibraries g_fn_AddLibraries
+#define MF_RemoveLibraries g_fn_RemoveLibraries
+#define MF_OverrideNatives g_fn_OverrideNatives
+#define MF_GetLocalInfo g_fn_GetLocalInfo
+#define MF_AmxReRegister g_fn_AmxReRegister
+#define MF_RegisterFunctionEx g_fn_RegisterFunctionEx
+#define MF_MessageBlock g_fn_MessageBlock
 
 #ifdef MEMORY_TEST
 /*** Memory ***/

@@ -506,6 +506,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\CFlagManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\CForward.cpp"
 				>
 			</File>
@@ -708,6 +712,10 @@
 			</File>
 			<File
 				RelativePath="..\CFile.h"
+				>
+			</File>
+			<File
+				RelativePath="..\CFlagManager.h"
 				>
 			</File>
 			<File

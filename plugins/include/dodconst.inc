@@ -24,6 +24,27 @@
 
 #define DODMAX_WEAPONS		46 // 5 slots for custom weapons
 
+// DoD Weapon Types
+enum
+{
+	DODWT_PRIMARY = 0,
+	DODWT_SECONDARY,
+	DODWT_MELEE,
+	DODWT_GRENADE, 
+	DODWT_OTHER
+};
+
+// Ammo Channels
+#define AMMO_SMG 1 		// thompson, greasegun, sten, mp40
+#define AMMO_ALTRIFLE 2 	// carbine, k43, mg34
+#define AMMO_RIFLE 3 		// garand, enfield, scoped enfield, k98, scoped k98
+#define AMMO_PISTOL 4 		// colt, webley, luger
+#define AMMO_SPRING 5 		// springfield
+#define AMMO_HEAVY 6 		// bar, bren, stg44, fg42, scoped fg42
+#define AMMO_MG42 7    		// mg42
+#define AMMO_30CAL 8 		// 30cal
+#define AMMO_GREN 9 		// grenades (should be all 3 types)
+#define AMMO_ROCKET 13 		// bazooka, piat, panzerschreck
 enum { 
 	PS_NOPRONE =0,
 	PS_PRONE,

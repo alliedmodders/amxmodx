@@ -177,3 +177,37 @@ stock bool:operator!(Float:oper)
 forward operator%(Float:oper1, Float:oper2);
 forward operator%(Float:oper1, oper2);
 forward operator%(oper1, Float:oper2);
+
+
+stock Float:floatmin(Float:ValueA, Float:ValueB)
+{
+	if (ValueA<=ValueB)
+	{
+		return ValueA;
+	}
+	
+	return ValueB;
+}
+
+stock Float:floatmax(Float:ValueA, Float:ValueB)
+{
+	if (ValueA>=ValueB)
+	{
+		return ValueA;
+	}
+	
+	return ValueB;
+}
+stock Float:floatclamp(Float:Value, Float:MinValue, Float:MaxValue)
+{
+	if (Value<=MinValue)
+	{
+		return MinValue;
+	}
+	if (Value>=MaxValue)
+	{
+		return MaxValue;
+	}
+	
+	return Value;
+}

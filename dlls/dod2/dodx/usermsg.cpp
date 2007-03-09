@@ -98,47 +98,129 @@ void Client_ObjScore(void* mValue)
 	}
 }
 
-
 void Client_CurWeapon(void* mValue)
 {
-  static int iState;
-  static int iId;
+	static int iState;
+	static int iId;
 
-  switch (mState++)
-  {
-  case 0: 
-    iState = *(int*)mValue;
-    break;
-  case 1:
-    if (!iState) break; 
-    iId = *(int*)mValue;
-	break;
-  case 2:
-    if ( !iState || !isModuleActive() )
-		break;
-	int iClip = *(int*)mValue;
-	mPlayer->current = iId;
-
-   	if ( weaponData[iId].needcheck )
+	switch (mState++)
 	{
-		iId = get_weaponid(mPlayer);
-		mPlayer->current = iId;
+		case 0: 
+			iState = *(int*)mValue;
+			break;
+
+		case 1:
+			if (!iState) 
+				break; 
+
+			iId = *(int*)mValue;
+			break;
+
+		case 2:
+			if(!iState || !isModuleActive())
+				break;
+
+			int iClip = *(int*)mValue;
+			mPlayer->old = mPlayer->current;
+			mPlayer->current = iId;
+
+			if(weaponData[iId].needcheck)
+			{
+				iId = get_weaponid(mPlayer);
+				mPlayer->current = iId;
+			}
+
+			if(iClip > -1) 
+			{
+				if(mPlayer->current == 17)
+				{
+					if(iClip+2 == mPlayer->weapons[iId].clip)
+					mPlayer->saveShot(iId);
+				}
+
+				else 
+				{
+					if ( iClip+1 == mPlayer->weapons[iId].clip)
+						mPlayer->saveShot(iId);
+				}
+			}
+
+			mPlayer->weapons[iId].clip = iClip;
+			mCurWpnEnd = 1;
+			break;
+	};
+}
+
+void Client_CurWeapon_End(void*)
+{
+	if(mCurWpnEnd == 1 && mPlayer->index && mPlayer->current && mPlayer->old && (mPlayer->current != mPlayer->old))
+		MF_ExecuteForward(iFCurWpnForward, mPlayer->index, mPlayer->current, mPlayer->old);
+
+	mCurWpnEnd = 0;
+}
+
+
+/*
+Nie ma damage event ...
+*/
+void Client_Health_End(void* mValue)
+{
+    if ( !isModuleActive() )
+		return;
+
+	edict_t *enemy = mPlayer->pEdict->v.dmg_inflictor;
+	int damage = (int)mPlayer->pEdict->v.dmg_take;
+
+	if ( !mPlayer || !damage || !enemy )
+		return;
+	
+	int weapon = 0;
+	int aim = 0;
+		
+	mPlayer->pEdict->v.dmg_take = 0.0; 
+	
+	CPlayer* pAttacker = NULL;
+
+	if(enemy->v.flags & (FL_CLIENT | FL_FAKECLIENT))
+	{
+		pAttacker = GET_PLAYER_POINTER(enemy);
+		weapon = pAttacker->current;
+
+		if ( weaponData[weapon].needcheck )
+			weapon = get_weaponid(pAttacker);
+
+		aim = pAttacker->aiming;
+
+		if ( weaponData[weapon].melee )
+			pAttacker->saveShot(weapon);
+	}
+	else 
+	{
+		g_grenades.find(enemy , &pAttacker , weapon);
 	}
 
-	if (iClip > -1) {
-		if ( mPlayer->current == 17 )
-		{
-			if ( iClip+2 == mPlayer->weapons[iId].clip)
-				mPlayer->saveShot(iId);
-		}
-		else 
-		{
-			if ( iClip+1 == mPlayer->weapons[iId].clip)
-				mPlayer->saveShot(iId);
-		}
+	int TA = 0;
+	
+	if ( !pAttacker )
+	{
+		pAttacker = mPlayer;
 	}
-    mPlayer->weapons[iId].clip = iClip;
-  }
+
+	if ( pAttacker->index != mPlayer->index )
+	{ 
+		pAttacker->saveHit( mPlayer , weapon , damage, aim );
+
+		if ( mPlayer->pEdict->v.team == pAttacker->pEdict->v.team )
+			TA = 1;
+	}
+
+	MF_ExecuteForward( iFDamage, pAttacker->index, mPlayer->index, damage, weapon, aim, TA );
+
+	if ( !mPlayer->IsAlive() )
+	{
+		pAttacker->saveKill(mPlayer,weapon,( aim == 1 ) ? 1:0 ,TA);
+		MF_ExecuteForward( iFDeath, pAttacker->index, mPlayer->index, weapon, aim, TA );
+	}
 }
 
 void Client_AmmoX(void* mValue)
@@ -170,135 +252,97 @@ void Client_AmmoShort(void* mValue)
   case 0:
     iAmmo = *(int*)mValue;
     break;
+
   case 1:
-	if (!mPlayer ) break;
+	if(!mPlayer ) 
+		break;
+
     for(int i = 1; i < MAX_WEAPONS ; ++i) 
 	{
       if (iAmmo == weaponData[i].ammoSlot)
-        mPlayer->weapons[i].ammo = *(int*)mValue;
+		  mPlayer->weapons[i].ammo = *(int*)mValue;
 	}
   }
 }
 
-void Client_Health_End(void* mValue)
-{
-    if ( !isModuleActive() )
-		return;
-
-	CPlayer* pVictim = mPlayer;
-
-	edict_t *enemy = pVictim->pEdict->v.dmg_inflictor;
-	int damage = (int)pVictim->pEdict->v.dmg_take;
-
-	if(!pVictim || !damage || !enemy)
-		return;
-	
-	int weapon = 0;
-	int aim = 0;
-		
-	pVictim->pEdict->v.dmg_take = 0.0; 
-	
-	CPlayer* pAttacker = NULL;
-
-	if(enemy->v.flags & (FL_CLIENT | FL_FAKECLIENT))
-	{
-		pAttacker = GET_PLAYER_POINTER(enemy);
-		weapon = pAttacker->current;
-
-		if(weaponData[weapon].needcheck)
-			weapon = get_weaponid(pAttacker);
-
-		aim = pAttacker->aiming;
-
-		if(weaponData[weapon].melee)
-			pAttacker->saveShot(weapon);
-	}
-
-	else 
-		g_grenades.find(enemy , &pAttacker , weapon);
-
-	int TA = 0;
-	
-	if(!pAttacker)
-	{
-		pAttacker = pVictim;
-	}
-
-	if(pAttacker->index != pVictim->index)
-	{ 
-		pAttacker->saveHit(pVictim , weapon , damage, aim);
-
-		if(pVictim->pEdict->v.team == pAttacker->pEdict->v.team)
-			TA = 1;
-	}
-
-	MF_ExecuteForward(iFDamage, pAttacker->index, pVictim->index, damage, weapon, aim, TA);
-
-	if(!pVictim->IsAlive())
-	{
-		pAttacker->saveKill(pVictim, weapon, (aim == 1) ? 1:0 , TA);
-		MF_ExecuteForward(iFDeath, pAttacker->index, pVictim->index, weapon, aim, TA);
-	}
-}
-
-/*
-Working on being able to modify and switch weapons as they are sent to the client
-
-void WeaponList(void* value)
+// Called with a value of 90 at start 20 when someone scopes in and 0 when they scope out
+void Client_SetFOV(void* mValue)
 {
 	if(!mPlayer)
 		return;
 
-	if(!mPlayer->ingame || ignoreBots(mPlayer->pEdict))
-		return;
-
-	switch(mPlayer->position)
-	{
-		case 0: MF_Log("pszName = %s", value); break;			// string	weapon name
-		case 1: MF_Log("pszAmmo1 = %d", (int)value); break;		// byte		Ammo Type
-		case 2: MF_Log("iMaxAmmo1 = %d", (int)value); break;	// byte     Max Ammo 1
-		case 3: MF_Log("pszAmmo2 = %d", (int)value); break;		// byte		Ammo2 Type
-		case 4: MF_Log("iMaxAmmo2 = %d", (int)value); break;	// byte     Max Ammo 2
-		case 5: MF_Log("iSlot = %d", (int)value); break;		// byte		bucket
-		case 6: MF_Log("iPosition = %d", (int)value); break;	// byte		bucket pos
-		case 7: MF_Log("iId = %d", (int)value); break;			// byte		id (bit index into pev->weapons)
-		case 8: MF_Log("iFlags = %d", (int)value); break;		// byte		Flags
-	};
-
-	mPlayer->position++;
+	mPlayer->Scoping(*(int*)mValue);
 }
 
-void WeaponList_End(void* mValue)
+void Client_SetFOV_End(void* mValue)
 {
 	if(!mPlayer)
 		return;
 
-	MF_Log("Done with %d", mPlayer->position);
-	mPlayer->position = 0;
+	mPlayer->ScopingCheck();
 }
 
-struct weapon_info_s
+void Client_Object(void* mValue)
 {
-	char *pszName;			// string	weapon name
-	int pszAmmo1;			// byte		Ammo Type
-	int iMaxAmmo1;			// byte     Max Ammo 1
-	int pszAmmo2;			// byte		Ammo2 Type
-	int iMaxAmmo2;			// byte     Max Ammo 2
-	int iSlot;				// byte		bucket
-	int iPosition;			// byte		bucket pos
-	int iId;				// byte		id (bit index into pev->weapons)
-	int iFlags;				// byte		Flags
-}weapon_info_t;
+	if(!mPlayer) 
+		return;
 
-MESSAGE_BEGIN( MSG_ONE, gmsgWeaponList, NULL, pev );  
-	WRITE_STRING(pszName);			// string	weapon name
-	WRITE_BYTE(GetAmmoIndex(II.pszAmmo1));	// byte		Ammo Type
-	WRITE_BYTE(II.iMaxAmmo1);				// byte     Max Ammo 1
-	WRITE_BYTE(GetAmmoIndex(II.pszAmmo2));	// byte		Ammo2 Type
-	WRITE_BYTE(II.iMaxAmmo2);				// byte     Max Ammo 2
-	WRITE_BYTE(II.iSlot);					// byte		bucket
-	WRITE_BYTE(II.iPosition);				// byte		bucket pos
-	WRITE_BYTE(II.iId);						// byte		id (bit index into pev->weapons)
-	WRITE_BYTE(II.iFlags);					// byte		Flags
-MESSAGE_END();
-*/
+	// First need to find out what was picked up
+	const char *classname;
+	edict_t* pObject = NULL;
+
+	const char* value;
+
+	if(mValue)
+	{
+		value = (char*)mValue;
+	}
+
+	if(!mPlayer->object.carrying)
+	{
+		// We grab the first object within the sphere of our player
+		pObject = FindEntityInSphere(mPlayer->pEdict, mPlayer->pEdict, 50.0);
+
+		// The loop through all the objects within the sphere
+		while(pObject && !FNullEnt(pObject))
+		{
+			classname = STRING(pObject->v.classname);
+
+			if(strcmp(classname, "dod_object") == 0)
+			{
+				mPlayer->object.pEdict = pObject;
+				mPlayer->object.do_forward = true;
+				return;
+			}
+
+			pObject = FindEntityInSphere(pObject, mPlayer->pEdict, 50.0);
+		}
+	}
+
+	else
+	{
+		mPlayer->object.do_forward = true;
+	}
+}
+
+void Client_Object_End(void* mValue)
+{
+	if(!mPlayer) 
+		return;
+
+	float fposition[3];
+
+	if(mPlayer->object.do_forward)
+	{
+		mPlayer->object.do_forward = (mPlayer->object.do_forward) ? false : true;
+		mPlayer->object.carrying = (mPlayer->object.carrying) ? false : true;
+
+		mPlayer->object.pEdict->v.origin.CopyToArray(fposition);
+		cell position[3] = {fposition[0], fposition[1], fposition[2]};
+		cell pos = MF_PrepareCellArray(position, 3);
+		MF_ExecuteForward(iFObjectTouched, mPlayer->index, ENTINDEX(mPlayer->object.pEdict), pos, mPlayer->object.carrying);
+
+		if(!mPlayer->object.carrying)
+			mPlayer->object.pEdict = NULL;
+	}
+}

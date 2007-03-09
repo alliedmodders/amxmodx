@@ -339,6 +339,14 @@ struct func_s
 	const char *desc;
 };
 
+enum AdminProperty
+{
+	Admin_Auth = 0,
+	Admin_Password,
+	Admin_Access,
+	Admin_Flags
+};
+
 extern enginefuncs_t *g_pEngTable;
 
 #endif // AMXMODX_H

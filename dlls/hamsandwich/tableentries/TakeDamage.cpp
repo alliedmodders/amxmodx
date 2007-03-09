@@ -1,0 +1,322 @@
+#include "sdk/amxxmodule.h"
+
+#include "hamsandwich.h"
+
+#include "hooks.h"
+#include "VTableManager.h"
+#include "VTableEntries.h"
+
+#include "vfunc_gcc295.h"
+#include "vfunc_msvc.h"
+
+#include "NEW_Util.h"
+
+// Change these on a per-hook basis! Auto-changes all the annoying fields in the following functions
+#define ThisVTable  VTableTakeDamage
+#define ThisEntries	TakeDamageEntries
+#define ThisHook	VHOOK_TakeDamage
+
+unsigned int	*ThisVTable::pevoffset=NULL;
+unsigned int	*ThisVTable::pevset=NULL;
+unsigned int	*ThisVTable::baseoffset=NULL;
+unsigned int	*ThisVTable::baseset=0;
+unsigned int	 ThisVTable::index=0;
+unsigned int	 ThisVTable::indexset=0;
+
+static AMX_NATIVE_INFO registernatives[] = {
+	{ "register_takedamage",	ThisVTable::RegisterNative },
+	{ NULL,						NULL }
+};
+
+static AMX_NATIVE_INFO callnatives[] = {
+	{ "hs_takedamage",			ThisVTable::NativeCall },
+	{ "hs_etakedamage",			ThisVTable::ENativeCall },
+	{ NULL,						NULL }
+};
+
+/**
+ * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+ *
+ * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+ * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+ * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+ * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+ * @noreturn
+ */
+void ThisVTable::Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset)
+{
+	ThisVTable::pevoffset=poffset;
+	ThisVTable::pevset=pset;
+
+	ThisVTable::baseoffset=baseoffs;
+	ThisVTable::baseset=baseset;
+
+	ThisVTable::index=0;
+	ThisVTable::indexset=0;
+
+	RegisterConfigCallback(ThisVTable::ConfigDone);
+
+	RegisterKeySuffix("takedamage",ThisVTable::KeyValue);
+};
+
+/**
+ * Called when one of this table entry's keyvalues is caught in a config file.
+ *
+ * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+ * @param data				The data this keyvalue is set to.
+ * @noreturn
+ */
+void ThisVTable::KeyValue(const char *key, const char *data)
+{
+	if (strcmp(key,"takedamage")==0)
+	{
+		ThisVTable::index=HAM_StrToNum(data);
+		ThisVTable::indexset=1;
+	}
+};
+
+/**
+ * Called immediately after the config file is done being parsed.  Register our natives here.
+ *
+ * @noreturn
+ */
+void ThisVTable::ConfigDone(void)
+{
+	if (ThisVTable::indexset && *(ThisVTable::baseset))
+	{
+		MF_AddNatives(callnatives);
+
+		if (*(ThisVTable::pevset))
+		{
+			MF_AddNatives(registernatives);
+		}
+	}
+};
+
+/**
+ * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+ * 
+ * @param amx				The AMX structure for the plugin.
+ * @param params			The parameters passed from the plugin.
+ * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+ */
+cell ThisVTable::RegisterNative(AMX *amx, cell *params)
+{
+	int funcid;
+	char *function=MF_GetAmxString(amx,params[2],0,NULL);
+
+	if (MF_AmxFindPublic(amx,function,&funcid)!=AMX_ERR_NONE)
+	{
+		MF_LogError(amx,AMX_ERR_NATIVE,"Can not find function \"%s\"",function);
+		return 0;
+	}
+	// Get the classname
+	char *classname=MF_GetAmxString(amx,params[1],1,NULL);
+
+	// create an entity, assign it the gamedll's class, hook it and destroy it
+	edict_t *Entity=CREATE_ENTITY();
+
+	CALL_GAME_ENTITY(PLID,classname,&Entity->v);
+
+	if (Entity->pvPrivateData)
+	{
+		ThisVTable::Hook(&VTMan,EdictToVTable(Entity),amx,funcid);
+		REMOVE_ENTITY(Entity);
+		return 1;
+	}
+
+	REMOVE_ENTITY(Entity);
+	// class was not found
+	// throw an error alerting console that this hook did not happen
+	MF_LogError(amx, AMX_ERR_NATIVE,"Failed to retrieve classtype for \"%s\", hook for \"%s\" not active.",classname,function);
+	
+	return 0;
+
+};
+
+/**
+ * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+ *
+ * @param amx				The AMX structure for the plugin.
+ * @param params			The parameters passed from the plugin.
+ * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+ */
+cell ThisVTable::NativeCall(AMX *amx, cell *params)
+{
+	// scan to see if this virtual function is a trampoline
+	void *pthis=INDEXENT_NEW(params[1])->pvPrivateData;
+	void *func=GetVTableEntry(pthis,ThisVTable::index,*ThisVTable::baseoffset);
+
+	int i=0;
+	int end=VTMan.ThisEntries.size();
+
+	while (i<end)
+	{
+		if (VTMan.ThisEntries[i]->IsTrampoline(func))
+		{
+			// this function is a trampoline
+			// use the original function instead
+			func=VTMan.ThisEntries[i]->GetOriginalFunction();
+			break;
+		}
+		++i;
+	}
+	// TODO: Inline ASM this
+#ifdef _WIN32
+	return reinterpret_cast<int (__fastcall *)(void *,int,void *,void *,float,int)>(func)(
+		pthis,											/*this*/
+		0,												/*fastcall buffer*/
+		&(INDEXENT_NEW(params[2])->v),					/*inflictor*/
+		&(INDEXENT_NEW(params[3])->v),					/*attacker*/
+		amx_ctof2(params[4]),							/*damage*/
+		(int)params[5]									/*dmgtype*/
+		);
+#else
+	return reinterpret_cast<int (*)(void *,void *,void *,float,int)>(func)(
+		pthis,											/*this*/
+		&(INDEXENT_NEW(params[2])->v),					/*inflictor*/
+		&(INDEXENT_NEW(params[3])->v),					/*attacker*/
+		amx_ctof2(params[4]),							/*damage*/
+		(int)params[5]									/*dmgtype*/
+		);
+#endif
+};
+
+/**
+ * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+ *
+ * @param amx				The AMX structure for the plugin.
+ * @param params			The parameters passed from the plugin.
+ * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+ */
+cell ThisVTable::ENativeCall(AMX *amx, cell *params)
+{
+	return VCall4<int>(
+		INDEXENT_NEW(params[1])->pvPrivateData, /*this*/
+		ThisVTable::index,						/*vtable entry*/
+		*(ThisVTable::baseoffset),				/*size of class*/
+		&(INDEXENT_NEW(params[2])->v),			/*inflictor*/
+		&(INDEXENT_NEW(params[3])->v),			/*attacker*/
+		amx_ctof2(params[4]),					/*damage*/
+		(int)params[5]							/*dmgtype*/
+	);
+};
+
+/**
+ * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+ *
+ * @param manager			The VTableManager this is a child of.
+ * @param vtable			The virtual table we're molesting.
+ * @param outtrampoline		The trampoline that was created.
+ * @param origfunc			The original function that was hooked.
+ * @noreturn
+ */
+void ThisVTable::CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc)
+{
+
+	VTableEntryBase::CreateGenericTrampoline(manager,
+		vtable,
+		ThisVTable::index,
+		id,
+		outtrampoline,
+		origfunc,
+		reinterpret_cast<void *>(ThisHook),
+		4,  // param count
+		0,  // voidcall
+		1); // thiscall
+
+};
+
+/**
+ * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+ *
+ * @param manager			The VTableManager this is a child of.
+ * @param vtable			The virtual table we're molesting.
+ * @param plugin			The plugin that's requesting this.
+ * @param funcid			The function id of the callback.
+ * @noreturn
+ */
+void ThisVTable::Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid)
+{
+	void *ptr=vtable[ThisVTable::index];
+
+	int i=0;
+	int end=manager->ThisEntries.size();
+	int fwd=MF_RegisterSPForward(plugin,funcid,FP_CELL/*this*/,FP_CELL/*inflictor*/,FP_CELL/*attacker*/,FP_CELL/*damage*/,FP_CELL/*type*/,FP_DONE);
+	while (i<end)
+	{
+		if (manager->ThisEntries[i]->IsTrampoline(ptr))
+		{
+			// this function is already hooked!
+
+			manager->ThisEntries[i]->AddForward(fwd);
+			
+			return;
+		}
+
+		++i;
+	}
+	// this function is NOT hooked
+	void *tramp;
+	void *func;
+	ThisVTable::CreateHook(manager,vtable,manager->ThisEntries.size(),&tramp,&func);
+	ThisVTable *entry=new ThisVTable;
+	
+	entry->Setup(&vtable[ThisVTable::index],tramp,func);
+
+	manager->ThisEntries.push_back(entry);
+	
+	entry->AddForward(fwd);
+
+}
+
+/**
+ * Execute the command.  This is called directly from our global hook function.
+ *
+ * @param pthis				The "this" pointer, cast to a void.  The victim.
+ * @param inflictor			Damage inflictor.
+ * @param attacker			The attacker who caused the inflictor to damage the victim.
+ * @param damage			How much damage was caused.
+ * @param type				Damage type (usually in bitmask form).
+ * @return					Unsure.  Does not appear to be used.
+ */
+int ThisVTable::Execute(void *pthis, void *inflictor, void *attacker, float damage, int type)
+{
+	int i=0;
+
+	int end=Forwards.size();
+
+	int result=HAM_UNSET;
+	int thisresult=HAM_UNSET;
+
+	int iThis=PrivateToIndex(pthis);
+	int iInflictor=EntvarToIndex((entvars_t *)inflictor);
+	int iAttacker=EntvarToIndex((entvars_t *)attacker);
+
+	while (i<end)
+	{
+		thisresult=MF_ExecuteForward(Forwards[i++],iThis,iInflictor,iAttacker,amx_ftoc2(damage),type);
+
+		if (thisresult>result)
+		{
+			result=thisresult;
+		}
+	};
+
+	// stop here
+	if (result>=HAM_SUPERCEDE)
+	{
+		return 0;
+	}
+
+#if defined _WIN32
+	int ireturn=reinterpret_cast<int (__fastcall *)(void *,int,void *,void *,float,int)>(function)(pthis,0,inflictor,attacker,damage,type);
+#elif defined __linux__
+	int ireturn=reinterpret_cast<int (*)(void *,void *,void *,float,int)>(function)(pthis,inflictor,attacker,damage,type);
+#endif
+
+	if (result!=HAM_OVERRIDE)
+		return ireturn;
+
+	return 0;
+};

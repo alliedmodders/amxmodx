@@ -47,30 +47,64 @@ extern AMX_NATIVE_INFO stats_Natives[];
 extern AMX_NATIVE_INFO base_Natives[];
 extern AMX_NATIVE_INFO pd_Natives[];
 
-struct weapon_t {
+// Weapons grabbing by type
+enum
+{
+	DODWT_PRIMARY = 0,
+	DODWT_SECONDARY,
+	DODWT_MELEE,
+	DODWT_GRENADE, 
+	DODWT_OTHER
+};
+
+// Model Sequences
+enum
+{
+	DOD_SEQ_PRONE_IDLE = 15,
+	DOD_SEQ_PRONE_FORWARD,
+	DOD_SEQ_PRONE_DOWN,
+	DOD_SEQ_PRONE_UP
+};
+
+// Weapons Structure
+struct weapon_t 
+{
 	bool needcheck;
 	bool melee;
 	char logname[16];
 	char name[32];
+	char hashname[32];
 	int ammoSlot;
+	int type;
+};
+
+struct weaponlist_s
+{
+	int grp;
+	int bitfield;
+	int clip;
+	bool changeable;
 };
 
 extern bool rankBots;
 extern int mState;
+extern int mDest;
+extern int mCurWpnEnd;
 extern int mPlayerIndex;
 
 void Client_CurWeapon(void*);
+void Client_CurWeapon_End(void*);
+void Client_Health_End(void*);
 void Client_ResetHUD_End(void*);
 void Client_ObjScore(void*);
 void Client_TeamScore(void*);
 void Client_RoundState(void*);
 void Client_AmmoX(void*);
 void Client_AmmoShort(void*);
-void Client_Health_End(void*);
-
-// Zors
-//void WeaponList(void*);
-//void WeaponList_End(void*);
+void Client_SetFOV(void*);
+void Client_SetFOV_End(void*);
+void Client_Object(void*);
+void Client_Object_End(void*);
 
 typedef void (*funEventCall)(void*);
 
@@ -78,6 +112,8 @@ extern int AlliesScore;
 extern int AxisScore;
 
 extern int gmsgCurWeapon;
+extern int gmsgCurWeaponEnd;
+extern int gmsgHealth;
 extern int gmsgResetHUD;
 extern int gmsgObjScore;
 extern int gmsgRoundState;
@@ -86,7 +122,10 @@ extern int gmsgScoreShort;
 extern int gmsgPTeam;
 extern int gmsgAmmoX;
 extern int gmsgAmmoShort;
-extern int gmsgHealth_End;
+extern int gmsgSetFOV;
+extern int gmsgSetFOV_End;
+extern int gmsgObject;
+extern int gmsgObject_End;
 
 extern int iFDamage;
 extern int iFDeath;
@@ -94,6 +133,14 @@ extern int iFScore;
 extern int iFSpawnForward;
 extern int iFTeamForward;
 extern int iFClassForward;
+extern int iFScopeForward;
+extern int iFProneForward;
+extern int iFWpnPickupForward;
+extern int iFCurWpnForward;
+extern int iFGrenadeExplode;
+extern int iFRocketExplode;
+extern int iFObjectTouched;
+extern int iFStaminaForward;
 
 extern cvar_t* dodstats_maxsize;
 extern cvar_t* dodstats_rank;
@@ -113,7 +160,9 @@ extern CMapInfo g_map;
 int get_weaponid(CPlayer* player);
 bool ignoreBots (edict_t *pEnt, edict_t *pOther = NULL );
 bool isModuleActive();
+edict_t *FindEntityByString(edict_t *pentStart, const char *szKeyword, const char *szValue);
 edict_t *FindEntityByClassname(edict_t *pentStart, const char *szName);
+edict_t *FindEntityInSphere(edict_t *pentStart, edict_t *origin, float radius);
 
 #define CHECK_ENTITY(x) \
 	if (x < 0 || x > gpGlobals->maxEntities) { \

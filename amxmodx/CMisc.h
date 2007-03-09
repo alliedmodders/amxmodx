@@ -304,4 +304,87 @@ public:
 	inline bool isNewTeam() { return newTeam ? true : false; }
 };
 
+class CAdminData
+{
+private:
+	cell		m_AuthData[44];
+	cell		m_Password[32];
+	cell		m_Flags;
+	cell		m_Access;
+public:
+
+	CAdminData()
+	{
+		m_AuthData[0]=0;
+		m_Password[0]=0;
+		m_Flags=0;
+		m_Access=0;
+	};
+
+	void SetAccess(cell Access)
+	{
+		m_Access=Access;
+	};
+	cell GetAccess(void) const
+	{
+		return m_Access;
+	};
+
+	void SetFlags(cell Flags)
+	{
+		m_Flags=Flags;
+	};
+	cell GetFlags(void) const
+	{
+		return m_Flags;
+	};
+
+	void SetAuthID(const cell *Input)
+	{
+		unsigned int i=0;
+		while (i<sizeof(m_AuthData)-1)
+		{
+			if ((m_AuthData[i++]=*Input++)==0)
+			{
+				return;
+			}
+		}
+
+		m_AuthData[sizeof(m_AuthData)-1]=0;
+
+	};
+	const cell *GetAuthID(void) const
+	{
+		return &m_AuthData[0];
+	};
+
+	void SetPass(const cell *Input)
+	{
+		unsigned int i=0;
+		while (i<sizeof(m_Password)-1)
+		{
+			if ((m_Password[i++]=*Input++)==0)
+			{
+				return;
+			}
+		}
+
+		m_Password[sizeof(m_Password)-1]=0;
+
+	};
+	const cell *GetPass(void) const
+	{
+		return &m_Password[0];
+	};
+
+	CAdminData & operator = (const CAdminData &src)
+	{
+		this->SetAccess(src.GetAccess());
+		this->SetFlags(src.GetFlags());
+		this->SetAuthID(src.GetAuthID());
+		this->SetPass(src.GetPass());
+
+		return *this;
+	}
+};
 #endif //CMISC_H

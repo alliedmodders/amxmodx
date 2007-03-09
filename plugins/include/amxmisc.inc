@@ -310,3 +310,19 @@ stock constraint_offset(low, high, seed, offset)
 	
 	return 0;	// Makes the compiler happy -_-
 }
+
+/* Returns true if the user has ANY of the provided flags
+ * false if they have none 
+ */
+stock has_flag(id, const flags[]) 
+{
+	return (get_user_flags(id) & read_flags(flags));
+}
+/* Returns true if the user has ALL of the provided flags
+ * false otherwise
+ */
+stock has_all_flags(id, const flags[]) 
+{
+	new FlagsNumber=read_flags(flags);
+	return ((get_user_flags(id) & FlagsNumber)==FlagsNumber);
+}

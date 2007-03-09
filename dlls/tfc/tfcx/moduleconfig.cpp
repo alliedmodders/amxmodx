@@ -58,6 +58,8 @@ int mPlayerIndex;
 int g_death_info = -1;
 int g_damage_info = -1;
 
+int g_AlliesFlags[4];
+
 RankSystem g_rank;
 Grenades g_grenades;
 
@@ -166,7 +168,13 @@ void ServerDeactivate() {
 		weaponData[i].ammoSlot = false;
 	
 	g_grenades.clear();
-	
+
+	g_AlliesFlags[0]=0;
+	g_AlliesFlags[1]=0;
+	g_AlliesFlags[2]=0;
+	g_AlliesFlags[3]=0;
+
+
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -349,6 +357,10 @@ void OnAmxxAttach() {
 	pdAmmo[TFC_AMMO_NADE1] = PD_AMMO_NADE1;
 	pdAmmo[TFC_AMMO_NADE2] = PD_AMMO_NADE2;
 	
+	g_AlliesFlags[0]=0;
+	g_AlliesFlags[1]=0;
+	g_AlliesFlags[2]=0;
+	g_AlliesFlags[3]=0;
 }
 
 void OnPluginsLoaded()
@@ -357,3 +369,37 @@ void OnPluginsLoaded()
 	g_death_info = MF_RegisterForward("client_death", ET_IGNORE, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 }
 
+void DispatchKeyValue(edict_t *pentKeyvalue, KeyValueData *pkvd)
+{
+	if (pkvd->szClassName && strcmp(pkvd->szClassName,"info_tfdetect")==0)
+	{
+		if (pkvd->szKeyName && strncmp(pkvd->szKeyName,"team",4)==0)
+		{
+			if (strcmp(pkvd->szKeyName,"team1_allies")==0 && pkvd->szValue!=NULL)
+			{
+				g_AlliesFlags[0]=atoi(pkvd->szValue);
+
+				RETURN_META(MRES_IGNORED);
+			}
+			else if (strcmp(pkvd->szKeyName,"team2_allies")==0 && pkvd->szValue!=NULL)
+			{
+				g_AlliesFlags[1]=atoi(pkvd->szValue);
+
+				RETURN_META(MRES_IGNORED);
+			}
+			else if (strcmp(pkvd->szKeyName,"team3_allies")==0 && pkvd->szValue!=NULL)
+			{
+				g_AlliesFlags[2]=atoi(pkvd->szValue);
+
+				RETURN_META(MRES_IGNORED);
+			}
+			else if (strcmp(pkvd->szKeyName,"team4_allies")==0 && pkvd->szValue!=NULL)
+			{
+				g_AlliesFlags[3]=atoi(pkvd->szValue);
+
+				RETURN_META(MRES_IGNORED);
+			}
+		}
+	}
+	RETURN_META(MRES_IGNORED);
+}

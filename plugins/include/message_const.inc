@@ -23,15 +23,64 @@
 #define MSG_ONE_UNRELIABLE          8        // Send to one client, but don't put in reliable stream, put in unreliable datagram (could be dropped)
 #define	MSG_SPEC                    9        // Sends to all spectator proxies
 
-/* Message types for message_begin() */
-#define SVC_TEMPENTITY              23
-#define SVC_INTERMISSION            30
-#define SVC_CDTRACK                 32
-#define SVC_WEAPONANIM              35
-#define SVC_ROOMTYPE                37
-#define SVC_ADDANGLE                38       // [vec3] add this angle to the view angle
-#define SVC_NEWUSERMSG              39
-#define	SVC_HLTV                    50
+/* Hardcoded message types for message_begin() 
+ * Look in the actual HLSDK for details!
+ */
+#define SVC_NOP						1
+#define SVC_DISCONNECT				2
+#define SVC_EVENT					3
+#define SVC_VERSION					4
+#define SVC_SETVIEW					5
+#define SVC_SOUND					6
+#define SVC_TIME					7
+#define SVC_PRINT					8
+#define SVC_STUFFTEXT				9
+#define SVC_SETANGLE				10
+#define SVC_SERVERINFO				11
+#define SVC_LIGHTSTYLE				12
+#define SVC_UPDATEUSERINFO			13
+#define SVC_DELTADESCRIPTION		14
+#define SVC_CLIENTDATA				15
+#define SVC_STOPSOUND				16
+#define SVC_PINGS					17
+#define SVC_PARTICLE				18
+#define SVC_DAMAGE					19
+#define SVC_SPAWNSTATIC				20
+#define SVC_EVENT_RELIABLE			21
+#define SVC_SPAWNBASELINE			22
+#define SVC_TEMPENTITY				23
+#define SVC_SETPAUSE				24
+#define SVC_SIGNONNUM				25
+#define SVC_CENTERPRINT				26
+#define SVC_KILLEDMONSTER			27
+#define SVC_FOUNDSECRET				28
+#define SVC_SPAWNSTATICSOUND		29
+#define SVC_INTERMISSION			30
+#define SVC_FINALE					31
+#define SVC_CDTRACK					32
+#define SVC_RESTORE					33
+#define SVC_CUTSCENE				34
+#define SVC_WEAPONANIM				35
+#define SVC_DECALNAME				36
+#define SVC_ROOMTYPE				37
+#define SVC_ADDANGLE				38
+#define SVC_NEWUSERMSG				39
+#define SVC_PACKETENTITIES			40
+#define SVC_DELTAPACKETENTITIES		41
+#define SVC_CHOKE					42
+#define SVC_RESOURCELIST			43
+#define SVC_NEWMOVEVARS				44
+#define SVC_RESOURCEREQUEST			45
+#define SVC_CUSTOMIZATION			46
+#define SVC_CROSSHAIRANGLE			47
+#define SVC_SOUNDFADE				48
+#define SVC_FILETXFERFAILED			49
+#define SVC_HLTV					50
+#define SVC_DIRECTOR				51
+#define SVC_VOICEINIT				52
+#define SVC_VOICEDATA				53
+#define SVC_SENDEXTRAINFO			54
+#define SVC_TIMESCALE				55
 
 /* Message flags for set_msg_block() */
 #define BLOCK_NOT                   0
@@ -323,8 +372,6 @@ enum
 // write_coord(position.z)
 // write_short(model index)
 // write_byte(scale / 10)
-// write_byte(size)
-// write_byte(brightness)
 
 #define TE_BEAMRING                 24       // Connect a beam ring to two entities
 // write_byte(TE_BEAMRING)
@@ -364,6 +411,7 @@ enum
 // write_byte(red)
 // write_byte(green)
 // write_byte(blue)
+// write_byte(brightness)
 // write_byte(life in 10's)
 // write_byte(decay rate in 10's)
 
@@ -649,7 +697,7 @@ enum
 
 #define TE_PLAYERSPRITES            121      // Sprites emit from a player's bounding box (ONLY use for players!)
 // write_byte(TE_PLAYERSPRITES)
-// write_short(playernum)
+// write_byte(playernum)
 // write_short(sprite modelindex)
 // write_byte(count)
 // write_byte(variance) (0 = no variance in size) (10 = 10% variance in size)
@@ -719,3 +767,35 @@ enum
 // write_byte(life * 10)
 // write_byte(color) this is an index into an array of color vectors in the engine. (0 - )
 // write_byte(length * 10)
+
+// From hltv.h from the HLSDK, these are used in conjunction with SVC_DIRECTOR
+// sub commands of svc_director:
+#define DRC_CMD_NONE				0	// NULL director command
+#define DRC_CMD_START				1	// start director mode
+#define DRC_CMD_EVENT				2	// informs about director command
+#define DRC_CMD_MODE				3	// switches camera modes
+#define DRC_CMD_CAMERA				4	// sets camera registers
+#define DRC_CMD_TIMESCALE			5	// sets time scale
+#define DRC_CMD_MESSAGE				6	// send HUD centerprint
+#define DRC_CMD_SOUND				7	// plays a particular sound
+#define DRC_CMD_STATUS				8	// status info about broadcast
+#define DRC_CMD_BANNER				9	// banner file name for HLTV gui
+#define	DRC_CMD_FADE				10	// send screen fade command
+#define DRC_CMD_SHAKE				11	// send screen shake command
+#define DRC_CMD_STUFFTEXT			12	// like the normal svc_stufftext but as director command
+
+#define DRC_CMD_LAST				12
+
+// HLTV_EVENT event flags
+#define DRC_FLAG_PRIO_MASK		0x0F	// priorities between 0 and 15 (15 most important)
+#define DRC_FLAG_SIDE			(1<<4)	// 
+#define DRC_FLAG_DRAMATIC		(1<<5)	// is a dramatic scene
+#define DRC_FLAG_SLOWMOTION		(1<<6)  // would look good in SloMo
+#define DRC_FLAG_FACEPLAYER		(1<<7)  // player is doning something (reload/defuse bomb etc)
+#define DRC_FLAG_INTRO			(1<<8)	// is a introduction scene
+#define DRC_FLAG_FINAL			(1<<9)	// is a final scene
+#define DRC_FLAG_NO_RANDOM		(1<<10)	// don't randomize event data
+
+
+#define MAX_DIRECTOR_CMD_PARAMETERS		4
+#define MAX_DIRECTOR_CMD_STRING			128

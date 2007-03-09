@@ -892,7 +892,9 @@ static cell AMX_NATIVE_CALL menu_destroy(AMX *amx, cell *params)
 	GETMENU_R(params[1]);
 
 	if (pMenu->isDestroying)
+	{
 		return 0;	//prevent infinite recursion
+	}
 
 	pMenu->isDestroying = true;
 	g_menucmds.removeMenuId(pMenu->menuId);
@@ -938,8 +940,16 @@ static cell AMX_NATIVE_CALL player_menu_info(AMX *amx, cell *params)
 	*m = player->menu;
 	*n = player->newmenu;
 
+	if (params[0] / sizeof(cell) == 4)
+	{
+		cell *addr = get_amxaddr(amx, params[4]);
+		*addr = player->page;
+	}
+
 	if ( (*m != 0 && *m != -1) || (*n != -1))
+	{
 		return 1;
+	}
 
 	return 0;
 }

@@ -32,6 +32,8 @@
 #include "amxxmodule.h"
 #include "tfcx.h"
 
+extern int g_AlliesFlags[4];
+
 // Vexd start
 
 // Set A TFC Player's model. This works differently then CS.
@@ -429,6 +431,60 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL TFC_IsFeigning(AMX *amx, cell *params)
+{
+	int index = params[1];
+	CHECK_PLAYER(index);
+	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	
+	return (pPlayer->pEdict->v.playerclass == TFC_PC_SPY && pPlayer->pEdict->v.deadflag == 5);
+};
+cvar_t *mp_teamplay=NULL;
+static cell AMX_NATIVE_CALL TFC_IsTeamAlly(AMX *amx, cell *params)
+{
+	if (mp_teamplay==NULL)
+	{
+		mp_teamplay=CVAR_GET_POINTER("mp_teamplay");
+	}
+
+	if (mp_teamplay && mp_teamplay->value != 0.0)
+	{
+		return 0;
+	}
+	int TeamA=params[1];
+	int TeamB=params[2];
+	if (TeamA==TeamB) // same team, yes these are allies
+	{
+		return 1;
+	}
+
+	if (TeamA==0 || TeamB==0) // spectators
+	{
+		return 0;
+	}
+
+
+
+	if (TeamA < 1 || TeamA > 4) // out of bounds?
+	{
+		MF_LogError(amx,AMX_ERR_NATIVE,"Team A is out of bounds (got %d, expected 0 through 4)",TeamA);
+		return 0;
+	}
+	if (TeamB < 1 || TeamB > 4) // out of bounds?
+	{
+		MF_LogError(amx,AMX_ERR_NATIVE,"Team B is out of bounds (got %d, expected 0 through 4)",TeamA);
+		return 0;
+	}
+
+	if (g_AlliesFlags[--TeamA] & (1<<(--TeamB)))
+	{
+		return 1;
+	}
+
+
+	return 0;
+};
+
 // Native list.
 AMX_NATIVE_INFO base_Natives[] = {
 	{"tfc_setmodel", TFC_SetModel},
@@ -439,6 +495,10 @@ AMX_NATIVE_INFO base_Natives[] = {
 	{"tfc_setweaponbammo", TFC_SetWeaponBAmmo},
 	{"tfc_getweaponammo", TFC_GetWeaponAmmo},
 	{"tfc_setweaponammo", TFC_SetWeaponAmmo},
+
+	{"tfc_is_user_feigning", TFC_IsFeigning},
+
+	{"tfc_is_team_ally", TFC_IsTeamAlly},
 
 	{"tfc_get_user_goalitem", TFC_GetUserGoalItem},
 

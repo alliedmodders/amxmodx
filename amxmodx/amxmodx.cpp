@@ -35,7 +35,12 @@
 #include "debugger.h"
 #include "binlog.h"
 #include "libraries.h"
+#include "CFlagManager.h"
 #include "nongpl_matches.h"
+
+extern CFlagManager FlagMan;
+CVector<CAdminData *> DynamicAdmins;
+char CVarTempBuffer[64];
 
 const char *invis_cvar_list[5] = {"amxmodx_version", "amxmodx_modules", "amx_debug", "amx_mldebug", "amx_client_languages"};
 
@@ -1254,7 +1259,12 @@ static cell AMX_NATIVE_CALL register_concmd(AMX *amx, cell *params) /* 4 param *
 		access = 0;
 		listable = false;
 	}
-	
+
+	if (FlagMan.ShouldIAddThisCommand(amx,params,temp)==1)
+	{
+		FlagMan.LookupOrAdd(temp,access,amx);
+	}
+
 	if ((cmd = g_commands.registerCommand(plugin, idx, temp, info, access, listable)) == NULL)
 		return 0;
 
@@ -1294,7 +1304,12 @@ static cell AMX_NATIVE_CALL register_clcmd(AMX *amx, cell *params) /* 4 param */
 		access = 0;
 		listable = false;
 	}
-	
+
+	if (FlagMan.ShouldIAddThisCommand(amx,params,temp)==1)
+	{
+		FlagMan.LookupOrAdd(temp,access,amx);
+	}
+
 	if ((cmd = g_commands.registerCommand(plugin, idx, temp, info, access, listable)) == NULL)
 		return 0;
 	
@@ -1713,8 +1728,8 @@ static cell AMX_NATIVE_CALL set_pcvar_float(AMX *amx, cell *params)
 		return 0;
 	}
 
-	ptr->value = amx_ctof(params[2]);
-	
+	snprintf(CVarTempBuffer,sizeof(CVarTempBuffer)-1,"%f",amx_ctof(params[2]));
+	(*g_engfuncs.pfnCvar_DirectSet)(ptr, &CVarTempBuffer[0]);
 	return 1;
 }
 
@@ -1735,7 +1750,7 @@ static cell AMX_NATIVE_CALL get_pcvar_num(AMX *amx, cell *params)
 		return 0;
 	}
 
-	return (int)ptr->value;
+	return atoi(ptr->string);
 }
 
 static cell AMX_NATIVE_CALL get_cvar_num(AMX *amx, cell *params) /* 1 param */
@@ -1753,7 +1768,7 @@ static cell AMX_NATIVE_CALL get_cvar_num(AMX *amx, cell *params) /* 1 param */
 			}
 		}
 	}
-	return (int)CVAR_GET_FLOAT(get_amxstring(amx, params[1], 0, ilen));
+	return atoi(CVAR_GET_STRING(get_amxstring(amx, params[1], 0, ilen)));
 }
 
 static cell AMX_NATIVE_CALL set_pcvar_num(AMX *amx, cell *params)
@@ -1765,7 +1780,8 @@ static cell AMX_NATIVE_CALL set_pcvar_num(AMX *amx, cell *params)
 		return 0;
 	}
 
-	ptr->value = (float)params[2];
+	snprintf(CVarTempBuffer,sizeof(CVarTempBuffer)-1,"%d",params[2]);
+	(*g_engfuncs.pfnCvar_DirectSet)(ptr, &CVarTempBuffer[0]);
 
 	return 1;
 }
@@ -1786,6 +1802,22 @@ static cell AMX_NATIVE_CALL set_cvar_string(AMX *amx, cell *params) /* 2 param *
 	
 	CVAR_SET_STRING(sptemp, szValue);
 	
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL set_pcvar_string(AMX *amx, cell *params) /* 2 param */
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	if (!ptr)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	int len;
+
+	(*g_engfuncs.pfnCvar_DirectSet)(ptr, get_amxstring(amx,params[2],0,len));
+
 	return 1;
 }
 
@@ -4408,9 +4440,109 @@ static cell AMX_NATIVE_CALL GetLangTransKey(AMX *amx, cell *params)
 	return g_langMngr.GetKeyEntry(key);
 }
 
+static cell AMX_NATIVE_CALL admins_push(AMX *amx, cell *params)
+{
+	// admins_push("SteamID","password",access,flags);
+	CAdminData *TempData=new CAdminData;;
+
+	TempData->SetAuthID(get_amxaddr(amx,params[1]));
+	TempData->SetPass(get_amxaddr(amx,params[2]));
+	TempData->SetAccess(params[3]);
+	TempData->SetFlags(params[4]);
+
+	DynamicAdmins.push_back(TempData);
+
+	return 0;
+};
+static cell AMX_NATIVE_CALL admins_flush(AMX *amx, cell *params)
+{
+	// admins_flush();
+
+	size_t iter=DynamicAdmins.size();
+
+	while (iter--)
+	{
+		delete DynamicAdmins[iter];
+	}
+
+	DynamicAdmins.clear();
+
+	return 0;
+
+};
+static cell AMX_NATIVE_CALL admins_num(AMX *amx, cell *params)
+{
+	// admins_num();
+
+	return static_cast<cell>(DynamicAdmins.size());
+};
+static cell AMX_NATIVE_CALL admins_lookup(AMX *amx, cell *params)
+{
+	// admins_lookup(Num, Property, Buffer[]={0}, BufferSize=-1);
+
+	if (params[1]>=static_cast<int>(DynamicAdmins.size()))
+	{
+		LogError(amx,AMX_ERR_NATIVE,"Invalid admins num");
+		return 1;
+	};
+
+	int BufferSize;
+	cell *Buffer;
+	const cell *Input;
+
+	switch(params[2])
+	{
+	case Admin_Auth:
+		BufferSize=params[4];
+		Buffer=get_amxaddr(amx, params[3]);
+		Input=DynamicAdmins[params[1]]->GetAuthID();
+
+		while (BufferSize-->0)
+		{
+			if ((*Buffer++=*Input++)==0)
+			{
+				return 0;
+			}
+		}
+		// hit max buffer size, terminate string
+		*Buffer=0;
+		return 0;
+		break;
+	case Admin_Password:
+		BufferSize=params[4];
+		Buffer=get_amxaddr(amx, params[3]);
+		Input=DynamicAdmins[params[1]]->GetPass();
+
+		while (BufferSize-->0)
+		{
+			if ((*Buffer++=*Input++)==0)
+			{
+				return 0;
+			}
+		}
+		// hit max buffer size, terminate string
+		*Buffer=0;
+		return 0;
+		break;
+	case Admin_Access:
+		return DynamicAdmins[params[1]]->GetAccess();
+		break;
+	case Admin_Flags:
+		return DynamicAdmins[params[1]]->GetFlags();
+		break;
+	};
+
+	// unknown property
+	return 0;
+};
+
 AMX_NATIVE_INFO amxmodx_Natives[] =
 {
 	{"abort",					amx_abort},
+	{"admins_flush",			admins_flush},
+	{"admins_lookup",			admins_lookup},
+	{"admins_num",				admins_num},
+	{"admins_push",				admins_push},
 	{"amxx_setpl_curweap",		amxx_setpl_curweap},
 	{"arrayset",				arrayset},
 	{"get_addr_val",			get_addr_val},
@@ -4575,6 +4707,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"set_localinfo",			set_localinfo},
 	{"set_pcvar_flags",			set_pcvar_flags},
 	{"set_pcvar_float",			set_pcvar_float},
+	{"set_pcvar_string",		set_pcvar_string},
 	{"set_pcvar_num",			set_pcvar_num},
 	{"set_task",				set_task},
 	{"set_user_flags",			set_user_flags},

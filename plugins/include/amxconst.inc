@@ -312,3 +312,11 @@ enum LibType
 	LibType_Library,
 	LibType_Class
 };
+
+enum AdminProp
+{
+	AdminProp_Auth = 0,
+	AdminProp_Password,
+	AdminProp_Access,
+	AdminProp_Flags
+};

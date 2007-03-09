@@ -37,18 +37,20 @@
 new Float:g_Flooding[33] = {0.0, ...}
 new g_Flood[33] = {0, ...}
 
+new amx_flood_time;
+
 public plugin_init()
 {
 	register_plugin("Anti Flood", AMXX_VERSION_STR, "AMXX Dev Team")
 	register_dictionary("antiflood.txt")
 	register_clcmd("say", "chkFlood")
 	register_clcmd("say_team", "chkFlood")
-	register_cvar("amx_flood_time", "0.75")
+	amx_flood_time=register_cvar("amx_flood_time", "0.75")
 }
 
 public chkFlood(id)
 {
-	new Float:maxChat = get_cvar_float("amx_flood_time")
+	new Float:maxChat = get_pcvar_float(amx_flood_time)
 
 	if (maxChat)
 	{

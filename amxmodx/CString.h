@@ -129,7 +129,7 @@ public:
 	}
 
 	//Added this for amxx inclusion
-	bool empty()
+	bool empty() const
 	{
 		if (!v)
 			return true;
@@ -140,7 +140,7 @@ public:
 		return false;
 	}
 
-	size_t size()
+	size_t size() const
 	{
 		if (v)
 			return strlen(v);

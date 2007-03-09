@@ -45,11 +45,16 @@ new bool:g_Paused
 new bool:g_PauseAllowed = false
 new g_addCvar[] = "amx_cvar add %s"
 
+new amx_show_activity;
+new pausable;
+new rcon_password;
+
 public plugin_init()
 {
 	register_plugin("Admin Commands", AMXX_VERSION_STR, "AMXX Dev Team")
 	register_dictionary("admincmd.txt")
 	register_dictionary("common.txt")
+	register_dictionary("adminhelp.txt")
 	register_concmd("amx_kick", "cmdKick", ADMIN_KICK, "<name or #userid> [reason]")
 	register_concmd("amx_ban", "cmdBan", ADMIN_BAN, "<name or #userid> <minutes> [reason]")
 	register_concmd("amx_banip", "cmdBanIP", ADMIN_BAN, "<name or #userid> <minutes> [reason]")
@@ -69,6 +74,18 @@ public plugin_init()
 	register_clcmd("amx_rcon", "cmdRcon", ADMIN_RCON, "<command line>")
 	register_clcmd("amx_showrcon", "cmdShowRcon", ADMIN_RCON, "<command line>")
 	register_clcmd("pauseAck", "cmdLBack")
+
+
+	rcon_password=get_cvar_pointer("rcon_password");
+	pausable=get_cvar_pointer("pausable");
+	
+	amx_show_activity=get_cvar_pointer("amx_show_activity");
+	
+	if (amx_show_activity==0) // cvar does not exist, register it
+	{
+		amx_show_activity=register_cvar("amx_show_activity", "2");
+	}
+	
 }
 
 public plugin_cfg()
@@ -108,7 +125,7 @@ public cmdKick(id, level, cid)
 	
 	log_amx("Kick: ^"%s<%d><%s><>^" kick ^"%s<%d><%s><>^" (reason ^"%s^")", name, get_user_userid(id), authid, name2, userid2, authid2, reason)
 	
-	switch (get_cvar_num("amx_show_activity"))
+	switch (get_pcvar_num(amx_show_activity))
 	{
 		case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_KICK_2", name, name2)
 		case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_KICK_1", name2)
@@ -149,7 +166,7 @@ public cmdUnban(id, level, cid)
 
 	get_user_name(id, name, 31)
 	
-	switch (get_cvar_num("amx_show_activity"))
+	switch (get_pcvar_num(amx_show_activity))
 	{
 		case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_UNBAN_2", name, arg)
 		case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_UNBAN_1", arg)
@@ -183,7 +200,7 @@ public cmdAddBan(id, level, cid)
 
 	get_user_name(id, name, 31)
 
-	switch (get_cvar_num("amx_show_activity"))
+	switch (get_pcvar_num(amx_show_activity))
 	{
 		case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_ADDBAN_2", name, arg)
 		case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_ADDBAN_1", arg)
@@ -234,7 +251,7 @@ public cmdBan(id, level, cid)
 	else
 		server_cmd("kick #%d ^"%s %s^";wait;banid ^"%s^" ^"%s^";wait;writeid", userid2, banned, temp, minutes, authid2)
 
-	new activity = get_cvar_num("amx_show_activity")
+	new activity = get_pcvar_num(amx_show_activity)
 	if (activity != 0)
 	{
 		new players[32], pnum, msg[256], len
@@ -306,7 +323,7 @@ public cmdBanIP(id, level, cid)
 	else
 		server_cmd("kick #%d ^"%s %s^";wait;addip ^"%s^" ^"%s^";wait;writeip", userid2, banned, temp, minutes, address)
 
-	new activity = get_cvar_num("amx_show_activity")
+	new activity = get_pcvar_num(amx_show_activity)
 	if (activity != 0)
 	{
 		new players[32], pnum, msg[256], len
@@ -362,7 +379,7 @@ public cmdSlay(id, level, cid)
 	
 	log_amx("Cmd: ^"%s<%d><%s><>^" slay ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2)
 
-	switch (get_cvar_num("amx_show_activity"))
+	switch (get_pcvar_num(amx_show_activity))
 	{
 		case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_SLAY_2", name, name2)
 		case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_SLAY_1", name2)
@@ -400,7 +417,7 @@ public cmdSlap(id, level, cid)
 	
 	log_amx("Cmd: ^"%s<%d><%s><>^" slap with %d damage ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, damage, name2, get_user_userid(player), authid2)
 
-	switch (get_cvar_num("amx_show_activity"))
+	switch (get_pcvar_num(amx_show_activity))
 	{
 		case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_SLAP_2", name, name2, damage)
 		case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_SLAP_1", name2, damage)
@@ -434,7 +451,7 @@ public cmdMap(id, level, cid)
 	get_user_authid(id, authid, 31)
 	get_user_name(id, name, 31)
 	
-	switch (get_cvar_num("amx_show_activity"))
+	switch (get_pcvar_num(amx_show_activity))
 	{
 		case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_MAP_2", name, arg)
 		case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_MAP_1", arg)
@@ -474,6 +491,8 @@ public cmdCvar(id, level, cid)
 	read_argv(1, arg, 31)
 	read_argv(2, arg2, 63)
 	
+	new pointer;
+	
 	if (equal(arg, "add") && (get_user_flags(id) & ADMIN_RCON))
 	{
 		if (cvar_exists(arg2))
@@ -486,7 +505,7 @@ public cmdCvar(id, level, cid)
 		return PLUGIN_HANDLED
 	}
 	
-	if (!cvar_exists(arg))
+	if ((pointer=get_cvar_pointer(arg))==0)
 	{
 		console_print(id, "[AMXX] %L", id, "UNKNOWN_CVAR", arg)
 		return PLUGIN_HANDLED
@@ -497,7 +516,7 @@ public cmdCvar(id, level, cid)
 		console_print(id, "[AMXX] %L", id, "CVAR_NO_ACC")
 		return PLUGIN_HANDLED
 	}
-	else if (equal(arg, "sv_password") && !(get_user_flags(id) & ADMIN_PASSWORD))
+	else if (equali(arg, "sv_password") && !(get_user_flags(id) & ADMIN_PASSWORD))
 	{
 		console_print(id, "[AMXX] %L", id, "CVAR_NO_ACC")
 		return PLUGIN_HANDLED
@@ -505,7 +524,7 @@ public cmdCvar(id, level, cid)
 	
 	if (read_argc() < 3)
 	{
-		get_cvar_string(arg, arg2, 63)
+		get_pcvar_string(pointer, arg2, 63)
 		console_print(id, "[AMXX] %L", id, "CVAR_IS", arg, arg2)
 		return PLUGIN_HANDLED
 	}
@@ -517,8 +536,9 @@ public cmdCvar(id, level, cid)
 	
 	log_amx("Cmd: ^"%s<%d><%s><>^" set cvar (name ^"%s^") (value ^"%s^")", name, get_user_userid(id), authid, arg, arg2)
 	set_cvar_string(arg, arg2)
-
-	new activity = get_cvar_num("amx_show_activity")
+	
+	
+	new activity = get_pcvar_num(amx_show_activity)
 	if (activity != 0)
 	{
 		new players[32], pnum, admin[64], cvar_val[64], len
@@ -533,12 +553,12 @@ public cmdCvar(id, level, cid)
 			else
 				len += format(admin[len], 255-len, " %s:", name)
 
-			if (equal(arg, "rcon_password") || equal(arg, "sv_password"))
+			if (get_pcvar_flags(pointer) & FCVAR_PROTECTED || equali(arg,"rcon_password"))
 				format(cvar_val, 63, "*** %L ***", players[i], "PROTECTED")
 			else
 				copy(cvar_val, 63, arg2)
 			
-			client_print(players[i], print_chat, "%L", players[i], "SET_CVAR_TO", admin, arg, arg2)
+			client_print(players[i], print_chat, "%L", players[i], "SET_CVAR_TO", admin, arg, cvar_val)
 		}
 	}
 	console_print(id, "[AMXX] %L", id, "CVAR_CHANGED", arg, arg2)
@@ -550,6 +570,12 @@ public cmdPlugins(id, level, cid)
 {
 	if (!cmd_access(id, level, cid, 1))
 		return PLUGIN_HANDLED
+		
+	if (id==0) // If server executes redirect this to "amxx plugins" for more in depth output
+	{
+		server_cmd("amxx plugins");
+		return PLUGIN_HANDLED;
+	}
 
 	new name[32], version[32], author[32], filename[32], status[32]
 	new lName[32], lVersion[32], lAuthor[32], lFile[32], lStatus[32]
@@ -560,21 +586,50 @@ public cmdPlugins(id, level, cid)
 	format(lFile, 31, "%L", id, "FILE")
 	format(lStatus, 31, "%L", id, "STATUS")
 
+	new StartPLID=0;
+	new EndPLID;
+
+	new Temp[96]
+
 	new num = get_pluginsnum()
+	
+	if (read_argc() > 1)
+	{
+		read_argv(1,Temp,sizeof(Temp)-1);
+		StartPLID=str_to_num(Temp)-1; // zero-based
+	}
+
+	EndPLID=min(StartPLID + 10, num);
+	
 	new running = 0
 	
-	console_print(id, "%L:", id, "LOADED_PLUGINS")
+	console_print(id, "----- %L -----", id, "LOADED_PLUGINS")
 	console_print(id, "%-18.17s %-8.7s %-17.16s %-16.15s %-9.8s", lName, lVersion, lAuthor, lFile, lStatus)
 
-	for (new i = 0; i <num; i++)
+	new i=StartPLID;
+	while (i <EndPLID)
 	{
-		get_plugin(i, filename, 31, name, 31, version, 31, author, 31, status, 31)
+		get_plugin(i++, filename, 31, name, 31, version, 31, author, 31, status, 31)
 		console_print(id, "%-18.17s %-8.7s %-17.16s %-16.15s %-9.8s", name, version, author, filename, status)
 		
 		if (status[0]=='d' || status[0]=='r') // "debug" or "running"
 			running++
 	}
-	console_print(id, "%L", id, "PLUGINS_RUN", num, running)
+	console_print(id, "%L", id, "PLUGINS_RUN", EndPLID-StartPLID, running)
+	console_print(id, "----- %L -----",id,"HELP_ENTRIES",StartPLID + 1,EndPLID,num);
+	
+	if (EndPLID < num)
+	{
+		formatex(Temp,sizeof(Temp)-1,"----- %L -----",id,"HELP_USE_MORE", EndPLID + 1);
+		replace_all(Temp,sizeof(Temp)-1,"amx_help","amx_plugins");
+		console_print(id,"%s",Temp);
+	}
+	else
+	{
+		formatex(Temp,sizeof(Temp)-1,"----- %L -----",id,"HELP_USE_BEGIN");
+		replace_all(Temp,sizeof(Temp)-1,"amx_help","amx_plugins");
+		console_print(id,"%s",Temp);
+	}
 
 	return PLUGIN_HANDLED
 }
@@ -637,7 +692,7 @@ public cmdCfg(id, level, cid)
 	console_print(id, "[AMXX] Executing file ^"%s^"", arg)
 	server_cmd("exec %s", arg)
 
-	switch(get_cvar_num("amx_show_activity"))
+	switch(get_pcvar_num(amx_show_activity))
 	{
 		case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_CONF_2", name, arg)
 		case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_CONF_1", arg)
@@ -675,7 +730,10 @@ public cmdPause(id, level, cid)
 	
 	get_user_authid(id, authid, 31) 
 	get_user_name(id, name, 31) 
-	g_pausAble = get_cvar_float("pausable")
+	if (pausable!=0)
+	{
+		g_pausAble = get_pcvar_float(pausable)
+	}
 	
 	if (!slayer)
 		slayer = find_player("h") 
@@ -694,7 +752,7 @@ public cmdPause(id, level, cid)
 	
 	console_print(id, "[AMXX] %L", id, g_Paused ? "UNPAUSING" : "PAUSING")
 
-	new activity = get_cvar_num("amx_show_activity")
+	new activity = get_pcvar_num(amx_show_activity)
 	if (activity != 0)
 	{
 		new players[32], pnum, msg[128], len
@@ -725,7 +783,7 @@ public cmdShowRcon(id, level, cid)
 		
 	new password[64]
 	
-	get_cvar_string("rcon_password", password, 63)
+	get_pcvar_string(rcon_password, password, 63)
 	
 	if (!password[0])
 	{
@@ -862,7 +920,7 @@ public cmdLeave(id, level, cid)
 	get_user_name(id, name, 31)
 	log_amx("Kick: ^"%s<%d><%s><>^" leave some group (tag1 ^"%s^") (tag2 ^"%s^") (tag3 ^"%s^") (tag4 ^"%s^")", name, get_user_userid(id), authid, ltags[0], ltags[1], ltags[2], ltags[3])
 
-	switch(get_cvar_num("amx_show_activity"))
+	switch(get_pcvar_num(amx_show_activity))
 	{
 		case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_LEAVE_2", name, ltags[0], ltags[1], ltags[2], ltags[3])
 		case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_LEAVE_1", ltags[0], ltags[1], ltags[2], ltags[3])
@@ -895,7 +953,7 @@ public cmdNick(id, level, cid)
 
 	log_amx("Cmd: ^"%s<%d><%s><>^" change nick to ^"%s^" ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, arg2, name2, get_user_userid(player), authid2)
 
-	switch (get_cvar_num("amx_show_activity"))
+	switch (get_pcvar_num(amx_show_activity))
 	{
 		case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_NICK_2", name, name2, arg2)
 		case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_NICK_1", name2, arg2)

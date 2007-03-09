@@ -154,10 +154,33 @@ public actionBanMenu(id, key)
 
 			switch (get_cvar_num("amx_show_activity"))
 			{
-				case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_BAN_2", name, name2)
-				case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_BAN_1", name2)
+				case 2: 
+				{
+					if (g_menuSettings[id]==0) // permanent
+					{
+						client_print(0, print_chat, "%L %s: %L %s %L", LANG_PLAYER, "ADMIN", name, LANG_PLAYER, "BAN", name2, LANG_PLAYER, "PERM");
+					}
+					else
+					{
+						new tempTime[32];
+						formatex(tempTime,sizeof(tempTime)-1,"%d",g_menuSettings[id]);
+						client_print(0, print_chat, "%L %s: %L %s %L", LANG_PLAYER, "ADMIN", name, LANG_PLAYER, "BAN", name2, LANG_PLAYER, "FOR_MIN", tempTime);
+					}
+				}
+				case 1: 
+				{
+					if (g_menuSettings[id]==0) // permanent
+					{
+						client_print(0, print_chat, "%L: %L %s %L", LANG_PLAYER, "ADMIN", LANG_PLAYER, "BAN", name2, LANG_PLAYER, "PERM");
+					}
+					else
+					{
+						new tempTime[32];
+						formatex(tempTime,sizeof(tempTime)-1,"%d",g_menuSettings[id]);
+						client_print(0, print_chat, "%L: %L %s %L", LANG_PLAYER, "ADMIN", LANG_PLAYER, "BAN", name2, LANG_PLAYER, "FOR_MIN", tempTime);
+					}
+				}
 			}
-
 			/* ---------- check for Steam ID added by MistaGee -------------------- 
 			IF AUTHID == 4294967295 OR VALVE_ID_LAN OR HLTV, BAN PER IP TO NOT BAN EVERYONE */
 			
@@ -173,7 +196,9 @@ public actionBanMenu(id, key)
 				server_cmd("addip %d %s;writeip", g_menuSettings[id], ipa)
 			}
 			else
+			{
 				server_cmd("banid %d #%d kick;writeid", g_menuSettings[id], userid2)
+			}
 
 			server_exec()
 

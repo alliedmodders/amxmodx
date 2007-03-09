@@ -133,3 +133,13 @@ native tfc_setweaponammo(index, value);
  * Use the TFC_GOALITEM_* constants to determine the owning team.
  */
 native tfc_get_user_goalitem(index, &team);
+
+/* Returns 1 if the player is a spy and is currently feigning death */
+native tfc_is_user_feigning(index);
+
+/* Returns 1 if the two teams are allies, 0 otherwise 
+ * Note: Team must be 1->4
+ *       Team 0 will always return 0
+ *       Any other team will result in an error
+ */
+native tfc_is_team_ally(TeamA,TeamB);

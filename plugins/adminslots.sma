@@ -72,6 +72,8 @@ public ackSignal(id)
 	new lReason[64]
 	format(lReason, 63, "%L", id, "DROPPED_RES")
 	server_cmd("kick #%d ^"%s^"", get_user_userid(id), lReason)
+	
+	return PLUGIN_HANDLED
 }
 
 public client_authorized(id)

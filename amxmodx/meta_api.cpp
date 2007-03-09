@@ -47,6 +47,9 @@
 #include "messages.h"
 #include "amxmod_compat.h"
 
+#include "CFlagManager.h"
+
+
 plugin_info_t Plugin_info = 
 {
 	META_INTERFACE_VERSION,		// ifvers
@@ -73,6 +76,7 @@ void (*function)(void*);
 void (*endfunction)(void*);
 
 extern List<AUTHORIZEFUNC> g_auth_funcs;
+extern CVector<CAdminData *> DynamicAdmins;
 
 CLog g_log;
 CForwardMngr g_forwards;
@@ -86,7 +90,7 @@ CPlayer* mPlayer;
 CPluginMngr g_plugins;
 CTaskMngr g_tasksMngr;
 CmdMngr g_commands;
-
+CFlagManager FlagMan;
 EventsMngr g_events;
 Grenades g_grenades;
 LogEventsMngr g_logevents;
@@ -381,6 +385,8 @@ int	C_Spawn(edict_t *pent)
 	get_localinfo("amx_pluginsdir", "addons/amxmodx/plugins");
 	get_localinfo("amx_logdir", "addons/amxmodx/logs");
 
+	FlagMan.LoadFile();
+
 	char map_pluginsfile_path[256];
 	char configs_dir[256];
 
@@ -390,6 +396,31 @@ int	C_Spawn(edict_t *pent)
 	get_localinfo_r("amxx_configsdir", "addons/amxmodx/configs", configs_dir, sizeof(configs_dir)-1);
 	g_plugins.CALMFromFile(get_localinfo("amxx_plugins", "addons/amxmodx/configs/plugins.ini"));
 	LoadExtraPluginsToPCALM(configs_dir);
+	char temporaryMap[64];
+
+	strncpy(temporaryMap,STRING(gpGlobals->mapname),sizeof(temporaryMap)-1);
+
+	int i=0;
+
+	while (temporaryMap[i]!='_' && temporaryMap[i]!='\0') 
+	{
+		++i;
+	}
+
+
+	if (temporaryMap[i]=='_')
+	{
+		// this map has a prefix
+
+		temporaryMap[i]='\0';
+		snprintf(map_pluginsfile_path, sizeof(map_pluginsfile_path)-1,
+						"%s/maps/prefixes/plugins-%s.ini",
+						configs_dir,
+						temporaryMap);
+		g_plugins.CALMFromFile(map_pluginsfile_path);
+
+	}
+
 	snprintf(map_pluginsfile_path, sizeof(map_pluginsfile_path)-1,
 					"%s/maps/plugins-%s.ini",
 					configs_dir,
@@ -650,9 +681,18 @@ void C_ServerDeactivate_Post()
 
 	ClearMessages();
 	
+	// Flush the dynamic admins list
+	for (size_t iter=DynamicAdmins.size();iter--; )
+	{
+		delete DynamicAdmins[iter];
+	}
+
+	DynamicAdmins.clear();
 	for (unsigned int i=0; i<g_hudsync.size(); i++)
 		delete [] g_hudsync[i];
 	g_hudsync.clear();
+
+	FlagMan.WriteCommands();
 
 	// last memreport
 #ifdef MEMORY_TEST
@@ -1062,20 +1102,6 @@ void C_MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict
 {
 	if (ed)
 	{
-		if (gmsgBattery == msg_type && g_bmod_cstrike)
-		{
-			void* ptr = GET_PRIVATE(ed);
-#ifdef __linux__
-			int *z = (int*)ptr + 0x171;
-#else
-			int *z = (int*)ptr + 0x16C;
-#endif
-			int stop = (int)ed->v.armorvalue;
-			
-			*z = stop;
-			ed->v.armorvalue = (float)stop;
-		}
-
 		mPlayerIndex = ENTINDEX(ed);
 		mPlayer	= GET_PLAYER_POINTER_I(mPlayerIndex);
 	} else {
@@ -1424,6 +1450,8 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 	GET_HOOK_TABLES(PLID, &g_pEngTable, NULL, NULL);
 
+	FlagMan.SetFile("cmdaccess.ini");
+	
 	return (TRUE);
 }
 

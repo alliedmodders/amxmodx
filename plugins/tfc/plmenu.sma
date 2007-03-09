@@ -62,6 +62,7 @@ public plugin_init()
 
 	register_dictionary("plmenu.txt")
 	register_dictionary("common.txt")
+	register_dictionary("admincmd.txt")
 
 	register_clcmd("amx_kickmenu","cmdKickMenu",ADMIN_KICK,"- displays kick menu")
 	register_clcmd("amx_banmenu","cmdBanMenu",ADMIN_BAN,"- displays ban menu")
@@ -122,8 +123,32 @@ public actionBanMenu(id, key)
 
 			switch (get_cvar_num("amx_show_activity"))
 			{
-				case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_BAN_2", name, name2)
-				case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_BAN_1", name2)
+				case 2: 
+				{
+					if (g_menuSettings[id]==0) // permanent
+					{
+						client_print(0, print_chat, "%L %s: %L %s %L", LANG_PLAYER, "ADMIN", name, LANG_PLAYER, "BAN", name2, LANG_PLAYER, "PERM");
+					}
+					else
+					{
+						new tempTime[32];
+						formatex(tempTime,sizeof(tempTime)-1,"%d",g_menuSettings[id]);
+						client_print(0, print_chat, "%L %s: %L %s %L", LANG_PLAYER, "ADMIN", name, LANG_PLAYER, "BAN", name2, LANG_PLAYER, "FOR_MIN", tempTime);
+					}
+				}
+				case 1: 
+				{
+					if (g_menuSettings[id]==0) // permanent
+					{
+						client_print(0, print_chat, "%L: %L %s %L", LANG_PLAYER, "ADMIN", LANG_PLAYER, "BAN", name2, LANG_PLAYER, "PERM");
+					}
+					else
+					{
+						new tempTime[32];
+						formatex(tempTime,sizeof(tempTime)-1,"%d",g_menuSettings[id]);
+						client_print(0, print_chat, "%L: %L %s %L", LANG_PLAYER, "ADMIN", LANG_PLAYER, "BAN", name2, LANG_PLAYER, "FOR_MIN", tempTime);
+					}
+				}
 			}
 
 			if (equal("4294967295", authid2))

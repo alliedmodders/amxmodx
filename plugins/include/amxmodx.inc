@@ -239,7 +239,7 @@ native user_has_weapon(index,weapon,setweapon=-1);
 
 /* Returns id of currently carried weapon. Gets also 
 * ammount of ammo in clip and backpack. */
-native get_user_weapon(index,&clip,&ammo);
+native get_user_weapon(index,&clip=0,&ammo=0);
 
 /* Gets ammo and clip from current weapon. */
 native get_user_ammo(index,weapon,&clip,&ammo);
@@ -474,14 +474,18 @@ native get_user_flags(index,id=0);
 native remove_user_flags(index,flags=-1,id=0);
 
 /* Registers function which will be called from client console. 
+ * Set FlagManager to 1 to make FlagManager always include this command
+ * Set FlagManager to 0 to make FlagManager never include this command
  * Returns the command ID.
  */
-native register_clcmd(const client_cmd[],const function[],flags=-1, const info[]="");
+native register_clcmd(const client_cmd[],const function[],flags=-1, const info[]="", FlagManager=-1);
 
 /* Registers function which will be called from any console. 
+ * Set FlagManager to 1 to make FlagManager always include this command
+ * Set FlagManager to 0 to make FlagManager never include this command
  * Returns the command ID.
  */
-native register_concmd(const cmd[],const function[],flags=-1, const info[]="");
+native register_concmd(const cmd[],const function[],flags=-1, const info[]="", FlagManager=-1);
 
 /* Registers function which will be called from server console. 
  * Returns the command ID.
@@ -609,7 +613,7 @@ native is_plugin_loaded(const name[]);
  * Note: the [...] portion should not be used, and is only for backward compatibility.
  * Use index of -1 to use the calling plugin's ID.
  */
-native get_plugin(index,filename[],len1,name[],len2,version[],len3,author[],len4,status[],len5,...);
+native get_plugin(index,filename[]="",len1=0,name[]="",len2=0,version[]="",len3=0,author[]="",len4=0,status[]="",len5=0,...);
 
 /* Returns number of all loaded plugins. */
 native get_pluginsnum();
@@ -826,7 +830,8 @@ native menu_destroy(menu);
 
 //Gets info about a player's menu.  Returns 1 if the player is viewing a menu.
 //menu will be >0 for a valid oldmenu.  newmenu will be != -1 for a valid newmenu.
-native player_menu_info(id, &menu, &newmenu);
+//As of 1.77, there is an optional page parameter.
+native player_menu_info(id, &menu, &newmenu, &menupage=0);
 
 //adds a blank line to a menu.
 //if slot is nonzero (default), the blank line will increase
@@ -1080,6 +1085,7 @@ native set_pcvar_num(pcvar, num);
 native Float:get_pcvar_float(pcvar);
 native set_pcvar_float(pcvar, Float:num);
 native get_pcvar_string(pcvar, string[], maxlen);
+native set_pcvar_string(pcvar, const string[]);
 
 /**
  * Sets a whole array to a certain value.
@@ -1092,5 +1098,29 @@ native arrayset(array[], value, size);
  */
 native get_weaponid(const name[]);
 
+/**
+ * Adds an admin to the dynamic admin storage
+ * for lookup at a later time
+ */
+native admins_push(const AuthData[], const Password[], Access, Flags);
+
+/**
+ * Gets the number of admins in the dynamic admin
+ * storage list
+ */
+native admins_num();
+
+/**
+ * Gets information about a dynamically stored admin
+ * Use the enum AdminProp
+ * Returns an integer value: AdminProp_Access, AdminProp_Flags
+ * Sets the buffer string: AdminProp_Auth, AdminProp_Password
+ */
+native admins_lookup(num, AdminProp:Property, Buffer[]="", BufferSize=0);
+
+/**
+ * Clears the list of dynamically stored admins
+ */
+native admins_flush();
 // Keep this always at the bottom of this file
 #include <message_stocks>

@@ -23,6 +23,9 @@
 /* Function is called after grenade throw */
 forward grenade_throw(index,greindex,wId);
 
+/* Function is called after a rocket is shot */
+forward rocket_shoot(index,rocketindex,wId);
+
 /* Example: for full stamina use dod_player_stamina(1,STAMINA_SET,100,100) */
 /* value is from 0 - 100 */
 native dod_set_stamina(index,set=STAMINA_SET,minvalue=0,maxvalue=100);

@@ -47,101 +47,131 @@
 
 #define MAX_TRACE	6
 
-struct traceVault {
+struct traceVault 
+{
 	char szName[16];
 	int iId;
 	int iAction;
 	float fDel;
 };
 
-#define ACT_NADE_NONE		0
-#define ACT_NADE_SHOT		1<<0
-#define ACT_NADE_PUT		1<<1
-#define ACT_NADE_THROW		1<<2
+#define ACT_NADE_NONE		(0)
+#define ACT_NADE_SHOT		(1<<0)
+#define ACT_NADE_PUT		(1<<1)
+#define ACT_NADE_THROW		(1<<2)
+
+#define ACT_ROCKET_NONE		(0)
+#define ACT_ROCKET_SHOT		(1<<0)
+#define ACT_ROCKET_PUT		(1<<3)
 
 
 // *****************************************************
 // class CPlayer
 // *****************************************************
 
-class CPlayer {
-private:
-	char ip[32];
-public:
-	edict_t* pEdict;
-	int index;
-	int aiming;
-	int current;
-	int wpnModel;
+class CPlayer 
+{
+	private:
+		char ip[32];
 
-	float savedScore;
-	int lastScore;
-	int sendScore;
+	public:
+		edict_t* pEdict;
+		int index;
+		int aiming;
+		int current;
+		int old;
+		int wpnModel;
+		int wpnscount;
+		int wpns_bitfield;
+		int old_weapons[DODMAX_WEAPONS];
 
-	bool ingame;
-	bool bot;
-	float clearStats;
-	float clearRound;
+		float savedScore;
+		int lastScore;
+		int sendScore;
 
-	struct PlayerWeapon : public Stats {
-		char*		name;
-		int			ammo;
-		int			clip;
-	};
+		bool ingame;
+		bool bot;
+		float clearStats;
+		float clearRound;
 
-	PlayerWeapon	weapons[DODMAX_WEAPONS];
-	PlayerWeapon	attackers[33];
-	PlayerWeapon	victims[33];
-	Stats			weaponsLife[DODMAX_WEAPONS]; // DEC-Weapon (Life) stats
-	Stats			weaponsRnd[DODMAX_WEAPONS]; // DEC-Weapon (Round) stats
-	Stats			life;
-	Stats			round;
+		int oldteam;
+		int olddeadflag;
+		int oldclass;
+		float oldstamina;
 
-	RankSystem::RankStats*	rank;
+		struct ModelStruct
+		{
+			int body_num;
+			bool is_model_set;
+			char* modelclass;
+		}
+		sModel;
 
-	void Init(  int pi, edict_t* pe );
-	void Connect(const char* name,const char* ip );
-	void PutInServer();
-	void Disconnect();
-	void saveKill(CPlayer* pVictim, int weapon, int hs, int tk);
-	void saveHit(CPlayer* pVictim, int weapon, int damage, int aiming);
-	void saveShot(int weapon);
-	void updateScore(int weapon, int score);
-	void restartStats(bool all = true);
-	void killPlayer();
+		int oldprone;
+		bool do_scoped;
+		bool is_scoped;
 
-	// Zors
-	int oldteam;
-	int olddeadflag;
-	int oldplayerclass;
+		struct ObjectStruct
+		{
+			edict_t* pEdict;
+			bool carrying;
+			bool do_forward;
+			int type;
+		}
+		object;
 
-	bool is_model_set;
-	char* newmodel;
-	int body_num;
+		struct PlayerWeapon : public Stats 
+		{
+			char*		name;
+			int			ammo;
+			int			clip;
+		};
 
-	int position;
+		PlayerWeapon	weapons[DODMAX_WEAPONS];
+		PlayerWeapon	attackers[33];
+		PlayerWeapon	victims[33];
+		Stats			weaponsLife[DODMAX_WEAPONS]; // DEC-Weapon (Life) stats
+		Stats			weaponsRnd[DODMAX_WEAPONS]; // DEC-Weapon (Round) stats
+		Stats			life;
+		Stats			round;
 
-	void initModel(char*);
-	void clearModel();
-	bool setModel();
-	void setBody(int);
-	void checkStatus();
-	// Zors
+		RankSystem::RankStats*	rank;
 
-	inline bool IsBot(){
-		const char* auth= (*g_engfuncs.pfnGetPlayerAuthId)(pEdict);
-		return ( auth && !strcmp( auth , "BOT" ) );
-	}
-	inline bool IsAlive(){
-		return ((pEdict->v.deadflag==DEAD_NO)&&(pEdict->v.health>0));
-	}
+		void Init(  int pi, edict_t* pe );
+		void Connect(const char* name,const char* ip );
+		void PutInServer();
+		void Disconnect();
+		void saveKill(CPlayer* pVictim, int weapon, int hs, int tk);
+		void saveHit(CPlayer* pVictim, int weapon, int damage, int aiming);
+		void saveShot(int weapon);
+		void updateScore(int weapon, int score);
+		void restartStats(bool all = true);
+		void killPlayer();
+		void initModel(char*);
+		void clearModel();
+		bool setModel();
+		void setBody(int);
+		void PreThink();
+		void Scoping(int);
+		void ScopingCheck();
+		void WeaponsCheck(int);
+
+		inline bool IsBot()
+		{
+			const char* auth= (*g_engfuncs.pfnGetPlayerAuthId)(pEdict);
+			return ( auth && !strcmp( auth , "BOT" ) );
+		}
+
+		inline bool IsAlive()
+		{
+			return ((pEdict->v.deadflag==DEAD_NO)&&(pEdict->v.health>0));
+		}
 };
 
 // *****************************************************
 // class Grenades
 // *****************************************************
-
-class Grenades
+class Grenades // : public CObject
 {
   struct Obj
   {
@@ -154,11 +184,11 @@ class Grenades
 
 
 public:
-  Grenades() { head = 0; }
-  ~Grenades() { clear(); }
-  void put( edict_t* grenade, float time, int type, CPlayer* player  );
-  bool find( edict_t* enemy, CPlayer** p, int& type );
-  void clear();
+	Grenades() { head = 0; }
+	~Grenades() { clear(); }
+	void put(edict_t* grenade, float time, int type, CPlayer* player);
+	bool find(edict_t* enemy, CPlayer** p, int& type);
+	void clear();
 };
 
 // *****************************************************
@@ -177,6 +207,8 @@ public:
 
 	void Init();
 };
+
+
 
 #endif // CMISC_H
 

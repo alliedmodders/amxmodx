@@ -5,7 +5,7 @@
 
 // Module info
 #define MODULE_NAME "DoDX"
-#define MODULE_VERSION "1.76b"
+#define MODULE_VERSION "1.76c_beta_6"
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "http://www.amxmodx.org"
 #define MODULE_LOGTAG "DODX"

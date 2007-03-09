@@ -80,6 +80,46 @@ inline RetType VCall4(void *pThis, int ventry, int size, PTypeA pa, PTypeB pb, P
 	fptr function=reinterpret_cast<fptr>(vtbl[ventry]);
 	return function(pThis,pa,pb,pc,pd);
 };
+template <class PTypeA, class PTypeB, class PTypeC>
+inline void VoidVCall3(void *pThis, int ventry, int size, PTypeA pa, PTypeB pb, PTypeC pc)
+{
+	char *pcThis=*(char **)&pThis;
+	pcThis+=size;
+	int **vtbl=*(int ***)pcThis;
+	typedef void (*fptr)(void*,PTypeA,PTypeB,PTypeC);
+	fptr function=reinterpret_cast<fptr>(vtbl[ventry]);
+	function(pThis,pa,pb,pc);
+};
+template <class RetType, class PTypeA, class PTypeB, class PTypeC>
+inline RetType VCall3(void *pThis, int ventry, int size, PTypeA pa, PTypeB pb, PTypeC pc)
+{
+	char *pcThis=*(char **)&pThis;
+	pcThis+=size;
+	int **vtbl=*(int ***)pcThis;
+	typedef RetType (*fptr)(void*,PTypeA,PTypeB,PTypeC);
+	fptr function=reinterpret_cast<fptr>(vtbl[ventry]);
+	return function(pThis,pa,pb,pc);
+};
+template <class PTypeA, class PTypeB>
+inline void VoidVCall2(void *pThis, int ventry, int size, PTypeA pa, PTypeB pb)
+{
+	char *pcThis=*(char **)&pThis;
+	pcThis+=size;
+	int **vtbl=*(int ***)pcThis;
+	typedef void (*fptr)(void*,PTypeA,PTypeB);
+	fptr function=reinterpret_cast<fptr>(vtbl[ventry]);
+	function(pThis,pa,pb);
+};
+template <class RetType, class PTypeA, class PTypeB>
+inline RetType VCall2(void *pThis, int ventry, int size, PTypeA pa, PTypeB pb)
+{
+	char *pcThis=*(char **)&pThis;
+	pcThis+=size;
+	int **vtbl=*(int ***)pcThis;
+	typedef RetType (*fptr)(void*,PTypeA,PTypeB);
+	fptr function=reinterpret_cast<fptr>(vtbl[ventry]);
+	return function(pThis,pa,pb);
+};
 template <class PTypeA>
 inline void VoidVCall1(void *pThis, int ventry, int size, PTypeA pa)
 {
@@ -100,6 +140,26 @@ inline RetType VCall1(void *pThis, int ventry, int size, PTypeA pa)
 	fptr function=reinterpret_cast<fptr>(vtbl[ventry]);
 	return function(pThis,pa);
 };
+inline void VoidVCall0(void *pThis, int ventry, int size)
+{
+	char *pcThis=*(char **)&pThis;
+	pcThis+=size;
+	int **vtbl=*(int ***)pcThis;
+	typedef void (*fptr)(void*);
+	fptr function=reinterpret_cast<fptr>(vtbl[ventry]);
+	function(pThis);
+};
+template <class RetType>
+inline RetType VCall0(void *pThis, int ventry, int size)
+{
+	char *pcThis=*(char **)&pThis;
+	pcThis+=size;
+	int **vtbl=*(int ***)pcThis;
+	typedef RetType (*fptr)(void*);
+	fptr function=reinterpret_cast<fptr>(vtbl[ventry]);
+	return function(pThis);
+};
+
 
 #endif //VFUNC_GCC295_H
 #endif // __linux__

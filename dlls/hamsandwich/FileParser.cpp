@@ -20,7 +20,7 @@ static char *FP_FormatLine(char *data)
 {
 	char				*End;			/**< Pointer to the end of the string. */
 	char				*Start;			/**< Pointer to the start of the string. */
-	char				*Temp=Start;	/**< Temporary pointer for parsing. */
+	char				*Temp;			/**< Temporary pointer for parsing. */
 
 	Start=data;
 

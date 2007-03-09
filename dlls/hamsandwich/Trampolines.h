@@ -37,6 +37,14 @@
 #endif
 
 #if defined _WIN32
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif // WIN32_LEAN_AND_MEAN
+#if _MSC_VER >= 1400
+#ifdef offsetof
+#undef offsetof
+#endif // offsetof
+#endif // _MSC_VER >= 1400
 #include <windows.h>
 #elif defined __linux__
 #include <sys/mman.h>

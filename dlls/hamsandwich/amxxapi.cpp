@@ -101,6 +101,12 @@ void HAM_CallInitialization(void)
 
 	VTINIT(TakeDamage);
 	VTINIT(Use);
+	VTINIT(Killed);
+	VTINIT(Blocked);
+	VTINIT(Respawn);
+	VTINIT(Restart);
+	VTINIT(AddPoints);
+	VTINIT(AddPointsToTeam);
 
 #undef VTINIT
 }
@@ -216,6 +222,8 @@ void OnAmxxAttach()
 	HAM_classbase=0;
 	HAM_classbaseset=1;
 #endif
+
+	RegisterRegisterNatives();
 
 	FP_SetupOffsets(ModKey,HAM_GetKey);
 

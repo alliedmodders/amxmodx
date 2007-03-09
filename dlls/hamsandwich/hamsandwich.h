@@ -36,6 +36,20 @@
 extern unsigned int HAM_pev;
 extern unsigned int HAM_classbase;
 
+enum HAMHooks
+{
+	HAM_TakeDamage,
+	HAM_Use,
+	HAM_AddPoints,
+	HAM_AddPointsToTeam,
+	HAM_Blocked,
+	HAM_Killed,
+	HAM_Respawn,
+	HAM_Restart,
+	HAM_TakeHealth,
+
+	HAM_END_DONT_USE_ME
+};
 
 inline edict_t *PrivateToEdict(const void *pdata)
 {

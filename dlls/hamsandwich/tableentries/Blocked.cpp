@@ -13,7 +13,14 @@
 // Change these on a per-hook basis! Auto-changes all the annoying fields in the following functions
 #define ThisVTable  VTableBlocked
 #define ThisEntries	BlockedEntries
-#define ThisHook	VHOOK_Blocked
+
+#define ThisKey			"blocked"
+#define ThisNative		"hs_blocked"
+#define ThisENative		"hs_eblocked"
+#define ThisRegisterID	HAM_Blocked
+#define ThisParamCount	1
+#define ThisVoidCall	1
+
 
 unsigned int	*ThisVTable::pevoffset=NULL;
 unsigned int	*ThisVTable::pevset=NULL;
@@ -21,11 +28,6 @@ unsigned int	*ThisVTable::baseoffset=NULL;
 unsigned int	*ThisVTable::baseset=0;
 unsigned int	 ThisVTable::index=0;
 unsigned int	 ThisVTable::indexset=0;
-
-static AMX_NATIVE_INFO registernatives[] = {
-	{ "register_blocked",		ThisVTable::RegisterNative },
-	{ NULL,						NULL }
-};
 
 static AMX_NATIVE_INFO callnatives[] = {
 	{ "hs_blocked",				ThisVTable::NativeCall },
@@ -56,6 +58,8 @@ void ThisVTable::Initialize(unsigned int *poffset, unsigned int *pset, unsigned 
 	RegisterConfigCallback(ThisVTable::ConfigDone);
 
 	RegisterKeySuffix("blocked",ThisVTable::KeyValue);
+
+	RegisterThisRegisterName(ThisRegisterID,ThisKey);
 };
 
 /**
@@ -87,7 +91,7 @@ void ThisVTable::ConfigDone(void)
 
 		if (*(ThisVTable::pevset))
 		{
-			MF_AddNatives(registernatives);
+			RegisterThisRegister(ThisRegisterID,ThisVTable::RegisterNative,ThisVTable::RegisterIDNative);
 		}
 	}
 };
@@ -101,14 +105,6 @@ void ThisVTable::ConfigDone(void)
  */
 cell ThisVTable::RegisterNative(AMX *amx, cell *params)
 {
-	int funcid;
-	char *function=MF_GetAmxString(amx,params[2],0,NULL);
-
-	if (MF_AmxFindPublic(amx,function,&funcid)!=AMX_ERR_NONE)
-	{
-		MF_LogError(amx,AMX_ERR_NATIVE,"Can not find function \"%s\"",function);
-		return 0;
-	}
 	// Get the classname
 	char *classname=MF_GetAmxString(amx,params[1],1,NULL);
 
@@ -119,7 +115,11 @@ cell ThisVTable::RegisterNative(AMX *amx, cell *params)
 
 	if (Entity->pvPrivateData)
 	{
-		ThisVTable::Hook(&VTMan,EdictToVTable(Entity),amx,funcid);
+		// Simulate a call to hs_register_id_takedamage
+		cell tempparams[4];
+		memcpy(tempparams,params,sizeof(cell)*4);
+		tempparams[1]=ENTINDEX_NEW(Entity);
+		ThisVTable::RegisterIDNative(amx,&tempparams[0]);
 		REMOVE_ENTITY(Entity);
 		return 1;
 	}
@@ -127,7 +127,41 @@ cell ThisVTable::RegisterNative(AMX *amx, cell *params)
 	REMOVE_ENTITY(Entity);
 	// class was not found
 	// throw an error alerting console that this hook did not happen
+	char *function=MF_GetAmxString(amx,params[2],0,NULL);
 	MF_LogError(amx, AMX_ERR_NATIVE,"Failed to retrieve classtype for \"%s\", hook for \"%s\" not active.",classname,function);
+	
+	return 0;
+
+};
+
+/**
+ * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+ * 
+ * @param amx				The AMX structure for the plugin.
+ * @param params			The parameters passed from the plugin.
+ * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+ */
+cell ThisVTable::RegisterIDNative(AMX *amx, cell *params)
+{
+	int funcid;
+	char *function=MF_GetAmxString(amx,params[2],0,NULL);
+
+	if (MF_AmxFindPublic(amx,function,&funcid)!=AMX_ERR_NONE)
+	{
+		MF_LogError(amx,AMX_ERR_NATIVE,"Can not find function \"%s\"",function);
+		return 0;
+	}
+	edict_t *Entity=INDEXENT_NEW(params[1]);
+
+	if (Entity->pvPrivateData)
+	{
+		ThisVTable::Hook(&VTMan,EdictToVTable(Entity),amx,funcid,params[0] / sizeof(cell) > 2 ? params[3] : 0);
+		return 1;
+	}
+
+	// class was not found
+	// throw an error alerting console that this hook did not happen
+	MF_LogError(amx, AMX_ERR_NATIVE,"Failed to retrieve classtype for entity id %d, hook for \"%s\" not active.",params[1],function);
 	
 	return 0;
 
@@ -142,8 +176,38 @@ cell ThisVTable::RegisterNative(AMX *amx, cell *params)
  */
 cell ThisVTable::NativeCall(AMX *amx, cell *params)
 {
-	// TODO: This
-	return 0;
+	// scan to see if this virtual function is a trampoline
+	void *pthis=INDEXENT_NEW(params[1])->pvPrivateData;
+	void *func=GetVTableEntry(pthis,ThisVTable::index,*ThisVTable::baseoffset);
+
+	int i=0;
+	int end=VTMan.ThisEntries.size();
+
+	while (i<end)
+	{
+		if (VTMan.ThisEntries[i]->IsTrampoline(func))
+		{
+			// this function is a trampoline
+			// use the original function instead
+			func=VTMan.ThisEntries[i]->GetOriginalFunction();
+			break;
+		}
+		++i;
+	}
+	// TODO: Inline ASM this
+#ifdef _WIN32
+	reinterpret_cast<void (__fastcall *)(void *,int,void *)>(func)(
+		pthis,											/*this*/
+		0,												/*fastcall buffer*/
+		INDEXENT_NEW(params[2])->pvPrivateData			/*other*/
+		);
+#else
+	reinterpret_cast<void (*)(void *,void *)>(func)(
+		pthis,											/*this*/
+		INDEXENT_NEW(params[2])->pvPrivateData			/*other*/
+		);
+#endif
+	return 1;
 };
 
 /**
@@ -183,7 +247,7 @@ void ThisVTable::CreateHook(VTableManager *manager, void **vtable, int id, void 
 		id,
 		outtrampoline,
 		origfunc,
-		reinterpret_cast<void *>(ThisHook),
+		reinterpret_cast<void *>(ThisVTable::EntryPoint),
 		1,  // param count
 		1,  // voidcall
 		1); // thiscall
@@ -199,7 +263,7 @@ void ThisVTable::CreateHook(VTableManager *manager, void **vtable, int id, void 
  * @param funcid			The function id of the callback.
  * @noreturn
  */
-void ThisVTable::Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid)
+void ThisVTable::Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post)
 {
 	void *ptr=vtable[ThisVTable::index];
 
@@ -212,7 +276,14 @@ void ThisVTable::Hook(VTableManager *manager, void **vtable, AMX *plugin, int fu
 		{
 			// this function is already hooked!
 
-			manager->ThisEntries[i]->AddForward(fwd);
+			if (post)
+			{
+				manager->ThisEntries[i]->AddPostForward(fwd);
+			}
+			else
+			{
+				manager->ThisEntries[i]->AddForward(fwd);
+			}
 			
 			return;
 		}
@@ -229,7 +300,14 @@ void ThisVTable::Hook(VTableManager *manager, void **vtable, AMX *plugin, int fu
 
 	manager->ThisEntries.push_back(entry);
 	
-	entry->AddForward(fwd);
+	if (post)
+	{
+		entry->AddPostForward(fwd);
+	}
+	else
+	{
+		entry->AddForward(fwd);
+	}
 
 }
 
@@ -265,16 +343,24 @@ void ThisVTable::Execute(void *pthis, void *other)
 		}
 	};
 
-	if (result>=HAM_SUPERCEDE)
+	if (result<HAM_SUPERCEDE)
 	{
-		return;
+#if defined _WIN32
+		reinterpret_cast<void (__fastcall *)(void *,int, void *)>(function)(pthis,0,other);
+#elif defined __linux__
+		reinterpret_cast<void (*)(void *,void *)>(function)(pthis,other);
+#endif
 	}
 
-#if defined _WIN32
-	reinterpret_cast<void (__fastcall *)(void *,int, void *)>(function)(pthis,0,other);
-#elif defined __linux__
-	reinterpret_cast<void (*)(void *,void *)>(function)(pthis,other);
-#endif
-
+	i=0;
+	end=PostForwards.size();
+	while (i<end)
+	{
+		MF_ExecuteForward(PostForwards[i++],iThis,iOther);
+	}
 
 };
+HAM_CDECL void ThisVTable::EntryPoint(int id,void *pthis,void *other)
+{
+	VTMan.BlockedEntries[id]->Execute(pthis,other);
+}

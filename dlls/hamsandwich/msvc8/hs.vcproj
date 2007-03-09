@@ -133,7 +133,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="z:\metamod\metamod;z:\hlsdk\common;z:\hlsdk\engine;z:\hlsdk\dlls;z:\hlsdk\pm_shared;.."
+				AdditionalIncludeDirectories="z:\metamod\metamod;z:\hlsdk\common;z:\hlsdk\engine;z:\hlsdk\dlls;z:\hlsdk\pm_shared;&quot;$(ProjectDir)\..\tableentries&quot;;&quot;$(ProjectDir)\..&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;ns_amxx_EXPORTS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -214,6 +214,50 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Entries"
+			>
+			<File
+				RelativePath="..\tableentries\AddPoints.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\AddPointsToTeam.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\Blocked.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\Killed.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\Respawn.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\Restart.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\TakeDamage.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\TakeHealth.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\Use.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\VTableEntries.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath="..\amxxapi.cpp"
 			>
@@ -235,10 +279,6 @@
 			>
 		</File>
 		<File
-			RelativePath="..\natives.cpp"
-			>
-		</File>
-		<File
 			RelativePath="..\NEW_Util.h"
 			>
 		</File>
@@ -255,11 +295,11 @@
 			>
 		</File>
 		<File
-			RelativePath="..\vtable.cpp"
+			RelativePath="..\tableentries\VTableManager.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\VTableManager.h"
+			RelativePath="..\tableentries\VTableManager.h"
 			>
 		</File>
 	</Files>

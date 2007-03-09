@@ -93,6 +93,78 @@ inline RetType VCall4(void *pThis, int ventry, int size, PTypeA pa, PTypeB pb, P
 
 	return _ret;
 };
+template <class PTypeA, class PTypeB, class PTypeC>
+inline void VoidVCall3(void *pThis, int ventry, int size, PTypeA pa, PTypeB pb, PTypeC pc)
+{
+	void **vtbl=*(void ***)pThis;
+	void *func=vtbl[ventry];
+	_asm {
+		push ecx;
+		push eax;
+		push pc;
+		push pb;
+		push pa;
+		mov ecx, pThis;
+		call [func];
+		pop eax;
+		pop ecx;
+	};
+};
+template <class RetType, class PTypeA, class PTypeB, class PTypeC>
+inline RetType VCall3(void *pThis, int ventry, int size, PTypeA pa, PTypeB pb, PTypeC pc)
+{
+	void **vtbl=*(void ***)pThis;
+	void *func=vtbl[ventry];
+	RetType _ret;
+	_asm {
+		push ecx;
+		push eax;
+		push pc;
+		push pb;
+		push pa;
+		mov ecx, pThis;
+		call [func];
+		mov _ret, eax;
+		pop eax;
+		pop ecx;
+	};
+	return _ret;
+};
+template <class PTypeA, class PTypeB>
+inline void VoidVCall2(void *pThis, int ventry, int size, PTypeA pa, PTypeB pb)
+{
+	void **vtbl=*(void ***)pThis;
+	void *func=vtbl[ventry];
+	_asm {
+		push ecx;
+		push eax;
+		push pb;
+		push pa;
+		mov ecx, pThis;
+		call [func];
+		pop eax;
+		pop ecx;
+	};
+};
+template <class RetType, class PTypeA, class PTypeB>
+inline RetType VCall2(void *pThis, int ventry, int size, PTypeA pa, PTypeB pb)
+{
+	void **vtbl=*(void ***)pThis;
+	void *func=vtbl[ventry];
+	RetType _ret;
+	_asm {
+		push ecx;
+		push eax;
+		push pb;
+		push pa;
+		mov ecx, pThis;
+		call [func];
+		mov _ret, eax;
+		pop eax;
+		pop ecx;
+	};
+	return _ret;
+};
 template <class PTypeA>
 inline void VoidVCall1(void *pThis, int ventry, int size, PTypeA pa)
 {
@@ -122,6 +194,42 @@ inline RetType VCall1(void *pThis, int ventry, int size, PTypeA pa)
 		push ecx;
 		push eax;
 		push pa;
+		mov ecx, pThis;
+		call [func];
+		mov _ret, eax;
+		pop eax;
+		pop ecx;
+	};
+
+	return _ret;
+};
+
+inline void VoidVCall0(void *pThis, int ventry, int size)
+{
+	void **vtbl=*(void ***)pThis;
+
+	void *func=vtbl[ventry];
+
+	_asm {
+		push ecx;
+		push eax;
+		mov ecx, pThis;
+		call [func];
+		pop eax;
+		pop ecx;
+	};
+};
+template <class RetType>
+inline RetType VCall0(void *pThis, int ventry, int size)
+{
+	void **vtbl=*(void ***)pThis;
+
+	void *func=vtbl[ventry];
+
+	RetType _ret;
+	_asm {
+		push ecx;
+		push eax;
 		mov ecx, pThis;
 		call [func];
 		mov _ret, eax;

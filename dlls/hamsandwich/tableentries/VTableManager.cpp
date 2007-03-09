@@ -1,9 +1,97 @@
 #include "sdk/amxxmodule.h"
 
+#include "hamsandwich.h"
+
 #include "VTableManager.h"
 #include "VTableEntries.h"
 
 #include "NEW_Util.h"
+
+VTableManager VTMan;
+
+NATIVEFUNC VTableManager::RegisterNatives[HAM_END_DONT_USE_ME];
+NATIVEFUNC VTableManager::RegisterIDNatives[HAM_END_DONT_USE_ME];
+const char *VTableManager::RegisterNames[HAM_END_DONT_USE_ME];
+
+void RegisterThisRegister(int index,NATIVEFUNC byname, NATIVEFUNC byid)
+{
+	VTableManager::RegisterNatives[index]=byname;
+	VTableManager::RegisterIDNatives[index]=byid;
+}
+void RegisterThisRegisterName(int index, const char *name)
+{
+	VTableManager::RegisterNames[index]=name;
+}
+
+static AMX_NATIVE_INFO registernatives[] = {
+	{ "ham_register",			VTableManager::Register },
+	{ "ham_registerid",			VTableManager::RegisterID },
+
+	{ NULL,						NULL }
+};
+void RegisterRegisterNatives(void)
+{
+	MF_AddNatives(registernatives);
+}
+cell VTableManager::Register(AMX *amx, cell *params)
+{
+	int id=params[1];
+
+	if (id<0 || id>=HAM_END_DONT_USE_ME || RegisterIDNatives[id]==NULL)
+	{
+		// this register is not found, fail the plugin
+		int fwd=MF_RegisterSPForwardByName(amx,"__fatal_ham_error",FP_STRING,FP_DONE);
+
+		char error[]="Requested to hs_registerid a function ID that is not registered in configs/hamdata.ini, cannot continue.";
+		int errorcell=MF_PrepareCharArray(&error[0],strlen(error)+1);
+
+		MF_ExecuteForward(fwd,errorcell);
+
+		MF_UnregisterSPForward(fwd);
+		return 0;
+
+	}
+
+	cell tempparams[4];
+
+	// remove one parameter from this param count
+	tempparams[0]=(params[0]-(sizeof(cell)));
+	tempparams[1]=params[2];
+	tempparams[2]=params[3];
+	tempparams[3]=params[4];
+
+	return RegisterNatives[id](amx,&tempparams[0]);
+}
+cell VTableManager::RegisterID(AMX *amx, cell *params)
+{
+	int id=params[1];
+
+	if (id<0 || id>=HAM_END_DONT_USE_ME || RegisterNatives[id]==NULL)
+	{
+		// this register is not found, fail the plugin
+		int fwd=MF_RegisterSPForwardByName(amx,"__fatal_ham_error",FP_STRING,FP_DONE);
+
+		char error[]="Requested to hs_register a function ID that is not registered in configs/hamdata.ini, cannot continue.";
+		int errorcell=MF_PrepareCharArray(&error[0],strlen(error)+1);
+
+		MF_ExecuteForward(fwd,errorcell);
+
+		MF_UnregisterSPForward(fwd);
+		return 0;
+
+	}
+
+	cell tempparams[4];
+
+	// remove one parameter from this param count
+	tempparams[0]=(params[0]-(sizeof(cell)));
+	tempparams[1]=params[2];
+	tempparams[2]=params[3];
+	tempparams[3]=params[4];
+
+	return RegisterIDNatives[id](amx,&tempparams[0]);
+}
+
 
 void *VTableManager::InsertIntoVTable(void **vtable, int index, void *trampoline)
 {

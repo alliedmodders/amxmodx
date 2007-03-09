@@ -3,8 +3,9 @@
 
 #include "Trampolines.h"
 
+#include "hamsandwich.h"
+
 #include "CVector.h"
-#include "hooks.h"
 #include "VTableEntries.h"
 
 /* !!WARNING: HERE BE DRAGONS
@@ -72,22 +73,38 @@ enum
 };
 
 
-
+typedef cell (*NATIVEFUNC)(AMX *, cell *);
 
 class VTableManager
 {
 public:
-	CVector<VTableUse *>			UseEntries;
-	CVector<VTableTakeDamage *>		TakeDamageEntries;
-	CVector<VTableBlocked *>		BlockedEntries;
+#define VTINIT(Type) CVector<VTable##Type *>	Type##Entries
+	VTINIT(Use);
+	VTINIT(TakeDamage);
+	VTINIT(Blocked);
+	VTINIT(Killed);
+	VTINIT(Respawn);
+	VTINIT(Restart);
+	VTINIT(AddPoints);
+	VTINIT(AddPointsToTeam);
+#undef VTINIT
+	static NATIVEFUNC					 RegisterNatives[HAM_END_DONT_USE_ME];
+	static NATIVEFUNC					 RegisterIDNatives[HAM_END_DONT_USE_ME];
+	static const char					*RegisterNames[HAM_END_DONT_USE_ME];
+
+	static cell Register(AMX *amx, cell *params);
+	static cell RegisterID(AMX *amx, cell *params);
 
 	/* returns the original function */
 	void *InsertIntoVTable(void **vtable, int index, void *trampoline);
 	void  Cleanup(void);
 };
 
+void RegisterThisRegister(int index,NATIVEFUNC byname, NATIVEFUNC byid);
+void RegisterThisRegisterName(int index, const char *name);
+void RegisterRegisterNatives(void);
+
 extern VTableManager VTMan;
 
-//#include "VTableEntries.h"
 
 #endif // VTABLEMANAGER_H

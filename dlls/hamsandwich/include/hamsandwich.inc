@@ -12,6 +12,10 @@
  #pragma library hamsandwich
 #endif
 
+#if !defined _amxmodx_included
+	#include <amxmodx>
+#endif
+
 /**
  * Ham Sandwich general usage
  * -
@@ -112,6 +116,15 @@ native hs_etakedamage(id,inflictor,attacker,Float:damage,type);
 native hs_use(id,activator,caller,use_type,Float:use_value);
 native hs_euse(id,activator,caller,use_type,Float:use_value);
 
+native hs_killed(id,attacker,gib);
+native hs_ekilled(id,attacker,gib);
+native hs_blocked(id,other);
+native hs_eblocked(id,other);
+native hs_respawn(id);
+native hs_erespawn(id);
+native hs_restart(id);
+native hs_erestart(id);
+
 
 
 enum 
@@ -133,7 +146,7 @@ enum
  * Note: For now, this will also intercept calls to hs_takedamage
  *       that is very likely to change shortly in the future.
  */
-native register_takedamage(const classname[], const function[]);
+native register_takedamage(const classname[], const function[], post=0);
 
 /**
  * Forwards all use routines that would occur to the given
@@ -145,4 +158,31 @@ native register_takedamage(const classname[], const function[]);
  * Note: For now, this will also intercept calls to hs_use
  *       that is very likely to change shortly in the future.
  */
-native register_use(const classname[], const function[]);
+native register_use(const classname[], const function[], post=0);
+
+native register_killed(const classname[], const function[], post=0);
+native register_blocked(const classname[], const function[], post=0);
+native hs_register_respawn(const classname[], const function[], post=0);
+native hs_register_restart(const classname[], const function[],  post=0);
+
+
+enum HAMHooks
+{
+	HAM_TakeDamage,
+	HAM_Use,
+	HAM_AddPoints,
+	HAM_AddPointsToTeam,
+	HAM_Blocked,
+	HAM_Killed,
+	HAM_Respawn,
+	HAM_Restart,
+	HAM_TakeHealth,
+
+	HAM_END_DONT_USE_ME
+};
+
+native ham_register(HAMHooks:hook, const classname[], const function[], post=0);
+public __fatal_ham_error(const reason[])
+{
+	set_fail_state(reason);
+}

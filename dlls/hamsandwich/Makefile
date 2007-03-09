@@ -25,7 +25,9 @@ BIN_SUFFIX = amxx_i386.so
 
 OBJECTS = sdk/amxxmodule.cpp FileParser.cpp  amxxapi.cpp hooks.cpp \
 tableentries/VTableManager.cpp tableentries/TakeDamage.cpp tableentries/Use.cpp \
-tableentries/Blocked.cpp
+tableentries/Blocked.cpp tableentries/Killed.cpp tableentries/Respawn.cpp \
+tableentries/Restart.cpp tableentries/AddPoints.cpp tableentries/AddPointsToTeam.cpp \
+
 
 
 #natives.cpp  vtable.cpp

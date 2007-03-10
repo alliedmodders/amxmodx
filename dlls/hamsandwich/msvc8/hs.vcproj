@@ -218,6 +218,10 @@
 			Name="Entries"
 			>
 			<File
+				RelativePath="..\tableentries\AddPlayerItem.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\tableentries\AddPoints.cpp"
 				>
 			</File>
@@ -230,7 +234,55 @@
 				>
 			</File>
 			<File
+				RelativePath="..\tableentries\BloodColor.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\Classify.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\GetToggleState.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\IsAlive.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\IsBSPModel.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\IsInWorld.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\IsMoving.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\IsNetClient.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\IsPlayer.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\IsSneaking.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\tableentries\Killed.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\ObjectCaps.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\RemovePlayerItem.cpp"
 				>
 			</File>
 			<File
@@ -246,7 +298,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\tableentries\TakeHealth.cpp"
+				RelativePath="..\tableentries\Think.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\tableentries\Touch.cpp"
 				>
 			</File>
 			<File

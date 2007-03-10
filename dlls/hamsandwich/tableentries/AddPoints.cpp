@@ -357,7 +357,7 @@ void ThisVTable::Execute(void *pthis,int points, int allownegative)
 	}
 
 };
-HAM_CDECL void ThisVTable::EntryPoint(int id,void *pthis,int points,int allownegative)
+void HAM_CDECL ThisVTable::EntryPoint(int id,void *pthis,int points,int allownegative)
 {
 	VTMan.ThisEntries[id]->Execute(pthis,points,allownegative);
 }

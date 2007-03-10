@@ -286,7 +286,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL int EntryPoint(int id,void *pthis);
+	static int HAM_CDECL EntryPoint(int id,void *pthis);
 };
 
 
@@ -399,7 +399,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL int EntryPoint(int id,void *pthis);
+	static int HAM_CDECL EntryPoint(int id,void *pthis);
 };
 
 
@@ -516,7 +516,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL void EntryPoint(int id,void *pthis,void *pevattacker,float flDamage,float *direction,void *tr,int bits);
+	static void HAM_CDECL EntryPoint(int id,void *pthis,void *pevattacker,float flDamage,float *direction,void *tr,int bits);
 };
 // int TakeDamage(entvars_t *inflictor, entvars_t *attacker, float damage, int type);
 class VTableTakeDamage : public VTableEntryBase
@@ -632,7 +632,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL int EntryPoint(int id,void *pthis,void *inflictor,void *attacker,float damage,int type);
+	static int HAM_CDECL EntryPoint(int id,void *pthis,void *inflictor,void *attacker,float damage,int type);
 };
 // int BloodColor(void) TODO
 class VTableBloodColor : public VTableEntryBase
@@ -743,7 +743,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL int EntryPoint(int id,void *pthis);
+	static int HAM_CDECL EntryPoint(int id,void *pthis);
 };
 
 
@@ -860,7 +860,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL void EntryPoint(int id,void *pthis,void *attacker, int gib);
+	static void HAM_CDECL EntryPoint(int id,void *pthis,void *attacker, int gib);
 };
 // void Restart(void) CS ONLY
 class VTableRestart : public VTableEntryBase
@@ -973,7 +973,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL void EntryPoint(int id,void *pthis);
+	static void HAM_CDECL EntryPoint(int id,void *pthis);
 };
 // int GetToggleState(void) TODO
 class VTableGetToggleState : public VTableEntryBase
@@ -1084,7 +1084,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL int EntryPoint(int id,void *pthis);
+	static int HAM_CDECL EntryPoint(int id,void *pthis);
 };
 
 
@@ -1200,7 +1200,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL void EntryPoint(int id,void *pthis,int points,int allownegative);
+	static void HAM_CDECL EntryPoint(int id,void *pthis,int points,int allownegative);
 };
 // void AddPointsToTeam(int points, int allownegative)
 class VTableAddPointsToTeam : public VTableEntryBase
@@ -1313,7 +1313,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL void EntryPoint(int id,void *pthis,int points,int allownegative);
+	static void HAM_CDECL EntryPoint(int id,void *pthis,int points,int allownegative);
 };
 
 // int AddPlayerItem(CBasePlayerItem *item);
@@ -1428,7 +1428,7 @@ public:
 	 * @param pthis				The "this" pointer. 
 	 * @param item				The private data of the item being added.
 	 */
-	static HAM_CDECL int EntryPoint(int id,void *pthis,void *item);
+	static int HAM_CDECL EntryPoint(int id,void *pthis,void *item);
 };
 // int RemovePlayerItem(CBasePlayerItem *item);
 class VTableRemovePlayerItem : public VTableEntryBase
@@ -1542,7 +1542,7 @@ public:
 	 * @param pthis				The "this" pointer. 
 	 * @param item				The private data of the item being added.
 	 */
-	static HAM_CDECL int EntryPoint(int id,void *pthis,void *item);
+	static int HAM_CDECL EntryPoint(int id,void *pthis,void *item);
 };
 
 
@@ -1663,7 +1663,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL int EntryPoint(int id,void *pthis);
+	static int HAM_CDECL EntryPoint(int id,void *pthis);
 };
 
 
@@ -1777,7 +1777,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL int EntryPoint(int id,void *pthis);
+	static int HAM_CDECL EntryPoint(int id,void *pthis);
 };
 
 
@@ -1892,7 +1892,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL int EntryPoint(int id,void *pthis);
+	static int HAM_CDECL EntryPoint(int id,void *pthis);
 };
 
 
@@ -2005,7 +2005,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL int EntryPoint(int id,void *pthis);
+	static int HAM_CDECL EntryPoint(int id,void *pthis);
 };
 
 
@@ -2118,7 +2118,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL int EntryPoint(int id,void *pthis);
+	static int HAM_CDECL EntryPoint(int id,void *pthis);
 };
 
 
@@ -2231,7 +2231,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL int EntryPoint(int id,void *pthis);
+	static int HAM_CDECL EntryPoint(int id,void *pthis);
 };
 
 
@@ -2344,7 +2344,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL int EntryPoint(int id,void *pthis);
+	static int HAM_CDECL EntryPoint(int id,void *pthis);
 };
 
 
@@ -2457,7 +2457,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL int EntryPoint(int id,void *pthis);
+	static int HAM_CDECL EntryPoint(int id,void *pthis);
 };
 
 
@@ -2572,7 +2572,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL const char *EntryPoint(int id,void *pthis);
+	static const char* HAM_CDECL EntryPoint(int id,void *pthis);
 };
 
 // void Think(void) TODO
@@ -2686,7 +2686,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL void EntryPoint(int id,void *pthis);
+	static void HAM_CDECL EntryPoint(int id,void *pthis);
 };
 // void Touch(void *pOther) TODO
 class VTableTouch : public VTableEntryBase
@@ -2799,7 +2799,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL void EntryPoint(int id,void *pthis,void *other);
+	static void HAM_CDECL EntryPoint(int id,void *pthis,void *other);
 };
 // void Use(CBaseEntity *activator, CBaseEntity *caller, USE_TYPE type, float value)
 class VTableUse : public VTableEntryBase
@@ -2915,7 +2915,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL void EntryPoint(int id,void *pthis, void *activator, void *caller, int type, float value);
+	static void HAM_CDECL EntryPoint(int id,void *pthis, void *activator, void *caller, int type, float value);
 
 };
 // void Blocked(CBaseEntity *pOther)
@@ -3029,7 +3029,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL void EntryPoint(int id,void *pthis,void *other);
+	static void HAM_CDECL EntryPoint(int id,void *pthis,void *other);
 };
 
 // CBaseEntity *Respawn(void)
@@ -3143,7 +3143,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL void *EntryPoint(int id,void *pthis);
+	static void* HAM_CDECL EntryPoint(int id,void *pthis);
 };
 
 // void UpdateOwner(void) TODO
@@ -3257,7 +3257,7 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static HAM_CDECL void EntryPoint(int id,void *pthis);
+	static void HAM_CDECL EntryPoint(int id,void *pthis);
 };
 
 

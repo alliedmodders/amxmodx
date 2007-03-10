@@ -350,7 +350,7 @@ void ThisVTable::Execute(void *pthis)
 	}
 
 };
-HAM_CDECL void ThisVTable::EntryPoint(int id,void *pthis)
+void HAM_CDECL ThisVTable::EntryPoint(int id,void *pthis)
 {
 	VTMan.ThisEntries[id]->Execute(pthis);
 }

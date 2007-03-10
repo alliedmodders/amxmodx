@@ -14,8 +14,8 @@
 #define ThisVTable		VTableRespawn
 #define ThisEntries		RespawnEntries
 #define ThisKey			"respawn"
-#define ThisNative		"hs_respawn"
-#define ThisENative		"hs_erespawn"
+#define ThisNative		"ham_respawn"
+#define ThisENative		"ham_erespawn"
 #define ThisRegisterID	HAM_Respawn
 #define ThisParamCount	0
 #define ThisVoidCall	1
@@ -28,8 +28,8 @@ unsigned int	 ThisVTable::index=0;
 unsigned int	 ThisVTable::indexset=0;
 
 static AMX_NATIVE_INFO callnatives[] = {
-	{ "hs_respawn",				ThisVTable::NativeCall },
-	{ "hs_respawn",				ThisVTable::ENativeCall },
+	{ ThisNative,				ThisVTable::NativeCall },
+	{ ThisENative,				ThisVTable::ENativeCall },
 	{ NULL,						NULL }
 };
 
@@ -352,5 +352,5 @@ void *ThisVTable::Execute(void *pthis)
 };
 extern "C" void *ThisVTable::EntryPoint(int id,void *pthis)
 {
-	return VTMan.RespawnEntries[id]->Execute(pthis);
+	return VTMan.ThisEntries[id]->Execute(pthis);
 }

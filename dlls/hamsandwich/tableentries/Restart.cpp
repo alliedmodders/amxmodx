@@ -14,8 +14,8 @@
 #define ThisVTable		VTableRestart
 #define ThisEntries		RestartEntries
 #define ThisKey			"restart"
-#define ThisNative		"hs_restart"
-#define ThisENative		"hs_erestart"
+#define ThisNative		"ham_restart"
+#define ThisENative		"ham_erestart"
 #define ThisRegisterID	HAM_Restart
 #define ThisParamCount	0
 #define ThisVoidCall	1
@@ -352,5 +352,5 @@ void ThisVTable::Execute(void *pthis)
 };
 HAM_CDECL void ThisVTable::EntryPoint(int id,void *pthis)
 {
-	VTMan.RestartEntries[id]->Execute(pthis);
+	VTMan.ThisEntries[id]->Execute(pthis);
 }

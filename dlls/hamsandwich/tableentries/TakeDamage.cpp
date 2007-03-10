@@ -15,8 +15,8 @@
 #define ThisEntries	TakeDamageEntries
 
 #define ThisKey			"takedamage"
-#define ThisNative		"hs_takedamage"
-#define ThisENative		"hs_etakedamage"
+#define ThisNative		"ham_takedamage"
+#define ThisENative		"ham_etakedamage"
 #define ThisRegisterID	HAM_TakeDamage
 #define ThisParamCount	4
 #define ThisVoidCall	0
@@ -377,5 +377,5 @@ int ThisVTable::Execute(void *pthis, void *inflictor, void *attacker, float dama
 };
 HAM_CDECL int ThisVTable::EntryPoint(int id,void *pthis,void *inflictor,void *attacker,float damage,int type)
 {
-	return VTMan.TakeDamageEntries[id]->Execute(pthis,inflictor,attacker,damage,type);
+	return VTMan.ThisEntries[id]->Execute(pthis,inflictor,attacker,damage,type);
 }

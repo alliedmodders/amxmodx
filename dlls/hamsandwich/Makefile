@@ -2,7 +2,7 @@
 # Makefile written by David "BAILOPAN" Anderson
 
 HLSDK = ../../../hlsdk
-MM_ROOT = ../../../metamod/metamod
+MM_ROOT = ../../metamod/metamod
 
 ### EDIT BELOW FOR OTHER PROJECTS ###
 
@@ -27,7 +27,11 @@ OBJECTS = sdk/amxxmodule.cpp FileParser.cpp  amxxapi.cpp hooks.cpp \
 tableentries/VTableManager.cpp tableentries/TakeDamage.cpp tableentries/Use.cpp \
 tableentries/Blocked.cpp tableentries/Killed.cpp tableentries/Respawn.cpp \
 tableentries/Restart.cpp tableentries/AddPoints.cpp tableentries/AddPointsToTeam.cpp \
-
+tableentries/AddPlayerItem.cpp tableentries/RemovePlayerItem.cpp tableentries/IsPlayer.cpp \
+tableentries/BloodColor.cpp tableentries/ObjectCaps.cpp tableentries/Classify.cpp \
+tableentries/IsInWorld.cpp tableentries/IsNetClient.cpp tableentries/IsSneaking.cpp \
+tableentries/IsMoving.cpp tableentries/IsBSPModel.cpp tableentries/IsAlive.cpp \
+tableentries/GetToggleState.cpp tableentries/Think.cpp tableentries/Touch.cpp
 
 
 #natives.cpp  vtable.cpp

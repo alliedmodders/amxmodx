@@ -41,11 +41,11 @@ cell VTableManager::Register(AMX *amx, cell *params)
 	{
 		// this register is not found, fail the plugin
 		int fwd=MF_RegisterSPForwardByName(amx,"__fatal_ham_error",FP_STRING,FP_DONE);
+		char error[256];
 
-		char error[]="Requested to hs_registerid a function ID that is not registered in configs/hamdata.ini, cannot continue.";
-		int errorcell=MF_PrepareCharArray(&error[0],strlen(error)+1);
+		snprintf(&error[0],sizeof(error)-1,"Requested to ham_registerid a function ID that is not registered in configs/hamdata.ini, cannot continue. (Requested: %d)",id);
 
-		MF_ExecuteForward(fwd,errorcell);
+		MF_ExecuteForward(fwd,&error[0]);
 
 		MF_UnregisterSPForward(fwd);
 		return 0;
@@ -71,10 +71,11 @@ cell VTableManager::RegisterID(AMX *amx, cell *params)
 		// this register is not found, fail the plugin
 		int fwd=MF_RegisterSPForwardByName(amx,"__fatal_ham_error",FP_STRING,FP_DONE);
 
-		char error[]="Requested to hs_register a function ID that is not registered in configs/hamdata.ini, cannot continue.";
-		int errorcell=MF_PrepareCharArray(&error[0],strlen(error)+1);
+		char error[256];
 
-		MF_ExecuteForward(fwd,errorcell);
+		snprintf(&error[0],sizeof(error)-1,"Requested to ham_register a function ID that is not registered in configs/hamdata.ini, cannot continue. (Requested: %d)",id);
+		
+		MF_ExecuteForward(fwd,&error[0]);
 
 		MF_UnregisterSPForward(fwd);
 		return 0;

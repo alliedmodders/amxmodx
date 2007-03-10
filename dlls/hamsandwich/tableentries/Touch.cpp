@@ -11,14 +11,16 @@
 #include "NEW_Util.h"
 
 // Change these on a per-hook basis! Auto-changes all the annoying fields in the following functions
-#define ThisVTable		VTableAddPoints
-#define ThisEntries		AddPointsEntries
-#define ThisKey			"addpoints"
-#define ThisNative		"ham_addpoints"
-#define ThisENative		"ham_eaddpoints"
-#define ThisRegisterID	HAM_AddPoints
-#define ThisParamCount	0
+#define ThisVTable  VTableTouch
+#define ThisEntries	TouchEntries
+
+#define ThisKey			"touch"
+#define ThisNative		"ham_touch"
+#define ThisENative		"ham_etouch"
+#define ThisRegisterID	HAM_Touch
+#define ThisParamCount	1
 #define ThisVoidCall	1
+
 
 unsigned int	*ThisVTable::pevoffset=NULL;
 unsigned int	*ThisVTable::pevset=NULL;
@@ -90,7 +92,6 @@ void ThisVTable::ConfigDone(void)
 		if (*(ThisVTable::pevset))
 		{
 			RegisterThisRegister(ThisRegisterID,ThisVTable::RegisterNative,ThisVTable::RegisterIDNative);
-			return;
 		}
 	}
 };
@@ -195,20 +196,18 @@ cell ThisVTable::NativeCall(AMX *amx, cell *params)
 	}
 	// TODO: Inline ASM this
 #ifdef _WIN32
-	reinterpret_cast<void (__fastcall *)(void *,int,int,int)>(func)(
+	reinterpret_cast<void (__fastcall *)(void *,int,void *)>(func)(
 		pthis,											/*this*/
 		0,												/*fastcall buffer*/
-		params[2],
-		params[3]
+		INDEXENT_NEW(params[2])->pvPrivateData			/*other*/
 		);
 #else
-	reinterpret_cast<void (*)(void *,int,int)>(func)(
+	reinterpret_cast<void (*)(void *,void *)>(func)(
 		pthis,											/*this*/
-		params[2],
-		params[3]
+		INDEXENT_NEW(params[2])->pvPrivateData			/*other*/
 		);
 #endif
-	return 0;
+	return 1;
 };
 
 /**
@@ -220,13 +219,13 @@ cell ThisVTable::NativeCall(AMX *amx, cell *params)
  */
 cell ThisVTable::ENativeCall(AMX *amx, cell *params)
 {
-	VoidVCall2(
-		INDEXENT_NEW(params[1])->pvPrivateData, /*this*/
-		ThisVTable::index,						/*vtable entry*/
-		*(ThisVTable::baseoffset),				/*size of class*/
-		params[2],
-		params[3]
-		);
+	VoidVCall1(
+		INDEXENT_NEW(params[1])->pvPrivateData,		/*this*/
+		ThisVTable::index,							/*vtable entry*/
+		*(ThisVTable::baseoffset),					/*size of class*/
+		INDEXENT_NEW(params[2])->pvPrivateData		/*other*/
+	);
+
 	return 1;
 };
 
@@ -270,7 +269,7 @@ void ThisVTable::Hook(VTableManager *manager, void **vtable, AMX *plugin, int fu
 
 	int i=0;
 	int end=manager->ThisEntries.size();
-	int fwd=MF_RegisterSPForward(plugin,funcid,FP_CELL/*this*/,FP_CELL,FP_CELL,FP_DONE);
+	int fwd=MF_RegisterSPForward(plugin,funcid,FP_CELL/*this*/,FP_CELL/*other*/,FP_DONE);
 	while (i<end)
 	{
 		if (manager->ThisEntries[i]->IsTrampoline(ptr))
@@ -316,9 +315,13 @@ void ThisVTable::Hook(VTableManager *manager, void **vtable, AMX *plugin, int fu
  * Execute the command.  This is called directly from our global hook function.
  *
  * @param pthis				The "this" pointer, cast to a void.  The victim.
- * @return					Unsure.  Does not appear to be used.
+ * @param activator			Entity causing the opening.
+ * @param caller			Entity controlling the caller.
+ * @param type				USE_TYPE (USE_{ON,OFF,SET}
+ * @param value				Use value, only seen set when USE_SET is used.
+ * @noreturn
  */
-void ThisVTable::Execute(void *pthis,int points, int allownegative)
+void ThisVTable::Execute(void *pthis, void *other)
 {
 	int i=0;
 
@@ -328,10 +331,11 @@ void ThisVTable::Execute(void *pthis,int points, int allownegative)
 	int thisresult=HAM_UNSET;
 
 	int iThis=PrivateToIndex(pthis);
+	int iOther=PrivateToIndex(other);
 
 	while (i<end)
 	{
-		thisresult=MF_ExecuteForward(Forwards[i++],iThis,points,allownegative);
+		thisresult=MF_ExecuteForward(Forwards[i++],iThis,iOther);
 
 		if (thisresult>result)
 		{
@@ -342,22 +346,21 @@ void ThisVTable::Execute(void *pthis,int points, int allownegative)
 	if (result<HAM_SUPERCEDE)
 	{
 #if defined _WIN32
-		reinterpret_cast<void (__fastcall *)(void *,int,int,int)>(function)(pthis,0,points,allownegative);
+		reinterpret_cast<void (__fastcall *)(void *,int, void *)>(function)(pthis,0,other);
 #elif defined __linux__
-		reinterpret_cast<void (*)(void *,int,int)>(function)(pthis,points,allownegative);
+		reinterpret_cast<void (*)(void *,void *)>(function)(pthis,other);
 #endif
 	}
 
 	i=0;
 	end=PostForwards.size();
-
 	while (i<end)
 	{
-		MF_ExecuteForward(PostForwards[i++],iThis,points,allownegative);
+		MF_ExecuteForward(PostForwards[i++],iThis,iOther);
 	}
 
 };
-HAM_CDECL void ThisVTable::EntryPoint(int id,void *pthis,int points,int allownegative)
+HAM_CDECL void ThisVTable::EntryPoint(int id,void *pthis,void *other)
 {
-	VTMan.ThisEntries[id]->Execute(pthis,points,allownegative);
+	VTMan.ThisEntries[id]->Execute(pthis,other);
 }

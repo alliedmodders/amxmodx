@@ -15,8 +15,8 @@
 #define ThisEntries	TakeHealthEntries
 
 #define ThisKey			"takehealth"
-#define ThisNative		"hs_takehealth"
-#define ThisENative		"hs_etakehealth"
+#define ThisNative		"ham_takehealth"
+#define ThisENative		"ham_etakehealth"
 #define ThisRegisterID	HAM_TakeHealth
 #define ThisParamCount	2
 #define ThisVoidCall	0

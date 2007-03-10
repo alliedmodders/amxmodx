@@ -11,12 +11,12 @@
 #include "NEW_Util.h"
 
 // Change these on a per-hook basis! Auto-changes all the annoying fields in the following functions
-#define ThisVTable		VTableAddPoints
-#define ThisEntries		AddPointsEntries
-#define ThisKey			"addpoints"
-#define ThisNative		"ham_addpoints"
-#define ThisENative		"ham_eaddpoints"
-#define ThisRegisterID	HAM_AddPoints
+#define ThisVTable		VTableThink
+#define ThisEntries		ThinkEntries
+#define ThisKey			"think"
+#define ThisNative		"ham_think"
+#define ThisENative		"ham_ethink"
+#define ThisRegisterID	HAM_Think
 #define ThisParamCount	0
 #define ThisVoidCall	1
 
@@ -90,7 +90,6 @@ void ThisVTable::ConfigDone(void)
 		if (*(ThisVTable::pevset))
 		{
 			RegisterThisRegister(ThisRegisterID,ThisVTable::RegisterNative,ThisVTable::RegisterIDNative);
-			return;
 		}
 	}
 };
@@ -195,17 +194,13 @@ cell ThisVTable::NativeCall(AMX *amx, cell *params)
 	}
 	// TODO: Inline ASM this
 #ifdef _WIN32
-	reinterpret_cast<void (__fastcall *)(void *,int,int,int)>(func)(
+	reinterpret_cast<void (__fastcall *)(void *,int)>(func)(
 		pthis,											/*this*/
-		0,												/*fastcall buffer*/
-		params[2],
-		params[3]
+		0												/*fastcall buffer*/
 		);
 #else
-	reinterpret_cast<void (*)(void *,int,int)>(func)(
-		pthis,											/*this*/
-		params[2],
-		params[3]
+	reinterpret_cast<void (*)(void *)>(func)(
+		pthis											/*this*/
 		);
 #endif
 	return 0;
@@ -220,12 +215,10 @@ cell ThisVTable::NativeCall(AMX *amx, cell *params)
  */
 cell ThisVTable::ENativeCall(AMX *amx, cell *params)
 {
-	VoidVCall2(
+	VoidVCall0(
 		INDEXENT_NEW(params[1])->pvPrivateData, /*this*/
 		ThisVTable::index,						/*vtable entry*/
-		*(ThisVTable::baseoffset),				/*size of class*/
-		params[2],
-		params[3]
+		*(ThisVTable::baseoffset)				/*size of class*/
 		);
 	return 1;
 };
@@ -249,8 +242,8 @@ void ThisVTable::CreateHook(VTableManager *manager, void **vtable, int id, void 
 		outtrampoline,
 		origfunc,
 		reinterpret_cast<void *>(ThisVTable::EntryPoint),
-		ThisParamCount,  // param count
-		ThisVoidCall,  // voidcall
+		0,  // param count
+		1,  // voidcall
 		1); // thiscall
 
 };
@@ -270,7 +263,7 @@ void ThisVTable::Hook(VTableManager *manager, void **vtable, AMX *plugin, int fu
 
 	int i=0;
 	int end=manager->ThisEntries.size();
-	int fwd=MF_RegisterSPForward(plugin,funcid,FP_CELL/*this*/,FP_CELL,FP_CELL,FP_DONE);
+	int fwd=MF_RegisterSPForward(plugin,funcid,FP_CELL/*this*/,FP_DONE);
 	while (i<end)
 	{
 		if (manager->ThisEntries[i]->IsTrampoline(ptr))
@@ -318,7 +311,7 @@ void ThisVTable::Hook(VTableManager *manager, void **vtable, AMX *plugin, int fu
  * @param pthis				The "this" pointer, cast to a void.  The victim.
  * @return					Unsure.  Does not appear to be used.
  */
-void ThisVTable::Execute(void *pthis,int points, int allownegative)
+void ThisVTable::Execute(void *pthis)
 {
 	int i=0;
 
@@ -331,7 +324,7 @@ void ThisVTable::Execute(void *pthis,int points, int allownegative)
 
 	while (i<end)
 	{
-		thisresult=MF_ExecuteForward(Forwards[i++],iThis,points,allownegative);
+		thisresult=MF_ExecuteForward(Forwards[i++],iThis);
 
 		if (thisresult>result)
 		{
@@ -342,9 +335,9 @@ void ThisVTable::Execute(void *pthis,int points, int allownegative)
 	if (result<HAM_SUPERCEDE)
 	{
 #if defined _WIN32
-		reinterpret_cast<void (__fastcall *)(void *,int,int,int)>(function)(pthis,0,points,allownegative);
+		reinterpret_cast<void (__fastcall *)(void *,int)>(function)(pthis,0);
 #elif defined __linux__
-		reinterpret_cast<void (*)(void *,int,int)>(function)(pthis,points,allownegative);
+		reinterpret_cast<void (*)(void *)>(function)(pthis);
 #endif
 	}
 
@@ -353,11 +346,11 @@ void ThisVTable::Execute(void *pthis,int points, int allownegative)
 
 	while (i<end)
 	{
-		MF_ExecuteForward(PostForwards[i++],iThis,points,allownegative);
+		MF_ExecuteForward(PostForwards[i++],iThis);
 	}
 
 };
-HAM_CDECL void ThisVTable::EntryPoint(int id,void *pthis,int points,int allownegative)
+HAM_CDECL void ThisVTable::EntryPoint(int id,void *pthis)
 {
-	VTMan.ThisEntries[id]->Execute(pthis,points,allownegative);
+	VTMan.ThisEntries[id]->Execute(pthis);
 }

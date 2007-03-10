@@ -15,8 +15,8 @@
 #define ThisEntries	KilledEntries
 
 #define ThisKey			"killed"
-#define ThisNative		"hs_killed"
-#define ThisENative		"hs_ekilled"
+#define ThisNative		"ham_killed"
+#define ThisENative		"ham_ekilled"
 #define ThisRegisterID	HAM_Killed
 #define ThisParamCount	2
 #define ThisVoidCall	1
@@ -363,6 +363,6 @@ void ThisVTable::Execute(void *pthis, void *attacker, int gib)
 };
 HAM_CDECL void ThisVTable::EntryPoint(int id,void *pthis,void *attacker,int gib)
 {
-	VTMan.KilledEntries[id]->Execute(pthis,attacker,gib);
+	VTMan.ThisEntries[id]->Execute(pthis,attacker,gib);
 }
 

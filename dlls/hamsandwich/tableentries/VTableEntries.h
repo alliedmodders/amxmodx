@@ -176,6 +176,233 @@ public:
 
 };
 
+
+// int ObjectCaps(void) TODO
+class VTableObjectCaps : public VTableEntryBase
+{
+public:
+	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
+	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
+	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
+	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
+	static unsigned int				  index;		/**< This entry's virtual table index. */
+	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
+
+	/**
+	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+	 *
+	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+	 * @noreturn
+	 */
+	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
+
+	/**
+	 * Called when one of this table entry's keyvalues is caught in a config file.
+	 *
+	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+	 * @param data				The data this keyvalue is set to.
+	 * @noreturn
+	 */
+	static void KeyValue(const char *key, const char *data);
+
+	/**
+	 * Called immediately after the config file is done being parsed.  Register our natives here.
+	 *
+	 * @noreturn
+	 */
+	static void ConfigDone(void);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterIDNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell NativeCall(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell ENativeCall(AMX *amx, cell *params);
+
+	/**
+	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param outtrampoline		The trampoline that was created.
+	 * @param origfunc			The original function that was hooked.
+	 * @noreturn
+	 */
+	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
+
+	/**
+	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param plugin			The plugin that's requesting this.
+	 * @param funcid			The function id of the callback.
+	 * @noreturn
+	 */
+	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
+
+	/**
+	 * Execute the command.  This is called directly from our global hook function.
+	 *
+	 * @param pthis				The "this" pointer, cast to a void.  The victim.
+	 */
+	int Execute(void *pthis);
+
+	/**
+	 * The hook that is directly called by the trampoline.
+	 *
+	 * @param id				The index of the hook to call.
+	 * @param pthis				The "this" pointer. 
+	 */
+	static HAM_CDECL int EntryPoint(int id,void *pthis);
+};
+
+
+// int Classify(void) TODO
+class VTableClassify : public VTableEntryBase
+{
+public:
+	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
+	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
+	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
+	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
+	static unsigned int				  index;		/**< This entry's virtual table index. */
+	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
+
+	/**
+	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+	 *
+	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+	 * @noreturn
+	 */
+	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
+
+	/**
+	 * Called when one of this table entry's keyvalues is caught in a config file.
+	 *
+	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+	 * @param data				The data this keyvalue is set to.
+	 * @noreturn
+	 */
+	static void KeyValue(const char *key, const char *data);
+
+	/**
+	 * Called immediately after the config file is done being parsed.  Register our natives here.
+	 *
+	 * @noreturn
+	 */
+	static void ConfigDone(void);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterIDNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell NativeCall(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell ENativeCall(AMX *amx, cell *params);
+
+	/**
+	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param outtrampoline		The trampoline that was created.
+	 * @param origfunc			The original function that was hooked.
+	 * @noreturn
+	 */
+	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
+
+	/**
+	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param plugin			The plugin that's requesting this.
+	 * @param funcid			The function id of the callback.
+	 * @noreturn
+	 */
+	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
+
+	/**
+	 * Execute the command.  This is called directly from our global hook function.
+	 *
+	 * @param pthis				The "this" pointer, cast to a void.  The victim.
+	 */
+	int Execute(void *pthis);
+
+	/**
+	 * The hook that is directly called by the trampoline.
+	 *
+	 * @param id				The index of the hook to call.
+	 * @param pthis				The "this" pointer. 
+	 */
+	static HAM_CDECL int EntryPoint(int id,void *pthis);
+};
+
+
 class VTableTraceAttack : public VTableEntryBase
 {
 public:
@@ -291,6 +518,7 @@ public:
 	 */
 	static HAM_CDECL void EntryPoint(int id,void *pthis,void *pevattacker,float flDamage,float *direction,void *tr,int bits);
 };
+// int TakeDamage(entvars_t *inflictor, entvars_t *attacker, float damage, int type);
 class VTableTakeDamage : public VTableEntryBase
 {
 public:
@@ -406,6 +634,121 @@ public:
 	 */
 	static HAM_CDECL int EntryPoint(int id,void *pthis,void *inflictor,void *attacker,float damage,int type);
 };
+// int BloodColor(void) TODO
+class VTableBloodColor : public VTableEntryBase
+{
+public:
+	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
+	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
+	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
+	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
+	static unsigned int				  index;		/**< This entry's virtual table index. */
+	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
+
+	/**
+	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+	 *
+	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+	 * @noreturn
+	 */
+	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
+
+	/**
+	 * Called when one of this table entry's keyvalues is caught in a config file.
+	 *
+	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+	 * @param data				The data this keyvalue is set to.
+	 * @noreturn
+	 */
+	static void KeyValue(const char *key, const char *data);
+
+	/**
+	 * Called immediately after the config file is done being parsed.  Register our natives here.
+	 *
+	 * @noreturn
+	 */
+	static void ConfigDone(void);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterIDNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell NativeCall(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell ENativeCall(AMX *amx, cell *params);
+
+	/**
+	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param outtrampoline		The trampoline that was created.
+	 * @param origfunc			The original function that was hooked.
+	 * @noreturn
+	 */
+	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
+
+	/**
+	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param plugin			The plugin that's requesting this.
+	 * @param funcid			The function id of the callback.
+	 * @noreturn
+	 */
+	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
+
+	/**
+	 * Execute the command.  This is called directly from our global hook function.
+	 *
+	 * @param pthis				The "this" pointer, cast to a void.  The victim.
+	 */
+	int Execute(void *pthis);
+
+	/**
+	 * The hook that is directly called by the trampoline.
+	 *
+	 * @param id				The index of the hook to call.
+	 * @param pthis				The "this" pointer. 
+	 */
+	static HAM_CDECL int EntryPoint(int id,void *pthis);
+};
+
+
+
+// void Killed(entvars_t *attacker, int gib)
 class VTableKilled : public VTableEntryBase
 {
 public:
@@ -519,6 +862,1946 @@ public:
 	 */
 	static HAM_CDECL void EntryPoint(int id,void *pthis,void *attacker, int gib);
 };
+// void Restart(void) CS ONLY
+class VTableRestart : public VTableEntryBase
+{
+public:
+	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
+	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
+	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
+	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
+	static unsigned int				  index;		/**< This entry's virtual table index. */
+	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
+
+	/**
+	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+	 *
+	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+	 * @noreturn
+	 */
+	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
+
+	/**
+	 * Called when one of this table entry's keyvalues is caught in a config file.
+	 *
+	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+	 * @param data				The data this keyvalue is set to.
+	 * @noreturn
+	 */
+	static void KeyValue(const char *key, const char *data);
+
+	/**
+	 * Called immediately after the config file is done being parsed.  Register our natives here.
+	 *
+	 * @noreturn
+	 */
+	static void ConfigDone(void);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterIDNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell NativeCall(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell ENativeCall(AMX *amx, cell *params);
+
+	/**
+	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param outtrampoline		The trampoline that was created.
+	 * @param origfunc			The original function that was hooked.
+	 * @noreturn
+	 */
+	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
+
+	/**
+	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param plugin			The plugin that's requesting this.
+	 * @param funcid			The function id of the callback.
+	 * @noreturn
+	 */
+	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
+
+	/**
+	 * Execute the command.  This is called directly from our global hook function.
+	 *
+	 * @param pthis				The "this" pointer, cast to a void.  The victim.
+	 * @param other				Entity that's blocking.
+	 * @noreturn
+	 */
+	void Execute(void *pthis);
+
+	/**
+	 * The hook that is directly called by the trampoline.
+	 *
+	 * @param id				The index of the hook to call.
+	 * @param pthis				The "this" pointer. 
+	 */
+	static HAM_CDECL void EntryPoint(int id,void *pthis);
+};
+// int GetToggleState(void) TODO
+class VTableGetToggleState : public VTableEntryBase
+{
+public:
+	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
+	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
+	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
+	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
+	static unsigned int				  index;		/**< This entry's virtual table index. */
+	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
+
+	/**
+	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+	 *
+	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+	 * @noreturn
+	 */
+	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
+
+	/**
+	 * Called when one of this table entry's keyvalues is caught in a config file.
+	 *
+	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+	 * @param data				The data this keyvalue is set to.
+	 * @noreturn
+	 */
+	static void KeyValue(const char *key, const char *data);
+
+	/**
+	 * Called immediately after the config file is done being parsed.  Register our natives here.
+	 *
+	 * @noreturn
+	 */
+	static void ConfigDone(void);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterIDNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell NativeCall(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell ENativeCall(AMX *amx, cell *params);
+
+	/**
+	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param outtrampoline		The trampoline that was created.
+	 * @param origfunc			The original function that was hooked.
+	 * @noreturn
+	 */
+	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
+
+	/**
+	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param plugin			The plugin that's requesting this.
+	 * @param funcid			The function id of the callback.
+	 * @noreturn
+	 */
+	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
+
+	/**
+	 * Execute the command.  This is called directly from our global hook function.
+	 *
+	 * @param pthis				The "this" pointer, cast to a void.  The victim.
+	 */
+	int Execute(void *pthis);
+
+	/**
+	 * The hook that is directly called by the trampoline.
+	 *
+	 * @param id				The index of the hook to call.
+	 * @param pthis				The "this" pointer. 
+	 */
+	static HAM_CDECL int EntryPoint(int id,void *pthis);
+};
+
+
+
+// void AddPoints(int points, int allownegative)
+class VTableAddPoints : public VTableEntryBase
+{
+public:
+	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
+	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
+	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
+	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
+	static unsigned int				  index;		/**< This entry's virtual table index. */
+	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
+
+	/**
+	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+	 *
+	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+	 * @noreturn
+	 */
+	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
+
+	/**
+	 * Called when one of this table entry's keyvalues is caught in a config file.
+	 *
+	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+	 * @param data				The data this keyvalue is set to.
+	 * @noreturn
+	 */
+	static void KeyValue(const char *key, const char *data);
+
+	/**
+	 * Called immediately after the config file is done being parsed.  Register our natives here.
+	 *
+	 * @noreturn
+	 */
+	static void ConfigDone(void);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterIDNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell NativeCall(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell ENativeCall(AMX *amx, cell *params);
+
+	/**
+	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param outtrampoline		The trampoline that was created.
+	 * @param origfunc			The original function that was hooked.
+	 * @noreturn
+	 */
+	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
+
+	/**
+	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param plugin			The plugin that's requesting this.
+	 * @param funcid			The function id of the callback.
+	 * @noreturn
+	 */
+	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
+
+	/**
+	 * Execute the command.  This is called directly from our global hook function.
+	 *
+	 * @param pthis				The "this" pointer, cast to a void.  The victim.
+	 * @param other				Entity that's blocking.
+	 * @noreturn
+	 */
+	void Execute(void *pthis, int points, int allowneg);
+
+	/**
+	 * The hook that is directly called by the trampoline.
+	 *
+	 * @param id				The index of the hook to call.
+	 * @param pthis				The "this" pointer. 
+	 */
+	static HAM_CDECL void EntryPoint(int id,void *pthis,int points,int allownegative);
+};
+// void AddPointsToTeam(int points, int allownegative)
+class VTableAddPointsToTeam : public VTableEntryBase
+{
+public:
+	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
+	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
+	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
+	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
+	static unsigned int				  index;		/**< This entry's virtual table index. */
+	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
+
+	/**
+	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+	 *
+	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+	 * @noreturn
+	 */
+	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
+
+	/**
+	 * Called when one of this table entry's keyvalues is caught in a config file.
+	 *
+	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+	 * @param data				The data this keyvalue is set to.
+	 * @noreturn
+	 */
+	static void KeyValue(const char *key, const char *data);
+
+	/**
+	 * Called immediately after the config file is done being parsed.  Register our natives here.
+	 *
+	 * @noreturn
+	 */
+	static void ConfigDone(void);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterIDNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell NativeCall(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell ENativeCall(AMX *amx, cell *params);
+
+	/**
+	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param outtrampoline		The trampoline that was created.
+	 * @param origfunc			The original function that was hooked.
+	 * @noreturn
+	 */
+	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
+
+	/**
+	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param plugin			The plugin that's requesting this.
+	 * @param funcid			The function id of the callback.
+	 * @noreturn
+	 */
+	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
+
+	/**
+	 * Execute the command.  This is called directly from our global hook function.
+	 *
+	 * @param pthis				The "this" pointer, cast to a void.  The victim.
+	 * @param other				Entity that's blocking.
+	 * @noreturn
+	 */
+	void Execute(void *pthis, int points, int allowneg);
+
+	/**
+	 * The hook that is directly called by the trampoline.
+	 *
+	 * @param id				The index of the hook to call.
+	 * @param pthis				The "this" pointer. 
+	 */
+	static HAM_CDECL void EntryPoint(int id,void *pthis,int points,int allownegative);
+};
+
+// int AddPlayerItem(CBasePlayerItem *item);
+class VTableAddPlayerItem : public VTableEntryBase
+{
+public:
+	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
+	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
+	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
+	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
+	static unsigned int				  index;		/**< This entry's virtual table index. */
+	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
+
+	/**
+	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+	 *
+	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+	 * @noreturn
+	 */
+	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
+
+	/**
+	 * Called when one of this table entry's keyvalues is caught in a config file.
+	 *
+	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+	 * @param data				The data this keyvalue is set to.
+	 * @noreturn
+	 */
+	static void KeyValue(const char *key, const char *data);
+
+	/**
+	 * Called immediately after the config file is done being parsed.  Register our natives here.
+	 *
+	 * @noreturn
+	 */
+	static void ConfigDone(void);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterIDNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell NativeCall(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell ENativeCall(AMX *amx, cell *params);
+
+	/**
+	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param outtrampoline		The trampoline that was created.
+	 * @param origfunc			The original function that was hooked.
+	 * @noreturn
+	 */
+	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
+
+	/**
+	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param plugin			The plugin that's requesting this.
+	 * @param funcid			The function id of the callback.
+	 * @noreturn
+	 */
+	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
+
+	/**
+	 * Execute the command.  This is called directly from our global hook function.
+	 *
+	 * @param pthis				The "this" pointer, cast to a void.  The victim.
+	 * @param item				The private data of the item being added.
+	 * @return					Unsure.  Does not appear to be used.
+	 */
+	int Execute(void *pthis, void *item);
+
+	/**
+	 * The hook that is directly called by the trampoline.
+	 *
+	 * @param id				The index of the hook to call.
+	 * @param pthis				The "this" pointer. 
+	 * @param item				The private data of the item being added.
+	 */
+	static HAM_CDECL int EntryPoint(int id,void *pthis,void *item);
+};
+// int RemovePlayerItem(CBasePlayerItem *item);
+class VTableRemovePlayerItem : public VTableEntryBase
+{
+public:
+	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
+	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
+	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
+	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
+	static unsigned int				  index;		/**< This entry's virtual table index. */
+	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
+
+	/**
+	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+	 *
+	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+	 * @noreturn
+	 */
+	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
+
+	/**
+	 * Called when one of this table entry's keyvalues is caught in a config file.
+	 *
+	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+	 * @param data				The data this keyvalue is set to.
+	 * @noreturn
+	 */
+	static void KeyValue(const char *key, const char *data);
+
+	/**
+	 * Called immediately after the config file is done being parsed.  Register our natives here.
+	 *
+	 * @noreturn
+	 */
+	static void ConfigDone(void);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterIDNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell NativeCall(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell ENativeCall(AMX *amx, cell *params);
+
+	/**
+	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param outtrampoline		The trampoline that was created.
+	 * @param origfunc			The original function that was hooked.
+	 * @noreturn
+	 */
+	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
+
+	/**
+	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param plugin			The plugin that's requesting this.
+	 * @param funcid			The function id of the callback.
+	 * @noreturn
+	 */
+	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
+
+	/**
+	 * Execute the command.  This is called directly from our global hook function.
+	 *
+	 * @param pthis				The "this" pointer, cast to a void.  The victim.
+	 * @param item				The private data of the item being added.
+	 * @return					Unsure.  Does not appear to be used.
+	 */
+	int Execute(void *pthis, void *item);
+
+	/**
+	 * The hook that is directly called by the trampoline.
+	 *
+	 * @param id				The index of the hook to call.
+	 * @param pthis				The "this" pointer. 
+	 * @param item				The private data of the item being added.
+	 */
+	static HAM_CDECL int EntryPoint(int id,void *pthis,void *item);
+};
+
+
+
+
+
+
+
+
+
+
+// int Is(void) TODO
+class VTableIsMoving : public VTableEntryBase
+{
+public:
+	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
+	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
+	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
+	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
+	static unsigned int				  index;		/**< This entry's virtual table index. */
+	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
+
+	/**
+	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+	 *
+	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+	 * @noreturn
+	 */
+	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
+
+	/**
+	 * Called when one of this table entry's keyvalues is caught in a config file.
+	 *
+	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+	 * @param data				The data this keyvalue is set to.
+	 * @noreturn
+	 */
+	static void KeyValue(const char *key, const char *data);
+
+	/**
+	 * Called immediately after the config file is done being parsed.  Register our natives here.
+	 *
+	 * @noreturn
+	 */
+	static void ConfigDone(void);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterIDNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell NativeCall(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell ENativeCall(AMX *amx, cell *params);
+
+	/**
+	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param outtrampoline		The trampoline that was created.
+	 * @param origfunc			The original function that was hooked.
+	 * @noreturn
+	 */
+	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
+
+	/**
+	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param plugin			The plugin that's requesting this.
+	 * @param funcid			The function id of the callback.
+	 * @noreturn
+	 */
+	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
+
+	/**
+	 * Execute the command.  This is called directly from our global hook function.
+	 *
+	 * @param pthis				The "this" pointer, cast to a void.  The victim.
+	 */
+	int Execute(void *pthis);
+
+	/**
+	 * The hook that is directly called by the trampoline.
+	 *
+	 * @param id				The index of the hook to call.
+	 * @param pthis				The "this" pointer. 
+	 */
+	static HAM_CDECL int EntryPoint(int id,void *pthis);
+};
+
+
+
+// int Is(void) TODO
+class VTableDamageDecal : public VTableEntryBase
+{
+public:
+	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
+	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
+	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
+	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
+	static unsigned int				  index;		/**< This entry's virtual table index. */
+	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
+
+	/**
+	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+	 *
+	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+	 * @noreturn
+	 */
+	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
+
+	/**
+	 * Called when one of this table entry's keyvalues is caught in a config file.
+	 *
+	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+	 * @param data				The data this keyvalue is set to.
+	 * @noreturn
+	 */
+	static void KeyValue(const char *key, const char *data);
+
+	/**
+	 * Called immediately after the config file is done being parsed.  Register our natives here.
+	 *
+	 * @noreturn
+	 */
+	static void ConfigDone(void);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterIDNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell NativeCall(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell ENativeCall(AMX *amx, cell *params);
+
+	/**
+	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param outtrampoline		The trampoline that was created.
+	 * @param origfunc			The original function that was hooked.
+	 * @noreturn
+	 */
+	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
+
+	/**
+	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param plugin			The plugin that's requesting this.
+	 * @param funcid			The function id of the callback.
+	 * @noreturn
+	 */
+	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
+
+	/**
+	 * Execute the command.  This is called directly from our global hook function.
+	 *
+	 * @param pthis				The "this" pointer, cast to a void.  The victim.
+	 */
+	int Execute(void *pthis);
+
+	/**
+	 * The hook that is directly called by the trampoline.
+	 *
+	 * @param id				The index of the hook to call.
+	 * @param pthis				The "this" pointer. 
+	 */
+	static HAM_CDECL int EntryPoint(int id,void *pthis);
+};
+
+
+
+
+// int Is(void) TODO
+class VTableIsSneaking : public VTableEntryBase
+{
+public:
+	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
+	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
+	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
+	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
+	static unsigned int				  index;		/**< This entry's virtual table index. */
+	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
+
+	/**
+	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+	 *
+	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+	 * @noreturn
+	 */
+	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
+
+	/**
+	 * Called when one of this table entry's keyvalues is caught in a config file.
+	 *
+	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+	 * @param data				The data this keyvalue is set to.
+	 * @noreturn
+	 */
+	static void KeyValue(const char *key, const char *data);
+
+	/**
+	 * Called immediately after the config file is done being parsed.  Register our natives here.
+	 *
+	 * @noreturn
+	 */
+	static void ConfigDone(void);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterIDNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell NativeCall(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell ENativeCall(AMX *amx, cell *params);
+
+	/**
+	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param outtrampoline		The trampoline that was created.
+	 * @param origfunc			The original function that was hooked.
+	 * @noreturn
+	 */
+	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
+
+	/**
+	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param plugin			The plugin that's requesting this.
+	 * @param funcid			The function id of the callback.
+	 * @noreturn
+	 */
+	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
+
+	/**
+	 * Execute the command.  This is called directly from our global hook function.
+	 *
+	 * @param pthis				The "this" pointer, cast to a void.  The victim.
+	 */
+	int Execute(void *pthis);
+
+	/**
+	 * The hook that is directly called by the trampoline.
+	 *
+	 * @param id				The index of the hook to call.
+	 * @param pthis				The "this" pointer. 
+	 */
+	static HAM_CDECL int EntryPoint(int id,void *pthis);
+};
+
+
+// int Is(void) TODO
+class VTableIsAlive : public VTableEntryBase
+{
+public:
+	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
+	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
+	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
+	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
+	static unsigned int				  index;		/**< This entry's virtual table index. */
+	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
+
+	/**
+	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+	 *
+	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+	 * @noreturn
+	 */
+	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
+
+	/**
+	 * Called when one of this table entry's keyvalues is caught in a config file.
+	 *
+	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+	 * @param data				The data this keyvalue is set to.
+	 * @noreturn
+	 */
+	static void KeyValue(const char *key, const char *data);
+
+	/**
+	 * Called immediately after the config file is done being parsed.  Register our natives here.
+	 *
+	 * @noreturn
+	 */
+	static void ConfigDone(void);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterIDNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell NativeCall(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell ENativeCall(AMX *amx, cell *params);
+
+	/**
+	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param outtrampoline		The trampoline that was created.
+	 * @param origfunc			The original function that was hooked.
+	 * @noreturn
+	 */
+	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
+
+	/**
+	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param plugin			The plugin that's requesting this.
+	 * @param funcid			The function id of the callback.
+	 * @noreturn
+	 */
+	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
+
+	/**
+	 * Execute the command.  This is called directly from our global hook function.
+	 *
+	 * @param pthis				The "this" pointer, cast to a void.  The victim.
+	 */
+	int Execute(void *pthis);
+
+	/**
+	 * The hook that is directly called by the trampoline.
+	 *
+	 * @param id				The index of the hook to call.
+	 * @param pthis				The "this" pointer. 
+	 */
+	static HAM_CDECL int EntryPoint(int id,void *pthis);
+};
+
+
+// int Is(void) TODO
+class VTableIsBSPModel : public VTableEntryBase
+{
+public:
+	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
+	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
+	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
+	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
+	static unsigned int				  index;		/**< This entry's virtual table index. */
+	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
+
+	/**
+	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+	 *
+	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+	 * @noreturn
+	 */
+	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
+
+	/**
+	 * Called when one of this table entry's keyvalues is caught in a config file.
+	 *
+	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+	 * @param data				The data this keyvalue is set to.
+	 * @noreturn
+	 */
+	static void KeyValue(const char *key, const char *data);
+
+	/**
+	 * Called immediately after the config file is done being parsed.  Register our natives here.
+	 *
+	 * @noreturn
+	 */
+	static void ConfigDone(void);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterIDNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell NativeCall(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell ENativeCall(AMX *amx, cell *params);
+
+	/**
+	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param outtrampoline		The trampoline that was created.
+	 * @param origfunc			The original function that was hooked.
+	 * @noreturn
+	 */
+	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
+
+	/**
+	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param plugin			The plugin that's requesting this.
+	 * @param funcid			The function id of the callback.
+	 * @noreturn
+	 */
+	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
+
+	/**
+	 * Execute the command.  This is called directly from our global hook function.
+	 *
+	 * @param pthis				The "this" pointer, cast to a void.  The victim.
+	 */
+	int Execute(void *pthis);
+
+	/**
+	 * The hook that is directly called by the trampoline.
+	 *
+	 * @param id				The index of the hook to call.
+	 * @param pthis				The "this" pointer. 
+	 */
+	static HAM_CDECL int EntryPoint(int id,void *pthis);
+};
+
+
+// int IsInWorld(void) TODO
+class VTableIsInWorld : public VTableEntryBase
+{
+public:
+	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
+	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
+	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
+	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
+	static unsigned int				  index;		/**< This entry's virtual table index. */
+	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
+
+	/**
+	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+	 *
+	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+	 * @noreturn
+	 */
+	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
+
+	/**
+	 * Called when one of this table entry's keyvalues is caught in a config file.
+	 *
+	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+	 * @param data				The data this keyvalue is set to.
+	 * @noreturn
+	 */
+	static void KeyValue(const char *key, const char *data);
+
+	/**
+	 * Called immediately after the config file is done being parsed.  Register our natives here.
+	 *
+	 * @noreturn
+	 */
+	static void ConfigDone(void);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterIDNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell NativeCall(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell ENativeCall(AMX *amx, cell *params);
+
+	/**
+	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param outtrampoline		The trampoline that was created.
+	 * @param origfunc			The original function that was hooked.
+	 * @noreturn
+	 */
+	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
+
+	/**
+	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param plugin			The plugin that's requesting this.
+	 * @param funcid			The function id of the callback.
+	 * @noreturn
+	 */
+	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
+
+	/**
+	 * Execute the command.  This is called directly from our global hook function.
+	 *
+	 * @param pthis				The "this" pointer, cast to a void.  The victim.
+	 */
+	int Execute(void *pthis);
+
+	/**
+	 * The hook that is directly called by the trampoline.
+	 *
+	 * @param id				The index of the hook to call.
+	 * @param pthis				The "this" pointer. 
+	 */
+	static HAM_CDECL int EntryPoint(int id,void *pthis);
+};
+
+
+// int IsPlayer(void) TODO
+class VTableIsPlayer : public VTableEntryBase
+{
+public:
+	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
+	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
+	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
+	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
+	static unsigned int				  index;		/**< This entry's virtual table index. */
+	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
+
+	/**
+	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+	 *
+	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+	 * @noreturn
+	 */
+	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
+
+	/**
+	 * Called when one of this table entry's keyvalues is caught in a config file.
+	 *
+	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+	 * @param data				The data this keyvalue is set to.
+	 * @noreturn
+	 */
+	static void KeyValue(const char *key, const char *data);
+
+	/**
+	 * Called immediately after the config file is done being parsed.  Register our natives here.
+	 *
+	 * @noreturn
+	 */
+	static void ConfigDone(void);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterIDNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell NativeCall(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell ENativeCall(AMX *amx, cell *params);
+
+	/**
+	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param outtrampoline		The trampoline that was created.
+	 * @param origfunc			The original function that was hooked.
+	 * @noreturn
+	 */
+	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
+
+	/**
+	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param plugin			The plugin that's requesting this.
+	 * @param funcid			The function id of the callback.
+	 * @noreturn
+	 */
+	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
+
+	/**
+	 * Execute the command.  This is called directly from our global hook function.
+	 *
+	 * @param pthis				The "this" pointer, cast to a void.  The victim.
+	 */
+	int Execute(void *pthis);
+
+	/**
+	 * The hook that is directly called by the trampoline.
+	 *
+	 * @param id				The index of the hook to call.
+	 * @param pthis				The "this" pointer. 
+	 */
+	static HAM_CDECL int EntryPoint(int id,void *pthis);
+};
+
+
+// int IsNetClient(void) TODO
+class VTableIsNetClient : public VTableEntryBase
+{
+public:
+	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
+	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
+	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
+	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
+	static unsigned int				  index;		/**< This entry's virtual table index. */
+	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
+
+	/**
+	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+	 *
+	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+	 * @noreturn
+	 */
+	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
+
+	/**
+	 * Called when one of this table entry's keyvalues is caught in a config file.
+	 *
+	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+	 * @param data				The data this keyvalue is set to.
+	 * @noreturn
+	 */
+	static void KeyValue(const char *key, const char *data);
+
+	/**
+	 * Called immediately after the config file is done being parsed.  Register our natives here.
+	 *
+	 * @noreturn
+	 */
+	static void ConfigDone(void);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterIDNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell NativeCall(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell ENativeCall(AMX *amx, cell *params);
+
+	/**
+	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param outtrampoline		The trampoline that was created.
+	 * @param origfunc			The original function that was hooked.
+	 * @noreturn
+	 */
+	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
+
+	/**
+	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param plugin			The plugin that's requesting this.
+	 * @param funcid			The function id of the callback.
+	 * @noreturn
+	 */
+	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
+
+	/**
+	 * Execute the command.  This is called directly from our global hook function.
+	 *
+	 * @param pthis				The "this" pointer, cast to a void.  The victim.
+	 */
+	int Execute(void *pthis);
+
+	/**
+	 * The hook that is directly called by the trampoline.
+	 *
+	 * @param id				The index of the hook to call.
+	 * @param pthis				The "this" pointer. 
+	 */
+	static HAM_CDECL int EntryPoint(int id,void *pthis);
+};
+
+
+// const char *TeamID(void) TODO
+class VTableTeamID : public VTableEntryBase
+{
+public:
+	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
+	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
+	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
+	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
+	static unsigned int				  index;		/**< This entry's virtual table index. */
+	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
+
+	/**
+	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+	 *
+	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+	 * @noreturn
+	 */
+	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
+
+	/**
+	 * Called when one of this table entry's keyvalues is caught in a config file.
+	 *
+	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+	 * @param data				The data this keyvalue is set to.
+	 * @noreturn
+	 */
+	static void KeyValue(const char *key, const char *data);
+
+	/**
+	 * Called immediately after the config file is done being parsed.  Register our natives here.
+	 *
+	 * @noreturn
+	 */
+	static void ConfigDone(void);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterIDNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell NativeCall(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell ENativeCall(AMX *amx, cell *params);
+
+	/**
+	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param outtrampoline		The trampoline that was created.
+	 * @param origfunc			The original function that was hooked.
+	 * @noreturn
+	 */
+	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
+
+	/**
+	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param plugin			The plugin that's requesting this.
+	 * @param funcid			The function id of the callback.
+	 * @noreturn
+	 */
+	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
+
+	/**
+	 * Execute the command.  This is called directly from our global hook function.
+	 *
+	 * @param pthis				The "this" pointer, cast to a void.  The victim.
+	 * @param other				Entity that's blocking.
+	 * @noreturn
+	 */
+	const char *Execute(void *pthis);
+
+	/**
+	 * The hook that is directly called by the trampoline.
+	 *
+	 * @param id				The index of the hook to call.
+	 * @param pthis				The "this" pointer. 
+	 */
+	static HAM_CDECL const char *EntryPoint(int id,void *pthis);
+};
+
+// void Think(void) TODO
+class VTableThink : public VTableEntryBase
+{
+public:
+	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
+	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
+	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
+	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
+	static unsigned int				  index;		/**< This entry's virtual table index. */
+	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
+
+	/**
+	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+	 *
+	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+	 * @noreturn
+	 */
+	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
+
+	/**
+	 * Called when one of this table entry's keyvalues is caught in a config file.
+	 *
+	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+	 * @param data				The data this keyvalue is set to.
+	 * @noreturn
+	 */
+	static void KeyValue(const char *key, const char *data);
+
+	/**
+	 * Called immediately after the config file is done being parsed.  Register our natives here.
+	 *
+	 * @noreturn
+	 */
+	static void ConfigDone(void);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterIDNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell NativeCall(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell ENativeCall(AMX *amx, cell *params);
+
+	/**
+	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param outtrampoline		The trampoline that was created.
+	 * @param origfunc			The original function that was hooked.
+	 * @noreturn
+	 */
+	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
+
+	/**
+	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param plugin			The plugin that's requesting this.
+	 * @param funcid			The function id of the callback.
+	 * @noreturn
+	 */
+	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
+
+	/**
+	 * Execute the command.  This is called directly from our global hook function.
+	 *
+	 * @param pthis				The "this" pointer, cast to a void.  The victim.
+	 * @param other				Entity that's blocking.
+	 * @noreturn
+	 */
+	void Execute(void *pthis);
+
+	/**
+	 * The hook that is directly called by the trampoline.
+	 *
+	 * @param id				The index of the hook to call.
+	 * @param pthis				The "this" pointer. 
+	 */
+	static HAM_CDECL void EntryPoint(int id,void *pthis);
+};
+// void Touch(void *pOther) TODO
+class VTableTouch : public VTableEntryBase
+{
+public:
+	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
+	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
+	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
+	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
+	static unsigned int				  index;		/**< This entry's virtual table index. */
+	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
+
+	/**
+	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
+	 *
+	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
+	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
+	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
+	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
+	 * @noreturn
+	 */
+	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
+
+	/**
+	 * Called when one of this table entry's keyvalues is caught in a config file.
+	 *
+	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
+	 * @param data				The data this keyvalue is set to.
+	 * @noreturn
+	 */
+	static void KeyValue(const char *key, const char *data);
+
+	/**
+	 * Called immediately after the config file is done being parsed.  Register our natives here.
+	 *
+	 * @noreturn
+	 */
+	static void ConfigDone(void);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
+	 * 
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell RegisterIDNative(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell NativeCall(AMX *amx, cell *params);
+
+	/**
+	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
+	 *
+	 * @param amx				The AMX structure for the plugin.
+	 * @param params			The parameters passed from the plugin.
+	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
+	 */
+	static cell ENativeCall(AMX *amx, cell *params);
+
+	/**
+	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param outtrampoline		The trampoline that was created.
+	 * @param origfunc			The original function that was hooked.
+	 * @noreturn
+	 */
+	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
+
+	/**
+	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
+	 *
+	 * @param manager			The VTableManager this is a child of.
+	 * @param vtable			The virtual table we're molesting.
+	 * @param plugin			The plugin that's requesting this.
+	 * @param funcid			The function id of the callback.
+	 * @noreturn
+	 */
+	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
+
+	/**
+	 * Execute the command.  This is called directly from our global hook function.
+	 *
+	 * @param pthis				The "this" pointer, cast to a void.  The victim.
+	 * @param other				Entity that's blocking.
+	 * @noreturn
+	 */
+	void Execute(void *pthis, void *other);
+
+	/**
+	 * The hook that is directly called by the trampoline.
+	 *
+	 * @param id				The index of the hook to call.
+	 * @param pthis				The "this" pointer. 
+	 */
+	static HAM_CDECL void EntryPoint(int id,void *pthis,void *other);
+};
+// void Use(CBaseEntity *activator, CBaseEntity *caller, USE_TYPE type, float value)
 class VTableUse : public VTableEntryBase
 {
 public:
@@ -635,6 +2918,7 @@ public:
 	static HAM_CDECL void EntryPoint(int id,void *pthis, void *activator, void *caller, int type, float value);
 
 };
+// void Blocked(CBaseEntity *pOther)
 class VTableBlocked : public VTableEntryBase
 {
 public:
@@ -747,6 +3031,8 @@ public:
 	 */
 	static HAM_CDECL void EntryPoint(int id,void *pthis,void *other);
 };
+
+// CBaseEntity *Respawn(void)
 class VTableRespawn : public VTableEntryBase
 {
 public:
@@ -857,9 +3143,11 @@ public:
 	 * @param id				The index of the hook to call.
 	 * @param pthis				The "this" pointer. 
 	 */
-	static void *EntryPoint(int id,void *pthis);
+	static HAM_CDECL void *EntryPoint(int id,void *pthis);
 };
-class VTableRestart : public VTableEntryBase
+
+// void UpdateOwner(void) TODO
+class VTableUpdateOwner : public VTableEntryBase
 {
 public:
 	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
@@ -971,230 +3259,8 @@ public:
 	 */
 	static HAM_CDECL void EntryPoint(int id,void *pthis);
 };
-class VTableAddPoints : public VTableEntryBase
-{
-public:
-	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
-	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
-	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
-	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
-	static unsigned int				  index;		/**< This entry's virtual table index. */
-	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
 
-	/**
-	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
-	 *
-	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
-	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
-	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
-	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
-	 * @noreturn
-	 */
-	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
 
-	/**
-	 * Called when one of this table entry's keyvalues is caught in a config file.
-	 *
-	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
-	 * @param data				The data this keyvalue is set to.
-	 * @noreturn
-	 */
-	static void KeyValue(const char *key, const char *data);
-
-	/**
-	 * Called immediately after the config file is done being parsed.  Register our natives here.
-	 *
-	 * @noreturn
-	 */
-	static void ConfigDone(void);
-
-	/**
-	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
-	 * 
-	 * @param amx				The AMX structure for the plugin.
-	 * @param params			The parameters passed from the plugin.
-	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
-	 */
-	static cell RegisterNative(AMX *amx, cell *params);
-
-	/**
-	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
-	 * 
-	 * @param amx				The AMX structure for the plugin.
-	 * @param params			The parameters passed from the plugin.
-	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
-	 */
-	static cell RegisterIDNative(AMX *amx, cell *params);
-
-	/**
-	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
-	 *
-	 * @param amx				The AMX structure for the plugin.
-	 * @param params			The parameters passed from the plugin.
-	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
-	 */
-	static cell NativeCall(AMX *amx, cell *params);
-
-	/**
-	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
-	 *
-	 * @param amx				The AMX structure for the plugin.
-	 * @param params			The parameters passed from the plugin.
-	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
-	 */
-	static cell ENativeCall(AMX *amx, cell *params);
-
-	/**
-	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
-	 *
-	 * @param manager			The VTableManager this is a child of.
-	 * @param vtable			The virtual table we're molesting.
-	 * @param outtrampoline		The trampoline that was created.
-	 * @param origfunc			The original function that was hooked.
-	 * @noreturn
-	 */
-	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
-
-	/**
-	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
-	 *
-	 * @param manager			The VTableManager this is a child of.
-	 * @param vtable			The virtual table we're molesting.
-	 * @param plugin			The plugin that's requesting this.
-	 * @param funcid			The function id of the callback.
-	 * @noreturn
-	 */
-	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
-
-	/**
-	 * Execute the command.  This is called directly from our global hook function.
-	 *
-	 * @param pthis				The "this" pointer, cast to a void.  The victim.
-	 * @param other				Entity that's blocking.
-	 * @noreturn
-	 */
-	void Execute(void *pthis, int points, int allowneg);
-
-	/**
-	 * The hook that is directly called by the trampoline.
-	 *
-	 * @param id				The index of the hook to call.
-	 * @param pthis				The "this" pointer. 
-	 */
-	static HAM_CDECL void EntryPoint(int id,void *pthis,int points,int allownegative);
-};
-class VTableAddPointsToTeam : public VTableEntryBase
-{
-public:
-	static unsigned int				*pevoffset;	/**< Offset of pev value (globally stored) */
-	static unsigned int				*pevset;		/**< Whether or not pev entry has been set */
-	static unsigned int				 *baseoffset;	/**< Offset of the base class (only needed for GCC 2.95). */
-	static unsigned int				 *baseset;		/**< Whether or base offset value has been set. */
-	static unsigned int				  index;		/**< This entry's virtual table index. */
-	static unsigned int				  indexset;		/**< Whether or not this entry's virtual table index has been set. */
-
-	/**
-	 * Initialize this table hook. This also registers our required keyvalue suffixes to the file parser.
-	 *
-	 * @param poffset			Pointer to an integer that stores the pev offset for this mod.
-	 * @param pset				Pointer to an integer that tells whether pev offset was set or not.
-	 * @param baseoffs			Pointer to an integer that stores the class base offset for this mod. (GCC 2.95 only required)
-	 * @param baseset			Pointer to an integer that tells whether class base offset has been set.
-	 * @noreturn
-	 */
-	static void Initialize(unsigned int *poffset, unsigned int *pset, unsigned int *baseoffs, unsigned int *baseset);
-
-	/**
-	 * Called when one of this table entry's keyvalues is caught in a config file.
-	 *
-	 * @param key				The keyvalue suffix ("<mod>_<os>_" is removed)
-	 * @param data				The data this keyvalue is set to.
-	 * @noreturn
-	 */
-	static void KeyValue(const char *key, const char *data);
-
-	/**
-	 * Called immediately after the config file is done being parsed.  Register our natives here.
-	 *
-	 * @noreturn
-	 */
-	static void ConfigDone(void);
-
-	/**
-	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
-	 * 
-	 * @param amx				The AMX structure for the plugin.
-	 * @param params			The parameters passed from the plugin.
-	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
-	 */
-	static cell RegisterNative(AMX *amx, cell *params);
-
-	/**
-	 * A plugin is registering this entry's virtual hook.  This is a normal native callback.
-	 * 
-	 * @param amx				The AMX structure for the plugin.
-	 * @param params			The parameters passed from the plugin.
-	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
-	 */
-	static cell RegisterIDNative(AMX *amx, cell *params);
-
-	/**
-	 * A plugin is requesting a direct call of this entry's virtual function.  This is a normal native callback.
-	 *
-	 * @param amx				The AMX structure for the plugin.
-	 * @param params			The parameters passed from the plugin.
-	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
-	 */
-	static cell NativeCall(AMX *amx, cell *params);
-
-	/**
-	 * A plugin is requesting a direct call of this entry's virtual function, and will be exposed to all hooks.  This is a normal native callback.
-	 *
-	 * @param amx				The AMX structure for the plugin.
-	 * @param params			The parameters passed from the plugin.
-	 * @return					1 on success, 0 on failure.  It only fails if the callback function is not found.
-	 */
-	static cell ENativeCall(AMX *amx, cell *params);
-
-	/**
-	 * Hook this entry's function!  This creates our trampoline and modifies the virtual table.
-	 *
-	 * @param manager			The VTableManager this is a child of.
-	 * @param vtable			The virtual table we're molesting.
-	 * @param outtrampoline		The trampoline that was created.
-	 * @param origfunc			The original function that was hooked.
-	 * @noreturn
-	 */
-	static void CreateHook(VTableManager *manager, void **vtable, int id, void **outtrampoline, void **origfunc);
-
-	/**
-	 * Checks if the virtual function is already being hooked or not.  If it's not, it begins hooking it.  Either way it registers a forward and adds it to our vector.
-	 *
-	 * @param manager			The VTableManager this is a child of.
-	 * @param vtable			The virtual table we're molesting.
-	 * @param plugin			The plugin that's requesting this.
-	 * @param funcid			The function id of the callback.
-	 * @noreturn
-	 */
-	static void Hook(VTableManager *manager, void **vtable, AMX *plugin, int funcid, int post);	
-
-	/**
-	 * Execute the command.  This is called directly from our global hook function.
-	 *
-	 * @param pthis				The "this" pointer, cast to a void.  The victim.
-	 * @param other				Entity that's blocking.
-	 * @noreturn
-	 */
-	void Execute(void *pthis, int points, int allowneg);
-
-	/**
-	 * The hook that is directly called by the trampoline.
-	 *
-	 * @param id				The index of the hook to call.
-	 * @param pthis				The "this" pointer. 
-	 */
-	static HAM_CDECL void EntryPoint(int id,void *pthis,int points,int allownegative);
-};
 
 //TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecDir, TraceResult *ptr, int bitsDamageType);
 /*class VTableTraceAttack : public VTableEntryBase

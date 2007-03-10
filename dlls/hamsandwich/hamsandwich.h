@@ -47,6 +47,22 @@ enum HAMHooks
 	HAM_Respawn,
 	HAM_Restart,
 	HAM_TakeHealth,
+	HAM_AddPlayerItem,
+	HAM_RemovePlayerItem,
+	HAM_BloodColor,
+	HAM_Classify,
+	HAM_GetToggleState,
+	HAM_IsAlive,
+	HAM_IsBSPModel,
+	HAM_IsInWorld,
+	HAM_IsMoving,
+	HAM_IsNetClient,
+	HAM_IsPlayer,
+	HAM_IsSneaking,
+	HAM_ObjectCaps,
+	HAM_Think,
+	HAM_Touch,
+
 
 	HAM_END_DONT_USE_ME
 };

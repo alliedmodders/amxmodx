@@ -107,6 +107,22 @@ void HAM_CallInitialization(void)
 	VTINIT(Restart);
 	VTINIT(AddPoints);
 	VTINIT(AddPointsToTeam);
+	VTINIT(AddPlayerItem);
+	VTINIT(RemovePlayerItem);
+	VTINIT(BloodColor);
+	VTINIT(Classify);
+	VTINIT(GetToggleState);
+	VTINIT(IsAlive);
+	VTINIT(IsBSPModel);
+	VTINIT(IsInWorld);
+	VTINIT(IsMoving);
+	VTINIT(IsNetClient);
+	VTINIT(IsPlayer);
+	VTINIT(IsSneaking);
+	VTINIT(ObjectCaps);
+	VTINIT(Think);
+	VTINIT(Touch);
+
 
 #undef VTINIT
 }

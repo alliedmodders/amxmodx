@@ -16,114 +16,74 @@
 	#include <amxmodx>
 #endif
 
-/**
- * Ham Sandwich general usage
- * -
- * Mods supported:
- *   cs:
- *      * 1.6 - legimate, most up to date version
- *         * linux 32bit and windows
- *      * czero - legimate, most up to date version
- *         * linux 32bit and windows
- *         * czero untested, theoretically it should work
- *   dod:
- *      * whatever the most up to date legitimate version is (1.3?)
- *         * linux and windows
- *         * windows untested, should work
- *   tfc:
- *      * whatever most up to date legitimate version is
- *         * linux and windows
- *         * windows untested, should work
- *   ns:
- *      * 3.2 beta 2
- *         * linux and windows
- *         * windows untested, should work
- *   ts:
- *      * 2.1
- *         * linux and windows
- *         * windows untested, should work
- *   sven:
- *     * 3.0
- *         * windows
- *         * windows untested, should work
- * -
- * The module will automatically use the relevant function depending
- * on what game mod is loaded.  You only have to tell it to do the damage.
- * -
- * Be VERY VERY careful.  I check _NO_ bounds in any of the natives
- * Also, these call the game's private function, and I do not have
- * the time nor desire to figure out the quirks of each mod's function
- * -
- * The USE natives haven't been tested yet, but should work!
- * -
- * The only mod I tested the windows version of takedamage
- * for was cs 1.6.  It's much easier for me to test linux.
- */
+native ham_addplayeritem(idPlayer,idItem);
+native ham_eaddplayeritem(idPlayer,idItem);
 
-/** 
- * Calls the mod's private damage routine.
- * -
- * parameters:
- *        id: index of the entity that is to be damaged
- *
- * inflictor: the entity that is "doing the damage" (eg a weapon)
- *
- *  attacker: the entity who controls the inflictor (eg weapon holder)
- *
- *    damage: how much damage to do to the victim
- *
- *      type: bitmask of damage flags.  Most mods do not
- *            follow the standard HLSDK damage flags, so
- *            you may have to do some testing!
- *            The only flags I figured out were CS related:
- *               * (1<<6)  = no slowdown on damage
- *               * (1<<13) = always gib
- *               * (1<<12) = never gib
- *
- * -
- * Note: Setting damage to a ridiculously high value can mess up
- *       some mods!
- */
-native hs_takedamage(id,inflictor,attacker,Float:damage,type);
-native hs_etakedamage(id,inflictor,attacker,Float:damage,type);
+native ham_addpoints(idEntity,points,bool:allownegative);
+native ham_eaddpoints(idEntity,points,bool:allownegative);
 
+native ham_addpointstoteam(idEntity,points,bool:allownegative);
+native ham_eaddpointstoteam(idEntity,points,bool:allownegative);
 
-/** 
- * Calls the mod's private use routine.
- * -
- * parameters:
- *        id: index of the entity that is to be used
- *
- * activator: the entity that is "doing the use" (eg a trigger_multiple)
- *
- *    caller: the entity who controls the activator (eg the player who trigger the trigger_multiple)
- *
- *  use_type: how to use the entity
- *            TYPICAL settings in HLSDK are:
- *            0 = USE_OFF    - turns the object "off"
- *            1 = USE_ON     - turns the object "on"
- *            2 = USE_SET    - sets the object use state (uses the value flag)
- *            3 = USE_TOGGLE - toggles the state (from on->off and off->on)
- *
- * use_value: set when USE_SET is invoked
- *            TYPICALLY USE_SET is only used for players using an object
- *            when he begins using it, the use_value is set to 1.0
- *            when he's done using it, the use_value is set to 0.0
- *
- * -
- * NOTE: This native was not tested at all beyond theory tests!
- */
-native hs_use(id,activator,caller,use_type,Float:use_value);
-native hs_euse(id,activator,caller,use_type,Float:use_value);
+native ham_blocked(idEntity,idOther);
+native ham_eblocked(idEntity,idOther);
 
-native hs_killed(id,attacker,gib);
-native hs_ekilled(id,attacker,gib);
-native hs_blocked(id,other);
-native hs_eblocked(id,other);
-native hs_respawn(id);
-native hs_erespawn(id);
-native hs_restart(id);
-native hs_erestart(id);
+native ham_bloodcolor(idEntity);
+native ham_ebloodcolor(idEntity);
+
+native ham_classify(idEntity);
+native ham_eclassify(idEntity);
+
+native ham_gettogglestate(idEntity);
+native ham_egettogglestate(idEntity);
+
+native ham_isalive(idEntity);
+native ham_eisalive(idEntity);
+
+native ham_isbspmodel(idEntity);
+native ham_eisbspmodel(idEntity);
+
+native ham_isinworld(idEntity);
+native ham_eisinworld(idEntity);
+
+native ham_isnetclient(idEntity);
+native ham_eisnetclient(idEntity);
+
+native ham_isplayer(idEntity);
+native ham_eisplayer(idEntity);
+
+native ham_issneaking(idEntity);
+native ham_eissneaking(idEntity);
+
+native ham_killed(idEntity,idAttacker,iGib);
+native ham_ekilled(idEntity,idAttacker,iGib);
+
+native ham_objectcaps(idEntity);
+native ham_eobjectcaps(idEntity);
+
+native ham_removeplayeritem(idEntity,idItem);
+native ham_eremoveplayeritem(idEntity,idItem);
+
+native ham_respawn(idEntity);
+native ham_erespawn(idEntity);
+
+native ham_restart(idEntity);
+native ham_erestart(idEntity);
+
+native ham_takedamage(idEntity,idInflictor,idAttacker,Float:damage,dmgtype);
+native ham_etakedamage(idEntity,idInflictor,idAttacker,Float:damage,dmgtype);
+
+native ham_takehealth(idEntity,Float:health,dmgtype);
+native ham_etakehealth(idEntity,Float:health,dmgtype);
+
+native ham_think(idEntity);
+native ham_ethink(idEntity);
+
+native ham_touch(idEntity,idOther);
+native ham_etouch(idEntity,idOther);
+
+native ham_use(idEntity,idActivator,idCaller,use_type,Float:value);
+native ham_euse(idEntity,idActivator,idCaller,use_type,Float:value);
 
 
 
@@ -136,34 +96,6 @@ enum
 	HAM_SUPERCEDE
 };
 
-/**
- * Forwards all takedamage routines that would occur to the given
- * classname to the public provided.
- *
- * Parameters are:
- * function(IDVictim, IDInflictor, IDAttacker, Float:Damage, DamageType)
- *
- * Note: For now, this will also intercept calls to hs_takedamage
- *       that is very likely to change shortly in the future.
- */
-native register_takedamage(const classname[], const function[], post=0);
-
-/**
- * Forwards all use routines that would occur to the given
- * classname to the public provided.
- *
- * Parameters are:
- * function(IDUsed, IDActivator, IDCaller, UseType, Float:UseValue)
- *
- * Note: For now, this will also intercept calls to hs_use
- *       that is very likely to change shortly in the future.
- */
-native register_use(const classname[], const function[], post=0);
-
-native register_killed(const classname[], const function[], post=0);
-native register_blocked(const classname[], const function[], post=0);
-native hs_register_respawn(const classname[], const function[], post=0);
-native hs_register_restart(const classname[], const function[],  post=0);
 
 
 enum HAMHooks
@@ -177,11 +109,28 @@ enum HAMHooks
 	HAM_Respawn,
 	HAM_Restart,
 	HAM_TakeHealth,
+	HAM_AddPlayerItem,
+	HAM_RemovePlayerItem,
+	HAM_BloodColor,
+	HAM_Classify,
+	HAM_GetToggleState,
+	HAM_IsAlive,
+	HAM_IsBSPModel,
+	HAM_IsInWorld,
+	HAM_IsMoving,
+	HAM_IsNetClient,
+	HAM_IsPlayer,
+	HAM_IsSneaking,
+	HAM_ObjectCaps,
+	HAM_Think,
+	HAM_Touch,
+
 
 	HAM_END_DONT_USE_ME
 };
 
 native ham_register(HAMHooks:hook, const classname[], const function[], post=0);
+
 public __fatal_ham_error(const reason[])
 {
 	set_fail_state(reason);

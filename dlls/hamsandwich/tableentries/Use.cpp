@@ -15,8 +15,8 @@
 #define ThisEntries	UseEntries
 
 #define ThisKey			"use"
-#define ThisNative		"hs_use"
-#define ThisENative		"hs_euse"
+#define ThisNative		"ham_use"
+#define ThisENative		"ham_euse"
 #define ThisRegisterID	HAM_Use
 #define ThisParamCount	4
 #define ThisVoidCall	1
@@ -119,7 +119,6 @@ cell ThisVTable::RegisterNative(AMX *amx, cell *params)
 		cell tempparams[4];
 		memcpy(tempparams,params,sizeof(cell)*4);
 		tempparams[1]=ENTINDEX_NEW(Entity);
-		printf("TEMPPARAMS[1]==%d\n",tempparams[1]);
 		ThisVTable::RegisterIDNative(amx,&tempparams[0]);
 		REMOVE_ENTITY(Entity);
 		return 1;
@@ -153,7 +152,6 @@ cell ThisVTable::RegisterIDNative(AMX *amx, cell *params)
 		MF_LogError(amx,AMX_ERR_NATIVE,"Can not find function \"%s\"",function);
 		return 0;
 	}
-	printf("PARAMS[1]==%d\n",params[1]);
 	edict_t *Entity=INDEXENT_NEW(params[1]);
 
 	if (Entity->pvPrivateData)
@@ -377,5 +375,5 @@ void ThisVTable::Execute(void *pthis, void *activator, void *caller, int type, f
 };
 HAM_CDECL void ThisVTable::EntryPoint(int id,void *pthis,void *activator,void *caller,int type,float value)
 {
-	VTMan.UseEntries[id]->Execute(pthis,activator,caller,type,value);
+	VTMan.ThisEntries[id]->Execute(pthis,activator,caller,type,value);
 }

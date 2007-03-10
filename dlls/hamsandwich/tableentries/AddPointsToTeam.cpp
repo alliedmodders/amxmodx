@@ -14,8 +14,8 @@
 #define ThisVTable		VTableAddPointsToTeam
 #define ThisEntries		AddPointsToTeamEntries
 #define ThisKey			"addpointstoteam"
-#define ThisNative		"hs_addpointstoteam"
-#define ThisENative		"hs_eaddpointstoteam"
+#define ThisNative		"ham_addpointstoteam"
+#define ThisENative		"ham_eaddpointstoteam"
 #define ThisRegisterID	HAM_AddPointsToTeam
 #define ThisParamCount	2
 #define ThisVoidCall	1
@@ -358,5 +358,5 @@ void ThisVTable::Execute(void *pthis,int points, int allownegative)
 };
 HAM_CDECL void ThisVTable::EntryPoint(int id,void *pthis,int points,int allownegative)
 {
-	VTMan.AddPointsToTeamEntries[id]->Execute(pthis,points,allownegative);
+	VTMan.ThisEntries[id]->Execute(pthis,points,allownegative);
 }

@@ -15,8 +15,8 @@
 #define ThisEntries	BlockedEntries
 
 #define ThisKey			"blocked"
-#define ThisNative		"hs_blocked"
-#define ThisENative		"hs_eblocked"
+#define ThisNative		"ham_blocked"
+#define ThisENative		"ham_eblocked"
 #define ThisRegisterID	HAM_Blocked
 #define ThisParamCount	1
 #define ThisVoidCall	1
@@ -30,8 +30,8 @@ unsigned int	 ThisVTable::index=0;
 unsigned int	 ThisVTable::indexset=0;
 
 static AMX_NATIVE_INFO callnatives[] = {
-	{ "hs_blocked",				ThisVTable::NativeCall },
-	{ "hs_eblocked",			ThisVTable::ENativeCall },
+	{ ThisNative,				ThisVTable::NativeCall },
+	{ ThisENative,				ThisVTable::ENativeCall },
 	{ NULL,						NULL }
 };
 
@@ -57,7 +57,7 @@ void ThisVTable::Initialize(unsigned int *poffset, unsigned int *pset, unsigned 
 
 	RegisterConfigCallback(ThisVTable::ConfigDone);
 
-	RegisterKeySuffix("blocked",ThisVTable::KeyValue);
+	RegisterKeySuffix(ThisKey,ThisVTable::KeyValue);
 
 	RegisterThisRegisterName(ThisRegisterID,ThisKey);
 };
@@ -71,7 +71,7 @@ void ThisVTable::Initialize(unsigned int *poffset, unsigned int *pset, unsigned 
  */
 void ThisVTable::KeyValue(const char *key, const char *data)
 {
-	if (strcmp(key,"blocked")==0)
+	if (strcmp(key,ThisKey)==0)
 	{
 		ThisVTable::index=HAM_StrToNum(data);
 		ThisVTable::indexset=1;
@@ -248,8 +248,8 @@ void ThisVTable::CreateHook(VTableManager *manager, void **vtable, int id, void 
 		outtrampoline,
 		origfunc,
 		reinterpret_cast<void *>(ThisVTable::EntryPoint),
-		1,  // param count
-		1,  // voidcall
+		ThisParamCount,  // param count
+		ThisVoidCall,  // voidcall
 		1); // thiscall
 
 };
@@ -362,5 +362,5 @@ void ThisVTable::Execute(void *pthis, void *other)
 };
 HAM_CDECL void ThisVTable::EntryPoint(int id,void *pthis,void *other)
 {
-	VTMan.BlockedEntries[id]->Execute(pthis,other);
+	VTMan.ThisEntries[id]->Execute(pthis,other);
 }

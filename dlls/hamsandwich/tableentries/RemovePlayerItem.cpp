@@ -11,14 +11,15 @@
 #include "NEW_Util.h"
 
 // Change these on a per-hook basis! Auto-changes all the annoying fields in the following functions
-#define ThisVTable		VTableAddPoints
-#define ThisEntries		AddPointsEntries
-#define ThisKey			"addpoints"
-#define ThisNative		"ham_addpoints"
-#define ThisENative		"ham_eaddpoints"
-#define ThisRegisterID	HAM_AddPoints
-#define ThisParamCount	0
-#define ThisVoidCall	1
+#define ThisVTable  VTableRemovePlayerItem
+#define ThisEntries	RemovePlayerItemEntries
+
+#define ThisKey			"removeplayeritem"
+#define ThisNative		"ham_removeplayeritem"
+#define ThisENative		"ham_eremoveplayeritem"
+#define ThisRegisterID	HAM_RemovePlayerItem
+#define ThisParamCount	1
+#define ThisVoidCall	0
 
 unsigned int	*ThisVTable::pevoffset=NULL;
 unsigned int	*ThisVTable::pevset=NULL;
@@ -89,8 +90,8 @@ void ThisVTable::ConfigDone(void)
 
 		if (*(ThisVTable::pevset))
 		{
+			//MF_AddNatives(registernatives);
 			RegisterThisRegister(ThisRegisterID,ThisVTable::RegisterNative,ThisVTable::RegisterIDNative);
-			return;
 		}
 	}
 };
@@ -124,9 +125,10 @@ cell ThisVTable::RegisterNative(AMX *amx, cell *params)
 	}
 
 	REMOVE_ENTITY(Entity);
+
+	char *function=MF_GetAmxString(amx,params[2],0,NULL);
 	// class was not found
 	// throw an error alerting console that this hook did not happen
-	char *function=MF_GetAmxString(amx,params[2],0,NULL);
 	MF_LogError(amx, AMX_ERR_NATIVE,"Failed to retrieve classtype for \"%s\", hook for \"%s\" not active.",classname,function);
 	
 	return 0;
@@ -195,20 +197,17 @@ cell ThisVTable::NativeCall(AMX *amx, cell *params)
 	}
 	// TODO: Inline ASM this
 #ifdef _WIN32
-	reinterpret_cast<void (__fastcall *)(void *,int,int,int)>(func)(
+	return reinterpret_cast<int (__fastcall *)(void *,int,void *)>(func)(
 		pthis,											/*this*/
 		0,												/*fastcall buffer*/
-		params[2],
-		params[3]
+		INDEXENT_NEW(params[2])->pvPrivateData			/*item*/
 		);
 #else
-	reinterpret_cast<void (*)(void *,int,int)>(func)(
+	return reinterpret_cast<int (*)(void *,void *)>(func)(
 		pthis,											/*this*/
-		params[2],
-		params[3]
+		INDEXENT_NEW(params[2])->pvPrivateData			/*item*/
 		);
 #endif
-	return 0;
 };
 
 /**
@@ -220,14 +219,12 @@ cell ThisVTable::NativeCall(AMX *amx, cell *params)
  */
 cell ThisVTable::ENativeCall(AMX *amx, cell *params)
 {
-	VoidVCall2(
+	return VCall1<int>(
 		INDEXENT_NEW(params[1])->pvPrivateData, /*this*/
 		ThisVTable::index,						/*vtable entry*/
 		*(ThisVTable::baseoffset),				/*size of class*/
-		params[2],
-		params[3]
-		);
-	return 1;
+		INDEXENT_NEW(params[3])->pvPrivateData	/*item*/
+	);
 };
 
 /**
@@ -270,7 +267,7 @@ void ThisVTable::Hook(VTableManager *manager, void **vtable, AMX *plugin, int fu
 
 	int i=0;
 	int end=manager->ThisEntries.size();
-	int fwd=MF_RegisterSPForward(plugin,funcid,FP_CELL/*this*/,FP_CELL,FP_CELL,FP_DONE);
+	int fwd=MF_RegisterSPForward(plugin,funcid,FP_CELL/*this*/,FP_CELL/*item*/,FP_DONE);
 	while (i<end)
 	{
 		if (manager->ThisEntries[i]->IsTrampoline(ptr))
@@ -316,9 +313,13 @@ void ThisVTable::Hook(VTableManager *manager, void **vtable, AMX *plugin, int fu
  * Execute the command.  This is called directly from our global hook function.
  *
  * @param pthis				The "this" pointer, cast to a void.  The victim.
+ * @param inflictor			Damage inflictor.
+ * @param attacker			The attacker who caused the inflictor to damage the victim.
+ * @param damage			How much damage was caused.
+ * @param type				Damage type (usually in bitmask form).
  * @return					Unsure.  Does not appear to be used.
  */
-void ThisVTable::Execute(void *pthis,int points, int allownegative)
+int ThisVTable::Execute(void *pthis, void *item)
 {
 	int i=0;
 
@@ -328,36 +329,43 @@ void ThisVTable::Execute(void *pthis,int points, int allownegative)
 	int thisresult=HAM_UNSET;
 
 	int iThis=PrivateToIndex(pthis);
+	int iItem=PrivateToIndex(item);
 
 	while (i<end)
 	{
-		thisresult=MF_ExecuteForward(Forwards[i++],iThis,points,allownegative);
+		thisresult=MF_ExecuteForward(Forwards[i++],iThis,item);
 
 		if (thisresult>result)
 		{
 			result=thisresult;
 		}
 	};
+	int ireturn=0;
 
 	if (result<HAM_SUPERCEDE)
 	{
 #if defined _WIN32
-		reinterpret_cast<void (__fastcall *)(void *,int,int,int)>(function)(pthis,0,points,allownegative);
+		ireturn=reinterpret_cast<int (__fastcall *)(void *,int,void *)>(function)(pthis,0,item);
 #elif defined __linux__
-		reinterpret_cast<void (*)(void *,int,int)>(function)(pthis,points,allownegative);
+		ireturn=reinterpret_cast<int (*)(void *,void *)>(function)(pthis,item);
 #endif
 	}
 
 	i=0;
-	end=PostForwards.size();
 
+	end=PostForwards.size();
 	while (i<end)
 	{
-		MF_ExecuteForward(PostForwards[i++],iThis,points,allownegative);
+		MF_ExecuteForward(PostForwards[i++],iThis,iItem);
 	}
 
+
+	if (result!=HAM_OVERRIDE)
+		return ireturn;
+
+	return 0;
 };
-HAM_CDECL void ThisVTable::EntryPoint(int id,void *pthis,int points,int allownegative)
+HAM_CDECL int ThisVTable::EntryPoint(int id,void *pthis,void *item)
 {
-	VTMan.ThisEntries[id]->Execute(pthis,points,allownegative);
+	return VTMan.ThisEntries[id]->Execute(pthis,item);
 }

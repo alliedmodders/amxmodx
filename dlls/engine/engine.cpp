@@ -830,6 +830,7 @@ static cell AMX_NATIVE_CALL in_view_cone(AMX *amx, cell *params)
 
 	flDot = DotProduct(vecLOS, vecForward);
 
+	// Dividing fov by two and then converting it to radians - don't ask about this ever again, please :\
 	if (flDot >= cos(pEdictSrc->v.fov * (M_PI / 360)))
 		return 1;
 	else

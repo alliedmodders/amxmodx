@@ -44,6 +44,8 @@
 	#define	vsnprintf	_vsnprintf
 #endif
 
+#include "svn_version.h"
+
 CLog::CLog()
 {
 	m_LogType = 0;
@@ -118,7 +120,7 @@ void CLog::CreateNewFile()
 		ALERT(at_logged, "[AMXX] Unexpected fatal logging error. AMXX Logging disabled.\n");
 		SET_LOCALINFO("amxx_logging", "0");
 	} else {
-		fprintf(fp, "AMX Mod X log file started (file \"%s/L%02d%02d%03d.log\") (version \"%s\")\n", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday, i, AMX_VERSION);
+		fprintf(fp, "AMX Mod X log file started (file \"%s/L%02d%02d%03d.log\") (version \"%s\")\n", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday, i, SVN_VERSION_STRING);
 		fclose(fp);
 	}
 }

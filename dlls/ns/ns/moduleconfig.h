@@ -3,9 +3,11 @@
 #ifndef __MODULECONFIG_H__
 #define __MODULECONFIG_H__
 
+#include "svn_version.h"
+
 // Module info
 #define MODULE_NAME "NS"
-#define MODULE_VERSION "1.76d"
+#define MODULE_VERSION SVN_VERSION
 #define MODULE_AUTHOR "Steve Dudenhoeffer"
 #define MODULE_URL "http://www.amxmodx.org/"
 #define MODULE_LOGTAG "NS"

@@ -1,0 +1,94 @@
+[PRODUCT]
+major = 1
+minor = 8
+revision = 0
+
+[core]
+folder = amxmodx
+in = svn_version.tpl
+out = svn_version.h
+
+[plugins]
+folder = plugins/include
+in = svn_version.tpl
+out = svn_version.inc
+
+[cstrike]
+folder = dlls/cstrike
+in = svn_version.tpl
+out = svn_version.h
+
+[csx]
+folder = dlls/csx/source
+in = svn_version.tpl
+out = svn_version.h
+
+[dodfun]
+folder = dlls/dod2/dodfun
+in = svn_version.tpl
+out = svn_version.h
+
+[dodx]
+folder = dlls/dod2/dodx
+in = svn_version.tpl
+out = svn_version.h
+
+[engine]
+folder = dlls/engine
+in = svn_version.tpl
+out = svn_version.h
+
+[fakemeta]
+folder = dlls/fakemeta/sdk
+in = svn_version.tpl
+out = svn_version.h
+
+[fun]
+folder = dlls/fun
+in = svn_version.tpl
+out = svn_version.h
+
+[geoip]
+folder = dlls/geoip
+in = svn_version.tpl
+out = svn_version.h
+
+[mysqlx]
+folder = dlls/mysqlx/sdk
+in = svn_version.tpl
+out = svn_version.h
+
+[ns]
+folder = dlls/ns/ns
+in = svn_version.tpl
+out = svn_version.h
+
+[nvault]
+folder = dlls/nvault
+in = svn_version.tpl
+out = svn_version.h
+
+[regex]
+folder = dlls/regex
+in = svn_version.tpl
+out = svn_version.h
+
+[sockets]
+folder = dlls/sockets
+in = svn_version.tpl
+out = svn_version.h
+
+[sqlite]
+folder = dlls/sqlite/sdk
+in = svn_version.tpl
+out = svn_version.h
+
+[tfcx]
+folder = dlls/tfc/tfcx
+in = svn_version.tpl
+out = svn_version.h
+
+[tsx]
+folder = dlls/ts/tsx
+in = svn_version.tpl
+out = svn_version.h

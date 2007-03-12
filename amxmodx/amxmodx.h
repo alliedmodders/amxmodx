@@ -73,7 +73,6 @@
 
 #define AMXXLOG_Log g_log.Log
 #define AMXXLOG_Error g_log.LogError
-#define AMX_VERSION	"1.76d"
 
 extern AMX_NATIVE_INFO core_Natives[];
 extern AMX_NATIVE_INFO time_Natives[];

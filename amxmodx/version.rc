@@ -8,6 +8,7 @@
 // Generated from the TEXTINCLUDE 2 resource.
 //
 #include "winres.h"
+#include "svn_version.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -27,8 +28,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,7,6,3387
- PRODUCTVERSION 1,7,6,3387
+ FILEVERSION SVN_VERSION_DWORD
+ PRODUCTVERSION SVN_VERSION_DWORD
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -45,12 +46,12 @@ BEGIN
         BEGIN
             VALUE "Comments", "AMX Mod X"
             VALUE "FileDescription", "AMX Mod X"
-            VALUE "FileVersion", "1.76d"
+            VALUE "FileVersion", SVN_VERSION_STRING
             VALUE "InternalName", "amxmodx"
-            VALUE "LegalCopyright", "Copyright (c) 2004-2006, AMX Mod X Dev Team"
+            VALUE "LegalCopyright", "Copyright (c) 2004-2007, AMX Mod X Dev Team"
             VALUE "OriginalFilename", "amxmodx_mm.dll"
             VALUE "ProductName", "AMX Mod X"
-            VALUE "ProductVersion", "1.76d"
+            VALUE "ProductVersion", SVN_VERSION_PRODUCT
         END
     END
     BLOCK "VarFileInfo"

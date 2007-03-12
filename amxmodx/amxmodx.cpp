@@ -37,6 +37,7 @@
 #include "libraries.h"
 #include "CFlagManager.h"
 #include "nongpl_matches.h"
+#include "svn_version.h"
 
 extern CFlagManager FlagMan;
 CVector<CAdminData *> DynamicAdmins;
@@ -593,7 +594,7 @@ static cell AMX_NATIVE_CALL is_user_alive(AMX *amx, cell *params) /* 1 param */
 
 static cell AMX_NATIVE_CALL get_amxx_verstring(AMX *amx, cell *params) /* 2 params */
 {
-	return set_amxstring(amx, params[1], AMX_VERSION, params[2]);
+	return set_amxstring(amx, params[1], SVN_VERSION_STRING, params[2]);
 }
 
 static cell AMX_NATIVE_CALL get_user_frags(AMX *amx, cell *params) /* 1 param */

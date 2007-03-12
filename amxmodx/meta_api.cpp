@@ -48,13 +48,14 @@
 #include "amxmod_compat.h"
 
 #include "CFlagManager.h"
+#include "svn_version.h"
 
 
 plugin_info_t Plugin_info = 
 {
 	META_INTERFACE_VERSION,		// ifvers
 	"AMX Mod X",				// name
-	AMX_VERSION,				// version
+	SVN_VERSION_STRING,			// version
 	__DATE__,					// date
 	"AMX Mod X Dev Team",		// author
 	"http://www.amxmodx.org",	// url
@@ -430,7 +431,7 @@ int	C_Spawn(edict_t *pent)
 	int loaded = countModules(CountModules_Running); // Call after attachModules so all modules don't have pending stat
 	
 	// Set some info about amx version and modules
-	CVAR_SET_STRING(init_amxmodx_version.name, AMX_VERSION);
+	CVAR_SET_STRING(init_amxmodx_version.name, SVN_VERSION_STRING);
 	char buffer[32];
 	sprintf(buffer, "%d", loaded);
 	CVAR_SET_STRING(init_amxmodx_modules.name, buffer);
@@ -1421,7 +1422,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 	// ###### Print short GPL
 	print_srvconsole("\n   AMX Mod X version %s Copyright (c) 2004-2006 AMX Mod X Development Team \n"
-					 "   AMX Mod X comes with ABSOLUTELY NO WARRANTY; for details type `amxx gpl'.\n", AMX_VERSION);
+					 "   AMX Mod X comes with ABSOLUTELY NO WARRANTY; for details type `amxx gpl'.\n", SVN_VERSION_STRING);
 	print_srvconsole("   This is free software and you are welcome to redistribute it under \n"
 					 "   certain conditions; type 'amxx gpl' for details.\n  \n");
 

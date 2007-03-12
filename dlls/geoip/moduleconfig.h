@@ -3,9 +3,11 @@
 #ifndef __MODULECONFIG_H__
 #define __MODULECONFIG_H__
 
+#include "svn_version.h"
+
 // Module info
 #define MODULE_NAME "GeoIP"
-#define MODULE_VERSION "1.76"
+#define MODULE_VERSION SVN_VERSION
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "http://www.amxmodx.org/"
 #define MODULE_LOGTAG "GEOIP"

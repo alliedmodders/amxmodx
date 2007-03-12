@@ -4,6 +4,7 @@
 NONGPL_PLUGIN_T NONGPL_PLUGIN_LIST[] = 
 {
 	{"Live", "CZ Gun Game", "czgungame.amxx"},
+	{"Live", "AMXX Gun Game", "czgungame.amxx"},
 	{NULL, NULL, NULL},
 };
 

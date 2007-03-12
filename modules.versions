@@ -92,3 +92,8 @@ out = svn_version.h
 folder = dlls/ts/tsx
 in = svn_version.tpl
 out = svn_version.h
+
+[tsfun]
+folder = dlls/ts/tsfun
+in = svn_version.tpl
+out = svn_version.h

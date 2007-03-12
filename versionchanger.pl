@@ -9,6 +9,7 @@ our %arguments =
 	'build' => undef,
 	'svnrev' => 'global',
 	'path' => '',
+	'modules' => '',
 );
 
 my $arg;
@@ -17,6 +18,20 @@ foreach $arg (@ARGV)
 	$arg =~ s/--//;
 	@arg = split(/=/, $arg);
 	$arguments{$arg[0]} = $arg[1];
+}
+
+our (%allowed);
+if ($arguments{'modules'} ne "")
+{
+	my @l = split(/,/, $arguments{'modules'});
+	my $i;
+	
+	for ($i=0; $i<=$#l; $i++)
+	{
+		$allowed{$l[$i]} = 1;
+	}
+} else {
+	$allowed{'*'} = 1;
 }
 
 #Set up path info
@@ -102,6 +117,10 @@ while ( ($cur_module, $mod_i) = each(%modules) )
 	{
 		next;
 	}
+	if (!$allowed{'*'} && !$allowed{$cur_module})
+	{
+		next;
+	}
 	#Prepare path
 	my %mod = %{$mod_i};
 	my $infile = $mod{'in'};
@@ -163,3 +182,4 @@ sub GetRevision
 	}
 	return $rev;
 }
+

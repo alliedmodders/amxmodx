@@ -23,7 +23,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="..\sdk"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;SVENCOOP_EXPORTS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="5"
@@ -89,7 +89,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="..\sdk"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;SVENCOOP_EXPORTS"
 				StringPooling="TRUE"
 				RuntimeLibrary="4"
@@ -182,25 +182,35 @@
 			Name="Module SDK"
 			Filter="">
 			<File
-				RelativePath="..\moduleconfig.h">
+				RelativePath="..\sdk\moduleconfig.h">
 			</File>
-			<Filter
-				Name="SDK Base"
-				Filter="">
-				<File
-					RelativePath="..\amxxmodule.cpp">
-				</File>
-				<File
-					RelativePath="..\amxxmodule.h">
-				</File>
-			</Filter>
 			<Filter
 				Name="AMXX STL"
 				Filter="">
 				<File
-					RelativePath="..\CString.h">
+					RelativePath="..\sdk\CString.h">
 				</File>
 			</Filter>
+			<Filter
+				Name="SDK Base"
+				Filter="">
+				<File
+					RelativePath="..\sdk\amxxmodule.cpp">
+				</File>
+				<File
+					RelativePath="..\sdk\amxxmodule.h">
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Pawn Includes"
+			Filter="">
+			<File
+				RelativePath="..\svencoop.inc">
+			</File>
+			<File
+				RelativePath="..\svencoop_const.inc">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

@@ -6,14 +6,13 @@ EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
-		Profile = Profile
 		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
 		{AB148B92-4F47-42E6-8268-AB4E588EC6A2}.Debug.ActiveCfg = Debug|Win32
 		{AB148B92-4F47-42E6-8268-AB4E588EC6A2}.Debug.Build.0 = Debug|Win32
-		{AB148B92-4F47-42E6-8268-AB4E588EC6A2}.Profile.ActiveCfg = Release|Win32
-		{AB148B92-4F47-42E6-8268-AB4E588EC6A2}.Profile.Build.0 = Release|Win32
 		{AB148B92-4F47-42E6-8268-AB4E588EC6A2}.Release.ActiveCfg = Release|Win32
 		{AB148B92-4F47-42E6-8268-AB4E588EC6A2}.Release.Build.0 = Release|Win32
 	EndGlobalSection

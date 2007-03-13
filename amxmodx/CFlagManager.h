@@ -168,7 +168,6 @@ public:
 	};
 	~CFlagManager()
 	{
-		WriteCommands();
 	};
 
 	/**

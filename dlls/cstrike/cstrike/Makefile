@@ -1,8 +1,8 @@
 #(C)2004-2005 AMX Mod X Development Team
 # Makefile written by David "BAILOPAN" Anderson
 
-HLSDK = ../../../hlsdk
-MM_ROOT = ../../metamod/metamod
+HLSDK = ../../../../hlsdk
+MM_ROOT = ../../../metamod/metamod
 
 ### EDIT BELOW FOR OTHER PROJECTS ###
 

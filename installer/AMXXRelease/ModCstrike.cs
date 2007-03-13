@@ -48,7 +48,10 @@ namespace AMXXRelease
 		private void AddModules()
 		{
 			Module csx = new Module("csx");
+			csx.sourcedir = "dlls\\cstrike\\csx";
+
 			Module cstrike = new Module("cstrike");
+			cstrike.sourcedir = "dlls\\cstrike\\cstrike";
 
 			m_Modules.Add(csx);
 			m_Modules.Add(cstrike);

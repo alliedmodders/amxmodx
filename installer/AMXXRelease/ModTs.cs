@@ -27,15 +27,11 @@ namespace AMXXRelease
 
 		private void AddModules()
 		{
-			Module tsx = new Module();
+			Module tsx = new Module("tsx");
 			tsx.sourcedir = "dlls\\ts\\tsx";
-			tsx.projname = "tsx_amxx";
-			tsx.vcproj = "tsx";
 
-			Module tsfun = new Module();
+			Module tsfun = new Module("tsfun");
 			tsfun.sourcedir = "dlls\\ts\\tsfun";
-			tsfun.projname = "tsfun_amxx";
-			tsfun.vcproj = "tsfun";
 
 			m_Modules.Add(tsx);
 			m_Modules.Add(tsfun);

@@ -29,15 +29,11 @@ namespace AMXXRelease
 
 		private void AddModules()
 		{
-			Module dodx = new Module();
-			dodx.sourcedir = "dlls\\dod2\\dodx";
-			dodx.projname = "dodx_amxx";
-			dodx.vcproj = "dodx";
+			Module dodx = new Module("dodx");
+			dodx.sourcedir = "dlls\\dod\\dodx";
 
-			Module dodfun = new Module();
-			dodfun.sourcedir = "dlls\\dod2\\dodfun";
-			dodfun.projname = "dodfun_amxx";
-			dodfun.vcproj = "dodfun";
+			Module dodfun = new Module("dodfun");
+			dodfun.sourcedir = "dlls\\dod\\dodfun";
 
 			m_Modules.Add(dodx);
 			m_Modules.Add(dodfun);

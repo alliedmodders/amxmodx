@@ -37,7 +37,7 @@ namespace AMXXRelease
 			if ((int)System.Environment.OSVersion.Platform == 128)
 			{
 			} else {
-				File.Copy(source + "\\dlls\\csx\\WinCSX\\Release\\WinCSX.exe",
+				File.Copy(source + "\\dlls\\cstrike\\csx\\WinCSX\\Release\\WinCSX.exe",
 					  basedir + "\\data\\WinCSX.exe",
 					  true);
 			}

@@ -34,7 +34,6 @@ namespace AMXXRelease
 				if (!BuildMod(mod))
 				{
 					System.Console.WriteLine("Mod failed to build: " + mod.GetName());
-					return false;
 				}
 				CompressDir(
 					PropSlashes(m_Cfg.OutputPath() + "\\" + m_Cfg.GetReleaseName() + "-" + mod.GetName()), 

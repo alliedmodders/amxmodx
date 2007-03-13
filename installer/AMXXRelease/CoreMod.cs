@@ -43,6 +43,10 @@ namespace AMXXRelease
 			if ( ((ABuilder.GetFileName(file).CompareTo("sasm")) == 0) 
 				  && Releaser.IsWindows )
 				return true;
+			if (ABuilder.GetFileName(file).CompareTo("svn_version.tpl") == 0)
+			{
+				return true;
+			}
 
 			return base.ExcludeCopy(file);
 		}

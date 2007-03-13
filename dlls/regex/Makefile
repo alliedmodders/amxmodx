@@ -14,12 +14,12 @@ NAME = regex
 BIN_SUFFIX_32 = amxx_i386.so
 BIN_SUFFIX_64 = amxx_amd64.so
 
-OBJECTS = amxxmodule.cpp module.cpp CRegEx.cpp
+OBJECTS = sdk/amxxmodule.cpp module.cpp CRegEx.cpp
 
 LINK = -lpcre
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
-	-I$(MM_ROOT) -I$(HLSDK)/common
+	-I$(MM_ROOT) -I$(HLSDK)/common -Isdk
 
 GCC_VERSION := $(shell $(CPP) -dumpversion >&1 | cut -b1)
 
@@ -70,10 +70,11 @@ debug:
 default: all
 
 clean:
+	rm -rf Release/sdk/*.o
 	rm -rf Release/*.o
 	rm -rf Release/$(NAME)_$(BIN_SUFFIX_32)
 	rm -rf Release/$(NAME)_$(BIN_SUFFIX_64)
+	rm -rf Debug/sdk/*.o
 	rm -rf Debug/*.o
 	rm -rf Debug/$(NAME)_$(BIN_SUFFIX_32)
 	rm -rf Debug/$(NAME)_$(BIN_SUFFIX_64)
-	

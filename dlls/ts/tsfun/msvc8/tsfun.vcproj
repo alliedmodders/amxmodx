@@ -75,6 +75,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="odbc32.lib odbccp32.lib"
 				OutputFile=".\Debug/tsfun.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -169,6 +170,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="odbc32.lib odbccp32.lib"
 				OutputFile=".\Release/tsfun_amxx.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -206,26 +208,28 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Source Files"
-			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+			Name="Module SDK"
 			>
 			<File
-				RelativePath="..\amxxmodule.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl"
-			>
-			<File
-				RelativePath="..\amxxmodule.h"
+				RelativePath="..\sdk\moduleconfig.h"
 				>
 			</File>
 			<File
-				RelativePath="..\moduleconfig.h"
+				RelativePath="..\sdk\svn_version.h"
 				>
 			</File>
+			<Filter
+				Name="SDK Base"
+				>
+				<File
+					RelativePath="..\sdk\amxxmodule.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\sdk\amxxmodule.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

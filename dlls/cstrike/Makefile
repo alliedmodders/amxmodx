@@ -14,12 +14,12 @@ NAME = cstrike
 BIN_SUFFIX_32 = amxx_i386.so
 BIN_SUFFIX_64 = amxx_amd64.so
 
-OBJECTS = CstrikePlayer.cpp cstrike.cpp amxxmodule.cpp
+OBJECTS = sdk/amxxmodule.cpp CstrikePlayer.cpp cstrike.cpp
 
 LINK = 
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
-	-I$(MM_ROOT) -I$(HLSDK)/common
+	-I$(MM_ROOT) -I$(HLSDK)/common -Isdk
 
 GCC_VERSION := $(shell $(CPP) -dumpversion >&1 | cut -b1)
 
@@ -53,6 +53,7 @@ $(BIN_DIR)/%.o: %.cpp
 
 all:
 	mkdir -p $(BIN_DIR)
+	mkdir -p $(BIN_DIR)/sdk
 	$(MAKE) cstrike
 
 amd64:
@@ -67,9 +68,11 @@ debug:
 default: all
 
 clean:
+	rm -rf Release/sdk/*.o
 	rm -rf Release/*.o
 	rm -rf Release/$(NAME)_$(BIN_SUFFIX_32)
 	rm -rf Release/$(NAME)_$(BIN_SUFFIX_64)
+	rm -rf Debug/sdk/*.o
 	rm -rf Debug/*.o
 	rm -rf Debug/$(NAME)_$(BIN_SUFFIX_32)
 	rm -rf Debug/$(NAME)_$(BIN_SUFFIX_64)

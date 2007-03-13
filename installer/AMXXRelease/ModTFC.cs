@@ -28,12 +28,7 @@ namespace AMXXRelease
 
 		private void AddModules()
 		{
-			Module tfcx = new Module();
-
-			tfcx.sourcedir = "dlls\\tfc\\tfcx";
-			tfcx.vcproj = "tfcx";
-			tfcx.projname = "tfcx_amxx";
-			tfcx.bindir = "msvc";
+			Module tfcx = new Module("tfcx");
 
 			m_Modules.Add(tfcx);
 		}

@@ -4,7 +4,7 @@
 	Version="8.00"
 	Name="fun"
 	ProjectGUID="{43B95C78-8D1A-4D12-B668-2520B38E1DA3}"
-	RootNamespace="fun"
+	RootNamespace="fun_amx"
 	>
 	<Platforms>
 		<Platform
@@ -49,6 +49,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="../sdk"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;FUN_EXPORTS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -143,6 +144,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="../sdk"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;FUN_EXPORTS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -215,27 +217,6 @@
 			<File
 				RelativePath="..\fun.cpp"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;FUN_EXPORTS;$(NoInherit)"
-						BrowseInformation="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;FUN_EXPORTS;$(NoInherit)"
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -248,27 +229,34 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Resource Files"
-			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+			Name="Module SDK"
+			>
+			<File
+				RelativePath="..\sdk\moduleconfig.h"
+				>
+			</File>
+			<File
+				RelativePath="..\sdk\svn_version.h"
+				>
+			</File>
+			<Filter
+				Name="SDK Base"
+				>
+				<File
+					RelativePath="..\sdk\amxxmodule.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\sdk\amxxmodule.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Pawn Includes"
 			>
 			<File
 				RelativePath="..\..\..\plugins\include\fun.inc"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="AMXX"
-			>
-			<File
-				RelativePath="..\amxxmodule.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\amxxmodule.h"
-				>
-			</File>
-			<File
-				RelativePath="..\moduleconfig.h"
 				>
 			</File>
 		</Filter>

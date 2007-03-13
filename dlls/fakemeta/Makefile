@@ -20,7 +20,7 @@ OBJECTS = sdk/amxxmodule.cpp dllfunc.cpp engfunc.cpp fakemeta_amxx.cpp pdata.cpp
 LINK =
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
-	-I$(MM_ROOT) -I$(HLSDK)/common -I$(HLSDK)/pm_shared
+	-I$(MM_ROOT) -I$(HLSDK)/common -I$(HLSDK)/pm_shared -Isdk
 
 GCC_VERSION := $(shell $(CPP) -dumpversion >&1 | cut -b1)
 

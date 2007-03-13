@@ -41,6 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="..\sdk"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;SOCKETS_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -121,6 +122,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="..\sdk"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;SOCKETS_EXPORTS"
 				RuntimeLibrary="0"
 				RuntimeTypeInfo="false"
@@ -190,32 +192,36 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			Name="Module SDK"
 			>
+			<File
+				RelativePath="..\sdk\moduleconfig.h"
+				>
+			</File>
+			<File
+				RelativePath="..\sdk\svn_version.h"
+				>
+			</File>
 			<Filter
-				Name="SDK"
+				Name="SDK Base"
 				>
 				<File
-					RelativePath="..\amxxmodule.cpp"
+					RelativePath="..\sdk\amxxmodule.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\amxxmodule.h"
-					>
-				</File>
-				<File
-					RelativePath="..\moduleconfig.h"
+					RelativePath="..\sdk\amxxmodule.h"
 					>
 				</File>
 			</Filter>
 		</Filter>
 		<Filter
-			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			Name="Pawn Includes"
 			>
+			<File
+				RelativePath="..\..\..\plugins\include\sockets.inc"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

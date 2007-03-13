@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;c:\Documents and Settings\Steve\My Documents\include\metamod&quot;;&quot;c:\Documents and Settings\Steve\My Documents\include\HLSDKMP\common&quot;;&quot;c:\Documents and Settings\Steve\My Documents\include\HLSDKMP\engine&quot;;&quot;c:\Documents and Settings\Steve\My Documents\include\HLSDKMP\dlls&quot;;&quot;c:\Documents and Settings\Steve\My Documents\include\HLSDKMP\pm_shared&quot;"
+				AdditionalIncludeDirectories="..\sdk"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;ENGINE_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -51,7 +51,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -122,6 +122,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="..\sdk"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;ENGINE_EXPORTS"
 				RuntimeLibrary="0"
 				StructMemberAlignment="3"
@@ -220,14 +221,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\CString.h"
-				>
-			</File>
-			<File
-				RelativePath="..\CVector.h"
-				>
-			</File>
-			<File
 				RelativePath="..\engine.h"
 				>
 			</File>
@@ -241,18 +234,58 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="amxx"
+			Name="Module SDK"
 			>
 			<File
-				RelativePath="..\amxxmodule.cpp"
+				RelativePath="..\sdk\moduleconfig.h"
 				>
 			</File>
 			<File
-				RelativePath="..\amxxmodule.h"
+				RelativePath="..\sdk\svn_version.h"
+				>
+			</File>
+			<Filter
+				Name="AMXX STL"
+				>
+				<File
+					RelativePath="..\sdk\CString.h"
+					>
+				</File>
+				<File
+					RelativePath="..\sdk\CVector.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="SDK Base"
+				>
+				<File
+					RelativePath="..\sdk\amxxmodule.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\sdk\amxxmodule.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Pawn Includes"
+			>
+			<File
+				RelativePath="..\..\..\plugins\include\engine.inc"
 				>
 			</File>
 			<File
-				RelativePath="..\moduleconfig.h"
+				RelativePath="..\..\..\plugins\include\engine_const.inc"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\plugins\include\engine_stocks.inc"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\plugins\include\hlsdk_const.inc"
 				>
 			</File>
 		</Filter>

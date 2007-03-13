@@ -32,13 +32,11 @@ namespace AMXXRelease
 			Module dodx = new Module();
 			dodx.sourcedir = "dlls\\dod2\\dodx";
 			dodx.projname = "dodx_amxx";
-			dodx.bindir = "msvc";
 			dodx.vcproj = "dodx";
 
 			Module dodfun = new Module();
 			dodfun.sourcedir = "dlls\\dod2\\dodfun";
 			dodfun.projname = "dodfun_amxx";
-			dodfun.bindir = "msvc";
 			dodfun.vcproj = "dodfun";
 
 			m_Modules.Add(dodx);

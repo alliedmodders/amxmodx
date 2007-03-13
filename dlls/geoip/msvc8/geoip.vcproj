@@ -41,6 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="..\sdk"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;GEOIP_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -49,7 +50,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -122,6 +123,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="..\sdk"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;GEOIP_EXPORTS"
 				RuntimeLibrary="0"
 				RuntimeTypeInfo="false"
@@ -189,34 +191,6 @@
 				RelativePath="..\geoip_amxx.cpp"
 				>
 			</File>
-			<Filter
-				Name="SDK"
-				>
-				<File
-					RelativePath="..\amxxmodule.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\amxxmodule.h"
-					>
-				</File>
-				<File
-					RelativePath="..\moduleconfig.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="GeoIP"
-				>
-				<File
-					RelativePath="..\GeoIP.c"
-					>
-				</File>
-				<File
-					RelativePath="..\GeoIP.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -229,10 +203,48 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			Name="GeoIP"
 			>
+			<File
+				RelativePath="..\GeoIP.c"
+				>
+			</File>
+			<File
+				RelativePath="..\GeoIP.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Module SDK"
+			>
+			<File
+				RelativePath="..\sdk\moduleconfig.h"
+				>
+			</File>
+			<File
+				RelativePath="..\sdk\svn_version.h"
+				>
+			</File>
+			<Filter
+				Name="SDK Base"
+				>
+				<File
+					RelativePath="..\sdk\amxxmodule.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\sdk\amxxmodule.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Pawn Includes"
+			>
+			<File
+				RelativePath="..\..\..\plugins\include\geoip.inc"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

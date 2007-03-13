@@ -37,7 +37,7 @@ namespace AMXXRelease
 			if ((int)System.Environment.OSVersion.Platform == 128)
 			{
 			} else {
-				File.Copy(source + "\\dlls\\csx\\source\\WinCSX\\Release\\WinCSX.exe",
+				File.Copy(source + "\\dlls\\csx\\WinCSX\\Release\\WinCSX.exe",
 					  basedir + "\\data\\WinCSX.exe",
 					  true);
 			}
@@ -47,16 +47,8 @@ namespace AMXXRelease
 
 		private void AddModules()
 		{
-			Module csx = new Module();
-			csx.sourcedir = "dlls\\csx\\source";
-			csx.projname = "csx_amxx";
-			csx.bindir = "msvc";
-			csx.vcproj = "csx";
-
-			Module cstrike = new Module();
-			cstrike.sourcedir = "dlls\\cstrike";
-			cstrike.projname = "cstrike_amxx";
-			cstrike.vcproj = "cstrike";
+			Module csx = new Module("csx");
+			Module cstrike = new Module("cstrike");
 
 			m_Modules.Add(csx);
 			m_Modules.Add(cstrike);

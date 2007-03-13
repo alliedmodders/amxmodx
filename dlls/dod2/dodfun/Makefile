@@ -13,12 +13,12 @@ NAME = dodfun
 
 BIN_SUFFIX = amxx_i386.so
 
-OBJECTS = amxxmodule.cpp NBase.cpp CMisc.cpp NPD.cpp Utils.cpp usermsg.cpp moduleconfig.cpp
+OBJECTS = sdk/amxxmodule.cpp NBase.cpp CMisc.cpp NPD.cpp Utils.cpp usermsg.cpp moduleconfig.cpp
 
 LINK = 
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
-	-I$(MM_ROOT) -I$(HLSDK)/common
+	-I$(MM_ROOT) -I$(HLSDK)/common -Isdk
 
 GCC_VERSION := $(shell $(CPP) -dumpversion >&1 | cut -b1)
 
@@ -47,6 +47,7 @@ $(BIN_DIR)/%.o: %.cpp
 
 all:
 	mkdir -p $(BIN_DIR)
+	mkdir -p $(BIN_DIR)/sdk
 	$(MAKE) dodfun
 
 dodfun: $(OBJ_LINUX)
@@ -58,7 +59,9 @@ debug:
 default: all
 
 clean:
+	rm -rf Release/sdk/*.o
 	rm -rf Release/*.o
 	rm -rf Release/$(NAME)_$(BIN_SUFFIX)
+	rm -rf Debug/sdk/*.o
 	rm -rf Debug/*.o
 	rm -rf Debug/$(NAME)_$(BIN_SUFFIX)

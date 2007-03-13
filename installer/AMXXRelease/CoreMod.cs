@@ -129,34 +129,16 @@ namespace AMXXRelease
 		{
 			Module core = new Module();
 
-			core.bindir = "msvc";
 			core.sourcedir = "amxmodx";
 			core.vcproj = "amxmodx_mm";
 			core.build = "JITRelease";
 			core.projname = "amxmodx_mm";
 			core.outdir = "dlls";
 
-			Module mysqlx = new Module();
-			mysqlx.projname = "mysql_amxx";
-			mysqlx.sourcedir = "dlls\\" + "mysqlx";
-			mysqlx.vcproj = "mysql2";
-
-			Module sqlitex = new Module();
-			sqlitex.projname = "sqlite_amxx";
-			sqlitex.sourcedir = "dlls\\" + "sqlite";
-			sqlitex.bindir = "msvc7";
-			sqlitex.vcproj = "sqlite_amxx";
-
-			Module engine = new Module();
-			engine.sourcedir = "dlls\\engine";
-			engine.projname = "engine_amxx";
-			engine.vcproj = "engine";
-
-			Module fun = new Module();
-			fun.sourcedir = "dlls\\fun";
-			fun.projname = "fun_amxx";
-			fun.vcproj = "fun";
-
+			Module mysqlx = new Module("mysqlx");
+			Module sqlitex = new Module("sqlite");
+			Module engine = new Module("engine");
+			Module fun = new Module("fun");
 			Module geoip = new Module("geoip");
 			Module fakemeta = new Module("fakemeta");
 			Module sockets = new Module("sockets");

@@ -30,8 +30,7 @@ namespace AMXXRelease
 			Module tsx = new Module();
 			tsx.sourcedir = "dlls\\ts\\tsx";
 			tsx.projname = "tsx_amxx";
-			tsx.bindir = "msvc";
-			tsx.vcproj = "tsx_amxx";
+			tsx.vcproj = "tsx";
 
 			Module tsfun = new Module();
 			tsfun.sourcedir = "dlls\\ts\\tsfun";

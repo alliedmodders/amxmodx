@@ -48,6 +48,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="..\sdk"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;CSTRIKE_EXPORTS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -144,6 +145,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="..\sdk"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;CSTRIKE_EXPORTS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -215,52 +217,10 @@
 			<File
 				RelativePath="..\cstrike.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;CSTRIKE_EXPORTS;$(NoInherit)"
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;CSTRIKE_EXPORTS;$(NoInherit)"
-						BrowseInformation="1"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\CstrikePlayer.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;CSTRIKE_EXPORTS;$(NoInherit)"
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;CSTRIKE_EXPORTS;$(NoInherit)"
-						BrowseInformation="1"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -277,30 +237,37 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Resource Files"
-			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+			Name="Module SDK"
 			>
+			<File
+				RelativePath="..\sdk\moduleconfig.h"
+				>
+			</File>
+			<File
+				RelativePath="..\sdk\svn_version.h"
+				>
+			</File>
+			<Filter
+				Name="SDK Base"
+				>
+				<File
+					RelativePath="..\sdk\amxxmodule.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\sdk\amxxmodule.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
-			Name="AMXX module"
+			Name="Pawn Includes"
 			>
 			<File
-				RelativePath="..\amxxmodule.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\amxxmodule.h"
-				>
-			</File>
-			<File
-				RelativePath="..\moduleconfig.h"
+				RelativePath="..\..\..\plugins\include\cstrike.inc"
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath="..\..\..\plugins\include\cstrike.inc"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

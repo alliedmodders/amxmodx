@@ -28,11 +28,7 @@ namespace AMXXRelease
 
 		private void AddModules()
 		{
-			Module ns = new Module();
-
-			ns.sourcedir = "dlls\\ns\\ns";
-			ns.projname = "ns_amxx";
-			ns.vcproj = "ns";
+			Module ns = new Module("ns");
 
 			m_Modules.Add(ns);
 		}

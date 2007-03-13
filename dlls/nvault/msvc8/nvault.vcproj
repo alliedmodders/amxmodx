@@ -41,6 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="..\sdk"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;NVAULT_EXPORTS"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
@@ -51,7 +52,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -122,6 +123,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="..\sdk"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;NVAULT_EXPORTS"
 				RuntimeLibrary="0"
 				StructMemberAlignment="3"
@@ -188,17 +190,6 @@
 			<File
 				RelativePath="..\amxxapi.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ExceptionHandling="0"
-						RuntimeLibrary="1"
-						StructMemberAlignment="3"
-						Detect64BitPortabilityProblems="false"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\Binary.cpp"
@@ -231,10 +222,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\CQueue.h"
-				>
-			</File>
-			<File
 				RelativePath="..\IVault.h"
 				>
 			</File>
@@ -246,38 +233,60 @@
 				RelativePath="..\NVault.h"
 				>
 			</File>
-			<File
-				RelativePath="..\sh_list.h"
-				>
-			</File>
-			<File
-				RelativePath="..\sh_tinyhash.h"
-				>
-			</File>
 		</Filter>
 		<Filter
-			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			Name="Module SDK"
 			>
+			<File
+				RelativePath="..\sdk\moduleconfig.h"
+				>
+			</File>
+			<File
+				RelativePath="..\sdk\svn_version.h"
+				>
+			</File>
+			<Filter
+				Name="AMXX STL"
+				>
+				<File
+					RelativePath="..\sdk\CQueue.h"
+					>
+				</File>
+				<File
+					RelativePath="..\sdk\CString.h"
+					>
+				</File>
+				<File
+					RelativePath="..\sdk\CVector.h"
+					>
+				</File>
+				<File
+					RelativePath="..\sdk\sh_list.h"
+					>
+				</File>
+				<File
+					RelativePath="..\sdk\sh_tinyhash.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="SDK Base"
+				>
+				<File
+					RelativePath="..\sdk\amxxmodule.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\sdk\amxxmodule.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
-			Name="SDK"
+			Name="Pawn Includes"
 			>
 			<File
-				RelativePath="..\amxxmodule.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\amxxmodule.h"
-				>
-			</File>
-			<File
-				RelativePath="..\CString.h"
-				>
-			</File>
-			<File
-				RelativePath="..\moduleconfig.h"
+				RelativePath="..\..\..\plugins\include\nvault.inc"
 				>
 			</File>
 		</Filter>

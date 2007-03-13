@@ -41,6 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="..\sdk"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;REGEX_EXPORTS;PCRE_STATIC"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -49,7 +50,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -62,11 +63,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../lib_win/pcre.lib"
+				AdditionalDependencies="..\lib_win\pcre.lib"
 				OutputFile="$(OutDir)/regex_amxx.dll"
 				LinkIncremental="2"
-				IgnoreAllDefaultLibraries="false"
-				IgnoreDefaultLibraryNames="LIBC"
+				IgnoreDefaultLibraryNames="LIBCMT"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/regex.pdb"
 				SubSystem="2"
@@ -123,6 +123,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="..\sdk"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;REGEX_EXPORTS;PCRE_STATIC"
 				RuntimeLibrary="0"
 				RuntimeTypeInfo="false"
@@ -142,11 +143,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../lib_win/pcre.lib"
+				AdditionalDependencies="..\lib_win\pcre.lib"
 				OutputFile="$(OutDir)/regex_amxx.dll"
 				LinkIncremental="1"
-				IgnoreAllDefaultLibraries="false"
-				IgnoreDefaultLibraryNames="LIBC"
+				IgnoreDefaultLibraryNames="LIBCMT"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -207,37 +207,47 @@
 				>
 			</File>
 			<File
-				RelativePath="..\CVector.h"
-				>
-			</File>
-			<File
-				RelativePath="..\module.h"
-				>
-			</File>
-			<File
 				RelativePath="..\pcre.h"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			Name="Module SDK"
 			>
+			<File
+				RelativePath="..\sdk\moduleconfig.h"
+				>
+			</File>
+			<File
+				RelativePath="..\sdk\svn_version.h"
+				>
+			</File>
+			<Filter
+				Name="AMXX STL"
+				>
+				<File
+					RelativePath="..\sdk\CVector.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="SDK Base"
+				>
+				<File
+					RelativePath="..\sdk\amxxmodule.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\sdk\amxxmodule.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
-			Name="SDK"
+			Name="Pawn Includes"
 			>
 			<File
-				RelativePath="..\amxxmodule.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\amxxmodule.h"
-				>
-			</File>
-			<File
-				RelativePath="..\moduleconfig.h"
+				RelativePath="..\..\..\plugins\include\regex.inc"
 				>
 			</File>
 		</Filter>

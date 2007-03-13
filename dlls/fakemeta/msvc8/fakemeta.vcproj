@@ -41,6 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="..\sdk"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;FAKEMETA_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -49,7 +50,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -120,6 +121,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="..\sdk"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;FAKEMETA_EXPORTS"
 				RuntimeLibrary="0"
 				RuntimeTypeInfo="false"
@@ -183,10 +185,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\CVector.h"
-				>
-			</File>
-			<File
 				RelativePath="..\fakemeta_amxx.cpp"
 				>
 			</File>
@@ -214,22 +212,6 @@
 				RelativePath="..\pdata.cpp"
 				>
 			</File>
-			<Filter
-				Name="AMXXSDK"
-				>
-				<File
-					RelativePath="..\sdk\amxxmodule.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\sdk\amxxmodule.h"
-					>
-				</File>
-				<File
-					RelativePath="..\sdk\moduleconfig.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Engine Funcs"
@@ -259,7 +241,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\pev.h"
+				RelativePath=".\pev.h"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -287,6 +269,54 @@
 			</File>
 		</Filter>
 		<Filter
+			Name="Globals"
+			>
+			<File
+				RelativePath="..\glb.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\glb.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Module SDK"
+			>
+			<File
+				RelativePath="..\sdk\moduleconfig.h"
+				>
+			</File>
+			<File
+				RelativePath="..\sdk\svn_version.h"
+				>
+			</File>
+			<Filter
+				Name="AMXX STL"
+				>
+				<File
+					RelativePath="..\sdk\CString.h"
+					>
+				</File>
+				<File
+					RelativePath="..\sdk\CVector.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="SDK Base"
+				>
+				<File
+					RelativePath="..\sdk\amxxmodule.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\sdk\amxxmodule.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
 			Name="Pawn Includes"
 			>
 			<File
@@ -301,16 +331,8 @@
 				RelativePath="..\..\..\plugins\include\fakemeta_stocks.inc"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="Globals"
-			>
 			<File
-				RelativePath="..\glb.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\glb.h"
+				RelativePath="..\..\..\plugins\include\hlsdk_const.inc"
 				>
 			</File>
 		</Filter>

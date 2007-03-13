@@ -73,7 +73,6 @@ struct weapon_t
 	bool melee;
 	char logname[16];
 	char name[32];
-	char hashname[32];
 	int ammoSlot;
 	int type;
 };

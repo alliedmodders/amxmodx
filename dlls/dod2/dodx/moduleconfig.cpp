@@ -377,7 +377,10 @@ void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 				else if(traceData[i].iAction&ACT_ROCKET_SHOT)
 						pPlayer->saveShot(traceData[i].iId);
 
-				cell position[3] = {v2[0], v2[1], v2[2]};
+				cell position[3];
+				position[0] = amx_ftoc(v2[0]);
+				position[1] = amx_ftoc(v2[1]);
+				position[2] = amx_ftoc(v2[2]);
 				cell pos = MF_PrepareCellArray(position, 3);
 
 				if(traceData[i].iAction&ACT_NADE_PUT)

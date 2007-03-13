@@ -338,7 +338,10 @@ void Client_Object_End(void* mValue)
 		mPlayer->object.carrying = (mPlayer->object.carrying) ? false : true;
 
 		mPlayer->object.pEdict->v.origin.CopyToArray(fposition);
-		cell position[3] = {fposition[0], fposition[1], fposition[2]};
+		cell position[3]; 
+		position[0] = amx_ftoc(fposition[0]);
+		position[1] = amx_ftoc(fposition[1]);
+		position[2] = amx_ftoc(fposition[2]);
 		cell pos = MF_PrepareCellArray(position, 3);
 		MF_ExecuteForward(iFObjectTouched, mPlayer->index, ENTINDEX(mPlayer->object.pEdict), pos, mPlayer->object.carrying);
 

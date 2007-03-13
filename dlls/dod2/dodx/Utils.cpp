@@ -35,48 +35,48 @@
 /* Weapon names aren't send in WeaponList message in DoD */
 weapon_t weaponData[] = 
 {
-	{ false,	false,	"mortar",			"mortar",			0, DODWT_OTHER },
-	{ true,		true,	"amerknife",		"knife",			0, DODWT_MELEE }, // aknife->bknife
-	{ false,	true,	"gerknife",			"knife",			0, DODWT_MELEE },
-	{ false,	false,	"colt",				"Colt",				4, DODWT_SECONDARY }, 
-	{ false,	false,	"luger",			"Luger",			4, DODWT_SECONDARY },
-	{ true,		false,	"garand",			"Garand",			3, DODWT_PRIMARY }, // Garand->Garand butt
-	{ false,	false,	"scopedkar",		"scoped K98",		3, DODWT_PRIMARY }, 
-	{ false,	false,	"thompson",			"Thompson",			1, DODWT_PRIMARY },
-	{ false,	false,	"mp44",				"STG44",			6, DODWT_PRIMARY },
-	{ false,	false,	"spring",			"Springfield",		5, DODWT_PRIMARY },  
-	{ true,		false,	"kar",				"K98",				3, DODWT_PRIMARY }, // KAR->KAR bayonet
-	{ false,	false,	"bar",				"BAR",				6, DODWT_PRIMARY },
-	{ false,	false,	"mp40",				"MP40",				1, DODWT_PRIMARY }, 
-	{ false,	false,	"grenade",			"handgrenade",		9, DODWT_GRENADE },
-	{ false,	false,	"grenade2",			"stickgrenade",		11, DODWT_GRENADE },
-	{ false,	false,	"stickgrenade_ex",	"stickgrenade_ex",	11, DODWT_GRENADE },
-	{ false,	false,	"handgrenade_ex",	"handgrenade_ex",	 9, DODWT_GRENADE },
-	{ false,	false,	"mg42",				"MG42",				 7, DODWT_PRIMARY },
-	{ false,	false,	"30cal",			".30 cal",			 8, DODWT_PRIMARY },
-	{ false,	true,	"spade",			"spade",			 0, DODWT_MELEE },
-	{ true,		false,	"m1carbine",		"M1 Carbine",		 2, DODWT_PRIMARY },  // M1 Carbine->Folding Carbine
-	{ false,	false,	"mg34",				"MG34",				 2, DODWT_PRIMARY },
-	{ false,	false,	"greasegun",		"Greasegun",		 1, DODWT_PRIMARY },
-	{ true,		false,	"fg42",				"FG42",				 6, DODWT_PRIMARY }, // FG42 -> scoped FG42
-	{ true,		false,	"k43",				"K43",				 2, DODWT_PRIMARY },
-	{ true,		false,	"enfield",			"Enfield",			 3, DODWT_PRIMARY }, // Enfield->Scoped Enfield->Enfield bayonet
-	{ false,	false,	"sten",				"Sten",				 1, DODWT_PRIMARY },
-	{ false,	false,	"bren",				"Bren",				 6, DODWT_PRIMARY }, 
-	{ false,	false,	"webley",			"Webley",			 4, DODWT_PRIMARY },
-	{ false,	false,	"bazooka",			"Bazooka",			13, DODWT_PRIMARY },
-	{ false,	false,	"pschreck",			"Panzerschrek",		13, DODWT_PRIMARY },
-	{ false,	false,	"piat",				"Piat",				13, DODWT_PRIMARY },
-	{ false,	false,	"scoped_fg42",		"scoped FG42",		 6, DODWT_PRIMARY },
-	{ false,	false,	"fcarbine",			"Folding Carbine",	 0, DODWT_PRIMARY },
-	{ false,	true,	"bayonet",			"K98 bayonet",		 0, DODWT_MELEE }, // KAR bayonet
-	{ false,	false,	"scoped_enfield",	"scoped Enfield",	 3, DODWT_PRIMARY },
-	{ false,	false,	"mills_bomb",		"mills bomb",		 9, DODWT_GRENADE },
-	{ false,	true,	"brit_knife",		"knife",			 0, DODWT_MELEE }, 
-	{ false,	true,	"garandbutt",		"Garand butt",		 0, DODWT_MELEE }, // Garand butt
-	{ false,	true,	"enf_bayonet",		"Enfield bayonet",	 0, DODWT_MELEE },
-	{ false,	false,	"mortar",			"mortar",			 0, DODWT_OTHER }, // mortar new id
-	{ false,	true,	"k43butt",			"K43 butt",			 0, DODWT_MELEE },
+	{ false,	false,	{"mortar"},			{"mortar"},			0, DODWT_OTHER },
+	{ true,		true,	{"amerknife"},		{"knife"},			0, DODWT_MELEE }, // aknife->bknife
+	{ false,	true,	{"gerknife"},		{"knife"},			0, DODWT_MELEE },
+	{ false,	false,	{"colt"},			{"Colt"},				4, DODWT_SECONDARY }, 
+	{ false,	false,	{"luger"},			{"Luger"},			4, DODWT_SECONDARY },
+	{ true,		false,	{"garand"},			{"Garand"},			3, DODWT_PRIMARY }, // Garand->Garand butt
+	{ false,	false,	{"scopedkar"},		{"scoped K98"},		3, DODWT_PRIMARY }, 
+	{ false,	false,	{"thompson"},		{"Thompson"},			1, DODWT_PRIMARY },
+	{ false,	false,	{"mp44"},			{"STG44"},			6, DODWT_PRIMARY },
+	{ false,	false,	{"spring"},			{"Springfield"},		5, DODWT_PRIMARY },  
+	{ true,		false,	{"kar"},			{"K98"},				3, DODWT_PRIMARY }, // KAR->KAR bayonet
+	{ false,	false,	{"bar"},			{"BAR"},				6, DODWT_PRIMARY },
+	{ false,	false,	{"mp40"},			{"MP40"},				1, DODWT_PRIMARY }, 
+	{ false,	false,	{"grenade"},		{"handgrenade"},		9, DODWT_GRENADE },
+	{ false,	false,	{"grenade2"},		{"stickgrenade"},		11, DODWT_GRENADE },
+	{ false,	false,	{"stickgrenade_ex"},{"stickgrenade_ex"},	11, DODWT_GRENADE },
+	{ false,	false,	{"handgrenade_ex"},	{"handgrenade_ex"},	 9, DODWT_GRENADE },
+	{ false,	false,	{"mg42"},			{"MG42"},				 7, DODWT_PRIMARY },
+	{ false,	false,	{"30cal"},			{".30 cal"},			 8, DODWT_PRIMARY },
+	{ false,	true,	{"spade"},			{"spade"},			 0, DODWT_MELEE },
+	{ true,		false,	{"m1carbine"},		{"M1 Carbine"},		 2, DODWT_PRIMARY },  // M1 Carbine->Folding Carbine
+	{ false,	false,	{"mg34"},			{"MG34"},				 2, DODWT_PRIMARY },
+	{ false,	false,	{"greasegun"},		{"Greasegun"},		 1, DODWT_PRIMARY },
+	{ true,		false,	{"fg42"},			{"FG42"},				 6, DODWT_PRIMARY }, // FG42 -> scoped FG42
+	{ true,		false,	{"k43"},			{"K43"},				 2, DODWT_PRIMARY },
+	{ true,		false,	{"enfield"},		{"Enfield"},			 3, DODWT_PRIMARY }, // Enfield->Scoped Enfield->Enfield bayonet
+	{ false,	false,	{"sten"},			{"Sten"},				 1, DODWT_PRIMARY },
+	{ false,	false,	{"bren"},			{"Bren"},				 6, DODWT_PRIMARY }, 
+	{ false,	false,	{"webley"},			{"Webley"},			 4, DODWT_PRIMARY },
+	{ false,	false,	{"bazooka"},		{"Bazooka"},			13, DODWT_PRIMARY },
+	{ false,	false,	{"pschreck"},		{"Panzerschrek"},		13, DODWT_PRIMARY },
+	{ false,	false,	{"piat"},			{"Piat"},				13, DODWT_PRIMARY },
+	{ false,	false,	{"scoped_fg42"},	{"scoped FG42"},		 6, DODWT_PRIMARY },
+	{ false,	false,	{"fcarbine"},		{"Folding Carbine"},	 0, DODWT_PRIMARY },
+	{ false,	true,	{"bayonet"},		{"K98 bayonet"},		 0, DODWT_MELEE }, // KAR bayonet
+	{ false,	false,	{"scoped_enfield"},	{"scoped Enfield"},	 3, DODWT_PRIMARY },
+	{ false,	false,	{"mills_bomb"},		{"mills bomb"},		 9, DODWT_GRENADE },
+	{ false,	true,	{"brit_knife"},		{"knife"},			 0, DODWT_MELEE }, 
+	{ false,	true,	{"garandbutt"},		{"Garand butt"},		 0, DODWT_MELEE }, // Garand butt
+	{ false,	true,	{"enf_bayonet"},	{"Enfield bayonet"},	 0, DODWT_MELEE },
+	{ false,	false,	{"mortar"},			{"mortar"},			 0, DODWT_OTHER }, // mortar new id
+	{ false,	true,	{"k43butt"},		{"K43 butt"},			 0, DODWT_MELEE },
 };
 
 /* Function will select correct id */

@@ -46,7 +46,6 @@ public KillingStreakSound
 public DoubleKill
 public DoubleKillSound
 public BulletDamage
-public EndRoundStats
 
 new g_streakKills[33][2]
 new g_multiKills[33][2]

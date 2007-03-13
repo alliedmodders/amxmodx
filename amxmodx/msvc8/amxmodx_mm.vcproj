@@ -831,6 +831,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\svn_version.h"
+				>
+			</File>
+			<File
 				RelativePath="..\zlib\zconf.h"
 				>
 			</File>

@@ -95,7 +95,7 @@ namespace AMXXRelease
 
 			info.WorkingDirectory = PropSlashes(dir);
 			info.FileName = m_Cfg.DevenvPath();
-			info.Arguments =m_Cfg.MakeOpts();
+			info.Arguments = m_Cfg.MakeOpts();
 			info.UseShellExecute = false;
 
 			p = Process.Start(info);

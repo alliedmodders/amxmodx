@@ -63,6 +63,16 @@ namespace AMXXRelease
 			if (File.Exists(file))
 				File.Delete(file);
 
+			string args = m_Cfg.MakeOpts();
+			if (args != null)
+			{
+				info.Arguments = args;
+			} 
+			else 
+			{
+				info.Arguments = "";
+			}
+			
 			info.WorkingDirectory = PropSlashes(dir);
 			info.FileName = m_Cfg.DevenvPath();
 			info.Arguments = "/rebuild " + module.build + " " + module.vcproj + ".vcproj";

@@ -992,7 +992,7 @@ native CreateHudSyncObj(num=0, ...);
  * You must use set_hudmessage, although the channel parameter is 
  *  entirely ignored.
  */
-native ShowSyncHudMsg(target, syncObj, const fmt[], ...);
+native ShowSyncHudMsg(target, syncObj, const fmt[], {Float,Sql,Result,_}:...);
 
 /**
  * Clears the display on a HudSync Object.  This is essentially the same

@@ -20,6 +20,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="..\resources"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -68,6 +69,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="..\resources"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="4"
 				UsePrecompiledHeader="3"
@@ -116,7 +118,7 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath=".\stdafx.cpp">
+				RelativePath="..\stdafx.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
@@ -131,7 +133,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\WinCSX.cpp">
+				RelativePath="..\WinCSX.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -139,13 +141,13 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
-				RelativePath=".\Resource.h">
+				RelativePath="..\resources\Resource.h">
 			</File>
 			<File
-				RelativePath=".\stdafx.h">
+				RelativePath="..\stdafx.h">
 			</File>
 			<File
-				RelativePath=".\WinCSX.h">
+				RelativePath="..\WinCSX.h">
 			</File>
 		</Filter>
 		<Filter
@@ -153,32 +155,32 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
 			<File
-				RelativePath=".\small.ico">
+				RelativePath="..\resources\small.ico">
 			</File>
 			<File
-				RelativePath=".\WinCSX.exe.manifest">
+				RelativePath="..\resources\WinCSX.exe.manifest">
 			</File>
 			<File
-				RelativePath=".\WinCSX.ico">
+				RelativePath="..\resources\WinCSX.ico">
 			</File>
 			<File
-				RelativePath=".\WinCSX.rc">
+				RelativePath="..\resources\WinCSX.rc">
 			</File>
 		</Filter>
 		<Filter
 			Name="Dependencies"
 			Filter="">
 			<File
-				RelativePath=".\amxxmodule.h">
+				RelativePath="..\amxxmodule.h">
 			</File>
 			<File
-				RelativePath=".\CRank.cpp">
+				RelativePath="..\CRank.cpp">
 			</File>
 			<File
-				RelativePath=".\CRank.h">
+				RelativePath="..\CRank.h">
 			</File>
 			<File
-				RelativePath=".\moduleconfig.h">
+				RelativePath="..\moduleconfig.h">
 			</File>
 		</Filter>
 	</Files>

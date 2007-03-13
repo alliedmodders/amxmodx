@@ -41,6 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="..\resources"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -119,6 +120,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="..\resources"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
@@ -211,7 +213,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\Resource.h"
+				RelativePath="..\resources\Resource.h"
 				>
 			</File>
 			<File
@@ -229,19 +231,19 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\small.ico"
+				RelativePath="..\resources\small.ico"
 				>
 			</File>
 			<File
-				RelativePath="..\WinCSX.exe.manifest"
+				RelativePath="..\resources\WinCSX.exe.manifest"
 				>
 			</File>
 			<File
-				RelativePath="..\WinCSX.ico"
+				RelativePath="..\resources\WinCSX.ico"
 				>
 			</File>
 			<File
-				RelativePath="..\WinCSX.rc"
+				RelativePath="..\resources\WinCSX.rc"
 				>
 			</File>
 		</Filter>

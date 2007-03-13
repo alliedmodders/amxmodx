@@ -3,7 +3,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "csx", "csx.vcproj", "{1DC4A
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinCSX", "..\WinCSX\WinCSX.vcproj", "{39A1E5DD-81A1-441D-B99A-E50A01DB05D7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinCSX", "..\WinCSX\msvc7\WinCSX.vcproj", "{39A1E5DD-81A1-441D-B99A-E50A01DB05D7}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject

@@ -18,6 +18,7 @@
 #define SHORTINT	0x00000040		/* short integer */
 #define ZEROPAD		0x00000080		/* zero (as opposed to blank) pad */
 #define FPT			0x00000100		/* floating point number */
+#define UPPERDIGITS	0x00000200		/* make alpha digits uppercase */
 #define to_digit(c)		((c) - '0')
 #define is_digit(c)		((unsigned)to_digit(c) <= 9)
 #define to_char(n)		((n) + '0')
@@ -326,6 +327,66 @@ void AddInt(U **buf_p, size_t &maxlen, int val, int width, int flags)
 	*buf_p = buf;
 }
 
+template <typename U>
+void AddHex(U **buf_p, size_t &maxlen, unsigned int val, int width, int flags)
+{
+	U		text[32];
+	int		digits;
+	U		*buf;
+	U		digit;
+	int		hexadjust;
+
+	if (flags & UPPERDIGITS)
+	{
+		hexadjust = 'A' - '9' - 1;
+	} else {
+		hexadjust = 'a' - '9' - 1;
+	}
+
+	digits = 0;
+	do
+	{
+		digit = ('0' + val % 16);
+		if (digit > '9')
+		{
+			digit += hexadjust;
+		}
+
+		text[digits++] = digit;
+		val /= 16;
+	} while (val);
+
+	buf = *buf_p;
+
+	if( !(flags & LADJUST) )
+	{
+		while (digits < width && maxlen)
+		{
+			*buf++ = (flags & ZEROPAD) ? '0' : ' ';
+			width--;
+			maxlen--;
+		}
+	}
+
+	while (digits-- && maxlen)
+	{
+		*buf++ = text[digits];
+		width--;
+		maxlen--;
+	}
+
+	if (flags & LADJUST)
+	{
+		while (width-- && maxlen)
+		{
+			*buf++ = (flags & ZEROPAD) ? '0' : ' ';
+			maxlen--;
+		}
+	}
+
+	*buf_p = buf;
+}
+
 template <typename D, typename S>
 size_t atcprintf(D *buffer, size_t maxlen, const S *format, AMX *amx, cell *params, int *param)
 {
@@ -420,6 +481,17 @@ reswitch:
 		case 'f':
 			CHECK_ARGS(0);
 			AddFloat(&buf_p, llen, amx_ctof(*get_amxaddr(amx, params[arg])), width, prec);
+			arg++;
+			break;
+		case 'X':
+			CHECK_ARGS(0);
+			flags |= UPPERDIGITS;
+			AddHex(&buf_p, llen, static_cast<unsigned int>(*get_amxaddr(amx, params[arg])), width, flags);
+			arg++;
+			break;
+		case 'x':
+			CHECK_ARGS(0);
+			AddHex(&buf_p, llen, static_cast<unsigned int>(*get_amxaddr(amx, params[arg])), width, flags);
 			arg++;
 			break;
 		case 's':

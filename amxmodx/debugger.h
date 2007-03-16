@@ -176,7 +176,7 @@ public:
 	trace_info_t *GetTrace() const { return m_pTrace; }
 	const char *GetFmtCache() { return m_FmtCache.c_str(); }
 	
-	bool IsNativeFiltering() { return (m_iNatFunc > 0); }
+	bool IsNativeFiltering() { return (m_iNatFunc > -1); }
 	bool InNativeFilter() { return m_InNativeFilter; }
 private:
 	AMX *m_pAmx;

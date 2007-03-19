@@ -50,11 +50,12 @@ static cell AMX_NATIVE_CALL socket_open(AMX *amx, cell *params)  /* 2 param */
     unsigned int port = params[2];
     int len;
     char* hostname = MF_GetAmxString(amx,params[1],0,&len); // Get the hostname from AMX
+	cell *err = MF_GetAmxAddr(amx, params[4]);
     if(len == 0) { // just to prevent to work with a nonset hostname
-        params[4] = 2;  // server unknown
+        *err = 2;  // server unknown
         return -1;
     }
-    params[4] = 0; // params[4] is error backchannel
+    *err = 0; // params[4] is error backchannel
     struct sockaddr_in server;
     struct hostent *host_info;
     unsigned long addr;
@@ -64,7 +65,7 @@ static cell AMX_NATIVE_CALL socket_open(AMX *amx, cell *params)  /* 2 param */
     sock = socket(AF_INET, params[3]==SOCKET_TCP?SOCK_STREAM:SOCK_DGRAM, 0);
     if (sock < 0) {
         // Error, couldn't create a socket, so set an error and return.
-        params[4] = 1;
+        *err = 1;
         return -1;
     }
     
@@ -80,7 +81,7 @@ static cell AMX_NATIVE_CALL socket_open(AMX *amx, cell *params)  /* 2 param */
         host_info = gethostbyname(hostname);
         if (host_info == NULL) {
             // an error occured, the hostname is unknown
-            params[4] = 2;  // server unknown
+            *err = 2;  // server unknown
             return -1;
         }
         // If not, put it in the Server structure
@@ -95,7 +96,7 @@ static cell AMX_NATIVE_CALL socket_open(AMX *amx, cell *params)  /* 2 param */
     contr = connect(sock, (struct sockaddr*)&server, sizeof( server));
     if (contr < 0) {
             // If an error occured cancel
-            params[4] = 3;  //error while connecting
+            *err = 3;  //error while connecting
             return -1;
     }
     // Everything went well, so return the socket

@@ -5,26 +5,29 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <dlfcn.h>
+#include <limits.h>
 
 int main(int argc, char **argv)
 {
 	char *file=NULL;
 	void *dl= NULL;
 	FILE *fp = NULL;
+	char path[PATH_MAX];
 	if (argc != 2)
 	{
 		printf("Usage: dlsym <file>\n");
 		exit(0);
 	}
 	file = argv[1];
-	fp = fopen(file, "rb");
+	realpath(file, path);
+	fp = fopen(path, "rb");
 	if (!fp)
 	{
-		printf("File not found.");
+		printf("File not found.\n");
 		exit(0);
 	}
 
-	dl = dlopen(file, RTLD_NOW);
+	dl = dlopen(path, RTLD_NOW);
 	
 	if (dl)
 	{

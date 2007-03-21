@@ -2284,7 +2284,7 @@ C_DLLEXPORT int Meta_Query(char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_
 	}
 
 #ifdef FN_META_QUERY
-	return FN_META_QUERY();
+	FN_META_QUERY();
 #endif	// FN_META_QUERY
 
 	return 1;
@@ -2327,7 +2327,7 @@ C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason)
 	}
 
 #ifdef FN_META_DETACH
-	return FN_META_DETACH();
+	FN_META_DETACH();
 #endif	// FN_META_DETACH
 	return TRUE;
 }
@@ -2374,7 +2374,7 @@ C_DLLEXPORT void __stdcall GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, 
 	gpGlobals = pGlobals;
 	// NOTE!  Have to call logging function _after_ copying into g_engfuncs, so
 	// that g_engfuncs.pfnAlertMessage() can be resolved properly, heh. :)
-	UTIL_LogPrintf("[%s] dev: called: GiveFnptrsToDll\n", Plugin_info.logtag);
+	// UTIL_LogPrintf("[%s] dev: called: GiveFnptrsToDll\n", Plugin_info.logtag);
 	// --> ** Function core
 
 #ifdef _MSC_VER
@@ -2437,6 +2437,7 @@ static amxx_module_info_s g_ModuleInfo =
 
 // Storage for the requested functions
 PFN_ADD_NATIVES				g_fn_AddNatives;
+PFN_ADD_NEW_NATIVES			g_fn_AddNewNatives;
 PFN_BUILD_PATHNAME			g_fn_BuildPathname;
 PFN_BUILD_PATHNAME_R		g_fn_BuildPathnameR;
 PFN_GET_AMXADDR				g_fn_GetAmxAddr;
@@ -2515,6 +2516,7 @@ PFN_OVERRIDENATIVES			g_fn_OverrideNatives;
 PFN_GETLOCALINFO			g_fn_GetLocalInfo;
 PFN_AMX_REREGISTER			g_fn_AmxReRegister;
 PFN_REGISTERFUNCTIONEX		g_fn_RegisterFunctionEx;
+PFN_MESSAGE_BLOCK			g_fn_MessageBlock;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2591,6 +2593,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 
 	// Natives / Forwards
 	REQFUNC("AddNatives", g_fn_AddNatives, PFN_ADD_NATIVES);
+	REQFUNC("AddNewNatives", g_fn_AddNewNatives, PFN_ADD_NEW_NATIVES);
 	REQFUNC("RaiseAmxError", g_fn_RaiseAmxError, PFN_RAISE_AMXERROR);
 	REQFUNC("RegisterForward", g_fn_RegisterForward, PFN_REGISTER_FORWARD);
 	REQFUNC("RegisterSPForward", g_fn_RegisterSPForward, PFN_REGISTER_SPFORWARD);
@@ -2637,6 +2640,8 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("OverrideNatives", g_fn_OverrideNatives, PFN_OVERRIDENATIVES);
 	REQFUNC("GetLocalInfo", g_fn_GetLocalInfo, PFN_GETLOCALINFO);
 	REQFUNC("AmxReregister", g_fn_AmxReRegister, PFN_AMX_REREGISTER);
+
+	REQFUNC("MessageBlock", g_fn_MessageBlock, PFN_MESSAGE_BLOCK);
 
 #ifdef MEMORY_TEST
 	// Memory
@@ -2780,6 +2785,7 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_AddLibraries(NULL, LibType_Class, NULL);
 	MF_RemoveLibraries(NULL);
 	MF_OverrideNatives(NULL, NULL);
+	MF_MessageBlock(0, 0, NULL);
 }
 #endif
 

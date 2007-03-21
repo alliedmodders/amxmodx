@@ -20,16 +20,13 @@ CPP_OBJECTS = basic_sql.cpp handles.cpp module.cpp threading.cpp sdk/amxxmodule.
 CPP_OBJECTS += thread/BaseWorker.cpp thread/ThreadWorker.cpp thread/PosixThreads.cpp
 CPP_OBJECTS += sqlitepp/SqliteQuery.cpp sqlitepp/SqliteResultSet.cpp sqlitepp/SqliteDatabase.cpp sqlitepp/SqliteDriver.cpp
 
-C_OBJECTS = $(SQL)/attach.c $(SQL)/auth.c $(SQL)/btree.c $(SQL)/build.c \
-	$(SQL)/date.c $(SQL)/delete.c $(SQL)/func.c $(SQL)/hash.c \
-	$(SQL)/insert.c $(SQL)/legacy.c $(SQL)/main.c $(SQL)/opcodes.c \
-	$(SQL)/os.c $(SQL)/os_unix.c $(SQL)/pager.c $(SQL)/parse.c \
-	$(SQL)/pragma.c $(SQL)/printf.c $(SQL)/random.c $(SQL)/select.c \
-	$(SQL)/table.c $(SQL)/tokenize.c $(SQL)/trigger.c $(SQL)/update.c \
-	$(SQL)/utf.c $(SQL)/util.c $(SQL)/vacuum.c $(SQL)/vdbe.c \
-	$(SQL)/vdbeapi.c $(SQL)/vdbeaux.c $(SQL)/vdbemem.c $(SQL)/where.c \
-	$(SQL)/prepare.c $(SQL)/expr.c $(SQL)/callback.c $(SQL)/alter.c \
-	$(SQL)/vdbefifo.c $(SQL)/complete.c $(SQL)/analyze.c
+C_OBJECTS = $(SQL)/alter.c $(SQL)/analyze.c $(SQL)/attach.c $(SQL)/auth.c $(SQL)/btree.c $(SQL)/build.c \
+			$(SQL)/callback.c $(SQL)/complete.c $(SQL)/date.c $(SQL)/delete.c $(SQL)/expr.c $(SQL)/func.c \
+			$(SQL)/hash.c $(SQL)/insert.c $(SQL)/legacy.c $(SQL)/loadext.c $(SQL)/main.c $(SQL)/opcodes.c \
+			$(SQL)/os.c $(SQL)/os_unix.c $(SQL)/pager.c $(SQL)/parse.c $(SQL)/pragma.c $(SQL)/prepare.c \
+			$(SQL)/printf.c $(SQL)/random.c $(SQL)/select.c $(SQL)/table.c $(SQL)/tokenize.c $(SQL)/trigger.c \
+			$(SQL)/update.c $(SQL)/utf.c $(SQL)/util.c $(SQL)/vacuum.c $(SQL)/vdbe.c $(SQL)/vdbeapi.c \
+			$(SQL)/vdbeaux.c $(SQL)/vdbefifo.c $(SQL)/vdbemem.c $(SQL)/vtab.c $(SQL)/where.c \
 
 CFLAGS = -Wall -Werror
 CPPFLAGS = -Wall -Wno-non-virtual-dtor -Werror

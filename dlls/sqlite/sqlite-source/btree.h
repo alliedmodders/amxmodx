@@ -75,6 +75,7 @@ int sqlite3BtreeRollbackStmt(Btree*);
 int sqlite3BtreeCreateTable(Btree*, int*, int flags);
 int sqlite3BtreeIsInTrans(Btree*);
 int sqlite3BtreeIsInStmt(Btree*);
+int sqlite3BtreeIsInReadTrans(Btree*);
 int sqlite3BtreeSync(Btree*, const char *zMaster);
 void *sqlite3BtreeSchema(Btree *, int, void(*)(void *));
 int sqlite3BtreeSchemaLocked(Btree *);
@@ -130,7 +131,7 @@ const void *sqlite3BtreeDataFetch(BtCursor*, int *pAmt);
 int sqlite3BtreeDataSize(BtCursor*, u32 *pSize);
 int sqlite3BtreeData(BtCursor*, u32 offset, u32 amt, void*);
 
-char *sqlite3BtreeIntegrityCheck(Btree*, int *aRoot, int nRoot);
+char *sqlite3BtreeIntegrityCheck(Btree*, int *aRoot, int nRoot, int, int*);
 struct Pager *sqlite3BtreePager(Btree*);
 
 

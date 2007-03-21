@@ -230,7 +230,7 @@ static int vxprintf(
   char buf[etBUFSIZE];       /* Conversion buffer */
   char prefix;               /* Prefix character.  "+" or "-" or " " or '\0'. */
   etByte errorflag = 0;      /* True if an error is encountered */
-  etByte xtype = 0;          /* Conversion paradigm */
+  etByte xtype;              /* Conversion paradigm */
   char *zExtra;              /* Extra memory used for etTCLESCAPE conversions */
   static const char spaces[] =
    "                                                                         ";
@@ -333,6 +333,8 @@ static int vxprintf(
         infop = &fmtinfo[idx];
         if( useExtended || (infop->flags & FLAG_INTERN)==0 ){
           xtype = infop->type;
+        }else{
+          return -1;
         }
         break;
       }
@@ -804,27 +806,26 @@ char *sqlite3MPrintf(const char *zFormat, ...){
 }
 
 /*
-** Print into memory obtained from malloc().  Do not use the internal
-** %-conversion extensions.  This routine is for use by external users.
+** Print into memory obtained from sqlite3_malloc().  Omit the internal
+** %-conversion extensions.
+*/
+char *sqlite3_vmprintf(const char *zFormat, va_list ap){
+  char zBase[SQLITE_PRINT_BUF_SIZE];
+  return base_vprintf(sqlite3_realloc, 0, zBase, sizeof(zBase), zFormat, ap);
+}
+
+/*
+** Print into memory obtained from sqlite3_malloc()().  Omit the internal
+** %-conversion extensions.
 */
 char *sqlite3_mprintf(const char *zFormat, ...){
   va_list ap;
   char *z;
-  char zBuf[200];
-
-  va_start(ap,zFormat);
-  z = base_vprintf((void*(*)(void*,int))realloc, 0, 
-                   zBuf, sizeof(zBuf), zFormat, ap);
+  char zBase[SQLITE_PRINT_BUF_SIZE];
+  va_start(ap, zFormat);
+  z = base_vprintf(sqlite3_realloc, 0, zBase, sizeof(zBase), zFormat, ap);
   va_end(ap);
   return z;
-}
-
-/* This is the varargs version of sqlite3_mprintf.  
-*/
-char *sqlite3_vmprintf(const char *zFormat, va_list ap){
-  char zBuf[200];
-  return base_vprintf((void*(*)(void*,int))realloc, 0,
-                      zBuf, sizeof(zBuf), zFormat, ap);
 }
 
 /*
@@ -856,7 +857,7 @@ void sqlite3DebugPrintf(const char *zFormat, ...){
   va_start(ap, zFormat);
   base_vprintf(0, 0, zBuf, sizeof(zBuf), zFormat, ap);
   va_end(ap);
-  fprintf(stdout,"%d: %s", getpid(), zBuf);
+  fprintf(stdout,"%s", zBuf);
   fflush(stdout);
 }
 #endif

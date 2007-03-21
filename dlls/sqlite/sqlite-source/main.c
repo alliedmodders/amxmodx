@@ -116,6 +116,7 @@ int sqlite3_close(sqlite3 *db){
 #endif 
 
   /* If there are any outstanding VMs, return SQLITE_BUSY. */
+  sqlite3ResetInternalSchema(db, 0);
   if( db->pVdbe ){
     sqlite3Error(db, SQLITE_BUSY, 
         "Unable to close due to unfinalised statements");
@@ -132,6 +133,8 @@ int sqlite3_close(sqlite3 *db){
     /* printf("DID NOT CLOSE\n"); fflush(stdout); */
     return SQLITE_ERROR;
   }
+
+  sqlite3VtabRollback(db);
 
   for(j=0; j<db->nDb; j++){
     struct Db *pDb = &db->aDb[j];
@@ -159,12 +162,20 @@ int sqlite3_close(sqlite3 *db){
     sqliteFree(pColl);
   }
   sqlite3HashClear(&db->aCollSeq);
+#ifndef SQLITE_OMIT_VIRTUALTABLE
+  for(i=sqliteHashFirst(&db->aModule); i; i=sqliteHashNext(i)){
+    Module *pMod = (Module *)sqliteHashData(i);
+    sqliteFree(pMod);
+  }
+  sqlite3HashClear(&db->aModule);
+#endif
 
   sqlite3HashClear(&db->aFunc);
   sqlite3Error(db, SQLITE_OK, 0); /* Deallocates any cached error strings. */
   if( db->pErr ){
     sqlite3ValueFree(db->pErr);
   }
+  sqlite3CloseExtensions(db);
 
   db->magic = SQLITE_MAGIC_ERROR;
 
@@ -195,6 +206,7 @@ void sqlite3RollbackAll(sqlite3 *db){
       db->aDb[i].inTrans = 0;
     }
   }
+  sqlite3VtabRollback(db);
   if( db->flags&SQLITE_InternChanges ){
     sqlite3ResetInternalSchema(db, 0);
   }
@@ -211,7 +223,7 @@ void sqlite3RollbackAll(sqlite3 *db){
 */
 const char *sqlite3ErrStr(int rc){
   const char *z;
-  switch( rc ){
+  switch( rc & 0xff ){
     case SQLITE_ROW:
     case SQLITE_DONE:
     case SQLITE_OK:         z = "not an error";                          break;
@@ -355,6 +367,9 @@ void sqlite3_progress_handler(
 ** specified number of milliseconds before returning 0.
 */
 int sqlite3_busy_timeout(sqlite3 *db, int ms){
+  if( sqlite3SafetyCheck(db) ){
+    return SQLITE_MISUSE;
+  }
   if( ms>0 ){
     db->busyTimeout = ms;
     sqlite3_busy_handler(db, sqliteDefaultBusyCallback, (void*)db);
@@ -368,20 +383,35 @@ int sqlite3_busy_timeout(sqlite3 *db, int ms){
 ** Cause any pending operation to stop at its earliest opportunity.
 */
 void sqlite3_interrupt(sqlite3 *db){
-  if( !sqlite3SafetyCheck(db) ){
-    db->flags |= SQLITE_Interrupt;
+  if( db && (db->magic==SQLITE_MAGIC_OPEN || db->magic==SQLITE_MAGIC_BUSY) ){
+    db->u1.isInterrupted = 1;
   }
 }
 
 /*
-** Windows systems should call this routine to free memory that
-** is returned in the in the errmsg parameter of sqlite3_open() when
-** SQLite is a DLL.  For some reason, it does not work to call free()
-** directly.
+** Memory allocation routines that use SQLites internal memory
+** memory allocator.  Depending on how SQLite is compiled, the
+** internal memory allocator might be just an alias for the
+** system default malloc/realloc/free.  Or the built-in allocator
+** might do extra stuff like put sentinals around buffers to 
+** check for overruns or look for memory leaks.
 **
-** Note that we need to call free() not sqliteFree() here.
+** Use sqlite3_free() to free memory returned by sqlite3_mprintf().
 */
-void sqlite3_free(char *p){ free(p); }
+void sqlite3_free(void *p){ if( p ) sqlite3OsFree(p); }
+void *sqlite3_malloc(int nByte){ return nByte>0 ? sqlite3OsMalloc(nByte) : 0; }
+void *sqlite3_realloc(void *pOld, int nByte){ 
+  if( pOld ){
+    if( nByte>0 ){
+      return sqlite3OsRealloc(pOld, nByte);
+    }else{
+      sqlite3OsFree(pOld);
+      return 0;
+    }
+  }else{
+    return sqlite3_malloc(nByte);
+  }
+}
 
 /*
 ** This function is exactly the same as sqlite3_create_function(), except
@@ -411,6 +441,7 @@ int sqlite3CreateFunc(
       (!xFunc && (!xFinal && xStep)) ||
       (nArg<-1 || nArg>127) ||
       (255<(nName = strlen(zFunctionName))) ){
+    sqlite3Error(db, SQLITE_ERROR, "bad parameters");
     return SQLITE_ERROR;
   }
   
@@ -462,6 +493,7 @@ int sqlite3CreateFunc(
     p->xStep = xStep;
     p->xFinalize = xFinal;
     p->pUserData = pUserData;
+    p->nArg = nArg;
   }
   return SQLITE_OK;
 }
@@ -508,6 +540,32 @@ int sqlite3_create_function16(
   return sqlite3ApiExit(db, rc);
 }
 #endif
+
+
+/*
+** Declare that a function has been overloaded by a virtual table.
+**
+** If the function already exists as a regular global function, then
+** this routine is a no-op.  If the function does not exist, then create
+** a new one that always throws a run-time error.  
+**
+** When virtual tables intend to provide an overloaded function, they
+** should call this routine to make sure the global function exists.
+** A global function must exist in order for name resolution to work
+** properly.
+*/
+int sqlite3_overload_function(
+  sqlite3 *db,
+  const char *zName,
+  int nArg
+){
+  int nName = strlen(zName);
+  if( sqlite3FindFunction(db, zName, nName, nArg, SQLITE_UTF8, 0)==0 ){
+    sqlite3CreateFunc(db, zName, nArg, SQLITE_UTF8,
+                      0, sqlite3InvalidFunction, 0, 0);
+  }
+  return sqlite3ApiExit(db, SQLITE_OK);
+}
 
 #ifndef SQLITE_OMIT_TRACE
 /*
@@ -731,7 +789,7 @@ int sqlite3_errcode(sqlite3 *db){
   if( sqlite3SafetyCheck(db) ){
     return SQLITE_MISUSE;
   }
-  return db->errCode;
+  return db->errCode & db->errMask;
 }
 
 /*
@@ -809,14 +867,22 @@ static int openDatabase(
   /* Allocate the sqlite data structure */
   db = sqliteMalloc( sizeof(sqlite3) );
   if( db==0 ) goto opendb_out;
+  db->errMask = 0xff;
   db->priorNewRowid = 0;
   db->magic = SQLITE_MAGIC_BUSY;
   db->nDb = 2;
   db->aDb = db->aDbStatic;
   db->autoCommit = 1;
-  db->flags |= SQLITE_ShortColNames;
+  db->flags |= SQLITE_ShortColNames
+#if SQLITE_DEFAULT_FILE_FORMAT<4
+                 | SQLITE_LegacyFileFmt
+#endif
+      ;
   sqlite3HashInit(&db->aFunc, SQLITE_HASH_STRING, 0);
   sqlite3HashInit(&db->aCollSeq, SQLITE_HASH_STRING, 0);
+#ifndef SQLITE_OMIT_VIRTUALTABLE
+  sqlite3HashInit(&db->aModule, SQLITE_HASH_STRING, 0);
+#endif
 
   /* Add the default collation sequence BINARY. BINARY works for both UTF-8
   ** and UTF-16, so add a version for each to avoid any unnecessary
@@ -851,9 +917,6 @@ static int openDatabase(
   }
   db->aDb[0].pSchema = sqlite3SchemaGet(db->aDb[0].pBt);
   db->aDb[1].pSchema = sqlite3SchemaGet(0);
-  if( db->aDb[0].pSchema ){
-    ENC(db) = SQLITE_UTF8;
-  }
 
 
   /* The default safety_level for the main database is 'full'; for the temp
@@ -871,10 +934,29 @@ static int openDatabase(
   ** is accessed.
   */
   if( !sqlite3MallocFailed() ){
-    sqlite3RegisterBuiltinFunctions(db);
     sqlite3Error(db, SQLITE_OK, 0);
+    sqlite3RegisterBuiltinFunctions(db);
   }
   db->magic = SQLITE_MAGIC_OPEN;
+
+  /* Load automatic extensions - extensions that have been registered
+  ** using the sqlite3_automatic_extension() API.
+  */
+  (void)sqlite3AutoLoadExtensions(db);
+
+#ifdef SQLITE_ENABLE_FTS1
+  {
+    extern int sqlite3Fts1Init(sqlite3*);
+    sqlite3Fts1Init(db);
+  }
+#endif
+
+#ifdef SQLITE_ENABLE_FTS2
+  {
+    extern int sqlite3Fts2Init(sqlite3*);
+    sqlite3Fts2Init(db);
+  }
+#endif
 
 opendb_out:
   if( SQLITE_NOMEM==(rc = sqlite3_errcode(db)) ){
@@ -963,6 +1045,7 @@ int sqlite3_reset(sqlite3_stmt *pStmt){
   }else{
     rc = sqlite3VdbeReset((Vdbe*)pStmt);
     sqlite3VdbeMakeReady((Vdbe*)pStmt, -1, 0, 0, 0);
+    assert( (rc & (sqlite3_db_handle(pStmt)->errMask))==rc );
   }
   return rc;
 }
@@ -1230,3 +1313,30 @@ error_out:
   return sqlite3ApiExit(db, rc);
 }
 #endif
+
+/*
+** Set all the parameters in the compiled SQL statement to NULL.
+*/
+int sqlite3_clear_bindings(sqlite3_stmt *pStmt){
+  int i;
+  int rc = SQLITE_OK;
+  for(i=1; rc==SQLITE_OK && i<=sqlite3_bind_parameter_count(pStmt); i++){
+    rc = sqlite3_bind_null(pStmt, i);
+  }
+  return rc;
+}
+
+/*
+** Sleep for a little while.  Return the amount of time slept.
+*/
+int sqlite3_sleep(int ms){
+  return sqlite3OsSleep(ms);
+}
+
+/*
+** Enable or disable the extended result codes.
+*/
+int sqlite3_extended_result_codes(sqlite3 *db, int onoff){
+  db->errMask = onoff ? 0xffffffff : 0xff;
+  return SQLITE_OK;
+}

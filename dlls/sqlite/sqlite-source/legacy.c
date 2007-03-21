@@ -123,7 +123,7 @@ exec_out:
 
   rc = sqlite3ApiExit(0, rc);
   if( rc!=SQLITE_OK && rc==sqlite3_errcode(db) && pzErrMsg ){
-    *pzErrMsg = malloc(1+strlen(sqlite3_errmsg(db)));
+    *pzErrMsg = sqlite3_malloc(1+strlen(sqlite3_errmsg(db)));
     if( *pzErrMsg ){
       strcpy(*pzErrMsg, sqlite3_errmsg(db));
     }
@@ -131,5 +131,6 @@ exec_out:
     *pzErrMsg = 0;
   }
 
+  assert( (rc&db->errMask)==rc );
   return rc;
 }

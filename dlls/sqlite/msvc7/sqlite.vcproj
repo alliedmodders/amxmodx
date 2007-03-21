@@ -295,6 +295,9 @@
 				RelativePath="..\sqlite-source\legacy.c">
 			</File>
 			<File
+				RelativePath="..\sqlite-source\loadext.c">
+			</File>
+			<File
 				RelativePath="..\sqlite-source\main.c">
 			</File>
 			<File
@@ -346,6 +349,9 @@
 				RelativePath="..\sqlite-source\sqlite3.h">
 			</File>
 			<File
+				RelativePath="..\sqlite-source\sqlite3ext.h">
+			</File>
+			<File
 				RelativePath="..\sqlite-source\sqliteInt.h">
 			</File>
 			<File
@@ -389,6 +395,9 @@
 			</File>
 			<File
 				RelativePath="..\sqlite-source\vdbemem.c">
+			</File>
+			<File
+				RelativePath="..\sqlite-source\vtab.c">
 			</File>
 			<File
 				RelativePath="..\sqlite-source\where.c">

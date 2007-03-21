@@ -49,7 +49,8 @@ void sqlite3BeginTrigger(
   SrcList *pTableName,/* The name of the table/view the trigger applies to */
   int foreach,        /* One of TK_ROW or TK_STATEMENT */
   Expr *pWhen,        /* WHEN clause */
-  int isTemp          /* True if the TEMPORARY keyword is present */
+  int isTemp,         /* True if the TEMPORARY keyword is present */
+  int noErr           /* Suppress errors if the trigger already exists */
 ){
   Trigger *pTrigger = 0;
   Table *pTab;
@@ -103,6 +104,10 @@ void sqlite3BeginTrigger(
     /* The table does not exist. */
     goto trigger_cleanup;
   }
+  if( IsVirtual(pTab) ){
+    sqlite3ErrorMsg(pParse, "cannot create triggers on virtual tables");
+    goto trigger_cleanup;
+  }
 
   /* Check that the trigger name is not reserved and that no trigger of the
   ** specified name exists */
@@ -111,7 +116,9 @@ void sqlite3BeginTrigger(
     goto trigger_cleanup;
   }
   if( sqlite3HashFind(&(db->aDb[iDb].pSchema->trigHash), zName,strlen(zName)) ){
-    sqlite3ErrorMsg(pParse, "trigger %T already exists", pName);
+    if( !noErr ){
+      sqlite3ErrorMsg(pParse, "trigger %T already exists", pName);
+    }
     goto trigger_cleanup;
   }
 
@@ -435,7 +442,7 @@ void sqlite3DeleteTrigger(Trigger *pTrigger){
 ** same job as this routine except it takes a pointer to the trigger
 ** instead of the trigger name.
 **/
-void sqlite3DropTrigger(Parse *pParse, SrcList *pName){
+void sqlite3DropTrigger(Parse *pParse, SrcList *pName, int noErr){
   Trigger *pTrigger = 0;
   int i;
   const char *zDb;
@@ -459,7 +466,9 @@ void sqlite3DropTrigger(Parse *pParse, SrcList *pName){
     if( pTrigger ) break;
   }
   if( !pTrigger ){
-    sqlite3ErrorMsg(pParse, "no such trigger: %S", pName, 0);
+    if( !noErr ){
+      sqlite3ErrorMsg(pParse, "no such trigger: %S", pName, 0);
+    }
     goto drop_trigger_cleanup;
   }
   sqlite3DropTriggerPtr(pParse, pTrigger);
@@ -594,9 +603,10 @@ int sqlite3TriggersExist(
   int op,                 /* one of TK_DELETE, TK_INSERT, TK_UPDATE */
   ExprList *pChanges      /* Columns that change in an UPDATE statement */
 ){
-  Trigger *pTrigger = pTab->pTrigger;
+  Trigger *pTrigger;
   int mask = 0;
 
+  pTrigger = IsVirtual(pTab) ? 0 : pTab->pTrigger;
   while( pTrigger ){
     if( pTrigger->op==op && checkColumnOverLap(pTrigger->pColumns, pChanges) ){
       mask |= pTrigger->tr_tm;
@@ -658,12 +668,12 @@ static int codeTriggerProgram(
     pParse->trigStack->orconf = orconf;
     switch( pTriggerStep->op ){
       case TK_SELECT: {
-	Select * ss = sqlite3SelectDup(pTriggerStep->pSelect);		  
-	assert(ss);
-	assert(ss->pSrc);
-        sqlite3SelectResolve(pParse, ss, 0);
-	sqlite3Select(pParse, ss, SRT_Discard, 0, 0, 0, 0, 0);
-	sqlite3SelectDelete(ss);
+	Select *ss = sqlite3SelectDup(pTriggerStep->pSelect);
+        if( ss ){
+          sqlite3SelectResolve(pParse, ss, 0);
+          sqlite3Select(pParse, ss, SRT_Discard, 0, 0, 0, 0, 0);
+          sqlite3SelectDelete(ss);
+        }
 	break;
       }
       case TK_UPDATE: {

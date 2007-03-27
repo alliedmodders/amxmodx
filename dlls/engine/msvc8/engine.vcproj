@@ -232,16 +232,16 @@
 				RelativePath="..\gpglobals.h"
 				>
 			</File>
+			<File
+				RelativePath="..\svn_version.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Module SDK"
 			>
 			<File
 				RelativePath="..\sdk\moduleconfig.h"
-				>
-			</File>
-			<File
-				RelativePath="..\sdk\svn_version.h"
 				>
 			</File>
 			<Filter

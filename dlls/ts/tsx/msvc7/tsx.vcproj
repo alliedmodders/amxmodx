@@ -150,47 +150,9 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
 				RelativePath="..\CMisc.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;tsx_amxx_EXPORTS;$(NoInherit)"
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="tsx_amxx_EXPORTS;$(NoInherit)"
-						BrowseInformation="1"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\CRank.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;tsx_amxx_EXPORTS;$(NoInherit)"
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="tsx_amxx_EXPORTS;$(NoInherit)"
-						BrowseInformation="1"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\moduleconfig.cpp">
@@ -206,25 +168,6 @@
 			</File>
 			<File
 				RelativePath="..\Utils.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;tsx_amxx_EXPORTS;$(NoInherit)"
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="tsx_amxx_EXPORTS;$(NoInherit)"
-						BrowseInformation="1"/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -235,6 +178,9 @@
 			</File>
 			<File
 				RelativePath="..\CRank.h">
+			</File>
+			<File
+				RelativePath="..\svn_version.h">
 			</File>
 			<File
 				RelativePath="..\tsx.h">
@@ -248,9 +194,6 @@
 			Filter="">
 			<File
 				RelativePath="..\sdk\amxxmodule.h">
-			</File>
-			<File
-				RelativePath="..\sdk\svn_version.h">
 			</File>
 			<Filter
 				Name="Base SDK"

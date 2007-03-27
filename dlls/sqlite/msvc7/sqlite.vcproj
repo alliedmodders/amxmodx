@@ -153,6 +153,9 @@
 				RelativePath="..\sqlite_header.h">
 			</File>
 			<File
+				RelativePath="..\svn_version.h">
+			</File>
+			<File
 				RelativePath="..\threading.h">
 			</File>
 		</Filter>
@@ -408,9 +411,6 @@
 			Filter="">
 			<File
 				RelativePath="..\sdk\moduleconfig.h">
-			</File>
-			<File
-				RelativePath="..\sdk\svn_version.h">
 			</File>
 			<Filter
 				Name="AMXX STL"

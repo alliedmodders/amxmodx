@@ -189,15 +189,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\fakemeta_amxx.h"
-				>
-			</File>
-			<File
 				RelativePath="..\fm_tr.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\fm_tr.h"
 				>
 			</File>
 			<File
@@ -210,6 +202,23 @@
 			</File>
 			<File
 				RelativePath="..\pdata.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			>
+			<File
+				RelativePath="..\fakemeta_amxx.h"
+				>
+			</File>
+			<File
+				RelativePath="..\fm_tr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\svn_version.h"
 				>
 			</File>
 		</Filter>
@@ -285,10 +294,6 @@
 			>
 			<File
 				RelativePath="..\sdk\moduleconfig.h"
-				>
-			</File>
-			<File
-				RelativePath="..\sdk\svn_version.h"
 				>
 			</File>
 			<Filter

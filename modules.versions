@@ -14,86 +14,86 @@ in = svn_version.tpl
 out = svn_version.inc
 
 [cstrike]
-folder = dlls/cstrike/cstrike/sdk
+folder = dlls/cstrike/cstrike
 in = svn_version.tpl
 out = svn_version.h
 
 [csx]
-folder = dlls/cstrike/csx/sdk
+folder = dlls/cstrike/csx
 in = svn_version.tpl
 out = svn_version.h
 
 [dodfun]
-folder = dlls/dod/dodfun/sdk
+folder = dlls/dod/dodfun
 in = svn_version.tpl
 out = svn_version.h
 
 [dodx]
-folder = dlls/dod/dodx/sdk
+folder = dlls/dod/dodx
 in = svn_version.tpl
 out = svn_version.h
 
 [engine]
-folder = dlls/engine/sdk
+folder = dlls/engine
 in = svn_version.tpl
 out = svn_version.h
 
 [fakemeta]
-folder = dlls/fakemeta/sdk
+folder = dlls/fakemeta
 in = svn_version.tpl
 out = svn_version.h
 
 [fun]
-folder = dlls/fun/sdk
+folder = dlls/fun
 in = svn_version.tpl
 out = svn_version.h
 
 [geoip]
-folder = dlls/geoip/sdk
+folder = dlls/geoip
 in = svn_version.tpl
 out = svn_version.h
 
 [mysqlx]
-folder = dlls/mysqlx/sdk
+folder = dlls/mysqlx
 in = svn_version.tpl
 out = svn_version.h
 
 [ns]
-folder = dlls/ns/sdk
+folder = dlls/ns
 in = svn_version.tpl
 out = svn_version.h
 
 [nvault]
-folder = dlls/nvault/sdk
+folder = dlls/nvault
 in = svn_version.tpl
 out = svn_version.h
 
 [regex]
-folder = dlls/regex/sdk
+folder = dlls/regex
 in = svn_version.tpl
 out = svn_version.h
 
 [sockets]
-folder = dlls/sockets/sdk
+folder = dlls/sockets
 in = svn_version.tpl
 out = svn_version.h
 
 [sqlite]
-folder = dlls/sqlite/sdk
+folder = dlls/sqlite
 in = svn_version.tpl
 out = svn_version.h
 
 [tfcx]
-folder = dlls/tfcx/sdk
+folder = dlls/tfcx
 in = svn_version.tpl
 out = svn_version.h
 
 [tsx]
-folder = dlls/ts/tsx/sdk
+folder = dlls/ts/tsx
 in = svn_version.tpl
 out = svn_version.h
 
 [tsfun]
-folder = dlls/ts/tsfun/sdk
+folder = dlls/ts/tsfun
 in = svn_version.tpl
 out = svn_version.h

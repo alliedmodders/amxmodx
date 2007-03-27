@@ -182,15 +182,15 @@
 			<File
 				RelativePath="..\dodx.h">
 			</File>
+			<File
+				RelativePath="..\svn_version.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Module SDK"
 			Filter="">
 			<File
 				RelativePath="..\sdk\moduleconfig.h">
-			</File>
-			<File
-				RelativePath="..\sdk\svn_version.h">
 			</File>
 			<Filter
 				Name="SDK Base"

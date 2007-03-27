@@ -208,14 +208,19 @@
 	</References>
 	<Files>
 		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl"
+			>
+			<File
+				RelativePath="..\svn_version.h"
+				>
+			</File>
+		</Filter>
+		<Filter
 			Name="Module SDK"
 			>
 			<File
 				RelativePath="..\sdk\moduleconfig.h"
-				>
-			</File>
-			<File
-				RelativePath="..\sdk\svn_version.h"
 				>
 			</File>
 			<Filter

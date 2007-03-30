@@ -124,8 +124,6 @@ CmdMngr::Command* CmdMngr::getCmd(long int id, int type, int access)
 
 int CmdMngr::getCmdNum(int type, int access)
 {
-	if ((access == buf_access) && (type == buf_type))
-		return buf_num;			// once calculated don't have to be done again
 
 	buf_access = access;
 	buf_type = type;

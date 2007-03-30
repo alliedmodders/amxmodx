@@ -493,7 +493,7 @@ public cmdVoteKickBan(id, level, cid)
 		get_players(players, pnum, "c")
 		for (new i = 0; i < pnum; i++)
 		{
-			format(lTag, 15, "%L", players[i], is_user_admin(id) ? "ADMIN" : "USER")
+			format(lTag, 15, "%L", players[i], is_user_admin(id) ? "ADMIN" : "PLAYER")
 			format(lKickBan, 15, "%L", players[i], voteban ? "BAN" : "KICK")
 			
 			switch (activity)

@@ -470,7 +470,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 	{
 		if (HeadShotKill && wpnindex)
 		{
-			new killer_name[32], victim_name[32], weapon_name[32], message[128], players[32], pnum
+			new killer_name[32], victim_name[32], weapon_name[32], message[256], players[32], pnum
 			
 			xmod_get_wpnname(wpnindex, weapon_name, 31)
 			get_user_name(killer, killer_name, 31)
@@ -479,11 +479,11 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 			
 			for (new i = 0; i < pnum; i++)
 			{
-				format(message, 127, "%L", players[i], g_HeadShots[random_num(0, 6)])
+				format(message, sizeof(message)-1, "%L", players[i], g_HeadShots[random_num(0, 6)])
 				
-				replace(message, 127, "$vn", victim_name)
-				replace(message, 127, "$wn", weapon_name)
-				replace(message, 127, "$kn", killer_name)
+				replace(message, sizeof(message)-1, "$vn", victim_name)
+				replace(message, sizeof(message)-1, "$wn", weapon_name)
+				replace(message, sizeof(message)-1, "$kn", killer_name)
 				
 				set_hudmessage(100, 100, 255, -1.0, 0.30, 0, 6.0, 6.0, 0.5, 0.15, -1)
 				ShowSyncHudMsg(players[i], g_announce_sync, "%s", message)

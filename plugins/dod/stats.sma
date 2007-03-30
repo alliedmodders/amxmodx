@@ -713,17 +713,17 @@ public client_death(killer,victim,wpnindex,hitplace,TK)
 
   if ( headshot && (HeadShotKill || HeadShotKillSound) && !xmod_is_melee_wpn(wpnindex) ){
     if ( HeadShotKill ){
-      new weapon[32], message[128], players[32], pnum
+      new weapon[32], message[256], players[32], pnum
       xmod_get_wpnname(wpnindex,weapon,31) 
 
       get_players(players,pnum,"c")
       for (new i=0;i<pnum;i++) {
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
           continue
-        format( message, 127, "%L",players[i],g_HeadShots[ random_num(0,6) ] )
-        replace( message, 127 , "$vn", victim_name )
-        replace( message, 127 , "$wn", weapon )    
-        replace( message, 127 , "$kn", killer_name )
+        format( message, sizeof(message)-1, "%L",players[i],g_HeadShots[ random_num(0,6) ] )
+        replace( message, sizeof(message)-1, "$vn", victim_name )
+        replace( message, sizeof(message)-1, "$wn", weapon )    
+        replace( message, sizeof(message)-1, "$kn", killer_name )
         set_hudmessage(100, 100, 255, -1.0, 0.19, 0, 6.0, 6.0, 0.5, 0.15, -1)  
         ShowSyncHudMsg(players[i], g_center2_sync, "%s", message) 
       }

@@ -595,12 +595,12 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
 
   if ( headshot && (HeadShotKill || HeadShotKillSound) && !xmod_is_melee_wpn(wpnindex) ){
     if ( HeadShotKill ){
-      new weapon[32], message[128]
+      new weapon[32], message[256]
       xmod_get_wpnname(wpnindex,weapon,31) 
-      copy( message, 127, g_HeadShots[ random_num(0,6) ] )
-      replace( message, 127 , "$vn", victim_name )
-      replace( message, 127 , "$wn", weapon )    
-      replace( message, 127 , "$kn", killer_name )
+      copy( message, sizeof(message)-1, g_HeadShots[ random_num(0,6) ] )
+      replace( message, sizeof(message)-1, "$vn", victim_name )
+      replace( message, sizeof(message)-1, "$wn", weapon )    
+      replace( message, sizeof(message)-1, "$kn", killer_name )
       set_hudmessage(100, 100, 255, -1.0, 0.19, 0, 6.0, 6.0, 0.5, 0.15, -1) 
       for (new i=1;i<=get_maxplayers();i++){
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )

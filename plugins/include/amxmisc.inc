@@ -29,7 +29,8 @@
 
 stock is_user_admin(id)
 {
-	return ( get_user_flags(id)>0 && !(get_user_flags(id)&ADMIN_USER) );
+	new __flags=get_user_flags(id);
+	return (__flags>0 && !(__flags&ADMIN_USER));
 }
 
 stock cmd_access(id,level,cid,num) 
@@ -81,9 +82,13 @@ stock cmd_access(id,level,cid,num)
 
 stock access(id,level) 
 {
-	if ( level==ADMIN_ADMIN )
+	if (level==ADMIN_ADMIN)
 	{
 		return is_user_admin(id);
+	}
+	else if (level==ADMIN_ALL)
+	{
+		return 1;
 	}
 
 	return (get_user_flags(id) & level);

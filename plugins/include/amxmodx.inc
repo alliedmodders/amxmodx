@@ -463,8 +463,13 @@ native change_task(id = 0, Float:newTime=1.0, outside = 0);
 /* Returns 1 if task under given id exists. */
 native task_exists(id = 0, outside = 0);
 
-/* Sets flags for player. Set flags to -1 if you want to clear all flags.
-* You can use different settings by changing the id, which is from range 0 - 31. */
+/* Adds flags to a player. Set flags to -1 if you want to clear all flags.
+ * You can use different settings by changing the id, which is from range 0 - 31. 
+ * Example: If the user has flags read_flags("a") set, and you pass set_user_flags(player,read_flags("b"))
+ *          they would then have flags "ab" set.
+ *          If they have flags "abc" set, and you want to only have them with flags "a", you would
+ *          do set_user_flags(player,-1); set_user_flags(player,read_flags("a"))
+ */
 native set_user_flags(index,flags=-1,id=0);
 
 /* Gets flags from player. Set index to 0 if you want to read flags from server. */

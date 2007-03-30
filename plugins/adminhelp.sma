@@ -65,6 +65,12 @@ public cmdHelp(id, level, cid)
 	new start = read_argv(1, arg1, 7) ? str_to_num(arg1) : 1
 	new lHelpAmount = HELPAMOUNT
 	
+	// HACK: ADMIN_ADMIN is never set as a user's actual flags, so those types of commands never show
+	if (flags > 0 && !(flags & ADMIN_USER))
+	{
+		flags |= ADMIN_ADMIN;
+	}
+	
 	if (id == 0 && read_argc() == 3)
 		lHelpAmount = read_argv(2, arg1, 7) ? str_to_num(arg1) : HELPAMOUNT
 

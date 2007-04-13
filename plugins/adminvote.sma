@@ -36,7 +36,7 @@
 #include <amxmisc>
 
 new g_Answer[128]
-new g_optionName[4][32]
+new g_optionName[4][64]
 new g_voteCount[4]
 new g_validMaps
 new g_yesNoVote
@@ -474,10 +474,29 @@ public cmdVoteKickBan(id, level, cid)
 	format(menu_msg, 255, g_coloredMenus ? "\y%s %s?\w^n^n1.  %s^n2.  %s" : "%s %s?^n^n1.  %s^n2.  %s", lKickBan, arg, lYes, lNo)
 	g_yesNoVote = 1
 	
+	new bool:ipban=false;
+	
 	if (voteban)
-		get_user_authid(player, g_optionName[0], 31)
+	{
+		get_user_authid(player, g_optionName[0], sizeof(g_optionName[])-1);
+		
+		server_print("g_optionName==^"%s^"",g_optionName[0]);
+		// Do the same check that's in plmenu to determine if this should be an IP ban instead
+		if (equal("4294967295", g_optionName[0])
+			|| equal("HLTV", g_optionName[0])
+			|| equal("STEAM_ID_LAN", g_optionName[0])
+			|| equali("VALVE_ID_LAN", g_optionName[0]))
+		{
+			get_user_ip(player, g_optionName[0], sizeof(g_optionName[])-1, 1);
+			
+			ipban=true;
+		}
+
+	}
 	else
+	{
 		num_to_str(get_user_userid(player), g_optionName[0], 31)
+	}
 	
 	new authid[32], name[32]
 	
@@ -510,7 +529,23 @@ public cmdVoteKickBan(id, level, cid)
 	
 	set_cvar_float("amx_last_voting", get_gametime() + vote_time)
 	g_voteRatio = get_cvar_float(voteban ? "amx_voteban_ratio" : "amx_votekick_ratio")
-	g_Answer = voteban ? "banid 30.0 %s kick" : "kick #%s"
+
+	if (voteban)
+	{
+		if (ipban==true)
+		{
+			g_Answer = "addip 30.0 %s";
+		}
+		else
+		{
+			g_Answer = "banid 30.0 %s kick";
+
+		}
+	}
+	else
+	{
+		g_Answer = "kick #%s";
+	}
 	show_menu(0, keys, menu_msg, floatround(vote_time), voteban ? "Ban " : "Kick ")
 	set_task(vote_time, "checkVotes", 99889988)
 	g_voteCaller = id

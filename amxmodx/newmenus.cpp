@@ -347,6 +347,8 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	
 	for (item_t i = start; i <= end; i++)
 	{
+		// reset enabled
+		enabled = true;
 		pItem = m_Items[i];
 		
 		if (pItem->access && !(pItem->access & g_players[player].flags[0]))

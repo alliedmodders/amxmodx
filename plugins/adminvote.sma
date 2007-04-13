@@ -374,7 +374,7 @@ public cmdVote(id, level, cid)
 	}
 	
 	new count=read_argc();
-	server_print("count==%d",count);
+
 	for (new i=0;i<4 && (i+2)<count;i++)
 	{
 		read_argv(i+2, g_optionName[i], sizeof(g_optionName[])-1);

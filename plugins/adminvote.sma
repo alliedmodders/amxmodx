@@ -35,6 +35,7 @@
 #include <amxmodx>
 #include <amxmisc>
 
+
 new g_Answer[128]
 new g_optionName[4][64]
 new g_voteCount[4]
@@ -58,7 +59,7 @@ public plugin_init()
 	register_menucmd(register_menuid("Choose map: "), MENU_KEY_1|MENU_KEY_2|MENU_KEY_3|MENU_KEY_4, "voteCount")
 	register_menucmd(register_menuid("Kick "), MENU_KEY_1|MENU_KEY_2, "voteCount")
 	register_menucmd(register_menuid("Ban "), MENU_KEY_1|MENU_KEY_2, "voteCount")
-	register_menucmd(register_menuid("Vote: "), MENU_KEY_1|MENU_KEY_2, "voteCount")
+	register_menucmd(register_menuid("Vote: "), MENU_KEY_1|MENU_KEY_2|MENU_KEY_3|MENU_KEY_4, "voteCount")
 	register_menucmd(register_menuid("The result: "), MENU_KEY_1|MENU_KEY_2, "actionResult")
 	register_concmd("amx_votemap", "cmdVoteMap", ADMIN_VOTE, "<map> [map] [map] [map]")
 	register_concmd("amx_votekick", "cmdVoteKickBan", ADMIN_VOTE, "<name or #userid>")
@@ -372,8 +373,12 @@ public cmdVote(id, level, cid)
 		return PLUGIN_HANDLED
 	}
 	
-	read_argv(2, g_optionName[0], 31)
-	read_argv(3, g_optionName[1], 31)
+	new count=read_argc();
+	server_print("count==%d",count);
+	for (new i=0;i<4 && (i+2)<count;i++)
+	{
+		read_argv(i+2, g_optionName[i], sizeof(g_optionName[])-1);
+	}
 
 	new authid[32], name[32]
 	
@@ -400,18 +405,35 @@ public cmdVote(id, level, cid)
 		}
 	}
 
-	new menu_msg[256], lVote[16]
+	new menu_msg[512], lVote[16]
 	
 	format(lVote, 15, "%L", LANG_SERVER, "VOTE")
-	new keys = MENU_KEY_1|MENU_KEY_2
 	
-	format(menu_msg, 255, g_coloredMenus ? "\y%s: %s\w^n^n1.  %s^n2.  %s" : "%s: %s^n^n1.  %s^n2.  %s", lVote, quest, g_optionName[0], g_optionName[1])
+	count-=2;
+	if (count>4)
+	{
+		count=4;
+	}
+	// count now shows how many options were listed
+	new keys=0;
+	for (new i=0;i<count;i++)
+	{
+		keys |= (1<<i);
+	}
+	
+	new len=formatex(menu_msg, sizeof(menu_msg)-1, g_coloredMenus ? "\y%s: %s\w^n^n" : "%s: %s^n^n", lVote, quest);
+	
+	for (new i=0;i<count;i++)
+	{
+		len+=formatex(menu_msg[len], sizeof(menu_msg) - 1 - len ,"%d.  %s^n",i+1,g_optionName[i]);
+	}
 	g_execResult = false
 	
 	new Float:vote_time = get_cvar_float("amx_vote_time") + 2.0
 	
 	set_cvar_float("amx_last_voting", get_gametime() + vote_time)
 	g_voteRatio = get_cvar_float("amx_vote_ratio")
+	replace_all(quest,sizeof(quest)-1,"%","");
 	format(g_Answer, 127, "%s - %%s", quest)
 	show_menu(0, keys, menu_msg, floatround(vote_time), "Vote: ")
 	set_task(vote_time, "checkVotes", 99889988)

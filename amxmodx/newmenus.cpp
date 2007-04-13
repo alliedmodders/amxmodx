@@ -458,7 +458,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 					_snprintf(buffer, 
 						sizeof(buffer)-1, 
 						m_AutoColors ? "\\r%d. \\w%s\n" : "%d. %s\n", 
-						option, 
+						option == 10 ? 0 : option, 
 						m_OptNames[abs(MENU_BACK)].c_str()
 						);
 					m_Text.append(buffer);
@@ -473,7 +473,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 					_snprintf(buffer, 
 						sizeof(buffer)-1, 
 						m_AutoColors ? "\\r%d. \\w%s\n" : "%d. %s\n", 
-						option, 
+						option == 10 ? 0 : option, 
 						m_OptNames[abs(MENU_MORE)].c_str()
 						);
 					m_Text.append(buffer);
@@ -488,7 +488,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 					_snprintf(buffer, 
 						sizeof(buffer)-1, 
 						m_AutoColors ? "\\r%d. \\w%s\n" : "%d. %s\n", 
-						option, 
+						option == 10 ? 0 : option, 
 						m_OptNames[abs(MENU_EXIT)].c_str()
 						);
 					m_Text.append(buffer);

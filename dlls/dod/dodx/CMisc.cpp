@@ -352,13 +352,14 @@ void CPlayer::setBody(int bn)
 /*
 	iuser3 = 0 standing up
 	iuser3 = 1 going prone or mg tearing down
-	iuser3 = 2 setting up mg
+	iuser3 = 2 setting up mg while laying down
 */
 void CPlayer::PreThink()
 {
 	if(!ingame || ignoreBots(pEdict))
 		return;
 
+	// Died in the normal way
 	if(olddeadflag != 0 && pEdict->v.deadflag == 0 && iFSpawnForward != -1)
 		MF_ExecuteForward(iFSpawnForward, index);
 

@@ -40,8 +40,6 @@ void CPlayer::Init(edict_t* e, int i)
 	pEdict = e;
 	initialized = false;
 	ingame = false;
-	bot_value = false;
-	bot_cached = false;
 	authorized = false;
 
 	current = 0;
@@ -89,8 +87,6 @@ void CPlayer::Disconnect()
 	}
 	queries.clear();
 
-	bot_value = false;
-	bot_cached = false;
 	menu = 0;
 	newmenu = -1;
 }
@@ -116,8 +112,6 @@ int CPlayer::NextHUDChannel()
 
 bool CPlayer::Connect(const char* connectname, const char* ipaddress)
 {
-	bot_value = false;
-	bot_cached = false;
 	name.assign(connectname);
 	ip.assign(ipaddress);
 	time = gpGlobals->time;

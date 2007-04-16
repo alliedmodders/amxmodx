@@ -84,8 +84,6 @@ public:
 
 	bool initialized;
 	bool ingame;
-	bool bot_cached;
-	bool bot_value;
 	bool authorized;
 	bool vgui;	
 
@@ -132,24 +130,7 @@ public:
 
 	inline bool IsBot()
 	{
-		if (!bot_cached)
-		{
-			bot_value = false;
-			if (pEdict->v.flags & FL_FAKECLIENT)
-			{
-				bot_value = true;
-				bot_cached = true;
-			} else {
-				const char *auth = GETPLAYERAUTHID(pEdict);
-				if (auth && (strcmp(auth, "BOT") == 0))
-				{
-					bot_value = true;
-					bot_cached = true;
-				}
-			}
-		}
-
-		return bot_value;
+		return ((pEdict->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT);
 	}
 
 	inline bool IsAlive()

@@ -280,25 +280,22 @@ enum {
 #define FORWARD_ONLY_NEW	2
 #define FORWARD_ALL		3
 
-#define MEXIT_ALL	1
-#define MEXIT_NORMAL	0
-#define MEXIT_NEVER	-1
+#define MEXIT_ALL		1		/* (default) Menu will have an exit option */
+#define MEXIT_NORMAL	0		/* Deprecated, has no effect */
+#define MEXIT_NEVER		-1		/* Menu will not have an exit option */
 
-#define MENUPAD_NONE		0	//no padding (default)
-#define MENUPAD_PAGE		1	//pads based on items per page
+#define MENUPAD_NONE		0	/* Deprecated, not used */
+#define MENUPAD_PAGE		1	/* Deprecated, not used */
 
-#define MPROP_PERPAGE	1	//NUM - items per page.  0=no paginating, 7=default
-#define MPROP_BACKNAME	2	//STRING - name of "back" button
-#define MPROP_NEXTNAME	3	//STRING - name of "more" button
-#define MPROP_EXITNAME	4	//STRING - name of "exit" button
-#define MPROP_TITLE	5	//STRING - sets menu title
-#define MPROP_EXIT	6	//NUM - sets how "Exit" appears on the menu
-#define MPROP_ORDER	7	//Sets the back/next/exit order
-				//Send an 3-cell array with MENU_EXIT etc in the order
-				//(from 0-2), 0 being first
-#define MPROP_NOCOLORS	8	//NUM - sets whether colors are not auto (0=default)
-#define MPROP_PADMENU	9	//NUM - sets how the ending portions of a menu are padded
-				//i.e. 2 items, 7 per page, with endings at slots 5/6/7.
+#define MPROP_PERPAGE	1		//NUM - items per page.  0=no paginating, 7=default
+#define MPROP_BACKNAME	2		//STRING - name of "back" button
+#define MPROP_NEXTNAME	3		//STRING - name of "more" button
+#define MPROP_EXITNAME	4		//STRING - name of "exit" button
+#define MPROP_TITLE		5		//STRING - sets menu title
+#define MPROP_EXIT		6		//NUM - sets how "Exit" appears on the menu
+#define MPROP_ORDER		7		/* Deprecated, has no effect */
+#define MPROP_NOCOLORS	8		//NUM - sets whether colors are not auto (0=default)
+#define MPROP_PADMENU	9		/* Deprecated, has no effect */
 
 #define SND_SPAWNING		(1<<8)		// we're spawing, used in some cases for ambients 
 #define SND_STOP		(1<<5)		// stop sound

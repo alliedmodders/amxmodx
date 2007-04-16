@@ -39,6 +39,7 @@
 #define	ITEM_ENABLED	1
 #define ITEM_DISABLED	2
 
+#define MAX_MENU_ITEMS		10
 
 #define MPROP_PERPAGE	1
 #define MPROP_BACKNAME	2
@@ -92,16 +93,13 @@ public:
 	String m_Text;
 
 	String m_OptNames[4];
-	int m_OptOrders[3];
 
-	bool m_AlwaysExit;
 	bool m_NeverExit;
 	bool m_AutoColors;
 	
 	int menuId;
 	int thisId;
 	int func;
-	int padding;
 	bool isDestroying;
 public:
 	unsigned int items_per_page;

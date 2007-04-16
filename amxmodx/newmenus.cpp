@@ -90,17 +90,11 @@ Menu::Menu(const char *title, int mid, int tid)
 	m_OptNames[abs(MENU_MORE)].assign("More");
 	m_OptNames[abs(MENU_EXIT)].assign("Exit");
 
-	m_OptOrders[0] = MENU_BACK;
-	m_OptOrders[1] = MENU_MORE;
-	m_OptOrders[2] = MENU_EXIT;
-
-	m_AlwaysExit = false;
 	m_NeverExit = false;
 	m_AutoColors = g_coloredmenus;
 
 	items_per_page = 7;
 	func = 0;
-	padding = 0;
 	isDestroying = false;
 }
 
@@ -164,9 +158,11 @@ int Menu::PagekeyToItem(page_t page, item_t key)
 	if (num_pages == 1 || !items_per_page)
 	{
 		if (key > m_Items.size())
+		{
 			return MENU_EXIT;
-		else
+		} else {
 			return key-1;
+		}
 	} else {
 		//first page
 		if (page == 0)
@@ -192,10 +188,10 @@ int Menu::PagekeyToItem(page_t page, item_t key)
 				}
 			}
 			key = new_key;
-			if (key == items_per_page + 1)
+			if (key == items_per_page + 2)
 			{
 				return MENU_MORE;
-			} else if (key == items_per_page + 2) {
+			} else if (key == items_per_page + 3) {
 				return MENU_EXIT;
 			} else {
 				return (start + key - 1);
@@ -214,10 +210,10 @@ int Menu::PagekeyToItem(page_t page, item_t key)
 					}
 				}
 			}
-			if (key == remaining + 1)
+			if (key == items_per_page + 1)
 			{
 				return MENU_BACK;
-			} else if (key == remaining + 2) {
+			} else if (key == items_per_page + 3) {
 				return MENU_EXIT;
 			} else {
 				return (start + key - 1);
@@ -227,7 +223,7 @@ int Menu::PagekeyToItem(page_t page, item_t key)
 			 * one from the key for each space we find along the way.
 			 */
 			item_t new_key = key;
-			for (size_t i=start; i<(start+key-1) && i<m_Items.size(); i++)
+			for (size_t i=start; i<(start+items_per_page-1) && i<m_Items.size(); i++)
 			{
 				for (size_t j=0; j<m_Items[i]->blanks.size(); j++)
 				{
@@ -246,9 +242,11 @@ int Menu::PagekeyToItem(page_t page, item_t key)
 				}
 			}
 			key = new_key;
-			if (key > items_per_page && (key-items_per_page<=3))
+			if (key > items_per_page && (key-items_per_page<3))
 			{
-				return m_OptOrders[key-items_per_page-1];
+				unsigned int num = key - items_per_page - 1;
+				static int map[] = {MENU_BACK, MENU_MORE, MENU_EXIT};
+				return map[num];
 			} else {
 				return (start + key - 1);
 			}
@@ -309,10 +307,10 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	{
 		Display_Back = (1<<0),
 		Display_Next = (1<<1),
-		Display_Exit = (1<<2),
 	};
 
 	int flags = Display_Back|Display_Next;
+
 	item_t start = page * items_per_page;
 	item_t end = 0;
 	if (items_per_page)
@@ -324,17 +322,18 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 		} else {
 			end = start + items_per_page - 1;
 		}
-		if (!m_NeverExit && (m_AlwaysExit || (page == 0 || page == pages-1)))
-			flags |= Display_Exit;
 	} else {
 		end = numItems - 1;
 		if (end > 10)
+		{
 			end = 10;
-		flags = 0;
+		}
 	}
 
 	if (page == 0)
+	{
 		flags &= ~Display_Back;
+	}
 	
 	menuitem *pItem = NULL;
 	
@@ -424,77 +423,79 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 		}
 	}
 
-	if (padding == 1 && items_per_page)
+	if (items_per_page)
 	{
-		int pad = items_per_page;
-		if (flags & Display_Back)
-		{
-			pad--;
-		}
-		if (flags & Display_Next)
-		{
-			pad--;
-		}
-		if (flags & Display_Exit)
-		{
-			pad--;
-		}
-		for (int i=slots+1; i<=pad; i++)
+		/* Pad spaces until we reach the end of the max possible items */
+		for (unsigned int i=(unsigned)slots; i<items_per_page; i++)
 		{
 			m_Text.append("\n");
 			option++;
 		}
-	}
+		/* Make sure there is at least one visual pad */
+		m_Text.append("\n");
 
-	for (int i=0; i<3; i++)
-	{
-		switch (m_OptOrders[i])
+		/* Don't bother if there is only one page */
+		if (pages > 1)
 		{
-		case MENU_BACK:
+			if (flags & Display_Back)
 			{
-				if (flags & Display_Back)
+				keys |= (1<<option++);
+				_snprintf(buffer, 
+					sizeof(buffer)-1, 
+					m_AutoColors ? "\\r%d. \\w%s\n" : "%d. %s\n", 
+					option == 10 ? 0 : option, 
+					m_OptNames[abs(MENU_BACK)].c_str());
+			} else {
+				option++;
+				if (m_AutoColors)
 				{
-					keys |= (1<<option++);
-					_snprintf(buffer, 
-						sizeof(buffer)-1, 
-						m_AutoColors ? "\\r%d. \\w%s\n" : "%d. %s\n", 
-						option == 10 ? 0 : option, 
-						m_OptNames[abs(MENU_BACK)].c_str()
-						);
-					m_Text.append(buffer);
+					_snprintf(buffer,
+						sizeof(buffer)-1,
+						"\\d%d. %s\n\\w",
+						option == 10 ? 0 : option,
+						m_OptNames[abs(MENU_BACK)].c_str());
+				} else {
+					_snprintf(buffer, sizeof(buffer)-1, "#. %s\n", m_OptNames[abs(MENU_BACK)].c_str());
 				}
-				break;
 			}
-		case MENU_MORE:
+			m_Text.append(buffer);
+	
+			if (flags & Display_Next)
 			{
-				if (flags & Display_Next)
+				keys |= (1<<option++);
+				_snprintf(buffer, 
+					sizeof(buffer)-1, 
+					m_AutoColors ? "\\r%d. \\w%s\n" : "%d. %s\n", 
+					option == 10 ? 0 : option, 
+					m_OptNames[abs(MENU_MORE)].c_str());
+			} else {
+				option++;
+				if (m_AutoColors)
 				{
-					keys |= (1<<option++);
-					_snprintf(buffer, 
-						sizeof(buffer)-1, 
-						m_AutoColors ? "\\r%d. \\w%s\n" : "%d. %s\n", 
-						option == 10 ? 0 : option, 
-						m_OptNames[abs(MENU_MORE)].c_str()
-						);
-					m_Text.append(buffer);
+					_snprintf(buffer,
+						sizeof(buffer)-1,
+						"\\d%d. %s\n\\w",
+						option == 10 ? 0 : option,
+						m_OptNames[abs(MENU_MORE)].c_str());
+				} else {
+					_snprintf(buffer, sizeof(buffer)-1, "#. %s\n", m_OptNames[abs(MENU_MORE)].c_str());
 				}
-				break;
 			}
-		case MENU_EXIT:
-			{
-				if (flags & Display_Exit)
-				{
-					keys |= (1<<option++);
-					_snprintf(buffer, 
-						sizeof(buffer)-1, 
-						m_AutoColors ? "\\r%d. \\w%s\n" : "%d. %s\n", 
-						option == 10 ? 0 : option, 
-						m_OptNames[abs(MENU_EXIT)].c_str()
-						);
-					m_Text.append(buffer);
-				}
-				break;
-			}
+			m_Text.append(buffer);
+		} else {
+			/* Keep padding */
+			option += 2;
+		}
+
+		if (!m_NeverExit)
+		{
+			keys |= (1<<option++);
+			_snprintf(buffer, 
+				sizeof(buffer)-1, 
+				m_AutoColors ? "\\r%d. \\w%s\n" : "%d. %s\n", 
+				option == 10 ? 0 : option, 
+				m_OptNames[abs(MENU_EXIT)].c_str());
+			m_Text.append(buffer);
 		}
 	}
 	
@@ -810,25 +811,17 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 	case MPROP_EXITALL:
 		{
 			cell ans = *get_amxaddr(amx, params[3]);
-			if (ans == 1)
+			if (ans == 1 || ans == 0)
 			{
-				pMenu->m_AlwaysExit = true;
-				pMenu->m_NeverExit = false;
-			} else if (ans == 0) {
-				pMenu->m_AlwaysExit = false;
 				pMenu->m_NeverExit = false;
 			} else if (ans == -1) {
 				pMenu->m_NeverExit = true;
-				pMenu->m_AlwaysExit = false;
 			}
 			break;
 		}
 	case MPROP_ORDER:
 		{
-			cell *addr = get_amxaddr(amx, params[3]);
-			pMenu->m_OptOrders[0] = addr[0];
-			pMenu->m_OptOrders[1] = addr[1];
-			pMenu->m_OptOrders[2] = addr[2];
+			/* Ignored as of 1.8.0 */
 			break;
 		}
 	case MPROP_NOCOLORS:
@@ -838,7 +831,7 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 		}
 	case MPROP_PADMENU:
 		{
-			pMenu->padding = *get_amxaddr(amx, params[3]);
+			/* Ignored as of 1.8.0 */
 			break;
 		}
 	default:

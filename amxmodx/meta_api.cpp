@@ -948,7 +948,7 @@ void C_ClientCommand(edict_t *pEntity)
 				g_menucmds.SetWatchIter(a);
 				if ((*a).matchCommand(menuid, bit_key) && (*a).getPlugin()->isExecutable((*a).getFunction()))
 				{
-					if (pPlayer->newmenu != -1)
+					if (pPlayer->newmenu != -1 && pPlayer->newmenu == (*a).newmenu)
 					{
 						int menu = pPlayer->newmenu;
 						pPlayer->newmenu = -1;

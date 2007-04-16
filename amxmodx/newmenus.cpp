@@ -525,7 +525,6 @@ static cell AMX_NATIVE_CALL menu_create(AMX *amx, cell *params)
 	}
 
 	int id = g_menucmds.registerMenuId(title, amx);
-	g_menucmds.registerMenuCmd(g_plugins.findPluginFast(amx), id, 1023, func);
 
 	Menu *pMenu = new Menu(title, id, 0);
 
@@ -535,14 +534,16 @@ static cell AMX_NATIVE_CALL menu_create(AMX *amx, cell *params)
 	{
 		g_NewMenus.push_back(pMenu);
 		pMenu->thisId = (int)g_NewMenus.size() - 1;
-		return (int)g_NewMenus.size() - 1;
 	} else {
 		int pos = g_MenuFreeStack.front();
 		g_MenuFreeStack.pop();
 		g_NewMenus[pos] = pMenu;
 		pMenu->thisId = pos;
-		return pos;
 	}
+
+	g_menucmds.registerMenuCmd(g_plugins.findPluginFast(amx), id, 1023, func, pMenu->thisId);
+
+	return pMenu->thisId;
 }
 
 static cell AMX_NATIVE_CALL menu_addblank(AMX *amx, cell *params)
@@ -622,6 +623,36 @@ static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 	int page = params[3];
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(player);
 	
+	/* If the stupid handler keeps drawing menus, 
+	 * We need to keep cancelling them.  But we put in a quick infinite loop
+	 * counter to prevent this from going nuts.
+	 */
+	int menu;
+	int loops = 0;
+	while ((menu = pPlayer->newmenu) >= 0)
+	{
+		if ((size_t)menu >= g_NewMenus.size() || !g_NewMenus[menu])
+		{
+			break;
+		}
+
+		Menu *pOther = g_NewMenus[menu];
+
+		pPlayer->newmenu = -1;
+		pPlayer->menu = 0;
+		executeForwards(pOther->func, 
+			static_cast<cell>(player),
+			static_cast<cell>(pOther->thisId),
+			static_cast<cell>(MENU_EXIT));
+
+		/* Infinite loop counter */
+		if (++loops >= 10)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Recursion bug detected in menu handler");
+			return 0;
+		}
+	}
+
 	// This will set the expire time of the menu to infinite
 	pPlayer->menuexpire = INFINITE;
 
@@ -892,7 +923,27 @@ static cell AMX_NATIVE_CALL menu_destroy(AMX *amx, cell *params)
 	}
 
 	pMenu->isDestroying = true;
-	g_menucmds.removeMenuId(pMenu->menuId);
+
+	/* :TODO: Move this to some sort of referencing counting thingy */
+	bool removeMenuId = true;
+	for (size_t i = 0; i < g_NewMenus.size(); i++)
+	{
+		if (!g_NewMenus[i] || g_NewMenus[i]->isDestroying)
+		{
+			continue;
+		}
+		if (g_NewMenus[i]->menuId == pMenu->menuId)
+		{
+			removeMenuId = false;
+			break;
+		}
+	}
+	if (removeMenuId)
+	{
+		g_menucmds.removeMenuId(pMenu->menuId);
+	}
+	g_menucmds.removeMenuCmds(pMenu->thisId);
+
 	CPlayer *player;
 	for (int i=1; i<=gpGlobals->maxClients; i++)
 	{

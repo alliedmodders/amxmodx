@@ -55,6 +55,8 @@ public Test_Menu1_Handler(id, menu, item)
 	
 	client_print(id, print_chat, "Menu resolved to: %s (%s)", name, cmd)
 	
+	menu_destroy(menu)
+	
 	return PLUGIN_HANDLED
 }
 

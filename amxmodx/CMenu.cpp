@@ -35,13 +35,14 @@
 // *****************************************************
 // class MenuMngr
 // *****************************************************
-MenuMngr::MenuCommand::MenuCommand(CPluginMngr::CPlugin *a, int mi, int k, int f)
+MenuMngr::MenuCommand::MenuCommand(CPluginMngr::CPlugin *a, int mi, int k, int f, int n)
 {
 	plugin = a;
 	keys = k;
 	menuid = mi;
 	function = f;
 	next = 0;
+	newmenu = n;
 }
 
 MenuMngr::~MenuMngr() 
@@ -105,6 +106,33 @@ void MenuMngr::removeMenuId(int id)
 	}
 }
 
+void MenuMngr::removeMenuCmds(int newMenu)
+{
+	MenuCommand *c = headcmd;
+	MenuCommand *lc = NULL;
+	MenuCommand *tmp;
+	while (c)
+	{
+		if (c->newmenu == newMenu)
+		{
+			if (m_watch_iter.a == c)
+			{
+				++m_watch_iter;
+			}
+			if (lc)
+				lc->next = c->next;
+			else
+				headcmd = c->next;
+			tmp = c->next;
+			delete c;
+			c = tmp;
+		} else {
+			lc = c;
+			c = c->next;
+		}
+	}
+}
+
 int MenuMngr::registerMenuId(const char* n, AMX* a)
 {
 	int id = findMenuId(n, a);
@@ -120,11 +148,11 @@ int MenuMngr::registerMenuId(const char* n, AMX* a)
 	return headid->id;
 }
 
-void MenuMngr::registerMenuCmd(CPluginMngr::CPlugin *a, int mi, int k, int f) 
+void MenuMngr::registerMenuCmd(CPluginMngr::CPlugin *a, int mi, int k, int f, int n) 
 {
 	MenuCommand** temp = &headcmd;
 	while (*temp) temp = &(*temp)->next;
-	*temp = new MenuCommand(a, mi, k, f);
+	*temp = new MenuCommand(a, mi, k, f, n);
 }
 
 void MenuMngr::clear()

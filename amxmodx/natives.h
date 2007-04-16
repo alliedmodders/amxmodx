@@ -50,9 +50,7 @@ struct regnative
 	String name;
 	char *pfn;
 	int func;
-	AMX *caller;
 	int style;
-	cell params[CALLFUNC_MAXPARAMS];
 };
 
 extern "C" void amxx_DynaInit(void *ptr);

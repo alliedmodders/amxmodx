@@ -46,11 +46,15 @@
 //With the exception for param_convert, which was written by
 // Julien "dJeyL" Laurent
 
-CStack<int> g_ErrorStk;
 CVector<regnative *> g_RegNatives;
-CStack<regnative *> g_NativeStack;
 static char g_errorStr[512] = {0};
 bool g_Initialized = false;
+
+/* Stack stuff */
+regnative *g_pCurNative = NULL;
+AMX *g_pCaller = NULL;
+cell g_Params[CALLFUNC_MAXPARAMS];
+int g_CurError = AMX_ERR_NONE;
 
 int amxx_DynaCallback(int idx, AMX *amx, cell *params)
 {
@@ -79,37 +83,55 @@ int amxx_DynaCallback(int idx, AMX *amx, cell *params)
 		return 0;
 	}
 
-	if (pNative->caller)
+	/* Save old values on ZE STACK */
+	AMX *pSaveCaller = g_pCaller;
+	cell saveParams[CALLFUNC_MAXPARAMS];
+	regnative *pSaveNative = g_pCurNative;
+	int saveError = g_CurError;
+
+	if (pSaveNative)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Bug caught! Please contact the AMX Mod X Dev Team.");
-		return 0;
+		for (ucell i = 0; i <= g_Params[0] / sizeof(cell); i++)
+		{
+			saveParams[i] = g_Params[i];
+		}
 	}
 
-	//parameter stack
-	//NOTE: it is possible that recursive register native calling
-	// could potentially be somehow damaged here.
-	//so, a :TODO: - make the stack unique, rather than a known ptr
-	pNative->caller = amx;
+	/* Save current info */
+	g_CurError = AMX_ERR_NONE;
+	g_pCaller = amx;
+	g_pCurNative = pNative;
 
 	int err = 0;
 	cell ret = 0;
-	g_ErrorStk.push(0);
-	g_NativeStack.push(pNative);
 	if (pNative->style == 0)
 	{
 		amx_Push(pNative->amx, numParams);
 		amx_Push(pNative->amx, pPlugin->getId());
 		for (int i=numParams; i>=0; i--)
-			pNative->params[i] = params[i];
+		{
+			g_Params[i] = params[i];
+		}
 	} else if (pNative->style == 1) {
-		//use dJeyL's system .. very clever!
+		/**
+		 * use dJeyL's system .. very clever!
+		 * NOTE: clever, but doesn't work at all since the JIT does bounds checking
+		 * this should REALLY be deprecated
+		 */
 		for (int i=numParams; i>=1; i--)
+		{
 			amx_Push(pNative->amx, params[i]);
+		}
 	}
+
 	Debugger *pDebugger = (Debugger *)pNative->amx->userdata[UD_DEBUGGER];
 	if (pDebugger)
+	{
 		pDebugger->BeginExec();
+	}
+
 	err=amx_Exec(pNative->amx, &ret, pNative->func);
+
 	if (err != AMX_ERR_NONE)
 	{
 		if (pDebugger && pDebugger->ErrorExists())
@@ -122,15 +144,26 @@ int amxx_DynaCallback(int idx, AMX *amx, cell *params)
 		pNative->amx->error = AMX_ERR_NONE;
 		//furthermore, log an error in the parent plugin.
 		LogError(amx, AMX_ERR_NATIVE, "Unhandled dynamic native error");
-	} else if (g_ErrorStk.front()) {
-		LogError(amx, g_ErrorStk.front(), g_errorStr);
+	} else if (g_CurError != AMX_ERR_NONE) {
+		LogError(amx, g_CurError, g_errorStr);
 	}
-	if (pDebugger)
-		pDebugger->EndExec();
-	g_NativeStack.pop();
-	g_ErrorStk.pop();
 
-	pNative->caller = NULL;
+	if (pDebugger)
+	{
+		pDebugger->EndExec();
+	}
+
+	/* Restore everything */
+	g_pCurNative = pSaveNative;
+	g_CurError = saveError;
+	g_pCaller = pSaveCaller;
+	if (pSaveNative)
+	{
+		for (ucell i = 0; i <= saveParams[0] / sizeof(cell); i++)
+		{
+			g_Params[i] = saveParams[i];
+		}
+	}
 
 	return ret;
 }
@@ -138,7 +171,9 @@ int amxx_DynaCallback(int idx, AMX *amx, cell *params)
 AMX_NATIVE_INFO *BuildNativeTable()
 {
 	if (g_RegNatives.size() < 1)
+	{
 		return NULL;
+	}
 
 	AMX_NATIVE_INFO *pNatives = new AMX_NATIVE_INFO[g_RegNatives.size() + 1];
 
@@ -164,8 +199,7 @@ static cell AMX_NATIVE_CALL log_error(AMX *amx, cell *params)
 	char *err = format_amxstring(amx, params, 2, len);
 
 	_snprintf(g_errorStr, sizeof(g_errorStr), "%s", err);
-	g_ErrorStk.pop();
-	g_ErrorStk.push(params[1]);
+	g_CurError = params[1];
 
 	return 1;
 }
@@ -173,13 +207,12 @@ static cell AMX_NATIVE_CALL log_error(AMX *amx, cell *params)
 //get_string(param, dest[], len)
 static cell AMX_NATIVE_CALL get_string(AMX *amx, cell *params)
 {
-	if (!g_NativeStack.size())
+	if (!g_pCurNative || (g_pCaller != amx))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
 	}
-	regnative *pNative = g_NativeStack.front();
-	if (pNative->style)
+	if (g_pCurNative->style)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
 		return 0;
@@ -187,20 +220,19 @@ static cell AMX_NATIVE_CALL get_string(AMX *amx, cell *params)
 	int p = params[1];
 
 	int len;
-	char *str = get_amxstring(pNative->caller, pNative->params[p], 0, len);
+	char *str = get_amxstring(g_pCaller, g_Params[p], 0, len);
 	return set_amxstring(amx, params[2], str, params[3]);
 }
 
 //set_string(param, source[], maxlen)
 static cell AMX_NATIVE_CALL set_string(AMX *amx, cell *params)
 {
-	if (!g_NativeStack.size())
+	if (!g_pCurNative || (g_pCaller != amx))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
 	}
-	regnative *pNative = g_NativeStack.front();
-	if (pNative->style)
+	if (g_pCurNative->style)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
 		return 0;
@@ -210,46 +242,44 @@ static cell AMX_NATIVE_CALL set_string(AMX *amx, cell *params)
 	int len;
 	char *str = get_amxstring(amx, params[2], 0, len);
 
-	return set_amxstring(pNative->caller, pNative->params[p], str, params[3]);
+	return set_amxstring(g_pCaller, g_Params[p], str, params[3]);
 }
 
 //get a byvalue parameter
 //get_param(num)
 static cell AMX_NATIVE_CALL get_param(AMX *amx, cell *params)
 {
-	if (!g_NativeStack.size())
+	if (!g_pCurNative || (g_pCaller != amx))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
 	}
-	regnative *pNative = g_NativeStack.front();
-	if (pNative->style)
+	if (g_pCurNative->style)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
 		return 0;
 	}
 	int p = params[1];
 
-	return pNative->params[p];
+	return g_Params[p];
 }
 
 //get_param_byref(num)
 static cell AMX_NATIVE_CALL get_param_byref(AMX *amx, cell *params)
 {
-	if (!g_NativeStack.size())
+	if (!g_pCurNative || (g_pCaller != amx))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
 	}
-	regnative *pNative = g_NativeStack.front();
-	if (pNative->style)
+	if (g_pCurNative->style)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
 		return 0;
 	}
 	int p = params[1];
 
-	cell *addr = get_amxaddr(pNative->caller, pNative->params[p]);
+	cell *addr = get_amxaddr(g_pCaller, g_Params[p]);
 
 	return addr[0];
 }
@@ -257,20 +287,19 @@ static cell AMX_NATIVE_CALL get_param_byref(AMX *amx, cell *params)
 //set_param_byref(num, val)
 static cell AMX_NATIVE_CALL set_param_byref(AMX *amx, cell *params)
 {
-	if (!g_NativeStack.size())
+	if (!g_pCurNative || (g_pCaller != amx))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
 	}
-	regnative *pNative = g_NativeStack.front();
-	if (pNative->style)
+	if (g_pCurNative->style)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
 		return 0;
 	}
 	int p = params[1];
 
-	cell *addr = get_amxaddr(pNative->caller, pNative->params[p]);
+	cell *addr = get_amxaddr(g_pCaller, g_Params[p]);
 
 	addr[0] = params[2];
 
@@ -280,20 +309,19 @@ static cell AMX_NATIVE_CALL set_param_byref(AMX *amx, cell *params)
 //get_array(param, dest[], size)
 static cell AMX_NATIVE_CALL get_array(AMX *amx, cell *params)
 {
-	if (!g_NativeStack.size())
+	if (!g_pCurNative || (g_pCaller != amx))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
 	}
-	regnative *pNative = g_NativeStack.front();
-	if (pNative->style)
+	if (g_pCurNative->style)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
 		return 0;
 	}
 	int p = params[1];
 
-	cell *source = get_amxaddr(pNative->caller, pNative->params[p]);
+	cell *source = get_amxaddr(g_pCaller, g_Params[p]);
 	cell *dest = get_amxaddr(amx, params[2]);
 
 	int size = params[3];
@@ -306,20 +334,19 @@ static cell AMX_NATIVE_CALL get_array(AMX *amx, cell *params)
 //set_array(param, source[], size)
 static cell AMX_NATIVE_CALL set_array(AMX *amx, cell *params)
 {
-	if (!g_NativeStack.size())
+	if (!g_pCurNative || (g_pCaller != amx))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
 	}
-	regnative *pNative = g_NativeStack.front();
-	if (pNative->style)
+	if (g_pCurNative->style)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
 		return 0;
 	}
 	int p = params[1];
 
-	cell *dest = get_amxaddr(pNative->caller, pNative->params[p]);
+	cell *dest = get_amxaddr(g_pCaller, g_Params[p]);
 	cell *source = get_amxaddr(amx, params[2]);
 
 	int size = params[3];
@@ -331,15 +358,13 @@ static cell AMX_NATIVE_CALL set_array(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL vdformat(AMX *amx, cell *params)
 {
-	if (!g_NativeStack.size())
+	if (!g_pCurNative || (g_pCaller != amx))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
 	}
 
-	regnative *pNative = g_NativeStack.front();
-
-	if (pNative->style)
+	if (g_pCurNative->style)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
 		return 0;
@@ -348,10 +373,7 @@ static cell AMX_NATIVE_CALL vdformat(AMX *amx, cell *params)
 	int vargPos = static_cast<int>(params[4]);
 	int fargPos = static_cast<int>(params[3]);
 
-	/** get the parent parameter array */
-	cell *local_params = pNative->params;
-
-	cell max = local_params[0] / sizeof(cell);
+	cell max = g_Params[0] / sizeof(cell);
 	if (vargPos > (int)max + 1)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid vararg parameter passed: %d", vargPos);
@@ -374,7 +396,7 @@ static cell AMX_NATIVE_CALL vdformat(AMX *amx, cell *params)
 		}
 		fmt = get_amxaddr(amx, params[5]);
 	} else {
-		fmt = get_amxaddr(pNative->caller, pNative->params[fargPos]);
+		fmt = get_amxaddr(g_pCaller, g_Params[fargPos]);
 	}
 	cell *realdest = get_amxaddr(amx, params[1]);
 	size_t maxlen = static_cast<size_t>(params[2]);
@@ -385,7 +407,7 @@ static cell AMX_NATIVE_CALL vdformat(AMX *amx, cell *params)
 	dest = cpbuf;
 
 	/* perform format */
-	size_t total = atcprintf(dest, maxlen, fmt, pNative->caller, local_params, &vargPos);
+	size_t total = atcprintf(dest, maxlen, fmt, g_pCaller, g_Params, &vargPos);
 
 	/* copy back */
 	memcpy(realdest, dest, (total+1) * sizeof(cell));
@@ -399,20 +421,19 @@ static cell AMX_NATIVE_CALL vdformat(AMX *amx, cell *params)
 //I've no idea how he thought of this, but it's great.  No idea how well it works.
 static cell AMX_NATIVE_CALL param_convert(AMX *amx, cell *params)
 {
-	if (!g_NativeStack.size())
+	if (!g_pCurNative || (g_pCaller != amx))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
 	}
-	regnative *pNative = g_NativeStack.front();
-	if (pNative->style != 1)
+	if (g_pCurNative->style != 1)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
 		return 0;
 	}
 	cell p = params[1];
 
-	AMX *caller = pNative->caller;
+	AMX *caller = g_pCaller;
 
 	unsigned char *data =amx->base+(int)((AMX_HEADER *)amx->base)->dat;
 	unsigned char *realdata = caller->base+(int)((AMX_HEADER *)caller->base)->dat;
@@ -454,7 +475,6 @@ static cell AMX_NATIVE_CALL register_native(AMX *amx, cell *params)
 	regnative *pNative = new regnative;
 	pNative->amx = amx;
 	pNative->func = idx;
-	pNative->caller = NULL;
 	
 	//we'll apply a safety buffer too
 	//make our function

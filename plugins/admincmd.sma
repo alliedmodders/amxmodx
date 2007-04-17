@@ -35,10 +35,6 @@
 #include <amxmodx>
 #include <amxmisc>
 
-#define MAXRCONCVARS 16
-
-new g_cvarRcon[MAXRCONCVARS][32]
-new g_cvarRconNum
 new g_pauseCon
 new Float:g_pausAble
 new bool:g_Paused
@@ -99,6 +95,13 @@ public plugin_cfg()
 	server_cmd(g_addCvar, "amx_reserved_slots")
 	server_cmd(g_addCvar, "amx_reservation")
 	server_cmd(g_addCvar, "amx_conmotd_file")
+	server_cmd(g_addCvar, "amx_sql_table");
+	server_cmd(g_addCvar, "amx_sql_host");
+	server_cmd(g_addCvar, "amx_sql_user");
+	server_cmd(g_addCvar, "amx_sql_pass");
+	server_cmd(g_addCvar, "amx_sql_db");
+	server_cmd(g_addCvar, "amx_sql_type");
+
 }
 
 public cmdKick(id, level, cid)
@@ -473,12 +476,14 @@ public cmdMap(id, level, cid)
 	return PLUGIN_HANDLED
 }
 
-onlyRcon(name[])
+stock bool:onlyRcon(const name[])
 {
-	for (new a = 0; a < g_cvarRconNum; ++a)
-		if (equali(g_cvarRcon[a], name))
-			return 1
-	return 0
+	new ptr=get_cvar_pointer(name);
+	if (ptr && get_pcvar_flags(ptr) & FCVAR_PROTECTED)
+	{
+		return true;
+	}
+	return false;
 }
 
 public cmdCvar(id, level, cid)
@@ -495,12 +500,14 @@ public cmdCvar(id, level, cid)
 	
 	if (equal(arg, "add") && (get_user_flags(id) & ADMIN_RCON))
 	{
-		if (cvar_exists(arg2))
+		if ((pointer=get_cvar_pointer(arg2))!=0)
 		{
-			if (g_cvarRconNum < MAXRCONCVARS)
-				copy(g_cvarRcon[g_cvarRconNum++], 31, arg2)
-			else
-				console_print(id, "[AMXX] %L", id, "NO_MORE_CVARS")
+			new flags=get_pcvar_flags(pointer);
+			
+			if (!(flags & FCVAR_PROTECTED))
+			{
+				set_pcvar_flags(pointer,flags | FCVAR_PROTECTED);
+			}
 		}
 		return PLUGIN_HANDLED
 	}
@@ -513,13 +520,13 @@ public cmdCvar(id, level, cid)
 	
 	if (onlyRcon(arg) && !(get_user_flags(id) & ADMIN_RCON))
 	{
-		console_print(id, "[AMXX] %L", id, "CVAR_NO_ACC")
-		return PLUGIN_HANDLED
-	}
-	else if (equali(arg, "sv_password") && !(get_user_flags(id) & ADMIN_PASSWORD))
-	{
-		console_print(id, "[AMXX] %L", id, "CVAR_NO_ACC")
-		return PLUGIN_HANDLED
+		// Exception for the new onlyRcon rules:
+		//   sv_password is allowed to be modified by ADMIN_PASSWORD
+		if (!(equali(arg,"sv_password") && (get_user_flags(id) & ADMIN_PASSWORD)))
+		{
+			console_print(id, "[AMXX] %L", id, "CVAR_NO_ACC")
+			return PLUGIN_HANDLED
+		}
 	}
 	
 	if (read_argc() < 3)
@@ -962,3 +969,4 @@ public cmdNick(id, level, cid)
 
 	return PLUGIN_HANDLED
 }
+

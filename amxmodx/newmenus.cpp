@@ -90,6 +90,7 @@ Menu::Menu(const char *title, int mid, int tid)
 	m_OptNames[abs(MENU_MORE)].assign("More");
 	m_OptNames[abs(MENU_EXIT)].assign("Exit");
 
+	m_ItemColor.assign("\\r");
 	m_NeverExit = false;
 	m_AutoColors = g_coloredmenus;
 
@@ -392,7 +393,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 		{
 			if (m_AutoColors) 
 			{
-				_snprintf(buffer, sizeof(buffer)-1, "\\r%d.\\w %s\n", option_display, pItem->name.c_str());
+				_snprintf(buffer, sizeof(buffer)-1, "%s%d.\\w %s\n", m_ItemColor.c_str(),option_display, pItem->name.c_str());
 			} else {
 				_snprintf(buffer, sizeof(buffer)-1, "%d. %s\n", option_display, pItem->name.c_str());
 			}
@@ -440,11 +441,21 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 			if (flags & Display_Back)
 			{
 				keys |= (1<<option++);
-				_snprintf(buffer, 
-					sizeof(buffer)-1, 
-					m_AutoColors ? "\\r%d. \\w%s\n" : "%d. %s\n", 
-					option == 10 ? 0 : option, 
-					m_OptNames[abs(MENU_BACK)].c_str());
+				if (m_AutoColors)
+				{
+					_snprintf(buffer, 
+						sizeof(buffer)-1, 
+						"%s%d. \\w%s\n", 
+						m_ItemColor.c_str(), 
+						option == 10 ? 0 : option, 
+						m_OptNames[abs(MENU_BACK)].c_str());
+				} else {
+					_snprintf(buffer, 
+						sizeof(buffer)-1, 
+						"%d. %s\n", 
+						option == 10 ? 0 : option, 
+						m_OptNames[abs(MENU_BACK)].c_str());
+				}
 			} else {
 				option++;
 				if (m_AutoColors)
@@ -463,11 +474,21 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 			if (flags & Display_Next)
 			{
 				keys |= (1<<option++);
-				_snprintf(buffer, 
-					sizeof(buffer)-1, 
-					m_AutoColors ? "\\r%d. \\w%s\n" : "%d. %s\n", 
-					option == 10 ? 0 : option, 
-					m_OptNames[abs(MENU_MORE)].c_str());
+				if (m_AutoColors)
+				{
+					_snprintf(buffer, 
+						sizeof(buffer)-1, 
+						"%s%d. \\w%s\n", 
+						m_ItemColor.c_str(), 
+						option == 10 ? 0 : option, 
+						m_OptNames[abs(MENU_MORE)].c_str());
+				} else {
+					_snprintf(buffer, 
+						sizeof(buffer)-1, 
+						"%d. %s\n", 
+						option == 10 ? 0 : option, 
+						m_OptNames[abs(MENU_MORE)].c_str());
+				}
 			} else {
 				option++;
 				if (m_AutoColors)
@@ -490,11 +511,21 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 		if (!m_NeverExit)
 		{
 			keys |= (1<<option++);
-			_snprintf(buffer, 
-				sizeof(buffer)-1, 
-				m_AutoColors ? "\\r%d. \\w%s\n" : "%d. %s\n", 
-				option == 10 ? 0 : option, 
-				m_OptNames[abs(MENU_EXIT)].c_str());
+			if (m_AutoColors)
+			{
+				_snprintf(buffer, 
+					sizeof(buffer)-1, 
+					"%s%d. \\w%s\n", 
+					m_ItemColor.c_str(), 
+					option == 10 ? 0 : option, 
+					m_OptNames[abs(MENU_EXIT)].c_str());
+			} else {
+				_snprintf(buffer, 
+					sizeof(buffer)-1, 
+					"%d. %s\n", 
+					option == 10 ? 0 : option, 
+					m_OptNames[abs(MENU_EXIT)].c_str());
+			}
 			m_Text.append(buffer);
 		}
 	}
@@ -781,6 +812,13 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 
 	switch (params[2])
 	{
+	case MPROP_SET_NUMBER_COLOR:
+		{
+			char *str = get_amxstring(amx, params[3], 0, len);
+			validate_menu_text(str);
+			pMenu->m_ItemColor.assign(str);
+			break;
+		}
 	case MPROP_PERPAGE:
 		{
 			cell count = *get_amxaddr(amx, params[3]);

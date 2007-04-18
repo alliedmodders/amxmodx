@@ -50,6 +50,7 @@
 #define MPROP_ORDER		7
 #define MPROP_NOCOLORS	8
 #define MPROP_PADMENU	9
+#define MPROP_SET_NUMBER_COLOR	10
 
 typedef int (*MENUITEM_CALLBACK)(int, int, int);
 
@@ -94,6 +95,7 @@ public:
 
 	String m_OptNames[4];
 
+	String m_ItemColor;
 	bool m_NeverExit;
 	bool m_AutoColors;
 	

@@ -296,6 +296,7 @@ enum {
 #define MPROP_ORDER		7		/* Deprecated, has no effect */
 #define MPROP_NOCOLORS	8		//NUM - sets whether colors are not auto (0=default)
 #define MPROP_PADMENU	9		/* Deprecated, has no effect */
+#define MPROP_NUMBER_COLOR	10	//STRING - color indicator to use for the numbers.  ("\r"=default)
 
 #define SND_SPAWNING		(1<<8)		// we're spawing, used in some cases for ambients 
 #define SND_STOP		(1<<5)		// stop sound

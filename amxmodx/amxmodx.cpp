@@ -4536,6 +4536,21 @@ static cell AMX_NATIVE_CALL admins_lookup(AMX *amx, cell *params)
 	// unknown property
 	return 0;
 };
+// LookupLangKey(Output[], OutputSize, const Key[], const &id)
+static cell AMX_NATIVE_CALL LookupLangKey(AMX *amx, cell *params)
+{
+	int len;
+	char *key=get_amxstring(amx,params[3],0,len);
+	const char *def=translate(amx,params[4],key);
+
+	if (def==NULL)
+	{
+		return 0;
+	}
+
+	set_amxstring(amx,params[1],def,params[2]);
+	return 1;
+};
 
 AMX_NATIVE_INFO amxmodx_Natives[] =
 {

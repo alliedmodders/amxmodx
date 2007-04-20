@@ -45,3 +45,12 @@ native TransKey:GetLangTransKey(const key[]);
  * Adds a translation.
  */
 native AddTranslation(const lang[3], TransKey:key, const phrase[]);
+
+/**
+ * Looks up the translation of the key for the given type
+ * This does NOT format the output text.
+ * eg: If the key includes %s, the outputted text will also contain %s.
+ * NOTE: LANG_PLAYER is invalid in this, use a player index
+ *       or LANG_SERVER
+ */
+native LookupLangKey(Output[], OutputSize, const Key[], const &id);

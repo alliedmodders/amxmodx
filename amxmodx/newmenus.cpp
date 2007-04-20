@@ -199,26 +199,50 @@ int Menu::PagekeyToItem(page_t page, item_t key)
 			}
 		} else if (page == num_pages - 1) {
 			//last page
+			item_t item_tracker = 0; //  tracks how many valid items we have passed so far.
 			size_t remaining = m_Items.size() - start;
-			/* We have to add one remaining for each "bumping" space */
+			item_t new_key = key;
+			
+			// For every item that takes up a slot (item or padded blank)
+			// we subtract one from new key.
+			// For every item (not blanks), we increase item_tracker.
+			// When new_key equals 0, item_tracker will then be set to
+			// whatever valid item was selected.
 			for (size_t i=m_Items.size() - remaining; i<m_Items.size(); i++)
 			{
+				item_tracker++;
+				new_key--;
+				if (!new_key)
+				{
+					break;
+				}
 				for (size_t j=0; j<m_Items[i]->blanks.size(); j++)
 				{
 					if (m_Items[i]->blanks[j] == 1)
 					{
-						remaining++;
+						new_key--;
+					}
+					if (!new_key)
+					{
+						break;
 					}
 				}
 			}
-			if (key == items_per_page + 1)
+			// If new_key doesn't equal zero, then a back/exit button was pressed.
+			if (new_key!=0)
 			{
-				return MENU_BACK;
-			} else if (key == items_per_page + 3) {
-				return MENU_EXIT;
-			} else {
-				return (start + key - 1);
+				if (key == items_per_page + 1)
+				{
+					return MENU_BACK;
+				}
+				else if (key == items_per_page + 3)
+				{
+					return MENU_EXIT;
+				}
+				// MENU_MORE should never happen here.
 			}
+			// otherwise our item is now start + item_tracker - 1
+			return (start + item_tracker - 1);
 		} else {
 			/* The algorithm for spaces here is a bit harder.  We have to subtract 
 			 * one from the key for each space we find along the way.

@@ -211,11 +211,15 @@ int Menu::PagekeyToItem(page_t page, item_t key)
 			for (size_t i=m_Items.size() - remaining; i<m_Items.size(); i++)
 			{
 				item_tracker++;
-				new_key--;
-				if (!new_key)
+				
+				if (new_key<=1) // If new_key is 0, or will be 0 after the next decrease
 				{
+					new_key=0;
 					break;
 				}
+				
+				new_key--;
+				
 				for (size_t j=0; j<m_Items[i]->blanks.size(); j++)
 				{
 					if (m_Items[i]->blanks[j] == 1)

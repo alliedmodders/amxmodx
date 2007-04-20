@@ -243,7 +243,7 @@ int Menu::PagekeyToItem(page_t page, item_t key)
 				}
 			}
 			key = new_key;
-			if (key > items_per_page && (key-items_per_page<3))
+			if (key > items_per_page && (key-items_per_page<=3))
 			{
 				unsigned int num = key - items_per_page - 1;
 				static int map[] = {MENU_BACK, MENU_MORE, MENU_EXIT};

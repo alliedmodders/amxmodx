@@ -37,6 +37,7 @@
 #include "libraries.h"
 #include "CFlagManager.h"
 #include "nongpl_matches.h"
+#include "format.h"
 #include "svn_version.h"
 
 extern CFlagManager FlagMan;
@@ -4750,6 +4751,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"ExecuteForward",			ExecuteForward},
 	{"GetLangTransKey",			GetLangTransKey},
 	{"LibraryExists",			LibraryExists},
+	{"LookupLangKey",			LookupLangKey},
 	{"PrepareArray",			PrepareArray},
 	{"ShowSyncHudMsg",			ShowSyncHudMsg},
 	{NULL,						NULL}

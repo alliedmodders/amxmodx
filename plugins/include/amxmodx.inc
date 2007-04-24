@@ -21,6 +21,7 @@
 #include <messages>
 #include <vector>
 #include <sorting>
+#include <array>
 
 /* Function is called just after server activation.
 * Good place for configuration loading, commands and cvars registration. */
@@ -97,16 +98,16 @@ native get_localinfo(const info[],output[],len);
 native show_motd(player,const message[],const header[]="");
 
 /* Sends message to player. Set index to 0 to send text globaly. */
-native client_print(index,type,const message[],{Float,Sql,Result,_}:...);
+native client_print(index,type,const message[],any:...);
 
 /* Sends message to player by engine. Set index to 0 to send text globaly. */
-native engclient_print(player,type,const message[],{Float,Sql,Result,_}:...);
+native engclient_print(player,type,const message[],any:...);
 
 /* Sends message to console. */
-native console_print(id,const message[],{Float,Sql,Result,_}:...);
+native console_print(id,const message[],any:...);
 
 /* Sends command to console. */
-native console_cmd(id,const cmd[],{Float,Sql,Result,_}:...);
+native console_cmd(id,const cmd[],any:...);
 
 /* Registers event on which a given function will be called
 * Flags:
@@ -141,7 +142,7 @@ native register_logevent(const function[], argsnum,  ... );
 native set_hudmessage(red=200, green=100, blue=0, Float:x=-1.0, Float:y=0.35, effects=0, Float:fxtime=6.0, Float:holdtime=12.0, Float:fadeintime=0.1, Float:fadeouttime=0.2,channel=4);
 
 /* Displays HUD message to given player. */
-native show_hudmessage(index,const message[],{Float,Sql,Result,_}:...);
+native show_hudmessage(index,const message[],any:...);
 
 /* Displays menu. Keys have bit values (key 1 is (1<<0), key 5 is (1<<4) etc.). */
 native show_menu(index,keys,const menu[], time = -1, const title[] = "");
@@ -150,7 +151,7 @@ native show_menu(index,keys,const menu[], time = -1, const title[] = "");
 * When you are asking for string the array and length is needed (read_data(2,name,len)).
 * Integer is returned by function (new me = read_data(3)).
 * Float is set in second parameter (read_data(3,value)). */
-native read_data(value, {Float,Sql,Result,_}:... );
+native read_data(value, any:... );
 
 /* Returns number of values in client message. */
 native read_datanum();
@@ -171,7 +172,7 @@ native parse_loguser(const text[], name[], nlen, &userid = -2, authid[] = "", al
 
 /* Prints message to server console.
 * You may use text formating (f.e. server_print("%-32s %.2f!","hello",7.345)) */
-native server_print(const message[], {Float,Sql,Result,_}:...);
+native server_print(const message[], any:...);
 
 /* Returns 1 or 0. */
 native is_map_valid(const mapname[]);
@@ -305,13 +306,13 @@ native user_kill(index,flag=0);
 *  ...      - optional parameters
 * Return value:
 *  always 0 */
-native log_amx(const string[], {Float,Sql,Result,_}:...);
+native log_amx(const string[], any:...);
 
 /* Sends message to standard HL logs. */
-native log_message(const message[],{Float,Sql,Result,_}:...);
+native log_message(const message[],any:...);
 
 /* Sends log message to specified file. */
-native log_to_file(const file[],const message[],{Float,Sql,Result,_}:...);
+native log_to_file(const file[],const message[],any:...);
 
 /* Returns number of players put in server. 
 * If flag is set then also connecting are counted. */
@@ -367,7 +368,7 @@ native find_player(const flags[], ... );
 native remove_quotes(text[]);
 
 /* Executes command on player. */
-native client_cmd(index,const command[],{Float,Sql,Result,_}:...);
+native client_cmd(index,const command[],any:...);
 
 /* This is an emulation of a client command (commands aren't send to client!).
 * It allows to execute some commands on players and bots.
@@ -376,7 +377,7 @@ native client_cmd(index,const command[],{Float,Sql,Result,_}:...);
 native engclient_cmd(index,const command[],const arg1[]="",const arg2[]="");
 
 /* Executes command on a server console. */
-native server_cmd(const command[],{Float,Sql,Result,_}:...);
+native server_cmd(const command[],any:...);
 
 /* Sets a cvar to given value. */
 native set_cvar_string(const cvar[],const value[]);
@@ -991,7 +992,7 @@ native CreateHudSyncObj(num=0, ...);
  * You must use set_hudmessage, although the channel parameter is 
  *  entirely ignored.
  */
-native ShowSyncHudMsg(target, syncObj, const fmt[], {Float,Sql,Result,_}:...);
+native ShowSyncHudMsg(target, syncObj, const fmt[], any:...);
 
 /**
  * Clears the display on a HudSync Object.  This is essentially the same

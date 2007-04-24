@@ -1,5 +1,6 @@
 #include "amxmodx.h"
 #include "format.h"
+#include "datastructs.h"
 #include "amxmod_compat.h"
 
 //Adapted from Quake3's vsprintf
@@ -494,6 +495,21 @@ reswitch:
 			AddHex(&buf_p, llen, static_cast<unsigned int>(*get_amxaddr(amx, params[arg])), width, flags);
 			arg++;
 			break;
+		case 'S':
+			{
+				CHECK_ARGS(0);
+				// %S is passed a pointer directly to a cell string.
+				cell* ptr=reinterpret_cast<cell*>(*get_amxaddr(amx, params[arg]));
+				if (!ptr)
+				{
+					LogError(amx, AMX_ERR_NATIVE, "Invalid vector string handle provided (%d)", *get_amxaddr(amx, params[arg]));
+					return 0;
+				}
+
+				AddString(&buf_p, llen, ptr, width, prec);
+				arg++;
+				break;
+			}
 		case 's':
 			CHECK_ARGS(0);
 			if (amx->flags & AMX_FLAG_OLDFILE)

@@ -31,10 +31,10 @@
  *    new ptr, classname[32]
  *    pev(entid, pev_classname, ptr, classname, 31)
  */
-native pev(_index,_value,{Float,Sql,Result,_}:...);
+native pev(_index,_value,any:...);
 
 /* Sets entvar data for an entity.  Use the pev_* enum */
-native set_pev(_index,_value,{Float,Sql,Result,_}:...);
+native set_pev(_index,_value,any:...);
 
 /* returns 0 if ent is invalid, >0 if valid
  * (1 == valid, 2 == valid+pvPrivateData valid)
@@ -50,7 +50,7 @@ native pev_valid(entindex);
  * new ptr = pev(id, pev_viewmodel)
  * global_get(glb_pStringBase, ptr, model, 127)
  */
-native global_get(_value, {Float,Sql,Result,_}:...);
+native global_get(_value, any:...);
 
 /* Returns an integer from private data.  _linuxdiff is added into the _Offset if it's used on a linux server. */
 native get_pdata_int(_index,_Offset,_linuxdiff=5);
@@ -77,7 +77,7 @@ native register_forward(_forwardType,const _function[],_post=0);
 native unregister_forward(_forwardType, registerId, post=0);
 
 /* Returns data for metamod */
-native forward_return(type,{Float,Sql,Result,_}:...);
+native forward_return(type,any:...);
 
 /* Returns the original return value of an engine function. 
  * This is only valid in forwards that were registered as post.
@@ -89,7 +89,7 @@ native forward_return(type,{Float,Sql,Result,_}:...);
 native get_orig_retval({Float,_}:...);
 
 native engfunc(type,{Float,Sql,Result,AlertType,_}:...);
-native dllfunc(type,{Float,Sql,Result,_}:...);
+native dllfunc(type,any:...);
 
 //only use this with functions that pass a Trace
 // get: zero extra params - return int, one extra param = byref float or vector

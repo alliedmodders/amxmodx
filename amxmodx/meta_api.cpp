@@ -47,6 +47,7 @@
 #include "messages.h"
 #include "amxmod_compat.h"
 
+#include "datastructs.h"
 #include "CFlagManager.h"
 #include "svn_version.h"
 
@@ -387,6 +388,12 @@ int	C_Spawn(edict_t *pent)
 	get_localinfo("amx_logdir", "addons/amxmodx/logs");
 
 	FlagMan.LoadFile();
+
+	for (unsigned int i=0; i<VectorHolder.size(); i++)
+	{
+		delete VectorHolder[i];
+	};
+	VectorHolder.clear();
 
 	char map_pluginsfile_path[256];
 	char configs_dir[256];

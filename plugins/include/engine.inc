@@ -22,7 +22,7 @@
  #pragma library engine
 #endif
 
-native traceresult(type,{Float,Sql,Result,_}:...);
+native traceresult(type,any:...);
 
 /* Registers a client impulse to a function.  Function is passed the ID of the user. */
 native register_impulse(impulse, const function[]);
@@ -39,7 +39,7 @@ native register_think(const Classname[], const function[]);
  */
 
 /* Precaches an event. */
-native precache_event(type, const Name[], {Float,Sql,Result,_}:...);
+native precache_event(type, const Name[], any:...);
 
 /* set/get a user's speak flags */
 native set_speak(iIndex, iSpeakFlags);
@@ -174,11 +174,11 @@ native playback_event(flags,invoker,eventindex,Float:delay,const Float:origin[3]
 /* Gets parameters sent from CmdStart.
    Note that you will receive modified values if any other plugin have
    changed them. */
-native get_usercmd(type,{Float,Sql,Result,_}:...);
+native get_usercmd(type,any:...);
 
 /* Sets the parameters sent from CmdStart.
    Note that your changes will be seen by any other plugin doing get_usercmd() */
-native set_usercmd(type,{Float,Sql,Result,_}:...);
+native set_usercmd(type,any:...);
 
 /* Converts a string offset into a real string. Some of the forwards in fakemeta
    uses string offsets. (FM_CreateNamedEntity) */

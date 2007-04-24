@@ -83,7 +83,7 @@ native fgets(file, buffer[], maxlength);
 native fputs(file, const text[]);
 
 //Writes a line to the file
-native fprintf(file, const fmt[], {Float,Sql,Result,_}:...);
+native fprintf(file, const fmt[], any:...);
 
 //Sets the current position in a file (see SEEK_ values above)
 native fseek(file, position, start);
@@ -97,7 +97,7 @@ native fputc(file, data);
 native fungetc(file, data);
 
 //Return the size of a file
-native filesize(const filename[], {Float,Sql,Result,_}:...);
+native filesize(const filename[], any:...);
 
 //Attempts to remove a directory.
 //Note that you cannot remove a directory that has files on most

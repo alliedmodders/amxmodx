@@ -34,7 +34,7 @@ native add(dest[],len,const src[],max=0);
  *  slower, so you should using a source string that is the same as
  *  the destination.
  */
-native format(output[] ,len ,const format[] , {Float,Sql,Result,_}:...);
+native format(output[] ,len ,const format[] , any:...);
 
 /* Same as format(), except does not perform a "copy back" check.
  * This means formatex() is faster, but DOES NOT ALLOW this type
@@ -45,7 +45,7 @@ native format(output[] ,len ,const format[] , {Float,Sql,Result,_}:...);
  * This is because the output is directly stored into "buffer", 
  *  rather than copied back at the end.
  */
-native formatex(output[] ,len ,const format[] , {Float,Sql,Result,_}:...);
+native formatex(output[] ,len ,const format[] , any:...);
 
 /* Replacement for format_args.  Much faster and %L compatible.
  * This works exactly like vsnprintf() from C.

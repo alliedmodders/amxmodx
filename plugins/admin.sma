@@ -41,6 +41,8 @@
 #include <sqlx>
 #endif
 
+new Vector:AdminList;
+
 new AdminCount;
 
 new PLUGINNAME[] = "AMX Mod X"
@@ -108,6 +110,11 @@ public plugin_init()
 	
 	server_cmd("exec %s/amxx.cfg", configsDir)	// Execute main configuration file
 	server_cmd("exec %s/sql.cfg", configsDir)
+
+	// Create a vector of 5 cells to store the info.
+	AdminList=vector_create(5);
+
+	
 #if defined USING_SQL
 	server_cmd("amx_sqladmins")
 #else

@@ -771,6 +771,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\datastructs.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\datastructs.h"
+				>
+			</File>
+			<File
 				RelativePath="..\debugger.h"
 				>
 			</File>

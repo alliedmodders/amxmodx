@@ -578,6 +578,7 @@ int set_amxnatives(AMX* amx, char error[128])
 	amx_Register(amx, msg_Natives, -1);
 	amx_Register(amx, vector_Natives, -1);
 	amx_Register(amx, g_SortNatives, -1);
+	amx_Register(amx, g_DataStructNatives, -1);
 	
 	if (amx->flags & AMX_FLAG_OLDFILE)
 	{

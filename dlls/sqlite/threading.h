@@ -33,6 +33,7 @@ public:
 	virtual bool IsDone();
 	virtual IResultRow *GetRow();
 	virtual void NextRow();
+	virtual void Rewind();
 public:
 	virtual const char *GetString(unsigned int columnId);
 	virtual const char *GetStringSafe(unsigned int columnId);

@@ -43,6 +43,7 @@ namespace SourceMod
 		bool IsDone();
 		IResultRow *GetRow();
 		void NextRow();
+		void Rewind();
 	private:
 		MYSQL_RES *m_pRes;
 		MysqlResultRow m_kRow;

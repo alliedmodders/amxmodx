@@ -147,3 +147,9 @@ void MysqlResultSet::NextRow()
 		m_kRow.m_Lengths = lengths;
 	}
 }
+
+void MysqlResultSet::Rewind()
+{
+	mysql_data_seek(m_pRes, 0);
+	NextRow();
+}

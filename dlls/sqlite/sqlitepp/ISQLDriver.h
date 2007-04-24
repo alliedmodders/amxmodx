@@ -57,6 +57,10 @@ namespace SourceMod
 		 *  call IsDone() after each call to NextRow().
 		 */
 		virtual void NextRow() =0;
+		/**
+		 * Resets back to the first row.
+		 */
+		virtual void Rewind() =0;
 	};
 
 	struct QueryInfo

@@ -27,6 +27,7 @@ namespace SourceMod
 		bool IsDone();
 		IResultRow *GetRow();
 		void NextRow();
+		void Rewind();
 	public:
 		/** 
 		 * IResultRow

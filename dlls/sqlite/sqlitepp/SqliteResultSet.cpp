@@ -158,3 +158,9 @@ void SqliteResultSet::NextRow()
 {
 	m_CurIndex = (++m_CurRow * m_Columns);
 }
+
+void SqliteResultSet::Rewind()
+{
+	m_CurRow = 1;
+	m_CurIndex = (m_CurRow * m_Columns);
+}

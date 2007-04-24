@@ -555,6 +555,10 @@ void AtomicResult::CopyFrom(IResultSet *rs)
 	}
 }
 
+void AtomicResult::Rewind()
+{
+	m_CurRow = 1;
+}
 
 AMX_NATIVE_INFO g_ThreadSqlNatives[] =
 {

@@ -35,23 +35,28 @@
 #include <amxmodx>
 #include <amxmisc>
 
-#define MAX_MESSAGES  6
 #define X_POS         -1.0
 #define Y_POS         0.20
 #define HOLD_TIME     12.0
 
-new g_Values[MAX_MESSAGES][3]
-new g_Messages[MAX_MESSAGES][384]
+new Array:g_Values
+new Array:g_Messages
 new g_MessagesNum
 new g_Current
 
+#define charsof(%1) (sizeof(%1)-1)
+
+new amx_freq_imessage;
+
 public plugin_init()
 {
+	g_Messages=ArrayCreate(384);
+	g_Values=ArrayCreate(3);
 	register_plugin("Info. Messages", AMXX_VERSION_STR, "AMXX Dev Team")
 	register_dictionary("imessage.txt")
 	register_dictionary("common.txt")
 	register_srvcmd("amx_imessage", "setMessage")
-	register_cvar("amx_freq_imessage", "10")
+	amx_freq_imessage=register_cvar("amx_freq_imessage", "10")
 	
 	new lastinfo[8]
 	get_localinfo("lastinfomsg", lastinfo, 7)
@@ -64,49 +69,64 @@ public infoMessage()
 	if (g_Current >= g_MessagesNum)
 		g_Current = 0
 		
-	new hostname[64]
+	// No messages, just get out of here
+	if (g_MessagesNum==0)
+	{
+		return;
+	}
 	
-	get_cvar_string("hostname", hostname, 63)
-	replace(g_Messages[g_Current], 380, "%hostname%", hostname)
+	new values[3];
+	new Message[384];
 	
-	set_hudmessage(g_Values[g_Current][0], g_Values[g_Current][1], g_Values[g_Current][2], X_POS, Y_POS, 0, 0.5, HOLD_TIME, 2.0, 2.0, -1)
-	show_hudmessage(0, "%s", g_Messages[g_Current])
-	client_print(0, print_console, "%s", g_Messages[g_Current])
-	++g_Current
+	ArrayGetString(g_Messages, g_Current, Message, charsof(Message));
+	ArrayGetArray(g_Values, g_Current, values);
 	
-	new Float:freq_im = get_cvar_float("amx_freq_imessage")
+	new hostname[64];
+	
+	get_cvar_string("hostname", hostname, 63);
+	replace(Message, 380, "%hostname%", hostname);
+	
+	set_hudmessage(values[0], values[1], values[2], X_POS, Y_POS, 0, 0.5, HOLD_TIME, 2.0, 2.0, -1);
+	
+	show_hudmessage(0, "%s", Message);
+	
+	client_print(0, print_console, "%s", Message);
+	++g_Current;
+	
+	new Float:freq_im = get_cvar_float(amx_freq_imessage);
 	
 	if (freq_im > 0.0)
-		set_task(freq_im, "infoMessage", 12345)
+		set_task(freq_im, "infoMessage", 12345);
 }
 
 public setMessage()
 {
-	if (g_MessagesNum >= MAX_MESSAGES)
-	{
-		server_print("%L", LANG_SERVER, "INF_REACH")
-		return PLUGIN_HANDLED
-	}
 
-	remove_task(12345)
-	read_argv(1, g_Messages[g_MessagesNum], 380)
+	new Message[384];
 	
-	while (replace(g_Messages[g_MessagesNum], 380, "\n", "^n")) {}
+	remove_task(12345)
+	read_argv(1, Message, 380)
+	
+	while (replace(Message, 380, "\n", "^n")) {}
 	
 	new mycol[12]
+	new vals[3];
 	
 	read_argv(2, mycol, 11)		// RRRGGGBBB
-	g_Values[g_MessagesNum][2] = str_to_num(mycol[6])
+	vals[2] = str_to_num(mycol[6])
 	
 	mycol[6] = 0
-	g_Values[g_MessagesNum][1] = str_to_num(mycol[3])
+	vals[1] = str_to_num(mycol[3])
 	
 	mycol[3] = 0
-	g_Values[g_MessagesNum][0] = str_to_num(mycol[0])
+	vals[0] = str_to_num(mycol[0])
 	
 	g_MessagesNum++
 	
-	new Float:freq_im = get_cvar_float("amx_freq_imessage")
+	new Float:freq_im = get_pcvar_float(amx_freq_imessage)
+	
+	ArrayPushString(g_Messages, Message);
+	ArrayPushArray(g_Values, vals);
 	
 	if (freq_im > 0.0)
 		set_task(freq_im, "infoMessage", 12345)

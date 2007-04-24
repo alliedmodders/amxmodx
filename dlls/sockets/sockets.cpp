@@ -133,7 +133,7 @@ static cell AMX_NATIVE_CALL socket_change(AMX *amx, cell *params)  /* 2 param */
     tv.tv_sec = 0;
     tv.tv_usec = timeout;
     // Now we "select", which will show us if new data is waiting in the socket's buffer
-    if (select(socket+1, &rfds, NULL, NULL, &tv)) 
+    if (select(socket+1, &rfds, NULL, NULL, &tv) > 0) 
        return 1; // Ok, new data, return it
      else 
        return 0; // No new data, return it

@@ -67,6 +67,8 @@
 #define VERSION_STR "3.0.3367-amxx"
 #define VERSION_INT 0x300
 
+int pc_anytag;
+
 static void resetglobals(void);
 static void initglobals(void);
 static void setopt(int argc,char **argv,char *oname,char *ename,char *pname,
@@ -1402,6 +1404,8 @@ static void setconstants(void)
   add_constant("ucharmax",(1 << (sizeof(cell)-1)*8)-1,sGLOBAL,0);
 
   add_constant("__Pawn",VERSION_INT,sGLOBAL,0);
+  
+  pc_anytag=pc_addtag("any");
 
   debug=0;
   if ((sc_debug & (sCHKBOUNDS | sSYMBOLIC))==(sCHKBOUNDS | sSYMBOLIC))

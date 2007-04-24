@@ -785,6 +785,8 @@ SC_VDECL short sc_is_utf8;    /* is this source file in UTF-8 encoding */
 SC_VDECL constvalue sc_automaton_tab; /* automaton table */
 SC_VDECL constvalue sc_state_tab;     /* state table */
 
+SC_VDECL int pc_anytag;
+
 SC_VDECL FILE *inpf;          /* file read from (source or include) */
 SC_VDECL FILE *inpf_org;      /* main source file */
 SC_VDECL FILE *outf;          /* file written to */

@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\mysql;..\thread;..\sdk;."
+				AdditionalIncludeDirectories="..\mysql;..\thread;..\sdk;.;.."
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;MYSQL2_EXPORTS;SM_DEFAULT_THREADER"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -70,7 +70,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\mysql;..\thread;..\sdk;."
+				AdditionalIncludeDirectories="..\mysql;..\thread;..\sdk;.;.."
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;MYSQL2_EXPORTS;SM_DEFAULT_THREADER"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"

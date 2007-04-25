@@ -1520,6 +1520,178 @@ static cell AMX_NATIVE_CALL cs_get_user_zoom(AMX *amx, cell *params)
 
 	return 0;
 }
+// Returns whether the player has a thighpack or backpack model on
+
+static cell AMX_NATIVE_CALL cs_get_user_submodel(AMX* amx, cell* params)
+{
+	// Check Player
+	CHECK_PLAYER(params[1]);
+	// Fetch player pointer 
+	edict_t* pPlayer = MF_GetPlayerEdict(params[1]);
+
+	return pPlayer->v.body;
+}
+static cell AMX_NATIVE_CALL cs_set_user_submodel(AMX* amx, cell* params)
+{
+	// Check Player
+	CHECK_PLAYER(params[1]);
+	// Fetch player pointer 
+	edict_t* pPlayer = MF_GetPlayerEdict(params[1]);
+
+	pPlayer->v.body = params[2];
+
+	return 1;
+}
+#if PAWN_CELL_SIZE == 32
+static cell AMX_NATIVE_CALL cs_get_user_lastactivity(AMX *amx, cell *params)
+{
+	//Return time that the user last did activity
+   
+	//Check player
+	CHECK_PLAYER(params[1]);
+   
+	// Make into edict pointer
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+   
+	return amx_ftoc(*((REAL*)pPlayer->pvPrivateData + OFFSET_LASTACTIVITY));
+}
+
+static cell AMX_NATIVE_CALL cs_set_user_lastactivity(AMX *amx, cell *params)
+{
+	//set time that the user last did activity
+   
+	//Check player
+	CHECK_PLAYER(params[1]);
+   
+	// Make into edict pointer
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+   
+	*((REAL*)pPlayer->pvPrivateData + OFFSET_LASTACTIVITY) = amx_ctof(params[2]);
+
+	return 1;
+}
+static cell AMX_NATIVE_CALL cs_get_hostage_lastuse(AMX *amx, cell *params)
+{
+	//Return time that the hostage was last used
+   
+	CHECK_NONPLAYER(params[1]);
+
+	// Make into edict pointer
+	edict_t* pHostage = INDEXENT(params[1]);
+
+	// Make sure this is a hostage.
+	if (strcmp(STRING(pHostage->v.classname), "hostage_entity") != 0) {
+		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d (\"%s\") is not a hostage", params[1], STRING(pHostage->v.classname));
+		return 0;
+	}
+   
+	return amx_ftoc(*((REAL*)pHostage->pvPrivateData + OFFSET_HOSTAGE_LASTUSE));
+}
+static cell AMX_NATIVE_CALL cs_set_hostage_lastuse(AMX *amx, cell *params)
+{
+	//Return time that the hostage was last used
+   
+	CHECK_NONPLAYER(params[1]);
+
+	// Make into edict pointer
+	edict_t* pHostage = INDEXENT(params[1]);
+
+	// Make sure this is a hostage.
+	if (strcmp(STRING(pHostage->v.classname), "hostage_entity") != 0) {
+		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d (\"%s\") is not a hostage", params[1], STRING(pHostage->v.classname));
+		return 0;
+	}
+   
+	*((REAL*)pHostage->pvPrivateData + OFFSET_HOSTAGE_LASTUSE) = amx_ctof(params[2]);
+
+	return 1;
+}
+static cell AMX_NATIVE_CALL cs_get_hostage_nextuse(AMX* amx, cell* params)
+{
+	//Return time that the hostage was last used
+   
+	CHECK_NONPLAYER(params[1]);
+
+	// Make into edict pointer
+	edict_t* pHostage = INDEXENT(params[1]);
+
+	// Make sure this is a hostage.
+	if (strcmp(STRING(pHostage->v.classname), "hostage_entity") != 0) {
+		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d (\"%s\") is not a hostage", params[1], STRING(pHostage->v.classname));
+		return 0;
+	}
+   
+	return amx_ftoc(*((REAL*)pHostage->pvPrivateData + OFFSET_HOSTAGE_NEXTUSE));
+}
+static cell AMX_NATIVE_CALL cs_set_hostage_nextuse(AMX* amx, cell* params)
+{
+	//Return time that the hostage was last used
+   
+	CHECK_NONPLAYER(params[1]);
+
+	// Make into edict pointer
+	edict_t* pHostage = INDEXENT(params[1]);
+
+	// Make sure this is a hostage.
+	if (strcmp(STRING(pHostage->v.classname), "hostage_entity") != 0) {
+		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d (\"%s\") is not a hostage", params[1], STRING(pHostage->v.classname));
+		return 0;
+	}
+   
+	*((REAL*)pHostage->pvPrivateData + OFFSET_HOSTAGE_NEXTUSE) = amx_ctof(params[2]);
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL cs_get_c4_explode_time(AMX* amx, cell* params)
+{
+	CHECK_NONPLAYER(params[1]);
+	edict_t* pC4 = INDEXENT(params[1]);
+
+	// Make sure it's a c4
+	if (strcmp(STRING(pC4->v.classname), "grenade") != 0)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d (\"%s\") is not C4!", params[1], STRING(pC4->v.classname));
+		return 0;
+	}
+
+	return amx_ftoc(*((REAL*)pC4->pvPrivateData + OFFSET_C4_EXPLODE_TIME));
+}
+static cell AMX_NATIVE_CALL cs_set_c4_explode_time(AMX* amx, cell* params)
+{
+	CHECK_NONPLAYER(params[1]);
+	edict_t* pC4 = INDEXENT(params[1]);
+
+	// Make sure it's a c4
+	if (strcmp(STRING(pC4->v.classname), "grenade") != 0)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d (\"%s\") is not C4!", params[1], STRING(pC4->v.classname));
+		return 0;
+	}
+
+	*((REAL*)pC4->pvPrivateData + OFFSET_C4_EXPLODE_TIME) = amx_ctof(params[2]);
+
+	return 1;
+}
+
+#else
+
+static cell AMX_NATIVE_CALL not_on_64(AMX* amx, cell* params)
+{
+	MF_LogError(amx, AMX_ERR_NATIVE, "This function is not implemented on AMD64");
+
+	return 0;
+}
+#define cs_get_user_lastactivity not_on_64
+#define cs_set_user_lastactivity not_on_64
+#define cs_get_hostage_lastuse not_on_64
+#define cs_set_hostage_lastuse not_on_64
+#define cs_get_hostage_nextuse not_on_64
+#define cs_set_hostage_nextuse not_on_64
+#define cs_get_c4_explode_time not_on_64
+#define cs_set_c4_explode_time not_on_64
+#endif
+
 
 AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_user_money",			cs_set_user_money},
@@ -1568,6 +1740,17 @@ AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_armoury_type",			cs_set_armoury_type},
 	{"cs_get_user_zoom",			cs_get_user_zoom},
 	{"cs_set_user_zoom",			cs_set_user_zoom},
+	{"cs_get_user_submodel",		cs_get_user_submodel},
+	{"cs_set_user_submodel",		cs_set_user_submodel},
+	{"cs_get_user_lastactivity",	cs_get_user_lastactivity},
+	{"cs_set_user_lastactivity",	cs_set_user_lastactivity},
+	{"cs_get_hostage_lastuse",		cs_get_hostage_lastuse},
+	{"cs_set_hostage_lastuse",		cs_set_hostage_lastuse},
+	{"cs_get_hostage_nextuse",		cs_get_hostage_nextuse},
+	{"cs_set_hostage_nextuse",		cs_set_hostage_nextuse},
+	{"cs_get_c4_explode_time",		cs_get_c4_explode_time},
+	{"cs_set_c4_explode_time",		cs_set_c4_explode_time},
+
 	//------------------- <-- max 19 characters!
 	{NULL,							NULL}
 };

@@ -136,6 +136,8 @@ namespace AMXXRelease
 			core.outdir = "dlls";
 
 			Module mysqlx = new Module("mysqlx");
+			mysqlx.projname = "mysql_amxx";
+
 			Module sqlitex = new Module("sqlite");
 			Module engine = new Module("engine");
 			Module fun = new Module("fun");

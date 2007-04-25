@@ -408,19 +408,19 @@ int	C_Spawn(edict_t *pent)
 
 	strncpy(temporaryMap,STRING(gpGlobals->mapname),sizeof(temporaryMap)-1);
 
-	int i=0;
+	int ii=0;
 
-	while (temporaryMap[i]!='_' && temporaryMap[i]!='\0') 
+	while (temporaryMap[ii]!='_' && temporaryMap[ii]!='\0') 
 	{
-		++i;
+		++ii;
 	}
 
 
-	if (temporaryMap[i]=='_')
+	if (temporaryMap[ii]=='_')
 	{
 		// this map has a prefix
 
-		temporaryMap[i]='\0';
+		temporaryMap[ii]='\0';
 		snprintf(map_pluginsfile_path, sizeof(map_pluginsfile_path)-1,
 						"%s/maps/prefixes/plugins-%s.ini",
 						configs_dir,

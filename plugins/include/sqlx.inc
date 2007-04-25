@@ -61,6 +61,7 @@ native Handle:SQL_Connect(Handle:cn_tuple, &errcode, error[], maxlength);
  */
 native Handle:SQL_PrepareQuery(Handle:db, const fmt[], {Float,_}:...);
 
+
 #define TQUERY_CONNECT_FAILED	-2
 #define TQUERY_QUERY_FAILED	-1
 #define TQUERY_SUCCESS		0
@@ -174,6 +175,12 @@ native SQL_FieldNumToName(Handle:query, num, name[], maxlength);
  * Returns the number of a named column, or -1 if not found.
  */
 native SQL_FieldNameToNum(Handle:query, const name[]);
+
+
+/**
+ * Rewinds a result set to the first row.
+ */
+native SQL_Rewind(Handle:query);
 
 
 /**

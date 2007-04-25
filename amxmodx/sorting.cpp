@@ -265,6 +265,7 @@ static cell AMX_NATIVE_CALL SortCustom1D(AMX *amx, cell *params)
 	qsort(array, array_size, sizeof(cell), sort1d_amx_custom);
 	g_AMXSortStack.pop();
 
+	unregisterSPForward(pfn);
 	delete pInfo;
 
 	return 1;

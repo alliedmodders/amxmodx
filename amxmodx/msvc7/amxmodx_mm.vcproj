@@ -392,6 +392,9 @@
 				RelativePath="..\CVault.cpp">
 			</File>
 			<File
+				RelativePath="..\datastructs.cpp">
+			</File>
+			<File
 				RelativePath="..\debugger.cpp">
 			</File>
 			<File
@@ -559,6 +562,9 @@
 			</File>
 			<File
 				RelativePath="..\CVector.h">
+			</File>
+			<File
+				RelativePath="..\datastructs.h">
 			</File>
 			<File
 				RelativePath="..\debugger.h">

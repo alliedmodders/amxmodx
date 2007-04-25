@@ -48,6 +48,28 @@ void ClearMenus()
 	}
 }
 
+void RemoveMenuIdIfOkay(Menu *pMenu, int menuid)
+{
+	/* :TODO: Move this to some sort of referencing counting thingy */
+	bool removeMenuId = true;
+	for (size_t i = 0; i < g_NewMenus.size(); i++)
+	{
+		if (!g_NewMenus[i] || g_NewMenus[i]->isDestroying)
+		{
+			continue;
+		}
+		if (g_NewMenus[i]->menuId == menuid)
+		{
+			removeMenuId = false;
+			break;
+		}
+	}
+	if (removeMenuId)
+	{
+		g_menucmds.removeMenuId(menuid);
+	}
+}
+
 void validate_menu_text(char *str)
 {
 	if (!g_coloredmenus)
@@ -600,8 +622,6 @@ static cell AMX_NATIVE_CALL menu_create(AMX *amx, cell *params)
 		pMenu->thisId = pos;
 	}
 
-	g_menucmds.registerMenuCmd(g_plugins.findPluginFast(amx), id, 1023, func, pMenu->thisId);
-
 	return pMenu->thisId;
 }
 
@@ -883,14 +903,9 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 		{
 			char *str = get_amxstring(amx, params[3], 0, len);
 			int old = pMenu->menuId;
-			g_menucmds.removeMenuId(old);
+			RemoveMenuIdIfOkay(pMenu, old);
 			pMenu->m_Title.assign(str);
 			pMenu->menuId = g_menucmds.registerMenuId(str, amx);
-			g_menucmds.registerMenuCmd(
-				g_plugins.findPluginFast(amx),
-				pMenu->menuId,
-				1023,
-				pMenu->func);
 			CPlayer *pl;
 			/**
 			 * NOTE - this is actually bogus
@@ -990,25 +1005,7 @@ static cell AMX_NATIVE_CALL menu_destroy(AMX *amx, cell *params)
 
 	pMenu->isDestroying = true;
 
-	/* :TODO: Move this to some sort of referencing counting thingy */
-	bool removeMenuId = true;
-	for (size_t i = 0; i < g_NewMenus.size(); i++)
-	{
-		if (!g_NewMenus[i] || g_NewMenus[i]->isDestroying)
-		{
-			continue;
-		}
-		if (g_NewMenus[i]->menuId == pMenu->menuId)
-		{
-			removeMenuId = false;
-			break;
-		}
-	}
-	if (removeMenuId)
-	{
-		g_menucmds.removeMenuId(pMenu->menuId);
-	}
-	g_menucmds.removeMenuCmds(pMenu->thisId);
+	RemoveMenuIdIfOkay(pMenu, pMenu->menuId);
 
 	CPlayer *player;
 	for (int i=1; i<=gpGlobals->maxClients; i++)

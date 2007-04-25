@@ -150,8 +150,23 @@ int MenuMngr::registerMenuId(const char* n, AMX* a)
 
 void MenuMngr::registerMenuCmd(CPluginMngr::CPlugin *a, int mi, int k, int f, int n) 
 {
-	MenuCommand** temp = &headcmd;
-	while (*temp) temp = &(*temp)->next;
+	MenuCommand **temp = &headcmd;
+	MenuCommand *ptr;
+	while (*temp)
+	{
+		ptr = *temp;
+		if (n > -1
+			&& ptr->plugin == a
+			&& ptr->menuid == mi
+			&& ptr->keys == k)
+		{
+			if (strcmp(g_forwards.getFuncName(ptr->function), g_forwards.getFuncName(f)) == 0)
+			{
+				return;
+			}
+		}
+		temp = &(*temp)->next;
+	}
 	*temp = new MenuCommand(a, mi, k, f, n);
 }
 

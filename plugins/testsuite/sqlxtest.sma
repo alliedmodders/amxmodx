@@ -16,6 +16,7 @@ public plugin_init()
 	register_srvcmd("sqlx_test_old2", "SqlxTest_Old2")
 	register_srvcmd("sqlx_test_thread_end", "SqlxTest_ThreadEnd")
 	register_srvcmd("sqlx_test_bad", "SqlxTest_Bad")
+	register_srvcmd("sqlx_test_quote", "SqlxTest_Quote")
 	
 	new configsDir[64]
 	get_configsdir(configsDir, 63)
@@ -161,6 +162,30 @@ public SqlxTest_Thread()
 	SQL_ThreadQuery(g_DbInfo, "GetMyStuff", query, data, 1)
 	
 	g_QueryNum++
+}
+
+/**
+ * Tests string quoting
+ */
+public SqlxTest_Quote()
+{
+	DoBasicInfo(1)
+	
+	new errno, error[255]
+	
+	new Handle:db = SQL_Connect(g_DbInfo, errno, error, sizeof(error)-1)
+	if (!db)
+	{
+		server_print("Query failure: [%d] %s", errno, error)
+		return
+	}
+	
+	new buffer[500], num
+	num = SQL_QuoteString(buffer, sizeof(buffer)-1, "Hi y'all! C\lam")
+	
+	server_print("num: %d str: %s", num, buffer)
+	
+	SQL_FreeHandle(db)
 }
 
 /**

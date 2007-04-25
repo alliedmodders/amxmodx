@@ -62,6 +62,34 @@ native Handle:SQL_Connect(Handle:cn_tuple, &errcode, error[], maxlength);
 native Handle:SQL_PrepareQuery(Handle:db, const fmt[], {Float,_}:...);
 
 
+/**
+ * Back-quotes characters in a string for database querying.
+ * Note: The buffer's maximum size should be 2*strlen(string) to catch
+ * all scenarios.
+ *
+ * @param db				Database handle, for localization.
+ * @param buffer			Buffer to copy to.
+ * @param buflen			Maximum size of the buffer.
+ * @param string			String to backquote (should not overlap buffer).
+ * @return					Length of new string, or -1 on failure.
+ */
+native SQL_QuoteString(Handle:db, buffer[], buflen, const string[]);
+
+/**
+ * Back-quotes characters in a string for database querying.
+ * Note: The buffer's maximum size should be 2*strlen(string) to catch
+ * all scenarios.
+ *
+ * @param db				Database handle, for localization.
+ * @param buffer			Buffer to copy to.
+ * @param buflen			Maximum size of the buffer.
+ * @param fmt				Format of string to backquote (should not overlap buffer).
+ * @param ...				Format arguments.
+ * @return					Length of new string, or -1 on failure.
+ */
+native SQL_QuoteStringFmt(Handle:db, buffer[], buflen, const fmt[], any:...);
+
+
 #define TQUERY_CONNECT_FAILED	-2
 #define TQUERY_QUERY_FAILED	-1
 #define TQUERY_SUCCESS		0

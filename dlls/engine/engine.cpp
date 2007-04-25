@@ -136,12 +136,15 @@ static cell AMX_NATIVE_CALL RadiusDamage_AMXModX(AMX *amx, cell *params)
 	Vector vOrigin = Vector(fCurrentX, fCurrentY, fCurrentZ);
 
 	edict_t *pSearchEnt = NULL;
-	while((pSearchEnt = UTIL_FindEntityInSphere(pSearchEnt, vOrigin, 5 * iRadiusMultiplier)) != NULL) {
-		if(FStrEq(STRING(pSearchEnt->v.classname), "player")) {
-			if(pSearchEnt->v.takedamage != DAMAGE_NO) {
-				pSearchEnt->v.health -= 10 + RANDOM_FLOAT(0,1 * iDamageMultiplier);
-				if(pSearchEnt->v.health < 1) {
-					pSearchEnt->v.health = 1;
+	while ((pSearchEnt = UTIL_FindEntityInSphere(pSearchEnt, vOrigin, 5 * iRadiusMultiplier)) != NULL)
+	{
+		if (FStrEq(STRING(pSearchEnt->v.classname), "player")) 
+		{
+			if (pSearchEnt->v.takedamage != DAMAGE_NO) 
+			{
+				pSearchEnt->v.health -= 10 + RANDOM_FLOAT(0, 1 * iDamageMultiplier);
+				if (pSearchEnt->v.health < 1)
+				{
 					MDLL_ClientKill(pSearchEnt);
 				}
 			}
@@ -150,12 +153,15 @@ static cell AMX_NATIVE_CALL RadiusDamage_AMXModX(AMX *amx, cell *params)
 
 	pSearchEnt = NULL;
 
-	while((pSearchEnt = UTIL_FindEntityInSphere(pSearchEnt, vOrigin, 4 * iRadiusMultiplier)) != NULL) {
-		if(FStrEq(STRING(pSearchEnt->v.classname), "player")) {
-			if(pSearchEnt->v.takedamage != DAMAGE_NO) {
-				pSearchEnt->v.health -= 25 + RANDOM_FLOAT(0,2 * iDamageMultiplier);
-				if(pSearchEnt->v.health < 1) {
-					pSearchEnt->v.health = 1;
+	while ((pSearchEnt = UTIL_FindEntityInSphere(pSearchEnt, vOrigin, 4 * iRadiusMultiplier)) != NULL)
+	{
+		if (FStrEq(STRING(pSearchEnt->v.classname), "player"))
+		{
+			if (pSearchEnt->v.takedamage != DAMAGE_NO) 
+			{
+				pSearchEnt->v.health -= 25 + RANDOM_FLOAT(0, 2 * iDamageMultiplier);
+				if (pSearchEnt->v.health < 1) 
+				{
 					MDLL_ClientKill(pSearchEnt);
 				}
 			}
@@ -164,12 +170,15 @@ static cell AMX_NATIVE_CALL RadiusDamage_AMXModX(AMX *amx, cell *params)
 
 	pSearchEnt = NULL;
 
-	while((pSearchEnt = UTIL_FindEntityInSphere(pSearchEnt, vOrigin, 3 * iRadiusMultiplier)) != NULL) {
-		if(FStrEq(STRING(pSearchEnt->v.classname), "player")) {
-			if(pSearchEnt->v.takedamage != DAMAGE_NO) {
-				pSearchEnt->v.health -= 50 + RANDOM_FLOAT(0,3 * iDamageMultiplier);
-				if(pSearchEnt->v.health < 1) {
-					pSearchEnt->v.health = 1;
+	while ((pSearchEnt = UTIL_FindEntityInSphere(pSearchEnt, vOrigin, 3 * iRadiusMultiplier)) != NULL)
+	{
+		if (FStrEq(STRING(pSearchEnt->v.classname), "player"))
+		{
+			if (pSearchEnt->v.takedamage != DAMAGE_NO)
+			{
+				pSearchEnt->v.health -= 50 + RANDOM_FLOAT(0, 3 * iDamageMultiplier);
+				if (pSearchEnt->v.health < 1) 
+				{
 					MDLL_ClientKill(pSearchEnt);
 				}
 			}
@@ -178,9 +187,14 @@ static cell AMX_NATIVE_CALL RadiusDamage_AMXModX(AMX *amx, cell *params)
 
 	pSearchEnt = NULL;
 
-	while((pSearchEnt = UTIL_FindEntityInSphere(pSearchEnt, vOrigin, 2 * iRadiusMultiplier)) != NULL) {
-		if(FStrEq(STRING(pSearchEnt->v.classname), "player")) {
-			if(pSearchEnt->v.takedamage != DAMAGE_NO) MDLL_ClientKill(pSearchEnt);
+	while ((pSearchEnt = UTIL_FindEntityInSphere(pSearchEnt, vOrigin, 2 * iRadiusMultiplier)) != NULL)
+	{
+		if (FStrEq(STRING(pSearchEnt->v.classname), "player"))
+		{
+			if (pSearchEnt->v.takedamage != DAMAGE_NO)
+			{
+				MDLL_ClientKill(pSearchEnt);
+			}
 		}
 	}
 

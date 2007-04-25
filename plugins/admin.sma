@@ -41,7 +41,7 @@
 #include <sqlx>
 #endif
 
-new Vector:AdminList;
+//new Vector:AdminList;
 
 new AdminCount;
 
@@ -112,7 +112,7 @@ public plugin_init()
 	server_cmd("exec %s/sql.cfg", configsDir)
 
 	// Create a vector of 5 cells to store the info.
-	AdminList=vector_create(5);
+	//AdminList=vector_create(5);
 
 	
 #if defined USING_SQL

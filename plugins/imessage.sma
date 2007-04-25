@@ -93,7 +93,7 @@ public infoMessage()
 	client_print(0, print_console, "%s", Message);
 	++g_Current;
 	
-	new Float:freq_im = get_cvar_float(amx_freq_imessage);
+	new Float:freq_im = get_pcvar_float(amx_freq_imessage);
 	
 	if (freq_im > 0.0)
 		set_task(freq_im, "infoMessage", 12345);

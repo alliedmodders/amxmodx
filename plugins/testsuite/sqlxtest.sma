@@ -22,7 +22,8 @@ public plugin_init()
 	get_configsdir(configsDir, 63)
 	
 	server_cmd("exec %s/sql.cfg", configsDir)
-	server_exec()
+	
+	set_task(2.0, "start_map")
 }
 
 DoBasicInfo(affinities=0)
@@ -55,12 +56,12 @@ DoBasicInfo(affinities=0)
 			wanted_type,
 			res ? "Success" : "Failed")
 		SQL_GetAffinity(affinity, 11)
-		plugin_cfg()
+		start_map()
 		server_print("Verification: %s", affinity)
 	}
 }
 
-public plugin_cfg()
+public start_map()
 {
 	new host[64]
 	new user[64]
@@ -181,7 +182,7 @@ public SqlxTest_Quote()
 	}
 	
 	new buffer[500], num
-	num = SQL_QuoteString(buffer, sizeof(buffer)-1, "Hi y'all! C\lam")
+	num = SQL_QuoteString(db, buffer, sizeof(buffer)-1, "Hi y'all! C\lam")
 	
 	server_print("num: %d str: %s", num, buffer)
 	

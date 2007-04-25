@@ -489,6 +489,51 @@ static cell AMX_NATIVE_CALL SQL_Rewind(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL SQL_QuoteString(AMX *amx, cell *params)
+{
+	IDatabase *pDb = (IDatabase *)GetHandle(params[1], Handle_Database);
+	if (!pDb)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid database handle: %d", params[1]);
+		return 0;
+	}
+
+	int len;
+	char *str = MF_GetAmxString(amx, params[4], 0, &len);
+	size_t newsize;
+	static char buffer[8192];
+
+	if (pDb->QuoteString(str, buffer, sizeof(buffer)-1, &newsize) == 0)
+	{
+		MF_SetAmxString(amx, params[2], buffer, params[3]);
+		return newsize;
+	} else {
+		return -1;
+	}
+}
+
+static cell AMX_NATIVE_CALL SQL_QuoteStringFmt(AMX *amx, cell *params)
+{
+	IDatabase *pDb = (IDatabase *)GetHandle(params[1], Handle_Database);
+	if (!pDb)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid database handle: %d", params[1]);
+		return 0;
+	}
+
+	int len;
+	char *str = MF_FormatAmxString(amx, params, 4, &len);
+	size_t newsize;
+	static char buffer[8192];
+
+	if (pDb->QuoteString(str, buffer, sizeof(buffer)-1, &newsize) == 0)
+	{
+		MF_SetAmxString(amx, params[2], buffer, params[3]);
+		return newsize;
+	} else {
+		return -1;
+	}
+}
 
 AMX_NATIVE_INFO g_BaseSqlNatives[] = 
 {
@@ -512,6 +557,8 @@ AMX_NATIVE_INFO g_BaseSqlNatives[] =
 	{"SQL_GetInsertId",		SQL_GetInsertId},
 	{"SQL_GetQueryString",	SQL_GetQueryString},
 	{"SQL_Rewind",			SQL_Rewind},
+	{"SQL_QuoteString",		SQL_QuoteString},
+	{"SQL_QuoteStringFmt",	SQL_QuoteStringFmt},
 
 	{NULL,					NULL},
 };

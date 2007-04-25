@@ -69,12 +69,16 @@ int MysqlDatabase::QuoteString(const char *str, char buffer[], size_t maxlen, si
 	unsigned long size = static_cast<unsigned long>(strlen(str));
 	unsigned long needed = size*2 + 1;
 
-	if (size < needed)
+	if (maxlen < needed)
+	{
 		return (int)needed;
+	}
 
 	needed = mysql_real_escape_string(m_pMysql, buffer, str, size);
 	if (newsize)
+	{
 		*newsize = static_cast<size_t>(needed);
+	}
 
 	return 0;
 }

@@ -68,13 +68,12 @@ IQuery *SqliteDatabase::PrepareQueryFmt(const char *fmt, ...)
 
 int SqliteDatabase::QuoteString(const char *str, char buffer[], size_t maxlen, size_t *newsize)
 {
-	unsigned long size = static_cast<unsigned long>(strlen(str));
-	unsigned long needed = size*2 + 1;
+	char *res = sqlite3_snprintf(static_cast<int>(maxlen), buffer, "%q", str);
 
-	if (size < needed)
-		return (int)needed;
-
-	sqlite3_snprintf(static_cast<int>(maxlen), buffer, "%q", str);
+	if (res != NULL && newsize != NULL)
+	{
+		*newsize = strlen(buffer);
+	}
 
 	return 0;
 }

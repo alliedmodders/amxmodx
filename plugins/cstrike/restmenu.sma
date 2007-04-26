@@ -623,6 +623,22 @@ public actionMenu(id, key)
 	return PLUGIN_HANDLED
 }
 
+public CS_InternalCommand(id, const cmd[])
+{
+	new a = 0
+
+	do
+	{
+		if (equali(g_Aliases[g_AliasBlock[a]], cmd) || equali(g_Aliases2[g_AliasBlock[a]], cmd))
+		{
+			client_print(id, print_center, "%s", g_Restricted)
+			return PLUGIN_HANDLED
+		}
+	} while (++a < g_AliasBlockNum)
+	
+	return PLUGIN_CONTINUE
+}
+
 public client_command(id)
 {
 	if (g_AliasBlockNum)

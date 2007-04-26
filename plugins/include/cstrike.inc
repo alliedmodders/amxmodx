@@ -331,3 +331,14 @@ native cs_set_hostage_nextuse(index, Float:value);
 native Float:cs_get_c4_explode_time(index);
 
 native cs_set_c4_explode_time(index, Float:value);
+
+/**
+ * Called when CS internally fires a command to a player.  It does this for a few 
+ * functions, most notably rebuy/autobuy functionality.  This is also used to pass
+ * commands to CZ bots internally.
+ *
+ * @param id			Client index.
+ * @param cmd			Command string.
+ * @return				PLUGIN_HANDLED to block, PLUGIN_CONTINUE for normal operation.
+ */
+forward CS_InternalCommand(id, const cmd[]);

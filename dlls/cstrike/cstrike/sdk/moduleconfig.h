@@ -52,12 +52,12 @@
 #define FN_AMXX_ATTACH OnAmxxAttach
 
 /** AMXX Detach (unload) */
-//#define FN_AMXX_DETACH OnAmxxDetach
+#define FN_AMXX_DETACH OnAmxxDetach
 
 /** All plugins loaded
  * Do forward functions init here (MF_RegisterForward)
  */
-//#define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
+#define FN_AMXX_PLUGINSLOADED OnPluginsLoaded
 
 /** All plugins are about to be unloaded */
 //#define FN_AMXX_PLUGINSUNLOADING OnPluginsUnloading

@@ -33,6 +33,11 @@
    *  version. 
    */ 
 
+CCstrikePlayer g_players[33];
+int g_zooming[33] = {0};
+bool g_precachedknife = false;
+bool g_noknives = false;
+
 // Utils first
 
 bool UTIL_IsPlayer(AMX* amx, edict_t* pPlayer) {
@@ -1836,4 +1841,10 @@ void PlayerPreThink(edict_t *pPlayer)
 void OnAmxxAttach()
 {
 	MF_AddNatives(cstrike_Exports);
+	InitializeHacks();
+}
+
+void OnAmxxDetach()
+{
+	ShutdownHacks();
 }

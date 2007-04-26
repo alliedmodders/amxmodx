@@ -152,6 +152,9 @@
 				RelativePath="..\cstrike.cpp">
 			</File>
 			<File
+				RelativePath="..\CstrikeHacks.cpp">
+			</File>
+			<File
 				RelativePath="..\CstrikePlayer.cpp">
 			</File>
 		</Filter>

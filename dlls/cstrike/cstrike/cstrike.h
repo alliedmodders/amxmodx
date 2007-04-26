@@ -152,6 +152,15 @@
 	#define OFFSET_HOSTAGEID			516 + EXTRAOFFSET // +29
 #endif
 
+#if defined __linux__
+#define CS_DETOURCOPYBYTES_CLIENTCOMMAND		9
+#else
+#define CS_DETOURCOPYBYTES_CLIENTCOMMAND		6
+#define CS_CLICMD_OFFS_USEBOTARGS				2
+#define CS_CLICMD_OFFS_BOTARGS					22
+#endif
+
+
 // Ids of weapons in CS
 #define CSW_P228						1
 //#define CSW_SHIELD					2
@@ -280,11 +289,14 @@ enum
 };
 // cstrike-specific defines above
 
-CCstrikePlayer g_players[33];
-int g_zooming[33] = {0};
-bool g_precachedknife = false;
-bool g_noknives = false;
+extern CCstrikePlayer g_players[33];
+extern int g_zooming[33];
+extern bool g_precachedknife;
+extern bool g_noknives;
 // Globals above
+
+void InitializeHacks();
+void ShutdownHacks();
 
 #define CHECK_ENTITY(x) \
 	if (x < 0 || x > gpGlobals->maxEntities) { \

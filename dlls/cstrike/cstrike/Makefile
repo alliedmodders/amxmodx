@@ -14,7 +14,7 @@ NAME = cstrike
 BIN_SUFFIX_32 = amxx_i386.so
 BIN_SUFFIX_64 = amxx_amd64.so
 
-OBJECTS = sdk/amxxmodule.cpp CstrikePlayer.cpp cstrike.cpp
+OBJECTS = sdk/amxxmodule.cpp CstrikePlayer.cpp cstrike.cpp CstrikeHacks.cpp
 
 LINK = 
 

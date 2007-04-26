@@ -1,5 +1,6 @@
-#include "cstrike.h"
 #include <assert.h>
+#include <malloc.h>
+#include "cstrike.h"
 
 #ifdef __linux__
 #include <sys/mman.h>
@@ -10,6 +11,7 @@
 unsigned char *UTIL_CodeAlloc(size_t size);
 void UTIL_CodeFree(unsigned char *addr);
 void UTIL_MemProtect(void *addr, int length, int prot);
+bool UTIL_GetLibraryOfAddress(void *memInBase, char *buffer, size_t maxlength);
 
 /* Detours */
 void CtrlDetour_ClientCommand(bool set);
@@ -61,12 +63,26 @@ void CtrlDetour_ClientCommand(bool set)
 	const unsigned int DetourJmpBytes = 5;
 	static unsigned char *FullDetour = NULL;
 
-	void *target = MDLL_ClientCommand;
+	void *target = (void *)MDLL_ClientCommand;
 	unsigned char *paddr;
 
 	if (!g_UseBotArgs)
 	{
 #if defined __linux__
+		/* Find the DLL */
+		char dll[256];
+		if (!UTIL_GetLibraryOfAddress(target, dll, sizeof(dll)))
+		{
+			return;
+		}
+		void *handle = dlopen(dll, RTLD_NOW);
+		if (!handle)
+		{
+			return;
+		}
+		g_UseBotArgs = (int *)dlsym(handle, "UseBotArgs");
+		g_BotArgs = (const char **)dlsym(handle, "BotArgs");
+		dlclose(handle);
 #else
 		/* Find the bot args addresses */
 		paddr = (unsigned char *)target + CS_CLICMD_OFFS_USEBOTARGS;
@@ -130,7 +146,7 @@ unsigned char *UTIL_CodeAlloc(size_t size)
 	return (unsigned char *)VirtualAlloc(NULL, size, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
 #else
 	unsigned char *addr = (unsigned char *)memalign(sysconf(_SC_PAGESIZE), size);
-	mprotect(base, size, PROT_READ|PROT_WRITE|PROT_EXEC);
+	mprotect(addr, size, PROT_READ|PROT_WRITE|PROT_EXEC);
 	return addr;
 #endif
 }
@@ -155,3 +171,34 @@ void UTIL_MemProtect(void *addr, int length, int prot)
 	VirtualProtect(addr, length, prot, &old_prot);
 #endif
 }
+
+bool UTIL_GetLibraryOfAddress(void *memInBase, char *buffer, size_t maxlength)
+{
+#if defined __linux__
+	Dl_info info;
+	if (!dladdr(memInBase, &info))
+	{
+		return false;
+	}
+	if (!info.dli_fbase || !info.dli_fname)
+	{
+		return false;
+	}
+	const char *dllpath = info.dli_fname;
+	snprintf(buffer, maxlength, "%s", dllpath);
+#else
+	MEMORY_BASIC_INFORMATION mem;
+	if (!VirtualQuery(memInBase, &mem, sizeof(mem)))
+	{
+		return false;
+	}
+	if (mem.AllocationBase == NULL)
+	{
+		return false;
+	}
+	HMODULE dll = (HMODULE)mem.AllocationBase;
+	GetModuleFileName(dll, (LPTSTR)buffer, maxlength);
+#endif
+	return true;
+}
+

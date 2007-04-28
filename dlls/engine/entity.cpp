@@ -130,29 +130,38 @@ static cell AMX_NATIVE_CALL is_valid_ent(AMX *amx, cell *params)
 //uses mahnsawce's version now
 static cell AMX_NATIVE_CALL DispatchKeyValue(AMX *amx, cell *params)
 {
-	int count = *params/sizeof(cell);
-	if (count == 3) {
+	int count = *params / sizeof(cell);
+
+	if (count == 3) 
+	{
 		cell *cVal = MF_GetAmxAddr(amx, params[1]);
 		int iValue = *cVal;
-		CHECK_ENTITY(iValue);
+
+		if (iValue != 0 && (FNullEnt(INDEXENT2(iValue)) || iValue < 0 || iValue > gpGlobals->maxEntities)) 
+		{
+			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", iValue);
+			return 0;
+		}
+
 		edict_t *pEntity = INDEXENT2(iValue);
 		KeyValueData kvd;
 		int iLength=0;
 		char *char1 = MF_GetAmxString(amx, params[2], 0, &iLength);
 		char *char2 = MF_GetAmxString(amx, params[3], 1, &iLength);
+
 		kvd.szClassName = (char*)STRING(pEntity->v.classname);
 		kvd.szKeyName = char1;
 		kvd.szValue = char2;
 		kvd.fHandled = 0;
+
 		MDLL_KeyValue(pEntity, &kvd);
-	}
-	else
-	{
+	} else {
 		int iLength;
 		char *char1 = MF_GetAmxString(amx, params[1], 0, &iLength);
 		char *char2 = MF_GetAmxString(amx, params[2], 1, &iLength);
 		const char *charA = STRING(ALLOC_STRING(char1));
 		const char *charB = STRING(ALLOC_STRING(char2));
+
 		g_pkvd->szKeyName = const_cast<char *>(charA);
 		g_pkvd->szValue = const_cast<char *>(charB);
 	}

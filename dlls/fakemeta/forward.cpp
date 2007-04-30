@@ -652,6 +652,8 @@ void ClientPrintf_post(edict_t* pEdict, PRINT_TYPE ptype, const char *szMsg)
 	RETURN_META(MRES_IGNORED);
 }
 
+SIMPLE_VOID_HOOK_CONSTSTRING(ServerPrint);
+
 /*
  * Beginning of Engine->Game DLL hooks
  */
@@ -1480,6 +1482,10 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	case FM_ClientPrintf:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_STRING, FP_DONE);
 		ENGHOOK(ClientPrintf);
+		break;
+	case FM_ServerPrint:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_STRING, FP_DONE);
+		ENGHOOK(ServerPrint);
 		break;
 #if 0
 

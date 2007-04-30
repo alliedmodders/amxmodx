@@ -164,6 +164,7 @@ enum {
 	FM_CreateBaseline,
 	FM_GetInfoKeyBuffer,
 	FM_ClientPrintf,
+	FM_ServerPrint,
 	FM_LAST_DONT_USE_ME
 };
 

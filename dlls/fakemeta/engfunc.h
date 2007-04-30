@@ -81,7 +81,8 @@ enum {
 	EngFunc_CreateInstancedBaseline,	// int  )			(int classname, struct entity_state_s *baseline);
 	EngFunc_GetInfoKeyBuffer,			// char*)			(edict_t *e);
 	EngFunc_AlertMessage,				// void )			(ALERT_TYPE atype, char *szFmt, ...);
-	EngFunc_ClientPrintf				// void )			(edict_t* pEdict, PRINT_TYPE ptype, const char *szMsg);
+	EngFunc_ClientPrintf,				// void )			(edict_t* pEdict, PRINT_TYPE ptype, const char *szMsg);
+	EngFunc_ServerPrint					// void )			(const char *szMsg);
 };
 
 #endif //_ENGFUNC_INCLUDE_H

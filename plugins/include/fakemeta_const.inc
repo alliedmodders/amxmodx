@@ -119,7 +119,8 @@ enum {
 	// Returns pointer to info buffer that can be used with the infobuffer param of InfoKeyValue, SetKeyValue, and SetClientKeyValue
 	EngFunc_GetInfoKeyBuffer,			// char*)			(edict_t *e);
 	EngFunc_AlertMessage,				// void )			(ALERT_TYPE atype, char *szFmt, ...);
-	EngFunc_ClientPrintf				// void )			(edict_t* pEdict, PRINT_TYPE ptype, const char *szMsg);
+	EngFunc_ClientPrintf,				// void )			(edict_t* pEdict, PRINT_TYPE ptype, const char *szMsg);
+	EngFunc_ServerPrint					// void )			(const char *szMsg);
 };
 
 /* Used with dllfunc()
@@ -529,7 +530,7 @@ enum {
 	FM_GameShutdown,
 	FM_ShouldCollide,
 	
-	//LATE ADDITIONS (v1.71)
+	// LATE ADDITIONS (v1.71)
 	FM_ClientUserInfoChanged,
 	
 	// LATE ADDITIONS (v1.75)
@@ -540,7 +541,10 @@ enum {
 	FM_CreateInstBaseline,
 	FM_CreateBaseline,
 	FM_GetInfoKeyBuffer,
-	FM_ClientPrintf
+	FM_ClientPrintf,
+	
+	// LATE ADDITIONS (v1.80)
+	FM_ServerPrint
 };
 
 enum TraceResult

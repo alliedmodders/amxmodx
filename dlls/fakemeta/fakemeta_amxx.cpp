@@ -152,6 +152,7 @@ void FMH_ServerDeactivate_Post()
 	RESETE(GetPlayerAuthId);
 	RESETE(GetPlayerWONId);
 	RESETE(IsMapValid);
+	RESETE(ServerPrint);
 
 	RESETD(Spawn);
 	RESETD(Think);

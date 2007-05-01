@@ -14,7 +14,7 @@ NAME = csx
 BIN_SUFFIX_32 = amxx_i386.so
 BIN_SUFFIX_64 = amxx_amd64.so
 
-OBJECTS = sdk/mxxmodule.cpp CRank.cpp CMisc.cpp meta_api.cpp rank.cpp usermsg.cpp
+OBJECTS = sdk/amxxmodule.cpp CRank.cpp CMisc.cpp meta_api.cpp rank.cpp usermsg.cpp
 
 LINK = 
 

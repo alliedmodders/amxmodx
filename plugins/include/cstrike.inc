@@ -314,6 +314,12 @@ native Float:cs_get_user_lastactivity(index);
 
 native cs_set_user_lastactivity(index, Float:value);
 
+/* Gets or sets the number of hostages that a user has killed.
+ */
+native cs_get_user_hostagekills(index);
+
+native cs_set_user_hostagekills(index, value);
+
 /* Gets or sets the time that the hostage was last used.
  */
 native Float:cs_get_hostage_lastuse(index);

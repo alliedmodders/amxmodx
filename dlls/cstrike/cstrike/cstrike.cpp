@@ -1575,6 +1575,35 @@ static cell AMX_NATIVE_CALL cs_set_user_lastactivity(AMX *amx, cell *params)
 
 	return 1;
 }
+
+static cell AMX_NATIVE_CALL cs_get_user_hostagekills(AMX *amx, cell *params)
+{
+	//Return number of hostages that user has killed
+
+	//Check player
+	CHECK_PLAYER(params[1]);
+
+	// Make into edict pointer
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+
+	return *((int *)pPlayer->pvPrivateData + OFFSET_HOSTAGEKILLS);
+}
+
+static cell AMX_NATIVE_CALL cs_set_user_hostagekills(AMX *amx, cell *params)
+{
+	//Set number of hostages that user has killed
+
+	//Check player
+	CHECK_PLAYER(params[1]);
+
+	// Make into edict pointer
+	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+
+	*((int *)pPlayer->pvPrivateData + OFFSET_HOSTAGEKILLS) = params[2];
+
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL cs_get_hostage_lastuse(AMX *amx, cell *params)
 {
 	//Return time that the hostage was last used
@@ -1689,6 +1718,8 @@ static cell AMX_NATIVE_CALL not_on_64(AMX* amx, cell* params)
 }
 #define cs_get_user_lastactivity not_on_64
 #define cs_set_user_lastactivity not_on_64
+#define cs_get_user_hostagekills not_on_64
+#define cs_set_user_hostagekills not_on_64
 #define cs_get_hostage_lastuse not_on_64
 #define cs_set_hostage_lastuse not_on_64
 #define cs_get_hostage_nextuse not_on_64
@@ -1749,6 +1780,8 @@ AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_user_submodel",		cs_set_user_submodel},
 	{"cs_get_user_lastactivity",	cs_get_user_lastactivity},
 	{"cs_set_user_lastactivity",	cs_set_user_lastactivity},
+	{"cs_get_user_hostagekills",	cs_get_user_hostagekills},
+	{"cs_set_user_hostagekills",	cs_set_user_hostagekills},
 	{"cs_get_hostage_lastuse",		cs_get_hostage_lastuse},
 	{"cs_set_hostage_lastuse",		cs_set_hostage_lastuse},
 	{"cs_get_hostage_nextuse",		cs_get_hostage_nextuse},
@@ -1756,7 +1789,6 @@ AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_get_c4_explode_time",		cs_get_c4_explode_time},
 	{"cs_set_c4_explode_time",		cs_set_c4_explode_time},
 
-	//------------------- <-- max 19 characters!
 	{NULL,							NULL}
 };
 

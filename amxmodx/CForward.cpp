@@ -130,7 +130,7 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 			}
 			
 			// exec
-			cell retVal;
+			cell retVal = 0;
 #if defined BINLOG_ENABLED
 			g_BinLog.WriteOp(BinLog_CallPubFunc, (*iter).pPlugin->getId(), iter->func);
 #endif

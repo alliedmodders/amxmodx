@@ -103,6 +103,26 @@ native set_tr(TraceResult:tr_member, {Float,_}:...);
 native get_tr2(tr_handle, TraceResult:tr_member, {Float,_}:...);
 native set_tr2(tr_handle, TraceResult:tr_member, {Float,_}:...);
 
+/**
+ * Creates a traceresult handle.  This value should never be altered.
+ * The handle can be used in get/set_tr2 and various traceresult engine functions.
+ *
+ * NOTE: You must call free_tr2() on every handle made with create_tr2().
+ *
+ * @return		A new TraceResult handle.
+ */
+native create_tr2();
+
+/** 
+ * Frees a traceresult handle created with free_tr2().  Do not call
+ * this more than once per handle, or on handles not created through
+ * create_tr2().
+ *
+ * @param tr_handle	TraceResult handle created via create_tr2().
+ * @noreturn
+ */
+native free_tr2(tr_handle);
+
 //Same as above, use either a kvd_handle or 0 for global reserved kvd data
 //kvd_handle is passed by the kvd hook, last param
 native get_kvd(kvd_handle, KeyValueData:member, {Float,_}:...);

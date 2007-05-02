@@ -1,4 +1,5 @@
 #include "fakemeta_amxx.h"
+#include "sh_stack.h"
 
 edict_t *g_player_edicts[33]; // Used for INDEXENT() forward.
 
@@ -19,6 +20,16 @@ void OnAmxxAttach()
 	g_kvd_2.szKeyName = "";
 	g_kvd_2.szValue = "";
 	g_kvd_glb.kvd = &g_kvd_2;
+}
+
+extern CStack<TraceResult *> g_FreeTRs;
+void OnAmxxDetach()
+{
+	while (!g_FreeTRs.empty())
+	{
+		delete g_FreeTRs.front();
+		g_FreeTRs.pop();
+	}
 }
 
 int GetHullBounds(int hullnumber, float *mins, float *maxs);

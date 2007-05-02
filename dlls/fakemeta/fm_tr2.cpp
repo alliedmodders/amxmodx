@@ -1,4 +1,5 @@
 #include "fakemeta_amxx.h"
+#include "sh_stack.h"
 
 TraceResult g_tr_2;
 KeyValueData g_kvd_2;
@@ -1214,8 +1215,39 @@ static cell AMX_NATIVE_CALL set_uc(AMX *amx, cell *params)
 	return 0;
 }
 
+CStack<TraceResult *> g_FreeTRs;
+
+static cell AMX_NATIVE_CALL create_tr2(AMX *amx, cell *params)
+{
+	TraceResult *tr;
+	if (g_FreeTRs.empty())
+	{
+		tr = new TraceResult;
+	} else {
+		tr = g_FreeTRs.front();
+		g_FreeTRs.pop();
+	}
+	memset(tr, 0, sizeof(TraceResult));
+	return reinterpret_cast<cell>(tr);
+}
+
+static cell AMX_NATIVE_CALL free_tr2(AMX *amx, cell *params)
+{
+	TraceResult *tr = reinterpret_cast<TraceResult *>(params[1]);
+	if (!tr)
+	{
+		return 0;
+	}
+
+	g_FreeTRs.push(tr);
+
+	return 1;
+}
+
 AMX_NATIVE_INFO ext2_natives[] = 
 {
+	{"create_tr2",		create_tr2},
+	{"free_tr2",		free_tr2},
 	{"get_tr2",			get_tr2},
 	{"set_tr2",			set_tr2},
 	{"get_kvd",			get_kvd},

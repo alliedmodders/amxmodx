@@ -97,11 +97,13 @@ void CLog::CreateNewFile()
 	tm *curTime = localtime(&td);
 
 	char file[256];
+	char name[256];
 	int i = 0;
 	
 	while (true)
 	{
-		build_pathname_r(file, sizeof(file)-1, "%s/L%02d%02d%03d.log", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday, i);
+		snprintf(name, sizeof(name), "%s/L%02d%02d%03d.log", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday, i);
+		build_pathname_r(file, sizeof(file)-1, "%s", name);
 		FILE *pTmpFile = fopen(file, "r");			// open for reading to check whether the file exists
 		
 		if (!pTmpFile)
@@ -120,7 +122,7 @@ void CLog::CreateNewFile()
 		ALERT(at_logged, "[AMXX] Unexpected fatal logging error. AMXX Logging disabled.\n");
 		SET_LOCALINFO("amxx_logging", "0");
 	} else {
-		fprintf(fp, "AMX Mod X log file started (file \"%s/L%02d%02d%03d.log\") (version \"%s\")\n", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday, i, SVN_VERSION_STRING);
+		fprintf(fp, "AMX Mod X log file started (file \"%s\") (version \"%s\")\n", name, SVN_VERSION_STRING);
 		fclose(fp);
 	}
 }
@@ -202,7 +204,7 @@ void CLog::Log(const char *fmt, ...)
 				}
 			}
 		} else {
-			build_pathname_r(file, sizeof(file)-1, "%s/L%02d%02d.log", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday);
+			build_pathname_r(file, sizeof(file)-1, "%s/L%04d%02d%02d.log", g_log_dir.c_str(), (curTime->tm_year + 1900), curTime->tm_mon + 1, curTime->tm_mday);
 			pF = fopen(file, "a+");
 		}
 		
@@ -255,7 +257,7 @@ void CLog::LogError(const char *fmt, ...)
 	va_end(arglst);
 
 	FILE *pF = NULL;
-	build_pathname_r(file, sizeof(file)-1, "%s/error_%02d%02d%02d.log", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday, curTime->tm_year - 100);
+	build_pathname_r(file, sizeof(file)-1, "%s/error_%04d%02d%02d.log", g_log_dir.c_str(), (curTime->tm_year + 1900), curTime->tm_mon + 1, curTime->tm_mday);
 	pF = fopen(file, "a+");
 
 	if (pF)

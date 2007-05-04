@@ -26,7 +26,6 @@
 	{																	\
 		if ((*i)->state == FSTATE_OK)									\
 		{																\
-			printf("id=%d\n",(*i)->id);									\
 			thisresult=MF_ExecuteForward((*i)->id,iThis
 
 #define PRE_END()									\

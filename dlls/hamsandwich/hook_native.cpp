@@ -174,7 +174,6 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 	// Don't fail the plugin if this fails, just emit a normal error
 	int fwd=hooklist[func].makefunc(amx, function);
 
-	printf("\n\n----> FORWARD = %d\n\n\n",fwd);
 	if (fwd == -1)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Function %s not found.", function);

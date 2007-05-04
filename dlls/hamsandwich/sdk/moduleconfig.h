@@ -63,7 +63,7 @@
 //#define FN_AMXX_PLUGINSUNLOADING OnPluginsUnloading
 
 /** All plugins are now unloaded */
-//#define FN_AMXX_PLUGINSUNLOADED OnPluginsUnloaded
+#define FN_AMXX_PLUGINSUNLOADED OnPluginsUnloaded
 
 
 /**** METAMOD ****/

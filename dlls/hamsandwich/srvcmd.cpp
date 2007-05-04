@@ -39,7 +39,17 @@ void HamCommand(void)
 		print_srvconsole("-------------------------------------------\n");
 		print_srvconsole("%-24s |  %s  | %10d\n", "pev", Offsets.IsPevSet() == 0 ? "n" : "y", Offsets.GetPev());
 		print_srvconsole("%-24s |  %s  | %10d\n", "base", Offsets.IsBaseSet() == 0 ? "n" : "y", Offsets.GetBase());
-		int count=0;
+
+		if (Offsets.IsPevSet())
+		{
+			Total++;
+		}
+		if (Offsets.IsBaseSet())
+		{
+			Total++;
+		}
+
+		int count=2;
 		for (int i=0; i<HAM_LAST_ENTRY_DONT_USE_ME_LOL; i++)
 		{
 			print_srvconsole("%-24s |  %s  | %10d\n", hooklist[i].name, hooklist[i].isset == 0 ? "n" : "y", hooklist[i].vtid);

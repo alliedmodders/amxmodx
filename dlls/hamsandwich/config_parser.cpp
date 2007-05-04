@@ -203,7 +203,6 @@ static const char* get_localinfo( const char* name , const char* def = 0 )
 }
 int read_start_section(char *data)
 {
-	printf("Section: %s\n", data);
 	if (strncmp(data, CurrentModName, strlen(CurrentModName))==0)
 	{
 		data+=strlen(CurrentModName)+1;
@@ -269,7 +268,6 @@ void process_key(char *data)
 			hooklist[i].isset=1;
 			hooklist[i].vtid=value;
 
-			printf("setting \"%s\" to %d", hooklist[i].name, hooklist[i].vtid);
 
 			set=1;
 			break;
@@ -279,7 +277,7 @@ void process_key(char *data)
 
 	if (set==0)
 	{
-		printf("stray key in process_key: %s", data);
+		printf("stray key in process_key: %s\n", data);
 	}
 
 }

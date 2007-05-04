@@ -2702,9 +2702,7 @@ static cell AMX_NATIVE_CALL precache_sound(AMX *amx, cell *params) /* 1 param */
 	int len;
 	char* sptemp = get_amxstring(amx, params[1], 0, len);
 	
-	PRECACHE_SOUND((char*)STRING(ALLOC_STRING(sptemp)));
-	
-	return 1;
+	return PRECACHE_SOUND((char*)STRING(ALLOC_STRING(sptemp)));
 }
 
 static cell AMX_NATIVE_CALL precache_model(AMX *amx, cell *params) /* 1 param */

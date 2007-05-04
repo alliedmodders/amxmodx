@@ -428,10 +428,8 @@ namespace Trampolines
 			Append(&code[0],sizeof(::Trampolines::Bytecode::codePushThis));
 
 #if defined __linux__
-			TPRINT(("mystack=%d+4\n",m_mystack));
 			m_mystack+=4;
 #endif
-			TPRINT(("calledstack=%d+4\n",m_calledstack));
 			m_calledstack+=4;
 		};
 
@@ -441,7 +439,6 @@ namespace Trampolines
 		void FreeMyStack(void)
 		{
 
-			TPRINT(("freeing mystack=%d+4\n",m_mystack));
 			this->FreeStack(m_mystack);
 		};
 
@@ -450,7 +447,6 @@ namespace Trampolines
 		 */
 		void FreeTargetStack(void)
 		{
-			TPRINT(("freeing calledstack=%d+4\n",m_calledstack));
 			this->FreeStack(m_calledstack);
 		};
 
@@ -460,8 +456,6 @@ namespace Trampolines
 		 */
 		void FreeBothStacks(void)
 		{
-			TPRINT(("freeing mystack=%d+4\n",m_mystack));
-			TPRINT(("freeing calledstack=%d+4\n",m_calledstack));
 			this->FreeStack(m_calledstack + m_mystack);
 		};
 
@@ -525,7 +519,6 @@ namespace Trampolines
 
 			Append(&code[0],sizeof(::Trampolines::Bytecode::codePushID));
 
-			TPRINT(("calledstack=%d+4\n",m_calledstack));
 			m_calledstack+=4; // increase auto detected stack size
 
 		};
@@ -562,9 +555,7 @@ namespace Trampolines
 
 			Append(&code[0],sizeof(::Trampolines::Bytecode::codePushParam));
 
-			TPRINT(("calledstack=%d+4\n",m_calledstack));
 			m_calledstack+=4; // increase auto detected stack size
-			TPRINT(("mystack=%d+4\n",m_mystack));
 			m_mystack+=4;
 
 		};

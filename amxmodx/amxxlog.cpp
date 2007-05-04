@@ -102,7 +102,7 @@ void CLog::CreateNewFile()
 	
 	while (true)
 	{
-		snprintf(name, sizeof(name), "%s/L%02d%02d%03d.log", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday, i);
+		snprintf(name, sizeof(name), "%s%cL%02d%02d%03d.log", g_log_dir.c_str(), PATH_SEP_CHAR, curTime->tm_mon + 1, curTime->tm_mday, i);
 		build_pathname_r(file, sizeof(file)-1, "%s", name);
 		FILE *pTmpFile = fopen(file, "r");			// open for reading to check whether the file exists
 		
@@ -234,6 +234,7 @@ void CLog::Log(const char *fmt, ...)
 void CLog::LogError(const char *fmt, ...)
 {
 	static char file[256];
+	static char name[256];
 
 	if (m_FoundError)
 	{
@@ -257,7 +258,8 @@ void CLog::LogError(const char *fmt, ...)
 	va_end(arglst);
 
 	FILE *pF = NULL;
-	build_pathname_r(file, sizeof(file)-1, "%s/error_%04d%02d%02d.log", g_log_dir.c_str(), (curTime->tm_year + 1900), curTime->tm_mon + 1, curTime->tm_mday);
+	snprintf(name, sizeof(name), "%s%cerror_%04d%02d%02d.log", g_log_dir.c_str(), PATH_SEP_CHAR, curTime->tm_year + 1900, curTime->tm_mon + 1, curTime->tm_mday);
+	build_pathname_r(file, sizeof(file)-1, "%s", name);
 	pF = fopen(file, "a+");
 
 	if (pF)
@@ -265,7 +267,7 @@ void CLog::LogError(const char *fmt, ...)
 		if (!m_LoggedErrMap)
 		{
 			fprintf(pF, "L %s: Start of error session.\n", date);
-			fprintf(pF, "L %s: Info (map \"%s\") (logfile \"error_%02d%02d%02d.log\")\n", date, STRING(gpGlobals->mapname), curTime->tm_mon + 1, curTime->tm_mday, curTime->tm_year - 100);
+			fprintf(pF, "L %s: Info (map \"%s\") (file \"%s\")\n", date, STRING(gpGlobals->mapname), name);
 			m_LoggedErrMap = true;
 		}
 		fprintf(pF, "L %s: %s\n", date, msg);

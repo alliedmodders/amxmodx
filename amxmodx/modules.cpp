@@ -722,13 +722,7 @@ char* build_pathname(char *fmt, ...)
 {
 	static char string[256];
 	int b;
-	int a = b = snprintf(string, 255, 
-#ifndef __linux__
-		"%s\\", 
-#else
-		"%s/", 
-#endif
-		g_mod_name.c_str());
+	int a = b = snprintf(string, 255, "%s%c", g_mod_name.c_str(), PATH_SEP_CHAR);
 
 	va_list argptr;
 	va_start(argptr, fmt);
@@ -740,11 +734,10 @@ char* build_pathname(char *fmt, ...)
 
 	while (*path) 
 	{
-#ifndef __linux__
-		if (*path == '/') *path = '\\';
-#else
-		if (*path == '\\') *path = '/';
-#endif
+		if (*path == ALT_SEP_CHAR)
+		{
+			*path = PATH_SEP_CHAR;
+		}
 		++path;
 	}
 
@@ -753,13 +746,7 @@ char* build_pathname(char *fmt, ...)
 
 char *build_pathname_r(char *buffer, size_t maxlen, char *fmt, ...)
 {
-	snprintf(buffer, maxlen, 
-#ifdef __linux__
-		"%s/", 
-#else
-		"%s\\", 
-#endif
-		g_mod_name.c_str());
+	snprintf(buffer, maxlen, "%s%c", g_mod_name.c_str(), PATH_SEP_CHAR);
 
 	size_t len = strlen(buffer);
 	char *ptr = buffer + len;
@@ -771,11 +758,10 @@ char *build_pathname_r(char *buffer, size_t maxlen, char *fmt, ...)
 
 	while (*ptr) 
 	{
-#ifndef __linux__
-		if (*ptr == '/') *ptr = '\\';
-#else
-		if (*ptr == '\\') *ptr = '/';
-#endif
+		if (*ptr == ALT_SEP_CHAR)
+		{
+			*ptr = PATH_SEP_CHAR;
+		}
 		++ptr;
 	}
 
@@ -796,22 +782,15 @@ char* build_pathname_addons(char *fmt, ...)
 
 	while (*path) 
 	{
-#ifndef __linux__
-		if (*path == '/') *path = '\\';
-#else
-		if (*path == '\\') *path = '/';
-#endif
+		if (*path == ALT_SEP_CHAR)
+		{
+			*path = PATH_SEP_CHAR;
+		}
 		++path;
 	}
 
 	return string;
 }
-
-#if defined WIN32
-#define SEPCHAR '\\'
-#elif defined __linux__
-#define SEPCHAR '/'
-#endif
 
 bool ConvertModuleName(const char *pathString, String &path)
 {
@@ -830,7 +809,7 @@ bool ConvertModuleName(const char *pathString, String &path)
 	/* run to filename instead of dir */
 	char *ptr = tmpname;
 	ptr = tmpname + len - 1;
-	while (ptr >= tmpname && *ptr != SEPCHAR)
+	while (ptr >= tmpname && *ptr != PATH_SEP_CHAR)
 		ptr--;
 	if (ptr >= tmpname)
 	{
@@ -891,7 +870,7 @@ bool ConvertModuleName(const char *pathString, String &path)
 	}
 
 	path.assign(orig_path);
-	path.append(SEPCHAR);
+	path.append(PATH_SEP_CHAR);
 	path.append(tmpname);
 	path.append("_amxx");
 #if defined __linux__

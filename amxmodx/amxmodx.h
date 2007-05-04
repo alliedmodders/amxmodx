@@ -115,6 +115,14 @@ extern AMX_NATIVE_INFO g_DataStructNatives[];
 	#define INFINITE 0xFFFFFFFF
 #endif
 
+#ifndef __linux__
+	#define PATH_SEP_CHAR		'\\'
+	#define ALT_SEP_CHAR		'/'
+#else
+	#define PATH_SEP_CHAR		'/'
+	#define ALT_SEP_CHAR		'\\'
+#endif
+
 #ifndef GETPLAYERAUTHID
 #define GETPLAYERAUTHID     (*g_engfuncs.pfnGetPlayerAuthId)
 #endif

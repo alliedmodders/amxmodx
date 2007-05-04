@@ -14,6 +14,10 @@ void FailPlugin(AMX *amx, int id, int err, const char *reason);
 
 inline void *GetFunction(void *pthis, int id)
 {
+	return GetVTableEntry(pthis, hooklist[id].vtid, Offsets.GetBase());
+}
+inline void *_GetFunction(void *pthis, int id)
+{
 	void **vtbl=GetVTable(pthis, Offsets.GetBase());
 
 	int **ivtbl=(int **)vtbl;
@@ -30,11 +34,13 @@ inline void *GetFunction(void *pthis, int id)
 		// function.
 		if (func==(*i)->tramp)
 		{
+			printf("Func=0x%08X\n",reinterpret_cast<unsigned int>((*i)->func));
 			return (*i)->func;
 		}
 	}
 
 	// this is an original function
+	printf("Func=0x%08X\n",reinterpret_cast<unsigned int>(func));
 	return func;
 }
 

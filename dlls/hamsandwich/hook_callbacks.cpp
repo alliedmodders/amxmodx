@@ -17,39 +17,50 @@
 #include "ham_utils.h"
 
 
-#define PRE_START()														\
-	int result=HAM_UNSET;												\
-	int thisresult=HAM_UNSET;											\
-	int iThis=PrivateToIndex(pthis);									\
-	CVector<Forward*>::iterator end=hook->pre.end();					\
-	for (CVector<Forward*>::iterator i=hook->pre.begin(); i!=end; i++)	\
-	{																	\
-		if ((*i)->state == FSTATE_OK)									\
-		{																\
-			thisresult=MF_ExecuteForward((*i)->id,iThis
 
-#define PRE_END()									\
-			);										\
-		}											\
-		if (thisresult > result)					\
-		{											\
-			result=thisresult;						\
-		}											\
-	}												\
-	if (result < HAM_SUPERCEDE)						\
+extern bool gDoForwards;
+
+#define PRE_START()																\
+	bool DoForwards=gDoForwards;												\
+	gDoForwards=true;															\
+	int result=HAM_UNSET;														\
+	int thisresult=HAM_UNSET;													\
+	int iThis=PrivateToIndex(pthis);											\
+	if (DoForwards)																\
+	{																			\
+		CVector<Forward*>::iterator end=hook->pre.end();						\
+		for (CVector<Forward*>::iterator i=hook->pre.begin(); i!=end; i++)		\
+		{																		\
+			if ((*i)->state == FSTATE_OK)										\
+			{																	\
+				thisresult=MF_ExecuteForward((*i)->id,iThis
+
+#define PRE_END()												\
+				);												\
+			}													\
+			if (thisresult > result)							\
+			{													\
+				result=thisresult;								\
+			}													\
+		}														\
+	}															\
+	if (result < HAM_SUPERCEDE)									\
 	{
 
-#define POST_START()													\
-	}																	\
-	end=hook->post.end();												\
-	for (CVector<Forward*>::iterator i=hook->post.begin(); i!=end; i++)\
-	{																	\
-		if ((*i)->state == FSTATE_OK)									\
-		{																\
-			MF_ExecuteForward((*i)->id,iThis
+#define POST_START()														\
+	}																		\
+	if (DoForwards)															\
+	{																		\
+		CVector<Forward*>::iterator end=hook->post.end();					\
+		for (CVector<Forward*>::iterator i=hook->post.begin(); i!=end; i++)	\
+		{																	\
+			if ((*i)->state == FSTATE_OK)									\
+			{																\
+				MF_ExecuteForward((*i)->id,iThis
 
 #define POST_END()														\
-			);															\
+				);														\
+			}															\
 		}																\
 	}
 

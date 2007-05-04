@@ -13,7 +13,6 @@
 #include "forward.h"
 #include "hook_callbacks.h"
 #include "call_funcs.h"
-#include "ecall_funcs.h"
 #include "hook_create.h"
 #include "offsets.h"
 #include "hooklist.h"
@@ -21,10 +20,12 @@
 
 OffsetManager Offsets;
 
+bool gDoForwards=false;
+
 CVector<Hook *> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
 
 
-#define V(__STUFF__) reinterpret_cast<void *>(Hook_##__STUFF__), Create_##__STUFF__, Call_##__STUFF__, eCall_##__STUFF__
+#define V(__STUFF__) reinterpret_cast<void *>(Hook_##__STUFF__), Create_##__STUFF__, Call_##__STUFF__
 
 hook_t hooklist[] =
 {
@@ -230,6 +231,7 @@ static cell AMX_NATIVE_CALL ExecuteHam(AMX *amx, cell *params)
 
 	CHECK_FUNCTION(func);
 
+	gDoForwards=false;
 	return hooklist[func].call(amx, params);
 }
 static cell AMX_NATIVE_CALL ExecuteHamB(AMX *amx, cell *params)
@@ -238,7 +240,8 @@ static cell AMX_NATIVE_CALL ExecuteHamB(AMX *amx, cell *params)
 
 	CHECK_FUNCTION(func);
 
-	return hooklist[func].ecall(amx, params);
+	gDoForwards=true;
+	return hooklist[func].call(amx, params);
 }
 
 

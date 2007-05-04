@@ -11,7 +11,6 @@ typedef struct hook_s
 	void *targetfunc;						// the target hook
 	int (*makefunc)(AMX *, const char*);	// function that creates forwards
 	cell (*call)(AMX *, cell*);				// function to call the vcall
-	cell (*ecall)(AMX *, cell*);				// function to ecall the vcall
 } hook_t;
 
 extern hook_t hooklist[];

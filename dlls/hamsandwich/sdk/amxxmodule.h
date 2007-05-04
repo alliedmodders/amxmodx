@@ -1077,7 +1077,7 @@ void FN_AlertMessage(ALERT_TYPE atype, char *szFmt, ...);
 #endif // FN_AlertMessage
 
 #ifdef FN_EngineFprintf
-void FN_EngineFprintf(FILE *pfile, char *szFmt, ...);
+void FN_EngineFprintf(void *pfile, char *szFmt, ...);
 #endif // FN_EngineFprintf
 
 #ifdef FN_PvAllocEntPrivateData
@@ -1141,11 +1141,11 @@ void FN_GetBonePosition(const edict_t *pEdict, int iBone, float *rgflOrigin, flo
 #endif // FN_GetBonePosition
 
 #ifdef FN_FunctionFromName
-unsigned long FN_FunctionFromName(const char *pName);
+uint32 FN_FunctionFromName(const char *pName);
 #endif // FN_FunctionFromName
 
 #ifdef FN_NameForFunction
-const char *FN_NameForFunction(unsigned long function);
+const char *FN_NameForFunction(uint32);
 #endif // FN_NameForFunction
 
 #ifdef FN_ClientPrintf
@@ -1189,7 +1189,7 @@ CRC32_t FN_CRC32_Final(CRC32_t pulCRC);
 #endif // FN_CRC32_Final
 
 #ifdef FN_RandomLong
-long FN_RandomLong(long lLow, long lHigh);
+int32 FN_RandomLong(int32 lLow, int32 lHigh);
 #endif // FN_RandomLong
 
 #ifdef FN_RandomFloat
@@ -1658,11 +1658,11 @@ void FN_AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...);
 #endif // FN_AlertMessage_Post
 
 #ifdef FN_EngineFprintf_Post
-void FN_EngineFprintf_Post(FILE *pfile, char *szFmt, ...);
+void FN_EngineFprintf_Post(void *pfile, char *szFmt, ...);
 #endif // FN_EngineFprintf_Post
 
 #ifdef FN_PvAllocEntPrivateData_Post
-void *FN_PvAllocEntPrivateData_Post(edict_t *pEdict, long cb);
+void *FN_PvAllocEntPrivateData_Post(edict_t *pEdict, int32 cb);
 #endif // FN_PvAllocEntPrivateData_Post
 
 #ifdef FN_PvEntPrivateData_Post
@@ -1722,11 +1722,11 @@ void FN_GetBonePosition_Post(const edict_t *pEdict, int iBone, float *rgflOrigin
 #endif // FN_GetBonePosition_Post
 
 #ifdef FN_FunctionFromName_Post
-unsigned long FN_FunctionFromName_Post(const char *pName);
+uint32 FN_FunctionFromName_Post(const char *pName);
 #endif // FN_FunctionFromName_Post
 
 #ifdef FN_NameForFunction_Post
-const char *FN_NameForFunction_Post(unsigned long function);
+const char *FN_NameForFunction_Post(uint32);
 #endif // FN_NameForFunction_Post
 
 #ifdef FN_ClientPrintf_Post
@@ -1770,7 +1770,7 @@ CRC32_t FN_CRC32_Final_Post(CRC32_t pulCRC);
 #endif // FN_CRC32_Final_Post
 
 #ifdef FN_RandomLong_Post
-long FN_RandomLong_Post(long lLow, long lHigh);
+int32 FN_RandomLong_Post(int32 lLow, int32 lHigh);
 #endif // FN_RandomLong_Post
 
 #ifdef FN_RandomFloat_Post
@@ -2095,9 +2095,16 @@ enum LibType
 	LibType_Class
 };
 
+#define MSGBLOCK_SET	0
+#define MSGBLOCK_GET	1
+#define BLOCK_NOT 0
+#define BLOCK_ONCE 1
+#define BLOCK_SET 2
+
 typedef void (*AUTHORIZEFUNC)(int player, const char *authstring);
 
 typedef int				(*PFN_ADD_NATIVES)				(const AMX_NATIVE_INFO * /*list*/);
+typedef int				(*PFN_ADD_NEW_NATIVES)			(const AMX_NATIVE_INFO * /*list*/);
 typedef char *			(*PFN_BUILD_PATHNAME)			(const char * /*format*/, ...);
 typedef char *			(*PFN_BUILD_PATHNAME_R)			(char * /*buffer*/, size_t /* maxlen */, const char * /* format */, ...);
 typedef cell *			(*PFN_GET_AMXADDR)				(AMX * /*amx*/, cell /*offset*/);
@@ -2183,8 +2190,10 @@ typedef void			(*PFN_OVERRIDENATIVES)			(AMX_NATIVE_INFO * /*natives*/, const ch
 typedef const char *	(*PFN_GETLOCALINFO)				(const char * /*name*/, const char * /*def*/);
 typedef int				(*PFN_AMX_REREGISTER)			(AMX * /*amx*/, AMX_NATIVE_INFO * /*list*/, int /*list*/);
 typedef void *			(*PFN_REGISTERFUNCTIONEX)		(void * /*pfn*/, const char * /*desc*/);
+typedef void			(*PFN_MESSAGE_BLOCK)			(int /* mode */, int /* message */, int * /* opt */);
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
+extern PFN_ADD_NEW_NATIVES			g_fn_AddNewNatives;
 extern PFN_BUILD_PATHNAME			g_fn_BuildPathname;
 extern PFN_BUILD_PATHNAME_R			g_fn_BuildPathnameR;
 extern PFN_GET_AMXADDR				g_fn_GetAmxAddr;
@@ -2257,11 +2266,13 @@ extern PFN_OVERRIDENATIVES			g_fn_OverrideNatives;
 extern PFN_GETLOCALINFO				g_fn_GetLocalInfo;
 extern PFN_AMX_REREGISTER			g_fn_AmxReRegister;
 extern PFN_REGISTERFUNCTIONEX		g_fn_RegisterFunctionEx;
+extern PFN_MESSAGE_BLOCK			g_fn_MessageBlock;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
 // They understand #if 0 so we use #ifdef MAY_NEVER_BE_DEFINED
 int				MF_AddNatives				(const AMX_NATIVE_INFO *list) { }
+int				MF_AddNewNatives			(const AMX_NATIVE_INFO *list) { }
 char *			MF_BuildPathname			(const char * format, ...) { }
 char *			MF_BuildPathnameR			(char *buffer, size_t maxlen, const char *fmt, ...) { }
 cell *			MF_GetAmxAddr				(AMX * amx, cell offset) { }
@@ -2328,9 +2339,11 @@ void			MF_OverrideNatives			(AMX_NATIVE_INFO *natives, const char *myname) { }
 const char *	MF_GetLocalInfo				(const char *name, const char *def) { }
 int				MF_AmxReRegister			(AMX *amx, AMX_NATIVE_INFO *list, int number) { return 0; }
 void *			MF_RegisterFunctionEx		(void *pfn, const char *description) { }
+void *			MF_MessageBlock				(int mode, int msg, int *opt) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
+#define MF_AddNewNatives g_fn_AddNewNatives
 #define MF_BuildPathname g_fn_BuildPathname
 #define MF_BuildPathnameR g_fn_BuildPathnameR
 #define MF_FormatAmxString g_fn_FormatAmxString
@@ -2404,6 +2417,7 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...);
 #define MF_GetLocalInfo g_fn_GetLocalInfo
 #define MF_AmxReRegister g_fn_AmxReRegister
 #define MF_RegisterFunctionEx g_fn_RegisterFunctionEx
+#define MF_MessageBlock g_fn_MessageBlock
 
 #ifdef MEMORY_TEST
 /*** Memory ***/

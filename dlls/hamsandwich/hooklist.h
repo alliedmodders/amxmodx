@@ -10,8 +10,8 @@ typedef struct hook_s
 	int  paramcount;						// how many parameters are in the func
 	void *targetfunc;						// the target hook
 	int (*makefunc)(AMX *, const char*);	// function that creates forwards
-	int (*call)(AMX *, cell*);				// function to call the vcall
-	int (*ecall)(AMX *, cell*);				// function to ecall the vcall
+	cell (*call)(AMX *, cell*);				// function to call the vcall
+	cell (*ecall)(AMX *, cell*);				// function to ecall the vcall
 } hook_t;
 
 extern hook_t hooklist[];

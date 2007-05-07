@@ -62,6 +62,10 @@
  *
  *   - All functions take (and pass) a "this" index as the first param.
  *     This is the entity from which the function is being executed on.
+ *
+ *   - All functions and forwards (eg: {Register,Execute}Ham[B]) require
+ *     the mod to have the pev and base keys in addition to the function
+ *     keys for the corresponding mod/operating system in hamdata.ini
  */
 
 enum Ham
@@ -69,7 +73,9 @@ enum Ham
 	/**
      * Description: 	This is typically called whenever an entity is created. 
 	 *					It is the virtual equivilent of spawn from the engine.
+	 *					Some mods call this on player spawns too.
 	 * Forward params:	function(this)
+	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_Spawn, this);
 	 */
 	Ham_Spawn = 0, 
@@ -78,6 +84,7 @@ enum Ham
      * Description: 	This is typically called on map change.
 	 *					This will typically precache all assets required by the entity.
 	 * Forward params:	function(this)
+	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_Precache, this);
 	 */
 	Ham_Precache,
@@ -87,12 +94,15 @@ enum Ham
 	 *					Use the kvd natives from fakemeta to handle the kvd_handle passed.
 	 *					NOTE: Do not pass handle 0 to this! Use get_kvd_handle(0) from fakemeta instead!
 	 * Forward params:	function(this, kvd_handle);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_Keyvalue, this, kvd_handle);
 	 */
 	Ham_Keyvalue,
 	
 	/**
 	 * Description:		Returns flags for how an entity can be used (FCAP_* constants in hlsdk_const.inc)
 	 * Forward params:	function(this)
+	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_ObjectCaps, this);
 	 */
 	Ham_ObjectCaps,
@@ -100,6 +110,7 @@ enum Ham
 	/**
 	 * Description:		Usually called to activate some objects.
 	 * Forward params:	function(this)
+	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_Activate, this);
 	 */
 	Ham_Activate,
@@ -107,6 +118,7 @@ enum Ham
 	/**
 	 * Description:		Usually called after the engine call with the same name.
 	 * Forward params:	function(this)
+	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_SetObjectCollisionBox, this);
 	 */
 	Ham_SetObjectCollisionBox,
@@ -114,6 +126,7 @@ enum Ham
 	/**
 	 * Description:		Returns an integer number that corresponds with what type of entity this is.
 	 * Forward params:	function(this)
+	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_Classify, this);
 	 */
 	Ham_Classify,
@@ -121,6 +134,7 @@ enum Ham
 	/**
 	 * Description:		Typically called when an entity dies to notify any children entities about the death.
 	 * Forward params:	function(this, idchild)
+	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_DeathNotice, this, idchild)
 	 */
 	Ham_DeathNotice,
@@ -130,6 +144,7 @@ enum Ham
 	 *					Use the get/set tr2 natives in fakemeta to handle the traceresult data.
 	 *					Do not use a handle of 0 as a traceresult in execution, use get_tr_handle(0) instead.
 	 * Forward params:	function(this, idattacker, Float:damage, Float:direction[3], traceresult, damagebits)
+	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_TraceAttack, this, idattacker, Float:damage, Float:direction[3], tracehandle, damagebits);
 	 */
 	Ham_TraceAttack,
@@ -139,6 +154,7 @@ enum Ham
 	 *					Inflictor is the entity that caused the damage (such as a gun).
 	 *					Attacker is the entity that tirggered the damage (such as the gun's owner).
 	 * Forward params:	function(this, idinflictor, idattacker, Float:damage, damagebits);
+	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_TakeDamage, this, idinflictor, idattacker, Float:damage, damagebits);
 	 */
 	Ham_TakeDamage,
@@ -146,6 +162,7 @@ enum Ham
 	/**
 	 * Description:		Usually called whenever an entity gets a form of a heal.
 	 * Forward params:	function(this, Float:health, damagebits);
+	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_TakeHealth, this, Float:health, damagebits);
 	 */
 	Ham_TakeHealth,
@@ -153,6 +170,7 @@ enum Ham
 	/**
 	 * Description:		Normally called whenever an entity dies.
 	 * Forward params:	function(this, idattacker, shouldgib)
+	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_Killed, this, idattacker, shouldgib);
 	 */
 	Ham_Killed,
@@ -160,6 +178,7 @@ enum Ham
 	/**
 	 * Description:		Normally returns the blood color of the entity.
 	 * Forward params:	function(this)
+	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_BloodColor, this)
 	 */
 	Ham_BloodColor,
@@ -168,9 +187,37 @@ enum Ham
 	Ham_TraceBleed,
 	Ham_IsTriggered,
 	Ham_GetToggleState,
+	
+	/**
+	 * Description:		Typically adds points to the entity.
+	 * Forward params:	function(this, points, bool:cangonegative);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_BloodColor, this, points, bool:cangonegative);
+	 */
 	Ham_AddPoints,
+
+	/**
+	 * Description:		Typically adds points to the entity's team.
+	 * Forward params:	function(this, points, bool:cangonegative);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_BloodColor, this, points, bool:cangonegative);
+	 */
 	Ham_AddPointsToTeam,
+	
+	/**
+	 * Description:		Adds an item to the player's inventory.
+	 * Forward params:	function(this, idother);
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_AddPlayerItem, this, idother);
+	 */
 	Ham_AddPlayerItem,
+	
+	/**
+	 * Description:		Removes an item to the player's inventory.
+	 * Forward params:	function(this, idother);
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_RemovePlayerItem, this, idother);
+	 */
 	Ham_RemovePlayerItem,
 	Ham_GiveAmmo,
 	Ham_GetDelay,
@@ -178,6 +225,7 @@ enum Ham
 	/** 
 	 * Description:		Whether or not the entity is moving.
 	 * Forward params:	function(this);
+	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_IsMoving, this);
 	 */
 	Ham_IsMoving,
@@ -188,6 +236,7 @@ enum Ham
 	/**
 	 * Description:		Not entirely sure what this does.
 	 * Forward params:	function(this)
+	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_StartSneaking, this);
 	 */
 	Ham_StartSneaking,
@@ -195,6 +244,7 @@ enum Ham
 	/**
 	 * Description:		Not entirely sure what this does.
 	 * Forward params:	function(this)
+	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_StopSneaking, this);
 	 */
 	Ham_StopSneaking,
@@ -203,6 +253,7 @@ enum Ham
 	/** 
 	 * Description:		Whether or not the entity is sneaking.
 	 * Forward params:	function(this);
+	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_IsSneaking, this);
 	 */
 	Ham_IsSneaking,
@@ -210,6 +261,7 @@ enum Ham
 	/** 
 	 * Description:		Whether or not the entity is alive.
 	 * Forward params:	function(this);
+	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_IsAlive, this);
 	 */
 	Ham_IsAlive,
@@ -217,6 +269,7 @@ enum Ham
 	/** 
 	 * Description:		Whether or not the entity uses a BSP model.
 	 * Forward params:	function(this);
+	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_IsBSPModel, this);
 	 */
 	Ham_IsBSPModel,
@@ -224,6 +277,7 @@ enum Ham
 	/** 
 	 * Description:		Whether or not the entity can reflect gauss shots..
 	 * Forward params:	function(this);
+	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_ReflectGauss, this);
 	 */
 	Ham_ReflectGauss,
@@ -232,6 +286,7 @@ enum Ham
 	/** 
 	 * Description:		Whether or not the entity is in the world.
 	 * Forward params:	function(this);
+	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_IsInWorld, this);
 	 */
 	Ham_IsInWorld,
@@ -239,6 +294,7 @@ enum Ham
 	/** 
 	 * Description:		Whether or not the entity is a player.
 	 * Forward params:	function(this);
+	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_IsPlayer, this);
 	 */
 	Ham_IsPlayer,
@@ -246,6 +302,7 @@ enum Ham
 	/** 
 	 * Description:		Whether or not the entity is a net client.
 	 * Forward params:	function(this);
+	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_IsNetClient, this);
 	 */
 	Ham_IsNetClient,
@@ -253,6 +310,7 @@ enum Ham
 	/** 
 	 * Description:		Get the entity's team id.
 	 * Forward params:	function(this);
+	 * Return type:		String (string length returned and string byref'd in ExecuteHam).
 	 * Execute params:	ExecuteHam(Ham_IsPlayer, this, buffer[], size);
 	 */
 	Ham_TeamId,
@@ -267,6 +325,7 @@ enum Ham
 	/**
 	 * Description:		Called whenever an entity thinks.
 	 * Forward params:	function(this)
+	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_Think, this);
 	 */
 	Ham_Think,
@@ -274,6 +333,7 @@ enum Ham
 	/**
 	 * Description:		Called whenever two entities touch.
 	 * Forward params:	function(this, idother);
+	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_Touch, this, idother);
 	 */
 	Ham_Touch,
@@ -281,6 +341,7 @@ enum Ham
 	/**
 	 * Description:		Called whenver one entity uses another.
 	 * Forward params:	function(this, idcaller, idactivator, use_type, Float:value)
+	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_Use, this, idcaller, idactivator, use_type, Float:value);
 	 */
 	Ham_Use,
@@ -288,6 +349,7 @@ enum Ham
 	/**
 	 * Description:		Normally called whenever one entity blocks another from moving.
 	 * Forward params:	function(this, idother);
+	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_Blocked, this, idother);
 	 */
 	Ham_Blocked,
@@ -295,6 +357,7 @@ enum Ham
 	/**
 	 * Description:		Normally called when a map-based item respawns, such as a health kit or something.
 	 * Forward params:	function(this);
+	 * Return type:		CBaseEntity.
 	 * Execute params:	ExecuteHam(Ham_Respawn, this);
 	 */
 	Ham_Respawn,
@@ -302,6 +365,7 @@ enum Ham
 	/**
 	 * Description:		Used in Half-Life to update a monster's owner.
 	 * Forward params:	function(this);
+	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_UpdateOwner, this);
 	 */
 	Ham_UpdateOwner,
@@ -309,6 +373,7 @@ enum Ham
 	/**
 	 * Description:		Normally called whenever a barnacle grabs the entity.
 	 * Forward params:	function(this);
+	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_FBecomeProne, this);
 	 */
 	Ham_FBecomeProne,
@@ -316,6 +381,7 @@ enum Ham
 	/**
 	 * Description:		Returns the center of the entity.
 	 * Forward params:	function(this);
+	 * Return type:		Vector (byref'd in Execute).
 	 * Execute params:	ExecuteHam(Ham_Center, this, Float:output[3]);
 	 */
 	Ham_Center,
@@ -323,6 +389,7 @@ enum Ham
 	/**
 	 * Description:		Returns the eye position of the entity.
 	 * Forward params:	function(this);
+	 * Return type:		Vector (byref'd in Execute).
 	 * Execute params:	ExecuteHam(Ham_EyePosition, this, Float:output[3]);
 	 */
 	Ham_EyePosition,
@@ -330,9 +397,17 @@ enum Ham
 	/**
 	 * Description:		Returns the ear position of the entity.
 	 * Forward params:	function(this);
+	 * Return type:		Vector (byref'd in Execute).
 	 * Execute params:	ExecuteHam(Ham_EarPosition, this, Float:output[3]);
 	 */
 	Ham_EarPosition,
+	
+	/**
+	 * Description:		Position to shoot at.
+	 * Forward params:	function(this, Float:srcvector[3]);
+	 * Return type:		Vector (byref'd in Execute).
+	 * Execute params:	ExecuteHam(Ham_BodyTarget, Float:srcvector[3], Float:returnvector[3])
+	 */
 	Ham_BodyTarget,
 	Ham_Illumination,
 	Ham_FVisible,
@@ -390,8 +465,6 @@ enum Ham
  * @param entity		The entity classname to hook.
  * @param post			Whether or not to forward this in post.
  */
- 
-
 native RegisterHam(Ham:function, const callback[], const entity[], post=0);
 
 /**
@@ -424,6 +497,37 @@ native ExecuteHamB(Ham:function, this, any:...);
  * @return				true if the function is valid, false otherwise.
  */
 native bool:IsHamValid(Ham:function);
+
+/**
+ * This is used to compliment fakemeta's {get,set}_pdata_{int,float,string}.
+ * This requires the mod to have the pev field set in hamdata.ini.
+ * Note this dereferences memory! Improper use of this will crash the server.
+ * This will return an index of the corresponding cbase field in private data.
+ *
+ * @param id			The entity to examine the private data.
+ * @param offset		The windows offset of the data.
+ * @param linuxdiff		The linux difference of the data.
+ * @return				The index of the corresponding pdata field. -1 for none set.
+ */
+native get_pdata_cbase(id, offset, linuxdiff=5);
+
+/**
+ * This is used to compliment fakemeta's {get,set}_pdata_{int,float,string}.
+ * This requires the mod to have the pev field set in hamdata.ini.
+ * Note this dereferences memory! Improper use of this will crash the server.
+ * This will set the corresponding cbase field in private data with the index.
+ *
+ * @param id			The entity to examine the private data.
+ * @param offset		The windows offset of the data.
+ * @param value			The index to store.
+ * @param linuxdiff		The linux difference of the data.
+ * @return				The index of the corresponding pdata field. -1 for none set.
+ */
+native set_pdata_cbase(id, offset, value, linuxdiff=5);
+
+
+
+ 
 
 
 enum HamError

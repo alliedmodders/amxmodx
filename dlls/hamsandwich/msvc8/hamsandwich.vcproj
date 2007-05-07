@@ -94,6 +94,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy $(OutDir)\hamsandwich_amxx.dll c:\hlds\cstrike\addons\amxmodx\modules"
 			/>
 		</Configuration>
 		<Configuration
@@ -191,14 +192,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ecall_funcs.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\ecall_funcs.h"
-				>
-			</File>
-			<File
 				RelativePath="..\forward.h"
 				>
 			</File>
@@ -258,10 +251,6 @@
 				RelativePath="..\sdk\moduleconfig.h"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="Calls"
-			>
 		</Filter>
 		<Filter
 			Name="Config File"

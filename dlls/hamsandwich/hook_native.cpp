@@ -20,7 +20,7 @@
 
 OffsetManager Offsets;
 
-bool gDoForwards=false;
+bool gDoForwards=true;
 
 CVector<Hook *> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
 

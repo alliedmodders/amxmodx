@@ -255,6 +255,10 @@ void process_key(char *data)
 		size++;
 	}
 
+	if (size==0)
+	{
+		return;
+	}
 	int set=0;
 	for (int i=0; i< HAM_LAST_ENTRY_DONT_USE_ME_LOL; i++)
 	{

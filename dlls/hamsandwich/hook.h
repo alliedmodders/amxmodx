@@ -61,8 +61,11 @@ public:
 #endif
 
 		ivtable[entry]=(int *)func;
-
+#if defined _WIN32
+	VirtualFree(tramp, 0, MEM_RELEASE);
+#elif __linux__
 		free(tramp);
+#endif
 
 		delete[] ent;
 
@@ -74,6 +77,15 @@ public:
 		{
 			delete (*i);
 		}
+		end=post.end();
+		for (CVector<Forward *>::iterator i=post.begin();
+			 i!=end;
+			 ++i)
+		{
+			delete (*i);
+		}
+		pre.clear();
+		post.clear();
 	}
 };
 

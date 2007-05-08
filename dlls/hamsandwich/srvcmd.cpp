@@ -74,8 +74,8 @@ void HamCommand(void)
 	}
 	else if (strcmp(cmd, "hooks")==0)
 	{
-		print_srvconsole("%-24s | %-32s | %10s | %10s\n", "Key", "Classname", "Pre", "Post");
-		print_srvconsole("-------------------------------------------------------------------------------------\n");
+		print_srvconsole("%-24s | %-27s | %10s | %10s\n", "Key", "Classname", "Pre", "Post");
+		print_srvconsole("--------------------------------------------------------------------------------\n");
 		unsigned int ForwardCount=0;
 		unsigned int HookCount=0;
 		int count = 0;
@@ -90,14 +90,14 @@ void HamCommand(void)
 				HookCount++;
 				ForwardCount+=(*j)->pre.size() + (*j)->post.size();
 
-				print_srvconsole("%-24s | %-32s | %10d | %10d\n",hooklist[i].name, (*j)->ent, (*j)->pre.size(), (*j)->post.size());
+				print_srvconsole("%-24s | %-27s | %10d | %10d\n",hooklist[i].name, (*j)->ent, (*j)->pre.size(), (*j)->post.size());
 				if (count >= 5)
 				{
-					print_srvconsole("-------------------------------------------------------------------------------------\n");
+					print_srvconsole("--------------------------------------------------------------------------------\n");
 				}
 			}
 		}
-		print_srvconsole("\n%u active hooks, %u active forwards.\n\n", HookCount, ForwardCount);
+		print_srvconsole("\n%u hooks, %u forwards.\n\n", HookCount, ForwardCount);
 		return;
 	}
 

@@ -13,6 +13,7 @@ bool NEW_Initialized;
 extern CVector<Hook*> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
 
 extern AMX_NATIVE_INFO RegisterNatives[];
+extern AMX_NATIVE_INFO ReturnNatives[];
 
 int ReadConfig(void);
 
@@ -21,6 +22,7 @@ void OnAmxxAttach(void)
 	if (ReadConfig() > 0)
 	{
 		MF_AddNatives(RegisterNatives);
+		MF_AddNatives(ReturnNatives);
 	}
 }
 

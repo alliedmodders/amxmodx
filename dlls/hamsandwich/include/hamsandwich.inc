@@ -456,6 +456,18 @@ enum Ham
 
 
 /**
+ * Ham return types.
+ * -
+ * Return these from hooks to disable calling the target function.
+ * Numbers match up with fakemeta's FMRES_* for clarity.  They are interchangable.
+ * 0 (or no return) is also interpretted as HAM_IGNORED.
+ */
+#define HAM_IGNORED		1	/**< Calls target function, returns normal value */
+#define HAM_HANDLED		2	/**< Tells the module you did something, still calls target function and returns normal value */
+#define HAM_OVERRIDE	3	/**< Still calls the target function, but returns whatever is set with SetHamReturn*() */
+#define HAM_SUPERCEDE	4	/**< Block the target call, and use your return value (if applicable) (Set with SetHamReturn*()) */
+
+/**
  * Hooks the virtual table for the specified entity class.
  * An example would be: RegisterHam(Ham_TakeDamage, "player_hurt", "player");
  * Look at the Ham enum for parameter lists.
@@ -464,8 +476,27 @@ enum Ham
  * @param callback		The forward to call.
  * @param entity		The entity classname to hook.
  * @param post			Whether or not to forward this in post.
+ * @return 				Returns a handle to the forward.  Use EnableHamForward/DisableHamForward to toggle the forward on or off.
  */
-native RegisterHam(Ham:function, const callback[], const entity[], post=0);
+native HamHook:RegisterHam(Ham:function, const callback[], const entity[], post=0);
+
+/**
+ * Stops a ham forward from triggering.
+ * Use the return value from RegisterHam as the parameter here!
+ *
+ * @param fwd			The forward to stop.
+ */
+native DisableHamForward(HamHook:fwd);
+
+/**
+ * Starts a ham forward back up.
+ * Use the return value from RegisterHam as the parameter here!
+ *
+ * @param fwd			The forward to re-enable.
+ */
+native EnableHamForward(HamHook:fwd);
+
+
 
 /**
  * Executes the virtual function on the entity.
@@ -485,6 +516,23 @@ native ExecuteHam(Ham:function, this, any:...);
  * @param id			The id of the entity to execute it on.
  */
 native ExecuteHamB(Ham:function, this, any:...);
+
+
+native GetHamReturnInteger(&output);
+native GetHamReturnFloat(&Float:output);
+native GetHamReturnVector(Float:output[3]);
+native GetHamReturnCbase(&output);
+native GetHamReturnString(output[], size);
+native GetOrigHamReturnInteger(&output);
+native GetOrigHamReturnFloat(&Float:output);
+native GetOrigHamReturnVector(Float:output[3]);
+native GetOrigHamReturnCbase(&output);
+native GetOrigHamReturnString(output[], size);
+native SetHamReturnInteger(output);
+native SetHamReturnFloat(Float:output);
+native SetHamReturnVector(const Float:output[3]);
+native SetHamReturnCbase(output);
+native SetHamReturnString(const output[]);
 
 
 /**

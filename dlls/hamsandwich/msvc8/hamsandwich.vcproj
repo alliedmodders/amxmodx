@@ -260,6 +260,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Data Handler"
+			>
+			<File
+				RelativePath="..\CString.h"
+				>
+			</File>
+			<File
+				RelativePath="..\DataHandler.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\DataHandler.h"
+				>
+			</File>
+			<File
+				RelativePath="..\sh_stack.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath="..\amxx_api.cpp"
 			>

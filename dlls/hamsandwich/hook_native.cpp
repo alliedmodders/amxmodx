@@ -198,15 +198,16 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 		if ((*i)->tramp == vfunction)
 		{
 			// Yes, this function is hooked
+			Forward *pfwd=new Forward(fwd);
 			if (post)
 			{
-				(*i)->post.push_back(new Forward(fwd));
+				(*i)->post.push_back(pfwd);
 			}
 			else
 			{
-				(*i)->pre.push_back(new Forward(fwd));
+				(*i)->pre.push_back(pfwd);
 			}
-			return 1;
+			return reinterpret_cast<cell>(pfwd);
 		}
 	}
 
@@ -214,16 +215,17 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 	Hook *hook=new Hook(vtable, hooklist[func].vtid, hooklist[func].targetfunc, hooklist[func].isvoid, hooklist[func].paramcount, classname);
 	hooks[func].push_back(hook);
 
+	Forward *pfwd=new Forward(fwd);
 	if (post)
 	{
-		hook->post.push_back(new Forward(fwd));
+		hook->post.push_back(pfwd);
 	}
 	else
 	{
-		hook->pre.push_back(new Forward(fwd));
+		hook->pre.push_back(pfwd);
 	}
 
-	return 1;
+	return reinterpret_cast<cell>(pfwd);
 }
 static cell AMX_NATIVE_CALL ExecuteHam(AMX *amx, cell *params)
 {
@@ -258,12 +260,40 @@ static cell AMX_NATIVE_CALL IsHamValid(AMX *amx, cell *params)
 	return 0;
 }
 
+static cell AMX_NATIVE_CALL DisableHamForward(AMX *amx, cell *params)
+{
+	Forward *fwd=reinterpret_cast<Forward *>(params[1]);
+
+	if (fwd == 0)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid HamHook handle.");
+		return -1;
+	}
+
+	fwd->state=FSTATE_STOP;
+	return 0;
+}
+static cell AMX_NATIVE_CALL EnableHamForward(AMX *amx, cell *params)
+{
+	Forward *fwd=reinterpret_cast<Forward *>(params[1]);
+
+	if (fwd == 0)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid HamHook handle.");
+		return -1;
+	}
+
+	fwd->state=FSTATE_OK;
+	return 0;
+}
 AMX_NATIVE_INFO RegisterNatives[] =
 {
 	{ "RegisterHam",			RegisterHam },
 	{ "ExecuteHam",				ExecuteHam },
 	{ "ExecuteHamB",			ExecuteHamB },
 	{ "IsHamValid",				IsHamValid },
+	{ "DisableHamForward",		DisableHamForward },
+	{ "EnableHamForward",		EnableHamForward },
 
 	{ NULL,						NULL }
 };

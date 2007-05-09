@@ -77,11 +77,11 @@ hook_t hooklist[] =
 	{ 0, 0, "fbecomeprone",				false, 0, V(Int_Void) }, // FBecomeProne
 
 
-	// TODO: These
-	{ 0, 0, "center",					false, 0, V(Vector_Void) }, // Center
-	{ 0, 0, "eyeposition",				false, 0, V(Vector_Void) }, // EyePosition
-	{ 0, 0, "earposition",				false, 0, V(Vector_Void) }, // EarPosition
-	{ 0, 0, "bodytarget",				false, 1, V(Vector_pVector) }, // BodyTarget
+	// Vectors are over 2 registers large, so they get passed weird
+	{ 0, 0, "center",					true, 1, V(Vector_Void) }, // Center
+	{ 0, 0, "eyeposition",				true, 1, V(Vector_Void) }, // EyePosition
+	{ 0, 0, "earposition",				true, 1, V(Vector_Void) }, // EarPosition
+	{ 0, 0, "bodytarget",				true, 2, V(Vector_pVector) }, // BodyTarget
 	{ 0, 0, "illumination",				false, 0, V(Int_Void) }, // Illumination
 	{ 0, 0, "fvisible",					false, 1, V(Int_Cbase) }, // FVisible
 	{ 0, 0, "fvecvisible",				false, 1, V(Int_pVector) }, // FVecVisible

@@ -77,6 +77,10 @@ inline void *IndexToPrivate(int index)
 {
 	return INDEXENT_NEW(index)->pvPrivateData;
 };
+inline entvars_t *IndexToEntvar(int index)
+{
+	return &(INDEXENT_NEW(index)->v);
+};
 
 inline int EntvarToIndex(entvars_t *pev)
 {

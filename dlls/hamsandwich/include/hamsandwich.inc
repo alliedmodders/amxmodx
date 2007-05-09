@@ -518,21 +518,29 @@ native ExecuteHam(Ham:function, this, any:...);
 native ExecuteHamB(Ham:function, this, any:...);
 
 
+native GetHamReturnStatus();
+native SetHamParamInteger(which, value);
+native SetHamParamFloat(which, Float:value);
+native SetHamParamVector(which, const Float:value[3]);
+native SetHamParamEntity(which, value);
+native SetHamParamString(which, const output[]);
+native SetHamParamTraceResult(which, tr_handle);
+
 native GetHamReturnInteger(&output);
 native GetHamReturnFloat(&Float:output);
 native GetHamReturnVector(Float:output[3]);
-native GetHamReturnCbase(&output);
+native GetHamReturnEntity(&output);
 native GetHamReturnString(output[], size);
 native GetOrigHamReturnInteger(&output);
 native GetOrigHamReturnFloat(&Float:output);
 native GetOrigHamReturnVector(Float:output[3]);
 native GetOrigHamReturnCbase(&output);
 native GetOrigHamReturnString(output[], size);
-native SetHamReturnInteger(output);
-native SetHamReturnFloat(Float:output);
-native SetHamReturnVector(const Float:output[3]);
-native SetHamReturnCbase(output);
-native SetHamReturnString(const output[]);
+native SetHamReturnInteger(value);
+native SetHamReturnFloat(Float:value);
+native SetHamReturnVector(const Float:value[3]);
+native SetHamReturnEntity(value);
+native SetHamReturnString(const value[]);
 
 
 /**

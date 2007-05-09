@@ -49,9 +49,9 @@ const char *Hook_Str_Void(Hook *hook, void *pthis);
 
 void *Hook_Cbase_Void(Hook *hook, void *pthis);
 
-Vector Hook_Vector_Void(Hook *hook, void *pthis);
+void Hook_Vector_Void(Hook *hook, Vector *out, void *pthis);
 
-Vector Hook_Vector_pVector(Hook *hook, void *pthis, Vector *v1);
+void Hook_Vector_pVector(Hook *hook, Vector *out, void *pthis, Vector *v1);
 
 int Hook_Int_pVector(Hook *hook, void *pthis, Vector *v1);
 

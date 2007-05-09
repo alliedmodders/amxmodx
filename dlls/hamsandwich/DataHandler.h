@@ -13,7 +13,9 @@ enum
 	RET_FLOAT,
 	RET_VECTOR,
 	RET_STRING,
-	RET_CBASE
+	RET_CBASE,
+	RET_ENTVAR,
+	RET_TRACE
 };
 // Container for return and parameter data.
 // Contains a void pointer, and a flag telling what it contains.
@@ -21,6 +23,7 @@ class Data
 {
 private:
 	void		*m_data;
+	int			*m_index;
 	int			 m_type;
 
 	bool IsSet(void)
@@ -34,10 +37,13 @@ private:
 	};
 
 public:
-	Data() : m_data(NULL), m_type(RET_VOID)
+	Data() : m_data(NULL), m_index(NULL), m_type(RET_VOID)
 	{ /* nothing */	};
 
-	Data(int type, void *ptr) : m_data(ptr), m_type(type)
+	Data(int type, void *ptr) : m_data(ptr), m_index(NULL), m_type(type)
+	{ /* nothing */ };
+
+	Data(int type, void *ptr, int *cptr) : m_data(ptr), m_index(NULL), m_type(type)
 	{ /* nothing */ };
 
 	~Data()
@@ -57,13 +63,18 @@ public:
 		{
 			return -2;
 		}
-		if (!IsType(RET_INTEGER))
+		if (IsType(RET_INTEGER))
 		{
-			return -1;
+			*(reinterpret_cast<int *>(m_data))=*data;
+			return 0;
 		}
-		*(reinterpret_cast<int *>(m_data))=*data;
+		else if (IsType(RET_TRACE))
+		{
+			*(reinterpret_cast<int *>(m_data))=*data;
+			return 0;
+		}
 
-		return 0;
+		return -1;
 	};
 
 	int SetFloat(cell *data)
@@ -135,20 +146,33 @@ public:
 		return 0;
 	};
 
-	int SetCbase(cell *data)
+	int SetEntity(cell *data)
 	{
 		if (!IsSet())
 		{
 			return -2;
 		}
-		if (!IsType(RET_CBASE))
+		if (IsType(RET_CBASE))
 		{
-			return -1;
+			*(reinterpret_cast<void **>(m_data))=IndexToPrivate(*data);
+			if (m_index != 0)
+			{
+				*m_index=*data;
+			}
+
+			return 0;
 		}
+		else if (IsType(RET_ENTVAR))
+		{
+			*(reinterpret_cast<entvars_t **>(m_data))=IndexToEntvar(*data);
+			if (m_index != 0)
+			{
+				*m_index=*data;
+			}
 
-		*(reinterpret_cast<void **>(m_data))=IndexToPrivate(*data);
-
-		return 0;
+			return 0;
+		}
+		return -1;
 	};
 
 	int GetInt(cell *data)
@@ -157,13 +181,20 @@ public:
 		{
 			return -2;
 		}
-		if (!IsType(RET_INTEGER))
+		if (IsType(RET_INTEGER))
 		{
-			return -1;
-		}
-		*data=*(reinterpret_cast<int *>(m_data));
+			*data=*(reinterpret_cast<int *>(m_data));
 
-		return 0;
+			return 0;
+		}
+		else if (IsType(RET_TRACE))
+		{
+			*data=*(reinterpret_cast<int *>(m_data));
+
+			return 0;
+		}
+
+		return -1;
 	};
 	int GetFloat(cell *data)
 	{
@@ -215,24 +246,30 @@ public:
 		};
 		return 0;
 	};
-	int GetCbase(cell *data)
+	int GetEntity(cell *data)
 	{
 		if (!IsSet())
 		{
 			return -2;
 		}
-		if (!IsType(RET_CBASE))
+		if (IsType(RET_CBASE))
 		{
-			return -1;
-		}
-		*data=PrivateToIndex(m_data);
+			*data=PrivateToIndex(m_data);
 
-		return 0;
+			return 0;
+		}
+		else if (IsType(RET_ENTVAR))
+		{
+			*data=EntvarToIndex(reinterpret_cast<entvars_t *>(m_data));
+
+			return 0;
+		}
+		return -1;
 	}
 };
 
 extern CStack< Data * > ReturnStack;
 extern CStack< Data * > OrigReturnStack;
 extern CStack< CVector< Data * > * > ParamStack;
-
+extern CStack< int * > ReturnStatus;
 #endif

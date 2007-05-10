@@ -32,7 +32,7 @@ int Create_Void_Cbase_Cbase_Int_Float(AMX *amx, const char *func);
 
 int Create_Void_Entvar_Float_Vector_Trace_Int(AMX *amx, const char *func);
 
-int Create_Void_Float_Vector_TraceResult_Int(AMX *amx, const char *func);
+int Create_Void_Float_Vector_Trace_Int(AMX *amx, const char *func);
 
 int Create_Str_Void(AMX *amx, const char *func);
 
@@ -50,5 +50,8 @@ int Create_Int_pFloat_pFloat(AMX *amx, const char *func);
 
 int Create_Void_Entvar_Float(AMX *amx, const char *func);
 
+int Create_Void_Int_Int_Int(AMX *amx, const char *func);
+
+int Create_Void_ItemInfo(AMX *amx, const char *func);
 
 #endif

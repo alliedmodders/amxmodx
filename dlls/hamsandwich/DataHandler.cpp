@@ -40,8 +40,8 @@ static const char *returntypes[] =
 	"string",
 	"entity",
 	"entity",
-	"traceresult"
-	""
+	"traceresult",
+	"iteminfo"
 };
 
 static cell AMX_NATIVE_CALL GetHamReturnInteger(AMX *amx, cell *params)

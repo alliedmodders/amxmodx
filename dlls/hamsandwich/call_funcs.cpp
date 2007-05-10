@@ -350,7 +350,7 @@ cell Call_Void_Entvar_Float_Vector_Trace_Int(AMX *amx, cell *params)
 	return 1;
 }
 
-cell Call_Void_Float_Vector_TraceResult_Int(AMX *amx, cell *params)
+cell Call_Void_Float_Vector_Trace_Int(AMX *amx, cell *params)
 {
 	SETUP(4);
 
@@ -524,3 +524,37 @@ cell Call_Void_Entvar_Float(AMX *amx, cell *params)
 #endif
 }
 
+cell Call_Void_Int_Int_Int(AMX *amx, cell *params)
+{
+	SETUP(2);
+
+	int i3=*MF_GetAmxAddr(amx, params[3]);
+	int i4=*MF_GetAmxAddr(amx, params[4]);
+	int i5=*MF_GetAmxAddr(amx, params[5]);
+
+#ifdef _WIN32
+	reinterpret_cast<void (__fastcall *)(void*, int, int, int, int)>(__func)(pv, 0, i3, i4, i5);
+#elif defined __linux__
+	reinterpret_cast<void (*)(void *, int, int, int)>(__func)(pv, i3, i4, i5);
+#endif
+	return 1;
+}
+
+cell Call_Void_ItemInfo(AMX *amx, cell *params)
+{
+	SETUP(1);
+
+	void *ptr=reinterpret_cast<void *>(*MF_GetAmxAddr(amx, params[3]));
+
+	if (ptr==0)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Null ItemInfo handle!");
+		return 0;
+	}
+#ifdef _WIN32
+	reinterpret_cast<void (__fastcall *)(void*, int, void *)>(__func)(pv, 0, ptr);
+#elif defined __linux__
+	reinterpret_cast<void (*)(void *, void *)>(__func)(pv, ptr);
+#endif
+	return 1;
+}

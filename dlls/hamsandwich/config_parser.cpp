@@ -132,7 +132,9 @@ static void trim_line(char *input)
 	char *start=input;
 
 	while ( *start==' ' ||
-			*start=='\t')
+			*start=='\t' ||
+			*start=='\r' ||
+			*start=='\n')
 	{
 		start++;
 	}
@@ -149,7 +151,7 @@ static void trim_line(char *input)
 
 	start+=strlen(start) - 1;
 
-	while ( start > oldinput &&
+	while ( start >= oldinput &&
 			( *start == '\0' ||
 			  *start == ' '  ||
 			  *start == '\r' ||

@@ -186,6 +186,8 @@ enum Ham
 	
 	Ham_TraceBleed,
 	Ham_IsTriggered,
+	Ham_MyMonsterPointer,
+	Ham_MySquadMonsterPointer,
 	Ham_GetToggleState,
 	
 	/**
@@ -413,6 +415,57 @@ enum Ham
 	Ham_FVisible,
 	Ham_FVecVisible,
 
+	Ham_Player_Jump,
+	Ham_Player_Duck,
+	Ham_Player_PreThink,
+	Ham_Player_PostThink,
+	Ham_Player_GetGunPosition,
+	Ham_Player_ShouldFadeOnDeath,
+	Ham_Player_ImpulseCommands,
+	Ham_Player_UpdateClientData,
+	
+	/**
+	 * Items have all the attributes of normal entities in addition to these.
+	 */
+	Ham_Item_AddToPlayer,
+	Ham_Item_AddDuplicate,
+	Ham_Item_GetItemInfo,
+	Ham_Item_CanDeploy,
+	Ham_Item_Deploy,
+	Ham_Item_CanHolster,
+	Ham_Item_Holster,
+	Ham_Item_UpdateItemInfo,
+	Ham_Item_PreFrame,
+	Ham_Item_PostFrame,
+	Ham_Item_Drop,
+	Ham_Item_Kill,
+	Ham_Item_AttachToPlayer,
+	Ham_Item_PrimaryAmmoIndex,
+	Ham_Item_SecondaryAmmoIndex,
+	Ham_Item_UpdateClientData,
+	Ham_Item_GetWeaponPtr,
+	Ham_Item_ItemSlot,
+	
+	
+	/**
+	 * Weapons have all the attributes to Ham_Item_*, in addition to these.
+	 */
+	Ham_Weapon_ExtractAmmo,
+	Ham_Weapon_ExtractClipAmmo,
+	Ham_Weapon_AddWeapon,
+	Ham_Weapon_PlayEmptySound,
+	Ham_Weapon_ResetEmptySound,
+	Ham_Weapon_SendWeaponAnim,
+	Ham_Weapon_IsUsable,
+	Ham_Weapon_PrimaryAttack,
+	Ham_Weapon_SecondaryAttack,
+	Ham_Weapon_Reload,
+	Ham_Weapon_WeaponIdle,
+	Ham_Weapon_RetireWeapon,
+	Ham_Weapon_ShouldWeaponIdle,
+	Ham_Weapon_UseDecrement,
+	 
+	
 	Ham_TS_BreakableRespawn,
 	Ham_TS_CanUsedThroughWalls,
 	Ham_TS_RespawnWait,
@@ -420,9 +473,16 @@ enum Ham
 	/**
 	 * Description:		This is called on a map reset for most map based entities.
 	 * Forward params:	function(this);
-	 * Execute params:	ExecuteHam(Ham_Respawn, this);
+	 * Execute params:	ExecuteHam(Ham_CS_Restart, this);
 	 */
 	Ham_CS_Restart,
+	
+	/**
+	 * Description:		Respawn function for players/bots only! Do not use this on non player/bot entities!
+	 * Forward params:	function(this);
+	 * Execute params:	ExecuteHam(Ham_CS_RoundRespawn, this);
+	 */
+	Ham_CS_RoundRespawn,
 
 	Ham_DOD_RoundRespawn,
 	Ham_DOD_RoundRespawnEnt,

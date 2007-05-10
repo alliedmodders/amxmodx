@@ -51,6 +51,7 @@ extern bool gDoForwards;
 #define P_TRACE(__PARAM)			__vec->push_back(new Data(RET_TRACE, (void *) (__PARAM)));
 #define P_PTRVECTOR(__PARAM)		__vec->push_back(new Data(RET_VECTOR, (void *) (__PARAM)));
 #define P_PTRFLOAT(__PARAM)			__vec->push_back(new Data(RET_FLOAT, (void *) (__PARAM)));
+#define P_ITEMINFO(__PARAM)			__vec->push_back(new Data(RET_ITEMINFO, (void *) & (__PARAM)));
 
 #define KILL_VECTOR()															\
 	CVector<Data *>::iterator end=__vec->end();									\
@@ -570,7 +571,7 @@ void Hook_Void_Entvar_Float_Vector_Trace_Int(Hook *hook, void *pthis, entvars_t 
 	POP()
 }
 
-void Hook_Void_Float_Vector_TraceResult_Int(Hook *hook, void *pthis, float f1, Vector v1, TraceResult *tr1, int i1)
+void Hook_Void_Float_Vector_Trace_Int(Hook *hook, void *pthis, float f1, Vector v1, TraceResult *tr1, int i1)
 {
 	PUSH_VOID()
 
@@ -833,3 +834,53 @@ void Hook_Void_Entvar_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1)
 	POP()
 }
 
+void Hook_Void_Int_Int_Int(Hook *hook, void *pthis, int i1, int i2, int i3)
+{
+	PUSH_VOID()
+
+	MAKE_VECTOR()
+	
+	P_INT(i1)
+	P_INT(i2)
+	P_INT(i3)
+
+	PRE_START()
+		,i1, i2, i3
+	PRE_END()
+#if defined _WIN32
+	reinterpret_cast<void (__fastcall*)(void*, int, int, int, int)>(hook->func)(pthis, 0, i1, i2, i3);
+#elif defined __linux__
+	reinterpret_cast<void (*)(void*, int, int, int)>(hook->func)(pthis, i1, i2, i3);
+#endif
+
+	POST_START()
+		,i1, i2, i3
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+}
+void Hook_Void_ItemInfo(Hook *hook, void *pthis, void *iteminfo)
+{
+	PUSH_VOID()
+
+	MAKE_VECTOR()
+	
+	P_ITEMINFO(iteminfo)
+
+	PRE_START()
+		,iteminfo
+	PRE_END()
+#if defined _WIN32
+	reinterpret_cast<void (__fastcall*)(void*, int, void *)>(hook->func)(pthis, 0, iteminfo);
+#elif defined __linux__
+	reinterpret_cast<void (*)(void*, void *)>(hook->func)(pthis, iteminfo);
+#endif
+
+	POST_START()
+		,iteminfo
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+}

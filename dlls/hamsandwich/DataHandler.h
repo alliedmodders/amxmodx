@@ -15,7 +15,8 @@ enum
 	RET_STRING,
 	RET_CBASE,
 	RET_ENTVAR,
-	RET_TRACE
+	RET_TRACE,
+	RET_ITEMINFO
 };
 // Container for return and parameter data.
 // Contains a void pointer, and a flag telling what it contains.

@@ -25,103 +25,151 @@ bool gDoForwards=true;
 CVector<Hook *> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
 
 
-#define V(__STUFF__) reinterpret_cast<void *>(Hook_##__STUFF__), Create_##__STUFF__, Call_##__STUFF__
+#define V(__KEYNAME, __STUFF__) 0, 0, __KEYNAME, RT_##__STUFF__, PC_##__STUFF__, reinterpret_cast<void *>(Hook_##__STUFF__), Create_##__STUFF__, Call_##__STUFF__
 
 hook_t hooklist[] =
 {
-	{ 0, 0, "spawn",					true, 0,  V(Void_Void) }, // Spawn
-	{ 0, 0, "precache",					true, 0,  V(Void_Void) }, // Precache
-	{ 0, 0, "keyvalue",					true, 1,  V(Void_Int) }, // Keyvalue
-	{ 0, 0, "objectcaps",				false, 0, V(Int_Void) }, // ObjectCaps
-	{ 0, 0, "activate",					true, 0,  V(Void_Void) }, // Activate
-	{ 0, 0, "setobjectcollisionbox",	true, 0,  V(Void_Void) }, // SetObjectCollisionBox
-	{ 0, 0, "classify",					false, 0, V(Int_Void) }, // Classify
-	{ 0, 0, "deathnotice",				true, 1,  V(Void_Entvar) }, // DeathNotice
-	{ 0, 0, "traceattack",				true, 7, V(Void_Entvar_Float_Vector_Trace_Int) }, // TraceAttack
-	{ 0, 0, "takedamage",				false, 4, V(Int_Entvar_Entvar_Float_Int) },  // Takedamage
-	{ 0, 0, "takehealth",				false, 2, V(Int_Float_Int) }, // TakeHealth
-	{ 0, 0, "killed",					true,  2, V(Void_Entvar_Int) }, // Killed
-	{ 0, 0, "bloodcolor",				false, 0, V(Int_Void) }, // BloodColor
-	{ 0, 0, "tracebleed",				true, 6, V(Void_Float_Vector_TraceResult_Int) }, // TraceBleed
-	{ 0, 0, "istriggered",				false, 1, V(Int_Cbase) }, // IsTriggered
-	{ 0, 0, "gettogglestate",			false, 0, V(Int_Void) }, // GetToggleState
-	{ 0, 0, "addpoints",				true, 2,  V(Void_Int_Int) }, // AddPoints
-	{ 0, 0, "addpointstoteam",			true, 2,  V(Void_Int_Int) }, // AddPointsToTeam
-	{ 0, 0, "addplayeritem",			false, 1, V(Int_Cbase) }, // AddPlayerItem
-	{ 0, 0, "removeplayeritem",			false, 1, V(Int_Cbase) }, // RemovePlayerItem
-	{ 0, 0, "giveammo",					false, 3, V(Int_Int_Str_Int) }, // GiveAmmo
-	{ 0, 0, "getdelay",					false, 0, V(Int_Void) }, // GetDelay
-	{ 0, 0, "ismoving",					false, 0, V(Int_Void) }, // IsMoving
-	{ 0, 0, "overridereset",			true, 0,  V(Void_Void) }, // OverrideReset
-	{ 0, 0, "damagedecal",				false, 1, V(Int_Int) }, // DamageDecal
-	{ 0, 0, "settogglestate",			true, 1,  V(Void_Int) }, // SetToggleState
-	{ 0, 0, "startsneaking",			true, 0, V(Void_Void) }, // StartSneaking
-	{ 0, 0, "stopsneaking",				true, 0, V(Void_Void) }, // StopSneaking
-	{ 0, 0, "oncontrols",				false, 1, V(Int_Entvar) }, // OnControls
-	{ 0, 0, "issneaking",				false, 0, V(Int_Void) }, // IsSneaking
-	{ 0, 0, "isalive",					false, 0, V(Int_Void) }, // IsAlive
-	{ 0, 0, "isbspmodel",				false, 0, V(Int_Void) }, // IsBSPModel
-	{ 0, 0, "reflectgauss",				false, 0, V(Int_Void) }, // ReflectGauss
-	{ 0, 0, "hastarget",				false, 1, V(Int_Int) }, // HasTarget
-	{ 0, 0, "isinworld",				false, 0, V(Int_Void) }, // IsInWorld
-	{ 0, 0, "isplayer",					false, 0, V(Int_Void) }, // IsPlayer
-	{ 0, 0, "isnetclient",				false, 0, V(Int_Void) }, // IsNetClient
-	{ 0, 0, "teamid",					false, 0, V(Str_Void) }, // TeamID
-	{ 0, 0, "getnexttarget",			false, 0, V(Cbase_Void) }, // GetNextTarget 
-	{ 0, 0, "think",					true, 0,  V(Void_Void) }, // Think
-	{ 0, 0, "touch",					true, 1,  V(Void_Cbase) }, // Touch
-	{ 0, 0, "use",						true, 4,  V(Void_Cbase_Cbase_Int_Float) }, // Use
-	{ 0, 0, "blocked",					true, 1,  V(Void_Cbase) }, // Blocked
-	{ 0, 0, "respawn",					false, 0, V(Cbase_Void) }, // Respawn TODO: Cbase this
-	{ 0, 0, "updateowner",				true, 0,  V(Void_Void) }, // UpdateOwner
-	{ 0, 0, "fbecomeprone",				false, 0, V(Int_Void) }, // FBecomeProne
+	{ V("spawn",					Void_Void) },
+	{ V("precache",					Void_Void) },
+	{ V("keyvalue",					Void_Int) },
+	{ V("objectcaps",				Int_Void) },
+	{ V("activate",					Void_Void) },
+	{ V("setobjectcollisionbox",	Void_Void) },
+	{ V("classify",					Int_Void) },
+	{ V("deathnotice",				Void_Entvar) },
+	{ V("traceattack",				Void_Entvar_Float_Vector_Trace_Int) },
+	{ V("takedamage",				Int_Entvar_Entvar_Float_Int) },
+	{ V("takehealth",				Int_Float_Int) },
+	{ V("killed",					Void_Entvar_Int) },
+	{ V("bloodcolor",				Int_Void) },
+	{ V("tracebleed",				Void_Float_Vector_Trace_Int) },
+	{ V("istriggered",				Int_Cbase) },
+	{ V("mymonsterpointer",			Cbase_Void) },
+	{ V("mysquadmonsterpointer",	Cbase_Void) },
+	{ V("gettogglestate",			Int_Void) },
+	{ V("addpoints",				Void_Int_Int) },
+	{ V("addpointstoteam",			Void_Int_Int) },
+	{ V("addplayeritem",			Int_Cbase) },
+	{ V("removeplayeritem",			Int_Cbase) },
+	{ V("giveammo",					Int_Int_Str_Int) },
+	{ V("getdelay",					Int_Void) },
+	{ V("ismoving",					Int_Void) },
+	{ V("overridereset",			Void_Void) },
+	{ V("damagedecal",				Int_Int) },
+	{ V("settogglestate",			Void_Int) },
+	{ V("startsneaking",			Void_Void) },
+	{ V("stopsneaking",				Void_Void) },
+	{ V("oncontrols",				Int_Entvar) },
+	{ V("issneaking",				Int_Void) },
+	{ V("isalive",					Int_Void) },
+	{ V("isbspmodel",				Int_Void) },
+	{ V("reflectgauss",				Int_Void) },
+	{ V("hastarget",				Int_Int) },
+	{ V("isinworld",				Int_Void) },
+	{ V("isplayer",					Int_Void) },
+	{ V("isnetclient",				Int_Void) },
+	{ V("teamid",					Str_Void) },
+	{ V("getnexttarget",			Cbase_Void) },
+	{ V("think",					Void_Void) },
+	{ V("touch",					Void_Cbase) },
+	{ V("use",						Void_Cbase_Cbase_Int_Float) },
+	{ V("blocked",					Void_Cbase) },
+	{ V("respawn",					Cbase_Void) },
+	{ V("updateowner",				Void_Void) },
+	{ V("fbecomeprone",				Int_Void) },
+	{ V("center",					Vector_Void) },
+	{ V("eyeposition",				Vector_Void) },
+	{ V("earposition",				Vector_Void) },
+	{ V("bodytarget",				Vector_pVector) },
+	{ V("illumination",				Int_Void) },
+	{ V("fvisible",					Int_Cbase) },
+	{ V("fvecvisible",				Int_pVector) },
+	
+	/** Entity specific hooks **/
 
+	/* CBasePlayer */
+	{ V("player_jump",				Void_Void) },
+	{ V("player_duck",				Void_Void) },
+	{ V("player_prethink",			Void_Void) },
+	{ V("player_postthink",			Void_Void) },
+	{ V("player_getgunposition",	Vector_Void) },
+	{ V("player_shouldfadeondeath",	Int_Void) },
+	{ V("player_impulsecommands",	Void_Void) },
+	{ V("player_updateclientdata",	Void_Void) },
 
-	// Vectors are over 2 registers large, so they get passed weird
-	{ 0, 0, "center",					true, 1, V(Vector_Void) }, // Center
-	{ 0, 0, "eyeposition",				true, 1, V(Vector_Void) }, // EyePosition
-	{ 0, 0, "earposition",				true, 1, V(Vector_Void) }, // EarPosition
-	{ 0, 0, "bodytarget",				true, 2, V(Vector_pVector) }, // BodyTarget
-	{ 0, 0, "illumination",				false, 0, V(Int_Void) }, // Illumination
-	{ 0, 0, "fvisible",					false, 1, V(Int_Cbase) }, // FVisible
-	{ 0, 0, "fvecvisible",				false, 1, V(Int_pVector) }, // FVecVisible
+	/* CBasePlayerItem */
+	{ V("item_addtoplayer",			Int_Cbase) },
+	{ V("item_addduplicate",		Int_Cbase) },
+	{ V("item_getiteminfo",			Void_ItemInfo) },
+	{ V("item_candeploy",			Int_Void) },
+	{ V("item_deploy",				Int_Void) },
+	{ V("item_canholster",			Int_Void) },
+	{ V("item_holster",				Void_Int) },
+	{ V("item_updateiteminfo",		Void_Void) },
+	{ V("item_preframe",			Void_Void) },
+	{ V("item_postframe",			Void_Void) },
+	{ V("item_drop",				Void_Void) },
+	{ V("item_kill",				Void_Void) },
+	{ V("item_attachtoplayer",		Void_Cbase) },
+	{ V("item_primaryammoindex",	Int_Void) },
+	{ V("item_secondaryammoindex",	Int_Void) },
+	{ V("item_updateclientdata",	Int_Cbase) },
+	{ V("item_getweaponptr",		Cbase_Void) },
+	{ V("item_itemslot",			Int_Void) },
+	
+	/* CBasePlayerWeapon */
+	{ V("weapon_extractammo",		Int_Cbase) },
+	{ V("weapon_extractclipammo",	Int_Cbase) },
+	{ V("weapon_addweapon",			Int_Void) },
+	{ V("weapon_playemptysound",	Int_Void) },
+	{ V("weapon_resetemptysound",	Void_Void) },
+	{ V("weapon_sendweaponanim",	Void_Int_Int_Int) },
+	{ V("weapon_isusable",			Int_Void) },
+	{ V("weapon_primaryattack",		Void_Void) },
+	{ V("weapon_secondaryattack",	Void_Void) },
+	{ V("weapon_reload",			Void_Void) },
+	{ V("weapon_weaponidle",		Void_Void) },
+	{ V("weapon_retireweapon",		Void_Void) },
+	{ V("weapon_shouldweaponidle",	Int_Void) },
+	{ V("weapon_usedecrement",		Int_Void) },
 	/** Mod specific hooks **/
 
 	/* The Specialists */
-	{ 0, 0, "ts_breakablerespawn",		false, 1, V(Int_Int) },		// TS_BreakableRespawn
-	{ 0, 0, "ts_canusedthroughwalls",	false, 0, V(Int_Void) },		// TS_CanUsedThroughWalls
-	{ 0, 0, "ts_respawnwait",			false, 0, V(Int_Void) },		// TS_RespawnWait
+	{ V("ts_breakablerespawn",		Int_Int) },
+	{ V("ts_canusedthroughwalls",	Int_Void) },
+	{ V("ts_respawnwait",			Int_Void) },
 
 	/* Counter-Strike */
-	{ 0, 0, "cstrike_restart",			true, 0, V(Void_Void) },		// CS_Restart
+	{ V("cstrike_restart",			Void_Void) },
+	{ V("cstrike_roundrespawn",		Void_Void) },
 
 	/* Day of Defeat */
-	{ 0, 0, "dod_roundrespawn",			true, 0, V(Void_Void) },			// DOD_RoundRespawn
-	{ 0, 0, "dod_roundrespawnent",		true, 0, V(Void_Void) },			// DOD_RoundRespawnEnt
-	{ 0, 0, "dod_roundstore",			true, 0, V(Void_Void) },			// DOD_RoundStore
-	{ 0, 0, "dod_areasetindex",			true, 1, V(Void_Int) },			// DOD_AreaSetIndex
-	{ 0, 0, "dod_areasendstatus",		true, 1, V(Void_Cbase) },			// DOD_AreaSendStatus
-	{ 0, 0, "dod_getstate",				false, 0, V(Int_Void) },		// DOD_GetState
-	{ 0, 0, "dod_getstateent",			false, 1, V(Int_Cbase) },							// DOD_GetStateEnt
+	{ V("dod_roundrespawn",			Void_Void) },
+	{ V("dod_roundrespawnent",		Void_Void) },
+	{ V("dod_roundstore",			Void_Void) },
+	{ V("dod_areasetindex",			Void_Int) },
+	{ V("dod_areasendstatus",		Void_Cbase) },
+	{ V("dod_getstate",				Int_Void) },
+	{ V("dod_getstateent",			Int_Cbase) },
 
 	
 	/* Team Fortress Classic */
 	// This next one is just a huge guess
-	{ 0, 0, "tfc_dbgetitemname",		false, 0, V(Str_Void) },							// TFC_DbGetItemName
-	{ 0, 0, "tfc_engineeruse",			false, 1, V(Int_Cbase) },		// TFC_EngineerUse
-	{ 0, 0, "tfc_finished",				true, 0, V(Void_Void) },							// TFC_Finished
-	{ 0, 0, "tfc_empexplode",			true, 3, V(Void_Entvar_Float_Float) },	// TFC_EmpExplode
-	{ 0, 0, "tfc_calcempdmgrad",		false, 2, V(Int_pFloat_pFloat) }, // TFC_CalcEmpDmgRad
-	{ 0, 0, "tfc_takeempblast",			true, 1, V(Void_Entvar) },		// TFC_TakeEmpBlast
-	{ 0, 0, "tfc_empremove",			true, 0, V(Void_Void) },					// TFC_EmpRemove
-	{ 0, 0, "tfc_takeconcussionblast",	true, 2, V(Void_Entvar_Float) },	// TFC_TakeConcussionBlast
-	{ 0, 0, "tfc_concuss",				true, 1, V(Void_Entvar) },		// TFC_Concuss
+	{ V("tfc_dbgetitemname",		Str_Void) },
+	{ V("tfc_engineeruse",			Int_Cbase) },
+	{ V("tfc_finished",				Void_Void) },
+	{ V("tfc_empexplode",			Void_Entvar_Float_Float) },
+	{ V("tfc_calcempdmgrad",		Int_pFloat_pFloat) },
+	{ V("tfc_takeempblast",			Void_Entvar) },
+	{ V("tfc_empremove",			Void_Void) },
+	{ V("tfc_takeconcussionblast",	Void_Entvar_Float) },
+	{ V("tfc_concuss",				Void_Entvar) },
 
 	/* Natural-Selection */
-	{ 0, 0, "ns_getpointvalue",			false, 0, V(Int_Void) },						// NS_GetPointValue
-	{ 0, 0, "ns_awardkill",				true, 1, V(Void_Entvar) },		// NS_AwardKill
-	{ 0, 0, "ns_resetentity",			true, 0, V(Void_Void) },							// NS_ResetEntity
-	{ 0, 0, "ns_updateonremove",		true, 0, V(Void_Void) },							// NS_UpdateOnRemove
+	{ V("ns_getpointvalue",			Int_Void) },
+	{ V("ns_awardkill",				Void_Entvar) },
+	{ V("ns_resetentity",			Void_Void) },
+	{ V("ns_updateonremove",		Void_Void) },
 
 };
 

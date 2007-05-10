@@ -6,6 +6,8 @@
 #include "forward.h"
 #include "hook.h"
 #include "ham_const.h"
+#include "hooklist.h"
+#include <assert.h>
 
 edict_t *NEW_FirstEdict;
 bool NEW_Initialized;
@@ -15,10 +17,15 @@ extern CVector<Hook*> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
 extern AMX_NATIVE_INFO RegisterNatives[];
 extern AMX_NATIVE_INFO ReturnNatives[];
 
+extern hook_t hooklist[];
+
 int ReadConfig(void);
 
 void OnAmxxAttach(void)
 {
+	// Assert that the enum is aligned properly with the table
+	assert(strcmp(hooklist[Ham_NS_UpdateOnRemove].name, "ns_updateonremove")==0);
+
 	if (ReadConfig() > 0)
 	{
 		MF_AddNatives(RegisterNatives);

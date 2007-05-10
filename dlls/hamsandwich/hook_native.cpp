@@ -154,8 +154,6 @@ hook_t hooklist[] =
 
 	
 	/* Team Fortress Classic */
-	// This next one is just a huge guess
-	{ V("tfc_dbgetitemname",		Str_Void) },
 	{ V("tfc_engineeruse",			Int_Cbase) },
 	{ V("tfc_finished",				Void_Void) },
 	{ V("tfc_empexplode",			Void_Entvar_Float_Float) },

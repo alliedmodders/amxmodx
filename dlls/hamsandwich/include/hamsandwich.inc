@@ -492,7 +492,6 @@ enum Ham
 	Ham_DOD_GetState,
 	Ham_DOD_GetStateEnt,
 
-	Ham_TFC_DbGetItemName,
 	Ham_TFC_EngineerUse,
 	Ham_TFC_Finished,
 	Ham_TFC_EmpExplode,

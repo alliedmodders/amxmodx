@@ -666,7 +666,7 @@ public __fatal_ham_error(Ham:id, HamError:err, const reason[])
 	new func=get_func_id("HamFilter", -1);
 	new bool:fail=true;
 	
-	if (callfunc_begin_i(func, -1)==1)
+	if (func != -1 && callfunc_begin_i(func, -1)==1)
 	{
 		callfunc_push_int(_:id);
 		callfunc_push_int(_:err);

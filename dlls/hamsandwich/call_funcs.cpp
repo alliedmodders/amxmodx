@@ -277,6 +277,29 @@ cell Call_Int_Entvar_Entvar_Float_Int(AMX *amx, cell *params)
 #endif
 }
 
+cell Call_Int_Entvar_Entvar_Float_Float_Int(AMX *amx, cell *params)
+{
+	SETUP(5);
+
+	int id3=*MF_GetAmxAddr(amx, params[3]);
+	int id4=*MF_GetAmxAddr(amx, params[4]);
+	float f5=amx_ctof2(*MF_GetAmxAddr(amx, params[5]));
+	float f6=amx_ctof2(*MF_GetAmxAddr(amx, params[6]));
+	int i7=*MF_GetAmxAddr(amx, params[7]);
+
+	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id4);
+
+	entvars_t *ev3=&(INDEXENT_NEW(id3)->v);
+	entvars_t *ev4=&(INDEXENT_NEW(id4)->v);
+
+#ifdef _WIN32
+	return reinterpret_cast<int (__fastcall *)(void *, int, entvars_t *, entvars_t *, float, float, int)>(__func)(pv, 0, ev3, ev4, f5, f6, i7);
+#elif defined __linux__
+	return reinterpret_cast<int (*)(void *, entvars_t *, entvars_t *, float, float, int)>(__func)(pv, ev3, ev4, f5, f6, i7);
+#endif
+}
+
 cell Call_Void_Int(AMX *amx, cell *params)
 {
 	SETUP(1);

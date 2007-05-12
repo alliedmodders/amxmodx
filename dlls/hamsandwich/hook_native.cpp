@@ -163,6 +163,10 @@ hook_t hooklist[] =
 	{ V("tfc_takeconcussionblast",	Void_Entvar_Float) },
 	{ V("tfc_concuss",				Void_Entvar) },
 
+	/* Earth's Special Forces */
+	{ V("esf_isenvmodel",			Int_Void) },
+	{ V("esf_takedamage2",			Int_Entvar_Entvar_Float_Float_Int) },
+
 	/* Natural-Selection */
 	{ V("ns_getpointvalue",			Int_Void) },
 	{ V("ns_awardkill",				Void_Entvar) },

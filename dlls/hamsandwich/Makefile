@@ -48,12 +48,14 @@ else
 		OPT_FLAGS = $(SANE_OPT_FLAGS)
 	endif
 	ifeq "$(GCC_VERSION)" "4"
-		OPT_FLAGS += -fvisibility=hidden -fvisibility-inlines-hidden
+#		OPT_FLAGS += -fvisibility=hidden 
+#-fvisibility-inlines-hidden
+		OPT_FLAGS += -g -ggdb3
 	endif
 	CFLAGS = $(OPT_FLAGS)
 endif
 
-CFLAGS += -fPIC -Wall -Wno-non-virtual-dtor -fno-exceptions -DHAVE_STDINT_H -fno-rtti
+CFLAGS += -fPIC -Wall -Wno-non-virtual-dtor -fno-exceptions -DHAVE_STDINT_H -fno-rtti -Werror
 
 BINARY = $(NAME)_$(BIN_SUFFIX)
 CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32

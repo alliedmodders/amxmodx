@@ -59,6 +59,13 @@ int  Hook_Int_Entvar_Entvar_Float_Int(Hook *hook, void *pthis,
 									  entvars_t *attacker, float damage, 
 									  int damagebits);
 
+const bool RT_Int_Entvar_Entvar_Float_Float_Int = false;
+const int PC_Int_Entvar_Entvar_Float_Float_Int = 5;
+int  Hook_Int_Entvar_Entvar_Float_Float_Int(Hook *hook, void *pthis, 
+									  entvars_t *inflictor, 
+									  entvars_t *attacker, float damage, 
+									  float unknown, int damagebits);
+
 const bool RT_Void_Int = true;
 const int PC_Void_Int = 1;
 void Hook_Void_Int(Hook *hook, void *pthis, int i1);
@@ -91,7 +98,7 @@ void *Hook_Cbase_Void(Hook *hook, void *pthis);
 
 // HACK: I'm too lazy to fix up trampoline generator to deal with
 //       special return values.  this is so much easier.
-const bool RT_Vector_Void = false;
+const bool RT_Vector_Void = true;
 const int PC_Vector_Void = 1;
 #ifdef _WIN32
 void Hook_Vector_Void(Hook *hook, void *pthis, Vector *out);

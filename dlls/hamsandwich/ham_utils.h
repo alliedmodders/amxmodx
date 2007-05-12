@@ -6,11 +6,15 @@
 #include "NEW_Util.h"
 
 #define CHECK_FUNCTION(x)																			\
-	if (x < 0 || x > HAM_LAST_ENTRY_DONT_USE_ME_LOL) {												\
-		FailPlugin(amx, x, HAM_INVALID_FUNC, "Function out of bounds.");							\
+	if (x < 0 || x >= HAM_LAST_ENTRY_DONT_USE_ME_LOL) {												\
+		char msg[1024];																				\
+		snprintf(msg, sizeof(msg)-1, "Function out of bounds.  Got: %d  Max: %d",x, HAM_LAST_ENTRY_DONT_USE_ME_LOL - 1);	\
+		FailPlugin(amx, x, HAM_INVALID_FUNC, msg);							\
 		return 0;																					\
 	} else if (hooklist[x].isset == 0) {															\
-		FailPlugin(amx, x, HAM_FUNC_NOT_CONFIGURED, "Function not configured in hamdata.ini");		\
+		char msg[1024];																				\
+		snprintf(msg, sizeof(msg)-1, "Function %s is not configured in hamdata.ini.",hooklist[x].name);	\
+		FailPlugin(amx, x, HAM_FUNC_NOT_CONFIGURED, msg);											\
 		return 0;																					\
 	}
 

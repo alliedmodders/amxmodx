@@ -501,6 +501,9 @@ enum Ham
 	Ham_TFC_TakeConcussionBlast,
 	Ham_TFC_Concuss,
 
+	Ham_ESF_IsEnvModel, // Only valid in ESF Open Beta
+	Ham_ESF_TakeDamage2, // Only valid in ESF Open Beta
+
 	Ham_NS_GetPointValue,
 	Ham_NS_AwardKill,
 	Ham_NS_ResetEntity,

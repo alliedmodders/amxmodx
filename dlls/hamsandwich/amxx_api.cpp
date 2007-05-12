@@ -7,6 +7,7 @@
 #include "hook.h"
 #include "ham_const.h"
 #include "hooklist.h"
+#include "offsets.h"
 #include <assert.h>
 
 edict_t *NEW_FirstEdict;
@@ -28,8 +29,23 @@ void OnAmxxAttach(void)
 
 	if (ReadConfig() > 0)
 	{
-		MF_AddNatives(RegisterNatives);
-		MF_AddNatives(ReturnNatives);
+		if (Offsets.IsValid())
+		{
+			MF_AddNatives(RegisterNatives);
+			MF_AddNatives(ReturnNatives);
+		}
+		else
+		{
+#ifdef _WIN32
+			MF_Log("Error: pev and base not set for section \"%s windows\", cannot register natives.", MF_GetModname());
+#elif defined __linux__
+			MF_Log("Error: pev and base not set for section \"%s linux\", cannot register natives.", MF_GetModname());
+#endif
+		}
+	}
+	else
+	{
+		MF_Log("Error: Cannot read config file, natives not registered!");
 	}
 }
 

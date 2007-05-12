@@ -450,7 +450,6 @@ int Hook_Int_Entvar(Hook *hook, void *pthis, entvars_t *ev1)
 
 
 
-// Takedamage
 int Hook_Int_Entvar_Entvar_Float_Int(Hook *hook, void *pthis, entvars_t *inflictor, entvars_t *attacker, float damage, int damagebits)
 {
 	int ret=0;
@@ -478,6 +477,41 @@ int Hook_Int_Entvar_Entvar_Float_Int(Hook *hook, void *pthis, entvars_t *inflict
 
 	POST_START()
 		,iInflictor, iAttacker, damage, damagebits
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+	CHECK_RETURN()
+	return ret;
+}
+int Hook_Int_Entvar_Entvar_Float_Float_Int(Hook *hook, void *pthis, entvars_t *inflictor, entvars_t *attacker, float damage, float unknown, int damagebits)
+{
+	int ret=0;
+	int origret=0;
+	PUSH_INT()
+	int iInflictor=EntvarToIndex(inflictor);
+	int iAttacker=EntvarToIndex(attacker);
+	
+	MAKE_VECTOR()
+	P_ENTVAR(inflictor, iInflictor)
+	P_ENTVAR(attacker, iAttacker)
+	P_FLOAT(damage)
+	P_FLOAT(unknown)
+	P_INT(damagebits)
+
+	PRE_START()
+		,iInflictor, iAttacker, damage, unknown, damagebits
+	PRE_END()
+	
+	
+#if defined _WIN32
+	origret=reinterpret_cast<int (__fastcall*)(void*, int, entvars_t *, entvars_t *, float, float, int)>(hook->func)(pthis, 0, inflictor, attacker, damage, unknown, damagebits);
+#elif defined __linux__
+	origret=reinterpret_cast<int (*)(void*, entvars_t *, entvars_t *, float, float, int)>(hook->func)(pthis, inflictor, attacker, damage, unknown, damagebits);
+#endif
+
+	POST_START()
+		,iInflictor, iAttacker, damage, unknown, damagebits
 	POST_END()
 
 	KILL_VECTOR()
@@ -675,7 +709,7 @@ void Hook_Vector_Void(Hook *hook, Vector *out, void *pthis)
 #if defined _WIN32
 	reinterpret_cast<void (__fastcall*)(void*, int, Vector *)>(hook->func)(pthis, 0, &origret);
 #elif defined __linux__
-	reinterpret_cast<void (*)(Vector *, void*)>(hook->func)(&origret, pthis);
+	origret=reinterpret_cast<Vector (*)(void *)>(hook->func)(pthis);
 #endif
 
 	POST_START()
@@ -711,7 +745,7 @@ void Hook_Vector_pVector(Hook *hook, Vector *out, void *pthis, Vector *v1)
 #if defined _WIN32
 	reinterpret_cast<void (__fastcall*)(void*, int, Vector *, Vector *)>(hook->func)(pthis, 0, &origret, v1);
 #elif defined __linux__
-	reinterpret_cast<void (*)(Vector *, void*, Vector *)>(hook->func)(&origret, pthis, v1);
+	origret=reinterpret_cast<Vector (*)(void*, Vector *)>(hook->func)(pthis, v1);
 #endif
 
 	POST_START()

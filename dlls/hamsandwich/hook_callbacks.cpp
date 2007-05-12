@@ -123,8 +123,9 @@ extern bool gDoForwards;
 		if (thisresult < HAM_OVERRIDE)									\
 		{																\
 			memcpy(out, &origret, sizeof(Vector));						\
-			return;														\
+			return;							\
 		}
+
 
 
 
@@ -652,8 +653,11 @@ void *Hook_Cbase_Void(Hook *hook, void *pthis)
 
 }
 
-
+#ifdef _WIN32
+void Hook_Vector_Void(Hook *hook, void *pthis, Vector *out)
+#elif defined __linux__
 void Hook_Vector_Void(Hook *hook, Vector *out, void *pthis)
+#endif
 {
 	Vector ret;
 	Vector origret;
@@ -683,8 +687,11 @@ void Hook_Vector_Void(Hook *hook, Vector *out, void *pthis)
 	memcpy(out, &ret, sizeof(Vector));
 
 }
-
+#ifdef _WIN32
+void Hook_Vector_pVector(Hook *hook, void *pthis, Vector *out, Vector *v1)
+#elif defined __linux__
 void Hook_Vector_pVector(Hook *hook, Vector *out, void *pthis, Vector *v1)
+#endif
 {
 	Vector ret;
 	Vector origret;

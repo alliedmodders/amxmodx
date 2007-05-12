@@ -89,13 +89,23 @@ const bool RT_Cbase_Void = false;
 const int PC_Cbase_Void = 0;
 void *Hook_Cbase_Void(Hook *hook, void *pthis);
 
-const bool RT_Vector_Void = true;
+// HACK: I'm too lazy to fix up trampoline generator to deal with
+//       special return values.  this is so much easier.
+const bool RT_Vector_Void = false;
 const int PC_Vector_Void = 1;
+#ifdef _WIN32
+void Hook_Vector_Void(Hook *hook, void *pthis, Vector *out);
+#elif defined __linux__
 void Hook_Vector_Void(Hook *hook, Vector *out, void *pthis);
+#endif
 
 const bool RT_Vector_pVector = true;
 const int PC_Vector_pVector = 2;
+#ifdef _WIN32
+void Hook_Vector_pVector(Hook *hook, void *pthis, Vector *out, Vector *v1);
+#elif defined __linux__
 void Hook_Vector_pVector(Hook *hook, Vector *out, void *pthis, Vector *v1);
+#endif
 
 const bool RT_Int_pVector = false;
 const int PC_Int_pVector = 1;

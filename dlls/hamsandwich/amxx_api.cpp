@@ -17,6 +17,9 @@ extern CVector<Hook*> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
 
 extern AMX_NATIVE_INFO RegisterNatives[];
 extern AMX_NATIVE_INFO ReturnNatives[];
+extern AMX_NATIVE_INFO pdata_natives[];
+extern AMX_NATIVE_INFO pdata_natives_safe[];
+
 
 extern hook_t hooklist[];
 
@@ -27,12 +30,14 @@ void OnAmxxAttach(void)
 	// Assert that the enum is aligned properly with the table
 	assert(strcmp(hooklist[Ham_NS_UpdateOnRemove].name, "ns_updateonremove")==0);
 
+	MF_AddNatives(pdata_natives_safe);
 	if (ReadConfig() > 0)
 	{
 		if (Offsets.IsValid())
 		{
 			MF_AddNatives(RegisterNatives);
 			MF_AddNatives(ReturnNatives);
+			MF_AddNatives(pdata_natives);
 		}
 		else
 		{

@@ -276,6 +276,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\pdata.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\sh_stack.h"
 				>
 			</File>

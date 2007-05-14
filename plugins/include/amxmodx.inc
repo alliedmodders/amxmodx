@@ -21,7 +21,7 @@
 #include <messages>
 #include <vector>
 #include <sorting>
-#include <array>
+#include <cellarray>
 
 /* Function is called just after server activation.
 * Good place for configuration loading, commands and cvars registration. */

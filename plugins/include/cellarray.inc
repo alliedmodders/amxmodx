@@ -1,8 +1,8 @@
-#if defined _array_included
+#if defined _cellarray_included
 	#endinput
 #endif
 
-#define _array_included
+#define _cellarray_included
 
 /**
  * These arrays are intended to be used for a form of global storage without 

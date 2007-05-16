@@ -48,9 +48,7 @@ else
 		OPT_FLAGS = $(SANE_OPT_FLAGS)
 	endif
 	ifeq "$(GCC_VERSION)" "4"
-#		OPT_FLAGS += -fvisibility=hidden 
-#-fvisibility-inlines-hidden
-		OPT_FLAGS += -g -ggdb3
+		OPT_FLAGS += -fvisibility=hidden -fvisibility-inlines-hidden
 	endif
 	CFLAGS = $(OPT_FLAGS)
 endif

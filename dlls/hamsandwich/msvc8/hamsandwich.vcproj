@@ -308,10 +308,6 @@
 			RelativePath="..\srvcmd.cpp"
 			>
 		</File>
-		<File
-			RelativePath="..\vfuncs.h"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

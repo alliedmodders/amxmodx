@@ -147,26 +147,59 @@ enum Ham
 	 */
 	Ham_BloodColor,
 	
-	
+	/**
+	 * Description:		Traces where blood should appear.
+	 * Forward params:	function(this, Float:Damage, Float:Direction[3], trace_handle, damagebits);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_TraceBleed, this, Float:damage, Float:direction[3], trace_handle, damagebits);
+	 */
 	Ham_TraceBleed,
+	
+	/**
+	 * Description:		Returns whether an entity is activated.
+	 * Forward params:	function(this, idActivator);
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_IsTriggered, this, idActivator);
+	 */
 	Ham_IsTriggered,
+	
+	/**
+	 * Description:		Returns the id of the entity if its class is derived off of CBaseMonster, -1 otherwise.
+	 * Forward params:	function(this)
+	 * Return type:		Entity.
+	 * Execute params:	ExecuteHam(Ham_MyMonsterPointer, this);
+	 */
 	Ham_MyMonsterPointer,
+	
+	/**
+	 * Description:		Returns the id of the entity if its class is derived off of CBaseSquadMonster, -1 otherwise.
+	 * Forward params:	function(this)
+	 * Return type:		Entity.
+	 * Execute params:	ExecuteHam(Ham_MySquadMonsterPointer, this);
+	 */
 	Ham_MySquadMonsterPointer,
+	
+	/**
+	 * Description:		Returns the toggle state of the entity.
+	 * Forward params:	function(this)
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_GetToggleState, this);
+	 */
 	Ham_GetToggleState,
 	
 	/**
 	 * Description:		Typically adds points to the entity.
 	 * Forward params:	function(this, points, bool:cangonegative);
 	 * Return type:		None.
-	 * Execute params:	ExecuteHam(Ham_BloodColor, this, points, bool:cangonegative);
+	 * Execute params:	ExecuteHam(Ham_AddPoints, this, points, bool:cangonegative);
 	 */
 	Ham_AddPoints,
 
 	/**
-	 * Description:		Typically adds points to the entity's team.
+	 * Description:		Typically adds points to everybody on the entity's team.
 	 * Forward params:	function(this, points, bool:cangonegative);
 	 * Return type:		None.
-	 * Execute params:	ExecuteHam(Ham_BloodColor, this, points, bool:cangonegative);
+	 * Execute params:	ExecuteHam(Ham_AddPointsToTeam, this, points, bool:cangonegative);
 	 */
 	Ham_AddPointsToTeam,
 	
@@ -185,7 +218,21 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_RemovePlayerItem, this, idother);
 	 */
 	Ham_RemovePlayerItem,
+	
+	/**
+	 * Description:		Gives ammo to the entity.
+	 * Forward params:	function(this, Amount, const Name[], Max)
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_GiveAmmo, this, amount, "type", max);
+	 */
 	Ham_GiveAmmo,
+	
+	/**
+	 * Description:		Unsure, I believe this is the delay between activation for an entity.
+	 * Forward params:	function(this)
+	 * Return type:		Float.
+	 * Execute params:	ExecuteHam(Ham_GetDelay, this, Float:output)
+	 */
 	Ham_GetDelay,
 	
 	/** 
@@ -195,8 +242,29 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_IsMoving, this);
 	 */
 	Ham_IsMoving,
+	
+	/**
+	 * Description:		Unsure.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_OverrideReset, this)
+	 */
 	Ham_OverrideReset,
+	
+	/**
+	 * Description:		Returns the damage decal of the entity for the damage type.
+	 * Forward params:	function(this, damagebits)
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_DamageDecal, this);
+	 */
 	Ham_DamageDecal,
+	
+	/**
+	 * Description:		Sets the toggle state of the entity.
+	 * Forward params:	function(this, state)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SetToggleState, this, state);
+	 */
 	Ham_SetToggleState,
 	
 	/**
@@ -214,12 +282,19 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_StopSneaking, this);
 	 */
 	Ham_StopSneaking,
+	
+	/**
+	 * Description:		Not entirely sure.
+	 * Forward params:	function(this, idOn)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_OnControls, this, idOn);
+	 */
 	Ham_OnControls,
 	
 	/** 
 	 * Description:		Whether or not the entity is sneaking.
 	 * Forward params:	function(this);
-	 * Return type:		None.
+	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_IsSneaking, this);
 	 */
 	Ham_IsSneaking,
@@ -227,7 +302,7 @@ enum Ham
 	/** 
 	 * Description:		Whether or not the entity is alive.
 	 * Forward params:	function(this);
-	 * Return type:		Integer.
+	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_IsAlive, this);
 	 */
 	Ham_IsAlive,
@@ -235,7 +310,7 @@ enum Ham
 	/** 
 	 * Description:		Whether or not the entity uses a BSP model.
 	 * Forward params:	function(this);
-	 * Return type:		Integer.
+	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_IsBSPModel, this);
 	 */
 	Ham_IsBSPModel,
@@ -243,16 +318,26 @@ enum Ham
 	/** 
 	 * Description:		Whether or not the entity can reflect gauss shots..
 	 * Forward params:	function(this);
-	 * Return type:		Integer.
+	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_ReflectGauss, this);
 	 */
 	Ham_ReflectGauss,
+	
+	/**
+	 * Description:		Whether or not the target is the same as the one passed.
+	 *					Note the strindex parameter is a string passed that has been allocated by the engine.
+	 *					Use fakemeta's EngFunc_SzFromIndex to convert to a normal string, or fakemeta's
+	 *					EngFunc_AllocString to create a new string.
+	 * Forward params:	function(this, strindex).
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_HasTarget, this, strindex);
+	 */
 	Ham_HasTarget,
 	
 	/** 
 	 * Description:		Whether or not the entity is in the world.
 	 * Forward params:	function(this);
-	 * Return type:		Integer.
+	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_IsInWorld, this);
 	 */
 	Ham_IsInWorld,
@@ -260,7 +345,7 @@ enum Ham
 	/** 
 	 * Description:		Whether or not the entity is a player.
 	 * Forward params:	function(this);
-	 * Return type:		Integer.
+	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_IsPlayer, this);
 	 */
 	Ham_IsPlayer,
@@ -268,7 +353,7 @@ enum Ham
 	/** 
 	 * Description:		Whether or not the entity is a net client.
 	 * Forward params:	function(this);
-	 * Return type:		Integer.
+	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_IsNetClient, this);
 	 */
 	Ham_IsNetClient,
@@ -277,13 +362,14 @@ enum Ham
 	 * Description:		Get the entity's team id.
 	 * Forward params:	function(this);
 	 * Return type:		String (string length returned and string byref'd in ExecuteHam).
-	 * Execute params:	ExecuteHam(Ham_IsPlayer, this, buffer[], size);
+	 * Execute params:	ExecuteHam(Ham_TeamId, this, buffer[], size);
 	 */
 	Ham_TeamId,
 	
 	/**
 	 * Description:		Returns the next target of this.
 	 * Forward params:	function(this);
+	 * Return type:		Entity.
 	 * Execute params:	ExecuteHam(Ham_GetNextTarget, this);
 	 */
 	Ham_GetNextTarget,
@@ -323,7 +409,7 @@ enum Ham
 	/**
 	 * Description:		Normally called when a map-based item respawns, such as a health kit or something.
 	 * Forward params:	function(this);
-	 * Return type:		CBaseEntity.
+	 * Return type:		Entity.
 	 * Execute params:	ExecuteHam(Ham_Respawn, this);
 	 */
 	Ham_Respawn,
@@ -375,68 +461,385 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_BodyTarget, Float:srcvector[3], Float:returnvector[3])
 	 */
 	Ham_BodyTarget,
+	
+	/**
+	 * Description:		Returns the illumination of the entity.
+	 * Forward params:	function(this)
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_Illumination, this);
+	 */
 	Ham_Illumination,
+	
+	/**
+	 * Description:		Unsure, I assume it is whether or not the other entity is visible to this entity.
+	 * Forward params:	function(this, idOther);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_FVisible, this, idOther);
+	 */
 	Ham_FVisible,
+	
+	/**
+	 * Description:		Unsure, I assume it is whether or not the target vector is visible to this entity.
+	 * Forward params:	function(this, const Float:origin[3]);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_FVecVisible, this, const Float:origin[3]);
+	 */
 	Ham_FVecVisible,
 
+	
+	/**
+	 * Players have all the attributes of normal entities, in addition to these.
+	 */
+	 
+	/**
+	 * Description:		Typically called every frame when a player has jump held.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_Player_Jump, this);
+	 */
 	Ham_Player_Jump,
+
+	/**
+	 * Description:		Typically called every frame when a player has duck held.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_Player_Duck, this);
+	 */
 	Ham_Player_Duck,
+	
+	/**
+	 * Description:		Typically called every frame during PlayerPreThink engine call.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_Player_PreThink, this);
+	 */
 	Ham_Player_PreThink,
+
+	/**
+	 * Description:		Typically called every frame during PlayerPostThink engine call.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_Player_PostThink, this);
+	 */
 	Ham_Player_PostThink,
+	
+	/**
+	 * Description:		Returns a vector that tells the gun position.
+	 * Forward params:	function(this)
+	 * Return type:		Vector, byreffed in execute.
+	 * Execute params:	ExecuteHam(Ham_Player_GetGunPosition, this, Float:output[3]);
+	 */
 	Ham_Player_GetGunPosition,
+	
+	/**
+	 * Description:		Whether or not the player should fade on death.
+	 * Forward param:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_Player_ShouldFadeOnDeath, this);
+	 */
 	Ham_Player_ShouldFadeOnDeath,
+
+	/**
+	 * Description:		Called whenever an impulse command is executed.
+	 * Forward param:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_Player_ImpulseComands, this);
+	 */
 	Ham_Player_ImpulseCommands,
+	
+	/**
+	 * Description:		Updates the client's data for hud changes (such as ammo).  Usually called every frame.
+	 * Forward param:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_Player_UpdateClientData, this);
+	 */
 	Ham_Player_UpdateClientData,
 	
 	/**
 	 * Items have all the attributes of normal entities in addition to these.
 	 */
+	 
+	/**
+	 * Description:		Adds the item to the player.
+	 * Forward params:	function(this, idPlayer);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_Item_AddToPlayer, this, idPlayer);
+	 */
 	Ham_Item_AddToPlayer,
+
+	/**
+	 * Description:		Unsure.
+	 * Forward params:	function(this, idOriginal);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_Item_AddDuplicate, this, idOriginal);
+	 */
 	Ham_Item_AddDuplicate,
-	Ham_Item_GetItemInfo,
+	
+	/**
+	 * Description:		Whether or not this entity can be deployed.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_Item_CanDeploy, this);
+	 */
 	Ham_Item_CanDeploy,
+	
+	/**
+	 * Description:		Deploys the entity (usually a weapon).
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_Item_Deploy, this);
+	 */
 	Ham_Item_Deploy,
+	
+	/**
+	 * Description:		Whether or not the entity can be holstered.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_Item_CanHolster, this);
+	 */
 	Ham_Item_CanHolster,
+	
+	/**
+	 * Description:		Whether or not the entity (usually weapon) can be holstered.
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_Item_Holster, this);
+	 */
 	Ham_Item_Holster,
+	
+	/**
+	 * Description:		Updates the HUD info about this item.
+	 * Forward params:	function(this);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_UpdateItemInfo, this);
+	 */
 	Ham_Item_UpdateItemInfo,
+	
+	/**
+	 * Description:		Called each frame for an item, normally only on active items.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_Item_PreFrame, this);
+	 */
 	Ham_Item_PreFrame,
+	
+	/**
+	 * Description:		Called each frame for an item, normally only on active items.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_Item_PostFrame, this);
+	 */
 	Ham_Item_PostFrame,
+	
+	/**
+	 * Description:		Called when an item gets dropped, normally on death only.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_Item_Drop, this);
+	 */
 	Ham_Item_Drop,
+	
+	/**
+	 * Description:		Normally called when an item gets deleted.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_Item_Drop, this);
+	 */
 	Ham_Item_Kill,
+	
+	/**
+	 * Description:		Called when an entity starts being attached to (normally invisible and "following") a player.
+	 * Forward params:	function(this, idPlayer)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_Item_AttachToPlayer, this, idPlayer)
+	 */
 	Ham_Item_AttachToPlayer,
+	
+	/**
+	 * Description:		Returns the ammo index of the item.
+	 * Forward params:	function(this)
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_Item_PrimaryAmmoIndex, this);
+	 */
 	Ham_Item_PrimaryAmmoIndex,
+	
+	/**
+	 * Description:		Returns the secondary ammo index of the item.
+	 * Forward params:	function(this)
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_Item_SecondaryAmmoIndex, this);
+	 */
 	Ham_Item_SecondaryAmmoIndex,
+
+	/**
+	 * Description:		Updates item data for the client.
+	 * Forward params:	function(this, idPlayer)
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_Item_UpdateClientData, this, idPlayer);
+	 */
 	Ham_Item_UpdateClientData,
+	
+	/**
+	 * Description:		Returns the entity index if the item is a weapon, -1 otherwise.
+	 * Forward params:	function(this)
+	 * Return type:		Entity.
+	 * Execute Params:	ExecuteHam(Ham_Item_GetWeaponPtr, this)
+	 */
 	Ham_Item_GetWeaponPtr,
+	
+	/**
+	 * Description:		Returns the item slot for the item.
+	 * Forward params:	function(this)
+	 * Return type:		Integer.
+	 * Execute Params:	ExecuteHam(Ham_Item_ItemSlot, this)
+	 */
 	Ham_Item_ItemSlot,
 	
 	
 	/**
 	 * Weapons have all the attributes to Ham_Item_*, in addition to these.
 	 */
+	 
+	/**
+	 * Description:		Gets ammo from the target weapon.
+	 * Forward params:	function(this, idTarget)
+	 * Return type:		Integer.
+	 * Execute Params:	ExecuteHam(Ham_Weapon_ExtractAmmo, this, idTarget)
+	 */
 	Ham_Weapon_ExtractAmmo,
+
+	/**
+	 * Description:		Gets clip ammo from the target weapon.
+	 * Forward params:	function(this, idTarget)
+	 * Return type:		Integer.
+	 * Execute Params:	ExecuteHam(Ham_Weapon_ExtractAmmo, this, idTarget)
+	 */
 	Ham_Weapon_ExtractClipAmmo,
+	
+	/**
+	 * Description:		Unsure.
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_Weapon_AddWeapon, this);
+	 */
 	Ham_Weapon_AddWeapon,
+	
+	/**
+	 * Description:		Plays the weapon's empty sound.
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_Weapon_PlayEmptySound, this);
+	 */
 	Ham_Weapon_PlayEmptySound,
+
+	/**
+	 * Description:		Sets the weapon so that it can play empty sound again.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_Weapon_ResetEmptySound, this);
+	 */
 	Ham_Weapon_ResetEmptySound,
+	
+	/**
+	 * Description:		Sends an animation event for the weapon.
+	 * Forward params:	function(this, iAnim, skiplocal, body);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_Weapon_SendWeaponAnim, this, iAnim, skiplocal, body);
+	 */
 	Ham_Weapon_SendWeaponAnim,
+	
+	/**
+	 * Description:		Whether or not the weapon is usable (has ammo, etc.)
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_Weapon_IsUsable, this)
+	 */
 	Ham_Weapon_IsUsable,
+	
+	/**
+	 * Description:		Called when the main attack of a weapon is triggered.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_Weapon_PrimaryAttack, this);
+	 */
 	Ham_Weapon_PrimaryAttack,
+	
+	/**
+	 * Description:		Called when the secondary attack of a weapon is triggered.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_Weapon_SecondaryAttack, this);
+	 */
 	Ham_Weapon_SecondaryAttack,
+	
+	/**
+	 * Description:		Called when the weapon is reloaded.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_Weapon_Reload, this);
+	 */
 	Ham_Weapon_Reload,
+	
+	/**
+	 * Description:		Displays the idle animation for the weapon.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_Weapon_WeaponIdle, this);
+	 */
 	Ham_Weapon_WeaponIdle,
+	
+	/**
+	 * Description:		There is no more ammo for this gun, so switch to the next best one.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * ExecuteParams:	ExecuteHam(Ham_Weapon_RetireWeapon, this)
+	 */
 	Ham_Weapon_RetireWeapon,
+	
+	/**
+	 * Description:		Whether or not the weapon should idle.
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute Params:	ExecuteHam(Ham_Weapon_ShouldWeaponIdle, this)
+	 */
 	Ham_Weapon_ShouldWeaponIdle,
+	
+	/**
+	 * Description:		Not sure.
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_Weapon_UseDecrement, this);
+	 */
 	Ham_Weapon_UseDecrement,
 	 
-	
+	/**
+	 * Description:		-
+	 * Forward params:	function(this, someboolvalue)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_TS_BreakableRespawn, this, someboolvalue);
+	 */
 	Ham_TS_BreakableRespawn,
+	
+	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean)
+	 * Execute params:	ExecuteHam(Ham_TS_CanUsedThroughWalls, this);
+	 */
 	Ham_TS_CanUsedThroughWalls,
+	
+	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		Integer (I think...)
+	 * Execute params:	ExecuteHam(Ham_TS_RespawnWait, this);
+	 */
 	Ham_TS_RespawnWait,
 
 	/**
 	 * Description:		This is called on a map reset for most map based entities.
 	 * Forward params:	function(this);
+	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_CS_Restart, this);
 	 */
 	Ham_CS_Restart,
@@ -444,33 +847,204 @@ enum Ham
 	/**
 	 * Description:		Respawn function for players/bots only! Do not use this on non player/bot entities!
 	 * Forward params:	function(this);
+	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_CS_RoundRespawn, this);
 	 */
 	Ham_CS_RoundRespawn,
+	/**
+	 * Description:		Whether or not the player can drop the specified item.
+	 * Forward params:	function(this)
+	 * Return type:		Integer
+	 * Execute params:	ExecuteHam(Ham_CS_Item_CanDrop, this);
+	 */
+	Ham_CS_Item_CanDrop,
+	
+	/**
+	 * Description:		Gets the maximum speed for whenever a player has the item deployed.
+	 * Forward params:	function(this);
+	 * Return type:		Float, byrefed in execute.
+	 * Execute params:	ExecuteHam(Ham_CS_Item_GetMaxSpeed, this, Float:output);
+	 */
+	Ham_CS_Item_GetMaxSpeed,
 
+	/**
+	 * Description:		I assume this spawns players at the start of a new round.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute Params:	ExecuteHam(Ham_DOD_RoundRespawn, this);
+	 */
 	Ham_DOD_RoundRespawn,
-	Ham_DOD_RoundRespawnEnt,
-	Ham_DOD_RoundStore,
-	Ham_DOD_AreaSetIndex,
-	Ham_DOD_AreaSendStatus,
-	Ham_DOD_GetState,
-	Ham_DOD_GetStateEnt,
 
+	/**
+	 * Description:		I assume this spawns entities (like func_breakables) at the start of a new round.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute Params:	ExecuteHam(Ham_DOD_RoundRespawn, this);
+	 */
+	Ham_DOD_RoundRespawnEnt,
+	
+	/**
+	 * Description:		Unsure.
+	 * Forward params:	function(this)
+	 * Return type:		None, I think...
+	 * Execute params:	ExecuteHam(Ham_DOD_RoundStore, this);
+	 */
+	Ham_DOD_RoundStore,
+	
+	/**
+	 * Description:		Unsure.
+	 * Forward params:	function(this, someintegervalue)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_DOD_AreaSetIndex, this, someintegervalue)
+	 */
+	Ham_DOD_AreaSetIndex,
+	
+	/**
+	 * Description:		Unsure
+	 * Forward params:	function(this, idPlayer)
+	 * Return type:		None.
+	 * Execute Params:	ExecuteHam(Ham_DOD_AreaSendStatus, this, idPlayer);
+	 */
+	Ham_DOD_AreaSendStatus,
+	
+	/**
+	 * Description:		Unsure.
+	 * Forward params:	function(this)
+	 * Return type:		Integer.
+	 * Execute Params:	ExecuteHam(Ham_DOD_GetState, this);
+	 */
+	Ham_DOD_GetState,
+	
+	/**
+	 * Description:		Unsure.
+	 * Forward params:	function(this, idtarget)
+	 * Return type:		Integer.
+	 * Execute Params:	ExecuteHam(Ham_DOD_GetStateEnt, this, idtarget);
+	 */
+	Ham_DOD_GetStateEnt,
+	
+	/**
+	 * Description:		Whether or not a player can drop this item.
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute Params:	ExecuteHam(Ham_DOD_Item_CanDrop, this);
+	 */
+	Ham_DOD_Item_CanDrop,
+
+	/**
+	 * Description:		Unsure.
+	 * Forward params:	function(this, iduser)
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_TFC_EngineerUse, this, iduser)
+	 */
 	Ham_TFC_EngineerUse,
+	
+	/**
+	 * Description:		Unsure.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_TFC_Finished, this);
+	 */
 	Ham_TFC_Finished,
+	
+	/**
+	 * Description:		Unsure.
+	 * Forward params:	function(this, entityid, Float:floata, Float:floatb)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_TFC_EmpExplode, this, entityid, Float:floata, Float:floatb)
+	 */
 	Ham_TFC_EmpExplode,
+
+	/**
+	 * Description:		Unsure.
+	 * Forward params:	function(this, Float:floata, Float:floatb)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_TFC_CalcEmpDmgRad, this, Float:floata, Float:floatb)
+	 */
 	Ham_TFC_CalcEmpDmgRad,
+	
+	/**
+	 * Description:		Unsure.
+	 * Forward params:	function(this, entityid)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_TFC_TakeEmpBlast, this, entityid);
+	 */
 	Ham_TFC_TakeEmpBlast,
+	
+	/**
+	 * Description:		Unsure.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_TFC_EmpRemove, this);
+	 */
 	Ham_TFC_EmpRemove,
+	
+	
+	/**
+	 * Description:		Unsure.
+	 * Forward params:	function(this, entityid, Float:floata)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_TFC_TakeConcussionBlast, this, entityid, Float:floata);
+	 */
 	Ham_TFC_TakeConcussionBlast,
+	
+	/**
+	 * Description:		Unsure.
+	 * Forward params:	function(this, entityid)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_TFC_Concuss, this, entityid);
+	 */
 	Ham_TFC_Concuss,
 
-	Ham_ESF_IsEnvModel, // Only valid in ESF Open Beta
-	Ham_ESF_TakeDamage2, // Only valid in ESF Open Beta
+	
+	/**
+	 * Description:		Unsure.
+	 *					Is only in ESF Open Beta.
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_ESF_IsEnvModel, this);
+	 */
+	Ham_ESF_IsEnvModel, 
+	
+	/**
+	 * Description:		Unsure.
+	 *					Is only in ESF Open Beta.
+	 * Forward params:	function(this, entityida, entityidb, Float:floata, Float:floatb, dmgbits)
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_ESF_TakeDamage2, this, entityida, entityidb, Float:floata, Float:floatb, dmgbits);
+	 */
+	Ham_ESF_TakeDamage2,
 
+	/**
+	 * Description:		Returns how many points each entity is worth.
+	 * Forward params:	function(this)
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_NS_GetPointValue, this);
+	 */
 	Ham_NS_GetPointValue,
+	
+	/**
+	 * Description:		Unsure.  Probably awards this with the killing of idvictim.
+	 * Forward params:	function(this, idvictim)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_NS_AwardKill, this, idvictim);
+	 */
 	Ham_NS_AwardKill,
+	
+	/**
+	 * Description:		Unsure, probably whenever an entity resets after a new round.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_NS_ResetEntity, this);
+	 */
 	Ham_NS_ResetEntity,
+	
+	/**
+	 * Description:		Unsure.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_NS_UpdateOnRemove, this)
+	 */
 	Ham_NS_UpdateOnRemove,
 
 

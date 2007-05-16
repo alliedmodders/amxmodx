@@ -1,3 +1,31 @@
+/* Ham Sandwich
+ *   Copyright 2007
+ *   By the AMX Mod X Development Team
+ *
+ *  Ham Sandwich is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation; either version 2 of the License, or (at
+ *  your option) any later version.
+ *
+ *  Ham Sandwich is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ *  General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Ham Sandwich; if not, write to the Free Software Foundation,
+ *  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ *  In addition, as a special exception, the author gives permission to
+ *  link the code of Ham Sandwich with the Half-Life Game Engine ("HL
+ *  Engine") and Modified Game Libraries ("MODs") developed by Valve,
+ *  L.L.C ("Valve"). You must obey the GNU General Public License in all
+ *  respects for all of the code used other than the HL Engine and MODs
+ *  from Valve. If you modify this file, you may extend this exception
+ *  to your version of the file, but you are not obligated to do so. If
+ *  you do not wish to do so, delete this exception statement from your
+ *  version.
+ */
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -52,7 +80,7 @@ hook_t hooklist[] =
 	{ V("addplayeritem",			Int_Cbase) },
 	{ V("removeplayeritem",			Int_Cbase) },
 	{ V("giveammo",					Int_Int_Str_Int) },
-	{ V("getdelay",					Int_Void) },
+	{ V("getdelay",					Float_Void) },
 	{ V("ismoving",					Int_Void) },
 	{ V("overridereset",			Void_Void) },
 	{ V("damagedecal",				Int_Int) },
@@ -100,7 +128,6 @@ hook_t hooklist[] =
 	/* CBasePlayerItem */
 	{ V("item_addtoplayer",			Int_Cbase) },
 	{ V("item_addduplicate",		Int_Cbase) },
-	{ V("item_getiteminfo",			Void_ItemInfo) },
 	{ V("item_candeploy",			Int_Void) },
 	{ V("item_deploy",				Int_Void) },
 	{ V("item_canholster",			Int_Void) },
@@ -142,6 +169,8 @@ hook_t hooklist[] =
 	/* Counter-Strike */
 	{ V("cstrike_restart",			Void_Void) },
 	{ V("cstrike_roundrespawn",		Void_Void) },
+	{ V("cstrike_item_candrop",		Int_Void) },
+	{ V("cstrike_item_getmaxspeed",	Float_Void) },
 
 	/* Day of Defeat */
 	{ V("dod_roundrespawn",			Void_Void) },
@@ -151,6 +180,7 @@ hook_t hooklist[] =
 	{ V("dod_areasendstatus",		Void_Cbase) },
 	{ V("dod_getstate",				Int_Void) },
 	{ V("dod_getstateent",			Int_Cbase) },
+	{ V("dod_item_candrop",			Int_Void) },
 
 	
 	/* Team Fortress Classic */
@@ -192,8 +222,8 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 
 	CHECK_FUNCTION(func);
 
-	char *function=MF_GetAmxString(amx, params[2], 0, NULL);
-	char *classname=MF_GetAmxString(amx, params[3], 1, NULL);
+	char *function=MF_GetAmxString(amx, params[3], 0, NULL);
+	char *classname=MF_GetAmxString(amx, params[2], 1, NULL);
 	
 	// Check the entity
 

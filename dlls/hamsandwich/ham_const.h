@@ -1,3 +1,32 @@
+/* Ham Sandwich
+ *   Copyright 2007
+ *   By the AMX Mod X Development Team
+ *
+ *  Ham Sandwich is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation; either version 2 of the License, or (at
+ *  your option) any later version.
+ *
+ *  Ham Sandwich is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ *  General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Ham Sandwich; if not, write to the Free Software Foundation,
+ *  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ *  In addition, as a special exception, the author gives permission to
+ *  link the code of Ham Sandwich with the Half-Life Game Engine ("HL
+ *  Engine") and Modified Game Libraries ("MODs") developed by Valve,
+ *  L.L.C ("Valve"). You must obey the GNU General Public License in all
+ *  respects for all of the code used other than the HL Engine and MODs
+ *  from Valve. If you modify this file, you may extend this exception
+ *  to your version of the file, but you are not obligated to do so. If
+ *  you do not wish to do so, delete this exception statement from your
+ *  version.
+ */
+
 #ifndef HAM_CONST_H
 #define HAM_CONST_H
 
@@ -80,7 +109,6 @@ enum
 
 	Ham_Item_AddToPlayer,
 	Ham_Item_AddDuplicate,
-	Ham_Item_GetItemInfo,
 	Ham_Item_CanDeploy,
 	Ham_Item_Deploy,
 	Ham_Item_CanHolster,
@@ -118,6 +146,8 @@ enum
 
 	Ham_CS_Restart,
 	Ham_CS_RoundRespawn,
+	Ham_CS_Item_CanDrop,
+	Ham_CS_Item_GetMaxSpeed,
 
 	Ham_DOD_RoundRespawn,
 	Ham_DOD_RoundRespawnEnt,
@@ -126,6 +156,7 @@ enum
 	Ham_DOD_AreaSendStatus,
 	Ham_DOD_GetState,
 	Ham_DOD_GetStateEnt,
+	Ham_DOD_Item_CanDrop,
 
 	Ham_TFC_EngineerUse,
 	Ham_TFC_Finished,

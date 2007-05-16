@@ -1,3 +1,31 @@
+/* Ham Sandwich
+ *   Copyright 2007
+ *   By the AMX Mod X Development Team
+ *
+ *  Ham Sandwich is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation; either version 2 of the License, or (at
+ *  your option) any later version.
+ *
+ *  Ham Sandwich is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ *  General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Ham Sandwich; if not, write to the Free Software Foundation,
+ *  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ *  In addition, as a special exception, the author gives permission to
+ *  link the code of Ham Sandwich with the Half-Life Game Engine ("HL
+ *  Engine") and Modified Game Libraries ("MODs") developed by Valve,
+ *  L.L.C ("Valve"). You must obey the GNU General Public License in all
+ *  respects for all of the code used other than the HL Engine and MODs
+ *  from Valve. If you modify this file, you may extend this exception
+ *  to your version of the file, but you are not obligated to do so. If
+ *  you do not wish to do so, delete this exception statement from your
+ *  version.
+ */
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -924,4 +952,30 @@ void Hook_Void_ItemInfo(Hook *hook, void *pthis, void *iteminfo)
 
 	KILL_VECTOR()
 	POP()
+}
+
+float Hook_Float_Void(Hook *hook, void *pthis)
+{
+	float ret=0.0;
+	float origret=0.0;
+	PUSH_FLOAT()
+
+	MAKE_VECTOR()
+	
+	PRE_START()
+	PRE_END()
+#if defined _WIN32
+	origret=reinterpret_cast<float (__fastcall*)(void*, int)>(hook->func)(pthis, 0);
+#elif defined __linux__
+	origret=reinterpret_cast<float (*)(void*)>(hook->func)(pthis);
+#endif
+
+	POST_START()
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+
+	CHECK_RETURN()
+	return ret;
 }

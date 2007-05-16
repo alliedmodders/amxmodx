@@ -64,7 +64,7 @@
  * @param post			Whether or not to forward this in post.
  * @return 				Returns a handle to the forward.  Use EnableHamForward/DisableHamForward to toggle the forward on or off.
  */
-native HamHook:RegisterHam(Ham:function, const callback[], const entity[], post=0);
+native HamHook:RegisterHam(Ham:function, const EntityClassname[], const Callback[], Post=0);
 
 /**
  * Stops a ham forward from triggering.

@@ -7,14 +7,7 @@ MM_ROOT = ../../metamod/metamod
 ### EDIT BELOW FOR OTHER PROJECTS ###
 
 
-CRAZY_OPT_FLAGS = -DCRAZY_OPTS -O3 -funroll-loops -ffast-math -s -pipe -fomit-frame-pointer -fno-strict-aliasing -DNDEBUG -fmerge-all-constants -fmodulo-sched -fgcse-sm -fgcse-las -fgcse-after-reload -floop-optimize2 -funsafe-loop-optimizations -ftree-loop-linear -ftree-loop-im -ftree-loop-ivcanon -fivopts -ftree-vectorize -fvariable-expansion-in-unroller -funsafe-math-optimizations -ffinite-math-only  -fpeel-loops -funswitch-loops -fvisibility=hidden -fvisibility-inlines-hidden -fPIC -Wall -Wno-unknown-pragmas -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H -static-libgcc -fno-rtti -Wpointer-arith -Wcast-qual -Wcast-align -Wconversion -Wsign-compare -Wmissing-noreturn -Winline -Wlong-long -Wunsafe-loop-optimizations -Wctor-dtor-privacy -Wno-non-virtual-dtor -Wreorder -Woverloaded-virtual -Wsign-promo -Wsynth -shared 
-
-CRAZY_LINK_FLAGS = -fwhole-program
-#-fwhole-program -combine
-
-SANE_OPT_FLAGS = -O3 -funroll-loops -s -pipe -fomit-frame-pointer -fno-strict-aliasing -DNDEBUG
-
-OPT_FLAGS =
+OPT_FLAGS = -O3 -funroll-loops -s -pipe -fomit-frame-pointer -fno-strict-aliasing -DNDEBUG
 
 DEBUG_FLAGS = -g -ggdb3
 CPP = gcc-4.1
@@ -39,14 +32,8 @@ ifeq "$(DEBUG)" "true"
 	BIN_DIR = Debug
 	CFLAGS = $(DEBUG_FLAGS)
 else
-	ifeq "$(CRAZY)" "true"
-		BIN_DIR = Optimized
-		OPT_FLAGS = $(CRAZY_OPT_FLAGS)
-		LINK = $(CRAZY_LINK_FLAGS)
-	else
-		BIN_DIR = Release
-		OPT_FLAGS = $(SANE_OPT_FLAGS)
-	endif
+	BIN_DIR = Release
+
 	ifeq "$(GCC_VERSION)" "4"
 		OPT_FLAGS += -fvisibility=hidden -fvisibility-inlines-hidden
 	endif
@@ -67,8 +54,6 @@ $(BIN_DIR)/%.o: %.cpp
 all:
 	mkdir -p $(BIN_DIR)
 	mkdir -p $(BIN_DIR)/sdk
-	mkdir -p $(BIN_DIR)/natives
-	mkdir -p $(BIN_DIR)/tableentries
 	$(MAKE) hamsandwich
 
 hamsandwich: $(OBJ_LINUX)
@@ -79,23 +64,11 @@ debug:
 
 default: all
 
-crazy:
-	$(MAKE) all CRAZY=true
-
 clean:
 	rm -rf Release/*.o
 	rm -rf Release/sdk/*.o
-	rm -rf Release/natives/*.o
-	rm -rf Release/tableentries/*.o
 	rm -rf Release/$(NAME)_$(BIN_SUFFIX)
 	rm -rf Debug/*.o
 	rm -rf Debug/sdk/*.o
-	rm -rf Debug/natives/*.o
-	rm -rf Debug/tableentries/*.o
 	rm -rf Debug/$(NAME)_$(BIN_SUFFIX)
-	rm -rf Optimized/*.o
-	rm -rf Optimized/sdk/*.o
-	rm -rf Optimized/natives/*.o
-	rm -rf Optimized/tableentries/*.o
-	rm -rf Optimized/$(NAME)_$(BIN_SUFFIX)
 	

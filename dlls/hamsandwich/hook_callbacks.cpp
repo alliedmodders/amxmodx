@@ -970,6 +970,7 @@ float Hook_Float_Void(Hook *hook, void *pthis)
 	origret=reinterpret_cast<float (*)(void*)>(hook->func)(pthis);
 #endif
 
+	fflush(stdout);
 	POST_START()
 	POST_END()
 

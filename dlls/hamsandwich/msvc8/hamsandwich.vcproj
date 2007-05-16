@@ -122,7 +122,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\sdk"
+				AdditionalIncludeDirectories="..\..\..\..\hlsdk\dlls;..\..\..\..\hlsdk\common;..\..\..\..\hlsdk\engine\;..\..\..\..\hlsdk\pm_shared; ..\..\..\metamod\metamod"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL"
 				RuntimeLibrary="0"
 				RuntimeTypeInfo="false"

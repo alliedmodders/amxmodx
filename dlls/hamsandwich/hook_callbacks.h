@@ -170,7 +170,7 @@ const int PC_Void_ItemInfo = 1;
 void Hook_Void_ItemInfo(Hook *hook, void *pthis, void *iteminfo);
 
 
-const bool RT_Float_Void = true;
+const bool RT_Float_Void = false;
 const int PC_Float_Void = 0;
 float Hook_Float_Void(Hook *hook, void *pthis);
 

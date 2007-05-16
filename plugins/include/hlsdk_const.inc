@@ -479,3 +479,14 @@
 #define	FEV_HOSTONLY	(1<<4)	// Only send to entity specified as the invoker
 #define FEV_SERVER		(1<<5)	// Only send if the event was created on the server.
 #define FEV_CLIENT		(1<<6)	// Only issue event client side ( from shared code )
+
+// These are caps bits to indicate what an object's capabilities (currently used for save/restore and level transitions)
+#define		FCAP_CUSTOMSAVE				0x00000001
+#define		FCAP_ACROSS_TRANSITION		0x00000002		// should transfer between transitions
+#define		FCAP_MUST_SPAWN				0x00000004		// Spawn after restore
+#define		FCAP_DONT_SAVE				0x80000000		// Don't save this
+#define		FCAP_IMPULSE_USE			0x00000008		// can be used by the player
+#define		FCAP_CONTINUOUS_USE			0x00000010		// can be used by the player
+#define		FCAP_ONOFF_USE				0x00000020		// can be used by the player
+#define		FCAP_DIRECTIONAL_USE		0x00000040		// Player sends +/- 1 when using (currently only tracktrains)
+#define		FCAP_MASTER					0x00000080		// Can be used to "master" other entities (like multisource)

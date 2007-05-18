@@ -11,6 +11,8 @@
 #endif
 #define _string_included
 
+#define charsmax(%1) (sizeof(%1)-1)
+
 /* Checks if source contains string. On success function
 * returns position in source, on failure returns -1. */
 native contain(const source[],const string[]);

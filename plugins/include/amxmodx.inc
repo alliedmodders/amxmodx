@@ -746,7 +746,7 @@ native register_library(const library[]);
 /* Logs an error in your native, and breaks into the debugger.
  * Acts as if the calling plugin had the error.
  */
-native log_error(error, const fmt[], ...);
+native log_error(error, const fmt[], any:...);
 
 // More Dynamic Native System Stuff
 // Each of these natives affects one of the parameters sent to your native.
@@ -949,7 +949,7 @@ native set_module_filter(const handler[]);
  * Note that the plugin's filename is prepending to your message:
  *  [myplugin.amxx] MESSAGE
  */
-native abort(error, const fmt[]="", {Float,_}:...);
+native abort(error, const fmt[]="", any:...);
 
 /**
  * Checks if a specific module is loaded.  This is the exact same method AMX Mod X 
@@ -1016,7 +1016,7 @@ native set_fail_state(const err_msg[]);
 //Returns the reference address of the variable passed in.
 //This address is local to the plugin, and not a full CPU address
 //pass the variable as the first parameter
-native get_var_addr(...);
+native get_var_addr(any:...);
 
 //Returns the value of an address.  This dereferences something returned by
 // get_var_addr().  Attempting to pass in a value beyond stack or heap limits
@@ -1060,7 +1060,7 @@ native PrepareArray(const array[], size, copyback=0);
  * executes a forward.  returns result in ret.
  * returns 1 for success, 0 for failure.
  */
-native ExecuteForward(forward_handle, &ret, {Float,_}:...);
+native ExecuteForward(forward_handle, &ret, any:...);
 
 /**
  * Destroys/deallocates any type of forward

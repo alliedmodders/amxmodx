@@ -172,7 +172,7 @@ stock cmd_target(id,const arg[],flags = 1)
 	return player;
 }
 
-stock show_activity( id, const name[], {Float,_}: ... ) 
+stock show_activity( id, const name[], any:... ) 
 {
 	new buffer[128];
 	format_args( buffer , 127 , 2 );

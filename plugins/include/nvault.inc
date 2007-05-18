@@ -29,7 +29,7 @@ native nvault_open(const name[]);
 /* Gets a vault value by returning an int
  * setting a byref float or setting a string + maxlength
  */
-native nvault_get(vault, const key[], ...);
+native nvault_get(vault, const key[], {Float,_}:...);
 
 /* Looks up a vault value for full information
  * Returns 0 if the entry is not found

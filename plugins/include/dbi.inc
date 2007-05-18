@@ -53,13 +53,13 @@ native Sql:dbi_connect(_host[], _user[], _pass[], _dbname[], _error[]="", _maxle
  * If greater than zero, make sure to call dbi_free_result() on it!
  *  The return is a handle to the result set
  */
-native Result:dbi_query(Sql:_sql, _query[], {Float,_}:...);
+native Result:dbi_query(Sql:_sql, _query[], any:...);
 
 /* Has the same usage as dbi_query, but this native returns by
  * reference the number of rows affected in the query. If the
  * query fails rows will be equal to -1.
  */
-native Result:dbi_query2(Sql:_sql, &rows, _query[], {Float,_}:...);
+native Result:dbi_query2(Sql:_sql, &rows, _query[], any:...);
 
 /* Returns 0 on failure or End of Results.
  * Advances result pointer by one row.

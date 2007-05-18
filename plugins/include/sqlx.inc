@@ -59,7 +59,7 @@ native Handle:SQL_Connect(Handle:cn_tuple, &errcode, error[], maxlength);
  * The query must always be freed.
  * This does not actually do the query!
  */
-native Handle:SQL_PrepareQuery(Handle:db, const fmt[], {Float,_}:...);
+native Handle:SQL_PrepareQuery(Handle:db, const fmt[], any:...);
 
 
 /**
@@ -295,7 +295,7 @@ stock SQL_SimpleQuery(Handle:db, const query[], error[]="", maxlength=0, &rows=0
  * Use this for executing a query where you don't care about the result.
  * Returns 0 on failure, 1 on success
  */
-stock SQL_SimpleQueryFmt(Handle:db, error[]="", maxlength=0, &rows=0, const fmt[], ...)
+stock SQL_SimpleQueryFmt(Handle:db, error[]="", maxlength=0, &rows=0, const fmt[], any:...)
 {
 	static query_buf[2048];
 	vformat(query_buf, 2047, fmt, 6);
@@ -320,7 +320,7 @@ stock SQL_SimpleQueryFmt(Handle:db, error[]="", maxlength=0, &rows=0, const fmt[
  * Use this for executing a query and not caring about the error.
  * Returns -1 on error, >=0 on success (with number of affected rows)
  */
-stock SQL_QueryAndIgnore(Handle:db, const queryfmt[], {Float,_}:...)
+stock SQL_QueryAndIgnore(Handle:db, const queryfmt[], any:...)
 {
 	static query[4096];
 	new Handle:hQuery;

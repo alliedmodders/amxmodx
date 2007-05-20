@@ -73,7 +73,7 @@ getNextMapName(szArg[], iMax)
 {
 	new len = get_cvar_string("amx_nextmap", szArg, iMax)
 	
-	if (is_map_valid(szArg)) return len
+	if (ValidMap(szArg)) return len
 	len = copy(szArg, iMax, g_nextMap)
 	set_cvar_string("amx_nextmap", g_nextMap)
 	
@@ -119,6 +119,36 @@ public changeMap()
 
 new g_warning[] = "WARNING: Couldn't find a valid map or the file doesn't exist (file ^"%s^")"
 
+stock bool:ValidMap(mapname[])
+{
+	if ( is_map_valid(mapname) )
+	{
+		return true;
+	}
+	// If the is_map_valid check failed, check the end of the string
+	new len = strlen(mapname) - 4;
+	
+	// The mapname was too short to possibly house the .bsp extension
+	if (len < 0)
+	{
+		return false;
+	}
+	if ( equali(mapname[len], ".bsp") )
+	{
+		// If the ending was .bsp, then cut it off.
+		// the string is byref'ed, so this copies back to the loaded text.
+		mapname[len] = '^0';
+		
+		// recheck
+		if ( is_map_valid(mapname) )
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
+
 #if defined OBEY_MAPCYCLE
 readMapCycle(szFileName[], szNext[], iNext)
 {
@@ -129,7 +159,8 @@ readMapCycle(szFileName[], szNext[], iNext)
 	{
 		while (read_file(szFileName, i++, szBuffer, 31, b))
 		{
-			if (!isalnum(szBuffer[0]) || !is_map_valid(szBuffer)) continue
+			if (!isalnum(szBuffer[0]) || !ValidMap(szBuffer)) continue
+			
 			if (!iMaps)
 				copy(szFirst, 31, szBuffer)
 			
@@ -167,7 +198,7 @@ readMapCycle(szFileName[], szNext[], iNext)
 	{
 		while (read_file(szFileName, i++, szBuffer, 31, b))
 		{
-			if (!isalnum(szBuffer[0]) || !is_map_valid(szBuffer)) continue
+			if (!isalnum(szBuffer[0]) || !ValidMap(szBuffer)) continue
 			
 			if (!iMaps)
 			{

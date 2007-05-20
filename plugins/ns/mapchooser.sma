@@ -148,6 +148,35 @@ public voteNextmap(){
   client_cmd(0,"spk Gman/Gman_Choose2")
   log_amx("Vote: Voting for the nextmap started")
 }
+stock bool:ValidMap(mapname[])
+{
+	if ( is_map_valid(mapname) )
+	{
+		return true;
+	}
+	// If the is_map_valid check failed, check the end of the string
+	new len = strlen(mapname) - 4;
+	
+	// The mapname was too short to possibly house the .bsp extension
+	if (len < 0)
+	{
+		return false;
+	}
+	if ( equali(mapname[len], ".bsp") )
+	{
+		// If the ending was .bsp, then cut it off.
+		// the string is byref'ed, so this copies back to the loaded text.
+		mapname[len] = '^0';
+		
+		// recheck
+		if ( is_map_valid(mapname) )
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
 
 loadSettings(filename[])
 {
@@ -162,7 +191,7 @@ loadSettings(filename[])
   {
     if ( szText[0] != ';'
     &&  parse(szText, g_mapName[g_mapNums] ,31 )
-    &&  is_map_valid( g_mapName[g_mapNums] ) 
+    &&  ValidMap( g_mapName[g_mapNums] ) 
     &&  !equali( g_mapName[g_mapNums] ,g_lastMap)
     &&  !equali( g_mapName[g_mapNums] ,currentMap) )
       ++g_mapNums

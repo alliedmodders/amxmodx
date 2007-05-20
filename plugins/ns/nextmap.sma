@@ -59,6 +59,35 @@ public plugin_init() {
 	readMapCycle()
 	findNextMap()
 }
+stock bool:ValidMap(mapname[])
+{
+	if ( is_map_valid(mapname) )
+	{
+		return true;
+	}
+	// If the is_map_valid check failed, check the end of the string
+	new len = strlen(mapname) - 4;
+	
+	// The mapname was too short to possibly house the .bsp extension
+	if (len < 0)
+	{
+		return false;
+	}
+	if ( equali(mapname[len], ".bsp") )
+	{
+		// If the ending was .bsp, then cut it off.
+		// the string is byref'ed, so this copies back to the loaded text.
+		mapname[len] = '^0';
+		
+		// recheck
+		if ( is_map_valid(mapname) )
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
 
 public server_changelevel() {
 	if (g_mapChanging)
@@ -68,7 +97,7 @@ public server_changelevel() {
 	new szCvarNextMap[32]
 	get_cvar_string("amx_nextmap", szCvarNextMap, 31)
 	if ( !equal(szCvarNextMap, g_mapCycle[g_nextPos][NAME]) ) {
-		if (is_map_valid(szCvarNextMap)) {
+		if (ValidMap(szCvarNextMap)) {
 			if (g_changeMapDelay)
 				set_task(INFO_READ_TIME, "changeMap", 0, szCvarNextMap, 32)
 			else
@@ -79,7 +108,7 @@ public server_changelevel() {
 
 	new szNextMap[32]
 	getNextValidMap(szNextMap)
-	if (is_map_valid(szNextMap)) {
+	if (ValidMap(szNextMap)) {
 		if (g_changeMapDelay)
 			set_task(INFO_READ_TIME, "changeMap", 0, szNextMap, 32)
 		else
@@ -196,7 +225,7 @@ readMapCycle() {
 	if ( file_exists(szMapCycleFile) ) {
 		while( read_file(szMapCycleFile, line++, szBuffer, 63, length) )  {	// ns_lost "\minplayers\16\maxplayers\32\"
 			parse(szBuffer, szMapName, 31, szMapPlayerNum, 31)
-			if ( !isalpha(szMapName[0]) || !is_map_valid(szMapName) ) continue
+			if ( !isalpha(szMapName[0]) || !ValidMap(szMapName) ) continue
 
 			copy(g_mapCycle[g_numMaps][NAME], 31, szMapName)
 

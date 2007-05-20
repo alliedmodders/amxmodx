@@ -188,7 +188,7 @@ public voteNextmap()
 	g_selected = true
 	
 	new menu[512], a, mkeys = (1<<SELECTMAPS + 1)
-	new tempmap[32];
+
 	new pos = format(menu, 511, g_coloredMenus ? "\y%L:\w^n^n" : "%L:^n^n", LANG_SERVER, "CHOOSE_NEXTM")
 	new dmax = (g_mapNums > SELECTMAPS) ? SELECTMAPS : g_mapNums
 	
@@ -200,8 +200,7 @@ public voteNextmap()
 			if (++a >= g_mapNums) a = 0
 		
 		g_nextName[g_mapVoteNum] = a
-		ArrayGetString(g_mapName, a, tempmap, charsof(tempmap));
-		pos += format(menu[pos], 511, "%d. %s^n", g_mapVoteNum + 1, tempmap);
+		pos += format(menu[pos], 511, "%d. %S^n", g_mapVoteNum + 1, ArrayGetStringHandle(g_mapName, a));
 		mkeys |= (1<<g_mapVoteNum)
 		g_voteCount[g_mapVoteNum] = 0
 	}
@@ -229,6 +228,35 @@ public voteNextmap()
 	client_cmd(0, "spk Gman/Gman_Choose2")
 	log_amx("Vote: Voting for the nextmap started")
 }
+stock bool:ValidMap(mapname[])
+{
+	if ( is_map_valid(mapname) )
+	{
+		return true;
+	}
+	// If the is_map_valid check failed, check the end of the string
+	new len = strlen(mapname) - 4;
+	
+	// The mapname was too short to possibly house the .bsp extension
+	if (len < 0)
+	{
+		return false;
+	}
+	if ( equali(mapname[len], ".bsp") )
+	{
+		// If the ending was .bsp, then cut it off.
+		// the string is byref'ed, so this copies back to the loaded text.
+		mapname[len] = '^0';
+		
+		// recheck
+		if ( is_map_valid(mapname) )
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
 
 loadSettings(filename[])
 {
@@ -254,7 +282,7 @@ loadSettings(filename[])
 		
 		
 		if (szText[0] != ';' &&
-			is_map_valid(szText) &&
+			ValidMap(szText) &&
 			!equali(szText, g_lastMap) &&
 			!equali(szText, currentMap))
 		{

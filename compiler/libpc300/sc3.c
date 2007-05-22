@@ -284,7 +284,7 @@ static void (*unopers[])(void) = { lneg, neg, user_inc, user_dec };
 
 SC_FUNC int matchtag(int formaltag,int actualtag,int allowcoerce)
 {
-  if (formaltag!=actualtag && formaltag!=pc_anytag) {
+  if (formaltag!=actualtag && formaltag!=pc_anytag && actualtag!=pc_anytag) {
     /* if the formal tag is zero and the actual tag is not "fixed", the actual
      * tag is "coerced" to zero
      */

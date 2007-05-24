@@ -105,11 +105,7 @@ public actionTelMenu(id, key)
 
 			log_amx("Cmd: ^"%s<%d><%s><>^" teleport ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2)
 
-			switch (get_cvar_num("amx_show_activity"))
-			{
-				case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_TELEPORT_2", name, name2)
-				case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_TELEPORT_1", name2)
-			}
+			show_activity_key("ADMIN_TELEPORT_1", "ADMIN_TELEPORT_2", name, name2);
 
 			displayTelMenu(id, g_menuPosition[id])
 		}

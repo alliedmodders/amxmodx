@@ -43,6 +43,7 @@ new g_Colors[MAX_CLR][] = {"COL_WHITE", "COL_RED", "COL_GREEN", "COL_BLUE", "COL
 new g_Values[MAX_CLR][] = {{255, 255, 255}, {255, 0, 0}, {0, 255, 0}, {0, 0, 255}, {255, 255, 0}, {255, 0, 255}, {0, 255, 255}, {227, 96, 8}, {45, 89, 116}, {103, 44, 38}}
 new Float:g_Pos[4][] = {{0.0, 0.0}, {0.05, 0.55}, {-1.0, 0.2}, {-1.0, 0.7}}
 
+new amx_show_activity;
 public plugin_init()
 {
 	register_plugin("Admin Chat", AMXX_VERSION_STR, "AMXX Dev Team")
@@ -55,6 +56,13 @@ public plugin_init()
 	register_concmd("amx_psay", "cmdPsay", ADMIN_CHAT, "<name or #userid> <message> - sends private message")
 	register_concmd("amx_tsay", "cmdTsay", ADMIN_CHAT, "<color> <message> - sends left side hud message to all players")
 	register_concmd("amx_csay", "cmdTsay", ADMIN_CHAT, "<color> <message> - sends center hud message to all players")
+	
+	amx_show_activity = get_cvar_pointer("amx_show_activity");
+	
+	if (amx_show_activity == 0)
+	{
+		amx_show_activity = register_cvar("amx_show_activity", "2");
+	}
 }
 
 public cmdSayChat(id)
@@ -123,13 +131,38 @@ public cmdSayChat(id)
 	
 	set_hudmessage(g_Values[a][0], g_Values[a][1], g_Values[a][2], g_Pos[i][0], verpos, 0, 6.0, 6.0, 0.5, 0.15, -1)
 
-	if (get_cvar_num("amx_show_activity") == 2)
+	switch ( get_pcvar_num(amx_show_activity) )
 	{
-		show_hudmessage(0, "%s :   %s", name, message[i + n])
-		client_print(0, print_notify, "%s :   %s", name, message[i + n])
-	} else {
-		show_hudmessage(0, "%s", message[i + n])
-		client_print(0, print_notify, "%s", message[i + n])
+		case 3, 4:
+		{
+			new maxpl = get_maxplayers();
+			for (new pl = 1; pl <= maxpl; pl++)
+			{
+				if (is_user_connected(pl) && !is_user_bot(pl))
+				{
+					if (is_user_admin(pl))
+					{
+						show_hudmessage(pl, "%s :   %s", name, message[i + n])
+						client_print(pl, print_notify, "%s :   %s", name, message[i + n])
+					}
+					else
+					{
+						show_hudmessage(pl, "%s", message[i + n])
+						client_print(pl, print_notify, "%s", message[i + n])
+					}
+				}
+			}
+		}
+		case 2:
+		{
+			show_hudmessage(0, "%s :   %s", name, message[i + n])
+			client_print(0, print_notify, "%s :   %s", name, message[i + n])
+		}
+		default:
+		{
+			show_hudmessage(0, "%s", message[i + n])
+			client_print(0, print_notify, "%s", message[i + n])
+		}
 	}
 
 	return PLUGIN_HANDLED
@@ -318,15 +351,41 @@ public cmdTsay(id, level, cid)
 	userid = get_user_userid(id)
 	set_hudmessage(g_Values[a][0], g_Values[a][1], g_Values[a][2], tsay ? 0.05 : -1.0, verpos, 0, 6.0, 6.0, 0.5, 0.15, -1)
 
-	if (get_cvar_num("amx_show_activity") == 2)
+	switch ( get_pcvar_num(amx_show_activity) )
 	{
-		show_hudmessage(0, "%s :   %s", name, message[length])
-		client_print(0, print_notify, "%s :   %s", name, message[length])
-		console_print(id, "%s :   %s", name, message[length])
-	} else {
-		show_hudmessage(0, "%s", message[length])
-		client_print(0, print_notify, "%s", message[length])
-		console_print(id, "%s", message[length])
+		case 3, 4:
+		{
+			new maxpl = get_maxplayers();
+			for (new pl = 1; pl <= maxpl; pl++)
+			{
+				if (is_user_connected(pl) && !is_user_bot(pl))
+				{
+					if (is_user_admin(pl))
+					{
+						show_hudmessage(pl, "%s :   %s", name, message[length])
+						client_print(pl, print_notify, "%s :   %s", name, message[length])
+					}
+					else
+					{
+						show_hudmessage(pl, "%s", message[length])
+						client_print(pl, print_notify, "%s", message[length])
+					}
+				}
+			}
+			console_print(id, "%s :  %s", name, message[length])
+		}
+		case 2:
+		{
+			show_hudmessage(0, "%s :   %s", name, message[length])
+			client_print(0, print_notify, "%s :   %s", name, message[length])
+			console_print(id, "%s :  %s", name, message[length])
+		}
+		default:
+		{
+			show_hudmessage(0, "%s", message[length])
+			client_print(0, print_notify, "%s", message[length])
+			console_print(id, "%s", message[length])
+		}
 	}
 
 	log_amx("Chat: ^"%s<%d><%s><>^" %s ^"%s^"", name, userid, authid, cmd[4], message[length])

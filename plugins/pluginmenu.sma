@@ -34,9 +34,6 @@
 #include <amxmodx>
 #include <amxmisc>
 
-// Temporary define for having users test on their core.
-// This will ensure that the build will work on 1.76.
-#define BUILD_FOR_176
 
 
 new DisabledCallback;
@@ -148,9 +145,8 @@ stock DisplayPluginMenu(id,const MenuText[], const Handler[], const Command[], c
 			}
 		}
 	}
-#if !defined BUILD_FOR_176
+
 	menu_setprop(Menu,MPROP_NUMBER_COLOR,"\y");
-#endif
 	menu_setprop(Menu,MPROP_EXIT,MEXIT_ALL);
 	menu_display(id,Menu,0);
 
@@ -404,11 +400,7 @@ public CommandChangeCvar(id)
 		// Changed to set_cvar_* for 1.76 tests
 		
 		new pointer=CurrentCvar[id];
-#if defined BUILD_FOR_176
-		set_cvar_string(CurrentCvarName[id],Args);
-#else
 		set_pcvar_string(CurrentCvar[id],Args);
-#endif
 		
 		client_print(id,print_chat,"[AMXX] Cvar ^"%s^" changed to ^"%s^"",CurrentCvarName[id],Args);
 		
@@ -420,42 +412,24 @@ public CommandChangeCvar(id)
 		get_user_name(id,Name,sizeof(Name)-1);
 		get_user_authid(id,AuthID,sizeof(AuthID)-1);
 		
-		// TODO: Additional amx_show_activity settings
 		log_amx("Cmd: ^"%s<%d><%s><>^" set cvar (name ^"%s^") (value ^"%s^")", Name, get_user_userid(id), AuthID, CurrentCvarName[id], Args);
 	
 	
-		new activity = get_cvar_num("amx_show_activity");
-		
-		if (activity != 0)
+		new cvar_val[64];
+		new maxpl = get_maxplayers();
+		for (new i = 1; i <= maxpl; i++)
 		{
-			new players[32], pnum, admin[64], cvar_val[64], len;
-			get_players(players, pnum, "c");
-			
-			for (new i = 0; i < pnum; i++)
+			if (is_user_connected(i) && !is_user_bot(i))
 			{
-				len = format(admin, 255, "%L", players[i], "ADMIN");
-				
-				if (activity == 1)
+				if (get_pcvar_flags(pointer) & FCVAR_PROTECTED || equali(Args, "rcon_password"))
 				{
-					len += copy(admin[len], 255-len, ":");
+					formatex(cvar_val, charsmax(cvar_val), "*** %L ***", i, "PROTECTED");
 				}
 				else
 				{
-					len += format(admin[len], 255-len, " %s:", Name);
+					copy(cvar_val, charsmax(cvar_val), Args);
 				}
-
-				if (get_pcvar_flags(pointer) & FCVAR_PROTECTED || 
-					equali(CurrentCvarName[id],"rcon_password") ||
-					equali(CurrentCvarName[id],"amx_sql_",8))
-				{
-					format(cvar_val, 63, "*** %L ***", players[i], "PROTECTED");
-				}
-				else
-				{
-					copy(cvar_val, 63, Args);
-				}
-				
-				client_print(players[i], print_chat, "%L", players[i], "SET_CVAR_TO", admin, CurrentCvarName[id], cvar_val);
+				show_activity_id(i, id, Name, "%L", i, "SET_CVAR_TO", "", CurrentCvarName[id], cvar_val);
 			}
 		}
 		console_print(id, "[AMXX] %L", id, "CVAR_CHANGED", CurrentCvarName[id], Args);
@@ -591,9 +565,7 @@ public DisplayCvarMenu(id, plid, page)
 	}
 	
 	menu_setprop(Menu,MPROP_EXIT,MEXIT_ALL);
-#if !defined BUILD_FOR_176
 	menu_setprop(Menu,MPROP_NUMBER_COLOR,"\y");
-#endif
 	menu_display(id,Menu,page);
 
 }
@@ -739,9 +711,7 @@ stock DisplaySpecificCommand(id,cid)
 	menu_additem(Menu,"Execute with parameters.",CommandName,_,EnabledCallback);
 	menu_additem(Menu,"Execute with no parameters.",CommandName,_,EnabledCallback);
 	
-#if !defined BUILD_FOR_176
 	menu_setprop(Menu,MPROP_NUMBER_COLOR,"\y");
-#endif
 	menu_display(id,Menu,0);
 }
 
@@ -917,9 +887,7 @@ public DisplayCmdMenu(id, plid, page)
 			}
 		}
 	}
-#if !defined BUILD_FOR_176
 	menu_setprop(Menu,MPROP_NUMBER_COLOR,"\y");
-#endif
 	menu_display(id,Menu,page);
 
 }

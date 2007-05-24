@@ -152,33 +152,22 @@ public actionBanMenu(id, key)
 
 			log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%d^")", name, get_user_userid(id), authid, name2, userid2, authid2, g_menuSettings[id])
 
-			switch (get_cvar_num("amx_show_activity"))
+			if (g_menuSettings[id]==0) // permanent
 			{
-				case 2: 
+				new maxpl = get_maxplayers();
+				for (new i = 1; i <= maxpl; i++)
 				{
-					if (g_menuSettings[id]==0) // permanent
-					{
-						client_print(0, print_chat, "%L %s: %L %s %L", LANG_PLAYER, "ADMIN", name, LANG_PLAYER, "BAN", name2, LANG_PLAYER, "PERM");
-					}
-					else
-					{
-						new tempTime[32];
-						formatex(tempTime,sizeof(tempTime)-1,"%d",g_menuSettings[id]);
-						client_print(0, print_chat, "%L %s: %L %s %L", LANG_PLAYER, "ADMIN", name, LANG_PLAYER, "BAN", name2, LANG_PLAYER, "FOR_MIN", tempTime);
-					}
+					show_activity_id(i, id, name, "%L %s %L", i, "BAN", name2, i, "PERM");
 				}
-				case 1: 
+			}
+			else
+			{
+				new tempTime[32];
+				formatex(tempTime,sizeof(tempTime)-1,"%d",g_menuSettings[id]);
+				new maxpl = get_maxplayers();
+				for (new i = 1; i <= maxpl; i++)
 				{
-					if (g_menuSettings[id]==0) // permanent
-					{
-						client_print(0, print_chat, "%L: %L %s %L", LANG_PLAYER, "ADMIN", LANG_PLAYER, "BAN", name2, LANG_PLAYER, "PERM");
-					}
-					else
-					{
-						new tempTime[32];
-						formatex(tempTime,sizeof(tempTime)-1,"%d",g_menuSettings[id]);
-						client_print(0, print_chat, "%L: %L %s %L", LANG_PLAYER, "ADMIN", LANG_PLAYER, "BAN", name2, LANG_PLAYER, "FOR_MIN", tempTime);
-					}
+					show_activity_id(i, id, name, "%L %s %L", i, "BAN", name2, i, "FOR_MIN", tempTime);
 				}
 			}
 			/* ---------- check for Steam ID added by MistaGee -------------------- 
@@ -328,20 +317,12 @@ public actionSlapMenu(id, key)
 			if (g_menuOption[id])
 			{
 				log_amx("Cmd: ^"%s<%d><%s><>^" slap with %d damage ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, g_menuSettings[id], name2, get_user_userid(player), authid2)
-				
-				switch (get_cvar_num("amx_show_activity"))
-				{
-					case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_SLAP_2", name, name2, g_menuSettings[id])
-					case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_SLAP_1", name2, g_menuSettings[id])
-				}
+
+				show_activity_key("ADMIN_SLAP_1", "ADMIN_SLAP_2", name, name2, g_menuSettings[id]);
 			} else {
 				log_amx("Cmd: ^"%s<%d><%s><>^" slay ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2)
 				
-				switch (get_cvar_num("amx_show_activity"))
-				{
-					case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_SLAY_2", name, name2)
-					case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_SLAY_1", name2)
-				}
+				show_activity_key("ADMIN_SLAY_1", "ADMIN_SLAY_2", name, name2);
 			}
 
 			if (g_menuOption[id])
@@ -469,12 +450,9 @@ public actionKickMenu(id, key)
 
 			log_amx("Kick: ^"%s<%d><%s><>^" kick ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, name2, userid2, authid2)
 
-			switch (get_cvar_num("amx_show_activity"))
-			{
-				case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_KICK_2", name, name2)
-				case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_KICK_1", name2)
-			}
+			show_activity_key("ADMIN_KICK_1", "ADMIN_KICK_2", name, name2);
 
+			
 			server_cmd("kick #%d", userid2)
 			server_exec()
 
@@ -575,11 +553,7 @@ public actionTeamMenu(id, key)
 				
 			log_amx("Cmd: ^"%s<%d><%s><>^" transfer ^"%s<%d><%s><>^" (team ^"%s^")", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2, g_menuOption[id] ? "TERRORIST" : "CT")
 
-			switch (get_cvar_num("amx_show_activity"))
-			{
-				case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_TRANSF_2", name, name2, g_menuOption[id] ? "TERRORIST" : "CT")
-				case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_TRANSF_1", name2, g_menuOption[id] ? "TERRORIST" : "CT")
-			}
+			show_activity_key("ADMIN_TRANSF_1", "ADMIN_TRANSF_2", name, name2, g_menuOption[id] ? "TERRORIST" : "CT");
 
 			if (g_cstrike)
 			{

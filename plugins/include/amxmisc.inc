@@ -172,24 +172,305 @@ stock cmd_target(id,const arg[],flags = 1)
 	return player;
 }
 
-stock show_activity( id, const name[], any:... ) 
+/**
+ * Standard method to show activity to clients connected to the server.
+ * This depends on the amx_show_activity cvar.  See documentation for more details.
+ *
+ * @param id		The user id of the person doing the action.
+ * @param name		The name of the person doing the action.
+ * @param fmt		The format string to display.  Do not put the "ADMIN:" prefix in this.
+ */
+stock show_activity( id, const name[], const fmt[], any:... ) 
 {
+	static __amx_show_activity;
+	if (__amx_show_activity == 0)
+	{
+		__amx_show_activity = get_cvar_pointer("amx_show_activity");
+	
+		// if still not found, then register the cvar as a dummy
+		if (__amx_show_activity == 0)
+		{
+			__amx_show_activity = register_cvar("amx_show_activity", "2");
+		}
+	}
+#if defined AMXMOD_BCOMPAT
 	new buffer[128];
 	format_args( buffer , 127 , 2 );
-	switch(get_cvar_num("amx_show_activity"))
+#else
+	new prefix[10];
+	if (is_user_admin(id))
 	{
-		case 2:
+		copy(prefix, charsmax(prefix), "ADMIN");
+	}
+	else
+	{
+		copy(prefix, charsmax(prefix), "PLAYER");
+	}
+	new buffer[512];
+	vformat(buffer, charsmax(buffer), fmt, 3);
+#endif
+	switch(get_pcvar_num(__amx_show_activity))
+	{
 #if defined AMXMOD_BCOMPAT
+		case 2: // show name to all
+		{
 			client_print(0, print_chat, "%s %s: %s", is_user_admin(id) ? SIMPLE_T("ADMIN") : SIMPLE_T("PLAYER"), name, buffer);
-#else
-			client_print(0, print_chat, "%L %s: %s", id, is_user_admin(id) ? "ADMIN" : "PLAYER" , name , buffer );
-#endif
-		case 1: 
-#if defined AMXMOD_BCOMPAT
+		}
+		case 1: // hide name to all
+		{
 			client_print(0, print_chat, "%s: %s", is_user_admin(id) ? SIMPLE_T("ADMIN") : SIMPLE_T("PLAYER"), buffer);
+		}
 #else
-			client_print(0, print_chat, "%L: %s", id, is_user_admin(id) ? "ADMIN" : "PLAYER", buffer );
+		case 5: // hide name only to admins, show nothing to normal users
+		{
+			new __maxclients=get_maxplayers();
+			
+			
+			for (new i=1; i<__maxclients; i++)
+			{
+				if (is_user_connected(i))
+				{
+					if (is_user_admin(i))
+					{
+						client_print(i, print_chat, "%L: %s", i, prefix, buffer);
+					}
+				}
+			}
+		}
+		case 4: // show name only to admins, show nothing to normal users
+		{
+			new __maxclients=get_maxplayers();
+			
+			for (new i=1; i<__maxclients; i++)
+			{
+				if (is_user_connected(i))
+				{
+					if (is_user_admin(i))
+					{
+						client_print(i, print_chat, "%L %s: %s", i, prefix, name, buffer);
+					}
+				}
+			}
+		}
+		case 3: // show name only to admins, hide name from normal users
+		{
+			new __maxclients=get_maxplayers();
+			
+			for (new i=1; i<__maxclients; i++)
+			{
+				if (is_user_connected(i))
+				{
+					if (is_user_admin(i))
+					{
+						client_print(i, print_chat, "%L %s: %s", i, prefix, name, buffer);
+					}
+					else
+					{
+						client_print(i, print_chat, "%L: %s", i, prefix, buffer);
+					}
+				}
+			}
+		}
+		case 2: // show name to all
+		{
+			client_print(0, print_chat, "%L %s: %s", LANG_PLAYER, prefix , name , buffer );
+		}
+		case 1: // hide name to all
+		{
+			client_print(0, print_chat, "%L: %s", LANG_PLAYER, prefix, buffer );
+		}
 #endif
+	}
+}
+
+/**
+ * Standard method to show activity to one single client. 
+ * This is useful for messages that get pieced together by many language keys.
+ * This depends on the amx_show_activity cvar.  See documentation for more details.
+ *
+ * @param idtarget	The user id of the person to display to.  0 is invalid.
+ * @param idadmin	The user id of the person doing the action.
+ * @param name		The name of the person doing the action.
+ * @param fmt		The format string to display.  Do not put the "ADMIN:" prefix in this.
+ */
+stock show_activity_id(idtarget, idadmin, const name[], const fmt[], any:...)
+{
+	if (idtarget == 0 ||
+		!is_user_connected(idtarget) )
+	{
+		return;
+	}
+	
+	static __amx_show_activity;
+	if (__amx_show_activity == 0)
+	{
+		__amx_show_activity = get_cvar_pointer("amx_show_activity");
+	
+		// if still not found, then register the cvar as a dummy
+		if (__amx_show_activity == 0)
+		{
+			__amx_show_activity = register_cvar("amx_show_activity", "2");
+		}
+	}
+
+	static prefix[10];
+	if (is_user_admin(idadmin))
+	{
+		copy(prefix, charsmax(prefix), "ADMIN");
+	}
+	else
+	{
+		copy(prefix, charsmax(prefix), "PLAYER");
+	}
+	
+	static buffer[512];
+	vformat(buffer, charsmax(buffer), fmt, 5);
+	
+	
+	switch(get_pcvar_num(__amx_show_activity))
+	{
+		case 5: // hide name only to admins, show nothing to normal users
+		{
+			if ( is_user_admin(idtarget) )
+			{
+				client_print(idtarget, print_chat, "%L: %s", idtarget, prefix, buffer);
+			}
+		}
+		case 4: // show name only to admins, show nothing to normal users
+		{
+			if ( is_user_admin(idtarget) )
+			{
+				client_print(idtarget, print_chat, "%L %s: %s", idtarget, prefix, name, buffer);
+			}
+		}
+		case 3: // show name only to admins, hide name from normal users
+		{
+			if ( is_user_admin(idtarget) )
+			{
+				client_print(idtarget, print_chat, "%L %s: %s", idtarget, prefix, name, buffer);
+			}
+			else
+			{
+				client_print(idtarget, print_chat, "%L: %s", idtarget, prefix, buffer);
+			}
+		}
+		case 2: // show name to all
+		{
+			client_print(idtarget, print_chat, "%L %s: %s", idtarget, prefix, name, buffer);
+		}
+		case 1: // hide name to all
+		{
+			client_print(idtarget, print_chat, "%L: %s", idtarget, prefix, buffer);
+		}
+	}
+}
+/**
+ * Standard method to show activity to one single client with normal language keys.
+ * These keys need to be in the format of standard AMXX keys:
+ *   eg: ADMIN_KICK_1 = ADMIN: kick %s
+ *       ADMIN_KICK_2 = ADMIN %s: kick %s
+ * This depends on the amx_show_activity cvar.  See documentation for more details.
+ *
+ * @param KeyWithoutName	The language key that does not have the name field.
+ * @param KeyWithName		The language key that does have the name field.
+ * @param __AdminName		The name of the person doing the action.
+ * @extra					Pass any extra format arguments for the language key in the variable arguments list. 
+ */
+stock show_activity_key(const KeyWithoutName[], const KeyWithName[], const ___AdminName[], any:...)
+{
+// The variable gets used via vformat, but the compiler doesn't know that, so it still cries.
+#pragma unused ___AdminName
+	static __amx_show_activity;
+	if (__amx_show_activity == 0)
+	{
+		__amx_show_activity = get_cvar_pointer("amx_show_activity");
+	
+		// if still not found, then register the cvar as a dummy
+		if (__amx_show_activity == 0)
+		{
+			__amx_show_activity = register_cvar("amx_show_activity", "2");
+		}
+	}
+	
+	new buffer[512];
+	new keyfmt[256];
+	new i;
+	
+	new __maxclients=get_maxplayers();
+	
+	switch( get_pcvar_num(__amx_show_activity) )
+	{
+	case 5: // hide name to admins, display nothing to normal players
+		while (i++ < __maxclients)
+		{
+			if ( is_user_connected(i) )
+			{
+				if ( is_user_admin(i) )
+				{
+					LookupLangKey(keyfmt, charsmax(keyfmt), KeyWithoutName, i);
+
+					// skip the "adminname" argument if not showing name
+					vformat(buffer, charsmax(buffer), keyfmt, 4);
+					client_print(i, print_chat, "%s", buffer);
+				}
+			}
+		}
+	case 4: // show name only to admins, display nothing to normal players
+		while (i++ < __maxclients)
+		{
+			if ( is_user_connected(i) )
+			{
+				if ( is_user_admin(i) )
+				{
+					LookupLangKey(keyfmt, charsmax(keyfmt), KeyWithName, i);
+					vformat(buffer, charsmax(buffer), keyfmt, 3);
+					client_print(i, print_chat, "%s", buffer);
+				}
+			}
+		}
+	case 3: // show name only to admins, hide name from normal users
+		while (i++ < __maxclients)
+		{
+			if ( is_user_connected(i) )
+			{
+				if ( is_user_admin(i) )
+				{
+					LookupLangKey(keyfmt, charsmax(keyfmt), KeyWithName, i);
+					vformat(buffer, charsmax(buffer), keyfmt, 3);
+				}
+				else
+				{
+					LookupLangKey(keyfmt, charsmax(keyfmt), KeyWithoutName, i);
+					
+					// skip the "adminname" argument if not showing name
+					vformat(buffer, charsmax(buffer), keyfmt, 4);
+				}
+				client_print(i, print_chat, "%s", buffer);
+			}
+		}
+	case 2: // show name to all users
+		while (i++ < __maxclients)
+		{
+			if ( is_user_connected(i) )
+			{
+				LookupLangKey(keyfmt, charsmax(keyfmt), KeyWithName, i);
+				vformat(buffer, charsmax(buffer), keyfmt, 3);
+				client_print(i, print_chat, "%s", buffer);
+			}
+		}
+	case 1: // hide name from all users
+		while (i++ < __maxclients)
+		{
+			if ( is_user_connected(i) )
+			{
+				LookupLangKey(keyfmt, charsmax(keyfmt), KeyWithoutName, i);
+
+				// skip the "adminname" argument if not showing name
+				vformat(buffer, charsmax(buffer), keyfmt, 4);
+				client_print(i, print_chat, "%s", buffer);
+			}
+		}
+		
 	}
 }
 

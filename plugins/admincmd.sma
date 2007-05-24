@@ -35,22 +35,26 @@
 #include <amxmodx>
 #include <amxmisc>
 
+
 new g_pauseCon
 new Float:g_pausAble
 new bool:g_Paused
 new bool:g_PauseAllowed = false
 new g_addCvar[] = "amx_cvar add %s"
 
-new amx_show_activity;
 new pausable;
 new rcon_password;
+
 
 public plugin_init()
 {
 	register_plugin("Admin Commands", AMXX_VERSION_STR, "AMXX Dev Team")
+
 	register_dictionary("admincmd.txt")
 	register_dictionary("common.txt")
 	register_dictionary("adminhelp.txt")
+	
+	
 	register_concmd("amx_kick", "cmdKick", ADMIN_KICK, "<name or #userid> [reason]")
 	register_concmd("amx_ban", "cmdBan", ADMIN_BAN, "<name or #userid> <minutes> [reason]")
 	register_concmd("amx_banip", "cmdBanIP", ADMIN_BAN, "<name or #userid> <minutes> [reason]")
@@ -75,12 +79,6 @@ public plugin_init()
 	rcon_password=get_cvar_pointer("rcon_password");
 	pausable=get_cvar_pointer("pausable");
 	
-	amx_show_activity=get_cvar_pointer("amx_show_activity");
-	
-	if (amx_show_activity==0) // cvar does not exist, register it
-	{
-		amx_show_activity=register_cvar("amx_show_activity", "2");
-	}
 	
 }
 
@@ -127,12 +125,8 @@ public cmdKick(id, level, cid)
 	remove_quotes(reason)
 	
 	log_amx("Kick: ^"%s<%d><%s><>^" kick ^"%s<%d><%s><>^" (reason ^"%s^")", name, get_user_userid(id), authid, name2, userid2, authid2, reason)
-	
-	switch (get_pcvar_num(amx_show_activity))
-	{
-		case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_KICK_2", name, name2)
-		case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_KICK_1", name2)
-	} 
+
+	show_activity_key("ADMIN_KICK_1", "ADMIN_KICK_2", name, name2);
 
 	if (is_user_bot(player))
 		server_cmd("kick #%d", userid2)
@@ -168,12 +162,8 @@ public cmdUnban(id, level, cid)
 	}
 
 	get_user_name(id, name, 31)
-	
-	switch (get_pcvar_num(amx_show_activity))
-	{
-		case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_UNBAN_2", name, arg)
-		case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_UNBAN_1", arg)
-	}
+
+	show_activity_key("ADMIN_UNBAN_1", "ADMIN_UNBAN_2", name, arg);
 
 	get_user_authid(id, authid, 31)
 	log_amx("Cmd: ^"%s<%d><%s><>^" unban ^"%s^"", name, get_user_userid(id), authid, arg)
@@ -203,11 +193,7 @@ public cmdAddBan(id, level, cid)
 
 	get_user_name(id, name, 31)
 
-	switch (get_pcvar_num(amx_show_activity))
-	{
-		case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_ADDBAN_2", name, arg)
-		case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_ADDBAN_1", arg)
-	}
+	show_activity_key("ADMIN_ADDBAN_1", "ADMIN_ADDBAN_2", name, arg);
 
 	get_user_authid(id, authid, 31)
 	log_amx("Cmd: ^"%s<%d><%s><>^" ban ^"%s^" (minutes ^"%s^") (reason ^"%s^")", name, get_user_userid(id), authid, arg, minutes, reason)
@@ -254,32 +240,30 @@ public cmdBan(id, level, cid)
 	else
 		server_cmd("kick #%d ^"%s %s^";wait;banid ^"%s^" ^"%s^";wait;writeid", userid2, banned, temp, minutes, authid2)
 
-	new activity = get_pcvar_num(amx_show_activity)
-	if (activity != 0)
+	
+	// Display the message to all clients
+
+	new msg[256];
+	new len;
+	new maxpl = get_maxplayers();
+	for (new i = 1; i <= maxpl; i++)
 	{
-		new players[32], pnum, msg[256], len
-		get_players(players, pnum, "c")
-		
-		for (new i = 0; i < pnum; i++)
+		if (is_user_connected(i) && !is_user_bot(i))
 		{
-			len = format(msg, 255, "%L", players[i], "ADMIN")
-			
-			if (activity == 1)
-				len += copy(msg[len], 255-len, ":")
-			else
-				len += format(msg[len], 255-len, " %s:", name)
-			
-			len += format(msg[len], 255-len, " %L", players[i], "BAN")
-			len += format(msg[len], 255-len, " %s ", name2)
-			
+			len = formatex(msg, charsmax(msg), "%L", i, "BAN");
+			len += formatex(msg[len], charsmax(msg) - len, " %s ", name2);
 			if (nNum)
-				format(msg[len], 255-len, "%L", players[i], "FOR_MIN", minutes)
+			{
+				formatex(msg[len], charsmax(msg) - len, "%L", i, "FOR_MIN", minutes);
+			}
 			else
-				format(msg[len], 255-len, "%L", players[i], "PERM")
-			
-			client_print(players[i], print_chat, "%s", msg)
+			{
+				formatex(msg[len], charsmax(msg) - len, "%L", i, "PERM");
+			}
+			show_activity_id(i, id, name, msg);
 		}
 	}
+	
 	console_print(id, "[AMXX] %L", id, "CLIENT_BANNED", name2)
 	
 	return PLUGIN_HANDLED
@@ -299,7 +283,10 @@ public cmdBanIP(id, level, cid)
 	new player = cmd_target(id, target, 9)
 	
 	if (!player)
+	{
+		player = cmd_target(id, target, 9);
 		return PLUGIN_HANDLED
+	}
 	
 	new authid[32], name2[32], authid2[32], name[32]
 	new userid2 = get_user_userid(player)
@@ -326,32 +313,29 @@ public cmdBanIP(id, level, cid)
 	else
 		server_cmd("kick #%d ^"%s %s^";wait;addip ^"%s^" ^"%s^";wait;writeip", userid2, banned, temp, minutes, address)
 
-	new activity = get_pcvar_num(amx_show_activity)
-	if (activity != 0)
+	// Display the message to all clients
+
+	new msg[256];
+	new len;
+	new maxpl = get_maxplayers();
+	for (new i = 1; i <= maxpl; i++)
 	{
-		new players[32], pnum, msg[256], len
-		get_players(players, pnum, "c")
-		
-		for (new i = 0; i < pnum; i++)
+		if (is_user_connected(i) && !is_user_bot(i))
 		{
-			len = format(msg, 255, "%L", players[i], "ADMIN")
-			
-			if (activity == 1)
-				len += copy(msg[len], 255-len, ":")
-			else
-				len += format(msg[len], 255-len, " %s:", name)
-			
-			len += format(msg[len], 255-len, " %L", players[i], "BAN")
-			len += format(msg[len], 255-len, " %s ", name2)
-		
+			len = formatex(msg, charsmax(msg), "%L", i, "BAN");
+			len += formatex(msg[len], charsmax(msg) - len, " %s ", name2);
 			if (nNum)
-				format(msg[len], 255-len, "%L", players[i], "FOR_MIN", minutes)
+			{
+				formatex(msg[len], charsmax(msg) - len, "%L", i, "FOR_MIN", minutes);
+			}
 			else
-				format(msg[len], 255-len, "%L", players[i], "PERM")
-			
-			client_print(players[i], print_chat, "%s", msg)
+			{
+				formatex(msg[len], charsmax(msg) - len, "%L", i, "PERM");
+			}
+			show_activity_id(i, id, name, msg);
 		}
 	}
+
 	console_print(id, "[AMXX] %L", id, "CLIENT_BANNED", name2)
 	
 	return PLUGIN_HANDLED
@@ -382,11 +366,8 @@ public cmdSlay(id, level, cid)
 	
 	log_amx("Cmd: ^"%s<%d><%s><>^" slay ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2)
 
-	switch (get_pcvar_num(amx_show_activity))
-	{
-		case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_SLAY_2", name, name2)
-		case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_SLAY_1", name2)
-	}
+	show_activity_key("ADMIN_SLAY_1", "ADMIN_SLAY_2", name, name2);
+
 	console_print(id, "[AMXX] %L", id, "CLIENT_SLAYED", name2)
 	
 	return PLUGIN_HANDLED
@@ -420,11 +401,8 @@ public cmdSlap(id, level, cid)
 	
 	log_amx("Cmd: ^"%s<%d><%s><>^" slap with %d damage ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, damage, name2, get_user_userid(player), authid2)
 
-	switch (get_pcvar_num(amx_show_activity))
-	{
-		case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_SLAP_2", name, name2, damage)
-		case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_SLAP_1", name2, damage)
-	}
+	show_activity_key("ADMIN_SLAP_1", "ADMIN_SLAP_2", name, name2, damage);
+
 	console_print(id, "[AMXX] %L", id, "CLIENT_SLAPED", name2, damage)
 	
 	return PLUGIN_HANDLED
@@ -454,11 +432,7 @@ public cmdMap(id, level, cid)
 	get_user_authid(id, authid, 31)
 	get_user_name(id, name, 31)
 	
-	switch (get_pcvar_num(amx_show_activity))
-	{
-		case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_MAP_2", name, arg)
-		case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_MAP_1", arg)
-	}
+	show_activity_key("ADMIN_MAP_1", "ADMIN_MAP_2", name, arg);
 	
 	log_amx("Cmd: ^"%s<%d><%s><>^" changelevel ^"%s^"", name, get_user_userid(id), authid, arg)
 	
@@ -545,29 +519,26 @@ public cmdCvar(id, level, cid)
 	set_cvar_string(arg, arg2)
 	
 	
-	new activity = get_pcvar_num(amx_show_activity)
-	if (activity != 0)
-	{
-		new players[32], pnum, admin[64], cvar_val[64], len
-		get_players(players, pnum, "c")
-		
-		for (new i = 0; i < pnum; i++)
-		{
-			len = format(admin, 255, "%L", players[i], "ADMIN")
-			
-			if (activity == 1)
-				len += copy(admin[len], 255-len, ":")
-			else
-				len += format(admin[len], 255-len, " %s:", name)
+	// Display the message to all clients
 
-			if (get_pcvar_flags(pointer) & FCVAR_PROTECTED || equali(arg,"rcon_password"))
-				format(cvar_val, 63, "*** %L ***", players[i], "PROTECTED")
+	new cvar_val[64];
+	new maxpl = get_maxplayers();
+	for (new i = 1; i <= maxpl; i++)
+	{
+		if (is_user_connected(i) && !is_user_bot(i))
+		{
+			if (get_pcvar_flags(pointer) & FCVAR_PROTECTED || equali(arg, "rcon_password"))
+			{
+				formatex(cvar_val, charsmax(cvar_val), "*** %L ***", i, "PROTECTED");
+			}
 			else
-				copy(cvar_val, 63, arg2)
-			
-			client_print(players[i], print_chat, "%L", players[i], "SET_CVAR_TO", admin, arg, cvar_val)
+			{
+				copy(cvar_val, charsmax(cvar_val), arg2);
+			}
+			show_activity_id(i, id, name, "%L", i, "SET_CVAR_TO", "", arg, cvar_val);
 		}
 	}
+
 	console_print(id, "[AMXX] %L", id, "CVAR_CHANGED", arg, arg2)
 	
 	return PLUGIN_HANDLED
@@ -699,11 +670,7 @@ public cmdCfg(id, level, cid)
 	console_print(id, "[AMXX] Executing file ^"%s^"", arg)
 	server_cmd("exec %s", arg)
 
-	switch(get_pcvar_num(amx_show_activity))
-	{
-		case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_CONF_2", name, arg)
-		case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_CONF_1", arg)
-	}
+	show_activity_key("ADMIN_CONF_1", "ADMIN_CONF_2", name, arg);
 
 	return PLUGIN_HANDLED
 }
@@ -759,25 +726,17 @@ public cmdPause(id, level, cid)
 	
 	console_print(id, "[AMXX] %L", id, g_Paused ? "UNPAUSING" : "PAUSING")
 
-	new activity = get_pcvar_num(amx_show_activity)
-	if (activity != 0)
+	// Display the message to all clients
+
+	new maxpl = get_maxplayers();
+	for (new i = 1; i <= maxpl; i++)
 	{
-		new players[32], pnum, msg[128], len
-		get_players(players, pnum, "c")
-		
-		for (new i = 0; i < pnum; i++)
+		if (is_user_connected(i) && !is_user_bot(i))
 		{
-			len = format(msg, 127, "%L", players[i], "ADMIN")
-			
-			if (activity == 1)
-				len += copy(msg[len], 127-len, ": ")
-			else
-				len += format(msg[len], 127-len, " %s: ", name)
-			
-			format(msg[len], 127-len, "%L", players[i], g_Paused ? "UNPAUSE" : "PAUSE")
-			client_print(players[i], print_chat, "%s server", msg)
+			show_activity_id(i, id, name, "%L server", i, g_Paused ? "UNPAUSE" : "PAUSE");
 		}
 	}
+
 	g_pauseCon = id
 	
 	return PLUGIN_HANDLED
@@ -927,11 +886,7 @@ public cmdLeave(id, level, cid)
 	get_user_name(id, name, 31)
 	log_amx("Kick: ^"%s<%d><%s><>^" leave some group (tag1 ^"%s^") (tag2 ^"%s^") (tag3 ^"%s^") (tag4 ^"%s^")", name, get_user_userid(id), authid, ltags[0], ltags[1], ltags[2], ltags[3])
 
-	switch(get_pcvar_num(amx_show_activity))
-	{
-		case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_LEAVE_2", name, ltags[0], ltags[1], ltags[2], ltags[3])
-		case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_LEAVE_1", ltags[0], ltags[1], ltags[2], ltags[3])
-	} 
+	show_activity_key("ADMIN_LEAVE_1", "ADMIN_LEAVE_2", name, ltags[0], ltags[1], ltags[2], ltags[3]);
 
 	return PLUGIN_HANDLED
 }
@@ -960,11 +915,8 @@ public cmdNick(id, level, cid)
 
 	log_amx("Cmd: ^"%s<%d><%s><>^" change nick to ^"%s^" ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, arg2, name2, get_user_userid(player), authid2)
 
-	switch (get_pcvar_num(amx_show_activity))
-	{
-		case 2: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_NICK_2", name, name2, arg2)
-		case 1: client_print(0, print_chat, "%L", LANG_PLAYER, "ADMIN_NICK_1", name2, arg2)
-	}
+	show_activity_key("ADMIN_NICK_1", "ADMIN_NICK_2", name, name2, arg2);
+
 	console_print(id, "[AMXX] %L", id, "CHANGED_NICK", name2, arg2)
 
 	return PLUGIN_HANDLED

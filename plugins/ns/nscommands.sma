@@ -174,10 +174,9 @@ public cmdRandom(id,level,cid) {
     get_user_authid(id,auth,31);
     get_user_authid(player,auth_targ,31);
     log_amx("Cmd: ^"%s<%d><%s><>^" random ^"%s<%d><%s><>^"",name,get_user_userid(id),auth,  name_targ,get_user_userid(player),auth_targ);
-    switch (get_cvar_num("amx_show_activity")) {
-      case 2: client_print(0,print_chat,"ADMIN %s: random %s",name,name_targ);
-      case 1: client_print(0,print_chat,"ADMIN: random %s",name_targ);
-    }
+	
+	show_activity(id, name, "random %s", name_targ);
+
     client_cmd(player, "%s", g_AutoAssignAck);
   }
   else {
@@ -198,10 +197,9 @@ public cmdRandom(id,level,cid) {
       get_user_name(id,name,31);
       get_user_authid(id,auth,31);
       log_amx("Cmd: ^"%s<%d><%s><>^" random all",name,get_user_userid(id),auth);
-      switch (get_cvar_num("amx_show_activity")) {
-        case 2: client_print(0,print_chat,"ADMIN %s: random all",name);
-        case 1: client_print(0,print_chat,"ADMIN: random all");
-      }
+	  
+	  show_activity(id, name, "random all");
+
       randomStep(1);
     } else {
       client_print(id,print_chat,"[AMXX] There is nobody in the readyroom.");
@@ -242,10 +240,9 @@ public cmdReadyRoom(id,level,cid) {
     get_user_authid(id,auth,31);
     get_user_authid(player,auth_targ,31);
     log_amx("Cmd: ^"%s<%d><%s><>^" ready room ^"%s<%d><%s><>^"",name,get_user_userid(id),auth,  name_targ,get_user_userid(player),auth_targ);
-    switch (get_cvar_num("amx_show_activity")) {
-      case 2: client_print(0,print_chat,"ADMIN %s: ready room %s",name,name_targ);
-      case 1: client_print(0,print_chat,"ADMIN: ready room %s",name_targ);
-    }
+	
+	show_activity(id, name, "ready room %s", name_targ);
+
     client_cmd(player, "%s", g_ReadyRoomAck);
   }
   else {
@@ -264,10 +261,9 @@ public cmdReadyRoom(id,level,cid) {
       get_user_name(id,name,31);
       get_user_authid(id,auth,31);
       log_amx("Cmd: ^"%s<%d><%s><>^" ready room all",name,get_user_userid(id),auth);
-      switch (get_cvar_num("amx_show_activity")) {
-        case 2: client_print(0,print_chat,"ADMIN %s: ready room all",name);
-        case 1: client_print(0,print_chat,"ADMIN: ready room all");
-      }
+	  
+	  show_activity(id, name, "ready room all");
+	  
       rrStep(1);
     } else {
       client_print(id,print_chat,"[AMXX] There is nobody on a team.");
@@ -311,10 +307,9 @@ public cmdTeamTwo(id,level,cid) {
     get_user_authid(id,auth,31);
     get_user_authid(player,auth_targ,31);
     log_amx("Cmd: ^"%s<%d><%s><>^" alien ^"%s<%d><%s><>^"",name,get_user_userid(id),auth,  name_targ,get_user_userid(player),auth_targ);
-    switch (get_cvar_num("amx_show_activity")) {
-      case 2: client_print(0,print_chat,"ADMIN %s: alien %s",name,name_targ);
-      case 1: client_print(0,print_chat,"ADMIN: alien %s",name_targ);
-    }
+	
+	show_activity(id, name, "alien %s", name_targ);
+
     client_cmd(player, "%s", g_TeamTwoAck);
   }
   return PLUGIN_HANDLED_MAIN;
@@ -340,10 +335,9 @@ public cmdTeamOne(id,level,cid) {
     get_user_authid(id,auth,31);
     get_user_authid(player,auth_targ,31);
     log_amx("Cmd: ^"%s<%d><%s><>^" marine ^"%s<%d><%s><>^"",name,get_user_userid(id),auth,  name_targ,get_user_userid(player),auth_targ);
-    switch (get_cvar_num("amx_show_activity")) {
-      case 2: client_print(0,print_chat,"ADMIN %s: marine %s",name,name_targ);
-      case 1: client_print(0,print_chat,"ADMIN: marine %s",name_targ);
-    }
+	
+	show_activity(id, name, "marine %s", name_targ);
+
     client_cmd(player, "%s", g_TeamOneAck);
   }
   return PLUGIN_HANDLED_MAIN;
@@ -365,10 +359,8 @@ public cmdUnComm(id,level,cid) {
     get_user_authid(id,auth,31);
     get_user_authid(comm,auth_targ,31);
     log_amx("Cmd: ^"%s<%d><%s><>^" uncomm ^"%s<%d><%s><>^"",name,get_user_userid(id),auth,  name_targ,get_user_userid(comm),auth_targ);
-    switch (get_cvar_num("amx_show_activity")) {
-      case 2: client_print(0,print_chat,"ADMIN %s: uncomm %s",name,name_targ);
-      case 1: client_print(0,print_chat,"ADMIN: uncomm %s",name_targ);
-    }
+
+	show_activity(id, name, "uncomm %s", name_targ);
 
   } else {
     client_print(id,print_chat,"[AMXX] There is no commander to eject.");

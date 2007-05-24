@@ -90,6 +90,7 @@ new g_menuLayer[33]
 
 new g_coloredMenus
 
+
 public plugin_init()
 {
 	register_plugin("Commands Menu", AMXX_VERSION_STR, "AMXX Dev Team")

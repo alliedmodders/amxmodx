@@ -13,6 +13,7 @@ PAUSED_PLUGIN = Paused %d plugin
 PAUSED_PLUGINS = Paused %d plugins
 UNPAUSED_PLUGIN = Unpaused %d plugin
 UNPAUSED_PLUGINS = Unpaused %d plugins
+CANT_UNPAUSE_PLUGIN = Plugin "%s" is stopped and cannot be unpaused.
 CANT_MARK_MORE = Can't mark more plugins as unpauseable!
 PAUSE_LOADED = Pause Plugins: Loaded plugins
 STOPPED = stopped
@@ -32,6 +33,10 @@ COM_PAUSE_SAVE = ^tsave - saves a list of stopped plugins
 COM_PAUSE_CLEAR = ^tclear - clears a list of stopped plugins
 COM_PAUSE_LIST = ^tlist [id] - lists plugins
 COM_PAUSE_ADD = ^tadd <title> - marks a plugin as unpauseable
+SAVE_PAUSED = Save paused
+COM_PAUSE_SAVE_PAUSED = ^tsave - saves a list of paused plugins
+COM_PAUSE_CLEAR_PAUSED = ^tclear - clears a list of paused plugins
+
 
 [de]
 PAUSE_COULDNT_FIND = Konnte kein Plugin finden, dass mit "%s" uebereinstimmt
@@ -102,6 +107,7 @@ COM_PAUSE_SAVE = ^tsave - snima listu zaustavljenih pluginova
 COM_PAUSE_CLEAR = ^tclear - prazni listu zaustavljenih pluginova
 COM_PAUSE_LIST = ^tlist [id] - lista pluginove
 COM_PAUSE_ADD = ^tadd <title> - zakljucava plugin
+SAVE_STOPPED = Sacuvaj stopirane
 
 [tr]
 PAUSE_COULDNT_FIND = "%s" Buna benzer bir plugin bulunamadi

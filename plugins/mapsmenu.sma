@@ -35,10 +35,7 @@
 #include <amxmodx>
 #include <amxmisc>
 
-#define MAX_MAPS 64
-
 new Array:g_mapName;
-//new g_mapName[MAX_MAPS][32]
 new g_mapNums
 new g_menuPosition[33]
 

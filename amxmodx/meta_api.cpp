@@ -357,6 +357,22 @@ int	C_Spawn(edict_t *pent)
 	hostname = CVAR_GET_POINTER("hostname");
 	mp_timelimit = CVAR_GET_POINTER("mp_timelimit");
 
+	// Fix for crashing on mods that do not have mp_timelimit
+	if (mp_timelimit == NULL)
+	{
+		static cvar_t timelimit_holder;
+
+		timelimit_holder.name = "mp_timelimit";
+		timelimit_holder.string = "0";
+		timelimit_holder.flags = 0;
+		timelimit_holder.value = 0.0;
+
+		CVAR_REGISTER(&timelimit_holder);
+
+		mp_timelimit = &timelimit_holder;
+
+	}
+
 	g_forwards.clear();
 
 	g_log.MapChange();

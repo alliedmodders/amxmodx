@@ -27,8 +27,8 @@ stock EF_ModelIndex(const STRING[])
 stock EF_ModelFrames(modelIndex)
 	return engfunc(EngFunc_ModelFrames, modelIndex);
 
-stock EF_SetSize(const STRING[])
-	return engfunc(EngFunc_SetSize, STRING);
+stock EF_SetSize(const ENTITY, const Float:MIN[3], const Float:MAX[3])
+	return engfunc(EngFunc_SetSize, ENTITY, MIN, MAX);
 stock EF_ChangeLevel(const S1[], const S2[])
 	return engfunc(EngFunc_ChangeLevel, S1, S2);
 stock EF_VecToYaw(const Float:VECTOR[3], &Float:returnValue)

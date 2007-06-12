@@ -106,7 +106,8 @@ enum Ham
 	/**
 	 * Description:		Usually called whenever an entity gets attacked by a hitscan (such as a gun) weapon.
 	 *					Use the get/set tr2 natives in fakemeta to handle the traceresult data.
-	 *					Do not use a handle of 0 as a traceresult in execution, use get_tr_handle(0) instead.
+	 *					Do not use a handle of 0 as a traceresult in execution, use create_tr2() from Fakemeta
+	 *					to pass a custom handle instead.  (Don't forget to free the handle when you're done.)
 	 * Forward params:	function(this, idattacker, Float:damage, Float:direction[3], traceresult, damagebits)
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_TraceAttack, this, idattacker, Float:damage, Float:direction[3], tracehandle, damagebits);

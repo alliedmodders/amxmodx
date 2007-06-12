@@ -149,7 +149,7 @@ static void read_mirror(char *input)
 
 	if (strcmp(dest, CurrentModName)==0)
 	{
-		snprintf(CurrentModName, sizeof(CurrentModName)-1, "%s", dest);
+		snprintf(CurrentModName, sizeof(CurrentModName)-1, "%s", source);
 	}
 
 }

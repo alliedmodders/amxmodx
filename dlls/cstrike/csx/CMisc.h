@@ -58,7 +58,8 @@ struct CPlayer {
 	void restartStats(bool all = true);
 	inline bool IsBot(){
 		const char* auth= (*g_engfuncs.pfnGetPlayerAuthId)(pEdict);
-		return ( auth && !strcmp( auth , "BOT" ) );
+		return ( (auth && !strcmp( auth , "BOT" )) || // AuthID of "BOT"
+				 (pEdict->v.flags & FL_FAKECLIENT));  // FL_FAKECLIENT flag set
 	}
 	inline bool IsAlive(){
 		return ((pEdict->v.deadflag==DEAD_NO)&&(pEdict->v.health>0));

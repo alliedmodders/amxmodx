@@ -67,13 +67,19 @@ void CPlayer::Disconnect(){
 	if ( ignoreBots(pEdict) || !isModuleActive() ) // ignore if he is bot and bots rank is disabled or module is paused
 		return;
 
-	rank->updatePosition( &life );
+	if (rank != 0) // Just a sanity check, FL_FAKECLIENT is notoriously unreliable.
+	{
+		rank->updatePosition( &life );
+	}
+		
 	rank = 0;
 }
 
 void CPlayer::PutInServer(){
 
-	if ( ignoreBots(pEdict) )
+	//if ( ignoreBots(pEdict) )
+	if ( (int)csstats_rankbots->value == 0 &&
+		 IsBot() )
 		return;
 
 	restartStats();

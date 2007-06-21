@@ -137,9 +137,24 @@ void amx_command()
 
 		int ammount = 0;
 
-		for (CList<CCVar>::iterator a = g_cvars.begin(); a; ++a)
+		if (CMD_ARGC() > 2) // Searching for cvars registered to a plugin
 		{
-			print_srvconsole(" [%3d] %-24.23s %-24.23s %-16.15s\n", ++ammount, (*a).getName(), CVAR_GET_STRING((*a).getName()), (*a).getPluginName());
+			const char* targetname = CMD_ARGV(2);
+			size_t len = strlen(targetname);
+			for (CList<CCVar>::iterator a = g_cvars.begin(); a; ++a)
+			{
+				if (strncmp((*a).getPluginName(), targetname, len) == 0)
+				{
+					print_srvconsole(" [%3d] %-24.23s %-24.23s %-16.15s\n", ++ammount, (*a).getName(), CVAR_GET_STRING((*a).getName()), (*a).getPluginName());
+				}
+			}
+		}
+		else // No search
+		{
+			for (CList<CCVar>::iterator a = g_cvars.begin(); a; ++a)
+			{
+				print_srvconsole(" [%3d] %-24.23s %-24.23s %-16.15s\n", ++ammount, (*a).getName(), CVAR_GET_STRING((*a).getName()), (*a).getPluginName());
+			}
 		}
 		
 		print_srvconsole("%d cvars\n", ammount);
@@ -154,13 +169,29 @@ void amx_command()
 
 		CmdMngr::iterator a = g_commands.begin(CMD_ConsoleCommand);
 
-		while (a)
+		if (CMD_ARGC() > 2) // Searching for commands registered to a plugin
 		{
-			UTIL_GetFlags(access, (*a).getFlags());
-			print_srvconsole(" [%3d] %-24.23s %-16.15s %-8.7s %-16.15s\n", ++ammount, (*a).getCmdLine(), access, (*a).getCmdType(), (*a).getPlugin()->getName());
-			++a;
+			const char* targetname = CMD_ARGV(2);
+			size_t len = strlen(targetname);
+			while (a)
+			{
+				if (strncmp((*a).getPlugin()->getName(), targetname, len) == 0)
+				{
+					UTIL_GetFlags(access, (*a).getFlags());
+					print_srvconsole(" [%3d] %-24.23s %-16.15s %-8.7s %-16.15s\n", ++ammount, (*a).getCmdLine(), access, (*a).getCmdType(), (*a).getPlugin()->getName());
+				}
+				++a;
+			}
 		}
-
+		else // No search
+		{
+			while (a)
+			{
+				UTIL_GetFlags(access, (*a).getFlags());
+				print_srvconsole(" [%3d] %-24.23s %-16.15s %-8.7s %-16.15s\n", ++ammount, (*a).getCmdLine(), access, (*a).getCmdType(), (*a).getPlugin()->getName());
+				++a;
+			}
+		}
 		print_srvconsole("%d commands\n",ammount);
 	}
 	else if (!strcmp(cmd, "version")) 
@@ -267,8 +298,8 @@ void amx_command()
 		print_srvconsole("   gpl                    - print the license\n");
 		print_srvconsole("   plugins                - list plugins currently loaded\n");
 		print_srvconsole("   modules                - list modules currently loaded\n");
-		print_srvconsole("   cvars                  - list cvars registered by plugins\n");
-		print_srvconsole("   cmds                   - list commands registered by plugins\n");
+		print_srvconsole("   cvars [ plugin ]       - list cvars registered by plugins\n");
+		print_srvconsole("   cmds [ plugin ]        - list commands registered by plugins\n");
 		print_srvconsole("   pause < plugin >       - pause a running plugin\n");
 		print_srvconsole("   unpause < plugin >     - unpause a previously paused plugin\n");
 	}

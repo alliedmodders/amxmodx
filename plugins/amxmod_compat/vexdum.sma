@@ -395,7 +395,7 @@ public __traceline_set_float(plid, num)
 		case TR_FL_flFraction:
 			set_tr2(g_LastTrace, TraceResult:TR_flFraction, fValue)
 		case TR_FL_flPlaneDist:
-			get_tr2(g_LastTrace, TraceResult:TR_flPlaneDist, fValue)
+			set_tr2(g_LastTrace, TraceResult:TR_flPlaneDist, fValue)
 		default:
 		{
 			log_error(AMX_ERR_NATIVE, "Invalid TR_ parameter")

@@ -89,7 +89,7 @@ public:
 
 	void saveRank( const char* filename );
 	void loadRank( const char* filename );
-	RankStats* findEntryInRank(const char* unique, const char* name );
+	RankStats* findEntryInRank(const char* unique, const char* name , bool isip = false );
 	bool loadCalc(const char* filename, char* error);
 	inline int getRankNum( ) const { return rankNum; }
 	void clear();

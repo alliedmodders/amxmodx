@@ -62,6 +62,7 @@ void CPlayer::PutInServer()
 
 	const char* unique;
 	const char* name = STRING(pEdict->v.netname);
+	bool isip = false;
 	switch((int)tsstats_rank->value) {
 	case 1: 
 		if ( (unique = GETPLAYERAUTHID(pEdict)) == 0 )
@@ -69,16 +70,27 @@ void CPlayer::PutInServer()
 		break;
 	case 2: 
 		unique = ip; 
+		isip = true;
 		break;
 	default: 
 		unique = name;
 	}
-	if ( ( rank = g_rank.findEntryInRank( unique , name ) ) == 0 )
+	if ( ( rank = g_rank.findEntryInRank( unique , name , isip) ) == 0 )
 		ingame = false;
 }
 void CPlayer::Connect(const char* ippp)
 {
 	strcpy(ip,ippp);
+	// Strip the port from the ip
+	for (size_t i = 0; i < sizeof(ip); i++)
+	{
+		if (ip[i] == ':')
+		{
+			ip[i] = '\0';
+			break;
+		}
+	}
+
 }
 
 void CPlayer::restartStats(bool all)

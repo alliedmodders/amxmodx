@@ -146,16 +146,50 @@ void RankSystem::unloadCalc()
 	MF_UnloadAmxScript(&calc.amx , &calc.code);
 }
 
-RankSystem::RankStats* RankSystem::findEntryInRank(const char* unique, const char* name )
+RankSystem::RankStats* RankSystem::findEntryInRank(const char* unique, const char* name, bool isip)
 {
 	RankStats* a = head;
 	
-	while ( a )
+	if (isip) // IP lookups need to strip the port from already saved instances.
+	{         // Otherwise the stats file would be essentially reset.
+	
+		// The IP passed does not contain the port any more for unique
+		size_t iplen = strlen(unique);
+		
+		
+		while ( a )
+		{
+			const char* targetUnique = a->getUnique();
+			if ( strncmp( targetUnique, unique, iplen) == 0 )
+			{
+				// It mostly matches, make sure this isn't a false match
+				// eg: checking 4.2.2.2 would match 4.2.2.24 here.
+				
+				// Get the next character stored in targetUnique
+				char c = targetUnique[iplen];
+				
+				// If c is either a colon or end of line, then this
+				// is a valid match.
+				if (c == ':' ||
+					c == '\0')
+				{
+					// Yes, this is a match.
+					return a;
+				}
+				// Any other case was a false match.
+				
+			}
+		}
+	}
+	else // No special case
 	{
-		if (  strcmp( a->getUnique() ,unique ) == 0 )
-			return a;
+		while ( a )
+		{
+			if (  strcmp( a->getUnique() ,unique ) == 0 )
+				return a;
 
-		a = a->prev;
+			a = a->prev;
+		}
 	}
 	a = new RankStats( unique ,name,this );
 	if ( a == 0 ) return 0;

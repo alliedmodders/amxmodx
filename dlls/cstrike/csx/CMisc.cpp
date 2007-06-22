@@ -85,6 +85,7 @@ void CPlayer::PutInServer(){
 	restartStats();
 	const char* name = STRING(pEdict->v.netname);
 	const char* unique = name;
+	bool isip = false;
 	switch((int)csstats_rank->value) {
 	case 1: 
 		if ( (unique = GETPLAYERAUTHID(pEdict)) == 0 )
@@ -92,13 +93,23 @@ void CPlayer::PutInServer(){
 		break;
 	case 2:
 		unique = ip;
+		isip = true;
 	}
-	rank = g_rank.findEntryInRank( unique , name );
+	rank = g_rank.findEntryInRank( unique , name , isip);
 }
 
 void CPlayer::Connect(const char* address ){
 	bot = IsBot();
 	strcpy(ip,address);
+	// Strip the port from the ip
+	for (size_t i = 0; i < sizeof(ip); i++)
+	{
+		if (ip[i] == ':')
+		{
+			ip[i] = '\0';
+			break;
+		}
+	}
 	rank = 0;
 	clearStats = 0.0f;
 }

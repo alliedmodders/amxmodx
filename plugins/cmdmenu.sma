@@ -215,7 +215,6 @@ public cmdCmdMenu(id, level, cid)
 	}
 
 	g_menuLayer[id] = lvl
-	new flags = get_user_flags(id)
 	g_menuSelectNum[id] = 0
 
 	new a = lvl * MAX_CMDS
@@ -225,7 +224,7 @@ public cmdCmdMenu(id, level, cid)
 	{
 		d = a + c
 		
-		if (g_cmdMisc[d][0] & flags)
+		if (access(id, g_cmdMisc[d][0]))
 		{
 			g_menuSelect[id][g_menuSelectNum[id]++] = d
 		}
@@ -360,11 +359,10 @@ public cmdCvarMenu(id, level, cid)
 	if (!cmd_access(id, level, cid, 1))
 		return PLUGIN_HANDLED
 
-	new flags = get_user_flags(id)
 	g_menuSelectNum[id] = 0
 
 	for (new a = 0; a < g_cvarNum; ++a)
-		if (g_cvarMisc[a][0] & flags)
+		if (access(id, g_cvarMisc[a][0]))
 			g_menuSelect[id][g_menuSelectNum[id]++] = a
 
 	displayCvarMenu(id, g_menuPosition[id] = 0)

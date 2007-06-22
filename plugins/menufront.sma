@@ -189,11 +189,9 @@ displayMenu(id, pos)
 	if (end > g_menusNumber)		// MENUS_NUMBER
 		end = g_menusNumber			// MENUS_NUMBER
 
-	new flags = get_user_flags(id)
-
 	for (new a = start; a < end; ++a)
 	{
-		if ((flags & g_menuAccess[a]) && (is_plugin_loaded(g_menuPlugin[a]) != -1))
+		if (access(id, g_menuAccess[a]) && (is_plugin_loaded(g_menuPlugin[a]) != -1))
 		{
 			keys |= (1<<b)
 			
@@ -250,11 +248,9 @@ clientDisplayMenu(id, pos)
 	if (end > g_clientMenusNumber)			// MENUS_NUMBER
 		end = g_clientMenusNumber			// MENUS_NUMBER
 
-	new flags = get_user_flags(id)
-
 	for (new a = start; a < end; ++a)
 	{
-		if ((flags & g_clientMenuAccess[a]) && (is_plugin_loaded(g_clientMenuPlugin[a]) != -1))
+		if (access(id, g_clientMenuAccess[a]) && (is_plugin_loaded(g_clientMenuPlugin[a]) != -1))
 		{
 			keys |= (1<<b)
 			

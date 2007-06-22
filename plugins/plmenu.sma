@@ -792,7 +792,7 @@ public cmdClcmdMenu(id, level, cid)
 	g_menuSelectNum[id] = 0
 
 	for (new a = 0; a < g_clcmdNum; ++a)
-		if (g_clcmdMisc[a][0] & flags)
+		if (access(id, g_clcmdMisc[a][0]))
 			g_menuSelect[id][g_menuSelectNum[id]++] = a
 
 	g_menuOption[id] = 0

@@ -69,6 +69,9 @@ public plugin_init()
 	format(maps_ini_file, 63, "%s/maps.ini", maps_ini_file);
 
 	if (!file_exists(maps_ini_file))
+		get_cvar_string("mapcyclefile", maps_ini_file, sizeof(maps_ini_file) - 1);
+		
+	if (!file_exists(maps_ini_file))
 		format(maps_ini_file, 63, "mapcycle.txt")
 	
 	load_settings(maps_ini_file)

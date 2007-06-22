@@ -237,10 +237,30 @@ void EventsMngr::parserInit(int msg_type, float* timer, CPlayer* pPlayer, int in
 
 		if (pPlayer)
 		{
-			if (!(*iter).m_FlagPlayer || (pPlayer->IsAlive() ? !(*iter).m_FlagAlive : !(*iter).m_FlagDead))
+			// seriously who writes an if statement like this
+			// if (!(*iter).m_FlagPlayer || (pPlayer->IsAlive() ? !(*iter).m_FlagAlive : !(*iter).m_FlagDead))
+			if (!(*iter).m_FlagPlayer)
 			{
 				(*iter).m_Done = true;
 				continue;
+			}
+			else if ((*iter).m_FlagAlive) // can only be sent to an alive user
+			{
+				if (!pPlayer->IsAlive() ||
+					!pPlayer->ingame) // fix for amb149 - is_user_alive checks ingame status, so this should too
+				{
+					(*iter).m_Done = true;
+					continue;
+				}
+			}
+			else if ((*iter).m_FlagDead) // can only be sent to "dead" users
+			{
+				if (pPlayer->IsAlive() &&
+					pPlayer->ingame) // added to compliment amb149 fix: check both incase there is stale health data
+				{
+					(*iter).m_Done = true;
+					continue;
+				}
 			}
 		}
 		else if (!(*iter).m_FlagWorld)

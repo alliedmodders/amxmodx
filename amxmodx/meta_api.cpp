@@ -61,7 +61,7 @@ plugin_info_t Plugin_info =
 	"AMX Mod X Dev Team",		// author
 	"http://www.amxmodx.org",	// url
 	"AMXX",						// logtag
-	PT_ANYTIME,					// (when) loadable
+	PT_STARTUP,					// (when) loadable
 	PT_ANYTIME,					// (when) unloadable
 };
 

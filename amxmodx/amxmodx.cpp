@@ -1759,7 +1759,7 @@ static cell AMX_NATIVE_CALL get_pcvar_num(AMX *amx, cell *params)
 		return 0;
 	}
 
-	return atoi(ptr->string);
+	return (int)ptr->value;
 }
 
 static cell AMX_NATIVE_CALL get_cvar_num(AMX *amx, cell *params) /* 1 param */
@@ -1777,7 +1777,7 @@ static cell AMX_NATIVE_CALL get_cvar_num(AMX *amx, cell *params) /* 1 param */
 			}
 		}
 	}
-	return atoi(CVAR_GET_STRING(get_amxstring(amx, params[1], 0, ilen)));
+	return (int)CVAR_GET_FLOAT(get_amxstring(amx, params[1], 0, ilen));
 }
 
 static cell AMX_NATIVE_CALL set_pcvar_num(AMX *amx, cell *params)

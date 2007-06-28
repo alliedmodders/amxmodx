@@ -177,6 +177,7 @@ new t_sName[MAX_NAME_LENGTH + 1]                    = ""
 new t_sWpn[MAX_WEAPON_LENGTH + 1]                   = ""
 
 new g_HudSync_EndRound
+new g_HudSync_SpecInfo
 
 //--------------------------------
 // Initialize
@@ -237,34 +238,35 @@ public plugin_init()
 	save_team_chatscore()
 	
 	g_HudSync_EndRound = CreateHudSyncObj()
+	g_HudSync_SpecInfo = CreateHudSyncObj()
 }
 
 public plugin_cfg()
 {
 	new addStast[] = "amx_statscfg add ^"%s^" %s"
 
-	server_cmd(addStast, "Show killer hp&ap", "KillerChat")
-	server_cmd(addStast, "Show Attackers", "ShowAttackers")
-	server_cmd(addStast, "Show Victims", "ShowVictims")
-	server_cmd(addStast, "Show killer", "ShowKiller")
-	server_cmd(addStast, "Show Team Score", "ShowTeamScore")
-	server_cmd(addStast, "Show Total Stats", "ShowTotalStats")
-	server_cmd(addStast, "Show Best Score", "ShowBestScore")
-	server_cmd(addStast, "Show Most Disruptive", "ShowMostDisruptive")
-	server_cmd(addStast, "HUD-stats default", "ShowStats")
-	server_cmd(addStast, "Dist&HS in HUD lists", "ShowDistHS")
-	server_cmd(addStast, "Stats at the end of map", "EndPlayer")
-	server_cmd(addStast, "Top15 at the end of map", "EndTop15")
-	server_cmd(addStast, "Say /hp", "SayHP")
-	server_cmd(addStast, "Say /statsme", "SayStatsMe")
-	server_cmd(addStast, "Say /rankstats", "SayRankStats")
-	server_cmd(addStast, "Say /me", "SayMe")
-	server_cmd(addStast, "Say /rank", "SayRank")
-	server_cmd(addStast, "Say /report", "SayReport")
-	server_cmd(addStast, "Say /score", "SayScore")
-	server_cmd(addStast, "Say /top15", "SayTop15")
-	server_cmd(addStast, "Say /stats", "SayStatsAll")
-	server_cmd(addStast, "Spec. Rank Info", "SpecRankInfo")
+	server_cmd(addStast, "ST_SHOW_KILLER_CHAT", "KillerChat")
+	server_cmd(addStast, "ST_SHOW_ATTACKERS", "ShowAttackers")
+	server_cmd(addStast, "ST_SHOW_VICTIMS", "ShowVictims")
+	server_cmd(addStast, "ST_SHOW_KILLER", "ShowKiller")
+	server_cmd(addStast, "ST_SHOW_TEAM_SCORE", "ShowTeamScore")
+	server_cmd(addStast, "ST_SHOW_TOTAL_STATS", "ShowTotalStats")
+	server_cmd(addStast, "ST_SHOW_BEST_SCORE", "ShowBestScore")
+	server_cmd(addStast, "ST_SHOW_MOST_DISRUPTIVE", "ShowMostDisruptive")
+	server_cmd(addStast, "ST_SHOW_HUD_STATS_DEF", "ShowStats")
+	server_cmd(addStast, "ST_SHOW_DIST_HS_HUD", "ShowDistHS")
+	server_cmd(addStast, "ST_STATS_PLAYER_MAP_END", "EndPlayer")
+	server_cmd(addStast, "ST_STATS_TOP15_MAP_END", "EndTop15")
+	server_cmd(addStast, "ST_SAY_HP", "SayHP")
+	server_cmd(addStast, "ST_SAY_STATSME", "SayStatsMe")
+	server_cmd(addStast, "ST_SAY_RANKSTATS", "SayRankStats")
+	server_cmd(addStast, "ST_SAY_ME", "SayMe")
+	server_cmd(addStast, "ST_SAY_RANK", "SayRank")
+	server_cmd(addStast, "ST_SAY_REPORT", "SayReport")
+	server_cmd(addStast, "ST_SAY_SCORE", "SayScore")
+	server_cmd(addStast, "ST_SAY_TOP15", "SayTop15")
+	server_cmd(addStast, "ST_SAY_STATS", "SayStatsAll")
+	server_cmd(addStast, "ST_SPEC_RANK", "SpecRankInfo")
 
 	// Update local configuration vars with value in cvars.
 	get_config_cvars()
@@ -287,7 +289,7 @@ set_hudtype_victim(Float:fDuration)
 
 set_hudtype_specmode()
 {
-	set_hudmessage(255, 255, 255, 0.02, 0.87, 2, 0.05, 0.1, 0.01, 3.0, -1)
+	set_hudmessage(255, 255, 255, 0.02, 0.96, 2, 0.05, 0.1, 0.01, 3.0, -1)
 }
 
 #if defined STATSX_DEBUG
@@ -1677,7 +1679,7 @@ public eventShowRank(id)
 			iRankMax = get_statsnum()
 			
 			set_hudtype_specmode()
-			show_hudmessage(id, "%L", id, "X_RANK_IS", t_sName, iRankPos, iRankMax)
+			ShowSyncHudMsg(id, g_HudSync_SpecInfo, "%L", id, "X_RANK_IS", t_sName, iRankPos, iRankMax)
 		}
 	}
 	

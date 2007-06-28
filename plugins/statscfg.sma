@@ -35,7 +35,7 @@
 #include <amxmodx>
 #include <amxmisc>
 
-#define MAX_MENU_DATA 64
+#define MAX_MENU_DATA 72
 
 new g_menuData[MAX_MENU_DATA][32]
 new g_menuDataVar[MAX_MENU_DATA][32]
@@ -218,7 +218,13 @@ displayCfgMenu(id, pos)
 	for (new a = start; a < end; ++a)
 	{
 		keys |= (1<<k)
-		len += format(menu_body[len], 511-len, g_coloredMenus ? "%d. %s\y\R%L^n\w" : "%d. %s %L^n", ++k, g_menuData[a], id, get_xvar_num(g_menuDataId[a]) ? "ON" : "OFF")
+		/* Backwards compatibility hack - if the name starts with ST_, assume it is translation safe! */
+		if (equal(g_menuData[a], "ST_", 3))
+		{
+			len += format(menu_body[len], 511-len, g_coloredMenus ? "%d. %L\y\R%L^n\w" : "%d. %L %L^n", ++k, id, g_menuData[a], id, get_xvar_num(g_menuDataId[a]) ? "ON" : "OFF")
+		} else {
+			len += format(menu_body[len], 511-len, g_coloredMenus ? "%d. %s\y\R%L^n\w" : "%d. %L %L^n", ++k, g_menuData[a], id, get_xvar_num(g_menuDataId[a]) ? "ON" : "OFF")
+		}
 	}
 	
 	if (g_menuDataNum == 0)

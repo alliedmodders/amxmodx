@@ -206,35 +206,35 @@ public plugin_cfg()
 {
 	new g_addStast[] = "amx_statscfg add ^"%s^" %s"
 	
-	server_cmd(g_addStast, "MultiKill", "MultiKill")
-	server_cmd(g_addStast, "MultiKillSound", "MultiKillSound")
-	server_cmd(g_addStast, "Bomb Planting", "BombPlanting")
-	server_cmd(g_addStast, "Bomb Defusing", "BombDefusing")
-	server_cmd(g_addStast, "Bomb Planted", "BombPlanted")
-	server_cmd(g_addStast, "Bomb Defuse Succ.", "BombDefused")
-	server_cmd(g_addStast, "Bomb Def. Failure", "BombFailed")
-	server_cmd(g_addStast, "Bomb PickUp", "BombPickUp")
-	server_cmd(g_addStast, "Bomb Drop", "BombDrop")
-	server_cmd(g_addStast, "Bomb Count Down", "BombCountVoice")
-	server_cmd(g_addStast, "Bomb Count Down (def)", "BombCountDef")
-	server_cmd(g_addStast, "Bomb Site Reached", "BombReached")
-	server_cmd(g_addStast, "Italy Bonus Kill", "ItalyBonusKill")
-	server_cmd(g_addStast, "Last Man", "LastMan")
-	server_cmd(g_addStast, "Knife Kill", "KnifeKill")
-	server_cmd(g_addStast, "Knife Kill Sound", "KnifeKillSound")
-	server_cmd(g_addStast, "Grenade Kill", "GrenadeKill")
-	server_cmd(g_addStast, "Grenade Suicide", "GrenadeSuicide")
-	server_cmd(g_addStast, "HeadShot Kill", "HeadShotKill")
-	server_cmd(g_addStast, "HeadShot Kill Sound", "HeadShotKillSound")
-	server_cmd(g_addStast, "Round Counter", "RoundCounter")
-	server_cmd(g_addStast, "Round Counter Sound", "RoundCounterSound")
-	server_cmd(g_addStast, "Killing Streak", "KillingStreak")
-	server_cmd(g_addStast, "Killing Streak Sound", "KillingStreakSound")
-	server_cmd(g_addStast, "Enemy Remaining", "EnemyRemaining")
-	server_cmd(g_addStast, "Double Kill", "DoubleKill")
-	server_cmd(g_addStast, "Double Kill Sound", "DoubleKillSound")
-	server_cmd(g_addStast, "Player Name", "PlayerName")
-	server_cmd(g_addStast, "First Blood Sound", "FirstBloodSound")
+	server_cmd(g_addStast, "ST_MULTI_KILL", "MultiKill")
+	server_cmd(g_addStast, "ST_MULTI_KILL_SOUND", "MultiKillSound")
+	server_cmd(g_addStast, "ST_BOMB_PLANTING", "BombPlanting")
+	server_cmd(g_addStast, "ST_BOMB_DEFUSING", "BombDefusing")
+	server_cmd(g_addStast, "ST_BOMB_PLANTED", "BombPlanted")
+	server_cmd(g_addStast, "ST_BOMB_DEF_SUCC", "BombDefused")
+	server_cmd(g_addStast, "ST_BOMB_DEF_FAIL", "BombFailed")
+	server_cmd(g_addStast, "ST_BOMB_PICKUP", "BombPickUp")
+	server_cmd(g_addStast, "ST_BOMB_DROP", "BombDrop")
+	server_cmd(g_addStast, "ST_BOMB_CD_VOICE", "BombCountVoice")
+	server_cmd(g_addStast, "ST_BOMB_CD_DEF", "BombCountDef")
+	server_cmd(g_addStast, "ST_BOMB_SITE", "BombReached")
+	server_cmd(g_addStast, "ST_ITALY_BONUS", "ItalyBonusKill")
+	server_cmd(g_addStast, "ST_LAST_MAN", "LastMan")
+	server_cmd(g_addStast, "ST_KNIFE_KILL", "KnifeKill")
+	server_cmd(g_addStast, "ST_KNIFE_KILL_SOUND", "KnifeKillSound")
+	server_cmd(g_addStast, "ST_HE_KILL", "GrenadeKill")
+	server_cmd(g_addStast, "ST_HE_SUICIDE", "GrenadeSuicide")
+	server_cmd(g_addStast, "ST_HS_KILL", "HeadShotKill")
+	server_cmd(g_addStast, "ST_HS_KILL_SOUND", "HeadShotKillSound")
+	server_cmd(g_addStast, "ST_ROUND_CNT", "RoundCounter")
+	server_cmd(g_addStast, "ST_ROUND_CNT_SOUND", "RoundCounterSound")
+	server_cmd(g_addStast, "ST_KILL_STR", "KillingStreak")
+	server_cmd(g_addStast, "ST_KILL_STR_SOUND", "KillingStreakSound")
+	server_cmd(g_addStast, "ST_ENEMY_REM", "EnemyRemaining")
+	server_cmd(g_addStast, "ST_DOUBLE_KILL", "DoubleKill")
+	server_cmd(g_addStast, "ST_DOUBLE_KILL_SOUND", "DoubleKillSound")
+	server_cmd(g_addStast, "ST_PLAYER_NAME", "PlayerName")
+	server_cmd(g_addStast, "ST_FIRST_BLOOD_SOUND", "FirstBloodSound")
 }
 
 public client_putinserver(id)
@@ -297,7 +297,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 
 	if (MultiKill || MultiKillSound)
 	{
-		if (!selfkill && !TK)
+		if (!selfkill && !TK && killer)
 		{
 			g_multiKills[killer][0]++ 
 			g_multiKills[killer][1] += headshot
@@ -535,30 +535,30 @@ public setTeam(id)
 
 public showStatus(id)
 {
-	if (PlayerName)
+	if(!is_user_bot(id) && is_user_connected(id) && PlayerName) 
 	{
 		new name[32], pid = read_data(2)
-		
+	
 		get_user_name(pid, name, 31)
 		new color1 = 0, color2 = 0
-		
+	
 		if (get_user_team(pid) == 1)
 			color1 = 255
 		else
 			color2 = 255
-			
+		
 		if (g_friend[id] == 1)	// friend
 		{
 			new clip, ammo, wpnid = get_user_weapon(pid, clip, ammo)
 			new wpnname[32]
-			
+		
 			if (wpnid)
 				xmod_get_wpnname(wpnid, wpnname, 31)
-			
-			set_hudmessage(color1, 50, color2, -1.0, 0.60, 1, 0.01, 3.0, 0.01, 0.01)
+		
+			set_hudmessage(color1, 50, color2, -1.0, 0.60, 1, 0.01, 3.0, 0.01, 0.01, -1)
 			ShowSyncHudMsg(id, g_status_sync, "%s -- %d HP / %d AP / %s", name, get_user_health(pid), get_user_armor(pid), wpnname)
 		} else {
-			set_hudmessage(color1, 50, color2, -1.0, 0.60, 1, 0.01, 3.0, 0.01, 0.01)
+			set_hudmessage(color1, 50, color2, -1.0, 0.60, 1, 0.01, 3.0, 0.01, 0.01, -1)
 			ShowSyncHudMsg(id, g_status_sync, "%s", name)
 		}
 	}
@@ -652,8 +652,10 @@ public checkKills(param[])
 }
 
 public chickenKill()
+{
 	if (ItalyBonusKill)
 		announceEvent(0, "KILLED_CHICKEN")
+}
 
 public radioKill()
 {
@@ -671,12 +673,16 @@ announceEvent(id, message[])
 }
 
 public eBombPickUp(id)
+{
 	if (BombPickUp)
 		announceEvent(id, "PICKED_BOMB")
+}
 
 public eBombDrop()
+{
 	if (BombDrop)
 		announceEvent(g_Planter, "DROPPED_BOMB")
+}
 
 public eGotBomb(id)
 {
@@ -731,8 +737,10 @@ public bomb_planted(planter)
 }
 
 public bomb_planting(planter)
+{
 	if (BombPlanting)
 		announceEvent(planter, "PLANT_BOMB")
+}
 
 public bomb_defusing(defuser)
 {
@@ -743,12 +751,16 @@ public bomb_defusing(defuser)
 }
 
 public bomb_defused(defuser)
+{
 	if (BombDefused)
 		announceEvent(defuser, "DEFUSED_BOMB")
+}
 
 public bomb_explode(planter, defuser)
+{
 	if (BombFailed && defuser)
 		announceEvent(defuser, "FAILED_DEFU")
+}
 
 public play_sound(sound[])
 {

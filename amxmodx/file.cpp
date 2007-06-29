@@ -383,8 +383,9 @@ static cell AMX_NATIVE_CALL amx_fwrite_blocks(AMX *amx, cell *params)
 	case 1:
 		{
 			char *a = new char[blocks];
+			char *ptr = a;
 			while (btmp--)
-				*a++ = static_cast<char>(*addr++);
+				*ptr++ = static_cast<char>(*addr++);
 			size_t res = fwrite(a, sizeof(char), blocks, fp);
 			delete [] a;
 			return res;
@@ -392,8 +393,9 @@ static cell AMX_NATIVE_CALL amx_fwrite_blocks(AMX *amx, cell *params)
 	case 2:
 		{
 			short *a = new short[blocks];
+			short *ptr = a;
 			while (btmp--)
-				*a++ = static_cast<short>(*addr++);
+				*ptr++ = static_cast<short>(*addr++);
 			size_t res = fwrite(a, sizeof(short), blocks, fp);
 			delete [] a;
 			return res;
@@ -401,8 +403,9 @@ static cell AMX_NATIVE_CALL amx_fwrite_blocks(AMX *amx, cell *params)
 	case 4:
 		{
 			int *a = new int[blocks];
+			int *ptr = a;
 			while (btmp--)
-				*a++ = static_cast<int>(*addr++);
+				*ptr++ = static_cast<int>(*addr++);
 			size_t res = fwrite(a, sizeof(int), blocks, fp);
 			delete [] a;
 			return res;

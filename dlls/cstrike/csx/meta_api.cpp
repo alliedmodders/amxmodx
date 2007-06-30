@@ -137,7 +137,9 @@ void ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax ){
 
 void PlayerPreThink_Post( edict_t *pEntity ) {
     if ( !isModuleActive() )
-		return;
+	{
+		RETURN_META(MRES_IGNORED);
+	}
 
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
 	if (pPlayer->clearStats && pPlayer->clearStats < gpGlobals->time ){
@@ -296,7 +298,9 @@ void StartFrame_Post(){
 void SetModel_Post(edict_t *e, const char *m){
 
 	if ( !isModuleActive() )
-		return;
+	{
+		RETURN_META(MRES_IGNORED);
+	}
 
 	if ( e->v.owner && m[7]=='w' && m[8]=='_' ){
 		int w_id = 0;

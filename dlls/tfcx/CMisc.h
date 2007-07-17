@@ -22,6 +22,12 @@
 #define PD_SENTRY_OWNER		83	+ LINUXOFFSET
 #define PD_TIMER_OWNER		932	+ LINUXOFFSET
 
+// If somehow TFC updates, the following two offsets can be updated by
+// disassembling CBaseEntity::KeyValuePartThree(KeyValueData_s *)
+#define PD_REPLACE_MODEL	170 + LINUXOFFSET
+#define PD_REPLACE_SKIN		172 + LINUXOFFSET
+
+
 #define MAX_TRACE	13 
 //#define NADE_OFFSET		24
 

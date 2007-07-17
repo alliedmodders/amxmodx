@@ -80,7 +80,31 @@ static cell AMX_NATIVE_CALL TFC_ClearModel(AMX *amx, cell *params) {
 	CHECK_PLAYER(iIndex)
 
 	edict_t* pPlayer = INDEXENT(iIndex);
+	
+	if (pPlayer->pvPrivateData == NULL)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Player has no private data, cannot clear model!");
+		return 0;
+	}
 
+	// PD_REPLACE_MODEL is the string_t for the replacement model
+	// setting it to 0 will reset the model properly
+	*( (int*)pPlayer->pvPrivateData + PD_REPLACE_MODEL) = 0;
+
+	// PD_REPLACE_SKIN is the integer setting for the skin, by default
+	// it is 0.
+	*( (int*)pPlayer->pvPrivateData + PD_REPLACE_SKIN) = 0;
+
+	return 1;
+	
+	/*
+	// the old, buggy method here
+	int iIndex = params[1];
+  
+	CHECK_PLAYER(iIndex)
+
+	edict_t* pPlayer = INDEXENT(iIndex);
+	
 	char szModel[32];
 	memset(szModel, 0x0, strlen(szModel));
 
@@ -135,8 +159,9 @@ static cell AMX_NATIVE_CALL TFC_ClearModel(AMX *amx, cell *params) {
 	(gpGamedllFuncs->dllapi_table->pfnKeyValue)(pPlayer, &pkvd2);
 
 	(g_engfuncs.pfnSetClientKeyValue)(iIndex, (g_engfuncs.pfnGetInfoKeyBuffer)(pPlayer), "model", szModel);
-
+	
 	return 1;
+	*/
 }
 // Vexd end :)
 

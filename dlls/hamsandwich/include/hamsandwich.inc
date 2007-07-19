@@ -55,16 +55,32 @@
 
 /**
  * Hooks the virtual table for the specified entity class.
- * An example would be: RegisterHam(Ham_TakeDamage, "player_hurt", "player");
+ * An example would be: RegisterHam(Ham_TakeDamage, "player", "player_hurt");
  * Look at the Ham enum for parameter lists.
  *
  * @param function		The function to hook.
+ * @param EntityClass	The entity classname to hook.
  * @param callback		The forward to call.
- * @param entity		The entity classname to hook.
  * @param post			Whether or not to forward this in post.
  * @return 				Returns a handle to the forward.  Use EnableHamForward/DisableHamForward to toggle the forward on or off.
  */
-native HamHook:RegisterHam(Ham:function, const EntityClassname[], const Callback[], Post=0);
+native HamHook:RegisterHam(Ham:function, const EntityClass[], const Callback[], Post=0);
+
+/**
+ * Hooks the virtual table for the specified entity's class.
+ * An example would be: RegisterHam(Ham_TakeDamage, id, "player_hurt");
+ * Look at the Ham enum for parameter lists.
+ * Note: This will cause hooks for the entire internal class that the entity is
+ *       not exclusively for the provided entity.
+ *
+ * @param function		The function to hook.
+ * @param EntityId		The entity classname to hook.
+ * @param callback		The forward to call.
+ * @param post			Whether or not to forward this in post.
+ * @return 				Returns a handle to the forward.  Use EnableHamForward/DisableHamForward to toggle the forward on or off.
+ */
+native HamHook:RegisterHamFromEntity(Ham:function, EntityId, const Callback[], Post=0);
+
 
 /**
  * Stops a ham forward from triggering.

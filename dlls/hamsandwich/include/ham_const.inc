@@ -30,6 +30,10 @@
  *   - All functions and forwards (eg: {Register,Execute}Ham[B]) require
  *     the mod to have the pev and base keys in addition to the function
  *     keys for the corresponding mod/operating system in hamdata.ini
+ *
+ *   - Some functions that return booleans may need to be logically ANDed
+ *     to get the results desired.  e.g: if (ExecuteHam(Ham_TS_IsObjective, this) & 0x0000FFFF != 0) { // true.. }
+ *     because the module will return the full integer value.
  */
 
 enum Ham
@@ -830,7 +834,7 @@ enum Ham
 	Ham_TS_CanUsedThroughWalls,
 	
 	/**
-	 * Description:		-
+	 * Description:		Unsure - this was removed in TS 3.0 (and thus is deprecated).
 	 * Forward params:	function(this)
 	 * Return type:		Integer (I think...)
 	 * Execute params:	ExecuteHam(Ham_TS_RespawnWait, this);
@@ -1047,6 +1051,65 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_NS_UpdateOnRemove, this)
 	 */
 	Ham_NS_UpdateOnRemove,
+
+
+	/** Virtual functions added to TS in TS 3 */
+	
+	/**
+	 * Description:		Unsure.
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_TS_GiveSlowMul, this)
+	 */
+	Ham_TS_GiveSlowMul,
+	
+	/**
+	 * Description:		Unsure.  The second paramater is actually a char.
+	 * Forward params:	function(this, Float:someval, someotherval)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_TS_GoSlow, this, Float:someval, someotherval)
+	 */
+	Ham_TS_GoSlow,
+	
+	/**
+	 * Description:		Probably returns true if the user is in slow mo.
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_TS_InSlow, this)
+	 */
+	Ham_TS_InSlow,
+	
+	/**
+	 * Description:		Returns true if the entity is an objective.
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_TS_IsObjective, this)
+	 */
+	Ham_TS_IsObjective,
+	
+	/**
+	 * Description:		Unsure.
+	 * Forward params:	function(this, bool:someval)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_TS_EnableObjective, this, bool:someval)
+	 */
+	Ham_TS_EnableObjective,
+	
+	/**
+	 * Description:		Probably called when the engine call to OnEntFreePrivateData is called (the entity destructor.)
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_TS_OnEntFreePrivateData, this)
+	 */
+	Ham_TS_OnFreeEntPrivateData,
+	
+	/**
+	 * Description:		Probably called when the engine call to ShouldCollide is called.
+	 * Forward params:	function(this, otherEntity)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_TS_ShouldCollide, this, otherEntity)
+	 */
+	Ham_TS_ShouldCollide,
 
 
 	/**

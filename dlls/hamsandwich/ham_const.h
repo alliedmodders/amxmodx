@@ -175,6 +175,13 @@ enum
 	Ham_NS_ResetEntity,
 	Ham_NS_UpdateOnRemove,
 
+	Ham_TS_GiveSlowMul,
+	Ham_TS_GoSlow,
+	Ham_TS_InSlow,
+	Ham_TS_IsObjective,
+	Ham_TS_EnableObjective,
+	Ham_TS_OnFreeEntPrivateData,
+	Ham_TS_ShouldCollide,
 
 	HAM_LAST_ENTRY_DONT_USE_ME_LOL
 };

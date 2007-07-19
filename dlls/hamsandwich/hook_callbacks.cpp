@@ -970,7 +970,6 @@ float Hook_Float_Void(Hook *hook, void *pthis)
 	origret=reinterpret_cast<float (*)(void*)>(hook->func)(pthis);
 #endif
 
-	fflush(stdout);
 	POST_START()
 	POST_END()
 
@@ -979,4 +978,31 @@ float Hook_Float_Void(Hook *hook, void *pthis)
 
 	CHECK_RETURN()
 	return ret;
+}
+void Hook_Void_Float_Int(Hook* hook, void* pthis, float f1, int i1)
+{
+	PUSH_VOID()
+
+	MAKE_VECTOR()
+	P_FLOAT(f1)
+	P_INT(i1)
+	
+	PRE_START()
+		, f1, i1
+	PRE_END()
+#if defined _WIN32
+	reinterpret_cast<void (__fastcall*)(void*, int, float, int)>(hook->func)(pthis, 0, f1, i1);
+#elif defined __linux__
+	reinterpret_cast<void (*)(void*, float, int)>(hook->func)(pthis, f1, i1);
+#endif
+
+	POST_START()
+		, f1, i1
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+}
+void Hook_Deprecated(Hook* hook)
+{
 }

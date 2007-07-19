@@ -164,7 +164,7 @@ hook_t hooklist[] =
 	/* The Specialists */
 	{ V("ts_breakablerespawn",		Int_Int) },
 	{ V("ts_canusedthroughwalls",	Int_Void) },
-	{ V("ts_respawnwait",			Int_Void) },
+	{ V("ts_respawnwait",			Deprecated) },
 
 	/* Counter-Strike */
 	{ V("cstrike_restart",			Void_Void) },
@@ -202,6 +202,14 @@ hook_t hooklist[] =
 	{ V("ns_awardkill",				Void_Entvar) },
 	{ V("ns_resetentity",			Void_Void) },
 	{ V("ns_updateonremove",		Void_Void) },
+
+	{ V("ts_giveslowmul",			Void_Void) },
+	{ V("ts_goslow",				Void_Float_Int) },
+	{ V("ts_inslow",				Int_Void) },
+	{ V("ts_isobjective",			Int_Void) },
+	{ V("ts_enableobjective",		Void_Int) },
+	{ V("ts_onfreeentprivatedata",	Void_Void) },
+	{ V("ts_shouldcollide",			Int_Cbase) },
 
 };
 
@@ -307,6 +315,103 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 
 	return reinterpret_cast<cell>(pfwd);
 }
+// RegisterHamFromEntity(Ham:function, EntityId, const Callback[], Post=0);
+static cell AMX_NATIVE_CALL RegisterHamFromEntity(AMX *amx, cell *params)
+{
+	// Make sure the function we're requesting is within bounds
+	int func=params[1];
+	int post=params[4];
+
+	CHECK_FUNCTION(func);
+
+	char *function=MF_GetAmxString(amx, params[3], 0, NULL);
+	int entid=params[2];
+	char classname[64];
+	
+	// Check the entity
+
+	edict_t *Entity=INDEXENT_NEW(entid);
+
+
+	if (Entity->pvPrivateData == NULL)
+	{
+
+		MF_LogError(amx, AMX_ERR_NATIVE,"Failed to retrieve classtype for entity id \"%d\", hook for \"%s\" not active.",entid,function);
+
+		return 0;
+	}
+	void **vtable=GetVTable(Entity->pvPrivateData, Offsets.GetBase());
+
+
+	if (vtable == NULL)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE,"Failed to retrieve vtable for entity id \"%d\", hook for \"%s\" not active.",entid,function);
+
+		return 0;
+	}
+
+	// Verify that the function is valid
+	// Don't fail the plugin if this fails, just emit a normal error
+	int fwd=hooklist[func].makefunc(amx, function);
+
+	if (fwd == -1)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Function %s not found.", function);
+
+		return 0;
+	}
+
+	// We've passed all tests...
+
+	int **ivtable=(int **)vtable;
+
+	void *vfunction=(void *)ivtable[hooklist[func].vtid];
+
+	// Check the list of this function's hooks, see if the function we have is a hook
+
+	CVector<Hook *>::iterator end=hooks[func].end();
+	for (CVector<Hook *>::iterator i=hooks[func].begin();
+		 i!=end;
+		 ++i)
+	{
+		if ((*i)->tramp == vfunction)
+		{
+			// Yes, this function is hooked
+			Forward *pfwd=new Forward(fwd);
+			if (post)
+			{
+				(*i)->post.push_back(pfwd);
+			}
+			else
+			{
+				(*i)->pre.push_back(pfwd);
+			}
+			return reinterpret_cast<cell>(pfwd);
+		}
+	}
+
+	// Note down the classname for the given class
+	// It may very well be wrong (such as lots of TS weapons have the same classname)
+	// but it's the best we can do, and better than nothing.
+	// (only used for display)
+	snprintf(classname, sizeof(classname) - 1, "%s", STRING(Entity->v.classname));
+
+	// If we got here, the function is not hooked
+	Hook *hook=new Hook(vtable, hooklist[func].vtid, hooklist[func].targetfunc, hooklist[func].isvoid, hooklist[func].paramcount, classname);
+	hooks[func].push_back(hook);
+
+	Forward *pfwd=new Forward(fwd);
+	if (post)
+	{
+		hook->post.push_back(pfwd);
+	}
+	else
+	{
+		hook->pre.push_back(pfwd);
+	}
+
+	return reinterpret_cast<cell>(pfwd);
+}
 static cell AMX_NATIVE_CALL ExecuteHam(AMX *amx, cell *params)
 {
 	int func=params[1];
@@ -369,6 +474,7 @@ static cell AMX_NATIVE_CALL EnableHamForward(AMX *amx, cell *params)
 AMX_NATIVE_INFO RegisterNatives[] =
 {
 	{ "RegisterHam",			RegisterHam },
+	{ "RegisterHamFromEntity",	RegisterHamFromEntity },
 	{ "ExecuteHam",				ExecuteHam },
 	{ "ExecuteHamB",			ExecuteHamB },
 	{ "IsHamValid",				IsHamValid },

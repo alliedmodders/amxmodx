@@ -64,6 +64,7 @@ void OnAmxxAttach(void)
 	assert(strcmp(hooklist[Ham_Weapon_ExtractAmmo].name, "weapon_extractammo")==0);
 	assert(strcmp(hooklist[Ham_TS_BreakableRespawn].name, "ts_breakablerespawn")==0);
 	assert(strcmp(hooklist[Ham_NS_UpdateOnRemove].name, "ns_updateonremove")==0);
+	assert(strcmp(hooklist[Ham_TS_ShouldCollide].name, "ts_shouldcollide")==0);
 
 	MF_AddNatives(pdata_natives_safe);
 	if (ReadConfig() > 0)

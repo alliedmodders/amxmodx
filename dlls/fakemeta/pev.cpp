@@ -398,6 +398,45 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 	
 	return 0;
 }
+static cell AMX_NATIVE_CALL amx_set_pev_string(AMX *amx, cell *params)
+{
+	// index, pevdata
+	int index = params[1];
+	CHECK_ENTITY(index);
+	edict_t *pEdict = INDEXENT2(index);
+	int iSwitch = params[2];
+
+	//onto normal cases - sanity check
+	if (iSwitch <= pev_string_start || iSwitch >= pev_absolute_end)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Undefined pev index: %d", iSwitch);
+		return 0;
+	}
+
+	int offs = g_offset_table[iSwitch];
+
+	//sanity check #2
+	if (offs == -1)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Undefined pev index: %d", iSwitch);
+		return 0;
+	}
+
+	entvars_t *v = &(pEdict->v);
+
+	if ( (iSwitch > pev_string_start && iSwitch < pev_string_end)
+				|| (iSwitch > pev_string2_begin && iSwitch < pev_string2_end) ) 
+	{
+		*(string_t *)EDICT_OFFS(v, offs) = params[3];
+	}
+	else 
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Non-string field passed to set_pev_string!");
+		return 0;
+	}
+	
+	return 0;
+}
 
 static cell AMX_NATIVE_CALL amx_pev_valid(AMX *amx, cell *params)
 {
@@ -413,10 +452,20 @@ static cell AMX_NATIVE_CALL amx_pev_valid(AMX *amx, cell *params)
 
 	return 1;
 }
+static cell AMX_NATIVE_CALL amx_pev_serial(AMX* amx, cell* params)
+{
+	int id = static_cast<int>(params[1]);
 
+	CHECK_ENTITY(id);
+	edict_t* ent = INDEXENT(id);
+
+	return ent->serialnumber;
+}
 AMX_NATIVE_INFO pev_natives[] = {
 	{ "pev",			amx_pev },
 	{ "set_pev",		amx_set_pev },
+	{ "set_pev_string",	amx_set_pev_string },
 	{ "pev_valid",		amx_pev_valid },
+	{ "pev_serial",		amx_pev_serial },
 	{NULL,				NULL},
 };

@@ -21,25 +21,71 @@
  #pragma library fakemeta
 #endif
 
-/* Returns entvar data from an entity   Use the pev_* enum to specify which form of data you want returned.
+/**
+ * Returns entvar data from an entity.  Use the pev_* enum (in fakemeta_const.inc) to specify which data you want retrieved.
  *
- * If retrieving strings, you may optionally get a pointer into the global string table. Depending on
- * your situation, there are two ways to do this.
- * 1: This simply gets the pointer.
- *    new ptr = pev(entid, pev_classname)
- * 2: The pointer will be stored in ptr AND the actual string is retrieved.
- *    new ptr, classname[32]
- *    pev(entid, pev_classname, ptr, classname, 31)
+ * @note	This function uses "read_data" style data syntax.  It returns integer values,
+ *				by-references float data, and sets a buffer for string data.
+ *
+ * @note	If retrieving strings, you may optionally get a pointer into the global string table. Depending on
+ * 			your situation, there are two ways to do this.
+ * 			1: This simply gets the pointer.
+ * 			   new ptr = pev(entid, pev_classname)
+ * 			2: The pointer will be stored in ptr AND the actual string is retrieved.
+ * 			   new ptr, classname[32]
+ * 			   pev(entid, pev_classname, ptr, classname, 31)
+ *
+ * @param	_index		The entity index to lookup.
+ * @param	_value		The pev field to lookup (look in fakemeta_const.inc)
  */
 native pev(_index,_value,any:...);
 
-/* Sets entvar data for an entity.  Use the pev_* enum */
+/**
+ * Sets entvar data for an entity.  Use the pev_* enum from fakemeta_const.inc for reference.
+ *
+ * @note	Setting string data will automatically allocate a new string (via AllocString)
+ *			If you have a string already allocated with your own call to AllocString, use
+ *			set_pev_string_ptr instead.
+ *
+ * @param	_index		The entity index to set the value on.
+ * @param	_value		The pev field to set, (look in fakemeta_const.inc)
+ */
 native set_pev(_index,_value,any:...);
 
-/* returns 0 if ent is invalid, >0 if valid
- * (1 == valid, 2 == valid+pvPrivateData valid)
+/**
+ * Use this native to set a pev field to a string that is already allocated (via a function such
+ * as EngFunc_AllocString).
+ *
+ * @note	If you specify _value as anything other than string fields, an error will be thrown.
+ * @note	Pass 0 as the _string field to set it to an empty string.
+ *
+ * @param	_index		The entity index to set the value on.
+ * @param	_value		The pev field to set - MUST be a string field.
+ * @param	_string		The string handle, retrieved from places like AllocString.
+ */
+native set_pev_string(_index, _value, _string)
+
+
+/**
+ * Checks the validity of an entity.
+ *
+ * @param entindex		The entity id to check.
+ *
+ * @return 			0 on invalid entity
+ *						1 on entity is valid
+ *						2 on entity is valid and it has private data (safe to use pdata natives on).
  */
 native pev_valid(entindex);
+
+/**
+ * Returns the serial number for each entity.  The serial number is a unique identity 
+ * generated when an entity is created.
+ * 
+ * @param	entindex	The entity id.
+ *
+ * @return				The serial number for the entity.
+ */
+native pev_serial(entindex);
 
 /* Returns any global variable inside globalvars_t structure. Use the glb_* enum.
  *
@@ -168,3 +214,26 @@ native set_pdata_string(entity, offset, const source[], realloc=2, linux=-5);
 // Copies the given infoBuffer pointer into out[]
 // An infoBuffer pointer is returned by EngFunc_GetInfoKeyBuffer
 native copy_infokey_buffer(infoBuffer, out[], maxlen);
+
+
+/**
+ * Looks up the sequence for the entity.
+ *
+ * @param entity		The entity id to lookup.
+ * @param name			The sequence name to lookup, case insensitive. ("JUMP" would match "jump")
+ * @param framerate	The framerate of the sequence, if found.
+ * @param loops		Whether or not the sequence loops.
+ * @param groundspeed	The groundspeed setting of the sequence.
+ * @return				-1 on failed lookup, the sequence number on successful lookup.
+ */
+native lookup_sequence(entity, const name[], &Float:framerate = 0.0, &bool:loops = false, &Float:groundspeed = 0.0)
+
+/**
+ * Sets a bone controller with the specified value.
+ *
+ * @param entity		The entity id to set the value on.
+ * @param controller	Which controller to set (0 through 3).
+ * @param value		The value to set it to.
+ * @return				The percentage that the controller is extended (0.0 through 1.0)
+ */
+native Float:set_controller(entity, controller, Float:value)

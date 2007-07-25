@@ -148,6 +148,10 @@ public actionMenu(id, key)
 					g_Modified = 1
 					unpause("ac", file)
 				}
+				case 's':
+				{
+					client_print(id, print_chat, "%L", id, "CANT_UNPAUSE_PLUGIN", file);
+				}
 			}
 			
 			displayMenu(id, g_menuPos[id])
@@ -234,8 +238,8 @@ displayMenu(id, pos)
 		}
 	}
 	
-	len += format(menu_body[len], 511-len, "^n7. %L^n", id, "CLEAR_STOPPED")
-	len += format(menu_body[len], 511-len, g_coloredMenus ? "8. %L \y\R%s^n\w" : "8. %L %s^n", id, "SAVE_STOPPED", g_Modified ? "*" : "")
+	len += format(menu_body[len], 511-len, "^n7. %L^n", id, "CLEAR_PAUSED")
+	len += format(menu_body[len], 511-len, g_coloredMenus ? "8. %L \y\R%s^n\w" : "8. %L %s^n", id, "SAVE_PAUSED", g_Modified ? "*" : "")
 
 	if (end != datanum)
 	{
@@ -403,9 +407,7 @@ public cmdPlugin(id, level, cid)
 			}
 			else
 			{
-				// TODO: change this to let out an error that the plugin is stopped
-				//       need language keys for this first!  Use old message for now
-				console_print(id, "%L", id, "PAUSE_COULDNT_FIND", arg)
+				console_print(id, "%L", id, "CANT_UNPAUSE_PLUGIN", arg)
 			}
 		}
 		else
@@ -475,8 +477,8 @@ public cmdPlugin(id, level, cid)
 		console_print(id, "%L", id, "COM_PAUSE_STOP")
 		console_print(id, "%L", id, "COM_PAUSE_PAUSE")
 		console_print(id, "%L", id, "COM_PAUSE_ENABLE")
-		console_print(id, "%L", id, "COM_PAUSE_SAVE")
-		console_print(id, "%L", id, "COM_PAUSE_CLEAR")
+		console_print(id, "%L", id, "COM_PAUSE_SAVE_PAUSED")
+		console_print(id, "%L", id, "COM_PAUSE_CLEAR_PAUSED")
 		console_print(id, "%L", id, "COM_PAUSE_LIST")
 		console_print(id, "%L", id, "COM_PAUSE_ADD")
 	}

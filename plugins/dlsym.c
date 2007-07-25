@@ -37,6 +37,7 @@ int main(int argc, char **argv)
 	} else {
 		printf("Shared module failed to load: %s\n", dlerror());
 	}
-	return 0;
+	
+	exit(0);
 }
 

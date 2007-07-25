@@ -3124,6 +3124,7 @@ static cell AMX_NATIVE_CALL is_module_loaded(AMX *amx, cell *params)
 }
 
 // native is_plugin_loaded(const name[]);
+// 1.8 changed to: is_plugin_loaded(const name[], bool:usefilename=false);
 static cell AMX_NATIVE_CALL is_plugin_loaded(AMX *amx, cell *params)
 {
 	// param1: name
@@ -3131,12 +3132,29 @@ static cell AMX_NATIVE_CALL is_plugin_loaded(AMX *amx, cell *params)
 	char *name = get_amxstring(amx, params[1], 0, len);
 	int id = 0;
 	
-	for (CPluginMngr::iterator iter = g_plugins.begin(); iter; ++iter)
+	if (params[0] / sizeof(cell) == 1 || // compiled pre-1.8 - assume plugin's registered name
+		params[2] == 0) // compiled post 1.8 - wants plugin's registered name
 	{
-		if (stricmp((*iter).getTitle(), name) == 0)
-			return id;
-		
-		++id;
+		// searching for registered plugin name
+		for (CPluginMngr::iterator iter = g_plugins.begin(); iter; ++iter)
+		{
+			if (stricmp((*iter).getTitle(), name) == 0)
+				return id;
+			
+			++id;
+		}
+	}
+	else
+	{
+		// searching for filename
+		// filename search is case sensitive
+		for (CPluginMngr::iterator iter = g_plugins.begin(); iter; ++iter)
+		{
+			if (strcmp((*iter).getName(), name) == 0)
+				return id;
+				
+			++id;
+		}
 	}
 	
 	return -1;

@@ -191,7 +191,9 @@ displayMenu(id, pos)
 
 	for (new a = start; a < end; ++a)
 	{
-		if (access(id, g_menuAccess[a]) && (is_plugin_loaded(g_menuPlugin[a]) != -1))
+		if ( access(id, g_menuAccess[a]) && 
+			((is_plugin_loaded(g_menuPlugin[a]) != -1) ||			// search plugins for registered name
+			 (is_plugin_loaded(g_menuPlugin[a], true) != -1)))	// search plugins for filename
 		{
 			keys |= (1<<b)
 			
@@ -250,7 +252,9 @@ clientDisplayMenu(id, pos)
 
 	for (new a = start; a < end; ++a)
 	{
-		if (access(id, g_clientMenuAccess[a]) && (is_plugin_loaded(g_clientMenuPlugin[a]) != -1))
+		if ( access(id, g_clientMenuAccess[a]) && 
+			((is_plugin_loaded(g_clientMenuPlugin[a]) != -1) ||			// search plugins for registered name
+			 (is_plugin_loaded(g_clientMenuPlugin[a], true) != -1)))		// search plugins for file name
 		{
 			keys |= (1<<b)
 			
@@ -350,8 +354,8 @@ public plugin_init()
 	register_clcmd("amxmodmenu", "cmdMenu", ADMIN_MENU, "- displays menus")
 	register_clcmd("amx_menu", "clientCmdMenu", 0, "- displays menus available to client")
 
-	register_srvcmd("amx_addmenuitem", "addmenuitem_cmd", 0, "<menu text> <menu command> <access flags> <plugin name> - Add a menu item to Menus Front-End")
-	register_srvcmd("amx_addclientmenuitem", "addclientmenuitem_cmd", 0, "<menu text> <menu command> <access flags> <plugin name> - Add a menu item to Client Menus Front-End")
+	register_srvcmd("amx_addmenuitem", "addmenuitem_cmd", 0, "<menu text> <menu command> <access flags> <plugin name | plugin filename> - Add a menu item to Menus Front-End")
+	register_srvcmd("amx_addclientmenuitem", "addclientmenuitem_cmd", 0, "<menu text> <menu command> <access flags> <plugin name | plugin filename> - Add a menu item to Client Menus Front-End")
 
 	g_coloredMenus = colored_menus()
 

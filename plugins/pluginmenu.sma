@@ -80,11 +80,11 @@ public plugin_init()
 // Add these menus to the amxmodmenu
 public plugin_cfg()
 {
-	new PluginName[64];
+	new PluginFileName[64];
 	
-	get_plugin(-1,"",0,PluginName,sizeof(PluginName)-1);
-	AddMenuItem("Plugin Cvars", "amx_plugincvarmenu", ADMIN_CVAR, PluginName);
-	AddMenuItem("Plugin Commands", "amx_plugincmdmenu", ADMIN_MENU, PluginName);
+	get_plugin(-1, PluginFileName, charsmax(PluginFileName));
+	AddMenuItem("Plugin Cvars", "amx_plugincvarmenu", ADMIN_CVAR, PluginFileName);
+	AddMenuItem("Plugin Commands", "amx_plugincmdmenu", ADMIN_MENU, PluginFileName);
 }
 
 // Reset all fields for each client as they connect.

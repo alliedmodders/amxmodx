@@ -604,9 +604,23 @@ native get_module(id, name[], nameLen, author[], authorLen, version[], versionLe
 /* Returns number of currently registered modules */
 native get_modulesnum();
 
-/* Checks whether a plugin is loaded. If it is not, the return value is -1, otherwise
-* the return value is the plugin id. The function is case insensitive. */
-native is_plugin_loaded(const name[]);
+/**
+ * Checks whether a plugin is loaded by the given registered name (such as "Admin Base"), or, optionally
+ * the given filename ("admin.amxx").
+ *
+ * @param name			Either the plugin name to lookup, or the plugin filename to lookup.
+ * @param usefilename	Set to true if you want to search for the plugin by the filename, false to search
+ *						by the plugin's registered name.
+ *
+ * @return				Plugin ID of the matching plugin on a successful search, -1 on a failed search.
+ *
+ * @note				Prior to 1.8, this function would only search for plugins registered names, not
+ *						the filename.
+ *
+ * @note				The plugin registered name search is a case insensitive search, however, the plugin
+ *						filename search is case sensitive.
+ */
+native is_plugin_loaded(const name[], bool:usefilename=false);
 
 /* Gets info about plugin by given index.
  * Function returns -1 if plugin doesn't exist with given index. 

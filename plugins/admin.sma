@@ -164,7 +164,7 @@ public addadminfn(id, level, cid)
 		if (containi(arg, "STEAM_0:") == -1)
 		{
 			idtype |= ADMIN_LOOKUP
-			player = cmd_target(id, arg, 10)
+			player = cmd_target(id, arg, CMDTARGET_ALLOW_SELF | CMDTARGET_NO_BOTS)
 		} else {
 			new _steamid[44]
 			static _players[32], _num, _pv
@@ -189,7 +189,7 @@ public addadminfn(id, level, cid)
 	}
 	else if (idtype & ADMIN_NAME)
 	{
-		player = cmd_target(id, arg, 10)
+		player = cmd_target(id, arg, CMDTARGET_ALLOW_SELF | CMDTARGET_NO_BOTS)
 		
 		if (player)
 			idtype |= ADMIN_LOOKUP

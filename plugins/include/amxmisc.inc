@@ -99,7 +99,11 @@ stock access(id,level)
 *  2 - allow yourself
 *  4 - must be alive
 *  8 - can't be bot */
-stock cmd_target(id,const arg[],flags = 1) 
+#define CMDTARGET_OBEY_IMMUNITY (1<<0)
+#define CMDTARGET_ALLOW_SELF	(1<<1)
+#define CMDTARGET_ONLY_ALIVE	(1<<2)
+#define CMDTARGET_NO_BOTS		(1<<3)
+stock cmd_target(id,const arg[],flags = CMDTARGET_OBEY_IMMUNITY) 
 {
 	new player = find_player("bl",arg);
 	if (player) 
@@ -127,9 +131,10 @@ stock cmd_target(id,const arg[],flags = 1)
 #endif
 		return 0;
 	}
-	if (flags & 1) 
+	if (flags & CMDTARGET_OBEY_IMMUNITY) 
 	{
-		if ((get_user_flags(player)&ADMIN_IMMUNITY) && ((flags&2)?(id!=player):true) ) 
+		if ((get_user_flags(player) & ADMIN_IMMUNITY) && 
+			((flags & CMDTARGET_ALLOW_SELF) ? (id != player) : true) ) 
 		{
 			new imname[32];
 			get_user_name(player,imname,31);
@@ -141,7 +146,7 @@ stock cmd_target(id,const arg[],flags = 1)
 			return 0;
 		}
 	}
-	if (flags & 4) 
+	if (flags & CMDTARGET_ONLY_ALIVE) 
 	{
 		if (!is_user_alive(player)) 
 		{
@@ -155,7 +160,7 @@ stock cmd_target(id,const arg[],flags = 1)
 			return 0;
 		}
 	}
-	if (flags & 8) 
+	if (flags & CMDTARGET_NO_BOTS) 
 	{
 		if (is_user_bot(player)) 
 		{

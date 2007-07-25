@@ -466,7 +466,7 @@ public cmdVoteKickBan(id, level, cid)
 	new arg[32]
 	read_argv(1, arg, 31)
 	
-	new player = cmd_target(id, arg, 1)
+	new player = cmd_target(id, arg, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF)
 	
 	if (!player)
 		return PLUGIN_HANDLED

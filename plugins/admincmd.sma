@@ -109,7 +109,7 @@ public cmdKick(id, level, cid)
 
 	new arg[32]
 	read_argv(1, arg, 31)
-	new player = cmd_target(id, arg, 1)
+	new player = cmd_target(id, arg, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF)
 	
 	if (!player)
 		return PLUGIN_HANDLED
@@ -212,7 +212,7 @@ public cmdBan(id, level, cid)
 	read_argv(2, minutes, 7)
 	read_argv(3, reason, 63)
 	
-	new player = cmd_target(id, target, 9)
+	new player = cmd_target(id, target, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_NO_BOTS | CMDTARGET_ALLOW_SELF)
 	
 	if (!player)
 		return PLUGIN_HANDLED
@@ -280,10 +280,11 @@ public cmdBanIP(id, level, cid)
 	read_argv(2, minutes, 7)
 	read_argv(3, reason, 63)
 	
-	new player = cmd_target(id, target, 9)
+	new player = cmd_target(id, target, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_NO_BOTS | CMDTARGET_ALLOW_SELF)
 	
 	if (!player)
 	{
+		// why is this here?
 		player = cmd_target(id, target, 9);
 		return PLUGIN_HANDLED
 	}
@@ -350,7 +351,7 @@ public cmdSlay(id, level, cid)
 	
 	read_argv(1, arg, 31)
 	
-	new player = cmd_target(id, arg, 5)
+	new player = cmd_target(id, arg, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF | CMDTARGET_ONLY_ALIVE)
 	
 	if (!player)
 		return PLUGIN_HANDLED
@@ -381,7 +382,7 @@ public cmdSlap(id, level, cid)
 	new arg[32]
 	
 	read_argv(1, arg, 31)
-	new player = cmd_target(id, arg, 5)
+	new player = cmd_target(id, arg, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF | CMDTARGET_ONLY_ALIVE)
 	
 	if (!player)
 		return PLUGIN_HANDLED
@@ -901,7 +902,7 @@ public cmdNick(id, level, cid)
 	read_argv(1, arg1, 31)
 	read_argv(2, arg2, 31)
 
-	new player = cmd_target(id, arg1, 1)
+	new player = cmd_target(id, arg1, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF)
 	
 	if (!player)
 		return PLUGIN_HANDLED

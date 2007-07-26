@@ -19,14 +19,14 @@
  *
  * @param cellsize		How many cells each entry in the array is.
  * @param reserved		How many blank entries are created immediately when the array is created.  These entries are not valid to read from until called with ArraySet.
- * @return 				Handle to the array.
+ * @return 			Handle to the array.
  */
 native Array:ArrayCreate(cellsize=1, reserved=32);
 
 /**
  * Clears all entries from the array.
  *
- * @param which			The array to clear.
+ * @param which		The array to clear.
  * @return				1 on success, 0 on failure.
  */
 native ArrayClear(Array:which);
@@ -34,7 +34,7 @@ native ArrayClear(Array:which);
 /**
  * Returns the number of elements in the array.
  *
- * @param which			The array to check.
+ * @param which		The array to check.
  * @return				How many elements are in the array.
  */
 native ArraySize(Array:which);
@@ -43,7 +43,7 @@ native ArraySize(Array:which);
  * Returns data within an array.  
  * Make sure the output buffer matches the size the array was created with!
  *
- * @param which			The array to retrieve the item from.
+ * @param which		The array to retrieve the item from.
  * @param item			The item to retrieve (zero-based).
  * @param output		The output buffer to write.
  */
@@ -53,11 +53,11 @@ native ArrayGetArray(Array:which, item, any:output[]);
  * Returns a single cell of data from an array.  
  * Use this only with arrays that were created with a cellsize of 1!
  *
- * @param which			The array to retrieve the item from.
+ * @param which		The array to retrieve the item from.
  * @param item			The item to retrieve (zero-based).
- * @param output		The variable to store the value in.
+ * @return				The value of the cell.
  */
-native ArrayGetCell(Array:which, item, &any:output);
+native any:ArrayGetCell(Array:which, item);
 
 /**
  * Returns a string value from an array.

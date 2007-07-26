@@ -136,13 +136,14 @@ static cell AMX_NATIVE_CALL ArrayGetCell(AMX* amx, cell* params)
 		return 0;
 	}
 
-	if (vec->GetCell(params[2],get_amxaddr(amx, params[3]))!=1)
+	cell ret;
+	if (vec->GetCell(params[2],&ret)!=1)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid cellvector handle provided (%d:%d:%d)", params[1], params[2], vec->Size());
 		return 0;
 	}
 
-	return 1;
+	return ret;
 }
 // ArrayGetString(Array:which, item, any:output[], size);
 static cell AMX_NATIVE_CALL ArrayGetString(AMX* amx, cell* params)

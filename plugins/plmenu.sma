@@ -58,6 +58,10 @@ new g_clcmdNum
 new g_coloredMenus
 new g_cstrike = 0
 
+new Array:g_bantimes;
+new Array:g_slapsettings;
+
+
 public plugin_natives()
 {
 	set_module_filter("module_filter")
@@ -82,6 +86,28 @@ public plugin_init()
 	register_menucmd(register_menuid("Slap/Slay Menu"), 1023, "actionSlapMenu")
 	register_menucmd(register_menuid("Team Menu"), 1023, "actionTeamMenu")
 	register_menucmd(register_menuid("Client Cmds Menu"), 1023, "actionClcmdMenu")
+	
+	
+	g_bantimes = ArrayCreate();
+	// Load up the old default values
+	ArrayPushCell(g_bantimes, 0);
+	ArrayPushCell(g_bantimes, 5);
+	ArrayPushCell(g_bantimes, 10);
+	ArrayPushCell(g_bantimes, 15);
+	ArrayPushCell(g_bantimes, 30);
+	ArrayPushCell(g_bantimes, 45);
+	ArrayPushCell(g_bantimes, 60);
+	
+	
+	g_slapsettings = ArrayCreate();
+	// Old default values
+	ArrayPushCell(g_slapsettings, 0); // First option is ignored - it is slay
+	ArrayPushCell(g_slapsettings, 1);
+	ArrayPushCell(g_slapsettings, 5);
+	
+	
+	register_srvcmd("amx_plmenu_bantimes", "plmenu_setbantimes");
+	register_srvcmd("amx_plmenu_slapdmg", "plmenu_setslapdmg");
 
 	g_coloredMenus = colored_menus()
 
@@ -93,7 +119,56 @@ public plugin_init()
 	if (module_exists("cstrike"))
 		g_cstrike = 1
 }
-
+public plmenu_setbantimes()
+{
+	new buff[32];
+	new args = read_argc();
+	
+	if (args <= 1)
+	{
+		server_print("usage: amx_plmenu_bantimes <time1> [time2] [time3] ...");
+		server_print("   use time of 0 for permanent.");
+		
+		return;
+	}
+	
+	ArrayClear(g_bantimes);
+	
+	for (new i = 1; i < args; i++)
+	{
+		read_argv(i, buff, charsmax(buff));
+		
+		ArrayPushCell(g_bantimes, str_to_num(buff));
+		
+	}
+	
+}
+public plmenu_setslapdmg()
+{
+	new buff[32];
+	new args = read_argc();
+	
+	if (args <= 1)
+	{
+		server_print("usage: amx_plmenu_slapdmg <dmg1> [dmg2] [dmg3] ...");
+		server_print("   slay is automatically set for the first value.");
+		
+		return;
+	}
+	
+	ArrayClear(g_slapsettings);
+	
+	ArrayPushCell(g_slapsettings, 0); // compensate for slay
+	
+	for (new i = 1; i < args; i++)
+	{
+		read_argv(i, buff, charsmax(buff));
+		
+		ArrayPushCell(g_slapsettings, str_to_num(buff));
+		
+	}
+	
+}
 public module_filter(const module[])
 {
 	if (equali(module, "cstrike"))
@@ -121,18 +196,9 @@ public actionBanMenu(id, key)
 			/* BEGIN OF CHANGES BY MISTAGEE ADDED A FEW MORE OPTIONS */
 			
 			++g_menuOption[id]
-			g_menuOption[id] %= 7
+			g_menuOption[id] %= ArraySize(g_bantimes);
 
-			switch (g_menuOption[id])
-			{
-				case 0: g_menuSettings[id] = 0
-				case 1: g_menuSettings[id] = 5
-				case 2: g_menuSettings[id] = 10
-				case 3: g_menuSettings[id] = 15
-				case 4: g_menuSettings[id] = 30
-				case 5: g_menuSettings[id] = 45
-				case 6: g_menuSettings[id] = 60
-			}
+			g_menuSettings[id] = ArrayGetCell(g_bantimes, g_menuOption[id]);
 
 			displayBanMenu(id, g_menuPosition[id])
 		}
@@ -265,8 +331,17 @@ public cmdBanMenu(id, level, cid)
 	if (!cmd_access(id, level, cid, 1))
 		return PLUGIN_HANDLED
 
-	g_menuOption[id] = 1
-	g_menuSettings[id] = 5
+	g_menuOption[id] = 0
+	
+	if (ArraySize(g_bantimes) > 0)
+	{
+		g_menuSettings[id] = ArrayGetCell(g_bantimes, g_menuOption[id]);
+	}
+	else
+	{
+		// should never happen, but failsafe
+		g_menuSettings[id] = 0
+	}
 	displayBanMenu(id, g_menuPosition[id] = 0)
 
 	return PLUGIN_HANDLED
@@ -281,16 +356,12 @@ public actionSlapMenu(id, key)
 		case 7:
 		{
 			++g_menuOption[id]
-			g_menuOption[id] %= 4
 			
-			switch (g_menuOption[id])
-			{
-				case 1: g_menuSettings[id] = 0
-				case 2: g_menuSettings[id] = 1
-				case 3: g_menuSettings[id] = 5
-			}
+			g_menuOption[id] %= ArraySize(g_slapsettings);
 			
-			displaySlapMenu(id, g_menuPosition[id])
+			g_menuSettings[id] = ArrayGetCell(g_slapsettings, g_menuOption[id]);
+			
+			displaySlapMenu(id, g_menuPosition[id]);
 		}
 		case 8: displaySlapMenu(id, ++g_menuPosition[id])
 		case 9: displaySlapMenu(id, --g_menuPosition[id])
@@ -421,7 +492,15 @@ public cmdSlapMenu(id, level, cid)
 		return PLUGIN_HANDLED
 
 	g_menuOption[id] = 0
-	g_menuSettings[id] = 0
+	if (ArraySize(g_slapsettings) > 0)
+	{
+		g_menuSettings[id] = ArrayGetCell(g_slapsettings, g_menuOption[id]);
+	}
+	else
+	{
+		// should never happen, but failsafe
+		g_menuSettings[id] = 0
+	}
 
 	displaySlapMenu(id, g_menuPosition[id] = 0)
 
@@ -786,8 +865,6 @@ public cmdClcmdMenu(id, level, cid)
 {
 	if (!cmd_access(id, level, cid, 1))
 		return PLUGIN_HANDLED
-
-	new flags = get_user_flags(id)
 
 	g_menuSelectNum[id] = 0
 

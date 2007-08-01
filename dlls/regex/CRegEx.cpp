@@ -43,12 +43,49 @@ bool RegEx::isFree(bool set, bool val)
 	}
 }
 
-int RegEx::Compile(const char *pattern)
+int RegEx::Compile(const char *pattern, const char* flags)
 {
 	if (!mFree)
 		Clear();
 
-	re = pcre_compile(pattern, 0, &mError, &mErrorOffset, NULL);
+		
+	int iFlags = 0;
+	
+	if (flags != NULL)
+	{
+		for ( ; *flags != 0; flags++)
+		{
+			switch (*flags)
+			{
+				case 'i':
+				{
+					iFlags |= PCRE_CASELESS;
+					break;
+				}
+				case 'm':
+				{
+					iFlags |= PCRE_MULTILINE;
+					break;
+				}
+				case 's':
+				{
+					iFlags |= PCRE_DOTALL;
+					break;
+				}
+				case 'x':
+				{
+					iFlags |= PCRE_EXTENDED;
+					break;
+				}
+				default:
+				{
+					break;
+				}
+			}
+		}
+	}
+		
+	re = pcre_compile(pattern, iFlags, &mError, &mErrorOffset, NULL);
 
 	if (re == NULL)
 	{
@@ -66,6 +103,8 @@ int RegEx::Match(const char *str)
 
 	if (mFree || re == NULL)
 		return -1;
+		
+	this->ClearMatch();
 
 	//save str
 	subject = new char[strlen(str)+1];
@@ -87,6 +126,16 @@ int RegEx::Match(const char *str)
 	mSubStrings = rc;
 
 	return 1;
+}
+void RegEx::ClearMatch()
+{
+	// Clears match results
+	mErrorOffset = 0;
+	mError = NULL;
+	if (subject)
+		delete [] subject;
+	subject = NULL;
+	mSubStrings = 0;
 }
 
 const char *RegEx::GetSubstring(int s, char buffer[], int max)

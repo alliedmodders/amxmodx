@@ -9,8 +9,9 @@ public:
 	bool isFree(bool set=false, bool val=false);
 	void Clear();
 
-	int Compile(const char *pattern);
+	int Compile(const char *pattern, const char* flags = NULL);
 	int Match(const char *str);
+	void ClearMatch();
 	const char *GetSubstring(int s, char buffer[], int max);
 public:
 	int mErrorOffset;

@@ -3,18 +3,16 @@
 #ifndef __MODULECONFIG_H__
 #define __MODULECONFIG_H__
 
-#include "svn_version.h"
-
 // Module info
 #define MODULE_NAME "NS"
-#define MODULE_VERSION SVN_VERSION
-#define MODULE_AUTHOR "Steve Dudenhoeffer"
+#define MODULE_VERSION "1.8"
+#define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "http://www.amxmodx.org/"
 #define MODULE_LOGTAG "NS"
 #define MODULE_LIBRARY "ns"
 #define MODULE_LIBCLASS ""
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line
-#define MODULE_RELOAD_ON_MAPCHANGE
+// #define MODULE_RELOAD_ON_MAPCHANGE
 
 #ifdef __DATE__
 #define MODULE_DATE __DATE__
@@ -90,7 +88,7 @@
 // #define FN_DispatchUse				DispatchUse					/* pfnUse() */
 // #define FN_DispatchTouch				DispatchTouch				/* pfnTouch() */
 // #define FN_DispatchBlocked			DispatchBlocked				/* pfnBlocked() */
-// #define FN_DispatchKeyValue			DispatchKeyValue			/* pfnKeyValue() */
+#define FN_DispatchKeyValue			 DispatchKeyValue			/* pfnKeyValue() */
 // #define FN_DispatchSave				DispatchSave				/* pfnSave() */
 // #define FN_DispatchRestore			DispatchRestore				/* pfnRestore() */
 // #define FN_DispatchObjectCollsionBox	DispatchObjectCollsionBox	/* pfnSetAbsBox() */
@@ -107,7 +105,7 @@
 // #define FN_ClientUserInfoChanged		ClientUserInfoChanged		/* pfnClientUserInfoChanged()	(wd) Client has updated their setinfo structure */
 #define FN_ServerActivate				ServerActivate				/* pfnServerActivate()			(wd) Server is starting a new map */
 #define FN_ServerDeactivate				ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
-#define FN_PlayerPreThink				PlayerPreThink				/* pfnPlayerPreThink() */
+// #define FN_PlayerPreThink				PlayerPreThink				/* pfnPlayerPreThink() */
 // #define FN_PlayerPostThink			PlayerPostThink				/* pfnPlayerPostThink() */
 // #define FN_StartFrame				StartFrame					/* pfnStartFrame() */
 // #define FN_ParmsNewLevel				ParmsNewLevel				/* pfnParmsNewLevel() */
@@ -122,7 +120,7 @@
 // #define FN_PM_Init					PM_Init						/* pfnPM_Init()				Server version of player movement initialization; (wd) SDK2 */
 // #define FN_PM_FindTextureType		PM_FindTextureType			/* pfnPM_FindTextureType()		(wd) SDK2 */
 // #define FN_SetupVisibility			SetupVisibility				/* pfnSetupVisibility()		Set up PVS and PAS for networking for this client; (wd) SDK2 */
-#define FN_UpdateClientData				UpdateClientData			/* pfnUpdateClientData()		Set up data sent only to specific client; (wd) SDK2 */
+// #define FN_UpdateClientData				UpdateClientData			/* pfnUpdateClientData()		Set up data sent only to specific client; (wd) SDK2 */
 // #define FN_AddToFullPack				AddToFullPack				/* pfnAddToFullPack()			(wd) SDK2 */
 // #define FN_CreateBaseline			CreateBaseline				/* pfnCreateBaseline()			Tweak entity baseline for network encoding allows setup of player baselines too.; (wd) SDK2 */
 // #define FN_RegisterEncoders			RegisterEncoders			/* pfnRegisterEncoders()		Callbacks for network encoding; (wd) SDK2 */
@@ -157,10 +155,10 @@
 // #define FN_ClientPutInServer_Post			ClientPutInServer_Post
 // #define FN_ClientCommand_Post				ClientCommand_Post
 // #define FN_ClientUserInfoChanged_Post		ClientUserInfoChanged_Post
-// #define FN_ServerActivate_Post				ServerActivate_Post
+#define FN_ServerActivate_Post				ServerActivate_Post
 // #define FN_ServerDeactivate_Post				ServerDeactivate_Post
-#define FN_PlayerPreThink_Post					PlayerPreThink_Post
-#define FN_PlayerPostThink_Post					PlayerPostThink_Post
+// #define FN_PlayerPreThink_Post					PlayerPreThink_Post
+// #define FN_PlayerPostThink_Post					PlayerPostThink_Post
 // #define FN_StartFrame_Post					StartFrame_Post
 // #define FN_ParmsNewLevel_Post				ParmsNewLevel_Post
 // #define FN_ParmsChangeLevel_Post				ParmsChangeLevel_Post
@@ -211,7 +209,7 @@
 // #define FN_AngleVectors						AngleVectors
 // #define FN_CreateEntity						CreateEntity
 // #define FN_RemoveEntity						RemoveEntity
-#define FN_CreateNamedEntity					CreateNamedEntity
+// #define FN_CreateNamedEntity					CreateNamedEntity
 // #define FN_MakeStatic						MakeStatic
 // #define FN_EntIsOnFloor						EntIsOnFloor
 // #define FN_DropToFloor						DropToFloor
@@ -395,7 +393,7 @@
 // #define FN_CVarGetString_Post				CVarGetString_Post
 // #define FN_CVarSetFloat_Post					CVarSetFloat_Post
 // #define FN_CVarSetString_Post				CVarSetString_Post
-#define FN_AlertMessage_Post					AlertMessage_Post
+// #define FN_AlertMessage_Post					AlertMessage_Post
 // #define FN_EngineFprintf_Post				EngineFprintf_Post
 // #define FN_PvAllocEntPrivateData_Post		PvAllocEntPrivateData_Post
 // #define FN_PvEntPrivateData_Post				PvEntPrivateData_Post
@@ -456,7 +454,7 @@
 // #define FN_GetPhysicsKeyValue_Post			GetPhysicsKeyValue_Post
 // #define FN_SetPhysicsKeyValue_Post			SetPhysicsKeyValue_Post
 // #define FN_GetPhysicsInfoString_Post			GetPhysicsInfoString_Post
-// #define FN_PrecacheEvent_Post				PrecacheEvent_Post
+#define FN_PrecacheEvent_Post				PrecacheEvent_Post
 // #define FN_PlaybackEvent_Post				PlaybackEvent_Post
 // #define FN_SetFatPVS_Post					SetFatPVS_Post
 // #define FN_SetFatPAS_Post					SetFatPAS_Post

@@ -49,7 +49,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\;..\sdk"
+				AdditionalIncludeDirectories="z:\metamod\metamod;z:\hlsdk\common;z:\hlsdk\engine;z:\hlsdk\dlls;z:\hlsdk\pm_shared"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;ns_amxx_EXPORTS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -142,9 +142,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/I "
 				Optimization="0"
-				AdditionalIncludeDirectories="..\;..\sdk"
+				AdditionalIncludeDirectories="z:\metamod\metamod;z:\hlsdk\common;z:\hlsdk\engine;z:\hlsdk\dlls;z:\hlsdk\pm_shared"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;ns_amxx_EXPORTS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -214,36 +213,133 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="..\CPlayer.cpp"
+				RelativePath="..\amxxapi.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\CSpawn.cpp"
+				RelativePath="..\dllapi.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="2"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;ns_amxx_EXPORTS;$(NoInherit)"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="0"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;ns_amxx_EXPORTS;$(NoInherit)"
+						BasicRuntimeChecks="3"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\engineapi.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\hookedfunctions.cpp"
+				RelativePath="..\GameManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\NMisc.cpp"
+				RelativePath="..\MessageHandler.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\NPData.cpp"
+				RelativePath="..\ParticleManager.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\TitleManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\utils.cpp"
+				>
+			</File>
+			<Filter
+				Name="Natives"
+				>
+				<File
+					RelativePath="..\natives\general.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\natives\memberfuncs.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\natives\particles.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\natives\player.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\natives\player_memory.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\natives\structure.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\natives\weapons.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
+				RelativePath="..\AllocString.h"
+				>
+			</File>
+			<File
 				RelativePath="..\CPlayer.h"
 				>
 			</File>
 			<File
-				RelativePath="..\CSpawn.h"
+				RelativePath="..\CString.h"
+				>
+			</File>
+			<File
+				RelativePath="..\CVector.h"
+				>
+			</File>
+			<File
+				RelativePath="..\FastDelegate.h"
+				>
+			</File>
+			<File
+				RelativePath="..\GameManager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Hash.h"
+				>
+			</File>
+			<File
+				RelativePath="..\LocationManager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\MessageHandler.h"
+				>
+			</File>
+			<File
+				RelativePath="..\NEW_Util.h"
 				>
 			</File>
 			<File
@@ -255,11 +351,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\plugin.h"
+				RelativePath="..\ParticleManager.h"
 				>
 			</File>
 			<File
-				RelativePath="..\svn_version.h"
+				RelativePath="..\sh_list.h"
+				>
+			</File>
+			<File
+				RelativePath="..\SpawnManager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\TitleManager.h"
 				>
 			</File>
 			<File
@@ -268,39 +372,18 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Module SDK"
+			Name="sdk"
 			>
+			<File
+				RelativePath="..\sdk\amxxmodule.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\sdk\amxxmodule.h"
+				>
+			</File>
 			<File
 				RelativePath="..\sdk\moduleconfig.h"
-				>
-			</File>
-			<Filter
-				Name="SDK Base"
-				>
-				<File
-					RelativePath="..\sdk\amxxmodule.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\sdk\amxxmodule.h"
-					>
-				</File>
-			</Filter>
-		</Filter>
-		<Filter
-			Name="Pawn Includes"
-			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
-			>
-			<File
-				RelativePath="..\..\..\plugins\include\ns.inc"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\plugins\include\ns2amx.inc"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\plugins\include\ns_const.inc"
 				>
 			</File>
 		</Filter>

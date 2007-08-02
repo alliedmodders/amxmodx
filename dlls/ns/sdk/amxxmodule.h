@@ -1077,7 +1077,7 @@ void FN_AlertMessage(ALERT_TYPE atype, char *szFmt, ...);
 #endif // FN_AlertMessage
 
 #ifdef FN_EngineFprintf
-void FN_EngineFprintf(void *pfile, char *szFmt, ...);
+void FN_EngineFprintf(FILE *pfile, char *szFmt, ...);
 #endif // FN_EngineFprintf
 
 #ifdef FN_PvAllocEntPrivateData
@@ -1141,11 +1141,11 @@ void FN_GetBonePosition(const edict_t *pEdict, int iBone, float *rgflOrigin, flo
 #endif // FN_GetBonePosition
 
 #ifdef FN_FunctionFromName
-uint32 FN_FunctionFromName(const char *pName);
+unsigned long FN_FunctionFromName(const char *pName);
 #endif // FN_FunctionFromName
 
 #ifdef FN_NameForFunction
-const char *FN_NameForFunction(uint32);
+const char *FN_NameForFunction(unsigned long function);
 #endif // FN_NameForFunction
 
 #ifdef FN_ClientPrintf
@@ -1189,7 +1189,7 @@ CRC32_t FN_CRC32_Final(CRC32_t pulCRC);
 #endif // FN_CRC32_Final
 
 #ifdef FN_RandomLong
-int32 FN_RandomLong(int32 lLow, int32 lHigh);
+long FN_RandomLong(long lLow, long lHigh);
 #endif // FN_RandomLong
 
 #ifdef FN_RandomFloat
@@ -1658,11 +1658,11 @@ void FN_AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...);
 #endif // FN_AlertMessage_Post
 
 #ifdef FN_EngineFprintf_Post
-void FN_EngineFprintf_Post(void *pfile, char *szFmt, ...);
+void FN_EngineFprintf_Post(FILE *pfile, char *szFmt, ...);
 #endif // FN_EngineFprintf_Post
 
 #ifdef FN_PvAllocEntPrivateData_Post
-void *FN_PvAllocEntPrivateData_Post(edict_t *pEdict, int32 cb);
+void *FN_PvAllocEntPrivateData_Post(edict_t *pEdict, long cb);
 #endif // FN_PvAllocEntPrivateData_Post
 
 #ifdef FN_PvEntPrivateData_Post
@@ -1722,11 +1722,11 @@ void FN_GetBonePosition_Post(const edict_t *pEdict, int iBone, float *rgflOrigin
 #endif // FN_GetBonePosition_Post
 
 #ifdef FN_FunctionFromName_Post
-uint32 FN_FunctionFromName_Post(const char *pName);
+unsigned long FN_FunctionFromName_Post(const char *pName);
 #endif // FN_FunctionFromName_Post
 
 #ifdef FN_NameForFunction_Post
-const char *FN_NameForFunction_Post(uint32);
+const char *FN_NameForFunction_Post(unsigned long function);
 #endif // FN_NameForFunction_Post
 
 #ifdef FN_ClientPrintf_Post
@@ -1770,7 +1770,7 @@ CRC32_t FN_CRC32_Final_Post(CRC32_t pulCRC);
 #endif // FN_CRC32_Final_Post
 
 #ifdef FN_RandomLong_Post
-int32 FN_RandomLong_Post(int32 lLow, int32 lHigh);
+long FN_RandomLong_Post(long lLow, long lHigh);
 #endif // FN_RandomLong_Post
 
 #ifdef FN_RandomFloat_Post

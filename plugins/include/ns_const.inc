@@ -1,6 +1,8 @@
 /* NS module constants
- * -
- * (c) 2004, Steve Dudenhoeffer
+ *
+ * by the AMX Mod X Development Team
+ *   Most definitions graciously provided by Flayra
+ *
  * This file is provided as is (no warranties).
  */
 
@@ -9,6 +11,20 @@
 	#endinput
 #endif
 #define NS_CONST_INC
+
+
+enum NSGameplay
+{
+	NSGame_CantTell,		/**< It is too soon to tell (can't find avhgameplay
+								 entity or it doesn't have private data) */
+
+	NSGame_MarineVAlien,	/**< Marine vs Aliens (standard) gameplay */
+	NSGame_MarineVMarine,	/**< Marine vs Marine */
+	NSGame_AlienVAlien,		/**< Alien  vs Alien  */
+
+	NSGame_Unknown,			/**< Can find the gameplay entity, but can't 
+								 determine gameplay type. */
+}
 
 // entity pev->iuser4 fields
 enum {
@@ -122,4 +138,57 @@ enum {
 	HIVETRAIT_DC	= 92,
 	HIVETRAIT_SC	= 93,
 	HIVETRAIT_MC	= 94
+}
+
+enum NSPS_VelShape
+{
+	NSPS_VS_POINT = 1,
+	NSPS_VS_BOX,
+	NSPS_VS_SPHERE,
+	NSPS_VS_BLOB
+
+}
+
+/* Genshape used in ns_set_ps_genshape
+ * NOTE: The following are in the ns.ps file but
+ *       are not listed in the .fgd file.  Use
+ *       at your own risk!
+ *       Line, Triangle, Plane, Cylinder, 
+ *       Cone, Disc, Rectangle and None
+ */
+enum NSPS_GenShape
+{
+	NSPS_GS_POINT = 0,
+	NSPS_GS_LINE,
+	NSPS_GS_TRIANGLE,
+	NSPS_GS_PLANE,
+	NSPS_GS_BOX,
+	NSPS_GS_CYLINDER,
+	NSPS_GS_CONE,
+	NSPS_GS_BLOB,
+	NSPS_GS_DISC,
+	NSPS_GS_RECTANGLE,
+	NSPS_GS_NONE
+}
+enum NSPS_RenderMode
+{
+	NSPS_R_NORMAL = 0,
+	NSPS_R_TRANSCOLOR,
+	NSPS_R_TRANSTEXTURE,
+	NSPS_R_GLOW,
+	NSPS_R_TRANSALPHA,
+	NSPS_R_ADDITIVE
+}
+enum NSPS_Flags
+{
+	NSPS_FL_START_ON = 1,
+	NSPS_FL_PARTICLE_DENSITY = 2,
+	NSPS_FL_FADE_IN = 4,
+	NSPS_FL_FADE_OUT = 8,
+	NSPS_FL_USE_GRAVITY = 16,
+	NSPS_FL_USE_TRI = 32,
+	NSPS_FL_CONSTRAIN_PITCH = 128,
+	NSPS_FL_COLLIDE = 256,
+	NSPS_FL_HI_DETAIL = 512,
+	NSPS_FL_FACE_UP = 1024
 }

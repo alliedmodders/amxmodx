@@ -32,7 +32,6 @@
 */
 
 #include <amxmodx>
-#include <engine>
 #include <ns>
 
 #define START_DISTANCE	32			// The first search distance for finding a free location in the map
@@ -41,68 +40,53 @@
 
 new Float:g_lastcmdtime[33]
 
-public plugin_init() {
+new amx_unstuck_frequency;
+
+public plugin_init() 
+{
 	register_plugin("UnStuck",AMXX_VERSION_STR,"AMXX Dev Team")
-	register_cvar("amx_unstuck_frequency", "4.0")
+	amx_unstuck_frequency=register_cvar("amx_unstuck_frequency", "4.0")
 	register_clcmd("say_team /stuck", "unStuck")
 	register_clcmd("say /stuck", "unStuck")
 	register_clcmd("say_team /unstuck", "unStuck")
 	register_clcmd("say /unstuck", "unStuck")
 }
 
-public unStuck(id) {
-	new Float:minfrequency = get_cvar_float("amx_unstuck_frequency")
+public unStuck(id) 
+{
+	new Float:minfrequency = get_pcvar_float(amx_unstuck_frequency);
 	new Float:elapsedcmdtime = get_gametime() - g_lastcmdtime[id]
-	if ( elapsedcmdtime < minfrequency ) {
+	if ( elapsedcmdtime < minfrequency ) 
+	{
 		client_print(id, print_chat, "[AMXX] You must wait %.1f seconds before trying to free yourself", minfrequency - elapsedcmdtime)
 		return PLUGIN_HANDLED
 	}
 	g_lastcmdtime[id] = get_gametime()
-
-	if (ns_get_mask(id, BLOCKED_MASKS)) {
-		client_print(id, print_chat, "[AMXX] You cannot free yourself while evolving, stunned or webbed")
-		return PLUGIN_CONTINUE
-	}
-
-	new Float:origin[3], Float:new_origin[3], hullsize, distance
-
-	hullsize = getHullSize(id)
-	if (!hullsize) {
-		return PLUGIN_CONTINUE
-	}
-
-	entity_get_vector(id, EV_VEC_origin, origin)
-	distance = START_DISTANCE
-
-	while( distance < 1000 ) {	// 1000 is just incase, should never get anywhere near that
-		for (new i = 0; i < MAX_ATTEMPTS; ++i) {
-			new_origin[0] = random_float(origin[0]-distance,origin[0]+distance)
-			new_origin[1] = random_float(origin[1]-distance,origin[1]+distance)
-			new_origin[2] = random_float(origin[2]-distance,origin[2]+distance)
-
-			if ( trace_hull(new_origin, hullsize, id) == 0 ) {
-				entity_set_origin(id, new_origin)
-				return PLUGIN_CONTINUE
+	
+	new val;
+	
+	// 1=success,0=no valid spot,-1=invalid state,-2=invalid class
+	if ((val=ns_unstick_player(id,START_DISTANCE,MAX_ATTEMPTS))!=1)
+	{
+		switch(val)
+		{
+			case 0:
+			{
+				client_print(id, print_chat, "[AMXX] Couldn't find a free spot to move you too.");
+			}
+			case -1:
+			{
+				client_print(id, print_chat, "[AMXX] You cannot free yourself while stunned or webbed.");
+			}
+			case -2:
+			{
+				client_print(id, print_chat, "[AMXX] You cannot free yourself as a commander or while evolving.");
+			}
+			case -3:
+			{
+				client_print(id, print_chat, "[AMXX] You cannot free yourself as a spectator or from the ready room.");
 			}
 		}
-		distance += START_DISTANCE
 	}
-	client_print(id, print_chat, "[AMXX] Couldn't find a free spot to move you too.")
-	return PLUGIN_CONTINUE
-}
-
-getHullSize(id) {
-	switch (ns_get_class(id)) {
-		case 1,2,3:
-			return HULL_HEAD
-		case 4,6,7,8:
-			return (entity_get_int(id, EV_INT_flags) & FL_DUCKING) ? HULL_HEAD : HULL_HUMAN
-		case 5:
-			return (entity_get_int(id, EV_INT_flags) & FL_DUCKING) ? HULL_HUMAN : HULL_LARGE
-		default: {
-			client_print(id, print_chat, "[AMXX] You cannot free yourself at this time.")
-			return false
-		}
-	}
-	return false
+	return PLUGIN_CONTINUE;
 }

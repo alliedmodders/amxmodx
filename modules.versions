@@ -97,3 +97,8 @@ out = svn_version.h
 folder = dlls/ts/tsfun
 in = svn_version.tpl
 out = svn_version.h
+
+[hamsandwich]
+folder = dlls/hamsandwich
+in = svn_version.tpl
+out = svn_version.h

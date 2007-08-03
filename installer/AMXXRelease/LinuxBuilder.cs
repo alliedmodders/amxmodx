@@ -36,7 +36,7 @@ namespace AMXXRelease
 			chmod.UseShellExecute = false;
 			Process c = Process.Start(chmod);
 			c.WaitForExit();
-			
+			c.Close();
 
 
 			info.Arguments = "zcvf \"" + target + ".tar.gz\" " + file_list;
@@ -44,6 +44,7 @@ namespace AMXXRelease
 
 			Process p = Process.Start(info);
 			p.WaitForExit();
+			p.Close();
 		}
 
 		public override void AmxxPc(string inpath, string args)
@@ -59,6 +60,7 @@ namespace AMXXRelease
 
 			Process p = Process.Start(info);
 			p.WaitForExit();
+			p.Close();
 		}
 
 		public override string GetLibExt()
@@ -94,6 +96,7 @@ namespace AMXXRelease
 
 			p = Process.Start(info);
 			p.WaitForExit();
+			p.Close();
 
 			if (!File.Exists(file))
 			{
@@ -110,10 +113,10 @@ namespace AMXXRelease
 			info.FileName = dlsym;
 			info.Arguments = file;
 			info.UseShellExecute = false;
-			info.RedirectStandardOutput = true;
 
 			p = Process.Start(info);
 			p.WaitForExit();
+			p.Close();
 
 			string output = p.StandardOutput.ReadToEnd();
 			if (output.IndexOf("Handle:") == -1)

@@ -37,8 +37,11 @@ namespace AMXXRelease
 			if (args != null)
 				info.Arguments += " " + args;
 			info.UseShellExecute = false;
+			info.RedirectStandardOutput = true;
+			info.RedirectStandardError = true;
 
 			Process p = Process.Start(info);
+			Console.WriteLine(p.StandardOutput.ReadToEnd() + "\n");
 			p.WaitForExit();
 		}
 
@@ -77,12 +80,18 @@ namespace AMXXRelease
 			info.FileName = m_Cfg.DevenvPath();
 			info.Arguments += "/rebuild " + module.build + " " + module.vcproj + ".vcproj";
 			info.UseShellExecute = false;
+			info.RedirectStandardOutput = true;
+			info.RedirectStandardError = true;
 
 			Process p = Process.Start(info);
+			Console.WriteLine(p.StandardOutput.ReadToEnd());
 			p.WaitForExit();
+			p.Close();
 
 			if (!File.Exists(file))
+			{
 				return null;
+			}
 
 			return file;
 		}

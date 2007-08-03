@@ -35,12 +35,16 @@ namespace AMXXRelease
 			file = ABuilder.PropSlashes(file);
 			if (!m_Cfg.ReadFromFile(file))
 			{
-				Console.WriteLine("Failed to read config, aborting!");
+				Console.WriteLine("Failed to read config, aborting.");
+				Console.WriteLine("Build failed!");
 				return;
 			}
 
 			if (!ValidateConfigPaths())
+			{
+				Console.WriteLine("Build failed!");
 				return;
+			}
 
 			ABuilder builder = null;
 			if ((int)System.Environment.OSVersion.Platform == 128)
@@ -54,7 +58,14 @@ namespace AMXXRelease
 
 			Build build = new Build(m_Cfg);
 
-			builder.Build(m_Cfg, build);
+			if (!builder.Build(m_Cfg, build))
+			{
+				Console.WriteLine("Build failed!");
+			} 
+			else 
+			{
+				Console.WriteLine("Build succeeded!");
+			}
 		}
 
 		private bool ValidateConfigPaths()

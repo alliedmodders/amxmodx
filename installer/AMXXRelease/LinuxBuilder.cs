@@ -117,10 +117,10 @@ namespace AMXXRelease
 			info.RedirectStandardOutput = true;
 
 			p = Process.Start(info);
+			string output = p.StandardOutput.ReadToEnd();
 			p.WaitForExit();
 			p.Close();
 
-			string output = p.StandardOutput.ReadToEnd();
 			if (output.IndexOf("Handle:") == -1)
 				return null;
 

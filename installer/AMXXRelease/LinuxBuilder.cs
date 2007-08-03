@@ -88,6 +88,7 @@ namespace AMXXRelease
 
 			Process p = Process.Start(info);
 			p.WaitForExit();
+			p.Close();
 
 			info.WorkingDirectory = PropSlashes(dir);
 			info.FileName = m_Cfg.DevenvPath();
@@ -113,6 +114,7 @@ namespace AMXXRelease
 			info.FileName = dlsym;
 			info.Arguments = file;
 			info.UseShellExecute = false;
+			info.RedirectStandardOutput = true;
 
 			p = Process.Start(info);
 			p.WaitForExit();

@@ -21,20 +21,17 @@ namespace AMXXRelease
 			m_Mods.Add(core);
 			m_Mods.Add(cstrike);
 
-			if (m_Cfg.MakeOpts().IndexOf("amd64") == -1)
-			{
-				ModDoD dod = new ModDoD();
-				ModEsf esf = new ModEsf();
-				ModNs ns = new ModNs();
-				ModTFC tfc = new ModTFC();
-				ModTs ts = new ModTs();
+			ModDoD dod = new ModDoD();
+			ModEsf esf = new ModEsf();
+			ModNs ns = new ModNs();
+			ModTFC tfc = new ModTFC();
+			ModTs ts = new ModTs();
 
-				m_Mods.Add(dod);
-				m_Mods.Add(esf);
-				m_Mods.Add(ns);
-				m_Mods.Add(tfc);
-				m_Mods.Add(ts);
-			}
+			m_Mods.Add(dod);
+			m_Mods.Add(esf);
+			m_Mods.Add(ns);
+			m_Mods.Add(tfc);
+			m_Mods.Add(ts);
 		}
 
 		public virtual int GetMods()

@@ -59,12 +59,6 @@ namespace AMXXRelease
 
 		private bool ValidateConfigPaths()
 		{
-			if ( !File.Exists( ABuilder.PropSlashes(m_Cfg.CompressPath()) ) )
-			{
-				Console.WriteLine("Failed to find compression program! Check 'compress' option in config.");
-				return false;
-			}
-
 			string source = ABuilder.PropSlashes(m_Cfg.GetSourceTree());
 
 			if (!Directory.Exists(source))

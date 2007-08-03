@@ -35,10 +35,13 @@ namespace AMXXRelease
 				{
 					System.Console.WriteLine("Mod failed to build: " + mod.GetName());
 				}
-				CompressDir(
-					PropSlashes(m_Cfg.OutputPath() + "\\" + m_Cfg.GetReleaseName() + "-" + mod.GetName()), 
-					PropSlashes(m_Cfg.OutputPath() + "\\" + mod.GetName())
-					);
+				if (m_Cfg.CompressPath() != null)
+				{
+					CompressDir(
+						PropSlashes(m_Cfg.OutputPath() + "\\" + m_Cfg.GetReleaseName() + "-" + mod.GetName()), 
+						PropSlashes(m_Cfg.OutputPath() + "\\" + mod.GetName())
+						);
+				}
 			}
 
 			return true;

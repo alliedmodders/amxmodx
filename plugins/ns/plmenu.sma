@@ -117,11 +117,6 @@ stock ExecuteString(id, const string[])
 		engclient_cmd(id, tempbuff[start]);
 	}
 }
-public plugin_natives()
-{
-	set_module_filter("module_filter")
-	set_native_filter("native_filter")
-}
 
 public plugin_init()
 {
@@ -280,21 +275,6 @@ public plmenu_setslapdmg()
 		
 	}
 	
-}
-public module_filter(const module[])
-{
-	if (equali(module, "cstrike"))
-		return PLUGIN_HANDLED
-	
-	return PLUGIN_CONTINUE
-}
-
-public native_filter(const name[], index, trap)
-{
-	if (!trap)
-		return PLUGIN_HANDLED
-		
-	return PLUGIN_CONTINUE
 }
 
 /* Ban menu */

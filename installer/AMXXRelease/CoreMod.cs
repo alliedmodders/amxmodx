@@ -146,6 +146,7 @@ namespace AMXXRelease
 			Module sockets = new Module("sockets");
 			Module regex = new Module("regex");
 			Module nvault = new Module("nvault");
+			Module sammich = new Module("hamsandwich");
 
 			m_Modules.Add(core);
 			m_Modules.Add(mysqlx);
@@ -157,6 +158,7 @@ namespace AMXXRelease
 			m_Modules.Add(regex);
 			m_Modules.Add(nvault);
 			m_Modules.Add(sqlitex);
+			m_Modules.Add(sammich);
 		}
 	}
 }

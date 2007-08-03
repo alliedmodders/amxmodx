@@ -39,10 +39,7 @@ namespace AMXXRelease
 			
 
 
-			if (m_Cfg.MakeOpts().IndexOf("amd64") != -1)
-				info.Arguments = "zcvf \"" + target + "_amd64.tar.gz\" " + file_list;
-			else
-				info.Arguments = "zcvf \"" + target + ".tar.gz\" " + file_list;
+			info.Arguments = "zcvf \"" + target + ".tar.gz\" " + file_list;
 			info.UseShellExecute = false;
 
 			Process p = Process.Start(info);
@@ -66,10 +63,7 @@ namespace AMXXRelease
 
 		public override string GetLibExt()
 		{
-			if (m_Cfg.MakeOpts().IndexOf("amd64") != -1)
-				return "_amd64.so";
-			else
-				return "_i386.so";
+			return "_i386.so";
 		}
 
 		public override string BuildModule(Module module)
@@ -110,8 +104,6 @@ namespace AMXXRelease
 			//Now we need to see if the DL handle is valid!
 			string dlsym_dir = m_Cfg.GetSourceTree() + "\\plugins";
 			string dlsym = dlsym_dir + "\\dlsym";
-			if (m_Cfg.MakeOpts().IndexOf("amd64") != -1)
-				dlsym += "64";
 			dlsym = PropSlashes(dlsym);
 			dlsym_dir = PropSlashes(dlsym_dir);
 			info.WorkingDirectory = dlsym_dir;

@@ -65,6 +65,16 @@ native ns_is_combat();
 native NSGameplay:ns_get_gameplay();
 
 /**
+ * Exact syntax as get_user_team, but should be more accurate.
+ *
+ * @param id	Player id.
+ * @param buff	Buffer to store team name in.
+ * @param len	Buffer length.
+ * @return		The pev_team setting for the player.
+ */
+native ns_get_user_team(id, buff[], len);
+
+/**
  * Send an NS-style popup message.
  * 
  * @param target		The client to receive the message.  Set to 0 to send to everybody.

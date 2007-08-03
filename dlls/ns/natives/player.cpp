@@ -188,6 +188,72 @@ static cell AMX_NATIVE_CALL ns_giveitem(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL ns_get_user_team(AMX* amx, cell* params)
+{
+	CreatePlayerPointer(amx,params[1]);
+
+	if (!player->IsConnected())
+	{
+		return 0;
+	}
+	
+	int team = player->GetPev()->team;
+	
+	if (team > 4 || team < 0)
+	{
+		MF_SetAmxString(amx, params[2], "undefinedteam", params[3]);
+		
+		return 0;
+	}
+	
+	switch (team)
+	{
+		case 0:
+		{
+			// iuser1 means readyroom (I think!)
+			if (player->GetPev()->iuser1 == 0)
+			{
+				MF_SetAmxString(amx, params[2], "undefinedteam", params[3]);
+				
+				return 0;
+			}
+			MF_SetAmxString(amx, params[2], "spectatorteam", params[3]);
+			
+			return 0;
+		}
+		case 1:
+		{
+			MF_SetAmxString(amx, params[2], "marine1team", params[3]);
+			
+			return 1;
+		}
+		case 2:
+		{
+			MF_SetAmxString(amx, params[2], "alien1team", params[3]);
+			
+			return 2;
+		}
+		case 3:
+		{
+			MF_SetAmxString(amx, params[2], "marine2team", params[3]);
+			
+			return 3;
+		}
+		case 4:
+		{
+			MF_SetAmxString(amx, params[2], "alien2team", params[3]);
+			
+			return 4;
+		}
+		default:
+		{
+			break;
+		}
+	}
+	MF_SetAmxString(amx, params[2], "spectatorteam", params[3]);
+	
+	return 0;
+}
 
 AMX_NATIVE_INFO player_natives[] = {
 
@@ -212,6 +278,8 @@ AMX_NATIVE_INFO player_natives[] = {
 	{ "ns_set_fov",				ns_set_fov },
 
 	{ "ns_give_item",			ns_giveitem },
+	
+	{ "ns_get_user_team",		ns_get_user_team },
 
 
 	{ NULL,						NULL }

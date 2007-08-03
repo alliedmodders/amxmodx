@@ -35,6 +35,8 @@
 #include <amxmodx>
 #include <amxmisc>
 
+// This is not a dynamic array because it would be bad for 24/7 map servers.
+#define OLD_CONNECTION_QUEUE 10
 
 new g_pauseCon
 new Float:g_pausAble
@@ -45,6 +47,108 @@ new g_addCvar[] = "amx_cvar add %s"
 new pausable;
 new rcon_password;
 
+// Old connection queue
+new g_Names[OLD_CONNECTION_QUEUE][32];
+new g_SteamIDs[OLD_CONNECTION_QUEUE][32];
+new g_IPs[OLD_CONNECTION_QUEUE][32];
+new g_Access[OLD_CONNECTION_QUEUE];
+new g_Tracker;
+new g_Size;
+
+stock InsertInfo(id)
+{
+	
+	// Scan to see if this entry is the last entry in the list
+	// If it is, then update the name and access
+	// If it is not, then insert it again.
+
+	if (g_Size > 0)
+	{
+		new ip[32]
+		new auth[32];
+
+		get_user_authid(id, auth, charsmax(auth));
+		get_user_ip(id, ip, charsmax(ip), 1/*no port*/);
+
+		new last = 0;
+		
+		if (g_Size < sizeof(g_SteamIDs))
+		{
+			last = g_Size - 1;
+		}
+		else
+		{
+			last = g_Tracker - 1;
+			
+			if (last < 0)
+			{
+				last = g_Size - 1;
+			}
+		}
+		
+		if (equal(auth, g_SteamIDs[last]) &&
+			equal(ip, g_IPs[last])) // need to check ip too, or all the nosteams will while it doesn't work with their illegitimate server
+		{
+			get_user_name(id, g_Names[last], charsmax(g_Names[]));
+			g_Access[last] = get_user_flags(id);
+			
+			return;
+		}
+	}
+	
+	// Need to insert the entry
+	
+	new target = 0;  // the slot to save the info at
+
+	// Queue is not yet full
+	if (g_Size < sizeof(g_SteamIDs))
+	{
+		target = g_Size;
+		
+		++g_Size;
+		
+	}
+	else
+	{
+		target = g_Tracker;
+		
+		++g_Tracker;
+		// If we reached the end of the array, then move to the front
+		if (g_Tracker == sizeof(g_SteamIDs))
+		{
+			g_Tracker = 0;
+		}
+	}
+	
+	get_user_authid(id, g_SteamIDs[target], charsmax(g_SteamIDs[]));
+	get_user_name(id, g_Names[target], charsmax(g_Names[]));
+	get_user_ip(id, g_IPs[target], charsmax(g_IPs[]), 1/*no port*/);
+	
+	g_Access[target] = get_user_flags(id);
+
+}
+stock GetInfo(i, name[], namesize, auth[], authsize, ip[], ipsize, &access)
+{
+	if (i >= g_Size)
+	{
+		abort(AMX_ERR_NATIVE, "GetInfo: Out of bounds (%d:%d)", i, g_Size);
+	}
+	
+	new target = (g_Tracker + i) % sizeof(g_SteamIDs);
+	
+	copy(name, namesize, g_Names[target]);
+	copy(auth, authsize, g_SteamIDs[target]);
+	copy(ip,   ipsize,   g_IPs[target]);
+	access = g_Access[target];
+	
+}
+public client_disconnect(id)
+{
+	if (!is_user_bot(id))
+	{
+		InsertInfo(id);
+	}
+}
 
 public plugin_init()
 {
@@ -58,8 +162,8 @@ public plugin_init()
 	register_concmd("amx_kick", "cmdKick", ADMIN_KICK, "<name or #userid> [reason]")
 	register_concmd("amx_ban", "cmdBan", ADMIN_BAN, "<name or #userid> <minutes> [reason]")
 	register_concmd("amx_banip", "cmdBanIP", ADMIN_BAN, "<name or #userid> <minutes> [reason]")
-	register_concmd("amx_addban", "cmdAddBan", ADMIN_RCON, "<authid or ip> <minutes> [reason]")
-	register_concmd("amx_unban", "cmdUnban", ADMIN_BAN, "<authid or ip>")
+	register_concmd("amx_addban", "cmdAddBan", ADMIN_BAN, "<^"authid^" or ip> <minutes> [reason]")
+	register_concmd("amx_unban", "cmdUnban", ADMIN_BAN, "<^"authid^" or ip>")
 	register_concmd("amx_slay", "cmdSlay", ADMIN_SLAY, "<name or #userid>")
 	register_concmd("amx_slap", "cmdSlap", ADMIN_SLAY, "<name or #userid> [power]")
 	register_concmd("amx_leave", "cmdLeave", ADMIN_KICK, "<tag> [tag] [tag] [tag]")
@@ -71,6 +175,7 @@ public plugin_init()
 	register_concmd("amx_map", "cmdMap", ADMIN_MAP, "<mapname>")
 	register_concmd("amx_cfg", "cmdCfg", ADMIN_CFG, "<filename>")
 	register_concmd("amx_nick", "cmdNick", ADMIN_SLAY, "<name or #userid> <new nick>")
+	register_concmd("amx_last", "cmdLast", ADMIN_BAN, "- list the last few disconnected clients info");
 	register_clcmd("amx_rcon", "cmdRcon", ADMIN_RCON, "<command line>")
 	register_clcmd("amx_showrcon", "cmdShowRcon", ADMIN_RCON, "<command line>")
 	register_clcmd("pauseAck", "cmdLBack")
@@ -171,10 +276,28 @@ public cmdUnban(id, level, cid)
 	return PLUGIN_HANDLED
 }
 
+/* amx_addban is a special command now.
+ * If a user with rcon uses it, it bans the user.  No questions asked.
+ * If a user without rcon but with ADMIN_BAN uses it, it will scan the old
+ * connection queue, and if it finds the info for a player in it, it will
+ * check their old access.  If they have immunity, it will not ban.
+ * If they do not have immunity, it will ban.  If the user is not found,
+ * it will refuse to ban the target.
+ */
+ 
 public cmdAddBan(id, level, cid)
 {
-	if (!cmd_access(id, level, cid, 3))
-		return PLUGIN_HANDLED
+	if (!cmd_access(id, level, cid, 3, true)) // check for ADMIN_BAN access
+	{
+		if (get_user_flags(id) & level) // Getting here means they didn't input enough args
+		{
+			return PLUGIN_HANDLED;
+		}
+		if (!cmd_access(id, ADMIN_RCON, cid, 3)) // If somehow they have ADMIN_RCON without ADMIN_BAN, continue
+		{
+			return PLUGIN_HANDLED;
+		}
+	}
 
 	new arg[32], authid[32], name[32], minutes[32], reason[32]
 	
@@ -182,6 +305,87 @@ public cmdAddBan(id, level, cid)
 	read_argv(2, minutes, 31)
 	read_argv(3, reason, 31)
 	
+	
+	if (!(get_user_flags(id) & ADMIN_RCON))
+	{
+		new bool:canban = false;
+		new bool:isip = false;
+		// Limited access to this command
+		if (equali(arg, "STEAM_ID_PENDING") ||
+			equali(arg, "STEAM_ID_LAN") ||
+			equali(arg, "HLTV") ||
+			equali(arg, "4294967295") ||
+			equali(arg, "VALVE_ID_LAN") ||
+			equali(arg, "VALVE_ID_PENDING"))
+		{
+			// Hopefully we never get here, so ML shouldn't be needed
+			console_print(id, "Cannot ban %s", arg);
+			return PLUGIN_HANDLED;
+		}
+		
+		if (contain(arg, ".") != -1)
+		{
+			isip = true;
+		}
+		
+		// Scan the disconnection queue
+		if (isip)
+		{
+			new IP[32];
+			new Name[32];
+			new dummy[1];
+			new Access;
+			for (new i = 0; i < g_Size; i++)
+			{
+				GetInfo(i, Name, charsmax(Name), dummy, 0, IP, charsmax(IP), Access);
+				
+				if (equal(IP, arg))
+				{
+					if (Access & ADMIN_IMMUNITY)
+					{
+						console_print(id, "[AMXX] %s : %L", IP, id, "CLIENT_IMM", Name);
+						
+						return PLUGIN_HANDLED;
+					}
+					// User did not have immunity
+					canban = true;
+				}
+			}
+		}
+		else
+		{
+			new Auth[32];
+			new Name[32];
+			new dummy[1];
+			new Access;
+			for (new i = 0; i < g_Size; i++)
+			{
+				GetInfo(i, Name, charsmax(Name), Auth, charsmax(Auth), dummy, 0, Access);
+				
+				if (equal(Auth, arg))
+				{
+					if (Access & ADMIN_IMMUNITY)
+					{
+						console_print(id, "[AMXX] %s : %L", Auth, id, "CLIENT_IMM", Name);
+						
+						return PLUGIN_HANDLED;
+					}
+					// User did not have immunity
+					canban = true;
+				}
+			}
+		}
+		
+		if (!canban)
+		{
+			console_print(id, "[AMXX] You may only ban recently disconnected clients.");
+			
+			return PLUGIN_HANDLED;
+		}
+		
+	}
+	
+	// User has access to ban their target
 	if (contain(arg, ".") != -1)
 	{
 		server_cmd("addip ^"%s^" ^"%s^";wait;writeip", minutes, arg)
@@ -930,3 +1134,35 @@ public cmdNick(id, level, cid)
 	return PLUGIN_HANDLED
 }
 
+public cmdLast(id, level, cid)
+{
+	if (!cmd_access(id, level, cid, 1))
+	{
+		return PLUGIN_HANDLED;
+	}
+	
+	new name[32];
+	new authid[32];
+	new ip[32];
+	new flags[32];
+	new access;
+	
+	
+	// This alignment is a bit weird (it should grow if the name is larger)
+	// but otherwise for the more common shorter name, it'll wrap in server console
+	// Steam client display is all skewed anyway because of the non fixed font.
+	console_print(id, "%19s %20s %15s %s", "name", "authid", "ip", "access");
+	
+	for (new i = 0; i < g_Size; i++)
+	{
+		GetInfo(i, name, charsmax(name), authid, charsmax(authid), ip, charsmax(ip), access);
+		
+		get_flags(access, flags, charsmax(flags));
+		
+		console_print(id, "%19s %20s %15s %s", name, authid, ip, flags);
+	}
+	
+	console_print(id, "%d old connections saved.", g_Size);
+	
+	return PLUGIN_HANDLED;
+}

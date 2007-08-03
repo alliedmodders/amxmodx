@@ -33,7 +33,7 @@ stock is_user_admin(id)
 	return (__flags>0 && !(__flags&ADMIN_USER));
 }
 
-stock cmd_access(id,level,cid,num) 
+stock cmd_access(id, level, cid, num, bool:accesssilent = false) 
 {
 	new has_access = 0;
 	if ( id==(is_dedicated_server()?0:1) ) 
@@ -58,11 +58,14 @@ stock cmd_access(id,level,cid,num)
 
 	if ( has_access==0 ) 
 	{
+		if (!accesssilent)
+		{
 #if defined AMXMOD_BCOMPAT
-		console_print(id, SIMPLE_T("You have no access to that command."));
+			console_print(id, SIMPLE_T("You have no access to that command."));
 #else
-		console_print(id,"%L",id,"NO_ACC_COM");
+			console_print(id,"%L",id,"NO_ACC_COM");
 #endif
+		}
 		return 0;
 	}
 	if (read_argc() < num) 

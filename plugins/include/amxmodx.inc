@@ -716,15 +716,17 @@ native md5(const szString[], md5buffer[34]);
 /* Calculates the md5 keysum of a file */
 native md5_file(const file[], md5buffer[34]);
 
-/* Returns the internal flags set on the called plugin's state
+/* Returns the internal flags set on the plugin's state
  * If hdr is 1, it will return the pcode flags rather than state flags.
+ *
+ * Use a plid of -1 to get the flags for the calling plugin.
  */
-native plugin_flags(hdr=0);
+native plugin_flags(hdr=0, plid=-1);
 
-/* When using modules that aren't part of AMX Mod X base package, do
-* a require_module("modulename") for each of them within the plugin_modules()
-* forward. Module name is the one listed when doing "amxx modules" in server
-* console. */
+/**
+ * @deprecated
+ * Do not use!
+ */
 forward plugin_modules();
 
 native require_module(const module[]);

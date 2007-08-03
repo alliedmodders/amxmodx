@@ -3793,14 +3793,35 @@ static cell AMX_NATIVE_CALL register_dictionary(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL plugin_flags(AMX *amx, cell *params)
 {
-	if (params[1])
+	if ((params[0] / sizeof(cell)) == 1 || // compiled with old include file
+		 params[2] < 0) // specifically want calling plugin's flags
 	{
-		AMX_HEADER *hdr;
-		hdr = (AMX_HEADER *)amx->base;
-		return hdr->flags;
-	}
+		if (params[1])
+		{
+			AMX_HEADER *hdr;
+			hdr = (AMX_HEADER *)amx->base;
+			return hdr->flags;
+		}
 
-	return amx->flags;
+		return amx->flags;
+	}
+	else
+	{
+		CPluginMngr::CPlugin* a = g_plugins.findPlugin((int)params[2]);
+		
+		if (a == NULL)
+		{
+			return 0;
+		}
+		if (params[1])
+		{
+			AMX_HEADER *hdr;
+			hdr = (AMX_HEADER *)a->getAMX()->base;
+			return hdr->flags;
+		}
+
+		return a->getAMX()->flags;
+	}
 }
 
 // lang_exists(const name[]);

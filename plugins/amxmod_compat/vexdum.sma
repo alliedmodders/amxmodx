@@ -34,7 +34,6 @@ VexdUM_Register()
 	register_forward(FM_EmitSound, 				"Hook_FM_EmitSound")
 	register_forward(FM_EmitAmbientSound,		"Hook_FM_EmitAmbientSound")
 	register_forward(FM_SetModel, 				"Hook_FM_SetModel")
-	register_forward(FM_TraceLine, 				"Hook_FM_TraceLine")
 	register_forward(FM_SetClientKeyValue,		"Hook_FM_SetClientKeyValue")
 	register_forward(FM_KeyValue, 				"Hook_FM_KeyValue")
 	register_forward(FM_Touch, 					"Hook_FM_Touch")
@@ -43,7 +42,21 @@ VexdUM_Register()
 	register_forward(FM_PlayerPreThink,			"Hook_FM_PlayerPreThink")
 	register_forward(FM_PlayerPostThink,		"Hook_FM_PlayerPostThink")
 	register_forward(FM_ClientUserInfoChanged,	"Hook_ClientUserInfoChanged")
+
+	// Only register the traceline forward if there actually is a plugin
+	// that needs it.  Otherwise this will mess with set_user_hitzones
 	
+	new pluginnum = get_pluginsnum();
+	for (new i = 0; i < pluginnum; i++)
+	{
+		if (plugin_flags(0, i) & AMX_FLAG_OLDFILE && 	// plugin is an AMX plugin being emulated
+			get_func_id("traceline", i) != -1)			// plugin needs traceline
+		{
+			register_forward(FM_TraceLine, 				"Hook_FM_TraceLine")
+			break;
+		}
+
+	}
 	/* Global Forwards */
 	g_FwdTouch = 			CreateMultiForwardEx("entity_touch", 		ET_STOP, FORWARD_ONLY_OLD, FP_CELL, FP_CELL)
 	g_FwdThink = 			CreateMultiForwardEx("entity_think", 		ET_STOP, FORWARD_ONLY_OLD, FP_CELL)

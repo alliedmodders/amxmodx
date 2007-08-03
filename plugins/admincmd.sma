@@ -619,16 +619,17 @@ public cmdModules(id, level, cid)
 		return PLUGIN_HANDLED
 
 	new name[32], version[32], author[32], status, sStatus[16]
-	new lName[32], lVersion[32], lAuthor[32]
+	new lName[32], lVersion[32], lAuthor[32], lStatus[32];
 
 	format(lName, 31, "%L", id, "NAME")
 	format(lVersion, 31, "%L", id, "VERSION")
 	format(lAuthor, 31, "%L", id, "AUTHOR")
+	format(lStatus, charsmax(lStatus), "%L", id, "STATUS")
 
 	new num = get_modulesnum()
 	
 	console_print(id, "%L:", id, "LOADED_MODULES")
-	console_print(id, "%-23.22s %-8.7s %-20.19s", lName, lVersion, lAuthor)
+	console_print(id, "%-23.22s %-8.7s %-20.19s %-11.10s", lName, lVersion, lAuthor, lStatus)
 	
 	for (new i = 0; i < num; i++)
 	{
@@ -637,10 +638,16 @@ public cmdModules(id, level, cid)
 		switch (status)
 		{
 			case module_loaded: copy(sStatus, 15, "running")
-			default: copy(sStatus, 15, "error")
+			default: 
+			{
+				copy(sStatus, 15, "bad load");
+				copy(name, charsmax(name), "unknown");
+				copy(author, charsmax(author), "unknown");
+				copy(version, charsmax(version), "unknown");
+			}
 		}
 		
-		console_print(id, "%-23.22s %-8.7s %-20.19s", name, version, author)
+		console_print(id, "%-23.22s %-8.7s %-20.19s %-11.10s", name, version, author, sStatus)
 	}
 	console_print(id, "%L", id, "NUM_MODULES", num)
 

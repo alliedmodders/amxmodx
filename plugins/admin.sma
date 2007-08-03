@@ -566,6 +566,8 @@ public cmdReload(id, level, cid)
 
 	//strip original flags (patch submitted by mrhunt)
 	remove_user_flags(0, read_flags("z"))
+	
+	admins_flush();
 
 #if !defined USING_SQL
 	new filename[128]

@@ -378,7 +378,7 @@ public cmdAddBan(id, level, cid)
 		
 		if (!canban)
 		{
-			console_print(id, "[AMXX] You may only ban recently disconnected clients.");
+			console_print(id, "[AMXX] You may only ban recently disconnected clients.  Use ^"amx_last^" to view.");
 			
 			return PLUGIN_HANDLED;
 		}

@@ -338,6 +338,11 @@ native Float:cs_get_c4_explode_time(index);
 
 native cs_set_c4_explode_time(index, Float:value);
 
+/* Gets or sets whether the C4 is being defused.
+ */
+native bool:cs_get_c4_defusing(c4index);
+
+native cs_set_c4_defusing(c4index, bool:defusing);
 /**
  * Called when CS internally fires a command to a player.  It does this for a few 
  * functions, most notably rebuy/autobuy functionality.  This is also used to pass

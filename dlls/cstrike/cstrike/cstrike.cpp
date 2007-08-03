@@ -1707,6 +1707,38 @@ static cell AMX_NATIVE_CALL cs_set_c4_explode_time(AMX* amx, cell* params)
 
 	return 1;
 }
+static cell AMX_NATIVE_CALL cs_get_c4_defusing(AMX* amx, cell* params)
+{
+	CHECK_NONPLAYER(params[1]);
+	edict_t* pC4 = INDEXENT(params[1]);
+
+	// Make sure it's a c4
+	if (strcmp(STRING(pC4->v.classname), "grenade") != 0)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d (\"%s\") is not C4!", params[1], STRING(pC4->v.classname));
+		return 0;
+	}
+
+	return *((char*)((REAL*)pC4->pvPrivateData + OFFSET_C4_DEFUSING)) ? 1 : 0;
+
+	return 1;
+}
+static cell AMX_NATIVE_CALL cs_set_c4_defusing(AMX* amx, cell* params)
+{
+	CHECK_NONPLAYER(params[1]);
+	edict_t* pC4 = INDEXENT(params[1]);
+
+	// Make sure it's a c4
+	if (strcmp(STRING(pC4->v.classname), "grenade") != 0)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d (\"%s\") is not C4!", params[1], STRING(pC4->v.classname));
+		return 0;
+	}
+
+	*((char*)((REAL*)pC4->pvPrivateData + OFFSET_C4_DEFUSING)) = params[2] ? 1 : 0;
+
+	return 1;
+}
 
 #else
 
@@ -1726,6 +1758,8 @@ static cell AMX_NATIVE_CALL not_on_64(AMX* amx, cell* params)
 #define cs_set_hostage_nextuse not_on_64
 #define cs_get_c4_explode_time not_on_64
 #define cs_set_c4_explode_time not_on_64
+#define cs_get_c4_defusing not_on_64
+#define cs_set_c4_defusing not_on_64
 #endif
 
 
@@ -1788,6 +1822,8 @@ AMX_NATIVE_INFO cstrike_Exports[] = {
 	{"cs_set_hostage_nextuse",		cs_set_hostage_nextuse},
 	{"cs_get_c4_explode_time",		cs_get_c4_explode_time},
 	{"cs_set_c4_explode_time",		cs_set_c4_explode_time},
+	{"cs_get_c4_defusing",			cs_get_c4_defusing},
+	{"cs_set_c4_defusing",			cs_set_c4_defusing},
 
 	{NULL,							NULL}
 };

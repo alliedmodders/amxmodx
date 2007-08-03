@@ -55,6 +55,8 @@ extern int gmsgScoreShort;
 extern int gmsgPTeam;
 extern int gmsgInitObj;
 extern int gmsgSetObj;
+extern int gmsgFrags;
+extern int gmsgObjScore;
 
 extern int iFGrenade;
 extern int iFRocket;

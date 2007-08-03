@@ -49,7 +49,10 @@ native dod_is_randomclass(index);
 /* Returns player deaths */
 native dod_get_pl_deaths(index);
 
-/* Sets player deaths. */
+/* Sets player deaths. 
+ * Note if you opt to refresh the scoreboard, it
+ * will make the player appear as "DEAD" in the scoreboard.
+ */
 native dod_set_pl_deaths(index,value,refresh=1);
 
 /* Returns player deaths. */

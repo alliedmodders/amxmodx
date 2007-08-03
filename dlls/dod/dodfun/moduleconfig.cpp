@@ -56,6 +56,8 @@ int gmsgScoreShort;
 int gmsgPTeam;
 int gmsgInitObj;
 int gmsgSetObj;
+int gmsgFrags;
+int gmsgObjScore;
 
 struct sUserMsg {
 	const char* name;
@@ -68,6 +70,8 @@ struct sUserMsg {
 	{ "ScoreShort",&gmsgScoreShort,NULL,false },
 	{ "PTeam",&gmsgPTeam,NULL,false },
 	{ "SetObj",&gmsgSetObj,Client_SetObj,false },
+	{ "Frags",&gmsgFrags,NULL,false },
+	{ "ObjScore", &gmsgObjScore, NULL, false },
 
 	{ 0,0,0,false }
 };

@@ -154,6 +154,7 @@ static cell AMX_NATIVE_CALL set_user_score(AMX *amx, cell *params){
 		*( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_SCORE ) = params[2];
 
 		if ( params[3]){
+		/*
 			//ScoreShort message
 			MESSAGE_BEGIN(MSG_ALL,gmsgScoreShort);
 			WRITE_BYTE(pPlayer->index);
@@ -161,6 +162,11 @@ static cell AMX_NATIVE_CALL set_user_score(AMX *amx, cell *params){
 			WRITE_SHORT((int)pPlayer->pEdict->v.frags);
 			WRITE_SHORT( *( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_DEATHS ) );
 			WRITE_BYTE(1);
+			MESSAGE_END();
+		*/
+			MESSAGE_BEGIN(MSG_ALL, gmsgObjScore);
+			WRITE_BYTE(pPlayer->index);
+			WRITE_SHORT(params[2]);
 			MESSAGE_END();
 		}
 	}
@@ -177,13 +183,20 @@ static cell AMX_NATIVE_CALL set_user_frags(AMX *amx, cell *params){
 		pPlayer->pEdict->v.frags = (float)params[2];
 
 		if ( params[3]){
+		/*
 			//ScoreShort message
+			
 			MESSAGE_BEGIN(MSG_ALL,gmsgScoreShort);
 			WRITE_BYTE(pPlayer->index);
 			WRITE_SHORT( *( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_SCORE ) );
 			WRITE_SHORT((int)pPlayer->pEdict->v.frags);
 			WRITE_SHORT( *( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_DEATHS ) );
 			WRITE_BYTE(1);
+			MESSAGE_END();
+		*/
+			MESSAGE_BEGIN(MSG_ALL, gmsgFrags);
+			WRITE_BYTE(pPlayer->index);
+			WRITE_SHORT((int)pPlayer->pEdict->v.frags);
 			MESSAGE_END();
 		}
 	}

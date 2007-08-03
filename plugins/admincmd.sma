@@ -464,6 +464,10 @@ public cmdBan(id, level, cid)
 			{
 				formatex(msg[len], charsmax(msg) - len, "%L", i, "PERM");
 			}
+			if (strlen(reason) > 0)
+			{
+				formatex(msg[len], charsmax(msg) - len, " (%L: %s)", i, "REASON", reason);
+			}
 			show_activity_id(i, id, name, msg);
 		}
 	}
@@ -536,6 +540,10 @@ public cmdBanIP(id, level, cid)
 			else
 			{
 				formatex(msg[len], charsmax(msg) - len, "%L", i, "PERM");
+			}
+			if (strlen(reason) > 0)
+			{
+				formatex(msg[len], charsmax(msg) - len, " (%L: %s)", i, "REASON", reason);
 			}
 			show_activity_id(i, id, name, msg);
 		}

@@ -342,7 +342,7 @@ stock SQL_QueryAndIgnore(Handle:db, const queryfmt[], any:...)
 	return ret;
 }
 
-stock Handle:SQL_MakeStdTuple()
+stock Handle:SQL_MakeStdTuple(timeout = 0)
 {
 	static host[64], user[32], pass[32], db[128];
 	static get_type[12], set_type[12];
@@ -363,5 +363,5 @@ stock Handle:SQL_MakeStdTuple()
 		}
 	}
 	
-	return SQL_MakeDbTuple(host, user, pass, db);
+	return SQL_MakeDbTuple(host, user, pass, db, timeout);
 }

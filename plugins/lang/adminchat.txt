@@ -192,3 +192,42 @@ COL_ORANGE = orangev
 COL_OCEAN = okeanski
 COL_MAROON = maroon
 PRINT_ALL = (ALL) %s :   %s
+
+[ro]
+COL_WHITE = alb
+COL_RED = rosu
+COL_GREEN = verde
+COL_BLUE = albastru
+COL_YELLOW = galben
+COL_MAGENTA = purpuriu
+COL_CYAN = cian
+COL_ORANGE = oranj
+COL_OCEAN = ocean
+COL_MAROON = maro
+PRINT_ALL = (TOTI) %s :   %s
+
+[hu]
+COL_WHITE = feher
+COL_RED = piros
+COL_GREEN = zold
+COL_BLUE = kek
+COL_YELLOW = csarga
+COL_MAGENTA = magenta
+COL_CYAN = cyan
+COL_ORANGE = nsarga
+COL_OCEAN = ocean
+COL_MAROON = maroon
+PRINT_ALL = (MIND) %s :   %s
+
+[lt]
+COL_WHITE = balta
+COL_RED = raudona
+COL_GREEN = zalia
+COL_BLUE = melyna
+COL_YELLOW = geltona
+COL_MAGENTA = rausvas
+COL_CYAN = zydras
+COL_ORANGE = oranzine
+COL_OCEAN = melsva
+COL_MAROON = bordine
+PRINT_ALL = (VISIEM) %s :   %s

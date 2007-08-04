@@ -42,3 +42,12 @@ INF_REACH = l!m!tz r34ch3d
 
 [bg]
 INF_REACH = Informacionnoto saob6tenie dostigna limita!
+
+[ro]
+INF_REACH = Limita mesajelor informative a fost atinsa!
+
+[hu]
+INF_REACH = Informacio uzenetek limit elerve!
+
+[lt]
+INF_REACH = Informacijos zinuciu limitas pasiektas

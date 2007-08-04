@@ -132,3 +132,30 @@ HELP_USE_BEGIN = izpolzvaite 'amx_help 1' za na4alo
 TYPE_HELP = napi6ete 'amx_help' v consolata za da vidite pove4e comandi
 TIME_INFO_1 = Ostava6to vreme: %d:%02d min. Sledva6tata karta: %s
 TIME_INFO_2 = Nqma limit na vremeto. Sledva6tata karta: %s
+
+[ro]
+HELP_COMS = Ajutor AMX Mod X: Comenzi
+HELP_ENTRIES = Intrari %d - %d din %d
+HELP_USE_MORE = Scrie 'amx_help %d' pentru mai mult
+HELP_USE_BEGIN = Scrie 'amx_help 1' pentru inceput
+TYPE_HELP = Scrie 'amx_help' in consola pentru afisare lista comenzi
+TIME_INFO_1 = Timp Ramas: %d:%02d. Urmatoarea Harta: %s
+TIME_INFO_2 = Nici o Limita a Timpului. Urmatoarea Harta: %s
+
+[hu]
+HELP_COMS = AMX Mod X segitseg: Parancsok
+HELP_ENTRIES = Bejegyzes %d - %d of %d
+HELP_USE_MORE = Irj 'amx_help %d' -t tobbhoz
+HELP_USE_BEGIN = Irj 'amx_help 1' -t az elso oldalhoz
+TYPE_HELP = Irj 'amx_help' -t a konzolba hogy lathasd a parancsokat
+TIME_INFO_1 = Hatralevo ido: %d:%02d perc. kovetkezo palya: %s
+TIME_INFO_2 = Nincs idohatar. A kovetkezo palya: %s
+
+[lt]
+HELP_COMS = AMX Mod X Pagalba: Komandos
+HELP_ENTRIES = Irasai %d - %d is %d
+HELP_USE_MORE = Naudok 'amx_help %d' del daugiau info
+HELP_USE_BEGIN = Naudok 'amx_help 1' kad pradetum
+TYPE_HELP = Rasyk 'amx_help' konsoleje, kad pamatytum prieinamas komandas.
+TIME_INFO_1 = Liko laiko: %d:%02d min. Kitas zemelapis: %s
+TIME_INFO_2 = Nera laiko limito. Kitas zemelapis: %s

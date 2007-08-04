@@ -161,3 +161,36 @@ SET_LANG_SERVER = Ezika na servera e smenen na "%s"
 SET_LANG_USER = Tvoq ezik e smenen na "%s"
 TYPE_LANGMENU = Napi5i 'amx_langmenu' v consolata za da vidite menu kadeto mojete da si izberete ezik
 LANG_MENU_DISABLED = Ezikovoto menu e izklu4eno.
+
+[ro]
+LANG_NOT_EXISTS = Acest limbaj nu exista
+PERSO_LANG = Limbaj Personal
+LANG_MENU = Menu Limbaj
+SERVER_LANG = Limbaj Server
+SAVE_LANG = Salveaza Limbaj
+SET_LANG_SERVER = Limbajul server-ului a fost setat pe "%s"
+SET_LANG_USER = Limbajul tau a fost setat pe "%s"
+TYPE_LANGMENU = Scrie 'amx_langmenu' in consola pentru afisarea unui menu cu limbaje
+LANG_MENU_DISABLED = Menu limbaj dezactivat.
+
+[hu]
+LANG_NOT_EXISTS = A nyelv nem letezik
+PERSO_LANG = Szemelyi nyelv
+LANG_MENU = Nyelv menu
+SERVER_LANG = Szerver nyelv
+SAVE_LANG = Nyelv mentese
+SET_LANG_SERVER = A szerver nyelve "%s"-ra lett alitva.
+SET_LANG_USER = A nyelved "%s"-ra lett allitva.
+TYPE_LANGMENU = Irj 'amx_langmenu'-t a konzolba hogy nyelvet valaszthass.
+LANG_MENU_DISABLED = Nyelv menu letiltva.
+
+[lt]
+LANG_NOT_EXISTS = Kalba neegzistuoja
+PERSO_LANG = Asmenine kalba
+LANG_MENU = Kalbu meniu
+SERVER_LANG = Serverio kalba
+SAVE_LANG = Issaugoti kalba
+SET_LANG_SERVER = Serverio kalba buvo nustatyta i "%s"
+SET_LANG_USER = Tavo kalba buvo nustatyta i "%s"
+TYPE_LANGMENU = Rasyk 'amx_langmenu' konsoleje, kad parodytu meniu kur gali issirinkti kalba.
+LANG_MENU_DISABLED = Kalbu meniu atjungtas.

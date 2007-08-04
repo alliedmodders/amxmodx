@@ -132,3 +132,30 @@ X_CHOSE_X = %s izbra %s
 CHOOSE_NEXTM = AMX Izberete sledva6tata karta
 EXTED_MAP = Odalji kartata %s
 TIME_CHOOSE = Vreme e da se izbere sledva6tata karta...
+
+[ro]
+CHO_FIN_EXT = Votarea s-a incheiat. Harta actuala va fi prelungita %.0f minute
+CHO_FIN_NEXT = Votarea s-a incheiat. Urmatoarea harta va fi %s
+CHOSE_EXT = %s a votat pentru prelungirea hartii actuale
+X_CHOSE_X = %s a votat pentru %s
+CHOOSE_NEXTM = AMX Alege harta urmatoare
+EXTED_MAP = Prelungirea hartii actuale %s
+TIME_CHOOSE = E timpul sa alegeti harta urmatoare...
+
+[hu]
+CHO_FIN_EXT = A valasztas veget ert. A mostani palya meg %.0f percig lesz.
+CHO_FIN_NEXT = A valasztas veget ert. A kovetkezo palya a %s lesz.
+CHOSE_EXT = %s meg maradni szeretne
+X_CHOSE_X = %s a %s-ra szavazott
+CHOOSE_NEXTM = Valaszd ki a kovetkezo palyat.
+EXTED_MAP = Maradjunk a %s-n!
+TIME_CHOOSE = Itt az ido hogy kivalaszd a kovetkezo palyat.
+
+[lt]
+CHO_FIN_EXT = Pasirinkimai baigti. Sis zemelapis dar bus %.0f minutes
+CHO_FIN_NEXT = Pasirinkimtas baigtas. Kitas zemelapis %s
+CHOSE_EXT = %s Pasirinko zemelapio pratesima
+X_CHOSE_X = %s pasirinko %s
+CHOOSE_NEXTM = AMX Issirink sekanti zemelapi
+EXTED_MAP = Pratestas zemelapis %s
+TIME_CHOOSE = Laikas issirinkti kita zemelapi..

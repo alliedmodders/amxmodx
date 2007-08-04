@@ -72,3 +72,18 @@ FRIEND_FIRE = |=r!3nd|y f!r3
 NEXT_MAP = Sledva6tata karta:
 PLAYED_MAP = Igrana karta
 FRIEND_FIRE = Friendly fire
+
+[ro]
+NEXT_MAP = Urmatoarea Harta:
+PLAYED_MAP = Harta Actuala
+FRIEND_FIRE = Friendly-Fire
+
+[hu]
+NEXT_MAP = A kovetkezo palya:
+PLAYED_MAP = Jatszott Palya
+FRIEND_FIRE = Csapattars Sebzes
+
+[lt]
+NEXT_MAP = Kitas zemelapis:
+PLAYED_MAP = Zaide zemelapiu
+FRIEND_FIRE = Savu saudymas

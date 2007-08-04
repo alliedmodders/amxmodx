@@ -252,3 +252,54 @@ TEAM_MENU = Otborno Menu
 TRANSF_TO = Transferirai kam %s
 CL_CMD_MENU = Klient Comandno Menu
 NO_CMDS = Nqma nikakvi pozvoleni comandi
+
+[ro]
+ADMIN_BAN_1 = ADMIN: ban %s
+ADMIN_BAN_2 = ADMIN %s: ban %s
+BAN_MENU = Menu Ban
+BAN_FOR_MIN = Ban %d minute
+BAN_PERM = Ban permanent
+SLAP_SLAY_MENU = Slap/Slay
+SLAP_WITH_DMG = Slap cu %d dmg
+SLAY = Slay
+KICK_MENU = Menu Kick
+ADMIN_TRANSF_1 = ADMIN: transfera %s la %s
+ADMIN_TRANSF_2 = ADMIN %s: transfera %s la %s
+TEAM_MENU = Menu Echipe
+TRANSF_TO = Transfera la %s
+CL_CMD_MENU = Menu Comenzi Jucator
+NO_CMDS = Nici o comanda valabila
+
+[hu]
+ADMIN_BAN_1 = ADMIN: %s banolva
+ADMIN_BAN_2 = ADMIN %s: %s banolva
+BAN_MENU = Ban Menu
+BAN_FOR_MIN = Banolva %d percre
+BAN_PERM = Orokos ban
+SLAP_SLAY_MENU = Utes/Oles Menu
+SLAP_WITH_DMG = Megutve %d sebzessel
+SLAY = Megoles
+KICK_MENU = kick Menu
+ADMIN_TRANSF_1 = ADMIN: %s atallitva %s-nak
+ADMIN_TRANSF_2 = ADMIN %s: %s atallitva %s-nak
+TEAM_MENU = CSapat Menu
+TRANSF_TO = Atallitva %s-nek
+CL_CMD_MENU = Client Cmds Menu
+NO_CMDS = Nincs elerheto parancs
+
+[lt]
+ADMIN_BAN_1 = ADMINAS: isbanino %s
+ADMIN_BAN_2 = ADMINAS %s: isbanino %s
+BAN_MENU = Ban meniu
+BAN_FOR_MIN = Banas %d minutem
+BAN_PERM = Banas visam laikui
+SLAP_SLAY_MENU = Musti/Nudeti Meniu
+SLAP_WITH_DMG = Musa su %d zala
+SLAY = Nudeti
+KICK_MENU = Ismetimo meniu
+ADMIN_TRANSF_1 = ADMINAS: siuncia %s i %s
+ADMIN_TRANSF_2 = ADMINAS %s: siuncia %s i %s
+TEAM_MENU = Komandos meniu
+TRANSF_TO = Issiusti i %s
+CL_CMD_MENU = Klientu CMD meniu
+NO_CMDS = Nera galimu CMD

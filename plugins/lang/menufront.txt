@@ -267,3 +267,57 @@ STATS_SET = Nastroiki za Statistikite ^n
 PAUSE_PLUG = Pause Plugini
 RES_WEAP = Blokirai Orajia
 TELE_PLAYER = Teleportirai Igra4i
+
+[ro]
+KICK_PLAYER = Kick Jucator
+BAN_PLAYER = Ban Jucator
+SLAP_SLAY = Plesneste/Ucide Jucator
+TEAM_PLAYER = Jucator Echipa ^n
+CHANGEL = Schimba harta
+VOTE_MAPS = Voteaza pentru hartile ^n
+SPECH_STUFF = Speech
+CLIENT_COM = Comenzi Jucatori
+SERVER_COM = Comenzi Server
+CVARS_SET = Setari Cvar
+CONFIG = Configuratie
+LANG_SET = Setari Limbaj
+STATS_SET = Setari Statistici ^n
+PAUSE_PLUG = Opreste Plugin-uri
+RES_WEAP = Restrictioneaza Arme
+TELE_PLAYER = Teleporteaza Jucator
+
+[hu]
+KICK_PLAYER = Jatekos kirugasa
+BAN_PLAYER = Jatekos ban
+SLAP_SLAY = Jatekos Megutes/Megoles
+TEAM_PLAYER = Jatekos csapatvaltasa ^n
+CHANGEL = Palyavaltas
+VOTE_MAPS = Szavazas palyara ^n
+SPECH_STUFF = Beszed menu
+CLIENT_COM = Jatekos parancsok
+SERVER_COM = Szerver parancsok
+CVARS_SET = Cvars Beallitasok
+CONFIG = Configuracio
+LANG_SET = Nyelv Beallitasok
+STATS_SET = Stat beallitasok ^n
+PAUSE_PLUG = Pillanat alj Pluginok
+RES_WEAP = Felfuggesztett fegyverek
+TELE_PLAYER = Teleport jatekos
+
+[lt]
+KICK_PLAYER = Ismesti zaideja
+BAN_PLAYER = ISbaninti zaideja
+SLAP_SLAY = Sumusti/Uzmusti zaideja
+TEAM_PLAYER = Komandos zaidejas ^n
+CHANGEL = Pakeisti zemelapi
+VOTE_MAPS = Balsuoti uz zemelapius ^n
+SPECH_STUFF = Kalbos meniu
+CLIENT_COM = Kliento komandos
+SERVER_COM = Serverio komandos
+CVARS_SET = Komandu nustatymai
+CONFIG = Konfiguracija
+LANG_SET = Kalbos nustatymai
+STATS_SET = Statistikos nustatymai ^n
+PAUSE_PLUG = Sustabdyti pluginus
+RES_WEAP = Uzdrausti ginklus
+TELE_PLAYER = Teleportuoti zaideja

@@ -72,3 +72,18 @@ SPE_MENU = l33t $p33ch M3nu
 CMD_MENU = Comandnoto Menu
 CONF_MENU = Configuracionno Menu
 SPE_MENU = Menu za Govorene
+
+[ro]
+CMD_MENU = Menu Comenzi
+CONF_MENU = Menu Configuratie
+SPE_MENU = Menu Speech
+
+[hu]
+CMD_MENU = Parancs Menu
+CONF_MENU = Beallitas Menu
+SPE_MENU = Beszed Menu
+
+[lt]
+CMD_MENU = Komandu meniu
+CONF_MENU = Konfigu meniu
+SPE_MENU = Kalbos meniu

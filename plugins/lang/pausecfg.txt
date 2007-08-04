@@ -32,7 +32,11 @@ COM_PAUSE_SAVE = ^tsave - saves a list of stopped plugins
 COM_PAUSE_CLEAR = ^tclear - clears a list of stopped plugins
 COM_PAUSE_LIST = ^tlist [id] - lists plugins
 COM_PAUSE_ADD = ^tadd <title> - marks a plugin as unpauseable
-
+SAVE_PAUSED = Save paused
+COM_PAUSE_SAVE_PAUSED = ^tsave - saves a list of paused plugins
+COM_PAUSE_CLEAR_PAUSED = ^tclear - clears a list of paused plugins
+CANT_UNPAUSE_PLUGIN = Plugin "%s" is stopped and cannot be paused or unpaused.
+CLEAR_PAUSED = Clear file with paused
 
 [de]
 PAUSE_COULDNT_FIND = Konnte kein Plugin finden, dass mit "%s" uebereinstimmt
@@ -68,6 +72,11 @@ COM_PAUSE_SAVE = ^tsave - speichert die Liste der gestoppten Plugins
 COM_PAUSE_CLEAR = ^tclear - loescht die Liste der gestoppten Plugins
 COM_PAUSE_LIST = ^tlist [id] - Plugins anzeigen
 COM_PAUSE_ADD = ^tadd <title> - markiert ein Plugin als nicht pausierbar
+SAVE_PAUSED = Speichere pausierte Plugins
+COM_PAUSE_SAVE_PAUSED = ^tsave - speichert die Liste der pausierten Plugins
+COM_PAUSE_CLEAR_PAUSED = ^tclear - leert die Liste der pausierten Plugins
+CANT_UNPAUSE_PLUGIN = Das Plugin "%s" ist gestoppt und kann nicht pausiert oder unpausiert werden.
+CLEAR_PAUSED = Loeschen der Datei pausierten
 
 [sr]
 PAUSE_COULDNT_FIND = Nije moguce naci plugin koji se poklapa sa "%s"
@@ -156,7 +165,7 @@ UNPAUSED_PLUGIN = Enlever la pause de %d plugin
 UNPAUSED_PLUGINS = Enlever la pause de %d plugins
 CANT_MARK_MORE = Impossible d'ajouter plus de plugins qui ne peuvent etre mis en pause!
 PAUSE_LOADED = Pause Plugins: Chargement des plugins
-STOPPED = a ete arrete
+STOPPED = stoppe
 VERSION = version
 FILE = fichier
 PAUSE_ENTRIES = Entrees %d - %d sur %d (%d en fonctionnement)
@@ -173,6 +182,11 @@ COM_PAUSE_SAVE = ^tsave - sauver la liste des plugins arretes
 COM_PAUSE_CLEAR = ^tclear - effacer la liste des plugins arretes
 COM_PAUSE_LIST = ^tlist [id] - listes  des plugins
 COM_PAUSE_ADD = ^tadd <title> - marquer un plugin comme impossible a mettre en paus
+SAVE_PAUSED = Sauvegarder les plugins en pause
+COM_PAUSE_SAVE_PAUSED = ^tsave - sauvegarde une liste de plugins en pause
+COM_PAUSE_CLEAR_PAUSED = ^tclear - efface une liste de plugins en pause
+CANT_UNPAUSE_PLUGIN = Le plugin "%s" est arrete et ne peut etre mis en pause ou re-active.
+CLEAR_PAUSED = Efface la liste de plugins en pause
 
 [sv]
 PAUSE_COULDNT_FIND = Kunde inte hitta plugin som matchar "%s"
@@ -208,6 +222,11 @@ COM_PAUSE_SAVE = ^tsave - sparar lista av stoppade plugins
 COM_PAUSE_CLEAR = ^tclear - rensar lista av stoppade plugins
 COM_PAUSE_LIST = ^tlist [id] - listar plugins
 COM_PAUSE_ADD = ^tadd <titel> - markerar en plugin som icke pausbar
+SAVE_PAUSED = Spara pausade
+COM_PAUSE_SAVE_PAUSED = ^tsave - sparar en lista av pausade plugins
+COM_PAUSE_CLEAR_PAUSED = ^tclear - rensar en lista av pausade plugins
+CANT_UNPAUSE_PLUGIN = Plugin "%s" 'a'r stoppad och kan inte bli pausad eller forts'a'tta.
+CLEAR_PAUSED = Rensa fil med pausade
 
 [da]
 PAUSE_COULDNT_FIND = Kunne ikke finde et plugin der matcher til "%s"
@@ -278,6 +297,11 @@ COM_PAUSE_SAVE = ^tsave - zapisuje liste wylaczonych pluginow
 COM_PAUSE_CLEAR = ^tclear - czysci liste wylaczonych pluginow
 COM_PAUSE_LIST = ^tlist [id] - wyswietla liste pluginow
 COM_PAUSE_ADD = ^tadd <title> - oznacza plugin jako niepauzowalny
+SAVE_PAUSED = Zapisz zapauzowane pluginy
+COM_PAUSE_SAVE_PAUSED = ^tsave - zapisuje liste zapauzowanych pluginow
+COM_PAUSE_CLEAR_PAUSED = ^tsave - czysci liste zapauzowanych plugninow
+CANT_UNPAUSE_PLUGIN = Plugin "%s" jest zastopowany i nie moze byc zapauzowany lub odpauzowany.
+CLEAR_PAUSED = czysci liste zapauzowanych pluginow
 
 [nl]
 PAUSE_COULDNT_FIND = Kon geen plugin vinden gelijk aan "%s"
@@ -313,6 +337,11 @@ COM_PAUSE_SAVE = ^tsave - bewaart een lijst van gestopte plugins
 COM_PAUSE_CLEAR = ^tclear - haalt lijst met gestopte plugins leeg
 COM_PAUSE_LIST = ^tlist [id] - maakt lijst met plugins
 COM_PAUSE_ADD = ^tadd <titel> - markeert een plugin als niet pauzeerbaar
+SAVE_PAUSED = Gepauseerde plugins opgeslagen
+COM_PAUSE_SAVE_PAUSED = ^tsave - Slaat een lijst op van gepauseerde plugins
+COM_PAUSE_CLEAR_PAUSED = ^tclear - Maakt de lijst met gepauseerde plugins leeg
+CANT_UNPAUSE_PLUGIN = Plugin "%s" is gestopt en kan niet meer gepauseerd of gestart worden.
+CLEAR_PAUSED = Haal bestand met gepauseerde plugins leeg
 
 [es]
 PAUSE_COULDNT_FIND = No se encontro ningun plugin que coincida con "%s"
@@ -348,6 +377,11 @@ COM_PAUSE_SAVE = ^tsave - guarda la lista de plugins detenidos
 COM_PAUSE_CLEAR = ^tclear - borra la lista de plugins detenidos
 COM_PAUSE_LIST = ^tlist [id] - muestra la lista de plugins
 COM_PAUSE_ADD = ^tadd <titulo> - marca el plugin como despausable
+SAVE_PAUSED = Guardar Pausados
+COM_PAUSE_SAVE_PAUSED = ^tsave - guarda una lista de los plugins pausados.
+COM_PAUSE_CLEAR_PAUSED = ^tclear - limpia la lista de los plugins pausados.
+CANT_UNPAUSE_PLUGIN = El plugin "%s" esta detenido, este no puede ser pausado ni reanudado.
+CLEAR_PAUSED = Borrar lista de archivos pausados
 
 [bp]
 PAUSE_COULDNT_FIND = Nao achou um plugin igual a "%s"
@@ -383,6 +417,11 @@ COM_PAUSE_SAVE = ^tsave - salva uma lista de plugins parados
 COM_PAUSE_CLEAR = ^tclear - clareia uma lista de plugins parado
 COM_PAUSE_LIST = ^tlist [id] - lista os plugins
 COM_PAUSE_ADD = ^tadd <nome> - marca um plugin para nao pausar
+SAVE_PAUSED = Salvar Pausados
+COM_PAUSE_SAVE_PAUSED = ^tsave - salva uma lista de plugins pausados
+COM_PAUSE_CLEAR_PAUSED = ^tclear - limpa uma lista de plugins pausados
+CANT_UNPAUSE_PLUGIN = O plugin "%s" esta desligado e nao pode ser pausado ou re-ativado
+CLEAR_PAUSED = Limpa arquivo de plugins pausados
 
 [cz]
 PAUSE_COULDNT_FIND = Nemuzu najit plugin odpovidajici "%s"
@@ -488,6 +527,10 @@ COM_PAUSE_SAVE = ^tsave - s4v3z $t0|>|>3dz l33t p|ug!nz
 COM_PAUSE_CLEAR = ^tclear - cl34rz  $t0|>|>3dz l33t p|ug!nz
 COM_PAUSE_LIST = ^tlist [id] - sh0wz l33t p|ug!nz
 COM_PAUSE_ADD = ^tadd <title> - l33t p|ug!nz = un|>4UZ3able
+SAVE_PAUSED = $4\/3 P4U$3D
+COM_PAUSE_SAVE_PAUSED = ^tsave - $4\/3$ 4 1!$+ 0|= P4U$3D P1UG!|\|$
+COM_PAUSE_CLEAR_PAUSED = ^tclear - C134R$ 4 1!$+ 0|= P4U$3D P1UG!|\|$
+CANT_UNPAUSE_PLUGIN = P1UG!|\| "%s" !$ $+0PP3D 4|\|D C$|\||\|p+ |33 P4U$3D 0|2 U|\|P4U$3D.
 
 [bg]
 PAUSE_COULDNT_FIND = Ne uspq da nameri plugin koito da savbada s "%s"
@@ -523,3 +566,118 @@ COM_PAUSE_SAVE = ^tsave - zapameti list ot sprqni plugini
 COM_PAUSE_CLEAR = ^tclear - iz4isti list ot sprqni plugini
 COM_PAUSE_LIST = ^tlist [id] - pokazva plugini
 COM_PAUSE_ADD = ^tadd <title> - markira plugin kato nespira6t
+
+[ro]
+PAUSE_COULDNT_FIND = Nu a fost gasit un plugin ce rezulta cautarea "%s"
+PAUSE_PLUGIN_MATCH = Plugin-ul "%s" rezulta cautarea
+PAUSE_CONF_CLEARED = Fisier-ul de configuratie a fost golit. Reincarca harta daca este nevoie
+PAUSE_ALR_CLEARED = Configuratia a fost golita deja!
+PAUSE_CONF_SAVED = Configuratia a fost salvata cu succes
+PAUSE_SAVE_FAILED = Salvarea configuratiei a esuat!!!
+LOCKED = BLOCAT
+PAUSE_UNPAUSE = Intrerupe/Reincarca Plugin-uri
+CLEAR_STOPPED = Goleste fisier-ul cu cele intrerupte
+SAVE_STOPPED = Salveaza fisier-ul cu cele intrerupte
+PAUSED_PLUGIN = Plugin-ul %d a fost intrerupt
+PAUSED_PLUGINS = Au fost intrerupte %d plugin-uri
+UNPAUSED_PLUGIN = Plugin-ul %d a fost reincarcat
+UNPAUSED_PLUGINS = Au fost reincarcate %d plugin-uri
+CANT_MARK_MORE = Nu se pot marca mai multe plugin-uri ca intrerupte!
+PAUSE_LOADED = Intrerupe plugin-uri: Plugin-uri incarcate
+STOPPED = intrerupte
+VERSION = versiune
+FILE = fisier
+PAUSE_ENTRIES = Intrari %d - %d din %d (%d functioneaza)
+PAUSE_USE_MORE = Scrie 'amx_pausecfg list %d' pentru mai mult
+PAUSE_USE_BEGIN = Scrie 'amx_pausecfg list 1' pentru inceput
+PAUSE_USAGE = Folosire:  amx_pausecfg <comanda> [nume]
+PAUSE_COMMANDS = Comenzi
+COM_PAUSE_OFF = ^toff - intrerupe toate plugin-urile ce nu sunt in lista
+COM_PAUSE_ON = ^ton - reincarca toate plugin-urile ce nu sunt in lista
+COM_PAUSE_STOP = ^tstop <fisier> - opreste un plugin
+COM_PAUSE_PAUSE = ^tpause <fisier> - intrerupe un plugin
+COM_PAUSE_ENABLE = ^tenable <file> - incarca un plugin
+COM_PAUSE_SAVE = ^tsave - salveaza o lista a plugin-urilor oprite
+COM_PAUSE_CLEAR = ^tclear - goleste o lista a plugin-urilor oprite
+COM_PAUSE_LIST = ^tlist [id] - listeaza plugin-urile
+COM_PAUSE_ADD = ^tadd <title> - marcheaza un plugin ca si reincarcat
+SAVE_PAUSED = Salvarea oprita
+COM_PAUSE_SAVE_PAUSED = ^tsave - salveaza o lista cu pluginurile oprite
+COM_PAUSE_CLEAR_PAUSED = ^tclear - sterge lista cu pluginurile oprite
+CANT_UNPAUSE_PLUGIN = Pluginul "%s" este oprit si nu poate fi pus pe pauza sau scos din pauza.
+CLEAR_PAUSED = Goleste fisier-ul cu cele oprite
+
+[hu]
+PAUSE_COULDNT_FIND = Nem lehet a plugint talalni "%s"
+PAUSE_PLUGIN_MATCH = Plugin matching "%s"
+PAUSE_CONF_CLEARED = Beallitasok file betoltve. Valts palyat a hasznalatahoz
+PAUSE_ALR_CLEARED = A beallitasok mar ki vannak uritve!
+PAUSE_CONF_SAVED = Beallitasok sikeresen elmentve
+PAUSE_SAVE_FAILED = Nem sikerult a mentes!!!
+LOCKED = LEZARVA
+PAUSE_UNPAUSE = Ki/Be kapcsolas Pluginok
+CLEAR_STOPPED = A leallitot pluginok filejenak uritese
+SAVE_STOPPED = Megallitottak mentese
+PAUSED_PLUGIN = Leallitva %d plugin
+PAUSED_PLUGINS = Leallitva %d plugin
+UNPAUSED_PLUGIN = Engedelyezve %d plugin
+UNPAUSED_PLUGINS = Engedelyezve %d plugin
+CANT_MARK_MORE = Nem lehet mark tobb plugint megallitani!
+PAUSE_LOADED = Pause Plugins: Loaded plugins
+STOPPED = leallitva
+VERSION = verzio
+FILE = file
+PAUSE_ENTRIES = Bejegyzes %d - %d a %d-bol (%d fut)
+PAUSE_USE_MORE = Irj 'amx_pausecfg list %d' a tobbihez
+PAUSE_USE_BEGIN = Irj 'amx_pausecfg list 1' az elejehez
+PAUSE_USAGE = Hasznalat:  amx_pausecfg <parancs> [nev]
+PAUSE_COMMANDS = Parancsok
+COM_PAUSE_OFF = ^tki - minden plugin leallitasa a listan
+COM_PAUSE_ON = ^tbe - osszes plugin engedelyezese
+COM_PAUSE_STOP = ^tstop <file> - plugin megallitasa
+COM_PAUSE_PAUSE = ^tpause <file> - kikapcsolt pluginok
+COM_PAUSE_ENABLE = ^tenable <file> - plugin engedelyezese
+COM_PAUSE_SAVE = ^tsave - lista mentese a leallitott pluginokkal
+COM_PAUSE_CLEAR = ^tclear - a megallitott pluginok listajanak kiuritese
+COM_PAUSE_LIST = ^tlist [id] - pluginok listaja
+COM_PAUSE_ADD = ^tadd <nev> - megjelolni a plugint megalithatokent
+SAVE_PAUSED = Mentes Szunetelve
+COM_PAUSE_SAVE_PAUSED = ^tsave - menti a szunetelt pluginok listajat
+COM_PAUSE_CLEAR_PAUSED = ^tclear - torli a szunetelt pluginok listajat
+CANT_UNPAUSE_PLUGIN = A "%s" plugint nemlehet szuneteltetni vagy engedelyezni.
+CLEAR_PAUSED = Torli a szunetelt pluginok listajat
+
+[lt]
+PAUSE_COULDNT_FIND = Negali surasti plugino "%s"
+PAUSE_PLUGIN_MATCH = Pluginas sutampa "%s"
+PAUSE_CONF_CLEARED = Konfigo failas istryntas. Perkrauk mapa jei reikia
+PAUSE_ALR_CLEARED = Konfigas jau buvo isvalyta!
+PAUSE_CONF_SAVED = Konfigas issaugotas sekmingai
+PAUSE_SAVE_FAILED = Konfigo issaugojimas sekmingas!!!
+LOCKED = Uzrakinta
+PAUSE_UNPAUSE = Pauze/Nuimti pauze pluginus
+CLEAR_STOPPED = Isvalyti sustabdytus failus
+SAVE_STOPPED = Issaugoti sustabdytus
+PAUSED_PLUGIN = Sustabdytas %d pluginas
+PAUSED_PLUGINS = Sustabdyti %d pluginai
+UNPAUSED_PLUGIN = Paleistas %d pluginas
+UNPAUSED_PLUGINS = Paleisti %d pluginai
+CANT_MARK_MORE = Daugiau pluginu pazymeti negalima!
+PAUSE_LOADED = Sustabdyti pluginus: Uzkrauti pluginai
+STOPPED = sustabdyti
+VERSION = versija
+FILE = failas
+PAUSE_ENTRIES = Irasas %d - %d is %d (%d veikiantis)
+PAUSE_USE_MORE = Naudok 'amx_pausecfg sarasa %d' del daugiau info
+PAUSE_USE_BEGIN = Naudok 'amx_pausecfg saraso 1 nr del pradzios
+PAUSE_USAGE = Naudok:  amx_pausecfg <komanda> [skaicius]
+PAUSE_COMMANDS = Komandos
+COM_PAUSE_OFF = ^tisjungti - Sustabdo visus pluginus esancius ne sarase
+COM_PAUSE_ON = ^tijungti - paleidzia visus pluginus
+COM_PAUSE_STOP = ^tstop <failas> - sustabdo plugina
+COM_PAUSE_PAUSE = ^tpauze <failas> - pauze pluginui
+COM_PAUSE_ENABLE = ^tpaleisti <failas> - paleidzia/ijungia plugina
+COM_PAUSE_SAVE = ^tissaugoti - issaugo sustabdytu pluginu sarasa
+COM_PAUSE_CLEAR = ^tpravalyti - pravalo sustabdytus pluginus
+COM_PAUSE_LIST = ^tlistas [id] - pluginu sarasas
+COM_PAUSE_ADD = ^tprideti <pavadinimas> - pazymi plugina kaip nesustabdoma

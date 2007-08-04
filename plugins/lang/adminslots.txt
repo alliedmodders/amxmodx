@@ -42,3 +42,12 @@ DROPPED_RES = j00 r n0t l33t 3uff, s0z
 
 [bg]
 DROPPED_RES = Izklu4en poneje mqstoto e rezervirano
+
+[ro]
+DROPPED_RES = Ai primit kick pentru rezervare slot.
+
+[hu]
+DROPPED_RES = Nincs szabad hely.
+
+[lt]
+DROPPED_RES = Atjungtas, nes nera laisvos vietos

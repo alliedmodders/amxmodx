@@ -192,3 +192,42 @@ INV_PAS = Greshna Parola!
 PAS_ACC = Parolata e prieta
 PRIV_SET = Priviligiite sa nastroeni
 NO_ENTRY = Nqmate vhod kam servara...
+
+[ro]
+LOADED_ADMIN = 1 administrator a fost incarcat din fisier
+LOADED_ADMINS = %d administratori au fost incarcati din fisier
+SQL_CANT_CON = Eroare SQL: conectare esuata: '%s'
+SQL_CANT_LOAD_ADMINS = Eroare SQL: esuare incarcare administratori: '%s'
+NO_ADMINS = Nu a fost gasit nici un administrator.
+SQL_LOADED_ADMIN = 1 administrator a fost incarcat din baza de date
+SQL_LOADED_ADMINS = %d administratori au fost incarcati din baza de date
+INV_PAS = Parola invalida!
+PAS_ACC = Parola acceptata
+PRIV_SET = Privilegii acordate
+NO_ENTRY = Acest nume este rezervat pe server.
+
+[hu]
+LOADED_ADMIN = 1 admin betoltve a file-bol.
+LOADED_ADMINS =  %d admin betoltve a filebol.
+SQL_CANT_CON = SQL hiba: nem lehet csatlakozni: '%s'
+SQL_CANT_LOAD_ADMINS = SQL hiba: nem lehet az adminokat betolteni: '%s'
+NO_ADMINS = Nincsenek adminok.
+SQL_LOADED_ADMIN = 1 admin betoltve a adatbazisbol
+SQL_LOADED_ADMINS = %d admin betoltve a adatbazisbol
+INV_PAS = Hibas jelszo!
+PAS_ACC = Jelszo elfogadva
+PRIV_SET = Beallitasok
+NO_ENTRY = Neked nincs bejegyzesed a szerveren...
+
+[lt]
+LOADED_ADMIN = Uzkrautas 1 adminas is failo
+LOADED_ADMINS = Uzkrauti %d adminai is failo
+SQL_CANT_CON = SQL klaida: negali pasijungti: '%s'
+SQL_CANT_LOAD_ADMINS = SQL klaida: negali uzkrauti adminu: '%s'
+NO_ADMINS = Adminu nerasta.
+SQL_LOADED_ADMIN = Uzkrautas 1 adminas is duomenu bazes
+SQL_LOADED_ADMINS = Uzkrauti %d adminai is duomenu bazes
+INV_PAS = Blogas slaptazodis!
+PAS_ACC = Slaptazodis priimtas
+PRIV_SET = Privilegijos nustatytos
+NO_ENTRY = Neturi leidimo ieiti i serva..

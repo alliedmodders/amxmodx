@@ -102,3 +102,24 @@ ADMIN_TELEPORT_2 = ADMINISTRATOR %s: teleportira %s
 TELE_MENU = Teleport Menu
 CUR_LOC = Mestopolojenie
 SAVE_LOC = Zapazi mestopolojenieto
+
+[ro]
+ADMIN_TELEPORT_1 = ADMIN: teleportare %s
+ADMIN_TELEPORT_2 = ADMIN %s: teleportare %s
+TELE_MENU = Menu Teleportare
+CUR_LOC = Locatia Actuala
+SAVE_LOC = Salveaza Locatie
+
+[hu]
+ADMIN_TELEPORT_1 = ADMIN: %s teleport
+ADMIN_TELEPORT_2 = ADMIN %s: %s teleport
+TELE_MENU = Teleport Menu
+CUR_LOC = Mostani hely
+SAVE_LOC = Hely mentese
+
+[lt]
+ADMIN_TELEPORT_1 = ADMINAS: teleportavo %s
+ADMIN_TELEPORT_2 = ADMINAS %s: teleportavo %s
+TELE_MENU = Teleporto Meniu
+CUR_LOC = Dabartine vieta
+SAVE_LOC = Issaugoti vietove

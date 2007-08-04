@@ -207,7 +207,7 @@ static cell AMX_NATIVE_CALL log_error(AMX *amx, cell *params)
 //get_string(param, dest[], len)
 static cell AMX_NATIVE_CALL get_string(AMX *amx, cell *params)
 {
-	if (!g_pCurNative || (g_pCaller != amx))
+	if (!g_pCurNative || (g_pCurNative->amx != amx))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
@@ -227,7 +227,7 @@ static cell AMX_NATIVE_CALL get_string(AMX *amx, cell *params)
 //set_string(param, source[], maxlen)
 static cell AMX_NATIVE_CALL set_string(AMX *amx, cell *params)
 {
-	if (!g_pCurNative || (g_pCaller != amx))
+	if (!g_pCurNative || (g_pCurNative->amx != amx))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
@@ -249,7 +249,7 @@ static cell AMX_NATIVE_CALL set_string(AMX *amx, cell *params)
 //get_param(num)
 static cell AMX_NATIVE_CALL get_param(AMX *amx, cell *params)
 {
-	if (!g_pCurNative || (g_pCaller != amx))
+	if (!g_pCurNative || (g_pCurNative->amx != amx))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
@@ -267,7 +267,7 @@ static cell AMX_NATIVE_CALL get_param(AMX *amx, cell *params)
 //get_param_byref(num)
 static cell AMX_NATIVE_CALL get_param_byref(AMX *amx, cell *params)
 {
-	if (!g_pCurNative || (g_pCaller != amx))
+	if (!g_pCurNative || (g_pCurNative->amx != amx))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
@@ -287,7 +287,7 @@ static cell AMX_NATIVE_CALL get_param_byref(AMX *amx, cell *params)
 //set_param_byref(num, val)
 static cell AMX_NATIVE_CALL set_param_byref(AMX *amx, cell *params)
 {
-	if (!g_pCurNative || (g_pCaller != amx))
+	if (!g_pCurNative || (g_pCurNative->amx != amx))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
@@ -299,7 +299,7 @@ static cell AMX_NATIVE_CALL set_param_byref(AMX *amx, cell *params)
 	}
 	int p = params[1];
 
-	cell *addr = get_amxaddr(g_pCaller, g_Params[p]);
+	cell *addr = get_amxaddr(g_pCurNative->amx, g_Params[p]);
 
 	addr[0] = params[2];
 
@@ -309,7 +309,7 @@ static cell AMX_NATIVE_CALL set_param_byref(AMX *amx, cell *params)
 //get_array(param, dest[], size)
 static cell AMX_NATIVE_CALL get_array(AMX *amx, cell *params)
 {
-	if (!g_pCurNative || (g_pCaller != amx))
+	if (!g_pCurNative || (g_pCurNative->amx != amx))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
@@ -334,7 +334,7 @@ static cell AMX_NATIVE_CALL get_array(AMX *amx, cell *params)
 //set_array(param, source[], size)
 static cell AMX_NATIVE_CALL set_array(AMX *amx, cell *params)
 {
-	if (!g_pCurNative || (g_pCaller != amx))
+	if (!g_pCurNative || (g_pCurNative->amx != amx))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
@@ -358,7 +358,7 @@ static cell AMX_NATIVE_CALL set_array(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL vdformat(AMX *amx, cell *params)
 {
-	if (!g_pCurNative || (g_pCaller != amx))
+	if (!g_pCurNative || (g_pCurNative->amx != amx))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;
@@ -421,7 +421,7 @@ static cell AMX_NATIVE_CALL vdformat(AMX *amx, cell *params)
 //I've no idea how he thought of this, but it's great.  No idea how well it works.
 static cell AMX_NATIVE_CALL param_convert(AMX *amx, cell *params)
 {
-	if (!g_pCurNative || (g_pCaller != amx))
+	if (!g_pCurNative || (g_pCurNative->amx != amx))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Not currently in a dynamic native");
 		return 0;

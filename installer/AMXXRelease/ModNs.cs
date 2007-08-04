@@ -24,6 +24,7 @@ namespace AMXXRelease
 			AddPlugin("idlekicker");
 			AddPlugin("nscommands");
 			AddPlugin("unstuck");
+			AddPlugin("plmenu");
 		}
 
 		private void AddModules()

@@ -3,7 +3,7 @@
 #ifndef __MODULECONFIG_H__
 #define __MODULECONFIG_H__
 
-#include "svn_version.h"
+#include "../svn_version.h"
 
 // Module info
 #define MODULE_NAME "NS"

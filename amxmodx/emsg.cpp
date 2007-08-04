@@ -211,9 +211,15 @@ void Client_CurWeapon(void* mValue)
 		case 2:
 			if (!mPlayer) return;
 			if (!iState || (iId < 1 || iId >= MAX_WEAPONS)) break;
-			mPlayer->weapons[iId].clip = *(int*)mValue;
 			mPlayer->current = iId;
-			mPlayer->lastHit = mPlayer->lastTrace;
+
+			
+			if (*(int*)mValue < mPlayer->weapons[iId].clip && // Only update the lastHit vector if the clip size is decreasing
+				*(int*)mValue != -1) // But not if it's a melee weapon
+			{
+				mPlayer->lastHit = mPlayer->lastTrace;
+			}
+			mPlayer->weapons[iId].clip = *(int*)mValue;
 	}
 }
 

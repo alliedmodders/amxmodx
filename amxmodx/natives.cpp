@@ -299,7 +299,7 @@ static cell AMX_NATIVE_CALL set_param_byref(AMX *amx, cell *params)
 	}
 	int p = params[1];
 
-	cell *addr = get_amxaddr(g_pCurNative->amx, g_Params[p]);
+	cell *addr = get_amxaddr(g_pCaller, g_Params[p]);
 
 	addr[0] = params[2];
 

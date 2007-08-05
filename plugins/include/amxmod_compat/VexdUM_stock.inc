@@ -97,7 +97,8 @@ stock can_see(ent1, ent2)
 // type = 10: "noise3"
 // type = 11: "viewmodel"
 // type = 12: "weaponmodel"
-stock find_entity(ent, szValue[], type=0)
+
+stock vexd_find_entity(ent, szValue[], type=0)
 {
 	static _g_FindEntTypes[13][] = 
 	{
@@ -123,6 +124,8 @@ stock find_entity(ent, szValue[], type=0)
 	
 	return engfunc(EngFunc_FindEntityByString, ent, _g_FindEntTypes[type], szValue);
 }
+
+#define find_entity vexd_find_entity
 
 //From AMX Mod:
 // Find an entity within a given origin and radius

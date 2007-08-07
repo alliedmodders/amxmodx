@@ -104,6 +104,10 @@ native filesize(const filename[], any:...);
 // operating systems.
 native rmdir(const path[]);
 
+/* Returns 0 on success, like the POSIX specification */
+native mkdir(const dirname[]);
+
+
 //Delete a file (delete_file macro)
 native unlink(const filename[]);
 

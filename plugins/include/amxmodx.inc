@@ -733,9 +733,6 @@ native require_module(const module[]);
 
 native is_amd64_server();
 
-/* Returns 0 on success, like the POSIX specification */
-native mkdir(const dirname[]);
-
 /* Returns plugin id searched by file/name.  Returns INVALID_PLUGIN_ID on failure. */
 native find_plugin_byfile(const filename[], ignoreCase=1);
 

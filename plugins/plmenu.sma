@@ -61,6 +61,22 @@ new g_cstrike = 0
 new Array:g_bantimes;
 new Array:g_slapsettings;
 
+new g_CSTeamNames[3][] = {
+	"TERRORIST",
+	"CT",
+	"SPECTATOR"
+}
+new g_CSTeamNumbers[3][] = {
+	"1",
+	"2",
+	"6"
+}
+new g_CSTeamiNumbers[3] = {
+	1,
+	2,
+	6
+}
+
 
 public plugin_natives()
 {
@@ -615,7 +631,7 @@ public actionTeamMenu(id, key)
 	{
 		case 7:
 		{
-			g_menuOption[id] = 1 - g_menuOption[id]
+			g_menuOption[id] = (g_menuOption[id] + 1) % (g_cstrike ? 3 : 2);
 			displayTeamMenu(id, g_menuPosition[id])
 		}
 		case 8: displayTeamMenu(id, ++g_menuPosition[id])
@@ -632,7 +648,7 @@ public actionTeamMenu(id, key)
 				
 			log_amx("Cmd: ^"%s<%d><%s><>^" transfer ^"%s<%d><%s><>^" (team ^"%s^")", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2, g_menuOption[id] ? "TERRORIST" : "CT")
 
-			show_activity_key("ADMIN_TRANSF_1", "ADMIN_TRANSF_2", name, name2, g_menuOption[id] ? "TERRORIST" : "CT");
+			show_activity_key("ADMIN_TRANSF_1", "ADMIN_TRANSF_2", name, name2, g_CSTeamNames[g_menuOption[id] % 3]);
 
 			if (g_cstrike)
 			{
@@ -642,13 +658,14 @@ public actionTeamMenu(id, key)
 					user_kill(player, 1)
 					cs_set_user_deaths(player, deaths)
 				}
-				cs_set_user_team(player, g_menuOption[id] ? 1 : 2)
+				// This modulo math just aligns the option to the CsTeams-corresponding number
+				cs_set_user_team(player, (g_menuOption[id] % 3) + 1)
 				cs_reset_user_model(player)
 			} else {
 				new limit_setting = get_cvar_num("mp_limitteams")
 				
 				set_cvar_num("mp_limitteams", 0)
-				engclient_cmd(player, "jointeam", g_menuOption[id] ? "1" : "2")
+				engclient_cmd(player, "jointeam", g_CSTeamNumbers[g_menuOption[id] % 2])
 				engclient_cmd(player, "joinclass", "1")
 				set_cvar_num("mp_limitteams", limit_setting)
 			}
@@ -699,14 +716,19 @@ displayTeamMenu(id, pos)
 			else if (iteam == 2)
 			{
 				copy(team, 3, "CT")
+			}
+			else if (iteam == 3)
+			{
+				copy(team, 3, "SPE");
+				iteam = 6;
 			} else {
-				get_user_team(i, team, 3)
+				iteam = get_user_team(i, team, 3)
 			}
 		} else {
 			iteam = get_user_team(i, team, 3)
 		}
 
-		if ((iteam == (g_menuOption[id] ? 1 : 2)) || access(i, ADMIN_IMMUNITY))
+		if ((iteam == g_CSTeamiNumbers[g_menuOption[id] % (g_cstrike ? 3 : 2)]) || access(i, ADMIN_IMMUNITY))
 		{
 			++b
 			
@@ -724,7 +746,7 @@ displayTeamMenu(id, pos)
 		}
 	}
 
-	len += format(menuBody[len], 511-len, "^n8. %L^n", id, "TRANSF_TO", g_menuOption[id] ? "TERRORIST" : "CT")
+	len += format(menuBody[len], 511-len, "^n8. %L^n", id, "TRANSF_TO", g_CSTeamNames[g_menuOption[id] % (g_cstrike ? 3 : 2)])
 
 	if (end != g_menuPlayersNum[id])
 	{

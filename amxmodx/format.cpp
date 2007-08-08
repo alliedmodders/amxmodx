@@ -495,10 +495,10 @@ reswitch:
 			AddHex(&buf_p, llen, static_cast<unsigned int>(*get_amxaddr(amx, params[arg])), width, flags);
 			arg++;
 			break;
-		case 'S':
+		case 'a':
 			{
 				CHECK_ARGS(0);
-				// %S is passed a pointer directly to a cell string.
+				// %a is passed a pointer directly to a cell string.
 				cell* ptr=reinterpret_cast<cell*>(*get_amxaddr(amx, params[arg]));
 				if (!ptr)
 				{

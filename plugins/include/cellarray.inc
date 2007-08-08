@@ -206,11 +206,11 @@ native ArraySwap(Array:which, item1, item2);
 native ArrayDeleteItem(Array:which, item);
 
 /**
- * Creates a handle that is passable to a format compliant routine for printing as a string (with the %S parameter).  
+ * Creates a handle that is passable to a format compliant routine for printing as a string (with the %a format option).  
  * It is suggested to pass the function directly as a parameter to the format routine.
  * The array contents must be a null-terminated string!
  *
- * An example usage:  client_print(id, print_chat, "%S", ArrayGetStringHandle(MessageArray, i));
+ * An example usage:  client_print(id, print_chat, "%a", ArrayGetStringHandle(MessageArray, i));
  *
  * @param which			The array the string is stored in.
  * @param item			Which item to print the string value of.

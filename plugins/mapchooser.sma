@@ -200,7 +200,7 @@ public voteNextmap()
 			if (++a >= g_mapNums) a = 0
 		
 		g_nextName[g_mapVoteNum] = a
-		pos += format(menu[pos], 511, "%d. %S^n", g_mapVoteNum + 1, ArrayGetStringHandle(g_mapName, a));
+		pos += format(menu[pos], 511, "%d. %a^n", g_mapVoteNum + 1, ArrayGetStringHandle(g_mapName, a));
 		mkeys |= (1<<g_mapVoteNum)
 		g_voteCount[g_mapVoteNum] = 0
 	}

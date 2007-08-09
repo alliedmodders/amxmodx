@@ -20,7 +20,7 @@ OBJECTS = basic_sql.cpp handles.cpp module.cpp threading.cpp sdk/amxxmodule.cpp 
 OBJECTS += thread/BaseWorker.cpp thread/ThreadWorker.cpp thread/PosixThreads.cpp
 OBJECTS += mysql/MysqlQuery.cpp mysql/MysqlResultSet.cpp mysql/MysqlDatabase.cpp mysql/MysqlDriver.cpp 
 
-LINK = -lgcc -static-libgcc -lmysqlclient_r -lz -lpthread
+LINK = -lgcc -static-libgcc $(MYSQL_DIR)/lib/libmysqlclient_r.a -lz -lpthread
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
 	-I$(MM_ROOT) -I$(HLSDK)/common -I$(MYSQL_DIR)/include -L$(MYSQL_DIR)/lib -Ithread \

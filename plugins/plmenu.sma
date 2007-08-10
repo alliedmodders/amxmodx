@@ -792,16 +792,16 @@ public actionClcmdMenu(id, key)
 			
 			if (is_user_connected(player))
 			{
-				new command[64], authid[32], name[32], userid[32]
+				new command[512], authid[32], name[32], userid[32]
 				
-				copy(command, 63, g_clcmdCmd[g_menuSelect[id][g_menuOption[id]]])
+				copy(command, charsmax(command), g_clcmdCmd[g_menuSelect[id][g_menuOption[id]]])
 				get_user_authid(player, authid, 31)
 				get_user_name(player, name, 31)
 				num_to_str(get_user_userid(player), userid, 31)
 				
-				replace(command, 63, "%userid%", userid)
-				replace(command, 63, "%authid%", authid)
-				replace(command, 63, "%name%", name)
+				replace(command, charsmax(command), "%userid%", userid)
+				replace(command, charsmax(command), "%authid%", authid)
+				replace(command, charsmax(command), "%name%", name)
 				
 				if (flags & 1)
 				{

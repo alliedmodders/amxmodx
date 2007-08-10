@@ -18,7 +18,7 @@ enum
     timeunit_hours,
     timeunit_days,
     timeunit_weeks,
-}
+};
 
 // seconds are in each time unit
 #define SECONDS_IN_MINUTE 60

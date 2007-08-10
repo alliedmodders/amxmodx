@@ -17,7 +17,7 @@
 native get_vaultdata(const key[], data[] = "", len = 0);
 
 /* Sets a data under given key. */
-native set_vaultdata(const key[], const data[] = "" );
+native set_vaultdata(const key[], const data[] = "");
 
 /* Removes a key from vault.*/
 native remove_vaultdata(const key[]);

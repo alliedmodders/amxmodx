@@ -31,14 +31,14 @@ enum Sql
 {
 	SQL_FAILED=0,
 	SQL_OK
-}
+};
 
 enum Result
 {
 	RESULT_FAILED=-1,
 	RESULT_NONE,
 	RESULT_OK
-}
+};
 
 /* This will return a number equal to or below 0 on failure.
  * If it does fail, the error will be mirrored in dbi_error()

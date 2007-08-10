@@ -20,7 +20,7 @@
 #include <fun>
 #include <maths>
 
-stock AMX_VERSION[] = 	"1.76-BC"
+stock AMX_VERSION[] = 	"1.76-BC";
 
 #define ADMIN_PERMBAN       ADMIN_BAN		//AMX Mod admin flag for permanent ban
 #define ADMIN_UNBAN         ADMIN_BAN		//AMX Mod admin flag for unbanning
@@ -307,12 +307,12 @@ stock is_module_running(const module[])
 
 stock is_plugin_running(const plugin[])
 {
-	new status[8]
-	new id, filename[1], name[1], version[1], author[1]
+	new status[8];
+	new id, filename[1], name[1], version[1], author[1];
 	
-	id = is_plugin_loaded(plugin)
+	id = is_plugin_loaded(plugin);
 	
-	get_plugin(id, filename, 0, name, 0, version, 0, author, 0, status, 7)
+	get_plugin(id, filename, 0, name, 0, version, 0, author, 0, status, 7);
 	
-	return strcmp(status, "running") == 0 ? id + 1 : 0
+	return strcmp(status, "running") == 0 ? id + 1 : 0;
 }

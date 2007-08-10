@@ -53,4 +53,3 @@ native get_stats(index,stats[8],bodyhits[8],name[],len);
 
 /* Returns number of all entries in stats. */
 native get_statsnum();
-

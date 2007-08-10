@@ -18,7 +18,7 @@
 enum {
   XMF_DAMAGE = 0,
   XMF_DEATH,
-}
+};
 
 #if AMXX_VERSION_NUM >= 175
  #pragma reqlib tsfun

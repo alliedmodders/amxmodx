@@ -251,4 +251,3 @@ stock IsInWorld( ent )
 
    return 1;
 }
-

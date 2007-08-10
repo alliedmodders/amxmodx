@@ -50,14 +50,14 @@ enum {
 	PS_PRONE,
 	PS_PRONEDEPLOY,
 	PS_DEPLOY,
-}
+};
 
 /* info types for dod_get_map_info native */
 enum {
 	MI_ALLIES_TEAM = 0,
 	MI_ALLIES_PARAS,
 	MI_AXIS_PARAS,
-}
+};
 
 /* DoD weapons */
 enum {
@@ -133,4 +133,3 @@ enum {
 	DODC_PIAT, 
 	//DODC_BRIT_MORTAR,
 };
-

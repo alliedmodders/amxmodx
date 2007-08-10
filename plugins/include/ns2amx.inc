@@ -259,7 +259,5 @@ stock get_res(id)
 stock get_class(id)
   return ns_get_class(id);
 
-
-
 stock is_combat()
 	return ns_is_combat();

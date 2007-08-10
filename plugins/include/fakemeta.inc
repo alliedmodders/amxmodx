@@ -63,7 +63,7 @@ native set_pev(_index,_value,any:...);
  * @param	_value		The pev field to set - MUST be a string field.
  * @param	_string		The string handle, retrieved from places like AllocString.
  */
-native set_pev_string(_index, _value, _string)
+native set_pev_string(_index, _value, _string);
 
 
 /**
@@ -221,19 +221,19 @@ native copy_infokey_buffer(infoBuffer, out[], maxlen);
  *
  * @param entity		The entity id to lookup.
  * @param name			The sequence name to lookup, case insensitive. ("JUMP" would match "jump")
- * @param framerate	The framerate of the sequence, if found.
- * @param loops		Whether or not the sequence loops.
+ * @param framerate		The framerate of the sequence, if found.
+ * @param loops			Whether or not the sequence loops.
  * @param groundspeed	The groundspeed setting of the sequence.
  * @return				-1 on failed lookup, the sequence number on successful lookup.
  */
-native lookup_sequence(entity, const name[], &Float:framerate = 0.0, &bool:loops = false, &Float:groundspeed = 0.0)
+native lookup_sequence(entity, const name[], &Float:framerate = 0.0, &bool:loops = false, &Float:groundspeed = 0.0);
 
 /**
  * Sets a bone controller with the specified value.
  *
  * @param entity		The entity id to set the value on.
  * @param controller	Which controller to set (0 through 3).
- * @param value		The value to set it to.
+ * @param value			The value to set it to.
  * @return				The percentage that the controller is extended (0.0 through 1.0)
  */
-native Float:set_controller(entity, controller, Float:value)
+native Float:set_controller(entity, controller, Float:value);

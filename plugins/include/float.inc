@@ -19,13 +19,13 @@ enum floatround_method {
 	floatround_floor,
 	floatround_ceil,
 	floatround_tozero
-}
+};
 
 enum anglemode {
 	radian = 0,
 	degrees,
 	grades
-}
+};
 
 /* Convert an integer into a floating point value */
 native Float:float(value);

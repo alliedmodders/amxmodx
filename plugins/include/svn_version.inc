@@ -13,4 +13,4 @@
 
 #define AMXX_VERSION		1.80
 #define AMXX_VERSION_NUM	180
-stock const AMXX_VERSION_STR[] = "1.8.0.3398"
+stock const AMXX_VERSION_STR[] = "1.8.0.3398";

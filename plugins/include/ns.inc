@@ -82,7 +82,7 @@ native ns_get_user_team(id, buff[], len);
  * @param ah			Whether to only display the message on clients who have the cvar "cl_autohelp" set to 1.
  * @noreturn
  */
-native ns_popup(target, const szMsg[180], ah=0)
+native ns_popup(target, const szMsg[180], ah=0);
 
 /**
  * Sets a player model.  Omit the second parameter to return to default

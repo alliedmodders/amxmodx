@@ -61,7 +61,7 @@ enum {
 	EV_INT_button,
 	EV_INT_impulse,
 	EV_INT_deadflag,
-}
+};
 
 /* Float */
 enum {
@@ -102,7 +102,7 @@ enum {
 	EV_FL_fuser2,
 	EV_FL_fuser3,
 	EV_FL_fuser4,
-}
+};
 
 /* Vector */
 enum {
@@ -129,7 +129,7 @@ enum {
 	EV_VEC_vuser2,
 	EV_VEC_vuser3,
 	EV_VEC_vuser4,
-}
+};
 
 /* Edict */
 enum {
@@ -144,7 +144,7 @@ enum {
 	EV_ENT_euser2,
 	EV_ENT_euser3,
 	EV_ENT_euser4,
-}
+};
 
 /* String */
 enum {
@@ -161,7 +161,7 @@ enum {
 	EV_SZ_noise3,
 	EV_SZ_viewmodel,
 	EV_SZ_weaponmodel,
-}
+};
 
 /* Byte */
 enum {
@@ -171,7 +171,7 @@ enum {
 	EV_BYTE_controller4,
 	EV_BYTE_blending1,
 	EV_BYTE_blending2,
-}
+};
 
 #if defined _jghg_enums
   #endinput
@@ -220,7 +220,7 @@ enum {
 
     // Void (not supported)
     GL_pSaveData
-}
+};
 
 enum
 {

@@ -15,30 +15,30 @@
 
 /* Gets the velocity of an entity */
 stock get_entity_velocity(index, velocity[3]) {
-	new Float:vector[3]
-	entity_get_vector(index, EV_VEC_velocity, vector)
-	FVecIVec(vector, velocity)
+	new Float:vector[3];
+	entity_get_vector(index, EV_VEC_velocity, vector);
+	FVecIVec(vector, velocity);
 }
 
 /* Sets the velocity of an entity */
 stock set_entity_velocity(index, velocity[3]) {
-	new Float:vector[3]
-	IVecFVec(velocity, vector)
-	entity_set_vector(index, EV_VEC_velocity, vector)
+	new Float:vector[3];
+	IVecFVec(velocity, vector);
+	entity_set_vector(index, EV_VEC_velocity, vector);
 }
 
 /* Gets the origin of an entity */
 stock get_entity_origin(index, origin[3]) {
-	new Float:vector[3]
-	entity_get_vector(index, EV_VEC_origin, vector)
-	FVecIVec(vector, origin)
+	new Float:vector[3];
+	entity_get_vector(index, EV_VEC_origin, vector);
+	FVecIVec(vector, origin);
 }
 
 /* Sets the origin of an entity */
 stock set_entity_origin(index, origin[3]) {
-	new Float:vector[3]
-	IVecFVec(origin, vector)
-	entity_set_vector(index, EV_VEC_origin, vector)
+	new Float:vector[3];
+	IVecFVec(origin, vector);
+	entity_set_vector(index, EV_VEC_origin, vector);
 }
 
 /* Get the index of the grenade belonging to index.
@@ -51,16 +51,16 @@ stock set_entity_origin(index, origin[3]) {
  * FLASHBANG = "models/w_flashbang.mdl"
  * SMOKEGRENADE = "models/w_smokegrenade.mdl" */
 stock get_grenade_index(index, model[], len, grenadeindex = 0) {
-	new entfind = grenadeindex
-	new entowner = index
+	new entfind = grenadeindex;
+	new entowner = index;
 
 	for (;;) {
-		entfind = find_ent_by_class(entfind, "grenade")
+		entfind = find_ent_by_class(entfind, "grenade");
 
 		if (entfind && is_valid_ent(entfind)) {
 			if (entity_get_edict(entFind, EV_ENT_owner) == entowner) {
-				entity_get_string(entfind, EV_SZ_model, model)
-				return entfind
+				entity_get_string(entfind, EV_SZ_model, model);
+				return entfind;
 			}
 		}
 		else {
@@ -79,7 +79,7 @@ enum {
    classname = 0,
    target,
    targetname
-}
+};
 
 #if !defined _vexd_bcompat_included
 /* Find an entity ID from start_from_ent id (use 0 to start from
@@ -87,10 +87,10 @@ enum {
  * "targetname", value is the name you are searching for */
 stock find_entity(start_from_ent, category, value[]) {
 	switch (category) {
-		case target: return find_ent_by_target(start_from_ent, value)
-		case targetname: return find_ent_by_tname(start_from_ent, value)
+		case target: return find_ent_by_target(start_from_ent, value);
+		case targetname: return find_ent_by_tname(start_from_ent, value);
 	}
-	return find_ent_by_class(start_from_ent, value)
+	return find_ent_by_class(start_from_ent, value);
 }
 #endif
 

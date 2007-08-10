@@ -23,9 +23,9 @@ native translate(const string[], destid=-1, forcelang=-1);
 
 stock _T(const string[], destid=-1, forcelang=-1)
 {
-	new TranslationResult[2] = {0, 0}
-	TranslationResult[0] = translate(string, destid, forcelang)
-	return TranslationResult
+	new TranslationResult[2] = {0, 0};
+	TranslationResult[0] = translate(string, destid, forcelang);
+	return TranslationResult;
 }
 
 stock load_translations(const file[])

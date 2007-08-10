@@ -27,7 +27,7 @@
 enum {
   XMF_DAMAGE = 0,
   XMF_DEATH,
-}
+};
 
 /* Use this function to register forwards */
 native register_statsfwd( ftype );

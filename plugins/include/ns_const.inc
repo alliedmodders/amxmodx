@@ -24,7 +24,7 @@ enum NSGameplay
 
 	NSGame_Unknown,			/**< Can find the gameplay entity, but can't 
 								 determine gameplay type. */
-}
+};
 
 // entity pev->iuser4 fields
 enum {
@@ -78,8 +78,7 @@ enum {
 	MASK_SELECTABLE = 268435456,	// ???
 	MASK_PARASITED = 536870912,	// Parasite flag
 	MASK_SENSORY_NEARBY = 1073741824 // Sensory chamber in range
-
-}
+};
 
 
 enum {
@@ -96,7 +95,7 @@ enum {
 	CLASS_GESTATE,
 	CLASS_DEAD,
 	CLASS_NOTEAM
-}
+};
 
 enum {
 	WEAPON_NONE = 0,
@@ -131,14 +130,14 @@ enum {
 	WEAPON_STOMP,
 	WEAPON_DEVOUR,
 	WEAPON_MAX
-}
+};
 
 enum {
 	HIVETRAIT_NONE	= 0,
 	HIVETRAIT_DC	= 92,
 	HIVETRAIT_SC	= 93,
 	HIVETRAIT_MC	= 94
-}
+};
 
 enum NSPS_VelShape
 {
@@ -146,8 +145,7 @@ enum NSPS_VelShape
 	NSPS_VS_BOX,
 	NSPS_VS_SPHERE,
 	NSPS_VS_BLOB
-
-}
+};
 
 /* Genshape used in ns_set_ps_genshape
  * NOTE: The following are in the ns.ps file but
@@ -169,7 +167,7 @@ enum NSPS_GenShape
 	NSPS_GS_DISC,
 	NSPS_GS_RECTANGLE,
 	NSPS_GS_NONE
-}
+};
 enum NSPS_RenderMode
 {
 	NSPS_R_NORMAL = 0,
@@ -178,7 +176,7 @@ enum NSPS_RenderMode
 	NSPS_R_GLOW,
 	NSPS_R_TRANSALPHA,
 	NSPS_R_ADDITIVE
-}
+};
 enum NSPS_Flags
 {
 	NSPS_FL_START_ON = 1,
@@ -191,4 +189,4 @@ enum NSPS_Flags
 	NSPS_FL_COLLIDE = 256,
 	NSPS_FL_HI_DETAIL = 512,
 	NSPS_FL_FACE_UP = 1024
-}
+};

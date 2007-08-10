@@ -98,7 +98,7 @@ enum
 	ARG_COORD,          /* float */
 	ARG_STRING,         /* string */
 	ARG_ENTITY,         /* int */
-}
+};
 
 /* Temp entity message types for message_begin() */
 #define	TE_BEAMPOINTS               0        // Beam effect between two points

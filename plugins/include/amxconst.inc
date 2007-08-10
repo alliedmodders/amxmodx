@@ -171,14 +171,14 @@ enum {
 	print_console,
 	print_chat,
 	print_center,
-}
+};
 
 /* Destination types for engclient_print() */
 enum {
 	engprint_console = 0,
 	engprint_center,
 	engprint_chat,
-}
+};
 
 /* Render for set_user_rendering() */
 enum {
@@ -188,7 +188,7 @@ enum {
 	kRenderGlow,			/* src*a+dest -- No Z buffer checks */
 	kRenderTransAlpha,		/* src*srca+dest*(1-srca) */
 	kRenderTransAdd,		/* src*a+dest */
-}
+};
 
 /* Fx for set_user_rendering() */
 enum {
@@ -213,14 +213,14 @@ enum {
 	kRenderFxExplode,		/* Scale up really big! */
 	kRenderFxGlowShell,		/* Glowing Shell */
 	kRenderFxClampMinScale,		/* Keep this sprite from getting very small (SPRITES only!) */
-}
+};
 
 /* Type for force_unmodified() */
 enum {
 	force_exactfile = 0,		/* File on client must exactly match server's file */
 	force_model_samebounds,		/* For model files only, the geometry must fit in the same bbox */
 	force_model_specifybounds,	/* For model files only, the geometry must fit in the specified bbox */
-}
+};
 
 /* Status for get_module() */
 enum {

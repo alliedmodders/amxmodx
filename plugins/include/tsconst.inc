@@ -91,7 +91,7 @@ enum {
   TSW_SKNIFE,
   TSW_KUNG_FU,
   TSW_TKNIFE,
-}
+};
 
 /* 
 valid tsweaponid in TS_GiveWeapon

@@ -46,7 +46,7 @@ void CtrlDetour_ClientCommand(bool set)
 	{
 		'\x50',									/* push eax         ; just for safety */
 		'\x68', '\x00', '\x00', '\x00', '\x00', /* push 0			; space to store override rule */
-		'\xff', '\x74', '\x24', '\x0C',			/* push [esp+4]		; push the edict pointer */
+		'\xff', '\x74', '\x24', '\x0C',			/* push [esp+0xC]		; push the edict pointer */
 		'\xe8', '\x00', '\x00', '\x00', '\x00', /* call <gate>		; call our function */
 		'\x58',									/* pop eax			; remove 3rd push */
 		'\x58',									/* pop eax			; remove 2nd push */

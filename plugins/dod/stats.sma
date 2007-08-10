@@ -625,7 +625,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK)
   g_DeathStats[victim] = get_gametime() + statstime 
 
 
-  if ( ShowKiller && !(!get_cvar_num("dodstats_rankbots") &&  (is_user_bot(killer) || is_user_bot(killer)))  ){ 
+  if ( ShowKiller && !(!get_cvar_num("dodstats_rankbots") &&  (is_user_bot(killer) || is_user_bot(victim)))  ){ 
     new stats[9], body[8], wpn[33], mstats[9], mbody[8] 
   
     get_user_astats(victim,killer,stats,body,wpn,31) 

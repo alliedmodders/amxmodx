@@ -135,8 +135,6 @@
 #endif
 
 
-// Hardcore
-#pragma semicolon 1
 /****** DEBUGGING / LOGING FUNCTIONS ******/
 	enum xs_logtypes
 	{
@@ -1246,4 +1244,3 @@
 		return 1;
 	}
 	
-#pragma semicolon 0

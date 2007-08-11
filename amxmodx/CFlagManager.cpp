@@ -161,7 +161,9 @@ done_with_flags:
 
 
 
-		if (!isalnum(*Command))
+		//if (!isalnum(*Command))
+		if (*Command == '"' || 
+			*Command == '\0')
 		{
 			continue;
 		};
@@ -208,6 +210,7 @@ void CFlagManager::LookupOrAdd(const char *Command, int &Flags, AMX *Plugin)
 	{
 		return;
 	}
+	
 
 	int TempFlags=Flags;
 	if (TempFlags==-1)
@@ -338,7 +341,8 @@ int CFlagManager::ShouldIAddThisCommand(const AMX *amx, const cell *params, cons
 	{
 		return 0;
 	}
-
+	
+	
 	// If 5th param exists it was compiled after this change was made
 	// if it does not exist, try our logic at the end of this function
 	// 5th param being > 0 means explicit yes

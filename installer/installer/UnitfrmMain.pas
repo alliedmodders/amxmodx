@@ -805,8 +805,8 @@ begin
     IdLogFile.Active := True;
   end;
 
-  if not DirectoryExists(ExtractFilePath(Application.ExeName) + 'files') then begin
-    MessageBox(Handle, 'The files-folder couldn''t be found. Run the Pre-Installer of AMX Mod X and try again.', 'Error', MB_ICONERROR);
+  if not DirectoryExists(ExtractFilePath(Application.ExeName) + 'files\base') then begin
+    MessageBox(Handle, 'You cannot copy this program and then run it to install AMX Mod X. Please download and install the full AMX Mod X package and start this installer again from the start menu.', 'Error', MB_ICONERROR);
     Application.Terminate;
   end
   else begin

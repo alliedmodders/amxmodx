@@ -38,7 +38,7 @@ uses UnitfrmMain, UnitfrmProxy, UnitFunctions, UnitScanMods;
 
 function InstallTime: String;
 begin
-  Result := FormatDateTime('HH:MM:SS', Now - StartTime);
+  Result := Copy(FormatDateTime('HH:MM:SS', Now - StartTime), 4, 5);
 end;
 
 procedure AddStatus(Text: String; Color: TColor; ShowTime: Boolean = True);
@@ -308,6 +308,18 @@ begin
   end;
   AddDone('found ' + IntToStr(FileList.Count) + ' files..');
   AddStatus('', clBlack, False);
+
+  if (DirList.Count = 0) or (FileList.Count = 0) then begin
+    MessageBox(frmMain.Handle, 'Sorry, you do not seem to have any files in your files-directory. Please verify that you have properly installed the full AMX Mod X package and try again.', 'Error', MB_ICONERROR);
+
+    Screen.Cursor := crDefault;
+    Application.OnException := frmMain.ExceptionHandler;
+    Cancel := True;
+    if frmMain.IdFTP.Connected then
+      frmMain.IdFTP.Quit;
+    frmMain.cmdCancel.Caption := 'Close';
+    exit;
+  end;
 
   frmMain.ggeAll.MaxValue := DirList.Count + FileList.Count;
   frmMain.ggeItem.MaxValue := DirList.Count;

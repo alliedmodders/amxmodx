@@ -317,7 +317,7 @@ begin
       ChosenMod := modNone;
       ePath := LowerCase(GetModPathName(trvMods.Selected.Text));
       if gMultiAccount then
-        SteamPath := GetSteamAppsDir + trvMods.Selected.Parent.Text + '\dedicated server\'; // setting this path for a user with only one account is not neccessary
+        SteamPath := GetSteamAppsDir + trvMods.Selected.Parent.Text + '\dedicated server\'; // setting this path for a user with only one account is not necessary
       // ask for additional mods...
       if (ePath = 'cstrike') or (ePath = 'czero') then begin
         if MessageBox(Handle, 'Install Counter-Strike addon?', PChar(Application.Title), MB_ICONQUESTION + MB_YESNO) = mrYes then
@@ -367,7 +367,7 @@ begin
     if frbListenServer.Checked then begin
       ChosenMod := modNone;
       if gMultiAccount then
-        SteamPath := GetSteamAppsDir + trvMods.Selected.Parent.Text + '\'; // setting this path for a user with only one account is not neccessary
+        SteamPath := GetSteamAppsDir + trvMods.Selected.Parent.Text + '\'; // setting this path for a user with only one account is not necessary
       ePath := trvMods.Selected.Text;
       if DirectoryExists(SteamPath + ePath + '\' + GetModPathName(ePath)) then
         ePath := SteamPath + ePath + '\' + GetModPathName(ePath)
@@ -530,7 +530,7 @@ begin
         end;
 
         if trvMods.Items.Count = 0 then
-          MessageBox(Handle, 'You haven''t installed any Steam games yet. It is neccessary to do that if you want to install AMX Mod X on a listen server.', 'Error', MB_ICONERROR)
+          MessageBox(Handle, 'You haven''t installed any Steam games yet. It is necessary to do that if you want to install AMX Mod X on a listen server.', 'Error', MB_ICONERROR)
         else begin
           jspSelectMod.Show;
           trvMods.Selected := nil;

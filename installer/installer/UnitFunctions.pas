@@ -32,9 +32,9 @@ begin
   Result := TStringList.Create;
 
   // Find all files
-  if FindFirst(Mask, Attr, eSearch) = 0 then begin
+  if (FindFirst(Mask, Attr, eSearch) = 0) then begin
     repeat
-      if eSearch.Name[1] <> '.' then begin
+      if (eSearch.Name[1] <> '.') then begin
         if ShowPath then begin
           if ((eSearch.Attr and Attr) = eSearch.Attr) and ((eSearch.Attr and faDirectory) <> eSearch.Attr) then
             Result.Add(ExtractFilePath(Mask) + eSearch.Name)
@@ -55,8 +55,10 @@ begin
           end;
         end;
       end;
-    until FindNext(eSearch) <> 0;
+    until (FindNext(eSearch) <> 0);
   end;
+
+  SysUtils.FindClose(eSearch);
 end;
 
 function GetSteamAppsDir: String;

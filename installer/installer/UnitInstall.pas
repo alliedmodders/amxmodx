@@ -325,7 +325,7 @@ begin
   frmMain.ggeItem.MaxValue := DirList.Count;
 
   if (SteamInstall) and (GetProcessID('Steam.exe') <> -1) then begin
-    if MessageBox(frmMain.Handle, 'Steam is still running. It is necersarry to shut it down before you install AMX Mod X. Shut it down now?', PChar(frmMain.Caption), MB_ICONQUESTION + MB_YESNO) = mrYes then begin
+    if MessageBox(frmMain.Handle, 'Steam is still running. It is necessary to shut it down before you install AMX Mod X. Shut it down now?', PChar(frmMain.Caption), MB_ICONQUESTION + MB_YESNO) = mrYes then begin
       AddStatus('Shutting down Steam...', clBlack, False);
       if GetProcessID('Steam.exe') = -1 then
         AddDone

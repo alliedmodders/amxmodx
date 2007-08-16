@@ -429,6 +429,8 @@ loadSettings(szFilename[])
 		{
 			fgets(File,Text,sizeof(Text)-1);
 			
+			trim(Text);
+			
 			// comment
 			if (Text[0]==';') 
 			{

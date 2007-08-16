@@ -15,7 +15,7 @@ bool UTIL_GetLibraryOfAddress(void *memInBase, char *buffer, size_t maxlength);
 
 /* Detours */
 void CtrlDetour_ClientCommand(bool set);
-void Detour_ClientCommand(edict_t *pEdict, int retVal);
+int Detour_ClientCommand(edict_t *pEdict);
 
 int g_CSCliCmdFwd = -1;
 int *g_UseBotArgs = NULL;
@@ -45,20 +45,17 @@ void CtrlDetour_ClientCommand(bool set)
 	static unsigned char DetourOps[] = 
 	{
 		'\x50',									/* push eax         ; just for safety */
-		'\x68', '\x00', '\x00', '\x00', '\x00', /* push 0			; space to store override rule */
-		'\xff', '\x74', '\x24', '\x0C',			/* push [esp+0xC]		; push the edict pointer */
+		'\xff', '\x74', '\x24', '\x08',			/* push [esp+0x8]	; push the edict pointer */
 		'\xe8', '\x00', '\x00', '\x00', '\x00', /* call <gate>		; call our function */
-		'\x58',									/* pop eax			; remove 3rd push */
-		'\x58',									/* pop eax			; remove 2nd push */
-		'\x85', '\xc0',							/* test eax, eax	; do != 0 test now, flags will be saved */
-		'\x58',									/* pop eax			; remove 1st push */
+		'\x83', '\xc4', '\x08',					/* add esp, 8		; correct stack */
+		'\x85', '\xc0',							/* test eax, eax	; do != 0 test */
 		'\x74', '\x01',							/* je <cont>		; if == 0, jump to where old func is saved */
 		'\xc3'									/* ret				; return otherwise */
 	};
 	static unsigned char DetourJmp = '\xE9';
 
-	const unsigned int DetourBytes = 23;
-	const unsigned int DetourCallPos = 11;
+	const unsigned int DetourBytes = 18;
+	const unsigned int DetourCallPos = 6;
 	const unsigned int DetourJmpPos = DetourBytes + CS_DETOURCOPYBYTES_CLIENTCOMMAND;
 	const unsigned int DetourJmpBytes = 5;
 	static unsigned char *FullDetour = NULL;
@@ -130,14 +127,15 @@ void CtrlDetour_ClientCommand(bool set)
 	}
 }
 
-void Detour_ClientCommand(edict_t *pEdict, int retVal)
+int Detour_ClientCommand(edict_t *pEdict)
 {
 	if (*g_UseBotArgs)
 	{
 		int client = ENTINDEX(pEdict);
 		const char *args = *g_BotArgs;
-		retVal = MF_ExecuteForward(g_CSCliCmdFwd, (cell)client, args);
+		return MF_ExecuteForward(g_CSCliCmdFwd, (cell)client, args);
 	}
+	return 0;
 }
 
 unsigned char *UTIL_CodeAlloc(size_t size)

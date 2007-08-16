@@ -202,14 +202,18 @@ native set_uc(uc_handle, UserCmd:member, {Float,_}:...);
 //NOTE that for the string offsets below, on AMD64, a byref (char **) offset is NOT the same as an int offset
 //In fact it's QWORD aligned rather than DWORD aligned, so the offset will be exactly half.
 //Gets a string from a private offset.  If byref is false, the string is treated as static rather than dynamic.
-native get_pdata_string(entity, offset, dest[], maxlength, byref=1, linux=-5);
+//linux value is what to add to the offset for linux servers.
+//this cannot use a default value due to older version using an awkward default value.
+native get_pdata_string(entity, offset, dest[], maxlength, byref=1, linux);
 
 //Sets a string in a private offset.
 //realloc = -1 - nonbyref copy (static
 //realloc = 0 - copy byref, no realloc *(char **)
 //realloc = 1 - reallocate new string with free+malloc
 //realloc = 2 - reallocate new string with delete[]+new[]
-native set_pdata_string(entity, offset, const source[], realloc=2, linux=-5);
+//linux value is what to add to the offset for linux servers.
+//this cannot use a default value due to older version using an awkward default value.
+native set_pdata_string(entity, offset, const source[], realloc=2, linux);
 
 // Copies the given infoBuffer pointer into out[]
 // An infoBuffer pointer is returned by EngFunc_GetInfoKeyBuffer

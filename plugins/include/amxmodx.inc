@@ -116,6 +116,8 @@ native console_cmd(id,const cmd[],any:...);
 * "c" - send only once when repeated to other players.
 * "d" - call if is send to dead player.
 * "e" - to alive.
+* NOTE: Due to a long-standing bug that would break compatibility with old plugins,
+*       the client id should be checked for alive/dead state if you use d or e.
 * Examples for conditions:
 * "2=c4" - 2nd parameter of message must be sting "c4".
 * "3>10" - 3rd parameter must be greater then 10.

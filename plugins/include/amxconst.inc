@@ -281,24 +281,6 @@ enum {
 #define FORWARD_ONLY_NEW	2
 #define FORWARD_ALL		3
 
-#define MEXIT_ALL		1		/* (default) Menu will have an exit option */
-#define MEXIT_NORMAL	0		/* Deprecated, has no effect */
-#define MEXIT_NEVER		-1		/* Menu will not have an exit option */
-
-#define MENUPAD_NONE		0	/* Deprecated, not used */
-#define MENUPAD_PAGE		1	/* Deprecated, not used */
-
-#define MPROP_PERPAGE	1		//NUM - items per page.  0=no paginating, 7=default
-#define MPROP_BACKNAME	2		//STRING - name of "back" button
-#define MPROP_NEXTNAME	3		//STRING - name of "more" button
-#define MPROP_EXITNAME	4		//STRING - name of "exit" button
-#define MPROP_TITLE		5		//STRING - sets menu title
-#define MPROP_EXIT		6		//NUM - sets how "Exit" appears on the menu
-#define MPROP_ORDER		7		/* Deprecated, has no effect */
-#define MPROP_NOCOLORS	8		//NUM - sets whether colors are not auto (0=default)
-#define MPROP_PADMENU	9		/* Deprecated, has no effect */
-#define MPROP_NUMBER_COLOR	10	//STRING - color indicator to use for the numbers.  ("\r"=default)
-
 #define SND_SPAWNING		(1<<8)		// we're spawing, used in some cases for ambients 
 #define SND_STOP		(1<<5)		// stop sound
 #define SND_CHANGE_VOL		(1<<6)		// change sound vol

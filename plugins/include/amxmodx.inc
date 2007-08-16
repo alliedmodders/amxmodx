@@ -22,6 +22,7 @@
 #include <vector>
 #include <sorting>
 #include <cellarray>
+#include <newmenus>
 
 /* Function is called just after server activation.
 * Good place for configuration loading, commands and cvars registration. */
@@ -796,71 +797,6 @@ native get_array(param, dest[], size);
 native get_array_f(param, Float:dest[], size);
 native set_array(param, const source[], size);
 native set_array_f(param, const Float:source[], size);
-
-/** The new menu natives */
-//If you set ml to 1, everything will be preformatted
-// with the multi-lingual system.
-//NOTE: ml=1 currently is not enabled.
-//handler[] will be called when someone presses a key on your menu
-native menu_create(const title[], const handler[], ml=0);
-
-//Creates a menu item callback handler.  
-//The callback handler is passed the playerid, menuid, and itemid.
-//It can return either ITEM_IGNORE, ITEM_ENABLED, or ITEM_DISABLED.
-native menu_makecallback(const function[]);
-
-//Adds an item to a menu.  When displayed, the name will be shown.
-//If the player does not have the access it is disabled.
-//If you set callback, the callback will be called before the item is printed on the screen.
-//this lets you change it in real time depending on conditions.
-native menu_additem(menu, const name[], const command[]="", paccess=0, callback=-1);
-
-//returns how many pages are in a menu
-native menu_pages(menu);
-
-//returns how many items are in a menu
-native menu_items(menu);
-
-//displays a menu to a player
-//page of the menu starts at 0.  there are 7 items to a page.
-//back/exit/next/more whatever are automatically added as needed.
-//you cannot use this to show a menu to everyone at once!
-native menu_display(id, menu, page);
-
-//Given a page on a menu and a keypress on that page, returns the item id selected.
-//if the item is less than 0, a special option was chosen (such as MENU_EXIT)
-native menu_find_id(menu, page, key);
-
-//Gets/sets info about a menu option
-native menu_item_getinfo(menu, item, &access, command[], cmdlen, name[]="", namelen=0, &callback);
-
-native menu_item_setname(menu, item, const name[]);
-native menu_item_setcmd(menu, item, const cmd[]);
-native menu_item_setcall(menu, item, callback=-1);
-
-//Destroys a menu - invalidates the handle
-//This is safe, as it will go through the players and make
-// sure they don't have this menu set anymore.
-native menu_destroy(menu);
-
-//Gets info about a player's menu.  Returns 1 if the player is viewing a menu.
-//menu will be >0 for a valid oldmenu.  newmenu will be != -1 for a valid newmenu.
-//As of 1.77, there is an optional page parameter.
-native player_menu_info(id, &menu, &newmenu, &menupage=0);
-
-//adds a blank line to a menu.
-//if slot is nonzero (default), the blank line will increase
-//the numbering rather than just shifting down.
-native menu_addblank(menu, slot=1);
-
-//Sets a menu property.  See amxconst.inc for various menu properties.
-//The third value depends on the property
-native menu_setprop(menu, prop, ...);
-
-//Cancels a player's menu, effectively forcing the player to select MENU_EXIT
-//The menu will still exist on their screen but any results are invalidated,
-//and the callback is invoked.
-native menu_cancel(player);
 
 // Dispatches a client cvar query
 //  id: Player id

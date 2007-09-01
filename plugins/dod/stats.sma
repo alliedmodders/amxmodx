@@ -996,7 +996,7 @@ getTop15_steam(id){
   new pos = copy(g_Buffer,2047,"<html><head><style type=^"text/css^">pre{color:#FFB000;}body{background:Black;margin-left:8px;margin-top:0px;color:#FFB000;}</style></head><pre><body>")
 
   pos += format(g_Buffer[pos],2047-pos,"<table><tr><td>#</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td></tr>",
-		id,"M_NICK",id,"M_KILLS",id,"M_DEATHS",id,"M_SCORE",id,"M_HS",id,"M_HITS",id,"M_SHOTS",id,"M_HS")
+		id,"M_NICK",id,"M_KILLS",id,"M_DEATHS",id,"M_SCORE",id,"M_TKS",id,"M_HITS",id,"M_SHOTS",id,"M_HS")
   new imax = get_statsnum()
   new itmax =  get_cvar_num("dodstats_topvalue")
   if (imax > itmax ) 

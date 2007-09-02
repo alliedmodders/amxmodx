@@ -35,14 +35,15 @@
 // *****************************************************
 // class MenuMngr
 // *****************************************************
-MenuMngr::MenuCommand::MenuCommand(CPluginMngr::CPlugin *a, int mi, int k, int f, int n)
+MenuMngr::MenuCommand::MenuCommand(CPluginMngr::CPlugin *a, int mi, int k, int f, bool new_menu)
 {
 	plugin = a;
 	keys = k;
 	menuid = mi;
-	function = f;
 	next = 0;
-	newmenu = n;
+	is_new_menu = new_menu;
+
+	function = f;
 }
 
 MenuMngr::~MenuMngr() 
@@ -62,112 +63,47 @@ int MenuMngr::findMenuId(const char* name, AMX* amx)
 	return 0;
 }
 
-void MenuMngr::removeMenuId(int id)
-{
-	MenuIdEle *n = headid;
-	MenuIdEle *l = NULL;
-	while (n)
-	{
-		if (n->id == id)
-		{
-			if (l)
-				l->next = n->next;
-			else
-				headid = n->next;
-			delete n;
-			break;
-		}
-		l = n;
-		n = n->next;
-	}
-
-	MenuCommand *c = headcmd;
-	MenuCommand *lc = NULL;
-	MenuCommand *tmp;
-	while (c)
-	{
-		if (c->menuid == id)
-		{
-			if (m_watch_iter.a == c)
-			{
-				++m_watch_iter;
-			}
-			if (lc)
-				lc->next = c->next;
-			else
-				headcmd = c->next;
-			tmp = c->next;
-			delete c;
-			c = tmp;
-		} else {
-			lc = c;
-			c = c->next;
-		}
-	}
-}
-
-void MenuMngr::removeMenuCmds(int newMenu)
-{
-	MenuCommand *c = headcmd;
-	MenuCommand *lc = NULL;
-	MenuCommand *tmp;
-	while (c)
-	{
-		if (c->newmenu == newMenu)
-		{
-			if (m_watch_iter.a == c)
-			{
-				++m_watch_iter;
-			}
-			if (lc)
-				lc->next = c->next;
-			else
-				headcmd = c->next;
-			tmp = c->next;
-			delete c;
-			c = tmp;
-		} else {
-			lc = c;
-			c = c->next;
-		}
-	}
-}
-
 int MenuMngr::registerMenuId(const char* n, AMX* a)
 {
 	int id = findMenuId(n, a);
 	
 	if (id)
+	{
 		return id;
+	}
 	
 	headid = new MenuIdEle(n, a, headid);
-	
-	if (!headid)
-		return 0;			// :TODO: Better error report
 	
 	return headid->id;
 }
 
-void MenuMngr::registerMenuCmd(CPluginMngr::CPlugin *a, int mi, int k, int f, int n) 
+void MenuMngr::registerMenuCmd(CPluginMngr::CPlugin *a, int mi, int k, int f, bool from_new_menu) 
 {
 	MenuCommand **temp = &headcmd;
-	MenuCommand *ptr;
-	while (*temp)
+	if (from_new_menu)
 	{
-		ptr = *temp;
-		if (n > -1
-			&& ptr->plugin == a
-			&& ptr->menuid == mi
-			&& ptr->keys == k)
+		MenuCommand *ptr;
+		while (*temp)
 		{
-			if (strcmp(g_forwards.getFuncName(ptr->function), g_forwards.getFuncName(f)) == 0)
+			ptr = *temp;
+			if (ptr->is_new_menu
+				&& ptr->plugin == a
+				&& ptr->menuid == mi)
 			{
-				return;
+				if (g_forwards.isSameSPForward(ptr->function, f))
+				{
+					return;
+				}
 			}
+			temp = &(*temp)->next;
 		}
-		temp = &(*temp)->next;
+	} else {
+		while (*temp)
+		{
+			temp = &(*temp)->next;
+		}
 	}
-	*temp = new MenuCommand(a, mi, k, f, n);
+	*temp = new MenuCommand(a, mi, k, f, from_new_menu);
 }
 
 void MenuMngr::clear()

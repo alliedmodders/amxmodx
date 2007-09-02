@@ -29,6 +29,7 @@
 */
 
 #include "amxmodx.h"
+#include "CMenu.h"
 #include "newmenus.h"
 
 CVector<Menu *> g_NewMenus;
@@ -45,28 +46,6 @@ void ClearMenus()
 	while (!g_MenuFreeStack.empty())
 	{
 		g_MenuFreeStack.pop();
-	}
-}
-
-void RemoveMenuIdIfOkay(Menu *pMenu, int menuid)
-{
-	/* :TODO: Move this to some sort of referencing counting thingy */
-	bool removeMenuId = true;
-	for (size_t i = 0; i < g_NewMenus.size(); i++)
-	{
-		if (!g_NewMenus[i] || g_NewMenus[i]->isDestroying)
-		{
-			continue;
-		}
-		if (g_NewMenus[i]->menuId == menuid)
-		{
-			removeMenuId = false;
-			break;
-		}
-	}
-	if (removeMenuId)
-	{
-		g_menucmds.removeMenuId(menuid);
 	}
 }
 
@@ -102,23 +81,31 @@ void validate_menu_text(char *str)
 	}
 }
 
-Menu::Menu(const char *title, int mid, int tid)
+Menu::Menu(const char *title, AMX *amx, int fid) : m_Title(title), m_ItemColor("\\r"), 
+m_NeverExit(false), m_AutoColors(g_coloredmenus), thisId(0), func(fid), 
+isDestroying(false), items_per_page(7)
 {
-	m_Title.assign(title);
-	menuId = mid;
-	thisId = tid;
+	CPluginMngr::CPlugin *pPlugin = g_plugins.findPluginFast(amx);
+	menuId = g_menucmds.registerMenuId(title, amx);
+
+	if (strcmp(pPlugin->getName(), "war3ft.amxx") == 0)
+	{
+		const char *version = pPlugin->getVersion();
+		if (strncmp(pPlugin->getVersion(), "3.0 RC", 6) == 0
+			&& atoi(&version[6]) <= 8)
+		{
+			g_menucmds.registerMenuCmd(
+				g_plugins.findPluginFast(amx), 
+				menuId, 
+				-1, 
+				g_forwards.duplicateSPForward(fid), 
+				true);
+		}
+	}
 
 	m_OptNames[abs(MENU_BACK)].assign("Back");
 	m_OptNames[abs(MENU_MORE)].assign("More");
 	m_OptNames[abs(MENU_EXIT)].assign("Exit");
-
-	m_ItemColor.assign("\\r");
-	m_NeverExit = false;
-	m_AutoColors = g_coloredmenus;
-
-	items_per_page = 7;
-	func = 0;
-	isDestroying = false;
 }
 
 Menu::~Menu()
@@ -605,11 +592,7 @@ static cell AMX_NATIVE_CALL menu_create(AMX *amx, cell *params)
 		return 0;
 	}
 
-	int id = g_menucmds.registerMenuId(title, amx);
-
-	Menu *pMenu = new Menu(title, id, 0);
-
-	pMenu->func = func;
+	Menu *pMenu = new Menu(title, amx, func);
 
 	if (g_MenuFreeStack.empty())
 	{
@@ -727,7 +710,7 @@ static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 		/* Infinite loop counter */
 		if (++loops >= 10)
 		{
-			LogError(amx, AMX_ERR_NATIVE, "Recursion bug detected in menu handler");
+			LogError(amx, AMX_ERR_NATIVE, "Plugin called menu_display when item=MENU_EXIT");
 			return 0;
 		}
 	}
@@ -902,22 +885,7 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 	case MPROP_TITLE:
 		{
 			char *str = get_amxstring(amx, params[3], 0, len);
-			int old = pMenu->menuId;
-			RemoveMenuIdIfOkay(pMenu, old);
 			pMenu->m_Title.assign(str);
-			pMenu->menuId = g_menucmds.registerMenuId(str, amx);
-			CPlayer *pl;
-			/**
-			 * NOTE - this is actually bogus
-			 *  the client's screen won't actually match the cmd here 
-			 *  I think, this scenario needs to be tested. 
-			 */
-			for (int i=1; i<=gpGlobals->maxClients; i++)
-			{
-				pl = GET_PLAYER_POINTER_I(i);
-				if (pl->menu == old)
-					pl->menu = pMenu->menuId;
-			}
 			break;
 		}
 	case MPROP_EXITALL:
@@ -1004,8 +972,6 @@ static cell AMX_NATIVE_CALL menu_destroy(AMX *amx, cell *params)
 	}
 
 	pMenu->isDestroying = true;
-
-	RemoveMenuIdIfOkay(pMenu, pMenu->menuId);
 
 	CPlayer *player;
 	for (int i=1; i<=gpGlobals->maxClients; i++)

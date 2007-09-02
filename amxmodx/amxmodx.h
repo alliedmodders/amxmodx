@@ -65,7 +65,6 @@
 #include "CLogEvent.h"
 #include "CForward.h"
 #include "CCmd.h"
-#include "CMenu.h"
 #include "CEvent.h"
 #include "CLang.h"
 #include "fakemeta.h"
@@ -183,7 +182,6 @@ extern CList<CPlayer*> g_auth;
 extern EventsMngr g_events;
 extern Grenades g_grenades;
 extern LogEventsMngr g_logevents;
-extern MenuMngr g_menucmds;
 extern CLangMngr g_langMngr;
 extern String g_log_dir;
 extern String g_mod_name;

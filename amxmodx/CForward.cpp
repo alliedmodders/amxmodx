@@ -543,7 +543,9 @@ void CForwardMngr::unregisterSPForward(int id)
 {
 	//make sure the id is valid
 	if (!isIdValid(id) || m_SPForwards.at(id >> 1)->isFree)
+	{
 		return;
+	}
 
 	CSPForward *fwd = m_SPForwards.at(id >> 1);
 
@@ -554,6 +556,38 @@ void CForwardMngr::unregisterSPForward(int id)
 		fwd->isFree = true;
 		m_FreeSPForwards.push(id);
 	}
+}
+
+int CForwardMngr::duplicateSPForward(int id)
+{
+	if (!isIdValid(id) || m_SPForwards.at(id >> 1)->isFree)
+	{
+		return -1;
+	}
+
+	CSPForward *fwd = m_SPForwards.at(id >> 1);
+	
+	return registerSPForward(fwd->m_Func, fwd->m_Amx, fwd->m_NumParams, fwd->m_ParamTypes);
+}
+
+int CForwardMngr::isSameSPForward(int id1, int id2)
+{
+	if (!isIdValid(id1) || !isIdValid(id2))
+	{
+		return false;
+	}
+
+	CSPForward *fwd1 = m_SPForwards.at(id1 >> 1);
+	CSPForward *fwd2 = m_SPForwards.at(id2 >> 1);
+
+	if (fwd1->isFree || fwd2->isFree)
+	{
+		return false;
+	}
+
+	return ((fwd1->m_Amx == fwd2->m_Amx)
+			&& (fwd1->m_Func == fwd2->m_Func)
+			&& (fwd1->m_NumParams == fwd2->m_NumParams));
 }
 
 int registerForwardC(const char *funcName, ForwardExecType et, cell *list, size_t num, int fwd_type)

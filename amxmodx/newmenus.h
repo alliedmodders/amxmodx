@@ -75,7 +75,7 @@ typedef unsigned int page_t;
 class Menu
 {
 public:
-	Menu(const char *title, int menuId, int thisId);
+	Menu(const char *title, AMX *amx, int fid);
 	~Menu();
 	
 	menuitem *GetMenuItem(item_t item);

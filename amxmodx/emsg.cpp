@@ -30,6 +30,7 @@
 */
 
 #include "amxmodx.h"
+#include "CMenu.h"
 
 int gmsgAmmoPickup;
 int gmsgAmmoX;

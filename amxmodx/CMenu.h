@@ -66,14 +66,17 @@ private:
 		int menuid;
 		int keys;
 		int function;
+		int is_new_menu;
 		
 		MenuCommand* next;
-		MenuCommand(CPluginMngr::CPlugin *a, int mi, int k, int f, int n=-1);
+		MenuCommand(CPluginMngr::CPlugin *a, int mi, int k, int f, bool new_menu=false);
 	public:
 		inline int getFunction() { return function; }
 		inline CPluginMngr::CPlugin* getPlugin() { return plugin; }
-		inline bool matchCommand(int m, int k) { return ((m == menuid) && (keys & k)); }
-		int newmenu;
+		inline bool matchCommand(int m, int k)
+		{
+			return ((m == menuid) && (keys & k));
+		}
 	} *headcmd;
 	
 public:
@@ -85,9 +88,7 @@ public:
 
 	int findMenuId(const char* name, AMX* a = 0);
 	int registerMenuId(const char* n, AMX* a);
-	void removeMenuId(int id);
-	void removeMenuCmds(int newMenu);
-	void registerMenuCmd(CPluginMngr::CPlugin *a, int mi, int k, int f, int n=-1);
+	void registerMenuCmd(CPluginMngr::CPlugin *a, int mi, int k, int f, bool from_new_menu=false);
 	void clear();
 
 	class iterator
@@ -111,5 +112,7 @@ public:
 private:
 	MenuMngr::iterator m_watch_iter;
 };
+
+extern MenuMngr g_menucmds;
 
 #endif //MENUS_H

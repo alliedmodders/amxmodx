@@ -192,7 +192,10 @@ native menu_destroy(menu);
 /**
  * Returns information about a menu (if any) the client is currently viewing.
  *
- * Either menu or newmenu can return a valid menu, but never both.  
+ * If newmenu is valid, then the menu will refer to the menuid associated with 
+ * the title.  If newmenu is not valid, and the menu is valid, then the player 
+ * is viewing a menu displayed with show_menu().
+ *
  * Both may be invalid if the player is not viewing a menu.
  *
  * @param id			Client index.
@@ -201,7 +204,6 @@ native menu_destroy(menu);
  * @param newmenu		Variable to store new menu id.  If none, then -1 will be 
  *						stored.
  * @param menupage		Variable to store current page of the new menu, if any.
- *						
  * @return				1 if the player is viewing a menu, 0 otherwise.
  * @error				Invalid client.
  */

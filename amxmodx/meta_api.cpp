@@ -39,6 +39,7 @@
 
 #include "amxmodx.h"
 #include "fakemeta.h"
+#include "CMenu.h"
 #include "newmenus.h"
 #include "natives.h"
 #include "binlog.h"
@@ -965,6 +966,7 @@ void C_ClientCommand(edict_t *pEntity)
 			pPlayer->menu = 0;
 
 			/* First, do new menus */
+			int func_was_executed = -1;
 			if (pPlayer->newmenu != -1)
 			{
 				int menu = pPlayer->newmenu;
@@ -988,6 +990,11 @@ void C_ClientCommand(edict_t *pEntity)
 							RETURN_META(MRES_SUPERCEDE);
 						}
 					}
+					/**
+					 * No matter what we marked it as executed, since the callback styles are 
+					 * entirely different.  After all, this is a backwards compat shim.
+					 */
+					func_was_executed = pMenu->func;
 				}
 			}		
 
@@ -997,7 +1004,11 @@ void C_ClientCommand(edict_t *pEntity)
 			while (a)
 			{
 				g_menucmds.SetWatchIter(a);
-				if ((*a).matchCommand(menuid, bit_key) && (*a).getPlugin()->isExecutable((*a).getFunction()))
+				if ((*a).matchCommand(menuid, bit_key) 
+					&& (*a).getPlugin()->isExecutable((*a).getFunction())
+					&& (func_was_executed == -1 
+						|| !g_forwards.isSameSPForward(func_was_executed, (*a).getFunction()))
+					)
 				{
 					ret = executeForwards((*a).getFunction(), static_cast<cell>(pPlayer->index),
 						static_cast<cell>(pressed_key), 0);

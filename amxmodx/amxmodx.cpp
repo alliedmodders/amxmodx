@@ -31,6 +31,7 @@
 
 #include <time.h>
 #include "amxmodx.h"
+#include "CMenu.h"
 #include "natives.h"
 #include "debugger.h"
 #include "binlog.h"

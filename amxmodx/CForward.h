@@ -217,6 +217,8 @@ public:
 	
 	// Unregister single plugin forward
 	void unregisterSPForward(int id);
+	int duplicateSPForward(int id);
+	int isSameSPForward(int id1, int id2);
 	
 	// execute forward
 	cell executeForwards(int id, cell *params);

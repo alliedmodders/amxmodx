@@ -38,10 +38,17 @@
  *  menu   - Menu resource identifier.
  *  id     - Client the menu is being acted upon.
  *  item   - Item the client selected.  If less than 0, the menu was 
- *           cancelled and the item is a status code.
+ *           cancelled and the item is a status code.  menu_display 
+ *			 should never be called immediately if the item is a status 
+ *			 code, for re-entrancy reasons.
+ *
+ * The handler function should always return PLUGIN_HANDLED to block 
+ * any old menu handlers from potentially feeding on the menu, unless 
+ * that is the desired functionality.
  *
  * @param title 		Title the menu should use.
- * @param handler		Name of the handler function.
+ * @param handler		Name of the handler function.  The function will be invoked 
+ *						once and only once to every menu_display() call.
  * @param ml			Unused (should be 0).
  * @return				Menu resource identifier which must be destroyed via 
  *						menu_destroy().  All menus are destroyed when the plugin 

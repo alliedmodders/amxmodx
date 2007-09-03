@@ -765,6 +765,7 @@ public cmdPlugins(id, level, cid)
 	if (id==0) // If server executes redirect this to "amxx plugins" for more in depth output
 	{
 		server_cmd("amxx plugins");
+		server_exec();
 		return PLUGIN_HANDLED;
 	}
 

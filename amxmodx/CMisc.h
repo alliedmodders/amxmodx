@@ -130,7 +130,18 @@ public:
 
 	inline bool IsBot()
 	{
-		return ((pEdict->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT);
+		if ((pEdict->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT)
+		{
+			return true;
+		}
+		
+		const char *auth = GETPLAYERAUTHID(pEdict); 	 
+		if (auth && (strcmp(auth, "BOT") == 0)) 	 
+		{
+			return true;
+		}
+		
+		return false;
 	}
 
 	inline bool IsAlive()

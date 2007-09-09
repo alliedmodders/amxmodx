@@ -142,12 +142,20 @@ public actionMenu(id, key)
 			
 			switch (status[0])
 			{
+				// "running"
 				case 'r': pause("ac", file)
+				
+				// "debug"
+				case 'd': pause("ac", file)
+				
+				// "paused"
 				case 'p':
 				{
 					g_Modified = 1
 					unpause("ac", file)
 				}
+				
+				// "stopped"
 				case 's':
 				{
 					client_print(id, print_chat, "%L", id, "CANT_UNPAUSE_PLUGIN", file);
@@ -165,21 +173,35 @@ getStatus(id, code, &statusCode, lStatus[], lLen)
 {
 	switch (code)
 	{
+		// "running"
 		case 'r':
 		{
 			statusCode = 'O'
 			format(lStatus, lLen, "%L", id, "ON")
 		}
+		
+		// "debug"
+		case 'd':
+		{
+			statusCode = 'O'
+			format(lStatus, lLen, "%L", id, "ON")
+		}
+		
+		// "stopped"
 		case 's':
 		{
 			statusCode = 'S'
 			format(lStatus, lLen, "%L", id, "STOPPED")
 		}	
+		
+		// "paused"
 		case 'p':
 		{
 			statusCode = 'O'
 			format(lStatus, lLen, "%L", id, "OFF")
 		}
+		
+		// "bad load"
 		case 'b':
 		{
 			statusCode = 'E'
@@ -501,7 +523,8 @@ saveSettings(filename[])
 	{
 		get_plugin(a, file, 31, title, 31, status, 0, status, 0, status, 1)
 		
-		if (status[0] == 's')
+		// "paused"
+		if (status[0] == 'p')
 		{
 			format(text, 255, "^"%s^" ;%s", title, file)
 			write_file(filename, text)
@@ -521,7 +544,7 @@ loadSettings(filename[])
 	while (read_file(filename, pos++, name, 255, i))
 	{
 		if (name[0] != ';' && parse(name, name, 31) && (i = findPluginByTitle(name, file, 31) != -1))
-			pause("dc", file)
+			pause("ac", file)
 	}
 	
 	return 1

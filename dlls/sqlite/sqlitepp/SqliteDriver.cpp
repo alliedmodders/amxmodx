@@ -7,6 +7,10 @@
 #if defined WIN32
 #define snprintf _snprintf
 #define strncasecmp strnicmp
+#define WINDOWS_LEAN_AND_MEAN
+#include <windows.h>
+#else
+#include <unistd.h>
 #endif
 
 using namespace SourceMod;
@@ -19,6 +23,17 @@ bool SqliteDriver::IsCompatDriver(const char *namestr)
 const char *SqliteDriver::NameString()
 {
 	return "sqlite";
+}
+
+int busy_handler(void *unused1, int unused2)
+{
+#if defined __linux__
+	usleep(100000);
+#else
+	Sleep(100);
+#endif
+
+	return 1;
 }
 
 IDatabase *SqliteDriver::Connect(DatabaseInfo *info, int *errcode, char *error, size_t maxlength)
@@ -38,7 +53,9 @@ IDatabase *SqliteDriver::Connect(DatabaseInfo *info, int *errcode, char *error, 
 		sqlite3_close(pSql);
 		return NULL;
 	} else {
+		sqlite3_busy_handler(pSql, busy_handler, NULL);
 		SqliteDatabase *pDb = new SqliteDatabase(pSql, this);
 		return static_cast<IDatabase *>(pDb);
 	}
 }
+

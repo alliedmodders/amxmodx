@@ -973,27 +973,25 @@ int AMXAPI amx_InitJIT(AMX *amx, void *reloc_table, void *native_code)
   memcpy(native_code, amx->base, ((AMX_HEADER *)(amx->base))->cod);
   hdr = (AMX_HEADER *)native_code;
 
+  
+
   /* JIT rulz! (TM) */
   /* MP: added check for correct compilation */
   //Fixed bug (thanks T(+)rget)
   if ((res = asm_runJIT(amx->base, reloc_table, native_code)) == 0) 
   {
-    /* update the required memory size (the previous value was a
-     * conservative estimate, now we know the exact size)
-     */
-    amx->code_size = (hdr->dat + hdr->stp + 3) & ~3;
     /* The compiled code is relocatable, since only relative jumps are
      * used for destinations within the generated code and absoulute
      * addresses for jumps into the runtime, which is fixed in memory.
      */
     amx->base = (unsigned char*) native_code;
     amx->cip = hdr->cip;
-    amx->hea = hdr->hea;
-    amx->stp = hdr->stp - sizeof(cell);
-	amx->hlw = hdr->hea;
-    /* also put a sentinel for strings at the top the stack */
-    *(cell *)((char*)native_code + hdr->dat + hdr->stp - sizeof(cell)) = 0;
-    amx->stk = amx->stp;
+	/* also put a sentinel for strings at the top the stack */
+	*(cell *)((char*)native_code + hdr->dat + amx->stp - sizeof(cell)) = 0;
+	/* update the required memory size (the previous value was a
+	 * conservative estimate, now we know the exact size)
+	 */
+	amx->code_size = (hdr->dat + amx->stp + sizeof(cell)) & ~3;
   } /* if */
 
   return (res == 0) ? AMX_ERR_NONE : AMX_ERR_INIT_JIT;

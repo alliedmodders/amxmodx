@@ -1719,10 +1719,9 @@ static cell AMX_NATIVE_CALL cs_get_c4_defusing(AMX* amx, cell* params)
 		return 0;
 	}
 
-	return *((char*)((REAL*)pC4->pvPrivateData + OFFSET_C4_DEFUSING)) ? 1 : 0;
-
-	return 1;
+	return *(bool *)((char *)(pC4->pvPrivateData) + OFFSET_C4_DEFUSING) ? 1 : 0;
 }
+
 static cell AMX_NATIVE_CALL cs_set_c4_defusing(AMX* amx, cell* params)
 {
 	CHECK_NONPLAYER(params[1]);

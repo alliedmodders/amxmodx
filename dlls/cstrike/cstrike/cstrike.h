@@ -47,9 +47,11 @@
 #if defined __linux__
 	#define EXTRAOFFSET					5 // offsets 5 higher in Linux builds
 	#define EXTRAOFFSET_WEAPONS			4 // weapon offsets are obviously only 4 steps higher on Linux!
+	#define ACTUAL_EXTRA_OFFSET			20 // actual, byte-addressable offset
 #else
 	#define EXTRAOFFSET					0 // no change in Windows builds
 	#define EXTRAOFFSET_WEAPONS			0
+	#define ACTUAL_EXTRA_OFFSET			0
 #endif // defined __linux__
 /*
 	Offset history:
@@ -111,7 +113,7 @@
 	#define OFFSET_ARMOURY_TYPE			34 + EXTRAOFFSET_WEAPONS
 	// C4 offsets
 	#define OFFSET_C4_EXPLODE_TIME		100 + EXTRAOFFSET
-	#define OFFSET_C4_DEFUSING			0x60 + EXTRAOFFSET
+	#define OFFSET_C4_DEFUSING			0x180 + ACTUAL_EXTRA_OFFSET
 #else
 	// Amd64 offsets here
 	#define OFFSET_ARMORTYPE			137 + EXTRAOFFSET

@@ -1734,7 +1734,7 @@ static cell AMX_NATIVE_CALL cs_set_c4_defusing(AMX* amx, cell* params)
 		return 0;
 	}
 
-	*((char*)((REAL*)pC4->pvPrivateData + OFFSET_C4_DEFUSING)) = params[2] ? 1 : 0;
+	*(bool *)((char *)(pC4->pvPrivateData) + OFFSET_C4_DEFUSING) = params[2] ? true : false;
 
 	return 1;
 }

@@ -824,6 +824,37 @@ static cell AMX_NATIVE_CALL amx_rename(AMX *amx, cell *params)
 #endif
 }
 
+static cell LoadFileForMe(AMX *amx, cell *params)
+{
+	int len;
+	char *file = get_amxstring(amx, params[1], 0, len);
+	char path[256];
+
+	build_pathname_r(path, sizeof(path), "%s", file);
+
+	byte *addr = LOAD_FILE_FOR_ME(path, &len);
+	if (addr == NULL)
+	{
+		return -1;
+	}
+
+	cell *buffer = get_amxaddr(amx, params[2]);
+	cell maxlength = params[3];
+	cell *bytes_avail = get_amxaddr(amx, params[4]);
+
+	*bytes_avail = len;
+
+	cell count;
+	for (count = 0; count < len && count < maxlength; count++)
+	{
+		buffer[count] = addr[count];
+	}
+
+	FREE_FILE(addr);
+
+	return count;
+}
+
 AMX_NATIVE_INFO file_Natives[] =
 {
 	{"delete_file",		delete_file},
@@ -859,5 +890,6 @@ AMX_NATIVE_INFO file_Natives[] =
 	{"rmdir",			amx_rmdir},
 	{"fputs",			amx_fputs},
 	{"rename_file",		amx_rename},
+	{"LoadFileForMe",	LoadFileForMe},
 	{NULL,				NULL}
 };

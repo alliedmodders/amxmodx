@@ -115,3 +115,20 @@ native unlink(const filename[]);
 native open_dir(dir[], firstfile[], length);
 native next_file(dirh, buffer[], length);
 native close_dir(dirh);
+
+/**
+ * Loads a file using the LoadFileForMe engine function.
+ *
+ * The data is truncated if there is not enough space.  No null-terminator 
+ * is applied; the data is the raw contents of the file.
+ *
+ * @param file			File to load (may be a file from the GCF).
+ * @param buffer		Buffer to store file contents.
+ * @param maxlength		Maximum size of the file buffer.
+ * @param length		Variable to store the file length.  This may return 
+ *						a number larger than the buffer size.
+ * @return				-1 if the file could not be loaded.  Otherwise, 
+ *						the number of cells actually written to the buffer 
+ *						are returned.
+ */
+native LoadFileForMe(const file[], buffer[], maxlength, &length=0);

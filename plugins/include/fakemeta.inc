@@ -110,6 +110,20 @@ native Float:get_pdata_float(_index,_Offset,_linuxdiff=5);
 /* Sets a float from private data.  _linuxdiff is added into the _Offset if it's used on a linux server. */
 native set_pdata_float(_index,_Offset,Float:_Value,_linuxdiff=5);
 
+/**
+ * Tries to retrieve an edict (entity encapsulation) pointer from an entity's private data.
+ *
+ * This function is byte-addressable.  Unlike get_pdata_int() which searches in byte increments of 4, 
+ * get_pdata_end searches in increments of 1.
+ *
+ * @param _index		Entity index.
+ * @param _offset		Offset to search.
+ * @param _linuxdiff	Linux difference.
+ * @return				-2 if an invalid entity was found.
+ *						-1 if an empty entity was found.
+ * 						Otherwise, an entity index is returned.
+ */
+native get_pdata_ent(_index, _offset, _linuxdiff=20);
 
 /* Registers a forward.
  * Returns an id you can pass to unregister_forward

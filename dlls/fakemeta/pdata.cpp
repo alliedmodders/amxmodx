@@ -143,12 +143,48 @@ static cell AMX_NATIVE_CALL set_pdata_string(AMX *amx, cell *params)
 	return 1;
 }
 
-AMX_NATIVE_INFO pdata_natives[] = {
+static cell AMX_NATIVE_CALL get_pdata_ent(AMX *amx, cell *params)
+{
+	int index=params[1];
+	int iOffset=params[2];
+
+	CHECK_ENTITY(index);
+
+#ifdef __linux__
+	iOffset += params[3];
+#endif
+
+	edict_t *pEdict = *(edict_t **)((char *)(INDEXENT2(index)->pvPrivateData) + iOffset);
+
+	if (pEdict == NULL)
+	{
+		return -1;
+	}
+
+	edict_t *pWorld = INDEXENT(0);
+	int ent = pEdict - pWorld;
+
+	if (ent < 0 || ent > gpGlobals->maxEntities)
+	{
+		return -2;
+	}
+
+	if (pEdict->free || pEdict->pvPrivateData == NULL)
+	{
+		return -1;
+	}
+
+	return ent;
+}
+
+AMX_NATIVE_INFO pdata_natives[] =
+{
 	{ "get_pdata_int",		get_pdata_int },
 	{ "set_pdata_int",		set_pdata_int },
 	{ "get_pdata_float",	get_pdata_float },
 	{ "set_pdata_float",	set_pdata_float },
 	{ "set_pdata_string",	set_pdata_string },
 	{ "get_pdata_string",	get_pdata_string },
+	{ "get_pdata_ent",		get_pdata_ent },
 	{ NULL,					NULL }
 };

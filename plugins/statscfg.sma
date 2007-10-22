@@ -288,7 +288,14 @@ saveSettings(filename[])
 	{
 		if (get_xvar_num(g_menuDataId[a]))
 		{
-			format(text, 255, "%-24.23s ;%s", g_menuDataVar[a], g_menuData[a])
+			if (equal(g_menuData[a], "ST_", 3))
+			{
+				format(text, 255, "%-24.23s ;%L", g_menuDataVar[a], LANG_SERVER, g_menuData[a])
+			}
+			else
+			{
+				format(text, 255, "%-24.23s ;%s", g_menuDataVar[a], g_menuData[a])
+			}
 			write_file(filename, text)
 		}
 	} 

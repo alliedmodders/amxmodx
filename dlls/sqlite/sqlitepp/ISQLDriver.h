@@ -61,6 +61,9 @@ namespace SourceMod
 		 * Resets back to the first row.
 		 */
 		virtual void Rewind() =0;
+
+		/* Always returns false in Sqlite */
+		virtual bool NextResultSet() =0;
 	};
 
 	struct QueryInfo

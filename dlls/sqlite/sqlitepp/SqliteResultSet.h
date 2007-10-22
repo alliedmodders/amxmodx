@@ -39,6 +39,7 @@ namespace SourceMod
 		int GetInt(unsigned int columnId);
 		bool IsNull(unsigned int columnId);
 		const char *GetRaw(unsigned int columnId, size_t *length);
+		bool NextResultSet();
 	private:
 		const char *GetStringSafe(unsigned int columnId);
 	private:

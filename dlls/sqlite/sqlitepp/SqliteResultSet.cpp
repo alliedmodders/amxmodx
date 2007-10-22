@@ -164,3 +164,8 @@ void SqliteResultSet::Rewind()
 	m_CurRow = 1;
 	m_CurIndex = (m_CurRow * m_Columns);
 }
+
+bool SqliteResultSet::NextResultSet()
+{
+	return false;
+}

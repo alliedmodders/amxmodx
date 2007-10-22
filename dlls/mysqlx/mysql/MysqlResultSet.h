@@ -30,7 +30,7 @@ namespace SourceMod
 	class MysqlResultSet : public IResultSet
 	{
 	public:
-		MysqlResultSet(MYSQL_RES *res);
+		MysqlResultSet(MYSQL_RES *res, MYSQL *mysql);
 		~MysqlResultSet();
 	public:
 		void FreeHandle();
@@ -44,7 +44,9 @@ namespace SourceMod
 		IResultRow *GetRow();
 		void NextRow();
 		void Rewind();
+		bool NextResultSet();
 	private:
+		MYSQL *m_pMySQL;
 		MYSQL_RES *m_pRes;
 		MysqlResultRow m_kRow;
 		unsigned int m_Columns;

@@ -34,6 +34,7 @@ public:
 	virtual IResultRow *GetRow();
 	virtual void NextRow();
 	virtual void Rewind();
+	virtual bool NextResultSet();
 public:
 	virtual const char *GetString(unsigned int columnId);
 	virtual const char *GetStringSafe(unsigned int columnId);

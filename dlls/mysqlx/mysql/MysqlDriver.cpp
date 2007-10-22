@@ -57,7 +57,7 @@ IDatabase *MysqlDriver::_Connect(DatabaseInfo *info, int *errcode, char *error, 
 							info->database,
 							info->port,
 							NULL,
-							0) == NULL)
+							CLIENT_MULTI_STATEMENTS) == NULL)
 	{
 		if (errcode)
 		{

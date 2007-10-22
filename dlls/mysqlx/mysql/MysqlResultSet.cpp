@@ -61,11 +61,12 @@ int MysqlResultRow::GetInt(unsigned int columnId)
 	return atoi(GetStringSafe(columnId));
 }
 
-MysqlResultSet::MysqlResultSet(MYSQL_RES *res) : 
+MysqlResultSet::MysqlResultSet(MYSQL_RES *res, MYSQL *mysql) : 
 	m_pRes(res)
 {
 	m_Rows = (unsigned int)mysql_num_rows(res);
 	m_Columns = (unsigned int)mysql_num_fields(res);
+	m_pMySQL = mysql;
 
 	if (m_Rows > 0)
 	{
@@ -77,7 +78,49 @@ MysqlResultSet::MysqlResultSet(MYSQL_RES *res) :
 
 MysqlResultSet::~MysqlResultSet()
 {
+	if (m_pRes == NULL)
+	{
+		return;
+	}
+
 	mysql_free_result(m_pRes);
+	while (mysql_next_result(m_pMySQL) == 0)
+	{
+		m_pRes = mysql_store_result(m_pMySQL);
+		if (m_pRes != NULL)
+		{
+			mysql_free_result(m_pRes);
+		}
+	}
+}
+
+bool MysqlResultSet::NextResultSet()
+{
+	if (!mysql_more_results(m_pMySQL))
+	{
+		return false;
+	}
+
+	mysql_free_result(m_pRes);
+	if (mysql_next_result(m_pMySQL) != 0
+		|| (m_pRes = mysql_store_result(m_pMySQL)) == NULL)
+	{
+		m_Rows = 0;
+		m_pRes = NULL;
+		m_Columns = 0;
+		m_kRow.m_CurRow = NULL;
+		return false;
+	}
+
+	m_Rows = (unsigned int)mysql_num_rows(m_pRes);
+	m_Columns = (unsigned int)mysql_num_fields(m_pRes);
+
+	if (m_Rows > 0)
+	{
+		NextRow();
+	}
+
+	m_kRow.m_Columns = m_Columns;
 }
 
 void MysqlResultSet::FreeHandle()

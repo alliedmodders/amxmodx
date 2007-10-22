@@ -248,6 +248,20 @@ native SQL_SetAffinity(const driver[]);
 native SQL_GetQueryString(Handle:query, buffer[], maxlength);
 
 /**
+ * For queries which return multiple result sets, this advances to the next 
+ * result set if one is available.  Otherwise, the current result set is 
+ * destroyed and will no longer be accessible.
+ *
+ * This function will always return false on SQLite, and when using threaded 
+ * queries in MySQL.  Nonetheless, it has the same effect of removing the last 
+ * result set.
+ *
+ * @param query		Query Handle.
+ * @return			True on success, false on failure.
+ */
+native bool:SQL_NextResultSet(Handle:query);
+
+/**
  * This function can be used to find out if a table in a Sqlite database exists.
  * (updated for newer API)
  */

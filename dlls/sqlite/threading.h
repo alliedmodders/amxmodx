@@ -42,6 +42,7 @@ public:
 	virtual int GetInt(unsigned int columnId);
 	virtual bool IsNull(unsigned int columnId);
 	virtual const char *GetRaw(unsigned int columnId, size_t *length);
+	virtual bool NextResultSet();
 public:
 	void CopyFrom(IResultSet *rs);
 private:

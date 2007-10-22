@@ -61,6 +61,10 @@ namespace SourceMod
 		 * Rewinds to the first row.
 		 */
 		virtual void Rewind() =0;
+		/**
+		 * Transitions to the next result set, if any is available.
+		 */
+		virtual bool NextResultSet() =0;
 	};
 
 	struct QueryInfo

@@ -566,6 +566,11 @@ void AtomicResult::Rewind()
 	m_CurRow = 1;
 }
 
+bool AtomicResult::NextResultSet()
+{
+	return false;
+}
+
 AMX_NATIVE_INFO g_ThreadSqlNatives[] =
 {
 	{"SQL_ThreadQuery",			SQL_ThreadQuery},

@@ -19,6 +19,7 @@
 #if defined WIN32 || defined _WIN32
 #include <winsock.h>
 #endif
+typedef unsigned long ulong;
 #include <mysql.h>
 
 #endif //_INCLUDE_SOURCEMOD_MYSQL_HEADERS_H

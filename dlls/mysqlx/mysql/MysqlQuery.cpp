@@ -84,7 +84,9 @@ bool MysqlQuery::ExecuteR(QueryInfo *info, char *error, size_t maxlength)
 		{
 			snprintf(error, maxlength, "%s", mysql_error(m_pDatabase->m_pMysql));
 		}
-	} else {
+	}
+	else
+	{
 		MYSQL_RES *res = mysql_store_result(m_pDatabase->m_pMysql);
 		if (!res)
 		{
@@ -105,7 +107,7 @@ bool MysqlQuery::ExecuteR(QueryInfo *info, char *error, size_t maxlength)
 			info->errorcode = 0;
 			info->success = true;
 			info->affected_rows = mysql_affected_rows(m_pDatabase->m_pMysql);
-			MysqlResultSet *rs = new MysqlResultSet(res);
+			MysqlResultSet *rs = new MysqlResultSet(res, m_pDatabase->m_pMysql);
 			info->rs = rs;
 		}
 	}

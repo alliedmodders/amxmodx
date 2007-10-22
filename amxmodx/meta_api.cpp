@@ -421,25 +421,18 @@ int	C_Spawn(edict_t *pent)
 	get_localinfo_r("amxx_configsdir", "addons/amxmodx/configs", configs_dir, sizeof(configs_dir)-1);
 	g_plugins.CALMFromFile(get_localinfo("amxx_plugins", "addons/amxmodx/configs/plugins.ini"));
 	LoadExtraPluginsToPCALM(configs_dir);
-	char temporaryMap[64];
+	char temporaryMap[64], *tmap_ptr;
 
 	strncpy(temporaryMap,STRING(gpGlobals->mapname),sizeof(temporaryMap)-1);
 
-	int ii=0;
 
-	while (temporaryMap[ii]!='_' && temporaryMap[ii]!='\0') 
-	{
-		++ii;
-	}
-
-
-	if (temporaryMap[ii]=='_')
+	if ((tmap_ptr = strchr(temporaryMap, '_')) != NULL)
 	{
 		// this map has a prefix
 
-		temporaryMap[ii]='\0';
+		*tmap_ptr = '\0';
 		snprintf(map_pluginsfile_path, sizeof(map_pluginsfile_path)-1,
-						"%s/maps/prefixes/plugins-%s.ini",
+						"%s/maps/plugins-%s.ini",
 						configs_dir,
 						temporaryMap);
 		g_plugins.CALMFromFile(map_pluginsfile_path);

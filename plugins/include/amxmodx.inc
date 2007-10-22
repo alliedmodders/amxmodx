@@ -753,9 +753,12 @@ forward plugin_natives();
  */
 native register_native(const name[], const handler[], style=0);
 
-/* Registers a library.  You can put #pragma library <name> in your include files,
- * and plugins that use your include without loading your plugin will get a nice
- * error message.
+/* Registers a library.  To mark a library as required, place the following
+ * in your include file:
+ *  #pragma reqlib <name>
+ *  #if !defined AMXMODX_NOAUTOLOAD
+ *   #pragma loadlib <name>
+ *  #endif
  */
 native register_library(const library[]);
 

@@ -121,6 +121,8 @@ bool MysqlResultSet::NextResultSet()
 	}
 
 	m_kRow.m_Columns = m_Columns;
+
+	return true;
 }
 
 void MysqlResultSet::FreeHandle()

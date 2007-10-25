@@ -413,6 +413,7 @@ int	C_Spawn(edict_t *pent)
 	VectorHolder.clear();
 
 	char map_pluginsfile_path[256];
+	char prefixed_map_pluginsfile[256];
 	char configs_dir[256];
 
 	// ###### Load modules
@@ -423,26 +424,27 @@ int	C_Spawn(edict_t *pent)
 	LoadExtraPluginsToPCALM(configs_dir);
 	char temporaryMap[64], *tmap_ptr;
 
-	strncpy(temporaryMap,STRING(gpGlobals->mapname),sizeof(temporaryMap)-1);
+	snprintf(temporaryMap, sizeof(temporaryMap), "%s", STRING(gpGlobals->mapname));
 
-
+	prefixed_map_pluginsfile[0] = '\0';
 	if ((tmap_ptr = strchr(temporaryMap, '_')) != NULL)
 	{
 		// this map has a prefix
 
 		*tmap_ptr = '\0';
-		snprintf(map_pluginsfile_path, sizeof(map_pluginsfile_path)-1,
-						"%s/maps/plugins-%s.ini",
-						configs_dir,
-						temporaryMap);
-		g_plugins.CALMFromFile(map_pluginsfile_path);
-
+		snprintf(prefixed_map_pluginsfile, 
+			sizeof(prefixed_map_pluginsfile),
+			"%s/maps/plugins-%s.ini",
+			configs_dir,
+			temporaryMap);
+		g_plugins.CALMFromFile(prefixed_map_pluginsfile);
 	}
 
-	snprintf(map_pluginsfile_path, sizeof(map_pluginsfile_path)-1,
-					"%s/maps/plugins-%s.ini",
-					configs_dir,
-					STRING(gpGlobals->mapname));
+	snprintf(map_pluginsfile_path, 
+		sizeof(map_pluginsfile_path),
+		"%s/maps/plugins-%s.ini",
+		configs_dir,
+		STRING(gpGlobals->mapname));
 	g_plugins.CALMFromFile(map_pluginsfile_path);
 
 	int loaded = countModules(CountModules_Running); // Call after attachModules so all modules don't have pending stat
@@ -484,6 +486,11 @@ int	C_Spawn(edict_t *pent)
 	g_plugins.loadPluginsFromFile(get_localinfo("amxx_plugins", "addons/amxmodx/configs/plugins.ini"));
 	LoadExtraPluginsFromDir(configs_dir);
 	g_plugins.loadPluginsFromFile(map_pluginsfile_path, false);
+	if (prefixed_map_pluginsfile[0] != '\0')
+	{
+		g_plugins.loadPluginsFromFile(prefixed_map_pluginsfile, false);
+	}
+
 	g_plugins.Finalize();
 	g_plugins.InvalidateCache();
 

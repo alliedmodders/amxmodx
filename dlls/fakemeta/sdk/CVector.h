@@ -341,14 +341,13 @@ public:
 
 	bool push_back(const T & elem)
 	{
-		++m_CurrentUsedSize;
 		if (!GrowIfNeeded(1))
 		{
-			--m_CurrentUsedSize;
 			return false;
 		}
 
-		m_Data[m_CurrentUsedSize - 1] = elem;
+		m_Data[m_CurrentUsedSize++] = elem;
+
 		return true;
 	}
 

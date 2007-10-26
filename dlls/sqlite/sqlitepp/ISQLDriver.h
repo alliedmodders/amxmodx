@@ -141,11 +141,13 @@ namespace SourceMod
 
 	struct DatabaseInfo
 	{
+		DatabaseInfo() : max_timeout(0) { };
 		const char *host;
 		const char *database;
 		const char *user;
 		const char *pass;
 		unsigned int port;
+		unsigned int max_timeout;
 	};
 
 	class ISQLDriver
@@ -154,6 +156,8 @@ namespace SourceMod
 		virtual ~ISQLDriver() { };
 	public:
 		virtual IDatabase *Connect(DatabaseInfo *info, int *errcode, char *error, size_t maxlength) =0;
+		//Supports the timeout clause
+		virtual IDatabase *Connect2(DatabaseInfo *info, int *errcode, char *error, size_t maxlength) =0;
 		virtual const char *NameString() =0;
 		virtual bool IsCompatDriver(const char *namestring) =0;
 	};

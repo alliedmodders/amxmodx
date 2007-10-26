@@ -35,6 +35,10 @@ int busy_handler(void *unused1, int unused2)
 
 	return 1;
 }
+IDatabase *SqliteDriver::Connect2(DatabaseInfo *info, int *errcode, char *error, size_t maxlength)
+{
+	return Connect(info, errcode, error, maxlength);
+}
 
 IDatabase *SqliteDriver::Connect(DatabaseInfo *info, int *errcode, char *error, size_t maxlength)
 {

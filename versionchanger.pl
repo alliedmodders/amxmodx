@@ -139,7 +139,17 @@ while ( ($cur_module, $mod_i) = each(%modules) )
 		die "File $infile is not a file.\n";
 	}
 	my $global_rev = $rev;
-	my $local_rev = GetRevision($mod{'folder'});
+	my $local_rev;
+	
+	if ($arguments{'build'} == undef)
+	{
+		$local_rev = GetRevision($mod{'folder'});
+	}
+	else
+	{
+		$local_rev = $rev;
+	}
+
 	if ($arguments{'svnrev'} eq 'local')
 	{
 		$global_rev = $local_rev;

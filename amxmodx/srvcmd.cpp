@@ -39,7 +39,7 @@ void amx_command()
 	{
 
 		print_srvconsole("Currently loaded plugins:\n");
-		print_srvconsole("       %-23.22s %-8.7s %-17.16s %-16.15s %-9.8s\n", "name", "version", "author", "file", "status");
+		print_srvconsole("       %-23.22s %-11.10s %-17.16s %-16.15s %-9.8s\n", "name", "version", "author", "file", "status");
 
 		int plugins = 0;
 		int	running = 0;
@@ -52,7 +52,7 @@ void amx_command()
 			if ((*a).isValid() && !(*a).isPaused()) 
 				++running;
 
-			print_srvconsole(" [%3d] %-23.22s %-8.7s %-17.16s %-16.15s %-9.8s\n", plugins, (*a).getTitle(), (*a).getVersion(), (*a).getAuthor(), (*a).getName(), (*a).getStatus());
+			print_srvconsole(" [%3d] %-23.22s %-11.10s %-17.16s %-16.15s %-9.8s\n", plugins, (*a).getTitle(), (*a).getVersion(), (*a).getAuthor(), (*a).getName(), (*a).getStatus());
 			++a;
 		}
 
@@ -215,7 +215,7 @@ void amx_command()
 	else if (!strcmp(cmd, "modules"))
 	{
 		print_srvconsole("Currently loaded modules:\n");
-		print_srvconsole("      %-23.22s %-8.7s %-20.19s %-11.10s\n", "name", "version", "author", "status");
+		print_srvconsole("      %-23.22s %-11.10s %-20.19s %-11.10s\n", "name", "version", "author", "status");
 
 		int running = 0;
 		int modules = 0;
@@ -228,7 +228,7 @@ void amx_command()
 				++running;
 			++modules;
 
-			print_srvconsole(" [%2d] %-23.22s %-8.7s %-20.19s %-11.10s\n", modules, (*a).getName(), (*a).getVersion(), (*a).getAuthor(), (*a).getStatus());
+			print_srvconsole(" [%2d] %-23.22s %-11.10s %-20.19s %-11.10s\n", modules, (*a).getName(), (*a).getVersion(), (*a).getAuthor(), (*a).getStatus());
 			++a;
 		}
 

@@ -37,12 +37,20 @@
 // Vector
 template <class T> class CVector
 {
-	bool Grow()
+	bool Grow(size_t amount)
 	{
 		// automatic grow
 		size_t newSize = m_Size * 2;
+
 		if (newSize == 0)
-			newSize = 8;					// a good init value
+		{
+			newSize = 8;
+		}
+
+		while (m_CurrentUsedSize + amount > newSize)
+		{
+			newSize *= 2;
+		}
 		T *newData = new T[newSize];
 		if (!newData)
 			return false;
@@ -57,12 +65,16 @@ template <class T> class CVector
 		return true;
 	}
 
-	bool GrowIfNeeded()
+	bool GrowIfNeeded(size_t amount)
 	{
-		if (m_CurrentUsedSize >= m_Size)
-			return Grow();
+		if (m_CurrentUsedSize + amount >= m_Size)
+		{
+			return Grow(amount);
+		}
 		else
+		{
 			return true;
+		}
 	}
 
 	bool ChangeSize(size_t size)
@@ -70,32 +82,58 @@ template <class T> class CVector
 		// change size
 		if (size == m_Size)
 			return true;
+
+		if (!size)
+		{
+			if (m_Data)
+			{
+				delete [] m_Data;
+				m_Data = NULL;
+				m_Size = 0;
+			}
+			return true;
+		}
+
 		T *newData = new T[size];
 		if (!newData)
 			return false;
 		if (m_Data)
 		{
-			size_t end = (m_Size < size) ? (m_Size) : size;
+			size_t end = (m_CurrentUsedSize < size) ? (m_CurrentUsedSize) : size;
 			for (size_t i=0; i<end; i++)
 				newData[i] = m_Data[i];
 			delete [] m_Data;
 		}
-		if (m_Size < size)
-			m_CurrentSize = size;
 		m_Data = newData;
 		m_Size = size;
+		if (m_CurrentUsedSize > m_Size)
+			m_CurrentUsedSize = m_Size;
+
 		return true;
 	}
 
 	void FreeMemIfPossible()
 	{
+		if (!m_Data)
+			return;
 
+		if (!m_CurrentUsedSize)
+		{
+			ChangeSize(0);
+			return;
+		}
+
+		size_t newSize = m_Size;
+		while (m_CurrentUsedSize <= newSize / 2)
+			newSize /= 2;
+
+		if (newSize != m_Size)
+			ChangeSize(newSize);
 	}
 protected:
 	T *m_Data;
 	size_t m_Size;
 	size_t m_CurrentUsedSize;
-	size_t m_CurrentSize;
 public:
 	class iterator
 	{
@@ -189,7 +227,7 @@ public:
 
 		iterator & operator-=(size_t offset)
 		{
-			m_Ptr += offset;
+			m_Ptr -= offset;
 			return (*this);
 		}
 
@@ -203,10 +241,10 @@ public:
 		iterator operator-(size_t offset) const
 		{
 			iterator tmp(*this);
-			tmp.m_Ptr += offset;
+			tmp.m_Ptr -= offset;
 			return tmp;
 		}
-		
+
 		T & operator[](size_t offset)
 		{
 			return (*(*this + offset));
@@ -277,12 +315,12 @@ public:
 		return m_Size;
 	}
 
-	iterator begin()
+	iterator begin() const
 	{
 		return iterator(m_Data);
 	}
 
-	iterator end()
+	iterator end() const
 	{
 		return iterator(m_Data + m_CurrentUsedSize);
 	}
@@ -296,19 +334,20 @@ public:
 
 	bool reserve(size_t newSize)
 	{
-		return ChangeSize(newSize);
+		if (newSize > m_Size)
+			return ChangeSize(newSize);
+		return true;
 	}
 
 	bool push_back(const T & elem)
 	{
-		++m_CurrentUsedSize;
-		if (!GrowIfNeeded())
+		if (!GrowIfNeeded(1))
 		{
-			--m_CurrentUsedSize;
 			return false;
 		}
 
-		m_Data[m_CurrentUsedSize - 1] = elem;
+		m_Data[m_CurrentUsedSize++] = elem;
+
 		return true;
 	}
 
@@ -317,14 +356,15 @@ public:
 		--m_CurrentUsedSize;
 		if (m_CurrentUsedSize < 0)
 			m_CurrentUsedSize = 0;
-		// :TODO: free memory sometimes
+
+		FreeMemIfPossible();
 	}
 
 	bool resize(size_t newSize)
 	{
 		if (!ChangeSize(newSize))
 			return false;
-		FreeMemIfPossible();
+		m_CurrentUsedSize = newSize;
 		return true;
 	}
 
@@ -397,50 +437,64 @@ public:
 		return m_Data[m_CurrentUsedSize - 1];
 	}
 
-	bool insert(iterator where, const T & value)
+	iterator insert(iterator where, const T & value)
 	{
-		// we have to insert before
-		// if it is begin, don't decrement
-		if (where != m_Data)
-			--where;
 		// validate iter
-		if (where < m_Data || where >= (m_Data + m_CurrentUsedSize))
-			return false;
+		if (where < m_Data || where > (m_Data + m_CurrentUsedSize))
+			return iterator(0);
 
-		++m_CurrentUsedSize;
-		if (!GrowIfNeeded())
+		size_t ofs = where - begin();
+
+		if (!GrowIfNeeded(1))
 		{
-			--m_CurrentUsedSize;
 			return false;
 		}
 
-		memmove(where.base() + 1, where.base(), m_CurrentUsedSize - (where - m_Data));
-		memcpy(where.base(), &value, sizeof(T));
-		return true;
+		++m_CurrentUsedSize;
+
+		where = begin() + ofs;
+
+		// Move subsequent entries
+		for (T *ptr = m_Data + m_CurrentUsedSize - 2; ptr >= where.base(); --ptr)
+			*(ptr + 1) = *ptr;
+
+		*where.base() = value;
+
+		return where;
 	}
 
-	void erase(iterator where)
+	iterator erase(iterator where)
 	{
 		// validate iter
 		if (where < m_Data || where >= (m_Data + m_CurrentUsedSize))
-			return false;
+			return iterator(0);
+
+		size_t ofs = where - begin();
 
 		if (m_CurrentUsedSize > 1)
 		{
 			// move
-			memmove(where.base(), where.base() + 1, m_CurrentUsedSize - 1);
+			T *theend = m_Data + m_CurrentUsedSize;
+			for (T *ptr = where.base() + 1; ptr < theend; ++ptr)
+				*(ptr - 1) = *ptr;
 		}
 
 		--m_CurrentUsedSize;
-		// :TODO: free memory sometimes
+
+		FreeMemIfPossible();
+
+		return begin() + ofs;
 	}
 
 	void clear()
 	{
 		m_Size = 0;
 		m_CurrentUsedSize = 0;
-		delete [] m_Data;
-		m_Data = NULL;
+		if (m_Data)
+		{
+			delete [] m_Data;
+			m_Data = NULL;
+		}
 	}
 };
 

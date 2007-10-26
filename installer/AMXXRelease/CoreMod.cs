@@ -123,6 +123,7 @@ namespace AMXXRelease
 			AddPlugin("telemenu");
 			AddPlugin("timeleft");
 			AddPlugin("cmdmenu");
+			AddPlugin("pluginmenu");
 		}
 
 		private void AddModules()

@@ -796,13 +796,13 @@ public cmdPlugins(id, level, cid)
 	new running = 0
 	
 	console_print(id, "----- %L -----", id, "LOADED_PLUGINS")
-	console_print(id, "%-18.17s %-8.7s %-17.16s %-16.15s %-9.8s", lName, lVersion, lAuthor, lFile, lStatus)
+	console_print(id, "%-18.17s %-11.10s %-17.16s %-16.15s %-9.8s", lName, lVersion, lAuthor, lFile, lStatus)
 
 	new i=StartPLID;
 	while (i <EndPLID)
 	{
 		get_plugin(i++, filename, 31, name, 31, version, 31, author, 31, status, 31)
-		console_print(id, "%-18.17s %-8.7s %-17.16s %-16.15s %-9.8s", name, version, author, filename, status)
+		console_print(id, "%-18.17s %-11.10s %-17.16s %-16.15s %-9.8s", name, version, author, filename, status)
 		
 		if (status[0]=='d' || status[0]=='r') // "debug" or "running"
 			running++
@@ -842,7 +842,7 @@ public cmdModules(id, level, cid)
 	new num = get_modulesnum()
 	
 	console_print(id, "%L:", id, "LOADED_MODULES")
-	console_print(id, "%-23.22s %-8.7s %-20.19s %-11.10s", lName, lVersion, lAuthor, lStatus)
+	console_print(id, "%-23.22s %-11.10s %-20.19s %-11.10s", lName, lVersion, lAuthor, lStatus)
 	
 	for (new i = 0; i < num; i++)
 	{
@@ -860,7 +860,7 @@ public cmdModules(id, level, cid)
 			}
 		}
 		
-		console_print(id, "%-23.22s %-8.7s %-20.19s %-11.10s", name, version, author, sStatus)
+		console_print(id, "%-23.22s %-11.10s %-20.19s %-11.10s", name, version, author, sStatus)
 	}
 	console_print(id, "%L", id, "NUM_MODULES", num)
 

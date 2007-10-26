@@ -1,6 +1,6 @@
 compress = C:\WINDOWS\zip.exe
-source = R:\amxmodx
+source = c:\temp\amxmodx
 makeopts = 
-output = c:\real\done
+output = c:\temp\done
 devenv = C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\IDE\devenv.com
-release = amxmodx-1.76d
+release = amxmodx-1.8.0

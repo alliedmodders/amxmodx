@@ -37,12 +37,20 @@
 // Vector
 template <class T> class CVector
 {
-	bool Grow()
+	bool Grow(size_t amount)
 	{
 		// automatic grow
 		size_t newSize = m_Size * 2;
+
 		if (newSize == 0)
-			newSize = 8;					// a good init value
+		{
+			newSize = 8;
+		}
+
+		while (m_CurrentUsedSize + amount > newSize)
+		{
+			newSize *= 2;
+		}
 		T *newData = new T[newSize];
 		if (!newData)
 			return false;
@@ -57,12 +65,16 @@ template <class T> class CVector
 		return true;
 	}
 
-	bool GrowIfNeeded()
+	bool GrowIfNeeded(size_t amount)
 	{
-		if (m_CurrentUsedSize >= m_Size)
-			return Grow();
+		if (m_CurrentUsedSize + amount >= m_Size)
+		{
+			return Grow(amount);
+		}
 		else
+		{
 			return true;
+		}
 	}
 
 	bool ChangeSize(size_t size)
@@ -329,14 +341,13 @@ public:
 
 	bool push_back(const T & elem)
 	{
-		++m_CurrentUsedSize;
-		if (!GrowIfNeeded())
+		if (!GrowIfNeeded(1))
 		{
-			--m_CurrentUsedSize;
 			return false;
 		}
 
-		m_Data[m_CurrentUsedSize - 1] = elem;
+		m_Data[m_CurrentUsedSize++] = elem;
+
 		return true;
 	}
 
@@ -434,12 +445,12 @@ public:
 
 		size_t ofs = where - begin();
 
-		++m_CurrentUsedSize;
-		if (!GrowIfNeeded())
+		if (!GrowIfNeeded(1))
 		{
-			--m_CurrentUsedSize;
 			return false;
 		}
+
+		++m_CurrentUsedSize;
 
 		where = begin() + ofs;
 

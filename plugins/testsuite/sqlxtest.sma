@@ -12,11 +12,13 @@ public plugin_init()
 	register_plugin("SQLX Test", "1.0", "BAILOPAN")
 	register_srvcmd("sqlx_test_normal", "SqlxTest_Normal")
 	register_srvcmd("sqlx_test_thread", "SqlxTest_Thread")
+	register_srvcmd("sqlx_test_proc", "SqlxTest_Proc")
 	register_srvcmd("sqlx_test_old1", "SqlxTest_Old1")
 	register_srvcmd("sqlx_test_old2", "SqlxTest_Old2")
 	register_srvcmd("sqlx_test_thread_end", "SqlxTest_ThreadEnd")
 	register_srvcmd("sqlx_test_bad", "SqlxTest_Bad")
 	register_srvcmd("sqlx_test_quote", "SqlxTest_Quote")
+	register_srvcmd("sqlx_test_affinity", "SqlxTest_Affinity")
 	
 	new configsDir[64]
 	get_configsdir(configsDir, 63)
@@ -146,6 +148,16 @@ public GetMyStuff(failstate, Handle:query, error[], errnum, data[], size, Float:
 	}
 }
 
+public SqlxTest_Affinity()
+{
+	server_print("[Access Manager] try SetAffinity to sqlite");
+	SQL_SetAffinity("sqlite");
+	server_print("[Access Manager] try SetAffinity to mysql");
+	SQL_SetAffinity("mysql");
+	server_print("[Access Manager] try SetAffinity to sqlite again");
+	SQL_SetAffinity("sqlite");
+}
+
 /**
  * Starts a threaded query.
  */
@@ -189,6 +201,39 @@ public SqlxTest_Quote()
 	SQL_FreeHandle(db)
 }
 
+public SqlxTest_Proc()
+{
+	new errnum, error[255]
+	
+	DoBasicInfo(1)
+	
+	new Handle:db = SQL_Connect(g_DbInfo, errnum, error, 254)
+	if (!db)
+	{
+		server_print("Query failure: [%d] %s", errnum, error)
+		return
+	}
+	
+	new Handle:query = SQL_PrepareQuery(db, "CALL ExampleProc()")
+	if (!SQL_Execute(query))
+	{
+		errnum = SQL_QueryError(query, error, 254)
+		server_print("Query failure: [%d] %s", errnum, error)
+		SQL_FreeHandle(query)
+		SQL_FreeHandle(db)
+		return
+	}
+
+	PrintQueryData(query)	
+	
+	server_print("Next result: %d", SQL_NextResultSet(query));
+	
+	PrintQueryData(query)
+	
+	SQL_FreeHandle(query)
+	SQL_FreeHandle(db)
+}
+
 /**
  * Does a normal query.
  */
@@ -216,6 +261,8 @@ public SqlxTest_Normal()
 	}
 
 	PrintQueryData(query)	
+	
+	server_print("Next result: %d", SQL_NextResultSet(query));
 	
 	SQL_FreeHandle(query)
 	SQL_FreeHandle(db)

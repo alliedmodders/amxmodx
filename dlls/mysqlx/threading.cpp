@@ -70,7 +70,9 @@ static cell AMX_NATIVE_CALL SQL_ThreadQuery(AMX *amx, cell *params)
 	if (g_FreeThreads.empty())
 	{
 		kmThread = new MysqlThread();
-	} else {
+	} 
+	else 
+	{
 		kmThread = g_FreeThreads.front();
 		g_FreeThreads.pop();
 	}
@@ -165,13 +167,17 @@ void MysqlThread::RunThread(IThreadHandle *pHandle)
 	{
 		m_qrInfo.connect_success = false;
 		m_qrInfo.query_success = false;
-	} else {
+	} 
+	else 
+	{
 		m_qrInfo.connect_success = true;
 		pQuery = pDatabase->PrepareQuery(m_query.c_str());
 		if (!pQuery->Execute2(&m_qrInfo.amxinfo.info, m_qrInfo.amxinfo.error, 254))
 		{
 			m_qrInfo.query_success = false;
-		} else {
+		} 
+		else 
+		{
 			m_qrInfo.query_success = true;
 		}
 	}
@@ -184,11 +190,13 @@ void MysqlThread::RunThread(IThreadHandle *pHandle)
 
 	if (pQuery)
 	{
-		m_qrInfo.amxinfo.pQuery = pQuery;
-	} else {
-		m_qrInfo.amxinfo.opt_ptr = new char[m_query.size() + 1];
-		strcpy(m_qrInfo.amxinfo.opt_ptr, m_query.c_str());
-	}
+		pQuery->FreeHandle();
+		pQuery = NULL;
+	} 
+
+	m_qrInfo.amxinfo.pQuery = NULL;
+	m_qrInfo.amxinfo.opt_ptr = new char[m_query.size() + 1];
+	strcpy(m_qrInfo.amxinfo.opt_ptr, m_query.c_str());
 
 	if (pDatabase)
 	{
@@ -228,7 +236,9 @@ void MysqlThread::Execute()
 	if (m_datalen)
 	{
 		data_addr = MF_PrepareCellArray(m_data, m_datalen);
-	} else {
+	} 
+	else 
+	{
 		static cell tmpdata[1] = {0};
 		data_addr = MF_PrepareCellArray(tmpdata, 1);
 	}
@@ -236,7 +246,9 @@ void MysqlThread::Execute()
 	if (!m_qrInfo.connect_success)
 	{
 		state = -2;
-	} else if (!m_qrInfo.query_success) {
+	} 
+	else if (!m_qrInfo.query_success) 
+	{
 		state = -1;
 	}
 	float diff = gpGlobals->time - m_qrInfo.queue_time;
@@ -252,7 +264,9 @@ void MysqlThread::Execute()
 			data_addr,
 			m_datalen,
 			c_diff);
-	} else {
+	} 
+	else 
+	{
 		MF_ExecuteForward(m_fwd,
 			(cell)0,
 			(cell)hndl,
@@ -263,11 +277,6 @@ void MysqlThread::Execute()
 			c_diff);
 	}
 	FreeHandle(hndl);
-	if (m_qrInfo.amxinfo.pQuery)
-	{
-		m_qrInfo.amxinfo.pQuery->FreeHandle();
-		m_qrInfo.amxinfo.pQuery = NULL;
-	}
 	delete [] m_qrInfo.amxinfo.opt_ptr;
 	m_qrInfo.amxinfo.opt_ptr = NULL;
 }
@@ -576,3 +585,4 @@ AMX_NATIVE_INFO g_ThreadSqlNatives[] =
 	{"SQL_ThreadQuery",			SQL_ThreadQuery},
 	{NULL,						NULL},
 };
+

@@ -114,3 +114,4 @@ bool MysqlQuery::ExecuteR(QueryInfo *info, char *error, size_t maxlength)
 
 	return info->success;
 }
+

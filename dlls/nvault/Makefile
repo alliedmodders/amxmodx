@@ -8,7 +8,7 @@ MM_ROOT = ../../metamod/metamod
 
 OPT_FLAGS = -O3 -funroll-loops -s -pipe -fno-strict-aliasing -fomit-frame-pointer
 DEBUG_FLAGS = -g -ggdb3
-CPP = gcc-4.1
+CPP = gcc-3.3
 NAME = nvault
 
 BIN_SUFFIX_32 = amxx_i386.so
@@ -16,7 +16,7 @@ BIN_SUFFIX_64 = amxx_amd64.so
 
 OBJECTS = sdk/amxxmodule.cpp amxxapi.cpp Binary.cpp Journal.cpp NVault.cpp
 
-LINK = /lib/libgcc_eh.a /lib/libstdc++-3.4.a
+LINK = /lib/libgcc_eh-3.3.a /lib/libstdc++-3.3-pic.a -fno-threadsafe-statics
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
 	-I$(MM_ROOT) -I$(HLSDK)/common -Isdk

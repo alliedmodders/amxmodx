@@ -103,7 +103,7 @@ class CPlayer
 		{
 			int body_num;
 			bool is_model_set;
-			char* modelclass;
+			char modelclass[64];
 		}
 		sModel;
 

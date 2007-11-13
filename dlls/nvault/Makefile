@@ -16,7 +16,7 @@ BIN_SUFFIX_64 = amxx_amd64.so
 
 OBJECTS = sdk/amxxmodule.cpp amxxapi.cpp Binary.cpp Journal.cpp NVault.cpp
 
-LINK = /lib/libgcc_eh-3.3.a /lib/libstdc++-3.3-pic.a -fno-threadsafe-statics
+LINK = /lib/libgcc_eh-3.3.a /lib/libstdc++-3.3-pic.a 
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
 	-I$(MM_ROOT) -I$(HLSDK)/common -Isdk

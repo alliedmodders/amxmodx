@@ -174,7 +174,15 @@ void ServerDeactivate() {
 }
 
 BOOL ClientConnect_Post( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ]  ){
-	GET_PLAYER_POINTER(pEntity)->Connect(pszAddress);
+	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
+	
+	if (pPlayer->pEdict == NULL)
+	{
+		pPlayer->Init(ENTINDEX(pEntity), pEntity);
+	}
+	
+	pPlayer->Connect(pszAddress);
+
 	RETURN_META_VALUE(MRES_IGNORED, TRUE);
 }
 
@@ -191,6 +199,12 @@ void ClientPutInServer_Post( edict_t *pEntity ) {
 
 void ClientUserInfoChanged_Post( edict_t *pEntity, char *infobuffer ) {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
+
+	if (pPlayer->pEdict == NULL)
+	{
+		pPlayer->Init(ENTINDEX(pEntity), pEntity);
+	}
+
 	const char* name = INFOKEY_VALUE(infobuffer,"name");
 	const char* oldname = STRING(pEntity->v.netname);
 

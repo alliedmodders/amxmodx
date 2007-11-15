@@ -160,8 +160,8 @@ native set_tr(TraceResult:tr_member, {Float,_}:...);
 //Upgraded version takes in a TraceResult handle, optionally passed in as the last parameter to the
 //TraceResult forward.  Use 0 to specify the global traceresult handle set from calling 
 // some of the Engfucs.
-native get_tr2(tr_handle, TraceResult:tr_member, {Float,_}:...);
-native set_tr2(tr_handle, TraceResult:tr_member, {Float,_}:...);
+native get_tr2(tr_handle, {TraceResult,_}:tr_member, {Float,_}:...);
+native set_tr2(tr_handle, {TraceResult,_}:tr_member, {Float,_}:...);
 
 /**
  * Creates a traceresult handle.  This value should never be altered.

@@ -197,7 +197,6 @@ public plugin_cfg()
 	server_cmd(g_addCvar, "amx_default_access")
 	server_cmd(g_addCvar, "amx_reserved_slots")
 	server_cmd(g_addCvar, "amx_reservation")
-	server_cmd(g_addCvar, "amx_conmotd_file")
 	server_cmd(g_addCvar, "amx_sql_table");
 	server_cmd(g_addCvar, "amx_sql_host");
 	server_cmd(g_addCvar, "amx_sql_user");

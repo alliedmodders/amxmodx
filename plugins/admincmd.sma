@@ -492,7 +492,8 @@ public cmdBanIP(id, level, cid)
 	if (!player)
 	{
 		// why is this here?
-		player = cmd_target(id, target, 9);
+		// no idea
+		// player = cmd_target(id, target, 9);
 		return PLUGIN_HANDLED
 	}
 	

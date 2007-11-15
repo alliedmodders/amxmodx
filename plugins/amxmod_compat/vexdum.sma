@@ -118,7 +118,7 @@ SetClientKeyValue(id, const key[], const value[])
 {
 	new buffer = engfunc(EngFunc_GetInfoKeyBuffer, id)
 	
-	return engfunc(EngFunc_SetClientKeyValue, buffer, key, value)
+	return engfunc(EngFunc_SetClientKeyValue, id, buffer, key, value)
 }
 
 GetClientKeyValue(id, const key[], value[], maxlen)

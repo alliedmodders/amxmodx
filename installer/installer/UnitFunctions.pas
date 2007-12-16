@@ -90,6 +90,7 @@ begin
           Result.Add(eSearch.Name)
       until FindNext(eSearch) <> 0;
     end;
+    SysUtils.FindClose(eSearch);
   end;
 end;
 

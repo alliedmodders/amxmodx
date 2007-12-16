@@ -206,8 +206,10 @@ end;
 function FSize(eFile: String): Cardinal;
 var eRec: TSearchRec;
 begin
-  if FindFirst(eFile, faAnyFile, eRec) = 0 then
-    Result := eRec.Size
+  if FindFirst(eFile, faAnyFile, eRec) = 0 then begin
+    Result := eRec.Size;
+    SysUtils.FindClose(eRec);
+  end
   else
     Result := 0;
 end;

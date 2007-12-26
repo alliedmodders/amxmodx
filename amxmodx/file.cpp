@@ -516,7 +516,7 @@ static cell AMX_NATIVE_CALL amx_fread_blocks(AMX *amx, cell *params)
 
 	cell *addr = get_amxaddr(amx, params[2]);
 	size_t blocks = params[3];
-	switch (params[3])
+	switch (params[4])
 	{
 	case 1:	//char
 		{

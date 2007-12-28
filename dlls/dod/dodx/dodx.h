@@ -104,6 +104,7 @@ void Client_SetFOV(void*);
 void Client_SetFOV_End(void*);
 void Client_Object(void*);
 void Client_Object_End(void*);
+void Client_PStatus(void*);
 
 typedef void (*funEventCall)(void*);
 
@@ -125,6 +126,7 @@ extern int gmsgSetFOV;
 extern int gmsgSetFOV_End;
 extern int gmsgObject;
 extern int gmsgObject_End;
+extern int gmsgPStatus;
 
 extern int iFDamage;
 extern int iFDeath;

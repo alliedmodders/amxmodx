@@ -79,6 +79,7 @@ int gmsgSetFOV;
 int gmsgSetFOV_End;
 int gmsgObject;
 int gmsgObject_End;
+int gmsgPStatus;
 
 RankSystem g_rank;
 Grenades g_grenades;
@@ -117,6 +118,7 @@ g_user_msg[] =
 	{ "SetFOV",		&gmsgSetFOV_End,		Client_SetFOV_End,		true  },
 	{ "Object",		&gmsgObject,			Client_Object,			false },
 	{ "Object",		&gmsgObject_End,		Client_Object_End,		true  },
+	{ "PStatus",	&gmsgPStatus,			Client_PStatus,			false },
 	{ "ScoreShort",	&gmsgScoreShort,		NULL,					false },
 	{ "PTeam",		&gmsgPTeam,				NULL,					false },
 	{ 0,0,0,false }

@@ -43,7 +43,6 @@ void CPlayer::Disconnect()
 	bot = false;
 	savedScore = 0;
 
-	olddeadflag = 0;
 	oldteam = 0;
 	oldclass = 0;
 	oldprone = 0;
@@ -138,7 +137,6 @@ void CPlayer::Init( int pi, edict_t* pe )
 	ingame =  false;
 	bot = false;
 	savedScore = 0;
-	olddeadflag = 0;
 	oldteam = 0;
 	oldclass = 0;
 	oldprone = 0;
@@ -370,10 +368,6 @@ void CPlayer::PreThink()
 	if(!ingame || ignoreBots(pEdict))
 		return;
 
-	// Died in the normal way
-	if(olddeadflag != 0 && pEdict->v.deadflag == 0 && iFSpawnForward != -1)
-		MF_ExecuteForward(iFSpawnForward, index);
-
 	if(oldteam != pEdict->v.team && iFTeamForward != -1)
 		MF_ExecuteForward(iFTeamForward, index, pEdict->v.team, oldteam);
 
@@ -391,7 +385,6 @@ void CPlayer::PreThink()
 
 	// Set the old variables for 
 	oldprone = pEdict->v.iuser3;
-	olddeadflag = pEdict->v.deadflag;
 	oldteam = pEdict->v.team;
 	oldclass = pEdict->v.playerclass;
 	oldstamina = pEdict->v.fuser4;

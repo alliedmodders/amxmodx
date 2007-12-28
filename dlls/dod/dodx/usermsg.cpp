@@ -349,3 +349,14 @@ void Client_Object_End(void* mValue)
 			mPlayer->object.pEdict = NULL;
 	}
 }
+
+// This seems to be only called when the player spawns
+void Client_PStatus(void* mValue)
+{
+	switch(mState++)
+	{
+		case 0:
+			MF_ExecuteForward(iFSpawnForward, *(int*)mValue);
+		break;
+	}
+}

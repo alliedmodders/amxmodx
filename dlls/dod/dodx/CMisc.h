@@ -95,7 +95,6 @@ class CPlayer
 		float clearRound;
 
 		int oldteam;
-		int olddeadflag;
 		int oldclass;
 		float oldstamina;
 

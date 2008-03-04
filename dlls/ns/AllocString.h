@@ -87,7 +87,7 @@ public:
 
 		while (iter!=end)
 		{
-			if (strcmp(str,(*iter)->c_str()))
+			if (strcmp(str, (*iter)->c_str()) == 0)
 			{
 				// String is already in the list, do not allocate it again
 				return MAKE_STRING((*iter)->c_str());

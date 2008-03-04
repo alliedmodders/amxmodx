@@ -35,7 +35,7 @@
 forward client_changeclass(id, newclass, oldclass);
 
 /**
- * Called whenever the client builds a structyure.
+ * Called whenever the client builds a structure.
  *
  * @param idPlayer		The player index who triggered the building.
  * @param idStructure	The structure index that was created.

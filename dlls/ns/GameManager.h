@@ -266,7 +266,7 @@ public:
 	};
 	inline void ExecuteClientChangeTeam(int &PlayerID, int &NewTeam, int &OldTeam)
 	{
-		MF_ExecuteForward(m_TeamForward,PlayerID,OldTeam,NewTeam);
+		MF_ExecuteForward(m_TeamForward, PlayerID, NewTeam, OldTeam);
 	};
 	inline void ExecuteClientChangeClass(int &PlayerID, int &NewClass, int &OldClass)
 	{

@@ -884,7 +884,7 @@ enum Ham
 	 * Description:		I assume this spawns entities (like func_breakables) at the start of a new round.
 	 * Forward params:	function(this)
 	 * Return type:		None.
-	 * Execute Params:	ExecuteHam(Ham_DOD_RoundRespawn, this);
+	 * Execute Params:	ExecuteHam(Ham_DOD_RoundRespawnEnt, this);
 	 */
 	Ham_DOD_RoundRespawnEnt,
 	

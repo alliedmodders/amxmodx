@@ -294,6 +294,11 @@ void CFlagManager::WriteCommands(void)
 
 
 	File=fopen(m_strConfigFile.c_str(),"a");
+	
+	if (!File)
+	{
+		return;
+	}
 
 	iter=m_FlagList.begin();
 	end=m_FlagList.end();

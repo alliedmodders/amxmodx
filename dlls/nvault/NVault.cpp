@@ -45,10 +45,12 @@ NVault::NVault(const char *file)
 		fp = fopen(m_File.c_str(), "wb");
 		if (!fp)
 		{
-			throw Vault_NoFile;
+			this->m_Valid = false;
+			return;
 		}
 	}
 
+	this->m_Valid = true;
 	fclose(fp);
 }
 
@@ -82,20 +84,36 @@ VaultError NVault::_ReadFromFile()
 	String sKey;
 	String sVal;
 
-	try
-	{
-		int32_t magic = br.ReadUInt32();
+//	try
+//	{
+		uint32_t magic;
+		if (!br.ReadUInt32(magic)) goto fail;
+			
 		if (magic != VAULT_MAGIC)
 			return Vault_BadFile;
-		int16_t version = br.ReadUInt16();
+			
+			
+		uint16_t version;
+		if (!br.ReadUInt16(version)) goto fail;
+		
 		if (version != VAULT_VERSION)
 			return Vault_OldFile;
-		int32_t entries = br.ReadUInt32();
+			
+		int32_t entries;
+
+		if (!br.ReadInt32(entries)) goto fail;
+		
+		
+		int32_t temp;
 		for (int32_t i=0; i<entries; i++)
 		{
-			stamp = static_cast<time_t>(br.ReadInt32());
-			keylen = br.ReadUInt8();
-			vallen = br.ReadUInt16();
+			if (!br.ReadInt32(temp)) goto fail;
+			
+			stamp = static_cast<time_t>(temp);
+			
+			if (!br.ReadUInt8(keylen)) goto fail;
+			if (!br.ReadUInt16(vallen)) goto fail;
+
 			if (keylen > oldkeylen)
 			{
 				if (key)
@@ -110,29 +128,36 @@ VaultError NVault::_ReadFromFile()
 				val = new char[vallen + 1];
 				oldvallen = vallen;
 			}
-			br.ReadChars(key, keylen);
-			br.ReadChars(val, vallen);
+			
+			if (!br.ReadChars(key, keylen)) goto fail;
+			if (!br.ReadChars(val, vallen)) goto fail;
+			
 			key[keylen] = '\0';
 			val[vallen] = '\0';
 			sKey.assign(key);
 			sVal.assign(val);
 			m_Hash.Insert(sKey, sVal, stamp);
 		}
-	} catch (...) {
-		if (key)
-		{
-			delete [] key;
-			key = NULL;
-		}
-		if (val)
-		{
-			delete [] val;
-			val = NULL;
-		}
-		fclose(fp);
-		return Vault_Read;
-	}
 
+//	} catch (...) {
+
+	goto success;
+fail:
+	if (key)
+	{
+		delete [] key;
+		key = NULL;
+	}
+	if (val)
+	{
+		delete [] val;
+		val = NULL;
+	}
+	fclose(fp);
+	return Vault_Read;
+//	}
+
+success:
 	fclose(fp);
 
 	return Vault_Ok;
@@ -149,37 +174,44 @@ bool NVault::_SaveToFile()
 
 	BinaryWriter bw(fp);
 
-	try
-	{
-		int32_t magic = VAULT_MAGIC;
-		int16_t version = VAULT_VERSION;
+//	try
+//	{
+	uint32_t magic = VAULT_MAGIC;
+	uint16_t version = VAULT_VERSION;
 
-		bw.WriteUInt32(magic);
-		bw.WriteUInt16(version);
+	time_t stamp;
+	String key;
+	String val;
 
-		bw.WriteUInt32( m_Hash.Size() );
-		
-		time_t stamp;
-		String key;
-		String val;
+	THash<String,String>::iterator iter = m_Hash.begin();
+
+	if (!bw.WriteUInt32(magic)) goto fail;
+	if (!bw.WriteUInt16(version)) goto fail;
+
+	if (!bw.WriteUInt32( m_Hash.Size() )) goto fail;
 	
-		THash<String,String>::iterator iter = m_Hash.begin();
-		while (iter != m_Hash.end())
-		{
-			key = (*iter).key;
-			val = (*iter).val;
-			stamp = (*iter).stamp;
-			bw.WriteInt32(static_cast<int32_t>(stamp));
-			bw.WriteUInt8( key.size() );
-			bw.WriteUInt16( val.size() );
-			bw.WriteChars( key.c_str(), key.size() );
-			bw.WriteChars( val.c_str(), val.size() );
-			iter++;
-		}
-	} catch (...) {
-		fclose(fp);
-		return false;
+	while (iter != m_Hash.end())
+	{
+		key = (*iter).key;
+		val = (*iter).val;
+		stamp = (*iter).stamp;
+		
+		if (!bw.WriteInt32(static_cast<int32_t>(stamp))) goto fail;;
+		if (!bw.WriteUInt8( key.size() )) goto fail;
+		if (!bw.WriteUInt16( val.size() )) goto fail;
+		if (!bw.WriteChars( key.c_str(), key.size() )) goto fail;
+		if (!bw.WriteChars( val.c_str(), val.size() )) goto fail;
+		iter++;
 	}
+		
+	goto success;
+//	} catch (...) {
+
+fail:
+	fclose(fp);
+	return false;
+//	}
+success:
 
 	fclose(fp);
 
@@ -324,10 +356,14 @@ bool NVault::GetValue(const char *key, time_t &stamp, char buffer[], size_t len)
 IVault *VaultMngr::OpenVault(const char *file)
 {
 	NVault *pVault;
-	try
+	//try
+	//{
+	pVault = new NVault(file);
+	
+//	} catch (...) {
+	if (!pVault->isValid())
 	{
-		pVault = new NVault(file);
-	} catch (...) {
+		delete pVault;
 		pVault = NULL;
 	}
 

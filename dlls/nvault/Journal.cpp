@@ -34,63 +34,87 @@ int Journal::Replay(VaultMap *pMap)
 	time_t stamp;
 	JOp op;
 	int ops = 0;
+	uint8_t temp8;
+	
+	uint32_t itemp;
 
-	try
+//	try
+//	{
+	do
 	{
-		do
+		if (!br.ReadUInt8(temp8)) goto fail;
+		op = static_cast<JOp>(temp8);
+		if (op == Journal_Clear)
 		{
-			op = static_cast<JOp>(br.ReadUInt8());
-			if (op == Journal_Clear)
-			{
-				pMap->Clear();
-			} else if (op == Journal_Prune) {
-				time_t start;
-				time_t end;
-				start = static_cast<time_t>(br.ReadUInt32());
-				end = static_cast<time_t>(br.ReadUInt32());
-				pMap->Prune(start, end);
-			} else if (op == Journal_Insert) {
-				stamp = static_cast<time_t>(br.ReadUInt32());
-				len8 = br.ReadUInt8();
-				key = new char[len8+1];
-				br.ReadChars(key, len8);
-				len16 = br.ReadUInt16();
-				val = new char[len16+1];
-				br.ReadChars(val, len16);
-				key[len8] = '\0';
-				val[len16] = '\0';
-				sKey.assign(key);
-				sVal.assign(val);
-				pMap->Insert(sKey, sVal, stamp);
-				//clean up
-				delete [] key;
-				key = NULL;
-				delete [] val;
-				val = NULL;
-			} else if (op == Journal_Remove) {
-				len8 = br.ReadUInt8();
-				key = new char[len8+1];
-				br.ReadChars(key, len8);
-				key[len8] = '\0';
-				sKey.assign(key);
-				pMap->Remove(sKey);
-			}
-			ops++;
-		} while (op < Journal_TotalOps && op);
-	} catch (...) {
-		//journal is done
-		if (key)
-		{
+			pMap->Clear();
+		} else if (op == Journal_Prune) {
+			time_t start;
+			time_t end;
+			
+			if (!br.ReadUInt32(itemp)) goto fail;
+			start = static_cast<time_t>(itemp);
+
+			if (!br.ReadUInt32(itemp)) goto fail;
+			end = static_cast<time_t>(itemp);
+			
+			pMap->Prune(start, end);
+			
+		} else if (op == Journal_Insert) {
+		
+			
+			if (!br.ReadUInt32(itemp)) goto fail;
+			stamp = static_cast<time_t>(itemp);
+			
+			if (!br.ReadUInt8(len8)) goto fail;
+			
+			key = new char[len8+1];
+			if (!br.ReadChars(key, len8)) goto fail;
+			
+			if (!br.ReadUInt16(len16)) goto fail;
+			val = new char[len16+1];
+
+			if (!br.ReadChars(val, len16)) goto fail;
+			
+			key[len8] = '\0';
+			val[len16] = '\0';
+			sKey.assign(key);
+			sVal.assign(val);
+			pMap->Insert(sKey, sVal, stamp);
+			//clean up
 			delete [] key;
 			key = NULL;
-		}
-		if (val)
-		{
 			delete [] val;
 			val = NULL;
-		}
-	}
+		} else if (op == Journal_Remove) {
+		
+			if (!br.ReadUInt8(len8)) goto fail;
 
+			key = new char[len8+1];
+			if (!br.ReadChars(key, len8)) goto fail;
+			key[len8] = '\0';
+			sKey.assign(key);
+			pMap->Remove(sKey);
+		}
+		ops++;
+	} while (op < Journal_TotalOps && op);
+	goto success;
+//	} catch (...) { 
+
+fail:
+//journal is done
+	if (key)
+	{
+		delete [] key;
+		key = NULL;
+	}
+	if (val)
+	{
+		delete [] val;
+		val = NULL;
+	}
+//	}
+
+success:
 	fclose(m_fp);
 
 	return ops;
@@ -112,73 +136,81 @@ bool Journal::End()
 
 bool Journal::Write_Clear()
 {
-	try
-	{
-		WriteOp(Journal_Clear);
+//	try
+//	{
+		if (!WriteOp(Journal_Clear)) goto fail;
 		return true;
-	} catch (...) {
+//	} catch (...) {
+fail:
 		return false;
-	}
+//	}
 }
 
 bool Journal::Write_Insert(const char *key, const char *val, time_t stamp)
 {
-	try
-	{
-		WriteOp(Journal_Insert);
-		WriteInt32(static_cast<int32_t>(stamp));
-		WriteString(key, Encode_Small);
-		WriteString(val, Encode_Medium);
+//	try
+//	{
+		if (!WriteOp(Journal_Insert)) goto fail;
+		if (!WriteInt32(static_cast<int32_t>(stamp))) goto fail;
+		if (!WriteString(key, Encode_Small)) goto fail;
+		if (!WriteString(val, Encode_Medium)) goto fail;
 		return true;
-	} catch (...) {
+//	} catch (...) {
+fail:
 		return false;
-	}
+//	}
 }
 
 bool Journal::Write_Prune(time_t start, time_t end)
 {
-	try
-	{
-		WriteOp(Journal_Prune);
-		WriteInt32(static_cast<int32_t>(start));
-		WriteInt32(static_cast<int32_t>(end));
+//	try
+//	{
+		if (!WriteOp(Journal_Prune)) goto fail;
+		if (!WriteInt32(static_cast<int32_t>(start))) goto fail;
+		if (!WriteInt32(static_cast<int32_t>(end))) goto fail;
 		return true;
-	} catch (...) {
+//	} catch (...) {
+
+fail:
 		return false;
-	}
+//	}
 }
 
 bool Journal::Write_Remove(const char *key)
 {
-	try
-	{
-		WriteOp(Journal_Remove);
-		WriteString(key, Encode_Small);
+//	try
+//	{
+		if (!WriteOp(Journal_Remove)) goto fail;
+		if (!WriteString(key, Encode_Small)) goto fail;
 		return true;
-	} catch (...) {
+//	} catch (...) {
+
+fail:
 		return false;
-	}
+//	}
 }
 
-void Journal::WriteInt32(int num)
+bool Journal::WriteInt32(int num)
 {
-	m_Bw.WriteInt32(num);
+	return m_Bw.WriteInt32(num);
 }
 
-void Journal::WriteOp(JOp op)
+bool Journal::WriteOp(JOp op)
 {
-	m_Bw.WriteUInt8(static_cast<uint8_t>(op));
+	return m_Bw.WriteUInt8(static_cast<uint8_t>(op));
 }
 
-void Journal::WriteString(const char *str, Encode enc)
+bool Journal::WriteString(const char *str, Encode enc)
 {
 	size_t len = strlen(str);
 	if (enc == Encode_Small)
 	{
-		m_Bw.WriteUInt8(static_cast<uint8_t>(len));
+		if (!m_Bw.WriteUInt8(static_cast<uint8_t>(len))) return false;
 	} else if (enc == Encode_Medium) {
-		m_Bw.WriteUInt16(static_cast<uint16_t>(len));
+		if (!m_Bw.WriteUInt16(static_cast<uint16_t>(len))) return false;
 	}
-	m_Bw.WriteChars(str, len); 
+	return m_Bw.WriteChars(str, len); 
+	
+	
 }
 

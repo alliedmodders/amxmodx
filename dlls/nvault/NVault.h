@@ -57,6 +57,11 @@ private:
 	THash<String, String> m_Hash;
 	Journal *m_Journal;
 	bool m_Open;
+	
+	bool m_Valid;
+	
+public:
+	bool isValid() { return m_Valid; }
 };
 
 class VaultMngr : public IVaultMngr

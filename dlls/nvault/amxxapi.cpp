@@ -22,6 +22,12 @@ CQueue<int> g_OldVaults;
 
 VaultMngr g_VaultMngr;
 
+#ifndef _WIN32
+extern "C" void __cxa_pure_virtual(void)
+{
+}
+#endif
+
 static cell nvault_open(AMX *amx, cell *params)
 {
 	int len, id=-1;

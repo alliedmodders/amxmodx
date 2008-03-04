@@ -39,9 +39,9 @@ public:
 	bool Write_Insert(const char *key, const char *val, time_t stamp);
 	bool Write_Remove(const char *key);
 private:
-	void WriteOp(JOp op);
-	void WriteInt32(int num);
-	void WriteString(const char *str, Encode enc);
+	bool WriteOp(JOp op);
+	bool WriteInt32(int num);
+	bool WriteString(const char *str, Encode enc);
 private:
 	String m_File;
 	FILE *m_fp;

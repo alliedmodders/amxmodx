@@ -14,50 +14,65 @@ bool BinaryWriter::WriteAddr(void *buffer, size_t size)
 	return true;
 }
 
-void BinaryWriter::WriteUInt32(uint32_t num)
+bool BinaryWriter::WriteUInt32(uint32_t num)
 {
 	if ( !WriteAddr(&num, sizeof(uint32_t)) )
-		throw -1;
+		return false;
+		
+	return true;
 }
 
-void BinaryWriter::WriteInt32(int32_t num)
+bool BinaryWriter::WriteInt32(int32_t num)
 {
 	if ( !WriteAddr(&num, sizeof(int32_t)) )
-		throw -1;
+		return false;
+		
+	return true;
 }
 
-void BinaryWriter::WriteUInt16(uint16_t num)
+bool BinaryWriter::WriteUInt16(uint16_t num)
 {
 	if ( !WriteAddr(&num, sizeof(uint16_t)) )
-		throw -1;
+		return false;
+		
+	return true;
 }
 
-void BinaryWriter::WriteInt16(int16_t num)
+bool BinaryWriter::WriteInt16(int16_t num)
 {
 	if ( !WriteAddr(&num, sizeof(int16_t)) )
-		throw -1;
+		return false;
+		
+	return true;
 }
 
-void BinaryWriter::WriteUInt8(uint8_t num)
+bool BinaryWriter::WriteUInt8(uint8_t num)
 {
 	if ( !WriteAddr(&num, sizeof(uint8_t)) )
-		throw -1;
+		return false;
+		
+	return true;
 }
 
-void BinaryWriter::WriteInt8(int8_t num)
+bool BinaryWriter::WriteInt8(int8_t num)
 {
 	if ( !WriteAddr(&num, sizeof(int8_t)) )
-		throw -1;
+		return false;
+		
+	return true;
 }
 
-void BinaryWriter::WriteChars(const char buffer[], size_t chars)
+bool BinaryWriter::WriteChars(const char buffer[], size_t chars)
 {
 	if (!chars)
-		return;
+		return true;
 
 	if (fwrite(buffer, sizeof(char), chars, m_Fp) != chars)
-		throw -1;
+		return false;
+		
+	return true;
 }
+
 
 BinaryReader::BinaryReader(FILE *fp)
 {
@@ -71,74 +86,62 @@ bool BinaryReader::ReadAddr(void *buffer, size_t size)
 
 	return true;
 }
-
-uint32_t BinaryReader::ReadUInt32()
+bool BinaryReader::ReadUInt32(uint32_t& num)
 {
-	uint32_t num;
-
 	if ( !ReadAddr(&num, sizeof(uint32_t)) )
-		throw -1;
+		return false;
 
-	return num;
+	return true;
 }
 
-int32_t BinaryReader::ReadInt32()
+bool BinaryReader::ReadInt32(int32_t& num)
 {
-	int32_t num;
-
 	if ( !ReadAddr(&num, sizeof(int32_t)) )
-		throw -1;
+		return false;
 
-	return num;
+	return true;
 }
 
-uint16_t BinaryReader::ReadUInt16()
+bool BinaryReader::ReadUInt16(uint16_t& num)
 {
-	uint16_t num;
-
 	if ( !ReadAddr(&num, sizeof(uint16_t)) )
-		throw -1;
+		return false;
 
-	return num;
+	return true;
 }
 
-int16_t BinaryReader::ReadInt16()
+bool BinaryReader::ReadInt16(int16_t& num)
 {
-	int16_t num;
-
 	if ( !ReadAddr(&num, sizeof(int16_t)) )
-		throw -1;
+		return false;
 
-	return num;
+	return true;
 }
 
-uint8_t BinaryReader::ReadUInt8()
+bool BinaryReader::ReadUInt8(uint8_t& num)
 {
-	uint8_t num;
-
 	if ( !ReadAddr(&num, sizeof(uint8_t)) )
-		throw -1;
+		return false;
 
-	return num;
+	return true;
 }
 
-int8_t BinaryReader::ReadInt8()
+bool BinaryReader::ReadInt8(int8_t& num)
 {
-	int8_t num;
-
 	if ( !ReadAddr(&num, sizeof(int8_t)) )
-		throw -1;
+		return false;
 
-	return num;
+	return true;
 }
 
-char *BinaryReader::ReadChars(char buffer[], size_t chars)
+bool BinaryReader::ReadChars(char buffer[], size_t chars)
 {
 	if (!chars)
-		return buffer;
+		return true;
 
 	if (fread(buffer, sizeof(char), chars, m_Fp) != chars)
-		throw -1;
+		return false;
 
-	return buffer;
+	return true;
 }
+

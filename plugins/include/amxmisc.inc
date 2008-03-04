@@ -215,7 +215,7 @@ stock show_activity( id, const name[], const fmt[], any:... )
 		copy(prefix, charsmax(prefix), "PLAYER");
 	}
 	new buffer[512];
-	vformat(buffer, charsmax(buffer), fmt, 3);
+	vformat(buffer, charsmax(buffer), fmt, 4);
 #endif
 	switch(get_pcvar_num(__amx_show_activity))
 	{

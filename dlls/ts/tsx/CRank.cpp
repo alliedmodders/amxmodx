@@ -192,7 +192,7 @@ RankSystem::RankStats* RankSystem::findEntryInRank(const char* unique, const cha
 					return a;
 				}
 				// Any other case was a false match.
-				
+				a = a->prev;	
 			}
 		}
 	}

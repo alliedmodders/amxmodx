@@ -111,7 +111,7 @@ public arraytest1()
 	for (new i=0; i<1000; i++)
 	{
 		f=float(i);
-		ArrayGetCell(a,i,r);
+		r=Float:ArrayGetCell(a, i);
 		
 		// This is normally bad for float "casting", but in this case it should be fine.
 		test(_:f, _:r);
@@ -121,9 +121,9 @@ public arraytest1()
 		new g=_:f;
 		g=~g;
 		
-		ArraySetCell(a,i,g);
+		ArraySetCell(a, i, g);
 		
-		ArrayGetCell(a,i,r);
+		r=Float:ArrayGetCell(a,i);
 		
 		test(g, _:r);
 		
@@ -318,7 +318,7 @@ public arraytest5()
 	test(ArraySize(a), 500);
 	for (new i=0; i< 500; i++)
 	{
-		ArrayGetCell(a, i, v);
+		v=ArrayGetCell(a, i);
 		
 		// All items should be incrementing odd numbers
 		test(((i + 1) * 2) - 1, v);
@@ -344,7 +344,7 @@ public arraytest5()
 	test(ArraySize(a), 500);
 	for (new i=0; i< 500; i++)
 	{
-		ArrayGetCell(a, i, v);
+		v=ArrayGetCell(a, i);
 		
 		// All items should be incrementing even numbers
 		test(((i + 1) * 2) - 2, v);
@@ -377,12 +377,12 @@ public arraytest6()
 	new v;
 	for (new i=0; i<110; i++)
 	{
-		ArrayGetCell(a, i, v);
+		v=ArrayGetCell(a, i);
 		
 		test(v, i / 10);
 		for (new j=0; j<10; j++)
 		{
-			ArrayGetCell(a, ++i, v);
+			v=ArrayGetCell(a, ++i);
 			test(v, j);
 		}
 	}
@@ -415,11 +415,11 @@ public arraytest7()
 	{
 		for (new j=9; j>=0; j--)
 		{
-			ArrayGetCell(a, i++, v);
+			v=ArrayGetCell(a, i++);
 			test(v, j);
 		}
 		
-		ArrayGetCell(a, i, v);
+		v=ArrayGetCell(a, i);
 		
 		test(v, (i - 10) / 10);
 	}
@@ -445,7 +445,7 @@ public arraytest8()
 	new v;
 	for (new i=0; i<5; i++)
 	{
-		ArrayGetCell(a, i, v);
+		v=ArrayGetCell(a, i);
 		
 		test(v, (10 - (i + 1)));
 	}

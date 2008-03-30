@@ -118,6 +118,7 @@ public plugin_init()
 	g_slapsettings = ArrayCreate();
 	// Old default values
 	ArrayPushCell(g_slapsettings, 0); // First option is ignored - it is slay
+	ArrayPushCell(g_slapsettings, 0); // slap 0 damage
 	ArrayPushCell(g_slapsettings, 1);
 	ArrayPushCell(g_slapsettings, 5);
 	
@@ -308,7 +309,7 @@ displayBanMenu(id, pos)
 		i = g_menuPlayers[id][a]
 		get_user_name(i, name, 31)
 
-		if (is_user_bot(i) || access(i, ADMIN_IMMUNITY))
+		if (is_user_bot(i) || (access(i, ADMIN_IMMUNITY) && i != id))
 		{
 			++b
 			
@@ -468,7 +469,7 @@ displaySlapMenu(id, pos)
 			get_user_team(i, team, 3)
 		}
 
-		if (!is_user_alive(i) || access(i, ADMIN_IMMUNITY))
+		if (!is_user_alive(i) || (access(i, ADMIN_IMMUNITY) && i != id))
 		{
 			++b
 		
@@ -586,7 +587,7 @@ displayKickMenu(id, pos)
 		i = g_menuPlayers[id][a]
 		get_user_name(i, name, 31)
 
-		if (access(i, ADMIN_IMMUNITY))
+		if (access(i, ADMIN_IMMUNITY) && i != id)
 		{
 			++b
 		
@@ -728,7 +729,7 @@ displayTeamMenu(id, pos)
 			iteam = get_user_team(i, team, 3)
 		}
 
-		if ((iteam == g_CSTeamiNumbers[g_menuOption[id] % (g_cstrike ? 3 : 2)]) || access(i, ADMIN_IMMUNITY))
+		if ((iteam == g_CSTeamiNumbers[g_menuOption[id] % (g_cstrike ? 3 : 2)]) || (access(i, ADMIN_IMMUNITY) && i != id))
 		{
 			++b
 			
@@ -849,7 +850,7 @@ displayClcmdMenu(id, pos)
 		i = g_menuPlayers[id][a]
 		get_user_name(i, name, 31)
 
-		if (!g_menuSelectNum[id] || access(i, ADMIN_IMMUNITY))
+		if (!g_menuSelectNum[id] || (access(i, ADMIN_IMMUNITY) && i != id))
 		{
 			++b
 			

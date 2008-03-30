@@ -234,7 +234,7 @@ stock show_activity( id, const name[], const fmt[], any:... )
 			new __maxclients=get_maxplayers();
 			
 			
-			for (new i=1; i<__maxclients; i++)
+			for (new i=1; i<=__maxclients; i++)
 			{
 				if (is_user_connected(i))
 				{
@@ -249,7 +249,7 @@ stock show_activity( id, const name[], const fmt[], any:... )
 		{
 			new __maxclients=get_maxplayers();
 			
-			for (new i=1; i<__maxclients; i++)
+			for (new i=1; i<=__maxclients; i++)
 			{
 				if (is_user_connected(i))
 				{
@@ -264,7 +264,7 @@ stock show_activity( id, const name[], const fmt[], any:... )
 		{
 			new __maxclients=get_maxplayers();
 			
-			for (new i=1; i<__maxclients; i++)
+			for (new i=1; i<=__maxclients; i++)
 			{
 				if (is_user_connected(i))
 				{

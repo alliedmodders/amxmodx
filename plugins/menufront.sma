@@ -125,24 +125,44 @@ public AddClientMenu(const menuBody[], const menuCmd[], const menuAccess, const 
 
 AddDefaultMenus()
 {
-	AddMenuLang("KICK_PLAYER", "amx_kickmenu", ADMIN_KICK, "Players Menu")
-	AddMenuLang("BAN_PLAYER", "amx_banmenu", ADMIN_BAN, "Players Menu")
-	AddMenuLang("SLAP_SLAY", "amx_slapmenu", ADMIN_SLAY, "Players Menu")
-	AddMenuLang("TEAM_PLAYER", "amx_teammenu", ADMIN_LEVEL_A, "Players Menu")
-	AddMenuLang("CHANGEL", "amx_mapmenu", ADMIN_MAP, "Maps Menu")
-	AddMenuLang("VOTE_MAPS", "amx_votemapmenu", ADMIN_VOTE, "Maps Menu")
-	AddMenuLang("SPECH_STUFF", "amx_speechmenu", ADMIN_MENU, "Commands Menu")
-	AddMenuLang("CLIENT_COM", "amx_clcmdmenu", ADMIN_LEVEL_A, "Players Menu")
-	AddMenuLang("SERVER_COM", "amx_cmdmenu", ADMIN_MENU, "Commands Menu")
-	AddMenuLang("CVARS_SET", "amx_cvarmenu", ADMIN_CVAR, "Commands Menu")
-	AddMenuLang("CONFIG", "amx_cfgmenu", ADMIN_MENU, "Commands Menu")
-	AddMenuLang("LANG_SET", "amx_langmenu", ADMIN_CFG, "Multi-Lingual System")
-	AddMenuLang("STATS_SET", "amx_statscfgmenu", ADMIN_CFG, "Stats Configuration")
-	AddMenuLang("PAUSE_PLUG", "amx_pausecfgmenu", ADMIN_CFG, "Pause Plugins")
-	AddMenuLang("RES_WEAP", "amx_restmenu", ADMIN_CFG, "Restrict Weapons")
-	AddMenuLang("TELE_PLAYER", "amx_teleportmenu", ADMIN_CFG, "Teleport Menu")
+	new flags;
+	AddMenuLang("KICK_PLAYER", "amx_kickmenu", get_clcmd_flags("amx_kickmenu", flags) ? flags : ADMIN_KICK , "Players Menu")
+	AddMenuLang("BAN_PLAYER", "amx_banmenu", get_clcmd_flags("amx_banmenu", flags) ? flags : ADMIN_BAN, "Players Menu")
+	AddMenuLang("SLAP_SLAY", "amx_slapmenu", get_clcmd_flags("amx_slapmenu", flags) ? flags : ADMIN_SLAY, "Players Menu")
+	AddMenuLang("TEAM_PLAYER", "amx_teammenu", get_clcmd_flags("amx_teammenu", flags) ? flags : ADMIN_LEVEL_A, "Players Menu")
+	AddMenuLang("CHANGEL", "amx_mapmenu", get_clcmd_flags("amx_mapmenu", flags) ? flags : ADMIN_MAP, "Maps Menu")
+	AddMenuLang("VOTE_MAPS", "amx_votemapmenu", get_clcmd_flags("amx_votemapmenu", flags) ? flags : ADMIN_VOTE, "Maps Menu")
+	AddMenuLang("SPECH_STUFF", "amx_speechmenu", get_clcmd_flags("amx_speechmenu", flags) ? flags : ADMIN_MENU, "Commands Menu")
+	AddMenuLang("CLIENT_COM", "amx_clcmdmenu", get_clcmd_flags("amx_clcmdmenu", flags) ? flags : ADMIN_LEVEL_A, "Players Menu")
+	AddMenuLang("SERVER_COM", "amx_cmdmenu", get_clcmd_flags("amx_cmdmenu", flags) ? flags : ADMIN_MENU, "Commands Menu")
+	AddMenuLang("CVARS_SET", "amx_cvarmenu", get_clcmd_flags("amx_cvarmenu", flags) ? flags : ADMIN_CVAR, "Commands Menu")
+	AddMenuLang("CONFIG", "amx_cfgmenu", get_clcmd_flags("amx_cfgmenu", flags) ? flags : ADMIN_MENU, "Commands Menu")
+	AddMenuLang("LANG_SET", "amx_langmenu", get_clcmd_flags("amx_langmenu", flags) ? flags : ADMIN_CFG, "Multi-Lingual System")
+	AddMenuLang("STATS_SET", "amx_statscfgmenu", get_clcmd_flags("amx_statscfgmenu", flags) ? flags : ADMIN_CFG, "Stats Configuration")
+	AddMenuLang("PAUSE_PLUG", "amx_pausecfgmenu", get_clcmd_flags("amx_pausecfgmenu", flags) ? flags : ADMIN_CFG, "Pause Plugins")
+	AddMenuLang("RES_WEAP", "amx_restmenu", get_clcmd_flags("amx_restmenu", flags) ? flags : ADMIN_CFG, "Restrict Weapons")
+	AddMenuLang("TELE_PLAYER", "amx_teleportmenu", get_clcmd_flags("amx_teleportmenu", flags) ? flags : ADMIN_CFG, "Teleport Menu")
 }
+stock bool:get_clcmd_flags(const search_command[], &flags)
+{
+	new count = get_clcmdsnum(-1);
+	static cmd[128];
+	static info[1];
+	new _flags;
 
+	for (new i = 0; i < count; i++)
+	{
+		get_clcmd(i, cmd, charsmax(cmd), _flags, info, charsmax(info), -1);
+
+		if (strcmp(cmd, search_command) == 0)
+		{
+			flags = _flags;
+			return true;
+		}
+	}
+
+	return false;
+}
 public actionMenu(id, key)
 {
 	switch (key)
@@ -359,9 +379,12 @@ public plugin_init()
 
 	g_coloredMenus = colored_menus()
 
+
+}
+public plugin_cfg()
+{
 	AddDefaultMenus()
 
-	// Add custom menu items
 	new configs[128]
 	get_configsdir(configs, 127)
 	server_cmd("exec %s/custommenuitems.cfg", configs)

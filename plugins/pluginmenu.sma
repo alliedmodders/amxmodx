@@ -55,7 +55,8 @@ new CurrentPage[33];
 new CurrentMenuFunction[33] = { -1,... };
 
 new CurrentCommand[33][32];
-
+new cvarmenu_cmdid;
+new cmdmenu_cmdid;
 
 new ExplicitPlugin[33];
 
@@ -66,8 +67,8 @@ public plugin_init()
 	register_dictionary("common.txt");
 	register_dictionary("pausecfg.txt"); // Needed for PAUSE_COULDNT_FIND
 	
-	register_clcmd("amx_plugincvarmenu", "CvarMenuCommand", ADMIN_CVAR, " - displays the plugin cvar menu");
-	register_clcmd("amx_plugincmdmenu", "CommandMenuCommand", ADMIN_MENU, " - displays the plugin command menu");
+	cvarmenu_cmdid=register_clcmd("amx_plugincvarmenu", "CvarMenuCommand", ADMIN_CVAR, " - displays the plugin cvar menu");
+	cmdmenu_cmdid=register_clcmd("amx_plugincmdmenu", "CommandMenuCommand", ADMIN_MENU, " - displays the plugin command menu");
 	
 	register_clcmd("amx_changecvar","CommandChangeCvar");
 	register_clcmd("amx_executecmd","CommandExecuteCommand");
@@ -80,11 +81,35 @@ public plugin_init()
 // Add these menus to the amxmodmenu
 public plugin_cfg()
 {
+	set_task(0.1, "addToMenuFront");
+}
+public addToMenuFront()
+{
 	new PluginFileName[64];
 	
 	get_plugin(-1, PluginFileName, charsmax(PluginFileName));
-	AddMenuItem("Plugin Cvars", "amx_plugincvarmenu", ADMIN_CVAR, PluginFileName);
-	AddMenuItem("Plugin Commands", "amx_plugincmdmenu", ADMIN_MENU, PluginFileName);
+	new cvarflags;
+	new cmdflags;
+	new garbage[1];
+	new cmd[32];
+
+	get_concmd(cmdmenu_cmdid, cmd, charsmax(cmd), cmdflags, garbage, charsmax(garbage), -1);
+
+	if (strcmp(cmd, "amx_plugincmdmenu") != 0)
+	{
+		// this should never happen, but just incase!
+		cmdflags = ADMIN_MENU;
+	}
+	get_concmd(cvarmenu_cmdid, cmd, charsmax(cmd), cvarflags, garbage, charsmax(garbage), -1);
+
+	if (strcmp(cmd, "amx_plugincvarmenu") != 0)
+	{
+		// this should never happen, but just incase!
+		cvarflags = ADMIN_CVAR;
+	}
+
+	AddMenuItem("Plugin Cvars", "amx_plugincvarmenu", cvarflags, PluginFileName);
+	AddMenuItem("Plugin Commands", "amx_plugincmdmenu", cmdflags, PluginFileName);
 }
 
 // Reset all fields for each client as they connect.

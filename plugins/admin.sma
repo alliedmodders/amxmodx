@@ -631,6 +631,8 @@ getAccess(id, name[], authid[], ip[], password[])
 	static AuthData[44];
 	static Password[32];
 	
+	g_CaseSensitiveName[id] = false;
+
 	Count=admins_num();
 	for (new i = 0; i < Count; ++i)
 	{

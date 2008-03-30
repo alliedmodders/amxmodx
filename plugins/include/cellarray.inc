@@ -4,6 +4,10 @@
 
 #define _cellarray_included
 
+enum Array
+{
+	Invalid_Array = 0
+};
 /**
  * These arrays are intended to be used for a form of global storage without 
  * requiring a #define that needs to be increased each time a person needs more 

@@ -45,6 +45,7 @@
 #define FLAG_AUTHID		(1<<2)	/* flag "c" */
 #define FLAG_IP			(1<<3)	/* flag "d" */
 #define FLAG_NOPASS		(1<<4)	/* flag "e" */
+#define FLAG_CASE_SENSITIVE	(1<<10) /* flag "k" */
 
 #define PLUGIN_CONTINUE		0	/* Results returned by public functions */
 #define PLUGIN_HANDLED		1	/* stop other plugins */

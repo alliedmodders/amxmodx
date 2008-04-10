@@ -46,9 +46,13 @@
 * 4 - shots
 * 5 - hits
 * 6 - damage
+* 7 - defusions
+* 8 - defused
+* 9 - plants
+* 10 - explosions
 *
 * Returning cellmin as value in get_score function
 * makes that rank won't be saved. */
 
-public get_score(stats[8], body[8])
+public get_score(stats[11], body[8])
 	return stats[0] - stats[1] - stats[3]	// kills - deaths - teamkills

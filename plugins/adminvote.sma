@@ -531,7 +531,7 @@ public cmdVoteKickBan(id, level, cid)
 			formatex(lKickBan, charsmax(lKickBan), "%L", i, voteban ? "BAN" : "KICK");
 			
 			// HACK: ADMIN_VOTE_FOR{1,2} keys are really weird.  Tokenize and ignore the text before the :
-			LookupLangKey(msg, charsmax(msg), "ADMIN_CANC_VOTE_1", i);
+			LookupLangKey(msg, charsmax(msg), "ADMIN_VOTE_FOR_1", i);
 			strtok(msg, dummy, 0, right, charsmax(right), ':');
 			trim(right);
 			show_activity_id(i, id, name, right, lKickBan, arg);

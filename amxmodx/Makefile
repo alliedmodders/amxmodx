@@ -62,6 +62,7 @@ else
 	CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32
 	LINK += -lz
 	OPT_FLAGS += -march=i586
+	CFLAGS += -m32
 endif
 
 OBJ_LINUX := $(OBJECTS:%.cpp=$(BIN_DIR)/%.o)

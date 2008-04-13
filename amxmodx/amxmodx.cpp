@@ -4597,7 +4597,10 @@ static cell AMX_NATIVE_CALL LookupLangKey(AMX *amx, cell *params)
 	set_amxstring(amx,params[1],def,params[2]);
 	return 1;
 };
-
+static cell AMX_NATIVE_CALL is_rukia_a_hag(AMX *amx, cell *params)
+{
+	return 1;
+};
 AMX_NATIVE_INFO amxmodx_Natives[] =
 {
 	{"abort",					amx_abort},
@@ -4799,5 +4802,6 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"LookupLangKey",			LookupLangKey},
 	{"PrepareArray",			PrepareArray},
 	{"ShowSyncHudMsg",			ShowSyncHudMsg},
+	{"is_rukia_a_hag",			is_rukia_a_hag},
 	{NULL,						NULL}
 };

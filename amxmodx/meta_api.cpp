@@ -51,7 +51,7 @@
 #include "datastructs.h"
 #include "CFlagManager.h"
 #include "svn_version.h"
-
+#include "trie_natives.h"
 
 plugin_info_t Plugin_info = 
 {
@@ -412,6 +412,7 @@ int	C_Spawn(edict_t *pent)
 	};
 	VectorHolder.clear();
 
+	g_TrieHandles.clear();
 	char map_pluginsfile_path[256];
 	char prefixed_map_pluginsfile[256];
 	char configs_dir[256];

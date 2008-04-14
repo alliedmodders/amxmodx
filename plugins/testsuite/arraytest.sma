@@ -102,6 +102,9 @@ public arraytest1()
 	
 	new Float:f;
 	new Array:a=ArrayCreate(1);
+	if (a == Invalid_Array)
+	{
+	}
 	for (new i=0; i<1000; i++)
 	{
 		f=float(i);

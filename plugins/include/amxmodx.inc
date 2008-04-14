@@ -22,6 +22,7 @@
 #include <vector>
 #include <sorting>
 #include <cellarray>
+#include <celltrie>
 #include <newmenus>
 
 /* Function is called just after server activation.

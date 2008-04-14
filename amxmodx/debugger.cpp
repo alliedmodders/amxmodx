@@ -289,7 +289,7 @@ void Debugger::BeginExec()
 	{
 		Tracer *pTracer = new Tracer();
 		m_pCalls.push_back(pTracer);
-		assert(m_Top == (m_pCalls.size() - 1));
+		assert(m_Top == static_cast<int>(m_pCalls.size() - 1));
 	}
 
 	m_pCalls[m_Top]->Reset();

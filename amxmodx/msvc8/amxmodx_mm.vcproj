@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="amxmodx_mm"
 	ProjectGUID="{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}"
 	RootNamespace="amxmodx"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -89,6 +90,8 @@
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\jitdebug/amxx_mm.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\jitdebug/amxmodx_mm.lib"
 			/>
 			<Tool
@@ -108,9 +111,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -197,6 +197,8 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\jitrelease/amxmodx_mm.pdb"
 				GenerateMapFile="true"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\jitrelease/amxmodx_mm.lib"
 			/>
 			<Tool
@@ -216,9 +218,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -299,6 +298,8 @@
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\jitdebugbinlog/amxmodx_bl_mm.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\jitdebugbinlog/amxmodx_bl_mm.lib"
 			/>
 			<Tool
@@ -318,9 +319,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -406,6 +404,8 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\jitreleasebinlog/amxmodx_bl_mm.pdb"
 				GenerateMapFile="true"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\jitreleasebinlog/amxmodx_bl_mm.lib"
 			/>
 			<Tool
@@ -425,9 +425,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -658,6 +655,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\trie_natives.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\util.cpp"
 				>
 			</File>
@@ -840,6 +841,10 @@
 			</File>
 			<File
 				RelativePath="..\svn_version.h"
+				>
+			</File>
+			<File
+				RelativePath="..\trie_natives.h"
 				>
 			</File>
 			<File

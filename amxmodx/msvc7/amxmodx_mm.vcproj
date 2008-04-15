@@ -487,6 +487,9 @@
 			<File
 				RelativePath="..\vector.cpp">
 			</File>
+			<File
+				RelativePath="..\trie_natives.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -622,6 +625,9 @@
 			</File>
 			<File
 				RelativePath="..\zlib\zlib.h">
+			</File>
+			<File
+				RelativePath="..\trie_natives.h">
 			</File>
 		</Filter>
 		<Filter

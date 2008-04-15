@@ -41,7 +41,7 @@ else
 endif
 
 CFLAGS += -DNDEBUG -fPIC -Wall -Wno-non-virtual-dtor -Werror -fno-exceptions -DHAVE_STDINT_H -Dstricmp=strcasecmp -fno-rtti -static-libgcc
-CFLAGS += -DSM_DEFAULT_THREADER
+CFLAGS += -DSM_DEFAULT_THREADER -m32
 
 ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_$(BIN_SUFFIX_64)

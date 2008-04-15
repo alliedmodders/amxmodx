@@ -34,7 +34,7 @@ else
 	CFLAGS = $(OPT_FLAGS)
 endif
 
-CFLAGS += -DNDEBUG -fPIC -Wall -Wno-non-virtual-dtor -Werror -fno-exceptions -DHAVE_STDINT_H -static-libgcc -fno-rtti
+CFLAGS += -DNDEBUG -fPIC -Wall -Wno-non-virtual-dtor -Werror -fno-exceptions -DHAVE_STDINT_H -static-libgcc -fno-rtti -m32
 
 BINARY = $(NAME)_$(BIN_SUFFIX)
 CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32

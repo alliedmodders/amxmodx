@@ -28,8 +28,8 @@ C_OBJECTS = $(SQL)/alter.c $(SQL)/analyze.c $(SQL)/attach.c $(SQL)/auth.c $(SQL)
 			$(SQL)/update.c $(SQL)/utf.c $(SQL)/util.c $(SQL)/vacuum.c $(SQL)/vdbe.c $(SQL)/vdbeapi.c \
 			$(SQL)/vdbeaux.c $(SQL)/vdbefifo.c $(SQL)/vdbemem.c $(SQL)/vtab.c $(SQL)/where.c \
 
-CFLAGS = -Wall -Werror
-CPPFLAGS = -Wall -Wno-non-virtual-dtor -Werror
+CFLAGS = -Wall -Werror -m32
+CPPFLAGS = -Wall -Wno-non-virtual-dtor -Werror -m32
 
 LINK = -lgcc -static-libgcc -lpthread 
 

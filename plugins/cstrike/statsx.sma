@@ -1271,7 +1271,8 @@ public eventStartRound()
 {
 	new iTeam, id, i
 	
-	if (read_data(1) >= floatround(get_cvar_float("mp_roundtime") * 60.0,floatround_floor))
+	new Float:roundtime = get_cvar_float("mp_roundtime");
+	if (read_data(1) >= floatround(roundtime * 60.0,floatround_floor) || (roundtime == 2.3 && read_data(1) == 137)) // these round too weird for it to work through pawn, have to add an exception for it
 	{
 #if defined STATSX_DEBUG
 		log_amx("Reset round stats")

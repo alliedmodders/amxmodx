@@ -663,6 +663,23 @@ native Float:ns_add_weld_done(idWeldable,Float:value);
 native Float:ns_get_obs_energy(idObs);
 native ns_set_obs_energy(idObs,Float:value);
 native Float:ns_add_obs_energy(idObs,Float:value);
+
+/**
+ * Removes an upgrade from the player's bought and active upgrade lists.
+ * This will not refund the points spent on the upgrade, nor will it
+ * immediately strip the upgrade if the player is alive.  Rather, it will
+ * make it so the player no longer receives the upgrade on spawn.
+ *
+ * @note This only works in combat.
+ * @params idPlayer		The player index to change upgrades for.
+ * @params ugprade		The impulse number for the upgrade to strip.
+ * @return 				2 for upgrade removed from player's bought and active list.
+ *						1 for upgrade removed from player's bought list only.
+ *						3 for upgrade removed from player's active list only (shouldn't happen, just incase.)
+ *						0 for the player didn't have the upgrade in either list.
+ */
+native ns_remove_upgrade(idPlayer, upgrade);
+
 /**
  * Particle system natives
  * -

@@ -318,7 +318,99 @@ static cell AMX_NATIVE_CALL ns_get_hive_ability(AMX *amx, cell *params)
 
 	return (params[2] > 0) ? (result >= params[2] - 1) : result;
 }
+static cell AMX_NATIVE_CALL ns_remove_upgrade(AMX *amx, cell *params)
+{
+	CreatePlayerPointer(amx, params[1]);
 
+	if (!GameMan.IsCombat())
+	{
+		return 0;
+	}
+
+	if (!player->IsConnected() || !player->HasPrivateData())
+	{
+		return 0;
+	}
+
+	// Upgrades are stored in a std::vector<int> in the player's private data
+	// The integer value represents the impulse for the offset
+	// std::vector's memory layout is:
+	// void *start
+	// void *lastobject
+	// void *lastreserved
+	struct upgradevector
+	{
+		int *start;
+		int *end;
+		int *allocated;
+
+		inline int size() { return static_cast<int>((reinterpret_cast<unsigned int>(end) - reinterpret_cast<unsigned int>(start)) / sizeof(int)); }
+		inline int at(int which) { return start[which]; }
+		inline void set(int which, int val) { start[which] = val; }
+		inline bool remove(int val)
+		{
+
+			for (int i = 0; i < this->size(); i++)
+			{
+				if (this->at(i) == val)
+				{
+					
+					int last = this->size() - 1;
+					while (i < last)
+					{
+						this->set(i, this->at(i + 1));
+
+						i++;
+					}
+
+					this->end--;
+
+					return true;
+				}
+			}
+
+			return false;
+		}
+		inline void print()
+		{
+			printf("size: %d values: ", this->size());
+			for (int i = 0; i < this->size(); i++)
+			{
+				if (i != 0)
+					printf(", ");
+
+				printf("%d", this->at(i));
+			}
+			printf("\n");
+		}
+	};
+
+
+	upgradevector *bought = reinterpret_cast<upgradevector *>(reinterpret_cast<char *>(player->GetEdict()->pvPrivateData) + MAKE_OFFSET(UPGRADES_BOUGHT));
+	upgradevector *active = reinterpret_cast<upgradevector *>(reinterpret_cast<char *>(player->GetEdict()->pvPrivateData) + MAKE_OFFSET(UPGRADES_ACTIVE));
+
+
+	//bought->print();
+	//active->print();
+
+	bool bfound = bought->remove(params[2]);
+	bool afound = active->remove(params[2]);
+
+	if (bfound)
+	{
+		if (afound)
+		{
+			return 2;
+		}
+		return 1;
+	}
+	if (afound)
+	{
+		// shouldn't happen, but just incase
+		return 3;
+	}
+	return 0;
+}
 
 
 AMX_NATIVE_INFO player_memory_natives[] = {
@@ -343,9 +435,9 @@ AMX_NATIVE_INFO player_memory_natives[] = {
 	{ "ns_set_deaths",			ns_set_deaths },
 	{ "ns_add_deaths",			ns_add_deaths },
 
-	{ "ns_get_hive_ability",	ns_get_hive_ability},
+	{ "ns_get_hive_ability",	ns_get_hive_ability },
 
-
+	{ "ns_remove_upgrade",		ns_remove_upgrade },
 
 	{ NULL,						NULL }
 };

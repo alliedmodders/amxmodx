@@ -137,6 +137,13 @@
 #define OFFSET_LIN_GAMEPLAY_TEAMB	0x68
 
 
+#define OFFSET_WIN_UPGRADES_BOUGHT	0x1980
+#define OFFSET_LIN_UPGRADES_BOUGHT	0x1994
+
+#define OFFSET_WIN_UPGRADES_ACTIVE	0x198C
+#define OFFSET_LIN_UPGRADES_ACTIVE	0x19A0
+
+
 // TODO: Symbols / signatures instead
 // Not actually offsets, but easier to use MAKE_OFFSET stuff for this :o
 // First functions listed in the disassembler

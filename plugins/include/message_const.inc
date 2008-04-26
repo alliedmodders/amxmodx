@@ -372,6 +372,8 @@ enum
 // write_coord(position.z)
 // write_short(model index)
 // write_byte(scale / 10)
+// write_byte(size)
+// write_byte(brightness)
 
 #define TE_BEAMRING                 24       // Connect a beam ring to two entities
 // write_byte(TE_BEAMRING)
@@ -697,7 +699,7 @@ enum
 
 #define TE_PLAYERSPRITES            121      // Sprites emit from a player's bounding box (ONLY use for players!)
 // write_byte(TE_PLAYERSPRITES)
-// write_byte(playernum)
+// write_short(playernum)
 // write_short(sprite modelindex)
 // write_byte(count)
 // write_byte(variance) (0 = no variance in size) (10 = 10% variance in size)

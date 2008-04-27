@@ -54,6 +54,46 @@
 
 typedef int (*MENUITEM_CALLBACK)(int, int, int);
 
+class BlankItem
+{
+private:
+	char *m_text;
+	bool m_num;
+public:
+	BlankItem() : m_text(NULL), m_num(false) { }
+	BlankItem(BlankItem &src) { this->copyFrom(src); } 
+	~BlankItem() { free(m_text); }
+
+	void copyFrom(BlankItem &src)
+	{
+		m_text = src.m_text;
+		m_num = src.m_num;
+		src.m_text = NULL; // stop the src from freeing the buffer
+	}
+	BlankItem &operator = (const BlankItem &src) { this->copyFrom(const_cast<BlankItem&>(src)); return *this; }
+
+	/* is this text instead of a blank */
+	bool IsText() { return m_text != NULL; }
+
+	/* is this a blank instead of text */
+	bool IsBlank() { return m_text == NULL; }
+
+	/* does this item take up a number */
+	bool EatNumber() { return m_num; }
+
+	/* the text this item is to display */
+	const char *GetDisplay() { return m_text == NULL ? "" : m_text; }
+
+	/* sets this item to use a blank */
+	void SetBlank() { free(m_text); m_text = NULL; }
+
+	/* sets this item to display text */
+	void SetText(const char *text) { free(m_text); m_text = strdup(text);  }
+
+	/* sets whether or not this item takes up a line */
+	void SetEatNumber(bool val) { m_num = val; }
+
+};
 struct menuitem
 {
 	String name;
@@ -65,7 +105,7 @@ struct menuitem
 	MENUITEM_CALLBACK pfn;
 	size_t id;
 
-	CVector<int> blanks;
+	CVector<BlankItem> blanks;
 };
 
 typedef unsigned int menu_t;

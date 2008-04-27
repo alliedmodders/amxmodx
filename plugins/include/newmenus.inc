@@ -228,6 +228,18 @@ native player_menu_info(id, &menu, &newmenu, &menupage=0);
 native menu_addblank(menu, slot=1);
 
 /**
+ * Adds a text line to a menu.  Only available in amxmodx 1.8.1 and above.
+ *
+ * @param menu			Menu resource identifier.
+ * @param text			Text to add.
+ * @param slot			1 (default) if the line should shift the numbering down.
+ * 						0 if the line should be a visual shift only.
+ * @noreturn
+ * @error				Invalid menu resource.
+ */
+native menu_addtext(menu, const text[], slot=1);
+
+/**
  * Sets a menu property.
  *
  * @param menu			Menu resource identifier.

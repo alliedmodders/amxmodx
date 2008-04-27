@@ -183,7 +183,7 @@ int Menu::PagekeyToItem(page_t page, item_t key)
 			{
 				for (size_t j=0; j<m_Items[i]->blanks.size(); j++)
 				{
-					if (m_Items[i]->blanks[j] == 1)
+					if (m_Items[i]->blanks[j].EatNumber())
 					{
 						if (!new_key)
 						{
@@ -231,7 +231,7 @@ int Menu::PagekeyToItem(page_t page, item_t key)
 				
 				for (size_t j=0; j<m_Items[i]->blanks.size(); j++)
 				{
-					if (m_Items[i]->blanks[j] == 1)
+					if (m_Items[i]->blanks[j].EatNumber())
 					{
 						new_key--;
 					}
@@ -265,7 +265,7 @@ int Menu::PagekeyToItem(page_t page, item_t key)
 			{
 				for (size_t j=0; j<m_Items[i]->blanks.size(); j++)
 				{
-					if (m_Items[i]->blanks[j] == 1)
+					if (m_Items[i]->blanks[j].EatNumber())
 					{
 						if (!new_key)
 						{
@@ -451,10 +451,11 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 		{
 			for (size_t j=0; j<pItem->blanks.size(); j++)
 			{
-				if (pItem->blanks[j] == 1)
+				if (pItem->blanks[j].EatNumber())
 				{
 					option++;
 				}
+				m_Text.append(pItem->blanks[j].GetDisplay());
 				m_Text.append("\n");
 				slots++;
 			}
@@ -607,7 +608,6 @@ static cell AMX_NATIVE_CALL menu_create(AMX *amx, cell *params)
 
 	return pMenu->thisId;
 }
-
 static cell AMX_NATIVE_CALL menu_addblank(AMX *amx, cell *params)
 {
 	GETMENU(params[1]);
@@ -625,7 +625,51 @@ static cell AMX_NATIVE_CALL menu_addblank(AMX *amx, cell *params)
 	}
 
 	menuitem *item = pMenu->m_Items[pMenu->m_Items.size() - 1];
-	item->blanks.push_back(params[2]);
+
+	BlankItem a;
+
+	a.SetBlank();
+
+	if (params[2] == 1)
+		a.SetEatNumber(true);
+
+	else
+		a.SetEatNumber(false);
+
+	item->blanks.push_back(a);
+
+	return 1;
+}
+static cell AMX_NATIVE_CALL menu_addtext(AMX *amx, cell *params)
+{
+	GETMENU(params[1]);
+
+	if (params[2] && (!pMenu->items_per_page && pMenu->GetItemCount() >= 10))
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Non-paginated menus are limited to 10 items.");
+		return 0;
+	}
+
+	if (!pMenu->m_Items.size())
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Blanks can only be added after items.");
+		return 0;
+	}
+
+	menuitem *item = pMenu->m_Items[pMenu->m_Items.size() - 1];
+
+	BlankItem a;
+
+	int len;
+	a.SetText(get_amxstring(amx, params[2], 0, len));
+
+	if (params[3] == 1)
+		a.SetEatNumber(true);
+
+	else
+		a.SetEatNumber(false);
+
+	item->blanks.push_back(a);
 
 	return 1;
 }
@@ -1034,6 +1078,7 @@ AMX_NATIVE_INFO g_NewMenuNatives[] =
 	{"menu_create",				menu_create},
 	{"menu_additem",			menu_additem},
 	{"menu_addblank",			menu_addblank},
+	{"menu_addtext",			menu_addtext},
 	{"menu_pages",				menu_pages},
 	{"menu_items",				menu_items},
 	{"menu_display",			menu_display},

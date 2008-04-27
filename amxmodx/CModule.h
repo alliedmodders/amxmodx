@@ -49,7 +49,8 @@ enum MODULE_STATUS
 	MODULE_NEWER,			// newer interface
 	MODULE_INTERROR,		// Internal error
 	MODULE_FUNCNOTPRESENT,	// Function not present
-	MODULE_NOT64BIT			// Not 64 bit compatible
+	MODULE_NOT64BIT,		// Not 64 bit compatible
+	MODULE_BADGAME,			// Module cannot load on the current game mod
 };
 
 struct amxx_module_info_s
@@ -67,6 +68,9 @@ struct amxx_module_info_s
 #define AMXX_IFVERS				1			/* interface version */
 #define AMXX_PARAM				2			/* Invalid parameter */
 #define AMXX_FUNC_NOT_PRESENT	3			/* Function not present */
+
+#define AMXX_GAME_OK			0			/* Module can load on this game. */
+#define AMXX_GAME_BAD			1			/* Module cannot load on this game. */
 
 #define AMXX_INTERFACE_VERSION	4
 

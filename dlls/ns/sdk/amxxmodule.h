@@ -55,6 +55,9 @@ struct amxx_module_info_s
 #define AMXX_PARAM				2			/* Invalid parameter */
 #define AMXX_FUNC_NOT_PRESENT	3			/* Function not present */
 
+#define AMXX_GAME_OK			0			/* This module can load on the current game mod. */
+#define AMXX_GAME_BAD			1			/* This module can not load on the current game mod. */
+
 // *** Small stuff ***
 // The next section is copied from the amx.h file
 // Copyright (c) ITB CompuPhase, 1997-2005
@@ -1077,7 +1080,7 @@ void FN_AlertMessage(ALERT_TYPE atype, char *szFmt, ...);
 #endif // FN_AlertMessage
 
 #ifdef FN_EngineFprintf
-void FN_EngineFprintf(FILE *pfile, char *szFmt, ...);
+void FN_EngineFprintf(void *pfile, char *szFmt, ...);
 #endif // FN_EngineFprintf
 
 #ifdef FN_PvAllocEntPrivateData
@@ -1141,11 +1144,11 @@ void FN_GetBonePosition(const edict_t *pEdict, int iBone, float *rgflOrigin, flo
 #endif // FN_GetBonePosition
 
 #ifdef FN_FunctionFromName
-unsigned long FN_FunctionFromName(const char *pName);
+uint32 FN_FunctionFromName(const char *pName);
 #endif // FN_FunctionFromName
 
 #ifdef FN_NameForFunction
-const char *FN_NameForFunction(unsigned long function);
+const char *FN_NameForFunction(uint32);
 #endif // FN_NameForFunction
 
 #ifdef FN_ClientPrintf
@@ -1189,7 +1192,7 @@ CRC32_t FN_CRC32_Final(CRC32_t pulCRC);
 #endif // FN_CRC32_Final
 
 #ifdef FN_RandomLong
-long FN_RandomLong(long lLow, long lHigh);
+int32 FN_RandomLong(int32 lLow, int32 lHigh);
 #endif // FN_RandomLong
 
 #ifdef FN_RandomFloat
@@ -1658,11 +1661,11 @@ void FN_AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...);
 #endif // FN_AlertMessage_Post
 
 #ifdef FN_EngineFprintf_Post
-void FN_EngineFprintf_Post(FILE *pfile, char *szFmt, ...);
+void FN_EngineFprintf_Post(void *pfile, char *szFmt, ...);
 #endif // FN_EngineFprintf_Post
 
 #ifdef FN_PvAllocEntPrivateData_Post
-void *FN_PvAllocEntPrivateData_Post(edict_t *pEdict, long cb);
+void *FN_PvAllocEntPrivateData_Post(edict_t *pEdict, int32 cb);
 #endif // FN_PvAllocEntPrivateData_Post
 
 #ifdef FN_PvEntPrivateData_Post
@@ -1722,11 +1725,11 @@ void FN_GetBonePosition_Post(const edict_t *pEdict, int iBone, float *rgflOrigin
 #endif // FN_GetBonePosition_Post
 
 #ifdef FN_FunctionFromName_Post
-unsigned long FN_FunctionFromName_Post(const char *pName);
+uint32 FN_FunctionFromName_Post(const char *pName);
 #endif // FN_FunctionFromName_Post
 
 #ifdef FN_NameForFunction_Post
-const char *FN_NameForFunction_Post(unsigned long function);
+const char *FN_NameForFunction_Post(uint32);
 #endif // FN_NameForFunction_Post
 
 #ifdef FN_ClientPrintf_Post
@@ -1770,7 +1773,7 @@ CRC32_t FN_CRC32_Final_Post(CRC32_t pulCRC);
 #endif // FN_CRC32_Final_Post
 
 #ifdef FN_RandomLong_Post
-long FN_RandomLong_Post(long lLow, long lHigh);
+int32 FN_RandomLong_Post(int32 lLow, int32 lHigh);
 #endif // FN_RandomLong_Post
 
 #ifdef FN_RandomFloat_Post
@@ -2022,6 +2025,10 @@ int FN_ShouldCollide_Post(edict_t *pentTouched, edict_t *pentOther);
 #ifdef FN_AMXX_QUERY
 void FN_AMXX_QUERY(void);
 #endif // FN_AMXX_QUERY
+
+#ifdef FN_AMXX_CHECKGAME
+int FN_AMXX_CHECKGAME(const char *);
+#endif // FN_AMXX_CHECKGAME
 
 #ifdef FN_AMXX_ATTACH
 void FN_AMXX_ATTACH(void);

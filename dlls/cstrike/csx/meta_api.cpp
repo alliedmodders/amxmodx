@@ -379,6 +379,15 @@ void OnMetaAttach() {
 	csstats_pause = CVAR_GET_POINTER(init_csstats_pause.name);
 }
 
+int AmxxCheckGame(const char *game)
+{
+	if (strcasecmp(game, "cstrike") == 0 ||
+		strcasecmp(game, "czero") == 0)
+	{
+		return AMXX_GAME_OK;
+	}
+	return AMXX_GAME_BAD;
+}
 void OnAmxxAttach(){
 	MF_AddNatives(stats_Natives);
 	const char* path =  get_localinfo("csstats_score");

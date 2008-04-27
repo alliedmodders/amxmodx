@@ -39,6 +39,7 @@
 // New
 typedef void* (*PFN_REQ_FNPTR)(const char * /*name*/);
 typedef int (FAR *QUERYMOD_NEW)(int * /*ifvers*/, amxx_module_info_s * /*modInfo*/);
+typedef int (FAR *CHECKGAME_NEW)(const char *);
 typedef int (FAR *ATTACHMOD_NEW)(PFN_REQ_FNPTR /*reqFnptrFunc*/);
 typedef int (FAR *DETACHMOD_NEW)(void);
 typedef void (FAR *PLUGINSLOADED_NEW)(void);
@@ -296,6 +297,33 @@ bool CModule::queryModule()
 			return false;
 		}
 
+
+		// Lastly, check to see if this module is able to load on this game mod
+		CHECKGAME_NEW checkGame_New = (CHECKGAME_NEW)DLPROC(m_Handle, "AMXX_CheckGame");
+
+		if (checkGame_New)
+		{
+			// This is an optional check; do not fail modules that do not have it
+			int ret = checkGame_New(g_mod_name.c_str());
+
+			if (ret != AMXX_GAME_OK)
+			{
+				switch (ret)
+				{
+				case AMXX_GAME_BAD:
+					AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") reported that it cannot load on game \"%s\"", m_Filename.c_str(), getVersion(), g_mod_name.c_str());
+					m_Status = MODULE_BADGAME;
+					break;
+				default:
+					AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an unknown CheckGame code (value: %d)", m_Filename.c_str(), getVersion(), ret);
+					m_Status = MODULE_BADLOAD;
+					break;
+				}
+
+				return false;
+			}
+		}
+
 		m_Status = MODULE_QUERY;
 		return true;
 	} else {
@@ -403,6 +431,7 @@ const char* CModule::getStatus() const
 		case MODULE_NEWER:		return "newer";
 		case MODULE_INTERROR:	return "internal err";
 		case MODULE_NOT64BIT:	return "not 64bit";
+		case MODULE_BADGAME:	return "bad game";
 		default:				break;
 	}
 	

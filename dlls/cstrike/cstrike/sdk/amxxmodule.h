@@ -55,6 +55,9 @@ struct amxx_module_info_s
 #define AMXX_PARAM				2			/* Invalid parameter */
 #define AMXX_FUNC_NOT_PRESENT	3			/* Function not present */
 
+#define AMXX_GAME_OK			0			/* This module can load on the current game mod. */
+#define AMXX_GAME_BAD			1			/* This module can not load on the current game mod. */
+
 // *** Small stuff ***
 // The next section is copied from the amx.h file
 // Copyright (c) ITB CompuPhase, 1997-2005
@@ -2022,6 +2025,10 @@ int FN_ShouldCollide_Post(edict_t *pentTouched, edict_t *pentOther);
 #ifdef FN_AMXX_QUERY
 void FN_AMXX_QUERY(void);
 #endif // FN_AMXX_QUERY
+
+#ifdef FN_AMXX_CHECKGAME
+int FN_AMXX_CHECKGAME(const char *);
+#endif // FN_AMXX_CHECKGAME
 
 #ifdef FN_AMXX_ATTACH
 void FN_AMXX_ATTACH(void);

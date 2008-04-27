@@ -90,7 +90,15 @@ void OnPluginsLoaded()
 
 
 
-
+int AmxxCheckGame(const char *game)
+{
+	if (strcasecmp(game, "ns") == 0 ||
+		strcasecmp(game, "nsp") == 0)
+	{
+		return AMXX_GAME_OK;
+	}
+	return AMXX_GAME_BAD;
+}
 // Module is attaching to AMXX
 void OnAmxxAttach()
 {

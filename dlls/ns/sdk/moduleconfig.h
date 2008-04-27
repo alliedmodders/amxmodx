@@ -46,6 +46,12 @@
 /** AMXX query */
 //#define FN_AMXX_QUERY OnAmxxQuery
 
+/** AMXX Check Game - module API is NOT available here.
+ * Return AMXX_GAME_OK if this module can load on the game, AMXX_GAME_BAD if it cannot.
+ * syntax: int AmxxCheckGame(const char *game)
+ */
+#define FN_AMXX_CHECKGAME AmxxCheckGame
+
 /** AMXX attach
  * Do native functions init here (MF_AddNatives)
  */

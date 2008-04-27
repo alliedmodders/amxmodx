@@ -958,6 +958,9 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 	case MODULE_NOT64BIT:
 		report_error(1, "[AMXX] Module \"%s\" is not 64 bit compatible.", path.c_str());
 		break;
+	case MODULE_BADGAME:
+		report_error(1, "[AMXX] Module \"%s\" cannot load on game \"%s\"", path.c_str(), g_mod_name.c_str());
+		break;
 	default:
 		error = false;
 		break;

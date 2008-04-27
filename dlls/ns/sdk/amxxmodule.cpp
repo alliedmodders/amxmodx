@@ -2284,7 +2284,7 @@ C_DLLEXPORT int Meta_Query(char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_
 	}
 
 #ifdef FN_META_QUERY
-	return FN_META_QUERY();
+	FN_META_QUERY();
 #endif	// FN_META_QUERY
 
 	return 1;
@@ -2327,7 +2327,7 @@ C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason)
 	}
 
 #ifdef FN_META_DETACH
-	return FN_META_DETACH();
+	FN_META_DETACH();
 #endif	// FN_META_DETACH
 	return TRUE;
 }
@@ -2374,7 +2374,7 @@ C_DLLEXPORT void __stdcall GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, 
 	gpGlobals = pGlobals;
 	// NOTE!  Have to call logging function _after_ copying into g_engfuncs, so
 	// that g_engfuncs.pfnAlertMessage() can be resolved properly, heh. :)
-	UTIL_LogPrintf("[%s] dev: called: GiveFnptrsToDll\n", Plugin_info.logtag);
+	// UTIL_LogPrintf("[%s] dev: called: GiveFnptrsToDll\n", Plugin_info.logtag);
 	// --> ** Function core
 
 #ifdef _MSC_VER
@@ -2548,6 +2548,14 @@ C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo
 // request optional function
 #define REQFUNC_OPT(name, fptr, type) fptr = (type)reqFnptrFunc(name)
 
+C_DLLEXPORT int AMXX_CheckGame(const char *game)
+{
+#ifdef FN_AMXX_CHECKGAME
+	return FN_AMXX_CHECKGAME(game);
+#else
+	return AMXX_GAME_OK;
+#endif
+}
 C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 {
 	// Check pointer

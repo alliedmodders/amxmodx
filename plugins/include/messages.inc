@@ -55,8 +55,14 @@ native get_msg_block(iMessage);
  * or fully block it. Here is how it works:
  * If you hook a message, the message is stored but not sent. You have the opportunity to
  * not only execute code, but to get/set the contents of the message, before you choose to 
- * either block it or let it go on its way. The hooked function will be passed a msg_id, msg_dest, and entity index. */
+ * either block it or let it go on its way. The hooked function will be passed a msg_id, msg_dest, and entity index. 
+ * The return value can be passed to unregister_message() to stop the message from being hooked */
 native register_message(iMsgId, const szFunction[]);
+
+/* Unregisters a message hook previously created with register_message
+ * You must pass the proper message id, and return value from the message to unregister the message successfully. */
+native unregister_message(iMsgId, registeredmsg);
+
 
 /* The get/set _msg commands will fail if used outside a hooked message scope.
  * They should never be used unless inside a registered message function.

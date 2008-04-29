@@ -2,7 +2,8 @@
 #include "messages.h"
 
 Message Msg;
-CVector<int> msgHooks[256];
+//CVector<int> msgHooks[256];
+RegisteredMessage msgHooks[256];
 int msgBlocks[256] = {BLOCK_NOT};
 int msgDest;
 int msgType;
@@ -16,7 +17,7 @@ void ClearMessages()
 {
 	for (size_t i=0; i<MAX_MESSAGES; i++)
 	{
-		msgHooks[i].clear();
+		msgHooks[i].Clear();
 		msgBlocks[i] = BLOCK_NOT;
 	}
 }
@@ -200,7 +201,7 @@ void C_MessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *e
 		inblock = true;
 		msgType = msg_type;
 		RETURN_META(MRES_SUPERCEDE);
-	} else if (msgHooks[msg_type].size()) {
+	} else if (msgHooks[msg_type].Hooked()) {
 		inhook = true;
 		msgDest = msg_dest;
 		msgType = msg_type;
@@ -318,8 +319,8 @@ void C_WriteEntity(int iValue)
 
 void C_MessageEnd(void)
 {
-	int mres = 0, mresB = 0;
-	unsigned int i = 0;
+	int mres = 0;
+	
 	if (inblock)
 	{
 		inblock = false;
@@ -329,12 +330,17 @@ void C_MessageEnd(void)
 		}
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (inhook) {
+
+		mres = msgHooks[msgType].Execute((cell)msgType, (cell)msgDest, (cell)ENTINDEX(msgpEntity));
+
+		/*
 		for (i=0; i<msgHooks[msgType].size(); i++)
 		{
 				mresB = executeForwards(msgHooks[msgType].at(i), (cell)msgType, (cell)msgDest, (cell)ENTINDEX(msgpEntity));
 				if (mresB > mres)
 						mres = mresB;
 		}
+		*/
 		inhook = false;
 		if (mres & 1)
 		{
@@ -477,7 +483,7 @@ static cell AMX_NATIVE_CALL register_message(AMX *amx, cell *params)
 		int id = registerSPForwardByName(amx, name, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 		if (id != -1)
 		{
-			msgHooks[params[1]].push_back(id);
+			msgHooks[params[1]].AddHook(id);
 			return id;
 		} else {
 			LogError(amx, AMX_ERR_NOTFOUND, "Could not find function \"%s\"", name);
@@ -487,6 +493,29 @@ static cell AMX_NATIVE_CALL register_message(AMX *amx, cell *params)
 
 	return 0;
 }
+
+// unregister_message(msgid, msghandle)
+static cell AMX_NATIVE_CALL unregister_message(AMX *amx, cell *params)
+{
+	if (!Msg.Ready())
+		Msg.Init();
+
+	if (params[1]>0 && params[1] < 256)
+	{
+		int id = params[2];
+		if (id != -1)
+		{
+			msgHooks[params[1]].RemoveHook(id);
+			return id;
+		} else {
+			LogError(amx, AMX_ERR_NOTFOUND, "Invalid registered message handle");
+			return -1;
+		}
+	}
+
+	return 0;
+}
+
 
 static cell AMX_NATIVE_CALL set_msg_block(AMX *amx, cell *params)
 {
@@ -775,6 +804,7 @@ AMX_NATIVE_INFO msg_Natives[] =
 	{"write_string",		write_string},
 
 	{"register_message",	register_message},
+	{"unregister_message",	unregister_message},
 
 	{"set_msg_block",		set_msg_block},
 	{"get_msg_block",		get_msg_block},

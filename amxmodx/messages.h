@@ -6,6 +6,7 @@
 #include "amx.h"
 #include "CVector.h"
 #include "CString.h"
+#include "sh_stack.h"
 
 #define MAX_MESSAGES 255
 
@@ -15,6 +16,136 @@
 #define BLOCK_ONCE 1
 #define BLOCK_SET 2
 
+class RegisteredMessage
+{
+private:
+	CVector<int> m_Forwards;
+	CStack<int> m_InExecution;
+	bool m_Cleanup;
+
+public:
+	RegisteredMessage() : m_Cleanup(false) { } 
+	~RegisteredMessage() { this->Clear(); }
+
+	void AddHook(int fwd)
+	{
+		m_Forwards.push_back(fwd);
+	}
+	bool RemoveHook(int fwd)
+	{
+		// Don't erase a forward if we're in the middle of execution; this
+		// could throw off the iterator that is going through the forwards
+		// and executing them.  Instead, unregister the forward and set it
+		// to -1 from within the vector.
+		if (m_InExecution.size())
+		{
+			this->m_Cleanup = true;
+
+			CVector<int>::iterator iter = m_Forwards.begin();
+			CVector<int>::iterator end = m_Forwards.end();
+			while (iter != end)
+			{
+				if (*iter == fwd)
+				{
+					if (*iter != -1)
+					{
+						unregisterSPForward(*iter);
+					}
+					*iter = -1;
+					return true;
+				}
+				else
+				{
+					iter++;
+				}
+			}
+		
+		}
+		else
+		{
+			CVector<int>::iterator iter = m_Forwards.begin();
+			CVector<int>::iterator end = m_Forwards.end();
+			while (iter != end)
+			{
+				if (*iter == fwd)
+				{
+					if (fwd != -1)
+					{
+						unregisterSPForward(fwd);
+
+						m_Forwards.erase(iter);
+
+						return true;
+					}
+					else
+					{
+						// -1 could be in here more than once
+						m_Forwards.erase(iter);
+					}
+				}
+				else
+				{
+					iter++;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	void Clear()
+	{
+		while (m_InExecution.size())
+		{
+			m_InExecution.pop();
+		}
+		for (size_t i = 0; i < m_Forwards.size(); i++)
+		{
+			int fwd = m_Forwards[i];
+
+			if (fwd != -1)
+			{
+				unregisterSPForward(m_Forwards[i]);
+			}
+		}
+
+		m_Forwards.clear();
+	}
+
+	cell Execute(cell type, cell dest, cell entity)
+	{
+		m_InExecution.push(1);
+		cell res = 0;
+		cell thisres = 0;
+		for (size_t i = 0; i < m_Forwards.size(); i++)
+		{
+			int fwd = m_Forwards[i];
+
+			if (fwd != -1)
+			{
+				thisres = executeForwards(fwd, type, dest, entity);
+				if (thisres > res)
+				{
+					res = thisres;
+				}
+
+			}
+		}
+
+		m_InExecution.pop();
+
+		if (m_InExecution.size() == 0 && m_Cleanup)
+		{
+			this->RemoveHook(-1);
+		}
+
+		return res;
+	}
+	bool Hooked() const
+	{
+		return m_Forwards.size() != 0;
+	}
+};
 enum msgtype
 {
 	arg_byte = 1,
@@ -76,7 +207,7 @@ void C_WriteString(const char *sz);
 void C_WriteEntity(int iValue);
 void C_MessageEnd(void);
 
-extern CVector<int> msgHooks[256];
+extern RegisteredMessage msgHooks[256];
 extern int msgBlocks[256];
 
 void ClearMessages();

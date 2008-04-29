@@ -342,6 +342,13 @@ void OnPluginsLoaded()
 	g_death_info = MF_RegisterForward("client_death", ET_IGNORE, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 }
 
+int AmxxCheckGame(const char *game)
+{
+	if (strcasecmp(game, "ts") == 0)
+		return AMXX_GAME_OK;
+
+	return AMXX_GAME_BAD;
+}
 void OnAmxxAttach()
 {
 

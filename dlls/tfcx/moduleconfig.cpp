@@ -331,6 +331,13 @@ void OnMetaAttach() {
 
 }
 
+int AmxxCheckGame(const char *game)
+{
+	if (strcasecmp(game, "tfc") == 0)
+		return AMXX_GAME_OK;
+
+	return AMXX_GAME_BAD;
+}
 void OnAmxxAttach() {
 
 	MF_AddNatives( stats_Natives );

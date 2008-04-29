@@ -10,6 +10,7 @@
 // config
 #include "moduleconfig.h"
 
+#include <stddef.h> // size_t
 // metamod include files
 #ifdef USE_METAMOD
 #include <extdll.h>
@@ -54,6 +55,9 @@ struct amxx_module_info_s
 #define AMXX_IFVERS				1			/* interface version */
 #define AMXX_PARAM				2			/* Invalid parameter */
 #define AMXX_FUNC_NOT_PRESENT	3			/* Function not present */
+
+#define AMXX_GAME_OK			0			/* This module can load on the current game mod. */
+#define AMXX_GAME_BAD			1			/* This module can not load on the current game mod. */
 
 // *** Small stuff ***
 // The next section is copied from the amx.h file
@@ -2022,6 +2026,10 @@ int FN_ShouldCollide_Post(edict_t *pentTouched, edict_t *pentOther);
 #ifdef FN_AMXX_QUERY
 void FN_AMXX_QUERY(void);
 #endif // FN_AMXX_QUERY
+
+#ifdef FN_AMXX_CHECKGAME
+int FN_AMXX_CHECKGAME(const char *);
+#endif // FN_AMXX_CHECKGAME
 
 #ifdef FN_AMXX_ATTACH
 void FN_AMXX_ATTACH(void);

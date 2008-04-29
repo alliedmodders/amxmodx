@@ -2548,6 +2548,14 @@ C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo
 // request optional function
 #define REQFUNC_OPT(name, fptr, type) fptr = (type)reqFnptrFunc(name)
 
+C_DLLEXPORT int AMXX_CheckGame(const char *game)
+{
+#ifdef FN_AMXX_CHECKGAME
+	return FN_AMXX_CHECKGAME(game);
+#else
+	return AMXX_GAME_OK;
+#endif
+}
 C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 {
 	// Check pointer

@@ -10,6 +10,7 @@
 // config
 #include "moduleconfig.h"
 
+#include <stddef.h> // size_t
 // metamod include files
 #ifdef USE_METAMOD
 #include <extdll.h>

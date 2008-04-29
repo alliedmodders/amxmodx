@@ -294,6 +294,13 @@ void SetModel_Post(edict_t *e, const char *m)
 	RETURN_META(MRES_IGNORED);
 }
 
+int AmxxCheckGame(const char *game)
+{
+	if (strcasecmp(game, "dod") == 0)
+		return AMXX_GAME_OK;
+
+	return AMXX_GAME_BAD;
+}
 void OnAmxxAttach() 
 {
 	MF_AddNatives( base_Natives );

@@ -471,6 +471,13 @@ void OnMetaAttach()
 	dodstats_pause = CVAR_GET_POINTER(init_dodstats_pause.name);
 }
 
+int AmxxCheckGame(const char *game)
+{
+	if (strcasecmp(game, "dod") == 0)
+		return AMXX_GAME_OK;
+
+	return AMXX_GAME_BAD;
+}
 void OnAmxxAttach()
 {
 	MF_AddNatives( stats_Natives );

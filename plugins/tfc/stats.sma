@@ -630,6 +630,10 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
 public showDoubleKill(){ 
   new pos = g_KillCount - 2
   if ( pos > 2 ) pos = 2
+
+  if (pos < 0)
+	  return PLUGIN_CONTINUE
+
   if ( DoubleKill ) {
     new name[32],message[128]
     get_user_name(g_prevKillerId,name,31)

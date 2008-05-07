@@ -200,7 +200,6 @@ public plugin_cfg(){
   server_cmd(g_addStast,"Double Kill","DoubleKill")    
   server_cmd(g_addStast,"Double Kill Sound","DoubleKillSound") 
   server_cmd(g_addStast,"Bullet Damage","BulletDamage") 
-  server_cmd(g_addStast,"End Round Stats","EndRoundStats") 
 }
 
 public cmdStatsMe(id){

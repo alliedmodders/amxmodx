@@ -61,7 +61,7 @@ void validate_menu_text(char *str)
 				str++;
 				char c = tolower(*str);
 				if (c == 'r' || c == 'w'
-					|| c== 'w' || c == 'd')
+					|| c== 'y' || c == 'd')
 				{
 					str++;
 					offs += 2;

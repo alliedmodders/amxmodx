@@ -302,12 +302,14 @@ stock fm_fakedamage(victim, const classname[], Float:takedmgdamage, damagetype) 
 // optimization idea by Orangutanz
 stock fm_get_brush_entity_origin(index, Float:origin[3]) {
 	new Float:mins[3], Float:maxs[3];
+
+	pev(index, pev_origin, origin);
 	pev(index, pev_mins, mins);
 	pev(index, pev_maxs, maxs);
 
-	origin[0] = (mins[0] + maxs[0]) * 0.5;
-	origin[1] = (mins[1] + maxs[1]) * 0.5;
-	origin[2] = (mins[2] + maxs[2]) * 0.5;
+	origin[0] += (mins[0] + maxs[0]) * 0.5;
+	origin[1] += (mins[1] + maxs[1]) * 0.5;
+	origin[2] += (mins[2] + maxs[2]) * 0.5;
 
 	return 1;
 }

@@ -22,7 +22,7 @@
 
 #include "GeoIP.h"
 
-#ifndef _WIN32
+#ifndef WIN32
 #include <netdb.h>
 #include <sys/socket.h>
 #include <netinet/in.h> /* For ntohl */
@@ -65,42 +65,153 @@
 		} \
 }
 
-const char GeoIP_country_code[247][3] = { "--","AP","EU","AD","AE","AF","AG","AI","AL","AM","AN","AO","AQ","AR","AS","AT","AU","AW","AZ","BA","BB","BD","BE","BF","BG","BH","BI","BJ","BM","BN","BO","BR","BS","BT","BV","BW","BY","BZ","CA","CC","CD","CF","CG","CH","CI","CK","CL","CM","CN","CO","CR","CU","CV","CX","CY","CZ","DE","DJ","DK","DM","DO","DZ","EC","EE","EG","EH","ER","ES","ET","FI","FJ","FK","FM","FO","FR","FX","GA","GB","GD","GE","GF","GH","GI","GL","GM","GN","GP","GQ","GR","GS","GT","GU","GW","GY","HK","HM","HN","HR","HT","HU","ID","IE","IL","IN","IO","IQ","IR","IS","IT","JM","JO","JP","KE","KG","KH","KI","KM","KN","KP","KR","KW","KY","KZ","LA","LB","LC","LI","LK","LR","LS","LT","LU","LV","LY","MA","MC","MD","MG","MH","MK","ML","MM","MN","MO","MP","MQ","MR","MS","MT","MU","MV","MW","MX","MY","MZ","NA","NC","NE","NF","NG","NI","NL","NO","NP","NR","NU","NZ","OM","PA","PE","PF","PG","PH","PK","PL","PM","PN","PR","PS","PT","PW","PY","QA","RE","RO","RU","RW","SA","SB","SC","SD","SE","SG","SH","SI","SJ","SK","SL","SM","SN","SO","SR","ST","SV","SY","SZ","TC","TD","TF","TG","TH","TJ","TK","TM","TN","TO","TL","TR","TT","TV","TW","TZ","UA","UG","UM","US","UY","UZ","VA","VC","VE","VG","VI","VN","VU","WF","WS","YE","YT","CS","ZA","ZM","ZR","ZW","A1","A2","O1"};
+const char GeoIP_country_code[251][3] = { "--","AP","EU","AD","AE","AF","AG","AI","AL","AM","AN",
+	"AO","AQ","AR","AS","AT","AU","AW","AZ","BA","BB",
+	"BD","BE","BF","BG","BH","BI","BJ","BM","BN","BO",
+	"BR","BS","BT","BV","BW","BY","BZ","CA","CC","CD",
+	"CF","CG","CH","CI","CK","CL","CM","CN","CO","CR",
+	"CU","CV","CX","CY","CZ","DE","DJ","DK","DM","DO",
+	"DZ","EC","EE","EG","EH","ER","ES","ET","FI","FJ",
+	"FK","FM","FO","FR","FX","GA","GB","GD","GE","GF",
+	"GH","GI","GL","GM","GN","GP","GQ","GR","GS","GT",
+	"GU","GW","GY","HK","HM","HN","HR","HT","HU","ID",
+	"IE","IL","IN","IO","IQ","IR","IS","IT","JM","JO",
+	"JP","KE","KG","KH","KI","KM","KN","KP","KR","KW",
+	"KY","KZ","LA","LB","LC","LI","LK","LR","LS","LT",
+	"LU","LV","LY","MA","MC","MD","MG","MH","MK","ML",
+	"MM","MN","MO","MP","MQ","MR","MS","MT","MU","MV",
+	"MW","MX","MY","MZ","NA","NC","NE","NF","NG","NI",
+	"NL","NO","NP","NR","NU","NZ","OM","PA","PE","PF",
+	"PG","PH","PK","PL","PM","PN","PR","PS","PT","PW",
+	"PY","QA","RE","RO","RU","RW","SA","SB","SC","SD",
+	"SE","SG","SH","SI","SJ","SK","SL","SM","SN","SO",
+	"SR","ST","SV","SY","SZ","TC","TD","TF","TG","TH",
+	"TJ","TK","TM","TN","TO","TL","TR","TT","TV","TW",
+	"TZ","UA","UG","UM","US","UY","UZ","VA","VC","VE",
+	"VG","VI","VN","VU","WF","WS","YE","YT","RS","ZA",
+	"ZM","ME","ZW","A1","A2","O1","AX","GG","IM","JE"};
 
-const char GeoIP_country_code3[247][4] = { "--","AP","EU","AND","ARE","AFG","ATG","AIA","ALB","ARM","ANT","AGO","AQ","ARG","ASM","AUT","AUS","ABW","AZE","BIH","BRB","BGD","BEL","BFA","BGR","BHR","BDI","BEN","BMU","BRN","BOL","BRA","BHS","BTN","BV","BWA","BLR","BLZ","CAN","CC","COD","CAF","COG","CHE","CIV","COK","CHL","CMR","CHN","COL","CRI","CUB","CPV","CX","CYP","CZE","DEU","DJI","DNK","DMA","DOM","DZA","ECU","EST","EGY","ESH","ERI","ESP","ETH","FIN","FJI","FLK","FSM","FRO","FRA","FX","GAB","GBR","GRD","GEO","GUF","GHA","GIB","GRL","GMB","GIN","GLP","GNQ","GRC","GS","GTM","GUM","GNB","GUY","HKG","HM","HND","HRV","HTI","HUN","IDN","IRL","ISR","IND","IO","IRQ","IRN","ISL","ITA","JAM","JOR","JPN","KEN","KGZ","KHM","KIR","COM","KNA","PRK","KOR","KWT","CYM","KAZ","LAO","LBN","LCA","LIE","LKA","LBR","LSO","LTU","LUX","LVA","LBY","MAR","MCO","MDA","MDG","MHL","MKD","MLI","MMR","MNG","MAC","MNP","MTQ","MRT","MSR","MLT","MUS","MDV","MWI","MEX","MYS","MOZ","NAM","NCL","NER","NFK","NGA","NIC","NLD","NOR","NPL","NRU","NIU","NZL","OMN","PAN","PER","PYF","PNG","PHL","PAK","POL","SPM","PCN","PRI","PSE","PRT","PLW","PRY","QAT","REU","ROU","RUS","RWA","SAU","SLB","SYC","SDN","SWE","SGP","SHN","SVN","SJM","SVK","SLE","SMR","SEN","SOM","SUR","STP","SLV","SYR","SWZ","TCA","TCD","TF","TGO","THA","TJK","TKL","TKM","TUN","TON","TLS","TUR","TTO","TUV","TWN","TZA","UKR","UGA","UM","USA","URY","UZB","VAT","VCT","VEN","VGB","VIR","VNM","VUT","WLF","WSM","YEM","YT","SCG","ZAF","ZMB","ZR","ZWE","A1","A2","O1"};
+const char GeoIP_country_code3[251][4] = { "--","AP","EU","AND","ARE","AFG","ATG","AIA","ALB","ARM","ANT",
+	"AGO","AQ","ARG","ASM","AUT","AUS","ABW","AZE","BIH","BRB",
+	"BGD","BEL","BFA","BGR","BHR","BDI","BEN","BMU","BRN","BOL",
+	"BRA","BHS","BTN","BV","BWA","BLR","BLZ","CAN","CC","COD",
+	"CAF","COG","CHE","CIV","COK","CHL","CMR","CHN","COL","CRI",
+	"CUB","CPV","CX","CYP","CZE","DEU","DJI","DNK","DMA","DOM",
+	"DZA","ECU","EST","EGY","ESH","ERI","ESP","ETH","FIN","FJI",
+	"FLK","FSM","FRO","FRA","FX","GAB","GBR","GRD","GEO","GUF",
+	"GHA","GIB","GRL","GMB","GIN","GLP","GNQ","GRC","GS","GTM",
+	"GUM","GNB","GUY","HKG","HM","HND","HRV","HTI","HUN","IDN",
+	"IRL","ISR","IND","IO","IRQ","IRN","ISL","ITA","JAM","JOR",
+	"JPN","KEN","KGZ","KHM","KIR","COM","KNA","PRK","KOR","KWT",
+	"CYM","KAZ","LAO","LBN","LCA","LIE","LKA","LBR","LSO","LTU",
+	"LUX","LVA","LBY","MAR","MCO","MDA","MDG","MHL","MKD","MLI",
+	"MMR","MNG","MAC","MNP","MTQ","MRT","MSR","MLT","MUS","MDV",
+	"MWI","MEX","MYS","MOZ","NAM","NCL","NER","NFK","NGA","NIC",
+	"NLD","NOR","NPL","NRU","NIU","NZL","OMN","PAN","PER","PYF",
+	"PNG","PHL","PAK","POL","SPM","PCN","PRI","PSE","PRT","PLW",
+	"PRY","QAT","REU","ROU","RUS","RWA","SAU","SLB","SYC","SDN",
+	"SWE","SGP","SHN","SVN","SJM","SVK","SLE","SMR","SEN","SOM",
+	"SUR","STP","SLV","SYR","SWZ","TCA","TCD","TF","TGO","THA",
+	"TJK","TKL","TKM","TUN","TON","TLS","TUR","TTO","TUV","TWN",
+	"TZA","UKR","UGA","UM","USA","URY","UZB","VAT","VCT","VEN",
+	"VGB","VIR","VNM","VUT","WLF","WSM","YEM","YT","SRB","ZAF",
+	"ZMB","MNE","ZWE","A1","A2","O1","ALA","GGY","IMN","JEY"};
 
-const char * GeoIP_country_name[247] = {"N/A","Asia/Pacific Region","Europe","Andorra","United Arab Emirates","Afghanistan","Antigua and Barbuda","Anguilla","Albania","Armenia","Netherlands Antilles","Angola","Antarctica","Argentina","American Samoa","Austria","Australia","Aruba","Azerbaijan","Bosnia and Herzegovina","Barbados","Bangladesh","Belgium","Burkina Faso","Bulgaria","Bahrain","Burundi","Benin","Bermuda","Brunei Darussalam","Bolivia","Brazil","Bahamas","Bhutan","Bouvet Island","Botswana","Belarus","Belize","Canada","Cocos (Keeling) Islands","Congo, The Democratic Republic of the","Central African Republic","Congo","Switzerland","Cote D'Ivoire","Cook Islands","Chile","Cameroon","China","Colombia","Costa Rica","Cuba","Cape Verde","Christmas Island","Cyprus","Czech Republic","Germany","Djibouti","Denmark","Dominica","Dominican Republic","Algeria","Ecuador","Estonia","Egypt","Western Sahara","Eritrea","Spain","Ethiopia","Finland","Fiji","Falkland Islands (Malvinas)","Micronesia, Federated States of","Faroe Islands","France","France, Metropolitan","Gabon","United Kingdom","Grenada","Georgia","French Guiana","Ghana","Gibraltar","Greenland","Gambia","Guinea","Guadeloupe","Equatorial Guinea","Greece","South Georgia and the South Sandwich Islands","Guatemala","Guam","Guinea-Bissau","Guyana","Hong Kong","Heard Island and McDonald Islands","Honduras","Croatia","Haiti","Hungary","Indonesia","Ireland","Israel","India","British Indian Ocean Territory","Iraq","Iran, Islamic Republic of","Iceland","Italy","Jamaica","Jordan","Japan","Kenya","Kyrgyzstan","Cambodia","Kiribati","Comoros","Saint Kitts and Nevis",
-"Korea, Democratic People's Republic of","Korea, Republic of","Kuwait","Cayman Islands","Kazakhstan","Lao People's Democratic Republic","Lebanon","Saint Lucia","Liechtenstein","Sri Lanka","Liberia","Lesotho","Lithuania","Luxembourg","Latvia","Libyan Arab Jamahiriya","Morocco","Monaco","Moldova, Republic of","Madagascar","Marshall Islands","Macedonia","Mali","Myanmar","Mongolia","Macau","Northern Mariana Islands","Martinique","Mauritania","Montserrat","Malta","Mauritius","Maldives","Malawi","Mexico","Malaysia","Mozambique","Namibia","New Caledonia","Niger","Norfolk Island","Nigeria","Nicaragua","Netherlands","Norway","Nepal","Nauru","Niue","New Zealand","Oman","Panama","Peru","French Polynesia","Papua New Guinea","Philippines","Pakistan","Poland","Saint Pierre and Miquelon","Pitcairn Islands","Puerto Rico","Palestinian Territory","Portugal","Palau","Paraguay","Qatar","Reunion","Romania","Russian Federation","Rwanda","Saudi Arabia","Solomon Islands","Seychelles","Sudan","Sweden","Singapore","Saint Helena","Slovenia","Svalbard and Jan Mayen","Slovakia","Sierra Leone","San Marino","Senegal","Somalia","Suriname","Sao Tome and Principe","El Salvador","Syrian Arab Republic","Swaziland","Turks and Caicos Islands","Chad","French Southern Territories","Togo","Thailand","Tajikistan","Tokelau","Turkmenistan","Tunisia","Tonga","Timor-Leste","Turkey","Trinidad and Tobago","Tuvalu","Taiwan","Tanzania, United Republic of","Ukraine","Uganda","United States Minor Outlying Islands","United States","Uruguay","Uzbekistan","Holy See (Vatican City State)","Saint Vincent and the Grenadines","Venezuela","Virgin Islands, British","Virgin Islands, U.S.","Vietnam","Vanuatu","Wallis and Futuna","Samoa","Yemen","Mayotte","Serbia and Montenegro","South Africa","Zambia","Zaire","Zimbabwe",
-"Anonymous Proxy","Satellite Provider","Other"};
+const char * GeoIP_country_name[251] = {"N/A","Asia/Pacific Region","Europe","Andorra","United Arab Emirates","Afghanistan","Antigua and Barbuda","Anguilla","Albania","Armenia","Netherlands Antilles",
+	"Angola","Antarctica","Argentina","American Samoa","Austria","Australia","Aruba","Azerbaijan","Bosnia and Herzegovina","Barbados",
+	"Bangladesh","Belgium","Burkina Faso","Bulgaria","Bahrain","Burundi","Benin","Bermuda","Brunei Darussalam","Bolivia",
+	"Brazil","Bahamas","Bhutan","Bouvet Island","Botswana","Belarus","Belize","Canada","Cocos (Keeling) Islands","Congo, The Democratic Republic of the",
+	"Central African Republic","Congo","Switzerland","Cote D'Ivoire","Cook Islands","Chile","Cameroon","China","Colombia","Costa Rica",
+	"Cuba","Cape Verde","Christmas Island","Cyprus","Czech Republic","Germany","Djibouti","Denmark","Dominica","Dominican Republic",
+	"Algeria","Ecuador","Estonia","Egypt","Western Sahara","Eritrea","Spain","Ethiopia","Finland","Fiji",
+	"Falkland Islands (Malvinas)","Micronesia, Federated States of","Faroe Islands","France","France, Metropolitan","Gabon","United Kingdom","Grenada","Georgia","French Guiana",
+	"Ghana","Gibraltar","Greenland","Gambia","Guinea","Guadeloupe","Equatorial Guinea","Greece","South Georgia and the South Sandwich Islands","Guatemala",
+	"Guam","Guinea-Bissau","Guyana","Hong Kong","Heard Island and McDonald Islands","Honduras","Croatia","Haiti","Hungary","Indonesia",
+	"Ireland","Israel","India","British Indian Ocean Territory","Iraq","Iran, Islamic Republic of","Iceland","Italy","Jamaica","Jordan",
+	"Japan","Kenya","Kyrgyzstan","Cambodia","Kiribati","Comoros","Saint Kitts and Nevis","Korea, Democratic People's Republic of","Korea, Republic of","Kuwait",
+	"Cayman Islands","Kazakhstan","Lao People's Democratic Republic","Lebanon","Saint Lucia","Liechtenstein","Sri Lanka","Liberia","Lesotho","Lithuania",
+	"Luxembourg","Latvia","Libyan Arab Jamahiriya","Morocco","Monaco","Moldova, Republic of","Madagascar","Marshall Islands","Macedonia","Mali",
+	"Myanmar","Mongolia","Macau","Northern Mariana Islands","Martinique","Mauritania","Montserrat","Malta","Mauritius","Maldives",
+	"Malawi","Mexico","Malaysia","Mozambique","Namibia","New Caledonia","Niger","Norfolk Island","Nigeria","Nicaragua",
+	"Netherlands","Norway","Nepal","Nauru","Niue","New Zealand","Oman","Panama","Peru","French Polynesia",
+	"Papua New Guinea","Philippines","Pakistan","Poland","Saint Pierre and Miquelon","Pitcairn Islands","Puerto Rico","Palestinian Territory","Portugal","Palau",
+	"Paraguay","Qatar","Reunion","Romania","Russian Federation","Rwanda","Saudi Arabia","Solomon Islands","Seychelles","Sudan",
+	"Sweden","Singapore","Saint Helena","Slovenia","Svalbard and Jan Mayen","Slovakia","Sierra Leone","San Marino","Senegal","Somalia","Suriname",
+	"Sao Tome and Principe","El Salvador","Syrian Arab Republic","Swaziland","Turks and Caicos Islands","Chad","French Southern Territories","Togo","Thailand",
+	"Tajikistan","Tokelau","Turkmenistan","Tunisia","Tonga","Timor-Leste","Turkey","Trinidad and Tobago","Tuvalu","Taiwan",
+	"Tanzania, United Republic of","Ukraine","Uganda","United States Minor Outlying Islands","United States","Uruguay","Uzbekistan","Holy See (Vatican City State)","Saint Vincent and the Grenadines","Venezuela",
+	"Virgin Islands, British","Virgin Islands, U.S.","Vietnam","Vanuatu","Wallis and Futuna","Samoa","Yemen","Mayotte","Serbia","South Africa",
+	"Zambia","Montenegro","Zimbabwe","Anonymous Proxy","Satellite Provider","Other","Aland Islands","Guernsey","Isle of Man","Jersey"};
 
-const char GeoIP_country_continent[247][3] = {"--","AS","EU","EU","AS","AS","SA","SA","EU","AS","SA","AF","AN","SA","OC","EU","OC","SA","AS","EU","SA","AS","EU","AF","EU","AS","AF","AF","SA","AS","SA","SA","SA","AS","AF","AF","EU","SA","NA","AS","AF","AF","AF","EU","AF","OC","SA","AF","AS","SA","SA","SA","AF","AS","AS","EU","EU","AF","EU","SA","SA","AF","SA","EU","AF","AF","AF","EU","AF","EU","OC","SA","OC","EU","EU","EU","AF","EU","SA","AS","SA","AF","EU","SA","AF","AF","SA","AF","EU","SA","SA","OC","AF","SA","AS","AF","SA","EU","SA","EU","AS","EU","AS","AS","AS","AS","AS","EU","EU","SA","AS","AS","AF","AS","AS","OC","AF","SA","AS","AS","AS","SA","AS","AS","AS","SA","EU","AS","AF","AF","EU","EU","EU","AF","AF","EU","EU","AF","OC","EU","AF","AS","AS","AS","OC","SA","AF","SA","EU","AF","AS","AF","NA","AS","AF","AF","OC","AF","OC","AF","SA","EU","EU","AS","OC","OC","OC","AS","SA","SA","OC","OC","AS","AS","EU","SA","OC","SA","AS","EU","OC","SA","AS","AF","EU","AS","AF","AS","OC","AF","AF","EU","AS","AF","EU","EU","EU","AF","EU","AF","AF","SA","AF","SA","AS","AF","SA","AF","AF","AF","AS","AS","OC","AS","AF","OC","AS","AS","SA","OC","AS","AF","EU","AF","OC","NA","SA","AS","EU","SA","SA","SA","SA","AS","OC","OC","OC","AS","AF","EU","AF","AF","AF","AF"};
+/* Possible continent codes are AF, AS, EU, NA, OC, SA for Africa, Asia, Europe, North America, Oceania
+and South America. */
+
+const char GeoIP_country_continent[251][3] = {"--","AS","EU","EU","AS","AS","SA","SA","EU","AS","SA",
+	"AF","AN","SA","OC","EU","OC","SA","AS","EU","SA",
+	"AS","EU","AF","EU","AS","AF","AF","SA","AS","SA",
+	"SA","SA","AS","AF","AF","EU","SA","NA","AS","AF",
+	"AF","AF","EU","AF","OC","SA","AF","AS","SA","SA",
+	"SA","AF","AS","AS","EU","EU","AF","EU","SA","SA",
+	"AF","SA","EU","AF","AF","AF","EU","AF","EU","OC",
+	"SA","OC","EU","EU","EU","AF","EU","SA","AS","SA",
+	"AF","EU","SA","AF","AF","SA","AF","EU","SA","SA",
+	"OC","AF","SA","AS","AF","SA","EU","SA","EU","AS",
+	"EU","AS","AS","AS","AS","AS","EU","EU","SA","AS",
+	"AS","AF","AS","AS","OC","AF","SA","AS","AS","AS",
+	"SA","AS","AS","AS","SA","EU","AS","AF","AF","EU",
+	"EU","EU","AF","AF","EU","EU","AF","OC","EU","AF",
+	"AS","AS","AS","OC","SA","AF","SA","EU","AF","AS",
+	"AF","NA","AS","AF","AF","OC","AF","OC","AF","SA",
+	"EU","EU","AS","OC","OC","OC","AS","SA","SA","OC",
+	"OC","AS","AS","EU","SA","OC","SA","AS","EU","OC",
+	"SA","AS","AF","EU","AS","AF","AS","OC","AF","AF",
+	"EU","AS","AF","EU","EU","EU","AF","EU","AF","AF",
+	"SA","AF","SA","AS","AF","SA","AF","AF","AF","AS",
+	"AS","OC","AS","AF","OC","AS","AS","SA","OC","AS",
+	"AF","EU","AF","OC","NA","SA","AS","EU","SA","SA",
+	"SA","SA","AS","OC","OC","OC","AS","AF","EU","AF",
+	"AF","EU","AF","--","--","--","EU","EU","EU","EU"};
 
 const char * GeoIPDBDescription[NUM_DB_TYPES] = {NULL, "GeoIP Country Edition", "GeoIP City Edition, Rev 1", "GeoIP Region Edition, Rev 1", "GeoIP ISP Edition", "GeoIP Organization Edition", "GeoIP City Edition, Rev 0", "GeoIP Region Edition, Rev 0","GeoIP Proxy Edition","GeoIP ASNum Edition","GeoIP Netspeed Edition","GeoIP Domain Name Edition"};
 
+char * custom_directory = NULL;
+
+void GeoIP_setup_custom_directory (char * dir) {
+	custom_directory = dir;
+}
+
 char *_GeoIP_full_path_to(const char *file_name) {
+	int len;
 	char *path = malloc(sizeof(char) * 1024);
 
-#ifndef _WIN32
-	memset(path, 0, sizeof(char) * 1024);
-	snprintf(path, sizeof(char) * 1024 - 1, "%s/%s", GEOIPDATADIR, file_name);
+	if (custom_directory == NULL){
+#ifndef WIN32
+		memset(path, 0, sizeof(char) * 1024);
+		snprintf(path, sizeof(char) * 1024 - 1, "%s/%s", GEOIPDATADIR, file_name);
 #else
-	char buf[MAX_PATH], *p, *q = NULL;
-	int len;
-	memset(buf, 0, sizeof(buf));
-	len = GetModuleFileName(GetModuleHandle(NULL), buf, sizeof(buf) - 1);
-	for (p = buf + len; p > buf; p--)
-		if (*p == '\\')
-		{
-			if (!q)
-				q = p;
-			else
-				*p = '/';
-		}
-	*q = 0;
-	memset(path, 0, sizeof(char) * 1024);
-	snprintf(path, sizeof(char) * 1024 - 1, "%s/%s", buf, file_name);
+		char buf[MAX_PATH], *p, *q = NULL;
+		memset(buf, 0, sizeof(buf));
+		len = GetModuleFileName(GetModuleHandle(NULL), buf, sizeof(buf) - 1);
+		for (p = buf + len; p > buf; p--)
+			if (*p == '\\')
+				{
+					if (!q)
+						q = p;
+					else
+						*p = '/';
+				}
+		*q = 0;
+		memset(path, 0, sizeof(char) * 1024);
+		snprintf(path, sizeof(char) * 1024 - 1, "%s/%s", buf, file_name);
 #endif
-
+	} else {
+		len = strlen(custom_directory);
+		if (custom_directory[len-1] != '/') {
+			snprintf(path, sizeof(char) * 1024 - 1, "%s/%s",custom_directory, file_name);
+		} else {
+			snprintf(path, sizeof(char) * 1024 - 1, "%s%s", custom_directory, file_name);
+		}
+	}
 	return path;
 }
 
@@ -136,6 +247,7 @@ int GeoIP_db_avail(int type) {
 	if (type < 0 || type >= NUM_DB_TYPES) {
 		return 0;
 	}
+	_GeoIP_setup_dbfilename();
 	filePath = GeoIPDBFileName[type];
 	if (NULL == filePath) {
 		return 0;
@@ -148,6 +260,8 @@ void _setup_segments(GeoIP * gi) {
 	int i, j;
 	unsigned char delim[3];
 	unsigned char buf[SEGMENT_RECORD_LENGTH];
+
+	gi->databaseSegments = NULL;
 
 	/* default to GeoIP Country Edition */
 	gi->databaseType = GEOIP_COUNTRY_EDITION;
@@ -227,9 +341,15 @@ int _check_mtime(GeoIP *gi) {
 						return -1;
 					}
 				}
-				if (gi->databaseSegments != NULL)
+				if (gi->databaseSegments != NULL) {
 					free(gi->databaseSegments);
+					gi->databaseSegments = NULL;
+				}
 				_setup_segments(gi);
+				if (gi->databaseSegments == NULL) {
+					fprintf(stderr, "Error reading file %s -- corrupt\n", gi->file_path);
+					return -1;
+				}
 				if (gi->flags & GEOIP_INDEX_CACHE) {                        
 					gi->index_cache = (unsigned char *) realloc(gi->index_cache, sizeof(unsigned char) * ((gi->databaseSegments[0] * (long)gi->record_length * 2)));
 					if (gi->index_cache != NULL) {
@@ -308,6 +428,7 @@ unsigned int _GeoIP_seek_record (GeoIP *gi, unsigned long ipnum) {
 		}
 
 		if (x >= gi->databaseSegments[0]) {
+			gi->netmask = 32 - depth;
 			return x;
 		}
 		offset = x;
@@ -380,7 +501,9 @@ GeoIP* GeoIP_new (int flags) {
 GeoIP* GeoIP_open (const char * filename, int flags) {
 	struct stat buf;
 	GeoIP * gi;
-#ifdef _WIN32
+	size_t len;
+
+#ifdef WIN32
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(1, 1), &wsa) != 0)
 		return NULL;
@@ -389,10 +512,13 @@ GeoIP* GeoIP_open (const char * filename, int flags) {
 	gi = (GeoIP *)malloc(sizeof(GeoIP));
 	if (gi == NULL)
 		return NULL;
-	gi->file_path = malloc(sizeof(char) * (strlen(filename)+1));
-	if (gi->file_path == NULL)
+	len = sizeof(char) * (strlen(filename)+1);
+	gi->file_path = malloc(len);
+	if (gi->file_path == NULL) {
+		free(gi);
 		return NULL;
-	strcpy(gi->file_path, filename);
+	}
+	strncpy(gi->file_path, filename, len);
 	gi->GeoIPDatabase = fopen(filename,"rb");
 	if (gi->GeoIPDatabase == NULL) {
 		fprintf(stderr,"Error Opening file %s\n",filename);
@@ -403,6 +529,7 @@ GeoIP* GeoIP_open (const char * filename, int flags) {
 		if (flags & GEOIP_MEMORY_CACHE) {
 			if (fstat(fileno(gi->GeoIPDatabase), &buf) == -1) {
 				fprintf(stderr,"Error stating file %s\n",filename);
+				free(gi->file_path);
 				free(gi);
 				return NULL;
 			}
@@ -412,6 +539,7 @@ GeoIP* GeoIP_open (const char * filename, int flags) {
 				if (fread(gi->cache, sizeof(unsigned char), buf.st_size, gi->GeoIPDatabase) != (size_t) buf.st_size) {
 					fprintf(stderr,"Error reading file %s\n",filename);
 					free(gi->cache);
+					free(gi->file_path);
 					free(gi);
 					return NULL;
 				}
@@ -420,6 +548,7 @@ GeoIP* GeoIP_open (const char * filename, int flags) {
 			if (flags & GEOIP_CHECK_CACHE) {
 				if (fstat(fileno(gi->GeoIPDatabase), &buf) == -1) {
 					fprintf(stderr,"Error stating file %s\n",filename);
+					free(gi->file_path);
 					free(gi);
 					return NULL;
 				}
@@ -428,6 +557,8 @@ GeoIP* GeoIP_open (const char * filename, int flags) {
 			gi->cache = NULL;
 		}
 		gi->flags = flags;
+		gi->charset = GEOIP_CHARSET_ISO_8859_1;
+
 		_setup_segments(gi);
 		if (flags & GEOIP_INDEX_CACHE) {                        
 			gi->index_cache = (unsigned char *) malloc(sizeof(unsigned char) * ((gi->databaseSegments[0] * (long)gi->record_length * 2)));
@@ -435,6 +566,7 @@ GeoIP* GeoIP_open (const char * filename, int flags) {
 				fseek(gi->GeoIPDatabase, 0, SEEK_SET);
 				if (fread(gi->index_cache, sizeof(unsigned char), gi->databaseSegments[0] * (long)gi->record_length * 2, gi->GeoIPDatabase) != (size_t) (gi->databaseSegments[0]*(long)gi->record_length * 2)) {
 					fprintf(stderr,"Error reading file %s\n",filename);
+					free(gi->databaseSegments);
 					free(gi->index_cache);
 					free(gi);
 					return NULL;
@@ -486,10 +618,10 @@ unsigned long _GeoIP_lookupaddress (const char *host) {
 	struct hostent phe2;
 	struct hostent * phe = &phe2;
 	char *buf = NULL;
-	int result = 0;
-#ifdef HAVE_GETHOSTBYNAME_R
 	int buflength = 16384;
 	int herr = 0;
+	int result = 0;
+#ifdef HAVE_GETHOSTBYNAME_R
 	buf = malloc(buflength);
 #endif
 	if (addr == INADDR_NONE) {
@@ -647,7 +779,7 @@ char *GeoIP_database_info (GeoIP* gi) {
 		fseek(gi->GeoIPDatabase, -4l, SEEK_CUR);
 	}
 	if (hasStructureInfo == 1) {
-		fseek(gi->GeoIPDatabase, -3l, SEEK_CUR);
+		fseek(gi->GeoIPDatabase, -6l, SEEK_CUR);
 	} else {
 		/* no structure info, must be pre Sep 2002 database, go back to end */
 		fseek(gi->GeoIPDatabase, -3l, SEEK_END);
@@ -776,6 +908,7 @@ char *_get_name (GeoIP* gi, unsigned long ipnum) {
 	char buf[MAX_ORG_RECORD_LENGTH];
 	char * org_buf, * buf_pointer;
 	int record_pointer;
+	size_t len;
 
 	if (gi->databaseType != GEOIP_ORG_EDITION &&
 			gi->databaseType != GEOIP_ISP_EDITION &&
@@ -793,12 +926,14 @@ char *_get_name (GeoIP* gi, unsigned long ipnum) {
 	if (gi->cache == NULL) {
 		fseek(gi->GeoIPDatabase, record_pointer, SEEK_SET);
 		fread(buf, sizeof(char), MAX_ORG_RECORD_LENGTH, gi->GeoIPDatabase);
-		org_buf = malloc(sizeof(char) * (strlen(buf)+1));
-		strcpy(org_buf, buf);
+		len = sizeof(char) * (strlen(buf)+1);
+		org_buf = malloc(len);
+		strncpy(org_buf, buf, len);
 	} else {
-		buf_pointer = (char *)gi->cache + (long)record_pointer;
-		org_buf = malloc(sizeof(char) * (strlen(buf_pointer)+1));
-		strcpy(org_buf, buf_pointer);
+		buf_pointer = gi->cache + (long)record_pointer;
+		len = sizeof(char) * (strlen(buf_pointer)+1);
+		org_buf = malloc(len);
+		strncpy(org_buf, buf_pointer, len);
 	}
 	return org_buf;
 }
@@ -841,3 +976,18 @@ char *GeoIP_org_by_name (GeoIP* gi, const char *name) {
 unsigned char GeoIP_database_edition (GeoIP* gi) {
 	return gi->databaseType;
 }
+
+int GeoIP_charset( GeoIP* gi){
+  return gi->charset;
+}
+
+int GeoIP_set_charset(  GeoIP* gi, int charset ){
+  int old_charset = gi->charset;
+  gi->charset = charset;
+  return old_charset;
+}
+
+int GeoIP_last_netmask (GeoIP* gi) {
+  return gi->netmask;
+}
+

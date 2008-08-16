@@ -58,8 +58,16 @@ typedef struct GeoIPTag {
 	time_t mtime;
 	int flags;
 	char record_length;
+	int charset; /* 0 iso-8859-1 1 utf8 */
 	int record_iter; /* used in GeoIP_next_record */
+	int netmask; /* netmask of last lookup - set using depth in _GeoIP_seek_record */
 } GeoIP;
+
+
+typedef enum {
+	GEOIP_CHARSET_ISO_8859_1 = 0,
+	GEOIP_CHARSET_UTF8       = 1
+} GeoIPCharset;
 
 typedef struct GeoIPRegionTag {
 	char country_code[3];
@@ -108,10 +116,10 @@ extern const char *GeoIPCityDBFileName;
 extern const char *GeoIPOrgDBFileName;
 extern const char *GeoIPISPDBFileName;
 
-extern const char GeoIP_country_code[247][3];
-extern const char GeoIP_country_code3[247][4];
-extern const char * GeoIP_country_name[247];
-extern const char GeoIP_country_continent[247][3];
+extern const char GeoIP_country_code[251][3];
+extern const char GeoIP_country_code3[251][4];
+extern const char * GeoIP_country_name[251];
+extern const char GeoIP_country_continent[251][3];
 
 #ifdef DLL
 #define GEOIP_API __declspec(dllexport)
@@ -119,6 +127,7 @@ extern const char GeoIP_country_continent[247][3];
 #define GEOIP_API
 #endif  /* DLL */
 
+GEOIP_API void GeoIP_setup_custom_directory(char *dir);
 GEOIP_API GeoIP* GeoIP_open_type (int type, int flags);
 GEOIP_API GeoIP* GeoIP_new(int flags);
 GEOIP_API GeoIP* GeoIP_open(const char * filename, int flags);
@@ -161,6 +170,17 @@ GEOIP_API char *GeoIP_name_by_name (GeoIP* gi, const char *host);
 
 GEOIP_API char *GeoIP_database_info (GeoIP* gi);
 GEOIP_API unsigned char GeoIP_database_edition (GeoIP* gi);
+
+GEOIP_API int GeoIP_charset (GeoIP* gi);
+GEOIP_API int GeoIP_set_charset (GeoIP* gi, int charset);
+
+GEOIP_API int GeoIP_last_netmask (GeoIP* gi);
+
+/* Convert region code to region name */
+GEOIP_API const char * GeoIP_region_name_by_code(const char *country_code, const char *region_code);
+
+/* Get timezone from country and region code */
+GEOIP_API const char * GeoIP_time_zone_by_country_and_region(const char *country_code, const char *region_code);
 
 #ifdef BSD
 #define memcpy(dest, src, n) bcopy(src, dest, n)

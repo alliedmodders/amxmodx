@@ -73,3 +73,7 @@ LANG_NAME_NATIVE = Lithuania
 [sk]
 LANG_NAME = Slovak
 LANG_NAME_NATIVE = Slovencina
+
+[mk]
+LANG_NAME = Macedonian
+LANG_NAME_NATIVE = Makedonski

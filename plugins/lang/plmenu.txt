@@ -320,3 +320,20 @@ TEAM_MENU = MENU: Tym
 TRANSF_TO = Premiestnit k %s
 CL_CMD_MENU = MENU: klientske prikazy
 NO_CMDS = Ziadny cmds
+
+[mk]
+ADMIN_BAN_1 = ADMIN: ban %s
+ADMIN_BAN_2 = ADMIN %s: ban %s
+BAN_MENU = Ban Meni
+BAN_FOR_MIN = Ban na %d minuti
+BAN_PERM = Ban za stalno
+SLAP_SLAY_MENU = Slap/Slay Meni
+SLAP_WITH_DMG = Udri mu samar so %d steta
+SLAY = Nasilno ubij go
+KICK_MENU = Kick Meni
+ADMIN_TRANSF_1 = ADMIN: napravi transfer na %s vo %s
+ADMIN_TRANSF_2 = ADMIN %s: napravi transfer na %s vo %s
+TEAM_MENU = Meni za timot
+TRANSF_TO = Transfer vo %s
+CL_CMD_MENU = Meni so komandi za klientite
+NO_CMDS = Nema dostapni komandi

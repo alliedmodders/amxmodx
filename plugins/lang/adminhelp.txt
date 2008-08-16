@@ -168,3 +168,12 @@ HELP_USE_BEGIN = Napis 'amx_help 1' pre zaciatok
 TYPE_HELP = Napis 'amx_help' do konzoly pre vypis prikazov
 TIME_INFO_1 = Ostava este: %d:%02d min. Dalsia mapa: %s
 TIME_INFO_2 = Neni casovy limit. Dalsia mapa: %s
+
+[mk]
+HELP_COMS = AMX Mod X Pomos - Dozvoleni komandi se:
+HELP_ENTRIES = Komandi %d - %d od %d
+HELP_USE_MORE = Napisi 'amx_help %d' za uste komandi
+HELP_USE_BEGIN = Napisi 'amx_help 1' za od pocetok
+TYPE_HELP = Napisi 'amx_help' vo konzolata za da gi vidis dozvolenite komandi
+TIME_INFO_1 = Preostanato Vreme: %d:%02d min. Sledna Mapa: %s
+TIME_INFO_2 = Nema vremensko ogranicuvanje. Sledna Mapa: %s

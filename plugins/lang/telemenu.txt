@@ -130,3 +130,10 @@ ADMIN_TELEPORT_2 = ADMIN %s: teleportovali %s
 TELE_MENU = MENU: Teleport
 CUR_LOC = Sucasne miesto
 SAVE_LOC = Ulozit miesto
+
+[mk]
+ADMIN_TELEPORT_1 = ADMIN: go teleportira %s
+ADMIN_TELEPORT_2 = ADMIN %s: go teleportira %s
+TELE_MENU = Meni za teleportiranje
+CUR_LOC = Vidi ja zacuvanata lokacija
+SAVE_LOC = Zacuvaj ja segasnata lokacija

@@ -92,3 +92,8 @@ FRIEND_FIRE = Savu saudymas
 NEXT_MAP = Dalsia mapa:
 PLAYED_MAP = Aktualna mapa
 FRIEND_FIRE = Friendly fire
+
+[mk]
+NEXT_MAP = Slednata mapa ke bide:
+PLAYED_MAP = Mapata sto ja igras se vika
+FRIEND_FIRE = Friendly fire

@@ -54,3 +54,6 @@ DROPPED_RES = Atjungtas, nes nera laisvos vietos
 
 [sk]
 DROPPED_RES = Prepac,ale slot je rezervovany
+
+[mk]
+DROPPED_RES = Serverot e poln, nemate pristap vo rezerviranite mesta

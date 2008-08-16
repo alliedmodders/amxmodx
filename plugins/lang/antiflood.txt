@@ -54,3 +54,6 @@ STOP_FLOOD = Nustok greitai rasyti!
 
 [sk]
 STOP_FLOOD = Prestan floodovat!
+
+[mk]
+STOP_FLOOD = Prestani na flodiras na serverot!

@@ -92,3 +92,8 @@ SPE_MENU = Kalbos meniu
 CMD_MENU = Menu prikazov
 CONF_MENU = Menu nastaveni
 SPE_MENU = Nastavenie reci
+
+[mk]
+CMD_MENU = Meni so komandi
+CONF_MENU = Meni so konfiguracii
+SPE_MENU = Meni so glasovni komandi

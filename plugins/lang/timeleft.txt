@@ -168,3 +168,12 @@ MINUTE = minuta
 MINUTES = minut
 SECOND = sekunda
 SECONDS = sekund
+
+[mk]
+THE_TIME = Vreme
+TIME_LEFT = Preostanato Vreme
+NO_T_LIMIT = Nema Ogranicuvanje Na Vremeto
+MINUTE = minuta
+MINUTES = minuti
+SECOND = sekunda
+SECONDS = sekundi

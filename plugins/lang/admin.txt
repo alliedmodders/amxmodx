@@ -244,3 +244,16 @@ INV_PAS = Nespravne heslo!
 PAS_ACC = Heslo overene
 PRIV_SET = Privilegium nastavene
 NO_ENTRY = Nemas ziadny zaznam na servery...
+
+[mk]
+LOADED_ADMIN = Vcitan e 1 administrator od fajlot
+LOADED_ADMINS = Vcitani se %d administratori od fajlot
+SQL_CANT_CON = SQL greska: ne e mozno da se vospostavi vrska so: '%s'
+SQL_CANT_LOAD_ADMINS = SQL greska: ne e mozno da se vcitaat administratorite: '%s'
+NO_ADMINS = Nema najdeni administratori.
+SQL_LOADED_ADMIN = Vcitan e 1 administrator od bazata na podatoci
+SQL_LOADED_ADMINS = Vcitani se %d administratori od bazata na podatoci
+INV_PAS = Pogresna lozinka!
+PAS_ACC = Lozinkata e prifatena
+PRIV_SET = Privilegiite se podeseni
+NO_ENTRY = Nemate pristap vo serverot...

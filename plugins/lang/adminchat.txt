@@ -244,3 +244,16 @@ COL_ORANGE = orandzova
 COL_OCEAN = modra
 COL_MAROON = gastanova
 PRINT_ALL = (ALL) %s :   %s
+
+[mk]
+COL_WHITE = bela
+COL_RED = crvena
+COL_GREEN = zelena
+COL_BLUE = plava
+COL_YELLOW = zolta
+COL_MAGENTA = ljubicesta
+COL_CYAN = tirkizna
+COL_ORANGE = portokalova
+COL_OCEAN = okean
+COL_MAROON = modra
+PRINT_ALL = (KON SITE) %s : %s

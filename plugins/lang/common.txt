@@ -415,3 +415,25 @@ CANT_PERF_DEAD = Tato operacia nejde previest na mrtvom klientovi "%s"
 CANT_PERF_BOT = Tato operacia nejde previest na botovi "%s"
 ON = ON
 OFF = OFF
+
+[mk]
+BACK = Nazad
+EXIT = Izlez
+MORE = Uste
+NONE = Nema
+ADMIN = ADMIN
+PLAYER = IGRAC
+ERROR = greska
+YES = Da
+NO = Ne
+BAN = ban
+KICK = kick
+NO_ACC_COM = Nemate pristap na dadenata komanda
+USAGE = Koristenje
+MORE_CL_MATCHT = Poveke igraci go zadovoluvaat vaseto baranje
+CL_NOT_FOUND = Igrac so toa ime ili so toj korisnicki ID ne e najden
+CLIENT_IMM = Igracot "%s" ima imunitet
+CANT_PERF_DEAD = Komandata ne moze da bide izvrsena na igracot "%s" bidejki e mrtov
+CANT_PERF_BOT = Komandata ne moze da bide izvrsena na botot "%s"
+ON = Uklucen
+OFF = Isklucen

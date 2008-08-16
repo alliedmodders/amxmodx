@@ -240,7 +240,7 @@ SC_FUNC stringlist *insert_path(char *path)
   strcpy(extra_path, path);
 #if defined __linux__
   strcat(extra_path, "/amxmod_compat/");
-#else if defined WIN32 || defined _WIN32
+#elif defined WIN32 || defined _WIN32
   strcat(extra_path, "\\amxmod_compat\\");
 #endif
   insert_string(&includepaths, extra_path);

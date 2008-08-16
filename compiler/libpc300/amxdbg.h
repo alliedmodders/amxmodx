@@ -65,8 +65,8 @@ extern  "C" {
 typedef struct tagAMX_DBG_HDR {
   int32_t size          PACKED; /* size of the debug information chunk */
   uint16_t magic        PACKED; /* signature, must be 0xf1ef */
-  char    file_version  PACKED; /* file format version */
-  char    amx_version   PACKED; /* required version of the AMX */
+  char    file_version; 		/* file format version */
+  char    amx_version; 			/* required version of the AMX */
   int16_t flags         PACKED; /* currently unused */
   int16_t files         PACKED; /* number of entries in the "file" table */
   int16_t lines         PACKED; /* number of entries in the "line" table */
@@ -74,51 +74,51 @@ typedef struct tagAMX_DBG_HDR {
   int16_t tags          PACKED; /* number of entries in the "tag" table */
   int16_t automatons    PACKED; /* number of entries in the "automaton" table */
   int16_t states        PACKED; /* number of entries in the "state" table */
-} AMX_DBG_HDR           PACKED;
+} AMX_DBG_HDR;
 #define AMX_DBG_MAGIC   0xf1ef
 
 typedef struct tagAMX_DBG_FILE {
   ucell   address       PACKED; /* address in the code segment where generated code (for this file) starts */
-  const char name[1]    PACKED; /* ASCII string, zero-terminated */
-} AMX_DBG_FILE          PACKED;
+  const char name[1]; 			/* ASCII string, zero-terminated */
+} AMX_DBG_FILE;
 
 typedef struct tagAMX_DBG_LINE {
   ucell   address       PACKED; /* address in the code segment where generated code (for this line) starts */
   int32_t line          PACKED; /* line number */
-} AMX_DBG_LINE          PACKED;
+} AMX_DBG_LINE;
 
 typedef struct tagAMX_DBG_SYMBOL {
   ucell   address       PACKED; /* address in the data segment or relative to the frame */
   int16_t tag           PACKED; /* tag for the symbol */
   ucell   codestart     PACKED; /* address in the code segment from which this symbol is valid (in scope) */
   ucell   codeend       PACKED; /* address in the code segment until which this symbol is valid (in scope) */
-  char    ident         PACKED; /* kind of symbol (function/variable) */
-  char    vclass        PACKED; /* class of symbol (global/local) */
+  char    ident;				/* kind of symbol (function/variable) */
+  char    vclass; 				/* class of symbol (global/local) */
   int16_t dim           PACKED; /* number of dimensions */
-  const char name[1]    PACKED; /* ASCII string, zero-terminated */
-} AMX_DBG_SYMBOL        PACKED;
+  const char name[1]; 			/* ASCII string, zero-terminated */
+} AMX_DBG_SYMBOL;
 
 typedef struct tagAMX_DBG_SYMDIM {
   int16_t tag           PACKED; /* tag for the array dimension */
   ucell   size          PACKED; /* size of the array dimension */
-} AMX_DBG_SYMDIM        PACKED;
+} AMX_DBG_SYMDIM;
 
 typedef struct tagAMX_DBG_TAG {
   int16_t tag           PACKED; /* tag id */
-  const char name[1]    PACKED; /* ASCII string, zero-terminated */
-} AMX_DBG_TAG           PACKED;
+  const char name[1];			/* ASCII string, zero-terminated */
+} AMX_DBG_TAG;
 
 typedef struct tagAMX_DBG_MACHINE {
   int16_t automaton     PACKED; /* automaton id */
   ucell address         PACKED; /* address of state variable */
-  const char name[1]    PACKED; /* ASCII string, zero-terminated */
-} AMX_DBG_MACHINE       PACKED;
+  const char name[1]; 			/* ASCII string, zero-terminated */
+} AMX_DBG_MACHINE;
 
 typedef struct tagAMX_DBG_STATE {
   int16_t state         PACKED; /* state id */
   int16_t automaton     PACKED; /* automaton id */
-  const char name[1]    PACKED; /* ASCII string, zero-terminated */
-} AMX_DBG_STATE         PACKED;
+  const char name[1]; 			/* ASCII string, zero-terminated */
+} AMX_DBG_STATE;
 
 typedef struct tagAMX_DBG {
   AMX_DBG_HDR     _FAR *hdr         PACKED; /* points to the AMX_DBG header */
@@ -128,7 +128,7 @@ typedef struct tagAMX_DBG {
   AMX_DBG_TAG     _FAR **tagtbl     PACKED;
   AMX_DBG_MACHINE _FAR **automatontbl PACKED;
   AMX_DBG_STATE   _FAR **statetbl   PACKED;
-} AMX_DBG                           PACKED;
+} AMX_DBG;
 
 #if !defined iVARIABLE
   #define iVARIABLE  1  /* cell that has an address and that can be fetched directly (lvalue) */

@@ -32,7 +32,7 @@ CFLAGS += $(OPT_FLAGS)
 OBJ_LINUX := $(OBJECTS:%.c=$(BIN_DIR)/%.o)
 
 $(BIN_DIR)/%.o: %.c
-	$(CPP) $(INCLUDE) $(CFLAGS) -o $@ -c $<
+	$(CPP) $(INCLUDE) $(CFLAGS) -m32 -o $@ -c $<
 
 all:
 	mkdir -p Release32
@@ -41,7 +41,7 @@ all:
 	$(MAKE) pawn_make PAWN64=true
 
 pawn_make: $(OBJ_LINUX)
-	$(CPP) $(INCLUDE) $(CFLAGS) $(OBJ_LINUX) $(LINK) -shared -ldl -lm -o$(BIN_DIR)/$(BINARY)
+	$(CPP) $(INCLUDE) $(CFLAGS) -m32 $(OBJ_LINUX) $(LINK) -shared -ldl -lm -o$(BIN_DIR)/$(BINARY)
 
 debug:	
 	$(MAKE) all DEBUG=true

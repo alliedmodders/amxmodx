@@ -10,7 +10,7 @@ BINARY = amxxpc
 
 OBJECTS = amx.cpp amxxpc.cpp Binary.cpp
 
-LINK = -lz /lib/libstdc++.a
+LINK = -lz /lib32/libstdc++.a
 
 INCLUDE = -I.  -L.
 
@@ -27,14 +27,14 @@ CFLAGS += -DLINUX -DNDEBUG -Wno-deprecated -fexceptions -DHAVE_STDINT_H -DAMX_AN
 OBJ_LINUX := $(OBJECTS:%.cpp=$(BIN_DIR)/%.o)
 
 $(BIN_DIR)/%.o: %.cpp
-	$(CPP) $(INCLUDE) $(CFLAGS) -o $@ -c $<
+	$(CPP) $(INCLUDE) $(CFLAGS) -m32 -o $@ -c $<
 
 all:
 	mkdir -p $(BIN_DIR)
 	$(MAKE) amxxpc
 
 amxxpc: $(OBJ_LINUX)
-	$(CPP) $(INCLUDE) $(CFLAGS) $(OBJ_LINUX) $(LINK) -ldl -lm -o$(BIN_DIR)/$(BINARY)
+	$(CPP) $(INCLUDE) $(CFLAGS) -m32 $(OBJ_LINUX) $(LINK) -ldl -lm -o$(BIN_DIR)/$(BINARY)
 
 default: all
 

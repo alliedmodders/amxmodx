@@ -21,7 +21,7 @@ $gccf = "gcc";
 my %OPTIONS, %OPT;
 
 $OPT{"debug"} = "-g -ggdb";
-$OPT{"opt"} = "-O2 -ffast-math -funroll-loops -fomit-frame-pointer -s -DNDEBUG -Wall -Wno-unknown-pragmas -DOPT_TYPE=\"optimized\"";
+$OPT{"opt"} = "-O2 -ffast-math -funroll-loops -fomit-frame-pointer -s -DHAVE_STDINT_H -DNDEBUG -Wall -Wno-unknown-pragmas -DOPT_TYPE=\"optimized\"";
 
 $OPTIONS{"include"} = "";
 
@@ -63,7 +63,7 @@ if ($OPTIONS{"debug"})
 		{
 			$proc = 3;
 		}
-		$cflags = "-march=i".$proc."86 ".$OPT{"opt"};
+		$cflags = "-march=i".$proc."86 -m32 ".$OPT{"opt"};
 	} else {
 		$cflags = $OPT{"opt"};
 	}

@@ -30,7 +30,7 @@
 #ifndef HAM_UTILS_H
 #define HAM_UTILS_H
 
-#include "sdk/amxxmodule.h"
+#include "amxxmodule.h"
 #include "offsets.h"
 #include "NEW_Util.h"
 

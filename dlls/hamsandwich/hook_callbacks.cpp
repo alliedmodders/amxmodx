@@ -32,7 +32,7 @@
 #include <string.h>
 
 #include <extdll.h>
-#include "sdk/amxxmodule.h"
+#include "amxxmodule.h"
 
 
 

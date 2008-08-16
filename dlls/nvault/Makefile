@@ -36,7 +36,7 @@ else
 	CFLAGS = $(OPT_FLAGS)
 endif
 
-CFLAGS += -DNDEBUG -fPIC -Wall -Werror -DHAVE_STDINT_H -fno-rtti -static-libgcc -fno-exceptions -m32
+CFLAGS += -DNDEBUG -Wall -Werror -DHAVE_STDINT_H -fno-rtti -static-libgcc -fno-exceptions -m32
 
 ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_$(BIN_SUFFIX_64)

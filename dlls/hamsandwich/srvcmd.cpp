@@ -27,7 +27,7 @@
  *  version.
  */
 
-#include "sdk/amxxmodule.h"
+#include "amxxmodule.h"
 
 #include <stdarg.h>
 

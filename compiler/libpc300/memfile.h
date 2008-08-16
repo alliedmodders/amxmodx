@@ -1,6 +1,14 @@
 #ifndef _INCLUDE_MEMFILE_H
 #define _INCLUDE_MEMFILE_H
 
+#ifdef _MSC_VER
+	// MSVC8 - replace POSIX functions with ISO C++ conformant ones as they are deprecated
+	#if _MSC_VER >= 1400	
+		#define strdup _strdup
+		#pragma warning(disable : 4996)
+	#endif
+#endif
+
 #include <malloc.h>
 
 typedef struct memfile_s

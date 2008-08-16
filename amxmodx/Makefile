@@ -49,7 +49,7 @@ ifeq "$(BINLOG)" "true"
 	CFLAGS += -DBINLOG_ENABLED
 endif
 
-CFLAGS += -DLINUX -DAMX_NOPROPLIST -fPIC -Wall -Werror -DHAVE_STDINT_H -static-libgcc -fno-rtti -fno-exceptions
+CFLAGS += -DLINUX -DAMX_NOPROPLIST -Wall -Werror -DHAVE_STDINT_H -static-libgcc -fno-rtti -fno-exceptions
 
 ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_$(BIN_SUFFIX_64)

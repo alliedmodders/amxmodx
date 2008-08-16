@@ -49,7 +49,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="z:\metamod\metamod;z:\hlsdk\common;z:\hlsdk\engine;z:\hlsdk\dlls;z:\hlsdk\pm_shared"
+				AdditionalIncludeDirectories="..\;..\sdk;&quot;$(METAMOD)&quot;;&quot;$(HLSDK)\common&quot;;&quot;$(HLSDK)\engine&quot;;&quot;$(HLSDK)\dlls&quot;;&quot;$(HLSDK)\pm_shared&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;ns_amxx_EXPORTS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -143,7 +143,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="z:\metamod\metamod;z:\hlsdk\common;z:\hlsdk\engine;z:\hlsdk\dlls;z:\hlsdk\pm_shared"
+				AdditionalIncludeDirectories="..\;..\sdk;&quot;$(METAMOD)&quot;;&quot;$(HLSDK)\common&quot;;&quot;$(HLSDK)\engine&quot;;&quot;$(HLSDK)\dlls&quot;;&quot;$(HLSDK)\pm_shared&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;ns_amxx_EXPORTS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"

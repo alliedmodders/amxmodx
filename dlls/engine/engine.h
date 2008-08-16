@@ -1,11 +1,11 @@
 #ifndef _ENGINE_INCLUDE_H
 #define _ENGINE_INCLUDE_H
 
+#include "amxxmodule.h"
 #include <extdll.h>	
 #include <string.h> 
 #include <meta_api.h>
 #include <sdk_util.h>
-#include "amxxmodule.h"
 #include "CVector.h"
 #include "CString.h"
 #include <usercmd.h>

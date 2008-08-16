@@ -34,9 +34,9 @@
 // cstrike MODULE TO DO HERE: http://www.amxmodx.org/forums/viewtopic.php?t=45
 // This implementation uses Vexd's way (lightly modified) of setting models on players.
 
+#include "amxxmodule.h"
 #include <extdll.h>
 #include <meta_api.h>
-#include "amxxmodule.h"
 #include "CstrikePlayer.h"
 
 #define GETINFOKEYBUFFER				(*g_engfuncs.pfnGetInfoKeyBuffer)

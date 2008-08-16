@@ -26,7 +26,7 @@
  *  you do not wish to do so, delete this exception statement from your
  *  version.
  */
-#include "sdk/amxxmodule.h"
+#include "amxxmodule.h"
 
 #include "offsets.h"
 #include "ham_utils.h"

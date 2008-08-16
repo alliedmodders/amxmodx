@@ -53,9 +53,9 @@ ifeq "$(GCC_VERSION)" "4"
 	CPPFLAGS += -fvisibility=hidden -fvisibility-inlines-hidden
 endif
 
-CPPFLAGS += -DNDEBUG -fPIC -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H -fno-rtti
+CPPFLAGS += -DNDEBUG -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H -fno-rtti
 CPPFLAGS += -DSM_DEFAULT_THREADER -Dstricmp=strcasecmp
-CFLAGS += -DNDEBUG -fPIC -DHAVE_STDINT_H -DSM_DEFAULT_THREADER -Dstricmp=strcasecmp
+CFLAGS += -DNDEBUG -DHAVE_STDINT_H -DSM_DEFAULT_THREADER -Dstricmp=strcasecmp
 
 ifeq "$(AMD64)" "true"
 	BINARY = $(NAME)_$(BIN_SUFFIX_64)

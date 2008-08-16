@@ -12,6 +12,13 @@
 #include "amxxpc.h"
 #include "Binary.h"
 
+#ifdef _MSC_VER
+	// MSVC8 - replace POSIX functions with ISO C++ conformant ones as they are deprecated
+	#if _MSC_VER >= 1400
+		#define unlink _unlink	
+	#endif
+#endif
+
 static PRINTF pc_printf = NULL;
 
 void ReadFileIntoPl(abl *pl, FILE *fp);

@@ -3,4 +3,4 @@ source = /home/users/dvander/amxx
 makeopts = 
 output = /home/users/dvander/done
 devenv = /usr/bin/make
-release = amxmodx-1.76c
+release = amxmodx-1.8.1

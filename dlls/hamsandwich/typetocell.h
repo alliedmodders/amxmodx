@@ -30,7 +30,7 @@
 #define TYPETOCELL_H
 
 #include <extdll.h>
-#include "sdk/amxxmodule.h"
+#include "amxxmodule.h"
 
 #include "CVector.h"
 

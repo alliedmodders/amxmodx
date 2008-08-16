@@ -1,0 +1,6 @@
+compress = C:\WINDOWS\zip.exe
+source = c:\temp\amxmodx
+makeopts = 
+output = c:\temp\done
+devenv = C:\Program Files\Microsoft Visual Studio 8\Common7\IDE\devenv.com
+release = amxmodx-1.8.1

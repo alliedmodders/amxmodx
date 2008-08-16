@@ -26,7 +26,7 @@
  *  you do not wish to do so, delete this exception statement from your
  *  version.
  */
-#include "sdk/amxxmodule.h"
+#include "amxxmodule.h"
 
 int Create_Void_Void(AMX *amx, const char *func)
 {

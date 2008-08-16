@@ -21,7 +21,7 @@ memfile_t *memfile_creat(const char *name, size_t init)
 	pmf = (memfile_t *)malloc(sizeof(memfile_t));
 	memcpy(pmf, &mf, sizeof(memfile_t));
 
-	pmf->name = strdup(name);
+	pmf->name = _strdup(name);
 
 	return pmf;
 }

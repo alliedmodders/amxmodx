@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\..\hlsdk\dlls;..\..\..\..\hlsdk\common;..\..\..\..\hlsdk\engine\;..\..\..\..\hlsdk\pm_shared; ..\..\..\metamod\metamod"
+				AdditionalIncludeDirectories="..\;..\sdk;&quot;$(METAMOD)&quot;;&quot;$(HLSDK)\common&quot;;&quot;$(HLSDK)\engine&quot;;&quot;$(HLSDK)\dlls&quot;;&quot;$(HLSDK)\pm_shared&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -122,7 +122,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\..\..\..\hlsdk\dlls;..\..\..\..\hlsdk\common;..\..\..\..\hlsdk\engine\;..\..\..\..\hlsdk\pm_shared; ..\..\..\metamod\metamod"
+				AdditionalIncludeDirectories="..\;..\sdk;&quot;$(METAMOD)&quot;;&quot;$(HLSDK)\common&quot;;&quot;$(HLSDK)\engine&quot;;&quot;$(HLSDK)\dlls&quot;;&quot;$(HLSDK)\pm_shared&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL"
 				RuntimeLibrary="0"
 				RuntimeTypeInfo="false"
@@ -237,20 +237,40 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="sdk"
+			Name="Module SDK"
 			>
-			<File
-				RelativePath="..\sdk\amxxmodule.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\sdk\amxxmodule.h"
-				>
-			</File>
 			<File
 				RelativePath="..\sdk\moduleconfig.h"
 				>
 			</File>
+			<Filter
+				Name="SDK Base"
+				>
+				<File
+					RelativePath="..\sdk\amxxmodule.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\sdk\amxxmodule.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="AMXX STL"
+				>
+				<File
+					RelativePath="..\sdk\CString.h"
+					>
+				</File>
+				<File
+					RelativePath="..\sdk\CVector.h"
+					>
+				</File>
+				<File
+					RelativePath="..\sdk\sh_stack.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Config File"
@@ -264,10 +284,6 @@
 			Name="Data Handler"
 			>
 			<File
-				RelativePath="..\CString.h"
-				>
-			</File>
-			<File
 				RelativePath="..\DataHandler.cpp"
 				>
 			</File>
@@ -279,35 +295,53 @@
 				RelativePath="..\pdata.cpp"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="Pawn Includes"
+			>
 			<File
-				RelativePath="..\sh_stack.h"
+				RelativePath="..\..\..\plugins\include\ham_const.inc"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\plugins\include\hamsandwich.inc"
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath="..\amxx_api.cpp"
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			>
-		</File>
-		<File
-			RelativePath="..\ham_const.h"
+			<File
+				RelativePath="..\ham_const.h"
+				>
+			</File>
+			<File
+				RelativePath="..\ham_utils.h"
+				>
+			</File>
+			<File
+				RelativePath="..\NEW_Util.h"
+				>
+			</File>
+			<File
+				RelativePath="..\offsets.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Source Files"
+			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			>
-		</File>
-		<File
-			RelativePath="..\ham_utils.h"
-			>
-		</File>
-		<File
-			RelativePath="..\NEW_Util.h"
-			>
-		</File>
-		<File
-			RelativePath="..\offsets.h"
-			>
-		</File>
-		<File
-			RelativePath="..\srvcmd.cpp"
-			>
-		</File>
+			<File
+				RelativePath="..\amxx_api.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\srvcmd.cpp"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

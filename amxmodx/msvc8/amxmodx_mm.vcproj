@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="8.00"
 	Name="amxmodx_mm"
 	ProjectGUID="{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}"
 	RootNamespace="amxmodx"
-	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -48,7 +47,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="&quot;$(METAMOD)&quot;;&quot;$(HLSDK)\common&quot;;&quot;$(HLSDK)\engine&quot;;&quot;$(HLSDK)\dlls&quot;;&quot;$(HLSDK)\pm_shared&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;PAWN_CELL_SIZE=32;ASM32;JIT;_CRT_SECURE_NO_DEPRECATE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -86,12 +85,10 @@
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\extra\lib_win32"
-				IgnoreDefaultLibraryNames="MSVCRT;LIBC"
+				IgnoreDefaultLibraryNames="LIBC;LIBCD;LIBCMT"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\jitdebug/amxx_mm.pdb"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				ImportLibrary=".\jitdebug/amxmodx_mm.lib"
 			/>
 			<Tool
@@ -111,6 +108,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -153,7 +153,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="..\..\metamod\metamod,..\..\hlsdk\sourcecode\common,..\..\hlsdk\sourcecode\engine,..\..\hlsdk\sourcecode\dlls,..\..\hlsdk\sourcecode\pm_shared,..\extra\include"
+				AdditionalIncludeDirectories="&quot;$(METAMOD)&quot;;&quot;$(HLSDK)\common&quot;;&quot;$(HLSDK)\engine&quot;;&quot;$(HLSDK)\dlls&quot;;&quot;$(HLSDK)\pm_shared&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;JIT;ASM32;PAWN_CELL_SIZE=32;_CRT_SECURE_NO_DEPRECATE"
 				IgnoreStandardIncludePath="false"
 				StringPooling="true"
@@ -192,13 +192,11 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\extra\lib_win32"
-				IgnoreDefaultLibraryNames="MSVCRT;LIBC"
+				IgnoreDefaultLibraryNames="LIBC;LIBCD;LIBCMTD"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\jitrelease/amxmodx_mm.pdb"
 				GenerateMapFile="true"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				ImportLibrary=".\jitrelease/amxmodx_mm.lib"
 			/>
 			<Tool
@@ -218,6 +216,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -256,7 +257,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="&quot;$(METAMOD)&quot;;&quot;$(HLSDK)\common&quot;;&quot;$(HLSDK)\engine&quot;;&quot;$(HLSDK)\dlls&quot;;&quot;$(HLSDK)\pm_shared&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;PAWN_CELL_SIZE=32;ASM32;JIT;BINLOG_ENABLED;_CRT_SECURE_NO_DEPRECATE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -294,12 +295,10 @@
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\extra\lib_win32"
-				IgnoreDefaultLibraryNames="MSVCRT;LIBC"
+				IgnoreDefaultLibraryNames="LIBC;LIBCD;LIBCMT"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\jitdebugbinlog/amxmodx_bl_mm.pdb"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				ImportLibrary=".\jitdebugbinlog/amxmodx_bl_mm.lib"
 			/>
 			<Tool
@@ -319,6 +318,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -361,7 +363,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="..\..\metamod\metamod,..\..\hlsdk\sourcecode\common,..\..\hlsdk\sourcecode\engine,..\..\hlsdk\sourcecode\dlls,..\..\hlsdk\sourcecode\pm_shared,..\extra\include"
+				AdditionalIncludeDirectories="&quot;$(METAMOD)&quot;;&quot;$(HLSDK)\common&quot;;&quot;$(HLSDK)\engine&quot;;&quot;$(HLSDK)\dlls&quot;;&quot;$(HLSDK)\pm_shared&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;JIT;ASM32;PAWN_CELL_SIZE=32;BINLOG_ENABLED;_CRT_SECURE_NO_DEPRECATE"
 				IgnoreStandardIncludePath="false"
 				StringPooling="true"
@@ -399,13 +401,11 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\extra\lib_win32"
-				IgnoreDefaultLibraryNames="MSVCRT;LIBC"
+				IgnoreDefaultLibraryNames="LIBC;LIBCD;LIBCMTD"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\jitreleasebinlog/amxmodx_bl_mm.pdb"
 				GenerateMapFile="true"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				ImportLibrary=".\jitreleasebinlog/amxmodx_bl_mm.lib"
 			/>
 			<Tool
@@ -425,6 +425,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"

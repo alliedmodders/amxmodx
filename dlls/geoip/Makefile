@@ -35,7 +35,7 @@ else
 	CFLAGS = $(OPT_FLAGS)
 endif
 
-CFLAGS += -DNDEBUG -fPIC -Wall -Werror -fno-exceptions -DHAVE_STDINT_H -static-libgcc -fno-rtti -m32
+CFLAGS += -DNDEBUG -Wall -Werror -fno-exceptions -DHAVE_STDINT_H -static-libgcc -fno-rtti -m32
 
 # Strip C++ options for compiling *.c files
 C_CFLAGS := $(shell echo $(CFLAGS) | sed -e 's/-fvisibility-inlines-hidden//' | sed -e 's/-fno-rtti//')

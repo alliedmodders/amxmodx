@@ -21,6 +21,15 @@
  *  Version: $Id$
  */
 
+#ifdef _MSC_VER
+	// MSVC8 - replace POSIX functions with ISO C++ conformant ones as they are deprecated
+	#if _MSC_VER >= 1400	
+		#define access _access
+		#define chdir _chdir
+		#define stricmp _stricmp
+	#endif
+#endif
+
 #if defined FREEBSD && !defined __FreeBSD__
   #define __FreeBSD__
 #endif

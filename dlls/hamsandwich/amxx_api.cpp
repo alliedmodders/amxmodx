@@ -27,8 +27,8 @@
  *  version.
  */
 
+#include "amxxmodule.h"
 #include <extdll.h>
-#include "sdk/amxxmodule.h"
 
 #include "NEW_Util.h"
 #include "CVector.h"

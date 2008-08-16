@@ -48,7 +48,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\;..\sdk"
+				AdditionalIncludeDirectories="..\;..\sdk;&quot;$(METAMOD)&quot;;&quot;$(HLSDK)\common&quot;;&quot;$(HLSDK)\engine&quot;;&quot;$(HLSDK)\dlls&quot;;&quot;$(HLSDK)\pm_shared&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;CSTRIKE_EXPORTS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -145,7 +145,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\;..\sdk"
+				AdditionalIncludeDirectories="..\;..\sdk;&quot;$(METAMOD)&quot;;&quot;$(HLSDK)\common&quot;;&quot;$(HLSDK)\engine&quot;;&quot;$(HLSDK)\dlls&quot;;&quot;$(HLSDK)\pm_shared&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;CSTRIKE_EXPORTS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -216,6 +216,10 @@
 			>
 			<File
 				RelativePath="..\cstrike.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\CstrikeHacks.cpp"
 				>
 			</File>
 			<File

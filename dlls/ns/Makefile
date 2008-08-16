@@ -7,7 +7,7 @@ MM_ROOT = ../../../metamod/metamod
 ### EDIT BELOW FOR OTHER PROJECTS ###
 
 
-CRAZY_OPT_FLAGS = -DCRAZY_OPTS -O3 -funroll-loops -ffast-math -s -pipe -fomit-frame-pointer -fno-strict-aliasing -DNDEBUG -fmerge-all-constants -fmodulo-sched -fgcse-sm -fgcse-las -fgcse-after-reload -floop-optimize2 -funsafe-loop-optimizations -ftree-loop-linear -ftree-loop-im -ftree-loop-ivcanon -fivopts -ftree-vectorize -fvariable-expansion-in-unroller -funsafe-math-optimizations -ffinite-math-only  -fpeel-loops -funswitch-loops -fvisibility=hidden -fvisibility-inlines-hidden -fPIC -Wall -Wno-unknown-pragmas -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H -static-libgcc -fno-rtti -Wpointer-arith -Wcast-qual -Wcast-align -Wconversion -Wsign-compare -Wmissing-noreturn -Winline -Wlong-long -Wunsafe-loop-optimizations -Wctor-dtor-privacy -Wno-non-virtual-dtor -Wreorder -Woverloaded-virtual -Wsign-promo -Wsynth -shared 
+CRAZY_OPT_FLAGS = -DCRAZY_OPTS -O3 -funroll-loops -ffast-math -s -pipe -fomit-frame-pointer -fno-strict-aliasing -DNDEBUG -fmerge-all-constants -fmodulo-sched -fgcse-sm -fgcse-las -fgcse-after-reload -floop-optimize2 -funsafe-loop-optimizations -ftree-loop-linear -ftree-loop-im -ftree-loop-ivcanon -fivopts -ftree-vectorize -fvariable-expansion-in-unroller -funsafe-math-optimizations -ffinite-math-only  -fpeel-loops -funswitch-loops -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wno-unknown-pragmas -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H -static-libgcc -fno-rtti -Wpointer-arith -Wcast-qual -Wcast-align -Wconversion -Wsign-compare -Wmissing-noreturn -Winline -Wlong-long -Wunsafe-loop-optimizations -Wctor-dtor-privacy -Wno-non-virtual-dtor -Wreorder -Woverloaded-virtual -Wsign-promo -Wsynth -shared 
 
 CRAZY_LINK_FLAGS = 
 #-fwhole-program
@@ -54,7 +54,7 @@ else
 	CFLAGS = $(OPT_FLAGS)
 endif
 
-CFLAGS += -fPIC -Wall -Wno-non-virtual-dtor -Werror -fno-exceptions -DHAVE_STDINT_H -static-libgcc -fno-rtti -m32
+CFLAGS += -Wall -Wno-non-virtual-dtor -Werror -fno-exceptions -DHAVE_STDINT_H -static-libgcc -fno-rtti -m32
 
 BINARY = $(NAME)_$(BIN_SUFFIX)
 CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32

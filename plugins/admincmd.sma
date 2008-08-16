@@ -457,11 +457,11 @@ public cmdBan(id, level, cid)
 			len += formatex(msg[len], charsmax(msg) - len, " %s ", name2);
 			if (nNum)
 			{
-				formatex(msg[len], charsmax(msg) - len, "%L", i, "FOR_MIN", minutes);
+				len += formatex(msg[len], charsmax(msg) - len, "%L", i, "FOR_MIN", minutes);
 			}
 			else
 			{
-				formatex(msg[len], charsmax(msg) - len, "%L", i, "PERM");
+				len += formatex(msg[len], charsmax(msg) - len, "%L", i, "PERM");
 			}
 			if (strlen(reason) > 0)
 			{

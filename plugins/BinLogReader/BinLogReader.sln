@@ -1,21 +1,20 @@
-Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinLogReader", "BinLogReader.csproj", "{5EB15D49-0E00-424F-A8E2-14A17FE78DD1}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinLogReader", "BinLogReader.csproj", "{CFC2A52D-FE82-46F4-A3A7-FBDFCDDEA8E0}"
 EndProject
 Global
-	GlobalSection(SolutionConfiguration) = preSolution
-		Debug = Debug
-		Release = Release
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(ProjectConfiguration) = postSolution
-		{5EB15D49-0E00-424F-A8E2-14A17FE78DD1}.Debug.ActiveCfg = Debug|.NET
-		{5EB15D49-0E00-424F-A8E2-14A17FE78DD1}.Debug.Build.0 = Debug|.NET
-		{5EB15D49-0E00-424F-A8E2-14A17FE78DD1}.Release.ActiveCfg = Release|.NET
-		{5EB15D49-0E00-424F-A8E2-14A17FE78DD1}.Release.Build.0 = Release|.NET
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CFC2A52D-FE82-46F4-A3A7-FBDFCDDEA8E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFC2A52D-FE82-46F4-A3A7-FBDFCDDEA8E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFC2A52D-FE82-46F4-A3A7-FBDFCDDEA8E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFC2A52D-FE82-46F4-A3A7-FBDFCDDEA8E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-	EndGlobalSection
-	GlobalSection(ExtensibilityAddIns) = postSolution
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

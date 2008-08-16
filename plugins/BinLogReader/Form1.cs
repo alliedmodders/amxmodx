@@ -26,11 +26,8 @@ namespace BinLogReader
 		private System.Windows.Forms.TabPage LogTextTab;
 		private System.Windows.Forms.RichTextBox TextLog;
 		private System.Windows.Forms.TabPage LogListTab;
-		private System.Windows.Forms.TabControl MainTab;
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.Container components = null;
+        private System.Windows.Forms.TabControl MainTab;
+        private IContainer components;
 
 		public Form1()
 		{
@@ -68,151 +65,153 @@ namespace BinLogReader
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.mainMenu1 = new System.Windows.Forms.MainMenu();
-			this.menuItem1 = new System.Windows.Forms.MenuItem();
-			this.MenuFileOpen = new System.Windows.Forms.MenuItem();
-			this.menuItem3 = new System.Windows.Forms.MenuItem();
-			this.menuItem4 = new System.Windows.Forms.MenuItem();
-			this.menuItem5 = new System.Windows.Forms.MenuItem();
-			this.menuItem6 = new System.Windows.Forms.MenuItem();
-			this.ofd = new System.Windows.Forms.OpenFileDialog();
-			this.PluginsTab = new System.Windows.Forms.TabPage();
-			this.PluginList = new System.Windows.Forms.ListView();
-			this.LogTextTab = new System.Windows.Forms.TabPage();
-			this.TextLog = new System.Windows.Forms.RichTextBox();
-			this.LogListTab = new System.Windows.Forms.TabPage();
-			this.MainTab = new System.Windows.Forms.TabControl();
-			this.PluginsTab.SuspendLayout();
-			this.LogTextTab.SuspendLayout();
-			this.MainTab.SuspendLayout();
-			this.SuspendLayout();
-			// 
-			// mainMenu1
-			// 
-			this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																					  this.menuItem1,
-																					  this.menuItem5});
-			// 
-			// menuItem1
-			// 
-			this.menuItem1.Index = 0;
-			this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																					  this.MenuFileOpen,
-																					  this.menuItem3,
-																					  this.menuItem4});
-			this.menuItem1.Text = "&File";
-			// 
-			// MenuFileOpen
-			// 
-			this.MenuFileOpen.Index = 0;
-			this.MenuFileOpen.Text = "&Open";
-			this.MenuFileOpen.Click += new System.EventHandler(this.MenuFileOpen_Click);
-			// 
-			// menuItem3
-			// 
-			this.menuItem3.Index = 1;
-			this.menuItem3.Text = "-";
-			// 
-			// menuItem4
-			// 
-			this.menuItem4.Index = 2;
-			this.menuItem4.Text = "E&xit";
-			this.menuItem4.Click += new System.EventHandler(this.menuItem4_Click);
-			// 
-			// menuItem5
-			// 
-			this.menuItem5.Index = 1;
-			this.menuItem5.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																					  this.menuItem6});
-			this.menuItem5.Text = "&Help";
-			// 
-			// menuItem6
-			// 
-			this.menuItem6.Index = 0;
-			this.menuItem6.Text = "&About";
-			// 
-			// ofd
-			// 
-			this.ofd.Filter = "Binary Log Files|*.blg";
-			// 
-			// PluginsTab
-			// 
-			this.PluginsTab.Controls.Add(this.PluginList);
-			this.PluginsTab.Location = new System.Drawing.Point(4, 22);
-			this.PluginsTab.Name = "PluginsTab";
-			this.PluginsTab.Size = new System.Drawing.Size(648, 346);
-			this.PluginsTab.TabIndex = 0;
-			this.PluginsTab.Text = "Plugins";
-			// 
-			// PluginList
-			// 
-			this.PluginList.AllowColumnReorder = true;
-			this.PluginList.AutoArrange = false;
-			this.PluginList.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PluginList.FullRowSelect = true;
-			this.PluginList.Location = new System.Drawing.Point(0, 0);
-			this.PluginList.MultiSelect = false;
-			this.PluginList.Name = "PluginList";
-			this.PluginList.Size = new System.Drawing.Size(648, 346);
-			this.PluginList.TabIndex = 0;
-			this.PluginList.View = System.Windows.Forms.View.Details;
-			// 
-			// LogTextTab
-			// 
-			this.LogTextTab.Controls.Add(this.TextLog);
-			this.LogTextTab.Location = new System.Drawing.Point(4, 22);
-			this.LogTextTab.Name = "LogTextTab";
-			this.LogTextTab.Size = new System.Drawing.Size(648, 346);
-			this.LogTextTab.TabIndex = 1;
-			this.LogTextTab.Text = "Event Log (Text)";
-			// 
-			// TextLog
-			// 
-			this.TextLog.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.TextLog.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
-			this.TextLog.Location = new System.Drawing.Point(0, 0);
-			this.TextLog.Name = "TextLog";
-			this.TextLog.Size = new System.Drawing.Size(648, 346);
-			this.TextLog.TabIndex = 0;
-			this.TextLog.Text = "";
-			// 
-			// LogListTab
-			// 
-			this.LogListTab.Location = new System.Drawing.Point(4, 22);
-			this.LogListTab.Name = "LogListTab";
-			this.LogListTab.Size = new System.Drawing.Size(648, 346);
-			this.LogListTab.TabIndex = 3;
-			this.LogListTab.Text = "Event Log (List)";
-			// 
-			// MainTab
-			// 
-			this.MainTab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-				| System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
-			this.MainTab.Controls.Add(this.PluginsTab);
-			this.MainTab.Controls.Add(this.LogTextTab);
-			this.MainTab.Controls.Add(this.LogListTab);
-			this.MainTab.ItemSize = new System.Drawing.Size(46, 18);
-			this.MainTab.Location = new System.Drawing.Point(8, 12);
-			this.MainTab.Name = "MainTab";
-			this.MainTab.SelectedIndex = 0;
-			this.MainTab.Size = new System.Drawing.Size(656, 372);
-			this.MainTab.TabIndex = 0;
-			this.MainTab.SelectedIndexChanged += new System.EventHandler(this.MainTab_SelectedIndexChanged);
-			// 
-			// Form1
-			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(676, 393);
-			this.Controls.Add(this.MainTab);
-			this.Menu = this.mainMenu1;
-			this.Name = "Form1";
-			this.Text = "AMX Mod X BinLogReader";
-			this.Load += new System.EventHandler(this.Form1_Load);
-			this.PluginsTab.ResumeLayout(false);
-			this.LogTextTab.ResumeLayout(false);
-			this.MainTab.ResumeLayout(false);
-			this.ResumeLayout(false);
+            this.components = new System.ComponentModel.Container();
+            this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.MenuFileOpen = new System.Windows.Forms.MenuItem();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.menuItem4 = new System.Windows.Forms.MenuItem();
+            this.menuItem5 = new System.Windows.Forms.MenuItem();
+            this.menuItem6 = new System.Windows.Forms.MenuItem();
+            this.ofd = new System.Windows.Forms.OpenFileDialog();
+            this.PluginsTab = new System.Windows.Forms.TabPage();
+            this.PluginList = new System.Windows.Forms.ListView();
+            this.LogTextTab = new System.Windows.Forms.TabPage();
+            this.TextLog = new System.Windows.Forms.RichTextBox();
+            this.LogListTab = new System.Windows.Forms.TabPage();
+            this.MainTab = new System.Windows.Forms.TabControl();
+            this.PluginsTab.SuspendLayout();
+            this.LogTextTab.SuspendLayout();
+            this.MainTab.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // mainMenu1
+            // 
+            this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem1,
+            this.menuItem5});
+            // 
+            // menuItem1
+            // 
+            this.menuItem1.Index = 0;
+            this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.MenuFileOpen,
+            this.menuItem3,
+            this.menuItem4});
+            this.menuItem1.Text = "&File";
+            // 
+            // MenuFileOpen
+            // 
+            this.MenuFileOpen.Index = 0;
+            this.MenuFileOpen.Text = "&Open";
+            this.MenuFileOpen.Click += new System.EventHandler(this.MenuFileOpen_Click);
+            // 
+            // menuItem3
+            // 
+            this.menuItem3.Index = 1;
+            this.menuItem3.Text = "-";
+            // 
+            // menuItem4
+            // 
+            this.menuItem4.Index = 2;
+            this.menuItem4.Text = "E&xit";
+            this.menuItem4.Click += new System.EventHandler(this.menuItem4_Click);
+            // 
+            // menuItem5
+            // 
+            this.menuItem5.Index = 1;
+            this.menuItem5.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem6});
+            this.menuItem5.Text = "&Help";
+            // 
+            // menuItem6
+            // 
+            this.menuItem6.Index = 0;
+            this.menuItem6.Text = "&About";
+            // 
+            // ofd
+            // 
+            this.ofd.Filter = "Binary Log Files|*.blg";
+            // 
+            // PluginsTab
+            // 
+            this.PluginsTab.Controls.Add(this.PluginList);
+            this.PluginsTab.Location = new System.Drawing.Point(4, 22);
+            this.PluginsTab.Name = "PluginsTab";
+            this.PluginsTab.Size = new System.Drawing.Size(648, 346);
+            this.PluginsTab.TabIndex = 0;
+            this.PluginsTab.Text = "Plugins";
+            // 
+            // PluginList
+            // 
+            this.PluginList.AllowColumnReorder = true;
+            this.PluginList.AutoArrange = false;
+            this.PluginList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PluginList.FullRowSelect = true;
+            this.PluginList.Location = new System.Drawing.Point(0, 0);
+            this.PluginList.MultiSelect = false;
+            this.PluginList.Name = "PluginList";
+            this.PluginList.Size = new System.Drawing.Size(648, 346);
+            this.PluginList.TabIndex = 0;
+            this.PluginList.UseCompatibleStateImageBehavior = false;
+            this.PluginList.View = System.Windows.Forms.View.Details;
+            // 
+            // LogTextTab
+            // 
+            this.LogTextTab.Controls.Add(this.TextLog);
+            this.LogTextTab.Location = new System.Drawing.Point(4, 22);
+            this.LogTextTab.Name = "LogTextTab";
+            this.LogTextTab.Size = new System.Drawing.Size(648, 346);
+            this.LogTextTab.TabIndex = 1;
+            this.LogTextTab.Text = "Event Log (Text)";
+            // 
+            // TextLog
+            // 
+            this.TextLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TextLog.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextLog.Location = new System.Drawing.Point(0, 0);
+            this.TextLog.Name = "TextLog";
+            this.TextLog.Size = new System.Drawing.Size(648, 346);
+            this.TextLog.TabIndex = 0;
+            this.TextLog.Text = "";
+            // 
+            // LogListTab
+            // 
+            this.LogListTab.Location = new System.Drawing.Point(4, 22);
+            this.LogListTab.Name = "LogListTab";
+            this.LogListTab.Size = new System.Drawing.Size(648, 346);
+            this.LogListTab.TabIndex = 3;
+            this.LogListTab.Text = "Event Log (List)";
+            // 
+            // MainTab
+            // 
+            this.MainTab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.MainTab.Controls.Add(this.PluginsTab);
+            this.MainTab.Controls.Add(this.LogTextTab);
+            this.MainTab.Controls.Add(this.LogListTab);
+            this.MainTab.ItemSize = new System.Drawing.Size(46, 18);
+            this.MainTab.Location = new System.Drawing.Point(8, 12);
+            this.MainTab.Name = "MainTab";
+            this.MainTab.SelectedIndex = 0;
+            this.MainTab.Size = new System.Drawing.Size(656, 372);
+            this.MainTab.TabIndex = 0;
+            this.MainTab.SelectedIndexChanged += new System.EventHandler(this.MainTab_SelectedIndexChanged);
+            // 
+            // Form1
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.ClientSize = new System.Drawing.Size(676, 393);
+            this.Controls.Add(this.MainTab);
+            this.Menu = this.mainMenu1;
+            this.Name = "Form1";
+            this.Text = "AMX Mod X BinLog Reader";
+            this.Load += new System.EventHandler(this.Form1_Load);
+            this.PluginsTab.ResumeLayout(false);
+            this.LogTextTab.ResumeLayout(false);
+            this.MainTab.ResumeLayout(false);
+            this.ResumeLayout(false);
 
 		}
 		#endregion
@@ -233,6 +232,8 @@ namespace BinLogReader
 		[STAThread]
 		static void Main() 
 		{
+            Application.EnableVisualStyles();
+            Application.DoEvents();
 			Application.Run(new Form1());
 		}
 

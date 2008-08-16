@@ -47,7 +47,7 @@ namespace AMXXRelease
 			}
 
 			ABuilder builder = null;
-			if ((int)System.Environment.OSVersion.Platform == 128)
+			if (System.Environment.OSVersion.Platform == System.PlatformID.Unix)
 			{
 				builder = new LinuxBuilder();
 				Releaser.IsWindows = false;

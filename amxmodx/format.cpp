@@ -160,71 +160,125 @@ void AddString(U **buf_p, size_t &maxlen, const cell *string, int width, int pre
 }
 
 template <typename U>
-void AddFloat(U **buf_p, size_t &maxlen, double fval, int width, int prec)
+void AddFloat(U **buf_p, size_t &maxlen, double fval, int width, int prec, int flags)
 {
-	U		text[32];
-	int		digits;
-	double	signedVal;
-	U		*buf;
-	int		val;
+	int digits;				// non-fraction part digits
+	double tmp;				// temporary
+	U *buf = *buf_p;			// output buffer pointer
+	int val;				// temporary
+	int sign = 0;				// 0: positive, 1: negative
+	int fieldlength;			// for padding
+	int significant_digits = 0;		// number of significant digits written
+	const int MAX_SIGNIFICANT_DIGITS = 16;
+
+	// default precision
+	if (prec < 0)
+	{
+		prec = 6;
+	}
 
 	// get the sign
-	signedVal = fval;
 	if (fval < 0)
+	{
 		fval = -fval;
+		sign = 1;
+	}
 
-	// write the float number
-	digits = 0;
-	val = (int)fval;
-	do {
-		text[digits++] = '0' + val % 10;
-		val /= 10;
-	} while (val);
+	// compute whole-part digits count
+	digits = (int)log10(fval) + 1;
 
-	if (signedVal < 0)
-		text[digits++] = '-';
-
-	buf = *buf_p;
-
-	while (digits < width && maxlen)
+	// Only print 0.something if 0 < fval < 1
+	if (digits < 1)
 	{
-		*buf++ = ' ';
-		width--;
+		digits = 1;
+	}
+
+	// compute the field length
+	fieldlength = digits + prec + ((prec > 0) ? 1 : 0) + sign;
+
+	// minus sign BEFORE left padding if padding with zeros
+	if (sign && maxlen && (flags & ZEROPAD))
+	{
+		*buf++ = '-';
 		maxlen--;
 	}
 
-	while (digits-- && maxlen)
+	// right justify if required
+	if ((flags & LADJUST) == 0)
 	{
-		*buf++ = text[digits];
-		maxlen--;
-	}
-
-	*buf_p = buf;
-
-	if (prec < 0)
-		prec = 6;
-	// write the fraction
-	digits = 0;
-	while (digits < prec)
-	{
-		fval -= (int) fval;
-		fval *= 10.0;
-		val = (int) fval;
-		text[digits++] = '0' + val % 10;
-	}
-
-	if (digits > 0 && maxlen)
-	{
-		buf = *buf_p;
-		*buf++ = '.';
-		maxlen--;
-		for (prec = 0; maxlen && prec < digits; prec++)
+		while ((fieldlength < width) && maxlen)
 		{
-			*buf++ = text[prec];
+			*buf++ = (flags & ZEROPAD) ? '0' : ' ';
+			width--;
 			maxlen--;
 		}
-		*buf_p = buf;
 	}
+
+	// minus sign AFTER left padding if padding with spaces
+	if (sign && maxlen && !(flags & ZEROPAD))
+	{
+		*buf++ = '-';
+		maxlen--;
+	}
+
+	// write the whole part
+	tmp = pow(10.0, digits-1);
+	while ((digits--) && maxlen)
+	{
+		if (++significant_digits > MAX_SIGNIFICANT_DIGITS)
+		{
+			*buf++ = '0';
+		}
+		else
+		{
+			val = (int)(fval / tmp);
+			*buf++ = '0' + val;
+			fval -= val * tmp;
+			tmp *= 0.1;
+		}
+		maxlen--;
+	}
+
+	// write the fraction part
+	if (maxlen)
+	{
+		*buf++ = '.';
+		maxlen--;
+	}
+
+	tmp = pow(10.0, prec);
+
+	fval *= tmp;
+	while (prec-- && maxlen)
+	{
+		if (++significant_digits > MAX_SIGNIFICANT_DIGITS)
+		{
+			*buf++ = '0';
+		}
+		else
+		{
+			tmp *= 0.1;
+			val = (int)(fval / tmp);
+			*buf++ = '0' + val;
+			fval -= val * tmp;
+		}
+		maxlen--;
+	}
+
+	// left justify if required
+	if (flags & LADJUST)
+	{
+		while ((fieldlength < width) && maxlen)
+		{
+			// right-padding only with spaces, ZEROPAD is ignored
+			*buf++ = ' ';
+			width--;
+			maxlen--;
+		}
+	}
+
+	// update parent's buffer pointer
+	*buf_p = buf;
 }
 
 template <typename U>
@@ -481,7 +535,7 @@ reswitch:
 			break;
 		case 'f':
 			CHECK_ARGS(0);
-			AddFloat(&buf_p, llen, amx_ctof(*get_amxaddr(amx, params[arg])), width, prec);
+			AddFloat(&buf_p, llen, amx_ctof(*get_amxaddr(amx, params[arg])), width, prec, flags);
 			arg++;
 			break;
 		case 'X':

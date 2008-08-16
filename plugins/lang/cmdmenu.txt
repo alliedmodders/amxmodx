@@ -87,3 +87,8 @@ SPE_MENU = Beszed Menu
 CMD_MENU = Komandu meniu
 CONF_MENU = Konfigu meniu
 SPE_MENU = Kalbos meniu
+
+[sk]
+CMD_MENU = Menu prikazov
+CONF_MENU = Menu nastaveni
+SPE_MENU = Nastavenie reci

@@ -51,3 +51,6 @@ INF_REACH = Informacio uzenetek limit elerve!
 
 [lt]
 INF_REACH = Informacijos zinuciu limitas pasiektas
+
+[sk]
+INF_REACH = Limit informacnych sprav prekroceny!

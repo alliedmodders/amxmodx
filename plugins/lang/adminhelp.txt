@@ -159,3 +159,12 @@ HELP_USE_BEGIN = Naudok 'amx_help 1' kad pradetum
 TYPE_HELP = Rasyk 'amx_help' konsoleje, kad pamatytum prieinamas komandas.
 TIME_INFO_1 = Liko laiko: %d:%02d min. Kitas zemelapis: %s
 TIME_INFO_2 = Nera laiko limito. Kitas zemelapis: %s
+
+[sk]
+HELP_COMS = AMX Mod X Help: Prikazy
+HELP_ENTRIES = Polozky %d - %d z %d
+HELP_USE_MORE = Napis 'amx_help %d' pre viac
+HELP_USE_BEGIN = Napis 'amx_help 1' pre zaciatok
+TYPE_HELP = Napis 'amx_help' do konzoly pre vypis prikazov
+TIME_INFO_1 = Ostava este: %d:%02d min. Dalsia mapa: %s
+TIME_INFO_2 = Neni casovy limit. Dalsia mapa: %s

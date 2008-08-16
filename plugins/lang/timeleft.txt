@@ -159,3 +159,12 @@ MINUTE = minute
 MINUTES = minutes
 SECOND = sekunde
 SECONDS = sekundes
+
+[sk]
+THE_TIME = Cas
+TIME_LEFT = Ostava este
+NO_T_LIMIT = Neni casovy limit
+MINUTE = minuta
+MINUTES = minut
+SECOND = sekunda
+SECONDS = sekund

@@ -51,3 +51,6 @@ DROPPED_RES = Nincs szabad hely.
 
 [lt]
 DROPPED_RES = Atjungtas, nes nera laisvos vietos
+
+[sk]
+DROPPED_RES = Prepac,ale slot je rezervovany

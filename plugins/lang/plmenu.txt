@@ -303,3 +303,20 @@ TEAM_MENU = Komandos meniu
 TRANSF_TO = Issiusti i %s
 CL_CMD_MENU = Klientu CMD meniu
 NO_CMDS = Nera galimu CMD
+
+[sk]
+ADMIN_BAN_1 = ADMIN: zabanoval %s
+ADMIN_BAN_2 = ADMIN %s: zabanovali %s
+BAN_MENU = MENU: ban
+BAN_FOR_MIN = Zabanovat na %d minut
+BAN_PERM = Zabanovat permanentne
+SLAP_SLAY_MENU = MENU: Placnut/Zabit
+SLAP_WITH_DMG = Udret silou %d damage
+SLAY = Zabit
+KICK_MENU = MENU: vykopnutie
+ADMIN_TRANSF_1 = ADMIN: premiestnil %s k %s
+ADMIN_TRANSF_2 = ADMIN %s: premiestnili %s k %s
+TEAM_MENU = MENU: Tym
+TRANSF_TO = Premiestnit k %s
+CL_CMD_MENU = MENU: klientske prikazy
+NO_CMDS = Ziadny cmds

@@ -123,3 +123,10 @@ ADMIN_TELEPORT_2 = ADMINAS %s: teleportavo %s
 TELE_MENU = Teleporto Meniu
 CUR_LOC = Dabartine vieta
 SAVE_LOC = Issaugoti vietove
+
+[sk]
+ADMIN_TELEPORT_1 = ADMIN: teleportoval %s
+ADMIN_TELEPORT_2 = ADMIN %s: teleportovali %s
+TELE_MENU = MENU: Teleport
+CUR_LOC = Sucasne miesto
+SAVE_LOC = Ulozit miesto

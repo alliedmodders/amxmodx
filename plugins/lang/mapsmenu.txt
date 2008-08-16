@@ -429,3 +429,27 @@ ADMIN_V_MAP_2 = ADMINAS %s: pradejo zemelapiu balsavima
 ADMIN_CHANGEL_1 = ADMINAS: pakeite zemelapi i %s
 ADMIN_CHANGEL_2 = ADMINAS %s: pakeite zemelapi i %s
 CHANGLE_MENU = Zemelapiu sarasas
+
+[sk]
+RESULT_REF = Vysledok odmietnuty
+RESULT_ACC = Vysledok prijaty
+VOTE_SUCCESS = Hlasovanie uspesne. Mapa se bude menit na
+VOTE_FAILED = Hlasovanie zlyhalo
+THE_WINNER = Vitaz
+WANT_CONT = Chces pokracovat?
+VOT_CANC = Hlasovanie bolo zrusene
+X_VOTED_FOR = %s hlasoval pre volbu #%d
+VOTEMAP_MENU = MENU: volba mapy
+START_VOT = Zacat hlasovanie
+SEL_MAPS = Zvolene mapy
+ALREADY_VOT = Uz tu jedno hlasovanie bolo...
+NO_MAPS_MENU = V menu niesu ziadne mapy
+VOT_NOW_ALLOW = Hlasovanie teraz neni povolene
+WHICH_MAP = Aku mapu chces?
+CHANGE_MAP_TO = Zmena mapy na
+CANC_VOTE = Zrusit hlasovanie
+ADMIN_V_MAP_1 = ADMIN: zvolil mapu
+ADMIN_V_MAP_2 = ADMIN %s: zvolili mapu
+ADMIN_CHANGEL_1 = ADMIN: meni mapu na %s
+ADMIN_CHANGEL_2 = ADMIN %s: meni mapu na %s
+CHANGLE_MENU = Menu zmeny mapy

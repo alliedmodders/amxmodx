@@ -69,3 +69,7 @@ LANG_NAME_NATIVE = Magyar
 [lt]
 LANG_NAME = Lithuania
 LANG_NAME_NATIVE = Lithuania
+
+[sk]
+LANG_NAME = Slovak
+LANG_NAME_NATIVE = Slovencina

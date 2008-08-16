@@ -231,3 +231,16 @@ COL_ORANGE = oranzine
 COL_OCEAN = melsva
 COL_MAROON = bordine
 PRINT_ALL = (VISIEM) %s :   %s
+
+[sk]
+COL_WHITE = biela
+COL_RED = cervena
+COL_GREEN = zelena
+COL_BLUE = modra
+COL_YELLOW = zlta
+COL_MAGENTA = fialova
+COL_CYAN = modrozelena
+COL_ORANGE = orandzova
+COL_OCEAN = modra
+COL_MAROON = gastanova
+PRINT_ALL = (ALL) %s :   %s

@@ -159,3 +159,12 @@ X_CHOSE_X = %s pasirinko %s
 CHOOSE_NEXTM = AMX Issirink sekanti zemelapi
 EXTED_MAP = Pratestas zemelapis %s
 TIME_CHOOSE = Laikas issirinkti kita zemelapi..
+
+[sk]
+CHO_FIN_EXT = Volba ukoncena. Tato mapa bude este dalsych %.0f minut
+CHO_FIN_NEXT = Volba ukoncena. Dalsia mapa bude %s
+CHOSE_EXT = %s zvolil predlzenie sucasnej mapy
+X_CHOSE_X = %s zvolil %s
+CHOOSE_NEXTM = Zvol si dalsiu mapu
+EXTED_MAP = Predlzuje mapu %s
+TIME_CHOOSE = Je cas pre volbu dalsej mapy...

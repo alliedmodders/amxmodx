@@ -393,3 +393,25 @@ CANT_PERF_DEAD = Sis veiksmas negalimas jau numirusiam zaidejui "%s"
 CANT_PERF_BOT = Sio veiksmo negalima naudoti ant boto "%s"
 ON = Ijungta
 OFF = Isjungta
+
+[sk]
+BACK = Spat
+EXIT = Exit
+MORE = Viac
+NONE = Nic
+ADMIN = ADMIN
+PLAYER = HRAC
+ERROR = chyba
+YES = Ano
+NO = Nie
+BAN = ban
+KICK = kick
+NO_ACC_COM = Nemas pristup k tomuto prikazu
+USAGE = Pouzity
+MORE_CL_MATCHT = je tu viac klientov zodpovedajucim tymto kriteriam
+CL_NOT_FOUND = Klient s tymto menom alebo userid nenajdeny
+CLIENT_IMM = Klient "%s" ma imunitu
+CANT_PERF_DEAD = Tato operacia nejde previest na mrtvom klientovi "%s"
+CANT_PERF_BOT = Tato operacia nejde previest na botovi "%s"
+ON = ON
+OFF = OFF

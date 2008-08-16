@@ -231,3 +231,16 @@ INV_PAS = Blogas slaptazodis!
 PAS_ACC = Slaptazodis priimtas
 PRIV_SET = Privilegijos nustatytos
 NO_ENTRY = Neturi leidimo ieiti i serva..
+
+[sk]
+LOADED_ADMIN = 1 admin nacitany zo soboru
+LOADED_ADMINS = %d adminov nacitanych zo suboru
+SQL_CANT_CON = SQL error: nemozem sa pripojit: '%s'
+SQL_CANT_LOAD_ADMINS = SQL error: Nemozem nacitat adminov: '%s'
+NO_ADMINS = Ziadny admin nenajdeny.
+SQL_LOADED_ADMIN = 1 admin nacitany z databazy
+SQL_LOADED_ADMINS = %d adminov nacitanych z databazy
+INV_PAS = Nespravne heslo!
+PAS_ACC = Heslo overene
+PRIV_SET = Privilegium nastavene
+NO_ENTRY = Nemas ziadny zaznam na servery...

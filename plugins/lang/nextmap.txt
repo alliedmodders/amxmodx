@@ -87,3 +87,8 @@ FRIEND_FIRE = Csapattars Sebzes
 NEXT_MAP = Kitas zemelapis:
 PLAYED_MAP = Zaide zemelapiu
 FRIEND_FIRE = Savu saudymas
+
+[sk]
+NEXT_MAP = Dalsia mapa:
+PLAYED_MAP = Aktualna mapa
+FRIEND_FIRE = Friendly fire

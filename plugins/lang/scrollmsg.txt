@@ -87,3 +87,8 @@ MSG_DISABLED = Scrolling uzenet letiltva
 MIN_FREQ = Minimalus daznumas siai zinutei yra %d sekundes
 MSG_FREQ = Slenkancios zinutes daznumas: %d:%02d minutes
 MSG_DISABLED = Slenkancioji zinute isjungta
+
+[sk]
+MIN_FREQ = Minimalna frekvencia tejto spravy je %d sekund
+MSG_FREQ = Frekvencia zobrazenia skrolovacej spravy: %d:%02d minut
+MSG_DISABLED = Skrolovacie zpravy vypnute

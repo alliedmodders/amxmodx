@@ -51,3 +51,6 @@ STOP_FLOOD = Ne irj ilyen sokat!
 
 [lt]
 STOP_FLOOD = Nustok greitai rasyti!
+
+[sk]
+STOP_FLOOD = Prestan floodovat!

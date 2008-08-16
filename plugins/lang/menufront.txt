@@ -321,3 +321,21 @@ STATS_SET = Statistikos nustatymai ^n
 PAUSE_PLUG = Sustabdyti pluginus
 RES_WEAP = Uzdrausti ginklus
 TELE_PLAYER = Teleportuoti zaideja
+
+[sk]
+KICK_PLAYER = Vykopnut hraca
+BAN_PLAYER = Zabanovat hraca
+SLAP_SLAY = Placnut/Zabit Hraca
+TEAM_PLAYER = Tymovy hrac ^n
+CHANGEL = Zmena mapy
+VOTE_MAPS = Hlasovanie pre zmenu mapy ^n
+SPECH_STUFF = Veci okolo reci
+CLIENT_COM = Prikazy klienta
+SERVER_COM = Prikazy serveru
+CVARS_SET = Nastavenie Cvar
+CONFIG = Konfiguracia
+LANG_SET = Nastavenie jazyka
+STATS_SET = Nastavenie statistyk ^n
+PAUSE_PLUG = Pauznut pluginy
+RES_WEAP = Obmedzit zbrane
+TELE_PLAYER = Teleportovat hraca

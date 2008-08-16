@@ -194,3 +194,14 @@ SET_LANG_SERVER = Serverio kalba buvo nustatyta i "%s"
 SET_LANG_USER = Tavo kalba buvo nustatyta i "%s"
 TYPE_LANGMENU = Rasyk 'amx_langmenu' konsoleje, kad parodytu meniu kur gali issirinkti kalba.
 LANG_MENU_DISABLED = Kalbu meniu atjungtas.
+
+[sk]
+LANG_NOT_EXISTS = Zvoleny jazyk neexistuje
+PERSO_LANG = Jazyk klienta
+LANG_MENU = Nastavenie jazyka
+SERVER_LANG = Jazyk na servery
+SAVE_LANG = Ulozit
+SET_LANG_SERVER = Na servery zvoleny jazyk "%s"
+SET_LANG_USER = Tvoj jazyk nastaveny na "%s"
+TYPE_LANGMENU = Napis amx_langmenu do konzoly pre zobrazenie menu vyberu jazyka
+LANG_MENU_DISABLED = Volba jazyka nepovolena.

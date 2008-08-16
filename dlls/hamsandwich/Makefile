@@ -24,7 +24,7 @@ call_funcs.cpp  hook_create.cpp DataHandler.cpp pdata.cpp
 LINK = 
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
-	-I$(MM_ROOT) -I$(HLSDK)/common -I$(HLSDK)/pm_shared -I./tableentries
+	-I$(MM_ROOT) -I$(HLSDK)/common -I$(HLSDK)/pm_shared -I./tableentries -Isdk
 
 GCC_VERSION := $(shell $(CPP) -dumpversion >&1 | cut -b1)
 

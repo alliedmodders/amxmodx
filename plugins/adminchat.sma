@@ -44,15 +44,19 @@ new g_Values[MAX_CLR][] = {{255, 255, 255}, {255, 0, 0}, {0, 255, 0}, {0, 0, 255
 new Float:g_Pos[4][] = {{0.0, 0.0}, {0.05, 0.55}, {-1.0, 0.2}, {-1.0, 0.7}}
 
 new amx_show_activity;
+new g_AdminChatFlag = ADMIN_CHAT;
+
 public plugin_init()
 {
+	new admin_chat_id
+
 	register_plugin("Admin Chat", AMXX_VERSION_STR, "AMXX Dev Team")
 	register_dictionary("adminchat.txt")
 	register_dictionary("common.txt")
 	register_clcmd("say", "cmdSayChat", ADMIN_CHAT, "@[@|@|@][w|r|g|b|y|m|c]<text> - displays hud message")
 	register_clcmd("say_team", "cmdSayAdmin", 0, "@<text> - displays message to admins")
 	register_concmd("amx_say", "cmdSay", ADMIN_CHAT, "<message> - sends message to all players")
-	register_concmd("amx_chat", "cmdChat", ADMIN_CHAT, "<message> - sends message to admins")
+	admin_chat_id = register_concmd("amx_chat", "cmdChat", ADMIN_CHAT, "<message> - sends message to admins")
 	register_concmd("amx_psay", "cmdPsay", ADMIN_CHAT, "<name or #userid> <message> - sends private message")
 	register_concmd("amx_tsay", "cmdTsay", ADMIN_CHAT, "<color> <message> - sends left side hud message to all players")
 	register_concmd("amx_csay", "cmdTsay", ADMIN_CHAT, "<color> <message> - sends center hud message to all players")
@@ -63,11 +67,14 @@ public plugin_init()
 	{
 		amx_show_activity = register_cvar("amx_show_activity", "2");
 	}
+
+	new str[1]
+	get_concmd(admin_chat_id, str, 0, g_AdminChatFlag, str, 0, -1)
 }
 
 public cmdSayChat(id)
 {
-	if (!access(id, ADMIN_CHAT))
+	if (!access(id, g_AdminChatFlag))
 	{
 		return PLUGIN_CONTINUE
 	}
@@ -198,7 +205,7 @@ public cmdSayAdmin(id)
 	for (new i = 0; i < inum; ++i)
 	{
 		// dont print the message to the client that used the cmd if he has ADMIN_CHAT to avoid double printing
-		if (players[i] != id && get_user_flags(players[i]) & ADMIN_CHAT)
+		if (players[i] != id && get_user_flags(players[i]) & g_AdminChatFlag)
 			client_print(players[i], print_chat, "%s", message)
 	}
 	
@@ -229,7 +236,7 @@ public cmdChat(id, level, cid)
 	
 	for (new i = 0; i < inum; ++i)
 	{
-		if (access(players[i], ADMIN_CHAT))
+		if (access(players[i], g_AdminChatFlag))
 			client_print(players[i], print_chat, "%s", message)
 	}
 	

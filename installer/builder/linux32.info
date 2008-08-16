@@ -1,5 +1,5 @@
 compress = /bin/tar
-source = /home/users/dvander/amxx
+source = /home/users/dvander/amxmodx/trunk
 makeopts = 
 output = /home/users/dvander/done
 devenv = /usr/bin/make

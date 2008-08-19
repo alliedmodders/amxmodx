@@ -2,7 +2,7 @@
 ; Licensed under the GNU General Public License
 ; Originally written by -=HaXoMaTiC=-
 !define PRODUCT_NAME "AMX Mod X Installer"
-!define PRODUCT_VERSION "1.8.0"
+!define PRODUCT_VERSION "1.8.1"
 !define PRODUCT_PUBLISHER "AMX Mod X Dev Team"
 !define PRODUCT_WEB_SITE "http://www.amxmodx.org/"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\Installer.exe"
@@ -222,6 +222,7 @@ Section "MainSection" SEC01
   File "installer\files\base\addons\amxmodx\scripting\include\amxmisc.inc"
   File "installer\files\base\addons\amxmodx\scripting\include\amxmodx.inc"
   File "installer\files\base\addons\amxmodx\scripting\include\cellarray.inc"
+  File "installer\files\base\addons\amxmodx\scripting\include\celltrie.inc"
   File "installer\files\base\addons\amxmodx\scripting\include\core.inc"
   File "installer\files\base\addons\amxmodx\scripting\include\csstats.inc"
   File "installer\files\base\addons\amxmodx\scripting\include\cstrike.inc"
@@ -668,6 +669,7 @@ Section Uninstall
   Delete "$INSTDIR\files\base\addons\amxmodx\scripting\include\cstrike.inc"
   Delete "$INSTDIR\files\base\addons\amxmodx\scripting\include\csstats.inc"
   Delete "$INSTDIR\files\base\addons\amxmodx\scripting\include\core.inc"
+  Delete "$INSTDIR\files\base\addons\amxmodx\scripting\include\celltrie.inc"
   Delete "$INSTDIR\files\base\addons\amxmodx\scripting\include\cellarray.inc"
   Delete "$INSTDIR\files\base\addons\amxmodx\scripting\include\amxmodx.inc"
   Delete "$INSTDIR\files\base\addons\amxmodx\scripting\include\amxmod.inc"

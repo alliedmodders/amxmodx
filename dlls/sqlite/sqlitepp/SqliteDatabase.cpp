@@ -77,3 +77,4 @@ int SqliteDatabase::QuoteString(const char *str, char buffer[], size_t maxlen, s
 
 	return 0;
 }
+

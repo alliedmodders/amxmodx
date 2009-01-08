@@ -519,47 +519,69 @@ static cell AMX_NATIVE_CALL SQL_NextResultSet(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL SQL_QuoteString(AMX *amx, cell *params)
 {
-	IDatabase *pDb = (IDatabase *)GetHandle(params[1], Handle_Database);
-	if (!pDb)
-	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid database handle: %d", params[1]);
-		return 0;
-	}
-
 	int len;
 	char *str = MF_GetAmxString(amx, params[4], 0, &len);
 	size_t newsize;
 	static char buffer[8192];
 
-	if (pDb->QuoteString(str, buffer, sizeof(buffer)-1, &newsize) == 0)
+	if (params[1] != 0)
 	{
-		MF_SetAmxString(amx, params[2], buffer, params[3]);
-		return newsize;
+		IDatabase *pDb = (IDatabase *)GetHandle(params[1], Handle_Database);
+		if (!pDb)
+		{
+			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid database handle: %d", params[1]);
+			return 0;
+		}
+
+		if (pDb->QuoteString(str, buffer, sizeof(buffer)-1, &newsize) == 0)
+		{
+			MF_SetAmxString(amx, params[2], buffer, params[3]);
+			return newsize;
+		} else {
+			return -1;
+		}
 	} else {
-		return -1;
+		if (g_Mysql.QuoteString(str, buffer, sizeof(buffer)-1, &newsize) == 0)
+		{
+			MF_SetAmxString(amx, params[2], buffer, params[3]);
+			return newsize;
+		} else {
+			return -1;
+		}
 	}
 }
 
 static cell AMX_NATIVE_CALL SQL_QuoteStringFmt(AMX *amx, cell *params)
 {
-	IDatabase *pDb = (IDatabase *)GetHandle(params[1], Handle_Database);
-	if (!pDb)
-	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid database handle: %d", params[1]);
-		return 0;
-	}
-
 	int len;
 	char *str = MF_FormatAmxString(amx, params, 4, &len);
 	size_t newsize;
 	static char buffer[8192];
 
-	if (pDb->QuoteString(str, buffer, sizeof(buffer)-1, &newsize) == 0)
+	if (params[1] != 0)
 	{
-		MF_SetAmxString(amx, params[2], buffer, params[3]);
-		return newsize;
+		IDatabase *pDb = (IDatabase *)GetHandle(params[1], Handle_Database);
+		if (!pDb)
+		{
+			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid database handle: %d", params[1]);
+			return 0;
+		}
+
+		if (pDb->QuoteString(str, buffer, sizeof(buffer)-1, &newsize) == 0)
+		{
+			MF_SetAmxString(amx, params[2], buffer, params[3]);
+			return newsize;
+		} else {
+			return -1;
+		}
 	} else {
-		return -1;
+		if (g_Mysql.QuoteString(str, buffer, sizeof(buffer)-1, &newsize) == 0)
+		{
+			MF_SetAmxString(amx, params[2], buffer, params[3]);
+			return newsize;
+		} else {
+			return -1;
+		}
 	}
 }
 

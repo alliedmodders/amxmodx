@@ -67,7 +67,8 @@ native Handle:SQL_PrepareQuery(Handle:db, const fmt[], any:...);
  * Note: The buffer's maximum size should be 2*strlen(string) to catch
  * all scenarios.
  *
- * @param db				Database handle, for localization.
+ * @param db				Database handle for localization, or Empty_Handle 
+ *                          for when a handle is not available.
  * @param buffer			Buffer to copy to.
  * @param buflen			Maximum size of the buffer.
  * @param string			String to backquote (should not overlap buffer).
@@ -80,7 +81,8 @@ native SQL_QuoteString(Handle:db, buffer[], buflen, const string[]);
  * Note: The buffer's maximum size should be 2*strlen(string) to catch
  * all scenarios.
  *
- * @param db				Database handle, for localization.
+ * @param db				Database handle for localization, or Empty_Handle 
+ *                          for when a handle is not available.
  * @param buffer			Buffer to copy to.
  * @param buflen			Maximum size of the buffer.
  * @param fmt				Format of string to backquote (should not overlap buffer).

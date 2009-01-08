@@ -63,3 +63,15 @@ IDatabase *SqliteDriver::Connect(DatabaseInfo *info, int *errcode, char *error, 
 	}
 }
 
+int SqliteDriver::QuoteString(const char *str, char buffer[], size_t maxlen, size_t *newsize)
+{
+	char *res = sqlite3_snprintf(static_cast<int>(maxlen), buffer, "%q", str);
+
+	if (res != NULL && newsize != NULL)
+	{
+		*newsize = strlen(buffer);
+	}
+
+	return 0;
+}
+

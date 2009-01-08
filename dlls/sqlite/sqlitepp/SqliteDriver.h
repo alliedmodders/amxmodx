@@ -12,6 +12,7 @@ namespace SourceMod
 		IDatabase *Connect2(DatabaseInfo *info, int *errcode, char *error, size_t maxlength);
 		const char *NameString();
 		bool IsCompatDriver(const char *namestr);
+		int QuoteString(const char *str, char buffer[], size_t maxlen, size_t *newsize);
 	};
 };
 

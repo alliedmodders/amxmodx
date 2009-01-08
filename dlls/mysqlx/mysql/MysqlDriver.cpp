@@ -74,3 +74,23 @@ IDatabase *MysqlDriver::_Connect(DatabaseInfo *info, int *errcode, char *error, 
 
 	return static_cast<IDatabase *>(pMysql);
 }
+
+int MysqlDriver::QuoteString(const char *str, char buffer[], size_t maxlen, size_t *newsize)
+{
+	unsigned long size = static_cast<unsigned long>(strlen(str));
+	unsigned long needed = size*2 + 1;
+
+	if (maxlen < needed)
+	{
+		return (int)needed;
+	}
+
+	needed = mysql_escape_string(buffer, str, size);
+	if (newsize)
+	{
+		*newsize = static_cast<size_t>(needed);
+	}
+
+	return 0;
+}
+

@@ -240,7 +240,7 @@ void AddFloat(U **buf_p, size_t &maxlen, double fval, int width, int prec, int f
 	}
 
 	// write the fraction part
-	if (maxlen)
+	if (maxlen && prec)
 	{
 		*buf++ = '.';
 		maxlen--;

@@ -365,8 +365,7 @@ public cmdVote(id, level, cid)
 	new quest[48]
 	read_argv(1, quest, 47)
 	
-	if ((contain(quest, "sv_password") != -1) || (contain(quest, "rcon_password") != -1) || (contain(quest, "kick") != -1) || 
-		(contain(quest, "addip") != -1) || (contain(quest, "ban") != -1))
+	if (contain(quest, "sv_password") != -1 || contain(quest, "rcon_password") != -1)
 	{
 		console_print(id, "%L", id, "VOTING_FORBIDDEN")
 		return PLUGIN_HANDLED

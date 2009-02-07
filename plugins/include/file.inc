@@ -132,3 +132,12 @@ native close_dir(dirh);
  *						are returned.
  */
 native LoadFileForMe(const file[], buffer[], maxlength, &length=0);
+
+/**
+ * Flushes a buffered output stream.
+ *
+ * @param file			File handle, or 0 for all open streams.
+ * @return				0 on success, -1 on failure.
+ */
+native fflush(file);
+

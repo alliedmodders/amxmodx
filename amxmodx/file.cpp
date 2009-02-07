@@ -855,6 +855,13 @@ static cell LoadFileForMe(AMX *amx, cell *params)
 	return count;
 }
 
+static cell AMX_NATIVE_CALL amx_fflush(AMX *amx, cell *params)
+{
+	FILE *fp = (FILE *)params[1];
+
+	return fflush(fp);
+}
+
 AMX_NATIVE_INFO file_Natives[] =
 {
 	{"delete_file",		delete_file},
@@ -891,5 +898,6 @@ AMX_NATIVE_INFO file_Natives[] =
 	{"fputs",			amx_fputs},
 	{"rename_file",		amx_rename},
 	{"LoadFileForMe",	LoadFileForMe},
+	{"fflush",			amx_fflush},
 	{NULL,				NULL}
 };

@@ -36,6 +36,11 @@ if (!(-f 'builder.exe')) {
 }
 chdir('../..');
 
+if (-d '../OUTPUT') {
+	Build::Delete(Cwd::abs_path('../OUTPUT'));
+}
+Build::Command("mkdir ../OUTPUT");
+
 #Output directions on how to build.
 open(DIRECTIONS, '>installer/builder/directions.info');
 if ($^O eq "linux") {
@@ -54,9 +59,4 @@ if ($^O eq "linux") {
 print DIRECTIONS "release = amxmodx-" . Build::ProductVersion('product.version') .
 				 "-hg" . Build::HgRevNum('.') . "\n";
 close(DIRECTIONS);
-
-#Clean the output path. Create dir twice for abs_path hack (Windows).
-Build::Command("mkdir ../OUTPUT");
-Build::Delete("" . Cwd::abs_path('../OUTPUT'));
-Build::Command("mkdir ../OUTPUT");
 

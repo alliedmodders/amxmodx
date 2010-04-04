@@ -9,18 +9,16 @@ require 'helpers.pm';
 
 chdir('../../installer/builder');
 
+my $output;
 if ($^O eq "linux") {
-	system("mono builder.exe");
+	$output = `mono builder.exe`;
 } else {
-	system("builder.exe");
+	$output = `builder.exe`;
 }
 
-if ($? != 0)
-{
-	die "Build failed: $!\n";
-}
-else
-{
+if ($output =~ /Build failed/) {
+	die "Build failed!\n";
+} else {
 	exit(0);
 }
 

@@ -61,6 +61,7 @@ namespace AMXXRelease
 			if (!builder.Build(m_Cfg, build))
 			{
 				Console.WriteLine("Build failed!");
+				System.Environment.Exit(1);
 			} 
 			else 
 			{

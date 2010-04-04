@@ -22,6 +22,21 @@ if ($^O eq "linux")
 }
 Build::Command(Build::PathFormat('support/versionchanger.pl') . ' --buildstring="-dev"');
 
+my $DEVENV = "C:\\Program Files\\Microsoft Visual Studio 8\\Common7\\IDE\\devenv.com";
+
+#Build the amxmodx builder tool.
+chdir('installer/builder');
+if ($^O eq "linux") {
+	Build::Command("make");
+} else {
+	Build::Command("\"$DEVENV\" /rebuild Debug builder.csproj");
+}
+if (!(-f 'builder.exe')) {
+	die "Could not find build tool.\n";
+}
+chdir('../..');
+
+#Output directions on how to build.
 open(DIRECTIONS, '>installer/builder/directions.info');
 if ($^O eq "linux") {
 	print DIRECTIONS "compress = /bin/tar\n";
@@ -34,11 +49,13 @@ print DIRECTIONS "output = " . Cwd::abs_path('../OUTPUT') . "\n";
 if ($^O eq "linux") {
 	print DIRECTIONS "devenv = /usr/bin/make\n";
 } else {
-	print DIRECTIONS "devenv = C:\\Program Files\\Microsoft Visual Studio 8\\Common7\\IDE\\devenv.com\n";
+	print DIRECTIONS "devenv = $DEVENV\n";
 }
 print DIRECTIONS "release = amxmodx-" . Build::ProductVersion('product.version') .
 				 "-hg" . Build::HgRevNum('.') . "\n";
 close(DIRECTIONS);
+
+#Clean the output path.
 Build::Delete("" . Cwd::abs_path('../OUTPUT'));
 Build::Command("mkdir \"" . Cwd::abs_path('../OUTPUT') . "\"");
 

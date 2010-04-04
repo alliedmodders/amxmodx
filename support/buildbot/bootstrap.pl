@@ -55,7 +55,8 @@ print DIRECTIONS "release = amxmodx-" . Build::ProductVersion('product.version')
 				 "-hg" . Build::HgRevNum('.') . "\n";
 close(DIRECTIONS);
 
-#Clean the output path.
+#Clean the output path. Create dir twice for abs_path hack (Windows).
+Build::Command("mkdir ../OUTPUT");
 Build::Delete("" . Cwd::abs_path('../OUTPUT'));
-Build::Command("mkdir \"" . Cwd::abs_path('../OUTPUT') . "\"");
+Build::Command("mkdir ../OUTPUT");
 

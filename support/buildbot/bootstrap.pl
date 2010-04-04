@@ -39,7 +39,7 @@ chdir('../..');
 if (-d '../OUTPUT') {
 	Build::Delete(Cwd::abs_path('../OUTPUT'));
 }
-Build::Command("mkdir ../OUTPUT");
+Build::Command("mkdir " . Build::PathFormat('../OUTPUT'));
 
 #Output directions on how to build.
 open(DIRECTIONS, '>installer/builder/directions.info');

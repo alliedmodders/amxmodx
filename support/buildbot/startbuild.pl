@@ -17,7 +17,7 @@ if ($^O eq "linux") {
 }
 print $output . "\n";
 
-if ($output =~ /Build failed/) {
+if (!($output =~ /Build succeeded/)) {
 	die "Build failed!\n";
 } else {
 	exit(0);

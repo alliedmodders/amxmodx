@@ -26,28 +26,15 @@ chdir($path);
 
 require 'helpers.pm';
 
-#Switch to the output folder.
-chdir(Build::PathFormat('../../OUTPUT'));
-
 my ($version);
+$version = Build::ProductVersion(Build::PathFormat('../../product.version'));
+$version .= '-hg' . Build::HgRevNum('.');
 
-$version = Build::ProductVersion(Build::PathFormat('../product.version'));
-$version .= '-hg' . Build::HgRevNum('..');
+#Switch to the output folder.
+chdir(Build::PathFormat('../../../OUTPUT'));
 
-my ($filename);
-$filename = 'mmsource-' . $version;
-if ($^O eq "linux")
-{
-    $filename .= '.tar.gz';
-    print "tar zcvf $filename addons\n";
-    system("tar zcvf $filename addons");
-}
-else
-{
-    $filename .= '.zip';
-    print "zip -r $filename addons\n";
-    system("zip -r $filename addons");
-}
+my (@packages);
+@packages = ('base', 'cstrike', 'dod', 'esf', 'ns', 'tfc', 'ts');
 
 my ($major,$minor) = ($version =~ /^(\d+)\.(\d+)/);
 $ftp_path .= "/$major.$minor";
@@ -67,12 +54,22 @@ if ($ftp_path ne '')
 }
 
 $ftp->binary();
-$ftp->put($filename)
-    or die "Cannot drop file $filename ($ftp_path): " . $ftp->message . "\n";
+my ($i);
+for ($i = 0; $i <= $#packages; $i++) {
+	my ($filename);
+	if ($^O eq "linux") {
+		$filename = "amxmodx-$version-" . $packages[$i] . ".tar.gz";
+	} else {
+		$filename = "amxmodx-$version-" . $packages[$i] . ".zip";
+	}
+	print "Uploading $filename...\n";
+	$ftp->put($filename)
+		or die "Cannot drop file $filename ($ftp_path): " . $ftp->message . "\n";
+}
 
 $ftp->close();
 
-print "File sent to drop site as $filename -- build succeeded.\n";
+print "Files sent to drop site -- build succeeded.\n";
 
 exit(0);
 

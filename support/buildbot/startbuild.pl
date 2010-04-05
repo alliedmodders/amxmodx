@@ -11,10 +11,11 @@ chdir('../../installer/builder');
 
 my $output;
 if ($^O eq "linux") {
-	$output = `mono builder.exe`;
+	$output = `mono builder.exe directions.info`;
 } else {
-	$output = `builder.exe`;
+	$output = `builder.exe directions.info`;
 }
+print $output . "\n";
 
 if ($output =~ /Build failed/) {
 	die "Build failed!\n";

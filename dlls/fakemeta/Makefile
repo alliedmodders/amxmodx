@@ -2,7 +2,7 @@
 # Makefile written by David "BAILOPAN" Anderson
 
 HLSDK = ../../../hlsdk
-MM_ROOT = ../../metamod/metamod
+MM_ROOT = ../../../metamod/metamod
 
 ### EDIT BELOW FOR OTHER PROJECTS ###
 

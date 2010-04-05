@@ -202,6 +202,7 @@ void amx_command()
 		print_srvconsole("\tLukasz \"SidLuke\" Wlasinski, Christian \"Basic-Master\" Hammacher\n");
 		print_srvconsole("\tBorja \"faluco\" Ferrer, Scott \"Damaged Soul\" Ehlert\n");
 		print_srvconsole("Compiled: %s\n", __DATE__ ", " __TIME__);
+		print_srvconsole("Build ID: %s\n", SVN_BUILD_ID);
 #if defined JIT && !defined ASM32
 		print_srvconsole("Core mode: JIT Only\n");
 #elif !defined JIT && defined ASM32

@@ -314,7 +314,7 @@ void StartFrame()
 {
 	if (g_pWorker && (g_lasttime < gpGlobals->time))
 	{
-        g_lasttime = gpGlobals->time + 0.3f;
+        g_lasttime = gpGlobals->time + 0.05f;
 		g_QueueLock->Lock();
 		size_t remaining = g_ThreadQueue.size();
 		if (remaining)

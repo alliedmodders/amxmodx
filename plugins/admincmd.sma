@@ -390,7 +390,7 @@ public cmdAddBan(id, level, cid)
 		server_cmd("addip ^"%s^" ^"%s^";wait;writeip", minutes, arg)
 		console_print(id, "[AMXX] Ip ^"%s^" added to ban list", arg)
 	} else {
-		server_cmd("banid ^"%s^" ^"%s^";wait;writeid", minutes, arg)
+		server_cmd("banid %s %s;wait;writeid", minutes, arg)
 		console_print(id, "[AMXX] Authid ^"%s^" added to ban list", arg)
 	}
 
@@ -439,9 +439,9 @@ public cmdBan(id, level, cid)
 	format(banned, 15, "%L", player, "BANNED")
 
 	if (reason[0])
-		server_cmd("kick #%d ^"%s (%s %s)^";wait;banid ^"%s^" ^"%s^";wait;writeid", userid2, reason, banned, temp, minutes, authid2)
+		server_cmd("kick #%d ^"%s (%s %s)^";wait;banid %s %s;wait;writeid", userid2, reason, banned, temp, minutes, authid2)
 	else
-		server_cmd("kick #%d ^"%s %s^";wait;banid ^"%s^" ^"%s^";wait;writeid", userid2, banned, temp, minutes, authid2)
+		server_cmd("kick #%d ^"%s %s^";wait;banid %s %s;wait;writeid", userid2, banned, temp, minutes, authid2)
 
 	
 	// Display the message to all clients

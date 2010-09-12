@@ -108,7 +108,7 @@ static cell AMX_NATIVE_CALL TrieSetString(AMX *amx, cell *params)
 // native TrieSetArray(Trie:handle, const key[], const any:buffer[], buffsize)
 static cell AMX_NATIVE_CALL TrieSetArray(AMX *amx, cell *params)
 {
-	celltrie *t = g_TrieHandles.lookup(params[2]);
+	celltrie *t = g_TrieHandles.lookup(params[1]);
 
 	if (t == NULL)
 	{

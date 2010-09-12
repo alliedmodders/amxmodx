@@ -34,9 +34,9 @@
  *
  * The handler function should be prototyped as:
  *
- * public <function>(menu, id, item)
- *  menu   - Menu resource identifier.
+ * public <function>(id, menu, item)
  *  id     - Client the menu is being acted upon.
+ *  menu   - Menu resource identifier.
  *  item   - Item the client selected.  If less than 0, the menu was 
  *           cancelled and the item is a status code.  menu_display 
  *			 should never be called immediately if the item is a status 

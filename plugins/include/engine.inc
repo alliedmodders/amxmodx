@@ -165,7 +165,8 @@ native set_lights(const Lighting[]);
 /* Sets Player's View to entity iTargetIndex. */
 native attach_view(iIndex, iTargetIndex);
 
-/* Sets Player's View Mode. */
+/* Sets Player's View Mode.
+ * rpgrocket.mdl must be precached in order for this function to work */
 native set_view(iIndex, ViewType);
 
 /* Direct copy of PLAYBACK_EVENT_FULL from Metamod/HLSDK.  If you don't know how that works, you probably shouldn't be using it. */

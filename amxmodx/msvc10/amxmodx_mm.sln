@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "amxmodx_mm", "amxmodx_mm.vcxproj", "{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		JITDebug|Win32 = JITDebug|Win32
+		JITDebugBinLog|Win32 = JITDebugBinLog|Win32
+		JITRelease|Win32 = JITRelease|Win32
+		JITReleaseBinLog|Win32 = JITReleaseBinLog|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.JITDebug|Win32.ActiveCfg = JITDebug|Win32
+		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.JITDebug|Win32.Build.0 = JITDebug|Win32
+		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.JITDebugBinLog|Win32.ActiveCfg = JITDebugBinLog|Win32
+		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.JITDebugBinLog|Win32.Build.0 = JITDebugBinLog|Win32
+		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.JITRelease|Win32.ActiveCfg = JITRelease|Win32
+		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.JITRelease|Win32.Build.0 = JITRelease|Win32
+		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.JITReleaseBinLog|Win32.ActiveCfg = JITReleaseBinLog|Win32
+		{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}.JITReleaseBinLog|Win32.Build.0 = JITReleaseBinLog|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

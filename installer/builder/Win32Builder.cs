@@ -78,7 +78,7 @@ namespace AMXXRelease
 
 			info.WorkingDirectory = PropSlashes(dir);
 			info.FileName = m_Cfg.DevenvPath();
-			info.Arguments += "/rebuild " + module.build + " " + module.vcproj + ".vcproj";
+            info.Arguments += module.vcproj + ".vcxproj" + " /p:Configuration=" + module.build + " /t:Rebuild";
 			info.UseShellExecute = false;
 			info.RedirectStandardOutput = true;
 			info.RedirectStandardError = true;

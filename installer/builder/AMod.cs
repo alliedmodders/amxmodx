@@ -34,7 +34,7 @@ namespace AMXXRelease
 		{
 			build = "Release";
 			outdir = "modules";
-			bindir = "msvc8";
+			bindir = "msvc10";
 		}
 		
 		public Module(string name)
@@ -42,7 +42,7 @@ namespace AMXXRelease
 			build = "Release";
 			outdir = "modules";
 			sourcedir = "dlls\\" + name;
-			bindir = "msvc8";
+			bindir = "msvc10";
 			projname = name + "_amxx";
 			vcproj = name;
 		}

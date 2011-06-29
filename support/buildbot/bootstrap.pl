@@ -22,14 +22,14 @@ if ($^O eq "linux")
 }
 Build::Command(Build::PathFormat('support/versionchanger.pl') . ' --buildstring="-dev"');
 
-my $DEVENV = "C:\\Program Files\\Microsoft Visual Studio 8\\Common7\\IDE\\devenv.com";
+my $DEVENV = "C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\MSBuild.exe";
 
 #Build the amxmodx builder tool.
 chdir('installer/builder');
 if ($^O eq "linux") {
 	Build::Command("make");
 } else {
-	Build::Command("\"$DEVENV\" /rebuild Debug builder.csproj");
+	Build::Command("\"$DEVENV\" builder.csproj /p:Configuration=Release /t:Rebuild");
 }
 if (!(-f 'builder.exe')) {
 	die "Could not find build tool.\n";

@@ -6,7 +6,7 @@ uses SysUtils, Classes, Windows, Graphics, Forms, ShellAPI, Controls, Messages,
      TlHelp32, IdFTPCommon, ComCtrls, Dialogs, JclFileUtils;
 
 type TMod = (modNone, modCS, modDoD, modTFC, modNS, modTS, modESF);
-type TOS = (osWindows, osLinux32{, osLinux64});
+type TOS = (osWindows, osLinux, osMac{, osLinux64});
 
 procedure AddStatus(Text: String; Color: TColor; ShowTime: Boolean = True);
 procedure AddDone(Additional: String = '');
@@ -222,13 +222,21 @@ begin
       if ExtractFileExt(eFile) = '.so' then
         Result := True;
     end;
-    osLinux32: begin
+    osLinux: begin
       if ExtractFileExt(eFile) = '.dll' then
         Result := True;
       if ExtractFileExt(eFile) = '.exe' then
         Result := True;
 
       if Pos('_amd64', ExtractFileName(eFile)) <> 0 then
+        Result := True;
+    end;
+    osMac: begin
+      if ExtractFileExt(eFile) = '.dll' then
+        Result := True;
+      if ExtractFileExt(eFile) = '.exe' then
+        Result := True;
+      if ExtractFileExt(eFile) = '.so' then
         Result := True;
     end;
     {osLinux64: begin
@@ -383,7 +391,8 @@ begin
       //if OS = osLinux64 then
       //  eStr.Add('gamedll_linux "addons/metamod/dlls/metamod_amd64.so"')
       //else
-      eStr.Add('gamedll_linux "addons/metamod/dlls/metamod_i386.so"');
+      eStr.Add('gamedll_linux "addons/metamod/dlls/metamod.so"');
+      eStr.Add('gamedll_linux "addons/metamod/dlls/metamod.dylib"');
       FileSetAttr(ePath + 'liblist.gam', 0);
       eStr.SaveToFile(ePath + 'liblist.gam');
       FileSetAttr(ePath + 'liblist.gam', faReadOnly); // important for listen servers
@@ -516,13 +525,15 @@ begin
   { metamod }
   AddStatus('Copying Metamod...', clBlack);
   FileCopy(ePath + 'addons\amxmodx\dlls\metamod.dll', ePath + '\addons\metamod\dlls\metamod.dll', CopyConfig, False);
-  FileCopy(ePath + '\addons\amxmodx\dlls\metamod_i386.so', ePath + '\addons\metamod\dlls\metamod_i386.so', CopyConfig, False);
+  FileCopy(ePath + '\addons\amxmodx\dlls\metamod.so', ePath + '\addons\metamod\dlls\metamod.so', CopyConfig, False);
+  FileCopy(ePath + '\addons\amxmodx\dlls\metamod.dylib', ePath + '\addons\metamod\dlls\metamod.dylib', CopyConfig, False);
   FileCopy(ePath + '\addons\amxmodx\dlls\metamod_amd64.so', ePath + '\addons\metamod\dlls\metamod_amd64.so', CopyConfig, False);
 
   try
     if FileExists(ePath + '\addons\amxmodx\dlls\metamod.dll')      then DeleteFile(PChar(ePath + '\addons\amxmodx\dlls\metamod.dll'));
     if FileExists(ePath + '\addons\amxmodx\dlls\metamod_amd64.so') then DeleteFile(PChar(ePath + '\addons\amxmodx\dlls\metamod_amd64.so'));
-    if FileExists(ePath + '\addons\amxmodx\dlls\metamod_i386.so')  then DeleteFile(PChar(ePath + '\addons\amxmodx\dlls\metamod_i386.so'));
+    if FileExists(ePath + '\addons\amxmodx\dlls\metamod.so')  then DeleteFile(PChar(ePath + '\addons\amxmodx\dlls\metamod.so'));
+    if FileExists(ePath + '\addons\amxmodx\dlls\metamod.dylib')  then DeleteFile(PChar(ePath + '\addons\amxmodx\dlls\metamod.dylib'));
   finally
     UpdatePluginsIni := True;
     eStr := TStringList.Create;
@@ -533,8 +544,12 @@ begin
         if (Pos('addons\amxmodx\dlls\amxmodx_mm.dll', eStr.Text) <> 0) then
           UpdatePluginsIni := False;
       end
-      else if OS = osLinux32 then begin
+      else if OS = osLinux then begin
         if (Pos('addons/amxmodx/dlls/amxmodx_mm_i386.so', eStr.Text) <> 0) then
+          UpdatePluginsIni := False;
+      end
+      else if OS = osMac then begin
+        if (Pos('addons/amxmodx/dlls/amxmodx_mm.dylib', eStr.Text) <> 0) then
           UpdatePluginsIni := False;
       end
       else begin
@@ -555,11 +570,17 @@ begin
         eStr.Add('; Enable this instead for binary logging');
         eStr.Add('; win32   addons\amxmodx\dlls\amxmodx_bl_mm.dll');
       end
-      else if OS = osLinux32 then begin
+      else if OS = osLinux then begin
         eStr.Add('');
         eStr.Add('linux   addons/amxmodx/dlls/amxmodx_mm_i386.so');
         eStr.Add('; Enable this instead for binary logging');
         eStr.Add('; linux   addons/amxmodx/dlls/amxmodx_bl_mm_i386.so');
+      end
+      else if OS = osMac then begin
+        eStr.Add('');
+        eStr.Add('osx   addons/amxmodx/dlls/amxmodx_mm.dylib');
+        eStr.Add('; Enable this instead for binary logging');
+        eStr.Add('; osx   addons/amxmodx/dlls/amxmodx_bl_mm.dylib');
       end
       else begin
         eStr.Add('');
@@ -710,10 +731,10 @@ begin
     end;
     if frmMain.optWindows.Checked then
       eStr.Add('gamedll "addons\metamod\dlls\metamod.dll"')
-    else if frmMain.optLinux32.Checked then
-      eStr.Add('gamedll_linux "addons/metamod/dlls/metamod_i386.so"')
+    else if frmMain.optLinux.Checked then
+      eStr.Add('gamedll_linux "addons/metamod/dlls/metamod.so"')
     else
-      eStr.Add('gamedll_linux "addons/metamod/dlls/metamod_amd64.so"');
+      eStr.Add('gamedll_osx "addons/metamod/dlls/metamod.dylib"');
     FileSetAttr(ExtractFilePath(Application.ExeName) + 'temp\liblist.gam', 0);
     eStr.SaveToFile(ExtractFilePath(Application.ExeName) + 'temp\liblist.gam');
   end;

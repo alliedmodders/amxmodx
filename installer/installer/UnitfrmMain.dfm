@@ -5733,7 +5733,7 @@ object frmMain: TfrmMain
         BorderColor = clBtnShadow
         Flat = True
         ShowBorder = True
-        Version = '1.24'
+        Version = '1.26'
       end
       object frbAgree: TFlatRadioButton
         Left = 10
@@ -6391,20 +6391,21 @@ object frmMain: TfrmMain
           TabOrder = 0
           TabStop = True
         end
-        object optLinux: TFlatRadioButton
-          Left = 197
+        object optLinux32: TFlatRadioButton
+          Left = 171
           Top = 5
-          Width = 46
+          Width = 84
           Height = 14
-          Caption = 'Linux'
+          Caption = 'Linux (32-bit)'
           TabOrder = 1
         end
-        object optMac: TFlatRadioButton
-          Left = 369
+        object optLinux64: TFlatRadioButton
+          Left = 353
           Top = 5
-          Width = 64
+          Width = 82
           Height = 14
-          Caption = 'Mac OS X'
+          Caption = 'Linux (64-bit)'
+          Enabled = False
           TabOrder = 2
         end
       end
@@ -6553,7 +6554,7 @@ object frmMain: TfrmMain
         BorderColor = clBtnShadow
         Flat = True
         ShowBorder = True
-        Version = '1.24'
+        Version = '1.26'
       end
     end
   end
@@ -6757,6 +6758,7 @@ object frmMain: TfrmMain
   object IdFTP: TIdFTP
     Intercept = IdLogFile
     MaxLineAction = maException
+    ReadTimeout = 0
     RecvBufferSize = 1024
     SendBufferSize = 1024
     OnWork = IdFTPWork

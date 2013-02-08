@@ -48,9 +48,9 @@ int main(int argc, char **argv)
 	if (!lib)
 	{
 #ifdef __linux__
-		printf("32bit compiler failed to instantiate: %s\n", dlerror());
+		printf("compiler failed to instantiate: %s\n", dlerror());
 #else
-		printf("32bit compiler failed to instantiate: %d\n", GetLastError());
+		printf("compiler failed to instantiate: %d\n", GetLastError());
 #endif
 		exit(0);
 	}
@@ -61,9 +61,9 @@ int main(int argc, char **argv)
 	if (!sc32 || !pc_printf)
 	{
 #ifdef __linux__
-		printf("32bit compiler failed to link: %p.\n",sc32);
+		printf("compiler failed to link: %p.\n",sc32);
 #else
-		printf("32bit compiler failed to link: %d.\n", GetLastError());
+		printf("compiler failed to link: %d.\n", GetLastError());
 #endif
 		exit(0);
 	}
@@ -112,60 +112,11 @@ int main(int argc, char **argv)
 
 	unlink(file);
 
-	HINSTANCE lib64 = NULL;
-#ifdef __linux__
-	if (FileExists("./amxxpc64.so"))
-		lib64 = dlmount("./amxxpc64.so");
-	else
-		lib64 = dlmount("amxxpc64.so");
-#else
-	lib64 = dlmount("amxxpc64.dll");
-#endif
-	if (!lib64)
-	{
-		pc_printf("64bit compiler failed to instantiate.\n");
-		exit(0);
-	}
-
-	COMPILER sc64 = (COMPILER)dlsym(lib64, "Compile64");
-
-	if (!sc64)
-	{
-#ifdef __linux__
-		pc_printf("64bit compiler failed to link: %s.\n", dlerror());
-#else
-		pc_printf("64bit compiler failed to link: %d.\n", GetLastError());
-#endif
-		exit(0);
-	}
-
-	sc64(argc, argv);
-
-	dlclose(lib64);
-
-	if (file == NULL)
-	{
-		pc_printf("Could not locate the output file on second pass.\n");
-		exit(0);
-	} else {
-		FILE *fp = fopen(file, "rb");
-		if (fp == NULL)
-		{
-			pc_printf("Could not locate output file on second pass (compile failed).\n");
-			exit(0);
-		}
-		ReadFileIntoPl(&pl64, fp);
-		pl64.cellsize = 8;
-		fclose(fp);
-	}
-
 	/////////////
 	// COMPRSSION
 	/////////////
 
 	CompressPl(&pl32);
-
-	CompressPl(&pl64);
 
 	char *newfile = new char[strlen(file)+3];
 	strcpy(newfile, file);
@@ -179,34 +130,33 @@ int main(int argc, char **argv)
 		exit(0);
 	}
 
-	BinPlugin bh32, bh64;
+	BinPlugin bh32;
 	
 	Pl2Bh(&pl32, &bh32);
-	Pl2Bh(&pl64, &bh64);
 
 	try
 	{
+
+	static const int kEntries = 1;
+
+	//entry is 4 ints and a byte
+	static const int kEntrySize = (sizeof(int32_t) * 4) + sizeof(int8_t);
 
 	BinaryWriter bw(fp);
 
 	bw.WriteUInt32(MAGIC_HEADER2);
 	bw.WriteUInt16(MAGIC_VERSION);
-	bw.WriteUInt8(2);
+	bw.WriteUInt8(kEntries);
 
 	//base header
 	int baseaddr = sizeof(int32_t) + sizeof(int16_t) + sizeof(int8_t);
-	//entry is 4 ints and a byte
-	int entrysize = (sizeof(int32_t) * 4) + sizeof(int8_t);
-	//extend this by the two entries we have
-	baseaddr += entrysize * 2;
+	//extend this by the entries we have
+	baseaddr += kEntrySize * kEntries;
 
 	bh32.offs = baseaddr;
-	bh64.offs = bh32.offs + bh32.disksize;
 	
 	WriteBh(&bw, &bh32);
-	WriteBh(&bw, &bh64);
 	bw.WriteChars(pl32.cmp, pl32.cmpsize);
-	bw.WriteChars(pl64.cmp, pl64.cmpsize);
 	} catch (...) {
 		fclose(fp);
 		unlink(file);

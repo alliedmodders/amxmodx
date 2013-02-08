@@ -5,20 +5,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libpc300", "libpc300.vcxpro
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug32|Win32 = Debug32|Win32
-		Debug64|Win32 = Debug64|Win32
-		Release32|Win32 = Release32|Win32
-		Release64|Win32 = Release64|Win32
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{19B72687-080B-437A-917A-12AEB0031635}.Debug32|Win32.ActiveCfg = Debug32|Win32
-		{19B72687-080B-437A-917A-12AEB0031635}.Debug32|Win32.Build.0 = Debug32|Win32
-		{19B72687-080B-437A-917A-12AEB0031635}.Debug64|Win32.ActiveCfg = Debug64|Win32
-		{19B72687-080B-437A-917A-12AEB0031635}.Debug64|Win32.Build.0 = Debug64|Win32
-		{19B72687-080B-437A-917A-12AEB0031635}.Release32|Win32.ActiveCfg = Release32|Win32
-		{19B72687-080B-437A-917A-12AEB0031635}.Release32|Win32.Build.0 = Release32|Win32
-		{19B72687-080B-437A-917A-12AEB0031635}.Release64|Win32.ActiveCfg = Release64|Win32
-		{19B72687-080B-437A-917A-12AEB0031635}.Release64|Win32.Build.0 = Release64|Win32
+		{19B72687-080B-437A-917A-12AEB0031635}.Debug|Win32.ActiveCfg = Debug|Win32
+		{19B72687-080B-437A-917A-12AEB0031635}.Debug|Win32.Build.0 = Debug|Win32
+		{19B72687-080B-437A-917A-12AEB0031635}.Release|Win32.ActiveCfg = Release|Win32
+		{19B72687-080B-437A-917A-12AEB0031635}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

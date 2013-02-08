@@ -40,9 +40,6 @@ namespace AMXXRelease
 				return true;
 			if ( (file.IndexOf("dlsym")!=-1) && Releaser.IsWindows )
 				return true;
-			if ( ((ABuilder.GetFileName(file).CompareTo("sasm")) == 0) 
-				  && Releaser.IsWindows )
-				return true;
 			if (ABuilder.GetFileName(file).CompareTo("svn_version.tpl") == 0)
 			{
 				return true;

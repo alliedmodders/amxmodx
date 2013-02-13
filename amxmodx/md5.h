@@ -59,8 +59,8 @@ public:
 
 // methods to acquire finalized result
   unsigned char    *raw_digest ();  // digest as a 16-byte binary array
-  char *            hex_digest ();  // digest as a 33-byte ascii-hex string
-  char *			hex_digest (char buffer[33]); //same as above, passing buffer
+  const char       *hex_digest ();  // digest as a 33-byte ascii-hex string
+  const char       *hex_digest (char buffer[33]); //same as above, passing buffer
 
 
 

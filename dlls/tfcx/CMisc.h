@@ -6,7 +6,7 @@
 #include "amxxmodule.h"
 #include "CRank.h"
 
-#ifndef __linux__
+#if defined(_WIN32)
 	#define LINUXOFFSET 0
 	#define CLIP_LINUXOFFSET 0
 #else
@@ -105,14 +105,14 @@ enum {
 };
 
 struct weaponsVault {
-  char* name;
-  char* logName;
+  char name[32];
+  char logName[32];
   short int ammoSlot;
   bool melee;
 };
 
 struct traceVault {
-	char * szName;
+	const char* szName;
 	char szTag[6];
 	int iId;
 	int iAction;

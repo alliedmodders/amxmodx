@@ -27,7 +27,7 @@ const char *SqliteDriver::NameString()
 
 int busy_handler(void *unused1, int unused2)
 {
-#if defined __linux__
+#if defined __linux__ || defined __APPLE__
 	usleep(100000);
 #else
 	Sleep(100);

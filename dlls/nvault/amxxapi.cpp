@@ -9,7 +9,7 @@
 #define MKDIR(p) mkdir(p, 0755)
 #endif
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>

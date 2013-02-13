@@ -17,21 +17,25 @@ namespace AMXXRelease
 
 			CoreMod core = new CoreMod();
 			ModCstrike cstrike = new ModCstrike();
+			ModDoD dod = new ModDoD();
+			ModTFC tfc = new ModTFC();
 
 			m_Mods.Add(core);
 			m_Mods.Add(cstrike);
-
-			ModDoD dod = new ModDoD();
-			ModEsf esf = new ModEsf();
-			ModNs ns = new ModNs();
-			ModTFC tfc = new ModTFC();
-			ModTs ts = new ModTs();
-
 			m_Mods.Add(dod);
-			m_Mods.Add(esf);
-			m_Mods.Add(ns);
 			m_Mods.Add(tfc);
-			m_Mods.Add(ts);
+
+			// These mods don't have OS X builds
+			if (!Releaser.IsOSX)
+			{
+				ModEsf esf = new ModEsf();
+				ModNs ns = new ModNs();
+				ModTs ts = new ModTs();
+
+				m_Mods.Add(esf);
+				m_Mods.Add(ns);
+				m_Mods.Add(ts);
+			}
 		}
 
 		public virtual int GetMods()

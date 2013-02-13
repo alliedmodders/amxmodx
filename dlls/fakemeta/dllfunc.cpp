@@ -7,9 +7,9 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 	int index;
 	int indexb;
 	unsigned char *pset;
-	char *temp = "";
-	char *temp2 = "";
-	char *temp3 = "";
+	const char *temp = "";
+	const char *temp2 = "";
+	const char *temp3 = "";
 	vec3_t Vec1;
 	vec3_t Vec2;
 	int iparam1;
@@ -105,7 +105,7 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		temp = MF_GetAmxString(amx,params[3],0,&len);
 		temp2 = MF_GetAmxString(amx,params[4],1,&len);
 		//temp3 = GET_AMXSTRING(amx,params[5],2,len);
-		iparam1 = MDLL_ClientConnect(INDEXENT2(index),STRING(ALLOC_STRING(temp)),STRING(ALLOC_STRING(temp2)),temp3);
+		iparam1 = MDLL_ClientConnect(INDEXENT2(index),STRING(ALLOC_STRING(temp)),STRING(ALLOC_STRING(temp2)),(char *)temp3);
 		cRet = MF_GetAmxAddr(amx,params[6]);
 		MF_SetAmxString(amx,params[5],temp3,cRet[0]);
 		return iparam1;

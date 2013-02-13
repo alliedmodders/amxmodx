@@ -44,7 +44,7 @@
 #define GETCLIENTKEYVALUE				(*g_engfuncs.pfnInfoKeyValue)
 #define CREATENAMEDENTITY				(*g_engfuncs.pfnCreateNamedEntity)
 
-#if defined __linux__
+#if defined(__linux__) || defined (__APPLE__)
 	#define EXTRAOFFSET					5 // offsets 5 higher in Linux builds
 	#define EXTRAOFFSET_WEAPONS			4 // weapon offsets are obviously only 4 steps higher on Linux!
 	#define ACTUAL_EXTRA_OFFSET			20 // actual, byte-addressable offset
@@ -52,7 +52,7 @@
 	#define EXTRAOFFSET					0 // no change in Windows builds
 	#define EXTRAOFFSET_WEAPONS			0
 	#define ACTUAL_EXTRA_OFFSET			0
-#endif // defined __linux__
+#endif // defined(__linux__) || defined(__APPLE__)
 /*
 	Offset history:
 	041029:
@@ -158,6 +158,8 @@
 
 #if defined __linux__
 #define CS_DETOURCOPYBYTES_CLIENTCOMMAND		6
+#elif defined __APPLE__
+#define CS_DETOURCOPYBYTES_CLIENTCOMMAND		5
 #else
 #define CS_DETOURCOPYBYTES_CLIENTCOMMAND		6
 #define CS_CLICMD_OFFS_USEBOTARGS				2

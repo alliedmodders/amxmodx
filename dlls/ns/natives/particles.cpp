@@ -58,7 +58,7 @@ typedef struct partsyskey_s
 	partsystype	 type;
 }partsyskey;
 
-cell PSKeyValueI(char *name, AMX *amx, cell *params)
+cell PSKeyValueI(const char *name, AMX *amx, cell *params)
 {
 	if (params[1]==0)
 	{
@@ -81,7 +81,7 @@ cell PSKeyValueI(char *name, AMX *amx, cell *params)
 
 	return 1;
 }
-cell PSKeyValueF(char *name, AMX *amx, cell *params)
+cell PSKeyValueF(const char *name, AMX *amx, cell *params)
 {
 	if (params[1]==0)
 	{
@@ -106,7 +106,7 @@ cell PSKeyValueF(char *name, AMX *amx, cell *params)
 	return 1;
 
 }
-cell PSKeyValueS(char *name, AMX *amx, cell *params)
+cell PSKeyValueS(const char *name, AMX *amx, cell *params)
 {
 	if (params[1]==0)
 	{

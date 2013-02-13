@@ -30,7 +30,7 @@
 
 #if defined PAWNC_DLL
 
-#ifndef __linux__
+#if !defined(__linux__) && !defined(__APPLE__)
 #include "dllmain.c"
 #endif
 
@@ -38,9 +38,6 @@
 # if !defined UNUSED_PARAM
 #   define UNUSED_PARAM(p) ((void)(p))
 # endif
-
-  static char *argv[MAX_ARGS];
-  static int  argc;
 
 #if PAWN_CELL_SIZE==32
 #define EXCOMPILER	Compile32

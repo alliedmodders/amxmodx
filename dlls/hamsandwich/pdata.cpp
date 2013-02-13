@@ -57,6 +57,12 @@ static cell AMX_NATIVE_CALL get_pdata_cbase_safe(AMX *amx, cell *params)
 	int iOffset=params[2];
 #ifdef __linux__
 	iOffset += params[3];
+#elif defined __APPLE__
+	// Use Linux offset in older plugins
+	if (params[0] / sizeof(cell) == 3)
+		iOffset += params[3];
+	else
+		iOffset += params[4];
 #endif
 	if (iOffset <0)
 	{
@@ -87,7 +93,14 @@ static cell AMX_NATIVE_CALL get_pdata_cbase(AMX *amx, cell *params)
 	int iOffset=params[2];
 #ifdef __linux__
 	iOffset += params[3];
+#elif defined __APPLE__
+	// Use Linux offset in older plugins
+	if (params[0] / sizeof(cell) == 3)
+		iOffset += params[3];
+	else
+		iOffset += params[4];
 #endif
+
 	if (iOffset <0)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid offset provided. (got: %d)", iOffset);
@@ -110,6 +123,12 @@ static cell AMX_NATIVE_CALL set_pdata_cbase(AMX *amx, cell *params)
 	int iOffset=params[2];
 #ifdef __linux__
 	iOffset += params[4];
+#elif defined __APPLE__
+	// Use Linux offset in older plugins
+	if (params[0] / sizeof(cell) == 4)
+		iOffset += params[4];
+	else
+		iOffset += params[5];
 #endif
 	if (iOffset <0)
 	{

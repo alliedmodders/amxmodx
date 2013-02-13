@@ -1470,7 +1470,7 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native
 	edict_t *entOwner = INDEXENT2(oEnt);
 
 	//optional fourth parameter is for jghg2 compatibility
-	char* sCategory = NULL; 
+	const char* sCategory = NULL; 
 	switch(params[4]){ 
 		case 1: sCategory = "target"; break; 
 		case 2: sCategory = "targetname"; break; 

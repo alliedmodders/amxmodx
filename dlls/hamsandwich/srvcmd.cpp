@@ -43,7 +43,7 @@
 extern hook_t hooklist[];
 extern CVector<Hook *> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
 
-void print_srvconsole(char *fmt, ...)
+void print_srvconsole(const char *fmt, ...)
 {
 	va_list argptr;
 	static char string[384];

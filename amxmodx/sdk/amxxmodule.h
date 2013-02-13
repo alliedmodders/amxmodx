@@ -20,11 +20,16 @@
 
 // DLL Export
 #undef DLLEXPORT
-#ifndef __linux__
+#if defined(_WIN32)
 #define DLLEXPORT __declspec(dllexport)
 #else
 #define DLLEXPORT __attribute__((visibility("default")))
+#endif
+
+#if defined(__linux__) && !defined(LINUX)
 #define LINUX
+#elif defined(__APPLE__) && !defined(OSX)
+#define OSX
 #endif
 
 #undef C_DLLEXPORT
@@ -66,7 +71,7 @@ struct amxx_module_info_s
 #if defined HAVE_STDINT_H
   #include <stdint.h>
 #else
-  #if defined __LCC__ || defined __DMC__ || defined LINUX
+  #if defined __LCC__ || defined __DMC__ || defined LINUX || defined __APPLE__
     #if defined HAVE_INTTYPES_H
       #include <inttypes.h>
     #else
@@ -308,7 +313,7 @@ typedef int (AMXAPI *AMX_DEBUG)(struct tagAMX *amx);
 #endif
 
 #if !defined AMX_NO_ALIGN
-  #if defined LINUX || defined __FreeBSD__
+  #if defined LINUX || defined __FreeBSD__ || defined __APPLE__
     #pragma pack(1)         /* structures must be packed (byte-aligned) */
   #elif defined MACOS && defined __MWERKS__
 	#pragma options align=mac68k
@@ -395,7 +400,7 @@ enum {
 };
 
 #if !defined AMX_NO_ALIGN
-  #if defined __linux__
+  #if defined(__linux__) || defined(__APPLE__)
     #pragma pack()    /* reset default packing */
   #else
     #pragma pack(pop) /* reset previous packing */
@@ -406,7 +411,7 @@ enum {
 // ***** declare functions *****
 
 #ifdef USE_METAMOD
-void UTIL_LogPrintf( char *fmt, ... );
+void UTIL_LogPrintf( const char *fmt, ... );
 void UTIL_HudMessage(CBaseEntity *pEntity, const hudtextparms_t &textparms, const char *pMessage);
 short FixedSigned16( float value, float scale );
 unsigned short FixedUnsigned16( float value, float scale );
@@ -833,11 +838,11 @@ int FN_AllowLagCompensation_Post(void);
 
 
 #ifdef FN_PrecacheModel
-int FN_PrecacheModel(char *s);
+int FN_PrecacheModel(const char *s);
 #endif // FN_PrecacheModel
 
 #ifdef FN_PrecacheSound
-int FN_PrecacheSound(char *s);
+int FN_PrecacheSound(const char *s);
 #endif // FN_PrecacheSound
 
 #ifdef FN_SetModel
@@ -857,7 +862,7 @@ void FN_SetSize(edict_t *e, const float *rgflMin, const float *rgflMax);
 #endif // FN_SetSize
 
 #ifdef FN_ChangeLevel
-void FN_ChangeLevel(char *s1, char *s2);
+void FN_ChangeLevel(const char *s1, const char *s2);
 #endif // FN_ChangeLevel
 
 #ifdef FN_GetSpawnParms
@@ -1261,19 +1266,19 @@ char *FN_GetInfoKeyBuffer(edict_t *e);
 #endif // FN_GetInfoKeyBuffer
 
 #ifdef FN_InfoKeyValue
-char *FN_InfoKeyValue(char *infobuffer, char *key);
+char *FN_InfoKeyValue(char *infobuffer, const char *key);
 #endif // FN_InfoKeyValue
 
 #ifdef FN_SetKeyValue
-void FN_SetKeyValue(char *infobuffer, char *key, char *value);
+void FN_SetKeyValue(char *infobuffer, const char *key, const char *value);
 #endif // FN_SetKeyValue
 
 #ifdef FN_SetClientKeyValue
-void FN_SetClientKeyValue(int clientIndex, char *infobuffer, char *key, char *value);
+void FN_SetClientKeyValue(int clientIndex, char *infobuffer, const char *key, const char *value);
 #endif // FN_SetClientKeyValue
 
 #ifdef FN_IsMapValid
-int FN_IsMapValid(char *filename);
+int FN_IsMapValid(const char *filename);
 #endif // FN_IsMapValid
 
 #ifdef FN_StaticDecal
@@ -1281,7 +1286,7 @@ void FN_StaticDecal(const float *origin, int decalIndex, int entityIndex, int mo
 #endif // FN_StaticDecal
 
 #ifdef FN_PrecacheGeneric
-int FN_PrecacheGeneric(char *s);
+int FN_PrecacheGeneric(const char *s);
 #endif // FN_PrecacheGeneric
 
 #ifdef FN_GetPlayerUserId
@@ -1414,11 +1419,11 @@ const char *FN_GetPlayerAuthId(edict_t *e);
 
 
 #ifdef FN_PrecacheModel_Post
-int FN_PrecacheModel_Post(char *s);
+int FN_PrecacheModel_Post(const char *s);
 #endif // FN_PrecacheModel_Post
 
 #ifdef FN_PrecacheSound_Post
-int FN_PrecacheSound_Post(char *s);
+int FN_PrecacheSound_Post(const char *s);
 #endif // FN_PrecacheSound_Post
 
 #ifdef FN_SetModel_Post
@@ -1438,7 +1443,7 @@ void FN_SetSize_Post(edict_t *e, const float *rgflMin, const float *rgflMax);
 #endif // FN_SetSize_Post
 
 #ifdef FN_ChangeLevel_Post
-void FN_ChangeLevel_Post(char *s1, char *s2);
+void FN_ChangeLevel_Post(const char *s1, const char *s2);
 #endif // FN_ChangeLevel_Post
 
 #ifdef FN_GetSpawnParms_Post
@@ -1842,19 +1847,19 @@ char *FN_GetInfoKeyBuffer_Post(edict_t *e);
 #endif // FN_GetInfoKeyBuffer_Post
 
 #ifdef FN_InfoKeyValue_Post
-char *FN_InfoKeyValue_Post(char *infobuffer, char *key);
+char *FN_InfoKeyValue_Post(char *infobuffer, const char *key);
 #endif // FN_InfoKeyValue_Post
 
 #ifdef FN_SetKeyValue_Post
-void FN_SetKeyValue_Post(char *infobuffer, char *key, char *value);
+void FN_SetKeyValue_Post(char *infobuffer, const char *key, const char *value);
 #endif // FN_SetKeyValue_Post
 
 #ifdef FN_SetClientKeyValue_Post
-void FN_SetClientKeyValue_Post(int clientIndex, char *infobuffer, char *key, char *value);
+void FN_SetClientKeyValue_Post(int clientIndex, char *infobuffer, const char *key, const char *value);
 #endif // FN_SetClientKeyValue_Post
 
 #ifdef FN_IsMapValid_Post
-int FN_IsMapValid_Post(char *filename);
+int FN_IsMapValid_Post(const char *filename);
 #endif // FN_IsMapValid_Post
 
 #ifdef FN_StaticDecal_Post
@@ -1862,7 +1867,7 @@ void FN_StaticDecal_Post(const float *origin, int decalIndex, int entityIndex, i
 #endif // FN_StaticDecal_Post
 
 #ifdef FN_PrecacheGeneric_Post
-int FN_PrecacheGeneric_Post(char *s);
+int FN_PrecacheGeneric_Post(const char *s);
 #endif // FN_PrecacheGeneric_Post
 
 #ifdef FN_GetPlayerUserId_Post
@@ -2116,7 +2121,7 @@ typedef int				(*PFN_ADD_NEW_NATIVES)			(const AMX_NATIVE_INFO * /*list*/);
 typedef char *			(*PFN_BUILD_PATHNAME)			(const char * /*format*/, ...);
 typedef char *			(*PFN_BUILD_PATHNAME_R)			(char * /*buffer*/, size_t /* maxlen */, const char * /* format */, ...);
 typedef cell *			(*PFN_GET_AMXADDR)				(AMX * /*amx*/, cell /*offset*/);
-typedef void			(*PFN_PRINT_SRVCONSOLE)			(char * /*format*/, ...);
+typedef void			(*PFN_PRINT_SRVCONSOLE)			(const char * /*format*/, ...);
 typedef const char *	(*PFN_GET_MODNAME)				(void);
 typedef const char *	(*PFN_GET_AMXSCRIPTNAME)		(int /*id*/);
 typedef AMX *			(*PFN_GET_AMXSCRIPT)			(int /*id*/);
@@ -2175,8 +2180,8 @@ typedef void			(*PFN_DEALLOCATOR)				(const char* /*filename*/, const unsigned i
 typedef int				(*PFN_AMX_EXEC)					(AMX* /*amx*/, cell* /*return val*/, int /*index*/);
 typedef int				(*PFN_AMX_EXECV)				(AMX* /*amx*/, cell* /*return val*/, int /*index*/, int /*numparams*/, cell[] /*params*/);
 typedef int				(*PFN_AMX_ALLOT)				(AMX* /*amx*/, int /*length*/, cell* /*amx_addr*/, cell** /*phys_addr*/);
-typedef int				(*PFN_AMX_FINDPUBLIC)			(AMX* /*amx*/, char* /*func name*/, int* /*index*/);
-typedef int				(*PFN_AMX_FINDNATIVE)			(AMX* /*amx*/, char* /*func name*/, int* /*index*/);
+typedef int				(*PFN_AMX_FINDPUBLIC)			(AMX* /*amx*/, const char* /*func name*/, int* /*index*/);
+typedef int				(*PFN_AMX_FINDNATIVE)			(AMX* /*amx*/, const char* /*func name*/, int* /*index*/);
 typedef int				(*PFN_LOAD_AMXSCRIPT)			(AMX* /*amx*/, void** /*code*/, const char* /*path*/, char[64] /*error info*/, int /* debug */);
 typedef int				(*PFN_UNLOAD_AMXSCRIPT)			(AMX* /*amx*/,void** /*code*/);
 typedef cell			(*PFN_REAL_TO_CELL)				(REAL /*x*/);

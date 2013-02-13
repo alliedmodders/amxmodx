@@ -141,8 +141,8 @@ public:
 	CLogEvent* registerLogEvent(CPluginMngr::CPlugin* plugin, int func, int pos);
 	inline bool logEventsExist() { return arelogevents; } 
 	
-	void setLogString(char* frmt, va_list& vaptr);
-	void setLogString(char* frmt, ...);
+	void setLogString(const char* frmt, va_list& vaptr);
+	void setLogString(const char* frmt, ...);
 	void parseLogString();
 	void executeLogEvents();
 	

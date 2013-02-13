@@ -134,7 +134,7 @@ void MysqlThread::SetInfo(const char *host, const char *user, const char *pass, 
 	m_user.assign(user);
 	m_pass.assign(pass);
 	m_db.assign(db);
-	m_max_timeout = m_max_timeout;
+	m_max_timeout = max_timeout;
 	m_port = port;
 	m_qrInfo.queue_time = gpGlobals->time;
 }

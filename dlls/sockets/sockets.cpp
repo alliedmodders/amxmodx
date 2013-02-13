@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <errno.h>
-#include <string>
+#include <string.h>
 
 #ifdef _WIN32
 /* Windows */

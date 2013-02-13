@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdarg.h>
-#if defined __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include <unistd.h>
 #endif
 #include "Journal.h"

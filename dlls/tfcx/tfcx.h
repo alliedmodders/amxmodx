@@ -49,7 +49,7 @@
 extern AMX_NATIVE_INFO stats_Natives[];
 extern AMX_NATIVE_INFO base_Natives[];
 
-extern weaponsVault weaponData[MAX_WEAPONS];
+extern weaponsVault weaponData[TFCMAX_WEAPONS];
 extern traceVault traceData[MAX_TRACE];
 
 typedef void (*funEventCall)(void*);

@@ -215,8 +215,7 @@ public:
 	int ShiftUpFrom(size_t which)
 	{
 		// No point shifting this.
-		if (this->count < 0 ||
-			which > this->count)
+		if (which > this->count)
 		{
 
 			return 0;
@@ -254,8 +253,7 @@ public:
 	int Delete(size_t which)
 	{
 		// No point shifting this.
-		if (this->count < 0 ||
-			which >= this->count)
+		if (which >= this->count)
 		{
 			return 0;
 		}

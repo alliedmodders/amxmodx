@@ -99,16 +99,16 @@ native pev_serial(entindex);
 native global_get(_value, any:...);
 
 /* Returns an integer from private data.  _linuxdiff is added into the _Offset if it's used on a linux server. */
-native get_pdata_int(_index,_Offset,_linuxdiff=5);
+native get_pdata_int(_index,_Offset,_linuxdiff=5,_macdiff=5);
 
 /* Sets an integer from private data.  _linuxdiff is added into the _Offset if it's used on a linux server. */
-native set_pdata_int(_index,_Offset,_Value,_linuxdiff=5);
+native set_pdata_int(_index,_Offset,_Value,_linuxdiff=5,_macdiff=5);
 
 /* Returns a float from private data.  _linuxdiff is added into the _Offset if it's used on a linux server. */
-native Float:get_pdata_float(_index,_Offset,_linuxdiff=5);
+native Float:get_pdata_float(_index,_Offset,_linuxdiff=5,_macdiff=5);
 
 /* Sets a float from private data.  _linuxdiff is added into the _Offset if it's used on a linux server. */
-native set_pdata_float(_index,_Offset,Float:_Value,_linuxdiff=5);
+native set_pdata_float(_index,_Offset,Float:_Value,_linuxdiff=5,_macdiff=5);
 
 /**
  * Tries to retrieve an edict (entity encapsulation) pointer from an entity's private data.
@@ -118,12 +118,13 @@ native set_pdata_float(_index,_Offset,Float:_Value,_linuxdiff=5);
  *
  * @param _index		Entity index.
  * @param _offset		Offset to search.
- * @param _linuxdiff	Linux difference.
+ * @param _linuxdiff		Linux difference.
+ * @param _macdiff		Mac OS X difference.
  * @return				-2 if an invalid entity was found.
  *						-1 if an empty entity was found.
  * 						Otherwise, an entity index is returned.
  */
-native get_pdata_ent(_index, _offset, _linuxdiff=20);
+native get_pdata_ent(_index, _offset, _linuxdiff=20, _macdiff=20);
 
 /* Registers a forward.
  * Returns an id you can pass to unregister_forward
@@ -217,8 +218,9 @@ native set_uc(uc_handle, UserCmd:member, {Float,_}:...);
 //In fact it's QWORD aligned rather than DWORD aligned, so the offset will be exactly half.
 //Gets a string from a private offset.  If byref is false, the string is treated as static rather than dynamic.
 //linux value is what to add to the offset for linux servers.
+//mac value is what to add to the offset for os x servers. Default (cellmin) means that linux value will be used.
 //this cannot use a default value due to older version using an awkward default value.
-native get_pdata_string(entity, offset, dest[], maxlength, byref=1, linux);
+native get_pdata_string(entity, offset, dest[], maxlength, byref=1, linux, mac=cellmin);
 
 //Sets a string in a private offset.
 //realloc = -1 - nonbyref copy (static
@@ -226,8 +228,9 @@ native get_pdata_string(entity, offset, dest[], maxlength, byref=1, linux);
 //realloc = 1 - reallocate new string with free+malloc
 //realloc = 2 - reallocate new string with delete[]+new[]
 //linux value is what to add to the offset for linux servers.
+//mac value iswhat to add to the offset for os x servers.
 //this cannot use a default value due to older version using an awkward default value.
-native set_pdata_string(entity, offset, const source[], realloc=2, linux);
+native set_pdata_string(entity, offset, const source[], realloc=2, linux, mac=cellmin);
 
 // Copies the given infoBuffer pointer into out[]
 // An infoBuffer pointer is returned by EngFunc_GetInfoKeyBuffer

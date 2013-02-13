@@ -34,15 +34,15 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	switch (type)
 	{
 		// pfnPrecacheModel
-	case 	EngFunc_PrecacheModel:	// int  )			(char* s);
+	case 	EngFunc_PrecacheModel:	// int  )			(const char* s);
 		temp = MF_GetAmxString(amx,params[2],0,&len);
 		if (temp[0]==0)
 			return 0;
-		return (*g_engfuncs.pfnPrecacheModel)((char*)STRING(ALLOC_STRING(temp)));
+		return (*g_engfuncs.pfnPrecacheModel)((char *)STRING(ALLOC_STRING(temp)));
 
 
 		// pfnPrecacheSound
-	case	EngFunc_PrecacheSound:	// int  )			(char* s);
+	case	EngFunc_PrecacheSound:	// int  )			(const char* s);
 		temp = MF_GetAmxString(amx,params[2],0,&len);
 		if (temp[0]==0)
 			return 0;

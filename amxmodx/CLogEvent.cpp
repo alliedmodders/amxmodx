@@ -111,7 +111,7 @@ void LogEventsMngr::CLogEvent::registerFilter(char* filter)
 	filters = new LogCond(cmp->pos, aa, filters);
 }
 
-void LogEventsMngr::setLogString(char* frmt, va_list& vaptr)
+void LogEventsMngr::setLogString(const char* frmt, va_list& vaptr)
 {
 	++logCounter;
 	int len = vsnprintf(logString, 255, frmt, vaptr);
@@ -128,7 +128,7 @@ void LogEventsMngr::setLogString(char* frmt, va_list& vaptr)
 	logArgc = 0;
 }
 
-void LogEventsMngr::setLogString(char* frmt, ...)
+void LogEventsMngr::setLogString(const char* frmt, ...)
 {
 	++logCounter;
 	va_list logArgPtr;

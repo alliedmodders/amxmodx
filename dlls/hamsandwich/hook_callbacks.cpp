@@ -166,9 +166,9 @@ void Hook_Void_Void(Hook *hook, void *pthis)
 	PRE_START()
 	PRE_END()
 
-#if defined _WIN32
+#if defined(_WIN32)
 	reinterpret_cast<void (__fastcall*)(void*,int)>(hook->func)(pthis,0);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	reinterpret_cast<void (*)(void*)>(hook->func)(pthis);
 #endif
 
@@ -192,9 +192,9 @@ int Hook_Int_Void(Hook *hook, void *pthis)
 	PRE_END()
 	
 	
-#if defined _WIN32
+#if defined(_WIN32)
 	origret=reinterpret_cast<int (__fastcall*)(void*,int)>(hook->func)(pthis,0);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	origret=reinterpret_cast<int (*)(void*)>(hook->func)(pthis);
 #endif
 
@@ -222,9 +222,9 @@ void Hook_Void_Entvar(Hook *hook, void *pthis, entvars_t *entvar)
 		, iOther
 	PRE_END()
 
-#if defined _WIN32
+#if defined(_WIN32)
 	reinterpret_cast<void (__fastcall*)(void*, int, entvars_t *)>(hook->func)(pthis, 0, entvar);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	reinterpret_cast<void (*)(void*, entvars_t *)>(hook->func)(pthis, entvar);
 #endif
 
@@ -250,9 +250,9 @@ void Hook_Void_Cbase(Hook *hook, void *pthis, void *other)
 		, iOther
 	PRE_END()
 
-#if defined _WIN32
+#if defined(_WIN32)
 	reinterpret_cast<void (__fastcall*)(void*, int, void *)>(hook->func)(pthis, 0, other);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	reinterpret_cast<void (*)(void*, void *)>(hook->func)(pthis, other);
 #endif
 
@@ -279,9 +279,9 @@ int Hook_Int_Float_Int(Hook *hook, void *pthis, float f1, int i1)
 		, f1, i1
 	PRE_END()
 
-#if defined _WIN32
+#if defined(_WIN32)
 	origret=reinterpret_cast<int (__fastcall*)(void*, int, float, int)>(hook->func)(pthis, 0, f1, i1);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	origret=reinterpret_cast<int (*)(void*, float, int)>(hook->func)(pthis, f1, i1);
 #endif
 
@@ -309,9 +309,9 @@ void Hook_Void_Entvar_Int(Hook *hook, void *pthis, entvars_t *ev1, int i1)
 		, iOther, i1
 	PRE_END()
 
-#if defined _WIN32
+#if defined(_WIN32)
 	reinterpret_cast<void (__fastcall*)(void*, int, entvars_t *, int)>(hook->func)(pthis, 0, ev1, i1);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	reinterpret_cast<void (*)(void*, entvars_t *, int)>(hook->func)(pthis, ev1, i1);
 #endif
 
@@ -339,9 +339,9 @@ int Hook_Int_Cbase(Hook *hook, void *pthis, void *cb1)
 	PRE_START()
 		, iOther
 	PRE_END()
-#if defined _WIN32
+#if defined(_WIN32)
 	origret=reinterpret_cast<int (__fastcall*)(void*, int, void *)>(hook->func)(pthis, 0, cb1);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	origret=reinterpret_cast<int (*)(void*, void *)>(hook->func)(pthis, cb1);
 #endif
 
@@ -367,9 +367,9 @@ void Hook_Void_Int_Int(Hook *hook, void *pthis, int i1, int i2)
 	PRE_START()
 		,i1, i2
 	PRE_END()
-#if defined _WIN32
+#if defined(_WIN32)
 	reinterpret_cast<void (__fastcall*)(void*, int, int, int)>(hook->func)(pthis, 0, i1, i2);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	reinterpret_cast<void (*)(void*, int, int)>(hook->func)(pthis, i1, i2);
 #endif
 
@@ -398,9 +398,9 @@ int Hook_Int_Int_Str_Int(Hook *hook, void *pthis, int i1, const char *sz1, int i
 	PRE_START()
 		,i1, a.c_str(), i2
 	PRE_END()
-#if defined _WIN32
+#if defined(_WIN32)
 	origret=reinterpret_cast<int (__fastcall*)(void*, int, int, const char *, int)>(hook->func)(pthis, 0, i1, a.c_str(), i2);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	origret=reinterpret_cast<int (*)(void*, int, const char *, int)>(hook->func)(pthis, i1, a.c_str(), i2);
 #endif
 
@@ -429,9 +429,9 @@ int Hook_Int_Int(Hook *hook, void *pthis, int i1)
 		,i1
 	PRE_END()
 
-#if defined _WIN32
+#if defined(_WIN32)
 	origret=reinterpret_cast<int (__fastcall*)(void*, int, int)>(hook->func)(pthis, 0, i1);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	origret=reinterpret_cast<int (*)(void*, int)>(hook->func)(pthis, i1);
 #endif
 
@@ -460,9 +460,9 @@ int Hook_Int_Entvar(Hook *hook, void *pthis, entvars_t *ev1)
 		,iOther
 	PRE_END()
 
-#if defined _WIN32
+#if defined(_WIN32)
 	origret=reinterpret_cast<int (__fastcall*)(void*, int, entvars_t *)>(hook->func)(pthis, 0, ev1);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	origret=reinterpret_cast<int (*)(void*, entvars_t *)>(hook->func)(pthis, ev1);
 #endif
 
@@ -497,9 +497,9 @@ int Hook_Int_Entvar_Entvar_Float_Int(Hook *hook, void *pthis, entvars_t *inflict
 	PRE_END()
 	
 	
-#if defined _WIN32
+#if defined(_WIN32)
 	origret=reinterpret_cast<int (__fastcall*)(void*, int, entvars_t *, entvars_t *, float, int)>(hook->func)(pthis, 0, inflictor, attacker, damage, damagebits);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	origret=reinterpret_cast<int (*)(void*, entvars_t *, entvars_t *, float, int)>(hook->func)(pthis, inflictor, attacker, damage, damagebits);
 #endif
 
@@ -532,9 +532,9 @@ int Hook_Int_Entvar_Entvar_Float_Float_Int(Hook *hook, void *pthis, entvars_t *i
 	PRE_END()
 	
 	
-#if defined _WIN32
+#if defined(_WIN32)
 	origret=reinterpret_cast<int (__fastcall*)(void*, int, entvars_t *, entvars_t *, float, float, int)>(hook->func)(pthis, 0, inflictor, attacker, damage, unknown, damagebits);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	origret=reinterpret_cast<int (*)(void*, entvars_t *, entvars_t *, float, float, int)>(hook->func)(pthis, inflictor, attacker, damage, unknown, damagebits);
 #endif
 
@@ -559,9 +559,9 @@ void Hook_Void_Int(Hook *hook, void *pthis, int i1)
 		, i1
 	PRE_END()
 
-#if defined _WIN32
+#if defined(_WIN32)
 	reinterpret_cast<void (__fastcall*)(void*, int, int)>(hook->func)(pthis, 0, i1);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	reinterpret_cast<void (*)(void*, int)>(hook->func)(pthis, i1);
 #endif
 
@@ -590,9 +590,9 @@ void Hook_Void_Cbase_Cbase_Int_Float(Hook *hook, void *pthis, void *cb1, void *c
 	PRE_END()
 	
 	
-#if defined _WIN32
+#if defined(_WIN32)
 	reinterpret_cast<void (__fastcall*)(void*, int, void *, void *, int, float)>(hook->func)(pthis, 0, cb1, cb2, i1, f1);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	reinterpret_cast<void (*)(void*, void *, void *, int, float)>(hook->func)(pthis, cb1, cb2, i1, f1);
 #endif
 
@@ -620,9 +620,9 @@ void Hook_Void_Entvar_Float_Vector_Trace_Int(Hook *hook, void *pthis, entvars_t 
 		,iev1, f1, MF_PrepareCellArrayA(reinterpret_cast<cell *>(&v1), 3, false), tr1, i1
 	PRE_END()
 
-#if defined _WIN32
+#if defined(_WIN32)
 	reinterpret_cast<void (__fastcall*)(void*, int, entvars_t *, float, Vector, TraceResult *, int)>(hook->func)(pthis, 0, ev1, f1, v1, tr1, i1);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	reinterpret_cast<void (*)(void*, entvars_t *, float, Vector, TraceResult *, int)>(hook->func)(pthis, ev1, f1, v1, tr1, i1);
 #endif
 
@@ -648,9 +648,9 @@ void Hook_Void_Float_Vector_Trace_Int(Hook *hook, void *pthis, float f1, Vector 
 		, f1, MF_PrepareCellArrayA(reinterpret_cast<cell *>(&v1), 3, false), tr1, i1
 	PRE_END()
 
-#if defined _WIN32
+#if defined(_WIN32)
 	reinterpret_cast<void (__fastcall*)(void*, int, float, Vector, TraceResult *, int)>(hook->func)(pthis, 0, f1, v1, tr1, i1);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	reinterpret_cast<void (*)(void*, float, Vector, TraceResult *, int)>(hook->func)(pthis, f1, v1, tr1, i1);
 #endif
 
@@ -672,9 +672,9 @@ const char *Hook_Str_Void(Hook *hook, void *pthis)
 	PRE_START()
 	PRE_END()
 
-#if defined _WIN32
+#if defined(_WIN32)
 	origret.assign(reinterpret_cast<const char *(__fastcall*)(void*, int)>(hook->func)(pthis, 0));
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	origret.assign(reinterpret_cast<const char *(*)(void*)>(hook->func)(pthis));
 #endif
 
@@ -699,9 +699,9 @@ void *Hook_Cbase_Void(Hook *hook, void *pthis)
 	PRE_START()
 	PRE_END()
 
-#if defined _WIN32
+#if defined(_WIN32)
 	origret=reinterpret_cast<void *(__fastcall*)(void*, int)>(hook->func)(pthis, 0);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	origret=reinterpret_cast<void *(*)(void*)>(hook->func)(pthis);
 #endif
 
@@ -717,7 +717,7 @@ void *Hook_Cbase_Void(Hook *hook, void *pthis)
 
 #ifdef _WIN32
 void Hook_Vector_Void(Hook *hook, void *pthis, Vector *out)
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 void Hook_Vector_Void(Hook *hook, Vector *out, void *pthis)
 #endif
 {
@@ -734,9 +734,9 @@ void Hook_Vector_Void(Hook *hook, Vector *out, void *pthis)
 	PRE_START()
 	PRE_END()
 
-#if defined _WIN32
+#if defined(_WIN32)
 	reinterpret_cast<void (__fastcall*)(void*, int, Vector *)>(hook->func)(pthis, 0, &origret);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	origret=reinterpret_cast<Vector (*)(void *)>(hook->func)(pthis);
 #endif
 
@@ -751,7 +751,7 @@ void Hook_Vector_Void(Hook *hook, Vector *out, void *pthis)
 }
 #ifdef _WIN32
 void Hook_Vector_pVector(Hook *hook, void *pthis, Vector *out, Vector *v1)
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 void Hook_Vector_pVector(Hook *hook, Vector *out, void *pthis, Vector *v1)
 #endif
 {
@@ -770,9 +770,9 @@ void Hook_Vector_pVector(Hook *hook, Vector *out, void *pthis, Vector *v1)
 		, MF_PrepareCellArrayA(reinterpret_cast<cell *>(v1), 3, false)
 	PRE_END()
 
-#if defined _WIN32
+#if defined(_WIN32)
 	reinterpret_cast<void (__fastcall*)(void*, int, Vector *, Vector *)>(hook->func)(pthis, 0, &origret, v1);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	origret=reinterpret_cast<Vector (*)(void*, Vector *)>(hook->func)(pthis, v1);
 #endif
 
@@ -800,9 +800,9 @@ int Hook_Int_pVector(Hook *hook, void *pthis, Vector *v1)
 		, MF_PrepareCellArrayA(reinterpret_cast<cell *>(v1), 3, false)
 	PRE_END()
 
-#if defined _WIN32
+#if defined(_WIN32)
 	origret=reinterpret_cast<int (__fastcall*)(void*, int, Vector *)>(hook->func)(pthis, 0, v1);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	origret=reinterpret_cast<int (*)(void*, Vector *)>(hook->func)(pthis, v1);
 #endif
 
@@ -831,9 +831,9 @@ void Hook_Void_Entvar_Float_Float(Hook *hook, void *pthis, entvars_t *ev1, float
 		, cev1, f1, f2
 	PRE_END()
 
-#if defined _WIN32
+#if defined(_WIN32)
 	reinterpret_cast<void (__fastcall*)(void *, int, entvars_t *, float, float)>(hook->func)(pthis, 0, ev1, f1, f2);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	reinterpret_cast<void (*)(void *, entvars_t *, float, float)>(hook->func)(pthis, ev1, f1, f2);
 #endif
 
@@ -860,9 +860,9 @@ int Hook_Int_pFloat_pFloat(Hook *hook, void *pthis, float *f1, float *f2)
 		, f1 != NULL ? *f1 : 0, f2 != NULL ? *f2 : 0
 	PRE_END()
 
-#if defined _WIN32
+#if defined(_WIN32)
 	origret=reinterpret_cast<int (__fastcall*)(void *, int, float *, float *)>(hook->func)(pthis, 0, f1, f2);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	origret=reinterpret_cast<int (*)(void *, float *, float *)>(hook->func)(pthis, f1, f2);
 #endif
 
@@ -889,9 +889,9 @@ void Hook_Void_Entvar_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1)
 		, cev1, f1
 	PRE_END()
 
-#if defined _WIN32
+#if defined(_WIN32)
 	reinterpret_cast<void (__fastcall*)(void *, int, entvars_t *, float)>(hook->func)(pthis, 0, ev1, f1);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	reinterpret_cast<void (*)(void *, entvars_t *, float)>(hook->func)(pthis, ev1, f1);
 #endif
 
@@ -916,9 +916,9 @@ void Hook_Void_Int_Int_Int(Hook *hook, void *pthis, int i1, int i2, int i3)
 	PRE_START()
 		,i1, i2, i3
 	PRE_END()
-#if defined _WIN32
+#if defined(_WIN32)
 	reinterpret_cast<void (__fastcall*)(void*, int, int, int, int)>(hook->func)(pthis, 0, i1, i2, i3);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	reinterpret_cast<void (*)(void*, int, int, int)>(hook->func)(pthis, i1, i2, i3);
 #endif
 
@@ -940,9 +940,9 @@ void Hook_Void_ItemInfo(Hook *hook, void *pthis, void *iteminfo)
 	PRE_START()
 		,iteminfo
 	PRE_END()
-#if defined _WIN32
+#if defined(_WIN32)
 	reinterpret_cast<void (__fastcall*)(void*, int, void *)>(hook->func)(pthis, 0, iteminfo);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	reinterpret_cast<void (*)(void*, void *)>(hook->func)(pthis, iteminfo);
 #endif
 
@@ -964,9 +964,9 @@ float Hook_Float_Void(Hook *hook, void *pthis)
 	
 	PRE_START()
 	PRE_END()
-#if defined _WIN32
+#if defined(_WIN32)
 	origret=reinterpret_cast<float (__fastcall*)(void*, int)>(hook->func)(pthis, 0);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	origret=reinterpret_cast<float (*)(void*)>(hook->func)(pthis);
 #endif
 
@@ -990,9 +990,9 @@ void Hook_Void_Float_Int(Hook* hook, void* pthis, float f1, int i1)
 	PRE_START()
 		, f1, i1
 	PRE_END()
-#if defined _WIN32
+#if defined(_WIN32)
 	reinterpret_cast<void (__fastcall*)(void*, int, float, int)>(hook->func)(pthis, 0, f1, i1);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	reinterpret_cast<void (*)(void*, float, int)>(hook->func)(pthis, f1, i1);
 #endif
 

@@ -46,9 +46,11 @@
 #endif // offsetof
 #endif // _MSC_VER >= 1400
 #include <windows.h>
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 #include <sys/mman.h>
+#if defined (__linux__)
 #include <malloc.h>
+#endif
 #endif
 #include <stddef.h> // size_t
 #include <string.h> // memcpy
@@ -113,14 +115,14 @@ namespace Trampolines
 		 * pushes it onto the target's stack.
 		 */
 		const unsigned char codePushThis[] = {
-		#if defined _WIN32
+		#if defined(_WIN32)
 			0x51						// push ecx
-		#elif defined __linux__
+		#elif defined(__linux__) || defined(__APPLE__)
 			0xFF, 0x75, 0x04			// pushl [ebp+0x08h]
 		#endif
 		};
 
-#if defined __linux__
+#if defined(__linux__) || defined(__APPLE__)
 		const int codePushThisReplace = 2;
 #endif
 
@@ -410,7 +412,7 @@ namespace Trampolines
 			memcpy(&code[0],&::Trampolines::Bytecode::codePushThis[0],sizeof(::Trampolines::Bytecode::codePushThis));
 
 
-#if defined __linux__
+#if defined(__linux__) || defined(__APPLE__)
 			unsigned char *c=&code[0];
 
 			union 
@@ -427,7 +429,7 @@ namespace Trampolines
 
 			Append(&code[0],sizeof(::Trampolines::Bytecode::codePushThis));
 
-#if defined __linux__
+#if defined(__linux__) || defined(__APPLE__)
 			m_mystack+=4;
 #endif
 			m_calledstack+=4;
@@ -531,7 +533,7 @@ namespace Trampolines
 		 */
 		void PushParam(int which)
 		{
-#if defined __linux__
+#if defined(__linux__) || defined(__APPLE__)
 			if (m_thiscall)
 			{
 				which++;
@@ -608,10 +610,14 @@ namespace Trampolines
 			}
 
 			// Reallocate with proper flags
-#if defined _WIN32
+#if defined(_WIN32)
 			void *ret=VirtualAlloc(NULL, m_size, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-#elif defined __linux__
+#elif defined(__GNUC__)
+# if defined(__APPLE__)
+			void *ret = valloc(m_size);
+# else
 			void *ret=memalign(sysconf(_SC_PAGESIZE), m_size);
+# endif
 			mprotect(ret,m_size,PROT_READ|PROT_WRITE|PROT_EXEC);
 #endif
 			memcpy(ret, m_buffer, m_size);
@@ -675,17 +681,17 @@ inline void *CreateGenericTrampoline(bool thiscall, bool voidcall, int paramcoun
 	tramp.FreeTargetStack();
 	if (voidcall)
 	{
-#if defined _WIN32
+#if defined(_WIN32)
 		tramp.VoidEpilogueAndFree();
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 		tramp.VoidEpilogue();
 #endif
 	}
 	else
 	{
-#if defined _WIN32
+#if defined(_WIN32)
 		tramp.ReturnEpilogueAndFree();
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 		tramp.ReturnEpilogue();
 #endif
 	}

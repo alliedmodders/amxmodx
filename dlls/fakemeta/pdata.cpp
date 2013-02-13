@@ -1,5 +1,17 @@
 #include "fakemeta_amxx.h"
 
+#if defined PAWN_CELL_SIZE
+# if PAWN_CELL_SIZE == 16
+#  define CELL_MIN SHRT_MIN
+# elif PAWN_CELL_SIZE == 32
+#  define CELL_MIN INT_MIN
+# elif PAWN_CELL_SIZE == 64
+#  define CELL_MIN _I64_MIN
+# endif
+#else
+#  define CELL_MIN _I32_MIN
+#endif
+
 #if defined WIN32
 #define WINDOWS_LEAN_AND_MEAN
 #include <windows.h>
@@ -24,6 +36,12 @@ static cell AMX_NATIVE_CALL set_pdata_int(AMX *amx, cell *params)
 		return 1;
 #ifdef __linux__
 	iOffset += params[4];
+#elif defined __APPLE__
+	// Use Linux offset in older plugins
+	if (params[0] / sizeof(cell) == 4)
+		iOffset += params[4];
+	else
+		iOffset += params[5];
 #endif
 	int iValue=params[3];
 	*((int *)INDEXENT2(index)->pvPrivateData + iOffset) = iValue;
@@ -38,7 +56,14 @@ static cell AMX_NATIVE_CALL get_pdata_int(AMX *amx, cell *params)
 		return 0;
 #ifdef __linux__
 	iOffset += params[3];
+#elif defined __APPLE__
+	// Use Linux offset in older plugins
+	if (params[0] / sizeof(cell) == 3)
+		iOffset += params[3];
+	else
+		iOffset += params[4];
 #endif
+
 	return *((int *)INDEXENT2(index)->pvPrivateData + iOffset);
 }
 // Float
@@ -51,7 +76,14 @@ static cell AMX_NATIVE_CALL set_pdata_float(AMX *amx, cell *params)
 		return 1;
 #ifdef __linux__
 	iOffset += params[4];
+#elif defined __APPLE__
+	// Use Linux offset in older plugins
+	if (params[0] / sizeof(cell) == 4)
+		iOffset += params[4];
+	else
+		iOffset += params[5];
 #endif
+
 	float fValue=amx_ctof(params[3]);
 	*((float *)INDEXENT2(index)->pvPrivateData + iOffset) = fValue;
 	return 1;
@@ -65,7 +97,14 @@ static cell AMX_NATIVE_CALL get_pdata_float(AMX *amx, cell *params)
 		return 1;
 #ifdef __linux__
 	iOffset += params[3];
+#elif defined __APPLE__
+	// Use Linux offset in older plugins
+	if (params[0] / sizeof(cell) == 3)
+		iOffset += params[3];
+	else
+		iOffset += params[4];
 #endif
+
 	return amx_ftoc(*((float *)INDEXENT2(index)->pvPrivateData + iOffset));
 }
 
@@ -79,6 +118,12 @@ static cell AMX_NATIVE_CALL get_pdata_string(AMX *amx, cell *params)
 		return 1;
 #ifdef __linux__
 	iOffset += params[6];
+#elif defined __APPLE__
+	// Use Linux offset in older plugins
+	if (params[0] / sizeof(cell) == 6 || params[7] == CELL_MIN)
+		iOffset += params[6];
+	else
+		iOffset += params[7];
 #endif
 
 	edict_t *pEdict = INDEXENT2(index);
@@ -111,6 +156,12 @@ static cell AMX_NATIVE_CALL set_pdata_string(AMX *amx, cell *params)
 		return 1;
 #ifdef __linux__
 	iOffset += params[5];
+#elif defined __APPLE__
+	// Use Linux offset in older plugins
+	if (params[0] / sizeof(cell) == 5 || params[6] == CELL_MIN)
+		iOffset += params[5];
+	else
+		iOffset += params[6];
 #endif
 
 	edict_t *pEdict = INDEXENT2(index);
@@ -152,6 +203,12 @@ static cell AMX_NATIVE_CALL get_pdata_ent(AMX *amx, cell *params)
 
 #ifdef __linux__
 	iOffset += params[3];
+#elif defined __APPLE__
+	// Use Linux offset in older plugins
+	if (params[0] / sizeof(cell) == 3)
+		iOffset += params[3];
+	else
+		iOffset += params[4];
 #endif
 
 	edict_t *pEdict = *(edict_t **)((char *)(INDEXENT2(index)->pvPrivateData) + iOffset);

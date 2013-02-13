@@ -144,7 +144,6 @@ public:
 class CSPForward
 {
 	friend class CForwardMngr;
-	const char *m_FuncName;
 	int m_NumParams;
 	
 	ForwardParam m_ParamTypes[FORWARD_MAX_PARAMS];

@@ -43,7 +43,7 @@ _amxx_CpuSupport:
 .fail:
 	xor		eax, eax
 	
-.end
+.end:
 	
 	pop		ebx
 

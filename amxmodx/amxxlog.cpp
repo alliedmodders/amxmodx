@@ -35,12 +35,12 @@
 //  3 = HL Logs
 
 #include <time.h>
-#ifndef __linux__
+#if defined(_WIN32)
 	#include <io.h>
 #endif
 #include "amxmodx.h"
 
-#ifndef __linux__
+#if defined(_WIN32WIN32)
 	#define	vsnprintf	_vsnprintf
 #endif
 
@@ -137,7 +137,7 @@ void CLog::MapChange()
 {
 	// create dir if not existing
 	char file[256];
-#ifdef __linux
+#if defined(__linux__) || defined(__APPLE__)
 	mkdir(build_pathname_r(file, sizeof(file)-1, "%s", g_log_dir.c_str()), 0700);
 #else
 	mkdir(build_pathname_r(file, sizeof(file)-1, "%s", g_log_dir.c_str()));

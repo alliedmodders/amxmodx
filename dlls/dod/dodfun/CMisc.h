@@ -32,7 +32,7 @@
 #ifndef CMISC_H
 #define CMISC_H
 
-#ifndef __linux__
+#if defined(_WIN32)
 #define LINUXOFFSET		0
 #else
 #define LINUXOFFSET		5
@@ -53,7 +53,7 @@
 // DoD Control Point
 struct pd_dcp {
 	int iunk_0;
-#ifndef __linux__
+#if defined(_WIN32)
 	int iunk_1; // windows only
 #endif
 	int iunk_2;	// pointer edict_t*
@@ -82,7 +82,7 @@ struct pd_dcp {
 	int iunk_36; // pointer entvars_t*
 	int unknown_block2[52];
 	int iunk_89; // pointer entvars_t*
-#ifdef __linux__
+#if defined (__linux__) || defined (__APPLE__)
 	int iunk_extra1;
 	int iunk_extra2;
 	int iunk_extra3;
@@ -129,7 +129,7 @@ struct pd_dca {
 	int iunk_0;
 	int iunk_1;
 	int iunk_2;
-#ifndef __linux__
+#if defined(_WIN32)
 	int iunk_3; // if def windows
 #endif
 
@@ -150,7 +150,7 @@ struct pd_dca {
 	float angles_z; // 15
 	
 	// 16-135
-#ifndef __linux__
+#if defined(_WIN32)
 	int unknown_block_16[111];
 #else
 	int unknown_block_16[116]; // linux +5 more
@@ -263,7 +263,7 @@ public:
 	void PutInServer();
 	void Disconnect();
 	void killPlayer();
-	void setTeamName( char *szName );
+	void setTeamName( const char *szName );
 	void getTeamName( char *szName );
 
 	inline bool IsBot(){

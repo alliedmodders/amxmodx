@@ -29,6 +29,11 @@
 		return 0; \
 	}
 
+template size_t atcprintf<cell, cell>(cell *, size_t, const cell *, AMX *, cell *, int *);
+template size_t atcprintf<char, cell>(char *, size_t, const cell *, AMX *, cell *, int *);
+template size_t atcprintf<cell, char>(cell *, size_t, const char *, AMX *, cell *, int *);
+template size_t atcprintf<char, char>(char *, size_t, const char *, AMX *, cell *, int *);
+
 THash<String, lang_err> BadLang_Table;
 
 static cvar_t *amx_mldebug = NULL;

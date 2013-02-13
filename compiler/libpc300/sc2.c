@@ -27,7 +27,7 @@
 #include <ctype.h>
 #include <math.h>
 #include "sc.h"
-#if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+#if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
   #include <sclinux.h>
 #endif
 
@@ -198,7 +198,7 @@ SC_FUNC int plungefile(char *name,int try_currentpath,int try_includepaths)
       char path[_MAX_PATH];
       strncpy(path,ptr,sizeof path);
       path[sizeof path - 1]='\0';       /* force '\0' termination */
-      strncat(path,name,sizeof(path)-strlen(path));
+      strncat(path,name,sizeof(path) - strlen(path) - 1);
       path[sizeof path - 1]='\0';
       result=plungequalifiedfile(path);
     } /* while */
@@ -408,7 +408,7 @@ static void stripcom(unsigned char *line)
         #if !defined SC_LIGHT
           /* collect the comment characters in a string */
           if (icomment==2) {
-            if (skipstar && (*line!='\0' && *line<=' ' || *line=='*')) {
+            if (skipstar && ((*line!='\0' && *line<=' ') || *line=='*')) {
               /* ignore leading whitespace and '*' characters */
             } else if (commentidx<COMMENT_LIMIT+COMMENT_MARGIN-1) {
               comment[commentidx++]=(char)((*line!='\n') ? *line : ' ');
@@ -585,22 +585,9 @@ static int htoi(cell *val,const unsigned char *curptr)
 }
 
 #if defined __GNUC__
-static double pow10(int value)
+static double pow10(double d)
 {
-  double res=1.0;
-  while (value>=4) {
-    res*=10000.0;
-    value-=5;
-  } /* while */
-  while (value>=2) {
-    res*=100.0;
-    value-=2;
-  } /* while */
-  while (value>=1) {
-    res*=10.0;
-    value-=1;
-  } /* while */
-  return res;
+	return pow(10, d);
 }
 #endif
 
@@ -1210,7 +1197,7 @@ static int command(void)
         sym=findloc(str);
         if (sym==NULL)
           sym=findglb(str);
-        if (sym==NULL || sym->ident!=iFUNCTN && sym->ident!=iREFFUNC && (sym->usage & uDEFINE)==0) {
+        if (sym==NULL || (sym->ident!=iFUNCTN && sym->ident!=iREFFUNC && (sym->usage & uDEFINE)==0)) {
           error(17,str);        /* undefined symbol */
         } else {
           outval(sym->addr,FALSE);
@@ -1644,7 +1631,7 @@ static void substallpatterns(unsigned char *line,int buffersize)
     if (strncmp((char*)start,"defined",7)==0 && !isalpha((char)*(start+7))) {
       start+=7;         /* skip "defined" */
       /* skip white space & parantheses */
-      while (*start<=' ' && *start!='\0' || *start=='(')
+      while ((*start<=' ' && *start!='\0') || *start=='(')
         start++;
       /* skip the symbol behind it */
       while (isalpha(*start) || isdigit(*start) || *start=='_')
@@ -1946,7 +1933,7 @@ SC_FUNC int lex(cell *lexvalue,char **lexsym)
         error(220);
       } /* if */
     } /* if */
-  } else if (*lptr=='\"' || *lptr==sc_ctrlchar && *(lptr+1)=='\"')
+  } else if (*lptr=='\"' || (*lptr==sc_ctrlchar && *(lptr+1)=='\"'))
   {                                     /* unpacked string literal */
     _lextok=tSTRING;
     stringflags= (*lptr==sc_ctrlchar) ? RAWMODE : 0;
@@ -1959,9 +1946,9 @@ SC_FUNC int lex(cell *lexvalue,char **lexsym)
       lptr+=1;          /* skip final quote */
     else
       error(37);        /* invalid (non-terminated) string */
-  } else if (*lptr=='!' && *(lptr+1)=='\"'
-             || *lptr=='!' && *(lptr+1)==sc_ctrlchar && *(lptr+2)=='\"'
-             || *lptr==sc_ctrlchar && *(lptr+1)=='!' && *(lptr+2)=='\"')
+  } else if ((*lptr=='!' && *(lptr+1)=='\"')
+             || (*lptr=='!' && *(lptr+1)==sc_ctrlchar && *(lptr+2)=='\"')
+             || (*lptr==sc_ctrlchar && *(lptr+1)=='!' && *(lptr+2)=='\"'))
   {                                     /* packed string literal */
     _lextok=tSTRING;
     stringflags= (*lptr==sc_ctrlchar || *(lptr+1)==sc_ctrlchar) ? RAWMODE : 0;
@@ -2053,7 +2040,7 @@ SC_FUNC int matchtoken(int token)
   int tok;
 
   tok=lex(&val,&str);
-  if (tok==token || token==tTERM && (tok==';' || tok==tENDEXPR)) {
+  if (tok==token || (token==tTERM && (tok==';' || tok==tENDEXPR))) {
     return 1;
   } else if (!sc_needsemicolon && token==tTERM && (_lexnewline || !freading)) {
     /* Push "tok" back, because it is the token following the implicit statement
@@ -2418,7 +2405,7 @@ SC_FUNC void delete_symbols(symbol *root,int level,int delete_labels,int delete_
 {
   symbol *sym,*parent_sym;
   constvalue *stateptr;
-  int mustdelete;
+  int mustdelete=0;
 
   /* erase only the symbols with a deeper nesting level than the
    * specified nesting level */

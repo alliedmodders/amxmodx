@@ -48,6 +48,7 @@
     <Compile Include="CoreMod.cs" />
     <Compile Include="LinuxBuilder.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="MacBuilder.cs" />
     <Compile Include="ModCstrike.cs" />
     <Compile Include="ModDoD.cs" />
     <Compile Include="ModEsf.cs" />

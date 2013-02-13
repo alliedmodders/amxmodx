@@ -43,7 +43,7 @@
 #endif
 
 // header file for unlink()
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include <unistd.h>
 #else
 #define WINDOWS_LEAN_AND_MEAN
@@ -784,7 +784,7 @@ static cell AMX_NATIVE_CALL amx_ungetc(AMX *amx, cell *params)
 	return ungetc(static_cast<int>(params[2]), fp);
 }
 
-#if defined __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #define _rmdir rmdir
 #endif
 
@@ -817,7 +817,7 @@ static cell AMX_NATIVE_CALL amx_rename(AMX *amx, cell *params)
 		snprintf(f_new_r, sizeof(f_new_r)-1, "%s", fnew);
 	}
 
-#if defined __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	return (rename(f_old_r, f_new_r) == 0);
 #elif defined WIN32
 	return MoveFileA(f_old_r, f_new_r);

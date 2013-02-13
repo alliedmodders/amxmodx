@@ -35,7 +35,7 @@
 #include "amx.h"
 
 #undef DLLEXPORT
-#ifndef __linux__
+#if defined(_WIN32)
 	#define DLLEXPORT __declspec(dllexport)
 #else
 	#define DLLEXPORT __attribute__((visibility("default")))

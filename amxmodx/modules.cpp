@@ -29,8 +29,11 @@
 *  version.
 */
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
+#if defined(__linux__)
 #include <malloc.h>
+#endif
+
 #include <stdlib.h>
 #include <sys/mman.h>
 #include "sclinux.h"
@@ -86,7 +89,7 @@ bool DirExists(const char *dir)
 	return false;
 }
 
-void report_error(int code, char* fmt, ...)
+void report_error(int code, const char* fmt, ...)
 {
 	va_list argptr;
 	char string[256];
@@ -106,7 +109,7 @@ void report_error(int code, char* fmt, ...)
 	}
 }
 
-void print_srvconsole(char *fmt, ...)
+void print_srvconsole(const char *fmt, ...)
 {
 	va_list argptr;
 	static char string[384];
@@ -340,11 +343,14 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 		if ((err = amx_InitJIT(amx, (void *)rt, (void *)np)) == AMX_ERR_NONE) 
 		{
 			//amx->base = (unsigned char FAR *)realloc(np, amx->code_size);
-#ifndef __linux__
+#if defined(_WIN32)
 			amx->base = (unsigned char *)VirtualAlloc(NULL, amx->code_size, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-#else
-			//posix_memalign((void **)&(amx->base), sysconf(_SC_PAGESIZE), amx->code_size);
+#elif defined(__GNUC__)
+# if defined(__APPLE__)
+			amx->base = (unsigned char *)valloc(amx->code_size);
+# else
 			amx->base = (unsigned char *)memalign(sysconf(_SC_PAGESIZE), amx->code_size);
+# endif
 			mprotect((void *)amx->base, amx->code_size, PROT_READ|PROT_WRITE|PROT_EXEC);
 #endif
 			if (amx->base)
@@ -641,7 +647,7 @@ int unload_amxscript(AMX* amx, void** program)
 		return AMX_ERR_NONE;
 
 #if defined JIT
-#if defined __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	if ((flags & AMX_FLAG_JITC) != AMX_FLAG_JITC)
 	{
 		delete [] prg;
@@ -720,7 +726,7 @@ void get_modname(char* buffer)
 	strcpy(buffer, g_mod_name.c_str());
 }
 
-char* build_pathname(char *fmt, ...)
+char* build_pathname(const char *fmt, ...)
 {
 	static char string[256];
 	int b;
@@ -746,7 +752,7 @@ char* build_pathname(char *fmt, ...)
 	return string;
 }
 
-char *build_pathname_r(char *buffer, size_t maxlen, char *fmt, ...)
+char *build_pathname_r(char *buffer, size_t maxlen, const char *fmt, ...)
 {
 	snprintf(buffer, maxlen, "%s%c", g_mod_name.c_str(), PATH_SEP_CHAR);
 
@@ -771,7 +777,7 @@ char *build_pathname_r(char *buffer, size_t maxlen, char *fmt, ...)
 }
 
 // build pathname based on addons dir
-char* build_pathname_addons(char *fmt, ...)
+char* build_pathname_addons(const char *fmt, ...)
 {
 	static char string[256];
 
@@ -875,7 +881,7 @@ bool ConvertModuleName(const char *pathString, String &path)
 	path.append(PATH_SEP_CHAR);
 	path.append(tmpname);
 	path.append("_amxx");
-#if defined __linux__
+#if defined(__linux__) || defined(__APPLE__)
  #if defined AMD64 || PAWN_CELL_SIZE==64
 	path.append("_amd64");
  #else
@@ -888,6 +894,8 @@ bool ConvertModuleName(const char *pathString, String &path)
 	path.append(".dll");
 #elif defined __linux__
 	path.append(".so");
+#elif defined __APPLE__
+	path.append(".dylib");
 #endif
 
 	return true;
@@ -1179,8 +1187,6 @@ void modules_callPluginsUnloading()
 // new functions
 int MNF_AddNatives(AMX_NATIVE_INFO* natives)
 {
-	CList<CModule, const char *>::iterator a = g_modules.begin();
-
 	if (!g_CurrentlyCalledModule || g_ModuleCallReason != ModuleCall_Attach)
 		return FALSE;				// may only be called from attach
 
@@ -1191,8 +1197,6 @@ int MNF_AddNatives(AMX_NATIVE_INFO* natives)
 
 int MNF_AddNewNatives(AMX_NATIVE_INFO *natives)
 {
-	CList<CModule, const char *>::iterator a = g_modules.begin();
-
 	if (!g_CurrentlyCalledModule || g_ModuleCallReason != ModuleCall_Attach)
 		return FALSE;				// may only be called from attach
 

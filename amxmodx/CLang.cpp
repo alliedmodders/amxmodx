@@ -35,7 +35,7 @@
 #include "format.h"
 #include "amxmod_compat.h"
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #define _snprintf snprintf
 #endif
 
@@ -108,7 +108,7 @@ size_t CLangMngr::strip(char *str, char *newstr, bool makelower)
 	int flag = 0;
 	size_t strln = strlen(str);
 
-	for (i = strln - 1; i >= 0; i--)
+	for (i = strln - 1; i < strln; i--)
 	{
 		if (str[i] == '\n' || str[i] == ' ' || str[i] == '\t')
 		{

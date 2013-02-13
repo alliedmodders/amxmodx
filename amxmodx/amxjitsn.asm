@@ -303,14 +303,6 @@
     %endif
 %endmacro
 
-
-%ifdef WIN32
-section .data exec
-%else
-section .text
-%endif
-
-
 global  asm_runJIT, _asm_runJIT
 global  amx_exec_jit, _amx_exec_jit
 global  getMaxCodeSize, _getMaxCodeSize
@@ -435,15 +427,6 @@ reloc_done:
         pop     ebx
         pop     ebp
         ret
-
-; GWMV:
-; The code below modifies itself to store the arguments to the Pawn opcodes
-; in the compiled code. This is fine, but the .text section in an ELF executable
-; is usually marked read-only, that's why this code is in the .data section.
-
-%ifndef WIN32
-section .data exec
-%endif
 
 OP_LOAD_PRI:
 ;nop;
@@ -1052,7 +1035,7 @@ OP_CALL:
         j_call:
         ;call   12345678h ; tasm chokes on this out of a sudden
         _PUSH	0
-        j_call_e8
+        j_call_e8:
         db      0e8h, 0, 0, 0, 0
 	CHECKCODESIZE j_call
 
@@ -2591,4 +2574,4 @@ _amx_opcodelist_jit:
         DD      OP_FLOAT_ROUND	; DA
         DD      OP_FLOAT_CMP	; DA
 
-END
+END:

@@ -79,8 +79,10 @@ void OnAmxxAttach(void)
 		{
 #ifdef _WIN32
 			MF_Log("Error: pev and base not set for section \"%s windows\", cannot register natives.", MF_GetModname());
-#elif defined __linux__
+#elif defined(__linux__)
 			MF_Log("Error: pev and base not set for section \"%s linux\", cannot register natives.", MF_GetModname());
+#elif defined(__APPLE__)
+			MF_Log("Error: pev and base not set for section \"%s mac\", cannot register natives.", MF_GetModname());
 #endif
 		}
 	}

@@ -39,7 +39,7 @@
 #define TSMAX_WEAPONS			39 + TSMAX_CUSTOMWPNS
 
 
-#ifndef __linux__
+#if defined(_WIN32)
 #define TSKNIFE_OFFSET			31 // owner offset in knife entity
 #else
 #define TSKNIFE_OFFSET			35
@@ -52,7 +52,7 @@
 #define TSPWUP_DFIRERATE		16
 #define TSPWUP_SJUMP			256
 
-#if defined __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #define EXTRAOFFSET	5
 #else
 #define EXTRAOFFSET 0

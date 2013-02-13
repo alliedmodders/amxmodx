@@ -9,7 +9,7 @@
 	#endif
 #endif
 
-#include <malloc.h>
+#include <stdlib.h>
 
 typedef struct memfile_s
 {

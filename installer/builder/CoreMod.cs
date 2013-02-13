@@ -31,14 +31,17 @@ namespace AMXXRelease
 		public override sealed bool ExcludeCopy(string file)
 		{
 			if ( ((file.IndexOf(".so")!=-1) || (ABuilder.GetFileName(file).CompareTo("amxxpc")==0))
-				&& (Releaser.IsWindows) )
+				&& (Releaser.IsWindows || Releaser.IsOSX) )
+				return true;
+			if ( ((file.IndexOf(".dylib")!=-1) || (ABuilder.GetFileName(file).CompareTo("amxxpc_osx")==0))
+				&& (!Releaser.IsOSX) )
 				return true;
 			if ( (file.IndexOf(".sh")!=-1) && Releaser.IsWindows )
 				return true;
 			if ( ((file.IndexOf(".exe")!=-1) || (file.IndexOf(".dll")!=-1))
 				&& (!Releaser.IsWindows) )
 				return true;
-			if ( (file.IndexOf("dlsym")!=-1) && Releaser.IsWindows )
+			if ( (file.IndexOf("dlsym")!=-1) && (Releaser.IsWindows || Releaser.IsOSX) )
 				return true;
 			if (ABuilder.GetFileName(file).CompareTo("svn_version.tpl") == 0)
 			{

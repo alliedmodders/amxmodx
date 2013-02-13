@@ -1,10 +1,14 @@
 #include <assert.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include "cstrike.h"
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include <sys/mman.h>
 #define	PAGE_EXECUTE_READWRITE	PROT_READ|PROT_WRITE|PROT_EXEC
+
+#if defined(__linux)
+#include <malloc.h>
+#endif
 #endif
 
 /* Utils */
@@ -65,7 +69,7 @@ void CtrlDetour_ClientCommand(bool set)
 
 	if (!g_UseBotArgs)
 	{
-#if defined __linux__
+#if defined(__linux__) || defined(__APPLE__)
 		/* Find the DLL */
 		char dll[256];
 		if (!UTIL_GetLibraryOfAddress(target, dll, sizeof(dll)))
@@ -102,7 +106,7 @@ void CtrlDetour_ClientCommand(bool set)
 		*(unsigned long *)paddr = (unsigned long)Detour_ClientCommand - (unsigned long)(paddr + 4);
 	
 		/* Copy original bytes onto the end of the function */
-	    memcpy(&FullDetour[DetourBytes], target, CS_DETOURCOPYBYTES_CLIENTCOMMAND);
+	    	memcpy(&FullDetour[DetourBytes], target, CS_DETOURCOPYBYTES_CLIENTCOMMAND);
 		
 		/* Patch and copy the final jmp */
 		paddr = &FullDetour[DetourJmpPos];
@@ -142,8 +146,12 @@ unsigned char *UTIL_CodeAlloc(size_t size)
 {
 #if defined WIN32
 	return (unsigned char *)VirtualAlloc(NULL, size, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+#elif defined __GNUC__
+#if defined __APPLE__
+	unsigned char *addr = (unsigned char *)valloc(size);
 #else
 	unsigned char *addr = (unsigned char *)memalign(sysconf(_SC_PAGESIZE), size);
+#endif
 	mprotect(addr, size, PROT_READ|PROT_WRITE|PROT_EXEC);
 	return addr;
 #endif
@@ -160,7 +168,7 @@ void UTIL_CodeFree(unsigned char *addr)
 
 void UTIL_MemProtect(void *addr, int length, int prot)
 {
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #define ALIGN(ar) ((long)ar & ~(sysconf(_SC_PAGESIZE)-1))
 	void *addr2 = (void *)ALIGN(addr);
 	mprotect(addr2, sysconf(_SC_PAGESIZE), prot);
@@ -172,7 +180,7 @@ void UTIL_MemProtect(void *addr, int length, int prot)
 
 bool UTIL_GetLibraryOfAddress(void *memInBase, char *buffer, size_t maxlength)
 {
-#if defined __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	Dl_info info;
 	if (!dladdr(memInBase, &info))
 	{

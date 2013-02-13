@@ -1,86 +1,127 @@
-#(C)2004-2005 AMX Mod X Development Team
+# (C)2004-2013 AMX Mod X Development Team
 # Makefile written by David "BAILOPAN" Anderson
 
-HLSDK = ../../../hlsdk
+###########################################
+### EDIT THESE PATHS FOR YOUR OWN SETUP ###
+###########################################
+
+HLSDK = ../../../hlsdk/multiplayer
 MM_ROOT = ../../../metamod/metamod
 
+#####################################
 ### EDIT BELOW FOR OTHER PROJECTS ###
+#####################################
 
-OPT_FLAGS = -O3 -funroll-loops -s -pipe -fno-strict-aliasing -fomit-frame-pointer
-DEBUG_FLAGS = -g -ggdb3
-CPP = gcc-4.1
-NAME = geoip
-
-BIN_SUFFIX_32 = amxx_i386.so
-BIN_SUFFIX_64 = amxx_amd64.so
+PROJECT = geoip
 
 OBJECTS = sdk/amxxmodule.cpp GeoIP.c geoip_amxx.cpp
 
-LINK = 
+##############################################
+### CONFIGURE ANY OTHER FLAGS/OPTIONS HERE ###
+##############################################
 
-INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
-	-I$(MM_ROOT) -I$(HLSDK)/common -Isdk
+C_OPT_FLAGS = -DNDEBUG -O3 -funroll-loops -fomit-frame-pointer -pipe
+C_DEBUG_FLAGS = -D_DEBUG -DDEBUG -g -ggdb3
+C_GCC4_FLAGS = -fvisibility=hidden
+CPP_GCC4_FLAGS = -fvisibility-inlines-hidden
+CPP = gcc
+CPP_OSX = clang
 
-GCC_VERSION := $(shell $(CPP) -dumpversion >&1 | cut -b1)
+LINK =
 
-ifeq "$(GCC_VERSION)" "4"
-        OPT_FLAGS += -fvisibility=hidden -fvisibility-inlines-hidden
+INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/common -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared \
+          -I$(MM_ROOT) -Isdk
+
+################################################
+### DO NOT EDIT BELOW HERE FOR MOST PROJECTS ###
+################################################
+
+OS := $(shell uname -s)
+
+ifeq "$(OS)" "Darwin"
+	CPP = $(CPP_OSX)
+	LIB_EXT = dylib
+	LIB_SUFFIX = _amxx
+	CFLAGS += -DOSX
+	LINK += -dynamiclib -lstdc++ -mmacosx-version-min=10.5
+else
+	LIB_EXT = so
+	LIB_SUFFIX = _amxx_i386
+	CFLAGS += -DLINUX
+	LINK += -shared
 endif
+
+LINK += -m32 -lm -ldl
+
+CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32 -DHAVE_STDINT_H -fno-strict-aliasing -m32 -Wall -Werror
+CPPFLAGS += -fno-exceptions -fno-rtti
+
+BINARY = $(PROJECT)$(LIB_SUFFIX).$(LIB_EXT)
 
 ifeq "$(DEBUG)" "true"
 	BIN_DIR = Debug
-	CFLAGS = $(DEBUG_FLAGS)
+	CFLAGS += $(C_DEBUG_FLAGS)
 else
 	BIN_DIR = Release
-	CFLAGS = $(OPT_FLAGS)
+	CFLAGS += $(C_OPT_FLAGS)
+	LINK += -s
 endif
 
-CFLAGS += -DNDEBUG -Wall -Werror -fno-exceptions -DHAVE_STDINT_H -static-libgcc -fno-rtti -m32
+IS_CLANG := $(shell $(CPP) --version | head -1 | grep clang > /dev/null && echo "1" || echo "0")
 
-# Strip C++ options for compiling *.c files
-C_CFLAGS := $(shell echo $(CFLAGS) | sed -e 's/-fvisibility-inlines-hidden//' | sed -e 's/-fno-rtti//')
-
-ifeq "$(AMD64)" "true"
-	BINARY = $(NAME)_$(BIN_SUFFIX_64)
-	CFLAGS += -DPAWN_CELL_SIZE=64 -DHAVE_I64 -m64 
+ifeq "$(IS_CLANG)" "1"
+	CPP_MAJOR := $(shell $(CPP) --version | grep clang | sed "s/.*version \([0-9]\)*\.[0-9]*.*/\1/")
+	CPP_MINOR := $(shell $(CPP) --version | grep clang | sed "s/.*version [0-9]*\.\([0-9]\)*.*/\1/")
 else
-	BINARY = $(NAME)_$(BIN_SUFFIX_32)
-	CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32
-	OPT_FLAGS += -march=i586
+	CPP_MAJOR := $(shell $(CPP) -dumpversion >&1 | cut -b1)
+	CPP_MINOR := $(shell $(CPP) -dumpversion >&1 | cut -b3)
 endif
 
-OBJ_LINUX := $(OBJECTS:%.cpp=$(BIN_DIR)/%.o)
-OBJ_LINUX := $(OBJ_LINUX:%.c=$(BIN_DIR)/%.o)
+# Clang || GCC >= 4
+ifeq "$(shell expr $(IS_CLANG) \| $(CPP_MAJOR) \>= 4)" "1"
+	CFLAGS += $(C_GCC4_FLAGS)
+	CPPFLAGS += $(CPP_GCC4_FLAGS)
+endif
+
+# Clang >= 3 || GCC >= 4.7
+ifeq "$(shell expr $(IS_CLANG) \& $(CPP_MAJOR) \>= 3 \| $(CPP_MAJOR) \>= 4 \& $(CPP_MINOR) \>= 7)" "1"
+	CFLAGS += -Wno-delete-non-virtual-dtor
+endif
+
+# OS is Linux and not using clang
+ifeq "$(shell expr $(OS) \= Linux \& $(IS_CLANG) \= 0)" "1"
+	LINK += -static-libgcc
+endif
+
+OBJ_BIN := $(OBJECTS:%.cpp=$(BIN_DIR)/%.o)
+OBJ_BIN := $(OBJ_BIN:%.c=$(BIN_DIR)/%.o)
+
+# This will break if we include other Makefiles, but is fine for now. It allows
+#  us to make a copy of this file that uses altered paths (ie. Makefile.mine)
+#  or other changes without mucking up the original.
+MAKEFILE_NAME := $(CURDIR)/$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
 
 $(BIN_DIR)/%.o: %.cpp
-	$(CPP) $(INCLUDE) $(CFLAGS) -o $@ -c $<
+	$(CPP) $(INCLUDE) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
 
 $(BIN_DIR)/%.o: %.c
-	$(CPP) $(INCLUDE) $(C_CFLAGS) -o $@ -c $<
+	$(CPP) $(INCLUDE) $(CFLAGS) -o $@ -c $<
 
 all:
 	mkdir -p $(BIN_DIR)
 	mkdir -p $(BIN_DIR)/sdk
-	$(MAKE) geoip
+	$(MAKE) -f $(MAKEFILE_NAME) $(PROJECT)
 
-amd64:
-	$(MAKE) all AMD64=true
+$(PROJECT): $(OBJ_BIN)
+	$(CPP) $(INCLUDE) $(OBJ_BIN) $(LINK) -o $(BIN_DIR)/$(BINARY)
 
-geoip: $(OBJ_LINUX)
-	$(CPP) $(INCLUDE) $(CFLAGS) $(OBJ_LINUX) $(LINK) -shared -ldl -lm -o$(BIN_DIR)/$(BINARY)
-
-debug:	
-	$(MAKE) all DEBUG=true
+debug:
+	$(MAKE) -f $(MAKEFILE_NAME) all DEBUG=true
 
 default: all
 
 clean:
-	rm -rf Release/sdk/*.o
-	rm -rf Release/*.o
-	rm -rf Release/$(NAME)_$(BIN_SUFFIX_32)
-	rm -rf Release/$(NAME)_$(BIN_SUFFIX_64)
-	rm -rf Debug/sdk/*.o
-	rm -rf Debug/*.o
-	rm -rf Debug/$(NAME)_$(BIN_SUFFIX_32)
-	rm -rf Debug/$(NAME)_$(BIN_SUFFIX_64)
+	rm -rf $(BIN_DIR)/*.o
+	rm -rf $(BIN_DIR)/sdk/*.o
+	rm -f $(BIN_DIR)/$(BINARY)
 

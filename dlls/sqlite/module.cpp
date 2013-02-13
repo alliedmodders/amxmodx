@@ -60,7 +60,7 @@ void OnAmxxAttach()
 	if (!DirExists(path))
 	{
 		mkdir(path
-#if defined __linux__
+#if defined(__linux__) || defined(__APPLE__)
 			, 0775
 #endif
 			);

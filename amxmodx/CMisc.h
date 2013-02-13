@@ -342,7 +342,7 @@ public:
 			}
 		}
 
-		m_AuthData[sizeof(m_AuthData)-1]=0;
+		m_AuthData[arraysize(m_AuthData)-1]=0;
 
 	};
 	const cell *GetAuthID(void) const
@@ -361,7 +361,7 @@ public:
 			}
 		}
 
-		m_Password[sizeof(m_Password)-1]=0;
+		m_Password[arraysize(m_Password)-1]=0;
 
 	};
 	const cell *GetPass(void) const

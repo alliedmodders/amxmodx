@@ -64,10 +64,10 @@ public:
 			tramp=CreateGenericTrampoline(true, voidcall, paramcount, (void*)this, target);
 
 			// Insert into vtable
-#if defined _WIN32
+#if defined(_WIN32)
 			DWORD OldFlags;
 			VirtualProtect(&ivtable[entry],sizeof(int*),PAGE_READWRITE,&OldFlags);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 			void *addr = (void *)ALIGN(&ivtable[entry]);
 			mprotect(addr,sysconf(_SC_PAGESIZE),PROT_READ|PROT_WRITE);
 #endif
@@ -84,18 +84,18 @@ public:
 		// Insert the original function back into the vtable
 		int **ivtable=(int **)vtable;
 
-#if defined _WIN32
+#if defined(_WIN32)
 		DWORD OldFlags;
 		VirtualProtect(&ivtable[entry],sizeof(int*),PAGE_READWRITE,&OldFlags);
-#elif defined __linux_
+#elif defined(__linux_) || defined(__APPLE__)
 		void *addr = (void *)ALIGN(&ivtable[entry]);
 		mprotect(addr,sysconf(_SC_PAGESIZE),PROT_READ|PROT_WRITE);
 #endif
 
 		ivtable[entry]=(int *)func;
-#if defined _WIN32
+#if defined(_WIN32)
 		VirtualFree(tramp, 0, MEM_RELEASE);
-#elif __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 		free(tramp);
 #endif
 

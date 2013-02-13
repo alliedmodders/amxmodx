@@ -63,7 +63,7 @@
 #define PREPROC_TERM  '\x7f'/* termination character for preprocessor expressions (the "DEL" code) */
 #define sDEF_PREFIX   "default.inc" /* default prefix filename */
 
-#if defined WIN32
+#if defined WIN32 || defined __clang__
 #define INVISIBLE
 #else
 #define INVISIBLE __attribute__((visibility("protected")))

@@ -49,7 +49,7 @@
 // Parse log messages here for any desired information (structure_built, etc.)
 // The following logs are needed:
 // "sawce<1><STEAM_0:1:4560311><alien1team>" triggered "structure_built" (type "defensechamber")`
-void AlertMessage_Post(ALERT_TYPE atype, char *szFmt, ...)
+void AlertMessage_Post(ALERT_TYPE atype, const char *szFmt, ...)
 {
 	if (atype != at_logged)
 	{

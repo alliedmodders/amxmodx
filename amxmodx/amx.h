@@ -24,7 +24,7 @@
 #if defined FREEBSD && !defined __FreeBSD__
   #define __FreeBSD__
 #endif
-#if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+#if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
   #include <sclinux.h>
 #endif
 
@@ -34,7 +34,7 @@
 #if defined HAVE_STDINT_H
   #include <stdint.h>
 #else
-  #if defined __LCC__ || defined __DMC__ || defined LINUX
+  #if defined __LCC__ || defined __DMC__ || defined LINUX || defined __APPLE__
     #if defined HAVE_INTTYPES_H
       #include <inttypes.h>
     #else
@@ -190,7 +190,7 @@ typedef int (AMXAPI *AMX_NATIVE_FILTER)(struct tagAMX *amx, int index);
 #endif
 
 #if !defined AMX_NO_ALIGN
-  #if defined LINUX || defined __FreeBSD__
+  #if defined LINUX || defined __FreeBSD__ || defined __APPLE__
     #pragma pack(1)         /* structures must be packed (byte-aligned) */
   #elif defined MACOS && defined __MWERKS__
 	#pragma options align=mac68k
@@ -442,7 +442,7 @@ int AMXAPI amx_GetStringOld(char *dest,const cell *source,int use_wchar);
   amx_Register((amx), amx_NativeInfo((name),(func)), 1);
 
 #if !defined AMX_NO_ALIGN
-  #if defined LINUX || defined __FreeBSD__
+  #if defined LINUX || defined __FreeBSD__ || defined __APPLE__
     #pragma pack()    /* reset default packing */
   #elif defined MACOS && defined __MWERKS__
     #pragma options align=reset

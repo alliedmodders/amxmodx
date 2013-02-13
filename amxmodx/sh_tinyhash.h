@@ -54,12 +54,12 @@
 		typedef List<THashNode *> *	NodePtr;
 	public:
 		class const_iterator;
-		THash() : m_Buckets(NULL), m_numBuckets(0), m_percentUsed(0.0f), m_items(0)
+		THash() : m_Buckets(NULL), m_numBuckets(0), m_percentUsed(0.0f)
 		{
 			_Refactor();
 		}
 		THash(const THash &other) : m_Buckets(new NodePtr[other.m_numBuckets]),
-			m_numBuckets(other.m_numBuckets), m_percentUsed(other.m_percentUsed), m_items(0)
+			m_numBuckets(other.m_numBuckets), m_percentUsed(other.m_percentUsed)
 		{
 			for (size_t i=0; i<m_numBuckets; i++)
 					m_Buckets[i] = NULL;
@@ -81,10 +81,6 @@
 		{
 			_Clear();
 			_Refactor();
-		}
-		size_t size()
-		{
-			return m_items;
 		}
 		size_t GetBuckets()
 		{
@@ -122,7 +118,6 @@
 				delete [] m_Buckets;
 			m_Buckets = NULL;
 			m_numBuckets = 0;
-			m_items = 0;
 		}
 	public:
 		template <typename U>
@@ -229,8 +224,6 @@
 			}
 		}
 	public:
-		friend class iterator;
-		friend class const_iterator;
 		class iterator
 		{
 			friend class THash;
@@ -304,8 +297,6 @@
 				*this = tmp;
 
 				// :TODO: Maybe refactor to a lower size if required
-
-				m_items--;
 			}
 		private:
 			void _Inc()
@@ -454,6 +445,8 @@
 			const THash *hash;
 			bool end;
 		};
+		friend class iterator;
+		friend class const_iterator;
 	public:
 		iterator begin()
 		{

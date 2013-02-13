@@ -146,7 +146,7 @@ static cell AMX_NATIVE_CALL server_print(AMX *amx, cell *params) /* 1 param */
 
 static cell AMX_NATIVE_CALL engclient_print(AMX *amx, cell *params) /* 3 param */
 {
-	int len;
+	int len = 0;
 	char *msg;
 	
 	if (params[1] == 0)
@@ -481,7 +481,7 @@ static cell AMX_NATIVE_CALL is_dedicated_server(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL is_linux_server(AMX *amx, cell *params)
 {
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	return 1;
 #else
 	return 0;
@@ -1005,7 +1005,7 @@ static cell AMX_NATIVE_CALL get_user_team(AMX *amx, cell *params) /* 3 param */
 			
 			if (params[3])
 			{
-				char *szTeam = "";
+				const char *szTeam = "";
 				
 				switch (iTeam)
 				{
@@ -3843,7 +3843,7 @@ static cell AMX_NATIVE_CALL amx_mkdir(AMX *amx, cell *params)
 	char *path = get_amxstring(amx, params[1], 0, len);
 	char *realpath = build_pathname("%s", path);
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	return mkdir(realpath, 0700);
 #else
 	return mkdir(realpath);

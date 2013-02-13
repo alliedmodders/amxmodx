@@ -67,7 +67,7 @@ void CPlayer::killPlayer(){
 	pEdict->v.weapons = 0;
 }
 
-void CPlayer::setTeamName( char *szName ){
+void CPlayer::setTeamName( const char *szName ){
 	
 	for (int i=0;i<16;i++){
 		*( (char*)pEdict->pvPrivateData + STEAM_PDOFFSET_TEAMNAME + i ) = szName[i];

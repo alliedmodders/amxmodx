@@ -32,7 +32,7 @@
 #include <time.h>
 #include "amxmodx.h"
 
-#if defined __linux__ && !defined _vsnprintf
+#if ( defined(__linux__) || defined(__APPLE__) ) && !defined _vsnprintf
 	#define _vsnprintf vsnprintf
 #endif
 
@@ -157,8 +157,8 @@ void UTIL_IntToString(int value, char *output)
 	
 	if (tho)
 	{
-		aaa += sprintf(&output[aaa], words[tho]);
-		aaa += sprintf(&output[aaa], words[29]);
+		aaa += sprintf(&output[aaa], "%s", words[tho]);
+		aaa += sprintf(&output[aaa], "%s", words[29]);
 		value = value % 1000;
 	}
 
@@ -166,8 +166,8 @@ void UTIL_IntToString(int value, char *output)
 	
 	if (hun)
 	{
-		aaa += sprintf(&output[aaa], words[hun]);
-		aaa += sprintf(&output[aaa], words[28]);
+		aaa += sprintf(&output[aaa], "%s", words[hun]);
+		aaa += sprintf(&output[aaa], "%s", words[28]);
 		value = value % 100;
 	}
 
@@ -175,10 +175,10 @@ void UTIL_IntToString(int value, char *output)
 	int unit = value % 10;
 	
 	if (ten)
-		aaa += sprintf(&output[aaa], words[(ten > 1) ? (ten + 18) : (unit + 10)]);
+		aaa += sprintf(&output[aaa], "%s", words[(ten > 1) ? (ten + 18) : (unit + 10)]);
 	
 	if (ten != 1 && (unit || (!value && !hun && !tho))) 
-		sprintf(&output[aaa], words[unit]);
+		sprintf(&output[aaa], "%s", words[unit]);
 }
 
 char* UTIL_SplitHudMessage(const char *src)
@@ -242,7 +242,7 @@ short FixedSigned16(float value, float scale)
 	return (short)output;
 }
 
-void UTIL_HudMessage(edict_t *pEntity, const hudtextparms_t &textparms, char *pMessage)
+void UTIL_HudMessage(edict_t *pEntity, const hudtextparms_t &textparms, const char *pMessage)
 {
 	if (pEntity)
 		MESSAGE_BEGIN(MSG_ONE_UNRELIABLE, SVC_TEMPENTITY, NULL, pEntity);

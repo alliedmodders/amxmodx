@@ -47,7 +47,7 @@
   #define _MAX_PATH     250
 #endif
 #if !defined DIRSEP_CHAR
-  #if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+  #if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE___
     #define DIRSEP_CHAR '/'
   #elif defined macintosh
     #define DIRSEP_CHAR ':'
@@ -339,7 +339,7 @@ SC_FUNC cell get_utf8_char(const unsigned char *string,const unsigned char **end
         /* the code positions 0xd800--0xdfff and 0xfffe & 0xffff do not
          * exist in UCS-4 (and hence, they do not exist in Unicode)
          */
-        if (result>=0xd800 && result<=0xdfff || result==0xfffe || result==0xffff)
+        if ((result>=0xd800 && result<=0xdfff) || result==0xfffe || result==0xffff)
           return -1;
       } /* if */
       break;

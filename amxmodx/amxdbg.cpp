@@ -462,8 +462,8 @@ int AMXAPI dbg_GetVariable(AMX_DBG *amxdbg, const char *symname, ucell scopeaddr
       break;
     /* check the range, keep a pointer to the symbol with the smallest range */
     if (strcmp(amxdbg->symboltbl[index]->name, symname) == 0
-        && (codestart == 0 && codeend == 0
-            || amxdbg->symboltbl[index]->codestart >= codestart && amxdbg->symboltbl[index]->codeend <= codeend))
+        && ((codestart == 0 && codeend == 0)
+            || (amxdbg->symboltbl[index]->codestart >= codestart && amxdbg->symboltbl[index]->codeend <= codeend)))
     {
       *sym = amxdbg->symboltbl[index];
       codestart = amxdbg->symboltbl[index]->codestart;

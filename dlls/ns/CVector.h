@@ -353,9 +353,8 @@ public:
 
 	void pop_back()
 	{
-		--m_CurrentUsedSize;
-		if (m_CurrentUsedSize < 0)
-			m_CurrentUsedSize = 0;
+		if (m_CurrentUsedSize > 0)
+			--m_CurrentUsedSize;
 
 		FreeMemIfPossible();
 	}

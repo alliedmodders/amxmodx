@@ -4,14 +4,14 @@ using System.IO;
 
 namespace AMXXRelease
 {
-	//Build process for Windows (32bit)
-	public class Win32Builder : ABuilder
+	//Build process for Mac OS X
+	public class MacBuilder : ABuilder
 	{
 		private string m_AmxxPc;
 
 		public override void OnBuild()
 		{
-			m_AmxxPc = PropSlashes(m_Cfg.GetSourceTree() + "\\plugins\\amxxpc.exe");
+			m_AmxxPc = PropSlashes(m_Cfg.GetSourceTree() + "/plugins/amxxpc_osx");
 		}
 
 		public override void CompressDir(string target, string dir)
@@ -20,11 +20,30 @@ namespace AMXXRelease
 
 			info.FileName = m_Cfg.CompressPath();
 			info.WorkingDirectory = dir;
-			info.Arguments = "-r \"" + target + "-windows.zip\" " + "*.*";
+
+			string [] files = Directory.GetFiles(dir);
+			string file_list = "";
+			for (int i=0; i<files.Length; i++)
+				file_list += GetFileName(files[i]) + " ";
+			files = Directory.GetDirectories(dir);
+			for (int i=0; i<files.Length; i++)
+				file_list += GetFileName(files[i]) + " ";
+
+			ProcessStartInfo chmod = new ProcessStartInfo();
+			chmod.FileName = "/bin/chmod";
+			chmod.WorkingDirectory = dir;
+			chmod.Arguments = "-R 755 " + file_list;
+			chmod.UseShellExecute = false;
+			Process c = Process.Start(chmod);
+			c.WaitForExit();
+			c.Close();
+
+			info.Arguments = "-r \"" + target + "-mac.zip\" " + ".";
 			info.UseShellExecute = false;
 
 			Process p = Process.Start(info);
 			p.WaitForExit();
+			p.Close();
 		}
 
 		public override void AmxxPc(string inpath, string args)
@@ -37,17 +56,15 @@ namespace AMXXRelease
 			if (args != null)
 				info.Arguments += " " + args;
 			info.UseShellExecute = false;
-			info.RedirectStandardOutput = true;
-			info.RedirectStandardError = true;
 
 			Process p = Process.Start(info);
-			Console.WriteLine(p.StandardOutput.ReadToEnd() + "\n");
 			p.WaitForExit();
+			p.Close();
 		}
 
 		public override string GetLibExt()
 		{
-			return ".dll";
+			return ".dylib";
 		}
 
 		public override string BuildModule(Module module)
@@ -55,41 +72,35 @@ namespace AMXXRelease
 			ProcessStartInfo info = new ProcessStartInfo();
 
 			string dir = m_Cfg.GetSourceTree() + "\\" + module.sourcedir;
-			if (module.bindir != null)
-				dir += "\\" + module.bindir;
 			string file = dir;
-			if (module.bindir == null)
-				file += "\\" + module.bindir;
-			file += "\\" + module.build + "\\" + module.projname + ".dll";
+			file += "\\" + "Release" + "\\" + module.projname + GetLibExt();
 			file = PropSlashes(file);
 
 			if (File.Exists(file))
 				File.Delete(file);
 
-			string args = m_Cfg.MakeOpts();
-			if (args != null)
-			{
-				info.Arguments = args + " ";
-			} 
-			else 
-			{
-				info.Arguments = "";
-			}
+			Console.WriteLine(PropSlashes(dir));
+			info.WorkingDirectory = PropSlashes(dir);
+			info.FileName = m_Cfg.DevenvPath();
+			info.Arguments = "clean";
+			info.UseShellExecute = false;
+
+			Process p = Process.Start(info);
+			p.WaitForExit();
+			p.Close();
 
 			info.WorkingDirectory = PropSlashes(dir);
 			info.FileName = m_Cfg.DevenvPath();
-			info.Arguments += module.vcproj + ".sln" + " /p:Configuration=" + module.build + " /t:Rebuild";
+			info.Arguments = m_Cfg.MakeOpts();
 			info.UseShellExecute = false;
-			info.RedirectStandardOutput = true;
-			info.RedirectStandardError = true;
 
-			Process p = Process.Start(info);
-			Console.WriteLine(p.StandardOutput.ReadToEnd());
+			p = Process.Start(info);
 			p.WaitForExit();
 			p.Close();
 
 			if (!File.Exists(file))
 			{
+				Console.WriteLine("Output file failed: " + file);
 				return null;
 			}
 

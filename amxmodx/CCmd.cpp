@@ -153,7 +153,7 @@ void CmdMngr::setCmdLink(CmdLink** a, Command* c, bool sorted)
 		{
 			int i = strcmp(c->getCommand(), (*a)->cmd->getCommand());
 
-			if ((i < 0) || (i == 0) && (strcmp(c->getArgument(), (*a)->cmd->getArgument()) < 0))
+			if ((i < 0) || ((i == 0) && (strcmp(c->getArgument(), (*a)->cmd->getArgument()) < 0)))
 				break;
 			
 			a = &(*a)->next;

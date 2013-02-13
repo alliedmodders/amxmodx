@@ -457,18 +457,18 @@ static int matchsequence(char *start,char *end,char *pattern,
     case ' ':
       if (*start!='\t' && *start!=' ')
         return FALSE;
-      while (start<end && *start=='\t' || *start==' ')
+      while ((start<end && *start=='\t') || *start==' ')
         start++;
       break;
     case '!':
-      while (start<end && *start=='\t' || *start==' ')
+      while ((start<end && *start=='\t') || *start==' ')
         start++;                /* skip trailing white space */
       if (*start!='\n')
         return FALSE;
       assert(*(start+1)=='\0');
       start+=2;                 /* skip '\n' and '\0' */
       if (*(pattern+1)!='\0')
-        while (start<end && *start=='\t' || *start==' ')
+        while ((start<end && *start=='\t') || *start==' ')
           start++;              /* skip leading white space of next instruction */
       break;
     default:

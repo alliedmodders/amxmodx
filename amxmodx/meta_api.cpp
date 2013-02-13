@@ -198,7 +198,7 @@ void BuildPluginFileList(const char *initialdir, CStack<String *> & files)
 	}
 
 	_findclose(handle);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	build_pathname_r(path, sizeof(path)-1, "%s/", initialdir);
 	struct dirent *ep;
 	DIR *dp;
@@ -254,7 +254,7 @@ void LoadExtraPluginsFromDir(const char *initialdir)
 
 // Precache	stuff from force consistency calls
 // or check	for	pointed	files won't	be done
-int	C_PrecacheModel(char *s)
+int	C_PrecacheModel(const char *s)
 {
 	if (!g_forcedmodules)
 	{
@@ -269,7 +269,7 @@ int	C_PrecacheModel(char *s)
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
-int	C_PrecacheSound(char *s)
+int	C_PrecacheSound(const char *s)
 {
 	if (!g_forcedsounds)
 	{
@@ -731,7 +731,7 @@ void C_ServerDeactivate_Post()
 			time(&td);
 			tm *curTime = localtime(&td);
 			int i = 0;
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 			mkdir(build_pathname("%s/memreports", get_localinfo("amxx_basedir", "addons/amxmodx")), 0700);
 #else
 			mkdir(build_pathname("%s/memreports", get_localinfo("amxx_basedir", "addons/amxmodx")));
@@ -740,7 +740,7 @@ void C_ServerDeactivate_Post()
 			{
 				char buffer[256];
 				sprintf(buffer, "%s/memreports/D%02d%02d%03d", get_localinfo("amxx_basedir", "addons/amxmodx"), curTime->tm_mon + 1, curTime->tm_mday, i);
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 				mkdir(build_pathname("%s", g_log_dir.c_str()), 0700);
 				if (mkdir(build_pathname(buffer), 0700) < 0)
 #else
@@ -1083,7 +1083,7 @@ void C_StartFrame_Post(void)
 			tm *curTime = localtime(&td);
 			
 			int i = 0;
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 			mkdir(build_pathname("%s/memreports", get_localinfo("amxx_basedir", "addons/amxmodx")), 0700);
 #else
 			mkdir(build_pathname("%s/memreports", get_localinfo("amxx_basedir", "addons/amxmodx")));
@@ -1092,7 +1092,7 @@ void C_StartFrame_Post(void)
 			{
 				char buffer[256];
 				sprintf(buffer, "%s/memreports/D%02d%02d%03d", get_localinfo("amxx_basedir", "addons/amxmodx"), curTime->tm_mon + 1, curTime->tm_mday, i);
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 				mkdir(build_pathname("%s", g_log_dir.c_str()), 0700);
 				if (mkdir(build_pathname(buffer), 0700) < 0)
 #else
@@ -1285,7 +1285,7 @@ void C_TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t
 	RETURN_META(MRES_IGNORED);
 }
 
-void C_AlertMessage(ALERT_TYPE atype, char *szFmt, ...)
+void C_AlertMessage(ALERT_TYPE atype, const char *szFmt, ...)
 {
 	if (atype != at_logged)
 	{
@@ -1329,7 +1329,7 @@ void C_AlertMessage(ALERT_TYPE atype, char *szFmt, ...)
     RETURN_META(MRES_IGNORED);
 }
 
-void C_ChangeLevel(char *map, char *what)
+void C_ChangeLevel(const char *map, const char *what)
 {
 	int ret = executeForwards(FF_ChangeLevel,  map);
 	if (ret)
@@ -1371,7 +1371,7 @@ void C_CvarValue2(const edict_t *pEdict, int requestId, const char *cvar, const 
 	RETURN_META(MRES_HANDLED);
 }
 
-C_DLLEXPORT	int	Meta_Query(char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_t *pMetaUtilFuncs)
+C_DLLEXPORT	int	Meta_Query(const char	*ifvers, plugin_info_t **pPlugInfo,	mutil_funcs_t *pMetaUtilFuncs)
 {
 	gpMetaUtilFuncs = pMetaUtilFuncs;
 	*pPlugInfo = &Plugin_info;
@@ -1535,7 +1535,7 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)
 	return (TRUE);
 }
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 // linux prototype
 C_DLLEXPORT void GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals)
 {

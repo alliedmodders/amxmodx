@@ -48,7 +48,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "osdefs.h"
-#if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+#if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
   #include <sclinux.h>
   #include <unistd.h>
   #include <errno.h>
@@ -436,7 +436,7 @@ int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
   hdr=(AMX_HEADER *)amx->base;
   assert(hdr->natives<=hdr->libraries);
 #if defined AMX_NATIVETABLE
-  if (index<NULL) {
+  if (index<0) {
     assert(-(index+1)<(sizeof(AMX_NATIVETABLE)/sizeof(AMX_NATIVETABLE)[0]));
     f=(AMX_NATIVETABLE)[-(index+1)];
   } else {
@@ -932,7 +932,7 @@ int AMXAPI amx_Init(AMX *amx, void *program)
 
     #define ALIGN(addr) (addr)
 
-  #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+  #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
 
     /* Linux already has mprotect() */
     /* But wants the address aligned! */
@@ -1014,10 +1014,10 @@ int AMXAPI amx_InitJIT(AMX *amx,void *compiled_program,void *reloc_table)
 #if defined AMX_CLEANUP
 int AMXAPI amx_Cleanup(AMX *amx)
 {
-  #if (defined _Windows || defined LINUX || defined __FreeBSD__ || defined __OpenBSD__) && !defined AMX_NODYNALOAD
+  #if (defined _Windows || defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__) && !defined AMX_NODYNALOAD
     #if defined _Windows
       typedef int (FAR WINAPI *AMX_ENTRY)(AMX FAR *amx);
-    #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+    #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
       typedef int (*AMX_ENTRY)(AMX *amx);
     #endif
     AMX_HEADER *hdr;
@@ -1027,7 +1027,7 @@ int AMXAPI amx_Cleanup(AMX *amx)
   #endif
 
   /* unload all extension modules */
-  #if (defined _Windows || defined LINUX || defined __FreeBSD__ || defined __OpenBSD__) && !defined AMX_NODYNALOAD
+  #if (defined _Windows || defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__) && !defined AMX_NODYNALOAD
     hdr=(AMX_HEADER *)amx->base;
     assert(hdr->magic==AMX_MAGIC);
     numlibraries=NUMENTRIES(hdr,libraries,pubvars);
@@ -1040,14 +1040,14 @@ int AMXAPI amx_Cleanup(AMX *amx)
         strcat(funcname,"Cleanup");
         #if defined _Windows
           libcleanup=(AMX_ENTRY)GetProcAddress((HINSTANCE)lib->address,funcname);
-        #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+        #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
           libcleanup=(AMX_ENTRY)dlsym((void*)lib->address,funcname);
         #endif
         if (libcleanup!=NULL)
           libcleanup(amx);
         #if defined _Windows
           FreeLibrary((HINSTANCE)lib->address);
-        #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+        #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
           dlclose((void*)lib->address);
         #endif
       } /* if */
@@ -3695,7 +3695,7 @@ int AMXAPI amx_GetAddr(AMX *amx,cell amx_addr,cell **phys_addr)
   data=(amx->data!=NULL) ? amx->data : amx->base+(int)hdr->dat;
 
   assert(phys_addr!=NULL);
-  if (amx_addr>=amx->hea && amx_addr<amx->stk || amx_addr<0 || amx_addr>=amx->stp) {
+  if ((amx_addr>=amx->hea && amx_addr<amx->stk) || amx_addr<0 || amx_addr>=amx->stp) {
     *phys_addr=NULL;
     return AMX_ERR_MEMACCESS;
   } /* if */
@@ -4094,7 +4094,7 @@ int AMXAPI amx_GetLibraries(AMX *amx)
 	return numLibraries;
 }
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #define _snprintf snprintf
 #endif
 

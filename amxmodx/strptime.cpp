@@ -10,7 +10,7 @@
 #include <ctype.h>
 #include <string.h>
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #define strnicmp strncasecmp
 #endif
 
@@ -336,8 +336,10 @@ char *strptime(const char *buf, const char *fmt, struct tm *tm, short addthem)
  if (0 <= ti.qS) (*defoper) ( &tm->tm_sec ,  ti.qS );
  if (0 <= ti.qM) (*defoper) ( &tm->tm_min ,  ti.qM ); //tm->tm_min  = ti.qM;
  if (0 <= ti.qI)
+ {
    if (0 <= ti.qp) ti.qH = ti.qI % 12 + ti.qp * 12;
-   else (*defoper) ( &tm->tm_hour ,  ti.qI ); //tm->tm_hour = ti.qI;
+   else (*defoper) ( &tm->tm_hour ,  ti.qI );  //tm->tm_hour = ti.qI;
+ }
  if (0 <= ti.qH) (*defoper) ( &tm->tm_hour ,  ti.qH ); //tm->tm_hour = ti.qH;
  if (0 <= ti.qZ) (*defoper) ( &tm->tm_isdst ,  ti.qZ - 1 ); //tm->tm_isdst = ti.qZ - 1;
  if (0 <= ti.qy) ti.qY = ti.qy;

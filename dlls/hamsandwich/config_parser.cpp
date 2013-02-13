@@ -240,8 +240,10 @@ int read_start_section(char *data)
 
 #ifdef _WIN32
 		if (strcmp(data, "windows")==0)
-#elif defined __linux__
+#elif defined(__linux__)
 		if (strcmp(data, "linux")==0)
+#elif defined(__APPLE__)
+		if (strcmp(data, "mac")==0)
 #endif
 		{
 			return 1;

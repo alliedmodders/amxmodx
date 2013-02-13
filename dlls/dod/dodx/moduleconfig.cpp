@@ -430,7 +430,7 @@ void DispatchKeyValue_Post( edict_t *pentKeyvalue, KeyValueData *pkvd )
 	RETURN_META(MRES_IGNORED);
 }
 
-void SetClientKeyValue(int id, char *protocol, char *type, char *var)
+void SetClientKeyValue(int id, char *protocol, const char *type, const char *var)
 {
 	// ID: Number
 	// protocol: \name\Sgt.MEOW\topcolor\1\bottomcolor\1\cl_lw\1\team\axis\model\axis-inf 

@@ -1,98 +1,128 @@
-#(C)2004-2005 AMX Mod X Development Team
+# (C)2004-2013 AMX Mod X Development Team
 # Makefile written by David "BAILOPAN" Anderson
 
-HLSDK = ../../../hlsdk
+###########################################
+### EDIT THESE PATHS FOR YOUR OWN SETUP ###
+###########################################
+
+HLSDK = ../../../hlsdk/multiplayer
 MM_ROOT = ../../../metamod/metamod
 
+#####################################
 ### EDIT BELOW FOR OTHER PROJECTS ###
+#####################################
 
+PROJECT = ns
 
-CRAZY_OPT_FLAGS = -DCRAZY_OPTS -O3 -funroll-loops -ffast-math -s -pipe -fomit-frame-pointer -fno-strict-aliasing -DNDEBUG -fmerge-all-constants -fmodulo-sched -fgcse-sm -fgcse-las -fgcse-after-reload -floop-optimize2 -funsafe-loop-optimizations -ftree-loop-linear -ftree-loop-im -ftree-loop-ivcanon -fivopts -ftree-vectorize -fvariable-expansion-in-unroller -funsafe-math-optimizations -ffinite-math-only  -fpeel-loops -funswitch-loops -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wno-unknown-pragmas -Wno-deprecated -fno-exceptions -DHAVE_STDINT_H -static-libgcc -fno-rtti -Wpointer-arith -Wcast-qual -Wcast-align -Wconversion -Wsign-compare -Wmissing-noreturn -Winline -Wlong-long -Wunsafe-loop-optimizations -Wctor-dtor-privacy -Wno-non-virtual-dtor -Wreorder -Woverloaded-virtual -Wsign-promo -Wsynth -shared 
+OBJECTS = sdk/amxxmodule.cpp dllapi.cpp utils.cpp amxxapi.cpp engineapi.cpp TitleManager.cpp \
+          ParticleManager.cpp MessageHandler.cpp GameManager.cpp natives/general.cpp \
+	  natives/player.cpp natives/player_memory.cpp natives/structure.cpp natives/weapons.cpp \
+	  natives/particles.cpp natives/memberfuncs.cpp
 
-CRAZY_LINK_FLAGS = 
-#-fwhole-program
-#-fwhole-program -combine
+##############################################
+### CONFIGURE ANY OTHER FLAGS/OPTIONS HERE ###
+##############################################
 
-SANE_OPT_FLAGS = -O3 -funroll-loops -s -pipe -fomit-frame-pointer -fno-strict-aliasing -DNDEBUG
+C_OPT_FLAGS = -DNDEBUG -O3 -funroll-loops -fomit-frame-pointer -pipe
+C_DEBUG_FLAGS = -D_DEBUG -DDEBUG -g -ggdb3
+C_GCC4_FLAGS = -fvisibility=hidden
+CPP_GCC4_FLAGS = -fvisibility-inlines-hidden
+CPP = gcc
+CPP_OSX = clang
 
-OPT_FLAGS =
+LINK =
 
-DEBUG_FLAGS = -g -ggdb3
-CPP = gcc-4.1
-NAME = ns
+INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/common -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared \
+          -I$(HLSDK)/pm_shared -I$(MM_ROOT) -Isdk
 
-BIN_SUFFIX = amxx_i386.so
+################################################
+### DO NOT EDIT BELOW HERE FOR MOST PROJECTS ###
+################################################
 
-OBJECTS = sdk/amxxmodule.cpp dllapi.cpp utils.cpp amxxapi.cpp engineapi.cpp \
-TitleManager.cpp ParticleManager.cpp MessageHandler.cpp GameManager.cpp \
-natives/general.cpp natives/player.cpp natives/player_memory.cpp \
-natives/structure.cpp natives/weapons.cpp natives/particles.cpp \
-natives/memberfuncs.cpp
+OS := $(shell uname -s)
 
-LINK = 
+ifeq "$(OS)" "Darwin"
+	CPP = $(CPP_OSX)
+	LIB_EXT = dylib
+	LIB_SUFFIX = _amxx
+	CFLAGS += -DOSX
+	LINK += -dynamiclib -lstdc++ -mmacosx-version-min=10.5
+else
+	LIB_EXT = so
+	LIB_SUFFIX = _amxx_i386
+	CFLAGS += -DLINUX
+	LINK += -shared
+endif
 
-INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/game_shared \
-	-I$(MM_ROOT) -I$(HLSDK)/common -I$(HLSDK)/pm_shared
+LINK += -m32 -lm -ldl
 
-GCC_VERSION := $(shell $(CPP) -dumpversion >&1 | cut -b1)
+CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32 -DHAVE_STDINT_H -fno-strict-aliasing -m32 -Wall -Werror
+CPPFLAGS += -fno-exceptions -fno-rtti
+
+BINARY = $(PROJECT)$(LIB_SUFFIX).$(LIB_EXT)
 
 ifeq "$(DEBUG)" "true"
 	BIN_DIR = Debug
-	CFLAGS = $(DEBUG_FLAGS)
+	CFLAGS += $(C_DEBUG_FLAGS)
 else
-	ifeq "$(CRAZY)" "true"
-		BIN_DIR = Optimized
-		OPT_FLAGS = $(CRAZY_OPT_FLAGS)
-		LINK = $(CRAZY_LINK_FLAGS)
-	else
-		BIN_DIR = Release
-		OPT_FLAGS = $(SANE_OPT_FLAGS)
-	endif
-	ifeq "$(GCC_VERSION)" "4"
-		OPT_FLAGS += -fvisibility=hidden -fvisibility-inlines-hidden
-	endif
-	CFLAGS = $(OPT_FLAGS)
+	BIN_DIR = Release
+	CFLAGS += $(C_OPT_FLAGS)
+	LINK += -s
 endif
 
-CFLAGS += -Wall -Wno-non-virtual-dtor -Werror -fno-exceptions -DHAVE_STDINT_H -static-libgcc -fno-rtti -m32
+IS_CLANG := $(shell $(CPP) --version | head -1 | grep clang > /dev/null && echo "1" || echo "0")
 
-BINARY = $(NAME)_$(BIN_SUFFIX)
-CFLAGS += -DPAWN_CELL_SIZE=32 -DJIT -DASM32
-OPT_FLAGS += -march=i586
+ifeq "$(IS_CLANG)" "1"
+	CPP_MAJOR := $(shell $(CPP) --version | grep clang | sed "s/.*version \([0-9]\)*\.[0-9]*.*/\1/")
+	CPP_MINOR := $(shell $(CPP) --version | grep clang | sed "s/.*version [0-9]*\.\([0-9]\)*.*/\1/")
+else
+	CPP_MAJOR := $(shell $(CPP) -dumpversion >&1 | cut -b1)
+	CPP_MINOR := $(shell $(CPP) -dumpversion >&1 | cut -b3)
+endif
 
-OBJ_LINUX := $(OBJECTS:%.cpp=$(BIN_DIR)/%.o)
+# Clang || GCC >= 4
+ifeq "$(shell expr $(IS_CLANG) \| $(CPP_MAJOR) \>= 4)" "1"
+	CFLAGS += $(C_GCC4_FLAGS)
+	CPPFLAGS += $(CPP_GCC4_FLAGS)
+endif
+
+# Clang >= 3 || GCC >= 4.7
+ifeq "$(shell expr $(IS_CLANG) \& $(CPP_MAJOR) \>= 3 \| $(CPP_MAJOR) \>= 4 \& $(CPP_MINOR) \>= 7)" "1"
+	CFLAGS += -Wno-delete-non-virtual-dtor
+endif
+
+# OS is Linux and not using clang
+ifeq "$(shell expr $(OS) \= Linux \& $(IS_CLANG) \= 0)" "1"
+	LINK += -static-libgcc
+endif
+
+OBJ_BIN := $(OBJECTS:%.cpp=$(BIN_DIR)/%.o)
+
+# This will break if we include other Makefiles, but is fine for now. It allows
+#  us to make a copy of this file that uses altered paths (ie. Makefile.mine)
+#  or other changes without mucking up the original.
+MAKEFILE_NAME := $(CURDIR)/$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
 
 $(BIN_DIR)/%.o: %.cpp
-	$(CPP) $(INCLUDE) $(CFLAGS) -o $@ -c $<
+	$(CPP) $(INCLUDE) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
 
 all:
 	mkdir -p $(BIN_DIR)
 	mkdir -p $(BIN_DIR)/sdk
 	mkdir -p $(BIN_DIR)/natives
-	$(MAKE) ns
+	$(MAKE) -f $(MAKEFILE_NAME) $(PROJECT)
 
-ns: $(OBJ_LINUX)
-	$(CPP) $(INCLUDE) $(CFLAGS) $(OBJ_LINUX) $(LINK) -shared -ldl -lm -o$(BIN_DIR)/$(BINARY)
+$(PROJECT): $(OBJ_BIN)
+	$(CPP) $(INCLUDE) $(OBJ_BIN) $(LINK) -o $(BIN_DIR)/$(BINARY)
 
-debug:	
-	$(MAKE) all DEBUG=true
+debug:
+	$(MAKE) -f $(MAKEFILE_NAME) all DEBUG=true
 
 default: all
 
-crazy:
-	$(MAKE) all CRAZY=true
-
 clean:
-	rm -rf Release/*.o
-	rm -rf Release/sdk/*.o
-	rm -rf Release/natives/*.o
-	rm -rf Release/$(NAME)_$(BIN_SUFFIX)
-	rm -rf Debug/*.o
-	rm -rf Debug/sdk/*.o
-	rm -rf Debug/natives/*.o
-	rm -rf Debug/$(NAME)_$(BIN_SUFFIX)
-	rm -rf Optimized/*.o
-	rm -rf Optimized/sdk/*.o
-	rm -rf Optimized/natives/*.o
-	rm -rf Optimized/$(NAME)_$(BIN_SUFFIX)
-	
+	rm -rf $(BIN_DIR)/*.o
+	rm -rf $(BIN_DIR)/sdk/*.o
+	rm -rf $(BIN_DIR)/natives/*.o
+	rm -f $(BIN_DIR)/$(BINARY)
+

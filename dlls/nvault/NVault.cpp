@@ -4,7 +4,7 @@
 #include "Binary.h"
 #include "CString.h"
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #define _snprintf snprintf
 #endif
 

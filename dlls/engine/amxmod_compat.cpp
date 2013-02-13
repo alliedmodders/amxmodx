@@ -16,8 +16,8 @@ static int gmsgScoreInfo = 0;
 BOOL is_breakable(edict_t* pBreak)
 {
 	if (FStrEq("func_breakable", STRING(pBreak->v.classname))
-		|| FStrEq("func_pushable", STRING(pBreak->v.classname))
-		&& pBreak->v.spawnflags & SF_PUSH_BREAKABLE)
+		|| (FStrEq("func_pushable", STRING(pBreak->v.classname))
+		&& pBreak->v.spawnflags & SF_PUSH_BREAKABLE))
 	{
 		return true;
 	}

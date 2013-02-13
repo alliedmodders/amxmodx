@@ -35,8 +35,11 @@
 #include "libraries.h"
 #include "format.h"
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
+#if defined(__linux__)
 #include <malloc.h>
+#endif
+
 #include <stdlib.h>
 #include <sys/mman.h>
 #include "sclinux.h"
@@ -479,12 +482,16 @@ static cell AMX_NATIVE_CALL register_native(AMX *amx, cell *params)
 	//we'll apply a safety buffer too
 	//make our function
 	int size = amxx_DynaCodesize();
-#ifndef __linux__
+#if defined(_WIN32)
 	DWORD temp;
 	pNative->pfn = new char[size + 10];
 	VirtualProtect(pNative->pfn, size+10, PAGE_EXECUTE_READWRITE, &temp);
-#else
+#elif defined(__GNUC__)
+# if defined(__APPLE__)
+	pNative->pfn = (char *)valloc(size+10);
+# else
 	pNative->pfn = (char *)memalign(sysconf(_SC_PAGESIZE), size+10);
+# endif
 	mprotect((void *)pNative->pfn, size+10, PROT_READ|PROT_WRITE|PROT_EXEC);
 #endif
 

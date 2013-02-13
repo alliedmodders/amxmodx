@@ -220,7 +220,7 @@ bool CModule::queryModule()
 	m_Handle = DLLOAD(m_Filename.c_str());		// load file
 	if (!m_Handle)
 	{
-#if defined __linux__
+#if defined(__linux__) || defined(__APPLE__)
 		AMXXLOG_Log("[AMXX] Module \"%s\" failed to load (%s)", m_Filename.c_str(), dlerror());
 #endif
 		m_Status = MODULE_BADLOAD;

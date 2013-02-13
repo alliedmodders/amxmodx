@@ -235,7 +235,7 @@ SC_FUNC void begdseg(void)
 
 SC_FUNC void setline(int chkbounds)
 {
-  if ((sc_debug & sSYMBOLIC)!=0 || chkbounds && (sc_debug & sCHKBOUNDS)!=0) {
+  if ((sc_debug & sSYMBOLIC)!=0 || (chkbounds && (sc_debug & sCHKBOUNDS)!=0)) {
     /* generate a "break" (start statement) opcode rather than a "line" opcode
      * because earlier versions of Small/Pawn have an incompatible version of the
      * line opcode
@@ -719,7 +719,7 @@ SC_FUNC void ffcall(symbol *sym,const char *label,int numargs)
       stgwrite(sym->name);
     } /* if */
     if (sc_asmfile
-        && (label!=NULL || !isalpha(sym->name[0]) && sym->name[0]!='_'  && sym->name[0]!=sc_ctrlchar))
+        && (label!=NULL || (!isalpha(sym->name[0]) && sym->name[0]!='_'  && sym->name[0]!=sc_ctrlchar)))
     {
       stgwrite("\t; ");
       stgwrite(symname);

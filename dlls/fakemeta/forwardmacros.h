@@ -75,6 +75,19 @@
 		RETURN_META(MRES_IGNORED); \
 	}
 
+#define SIMPLE_VOID_HOOK_INT_STRING_CONSTSTRING_CONSTSTRING(call) \
+        void call (int v,char *c, const char *cb, const char *cc) \
+        { \
+                FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),(cell)v,c,cb,cc)); \
+                RETURN_META(mswi(lastFmRes)); \
+        } \
+        void call##_post (int v, char *c, const char *cb, const char *cc) \
+        { \
+                FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),(cell)v,c,cb,cc)); \
+                RETURN_META(MRES_IGNORED); \
+        }
+
+
 #define SIMPLE_VOID_HOOK_STRING_STRING_STRING(call) \
 	void call (char *c, char *cb, char *cc) \
 	{ \
@@ -86,6 +99,18 @@
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),c,cb,cc)); \
 		RETURN_META(MRES_IGNORED); \
 	}
+
+#define SIMPLE_VOID_HOOK_STRING_CONSTSTRING_CONSTSTRING(call) \
+        void call (char *c, const char *cb, const char *cc) \
+        { \
+                FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),c,cb,cc)); \
+                RETURN_META(mswi(lastFmRes)); \
+        } \
+        void call##_post (char *c, const char *cb, const char *cc) \
+        { \
+                FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),c,cb,cc)); \
+                RETURN_META(MRES_IGNORED); \
+        }
 
 #define SIMPLE_STRING_HOOK_STRING_STRING(call) \
 	char* call (char *c, char *cb) \
@@ -99,6 +124,18 @@
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),c,cb)); \
 		RETURN_META_VALUE(MRES_IGNORED, (char*)mlStringResult); \
 	}
+#define SIMPLE_STRING_HOOK_STRING_CONSTSTRING(call) \
+        char* call (char *c, const char *cb) \
+        { \
+                FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),c,cb)); \
+                RETURN_META_VALUE(mswi(lastFmRes), (char*)mlStringResult); \
+        } \
+        char* call##_post (char *c, const char *cb) \
+        { \
+                origStringRet = META_RESULT_ORIG_RET(char *); \
+                FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),c,cb)); \
+                RETURN_META_VALUE(MRES_IGNORED, (char*)mlStringResult); \
+        }
 #define SIMPLE_CONSTSTRING_HOOK_EDICT(call) \
 	const char* call (edict_t *e) \
 	{ \
@@ -175,6 +212,19 @@
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i), s)); \
 		RETURN_META_VALUE(MRES_IGNORED, (char)mlCellResult); \
 	}
+#define SIMPLE_CHAR_HOOK_CONSTSTRING(call) \
+        char call (const char *s) \
+        { \
+                FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i), s)); \
+                RETURN_META_VALUE(mswi(lastFmRes), (char)mlCellResult); \
+        } \
+        char call##_post (const char *s) \
+        { \
+                origCellRet = META_RESULT_ORIG_RET(char); \
+                FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i), s)); \
+                RETURN_META_VALUE(MRES_IGNORED, (char)mlCellResult); \
+        }
+
 #define SIMPLE_VOID_HOOK_CONSTSTRING(call) \
 	void call (const char *s) \
 	{ \

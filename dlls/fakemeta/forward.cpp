@@ -83,10 +83,10 @@ static cell AMX_NATIVE_CALL fm_return(AMX *amx, cell *params)
  */
 
 // pfnPrecacheModel
-SIMPLE_INT_HOOK_STRING(PrecacheModel);
+SIMPLE_INT_HOOK_CONSTSTRING(PrecacheModel);
 
 // pfnPrecacheSound
-SIMPLE_INT_HOOK_STRING(PrecacheSound);
+SIMPLE_INT_HOOK_CONSTSTRING(PrecacheSound);
 
 void ClientUserInfoChanged(edict_t *e, char *infobuffer)
 {
@@ -261,7 +261,7 @@ void KeyValue_post(edict_t* entity, KeyValueData* data)
 	RETURN_META(MRES_IGNORED);
 }
 
-void AlertMessage(ALERT_TYPE atype, char *szFmt, ...)
+void AlertMessage(ALERT_TYPE atype, const char *szFmt, ...)
 {
 	static char buf[2048];
 	va_list ap;
@@ -272,7 +272,7 @@ void AlertMessage(ALERT_TYPE atype, char *szFmt, ...)
 	RETURN_META(mswi(lastFmRes));
 }
 
-void AlertMessage_post(ALERT_TYPE atype, char *szFmt, ...)
+void AlertMessage_post(ALERT_TYPE atype, const char *szFmt, ...)
 {
 	static char buf[2048];
 	va_list ap;
@@ -293,7 +293,7 @@ SIMPLE_INT_HOOK_INT(ModelFrames);
 SIMPLE_VOID_HOOK_EDICT_CONSTVECT_CONSTVECT(SetSize);
 
 // pfnChangeLevel
-SIMPLE_VOID_HOOK_STRING_STRING(ChangeLevel);
+SIMPLE_VOID_HOOK_CONSTSTRING_CONSTSTRING(ChangeLevel);
 
 // pfnVecToYaw
 SIMPLE_FLOAT_HOOK_CONSTVECT(VecToYaw);
@@ -507,7 +507,7 @@ SIMPLE_VOID_HOOK_CONSTEDICT_INT_INT_INT_INT(FadeClientVolume);
 SIMPLE_VOID_HOOK_CONSTEDICT_FLOAT(SetClientMaxspeed);
 
 // pfnPrecacheGeneric
-SIMPLE_INT_HOOK_STRING(PrecacheGeneric);
+SIMPLE_INT_HOOK_CONSTSTRING(PrecacheGeneric);
 
 // pfnPrecacheEvent
 SIMPLE_USHORT_HOOK_INT_CONSTSTRING(PrecacheEvent);
@@ -600,17 +600,17 @@ SIMPLE_BOOL_HOOK_INT_INT(Voice_GetClientListening);
 // pfnVoice_SetClientListening
 SIMPLE_BOOL_HOOK_INT_INT_BOOL(Voice_SetClientListening);
 
-SIMPLE_STRING_HOOK_STRING_STRING(InfoKeyValue);
+SIMPLE_STRING_HOOK_STRING_CONSTSTRING(InfoKeyValue);
 
-SIMPLE_VOID_HOOK_STRING_STRING_STRING(SetKeyValue);
+SIMPLE_VOID_HOOK_STRING_CONSTSTRING_CONSTSTRING(SetKeyValue);
 
-SIMPLE_VOID_HOOK_INT_STRING_STRING_STRING(SetClientKeyValue);
+SIMPLE_VOID_HOOK_INT_STRING_CONSTSTRING_CONSTSTRING(SetClientKeyValue);
 
 SIMPLE_CONSTSTRING_HOOK_EDICT(GetPlayerAuthId);
 
 SIMPLE_UINT_HOOK_EDICT(GetPlayerWONId);
 
-SIMPLE_INT_HOOK_STRING(IsMapValid);
+SIMPLE_INT_HOOK_CONSTSTRING(IsMapValid);
 
 int CreateInstancedBaseline(int classname, struct entity_state_s *baseline)
 {
@@ -725,7 +725,7 @@ SIMPLE_VOID_HOOK_EDICT(SpectatorThink);
 SIMPLE_VOID_HOOK_CONSTSTRING(Sys_Error);
 
 // pfnPM_FindTextureType
-SIMPLE_CHAR_HOOK_STRING(PM_FindTextureType);
+SIMPLE_CHAR_HOOK_CONSTSTRING(PM_FindTextureType);
 
 // pfnRegisterEncoders
 SIMPLE_VOID_HOOK_VOID(RegisterEncoders);

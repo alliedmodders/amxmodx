@@ -37,7 +37,7 @@
 #define DODMAX_CUSTOMWPNS	5	// custom weapons
 #define DODMAX_WEAPONS		42 + DODMAX_CUSTOMWPNS
 
-#ifndef __linux__
+#if defined(_WIN32)
 #define LINUXOFFSET	0
 #else
 #define LINUXOFFSET	5

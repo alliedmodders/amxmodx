@@ -432,7 +432,7 @@ public:
 		void erase()
 		{
 			if (end || !hash || curbucket < 0 || curbucket >= static_cast<int>(hash->m_numBuckets))
-				return true;
+				return;
 
 			iterator tmp = *this;
 			++tmp;

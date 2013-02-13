@@ -1,0 +1,6 @@
+compress = /usr/bin/zip
+source = /Users/Scott/Code/hl/amxmodx-central
+makeopts = 
+output = /Users/Scott/Code/hl/amxmodx-bin
+devenv = /usr/bin/make
+release = amxmodx-1.8.2

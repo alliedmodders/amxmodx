@@ -51,7 +51,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "sc.h"
-#if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+#if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
   #include <sclinux.h>
 #endif
 

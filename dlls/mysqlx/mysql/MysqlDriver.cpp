@@ -42,7 +42,7 @@ IDatabase *MysqlDriver::_Connect(DatabaseInfo *info, int *errcode, char *error, 
 		{
 			snprintf(error, maxlength, "Initialization failed");
 		}
-		return false;
+		return NULL;
 	}
 
 	if (do_timeout && info->max_timeout)
@@ -67,7 +67,7 @@ IDatabase *MysqlDriver::_Connect(DatabaseInfo *info, int *errcode, char *error, 
 		{
 			snprintf(error, maxlength, "%s", mysql_error(mysql));
 		}
-		return false;
+		return NULL;
 	}
 
 	MysqlDatabase *pMysql = new MysqlDatabase(mysql, this);

@@ -238,7 +238,7 @@ SC_FUNC stringlist *insert_path(char *path)
 {
   char *extra_path = malloc(strlen(path) + 16);
   strcpy(extra_path, path);
-#if defined __linux__
+#if defined __linux__ || defined __APPLE__
   strcat(extra_path, "/amxmod_compat/");
 #elif defined WIN32 || defined _WIN32
   strcat(extra_path, "\\amxmod_compat\\");
@@ -444,10 +444,10 @@ SC_FUNC stringlist *insert_dbgsymbol(symbol *sym)
     /* address tag:name codestart codeend ident vclass [tag:dim ...] */
 #if PAWN_CELL_SIZE==32
     if (sym->ident==iFUNCTN)
-      sprintf(string,"S:%08lx %x:%s %08lx %08lx %x %x",sym->addr,sym->tag,
+      sprintf(string,"S:%08x %x:%s %08x %08x %x %x",sym->addr,sym->tag,
               symname,sym->addr,sym->codeaddr,sym->ident,sym->vclass);
     else
-      sprintf(string,"S:%08lx %x:%s %08lx %08lx %x %x",sym->addr,sym->tag,
+      sprintf(string,"S:%08x %x:%s %08x %08x %x %x",sym->addr,sym->tag,
               symname,sym->codeaddr,code_idx,sym->ident,sym->vclass);
 #elif PAWN_CELL_SIZE==64
     if (sym->ident==iFUNCTN)

@@ -39,7 +39,7 @@ namespace AMXXRelease
 			c.Close();
 
 
-			info.Arguments = "zcvf \"" + target + ".tar.gz\" " + file_list;
+			info.Arguments = "zcvf \"" + target + "-linux.tar.gz\" " + file_list;
 			info.UseShellExecute = false;
 
 			Process p = Process.Start(info);

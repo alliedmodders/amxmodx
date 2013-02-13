@@ -12,11 +12,18 @@
 test -e compiled || mkdir compiled
 rm -f temp.txt
 
+# Choose compiler binary
+if test `uname` = "Darwin"; then
+	pc=./amxxpc_osx
+else
+	pc=./amxxpc
+fi
+
 for sourcefile in *.sma
 do
         amxxfile="`echo $sourcefile | sed -e 's/\.sma$/.amxx/'`"
         echo -n "Compiling $sourcefile ..."
-        ./amxxpc $sourcefile -ocompiled/$amxxfile >> temp.txt
+        $pc $sourcefile -ocompiled/$amxxfile >> temp.txt
         echo "done"
 done
 

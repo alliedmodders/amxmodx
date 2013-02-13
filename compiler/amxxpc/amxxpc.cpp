@@ -1,5 +1,5 @@
 #include <stdio.h>
-#ifdef __linux__
+#if defined(__linux__) | defined (__APPLE__)
 #include <unistd.h>
 #else
 #include <fcntl.h>
@@ -29,25 +29,26 @@ void WriteBh(BinaryWriter *bw, BinPlugin *bh);
 int main(int argc, char **argv)
 {
 	struct abl pl32;
-	struct abl pl64;
 
 #ifdef _DEBUG
 	printf("debug clamp\n");
 	getchar();
 #endif
 
-#ifdef __linux__
+#if defined(__linux__)
 	HINSTANCE lib = NULL;
 	if (FileExists("./amxxpc32.so"))
 		lib = dlmount("./amxxpc32.so");
 	else
 		lib = dlmount("amxxpc32.so");
+#elif defined(__APPLE__)
+	HINSTANCE lib = dlmount("amxxpc32.dylib");
 #else
 	HINSTANCE lib = dlmount("amxxpc32.dll");
 #endif
 	if (!lib)
 	{
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 		printf("compiler failed to instantiate: %s\n", dlerror());
 #else
 		printf("compiler failed to instantiate: %d\n", GetLastError());
@@ -60,7 +61,7 @@ int main(int argc, char **argv)
 
 	if (!sc32 || !pc_printf)
 	{
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 		printf("compiler failed to link: %p.\n",sc32);
 #else
 		printf("compiler failed to link: %d.\n", GetLastError());
@@ -69,7 +70,7 @@ int main(int argc, char **argv)
 	}
 
 	pc_printf("Welcome to the AMX Mod X %s Compiler.\n", VERSION_STRING);
-	pc_printf("Copyright (c) 1997-2006 ITB CompuPhase, AMX Mod X Team\n\n");
+	pc_printf("Copyright (c) 1997-2013 ITB CompuPhase, AMX Mod X Team\n\n");
 	
 	if (argc < 2)
 	{
@@ -243,7 +244,7 @@ char *swiext(const char *file, const char *ext, int isO)
 	int i = 0, pos = -1, j = 0;
 	int fileLen = strlen(file);
 	int extLen = strlen(ext);
-	int max = 0, odirFlag = -1;
+	int odirFlag = -1;
 
 	for (i=fileLen-1; i>=0; i--)
 	{
@@ -339,7 +340,7 @@ void show_help()
 	printf("\t-r[name] write cross reference report to console or to specified file\n");
 }
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 bool FileExists(const char *file)
 {
 	FILE *fp = fopen(file, "rb");

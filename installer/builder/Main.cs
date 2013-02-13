@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace AMXXRelease
 {
@@ -13,6 +14,7 @@ namespace AMXXRelease
 	{
 		private Config m_Cfg;
 		public static bool IsWindows;
+		public static bool IsOSX;
 
 		[STAThread]
 		static void Main(string[] args)
@@ -47,13 +49,21 @@ namespace AMXXRelease
 			}
 
 			ABuilder builder = null;
-			if (System.Environment.OSVersion.Platform == System.PlatformID.Unix)
+			if (IsMacOSX())
+			{
+				builder = new MacBuilder();
+				Releaser.IsWindows = false;
+				Releaser.IsOSX = true;
+			}
+			else if (System.Environment.OSVersion.Platform == System.PlatformID.Unix)
 			{
 				builder = new LinuxBuilder();
 				Releaser.IsWindows = false;
+				Releaser.IsOSX = false;
 			} else {
 				builder = new Win32Builder();
 				Releaser.IsWindows = true;
+				Releaser.IsOSX = false;
 			}
 
 			Build build = new Build(m_Cfg);
@@ -95,6 +105,40 @@ namespace AMXXRelease
 			}
 
 			return true;
+		}
+
+		[DllImport("libc")]
+		static extern int uname(IntPtr buf);
+		
+		// Environment.OSVersion.Platform returns PlatformID.Unix under Mono on OS X
+		// Code adapted from Mono: mcs/class/Managed.Windows.Forms/System.Windows.Forms/XplatUI.cs
+		private bool IsMacOSX()
+		{
+			IntPtr buf = IntPtr.Zero;
+
+			try
+			{
+				// The size of the utsname struct varies from system to system, but this _seems_ more than enough
+				buf = Marshal.AllocHGlobal(4096);
+
+				if (uname(buf) == 0)
+				{
+					string sys = Marshal.PtrToStringAnsi(buf);
+					if (sys == "Darwin")
+						return true;
+				}
+			}
+			catch
+			{
+				// Do nothing
+			}
+			finally
+			{
+				if (buf != IntPtr.Zero)
+					Marshal.FreeHGlobal(buf);
+			}
+
+			return false;
 		}
 	}
 }

@@ -124,7 +124,7 @@ class CPlayer;
 CPlayer *UTIL_PlayerByCID(int CID);
 
 // Converts something such as RESOURCES into OFFSET_WIN_RESOURCES or OFFSET_LIN_RESOURCES
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #define MAKE_OFFSET(Offset) OFFSET_LIN_##Offset
 #define MAKE_MEMBER_OFFSET(Offs) (Offs - OFFSET_LIN_MEMBERFUNCSTART)
 #else

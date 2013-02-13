@@ -35,9 +35,10 @@
   #include <io.h>
 #endif
 
-#if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+#if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
   #include <sclinux.h>
   #include <prefix.h> /* from BinReloc, see www.autopackage.org */
+  #include <unistd.h>
 #endif
 
 #if defined FORTIFY
@@ -421,7 +422,7 @@ int pc_compile(int argc, char *argv[])
   void *inpfmark;
   int lcl_packstr,lcl_needsemicolon,lcl_tabsize;
   #if !defined SC_LIGHT
-    int hdrsize;
+    int hdrsize=0;
   #endif
 
   /* set global variables to their initial value */
@@ -1248,9 +1249,9 @@ static void setconfig(char *root)
     /* add the default "include" directory */
     #if defined __WIN32__ || defined _WIN32
       GetModuleFileName(NULL,path,_MAX_PATH);
-    #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+    #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
       /* see www.autopackage.org for the BinReloc module */
-      ptr = SELFPATH;
+      ptr = (char *)SELFPATH;
       if (!ptr)
         ptr = root;
       strncpy(path,ptr,sizeof path);
@@ -1922,7 +1923,7 @@ static int declloc(int fstatic)
   int dim[sDIMEN_MAX];
   int numdim;
   int fconst;
-  int staging_start;
+  int staging_start=0;
 
   fconst=matchtoken(tCONST);
   do {
@@ -1948,7 +1949,7 @@ static int declloc(int fstatic)
      * level might indicate a bug.
 	 * NOTE - don't bother with the error if there's no valid function!
      */
-    if ((sym=findloc(name))!=NULL && sym->compound!=nestlevel || findglb(name)!=NULL)
+    if (((sym=findloc(name))!=NULL && sym->compound!=nestlevel) || findglb(name)!=NULL)
 	  if (curfunc!=NULL && (curfunc->usage & uNATIVE))
         error(219,name);                  /* variable shadows another symbol */
     while (matchtoken('[')){
@@ -2863,7 +2864,7 @@ static int operatoradjust(int opertok,symbol *sym,char *opername,int resulttag)
       error(62);      /* number or placement of the operands does not fit the operator */
   } /* switch */
 
-  if (tags[0]==0 && (opertok!='=' && tags[1]==0 || opertok=='=' && resulttag==0))
+  if (tags[0]==0 && ((opertok!='=' && tags[1]==0) || (opertok=='=' && resulttag==0)))
     error(64);        /* cannot change predefined operators */
 
   /* change the operator name */
@@ -3045,7 +3046,7 @@ static void funcstub(int native)
 
   tok=lex(&val,&str);
   if (native) {
-    if (tok==tPUBLIC || tok==tSTOCK || tok==tSTATIC || tok==tSYMBOL && *str==PUBLIC_CHAR)
+    if (tok==tPUBLIC || tok==tSTOCK || tok==tSTATIC || (tok==tSYMBOL && *str==PUBLIC_CHAR))
       error(42);                /* invalid combination of class specifiers */
   } else {
     if (tok==tPUBLIC || tok==tSTOCK || tok==tSTATIC)
@@ -3166,7 +3167,7 @@ static int newfunc(char *firstname,int firsttag,int fpublic,int fstatic,int stoc
     tag= (firsttag>=0) ? firsttag : pc_addtag(NULL);
     tok=lex(&val,&str);
     assert(!fpublic);
-    if (tok==tNATIVE || tok==tPUBLIC && stock)
+    if (tok==tNATIVE || (tok==tPUBLIC && stock))
       error(42);                /* invalid combination of class specifiers */
     if (tok==tOPERATOR) {
       opertok=operatorname(symbolname);
@@ -3512,7 +3513,7 @@ static int declargs(symbol *sym)
         error(10);                      /* illegal function or declaration */
       } /* switch */
     } while (tok=='&' || tok==tLABEL || tok==tCONST
-             || tok!=tELLIPS && matchtoken(',')); /* more? */
+             || (tok!=tELLIPS && matchtoken(','))); /* more? */
     /* if the next token is not ",", it should be ")" */
     needtoken(')');
   } /* if */
@@ -3873,7 +3874,7 @@ static void make_report(symbol *root,FILE *log,char *sourcefile)
       continue;
     if ((sym->usage & uREAD)==0)
       continue;
-    fprintf(log,"\t\t<member name=\"T:%s\" value=\"%ld\">\n",funcdisplayname(symname,sym->name),sym->addr);
+    fprintf(log,"\t\t<member name=\"T:%s\" value=\"%ld\">\n",funcdisplayname(symname,sym->name),(long)sym->addr);
     if (sym->tag!=0) {
       tagsym=find_tag_byval(sym->tag);
       assert(tagsym!=NULL);
@@ -3883,7 +3884,7 @@ static void make_report(symbol *root,FILE *log,char *sourcefile)
     if ((enumroot=sym->dim.enumlist)!=NULL) {
       enumroot=enumroot->next;  /* skip root */
       while (enumroot!=NULL) {
-        fprintf(log,"\t\t\t<member name=\"C:%s\" value=\"%ld\">\n",funcdisplayname(symname,enumroot->name),enumroot->value);
+        fprintf(log,"\t\t\t<member name=\"C:%s\" value=\"%ld\">\n",funcdisplayname(symname,enumroot->name),(long)enumroot->value);
         /* find the constant with this name and get the tag */
         ref=findglb(enumroot->name);
         if (ref!=NULL) {
@@ -3919,7 +3920,7 @@ static void make_report(symbol *root,FILE *log,char *sourcefile)
       continue;
     if ((sym->usage & uREAD)==0 || (sym->usage & (uENUMFIELD | uENUMROOT))!=0)
       continue;
-    fprintf(log,"\t\t<member name=\"C:%s\" value=\"%ld\">\n",funcdisplayname(symname,sym->name),sym->addr);
+    fprintf(log,"\t\t<member name=\"C:%s\" value=\"%ld\">\n",funcdisplayname(symname,sym->name),(long)sym->addr);
     if (sym->tag!=0) {
       tagsym=find_tag_byval(sym->tag);
       assert(tagsym!=NULL);
@@ -4039,7 +4040,7 @@ static void make_report(symbol *root,FILE *log,char *sourcefile)
     for (arg=0; sym->dim.arglist[arg].ident!=0; arg++) {
       int dim,paraminfo;
       char *outer_start,*inner_start;
-      int outer_length,inner_length;
+      int outer_length=0,inner_length=0;
       if (sym->dim.arglist[arg].ident==iVARARGS)
         fprintf(log,"\t\t\t<param name=\"...\">\n");
       else
@@ -5248,7 +5249,7 @@ static void doreturn(void)
     if ((rettype & uRETVALUE)!=0) {
       int retarray=(ident==iARRAY || ident==iREFARRAY);
       /* there was an earlier "return" statement in this function */
-      if (sub==NULL && retarray || sub!=NULL && !retarray)
+      if ((sub==NULL && retarray) || (sub!=NULL && !retarray))
         error(79);                      /* mixing "return array;" and "return value;" */
     } /* if */
     rettype|=uRETVALUE;                 /* function returns a value */
@@ -5257,7 +5258,7 @@ static void doreturn(void)
     if (!matchtag(curfunc->tag,tag,TRUE))
       error(213);                       /* tagname mismatch */
     if (ident==iARRAY || ident==iREFARRAY) {
-      int dim[sDIMEN_MAX],numdim;
+      int dim[sDIMEN_MAX],numdim=0;
       cell arraysize;
       assert(sym!=NULL);
       if (sub!=NULL) {

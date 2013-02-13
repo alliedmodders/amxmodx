@@ -39,6 +39,10 @@
   #include <endian.h>
 #endif
 
+#if defined __APPLE__
+  #include <sys/types.h>
+#endif
+
 /* Linux NOW has these */
 #if !defined BIG_ENDIAN
   #define BIG_ENDIAN    4321

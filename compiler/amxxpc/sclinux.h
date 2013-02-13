@@ -32,6 +32,10 @@
  */
 #if !defined __BYTE_ORDER
 # include <stdlib.h>
+# if defined __APPLE__
+#  include <sys/types.h>
+#  define __BYTE_ORDER BYTE_ORDER
+# endif
 #endif
 
 #if defined __OpenBSD__ || defined __FreeBSD__

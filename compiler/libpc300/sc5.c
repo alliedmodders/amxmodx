@@ -25,7 +25,7 @@
 #if defined	__WIN32__ || defined _WIN32 || defined __MSDOS__
   #include <io.h>
 #endif
-#if defined LINUX || defined __GNUC__
+#if defined LINUX || defined __APPLE__ || defined __GNUC__
   #include <unistd.h>
 #endif
 #include <stdio.h>
@@ -132,7 +132,7 @@ static short lastfile;
   } /* if */
   va_end(argptr);
 
-  if (number>=100 && number<200 || errnum>25){
+  if ((number>=100 && number<200) || errnum>25){
     if (strlen(errfname)==0) {
       va_start(argptr,number);
       pc_error(0,"\nCompilation aborted.",NULL,0,0,argptr);

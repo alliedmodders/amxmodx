@@ -315,9 +315,10 @@ native bool:IsHamValid(Ham:function);
  * @param id			The entity to examine the private data.
  * @param offset		The windows offset of the data.
  * @param linuxdiff		The linux difference of the data.
+ * @param macdiff		The mac os x difference of the data.
  * @return				The index of the corresponding pdata field. -1 for none set.
  */
-native get_pdata_cbase(id, offset, linuxdiff=5);
+native get_pdata_cbase(id, offset, linuxdiff=5, macdiff=5);
 
 /**
  * This is used to compliment fakemeta's {get,set}_pdata_{int,float,string}.
@@ -329,8 +330,9 @@ native get_pdata_cbase(id, offset, linuxdiff=5);
  * @param offset		The windows offset of the data.
  * @param value			The index to store, -1 for invalid
  * @param linuxdiff		The linux difference of the data.
+ * @param macdiff		The mac os x difference of the data.
  */
-native set_pdata_cbase(id, offset, value, linuxdiff=5);
+native set_pdata_cbase(id, offset, value, linuxdiff=5, macdiff=5);
 
 /**
  * This is similar to the get_pdata_cbase, however it does not dereference memory.
@@ -342,9 +344,10 @@ native set_pdata_cbase(id, offset, value, linuxdiff=5);
  * @param id			Entry to examine the private data.
  * @param offset		The windows offset of the data.
  * @param linuxdiff		The linux difference of the data.
+ * @param macdiff		The mac os x difference of the data.
  * @return				The index of the corresponding pdata field, -1 for null, -2 for invalid.
  */
-native get_pdata_cbase_safe(id, offset, linuxdiff=5);
+native get_pdata_cbase_safe(id, offset, linuxdiff=5, macdiff=5);
 
 
 

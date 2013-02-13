@@ -10,6 +10,7 @@ memfile_t *memfile_creat(const char *name, size_t init)
 	mf.size = init;
 	mf.base = (char *)malloc(init);
 	mf.usedoffs = 0;
+	mf.name = NULL;
 	if (!mf.base)
 	{
 		return NULL;

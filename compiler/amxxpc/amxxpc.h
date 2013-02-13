@@ -5,7 +5,7 @@
 #define MAGIC_HEADER2		0x414D5858
 #define	MAGIC_VERSION		0x0300
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 # include <dlfcn.h>
 #else
 # include <windows.h>
@@ -13,7 +13,7 @@
 
 #include <string.h>
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 # define dlmount(x)		dlopen(x, RTLD_NOW|RTLD_GLOBAL)
   typedef void*			HINSTANCE;
 #else
@@ -65,7 +65,7 @@ struct BinPlugin
 	int32_t offs;		//file offset
 };
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 bool FileExists(const char *file);
 #endif
 

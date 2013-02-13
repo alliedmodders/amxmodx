@@ -19,7 +19,7 @@
 #endif
 
 #include <new>
-#include <malloc.h>
+#include <stdlib.h>
 
 namespace SourceHook
 {

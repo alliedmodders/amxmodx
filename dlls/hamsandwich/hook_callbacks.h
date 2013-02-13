@@ -130,7 +130,7 @@ const bool RT_Vector_Void = true;
 const int PC_Vector_Void = 1;
 #ifdef _WIN32
 void Hook_Vector_Void(Hook *hook, void *pthis, Vector *out);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 void Hook_Vector_Void(Hook *hook, Vector *out, void *pthis);
 #endif
 
@@ -138,7 +138,7 @@ const bool RT_Vector_pVector = true;
 const int PC_Vector_pVector = 2;
 #ifdef _WIN32
 void Hook_Vector_pVector(Hook *hook, void *pthis, Vector *out, Vector *v1);
-#elif defined __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 void Hook_Vector_pVector(Hook *hook, Vector *out, void *pthis, Vector *v1);
 #endif
 

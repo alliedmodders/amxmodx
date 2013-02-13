@@ -20,10 +20,10 @@
 #define	stricmp(a,b)    strcasecmp(a,b)
 #define	strnicmp(a,b,c) strncasecmp(a,b,c)
 
-#if defined __linux__  && !defined _snprintf 
+#if ( defined(__linux__) || defined(__APPLE__) )  && !defined _snprintf 
 #define _snprintf snprintf
 #endif 
-#if defined __linux__  && !defined _vsnprintf
+#if ( defined(__linux__) || defined(__APPLE__) )  && !defined _vsnprintf
 //#define _vsnprintf vsnprintf
 #endif
 
@@ -40,6 +40,10 @@
  */
 #if !defined __BYTE_ORDER
 # include <stdlib.h>
+# if defined __APPLE__
+#  include <sys/types.h>
+#  define __BYTE_ORDER BYTE_ORDER
+# endif
 #endif
 
 #if defined __OpenBSD__

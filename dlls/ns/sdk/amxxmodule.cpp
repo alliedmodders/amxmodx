@@ -2240,7 +2240,7 @@ static META_FUNCTIONS g_MetaFunctions_Table =
 	GetEngineFunctions_Post
 };
 
-C_DLLEXPORT int Meta_Query(char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_t *pMetaUtilFuncs)
+C_DLLEXPORT int Meta_Query(const char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_t *pMetaUtilFuncs)
 {
 	if ((int) CVAR_GET_FLOAT("developer") != 0)
 		UTIL_LogPrintf("[%s] dev: called: Meta_Query; version=%s, ours=%s\n", 
@@ -2334,7 +2334,7 @@ C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason)
 
 
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 // linux prototype
 C_DLLEXPORT void GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals ) {
 
@@ -3050,7 +3050,7 @@ char* UTIL_VarArgs( char *format, ... )
 // UTIL_LogPrintf - Prints a logged message to console.
 // Preceded by LOG: ( timestamp ) < message >
 //=========================================================
-void UTIL_LogPrintf( char *fmt, ... )
+void UTIL_LogPrintf( const char *fmt, ... )
 {
 	va_list			argptr;
 	static char		string[1024];

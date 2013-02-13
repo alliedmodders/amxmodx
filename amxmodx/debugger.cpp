@@ -614,9 +614,9 @@ void Debugger::FmtGenericMsg(AMX *amx, int error, char buffer[], size_t maxLengt
 	if (a)
 		filename = (*a).getName();
 	size_t len = strlen(filename);
-	for (size_t i=len-1; i>=0; i--)
+	for (size_t i=len-1; i<len; i--)
 	{
-		if (filename[i] == '/' || filename[i] == '\\' && i != len - 1)
+		if ((filename[i] == '/' || filename[i] == '\\') && i != len - 1)
 		{
 			filename = &(filename[i+1]);
 			break;

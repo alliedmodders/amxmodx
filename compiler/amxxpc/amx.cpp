@@ -42,7 +42,7 @@
 #include <stddef.h>     /* for wchar_t */
 #include <string.h>
 #include "osdefs.h"
-#if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+#if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
   #include <sclinux.h>
   #if !defined AMX_NODYNALOAD
     #include <dlfcn.h>
@@ -815,12 +815,12 @@ static void expand(unsigned char *code, long codesize, long memsize)
 int AMXAPI amx_Init(AMX *amx,void *program)
 {
   AMX_HEADER *hdr;
-  #if (defined _Windows || defined LINUX || defined __FreeBSD__ || defined __OpenBSD__) && !defined AMX_NODYNALOAD
+  #if (defined _Windows || defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__) && !defined AMX_NODYNALOAD
     char libname[sNAMEMAX+8];  /* +1 for '\0', +3 for 'amx' prefix, +4 for extension */
     #if defined _Windows
       typedef int (FAR WINAPI *AMX_ENTRY)(AMX _FAR *amx);
       HINSTANCE hlib;
-    #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+    #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
       typedef int (*AMX_ENTRY)(AMX *amx);
       void *hlib;
     #endif
@@ -965,7 +965,7 @@ int AMXAPI amx_Init(AMX *amx,void *program)
   amx_BrowseRelocate(amx);
 
   /* load any extension modules that the AMX refers to */
-  #if (defined _Windows || defined LINUX || defined __FreeBSD__ || defined __OpenBSD__) && !defined AMX_NODYNALOAD
+  #if (defined _Windows || defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__) && !defined AMX_NODYNALOAD
     hdr=(AMX_HEADER *)amx->base;
     numlibraries=NUMENTRIES(hdr,libraries,pubvars);
     for (i=0; i<numlibraries; i++) {
@@ -981,7 +981,7 @@ int AMXAPI amx_Init(AMX *amx,void *program)
           if (hlib<=HINSTANCE_ERROR)
             hlib=NULL;
         #endif
-      #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+      #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
         strcat(libname,".so");
         hlib=dlopen(libname,RTLD_NOW);
       #endif
@@ -995,7 +995,7 @@ int AMXAPI amx_Init(AMX *amx,void *program)
         strcat(funcname,"Init");
         #if defined _Windows
           libinit=(AMX_ENTRY)GetProcAddress(hlib,funcname);
-        #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+        #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
           libinit=(AMX_ENTRY)dlsym(hlib,funcname);
         #endif
         if (libinit!=NULL)
@@ -1029,7 +1029,7 @@ int AMXAPI amx_Init(AMX *amx,void *program)
       return !VirtualProtect(addr, len, p, &prev);
     }
 
-  #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+  #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
 
     /* Linux already has mprotect() */
 
@@ -1104,10 +1104,10 @@ int AMXAPI amx_InitJIT(AMX *amx,void *compiled_program,void *reloc_table)
 #if defined AMX_CLEANUP
 int AMXAPI amx_Cleanup(AMX *amx)
 {
-  #if (defined _Windows || defined LINUX || defined __FreeBSD__ || defined __OpenBSD__) && !defined AMX_NODYNALOAD
+  #if (defined _Windows || defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__) && !defined AMX_NODYNALOAD
     #if defined _Windows
       typedef int (FAR WINAPI *AMX_ENTRY)(AMX FAR *amx);
-    #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+    #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
       typedef int (*AMX_ENTRY)(AMX *amx);
     #endif
     AMX_HEADER *hdr;
@@ -1117,7 +1117,7 @@ int AMXAPI amx_Cleanup(AMX *amx)
   #endif
 
   /* unload all extension modules */
-  #if (defined _Windows || defined LINUX || defined __FreeBSD__ || defined __OpenBSD__) && !defined AMX_NODYNALOAD
+  #if (defined _Windows || defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__) && !defined AMX_NODYNALOAD
     hdr=(AMX_HEADER *)amx->base;
     assert(hdr->magic==AMX_MAGIC);
     numlibraries=NUMENTRIES(hdr,libraries,pubvars);
@@ -1130,14 +1130,14 @@ int AMXAPI amx_Cleanup(AMX *amx)
         strcat(funcname,"Cleanup");
         #if defined _Windows
           libcleanup=(AMX_ENTRY)GetProcAddress((HINSTANCE)lib->address,funcname);
-        #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+        #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
           libcleanup=(AMX_ENTRY)dlsym((void*)lib->address,funcname);
         #endif
         if (libcleanup!=NULL)
           libcleanup(amx);
         #if defined _Windows
           FreeLibrary((HINSTANCE)lib->address);
-        #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+        #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
           dlclose((void*)lib->address);
         #endif
       } /* if */
@@ -1666,7 +1666,7 @@ int AMXAPI amx_PushString(AMX *amx, cell *amx_addr, cell **phys_addr, const char
      * fast "indirect threaded" interpreter.
      */
 
-#define NEXT(cip)       goto **cip++
+#define NEXT(cip)       goto *(const void *)*cip++
 
 int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
 {
@@ -1846,14 +1846,14 @@ static const void * const amx_opcodelist[] = {
     NEXT(cip);
   op_load_i:
     /* verify address */
-    if (pri>=hea && pri<stk || (ucell)pri>=(ucell)amx->stp)
+    if ((pri>=hea && pri<stk) || (ucell)pri>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
     pri= * (cell *)(data+(int)pri);
     NEXT(cip);
   op_lodb_i:
     GETPARAM(offs);
     /* verify address */
-    if (pri>=hea && pri<stk || (ucell)pri>=(ucell)amx->stp)
+    if ((pri>=hea && pri<stk) || (ucell)pri>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
     switch (offs) {
     case 1:
@@ -1919,14 +1919,14 @@ static const void * const amx_opcodelist[] = {
     NEXT(cip);
   op_stor_i:
     /* verify address */
-    if (alt>=hea && alt<stk || (ucell)alt>=(ucell)amx->stp)
+    if ((alt>=hea && alt<stk) || (ucell)alt>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
     *(cell *)(data+(int)alt)=pri;
     NEXT(cip);
   op_strb_i:
     GETPARAM(offs);
     /* verify address */
-    if (alt>=hea && alt<stk || (ucell)alt>=(ucell)amx->stp)
+    if ((alt>=hea && alt<stk) || (ucell)alt>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
     switch (offs) {
     case 1:
@@ -1943,7 +1943,7 @@ static const void * const amx_opcodelist[] = {
   op_lidx:
     offs=pri*sizeof(cell)+alt;
     /* verify address */
-    if (offs>=hea && offs<stk || (ucell)offs>=(ucell)amx->stp)
+    if ((offs>=hea && offs<stk) || (ucell)offs>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
     pri= * (cell *)(data+(int)offs);
     NEXT(cip);
@@ -1951,7 +1951,7 @@ static const void * const amx_opcodelist[] = {
     GETPARAM(offs);
     offs=(pri << (int)offs)+alt;
     /* verify address */
-    if (offs>=hea && offs<stk || (ucell)offs>=(ucell)amx->stp)
+    if ((offs>=hea && offs<stk) || (ucell)offs>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
     pri= * (cell *)(data+(int)offs);
     NEXT(cip);
@@ -2388,13 +2388,13 @@ static const void * const amx_opcodelist[] = {
     /* verify top & bottom memory addresses, for both source and destination
      * addresses
      */
-    if (pri>=hea && pri<stk || (ucell)pri>=(ucell)amx->stp)
+    if ((pri>=hea && pri<stk) || (ucell)pri>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
-    if ((pri+offs)>hea && (pri+offs)<stk || (ucell)(pri+offs)>(ucell)amx->stp)
+    if (((pri+offs)>hea && (pri+offs)<stk) || (ucell)(pri+offs)>(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
-    if (alt>=hea && alt<stk || (ucell)alt>=(ucell)amx->stp)
+    if ((alt>=hea && alt<stk) || (ucell)alt>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
-    if ((alt+offs)>hea && (alt+offs)<stk || (ucell)(alt+offs)>(ucell)amx->stp)
+    if (((alt+offs)>hea && (alt+offs)<stk) || (ucell)(alt+offs)>(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
     memcpy(data+(int)alt, data+(int)pri, (int)offs);
     NEXT(cip);
@@ -2403,22 +2403,22 @@ static const void * const amx_opcodelist[] = {
     /* verify top & bottom memory addresses, for both source and destination
      * addresses
      */
-    if (pri>=hea && pri<stk || (ucell)pri>=(ucell)amx->stp)
+    if ((pri>=hea && pri<stk) || (ucell)pri>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
-    if ((pri+offs)>hea && (pri+offs)<stk || (ucell)(pri+offs)>(ucell)amx->stp)
+    if (((pri+offs)>hea && (pri+offs)<stk) || (ucell)(pri+offs)>(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
-    if (alt>=hea && alt<stk || (ucell)alt>=(ucell)amx->stp)
+    if ((alt>=hea && alt<stk) || (ucell)alt>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
-    if ((alt+offs)>hea && (alt+offs)<stk || (ucell)(alt+offs)>(ucell)amx->stp)
+    if (((alt+offs)>hea && (alt+offs)<stk) || (ucell)(alt+offs)>(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
     pri=memcmp(data+(int)alt, data+(int)pri, (int)offs);
     NEXT(cip);
   op_fill:
     GETPARAM(offs);
     /* verify top & bottom memory addresses */
-    if (alt>=hea && alt<stk || (ucell)alt>=(ucell)amx->stp)
+    if ((alt>=hea && alt<stk) || (ucell)alt>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
-    if ((alt+offs)>hea && (alt+offs)<stk || (ucell)(alt+offs)>(ucell)amx->stp)
+    if (((alt+offs)>hea && (alt+offs)<stk) || (ucell)(alt+offs)>(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
     for (i=(int)alt; offs>=(int)sizeof(cell); i+=sizeof(cell), offs-=sizeof(cell))
       *(cell *)(data+i) = pri;
@@ -3592,7 +3592,7 @@ int AMXAPI amx_GetAddr(AMX *amx,cell amx_addr,cell **phys_addr)
   data=(amx->data!=NULL) ? amx->data : amx->base+(int)hdr->dat;
 
   assert(phys_addr!=NULL);
-  if (amx_addr>=amx->hea && amx_addr<amx->stk || amx_addr<0 || amx_addr>=amx->stp) {
+  if ((amx_addr>=amx->hea && amx_addr<amx->stk) || amx_addr<0 || amx_addr>=amx->stp) {
     *phys_addr=NULL;
     return AMX_ERR_MEMACCESS;
   } /* if */

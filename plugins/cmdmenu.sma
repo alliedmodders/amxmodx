@@ -87,7 +87,7 @@ new g_cvarCmdNum
 new g_cvarNum
 
 new g_menuPosition[33]
-new g_menuSelect[33][64]
+new g_menuSelect[33][MAX_CMDS]
 new g_menuSelectNum[33]
 new g_menuLayer[33]
 

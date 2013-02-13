@@ -10,7 +10,7 @@ require 'helpers.pm';
 chdir('../../installer/builder');
 
 my $output;
-if ($^O eq "linux") {
+if ($^O eq "linux" || $^O eq "darwin") {
 	$output = `mono builder.exe directions.info`;
 } else {
 	$output = `builder.exe directions.info`;

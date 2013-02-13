@@ -33,8 +33,9 @@ $version .= '-hg' . Build::HgRevNum('.');
 #Switch to the output folder.
 chdir(Build::PathFormat('../../../OUTPUT'));
 
-my (@packages);
+my (@packages,@mac_exclude);
 @packages = ('base', 'cstrike', 'dod', 'esf', 'ns', 'tfc', 'ts');
+@mac_exclude = ('esf', 'ns', 'ts');
 
 my ($major,$minor) = ($version =~ /^(\d+)\.(\d+)/);
 $ftp_path .= "/$major.$minor";
@@ -58,9 +59,12 @@ my ($i);
 for ($i = 0; $i <= $#packages; $i++) {
 	my ($filename);
 	if ($^O eq "linux") {
-		$filename = "amxmodx-$version-" . $packages[$i] . ".tar.gz";
+		$filename = "amxmodx-$version-" . $packages[$i] . "-linux.tar.gz";
+	} elsif ($^O eq "darwin") {
+		next if ($packages[$i] ~~ @mac_exclude);
+		$filename = "amxmodx-$version-" . $packages[$i] . "-mac.zip";
 	} else {
-		$filename = "amxmodx-$version-" . $packages[$i] . ".zip";
+		$filename = "amxmodx-$version-" . $packages[$i] . "-windows.zip";
 	}
 	print "Uploading $filename...\n";
 	$ftp->put($filename)

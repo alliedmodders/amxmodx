@@ -168,7 +168,7 @@ void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, f
 		{
 			clear();
 		} else {
-			m_fNextExecTime = fCurrentTime + m_fBase;
+			m_fNextExecTime += m_fBase;
 		}
 	}
 }

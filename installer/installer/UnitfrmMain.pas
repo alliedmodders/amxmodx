@@ -107,10 +107,10 @@ type
     lblStep3: TLabel;
     pnlOS: TPanel;
     optWindows: TFlatRadioButton;
-    optLinux32: TFlatRadioButton;
+    optLinux: TFlatRadioButton;
     lblStep5: TLabel;
     lblFTP: TLabel;
-    optLinux64: TFlatRadioButton;
+    optMac: TFlatRadioButton;
     procedure jvwStepsCancelButtonClick(Sender: TObject);
     procedure cmdCancelClick(Sender: TObject);
     procedure cmdNextClick(Sender: TObject);
@@ -149,7 +149,7 @@ var
   frmMain: TfrmMain;
   gMultiAccount: Boolean;
 
-const VERSION = '1.8.0';
+const VERSION = '1.8.2';
 
 implementation
 
@@ -249,8 +249,8 @@ begin
     trvDirectories.Enabled := False;
     cmdConnect.Enabled := False;
     optWindows.Enabled := False;
-    optLinux32.Enabled := False;
-    //optLinux64.Enabled := False;
+    optLinux.Enabled := False;
+    optMac.Enabled := False;
     cboGameAddon.Enabled := False;
     // preinstall...
     MakeDir(ExtractFilePath(Application.ExeName) + 'temp');
@@ -281,10 +281,10 @@ begin
 
     if optWindows.Checked then
       eOS := osWindows
-    else //if optLinux32.Checked then
-      eOS := osLinux32;
-    //else
-    //  eOS := osLinux64;
+    else if optLinux.Checked then
+      eOS := osLinux
+    else
+      eOS := osMac;
 
     jspInstallProgress.Show;
     frmMain.Height := 382;

@@ -109,6 +109,7 @@ void Client_TeamInfo(void* mValue)
 			char* msg = (char*)mValue;
 			g_players[index].team.assign(msg);
 			g_teamsIds.registerTeam(msg, -1);
+			g_players[index].teamId = g_teamsIds.findTeamId(msg);
 			break;
 	}
 }

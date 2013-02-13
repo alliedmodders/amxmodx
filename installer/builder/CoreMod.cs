@@ -41,7 +41,7 @@ namespace AMXXRelease
 			if ( ((file.IndexOf(".exe")!=-1) || (file.IndexOf(".dll")!=-1))
 				&& (!Releaser.IsWindows) )
 				return true;
-			if ( (file.IndexOf("dlsym")!=-1) && (Releaser.IsWindows || Releaser.IsOSX) )
+			if (file.IndexOf("dlsym")!=-1)
 				return true;
 			if (ABuilder.GetFileName(file).CompareTo("svn_version.tpl") == 0)
 			{

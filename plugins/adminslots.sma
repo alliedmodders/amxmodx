@@ -35,7 +35,6 @@
 #include <amxmodx>
 #include <amxmisc>
 
-new g_cmdLoopback[16]
 new g_ResPtr
 new g_HidePtr
 
@@ -46,9 +45,6 @@ public plugin_init()
 	register_dictionary("common.txt")
 	g_ResPtr = register_cvar("amx_reservation", "0")
 	g_HidePtr = register_cvar("amx_hideslots", "0")
-	
-	format(g_cmdLoopback, 15, "amxres%c%c%c%c", random_num('A', 'Z'), random_num('A', 'Z'), random_num('A', 'Z'), random_num('A', 'Z'))
-	register_clcmd(g_cmdLoopback, "ackSignal")
 }
 
 public plugin_cfg()
@@ -67,15 +63,6 @@ public MapLoaded()
 	setVisibleSlots(players, maxplayers, limit)
 }
 
-public ackSignal(id)
-{
-	new lReason[64]
-	format(lReason, 63, "%L", id, "DROPPED_RES")
-	server_cmd("kick #%d ^"%s^"", get_user_userid(id), lReason)
-	
-	return PLUGIN_HANDLED
-}
-
 public client_authorized(id)
 {
 	new maxplayers = get_maxplayers()
@@ -89,7 +76,9 @@ public client_authorized(id)
 		return PLUGIN_CONTINUE
 	}
 	
-	client_cmd(id, "%s", g_cmdLoopback)
+ 	new lReason[64]
+ 	format(lReason, 63, "%L", id, "DROPPED_RES")
+ 	server_cmd("kick #%d ^"%s^"", get_user_userid(id), lReason)
 
 	return PLUGIN_HANDLED
 }

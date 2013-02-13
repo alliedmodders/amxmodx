@@ -521,8 +521,8 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		Vec2[2]=amx_ctof(cRet[2]);
 		temp = (char*)(*g_engfuncs.pfnTraceTexture)(INDEXENT2(index),Vec1,Vec2);
 		cRet = MF_GetAmxAddr(amx,params[6]);
-		MF_SetAmxString(amx, params[5], temp, cRet[0]);
-		return 1;
+		MF_SetAmxString(amx, params[5], (temp == NULL) ? "NoTexture" : temp, cRet[0]);
+		return (temp != NULL);
 
 		
 		// pfnTraceSphere

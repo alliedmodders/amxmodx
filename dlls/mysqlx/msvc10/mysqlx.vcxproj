@@ -52,7 +52,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\;..\mysql;..\sdk;..\thread;$(METAMOD);$(HLSDK)\metamod\common;$(HLSDK)\metamod\engine;$(HLSDK)\metamod\dlls;$(MYSQL5)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\mysql;..\sdk;..\thread;$(METAMOD);$(HLSDK)\multiplayer\common;$(HLSDK)\multiplayer\engine;$(HLSDK)\multiplayer\dlls;$(MYSQL5)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;MYSQL2_EXPORTS;SM_DEFAULT_THREADER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -75,7 +75,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\;..\mysql;..\sdk;..\thread;$(METAMOD);$(HLSDK)\metamod\common;$(HLSDK)\metamod\engine;$(HLSDK)\metamod\dlls;$(MYSQL5)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\mysql;..\sdk;..\thread;$(METAMOD);$(HLSDK)\multiplayer\common;$(HLSDK)\multiplayer\engine;$(HLSDK)\multiplayer\dlls;$(MYSQL5)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;MYSQL2_EXPORTS;SM_DEFAULT_THREADER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>

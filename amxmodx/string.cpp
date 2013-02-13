@@ -1035,7 +1035,7 @@ static cell AMX_NATIVE_CALL n_strfind(AMX *amx, cell *params)
 	if (params[4] > len)
 		return -1;
 
-	char *find = strstr(str, sub);
+	char *find = strstr(str + params[4], sub);
 
 	if (!find)
 		return -1;

@@ -238,6 +238,8 @@ stock replace_all(string[], len, const what[], const with[])
 	
 	while (replace(string[pos], len - pos, what, with) != 0)
 	{
+		total++;
+
 		/* jump to position after replacement */
 		pos += with_len;
 		
@@ -261,7 +263,6 @@ stock replace_all(string[], len, const what[], const with[])
 		
 		/* otherwise, reposition and update counters */
 		pos += temp_pos;
-		total++;
 	}
 	
 	return total;

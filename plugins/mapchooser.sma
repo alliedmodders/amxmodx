@@ -275,6 +275,7 @@ loadSettings(filename[])
 	while (!feof(fp))
 	{
 		buff[0]='^0';
+		szText[0]='^0';
 		
 		fgets(fp, buff, charsof(buff));
 		

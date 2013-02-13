@@ -201,7 +201,7 @@ void amx_command()
 		print_srvconsole("Authors:\n\tDavid \"BAILOPAN\" Anderson, Pavol \"PM OnoTo\" Marko\n");
 		print_srvconsole("\tFelix \"SniperBeamer\" Geyer, Jonny \"Got His Gun\" Bergstrom\n");
 		print_srvconsole("\tLukasz \"SidLuke\" Wlasinski, Christian \"Basic-Master\" Hammacher\n");
-		print_srvconsole("\tBorja \"faluco\" Ferrer, Scott \"Damaged Soul\" Ehlert\n");
+		print_srvconsole("\tBorja \"faluco\" Ferrer, Scott \"DS\" Ehlert\n");
 		print_srvconsole("Compiled: %s\n", __DATE__ ", " __TIME__);
 		print_srvconsole("Build ID: %s\n", SVN_BUILD_ID);
 #if defined JIT && !defined ASM32

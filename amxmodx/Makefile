@@ -59,13 +59,13 @@ else
 
 	LIB_EXT = so
 	LIB_SUFFIX = _mm_i386
-	CFLAGS += -DLINUX
+	CFLAGS += -DLINUX -DJIT
 	LINK += -shared -lz
 endif
 
 LINK += -m32 -lm -ldl
 
-CFLAGS += -DAMX_NOPROPLIST -DPAWN_CELL_SIZE=32 -DJIT -DASM32 -DHAVE_STDINT_H -fno-strict-aliasing \
+CFLAGS += -DAMX_NOPROPLIST -DPAWN_CELL_SIZE=32 -DASM32 -DHAVE_STDINT_H -fno-strict-aliasing \
 	  -m32 -Wall -Werror
 CPPFLAGS += -fno-exceptions -fno-rtti
 

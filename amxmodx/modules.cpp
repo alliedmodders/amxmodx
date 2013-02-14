@@ -620,7 +620,7 @@ int set_amxnatives(AMX* amx, char error[128])
 
 int unload_amxscript(AMX* amx, void** program)
 {	
-#if !defined JIT
+#if defined JIT
 	int flags = amx->flags;
 #endif
 

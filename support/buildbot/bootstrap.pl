@@ -20,8 +20,8 @@ if ($^O eq "linux" || $^O eq "darwin")
 	Build::Command("flip -u support/versionchanger.pl");
 	Build::Command("chmod +x support/versionchanger.pl");
 }
-#Build::Command(Build::PathFormat('support/versionchanger.pl') . ' --buildstring="-dev"');
-Build::Command(Build::PathFormat('support/versionchanger.pl'));
+Build::Command(Build::PathFormat('support/versionchanger.pl') . ' --buildstring="-dev"');
+#Build::Command(Build::PathFormat('support/versionchanger.pl'));
 
 my $DEVENV = "C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\MSBuild.exe";
 

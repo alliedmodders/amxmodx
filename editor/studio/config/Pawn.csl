@@ -1,0 +1,5 @@
+Public Function!APPEND!public Function(){	}
+Internal Function!APPEND!Function(){	}
+Hudmessage (Red, Top/Centered)!INSERT!set_hudmessage(255, 0, 0, -1.0, 0.01)show_hudmessage(id, "<Hudmessage>")
+Hudmessage (Green, Left/Centered)!INSERT!set_hudmessage(0, 255, 0, -1.0, -1.0)show_hudmessage(id, "<Hudmessage>")
+Hudmessage (Blue, Centered)!INSERT!set_hudmessage(0, 0, 255, -1.0, -1.0)show_hudmessage(id, "<Hudmessage>")

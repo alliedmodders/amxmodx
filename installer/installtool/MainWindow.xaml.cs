@@ -53,6 +53,8 @@ namespace installtool
             {
                 swap(welcomePanel_);
             }
+
+            backButton_.IsEnabled = currentPanel_ != welcomePanel_;
         }
 
         private void nextButton__Click(object sender, RoutedEventArgs e)
@@ -67,10 +69,7 @@ namespace installtool
                 swap(licensePanel_);
             }
 
-            if (currentPanel_ != welcomePanel_)
-            {
-                backButton_.IsEnabled = true;
-            }
+            backButton_.IsEnabled = true;
         }
     }
 }

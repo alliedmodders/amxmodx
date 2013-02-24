@@ -90,6 +90,9 @@
 
 ; Revision History
 ; ----------------
+; 24 february 2013 by Scott Ehlert
+;       Aligned stack to 16-byte boundary for native calls in case they make library
+;       calls on Mac OS X or use SSE instructions.
 ; 16 august 2005 by David "BAILOPAN" Anderson (DA)
 ;		Changed JIT to not swap stack pointer during execution.  This 
 ;		is playing with fire, especially with pthreads and signals on linux,
@@ -301,6 +304,22 @@
     %ifndef STDECL               ; (for __cdecl calling convention only)
         add     esp,%1
     %endif
+%endmacro
+
+%macro  _STK_ALIGN 1            ; align stack to 16-byte boundary and
+                                ; allocate %1 bytes of stack space
+    %if %1 % 16 != 0
+        %error "expected 16-byte aligned value"
+    %endif
+        push     edi
+        mov      edi, esp
+        and      esp, 0xFFFFFFF0
+        sub      esp, %1
+%endmacro
+
+%macro _STK_RESTORE 0           ; restore stack pointer after 16-byte alignment
+        mov      esp, edi
+        pop      edi
 %endmacro
 
 global  asm_runJIT, _asm_runJIT
@@ -2238,8 +2257,10 @@ err_divide:
         jmp     _return_popstack
 
 JIT_OP_SYSREQ:
-        push	ecx
-        push	esi
+        _STK_ALIGN 32           ; align stack to 16-byte boundary and
+                                ; allocate 32 bytes of stack space
+        mov     [esp+16], ecx
+        mov     [esp+12], esi
         mov     ebp,amx         ; get amx into EBP
 
         sub     esi,edi         ; correct STK
@@ -2254,14 +2275,15 @@ JIT_OP_SYSREQ:
         lea     ebx,pri         ; 3rd param: addr. of retval
 
         ;Our original esi is still pushed!
-        push    ebx
-        push    eax             ; 2nd param: function number
-        push    ebp             ; 1st param: amx
+        mov     [esp+08], ebx
+        mov     [esp+04], eax   ; 2nd param: function number
+        mov     [esp], ebp      ; 1st param: amx
         call    [ebp+_callback]
-        _DROPARGS 12            ; remove args from stack
         
-		pop		esi
-        pop		ecx
+        mov     esi, [esp+12]   ; restore esi
+        mov     ecx, [esp+16]   ; restore ecx
+        _STK_RESTORE            ; restore stack pointer
+
         cmp     eax,AMX_ERR_NONE
         jne		_return_popstack
 .continue:
@@ -2273,8 +2295,10 @@ JIT_OP_SYSREQ:
 
 
 JIT_OP_SYSREQ_D:                ; (TR)
-        push	ecx
-        push	esi
+        _STK_ALIGN 16           ; align stack to 16-byte boundary and
+                                ; allocate 16 bytes of stack space
+        mov     [esp+08], ecx
+        mov     [esp+04], esi
         mov     ebp,amx         ; get amx into EBP
 
         sub     esi,edi         ; correct STK
@@ -2287,11 +2311,12 @@ JIT_OP_SYSREQ_D:                ; (TR)
         mov     [ebp+_frm],eax  ; eax & ecx are invalid by now
 
         ;esi is still pushed!
-        push    ebp             ; 1st param: amx
+        mov     [esp], ebp      ; 1st param: amx
         call    ebx             ; direct call
-        _DROPARGS 8             ; remove args from stack
-        
-        pop		ecx
+
+        mov     ecx, [esp+08]   ; restore ecx
+        _STK_RESTORE            ; restore stack pointer
+
         mov     ebp,amx         ; get amx into EBP
         cmp     dword [ebp+_error],AMX_ERR_NONE
         jne     _return_popstack; return error code, if any
@@ -2305,8 +2330,10 @@ JIT_OP_SYSREQ_D:                ; (TR)
 
 JIT_OP_BREAK:
 %ifdef DEBUGSUPPORT
-        push	ecx
-        push	esi
+        _STK_ALIGN 16           ; align stack to 16-byte boundary and
+                                ; allocate 16 bytes of stack space
+        mov     [esp+08], ecx
+        mov     [esp+04], esi
         mov     ebp,amx         ; get amx into EBP
 
         sub     esi,edi         ; correct STK
@@ -2320,12 +2347,13 @@ JIT_OP_BREAK:
         mov     [ebp+_frm],ebx  ; EBX & ECX are invalid by now
         ;??? storing CIP is not very useful, because the code changed (during JIT compile)
 
-        push    ebp             ; 1st param: amx
+        mov     [esp], ebp      ; 1st param: amx
         call    [ebp+_debug]
-        _DROPARGS 4             ; remove args from stack
 
-        pop		esi
-        pop		ecx
+        mov esi, [esp+04]       ; restore esi
+        mov ecx, [esp+08]       ; restore ecx
+        _STK_RESTORE            ; restore stack pointer
+
         cmp     eax,AMX_ERR_NONE
         jne     _return_popstack; return error code, if any
 

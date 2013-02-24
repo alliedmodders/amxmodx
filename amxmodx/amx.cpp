@@ -936,7 +936,7 @@ int AMXAPI amx_Init(AMX *amx, void *program)
 
     /* Linux already has mprotect() */
     /* But wants the address aligned! */
-    #define ALIGN(addr) (char *)(((long)addr + sysconf(_SC_PAGESIZE)-1) & ~(sysconf(_SC_PAGESIZE)-1))
+    #define ALIGN(addr) ((void *)((intptr_t)addr & ~(sysconf(_SC_PAGESIZE)-1)))
 
   #else
 

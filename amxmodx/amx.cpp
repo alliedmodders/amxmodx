@@ -1640,7 +1640,7 @@ int AMXAPI amx_PushString(AMX *amx, cell *amx_addr, cell **phys_addr, const char
      * fast "indirect threaded" interpreter.
      */
 
-#define NEXT(cip)       goto **cip++
+#define NEXT(cip)       goto *(const void *)*cip++
 
 int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
 {
@@ -1824,14 +1824,14 @@ static const void * const amx_opcodelist[] = {
     NEXT(cip);
   op_load_i:
     /* verify address */
-    if (pri>=hea && pri<stk || (ucell)pri>=(ucell)amx->stp)
+    if ((pri>=hea && pri<stk) || (ucell)pri>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
     pri= * (cell *)(data+(int)pri);
     NEXT(cip);
   op_lodb_i:
     GETPARAM(offs);
     /* verify address */
-    if (pri>=hea && pri<stk || (ucell)pri>=(ucell)amx->stp)
+    if ((pri>=hea && pri<stk) || (ucell)pri>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
     switch (offs) {
     case 1:
@@ -1897,14 +1897,14 @@ static const void * const amx_opcodelist[] = {
     NEXT(cip);
   op_stor_i:
     /* verify address */
-    if (alt>=hea && alt<stk || (ucell)alt>=(ucell)amx->stp)
+    if ((alt>=hea && alt<stk) || (ucell)alt>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
     *(cell *)(data+(int)alt)=pri;
     NEXT(cip);
   op_strb_i:
     GETPARAM(offs);
     /* verify address */
-    if (alt>=hea && alt<stk || (ucell)alt>=(ucell)amx->stp)
+    if ((alt>=hea && alt<stk) || (ucell)alt>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
     switch (offs) {
     case 1:
@@ -1921,7 +1921,7 @@ static const void * const amx_opcodelist[] = {
   op_lidx:
     offs=pri*sizeof(cell)+alt;
     /* verify address */
-    if (offs>=hea && offs<stk || (ucell)offs>=(ucell)amx->stp)
+    if ((offs>=hea && offs<stk) || (ucell)offs>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
     pri= * (cell *)(data+(int)offs);
     NEXT(cip);
@@ -1929,7 +1929,7 @@ static const void * const amx_opcodelist[] = {
     GETPARAM(offs);
     offs=(pri << (int)offs)+alt;
     /* verify address */
-    if (offs>=hea && offs<stk || (ucell)offs>=(ucell)amx->stp)
+    if ((offs>=hea && offs<stk) || (ucell)offs>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
     pri= * (cell *)(data+(int)offs);
     NEXT(cip);
@@ -2366,13 +2366,13 @@ static const void * const amx_opcodelist[] = {
     /* verify top & bottom memory addresses, for both source and destination
      * addresses
      */
-    if (pri>=hea && pri<stk || (ucell)pri>=(ucell)amx->stp)
+    if ((pri>=hea && pri<stk) || (ucell)pri>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
-    if ((pri+offs)>hea && (pri+offs)<stk || (ucell)(pri+offs)>(ucell)amx->stp)
+    if (((pri+offs)>hea && (pri+offs)<stk) || (ucell)(pri+offs)>(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
-    if (alt>=hea && alt<stk || (ucell)alt>=(ucell)amx->stp)
+    if ((alt>=hea && alt<stk) || (ucell)alt>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
-    if ((alt+offs)>hea && (alt+offs)<stk || (ucell)(alt+offs)>(ucell)amx->stp)
+    if (((alt+offs)>hea && (alt+offs)<stk) || (ucell)(alt+offs)>(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
     memcpy(data+(int)alt, data+(int)pri, (int)offs);
     NEXT(cip);
@@ -2381,22 +2381,22 @@ static const void * const amx_opcodelist[] = {
     /* verify top & bottom memory addresses, for both source and destination
      * addresses
      */
-    if (pri>=hea && pri<stk || (ucell)pri>=(ucell)amx->stp)
+    if ((pri>=hea && pri<stk) || (ucell)pri>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
-    if ((pri+offs)>hea && (pri+offs)<stk || (ucell)(pri+offs)>(ucell)amx->stp)
+    if (((pri+offs)>hea && (pri+offs)<stk) || (ucell)(pri+offs)>(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
-    if (alt>=hea && alt<stk || (ucell)alt>=(ucell)amx->stp)
+    if ((alt>=hea && alt<stk) || (ucell)alt>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
-    if ((alt+offs)>hea && (alt+offs)<stk || (ucell)(alt+offs)>(ucell)amx->stp)
+    if (((alt+offs)>hea && (alt+offs)<stk) || (ucell)(alt+offs)>(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
     pri=memcmp(data+(int)alt, data+(int)pri, (int)offs);
     NEXT(cip);
   op_fill:
     GETPARAM(offs);
     /* verify top & bottom memory addresses */
-    if (alt>=hea && alt<stk || (ucell)alt>=(ucell)amx->stp)
+    if ((alt>=hea && alt<stk) || (ucell)alt>=(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
-    if ((alt+offs)>hea && (alt+offs)<stk || (ucell)(alt+offs)>(ucell)amx->stp)
+    if (((alt+offs)>hea && (alt+offs)<stk) || (ucell)(alt+offs)>(ucell)amx->stp)
       ABORT(amx,AMX_ERR_MEMACCESS);
     for (i=(int)alt; offs>=(int)sizeof(cell); i+=sizeof(cell), offs-=sizeof(cell))
       *(cell *)(data+i) = pri;

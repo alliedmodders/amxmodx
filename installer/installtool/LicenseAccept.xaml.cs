@@ -22,6 +22,7 @@ namespace installtool
         public LicenseAccept()
         {
             InitializeComponent();
+            license_.Text = license_.Text.Replace("&#10;&#13;", "");
         }
     }
 }

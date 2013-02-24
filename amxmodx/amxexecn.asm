@@ -56,6 +56,9 @@
 ;
 ;History (list of changes)
 ;-------------------------
+; 24 february 2013 by Scott Ehlert
+;       Aligned stack to 16-byte boundary for native calls in case they make library
+;       calls on Mac OS X or use SSE instructions.
 ; 10 february 2006 by David Anderson
 ;       Addition of float opcodes
 ; 17 february 2005  by Thiadmer Riemersms
@@ -189,6 +192,21 @@
     %endif
 %endmacro
 
+%macro  _STK_ALIGN 1            ; align stack to 16-byte boundary and
+                                ; allocate %1 bytes of stack space
+    %if %1 % 16 != 0
+        %error "expected 16-byte aligned value"
+    %endif
+        push     edi
+        mov      edi, esp
+        and      esp, 0xFFFFFFF0
+        sub      esp, %1
+%endmacro
+
+%macro _STK_RESTORE 0           ; restore stack pointer after 16-byte alignment
+        mov      esp, edi
+        pop      edi
+%endmacro
 
 Start_CODE
 
@@ -1265,13 +1283,15 @@ OP_SYSREQ_PRI:
         push    ebp
         push    esi
         push    edi
+        _STK_ALIGN 16           ; align stack to 16-byte boundary and
+                                ; allocate 16 bytes of stack space
         ; push the parameters
-        push    ecx
-        push    ebx
-        push    edx
-        push    eax
+        mov     [esp+12], ecx
+        mov     [esp+08], ebx
+        mov     [esp+04], edx
+        mov     [esp], eax
         call    [ebp+_callback]
-        _DROPARGS 10h           ; remove arguments from stack
+        _STK_RESTORE            ; restore stack pointer
         pop     edi             ; restore saved registers
         pop     esi
         pop     ebp
@@ -1308,11 +1328,13 @@ OP_SYSREQ_D:                    ; (TR)
         push    ebp
         push    esi
         push    edi
+        _STK_ALIGN 16           ; align stack to 16-byte boundary and
+                                ; allocate 16 bytes of stack space
         ; push the parameters
-        push    edx
-        push    eax
+        mov     [esp+04], edx
+        mov     [esp], eax
         call    ebx             ; direct call
-        _DROPARGS 8             ; remove arguments from stack
+        _STK_RESTORE            ; restore stack pointer
         pop     edi             ; restore saved registers
         pop     esi
         pop     ebp
@@ -1533,9 +1555,11 @@ OP_BREAK:
         ; call the debug hook
         mov     eax,ebp         ; 1st parm: amx
         _SAVEREGS
-        push    eax
+        _STK_ALIGN 16           ; align stack to 16-byte boundary and
+                                ; allocate 16 bytes of stack space
+        mov     [esp], eax
         call    [ebp+_debug]    ; call debug function
-        _DROPARGS 4             ; remove arguments from stack
+        _STK_RESTORE            ; restore stack pointer
         cmp     eax,AMX_ERR_NONE
         je      short break_noabort; continue running
         mov     [ebp+_error],eax   ; save EAX (error code) before restoring all regs

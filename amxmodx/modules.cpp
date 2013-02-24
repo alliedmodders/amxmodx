@@ -835,7 +835,7 @@ bool ConvertModuleName(const char *pathString, String &path)
 		if (strncmp(ptr, "_amxx", 5) == 0)
 		{
 			char *p = ptr + 5;
-			if (strncmp(p, ".dll", 4) == 0)
+			if (strncmp(p, ".dll", 4) == 0 || strncmp(p, ".dylib", 6) == 0)
 			{
 				foundAmxx = true;
 				break;
@@ -881,7 +881,7 @@ bool ConvertModuleName(const char *pathString, String &path)
 	path.append(PATH_SEP_CHAR);
 	path.append(tmpname);
 	path.append("_amxx");
-#if defined(__linux__) || defined(__APPLE__)
+#if defined(__linux__)
  #if defined AMD64 || PAWN_CELL_SIZE==64
 	path.append("_amd64");
  #else

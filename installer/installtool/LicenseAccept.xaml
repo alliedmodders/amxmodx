@@ -298,8 +298,8 @@ consider it more useful to permit linking proprietary applications with the
 library.  If this is what you want to do, use the GNU Library General
 Public License instead of this License.
             </TextBox>
-            <RadioButton Content="I accept the terms in the License Agreement" Height="16" HorizontalAlignment="Left" Margin="22,207,0,0" Name="radioButton1" VerticalAlignment="Top" GroupName="accept" />
-            <RadioButton Content="I do not accept the terms in the License Agreement" Height="16" HorizontalAlignment="Left" Margin="22,227,0,0" Name="radioButton2" VerticalAlignment="Top" GroupName="accept" IsChecked="True" />
+            <RadioButton Content="I accept the terms in the License Agreement" Height="16" HorizontalAlignment="Left" Margin="22,207,0,0" Name="agreeOption" VerticalAlignment="Top" GroupName="accept" Checked="agreeOption_Checked" />
+            <RadioButton Content="I do not accept the terms in the License Agreement" Height="16" HorizontalAlignment="Left" Margin="22,227,0,0" Name="disagreeOption" VerticalAlignment="Top" GroupName="accept" IsChecked="True" Checked="disagreeOption_Checked" />
         </Grid>
     </Grid>
 </UserControl>

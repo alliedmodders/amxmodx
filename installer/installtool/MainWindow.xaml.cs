@@ -55,6 +55,7 @@ namespace installtool
             }
 
             backButton_.IsEnabled = currentPanel_ != welcomePanel_;
+            nextButton_.IsEnabled = currentPanel_ != licensePanel_;
         }
 
         private void nextButton__Click(object sender, RoutedEventArgs e)
@@ -65,11 +66,18 @@ namespace installtool
                 {
                     licensePanel_ = new LicenseAccept();
                     contentPanel_.Children.Add(licensePanel_);
+                    licensePanel_.AgreementStateChanged += new RoutedEventHandler(licensePanel__AgreementStateChanged);
                 }
+                nextButton_.IsEnabled = licensePanel_.Accepted;
                 swap(licensePanel_);
             }
 
             backButton_.IsEnabled = true;
+        }
+
+        void licensePanel__AgreementStateChanged(object sender, RoutedEventArgs e)
+        {
+            nextButton_.IsEnabled = licensePanel_.Accepted;
         }
     }
 }

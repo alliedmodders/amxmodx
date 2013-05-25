@@ -907,7 +907,7 @@ void C_ClientCommand(edict_t *pEntity)
 			len += sprintf(&buf[len], "         Jonny \"Got His Gun\" Bergstrom, Lukasz \"SidLuke\" Wlasinski\n");
 			CLIENT_PRINT(pEntity, print_console, buf);
 			len = sprintf(buf, "         Christian \"Basic-Master\" Hammacher, Borja \"faluco\" Ferrer\n");
-			len += sprintf(&buf[len], "         Scott \"Damaged Soul\" Ehlert\n");
+			len += sprintf(&buf[len], "         Scott \"DS\" Ehlert\n");
 			len += sprintf(&buf[len], "Compiled: %s\nURL:http://www.amxmodx.org/\n", __DATE__ ", " __TIME__);
 			CLIENT_PRINT(pEntity, print_console, buf);
 #ifdef JIT

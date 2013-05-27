@@ -308,18 +308,28 @@
 
 %macro  _STK_ALIGN 1            ; align stack to 16-byte boundary and
                                 ; allocate %1 bytes of stack space
+                                ; top of stack allocation will hold original esp
     %if %1 % 16 != 0
         %error "expected 16-byte aligned value"
     %endif
-        push     edi
-        mov      edi, esp
-        and      esp, 0xFFFFFFF0
-        sub      esp, %1
+
+    %push stkalign
+    %assign stkspace %1
+
+    mov      ebp, esp
+    and      esp, 0xFFFFFFF0
+    sub      esp, %1
+    mov      [esp+%1-4], ebp
 %endmacro
 
 %macro _STK_RESTORE 0           ; restore stack pointer after 16-byte alignment
-        mov      esp, edi
-        pop      edi
+    %ifnctx stkalign
+        %fatal "expected _STK_ALIGN before _STK_RESTORE"
+    %endif
+
+    mov      esp, [esp+stkspace-4]
+
+    %pop stkalign
 %endmacro
 
 global  asm_runJIT, _asm_runJIT

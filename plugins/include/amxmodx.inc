@@ -862,7 +862,7 @@ native dbg_fmt_error(buffer[], maxLength);
  *  if Fun isn't loaded and you use set_user_frags, your plugin will still load.  However, if you 
  *  attempt to call this native, your filter will intercept it with these parameters:
  *
- * public function native_filter(const name[], index)
+ * public function native_filter(const native[], index, trap)
  *  native - name of native
  *  index - index of native
  *  trap - 0 if native couldn't be found, 1 if native use was attempted

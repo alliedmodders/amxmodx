@@ -414,13 +414,6 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 
 			plinfo[ENTINDEX(pPlayer)].iViewType = CAMERA_NONE;
 			plinfo[ENTINDEX(pPlayer)].pViewEnt = NULL;
-
-			pPlayer->v.rendermode = plinfo[ENTINDEX(pPlayer)].iRenderMode;
-			pPlayer->v.renderamt = plinfo[ENTINDEX(pPlayer)].fRenderAmt;
-
-			plinfo[ENTINDEX(pPlayer)].iRenderMode = 0;
-			plinfo[ENTINDEX(pPlayer)].fRenderAmt = 0;
-
 			return 1;
 			break;
 		case CAMERA_3RDPERSON:
@@ -429,10 +422,8 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 				return 1;
 			}
 			g_CameraCount++;
-			g_pFunctionTable->pfnAddToFullPack=AddToFullPack;
+			g_pFunctionTable_Post->pfnAddToFullPack=AddToFullPack_Post;
 			g_pFunctionTable_Post->pfnPlayerPostThink=PlayerPostThink_Post;
-			plinfo[ENTINDEX(pPlayer)].iRenderMode = pPlayer->v.rendermode;
-			plinfo[ENTINDEX(pPlayer)].fRenderAmt = pPlayer->v.renderamt;
 
 			plinfo[ENTINDEX(pPlayer)].iViewType = CAMERA_3RDPERSON;
 			pNewCamera = CREATE_NAMED_ENTITY(MAKE_STRING("info_target"));
@@ -461,10 +452,8 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 			}
 
 			g_CameraCount++;
-			g_pFunctionTable->pfnAddToFullPack=AddToFullPack;
+			g_pFunctionTable_Post->pfnAddToFullPack=AddToFullPack_Post;
 			g_pFunctionTable_Post->pfnPlayerPostThink=PlayerPostThink_Post;
-			plinfo[ENTINDEX(pPlayer)].iRenderMode = pPlayer->v.rendermode;
-			plinfo[ENTINDEX(pPlayer)].fRenderAmt = pPlayer->v.renderamt;
 
 			plinfo[ENTINDEX(pPlayer)].iViewType = CAMERA_UPLEFT;
 			pNewCamera = CREATE_NAMED_ENTITY(MAKE_STRING("info_target"));
@@ -493,10 +482,8 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 			}
 
 			g_CameraCount++;
-			g_pFunctionTable->pfnAddToFullPack=AddToFullPack;
+			g_pFunctionTable_Post->pfnAddToFullPack=AddToFullPack_Post;
 			g_pFunctionTable_Post->pfnPlayerPostThink=PlayerPostThink_Post;
-			plinfo[ENTINDEX(pPlayer)].iRenderMode = pPlayer->v.rendermode;
-			plinfo[ENTINDEX(pPlayer)].fRenderAmt = pPlayer->v.renderamt;
 
 			plinfo[ENTINDEX(pPlayer)].iViewType = CAMERA_TOPDOWN;
 			pNewCamera = CREATE_NAMED_ENTITY(MAKE_STRING("info_target"));

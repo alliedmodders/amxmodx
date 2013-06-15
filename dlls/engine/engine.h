@@ -11,6 +11,7 @@
 #include <usercmd.h>
 #include "entity.h"
 #include "gpglobals.h"
+#include "entity_state.h"
 
 extern DLL_FUNCTIONS *g_pFunctionTable;
 extern DLL_FUNCTIONS *g_pFunctionTable_Post;
@@ -98,8 +99,8 @@ struct PlayerInfo {
 	int iSpeakFlags;
 	edict_t *pViewEnt;
 	int iViewType;
-	int iRenderMode;
-	float fRenderAmt;
+	//int iRenderMode;
+	//float fRenderAmt;
 };
 
 struct GlobalInfo {

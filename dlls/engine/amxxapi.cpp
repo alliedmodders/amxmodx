@@ -136,23 +136,12 @@ qboolean Voice_SetClientListening(int iReceiver, int iSender, qboolean bListen)
 	RETURN_META_VALUE(MRES_IGNORED, bListen);
 }
 
-int AddToFullPack(struct entity_state_s *state, int e, edict_t *ent, edict_t *host, int hostflags, int player, unsigned char *pSet)
+int AddToFullPack_Post(struct entity_state_s *state, int e, edict_t *ent, edict_t *host, int hostflags, int player, unsigned char *pSet)
 {
-	if(ent == host) {
-		if(FStrEq(STRING(ent->v.classname), "player")) {
-			if(plinfo[ENTINDEX(ent)].iViewType != CAMERA_NONE) {
-				ent->v.rendermode = kRenderTransTexture;
-				ent->v.renderamt = 100;
-				RETURN_META_VALUE(MRES_IGNORED, 0);
-			}
-		}
-	}
-
-	if(FStrEq(STRING(ent->v.classname), "player")) {
-		if(plinfo[ENTINDEX(ent)].iViewType != CAMERA_NONE) {
-			ent->v.rendermode = plinfo[ENTINDEX(ent)].iRenderMode;
-			ent->v.renderamt = plinfo[ENTINDEX(ent)].fRenderAmt;
-		}
+	if( player && ent == host && plinfo[ENTINDEX(ent)].iViewType != CAMERA_NONE )
+	{
+		state->rendermode = kRenderTransTexture;
+		state->renderamt = 100;
 	}
 
 	RETURN_META_VALUE(MRES_IGNORED, 0);
@@ -173,8 +162,6 @@ void ClientDisconnect(edict_t *pEntity)
 
 	plinfo[id].iSpeakFlags = SPEAK_NORMAL;
 	plinfo[id].iViewType = CAMERA_NONE;
-	plinfo[id].iRenderMode = 0;
-	plinfo[id].fRenderAmt = 0;
 
 	RETURN_META(MRES_IGNORED);
 }
@@ -186,8 +173,6 @@ BOOL ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress
 	plinfo[id].iSpeakFlags = SPEAK_NORMAL;
 	plinfo[id].iViewType = CAMERA_NONE;
 	plinfo[id].pViewEnt = NULL;
-	plinfo[id].iRenderMode = 0;
-	plinfo[id].fRenderAmt = 0;
 
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }

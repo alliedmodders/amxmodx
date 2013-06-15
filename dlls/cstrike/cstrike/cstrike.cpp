@@ -1327,8 +1327,14 @@ static cell AMX_NATIVE_CALL cs_user_spawn(AMX *amx, cell *params)
 	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
 
 	pPlayer->v.deadflag = DEAD_RESPAWNABLE;
-	MDLL_Spawn(pPlayer);
-	pPlayer->v.iuser1 = 0;
+	MDLL_Think(pPlayer);
+
+	const char *auth = GETPLAYERAUTHID(pPlayer);
+	if (((pPlayer->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT || (auth && (strcmp(auth, "BOT") == 0))) && pPlayer->v.deadflag == DEAD_RESPAWNABLE) {
+		MDLL_Spawn(pPlayer);
+	}
+
+	// pPlayer->v.iuser1 = 0;
 
 	return 1;
 }

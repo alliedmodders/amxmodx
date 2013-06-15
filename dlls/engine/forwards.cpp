@@ -123,7 +123,7 @@ void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int 
 	unsigned int i = 0;
 	int retVal = 0;
 	edict_t *pEntity = (edict_t *)player;
-	struct usercmd_s *g_cmd = (struct usercmd_s *)_cmd;
+	g_cmd = (struct usercmd_s *)_cmd;
 	META_RES res = MRES_IGNORED;
 	int origImpulse = g_cmd->impulse; // incase a plugin alters it
 	for (i=0; i<Impulses.size(); i++)

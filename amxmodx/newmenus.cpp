@@ -305,6 +305,11 @@ bool Menu::Display(int player, page_t page)
 
 	CPlayer *pPlayer = GET_PLAYER_POINTER_I(player);
 
+	pPlayer->keys = 0;
+	pPlayer->menu = 0;
+
+	UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
+
 	pPlayer->keys = keys;
 	pPlayer->menu = menuId;
 	pPlayer->newmenu = thisId;

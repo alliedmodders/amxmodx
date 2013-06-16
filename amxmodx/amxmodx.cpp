@@ -1058,6 +1058,11 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 
 			if (pPlayer->ingame)
 			{
+				pPlayer->keys = 0;
+				pPlayer->menu = 0;
+
+				UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
+
 				pPlayer->keys = keys;
 				pPlayer->menu = menuid;
 				pPlayer->vgui = false;
@@ -1085,6 +1090,11 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 
 		if (pPlayer->ingame)
 		{
+			pPlayer->keys = 0;
+			pPlayer->menu = 0;
+
+			UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
+
 			pPlayer->keys = keys;
 			pPlayer->menu = menuid;
 			pPlayer->vgui = false;			

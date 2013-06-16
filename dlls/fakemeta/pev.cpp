@@ -390,8 +390,8 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 				pEdict->v.controller[3]=blah[3];
 				return 1;
 			case blending:
-				pEdict->v.controller[0]=blah[0];
-				pEdict->v.controller[1]=blah[1];
+				pEdict->v.blending[0]=blah[0];
+				pEdict->v.blending[1]=blah[1];
 				return 1;
 		}
 	}

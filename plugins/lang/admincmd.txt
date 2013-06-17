@@ -762,9 +762,9 @@ ADMIN_LEAVE_2 = ADMIN %s: sacando a %s %s %s %s
 ADMIN_NICK_1 = ADMIN: nick de %s cambiado a "%s"
 ADMIN_NICK_2 = ADMIN %s: nick de %s cambiado a "%s"
 CHANGED_NICK = %s ha cambiado su nick a "%s"
-ADMIN_EXTEND_1 = ADMIN: ampliar mapa para %d minutos
-ADMIN_EXTEND_2 = ADMIN: %s: ampliar mapa para %d minutos
-MAP_EXTENDED = Mapa "%s" se ha ampliado para %d minutos
+ADMIN_EXTEND_1 = ADMIN: prolongar o mapa %d minutos
+ADMIN_EXTEND_2 = ADMIN %s: prolongar o mapa %d minutos
+MAP_EXTENDED = O mapa "%s" foi prolongado %d minutos
 
 [cz]
 ADMIN_KICK_1 = ADMIN: vykopl %s

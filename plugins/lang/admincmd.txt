@@ -64,6 +64,9 @@ ADMIN_LEAVE_2 = ADMIN %s: leave %s %s %s %s
 ADMIN_NICK_1 = ADMIN: change nick of %s to "%s"
 ADMIN_NICK_2 = ADMIN %s: change nick of %s to "%s"
 CHANGED_NICK = Changed nick of %s to "%s"
+ADMIN_EXTEND_1 = ADMIN: extend map for %d minutes
+ADMIN_EXTEND_2 = ADMIN %s: extend map for %d minutes
+MAP_EXTENDED = Map "%s" has been extended for %d minutes
 
 [de]
 ADMIN_KICK_1 = ADMIN: kickt %s
@@ -131,6 +134,9 @@ ADMIN_LEAVE_2 = ADMIN %s: erlaubt %s %s %s %s
 ADMIN_NICK_1 = ADMIN: aendert Name von %s zu "%s"
 ADMIN_NICK_2 = ADMIN %s: aendert Name von %s zu "%s"
 CHANGED_NICK = Name von %s zu "%s" geaendert
+ADMIN_EXTEND_1 = ADMIN: Verlaengere Map fuer %d Minuten
+ADMIN_EXTEND_2 = ADMIN %s: Verlaengere Map fuer %d Minuten
+MAP_EXTENDED = Map "%s" wurde fuer %d Minuten verlaengert
 
 [sr]
 ADMIN_KICK_1 = ADMIN: kick %s
@@ -197,6 +203,9 @@ ADMIN_LEAVE_2 = ADMIN %s: ostavi %s %s %s %s
 ADMIN_NICK_1 = ADMIN: promenio nick %s u "%s"
 ADMIN_NICK_2 = ADMIN %s: promenio nick of %s u "%s"
 CHANGED_NICK = Promenjen nick %s u "%s"
+ADMIN_EXTEND_1 = ADMIN: produziti mapu za %d minuta
+ADMIN_EXTEND_2 = ADMIN %s: produziti mapu za %d minuta
+MAP_EXTENDED = Mapa "%s" je produzena za %d minuta
 
 [tr]
 ADMIN_KICK_1 = ADMIN: at %s
@@ -263,6 +272,9 @@ ADMIN_LEAVE_2 = ADMIN %s: %s %s %s %s gitdi
 ADMIN_NICK_1 = ADMIN: %s kisinin ismini buna degisdirdi "%s"
 ADMIN_NICK_2 = ADMIN %s: %s kisinin ismini buna degisdirdi "%s"
 CHANGED_NICK = %s kisinin nickini buna degisdirdi "%s"
+ADMIN_EXTEND_1 = ADMIN: haritayi %d dakika uzatti
+ADMIN_EXTEND_2 = ADMIN %s: haritayi %d dakika uzatti
+MAP_EXTENDED = Harita "%s" %d dakika uzatildi
 
 [fr]
 ADMIN_KICK_1 = ADMIN: kick %s
@@ -330,6 +342,9 @@ ADMIN_LEAVE_2 = ADMIN %s: deconnecte %s %s %s %s
 ADMIN_NICK_1 = ADMIN: change le pseudo de %s en "%s"
 ADMIN_NICK_2 = ADMIN %s: change le pseudo de %s en "%s"
 CHANGED_NICK = A change le pseudo de %s en "%s"
+ADMIN_EXTEND_1 = ADMIN: prolonge la carte pour %d minutes
+ADMIN_EXTEND_2 = ADMIN %s: prolonge la carte pour %d minutes
+MAP_EXTENDED = La carte "%s" a ete prolongee pour %d minutes
 
 [sv]
 ADMIN_KICK_1 = ADMIN: sparka %s
@@ -397,6 +412,9 @@ ADMIN_LEAVE_2 = ADMIN %s: l'a'mna %s %s %s %s
 ADMIN_NICK_1 = ADMIN: byt namn pa %s till "%s"
 ADMIN_NICK_2 = ADMIN %s: byt namn pa %s till "%s"
 CHANGED_NICK = Bytt namn pa %s till "%s"
+ADMIN_EXTEND_1 = ADMIN: f'o'rlang mappen med %d minuter
+ADMIN_EXTEND_2 = ADMIN %s: f'o'rlang mappen med %d minuter
+MAP_EXTENDED = Bana "%s" har blivit f'o'rlangd med %d minuter
 
 [da]
 ADMIN_KICK_1 = ADMIN: kick %s
@@ -464,6 +482,9 @@ ADMIN_LEAVE_2 = ADMIN %s: forlad %s %s %s %s
 ADMIN_NICK_1 = ADMIN: skift navn paa %s til "%s"
 ADMIN_NICK_2 = ADMIN %s: skift navn paa %s til "%s"
 CHANGED_NICK = skiftet navn paa %s til "%s"
+ADMIN_EXTEND_1 = ADMIN: Udvide kortet til %d minutter
+ADMIN_EXTEND_2 = ADMIN %s: Udvide kortet til %d minutter
+MAP_EXTENDED = Kort "%s" har blevet dvidet til %d minutter  
 
 [bp]
 ADMIN_KICK_1 = ADMIN: kick %s
@@ -531,6 +552,9 @@ ADMIN_LEAVE_2 = ADMIN %s: deixar %s %s %s %s
 ADMIN_NICK_1 = ADMIN: alterado nick de %s para "%s"
 ADMIN_NICK_2 = ADMIN %s: alterado nick de %s para "%s"
 CHANGED_NICK = Alterado nick de %s para "%s"
+ADMIN_EXTEND_1 = ADMIN: Estendeu o mapa por %d minutos
+ADMIN_EXTEND_2 = ADMIN %s: Estendeu o mapa por %d minutos
+MAP_EXTENDED = O mapa "%s" foi estendido por %d minutos
 
 [pl]
 ADMIN_KICK_1 = ADMIN: wykopal %s
@@ -598,6 +622,9 @@ ADMIN_LEAVE_2 = ADMIN %s: oposc %s %s %s %s
 ADMIN_NICK_1 = ADMIN: zmien nick %s na "%s"
 ADMIN_NICK_2 = ADMIN %s: zmien nick %s na "%s"
 CHANGED_NICK = Zmieniono nick %s na "%s"
+ADMIN_EXTEND_1 = ADMIN: rozszerzyl mape o %d minut
+ADMIN_EXTEND_2 = ADMIN %s: rozszerzyl mape o %d minut
+MAP_EXTENDED = Mapa "%s" zostala rozszerzona o %d minut
 
 [nl]
 ADMIN_KICK_1 = ADMIN: verwijder %s
@@ -665,6 +692,9 @@ ADMIN_LEAVE_2 = ADMIN %s: verlaat %s %s %s %s
 ADMIN_NICK_1 = ADMIN: verander de naam van %s naar "%s"
 ADMIN_NICK_2 = ADMIN %s: verander de naam van %s naar "%s"
 CHANGED_NICK = Naam van %s veranderd naar "%s"
+ADMIN_EXTEND_1 = ADMIN: map verlengt met %d minuten
+ADMIN_EXTEND_2 = ADMIN %s: map verlengt met %d minuten
+MAP_EXTENDED   = Map "%s" is verlengt voor %d minuten
 
 [es]
 ADMIN_KICK_1 = ADMIN: %s expulsado
@@ -732,6 +762,9 @@ ADMIN_LEAVE_2 = ADMIN %s: sacando a %s %s %s %s
 ADMIN_NICK_1 = ADMIN: nick de %s cambiado a "%s"
 ADMIN_NICK_2 = ADMIN %s: nick de %s cambiado a "%s"
 CHANGED_NICK = %s ha cambiado su nick a "%s"
+ADMIN_EXTEND_1 = ADMIN: ampliar mapa para %d minutos
+ADMIN_EXTEND_2 = ADMIN: %s: ampliar mapa para %d minutos
+MAP_EXTENDED = Mapa "%s" se ha ampliado para %d minutos
 
 [cz]
 ADMIN_KICK_1 = ADMIN: vykopl %s
@@ -798,6 +831,9 @@ ADMIN_LEAVE_2 = ADMIN %s: opustili %s %s %s %s
 ADMIN_NICK_1 = ADMIN: zmenil nick z %s na "%s"
 ADMIN_NICK_2 = ADMIN %s: zmenili nick z %s na "%s"
 CHANGED_NICK = Nick zmenen z %s na "%s"
+ADMIN_EXTEND_1 = ADMIN: cas mapy predlouzen o %d min
+ADMIN_EXTEND_2 = ADMIN %s: cas mapy predlouzen o %d min
+MAP_EXTENDED = Map "%s" byla prodlouzena o %d min
 
 [fi]
 ADMIN_KICK_1 = ADMIN: potki %s
@@ -865,6 +901,9 @@ ADMIN_LEAVE_2 = ADMIN %s: leave %s %s %s %s
 ADMIN_NICK_1 = ADMIN: vaihtoi pelaajan %s nickin: "%s"
 ADMIN_NICK_2 = ADMIN %s: vaihtoi pelaajan %s nickin: "%s"
 CHANGED_NICK = Vaihdoit pelaajan %s nickin: "%s"
+ADMIN_EXTEND_1 = ADMIN: Pidentää kartta varten %d minuuttia
+ADMIN_EXTEND_2 = ADMIN %s: Pidentää kartta varten %d minuuttia
+MAP_EXTENDED = Kartta "%s" Has ollut laajennettu varten %d minuuttia
 
 [ls]
 ADMIN_KICK_1 = l33t s3rv3r 0P: kickz0|2 %s
@@ -932,6 +971,9 @@ ADMIN_LEAVE_2 = l33t s3rv3r 0P %s: l34f %s %s %s %s
 ADMIN_NICK_1 = l33t s3rv3r 0P: ch4ng n4m of %s to "%s"
 ADMIN_NICK_2 = l33t s3rv3r 0P %s: ch4ng n4m of %s to "%s"
 CHANGED_NICK = Ch4ng3d n4m of %s to "%s"
+ADMIN_EXTEND_1 = 4DM1N: 3xt3nd m4p 4 %d m1nut3z
+ADMIN_EXTEND_2 = 4DM1N %s: 3xt3nd m4p 4 %d m1nut3z
+MAP_EXTENDED = M4p "%s" h4z b33n 3xt3nd3d 4 %d m1nut3
 
 [bg]
 ADMIN_KICK_1 = ADMINISTRATOR: kickna %s
@@ -998,6 +1040,9 @@ ADMIN_LEAVE_2 = ADMINISTRATOR %s: ostavi %s %s %s %s
 ADMIN_NICK_1 = ADMINISTRATOR: smeni imeto ot %s na "%s"
 ADMIN_NICK_2 = ADMINISTRATOR %s: smeni imeto ot %s na "%s"
 CHANGED_NICK = smeni imeto ot %s na "%s"
+ADMIN_EXTEND_1 = ADMIN: udalji kartata s %d minuti
+ADMIN_EXTEND_2 = ADMIN %s: udalji kartata s %d minuti
+MAP_EXTENDED = Kartata "%s" beshe udaljena s %d minuti
 
 [ro]
 ADMIN_KICK_1 = ADMIN: kick %s
@@ -1064,6 +1109,9 @@ ADMIN_LEAVE_2 = ADMIN %s: iesire %s %s %s %s
 ADMIN_NICK_1 = ADMIN: schimbare nume %s cu "%s"
 ADMIN_NICK_2 = ADMIN %s: schimbare nume %s cu "%s"
 CHANGED_NICK = Numele %s a fost schimbat cu "%s"
+ADMIN_EXTEND_1 = ADMIN: extinde harta pentru %d minute
+ADMIN_EXTEND_2 = ADMIN %s: extinde harta pentru %d minute
+MAP_EXTENDED   = Harta "%s" a fost extinsa pentru %d minute
 
 [hu]
 ADMIN_KICK_1 = ADMIN: %s kirugva
@@ -1131,6 +1179,9 @@ ADMIN_LEAVE_2 = ADMIN %s: leave %s %s %s %s
 ADMIN_NICK_1 = ADMIN: nevvaltas %s-rol "%s"-ra
 ADMIN_NICK_2 = ADMIN %s: nevvaltas %s rol "%s"ra
 CHANGED_NICK = Nevvaltas %s rol "%s"ra
+ADMIN_EXTEND_1 = ADMIN: Bovített térkép számára %d percig
+ADMIN_EXTEND_2 = ADMIN %s: Bovített térkép számára %d percig
+MAP_EXTENDED = Térkép "%s" rendelkezik volna bovített számára %d percig
 
 [lt]
 ADMIN_KICK_1 = ADMINAS: iskikino %s
@@ -1197,6 +1248,9 @@ ADMIN_LEAVE_2 = ADMINAS %s: palieka %s %s %s %s
 ADMIN_NICK_1 = ADMINAS: pakeite nika is %s i "%s"
 ADMIN_NICK_2 = ADMINAS %s: pakeite nika is %s i "%s"
 CHANGED_NICK = Pasikeite nika is %s i "%s"
+ADMIN_EXTEND_1 = ADMINAS: pratese zemelapi %d minuciu
+ADMIN_EXTEND_2 = ADMINAS %s: pratese zemelapi %d minuciu
+MAP_EXTENDED = Zemelapis "%s" buvo pratestas %d minuciu
 
 [sk]
 ADMIN_KICK_1 = ADMIN: vykopol %s
@@ -1264,6 +1318,9 @@ ADMIN_LEAVE_2 = ADMIN %s: opustili %s %s %s %s
 ADMIN_NICK_1 = ADMIN: zmenil nick z %s na "%s"
 ADMIN_NICK_2 = ADMIN %s: zmenili nick z %s na "%s"
 CHANGED_NICK = Nick zmeneny z %s na "%s"
+ADMIN_EXTEND_1 = ADMIN: cas mapy predlzeny o %d min
+ADMIN_EXTEND_2 = ADMIN %s: cas mapypredlzeny o %d min
+MAP_EXTENDED = Map "%s" bola predlzena o %d min
 
 [mk]
 ADMIN_KICK_1 = ADMIN: kick %s
@@ -1331,3 +1388,6 @@ ADMIN_LEAVE_2 = ADMIN %s: ostavi %s %s %s %s
 ADMIN_NICK_1 = ADMIN: go promeni imeto na %s vo "%s"
 ADMIN_NICK_2 = ADMIN %s: go promeni imeto na %s vo "%s"
 CHANGED_NICK = Smeneto e imeto na %s vo "%s"
+ADMIN_EXTEND_1 = ADMIN: produljiti mapa za %d minuta
+ADMIN_EXTEND_2 = ADMIN %s: protezu mapa za %d minuta
+MAP_EXTENDED = Mapa "%s" je produzen za %d minuta

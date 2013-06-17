@@ -46,6 +46,7 @@ new g_addCvar[] = "amx_cvar add %s"
 
 new pausable;
 new rcon_password;
+new timelimit;
 
 // Old connection queue
 new g_Names[OLD_CONNECTION_QUEUE][32];
@@ -173,6 +174,7 @@ public plugin_init()
 	register_concmd("amx_plugins", "cmdPlugins", ADMIN_ADMIN)
 	register_concmd("amx_modules", "cmdModules", ADMIN_ADMIN)
 	register_concmd("amx_map", "cmdMap", ADMIN_MAP, "<mapname>")
+	register_concmd("amx_extendmap", "cmdExtendMap", ADMIN_MAP, "<number of minutes> - extend map")
 	register_concmd("amx_cfg", "cmdCfg", ADMIN_CFG, "<filename>")
 	register_concmd("amx_nick", "cmdNick", ADMIN_SLAY, "<name or #userid> <new nick>")
 	register_concmd("amx_last", "cmdLast", ADMIN_BAN, "- list the last few disconnected clients info");
@@ -183,7 +185,7 @@ public plugin_init()
 
 	rcon_password=get_cvar_pointer("rcon_password");
 	pausable=get_cvar_pointer("pausable");
-	
+	timelimit=get_cvar_pointer( "mp_timelimit" );
 	
 }
 
@@ -659,6 +661,35 @@ public cmdMap(id, level, cid)
 	}
 	
 	set_task(2.0, "chMap", 0, arg, arglen + 1)
+	
+	return PLUGIN_HANDLED
+}
+
+public cmdExtendMap(id, level, cid)
+{
+	if(!cmd_access(id, level, cid, 2))
+		return PLUGIN_HANDLED
+	
+	new arg[32]
+	read_argv(1, arg, charsmax(arg))
+	new mns = str_to_num(arg)
+	
+	if(mns <= 0)
+		return PLUGIN_HANDLED
+	
+	new mapname[32]
+	get_mapname(mapname, charsmax(mapname))
+	set_pcvar_num( timelimit , get_pcvar_num( timelimit ) + mns)
+	
+	new authid[32], name[32]
+	
+	get_user_authid(id, authid, charsmax(authid))
+	get_user_name(id, name, charsmax(name))
+	
+	show_activity_key("ADMIN_EXTEND_1", "ADMIN_EXTEND_2", name, mns)
+	
+	log_amx("ExtendMap: ^"%s<%d><%s><>^" extended map ^"%s^" for %d minutes.", name, get_user_userid(id), authid, mapname, mns)
+	console_print(id, "%L", id, "MAP_EXTENDED", mapname, mns)
 	
 	return PLUGIN_HANDLED
 }

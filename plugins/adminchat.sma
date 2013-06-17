@@ -278,8 +278,6 @@ public cmdPsay(id, level, cid)
 	
 	new length = strlen(name) + 1
 
-	get_user_name(priv, name, 31); 
-	
 	new message[192], name2[32], authid[32], authid2[32], userid, userid2
 	
 	get_user_authid(id, authid, 31)

@@ -138,6 +138,7 @@ private:
 	cell _CipAsVa(cell cip);
 	
 	const char *_GetFilename();
+	const char *_GetVersion();
 public:
 	AMX *m_pAmx;
 	AMX_DBG *m_pAmxDbg;
@@ -145,7 +146,8 @@ public:
 	int m_Top;
 	cell *m_pOpcodeList;
 	String m_FileName;
-	
+	String m_Version;
+
 	CVector<Tracer *> m_pCalls;
 };
 

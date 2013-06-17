@@ -562,8 +562,9 @@ void Debugger::DisplayTrace(const char *message)
 	FormatError(buffer, sizeof(buffer)-1);
 
 	const char *filename = _GetFilename();
+	const char *version = _GetVersion();
 
-	AMXXLOG_Error("[AMXX] Displaying debug trace (plugin \"%s\")", filename);
+	AMXXLOG_Error("[AMXX] Displaying debug trace (plugin \"%s\", version \"%s\")", filename, version);
 	AMXXLOG_Error("[AMXX] %s", buffer);
 	
 	int count = 0;
@@ -603,6 +604,23 @@ const char *Debugger::_GetFilename()
 	}
 
 	return m_FileName.c_str();
+}
+
+const char *Debugger::_GetVersion()
+{
+    if (m_Version.size() < 1)
+    {
+        const char *version = "";
+        CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(m_pAmx);
+        if (pl)
+        {
+            version = pl->getVersion();
+        }
+
+        m_Version.assign(version);
+    }
+
+    return m_Version.c_str();
 }
 
 void Debugger::FmtGenericMsg(AMX *amx, int error, char buffer[], size_t maxLength)

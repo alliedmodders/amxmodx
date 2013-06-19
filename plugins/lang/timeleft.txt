@@ -177,3 +177,12 @@ MINUTE = minuta
 MINUTES = minuti
 SECOND = sekunda
 SECONDS = sekundi
+
+[hr]
+THE_TIME = Vrijeme
+TIME_LEFT = Preostalo vrijeme
+NO_T_LIMIT = Bez vremenskog ogranicenja
+MINUTE = minuta
+MINUTES = minute
+SECOND = sekunda
+SECONDS = sekundi

@@ -216,3 +216,14 @@ SET_LANG_SERVER = Jazikot na serverot e postaven na "%s"
 SET_LANG_USER = Vasiot jazik e postaven na "%s"
 TYPE_LANGMENU = Napisi 'amx_langmenu' vo konzolata za da go otvoris menito za promena na jazikot
 LANG_MENU_DISABLED = Menito za izbor na jazik e iskluceno.
+
+[hr]
+LANG_NOT_EXISTS = Jezik ne postoji
+PERSO_LANG = Osobni jezik
+LANG_MENU = Izbornik jezika
+SERVER_LANG = Jezik servera
+SAVE_LANG = Sacuvaj jezik
+SET_LANG_SERVER = Jezik servera je postavljen na "%s"
+SET_LANG_USER = Vas jezik je postavljen na "%s"
+TYPE_LANGMENU = Upisite 'amx_langmenu' u konzoli da biste otvorili izbornik promjene jezika
+LANG_MENU_DISABLED = Izbornik jezika je iskljucen.

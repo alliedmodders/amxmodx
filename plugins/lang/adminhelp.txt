@@ -177,3 +177,12 @@ HELP_USE_BEGIN = Napisi 'amx_help 1' za od pocetok
 TYPE_HELP = Napisi 'amx_help' vo konzolata za da gi vidis dozvolenite komandi
 TIME_INFO_1 = Preostanato Vreme: %d:%02d min. Sledna Mapa: %s
 TIME_INFO_2 = Nema vremensko ogranicuvanje. Sledna Mapa: %s
+
+[hr]
+HELP_COMS = AMX Mod X Pomoc: Naredbe
+HELP_ENTRIES = Vrijednosti %d - %d od %d
+HELP_USE_MORE = Koristi 'amx_help %d' za jos naredbi
+HELP_USE_BEGIN = Koristi 'amx_help 1' za pocetak
+TYPE_HELP = Ukucajte 'amx_help' u konzoli da bi ste vidjeli moguce naredbe
+TIME_INFO_1 = Preostalo Vrijeme: %d:%02d min. Sljedeca Mapa: %s
+TIME_INFO_2 = Nema vremenskog ogranicenja. Sljedeca Mapa: %s

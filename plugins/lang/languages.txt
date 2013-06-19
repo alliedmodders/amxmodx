@@ -77,3 +77,7 @@ LANG_NAME_NATIVE = Slovencina
 [mk]
 LANG_NAME = Macedonian
 LANG_NAME_NATIVE = Makedonski
+
+[hr]
+LANG_NAME = Croatian
+LANG_NAME_NATIVE = Hrvatski

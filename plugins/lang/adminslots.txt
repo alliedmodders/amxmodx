@@ -57,3 +57,6 @@ DROPPED_RES = Prepac,ale slot je rezervovany
 
 [mk]
 DROPPED_RES = Serverot e poln, nemate pristap vo rezerviranite mesta
+
+[hr]
+DROPPED_RES = Server je pun, nemate pristup rezerviranim mjestima

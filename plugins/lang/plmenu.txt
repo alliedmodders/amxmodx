@@ -337,3 +337,20 @@ TEAM_MENU = Meni za timot
 TRANSF_TO = Transfer vo %s
 CL_CMD_MENU = Meni so komandi za klientite
 NO_CMDS = Nema dostapni komandi
+
+[hr]
+ADMIN_BAN_1 = ADMIN: banao %s
+ADMIN_BAN_2 = ADMIN %s: banao %s
+BAN_MENU = Ban izbornik
+BAN_FOR_MIN = Ban na %d minuta
+BAN_PERM = Ban za stalno
+SLAP_SLAY_MENU = Samar/Slay Meni
+SLAP_WITH_DMG = Samar sa %d stete
+SLAY = Slay
+KICK_MENU = Izbornik izbacivanja
+ADMIN_TRANSF_1 = ADMIN: transfer %s u %s
+ADMIN_TRANSF_2 = ADMIN %s: transfer %s u %s
+TEAM_MENU = Izbornik timova
+TRANSF_TO = Transfer u %s
+CL_CMD_MENU = Izbornik naredbi klijenta
+NO_CMDS = Nema dostupnih naredbi

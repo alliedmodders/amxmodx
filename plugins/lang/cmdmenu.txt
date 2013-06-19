@@ -97,3 +97,8 @@ SPE_MENU = Nastavenie reci
 CMD_MENU = Meni so komandi
 CONF_MENU = Meni so konfiguracii
 SPE_MENU = Meni so glasovni komandi
+
+[hr]
+CMD_MENU = Naredbe
+CONF_MENU = Podesavanja
+SPE_MENU = Izbornik govora

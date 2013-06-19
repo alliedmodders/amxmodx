@@ -97,3 +97,8 @@ MSG_DISABLED = Skrolovacie zpravy vypnute
 MIN_FREQ = Minimalnoto vreme na prikazuvanje na ovaa poraka e %d sekundi
 MSG_FREQ = Vreme za prikazuvanje na leteckite poraki: %d:%02d minuti
 MSG_DISABLED = Leteckata poraka e isklucena
+
+[hr]
+MIN_FREQ = Minimalno vrijeme prikazivanja za ovu poruku je %d sekundi
+MSG_FREQ = Vrijeme prikazivanja prolazece poruke: %d:%02d minut(a)
+MSG_DISABLED = Prolazeca poruka iskljucena

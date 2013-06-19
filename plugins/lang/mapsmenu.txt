@@ -477,3 +477,27 @@ ADMIN_V_MAP_2 = ADMIN %s: Glasanje za mapa...
 ADMIN_CHANGEL_1 = ADMIN: ja smeni mapata vo %s
 ADMIN_CHANGEL_2 = ADMIN %s: ja smeni mapata vo %s
 CHANGLE_MENU = Meni za promena na mapa
+
+[hr]
+RESULT_REF = Rezultat odbijen
+RESULT_ACC = Rezultat prihvacen
+VOTE_SUCCESS = Glasanje uspjesno. Sljedeca mapa ce biti
+VOTE_FAILED = Glasanje neuspjesno
+THE_WINNER = Pobjednik
+WANT_CONT = Zelite li nastaviti?
+VOT_CANC = Glasanje je otkazano
+X_VOTED_FOR = %s je glasao za #%d
+VOTEMAP_MENU = Izbornik glasanje za mapu
+START_VOT = Pokreni glasanje
+SEL_MAPS = Izabrane mape
+ALREADY_VOT = Vec je jedno glasanje je u toku...
+NO_MAPS_MENU = Nema mapa u izborniku
+VOT_NOW_ALLOW = Glasanje trenutno nije dozvoljeno
+WHICH_MAP = Koju mapu zelite?
+CHANGE_MAP_TO = Promijeni mapu u
+CANC_VOTE = Otkazi glasanje
+ADMIN_V_MAP_1 = ADMIN: glasanje za mapu(e)
+ADMIN_V_MAP_2 = ADMIN %s: glasanje za mapu(e)
+ADMIN_CHANGEL_1 = ADMIN: changelevel %s
+ADMIN_CHANGEL_2 = ADMIN %s: changelevel %s
+CHANGLE_MENU = Izbornik promjene mape

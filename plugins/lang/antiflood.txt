@@ -60,3 +60,7 @@ STOP_FLOOD = Prestani na flodiras na serverot!
 
 [hr]
 STOP_FLOOD = Prestani opterecivati server porukama!
+
+[bs]
+STOP_FLOOD = Prestani da opterecujes server porukama!
+

@@ -690,3 +690,37 @@ REST_WEAP = Zabrani oruzja
 SAVE_SET = Sacuvaj podesenja
 CONF_SAV_SUC = Konfiguracija je uspjesno sacuvana
 CONF_SAV_FAIL = Konfiguracija nije sacuvana!!!
+
+[bs]
+EQ_WE_RES = Oprema i oruzje su zabranjeni
+EQ_WE_UNRES = Oprema i oruzje su oslobodjeni zabrane
+HAVE_BEEN = je
+HAS_BEEN = je
+RESTRICTED = zabranjeno
+UNRESTRICTED = slobodno
+NO_EQ_WE = Nije moguce naci takvo opremu ili oruzje
+WEAP_RES = Zabrane oruzja
+VALUE = vrijednost
+REST_ENTRIES_OF = Vrijednosti %i - %i od %i
+REST_USE_MORE = Koristi 'amx_restrict list %i' za jos
+REST_USE_BEGIN = Koristi 'amx_restrict list 1' za pocetak
+REST_CONF_SAVED = Konfiguracija je uspjesno sacuvana (fajl "%s")
+REST_COULDNT_SAVE = Konfiguracija je neuspjesno sacuvana (fajl "%s")
+REST_CONF_LOADED = Konfiguracija je uspjesno ucitana (fajl "%s")
+REST_COULDNT_LOAD = Konfiguracija je neuspjesno ucitana (fajl "%s")
+COM_REST_USAGE = Koriscenje: amx_restrict <komanda> [vrednost]
+COM_REST_COMMANDS = Komande:
+COM_REST_ON = ^ton - postavi zabranu za cijelu opremu
+COM_REST_OFF = ^toff - skini zabranu sa cijele opreme
+COM_REST_ONV = ^ton <vrijednost> [...] - postavi zabranu na zadato oruzje
+COM_REST_OFFV = ^toff <vrijednost> [...] - skini zabranu sa zadatog oruzja
+COM_REST_LIST = ^tlist - prikazi listu mogucih oruzja i opreme
+COM_REST_SAVE = ^tsave - sacuvaj zabrane
+COM_REST_LOAD = ^tload [fajl] - ucitaj zabrane [iz fajla]
+COM_REST_VALUES = Moguce vrijednosti za zabrane su:^nammo, equip, pistol, shotgun, sub, rifle, machine
+COM_REST_TYPE = Kucaj 'amx_restrict list' za jos specificnih komandi
+REST_WEAP = Zabrani oruzja
+SAVE_SET = Sacuvaj Podesavanja
+CONF_SAV_SUC = Konfiguracija je uspjesno sacuvana
+CONF_SAV_FAIL = Konfiguracija je neuspjesno sacuvana!!
+

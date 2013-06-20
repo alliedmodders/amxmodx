@@ -270,3 +270,4 @@ COL_ORANGE = narancasta
 COL_OCEAN = modra
 COL_MAROON = kestenjasta
 PRINT_ALL = (SVIMA) %s : %s
+[bs]COL_WHITE = bijelaCOL_RED = crvenaCOL_GREEN = zelenaCOL_BLUE = plavaCOL_YELLOW = zutaCOL_MAGENTA = ljubicastaCOL_CYAN = tirkiznaCOL_ORANGE = narandzastaCOL_OCEAN = okeanCOL_MAROON = modraPRINT_ALL = (SVE) %s : %s

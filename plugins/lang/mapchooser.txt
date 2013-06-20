@@ -186,3 +186,13 @@ X_CHOSE_X = %s je izabrao %s
 CHOOSE_NEXTM = AMX Izbor sljedece mape
 EXTED_MAP = Produzi mapu %s
 TIME_CHOOSE = Vrijeme je za izbor nove mape...
+
+[bs]
+CHO_FIN_EXT = Biranje zavrseno. Sadasnja mapa ce biti produzena za %.0f minuta
+CHO_FIN_NEXT = Biranje zavrseno. Slijedeca mapa ce biti %s
+CHOSE_EXT = %s biraj mapu sa produzivanjem
+X_CHOSE_X = %s izabrao %s
+CHOOSE_NEXTM = AMX izaberi slijedecu mapu
+EXTED_MAP = Produzi mapu %s
+TIME_CHOOSE = Vrijeme je da se izabere slijedeca mapa...
+

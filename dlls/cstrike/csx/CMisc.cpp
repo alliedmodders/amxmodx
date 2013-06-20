@@ -132,7 +132,10 @@ void CPlayer::Init( int pi, edict_t* pe )
 	rank = 0;
 }
 
-void CPlayer::saveKill(CPlayer* pVictim, int wweapon, int hhs, int ttk){
+void CPlayer::saveKill(CPlayer* pVictim, int wweapon, int hhs, int ttk)
+{
+	if ( !isModuleActive() )
+		return;
 
 	if ( ignoreBots(pEdict,pVictim->pEdict) )
 		return;
@@ -186,7 +189,10 @@ void CPlayer::saveKill(CPlayer* pVictim, int wweapon, int hhs, int ttk){
 	life.tks += ttk;
 }
 
-void CPlayer::saveHit(CPlayer* pVictim, int wweapon, int ddamage, int bbody){
+void CPlayer::saveHit(CPlayer* pVictim, int wweapon, int ddamage, int bbody)
+{
+	if ( !isModuleActive() )
+		return;
 
 	if ( ignoreBots(pEdict,pVictim->pEdict) )
 		return;
@@ -229,7 +235,10 @@ void CPlayer::saveHit(CPlayer* pVictim, int wweapon, int ddamage, int bbody){
 }
 
 
-void CPlayer::saveShot(int weapon){
+void CPlayer::saveShot(int weapon)
+{
+	if ( !isModuleActive() )
+		return;
 
 	if ( ignoreBots(pEdict) )
 		return;
@@ -243,19 +252,35 @@ void CPlayer::saveShot(int weapon){
 }
 
 
-void CPlayer::saveBPlant(){
+void CPlayer::saveBPlant()
+{
+	if ( !isModuleActive() )
+		return;
+
 	life.bPlants++;
 }
 
-void CPlayer::saveBExplode(){
+void CPlayer::saveBExplode()
+{
+	if ( !isModuleActive() )
+		return;
+
 	life.bExplosions++;
 }
 
-void CPlayer::saveBDefusing(){
+void CPlayer::saveBDefusing()
+{
+	if ( !isModuleActive() )
+		return;
+
 	life.bDefusions++;
 }
 
-void CPlayer::saveBDefused(){
+void CPlayer::saveBDefused()
+{
+	if ( !isModuleActive() )
+		return;
+
 	life.bDefused++;
 }
 
@@ -273,7 +298,7 @@ bool ignoreBots(edict_t *pEnt, edict_t *pOther)
 }
 
 bool isModuleActive(){
-	if ( !(int)CVAR_GET_FLOAT("csstats_pause") )
+	if ( !(int)csstats_pause->value )
 		return true;
 	return false;
 }

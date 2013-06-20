@@ -375,3 +375,22 @@ STATS_SET = Podesavanje statistike ^n
 PAUSE_PLUG = Pauziranje pluginova
 RES_WEAP = Zabrana oruzja
 TELE_PLAYER = Teleportiraj igraca
+
+[bs]
+KICK_PLAYER = Kick Igraca
+BAN_PLAYER = Ban Igraca
+SLAP_SLAY = Slap/Slay Igraca
+TEAM_PLAYER = Promijeni Tim Igraca ^n
+CHANGEL = Promijeni Mapu
+VOTE_MAPS = Glasaj za mape ^n
+SPECH_STUFF = Govorne Komande
+CLIENT_COM = Komande Klijenta
+SERVER_COM = Komande Servera
+CVARS_SET = Komande Podesavanja
+CONFIG = Konfiguracija
+LANG_SET = Jezik
+STATS_SET = Podesavanje Statistike ^n
+PAUSE_PLUG = Pauza Pluginova
+RES_WEAP = Ogranici Oruzja
+TELE_PLAYER = Teleport Igraca
+

@@ -60,3 +60,7 @@ INF_REACH = Dostignat e limitot za Informacioni Poraki!
 
 [hr]
 INF_REACH = Ogranicenje informativnih poruka dosegnuto!
+
+[bs]
+INF_REACH = Dostignut limit Informacione Poruke
+

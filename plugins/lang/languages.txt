@@ -81,3 +81,8 @@ LANG_NAME_NATIVE = Makedonski
 [hr]
 LANG_NAME = Croatian
 LANG_NAME_NATIVE = Hrvatski
+
+[bs]
+LANG_NAME = Bosnian
+LANG_NAME_NATIVE = Bosanski
+

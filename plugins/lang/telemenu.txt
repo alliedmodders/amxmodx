@@ -144,3 +144,11 @@ ADMIN_TELEPORT_2 = ADMIN %s: teleportirao %s
 TELE_MENU = Izbornik teleportacije
 CUR_LOC = Trenutna lokacija
 SAVE_LOC = Sacuvaj lokaciju
+
+[bs]
+ADMIN_TELEPORT_1 = ADMIN: teleportuj %s
+ADMIN_TELEPORT_2 = ADMIN %s: teleportuj %s
+TELE_MENU = Teleport Meni
+CUR_LOC = Sadasnja Lokacija
+SAVE_LOC = Sacuvaj Lokacij
+

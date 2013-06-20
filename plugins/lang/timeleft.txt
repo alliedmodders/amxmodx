@@ -186,3 +186,13 @@ MINUTE = minuta
 MINUTES = minute
 SECOND = sekunda
 SECONDS = sekundi
+
+[bs]
+THE_TIME = Vrijeme
+TIME_LEFT = Preostalo Vrijeme
+NO_T_LIMIT = Nema Ogranicenja Vremena
+MINUTE = minut
+MINUTES = minute
+SECOND = sekund
+SECONDS = sekunde
+

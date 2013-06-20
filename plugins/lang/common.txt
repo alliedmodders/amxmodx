@@ -459,3 +459,26 @@ CANT_PERF_DEAD = Naredba ne moze biti izvrsena na mrtvom klijentu "%s"
 CANT_PERF_BOT = Nredba ne moze biti izvrsena na botu "%s"
 ON = Ukljucen
 OFF = Iskljucen
+
+[bs]
+BACK = Nazad
+EXIT = Izlaz
+MORE = Jos
+NONE = Nema
+ADMIN = ADMIN
+PLAYER = IGRAC
+ERROR = greska
+YES = Da
+NO = Ne
+BAN = ban
+KICK = kick
+NO_ACC_COM = Nemate pristup zadatoj komandi
+USAGE = Koriscenje
+MORE_CL_MATCHT = vise korisnika zadovoljava vas argument
+CL_NOT_FOUND = Klijent sa tim imenom ili korisnickim ID-om nije nadjen
+CLIENT_IMM = Klijent "%s" ima imunitet
+CANT_PERF_DEAD = Komanda ne moze biti izvrsena na mrtvom klijentu "%s"
+CANT_PERF_BOT = Komanda ne moze biti izvrsena na botu "%s"
+ON = Ukljucen
+OFF = Iskljucen
+

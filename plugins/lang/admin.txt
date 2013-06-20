@@ -270,4 +270,4 @@ INV_PAS = Pogresna lozinka!
 PAS_ACC = Lozinka prihvacena
 PRIV_SET = Privilegije podesene
 NO_ENTRY = Nemate pristup serveru...
-
+[bs]LOADED_ADMIN = Ucitan 1 administrator iz fajlaLOADED_ADMINS = Ucitano %d administratora iz fajlaSQL_CANT_CON = SQL greska: nije moguce uspostaviti vezu sa: '%s'SQL_CANT_LOAD_ADMINS = SQL greska: nije moguce ucitati administratore: '%s'NO_ADMINS = Nema nadjenih administratora.SQL_LOADED_ADMIN = Ucitan 1 administrator iz baze podatakaSQL_LOADED_ADMINS = Ucitano %d administratora iz baze podatakaINV_PAS = Pogresna lozinka!PAS_ACC = Lozinka prihvacenaPRIV_SET = Privilegije podeseneNO_ENTRY = Nemate pristup serveru...

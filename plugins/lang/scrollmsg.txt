@@ -102,3 +102,9 @@ MSG_DISABLED = Leteckata poraka e isklucena
 MIN_FREQ = Minimalno vrijeme prikazivanja za ovu poruku je %d sekundi
 MSG_FREQ = Vrijeme prikazivanja prolazece poruke: %d:%02d minut(a)
 MSG_DISABLED = Prolazeca poruka iskljucena
+
+[bs]
+MIN_FREQ = Minimalno vrijeme prikazivanja za ovu poruku je %d sekundi
+MSG_FREQ = Vrijeme prikazivanja prolazece poruke: %d:%02d minut(a)
+MSG_DISABLED = Prolazeca poruka iskljucena
+

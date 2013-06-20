@@ -102,3 +102,9 @@ FRIEND_FIRE = Friendly fire
 NEXT_MAP = Sljedeca mapa:
 PLAYED_MAP = Trenutna mapa
 FRIEND_FIRE = Prijateljska vatra
+
+[bs]
+NEXT_MAP = Slijedeca Mapa:
+PLAYED_MAP = Igrana mapa
+FRIEND_FIRE = Friendly fire
+

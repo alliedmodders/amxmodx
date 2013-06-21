@@ -74,6 +74,13 @@ public:
 	}
 };
 
+enum FileTimeType
+{
+	FileTime_LastAccess = 0,	/* Last access (not available on FAT) */
+	FileTime_Created = 1,		/* Creation (not available on FAT) */
+	FileTime_LastChange = 2,	/* Last modification */
+};
+
 static cell AMX_NATIVE_CALL read_dir(AMX *amx, cell *params)
 {
 #ifdef __GNUC__
@@ -862,6 +869,37 @@ static cell AMX_NATIVE_CALL amx_fflush(AMX *amx, cell *params)
 	return fflush(fp);
 }
 
+static cell AMX_NATIVE_CALL GetFileTime(AMX *amx, cell *params)
+{
+	int len;
+	char *file = get_amxstring(amx, params[1], 0, len);
+
+	char path[256];
+	build_pathname_r(path, sizeof(path), "%s", file);
+
+#if defined(WIN32)
+	struct _stat s;
+	if (_stat(path, &s) != 0)
+#elif defined(__linux__) || defined(__APPLE__)
+	struct stat s;
+	if (stat(path, &s) != 0)
+#endif
+	{
+		return -1;
+	}
+
+	time_t time_val;
+
+	switch( params[2] )
+	{
+		case FileTime_LastAccess	: time_val = s.st_atime; break;
+		case FileTime_Created		: time_val = s.st_ctime; break;
+		case FileTime_LastChange	: time_val = s.st_mtime; break;
+	}
+
+	return (cell)time_val;
+}
+
 AMX_NATIVE_INFO file_Natives[] =
 {
 	{"delete_file",		delete_file},
@@ -899,5 +937,6 @@ AMX_NATIVE_INFO file_Natives[] =
 	{"rename_file",		amx_rename},
 	{"LoadFileForMe",	LoadFileForMe},
 	{"fflush",			amx_fflush},
+	{"GetFileTime",		GetFileTime},
 	{NULL,				NULL}
 };

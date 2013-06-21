@@ -141,3 +141,18 @@ native LoadFileForMe(const file[], buffer[], maxlength, &length=0);
  */
 native fflush(file);
 
+enum FileTimeType
+{
+	FileTime_LastAccess,    /* Last access (not available on FAT) */
+	FileTime_Created,       /* Creation (not available on FAT) */
+	FileTime_LastChang,     /* Last modification */
+};
+
+/**
+ * Returns a file timestamp as a unix timestamp.
+ *
+ * @param file          File name.
+ * @param tmode         Time mode. See FileTime_* constants.
+ * @return              Returns a file timestamp as a unix timestamp.
+ */
+native GetFileTime( const file[], FileTimeType:tmode );

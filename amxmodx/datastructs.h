@@ -232,7 +232,7 @@ public:
 		}
 
 		// Allocate a temporary buffer to store data in
-		size_t tempbuffsize=(sizeof(cell) * cellcount) * (this->count - which);
+		size_t tempbuffsize=(sizeof(cell) * cellcount) * (this->count - 1 - which);
 
 		cell* temp=(cell*)malloc(tempbuffsize); 
 

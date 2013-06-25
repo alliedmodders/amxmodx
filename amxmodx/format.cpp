@@ -458,7 +458,7 @@ size_t atcprintf(D *buffer, size_t maxlen, const S *format, AMX *amx, cell *para
 	int		width;
 	int		prec;
 	int		n;
-	char	sign;
+	//char	sign;
 	const S	*fmt;
 	size_t	llen = maxlen;
 
@@ -486,7 +486,7 @@ size_t atcprintf(D *buffer, size_t maxlen, const S *format, AMX *amx, cell *para
 		flags = 0;
 		width = 0;
 		prec = -1;
-		sign = '\0';
+		//sign = '\0';
 
 rflag:
 		ch = static_cast<D>(*fmt++);

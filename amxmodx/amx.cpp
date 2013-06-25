@@ -1175,12 +1175,12 @@ int AMXAPI amx_GetNative(AMX *amx, int index, char *funcname)
 
 int AMXAPI amx_FindNative(AMX *amx, const char *name, int *index)
 {
-  int first,last,mid;
+  int last,mid;
   char pname[sNAMEMAX+1];
 
   amx_NumNatives(amx, &last);
   last--;       /* last valid index is 1 less than the number of functions */
-  first=0;
+
   /* normal search */
   for (mid=0; mid<=last; mid++)
   {

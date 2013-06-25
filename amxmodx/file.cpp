@@ -888,7 +888,7 @@ static cell AMX_NATIVE_CALL GetFileTime(AMX *amx, cell *params)
 		return -1;
 	}
 
-	time_t time_val;
+	time_t time_val = -1;
 
 	switch( params[2] )
 	{

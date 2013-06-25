@@ -391,7 +391,7 @@ int Debugger::FormatError(char *buffer, size_t maxLength)
 	//trace_info_t *pTrace = pTracer->GetEnd();
 	//cell cip = _CipAsVa(m_pAmx->cip);
 	//cell *p_cip = NULL;
-	int amx_err = AMX_ERR_NONE;
+	//int amx_err = AMX_ERR_NONE;
 
 	size += _snprintf(buffer, maxLength, "Run time error %d: %s ", error, gen_err);
 	buffer += size;
@@ -410,7 +410,7 @@ int Debugger::FormatError(char *buffer, size_t maxLength)
 		}*/
 		//New code only requires this...
 		num = (int)(_INT_PTR)m_pAmx->usertags[UT_NATIVE];
-		amx_err = amx_GetNative(m_pAmx, num, native_name);
+		/*amx_err = */amx_GetNative(m_pAmx, num, native_name);
 		/*if (num)
 			amx_err = amx_GetNative(m_pAmx, (int)*p_cip, native_name);
 		else 

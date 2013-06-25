@@ -605,7 +605,7 @@ public cmdSlap(id, level, cid)
 	
 	read_argv(2, spower, 31)
 	
-	new damage = str_to_num(spower)
+	new damage = clamp( str_to_num(spower), 0)
 	
 	user_slap(player, damage)
 	

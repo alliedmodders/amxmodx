@@ -1540,8 +1540,12 @@ static cell AMX_NATIVE_CALL user_slap(AMX *amx, cell *params) /* 2 param */
 	
 	if (index < 1 || index > gpGlobals->maxClients)
 		return 0;
-	
-	int power = abs((int)params[2]);
+
+	int power = (int)params[2];
+
+	if (power < 0)
+		power = 0;
+
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	
 	if (pPlayer->ingame && pPlayer->IsAlive())

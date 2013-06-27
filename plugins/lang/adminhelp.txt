@@ -64,11 +64,11 @@ TIME_INFO_2 = Ingen tidsgraense. Naeste bane: %s
 [pl]
 HELP_COMS = AMX Mod X pomoc: Komendy
 HELP_ENTRIES = Wpisy %d - %d z %d
-HELP_USE_MORE = Uzyj 'amx_help %d' aby dowiedziec sie wiecej
+HELP_USE_MORE = Uzyj 'amx_help %d' aby wyswietlic wiecej
 HELP_USE_BEGIN = Uzyj 'amx_help 1' aby dojsc do poczatku
 TYPE_HELP = Wpisz 'amx_help' w konsoli aby uzyskac liste komend
 TIME_INFO_1 = Pozostaly czas: %d:%02d min. Nastepna mapa: %s
-TIME_INFO_2 = Bez limitu czasu. Nastepna mapa: %s
+TIME_INFO_2 = Brak limitu czasu. Nastepna mapa: %s
 
 [bp]
 HELP_COMS = Ajuda do AMX Mod X: Comandos

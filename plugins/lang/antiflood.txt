@@ -20,7 +20,7 @@ STOP_FLOOD = Sluta flooda servern!
 STOP_FLOOD = Stop med at oversvoemme serveren!
 
 [pl]
-STOP_FLOOD = Przestan zapychac serwer!
+STOP_FLOOD = Ile razy to jeszcze wpiszesz?
 
 [nl]
 STOP_FLOOD = Stop met de server vol te spammen!

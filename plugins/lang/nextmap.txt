@@ -34,9 +34,9 @@ PLAYED_MAP = Spillet bane
 FRIEND_FIRE = Venskablig ild
 
 [pl]
-NEXT_MAP = Nastepna Mapa:
-PLAYED_MAP = Mapy grane
-FRIEND_FIRE = Friendly fire
+NEXT_MAP = Nastepna mapa
+PLAYED_MAP = Obecna mapa
+FRIEND_FIRE = Przyjacielski ogien
 
 [nl]
 NEXT_MAP = Volgende Map:

@@ -167,11 +167,11 @@ ADMIN_CHANGEL_2 = ADMIN %s: Skift bane %s
 CHANGLE_MENU = Skift bane Menu
 
 [pl]
-RESULT_REF = Rezultat odrzucony
-RESULT_ACC = Rezultat zaakceptowany
+RESULT_REF = Wynik odrzucony
+RESULT_ACC = Wynik zaakceptowany
 VOTE_SUCCESS = Glosowanie udane. Mapa zmieni sie na
 VOTE_FAILED = Glosowanie nieudane
-THE_WINNER = Zwyciesca
+THE_WINNER = Zwyciezca
 WANT_CONT = Czy chcesz kontynuowac?
 VOT_CANC = Glosowanie zostalo przerwane
 X_VOTED_FOR = %s zaglosowal na #%d
@@ -179,15 +179,15 @@ VOTEMAP_MENU = Menu Glosowan
 START_VOT = Rozpocznij glosowanie
 SEL_MAPS = Wybrane mapy
 ALREADY_VOT = Juz jest jedno glosowanie w trakcie...
-NO_MAPS_MENU = Nie ma zadnych map w menu
+NO_MAPS_MENU = Nie ma zadnych map w menu(dopisz do maps.ini)
 VOT_NOW_ALLOW = Teraz nie mozna glosowac
 WHICH_MAP = Ktora chcesz mape?
 CHANGE_MAP_TO = Zmien mape na
-CANC_VOTE = Anuluj glos
-ADMIN_V_MAP_1 = ADMIN: vote map(s)
-ADMIN_V_MAP_2 = ADMIN %s: vote map(s)
-ADMIN_CHANGEL_1 = ADMIN: zmiana mapy na %s
-ADMIN_CHANGEL_2 = ADMIN %s: zmiana mapy na %s
+CANC_VOTE = Przerwij glosowanie
+ADMIN_V_MAP_1 = Admin rozpoczyna glosowanie na mapy
+ADMIN_V_MAP_2 = Admin %s rozpoczyna glosowanie na mapy
+ADMIN_CHANGEL_1 = Admin zmienia mape na %s
+ADMIN_CHANGEL_2 = Admin %s zmienia mape na %s
 CHANGLE_MENU = Menu zmiany mapy
 
 [nl]

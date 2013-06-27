@@ -64,7 +64,7 @@ SECONDs = sekunder
 [pl]
 THE_TIME = Czas
 TIME_LEFT = Pozostalo czasu
-NO_T_LIMIT = Bez limitu czasu
+NO_T_LIMIT = Brak limitu czasu
 MINUTE = minuta
 MINUTES = minut
 SECOND = sekunda

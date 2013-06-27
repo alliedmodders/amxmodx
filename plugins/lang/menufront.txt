@@ -125,21 +125,21 @@ RES_WEAP = Forbyd Vaaben
 TELE_PLAYER = Teleport Spiller
 
 [pl]
-KICK_PLAYER = Wywal gracza
+KICK_PLAYER = Wyrzuc gracza
 BAN_PLAYER = Zbanuj gracza
 SLAP_SLAY = Uderz/zgladz gracza
-TEAM_PLAYER = Gracz druzyny ^n
+TEAM_PLAYER = Zmiana druzyny ^n
 CHANGEL = Zmien mape
-VOTE_MAPS = Glosuj na mapy ^n
+VOTE_MAPS = Glosowanie na mapy ^n
 SPECH_STUFF = Rzeczy zw. z rozmowa
-CLIENT_COM = Komendy Klienta
-SERVER_COM = Komendy Serwera
+CLIENT_COM = Komendy na graczach
+SERVER_COM = Komendy serwerowe
 CVARS_SET = Ustawienia Cvar'ow
 CONFIG = Konfiguracja
 LANG_SET = Ustawienia jezyka
 STATS_SET = Ustawienia statystyk ^n
 PAUSE_PLUG = Zatrzymaj pluginy
-RES_WEAP = Ogranicz bronie
+RES_WEAP = Zablokuj bronie
 TELE_PLAYER = Teleportuj gracza
 
 [nl]

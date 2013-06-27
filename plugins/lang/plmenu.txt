@@ -118,17 +118,17 @@ CL_CMD_MENU = Klient Kommando Menu
 NO_CMDS = Ingen kommandoer til raadighed
 
 [pl]
-ADMIN_BAN_1 = ADMIN: ban %s
-ADMIN_BAN_2 = ADMIN %s: ban %s
-BAN_MENU = Menu Bana
+ADMIN_BAN_1 = Admin zbanowal %s
+ADMIN_BAN_2 = Admin %s zbanowal %s
+BAN_MENU = Menu banow
 BAN_FOR_MIN = Ban na %d minut
-BAN_PERM = Kompletny Ban
-SLAP_SLAY_MENU = Menu udzerzen/zgladzen
+BAN_PERM = Permanentny ban
+SLAP_SLAY_MENU = Menu uderzen/zgladzen
 SLAP_WITH_DMG = Uderz zadajac %d obrazen
 SLAY = Zgladzenie
-KICK_MENU = Menu kicka
-ADMIN_TRANSF_1 = ADMIN: %s przeszedl do %s
-ADMIN_TRANSF_2 = ADMIN %s: %s przeszedl do %s
+KICK_MENU = Wyrzuc gracza
+ADMIN_TRANSF_1 = Admin przerzucil %s do %s
+ADMIN_TRANSF_2 = Admin %s przerzucil %s do %s
 TEAM_MENU = Menu druzyny
 TRANSF_TO = Przejdz do %s
 CL_CMD_MENU = menu komend klienta

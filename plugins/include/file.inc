@@ -145,7 +145,7 @@ enum FileTimeType
 {
 	FileTime_LastAccess,    /* Last access (not available on FAT) */
 	FileTime_Created,       /* Creation (not available on FAT) */
-	FileTime_LastChang,     /* Last modification */
+	FileTime_LastChange,    /* Last modification */
 };
 
 /**

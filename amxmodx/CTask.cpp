@@ -113,7 +113,9 @@ void CTaskMngr::CTask::changeBase(float fNewBase)
 
 void CTaskMngr::CTask::resetNextExecTime(float fCurrentTime)
 {
-	m_fNextExecTime = fCurrentTime + m_fBase;
+	// If we're here while we're executing we would add m_fBase twice
+	if (!m_bInExecute)
+		m_fNextExecTime = fCurrentTime + m_fBase;
 }
 
 void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, float fTimeLeft)

@@ -129,7 +129,9 @@ bool Journal::Begin()
 
 bool Journal::End()
 {
-	fclose(m_fp);
+	if (m_fp)
+		fclose(m_fp);
+
 	m_Bw.SetFilePtr(NULL);
 	return true;
 }

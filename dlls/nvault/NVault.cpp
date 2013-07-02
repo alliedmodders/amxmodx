@@ -266,8 +266,13 @@ bool NVault::Close()
 		return false;
 
 	_SaveToFile();
-	m_Journal->End();
-	m_Journal->Erase();
+
+	if (m_Journal) 
+	{
+		m_Journal->End();
+		m_Journal->Erase();
+	}
+
 	m_Open = false;
 
 	return true;

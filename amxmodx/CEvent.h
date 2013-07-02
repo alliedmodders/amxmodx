@@ -74,11 +74,13 @@ public:
 		CPluginMngr::CPlugin *m_Plugin;			// the plugin this ClEvent class is assigned to
 
 		// flags
-		bool m_FlagPlayer;
+		bool m_FlagClient;
 		bool m_FlagWorld;
 		bool m_FlagOnce;
 		bool m_FlagDead;
 		bool m_FlagAlive;
+		bool m_FlagPlayer;
+		bool m_FlagBot;
 
 		float m_Stamp;	// for 'once' flag
 

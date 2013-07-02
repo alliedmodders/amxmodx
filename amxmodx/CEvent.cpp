@@ -46,13 +46,25 @@ EventsMngr::ClEvent::ClEvent(CPluginMngr::CPlugin* plugin, int func, int flags)
 	m_FlagDead = true;
 
 	m_FlagWorld = (flags & 1) ? true : false;			// flag a
-	m_FlagPlayer = (flags & 2) ? true : false;			// flag b
+	m_FlagClient = (flags & 2) ? true : false;			// flag b
 	m_FlagOnce = (flags & 4) ? true : false;			// flag c
 	
 	if (flags & 24)
 	{
 		m_FlagAlive = (flags & 16) ? true : false;		// flag e
 		m_FlagDead = (flags & 8) ? true : false;		// flag d
+	}
+
+	if( m_FlagClient )
+	{
+		m_FlagPlayer = true;
+		m_FlagBot = true;
+
+		if( flags & 96 )
+		{
+			m_FlagPlayer = (flags & 32) ? true : false;	 // flag f
+			m_FlagBot = (flags & 64) ? true : false;	 // flag g
+		}
 	}
 
 	m_Stamp = 0.0f;
@@ -237,7 +249,7 @@ void EventsMngr::parserInit(int msg_type, float* timer, CPlayer* pPlayer, int in
 
 		if (pPlayer)
 		{
-			if (!(*iter).m_FlagPlayer || (pPlayer->IsAlive() ? !(*iter).m_FlagAlive : !(*iter).m_FlagDead))
+			if (!(*iter).m_FlagClient || (pPlayer->IsBot() ? !(*iter).m_FlagBot : !(*iter).m_FlagPlayer) || (pPlayer->IsAlive() ? !(*iter).m_FlagAlive : !(*iter).m_FlagDead))
 			{
 				(*iter).m_Done = true;
 				continue;

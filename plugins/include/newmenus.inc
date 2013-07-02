@@ -218,7 +218,10 @@ native player_menu_info(id, &menu, &newmenu, &menupage=0);
 
 /**
  * Adds a blank line to a menu.
- *
+ * 
+ * When using slot=1 this might break your menu. To achieve this functionality
+ * menu_addblank2 should be used.
+ * 
  * @param menu			Menu resource identifier.
  * @param slot			1 (default) if the line should shift the numbering down.
  * 						0 if the line should be a visual shift only.
@@ -230,6 +233,9 @@ native menu_addblank(menu, slot=1);
 /**
  * Adds a text line to a menu.  Only available in amxmodx 1.8.1 and above.
  *
+ * When using slot=1 this might break your menu. To achieve this functionality
+ * menu_addtext2 should be used.
+ * 
  * @param menu			Menu resource identifier.
  * @param text			Text to add.
  * @param slot			1 (default) if the line should shift the numbering down.
@@ -238,6 +244,41 @@ native menu_addblank(menu, slot=1);
  * @error				Invalid menu resource.
  */
 native menu_addtext(menu, const text[], slot=1);
+
+/**
+ * Adds a blank line to a menu, always shifting the numbering down.
+ * 
+ * This will add a special item to create a blank line. It will affect the menu
+ * item count and pagination. These items can be modified later but will ignore 
+ * access and item callback results.
+ * 
+ * Only available in 1.8.3 and above.
+ * 
+ * @param menu          Menu resource identifier.
+ * 
+ * @return              1 on success, 0 on failure.
+ * @error               Invalid menu resource.
+ *                      Too many items on non-paginated menu (max is 10)
+ */
+native menu_addblank2( menu );
+
+/**
+ * Adds a text line to a menu, always shifting the numbering down.
+ * 
+ * This will add a special item to create a blank line. It will affect the menu
+ * item count and pagination. These items can be modified later but will ignore 
+ * access and item callback results.
+ * 
+ * Only available in 1.8.3 and above.
+ *
+ * @param menu          Menu resource identifier.
+ * @param text          Text to add.
+ * 
+ * @return              1 on success, 0 on failure.
+ * @error               Invalid menu resource.
+ *                      Too many items on non-paginated menu (max is 10)
+ */
+native menu_addtext2( menu, const text[] );
 
 /**
  * Sets a menu property.

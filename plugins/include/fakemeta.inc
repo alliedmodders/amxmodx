@@ -112,7 +112,7 @@ native global_get(_value, any:...);
  * @param _macdiff      Mac OS X difference.
  * @return              An integer value is returned.
  */
-native get_pdata_int( _index, _Offset, _linuxdiff = 5, _macdiff = 5 );
+native get_pdata_int(_index, _Offset, _linuxdiff = 5, _macdiff = 5);
 
 /**
  * Sets an integer to an entity's private data.
@@ -129,7 +129,7 @@ native get_pdata_int( _index, _Offset, _linuxdiff = 5, _macdiff = 5 );
  * @param _macdiff      Mac OS X difference.
  * @return              1 on success.
  */
-native set_pdata_int( _index, _Offset, _Value, _linuxdiff = 5, _macdiff = 5 );
+native set_pdata_int(_index, _Offset, _Value, _linuxdiff = 5, _macdiff = 5);
 
 /**
  * Returns a float from an entity's private data.
@@ -145,7 +145,7 @@ native set_pdata_int( _index, _Offset, _Value, _linuxdiff = 5, _macdiff = 5 );
  * @param _macdiff      Mac OS X difference.
  * @return              An float value is returned.
  */
-native Float:get_pdata_float( _index, _Offset, _linuxdiff = 5, _macdiff = 5 );
+native Float:get_pdata_float(_index, _Offset, _linuxdiff = 5, _macdiff = 5);
 
 /**
  * Sets a float to an entity's private data.
@@ -162,7 +162,7 @@ native Float:get_pdata_float( _index, _Offset, _linuxdiff = 5, _macdiff = 5 );
  * @param _macdiff      Mac OS X difference.
  * @return              1 on success.
  */
-native set_pdata_float( _index, _Offset, Float:_Value, _linuxdiff = 5, _macdiff = 5 );
+native set_pdata_float(_index, _Offset, Float:_Value, _linuxdiff = 5, _macdiff = 5);
 
 /**
  * Tries to retrieve an edict pointer from an entity's private data.
@@ -183,7 +183,7 @@ native set_pdata_float( _index, _Offset, Float:_Value, _linuxdiff = 5, _macdiff 
  *						-1 if an empty entity was found.
  * 						Otherwise, an entity index is returned.
  */
-native get_pdata_ent( _index, _offset, _linuxdiff = 20, _macdiff = 20 );
+native get_pdata_ent(_index, _offset, _linuxdiff = 20, _macdiff = 20);
 
 /**
  * Sets an edict pointer to an entity's private data.
@@ -203,7 +203,7 @@ native get_pdata_ent( _index, _offset, _linuxdiff = 20, _macdiff = 20 );
  * @param _macdiff      Mac OS X difference.
  * @return              1 on success.           
  */
-native set_pdata_ent( _index, _offset, _value, _linuxdiff = 20, _macdiff = 20 );
+native set_pdata_ent(_index, _offset, _value, _linuxdiff = 20, _macdiff = 20);
 
 /**
  * Returns a boolean from an entity's private data.
@@ -222,7 +222,7 @@ native set_pdata_ent( _index, _offset, _value, _linuxdiff = 20, _macdiff = 20 );
  * @param _macdiff      Mac OS X difference.
  * @return              An boolean value is returned.
  */
-native bool:get_pdata_bool( _index, _offset, _linuxdiff = 20, _macdiff = 20 );
+native bool:get_pdata_bool(_index, _offset, _linuxdiff = 20, _macdiff = 20);
 
 /**
  * Sets a boolean to an entity's private data.
@@ -242,7 +242,7 @@ native bool:get_pdata_bool( _index, _offset, _linuxdiff = 20, _macdiff = 20 );
  * @param _macdiff      Mac OS X difference.
  * @return              1 on success.
  */
-native set_pdata_bool( _index, _offset, bool:_value, _linuxdiff = 20, _macdiff = 20 );
+native set_pdata_bool(_index, _offset, bool:_value, _linuxdiff = 20, _macdiff = 20);
 
 /**
  * Returns a byte value from an entity's private data.
@@ -261,7 +261,7 @@ native set_pdata_bool( _index, _offset, bool:_value, _linuxdiff = 20, _macdiff =
  * @param _macdiff      Mac OS X difference.
  * @return              A byte value is returned.
  */
-native get_pdata_byte( _index, _offset, _linuxdiff = 20, _macdiff = 20 );
+native get_pdata_byte(_index, _offset, _linuxdiff = 20, _macdiff = 20);
 
 /**
  * Sets a byte value to an entity's private data.
@@ -281,7 +281,7 @@ native get_pdata_byte( _index, _offset, _linuxdiff = 20, _macdiff = 20 );
  * @param _macdiff      Mac OS X difference.
  * @return              1 on success.
  */
-native set_pdata_byte( _index, _offset, _value, _linuxdiff = 20, _macdiff = 20 );
+native set_pdata_byte(_index, _offset, _value, _linuxdiff = 20, _macdiff = 20);
 
 /**
  * Returns a short value from an entity's private data.
@@ -300,7 +300,7 @@ native set_pdata_byte( _index, _offset, _value, _linuxdiff = 20, _macdiff = 20 )
  * @param _macdiff      Mac OS X difference.
  * @return              A short value is returned.
  */
-native get_pdata_short( _index, _offset, _linuxdiff = 20, _macdiff = 20 );
+native get_pdata_short(_index, _offset, _linuxdiff = 20, _macdiff = 20);
 
 /**
  * Sets a short value to an entity's private data.
@@ -320,7 +320,7 @@ native get_pdata_short( _index, _offset, _linuxdiff = 20, _macdiff = 20 );
  * @param _macdiff      Mac OS X difference.
  * @return              1 on success.  
  */
-native set_pdata_short( _index, _offset, _value, _linuxdiff = 20, _macdiff = 20 );
+native set_pdata_short(_index, _offset, _value, _linuxdiff = 20, _macdiff = 20);
 
 /**
  * Returns a vector from an entity's private data.
@@ -340,7 +340,7 @@ native set_pdata_short( _index, _offset, _value, _linuxdiff = 20, _macdiff = 20 
  * @param _macdiff      Mac OS X difference.
  * @return              1 on success.     
  */
-native get_pdata_vector( _index, _offset, Float:_output[3], _linuxdiff = 20, _macdiff = 20 );
+native get_pdata_vector(_index, _offset, Float:_output[3], _linuxdiff = 20, _macdiff = 20);
 
 /**
  * Sets a vector to an entity's private data.
@@ -360,7 +360,7 @@ native get_pdata_vector( _index, _offset, Float:_output[3], _linuxdiff = 20, _ma
  * @param _macdiff      Mac OS X difference.
  * @return              1 on success.   
  */
-native set_pdata_vector( _index, _offset, Float:_origin[3], _linuxdiff = 20, _macdiff = 20 );
+native set_pdata_vector(_index, _offset, Float:_origin[3], _linuxdiff = 20, _macdiff = 20);
 
 /**
  * Tries to retrieve an edict (entity encapsulation) pointer from an entity's private data.
@@ -382,7 +382,7 @@ native set_pdata_vector( _index, _offset, Float:_origin[3], _linuxdiff = 20, _ma
  *                      0 if serialnumber is not matching.
  *                      Otherwise, an entity index is returned.
  */
-native get_pdata_ehandle( _index, _offset, _linuxdiff = 20, _macdiff = 20 );
+native get_pdata_ehandle(_index, _offset, _linuxdiff = 20, _macdiff = 20);
 
 /**
  * Sets an edict (entity encapsulation) pointer to an entity's private data.
@@ -402,7 +402,7 @@ native get_pdata_ehandle( _index, _offset, _linuxdiff = 20, _macdiff = 20 );
  * @param _macdiff      Mac OS X difference.
  * @return              1 on success.          
  */
-native set_pdata_ehandle( _index, _offset, _value, _linuxdiff = 20, _macdiff = 20 );
+native set_pdata_ehandle(_index, _offset, _value, _linuxdiff = 20, _macdiff = 20);
 
 /* Registers a forward.
  * Returns an id you can pass to unregister_forward

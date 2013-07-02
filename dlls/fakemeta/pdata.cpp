@@ -239,267 +239,267 @@ static cell AMX_NATIVE_CALL get_pdata_ent(AMX *amx, cell *params)
 	return ent;
 }
 
-static cell AMX_NATIVE_CALL set_pdata_ent( AMX *amx, cell *params )
+static cell AMX_NATIVE_CALL set_pdata_ent(AMX *amx, cell *params)
 {
 	int index  = params[1];
-	CHECK_ENTITY( index );
+	CHECK_ENTITY(index);
 
 	int offset = params[2];
-	CHECK_OFFSET( offset );
+	CHECK_OFFSET(offset);
 
 	int entity = params[3];
-	CHECK_ENTITY( entity );
+	CHECK_ENTITY(entity);
 
-#if defined( __linux__ )
+#if defined(__linux__)
 	offset += params[4];
-#elif defined( __APPLE__ )
+#elif defined(__APPLE__)
 	// Use Linux offset in older plugins
-	if( params[0] / sizeof( cell ) == 4 )
+	if (params[0] / sizeof(cell) == 4)
 		offset += params[4];
 	else
 		offset += params[5];
 #endif
 
-	*( edict_t** )( ( char* )( INDEXENT2( index )->pvPrivateData ) + offset ) = INDEXENT2( entity );
+	*(edict_t **)((char *)(INDEXENT2(index)->pvPrivateData) + offset) = INDEXENT2(entity);
 
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL get_pdata_bool( AMX *amx, cell *params )
+static cell AMX_NATIVE_CALL get_pdata_bool(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_ENTITY( index );
+	CHECK_ENTITY(index);
 
 	int offset = params[2];
-	CHECK_OFFSET( offset );
+	CHECK_OFFSET(offset);
 
-#if defined( __linux__ )
+#if defined(__linux__)
 	offset += params[3];
-#elif defined( __APPLE__ )
+#elif defined(__APPLE__)
 	// Use Linux offset in older plugins
-	if( params[0] / sizeof( cell ) == 3 )
+	if (params[0] / sizeof(cell) == 3)
 		offset += params[3];
 	else
 		offset += params[4];
 #endif
 
-	return *( bool* )( ( char* )INDEXENT2( index )->pvPrivateData + offset ) ? TRUE : FALSE;
+	return *(bool *)((char *)INDEXENT2(index)->pvPrivateData + offset) ? TRUE : FALSE;
 }
 
-static cell AMX_NATIVE_CALL set_pdata_bool( AMX *amx, cell *params )
+static cell AMX_NATIVE_CALL set_pdata_bool(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_ENTITY( index );
+	CHECK_ENTITY(index);
 
 	int offset = params[2];
-	CHECK_OFFSET( offset );
+	CHECK_OFFSET(offset);
 
 	bool value = params[3] ? true : false;
 
-#if defined( __linux__ )
+#if defined(__linux__)
 	offset += params[4];
-#elif defined( __APPLE__ )
+#elif defined(__APPLE__)
 	// Use Linux offset in older plugins
-	if( params[0] / sizeof( cell ) == 4 )
+	if (params[0] / sizeof(cell) == 4)
 		offset += params[4];
 	else
 		offset += params[5];
 #endif
 
-	*( bool* )( ( char* )INDEXENT2( index )->pvPrivateData + offset ) = value;
+	*(bool *)((char *)INDEXENT2(index)->pvPrivateData + offset) = value;
 
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL get_pdata_byte( AMX *amx, cell *params )
+static cell AMX_NATIVE_CALL get_pdata_byte(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_ENTITY( index );
+	CHECK_ENTITY(index);
 
 	int offset = params[2];
-	CHECK_OFFSET( offset );
+	CHECK_OFFSET(offset);
 
-#if defined( __linux__ )
+#if defined(__linux__)
 	offset += params[3];
-#elif defined( __APPLE__ )
+#elif defined(__APPLE__)
 	// Use Linux offset in older plugins
-	if( params[0] / sizeof( cell ) == 3 )
+	if (params[0] / sizeof(cell) == 3)
 		offset += params[3];
 	else
 		offset += params[4];
 #endif
 	
-	return static_cast< cell >( *( ( byte* )INDEXENT2( index )->pvPrivateData + offset ) );
+	return static_cast<cell>(*((byte *)INDEXENT2(index)->pvPrivateData + offset));
 }
 
-static cell AMX_NATIVE_CALL set_pdata_byte( AMX *amx, cell *params )
+static cell AMX_NATIVE_CALL set_pdata_byte(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_ENTITY( index );
+	CHECK_ENTITY(index);
 
 	int offset = params[2];
-	CHECK_OFFSET( offset );
+	CHECK_OFFSET(offset);
 
-	byte value = static_cast< byte >( params[3] );
+	byte value = static_cast<byte>(params[3]);
 
-#if defined( __linux__ )
+#if defined(__linux__)
 	offset += params[4];
-#elif defined( __APPLE__ )
+#elif defined(__APPLE__)
 	// Use Linux offset in older plugins
-	if( params[0] / sizeof( cell ) == 4 )
+	if (params[0] / sizeof(cell) == 4)
 		offset += params[4];
 	else
 		offset += params[5];
 #endif
 
-	*( ( byte* )INDEXENT2( index )->pvPrivateData + offset ) = value;
+	*((byte *)INDEXENT2(index)->pvPrivateData + offset) = value;
 
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL get_pdata_short( AMX *amx, cell *params )
+static cell AMX_NATIVE_CALL get_pdata_short(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_ENTITY( index );
+	CHECK_ENTITY(index);
 
 	int offset = params[2];
-	CHECK_OFFSET( offset );
+	CHECK_OFFSET(offset);
 
-#if defined( __linux__ )
+#if defined(__linux__)
 	offset += params[3];
-#elif defined( __APPLE__ )
+#elif defined(__APPLE__)
 	// Use Linux offset in older plugins
-	if( params[0] / sizeof( cell ) == 3 )
+	if (params[0] / sizeof(cell) == 3)
 		offset += params[3];
 	else
 		offset += params[4];
 #endif
 
-	return static_cast< cell >( *( short* )( ( char* )INDEXENT2( index )->pvPrivateData + offset ) );
+	return static_cast<cell>(*(short *)((char *)INDEXENT2(index)->pvPrivateData + offset));
 }
 
-static cell AMX_NATIVE_CALL set_pdata_short( AMX *amx, cell *params )
+static cell AMX_NATIVE_CALL set_pdata_short(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_ENTITY( index );
+	CHECK_ENTITY(index);
 
 	int offset = params[2];
-	CHECK_OFFSET( offset );
+	CHECK_OFFSET(offset);
 
-	short value = static_cast< short >( params[3] );
+	short value = static_cast<short>(params[3]);
 
-#if defined( __linux__ )
+#if defined(__linux__)
 	offset += params[4];
-#elif defined( __APPLE__ )
+#elif defined(__APPLE__)
 	// Use Linux offset in older plugins
-	if( params[0] / sizeof( cell ) == 4 )
+	if (params[0] / sizeof(cell) == 4)
 		offset += params[4];
 	else
 		offset += params[5];
 #endif
 
-	*( short* )( ( char* )INDEXENT2( index )->pvPrivateData + offset ) = value;
+	*(short *)((char *)INDEXENT2(index)->pvPrivateData + offset) = value;
 
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL get_pdata_vector( AMX *amx, cell *params )
+static cell AMX_NATIVE_CALL get_pdata_vector(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_ENTITY( index );
+	CHECK_ENTITY(index);
 
 	int offset = params[2];
-	CHECK_OFFSET( offset );
+	CHECK_OFFSET(offset);
 
-#if defined( __linux__ )
+#if defined(__linux__)
 	offset += params[4];
-#elif defined( __APPLE__ )
+#elif defined(__APPLE__)
 	// Use Linux offset in older plugins
-	if( params[0] / sizeof( cell ) == 4 )
+	if (params[0] / sizeof(cell) == 4)
 		offset += params[4];
 	else
 		offset += params[5];
 #endif
 
-	cell *cpvec = MF_GetAmxAddr( amx, params[3] );
+	cell *cpvec = MF_GetAmxAddr(amx, params[3]);
 
-	Vector vec = *( Vector* )( ( char* )INDEXENT2( index )->pvPrivateData + offset );
+	Vector vec = *(Vector *)((char *)INDEXENT2(index)->pvPrivateData + offset);
 
-	cpvec[0] = amx_ftoc( vec.x );
-	cpvec[1] = amx_ftoc( vec.y );
-	cpvec[2] = amx_ftoc( vec.z );
+	cpvec[0] = amx_ftoc(vec.x);
+	cpvec[1] = amx_ftoc(vec.y);
+	cpvec[2] = amx_ftoc(vec.z);
 
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL set_pdata_vector( AMX *amx, cell *params )
+static cell AMX_NATIVE_CALL set_pdata_vector(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_ENTITY( index );
+	CHECK_ENTITY(index);
 
 	int offset = params[2];
-	CHECK_OFFSET( offset );
+	CHECK_OFFSET(offset);
 
-#if defined( __linux__ )
+#if defined(__linux__)
 	offset += params[4];
-#elif defined( __APPLE__ )
+#elif defined(__APPLE__)
 	// Use Linux offset in older plugins
-	if( params[0] / sizeof( cell ) == 4 )
+	if (params[0] / sizeof(cell) == 4)
 		offset += params[4];
 	else
 		offset += params[5];
 #endif
 
-	cell *pcvec = MF_GetAmxAddr( amx, params[3] );
+	cell *pcvec = MF_GetAmxAddr(amx, params[3]);
 
-	Vector vec( amx_ctof( pcvec[0] ), amx_ctof( pcvec[1] ), amx_ctof( pcvec[2] ) );
+	Vector vec(amx_ctof(pcvec[0]), amx_ctof(pcvec[1]), amx_ctof(pcvec[2]));
 
-	*( Vector* )( ( char* )INDEXENT2( index )->pvPrivateData + offset ) = vec;
+	*(Vector *)((char *)INDEXENT2(index)->pvPrivateData + offset) = vec;
 
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL get_pdata_ehandle( AMX *amx, cell *params )
+static cell AMX_NATIVE_CALL get_pdata_ehandle(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_ENTITY( index );
+	CHECK_ENTITY(index);
 
 	int offset = params[2];
-	CHECK_OFFSET( offset );
+	CHECK_OFFSET(offset);
 
-#if defined( __linux__ )
+#if defined(__linux__)
 	offset += params[3];
-#elif defined( __APPLE__ )
+#elif defined(__APPLE__)
 	// Use Linux offset in older plugins
-	if( params[0] / sizeof( cell ) == 3 )
+	if (params[0] / sizeof(cell) == 3)
 		offset += params[3];
 	else
 		offset += params[4];
 #endif
 
-	edict_t *pEdict = *( edict_t** )( ( char* )( INDEXENT2( index )->pvPrivateData ) + offset );
+	edict_t *pEdict = *(edict_t **)((char * )(INDEXENT2(index)->pvPrivateData) + offset);
 
-	if( pEdict == NULL )
+	if (pEdict == NULL)
 	{
 		return -1;
 	}
 
-	edict_t *pWorld = INDEXENT( 0 );
+	edict_t *pWorld = INDEXENT(0);
 	int ent = pEdict - pWorld;
 
-	if( ent < 0 || ent > gpGlobals->maxEntities )
+	if (ent < 0 || ent > gpGlobals->maxEntities)
 	{
 		return -2;
 	}
 
-	if( pEdict->free || pEdict->pvPrivateData == NULL )
+	if (pEdict->free || pEdict->pvPrivateData == NULL)
 	{
 		return -1;
 	}
 
-	int serialnumber = *( int* )( ( char* )INDEXENT2( index )->pvPrivateData + offset + 4 );
+	int serialnumber = *(int *)((char *)INDEXENT2(index)->pvPrivateData + offset + 4);
 
-	if( pEdict->serialnumber != serialnumber )
+	if (pEdict->serialnumber != serialnumber)
 	{
 		return 0;
 	}
@@ -507,34 +507,34 @@ static cell AMX_NATIVE_CALL get_pdata_ehandle( AMX *amx, cell *params )
 	return ent;
 }
 
-static cell AMX_NATIVE_CALL set_pdata_ehandle( AMX *amx, cell *params )
+static cell AMX_NATIVE_CALL set_pdata_ehandle(AMX *amx, cell *params)
 {
 	int index  = params[1];
-	CHECK_ENTITY( index );
+	CHECK_ENTITY(index);
 
 	int offset = params[2];
-	CHECK_OFFSET( offset );
+	CHECK_OFFSET(offset);
 
 	int entity = params[3];
-	CHECK_ENTITY( entity );
+	CHECK_ENTITY(entity);
 
-#if defined( __linux__ )
+#if defined(__linux__)
 	offset += params[4];
-#elif defined( __APPLE__ )
+#elif defined(__APPLE__)
 	// Use Linux offset in older plugins
-	if( params[0] / sizeof( cell ) == 4 )
+	if (params[0] / sizeof(cell) == 4)
 		offset += params[4];
 	else
 		offset += params[5];
 #endif
 
-	edict_t *pEntity = INDEXENT2( entity );
+	edict_t *pEntity = INDEXENT2(entity);
 
-	*( edict_t** )( ( char* )( INDEXENT2( index )->pvPrivateData ) + offset ) = pEntity;
+	*(edict_t **)((char* )(INDEXENT2(index)->pvPrivateData) + offset) = pEntity;
 
-	if( pEntity )
+	if (pEntity)
 	{
-		*( int* )( ( char* )INDEXENT2( index )->pvPrivateData + offset + 4 ) = pEntity->serialnumber;
+		*(int *)((char *)INDEXENT2(index)->pvPrivateData + offset + 4) = pEntity->serialnumber;
 	}
 
 	return 1;

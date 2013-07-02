@@ -55,12 +55,12 @@ EventsMngr::ClEvent::ClEvent(CPluginMngr::CPlugin* plugin, int func, int flags)
 		m_FlagDead = (flags & 8) ? true : false;		// flag d
 	}
 
-	if( m_FlagClient )
+	if (m_FlagClient)
 	{
 		m_FlagPlayer = true;
 		m_FlagBot = true;
 
-		if( flags & 96 )
+		if (flags & 96)
 		{
 			m_FlagPlayer = (flags & 32) ? true : false;	 // flag f
 			m_FlagBot = (flags & 64) ? true : false;	 // flag g

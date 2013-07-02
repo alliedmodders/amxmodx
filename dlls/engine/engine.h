@@ -27,7 +27,7 @@ extern int pfnThinkForward;
 extern int PlayerPreThinkForward;
 extern int PlayerPostThinkForward;
 extern int ClientKillForward;
-extern int CmdStartForward;
+extern int ClientImpulseForward;
 extern int StartFrameForward;
 extern int DispatchUseForward;
 extern int VexdTouchForward;

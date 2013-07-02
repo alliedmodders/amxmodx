@@ -10,7 +10,7 @@ int pfnThinkForward = 0;
 int PlayerPreThinkForward = 0;
 int PlayerPostThinkForward = 0;
 int ClientKillForward = 0;
-int CmdStartForward = 0;
+int ClientImpulseForward = 0;
 int StartFrameForward = 0;
 int VexdTouchForward = 0;
 int VexdServerForward = 0;
@@ -131,27 +131,23 @@ void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int 
 		if (Impulses[i]->Check == g_cmd->impulse)
 		{
 			retVal = MF_ExecuteForward(Impulses[i]->Forward, (cell)ENTINDEX(pEntity), (cell)origImpulse);
-			if (retVal & 2 /*PLUGIN_HANDLED_MAIN*/)
-			{
-				g_cmd->impulse=0;
-				RETURN_META(MRES_SUPERCEDE);
-			}
-			else if (retVal)
-				res = MRES_SUPERCEDE;
+			
+			// don't return SUPERCEDE in any way here, 
+			// we don't want to break client_impulse forward and access to cmd with [g/s]et_usercmd
+			if (retVal)
+				g_cmd->impulse = 0;
 		}
 	}
-	if (CmdStartForward != -1) {
-		incmd = true;
-		retVal = MF_ExecuteForward(CmdStartForward, (cell)ENTINDEX(pEntity), (cell)origImpulse);
-		incmd = false;
-		if (retVal) {
+
+	if (ClientImpulseForward != -1 && origImpulse != 0) 
+	{
+		retVal = MF_ExecuteForward(ClientImpulseForward, (cell)ENTINDEX(pEntity), (cell)origImpulse);
+
+		if (retVal)
 			g_cmd->impulse = 0;
-			RETURN_META(MRES_SUPERCEDE);
-		}
 	}
-	if (res == MRES_SUPERCEDE)
-		g_cmd->impulse=0;
-	RETURN_META(res);
+
+	RETURN_META(MRES_IGNORED);
 }
 
 void ClientKill(edict_t *pEntity)

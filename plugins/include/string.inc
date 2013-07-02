@@ -117,7 +117,7 @@ native str_to_num(const string[]);
  *                  If the value read is out of the range of representable values by a cell, 
  *                  the function returns 'cellmin' or 'cellmax'.
  */
-native strtol( const string[], &endPos = -1, base = 0 );
+native strtol(const string[], &endPos = -1, base = 0);
 
 /* Converts float to string. */
 native float_to_str(Float:fl, string[], len);

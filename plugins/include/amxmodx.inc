@@ -114,10 +114,12 @@ native console_cmd(id,const cmd[],any:...);
 /* Registers event on which a given function will be called
 * Flags:
 * "a" - global event.
-* "b" - specified.
+* "b" - specified to client (human player and bot).
 * "c" - send only once when repeated to other players.
 * "d" - call if is send to dead player.
 * "e" - to alive.
+* "f" - to human player only ("b" flag must be set).
+* "g" - to bot only ("b" flag must be set).
 * NOTE: Due to a long-standing bug that would break compatibility with old plugins,
 *       the client id should be checked for alive/dead state if you use d or e.
 * Examples for conditions:

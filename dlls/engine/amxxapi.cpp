@@ -35,6 +35,7 @@ void OnAmxxAttach()
 	PlayerPostThinkForward = 0;
 	ClientKillForward = 0;
 	ClientImpulseForward = 0;
+	CmdStartForward = 0;
 	StartFrameForward = 0;
 	MF_AddNatives(ent_Natives);
 	MF_AddNewNatives(ent_NewNatives);
@@ -55,6 +56,7 @@ void OnPluginsLoaded()
 	PlayerPostThinkForward = MF_RegisterForward("client_PostThink", ET_STOP, FP_CELL, FP_DONE); // done
 	ClientKillForward = MF_RegisterForward("client_kill", ET_STOP, FP_CELL, FP_DONE); // done
 	ClientImpulseForward = MF_RegisterForward("client_impulse", ET_STOP, FP_CELL, FP_CELL, FP_DONE); // done
+	CmdStartForward = MF_RegisterForward("client_cmdStart", ET_STOP, FP_CELL, FP_DONE); // done
 	StartFrameForward = MF_RegisterForward("server_frame", ET_IGNORE, FP_DONE); // done
 	DispatchKeyForward = MF_RegisterForward("pfn_keyvalue", ET_STOP, FP_CELL, FP_DONE); // done
 	PlaybackForward = MF_RegisterForward("pfn_playbackevent", ET_STOP, FP_CELL, FP_CELL, FP_CELL, FP_FLOAT, FP_ARRAY, FP_ARRAY, FP_FLOAT, FP_FLOAT, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE); // done
@@ -92,8 +94,8 @@ void OnPluginsLoaded()
 	if (CheckForPublic("client_kill"))
 		g_pFunctionTable->pfnClientKill=ClientKill;
 
-	g_pFunctionTable->pfnCmdStart=NULL; // "client_impulse","register_impulse"
-	if (CheckForPublic("client_impulse"))
+	g_pFunctionTable->pfnCmdStart=NULL; // "client_impulse","register_impulse","client_cmdStart"
+	if (CheckForPublic("client_impulse") || CheckForPublic("client_cmdStart"))
 		g_pFunctionTable->pfnCmdStart=CmdStart;
 	
 	g_pFunctionTable->pfnThink=NULL; // "pfn_think", "register_think"

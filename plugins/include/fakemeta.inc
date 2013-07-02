@@ -536,3 +536,70 @@ native lookup_sequence(entity, const name[], &Float:framerate = 0.0, &bool:loops
  * @return				The percentage that the controller is extended (0.0 through 1.0)
  */
 native Float:set_controller(entity, controller, Float:value);
+
+
+enum
+{
+    Model_DefaultSize     = -2,
+    Model_CurrentSequence = -1,
+};
+
+/**
+ * Gets size of the entity models collision box.
+ *
+ * @param entity        The entity index to use.
+ * @param mins          The local negative collision box distance.    
+ * @param maxs          The local positive collision box distance.    
+ * 
+ * @return              1 on success, 0 on faillure.
+ * 
+ * @error               Invalid entity.
+ *                      Invalid model pointer.
+ */
+native GetModelCollisionBox( entity, Float:mins[3], Float:maxs[3] );
+
+/**
+ * Sets entity size to the models collision box.
+ *
+ * @param entity        The entity index to set the value on.
+ * 
+ * @return              1 on success, 0 on faillure.
+ * 
+ * @error               Invalid entity.
+ *                      Invalid model pointer.
+ */
+native SetModelCollisionBox( entity );
+
+/**
+ * Gets size of a model bounding box.
+ *
+ * @param entity        The entity index to use.
+ * @param mins          The local negative bounding box distance.    
+ * @param maxs          The local positive bounding box distance.     
+ * @param sequence      The animation sequence to retrieve.
+ *                      Model_DefaultSize retrieves ideal moevement hull size.
+ *                      Model_CurrentSequence retrieves hull size of the current sequence.
+ *                      Values >= 0 will specify which sequence to retrieve size from.
+ * 
+ * @return              1 on success, 0 on faillure.
+ * 
+ * @error               Invalid entity.
+ *                      Invalid model pointer.
+ */
+native GetModelBoundingBox( entity, Float:mins[3], Float:maxs[3], sequence = Model_DefaultSize );
+
+/**
+ * Sets size to a model bounding box.
+ *
+ * @param entity        The entity index to set the value on. 
+ * @param sequence      The sequence to apply.
+ *                      Model_DefaultSize sets size of ideal movement hull.
+ *                      Model_CurrentSequence sets size of the current sequence.
+ *                      Values >= 0 will specify which sequence to use.
+ * 
+ * @return              1 on success, 0 on faillure.
+ * 
+ * @error               Invalid entity.
+ *                      Invalid model pointer.
+ */
+native SetModelBoundingBox( index, sequence = Model_DefaultSize );

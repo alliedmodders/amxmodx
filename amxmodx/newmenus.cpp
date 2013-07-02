@@ -129,6 +129,7 @@ menuitem *Menu::AddItem(const char *name, const char *cmd, int access)
 	pItem->access = access;
 	pItem->id = m_Items.size();
 	pItem->handler = -1;
+	pItem->isBlank = false;
 	pItem->pfn = NULL;
 
 	m_Items.push_back(pItem);
@@ -420,6 +421,11 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 			}
 		}
 
+		if (pItem->isBlank)
+		{
+			enabled = false;
+		}
+
 		if (enabled)
 		{
 			keys |= (1<<option);
@@ -431,7 +437,11 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 			option_display = 0;
 		}
 
-		if (enabled)
+		if (pItem->isBlank)
+		{
+			_snprintf(buffer, sizeof(buffer)-1, "%s\n", pItem->name.c_str());
+		}
+		else if (enabled)
 		{
 			if (m_AutoColors) 
 			{
@@ -676,6 +686,43 @@ static cell AMX_NATIVE_CALL menu_addtext(AMX *amx, cell *params)
 
 	item->blanks.push_back(a);
 
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL menu_addblank2(AMX *amx, cell *params)
+{
+	GETMENU(params[1]);
+	
+	if (!pMenu->items_per_page && pMenu->GetItemCount() >= 10)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Non-paginated menus are limited to 10 items.");
+		return 0;
+	}
+	
+	menuitem *pItem = pMenu->AddItem("", "", 0);
+	pItem->isBlank = true;
+	
+	return 1;
+}
+static cell AMX_NATIVE_CALL menu_addtext2(AMX *amx, cell *params)
+{
+	int len;
+	char *name;
+	
+	GETMENU(params[1]);
+	
+	if (!pMenu->items_per_page && pMenu->GetItemCount() >= 10)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Non-paginated menus are limited to 10 items.");
+		return 0;
+	}
+	
+	name = get_amxstring(amx, params[2], 0, len);
+	validate_menu_text(name);
+	
+	menuitem *pItem = pMenu->AddItem(name, "", 0);
+	pItem->isBlank = true;
+	
 	return 1;
 }
 
@@ -1097,5 +1144,7 @@ AMX_NATIVE_INFO g_NewMenuNatives[] =
 	{"menu_setprop",			menu_setprop},
 	{"menu_cancel",				menu_cancel},
 	{"player_menu_info",		player_menu_info},
+	{"menu_addblank2",			menu_addblank2},
+	{"menu_addtext2",			menu_addtext2},
 	{NULL,						NULL},
 };

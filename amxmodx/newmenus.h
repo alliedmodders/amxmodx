@@ -101,6 +101,7 @@ struct menuitem
 	
 	int access;
 	int handler;
+	bool isBlank;
 	
 	MENUITEM_CALLBACK pfn;
 	size_t id;

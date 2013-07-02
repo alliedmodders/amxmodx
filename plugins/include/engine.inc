@@ -207,6 +207,9 @@ forward client_PostThink(id);
 /* Forward for impulses. */
 forward client_impulse(id, impulse);
 
+/* Forward for CmdStart() on a player. */
+forward client_cmdStart(id);
+
 /* Called when an entity "thinks" (DispatchThink) */
 forward pfn_think(entid);
 

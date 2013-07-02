@@ -11,6 +11,7 @@ int PlayerPreThinkForward = 0;
 int PlayerPostThinkForward = 0;
 int ClientKillForward = 0;
 int ClientImpulseForward = 0;
+int CmdStartForward = 0;
 int StartFrameForward = 0;
 int VexdTouchForward = 0;
 int VexdServerForward = 0;
@@ -124,7 +125,6 @@ void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int 
 	int retVal = 0;
 	edict_t *pEntity = (edict_t *)player;
 	g_cmd = (struct usercmd_s *)_cmd;
-	META_RES res = MRES_IGNORED;
 	int origImpulse = g_cmd->impulse; // incase a plugin alters it
 	for (i=0; i<Impulses.size(); i++)
 	{
@@ -139,12 +139,24 @@ void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int 
 		}
 	}
 
+	// client_impulse
 	if (ClientImpulseForward != -1 && origImpulse != 0) 
 	{
 		retVal = MF_ExecuteForward(ClientImpulseForward, (cell)ENTINDEX(pEntity), (cell)origImpulse);
 
 		if (retVal)
 			g_cmd->impulse = 0;
+	}
+
+	// client_CmdStart
+	if (CmdStartForward != -1)
+	{
+		incmd = true;
+		retVal = MF_ExecuteForward(CmdStartForward, (cell)ENTINDEX(pEntity));
+		incmd = false;
+
+		if (retVal)
+			RETURN_META(MRES_SUPERCEDE);
 	}
 
 	RETURN_META(MRES_IGNORED);

@@ -556,7 +556,7 @@ enum
  * @error               Invalid entity.
  *                      Invalid model pointer.
  */
-native GetModelCollisionBox( entity, Float:mins[3], Float:maxs[3] );
+native GetModelCollisionBox(entity, Float:mins[3], Float:maxs[3]);
 
 /**
  * Sets entity size to the models collision box.
@@ -568,7 +568,7 @@ native GetModelCollisionBox( entity, Float:mins[3], Float:maxs[3] );
  * @error               Invalid entity.
  *                      Invalid model pointer.
  */
-native SetModelCollisionBox( entity );
+native SetModelCollisionBox(entity);
 
 /**
  * Gets size of a model bounding box.
@@ -586,7 +586,7 @@ native SetModelCollisionBox( entity );
  * @error               Invalid entity.
  *                      Invalid model pointer.
  */
-native GetModelBoundingBox( entity, Float:mins[3], Float:maxs[3], sequence = Model_DefaultSize );
+native GetModelBoundingBox(entity, Float:mins[3], Float:maxs[3], sequence = Model_DefaultSize);
 
 /**
  * Sets size to a model bounding box.
@@ -602,4 +602,4 @@ native GetModelBoundingBox( entity, Float:mins[3], Float:maxs[3], sequence = Mod
  * @error               Invalid entity.
  *                      Invalid model pointer.
  */
-native SetModelBoundingBox( index, sequence = Model_DefaultSize );
+native SetModelBoundingBox(index, sequence = Model_DefaultSize);

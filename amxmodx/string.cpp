@@ -346,18 +346,18 @@ static cell AMX_NATIVE_CALL amx_strtol(AMX *amx, cell *params) /* 3 param */
 	int len;
 	int base = params[3];
 
-	if( base != 0 && ( base < 2 || base > 36 ) )
+	if (base != 0 && (base < 2 || base > 36))
 		base = 0;
 
-	char *pString = get_amxstring( amx, params[1], 0, len );
-	cell *endPos = get_amxaddr( amx, params[2] );
+	char *pString = get_amxstring(amx, params[1], 0, len);
+	cell *endPos = get_amxaddr(amx, params[2]);
 
 	*endPos = -1;
 
 	char *pEnd = NULL;
-	long result = strtol( pString, &pEnd, base );
+	long result = strtol(pString, &pEnd, base);
 
-	if( pEnd != NULL && pString != pEnd )
+	if (pEnd != NULL && pString != pEnd)
 		*endPos = pEnd - pString;
 
 	return result;

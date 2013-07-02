@@ -98,33 +98,311 @@ native pev_serial(entindex);
  */
 native global_get(_value, any:...);
 
-/* Returns an integer from private data.  _linuxdiff is added into the _Offset if it's used on a linux server. */
-native get_pdata_int(_index,_Offset,_linuxdiff=5,_macdiff=5);
-
-/* Sets an integer from private data.  _linuxdiff is added into the _Offset if it's used on a linux server. */
-native set_pdata_int(_index,_Offset,_Value,_linuxdiff=5,_macdiff=5);
-
-/* Returns a float from private data.  _linuxdiff is added into the _Offset if it's used on a linux server. */
-native Float:get_pdata_float(_index,_Offset,_linuxdiff=5,_macdiff=5);
-
-/* Sets a float from private data.  _linuxdiff is added into the _Offset if it's used on a linux server. */
-native set_pdata_float(_index,_Offset,Float:_Value,_linuxdiff=5,_macdiff=5);
+/**
+ * Returns a integer from an entity's private data.
+ *
+ * _linuxdiff value is what to add to the _Offset for linux servers.
+ * _macdiff value is what to add to the _Offset for os x servers.
+ * 
+ * A log error is thrown on invalid _index and _Offset.
+ * 
+ * @param _index        Entity index.
+ * @param _Offset       Offset to search.
+ * @param _linuxdiff    Linux difference.
+ * @param _macdiff      Mac OS X difference.
+ * @return              An integer value is returned.
+ */
+native get_pdata_int( _index, _Offset, _linuxdiff = 5, _macdiff = 5 );
 
 /**
- * Tries to retrieve an edict (entity encapsulation) pointer from an entity's private data.
+ * Sets an integer to an entity's private data.
+ *
+ * _linuxdiff value is what to add to the _Offset for linux servers.
+ * _macdiff value is what to add to the _Offset for os x servers.
+ * 
+ * A log error is thrown on invalid _index and _Offset.
+ * 
+ * @param _index        Entity index.
+ * @param _Offset       Offset to search.
+ * @param _Value        Value to set.
+ * @param _linuxdiff    Linux difference.
+ * @param _macdiff      Mac OS X difference.
+ * @return              1 on success.
+ */
+native set_pdata_int( _index, _Offset, _Value, _linuxdiff = 5, _macdiff = 5 );
+
+/**
+ * Returns a float from an entity's private data.
+ *
+ * _linuxdiff value is what to add to the _Offset for linux servers.
+ * _macdiff value is what to add to the _Offset for os x servers.
+ * 
+ * A log error is thrown on invalid _index and _Offset.
+ * 
+ * @param _index        Entity index.
+ * @param _Offset       Offset to search.
+ * @param _linuxdiff    Linux difference.
+ * @param _macdiff      Mac OS X difference.
+ * @return              An float value is returned.
+ */
+native Float:get_pdata_float( _index, _Offset, _linuxdiff = 5, _macdiff = 5 );
+
+/**
+ * Sets a float to an entity's private data.
+ *
+ * _linuxdiff value is what to add to the _Offset for linux servers.
+ * _macdiff value is what to add to the _Offset for os x servers.
+ * 
+ * A log error is thrown on invalid _index and _Offset.
+ * 
+ * @param _index        Entity index.
+ * @param _Offset       Offset to search.
+ * @param _Value        Value to set.
+ * @param _linuxdiff    Linux difference.
+ * @param _macdiff      Mac OS X difference.
+ * @return              1 on success.
+ */
+native set_pdata_float( _index, _Offset, Float:_Value, _linuxdiff = 5, _macdiff = 5 );
+
+/**
+ * Tries to retrieve an edict pointer from an entity's private data.
  *
  * This function is byte-addressable.  Unlike get_pdata_int() which searches in byte increments of 4, 
- * get_pdata_end searches in increments of 1.
+ * get_pdata_ent searches in increments of 1.
  *
+ * _linuxdiff value is what to add to the _offset for linux servers.
+ * _macdiff value is what to add to the _offset for os x servers.
+ *
+ * A log error is thrown on invalid _index and _Offset.
+ * 
  * @param _index		Entity index.
  * @param _offset		Offset to search.
- * @param _linuxdiff		Linux difference.
+ * @param _linuxdiff	Linux difference.
  * @param _macdiff		Mac OS X difference.
  * @return				-2 if an invalid entity was found.
  *						-1 if an empty entity was found.
  * 						Otherwise, an entity index is returned.
  */
-native get_pdata_ent(_index, _offset, _linuxdiff=20, _macdiff=20);
+native get_pdata_ent( _index, _offset, _linuxdiff = 20, _macdiff = 20 );
+
+/**
+ * Sets an edict pointer to an entity's private data.
+ *
+ * This function is byte-addressable.  Unlike set_pdata_int() which searches in byte increments of 4, 
+ * set_pdata_ent searches in increments of 1.
+ *
+ * _linuxdiff value is what to add to the _offset for linux servers.
+ * _macdiff value is what to add to the _offset for os x servers.
+ * 
+ * A log error is thrown on invalid _index and _offset.
+ * 
+ * @param _index        Entity index.
+ * @param _offset       Offset to search.
+ * @param _value        Value to set.
+ * @param _linuxdiff    Linux difference.
+ * @param _macdiff      Mac OS X difference.
+ * @return              1 on success.           
+ */
+native set_pdata_ent( _index, _offset, _value, _linuxdiff = 20, _macdiff = 20 );
+
+/**
+ * Returns a boolean from an entity's private data.
+ *
+ * This function is byte-addressable. Unlike get_pdata_int() which searches in byte increments of 4, 
+ * get_pdata_bool searches in increments of 1.
+ *
+ * _linuxdiff value is what to add to the _offset for linux servers.
+ * _macdiff value is what to add to the _offset for os x servers.
+ * 
+ * A log error is thrown on invalid _index and _offset.
+ * 
+ * @param _index        Entity index.
+ * @param _offset       Offset to search.
+ * @param _linuxdiff    Linux difference.
+ * @param _macdiff      Mac OS X difference.
+ * @return              An boolean value is returned.
+ */
+native bool:get_pdata_bool( _index, _offset, _linuxdiff = 20, _macdiff = 20 );
+
+/**
+ * Sets a boolean to an entity's private data.
+ *
+ * This function is byte-addressable. Unlike set_pdata_int() which searches in byte increments of 4, 
+ * set_pdata_bool searches in increments of 1.
+ * 
+ * _linuxdiff value is what to add to the _offset for linux servers.
+ * _macdiff value is what to add to the _offset for os x servers.
+ *
+ * A log error is thrown on invalid _index and _offset.
+ * 
+ * @param _index        Entity index.
+ * @param _offset       Offset to search.
+ * @param _value        Value to set.
+ * @param _linuxdiff    Linux difference.
+ * @param _macdiff      Mac OS X difference.
+ * @return              1 on success.
+ */
+native set_pdata_bool( _index, _offset, bool:_value, _linuxdiff = 20, _macdiff = 20 );
+
+/**
+ * Returns a byte value from an entity's private data.
+ *
+ * This function is byte-addressable. Unlike get_pdata_int() which searches in byte increments of 4, 
+ * get_pdata_byte searches in increments of 1.
+ * 
+ * _linuxdiff value is what to add to the _offset for linux servers.
+ * _macdiff value is what to add to the _offset for os x servers.
+ *
+ * A log error is thrown on invalid _index and _offset.
+ * 
+ * @param _index        Entity index.
+ * @param _offset       Offset to search.
+ * @param _linuxdiff    Linux difference.
+ * @param _macdiff      Mac OS X difference.
+ * @return              A byte value is returned.
+ */
+native get_pdata_byte( _index, _offset, _linuxdiff = 20, _macdiff = 20 );
+
+/**
+ * Sets a byte value to an entity's private data.
+ *
+ * This function is byte-addressable. Unlike set_pdata_int() which searches in byte increments of 4, 
+ * set_pdata_byte searches in increments of 1.
+ *
+ * _linuxdiff value is what to add to the _offset for linux servers.
+ * _macdiff value is what to add to the _offset for os x servers.
+ * 
+ * A log error is thrown on invalid _index and _offset.
+ * 
+ * @param _index        Entity index.
+ * @param _offset       Offset to search.
+ * @param _value        Value to set.
+ * @param _linuxdiff    Linux difference.
+ * @param _macdiff      Mac OS X difference.
+ * @return              1 on success.
+ */
+native set_pdata_byte( _index, _offset, _value, _linuxdiff = 20, _macdiff = 20 );
+
+/**
+ * Returns a short value from an entity's private data.
+ *
+ * This function is byte-addressable. Unlike get_pdata_int() which searches in byte increments of 4, 
+ * get_pdata_short searches in increments of 1.
+ * 
+ * _linuxdiff value is what to add to the _offset for linux servers.
+ * _macdiff value is what to add to the _offset for os x servers.
+ *
+ * A log error is thrown on invalid _index and _offset.
+ * 
+ * @param _index        Entity index.
+ * @param _offset       Offset to search.
+ * @param _linuxdiff    Linux difference.
+ * @param _macdiff      Mac OS X difference.
+ * @return              A short value is returned.
+ */
+native get_pdata_short( _index, _offset, _linuxdiff = 20, _macdiff = 20 );
+
+/**
+ * Sets a short value to an entity's private data.
+ *
+ * This function is byte-addressable.  Unlike set_pdata_int() which searches in byte increments of 4, 
+ * set_pdata_short searches in increments of 1.
+ *
+ * _linuxdiff value is what to add to the _offset for linux servers.
+ * _macdiff value is what to add to the _offset for os x servers.
+ * 
+ * A log error is thrown on invalid _index and _offset.
+ * 
+ * @param _index        Entity index.
+ * @param _offset       Offset to search.
+ * @param _value        Value to set.
+ * @param _linuxdiff    Linux difference.
+ * @param _macdiff      Mac OS X difference.
+ * @return              1 on success.  
+ */
+native set_pdata_short( _index, _offset, _value, _linuxdiff = 20, _macdiff = 20 );
+
+/**
+ * Returns a vector from an entity's private data.
+ *
+ * This function is byte-addressable. Unlike get_pdata_int() which searches in byte increments of 4, 
+ * get_pdata_vector searches in increments of 1.
+ * 
+ * _linuxdiff value is what to add to the _offset for linux servers.
+ * _macdiff value is what to add to the _offset for os x servers.
+ *
+ * A log error is thrown on invalid _index and _offset.
+ * 
+ * @param _index        Entity index.
+ * @param _offset       Offset to search.
+ * @param _output       Vector returned by reference.
+ * @param _linuxdiff    Linux difference.
+ * @param _macdiff      Mac OS X difference.
+ * @return              1 on success.     
+ */
+native get_pdata_vector( _index, _offset, Float:_output[3], _linuxdiff = 20, _macdiff = 20 );
+
+/**
+ * Sets a vector to an entity's private data.
+ *
+ * This function is byte-addressable.  Unlike set_pdata_int() which searches in byte increments of 4, 
+ * set_pdata_vector searches in increments of 1.
+ *
+ * _linuxdiff value is what to add to the _offset for linux servers.
+ * _macdiff value is what to add to the _offset for os x servers.
+ * 
+ * A log error is thrown on invalid _index and _Offset.
+ * 
+ * @param _index        Entity index.
+ * @param _offset       Offset to search.
+ * @param _origin       Value to set.
+ * @param _linuxdiff    Linux difference.
+ * @param _macdiff      Mac OS X difference.
+ * @return              1 on success.   
+ */
+native set_pdata_vector( _index, _offset, Float:_origin[3], _linuxdiff = 20, _macdiff = 20 );
+
+/**
+ * Tries to retrieve an edict (entity encapsulation) pointer from an entity's private data.
+ *
+ * This function is byte-addressable.  Unlike get_pdata_int() which searches in byte increments of 4, 
+ * get_pdata_ehandle searches in increments of 1.
+ *
+ * _linuxdiff value is what to add to the _offset for linux servers.
+ * _macdiff value is what to add to the _offset for os x servers.
+ * 
+ * A log error is thrown on invalid _index and _offset.
+ * 
+ * @param _index        Entity index.
+ * @param _offset       Offset to search.
+ * @param _linuxdiff    Linux difference.
+ * @param _macdiff      Mac OS X difference.
+ * @return              -2 if an invalid entity was found.
+ *                      -1 if an empty entity was found.
+ *                      0 if serialnumber is not matching.
+ *                      Otherwise, an entity index is returned.
+ */
+native get_pdata_ehandle( _index, _offset, _linuxdiff = 20, _macdiff = 20 );
+
+/**
+ * Sets an edict (entity encapsulation) pointer to an entity's private data.
+ *
+ * This function is byte-addressable.  Unlike set_pdata_int() which searches in byte increments of 4, 
+ * set_pdata_ehandle searches in increments of 1.
+ *
+ * _linuxdiff value is what to add to the _offset for linux servers.
+ * _macdiff value is what to add to the _offset for os x servers.
+ * 
+ * A log error is thrown on invalid _index and _Offset.
+ * 
+ * @param _index        Entity index.
+ * @param _offset       Offset to search.
+ * @param _value        Value to set.
+ * @param _linuxdiff    Linux difference.
+ * @param _macdiff      Mac OS X difference.
+ * @return              1 on success.          
+ */
+native set_pdata_ehandle( _index, _offset, _value, _linuxdiff = 20, _macdiff = 20 );
 
 /* Registers a forward.
  * Returns an id you can pass to unregister_forward

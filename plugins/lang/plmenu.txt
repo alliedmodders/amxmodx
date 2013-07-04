@@ -171,19 +171,19 @@ NO_CMDS = No hay comandos disponibles
 [bp]
 ADMIN_BAN_1 = ADMIN: baniu %s
 ADMIN_BAN_2 = ADMIN %s: baniu %s
-BAN_MENU = Menu Banir
-BAN_FOR_MIN = Banido por %d minutos
-BAN_PERM = Banido permanentemente
-SLAP_SLAY_MENU = Menu Tapa/Assassinar
+BAN_MENU = Menu de Bans
+BAN_FOR_MIN = Banir por %d minutos
+BAN_PERM = Banir permanentemente
+SLAP_SLAY_MENU = Menu de Tapa/Assassinar
 SLAP_WITH_DMG = Tapa com %d de dano
-SLAY = Tapa
-KICK_MENU = Menu Kickar
+SLAY = Matar
+KICK_MENU = Menu Kicks
 ADMIN_TRANSF_1 = ADMIN: transferiu %s para %s
 ADMIN_TRANSF_2 = ADMIN %s: transferiu %s para %s
-TEAM_MENU = Menu Controle de Time
+TEAM_MENU = Menu de Controle de Time
 TRANSF_TO = Transferir para %s
 CL_CMD_MENU = Menu de Comandos no Cliente
-NO_CMDS = Sem cmds disponivel
+NO_CMDS = Sem comandos disponiveis
 
 [cz]
 ADMIN_BAN_1 = ADMIN: zabanoval %s

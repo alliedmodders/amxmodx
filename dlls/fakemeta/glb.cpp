@@ -74,6 +74,7 @@ static cell AMX_NATIVE_CALL amx_glb(AMX *amx, cell *params)
 	} rets;
 	Vector vec;
 
+	rets.i = 0;
 	int Valtype = 0;
 
 	if (iSwitch > glb_start_int && iSwitch < glb_end_int)

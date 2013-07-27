@@ -215,80 +215,81 @@ void PlayerPreThink_Post(edict_t *pEntity)
 			pEntity->v.fuser4 = (float)pPlayer->staminaMin;
 	}
 
-	if(pPlayer->current == 29 || pPlayer->current == 30 || pPlayer->current == 31)
+	if(pPlayer->current == DODW_BAZOOKA || pPlayer->current == DODW_PANZERSCHRECK || pPlayer->current == DODW_PIAT)
 	{
 		if(!(pPlayer->pEdict->v.oldbuttons&IN_ATTACK) && (pPlayer->pEdict->v.button&IN_ATTACK))
-			gPlayerRocket = GET_PLAYER_POINTER(pEntity);
+			gPlayerRocket = GET_PLAYER_POINTER(pEntity);	// Store player ID for rocket_shoot() event
 	}
 
 	RETURN_META(MRES_IGNORED);
 }
 
-void SetModel_Post(edict_t *e, const char *m)
-{
+void SetModel_Post(edict_t *e, const char *m) {
+	
+	/* For a grenade, this function gets called twice. The first time, all models are w_grenade.mdl and dmgtime is 0.
+	*    The second time, the proper model and dmgtime are set.
+	*    gPlayerRocket is set in PlayerPreThink_Post for all rockets.
+	*    So, if neither is set, the model isn't being set on a grenade or rocket and we just return.
+	*    TNT bundles/satchel charges also initially use w_grenade.mdl, so we can't efficiently filter based on model.
+	*/
+	if (!gPlayerRocket && !e->v.dmgtime) {
+		RETURN_META(MRES_IGNORED);
+	}
+
 	int w_id = 0;
 
-	if(!e->v.owner || !e->v.dmgtime)
-	{
-		int owner = ENTINDEX(e->v.owner);
+	if(e->v.owner && e->v.dmgtime) {	// owner was always set in my testing, but better safe than sorry
 
-		if(owner && owner < 33 && m[7]=='w' && m[8]=='_')
-		{
-			CPlayer* pPlayer = GET_PLAYER_POINTER_I(owner);
-			bool newNade = (pPlayer->current == 13 || pPlayer->current == 14) ? true : false;
-			
-			if(m[9]=='g' && m[10]=='r' && m[11]=='e' && m[12]=='n')
-				w_id = newNade ? 13 : 16; // grenade
+		CPlayer* pPlayer = GET_PLAYER_POINTER(e->v.owner);
+		// current weapon is never set to DODW_MILLS_BOMB; only DODW_HANDGRENADE/DODW_STICKGRENADE
+		bool newNade = (pPlayer->current == DODW_HANDGRENADE || pPlayer->current == DODW_STICKGRENADE) ? true : false;
 
-			else if(m[9]=='m' && m[10]=='i')
-				w_id = newNade ? 36 : 16 ; // mills ; should I add mills_grenade_ex weapon ?
+		if(m[9]=='g' && m[10]=='r' && m[12]=='n') {			// w_grenade.mdl (Allies)
+			w_id = newNade ? DODW_HANDGRENADE : DODW_HANDGRENADE_EX;
+		} else if(m[9]=='s' && m[10]=='t' && m[11]=='i') {		// w_stick.mdl (Axis)
+			w_id = newNade ? DODW_STICKGRENADE : DODW_STICKGRENADE_EX;
+		} else if(m[9]=='m' && m[10]=='i') {				// w_mills.mdl (British)
+			w_id = newNade ? DODW_MILLS_BOMB : DODW_HANDGRENADE_EX;
+			// A mills_ex weapon should be added in dlls/dod/dodfun/CMisc.h, plugins/include/dodconst.inc,
+			//   and probably dlls/dod/dodx/NBase.cpp. The DODMAX_WEAPONS define should be updated too.
+		}
 
-			else if(m[9]=='s' && m[10]=='t' && m[11]=='i')
-				w_id = newNade ? 14 : 15; // stick
-			
-			if(!w_id)
-				RETURN_META(MRES_IGNORED);
+		if(!w_id) {	// Fail-safe, just in case..
+			RETURN_META(MRES_IGNORED);
+		}
 
-			if(w_id == 13 || w_id == 14 || w_id == 15 || w_id == 16 || w_id == 36)
-			{
-				MF_ExecuteForward(iFGrenade, pPlayer->index, ENTINDEX(e), w_id);
+		MF_ExecuteForward(iFGrenade, pPlayer->index, ENTINDEX(e), w_id);	// Call grenade_throw() event
 
-				/* fuse start */
-				if(pPlayer->fuseSet)
-				{
-					if(newNade)
-					{
-						if(pPlayer->fuseType & 1<<0)
-						{
-							e->v.dmgtime += pPlayer->nadeFuse - 5.0;
-						}
-					}
+		/* fuse start */
+		if(pPlayer->fuseSet) {
 
-					else
-					{ 
-						float fExp = e->v.dmgtime - gpGlobals->time;
-						e->v.dmgtime += pPlayer->nadeFuse - fExp;
-					}
+			if(newNade) {
+
+				if(pPlayer->fuseType & 1<<0) {
+					e->v.dmgtime += pPlayer->nadeFuse - 5.0;
 				}
-				/* fuse end */
+			} else { 
+
+				float fExp = e->v.dmgtime - gpGlobals->time;
+				e->v.dmgtime += pPlayer->nadeFuse - fExp;
 			}
 		}
+		/* fuse end */
 
-		else if(strstr(m, "rocket") && gPlayerRocket)
-		{
-			if(strstr(m, "bazooka"))
-				w_id = 29;
+	} else if(gPlayerRocket && strstr(m, "rocket")) {
 
-			else if(strstr(m, "piat"))
-				w_id = 30;
-
-			else if(strstr(m, "pschreck"))
-				w_id = 31;
-			
-			MF_ExecuteForward(iFRocket, gPlayerRocket->index, ENTINDEX(e), w_id);
-
-			gPlayerRocket = NULL;
+		// Since "rocket" exists in the model name, there are only 3 possibilities.
+		if(m[9]=='b') {			// w_bazooka_rocket.mdl (Allies)
+			w_id = DODW_BAZOOKA;
+		} else if(m[10]=='s') {	// w_pschreck_rocket.mdl (Axis)
+			w_id = DODW_PANZERSCHRECK;
+		} else if(m[10]=='i') {	// w_piat_rocket.mdl (British)
+			w_id = DODW_PIAT;
 		}
+
+		MF_ExecuteForward(iFRocket, gPlayerRocket->index, ENTINDEX(e), w_id);	// Call rocket_shoot() event
+
+		gPlayerRocket = NULL;
 	}
 
 	RETURN_META(MRES_IGNORED);

@@ -4054,7 +4054,14 @@ static cell AMX_NATIVE_CALL LibraryExists(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL set_fail_state(AMX *amx, cell *params)
 {
 	int len;
-	char *str = get_amxstring(amx, params[1], 0, len);
+	char* str;
+
+	g_langMngr.SetDefLang(LANG_SERVER);	// Default language = server	
+
+	if (params[0] / sizeof(cell) > 1)
+		str = format_amxstring(amx, params, 1, len);
+	else
+		str = get_amxstring(amx, params[1], 0, len);
 
 	CPluginMngr::CPlugin *pPlugin = g_plugins.findPluginFast(amx);
 	

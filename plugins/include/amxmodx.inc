@@ -968,7 +968,7 @@ native int3();
 //If you use this, your plugin will cease operating.
 //This is a good idea to fatally, but gracefully, handle errors.
 //You can set a failed error message.
-native set_fail_state(const err_msg[]);
+native set_fail_state(const fmt[], any:...);
 
 //Returns the reference address of the variable passed in.
 //This address is local to the plugin, and not a full CPU address

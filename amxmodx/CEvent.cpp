@@ -138,7 +138,11 @@ EventsMngr::EventsMngr()
 {
 	m_ParseVault = NULL;
 	m_ParseVaultSize = 0;
-	m_CurrentMsgType = -1;
+	m_ParseMsgType = -1;
+	m_ReadVault = NULL;
+	m_ReadVaultSize = 0;
+	m_ReadPos = -1;
+	m_ReadMsgType = -1;
 	clearEvents();
 }
 
@@ -227,14 +231,14 @@ void EventsMngr::parserInit(int msg_type, float* timer, CPlayer* pPlayer, int in
 	if (msg_type < 0 || msg_type > MAX_AMX_REG_MSG)
 		return;
 
-	m_CurrentMsgType = msg_type;
-
 	m_ParseNotDone = false;
-	m_Timer = timer;
 
 	// don't parse if nothing to do
 	if (!m_Events[msg_type].size())
 		return;
+
+	m_ParseMsgType = msg_type;
+	m_Timer = timer;
 
 	for (ClEventVecIter iter = m_Events[msg_type].begin(); iter; ++iter)
 	{
@@ -423,12 +427,46 @@ void EventsMngr::parseValue(const char *sz)
 
 void EventsMngr::executeEvents()
 {
+	static unsigned int reentrant = 0;
 	if (!m_ParseFun)
 	{
 		return;
 	}
 
-	for (ClEventVecIter iter = m_ParseFun->begin(); iter; ++iter)
+	// Store old read data, which are either default values or previous event data
+	int oldMsgType = m_ReadMsgType, oldReadPos = m_ReadPos;
+	MsgDataEntry *oldReadVault = m_ReadVault, *readVault = NULL;
+	
+	// We have a re-entrant call
+	if (reentrant++)
+	{
+		// Create temporary read vault
+		readVault = new MsgDataEntry[m_ParsePos + 1];
+		m_ReadVault = readVault;
+	} else if (m_ReadVaultSize != m_ParseVaultSize) {
+		// Extend read vault size if necessary
+		delete [] m_ReadVault;
+		m_ReadVault = new MsgDataEntry[m_ParseVaultSize];
+		m_ReadVaultSize = m_ParseVaultSize;
+		
+		// Update old read vault so we don't restore to a wrong pointer
+		oldReadVault = m_ReadVault;
+	}
+
+	// Copy data over to readvault
+	m_ReadPos = m_ParsePos;
+	m_ReadMsgType = m_ParseMsgType;
+
+	if (m_ParseVault)
+	{
+		memcpy(m_ReadVault, m_ParseVault, (m_ParsePos + 1) * sizeof(MsgDataEntry));
+	}
+
+	// Reset this here so we don't trigger re-entrancy for unregistered messages
+	ClEventVec *parseFun = m_ParseFun;
+	m_ParseFun = NULL;
+
+	for (ClEventVecIter iter = parseFun->begin(); iter; ++iter)
 	{
 		if ((*iter).m_Done) 
 		{
@@ -437,67 +475,74 @@ void EventsMngr::executeEvents()
 		}
 		
 		(*iter).m_Stamp = (float)*m_Timer;
-		executeForwards((*iter).m_Func, static_cast<cell>(m_ParseVault ? m_ParseVault[0].iValue : 0));
-	}
 
-	m_CurrentMsgType = -1;
-	m_ParseFun = NULL;
+		executeForwards((*iter).m_Func, static_cast<cell>(m_ReadVault ? m_ReadVault[0].iValue : 0));
+	}
+	
+	// Restore old read data, either resetting to default or to previous event data
+	m_ReadMsgType = oldMsgType;
+	m_ReadPos = oldReadPos;
+	m_ReadVault = oldReadVault;
+	
+	delete [] readVault;
+
+	--reentrant;
 }
 
 int EventsMngr::getArgNum() const
 {
-	return m_ParsePos + 1;
+	return m_ReadPos + 1;
 }
 
 const char* EventsMngr::getArgString(int a) const
 {
-	if (a < 0 || a > m_ParsePos)
+	if (a < 0 || a > m_ReadPos)
 		return "";
 
 	static char var[32];
 
-	switch (m_ParseVault[a].type)
+	switch (m_ReadVault[a].type)
 	{
 		case MSG_INTEGER: 
-			sprintf(var, "%d", m_ParseVault[a].iValue);
+			sprintf(var, "%d", m_ReadVault[a].iValue);
 			return var;
 		case MSG_STRING: 
-			return m_ParseVault[a].sValue;
+			return m_ReadVault[a].sValue;
 		default:
-			sprintf(var, "%g", m_ParseVault[a].fValue);
+			sprintf(var, "%g", m_ReadVault[a].fValue);
 			return var;
 	}
 }
 
 int EventsMngr::getArgInteger(int a) const
 {
-	if (a < 0 || a > m_ParsePos)
+	if (a < 0 || a > m_ReadPos)
 		return 0;
 
-	switch (m_ParseVault[a].type)
+	switch (m_ReadVault[a].type)
 	{
 		case MSG_INTEGER:
-			return m_ParseVault[a].iValue;
+			return m_ReadVault[a].iValue;
 		case MSG_STRING:
-			return atoi(m_ParseVault[a].sValue);
+			return atoi(m_ReadVault[a].sValue);
 		default:
-			return (int)m_ParseVault[a].fValue; 
+			return (int)m_ReadVault[a].fValue; 
 	}
 }
 
 float EventsMngr::getArgFloat(int a) const
 {
-	if (a < 0 || a > m_ParsePos)
+	if (a < 0 || a > m_ReadPos)
 		return 0.0f;
 
-	switch (m_ParseVault[a].type)
+	switch (m_ReadVault[a].type)
 	{
 		case MSG_INTEGER:
-			return static_cast<float>(m_ParseVault[a].iValue);
+			return static_cast<float>(m_ReadVault[a].iValue);
 		case MSG_STRING:
-			return static_cast<float>(atof(m_ParseVault[a].sValue));
+			return static_cast<float>(atof(m_ReadVault[a].sValue));
 		default:
-			return m_ParseVault[a].fValue; 
+			return m_ReadVault[a].fValue; 
 	}
 }
 
@@ -514,6 +559,14 @@ void EventsMngr::clearEvents(void)
 		delete [] m_ParseVault;
 		m_ParseVault = NULL;
 		m_ParseVaultSize = 0;
+	}
+
+	if (m_ReadVault)
+	{
+		delete [] m_ReadVault;
+		m_ReadVault = NULL;
+		m_ReadVaultSize = 0;
+		m_ReadPos = -1;
 	}
 }
 
@@ -550,5 +603,5 @@ int EventsMngr::getEventId(const char* msg)
 
 int EventsMngr::getCurrentMsgType()
 {
-	return m_CurrentMsgType;
+	return m_ReadMsgType;
 }

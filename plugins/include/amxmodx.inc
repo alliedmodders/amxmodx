@@ -162,6 +162,9 @@ native read_data(value, any:... );
 /* Returns number of values in client message. */
 native read_datanum();
 
+/* Returns message id of client message */
+native read_datatype();
+
 /* Gets log message. Can be called only in plugin_log() forward function. */
 native read_logdata(output[],len);
 

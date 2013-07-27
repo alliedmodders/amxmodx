@@ -49,7 +49,7 @@ int Spawn(edict_t *pEntity)
 		int id = ENTINDEX(pEntity);
 		retVal = MF_ExecuteForward(SpawnForward, (cell)id);
 		if (retVal)
-			RETURN_META_VALUE(MRES_SUPERCEDE, 0);
+			RETURN_META_VALUE(MRES_SUPERCEDE, -1);
 	}
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }

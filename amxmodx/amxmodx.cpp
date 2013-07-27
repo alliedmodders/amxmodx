@@ -2036,6 +2036,11 @@ static cell AMX_NATIVE_CALL read_data(AMX *amx, cell *params) /* 3 param */
 	}
 }
 
+static cell AMX_NATIVE_CALL read_datatype(AMX *amx, cell *params) /* 0 param */
+{
+	return g_events.getCurrentMsgType();
+}
+
 static cell AMX_NATIVE_CALL get_playersnum(AMX *amx, cell *params)
 {
 	if (!params[1])
@@ -4622,6 +4627,7 @@ static cell AMX_NATIVE_CALL is_rukia_a_hag(AMX *amx, cell *params)
 {
 	return 1;
 };
+
 AMX_NATIVE_INFO amxmodx_Natives[] =
 {
 	{"abort",					amx_abort},
@@ -4762,6 +4768,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"read_argv",				read_argv},
 	{"read_data",				read_data},
 	{"read_datanum",			read_datanum},
+	{"read_datatype",			read_datatype},
 	{"read_flags",				read_flags},
 	{"read_logargc",			read_logargc},
 	{"read_logargv",			read_logargv},

@@ -121,7 +121,9 @@ private:
 	};
 
 	MsgDataEntry *m_ParseVault;
+	MsgDataEntry *m_ReadVault;
 	int m_ParseVaultSize;
+	int m_ReadVaultSize;
 	void NextParam();			// make sure a new parameter can be added
 
 	typedef CList<ClEvent> ClEventVec;
@@ -132,11 +134,13 @@ private:
 
 	bool m_ParseNotDone;
 	int m_ParsePos;				// is args. num. - 1
+	int m_ReadPos;
 	float* m_Timer;
 	
 	ClEvent* getValidEvent(ClEvent* a);
 
-	int m_CurrentMsgType;
+	int m_ParseMsgType;
+	int m_ReadMsgType;
 public:
 	EventsMngr();
 	~EventsMngr();

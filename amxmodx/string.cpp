@@ -851,11 +851,87 @@ static cell AMX_NATIVE_CALL amx_strtok(AMX *amx, cell *params)
 	return 1;
 }
 
+// Same as amx_strtok but fixes and expands trim, returns token pos if token was found, -1 otherwise
+static cell AMX_NATIVE_CALL amx_strtok2(AMX *amx, cell *params)
+{
+	int left_pos = 0, right_pos = 0, len, pos = -1;
+	unsigned int i = 0;
+
+	char *string = get_amxstring(amx, params[1], 0, len);
+	char *left = new char[len + 1], *right = new char[len + 1];
+	int left_max = params[3], right_max = params[5];
+	char token = static_cast<char>(params[6]);
+	
+	/*	Trim flags:
+			1 - ltrim left
+			2 - rtrim left
+			4 - ltrim right
+			8 - rtrim right
+	*/
+	int trim = params[7];
+
+	// ltrim left
+	if (trim & 1 && isspace(string[i]))
+	{
+		while (isspace(string[++i]));
+	}
+
+	for (; i < (unsigned int) len; ++i)
+	{
+		if (string[i] == token)
+		{
+			pos = i;
+			++i;
+			break;
+		}
+
+		left[left_pos++] = string[i];
+	}
+
+	// rtrim left
+	if (trim & 2 && left_pos && isspace(left[left_pos - 1]))
+	{
+		while (--left_pos >= 0 && isspace(left[left_pos]));
+		
+		++left_pos;
+	}
+
+	// ltrim right
+	if (trim & 4 && isspace(string[i]))
+	{
+		while (isspace(string[++i]));
+	}
+
+	for (; i < (unsigned int) len; ++i)
+	{
+		right[right_pos++] = string[i];	
+	}
+
+	// rtrim right
+	if (trim & 8 && right_pos && isspace(right[right_pos - 1]))
+	{
+		while (--right_pos >= 0 && isspace(right[right_pos]));
+
+		++right_pos;
+	}
+
+	right[right_pos] = 0;
+	left[left_pos] = 0;
+	set_amxstring(amx, params[2], left, left_max);
+	set_amxstring(amx, params[4], right, right_max);
+
+	delete [] left;
+	delete [] right;
+
+	return pos;
+}
+
 //added by BAILOPAN
 //Takes a string and breaks it into a 1st param and rest params
 //strbreak(String[], First[], FirstLen, Rest[], RestLen)
 static cell AMX_NATIVE_CALL strbreak(AMX *amx, cell *params)	/* 5 param */
 {
+
 	int _len;
 	bool in_quote = false;
 	bool had_quotes = false;
@@ -1156,6 +1232,7 @@ AMX_NATIVE_INFO string_Natives[] =
 	{"trim",			amx_trim},
 	{"ucfirst",			amx_ucfirst},
 	{"strtok",			amx_strtok},
+	{"strtok2",			amx_strtok2},
 	{"strlen",			amx_strlen},
 	{"strcat",			n_strcat},
 	{"strfind",			n_strfind},

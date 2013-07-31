@@ -162,6 +162,66 @@ native parse(const text[], ... );
 */
 native strtok(const text[], Left[], leftLen, Right[], rightLen, token=' ', trimSpaces=0);
    
+/**
+ * Below are the trim flags for strtok2
+ *
+ * You can specify how the left and right buffers will
+ * be trimmed by strtok2. LTRIM trims spaces from the
+ * left side. RTRIM trims from the right side.
+ *
+ * The defines TRIM_INNER, TRIM_OUTER and TRIM_FULL are
+ * shorthands for commonly used flag combinations.
+ *
+ * When the initial string is trimmed, using TRIM_INNER
+ * for all subsequent strtok2 calls will ensure that left
+ * and right are always trimmed from both sides.
+ *
+ * Examples:
+ * str1[] = "  This is  *  some text  "
+ * strtok2(str1, left, 24, right, 24, '*', TRIM_FULL)
+ *  left will be "This is", right will be "some text"
+ *
+ * str2[] = "  Here is  |  an  | example  "
+ * trim(str2)
+ * strtok2(str2, left, 24, right, 24, '|', TRIM_INNER)
+ *  left will be "Here is", right will be "an  | example"
+ * strtok2(right, left, 24, right, 24, '|', TRIM_INNER)
+ *  left will be "an", right will be "example"
+ *
+ * str3[] = "  One  -  more  "
+ * strtok2(str3, left, 24, right, 24, '-', TRIM_OUTER)
+ *  left will be "One  ", right will be "  more"
+ *
+ * str4[] = "  Final  .  example  "
+ * strtok2(str4, left, 24, right, 24, '.', LTRIM_LEFT|LTRIM_RIGHT)
+ *  left will be "Final  ", right will be "example  "
+*/
+#define LTRIM_LEFT (1<<0)
+#define RTRIM_LEFT (1<<1)
+#define LTRIM_RIGHT (1<<2)
+#define RTRIM_RIGHT (1<<3)
+
+#define TRIM_INNER RTRIM_LEFT|LTRIM_RIGHT
+#define TRIM_OUTER LTRIM_LEFT|RTRIM_RIGHT
+#define TRIM_FULL TRIM_OUTER|TRIM_INNER
+
+/**
+ * Breaks a string in two by token
+ *
+ * Only available in 1.8.3 and above
+ *
+ * @param text			String to tokenize
+ * @param left			Buffer to store left half
+ * @param llen			Size of left buffer
+ * @param right			Buffer to store right half
+ * @param rlen			Size of right buffer
+ * @param token			Token to split by
+ * @param trim			Flags for trimming behavior, see above
+ *
+ * @return				Returns position of token in string if found, 
+ *						-1 if token was not found
+ */
+native strtok2(const text[], left[], const llen, right[], const rlen, const token = ' ', const trim = 0);
 
 /* Gets parameters from text one at a time
    It breaks a string into the first parameter and the rest of the parameters

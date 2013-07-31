@@ -31,6 +31,15 @@
 #include "NEW_Util.h"
 #include "ham_utils.h"
 
+inline edict_t* INDEXENT2( int iEdictNum )
+{ 
+	if (iEdictNum >= 1 && iEdictNum <= gpGlobals->maxClients)
+		return MF_GetPlayerEdict(iEdictNum);
+	else
+		return (*g_engfuncs.pfnPEntityOfEntIndex)(iEdictNum); 
+}
+
+#ifdef DONT_TOUCH_THIS_AGAIN_BAIL
 #define FM_CHECK_ENTITY(x) \
 	if (x < 0 || x > gpGlobals->maxEntities) { \
 		MF_LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", x); \
@@ -47,6 +56,16 @@
 				return 0; \
 			} \
 		} \
+	}
+#endif
+
+#define FM_CHECK_ENTITY(x) \
+	if (x < 0 || x > gpGlobals->maxEntities) { \
+		MF_LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", x); \
+		return 0; \
+	} else if (x != 0 && FNullEnt(INDEXENT2(x))) { \
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", x); \
+		return 0; \
 	}
 
 // Return -1 on null, -2 on invalid, and the the index of any other.

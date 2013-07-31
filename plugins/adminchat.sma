@@ -44,7 +44,11 @@ new g_Values[MAX_CLR][] = {{255, 255, 255}, {255, 0, 0}, {0, 255, 0}, {0, 0, 255
 new Float:g_Pos[4][] = {{0.0, 0.0}, {0.05, 0.55}, {-1.0, 0.2}, {-1.0, 0.7}}
 
 new amx_show_activity;
+new amx_flood_time;
 new g_AdminChatFlag = ADMIN_CHAT;
+
+new Float:g_Flooding[33] = {0.0, ...}
+new g_Flood[33] = {0, ...}
 
 public plugin_init()
 {
@@ -53,6 +57,7 @@ public plugin_init()
 	register_plugin("Admin Chat", AMXX_VERSION_STR, "AMXX Dev Team")
 	register_dictionary("adminchat.txt")
 	register_dictionary("common.txt")
+	register_dictionary("antiflood.txt")
 	register_clcmd("say", "cmdSayChat", ADMIN_CHAT, "@[@|@|@][w|r|g|b|y|m|c]<text> - displays hud message")
 	register_clcmd("say_team", "cmdSayAdmin", 0, "@<text> - displays message to admins")
 	register_concmd("amx_say", "cmdSay", ADMIN_CHAT, "<message> - sends message to all players")
@@ -70,6 +75,19 @@ public plugin_init()
 
 	new str[1]
 	get_concmd(admin_chat_id, str, 0, g_AdminChatFlag, str, 0, -1)
+}
+
+public plugin_cfg()
+{
+	// check if cvar amx_flood_time exists (created by antiflood plugin)
+	
+	amx_flood_time = get_cvar_pointer("amx_flood_time");
+	
+	if( !amx_flood_time )
+	{
+		// else create it
+		amx_flood_time = register_cvar("amx_flood_time", "0.75");
+	}
 }
 
 public cmdSayChat(id)
@@ -182,6 +200,30 @@ public cmdSayAdmin(id)
 	
 	if (said[0] != '@')
 		return PLUGIN_CONTINUE
+
+	new Float:maxChat = get_pcvar_float(amx_flood_time)
+	
+	if (maxChat)
+	{
+		new Float:nexTime = get_gametime()
+		
+		if (g_Flooding[id] > nexTime)
+		{
+			if (g_Flood[id] >= 3)
+			{
+				client_print(id, print_notify, "** %L **", id, "STOP_FLOOD")
+				g_Flooding[id] = nexTime + maxChat + 3.0
+				return PLUGIN_HANDLED
+			}
+			g_Flood[id]++
+		}
+		else if (g_Flood[id])
+		{
+			g_Flood[id]--
+		}
+		
+		g_Flooding[id] = nexTime + maxChat
+	}
 	
 	new message[192], name[32], authid[32], userid
 	new players[32], inum

@@ -168,11 +168,11 @@
     <ClCompile Include="..\vector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\datastructs.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\sdk\amxxmodule.cpp">
       <Filter>SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\datastructs.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

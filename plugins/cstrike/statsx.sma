@@ -746,7 +746,7 @@ format_top15(sBuffer[MAX_BUFFER_LENGTH + 1])
 	ucfirst(lEff)
 	ucfirst(lAcc)
 
-	iLen = format(sBuffer, MAX_BUFFER_LENGTH, "<body bgcolor=#000000><font color=#FFB000><pre>")
+	iLen = format(sBuffer, MAX_BUFFER_LENGTH, "<meta charset=utf-8><body bgcolor=#000000><font color=#FFB000><pre>")
 	iLen += format(sBuffer[iLen], MAX_BUFFER_LENGTH - iLen, "%2s %-22.22s %6s %6s %6s %6s %4s %4s %4s^n", "#", "Nick", lKills, lDeaths, lHits, lShots, "HS", lEff, lAcc)
 	
 	for (new i = 0; i < iMax && MAX_BUFFER_LENGTH - iLen > 0; i++)

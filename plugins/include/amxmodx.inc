@@ -145,7 +145,7 @@ native register_logevent(const function[], argsnum,  ... );
  * Note - as of AMX Mod X 1.61, setting the channel to -1
  *  will automatically choose the next available HUD channel for a player.
  */
-native set_hudmessage(red=200, green=100, blue=0, Float:x=-1.0, Float:y=0.35, effects=0, Float:fxtime=6.0, Float:holdtime=12.0, Float:fadeintime=0.1, Float:fadeouttime=0.2,channel=4);
+native set_hudmessage(red=200, green=100, blue=0, Float:x=-1.0, Float:y=0.35, effects=0, Float:fxtime=6.0, Float:holdtime=12.0, Float:fadeintime=0.1, Float:fadeouttime=0.2,channel=-1);
 
 /* Displays HUD message to given player. */
 native show_hudmessage(index,const message[],any:...);

@@ -62,7 +62,7 @@ public client_disconnect(id)
 public cmdHelp(id, level, cid)
 {
 	new arg1[8], flags = get_user_flags(id)
-	new start = read_argv(1, arg1, 7) ? str_to_num(arg1) : 1
+	new start = read_argv(1, arg1, charsmax(arg1)) ? str_to_num(arg1) : 1
 	new lHelpAmount = HELPAMOUNT
 	
 	// HACK: ADMIN_ADMIN is never set as a user's actual flags, so those types of commands never show
@@ -72,7 +72,7 @@ public cmdHelp(id, level, cid)
 	}
 	
 	if (id == 0 && read_argc() == 3)
-		lHelpAmount = read_argv(2, arg1, 7) ? str_to_num(arg1) : HELPAMOUNT
+		lHelpAmount = read_argv(2, arg1, charsmax(arg1)) ? str_to_num(arg1) : HELPAMOUNT
 
 	if (--start < 0)
 		start = 0
@@ -92,7 +92,7 @@ public cmdHelp(id, level, cid)
 
 	for (new i = start; i < end; i++)
 	{
-		get_concmd(i, cmd, 31, eflags, info, 127, flags, id)
+		get_concmd(i, cmd, charsmax(cmd), eflags, info, charsmax(info), flags, id)
 		console_print(id, "%3d: %s %s", i + 1, cmd, info)
 	}
 	
@@ -110,18 +110,28 @@ public cmdHelp(id, level, cid)
 public dispInfo(id)
 {
 	client_print(id, print_chat, "%L", id, "TYPE_HELP")
-	
+
+	static amx_nextmap, mp_timelimit = 0
+	if( !mp_timelimit )
+	{
+		amx_nextmap = get_cvar_pointer("amx_nextmap")
+		mp_timelimit = get_cvar_pointer("mp_timelimit")
+	}
+
 	new nextmap[32]
-	get_cvar_string("amx_nextmap", nextmap, 31)
+	if( amx_nextmap )
+	{
+		get_pcvar_string(amx_nextmap, nextmap, charsmax(nextmap))
+	}
 	
-	if (get_cvar_float("mp_timelimit"))
+	if (get_pcvar_float(mp_timelimit))
 	{
 		new timeleft = get_timeleft()
 		
 		if (timeleft > 0)
 		{
 			client_print(id, print_chat, "%L", id, "TIME_INFO_1", timeleft / 60, timeleft % 60, nextmap)
-		} else {
+		} else if (amx_nextmap) {
 			client_print(id, print_chat, "%L", id, "TIME_INFO_2", nextmap)
 		}
 	}

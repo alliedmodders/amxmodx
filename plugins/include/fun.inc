@@ -42,7 +42,7 @@ native set_user_health(index, health);
 native set_user_origin(index, const origin[3]);
 
 /* Sets player rendering mode. */
-native set_user_rendering(index, fx = kRenderFxNone, r = 255, g = 255, b = 255, render = kRenderNormal, amount = 16);
+native set_user_rendering(index, fx = kRenderFxNone, r = 0, g = 0, b = 0, render = kRenderNormal, amount = 0);
 
 /* Gives item to player, name of item can start
  * with weapon_, ammo_ and item_. This event

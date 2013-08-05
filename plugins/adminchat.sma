@@ -58,7 +58,7 @@ public plugin_init()
 	register_dictionary("adminchat.txt")
 	register_dictionary("common.txt")
 	register_dictionary("antiflood.txt")
-	register_clcmd("say", "cmdSayChat", ADMIN_CHAT, "@[@|@|@][w|r|g|b|y|m|c]<text> - displays hud message")
+	register_clcmd("say", "cmdSayChat", ADMIN_CHAT, "@[@|@|@][w|r|g|b|y|m|c]<text> - displays hud message", 1) // forces FlagManager as it is a say command
 	register_clcmd("say_team", "cmdSayAdmin", 0, "@<text> - displays message to admins")
 	register_concmd("amx_say", "cmdSay", ADMIN_CHAT, "<message> - sends message to all players")
 	admin_chat_id = register_concmd("amx_chat", "cmdChat", ADMIN_CHAT, "<message> - sends message to admins")
@@ -90,15 +90,15 @@ public plugin_cfg()
 	}
 }
 
-public cmdSayChat(id)
+public cmdSayChat(id, level)
 {
-	if (!access(id, g_AdminChatFlag))
+	if (!access(id, level))
 	{
 		return PLUGIN_CONTINUE
 	}
 	
 	new said[6], i = 0
-	read_argv(1, said, 5)
+	read_argv(1, said, charsmax(said))
 	
 	while (said[i] == '@')
 	{
@@ -111,7 +111,7 @@ public cmdSayChat(id)
 	}
 	
 	new message[192], a = 0
-	read_args(message, 191)
+	read_args(message, charsmax(message))
 	remove_quotes(message)
 	
 	switch (said[i])
@@ -140,8 +140,8 @@ public cmdSayChat(id)
 
 	new name[32], authid[32], userid
 	
-	get_user_authid(id, authid, 31)
-	get_user_name(id, name, 31)
+	get_user_authid(id, authid, charsmax(authid))
+	get_user_name(id, name, charsmax(name))
 	userid = get_user_userid(id)
 	
 	log_amx("Chat: ^"%s<%d><%s><>^" tsay ^"%s^"", name, userid, authid, message[i + n])
@@ -156,25 +156,25 @@ public cmdSayChat(id)
 	
 	set_hudmessage(g_Values[a][0], g_Values[a][1], g_Values[a][2], g_Pos[i][0], verpos, 0, 6.0, 6.0, 0.5, 0.15, -1)
 
-	switch ( get_pcvar_num(amx_show_activity) )
+	switch (get_pcvar_num(amx_show_activity))
 	{
 		case 3, 4:
 		{
-			new maxpl = get_maxplayers();
-			for (new pl = 1; pl <= maxpl; pl++)
+			new players[32], plrsnum, pl
+			get_players(players, plrsnum, "ch")
+			for(new j; j<plrsnum; j++)
 			{
-				if (is_user_connected(pl) && !is_user_bot(pl))
+				pl = players[j]
+
+				if (is_user_admin(pl))
 				{
-					if (is_user_admin(pl))
-					{
-						show_hudmessage(pl, "%s :   %s", name, message[i + n])
-						client_print(pl, print_notify, "%s :   %s", name, message[i + n])
-					}
-					else
-					{
-						show_hudmessage(pl, "%s", message[i + n])
-						client_print(pl, print_notify, "%s", message[i + n])
-					}
+					show_hudmessage(pl, "%s :   %s", name, message[i + n])
+					client_print(pl, print_notify, "%s :   %s", name, message[i + n])
+				}
+				else
+				{
+					show_hudmessage(pl, "%s", message[i + n])
+					client_print(pl, print_notify, "%s", message[i + n])
 				}
 			}
 		}
@@ -196,17 +196,17 @@ public cmdSayChat(id)
 public cmdSayAdmin(id)
 {
 	new said[2]
-	read_argv(1, said, 1)
-	
+	read_argv(1, said, charsmax(said))
+
 	if (said[0] != '@')
 		return PLUGIN_CONTINUE
 
 	new Float:maxChat = get_pcvar_float(amx_flood_time)
-	
+		
 	if (maxChat)
 	{
 		new Float:nexTime = get_gametime()
-		
+			
 		if (g_Flooding[id] > nexTime)
 		{
 			if (g_Flood[id] >= 3)
@@ -224,34 +224,32 @@ public cmdSayAdmin(id)
 		
 		g_Flooding[id] = nexTime + maxChat
 	}
-	
+
 	new message[192], name[32], authid[32], userid
-	new players[32], inum
+	new players[32], inum, pl
 	
-	read_args(message, 191)
+	read_args(message, charsmax(message))
 	remove_quotes(message)
-	get_user_authid(id, authid, 31)
-	get_user_name(id, name, 31)
+	get_user_authid(id, authid, charsmax(authid))
+	get_user_name(id, name, charsmax(name))
 	userid = get_user_userid(id)
 	
 	log_amx("Chat: ^"%s<%d><%s><>^" chat ^"%s^"", name, userid, authid, message[1])
 	log_message("^"%s<%d><%s><>^" triggered ^"amx_chat^" (text ^"%s^")", name, userid, authid, message[1])
 	
-	if (is_user_admin(id))
-		format(message, 191, "(%L) %s :  %s", id, "ADMIN", name, message[1])
+	if (is_user_admin(id)) // no diff here if admins have g_AdminChatFlag access or not, but we don't want to print "PLAYER"
+		format(message, charsmax(message), "(%L) %s :  %s", id, "ADMIN", name, message[1])
 	else
-		format(message, 191, "(%L) %s :  %s", id, "PLAYER", name, message[1])
+		format(message, charsmax(message), "(%L) %s :  %s", id, "PLAYER", name, message[1])
 
-	get_players(players, inum)
+	get_players(players, inum, "ch")
 	
 	for (new i = 0; i < inum; ++i)
 	{
-		// dont print the message to the client that used the cmd if he has ADMIN_CHAT to avoid double printing
-		if (players[i] != id && get_user_flags(players[i]) & g_AdminChatFlag)
-			client_print(players[i], print_chat, "%s", message)
+		pl = players[i]
+		if (pl == id || get_user_flags(pl) & g_AdminChatFlag)
+			client_print(pl, print_chat, "%s", message)
 	}
-	
-	client_print(id, print_chat, "%s", message)
 	
 	return PLUGIN_HANDLED
 }
@@ -261,25 +259,26 @@ public cmdChat(id, level, cid)
 	if (!cmd_access(id, level, cid, 2))
 		return PLUGIN_HANDLED
 
-	new message[192], name[32], players[32], inum, authid[32], userid
+	new message[192], name[32], players[32], inum, authid[32], userid, pl
 	
-	read_args(message, 191)
+	read_args(message, charsmax(message))
 	remove_quotes(message)
-	get_user_authid(id, authid, 31)
-	get_user_name(id, name, 31)
+	get_user_authid(id, authid, charsmax(authid))
+	get_user_name(id, name, charsmax(name))
 	userid = get_user_userid(id)
-	get_players(players, inum)
+	get_players(players, inum, "ch")
 	
 	log_amx("Chat: ^"%s<%d><%s><>^" chat ^"%s^"", name, userid, authid, message)
 	log_message("^"%s<%d><%s><>^" triggered ^"amx_chat^" (text ^"%s^")", name, userid, authid, message)
 	
-	format(message, 191, "(ADMINS) %s :   %s", name, message)
+	format(message, charsmax(message), "(ADMINS) %s :   %s", name, message)
 	console_print(id, "%s", message)
 	
 	for (new i = 0; i < inum; ++i)
 	{
-		if (access(players[i], g_AdminChatFlag))
-			client_print(players[i], print_chat, "%s", message)
+		pl = players[i]
+		if (access(pl, g_AdminChatFlag))
+			client_print(pl, print_chat, "%s", message)
 	}
 	
 	return PLUGIN_HANDLED
@@ -292,10 +291,10 @@ public cmdSay(id, level, cid)
 
 	new message[192], name[32], authid[32], userid
 	
-	read_args(message, 191)
+	read_args(message, charsmax(message))
 	remove_quotes(message)
-	get_user_authid(id, authid, 31)
-	get_user_name(id, name, 31)
+	get_user_authid(id, authid, charsmax(authid))
+	get_user_name(id, name, charsmax(name))
 	userid = get_user_userid(id)
 	client_print(0, print_chat, "%L", LANG_PLAYER, "PRINT_ALL", name, message)
 	console_print(id, "%L", LANG_PLAYER, "PRINT_ALL", name, message)
@@ -312,7 +311,7 @@ public cmdPsay(id, level, cid)
 		return PLUGIN_HANDLED
 	
 	new name[32]
-	read_argv(1, name, 31)
+	read_argv(1, name, charsmax(name))
 	new priv = cmd_target(id, name, 0)
 
 	if (!priv)
@@ -322,10 +321,10 @@ public cmdPsay(id, level, cid)
 
 	new message[192], name2[32], authid[32], authid2[32], userid, userid2
 	
-	get_user_authid(id, authid, 31)
-	get_user_name(id, name2, 31)
+	get_user_authid(id, authid, charsmax(authid))
+	get_user_name(id, name2, charsmax(name2))
 	userid = get_user_userid(id)
-	read_args(message, 191)
+	read_args(message, charsmax(message))
 	
 	if (message[0] == '"' && message[length] == '"') // HLSW fix
 	{
@@ -335,14 +334,14 @@ public cmdPsay(id, level, cid)
 	}
 	
 	remove_quotes(message[length])
-	get_user_name(priv, name, 31)
+	get_user_name(priv, name, charsmax(name))
 	
 	if (id && id != priv)
 		client_print(id, print_chat, "(%s) %s :   %s", name, name2, message[length])
 	
 	client_print(priv, print_chat, "(%s) %s :   %s", name, name2, message[length])
 	console_print(id, "(%s) %s :   %s", name, name2, message[length])
-	get_user_authid(priv, authid2, 31)
+	get_user_authid(priv, authid2, charsmax(authid2))
 	userid2 = get_user_userid(priv)
 	
 	log_amx("Chat: ^"%s<%d><%s><>^" psay ^"%s<%d><%s><>^" ^"%s^"", name2, userid, authid, name, userid2, authid2, message[length])
@@ -358,12 +357,12 @@ public cmdTsay(id, level, cid)
 	
 	new cmd[16], color[16], color2[16], message[192], name[32], authid[32], userid = 0
 	
-	read_argv(0, cmd, 15)
+	read_argv(0, cmd, charsmax(cmd))
 	new bool:tsay = (tolower(cmd[4]) == 't')
 	
-	read_args(message, 191)
+	read_args(message, charsmax(message))
 	remove_quotes(message)
-	parse(message, color, 15)
+	parse(message, color, charsmax(color))
 	
 	new found = 0, a = 0
 	new lang[3], langnum = get_langsnum()
@@ -373,7 +372,7 @@ public cmdTsay(id, level, cid)
 		for (new j = 0; j < langnum; j++)
 		{
 			get_lang(j, lang)
-			format(color2, 15, "%L", lang, g_Colors[i])
+			formatex(color2, charsmax(color2), "%L", lang, g_Colors[i])
 			
 			if (equali(color, color2))
 			{
@@ -393,30 +392,30 @@ public cmdTsay(id, level, cid)
 
 	new Float:verpos = (tsay ? 0.55 : 0.1) + float(g_msgChannel) / 35.0
 	
-	get_user_authid(id, authid, 31)
-	get_user_name(id, name, 31)
+	get_user_authid(id, authid, charsmax(authid))
+	get_user_name(id, name, charsmax(name))
 	userid = get_user_userid(id)
 	set_hudmessage(g_Values[a][0], g_Values[a][1], g_Values[a][2], tsay ? 0.05 : -1.0, verpos, 0, 6.0, 6.0, 0.5, 0.15, -1)
 
-	switch ( get_pcvar_num(amx_show_activity) )
+	switch (get_pcvar_num(amx_show_activity))
 	{
 		case 3, 4:
 		{
-			new maxpl = get_maxplayers();
-			for (new pl = 1; pl <= maxpl; pl++)
+			new players[32], plrsnum, pl
+			get_players(players, plrsnum, "ch")
+			for(new i; i<plrsnum; i++)
 			{
-				if (is_user_connected(pl) && !is_user_bot(pl))
+				pl = players[i]
+				
+				if (is_user_admin(pl))
 				{
-					if (is_user_admin(pl))
-					{
-						show_hudmessage(pl, "%s :   %s", name, message[length])
-						client_print(pl, print_notify, "%s :   %s", name, message[length])
-					}
-					else
-					{
-						show_hudmessage(pl, "%s", message[length])
-						client_print(pl, print_notify, "%s", message[length])
-					}
+					show_hudmessage(pl, "%s :   %s", name, message[length])
+					client_print(pl, print_notify, "%s :   %s", name, message[length])
+				}
+				else
+				{
+					show_hudmessage(pl, "%s", message[length])
+					client_print(pl, print_notify, "%s", message[length])
 				}
 			}
 			console_print(id, "%s :  %s", name, message[length])

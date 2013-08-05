@@ -37,6 +37,8 @@
 
 new g_ResPtr
 new g_HidePtr
+new g_sv_visiblemaxplayers
+new g_maxplayers
 
 public plugin_init()
 {
@@ -45,6 +47,8 @@ public plugin_init()
 	register_dictionary("common.txt")
 	g_ResPtr = register_cvar("amx_reservation", "0")
 	g_HidePtr = register_cvar("amx_hideslots", "0")
+	g_sv_visiblemaxplayers = get_cvar_pointer("sv_visiblemaxplayers")
+	g_maxplayers = get_maxplayers()
 }
 
 public plugin_cfg()
@@ -54,54 +58,43 @@ public plugin_cfg()
 
 public MapLoaded()
 {
-	if (!get_pcvar_num(g_HidePtr))
-		return
-
-	new maxplayers = get_maxplayers()
-	new players = get_playersnum(1)
-	new limit = maxplayers - get_pcvar_num(g_ResPtr)
-	setVisibleSlots(players, maxplayers, limit)
+	if (get_pcvar_num(g_HidePtr))
+	{
+		setVisibleSlots(get_playersnum(1), g_maxplayers - get_pcvar_num(g_ResPtr))
+	}
 }
 
 public client_authorized(id)
 {
-	new maxplayers = get_maxplayers()
 	new players = get_playersnum(1)
-	new limit = maxplayers - get_pcvar_num(g_ResPtr)
+	new limit = g_maxplayers - get_pcvar_num(g_ResPtr)
 
 	if (access(id, ADMIN_RESERVATION) || (players <= limit))
 	{
-		if (get_pcvar_num(g_HidePtr) == 1)
-			setVisibleSlots(players, maxplayers, limit)
-		return PLUGIN_CONTINUE
+		if (get_pcvar_num(g_HidePtr))
+			setVisibleSlots(players, limit)
+		return
 	}
 	
- 	new lReason[64]
- 	format(lReason, 63, "%L", id, "DROPPED_RES")
- 	server_cmd("kick #%d ^"%s^"", get_user_userid(id), lReason)
-
-	return PLUGIN_HANDLED
+ 	server_cmd("kick #%d ^"%L^"", get_user_userid(id), id, "DROPPED_RES")
 }
 
 public client_disconnect(id)
 {
-	if (!get_pcvar_num(g_HidePtr))
-		return PLUGIN_CONTINUE
-
-	new maxplayers = get_maxplayers()
-	
-	setVisibleSlots(get_playersnum(1) - 1, maxplayers, maxplayers - get_pcvar_num(g_ResPtr))
-	return PLUGIN_CONTINUE
+	if (get_pcvar_num(g_HidePtr))
+	{
+		setVisibleSlots(get_playersnum(1) - 1, g_maxplayers - get_pcvar_num(g_ResPtr))
+	}
 }
 
-setVisibleSlots(players, maxplayers, limit)
+setVisibleSlots(players, limit)
 {
 	new num = players + 1
 
-	if (players == maxplayers)
-		num = maxplayers
+	if (players == g_maxplayers)
+		num = g_maxplayers
 	else if (players < limit)
 		num = limit
 	
-	set_cvar_num("sv_visiblemaxplayers", num)
+	set_pcvar_num(g_sv_visiblemaxplayers, num)
 }

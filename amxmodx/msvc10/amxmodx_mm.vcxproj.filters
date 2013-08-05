@@ -417,6 +417,12 @@
     <None Include="..\..\plugins\include\amxmod_compat\xtrafun.inc">
       <Filter>Pawn Includes\AMX Mod Compat</Filter>
     </None>
+    <None Include="..\..\plugins\include\cellarray.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
+    <None Include="..\..\plugins\include\celltrie.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Object Include="..\Jit\helpers-x86.obj">

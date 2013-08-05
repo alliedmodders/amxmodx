@@ -203,6 +203,10 @@ public:
 		cursize=1;
 		count=0;
 	};
+	cell* Base()
+	{
+		return data;
+	}
 	cell* GetCellPointer(size_t which)
 	{
 		if (which >= count)

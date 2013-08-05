@@ -220,7 +220,7 @@ public arraytest3()
 		
 		buffb[0]=0;
 		
-		formatex(buffb,sizeof(buffb)-1,"%S", ArrayGetStringHandle(a, i));
+		formatex(buffb,sizeof(buffb)-1,"%a", ArrayGetStringHandle(a, i));
 		
 		test(strcmp(buffb, "987654321"),0);
 	}
@@ -454,6 +454,109 @@ public arraytest8()
 	}
 	
 	ArrayDestroy(a);
+	
+	showres();
+}
+
+public sortcallbackex_string(Array:a, const b[], const c[], d)
+{
+	return strcmp(b,c);
+}
+public arraytest9()
+{
+	server_print("Testing (new) sorting function with string...");
+	
+	new Array:a=ArrayCreate(40);
+	
+	ArrayPushString(a, "z");
+	ArrayPushString(a, "yz");
+	ArrayPushString(a, "xyz");
+	ArrayPushString(a, "wxyz");
+	ArrayPushString(a, "vwxyz");
+	ArrayPushString(a, "uvwxyz");
+	ArrayPushString(a, "tuvwxyz");
+	ArrayPushString(a, "stuvwxyz");
+	ArrayPushString(a, "rstuvwxyz");
+	ArrayPushString(a, "qrstuvwxyz");
+	ArrayPushString(a, "pqrstuvwxyz");
+	ArrayPushString(a, "opqrstuvwxyz");
+	ArrayPushString(a, "nopqrstuvwxyz");
+	ArrayPushString(a, "mnopqrstuvwxyz");
+	ArrayPushString(a, "lmnopqrstuvwxyz");
+	ArrayPushString(a, "klmnopqrstuvwxyz");
+	ArrayPushString(a, "jklmnopqrstuvwxyz");
+	ArrayPushString(a, "ijklmnopqrstuvwxyz");
+	ArrayPushString(a, "hijklmnopqrstuvwxyz");
+	ArrayPushString(a, "ghijklmnopqrstuvwxyz");
+	ArrayPushString(a, "fghijklmnopqrstuvwxyz");
+	ArrayPushString(a, "efghijklmnopqrstuvwxyz");
+	ArrayPushString(a, "defghijklmnopqrstuvwxyz");
+	ArrayPushString(a, "cdefghijklmnopqrstuvwxyz");
+	ArrayPushString(a, "bcdefghijklmnopqrstuvwxyz");
+	ArrayPushString(a, "abcdefghijklmnopqrstuvwxyz");
+	
+	new OldSize=ArraySize(a);
+	
+	ArraySortEx(a, "sortcallbackex_string");
+	
+	test(ArraySize(a),OldSize);
+	
+	new buff[40];
+	
+	ArrayGetString(a,0,buff,sizeof(buff)-1);
+
+	test(strcmp(buff,"abcdefghijklmnopqrstuvwxyz"),0);
+	
+	ArrayGetString(a,25,buff,sizeof(buff)-1);
+	
+	test(strcmp(buff,"z"),0);
+
+	
+	new start='a';
+	
+	for (new i=0;i<OldSize;i++)
+	{
+		ArrayGetString(a,i,buff,sizeof(buff)-1)
+		
+		test(buff[0],start++);
+	}
+	
+	showres();
+}
+
+public sortcallbackex_int(Array:a, const b, const c, d)
+{
+	return b < c ? -1 : 1;
+}
+public arraytest10()
+{
+	server_print("Testing (new) sorting function with integer...");
+	
+	new Array:a=ArrayCreate(1);
+	
+	ArrayPushCell(a, 8);
+	ArrayPushCell(a, 1);
+	ArrayPushCell(a, 3);
+	ArrayPushCell(a, 5);
+	ArrayPushCell(a, 7);
+	ArrayPushCell(a, 2);
+	ArrayPushCell(a, 9);
+	ArrayPushCell(a, 4);
+	ArrayPushCell(a, 10);
+	ArrayPushCell(a, 6);
+	
+	new OldSize=ArraySize(a);
+
+	ArraySortEx(a, "sortcallbackex_int");
+	
+	test(ArraySize(a),OldSize);
+	test(ArrayGetCell(a, 0),1);
+	test(ArrayGetCell(a, 9),10);
+
+	for (new i=0;i<OldSize;i++)
+	{
+		test(ArrayGetCell(a, i),i+1);
+	}
 	
 	showres();
 }

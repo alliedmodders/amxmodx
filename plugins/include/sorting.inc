@@ -1,4 +1,4 @@
-/* Sorting functions.
+	/* Sorting functions.
  *
  * by the AMX Mod X Development Team
  *
@@ -14,12 +14,25 @@
 #endif
 #define _sorting_included
 
+/**
+ * Contains sorting orders.
+ */
 enum SortMethod
 {
 	Sort_Ascending = 0,
-	Sort_Descending = 1,
+	Sort_Descending,
+	Sort_Random,
 };
 
+/**
+ * Data types for ADT Array Sorts
+ */
+enum SortType
+{
+	Sort_Integer = 0,
+	Sort_Float,
+ 	Sort_String,
+};
 /**
  * Basic sorting functions below.
  */
@@ -74,3 +87,13 @@ native SortCustom1D(array[], array_size, const comparefunc[], data[]="", data_si
  * Note that the parameters after elem2[] are all optional and you do not need to specify them.
  */
 native SortCustom2D(array[][], array_size, const comparefunc[], data[]="", data_size=0);
+
+/**
+ * Sort an ADT Array. Specify the type as Integer, Float, or String.
+ *
+ * @param array			Array Handle to sort
+ * @param order			Sort order to use, same as other sorts.
+ * @param type			Data type stored in the ADT Array
+ * @noreturn
+ */
+native SortADTArray(Array:array, SortMethod:order, SortType:type);

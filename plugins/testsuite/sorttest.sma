@@ -9,6 +9,9 @@ public plugin_init()
 	register_srvcmd("test_sort_strings", "Command_TestSortStrings")
 	register_srvcmd("test_sort_1d", "Command_TestSort1D")
 	register_srvcmd("test_sort_2d", "Command_TestSort2D")
+	register_srvcmd("test_adtsort_ints", "Command_TestSortADTInts")
+	register_srvcmd("test_adtsort_floats", "Command_TestSortADTFloats")
+	register_srvcmd("test_adtsort_strings", "Command_TestSortADTStrings")
 }
 
 /*****************
@@ -35,6 +38,10 @@ public Command_TestSortInts()
 	server_print("Testing descending sort:")
 	SortIntegers(array, 10, Sort_Descending)
 	PrintIntegers(array, 10)
+	
+	server_print("Testing random sort:")
+	SortIntegers(array, 10, Sort_Random)
+	PrintIntegers(array, 10)
 }
 
 /**************************
@@ -59,6 +66,10 @@ public Command_TestSortFloats()
 	
 	server_print("Testing descending sort:")
 	SortFloats(array, 10, Sort_Descending)
+	PrintFloats(array, 10)
+	
+	server_print("Testing random sort:")
+	SortFloats(array, 10, Sort_Random)
 	PrintFloats(array, 10)
 	
 	return PLUGIN_HANDLED
@@ -122,6 +133,10 @@ public Command_TestSortStrings()
 	SortStrings(array, 10, Sort_Descending)
 	PrintStrings(array, 10)
 	
+	server_print("Testing random sort:")
+	SortStrings(array, 10, Sort_Random)
+	PrintStrings(array, 10)
+	
 	return PLUGIN_HANDLED
 }
 
@@ -148,6 +163,129 @@ public Command_TestSort2D()
 	
 	SortCustom2D(array, 10, "Custom2DSort")
 	PrintStrings(array, 10)
+	
+	return PLUGIN_HANDLED
+}
+
+
+/*******************
+ * ADT ARRAY TESTS *
+ *******************/
+// Int and floats work the same as normal comparisions. Strings are direct
+// comparisions with no hacky memory stuff like Pawn arrays.
+
+PrintADTArrayIntegers(Array:array)
+{
+	new size = ArraySize(array);
+	for (new i=0; i<size;i++)
+	{
+		server_print("array[%d] = %d", i, ArrayGetCell(array, i));	
+	}
+}
+
+public Command_TestSortADTInts()
+{
+	new Array:array = ArrayCreate();
+	ArrayPushCell(array, 6);
+	ArrayPushCell(array, 7);
+	ArrayPushCell(array, 3);
+	ArrayPushCell(array, 2);
+	ArrayPushCell(array, 8);
+	ArrayPushCell(array, 5);
+	ArrayPushCell(array, 0);
+	ArrayPushCell(array, 1);
+	ArrayPushCell(array, 4);
+	ArrayPushCell(array, 9);
+	
+	server_print("Testing ascending sort:")
+	SortADTArray(array, Sort_Ascending, Sort_Integer)
+	PrintADTArrayIntegers(array)
+	
+	server_print("Testing descending sort:")
+	SortADTArray(array, Sort_Descending, Sort_Integer)
+	PrintADTArrayIntegers(array)
+	
+	server_print("Testing random sort:")
+	SortADTArray(array, Sort_Random, Sort_Integer)
+	PrintADTArrayIntegers(array)
+	
+	return PLUGIN_HANDLED
+}
+
+PrintADTArrayFloats(Array:array)
+{
+	new size = ArraySize(array);
+	for (new i=0; i<size;i++)
+	{
+		server_print("array[%d] = %f", i, Float:ArrayGetCell(array, i));	
+	}
+}
+
+public Command_TestSortADTFloats()
+{
+	new Array:array = ArrayCreate();
+	ArrayPushCell(array, 6.0);
+	ArrayPushCell(array, 7.0);
+	ArrayPushCell(array, 3.0);
+	ArrayPushCell(array, 2.0);
+	ArrayPushCell(array, 8.0);
+	ArrayPushCell(array, 5.0);
+	ArrayPushCell(array, 0.0);
+	ArrayPushCell(array, 1.0);
+	ArrayPushCell(array, 4.0);
+	ArrayPushCell(array, 9.0);
+	
+	server_print("Testing ascending sort:")
+	SortADTArray(array, Sort_Ascending, Sort_Float)
+	PrintADTArrayFloats(array)
+	
+	server_print("Testing descending sort:")
+	SortADTArray(array, Sort_Descending, Sort_Float)
+	PrintADTArrayFloats(array)
+	
+	server_print("Testing random sort:")
+	SortADTArray(array, Sort_Random, Sort_Float)
+	PrintADTArrayFloats(array)
+	
+	return PLUGIN_HANDLED
+}
+
+PrintADTArrayStrings(Array:array)
+{
+	new size = ArraySize(array);
+	new buffer[64];
+	for (new i=0; i<size;i++)
+	{
+		ArrayGetString(array, i, buffer, sizeof(buffer));
+		server_print("array[%d] = %s", i, buffer);	
+	}
+}
+
+public Command_TestSortADTStrings()
+{
+	new Array:array = ArrayCreate(64);
+	ArrayPushString(array, "faluco");
+	ArrayPushString(array, "bailopan");
+	ArrayPushString(array, "pm onoto");
+	ArrayPushString(array, "damaged soul");
+	ArrayPushString(array, "sniperbeamer");
+	ArrayPushString(array, "sidluke");
+	ArrayPushString(array, "johnny got his gun");
+	ArrayPushString(array, "gabe newell");
+	ArrayPushString(array, "Hello pRED*");
+	ArrayPushString(array, "WHAT?!");
+	
+	server_print("Testing ascending sort:")
+	SortADTArray(array, Sort_Ascending, Sort_String)
+	PrintADTArrayStrings(array)
+	
+	server_print("Testing descending sort:")
+	SortADTArray(array, Sort_Descending, Sort_String)
+	PrintADTArrayStrings(array)
+	
+	server_print("Testing random sort:")
+	SortADTArray(array, Sort_Random, Sort_String)
+	PrintADTArrayStrings(array)
 	
 	return PLUGIN_HANDLED
 }

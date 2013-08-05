@@ -1,5 +1,7 @@
 #include "amxmodx.h"
 #include <stdlib.h>
+#include <time.h>
+#include "datastructs.h"
 
 /***********************************
  *   About the double array hack   *
@@ -51,6 +53,7 @@ enum SortOrder
 {
 	Sort_Ascending = 0,
 	Sort_Descending = 1,
+	Sort_Random = 2,
 };
 
 int sort_ints_asc(const void *int1, const void *int2)
@@ -63,17 +66,40 @@ int sort_ints_desc(const void *int1, const void *int2)
 	return (*(int *)int2) - (*(int *)int1);
 }
 
+void sort_random(cell *array, cell size)
+{
+	srand((unsigned int)time(NULL));
+
+	for (int i = size-1; i > 0; i--)
+	{
+		int n = rand() % (i + 1);
+
+		if (array[i] != array[n]) 
+		{
+			array[i] ^= array[n];
+			array[n] ^= array[i];
+			array[i] ^= array[n];
+		}
+	}
+}
+
 static cell AMX_NATIVE_CALL SortIntegers(AMX *amx, cell *params)
 {
 	cell *array = get_amxaddr(amx, params[1]);
 	cell array_size = params[2];
 	cell type = params[3];
 
-	if (type == Sort_Ascending)
+	if (type == Sort_Ascending) 
 	{
 		qsort(array, array_size, sizeof(cell), sort_ints_asc);
-	} else {
+	} 
+	else if (type == Sort_Descending) 
+	{
 		qsort(array, array_size, sizeof(cell), sort_ints_desc);
+	} 
+	else
+	{
+		sort_random(array, array_size);
 	}
 
 	return 1;
@@ -118,8 +144,14 @@ static cell AMX_NATIVE_CALL SortFloats(AMX *amx, cell *params)
 	if (type == Sort_Ascending)
 	{
 		qsort(array, array_size, sizeof(cell), sort_floats_asc);
-	} else {
+	} 
+	else if (type == Sort_Descending)
+	{
 		qsort(array, array_size, sizeof(cell), sort_floats_desc);
+	}
+	else
+	{
+		sort_random(array, array_size);
 	}
 
 	return 1;
@@ -193,8 +225,14 @@ static cell AMX_NATIVE_CALL SortStrings(AMX *amx, cell *params)
 	if (type == Sort_Ascending)
 	{
 		qsort(array, array_size, sizeof(cell), sort_strings_asc);
-	} else {
+	} 
+	else if (type == Sort_Descending)
+	{
 		qsort(array, array_size, sizeof(cell), sort_strings_desc);
+	}
+	else
+	{
+		sort_random(array, array_size);
 	}
 
 	/* END HACKHACK - restore what we damaged so Pawn doesn't throw up.
@@ -348,6 +386,98 @@ static cell AMX_NATIVE_CALL SortCustom2D(AMX *amx, cell *params)
 	return 1;
 }
 
+enum SortType
+{
+	Sort_Integer = 0,
+	Sort_Float,
+	Sort_String,
+};
+
+int sort_adtarray_strings_asc(const void *str1, const void *str2)
+{
+	return strcmp((char *) str1, (char *) str2);
+}
+
+int sort_adtarray_strings_desc(const void *str1, const void *str2)
+{
+	return strcmp((char *) str2, (char *) str1);
+}
+
+void sort_adt_random(CellVector *cArray)
+{
+	size_t arraysize = cArray->Size();
+
+	srand((unsigned int)time(NULL));
+
+	for (int i = arraysize-1; i > 0; i--)
+	{
+		int n = rand() % (i + 1);
+
+		cArray->Swap(i, n);
+	}
+}
+
+static cell AMX_NATIVE_CALL SortADTArray(AMX *amx, cell *params)
+{
+	CellVector* vec=HandleToVector(amx, params[1]);
+
+	if (vec==NULL)
+	{
+		return 0;
+	}
+
+	cell order = params[2];
+
+	if (order == Sort_Random)
+	{
+		sort_adt_random(vec);
+
+		return 1;
+	}
+
+	cell type = params[3];
+	size_t arraysize = vec->Size();
+	size_t blocksize = vec->GetCellCount();
+	cell *array = vec->Base();
+
+	if (type == Sort_Integer)
+	{
+		if (order == Sort_Ascending)
+		{
+			qsort(array, arraysize, blocksize * sizeof(cell), sort_ints_asc);
+		}
+		else
+		{
+			qsort(array, arraysize, blocksize * sizeof(cell), sort_ints_desc);
+		}
+	}
+	else if (type == Sort_Float)
+	{
+		if (order == Sort_Ascending)
+		{
+			qsort(array, arraysize, blocksize * sizeof(cell), sort_floats_asc);
+		}
+		else 
+		{
+			qsort(array, arraysize, blocksize * sizeof(cell), sort_floats_desc);
+		}
+	}
+	else if (type == Sort_String)
+	{
+		if (order == Sort_Ascending)
+		{
+			qsort(array, arraysize, blocksize * sizeof(cell), sort_adtarray_strings_asc);
+		}
+		else 
+		{
+			qsort(array, arraysize, blocksize * sizeof(cell), sort_adtarray_strings_desc);
+		}
+	}
+
+	return 1;
+}
+
+
 AMX_NATIVE_INFO g_SortNatives[] = 
 {
 	{"SortIntegers",			SortIntegers},
@@ -355,6 +485,7 @@ AMX_NATIVE_INFO g_SortNatives[] =
 	{"SortStrings",				SortStrings},
 	{"SortCustom1D",			SortCustom1D},
 	{"SortCustom2D",			SortCustom2D},
+	{"SortADTArray",			SortADTArray},
 
 	{NULL,						NULL},
 };

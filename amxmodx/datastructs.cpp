@@ -491,6 +491,10 @@ typedef struct ArraySort_s
 	int    forward;
 	cell   data;
 	cell   size;
+	CellVector *vec;
+	AMX*   amx;
+	cell   addr1;
+	cell   addr2;
 
 } ArraySort_t;
 
@@ -577,6 +581,135 @@ static cell AMX_NATIVE_CALL ArraySort(AMX* amx, cell* params)
 }
 
 
+int SortArrayListExCell(const void *itema, const void *itemb)
+{
+	ArraySort_t *Info = ArraySortStack.front();
+	cell vala, valb;
+
+	Info->vec->GetCell(*((int *)itema), &vala);
+	Info->vec->GetCell(*((int *)itemb), &valb);
+
+	return executeForwards(Info->forward, Info->handle, vala, valb, Info->data, Info->size);
+}
+
+int SortArrayListExArray(const void *itema, const void *itemb)
+{
+	ArraySort_t *Info = ArraySortStack.front();
+
+	Info->vec->GetArray(*((int *)itema), get_amxaddr(Info->amx, Info->addr1));
+	Info->vec->GetArray(*((int *)itemb), get_amxaddr(Info->amx, Info->addr2));
+
+	return executeForwards(Info->forward, Info->handle, Info->addr1, Info->addr2, Info->data, Info->size);
+}
+
+// native ArraySortEx(Array:array, const comparefunc[], data[]="", data_size=0);
+static cell AMX_NATIVE_CALL ArraySortEx(AMX* amx, cell* params)
+{
+	int handle=params[1];
+	CellVector* vec=HandleToVector(amx, handle);
+
+	if (!vec)
+	{
+		return 0;
+	}
+
+	cell amx_addr1, amx_addr2, *phys_addr = NULL;
+	size_t cellcount = vec->GetCellCount();
+
+	if (cellcount > 1)
+	{
+		int err;
+		if ((err=amx_Allot(amx, cellcount, &amx_addr1, &phys_addr)) != AMX_ERR_NONE
+			|| (err=amx_Allot(amx, cellcount, &amx_addr2, &phys_addr)) != AMX_ERR_NONE)
+		{
+			LogError(amx, err, "Ran out of memory");
+			return 0;
+		}
+	}
+
+	// This is kind of a cheating way to go about this but...
+	// Create an array of integers as big as however many elements are in the vector.
+	// Pass that array to qsort
+	// After the array is sorted out, then create a NEW cellvector
+	// and copy in the old data in the order of what was sorted
+	int len;
+	char* FuncName=get_amxstring(amx, params[2], 0, len);
+	// MySortFunc(Array:array, item1, item2, const data[], data_size)
+	int Forward = registerSPForwardByName(amx, FuncName, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	if (Forward < 0)
+	{
+		if (cellcount > 1)
+		{
+			amx_Release(amx, amx_addr1);
+			amx_Release(amx, amx_addr2);
+		}
+
+		LogError(amx, AMX_ERR_NATIVE, "The public function \"%s\" was not found.", FuncName);
+		return 0;
+	}
+
+	int *IntList=new int[vec->Size()];
+
+	for (int i=0; i< vec->Size(); i++)
+	{
+		IntList[i]=i;
+	}
+
+	ArraySort_t *Info=new ArraySort_t;
+
+	Info->handle=handle;
+	Info->forward=Forward;
+	Info->data=params[3];
+	Info->size=params[4];
+	Info->vec = vec;
+	Info->amx = amx;
+	Info->addr1 = amx_addr1;
+	Info->addr2 = amx_addr2;
+
+	ArraySortStack.push(Info);
+	qsort(IntList, vec->Size(), sizeof(int), cellcount > 1 ? SortArrayListExArray : SortArrayListExCell);
+	ArraySortStack.pop();
+
+	CellVector* newvec=new CellVector(vec->GetCellCount());
+
+	// Set the new vector's values
+	for (int i=0; i< vec->Size(); i++)
+	{
+		if (newvec->SetArray(newvec->Push(), vec->GetCellPointer(IntList[i]))!=1)
+		{
+			// This should never happen..
+			LogError(amx, AMX_ERR_NATIVE, "Failed to SetArray in ArraySort (i=%d, IntList=%d)",i,IntList[i]);
+
+			if (cellcount > 1)
+			{
+				amx_Release(amx, amx_addr1);
+				amx_Release(amx, amx_addr2);
+			}
+
+			return 0;
+		}
+	}
+
+	// Delete the old vector
+	delete vec;
+
+	// Now save the new vector in its handle location
+	VectorHolder[handle-1]=newvec;
+
+	// Cleanup
+	delete Info;
+	delete IntList;
+
+	unregisterSPForward(Forward);
+
+	if (cellcount > 1)
+	{
+		amx_Release(amx, amx_addr1);
+		amx_Release(amx, amx_addr2);
+	}
+
+	return 1;
+}
 
 AMX_NATIVE_INFO g_DataStructNatives[] = 
 {
@@ -603,6 +736,7 @@ AMX_NATIVE_INFO g_DataStructNatives[] =
 	{ "ArrayGetStringHandle",		ArrayGetStringHandle },
 	{ "ArrayDestroy",				ArrayDestroy },
 	{ "ArraySort",					ArraySort },
+	{ "ArraySortEx",				ArraySortEx },
 
 	{ NULL,							NULL }
 };

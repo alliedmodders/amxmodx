@@ -4623,6 +4623,16 @@ static cell AMX_NATIVE_CALL LookupLangKey(AMX *amx, cell *params)
 	set_amxstring(amx,params[1],def,params[2]);
 	return 1;
 };
+
+// has_map_ent_class(const classname[])
+static cell AMX_NATIVE_CALL has_map_ent_class(AMX *amx, cell *params)
+{
+	int len;
+	char *name = get_amxstring(amx, params[1], 0, len);
+
+	return len && !FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", name));
+};
+
 static cell AMX_NATIVE_CALL is_rukia_a_hag(AMX *amx, cell *params)
 {
 	return 1;
@@ -4728,6 +4738,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"get_xvar_float",			get_xvar_num},
 	{"get_xvar_id",				get_xvar_id},
 	{"get_xvar_num",			get_xvar_num},
+	{"has_map_ent_class",		has_map_ent_class},
 	{"int3",					int3},
 	{"is_amd64_server",			is_amd64_server},
 	{"is_dedicated_server",		is_dedicated_server},

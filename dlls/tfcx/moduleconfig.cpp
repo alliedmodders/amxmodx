@@ -134,8 +134,8 @@ void ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax ){
 
 void PlayerPreThink_Post( edict_t *pEntity ) {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-        if ( !isModuleActive() ) // stats only
-		return;
+    if (!isModuleActive()) // stats only
+		RETURN_META(MRES_IGNORED);
 
 	if (pPlayer->clearStats && pPlayer->clearStats < gpGlobals->time && pPlayer->ingame){
 

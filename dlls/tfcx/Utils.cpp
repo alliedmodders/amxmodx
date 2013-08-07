@@ -57,7 +57,7 @@ bool ignoreBots (edict_t *pEnt, edict_t *pOther)
 }
 
 bool isModuleActive(){
-	if ( !(int)CVAR_GET_FLOAT("tfcstats_pause") )
+	if (!(int)tfcstats_pause->value)
 		return true;
 	return false;
 }

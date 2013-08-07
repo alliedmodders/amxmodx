@@ -106,7 +106,7 @@ void CPlayer::PutInServer(){
 
 	ingame = true;
 
-	if ( ignoreBots(pEdict) )
+	if ((int)tfcstats_rankbots->value == 0 && IsBot()) // ignoreBots() can't be used as bot's flags are not set yet.
 		return;
 
 	restartStats();

@@ -48,7 +48,9 @@ traceVault traceData[] = {
 	{ "tf_weapon_concussiongrenade","co", TFC_WPN_CONCUSSIONGRENADE, ACT_NADE_NONE, 0.0 , 10 , 2 },
 };
 
-bool ignoreBots (edict_t *pEnt, edict_t *pOther){
+bool ignoreBots (edict_t *pEnt, edict_t *pOther)
+{
+	rankBots = (int)tfcstats_rankbots->value ? true : false;
 	if ( !rankBots && ( pEnt->v.flags & FL_FAKECLIENT || ( pOther && pOther->v.flags & FL_FAKECLIENT ) ) )
 		return true;
 	return false;

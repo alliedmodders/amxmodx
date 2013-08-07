@@ -161,7 +161,10 @@ void CPlayer::Init( int pi, edict_t* pe )
 	bot = false;
 }
 
-void CPlayer::saveKill(CPlayer* pVictim, int wweapon, int hhs, int ttk){
+void CPlayer::saveKill(CPlayer* pVictim, int wweapon, int hhs, int ttk)
+{
+	if (!isModuleActive())
+		return;
 
 	if ( ignoreBots(pEdict,pVictim->pEdict) )
 		return;
@@ -218,7 +221,10 @@ void CPlayer::saveKill(CPlayer* pVictim, int wweapon, int hhs, int ttk){
 	life.tks += ttk;
 }
 
-void CPlayer::saveHit(CPlayer* pVictim, int wweapon, int ddamage, int bbody){
+void CPlayer::saveHit(CPlayer* pVictim, int wweapon, int ddamage, int bbody)
+{
+	if (!isModuleActive())
+		return;
 
 	if ( ignoreBots(pEdict,pVictim->pEdict) )
 		return;
@@ -264,7 +270,10 @@ void CPlayer::saveHit(CPlayer* pVictim, int wweapon, int ddamage, int bbody){
 	life.bodyHits[bbody]++;
 }
 
-void CPlayer::saveShot(int weapon){
+void CPlayer::saveShot(int weapon)
+{
+	if (!isModuleActive())
+		return;
 
 	//PRINT_CONSOLE("Shot! Weapon:%d\n",weapon);
 

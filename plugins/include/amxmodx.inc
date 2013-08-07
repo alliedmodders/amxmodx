@@ -1084,5 +1084,16 @@ native admins_lookup(num, AdminProp:Property, Buffer[]="", BufferSize=0);
  * Clears the list of dynamically stored admins
  */
 native admins_flush();
+
+/**
+ * Searches whether a map contains at least one entity with the provided class name.
+ *
+ * @param classname		The entity classname to check.
+ *
+ * @return				Returns true if an entity is found, otherwise false.
+ */
+native bool:has_map_ent_class(const classname[]);
+
+
 // Keep this always at the bottom of this file
 #include <message_stocks>

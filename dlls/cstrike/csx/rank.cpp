@@ -370,6 +370,36 @@ static cell AMX_NATIVE_CALL get_stats_size(AMX *amx, cell *params){
 	return 8;
 }
 
+enum MapObjective
+{
+	MapObjective_Bomb	 = (1<<0),
+	MapObjective_Hostage = (1<<1),
+	MapObjective_Vip	 = (1<<2),
+	MapObjective_Escape  = (1<<3),
+};
+
+static cell AMX_NATIVE_CALL get_map_objectives(AMX *amx, cell *params)
+{
+	int flags = 0;
+
+	if (!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "func_bomb_target")) || 
+		!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "info_bomb_target")))
+		flags |= MapObjective_Bomb;
+
+	if (!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "func_hostage_rescue")) ||
+		!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "info_hostage_rescue")) ||
+		!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "hostage_entity"))) // there are maps with only this and using team spawn as rescue zone.
+		flags |= MapObjective_Hostage;
+
+	if (!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "func_vip_safetyzone")))
+		flags |= MapObjective_Vip;
+
+	if (!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "func_escapezone")))
+		flags |= MapObjective_Escape;
+
+	return flags;
+}
+
 AMX_NATIVE_INFO stats_Natives[] = {
 	{ "get_stats",      get_stats},
 	{ "get_stats2",      get_stats2},
@@ -394,6 +424,8 @@ AMX_NATIVE_INFO stats_Natives[] = {
 	{ "xmod_is_melee_wpn", is_melee },
 	{ "xmod_get_maxweapons", get_maxweapons },
 	{ "xmod_get_stats_size", get_stats_size },
+
+	{ "get_map_objectives", get_map_objectives },
 
 	//***************************************
 	//{ "get_weaponname", get_wpnname },

@@ -66,3 +66,19 @@ native xmod_get_maxweapons();
 native xmod_get_stats_size();
 
 /************* Shared Natives End ********************************/
+
+enum MapObjective
+{
+	MapObjective_Bomb	 = (1<<0),
+	MapObjective_Hostage = (1<<1),
+	MapObjective_Vip	 = (1<<2),
+	MapObjective_Escape  = (1<<3),
+};
+
+/**
+ * Gets current map objectives.
+ *
+ * @return 		Returns a bits sum if objectives are found, otherwise 0. 
+ * 				See MapObjective_* constants.
+ */
+native MapObjective:get_map_objectives();

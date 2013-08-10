@@ -89,7 +89,7 @@ endif
 
 # Clang >= 3 || GCC >= 4.7
 ifeq "$(shell expr $(IS_CLANG) \& $(CPP_MAJOR) \>= 3 \| $(CPP_MAJOR) \>= 4 \& $(CPP_MINOR) \>= 7)" "1"
-	CFLAGS += -Wno-delete-non-virtual-dtor
+	CPPFLAGS += -Wno-delete-non-virtual-dtor
 endif
 
 # OS is Linux and not using clang

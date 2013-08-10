@@ -20,7 +20,7 @@ void Client_ResetHUD(void* mValue){
 void Client_DeathMsg(void *mValue)
 {
 	static int killer_id;
-	static int victim_id;
+	//static int victim_id;
 	static int is_headshot;
 	const char *name;
 
@@ -31,11 +31,11 @@ void Client_DeathMsg(void *mValue)
 			killer_id = *(int *)mValue;
 			break;
 		}
-	case 1:
-		{
-			victim_id = *(int *)mValue;
-			break;
-		}
+	//case 1:
+	//	{
+	//		victim_id = *(int *)mValue;
+	//		break;
+	//	}
 	case 2:
 		{
 			is_headshot = *(int *)mValue;

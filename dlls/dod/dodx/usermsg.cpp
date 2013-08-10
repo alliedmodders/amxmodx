@@ -291,12 +291,12 @@ void Client_Object(void* mValue)
 	const char *classname;
 	edict_t* pObject = NULL;
 
-	const char* value;
+	//const char* value;
 
-	if(mValue)
-	{
-		value = (char*)mValue;
-	}
+	//if(mValue)
+	//{
+	//	value = (char*)mValue;
+	//}
 
 	if(!mPlayer->object.carrying)
 	{

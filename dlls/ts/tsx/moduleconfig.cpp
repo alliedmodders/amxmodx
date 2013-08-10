@@ -129,7 +129,7 @@ void check_stunts(edict_s *player)
 
 	if(pPlayer->checkstate == 0) return;
 
-	int stunttype;
+	/*int stunttype;
 	int newstate = pPlayer->state;
 	int oldstate = pPlayer->oldstate;
 	
@@ -138,7 +138,7 @@ void check_stunts(edict_s *player)
 	else if(oldstate == 2) stunttype = STUNT_GETUP;
 	else if( pPlayer->GetOffset(TSX_SROLL_OFFSET) == 1) stunttype = STUNT_ROLL;
 	else if( pPlayer->GetOffset(TSX_SDUCK_OFFSET) == 1 ) stunttype = STUNT_DUCK;
-	else stunttype = STUNT_FLIP;
+	else stunttype = STUNT_FLIP;*/
 
 	pPlayer->checkstate = 0;
 

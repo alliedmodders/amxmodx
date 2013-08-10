@@ -1518,9 +1518,33 @@ static cell AMX_NATIVE_CALL get_grenade_id(AMX *amx, cell *params)  /* 4 param *
 	return 0;
 }
 
+static cell AMX_NATIVE_CALL set_ent_rendering(AMX *amx, cell *params) // set_user_rendering(index, fx = kRenderFxNone, r = 0, g = 0, b = 0, render = kRenderNormal, amount = 0); = 7 arguments
+{
+	// params[1] = index
+	// params[2] = fx
+	// params[3] = r
+	// params[4] = g
+	// params[5] = b
+	// params[6] = render
+	// params[7] = amount
+
+	CHECK_ENTITY_SIMPLE(params[1]);
+
+	edict_t *pEntity = MF_GetPlayerEdict(params[1]);
+
+	pEntity->v.renderfx = params[2];
+	pEntity->v.rendercolor = Vector(float(params[3]), float(params[4]), float(params[5]));
+	pEntity->v.rendermode = params[6];
+	pEntity->v.renderamt = float(params[7]);
+
+	return 1;
+}
+
+
 AMX_NATIVE_INFO ent_NewNatives[] =
 {
 	{"DispatchKeyValue",	DispatchKeyValue},
+	{"set_ent_rendering",	set_ent_rendering},
 	{NULL,					NULL}
 };
 

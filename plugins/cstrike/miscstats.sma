@@ -33,8 +33,12 @@
 */
 
 #include <amxmodx>
+#include <amxmisc>
 #include <csx>
-#include <cstrike>
+
+#define AMXMODX_NOAUTOLOAD
+#include <engine>
+#include <fakemeta>
 
 public MultiKill
 public MultiKillSound
@@ -66,6 +70,17 @@ public DoubleKillSound
 public PlayerName
 public FirstBloodSound
 
+public BombPlantedSound
+public BombDefusedSound
+public BombFailedSound
+public BombCountHUD
+public LastManSound
+public GrenadeKillSound
+public GrenadeSuicideSound
+
+const SOUNDFILE_PATH_MAXLEN = 64
+const SOUND_SHORTPATH_MAXLEN = SOUNDFILE_PATH_MAXLEN - 10 // 64 (sound/ [ 54 ] .wav) critical value for fast dl
+
 new g_streakKills[33][2]
 new g_multiKills[33][2]
 new g_C4Timer
@@ -85,6 +100,18 @@ new g_left_sync
 new g_bottom_sync
 new g_he_sync
 
+new g_pcvar_mp_c4timer, g_c4timer_value
+
+const TASK_BOMB_TIMER = 8038
+const TASK_DELAYED_NEW_ROUND = 98038
+
+const TEAM_T = 1
+const TEAM_CT = 2
+
+new g_connected[33]
+
+new g_bIsBombMap = false
+
 new g_MultiKillMsg[7][] =
 {
 	"Multi-Kill! %s^n%L %d %L (%d %L)", 
@@ -96,16 +123,31 @@ new g_MultiKillMsg[7][] =
 	"%s IS GODLIKE!!!!^n%L %d %L (%d %L)"
 }
 
-new g_Sounds[7][] =
+new g_Sounds[7][SOUND_SHORTPATH_MAXLEN] = 
 {
-	"multikill", 
-	"ultrakill", 
-	"killingspree", 
-	"rampage", 
-	"unstoppable", 
-	"monsterkill", 
-	"godlike"
+	"misc/multikill",
+	"misc/ultrakill",
+	"misc/killingspree",
+	"misc/rampage",
+	"misc/unstoppable",
+	"misc/monsterkill",
+	"misc/godlike"
 }
+
+new g_firstbloodsound[SOUND_SHORTPATH_MAXLEN] = "misc/firstblood"
+new g_lastmansound_1vsothers[SOUND_SHORTPATH_MAXLEN] = "misc/oneandonly"
+new g_lastmansound_duel[SOUND_SHORTPATH_MAXLEN] = "misc/maytheforce"
+new g_hssound_killer[SOUND_SHORTPATH_MAXLEN] = "misc/headshot"
+new g_hssound_victim[SOUND_SHORTPATH_MAXLEN] = "misc/headshot"
+new g_knifekillsound[SOUND_SHORTPATH_MAXLEN] = "misc/humiliation"
+new g_doublekillsound[SOUND_SHORTPATH_MAXLEN] = "misc/doublekill"
+new g_roundcountersound[SOUND_SHORTPATH_MAXLEN] = "misc/prepare"
+new g_grenadekillsound[SOUND_SHORTPATH_MAXLEN] = "djeyl/grenade"
+new g_grenadesuicidesound[SOUND_SHORTPATH_MAXLEN] = "djeyl/witch"
+new g_bombplantedsound[SOUND_SHORTPATH_MAXLEN] = "djeyl/c4powa"
+new g_bombdefusedsound[SOUND_SHORTPATH_MAXLEN] = "djeyl/laugh"
+new g_bombfailedsound[SOUND_SHORTPATH_MAXLEN] = "djeyl/witch"
+
 new g_KillingMsg[7][] =
 {
 	"%s: Multi-Kill!", 
@@ -174,24 +216,30 @@ public plugin_init()
 	register_dictionary("miscstats.txt")
 	register_event("TextMsg", "eRestart", "a", "2&#Game_C", "2&#Game_w")
 	register_event("SendAudio", "eEndRound", "a", "2&%!MRAD_terwin", "2&%!MRAD_ctwin", "2&%!MRAD_rounddraw")
-	register_event("RoundTime", "eNewRound", "bc")
-	register_event("StatusValue", "setTeam", "be", "1=1")
-	register_event("StatusValue", "showStatus", "be", "1=2", "2!0")
-	register_event("StatusValue", "hideStatus", "be", "1=1", "2=0")
+	
+	register_event("HLTV", "Event_HLTV_New_Round", "a", "1=0", "2=0") // cache c4 timer value
+	register_logevent("LogEvent_Round_Start", 2, "1=Round_Start") // replaces ugly register_event("RoundTime", "eNewRound", "bc")
+	register_event("StatusValue", "setTeam", "bef", "1=1")
+	register_event("StatusValue", "showStatus", "bef", "1=2", "2!0")
+	register_event("StatusValue", "hideStatus", "bef", "1=1", "2=0")
 
-	new mapname[32]
-	get_mapname(mapname, 31)
-
-	if (equali(mapname, "de_", 3) || equali(mapname, "csde_", 5))
+	new mapname[32], n = get_mapname(mapname, charsmax(mapname))
+	new CLASSNAME[] = "classname", INFO_BOMB_TARGET[] = "info_bomb_target", FUNC_BOMB_TARGET[] = "func_bomb_target"
+	if(	(	LibraryExists("engine", LibType_Library) && ( find_ent_by_class(0, INFO_BOMB_TARGET) > 0 || find_ent_by_class(0, FUNC_BOMB_TARGET) > 0 )	)
+	||	(	LibraryExists("fakemeta", LibType_Library) && ( engfunc(EngFunc_FindEntityByString, 0, CLASSNAME, INFO_BOMB_TARGET) > 0 || engfunc(EngFunc_FindEntityByString, 0, CLASSNAME, FUNC_BOMB_TARGET) > 0 )	)
+	||	(equali(mapname, "de_", 3) || equali(mapname, "csde_", 5))	)
 	{
+		g_bIsBombMap = true
 		register_event("StatusIcon", "eGotBomb", "be", "1=1", "1=2", "2=c4")
 		register_event("TextMsg", "eBombPickUp", "bc", "2&#Got_bomb")
 		register_event("TextMsg", "eBombDrop", "bc", "2&#Game_bomb_d")
+		register_event("BarTime", "eStopDefuse", "b", "1=0")
 	}
-	else if (equali(mapname, "cs_italy"))
+	else if (equali(mapname, "cs_italy") || equali(mapname, "cs_italy_cz"))
 	{
-		register_event("23", "chickenKill", "a", "1=108", /*"12=106", */ "15=4")
-		register_event("23", "radioKill", "a", "1=108", /*"12=294", */ "15=2")
+		register_event("23", "chickenKill", "a", "1=108", "15=4")
+		register_event("23", "radioKill", "a", "1=108", n == 8 ? "15=2" : "15=8") // cz radio is wood
+		
 	}
 	
 	g_center1_sync = CreateHudSyncObj()
@@ -200,6 +248,207 @@ public plugin_init()
 	g_left_sync = CreateHudSyncObj()
 	g_bottom_sync = CreateHudSyncObj()
 	g_he_sync = CreateHudSyncObj()
+
+	g_pcvar_mp_c4timer = get_cvar_pointer("mp_c4timer")
+	g_c4timer_value = get_pcvar_num( g_pcvar_mp_c4timer )
+}
+
+public plugin_precache()
+{
+	// parse sounds and precache them
+	new szConfigsDir[64], szCfgFile[64]
+	get_configsdir(szConfigsDir, charsmax(szConfigsDir))
+	formatex(szCfgFile, charsmax(szCfgFile), "%s/stats.ini", szConfigsDir)
+
+	new buffer[256]
+
+	// initialize xvars so we can know later if sounds have to be precached or not.
+	// xvars gonna be initialized again in statscfg.amxx plugin_init, this is ok.
+	new fp = fopen(szCfgFile, "rt")
+	if( fp )
+	{
+		new xvarname[32], xvarid
+		while( !feof(fp) )
+		{
+			fgets(fp, buffer, charsmax(buffer))
+			trim(buffer)
+			if( buffer[0] != ';' )
+			{
+				parse(buffer, xvarname, charsmax(xvarname))
+				if ((xvarid = get_xvar_id(xvarname)) != -1)
+				{
+					set_xvar_num(xvarid, 1)
+				}
+			}
+		}
+		fclose(fp)
+	}
+
+	formatex(szCfgFile, charsmax(szCfgFile), "%s/miscstats.ini", szConfigsDir)
+	fp = fopen(szCfgFile, "rt")
+	if( fp )
+	{
+		new szSoundKey[32], szSoundFile[SOUNDFILE_PATH_MAXLEN]
+		while( !feof(fp) )
+		{
+			fgets(fp, buffer, charsmax(buffer))
+			trim(buffer)
+			if( buffer[0] != ';' && parse(buffer, szSoundKey, charsmax(szSoundKey), szSoundFile, charsmax(szSoundFile)) == 2 )
+			{
+				if( equal(szSoundKey, "FirstBloodSound") )
+				{
+					copy_sound(g_firstbloodsound, charsmax(g_firstbloodsound), szSoundFile)
+					if( FirstBloodSound ) precache_sound_custom(g_firstbloodsound)
+				}
+				else if( equal(szSoundKey, "LastManVsOthersSound") )
+				{
+					copy_sound(g_lastmansound_1vsothers, charsmax(g_lastmansound_1vsothers), szSoundFile)
+					if( LastManSound ) precache_sound_custom(g_lastmansound_1vsothers)
+				}
+				else if( equal(szSoundKey, "LastManDuelSound") )
+				{
+					copy_sound(g_lastmansound_duel, charsmax(g_lastmansound_duel), szSoundFile)
+					if( LastManSound ) precache_sound_custom(g_lastmansound_duel)
+				}
+				else if( equal(szSoundKey, "HeadShotKillSoundKiller") )
+				{
+					copy_sound(g_hssound_killer, charsmax(g_hssound_killer), szSoundFile)
+					if( HeadShotKillSound ) precache_sound_custom(g_hssound_killer)
+				}
+				else if( equal(szSoundKey, "HeadShotKillSoundVictim") )
+				{
+					copy_sound(g_hssound_victim, charsmax(g_hssound_victim), szSoundFile)
+					if( HeadShotKillSound ) precache_sound_custom(g_hssound_victim)
+				}
+				else if( equal(szSoundKey, "KnifeKillSound") )
+				{
+					copy_sound(g_knifekillsound, charsmax(g_knifekillsound), szSoundFile)
+					if( KnifeKillSound ) precache_sound_custom(g_knifekillsound)
+				}
+				else if( equal(szSoundKey, "DoubleKillSound") )
+				{
+					copy_sound(g_doublekillsound, charsmax(g_doublekillsound), szSoundFile)
+					if( DoubleKillSound ) precache_sound_custom(g_doublekillsound)
+				}
+				else if( equal(szSoundKey, "RoundCounterSound") )
+				{
+					copy_sound(g_roundcountersound, charsmax(g_roundcountersound), szSoundFile)
+					if( RoundCounterSound ) precache_sound_custom(g_roundcountersound)
+				}
+				else if( equal(szSoundKey, "GrenadeKillSound") )
+				{
+					copy_sound(g_grenadekillsound, charsmax(g_grenadekillsound), szSoundFile)
+					if( GrenadeKillSound ) precache_sound_custom(g_grenadekillsound)
+				}
+				else if( equal(szSoundKey, "GrenadeSuicideSound") )
+				{
+					copy_sound(g_grenadesuicidesound, charsmax(g_grenadesuicidesound), szSoundFile)
+					if( GrenadeSuicideSound ) precache_sound_custom(g_grenadesuicidesound)
+				}
+				else if( equal(szSoundKey, "BombPlantedSound") )
+				{
+					copy_sound(g_bombplantedsound, charsmax(g_bombplantedsound), szSoundFile)
+					if( BombPlantedSound ) precache_sound_custom(g_bombplantedsound)
+				}
+				else if( equal(szSoundKey, "BombDefusedSound") )
+				{
+					copy_sound(g_bombdefusedsound, charsmax(g_bombdefusedsound), szSoundFile)
+					if( BombDefusedSound ) precache_sound_custom(g_bombdefusedsound)
+				}
+				else if( equal(szSoundKey, "BombFailedSound") )
+				{
+					copy_sound(g_bombfailedsound, charsmax(g_bombfailedsound), szSoundFile)
+					if( BombFailedSound ) precache_sound_custom(g_bombfailedsound)
+				}
+				else
+				{
+					// KillingStreakSound and MultiKillSound
+					if( equal(szSoundKey, "MultiKillSound") )
+					{
+						copy_sound(g_Sounds[0], charsmax(g_Sounds[]), szSoundFile)
+						if( KillingStreakSound || MultiKillSound ) precache_sound_custom(g_Sounds[0])
+					}
+					else if( equal(szSoundKey, "UltraKillSound") )
+					{
+						copy_sound(g_Sounds[1], charsmax(g_Sounds[]), szSoundFile)
+						if( KillingStreakSound || MultiKillSound ) precache_sound_custom(g_Sounds[1])
+					}
+					else if( equal(szSoundKey, "KillingSpreeSound") )
+					{
+						copy_sound(g_Sounds[2], charsmax(g_Sounds[]), szSoundFile)
+						if( KillingStreakSound || MultiKillSound ) precache_sound_custom(g_Sounds[2])
+					}
+					else if( equal(szSoundKey, "RampageSound") )
+					{
+						copy_sound(g_Sounds[3], charsmax(g_Sounds[]), szSoundFile)
+						if( KillingStreakSound || MultiKillSound ) precache_sound_custom(g_Sounds[3])
+					}
+					else if( equal(szSoundKey, "UnstopableSound") )
+					{
+						copy_sound(g_Sounds[4], charsmax(g_Sounds[]), szSoundFile)
+						if( KillingStreakSound || MultiKillSound ) precache_sound_custom(g_Sounds[4])
+					}
+					else if( equal(szSoundKey, "MonsterKillSound") )
+					{
+						copy_sound(g_Sounds[5], charsmax(g_Sounds[]), szSoundFile)
+						if( KillingStreakSound || MultiKillSound ) precache_sound_custom(g_Sounds[5])
+					}
+					else if( equal(szSoundKey, "GodLike") )
+					{
+						copy_sound(g_Sounds[6], charsmax(g_Sounds[]), szSoundFile)
+						if( KillingStreakSound || MultiKillSound ) precache_sound_custom(g_Sounds[6])
+					}
+				}
+			}
+		}
+		fclose(fp)
+	}
+}
+
+precache_sound_custom( const sound[] )
+{
+	new fullpathsound[SOUNDFILE_PATH_MAXLEN]
+	formatex(fullpathsound, charsmax(fullpathsound), "sound/%s.wav", sound)
+	if( file_exists(fullpathsound) )
+	{
+		precache_sound(fullpathsound[6])
+	}
+	else
+	{
+		log_amx("Could not locate <%s> file", fullpathsound)
+	}
+}
+
+copy_sound(dest[], len, src[])
+{
+	new n = copy(dest, len, src[ 6 * equali(src, "sound/", 6) ])
+	if( n > 4 && equal(dest[n-4], ".wav") )
+	{
+		dest[n-4] = EOS
+	}
+}
+
+public plugin_natives()
+{
+	set_module_filter("module_filter")
+	set_native_filter("native_filter")
+}
+
+public module_filter(const module[])
+{
+	if (equali(module, "engine")
+	||	equali(module, "fakemeta"))
+		return PLUGIN_HANDLED
+	
+	return PLUGIN_CONTINUE
+}
+
+public native_filter(const name[], index, trap)
+{
+	if (!trap)
+		return PLUGIN_HANDLED
+		
+	return PLUGIN_CONTINUE
 }
 
 public plugin_cfg()
@@ -211,19 +460,26 @@ public plugin_cfg()
 	server_cmd(g_addStast, "ST_BOMB_PLANTING", "BombPlanting")
 	server_cmd(g_addStast, "ST_BOMB_DEFUSING", "BombDefusing")
 	server_cmd(g_addStast, "ST_BOMB_PLANTED", "BombPlanted")
+	server_cmd(g_addStast, "ST_BOMB_PLANTED_SOUND", "BombPlantedSound")
 	server_cmd(g_addStast, "ST_BOMB_DEF_SUCC", "BombDefused")
+	server_cmd(g_addStast, "ST_BOMB_DEF_SUCC_SOUND", "BombDefusedSound")
 	server_cmd(g_addStast, "ST_BOMB_DEF_FAIL", "BombFailed")
+	server_cmd(g_addStast, "ST_BOMB_DEF_FAIL_SOUND", "BombFailedSound")
 	server_cmd(g_addStast, "ST_BOMB_PICKUP", "BombPickUp")
 	server_cmd(g_addStast, "ST_BOMB_DROP", "BombDrop")
+	server_cmd(g_addStast, "ST_BOMB_CD_HUD", "BombCountHUD")
 	server_cmd(g_addStast, "ST_BOMB_CD_VOICE", "BombCountVoice")
 	server_cmd(g_addStast, "ST_BOMB_CD_DEF", "BombCountDef")
 	server_cmd(g_addStast, "ST_BOMB_SITE", "BombReached")
 	server_cmd(g_addStast, "ST_ITALY_BONUS", "ItalyBonusKill")
 	server_cmd(g_addStast, "ST_LAST_MAN", "LastMan")
+	server_cmd(g_addStast, "ST_LAST_MAN_SOUND", "LastManSound")
 	server_cmd(g_addStast, "ST_KNIFE_KILL", "KnifeKill")
 	server_cmd(g_addStast, "ST_KNIFE_KILL_SOUND", "KnifeKillSound")
 	server_cmd(g_addStast, "ST_HE_KILL", "GrenadeKill")
+	server_cmd(g_addStast, "ST_HE_KILL_SOUND", "GrenadeKillSound")
 	server_cmd(g_addStast, "ST_HE_SUICIDE", "GrenadeSuicide")
+	server_cmd(g_addStast, "ST_HE_SUICIDE_SOUND", "GrenadeSuicideSound")
 	server_cmd(g_addStast, "ST_HS_KILL", "HeadShotKill")
 	server_cmd(g_addStast, "ST_HS_KILL_SOUND", "HeadShotKillSound")
 	server_cmd(g_addStast, "ST_ROUND_CNT", "RoundCounter")
@@ -241,6 +497,12 @@ public client_putinserver(id)
 {
 	g_multiKills[id] = {0, 0}
 	g_streakKills[id] = {0, 0}
+	g_connected[id] = true
+}
+
+public client_disconnect(id)
+{
+	g_connected[id] = false
 }
 
 public client_death(killer, victim, wpnindex, hitplace, TK)
@@ -251,11 +513,13 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 	new headshot = (hitplace == HIT_HEAD) ? 1 : 0
 	new selfkill = (killer == victim) ? 1 : 0
 
+	new victim_alive = is_user_alive(victim) // happens on ClientKill
+
 	if (g_firstBlood)
 	{
 		g_firstBlood = 0
 		if (FirstBloodSound)
-			play_sound("misc/firstblood")
+			play_sound(g_firstbloodsound)
 	}
 
 	if ((KillingStreak || KillingStreakSound) && !TK)
@@ -273,7 +537,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 			if ((a > -1) && !(a % 2))
 			{
 				new name[32]
-				get_user_name(killer, name, 31)
+				get_user_name(killer, name, charsmax(name))
 				
 				if ((a >>= 1) > 6)
 					a = 6
@@ -286,10 +550,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				
 				if (KillingStreakSound)
 				{
-					new file[32]
-					
-					format(file, 31, "misc/%s", g_Sounds[a])
-					play_sound(file)
+					play_sound(g_Sounds[a])
 				}
 			}
 		}
@@ -306,36 +567,27 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 			
 			param[0] = killer
 			param[1] = g_multiKills[killer][0]
-			set_task(4.0 + float(param[1]), "checkKills", 0, param, 2)
+			set_task(4.0 + float(param[1]), "checkKills", killer, param, 2)
 		}
 	}
 
+	new team = get_user_team(victim)
 	if (EnemyRemaining && is_user_connected(victim))
 	{
-		new ppl[32], pplnum = 0, maxplayers = get_maxplayers()
-		new epplnum = 0
-		new CsTeams:team = cs_get_user_team(victim)
-		new CsTeams:other_team
-		new CsTeams:enemy_team = (team == CS_TEAM_T) ? CS_TEAM_CT : CS_TEAM_T
-		
-		if (team == CS_TEAM_T || team == CS_TEAM_CT)
+		if( TEAM_T <= team <= TEAM_CT )
 		{
-			for (new i=1; i<=maxplayers; i++)
+			new ppl[32], pplnum, epplnum, a
+			get_players(ppl, epplnum, "ae", team == TEAM_T ? "CT" : "TERRORIST")
+			get_players(ppl, pplnum, "ae", team == TEAM_T ? "TERRORIST" : "CT")
+			if( victim_alive )
 			{
-				if (!is_user_connected(i))
+				for(a=0; a<pplnum; a++)
 				{
-					continue
-				}
-				if (i == victim)
-				{
-					continue
-				}
-				other_team = cs_get_user_team(i)
-				if (other_team == team && is_user_alive(i))
-				{
-					epplnum++
-				} else if (other_team == enemy_team) {
-					ppl[pplnum++] = i
+					if( ppl[a] == victim )
+					{
+						ppl[a] = ppl[--pplnum]
+						break
+					}
 				}
 			}
 			
@@ -347,55 +599,75 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				
 				/* This is a pretty stupid thing to translate, but whatever */
 				new _teamname[32]
-				if (team == CS_TEAM_T)
+				if (team == TEAM_T)
 				{
-					format(_teamname, 31, "TERRORIST%s", (epplnum == 1) ? "" : "S")
-				} else if (team == CS_TEAM_CT) {
-					format(_teamname, 31, "CT%s", (epplnum == 1) ? "" : "S")
+					formatex(_teamname, charsmax(_teamname), "TERRORIST%s", (epplnum == 1) ? "" : "S")
+				} else {
+					formatex(_teamname, charsmax(_teamname), "CT%s", (epplnum == 1) ? "" : "S")
 				}
 
-				for (new a = 0; a < pplnum; ++a)
+				new id
+				for (a = 0; a < pplnum; ++a)
 				{
-					format(team_name, 31, "%L", ppl[a], _teamname)
-					format(message, 127, "%L", ppl[a], "REMAINING", epplnum, team_name)
-					ShowSyncHudMsg(ppl[a], g_bottom_sync, "%s", message)
+					id = ppl[a]
+					formatex(team_name, charsmax(team_name), "%L", id, _teamname)
+					formatex(message, charsmax(message), "%L", id, "REMAINING", epplnum, team_name)
+					ShowSyncHudMsg(id, g_bottom_sync, "%s", message)
 				}
 			}
 		}
 	}
 
-	if (LastMan)
+	if (LastMan || LastManSound)
 	{
-		new cts[32], ts[32], ctsnum, tsnum
-		new maxplayers = get_maxplayers()
-		new CsTeams:team
+		new cts[32], ts[32], ctsnum, tsnum, b
+		get_players(cts, ctsnum, "ae", "CT")
+		get_players(ts, tsnum, "ae", "TERRORIST")
 		
-		for (new i=1; i<=maxplayers; i++)
+		if( victim_alive )
 		{
-			if (!is_user_connected(i) || !is_user_alive(i))
+			switch( team )
 			{
-				continue
-			}
-			team = cs_get_user_team(i)
-			if (team == CS_TEAM_T)
-			{
-				ts[tsnum++] = i
-			} else if (team == CS_TEAM_CT) {
-				cts[ctsnum++] = i
+				case TEAM_T:
+				{
+					for(b=0; b<tsnum; b++)
+					{
+						if( ts[b] == victim )
+						{
+							ts[b] = ts[--tsnum]
+							break
+						}
+					}
+				}
+				case TEAM_CT:
+				{
+					for(b=0; b<ctsnum; b++)
+					{
+						if( cts[b] == victim )
+						{
+							cts[b] = cts[--ctsnum]
+							break
+						}
+					}
+				}
 			}
 		}
-		
+
 		if (ctsnum == 1 && tsnum == 1)
 		{
-			new ctname[32], tname[32]
+			if( LastMan )
+			{
+				new ctname[32], tname[32]
+				
+				get_user_name(cts[0], ctname, charsmax(ctname))
+				get_user_name(ts[0], tname, charsmax(tname))
+				
+				set_hudmessage(0, 255, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, -1)
+				ShowSyncHudMsg(0, g_center1_sync, "%s vs. %s", ctname, tname)
+			}
 			
-			get_user_name(cts[0], ctname, 31)
-			get_user_name(ts[0], tname, 31)
-			
-			set_hudmessage(0, 255, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, -1)
-			ShowSyncHudMsg(0, g_center1_sync, "%s vs. %s", ctname, tname)
-			
-			play_sound("misc/maytheforce")
+			if( LastManSound )
+				play_sound(g_lastmansound_duel)
 		}
 		else if (!g_LastAnnounce)
 		{
@@ -416,16 +688,18 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 
 			if (g_LastAnnounce)
 			{
-				new name[32]
-				
-				get_user_name(g_LastAnnounce, name, 31)
-				
-				set_hudmessage(0, 255, 255, -1.0, 0.38, 0, 6.0, 6.0, 0.5, 0.15, -1)
-				ShowSyncHudMsg(0, g_center1_sync, "%s (%d HP) vs. %d %s%s: %L", name, get_user_health(g_LastAnnounce), oposite, g_teamsNames[_team], (oposite == 1) ? "" : "S", LANG_PLAYER, g_LastMessages[random_num(0, 3)])
-				
-				if (!is_user_connecting(g_LastAnnounce))
+				if( LastMan )
 				{
-					client_cmd(g_LastAnnounce, "spk misc/oneandonly")
+					new name[32]
+				
+					get_user_name(g_LastAnnounce, name, charsmax(name))
+				
+					set_hudmessage(0, 255, 255, -1.0, 0.38, 0, 6.0, 6.0, 0.5, 0.15, -1)
+					ShowSyncHudMsg(0, g_center1_sync, "%s (%d HP) vs. %d %s%s: %L", name, get_user_health(g_LastAnnounce), oposite, g_teamsNames[_team], (oposite == 1) ? "" : "S", LANG_PLAYER, g_LastMessages[random_num(0, 3)])
+				}
+				if ( LastManSound && g_connected[g_LastAnnounce] )
+				{
+					client_cmd(g_LastAnnounce, "spk %s", g_lastmansound_1vsothers)
 				}
 			}
 		}
@@ -437,63 +711,74 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 		{
 			new killer_name[32], victim_name[32]
 			
-			get_user_name(killer, killer_name, 31)
-			get_user_name(victim, victim_name, 31)
+			get_user_name(killer, killer_name, charsmax(killer_name))
+			get_user_name(victim, victim_name, charsmax(victim_name))
 			
 			set_hudmessage(255, 100, 100, -1.0, 0.25, 1, 6.0, 6.0, 0.5, 0.15, -1)
 			ShowSyncHudMsg(0, g_he_sync, "%L", LANG_PLAYER, g_KinfeMsg[random_num(0, 3)], killer_name, victim_name)
 		}
 		
 		if (KnifeKillSound)
-			play_sound("misc/humiliation")
+			play_sound(g_knifekillsound)
 	}
 
-	if (wpnindex == CSW_HEGRENADE && (GrenadeKill || GrenadeSuicide))
+	if (wpnindex == CSW_HEGRENADE)
 	{
 		new killer_name[32], victim_name[32]
-		
-		get_user_name(killer, killer_name, 31)
-		get_user_name(victim, victim_name, 31)
-		
-		set_hudmessage(255, 100, 100, -1.0, 0.25, 1, 6.0, 6.0, 0.5, 0.15, -1)
+		if( GrenadeKill || GrenadeSuicide )
+		{
+			get_user_name(killer, killer_name, charsmax(killer_name))
+			get_user_name(victim, victim_name, charsmax(victim_name))
+			
+			set_hudmessage(255, 100, 100, -1.0, 0.25, 1, 6.0, 6.0, 0.5, 0.15, -1)
+		}
 		
 		if (!selfkill)
 		{
 			if (GrenadeKill)
 				ShowSyncHudMsg(0, g_he_sync, "%L", LANG_PLAYER, g_HeMessages[random_num(0, 3)], killer_name, victim_name)
+			if (GrenadeKillSound)
+				play_sound(g_grenadekillsound)
 		}
-		else if (GrenadeSuicide)
-			ShowSyncHudMsg(0, g_he_sync, "%L", LANG_PLAYER, g_SHeMessages[random_num(0, 3)], victim_name)
+		else
+		{
+			if (GrenadeSuicide)
+				ShowSyncHudMsg(0, g_he_sync, "%L", LANG_PLAYER, g_SHeMessages[random_num(0, 3)], victim_name)
+			if (GrenadeSuicideSound)
+				play_sound(g_grenadesuicidesound)
+		}
 	}
 
 	if (headshot && (HeadShotKill || HeadShotKillSound))
 	{
 		if (HeadShotKill && wpnindex)
 		{
-			new killer_name[32], victim_name[32], weapon_name[32], message[256], players[32], pnum
+			new killer_name[32], victim_name[32], weapon_name[32], message[256], players[32], pnum, plr
 			
-			xmod_get_wpnname(wpnindex, weapon_name, 31)
-			get_user_name(killer, killer_name, 31)
-			get_user_name(victim, victim_name, 31)
-			get_players(players, pnum, "c")
+			xmod_get_wpnname(wpnindex, weapon_name, charsmax(weapon_name))
+			get_user_name(killer, killer_name, charsmax(killer_name))
+			get_user_name(victim, victim_name, charsmax(victim_name))
+			get_players(players, pnum, "ch")
 			
 			for (new i = 0; i < pnum; i++)
 			{
-				format(message, sizeof(message)-1, "%L", players[i], g_HeadShots[random_num(0, 6)])
+				plr = players[i]
+				formatex(message, charsmax(message), "%L", plr, g_HeadShots[random_num(0, 6)])
 				
-				replace(message, sizeof(message)-1, "$vn", victim_name)
-				replace(message, sizeof(message)-1, "$wn", weapon_name)
-				replace(message, sizeof(message)-1, "$kn", killer_name)
+				replace(message, charsmax(message), "$vn", victim_name)
+				replace(message, charsmax(message), "$wn", weapon_name)
+				replace(message, charsmax(message), "$kn", killer_name)
 				
 				set_hudmessage(100, 100, 255, -1.0, 0.30, 0, 6.0, 6.0, 0.5, 0.15, -1)
-				ShowSyncHudMsg(players[i], g_announce_sync, "%s", message)
+				ShowSyncHudMsg(plr, g_announce_sync, "%s", message)
 			}
 		}
 		
 		if (HeadShotKillSound)
 		{
-			client_cmd(killer, "spk misc/headshot")
-			client_cmd(victim, "spk misc/headshot")
+			client_cmd(victim, "spk %s", g_hssound_victim)
+			if( victim != killer )
+				client_cmd(killer, "spk %s", g_hssound_killer)
 		}
 	}
 
@@ -507,14 +792,14 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 			{
 				new name[32]
 				
-				get_user_name(killer, name, 31)
+				get_user_name(killer, name, charsmax(name))
 				
 				set_hudmessage(255, 0, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, -1)
 				ShowSyncHudMsg(0, g_center1_sync, "%L", LANG_PLAYER, "DOUBLE_KILL", name)
 			}
 			
 			if (DoubleKillSound)
-				play_sound("misc/doublekill")
+				play_sound(g_doublekillsound)
 		}
 		
 		g_doubleKill = nowtime
@@ -535,25 +820,25 @@ public setTeam(id)
 
 public showStatus(id)
 {
-	if(!is_user_bot(id) && is_user_connected(id) && PlayerName) 
+	if( PlayerName) 
 	{
 		new name[32], pid = read_data(2)
 	
-		get_user_name(pid, name, 31)
+		get_user_name(pid, name, charsmax(name))
 		new color1 = 0, color2 = 0
 	
-		if (get_user_team(pid) == 1)
+		if (get_user_team(pid) == TEAM_T)
 			color1 = 255
 		else
 			color2 = 255
 		
 		if (g_friend[id] == 1)	// friend
 		{
-			new clip, ammo, wpnid = get_user_weapon(pid, clip, ammo)
+			new wpnid = get_user_weapon(pid)
 			new wpnname[32]
 		
 			if (wpnid)
-				xmod_get_wpnname(wpnid, wpnname, 31)
+				xmod_get_wpnname(wpnid, wpnname, charsmax(wpnname))
 		
 			set_hudmessage(color1, 50, color2, -1.0, 0.60, 1, 0.01, 3.0, 0.01, 0.01, -1)
 			ShowSyncHudMsg(id, g_status_sync, "%s -- %d HP / %d AP / %s", name, get_user_health(pid), get_user_armor(pid), wpnname)
@@ -564,37 +849,43 @@ public showStatus(id)
 	}
 }
 
-public eNewRound()
+public Event_HLTV_New_Round()
 {
-	if (read_data(1) == floatround(get_cvar_float("mp_roundtime") * 60.0,floatround_floor))
+	g_c4timer_value = get_pcvar_num( g_pcvar_mp_c4timer )
+	++g_roundCount
+	g_firstBlood = 1
+	g_C4Timer = 0
+	
+	if (RoundCounterSound)
+		play_sound(g_roundcountersound)
+
+	if (RoundCounter)
 	{
-		g_firstBlood = 1
-		g_C4Timer = 0
-		++g_roundCount
+		set_task(0.2, "Delayed_New_Round", TASK_DELAYED_NEW_ROUND)
+	}
+}
+
+public Delayed_New_Round()
+{
+	set_hudmessage(200, 0, 0, -1.0, 0.30, 0, 6.0, 6.0, 0.5, 0.15, -1)
+	ShowSyncHudMsg(0, g_announce_sync, "%L", LANG_PLAYER, "PREPARE_FIGHT", g_roundCount)
+}
+
+public LogEvent_Round_Start()
+{
+	if (KillingStreak)
+	{
+		new appl[32], ppl, i
+		get_players(appl, ppl, "ac")
 		
-		if (RoundCounter)
+		for (new a = 0; a < ppl; ++a)
 		{
-			set_hudmessage(200, 0, 0, -1.0, 0.30, 0, 6.0, 6.0, 0.5, 0.15, -1)
-			ShowSyncHudMsg(0, g_announce_sync, "%L", LANG_PLAYER, "PREPARE_FIGHT", g_roundCount)
-		}
-		
-		if (RoundCounterSound)
-			play_sound("misc/prepare")
-		
-		if (KillingStreak)
-		{
-			new appl[32], ppl, i
-			get_players(appl, ppl, "ac")
+			i = appl[a]
 			
-			for (new a = 0; a < ppl; ++a)
-			{
-				i = appl[a]
-				
-				if (g_streakKills[i][0] >= 2)
-					client_print(i, print_chat, "* %L", i, "KILLED_ROW", g_streakKills[i][0])
-				else if (g_streakKills[i][1] >= 2)
-					client_print(i, print_chat, "* %L", i, "DIED_ROUNDS", g_streakKills[i][1])
-			}
+			if (g_streakKills[i][0] >= 2)
+				client_print(i, print_chat, "* %L", i, "KILLED_ROW", g_streakKills[i][0])
+			else if (g_streakKills[i][1] >= 2)
+				client_print(i, print_chat, "* %L", i, "DIED_ROUNDS", g_streakKills[i][1])
 		}
 	}
 }
@@ -610,7 +901,7 @@ public eEndRound()
 {
 	g_C4Timer = -2
 	g_LastOmg = 0.0
-	remove_task(8038)
+	remove_task(TASK_BOMB_TIMER)
 	g_LastAnnounce = 0
 }
 
@@ -634,7 +925,7 @@ public checkKills(param[])
 			{
 				new name[32]
 				
-				get_user_name(id, name, 31)
+				get_user_name(id, name, charsmax(name))
 				set_hudmessage(255, 0, 100, 0.05, 0.50, 2, 0.02, 6.0, 0.01, 0.1, -1)
 				
 				ShowSyncHudMsg(0, g_left_sync, g_MultiKillMsg[a], name, LANG_PLAYER, "WITH", g_multiKills[id][0], LANG_PLAYER, "KILLS", g_multiKills[id][1], LANG_PLAYER, "HS")
@@ -642,9 +933,7 @@ public checkKills(param[])
 			
 			if (MultiKillSound)
 			{
-				new sound[24]
-				format(sound, 23, "misc/%s", g_Sounds[a])
-				play_sound(sound)
+				play_sound(g_Sounds[a])
 			}
 		}
 		g_multiKills[id] = {0, 0}
@@ -667,7 +956,7 @@ announceEvent(id, message[])
 {
 	new name[32]
 	
-	get_user_name(id, name, 31)
+	get_user_name(id, name, charsmax(name))
 	set_hudmessage(255, 100, 50, -1.0, 0.30, 0, 6.0, 6.0, 0.5, 0.15, -1)
 	ShowSyncHudMsg(0, g_announce_sync, "%L", LANG_PLAYER, message, name)
 }
@@ -699,30 +988,54 @@ public bombTimer()
 {
 	if (--g_C4Timer > 0)
 	{
+		if( BombCountHUD )
+		{
+			new r, g
+			if( g_C4Timer < 10 )
+			{
+				r = 255, g = 0
+			}
+			else
+			{
+				r = (((max(g_c4timer_value - g_C4Timer - 10,0)) * 255000) / (g_c4timer_value - 10)) / 1000
+				g = 255 - r
+			}
+
+			set_hudmessage(r, g, 0, -1.0, 0.75, g_C4Timer <= 10 ? 1 : 0, 0.01, 1.1, 0.001, 0.001, .channel = -1)
+			show_hudmessage(0, "C4: %ds", g_C4Timer)
+		}
 		if (BombCountVoice)
 		{
 			if (g_C4Timer == 30 || g_C4Timer == 20)
 			{
 				new temp[64]
 				
-				num_to_word(g_C4Timer, temp, 63)
-				format(temp, 63, "^"vox/%s seconds until explosion^"", temp)
+				num_to_word(g_C4Timer, temp, charsmax(temp))
+				format(temp, charsmax(temp), "^"vox/%s seconds until explosion^"", temp)
 				play_sound(temp)
 			}
 			else if (g_C4Timer < 11)
 			{
 				new temp[64]
 				
-				num_to_word(g_C4Timer, temp, 63)
-				format(temp, 63, "^"vox/%s^"", temp)
+				num_to_word(g_C4Timer, temp, charsmax(temp))
+				format(temp, charsmax(temp), "^"vox/%s^"", temp)
 				play_sound(temp)
 			}
 		}
-		if (BombCountDef && g_Defusing)
+		if (BombCountDef && g_Defusing && is_user_alive(g_Defusing))
 			client_print(g_Defusing, print_center, "%d", g_C4Timer)
 	}
 	else
-		remove_task(8038)
+		remove_task(TASK_BOMB_TIMER)
+}
+
+public eStopDefuse(id)
+{
+	if( id == g_Defusing )
+	{
+		g_Defusing = 0
+	}
 }
 
 public bomb_planted(planter)
@@ -731,13 +1044,28 @@ public bomb_planted(planter)
 	
 	if (BombPlanted)
 		announceEvent(planter, "SET_UP_BOMB")
+
+	if (BombPlantedSound)
+		play_sound(g_bombplantedsound)
 	
-	g_C4Timer = get_cvar_num("mp_c4timer")
-	set_task(1.0, "bombTimer", 8038, "", 0, "b")
+	g_C4Timer = g_c4timer_value + 1
+	bombTimer()
+	set_task(1.0, "bombTimer", TASK_BOMB_TIMER, "", 0, "b")
 }
 
 public bomb_planting(planter)
 {
+	// obviously we are on a bomb map and detection (engine and fakemeta are not loaded) failed
+	// register now missing event, better than nothing
+	if( !g_bIsBombMap )
+	{
+		g_bIsBombMap = true
+		register_event("StatusIcon", "eGotBomb", "be", "1=1", "1=2", "2=c4")
+		register_event("TextMsg", "eBombPickUp", "bc", "2&#Got_bomb")
+		register_event("TextMsg", "eBombDrop", "bc", "2&#Game_bomb_d")
+		register_event("BarTime", "eStopDefuse", "b", "1=0")
+	}
+
 	if (BombPlanting)
 		announceEvent(planter, "PLANT_BOMB")
 }
@@ -754,25 +1082,30 @@ public bomb_defused(defuser)
 {
 	if (BombDefused)
 		announceEvent(defuser, "DEFUSED_BOMB")
+	if (BombDefusedSound)
+		play_sound(g_bombdefusedsound)
 }
 
 public bomb_explode(planter, defuser)
 {
-	if (BombFailed && defuser)
-		announceEvent(defuser, "FAILED_DEFU")
+	if( defuser )
+	{
+		if (BombFailed)
+			announceEvent(defuser, "FAILED_DEFU")
+		if (BombFailedSound)
+			play_sound(g_bombfailedsound)
+	}
 }
 
-public play_sound(sound[])
+play_sound(sound[])
 {
-	new players[32], pnum
-	get_players(players, pnum, "c")
-	new i
-	
-	for (i = 0; i < pnum; i++)
+	new players[32], pnum, id
+	get_players(players, pnum, "ch")
+
+	for(--pnum; pnum>=0; pnum--)
 	{
-		if (is_user_connecting(players[i]))
-			continue
-		
-		client_cmd(players[i], "spk %s", sound)
+		id = players[pnum]
+		if ( g_connected[id] )
+			client_cmd(id, "spk %s", sound)
 	}
 }

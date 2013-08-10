@@ -72,6 +72,13 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Spec. Rank Info
+ST_BOMB_PLANTED_SOUND = Bomb Planted Sound
+ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
+ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
+ST_BOMB_CD_HUD = Bomb Countdown Hud
+ST_LAST_MAN_SOUND = Last Man Sound
+ST_HE_KILL_SOUND = Grenade Kill Sound
+ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
 [de]
 NO_OPTION = Finde keine Optionen mit dieser Variable (Name "%s")
@@ -147,6 +154,13 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Spec. Rang Info
+ST_BOMB_PLANTED_SOUND = Bombe platziert Sound
+ST_BOMB_DEF_SUCC_SOUND = Bombe entschaerfen erf. Sound
+ST_BOMB_DEF_FAIL_SOUND = Bombe entschaerfen fehl. Sound
+ST_BOMB_CD_HUD = Bomben Countdown Hud
+ST_LAST_MAN_SOUND = Letzter Mann Sound
+ST_HE_KILL_SOUND = Granaten Kill Sound
+ST_HE_SUICIDE_SOUND = Granaten Selbstmord Sound
 
 [sr]
 NO_OPTION = Nepostoji optcija(e) sa tom promenljivom (ime "%s")
@@ -222,6 +236,13 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Spec. Rank Info
+ST_BOMB_PLANTED_SOUND = Bomb Planted Sound
+ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
+ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
+ST_BOMB_CD_HUD = Bomb Countdown Hud
+ST_LAST_MAN_SOUND = Last Man Sound
+ST_HE_KILL_SOUND = Grenade Kill Sound
+ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
 [tr]
 NO_OPTION = O isimde aranan secenek(ler) bulunamadi (isim "%s")
@@ -297,6 +318,13 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Spec. Rank Info
+ST_BOMB_PLANTED_SOUND = Bomb Planted Sound
+ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
+ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
+ST_BOMB_CD_HUD = Bomb Countdown Hud
+ST_LAST_MAN_SOUND = Last Man Sound
+ST_HE_KILL_SOUND = Grenade Kill Sound
+ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
 [fr]
 NO_OPTION = Option(s) introuvable(s) avec cette variable (nom ^"%s^")
@@ -372,6 +400,13 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Info Rang Spectateur
+ST_BOMB_PLANTED_SOUND = Son Bombe Amorcee
+ST_BOMB_DEF_SUCC_SOUND = Son Bombe Desamorcee
+ST_BOMB_DEF_FAIL_SOUND = Son Bombe Non Desamorcee
+ST_BOMB_CD_HUD = Compte a Rebours Bombe Visuel
+ST_LAST_MAN_SOUND = Son Dernier en Vie
+ST_HE_KILL_SOUND = Son Frag a la Grenade
+ST_HE_SUICIDE_SOUND = Son Suicide a la Grenade
 
 [sv]
 NO_OPTION = Kunde inte hitta val(en) med en dylik variabel (namn "%s")
@@ -448,6 +483,13 @@ ST_SAY_TOP15 = Say /top15
 ST_SAY_FLOP15 = Say /flop15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Spec. Rank Info
+ST_BOMB_PLANTED_SOUND = Bomb Planted Sound
+ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
+ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
+ST_BOMB_CD_HUD = Bomb Countdown Hud
+ST_LAST_MAN_SOUND = Last Man Sound
+ST_HE_KILL_SOUND = Grenade Kill Sound
+ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
 [da]
 NO_OPTION = Kunne ikke finde mulighed(er)med en saadan variabel (name "%s")
@@ -523,6 +565,13 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Spec. Rank Info
+ST_BOMB_PLANTED_SOUND = Bomb Planted Sound
+ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
+ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
+ST_BOMB_CD_HUD = Bomb Countdown Hud
+ST_LAST_MAN_SOUND = Last Man Sound
+ST_HE_KILL_SOUND = Grenade Kill Sound
+ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
 [pl]
 NO_OPTION = Nie mozna znalesc opcji z podana zmienna (nazwa "%s")
@@ -598,6 +647,13 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Rankingi w obserwatorze
+ST_BOMB_PLANTED_SOUND = Bomba podlozona - dzwiek
+ST_BOMB_DEF_SUCC_SOUND = Bomba rozbrojona - dzwiek
+ST_BOMB_DEF_FAIL_SOUND = Bomba - nieudane rozbrajanie - dzwiek
+ST_BOMB_CD_HUD = Bomba - odliczanie - Hud
+ST_LAST_MAN_SOUND = Ostatni gracz - dzwiek
+ST_HE_KILL_SOUND = Zabicie granatem - dzwiek
+ST_HE_SUICIDE_SOUND = Samobojstwo granatem - dzwiek
 
 [nl]
 NO_OPTION = Kon opties met zo'n variabele niet vinden (naam "%s")
@@ -673,6 +729,13 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Spec. Rank Info
+ST_BOMB_PLANTED_SOUND = Bomb Planted Sound
+ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
+ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
+ST_BOMB_CD_HUD = Bomb Countdown Hud
+ST_LAST_MAN_SOUND = Last Man Sound
+ST_HE_KILL_SOUND = Grenade Kill Sound
+ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
 [es]
 NO_OPTION = No se encontraron opcion(es) con dicha variable (nombre "%s")
@@ -748,6 +811,13 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Spec. Rank Info
+ST_BOMB_PLANTED_SOUND = Bomb Planted Sound
+ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
+ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
+ST_BOMB_CD_HUD = Bomb Countdown Hud
+ST_LAST_MAN_SOUND = Last Man Sound
+ST_HE_KILL_SOUND = Grenade Kill Sound
+ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
 [bp]
 NO_OPTION = Nao pode achar opcao(oes) com tal(is) variavel(is) (nome "%s")
@@ -823,6 +893,13 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Info de Rank para Espectador
+ST_BOMB_PLANTED_SOUND = Som de Bomba Plantada
+ST_BOMB_DEF_SUCC_SOUND = Som de Bomba Defusada
+ST_BOMB_DEF_FAIL_SOUND = Som de Falha ao Defusar a Bomba
+ST_BOMB_CD_HUD = Contagem da Bomba (Hud)
+ST_LAST_MAN_SOUND = Som de Ultimo Homem
+ST_HE_KILL_SOUND = Som de Frag de Granada
+ST_HE_SUICIDE_SOUND = Som de Suicidio de Granada
 
 [cz]
 NO_OPTION = Nemuzu najit volbu s takovou promennou (jmeno "%s")
@@ -898,6 +975,13 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Spec. Rank Info
+ST_BOMB_PLANTED_SOUND = Bomb Planted Sound
+ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
+ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
+ST_BOMB_CD_HUD = Bomb Countdown Hud
+ST_LAST_MAN_SOUND = Last Man Sound
+ST_HE_KILL_SOUND = Grenade Kill Sound
+ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
 [fi]
 NO_OPTION = Ei loydetty asetuksia tuolla muuttujan nimella (nimi "%s")
@@ -972,6 +1056,13 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Spec. Rank Info
+ST_BOMB_PLANTED_SOUND = Bomb Planted Sound
+ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
+ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
+ST_BOMB_CD_HUD = Bomb Countdown Hud
+ST_LAST_MAN_SOUND = Last Man Sound
+ST_HE_KILL_SOUND = Grenade Kill Sound
+ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
 [ls]
 NO_OPTION = C0|_|ld|\|'t f!|\|d 0pt!0|\|(s) w!th s|_|(h v4r!4bl3 (|\|4m3 "%s")
@@ -1047,6 +1138,13 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Spec. Rank Info
+ST_BOMB_PLANTED_SOUND = Bomb Planted Sound
+ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
+ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
+ST_BOMB_CD_HUD = Bomb Countdown Hud
+ST_LAST_MAN_SOUND = Last Man Sound
+ST_HE_KILL_SOUND = Grenade Kill Sound
+ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
 [bg]
 NO_OPTION = Neuspe6no namerena opcia(i) s takav variable (ime "%s")
@@ -1122,6 +1220,13 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Spec. Rank Info
+ST_BOMB_PLANTED_SOUND = Bomb Planted Sound
+ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
+ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
+ST_BOMB_CD_HUD = Bomb Countdown Hud
+ST_LAST_MAN_SOUND = Last Man Sound
+ST_HE_KILL_SOUND = Grenade Kill Sound
+ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
 [ro]
 NO_OPTION = Couldn't find option(s) with such variable (name "%s")
@@ -1197,6 +1302,13 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Spec. Rank Info
+ST_BOMB_PLANTED_SOUND = Bomb Planted Sound
+ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
+ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
+ST_BOMB_CD_HUD = Bomb Countdown Hud
+ST_LAST_MAN_SOUND = Last Man Sound
+ST_HE_KILL_SOUND = Grenade Kill Sound
+ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
 [hu]
 NO_OPTION = Nem talalhato Funkcio a megadott nevvel (nev "%s") 
@@ -1272,6 +1384,13 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Spec. Rank Info
+ST_BOMB_PLANTED_SOUND = Bomb Planted Sound
+ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
+ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
+ST_BOMB_CD_HUD = Bomb Countdown Hud
+ST_LAST_MAN_SOUND = Last Man Sound
+ST_HE_KILL_SOUND = Grenade Kill Sound
+ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
 [lt]
 NO_OPTION = Negali surasti tokios optijos su tokiu kintamuoju (vardas "%s")
@@ -1347,6 +1466,13 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Spec. Rank Info
+ST_BOMB_PLANTED_SOUND = Bomb Planted Sound
+ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
+ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
+ST_BOMB_CD_HUD = Bomb Countdown Hud
+ST_LAST_MAN_SOUND = Last Man Sound
+ST_HE_KILL_SOUND = Grenade Kill Sound
+ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
 [sk]
 NO_OPTION = Nemozem najst volbu s takouto premennou (meno "%s")
@@ -1422,6 +1548,13 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Spec. Rank Info
+ST_BOMB_PLANTED_SOUND = Bomb Planted Sound
+ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
+ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
+ST_BOMB_CD_HUD = Bomb Countdown Hud
+ST_LAST_MAN_SOUND = Last Man Sound
+ST_HE_KILL_SOUND = Grenade Kill Sound
+ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
 [mk]
 NO_OPTION = Ne postoi opcija so takva vrednost (ime "%s")
@@ -1497,6 +1630,13 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Spec. Rank Info
+ST_BOMB_PLANTED_SOUND = Bomb Planted Sound
+ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
+ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
+ST_BOMB_CD_HUD = Bomb Countdown Hud
+ST_LAST_MAN_SOUND = Last Man Sound
+ST_HE_KILL_SOUND = Grenade Kill Sound
+ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
 [hr]
 NO_OPTION = Nepostoji opcija(e) sa tom promjenljivom (ime "%s")
@@ -1572,6 +1712,13 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Spec. Rank Info
+ST_BOMB_PLANTED_SOUND = Bomb Planted Sound
+ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
+ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
+ST_BOMB_CD_HUD = Bomb Countdown Hud
+ST_LAST_MAN_SOUND = Last Man Sound
+ST_HE_KILL_SOUND = Grenade Kill Sound
+ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
 [bs]
 NO_OPTION = Nepostoji opcija(e) sa tom promijenjivom (ime "%s")
@@ -1647,4 +1794,11 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Spec. Rank Inf
+ST_BOMB_PLANTED_SOUND = Bomb Planted Sound
+ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
+ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
+ST_BOMB_CD_HUD = Bomb Countdown Hud
+ST_LAST_MAN_SOUND = Last Man Sound
+ST_HE_KILL_SOUND = Grenade Kill Sound
+ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 

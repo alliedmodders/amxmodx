@@ -584,7 +584,7 @@ static cell AMX_NATIVE_CALL ArraySort(AMX* amx, cell* params)
 int SortArrayListExCell(const void *itema, const void *itemb)
 {
 	ArraySort_t *Info = ArraySortStack.front();
-	cell vala, valb;
+	cell vala = 0, valb = 0;
 
 	Info->vec->GetCell(*((int *)itema), &vala);
 	Info->vec->GetCell(*((int *)itemb), &valb);

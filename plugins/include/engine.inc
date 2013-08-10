@@ -241,4 +241,19 @@ native is_visible(entity, target);
 //Added at twistedeuphoria's request, see funcwiki for details
 native trace_forward(const Float:start[3], const Float:angle[3], Float:give, ignoreEnt, &Float:hitX, &Float:hitY, &Float:shortestDistance, &Float:shortestDistLow, &Float:shortestDistHigh);
 
+/**
+ * Sets rendering of an entity, including player entities.
+ * This is basically the same as set_rendering() stock.
+ * 
+ * @param index		The entity index to apply the render.
+ * @param fx		The render effect. See kRenderFx* constants.
+ * @param r			The amount of red.
+ * @param g			The amount of green.
+ * @param b			The amount of blue.
+ * @param render	The render mode. See kRender* constants.
+ * @param amount	The render thickness generally. It can have others meaning depending effect/mode.
+ * @noreturn
+ */
+native set_ent_rendering(index, fx = kRenderFxNone, r = 0, g = 0, b = 0, render = kRenderNormal, amount = 0);
+
 #include <engine_stocks>

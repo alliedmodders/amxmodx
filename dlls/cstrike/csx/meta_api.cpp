@@ -112,9 +112,10 @@ const char* get_localinfo( const char* name , const char* def = 0 )
 	return b;
 }
 
-void ClientKill(edict_t *pEntity){
+void ClientKill_Post(edict_t *pEntity)
+{
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-	if ( !pPlayer->IsAlive())
+	if ( pPlayer->IsAlive())
 		RETURN_META(MRES_IGNORED);
 
 	MF_ExecuteForward( iFDamage,static_cast<cell>(pPlayer->index), static_cast<cell>(pPlayer->index) , 

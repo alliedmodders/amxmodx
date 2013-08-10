@@ -17,6 +17,7 @@
  * intermission and many many others messages.
  * See HL SDK for more examples. */
 native message_begin(dest, msg_type, const origin[3] = {0,0,0}, player = 0);
+native message_begin_f(dest, msg_type, const Float:origin[3] = {0.0,0.0,0.0}, player = 0);
 native message_end();
 native write_byte(x);
 native write_char(x);
@@ -24,7 +25,9 @@ native write_short(x);
 native write_long(x);
 native write_entity(x);
 native write_angle(x);
+native write_angle_f(Float:x);
 native write_coord(x);
+native write_coord_f(Float:x);
 native write_string(const x[]);
 
 /* These are the same as above, except that the messages sent
@@ -36,6 +39,7 @@ native write_string(const x[]);
  * NOTE! These natives are experimental.
  */
 native emessage_begin(dest, msg_type, const origin[3] = {0,0,0}, player = 0);
+native emessage_begin_f(dest, msg_type, const Float:origin[3] = {0.0,0.0,0.0}, player = 0);
 native emessage_end();
 native ewrite_byte(x);
 native ewrite_char(x);
@@ -43,7 +47,9 @@ native ewrite_short(x);
 native ewrite_long(x);
 native ewrite_entity(x);
 native ewrite_angle(x);
+native ewrite_angle_f(Float:x);
 native ewrite_coord(x);
+native ewrite_coord_f(Float:x);
 native ewrite_string(const x[]);
 
 /* Sets/Gets what engine messages are blocked. */

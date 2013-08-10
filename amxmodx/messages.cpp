@@ -362,7 +362,7 @@ void C_MessageEnd(void)
 	RETURN_META(MRES_IGNORED);
 }
 
-static cell AMX_NATIVE_CALL message_begin(AMX *amx, cell *params) /* 4 param */
+static cell _message_begin(AMX *amx, cell *params, bool useFloat) /* 4 param */
 {
 	int numparam = *params / sizeof(cell);
 	float vecOrigin[3];
@@ -392,9 +392,16 @@ static cell AMX_NATIVE_CALL message_begin(AMX *amx, cell *params) /* 4 param */
 
 		cpOrigin = get_amxaddr(amx, params[3]);
 
-		vecOrigin[0] = static_cast<float>(*cpOrigin);
-		vecOrigin[1] = static_cast<float>(*(cpOrigin + 1));
-		vecOrigin[2] = static_cast<float>(*(cpOrigin + 2));
+		if (!useFloat)
+		{
+			vecOrigin[0] = static_cast<float>(*cpOrigin);
+			vecOrigin[1] = static_cast<float>(*(cpOrigin + 1));
+			vecOrigin[2] = static_cast<float>(*(cpOrigin + 2));
+		} else {
+			vecOrigin[0] = amx_ctof(*cpOrigin);
+			vecOrigin[1] = amx_ctof(*(cpOrigin + 1));
+			vecOrigin[2] = amx_ctof(*(cpOrigin + 2));
+		}
 
 		MESSAGE_BEGIN(params[1], params[2], vecOrigin);
 
@@ -412,6 +419,16 @@ static cell AMX_NATIVE_CALL message_begin(AMX *amx, cell *params) /* 4 param */
 	}
 
 	return 1;
+}
+
+static cell AMX_NATIVE_CALL message_begin(AMX *amx, cell *params) /* 4 param */
+{
+	return _message_begin(amx, params, false);
+}
+
+static cell AMX_NATIVE_CALL message_begin_f(AMX *amx, cell *params) /* 4 param */
+{
+	return _message_begin(amx, params, true);
 }
 
 static cell AMX_NATIVE_CALL message_end(AMX *amx, cell *params)
@@ -456,9 +473,21 @@ static cell AMX_NATIVE_CALL write_angle(AMX *amx, cell *params) /* 1 param */
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL write_angle_f(AMX *amx, cell *params) /* 1 param */
+{
+	WRITE_ANGLE(amx_ctof(params[1]));
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL write_coord(AMX *amx, cell *params) /* 1 param */
 {
 	WRITE_COORD(static_cast<float>(params[1]));
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL write_coord_f(AMX *amx, cell *params) /* 1 param */
+{
+	WRITE_COORD(amx_ctof(params[1]));
 	return 1;
 }
 
@@ -681,7 +710,7 @@ static cell AMX_NATIVE_CALL get_msg_origin(AMX *amx, cell *params)
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL emessage_begin(AMX *amx, cell *params) /* 4 param */
+static cell _emessage_begin(AMX *amx, cell *params, bool useFloat)
 {
 	int numparam = *params / sizeof(cell);
 	float vecOrigin[3];
@@ -711,9 +740,16 @@ static cell AMX_NATIVE_CALL emessage_begin(AMX *amx, cell *params) /* 4 param */
 
 		cpOrigin = get_amxaddr(amx, params[3]);
 
-		vecOrigin[0] = static_cast<float>(*cpOrigin);
-		vecOrigin[1] = static_cast<float>(*(cpOrigin + 1));
-		vecOrigin[2] = static_cast<float>(*(cpOrigin + 2));
+		if (!useFloat)
+		{
+			vecOrigin[0] = static_cast<float>(*cpOrigin);
+			vecOrigin[1] = static_cast<float>(*(cpOrigin + 1));
+			vecOrigin[2] = static_cast<float>(*(cpOrigin + 2));
+		} else {
+			vecOrigin[0] = amx_ctof(*cpOrigin);
+			vecOrigin[1] = amx_ctof(*(cpOrigin + 1));
+			vecOrigin[2] = amx_ctof(*(cpOrigin + 2));
+		}
 
 		g_pEngTable->pfnMessageBegin(params[1], params[2], vecOrigin, NULL);
 
@@ -731,6 +767,16 @@ static cell AMX_NATIVE_CALL emessage_begin(AMX *amx, cell *params) /* 4 param */
 	}
 
 	return 1;
+}
+
+static cell AMX_NATIVE_CALL emessage_begin(AMX *amx, cell *params) /* 4 param */
+{
+	return _emessage_begin(amx, params, false);
+}
+
+static cell AMX_NATIVE_CALL emessage_begin_f(AMX *amx, cell *params) /* 4 param */
+{
+	return _emessage_begin(amx, params, true);
 }
 
 static cell AMX_NATIVE_CALL emessage_end(AMX *amx, cell *params)
@@ -775,9 +821,21 @@ static cell AMX_NATIVE_CALL ewrite_angle(AMX *amx, cell *params) /* 1 param */
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL ewrite_angle_f(AMX *amx, cell *params) /* 1 param */
+{
+	g_pEngTable->pfnWriteAngle(amx_ctof(params[1]));
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL ewrite_coord(AMX *amx, cell *params) /* 1 param */
 {
 	g_pEngTable->pfnWriteCoord(static_cast<float>(params[1]));
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL ewrite_coord_f(AMX *amx, cell *params) /* 1 param */
+{
+	g_pEngTable->pfnWriteCoord(amx_ctof(params[1]));
 	return 1;
 }
 
@@ -792,12 +850,15 @@ static cell AMX_NATIVE_CALL ewrite_string(AMX *amx, cell *params) /* 1 param */
 AMX_NATIVE_INFO msg_Natives[] =
 {
 	{"message_begin",		message_begin},
+	{"message_begin_f",		message_begin_f},
 	{"message_end",			message_end},
-
+	
 	{"write_angle",			write_angle},
+	{"write_angle_f",		write_angle_f},
 	{"write_byte",			write_byte},
 	{"write_char",			write_char},
 	{"write_coord",			write_coord},
+	{"write_coord_f",		write_coord_f},
 	{"write_entity",		write_entity},
 	{"write_long",			write_long},
 	{"write_short",			write_short},
@@ -818,14 +879,17 @@ AMX_NATIVE_INFO msg_Natives[] =
 	{"get_msg_arg_string",	get_msg_arg_string},
 	{"set_msg_arg_string",	set_msg_arg_string},
 	{"get_msg_origin",		get_msg_origin},
-
+	
 	{"emessage_begin",		emessage_begin},
+	{"emessage_begin_f",	emessage_begin_f},
 	{"emessage_end",		emessage_end},
-
+	
 	{"ewrite_angle",		ewrite_angle},
+	{"ewrite_angle_f",		ewrite_angle_f},
 	{"ewrite_byte",			ewrite_byte},
 	{"ewrite_char",			ewrite_char},
 	{"ewrite_coord",		ewrite_coord},
+	{"ewrite_coord_f",		ewrite_coord_f},
 	{"ewrite_entity",		ewrite_entity},
 	{"ewrite_long",			ewrite_long},
 	{"ewrite_short",		ewrite_short},

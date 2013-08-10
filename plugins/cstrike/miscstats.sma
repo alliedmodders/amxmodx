@@ -36,10 +36,6 @@
 #include <amxmisc>
 #include <csx>
 
-#define AMXMODX_NOAUTOLOAD
-#include <engine>
-#include <fakemeta>
-
 public MultiKill
 public MultiKillSound
 public BombPlanting
@@ -109,8 +105,6 @@ const TEAM_T = 1
 const TEAM_CT = 2
 
 new g_connected[33]
-
-new g_bIsBombMap = false
 
 new g_MultiKillMsg[7][] =
 {
@@ -224,12 +218,8 @@ public plugin_init()
 	register_event("StatusValue", "hideStatus", "bef", "1=1", "2=0")
 
 	new mapname[32], n = get_mapname(mapname, charsmax(mapname))
-	new CLASSNAME[] = "classname", INFO_BOMB_TARGET[] = "info_bomb_target", FUNC_BOMB_TARGET[] = "func_bomb_target"
-	if(	(	LibraryExists("engine", LibType_Library) && ( find_ent_by_class(0, INFO_BOMB_TARGET) > 0 || find_ent_by_class(0, FUNC_BOMB_TARGET) > 0 )	)
-	||	(	LibraryExists("fakemeta", LibType_Library) && ( engfunc(EngFunc_FindEntityByString, 0, CLASSNAME, INFO_BOMB_TARGET) > 0 || engfunc(EngFunc_FindEntityByString, 0, CLASSNAME, FUNC_BOMB_TARGET) > 0 )	)
-	||	(equali(mapname, "de_", 3) || equali(mapname, "csde_", 5))	)
+	if ((get_map_objectives() & MapObjective_Bomb) || (equali(mapname, "de_", 3) || equali(mapname, "csde_", 5)))
 	{
-		g_bIsBombMap = true
 		register_event("StatusIcon", "eGotBomb", "be", "1=1", "1=2", "2=c4")
 		register_event("TextMsg", "eBombPickUp", "bc", "2&#Got_bomb")
 		register_event("TextMsg", "eBombDrop", "bc", "2&#Game_bomb_d")
@@ -426,29 +416,6 @@ copy_sound(dest[], len, src[])
 	{
 		dest[n-4] = EOS
 	}
-}
-
-public plugin_natives()
-{
-	set_module_filter("module_filter")
-	set_native_filter("native_filter")
-}
-
-public module_filter(const module[])
-{
-	if (equali(module, "engine")
-	||	equali(module, "fakemeta"))
-		return PLUGIN_HANDLED
-	
-	return PLUGIN_CONTINUE
-}
-
-public native_filter(const name[], index, trap)
-{
-	if (!trap)
-		return PLUGIN_HANDLED
-		
-	return PLUGIN_CONTINUE
 }
 
 public plugin_cfg()
@@ -1055,17 +1022,6 @@ public bomb_planted(planter)
 
 public bomb_planting(planter)
 {
-	// obviously we are on a bomb map and detection (engine and fakemeta are not loaded) failed
-	// register now missing event, better than nothing
-	if( !g_bIsBombMap )
-	{
-		g_bIsBombMap = true
-		register_event("StatusIcon", "eGotBomb", "be", "1=1", "1=2", "2=c4")
-		register_event("TextMsg", "eBombPickUp", "bc", "2&#Got_bomb")
-		register_event("TextMsg", "eBombDrop", "bc", "2&#Game_bomb_d")
-		register_event("BarTime", "eStopDefuse", "b", "1=0")
-	}
-
 	if (BombPlanting)
 		announceEvent(planter, "PLANT_BOMB")
 }

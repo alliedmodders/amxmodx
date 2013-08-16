@@ -393,6 +393,14 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 		if ((buf[0] == ';') || (buf[0] == '/' && buf[1] == '/'))
 			continue;
 
+		/* Check for BOM markings, which is only relevant on the first line.
+		* Not worth it, but it could be moved out of the loop.
+		*/
+		if (line == 1 && (buf[0] == (char)0xEF && buf[1] == (char)0xBB && buf[2] == (char)0xBF))
+		{
+			buf.erase(0, 3);
+		}
+
 		if (buf[0] == '[' && buf.size() >= 3)
 		{
 			if (multiline)

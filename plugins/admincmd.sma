@@ -47,6 +47,7 @@ new g_addCvar[] = "amx_cvar add %s"
 new pausable;
 new rcon_password;
 new timelimit;
+new p_amx_tempban_maxtime;
 
 // Old connection queue
 new g_Names[OLD_CONNECTION_QUEUE][32];
@@ -55,6 +56,8 @@ new g_IPs[OLD_CONNECTION_QUEUE][32];
 new g_Access[OLD_CONNECTION_QUEUE];
 new g_Tracker;
 new g_Size;
+
+public Trie:g_tempBans
 
 stock InsertInfo(id)
 {
@@ -161,10 +164,10 @@ public plugin_init()
 	
 	
 	register_concmd("amx_kick", "cmdKick", ADMIN_KICK, "<name or #userid> [reason]")
-	register_concmd("amx_ban", "cmdBan", ADMIN_BAN, "<name or #userid> <minutes> [reason]")
-	register_concmd("amx_banip", "cmdBanIP", ADMIN_BAN, "<name or #userid> <minutes> [reason]")
+	register_concmd("amx_ban", "cmdBan", ADMIN_BAN|ADMIN_BAN_TEMP, "<name or #userid> <minutes> [reason]")
+	register_concmd("amx_banip", "cmdBanIP", ADMIN_BAN|ADMIN_BAN_TEMP, "<name or #userid> <minutes> [reason]")
 	register_concmd("amx_addban", "cmdAddBan", ADMIN_BAN, "<^"authid^" or ip> <minutes> [reason]")
-	register_concmd("amx_unban", "cmdUnban", ADMIN_BAN, "<^"authid^" or ip>")
+	register_concmd("amx_unban", "cmdUnban", ADMIN_BAN|ADMIN_BAN_TEMP, "<^"authid^" or ip>")
 	register_concmd("amx_slay", "cmdSlay", ADMIN_SLAY, "<name or #userid>")
 	register_concmd("amx_slap", "cmdSlap", ADMIN_SLAY, "<name or #userid> [power]")
 	register_concmd("amx_leave", "cmdLeave", ADMIN_KICK, "<tag> [tag] [tag] [tag]")
@@ -186,7 +189,9 @@ public plugin_init()
 	rcon_password=get_cvar_pointer("rcon_password");
 	pausable=get_cvar_pointer("pausable");
 	timelimit=get_cvar_pointer( "mp_timelimit" );
-	
+	p_amx_tempban_maxtime = register_cvar("amx_tempban_maxtime", "4320");
+
+	g_tempBans = TrieCreate();
 }
 
 public plugin_cfg()
@@ -205,6 +210,7 @@ public plugin_cfg()
 	server_cmd(g_addCvar, "amx_sql_pass");
 	server_cmd(g_addCvar, "amx_sql_db");
 	server_cmd(g_addCvar, "amx_sql_type");
+	server_cmd(g_addCvar, "amx_tempban_maxtime");
 
 }
 
@@ -257,6 +263,18 @@ public cmdUnban(id, level, cid)
 	new arg[32], authid[32], name[32]
 	
 	read_argv(1, arg, charsmax(arg))
+
+	get_user_authid(id, authid, charsmax(authid))
+
+	if( ~get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON ) )
+	{
+		new storedAdminAuth[32]
+		if( !TrieGetString(g_tempBans, arg, storedAdminAuth, charsmax(storedAdminAuth)) || !equal(storedAdminAuth, authid) )
+		{
+			console_print(id, "%L", id, "NO_ACC_COM"); // may be someone wants to create a new sentence and to translate it in all languages ?
+			return PLUGIN_HANDLED;
+		}
+	}
 	
 	if (contain(arg, ".") != -1)
 	{
@@ -271,7 +289,6 @@ public cmdUnban(id, level, cid)
 
 	show_activity_key("ADMIN_UNBAN_1", "ADMIN_UNBAN_2", name, arg);
 
-	get_user_authid(id, authid, charsmax(authid))
 	log_amx("Cmd: ^"%s<%d><%s><>^" unban ^"%s^"", name, get_user_userid(id), authid, arg)
 	
 	return PLUGIN_HANDLED
@@ -401,6 +418,7 @@ public cmdAddBan(id, level, cid)
 	show_activity_key("ADMIN_ADDBAN_1", "ADMIN_ADDBAN_2", name, arg);
 
 	get_user_authid(id, authid, charsmax(authid))
+	TrieSetString(g_tempBans, arg, authid)
 	log_amx("Cmd: ^"%s<%d><%s><>^" ban ^"%s^" (minutes ^"%s^") (reason ^"%s^")", name, get_user_userid(id), authid, arg, minutes, reason)
 
 	return PLUGIN_HANDLED
@@ -422,6 +440,18 @@ public cmdBan(id, level, cid)
 	if (!player)
 		return PLUGIN_HANDLED
 
+	new nNum = str_to_num(minutes)
+	if( nNum < 0 ) // since negative values result in permanent bans
+	{
+		nNum = 0;
+		minutes = "0";
+	}
+	if( ~get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON ) && (nNum <= 0 || nNum > get_pcvar_num(p_amx_tempban_maxtime)) )
+	{
+		console_print(id, "%L", id, "NO_ACC_COM"); // may be someone wants to create a new sentence and to translate it in all languages ?
+		return PLUGIN_HANDLED
+	}
+
 	new authid[32], name2[32], authid2[32], name[32]
 	new userid2 = get_user_userid(player)
 
@@ -431,8 +461,10 @@ public cmdBan(id, level, cid)
 	get_user_name(id, name, charsmax(name))
 	
 	log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%s^") (reason ^"%s^")", name, get_user_userid(id), authid, name2, userid2, authid2, minutes, reason)
+
+	TrieSetString(g_tempBans, authid2, authid); // store all bans in case a permanent ban would override a temporary one.
 	
-	new temp[64], banned[16], nNum = str_to_num(minutes)
+	new temp[64], banned[16]
 	if (nNum)
 		formatex(temp, charsmax(temp), "%L", player, "FOR_MIN", minutes)
 	else
@@ -492,10 +524,17 @@ public cmdBanIP(id, level, cid)
 	new player = cmd_target(id, target, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_NO_BOTS | CMDTARGET_ALLOW_SELF)
 	
 	if (!player)
+		return PLUGIN_HANDLED
+
+	new nNum = str_to_num(minutes)
+	if( nNum < 0 ) // since negative values result in permanent bans
 	{
-		// why is this here?
-		// no idea
-		// player = cmd_target(id, target, 9);
+		nNum = 0;
+		minutes = "0";
+	}
+	if( ~get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON ) && (nNum <= 0 || nNum > get_pcvar_num(p_amx_tempban_maxtime)) )
+	{
+		console_print(id, "%L", id, "NO_ACC_COM"); // may be someone wants to create a new sentence and to translate it in all languages ?
 		return PLUGIN_HANDLED
 	}
 	
@@ -509,7 +548,9 @@ public cmdBanIP(id, level, cid)
 	
 	log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%s^") (reason ^"%s^")", name, get_user_userid(id), authid, name2, userid2, authid2, minutes, reason)
 
-	new temp[64], banned[16], nNum = str_to_num(minutes)
+	TrieSetString(g_tempBans, authid2, authid);
+
+	new temp[64], banned[16]
 	if (nNum)
 		formatex(temp, charsmax(temp), "%L", player, "FOR_MIN", minutes)
 	else

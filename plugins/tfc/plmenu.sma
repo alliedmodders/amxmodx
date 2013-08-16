@@ -56,6 +56,9 @@ new g_coloredMenus
 
 new g_teamNames[6][] = {"", "Blue", "Red", "Yellow", "Green", "Spectator"}
 
+new p_amx_tempban_maxtime;
+new Trie:g_tempBans;
+
 public plugin_init()
 {
 	register_plugin("Players Menu",AMXX_VERSION_STR,"AMXX Dev Team")
@@ -65,7 +68,7 @@ public plugin_init()
 	register_dictionary("admincmd.txt")
 
 	register_clcmd("amx_kickmenu","cmdKickMenu",ADMIN_KICK,"- displays kick menu")
-	register_clcmd("amx_banmenu","cmdBanMenu",ADMIN_BAN,"- displays ban menu")
+	register_clcmd("amx_banmenu","cmdBanMenu",ADMIN_BAN|ADMIN_BAN_TEMP,"- displays ban menu")
 	register_clcmd("amx_slapmenu","cmdSlapMenu",ADMIN_SLAY,"- displays slap/slay menu")
 	register_clcmd("amx_teammenu","cmdTeamMenu",ADMIN_LEVEL_A,"- displays team menu")
 	register_clcmd("amx_clcmdmenu","cmdClcmdMenu",ADMIN_LEVEL_A,"- displays client cmds menu")
@@ -82,6 +85,22 @@ public plugin_init()
 	get_configsdir(clcmds_ini_file, 63)
 	format(clcmds_ini_file, 63, "%s/clcmds.ini", clcmds_ini_file)
 	load_settings(clcmds_ini_file)
+}
+
+public plugin_cfg()
+{
+	new x = get_xvar_id("g_tempBans")
+	if( x )
+	{
+		g_tempBans = Trie:get_xvar_num(x)
+	}
+	new amx_tempban_maxtime[] = "amx_tempban_maxtime";
+	p_amx_tempban_maxtime = get_cvar_pointer(amx_tempban_maxtime);
+	if( !p_amx_tempban_maxtime )
+	{
+		p_amx_tempban_maxtime = register_cvar(amx_tempban_maxtime, "4320");
+		server_cmd("amx_cvar add %s", amx_tempban_maxtime);
+	}
 }
 
 /* Ban menu */
@@ -110,6 +129,13 @@ public actionBanMenu(id, key)
 		
 		default:
 		{
+			new banTime = g_menuSettings[id]
+			if( ~get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON ) && (banTime <= 0 || banTime > get_pcvar_num(p_amx_tempban_maxtime)) )
+			{
+				console_print(id, "%L", id, "NO_ACC_COM");
+				displayBanMenu(id, g_menuPosition[id])
+				return PLUGIN_HANDLED
+			}
 			new player = g_menuPlayers[id][g_menuPosition[id] * 7 + key]
       
 			new name[32], name2[32], authid[32], authid2[32]
@@ -156,9 +182,19 @@ public actionBanMenu(id, key)
 				new ipa[32]
 				get_user_ip(player, ipa, 31, 1)
 				server_cmd("addip %d %s;writeip", g_menuSettings[id], ipa)
+				if( g_tempBans )
+				{
+					TrieSetString(g_tempBans, ipa, authid)
+				}
 			}
 			else
+			{
 				server_cmd("banid %d #%d kick;writeid", g_menuSettings[id], userid2)
+				if( g_tempBans )
+				{
+					TrieSetString(g_tempBans, authid2, authid)
+				}
+			}
 
 			server_exec()
 

@@ -63,6 +63,9 @@ new g_TeamCommands[4][40];
 new g_PrettyTeamNames[4][32];
 new g_AbbreviatedTeamNames[4][10];
 
+new p_amx_tempban_maxtime;
+new Trie:g_tempBans;
+
 // This function failsafes to the readyroom
 stock GetNSTeam(id, abbreviation[], abrsize)
 {
@@ -126,7 +129,7 @@ public plugin_init()
 	register_dictionary("plmenu.txt")
 
 	register_clcmd("amx_kickmenu", "cmdKickMenu", ADMIN_KICK, "- displays kick menu")
-	register_clcmd("amx_banmenu", "cmdBanMenu", ADMIN_BAN, "- displays ban menu")
+	register_clcmd("amx_banmenu", "cmdBanMenu", ADMIN_BAN|ADMIN_BAN_TEMP, "- displays ban menu")
 	register_clcmd("amx_slapmenu", "cmdSlapMenu", ADMIN_SLAY, "- displays slap/slay menu")
 	register_clcmd("amx_teammenu", "cmdTeamMenu", ADMIN_LEVEL_A, "- displays team menu")
 	register_clcmd("amx_clcmdmenu", "cmdClcmdMenu", ADMIN_LEVEL_A, "- displays client cmds menu")
@@ -226,6 +229,23 @@ public plugin_init()
 	}
 
 }
+
+public plugin_cfg()
+{
+	new x = get_xvar_id("g_tempBans")
+	if( x )
+	{
+		g_tempBans = Trie:get_xvar_num(x)
+	}
+	new amx_tempban_maxtime[] = "amx_tempban_maxtime";
+	p_amx_tempban_maxtime = get_cvar_pointer(amx_tempban_maxtime);
+	if( !p_amx_tempban_maxtime )
+	{
+		p_amx_tempban_maxtime = register_cvar(amx_tempban_maxtime, "4320");
+		server_cmd("amx_cvar add %s", amx_tempban_maxtime);
+	}
+}
+
 public plmenu_setbantimes()
 {
 	new buff[32];
@@ -298,6 +318,13 @@ public actionBanMenu(id, key)
 		case 9: displayBanMenu(id, --g_menuPosition[id])
 		default:
 		{
+			new banTime = g_menuSettings[id]
+			if( ~get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON ) && (banTime <= 0 || banTime > get_pcvar_num(p_amx_tempban_maxtime)) )
+			{
+				console_print(id, "%L", id, "NO_ACC_COM");
+				displayBanMenu(id, g_menuPosition[id])
+				return PLUGIN_HANDLED
+			}
 			new player = g_menuPlayers[id][g_menuPosition[id] * 7 + key]
 			new name[32], name2[32], authid[32], authid2[32]
 		
@@ -307,10 +334,10 @@ public actionBanMenu(id, key)
 			get_user_name(id, name, 31)
 			
 			new userid2 = get_user_userid(player)
+			
+			log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%d^")", name, get_user_userid(id), authid, name2, userid2, authid2, banTime)
 
-			log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%d^")", name, get_user_userid(id), authid, name2, userid2, authid2, g_menuSettings[id])
-
-			if (g_menuSettings[id]==0) // permanent
+			if ( !banTime ) // permanent
 			{
 				new maxpl = get_maxplayers();
 				for (new i = 1; i <= maxpl; i++)
@@ -321,7 +348,7 @@ public actionBanMenu(id, key)
 			else
 			{
 				new tempTime[32];
-				formatex(tempTime,sizeof(tempTime)-1,"%d",g_menuSettings[id]);
+				formatex(tempTime,sizeof(tempTime)-1,"%d",banTime);
 				new maxpl = get_maxplayers();
 				for (new i = 1; i <= maxpl; i++)
 				{
@@ -340,11 +367,19 @@ public actionBanMenu(id, key)
 				new ipa[32]
 				get_user_ip(player, ipa, 31, 1)
 				
-				server_cmd("addip %d %s;writeip", g_menuSettings[id], ipa)
+				server_cmd("addip %d %s;writeip", banTime, ipa)
+				if( g_tempBans )
+				{
+					TrieSetString(g_tempBans, ipa, authid)
+				}
 			}
 			else
 			{
-				server_cmd("banid %d #%d kick;writeid", g_menuSettings[id], userid2)
+				server_cmd("banid %d #%d kick;writeid", banTime, userid2)
+				if( g_tempBans )
+				{
+					TrieSetString(g_tempBans, authid2, authid)
+				}
 			}
 
 			server_exec()

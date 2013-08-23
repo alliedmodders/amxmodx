@@ -154,9 +154,10 @@ public plugin_init()
 	
 	g_slapsettings = ArrayCreate();
 	// Old default values
-	ArrayPushCell(g_slapsettings, 0); // First option is ignored - it is slay
+	ArrayPushCell(g_slapsettings, 0); // slap 0 damage
 	ArrayPushCell(g_slapsettings, 1);
 	ArrayPushCell(g_slapsettings, 5);
+	ArrayPushCell(g_slapsettings, 0); // Last option is ignored - it is slay
 	
 	
 	register_srvcmd("amx_plmenu_bantimes", "plmenu_setbantimes");
@@ -278,14 +279,12 @@ public plmenu_setslapdmg()
 	if (args <= 1)
 	{
 		server_print("usage: amx_plmenu_slapdmg <dmg1> [dmg2] [dmg3] ...");
-		server_print("   slay is automatically set for the first value.");
+		server_print("   slay is automatically set for the last value.");
 		
 		return;
 	}
 	
 	ArrayClear(g_slapsettings);
-	
-	ArrayPushCell(g_slapsettings, 0); // compensate for slay
 	
 	for (new i = 1; i < args; i++)
 	{
@@ -294,7 +293,7 @@ public plmenu_setslapdmg()
 		ArrayPushCell(g_slapsettings, str_to_num(buff));
 		
 	}
-	
+	ArrayPushCell(g_slapsettings, 0); // compensate for slay
 }
 
 /* Ban menu */
@@ -509,22 +508,22 @@ public actionSlapMenu(id, key)
 			get_user_authid(player, authid2, 31)
 			get_user_name(id, name, 31)
 
-			if (g_menuOption[id])
+			new aSize = ArraySize(g_slapsettings);
+			if (aSize > 1 && g_menuOption[id] < aSize -1)
 			{
 				log_amx("Cmd: ^"%s<%d><%s><>^" slap with %d damage ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, g_menuSettings[id], name2, get_user_userid(player), authid2)
-
+				
 				show_activity_key("ADMIN_SLAP_1", "ADMIN_SLAP_2", name, name2, g_menuSettings[id]);
-			} else {
+				
+				user_slap(player, (get_user_health(player) > g_menuSettings[id]) ? g_menuSettings[id] : 0)
+			} else { // aSize == 1 or g_menuOption[id] == aSize - 1 // last option
 				log_amx("Cmd: ^"%s<%d><%s><>^" slay ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2)
 				
 				show_activity_key("ADMIN_SLAY_1", "ADMIN_SLAY_2", name, name2);
-			}
-
-			if (g_menuOption[id])
-				user_slap(player, (get_user_health(player) > g_menuSettings[id]) ? g_menuSettings[id] : 0)
-			else
+				
 				user_kill(player)
-
+			}
+			
 			displaySlapMenu(id, g_menuPosition[id])
 		}
 	}
@@ -577,10 +576,10 @@ displaySlapMenu(id, pos)
 		}
 	}
 
-	if (g_menuOption[id])
-		len += format(menuBody[len], 511-len, "^n8. %L^n", id, "SLAP_WITH_DMG", g_menuSettings[id])
-	else
+	if (g_menuOption[id] == ArraySize(g_slapsettings) - 1)
 		len += format(menuBody[len], 511-len, "^n8. %L^n", id, "SLAY")
+	else
+		len += format(menuBody[len], 511-len, "^n8. %L^n", id, "SLAP_WITH_DMG", g_menuSettings[id])
 
 	if (end != g_menuPlayersNum[id])
 	{

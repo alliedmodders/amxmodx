@@ -173,10 +173,14 @@ stock bool:operator<=(oper1, Float:oper2)
 stock bool:operator!(Float:oper)
 	return (_:oper & ((-1)/2)) == 0;		/* -1 = all bits to 1; /2 = remove most significant bit (sign)
 							works on both 32bit and 64bit systems; no constant required */
+stock Float:operator=(oper)
+	return float(oper);
+	
 /* forbidden operations */
 forward operator%(Float:oper1, Float:oper2);
 forward operator%(Float:oper1, oper2);
 forward operator%(oper1, Float:oper2);
+forward operator=(Float:oper);
 
 
 stock Float:floatmin(Float:ValueA, Float:ValueB)

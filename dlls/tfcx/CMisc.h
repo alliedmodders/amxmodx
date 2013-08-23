@@ -7,18 +7,18 @@
 #include "CRank.h"
 
 #if defined(_WIN32)
-	#define LINUXOFFSET 0
-	#define CLIP_LINUXOFFSET 0
+	#define LINUXOFFSET		0
+	#define CLIP_LINUXOFFSET	0
 #else
-	#define LINUXOFFSET 3
-	#define CLIP_LINUXOFFSET 4
+	#define LINUXOFFSET		4
+	#define CLIP_LINUXOFFSET	4
 #endif
 
 #define TFCMAX_CUSTOMWPNS	5
 #define TFCMAX_WEAPONS		MAX_WEAPONS + TFCMAX_CUSTOMWPNS
 
 #define PD_HAS_GOALITEM		26  + LINUXOFFSET
-#define PD_GOALITEM_TEAM    36  + LINUXOFFSET
+#define PD_GOALITEM_TEAM	36  + LINUXOFFSET
 #define PD_SENTRY_OWNER		83	+ LINUXOFFSET
 #define PD_TIMER_OWNER		932	+ LINUXOFFSET
 
@@ -28,7 +28,7 @@
 #define PD_REPLACE_SKIN		172 + LINUXOFFSET
 
 
-#define MAX_TRACE	13 
+#define MAX_TRACE		13
 //#define NADE_OFFSET		24
 
 #define ACT_NADE_NONE		0
@@ -49,11 +49,11 @@
 
 enum {
 	TFC_AMMO_SHELLS = 0,
-	TFC_AMMO_BULLETS, 
-	TFC_AMMO_CELLS, 
-	TFC_AMMO_ROCKETS, 
-	TFC_AMMO_NADE1, 
-	TFC_AMMO_NADE2, 
+	TFC_AMMO_BULLETS,
+	TFC_AMMO_CELLS,
+	TFC_AMMO_ROCKETS,
+	TFC_AMMO_NADE1,
+	TFC_AMMO_NADE2,
 };
 
 enum {
@@ -179,7 +179,7 @@ struct CPlayer {
 
 class Grenades
 {
-  struct Obj 
+  struct Obj
   {
     CPlayer* player;
     edict_t* grenade;

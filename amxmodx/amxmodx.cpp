@@ -211,77 +211,130 @@ static cell AMX_NATIVE_CALL console_cmd(AMX *amx, cell *params) /* 2 param */
 	return len;
 }
 
+// The server console is limited to 255 bytes, including the newline.
+// The client console is limited to 127 bytes, including the newline.
 static cell AMX_NATIVE_CALL console_print(AMX *amx, cell *params) /* 2 param */
 {
 	int index = params[1];
-	
+
 	if (index < 1 || index > gpGlobals->maxClients)
+	{
 		g_langMngr.SetDefLang(LANG_SERVER);
+	}
 	else
+	{
 		g_langMngr.SetDefLang(index);
+	}
 
 	int len;
 	char* message = format_amxstring(amx, params, 2, len);
-	
-	if (len > 254)
-		len = 254;
-	
-	message[len++] = '\n';
-	message[len] = 0;
-	
-	if (index < 1 || index > gpGlobals->maxClients)
+
+	if (index < 1 || index > gpGlobals->maxClients)	// Server console
+	{
+		if (len > 254)
+		{
+			len = 254;
+			if (((message[len - 1] & 0xFF) >= 0xC2) && ((message[len - 1] & 0xFF) <= 0xEF)) {       // Don't truncate a double-byte character
+				len--;
+			}
+		}
+		message[len++] = '\n';
+		message[len] = 0;
+
 		SERVER_PRINT(message);
-	else
+	}
+	else	// A specific player's console
 	{
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
-		
+
 		if (pPlayer->ingame)
+		{
+			if (len > 126)	// Client console truncates after byte 127. (126 + \n = 127)
+			{
+				len = 126;
+				if (((message[len - 1] & 0xFF) >= 0xC2) && ((message[len - 1] & 0xFF) <= 0xEF))	// Don't truncate a double-byte character
+				{
+					len--;
+				}
+			}
+			message[len++] = '\n';      // Client expects newline from the server
+			message[len] = 0;
+
 			UTIL_ClientPrint(pPlayer->pEdict, 2, message);
+		}
 	}
-	
+
 	return len;
 }
 
+// print_notify and print_console are limited to 127 bytes, including the newline.
+// print_chat and print_center are not limited by *this* function.
 static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 {
 	int len = 0;
 	char *msg;
-	
-	if (params[1] == 0)
+
+	if (params[1] == 0)	// 0 = All players
 	{
 		for (int i = 1; i <= gpGlobals->maxClients; ++i)
 		{
 			CPlayer *pPlayer = GET_PLAYER_POINTER_I(i);
-			
+
 			if (pPlayer->ingame)
 			{
 				g_langMngr.SetDefLang(i);
 				msg = format_amxstring(amx, params, 3, len);
-				msg[len++] = '\n';
+
+				// params[2]: print_notify = 1, print_console = 2, print_chat = 3, print_center = 4
+				if (((params[2] == 1) || (params[2] == 2)) && (len > 126))	// Client console truncates after byte 127. (126 + \n = 127)
+				{
+					len = 126;
+					if (((msg[len - 1] & 0xFF) >= 0xC2) && ((msg[len - 1] & 0xFF) <= 0xEF))	// Don't truncate a double-byte character
+					{
+						len--;
+					}
+				}
+				msg[len++] = '\n';	// Client expects newline from the server
 				msg[len] = 0;
+
 				UTIL_ClientPrint(pPlayer->pEdict, params[2], msg);
 			}
 		}
-	} else {
+	}
+	else	// A specific player
+	{
 		int index = params[1];
-		
+
 		if (index < 1 || index > gpGlobals->maxClients)
 		{
 			LogError(amx, AMX_ERR_NATIVE, "Invalid player id %d", index);
 			return 0;
 		}
-		
+
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
-		g_langMngr.SetDefLang(index);
-		
-		msg = format_amxstring(amx, params, 3, len);
-		msg[len++] = '\n';
-		msg[len] = 0;
-		
+
 		if (pPlayer->ingame)
-			UTIL_ClientPrint(pPlayer->pEdict, params[2], msg);		//format_amxstring(amx, params, 3, len));
+		{
+			g_langMngr.SetDefLang(index);
+
+			msg = format_amxstring(amx, params, 3, len);
+
+			// params[2]: print_notify = 1, print_console = 2, print_chat = 3, print_center = 4
+			if (((params[2] == 1) || (params[2] == 2)) && (len > 126))	// Client console truncates after byte 127. (126 + \n = 127)
+			{
+				len = 126;
+				if (((msg[len - 1] & 0xFF) >= 0xC2) && ((msg[len - 1] & 0xFF) <= 0xEF))       // Don't truncate a double-byte character
+				{
+					len--;
+				}
+			}
+			msg[len++] = '\n';	// Client expects newline from the server
+			msg[len] = 0;
+
+			UTIL_ClientPrint(pPlayer->pEdict, params[2], msg);
+		}
 	}
-	
+
 	return len;
 }
 

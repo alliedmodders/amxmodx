@@ -105,6 +105,8 @@ const TEAM_T = 1
 const TEAM_CT = 2
 
 new g_connected[33]
+new g_msounds[33]
+new const _msound[] = "_msound"
 
 new g_MultiKillMsg[7][] =
 {
@@ -208,6 +210,7 @@ public plugin_init()
 {
 	register_plugin("CS Misc. Stats", AMXX_VERSION_STR, "AMXX Dev Team")
 	register_dictionary("miscstats.txt")
+	register_dictionary("statsx.txt")
 	register_event("TextMsg", "eRestart", "a", "2&#Game_C", "2&#Game_w")
 	register_event("SendAudio", "eEndRound", "a", "2&%!MRAD_terwin", "2&%!MRAD_ctwin", "2&%!MRAD_rounddraw")
 	
@@ -241,6 +244,9 @@ public plugin_init()
 
 	g_pcvar_mp_c4timer = get_cvar_pointer("mp_c4timer")
 	g_c4timer_value = get_pcvar_num( g_pcvar_mp_c4timer )
+
+	register_clcmd("say /msounds", "cmdSwitchSounds", _, " - switches sounds on and off")
+	register_clcmd("say_team /msounds", "cmdSwitchSounds", _, " - switches sounds on and off")
 }
 
 public plugin_precache()
@@ -460,6 +466,24 @@ public plugin_cfg()
 	server_cmd(g_addStast, "ST_FIRST_BLOOD_SOUND", "FirstBloodSound")
 }
 
+public client_connect(id)
+{
+	if( is_user_bot(id) )
+	{
+		g_msounds[id] = 0
+		return;
+	}
+	new info[2]
+	if( !get_user_info(id, _msound, info, charsmax(info)) || info[0] != '0' )
+	{
+		g_msounds[id] = 1
+	}
+	else
+	{
+		g_msounds[id] = 0
+	}
+}
+
 public client_putinserver(id)
 {
 	g_multiKills[id] = {0, 0}
@@ -486,7 +510,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 	{
 		g_firstBlood = 0
 		if (FirstBloodSound)
-			play_sound(g_firstbloodsound)
+			play_sound(0, g_firstbloodsound)
 	}
 
 	if ((KillingStreak || KillingStreakSound) && !TK)
@@ -517,7 +541,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				
 				if (KillingStreakSound)
 				{
-					play_sound(g_Sounds[a])
+					play_sound(0, g_Sounds[a])
 				}
 			}
 		}
@@ -634,7 +658,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 			}
 			
 			if( LastManSound )
-				play_sound(g_lastmansound_duel)
+				play_sound(0, g_lastmansound_duel)
 		}
 		else if (!g_LastAnnounce)
 		{
@@ -666,7 +690,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				}
 				if ( LastManSound && g_connected[g_LastAnnounce] )
 				{
-					client_cmd(g_LastAnnounce, "spk %s", g_lastmansound_1vsothers)
+					play_sound(g_LastAnnounce, g_lastmansound_1vsothers)
 				}
 			}
 		}
@@ -686,7 +710,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 		}
 		
 		if (KnifeKillSound)
-			play_sound(g_knifekillsound)
+			play_sound(0, g_knifekillsound)
 	}
 
 	if (wpnindex == CSW_HEGRENADE)
@@ -705,14 +729,14 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 			if (GrenadeKill)
 				ShowSyncHudMsg(0, g_he_sync, "%L", LANG_PLAYER, g_HeMessages[random_num(0, 3)], killer_name, victim_name)
 			if (GrenadeKillSound)
-				play_sound(g_grenadekillsound)
+				play_sound(0, g_grenadekillsound)
 		}
 		else
 		{
 			if (GrenadeSuicide)
 				ShowSyncHudMsg(0, g_he_sync, "%L", LANG_PLAYER, g_SHeMessages[random_num(0, 3)], victim_name)
 			if (GrenadeSuicideSound)
-				play_sound(g_grenadesuicidesound)
+				play_sound(0, g_grenadesuicidesound)
 		}
 	}
 
@@ -743,9 +767,9 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 		
 		if (HeadShotKillSound)
 		{
-			client_cmd(victim, "spk %s", g_hssound_victim)
+			play_sound(victim, g_hssound_victim)
 			if( victim != killer )
-				client_cmd(killer, "spk %s", g_hssound_killer)
+				play_sound(killer, g_hssound_killer)
 		}
 	}
 
@@ -766,7 +790,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 			}
 			
 			if (DoubleKillSound)
-				play_sound(g_doublekillsound)
+				play_sound(0, g_doublekillsound)
 		}
 		
 		g_doubleKill = nowtime
@@ -824,7 +848,7 @@ public Event_HLTV_New_Round()
 	g_C4Timer = 0
 	
 	if (RoundCounterSound)
-		play_sound(g_roundcountersound)
+		play_sound(0, g_roundcountersound)
 
 	if (RoundCounter)
 	{
@@ -900,7 +924,7 @@ public checkKills(param[])
 			
 			if (MultiKillSound)
 			{
-				play_sound(g_Sounds[a])
+				play_sound(0, g_Sounds[a])
 			}
 		}
 		g_multiKills[id] = {0, 0}
@@ -979,7 +1003,7 @@ public bombTimer()
 				
 				num_to_word(g_C4Timer, temp, charsmax(temp))
 				format(temp, charsmax(temp), "^"vox/%s seconds until explosion^"", temp)
-				play_sound(temp)
+				play_sound(0, temp)
 			}
 			else if (g_C4Timer < 11)
 			{
@@ -987,7 +1011,7 @@ public bombTimer()
 				
 				num_to_word(g_C4Timer, temp, charsmax(temp))
 				format(temp, charsmax(temp), "^"vox/%s^"", temp)
-				play_sound(temp)
+				play_sound(0, temp)
 			}
 		}
 		if (BombCountDef && g_Defusing && is_user_alive(g_Defusing))
@@ -1013,7 +1037,7 @@ public bomb_planted(planter)
 		announceEvent(planter, "SET_UP_BOMB")
 
 	if (BombPlantedSound)
-		play_sound(g_bombplantedsound)
+		play_sound(0, g_bombplantedsound)
 	
 	g_C4Timer = g_c4timer_value + 1
 	bombTimer()
@@ -1039,7 +1063,7 @@ public bomb_defused(defuser)
 	if (BombDefused)
 		announceEvent(defuser, "DEFUSED_BOMB")
 	if (BombDefusedSound)
-		play_sound(g_bombdefusedsound)
+		play_sound(0, g_bombdefusedsound)
 }
 
 public bomb_explode(planter, defuser)
@@ -1049,19 +1073,37 @@ public bomb_explode(planter, defuser)
 		if (BombFailed)
 			announceEvent(defuser, "FAILED_DEFU")
 		if (BombFailedSound)
-			play_sound(g_bombfailedsound)
+			play_sound(0, g_bombfailedsound)
 	}
 }
 
-play_sound(sound[])
+play_sound(id, sound[])
 {
-	new players[32], pnum, id
-	get_players(players, pnum, "ch")
-
-	for(--pnum; pnum>=0; pnum--)
+	if( id )
 	{
-		id = players[pnum]
-		if ( g_connected[id] )
+		if( g_msounds[id] )
+		{
 			client_cmd(id, "spk %s", sound)
+		}
 	}
+	else
+	{
+		new players[32], pnum, id
+		get_players(players, pnum, "ch")
+
+		for(--pnum; pnum>=0; pnum--)
+		{
+			id = players[pnum]
+			if ( g_connected[id] && g_msounds[id] )
+				client_cmd(id, "spk %s", sound)
+		}
+	}
+}
+
+public cmdSwitchSounds( id )
+{
+	g_msounds[id] = !g_msounds[id]
+	client_print(id, print_chat, "MSounds %L", id, g_msounds[id] ? "ENABLED" : "DISABLED")
+	set_user_info(id, _msound, g_msounds[id] ? "1" : "0") // will this save setting for next map is player has cl_filterstuffcmd 0 ???
+	client_cmd(id, "setinfo %s %s", _msound, g_msounds[id] ? "1" : "0")
 }

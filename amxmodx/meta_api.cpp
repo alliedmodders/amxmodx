@@ -564,6 +564,8 @@ struct sUserMsg
 	{"WeapPickup", &gmsgWeapPickup, 0, false, false},
 	{"ResetHUD", &gmsgResetHUD, 0, false, false},
 	{"RoundTime", &gmsgRoundTime, 0, false, false},
+	{"SayText", &gmsgSayText, 0, false, false},
+	{"InitHUD", &gmsgInitHUD, Client_InitHUDEnd, true, false},
 	{0, 0, 0, false, false}
 };
 

@@ -175,6 +175,14 @@ enum {
 	print_center,
 };
 
+/* Color types for client_print_color() */
+enum {
+	print_team_default = 0,
+	print_team_grey = -1,
+	print_team_red = -2,
+	print_team_blue = -3,
+};
+
 /* Destination types for engclient_print() */
 enum {
 	engprint_console = 0,

@@ -338,6 +338,70 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 	return len;
 }
 
+static cell AMX_NATIVE_CALL client_print_color(AMX *amx, cell *params) /* 3 param */
+{
+	if (!g_bmod_cstrike)
+	{
+		params[2] = print_chat;
+		return client_print(amx, params);
+	}
+
+	int len = 0;
+	char *msg;
+	int index = params[1];
+	int sender = params[2];
+
+	if (sender < print_team_blue || sender > gpGlobals->maxClients) 
+	{
+		sender = print_team_default;
+	}
+	else if (sender < print_team_default)
+	{
+		sender = abs(sender) + 32; // align indexes to the TeamInfo ones.
+	}
+
+	if (!index)
+	{
+		for (int i = 1; i <= gpGlobals->maxClients; ++i)
+		{
+			CPlayer *pPlayer = GET_PLAYER_POINTER_I(i);
+
+			if (pPlayer->ingame && !pPlayer->IsBot())
+			{
+				g_langMngr.SetDefLang(i);
+				msg = format_amxstring(amx, params, 3, len);
+				msg[len++] = '\n';
+				msg[len] = 0;
+
+				UTIL_ClientSayText(pPlayer->pEdict, sender ? sender : i, msg);
+			}
+		}
+	} 
+	else
+	{
+		if (index < 1 || index > gpGlobals->maxClients)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Invalid player id %d", index);
+			return 0;
+		}
+
+		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+		
+		if (pPlayer->ingame && !pPlayer->IsBot())
+		{
+			g_langMngr.SetDefLang(index);
+
+			msg = format_amxstring(amx, params, 3, len);
+			msg[len++] = '\n';
+			msg[len] = 0;
+		
+			UTIL_ClientSayText(pPlayer->pEdict, sender ? sender : index, msg);
+		}
+	}
+
+	return len;
+}
+
 static cell AMX_NATIVE_CALL show_motd(AMX *amx, cell *params) /* 3 param */
 {
 	int ilen;
@@ -4715,6 +4779,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"change_task",				change_task},
 	{"client_cmd",				client_cmd},
 	{"client_print",			client_print},
+	{"client_print_color",		client_print_color},
 	{"console_cmd",				console_cmd},
 	{"console_print",			console_print},
 	{"cvar_exists",				cvar_exists},

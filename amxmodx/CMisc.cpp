@@ -41,6 +41,7 @@ void CPlayer::Init(edict_t* e, int i)
 	initialized = false;
 	ingame = false;
 	authorized = false;
+	teamIdsInitialized = false;
 
 	current = 0;
 	teamId = -1;
@@ -62,6 +63,7 @@ void CPlayer::Disconnect()
 	ingame = false;
 	initialized = false;
 	authorized = false;
+	teamIdsInitialized = false;
 
 	if (newmenu != -1)
 	{

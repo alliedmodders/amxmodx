@@ -38,6 +38,7 @@
 /** skip autoloading since it's optional */
 #define AMXMODX_NOAUTOLOAD
 #include <cstrike>
+#include <fakemeta>
 
 new g_menuPosition[33]
 new g_menuPlayers[33][32]
@@ -57,6 +58,7 @@ new g_clcmdNum
 
 new g_coloredMenus
 new g_cstrike = 0
+new g_fakemeta = 0, m_iMenu, m_bTeamChanged, Menu_ChooseAppearance
 
 new Array:g_bantimes;
 new Array:g_slapsettings;
@@ -74,8 +76,13 @@ new g_CSTeamNumbers[3][] = {
 new g_CSTeamiNumbers[3] = {
 	1,
 	2,
-	6
+	3
 }
+
+new g_CSPlayerCanSwitchFromSpec[33]
+new g_transferingAdmin
+
+new allow_spectators, mp_limitteams
 
 new p_amx_tempban_maxtime;
 new Trie:g_tempBans;
@@ -135,8 +142,26 @@ public plugin_init()
 	format(clcmds_ini_file, 63, "%s/clcmds.ini", clcmds_ini_file)
 	load_settings(clcmds_ini_file)
 
-	if (module_exists("cstrike"))
+	if (LibraryExists("cstrike", LibType_Library))
 		g_cstrike = 1
+	if (LibraryExists("fakemeta", LibType_Library))
+	{
+		g_fakemeta = 1
+		m_iMenu = 205
+		m_bTeamChanged = 501
+		Menu_ChooseAppearance = 3
+	}
+	
+	new modname[9]
+	get_modname(modname, charsmax(modname))
+	if( equal(modname, "cstrike") || equal(modname, "czero") )
+	{
+		register_event("TeamInfo", "Event_TeamInfo", "a", "2=TERRORIST", "2=CT")
+		register_event("TextMsg", "Event_TextMsg", "b", "1=4", "2=#Only_1_Team_Change")
+	}
+	
+	allow_spectators = get_cvar_pointer("allow_spectators")
+	mp_limitteams = get_cvar_pointer("mp_limitteams")
 }
 
 public plugin_cfg()
@@ -207,7 +232,7 @@ public plmenu_setslapdmg()
 }
 public module_filter(const module[])
 {
-	if (equali(module, "cstrike"))
+	if (equali(module, "cstrike") || equali(module, "fakemeta"))
 		return PLUGIN_HANDLED
 	
 	return PLUGIN_CONTINUE
@@ -660,13 +685,37 @@ public cmdKickMenu(id, level, cid)
 
 /* Team menu */
 
+public client_putinserver(id)
+{
+	g_CSPlayerCanSwitchFromSpec[id] = false
+}
+
+public Event_TeamInfo()
+{
+	new id = read_data(1)
+	if ( is_user_connected(id) )
+	{
+		g_CSPlayerCanSwitchFromSpec[id] = true
+	}
+}
+
+public Event_TextMsg( id ) // #Only_1_Team_Change
+{
+	if( g_transferingAdmin && is_user_connected(id) && (id == g_transferingAdmin || is_user_connected(g_transferingAdmin)) )
+	{
+		new name[32]
+		get_user_name(id, name, charsmax(name))
+		client_print(g_transferingAdmin, print_chat, "%L", g_transferingAdmin, "CANT_PERF_CLIENT", name);
+	}
+}
+
 public actionTeamMenu(id, key)
 {
 	switch (key)
 	{
 		case 7:
 		{
-			g_menuOption[id] = (g_menuOption[id] + 1) % (g_cstrike ? 3 : 2);
+			g_menuOption[id] = (g_menuOption[id] + 1) % 3;
 			displayTeamMenu(id, g_menuPosition[id])
 		}
 		case 8: displayTeamMenu(id, ++g_menuPosition[id])
@@ -674,18 +723,46 @@ public actionTeamMenu(id, key)
 		default:
 		{
 			new player = g_menuPlayers[id][g_menuPosition[id] * 7 + key]
+			if( !is_user_connected(player) ) // dunno why this check hasn't be implemented in the past
+			{
+				displayTeamMenu(id, g_menuPosition[id])
+				return PLUGIN_HANDLED
+			}
+
+			g_transferingAdmin = id
+
 			new authid[32], authid2[32], name[32], name2[32]
 
 			get_user_name(player, name2, 31)
 			get_user_authid(id, authid, 31)
 			get_user_authid(player, authid2, 31)
 			get_user_name(id, name, 31)
-				
-			log_amx("Cmd: ^"%s<%d><%s><>^" transfer ^"%s<%d><%s><>^" (team ^"%s^")", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2, g_menuOption[id] ? "TERRORIST" : "CT")
 
-			show_activity_key("ADMIN_TRANSF_1", "ADMIN_TRANSF_2", name, name2, g_CSTeamNames[g_menuOption[id] % 3]);
+			// This modulo math just aligns the option to the CsTeams-corresponding number
+			new destTeamSlot = (g_menuOption[id] % 3)
+			
+			log_amx("Cmd: ^"%s<%d><%s><>^" transfer ^"%s<%d><%s><>^" (team ^"%s^")", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2, g_CSTeamNames[destTeamSlot])
 
-			if (g_cstrike)
+			show_activity_key("ADMIN_TRANSF_1", "ADMIN_TRANSF_2", name, name2, g_CSTeamNames[destTeamSlot]);
+
+			
+			if( destTeamSlot == 2 )
+			{
+				if ( g_fakemeta )
+				{
+					if( get_pdata_int(player, m_iMenu) == Menu_ChooseAppearance )
+					{
+						// works for both vgui and old style menus, and send menuselect could close other menus (and since get_user_menu fails to return VGUI and old style classes menus...)
+						engclient_cmd(player, "joinclass", "6");
+					}
+				}
+				else // force
+				{
+					engclient_cmd(player, "joinclass", "6");
+				}
+			}
+
+			if ( g_CSPlayerCanSwitchFromSpec[player] && g_cstrike && (CS_TEAM_T <= cs_get_user_team(player) <= CS_TEAM_CT))
 			{
 				if (is_user_alive(player))
 				{
@@ -693,18 +770,59 @@ public actionTeamMenu(id, key)
 					user_kill(player, 1)
 					cs_set_user_deaths(player, deaths)
 				}
-				// This modulo math just aligns the option to the CsTeams-corresponding number
-				cs_set_user_team(player, (g_menuOption[id] % 3) + 1)
-				cs_reset_user_model(player)
-			} else {
-				new limit_setting = get_cvar_num("mp_limitteams")
 				
-				set_cvar_num("mp_limitteams", 0)
-				engclient_cmd(player, "jointeam", g_CSTeamNumbers[g_menuOption[id] % 2])
-				engclient_cmd(player, "joinclass", "1")
-				set_cvar_num("mp_limitteams", limit_setting)
+				cs_set_user_team(player, destTeamSlot + 1)
+
+			} else {
+				if (is_user_alive(player))
+				{
+					user_kill(player, 1)
+				}
+				if( g_fakemeta )
+				{
+					set_pdata_bool(player, m_bTeamChanged, true);
+				}
+				new limit_setting
+				if( mp_limitteams )
+				{
+					limit_setting = get_pcvar_num(mp_limitteams)
+				
+					set_pcvar_num(mp_limitteams, 0)
+				}
+
+				if( destTeamSlot == 2 )
+				{
+					new Float:allow_spectators_setting
+					if( allow_spectators )
+					{
+						allow_spectators_setting = get_pcvar_float(allow_spectators)
+						if( allow_spectators_setting != 1.0 )
+							set_pcvar_float(allow_spectators, 1.0)
+					}
+					engclient_cmd(player, "jointeam", g_CSTeamNumbers[destTeamSlot])
+					if( allow_spectators && allow_spectators_setting != 1.0 )
+						set_pcvar_float(allow_spectators, allow_spectators_setting)
+				}
+				else
+				{
+					engclient_cmd(player, "jointeam", g_CSTeamNumbers[destTeamSlot])
+					engclient_cmd(player, "joinclass", "1")
+				}
+				if( mp_limitteams && limit_setting != 0 )
+				{
+					set_pcvar_num(mp_limitteams, limit_setting)
+				}
+			}
+			if( g_cstrike )
+			{
+				cs_reset_user_model(player)
+			}
+			if( g_fakemeta )
+			{
+				set_pdata_bool(player, m_bTeamChanged, true);
 			}
 
+			g_transferingAdmin = 0
 			displayTeamMenu(id, g_menuPosition[id])
 		}
 	}
@@ -755,15 +873,19 @@ displayTeamMenu(id, pos)
 			else if (iteam == 3)
 			{
 				copy(team, 3, "SPE");
-				iteam = 6;
+				// iteam = 6; // oO WTF is this ?? fixed g_CSTeamiNumbers.
 			} else {
 				iteam = get_user_team(i, team, 3)
 			}
 		} else {
 			iteam = get_user_team(i, team, 3)
 		}
+		if( !iteam )
+		{
+			iteam = 3 // fix get_user_team returning 0 on spectators
+		}
 
-		if ((iteam == g_CSTeamiNumbers[g_menuOption[id] % (g_cstrike ? 3 : 2)]) || (access(i, ADMIN_IMMUNITY) && i != id))
+		if ((iteam == g_CSTeamiNumbers[g_menuOption[id] % 3]) || (access(i, ADMIN_IMMUNITY) && i != id))
 		{
 			++b
 			
@@ -781,7 +903,7 @@ displayTeamMenu(id, pos)
 		}
 	}
 
-	len += format(menuBody[len], 511-len, "^n8. %L^n", id, "TRANSF_TO", g_CSTeamNames[g_menuOption[id] % (g_cstrike ? 3 : 2)])
+	len += format(menuBody[len], 511-len, "^n8. %L^n", id, "TRANSF_TO", g_CSTeamNames[g_menuOption[id] % 3])
 
 	if (end != g_menuPlayersNum[id])
 	{

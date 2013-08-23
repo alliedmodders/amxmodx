@@ -294,6 +294,32 @@ void UTIL_ClientPrint(edict_t *pEntity, int msg_dest, char *msg)
 	msg[190] = c;
 }
 
+void UTIL_ClientSayText(edict_t *pEntity, int sender, char *msg)
+{
+	if (!gmsgSayText)
+		return;				// :TODO: Maybe output a warning log?
+
+	char c = msg[190];
+	msg[190] = 0;			// truncate without checking with strlen()
+
+	MESSAGE_BEGIN(MSG_ONE, gmsgSayText, NULL, pEntity);
+	WRITE_BYTE(sender);
+	WRITE_STRING(msg);
+	MESSAGE_END();
+	msg[190] = c;
+}
+
+void UTIL_TeamInfo(edict_t *pEntity, int playerIndex, char *pszTeamName)
+{
+	if (!gmsgTeamInfo)
+		return;
+
+	MESSAGE_BEGIN(MSG_ONE, gmsgTeamInfo, NULL, pEntity);
+	WRITE_BYTE(playerIndex);
+	WRITE_STRING(pszTeamName);
+	MESSAGE_END();
+}
+
 // UTIL_FakeClientCommand
 // PURPOSE: Sends a fake client command to GameDLL
 // HOW DOES IT WORK:

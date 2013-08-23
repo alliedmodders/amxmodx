@@ -85,7 +85,8 @@ public:
 	bool initialized;
 	bool ingame;
 	bool authorized;
-	bool vgui;	
+	bool vgui;
+	bool teamIdsInitialized;
 
 	float time;
 	float playtime;

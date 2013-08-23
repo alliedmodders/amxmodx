@@ -52,6 +52,8 @@ int gmsgWeaponList;
 int gmsgintermission;
 int gmsgResetHUD;
 int gmsgRoundTime;
+int gmsgSayText;
+int gmsgInitHUD;
 
 TeamIds g_teamsIds;
 WeaponsVault g_weaponsData[MAX_WEAPONS];
@@ -328,6 +330,26 @@ void Client_DeathMsg(void* mValue)
 			victim->death_tk = (killer->teamId == victim->teamId);
 	}
 }
+
+void Client_InitHUDEnd(void* mValue)
+{
+	if (!g_bmod_cstrike)
+		return;
+
+	CPlayer *pPlayer = mPlayer;
+
+	if (!pPlayer->teamIdsInitialized && !pPlayer->IsBot())
+	{
+		// This creates specific indexes (> maxplayers) for print_chat_color().
+		// 33 : print_team_grey / spectator
+		// 34 : print_team_red  / terrorist
+		// 35 : print_team_blue / ct
+		UTIL_TeamInfo(pPlayer->pEdict, 33 + 1, "TERRORIST"); // print_team_red
+		UTIL_TeamInfo(pPlayer->pEdict, 33 + 2, "CT");		 // print_team_blue
+		pPlayer->teamIdsInitialized = true;
+	}
+}
+
 /*
 void Client_SendAudio(void* mValue)
 {

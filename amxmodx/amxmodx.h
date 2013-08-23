@@ -143,6 +143,8 @@ void UTIL_HudMessage(edict_t *pEntity, const hudtextparms_t &textparms, const ch
 void UTIL_IntToString(int value, char *output);
 void UTIL_ShowMOTD(edict_t *client, char *motd, int mlen, const char *name);
 void UTIL_ShowMenu(edict_t* pEntity, int slots, int time, char *menu, int mlen);
+void UTIL_ClientSayText(edict_t *pEntity, int sender, char *msg);
+void UTIL_TeamInfo(edict_t *pEntity, int playerIndex, char *pszTeamName);
 
 char *UTIL_VarArgs(const char *fmt, ...);
 
@@ -235,6 +237,8 @@ extern int gmsgWeaponList;
 extern int gmsgintermission;
 extern int gmsgResetHUD;
 extern int gmsgRoundTime;
+extern int gmsgSayText;
+extern int gmsgInitHUD;
 
 void Client_AmmoPickup(void*);
 void Client_AmmoX(void*);
@@ -247,6 +251,7 @@ void Client_VGUIMenu(void*);
 void Client_WeaponList(void*);
 void Client_DamageEnd(void*);
 void Client_DeathMsg(void*);
+void Client_InitHUDEnd(void*);
 
 void amx_command();
 void plugin_srvcmd();
@@ -351,6 +356,14 @@ enum AdminProperty
 	Admin_Password,
 	Admin_Access,
 	Admin_Flags
+};
+
+enum PrintColor
+{
+	print_team_default = 0,
+	print_team_grey =-1,
+	print_team_red = -2,
+	print_team_blue = -3,
 };
 
 extern enginefuncs_t *g_pEngTable;

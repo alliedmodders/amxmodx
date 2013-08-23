@@ -316,6 +316,46 @@ void CLangMngr::MergeDefinitions(const char *lang, CQueue<sKeyDef> &tmpVec)
 		language->MergeDefinitions(tmpVec);
 }
 
+void reparse_color(String* def)
+{
+	size_t len = def->size();
+	int offs = 0;
+	int c;
+
+	if (!len)
+		return;
+
+	for (size_t i = 0; i < len; i++)
+	{
+		c = def->at(i); 
+		if (c == '^' && (i != len-1))
+		{
+			c = def->at(++i);
+			if (c >= '1' && c <= '4')
+			{
+				switch(c)
+				{
+					case '1' : c = '\x01'; break;
+					case '2' : c = '\x02'; break;
+					case '3' : c = '\x03'; break;
+					case '4' : c = '\x04'; break;
+				}
+
+				if (!g_bmod_cstrike) // remove completely these two characters if not under CS
+				{
+					offs += 2;
+					continue;
+				}
+
+				offs++;
+			}
+		}
+		def->at(i-offs, c);
+	}
+
+	def->at(len-offs, '\0');
+}
+
 //this is the file parser for dictionary text files
 // -- BAILOPAN
 int CLangMngr::MergeDefinitionFile(const char *file)
@@ -438,6 +478,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 					tmpEntry.definition = new String;
 					tmpEntry.definition->assign(def.c_str());
 					tmpEntry.definition->trim();
+					reparse_color(tmpEntry.definition);
 					tmpEntry.definition->reparse_newlines();
 					Defq.push(tmpEntry);
 					tmpEntry.key = -1;
@@ -465,6 +506,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 			} else {
 				if (buf[0] == ':')
 				{
+					reparse_color(tmpEntry.definition);
 					tmpEntry.definition->reparse_newlines();
 					Defq.push(tmpEntry);
 					tmpEntry.key = -1;

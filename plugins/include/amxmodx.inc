@@ -102,6 +102,33 @@ native show_motd(player,const message[],const header[]="");
 /* Sends message to player. Set index to 0 to send text globaly. */
 native client_print(index,type,const message[],any:...);
 
+/**
+ * Sends colored message to player.  Set index to 0 to send text globally.
+ * This works only under Counter-Strike 1.6 and Counter-Strike: Condition Zero.
+ *
+ * The available colors identifiers are :
+ *          green       ^4   ; use location color from this point forward
+ *  red/blue/grey       ^3   ; use team color from this point forward
+ *  red/blue/grey       ^2   ; use team color up to the end of the player name. This only works at the start of the string, and precludes using the other control characters.
+ *          normal      ^1   ; use normal color from this point forward
+ *
+ * The team color is defined either with a sender's index, or a specific team color using print_team_* constants (print_team_blue, print_team_red, print_team_grey).
+ * A message must start with a default color.
+ *
+ * An example would be: client_print_color(id, print_team_red, "^4This is green ^3this is red, ^1this is your default chat text color");
+ * Another with index : client_print_color(id, idOther, "^4This is green ^3this idOther's team color, ^1this is your default chat text color");
+ * In multilingual file : KEY = ^1This is normal color, ^4this is green, ^1normal again ^3and now team color.
+ *
+ * @param index         This is the player index (1 to maxplayer) you want to send the message, use 0 to send to all players.
+ * @param sender        This is the player index you want to use the team color, see print_team_* constants if you want to force a color.
+ * @param fmt           Format string in which patterns gonna be replaced with argument list.
+ * 
+ * @return              1 if the message has been sent, 
+ *                      0 if the index specified is a not connected player, 
+ *                        or if a global message has not been sent because there are no humans players.
+ */
+native client_print_color(index, sender, const message[], any:...);
+
 /* Sends message to player by engine. Set index to 0 to send text globaly. */
 native engclient_print(player,type,const message[],any:...);
 

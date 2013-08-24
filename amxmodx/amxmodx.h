@@ -144,7 +144,7 @@ void UTIL_IntToString(int value, char *output);
 void UTIL_ShowMOTD(edict_t *client, char *motd, int mlen, const char *name);
 void UTIL_ShowMenu(edict_t* pEntity, int slots, int time, char *menu, int mlen);
 void UTIL_ClientSayText(edict_t *pEntity, int sender, char *msg);
-void UTIL_TeamInfo(edict_t *pEntity, int playerIndex, char *pszTeamName);
+void UTIL_TeamInfo(edict_t *pEntity, int playerIndex, const char *pszTeamName);
 
 char *UTIL_VarArgs(const char *fmt, ...);
 

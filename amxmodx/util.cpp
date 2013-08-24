@@ -309,7 +309,7 @@ void UTIL_ClientSayText(edict_t *pEntity, int sender, char *msg)
 	msg[190] = c;
 }
 
-void UTIL_TeamInfo(edict_t *pEntity, int playerIndex, char *pszTeamName)
+void UTIL_TeamInfo(edict_t *pEntity, int playerIndex, const char *pszTeamName)
 {
 	if (!gmsgTeamInfo)
 		return;

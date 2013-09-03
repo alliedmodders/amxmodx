@@ -11,11 +11,15 @@
 #endif
 #endif
 
+#if defined(__APPLE__)
+#include <mach-o/nlist.h>
+#endif
+
 /* Utils */
 unsigned char *UTIL_CodeAlloc(size_t size);
 void UTIL_CodeFree(unsigned char *addr);
 void UTIL_MemProtect(void *addr, int length, int prot);
-bool UTIL_GetLibraryOfAddress(void *memInBase, char *buffer, size_t maxlength);
+bool UTIL_GetLibraryOfAddress(void *memInBase, char *buffer, size_t maxlength, uintptr_t *base);
 
 /* Detours */
 void CtrlDetour_ClientCommand(bool set);
@@ -72,10 +76,12 @@ void CtrlDetour_ClientCommand(bool set)
 #if defined(__linux__) || defined(__APPLE__)
 		/* Find the DLL */
 		char dll[256];
-		if (!UTIL_GetLibraryOfAddress(target, dll, sizeof(dll)))
+		uintptr_t base;
+		if (!UTIL_GetLibraryOfAddress(target, dll, sizeof(dll), &base))
 		{
 			return;
 		}
+#if defined(__linux__)
 		void *handle = dlopen(dll, RTLD_NOW);
 		if (!handle)
 		{
@@ -84,7 +90,20 @@ void CtrlDetour_ClientCommand(bool set)
 		g_UseBotArgs = (int *)dlsym(handle, "UseBotArgs");
 		g_BotArgs = (const char **)dlsym(handle, "BotArgs");
 		dlclose(handle);
-#else
+#elif defined(__APPLE__)
+		/* Using dlsym on OS X won't work because the symbols are hidden */
+		struct nlist symbols[3];
+		memset(symbols, 0, sizeof(symbols));
+		symbols[0].n_un.n_name = (char *)"_UseBotArgs";
+		symbols[1].n_un.n_name = (char *)"_BotArgs";
+		if (nlist(dll, symbols) != 0)
+		{
+			return;
+		}
+		g_UseBotArgs = (int *)(base + symbols[0].n_value);
+		g_BotArgs = (const char **)(base + symbols[1].n_value);
+#endif
+#else /* Windows */
 		/* Find the bot args addresses */
 		paddr = (unsigned char *)target + CS_CLICMD_OFFS_USEBOTARGS;
 		g_UseBotArgs = *(int **)paddr;
@@ -178,7 +197,7 @@ void UTIL_MemProtect(void *addr, int length, int prot)
 #endif
 }
 
-bool UTIL_GetLibraryOfAddress(void *memInBase, char *buffer, size_t maxlength)
+bool UTIL_GetLibraryOfAddress(void *memInBase, char *buffer, size_t maxlength, uintptr_t *base)
 {
 #if defined(__linux__) || defined(__APPLE__)
 	Dl_info info;
@@ -192,6 +211,10 @@ bool UTIL_GetLibraryOfAddress(void *memInBase, char *buffer, size_t maxlength)
 	}
 	const char *dllpath = info.dli_fname;
 	snprintf(buffer, maxlength, "%s", dllpath);
+	if (base)
+	{
+		*base = (uintptr_t)info.dli_fbase;
+	}
 #else
 	MEMORY_BASIC_INFORMATION mem;
 	if (!VirtualQuery(memInBase, &mem, sizeof(mem)))
@@ -204,6 +227,10 @@ bool UTIL_GetLibraryOfAddress(void *memInBase, char *buffer, size_t maxlength)
 	}
 	HMODULE dll = (HMODULE)mem.AllocationBase;
 	GetModuleFileName(dll, (LPTSTR)buffer, maxlength);
+	if (base)
+	{
+		*base = (uintptr_t)mem.AllocationBase;
+	}
 #endif
 	return true;
 }

@@ -6,6 +6,14 @@
 ; (27 disks, no output, DOS4/GW under Win95) with this implementation of the
 ; JIT compiler.
 
+; BUILD NOTE: Use nasm 0.97.x or 0.98.x with the options below.
+; ----------------
+; Windows  : nasm -O2 -f win32 -o amxjitsn.obj amxjitsn.asm
+; Linux    : nasm -O2 -f elf -o amxjitsn.o amxjitsn.asm
+; OS X     : nasm -O2 -f macho -o amxjitsn-darwin.o amxjitsn.asm
+; ----------------
+; If nasm 2.x must be used, replace -O2 with -O0.
+
 ; NOTE 1:
 ; There is only one pass implemented in this version. This means there is no
 ; way of knowing the size of the compiled code before it has actually been com-
@@ -329,7 +337,7 @@
 
     mov      esp, [esp+stkspace-4]
 
-    %pop stkalign
+    %pop
 %endmacro
 
 global  asm_runJIT, _asm_runJIT

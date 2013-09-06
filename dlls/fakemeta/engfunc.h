@@ -40,7 +40,7 @@ enum {
 	EngFunc_TraceSphere,				// void )			(const float *v1, const float *v2, int fNoMonsters, float radius, edict_t *pentToSkip, TraceResult *ptr);
 	EngFunc_GetAimVector,				// void )			(edict_t *ent, float speed, float *rgflReturn);
 	EngFunc_ParticleEffect,				// void )			(const float *org, const float *dir, float color, float count);
-	EngFunc_LightStyle,					// void )			(int style, char *val);
+	EngFunc_LightStyle,					// void )			(int style, const char *val);
 	EngFunc_DecalIndex,					// int  )			(const char *name);
 	EngFunc_PointContents,				// int  )			(const float *rgflVector);
 	EngFunc_FreeEntPrivateData,			// void )			(edict_t *pEdict);

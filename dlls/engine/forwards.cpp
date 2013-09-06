@@ -111,7 +111,7 @@ void StartFrame_Post()
 	{
 		if (glinfo.fNextLights < gpGlobals->time)
 		{
-			(g_engfuncs.pfnLightStyle)(0, (char *)glinfo.szLastLights);
+			(g_engfuncs.pfnLightStyle)(0, glinfo.szLastLights);
 			glinfo.fNextLights = gpGlobals->time + 1;
 		}
 	}

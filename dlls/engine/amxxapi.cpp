@@ -213,7 +213,7 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 	RETURN_META(MRES_IGNORED);
 }
 
-void LightStyle(int style, char *val) {
+void LightStyle(int style, const char *val) {
 	if (!style) {
 		memset(glinfo.szRealLights, 0x0, 128);
 		memcpy(glinfo.szRealLights, val, strlen(val));

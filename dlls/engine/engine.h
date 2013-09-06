@@ -106,8 +106,8 @@ struct PlayerInfo {
 
 struct GlobalInfo {
 	float fNextLights;
-	char *szLastLights[128];
-	char *szRealLights[128];
+	char szLastLights[128];
+	char szRealLights[128];
 	bool bCheckLights;
 };
 

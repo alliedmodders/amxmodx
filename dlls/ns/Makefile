@@ -5,7 +5,7 @@
 ### EDIT THESE PATHS FOR YOUR OWN SETUP ###
 ###########################################
 
-HLSDK = ../../../hlsdk/multiplayer
+HLSDK = ../../../hlsdk
 MM_ROOT = ../../../metamod/metamod
 
 #####################################
@@ -33,7 +33,7 @@ CPP_OSX = clang
 LINK =
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/common -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared \
-          -I$(HLSDK)/pm_shared -I$(MM_ROOT) -Isdk
+          -I$(HLSDK)/pm_shared -I$(HLSDK)/public -I$(MM_ROOT) -Isdk
 
 ################################################
 ### DO NOT EDIT BELOW HERE FOR MOST PROJECTS ###
@@ -89,6 +89,11 @@ endif
 # Clang >= 3 || GCC >= 4.7
 ifeq "$(shell expr $(IS_CLANG) \& $(CPP_MAJOR) \>= 3 \| $(CPP_MAJOR) \>= 4 \& $(CPP_MINOR) \>= 7)" "1"
 	CPPFLAGS += -Wno-delete-non-virtual-dtor
+endif
+
+# GCC >= 4.8
+ifeq "$(shell expr $(IS_CLANG) \= 0 \& \( \( $(CPP_MAJOR) \= 4 \& $(CPP_MINOR) \>= 8 \) \| $(CPP_MAJOR) \> 4 \))" "1"
+	CFLAGS += -Wno-unused-local-typedefs
 endif
 
 # OS is Linux and not using clang

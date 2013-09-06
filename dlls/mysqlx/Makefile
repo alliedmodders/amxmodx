@@ -5,7 +5,7 @@
 ### EDIT THESE PATHS FOR YOUR OWN SETUP ###
 ###########################################
 
-HLSDK = ../../../hlsdk/multiplayer
+HLSDK = ../../../hlsdk
 MM_ROOT = ../../../metamod/metamod
 MYSQL_DIR = ../../../mysql-5.0
 
@@ -33,7 +33,7 @@ CPP_OSX = clang
 LINK = $(MYSQL_DIR)/lib/libmysqlclient_r.a -lz -lpthread -L$(MYSQL_DIR)/lib
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/common -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared \
-          -I$(MM_ROOT) -I$(MYSQL_DIR)/include -Ithread -Imysql -Isdk
+          -I$(HLSDK)/public -I$(MM_ROOT) -I$(MYSQL_DIR)/include -Ithread -Imysql -Isdk
 
 ################################################
 ### DO NOT EDIT BELOW HERE FOR MOST PROJECTS ###

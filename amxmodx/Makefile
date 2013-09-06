@@ -5,7 +5,7 @@
 ### EDIT THESE PATHS FOR YOUR OWN SETUP ###
 ###########################################
 
-HLSDK = ../../hlsdk/multiplayer
+HLSDK = ../../hlsdk
 MM_ROOT = ../../metamod/metamod
 
 #####################################
@@ -37,7 +37,7 @@ CPP_OSX = clang
 LINK = -Lzlib
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/common -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared \
-	  -I$(MM_ROOT)
+	  -I$(HLSDK)/public -I$(MM_ROOT)
 
 ################################################
 ### DO NOT EDIT BELOW HERE FOR MOST PROJECTS ###

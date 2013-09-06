@@ -52,13 +52,13 @@ void CtrlDetour_ClientCommand(bool set)
 #endif
 	static unsigned char DetourOps[] = 
 	{
-		'\x50',									/* push eax         ; just for safety */
-		'\xff', '\x74', '\x24', '\x08',			/* push [esp+0x8]	; push the edict pointer */
-		'\xe8', '\x00', '\x00', '\x00', '\x00', /* call <gate>		; call our function */
-		'\x83', '\xc4', '\x08',					/* add esp, 8		; correct stack */
-		'\x85', '\xc0',							/* test eax, eax	; do != 0 test */
-		'\x74', '\x01',							/* je <cont>		; if == 0, jump to where old func is saved */
-		'\xc3'									/* ret				; return otherwise */
+		0x50,									/* push eax         ; just for safety */
+		0xff, 0x74, 0x24, 0x08,			/* push [esp+0x8]	; push the edict pointer */
+		0xe8, 0x00, 0x00, 0x00, 0x00, /* call <gate>		; call our function */
+		0x83, 0xc4, 0x08,					/* add esp, 8		; correct stack */
+		0x85, 0xc0,							/* test eax, eax	; do != 0 test */
+		0x74, 0x01,							/* je <cont>		; if == 0, jump to where old func is saved */
+		0xc3									/* ret				; return otherwise */
 	};
 	static unsigned char DetourJmp = '\xE9';
 

@@ -579,7 +579,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 
 		
 		// pfnLightStyle
-	case	EngFunc_LightStyle:			// void )			(int style, char* val);
+	case	EngFunc_LightStyle:			// void )			(int style, const char* val);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		iparam1=cRet[0];
 		temp = MF_GetAmxString(amx,params[3],0,&len);

@@ -5,7 +5,7 @@
 ### EDIT THESE PATHS FOR YOUR OWN SETUP ###
 ###########################################
 
-HLSDK = ../../../hlsdk/multiplayer
+HLSDK = ../../../hlsdk
 MM_ROOT = ../../../metamod/metamod
 SQL = sqlite-source
 
@@ -42,7 +42,7 @@ CPP_OSX = clang
 LINK =
 
 INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/common -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared \
-          -I$(MM_ROOT) -I$(SQL) -Isqlitepp -Ithread -Isdk
+          -I$(HLSDK)/public -I$(MM_ROOT) -I$(SQL) -Isqlitepp -Ithread -Isdk
 
 ################################################
 ### DO NOT EDIT BELOW HERE FOR MOST PROJECTS ###
@@ -94,6 +94,11 @@ endif
 ifeq "$(shell expr $(IS_CLANG) \| $(CPP_MAJOR) \>= 4)" "1"
 	CFLAGS += $(C_GCC4_FLAGS)
 	CPPFLAGS += $(CPP_GCC4_FLAGS)
+endif
+
+# GCC >= 4.6
+ifeq "$(shell expr $(IS_CLANG) \= 0 \& \( \( $(CPP_MAJOR) \= 4 \& $(CPP_MINOR) \>= 6 \) \| $(CPP_MAJOR) \> 4 \))" "1"
+	CFLAGS += -Wno-unused-but-set-variable
 endif
 
 # Clang >= 3 || GCC >= 4.7

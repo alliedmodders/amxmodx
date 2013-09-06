@@ -522,7 +522,7 @@ static cell AMX_NATIVE_CALL set_lights(AMX *amx, cell *params) {
 		glinfo.bCheckLights = false;
 		g_pFunctionTable_Post->pfnStartFrame = NULL;
 		memset(glinfo.szLastLights, 0x0, 128);
-		(g_engfuncs.pfnLightStyle)(0, (char *)glinfo.szRealLights);
+		(g_engfuncs.pfnLightStyle)(0, glinfo.szRealLights);
 		return 1;
 	}
 	

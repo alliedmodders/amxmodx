@@ -20,7 +20,7 @@
  *      misrepresented as being the original software.
  *  3.  This notice may not be removed or altered from any source distribution.
  *
- *  Version: $Id$
+ *  Version: $Id: libpawnc.c 2969 2006-08-25 00:28:36Z dvander $
  */
 #include <assert.h>
 #include <stdio.h>

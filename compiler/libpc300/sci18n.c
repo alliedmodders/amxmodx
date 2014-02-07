@@ -30,7 +30,7 @@
  *      misrepresented as being the original software.
  *  3.  This notice may not be removed or altered from any source distribution.
  *
- *  Version: $Id$
+ *  Version: $Id: sci18n.c 1724 2005-07-24 20:00:55Z dvander $
  */
 #include <assert.h>
 #include <stdio.h>

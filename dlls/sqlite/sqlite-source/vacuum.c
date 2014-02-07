@@ -14,7 +14,7 @@
 ** Most of the code in this file may be omitted by defining the
 ** SQLITE_OMIT_VACUUM macro.
 **
-** $Id$
+** $Id: vacuum.c 3426 2007-03-21 20:19:37Z damagedsoul $
 */
 #include "sqliteInt.h"
 #include "vdbeInt.h"

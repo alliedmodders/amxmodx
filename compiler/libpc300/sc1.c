@@ -20,7 +20,7 @@
  *      misrepresented as being the original software.
  *  3.  This notice may not be removed or altered from any source distribution.
  *
- *  Version: $Id$
+ *  Version: $Id: sc1.c 3460 2007-04-24 13:36:36Z sawce $
  */
 #include <assert.h>
 #include <ctype.h>

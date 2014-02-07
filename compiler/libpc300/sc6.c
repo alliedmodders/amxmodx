@@ -18,7 +18,7 @@
  *      misrepresented as being the original software.
  *  3.  This notice may not be removed or altered from any source distribution.
  *
- *  Version: $Id$
+ *  Version: $Id: sc6.c 2018 2005-09-06 21:34:33Z dvander $
  */
 #include <assert.h>
 #include <stdio.h>

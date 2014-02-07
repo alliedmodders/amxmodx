@@ -12,7 +12,7 @@
 ** This file contains C code routines that are called by the parser
 ** to handle INSERT statements in SQLite.
 **
-** $Id$
+** $Id: insert.c 3426 2007-03-21 20:19:37Z damagedsoul $
 */
 #include "sqliteInt.h"
 

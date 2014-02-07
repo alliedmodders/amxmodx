@@ -17,7 +17,7 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  *
- * Version: $Id$
+ * Version: $Id: amx_proc.h 835 2004-08-12 16:31:50Z dvander $
  */
 
 #ifndef _INCLUDE_AMXPROC_H

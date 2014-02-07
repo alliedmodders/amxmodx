@@ -20,7 +20,7 @@
  *      misrepresented as being the original software.
  *  3.  This notice may not be removed or altered from any source distribution.
  *
- *  Version: $Id$
+ *  Version: $Id: amxdbg.cpp 2345 2006-02-10 19:47:09Z faluco $
  */
 #include <assert.h>
 #include <stdio.h>

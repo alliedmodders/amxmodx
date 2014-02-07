@@ -17,7 +17,7 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  *
- * Version: $Id$
+ * Version: $Id: amxasm.h 824 2004-08-11 09:32:24Z dvander $
  */
 
 #ifndef _INCLUDE_AMXASM_H

@@ -17,7 +17,7 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  *
- * Version: $Id$
+ * Version: $Id: amx_proc.cpp 926 2004-08-21 18:57:47Z dvander $
  */
 
 #include "amxasm.h"

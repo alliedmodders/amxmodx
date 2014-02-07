@@ -14,7 +14,7 @@
 ** other files are for internal use by SQLite and should not be
 ** accessed by users of the library.
 **
-** $Id$
+** $Id: legacy.c 3426 2007-03-21 20:19:37Z damagedsoul $
 */
 
 #include "sqliteInt.h"

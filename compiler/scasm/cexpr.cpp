@@ -17,7 +17,7 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  *
- * Version: $Id$
+ * Version: $Id: cexpr.cpp 921 2004-08-21 06:20:27Z dvander $
  */
 
 #include <string>

@@ -21,7 +21,7 @@
  *      misrepresented as being the original software.
  *  3.  This notice may not be removed or altered from any source distribution.
  *
- *  Version: $Id$
+ *  Version: $Id: amxdbg.h 2977 2006-08-27 02:17:18Z damagedsoul $
  */
 
 #ifndef AMXDBG_H_INCLUDED

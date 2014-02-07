@@ -17,7 +17,7 @@
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  *
- * Version: $Id$
+ * Version: $Id: amx_parser.h 821 2004-08-11 08:18:14Z dvander $
  */
 
 #ifndef _INCLUDE_PARSER_H

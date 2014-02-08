@@ -2,6 +2,7 @@
 import os
 
 files = [
+  'admin.sma',
   'adminchat.sma',
   'admincmd.sma',
   'adminhelp.sma',

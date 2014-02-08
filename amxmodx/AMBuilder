@@ -24,12 +24,19 @@ elif builder.target_platform == 'linux':
     binary.Dep('JIT/helpers-x86.o'),
   ]
 
+binary.compiler.linkflags += jit_objects
+
 if builder.target_platform == 'linux':
-  binary.compiler.postlink += [binary.Dep('zlib/libz.a')]
+  binary.compiler.linkflags += [binary.Dep('zlib/libz.a')]
 elif builder.target_platform == 'mac':
-  binary.compiler.postlink += [binary.Dep('zlib/libz-darwin.a')]
+  binary.compiler.linkflags += [binary.Dep('zlib/libz-darwin.a')]
 elif builder.target_platform == 'windows':
-  binary.compiler.postlink += [binary.Dep('zlib\\zlib.lib')]
+  binary.compiler.linkflags += [binary.Dep('zlib\\zlib.lib')]
+
+if builder.target_platform == 'mac':
+  binary.compiler.postlink += [
+    '-Wl,-read_only_relocs,suppress'
+  ]
 
 binary.sources = [
   'meta_api.cpp',
@@ -79,6 +86,5 @@ binary.sources = [
   'datastructs.cpp',
   'trie_natives.cpp',
 ]
-binary.compiler.linkflags += jit_objects
 
 AMXX.binaries += [builder.Add(binary)]

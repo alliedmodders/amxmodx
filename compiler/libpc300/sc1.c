@@ -487,7 +487,9 @@ int pc_compile(int argc, char *argv[])
       tname=NULL;
       sname=NULL;
     #else
-      tname=tempnam(NULL,"pawn");
+      char *buffer = strdup(P_tmpdir "/pawn.XXXXXX");
+      close(mkstemp(buffer));
+      tname=buffer;
     #endif
     ftmp=(FILE*)pc_createsrc(tname);
     for (fidx=0; (sname=get_sourcefile(fidx))!=NULL; fidx++) {
@@ -1298,7 +1300,8 @@ static void setconfig(char *root)
       insert_path(path);
       /* same for the codepage root */
       #if !defined NO_CODEPAGE
-        *ptr='\0';
+        if (ptr)
+          *ptr='\0';
         if (!cp_path(path,"codepage"))
           error(109,path);        /* codepage path */
       #endif

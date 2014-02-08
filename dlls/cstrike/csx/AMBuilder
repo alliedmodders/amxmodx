@@ -1,0 +1,15 @@
+# vim: set sts=2 ts=8 sw=2 tw=99 et ft=python:
+import os.path
+
+binary = AMXX.MetaModule(builder, 'csx')
+
+binary.sources = [
+  'sdk/amxxmodule.cpp',
+  'CRank.cpp',
+  'CMisc.cpp',
+  'meta_api.cpp',
+  'rank.cpp',
+  'usermsg.cpp',
+]
+
+AMXX.modules += [builder.Add(binary)]

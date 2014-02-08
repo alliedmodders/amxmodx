@@ -1,0 +1,84 @@
+# vim: set sts=2 ts=8 sw=2 tw=99 et ft=python:
+import os.path
+
+binary = AMXX.MetaPlugin(builder, 'amxmodx')
+
+binary.compiler.defines += [
+  'JIT',
+  'ASM32',
+  'HAVE_STDINT_H',
+]
+
+if builder.target_platform == 'mac':
+  jit_objects = [
+    binary.Dep('JIT/amxexecn-darwin.o'),
+    binary.Dep('JIT/amxjitsn-darwin.o'),
+    binary.Dep('JIT/natives-darwin-x86.o'),
+    binary.Dep('JIT/helpers-darwin-x86.o'),
+  ]
+elif builder.target_platform == 'linux':
+  jit_objects = [
+    binary.Dep('JIT/amxexecn.o'),
+    binary.Dep('JIT/amxjitsn.o'),
+    binary.Dep('JIT/natives-x86.o'),
+    binary.Dep('JIT/helpers-x86.o'),
+  ]
+
+if builder.target_platform == 'linux':
+  binary.compiler.postlink += [binary.Dep('zlib/libz.a')]
+elif builder.target_platform == 'mac':
+  binary.compiler.postlink += [binary.Dep('zlib/libz-darwin.a')]
+elif builder.target_platform == 'windows':
+  binary.compiler.postlink += [binary.Dep('zlib\\zlib.lib')]
+
+binary.sources = [
+  'meta_api.cpp',
+  'CFile.cpp',
+  'CVault.cpp',
+  'vault.cpp',
+  'float.cpp',
+  'file.cpp',
+  'modules.cpp',
+  'CMisc.cpp',
+  'CTask.cpp',
+  'string.cpp',
+  'amxmodx.cpp',
+  'CEvent.cpp',
+  'CCmd.cpp',
+  'CLogEvent.cpp',
+  'srvcmd.cpp',
+  'strptime.cpp',
+  'amxcore.cpp',
+  'amxtime.cpp',
+  'power.cpp',
+  'amxxlog.cpp',
+  'fakemeta.cpp',
+  'amxxfile.cpp',
+  'CLang.cpp',
+  'md5.cpp',
+  'emsg.cpp',
+  'CForward.cpp',
+  'CPlugin.cpp',
+  'CModule.cpp',
+  'CMenu.cpp',
+  'util.cpp',
+  'amx.cpp',
+  'amxdbg.cpp',
+  'natives.cpp',
+  'newmenus.cpp',
+  'debugger.cpp',
+  'optimizer.cpp',
+  'format.cpp',
+  'messages.cpp',
+  'libraries.cpp',
+  'vector.cpp',
+  'sorting.cpp',
+  'amxmod_compat.cpp',
+  'nongpl_matches.cpp',
+  'CFlagManager.cpp',
+  'datastructs.cpp',
+  'trie_natives.cpp',
+]
+binary.compiler.linkflags += jit_objects
+
+AMXX.binaries += [builder.Add(binary)]

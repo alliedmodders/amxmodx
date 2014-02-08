@@ -1,0 +1,48 @@
+# vim: set sts=2 ts=8 sw=2 tw=99 et ft=python:
+import os.path
+
+if AMXX.mysql_path:
+  binary = AMXX.MetaModule(builder, 'mysql')
+
+  binary.compiler.cxxincludes += [
+    os.path.join(AMXX.mysql_path, 'include'),
+    os.path.join(builder.currentSourcePath, 'mysql'),
+    os.path.join(builder.currentSourcePath, 'thread'),
+  ]
+
+  binary.compiler.defines += [
+    'SM_DEFAULT_THREADER',
+    'stricmp=strcasecmp',
+  ]
+
+  if builder.target_platform is 'linux' or builder.target_platform is 'mac':
+    binary.compiler.postlink += [
+      os.path.join(AMXX.mysql_path, 'lib', 'libmysqlclient_r.a'),
+      '-lz',
+      '-lpthread',
+      '-lm'
+    ]
+  elif builder.target_platform is 'windows':
+    binary.compiler.postlink += [
+      os.path.join(AMXX.mysql_path, 'lib', 'opt', 'mysqlclient.lib'),
+      os.path.join(AMXX.mysql_path, 'lib', 'opt', 'zlib.lib'),
+      'wsock32.lib'
+    ]
+
+  binary.sources = [
+    'basic_sql.cpp',
+    'handles.cpp',
+    'module.cpp',
+    'threading.cpp',
+    'sdk/amxxmodule.cpp',
+    'oldcompat_sql.cpp',
+    'thread/BaseWorker.cpp',
+    'thread/ThreadWorker.cpp',
+    'thread/PosixThreads.cpp',
+    'mysql/MysqlQuery.cpp',
+    'mysql/MysqlResultSet.cpp',
+    'mysql/MysqlDatabase.cpp',
+    'mysql/MysqlDriver.cpp',
+  ]
+
+  AMXX.modules += [builder.Add(binary)]

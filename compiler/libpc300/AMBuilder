@@ -1,0 +1,38 @@
+# vim: set sts=2 ts=8 sw=2 tw=99 et ft=python:
+import os.path
+
+binary = AMXX.Library(builder, 'amxxpc32')
+
+binary.compiler.includes += [builder.currentSourcePath]
+
+if builder.target_platform in ['mac', 'linux']:
+  binary.compiler.defines += ['ENABLE_BINRELOC']
+  binary.compiler.postlink += ['-lm', '-lpthread']
+
+binary.compiler.defines += [
+  'NO_MAIN',
+  'PAWNC_DLL',
+  'HAVE_STDINT_H',
+]
+
+binary.sources = [
+  'sc1.c',
+  'sc2.c',
+  'sc3.c',
+  'sc4.c',
+  'sc5.c',
+  'sc6.c',
+  'sc7.c',
+  'scvars.c',
+  'scmemfil.c',
+  'scstate.c',
+  'sclist.c',
+  'sci18n.c',
+  'scexpand.c',
+  'pawncc.c',
+  'libpawnc.c',
+  'prefix.c',
+  'memfile.c',
+]
+
+AMXX.libpc300 = [builder.Add(binary)]

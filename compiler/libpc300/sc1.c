@@ -1013,6 +1013,9 @@ static void parseoptions(int argc,char **argv,char *oname,char *ename,char *pnam
           hwndFinish=(HWND)0;
         break;
 #endif
+      case 'h':
+        sc_showincludes = 1;
+        break;
       case 'i':
         strncpy(str,option_value(ptr),sizeof str);  /* set name of include directory */
         str[sizeof(str)-1]='\0';

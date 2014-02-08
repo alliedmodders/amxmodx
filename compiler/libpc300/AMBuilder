@@ -35,4 +35,4 @@ binary.sources = [
   'memfile.c',
 ]
 
-AMXX.libpc300 = [builder.Add(binary)]
+AMXX.libpc300 = builder.Add(binary)

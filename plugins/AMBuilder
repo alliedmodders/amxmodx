@@ -1,0 +1,112 @@
+# vim: set ts=8 sts=2 sw=2 tw=99 et ft=python: 
+import os
+
+files = [
+  'adminchat.sma',
+  'admincmd.sma',
+  'adminhelp.sma',
+  'adminslots.sma',
+  'adminvote.sma',
+  'antiflood.sma',
+  'imessage.sma',
+  'mapchooser.sma',
+  'mapsmenu.sma',
+  'menufront.sma',
+  'multilingual.sma',
+  'nextmap.sma',
+  'pausecfg.sma',
+  'plmenu.sma',
+  'scrollmsg.sma',
+  'statscfg.sma',
+  'telemenu.sma',
+  'timeleft.sma',
+  'cmdmenu.sma',
+  'pluginmenu.sma',
+  'cstrike/csstats.sma',
+  'cstrike/miscstats.sma',
+  'cstrike/restmenu.sma',
+  'cstrike/stats_logging.sma',
+  'cstrike/statsx.sma',
+  'dod/dodstats.sma',
+  'dod/plmenu.sma',
+  'dod/stats.sma',
+  'dod/stats_logging.sma',
+  'dod/statssounds.sma',
+  'esf/EvolutionX.Core.sma',
+  'ns/idlekicker.sma',
+  'ns/mapchooser.sma',
+  'ns/nextmap.sma',
+  'ns/nscommands.sma',
+  'ns/timeleft.sma',
+  'ns/unstuck.sma',
+  'ns/plmenu.sma',
+  'tfc/plmenu.sma',
+  'tfc/stats.sma',
+  'tfc/stats_logging.sma',
+  'tfc/statssounds.sma',
+  'tfc/tfcstats.sma',
+  'ts/stats.sma',
+  'ts/stats_logging.sma',
+  'ts/statssounds.sma',
+  'ts/tsstats.sma',
+]
+
+_, (libpc300,) = builder.AddCopy(AMXX.libpc300.binary, builder.localFolder)
+_, (amxxpc,) = builder.AddCopy(AMXX.amxxpc.binary, builder.localFolder)
+
+amxxpc_argv = [
+  os.path.join(os.curdir, 'amxxpc'),
+  '-i' + os.path.relpath(os.path.join(builder.buildPath, 'includes'),
+                         os.path.join(builder.buildPath, builder.buildFolder)),
+  '-i' + os.path.relpath(os.path.join(builder.sourcePath, 'plugins', 'include'),
+                         os.path.join(builder.buildPath, builder.buildFolder)),
+  '-h',
+]
+
+def build_plugin(script_path, amxx_file, extra_argv = []):
+  script_folder = os.path.dirname(amxx_file)
+  if len(script_folder):
+    builder.AddFolder(script_folder)
+
+  inputs = [
+    # Note, use the ones we locally copied, not the originals! Otherwise they
+    # could copy out of order.
+    amxxpc,
+    libpc300,
+    script_path,
+  ]
+  outputs = [
+    amxx_file
+  ]
+
+  argv = amxxpc_argv + extra_argv + [
+    script_path,
+    '-o' + amxx_file,
+  ]
+
+  cmd_entry, (amx_entry,) = builder.AddCommand(
+    inputs = inputs,
+    argv = argv,
+    outputs = outputs,
+    dep_type = 'msvc'
+  )
+  AMXX.plugins[amxx_file] = amx_entry
+
+for script_file in files:
+  script_path = os.path.join(builder.currentSourcePath, script_file)
+  amxx_file = os.path.splitext(script_file)[0] + '.amxx'
+
+  build_plugin(script_path, amxx_file)
+
+# admin_sql.amxx is generated from admin.sma.
+build_plugin(
+  script_path = os.path.join(builder.currentSourcePath, 'admin.sma'),
+  amxx_file = 'admin_sql.amxx',
+  extra_argv = ['USING_SQL=1']
+)
+
+# amxmod_compat is multi-file.
+build_plugin(
+  script_path = os.path.join(builder.currentSourcePath, 'amxmod_compat', 'amxmod_compat.sma'),
+  amxx_file = 'amxmod_compat.amxx'
+)

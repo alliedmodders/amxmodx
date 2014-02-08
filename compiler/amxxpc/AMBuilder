@@ -23,4 +23,4 @@ binary.sources = [
   'Binary.cpp',
 ]
 
-AMXX.modules += [builder.Add(binary)]
+AMXX.amxxpc = builder.Add(binary)

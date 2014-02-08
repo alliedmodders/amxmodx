@@ -5,7 +5,9 @@ class AMXXConfig(object):
   def __init__(self):
     self.binaries = []
     self.modules = []
+    self.plugins = {}
     self.libpc300 = None
+    self.amxxpc = None
     self.metamod_path = None
     self.hlsdk_path = None
     self.mysql_path = None
@@ -253,6 +255,7 @@ builder.RunBuildScripts(
     'dlls/tfcx/AMBuilder',
     'dlls/ts/tsfun/AMBuilder',
     'dlls/ts/tsx/AMBuilder',
+    'plugins/AMBuilder',
   ],
   {
     'AMXX': AMXX

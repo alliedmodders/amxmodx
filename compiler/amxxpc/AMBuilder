@@ -6,6 +6,7 @@ binary = AMXX.Program(builder, 'amxxpc')
 binary.compiler.defines += [
   'AMX_ANSIONLY',
 ]
+binary.compiler.cxxflags.remove('-fno-exceptions')
 
 if builder.target_platform == 'linux':
   binary.compiler.postlink += [

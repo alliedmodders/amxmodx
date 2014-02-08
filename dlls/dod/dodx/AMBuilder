@@ -1,0 +1,17 @@
+# vim: set sts=2 ts=8 sw=2 tw=99 et ft=python:
+import os.path
+
+binary = AMXX.MetaModule(builder, 'dodx')
+
+binary.sources = [
+  'sdk/amxxmodule.cpp',
+  'CRank.cpp',
+  'CMisc.cpp',
+  'NBase.cpp',
+  'NRank.cpp',
+  'usermsg.cpp',
+  'Utils.cpp',
+  'moduleconfig.cpp',
+]
+
+AMXX.modules += [builder.Add(binary)]

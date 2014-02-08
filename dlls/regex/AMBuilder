@@ -1,0 +1,19 @@
+# vim: set sts=2 ts=8 sw=2 tw=99 et ft=python:
+import os.path
+
+binary = AMXX.Module(builder, 'regex')
+
+if builder.target_platform == 'linux':
+  binary.compiler.postlink += [binary.Dep('lib_linux/libpcre.a')]
+elif builder.target_platform == 'mac':
+  binary.compiler.postlink += [binary.Dep('lib_darwin/libpcre.a')]
+elif builder.target_platform == 'windows':
+  binary.compiler.postlink += [binary.Dep('lib_win\\pcre.lib')]
+
+binary.sources = [
+  'sdk/amxxmodule.cpp',
+  'module.cpp',
+  'CRegEx.cpp',
+]
+
+AMXX.modules += [builder.Add(binary)]

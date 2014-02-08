@@ -1,0 +1,20 @@
+# vim: set sts=2 ts=8 sw=2 tw=99 et ft=python:
+import os.path
+
+binary = AMXX.MetaModule(builder, 'fakemeta')
+
+binary.sources = [
+  'sdk/amxxmodule.cpp',
+  'dllfunc.cpp',
+  'engfunc.cpp',
+  'fakemeta_amxx.cpp',
+  'pdata.cpp',
+  'forward.cpp',
+  'fm_tr.cpp',
+  'pev.cpp',
+  'glb.cpp',
+  'fm_tr2.cpp',
+  'misc.cpp',
+]
+
+AMXX.modules += [builder.Add(binary)]

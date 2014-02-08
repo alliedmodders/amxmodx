@@ -256,6 +256,7 @@ builder.RunBuildScripts(
     'dlls/ts/tsfun/AMBuilder',
     'dlls/ts/tsx/AMBuilder',
     'plugins/AMBuilder',
+    'support/PackageScript',
   ],
   {
     'AMXX': AMXX

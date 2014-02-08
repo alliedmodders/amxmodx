@@ -16,14 +16,14 @@ if AMXX.mysql_path:
   ]
 
   if builder.target_platform is 'linux' or builder.target_platform is 'mac':
-    binary.compiler.postlink += [
+    binary.compiler.linkflags += [
       os.path.join(AMXX.mysql_path, 'lib', 'libmysqlclient_r.a'),
       '-lz',
       '-lpthread',
       '-lm'
     ]
   elif builder.target_platform is 'windows':
-    binary.compiler.postlink += [
+    binary.compiler.linkflags += [
       os.path.join(AMXX.mysql_path, 'lib', 'opt', 'mysqlclient.lib'),
       os.path.join(AMXX.mysql_path, 'lib', 'opt', 'zlib.lib'),
       'wsock32.lib'

@@ -1,0 +1,318 @@
+# vim: set ts=8 sts=2 sw=2 tw=99 et ft=python: 
+import os
+
+builder.SetBuildFolder('packages')
+
+ModPackages = {
+  'cstrike': 'cstrike',
+  'dod': 'cstrike',
+  'esf': 'esf',
+  'ns': 'ns',
+  'tfc': 'tfc',
+  'tfcx': 'tfc',
+  'ts': 'ts',
+}
+
+folder_list = [
+    'core/addons/amxmodx/configs',
+    'core/addons/amxmodx/data',
+    'core/addons/amxmodx/data/lang',
+    'core/addons/amxmodx/dlls',
+    'core/addons/amxmodx/modules',
+    'core/addons/amxmodx/plugins',
+    'core/addons/amxmodx/scripting',
+    'core/addons/amxmodx/scripting/amxmod_compat',
+    'core/addons/amxmodx/scripting/include',
+    'core/addons/amxmodx/scripting/include/amxmod_compat',
+    'core/addons/amxmodx/scripting/testsuite',
+    'cstrike/addons/amxmodx/configs',
+    'cstrike/addons/amxmodx/plugins',
+    'cstrike/addons/amxmodx/modules',
+    'dod/addons/amxmodx/configs',
+    'dod/addons/amxmodx/plugins',
+    'dod/addons/amxmodx/modules',
+    'esf/addons/amxmodx/configs',
+    'esf/addons/amxmodx/plugins',
+    'esf/addons/amxmodx/modules',
+    'ns/addons/amxmodx/configs',
+    'ns/addons/amxmodx/plugins',
+    'ns/addons/amxmodx/modules',
+    'tfc/addons/amxmodx/configs',
+    'tfc/addons/amxmodx/plugins',
+    'tfc/addons/amxmodx/modules',
+    'ts/addons/amxmodx/configs',
+    'ts/addons/amxmodx/plugins',
+    'ts/addons/amxmodx/modules',
+]
+
+def split_all(path):
+  parts = []
+  while True:
+    head, tail = os.path.split(path)
+    if head == path or tail == path:
+      parts.insert(0, path)
+      break
+    path = head
+    parts.insert(0, tail)
+  return parts
+
+# Create the distribution folder hierarchy.
+folder_map = {}
+for folder in folder_list:
+  norm_folder = os.path.normpath(folder)
+  folder_map[folder] = builder.AddFolder(norm_folder)
+
+# Copy core dlls.
+for dll in AMXX.binaries:
+  builder.AddCopy(dll.binary, folder_map['core/addons/amxmodx/dlls'])
+
+# Copy modules.
+for module in AMXX.modules:
+  parts = split_all(module.binary.path)
+  if parts[1] in ModPackages:
+    package = ModPackages[parts[1]]
+  else:
+    package = 'core'
+  builder.AddCopy(module.binary, folder_map[package + '/addons/amxmodx/modules'])
+
+# Copy the compiler.
+builder.AddCopy(AMXX.amxxpc.binary, folder_map['core/addons/amxmodx/scripting'])
+builder.AddCopy(AMXX.libpc300.binary, folder_map['core/addons/amxmodx/scripting'])
+
+# Copy plugins.
+for amxx_file in AMXX.plugins:
+  amxx_entry = AMXX.plugins[amxx_file]
+  package = os.path.dirname(amxx_file)
+  if not len(package):
+    package = 'core'
+  builder.AddCopy(amxx_entry, folder_map[package + '/addons/amxmodx/plugins'])
+
+# Copy configuration files for each mod.
+configs = [
+  'amxx.cfg',
+  'clcmds.ini',
+  'cmds.ini',
+  'configs.ini',
+  'core.ini',
+  'custommenuitems.cfg',
+  'cvars.ini',
+  'hamdata.ini',
+  'maps.ini',
+  'modules.ini',
+  'plugins.ini',
+  'speech.ini',
+  'sql.cfg',
+  'users.ini',
+  'cstrike/amxx.cfg',
+  'cstrike/cmds.ini',
+  'cstrike/core.ini',
+  'cstrike/cvars.ini',
+  'cstrike/maps.ini',
+  'cstrike/modules.ini',
+  'cstrike/plugins.ini',
+  'cstrike/stats.ini',
+  'dod/core.ini',
+  'dod/cvars.ini',
+  'dod/maps.ini',
+  'dod/modules.ini',
+  'dod/plugins.ini',
+  'esf/modules.ini',
+  'esf/plugins.ini',
+  'ns/amxx.cfg',
+  'ns/clcmds.ini',
+  'ns/cmds.ini',
+  'ns/cvars.ini',
+  'ns/maps.ini',
+  'ns/modules.ini',
+  'ns/plugins.ini',
+  'ns/speech.ini',
+  'ns/users.ini',
+  'tfc/core.ini',
+  'tfc/cvars.ini',
+  'tfc/maps.ini',
+  'tfc/modules.ini',
+  'tfc/plugins.ini',
+  'ts/core.ini',
+  'ts/maps.ini',
+  'ts/modules.ini',
+  'ts/plugins.ini',
+]
+for config in configs:
+  cfg_folder, cfg_file = os.path.split(config)
+  if len(cfg_folder):
+    out_folder = cfg_folder + '/addons/amxmodx/configs'
+  else:
+    out_folder = 'core/addons/amxmodx/configs'
+  builder.AddCopy(
+    source = os.path.join(builder.sourcePath, 'configs', config),
+    output_path = folder_map[out_folder]
+  )
+
+# Copy core scripting files.
+scripting_files = [
+  'admin.sma',
+  'adminchat.sma',
+  'admincmd.sma',
+  'adminhelp.sma',
+  'adminslots.sma',
+  'adminvote.sma',
+  'antiflood.sma',
+  'cmdmenu.sma',
+  'compile.exe',
+  'compile.sh',
+  'imessage.sma',
+  'mapchooser.sma',
+  'mapsmenu.sma',
+  'menufront.sma',
+  'multilingual.sma',
+  'nextmap.sma',
+  'pausecfg.sma',
+  'plmenu.sma',
+  'scrollmsg.sma',
+  'statscfg.sma',
+  'telemenu.sma',
+  'timeleft.sma',
+  'pluginmenu.sma',
+  'amxmod_compat/amxmod_compat.sma',
+  'amxmod_compat/core.sma',
+  'amxmod_compat/mysql.sma',
+  'amxmod_compat/vexdum.sma',
+  'testsuite/admins_test.sma',
+  'testsuite/arraytest.sma',
+  'testsuite/callfunc_test.sma',
+  'testsuite/fakemeta_tests.sma',
+  'testsuite/fmttest.sma',
+  'testsuite/fwdtest1.sma',
+  'testsuite/fwdtest2.sma',
+  'testsuite/logtest.sma',
+  'testsuite/menutest.sma',
+  'testsuite/native_test.sma',
+  'testsuite/nvault_test.sma',
+  'testsuite/sorttest.sma',
+  'testsuite/sqlxtest.sma',
+  'testsuite/sqlxtest.sq3',
+  'testsuite/sqlxtest.sql',
+  'testsuite/trietest.sma',
+  'include/amxconst.inc',
+  'include/amxmisc.inc',
+  'include/amxmodx.inc',
+  'include/core.inc',
+  'include/csstats.inc',
+  'include/cstrike.inc',
+  'include/csx.inc',
+  'include/dbi.inc',
+  'include/dodconst.inc',
+  'include/dodfun.inc',
+  'include/dodstats.inc',
+  'include/dodx.inc',
+  'include/engine.inc',
+  'include/engine_const.inc',
+  'include/engine_stocks.inc',
+  'include/esf.inc',
+  'include/esf_const.inc',
+  'include/fakemeta.inc',
+  'include/fakemeta_const.inc',
+  'include/fakemeta_stocks.inc',
+  'include/file.inc',
+  'include/float.inc',
+  'include/fun.inc',
+  'include/geoip.inc',
+  'include/lang.inc',
+  'include/ns.inc',
+  'include/ns2amx.inc',
+  'include/ns_const.inc',
+  'include/nvault.inc',
+  'include/regex.inc',
+  'include/sockets.inc',
+  'include/string.inc',
+  'include/tfcconst.inc',
+  'include/tfcstats.inc',
+  'include/tfcx.inc',
+  'include/tsconst.inc',
+  'include/tsfun.inc',
+  'include/tsstats.inc',
+  'include/tsx.inc',
+  'include/vault.inc',
+  'include/xs.inc',
+  'include/cellarray.inc',
+  'include/celltrie.inc',
+  'include/fakemeta_util.inc',
+  'include/ham_const.inc',
+  'include/hamsandwich.inc',
+  'include/hlsdk_const.inc',
+  'include/message_const.inc',
+  'include/message_stocks.inc',
+  'include/messages.inc',
+  'include/newmenus.inc',
+  'include/sorting.inc',
+  'include/sqlx.inc',
+  'include/svn_version.inc',
+  'include/svn_version.tpl',
+  'include/time.inc',
+  'include/vector.inc',
+  'include/amxmod_compat/VexdUM.inc',
+  'include/amxmod_compat/VexdUM_const.inc',
+  'include/amxmod_compat/VexdUM_stock.inc',
+  'include/amxmod_compat/Vexd_Utilities.inc',
+  'include/amxmod_compat/amxmod.inc',
+  'include/amxmod_compat/maths.inc',
+  'include/amxmod_compat/mysql.inc',
+  'include/amxmod_compat/translator.inc',
+  'include/amxmod_compat/xtrafun.inc',
+]
+for filename in scripting_files:
+  output_folder = 'core/addons/amxmodx/scripting'
+  inner_folder = os.path.dirname(filename)
+  if len(inner_folder):
+    output_folder += '/' + inner_folder
+  builder.AddCopy(
+    source = os.path.join(builder.sourcePath, 'plugins', filename),
+    output_path = folder_map[output_folder]
+  )
+
+# Copy weird things.
+weirdfiles = [
+  ('dlls/geoip/GeoIP.dat', 'core/addons/amxmodx/data'),
+]
+
+for source, dest in weirdfiles:
+  builder.AddCopy(
+    source = os.path.join(builder.sourcePath, source),
+    output_path = folder_map[dest]
+  )
+
+# Copy language data.
+datafiles = [
+  'admin.txt',
+  'adminchat.txt',
+  'admincmd.txt',
+  'adminhelp.txt',
+  'adminslots.txt',
+  'adminvote.txt',
+  'antiflood.txt',
+  'cmdmenu.txt',
+  'common.txt',
+  'imessage.txt',
+  'languages.txt',
+  'mapchooser.txt',
+  'mapsmenu.txt',
+  'menufront.txt',
+  'miscstats.txt',
+  'multilingual.txt',
+  'nextmap.txt',
+  'pausecfg.txt',
+  'plmenu.txt',
+  'restmenu.txt',
+  'scrollmsg.txt',
+  'stats_dod.txt',
+  'statscfg.txt',
+  'statsx.txt',
+  'telemenu.txt',
+  'timeleft.txt',
+  'time.txt',
+]
+for datafile in datafiles:
+  builder.AddCopy(
+    source = os.path.join(builder.sourcePath, 'plugins', 'lang', datafile),
+    output_path = folder_map['core/addons/amxmodx/data/lang']
+  )

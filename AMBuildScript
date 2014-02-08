@@ -91,6 +91,7 @@ class AMXXConfig(object):
         '-Wall',
         '-Werror',
         '-Wno-uninitialized',
+        '-Wno-invalid-offsetof',
         '-Wno-unused',
         '-Wno-switch',
         '-m32',

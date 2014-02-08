@@ -1,6 +1,0 @@
-compress = /bin/tar
-source = /home/users/dvander/amxmodx/trunk
-makeopts = 
-output = /home/users/dvander/done
-devenv = /usr/bin/make
-release = amxmodx-1.8.1

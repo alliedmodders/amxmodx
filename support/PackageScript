@@ -5,7 +5,7 @@ builder.SetBuildFolder('packages')
 
 ModPackages = {
   'cstrike': 'cstrike',
-  'dod': 'cstrike',
+  'dod': 'dod',
   'esf': 'esf',
   'ns': 'ns',
   'tfc': 'tfc',
@@ -14,35 +14,45 @@ ModPackages = {
 }
 
 folder_list = [
-    'core/addons/amxmodx/configs',
-    'core/addons/amxmodx/data',
-    'core/addons/amxmodx/data/lang',
-    'core/addons/amxmodx/dlls',
-    'core/addons/amxmodx/modules',
-    'core/addons/amxmodx/plugins',
-    'core/addons/amxmodx/scripting',
-    'core/addons/amxmodx/scripting/amxmod_compat',
-    'core/addons/amxmodx/scripting/include',
-    'core/addons/amxmodx/scripting/include/amxmod_compat',
-    'core/addons/amxmodx/scripting/testsuite',
+    'base/addons/amxmodx/configs',
+    'base/addons/amxmodx/data',
+    'base/addons/amxmodx/data/lang',
+    'base/addons/amxmodx/dlls',
+    'base/addons/amxmodx/logs',
+    'base/addons/amxmodx/modules',
+    'base/addons/amxmodx/plugins',
+    'base/addons/amxmodx/scripting',
+    'base/addons/amxmodx/scripting/amxmod_compat',
+    'base/addons/amxmodx/scripting/include',
+    'base/addons/amxmodx/scripting/include/amxmod_compat',
+    'base/addons/amxmodx/scripting/testsuite',
     'cstrike/addons/amxmodx/configs',
+    'cstrike/addons/amxmodx/data',
     'cstrike/addons/amxmodx/plugins',
     'cstrike/addons/amxmodx/modules',
+    'cstrike/addons/amxmodx/scripting',
     'dod/addons/amxmodx/configs',
+    'dod/addons/amxmodx/data',
     'dod/addons/amxmodx/plugins',
     'dod/addons/amxmodx/modules',
+    'dod/addons/amxmodx/scripting',
     'esf/addons/amxmodx/configs',
     'esf/addons/amxmodx/plugins',
-    'esf/addons/amxmodx/modules',
+    'esf/addons/amxmodx/scripting',
     'ns/addons/amxmodx/configs',
     'ns/addons/amxmodx/plugins',
     'ns/addons/amxmodx/modules',
+    'ns/addons/amxmodx/scripting',
     'tfc/addons/amxmodx/configs',
+    'tfc/addons/amxmodx/data',
     'tfc/addons/amxmodx/plugins',
     'tfc/addons/amxmodx/modules',
+    'tfc/addons/amxmodx/scripting',
     'ts/addons/amxmodx/configs',
+    'ts/addons/amxmodx/data',
     'ts/addons/amxmodx/plugins',
     'ts/addons/amxmodx/modules',
+    'ts/addons/amxmodx/scripting',
 ]
 
 def split_all(path):
@@ -64,7 +74,7 @@ for folder in folder_list:
 
 # Copy core dlls.
 for dll in AMXX.binaries:
-  builder.AddCopy(dll.binary, folder_map['core/addons/amxmodx/dlls'])
+  builder.AddCopy(dll.binary, folder_map['base/addons/amxmodx/dlls'])
 
 # Copy modules.
 for module in AMXX.modules:
@@ -72,20 +82,40 @@ for module in AMXX.modules:
   if parts[1] in ModPackages:
     package = ModPackages[parts[1]]
   else:
-    package = 'core'
+    package = 'base'
   builder.AddCopy(module.binary, folder_map[package + '/addons/amxmodx/modules'])
 
 # Copy the compiler.
-builder.AddCopy(AMXX.amxxpc.binary, folder_map['core/addons/amxmodx/scripting'])
-builder.AddCopy(AMXX.libpc300.binary, folder_map['core/addons/amxmodx/scripting'])
+builder.AddCopy(AMXX.amxxpc.binary, folder_map['base/addons/amxmodx/scripting'])
+builder.AddCopy(AMXX.libpc300.binary, folder_map['base/addons/amxmodx/scripting'])
 
 # Copy plugins.
+StatsPlugins = ['csstats.amxx']
 for amxx_file in AMXX.plugins:
   amxx_entry = AMXX.plugins[amxx_file]
   package = os.path.dirname(amxx_file)
+  output_folder = '/addons/amxmodx/plugins'
   if not len(package):
-    package = 'core'
-  builder.AddCopy(amxx_entry, folder_map[package + '/addons/amxmodx/plugins'])
+    package = 'base'
+  else:
+    # Ugh - statsx plugins go into a random folder.
+    name = os.path.basename(amxx_file)
+    if name == package + 'stats.amxx' or name in StatsPlugins:
+      output_folder = '/addons/amxmodx/data'
+
+  builder.AddCopy(amxx_entry, folder_map[package + output_folder])
+
+  # If it was in a mod package, we can cheat and copy it to scripting since
+  # none of them are multi-file.
+  if package != 'base':
+    base_file, _ = os.path.splitext(os.path.basename(amxx_file))
+    source_file = os.path.join(
+      builder.sourcePath,
+      'plugins',
+      package,
+      base_file + '.sma'
+    )
+    builder.AddCopy(source_file, folder_map[package + '/addons/amxmodx/scripting'])
 
 # Copy configuration files for each mod.
 configs = [
@@ -98,6 +128,7 @@ configs = [
   'cvars.ini',
   'hamdata.ini',
   'maps.ini',
+  'miscstats.ini',
   'modules.ini',
   'plugins.ini',
   'speech.ini',
@@ -142,7 +173,7 @@ for config in configs:
   if len(cfg_folder):
     out_folder = cfg_folder + '/addons/amxmodx/configs'
   else:
-    out_folder = 'core/addons/amxmodx/configs'
+    out_folder = 'base/addons/amxmodx/configs'
   builder.AddCopy(
     source = os.path.join(builder.sourcePath, 'configs', config),
     output_path = folder_map[out_folder]
@@ -158,8 +189,6 @@ scripting_files = [
   'adminvote.sma',
   'antiflood.sma',
   'cmdmenu.sma',
-  'compile.exe',
-  'compile.sh',
   'imessage.sma',
   'mapchooser.sma',
   'mapsmenu.sma',
@@ -261,7 +290,7 @@ scripting_files = [
   'include/amxmod_compat/xtrafun.inc',
 ]
 for filename in scripting_files:
-  output_folder = 'core/addons/amxmodx/scripting'
+  output_folder = 'base/addons/amxmodx/scripting'
   inner_folder = os.path.dirname(filename)
   if len(inner_folder):
     output_folder += '/' + inner_folder
@@ -272,8 +301,18 @@ for filename in scripting_files:
 
 # Copy weird things.
 weirdfiles = [
-  ('dlls/geoip/GeoIP.dat', 'core/addons/amxmodx/data'),
+  ('dlls/geoip/GeoIP.dat', 'base/addons/amxmodx/data'),
+  ('plugins/esf/ESF_mod_tutorial.txt', 'esf/addons/amxmodx/scripting'),
 ]
+
+if builder.target_platform == 'windows':
+  weirdfiles += [
+    ('plugins/compile.exe', 'base/addons/amxmodx/scripting'),
+  ]
+else:
+  weirdfiles += [
+    ('plugins/compile.sh', 'base/addons/amxmodx/scripting'),
+  ]
 
 for source, dest in weirdfiles:
   builder.AddCopy(
@@ -314,5 +353,5 @@ datafiles = [
 for datafile in datafiles:
   builder.AddCopy(
     source = os.path.join(builder.sourcePath, 'plugins', 'lang', datafile),
-    output_path = folder_map['core/addons/amxmodx/data/lang']
+    output_path = folder_map['base/addons/amxmodx/data/lang']
   )

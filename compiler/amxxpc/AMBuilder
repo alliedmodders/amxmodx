@@ -29,4 +29,7 @@ binary.sources = [
   'Binary.cpp',
 ]
 
+if builder.target_platform == 'windows':
+  binary.sources += ['amxxpc1.rc']
+
 AMXX.amxxpc = builder.Add(binary)

@@ -229,13 +229,11 @@ class AMXXConfig(object):
     binary = compiler.Library(name)
     binary.compiler.cxxincludes += [os.path.join(context.currentSourcePath)]
     if builder.target_platform == 'windows':
-      #binary.sources += ['version.rc']
-      #binary.compiler.rcdefines += [
-      #  'BINARY_NAME="{0}"'.format(binary.outputFile),
-      #  'SM_GENERATED_BUILD',
-      #  'RC_COMPILE',
-      #]
-      pass
+      binary.compiler.rcdefines += [
+        'BINARY_NAME="{0}"'.format(binary.outputFile),
+        'AMBUILD',
+        'RC_COMPILE',
+      ]
     elif builder.target_platform == 'mac':
       binary.compiler.postlink += [
         '-compatibility_version', '1.0.0',
@@ -250,7 +248,7 @@ class AMXXConfig(object):
       os.path.join(context.currentSourcePath, 'sdk'),
     ]
 
-    if builder.target_platform == 'mac':
+    if builder.target_platform == 'mac' or builder.target_platform == 'windows':
       name = name + '_amxx'
     elif builder.target_platform == 'linux':
       name = name + '_amxx_i386'
@@ -260,14 +258,12 @@ class AMXXConfig(object):
   def ProgramBuilder(self, context, compiler, name):
     binary = compiler.Program(name)
     binary.compiler.cxxincludes += [os.path.join(context.currentSourcePath)]
-    # if builder.target_platform == 'windows':
-    #   binary.sources += ['version.rc']
-    #   binary.compiler.rcdefines += [
-    #     'BINARY_NAME="{0}"'.format(binary.outputFile),
-    #     'SM_GENERATED_BUILD',
-    #     'RC_COMPILE',
-    #   ]
-    # binary.compiler.linkflags += [self.versionlib]
+    if builder.target_platform == 'windows':
+      binary.compiler.rcdefines += [
+        'BINARY_NAME="{0}"'.format(binary.outputFile),
+        'AMBUILD',
+        'RC_COMPILE',
+      ]
     binary.compiler.sourcedeps += AMXX.generated_headers
     return binary
 
@@ -283,7 +279,7 @@ class AMXXConfig(object):
   def MetaPlugin(self, context, name):
     compiler = self.MMCompiler(context)
 
-    if builder.target_platform == 'mac':
+    if builder.target_platform == 'mac' or builder.target_platform == 'windows':
       name = name + '_mm'
     elif builder.target_platform == 'linux':
       name = name + '_mm_i386'

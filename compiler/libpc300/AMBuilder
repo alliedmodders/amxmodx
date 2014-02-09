@@ -35,4 +35,7 @@ binary.sources = [
   'memfile.c',
 ]
 
+if builder.target_platform == 'windows':
+  binary.sources+= ['libpawnc.rc']
+
 AMXX.libpc300 = builder.Add(binary)

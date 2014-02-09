@@ -30,7 +30,7 @@
 */
 
 #include "amxmodx.h"
-#include "svn_version.h"
+#include <amxmodx_version.h>
 
 void amx_command()
 {

@@ -1,0 +1,41 @@
+# vim: set ts=8 sts=2 sw=2 tw=99 et ft=python: 
+import os, sys
+
+builder.SetBuildFolder('/')
+
+includes = builder.AddFolder('includes')
+
+argv = [
+  sys.executable,
+  os.path.join(builder.sourcePath, 'support', 'generate_headers.py'),
+  os.path.join(builder.sourcePath),
+  os.path.join(builder.buildPath, 'includes'),
+]
+outputs = [
+  os.path.join(builder.buildFolder, 'includes', 'amxmodx_version.h'),
+  os.path.join(builder.buildFolder, 'includes', 'amxmodx_version.inc'),
+]
+
+with open(os.path.join(builder.sourcePath, '.git', 'HEAD')) as fp:
+ git_state = fp.read().strip().split(':')[1].strip()
+
+git_head_path = os.path.join(builder.sourcePath, '.git', git_state)
+if not os.path.exists(git_head_path):
+  git_head_path = os.path.join(builder.sourcePath, '.git', 'HEAD')
+
+sources = [
+  os.path.join(builder.sourcePath, 'product.version'),
+
+  # This is a hack, but we need some way to only run this script when HG changes.
+  git_head_path,
+
+  # The script source is a dependency, of course...
+  argv[1]
+]
+cmd_node, output_nodes = builder.AddCommand(
+  inputs = sources,
+  argv = argv,
+  outputs = outputs
+)
+
+rvalue = output_nodes

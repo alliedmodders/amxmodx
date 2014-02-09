@@ -1,6 +1,0 @@
-compress = C:\WINDOWS\zip.exe
-source = c:\temp\amxmodx
-makeopts = 
-output = c:\temp\done
-devenv = C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe
-release = amxmodx-1.8.1

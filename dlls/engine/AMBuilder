@@ -1,0 +1,16 @@
+# vim: set sts=2 ts=8 sw=2 tw=99 et ft=python:
+import os.path
+
+binary = AMXX.MetaModule(builder, 'engine')
+
+binary.sources = [
+  'sdk/amxxmodule.cpp',
+  'amxxapi.cpp',
+  'engine.cpp',
+  'entity.cpp',
+  'globals.cpp',
+  'forwards.cpp',
+  'amxmod_compat.cpp',
+]
+
+AMXX.modules += [builder.Add(binary)]

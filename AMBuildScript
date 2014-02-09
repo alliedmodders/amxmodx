@@ -1,0 +1,349 @@
+# vim: set sts=2 ts=8 sw=2 tw=99 et ft=python :
+import os
+
+class AMXXConfig(object):
+  def __init__(self):
+    self.binaries = []
+    self.modules = []
+    self.plugins = {}
+    self.libpc300 = None
+    self.amxxpc = None
+    self.metamod_path = None
+    self.hlsdk_path = None
+    self.mysql_path = None
+    self.generated_headers = None
+    self.csx_app = None
+
+  def detectProductVersion(self):
+    builder.AddConfigureFile('product.version')
+    builder.AddConfigureFile('.git/HEAD')
+
+    # For OS X dylib versioning
+    import re
+    with open(os.path.join(builder.sourcePath, 'product.version'), 'r') as fp:
+      productContents = fp.read()
+    m = re.match('(\d+)\.(\d+)\.(\d+).*', productContents)
+    if m == None:
+      self.productVersion = '1.0.0'
+    else:
+      major, minor, release = m.groups()
+      self.productVersion = '{0}.{1}.{2}'.format(major, minor, release)
+
+  def detectMetamod(self):
+    if len(builder.options.metamod_path):
+      self.metamod_path = os.path.join(builder.originalCwd, builder.options.metamod_path)
+      if not os.path.exists(os.path.join(self.metamod_path, 'metamod')):
+        raise Exception('Metamod path does not exist: {0}'.format(builder.options.metamod_path))
+    else:
+      try_paths = [
+        os.path.join(builder.sourcePath, '..', 'metamod'),
+        os.path.join(builder.sourcePath, '..', 'metamod-am'),
+      ]
+      for try_path in try_paths:
+        if os.path.exists(os.path.join(try_path, 'metamod')):
+          self.metamod_path = os.path.normpath(try_path)
+          break
+      if not self.metamod_path:
+        raise Exception('Could not find the source code to Metamod! Try passing --metamod to configure.py.')
+
+  def detectHlsdk(self):
+    if len(builder.options.hlsdk_path):
+      self.hlsdk_path = os.path.join(builder.originalCwd, builder.options.hlsdk_path)
+      if not os.path.exists(self.hlsdk_path):
+        raise Exception('Metamod path does not exist: {0}'.format(builder.options.hlsdk_path))
+    else:
+      try_paths = [
+        os.path.join(builder.sourcePath, '..', 'hlsdk'),
+      ]
+      for try_path in try_paths:
+        if os.path.exists(try_path):
+          self.hlsdk_path = os.path.normpath(try_path)
+          break
+      if not self.hlsdk_path:
+        raise Exception('Could not find the HLSDK! Try passing --hlsdk to configure.py.')
+
+  def detectMysql(self):
+    if builder.options.disable_mysql:
+      return
+
+    if len(builder.options.mysql_path):
+      self.mysql_path = os.path.join(builder.originalCwd, builder.options.mysql_path)
+      if not os.path.exists(self.mysql_path):
+        raise Exception('Metamod path does not exist: {0}'.format(builder.options.mysql_path))
+    else:
+      try_paths = [
+        os.path.join(builder.sourcePath, '..', 'mysql-5.0'),
+      ]
+      for try_path in try_paths:
+        if os.path.exists(try_path):
+          self.mysql_path = os.path.normpath(try_path)
+          break
+      if not self.mysql_path:
+        raise Exception('Could not find MySQL! Try passing --mysql to configure.py.')
+
+  def configure(self):
+    builder.AddConfigureFile('pushbuild.txt')
+
+    cfg = builder.DetectCompilers()
+    cxx = cfg.cxx
+
+    if cxx.behavior == 'gcc':
+      cfg.cflags += [
+        '-pipe',
+        '-fno-strict-aliasing',
+        '-Wall',
+        '-Werror',
+        '-Wno-uninitialized',
+        '-Wno-unused',
+        '-Wno-switch',
+        '-m32',
+      ]
+      cfg.cxxflags += [
+        '-Wno-invalid-offsetof',
+      ]
+
+      cfg.linkflags += ['-m32']
+
+      have_gcc = cxx.name == 'gcc'
+      have_clang = cxx.name == 'clang'
+
+      if have_clang or (have_gcc and cxx.majorVersion >= 4):
+        cfg.cflags += ['-fvisibility=hidden']
+        cfg.cxxflags += ['-fvisibility-inlines-hidden']
+        if (have_gcc and cxx.minorVersion >= 7) or (have_clang and cxx.majorVersion >= 3):
+          cfg.cxxflags += ['-Wno-delete-non-virtual-dtor']
+
+      if have_gcc:
+        cfg.cflags += ['-Wno-parentheses']
+      elif have_clang:
+        cfg.cflags += ['-Wno-logical-op-parentheses']
+
+      cfg.cxxflags += [
+        '-fno-exceptions',
+        '-fno-rtti',
+      ]
+    elif cxx.name == 'msvc':
+      if builder.options.debug == '1':
+        cfg.cflags += ['/MTd']
+        cfg.linkflags += ['/NODEFAULTLIB:libcmt']
+      else:
+        cfg.cflags += ['/MT']
+      cfg.defines += [
+        '_CRT_SECURE_NO_DEPRECATE',
+        '_CRT_SECURE_NO_WARNINGS',
+        '_CRT_NONSTDC_NO_DEPRECATE',
+        '_ITERATOR_DEBUG_LEVEL=0',
+      ]
+      cfg.cflags += [
+        '/W3',
+      ]
+      cfg.cxxflags += [
+        '/EHsc',
+        '/GR-',
+        '/TP',
+      ]
+      cfg.linkflags += [
+        '/MACHINE:X86',
+        '/SUBSYSTEM:WINDOWS',
+        'kernel32.lib',
+        'user32.lib',
+        'gdi32.lib',
+        'winspool.lib',
+        'comdlg32.lib',
+        'advapi32.lib',
+        'shell32.lib',
+        'ole32.lib',
+        'oleaut32.lib',
+        'uuid.lib',
+        'odbc32.lib',
+        'odbccp32.lib',
+      ] 
+
+    # Optimization
+    if builder.options.opt == '1':
+      cfg.defines += ['NDEBUG']
+      if cxx.behavior == 'gcc':
+        cfg.cflags += ['-O2']
+      elif cxx.behavior == 'msvc':
+        cfg.cflags += ['/Ox']
+        cfg.linkflags += ['/OPT:ICF', '/OPT:REF']
+
+    # Debugging
+    if builder.options.debug == '1':
+      cfg.defines += ['DEBUG', '_DEBUG']
+      if cxx.behavior == 'msvc':
+        cfg.cflags += ['/Od', '/RTC1']
+
+    # This needs to be after our optimization flags which could otherwise disable it.
+    if cxx.name == 'msvc':
+      # Don't omit the frame pointer.
+      cfg.cflags += ['/Oy-']
+
+    # Platform-specifics
+    if builder.target_platform == 'linux':
+      cfg.defines += ['_LINUX', 'POSIX', 'LINUX']
+      cfg.postlink += ['-ldl']
+      if cxx.name == 'gcc':
+        cfg.postlink += ['-static-libgcc']
+      elif cxx.name == 'clang':
+        cfg.postlink += ['-lgcc_eh']
+    elif builder.target_platform == 'mac':
+      cfg.defines += ['OSX', '_OSX', 'POSIX']
+      cfg.postlink += [
+        '-mmacosx-version-min=10.5',
+        '-arch', 'i386',
+        '-lstdc++',
+        '-stdlib=libstdc++',
+      ]
+      cfg.cxxflags += ['-stdlib=libstdc++']
+    elif builder.target_platform == 'windows':
+      cfg.defines += ['WIN32', '_WINDOWS']
+
+    # Finish up.
+    cfg.defines += [
+      'AMX_NOPROPLIST',
+      'PAWN_CELL_SIZE=32',
+      'AMBUILD',
+    ]
+
+    cfg.includes += [os.path.join(builder.buildPath, 'includes')]
+    return
+
+  #
+  # Low-level compiler and binary construction.
+  #
+
+  def MMCompiler(self, context):
+    compiler = context.compiler.clone()
+    compiler.cxxincludes += [
+      os.path.join(self.metamod_path, 'metamod'),
+      os.path.join(self.hlsdk_path, 'common'),
+      os.path.join(self.hlsdk_path, 'dlls'),
+      os.path.join(self.hlsdk_path, 'engine'),
+      os.path.join(self.hlsdk_path, 'game_shared'),
+      os.path.join(self.hlsdk_path, 'public'),
+      os.path.join(self.hlsdk_path, 'pm_shared'),
+    ]
+    return compiler
+
+  def LibraryBuilder(self, context, compiler, name):
+    binary = compiler.Library(name)
+    binary.compiler.cxxincludes += [os.path.join(context.currentSourcePath)]
+    if builder.target_platform == 'windows':
+      binary.compiler.rcdefines += [
+        'BINARY_NAME="{0}"'.format(binary.outputFile),
+        'AMBUILD',
+        'RC_COMPILE',
+      ]
+    elif builder.target_platform == 'mac':
+      binary.compiler.postlink += [
+        '-compatibility_version', '1.0.0',
+        '-current_version', self.productVersion
+      ]
+    #binary.compiler.linkflags += [self.versionlib]
+    binary.compiler.sourcedeps += AMXX.generated_headers
+    return binary
+
+  def ModuleBuilder(self, context, compiler, name):
+    compiler.cxxincludes += [
+      os.path.join(context.currentSourcePath, 'sdk'),
+    ]
+
+    if builder.target_platform == 'mac' or builder.target_platform == 'windows':
+      name = name + '_amxx'
+    elif builder.target_platform == 'linux':
+      name = name + '_amxx_i386'
+
+    return self.LibraryBuilder(context, compiler, name)
+
+  def ProgramBuilder(self, context, compiler, name):
+    binary = compiler.Program(name)
+    binary.compiler.cxxincludes += [os.path.join(context.currentSourcePath)]
+    if builder.target_platform == 'windows':
+      binary.compiler.rcdefines += [
+        'BINARY_NAME="{0}"'.format(binary.outputFile),
+        'AMBUILD',
+        'RC_COMPILE',
+      ]
+    binary.compiler.sourcedeps += AMXX.generated_headers
+    return binary
+
+  #
+  # High level job construction for libraries, metamod plugins, modules, and
+  # executables.
+  #
+
+  def Library(self, context, name):
+    compiler = context.compiler.clone()
+    return self.LibraryBuilder(context, compiler, name)
+
+  def MetaPlugin(self, context, name):
+    compiler = self.MMCompiler(context)
+
+    if builder.target_platform == 'mac' or builder.target_platform == 'windows':
+      name = name + '_mm'
+    elif builder.target_platform == 'linux':
+      name = name + '_mm_i386'
+
+    return self.LibraryBuilder(context, compiler, name)
+
+  def Module(self, context, name):
+    compiler = context.compiler.clone()
+    return self.ModuleBuilder(context, compiler, name)
+
+  def MetaModule(self, context, name):
+    compiler = self.MMCompiler(context)
+    return self.ModuleBuilder(context, compiler, name)
+
+  def Program(self, context, name):
+    compiler = context.compiler.clone()
+    return self.ProgramBuilder(context, compiler, name)
+
+AMXX = AMXXConfig()
+AMXX.detectProductVersion()
+AMXX.detectMetamod()
+AMXX.detectHlsdk()
+AMXX.detectMysql()
+AMXX.configure()
+
+AMXX.generated_headers = builder.RunScript(
+  'support/Versioning',
+  { 'AMXX': AMXX }
+)
+
+builder.RunBuildScripts(
+  [
+    'amxmodx/AMBuilder',
+    'compiler/amxxpc/AMBuilder',
+    'compiler/libpc300/AMBuilder',
+    'dlls/cstrike/cstrike/AMBuilder',
+    'dlls/cstrike/csx/AMBuilder',
+    'dlls/dod/dodfun/AMBuilder',
+    'dlls/dod/dodx/AMBuilder',
+    'dlls/engine/AMBuilder',
+    'dlls/fakemeta/AMBuilder',
+    'dlls/fun/AMBuilder',
+    'dlls/geoip/AMBuilder',
+    'dlls/hamsandwich/AMBuilder',
+    'dlls/mysqlx/AMBuilder',
+    'dlls/ns/AMBuilder',
+    'dlls/nvault/AMBuilder',
+    'dlls/regex/AMBuilder',
+    'dlls/sockets/AMBuilder',
+    'dlls/sqlite/AMBuilder',
+    'dlls/tfcx/AMBuilder',
+    'dlls/ts/tsfun/AMBuilder',
+    'dlls/ts/tsx/AMBuilder',
+    'plugins/AMBuilder',
+  ],
+  {
+    'AMXX': AMXX
+  }
+)
+
+# The csstats.dat reader is Windows-only.
+if builder.target_platform == 'windows':
+  builder.RunScript('dlls/cstrike/csx/WinCSX/AMBuilder', { 'AMXX': AMXX })
+
+# Finally, do packaging.
+builder.RunScript('support/PackageScript', { 'AMXX': AMXX })

@@ -775,7 +775,7 @@ static void expand(unsigned char *code, long codesize, long memsize)
     do {
       codesize--;
       /* no input byte should be shifted out completely */
-      assert(shift<8*sizeof(cell));
+      assert(size_t(shift)<8*sizeof(cell));
       /* we work from the end of a sequence backwards; the final code in
        * a sequence may not have the continuation bit set */
       assert(shift>0 || (code[(size_t)codesize] & 0x80)==0);

@@ -1,0 +1,15 @@
+# vim: set sts=2 ts=8 sw=2 tw=99 et ft=python:
+import os.path
+
+binary = AMXX.Module(builder, 'geoip')
+
+binary.sources = [
+  'sdk/amxxmodule.cpp',
+  'GeoIP.c',
+  'geoip_amxx.cpp',
+]
+
+if builder.target_platform == 'windows':
+  binary.compiler.postlink += ['ws2_32.lib']
+
+AMXX.modules += [builder.Add(binary)]

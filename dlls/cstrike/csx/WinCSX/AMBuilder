@@ -1,0 +1,22 @@
+# vim: set sts=2 ts=8 sw=2 tw=99 et ft=python:
+import os.path
+
+binary = AMXX.Program(builder, 'WinCSX')
+
+binary.compiler.includes += [
+  os.path.join(builder.currentSourcePath, 'resources'),
+]
+binary.compiler.defines += ['_MBCS']
+binary.compiler.linkflags += [
+  'comctl32.lib',
+]
+
+binary.sources = [
+  'CRank.cpp',
+  'WinCSX.cpp',
+  'stdafx.cpp',
+  'resources/WinCSX.rc',
+]
+
+AMXX.csx_app = builder.Add(binary)
+

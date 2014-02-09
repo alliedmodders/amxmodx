@@ -11,9 +11,11 @@ class AMXXConfig(object):
     self.metamod_path = None
     self.hlsdk_path = None
     self.mysql_path = None
+    self.generated_headers = None
 
   def detectProductVersion(self):
     builder.AddConfigureFile('product.version')
+    builder.AddConfigureFile('.git/HEAD')
 
     # For OS X dylib versioning
     import re
@@ -200,7 +202,11 @@ class AMXXConfig(object):
     cfg.defines += [
       'AMX_NOPROPLIST',
       'PAWN_CELL_SIZE=32',
+      'AMBUILD',
     ]
+
+    cfg.includes += [os.path.join(builder.buildPath, 'includes')]
+    return
 
   #
   # Low-level compiler and binary construction.
@@ -236,7 +242,7 @@ class AMXXConfig(object):
         '-current_version', self.productVersion
       ]
     #binary.compiler.linkflags += [self.versionlib]
-    #binary.compiler.sourcedeps += SM.generated_headers
+    binary.compiler.sourcedeps += AMXX.generated_headers
     return binary
 
   def ModuleBuilder(self, context, compiler, name):
@@ -262,7 +268,7 @@ class AMXXConfig(object):
     #     'RC_COMPILE',
     #   ]
     # binary.compiler.linkflags += [self.versionlib]
-    # binary.compiler.sourcedeps += SM.generated_headers
+    binary.compiler.sourcedeps += AMXX.generated_headers
     return binary
 
   #
@@ -302,6 +308,11 @@ AMXX.detectMetamod()
 AMXX.detectHlsdk()
 AMXX.detectMysql()
 AMXX.configure()
+
+AMXX.generated_headers = builder.RunScript(
+  'support/Versioning',
+  { 'AMXX': AMXX }
+)
 
 builder.RunBuildScripts(
   [

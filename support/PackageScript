@@ -117,6 +117,12 @@ for amxx_file in AMXX.plugins:
     )
     builder.AddCopy(source_file, folder_map[package + '/addons/amxmodx/scripting'])
 
+# Copy the generated version .inc.
+for generated_header in AMXX.generated_headers:
+  if 'inc' in generated_header.path:
+    builder.AddCopy(generated_header, folder_map['base/addons/amxmodx/scripting/include'])
+    break
+
 # Copy configuration files for each mod.
 configs = [
   'amxx.cfg',

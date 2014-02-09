@@ -3,7 +3,11 @@
 #ifndef __MODULECONFIG_H__
 #define __MODULECONFIG_H__
 
-#include "svn_version.h"
+#if defined AMBUILD
+# include <amxmodx_version.h>
+#else
+# define SVN_VERSION "dev-local"
+#endif
 
 // Module info
 #define MODULE_NAME "Sockets"

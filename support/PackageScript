@@ -123,6 +123,10 @@ for generated_header in AMXX.generated_headers:
     builder.AddCopy(generated_header, folder_map['base/addons/amxmodx/scripting/include'])
     break
 
+# Copy WinCSX.
+if builder.target_platform == 'windows':
+  builder.AddCopy(AMXX.csx_app.binary, folder_map['cstrike/addons/amxmodx/data'])
+
 # Copy configuration files for each mod.
 configs = [
   'amxx.cfg',

@@ -12,6 +12,7 @@ class AMXXConfig(object):
     self.hlsdk_path = None
     self.mysql_path = None
     self.generated_headers = None
+    self.csx_app = None
 
   def detectProductVersion(self):
     builder.AddConfigureFile('product.version')
@@ -334,9 +335,15 @@ builder.RunBuildScripts(
     'dlls/ts/tsfun/AMBuilder',
     'dlls/ts/tsx/AMBuilder',
     'plugins/AMBuilder',
-    'support/PackageScript',
   ],
   {
     'AMXX': AMXX
   }
 )
+
+# The csstats.dat reader is Windows-only.
+if builder.target_platform == 'windows':
+  builder.RunScript('dlls/cstrike/csx/WinCSX/AMBuilder', { 'AMXX': AMXX })
+
+# Finally, do packaging.
+builder.RunScript('support/PackageScript', { 'AMXX': AMXX })

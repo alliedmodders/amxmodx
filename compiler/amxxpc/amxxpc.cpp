@@ -30,11 +30,6 @@ int main(int argc, char **argv)
 {
 	struct abl pl32;
 
-#ifdef _DEBUG
-	printf("debug clamp\n");
-	getchar();
-#endif
-
 #if defined(__linux__)
 	HINSTANCE lib = NULL;
 	if (FileExists("./amxxpc32.so"))

@@ -23,6 +23,13 @@ elif builder.target_platform == 'linux':
     binary.Dep('JIT/natives-x86.o'),
     binary.Dep('JIT/helpers-x86.o'),
   ]
+elif builder.target_platform == 'windows':
+  jit_objects = [
+    binary.Dep('JIT/amxexecn.obj'),
+    binary.Dep('JIT/amxjitsn.obj'),
+    binary.Dep('JIT/helpers-x86.obj'),
+    binary.Dep('JIT/natives-x86.obj'),
+  ]
 
 binary.compiler.linkflags += jit_objects
 

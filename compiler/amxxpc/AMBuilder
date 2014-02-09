@@ -6,7 +6,9 @@ binary = AMXX.Program(builder, 'amxxpc')
 binary.compiler.defines += [
   'AMX_ANSIONLY',
 ]
-binary.compiler.cxxflags.remove('-fno-exceptions')
+
+if builder.target_platform != 'windows':
+  binary.compiler.cxxflags.remove('-fno-exceptions')
 
 if builder.target_platform == 'linux':
   binary.compiler.postlink += [
@@ -16,7 +18,10 @@ if builder.target_platform == 'linux':
 elif builder.target_platform == 'mac':
   binary.compiler.postlink += [binary.Dep('libz-darwin.a')]
 elif builder.target_platform == 'windows':
-  binary.compiler.postlink += [binary.Dep('zlib.lib')]
+  binary.compiler.defines += ['_MBCS']
+  binary.compiler.linkflags += [binary.Dep('zlib.lib')]
+  binary.compiler.linkflags.remove('/SUBSYSTEM:WINDOWS')
+  binary.compiler.linkflags.append('/SUBSYSTEM:CONSOLE')
 
 binary.sources = [
   'amx.cpp',

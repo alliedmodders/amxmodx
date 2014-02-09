@@ -7,7 +7,7 @@ chdir($path);
 
 require 'helpers.pm';
 
-chdir('../../OUTPUT');
+chdir('../../../OUTPUT');
 
 my $argn = $#ARGV + 1;
 if ($argn > 0) {

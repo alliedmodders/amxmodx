@@ -1,5 +1,7 @@
 In deps.zip are the dependencies needed to build the AMXX installer project in Delphi 7 on Windows.
 
+For getting the dependencies, see https://wiki.alliedmods.net/Building_AMX_Mod_X
+
 Follow the directions below in order to install these:
 
 1)  Make sure the Delphi IDE has been run at least once. Then make sure that the Delphi IDE is

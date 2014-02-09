@@ -94,4 +94,7 @@ binary.sources = [
   'trie_natives.cpp',
 ]
 
+if builder.target_platform == 'windows':
+  binary.sources += ['version.rc']
+
 AMXX.binaries += [builder.Add(binary)]

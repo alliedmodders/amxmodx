@@ -5,6 +5,7 @@ binary = AMXX.MetaModule(builder, 'sqlite')
 binary.compiler.cxxincludes += [
   os.path.join(builder.currentSourcePath, 'sqlitepp'),
   os.path.join(builder.currentSourcePath, 'thread'),
+  os.path.join(builder.currentSourcePath, 'sqlite-source'),
 ]
 binary.compiler.defines += [
   'SM_DEFAULT_THREADER',
@@ -14,7 +15,7 @@ binary.compiler.defines += [
 if builder.target_platform == 'linux':
   binary.compiler.postlink += ['-lpthread']
 
-binary.sources = [
+binary.sources += [
   'basic_sql.cpp',
   'handles.cpp',
   'module.cpp',
@@ -23,7 +24,6 @@ binary.sources = [
   'oldcompat_sql.cpp',
   'thread/BaseWorker.cpp',
   'thread/ThreadWorker.cpp',
-  'thread/PosixThreads.cpp',
   'sqlitepp/SqliteQuery.cpp',
   'sqlitepp/SqliteResultSet.cpp',
   'sqlitepp/SqliteDatabase.cpp',
@@ -47,7 +47,6 @@ binary.sources = [
   'sqlite-source/main.c',
   'sqlite-source/opcodes.c',
   'sqlite-source/os.c',
-  'sqlite-source/os_unix.c',
   'sqlite-source/pager.c',
   'sqlite-source/parse.c',
   'sqlite-source/pragma.c',
@@ -70,5 +69,17 @@ binary.sources = [
   'sqlite-source/vtab.c',
   'sqlite-source/where.c',
 ]
+
+if builder.target_platform == 'windows':
+  binary.sources += [
+    'thread/WinThreads.cpp',
+    'sqlite-source/os_win.c',
+  ]
+else:
+  binary.sources += [
+    'thread/PosixThreads.cpp',
+    'sqlite-source/os_unix.c',
+  ]
+
 
 AMXX.modules += [builder.Add(binary)]

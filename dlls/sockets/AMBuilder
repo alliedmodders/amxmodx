@@ -8,4 +8,7 @@ binary.sources = [
   'sockets.cpp',
 ]
 
+if builder.target_platform == 'windows':
+  binary.compiler.postlink += ['wsock32.lib', 'ws2_32.lib']
+
 AMXX.modules += [builder.Add(binary)]

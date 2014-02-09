@@ -117,6 +117,42 @@ class AMXXConfig(object):
         '-fno-exceptions',
         '-fno-rtti',
       ]
+    elif cxx.name == 'msvc':
+      if builder.options.debug == '1':
+        cfg.cflags += ['/MTd']
+        cfg.linkflags += ['/NODEFAULTLIB:libcmt']
+      else:
+        cfg.cflags += ['/MT']
+      cfg.defines += [
+        '_CRT_SECURE_NO_DEPRECATE',
+        '_CRT_SECURE_NO_WARNINGS',
+        '_CRT_NONSTDC_NO_DEPRECATE',
+        '_ITERATOR_DEBUG_LEVEL=0',
+      ]
+      cfg.cflags += [
+        '/W3',
+      ]
+      cfg.cxxflags += [
+        '/EHsc',
+        '/GR-',
+        '/TP',
+      ]
+      cfg.linkflags += [
+        '/MACHINE:X86',
+        '/SUBSYSTEM:WINDOWS',
+        'kernel32.lib',
+        'user32.lib',
+        'gdi32.lib',
+        'winspool.lib',
+        'comdlg32.lib',
+        'advapi32.lib',
+        'shell32.lib',
+        'ole32.lib',
+        'oleaut32.lib',
+        'uuid.lib',
+        'odbc32.lib',
+        'odbccp32.lib',
+      ] 
 
     # Optimization
     if builder.options.opt == '1':

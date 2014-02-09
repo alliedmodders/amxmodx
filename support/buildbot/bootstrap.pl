@@ -10,7 +10,7 @@ chdir($path);
 require 'helpers.pm';
 
 #Go to main source dir
-chdir(Build::PathFormat('../..'));
+chdir(Build::PathFormat('../../..'));
 
 #Get the source path.
 our ($root) = getcwd();

@@ -91,10 +91,12 @@ class AMXXConfig(object):
         '-Wall',
         '-Werror',
         '-Wno-uninitialized',
-        '-Wno-invalid-offsetof',
         '-Wno-unused',
         '-Wno-switch',
         '-m32',
+      ]
+      cfg.cxxflags += [
+        '-Wno-invalid-offsetof',
       ]
 
       cfg.linkflags += ['-m32']

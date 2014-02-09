@@ -276,7 +276,6 @@ scripting_files = [
   'include/sorting.inc',
   'include/sqlx.inc',
   'include/svn_version.inc',
-  'include/svn_version.tpl',
   'include/time.inc',
   'include/vector.inc',
   'include/amxmod_compat/VexdUM.inc',

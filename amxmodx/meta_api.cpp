@@ -50,7 +50,7 @@
 
 #include "datastructs.h"
 #include "CFlagManager.h"
-#include "svn_version.h"
+#include <amxmodx_version.h>
 #include "trie_natives.h"
 
 plugin_info_t Plugin_info = 

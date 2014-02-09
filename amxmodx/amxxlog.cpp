@@ -44,7 +44,7 @@
 	#define	vsnprintf	_vsnprintf
 #endif
 
-#include "svn_version.h"
+#include <amxmodx_version.h>
 
 CLog::CLog()
 {

@@ -39,7 +39,7 @@
 #include "CFlagManager.h"
 #include "nongpl_matches.h"
 #include "format.h"
-#include "svn_version.h"
+#include <amxmodx_version.h>
 
 extern CFlagManager FlagMan;
 CVector<CAdminData *> DynamicAdmins;

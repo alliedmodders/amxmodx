@@ -89,7 +89,8 @@ def build_plugin(script_path, amxx_file, extra_argv = []):
     inputs = inputs,
     argv = argv,
     outputs = outputs,
-    dep_type = 'msvc'
+    dep_type = 'msvc',
+    weak_inputs = AMXX.generated_headers
   )
   AMXX.plugins[amxx_file] = amx_entry
 

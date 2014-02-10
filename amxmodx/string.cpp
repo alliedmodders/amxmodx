@@ -982,7 +982,6 @@ static cell AMX_NATIVE_CALL strbreak(AMX *amx, cell *params)	/* 5 param */
 	size_t beg = 0;
 
 	char *string = get_amxstring(amx, params[1], 0, _len);
-	cell *left = get_amxaddr(amx, params[2]);
 	cell *right = get_amxaddr(amx, params[4]);
 	int LeftMax = params[3];
 	int RightMax = params[5];

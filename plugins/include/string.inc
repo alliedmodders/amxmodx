@@ -1,4 +1,3 @@
-// vim: set ts=4 sw=4 tw=99 sts=4 noet ft=c:
 /* Strings manipulation
 *
 * by the AMX Mod X Development Team

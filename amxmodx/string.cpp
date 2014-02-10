@@ -1,4 +1,3 @@
-// vim: set ts=8 sts=8 sw=8 tw=99 noet: 
 /* AMX Mod X
 *
 * by the AMX Mod X Development Team

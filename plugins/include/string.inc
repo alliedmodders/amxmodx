@@ -223,16 +223,6 @@ native strtok(const text[], Left[], leftLen, Right[], rightLen, token=' ', trimS
  */
 native strtok2(const text[], left[], const llen, right[], const rlen, const token = ' ', const trim = 0);
 
-/* Gets parameters from text one at a time
-   It breaks a string into the first parameter and the rest of the parameters
-   (A left side and right side of the string)
-   Example: to split text: "^"This is^" the best year",
-   strbreak(text, arg1, len1, arg2, len2)
-   arg1="This is", arg2=the best year
-   This is more useful than parse() because you can keep breaking
-   any number of arguments */
-native strbreak(const text[], Left[], leftLen, Right[], rightLen);
-
 /* Strips spaces from the beginning and end of a string. */
 native trim(text[]);
 
@@ -275,6 +265,58 @@ stock bool:is_str_num(const sString[])
 		++i;
 	
 	return sString[i] == 0 && i != 0;
+}
+
+// Warning: this function is deprecated as it does not work properly. Use
+// argparse() or argbreak().
+native strbreak(const text[], Left[], leftLen, Right[], rightLen);
+
+/**
+ * Parses an argument string to find the first argument. You can use this to
+ * replace strbreak().
+ *
+ * You can use argparse() to break a string into all of its arguments:
+ *   new arg[N], pos;
+ *   while (true) {
+ *     pos = argparse(string, pos, arg, sizeof(arg) - 1);
+ *     if (pos == -1)
+ *       break;
+ *   }
+ *
+ * All initial whitespace is removed. Remaining characters are read until an
+ * argument separator is encountered. A separator is any whitespace not inside
+ * a double-quotation pair (i.e. "x b" is one argument). If only one quotation
+ * mark appears, argparse() acts as if one existed at the end of the string.
+ * Quotation marks are never written back, and do not act as separators. For
+ * example, "a""b""c" will return "abc". An empty quote pair ("") will count
+ * as an argument containing no characters.
+ *
+ * argparse() will write an empty string to argbuffer if no argument is found.
+ *
+ * @param text          String to tokenize.
+ * @param pos           Position to start parsing from.
+ * @param argbuffer     Buffer to store first argument.
+ * @param maxlen        Size of the buffer.
+ * @return              If no argument was found, -1 is returned. Otherwise,
+ *                      the index to the next position to parse from is
+ *                      returned. This might be the very end of the string.
+ */
+native argparse(const text[], pos, argbuffer[], maxlen);
+
+/* Emulates strbreak() using argparse(). */
+stock argbreak(const text[], left[], leftlen, right[], rightlen)
+{
+	new pos = argparse(text, 0, left, leftlen);
+
+	if (pos == -1)
+		return -1;
+
+	new textlen = strlen(text);
+	while (pos < textlen && isspace(text[pos]))
+		pos++;
+
+	copy(right, rightlen, text[pos]);
+	return pos;
 }
 
 /* It is basically strbreak but you have a delimiter that is more than one character in length.

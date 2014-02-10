@@ -926,12 +926,55 @@ static cell AMX_NATIVE_CALL amx_strtok2(AMX *amx, cell *params)
 	return pos;
 }
 
-//added by BAILOPAN
+// native argparse(const text[], pos, buffer, maxlen);
+static cell AMX_NATIVE_CALL argparse(AMX *amx, cell *params)
+{
+	int temp;
+	const char *input = get_amxstring(amx, params[1], 0, temp);
+	size_t input_len = size_t(temp);
+	size_t start_pos = size_t(params[2]);
+
+	cell *buffer = get_amxaddr(amx, params[3]);
+	size_t buflen = size_t(params[4]);
+
+	// Strip all left-hand whitespace.
+	size_t i = start_pos;
+	while (i < input_len && isspace(input[i]))
+		i++;
+
+	if (i >= input_len) {
+		*buffer = '\0';
+		return -1;
+	}
+
+	cell *bufpos = buffer;
+
+	bool in_quote = false;
+	for (; i < input_len; i++) {
+		// Ignore quotes, except as an indicator as to whether to stop
+		// at a space.
+		if (input[i] == '"') {
+			in_quote = !in_quote;
+			continue;
+		}
+
+		// If not in quotes, and we see a space, stop.
+		if (isspace(input[i]) && !in_quote)
+			break;
+
+		if (size_t(bufpos - buffer) < buflen)
+			*bufpos++ = input[i];
+	}
+
+	*bufpos = '\0';
+	return i;
+}
+
+//added by BAILOPAN :(
 //Takes a string and breaks it into a 1st param and rest params
 //strbreak(String[], First[], FirstLen, Rest[], RestLen)
 static cell AMX_NATIVE_CALL strbreak(AMX *amx, cell *params)	/* 5 param */
 {
-
 	int _len;
 	bool in_quote = false;
 	bool had_quotes = false;
@@ -946,9 +989,9 @@ static cell AMX_NATIVE_CALL strbreak(AMX *amx, cell *params)	/* 5 param */
 
 	size_t len = (size_t)_len;
 
-    while (isspace(string[i]) && i<len)
+	while (isspace(string[i]) && i<len)
 		i++;
-    beg = i;
+	beg = i;
 	for (; i<len; i++)
 	{
 		if (string[i] == '"' && !in_quote)
@@ -968,15 +1011,18 @@ do_copy:
 				const char *start = had_quotes ? &(string[beg+1]) : &(string[beg]);
 				size_t _end = had_quotes ? (i==len-1 ? 1 : 2) : 0;
 				size_t end = (pos - _end > (size_t)LeftMax) ? (size_t)LeftMax : pos - _end;
-				size_t to_go = end-beg;
-				if (end && to_go)
-				{
-					while (to_go--)
-						*left++ = (cell)*start++;
-				}
-				*left = '\0';
+				
+				// If there is anything to copy, make sure we copy min(maxlen, slicelen).
+				size_t copylen = end >= beg
+				                 ? ((end - beg > size_t(LeftMax))
+				                    ? size_t(LeftMax)
+				                    : end - beg
+				                   )
+				                 : 0;
+				set_amxstring(amx, params[2], start, copylen);
+
 				end = (len-i+1 > (size_t)RightMax) ? (size_t)RightMax : len-i+1;
-                if (end)
+				if (end)
 				{
 					start = &(string[i]);
 					while (end--)
@@ -1224,6 +1270,7 @@ AMX_NATIVE_INFO string_Natives[] =
 	{"replace",			replace},
 	{"setc",			setc},
 	{"strbreak",		strbreak},
+	{"argparse",		argparse},
 	{"strtolower",		strtolower},
 	{"strtoupper",		strtoupper},
 	{"str_to_num",		strtonum},

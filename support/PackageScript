@@ -66,6 +66,11 @@ def split_all(path):
     parts.insert(0, tail)
   return parts
 
+def copy_binary(source, dest):
+  builder.AddCopy(source.binary, dest)
+  if builder.options.debug == '1':
+    builder.AddCopy(source.debug, dest)
+
 # Create the distribution folder hierarchy.
 folder_map = {}
 for folder in folder_list:
@@ -74,7 +79,7 @@ for folder in folder_list:
 
 # Copy core dlls.
 for dll in AMXX.binaries:
-  builder.AddCopy(dll.binary, folder_map['base/addons/amxmodx/dlls'])
+  copy_binary(dll, folder_map['base/addons/amxmodx/dlls'])
 
 # Copy modules.
 for module in AMXX.modules:
@@ -83,7 +88,7 @@ for module in AMXX.modules:
     package = ModPackages[parts[1]]
   else:
     package = 'base'
-  builder.AddCopy(module.binary, folder_map[package + '/addons/amxmodx/modules'])
+  copy_binary(module, folder_map[package + '/addons/amxmodx/modules'])
 
 # Copy the compiler.
 builder.AddCopy(AMXX.amxxpc.binary, folder_map['base/addons/amxmodx/scripting'])
@@ -228,6 +233,7 @@ scripting_files = [
   'testsuite/native_test.sma',
   'testsuite/nvault_test.sma',
   'testsuite/sorttest.sma',
+  'testsuite/strbreak.sma',
   'testsuite/sqlxtest.sma',
   'testsuite/sqlxtest.sq3',
   'testsuite/sqlxtest.sql',

@@ -38,11 +38,19 @@ if AMXX.mysql_path:
     'oldcompat_sql.cpp',
     'thread/BaseWorker.cpp',
     'thread/ThreadWorker.cpp',
-    'thread/PosixThreads.cpp',
     'mysql/MysqlQuery.cpp',
     'mysql/MysqlResultSet.cpp',
     'mysql/MysqlDatabase.cpp',
     'mysql/MysqlDriver.cpp',
   ]
+
+  if builder.target_platform == 'windows':
+    binary.sources += [
+      'thread/WinThreads.cpp',
+    ]
+  else:
+    binary.sources += [
+      'thread/PosixThreads.cpp',
+    ]
 
   AMXX.modules += [builder.Add(binary)]

@@ -3,6 +3,7 @@
 use strict;
 use Cwd;
 use File::Basename;
+use File::Path;
 
 my ($myself, $path) = fileparse($0);
 chdir($path);

@@ -189,6 +189,7 @@ class AMXXConfig(object):
         cfg.postlink += ['-lgcc_eh']
     elif builder.target_platform == 'mac':
       cfg.defines += ['OSX', '_OSX', 'POSIX']
+      cfg.cflags += ['-mmacosx-version-min=10.5']
       cfg.postlink += [
         '-mmacosx-version-min=10.5',
         '-arch', 'i386',

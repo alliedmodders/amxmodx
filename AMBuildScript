@@ -30,10 +30,14 @@ class AMXXConfig(object):
       self.productVersion = '{0}.{1}.{2}'.format(major, minor, release)
 
   def detectMetamod(self):
-    if len(builder.options.metamod_path):
-      self.metamod_path = os.path.join(builder.originalCwd, builder.options.metamod_path)
+    metamod_path = builder.options.metamod_path
+    if not len(metamod_path):
+      metamod_path = os.getenv('METAMOD', '')
+
+    if len(metamod_path):
+      self.metamod_path = os.path.join(builder.originalCwd, metamod_path)
       if not os.path.exists(os.path.join(self.metamod_path, 'metamod')):
-        raise Exception('Metamod path does not exist: {0}'.format(builder.options.metamod_path))
+        raise Exception('Metamod path does not exist: {0}'.format(metamod_path))
     else:
       try_paths = [
         os.path.join(builder.sourcePath, '..', 'metamod'),
@@ -47,10 +51,14 @@ class AMXXConfig(object):
         raise Exception('Could not find the source code to Metamod! Try passing --metamod to configure.py.')
 
   def detectHlsdk(self):
-    if len(builder.options.hlsdk_path):
-      self.hlsdk_path = os.path.join(builder.originalCwd, builder.options.hlsdk_path)
+    hlsdk_path = builder.options.hlsdk_path
+    if not len(hlsdk_path):
+      hlsdk_path = os.getenv('HLSDK', '')
+
+    if len(hlsdk_path):
+      self.hlsdk_path = os.path.join(builder.originalCwd, hlsdk_path)
       if not os.path.exists(self.hlsdk_path):
-        raise Exception('Metamod path does not exist: {0}'.format(builder.options.hlsdk_path))
+        raise Exception('Metamod path does not exist: {0}'.format(hlsdk_path))
     else:
       try_paths = [
         os.path.join(builder.sourcePath, '..', 'hlsdk'),
@@ -66,10 +74,14 @@ class AMXXConfig(object):
     if builder.options.disable_mysql:
       return
 
-    if len(builder.options.mysql_path):
-      self.mysql_path = os.path.join(builder.originalCwd, builder.options.mysql_path)
+    mysql_path = builder.options.mysql_path
+    if not len(mysql_path):
+      mysql_path = os.getenv('MYSQL5', '')
+
+    if len(mysql_path):
+      self.mysql_path = os.path.join(builder.originalCwd, mysql_path)
       if not os.path.exists(self.mysql_path):
-        raise Exception('Metamod path does not exist: {0}'.format(builder.options.mysql_path))
+        raise Exception('Metamod path does not exist: {0}'.format(mysql_path))
     else:
       try_paths = [
         os.path.join(builder.sourcePath, '..', 'mysql-5.0'),

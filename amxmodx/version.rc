@@ -5,7 +5,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "winres.h"
+#include <winresrc.h>
 #if defined AMBUILD
 # include <amxmodx_version.h>
 #else

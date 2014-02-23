@@ -1,5 +1,5 @@
 AMX Mod X
-=======
+=========
 
 AMX Mod X - Half-Life 1 Scripting and Server Administration
 

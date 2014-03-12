@@ -67,7 +67,7 @@ for ($i = 0; $i <= $#packages; $i++) {
 my ($ftp);
 $ftp_path .= "/$major.$minor";
 
-$ftp = Net::FTP->new($ftp_host, Debug => 0, Passive => 0) 
+$ftp = Net::FTP->new($ftp_host, Debug => 0, Passive => 1) 
     or die "Cannot connect to host $ftp_host: $@";
 
 $ftp->login($ftp_user, $ftp_pass)
@@ -100,4 +100,3 @@ $ftp->close();
 print "Files sent to drop site -- build succeeded.\n";
 
 exit(0);
-

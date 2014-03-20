@@ -58,6 +58,7 @@ new g_Tracker;
 new g_Size;
 
 public Trie:g_tempBans
+new Trie:g_tXvarsFlags;
 
 stock InsertInfo(id)
 {
@@ -174,6 +175,8 @@ public plugin_init()
 	register_concmd("amx_pause", "cmdPause", ADMIN_CVAR, "- pause or unpause the game")
 	register_concmd("amx_who", "cmdWho", ADMIN_ADMIN, "- displays who is on server")
 	register_concmd("amx_cvar", "cmdCvar", ADMIN_CVAR, "<cvar> [value]")
+	register_concmd("amx_xvar_float", "cmdXvar", ADMIN_CVAR, "<xvar> [value]")
+	register_concmd("amx_xvar_int", "cmdXvar", ADMIN_CVAR, "<xvar> [value]")
 	register_concmd("amx_plugins", "cmdPlugins", ADMIN_ADMIN)
 	register_concmd("amx_modules", "cmdModules", ADMIN_ADMIN)
 	register_concmd("amx_map", "cmdMap", ADMIN_MAP, "<mapname>")
@@ -826,6 +829,122 @@ public cmdCvar(id, level, cid)
 	console_print(id, "[AMXX] %L", id, "CVAR_CHANGED", arg, arg2)
 	
 	return PLUGIN_HANDLED
+}
+
+public cmdXvar(id, level, cid)
+{
+	if( !cmd_access(id, level, cid, 2) )
+	{
+		return PLUGIN_HANDLED;
+	}
+
+	new cmd[15], arg1[32], arg2[32];
+	
+	read_argv(0, cmd, charsmax(cmd));
+	read_argv(1, arg1, charsmax(arg1));
+	trim(arg1);
+	if( read_argc() > 2 )
+	{
+		read_argv(2, arg2, charsmax(arg2));
+		trim(arg2);
+
+		if( equali(arg1, "add") )
+		{
+			if( get_user_flags(id) & ADMIN_RCON && xvar_exists(arg2) )
+			{
+				if( !g_tXvarsFlags )
+				{
+					g_tXvarsFlags = TrieCreate();
+				}
+				TrieSetCell(g_tXvarsFlags, arg2, 1);
+			}
+			return PLUGIN_HANDLED;
+		}
+	}
+
+	new bFloat = equali(cmd, "amx_xvar_float");
+
+	new xvar = get_xvar_id( arg1 );
+
+	if( xvar == -1 )
+	{
+		console_print(id, "[AMXX] %L", id, "UNKNOWN_XVAR", arg1)
+		return PLUGIN_HANDLED
+	}
+
+	new any:value;
+
+	if( !arg2[0] ) // get value
+	{
+		value = get_xvar_num(xvar);
+		if( bFloat )
+		{
+			float_to_str(value, arg2, charsmax(arg2));
+		}
+		else
+		{
+			num_to_str(value, arg2, charsmax(arg2));
+		}
+		console_print(id, "[AMXX] %L", id, "XVAR_IS", arg1, arg2);
+		return PLUGIN_HANDLED;
+	}
+
+	// set value
+	if( g_tXvarsFlags && TrieKeyExists(g_tXvarsFlags, arg1) && ~get_user_flags(id) & ADMIN_RCON )
+	{
+		console_print(id, "[AMXX] %L", id, "XVAR_NO_ACC");
+		return PLUGIN_HANDLED;
+	}
+
+	new endPos;
+	if( bFloat )
+	{
+		value = strtof(arg2, endPos);
+		if( !endPos )
+		{
+			return PLUGIN_HANDLED;
+		}
+	}
+	else
+	{
+		value = strtol(arg2, endPos);
+		if( !endPos )
+		{
+			return PLUGIN_HANDLED;
+		}
+	}
+
+	set_xvar_num(xvar, value);
+
+	// convert back value to string so admin can know value has been set correctly
+	if( bFloat )
+	{
+		float_to_str(value, arg2, charsmax(arg2));
+	}
+	else
+	{
+		num_to_str(value, arg2, charsmax(arg2));
+	}
+
+	new authid[32], name[32];
+	
+	get_user_authid(id, authid, charsmax(authid));
+	get_user_name(id, name, charsmax(name));
+	
+	log_amx("Cmd: ^"%s<%d><%s><>^" set xvar (name ^"%s^") (value ^"%s^")", name, get_user_userid(id), authid, arg1, arg2);
+	
+	// Display the message to all clients
+	new players[32], pnum, plr;
+	get_players(players, pnum, "ch");
+	for (new i; i<pnum; i++)
+	{
+		plr = players[i];
+		show_activity_id(plr, id, name, "%L", plr, "SET_XVAR_TO", "", arg1, arg2);
+	}
+	
+	console_print(id, "[AMXX] %L", id, "XVAR_CHANGED", arg1, arg2);
+
+	return PLUGIN_HANDLED;
 }
 
 public cmdPlugins(id, level, cid)

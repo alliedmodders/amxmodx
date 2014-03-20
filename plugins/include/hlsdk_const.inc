@@ -157,6 +157,7 @@
 #define DMG_SLOWBURN                    (1<<21)     // In an oven
 #define DMG_SLOWFREEZE                  (1<<22)     // In a subzero freezer
 #define DMG_MORTAR                      (1<<23)     // Hit by air raid (done to distinguish grenade from mortar)
+#define DMG_GRENADE                     (1<<24)     // Counter-Strike only - Hit by HE grenade
 #define DMG_TIMEBASED                   (~(0x3fff)) // Mask for time-based damage
 
 // The fNoMonsters parameter of EngFunc_TraceLine, EngFunc_TraceMonsterHull, EngFunc_TraceHull, and EngFunc_TraceSphere

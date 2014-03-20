@@ -259,10 +259,16 @@ public cmdChat(id, level, cid)
 	if (!cmd_access(id, level, cid, 2))
 		return PLUGIN_HANDLED
 
-	new message[192], name[32], players[32], inum, authid[32], userid, pl
+	new message[192]
 	
 	read_args(message, charsmax(message))
 	remove_quotes(message)
+	
+	if (!message[0])
+		return PLUGIN_HANDLED
+	
+	new name[32], players[32], inum, authid[32], userid, pl
+	
 	get_user_authid(id, authid, charsmax(authid))
 	get_user_name(id, name, charsmax(name))
 	userid = get_user_userid(id)

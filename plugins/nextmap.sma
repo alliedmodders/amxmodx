@@ -115,16 +115,20 @@ public sayFFStatus()
 
 public delayedChange(param[])
 {
-	set_pcvar_float(g_mp_chattime, get_pcvar_float(g_mp_chattime) - 2.0)
+	if (g_mp_chattime) {
+		set_pcvar_float(g_mp_chattime, get_pcvar_float(g_mp_chattime) - 2.0)
+	}
 	server_cmd("changelevel %s", param)
 }
 
 public changeMap()
 {
 	new string[32]
-	new Float:chattime = get_pcvar_float(g_mp_chattime)
+	new Float:chattime = g_mp_chattime ? get_pcvar_float(g_mp_chattime) : 10.0;	// mp_chattime defaults to 10 in other mods
 	
-	set_pcvar_float(g_mp_chattime, chattime + 2.0)		// make sure mp_chattime is long
+	if (g_mp_chattime) {
+		set_pcvar_float(g_mp_chattime, chattime + 2.0)		// make sure mp_chattime is long
+	}
 	new len = getNextMapName(string, charsmax(string)) + 1
 	set_task(chattime, "delayedChange", 0, string, len)	// change with 1.5 sec. delay
 }

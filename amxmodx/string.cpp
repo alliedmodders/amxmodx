@@ -352,15 +352,26 @@ static cell AMX_NATIVE_CALL amx_strtol(AMX *amx, cell *params) /* 3 param */
 	char *pString = get_amxstring(amx, params[1], 0, len);
 	cell *endPos = get_amxaddr(amx, params[2]);
 
-	*endPos = -1;
-
 	char *pEnd = NULL;
 	long result = strtol(pString, &pEnd, base);
 
-	if (pEnd != NULL && pString != pEnd)
-		*endPos = pEnd - pString;
+	*endPos = pEnd - pString;
 
 	return result;
+}
+
+static cell AMX_NATIVE_CALL amx_strtof(AMX *amx, cell *params) /* 2 param */
+{
+	int len;
+	char *pString = get_amxstring(amx, params[1], 0, len);
+	cell *endPos = get_amxaddr(amx, params[2]);
+
+	char *pEnd = NULL;
+	float result = strtod(pString, &pEnd);
+
+	*endPos = pEnd - pString;
+
+	return amx_ftoc(result);
 }
 
 static cell AMX_NATIVE_CALL numtostr(AMX *amx, cell *params) /* 3 param */
@@ -1275,6 +1286,7 @@ AMX_NATIVE_INFO string_Natives[] =
 	{"str_to_num",		strtonum},
 	{"strtonum",		strtonum},
 	{"strtol",			amx_strtol},
+	{"strtof",			amx_strtof},
 	{"trim",			amx_trim},
 	{"ucfirst",			amx_ucfirst},
 	{"strtok",			amx_strtok},

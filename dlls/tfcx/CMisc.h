@@ -100,8 +100,9 @@ enum {
 	TFC_PC_HWGUY,
 	TFC_PC_PYRO,
 	TFC_PC_SPY,
-	TFC_PC_ENGENEER,
-	TFC_PC_CIVILIAN,
+	TFC_PC_ENGENEER,	// Typo; preserved for backward compatibility
+	TFC_PC_ENGINEER = 9,
+	TFC_PC_CIVILIAN = 11,
 };
 
 struct weaponsVault {

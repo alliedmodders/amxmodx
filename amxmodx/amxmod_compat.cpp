@@ -30,6 +30,14 @@ bool translate_bcompat(AMX *amx, cell *source, const char **_key, const char **_
 		return false;
 	}
 
+	//not optimized but it works, eh
+	//if someone cares they can make a translate() wrapper that takes the key # in directly
+	const char *r_key = g_langMngr.GetKey(key);
+	if (!r_key)
+	{
+		return false;
+	}
+
 	cell amx_addr, *phys_addr;
 	if (amx_Allot(amx, 3, &amx_addr, &phys_addr) != AMX_ERR_NONE)
 	{
@@ -50,9 +58,6 @@ bool translate_bcompat(AMX *amx, cell *source, const char **_key, const char **_
 		*phys_addr = LANG_SERVER;
 	}
 
-	//not optimized but it works, eh
-	//if someone cares they can make a translate() wrapper that takes the key # in directly
-	const char *r_key = g_langMngr.GetKey(key);
 	const char *def = translate(amx, amx_addr, r_key);
 	if (!def)
 	{

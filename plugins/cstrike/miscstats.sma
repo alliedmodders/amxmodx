@@ -404,7 +404,7 @@ public plugin_precache()
 precache_sound_custom( const sound[] )
 {
 	new fullpathsound[SOUNDFILE_PATH_MAXLEN]
-	formatex(fullpathsound, charsmax(fullpathsound), "sound/%s.wav", sound)
+	formatex(fullpathsound, charsmax(fullpathsound), "%s.wav", sound)
 	if( file_exists(fullpathsound) )
 	{
 		precache_sound(fullpathsound[6])

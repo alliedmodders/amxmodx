@@ -1,5 +1,5 @@
 /* Ham Sandwich
- *   Copyright 2007
+ *   Copyright 2007-2014
  *   By the AMX Mod X Development Team
  *
  *  Ham Sandwich is free software; you can redistribute it and/or modify it
@@ -233,7 +233,7 @@ static const char* get_localinfo( const char* name , const char* def = 0 )
 }
 int read_start_section(char *data)
 {
-	if (strncmp(data, CurrentModName, strlen(CurrentModName))==0)
+	if (strncasecmp(data, CurrentModName, strlen(CurrentModName))==0)
 	{
 		data+=strlen(CurrentModName)+1;
 		trim_line(data);

@@ -1,5 +1,5 @@
 /* Ham Sandwich
- *   Copyright 2007
+ *   Copyright 2007-2014
  *   By the AMX Mod X Development Team
  *
  *  Ham Sandwich is free software; you can redistribute it and/or modify it
@@ -32,10 +32,10 @@
 #include "forward.h"
 #include "Trampolines.h"
 
+#define ALIGN(ar) ((intptr_t)ar & ~(sysconf(_SC_PAGESIZE)-1))
+
 // This is just a simple container for data so I only have to add 1 extra 
 // parameter to calls that get trampolined
-
-#define ALIGN(ar) ((intptr_t)ar & ~(sysconf(_SC_PAGESIZE)-1))
 
 class Hook
 {
@@ -51,7 +51,7 @@ public:
 	void            *tramp;   // trampoline for this hook
 	char			*ent;     // ent name that's being hooked
 
-	Hook(void **vtable_, int entry_, void *target_, bool voidcall, int paramcount, char *name) :
+	Hook(void **vtable_, int entry_, void *target_, bool voidcall, bool retbuf, int paramcount, char *name) :
 		func(NULL), vtable(vtable_), entry(entry_), target(target_), exec(0), del(0), tramp(NULL)
 		{
 			// original function is vtable[entry]
@@ -61,7 +61,7 @@ public:
 
 			// now install a trampoline
 			// (int thiscall, int voidcall, int paramcount, void *extraptr)
-			tramp=CreateGenericTrampoline(true, voidcall, paramcount, (void*)this, target);
+			tramp = CreateGenericTrampoline(true, voidcall, retbuf, paramcount, (void*)this, target);
 
 			// Insert into vtable
 #if defined(_WIN32)
@@ -87,7 +87,7 @@ public:
 #if defined(_WIN32)
 		DWORD OldFlags;
 		VirtualProtect(&ivtable[entry],sizeof(int*),PAGE_READWRITE,&OldFlags);
-#elif defined(__linux_) || defined(__APPLE__)
+#elif defined(__linux__) || defined(__APPLE__)
 		void *addr = (void *)ALIGN(&ivtable[entry]);
 		mprotect(addr,sysconf(_SC_PAGESIZE),PROT_READ|PROT_WRITE);
 #endif

@@ -1,5 +1,5 @@
 /* Ham Sandwich
- *   Copyright 2007
+ *   Copyright 2007-2014
  *   By the AMX Mod X Development Team
  *
  *  Ham Sandwich is free software; you can redistribute it and/or modify it
@@ -37,15 +37,50 @@
 enum
 {
 	RET_VOID,
+	RET_BOOL,
 	RET_INTEGER,
+	RET_SHORT,
 	RET_FLOAT,
 	RET_VECTOR,
 	RET_STRING,
 	RET_CBASE,
 	RET_ENTVAR,
+	RET_EDICT,
 	RET_TRACE,
 	RET_ITEMINFO
 };
+
+typedef struct
+{
+	int iSlot;
+	int iPosition;
+	const char *pszAmmo1;
+	int iMaxAmmo1;
+	const char *pszAmmo2;
+	int iMaxAmmo2;
+	const char *pszName;
+	int iMaxClip;
+	int iId;
+	int iFlags;
+	int iWeight;
+}
+ItemInfo;
+
+enum
+{
+	ItemInfo_iSlot,
+	ItemInfo_iPosition,
+	ItemInfo_pszAmmo1,
+	ItemInfo_iMaxAmmo1,
+	ItemInfo_pszAmmo2,
+	ItemInfo_iMaxAmmo2,
+	ItemInfo_pszName,
+	ItemInfo_iMaxClip,
+	ItemInfo_iId,
+	ItemInfo_iFlags,
+	ItemInfo_iWeight
+};
+
 // Container for return and parameter data.
 // Contains a void pointer, and a flag telling what it contains.
 class Data
@@ -95,6 +130,21 @@ public:
 		if (IsType(RET_INTEGER))
 		{
 			*(reinterpret_cast<int *>(m_data))=*data;
+			return 0;
+		}
+		else if (IsType(RET_BOOL))
+		{
+			*(reinterpret_cast<bool *>(m_data)) = *data > 0;
+			return 0;
+		}
+		else if (IsType(RET_SHORT))
+		{
+			*(reinterpret_cast<short *>(m_data)) = *data;
+			return 0;
+		}
+		else if (IsType(RET_ITEMINFO))
+		{
+			*(reinterpret_cast<int *>(m_data)) = *data;
 			return 0;
 		}
 		else if (IsType(RET_TRACE))
@@ -201,6 +251,16 @@ public:
 
 			return 0;
 		}
+		else if (IsType(RET_EDICT))
+		{
+			*(reinterpret_cast<edict_t **>(m_data)) = IndexToEdict(*data);
+			if (m_index != 0)
+			{
+				*m_index = *data;
+			}
+
+			return 0;
+		}
 		return -1;
 	};
 
@@ -213,6 +273,25 @@ public:
 		if (IsType(RET_INTEGER))
 		{
 			*data=*(reinterpret_cast<int *>(m_data));
+
+			return 0;
+		}
+		else if (IsType(RET_BOOL))
+		{
+			*data = *(reinterpret_cast<bool *>(m_data));
+
+			return 0;
+		}
+
+		else if (IsType(RET_SHORT))
+		{
+			*data = *(reinterpret_cast<short *>(m_data));
+
+			return 0;
+		}
+		else if (IsType(RET_ITEMINFO))
+		{
+			*data = *(reinterpret_cast<int *>(m_data));
 
 			return 0;
 		}
@@ -290,6 +369,12 @@ public:
 		else if (IsType(RET_ENTVAR))
 		{
 			*data=EntvarToIndex(reinterpret_cast<entvars_t *>(m_data));
+
+			return 0;
+		}
+		else if (IsType(RET_EDICT))
+		{
+			*data = EdictToIndex(reinterpret_cast<edict_t *>(m_data));
 
 			return 0;
 		}

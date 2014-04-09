@@ -641,9 +641,9 @@ namespace Trampolines
 /**
  * Utility to make a generic trampoline.
  */
-inline void *CreateGenericTrampoline(bool thiscall, bool voidcall, int paramcount, void *extraptr, void *callee)
+inline void *CreateGenericTrampoline(bool thiscall, bool voidcall, bool retbuf, int paramcount, void *extraptr, void *callee)
 {
-		Trampolines::TrampolineMaker tramp;
+	Trampolines::TrampolineMaker tramp;
 
 	if (voidcall)
 	{
@@ -684,7 +684,14 @@ inline void *CreateGenericTrampoline(bool thiscall, bool voidcall, int paramcoun
 #if defined(_WIN32)
 		tramp.VoidEpilogueAndFree();
 #elif defined(__linux__) || defined(__APPLE__)
-		tramp.VoidEpilogue();
+		if (retbuf)
+		{
+			tramp.VoidEpilogue(4);
+		}
+		else
+		{
+			tramp.ThisVoidPrologue();
+		}
 #endif
 	}
 	else

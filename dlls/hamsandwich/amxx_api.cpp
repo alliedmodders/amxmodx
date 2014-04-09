@@ -1,5 +1,5 @@
 /* Ham Sandwich
- *   Copyright 2007
+ *   Copyright 2007-2014
  *   By the AMX Mod X Development Team
  *
  *  Ham Sandwich is free software; you can redistribute it and/or modify it
@@ -38,6 +38,7 @@
 #include "hooklist.h"
 #include "offsets.h"
 #include <assert.h>
+#include "DataHandler.h"
 
 edict_t *NEW_FirstEdict;
 bool NEW_Initialized;
@@ -66,6 +67,18 @@ void OnAmxxAttach(void)
 	assert(strcmp(hooklist[Ham_NS_UpdateOnRemove].name, "ns_updateonremove")==0);
 	assert(strcmp(hooklist[Ham_TS_ShouldCollide].name, "ts_shouldcollide")==0);
 
+	assert(strcmp(hooklist[Ham_GetDeathActivity].name, "getdeathactivity")==0);
+	assert(strcmp(hooklist[Ham_StopFollowing].name, "stopfollowing")==0);
+	assert(strcmp(hooklist[Ham_CS_Player_OnTouchingWeapon].name, "cstrike_player_ontouchingweapon")==0);
+	assert(strcmp(hooklist[Ham_DOD_Weapon_Special].name, "dod_weapon_special")==0);
+	assert(strcmp(hooklist[Ham_TFC_RadiusDamage2].name, "tfc_radiusdamage2")==0);
+	assert(strcmp(hooklist[Ham_ESF_Weapon_HolsterWhenMeleed].name, "esf_weapon_holsterwhenmeleed") == 0);
+	assert(strcmp(hooklist[Ham_NS_Weapon_GetDeployTime].name, "ns_weapon_getdeploytime")==0);
+	assert(strcmp(hooklist[Ham_SC_MedicCallSound].name, "sc_mediccallsound")==0);
+	assert(strcmp(hooklist[Ham_SC_Player_CanTouchPlayer].name, "sc_player_cantouchplayer")==0);
+	assert(strcmp(hooklist[Ham_SC_Weapon_ChangeWeaponSkin].name, "sc_weapon_changeweaponskin")==0);
+	assert(strcmp(hooklist[Ham_Item_GetItemInfo].name, "item_getiteminfo") == 0);
+
 	MF_AddNatives(pdata_natives_safe);
 	if (ReadConfig() > 0)
 	{
@@ -89,6 +102,17 @@ void OnAmxxAttach(void)
 	else
 	{
 		MF_Log("Error: Cannot read config file, natives not registered!");
+	}
+}
+
+extern CStack<ItemInfo *> g_FreeIIs;
+
+void OnAmxxDetach()
+{
+	while (!g_FreeIIs.empty())
+	{
+		delete g_FreeIIs.front();
+		g_FreeIIs.pop();
 	}
 }
 

@@ -1,5 +1,5 @@
 /* Ham Sandwich
- *   Copyright 2007
+ *   Copyright 2007-2014
  *   By the AMX Mod X Development Team
  *
  *  Ham Sandwich is free software; you can redistribute it and/or modify it
@@ -137,4 +137,3 @@ void HamCommand(void)
 	print_srvconsole("   %-22s - %s\n", "list", "list all keys and their values from the config file.");
 	print_srvconsole("   %-22s - %s\n", "hooks", "list all active hooks");
 }
-

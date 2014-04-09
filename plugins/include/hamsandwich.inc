@@ -1,24 +1,23 @@
-/**
- * Ham Sandwich module include file.
- *   (c) 2007, The AMX Mod X Development Team
+/* Ham Sandwich
+ *   Copyright 2007-2014
+ *   By the AMX Mod X Development Team
  *
- * -
- *  This program is free software; you can redistribute it and/or modify it
+ *  Ham Sandwich is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2 of the License, or (at
  *  your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful, but
+ *  Ham Sandwich is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  *  General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software Foundation,
+ *  along with Ham Sandwich; if not, write to the Free Software Foundation,
  *  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  *  In addition, as a special exception, the author gives permission to
- *  link the code of this program with the Half-Life Game Engine ("HL
+ *  link the code of Ham Sandwich with the Half-Life Game Engine ("HL
  *  Engine") and Modified Game Libraries ("MODs") developed by Valve,
  *  L.L.C ("Valve"). You must obey the GNU General Public License in all
  *  respects for all of the code used other than the HL Engine and MODs
@@ -280,7 +279,7 @@ native SetHamParamEntity(which, value);
  * Use this on parameters that are strings.
  *
  * @param which				Which parameter to change.  Starts at 1, and works up from the left to right.  1 is always "this".
- * @param value				The value to change it to.
+ * @param ouput				The value to change it to.
  */
 native SetHamParamString(which, const output[]);
 
@@ -289,9 +288,57 @@ native SetHamParamString(which, const output[]);
  * Use this on parameters that are trace result handles.
  *
  * @param which				Which parameter to change.  Starts at 1, and works up from the left to right.  1 is always "this".
- * @param value				The value to change it to.
+ * @param tr_handle			The value to change it to.
  */
 native SetHamParamTraceResult(which, tr_handle);
+
+/**
+ * Sets a parameter on the fly of the current hook.  This has no effect in post hooks.
+ * Use this on parameters that are trace result handles.
+ *
+ * @param which				Which parameter to change.  Starts at 1, and works up from the left to right.  1 is always "this".
+ * @param iteminfo_handle	The value to change it to.
+ */
+native SetHamParamItemInfo(which, iteminfo_handle);
+
+
+/**
+ * Gets a parameter on the fly of the current hook.
+ * Use this on parameters that are iteminfo result handles.
+ *
+ * @param iteminfo_handle	Item info handle.
+ * @param type				Item info type. See ItemInfo_ constants.
+ */
+native GetHamItemInfo(iteminfo_handle, ItemInfo:type, any:...);
+
+/**
+ * Sets a parameter on the fly of the current hook.
+ * Use this on parameters that are iteminfo result handles.
+ *
+ * @param iteminfo_handle	Item info handle.
+ * @param type				Item info type. See HamItemInfo_ constants.
+ */
+native SetHamItemInfo(iteminfo_handle, ItemInfo:type, any:...);
+
+/**
+ * Creates an ItemInfo handle.  This value should never be altered.
+ * The handle can be used in Get/SetHamItemInfo.
+ *
+ * NOTE: You must call FreeHamItemInfo() on every handle made with CreateHamItemInfo().
+ *
+ * @return			A new ItemInfo handle.
+ */
+native CreateHamItemInfo();
+
+/** 
+ * Frees an ItemIndo handle created with CreateHamItemInfo().  Do not call
+ * this more than once per handle, or on handles not created through
+ * CreateHamItemInfo().
+ *
+ * @param itemInfo_handle	ItemInfo handle created via CreateHamItemInfo().
+ * @noreturn
+ */
+native FreeHamItemInfo(itemInfo_handle);
 
 
 /**

@@ -1,5 +1,5 @@
 /* Ham Sandwich
- *   Copyright 2007
+ *   Copyright 2007-2014
  *   By the AMX Mod X Development Team
  *
  *  Ham Sandwich is free software; you can redistribute it and/or modify it
@@ -130,6 +130,21 @@ inline int EntvarToIndex(entvars_t *pev)
 	return ENTINDEX_NEW(pev->pContainingEntity);
 };
 
+inline int EdictToIndex(edict_t *v)
+{
+	if (v==NULL)
+	{
+		return -1;
+	}
+
+	return ENTINDEX_NEW(v);
+}
+
+inline edict_t *IndexToEdict(int index)
+{
+	return INDEXENT_NEW(index);
+};
+
 inline edict_t *EntvarToEdict(entvars_t *pev)
 {
 	if (pev==NULL)
@@ -157,5 +172,5 @@ inline void *GetVTableEntry(void *pthis, int ventry, int size)
 	return vtbl[ventry];
 }
 
-void print_srvconsole(char *fmt, ...);
+void print_srvconsole(const char *fmt, ...);
 #endif

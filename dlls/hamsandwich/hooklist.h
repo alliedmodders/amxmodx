@@ -1,5 +1,5 @@
 /* Ham Sandwich
- *   Copyright 2007
+ *   Copyright 2007-2014
  *   By the AMX Mod X Development Team
  *
  *  Ham Sandwich is free software; you can redistribute it and/or modify it
@@ -35,6 +35,7 @@ typedef struct hook_s
 	int vtid;								// vtable index of this function
 	const char *name;						// name used in the keys
 	bool isvoid;							// whether or not the target trampoline uses voids
+	bool needsretbuf;						// whether or not a pointer to a memory buffer is needed to store a return value
 	int  paramcount;						// how many parameters are in the func
 	void *targetfunc;						// the target hook
 	int (*makefunc)(AMX *, const char*);	// function that creates forwards

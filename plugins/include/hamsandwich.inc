@@ -307,9 +307,9 @@ native SetHamParamItemInfo(which, iteminfo_handle);
  * Use this on parameters that are iteminfo result handles.
  *
  * @param iteminfo_handle	Item info handle.
- * @param type				Item info type. See ItemInfo_ constants.
+ * @param type				Item info type. See HamItemInfo constants.
  */
-native GetHamItemInfo(iteminfo_handle, ItemInfo:type, any:...);
+native GetHamItemInfo(iteminfo_handle, HamItemInfo:type, any:...);
 
 /**
  * Sets a parameter on the fly of the current hook.
@@ -318,7 +318,7 @@ native GetHamItemInfo(iteminfo_handle, ItemInfo:type, any:...);
  * @param iteminfo_handle	Item info handle.
  * @param type				Item info type. See HamItemInfo_ constants.
  */
-native SetHamItemInfo(iteminfo_handle, ItemInfo:type, any:...);
+native SetHamItemInfo(iteminfo_handle, HamItemInfo:type, any:...);
 
 /**
  * Creates an ItemInfo handle.  This value should never be altered.

@@ -251,7 +251,7 @@ public addadminfn(id, level, cid)
 		}
 		else if (idtype & ADMIN_IPADDR)
 		{
-			get_user_ip(player, auth, 32)
+			get_user_ip(player, auth, 32, 1)
 		}
 		else if (idtype & ADMIN_NAME)
 		{

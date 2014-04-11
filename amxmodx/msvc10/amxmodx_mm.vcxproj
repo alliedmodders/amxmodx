@@ -295,6 +295,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\CCmd.cpp" />
+    <ClCompile Include="..\CDataPack.cpp" />
     <ClCompile Include="..\CEvent.cpp" />
     <ClCompile Include="..\CFile.cpp" />
     <ClCompile Include="..\CFlagManager.cpp" />
@@ -307,6 +308,7 @@
     <ClCompile Include="..\CPlugin.cpp" />
     <ClCompile Include="..\CTask.cpp" />
     <ClCompile Include="..\CVault.cpp" />
+    <ClCompile Include="..\datapacks.cpp" />
     <ClCompile Include="..\debugger.cpp" />
     <ClCompile Include="..\emsg.cpp" />
     <ClCompile Include="..\fakemeta.cpp" />
@@ -354,6 +356,7 @@
     <ClInclude Include="..\amxxlog.h" />
     <ClInclude Include="..\binlog.h" />
     <ClInclude Include="..\CCmd.h" />
+    <ClInclude Include="..\CDataPack.h" />
     <ClInclude Include="..\CEvent.h" />
     <ClInclude Include="..\CFile.h" />
     <ClInclude Include="..\CFlagManager.h" />
@@ -397,6 +400,7 @@
     <ResourceCompile Include="..\version.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\plugins\include\datapack.inc" />
     <None Include="..\amxdefn.asm" />
     <None Include="..\amxexecn.asm" />
     <None Include="..\amxjitsn.asm" />

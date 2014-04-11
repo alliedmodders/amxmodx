@@ -52,6 +52,7 @@
 #include "CFlagManager.h"
 #include <amxmodx_version.h>
 #include "trie_natives.h"
+#include "CDataPack.h"
 
 plugin_info_t Plugin_info = 
 {
@@ -413,6 +414,8 @@ int	C_Spawn(edict_t *pent)
 	VectorHolder.clear();
 
 	g_TrieHandles.clear();
+	g_DataPackHandles.clear();
+
 	char map_pluginsfile_path[256];
 	char prefixed_map_pluginsfile[256];
 	char configs_dir[256];

@@ -92,6 +92,8 @@ binary.sources = [
   'CFlagManager.cpp',
   'datastructs.cpp',
   'trie_natives.cpp',
+  'CDataPack.cpp',
+  'datapacks.cpp'
 ]
 
 if builder.target_platform == 'windows':

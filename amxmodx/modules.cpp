@@ -53,6 +53,7 @@
 #include "messages.h"
 #include "amxmod_compat.h"
 #include "trie_natives.h"
+#include "CDataPack.h"
 
 CList<CModule, const char*> g_modules;
 CList<CScript, AMX*> g_loadedscripts;
@@ -587,6 +588,7 @@ int set_amxnatives(AMX* amx, char error[128])
 	amx_Register(amx, g_SortNatives, -1);
 	amx_Register(amx, g_DataStructNatives, -1);
 	amx_Register(amx, trie_Natives, -1);
+	amx_Register(amx, g_DatapackNatives, -1);
 	
 	if (amx->flags & AMX_FLAG_OLDFILE)
 	{

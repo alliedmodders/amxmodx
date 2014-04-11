@@ -23,6 +23,7 @@
 #include <sorting>
 #include <cellarray>
 #include <celltrie>
+#include <datapack>
 #include <newmenus>
 
 /* Function is called just after server activation.

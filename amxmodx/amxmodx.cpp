@@ -568,6 +568,97 @@ static cell AMX_NATIVE_CALL show_hudmessage(AMX *amx, cell *params) /* 2 param *
 	return len;
 }
 
+static cell AMX_NATIVE_CALL set_dhudmessage(AMX *amx, cell *params) /* 10 param */
+{
+	g_hudset.a1 = 0;
+	g_hudset.a2 = 0;
+	g_hudset.r2 = 255;
+	g_hudset.g2 = 255;
+	g_hudset.b2 = 250;
+	g_hudset.r1 = static_cast<byte>(params[1]);
+	g_hudset.g1 = static_cast<byte>(params[2]);
+	g_hudset.b1 = static_cast<byte>(params[3]);
+	g_hudset.x = amx_ctof(params[4]);
+	g_hudset.y = amx_ctof(params[5]);
+	g_hudset.effect = params[6];;
+	g_hudset.fxTime = amx_ctof(params[7]);
+	g_hudset.holdTime = amx_ctof(params[8]);
+	g_hudset.fadeinTime = amx_ctof(params[9]);
+	g_hudset.fadeoutTime = amx_ctof(params[10]);
+	g_hudset.channel = -1;
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL show_dhudmessage(AMX *amx, cell *params) /* 2 param */
+{
+	int len = 0;
+	int index = params[1];
+	char *message;
+
+	if (!index)
+	{
+		for (int i = 1; i <= gpGlobals->maxClients; ++i)
+		{
+			CPlayer *pPlayer = GET_PLAYER_POINTER_I(i);
+
+			if (pPlayer->ingame && !pPlayer->IsBot())
+			{
+				g_langMngr.SetDefLang(i);
+				message = format_amxstring(amx, params, 2, len);
+
+				if (len > 127)	// Client truncates after byte 127.
+				{
+					len = 127;
+
+					// Don't truncate a double-byte character
+					if (((message[len - 1] & 0xFF) >= 0xC2) && ((message[len - 1] & 0xFF) <= 0xEF))
+					{
+						len--;
+					}
+
+					message[len] = 0;
+				}
+
+				UTIL_DHudMessage(pPlayer->pEdict, g_hudset, message, len);
+			}
+		}
+	}
+	else
+	{
+		if (index < 1 || index > gpGlobals->maxClients)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Invalid player id %d", index);
+			return 0;
+		}
+
+		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+
+		if (pPlayer->ingame && !pPlayer->IsBot())
+		{
+			g_langMngr.SetDefLang(index);
+			message = format_amxstring(amx, params, 2, len);
+
+			if (len > 127)	// Client truncates after byte 127.
+			{
+				len = 127;
+
+				// Don't truncate a double-byte character
+				if (((message[len - 1] & 0xFF) >= 0xC2) && ((message[len - 1] & 0xFF) <= 0xEF))      
+				{
+					--len;
+				}
+
+				message[len] = 0;
+			}
+
+			UTIL_DHudMessage(pPlayer->pEdict, g_hudset, message, len);
+		}
+	}
+
+	return len;
+}
+
 static cell AMX_NATIVE_CALL get_user_name(AMX *amx, cell *params) /* 3 param */
 {
 	int index = params[1];
@@ -4925,6 +5016,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"set_cvar_num",			set_cvar_num},
 	{"set_cvar_string",			set_cvar_string},
 	{"set_fail_state",			set_fail_state},
+	{"set_dhudmessage",			set_dhudmessage},
 	{"set_hudmessage",			set_hudmessage},
 	{"set_localinfo",			set_localinfo},
 	{"set_pcvar_flags",			set_pcvar_flags},
@@ -4936,6 +5028,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"set_user_info",			set_user_info},
 	{"set_xvar_float",			set_xvar_num},
 	{"set_xvar_num",			set_xvar_num},
+	{"show_dhudmessage",		show_dhudmessage}, 
 	{"show_hudmessage",			show_hudmessage},
 	{"show_menu",				show_menu},
 	{"show_motd",				show_motd},

@@ -179,6 +179,43 @@ native set_hudmessage(red=200, green=100, blue=0, Float:x=-1.0, Float:y=0.35, ef
 /* Displays HUD message to given player. */
 native show_hudmessage(index,const message[],any:...);
 
+/**
+ * Sets the Director HUD parameters for drawing text. 
+ *
+ * These parameters are stored globally, although nothing other than this function and set_hudmessage modify them. 
+ * You must call this function before drawing text. If you are drawing text to multiple clients, you can set the 
+ * parameters once, since they won't be modified. However, as soon as you pass control back to other plugins, 
+ * you must reset the parameters next time you draw.
+ * 
+ * @param red			The red color value.
+ * @param green			The green color value.
+ * @param blue			The blue color value.
+ * @param x				The x coordinate (abscissa). From 0,0 to 1.0.  -1.0 is the center.
+ * @param y				The y coordinate (ordinate). From 0,0 to 1.0. - 1.0 is the center.
+ * @param effects		The effect value. 0 = fade in/fade out, 1 is flickery credits, 2 is write out (training room).
+ * @param fxtime		The duration of chosen effect (may not apply to all effects).
+ * @param holdtime		The Number of seconds to hold the text.
+ * @param fadeintime	The number of seconds to spend fading in.	
+ * @param fadeoutime	The number of seconds to spend fading out.	
+ */
+native set_dhudmessage(red=200, green=100, blue=0, Float:x=-1.0, Float:y=0.35, effects=0, Float:fxtime=6.0, Float:holdtime=12.0, Float:fadeintime=0.1, Float:fadeouttime=0.2);
+
+/**
+ * Shows a Director HUD message to a client. Usually such message has a bigger letter size.
+ * Ideally used to show static/persistent message. 
+ *
+ * Unlike classic HUD message which is channel-based, Director HUD message is stack-based. Don't expect same behavior.
+ * You can have up to 8 messages displatying at once. If you try more, the first will be overwritten, then second, etc.
+ * Each message is limited to 128 characters. This will be automatically truncated by the native.
+ * Due to its way for working, there is no native to clear a specific message.
+ *
+ * @param index			THe client index to send the message to. Use 0 to send to all connected clients.
+ * @param message		The message text or formatting rules.
+ * @param ...			The message formatting parameters.
+ * @return				On success, the formatted message length. Otherwise 0.
+ */
+native show_dhudmessage(index, const message[], any:...);
+
 /* Displays menu. Keys have bit values (key 1 is (1<<0), key 5 is (1<<4) etc.). */
 native show_menu(index,keys,const menu[], time = -1, const title[] = "");
 

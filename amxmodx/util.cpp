@@ -273,6 +273,29 @@ void UTIL_HudMessage(edict_t *pEntity, const hudtextparms_t &textparms, const ch
 	MESSAGE_END();
 }
 
+void UTIL_DHudMessage(edict_t *pEntity, const hudtextparms_t &textparms, const char *pMessage, unsigned int length)
+{
+	#define DRC_CMD_MESSAGE 6
+
+	if (pEntity)
+		MESSAGE_BEGIN(MSG_ONE_UNRELIABLE, SVC_DIRECTOR, NULL, pEntity);
+	else
+		MESSAGE_BEGIN(MSG_BROADCAST, SVC_DIRECTOR);
+
+	WRITE_BYTE(length + 31); // message length (counting WRITE size)
+	WRITE_BYTE(DRC_CMD_MESSAGE);
+	WRITE_BYTE(textparms.effect);
+	WRITE_LONG(textparms.b1 + (textparms.g1 << 8) + (textparms.r1 << 16)); // pack color.
+	WRITE_LONG(amx_ftoc(textparms.x));
+	WRITE_LONG(amx_ftoc(textparms.y));
+	WRITE_LONG(amx_ftoc(textparms.fadeinTime));
+	WRITE_LONG(amx_ftoc(textparms.fadeoutTime));
+	WRITE_LONG(amx_ftoc(textparms.holdTime));
+	WRITE_LONG(amx_ftoc(textparms.fxTime));
+	WRITE_STRING(pMessage); // max length: 128. Truncated on the client.
+	MESSAGE_END();
+}
+
 /* warning - buffer of msg must be longer than 190 chars!
 (here in AMX it is always longer) */
 void UTIL_ClientPrint(edict_t *pEntity, int msg_dest, char *msg)

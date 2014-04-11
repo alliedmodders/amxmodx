@@ -140,6 +140,7 @@ void UTIL_ClientPrint(edict_t *pEntity, int msg_dest, char *msg);
 void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1 = NULL, const char *arg2 = NULL);
 void UTIL_GetFlags(char* flags, int flag);
 void UTIL_HudMessage(edict_t *pEntity, const hudtextparms_t &textparms, const char *pMessage);
+void UTIL_DHudMessage(edict_t *pEntity, const hudtextparms_t &textparms, const char *pMessage, unsigned int length);
 void UTIL_IntToString(int value, char *output);
 void UTIL_ShowMOTD(edict_t *client, char *motd, int mlen, const char *name);
 void UTIL_ShowMenu(edict_t* pEntity, int slots, int time, char *menu, int mlen);

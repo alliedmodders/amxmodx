@@ -690,7 +690,7 @@ inline void *CreateGenericTrampoline(bool thiscall, bool voidcall, bool retbuf, 
 		}
 		else
 		{
-			tramp.ThisVoidPrologue();
+			tramp.VoidPrologue();
 		}
 #endif
 	}

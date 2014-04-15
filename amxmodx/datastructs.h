@@ -39,6 +39,38 @@ private:
 	size_t cursize;    // current size of the vector (maximum elements)
 	size_t count;      // how many units of the vector are in use
 	
+	bool GrowIfNeeded(size_t howmany)
+	{
+		/* Shortcut out if we can store this */
+		if (count + howmany <= cursize)
+		{
+			return true;
+		}
+
+		/* Set a base allocation size of 8 items */
+		if (!cursize)
+		{
+			cursize = 8;
+		}
+
+		/* If it's not enough, keep doubling */
+		while (count + howmany > cursize)
+		{
+			cursize *= 2;
+		}
+
+		if (data)
+		{
+			data = (cell*)realloc(data, (sizeof(cell)* cellcount) * cursize);
+		}
+		else
+		{
+			data = (cell*)malloc((sizeof(cell)* cellcount) * cursize);
+		}
+
+		return (data != NULL);
+	};
+
 public:
 	CellVector(): data(NULL), cellcount(0), cursize(0), count(0)
 	{
@@ -196,6 +228,34 @@ public:
 	{
 		return this->count;
 	};
+
+	bool Resize(size_t newsize)
+	{
+		if (newsize <= count)
+		{
+			count = newsize;
+			return true;
+		}
+
+		if (!GrowIfNeeded(newsize - count))
+		{
+			return false;
+		}
+
+		count = newsize;
+		return true;
+	}
+
+	CellVector *Clone()
+	{
+		CellVector *array = new CellVector(cellcount);
+		array->count = count;
+		array->cursize = cursize;
+		array->data = (cell *)malloc((sizeof(cell)* cellcount) * cursize);
+		memcpy(array->data, data, (sizeof(cell)* cellcount) * count);
+		return array;
+	}
+
 	void Clear()
 	{
 		free(data);

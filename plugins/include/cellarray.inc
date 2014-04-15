@@ -23,14 +23,23 @@ enum Array
  *
  * @param cellsize		How many cells each entry in the array is.
  * @param reserved		How many blank entries are created immediately when the array is created.  These entries are not valid to read from until called with ArraySet.
- * @return 			Handle to the array.
+ * @return 				Handle to the array.
  */
 native Array:ArrayCreate(cellsize=1, reserved=32);
 
 /**
+ * Clones an array, returning a new handle with the same size and data. 
+ * You must close it.
+ *
+ * @param which			Array handle to be cloned.
+ * @return				New handle to the cloned array object on success, 0 on failure.
+ */
+native Array:ArrayClone(Array:which);
+
+/**
  * Clears all entries from the array.
  *
- * @param which		The array to clear.
+ * @param which			The array to clear.
  * @return				1 on success, 0 on failure.
  */
 native ArrayClear(Array:which);
@@ -38,16 +47,26 @@ native ArrayClear(Array:which);
 /**
  * Returns the number of elements in the array.
  *
- * @param which		The array to check.
+ * @param which			The array to check.
  * @return				How many elements are in the array.
  */
 native ArraySize(Array:which);
 
 /**
+ * Resizes an array.  If the size is smaller than the current size,
+ * the array is truncated.
+ *
+ * @param which			Array Handle.
+ * @param newsize		New size.
+ * @return				1 on success, 0 on failure.
+ */
+native bool:ArrayResize(Array:which, newsize);
+
+/**
  * Returns data within an array.  
  * Make sure the output buffer matches the size the array was created with!
  *
- * @param which		The array to retrieve the item from.
+ * @param which			The array to retrieve the item from.
  * @param item			The item to retrieve (zero-based).
  * @param output		The output buffer to write.
  */
@@ -57,7 +76,7 @@ native ArrayGetArray(Array:which, item, any:output[]);
  * Returns a single cell of data from an array.  
  * Use this only with arrays that were created with a cellsize of 1!
  *
- * @param which		The array to retrieve the item from.
+ * @param which			The array to retrieve the item from.
  * @param item			The item to retrieve (zero-based).
  * @return				The value of the cell.
  */
@@ -208,6 +227,26 @@ native ArraySwap(Array:which, item1, item2);
  * @param item			The item to delete.
  */
 native ArrayDeleteItem(Array:which, item);
+
+/**
+ * Returns the index for the first occurance of the provided string. If the string
+ * cannot be located, -1 will be returned.
+ *
+ * @param which			Array Handle.
+ * @param item			String to search for.
+ * @return				Array index, or -1 on failure.
+ */
+native ArrayFindString(Array:which, const item[]);
+ 
+/**
+ * Returns the index for the first occurance of the provided value. If the value
+ * cannot be located, -1 will be returned.
+ *
+ * @param which			Array Handle.
+ * @param item			Value to search for.
+ * @return				Array index, or -1 on failure.
+ */
+native ArrayFindValue(Array:which, any:item); 
 
 /**
  * Creates a handle that is passable to a format compliant routine for printing as a string (with the %a format option).  

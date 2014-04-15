@@ -82,6 +82,7 @@ static cell AMX_NATIVE_CALL ArrayCreate(AMX* amx, cell* params)
 
 	return VectorHolder.size();
 }
+
 // ArrayClear(Array:which)
 static cell AMX_NATIVE_CALL ArrayClear(AMX* amx, cell* params)
 {
@@ -96,6 +97,7 @@ static cell AMX_NATIVE_CALL ArrayClear(AMX* amx, cell* params)
 
 	return 1;
 }
+
 // ArraySize(Array:which)
 static cell AMX_NATIVE_CALL ArraySize(AMX* amx, cell* params)
 {
@@ -108,6 +110,54 @@ static cell AMX_NATIVE_CALL ArraySize(AMX* amx, cell* params)
 
 	return vec->Size();
 }
+
+// ArrayResize(Array:which, newsize);
+static cell AMX_NATIVE_CALL ArrayResize(AMX* amx, cell* params)
+{
+	CellVector* vec = HandleToVector(amx, params[1]);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	if (!vec->Resize(params[2]))
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Unable to resize array to \"%u\"", params[2]);
+		return 0;
+	}
+
+	return 1;
+}
+
+// ArrayClone(Array:which)
+static cell AMX_NATIVE_CALL ArrayClone(AMX* amx, cell* params)
+{
+	CellVector* vec = HandleToVector(amx, params[1]);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	CellVector *clonevec = vec->Clone();
+
+	// Scan through the vector list to see if any are NULL.
+	// NULL means the vector was previously destroyed.
+	for (unsigned int i = 0; i < VectorHolder.size(); ++i)
+	{
+		if (VectorHolder[i] == NULL)
+		{
+			VectorHolder[i] = clonevec;
+			return i + 1;
+		}
+	}
+
+	VectorHolder.push_back(clonevec);
+
+	return VectorHolder.size();
+}
+
 // ArrayGetArray(Array:which, item, any:output[]);
 static cell AMX_NATIVE_CALL ArrayGetArray(AMX* amx, cell* params)
 {
@@ -613,7 +663,7 @@ static cell AMX_NATIVE_CALL ArraySortEx(AMX* amx, cell* params)
 		return 0;
 	}
 
-	cell amx_addr1, amx_addr2, *phys_addr = NULL;
+	cell amx_addr1 = 0, amx_addr2 = 0, *phys_addr = NULL;
 	size_t cellcount = vec->GetCellCount();
 
 	if (cellcount > 1)
@@ -711,11 +761,67 @@ static cell AMX_NATIVE_CALL ArraySortEx(AMX* amx, cell* params)
 	return 1;
 }
 
+extern bool fastcellcmp(cell *a, cell *b, cell len);
+extern int amxstring_len(cell* a);
+
+// ArrayFindString(Array:which, const item[])
+static cell AMX_NATIVE_CALL ArrayFindString(AMX* amx, cell* params)
+{
+	int handle = params[1];
+	CellVector* vec = HandleToVector(amx, handle);
+
+	if (!vec)
+	{
+		return -1;
+	}
+
+	cell *b, *a = get_amxaddr(amx, params[2]);
+	size_t cellcount = vec->GetCellCount();
+	size_t a_len = max(1, amxstring_len(a));
+	size_t len = a_len > cellcount ? cellcount : a_len;
+
+	for (int i = 0; i < vec->Size(); i++)
+	{	
+		b = vec->GetCellPointer(i);
+
+		if (fastcellcmp(a, b, len))
+		{
+			return (cell)i;
+		}
+	}
+
+	return -1;
+}
+
+// ArrayFindValue(Array:which, any:item);
+static cell AMX_NATIVE_CALL ArrayFindValue(AMX* amx, cell* params)
+{
+	int handle = params[1];
+	CellVector* vec = HandleToVector(amx, handle);
+
+	if (!vec)
+	{
+		return -1;
+	}
+
+	for (int i = 0; i < vec->Size(); i++)
+	{
+		if (params[2] == *vec->GetCellPointer(i))
+		{
+			return (cell)i;
+		}
+	}
+
+	return -1;
+}
+
 AMX_NATIVE_INFO g_DataStructNatives[] = 
 {
 	{ "ArrayCreate",				ArrayCreate },
 	{ "ArrayClear",					ArrayClear },
+	{ "ArrayClone",					ArrayClone },
 	{ "ArraySize",					ArraySize },
+	{ "ArrayResize",				ArrayResize },
 	{ "ArrayGetArray",				ArrayGetArray },
 	{ "ArrayGetCell",				ArrayGetCell },
 	{ "ArrayGetString",				ArrayGetString },
@@ -737,6 +843,8 @@ AMX_NATIVE_INFO g_DataStructNatives[] =
 	{ "ArrayDestroy",				ArrayDestroy },
 	{ "ArraySort",					ArraySort },
 	{ "ArraySortEx",				ArraySortEx },
+	{ "ArrayFindString",			ArrayFindString },
+	{ "ArrayFindValue",				ArrayFindValue },
 
 	{ NULL,							NULL }
 };

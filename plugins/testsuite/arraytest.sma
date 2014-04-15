@@ -1,6 +1,5 @@
 #include <amxmodx>
 
-
 new __testnumber;
 new errcount;
 new __testfunc[32];
@@ -25,9 +24,7 @@ new TestWords[6][] = {
  "!="
 };
 
-
-
-stock test(A,B=0,TestType:Type=TT_Equal)
+stock test(any:A,any:B=0,TestType:Type=TT_Equal)
 {
 	++__testnumber;
 	
@@ -521,6 +518,8 @@ public arraytest9()
 		test(buff[0],start++);
 	}
 	
+	ArrayDestroy(a);
+	
 	showres();
 }
 
@@ -558,5 +557,112 @@ public arraytest10()
 		test(ArrayGetCell(a, i),i+1);
 	}
 	
+	ArrayDestroy(a);
+	
+	showres();
+}
+
+public arraytest11()
+{
+	server_print("Testing cloning function...");
+	
+	new Array:a = ArrayCreate(1);
+	
+	ArrayPushCell(a, 42);
+	ArrayPushCell(a, 9);
+	ArrayPushCell(a, -1);
+	ArrayPushCell(a, 0);
+	ArrayPushCell(a, 5);
+	ArrayPushCell(a, 10);
+	ArrayPushCell(a, 15);
+	ArrayPushCell(a, 6.5);
+	
+	new Array:b = ArrayClone(a);
+	
+	ArrayPushCell(b, 48);
+	ArrayPushCell(b, 3.14);
+	
+	test(a, b, TT_NotEqual);
+	test(ArraySize(a), ArraySize(b) - 2);
+	test(ArrayGetCell(b, 0), 42);
+	test(ArrayGetCell(b, 2), -1);
+	test(ArrayGetCell(b, 7), 6.5);
+	test(ArrayGetCell(b, 9), 3.14);
+	
+	ArrayDestroy(a);
+	ArrayDestroy(b);
+
+	showres();
+}
+
+public arraytest12()
+{
+	server_print("Testing resizing function...");
+	
+	new Array:a = ArrayCreate(16);
+	
+	ArrayPushString(a, "egg");
+	
+	ArrayResize(a, 50);
+	ArrayPushString(a, "boileregg");
+	
+	ArraySetString(a, 50, "no more egg v2");
+	
+	new buffer[16];
+	ArrayGetString(a, 50, buffer, charsmax(buffer));
+	
+	test(ArraySize(a), 50 + 1);
+	test(strcmp(buffer, "no more egg v2"), 0);
+
+	ArrayDestroy(a);
+
+	showres();
+}
+
+public arraytest13()
+{
+	server_print("Testing finding string in array...");
+	
+	new Array:a = ArrayCreate(16);
+	
+	ArrayPushString(a, "z");
+	ArrayPushString(a, "egg");
+	ArrayPushString(a, "boilerplate");
+	ArrayPushString(a, "amxmodx");
+	ArrayPushString(a, "something");
+	ArrayPushString(a, "");
+	ArrayPushString(a, "eggeggeggeggeggeggegg");
+	
+	test(ArrayFindString(a, "egg"), 1);
+	test(ArrayFindString(a, "doh"), -1);
+	test(ArrayFindString(a, "something"), 4);
+	test(ArrayFindString(a, "eggeggeggeggegg"), 6);
+	test(ArrayFindString(a, ""), 5);
+	test(ArrayFindString(a, "zz"), -1);
+	
+	ArrayDestroy(a);
+
+	showres();
+}
+
+public arraytest14()
+{
+	server_print("Testing finding value in array...");
+	
+	new Array:a = ArrayCreate(1);
+	
+	ArrayPushCell(a, 2);
+	ArrayPushCell(a, 1);
+	ArrayPushCell(a, 5);
+	ArrayPushCell(a, 3.14);
+	ArrayPushCell(a, -1);
+	
+	test(ArrayFindValue(a, -1), 4);
+	test(ArrayFindValue(a, 2), 0);
+	test(ArrayFindValue(a, 3), -1);
+	test(ArrayFindValue(a, 3.14), 3);
+	
+	ArrayDestroy(a);
+
 	showres();
 }

@@ -53,7 +53,6 @@ new PLUGINNAME[] = "AMX Mod X"
 #define ADMIN_IPADDR	(1<<3)
 #define ADMIN_NAME		(1<<4)
 
-new g_cmdLoopback[16]
 new bool:g_CaseSensitiveName[33];
 
 // pcvars
@@ -98,10 +97,6 @@ public plugin_init()
 
 	register_concmd("amx_reloadadmins", "cmdReload", ADMIN_CFG)
 	register_concmd("amx_addadmin", "addadminfn", ADMIN_RCON, "<playername|auth> <accessflags> [password] [authtype] - add specified player as an admin to users.ini")
-
-	format(g_cmdLoopback, 15, "amxauth%c%c%c%c", random_num('A', 'Z'), random_num('A', 'Z'), random_num('A', 'Z'), random_num('A', 'Z'))
-
-	register_clcmd(g_cmdLoopback, "ackSignal")
 
 	remove_user_flags(0, read_flags("z"))		// Remove 'user' flag from server rights
 
@@ -802,7 +797,7 @@ accessUser(id, name[] = "")
 	
 	if (result & 2)
 	{
-		client_cmd(id, "%s", g_cmdLoopback)
+		server_cmd("kick #%d ^"%L^"", get_user_userid(id), id, "NO_ENTRY")
 		return PLUGIN_HANDLED
 	}
 	
@@ -846,12 +841,6 @@ public client_infochanged(id)
 		}
 	}
 	return PLUGIN_CONTINUE
-}
-
-public ackSignal(id)
-{
-	server_cmd("kick #%d ^"%L^"", get_user_userid(id), id, "NO_ENTRY")
-	return PLUGIN_HANDLED
 }
 
 public client_authorized(id)

@@ -55,6 +55,22 @@ native Handle:SQL_Connect(Handle:cn_tuple, &errcode, error[], maxlength);
 
 
 /**
+ * Sets the character set of the current connection. 
+ * Like SET NAMES .. in mysql, but stays after connection problems.
+ * 
+ * If a connection tuple is supplied, this should be called before SQL_Connect or SQL_ThreadQuery.
+ * Also note the change will remain until you call this function with another value.
+ * 
+ * Example: "utf8", "latin1"
+ *
+ * @param h					Database or connection tuple Handle.
+ * @param charset			The character set string to change to.
+ * @return					True, if character set was changed, false otherwise.
+ */
+native bool:SQL_SetCharset(Handle:h, const charset[]);
+
+
+/**
  * Prepares a query.
  * The query must always be freed.
  * This does not actually do the query!

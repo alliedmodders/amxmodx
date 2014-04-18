@@ -35,6 +35,7 @@ struct SQL_Connection
 	char *db;
 	int port;
 	unsigned int max_timeout;
+	char *charset;
 };
 
 typedef void (*FREEHANDLE)(void *, unsigned int);

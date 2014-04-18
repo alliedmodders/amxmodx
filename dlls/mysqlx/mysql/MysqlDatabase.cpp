@@ -83,4 +83,7 @@ int MysqlDatabase::QuoteString(const char *str, char buffer[], size_t maxlen, si
 	return 0;
 }
 
-
+bool MysqlDatabase::SetCharacterSet(const char *characterset)
+{
+	return mysql_set_character_set(m_pMysql, characterset) == 0 ? true : false;
+}

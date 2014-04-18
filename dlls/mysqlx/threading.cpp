@@ -82,6 +82,7 @@ static cell AMX_NATIVE_CALL SQL_ThreadQuery(AMX *amx, cell *params)
 	kmThread->SetForward(fwd);
 	kmThread->SetQuery(MF_GetAmxString(amx, params[3], 1, &len));
 	kmThread->SetCellData(MF_GetAmxAddr(amx, params[4]), (ucell)params[5]);
+	kmThread->SetCharacterSet(cn->charset);
 
 	g_pWorker->MakeThread(kmThread);
 
@@ -139,6 +140,11 @@ void MysqlThread::SetInfo(const char *host, const char *user, const char *pass, 
 	m_qrInfo.queue_time = gpGlobals->time;
 }
 
+void MysqlThread::SetCharacterSet(const char *charset)
+{
+	m_charset.assign(charset);
+}
+
 void MysqlThread::SetQuery(const char *query)
 {
 	m_query.assign(query);
@@ -154,6 +160,7 @@ void MysqlThread::RunThread(IThreadHandle *pHandle)
 	info.host = m_host.c_str();
 	info.port = m_port;
 	info.max_timeout = m_max_timeout;
+	info.charset = m_charset.c_str();
 
 	float save_time = m_qrInfo.queue_time;
 

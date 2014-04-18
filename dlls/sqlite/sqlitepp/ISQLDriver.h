@@ -137,6 +137,13 @@ namespace SourceMod
 		 *  on internal failure.
 		 */
 		virtual int QuoteString(const char *str, char buffer[], size_t maxlen, size_t *newsize) =0;
+		
+		/**
+		 * @brief Sets the character set of the current connection
+		 *
+		 * @param characterset  The characterset to switch to. e.g. "utf8".
+		 */
+		virtual bool SetCharacterSet(const char *characterset) =0;
 	};
 
 	struct DatabaseInfo
@@ -148,6 +155,7 @@ namespace SourceMod
 		const char *pass;
 		unsigned int port;
 		unsigned int max_timeout;
+		const char *charset;
 	};
 
 	class ISQLDriver

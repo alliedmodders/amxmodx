@@ -72,6 +72,11 @@ IDatabase *MysqlDriver::_Connect(DatabaseInfo *info, int *errcode, char *error, 
 
 	MysqlDatabase *pMysql = new MysqlDatabase(mysql, this);
 
+	if (info->charset && *info->charset)
+	{
+		pMysql->SetCharacterSet(info->charset);
+	}
+
 	return static_cast<IDatabase *>(pMysql);
 }
 

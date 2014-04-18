@@ -63,6 +63,7 @@ public:
 	~MysqlThread();
 public:
 	void SetInfo(const char *host, const char *user, const char *pass, const char *db, int port, unsigned int max_timeout);
+	void SetCharacterSet(const char *charset);
 	void SetQuery(const char *query);
 	void SetCellData(cell data[], ucell len);
 	void SetForward(int forward);
@@ -78,6 +79,7 @@ private:
 	SourceHook::String m_pass;
 	SourceHook::String m_db;
 	unsigned int m_max_timeout;
+	SourceHook::String m_charset;
 	int m_port;
 	cell *m_data;
 	ucell m_datalen;

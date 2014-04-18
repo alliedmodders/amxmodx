@@ -16,6 +16,7 @@ void FreeConnection(void *p, unsigned int num)
 	free(cn->user);
 	free(cn->pass);
 	free(cn->db);
+	free(cn->charset);
 
 	delete cn;
 }
@@ -59,6 +60,7 @@ static cell AMX_NATIVE_CALL SQL_MakeDbTuple(AMX *amx, cell *params)
 	{
 		sql->max_timeout = static_cast<unsigned int>(params[5]);
 	}
+	sql->charset = NULL;
 
 	unsigned int num = MakeHandle(sql, Handle_Connection, FreeConnection);
 
@@ -92,6 +94,7 @@ static cell AMX_NATIVE_CALL SQL_Connect(AMX *amx, cell *params)
 	nfo.port = sql->port;
 	nfo.host = sql->host;
 	nfo.max_timeout = sql->max_timeout;
+	nfo.charset = sql->charset;
 
 	char buffer[512];
 	int errcode;
@@ -585,6 +588,37 @@ static cell AMX_NATIVE_CALL SQL_QuoteStringFmt(AMX *amx, cell *params)
 	}
 }
 
+static cell AMX_NATIVE_CALL SQL_SetCharset(AMX *amx, cell *params)
+{
+	SQL_Connection *sql = (SQL_Connection *)GetHandle(params[1], Handle_Connection);
+	if (!sql)
+	{
+		IDatabase *pDb = (IDatabase *)GetHandle(params[1], Handle_Database);
+		if (!pDb)
+		{
+			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid info tuple or database handle: %d", params[1]);
+			return 0;
+		}
+
+		int len;
+		return pDb->SetCharacterSet(MF_GetAmxString(amx, params[2], 0, &len));
+	}
+	else
+	{
+		int len;
+		const char *charset = MF_GetAmxString(amx, params[2], 0, &len);
+
+		if (!sql->charset || stricmp(charset, sql->charset))
+		{
+			sql->charset = strdup(charset);
+		}
+
+		return 1;
+	}
+
+	return 0;
+}
+
 AMX_NATIVE_INFO g_BaseSqlNatives[] = 
 {
 	{"SQL_MakeDbTuple",		SQL_MakeDbTuple},
@@ -610,6 +644,7 @@ AMX_NATIVE_INFO g_BaseSqlNatives[] =
 	{"SQL_QuoteString",		SQL_QuoteString},
 	{"SQL_QuoteStringFmt",	SQL_QuoteStringFmt},
 	{"SQL_NextResultSet",	SQL_NextResultSet},
+	{"SQL_SetCharset",		SQL_SetCharset},
 
 	{NULL,					NULL},
 };

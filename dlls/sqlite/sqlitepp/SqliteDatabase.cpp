@@ -78,7 +78,7 @@ int SqliteDatabase::QuoteString(const char *str, char buffer[], size_t maxlen, s
 	return 0;
 }
 
-bool SqDatabase::SetCharacterSet(const char *characterset)
+bool SqliteDatabase::SetCharacterSet(const char *characterset)
 {
     // sqlite only supports utf8 and utf16 - by the time the database is created. It's too late here.
     return false;

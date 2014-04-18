@@ -777,7 +777,9 @@ static cell AMX_NATIVE_CALL ArrayFindString(AMX* amx, cell* params)
 
 	cell *b, *a = get_amxaddr(amx, params[2]);
 	size_t cellcount = vec->GetCellCount();
-	size_t a_len = max(1, amxstring_len(a));
+	size_t a_len = amxstring_len(a);
+	if (a_len < 1)
+		a_len = 1;
 	size_t len = a_len > cellcount ? cellcount : a_len;
 
 	for (int i = 0; i < vec->Size(); i++)

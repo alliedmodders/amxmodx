@@ -22,7 +22,7 @@ namespace SourceMod
 		IQuery *PrepareQueryFmt(const char *fmt, va_list ap);
 		IQuery *PrepareQuery(const char *query);
 		int QuoteString(const char *str, char buffer[], size_t maxlen, size_t *newsize);
-		bool SqDatabase::SetCharacterSet(const char *characterset);
+		bool SetCharacterSet(const char *characterset);
 	private:
 		void Disconnect();
 	private:

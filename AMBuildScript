@@ -1,5 +1,7 @@
 # vim: set sts=2 ts=8 sw=2 tw=99 et ft=python :
 import os
+import subprocess
+import locale
 
 class AMXXConfig(object):
   def __init__(self):
@@ -13,6 +15,7 @@ class AMXXConfig(object):
     self.mysql_path = None
     self.generated_headers = None
     self.csx_app = None
+    self.stdcxx_path = None
 
   def detectProductVersion(self):
     builder.AddConfigureFile('product.version')
@@ -92,6 +95,19 @@ class AMXXConfig(object):
           break
       if not self.mysql_path:
         raise Exception('Could not find MySQL! Try passing --mysql to configure.py.')
+
+  # Returns list of lines of output from the compiler
+  @staticmethod
+  def invokeCompiler(args):
+    if builder.compiler:
+      p = subprocess.Popen(builder.compiler.argv + args, stdout=subprocess.PIPE)
+      output = p.communicate()[0]
+      if hasattr(output,'encoding') and output.encoding is not None:
+          encoding = output.encoding
+      else:
+          encoding = locale.getpreferredencoding()
+      return output.decode(encoding, 'replace').split('\n')
+    return None
 
   def configure(self):
     builder.AddConfigureFile('pushbuild.txt')
@@ -199,6 +215,9 @@ class AMXXConfig(object):
         cfg.postlink += ['-static-libgcc']
       elif cxx.name == 'clang':
         cfg.postlink += ['-lgcc_eh']
+      if cxx.behavior == 'gcc':
+        self.stdcxx_path = self.invokeCompiler(['-m32', '-print-file-name=' + 'libstdc++.a'])[0]
+        print(self.stdcxx_path)
     elif builder.target_platform == 'mac':
       cfg.defines += ['OSX', '_OSX', 'POSIX']
       cfg.cflags += ['-mmacosx-version-min=10.5']

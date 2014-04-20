@@ -217,7 +217,6 @@ class AMXXConfig(object):
         cfg.postlink += ['-lgcc_eh']
       if cxx.behavior == 'gcc':
         self.stdcxx_path = self.invokeCompiler(['-m32', '-print-file-name=' + 'libstdc++.a'])[0]
-        print(self.stdcxx_path)
     elif builder.target_platform == 'mac':
       cfg.defines += ['OSX', '_OSX', 'POSIX']
       cfg.cflags += ['-mmacosx-version-min=10.5']

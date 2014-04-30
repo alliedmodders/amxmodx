@@ -179,38 +179,9 @@ normal_string:
 
 char *get_amxstring(AMX *amx, cell amx_addr, int id, int& len)
 {
-	static char buffor[4][3072];
-	register cell* source = (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
-	register char* dest = buffor[id];
-	char* start = dest;
-
-	if ( (amx->flags & AMX_FLAG_OLDFILE) &&
-		 (*source & BCOMPAT_TRANSLATE_BITS) )
-	{
-		const char *def, *key;
-		if (!translate_bcompat(amx, source, &key, &def))
-		{
-			goto normal_string;
-		}
-		while ( (*dest++ = (*def++)) );
-		len = --dest - start;
-	} else {
-normal_string:
-		while ((*dest++=(char)(*source++)));
-
-		len = --dest - start;
-	}
-
-#if defined BINLOG_ENABLED
-	if (g_binlog_level & 2)
-	{
-		CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(amx);
-		if (pl)
-			g_BinLog.WriteOp(BinLog_GetString, pl->getId(), amx_addr, start);
-	}
-#endif
-	
-	return start;
+	static char buffer[4][16384];
+	len = get_amxstring_r(amx, amx_addr, buffer[id], sizeof(buffer[id]) - 1);
+	return buffer[id];
 }
 
 void copy_amxmemory(cell* dest, cell* src, int len)

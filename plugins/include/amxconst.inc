@@ -13,6 +13,13 @@
 
 #include <svn_version>
 
+/**
+ * This is the buffer size AMX Mod X uses internally to retrieve strings from plugins.
+ * Most natives that take strings as arguments will implicitly truncate those to this maximum length.
+ * This has been raised to the current value with AMXX 1.8.3. Previously the limit was 3072.
+ */
+#define MAX_STRING_LENGTH 16384
+
 #define M_PI 3.1415926535
 
 #define ADMIN_ALL		0	/* everyone */

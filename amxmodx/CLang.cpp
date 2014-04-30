@@ -218,6 +218,7 @@ const char * CLangMngr::CLang::GetDef(int key, int &status)
 		return NULL;
 	}
 
+	status = 0;
 	return def.definition->c_str();
 }
 
@@ -572,6 +573,7 @@ const char *CLangMngr::GetDef(const char *langName, const char *key, int &status
 		status = ERR_BADKEY;
 		return NULL;
 	} else {
+		status = 0;
 		return lang->GetDef(val.index, status);
 	}
 }

@@ -149,6 +149,12 @@ void AddString(U **buf_p, size_t &maxlen, const cell *string, int width, int pre
 	if (size > (int)maxlen)
 		size = maxlen;
 
+	/* If precision is provided, make sure we don't truncate a multi-byte character */
+	if (prec >= size && (string[size - 1] & 1 << 7))
+	{
+		size -= UTIL_CheckValidChar((cell *)string + size - 1);
+	}
+
 	maxlen -= size;
 	width -= size;
 
@@ -283,6 +289,58 @@ void AddFloat(U **buf_p, size_t &maxlen, double fval, int width, int prec, int f
 	}
 
 	// update parent's buffer pointer
+	*buf_p = buf;
+}
+
+template <typename U>
+void AddBinary(U **buf_p, size_t &maxlen, unsigned int val, int width, int flags)
+{
+	char text[32];
+	int digits;
+	U *buf;
+
+	digits = 0;
+	do
+	{
+		if (val & 1)
+		{
+			text[digits++] = '1';
+		}
+		else
+		{
+			text[digits++] = '0';
+		}
+		val >>= 1;
+	} while (val);
+
+	buf = *buf_p;
+
+	if (!(flags & LADJUST))
+	{
+		while (digits < width && maxlen)
+		{
+			*buf++ = (flags & ZEROPAD) ? '0' : ' ';
+			width--;
+			maxlen--;
+		}
+	}
+
+	while (digits-- && maxlen)
+	{
+		*buf++ = text[digits];
+		width--;
+		maxlen--;
+	}
+
+	if (flags & LADJUST)
+	{
+		while (width-- && maxlen)
+		{
+			*buf++ = (flags & ZEROPAD) ? '0' : ' ';
+			maxlen--;
+		}
+	}
+
 	*buf_p = buf;
 }
 
@@ -527,6 +585,11 @@ reswitch:
 			llen--;
 			arg++;
 			break;
+		case 'b':
+			CHECK_ARGS(0);
+			AddBinary(&buf_p, llen, *get_amxaddr(amx, params[arg]), width, flags);
+			arg++;
+			break;
 		case 'd':
 		case 'i':
 			CHECK_ARGS(0);
@@ -635,6 +698,14 @@ break_to_normal_string:
 done:
 	*buf_p = static_cast<D>(0);
 	*param = arg;
+
+	/* if max buffer length consumed, make sure we don't truncate a multi-byte character */
+	if (llen <= 0 && *(buf_p - 1) & 1 << 7)
+	{
+		llen += UTIL_CheckValidChar(buf_p - 1);
+		*(buf_p - llen) = static_cast<D>(0);
+	}
+
 	return maxlen-llen;
 }
 

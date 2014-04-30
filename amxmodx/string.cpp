@@ -103,11 +103,42 @@ int set_amxstring(AMX *amx, cell amx_addr, const char *source, int max)
 #endif
 	
 	while (max-- && *source)
-		*dest++ = (cell)*source++;
+		*dest++ = (unsigned char)*source++;
 	
 	*dest = 0;
 	
 	return dest - start;
+}
+
+int set_amxstring_utf8(AMX *amx, cell amx_addr, const char *source, size_t sourcelen, size_t maxlen)
+{
+	size_t len = sourcelen;
+	bool needtocheck = false;
+
+	register cell* dest = (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
+	register cell* start = dest;
+
+	if (len >= maxlen)
+	{
+		len = maxlen - 1;
+		needtocheck = true;
+	}
+
+	maxlen = len;
+
+	while (maxlen-- && *source)
+	{
+		*dest++ = *(unsigned char*)source++;
+	}
+
+	if (needtocheck && (start[len - 1] & 1 << 7))
+	{
+		len -= UTIL_CheckValidChar(start + len - 1);
+	}
+
+	start[len] = '\0';
+
+	return len;
 }
 
 extern "C" size_t get_amxstring_r(AMX *amx, cell amx_addr, char *destination, int maxlen)
@@ -285,6 +316,62 @@ static cell AMX_NATIVE_CALL replace(AMX *amx, cell *params) /* 4 param */
 	}
 	
 	return 0;
+}
+
+static cell AMX_NATIVE_CALL replace_string(AMX *amx, cell *params)
+{
+	int len;
+	size_t maxlength = (size_t)params[2];
+
+	char *text = get_amxstring(amx, params[1], 0, len);
+	const char *search = get_amxstring(amx, params[3], 1, len);
+	const char *replace = get_amxstring(amx, params[4], 2, len);
+
+	bool caseSensitive = params[5] ? true : false;
+
+	if (search[0] == '\0')
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Cannot replace searches of empty strings.");
+		return -1;
+	}
+
+	int count = UTIL_ReplaceAll(text, maxlength + 1, search, replace, caseSensitive); // + EOS
+
+	set_amxstring(amx, params[1], text, maxlength);
+
+	return count;
+}
+
+static cell AMX_NATIVE_CALL replace_stringex(AMX *amx, cell *params)
+{
+	int len;
+	size_t maxlength = (size_t)params[2];
+
+	char *text = get_amxstring(amx, params[1], 0, len);
+	const char *search = get_amxstring(amx, params[3], 1, len);
+	const char *replace = get_amxstring(amx, params[4], 2, len);
+
+	size_t searchLen = (params[5] == -1) ? strlen(search) : (size_t)params[5];
+	size_t replaceLen = (params[6] == -1) ? strlen(replace) : (size_t)params[6];
+
+	bool caseSensitive = params[7] ? true : false;
+
+	if (searchLen == 0)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Cannot replace searches of empty strings.");
+		return -1;
+	}
+
+	char *ptr = UTIL_ReplaceEx(text, maxlength + 1, search, searchLen, replace, replaceLen, caseSensitive); // + EOS
+
+	if (ptr == NULL)
+	{
+		return -1;
+	}
+
+	set_amxstring(amx, params[1], ptr, maxlength);
+
+	return ptr - text;
 }
 
 static cell AMX_NATIVE_CALL contain(AMX *amx, cell *params) /* 2 param */
@@ -854,8 +941,8 @@ static cell AMX_NATIVE_CALL amx_strtok(AMX *amx, cell *params)
 
 	right[right_pos] = 0;
 	left[left_pos] = 0;
-	set_amxstring(amx, params[2], left, leftMax);
-	set_amxstring(amx, params[4], right, rightMax);
+	set_amxstring_utf8(amx, params[2], left, strlen(left), leftMax + 1); // +EOS
+	set_amxstring_utf8(amx, params[4], right, strlen(right), rightMax + 1); // +EOS
 	delete [] left;
 	delete [] right;
 	
@@ -928,8 +1015,9 @@ static cell AMX_NATIVE_CALL amx_strtok2(AMX *amx, cell *params)
 
 	right[right_pos] = 0;
 	left[left_pos] = 0;
-	set_amxstring(amx, params[2], left, left_max);
-	set_amxstring(amx, params[4], right, right_max);
+
+	set_amxstring_utf8(amx, params[2], left, strlen(left), left_max + 1); // + EOS
+	set_amxstring_utf8(amx, params[4], right, strlen(right), right_max + 1); // + EOS
 
 	delete [] left;
 	delete [] right;
@@ -1029,7 +1117,7 @@ do_copy:
 				                    : end - beg
 				                   )
 				                 : 0;
-				set_amxstring(amx, params[2], start, copylen);
+				set_amxstring_utf8(amx, params[2], start, strlen(start), copylen + 1); // + EOS
 
 				end = (len-i+1 > (size_t)RightMax) ? (size_t)RightMax : len-i+1;
 				if (end)
@@ -1045,11 +1133,48 @@ do_copy:
 	}
 
 	//if we got here, there was nothing to break
-	set_amxstring(amx, params[2], &(string[beg]), LeftMax);
+	set_amxstring_utf8(amx, params[2], &(string[beg]), strlen(&(string[beg])), LeftMax + 1); // + EOS
 	if (RightMax)
 		*right = '\0';
 
 	return 1;
+}
+
+static cell AMX_NATIVE_CALL split_string(AMX *amx, cell *params)
+{
+	int textLen, splitLen;
+	char *text = get_amxstring(amx, params[1], 0, textLen);
+	const char *split = get_amxstring(amx, params[2], 1, splitLen);
+
+	if (splitLen > textLen)
+	{
+		return -1;
+	}
+
+	int maxLen = params[4];
+
+	/**
+	* Note that it's <= ... you could also just add 1,
+	* but this is a bit nicer
+	*/
+	for (int i = 0; i <= textLen - splitLen; i++)
+	{
+		if (strncmp(&text[i], split, splitLen) == 0)
+		{
+			/* Split hereeeee */
+			if (i >= maxLen + 1) // + null terminator
+			{
+				set_amxstring_utf8(amx, params[3], text, textLen, maxLen + 1); // + null terminator
+			}
+			else
+			{
+				set_amxstring_utf8(amx, params[3], text, textLen, i + 1);
+			}
+			return i + splitLen;
+		}
+	}
+
+	return -1;
 }
 
 static cell AMX_NATIVE_CALL format_args(AMX *amx, cell *params)
@@ -1065,28 +1190,101 @@ static cell AMX_NATIVE_CALL format_args(AMX *amx, cell *params)
 
 	char* string = format_arguments(amx, pos, len); // indexed from 0
 	
-	return set_amxstring(amx, params[1], string, params[2]);
+	return set_amxstring_utf8(amx, params[1], string, len, params[2] + 1); // + EOS
 }
 
 static cell AMX_NATIVE_CALL is_digit(AMX *amx, cell *params)
 {
-	return isdigit(params[1]);
+	char chr = params[1];
+
+	if (UTIL_GetUTF8CharBytes(&chr) != 1)
+	{
+		return 0;
+	}
+
+	return isdigit(chr);
 }
 
 static cell AMX_NATIVE_CALL is_alnum(AMX *amx, cell *params)
 {
-	return isalnum(params[1]);
+	char chr = params[1];
+
+	if (UTIL_GetUTF8CharBytes(&chr) != 1)
+	{
+		return 0;
+	}
+
+	return isalnum(chr);
 }
 
 static cell AMX_NATIVE_CALL is_space(AMX *amx, cell *params)
 {
-	return isspace(params[1]);
+	char chr = params[1];
+
+	if (UTIL_GetUTF8CharBytes(&chr) != 1)
+	{
+		return 0;
+	}
+
+	return isspace(chr);
 }
 
 static cell AMX_NATIVE_CALL is_alpha(AMX *amx, cell *params)
 {
-	return isalpha(params[1]);
+	char chr = params[1];
+
+	if (UTIL_GetUTF8CharBytes(&chr) != 1)
+	{
+		return 0;
+	}
+
+	return isalpha(chr);
 }
+
+static cell AMX_NATIVE_CALL is_char_upper(AMX *amx, cell *params)
+{
+	char chr = params[1];
+
+	if (UTIL_GetUTF8CharBytes(&chr) != 1)
+	{
+		return 0;
+	}
+
+	return isupper(chr);
+}
+
+static cell AMX_NATIVE_CALL is_char_lower(AMX *amx, cell *params)
+{
+	char chr = params[1];
+
+	if (UTIL_GetUTF8CharBytes(&chr) != 1)
+	{
+		return 0;
+	}
+
+	return islower(chr);
+}
+
+static cell AMX_NATIVE_CALL is_char_mb(AMX *amx, cell *params)
+{
+	char chr = params[1];
+
+	unsigned int bytes = UTIL_GetUTF8CharBytes(&chr);
+	if (bytes == 1)
+	{
+		return 0;
+	}
+
+	return bytes;
+}
+
+static cell AMX_NATIVE_CALL get_char_bytes(AMX *amx, cell *params)
+{
+	int len;
+	char *str = get_amxstring(amx, params[1], 0, len);
+
+	return UTIL_GetUTF8CharBytes(str);
+};
 
 static cell AMX_NATIVE_CALL amx_ucfirst(AMX *amx, cell *params)
 {
@@ -1161,6 +1359,18 @@ static cell AMX_NATIVE_CALL n_strcmp(AMX *amx, cell *params)
 		return stricmp(str1, str2);
 	else
 		return strcmp(str1, str2);
+}
+
+static cell AMX_NATIVE_CALL n_strncmp(AMX *amx, cell *params)
+{
+	int len;
+	char *str1 = get_amxstring(amx, params[1], 0, len);
+	char *str2 = get_amxstring(amx, params[2], 1, len);
+
+	if (params[4])
+		return strncmp(str1, str2, (size_t)params[3]);
+	else
+		return strncasecmp(str1, str2, (size_t)params[3]);
 }
 
 static cell AMX_NATIVE_CALL n_strfind(AMX *amx, cell *params)
@@ -1274,13 +1484,20 @@ AMX_NATIVE_INFO string_Natives[] =
 	{"isalnum",			is_alnum},
 	{"isspace",			is_space},
 	{"isalpha",			is_alpha},
+	{"is_char_upper",	is_char_upper},
+	{"is_char_lower",	is_char_lower},
+	{"is_char_mb",		is_char_mb},
+	{"get_char_bytes",	get_char_bytes},
 	{"num_to_str",		numtostr},
 	{"numtostr",		numtostr},
 	{"parse",			parse},
 	{"replace",			replace},
+	{"replace_string",	replace_string},
+	{"replace_stringex",replace_stringex},
 	{"setc",			setc},
 	{"strbreak",		strbreak},
 	{"argparse",		argparse},
+	{"split_string",	split_string},
 	{"strtolower",		strtolower},
 	{"strtoupper",		strtoupper},
 	{"str_to_num",		strtonum},
@@ -1295,6 +1512,7 @@ AMX_NATIVE_INFO string_Natives[] =
 	{"strcat",			n_strcat},
 	{"strfind",			n_strfind},
 	{"strcmp",			n_strcmp},
+	{"strncmp",			n_strncmp},
 	{"str_to_float",	str_to_float},
 	{"float_to_str",	float_to_str},
 	{"vformat",			vformat},

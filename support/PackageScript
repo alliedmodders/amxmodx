@@ -239,6 +239,7 @@ scripting_files = [
   'testsuite/sqlxtest.sq3',
   'testsuite/sqlxtest.sql',
   'testsuite/trietest.sma',
+  'testsuite/utf8test.sma',
   'include/amxconst.inc',
   'include/amxmisc.inc',
   'include/amxmodx.inc',

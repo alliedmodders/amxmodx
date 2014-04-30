@@ -169,7 +169,7 @@ static cell AMX_NATIVE_CALL read_file(AMX *amx, cell *params) /* 5 param */
 			buffor[--len] = 0;
 		
 		cell *length = get_amxaddr(amx, params[5]);
-		*length = set_amxstring(amx, params[3], buffor, params[4]);
+		*length = set_amxstring_utf8(amx, params[3], buffor, len, params[4] + 1); // + EOS
 		
 		return i;
 	}
@@ -583,7 +583,7 @@ static cell AMX_NATIVE_CALL amx_fgets(AMX *amx, cell *params)
 	static char buffer[4096];
 	buffer[0] = '\0';
 	fgets(buffer, sizeof(buffer)-1, fp);
-	return set_amxstring(amx, params[2], buffer, params[3]);
+	return set_amxstring_utf8(amx, params[2], buffer, strlen(buffer), params[3] + 1); // + EOS
 }
 
 static cell AMX_NATIVE_CALL amx_fseek(AMX *amx, cell *params)

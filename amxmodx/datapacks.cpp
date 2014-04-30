@@ -137,13 +137,14 @@ static cell AMX_NATIVE_CALL ReadPackString(AMX* amx, cell* params)
 	}
 
 	const char *str;
-	if (!(str = d->ReadString(NULL)))
+	size_t len;
+	if (!(str = d->ReadString(&len)))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "DataPack operation is out of bounds.");
 		return 0;
 	}
 
-	return set_amxstring(amx, params[2], str, params[3]);
+	return set_amxstring_utf8(amx, params[2], str, len, params[3] + 1); // + EOS
 }
 
 static cell AMX_NATIVE_CALL ResetPack(AMX* amx, cell* params)

@@ -234,8 +234,9 @@ static cell AMX_NATIVE_CALL console_print(AMX *amx, cell *params) /* 2 param */
 		if (len > 254)
 		{
 			len = 254;
-			if (((message[len - 1] & 0xFF) >= 0xC2) && ((message[len - 1] & 0xFF) <= 0xEF)) {       // Don't truncate a double-byte character
-				len--;
+			if ((message[len - 1] & 1 << 7))
+			{
+				len -= UTIL_CheckValidChar(message + len - 1); // Don't truncate a multi-byte character
 			}
 		}
 		message[len++] = '\n';
@@ -252,9 +253,9 @@ static cell AMX_NATIVE_CALL console_print(AMX *amx, cell *params) /* 2 param */
 			if (len > 126)	// Client console truncates after byte 127. (126 + \n = 127)
 			{
 				len = 126;
-				if (((message[len - 1] & 0xFF) >= 0xC2) && ((message[len - 1] & 0xFF) <= 0xEF))	// Don't truncate a double-byte character
+				if ((message[len - 1] & 1 << 7))
 				{
-					len--;
+					len -= UTIL_CheckValidChar(message + len - 1); // Don't truncate a multi-byte character
 				}
 			}
 			message[len++] = '\n';      // Client expects newline from the server
@@ -289,9 +290,9 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 				if (((params[2] == 1) || (params[2] == 2)) && (len > 126))	// Client console truncates after byte 127. (126 + \n = 127)
 				{
 					len = 126;
-					if (((msg[len - 1] & 0xFF) >= 0xC2) && ((msg[len - 1] & 0xFF) <= 0xEF))	// Don't truncate a double-byte character
+					if ((msg[len - 1] & 1 << 7))
 					{
-						len--;
+						len -= UTIL_CheckValidChar(msg + len - 1); // Don't truncate a multi-byte character
 					}
 				}
 				msg[len++] = '\n';	// Client expects newline from the server
@@ -323,9 +324,9 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 			if (((params[2] == 1) || (params[2] == 2)) && (len > 126))	// Client console truncates after byte 127. (126 + \n = 127)
 			{
 				len = 126;
-				if (((msg[len - 1] & 0xFF) >= 0xC2) && ((msg[len - 1] & 0xFF) <= 0xEF))       // Don't truncate a double-byte character
+				if ((msg[len - 1] & 1 << 7))
 				{
-					len--;
+					len -= UTIL_CheckValidChar(msg + len - 1); // Don't truncate a multi-byte character
 				}
 			}
 			msg[len++] = '\n';	// Client expects newline from the server
@@ -370,6 +371,16 @@ static cell AMX_NATIVE_CALL client_print_color(AMX *amx, cell *params) /* 3 para
 			{
 				g_langMngr.SetDefLang(i);
 				msg = format_amxstring(amx, params, 3, len);
+
+				if (len > 190)	// Server crashes after byte 190. (190 + \n = 191)
+				{
+					len = 190;
+					if ((msg[len - 1] & 1 << 7))
+					{
+						len -= UTIL_CheckValidChar(msg + len - 1); // Don't truncate a multi-byte character
+					}
+				}
+
 				msg[len++] = '\n';
 				msg[len] = 0;
 
@@ -392,6 +403,16 @@ static cell AMX_NATIVE_CALL client_print_color(AMX *amx, cell *params) /* 3 para
 			g_langMngr.SetDefLang(index);
 
 			msg = format_amxstring(amx, params, 3, len);
+
+			if (len > 190)	// Server crashes after byte 190. (190 + \n = 191)
+			{
+				len = 190;
+				if ((msg[len - 1] & 1 << 7))
+				{
+					len -= UTIL_CheckValidChar(msg + len - 1); // Don't truncate a multi-byte character
+				}
+			}
+
 			msg[len++] = '\n';
 			msg[len] = 0;
 		
@@ -663,7 +684,9 @@ static cell AMX_NATIVE_CALL get_user_name(AMX *amx, cell *params) /* 3 param */
 {
 	int index = params[1];
 	
-	return set_amxstring(amx, params[2], (index < 1 || index > gpGlobals->maxClients) ? hostname->string : g_players[index].name.c_str(), params[3]);
+	return set_amxstring_utf8(amx, params[2], (index < 1 || index > gpGlobals->maxClients) ? 
+			hostname->string : 
+			g_players[index].name.c_str(), g_players[index].name.size(), params[3] + 1);
 }
 
 static cell AMX_NATIVE_CALL get_user_index(AMX *amx, cell *params) /* 1 param */
@@ -1597,8 +1620,8 @@ static cell AMX_NATIVE_CALL get_concmd(AMX *amx, cell *params) /* 7 param */
 	if (cmd == 0)
 		return 0;
 	
-	set_amxstring(amx, params[2], cmd->getCmdLine(), params[3]);
-	set_amxstring(amx, params[5], cmd->getCmdInfo(), params[6]);
+	set_amxstring_utf8(amx, params[2], cmd->getCmdLine(), strlen(cmd->getCmdLine()), params[3] + 1); // + EOS
+	set_amxstring_utf8(amx, params[5], cmd->getCmdInfo(), strlen(cmd->getCmdInfo()), params[6] + 1); // + EOS
 	cell *cpFlags = get_amxaddr(amx, params[4]);
 	*cpFlags = cmd->getFlags();
 	
@@ -1633,9 +1656,9 @@ static cell AMX_NATIVE_CALL get_clcmd(AMX *amx, cell *params) /* 7 param */
 	
 	if (cmd == 0)
 		return 0;
-	
-	set_amxstring(amx, params[2], cmd->getCmdLine(), params[3]);
-	set_amxstring(amx, params[5], cmd->getCmdInfo(), params[6]);
+
+	set_amxstring_utf8(amx, params[2], cmd->getCmdLine(), strlen(cmd->getCmdLine()), params[3] + 1); // + EOS
+	set_amxstring_utf8(amx, params[5], cmd->getCmdInfo(), strlen(cmd->getCmdInfo()), params[6] + 1); // + EOS
 	cell *cpFlags = get_amxaddr(amx, params[4]);
 	*cpFlags = cmd->getFlags();
 
@@ -1649,8 +1672,8 @@ static cell AMX_NATIVE_CALL get_srvcmd(AMX *amx, cell *params)
 	if (cmd == 0)
 		return 0;
 	
-	set_amxstring(amx, params[2], cmd->getCmdLine(), params[3]);
-	set_amxstring(amx, params[5], cmd->getCmdInfo(), params[6]);
+	set_amxstring_utf8(amx, params[2], cmd->getCmdLine(), strlen(cmd->getCmdLine()), params[3] + 1); // + EOS
+	set_amxstring_utf8(amx, params[5], cmd->getCmdInfo(), strlen(cmd->getCmdInfo()), params[6] + 1); // + EOS
 	cell *cpFlags = get_amxaddr(amx, params[4]);
 	*cpFlags = cmd->getFlags();
 	
@@ -1891,7 +1914,7 @@ static cell AMX_NATIVE_CALL get_pcvar_string(AMX *amx, cell *params)
 		return 0;
 	}
 
-	return set_amxstring(amx, params[2], ptr->string ? ptr->string : "", params[3]);
+	return set_amxstring_utf8(amx, params[2], ptr->string ? ptr->string : "", ptr->string ? strlen(ptr->string) : 0, params[3] + 1); // EOS
 }
 
 static cell AMX_NATIVE_CALL get_cvar_string(AMX *amx, cell *params) /* 3 param */
@@ -1912,7 +1935,8 @@ static cell AMX_NATIVE_CALL get_cvar_string(AMX *amx, cell *params) /* 3 param *
 		}
 	}
 	
-	return set_amxstring(amx, params[2], CVAR_GET_STRING(sptemp), params[3]);
+	const char *value = CVAR_GET_STRING(sptemp);
+	return set_amxstring_utf8(amx, params[2], value, strlen(value), params[3] + 1); // + EOS
 }
 
 static cell AMX_NATIVE_CALL get_pcvar_float(AMX *amx, cell *params)
@@ -2168,9 +2192,9 @@ static cell AMX_NATIVE_CALL format_time(AMX *amx, cell *params) /* 3 param */
 	}
 	
 	char szDate[512];
-	strftime(szDate, 511, sptemp, lt);
+	ilen = strftime(szDate, 511, sptemp, lt); // Returns length, including null-character.
 	
-	return set_amxstring(amx, params[1], szDate, params[2]);
+	return set_amxstring_utf8(amx, params[1], szDate, ilen - 1, params[2] + 1); // + EOS
 
 }
 
@@ -2235,7 +2259,8 @@ static cell AMX_NATIVE_CALL read_data(AMX *amx, cell *params) /* 3 param */
 		case 1:
 			return g_events.getArgInteger(params[1]);
 		case 3:
-			return set_amxstring(amx, params[2], g_events.getArgString(params[1]), *get_amxaddr(amx, params[3]));
+			return set_amxstring_utf8(amx, params[2], g_events.getArgString(params[1]), 
+				strlen(g_events.getArgString(params[1])),*get_amxaddr(amx, params[3]) + 1); // + EOS
 		default:
 			cell *fCell = get_amxaddr(amx, params[2]);
 			REAL fparam = (REAL)g_events.getArgFloat(params[1]);
@@ -2438,7 +2463,8 @@ static cell AMX_NATIVE_CALL get_localinfo(AMX *amx, cell *params) /* 3 param */
 	int ilen;
 	char* sptemp = get_amxstring(amx, params[1], 0, ilen);
 	
-	return set_amxstring(amx, params[2], LOCALINFO(sptemp), params[3]);
+	char *value = LOCALINFO(sptemp);
+	return set_amxstring_utf8(amx, params[2], value, strlen(value), params[3] + 1); //  + EOS
 }
 
 static cell AMX_NATIVE_CALL set_localinfo(AMX *amx, cell *params) /* 2 param */
@@ -2511,14 +2537,15 @@ static cell AMX_NATIVE_CALL read_argc(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL read_argv(AMX *amx, cell *params) /* 3 param */
 {
-	return set_amxstring(amx, params[2], /*(params[1] < 0 ||
-	params[1] >= CMD_ARGC()) ? "" : */CMD_ARGV(params[1]), params[3]);
+	const char *value = CMD_ARGV(params[1]);
+	return set_amxstring_utf8(amx, params[2], /*(params[1] < 0 ||
+	params[1] >= CMD_ARGC()) ? "" : */value, strlen(value), params[3] + 1); // + EOS
 }
 
 static cell AMX_NATIVE_CALL read_args(AMX *amx, cell *params) /* 2 param */
 {
 	const char* sValue = CMD_ARGS();
-	return set_amxstring(amx, params[1], sValue ? sValue : "", params[2]);
+	return set_amxstring_utf8(amx, params[1], sValue ? sValue : "", sValue ? strlen(sValue) : 0, params[2] + 1); // +EOS
 }
 
 static cell AMX_NATIVE_CALL get_user_msgid(AMX *amx, cell *params) /* 1 param */
@@ -3210,7 +3237,8 @@ static cell AMX_NATIVE_CALL force_unmodified(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL read_logdata(AMX *amx, cell *params)
 {
-	return set_amxstring(amx, params[1], g_logevents.getLogString(), params[2]);
+	const char *value = g_logevents.getLogString();
+	return set_amxstring_utf8(amx, params[1], value, strlen(value), params[2] + 1); // + EOS
 }
 
 static cell AMX_NATIVE_CALL read_logargc(AMX *amx, cell *params)
@@ -3220,7 +3248,8 @@ static cell AMX_NATIVE_CALL read_logargc(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL read_logargv(AMX *amx, cell *params)
 {
-	return set_amxstring(amx, params[2], g_logevents.getLogArg(params[1]), params[3]);
+	const char *value = g_logevents.getLogArg(params[1]);
+	return set_amxstring_utf8(amx, params[2], value, strlen(value), params[3] + 1); // + EOS
 }
 
 static cell AMX_NATIVE_CALL parse_loguser(AMX *amx, cell *params)
@@ -3503,10 +3532,14 @@ static cell AMX_NATIVE_CALL get_module(AMX *amx, cell *params)
 	// set name, author, version
 	if ((*moduleIter).isAmxx()) 	 
 	{ 	 
-		const amxx_module_info_s *info = (*moduleIter).getInfoNew(); 	 
-		set_amxstring(amx, params[2], info && info->name ? info->name : "unk", params[3]); 	 
-		set_amxstring(amx, params[4], info && info->author ? info->author : "unk", params[5]); 	 
-		set_amxstring(amx, params[6], info && info->version ? info->version : "unk", params[7]); 	 
+		const amxx_module_info_s *info = (*moduleIter).getInfoNew();
+		const char *name = info && info->name ? info->name : "unk";
+		const char *author = info && info->author ? info->author : "unk";
+		const char *version = info && info->version ? info->version : "unk";
+
+		set_amxstring_utf8(amx, params[2], name, strlen(name), params[3]  + 1); // + EOS
+		set_amxstring_utf8(amx, params[4], author, strlen(author), params[5] + 1); // + EOS
+		set_amxstring_utf8(amx, params[6], version, strlen(version), params[7] + 1); // + EOS
 	}
 
 	// compatibility problem possible

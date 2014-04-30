@@ -163,6 +163,13 @@ public:
 			*out='\0';
 		}
 
+		/* Don't truncate a multi-byte character */
+		if (*(output - 1) & 1 << 7)
+		{
+			size = UTIL_CheckValidChar(output - 1);
+			*(output - size) = '\0';
+		}
+
 		return 1;
 	}
 	// Returns 1 on success

@@ -112,7 +112,16 @@ public:
 	{
 		if (m_type == TRIE_DATA_STRING && max >= 0)
 		{
-			memcpy(out, m_data, (max > m_cellcount ? m_cellcount : max) * sizeof(cell));
+			int len = (max > m_cellcount) ? m_cellcount : max;
+			memcpy(out, m_data, len * sizeof(cell));
+			
+			/* Don't truncate a multi-byte character */
+			if (m_data[len - 1] & 1 << 7)
+			{
+				len -= UTIL_CheckValidChar(m_data + len - 1);
+				out[len] = '\0';
+			}
+
 			return true;
 		}
 		return false;

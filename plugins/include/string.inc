@@ -13,69 +13,226 @@
 
 #define charsmax(%1) (sizeof(%1)-1)
 
-/* Checks if source contains string. On success function
-* returns position in source, on failure returns -1. */
-native contain(const source[],const string[]);
+/**
+ * @global 	Unless otherwise noted, all string functions which take in a 
+ *			writable buffer and maximum length should NOT have the null terminator INCLUDED
+ * 			in the length.  This means that this is valid: 
+ * 			copy(string, charsmax(string), ...)
+ */
+ 
+/**
+ * Calculates the length of a string.
+ *
+ * @param string		String to check.
+ * @return				Number of valid character bytes in the string.
+ */
+native strlen(const string[]);
 
-/* Checks if source contains string with case ignoring. On success function
-* returns position in source, on failure returns -1. */
+/**
+ * Tests whether a string is found inside another string.
+ *
+ * @param source		String to search in.
+ * @param string		Substring to find inside the original string.
+ *
+ * @return				-1 on failure (no match found). Any other value
+ *						indicates a position in the string where the match starts.
+ */
+native contain(const source[], const string[]);
+
+/**
+ * Tests whether a string is found inside another string with case ignoring.
+ *
+ * @param source		String to search in.
+ * @param string		Substring to find inside the original string.
+ *
+ * @return				-1 on failure (no match found). Any other value
+ *						indicates a position in the string where the match starts.
+ */
 native containi(const source[],const string[]);
 
-/* Replaces given string to another in given text. */
+/**
+ * Given a string, replaces the first occurrence of a search string with a 
+ * replacement string.
+ *
+ * @param text			String to perform search and replacements on.
+ * @param len			Maximum length of the string buffer.
+ * @param what			String to search for.
+ * @param with			String to replace the search string with.
+ *
+ * @return				The new string length after replacement, or 0 if no replacements were made.
+ */
 native replace(text[], len, const what[], const with[]);
 
-/* Adds one string to another. Last parameter different from 0, specifies
-* how many chars we want to add. Function returns number of all merged chars. */
+/**
+ * Given a string, replaces all occurrences of a search string with a 
+ * replacement string.
+ *
+ * @note Similar to replace_all() stock, but implemented as native and 
+ *       with different algorithm. This native doesn't error on bad 
+ *       buffer size and will smartly cut off the string in a way 
+ *       that pushes old data out.
+ *	
+ * @note Only available in 1.8.3 and above.
+ *
+ * @param text			String to perform search and replacements on.
+ * @param maxlength		Maximum length of the string buffer.
+ * @param search		String to search for.
+ * @param replace		String to replace the search string with.
+ * @param caseSensitive	If true (default), search is case sensitive.
+ *
+ * @return				Number of replacements that were performed.
+ */
+native replace_string(text[], maxlength, const search[], const replace[], bool:caseSensitive=true);
+
+/**
+ * Given a string, replaces the first occurrence of a search string with a 
+ * replacement string.
+ *
+ * @note Similar to replace() native, but implemented with more options and 
+ *       with different algorithm. This native doesn't error on bad 
+ *       buffer size and will smartly cut off the string in a way 
+ *       that pushes old data out.
+ *	
+ * @note Only available in 1.8.3 and above.
+ *
+ * @param text			String to perform search and replacements on.
+ * @param maxlength		Maximum length of the string buffer.
+ * @param search		String to search for.
+ * @param replace		String to replace the search string with.
+ * @param searchLen		If higher than -1, its value will be used instead of
+ *						a strlen() call on the search parameter.
+ * @param replaceLen	If higher than -1, its value will be used instead of
+ *						a strlen() call on the replace parameter.
+ * @param caseSensitive	If true (default), search is case sensitive.
+ *
+ * @return				Index into the buffer (relative to the start) from where
+ *						the last replacement ended, or -1 if no replacements were
+ *						made.
+ */
+native replace_stringex(text[], maxlength, const search[], const replace[], searchLen=-1, replaceLen=-1, bool:caseSensitive=true);
+
+/**
+ * Concatenates one string onto another.
+ *
+ * @param dest			String to append to.
+ * @param len			Maximum length of entire buffer.
+ * @param src			Source string to concatenate.
+ * @param max			Number of characters to add.
+ *
+ * @return				Number of of all merged characters.
+ */
 native add(dest[],len,const src[],max=0);
 
-/* Fills string with given format and parameters.
- * Function returns number of copied chars.
- * Example: format(dest,"Hello %s. You are %d years old","Tom",17).
- * If any of your input buffers overlap with the destination buffer,
- *  format() falls back to a "copy-back" version as of 1.65.  This is 
- *  slower, so you should using a source string that is the same as
- *  the destination.
+/**
+ * Formats a string according to the AMX Mod X format rules (see documentation).
+ *
+ * @note Example: format(dest, "Hello %s. You are %d years old", "Tom", 17).
+ *       If any of your input buffers overlap with the destination buffer,
+ *       format() falls back to a "copy-back" version as of 1.65.  This is 
+ *       slower, so you should using a source string that is the same as
+ *       the destination.
+ *
+ * @param output		Destination string buffer.
+ * @param len			Maximum length of output string buffer.
+ * @param format		Formatting rules.
+ * @param ...			Variable number of format parameters.
+ *
+ * @return				Number of cells written.
  */
-native format(output[] ,len ,const format[] , any:...);
+native format(output[], len, const format[], any:...);
 
-/* Same as format(), except does not perform a "copy back" check.
- * This means formatex() is faster, but DOES NOT ALLOW this type
- * of call:
- *  formatex(buffer, len, "%s", buffer)
- *  formatex(buffer, len, buffer, buffer)
- *  formatex(buffer, len, "%s", buffer[5])
- * This is because the output is directly stored into "buffer", 
- *  rather than copied back at the end.
+/**
+ * Formats a string according to the AMX Mod X format rules (see documentation).
+ *
+ * @note Same as format(), except does not perform a "copy back" check.
+ *       This means formatex() is faster, but DOES NOT ALLOW this type
+ *       of call:
+ *         formatex(buffer, len, "%s", buffer)
+ *         formatex(buffer, len, buffer, buffer)
+ *         formatex(buffer, len, "%s", buffer[5])
+ *       This is because the output is directly stored into "buffer", 
+ *       rather than copied back at the end.
+ *
+ * @param output		Destination string buffer.
+ * @param len			Maximum length of output string buffer.
+ * @param format		Formatting rules.
+ * @param ...			Variable number of format parameters.
+ *
+ * @return				Number of cells written.
  */
-native formatex(output[] ,len ,const format[] , any:...);
+native formatex(output[], len, const format[], any:...);
 
-/* Replacement for format_args.  Much faster and %L compatible.
- * This works exactly like vsnprintf() from C.
- * You must pass in the output buffer and its size,
- *  the string to format, and the number of the FIRST variable
- *  argument parameter.  For example, for:
- *  function (a, b, c, ...)
- *  You would pass 4 (a is 1, b is 2, c is 3, et cetera).
- * There is no vformatex().
+/**
+ * Formats a string according to the AMX Mod X format rules (see documentation).
+ *
+ * @note This is the same as format(), except it grabs parameters from a 
+ *       parent parameter stack, rather than a local.  This is useful for 
+ *       implementing your own variable argument functions.
+ *
+ * @note Replacement for format_args.  Much faster and %L compatible.
+ *       This works exactly like vsnprintf() from C.
+ *       You must pass in the output buffer and its size,
+ *        the string to format, and the number of the FIRST variable
+ *        argument parameter.  For example, for:
+ *        function (a, b, c, ...)
+ *        You would pass 4 (a is 1, b is 2, c is 3, et cetera).
+ *       There is no vformatex().
+ *
+ * @param buffer		Destination string buffer.
+ * @param len			Maximum length of output string buffer.
+ * @param fmt			Formatting rules.
+ * @param vararg		Argument number which contains the '...' symbol.
+ *						Note: Arguments start at 1.
+ * @return 				Number of bytes written.
  */
 native vformat(buffer[], len, const fmt[], vararg);
 
-/*
- * Same as vformat(), except works in normal style dynamic natives.
- * Instead of passing the format arg string, you can only pass the 
- *  actual format argument number itself.
- * If you pass 0, it will read the format string from an optional 
- *  fifth parameter.
+ /**
+ * Formats a string according to the AMX Mod X format rules (see documentation).
+ *
+ * @note Same as vformat(), except works in normal style dynamic natives.
+ *       Instead of passing the format arg string, you can only pass the 
+ *       actual format argument number itself.
+ *       If you pass 0, it will read the format string from an optional 
+ *       fifth parameter.
+ *
+ * @param buffer		Destination string buffer.
+ * @param len			Maximum length of output string buffer.
+ * @param fmt_arg		Argument number which contains the format.
+ * @param vararg		Argument number which contains the '...' symbol.
+ *						Note: Arguments start at 1.
+ * @return 				Number of bytes written.
  */
 native vdformat(buffer[], len, fmt_arg, vararg, ...);
 
-/* Gets parameters from function as formated string. */
-native format_args(output[] ,len ,pos = 0);
+/**
+ * Gets parameters from function as formated string. 
+ *
+ * @param output		Destination string buffer.
+ * @param len			Maximum length of output string buffer.
+ * @param pos			Argument number which contains the '...' symbol.
+ *
+ * @return				Number of bytes written.
+ */
+native format_args(output[], len, pos = 0);
 
-/* Converts number to string. */
+/**
+ * Converts an integer to a string.
+ *
+ * @param num			Integer to convert.
+ * @param string		Buffer to store string in.
+ * @param len			Maximum length of string buffer.
+ *
+ * @return				Number of cells written to buffer.
+ */
 native num_to_str(num,string[],len);
 
-/* Returns converted string to number. */
+/**
+ * Converts a string to an integer.
+ *
+ * @param string		String to convert.
+ * @return				Integer conversion of string, or 0 on failure.
+ */
 native str_to_num(const string[]);
 
 /**
@@ -144,47 +301,122 @@ native strtol(const string[], &endPos = 0, base = 0);
  */
 native Float:strtof(const string[], &endPos = 0);
 
-/* Converts float to string. */
+/**
+ * Converts a floating point number to a string.
+ *
+ * @param fl			Floating point number to convert.
+ * @param string		Buffer to store string in.
+ * @param len			Maximum length of string buffer.
+ *
+ * @return				Number of cells written to buffer.
+ */
 native float_to_str(Float:fl, string[], len);
 
-/* Parses a float. */
+/** 
+ * Converts a string to a floating point number.
+ *
+ * @param string		String to convert to a foat.
+ * @return				Floating point result, or 0.0 on error.
+ */
 native Float:str_to_float(const string[]);
 
-/* Checks if two strings equal. If len var is set
-* then there are only c chars comapred. */
+/**
+ * Returns whether two strings are equal.
+ *
+ * @param a				First string (left).
+ * @param b				Second string (right).
+ * @param c				Number of characters to compare.
+ *
+ * @return				True if equal, false otherwise.
+ */
 native equal(const a[],const b[],c=0);
 
-/* Checks if two strings equal with case ignoring. 
-* If len var is set then there are only c chars comapred. */
+/**
+ * Returns whether two strings are equal with case ignoring.
+ *
+ * @param a				First string (left).
+ * @param b				Second string (right).
+ * @param c				Number of characters to compare.
+ *
+ * @return				True if equal, false otherwise.
+ */
 native equali(const a[],const b[],c=0);
 
-/* Copies one string to another. By len var
-*  you may specify max. number of chars to copy. */
+/**
+ * Copies one string to another string.
+ *
+ * @note If the destination buffer is too small to hold the source string, the 
+ *       destination will be truncated.
+ *
+ * @param dest			Destination string buffer to copy to.
+ * @param len			Destination buffer length.
+ * @param src			Source string buffer to copy from.
+ *
+ * @return				Number of cells written.
+ */
 native copy(dest[],len,const src[]);
 
-/* Copies one string to another until char ch is found. 
-*  By len var you may specify max. number of chars to copy. */
+/**
+ * Copies one string to another string until ch is found.
+ *
+ * @param dest			Destination string buffer to copy to.
+ * @param len			Destination buffer length.
+ * @param src			Source string buffer to copy from.
+ * @param ch			Character to search for.
+ *
+ * @return				Number of cells written.
+ */
 native copyc(dest[],len,const src[],ch);
 
-/* Sets string with given character. */
+/**
+ * Sets string with given character.
+ *
+ * @param src			Destination string buffer to copy to.
+ * @param len			Destination buffer length.
+ * @param ch			Character to set string.
+ *
+ * @noreturn
+ */
 native setc(src[],len,ch);
 
-/* Gets parameters from text.
-* Example: to split text: "^"This is^" the best year",
-* call function like this: parse(text,arg1,len1,arg2,len2,arg3,len3,arg4,len4)
-* and you will get: "This is", "the", "best", "year"
-* Function returns number of parsed parameters. */
+/**
+ * Gets parameters from text.
+ *
+ * @note Example: to split text: "^"This is^" the best year",
+ *       call function like this: parse(text,arg1,len1,arg2,len2,arg3,len3,arg4,len4)
+ *       and you will get: "This is", "the", "best", "year"
+ *       Function returns number of parsed parameters.
+ *
+ * @param text			String to parse.
+ * @param ...			Variable number of format parameters.
+ *
+ * @return				Number of parsed parameters.
+ */
 native parse(const text[], ... );
 
-/* Breaks a string into two halves, by token.
-   See strbreak() for doing this with parameters.
-   Example:
-   str1[] = This *is*some text
-   strtok(str1, left, 24, right, 24, '*')
-   left will be "This "
-   Right will be "is*some text"
-   If you use trimSpaces, all spaces are trimmed from Left.
-*/
+/**
+ * Breaks a string in two by token.
+ *
+ * @note Trimming spaces is buggy. Consider strtok2 instead.
+ *
+ * @note See argbreak() for doing this with parameters.
+ *       Example:
+ *        str1[] = This *is*some text
+ *        strtok(str1, left, 24, right, 24, '*')
+ *        left will be "This "
+ *        Right will be "is*some text"
+ *        If you use trimSpaces, all spaces are trimmed from Left.
+ *
+ * @param text			String to tokenize
+ * @param Left			Buffer to store left half
+ * @param leftLen		Size of left buffer
+ * @param Right			Buffer to store right half
+ * @param rightLen		Size of right buffer
+ * @param token			Token to split by
+ * @param trimSpaces	Whether spaces are trimmed.
+ *
+ * @noreturn
+ */
 native strtok(const text[], Left[], leftLen, Right[], rightLen, token=' ', trimSpaces=0);
    
 /**
@@ -231,9 +463,9 @@ native strtok(const text[], Left[], leftLen, Right[], rightLen, token=' ', trimS
 #define TRIM_FULL TRIM_OUTER|TRIM_INNER
 
 /**
- * Breaks a string in two by token
+ * Breaks a string in two by token.
  *
- * Only available in 1.8.3 and above
+ * @note Only available in 1.8.3 and above.
  *
  * @param text			String to tokenize
  * @param left			Buffer to store left half
@@ -248,40 +480,118 @@ native strtok(const text[], Left[], leftLen, Right[], rightLen, token=' ', trimS
  */
 native strtok2(const text[], left[], const llen, right[], const rlen, const token = ' ', const trim = 0);
 
-/* Strips spaces from the beginning and end of a string. */
+/**
+ * Removes whitespace characters from the beginning and end of a string.
+ *
+ * @param text			The string to trim.
+ * @return				Number of bytes written.
+ */
 native trim(text[]);
 
-/* Converts all chars in string to lower case. */
+/**
+ * Converts all chars in string to lower case.
+ *
+ * @param string		The string to convert.
+ * @return				Number of bytes written.
+ */
 native strtolower(string[]);
 
-/* Converts all chars in string to upper case. */
+/**
+ * Converts all chars in string to upper case.
+ *
+ * @param string		The string to convert.
+ * @return				Number of bytes written.
+ */
 native strtoupper(string[]);
 
-/* Make a string's first character uppercase */
+/**
+ * Make a string's first character uppercase.
+ *
+ * @param string		The string to convert.
+ * @return				1 on success, otherwise 0.
+ */
 native ucfirst(string[]);
 
-/* Returns true when value is digit. */
+/**
+ * Returns whether a character is numeric.
+ *
+ * @note Multi-byte characters will always return false.
+ *
+ * @param ch			Character to test.
+ * @return				True if character is numeric, otherwise false.
+ */
 native isdigit(ch);
 
-/* Returns true when value is letter. */
+/**
+ * Returns whether a character is an ASCII alphabet character.
+ *
+ * @note Multi-byte characters will always return false.
+ *
+ * @param ch			Character to test.
+ * @return				True if character is alphabetical, otherwise false.
+ */
 native isalpha(ch);
 
-/* Returns true when value is space. */
+/**
+ * Returns whether a character is whitespace.
+ *
+ * @note Multi-byte characters will always return false.
+ *
+ * @param ch			Character to test.
+ * @return				True if character is whitespace, otherwise false.
+ */
 native isspace(ch);
 
-/* Returns true when value is letter or digit. */
+/**
+ * Returns whether a character is numeric or an ASCII alphabet character.
+ *
+ * @note Multi-byte characters will always return false.
+ *
+ * @param ch			Character to test.
+ * @return				True if character is numeric, otherwise false.
+ */
 native isalnum(ch);
 
-/* Concatenates a string.  Maxlength is the total buffer of the destination. */
-native strcat(dest[], const source[], maxlength);
+/**
+ * Returns if a character is multi-byte or not.
+ *
+ * @note Only available in 1.8.3 and above.
+ *
+ * @param ch			Character to test.
+ * @return				0 for a normal 7-bit ASCII character,
+ *						otherwise number of bytes in multi-byte character.
+ */
+native is_char_mb(ch);
 
-/* Finds a string in another string.  Returns -1 if not found. */
-native strfind(const string[], const sub[], ignorecase=0, pos=0);
+/**
+ * Returns whether an alphabetic character is uppercase.
+ *
+ * @note Only available in 1.8.3 and above.
+ * @note Multi-byte characters will always return false.
+ *
+ * @param ch			Character to test.
+ * @return				True if character is uppercase, otherwise false.
+ */
+native bool:is_char_upper(ch);
 
-/* Compares two strings with the C function strcmp().  Returns 0 on equal. */
-native strcmp(const string1[], const string2[], ignorecase=0);
+/**
+ * Returns whether an alphabetic character is lowercase.
+ *
+ * @note Only available in 1.8.3 and above.
+ * @note Multi-byte characters will always return false.
+ *
+ * @param ch			Character to test.
+ * @return				True if character is lowercase, otherwise false.
+ */
+native bool:is_char_lower(ch);
 
-/* Tests if given string contains only digits. Also, returns false for zero-length strings. */
+/**
+ * Returns whether a given string contains only digits.
+ * This returns false for zero-length strings.
+ *
+ * @param sString		Character to test.
+ * @return				True if string contains only digit, otherwise false.
+ */
 stock bool:is_str_num(const sString[])
 {
 	new i = 0;
@@ -292,31 +602,139 @@ stock bool:is_str_num(const sString[])
 	return sString[i] == 0 && i != 0;
 }
 
-// Warning: this function is deprecated as it does not work properly. Use
-// argparse() or argbreak().
-native strbreak(const text[], Left[], leftLen, Right[], rightLen);
+/** 
+ * Returns the number of bytes a character is using.  This is
+ * for multi-byte characters (UTF-8).  For normal ASCII characters,
+ * this will return 1.
+ *
+ * @note Only available in 1.8.3 and above.
+ *
+ * @param source		Source input string.
+ * @return				Number of bytes the current character uses.
+ */
+native get_char_bytes(const source[]);
+
+/**
+ * Returns an uppercase character to a lowercase character.
+ *
+ * @note Only available in 1.8.3 and above.
+ *
+ * @param chr			Characer to convert.
+ * @return				Lowercase character on success, 
+ *						no change on failure.
+ */
+stock char_to_upper(chr)
+{
+	if (is_char_lower(chr))
+	{
+		return (chr & ~(1<<5));
+	}
+	return chr;
+}
+
+/**
+ * Returns a lowercase character to an uppercase character.
+ *
+ * @note Only available in 1.8.3 and above.
+ *
+ * @param chr			Characer to convert.
+ * @return				Uppercase character on success, 
+ *						no change on failure.
+ */
+stock char_to_lower(chr)
+{
+	if (is_char_upper(chr))
+	{
+		return (chr | (1<<5));
+	}
+	return chr;
+}
+
+/**
+ * Concatenates one string onto another.
+ *
+ * @param dest			String to append to.
+ * @param source		Source string to concatenate.
+ * @param maxlength		Maximum length of entire buffer.
+ * @return				Number of bytes written.
+ */
+native strcat(dest[], const source[], maxlength);
+
+/**
+ * Tests whether a string is found inside another string.
+ *
+ * @param string		String to search in.
+ * @param sub			Substring to find inside the original string.
+ * @param ignorecase	If true, search is case insensitive.
+ *						If false (default), search is case sensitive.
+ * @param pos			
+ * @return				-1 on failure (no match found). Any other value
+ *						indicates a position in the string where the match starts.
+ */
+native strfind(const string[], const sub[], ignorecase=0, pos=0);
+
+/**
+ * Compares two strings lexographically.
+ *
+ * @param string1		First string (left).
+ * @param string2		Second string (right).
+ * @param ignorecase	If true, comparison is case insensitive.
+ *						If false (default), comparison is case sensitive.
+ * @return				-1 if string1 < string2
+ *						0 if string1 == string2
+ *						1 if string1 > string2
+ */
+native strcmp(const string1[], const string2[], ignorecase=0);
+
+/**
+ * Compares two strings parts lexographically.
+ *
+ * @note Only available in 1.8.3 and above.
+ *
+ * @param string1		First string (left).
+ * @param string2		Second string (right).
+ * @param num			Number of characters to compare.
+ * @param ignorecase	If true, comparison is case insensitive.
+ *						If false (default), comparison is case sensitive.
+ * @return				-1 if string1 < string2
+ *						0 if string1 == string2
+ *						1 if string1 > string2
+ */
+native strncmp(const string1[], const string2[], num, bool:ignorecase=false);
+
+/**
+ * Backwards compatibility stock - use argbreak or argparse.
+ * @deprecated			this function does not work properly.
+ */
+//#pragma deprecated Use argbreak() instead
+stock strbreak(const text[], Left[], leftLen, Right[], rightLen)
+{
+	return argbreak(text, Left, leftLen, Right, rightLen);
+}
 
 /**
  * Parses an argument string to find the first argument. You can use this to
  * replace strbreak().
  *
- * You can use argparse() to break a string into all of its arguments:
- *   new arg[N], pos;
- *   while (true) {
- *     pos = argparse(string, pos, arg, sizeof(arg) - 1);
- *     if (pos == -1)
- *       break;
- *   }
+ * @note Only available in 1.8.3 and above.
  *
- * All initial whitespace is removed. Remaining characters are read until an
- * argument separator is encountered. A separator is any whitespace not inside
- * a double-quotation pair (i.e. "x b" is one argument). If only one quotation
- * mark appears, argparse() acts as if one existed at the end of the string.
- * Quotation marks are never written back, and do not act as separators. For
- * example, "a""b""c" will return "abc". An empty quote pair ("") will count
- * as an argument containing no characters.
+ * @note You can use argparse() to break a string into all of its arguments:
+ *       new arg[N], pos;
+ *       while (true) {
+ *         pos = argparse(string, pos, arg, sizeof(arg) - 1);
+ *         if (pos == -1)
+ *           break;
+ *       }
  *
- * argparse() will write an empty string to argbuffer if no argument is found.
+ * @note All initial whitespace is removed. Remaining characters are read until an
+ *       argument separator is encountered. A separator is any whitespace not inside
+ *       a double-quotation pair (i.e. "x b" is one argument). If only one quotation
+ *       mark appears, argparse() acts as if one existed at the end of the string.
+ *       Quotation marks are never written back, and do not act as separators. For
+ *       example, "a""b""c" will return "abc". An empty quote pair ("") will count
+ *       as an argument containing no characters.
+ *
+ * @note argparse() will write an empty string to argbuffer if no argument is found.
  *
  * @param text          String to tokenize.
  * @param pos           Position to start parsing from.
@@ -328,7 +746,19 @@ native strbreak(const text[], Left[], leftLen, Right[], rightLen);
  */
 native argparse(const text[], pos, argbuffer[], maxlen);
 
-/* Emulates strbreak() using argparse(). */
+/**
+ * Emulates strbreak() using argparse().
+ *
+ * @param text			Source input string.
+ * @param left			Buffer to store string left part.
+ * @param leftlen		Maximum length of the string part buffer.
+ * @param right			Buffer to store string right part.
+ * @param rightlen		Maximum length of the string part buffer.
+ *
+ * @return				-1 if no match was found; otherwise, an index into source
+ *						marking the first index after the searched text.  The
+ *						index is always relative to the start of the input string.
+ */
 stock argbreak(const text[], left[], leftlen, right[], rightlen)
 {
 	new pos = argparse(text, 0, left, leftlen);
@@ -344,11 +774,34 @@ stock argbreak(const text[], left[], leftlen, right[], rightlen)
 	return pos;
 }
 
-/* It is basically strbreak but you have a delimiter that is more than one character in length.
-   You pass the Input string, the Left output, the max length of the left output,
-   the right output , the max right length, and then the delimiter string.
-   By Suicid3
-*/
+/**
+ * Returns text in a string up until a certain character sequence is reached.
+ *
+ * @note Only available in 1.8.3 and above.
+ *
+ * @param source		Source input string.
+ * @param split			A string which specifies a search point to break at.
+ * @param part			Buffer to store string part.
+ * @param partLen		Maximum length of the string part buffer.
+ *
+ * @return				-1 if no match was found; otherwise, an index into source
+ *						marking the first index after the searched text.  The
+ *						index is always relative to the start of the input string.
+ */
+native split_string(const source[], const split[], part[], partLen);
+
+ /**
+ * It is basically strbreak but you have a delimiter that is more than one character in length. By Suicid3.
+ *
+ * @param szInput		Source input string.
+ * @param szLeft		Buffer to store left string part.
+ * @param pL_Max		Maximum length of the string part buffer.
+ * @param szRight		Buffer to store right string part.
+ * @param pR_Max		Maximum length of the string part buffer.
+ * @param szDelim		A string which specifies a search point to break at.
+ * 
+ * @noreturn
+ */
 stock split(const szInput[], szLeft[], pL_Max, szRight[], pR_Max, const szDelim[])
 {
 	new iEnd = contain(szInput, szDelim);
@@ -373,7 +826,15 @@ stock split(const szInput[], szLeft[], pL_Max, szRight[], pR_Max, const szDelim[
 	return;
 }
 
-/* Removes a path from szFilePath leaving the name of the file in szFile for a pMax length. */
+ /**
+ * Removes a path from szFilePath leaving the name of the file in szFile for a pMax length.
+ *
+ * @param szFilePath	String to perform search and replacements on.
+ * @param szFile		Buffer to store file name.
+ * @param pMax			Maximum length of the string buffer.
+ * 
+ * @noreturn
+ */
 stock remove_filepath(const szFilePath[], szFile[], pMax)
 {
 	new len = strlen(szFilePath);
@@ -385,9 +846,20 @@ stock remove_filepath(const szFilePath[], szFile[], pMax)
 	return;
 }
 
-/* Replaces a contained string iteratively.
- * This ensures that no infinite replacements will take place by
- *  intelligently moving to the next string position each iteration.
+ /**
+ * Replaces a contained string iteratively.
+ *
+ * @note Consider using replace_string() instead.
+ *
+ * @note This ensures that no infinite replacements will take place by
+ *       intelligently moving to the next string position each iteration.
+ *
+ * @param string	String to perform search and replacements on.
+ * @param len		Maximum length of the string buffer.
+ * @param what		String to search for.
+ * @param with		String to replace the search string with.
+ 
+ * @return			Number of replacements on success, otherwise 0.
  */
 stock replace_all(string[], len, const what[], const with[])
 {
@@ -433,5 +905,80 @@ stock replace_all(string[], len, const what[], const with[])
 		pos += temp_pos;
 	}
 	
+	return total;
+}
+
+/**
+ * Breaks a string into pieces and stores each piece into an array of buffers.
+ *
+ * @param text				The string to split.
+ * @param split				The string to use as a split delimiter.
+ * @param buffers			An array of string buffers (2D array).
+ * @param maxStrings		Number of string buffers (first dimension size).
+ * @param maxStringLength	Maximum length of each string buffer.
+ * @param copyRemainder		False (default) discard excess pieces, true to ignore
+ *							delimiters after last piece.
+ * @return					Number of strings retrieved.
+ */
+stock explode_string(const text[], const split[], buffers[][], maxStrings, maxStringLength, bool:copyRemainder = false)
+{
+	new reloc_idx, idx, total;
+
+	if (maxStrings < 1 || !split[0])
+	{
+		return 0;
+	}
+
+	while ((idx = split_string(text[reloc_idx], split, buffers[total], maxStringLength)) != -1)
+	{
+		reloc_idx += idx;
+		if (++total == maxStrings)
+		{
+			if (copyRemainder)
+			{
+				copy(buffers[total-1], maxStringLength, text[reloc_idx-idx]);
+			}
+			return total;
+		}
+	}
+
+	copy(buffers[total++], maxStringLength, text[reloc_idx]);
+
+	return total;
+}
+
+/**
+ * Joins an array of strings into one string, with a "join" string inserted in
+ * between each given string.  This function complements ExplodeString.
+ *
+ * @param strings		An array of strings.
+ * @param numStrings	Number of strings in the array.
+ * @param join			The join string to insert between each string.
+ * @param buffer		Output buffer to write the joined string to.
+ * @param maxLength		Maximum length of the output buffer.
+ * @return				Number of bytes written to the output buffer.
+ */
+stock implode_strings(const strings[][], numStrings, const join[], buffer[], maxLength)
+{
+	new total, length, part_length;
+	new join_length = strlen(join);
+	for (new i=0; i<numStrings; i++)
+	{
+		length = copy(buffer[total], maxLength-total, strings[i]);
+		total += length;
+		if (length < part_length)
+		{
+			break;
+		}
+		if (i != numStrings - 1)
+		{
+			length = copy(buffer[total], maxLength-total, join);
+			total += length;
+			if (length < join_length)
+			{
+				break;
+			}
+		}
+	}
 	return total;
 }

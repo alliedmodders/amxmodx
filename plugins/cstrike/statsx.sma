@@ -1641,7 +1641,7 @@ public end_game_stats()
 			if (!g_izStatsSwitch[id])
 				continue	// Do not show any stats
 
-			cmdStatsMe(iaPlayers[iPlayer])
+			cmdStatsMe(id)
 		}
 	}
 	else if (EndTop15)
@@ -1656,7 +1656,7 @@ public end_game_stats()
 			if (!g_izStatsSwitch[id])
 				continue	// Do not show any stats
 
-			show_motd(iaPlayers[iPlayer], g_sBuffer, "Top 15")
+			show_motd(id, g_sBuffer, "Top 15")
 		}
 	}
 

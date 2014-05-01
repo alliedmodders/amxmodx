@@ -243,7 +243,6 @@ public plugin_init()
 
 	// Init buffers and some global vars.
 	g_sBuffer[0] = 0
-	save_team_chatscore(0, g_sScore)
 
 	g_HudSync_EndRound = CreateHudSyncObj()
 	g_HudSync_SpecInfo = CreateHudSyncObj()
@@ -1143,6 +1142,7 @@ public cmdScore(id)
 		return PLUGIN_HANDLED
 	}
 
+	save_team_chatscore(id, g_sScore)
 	client_print(id, print_chat, "%L: %s", id, "GAME_SCORE", g_sScore)
 
 	return PLUGIN_CONTINUE
@@ -1587,8 +1587,6 @@ endround_stats()
 #if defined STATSX_DEBUG
 	log_amx("End round stats")
 #endif
-
-	save_team_chatscore(0, g_sScore)
 
 	// Get and save round end stats time.
 	g_fShowStatsTime = get_gametime()

@@ -36,6 +36,7 @@
 #include <amxmodx>
 #include <amxmisc>
 #include <csx>
+#include <hamsandwich>
 //--------------------------------
 
 // Uncomment to activate log debug messages.
@@ -195,7 +196,7 @@ public plugin_init()
 
 	// Register events.
 	register_event("TextMsg", "eventStartGame", "a", "2=#Game_Commencing", "2=#Game_will_restart_in")
-	register_event("ResetHUD", "eventResetHud", "be")
+	RegisterHamPlayer(Ham_Spawn, "eventSpawn", 1)
 	register_event("RoundTime", "eventStartRound", "bc")
 	register_event("SendAudio", "eventEndRound", "a", "2=%!MRAD_terwin", "2=%!MRAD_ctwin", "2=%!MRAD_rounddraw")
 	register_event("TeamScore", "eventTeamScore", "a")
@@ -1309,7 +1310,7 @@ public eventStartRound()
 {
 	new iTeam, id, i
 
-	new Float:roundtime = get_pcvar_float(g_pRoundTime);
+	new Float:roundtime = get_pcvar_float(g_pRoundTime)
 	if (read_data(1) >= floatround(roundtime * 60.0,floatround_floor) || (roundtime == 2.3 && read_data(1) == 137)) // these round too weird for it to work through pawn, have to add an exception for it
 	{
 #if defined STATSX_DEBUG
@@ -1375,27 +1376,27 @@ public eventStartRound()
 }
 
 // Reset killer info on round restart.
-public eventResetHud(id)
+public eventSpawn(id)
 {
 	new args[1]
 	args[0] = id
 
 	if (g_iPluginMode & MODE_HUD_DELAY)
-		set_task(0.01, "delay_resethud", 200 + id, args, 1)
+		set_task(0.01, "delay_spawn", 200 + id, args, 1)
 	else
-		delay_resethud(args)
+		delay_spawn(args)
 
-	return PLUGIN_CONTINUE
+	return HAM_IGNORED
 }
 
-public delay_resethud(args[])
+public delay_spawn(args[])
 {
 	new id = args[0]
 	new Float:fGameTime
 
-	// Show user and score round stats after HUD-reset
+	// Show user and score round stats after spawn
 #if defined STATSX_DEBUG
-	log_amx("Reset HUD for #%d", id)
+	log_amx("Spawn for #%d", id)
 #endif
 	fGameTime = get_gametime()
 	show_user_hudstats(id, fGameTime)

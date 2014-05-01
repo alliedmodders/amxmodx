@@ -61,9 +61,25 @@
  * @param EntityClass	The entity classname to hook.
  * @param callback		The forward to call.
  * @param post			Whether or not to forward this in post.
+ * @param specialbot	Whether or not to enable support for bot without "player" classname.
  * @return 				Returns a handle to the forward.  Use EnableHamForward/DisableHamForward to toggle the forward on or off.
  */
-native HamHook:RegisterHam(Ham:function, const EntityClass[], const Callback[], Post=0);
+native HamHook:RegisterHam(Ham:function, const EntityClass[], const Callback[], Post=0, bool:specialbot = false);
+
+/**
+ * Hooks the virtual table for the player class.
+ * An example would be: RegisterHam(Ham_TakeDamage, "player_hurt");
+ * Look at the Ham enum for parameter lists.
+ *
+ * @param function		The function to hook.
+ * @param callback		The forward to call.
+ * @param post			Whether or not to forward this in post.
+ * @return 				Returns a handle to the forward.  Use EnableHamForward/DisableHamForward to toggle the forward on or off.
+ */
+stock HamHook:RegisterHamPlayer(Ham:function, const Callback[], Post=0)
+{
+	return RegisterHam(function, "player", Callback, Post, .specialbot = true);
+}
 
 /**
  * Hooks the virtual table for the specified entity's class.

@@ -99,6 +99,7 @@
     <ClCompile Include="..\hook_callbacks.cpp" />
     <ClCompile Include="..\hook_create.cpp" />
     <ClCompile Include="..\hook_native.cpp" />
+    <ClCompile Include="..\hook_specialbot.cpp" />
     <ClCompile Include="..\sdk\amxxmodule.cpp" />
     <ClCompile Include="..\config_parser.cpp" />
     <ClCompile Include="..\DataHandler.cpp" />
@@ -113,6 +114,7 @@
     <ClInclude Include="..\hook_callbacks.h" />
     <ClInclude Include="..\hook_create.h" />
     <ClInclude Include="..\hooklist.h" />
+    <ClInclude Include="..\hook_specialbot.h" />
     <ClInclude Include="..\typetocell.h" />
     <ClInclude Include="..\Trampolines.h" />
     <ClInclude Include="..\sdk\moduleconfig.h" />

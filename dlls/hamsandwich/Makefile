@@ -15,7 +15,7 @@ MM_ROOT = ../../../metamod/metamod
 PROJECT = hamsandwich
 
 OBJECTS = sdk/amxxmodule.cpp amxx_api.cpp config_parser.cpp hook_callbacks.cpp hook_native.cpp \
-          srvcmd.cpp call_funcs.cpp hook_create.cpp DataHandler.cpp pdata.cpp
+          srvcmd.cpp call_funcs.cpp hook_create.cpp DataHandler.cpp pdata.cpp hook_specialbot.cpp
 
 ##############################################
 ### CONFIGURE ANY OTHER FLAGS/OPTIONS HERE ###

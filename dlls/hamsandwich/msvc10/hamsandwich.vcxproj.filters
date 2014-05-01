@@ -65,6 +65,9 @@
     <ClCompile Include="..\srvcmd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\hook_specialbot.cpp">
+      <Filter>Hooks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\call_funcs.h">
@@ -120,6 +123,9 @@
     </ClInclude>
     <ClInclude Include="..\offsets.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\hook_specialbot.h">
+      <Filter>Hooks</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -39,11 +39,13 @@
 #include "offsets.h"
 #include <assert.h>
 #include "DataHandler.h"
+#include "hook_specialbot.h"
 
 edict_t *NEW_FirstEdict;
 bool NEW_Initialized;
 
 extern CVector<Hook*> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
+extern CHamSpecialBotHandler SpecialbotHandler;
 
 extern AMX_NATIVE_INFO RegisterNatives[];
 extern AMX_NATIVE_INFO ReturnNatives[];
@@ -143,4 +145,10 @@ void OnPluginsLoaded(void)
 void OnMetaAttach(void)
 {
 	REG_SVR_COMMAND("ham", HamCommand);
+}
+
+void SetClientKeyValue(int clientIndex, char *infobuffer, const char *key, const char *value)
+{
+	SpecialbotHandler.CheckClientKeyValue(clientIndex, infobuffer, key, value);
+	RETURN_META(MRES_IGNORED);
 }

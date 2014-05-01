@@ -45,13 +45,14 @@
 #include "offsets.h"
 #include "hooklist.h"
 #include "ham_utils.h"
+#include "hook_specialbot.h"
 
 OffsetManager Offsets;
 
 bool gDoForwards=true;
 
 CVector<Hook *> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
-
+CHamSpecialBotHandler SpecialbotHandler;
 
 #define V(__KEYNAME, __STUFF__) 0, 0, __KEYNAME, RT_##__STUFF__, RB_##__STUFF__, PC_##__STUFF__, reinterpret_cast<void *>(Hook_##__STUFF__), Create_##__STUFF__, Call_##__STUFF__
 
@@ -523,7 +524,7 @@ hook_t hooklist[] =
 
 	{ V("dod_weapon_sendweaponanim", Void_Int_Int) },
 
-	{ V("cs_weapon_isweapon", Int_Void) },
+	{ V("cstrike_item_isweapon", Int_Void) },
 
 	{ V("gearbox_mysquadtalkmonsterpointer", Cbase_Void) },
 	{ V("gearbox_weapontimebase", Float_Void) },
@@ -590,7 +591,19 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 		return 0;
 	}
 
+	bool enableSpecialBot = false;
+
+	// Old plugin doesn't have this param.
+	if (*params / sizeof(cell) == 5)
+	{
+		enableSpecialBot = params[5] > 0;
+	}
+
 	// We've passed all tests...
+	if (strcmp(classname, "player") == 0 && enableSpecialBot)
+	{
+		SpecialbotHandler.RegisterHamSpecialBot(amx, func, function, post, fwd);
+	}
 
 	int **ivtable=(int **)vtable;
 

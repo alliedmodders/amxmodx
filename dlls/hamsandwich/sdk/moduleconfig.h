@@ -302,7 +302,7 @@
 // #define FN_GetInfoKeyBuffer					GetInfoKeyBuffer
 // #define FN_InfoKeyValue						InfoKeyValue
 // #define FN_SetKeyValue						SetKeyValue
-// #define FN_SetClientKeyValue					SetClientKeyValue
+#define FN_SetClientKeyValue					SetClientKeyValue
 // #define FN_IsMapValid						IsMapValid
 // #define FN_StaticDecal						StaticDecal
 // #define FN_PrecacheGeneric					PrecacheGeneric

@@ -1399,8 +1399,12 @@ public delay_resethud(args[])
 #endif
 	fGameTime = get_gametime()
 	show_user_hudstats(id, fGameTime)
-	format_roundend_hudstats(id, g_sAwardAndScore)
-	show_roundend_hudstats(id, fGameTime, g_sAwardAndScore)
+
+	if (g_izStatsSwitch[id] && g_sAwardAndScore[0])
+	{
+		format_roundend_hudstats(id, g_sAwardAndScore)
+		show_roundend_hudstats(id, fGameTime, g_sAwardAndScore)
+	}
 
 	// Reset round stats
 	g_izKilled[id][KILLED_KILLER_ID] = 0
@@ -1599,6 +1603,9 @@ endround_stats()
 		{
 			kill_stats(id)
 		}
+
+		if (!g_izStatsSwitch[id])
+			continue
 
 		format_roundend_hudstats(id, g_sAwardAndScore)
 		show_roundend_hudstats(id, 0.0, g_sAwardAndScore)

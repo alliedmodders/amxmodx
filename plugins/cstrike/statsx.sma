@@ -844,6 +844,36 @@ format_stats(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 	}
 }
 
+// Format round end stats
+format_roundend_hudstats()
+{
+	g_sAwardAndScore[0] = 0
+
+	// Create round awards.
+	if (ShowMostDisruptive)
+		add_most_disruptive(0, g_sAwardAndScore)
+	if (ShowBestScore)
+		add_best_score(0, g_sAwardAndScore)
+
+	// Create round score.
+	// Compensate HUD message if awards are disabled.
+	if (ShowTeamScore || ShowTotalStats)
+	{
+		if (ShowMostDisruptive && ShowBestScore)
+			add(g_sAwardAndScore, charsmax(g_sAwardAndScore), "^n^n")
+		else if (ShowMostDisruptive || ShowBestScore)
+			add(g_sAwardAndScore, charsmax(g_sAwardAndScore), "^n^n^n^n")
+		else
+			add(g_sAwardAndScore, charsmax(g_sAwardAndScore), "^n^n^n^n^n^n")
+
+		if (ShowTeamScore)
+			add_team_score(0, g_sAwardAndScore)
+
+		if (ShowTotalStats)
+			add_total_stats(0, g_sAwardAndScore)
+	}
+}
+
 // Show round end stats. If gametime is zero then use default duration time.
 show_roundend_hudstats(id, Float:fGameTime)
 {
@@ -1567,31 +1597,7 @@ endround_stats()
 		}
 	}
 
-	g_sAwardAndScore[0] = 0
-
-	// Create round awards.
-	if (ShowMostDisruptive)
-		add_most_disruptive(0, g_sAwardAndScore)
-	if (ShowBestScore)
-		add_best_score(0, g_sAwardAndScore)
-
-	// Create round score.
-	// Compensate HUD message if awards are disabled.
-	if (ShowTeamScore || ShowTotalStats)
-	{
-		if (ShowMostDisruptive && ShowBestScore)
-			add(g_sAwardAndScore, charsmax(g_sAwardAndScore), "^n^n")
-		else if (ShowMostDisruptive || ShowBestScore)
-			add(g_sAwardAndScore, charsmax(g_sAwardAndScore), "^n^n^n^n")
-		else
-			add(g_sAwardAndScore, charsmax(g_sAwardAndScore), "^n^n^n^n^n^n")
-
-		if (ShowTeamScore)
-			add_team_score(0, g_sAwardAndScore)
-
-		if (ShowTotalStats)
-			add_total_stats(0, g_sAwardAndScore)
-	}
+	format_roundend_hudstats()
 
 	save_team_chatscore(0)
 

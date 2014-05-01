@@ -1399,6 +1399,7 @@ public delay_resethud(args[])
 #endif
 	fGameTime = get_gametime()
 	show_user_hudstats(id, fGameTime)
+	format_roundend_hudstats(id, g_sAwardAndScore)
 	show_roundend_hudstats(id, fGameTime, g_sAwardAndScore)
 
 	// Reset round stats
@@ -1587,6 +1588,11 @@ endround_stats()
 	log_amx("End round stats")
 #endif
 
+	save_team_chatscore(0, g_sScore)
+
+	// Get and save round end stats time.
+	g_fShowStatsTime = get_gametime()
+
 	for (iPlayer = 0; iPlayer < iPlayers; iPlayer++)
 	{
 		id = iaPlayers[iPlayer]
@@ -1595,19 +1601,8 @@ endround_stats()
 		{
 			kill_stats(id)
 		}
-	}
 
-	format_roundend_hudstats(0, g_sAwardAndScore)
-
-	save_team_chatscore(0, g_sScore)
-
-	// Get and save round end stats time.
-	g_fShowStatsTime = get_gametime()
-
-	// Display round end stats to all players.
-	for (iPlayer = 0; iPlayer < iPlayers; iPlayer++)
-	{
-		id = iaPlayers[iPlayer]
+		format_roundend_hudstats(id, g_sAwardAndScore)
 		show_roundend_hudstats(id, 0.0, g_sAwardAndScore)
 	}
 

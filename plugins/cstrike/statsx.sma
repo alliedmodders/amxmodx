@@ -243,7 +243,7 @@ public plugin_init()
 
 	// Init buffers and some global vars.
 	g_sBuffer[0] = 0
-	save_team_chatscore(0)
+	save_team_chatscore(0, g_sScore)
 
 	g_HudSync_EndRound = CreateHudSyncObj()
 	g_HudSync_SpecInfo = CreateHudSyncObj()
@@ -600,7 +600,7 @@ add_team_score(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 }
 
 // Get and format team stats, chat version
-save_team_chatscore(id)
+save_team_chatscore(id, sBuffer[MAX_TEXT_LENGTH + 1])
 {
 	new Float:fzMapEff[MAX_TEAMS], Float:fzMapAcc[MAX_TEAMS], Float:fzRndAcc[MAX_TEAMS]
 
@@ -613,7 +613,7 @@ save_team_chatscore(id)
 	}
 
 	// Format game team stats, chat
-	formatex(g_sScore, charsmax(g_sScore), "TERRORIST %d / %0.2f%% %L / %0.2f%% %L  --  CT %d / %0.2f%% %L / %0.2f%% %L", g_izTeamScore[0],
+	formatex(sBuffer, charsmax(sBuffer), "TERRORIST %d / %0.2f%% %L / %0.2f%% %L  --  CT %d / %0.2f%% %L / %0.2f%% %L", g_izTeamScore[0],
 			fzMapEff[0], id, "EFF", fzMapAcc[0], id, "ACC", g_izTeamScore[1], fzMapEff[1], id, "EFF", fzMapAcc[1], id, "ACC")
 }
 
@@ -845,42 +845,42 @@ format_stats(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 }
 
 // Format round end stats
-format_roundend_hudstats()
+format_roundend_hudstats(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 {
-	g_sAwardAndScore[0] = 0
+	sBuffer[0] = 0
 
 	// Create round awards.
 	if (ShowMostDisruptive)
-		add_most_disruptive(0, g_sAwardAndScore)
+		add_most_disruptive(id, sBuffer)
 	if (ShowBestScore)
-		add_best_score(0, g_sAwardAndScore)
+		add_best_score(id, sBuffer)
 
 	// Create round score.
 	// Compensate HUD message if awards are disabled.
 	if (ShowTeamScore || ShowTotalStats)
 	{
 		if (ShowMostDisruptive && ShowBestScore)
-			add(g_sAwardAndScore, charsmax(g_sAwardAndScore), "^n^n")
+			add(sBuffer, charsmax(sBuffer), "^n^n")
 		else if (ShowMostDisruptive || ShowBestScore)
-			add(g_sAwardAndScore, charsmax(g_sAwardAndScore), "^n^n^n^n")
+			add(sBuffer, charsmax(sBuffer), "^n^n^n^n")
 		else
-			add(g_sAwardAndScore, charsmax(g_sAwardAndScore), "^n^n^n^n^n^n")
+			add(sBuffer, charsmax(sBuffer), "^n^n^n^n^n^n")
 
 		if (ShowTeamScore)
-			add_team_score(0, g_sAwardAndScore)
+			add_team_score(id, sBuffer)
 
 		if (ShowTotalStats)
-			add_total_stats(0, g_sAwardAndScore)
+			add_total_stats(id, sBuffer)
 	}
 }
 
 // Show round end stats. If gametime is zero then use default duration time.
-show_roundend_hudstats(id, Float:fGameTime)
+show_roundend_hudstats(id, Float:fGameTime, sBuffer[MAX_BUFFER_LENGTH + 1])
 {
 	// Bail out if there no HUD stats should be shown
 	// for this player or end round stats not created.
 	if (!g_izStatsSwitch[id]) return
-	if (!g_sAwardAndScore[0]) return
+	if (!sBuffer[0]) return
 
 	// If round end timer is zero clear round end stats.
 	if (g_fShowStatsTime == 0.0)
@@ -908,7 +908,7 @@ show_roundend_hudstats(id, Float:fGameTime)
 	if (fDuration >= HUD_MIN_DURATION)
 	{
 		set_hudtype_endround(fDuration)
-		ShowSyncHudMsg(id, g_HudSync_EndRound, "%s", g_sAwardAndScore)
+		ShowSyncHudMsg(id, g_HudSync_EndRound, "%s", sBuffer)
 #if defined STATSX_DEBUG
 		log_amx("Show %1.2fs round end HUD stats for #%d", fDuration, id)
 #endif
@@ -1399,7 +1399,7 @@ public delay_resethud(args[])
 #endif
 	fGameTime = get_gametime()
 	show_user_hudstats(id, fGameTime)
-	show_roundend_hudstats(id, fGameTime)
+	show_roundend_hudstats(id, fGameTime, g_sAwardAndScore)
 
 	// Reset round stats
 	g_izKilled[id][KILLED_KILLER_ID] = 0
@@ -1597,9 +1597,9 @@ endround_stats()
 		}
 	}
 
-	format_roundend_hudstats()
+	format_roundend_hudstats(0, g_sAwardAndScore)
 
-	save_team_chatscore(0)
+	save_team_chatscore(0, g_sScore)
 
 	// Get and save round end stats time.
 	g_fShowStatsTime = get_gametime()
@@ -1608,7 +1608,7 @@ endround_stats()
 	for (iPlayer = 0; iPlayer < iPlayers; iPlayer++)
 	{
 		id = iaPlayers[iPlayer]
-		show_roundend_hudstats(id, 0.0)
+		show_roundend_hudstats(id, 0.0, g_sAwardAndScore)
 	}
 
 	// Flag round end processed.

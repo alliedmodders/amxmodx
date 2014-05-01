@@ -155,6 +155,11 @@ new Float:g_fHUDDuration                            = 0.0
 new g_iRoundEndTriggered                            = 0
 new g_iRoundEndProcessed                            = 0
 
+new g_pFreezeTime                                   = 0
+new g_pRoundTime                                    = 0
+new g_pHudDuration                                  = 0
+new g_pHudFreezeLimit                               = 0
+
 new Float:g_fStartGame                              = 0.0
 new g_izTeamScore[MAX_TEAMS]                        = {0, ...}
 new g_izTeamEventScore[MAX_TEAMS]                   = {0, ...}
@@ -230,8 +235,11 @@ public plugin_init()
 	register_clcmd("say /hudtest", "cmdHudTest")
 #endif
 
-	register_cvar(HUD_DURATION_CVAR, HUD_DURATION)
-	register_cvar(HUD_FREEZE_LIMIT_CVAR, HUD_FREEZE_LIMIT)
+	g_pHudDuration = register_cvar(HUD_DURATION_CVAR, HUD_DURATION)
+	g_pHudFreezeLimit = register_cvar(HUD_FREEZE_LIMIT_CVAR, HUD_FREEZE_LIMIT)
+
+	g_pFreezeTime = get_cvar_pointer("mp_freezetime")
+	g_pRoundTime = get_cvar_pointer("mp_roundtime")
 
 	// Init buffers and some global vars.
 	g_sBuffer[0] = 0
@@ -344,17 +352,17 @@ set_plugin_mode(id, sFlags[])
 // Get config parameters.
 get_config_cvars()
 {
-	g_fFreezeTime = get_cvar_float("mp_freezetime")
+	g_fFreezeTime = get_pcvar_float(g_pFreezeTime)
 
 	if (g_fFreezeTime < 0.0)
 		g_fFreezeTime = 0.0
 
-	g_fHUDDuration = get_cvar_float(HUD_DURATION_CVAR)
+	g_fHUDDuration = get_pcvar_float(g_pHudDuration)
 
 	if (g_fHUDDuration < 1.0)
 		g_fHUDDuration = 1.0
 
-	g_fFreezeLimitTime = get_cvar_float(HUD_FREEZE_LIMIT_CVAR)
+	g_fFreezeLimitTime = get_pcvar_float(g_pHudFreezeLimit)
 }
 
 // Get and format attackers header and list.
@@ -1271,7 +1279,7 @@ public eventStartRound()
 {
 	new iTeam, id, i
 
-	new Float:roundtime = get_cvar_float("mp_roundtime");
+	new Float:roundtime = get_pcvar_float(g_pRoundTime);
 	if (read_data(1) >= floatround(roundtime * 60.0,floatround_floor) || (roundtime == 2.3 && read_data(1) == 137)) // these round too weird for it to work through pawn, have to add an exception for it
 	{
 #if defined STATSX_DEBUG

@@ -243,7 +243,7 @@ public plugin_init()
 
 	// Init buffers and some global vars.
 	g_sBuffer[0] = 0
-	save_team_chatscore()
+	save_team_chatscore(0)
 
 	g_HudSync_EndRound = CreateHudSyncObj()
 	g_HudSync_SpecInfo = CreateHudSyncObj()
@@ -509,35 +509,35 @@ get_kill_info(id, iKiller, sBuffer[MAX_BUFFER_LENGTH + 1])
 }
 
 // Get and format most disruptive.
-add_most_disruptive(sBuffer[MAX_BUFFER_LENGTH + 1])
+add_most_disruptive(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 {
-	new id, iMaxDamageId, iMaxDamage, iMaxHeadShots
+	new iPlayer, iMaxDamageId, iMaxDamage, iMaxHeadShots
 
 	iMaxDamageId = 0
 	iMaxDamage = 0
 	iMaxHeadShots = 0
 
 	// Find player.
-	for (id = 1; id < MAX_PLAYERS; id++)
+	for (iPlayer = 1; iPlayer < MAX_PLAYERS; iPlayer++)
 	{
-		if (g_izUserRndStats[id][STATS_DAMAGE] >= iMaxDamage && (g_izUserRndStats[id][STATS_DAMAGE] > iMaxDamage || g_izUserRndStats[id][STATS_HS] > iMaxHeadShots))
+		if (g_izUserRndStats[iPlayer][STATS_DAMAGE] >= iMaxDamage && (g_izUserRndStats[iPlayer][STATS_DAMAGE] > iMaxDamage || g_izUserRndStats[iPlayer][STATS_HS] > iMaxHeadShots))
 		{
-			iMaxDamageId = id
-			iMaxDamage = g_izUserRndStats[id][STATS_DAMAGE]
-			iMaxHeadShots = g_izUserRndStats[id][STATS_HS]
+			iMaxDamageId = iPlayer
+			iMaxDamage = g_izUserRndStats[iPlayer][STATS_DAMAGE]
+			iMaxHeadShots = g_izUserRndStats[iPlayer][STATS_HS]
 		}
 	}
 
 	// Format statistics.
 	if (iMaxDamageId)
 	{
-		id = iMaxDamageId
+		iPlayer = iMaxDamageId
 
-		new Float:fGameEff = effec(g_izUserGameStats[id])
-		new Float:fRndAcc = accuracy(g_izUserRndStats[id])
+		new Float:fGameEff = effec(g_izUserGameStats[iPlayer])
+		new Float:fRndAcc = accuracy(g_izUserRndStats[iPlayer])
 
-		formatex(t_sText, charsmax(t_sText), "%L: %s^n%d %L / %d %L -- %0.2f%% %L / %0.2f%% %L^n", LANG_SERVER, "MOST_DMG", g_izUserRndName[id],
-				g_izUserRndStats[id][STATS_HITS], LANG_SERVER, "HIT_S", iMaxDamage, LANG_SERVER, "DMG", fGameEff, LANG_SERVER, "EFF", fRndAcc, LANG_SERVER, "ACC")
+		formatex(t_sText, charsmax(t_sText), "%L: %s^n%d %L / %d %L -- %0.2f%% %L / %0.2f%% %L^n", id, "MOST_DMG", g_izUserRndName[iPlayer],
+				g_izUserRndStats[iPlayer][STATS_HITS], id, "HIT_S", iMaxDamage, id, "DMG", fGameEff, id, "EFF", fRndAcc, id, "ACC")
 		add(sBuffer, charsmax(sBuffer), t_sText)
 	}
 
@@ -545,35 +545,35 @@ add_most_disruptive(sBuffer[MAX_BUFFER_LENGTH + 1])
 }
 
 // Get and format best score.
-add_best_score(sBuffer[MAX_BUFFER_LENGTH + 1])
+add_best_score(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 {
-	new id, iMaxKillsId, iMaxKills, iMaxHeadShots
+	new iPlayer, iMaxKillsId, iMaxKills, iMaxHeadShots
 
 	iMaxKillsId = 0
 	iMaxKills = 0
 	iMaxHeadShots = 0
 
 	// Find player
-	for (id = 1; id < MAX_PLAYERS; id++)
+	for (iPlayer = 1; iPlayer < MAX_PLAYERS; iPlayer++)
 	{
-		if (g_izUserRndStats[id][STATS_KILLS] >= iMaxKills && (g_izUserRndStats[id][STATS_KILLS] > iMaxKills || g_izUserRndStats[id][STATS_HS] > iMaxHeadShots))
+		if (g_izUserRndStats[iPlayer][STATS_KILLS] >= iMaxKills && (g_izUserRndStats[iPlayer][STATS_KILLS] > iMaxKills || g_izUserRndStats[iPlayer][STATS_HS] > iMaxHeadShots))
 		{
-			iMaxKillsId = id
-			iMaxKills = g_izUserRndStats[id][STATS_KILLS]
-			iMaxHeadShots = g_izUserRndStats[id][STATS_HS]
+			iMaxKillsId = iPlayer
+			iMaxKills = g_izUserRndStats[iPlayer][STATS_KILLS]
+			iMaxHeadShots = g_izUserRndStats[iPlayer][STATS_HS]
 		}
 	}
 
 	// Format statistics.
 	if (iMaxKillsId)
 	{
-		id = iMaxKillsId
+		iPlayer = iMaxKillsId
 
-		new Float:fGameEff = effec(g_izUserGameStats[id])
-		new Float:fRndAcc = accuracy(g_izUserRndStats[id])
+		new Float:fGameEff = effec(g_izUserGameStats[iPlayer])
+		new Float:fRndAcc = accuracy(g_izUserRndStats[iPlayer])
 
-		formatex(t_sText, charsmax(t_sText), "%L: %s^n%d %L / %d hs -- %0.2f%% %L / %0.2f%% %L^n", LANG_SERVER, "BEST_SCORE", g_izUserRndName[id],
-				iMaxKills, LANG_SERVER, "KILL_S", iMaxHeadShots, fGameEff, LANG_SERVER, "EFF", fRndAcc, LANG_SERVER, "ACC")
+		formatex(t_sText, charsmax(t_sText), "%L: %s^n%d %L / %d hs -- %0.2f%% %L / %0.2f%% %L^n", id, "BEST_SCORE", g_izUserRndName[iPlayer],
+				iMaxKills, id, "KILL_S", iMaxHeadShots, fGameEff, id, "EFF", fRndAcc, id, "ACC")
 		add(sBuffer, charsmax(sBuffer), t_sText)
 	}
 
@@ -581,7 +581,7 @@ add_best_score(sBuffer[MAX_BUFFER_LENGTH + 1])
 }
 
 // Get and format team score.
-add_team_score(sBuffer[MAX_BUFFER_LENGTH + 1])
+add_team_score(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 {
 	new Float:fzMapEff[MAX_TEAMS], Float:fzMapAcc[MAX_TEAMS], Float:fzRndAcc[MAX_TEAMS]
 
@@ -595,12 +595,12 @@ add_team_score(sBuffer[MAX_BUFFER_LENGTH + 1])
 
 	// Format round team stats, MOTD
 	formatex(t_sText, charsmax(t_sText), "TERRORIST %d / %0.2f%% %L / %0.2f%% %L^nCT %d / %0.2f%% %L / %0.2f%% %L^n", g_izTeamScore[0],
-			fzMapEff[0], LANG_SERVER, "EFF", fzRndAcc[0], LANG_SERVER, "ACC", g_izTeamScore[1], fzMapEff[1], LANG_SERVER, "EFF", fzRndAcc[1], LANG_SERVER, "ACC")
+			fzMapEff[0], id, "EFF", fzRndAcc[0], id, "ACC", g_izTeamScore[1], fzMapEff[1], id, "EFF", fzRndAcc[1], id, "ACC")
 	add(sBuffer, charsmax(sBuffer), t_sText)
 }
 
 // Get and format team stats, chat version
-save_team_chatscore()
+save_team_chatscore(id)
 {
 	new Float:fzMapEff[MAX_TEAMS], Float:fzMapAcc[MAX_TEAMS], Float:fzRndAcc[MAX_TEAMS]
 
@@ -614,14 +614,14 @@ save_team_chatscore()
 
 	// Format game team stats, chat
 	formatex(g_sScore, charsmax(g_sScore), "TERRORIST %d / %0.2f%% %L / %0.2f%% %L  --  CT %d / %0.2f%% %L / %0.2f%% %L", g_izTeamScore[0],
-			fzMapEff[0], LANG_SERVER, "EFF", fzMapAcc[0], LANG_SERVER, "ACC", g_izTeamScore[1], fzMapEff[1], LANG_SERVER, "EFF", fzMapAcc[1], LANG_SERVER, "ACC")
+			fzMapEff[0], id, "EFF", fzMapAcc[0], id, "ACC", g_izTeamScore[1], fzMapEff[1], id, "EFF", fzMapAcc[1], id, "ACC")
 }
 
 // Get and format total stats.
-add_total_stats(sBuffer[MAX_BUFFER_LENGTH + 1])
+add_total_stats(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 {
-	formatex(t_sText, charsmax(t_sText), "%L: %d %L / %d hs -- %d %L / %d %L^n", LANG_SERVER, "TOTAL", g_izUserRndStats[0][STATS_KILLS], LANG_SERVER, "KILL_S",
-			g_izUserRndStats[0][STATS_HS], g_izUserRndStats[0][STATS_HITS], LANG_SERVER, "HITS", g_izUserRndStats[0][STATS_SHOTS], LANG_SERVER, "SHOT_S")
+	formatex(t_sText, charsmax(t_sText), "%L: %d %L / %d hs -- %d %L / %d %L^n", id, "TOTAL", g_izUserRndStats[0][STATS_KILLS], id, "KILL_S",
+			g_izUserRndStats[0][STATS_HS], g_izUserRndStats[0][STATS_HITS], id, "HITS", g_izUserRndStats[0][STATS_SHOTS], id, "SHOT_S")
 	add(sBuffer, charsmax(sBuffer), t_sText)
 }
 
@@ -733,7 +733,7 @@ format_kill_vinfo(id, iKiller, sBuffer[MAX_BUFFER_LENGTH + 1])
 }
 
 // Get and format top 15.
-format_top15(sBuffer[MAX_BUFFER_LENGTH + 1])
+format_top15(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 {
 	new iMax = get_statsnum()
 	new izStats[8], izBody[8]
@@ -744,12 +744,12 @@ format_top15(sBuffer[MAX_BUFFER_LENGTH + 1])
 
 	new lKills[16], lDeaths[16], lHits[16], lShots[16], lEff[16], lAcc[16]
 
-	formatex(lKills, 15, "%L", LANG_SERVER, "KILLS")
-	formatex(lDeaths, 15, "%L", LANG_SERVER, "DEATHS")
-	formatex(lHits, 15, "%L", LANG_SERVER, "HITS")
-	formatex(lShots, 15, "%L", LANG_SERVER, "SHOTS")
-	formatex(lEff, 15, "%L", LANG_SERVER, "EFF")
-	formatex(lAcc, 15, "%L", LANG_SERVER, "ACC")
+	formatex(lKills, 15, "%L", id, "KILLS")
+	formatex(lDeaths, 15, "%L", id, "DEATHS")
+	formatex(lHits, 15, "%L", id, "HITS")
+	formatex(lShots, 15, "%L", id, "SHOTS")
+	formatex(lEff, 15, "%L", id, "EFF")
+	formatex(lAcc, 15, "%L", id, "ACC")
 
 	ucfirst(lEff)
 	ucfirst(lAcc)
@@ -1006,7 +1006,7 @@ public cmdTop15(id)
 		return PLUGIN_HANDLED
 	}
 
-	format_top15(g_sBuffer)
+	format_top15(id, g_sBuffer)
 	show_motd(id, g_sBuffer, "Top 15")
 
 	return PLUGIN_CONTINUE
@@ -1571,9 +1571,9 @@ endround_stats()
 
 	// Create round awards.
 	if (ShowMostDisruptive)
-		add_most_disruptive(g_sAwardAndScore)
+		add_most_disruptive(0, g_sAwardAndScore)
 	if (ShowBestScore)
-		add_best_score(g_sAwardAndScore)
+		add_best_score(0, g_sAwardAndScore)
 
 	// Create round score.
 	// Compensate HUD message if awards are disabled.
@@ -1587,13 +1587,13 @@ endround_stats()
 			add(g_sAwardAndScore, charsmax(g_sAwardAndScore), "^n^n^n^n^n^n")
 
 		if (ShowTeamScore)
-			add_team_score(g_sAwardAndScore)
+			add_team_score(0, g_sAwardAndScore)
 
 		if (ShowTotalStats)
-			add_total_stats(g_sAwardAndScore)
+			add_total_stats(0, g_sAwardAndScore)
 	}
 
-	save_team_chatscore()
+	save_team_chatscore(0)
 
 	// Get and save round end stats time.
 	g_fShowStatsTime = get_gametime()
@@ -1646,7 +1646,7 @@ public end_game_stats()
 	else if (EndTop15)
 	{
 		get_players(iaPlayers, iPlayers)
-		format_top15(g_sBuffer)
+		format_top15(0, g_sBuffer)
 
 		for (iPlayer = 0; iPlayer < iPlayers; iPlayer++)
 		{

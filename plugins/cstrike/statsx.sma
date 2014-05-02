@@ -55,7 +55,7 @@
 #define HUD_MIN_DURATION    0.2
 
 // Config plugin constants.
-#define MODE_HUD_DELAY      0   // Make a 0.01 sec delay on HUD reset process.
+#define MODE_HUD_DELAY      0   // Make a 0.1 sec delay on HUD reset process.
 
 // You can also manualy enable or disable these options by setting them to 1
 // For example:
@@ -760,8 +760,8 @@ format_top15(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 	for (new i = 0; i < iMax && charsmax(sBuffer) - iLen > 0; i++)
 	{
 		get_stats(i, izStats, izBody, t_sName, charsmax(t_sName))
-		replace_all(t_sName, charsmax(t_sName), "<", "[")
-		replace_all(t_sName, charsmax(t_sName), ">", "]")
+		replace_string(t_sName, charsmax(t_sName), "<", "[")
+		replace_string(t_sName, charsmax(t_sName), ">", "]")
 		iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%2d %-22.22s %6d %6d %6d %6d %4d %3.0f%% %3.0f%%^n", i + 1, t_sName, izStats[STATS_KILLS],
 						izStats[STATS_DEATHS], izStats[STATS_HITS], izStats[STATS_SHOTS], izStats[STATS_HS], effec(izStats), accuracy(izStats))
 	}
@@ -1382,7 +1382,7 @@ public eventSpawn(id)
 	args[0] = id
 
 	if (g_iPluginMode & MODE_HUD_DELAY)
-		set_task(0.01, "delay_spawn", 200 + id, args, 1)
+		set_task(0.1, "delay_spawn", 200 + id, args, 1)
 	else
 		delay_spawn(args)
 

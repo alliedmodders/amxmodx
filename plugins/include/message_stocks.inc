@@ -56,3 +56,53 @@ stock make_deathmsg(killer, victim, headshot, const weapon[])
 
 	return 1;
 }
+
+/**
+ * Sends a custom or predefined text message to player.
+ * Predefined texts are default game messages which will be translated
+ * to player's game language.
+ *
+ * @note Set index to 0 to send text globally.
+ *
+ * @note There does not necessarily have to be a total of 6 arguments.
+ *       It will depend if message takes arguments, e.g.:
+ *         Predefined message: client_printex(id, print_chat, "#Game_join_ct", "Pimp Daddy")
+ *         Custom message    : client_printex(id, print_chat, "%s is joining the Counter-Terrorist force", "Pimp Daddy")
+ *
+ * @param index         Index of the player, use 0 to send to all players.
+ * @param type          The message destination. See print_* constants.
+ * @param msg_name      The custom or predefined message to send.
+ * @param msg_param1    Optionnal message argument.
+ * @param msg_param2    Optionnal message argument.
+ * @param msg_param3    Optionnal message argument.
+ * @param msg_param4    Optionnal message argument.
+ *
+ * @noreturn
+ */
+client_printex(index, type, const msg_name[], const msg_param1[] = "", const msg_param2[] = "", const msg_param3[] = "", const msg_param4[] = "")
+{
+	static msgTextMsg;
+
+	if (!msgTextMsg)
+	{
+		msgTextMsg = get_user_msgid("TextMsg");
+	}
+
+	message_begin(index > 0 ? MSG_ONE : MSG_ALL, msgTextMsg, .player = index);
+	write_byte(type);
+	write_string(msg_name);
+
+	if (msg_param1[0])
+		write_string(msg_param1);
+
+	if (msg_param2[0])
+		write_string(msg_param2);
+
+	if (msg_param3[0])
+		write_string(msg_param3);
+
+	if (msg_param4[0])
+		write_string(msg_param4);
+
+	message_end();
+}

@@ -1119,7 +1119,7 @@ public cmdReport(id)
 
 	new lWeapon[16]
 
-	formatex(lWeapon, 15, "%L", id, "WEAPON")
+	formatex(lWeapon, 15, "%L", LANG_SERVER, "WEAPON")
 	strtolower(lWeapon)
 
 	if (iClip >= 0)

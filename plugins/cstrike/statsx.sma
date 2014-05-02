@@ -744,12 +744,12 @@ format_top15(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 
 	new lKills[16], lDeaths[16], lHits[16], lShots[16], lEff[16], lAcc[16]
 
-	formatex(lKills, 15, "%L", id, "KILLS")
-	formatex(lDeaths, 15, "%L", id, "DEATHS")
-	formatex(lHits, 15, "%L", id, "HITS")
-	formatex(lShots, 15, "%L", id, "SHOTS")
-	formatex(lEff, 15, "%L", id, "EFF")
-	formatex(lAcc, 15, "%L", id, "ACC")
+	formatex(lKills, charsmax(lKills), "%L", id, "KILLS")
+	formatex(lDeaths, charsmax(lDeaths), "%L", id, "DEATHS")
+	formatex(lHits, charsmax(lHits), "%L", id, "HITS")
+	formatex(lShots, charsmax(lShots), "%L", id, "SHOTS")
+	formatex(lEff, charsmax(lEff), "%L", id, "EFF")
+	formatex(lAcc, charsmax(lAcc), "%L", id, "ACC")
 
 	ucfirst(lEff)
 	ucfirst(lAcc)
@@ -775,13 +775,13 @@ format_rankstats(id, sBuffer[MAX_BUFFER_LENGTH + 1], iMyId = 0)
 	new iRankPos, iLen
 	new lKills[16], lDeaths[16], lHits[16], lShots[16], lDamage[16], lEff[16], lAcc[16]
 
-	formatex(lKills, 15, "%L", id, "KILLS")
-	formatex(lDeaths, 15, "%L", id, "DEATHS")
-	formatex(lHits, 15, "%L", id, "HITS")
-	formatex(lShots, 15, "%L", id, "SHOTS")
-	formatex(lDamage, 15, "%L", id, "DAMAGE")
-	formatex(lEff, 15, "%L", id, "EFF")
-	formatex(lAcc, 15, "%L", id, "ACC")
+	formatex(lKills, charsmax(lKills), "%L", id, "KILLS")
+	formatex(lDeaths, charsmax(lDeaths), "%L", id, "DEATHS")
+	formatex(lHits, charsmax(lHits), "%L", id, "HITS")
+	formatex(lShots, charsmax(lShots), "%L", id, "SHOTS")
+	formatex(lDamage, charsmax(lDamage), "%L", id, "DAMAGE")
+	formatex(lEff, charsmax(lEff), "%L", id, "EFF")
+	formatex(lAcc, charsmax(lAcc), "%L", id, "ACC")
 
 	ucfirst(lEff)
 	ucfirst(lAcc)
@@ -797,7 +797,7 @@ format_rankstats(id, sBuffer[MAX_BUFFER_LENGTH + 1], iMyId = 0)
 
 	for (new i = 1; i < 8; i++)
 	{
-		formatex(L_BODY_PART[i], 31, "%L", id, BODY_PART[i])
+		formatex(L_BODY_PART[i], charsmax(L_BODY_PART[]), "%L", id, BODY_PART[i])
 	}
 
 	iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%10s:^n%10s: %d^n%10s: %d^n%10s: %d^n%10s: %d^n%10s: %d^n%10s: %d^n%10s: %d", "HITS",
@@ -813,14 +813,14 @@ format_stats(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 	new iWeapon, iLen
 	new lKills[16], lDeaths[16], lHits[16], lShots[16], lDamage[16], lEff[16], lAcc[16], lWeapon[16]
 
-	formatex(lKills, 15, "%L", id, "KILLS")
-	formatex(lDeaths, 15, "%L", id, "DEATHS")
-	formatex(lHits, 15, "%L", id, "HITS")
-	formatex(lShots, 15, "%L", id, "SHOTS")
-	formatex(lDamage, 15, "%L", id, "DAMAGE")
-	formatex(lEff, 15, "%L", id, "EFF")
-	formatex(lAcc, 15, "%L", id, "ACC")
-	formatex(lWeapon, 15, "%L", id, "WEAPON")
+	formatex(lKills, charsmax(lKills), "%L", id, "KILLS")
+	formatex(lDeaths, charsmax(lDeaths), "%L", id, "DEATHS")
+	formatex(lHits, charsmax(lHits), "%L", id, "HITS")
+	formatex(lShots, charsmax(lShots), "%L", id, "SHOTS")
+	formatex(lDamage, charsmax(lDamage), "%L", id, "DAMAGE")
+	formatex(lEff, charsmax(lEff), "%L", id, "EFF")
+	formatex(lAcc, charsmax(lAcc), "%L", id, "ACC")
+	formatex(lWeapon, charsmax(lWeapon), "%L", id, "WEAPON")
 
 	ucfirst(lEff)
 	ucfirst(lAcc)
@@ -1119,7 +1119,7 @@ public cmdReport(id)
 
 	new lWeapon[16]
 
-	formatex(lWeapon, 15, "%L", LANG_SERVER, "WEAPON")
+	formatex(lWeapon, charsmax(lWeapon), "%L", LANG_SERVER, "WEAPON")
 	strtolower(lWeapon)
 
 	if (iClip >= 0)
@@ -1158,7 +1158,7 @@ public cmdSwitch(id)
 
 	new lEnDis[32]
 
-	formatex(lEnDis, 31, "%L", id, g_izStatsSwitch[id] ? "ENABLED" : "DISABLED")
+	formatex(lEnDis, charsmax(lEnDis), "%L", id, g_izStatsSwitch[id] ? "ENABLED" : "DISABLED")
 	client_print(id, print_chat, "* %L", id, "STATS_ANNOUNCE", lEnDis)
 
 	return PLUGIN_CONTINUE

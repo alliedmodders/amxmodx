@@ -137,7 +137,7 @@ char* UTIL_SplitHudMessage(register const char *src);
 int UTIL_ReadFlags(const char* c);
 
 void UTIL_ClientPrint(edict_t *pEntity, int msg_dest, char *msg);
-void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1 = NULL, const char *arg2 = NULL);
+void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1 = NULL, const char *arg2 = NULL, bool fwd = false);
 void UTIL_GetFlags(char* flags, int flag);
 void UTIL_HudMessage(edict_t *pEntity, const hudtextparms_t &textparms, const char *pMessage);
 void UTIL_DHudMessage(edict_t *pEntity, const hudtextparms_t &textparms, const char *pMessage, unsigned int length);
@@ -172,6 +172,7 @@ struct fakecmd_t
 	const char *argv[3];
 	int argc;
 	bool fake;
+	bool notify; // notify to plugins.
 };
 
 extern CLog g_log;

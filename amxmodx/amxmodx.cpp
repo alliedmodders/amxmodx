@@ -2532,19 +2532,20 @@ static cell AMX_NATIVE_CALL set_user_info(AMX *amx, cell *params) /* 3 param */
 
 static cell AMX_NATIVE_CALL read_argc(AMX *amx, cell *params)
 {
-	return CMD_ARGC();
+	return g_fakecmd.notify ? g_fakecmd.argc : CMD_ARGC();
 }
 
 static cell AMX_NATIVE_CALL read_argv(AMX *amx, cell *params) /* 3 param */
 {
-	const char *value = CMD_ARGV(params[1]);
-	return set_amxstring_utf8(amx, params[2], /*(params[1] < 0 ||
-	params[1] >= CMD_ARGC()) ? "" : */value, strlen(value), params[3] + 1); // + EOS
+	int argc = params[1];
+
+	const char *value = g_fakecmd.notify ? (argc >= 0 && argc < 3 ? g_fakecmd.argv[argc] : "") : CMD_ARGV(argc);
+	return set_amxstring_utf8(amx, params[2], value, strlen(value), params[3] + 1); // + EOS
 }
 
 static cell AMX_NATIVE_CALL read_args(AMX *amx, cell *params) /* 2 param */
 {
-	const char* sValue = CMD_ARGS();
+	const char* sValue = g_fakecmd.notify ? (g_fakecmd.argc > 1 ? g_fakecmd.args : g_fakecmd.argv[0]) : CMD_ARGS();
 	return set_amxstring_utf8(amx, params[1], sValue ? sValue : "", sValue ? strlen(sValue) : 0, params[2] + 1); // +EOS
 }
 
@@ -2715,7 +2716,7 @@ static cell AMX_NATIVE_CALL server_exec(AMX *amx, cell *params)
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL engclient_cmd(AMX *amx, cell *params) /* 4 param */
+int sendFakeCommand(AMX *amx, cell *params, bool fwd = false)
 {
 	int ilen;
 	const char* szCmd = get_amxstring(amx, params[2], 0, ilen);
@@ -2736,7 +2737,7 @@ static cell AMX_NATIVE_CALL engclient_cmd(AMX *amx, cell *params) /* 4 param */
 			CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
 			
 			if (pPlayer->ingame /*&& pPlayer->initialized */)
-				UTIL_FakeClientCommand(pPlayer->pEdict, szCmd, sArg1, sArg2);
+				UTIL_FakeClientCommand(pPlayer->pEdict, szCmd, sArg1, sArg2, fwd);
 		}
 	} else {
 		int index = params[1];
@@ -2750,10 +2751,19 @@ static cell AMX_NATIVE_CALL engclient_cmd(AMX *amx, cell *params) /* 4 param */
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 		
 		if (/*pPlayer->initialized && */pPlayer->ingame)
-			UTIL_FakeClientCommand(pPlayer->pEdict, szCmd, sArg1, sArg2);
+			UTIL_FakeClientCommand(pPlayer->pEdict, szCmd, sArg1, sArg2, fwd);
 	}
 	
 	return 1;
+}
+static cell AMX_NATIVE_CALL engclient_cmd(AMX *amx, cell *params) /* 4 param */
+{
+	return sendFakeCommand(amx, params);
+}
+
+static cell AMX_NATIVE_CALL amxclient_cmd(AMX *amx, cell *params) /* 4 param */
+{
+	return sendFakeCommand(amx, params, true);
 }
 
 static cell AMX_NATIVE_CALL pause(AMX *amx, cell *params) /* 3 param */
@@ -4886,6 +4896,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"admins_lookup",			admins_lookup},
 	{"admins_num",				admins_num},
 	{"admins_push",				admins_push},
+	{"amxclient_cmd",			amxclient_cmd},
 	{"amxx_setpl_curweap",		amxx_setpl_curweap},
 	{"arrayset",				arrayset},
 	{"get_addr_val",			get_addr_val},

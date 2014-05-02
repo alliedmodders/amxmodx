@@ -446,11 +446,36 @@ native remove_quotes(text[]);
 /* Executes command on player. */
 native client_cmd(index,const command[],any:...);
 
-/* This is an emulation of a client command (commands aren't send to client!).
-* It allows to execute some commands on players and bots.
-* Function is excellent for forcing to do an action related to a game (not settings!).
-* The command must stand alone but in arguments you can use spaces. */
+/**
+ * This is an emulation of a client command (commands aren't send to client!).
+ * It allows to execute some commands on players and bots.
+ * Function is excellent for forcing to do an action related to a game (not settings!).
+ * The command must stand alone but in arguments you can use spaces.
+ *
+ * @param index			Index of the client, use 0 to send to all clients.
+ * @param command		The client command to execute on.
+ * @param arg1			Optionnal. The command arguments. 
+ * @param arg2			Optionnal. The command arguments.
+ * @noreturn		
+ */
 native engclient_cmd(index,const command[],const arg1[]="",const arg2[]="");
+
+/**
+ * This is an emulation of a client command (commands aren't send to client!).
+ * It allows to execute some commands on players and bots.
+ * Function is excellent for forcing to do an action related to a game (not settings!).
+ * The command must stand alone but in arguments you can use spaces.
+ *
+ * @note This is similar to engclient_cmd with the difference all plugins hooking  
+ *       the command will be notified as well.
+ *
+ * @param index			Index of the client, use 0 to send to all clients.
+ * @param command		The client command to execute on.
+ * @param arg1			Optionnal. The command arguments. 
+ * @param arg2			Optionnal. The command arguments.
+ * @noreturn		
+ */
+native amxclient_cmd(index, const command[], const arg1[] = "", const arg2[] = "");
 
 /* Executes command on a server console. */
 native server_cmd(const command[],any:...);

@@ -350,7 +350,7 @@ void UTIL_TeamInfo(edict_t *pEntity, int playerIndex, const char *pszTeamName)
 //  2) Invokes ClientCommand in GameDLL
 //  3) meta_api.cpp overrides Cmd_Args, Cmd_Argv, Cmd_Argc and gives them fake values if the "fake" flag is set
 //  4) unsets the global "fake" flag
-void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1, const char *arg2)
+void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1, const char *arg2, bool fwd)
 {
 	if (!cmd) 
 		return;						// no command 
@@ -389,6 +389,44 @@ void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1, 
 	else
 		g_fakecmd.argc = 1;			// no argmuents -> only one command
 
+	/* Notify plugins about this command */
+	if (fwd)
+	{
+		/* Set flag so read_argc/v/s functions will give proper value */
+		g_fakecmd.notify = true;
+
+		if (executeForwards(FF_ClientCommand, static_cast<cell>(GET_PLAYER_POINTER(pEdict)->index)) > 0)
+		{
+			g_fakecmd.notify = false;
+			return;
+		}
+
+		/* check for command and if needed also for first argument and call proper function */
+		CmdMngr::iterator aa = g_commands.clcmdprefixbegin(cmd);
+
+		if (!aa)
+		{
+			aa = g_commands.clcmdbegin();
+		}
+
+		while (aa)
+		{
+			if ((*aa).matchCommandLine(cmd, arg1) && (*aa).getPlugin()->isExecutable((*aa).getFunction()))
+			{
+				if (executeForwards((*aa).getFunction(), static_cast<cell>(GET_PLAYER_POINTER(pEdict)->index)),
+					static_cast<cell>((*aa).getFlags()), static_cast<cell>((*aa).getId()) > 0)
+				{
+					g_fakecmd.notify = false;
+					return;
+				}	
+			}
+			++aa;
+		}
+
+		/* Unset flag */
+		g_fakecmd.notify = false;
+	}
+	
 	// set the global "fake" flag so the Cmd_Arg* functions will be superceded
 	g_fakecmd.fake = true;
 	// tell the GameDLL that the client sent a command

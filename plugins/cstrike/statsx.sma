@@ -1378,6 +1378,9 @@ public eventStartRound()
 // Reset killer info on round restart.
 public eventSpawn(id)
 {
+	if (!is_user_alive(id))
+		return HAM_IGNORED
+
 	new args[1]
 	args[0] = id
 

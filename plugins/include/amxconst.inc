@@ -180,6 +180,7 @@ enum {
 	print_console,
 	print_chat,
 	print_center,
+	print_radio		/* Counter-Strike only */
 };
 
 /* Color types for client_print_color() */

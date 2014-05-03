@@ -389,6 +389,7 @@
     <ClInclude Include="..\sh_list.h" />
     <ClInclude Include="..\sh_stack.h" />
     <ClInclude Include="..\sh_tinyhash.h" />
+    <ClInclude Include="..\sm_memtable.h" />
     <ClInclude Include="..\sm_stringhashmap.h" />
     <ClInclude Include="..\svn_version.h" />
     <ClInclude Include="..\trie_natives.h" />

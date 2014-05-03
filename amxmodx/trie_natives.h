@@ -3,6 +3,7 @@
 
 #include "amxmodx.h"
 #include "sm_stringhashmap.h"
+#include "sm_memtable.h"
 #include "CVector.h"
 
 using namespace SourceMod;
@@ -135,6 +136,22 @@ struct CellTrie
 	StringHashMap<Entry> map;
 };
 
+struct TrieSnapshot
+{
+	TrieSnapshot()
+	: strings(128)
+	{ }
+
+	size_t mem_usage()
+	{
+		return length * sizeof(int) + strings.GetMemTable()->GetMemUsage();
+	}
+
+	size_t length;
+	ke::AutoArray<int> keys;
+	BaseStringTable strings;
+};
+
 template <typename T>
 class TrieHandles
 {
@@ -208,6 +225,7 @@ public:
 
 
 extern TrieHandles<CellTrie> g_TrieHandles;
+extern TrieHandles<TrieSnapshot> g_TrieSnapshotHandles;
 extern AMX_NATIVE_INFO trie_Natives[];
 
 #endif

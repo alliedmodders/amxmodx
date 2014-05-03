@@ -8,6 +8,11 @@ enum Trie
 	Invalid_Trie = 0
 };
 
+enum Snapshot
+{
+	Invalid_Snapshot = 0
+};
+
 /**
  * Creates a hash map. A hash map is a container that can map strings (called
  * "keys") to arbitrary values (cells, arrays, or strings). Keys in a hash map
@@ -156,3 +161,61 @@ native TrieDestroy(&Trie:handle);
  * @error			Invalid Handle.
  */
 native TrieGetSize(Trie:handle);
+
+/**
+ * Creates a snapshot of all keys in the map. If the map is changed after this
+ * call, the changes are not reflected in the snapshot. Keys are not sorted.
+ *
+ * @param handle    Map handle.
+ *
+ * @return			New map snapshot handle, which must be freed via TrieSnapshotDestroy().
+ * @error			Invalid handle.
+ */
+native Snapshot:TrieSnapshotCreate(Trie:handle);
+
+/**
+ * Returns the number of keys in a map snapshot. Note that this may be
+ * different from the size of the map, since the map can change after the
+ * snapshot of its keys was taken.
+ *
+ * @param handle	Map snapshot.
+ *
+ * @return			Number of keys.
+ * @error			Invalid Handle.
+ */
+native TrieSnapshotLength(Snapshot:handle);
+
+/**
+ * Returns the buffer size required to store a given key. That is, it returns
+ * the length of the key plus one.
+ *
+ * @param handle	Map snapshot.
+ * @param index		Key index (starting from 0).
+ *
+ * @return 			Buffer size required to store the key string.
+ * @error			Invalid Handle or index out of range.
+ */
+native TrieSnapshotKeyBufferSize(Snapshot:handle, index);
+
+/**
+ * Retrieves the key string of a given key in a map snapshot.
+ *
+ * @param handle	Map snapshot.
+ * @param index		Key index (starting from 0).
+ * @param buffer	String buffer.
+ * @param maxlength	Maximum buffer length.
+ *
+ * @return			Number of bytes written to the buffer.
+ * @error			Invalid Handle or index out of range.
+ */
+native TrieSnapshotGetKey(Snapshot:handle, index, buffer[], maxlength);
+
+/**
+ * Destroys a Map snapshot
+ *
+ * @param handle	Map snapshot.
+ *
+ * @return			True on success, false if the value was never set.
+ * @error			Invalid Handle.
+ */
+native TrieSnapshotDestroy(&Snapshot:handle);

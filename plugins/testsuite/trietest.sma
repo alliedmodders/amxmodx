@@ -45,7 +45,7 @@ public trietest()
 			ok = false;
 		}
 	}
-	
+
 	for (new i = 0; i < 100; i++)
 	{
 		formatex(key, charsmax(key), "K%dK", i);
@@ -61,7 +61,7 @@ public trietest()
 			ok = false;
 		}
 	}
-	
+
 	// Setting K42K without replace should fail.
 	new value;
 	if (TrieSetCell(t, "K42K", 999, false))				{ ok = false; server_print("set trie K42K should fail"); }
@@ -74,12 +74,12 @@ public trietest()
 	{
 		server_print("Map size mismatch (1), expected: %d got: %d", 100, TrieGetSize(t)); ok = false;
 	}
-	
+
 	if (TrieGetCell(t, "cat", value))
 	{
 		server_print("trie should not have a cat."); ok = false;
 	}
-	
+
 	// Check that "K42K" is not a string or array.
 	new array[32];
 	new string[32];
@@ -88,16 +88,16 @@ public trietest()
 	{
 		server_print("entry K42K should not be an array or string"); ok = false;
 	}
- 
+
 	TrieClear(t);
- 
+
 	if (TrieGetSize(t) != 0)
 	{
 		server_print("Map size mismatch (2), expected: %d got: %d", 0, TrieGetSize(t)); ok = false;
 	}
-	
+
 	TrieDestroy(t);
-	
+
 	if (ok)
 		pass("Cell tests");
 	else
@@ -112,7 +112,7 @@ public trietest()
 		fail("Recycle handles");
 
 	ok = true;
-	
+
 	for (new i = 0; i < 100; i++)
 	{
 		static val[32];
@@ -120,7 +120,7 @@ public trietest()
 		formatex(val, charsmax(val), "V%dV", i);
 		TrieSetString(t, key, val);
 	}
-	
+
 	for (new i = 0; i < 100; i++)
 	{
 		formatex(key, charsmax(key), "K%dK", i);
@@ -128,7 +128,7 @@ public trietest()
 		static exp[32];
 		formatex(exp, charsmax(exp), "V%dV", i);
 		new size;
-		
+
 		if (!TrieGetString(t, key, val, charsmax(val), size))
 		{
 			server_print("TrieGetString(%d, '%s', %s) failed", t, key, val);
@@ -145,28 +145,28 @@ public trietest()
 			ok = false;
 		}
 	}
-	
+
 	if (TrieGetCell(t, "K42K", value) ||
 		TrieGetArray(t, "K42K", array, sizeof(array)))
 	{
 		server_print("entry K42K should not be an array or string"); ok = false;
 	}
-  
+
 	if (TrieGetString(t, "cat", string, charsmax(string)))
 	{
 		server_print("trie should not have a cat."); ok = false;
 	}
-	
+
 	if (ok)
 		pass("String tests");
 	else
 		fail("String tests");
 
-		
+
 	ok = true;
 
 	new data[5] = { 93, 1, 2, 3, 4 };
-	
+
 	if (!TrieSetArray(t, "K42K", data, sizeof data))
 	{
 		server_print("K42K should be a string."); ok = false;
@@ -175,7 +175,7 @@ public trietest()
 	{
 		server_print("K42K should be V42V."); ok = false;
 	}
-	for (new i = 0; i < sizeof data; i++) 
+	for (new i = 0; i < sizeof data; i++)
 	{
 		if (data[i] != array[i])
 		{
@@ -186,7 +186,7 @@ public trietest()
 		TrieGetString(t, "K42K", string, charsmax(string)))
 	{
 		server_print("entry K42K should not be an array or string"); ok = false;
-	}	
+	}
 	if (!TrieSetArray(t, "K42K", data, 1))
     {
 		server_print("couldn't set K42K to 1-entry array"); ok = false;
@@ -199,15 +199,15 @@ public trietest()
 	{
 		server_print("array size mismatch (%d, expected %d)", value, 1); ok = false;
 	}
-	
+
 	if (ok)
 		pass("Array tests");
 	else
 		fail("Array tests");
-		
-		
+
+
 	ok = true;
-	
+
 	// Remove "K42K".
 	if (!TrieDeleteKey(t, "K42K"))
 	{
@@ -223,11 +223,11 @@ public trietest()
 	{
 		server_print("map should not have a K42K"); ok = false;
 	}
-	
+
 	TrieDestroy(t);
-	
+
 	t = TrieCreate();
-	
+
 	for (new i = 0; i < 1000; i++)
 	{
 		formatex(key, charsmax(key), "!%d!", i);
@@ -246,16 +246,60 @@ public trietest()
 			server_print("Key '%s' could not be deleted", key); ok = false;
 		}
 	}
-	
+
 	if (ok)
 		pass("Exists/Delete");
 	else
 		fail("Exists/Delete");
 
+	ok = true;
+		
 	TrieClear(t);
+
+	if (TrieGetSize(t))
+	{
+		server_print("size should be 0"); ok = false
+	}
+
+	TrieSetString(t, "adventure", "time!");
+	TrieSetString(t, "butterflies", "bees");
+	TrieSetString(t, "egg", "egg");
+
+	new Snapshot:keys = TrieSnapshotCreate(t);
+	{
+		if (TrieSnapshotLength(keys) != 3)
+		{
+			server_print("trie snapshot length should be 3"); ok = false;
+		}
+
+		new bool:found[3], len = TrieSnapshotLength(keys);
+		new buffer[32];
+		for (new i = 0; i < len; i++)
+		{
+			new size = TrieSnapshotKeyBufferSize(keys, i); // Just to use it, otherwise you should use charsmax(buffer).
+			TrieSnapshotGetKey(keys, i, buffer, size);
+
+			if (strcmp(buffer, "adventure") == 0)			found[0] = true;
+			else if (strcmp(buffer, "butterflies") == 0)	found[1] = true;
+			else if (strcmp(buffer, "egg") == 0)			found[2] = true;
+			else { server_print("unexpected key: %s", buffer); ok = false; }
+		}
+		
+		if (!found[0] || !found[1] || !found[2])
+		{
+			server_print("did not find all keys"); ok = false;
+		}
+	}
+
+	TrieSnapshotDestroy(keys);
 	TrieDestroy(t);
+	
+	if (ok)
+		pass("Snapshot");
+	else
+		fail("Snapshot");
+
 
 	done();
-	
 }
 

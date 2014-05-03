@@ -9,6 +9,7 @@
 using namespace SourceMod;
 
 TrieHandles<CellTrie> g_TrieHandles;
+TrieHandles<TrieSnapshot> g_TrieSnapshotHandles;
 
 // native Trie:TrieCreate();
 static cell AMX_NATIVE_CALL TrieCreate(AMX *amx, cell *params)
@@ -304,6 +305,7 @@ static cell AMX_NATIVE_CALL TrieDeleteKey(AMX *amx, cell *params)
 
 	return 1;
 }
+
 //native TrieDestroy(&Trie:handle)
 static cell AMX_NATIVE_CALL TrieDestroy(AMX *amx, cell *params)
 {
@@ -339,6 +341,108 @@ static cell AMX_NATIVE_CALL TrieGetSize(AMX *amx, cell *params)
 	return t->map.elements();
 }
 
+static cell AMX_NATIVE_CALL TrieSnapshotCreate(AMX *amx, cell *params)
+{
+	CellTrie *t = g_TrieHandles.lookup(params[1]);
+
+	if (t == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		return 0;
+	}
+
+	int index = g_TrieSnapshotHandles.create();
+	TrieSnapshot *snapshot = g_TrieSnapshotHandles.lookup(index);
+	snapshot->length = t->map.elements();
+	snapshot->keys = new int[snapshot->length];
+
+	size_t i = 0;
+	for (StringHashMap<Entry>::iterator iter = t->map.iter(); !iter.empty(); iter.next(), i++)
+	{
+		snapshot->keys[i] = snapshot->strings.AddString(iter->key.chars(), iter->key.length());
+	}
+	assert(i == snapshot->length);
+
+	return static_cast<cell>(index);
+}
+
+static cell AMX_NATIVE_CALL TrieSnapshotLength(AMX *amx, cell *params)
+{
+	TrieSnapshot *snapshot = g_TrieSnapshotHandles.lookup(params[1]);
+
+	if (snapshot == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid snapshot handle provided (%d)", params[1]);
+		return 0;
+	}
+
+	return snapshot->length;
+}
+
+static cell AMX_NATIVE_CALL TrieSnapshotKeyBufferSize(AMX *amx, cell *params)
+{
+	TrieSnapshot *snapshot = g_TrieSnapshotHandles.lookup(params[1]);
+
+	if (snapshot == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid snapshot handle provided (%d)", params[1]);
+		return 0;
+	}
+
+	unsigned index = params[2];
+
+	if (index >= snapshot->length)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid index %d", index);
+		return 0;
+	}
+
+	return strlen(snapshot->strings.GetString(snapshot->keys[index])) + 1;
+}
+
+static cell AMX_NATIVE_CALL TrieSnapshotGetKey(AMX *amx, cell *params)
+{
+	TrieSnapshot *snapshot = g_TrieSnapshotHandles.lookup(params[1]);
+
+	if (snapshot == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid snapshot handle provided (%d)", params[1]);
+		return 0;
+	}
+
+	unsigned index = params[2];
+
+	if (index >= snapshot->length)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid index %d", index);
+		return 0;
+	}
+
+	const char *str = snapshot->strings.GetString(snapshot->keys[index]);
+	return set_amxstring_utf8(amx, params[3], str, strlen(str), params[4] + 1);
+}
+
+//native TrieSnapshotDestroy(&Snapshot:handle)
+static cell AMX_NATIVE_CALL TrieSnapshotDestroy(AMX *amx, cell *params)
+{
+	cell *ptr = get_amxaddr(amx, params[1]);
+
+	TrieSnapshot *t = g_TrieSnapshotHandles.lookup(*ptr);
+
+	if (t == NULL)
+	{
+		return 0;
+	}
+
+	if (g_TrieSnapshotHandles.destroy(*ptr))
+	{
+		*ptr = 0;
+		return 1;
+	}
+
+	return 0;
+}
+
 AMX_NATIVE_INFO trie_Natives[] =
 {
 	{ "TrieCreate",		TrieCreate },
@@ -355,8 +459,13 @@ AMX_NATIVE_INFO trie_Natives[] =
 	{ "TrieDeleteKey",	TrieDeleteKey },
 	{ "TrieKeyExists",	TrieKeyExists },
 	{ "TrieDestroy",	TrieDestroy },
-
 	{ "TrieGetSize",	TrieGetSize },
+
+	{ "TrieSnapshotCreate",			TrieSnapshotCreate },
+	{ "TrieSnapshotLength",			TrieSnapshotLength },
+	{ "TrieSnapshotKeyBufferSize",	TrieSnapshotKeyBufferSize },
+	{ "TrieSnapshotGetKey",			TrieSnapshotGetKey },
+	{ "TrieSnapshotDestroy",		TrieSnapshotDestroy },
 
 	{ NULL,			NULL }
 };

@@ -414,6 +414,7 @@ int	C_Spawn(edict_t *pent)
 	VectorHolder.clear();
 
 	g_TrieHandles.clear();
+	g_TrieSnapshotHandles.clear();
 	g_DataPackHandles.clear();
 
 	char map_pluginsfile_path[256];

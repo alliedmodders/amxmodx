@@ -3,7 +3,6 @@
 
 #include "amxmodx.h"
 #include "sm_stringhashmap.h"
-#include <am-refcounting.h>
 #include "CVector.h"
 
 using namespace SourceMod;
@@ -131,7 +130,7 @@ private:
 	cell data_;
 };
 
-struct CellTrie : public ke::Refcounted<CellTrie>
+struct CellTrie
 {
 	StringHashMap<Entry> map;
 };

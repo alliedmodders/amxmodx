@@ -39,11 +39,12 @@ native TrieClear(Trie:handle);
  * @param handle	Map Handle.
  * @param key		Key string.
  * @param value		Value to store at this key.
+ * @param replace	If false, operation will fail if the key is already set.
  *
  * @return			True on success, false on failure.
  * @error			Invalid Handle.
  */
-native TrieSetCell(Trie:handle, const key[], any:value);
+native TrieSetCell(Trie:handle, const key[], any:value, bool:replace = true);
 
 /**
  * Sets a string value in a Map, either inserting a new entry or replacing an old one.
@@ -51,11 +52,12 @@ native TrieSetCell(Trie:handle, const key[], any:value);
  * @param handle	Map Handle.
  * @param key		Key string.
  * @param value		String to store.
+ * @param replace	If false, operation will fail if the key is already set.
  *
  * @return			True on success, false on failure.
  * @error			Invalid Handle.
  */
-native TrieSetString(Trie:handle, const key[], const value[]);
+native TrieSetString(Trie:handle, const key[], const value[], bool:replace = true);
 
 /**
  * Sets an array value in a Map, either inserting a new entry or replacing an old one.
@@ -64,11 +66,12 @@ native TrieSetString(Trie:handle, const key[], const value[]);
  * @param key		Key string.
  * @param buffer	Array to store.
  * @param size		Number of items in the array.
+ * @param replace	If false, operation will fail if the key is already set.
  *
  * @return			True on success, false on failure.
  * @error			Invalid Handle.
  */
-native TrieSetArray(Trie:handle, const key[], const any:buffer[], size);
+native TrieSetArray(Trie:handle, const key[], const any:buffer[], size, bool:replace = true);
 
 /**
  * Retrieves a value in a Map.
@@ -89,12 +92,13 @@ native bool:TrieGetCell(Trie:handle, const key[], &any:value);
  * @param key			Key string.
  * @param output		Buffer to store value.
  * @param outputsize	Maximum size of string buffer.
+ * @param size			Optional parameter to store the number of bytes written to the buffer.
  *
  * @return				True on success.  False if the key is not set, or the key is set 
  *						as a value or array (not a string).
  * @error				Invalid Handle.
  */
-native bool:TrieGetString(Trie:handle, const key[], output[], outputsize);
+native bool:TrieGetString(Trie:handle, const key[], output[], outputsize, &size = 0);
 
 /**
  * Retrieves an array in a Map.
@@ -103,12 +107,13 @@ native bool:TrieGetString(Trie:handle, const key[], output[], outputsize);
  * @param key			Key string.
  * @param output		Buffer to store array.
  * @param outputsize	Maximum size of array buffer.
+ * @param size			Optional parameter to store the number of elements written to the buffer.
  *
  * @return				True on success.  False if the key is not set, or the key is set 
  *						as a value or string (not an array).
  * @error				Invalid Handle.
  */
-native bool:TrieGetArray(Trie:handle, const key[], any:output[], outputsize);
+native bool:TrieGetArray(Trie:handle, const key[], any:output[], outputsize, &size = 0);
 
 /**
  * Removes a key entry from a Map.

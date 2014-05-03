@@ -61,19 +61,19 @@ public:
 	}
 
 	size_t arrayLength() const {
-		//assert(isArray());
+		assert(isArray());
 		return raw()->length;
 	}
 	cell *array() const {
-		//assert(isArray());
+		assert(isArray());
 		return reinterpret_cast<cell *>(raw()->base());
 	}
 	char *chars() const {
-		//assert(isString());
+		assert(isString());
 		return reinterpret_cast<char *>(raw()->base());
 	}
 	cell cell_() const {
-		//assert(isCell());
+		assert(isCell());
 		return data_;
 	}
 
@@ -110,13 +110,13 @@ private:
 	}
 	void setType(EntryType aType) {
 		control_ = uintptr_t(raw()) | uintptr_t(aType);
-		//assert(type() == aType);
+		assert(type() == aType);
 	}
 	void setTypeAndPointer(EntryType aType, ArrayInfo *ptr) {
 		// malloc() should guarantee 8-byte alignment at worst
-		//assert((uintptr_t(ptr) & 0x3) == 0);
+		assert((uintptr_t(ptr) & 0x3) == 0);
 		control_ = uintptr_t(ptr) | uintptr_t(aType);
-		//assert(type() == aType);
+		assert(type() == aType);
 	}
 	EntryType type() const {
 		return (EntryType)(control_ & 0x3);

@@ -29,7 +29,8 @@ static cell AMX_NATIVE_CALL TrieClear(AMX *amx, cell *params)
 	t->map.clear();
 	return 1;
 }
-// native TrieSetCell(Trie:handle, const key[], any:value);
+
+// native TrieSetCell(Trie:handle, const key[], any:value, bool:replace = true);
 static cell AMX_NATIVE_CALL TrieSetCell(AMX *amx, cell *params)
 {
 	CellTrie *t = g_TrieHandles.lookup(params[1]);
@@ -50,13 +51,22 @@ static cell AMX_NATIVE_CALL TrieSetCell(AMX *amx, cell *params)
 		{
 			return 0;
 		}
+
+		i->value.setCell(params[3]);
+		return 1;
+	}
+
+	// Old plugin doesn't have 'replace' parameter.
+	if (*params / sizeof(cell) == 4 && !params[4])
+	{
+		return 0;
 	}
 
 	i->value.setCell(params[3]);
-	
 	return 1;
 }
-// native TrieSetString(Trie:handle, const key[], const data[]);
+
+// native TrieSetString(Trie:handle, const key[], const data[], bool:replace = true);
 static cell AMX_NATIVE_CALL TrieSetString(AMX *amx, cell *params)
 {
 	CellTrie *t = g_TrieHandles.lookup(params[1]);
@@ -78,13 +88,22 @@ static cell AMX_NATIVE_CALL TrieSetString(AMX *amx, cell *params)
 		{
 			return 0;
 		}
+
+		i->value.setString(value);
+		return 1;
+	}
+
+	// Old plugin doesn't have 'replace' parameter.
+	if (*params / sizeof(cell) == 4 && !params[4])
+	{
+		return 0;
 	}
 
 	i->value.setString(value);
-
 	return 1;
 }
-// native TrieSetArray(Trie:handle, const key[], const any:buffer[], buffsize)
+
+// native TrieSetArray(Trie:handle, const key[], const any:buffer[], buffsize, bool:replace = true)
 static cell AMX_NATIVE_CALL TrieSetArray(AMX *amx, cell *params)
 {
 	CellTrie *t = g_TrieHandles.lookup(params[1]);
@@ -95,8 +114,15 @@ static cell AMX_NATIVE_CALL TrieSetArray(AMX *amx, cell *params)
 		return 0;
 	}
 
+	if (params[4] < 0)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array size (%d)", params[4]);
+		return 0;
+	}
+
 	int len;
 	const char *key = get_amxstring(amx, params[2], 0, len);
+	cell *ptr = get_amxaddr(amx, params[3]);
 
 	StringHashMap<Entry>::Insert i = t->map.findForAdd(key);
 	if (!i.found())
@@ -105,12 +131,22 @@ static cell AMX_NATIVE_CALL TrieSetArray(AMX *amx, cell *params)
 		{
 			return 0;
 		}
+
+		i->key = key;
+		i->value.setArray(ptr, params[4]);
+		return 1;
 	}
 
-	i->value.setArray(get_amxaddr(amx, params[3]), params[4]);
+	// Old plugin doesn't have 'replace' parameter.
+	if (*params / sizeof(cell) == 4 && !params[5])
+	{
+		return 0;
 
+	}
+	i->value.setArray(ptr, params[4]);
 	return 1;
 }
+
 // native bool:TrieGetCell(Trie:handle, const key[], &any:value);
 static cell AMX_NATIVE_CALL TrieGetCell(AMX *amx, cell *params)
 {
@@ -140,9 +176,10 @@ static cell AMX_NATIVE_CALL TrieGetCell(AMX *amx, cell *params)
 		return 1;
 	}
 
-	return 1;
+	return 0;
 }
-// native bool:TrieGetString(Trie:handle, const key[], buff[], len);
+
+// native bool:TrieGetString(Trie:handle, const key[], buff[], len, &size = 0);
 static cell AMX_NATIVE_CALL TrieGetString(AMX *amx, cell *params)
 {
 	CellTrie *t = g_TrieHandles.lookup(params[1]);
@@ -153,8 +190,15 @@ static cell AMX_NATIVE_CALL TrieGetString(AMX *amx, cell *params)
 		return 0;
 	}
 
+	if (params[4] < 0)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid buffer size (%d)", params[4]);
+		return 0;
+	}
+
 	int len;
 	const char *key = get_amxstring(amx, params[2], 0, len);
+	cell *pSize = get_amxaddr(amx, params[5]);
 
 	StringHashMap<Entry>::Result r = t->map.find(key);
 	if (!r.found() || !r->value.isString())
@@ -162,11 +206,12 @@ static cell AMX_NATIVE_CALL TrieGetString(AMX *amx, cell *params)
 		return 0;
 	}
 
-	set_amxstring_utf8(amx, params[3], r->value.chars(), r->value.arrayLength(), params[4] + 1); // + EOS
+	*pSize = (cell)set_amxstring_utf8(amx, params[3], r->value.chars(), strlen(r->value.chars()), params[4] + 1); // + EOS
 
 	return 1;
 }
-// native bool:TrieGetArray(Trie:handle, const key[], any:buff[], len);
+
+// native bool:TrieGetArray(Trie:handle, const key[], any:buff[], len, &size = 0);
 static cell AMX_NATIVE_CALL TrieGetArray(AMX *amx, cell *params)
 {
 	CellTrie *t = g_TrieHandles.lookup(params[1]);
@@ -177,10 +222,16 @@ static cell AMX_NATIVE_CALL TrieGetArray(AMX *amx, cell *params)
 		return 0;
 	}
 
+	if (params[4] < 0)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array size (%d)", params[4]);
+		return 0;
+	}
+
 	int len;
 	const char *key = get_amxstring(amx, params[2], 0, len);
-	cell *ptr = get_amxaddr(amx, params[3]);
-	size_t size = params[4];
+	cell *pValue = get_amxaddr(amx, params[3]);
+	cell *pSize = get_amxaddr(amx, params[5]);
 
 	StringHashMap<Entry>::Result r = t->map.find(key);
 	if (!r.found() || !r->value.isArray())
@@ -188,17 +239,29 @@ static cell AMX_NATIVE_CALL TrieGetArray(AMX *amx, cell *params)
 		return 0;
 	}
 
+	if (!r->value.array())
+	{
+		*pSize = 0;
+		return 1;
+	}
+
+	if (!params[4])
+	{
+		return 0;
+	}
+
 	size_t length = r->value.arrayLength();
 	cell *base = r->value.array();
 
-	if (length <= size)
-	{
-		size = length;
-	}
+	if (length > size_t(params[4]))
+		*pSize = params[4];
+	else
+		*pSize = length;
 
-	memcpy(ptr, base, sizeof(cell)* size);
+	memcpy(pValue, base, sizeof(cell) * pSize[0]);
 	return 1;
 }
+
 // native bool:TrieKeyExists(Trie:handle, const key[]);
 static cell AMX_NATIVE_CALL TrieKeyExists(AMX *amx, cell *params)
 {

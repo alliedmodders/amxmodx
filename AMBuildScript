@@ -220,6 +220,7 @@ class AMXXConfig(object):
     ]
 
     cfg.includes += [os.path.join(builder.buildPath, 'includes')]
+    cfg.includes += [os.path.join(builder.sourcePath, 'public', 'amtl')]
     return
 
   #

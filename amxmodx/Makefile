@@ -6,7 +6,7 @@
 ###########################################
 
 HLSDK = ../../hlsdk
-MM_ROOT = ../../metamod/metamod
+MM_ROOT = ../../metamod-am/metamod
 
 #####################################
 ### EDIT BELOW FOR OTHER PROJECTS ###
@@ -36,7 +36,7 @@ CPP_OSX = clang
 
 LINK = -Lzlib
 
-INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/common -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared \
+INCLUDE = -I. -I../public/amtl -I$(HLSDK) -I$(HLSDK)/common -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared \
 	  -I$(HLSDK)/public -I$(MM_ROOT)
 
 ################################################

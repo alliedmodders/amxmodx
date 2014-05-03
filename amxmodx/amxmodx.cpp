@@ -2192,9 +2192,9 @@ static cell AMX_NATIVE_CALL format_time(AMX *amx, cell *params) /* 3 param */
 	}
 	
 	char szDate[512];
-	ilen = strftime(szDate, 511, sptemp, lt); // Returns length, including null-character.
+	ilen = strftime(szDate, 511, sptemp, lt);
 	
-	return set_amxstring_utf8(amx, params[1], szDate, ilen - 1, params[2] + 1); // + EOS
+	return set_amxstring_utf8(amx, params[1], szDate, ilen, params[2] + 1); // + EOS
 
 }
 

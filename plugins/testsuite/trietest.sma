@@ -1,10 +1,5 @@
 #include <amxmodx>
 
-
-// These natives are only available in a debug build of amxmodx
-native TrieFreeCount();
-native TrieMallocCount();
-
 new failcount = 0;
 new passcount = 0;
 public plugin_init()
@@ -29,16 +24,7 @@ stock done()
 {
 	server_print("Finished. %d tests, %d failed", failcount + passcount, failcount);
 }
-stock check_frees()
-{
-	if (TrieMallocCount() != TrieFreeCount())
-		fail("free count == malloc count");
 
-	else
-		pass("free count == malloc count");
-
-	server_print("malloc count: %d free count: %d", TrieMallocCount(), TrieFreeCount());
-}
 public trietest()
 {
 	failcount = 0;
@@ -53,7 +39,11 @@ public trietest()
 	for (new i = 0; i < 100; i++)
 	{
 		formatex(key, charsmax(key), "K%dK", i);
-		TrieSetCell(t, key, i);
+		if (!TrieSetCell(t, key, i))
+		{
+			server_print("TrieGetCell(%d, '%s', %d) failed", t, key, i);
+			ok = false;
+		}
 	}
 	
 	for (new i = 0; i < 100; i++)
@@ -65,17 +55,22 @@ public trietest()
 			server_print("TrieGetCell(%d, '%s', %d) failed", t, key, val);
 			ok = false;
 		}
-
 		else if (val != i)
 		{
 			server_print("val mismatch, expected: %d got: %d", i, val);
 			ok = false;
 		}
-
 	}
+	
+	// Check size is 100.
+	if (TrieGetSize(t) != 100)
+	{
+		ok = false;
+		server_print("Map size mismatch, expected: %d got: %d", 100, TrieGetSize(t));
+	}
+	
 	if (ok)
 		pass("Cell tests");
-
 	else
 		fail("Cell tests");
 
@@ -126,8 +121,6 @@ public trietest()
 
 	TrieDestroy(t);
 
-	check_frees();
-
 	t = TrieCreate();
 	ok = true;
 	for (new i = 0; i < 1000; i++)
@@ -159,10 +152,9 @@ public trietest()
 	else
 		fail("Exists/Delete");
 
-	check_frees();
 	TrieClear(t);
 	TrieDestroy(t);
-	check_frees();
+
 	done();
 	
 }

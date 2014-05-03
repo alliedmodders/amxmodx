@@ -142,3 +142,12 @@ native bool:TrieKeyExists(Trie:handle, const key[]);
  */
 native TrieDestroy(&Trie:handle);
 
+/**
+ * Retrieves the number of elements in a map.
+ *
+ * @param handle	Map Handle.
+ *
+ * @return			Number of elements in the trie.
+ * @error			Invalid Handle.
+ */
+native TrieGetSize(Trie:handle);

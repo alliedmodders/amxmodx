@@ -262,6 +262,20 @@ static cell AMX_NATIVE_CALL TrieDestroy(AMX *amx, cell *params)
 	return 0;
 }
 
+// native TrieGetSize(Trie:handle);
+static cell AMX_NATIVE_CALL TrieGetSize(AMX *amx, cell *params)
+{
+	CellTrie *t = g_TrieHandles.lookup(params[1]);
+
+	if (t == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		return 0;
+	}
+
+	return t->map.elements();
+}
+
 AMX_NATIVE_INFO trie_Natives[] =
 {
 	{ "TrieCreate",		TrieCreate },
@@ -278,6 +292,8 @@ AMX_NATIVE_INFO trie_Natives[] =
 	{ "TrieDeleteKey",	TrieDeleteKey },
 	{ "TrieKeyExists",	TrieKeyExists },
 	{ "TrieDestroy",	TrieDestroy },
+
+	{ "TrieGetSize",	TrieGetSize },
 
 	{ NULL,			NULL }
 };

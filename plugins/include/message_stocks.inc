@@ -60,7 +60,7 @@ stock make_deathmsg(killer, victim, headshot, const weapon[])
 /**
  * Sends a custom or predefined text message to player.
  * Predefined texts are default game messages which will be translated
- * to player's game language.
+ * to player's game language, e.g. #Game_join_ct.
  *
  * @note Set index to 0 to send text globally.
  *
@@ -79,7 +79,7 @@ stock make_deathmsg(killer, victim, headshot, const weapon[])
  *
  * @noreturn
  */
-client_printex(index, type, const msg_name[], const msg_param1[] = "", const msg_param2[] = "", const msg_param3[] = "", const msg_param4[] = "")
+stock client_printex(index, type, const msg_name[], const msg_param1[] = "", const msg_param2[] = "", const msg_param3[] = "", const msg_param4[] = "")
 {
 	static msgTextMsg;
 

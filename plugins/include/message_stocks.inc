@@ -72,10 +72,10 @@ stock make_deathmsg(killer, victim, headshot, const weapon[])
  * @param index         Index of the player, use 0 to send to all players.
  * @param type          The message destination. See print_* constants.
  * @param msg_name      The custom or predefined message to send.
- * @param msg_param1    Optionnal message argument.
- * @param msg_param2    Optionnal message argument.
- * @param msg_param3    Optionnal message argument.
- * @param msg_param4    Optionnal message argument.
+ * @param msg_param1    Optional message argument.
+ * @param msg_param2    Optional message argument.
+ * @param msg_param3    Optional message argument.
+ * @param msg_param4    Optional message argument.
  *
  * @noreturn
  */

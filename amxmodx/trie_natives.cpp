@@ -495,6 +495,9 @@ static cell AMX_NATIVE_CALL TrieIterNext(AMX *amx, cell *params)
 
 	i->iter->next();
 
+	if (i->iter->empty())
+		return false;
+
 	if (params[3] <= 0)
 		return true;
 
@@ -534,10 +537,7 @@ static cell AMX_NATIVE_CALL TrieIterGetKey(AMX *amx, cell *params)
 	cell *pSize = get_amxaddr(amx, params[4]);
 
 	if (i->iter->empty())
-	{
-		*pSize = (cell)set_amxstring_utf8(amx, params[2], "", 0, params[3] + 1);
 		return false;
-	}
 
 	*pSize = set_amxstring_utf8(amx, params[2], (*i->iter)->key.chars(), (*i->iter)->key.length(), params[3] + 1);
 	
@@ -608,6 +608,9 @@ static cell AMX_NATIVE_CALL TrieIterGetCell(AMX *amx, cell *params)
 		return false;
 	}
 
+	if (i->iter->empty())
+		return false;
+
 	cell *ptr = get_amxaddr(amx, params[2]);
 
 	if ((*i->iter)->value.isCell())
@@ -641,6 +644,9 @@ static cell AMX_NATIVE_CALL TrieIterGetString(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) is outdated", params[1]);
 		return false;
 	}
+
+	if (i->iter->empty())
+		return false;
 
 	cell *pSize = get_amxaddr(amx, params[4]);
 
@@ -680,6 +686,9 @@ static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Invalid array size (%d)", params[4]);
 		return false;
 	}
+
+	if (i->iter->empty())
+		return false;
 
 	cell *pValue = get_amxaddr(amx, params[2]);
 	cell *pSize = get_amxaddr(amx, params[4]);

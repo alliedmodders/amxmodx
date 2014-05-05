@@ -593,7 +593,54 @@ static cell AMX_NATIVE_CALL TrieIterGetString(AMX *amx, cell *params)
 // native bool:TrieIterGetArray(TrieIter:handle, array[], outputsize, &size = 0)
 static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
 {
-	return false;
+	CellTrieIter *i = g_TrieIterHandles.lookup(params[1]);
+
+	if (i == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[1]);
+		return false;
+	}
+
+	if (i->trie == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) has been closed", params[1]);
+		return false;
+	}
+
+	if (!i->iter->valid())
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) is outdated", params[1]);
+		return false;
+	}
+
+	if (params[3] < 0)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array size (%d)", params[4]);
+		return false;
+	}
+
+	cell *pValue = get_amxaddr(amx, params[2]);
+	cell *pSize = get_amxaddr(amx, params[4]);
+
+	if (!(*i->iter)->value.isArray() || !params[3])
+		return false;
+
+	if (!(*i->iter)->value.array())
+	{
+		*pSize = 0;
+		return true;
+	}
+
+	size_t length = (*i->iter)->value.arrayLength();
+	cell *base = (*i->iter)->value.array();
+
+	if (length > size_t(params[3]))
+		*pSize = params[3];
+	else
+		*pSize = length;
+
+	memcpy(pValue, base, sizeof(cell) * pSize[0]);
+	return true;
 }
 
 // native TrieIterDestroy(&TrieIter:handle)

@@ -526,6 +526,34 @@ static cell AMX_NATIVE_CALL TrieIterRefresh(AMX *amx, cell *params)
 // native bool:TrieIterGetCell(TrieIter:handle, &any:value)
 static cell AMX_NATIVE_CALL TrieIterGetCell(AMX *amx, cell *params)
 {
+	CellTrieIter *i = g_TrieIterHandles.lookup(params[1]);
+
+	if (i == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[1]);
+		return false;
+	}
+
+	if (i->trie == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) has been closed", params[1]);
+		return false;
+	}
+
+	if (!i->iter->valid())
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) is outdated", params[1]);
+		return false;
+	}
+
+	cell *ptr = get_amxaddr(amx, params[2]);
+
+	if ((*i->iter)->value.isCell())
+	{
+		*ptr = (*i->iter)->value.cell_();
+		return true;
+	}
+
 	return false;
 }
 

@@ -377,6 +377,12 @@ public trietest()
 		TrieIterRefresh(iter);
 		arrayset(valid, false, sizeof(valid));
 
+		if (TrieIterGetSize(iter) != 4)
+		{
+			server_print("Trie iterator size should be 4, is %d", TrieIterGetSize(iter));
+			ok = false;
+		}
+
 		// This tests looping with IterGetKey and doing intermediate calls to TrieNextIter
 		while (TrieIterGetKey(iter, key, charsmax(key)))
 		{

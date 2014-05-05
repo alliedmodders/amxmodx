@@ -172,7 +172,7 @@ native TrieDestroy(&Trie:handle);
  *
  * @param handle	Map handle.
  *
- * @return			Number of elements in the trie.
+ * @return			Number of elements in the map.
  * @error			Invalid handle.
  */
 native TrieGetSize(Trie:handle);
@@ -323,6 +323,20 @@ native TrieIterStatus:TrieIterGetStatus(TrieIter:handle);
  *						Iterator has been closed (underlying map destroyed)
  */
 native bool:TrieIterRefresh(TrieIter:handle);
+
+/**
+ * Retrieves the number of elements in the underlying map.
+ *
+ * When used on a valid iterator this is exactly the same as calling TrieGetSize on the map directly.
+ *
+ * @param handle		Iterator handle.
+ *
+ * @return				Number of elements in the map.
+ * @error				Invalid handle
+ *						Iterator has been closed (underlying map destroyed)
+ *						Iterator is invalid
+ */
+native TrieIterGetSize(TrieIter:handle);
 
 /**
  * Retrieves a value at the current position of the iterator

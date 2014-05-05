@@ -591,6 +591,32 @@ static cell AMX_NATIVE_CALL TrieIterRefresh(AMX *amx, cell *params)
 	return true;
 }
 
+// native TrieIterGetSize(TrieIter:handle)
+static cell AMX_NATIVE_CALL TrieIterGetSize(AMX *amx, cell *params)
+{
+	CellTrieIter *i = g_TrieIterHandles.lookup(params[1]);
+
+	if (i == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[1]);
+		return 0;
+	}
+
+	if (i->trie == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) has been closed", params[1]);
+		return 0;
+	}
+
+	if (!i->iter->valid_strict())
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) is outdated", params[1]);
+		return 0;
+	}
+
+	return i->trie->map.elements();
+}
+
 // native bool:TrieIterGetCell(TrieIter:handle, &any:value)
 static cell AMX_NATIVE_CALL TrieIterGetCell(AMX *amx, cell *params)
 {
@@ -774,6 +800,7 @@ AMX_NATIVE_INFO trie_Natives[] =
 	{ "TrieIterGetKey", TrieIterGetKey },
 	{ "TrieIterGetStatus", TrieIterGetStatus },
 	{ "TrieIterRefresh", TrieIterRefresh },
+	{ "TrieIterGetSize", TrieIterGetSize },
 	{ "TrieIterGetCell", TrieIterGetCell },
 	{ "TrieIterGetString", TrieIterGetString },
 	{ "TrieIterGetArray", TrieIterGetArray },

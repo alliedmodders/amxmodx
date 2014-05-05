@@ -455,7 +455,7 @@ class HashTable : public AllocPolicy
     if (!internalAdd(i))
       return false;
 
-	i.entry().construct();
+    i.entry().construct();
     return true;
   }
 

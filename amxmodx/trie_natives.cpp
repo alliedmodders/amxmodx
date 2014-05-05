@@ -646,7 +646,26 @@ static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
 // native TrieIterDestroy(&TrieIter:handle)
 static cell AMX_NATIVE_CALL TrieIterDestroy(AMX *amx, cell *params)
 {
-	return 0;
+	cell *ptr = get_amxaddr(amx, params[1]);
+
+	CellTrieIter *i = g_TrieIterHandles.lookup(params[1]);
+
+	if (i == NULL)
+	{
+		return false;
+	}
+	
+	delete i->iter;
+	i->iter = NULL;
+	i->trie = NULL;
+
+	if (g_TrieIterHandles.destroy(*ptr))
+	{
+		*ptr = 0;
+		return true;
+	}
+
+	return false;
 }
 
 AMX_NATIVE_INFO trie_Natives[] =

@@ -447,7 +447,20 @@ static cell AMX_NATIVE_CALL TrieSnapshotDestroy(AMX *amx, cell *params)
 // native TrieIter:TrieIterCreate(Trie:handle)
 static cell AMX_NATIVE_CALL TrieIterCreate(AMX *amx, cell *params)
 {
-	return 0;
+	CellTrie *t = g_TrieHandles.lookup(params[1]);
+
+	if (t == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		return 0;
+	}
+
+	int index = g_TrieIterHandles.create();
+	CellTrieIter *i = g_TrieIterHandles.lookup(index);
+	i->trie = t;
+	i->iter = t->map.iter_();
+
+	return static_cast<cell>(index);
 }
 
 // native TrieIterNext(TrieIter:handle, key[] = "", maxlen = 0)

@@ -486,6 +486,45 @@ static cell AMX_NATIVE_CALL TrieIterNext(AMX *amx, cell *params)
 	return set_amxstring_utf8(amx, params[2], (*i->iter)->key.chars(), (*i->iter)->key.length(), params[3] + 1);
 }
 
+// native TrieIterGetKey(TrieIter:handle, key[] = "", outputsize = 0, &size = 0)
+static cell AMX_NATIVE_CALL TrieIterGetKey(AMX *amx, cell *params)
+{
+	CellTrieIter *i = g_TrieIterHandles.lookup(params[1]);
+
+	if (i == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[1]);
+		return false;
+	}
+
+	if (i->trie == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) has been closed", params[1]);
+		return false;
+	}
+
+	if (!i->iter->valid())
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) is outdated", params[1]);
+		return false;
+	}
+
+	if (params[3] <= 0)
+		return i->iter->empty();
+
+	cell *pSize = get_amxaddr(amx, params[4]);
+
+	if (i->iter->empty())
+	{
+		*pSize = (cell)set_amxstring_utf8(amx, params[2], "", 0, params[3] + 1);
+		return false;
+	}
+
+	*pSize = set_amxstring_utf8(amx, params[2], (*i->iter)->key.chars(), (*i->iter)->key.length(), params[3] + 1);
+	
+	return true;
+}
+
 // native TrieIterStatus:TrieIterGetStatus(TrieIter:handle)
 static cell AMX_NATIVE_CALL TrieIterGetStatus(AMX *amx, cell *params)
 {
@@ -590,7 +629,7 @@ static cell AMX_NATIVE_CALL TrieIterGetString(AMX *amx, cell *params)
 	{
 		*pSize = (cell) set_amxstring_utf8(amx, params[2], (*i->iter)->value.chars(), strlen((*i->iter)->value.chars()), params[3] + 1);
 	}
-	
+
 	return false;
 }
 
@@ -698,6 +737,7 @@ AMX_NATIVE_INFO trie_Natives[] =
 
 	{ "TrieIterCreate", TrieIterCreate },
 	{ "TrieIterNext", TrieIterNext },
+	{ "TrieIterGetKey", TrieIterGetKey },
 	{ "TrieIterGetStatus", TrieIterGetStatus },
 	{ "TrieIterRefresh", TrieIterRefresh },
 	{ "TrieIterGetCell", TrieIterGetCell },

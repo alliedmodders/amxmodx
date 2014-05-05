@@ -443,6 +443,54 @@ static cell AMX_NATIVE_CALL TrieSnapshotDestroy(AMX *amx, cell *params)
 	return 0;
 }
 
+// native TrieIter:TrieIterCreate(Trie:handle)
+static cell AMX_NATIVE_CALL TrieIterCreate(AMX *amx, cell *params)
+{
+	return 0;
+}
+
+// native TrieIterNext(TrieIter:handle, key[] = "", maxlen = 0)
+static cell AMX_NATIVE_CALL TrieIterNext(AMX *amx, cell *params)
+{
+	return 0;
+}
+
+// native TrieIterStatus:TrieIterGetStatus(TrieIter:handle)
+static cell AMX_NATIVE_CALL TrieIterGetStatus(AMX *amx, cell *params)
+{
+	return Iter_Valid;
+}
+
+// native bool:TrieIterRefresh(TrieIter:handle)
+static cell AMX_NATIVE_CALL TrieIterRefresh(AMX *amx, cell *params)
+{
+	return false;
+}
+
+// native bool:TrieIterGetCell(TrieIter:handle, &any:value)
+static cell AMX_NATIVE_CALL TrieIterGetCell(AMX *amx, cell *params)
+{
+	return false;
+}
+
+// native bool:TrieIterGetString(TrieIter:handle, buffer[], outputsize, &size = 0)
+static cell AMX_NATIVE_CALL TrieIterGetString(AMX *amx, cell *params)
+{
+	return false;
+}
+
+// native bool:TrieIterGetArray(TrieIter:handle, array[], outputsize, &size = 0)
+static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
+{
+	return false;
+}
+
+// native TrieIterDestroy(&TrieIter:handle)
+static cell AMX_NATIVE_CALL TrieIterDestroy(AMX *amx, cell *params)
+{
+	return 0;
+}
+
 AMX_NATIVE_INFO trie_Natives[] =
 {
 	{ "TrieCreate",		TrieCreate },
@@ -466,6 +514,15 @@ AMX_NATIVE_INFO trie_Natives[] =
 	{ "TrieSnapshotKeyBufferSize",	TrieSnapshotKeyBufferSize },
 	{ "TrieSnapshotGetKey",			TrieSnapshotGetKey },
 	{ "TrieSnapshotDestroy",		TrieSnapshotDestroy },
+
+	{ "TrieIterCreate", TrieIterCreate },
+	{ "TrieIterNext", TrieIterNext },
+	{ "TrieIterGetStatus", TrieIterGetStatus },
+	{ "TrieIterRefresh", TrieIterRefresh },
+	{ "TrieIterGetCell", TrieIterGetCell },
+	{ "TrieIterGetString", TrieIterGetString },
+	{ "TrieIterGetArray", TrieIterGetArray },
+	{ "TrieIterDestroy", TrieIterDestroy },
 
 	{ NULL,			NULL }
 };

@@ -223,6 +223,12 @@ public:
 	}
 };
 
+enum TrieIterStatus
+{
+	Iter_Valid = 0,
+	Iter_Outdated = 1,
+	Iter_Invalid = 2,
+};
 
 extern TrieHandles<CellTrie> g_TrieHandles;
 extern TrieHandles<TrieSnapshot> g_TrieSnapshotHandles;

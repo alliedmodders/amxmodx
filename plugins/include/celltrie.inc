@@ -222,3 +222,24 @@ native TrieSnapshotGetKey(Snapshot:handle, index, buffer[], maxlength);
  * @error			Invalid handle.
  */
 native TrieSnapshotDestroy(&Snapshot:handle);
+
+enum TrieIter
+{
+	Invalid_Iter = 0
+};
+
+enum TrieIterStatus
+{
+	Iter_Valid = 0,
+	Iter_Outdated = 1,
+	Iter_Invalid = 2,
+};
+
+native TrieIter:TrieIterCreate(Trie:handle);
+native bool:TrieIterNext(TrieIter:handle, key[] = "", maxlen = 0);
+native TrieIterStatus:TrieIterGetStatus(TrieIter:handle);
+native bool:TrieIterRefresh(TrieIter:handle);
+native bool:TrieIterGetCell(TrieIter:handle, &any:value);
+native bool:TrieIterGetString(TrieIter:handle, buffer[], outputsize, &size = 0);
+native bool:TrieIterGetArray(TrieIter:handle, array[], outputsize, &size = 0);
+native TrieIterDestroy(&TrieIter:handle);

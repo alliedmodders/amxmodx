@@ -230,8 +230,15 @@ enum TrieIterStatus
 	Iter_Invalid = 2,
 };
 
+struct CellTrieIter
+{
+	CellTrie *trie;
+	StringHashMap<Entry>::iterator *iter;
+};
+
 extern TrieHandles<CellTrie> g_TrieHandles;
 extern TrieHandles<TrieSnapshot> g_TrieSnapshotHandles;
+extern TrieHandles<CellTrieIter> g_TrieIterHandles;
 extern AMX_NATIVE_INFO trie_Natives[];
 
 #endif

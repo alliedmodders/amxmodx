@@ -10,6 +10,7 @@ using namespace SourceMod;
 
 TrieHandles<CellTrie> g_TrieHandles;
 TrieHandles<TrieSnapshot> g_TrieSnapshotHandles;
+TrieHandles<CellTrieIter> g_TrieIterHandles;
 
 // native Trie:TrieCreate();
 static cell AMX_NATIVE_CALL TrieCreate(AMX *amx, cell *params)

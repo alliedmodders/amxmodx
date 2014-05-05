@@ -526,13 +526,13 @@ class HashTable : public AllocPolicy
     }
 
     bool valid() {
-        return (table->nmodcount_ == nmod_);
+        return (table_->nmodcount_ == nmod_);
     }
 
     void refresh() {
-        nmod_ = table->nmodcount_;
-        i_ = table->table_;
-        end_ = table->table_ + table->capacity_
+        nmod_ = table_->nmodcount_;
+        i_ = table_->table_;
+		end_ = table_->table_ + table_->capacity_;
     }
 
    private:

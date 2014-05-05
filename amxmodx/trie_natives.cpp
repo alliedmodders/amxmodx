@@ -466,7 +466,20 @@ static cell AMX_NATIVE_CALL TrieIterCreate(AMX *amx, cell *params)
 // native TrieIterNext(TrieIter:handle, key[] = "", maxlen = 0)
 static cell AMX_NATIVE_CALL TrieIterNext(AMX *amx, cell *params)
 {
-	return 0;
+	CellTrieIter *i = g_TrieIterHandles.lookup(params[1]);
+
+	if (i == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[1]);
+		return 0;
+	}
+
+	if (i->trie == NULL || !i->iter->valid() || i->iter->empty())
+		return set_amxstring_utf8(amx, params[2], "", 0, params[3] + 1);
+
+	i->iter->next();
+
+	return set_amxstring_utf8(amx, params[2], (*i->iter)->key.chars(), (*i->iter)->key.length(), params[3] + 1);
 }
 
 // native TrieIterStatus:TrieIterGetStatus(TrieIter:handle)

@@ -532,7 +532,10 @@ class HashTable : public AllocPolicy
     void refresh() {
         nmod_ = table_->nmodcount_;
         i_ = table_->table_;
-		end_ = table_->table_ + table_->capacity_;
+        end_ = table_->table_ + table_->capacity_;
+
+        while (i_ < end_ && !i_->isLive())
+            i_++;
     }
 
    private:

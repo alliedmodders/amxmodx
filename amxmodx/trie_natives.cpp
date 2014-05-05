@@ -725,7 +725,7 @@ static cell AMX_NATIVE_CALL TrieIterDestroy(AMX *amx, cell *params)
 {
 	cell *ptr = get_amxaddr(amx, params[1]);
 
-	CellTrieIter *i = g_TrieIterHandles.lookup(params[1]);
+	CellTrieIter *i = g_TrieIterHandles.lookup(*ptr);
 
 	if (i == NULL)
 	{

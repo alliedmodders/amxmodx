@@ -490,7 +490,7 @@ static cell AMX_NATIVE_CALL TrieIterNext(AMX *amx, cell *params)
 		return false;
 	}
 
-	if (!i->iter->valid())
+	if (!i->iter->valid_strict())
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) is outdated", params[1]);
 		return false;
@@ -531,7 +531,7 @@ static cell AMX_NATIVE_CALL TrieIterGetKey(AMX *amx, cell *params)
 		return false;
 	}
 
-	if (!i->iter->valid())
+	if (!i->iter->valid_strict())
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) is outdated", params[1]);
 		return false;
@@ -564,7 +564,7 @@ static cell AMX_NATIVE_CALL TrieIterGetStatus(AMX *amx, cell *params)
 	if (i->trie == NULL)
 		return IterStatus_Closed;
 
-	if (!i->iter->valid())
+	if (!i->iter->valid_strict())
 		return IterStatus_Outdated;
 
 	return IterStatus_Valid;
@@ -608,7 +608,7 @@ static cell AMX_NATIVE_CALL TrieIterGetCell(AMX *amx, cell *params)
 		return false;
 	}
 
-	if (!i->iter->valid())
+	if (!i->iter->valid_strict())
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) is outdated", params[1]);
 		return false;
@@ -645,7 +645,7 @@ static cell AMX_NATIVE_CALL TrieIterGetString(AMX *amx, cell *params)
 		return false;
 	}
 
-	if (!i->iter->valid())
+	if (!i->iter->valid_strict())
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) is outdated", params[1]);
 		return false;
@@ -681,7 +681,7 @@ static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
 		return false;
 	}
 
-	if (!i->iter->valid())
+	if (!i->iter->valid_strict())
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) is outdated", params[1]);
 		return false;

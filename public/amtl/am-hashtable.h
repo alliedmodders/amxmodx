@@ -273,7 +273,7 @@ class HashTable : public AllocPolicy
     }
     this->free(oldTable);
 
-    nmodcount_++;
+    nstrictmodcount_++;
     return true;
   }
 
@@ -332,7 +332,7 @@ class HashTable : public AllocPolicy
   bool internalAdd(Insert &i) {
     assert(!i.found());
 
-    nmodcount_++;
+    nstrictmodcount_++;
 
     // If the entry is deleted, just re-use the slot.
     if (i.entry().removed()) {
@@ -366,7 +366,7 @@ class HashTable : public AllocPolicy
   void removeEntry(Entry &e) {
     assert(e.isLive());
     e.setRemoved();
-    nmodcount_++;
+    nstrictmodcount_++;
     ndeleted_++;
     nelements_--;
   }
@@ -473,7 +473,7 @@ class HashTable : public AllocPolicy
     }
     ndeleted_ = 0;
     nelements_ = 0;
-    nmodcount_++;
+    nstrictmodcount_++;
   }
 
   size_t elements() const {
@@ -491,7 +491,7 @@ class HashTable : public AllocPolicy
    public:
     iterator(HashTable *table)
       : table_(table),
-      nmod_(table->nmodcount_),
+      nstrictmod_(table->nstrictmodcount_),
       i_(table->table_),
       end_(table->table_ + table->capacity_)
     {
@@ -521,12 +521,12 @@ class HashTable : public AllocPolicy
       } while (i_ < end_ && !i_->isLive());
     }
 
-    bool valid() {
-        return (table_->nmodcount_ == nmod_);
+    bool valid_strict() {
+        return (table_->nstrictmodcount_ == nstrictmod_);
     }
 
     void refresh() {
-        nmod_ = table_->nmodcount_;
+        nstrictmod_ = table_->nstrictmodcount_;
         i_ = table_->table_;
         end_ = table_->table_ + table_->capacity_;
 
@@ -536,7 +536,7 @@ class HashTable : public AllocPolicy
 
    private:
     HashTable *table_;
-    uint32_t nmod_;
+    uint32_t nstrictmod_;
     Entry *i_;
     Entry *end_;
   };
@@ -549,7 +549,7 @@ class HashTable : public AllocPolicy
   uint32_t capacity_;
   uint32_t nelements_;
   uint32_t ndeleted_;
-  uint32_t nmodcount_;
+  uint32_t nstrictmodcount_;
   Entry *table_;
   uint32_t minCapacity_;
 };

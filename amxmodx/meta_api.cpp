@@ -417,8 +417,11 @@ int	C_Spawn(edict_t *pent)
 	g_TrieSnapshotHandles.clear();
 
 	CellTrieIter *i;
-	for (int index = 0; (i = g_TrieIterHandles.lookup(index++)) != NULL; index++)
-		delete i->iter;
+	for (size_t index = 1; index <= g_TrieIterHandles.size(); index++)
+	{
+		if ((i = g_TrieIterHandles.lookup(index)) != NULL)
+			delete i->iter;
+	}
 
 	g_TrieIterHandles.clear();
 	g_DataPackHandles.clear();

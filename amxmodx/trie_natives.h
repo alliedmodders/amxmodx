@@ -165,6 +165,10 @@ public:
 		this->clear();
 	}
 
+	size_t size()
+	{
+		return m_tries.size();
+	}
 	void clear()
 	{
 		for (size_t i = 0; i < m_tries.size(); i++)

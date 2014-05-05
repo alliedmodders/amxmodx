@@ -320,8 +320,14 @@ static cell AMX_NATIVE_CALL TrieDestroy(AMX *amx, cell *params)
 	}
 
 	CellTrieIter *i;
-	for (int index = 0; (i = g_TrieIterHandles.lookup(index++)) != NULL; index++)
-		delete i->iter;
+	for (size_t index = 1; index <= g_TrieIterHandles.size(); index++)
+	{
+		if ((i = g_TrieIterHandles.lookup(index)) != NULL)
+		{
+			if (i->trie == t)
+				i->trie = NULL;
+		}
+	}
 
 	if (g_TrieHandles.destroy(*ptr))
 	{

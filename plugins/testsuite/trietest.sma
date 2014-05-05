@@ -400,6 +400,15 @@ public trietest()
 			ok = false;
 		}
 
+ 		// Overwriting an existing key should not invalidate our iterator
+		TrieSetString(t, "monkey", "island 2");
+
+		if (TrieIterGetStatus(iter) != IterStatus_Valid)
+		{
+			server_print("Trie iterator should report itself as valid");
+			ok = false;
+		}
+
 		TrieDestroy(t);
 
 		if (TrieIterGetStatus(iter) != IterStatus_Closed)

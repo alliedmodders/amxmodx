@@ -13,6 +13,18 @@ enum Snapshot
 	Invalid_Snapshot = 0
 };
 
+enum TrieIter
+{
+	Invalid_Iter = 0
+};
+
+enum TrieIterStatus
+{
+	IterStatus_Valid = 0,
+	IterStatus_Outdated = 1,
+	IterStatus_Closed = 2,
+};
+
 /**
  * Creates a hash map. A hash map is a container that can map strings (called
  * "keys") to arbitrary values (cells, arrays, or strings). Keys in a hash map
@@ -223,24 +235,144 @@ native TrieSnapshotGetKey(Snapshot:handle, index, buffer[], maxlength);
  */
 native TrieSnapshotDestroy(&Snapshot:handle);
 
-enum TrieIter
-{
-	Invalid_Iter = 0
-};
-
-enum TrieIterStatus
-{
-	IterStatus_Valid = 0,
-	IterStatus_Outdated = 1,
-	IterStatus_Closed = 2,
-};
-
+/**
+ * Creates an iterator for a map. An iterator provides very fast, iterative read-only
+ * access to a map.
+ *
+ * Any mutating change (that is key addition or key removal) to the underlying map
+ * will invalidate every iterator operating on it.
+ *
+ * Updating alreadys existing keys will not invalidate an iterator.
+ *
+ * Iterators are designed to be short-lived and not be permanently stored or cached.
+ * Creating new iterators is very fast, exhibiting virtually no overhead, even for
+ * large tries. It is usually recommended to create them on-demand. Value retrieval
+ * is as fast as directly reading from the underlying map.
+ *
+ * @return 				New iterator handle, which must be freed via TrieIterDestroy().
+ * @error				Invalid Handle
+ */
 native TrieIter:TrieIterCreate(Trie:handle);
+
+/**
+ * Advances the iterator to the next key if one is available
+ *
+ * Providing the function with an optional buffer and buffer length will
+ * store the next key inside that buffer.
+ *
+ * @param handle		Iterator handle.
+ * @param key			Optional buffer to store the next key in.
+ * @param outputsize	Maximum size of string buffer.
+ * @param size			Optional parameter to store the number of bytes written to the buffer.
+ *
+ * @return 				True if the iterator is not empty and a new key was made current.
+ * @error				Invalid handle
+ *						Iterator has been closed (underlying map destroyed)
+ *						Iterator is invalid
+*/
 native bool:TrieIterNext(TrieIter:handle, key[] = "", outputsize = 0, &size = 0);
+
+/**
+ * Checks if the iterator currently points to a key and is therefore not empty
+ *
+ * Providing the function with an optional buffer and buffer length will
+ * store the current key inside that buffer.
+ *
+ * @param handle		Iterator handle.
+ * @param key			Optional buffer to store the current key in.
+ * @param outputsize	Maximum size of string buffer.
+ * @param size			Optional parameter to store the number of bytes written to the buffer.
+ *
+ * @return 				True if the iterator is not empty  a new
+ *						was made current.
+ * @error				Invalid handle
+ *						Iterator has been closed (underlying map destroyed)
+ *						Iterator is invalid
+ */
 native bool:TrieIterGetKey(TrieIter:handle, key[] = "", outputsize = 0, &size = 0);
+
+/**
+ * Retrieves the current iterator status
+ *
+ * @param handle		Iterator handle.
+ *
+ * @return 				IterStatus_Valid 		if iterator can be used.
+ *						IterStatus_Outdated		if iterator has to be refreshed because
+ *												the underlying map has been modified.
+ *						IterStatus_Closed		if underlying map has been closed. The iterator
+ *												can't be refreshed and should be destroyed.
+ * @error				Invalid handle
+ */
 native TrieIterStatus:TrieIterGetStatus(TrieIter:handle);
+
+/**
+ * Refreshes the iterator if possible
+ *
+ * This function serves a dual purpose when working with iterators:
+ *
+ * 1) If the underlying map was mutated and the iterator invalidated, calling this function
+ * will allow the iterator to be revalidated without creating a new one.
+ *
+ * 2) After this function has returned the iterator will be starting over at its
+ * initial position, even if it was valid when this function was called.
+ *
+ * @param handle		Iterator handle.
+ *
+ * @return 				True if the iterator has been refreshed.
+ * @error				Invalid handle
+ *						Iterator has been closed (underlying map destroyed)
+ */
 native bool:TrieIterRefresh(TrieIter:handle);
+
+/**
+ * Retrieves a value at the current position of the iterator
+ *
+ * @param handle		Iterator handle.
+ * @param value			Variable to store value.
+ *
+ * @return 				True on success, false if the iterator is empty.
+ * @error				Invalid handle
+ *						Iterator has been closed (underlying map destroyed)
+ *						Iterator is invalid
+ */
 native bool:TrieIterGetCell(TrieIter:handle, &any:value);
+
+/**
+ * Retrieves a string at the current position of the iterator
+ *
+ * @param handle		Iterator handle.
+ * @param buffer		Buffer to store the string..
+ * @param outputsize	Maximum size of string buffer.
+ * @param size			Optional parameter to store the number of bytes written to the buffer.
+ *
+ * @return 				True on success, false if the iterator is empty.
+ * @error				Invalid handle
+ *						Iterator has been closed (underlying map destroyed)
+ *						Iterator is invalid
+ */
 native bool:TrieIterGetString(TrieIter:handle, buffer[], outputsize, &size = 0);
-native bool:TrieIterGetArray(TrieIter:handle, array[], outputsize, &size = 0);
+
+/**
+ * Retrieves an array at the current position of the iterator
+ *
+ * @param handle		Iterator handle.
+ * @param buffer		Buffer to store the array.
+ * @param outputsize	Maximum size of buffer.
+ * @param size			Optional parameter to store the number of bytes written to the buffer.
+ *
+ * @return 				True on success, false if the iterator is empty.
+ * @error				Invalid handle
+ *						Iterator has been closed (underlying map destroyed)
+ *						Iterator is invalid
+ */
+native bool:TrieIterGetArray(TrieIter:handle, any:array[], outputsize, &size = 0);
+
+/**
+ * Destroys an iterator handle.
+ *
+ * @param handle	Iterator handle.
+ *
+ * @return			True on success, false if the value was never set.
+ * @error			Invalid handle
+ */
 native TrieIterDestroy(&TrieIter:handle);

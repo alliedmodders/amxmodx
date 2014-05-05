@@ -366,6 +366,7 @@ class HashTable : public AllocPolicy
   void removeEntry(Entry &e) {
     assert(e.isLive());
     e.setRemoved();
+    nmodcount_++;
     ndeleted_++;
     nelements_--;
   }
@@ -426,13 +427,11 @@ class HashTable : public AllocPolicy
     if (!r.found())
       return;
 
-    nmodcount_++;
     remove(r);
   }
 
   void remove(Result &r) {
     assert(r.found());
-    nmodcount_++;
     removeEntry(r.entry());
   }
 
@@ -442,7 +441,6 @@ class HashTable : public AllocPolicy
     if (!internalAdd(i))
       return false;
 
-    nmodcount_++;
     i.entry().construct(payload);
     return true;
   }
@@ -450,7 +448,6 @@ class HashTable : public AllocPolicy
     if (!internalAdd(i))
       return false;
 
-    nmodcount_++;
     i.entry().construct(payload);
     return true;
   }
@@ -458,7 +455,6 @@ class HashTable : public AllocPolicy
     if (!internalAdd(i))
       return false;
 
-    nmodcount_++;
 	i.entry().construct();
     return true;
   }

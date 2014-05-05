@@ -273,6 +273,7 @@ class HashTable : public AllocPolicy
     }
     this->free(oldTable);
 
+    nmodcount_++;
     return true;
   }
 
@@ -330,6 +331,8 @@ class HashTable : public AllocPolicy
 
   bool internalAdd(Insert &i) {
     assert(!i.found());
+
+    nmodcount_++;
 
     // If the entry is deleted, just re-use the slot.
     if (i.entry().removed()) {
@@ -422,11 +425,14 @@ class HashTable : public AllocPolicy
     Result r = find(key);
     if (!r.found())
       return;
+
+    nmodcount_++;
     remove(r);
   }
 
   void remove(Result &r) {
     assert(r.found());
+    nmodcount_++;
     removeEntry(r.entry());
   }
 
@@ -435,19 +441,25 @@ class HashTable : public AllocPolicy
   bool add(Insert &i, const Payload &payload) {
     if (!internalAdd(i))
       return false;
+
+    nmodcount_++;
     i.entry().construct(payload);
     return true;
   }
   bool add(Insert &i, Moveable<Payload> payload) {
     if (!internalAdd(i))
       return false;
+
+    nmodcount_++;
     i.entry().construct(payload);
     return true;
   }
   bool add(Insert &i) {
     if (!internalAdd(i))
       return false;
-    i.entry().construct();
+
+    nmodcount_++;
+	i.entry().construct();
     return true;
   }
 
@@ -465,6 +477,7 @@ class HashTable : public AllocPolicy
     }
     ndeleted_ = 0;
     nelements_ = 0;
+    nmodcount_++;
   }
 
   size_t elements() const {
@@ -482,6 +495,7 @@ class HashTable : public AllocPolicy
    public:
     iterator(HashTable *table)
       : table_(table),
+      nmod_(table->nmodcount_),
       i_(table->table_),
       end_(table->table_ + table->capacity_)
     {
@@ -511,8 +525,19 @@ class HashTable : public AllocPolicy
       } while (i_ < end_ && !i_->isLive());
     }
 
+    bool valid() {
+        return (table->nmodcount_ == nmod_);
+    }
+
+    void refresh() {
+        nmod_ = table->nmodcount_;
+        i_ = table->table_;
+        end_ = table->table_ + table->capacity_
+    }
+
    private:
     HashTable *table_;
+    uint32_t nmod_;
     Entry *i_;
     Entry *end_;
   };
@@ -525,6 +550,7 @@ class HashTable : public AllocPolicy
   uint32_t capacity_;
   uint32_t nelements_;
   uint32_t ndeleted_;
+  uint32_t nmodcount_;
   Entry *table_;
   uint32_t minCapacity_;
 };

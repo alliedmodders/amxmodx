@@ -558,16 +558,16 @@ static cell AMX_NATIVE_CALL TrieIterGetStatus(AMX *amx, cell *params)
 	if (i == NULL)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[1]);
-		return Iter_Invalid;
+		return IterStatus_Closed;
 	}
 
 	if (i->trie == NULL)
-		return Iter_Invalid;
+		return IterStatus_Closed;
 
 	if (!i->iter->valid())
-		return Iter_Outdated;
+		return IterStatus_Outdated;
 
-	return Iter_Valid;
+	return IterStatus_Valid;
 }
 
 // native bool:TrieIterRefresh(TrieIter:handle)

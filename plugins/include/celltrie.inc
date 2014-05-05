@@ -230,9 +230,9 @@ enum TrieIter
 
 enum TrieIterStatus
 {
-	Iter_Valid = 0,
-	Iter_Outdated = 1,
-	Iter_Invalid = 2,
+	IterStatus_Valid = 0,
+	IterStatus_Outdated = 1,
+	IterStatus_Closed = 2,
 };
 
 native TrieIter:TrieIterCreate(Trie:handle);

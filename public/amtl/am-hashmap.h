@@ -164,7 +164,7 @@ class HashMap : public AllocPolicy
     return iterator(&table_);
   }
 
-  iterator *iter_() {
+  iterator *p_iter() {
     return new iterator(&table_);
   }
 

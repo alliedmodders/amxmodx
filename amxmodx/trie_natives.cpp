@@ -468,7 +468,7 @@ static cell AMX_NATIVE_CALL TrieIterCreate(AMX *amx, cell *params)
 	int index = g_TrieIterHandles.create();
 	CellTrieIter *i = g_TrieIterHandles.lookup(index);
 	i->trie = t;
-	i->iter = t->map.iter_();
+	i->iter = t->map.p_iter();
 
 	return static_cast<cell>(index);
 }

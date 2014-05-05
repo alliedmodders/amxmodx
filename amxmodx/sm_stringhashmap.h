@@ -197,9 +197,9 @@ public:
 		return internal_.iter();
 	}
 
-	iterator *iter_()
+	iterator *p_iter()
 	{
-		return internal_.iter_();
+		return internal_.p_iter();
 	}
 
 	size_t mem_usage() const

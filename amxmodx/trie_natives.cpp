@@ -505,7 +505,22 @@ static cell AMX_NATIVE_CALL TrieIterGetStatus(AMX *amx, cell *params)
 // native bool:TrieIterRefresh(TrieIter:handle)
 static cell AMX_NATIVE_CALL TrieIterRefresh(AMX *amx, cell *params)
 {
-	return false;
+	CellTrieIter *i = g_TrieIterHandles.lookup(params[1]);
+
+	if (i == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[1]);
+		return false;
+	}
+
+	if (i->trie == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) has been closed", params[1]);
+		return false;
+	}
+
+	i->iter->refresh();
+	return true;
 }
 
 // native bool:TrieIterGetCell(TrieIter:handle, &any:value)

@@ -236,7 +236,7 @@ enum TrieIterStatus
 };
 
 native TrieIter:TrieIterCreate(Trie:handle);
-native TrieIterNext(TrieIter:handle, key[] = "", maxlen = 0);
+native bool:TrieIterNext(TrieIter:handle, key[] = "", outputsize = 0, &size = 0);
 native bool:TrieIterGetKey(TrieIter:handle, key[] = "", outputsize = 0, &size = 0);
 native TrieIterStatus:TrieIterGetStatus(TrieIter:handle);
 native bool:TrieIterRefresh(TrieIter:handle);

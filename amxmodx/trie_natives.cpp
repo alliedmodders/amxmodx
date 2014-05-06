@@ -677,6 +677,12 @@ static cell AMX_NATIVE_CALL TrieIterGetString(AMX *amx, cell *params)
 		return false;
 	}
 
+	if (params[3] < 0)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid buffer size (%d)", params[3]);
+		return false;
+	}
+
 	if (i->iter->empty())
 		return false;
 
@@ -715,7 +721,7 @@ static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
 
 	if (params[3] < 0)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid array size (%d)", params[4]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array size (%d)", params[3]);
 		return false;
 	}
 

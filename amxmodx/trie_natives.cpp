@@ -496,6 +496,12 @@ static cell AMX_NATIVE_CALL TrieIterNext(AMX *amx, cell *params)
 		return false;
 	}
 
+	if (params[3] < 0)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid key buffer size (%d)", params[3]);
+		return false;
+	}
+
 	if (i->iter->empty())
 		return false;
 
@@ -503,9 +509,6 @@ static cell AMX_NATIVE_CALL TrieIterNext(AMX *amx, cell *params)
 
 	if (i->iter->empty())
 		return false;
-
-	if (params[3] <= 0)
-		return true;
 
 	cell *pSize = get_amxaddr(amx, params[4]);
 
@@ -537,13 +540,16 @@ static cell AMX_NATIVE_CALL TrieIterGetKey(AMX *amx, cell *params)
 		return false;
 	}
 
-	if (params[3] <= 0)
-		return i->iter->empty();
-
-	cell *pSize = get_amxaddr(amx, params[4]);
+	if (params[3] < 0)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid key buffer size (%d)", params[3]);
+		return false;
+	}
 
 	if (i->iter->empty())
 		return false;
+
+	cell *pSize = get_amxaddr(amx, params[4]);
 
 	*pSize = set_amxstring_utf8(amx, params[2], (*i->iter)->key.chars(), (*i->iter)->key.length(), params[3] + 1);
 	

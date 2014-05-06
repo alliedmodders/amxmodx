@@ -511,7 +511,6 @@ static cell AMX_NATIVE_CALL TrieIterNext(AMX *amx, cell *params)
 		return false;
 
 	cell *pSize = get_amxaddr(amx, params[4]);
-
 	*pSize = (cell)set_amxstring_utf8(amx, params[2], (*i->iter)->key.chars(), (*i->iter)->key.length(), params[3] + 1);
 
 	return true;
@@ -550,7 +549,6 @@ static cell AMX_NATIVE_CALL TrieIterGetKey(AMX *amx, cell *params)
 		return false;
 
 	cell *pSize = get_amxaddr(amx, params[4]);
-
 	*pSize = set_amxstring_utf8(amx, params[2], (*i->iter)->key.chars(), (*i->iter)->key.length(), params[3] + 1);
 	
 	return true;
@@ -646,18 +644,13 @@ static cell AMX_NATIVE_CALL TrieIterGetCell(AMX *amx, cell *params)
 		return false;
 	}
 
-	if (i->iter->empty())
+	if (i->iter->empty() || !(*i->iter)->value.isCell())
 		return false;
 
 	cell *ptr = get_amxaddr(amx, params[2]);
+	*ptr = (*i->iter)->value.cell_();
 
-	if ((*i->iter)->value.isCell())
-	{
-		*ptr = (*i->iter)->value.cell_();
-		return true;
-	}
-
-	return false;
+	return true;
 }
 
 // native bool:TrieIterGetString(TrieIter:handle, buffer[], outputsize, &size = 0)
@@ -689,17 +682,13 @@ static cell AMX_NATIVE_CALL TrieIterGetString(AMX *amx, cell *params)
 		return false;
 	}
 
-	if (i->iter->empty())
+	if (i->iter->empty() || !(*i->iter)->value.isString())
 		return false;
 
 	cell *pSize = get_amxaddr(amx, params[4]);
-
-	if ((*i->iter)->value.isString())
-	{
-		*pSize = (cell) set_amxstring_utf8(amx, params[2], (*i->iter)->value.chars(), strlen((*i->iter)->value.chars()), params[3] + 1);
-	}
-
-	return false;
+	*pSize = (cell) set_amxstring_utf8(amx, params[2], (*i->iter)->value.chars(), strlen((*i->iter)->value.chars()), params[3] + 1);
+	
+	return true;
 }
 
 // native bool:TrieIterGetArray(TrieIter:handle, array[], outputsize, &size = 0)
@@ -731,20 +720,20 @@ static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
 		return false;
 	}
 
-	if (i->iter->empty())
+	if (i->iter->empty() || !(*i->iter)->value.isArray())
 		return false;
 
 	cell *pValue = get_amxaddr(amx, params[2]);
 	cell *pSize = get_amxaddr(amx, params[4]);
-
-	if (!(*i->iter)->value.isArray() || !params[3])
-		return false;
 
 	if (!(*i->iter)->value.array())
 	{
 		*pSize = 0;
 		return true;
 	}
+
+	if (!params[3])
+		return true;
 
 	size_t length = (*i->iter)->value.arrayLength();
 	cell *base = (*i->iter)->value.array();

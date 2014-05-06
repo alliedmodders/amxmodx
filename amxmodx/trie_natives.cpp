@@ -486,13 +486,13 @@ static cell AMX_NATIVE_CALL TrieIterNext(AMX *amx, cell *params)
 
 	if (i->trie == NULL)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) has been closed", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Closed map iterator handle provided (%d)", params[1]);
 		return false;
 	}
 
 	if (!i->iter->valid_strict())
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) is outdated", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Outdated map iterator handle provided (%d)", params[1]);
 		return false;
 	}
 
@@ -529,13 +529,13 @@ static cell AMX_NATIVE_CALL TrieIterGetKey(AMX *amx, cell *params)
 
 	if (i->trie == NULL)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) has been closed", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Closed map iterator handle provided (%d)", params[1]);
 		return false;
 	}
 
 	if (!i->iter->valid_strict())
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) is outdated", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Outdated map iterator handle provided (%d)", params[1]);
 		return false;
 	}
 
@@ -587,7 +587,7 @@ static cell AMX_NATIVE_CALL TrieIterRefresh(AMX *amx, cell *params)
 
 	if (i->trie == NULL)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) has been closed", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Closed map iterator handle provided (%d)", params[1]);
 		return false;
 	}
 
@@ -608,13 +608,13 @@ static cell AMX_NATIVE_CALL TrieIterGetSize(AMX *amx, cell *params)
 
 	if (i->trie == NULL)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) has been closed", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Closed map iterator handle provided (%d)", params[1]);
 		return 0;
 	}
 
 	if (!i->iter->valid_strict())
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) is outdated", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Outdated map iterator handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -634,13 +634,13 @@ static cell AMX_NATIVE_CALL TrieIterGetCell(AMX *amx, cell *params)
 
 	if (i->trie == NULL)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) has been closed", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Closed map iterator handle provided (%d)", params[1]);
 		return false;
 	}
 
 	if (!i->iter->valid_strict())
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) is outdated", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Outdated map iterator handle provided (%d)", params[1]);
 		return false;
 	}
 
@@ -666,13 +666,13 @@ static cell AMX_NATIVE_CALL TrieIterGetString(AMX *amx, cell *params)
 
 	if (i->trie == NULL)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) has been closed", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Closed map iterator handle provided (%d)", params[1]);
 		return false;
 	}
 
 	if (!i->iter->valid_strict())
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) is outdated", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Outdated map iterator handle provided (%d)", params[1]);
 		return false;
 	}
 
@@ -704,13 +704,13 @@ static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
 
 	if (i->trie == NULL)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) has been closed", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Closed map iterator handle provided (%d)", params[1]);
 		return false;
 	}
 
 	if (!i->iter->valid_strict())
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Underlying map to iterator handle (%d) is outdated", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Outdated map iterator handle provided (%d)", params[1]);
 		return false;
 	}
 

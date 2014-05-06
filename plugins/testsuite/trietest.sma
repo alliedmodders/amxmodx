@@ -315,10 +315,24 @@ public trietest()
 			ok = false;
 		}
 
-		new key[32], value[32], bool:valid[4], klen, vlen;
-		if (!TrieIterGetKey(iter, key, charsmax(key), klen))
+		if (!TrieIterGetKey(iter))
 		{
-			server_print("Trie iterator should not be empty at this point");
+			server_print("Trie iterator should not be empty at this point (no key retrieval)");
+			ok = false;
+		}
+
+		if (!TrieIterNext(iter))
+		{
+			server_print("Trie iterator should have a next key/value pair at this point");
+			ok = false;
+		}
+
+		TrieIterRefresh(iter);
+
+		new key[32], value[32], bool:valid[4], klen, vlen;
+		if (!TrieIterGetKey(iter, key, charsmax(key), klen) || klen == 0)
+		{
+			server_print("Trie iterator should not be empty at this point (key retrieval)");
 			ok = false;
 		}
 		else

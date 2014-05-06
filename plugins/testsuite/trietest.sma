@@ -415,6 +415,14 @@ public trietest()
 			ok = false;
 		}
 
+		TrieClear(t);
+
+		if (TrieIterGetStatus(iter) != IterStatus_Outdated)
+		{
+			server_print("Trie iterator should report itself as outdated (clear)");
+			ok = false;
+		}
+
 		TrieDestroy(t);
 
 		if (TrieIterGetStatus(iter) != IterStatus_Closed)

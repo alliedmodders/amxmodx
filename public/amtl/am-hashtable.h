@@ -521,17 +521,29 @@ class HashTable : public AllocPolicy
       } while (i_ < end_ && !i_->isLive());
     }
 
+	bool setpos(Result r) {
+      if (r.entry_->isLive() && r.entry_ >= table_->table_ && r.entry_ < table_->table_ + table_->capacity_) {
+        nstrictmod_ = table_->nstrictmodcount_;
+        i_ = r.entry_;
+        end_ = table_->table_ + table_->capacity_;
+
+        return true;
+      }
+
+      return false;
+    }
+
     bool valid_strict() {
-        return (table_->nstrictmodcount_ == nstrictmod_);
+      return (table_->nstrictmodcount_ == nstrictmod_);
     }
 
     void refresh() {
-        nstrictmod_ = table_->nstrictmodcount_;
-        i_ = table_->table_;
-        end_ = table_->table_ + table_->capacity_;
+      nstrictmod_ = table_->nstrictmodcount_;
+      i_ = table_->table_;
+      end_ = table_->table_ + table_->capacity_;
 
-        while (i_ < end_ && !i_->isLive())
-            i_++;
+      while (i_ < end_ && !i_->isLive())
+          i_++;
     }
 
    private:

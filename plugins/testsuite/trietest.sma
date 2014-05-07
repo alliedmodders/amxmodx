@@ -311,7 +311,7 @@ public trietest()
 	{
 		if (TrieIterGetStatus(iter) != IterStatus_Valid)
 		{
-			server_print("Trie iterator should be valid");
+			server_print("Trie iterator should report itself as valid (create)");
 			ok = false;
 		}
 
@@ -388,6 +388,29 @@ public trietest()
 			ok = false;
 		}
 
+		if (TrieIterSetPos(iter, "monkey"))
+		{
+			if (TrieIterGetStatus(iter) != IterStatus_Valid)
+			{
+				server_print("Trie iterator should report itself as valid (setpos)");
+				ok = false;
+			}
+
+			TrieIterGetKey(iter, key, charsmax(key));
+			TrieIterGetString(iter, value, charsmax(value));
+
+			if (strcmp(key, "monkey") != 0 || strcmp(value, "island") != 0)
+			{
+				server_print("Trie iterator key/value pair doesn't match after setpos |%s|%s|", key, value);
+				ok = false;
+			}
+		}
+		else
+		{
+			server_print("Trie iterator positioning failed");
+			ok = false;
+		}
+
 		TrieIterRefresh(iter);
 		arrayset(valid, false, sizeof(valid));
 
@@ -425,7 +448,7 @@ public trietest()
 
 		if (TrieIterGetStatus(iter) != IterStatus_Valid)
 		{
-			server_print("Trie iterator should report itself as valid");
+			server_print("Trie iterator should report itself as valid (update)");
 			ok = false;
 		}
 

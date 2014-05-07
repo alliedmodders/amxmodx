@@ -350,6 +350,22 @@ native bool:TrieIterRefresh(TrieIter:handle);
 native TrieIterGetSize(TrieIter:handle);
 
 /**
+ * Attempts to set the iterator position to the provided key.
+ *
+ * It is allowed to use this on an outdated iterator. If the key is found in the underlying map and
+ * the iterator is successfully positioned, the iterator will be valid afterwards. However if the key
+ * can not be found an outdated iterator will stay outdated, but no error will occur.
+ *
+ * @param handle		Iterator handle.
+ * @param key			Key string.
+ *
+ * @return				True if key was found and iterator positioned, false if key was not found
+ * @error				Invalid handle
+ *						Iterator has been closed (underlying map destroyed)
+ */
+native bool:TrieIterSetPos(TrieIter:handle, const key[]);
+
+/**
  * Retrieves a value at the current position of the iterator.
  *
  * @param handle		Iterator handle.

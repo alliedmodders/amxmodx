@@ -473,7 +473,7 @@ static cell AMX_NATIVE_CALL TrieIterCreate(AMX *amx, cell *params)
 	return static_cast<cell>(index);
 }
 
-// native TrieIterNext(TrieIter:handle, key[] = "", outputsize = 0, &size = 0)
+// native bool:TrieIterNext(TrieIter:handle, key[] = "", outputsize = 0, &size = 0)
 static cell AMX_NATIVE_CALL TrieIterNext(AMX *amx, cell *params)
 {
 	CellTrieIter *i = g_TrieIterHandles.lookup(params[1]);
@@ -481,7 +481,7 @@ static cell AMX_NATIVE_CALL TrieIterNext(AMX *amx, cell *params)
 	if (i == NULL)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[1]);
-		return 0;
+		return false;
 	}
 
 	if (i->trie == NULL)
@@ -516,7 +516,7 @@ static cell AMX_NATIVE_CALL TrieIterNext(AMX *amx, cell *params)
 	return true;
 }
 
-// native TrieIterGetKey(TrieIter:handle, key[] = "", outputsize = 0, &size = 0)
+// native bool:TrieIterGetKey(TrieIter:handle, key[] = "", outputsize = 0, &size = 0)
 static cell AMX_NATIVE_CALL TrieIterGetKey(AMX *amx, cell *params)
 {
 	CellTrieIter *i = g_TrieIterHandles.lookup(params[1]);
@@ -619,6 +619,29 @@ static cell AMX_NATIVE_CALL TrieIterGetSize(AMX *amx, cell *params)
 	}
 
 	return i->trie->map.elements();
+}
+
+// native bool:TrieIterSetPos(TrieIter:handle, const key[])
+static cell AMX_NATIVE_CALL TrieIterSetPos(AMX *amx, cell *params)
+{
+	CellTrieIter *i = g_TrieIterHandles.lookup(params[1]);
+
+	if (i == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[1]);
+		return false;
+	}
+
+	if (i->trie == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Closed map iterator handle provided (%d)", params[1]);
+		return false;
+	}
+
+	int len;
+	const char *key = get_amxstring(amx, params[2], 0, len);
+
+	return i->iter->setpos(i->trie->map.find(key));
 }
 
 // native bool:TrieIterGetCell(TrieIter:handle, &any:value)
@@ -802,6 +825,7 @@ AMX_NATIVE_INFO trie_Natives[] =
 	{ "TrieIterGetStatus", TrieIterGetStatus },
 	{ "TrieIterRefresh", TrieIterRefresh },
 	{ "TrieIterGetSize", TrieIterGetSize },
+	{ "TrieIterSetPos", TrieIterSetPos },
 	{ "TrieIterGetCell", TrieIterGetCell },
 	{ "TrieIterGetString", TrieIterGetString },
 	{ "TrieIterGetArray", TrieIterGetArray },

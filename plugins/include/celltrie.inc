@@ -234,10 +234,10 @@ native TrieSnapshotGetKey(Snapshot:handle, index, buffer[], maxlength);
 native TrieSnapshotDestroy(&Snapshot:handle);
 
 /**
- * Creates an iterator for a map. An iterator provides very fast, iterative read-only
- * access to a map.
+ * Creates an iterator for a map. An iterator provides iterative read-only access to a map.
+ * Just like in snapshots the key/value pairs are not sorted.
  *
- * Any mutating change - key addition or key removal - to the underlying map will
+ * Any mutating change - that is key addition or key removal - to the underlying map will
  * mark every iterator operating on it as outdated. It then needs to be refreshed to
  * make it work again. See TrieIterRefresh for more information.
  *
@@ -246,7 +246,7 @@ native TrieSnapshotDestroy(&Snapshot:handle);
  *
  * Iterators are designed to be short-lived and not be permanently stored or cached.
  * Creating new iterators is very fast, exhibiting virtually no overhead, even for very
- * large tries. It is usually recommended to create them on-demand. Value retrieval
+ * large tries. It is generally recommended to create them on-demand. Value retrieval
  * can be done through the iterator and is as fast as directly reading from the underlying map.
  *
  * @return 				New iterator handle, which must be freed via TrieIterDestroy().
@@ -293,12 +293,12 @@ native bool:TrieIterGetKey(TrieIter:handle, key[] = "", outputsize = 0, &size = 
 /**
  * Retrieves the current iterator status.
  *
- * This function checks if an iterator is in a usable state, which is a pre-requisite
- * to using almost any function that operates on it (the exceptions being GetStatus, Refresh and Destroy).
+ * This function checks if an iterator is in a usable state, which is a pre-requisite to using almost
+ * any function that operates on it (the exceptions being GetStatus, SetPos, Refresh and Destroy).
  *
  * IterStatus_Valid: The iterator is currently in a usable state.
  * This does *not* mean that it currently points to a valid key/value pair, or that there
- * are any values at all.
+ * are any key/value pairs at all.
  *
  * IterStatus_Outdated: The iterator has to be refreshed before being used again.
  * Any key addition or removal to the underlying map will mark the iterator as outdated. To use it
@@ -317,15 +317,16 @@ native bool:TrieIterGetKey(TrieIter:handle, key[] = "", outputsize = 0, &size = 
 native TrieIterStatus:TrieIterGetStatus(TrieIter:handle);
 
 /**
- * Refreshes the iterator if possible
+ * Refreshes the iterator if possible.
  *
  * This function serves a dual purpose when working with iterators:
  *
  * 1) If the underlying map was mutated and the iterator marked as outdated, calling this function
  * will allow the iterator to be revalidated without creating a new one.
  *
- * 2) After this function has returned the iterator will be starting over at its
- * initial position, even if it was valid when this function was called.
+ * 2) After this function has returned the iterator will be starting over from the beginning,
+ * even if it was valid when this function was called. Because key/value pairs are not sorted, the
+ * first value is never guaranteed to stay the same.
  *
  * @param handle		Iterator handle.
  *
@@ -350,11 +351,13 @@ native bool:TrieIterRefresh(TrieIter:handle);
 native TrieIterGetSize(TrieIter:handle);
 
 /**
- * Attempts to set the iterator position to the provided key.
+ * Attempts to set the iterator position to the provided key. It is allowed to use this on an
+ * outdated iterator.
  *
- * It is allowed to use this on an outdated iterator. If the key is found in the underlying map and
- * the iterator is successfully positioned, the iterator will be valid afterwards. However if the key
- * can not be found an outdated iterator will stay outdated, but no error will occur.
+ * If the key is found in the underlying map and the iterator is successfully positioned,
+ * an outdated iterator will be valid afterwards.
+ * If the key can not be found the iterator is not modified so an outdated iterator will stay
+ * outdated, but no error will occur.
  *
  * @param handle		Iterator handle.
  * @param key			Key string.

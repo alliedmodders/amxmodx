@@ -248,7 +248,7 @@ static cell AMX_NATIVE_CALL TrieGetArray(AMX *amx, cell *params)
 
 	if (!params[4])
 	{
-		return 0;
+		return 1;
 	}
 
 	size_t length = r->value.arrayLength();

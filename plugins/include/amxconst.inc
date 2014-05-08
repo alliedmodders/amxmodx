@@ -17,6 +17,11 @@
  * This is the buffer size AMX Mod X uses internally to retrieve strings from plugins.
  * Most natives that take strings as arguments will implicitly truncate those to this maximum length.
  * This has been raised to the current value with AMXX 1.8.3. Previously the limit was 3072.
+ *
+ * @note This is here mainly for documentation purposes. By default plugins don't even have enough 
+ *       memory available to create an array of this size. You probably should not use this to 
+ *       actually *declare* a buffer unless you *absolutely* have to. Look at #pragma dynamic 
+ *       to increase a plugins available memory.
  */
 #define MAX_STRING_LENGTH 16384
 

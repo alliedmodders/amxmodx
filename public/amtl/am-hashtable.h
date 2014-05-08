@@ -521,7 +521,7 @@ class HashTable : public AllocPolicy
       } while (i_ < end_ && !i_->isLive());
     }
 
-    bool setpos(Result r) {
+    bool setpos(Result &r) {
       if (r.entry_->isLive() && r.entry_ >= table_->table_ && r.entry_ < table_->table_ + table_->capacity_) {
         nstrictmod_ = table_->nstrictmodcount_;
         i_ = r.entry_;

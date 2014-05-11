@@ -9,6 +9,7 @@
 *.sdf
 *.suo
 *.user
+*.opensdf
 
 # Build directories
 Debug

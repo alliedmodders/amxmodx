@@ -73,13 +73,13 @@ forward dod_client_prone(id, value);
 forward dod_client_weaponswitch(id, wpnew, wpnold);
 
 /* Forward for when a grenade explodes and its location */
-forward dod_grenade_explosion(id, pos[3], wpnid);
+forward dod_grenade_explosion(id, Float:pos[3], wpnid);
 
 /* Forward for when a rocket explodes and its location */
-forward dod_rocket_explosion(id, pos[3], wpnid);
+forward dod_rocket_explosion(id, Float:pos[3], wpnid);
 
 /* Forward for when a player picks up a object */
-forward dod_client_objectpickup(id, objid, pos[3], value);
+forward dod_client_objectpickup(id, objid, Float:pos[3], value);
 
 /* Forward for when a users stamina decreases */
 forward dod_client_stamina(id, stamina);

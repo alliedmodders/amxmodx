@@ -589,12 +589,21 @@ static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params) // cs_set_u
 	WRITE_STRING(teaminfo);
 	MESSAGE_END();
 	
-	if (params[2] == 1)
-		MF_SetPlayerTeamInfo(params[1], params[2], "TERRORIST");
-	else if (params[2] == 2)
-		MF_SetPlayerTeamInfo(params[1], params[2], "CT");
-	else
-		MF_SetPlayerTeamInfo(params[1], params[2], NULL);
+	switch (params[2]) 
+	{
+		case TEAM_T:
+			MF_SetPlayerTeamInfo(params[1], params[2], "TERRORIST");
+			break;
+		case TEAM_CT:
+			MF_SetPlayerTeamInfo(params[1], params[2], "CT");
+			break;
+		case TEAM_SPECTATOR:
+			MF_SetPlayerTeamInfo(params[1], params[2], "SPECTATOR");
+			break;
+		default:
+			MF_SetPlayerTeamInfo(params[1], params[2], NULL);
+			break;
+	}
 
 	return 1;
 }

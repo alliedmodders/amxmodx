@@ -103,7 +103,11 @@ stock client_printex(index, type, const msg_name[], const msg_param1[] = "", con
 		return client_print(index, type, msg_name, msg_param1, msg_param2, msg_param3, msg_param4);
 	}
 	
-	static msgTextMsg; msgTextMsg || (msgTextMsg = get_user_msgid("TextMsg"));
+	static msgTextMsg; 
+	if (!msgTextMsg) 
+	{ 
+		msgTextMsg = get_user_msgid("TextMsg"); 
+	}
 
 	message_begin(index > 0 ? MSG_ONE_UNRELIABLE : MSG_BROADCAST, msgTextMsg, .player = index);
 	write_byte(type);

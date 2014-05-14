@@ -1761,7 +1761,13 @@ int MNF_SetPlayerTeamInfo(int player, int teamid, const char *teamname)
 
 	pPlayer->teamId = teamid;
 	if (teamname != NULL)
+	{
 		pPlayer->team.assign(teamname);
+
+		// Make sure team is registered, otherwise
+		// natives relying on team id will return wrong result.
+		g_teamsIds.registerTeam(teamname, teamid);
+	}
 
 	return 1;
 }

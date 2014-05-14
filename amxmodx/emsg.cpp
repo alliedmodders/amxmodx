@@ -112,6 +112,20 @@ void Client_TeamInfo(void* mValue)
 			g_players[index].team.assign(msg);
 			g_teamsIds.registerTeam(msg, -1);
 			g_players[index].teamId = g_teamsIds.findTeamId(msg);
+
+			/**
+			* CS fix for SPECTATOR team. 
+			* -
+			* When a player chooses spectator, ScoreInfo is sent before TeamInfo and with 0 as index.
+			* This means for the first round of first spectator, SPECTATOR name is not associated with its index.
+			* The following fix manually sets the team index when we hit SPECTATOR team.
+			*/
+			if (g_players[index].teamId == -1 && g_bmod_cstrike && !strcmp(msg, "SPECTATOR"))
+			{
+				g_players[index].teamId = 3;
+				g_teamsIds.registerTeam(msg, 3);
+			}
+
 			break;
 	}
 }

@@ -93,7 +93,7 @@ public ShowFullStats        = 0 // show full HUD stats (more than 78 chars)
 
 public SpecRankInfo         = 0 // displays rank info when spectating
 
-// Standard Contstants.
+// Standard constants.
 #define MAX_TEAMS               2
 #define MAX_PLAYERS             32 + 1
 

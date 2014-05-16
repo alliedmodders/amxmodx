@@ -36,7 +36,7 @@
 #include <amxmisc>
 #include <fakemeta>
 
-// Standard Constants.
+// Standard constants.
 #define MAX_PLAYERS 32 + 1
 new const Float:VEC_DUCK_HULL_MIN[3] = {-16.0, -16.0, -18.0 }
 new const Float:VEC_DUCK_HULL_MAX[3] = { 16.0,  16.0,  32.0 }

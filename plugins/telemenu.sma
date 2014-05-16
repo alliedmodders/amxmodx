@@ -38,10 +38,10 @@
 
 // Standard Constants.
 #define MAX_PLAYERS 32 + 1
-new const Float:VEC_DUCK_HULL_MIN[3]	= {-16.0, -16.0, -18.0 }
-new const Float:VEC_DUCK_HULL_MAX[3]	= { 16.0,  16.0,  32.0 }
-new const Float:VEC_DUCK_VIEW[3]		= {  0.0,   0.0,  12.0 }
-new const Float:VEC_NULL[3]				= {  0.0,   0.0,   0.0 }
+new const Float:VEC_DUCK_HULL_MIN[3] = {-16.0, -16.0, -18.0 }
+new const Float:VEC_DUCK_HULL_MAX[3] = { 16.0,  16.0,  32.0 }
+new const Float:VEC_DUCK_VIEW[3] = {  0.0,   0.0,  12.0 }
+new const Float:VEC_NULL[3] = {  0.0,   0.0,   0.0 }
 
 new g_menuPosition[MAX_PLAYERS]
 new g_menuPlayers[MAX_PLAYERS][32]

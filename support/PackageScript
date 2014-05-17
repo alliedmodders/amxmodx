@@ -68,8 +68,6 @@ def split_all(path):
 
 def copy_binary(source, dest):
   builder.AddCopy(source.binary, dest)
-  if builder.options.debug == '1':
-    builder.AddCopy(source.debug, dest)
 
 # Create the distribution folder hierarchy.
 folder_map = {}

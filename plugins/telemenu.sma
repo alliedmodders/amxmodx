@@ -34,13 +34,21 @@
 
 #include <amxmodx>
 #include <amxmisc>
-#include <fun>
+#include <fakemeta>
 
-new g_menuPosition[33]
-new g_menuPlayers[33][32]
-new g_menuPlayersNum[33]
-new g_menuOption[33] = {-1, ...}
-new g_menuOrgin[33][3]
+// Standard constants.
+#define MAX_PLAYERS 32 + 1
+new const Float:VEC_DUCK_HULL_MIN[3] = {-16.0, -16.0, -18.0 }
+new const Float:VEC_DUCK_HULL_MAX[3] = { 16.0,  16.0,  32.0 }
+new const Float:VEC_DUCK_VIEW[3] = {  0.0,   0.0,  12.0 }
+new const Float:VEC_NULL[3] = {  0.0,   0.0,   0.0 }
+
+new g_menuPosition[MAX_PLAYERS]
+new g_menuPlayers[MAX_PLAYERS][32]
+new g_menuPlayersNum[MAX_PLAYERS]
+new g_menuOption[MAX_PLAYERS] = {-1, ...}
+new Float:g_menuOrigin[MAX_PLAYERS][3]
+new Float:g_menuVAngle[MAX_PLAYERS][3]
 new g_coloredMenus
 
 public plugin_init()
@@ -67,8 +75,9 @@ public actionTelMenu(id, key)
 		{
 			if (g_menuOption[id] < 0)	/* unlocking position for the first time */
 				g_menuOption[id] = 0
-			
-			get_user_origin(id, g_menuOrgin[id])
+
+			pev(id, pev_origin, g_menuOrigin[id])
+			pev(id, pev_v_angle, g_menuVAngle[id])
 			displayTelMenu(id, g_menuPosition[id])
 		}
 		case 8: displayTelMenu(id, ++g_menuPosition[id])
@@ -77,8 +86,8 @@ public actionTelMenu(id, key)
 		{
 			new player = g_menuPlayers[id][g_menuPosition[id] * 6 + key]
 			new name2[32]
-		
-			get_user_name(player, name2, 31)
+
+			get_user_name(player, name2, charsmax(name2))
 
 			if (!is_user_alive(player))
 			{
@@ -89,28 +98,42 @@ public actionTelMenu(id, key)
 
 			if (g_menuOption[id] > 0)
 			{
-				set_user_origin(player, g_menuOrgin[id])
+				set_pev(id, pev_flags, pev(id, pev_flags) | FL_DUCKING)
+				engfunc(EngFunc_SetSize, id, VEC_DUCK_HULL_MIN, VEC_DUCK_HULL_MAX)
+				engfunc(EngFunc_SetOrigin, id, g_menuOrigin[id])
+				set_pev(id, pev_view_ofs, VEC_DUCK_VIEW)
+				set_pev(id, pev_angles, g_menuVAngle[id])
+				set_pev(id, pev_v_angle, VEC_NULL)
+				set_pev(id, pev_fixangle, 1)
 			} else {
-				new origin[3]
-				
-				get_user_origin(id, origin)
-				set_user_origin(player, origin)
+				new Float:f_Origin[3], Float:f_VAngle[3]
+
+				pev(id, pev_origin, f_Origin)
+				pev(id, pev_v_angle, f_VAngle)
+
+				set_pev(player, pev_flags, pev(player, pev_flags) | FL_DUCKING)
+				engfunc(EngFunc_SetSize, player, VEC_DUCK_HULL_MIN, VEC_DUCK_HULL_MAX)
+				engfunc(EngFunc_SetOrigin, player, f_Origin)
+				set_pev(player, pev_view_ofs, VEC_DUCK_VIEW)
+				set_pev(player, pev_angles, f_VAngle)
+				set_pev(player, pev_v_angle, VEC_NULL)
+				set_pev(player, pev_fixangle, 1)
 			}
 
 			new authid[32], authid2[32], name[32]
 
-			get_user_authid(id, authid, 31)
-			get_user_authid(player, authid2, 31)
-			get_user_name(id, name, 31)
+			get_user_authid(id, authid, charsmax(authid))
+			get_user_authid(player, authid2, charsmax(authid2))
+			get_user_name(id, name, charsmax(name))
 
 			log_amx("Cmd: ^"%s<%d><%s><>^" teleport ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2)
 
-			show_activity_key("ADMIN_TELEPORT_1", "ADMIN_TELEPORT_2", name, name2);
+			show_activity_key("ADMIN_TELEPORT_1", "ADMIN_TELEPORT_2", name, name2)
 
 			displayTelMenu(id, g_menuPosition[id])
 		}
 	}
-	
+
 	return PLUGIN_HANDLED
 }
 
@@ -141,19 +164,19 @@ displayTelMenu(id, pos)
 	for (new a = start; a < end; ++a)
 	{
 		i = g_menuPlayers[id][a]
-		get_user_name(i, name, 31)
+		get_user_name(i, name, charsmax(name))
 
 		if (blockMenu || !is_user_alive(i) || (id != i && get_user_flags(i) & ADMIN_IMMUNITY))
 		{
 			++b
-		
+
 			if (g_coloredMenus)
 				len += format(menuBody[len], 511-len, "\d%d. %s^n\w", b, name)
 			else
 				len += format(menuBody[len], 511-len, "#. %s^n", name)
 		} else {
 			keys |= (1<<b)
-			
+
 			if (is_user_admin(i))
 				len += format(menuBody[len], 511-len, g_coloredMenus ? "%d. %s \r*^n\w" : "%d. %s *^n", ++b, name)
 			else
@@ -164,7 +187,7 @@ displayTelMenu(id, pos)
 	if (g_menuOption[id] > 0)	// 1
 	{
 		keys |= MENU_KEY_7
-		len += format(menuBody[len], 511-len, "^n7. To location: %d %d %d^n", g_menuOrgin[id][0], g_menuOrgin[id][1], g_menuOrgin[id][2])
+		len += format(menuBody[len], 511-len, "^n7. To location: %.0f %.0f %.0f^n", g_menuOrigin[id][0], g_menuOrigin[id][1], g_menuOrigin[id][2])
 	}
 	else if (g_menuOption[id])	// -1
 	{

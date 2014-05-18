@@ -81,7 +81,7 @@ public actionTelMenu(id, key)
 			new player = g_menuPlayers[id][g_menuPosition[id] * 6 + key]
 			new name2[32]
 
-			get_user_name(player, name2, 31)
+			get_user_name(player, name2, charsmax(name2))
 
 			if (!is_user_alive(player))
 			{
@@ -109,9 +109,9 @@ public actionTelMenu(id, key)
 
 			new authid[32], authid2[32], name[32]
 
-			get_user_authid(id, authid, 31)
-			get_user_authid(player, authid2, 31)
-			get_user_name(id, name, 31)
+			get_user_authid(id, authid, charsmax(authid))
+			get_user_authid(player, authid2, charsmax(authid2))
+			get_user_name(id, name, charsmax(name))
 
 			log_amx("Cmd: ^"%s<%d><%s><>^" teleport ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2)
 
@@ -141,7 +141,7 @@ displayTelMenu(id, pos)
 	if (start >= g_menuPlayersNum[id])
 		start = pos = g_menuPosition[id] = 0
 
-	new len = format(menuBody, 511, g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, "TELE_MENU", pos + 1, (g_menuPlayersNum[id] / 6 + ((g_menuPlayersNum[id] % 6) ? 1 : 0)))
+	new len = format(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, "TELE_MENU", pos + 1, (g_menuPlayersNum[id] / 6 + ((g_menuPlayersNum[id] % 6) ? 1 : 0)))
 	new end = start + 6
 	new keys = MENU_KEY_0|MENU_KEY_8
 
@@ -151,51 +151,51 @@ displayTelMenu(id, pos)
 	for (new a = start; a < end; ++a)
 	{
 		i = g_menuPlayers[id][a]
-		get_user_name(i, name, 31)
+		get_user_name(i, name, charsmax(name))
 
 		if (blockMenu || !is_user_alive(i) || (id != i && get_user_flags(i) & ADMIN_IMMUNITY))
 		{
 			++b
 
 			if (g_coloredMenus)
-				len += format(menuBody[len], 511-len, "\d%d. %s^n\w", b, name)
+				len += format(menuBody[len], charsmax(menuBody)-len, "\d%d. %s^n\w", b, name)
 			else
-				len += format(menuBody[len], 511-len, "#. %s^n", name)
+				len += format(menuBody[len], charsmax(menuBody)-len, "#. %s^n", name)
 		} else {
 			keys |= (1<<b)
 
 			if (is_user_admin(i))
-				len += format(menuBody[len], 511-len, g_coloredMenus ? "%d. %s \r*^n\w" : "%d. %s *^n", ++b, name)
+				len += format(menuBody[len], charsmax(menuBody)-len, g_coloredMenus ? "%d. %s \r*^n\w" : "%d. %s *^n", ++b, name)
 			else
-				len += format(menuBody[len], 511-len, "%d. %s^n", ++b, name)
+				len += format(menuBody[len], charsmax(menuBody)-len, "%d. %s^n", ++b, name)
 		}
 	}
 
 	if (g_menuOption[id] > 0)	// 1
 	{
 		keys |= MENU_KEY_7
-		len += format(menuBody[len], 511-len, "^n7. To location: %.0f %.0f %.0f^n", g_menuOrigin[id][0], g_menuOrigin[id][1], g_menuOrigin[id][2])
+		len += format(menuBody[len], charsmax(menuBody)-len, "^n7. To location: %.0f %.0f %.0f^n", g_menuOrigin[id][0], g_menuOrigin[id][1], g_menuOrigin[id][2])
 	}
 	else if (g_menuOption[id])	// -1
 	{
 		if (g_coloredMenus)
-			len += format(menuBody[len], 511-len, "^n\d7. %L^n\w", id, "CUR_LOC")
+			len += format(menuBody[len], charsmax(menuBody)-len, "^n\d7. %L^n\w", id, "CUR_LOC")
 		else
-			len += format(menuBody[len], 511-len, "^n#. %L^n", id, "CUR_LOC")
+			len += format(menuBody[len], charsmax(menuBody)-len, "^n#. %L^n", id, "CUR_LOC")
 	} else {					// 0
 		keys |= MENU_KEY_7
-		len += format(menuBody[len], 511-len, "^n7. %L^n", id, "CUR_LOC")
+		len += format(menuBody[len], charsmax(menuBody)-len, "^n7. %L^n", id, "CUR_LOC")
 	}
 
-	len += format(menuBody[len], 511-len, "8. %L^n", id, "SAVE_LOC")
+	len += format(menuBody[len], charsmax(menuBody)-len, "8. %L^n", id, "SAVE_LOC")
 
 	if (end != g_menuPlayersNum[id])
 	{
-		format(menuBody[len], 511-len, "^n9. %L...^n0. %L", id, "MORE", id, pos ? "BACK" : "EXIT")
+		format(menuBody[len], charsmax(menuBody)-len, "^n9. %L...^n0. %L", id, "MORE", id, pos ? "BACK" : "EXIT")
 		keys |= MENU_KEY_9
 	}
 	else
-		format(menuBody[len], 511-len, "^n0. %L", id, pos ? "BACK" : "EXIT")
+		format(menuBody[len], charsmax(menuBody)-len, "^n0. %L", id, pos ? "BACK" : "EXIT")
 
 	show_menu(id, keys, menuBody, -1, "Teleport Menu")
 }

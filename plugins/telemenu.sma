@@ -90,11 +90,13 @@ public actionTelMenu(id, key)
 
 			if (g_menuOption[id] > 0)
 			{
+				set_pev(player, pev_flags, pev(player, pev_flags) | FL_DUCKING)
 				engfunc(EngFunc_SetOrigin, player, g_menuOrigin[id])
 			} else {
 				new Float:f_origin[3]
 
 				pev(id, pev_origin, f_origin)
+				set_pev(player, pev_flags, pev(player, pev_flags) | FL_DUCKING)
 				engfunc(EngFunc_SetOrigin, player, f_origin)
 			}
 

@@ -45,6 +45,11 @@ new Float:g_menuOrigin[MAX_PLAYERS][3]
 new Float:g_menuVAngle[MAX_PLAYERS][3]
 new g_coloredMenus
 
+new g_bDuckingStateSaved
+#define SaveInDuckingState(%1)		g_bDuckingStateSaved |= 1<<(%1&31)
+#define SaveNoDuckingState(%1)		g_bDuckingStateSaved &= ~(1<<(%1&31))
+#define HasInDuckingStateSaved(%1)	g_bDuckingStateSaved & 1<<(%1&31)
+
 public plugin_init()
 {
 	register_plugin("Teleport Menu", AMXX_VERSION_STR, "AMXX Dev Team")
@@ -72,6 +77,10 @@ public actionTelMenu(id, key)
 
 			pev(id, pev_origin, g_menuOrigin[id])
 			pev(id, pev_v_angle, g_menuVAngle[id])
+			if (pev(id, pev_flags) & FL_DUCKING && is_user_alive(id))
+				SaveInDuckingState(id)
+			else
+				SaveNoDuckingState(id)
 			displayTelMenu(id, g_menuPosition[id])
 		}
 		case 8: displayTelMenu(id, ++g_menuPosition[id])
@@ -92,7 +101,8 @@ public actionTelMenu(id, key)
 
 			if (g_menuOption[id] > 0)
 			{
-				set_pev(player, pev_flags, pev(player, pev_flags) | FL_DUCKING)
+				if ( HasInDuckingStateSaved(id) )
+					set_pev(player, pev_flags, pev(player, pev_flags) | FL_DUCKING)
 				engfunc(EngFunc_SetOrigin, player, g_menuOrigin[id])
 				set_pev(player, pev_angles, g_menuVAngle[id])
 				set_pev(player, pev_fixangle, 1)
@@ -101,7 +111,8 @@ public actionTelMenu(id, key)
 
 				pev(id, pev_origin, f_origin)
 				pev(id, pev_v_angle, f_vangle)
-				set_pev(player, pev_flags, pev(player, pev_flags) | FL_DUCKING)
+				if ( HasInDuckingStateSaved(id) )
+					set_pev(player, pev_flags, pev(player, pev_flags) | FL_DUCKING)
 				engfunc(EngFunc_SetOrigin, player, f_origin)
 				set_pev(player, pev_angles, f_vangle)
 				set_pev(player, pev_fixangle, 1)

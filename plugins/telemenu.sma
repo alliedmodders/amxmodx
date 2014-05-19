@@ -101,7 +101,7 @@ public actionTelMenu(id, key)
 
 			if (g_menuOption[id] > 0)
 			{
-				if ( HasInDuckingStateSaved(id) )
+				if (HasInDuckingStateSaved(id))
 					set_pev(player, pev_flags, pev(player, pev_flags) | FL_DUCKING)
 				engfunc(EngFunc_SetOrigin, player, g_menuOrigin[id])
 				set_pev(player, pev_angles, g_menuVAngle[id])
@@ -111,7 +111,7 @@ public actionTelMenu(id, key)
 
 				pev(id, pev_origin, f_origin)
 				pev(id, pev_v_angle, f_vangle)
-				if ( HasInDuckingStateSaved(id) )
+				if (HasInDuckingStateSaved(id))
 					set_pev(player, pev_flags, pev(player, pev_flags) | FL_DUCKING)
 				engfunc(EngFunc_SetOrigin, player, f_origin)
 				set_pev(player, pev_angles, f_vangle)

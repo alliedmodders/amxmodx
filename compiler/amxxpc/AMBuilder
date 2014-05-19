@@ -14,6 +14,7 @@ if builder.target_platform == 'linux':
   binary.compiler.postlink += [
     '-ldl',
     binary.Dep('libz.a'),
+    binary.Dep(AMXX.stdcxx_path),
   ]
 elif builder.target_platform == 'mac':
   binary.compiler.postlink += [binary.Dep('libz-darwin.a')]

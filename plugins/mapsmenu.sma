@@ -81,7 +81,7 @@ public plugin_init()
 
 public autoRefuse()
 {
-	log_amx("Vote: %L", "en", "RESULT_REF")
+	log_amx("Vote: %L", LANG_PLAYER, "RESULT_REF")
 	client_print(0, print_chat, "%L", LANG_PLAYER, "RESULT_REF")
 }
 
@@ -106,7 +106,7 @@ public actionResult(id, key)
 			ArrayGetString(g_mapName, g_choosed, tempMap, charsmax(tempMap));
 			
 			set_task(2.0, "delayedChange", 0, tempMap, strlen(tempMap) + 1)
-			log_amx("Vote: %L", "en", "RESULT_ACC")
+			log_amx("Vote: %L", LANG_PLAYER, "RESULT_ACC")
 			client_print(0, print_chat, "%L", LANG_PLAYER, "RESULT_ACC")
 		}
 		case 1: autoRefuse()
@@ -137,8 +137,8 @@ public checkVotes(id)
 		g_choosed = g_voteSelected[id][a]
 		new tempMap[32];
 		ArrayGetString(g_mapName, g_choosed, tempMap, charsmax(tempMap));
-		client_print(0, print_chat, "%L %s", LANG_PLAYER, "VOTE_SUCCESS", tempMap);
-		log_amx("Vote: %L %s", "en", "VOTE_SUCCESS", tempMap);
+		client_print(0, print_chat, "%L", LANG_PLAYER, "VOTE_SUCCESS", iResult, iRatio, tempMap);
+		log_amx("Vote: %L", LANG_PLAYER, "VOTE_SUCCESS", iResult, iRatio, tempMap);
 	}
 	
 	if (g_choosed != -1)
@@ -170,7 +170,7 @@ public checkVotes(id)
 		}
 	} else {
 		client_print(0, print_chat, "%L", LANG_PLAYER, "VOTE_FAILED")
-		log_amx("Vote: %L", "en", "VOTE_FAILED")
+		log_amx("Vote: %L", LANG_PLAYER, "VOTE_FAILED")
 	}
 	
 	remove_task(34567 + id)
@@ -275,7 +275,7 @@ displayVoteMapsMenu(id, pos)
 	}
 
 	new menuName[64]
-	format(menuName, 63, "%L", "en", "VOTEMAP_MENU")
+	format(menuName, 63, "%L", LANG_PLAYER, "VOTEMAP_MENU")
 
 	show_menu(id, keys, menuBody, -1, menuName)
 }
@@ -378,7 +378,7 @@ public actionVoteMapMenu(id, key)
 			}
 
 			new menuName[64]
-			format(menuName, 63, "%L", "en", "WHICH_MAP")
+			format(menuName, 63, "%L", LANG_PLAYER, "WHICH_MAP")
 
 			for (new b = 0; b < pnum; ++b)
 				if (players[b] != id)
@@ -521,7 +521,7 @@ displayMapsMenu(id, pos)
 		format(menuBody[len], 511-len, "^n0. %L", id, pos ? "BACK" : "EXIT")
 
 	new menuName[64]
-	format(menuName, 63, "%L", "en", "CHANGLE_MENU")
+	format(menuName, 63, "%L", LANG_PLAYER, "CHANGLE_MENU")
 
 	show_menu(id, keys, menuBody, -1, menuName)
 }

@@ -1,7 +1,7 @@
 [en]
 RESULT_REF = Result refused
 RESULT_ACC = Result accepted
-VOTE_SUCCESS = Voting successful. Map will be changed to
+VOTE_SUCCESS = Voting successful. (got "%d") (needed "%d"). The result: %s
 VOTE_FAILED = Voting failed
 THE_WINNER = The winner
 WANT_CONT = Do you want to continue?
@@ -25,7 +25,7 @@ CHANGLE_MENU = Changelevel Menu
 [de]
 RESULT_REF = Ergebnis abgelehnt
 RESULT_ACC = Ergebnis angenommen
-VOTE_SUCCESS = Abstimmung beendet. Map wird gewechselt zu
+VOTE_SUCCESS = Abstimmung beendet. (erhielt "%d") (benoetigt "%d"). Ergebnis: %s
 VOTE_FAILED = Abstimmung gescheitert
 THE_WINNER = Der Gewinner
 WANT_CONT = Willst du fortfahren?
@@ -49,7 +49,7 @@ CHANGLE_MENU = Menu > Mapwechsel
 [sr]
 RESULT_REF = Rezultat odbijen
 RESULT_ACC = Rezultat prihvacen
-VOTE_SUCCESS = Glasanje uspesno. Sledeca mapa ce biti
+VOTE_SUCCESS = Glasanje uspesno. (dobijeno "%d") (potrebno "%d"). Rezultat je: %s
 VOTE_FAILED = Glasanje neuspesno
 THE_WINNER = Pobednik
 WANT_CONT = Da li zelite da nastavite?
@@ -73,7 +73,7 @@ CHANGLE_MENU = Meni za menjanje mape
 [tr]
 RESULT_REF = Sonuc red edilmistir
 RESULT_ACC = Sonuc kabul edilmistir
-VOTE_SUCCESS = Oylama sonucu kabul. Bu map'e degisiyor
+VOTE_SUCCESS = Oylama sonucu kabul. (alinan "%d") (gerekli "%d"). Sonuc: %s
 VOTE_FAILED = Oylama hatali
 THE_WINNER = Kazanan
 WANT_CONT = Devam etmek istiyormusunuz?
@@ -97,7 +97,7 @@ CHANGLE_MENU = Bolum degisdirme menusu
 [fr]
 RESULT_REF = Resultat refuse
 RESULT_ACC = Resultat accepte
-VOTE_SUCCESS = Vote reussi. La carte va etre changee pour
+VOTE_SUCCESS = Vote reussi. (obtenu "%d") (besoin de "%d"). Resultat: %s
 VOTE_FAILED = Vote rate
 THE_WINNER = Le gagnant
 WANT_CONT = Veux-tu continuer?
@@ -121,7 +121,7 @@ CHANGLE_MENU = Menu Changement de Carte
 [sv]
 RESULT_REF = Resultat nekas
 RESULT_ACC = Resultat godtages
-VOTE_SUCCESS = Valet lyckades. Kartan kommer att bli
+VOTE_SUCCESS = Valet lyckades. (fick "%d") (fordrades "%d"). Resultat: %s
 VOTE_FAILED = Valet misslyckades
 THE_WINNER = Vinnaren
 WANT_CONT = Vill du forts'a'tta?
@@ -145,7 +145,7 @@ CHANGLE_MENU = Bytkarta meny
 [da]
 RESULT_REF = Resultat afvist
 RESULT_ACC = Resultat accepteret
-VOTE_SUCCESS = Afstemning lykkedes. Bane bliver skiftet til
+VOTE_SUCCESS = Afstemning lykkedes. (fik "%d") (behoevede "%d"). Resultat: %s
 VOTE_FAILED = Afstemning mislykkedes
 THE_WINNER = Vinderen
 WANT_CONT = Vil du fortsaette?
@@ -169,7 +169,7 @@ CHANGLE_MENU = Skift bane Menu
 [pl]
 RESULT_REF = Wynik odrzucony
 RESULT_ACC = Wynik zaakceptowany
-VOTE_SUCCESS = Glosowanie udane. Mapa zmieni sie na
+VOTE_SUCCESS = Glosowanie udane. (ma "%d") (potrzeba "%d"). Rezultat: %s
 VOTE_FAILED = Glosowanie nieudane
 THE_WINNER = Zwyciezca
 WANT_CONT = Czy chcesz kontynuowac?
@@ -193,7 +193,7 @@ CHANGLE_MENU = Menu zmiany mapy
 [nl]
 RESULT_REF = Resultaat geweigerd
 RESULT_ACC = Resultaat geaccepteerd
-VOTE_SUCCESS = Stemmen geslaagd. De map wordt veranderd naar
+VOTE_SUCCESS = Stemmen geslaagd. (ontvangen "%d") (nodig "%d"). Resultaat: %s
 VOTE_FAILED = Stemmen mislukt
 THE_WINNER = De winnaar
 WANT_CONT = Wil je verder gaan?
@@ -217,7 +217,7 @@ CHANGLE_MENU = Verander Map Menu
 [es]
 RESULT_REF = Resultado rechazado
 RESULT_ACC = Resultado aceptado
-VOTE_SUCCESS = Votacion finalizada. Se va a cambiar el mapa a
+VOTE_SUCCESS = Votacion finalizada. (obtenidos "%d") (necesarios "%d"). Resultado: %s
 VOTE_FAILED = Votacion sin exito
 THE_WINNER = El ganador
 WANT_CONT = Deseas continuar?
@@ -241,7 +241,7 @@ CHANGLE_MENU = Menu de Cambio de Mapa
 [bp]
 RESULT_REF = Resultado negado
 RESULT_ACC = Resultado aceito
-VOTE_SUCCESS = Votacao com sucesso. O mapa sera mudado para
+VOTE_SUCCESS = Votacao com sucesso. (obteve "%d") (necessario "%d" votos). O resultado: %s
 VOTE_FAILED = Votacao falhou
 THE_WINNER = O vencedor
 WANT_CONT = Voce quer continuar?
@@ -265,7 +265,7 @@ CHANGLE_MENU = Menu Mudanca de Mapas
 [cz]
 RESULT_REF = Vysledek odmitnut
 RESULT_ACC = Vysledek prijmut
-VOTE_SUCCESS = Hlasovani uspesne. Mapa se bude menit na
+VOTE_SUCCESS = Hlasovani uspesne. (dostal "%d") (bylo potreba "%d"). Vysledek: %s
 VOTE_FAILED = Hlasovani selhalo
 THE_WINNER = Vitez
 WANT_CONT = Chces pokracovat?
@@ -289,7 +289,7 @@ CHANGLE_MENU = Menu zmeny mapy
 [fi]
 RESULT_REF = Tulos hylatty
 RESULT_ACC = Tulos hyvaksytty
-VOTE_SUCCESS = Vote onnistui. Mappi vaihdetaan
+VOTE_SUCCESS = Vote onnistui. (saatiin "%d") (tarvittiin "%d"). Tulos: %s
 VOTE_FAILED = Vote epaonnistui
 THE_WINNER = Voittaja
 WANT_CONT = Haluatko jatkaa?
@@ -313,7 +313,7 @@ CHANGLE_MENU = Mapinvaihtovalikko
 [ls]
 RESULT_REF = N0
 RESULT_ACC = 0|<
-VOTE_SUCCESS = Yush! n3w m@p! 
+VOTE_SUCCESS = Yush! n3w m@p! (|200T "%d") (|\|33|)3|) "%d"). L3w$3|2z: %s
 VOTE_FAILED = N03Z!
 THE_WINNER = W!n4r!
 WANT_CONT = j00 sur3?
@@ -337,7 +337,7 @@ CHANGLE_MENU = Ch4ng3l3v3l M3nu
 [bg]
 RESULT_REF = Resultata ne e priet
 RESULT_ACC = Resultata e priet
-VOTE_SUCCESS = Glasuvaneto e spolo4livo. Karta 6te e smenena na
+VOTE_SUCCESS = Glasuvaneto e spolo4livo. (polu4eni "%d") (nujni "%d"). Resultata: %s
 VOTE_FAILED = Glasuvaneto ne e spolo4livo
 THE_WINNER = Pobeditelq
 WANT_CONT = Jelaete li da prodaljite?
@@ -361,7 +361,7 @@ CHANGLE_MENU = Smenqne na karta Menu
 [ro]
 RESULT_REF = Rezultat refuzat
 RESULT_ACC = Rezultat acceptat
-VOTE_SUCCESS = Votarea a avut loc cu succes. Harta va fi schimbata pe
+VOTE_SUCCESS = Votarea a avut loc cu succes. (a obtinut "%d" voturi, necesare "%d"). Rezultatul este: %s
 VOTE_FAILED = Votare esuata
 THE_WINNER = Castigatoare
 WANT_CONT = Accepti schimbarea hartii?
@@ -385,7 +385,7 @@ CHANGLE_MENU = Menu Schimbare Harta
 [hu]
 RESULT_REF = Ergebnis abgelehnt
 RESULT_ACC = Ergebnis angenommen
-VOTE_SUCCESS = Abstimmung beendet. Map wird gewechselt zu
+VOTE_SUCCESS = Abstimmung beendet. (van "%d") (kell "%d"). Az eredmeny: %s
 VOTE_FAILED = Abstimmung gescheitert
 THE_WINNER = Der Gewinner
 WANT_CONT = Willst du fortfahren?
@@ -409,7 +409,7 @@ CHANGLE_MENU = Mapwechsel Menu
 [lt]
 RESULT_REF = Rezultatas atsauktas
 RESULT_ACC = Rezultatas priimtas
-VOTE_SUCCESS = Balsavimas pavyko. Kitas zemelapis bus 
+VOTE_SUCCESS = Balsavimas pavyko. (gavo "%d") (reikia "%d"). Rezultatas: %s
 VOTE_FAILED = Balsavimas nepavyko
 THE_WINNER = Laimetojas
 WANT_CONT = Ar nori testi?
@@ -433,7 +433,7 @@ CHANGLE_MENU = Zemelapiu sarasas
 [sk]
 RESULT_REF = Vysledok odmietnuty
 RESULT_ACC = Vysledok prijaty
-VOTE_SUCCESS = Hlasovanie uspesne. Mapa se bude menit na
+VOTE_SUCCESS = Hlasovanie uspesne. (dostal "%d") (bolo potrebnych "%d"). Vysledok: %s
 VOTE_FAILED = Hlasovanie zlyhalo
 THE_WINNER = Vitaz
 WANT_CONT = Chces pokracovat?
@@ -457,7 +457,7 @@ CHANGLE_MENU = Menu zmeny mapy
 [mk]
 RESULT_REF = Rezultatot e odbien
 RESULT_ACC = Rezultatot e prifaten
-VOTE_SUCCESS = Glasanjeto e uspesno. Slednata mapa ke bide
+VOTE_SUCCESS = Glasanjeto e uspesno. (dobieno e "%d") (potrebno e "%d"). Rezultatot e: %s
 VOTE_FAILED = Glasanjeto e neuspesno
 THE_WINNER = Pobednikot e
 WANT_CONT = Dali sakate da prodolzite?
@@ -481,7 +481,7 @@ CHANGLE_MENU = Meni za promena na mapa
 [hr]
 RESULT_REF = Rezultat odbijen
 RESULT_ACC = Rezultat prihvacen
-VOTE_SUCCESS = Glasanje uspjesno. Sljedeca mapa ce biti
+VOTE_SUCCESS = Glasanje uspjesno. (dobiveno "%d") (potrebno "%d"). Rezultat je: %s
 VOTE_FAILED = Glasanje neuspjesno
 THE_WINNER = Pobjednik
 WANT_CONT = Zelite li nastaviti?
@@ -505,7 +505,7 @@ CHANGLE_MENU = Izbornik promjene mape
 [bs]
 RESULT_REF = Rezultat odbijen
 RESULT_ACC = Rezultat prihvacen
-VOTE_SUCCESS = Glasanje uspjesno. Slijedeca mapa ce biti
+VOTE_SUCCESS = Glasanje uspjesno. (dobijeno "%d") (potrebno "%d"). Rezultat je: %s
 VOTE_FAILED = Glasanje neuspjesno
 THE_WINNER = Pobjednik
 WANT_CONT = Da li zelite da nastavite?

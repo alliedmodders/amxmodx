@@ -2962,7 +2962,14 @@ static cell AMX_NATIVE_CALL get_user_menu(AMX *amx, cell *params) /* 3 param */
 	{
 		if (gpGlobals->time > pPlayer->menuexpire)
 		{
-			pPlayer->menu = 0;
+			int menu = pPlayer->newmenu;
+			if (menu >= 0 && menu < (int)g_NewMenus.size() && g_NewMenus[menu])
+			{
+				Menu *pMenu = g_NewMenus[menu];
+				pMenu->Close(pPlayer->index);
+			}
+			else
+				pPlayer->menu = 0;
 	
 			*cpMenu = 0;
 			*cpKeys = 0;

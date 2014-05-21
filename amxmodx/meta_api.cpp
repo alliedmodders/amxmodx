@@ -967,14 +967,7 @@ void C_ClientCommand(edict_t *pEntity)
 				if (menu >= 0 && menu < (int)g_NewMenus.size() && g_NewMenus[menu])
 				{
 					Menu *pMenu = g_NewMenus[menu];
-
-					pPlayer->newmenu = -1;
-					pPlayer->menu = 0;
-
-					executeForwards(pMenu->func, 
-						static_cast<cell>(pPlayer->index),
-						static_cast<cell>(menu),
-						static_cast<cell>(MENU_TIMEOUT));
+					pMenu->Close(pPlayer->index);
 
 					RETURN_META(MRES_SUPERCEDE);
 				} 

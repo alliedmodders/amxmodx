@@ -65,25 +65,10 @@ void CPlayer::Disconnect()
 	authorized = false;
 	teamIdsInitialized = false;
 
-	if (newmenu != -1)
+	if (newmenu >= 0 && newmenu < (int)g_NewMenus.size() && g_NewMenus[newmenu])
 	{
 		Menu *pMenu = g_NewMenus[newmenu];
-		if (pMenu)
-		{
-			int status;
-			if (gpGlobals->time > menuexpire)
-				status = MENU_TIMEOUT;
-			else
-				status = MENU_EXIT;
-
-			//prevent recursion
-			newmenu = -1;
-			menu = 0;
-			executeForwards(pMenu->func, 
-				static_cast<cell>(ENTINDEX(pEdict)),
-				static_cast<cell>(pMenu->thisId),
-				static_cast<cell>(status));
-		}
+		pMenu->Close(index);
 	}
 
 	List<ClientCvarQuery_Info *>::iterator iter, end=queries.end();

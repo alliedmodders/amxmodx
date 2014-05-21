@@ -1298,15 +1298,7 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 				if (menu >= 0 && menu < (int)g_NewMenus.size() && g_NewMenus[menu])
 				{
 					Menu *pMenu = g_NewMenus[menu];
-					int status;
-					if (gpGlobals->time > pPlayer->menuexpire)
-						status = MENU_TIMEOUT;
-					else
-						status = MENU_EXIT;
-
-					pPlayer->newmenu = -1;
-
-					executeForwards(pMenu->func, static_cast<cell>(pPlayer->index), static_cast<cell>(menu), static_cast<cell>(status));
+					pMenu->Close(pPlayer->index);
 				}
 				
 				UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
@@ -1345,15 +1337,7 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 			if (menu >= 0 && menu < (int)g_NewMenus.size() && g_NewMenus[menu])
 			{
 				Menu *pMenu = g_NewMenus[menu];
-				int status;
-				if (gpGlobals->time > pPlayer->menuexpire)
-					status = MENU_TIMEOUT;
-				else
-					status = MENU_EXIT;
-
-				pPlayer->newmenu = -1;
-
-				executeForwards(pMenu->func, static_cast<cell>(pPlayer->index), static_cast<cell>(menu), static_cast<cell>(status));
+				pMenu->Close(pPlayer->index);
 			}
 
 			UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);

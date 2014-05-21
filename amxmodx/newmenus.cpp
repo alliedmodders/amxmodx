@@ -815,18 +815,7 @@ static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 		}
 
 		Menu *pOther = g_NewMenus[menu];
-		int status;
-		if (gpGlobals->time > pPlayer->menuexpire)
-			status = MENU_TIMEOUT;
-		else
-			status = MENU_EXIT;
-
-		pPlayer->newmenu = -1;
-		pPlayer->menu = 0;
-		executeForwards(pOther->func, 
-			static_cast<cell>(player),
-			static_cast<cell>(pOther->thisId),
-			static_cast<cell>(status));
+		pOther->Close(pPlayer->index);
 
 		/* Infinite loop counter */
 		if (++loops >= 10)
@@ -1072,19 +1061,7 @@ static cell AMX_NATIVE_CALL menu_cancel(AMX *amx, cell *params)
 		return 0;
 
 	Menu *pMenu = g_NewMenus[menu];
-
-	int status;
-	if (gpGlobals->time > player->menuexpire)
-		status = MENU_TIMEOUT;
-	else
-		status = MENU_EXIT;
-
-	player->newmenu = -1;
-	player->menu = 0;
-	executeForwards(pMenu->func, 
-		static_cast<cell>(index),
-		static_cast<cell>(pMenu->thisId),
-		static_cast<cell>(status));
+	pMenu->Close(player->index);
 
 	return 1;
 }
@@ -1106,18 +1083,7 @@ static cell AMX_NATIVE_CALL menu_destroy(AMX *amx, cell *params)
 		player = GET_PLAYER_POINTER_I(i);
 		if (player->newmenu == pMenu->thisId)
 		{
-			int status;
-			if (gpGlobals->time > player->menuexpire)
-				status = MENU_TIMEOUT;
-			else
-				status = MENU_EXIT;
-
-			player->newmenu = -1;
-			player->menu = 0;
-			executeForwards(pMenu->func, 
-				static_cast<cell>(i), 
-				static_cast<cell>(pMenu->thisId),
-				static_cast<cell>(status));
+			pMenu->Close(player->index);
 		}
 	}
 	g_NewMenus[params[1]] = NULL;

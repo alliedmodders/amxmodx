@@ -361,13 +361,13 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	{
 		if (start + items_per_page >= numItems)
 		{
-			end = numItems - 1;
+			end = numItems;
 			flags &= ~Display_Next;
 		} else {
-			end = start + items_per_page - 1;
+			end = start + items_per_page;
 		}
 	} else {
-		end = numItems - 1;
+		end = numItems;
 		if (end > 10)
 		{
 			end = 10;
@@ -388,7 +388,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	int slots = 0;
 	int option_display = 0;
 	
-	for (item_t i = start; i <= end; i++)
+	for (item_t i = start; i < end; i++)
 	{
 		// reset enabled
 		enabled = true;

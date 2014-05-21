@@ -961,12 +961,30 @@ void C_ClientCommand(edict_t *pEntity)
 
 		if (pPlayer->keys &	bit_key)
 		{
-			if ((pPlayer->menu > 0 && !pPlayer->vgui) && (gpGlobals->time > pPlayer->menuexpire))
+			if (gpGlobals->time > pPlayer->menuexpire)
 			{
-				pPlayer->menu = 0;
-				pPlayer->keys = 0;
+				int menu = pPlayer->newmenu;
+				if (menu >= 0 && menu < (int)g_NewMenus.size() && g_NewMenus[menu])
+				{
+					Menu *pMenu = g_NewMenus[menu];
 
-				RETURN_META(MRES_SUPERCEDE);
+					pPlayer->newmenu = -1;
+					pPlayer->menu = 0;
+
+					executeForwards(pMenu->func, 
+						static_cast<cell>(pPlayer->index),
+						static_cast<cell>(menu),
+						static_cast<cell>(MENU_TIMEOUT));
+
+					RETURN_META(MRES_SUPERCEDE);
+				} 
+				else if (pPlayer->menu > 0 && !pPlayer->vgui)
+				{
+					pPlayer->menu = 0;
+					pPlayer->keys = 0;
+
+					RETURN_META(MRES_SUPERCEDE);
+				}
 			}
 			
 			int menuid = pPlayer->menu;

@@ -127,7 +127,8 @@ public:
 	
 	const char *GetTextString(int player, page_t page, int &keys);
 	bool Display(int player, page_t page);
-	
+	void Close(int player);
+
 	int PagekeyToItem(page_t page, item_t key);
 	int GetMenuMenuid();
 public:

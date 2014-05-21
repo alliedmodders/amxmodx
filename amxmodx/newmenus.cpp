@@ -321,6 +321,26 @@ bool Menu::Display(int player, page_t page)
 	return true;
 }
 
+void Menu::Close(int player) 
+{
+	CPlayer *pPlayer = GET_PLAYER_POINTER_I(player);
+
+	int status;
+	if (gpGlobals->time > pPlayer->menuexpire)
+		status = MENU_TIMEOUT;
+	else
+		status = MENU_EXIT;
+
+	pPlayer->keys = 0;
+	pPlayer->menu = 0;
+	pPlayer->newmenu = -1;
+
+	executeForwards(func,
+		static_cast<cell>(player),
+		static_cast<cell>(thisId),
+		static_cast<cell>(status));
+}
+
 const char *Menu::GetTextString(int player, page_t page, int &keys)
 {
 	page_t pages = GetPageCount();

@@ -32,6 +32,7 @@
 #ifndef _INCLUDE_NEWMENUS_H
 #define _INCLUDE_NEWMENUS_H
 
+#define MENU_TIMEOUT	-4
 #define	MENU_EXIT		-3
 #define	MENU_BACK		-2
 #define	MENU_MORE		-1

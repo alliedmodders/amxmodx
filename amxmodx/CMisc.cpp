@@ -70,13 +70,19 @@ void CPlayer::Disconnect()
 		Menu *pMenu = g_NewMenus[newmenu];
 		if (pMenu)
 		{
+			int status;
+			if (gpGlobals->time > menuexpire)
+				status = MENU_TIMEOUT;
+			else
+				status = MENU_EXIT;
+
 			//prevent recursion
 			newmenu = -1;
 			menu = 0;
 			executeForwards(pMenu->func, 
 				static_cast<cell>(ENTINDEX(pEdict)),
 				static_cast<cell>(pMenu->thisId),
-				static_cast<cell>(MENU_EXIT));
+				static_cast<cell>(status));
 		}
 	}
 

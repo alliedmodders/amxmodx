@@ -138,6 +138,7 @@ public:
 
 	String m_ItemColor;
 	bool m_NeverExit;
+	bool m_ForceExit;
 	bool m_AutoColors;
 	
 	int menuId;

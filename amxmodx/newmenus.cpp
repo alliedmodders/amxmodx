@@ -560,27 +560,31 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 			/* Keep padding */
 			option += 2;
 		}
-
-		if (!m_NeverExit)
+	}
+	
+	if ((items_per_page && !m_NeverExit) || (m_ForceExit && numItems < 10))
+	{
+		/* Visual pad has not been added yet */
+		if (!items_per_page)
+			m_Text.append("\n");
+		
+		keys |= (1<<option++);
+		if (m_AutoColors)
 		{
-			keys |= (1<<option++);
-			if (m_AutoColors)
-			{
-				_snprintf(buffer, 
-					sizeof(buffer)-1, 
-					"%s%d. \\w%s\n", 
-					m_ItemColor.c_str(), 
-					option == 10 ? 0 : option, 
-					m_OptNames[abs(MENU_EXIT)].c_str());
-			} else {
-				_snprintf(buffer, 
-					sizeof(buffer)-1, 
-					"%d. %s\n", 
-					option == 10 ? 0 : option, 
-					m_OptNames[abs(MENU_EXIT)].c_str());
-			}
-			m_Text.append(buffer);
+			_snprintf(buffer, 
+				sizeof(buffer)-1, 
+				"%s%d. \\w%s\n", 
+				m_ItemColor.c_str(), 
+				option == 10 ? 0 : option, 
+				m_OptNames[abs(MENU_EXIT)].c_str());
+		} else {
+			_snprintf(buffer, 
+				sizeof(buffer)-1, 
+				"%d. %s\n", 
+				option == 10 ? 0 : option, 
+				m_OptNames[abs(MENU_EXIT)].c_str());
 		}
+		m_Text.append(buffer);
 	}
 	
 	return m_Text.c_str();
@@ -990,8 +994,13 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 			if (ans == 1 || ans == 0)
 			{
 				pMenu->m_NeverExit = false;
+				pMenu->m_ForceExit = false;
+			} else if (ans == 2) {
+				pMenu->m_NeverExit = false;
+				pMenu->m_ForceExit = true;
 			} else if (ans == -1) {
 				pMenu->m_NeverExit = true;
+				pMenu->m_ForceExit = false;
 			}
 			break;
 		}

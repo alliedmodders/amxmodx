@@ -12,6 +12,10 @@
 #define _newmenus_included
 
 #define MEXIT_ALL		1		/* Menu will have an exit option (default)*/
+#define MEXIT_FORCE		2		/* Menu will have an exit option, even when pagination is disabled. 
+ * There have to be less than 10 items in the menu or it won't appear. The exit 
+ * option will be appended to the last item with no extra slot padding. If you 
+ * want it in the 10th slot you have to pad it manually with menu_addblank2 */
 #define MEXIT_NEVER		-1		/* Menu will not have an exit option */
 
 #define MPROP_PERPAGE	1		/* Number of items per page (param1 = number, 0=no paginating, 7=default) */

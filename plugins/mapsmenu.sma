@@ -81,7 +81,7 @@ public plugin_init()
 
 public autoRefuse()
 {
-	log_amx("Vote: %L", LANG_PLAYER, "RESULT_REF")
+	log_amx("Vote: %L", LANG_SERVER, "RESULT_REF")
 	client_print(0, print_chat, "%L", LANG_PLAYER, "RESULT_REF")
 }
 
@@ -106,7 +106,7 @@ public actionResult(id, key)
 			ArrayGetString(g_mapName, g_choosed, tempMap, charsmax(tempMap));
 			
 			set_task(2.0, "delayedChange", 0, tempMap, strlen(tempMap) + 1)
-			log_amx("Vote: %L", LANG_PLAYER, "RESULT_ACC")
+			log_amx("Vote: %L", LANG_SERVER, "RESULT_ACC")
 			client_print(0, print_chat, "%L", LANG_PLAYER, "RESULT_ACC")
 		}
 		case 1: autoRefuse()
@@ -138,7 +138,7 @@ public checkVotes(id)
 		new tempMap[32];
 		ArrayGetString(g_mapName, g_choosed, tempMap, charsmax(tempMap));
 		client_print(0, print_chat, "%L", LANG_PLAYER, "VOTE_SUCCESS", iResult, iRatio, tempMap);
-		log_amx("Vote: %L", LANG_PLAYER, "VOTE_SUCCESS", iResult, iRatio, tempMap);
+		log_amx("Vote: %L", LANG_SERVER, "VOTE_SUCCESS", iResult, iRatio, tempMap);
 	}
 	
 	if (g_choosed != -1)
@@ -170,7 +170,7 @@ public checkVotes(id)
 		}
 	} else {
 		client_print(0, print_chat, "%L", LANG_PLAYER, "VOTE_FAILED")
-		log_amx("Vote: %L", LANG_PLAYER, "VOTE_FAILED")
+		log_amx("Vote: %L", LANG_SERVER, "VOTE_FAILED")
 	}
 	
 	remove_task(34567 + id)

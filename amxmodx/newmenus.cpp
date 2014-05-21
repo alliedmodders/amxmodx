@@ -825,8 +825,14 @@ static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 		}
 	}
 
-	// This will set the expire time of the menu to infinite
-	pPlayer->menuexpire = INFINITE;
+	int time = -1;
+	if (params[0] / sizeof(cell) >= 4)
+		time = params[4];
+
+	if (time < 0)
+		pPlayer->menuexpire = INFINITE;
+	else
+		pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
 
 	return pMenu->Display(player, page);
 }

@@ -32,6 +32,7 @@
 #include <time.h>
 #include "amxmodx.h"
 #include "CMenu.h"
+#include "newmenus.h"
 #include "natives.h"
 #include "debugger.h"
 #include "binlog.h"
@@ -1292,6 +1293,17 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 				pPlayer->keys = 0;
 				pPlayer->menu = 0;
 
+				// Fire newmenu callback so closing it can be handled by the plugin
+				int menu = pPlayer->newmenu;
+				if (menu >= 0 && menu < (int)g_NewMenus.size() && g_NewMenus[menu])
+				{
+					Menu *pMenu = g_NewMenus[menu];
+
+					pPlayer->newmenu = -1;
+
+					executeForwards(pMenu->func, static_cast<cell>(pPlayer->index), static_cast<cell>(menu), static_cast<cell>(MENU_EXIT));
+				}
+				
 				UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
 
 				pPlayer->keys = keys;
@@ -1303,7 +1315,6 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 				else
 					pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
 				
-				pPlayer->newmenu = -1;
 				pPlayer->page = 0;
 				UTIL_ShowMenu(pPlayer->pEdict, keys, time, sMenu, ilen);
 			}
@@ -1324,6 +1335,17 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 			pPlayer->keys = 0;
 			pPlayer->menu = 0;
 
+			// Fire newmenu callback so closing it can be handled by the plugin
+			int menu = pPlayer->newmenu;
+			if (menu >= 0 && menu < (int)g_NewMenus.size() && g_NewMenus[menu])
+			{
+				Menu *pMenu = g_NewMenus[menu];
+
+				pPlayer->newmenu = -1;
+
+				executeForwards(pMenu->func, static_cast<cell>(pPlayer->index), static_cast<cell>(menu), static_cast<cell>(MENU_EXIT));
+			}
+
 			UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
 
 			pPlayer->keys = keys;
@@ -1335,7 +1357,6 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 			else
 				pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
 			
-			pPlayer->newmenu = -1;
 			pPlayer->page = 0;
 			UTIL_ShowMenu(pPlayer->pEdict, keys, time, sMenu, ilen);
 		}
@@ -2948,6 +2969,7 @@ static cell AMX_NATIVE_CALL get_user_menu(AMX *amx, cell *params) /* 3 param */
 		if (gpGlobals->time > pPlayer->menuexpire)
 		{
 			pPlayer->menu = 0;
+	
 			*cpMenu = 0;
 			*cpKeys = 0;
 			

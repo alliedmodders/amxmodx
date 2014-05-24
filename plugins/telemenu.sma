@@ -75,12 +75,13 @@ public actionTelMenu(id, key)
 			if (g_menuOption[id] < 0)	/* unlocking position for the first time */
 				g_menuOption[id] = 0
 
-			pev(id, pev_origin, g_menuOrigin[id])
-			pev(id, pev_v_angle, g_menuVAngle[id])
+			getTeleportData(id, g_menuOrigin[id], g_menuVAngle[id])
+
 			if (pev(id, pev_flags) & FL_DUCKING && is_user_alive(id))
 				SaveInDuckingState(id)
 			else
 				SaveNoDuckingState(id)
+
 			displayTelMenu(id, g_menuPosition[id])
 		}
 		case 8: displayTelMenu(id, ++g_menuPosition[id])
@@ -101,79 +102,41 @@ public actionTelMenu(id, key)
 
 			if (g_menuOption[id] > 0)
 			{
-				if ( HasInDuckingStateSaved(id) )
+				if (HasInDuckingStateSaved(id))
 				{
-					new sz_modname[16]
+					static Float:VEC_DUCK_VIEW[3] = -1.0
 
-					get_modname(sz_modname, charsmax(sz_modname))
-					if (equal(sz_modname, "cstrike") // Counter-Strike 1.6
-					|| equal(sz_modname, "czero") // Counter-Strike: Condition Zero
-					|| equal(sz_modname, "valve") // Half-Life
-					|| equal(sz_modname, "tfc")	// Team Fortress Classic
-					|| equal(sz_modname, "gearbox")) // Half-Life: Opposing Force
+					if (VEC_DUCK_VIEW[0])
 					{
-						set_pev(player, pev_flags, pev(player, pev_flags) | FL_DUCKING)
-						set_pev(id, pev_view_ofs, {0.0, 0.0, 12.0})
+						VEC_DUCK_VIEW[0] = 0.0
+
+						new modname[16]
+
+						get_modname(modname, charsmax(modname))
+						if (equal(modname, "cstrike")	// Counter-Strike 1.6
+						|| equal(modname, "czero")		// Counter-Strike: Condition Zero
+						|| equal(modname, "valve")		// Half-Life
+						|| equal(modname, "tfc")		// Team Fortress Classic
+						|| equal(modname, "ns")			// Natural Selection
+						|| equal(modname, "gearbox"))	// Half-Life: Opposing Force
+							VEC_DUCK_VIEW[2] = 12.0
+						else if (equal(modname, "dod"))	// Day of Defeat
+							VEC_DUCK_VIEW[2] = 18.0
+						else if (equal(modname, "ts"))	// The Specialists
+							VEC_DUCK_VIEW[2] = 16.0
 					}
-					else if (equal(sz_modname, "dod"))	// Day of Defeat
+					if (VEC_DUCK_VIEW[2])
 					{
-						set_pev(player, pev_flags, pev(player, pev_flags) | FL_DUCKING)
-						set_pev(id, pev_view_ofs, {0.0, 0.0, 18.0})
+						set_pev(id, pev_flags, pev(id, pev_flags) | FL_DUCKING)
+						set_pev(id, pev_view_ofs, VEC_DUCK_VIEW)
 					}
-					else if (equal(sz_modname, "ns")) // Natural Selection
-					{
-						set_pev(player, pev_flags, pev(player, pev_flags) | FL_DUCKING)
-						// Natural Selection handle view_ofs by itself
-					}
-					else if (equal(sz_modname, "ts"))	// The Specialists
-					{
-						set_pev(player, pev_flags, pev(player, pev_flags) | FL_DUCKING)
-						set_pev(id, pev_view_ofs, {0.0, 0.0, 16.0})
-					}
-					// Don't add this feature for mods that we don't know how their view_ofs work
 				}
-				engfunc(EngFunc_SetOrigin, player, g_menuOrigin[id])
-				set_pev(player, pev_angles, g_menuVAngle[id])
-				set_pev(player, pev_fixangle, 1)
+				doTeleport(player, g_menuOrigin[id], g_menuVAngle[id])
 			} else {
-				new Float:f_origin[3], Float:f_vangle[3]
+				new Float:origin[3], Float:vAngle[3]
 
-				pev(id, pev_origin, f_origin)
-				pev(id, pev_v_angle, f_vangle)
-				if ( HasInDuckingStateSaved(id) )
-				{
-					new sz_modname[16]
-
-					get_modname(sz_modname, charsmax(sz_modname))
-					if (equal(sz_modname, "cstrike") // Counter-Strike 1.6
-					|| equal(sz_modname, "czero") // Counter-Strike: Condition Zero
-					|| equal(sz_modname, "valve") // Half-Life
-					|| equal(sz_modname, "tfc")	// Team Fortress Classic
-					|| equal(sz_modname, "gearbox")) // Half-Life: Opposing Force
-					{
-						set_pev(player, pev_flags, pev(player, pev_flags) | FL_DUCKING)
-						set_pev(id, pev_view_ofs, {0.0, 0.0, 12.0})
-					}
-					else if (equal(sz_modname, "dod"))	// Day of Defeat
-					{
-						set_pev(player, pev_flags, pev(player, pev_flags) | FL_DUCKING)
-						set_pev(id, pev_view_ofs, {0.0, 0.0, 18.0})
-					}
-					else if (equal(sz_modname, "ns")) // Natural Selection
-					{
-						set_pev(player, pev_flags, pev(player, pev_flags) | FL_DUCKING)
-						// Natural Selection handle view_ofs by itself
-					}
-					else if (equal(sz_modname, "ts"))	// The Specialists
-					{
-						set_pev(player, pev_flags, pev(player, pev_flags) | FL_DUCKING)
-						set_pev(id, pev_view_ofs, {0.0, 0.0, 16.0})
-					}
-					// Don't add this feature for mods that we don't know how their view_ofs work
-				}
-				engfunc(EngFunc_SetOrigin, player, f_origin)
-				set_pev(player, pev_angles, f_vangle)
-				set_pev(player, pev_fixangle, 1)
+				getTeleportData(id, origin, vAngle)
+				doTeleport(player, origin, vAngle)
 			}
 
 			new authid[32], authid2[32], name[32]
@@ -191,6 +154,19 @@ public actionTelMenu(id, key)
 	}
 
 	return PLUGIN_HANDLED
+}
+
+getTeleportData(id, Float:origin[3], Float:vAngle[3])
+{
+	pev(id, pev_origin, origin)
+	pev(id, pev_v_angle, vAngle)
+}
+
+doTeleport(id, const Float:origin[3], const Float:vAngle[3])
+{
+	engfunc(EngFunc_SetOrigin, id, origin)
+	set_pev(id, pev_angles, vAngle)
+	set_pev(id, pev_fixangle, 1)
 }
 
 displayTelMenu(id, pos)

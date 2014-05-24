@@ -112,10 +112,10 @@ public actionTelMenu(id, key)
 
 						get_modname(modname, charsmax(modname))
 						if (equal(modname, "cstrike")	// Counter-Strike 1.6
-						|| equal(modname, "czero")		// Counter-Strike: Condition Zero
-						|| equal(modname, "valve")		// Half-Life
-						|| equal(modname, "tfc")		// Team Fortress Classic
-						|| equal(modname, "ns")			// Natural Selection
+						|| equal(modname, "czero")	// Counter-Strike: Condition Zero
+						|| equal(modname, "valve")	// Half-Life
+						|| equal(modname, "tfc")	// Team Fortress Classic
+						|| equal(modname, "ns")		// Natural Selection
 						|| equal(modname, "gearbox"))	// Half-Life: Opposing Force
 							VEC_DUCK_VIEW[2] = 12.0
 						else if (equal(modname, "dod"))	// Day of Defeat

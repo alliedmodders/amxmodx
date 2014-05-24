@@ -104,12 +104,10 @@ public actionTelMenu(id, key)
 			{
 				if (HasInDuckingStateSaved(id))
 				{
-					static Float:VEC_DUCK_VIEW[3] = -1.0
+					static Float:VEC_DUCK_VIEW[3] = {0.0, 0.0, -1.0}
 
-					if (VEC_DUCK_VIEW[0])
+					if (VEC_DUCK_VIEW[2] == -1.0)
 					{
-						VEC_DUCK_VIEW[0] = 0.0
-
 						new modname[16]
 
 						get_modname(modname, charsmax(modname))
@@ -124,8 +122,10 @@ public actionTelMenu(id, key)
 							VEC_DUCK_VIEW[2] = 18.0
 						else if (equal(modname, "ts"))	// The Specialists
 							VEC_DUCK_VIEW[2] = 16.0
+						else
+							VEC_DUCK_VIEW[0] = 0.0
 					}
-					if (VEC_DUCK_VIEW[2])
+					if (VEC_DUCK_VIEW[2] > 0.0)
 					{
 						set_pev(id, pev_flags, pev(id, pev_flags) | FL_DUCKING)
 						set_pev(id, pev_view_ofs, VEC_DUCK_VIEW)

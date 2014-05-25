@@ -123,7 +123,7 @@ public actionTelMenu(id, key)
 						else if (equal(modname, "ts"))	// The Specialists
 							VEC_DUCK_VIEW[2] = 16.0
 						else
-							VEC_DUCK_VIEW[0] = 0.0
+							VEC_DUCK_VIEW[2] = 0.0
 					}
 					if (VEC_DUCK_VIEW[2] > 0.0)
 					{

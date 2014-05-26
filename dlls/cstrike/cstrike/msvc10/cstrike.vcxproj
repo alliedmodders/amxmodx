@@ -142,6 +142,7 @@
     <ClCompile Include="..\sdk\amxxmodule.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\CstrikeDatas.h" />
     <ClInclude Include="..\CstrikeNatives.h" />
     <ClInclude Include="..\CstrikePlayer.h" />
     <ClInclude Include="..\svn_version.h" />

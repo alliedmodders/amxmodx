@@ -52,6 +52,9 @@
     <ClInclude Include="..\CstrikeNatives.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\CstrikeDatas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\plugins\include\cstrike.inc">

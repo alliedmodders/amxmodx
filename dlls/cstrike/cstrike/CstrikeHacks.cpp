@@ -1,6 +1,6 @@
 #include <assert.h>
 #include <stdlib.h>
-#include "CstrikeNatives.h"
+#include "CstrikeDatas.h"
 
 #if defined(__linux__) || defined(__APPLE__)
 #include <sys/mman.h>

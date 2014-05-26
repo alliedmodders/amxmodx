@@ -31,6 +31,7 @@
  *  version.
  */
 #include "CstrikeNatives.h"
+#include "CstrikeDatas.h"
 
 CCstrikePlayer g_players[33];
 int g_zooming[33] = {0};

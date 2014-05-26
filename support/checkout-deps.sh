@@ -49,28 +49,41 @@ fi
 checkout ()
 {
   if [ ! -d "$name" ]; then
-    hg clone http://hg.alliedmods.net/$path
+    git clone $repo -b $branch $name
+    if [ -n "$origin" ]; then
+      cd $name
+      git remote rm origin
+      git remote add origin $origin
+      cd ..
+    fi
   else
     cd $name
-    hg pull -u
+    git checkout $branch
+    git pull origin $branch
     cd ..
   fi
 }
 
 name=metamod-am
-path=metamod-am
+branch=master
+repo="https://github.com/alliedmodders/metamod-hl1"
+origin=
 checkout
 
 name=hlsdk
-path=hl2sdks/hlsdk
+branch=master
+repo="https://github.com/alliedmodders/hlsdk"
+origin=
 checkout
 
 `python -c "import ambuild2"`
 if [ $? -eq 1 ]; then
+  repo="https://github.com/alliedmodders/ambuild"
+  origin=
+  branch=master
   name=ambuild
-  path=ambuild
   checkout
-  
+
   cd ambuild
   if [ $iswin -eq 1 ]; then
     python setup.py install

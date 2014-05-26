@@ -5,6 +5,7 @@ binary = AMXX.MetaModule(builder, 'cstrike')
 
 binary.sources = [
   'sdk/amxxmodule.cpp',
+  'amxx_api.cpp',
   'CstrikePlayer.cpp',
   'cstrike.cpp',
   'CstrikeHacks.cpp',

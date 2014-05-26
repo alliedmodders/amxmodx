@@ -14,7 +14,7 @@ MM_ROOT = ../../../../metamod/metamod
 
 PROJECT = cstrike
 
-OBJECTS = sdk/amxxmodule.cpp CstrikePlayer.cpp cstrike.cpp CstrikeHacks.cpp
+OBJECTS = sdk/amxxmodule.cpp amxx_api.cpp CstrikePlayer.cpp cstrike.cpp CstrikeHacks.cpp
 
 ##############################################
 ### CONFIGURE ANY OTHER FLAGS/OPTIONS HERE ###

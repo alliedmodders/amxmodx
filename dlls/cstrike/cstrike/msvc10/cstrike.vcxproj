@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\amxx_api.cpp" />
     <ClCompile Include="..\cstrike.cpp" />
     <ClCompile Include="..\CstrikeHacks.cpp" />
     <ClCompile Include="..\CstrikePlayer.cpp" />

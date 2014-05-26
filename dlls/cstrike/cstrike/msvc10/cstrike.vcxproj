@@ -136,13 +136,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\amxx_api.cpp" />
-    <ClCompile Include="..\cstrike.cpp" />
+    <ClCompile Include="..\CstrikeNatives.cpp" />
     <ClCompile Include="..\CstrikeHacks.cpp" />
     <ClCompile Include="..\CstrikePlayer.cpp" />
     <ClCompile Include="..\sdk\amxxmodule.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\cstrike.h" />
+    <ClInclude Include="..\CstrikeNatives.h" />
     <ClInclude Include="..\CstrikePlayer.h" />
     <ClInclude Include="..\svn_version.h" />
     <ClInclude Include="..\sdk\moduleconfig.h" />

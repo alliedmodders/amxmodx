@@ -31,7 +31,7 @@
  *  version.
  */
 #include "amxxmodule.h"
-#include "cstrike.h"
+#include "CstrikeNatives.h"
 
 extern AMX_NATIVE_INFO cstrikeNatives[];
 

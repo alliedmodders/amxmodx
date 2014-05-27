@@ -81,6 +81,14 @@ void validate_menu_text(char *str)
 	}
 }
 
+Menu *get_menu_by_id(int id)
+{
+	if (id < 0 || size_t(id) >= g_NewMenus.size() || !g_NewMenus[id])
+		return NULL;
+
+	return g_NewMenus[id];
+}
+
 Menu::Menu(const char *title, AMX *amx, int fid) : m_Title(title), m_ItemColor("\\r"), 
 m_NeverExit(false), m_AutoColors(g_coloredmenus), thisId(0), func(fid), 
 isDestroying(false), items_per_page(7)
@@ -319,6 +327,26 @@ bool Menu::Display(int player, page_t page)
 	UTIL_ShowMenu(pPlayer->pEdict, keys, -1, buffer, len);
 
 	return true;
+}
+
+void Menu::Close(int player) 
+{
+	CPlayer *pPlayer = GET_PLAYER_POINTER_I(player);
+
+	int status;
+	if (gpGlobals->time > pPlayer->menuexpire)
+		status = MENU_TIMEOUT;
+	else
+		status = MENU_EXIT;
+
+	pPlayer->keys = 0;
+	pPlayer->menu = 0;
+	pPlayer->newmenu = -1;
+
+	executeForwards(func,
+		static_cast<cell>(player),
+		static_cast<cell>(thisId),
+		static_cast<cell>(status));
 }
 
 const char *Menu::GetTextString(int player, page_t page, int &keys)
@@ -590,10 +618,10 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	return m_Text.c_str();
 }
 
-#define GETMENU(p) if (p >= (int)g_NewMenus.size() || p < 0 || !g_NewMenus[p] || g_NewMenus[p]->isDestroying) { \
+#define GETMENU(p) Menu *pMenu = get_menu_by_id(p); \
+	if (pMenu == NULL || pMenu->isDestroying) { \
 	LogError(amx, AMX_ERR_NATIVE, "Invalid menu id %d(%d)", p, g_NewMenus.size()); \
-	return 0; } \
-	Menu *pMenu = g_NewMenus[p];
+	return 0; }
 
 //Makes a new menu handle (-1 for failure)
 //native csdm_makemenu(title[]);
@@ -799,13 +827,7 @@ static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 		}
 
 		Menu *pOther = g_NewMenus[menu];
-
-		pPlayer->newmenu = -1;
-		pPlayer->menu = 0;
-		executeForwards(pOther->func, 
-			static_cast<cell>(player),
-			static_cast<cell>(pOther->thisId),
-			static_cast<cell>(MENU_EXIT));
+		pOther->Close(pPlayer->index);
 
 		/* Infinite loop counter */
 		if (++loops >= 10)
@@ -815,8 +837,14 @@ static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 		}
 	}
 
-	// This will set the expire time of the menu to infinite
-	pPlayer->menuexpire = INFINITE;
+	int time = -1;
+	if (params[0] / sizeof(cell) >= 4)
+		time = params[4];
+
+	if (time < 0)
+		pPlayer->menuexpire = INFINITE;
+	else
+		pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
 
 	return pMenu->Display(player, page);
 }
@@ -1029,10 +1057,10 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 	return 1;
 }
 
-#define GETMENU_R(p) if (p >= (int)g_NewMenus.size() || p < 0 || !g_NewMenus[p]) { \
+#define GETMENU_R(p) Menu *pMenu = get_menu_by_id(p); \
+	if (pMenu == NULL) { \
 	LogError(amx, AMX_ERR_NATIVE, "Invalid menu id %d(%d)", p, g_NewMenus.size()); \
-	return 0; } \
-	Menu *pMenu = g_NewMenus[p];
+	return 0; }
 
 static cell AMX_NATIVE_CALL menu_cancel(AMX *amx, cell *params)
 {
@@ -1047,24 +1075,16 @@ static cell AMX_NATIVE_CALL menu_cancel(AMX *amx, cell *params)
 	CPlayer *player = GET_PLAYER_POINTER_I(index);
 	if (!player->ingame)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Played %d is not in game", index);
+		LogError(amx, AMX_ERR_NATIVE, "Player %d is not in game", index);
 		return 0;
 	}
 
-	int menu = player->newmenu;
-	if (menu < 0 || menu >= (int)g_NewMenus.size() || !g_NewMenus[menu])
-		return 0;
+	if (Menu *pMenu = get_menu_by_id(player->newmenu)) {
+		pMenu->Close(player->index);
+		return 1;
+	}
 
-	Menu *pMenu = g_NewMenus[menu];
-
-	player->newmenu = -1;
-	player->menu = 0;
-	executeForwards(pMenu->func, 
-		static_cast<cell>(index),
-		static_cast<cell>(pMenu->thisId),
-		static_cast<cell>(MENU_EXIT));
-
-	return 1;
+	return 0;
 }
 
 static cell AMX_NATIVE_CALL menu_destroy(AMX *amx, cell *params)
@@ -1084,12 +1104,7 @@ static cell AMX_NATIVE_CALL menu_destroy(AMX *amx, cell *params)
 		player = GET_PLAYER_POINTER_I(i);
 		if (player->newmenu == pMenu->thisId)
 		{
-			player->newmenu = -1;
-			player->menu = 0;
-			executeForwards(pMenu->func, 
-				static_cast<cell>(i), 
-				static_cast<cell>(pMenu->thisId),
-				static_cast<cell>(MENU_EXIT));
+			pMenu->Close(player->index);
 		}
 	}
 	g_NewMenus[params[1]] = NULL;

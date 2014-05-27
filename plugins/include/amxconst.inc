@@ -269,9 +269,10 @@ enum {
 
 #define INVALID_PLUGIN_ID	-1
 
-#define MENU_EXIT	-3
-#define	MENU_BACK	-2
-#define MENU_MORE	-1
+#define MENU_TIMEOUT	-4
+#define MENU_EXIT		-3
+#define	MENU_BACK		-2
+#define MENU_MORE		-1
 #define	ITEM_IGNORE		0
 #define	ITEM_ENABLED	1
 #define ITEM_DISABLED	2

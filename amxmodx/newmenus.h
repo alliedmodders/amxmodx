@@ -32,6 +32,7 @@
 #ifndef _INCLUDE_NEWMENUS_H
 #define _INCLUDE_NEWMENUS_H
 
+#define MENU_TIMEOUT	-4
 #define	MENU_EXIT		-3
 #define	MENU_BACK		-2
 #define	MENU_MORE		-1
@@ -126,7 +127,8 @@ public:
 	
 	const char *GetTextString(int player, page_t page, int &keys);
 	bool Display(int player, page_t page);
-	
+	void Close(int player);
+
 	int PagekeyToItem(page_t page, item_t key);
 	int GetMenuMenuid();
 public:
@@ -150,6 +152,7 @@ public:
 };
 
 void ClearMenus();
+Menu *get_menu_by_id(int id);
 
 extern CVector<Menu *> g_NewMenus;
 extern AMX_NATIVE_INFO g_NewMenuNatives[];

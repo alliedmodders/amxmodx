@@ -961,12 +961,21 @@ void C_ClientCommand(edict_t *pEntity)
 
 		if (pPlayer->keys &	bit_key)
 		{
-			if ((pPlayer->menu > 0 && !pPlayer->vgui) && (gpGlobals->time > pPlayer->menuexpire))
+			if (gpGlobals->time > pPlayer->menuexpire)
 			{
-				pPlayer->menu = 0;
-				pPlayer->keys = 0;
+				if (Menu *pMenu = get_menu_by_id(pPlayer->newmenu))
+				{
+					pMenu->Close(pPlayer->index);
 
-				RETURN_META(MRES_SUPERCEDE);
+					RETURN_META(MRES_SUPERCEDE);
+				} 
+				else if (pPlayer->menu > 0 && !pPlayer->vgui)
+				{
+					pPlayer->menu = 0;
+					pPlayer->keys = 0;
+
+					RETURN_META(MRES_SUPERCEDE);
+				}
 			}
 			
 			int menuid = pPlayer->menu;
@@ -978,10 +987,8 @@ void C_ClientCommand(edict_t *pEntity)
 			{
 				int menu = pPlayer->newmenu;
 				pPlayer->newmenu = -1;
-
-				if (menu >= 0 && menu < (int)g_NewMenus.size() && g_NewMenus[menu])
+				if (Menu *pMenu = get_menu_by_id(menu))
 				{
-					Menu *pMenu = g_NewMenus[menu];
 					int item = pMenu->PagekeyToItem(pPlayer->page, pressed_key+1);
 					if (item == MENU_BACK)
 					{

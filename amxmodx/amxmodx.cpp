@@ -32,6 +32,7 @@
 #include <time.h>
 #include "amxmodx.h"
 #include "CMenu.h"
+#include "newmenus.h"
 #include "natives.h"
 #include "debugger.h"
 #include "binlog.h"
@@ -1292,6 +1293,10 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 				pPlayer->keys = 0;
 				pPlayer->menu = 0;
 
+				// Fire newmenu callback so closing it can be handled by the plugin
+				if (Menu *pMenu = get_menu_by_id(pPlayer->newmenu))
+					pMenu->Close(pPlayer->index);
+				
 				UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
 
 				pPlayer->keys = keys;
@@ -1303,7 +1308,6 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 				else
 					pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
 				
-				pPlayer->newmenu = -1;
 				pPlayer->page = 0;
 				UTIL_ShowMenu(pPlayer->pEdict, keys, time, sMenu, ilen);
 			}
@@ -1324,6 +1328,10 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 			pPlayer->keys = 0;
 			pPlayer->menu = 0;
 
+			// Fire newmenu callback so closing it can be handled by the plugin
+			if (Menu *pMenu = get_menu_by_id(pPlayer->newmenu))
+				pMenu->Close(pPlayer->index);
+
 			UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
 
 			pPlayer->keys = keys;
@@ -1335,7 +1343,6 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 			else
 				pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
 			
-			pPlayer->newmenu = -1;
 			pPlayer->page = 0;
 			UTIL_ShowMenu(pPlayer->pEdict, keys, time, sMenu, ilen);
 		}
@@ -2947,7 +2954,11 @@ static cell AMX_NATIVE_CALL get_user_menu(AMX *amx, cell *params) /* 3 param */
 	{
 		if (gpGlobals->time > pPlayer->menuexpire)
 		{
-			pPlayer->menu = 0;
+			if (Menu *pMenu = get_menu_by_id(pPlayer->newmenu))
+				pMenu->Close(pPlayer->index);
+			else
+				pPlayer->menu = 0;
+	
 			*cpMenu = 0;
 			*cpKeys = 0;
 			

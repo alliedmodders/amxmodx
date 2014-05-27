@@ -115,13 +115,21 @@ native menu_items(menu);
  * when the item is less than 0 (i.e. calling this from a cancelled menu will 
  * result in an error).
  *
+ * Starting with 1.8.3 this allows to specify a menu timeout similar to the 
+ * show_menu native. If the menu exists on the client past the timeout *any* 
+ * further action will send the MENU_TIMEOUT status code to the menu handler.
+ * That includes actions which would otherwise send MENU_EXIT, such as the
+ * client selecting an item or disconnecting and calling menu_cancel or 
+ * menu_destroy on a live menu.
+ *
  * @param id			Client index.
  * @param menu			Menu resource identifier.
  * @param page			Page to start from (starting from 0).
+ * @param time			If >=0 menu will timeout after this many seconds
  * @noreturn
  * @error				Invalid menu resource or client index.
  */
-native menu_display(id, menu, page=0);
+native menu_display(id, menu, page=0, time=-1);
 
 /**
  * Given a page on a menu and a keypress on that page, returns the item id selected.

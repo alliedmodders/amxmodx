@@ -9,6 +9,9 @@ binary.sources = [
   'CstrikePlayer.cpp',
   'CstrikeNatives.cpp',
   'CstrikeHacks.cpp',
+  '../../../public/memtools/MemoryUtils.cpp',
+  '../../../public/memtools/CDetour/detours.cpp',
+  '../../../public/memtools/CDetour/asm/asm.c',
 ]
 
 AMXX.modules += [builder.Add(binary)]

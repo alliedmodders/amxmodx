@@ -18,6 +18,15 @@
     <Filter Include="Pawn Includes">
       <UniqueIdentifier>{7be12e0f-47b1-4d7e-880c-83e5d1c378d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Memtools">
+      <UniqueIdentifier>{bbcd1d67-4670-423d-912f-695737e76bad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memtools\CDetour">
+      <UniqueIdentifier>{074d4da1-d1be-40ba-8417-1fc388d85568}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memtools\CDetour\asm">
+      <UniqueIdentifier>{4f3c4a13-065a-49b1-83a1-f646a3ec3678}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\CstrikeHacks.cpp">
@@ -34,6 +43,15 @@
     </ClCompile>
     <ClCompile Include="..\CstrikeNatives.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\public\memtools\MemoryUtils.cpp">
+      <Filter>Memtools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\public\memtools\CDetour\detours.cpp">
+      <Filter>Memtools\CDetour</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\public\memtools\CDetour\asm\asm.c">
+      <Filter>Memtools\CDetour\asm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -54,6 +72,18 @@
     </ClInclude>
     <ClInclude Include="..\CstrikeDatas.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\memtools\MemoryUtils.h">
+      <Filter>Memtools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\memtools\CDetour\detourhelpers.h">
+      <Filter>Memtools\CDetour</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\memtools\CDetour\detours.h">
+      <Filter>Memtools\CDetour</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\memtools\CDetour\asm\asm.h">
+      <Filter>Memtools\CDetour\asm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

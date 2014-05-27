@@ -14,7 +14,9 @@ MM_ROOT = ../../../../metamod/metamod
 
 PROJECT = cstrike
 
-OBJECTS = sdk/amxxmodule.cpp amxx_api.cpp CstrikePlayer.cpp CstrikeNatives.cpp CstrikeHacks.cpp
+OBJECTS = sdk/amxxmodule.cpp amxx_api.cpp CstrikePlayer.cpp CstrikeNatives.cpp CstrikeHacks.cpp \
+			../../../public/memtools/MemoryUtils.cpp ../../../public/memtools/CDetour/detours.cpp \
+			../../../public/memtools/CDetour/asm/asm.c
 
 ##############################################
 ### CONFIGURE ANY OTHER FLAGS/OPTIONS HERE ###
@@ -29,7 +31,7 @@ CPP_OSX = clang
 
 LINK =
 
-INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/common -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared \
+INCLUDE = -I. -I../../../public -I../../../public/amtl -I$(HLSDK) -I$(HLSDK)/common -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared \
 	  -I$(HLSDK)/public -I$(MM_ROOT) -Isdk
 
 ################################################

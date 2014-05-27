@@ -1066,7 +1066,7 @@ static cell AMX_NATIVE_CALL menu_cancel(AMX *amx, cell *params)
 	CPlayer *player = GET_PLAYER_POINTER_I(index);
 	if (!player->ingame)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Played %d is not in game", index);
+		LogError(amx, AMX_ERR_NATIVE, "Player %d is not in game", index);
 		return 0;
 	}
 

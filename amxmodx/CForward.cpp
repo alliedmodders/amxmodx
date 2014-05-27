@@ -100,7 +100,7 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 					if (!str)
 						str = "";
 					amx_Allot(iter->pPlugin->getAMX(), (m_ParamTypes[i] == FP_STRING) ? strlen(str) + 1 : STRINGEX_MAXLENGTH, &realParams[i], &tmp);
-					amx_SetStringOld(tmp, str, 0, 1);
+					amx_SetStringOld(tmp, str, 0, 0);
 					physAddrs[i] = tmp;
 				}
 				else if (m_ParamTypes[i] == FP_ARRAY)
@@ -277,7 +277,7 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 				str = "";
 			cell *tmp;
 			amx_Allot(m_Amx, (m_ParamTypes[i] == FP_STRING) ? strlen(str) + 1 : STRINGEX_MAXLENGTH, &realParams[i], &tmp);
-			amx_SetStringOld(tmp, str, 0, 1);
+			amx_SetStringOld(tmp, str, 0, 0);
 			physAddrs[i] = tmp;
 		}
 		else if (m_ParamTypes[i] == FP_ARRAY)

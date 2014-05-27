@@ -4141,7 +4141,7 @@ int AMXAPI amx_SetStringOld(cell *dest,const char *source,int pack,int use_wchar
         dest[i]=(cell)(((wchar_t*)source)[i]);
     } else {
       for (i=0; i<len; i++)
-        dest[i]=(cell)source[i];
+        dest[i]=(unsigned char)source[i];
     } /* if */
     dest[len]=0;
   } /* if */

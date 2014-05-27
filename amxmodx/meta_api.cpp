@@ -963,10 +963,8 @@ void C_ClientCommand(edict_t *pEntity)
 		{
 			if (gpGlobals->time > pPlayer->menuexpire)
 			{
-				int menu = pPlayer->newmenu;
-				if (menu >= 0 && menu < (int)g_NewMenus.size() && g_NewMenus[menu])
+				if (Menu *pMenu = get_menu_by_id(pPlayer->newmenu))
 				{
-					Menu *pMenu = g_NewMenus[menu];
 					pMenu->Close(pPlayer->index);
 
 					RETURN_META(MRES_SUPERCEDE);
@@ -989,10 +987,8 @@ void C_ClientCommand(edict_t *pEntity)
 			{
 				int menu = pPlayer->newmenu;
 				pPlayer->newmenu = -1;
-
-				if (menu >= 0 && menu < (int)g_NewMenus.size() && g_NewMenus[menu])
+				if (Menu *pMenu = get_menu_by_id(menu))
 				{
-					Menu *pMenu = g_NewMenus[menu];
 					int item = pMenu->PagekeyToItem(pPlayer->page, pressed_key+1);
 					if (item == MENU_BACK)
 					{

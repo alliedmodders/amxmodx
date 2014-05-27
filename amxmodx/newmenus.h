@@ -151,6 +151,7 @@ public:
 };
 
 void ClearMenus();
+Menu *get_menu_by_id(int id);
 
 extern CVector<Menu *> g_NewMenus;
 extern AMX_NATIVE_INFO g_NewMenuNatives[];

@@ -1294,12 +1294,8 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 				pPlayer->menu = 0;
 
 				// Fire newmenu callback so closing it can be handled by the plugin
-				int menu = pPlayer->newmenu;
-				if (menu >= 0 && menu < (int)g_NewMenus.size() && g_NewMenus[menu])
-				{
-					Menu *pMenu = g_NewMenus[menu];
+				if (Menu *pMenu = get_menu_by_id(pPlayer->newmenu))
 					pMenu->Close(pPlayer->index);
-				}
 				
 				UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
 
@@ -1333,12 +1329,8 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 			pPlayer->menu = 0;
 
 			// Fire newmenu callback so closing it can be handled by the plugin
-			int menu = pPlayer->newmenu;
-			if (menu >= 0 && menu < (int)g_NewMenus.size() && g_NewMenus[menu])
-			{
-				Menu *pMenu = g_NewMenus[menu];
+			if (Menu *pMenu = get_menu_by_id(pPlayer->newmenu))
 				pMenu->Close(pPlayer->index);
-			}
 
 			UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
 
@@ -2962,12 +2954,8 @@ static cell AMX_NATIVE_CALL get_user_menu(AMX *amx, cell *params) /* 3 param */
 	{
 		if (gpGlobals->time > pPlayer->menuexpire)
 		{
-			int menu = pPlayer->newmenu;
-			if (menu >= 0 && menu < (int)g_NewMenus.size() && g_NewMenus[menu])
-			{
-				Menu *pMenu = g_NewMenus[menu];
+			if (Menu *pMenu = get_menu_by_id(pPlayer->newmenu))
 				pMenu->Close(pPlayer->index);
-			}
 			else
 				pPlayer->menu = 0;
 	

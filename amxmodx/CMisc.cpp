@@ -65,11 +65,8 @@ void CPlayer::Disconnect()
 	authorized = false;
 	teamIdsInitialized = false;
 
-	if (newmenu >= 0 && newmenu < (int)g_NewMenus.size() && g_NewMenus[newmenu])
-	{
-		Menu *pMenu = g_NewMenus[newmenu];
+	if (Menu *pMenu = get_menu_by_id(newmenu))
 		pMenu->Close(index);
-	}
 
 	List<ClientCvarQuery_Info *>::iterator iter, end=queries.end();
 	for (iter=queries.begin(); iter!=end; iter++)

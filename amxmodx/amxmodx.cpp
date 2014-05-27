@@ -4030,7 +4030,7 @@ static cell AMX_NATIVE_CALL callfunc_push_str(AMX *amx, cell *params)
 	// copy it to the allocated memory
 	// we assume it's unpacked
 	// :NOTE: 4th parameter use_wchar since Small Abstract Machine 2.5.0
-	amx_SetStringOld(phys_addr, str, 0, 0);
+	amx_SetStringOld(phys_addr, str, 0, 1);
 
 	// push the address and set the reference flag so that memory is released after function call.
 	g_CallFunc_ParamInfo[g_CallFunc_CurParam].flags = CALLFUNC_FLAG_BYREF;

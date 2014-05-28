@@ -41,9 +41,6 @@
     <ClCompile Include="..\amxx_api.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\CstrikeNatives.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\public\memtools\MemoryUtils.cpp">
       <Filter>Memtools</Filter>
     </ClCompile>
@@ -53,12 +50,15 @@
     <ClCompile Include="..\..\..\..\public\memtools\CDetour\asm\asm.c">
       <Filter>Memtools\CDetour\asm</Filter>
     </ClCompile>
+    <ClCompile Include="..\CstrikeNatives.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CstrikeUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CstrikePlayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\svn_version.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\sdk\moduleconfig.h">
@@ -66,9 +66,6 @@
     </ClInclude>
     <ClInclude Include="..\sdk\amxxmodule.h">
       <Filter>Module SDK\SDK Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CstrikeNatives.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\CstrikeDatas.h">
       <Filter>Header Files</Filter>
@@ -85,9 +82,12 @@
     <ClInclude Include="..\..\..\..\public\memtools\CDetour\asm\asm.h">
       <Filter>Memtools\CDetour\asm</Filter>
     </ClInclude>
+    <ClInclude Include="..\CstrikeUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\plugins\include\cstrike.inc">
+    <None Include="..\..\..\..\plugins\include\cstrike.inc">
       <Filter>Pawn Includes</Filter>
     </None>
   </ItemGroup>

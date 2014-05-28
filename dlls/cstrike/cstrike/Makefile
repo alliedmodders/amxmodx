@@ -14,8 +14,9 @@ MM_ROOT = ../../../../metamod/metamod
 
 PROJECT = cstrike
 
-OBJECTS = sdk/amxxmodule.cpp amxx_api.cpp CstrikePlayer.cpp CstrikeNatives.cpp CstrikeHacks.cpp \
-			../../../public/memtools/MemoryUtils.cpp ../../../public/memtools/CDetour/detours.cpp \
+OBJECTS = sdk/amxxmodule.cpp amxx_api.cpp CstrikePlayer.cpp CstrikeNatives.cpp CstrikeHacks.cpp CstrikeUtils.cpp \
+			../../../public/memtools/MemoryUtils.cpp \
+			../../../public/memtools/CDetour/detours.cpp \
 			../../../public/memtools/CDetour/asm/asm.c
 
 ##############################################

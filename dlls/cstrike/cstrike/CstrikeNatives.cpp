@@ -30,42 +30,14 @@
  *  you do not wish to do so, delete this exception statement from your
  *  version.
  */
-#include "CstrikeNatives.h"
 #include "CstrikeDatas.h"
+#include "CstrikePlayer.h"
+#include "CstrikeUtils.h"
 
 CCstrikePlayer g_players[33];
 int g_zooming[33] = {0};
 bool g_precachedknife = false;
 bool g_noknives = false;
-
-// Utils first
-
-bool UTIL_IsPlayer(AMX* amx, edict_t* pPlayer) {
-	bool player = false;
-
-	if (strcmp(STRING(pPlayer->v.classname), "player") == 0)
-		player = true;
-
-	return player;
-}
-
-void UTIL_TextMsg_Generic(edict_t* pPlayer, const char* message)
-{
-	MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "TextMsg", NULL), NULL, pPlayer);
-	WRITE_BYTE(HUD_PRINTCENTER); // 1 = console, 2 = console, 3 = chat, 4 = center
-	WRITE_STRING(message);
-	MESSAGE_END();
-	/*
-	The byte above seems to use these:
-	#define HUD_PRINTNOTIFY		1
-	#define HUD_PRINTCONSOLE	2
-	#define HUD_PRINTTALK		3
-	#define HUD_PRINTCENTER		4
-	However both 1 and 2 seems to go to console with Steam CS.
-	*/
-}
-
-// Then natives
 
 static cell AMX_NATIVE_CALL cs_set_user_money(AMX *amx, cell *params) // cs_set_user_money(index, money, flash = 1); = 3 arguments
 {

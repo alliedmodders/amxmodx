@@ -139,9 +139,10 @@
     <ClCompile Include="..\..\..\..\public\memtools\CDetour\detours.cpp" />
     <ClCompile Include="..\..\..\..\public\memtools\MemoryUtils.cpp" />
     <ClCompile Include="..\amxx_api.cpp" />
-    <ClCompile Include="..\CstrikeNatives.cpp" />
     <ClCompile Include="..\CstrikeHacks.cpp" />
+    <ClCompile Include="..\CstrikeNatives.cpp" />
     <ClCompile Include="..\CstrikePlayer.cpp" />
+    <ClCompile Include="..\CstrikeUtils.cpp" />
     <ClCompile Include="..\sdk\amxxmodule.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -150,14 +151,13 @@
     <ClInclude Include="..\..\..\..\public\memtools\CDetour\detours.h" />
     <ClInclude Include="..\..\..\..\public\memtools\MemoryUtils.h" />
     <ClInclude Include="..\CstrikeDatas.h" />
-    <ClInclude Include="..\CstrikeNatives.h" />
     <ClInclude Include="..\CstrikePlayer.h" />
-    <ClInclude Include="..\svn_version.h" />
     <ClInclude Include="..\sdk\moduleconfig.h" />
     <ClInclude Include="..\sdk\amxxmodule.h" />
+    <ClInclude Include="..\CstrikeUtils.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\plugins\include\cstrike.inc" />
+    <None Include="..\..\..\..\plugins\include\cstrike.inc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

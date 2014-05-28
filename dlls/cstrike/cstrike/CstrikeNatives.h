@@ -48,9 +48,6 @@ extern bool g_precachedknife;
 extern bool g_noknives;
 // Globals above
 
-void InitializeHacks();
-void ShutdownHacks();
-
 #define CHECK_ENTITY(x) \
 	if (x < 0 || x > gpGlobals->maxEntities) { \
 		MF_LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", x); \

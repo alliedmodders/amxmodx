@@ -31,9 +31,12 @@
  *  version.
  */
 #include "amxxmodule.h"
-#include "CstrikeNatives.h"
 
 extern AMX_NATIVE_INFO cstrikeNatives[];
+extern int g_CSCliCmdFwd;
+
+void InitializeHacks();
+void ShutdownHacks();
 
 int AmxxCheckGame(const char *game)
 {
@@ -49,6 +52,11 @@ void OnAmxxAttach()
 {
 	MF_AddNatives(cstrikeNatives);
 	InitializeHacks();
+}
+
+void OnPluginsLoaded()
+{
+	g_CSCliCmdFwd = MF_RegisterForward("CS_InternalCommand", ET_STOP, FP_CELL, FP_STRING, FP_DONE);
 }
 
 void OnAmxxDetach()

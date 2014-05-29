@@ -33,7 +33,9 @@
 #include "amxxmodule.h"
 
 extern AMX_NATIVE_INFO cstrikeNatives[];
+
 extern int g_CSCliCmdFwd;
+extern int g_CSBuyCmdFwd;
 
 void InitializeHacks();
 void ShutdownHacks();
@@ -57,6 +59,7 @@ void OnAmxxAttach()
 void OnPluginsLoaded()
 {
 	g_CSCliCmdFwd = MF_RegisterForward("CS_InternalCommand", ET_STOP, FP_CELL, FP_STRING, FP_DONE);
+	g_CSBuyCmdFwd = MF_RegisterForward("CS_OnBuy", ET_STOP, FP_CELL, FP_CELL, FP_DONE);
 }
 
 void OnAmxxDetach()

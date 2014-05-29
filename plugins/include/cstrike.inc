@@ -343,6 +343,7 @@ native cs_set_c4_explode_time(index, Float:value);
 native bool:cs_get_c4_defusing(c4index);
 
 native cs_set_c4_defusing(c4index, bool:defusing);
+
 /**
  * Called when CS internally fires a command to a player.  It does this for a few 
  * functions, most notably rebuy/autobuy functionality.  This is also used to pass
@@ -353,3 +354,52 @@ native cs_set_c4_defusing(c4index, bool:defusing);
  * @return				PLUGIN_HANDLED to block, PLUGIN_CONTINUE for normal operation.
  */
 forward CS_InternalCommand(id, const cmd[]);
+
+
+/**
+ * The following constants are used with CS_OnBuy forward.
+ */
+#define CSI_P228				CSW_P228
+#define CSI_SCOUT				CSW_SCOUT
+#define CSI_HEGRENADE			CSW_HEGRENADE
+#define CSI_XM1014				CSW_XM1014
+#define CSI_C4					CSW_C4
+#define CSI_MAC10				CSW_MAC10
+#define CSI_AUG					CSW_AUG
+#define CSI_SMOKEGRENADE		CSW_SMOKEGRENADE
+#define CSI_ELITE				CSW_ELITE
+#define CSI_FIVESEVEN			CSW_FIVESEVEN
+#define CSI_UMP45				CSW_UMP45
+#define CSI_SG550				CSW_SG550
+#define CSI_GALI				CSW_GALI
+#define CSI_FAMAS				CSW_FAMAS
+#define CSI_USP					CSW_USP
+#define CSI_GLOCK18				CSW_GLOCK18
+#define CSI_AWP					CSW_AWP
+#define CSI_MP5NAVY				CSW_MP5NAVY
+#define CSI_M249				CSW_M249
+#define CSI_M3					CSW_M3
+#define CSI_M4A1				CSW_M4A1
+#define CSI_TMP					CSW_TMP
+#define CSI_G3SG1				CSW_G3SG1
+#define CSI_FLASHBANG			CSW_FLASHBANG
+#define CSI_DEAGLE				CSW_DEAGLE
+#define CSI_SG552				CSW_SG552
+#define CSI_AK47				CSW_AK47
+#define CSI_P90					CSW_P90
+#define CSI_SHIELDGUN			CSW_SHIELDGUN
+#define CSI_VEST				CSW_VEST		// Custom
+#define CSI_VESTHELM			CSW_VESTHELM	// Custom
+#define CSI_DEFUSER				33				// Custom
+#define CSI_NVGS				34				// Custom
+#define CSI_PRIMAMMO			36				// Custom
+#define CSI_SECAMMO				37				// Custom
+
+/**
+ * Called when a player attempts to purchase an item.
+ * Return PLUGIN_CONTINUE to allow the purchase or return a higher action to deny.
+ *
+ * @param id			Player index.
+ * @param item			Item index, see CSI_* constants.
+ */
+forward CS_OnBuy(index, item);

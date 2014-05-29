@@ -56,6 +56,14 @@ ret name(void)
 ret (*name##_Actual)(p1type) = NULL; \
 ret name(p1type p1name)
 
+#define DETOUR_DECL_STATIC2(name, ret, p1type, p1name, p2type, p2name) \
+ret (*name##_Actual)(p1type, p2type) = NULL; \
+ret name(p1type p1name, p2type p2name)
+
+#define DETOUR_DECL_STATIC3(name, ret, p1type, p1name, p2type, p2name, p3type, p3name) \
+ret (*name##_Actual)(p1type, p2type, p3type) = NULL; \
+ret name(p1type p1name, p2type p2name, p3type p3name)
+
 #define DETOUR_DECL_STATIC4(name, ret, p1type, p1name, p2type, p2name, p3type, p3name, p4type, p4name) \
 ret (*name##_Actual)(p1type, p2type, p3type, p4type) = NULL; \
 ret name(p1type p1name, p2type p2name, p3type p3name, p4type p4name)
@@ -127,9 +135,9 @@ ret name##Class::name(p1type p1name, p2type p2name, p3type p3name, p4type p4name
 #define GET_STATIC_CALLBACK(name) (void *)&name
 #define GET_STATIC_TRAMPOLINE(name) (void **)&name##_Actual
 
-#define DETOUR_CREATE_MEMBER(name, gamedata, target) CDetourManager::CreateDetour(GET_MEMBER_CALLBACK(name), GET_MEMBER_TRAMPOLINE(name), gamedata, target);
-#define DETOUR_CREATE_STATIC(name, gamedata, target) CDetourManager::CreateDetour(GET_STATIC_CALLBACK(name), GET_STATIC_TRAMPOLINE(name), gamedata, target);
-#define DETOUR_CREATE_STATIC_FIXED(name, address) CDetourManager::CreateDetour(GET_STATIC_CALLBACK(name), GET_STATIC_TRAMPOLINE(name), address);
+#define DETOUR_CREATE_MEMBER(name, gamedata, target)	CDetourManager::CreateDetour(GET_MEMBER_CALLBACK(name), GET_MEMBER_TRAMPOLINE(name), gamedata, target);
+#define DETOUR_CREATE_STATIC(name, gamedata, target)	CDetourManager::CreateDetour(GET_STATIC_CALLBACK(name), GET_STATIC_TRAMPOLINE(name), gamedata, target);
+#define DETOUR_CREATE_STATIC_FIXED(name, address)		CDetourManager::CreateDetour(GET_STATIC_CALLBACK(name), GET_STATIC_TRAMPOLINE(name), address);
 
 class GenericClass {};
 typedef void (GenericClass::*VoidFunc)();

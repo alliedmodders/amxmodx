@@ -1,3 +1,35 @@
+/* AMX Mod X
+ *   Counter-Strike Module
+ *
+ * by the AMX Mod X Development Team
+ *
+ * This file is part of AMX Mod X.
+ *
+ *
+ *  This program is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation; either version 2 of the License, or (at
+ *  your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ *  General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software Foundation,
+ *  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ *  In addition, as a special exception, the author gives permission to
+ *  link the code of this program with the Half-Life Game Engine ("HL
+ *  Engine") and Modified Game Libraries ("MODs") developed by Valve,
+ *  L.L.C ("Valve"). You must obey the GNU General Public License in all
+ *  respects for all of the code used other than the HL Engine and MODs
+ *  from Valve. If you modify this file, you may extend this exception
+ *  to your version of the file, but you are not obligated to do so. If
+ *  you do not wish to do so, delete this exception statement from your
+ *  version.
+ */
 #ifndef CSTRIKE_DATA_H
 #define CSTRIKE_DATA_H
 
@@ -123,10 +155,64 @@
 #define CS_CLICMD_OFFS_BOTARGS					22
 #endif
 
+/** 
+ * CS_OnBuy forward 
+ */
+#if defined(__linux__)
+	#define CS_SYM_CANBUYTHIS			"_Z10CanBuyThisP11CBasePlayeri"
+	#define CS_SYM_BUYITEM				"_Z7BuyItemP11CBasePlayeri" 
+	#define CS_SYM_BUYGUNAMMO			"_Z10BuyGunAmmoR11CBasePlayerR15CBasePlayerItemb"
+#elif defined(__APPLE__)
+	#define CS_SYM_CANBUYTHIS			"__Z10CanBuyThisP11CBasePlayeri"
+	#define CS_SYM_BUYITEM				"__Z7BuyItemP11CBasePlayeri" 
+	#define CS_SYM_BUYGUNAMMO			"__Z10BuyGunAmmoR11CBasePlayerR15CBasePlayerItemb"
+#elif defined(WIN32)
+	#define CS_SIG_CANBUYTHIS			"\x53\x8B\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x2A\x2A\x57"
+	#define CS_SIG_BUYITEM				"\x53\x56\x8B\x2A\x2A\x2A\xBB\x2A\x2A\x2A\x2A\x57\x53"
+	#define CS_SIG_BUYGUNAMMO			"\x56\x57\x8B\x2A\x2A\x2A\x6A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F"
+#endif
+
+#define CSI_P228						CSW_P228
+#define CSI_SCOUT						CSW_SCOUT
+#define CSI_HEGRENADE					CSW_HEGRENADE
+#define CSI_XM1014						CSW_XM1014
+#define CSI_C4							CSW_C4
+#define CSI_MAC10						CSW_MAC10
+#define CSI_AUG							CSW_AUG
+#define CSI_SMOKEGRENADE				CSW_SMOKEGRENADE
+#define CSI_ELITE						CSW_ELITE
+#define CSI_FIVESEVEN					CSW_FIVESEVEN
+#define CSI_UMP45						CSW_UMP45
+#define CSI_SG550						CSW_SG550
+#define CSI_GALI						CSW_GALI
+#define CSI_FAMAS						CSW_FAMAS
+#define CSI_USP							CSW_USP
+#define CSI_GLOCK18						CSW_GLOCK18
+#define CSI_AWP							CSW_AWP
+#define CSI_MP5NAVY						CSW_MP5NAVY
+#define CSI_M249						CSW_M249
+#define CSI_M3							CSW_M3
+#define CSI_M4A1						CSW_M4A1
+#define CSI_TMP							CSW_TMP
+#define CSI_G3SG1						CSW_G3SG1
+#define CSI_FLASHBANG					CSW_FLASHBANG
+#define CSI_DEAGLE						CSW_DEAGLE
+#define CSI_SG552						CSW_SG552
+#define CSI_AK47						CSW_AK47
+#define CSI_KNIFE						CSW_KNIFE
+#define CSI_P90							CSW_P90
+#define CSI_SHIELDGUN					CSW_SHIELDGUN
+#define CSI_VEST						CSW_VEST		 // Custom
+#define CSI_VESTHELM					CSW_VESTHELM	 // Custom
+#define CSI_DEFUSER						33				 // Custom
+#define CSI_NVGS						34				 // Custom
+#define CSI_PRIMAMMO					36				 // Custom
+#define CSI_SECAMMO						37				 // Custom
+
+#define BITS_PISTOLS					(1<<CSI_GLOCK18 | 1<<CSI_USP | 1<<CSI_P228 | 1<<CSI_DEAGLE | 1<<CSI_ELITE | 1<<CSI_FIVESEVEN)
 
 // Ids of weapons in CS
 #define CSW_P228						1
-//#define CSW_SHIELD					2
 #define CSW_SCOUT						3
 #define CSW_HEGRENADE					4
 #define CSW_XM1014						5
@@ -157,6 +243,7 @@
 #define CSW_P90							30
 #define CSW_VEST						31 // Brand new invention!
 #define CSW_VESTHELM					32 // Brand new invention!
+#define CSW_SHIELDGUN					99
 
 // These are used with armoury_entity:s.
 #define CSA_MP5NAVY						0

@@ -44,6 +44,10 @@
 	#include <windows.h>
 #endif
 
+#if defined _MSC_VER && _MSC_VER >= 1400
+	#pragma warning (disable:4996) /* Disable deprecation warnings */
+#endif
+
 struct DynLibInfo
 {
 	void *baseAddress;
@@ -66,12 +70,16 @@ class MemoryUtils
 		~MemoryUtils();
 
 	public: 
+		void *DecodeAndFindPattern(const void *libPtr, const char *pattern);
 		void *FindPattern(const void *libPtr, const char *pattern, size_t len);
 		void *ResolveSymbol(void *handle, const char *symbol);
 
 	public:
 		bool GetLibraryInfo(const void *libPtr, DynLibInfo &lib);
 		bool GetLibraryOfAddress(const void *libPtr, char *buffer, size_t maxlength, uintptr_t *base);
+
+	public:
+		size_t DecodeHexString(unsigned char *buffer, size_t maxlength, const char *hexstr);
 
 #if defined(__linux__) || defined(__APPLE__)
 	private:

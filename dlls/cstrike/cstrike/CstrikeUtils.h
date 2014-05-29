@@ -84,4 +84,36 @@ void UTIL_TextMsg_Generic(edict_t* pPlayer, const char* message);
 #define GETEDICT(n) \
 	((n >= 1 && n <= gpGlobals->maxClients) ? MF_GetPlayerEdict(n) : INDEXENT(n))
 
+
+inline edict_t *PrivateToEdict(const void *pdata)
+{
+	if (!pdata)
+	{
+		return NULL;
+	}
+
+	char *ptr = (char*)pdata;
+	ptr += 4;
+	entvars_t *pev = *(entvars_t **)ptr;
+
+	if (!pev)
+	{
+		return NULL;
+	}
+
+	return pev->pContainingEntity;
+};
+
+inline int PrivateToIndex(const void *pdata)
+{
+	edict_t *pEntity = PrivateToEdict(pdata);
+
+	if (!pEntity)
+	{
+		return -1;
+	}
+
+	return ENTINDEX(pEntity);
+};
+
 #endif // CSTRIKE_UTILS_H

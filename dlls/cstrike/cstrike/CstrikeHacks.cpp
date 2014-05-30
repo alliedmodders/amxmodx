@@ -169,8 +169,8 @@ void CtrlDetours(bool set)
 		void *buyItemAddress	= g_MemUtils.ResolveSymbol(target, CS_SYM_BUYITEM);
 		void *buyGunAmmoAddress = g_MemUtils.ResolveSymbol(target, CS_SYM_BUYGUNAMMO);
 
-		g_UseBotArgs = (int *)g_MemUtils.ResolveSymbol(target, "UseBotArgs");
-		g_BotArgs = (const char **)g_MemUtils.ResolveSymbol(target, "BotArgs");
+		g_UseBotArgs = (int *)g_MemUtils.ResolveSymbol(target, CS_SYM_USEBOTARGS);
+		g_BotArgs = (const char **)g_MemUtils.ResolveSymbol(target, CS_SYM_BOTARGS);
 
 #elif defined(__APPLE__)
 
@@ -180,8 +180,8 @@ void CtrlDetours(bool set)
 		symbols[0].n_un.n_name = (char *)CS_SYM_CANBUYTHIS;
 		symbols[1].n_un.n_name = (char *)CS_SYM_BUYITEM;
 		symbols[2].n_un.n_name = (char *)CS_SYM_BUYGUNAMMO;
-		symbols[3].n_un.n_name = (char *)"_UseBotArgs";
-		symbols[4].n_un.n_name = (char *)"_BotArgs";
+		symbols[3].n_un.n_name = (char *)CS_SYM_USEBOTARGS;
+		symbols[4].n_un.n_name = (char *)CS_SYM_BOTARGS;
 
 		if (nlist(libName, symbols) != 0) { return; }
 

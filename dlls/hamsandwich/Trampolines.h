@@ -57,6 +57,7 @@
 #include <stdlib.h> // memalign
 #include <stdio.h>
 
+#include <am-utility.h>
 
 namespace Trampolines
 {
@@ -72,28 +73,32 @@ namespace Trampolines
 	namespace Bytecode
 	{
 		/**
-		 * Prologue for a void function
-		 * Clobbers EBX and EAX
+		 * Prologue for a function
 		 */
-		const unsigned char codeVoidPrologue[] = { 
+		const unsigned char codePrologue[] = {
 			0x55,						// push ebp
 			0x89, 0xE5,					// mov ebp, esp
-			0x50,						// push eax
+		};
+
+		/**
+		 * Align stack on 16 byte boundary
+		 */
+		const unsigned char codeAlignStack16[] = {
+			0x83, 0xE4, 0xF0,				// and esp, 0xFFFFFFF0
 		};
 
 		/**
-		 * Prologue for a function that returns
-		 * Clobbers EBX, EAX too but not after call
+		 * Allocate stack space (8-bit) by adding to ESP
 		 */
-		const unsigned char codeReturnPrologue[] = {
-			0x55,						// push ebp
-			0x89, 0xE5,					// mov ebp, esp
-		};
-		const unsigned char codeThisReturnPrologue[] = {
-			0x55,						// push ebp
-			0x89, 0xE5,					// mov ebp, esp
+		const unsigned char codeAllocStack[] = {
+			0x83, 0xEC, 0xFF,				// sub esp, 0xFF
 		};
 
+		/**
+		 * Offset of codeAllocStack to modify at runtime
+		 * to contain amount of stack space to allocate. 
+		 */
+		const unsigned int codeAllocStackReplace = 2;
 
 		/**
 		 * Takes a paramter from the trampoline's stack
@@ -167,36 +172,19 @@ namespace Trampolines
 		const unsigned int codeFreeStackReplace = 2;
 
 		/**
-		 * Epilogue of a simple return function
+		 * Epilogue of a simple function
 		 */
-		const unsigned char codeReturnEpilogue[] = {
+		const unsigned char codeEpilogue[] = {
+				0x89, 0xEC,					// mov esp, ebp
 				0x5D,						// pop ebp
 				0xC3						// ret
 		};
-		const unsigned char codeReturnEpilogueN[] = {
+		const unsigned char codeEpilogueN[] = {
+				0x89, 0xEC,					// mov esp, ebp
 				0x5D,						// pop ebp
-				0xC2, 0xCD, 0xAB			// retn 0xABCD
+				0xC2, 0xCD, 0xAB				// retn 0xABCD
 		};
-		const int codeReturnEpilogueNReplace = 2;
-
-
-		/**
-		 * Epilogue of a void return function
-		 */
-		const unsigned char codeVoidEpilogue[] = {
-				0x58,						// pop eax
-				0x5D,						// pop ebp
-				0xC3						// ret
-		};
-
-		const unsigned char codeVoidEpilogueN[] = {
-				0x58,						// pop eax
-				0x5D,						// pop ebp
-				0xC2, 0xCD, 0xAB			// retn 0xABCD
-		};
-		const int codeVoidEpilogueNReplace = 3;
-
-
+		const int codeEpilogueNReplace = 4;
 
 		const unsigned char codeBreakpoint[] = {
 			0xCC							// int 3
@@ -272,65 +260,50 @@ namespace Trampolines
 		};
 
 		/**
-		 * Adds the "return prologue", pushes registers and prepares stack
+		 * Adds the prologue, pushes registers, prepares the stack
 		 */
-		void ReturnPrologue()
+		void Prologue()
 		{
-			Append(&::Trampolines::Bytecode::codeReturnPrologue[0],sizeof(::Trampolines::Bytecode::codeReturnPrologue));
-			m_paramstart=0;
-			m_thiscall=0;
-		};
-		void ThisReturnPrologue()
-		{
-			this->ReturnPrologue();
-			m_thiscall=1;
-		};
-
-		/**
-		 * Adds the void prologue pushes registers, prepares the stack
-		 */
-		void VoidPrologue()
-		{
-			Append(&::Trampolines::Bytecode::codeVoidPrologue[0],sizeof(::Trampolines::Bytecode::codeVoidPrologue));
+			Append(&::Trampolines::Bytecode::codePrologue[0],sizeof(::Trampolines::Bytecode::codePrologue));
 			m_paramstart=0;
 			m_thiscall=0;
 		};
 
 		/**
-		 * Flags this trampoline as a thiscall trampoline, and prepares the void prologue.
+		 * Flags this trampoline as a thiscall trampoline, and prepares the prologue.
 		 */
-		void ThisVoidPrologue()
+		void ThisPrologue()
 		{
-			this->VoidPrologue();
+			this->Prologue();
 			m_thiscall=1;
 		};
+
 		/**
-		 * Epilogue for a returning function pops registers but does not free any more of the stack!
+		 * Epilogue for a function pops registers but does not free any more of the stack!
 		 */
-		void ReturnEpilogue()
+		void Epilogue()
 		{
-			Append(&::Trampolines::Bytecode::codeReturnEpilogue[0],sizeof(::Trampolines::Bytecode::codeReturnEpilogue));
+			Append(&::Trampolines::Bytecode::codeEpilogue[0],sizeof(::Trampolines::Bytecode::codeEpilogue));
 		};
 
 		/**
 		 * Epilogue that also frees it's estimated stack usage.  Useful for stdcall/thiscall/fastcall.
 		 */
-		void ReturnEpilogueAndFree()
+		void EpilogueAndFree()
 		{
-			this->ReturnEpilogue(m_mystack);
+			this->Epilogue(m_mystack);
 		};
 
 		/**
-		 * Return epilogue.  Pops registers, and frees given amount of data from the stack.
+		 * Epilogue.  Pops registers, and frees given amount of data from the stack.
 		 *
 		 * @param howmuch			How many bytes to free from the stack.
 		 */
-		void ReturnEpilogue(int howmuch)
+		void Epilogue(int howmuch)
 		{
+			unsigned char code[sizeof(::Trampolines::Bytecode::codeEpilogueN)];
 
-			unsigned char code[sizeof(::Trampolines::Bytecode::codeReturnEpilogueN)];
-
-			memcpy(&code[0],&::Trampolines::Bytecode::codeReturnEpilogueN[0],sizeof(::Trampolines::Bytecode::codeReturnEpilogueN));
+			memcpy(&code[0],&::Trampolines::Bytecode::codeEpilogueN[0],sizeof(::Trampolines::Bytecode::codeEpilogueN));
 
 
 			unsigned char *c=&code[0];
@@ -343,58 +316,48 @@ namespace Trampolines
 
 			bi.i=howmuch;
 
-			c+=::Trampolines::Bytecode::codeReturnEpilogueNReplace;
+			c+=::Trampolines::Bytecode::codeEpilogueNReplace;
 			*c++=bi.b[0];
 			*c++=bi.b[1];
 
-			Append(&code[0],sizeof(::Trampolines::Bytecode::codeReturnEpilogueN));
-			//Append(&::Trampolines::Bytecode::codeReturnEpilogueN[0],sizeof(::Trampolines::Bytecode::codeReturnEpilogueN));
+			Append(&code[0],sizeof(::Trampolines::Bytecode::codeEpilogueN));
 		};
 
 		/**
-		 * Void epilogue, pops registers and frees the estimated stack usage of the trampoline.
+		 * Aligns stack on 16 byte boundary for functions that use aligned SSE instructions.
+		 * This also allocates extra stack space to allow the specified number of slots to be used
+		 * for function paramaters that will be pushed onto the stack.
 		 */
-		void VoidEpilogueAndFree()
+		void AlignStack16(int slots)
 		{
-			this->VoidEpilogue(m_mystack);
-		};
-		/**
-		 * Void epilogue, pops registers, nothing else done with stack.
-		 */
-		void VoidEpilogue()
-		{
-			Append(&::Trampolines::Bytecode::codeVoidEpilogue[0],sizeof(::Trampolines::Bytecode::codeVoidEpilogue));
-		};
-		/**
-		 * Void epilogue, pops registers, frees given amount of data off of the stack.
-		 *
-		 * @param howmuch			How many bytes to free from the stack.
-		 */
-		void VoidEpilogue(int howmuch)
-		{
+			const size_t stackNeeded = slots * sizeof(void *);
+			const size_t stackReserve = ke::Align(stackNeeded, 16);
+			const size_t stackExtra = stackReserve - stackNeeded;
 
-			unsigned char code[sizeof(::Trampolines::Bytecode::codeVoidEpilogueN)];
+			// Stack space should fit in a byte
+			assert(stackExtra <= 0xFF);
 
-			memcpy(&code[0],&::Trampolines::Bytecode::codeVoidEpilogueN[0],sizeof(::Trampolines::Bytecode::codeVoidEpilogueN));
+			const size_t codeAlignStackSize = sizeof(::Trampolines::Bytecode::codeAlignStack16);
+			const size_t codeAllocStackSize = sizeof(::Trampolines::Bytecode::codeAllocStack);
+			unsigned char code[codeAlignStackSize + codeAllocStackSize];
 
+			memcpy(&code[0], &::Trampolines::Bytecode::codeAlignStack16[0], codeAlignStackSize);
 
-			unsigned char *c=&code[0];
-
-			union 
+			if (stackExtra > 0)
 			{
-				int		i;
-				unsigned char	b[4];
-			} bi;
+				unsigned char *c = &code[codeAlignStackSize];
+				memcpy(c, &::Trampolines::Bytecode::codeAllocStack[0], codeAllocStackSize);
 
-			bi.i=howmuch;
+				c += ::Trampolines::Bytecode::codeAllocStackReplace;
+				*c = (unsigned char)stackExtra;
 
-			c+=::Trampolines::Bytecode::codeVoidEpilogueNReplace;
-			*c++=bi.b[0];
-			*c++=bi.b[1];
-
-			Append(&code[0],sizeof(::Trampolines::Bytecode::codeVoidEpilogueN));
-			Append(&::Trampolines::Bytecode::codeVoidEpilogueN[0],sizeof(::Trampolines::Bytecode::codeVoidEpilogueN));
-		};
+				Append(&code[0], codeAlignStackSize + codeAllocStackSize);
+			}
+			else
+			{
+				Append(&code[0], codeAlignStackSize);
+			}
+		}
 
 		/**
 		 * Pushes the "this" pointer onto the callee stack.  Pushes ECX for MSVC, and param0 on GCC.
@@ -645,27 +608,15 @@ inline void *CreateGenericTrampoline(bool thiscall, bool voidcall, bool retbuf, 
 {
 	Trampolines::TrampolineMaker tramp;
 
-	if (voidcall)
+	if (thiscall)
 	{
-		if (thiscall)
-		{
-			tramp.ThisVoidPrologue();
-		}
-		else
-		{
-			tramp.VoidPrologue();
-		}
+		tramp.ThisPrologue();
+		tramp.AlignStack16(paramcount + 2);	// Param count + this ptr + extra ptr
 	}
 	else
 	{
-		if (thiscall)
-		{
-			tramp.ThisReturnPrologue();
-		}
-		else
-		{
-			tramp.ReturnPrologue();
-		}
+		tramp.Prologue();
+		tramp.AlignStack16(paramcount + 1);	// Param count + extra ptr
 	}
 
 	while (paramcount)
@@ -679,31 +630,21 @@ inline void *CreateGenericTrampoline(bool thiscall, bool voidcall, bool retbuf, 
 	tramp.PushNum(reinterpret_cast<int>(extraptr));
 	tramp.Call(callee);
 	tramp.FreeTargetStack();
-	if (voidcall)
-	{
+
 #if defined(_WIN32)
-		tramp.VoidEpilogueAndFree();
+	tramp.EpilogueAndFree();
 #elif defined(__linux__) || defined(__APPLE__)
-		if (retbuf)
-		{
-			tramp.VoidEpilogue(4);
-		}
-		else
-		{
-			tramp.VoidEpilogue();
-		}
-#endif
+	if (retbuf)
+	{
+		tramp.Epilogue(4);
 	}
 	else
 	{
-#if defined(_WIN32)
-		tramp.ReturnEpilogueAndFree();
-#elif defined(__linux__) || defined(__APPLE__)
-		tramp.ReturnEpilogue();
-#endif
+		tramp.Epilogue();
 	}
-	return tramp.Finish(NULL);
+#endif
 
+	return tramp.Finish(NULL);
 };
 
 

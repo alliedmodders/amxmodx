@@ -188,8 +188,8 @@ void CtrlDetours(bool set)
 		void *canBuyThisAddress = (void *)(base + symbols[0].n_value);
 		void *buyItemAddress	= (void *)(base + symbols[1].n_value);
 		void *buyGunAmmoAddress = (void *)(base + symbols[2].n_value);
-		void *g_UseBotArgs		= (void *)(base + symbols[3].n_value);
-		void *g_BotArgs			= (void *)(base + symbols[4].n_value);
+		g_UseBotArgs			= (int *)(base + symbols[3].n_value);
+		g_BotArgs				= (const char **)(base + symbols[4].n_value);
 
 #endif
 		g_ClientCommandDetour	= DETOUR_CREATE_STATIC_FIXED(C_ClientCommand, target);

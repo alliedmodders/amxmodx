@@ -57,6 +57,7 @@
 #include <stdlib.h> // memalign
 #include <stdio.h>
 
+#include <am-utility.h>
 
 namespace Trampolines
 {
@@ -78,6 +79,26 @@ namespace Trampolines
 			0x55,						// push ebp
 			0x89, 0xE5,					// mov ebp, esp
 		};
+
+		/**
+		 * Align stack on 16 byte boundary
+		 */
+		const unsigned char codeAlignStack16[] = {
+			0x83, 0xE4, 0xF0,				// and esp, 0xFFFFFFF0
+		};
+
+		/**
+		 * Allocate stack space (8-bit) by adding to ESP
+		 */
+		const unsigned char codeAllocStack[] = {
+			0x83, 0xEC, 0xFF,				// sub esp, 0xFF
+		};
+
+		/**
+		 * Offset of codeAllocStack to modify at runtime
+		 * to contain amount of stack space to allocate. 
+		 */
+		const unsigned int codeAllocStackReplace = 2;
 
 		/**
 		 * Takes a paramter from the trampoline's stack
@@ -154,14 +175,16 @@ namespace Trampolines
 		 * Epilogue of a simple function
 		 */
 		const unsigned char codeEpilogue[] = {
+				0x89, 0xEC,					// mov esp, ebp
 				0x5D,						// pop ebp
 				0xC3						// ret
 		};
 		const unsigned char codeEpilogueN[] = {
+				0x89, 0xEC,					// mov esp, ebp
 				0x5D,						// pop ebp
 				0xC2, 0xCD, 0xAB				// retn 0xABCD
 		};
-		const int codeEpilogueNReplace = 2;
+		const int codeEpilogueNReplace = 4;
 
 		const unsigned char codeBreakpoint[] = {
 			0xCC							// int 3
@@ -299,6 +322,42 @@ namespace Trampolines
 
 			Append(&code[0],sizeof(::Trampolines::Bytecode::codeEpilogueN));
 		};
+
+		/**
+		 * Aligns stack on 16 byte boundary for functions that use aligned SSE instructions.
+		 * This also allocates extra stack space to allow the specified number of slots to be used
+		 * for function paramaters that will be pushed onto the stack.
+		 */
+		void AlignStack16(int slots)
+		{
+			const size_t stackNeeded = slots * sizeof(void *);
+			const size_t stackReserve = ke::Align(stackNeeded, 16);
+			const size_t stackExtra = stackReserve - stackNeeded;
+
+			// Stack space should fit in a byte
+			assert(stackExtra <= 0xFF);
+
+			const size_t codeAlignStackSize = sizeof(::Trampolines::Bytecode::codeAlignStack16);
+			const size_t codeAllocStackSize = sizeof(::Trampolines::Bytecode::codeAllocStack);
+			unsigned char code[codeAlignStackSize + codeAllocStackSize];
+
+			memcpy(&code[0], &::Trampolines::Bytecode::codeAlignStack16[0], codeAlignStackSize);
+
+			if (stackExtra > 0)
+			{
+				unsigned char *c = &code[codeAlignStackSize];
+				memcpy(c, &::Trampolines::Bytecode::codeAllocStack[0], codeAllocStackSize);
+
+				c += ::Trampolines::Bytecode::codeAllocStackReplace;
+				*c = (unsigned char)stackExtra;
+
+				Append(&code[0], codeAlignStackSize + codeAllocStackSize);
+			}
+			else
+			{
+				Append(&code[0], codeAlignStackSize);
+			}
+		}
 
 		/**
 		 * Pushes the "this" pointer onto the callee stack.  Pushes ECX for MSVC, and param0 on GCC.
@@ -552,10 +611,12 @@ inline void *CreateGenericTrampoline(bool thiscall, bool voidcall, bool retbuf, 
 	if (thiscall)
 	{
 		tramp.ThisPrologue();
+		tramp.AlignStack16(paramcount + 2);	// Param count + this ptr + extra ptr
 	}
 	else
 	{
 		tramp.Prologue();
+		tramp.AlignStack16(paramcount + 1);	// Param count + extra ptr
 	}
 
 	while (paramcount)

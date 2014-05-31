@@ -154,42 +154,37 @@ void CtrlDetours(bool set)
 			return;
 		}
 
+		void *canBuyThisAddress = NULL;
+		void *buyItemAddress	= NULL;
+		void *buyGunAmmoAddress = NULL;
+
 #if defined(WIN32)
 
-		void *canBuyThisAddress = g_MemUtils.DecodeAndFindPattern(target, CS_SIG_CANBUYTHIS);
-		void *buyItemAddress	= g_MemUtils.DecodeAndFindPattern(target, CS_SIG_BUYITEM);
-		void *buyGunAmmoAddress = g_MemUtils.DecodeAndFindPattern(target, CS_SIG_BUYGUNAMMO);
+		canBuyThisAddress	= g_MemUtils.DecodeAndFindPattern(target, CS_SIG_CANBUYTHIS);
+		buyItemAddress		= g_MemUtils.DecodeAndFindPattern(target, CS_SIG_BUYITEM);
+		buyGunAmmoAddress	= g_MemUtils.DecodeAndFindPattern(target, CS_SIG_BUYGUNAMMO);
 
 		g_UseBotArgs = *(int **)((unsigned char *)target + CS_CLICMD_OFFS_USEBOTARGS);
 		g_BotArgs = (const char **)*(const char **)((unsigned char *)target + CS_CLICMD_OFFS_BOTARGS);
 
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 
-		void *canBuyThisAddress = g_MemUtils.ResolveSymbol(target, CS_SYM_CANBUYTHIS);
-		void *buyItemAddress	= g_MemUtils.ResolveSymbol(target, CS_SYM_BUYITEM);
-		void *buyGunAmmoAddress = g_MemUtils.ResolveSymbol(target, CS_SYM_BUYGUNAMMO);
+		Dl_info info; 
+		void *handle = NULL;
 
-		g_UseBotArgs = (int *)g_MemUtils.ResolveSymbol(target, CS_SYM_USEBOTARGS);
-		g_BotArgs = (const char **)g_MemUtils.ResolveSymbol(target, CS_SYM_BOTARGS);
+		if (dladdr(target, &info) == 0) || (handle = dlopen(info.dli_fname, RTLD_NOW)) == NULL)
+		{
+			return;
+		}
 
-#elif defined(__APPLE__)
+		canBuyThisAddress	= g_MemUtils.ResolveSymbol(handle, CS_SYM_CANBUYTHIS);
+		buyItemAddress		= g_MemUtils.ResolveSymbol(handle, CS_SYM_BUYITEM);
+		buyGunAmmoAddress	= g_MemUtils.ResolveSymbol(handle, CS_SYM_BUYGUNAMMO);
 
-		struct nlist symbols[6];
-		memset(symbols, 0, sizeof(symbols));
+		g_UseBotArgs = (int *)g_MemUtils.ResolveSymbol(handle, CS_SYM_USEBOTARGS);
+		g_BotArgs = (const char **)g_MemUtils.ResolveSymbol(handle, CS_SYM_BOTARGS);
 
-		symbols[0].n_un.n_name = (char *)CS_SYM_CANBUYTHIS;
-		symbols[1].n_un.n_name = (char *)CS_SYM_BUYITEM;
-		symbols[2].n_un.n_name = (char *)CS_SYM_BUYGUNAMMO;
-		symbols[3].n_un.n_name = (char *)CS_SYM_USEBOTARGS;
-		symbols[4].n_un.n_name = (char *)CS_SYM_BOTARGS;
-
-		if (nlist(libName, symbols) != 0) { return; }
-
-		void *canBuyThisAddress = (void *)(base + symbols[0].n_value);
-		void *buyItemAddress	= (void *)(base + symbols[1].n_value);
-		void *buyGunAmmoAddress = (void *)(base + symbols[2].n_value);
-		g_UseBotArgs			= (int *)(base + symbols[3].n_value);
-		g_BotArgs				= (const char **)(base + symbols[4].n_value);
+		dlclose(handle);
 
 #endif
 		g_ClientCommandDetour	= DETOUR_CREATE_STATIC_FIXED(C_ClientCommand, target);

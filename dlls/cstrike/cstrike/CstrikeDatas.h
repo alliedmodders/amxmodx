@@ -151,8 +151,8 @@
 	#define CS_SYM_BOTARGS						"BotArgs"
 #elif defined __APPLE__
 	#define CS_DETOURCOPYBYTES_CLIENTCOMMAND	5
-	#define CS_SYM_USEBOTARGS					"_UseBotArgs"
-	#define CS_SYM_BOTARGS						"_BotArgs"
+	#define CS_SYM_USEBOTARGS					"UseBotArgs"
+	#define CS_SYM_BOTARGS						"BotArgs"
 #else
 	#define CS_DETOURCOPYBYTES_CLIENTCOMMAND	6
 	#define CS_CLICMD_OFFS_USEBOTARGS			2

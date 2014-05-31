@@ -78,7 +78,6 @@ namespace Trampolines
 		const unsigned char codeVoidPrologue[] = { 
 			0x55,						// push ebp
 			0x89, 0xE5,					// mov ebp, esp
-			0x50,						// push eax
 		};
 
 		/**
@@ -184,17 +183,15 @@ namespace Trampolines
 		 * Epilogue of a void return function
 		 */
 		const unsigned char codeVoidEpilogue[] = {
-				0x58,						// pop eax
 				0x5D,						// pop ebp
 				0xC3						// ret
 		};
 
 		const unsigned char codeVoidEpilogueN[] = {
-				0x58,						// pop eax
 				0x5D,						// pop ebp
 				0xC2, 0xCD, 0xAB			// retn 0xABCD
 		};
-		const int codeVoidEpilogueNReplace = 3;
+		const int codeVoidEpilogueNReplace = 2;
 
 
 

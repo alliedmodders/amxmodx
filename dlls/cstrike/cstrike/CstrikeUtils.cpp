@@ -120,3 +120,23 @@ void *UTIL_FindAddressFromEntry(const char *entry, bool isHidden, const char *li
 
 	return finalAddress != NULL ? finalAddress : NULL;
 }
+
+bool UTIL_CheckForPublic(const char *publicname)
+{
+	AMX* amx;
+	int iFunctionIndex;
+	int i = 0;
+	char blah[64];
+
+	strncpy(blah, publicname, sizeof(blah)-  1);
+
+	while ((amx = MF_GetScriptAmx(i++)) != NULL)
+	{
+		if (MF_AmxFindPublic(amx, blah, &iFunctionIndex) == AMX_ERR_NONE)
+		{
+			return true;
+		}
+	}
+
+	return false; 
+}

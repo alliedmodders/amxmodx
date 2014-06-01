@@ -157,16 +157,24 @@ void CtrlDetours_ClientCommand(bool set)
 #endif
 		g_ClientCommandDetour = DETOUR_CREATE_STATIC_FIXED(C_ClientCommand, target);
 
-		if (g_ClientCommandDetour != NULL)
-			g_ClientCommandDetour->EnableDetour();
-		else
+		if (g_ClientCommandDetour == NULL)
+		{
 			MF_Log("No Client Commands detour could be initialized - Disabled Client Command forward.");
+		}
 	}
 	else
 	{
-		g_ClientCommandDetour->Destroy();
+		if (g_ClientCommandDetour) 
+			g_ClientCommandDetour->Destroy();
 	}
 }
+
+void ToggleDetour_ClientCommands(bool enable)
+{
+	if (g_ClientCommandDetour)
+		(enable) ? g_ClientCommandDetour->EnableDetour() : g_ClientCommandDetour->DisableDetour();
+}
+
 
 void CtrlDetours_BuyCommands(bool set)
 {
@@ -180,21 +188,32 @@ void CtrlDetours_BuyCommands(bool set)
 		g_BuyItemDetour		= DETOUR_CREATE_STATIC_FIXED(BuyItem, buyItemAddress);
 		g_BuyGunAmmoDetour	= DETOUR_CREATE_STATIC_FIXED(BuyGunAmmo, buyGunAmmoAddress);
 
-		if (g_CanBuyThisDetour != NULL && g_BuyItemDetour != NULL && g_BuyGunAmmoDetour != NULL)
-		{
-			g_CanBuyThisDetour->EnableDetour();
-			g_BuyItemDetour->EnableDetour();
-			g_BuyGunAmmoDetour->EnableDetour();
-		}
-		else
+		if (g_CanBuyThisDetour == NULL || g_BuyItemDetour == NULL || g_BuyGunAmmoDetour == NULL)
 		{
 			MF_Log("No Buy Commands detours could be initialized - Disabled Buy forward.");
 		}
 	}
 	else
 	{
-		g_BuyItemDetour->Destroy();
-		g_BuyGunAmmoDetour->Destroy();
-		g_ClientCommandDetour->Destroy();
+		if (g_CanBuyThisDetour)
+			g_CanBuyThisDetour->Destroy();
+
+		if (g_BuyItemDetour)
+			g_BuyItemDetour->Destroy();
+
+		if (g_BuyGunAmmoDetour)
+			g_BuyGunAmmoDetour->Destroy();
 	}
+}
+
+void ToggleDetour_BuyCommands(bool enable)
+{
+	if (g_CanBuyThisDetour)
+		(enable) ? g_CanBuyThisDetour->EnableDetour() : g_CanBuyThisDetour->DisableDetour();
+
+	if (g_BuyItemDetour)
+		(enable) ? g_BuyItemDetour->EnableDetour() : g_BuyItemDetour->DisableDetour();
+
+	if (g_BuyGunAmmoDetour)
+		(enable) ? g_BuyGunAmmoDetour->EnableDetour() : g_BuyGunAmmoDetour->DisableDetour();
 }

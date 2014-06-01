@@ -145,14 +145,16 @@
 	#define OFFSET_HOSTAGEID			516 + EXTRAOFFSET // +29
 #endif
 
-#if defined __linux__
+#if defined(__linux__)
 	#define CS_DETOURCOPYBYTES_CLIENTCOMMAND	6
-	#define CS_SYM_USEBOTARGS					"UseBotArgs"
-	#define CS_SYM_BOTARGS						"BotArgs"
-#elif defined __APPLE__
+	#define CS_IDENT_USEBOTARGS					"UseBotArgs"
+	#define CS_IDENT_BOTARGS					"BotArgs"
+	#define CS_IDENT_HIDDEN_STATE				false
+#elif defined(__APPLE__)
 	#define CS_DETOURCOPYBYTES_CLIENTCOMMAND	5
-	#define CS_SYM_USEBOTARGS					"UseBotArgs"
-	#define CS_SYM_BOTARGS						"BotArgs"
+	#define CS_IDENT_USEBOTARGS					"UseBotArgs"
+	#define CS_IDENT_BOTARGS					"BotArgs"
+	#define CS_IDENT_HIDDEN_STATE				true
 #else
 	#define CS_DETOURCOPYBYTES_CLIENTCOMMAND	6
 	#define CS_CLICMD_OFFS_USEBOTARGS			2
@@ -163,17 +165,20 @@
  * CS_OnBuy forward 
  */
 #if defined(__linux__)
-	#define CS_SYM_CANBUYTHIS			"_Z10CanBuyThisP11CBasePlayeri"
-	#define CS_SYM_BUYITEM				"_Z7BuyItemP11CBasePlayeri" 
-	#define CS_SYM_BUYGUNAMMO			"_Z10BuyGunAmmoR11CBasePlayerR15CBasePlayerItemb"
+	#define CS_IDENT_CANBUYTHIS			"_Z10CanBuyThisP11CBasePlayeri"
+	#define CS_IDENT_BUYITEM			"_Z7BuyItemP11CBasePlayeri" 
+	#define CS_IDENT_BUYGUNAMMO			"_Z10BuyGunAmmoR11CBasePlayerR15CBasePlayerItemb"
+	#define CS_IDENT_HIDDEN_STATE		false
 #elif defined(__APPLE__)
-	#define CS_SYM_CANBUYTHIS			"__Z10CanBuyThisP11CBasePlayeri"
-	#define CS_SYM_BUYITEM				"__Z7BuyItemP11CBasePlayeri" 
-	#define CS_SYM_BUYGUNAMMO			"__Z10BuyGunAmmoR11CBasePlayerR15CBasePlayerItemb"
+	#define CS_IDENT_CANBUYTHIS			"_Z10CanBuyThisP11CBasePlayeri"
+	#define CS_IDENT_BUYITEM			"_Z7BuyItemP11CBasePlayeri" 
+	#define CS_IDENT_BUYGUNAMMO			"_Z10BuyGunAmmoR11CBasePlayerR15CBasePlayerItemb"
+	#define CS_IDENT_HIDDEN_STATE		true
 #elif defined(WIN32)
-	#define CS_SIG_CANBUYTHIS			"\x53\x8B\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x2A\x2A\x57"
-	#define CS_SIG_BUYITEM				"\x53\x56\x8B\x2A\x2A\x2A\xBB\x2A\x2A\x2A\x2A\x57\x53"
-	#define CS_SIG_BUYGUNAMMO			"\x56\x57\x8B\x2A\x2A\x2A\x6A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F"
+	#define CS_IDENT_CANBUYTHIS			"\\x53\\x8B\\x2A\\x2A\\x2A\\x2A\\x2A\\x56\\x8B\\x2A\\x2A\\x2A\\x57"
+	#define CS_IDENT_BUYITEM			"\\x53\\x56\\x8B\\x2A\\x2A\\x2A\\xBB\\x2A\\x2A\\x2A\\x2A\\x57\\x53"
+	#define CS_IDENT_BUYGUNAMMO			"\\x56\\x57\\x8B\\x2A\\x2A\\x2A\\x6A\\x2A\\x8B\\x2A\\xE8\\x2A\\x2A\\x2A\\x2A\\x84\\x2A\\x0F"
+	#define CS_IDENT_HIDDEN_STATE		false
 #endif
 
 #define CSI_P228						CSW_P228

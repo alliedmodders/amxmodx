@@ -32,14 +32,10 @@
  */
 #include "CstrikeDatas.h"
 #include "CstrikeUtils.h"
-#include <MemoryUtils.h>
 #include "CDetour/detours.h"
 
-#if defined(__APPLE__)
-	#include <mach-o/nlist.h>
-#endif
-
-void CtrlDetours(bool set);
+void CtrlDetours_ClientCommand(bool set);
+void CtrlDetours_BuyCommands(bool set);
 
 int g_CSCliCmdFwd = -1;
 int g_CSBuyCmdFwd = -1;
@@ -55,12 +51,18 @@ CDetour *g_BuyGunAmmoDetour = NULL;
 
 void InitializeHacks()
 {
-	CtrlDetours(true);
+#if defined AMD64
+	#error UNSUPPORTED
+#endif
+
+	CtrlDetours_ClientCommand(true);
+	CtrlDetours_BuyCommands(true);
 }
 
 void ShutdownHacks()
 {
-	CtrlDetours(false);
+	CtrlDetours_ClientCommand(false);
+	CtrlDetours_BuyCommands(false);
 }
 
 
@@ -136,68 +138,47 @@ DETOUR_DECL_STATIC3(BuyGunAmmo, bool, void*, pvPlayer, void*, pvWeapon, bool, bB
 }
 
 
-void CtrlDetours(bool set)
+void CtrlDetours_ClientCommand(bool set)
 {
-#if defined AMD64
-	#error UNSUPPORTED
-#endif
-
 	if (set)
 	{
-		char libName[256];
-		uintptr_t base;
-
 		void *target = (void *)MDLL_ClientCommand;
-		
-		if (!g_MemUtils.GetLibraryOfAddress(target, libName, sizeof(libName), &base))
-		{
-			return;
-		}
-
-		void *canBuyThisAddress = NULL;
-		void *buyItemAddress	= NULL;
-		void *buyGunAmmoAddress = NULL;
 
 #if defined(WIN32)
-
-		canBuyThisAddress	= g_MemUtils.DecodeAndFindPattern(target, CS_SIG_CANBUYTHIS);
-		buyItemAddress		= g_MemUtils.DecodeAndFindPattern(target, CS_SIG_BUYITEM);
-		buyGunAmmoAddress	= g_MemUtils.DecodeAndFindPattern(target, CS_SIG_BUYGUNAMMO);
 
 		g_UseBotArgs = *(int **)((unsigned char *)target + CS_CLICMD_OFFS_USEBOTARGS);
 		g_BotArgs = (const char **)*(const char **)((unsigned char *)target + CS_CLICMD_OFFS_BOTARGS);
 
 #elif defined(__linux__) || defined(__APPLE__)
 
-		Dl_info info; 
-		void *handle = NULL;
-
-		if (dladdr(target, &info) == 0) || (handle = dlopen(info.dli_fname, RTLD_NOW)) == NULL)
-		{
-			return;
-		}
-
-		canBuyThisAddress	= g_MemUtils.ResolveSymbol(handle, CS_SYM_CANBUYTHIS);
-		buyItemAddress		= g_MemUtils.ResolveSymbol(handle, CS_SYM_BUYITEM);
-		buyGunAmmoAddress	= g_MemUtils.ResolveSymbol(handle, CS_SYM_BUYGUNAMMO);
-
-		g_UseBotArgs = (int *)g_MemUtils.ResolveSymbol(handle, CS_SYM_USEBOTARGS);
-		g_BotArgs = (const char **)g_MemUtils.ResolveSymbol(handle, CS_SYM_BOTARGS);
-
-		dlclose(handle);
+		g_UseBotArgs = (int *)UTIL_FindAddressFromEntry(CS_IDENT_USEBOTARGS, CS_IDENT_HIDDEN_STATE);
+		g_BotArgs = (const char **)UTIL_FindAddressFromEntry(CS_IDENT_BOTARGS, CS_IDENT_HIDDEN_STATE);
 
 #endif
-		g_ClientCommandDetour	= DETOUR_CREATE_STATIC_FIXED(C_ClientCommand, target);
-		g_CanBuyThisDetour		= DETOUR_CREATE_STATIC_FIXED(CanBuyThis, canBuyThisAddress);
-		g_BuyItemDetour			= DETOUR_CREATE_STATIC_FIXED(BuyItem, buyItemAddress);
-		g_BuyGunAmmoDetour		= DETOUR_CREATE_STATIC_FIXED(BuyGunAmmo, buyGunAmmoAddress);
-		
+		g_ClientCommandDetour = DETOUR_CREATE_STATIC_FIXED(C_ClientCommand, target);
+
 		if (g_ClientCommandDetour != NULL)
 			g_ClientCommandDetour->EnableDetour();
 		else
-		{
-			MF_Log("No Client Commands detours could be initialized - Disabled Client Command forward.");
-		}
+			MF_Log("No Client Commands detour could be initialized - Disabled Client Command forward.");
+	}
+	else
+	{
+		g_ClientCommandDetour->Destroy();
+	}
+}
+
+void CtrlDetours_BuyCommands(bool set)
+{
+	if (set)
+	{
+		void *canBuyThisAddress = UTIL_FindAddressFromEntry(CS_IDENT_CANBUYTHIS, CS_IDENT_HIDDEN_STATE);
+		void *buyItemAddress	= UTIL_FindAddressFromEntry(CS_IDENT_BUYITEM, CS_IDENT_HIDDEN_STATE);
+		void *buyGunAmmoAddress = UTIL_FindAddressFromEntry(CS_IDENT_BUYGUNAMMO, CS_IDENT_HIDDEN_STATE);
+
+		g_CanBuyThisDetour	= DETOUR_CREATE_STATIC_FIXED(CanBuyThis, canBuyThisAddress);
+		g_BuyItemDetour		= DETOUR_CREATE_STATIC_FIXED(BuyItem, buyItemAddress);
+		g_BuyGunAmmoDetour	= DETOUR_CREATE_STATIC_FIXED(BuyGunAmmo, buyGunAmmoAddress);
 
 		if (g_CanBuyThisDetour != NULL && g_BuyItemDetour != NULL && g_BuyGunAmmoDetour != NULL)
 		{
@@ -212,7 +193,6 @@ void CtrlDetours(bool set)
 	}
 	else
 	{
-		g_CanBuyThisDetour->Destroy();
 		g_BuyItemDetour->Destroy();
 		g_BuyGunAmmoDetour->Destroy();
 		g_ClientCommandDetour->Destroy();

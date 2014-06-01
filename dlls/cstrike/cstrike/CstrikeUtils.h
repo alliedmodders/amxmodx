@@ -35,6 +35,7 @@
 
 bool UTIL_IsPlayer(AMX* amx, edict_t* pPlayer);
 void UTIL_TextMsg_Generic(edict_t* pPlayer, const char* message);
+void *UTIL_FindAddressFromEntry(const char *entry, bool isHidden = false, const char *library = "mod");
 
 #define GETINFOKEYBUFFER	(*g_engfuncs.pfnGetInfoKeyBuffer)
 #define	SETCLIENTKEYVALUE	(*g_engfuncs.pfnSetClientKeyValue)

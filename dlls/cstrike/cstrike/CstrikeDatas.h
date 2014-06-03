@@ -146,17 +146,14 @@
 #endif
 
 #if defined(__linux__)
-	#define CS_DETOURCOPYBYTES_CLIENTCOMMAND	6
 	#define CS_IDENT_USEBOTARGS					"UseBotArgs"
 	#define CS_IDENT_BOTARGS					"BotArgs"
 	#define CS_IDENT_HIDDEN_STATE				false
 #elif defined(__APPLE__)
-	#define CS_DETOURCOPYBYTES_CLIENTCOMMAND	5
 	#define CS_IDENT_USEBOTARGS					"UseBotArgs"
 	#define CS_IDENT_BOTARGS					"BotArgs"
 	#define CS_IDENT_HIDDEN_STATE				true
 #else
-	#define CS_DETOURCOPYBYTES_CLIENTCOMMAND	6
 	#define CS_CLICMD_OFFS_USEBOTARGS			2
 	#define CS_CLICMD_OFFS_BOTARGS				22
 #endif

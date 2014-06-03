@@ -399,7 +399,7 @@ forward CS_InternalCommand(id, const cmd[]);
  * Called when a player attempts to purchase an item.
  * Return PLUGIN_CONTINUE to allow the purchase or return a higher action to deny.
  *
- * @param id			Player index.
+ * @param index			Player index.
  * @param item			Item index, see CSI_* constants.
  */
 forward CS_OnBuy(index, item);

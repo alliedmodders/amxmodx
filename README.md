@@ -14,5 +14,5 @@ General
 Development
 -----------
 - [Issue tracker](https://bugs.alliedmods.net): Issues that require back and forth communication
-- [Building SourceMod](https://wiki.alliedmods.net/Building_AMX_Mod_X): Instructions on how to build AMXX itself using [AMBuild](https://github.com/alliedmodders/ambuild)
+- [Building AMXX](https://wiki.alliedmods.net/Building_AMX_Mod_X): Instructions on how to build AMXX itself using [AMBuild](https://github.com/alliedmodders/ambuild)
 - [AMXX scripting](https://wiki.alliedmods.net/Category:Scripting_(AMX_Mod_X)): Pawn examples and introduction to the language

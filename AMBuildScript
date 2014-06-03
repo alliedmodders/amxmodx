@@ -225,6 +225,7 @@ class AMXXConfig(object):
         '-arch', 'i386',
         '-lstdc++',
         '-stdlib=libstdc++',
+        '-framework', 'CoreServices',
       ]
       cfg.cxxflags += ['-stdlib=libstdc++']
     elif builder.target_platform == 'windows':
@@ -238,7 +239,9 @@ class AMXXConfig(object):
     ]
 
     cfg.includes += [os.path.join(builder.buildPath, 'includes')]
+    cfg.includes += [os.path.join(builder.sourcePath, 'public')]
     cfg.includes += [os.path.join(builder.sourcePath, 'public', 'amtl')]
+    cfg.includes += [os.path.join(builder.sourcePath, 'public', 'memtools')]
     return
 
   #

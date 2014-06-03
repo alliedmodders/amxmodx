@@ -1,237 +1,219 @@
-#include <assert.h>
-#include <stdlib.h>
-#include "cstrike.h"
+/* AMX Mod X
+ *   Counter-Strike Module
+ *
+ * by the AMX Mod X Development Team
+ *
+ * This file is part of AMX Mod X.
+ *
+ *
+ *  This program is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation; either version 2 of the License, or (at
+ *  your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ *  General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software Foundation,
+ *  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ *  In addition, as a special exception, the author gives permission to
+ *  link the code of this program with the Half-Life Game Engine ("HL
+ *  Engine") and Modified Game Libraries ("MODs") developed by Valve,
+ *  L.L.C ("Valve"). You must obey the GNU General Public License in all
+ *  respects for all of the code used other than the HL Engine and MODs
+ *  from Valve. If you modify this file, you may extend this exception
+ *  to your version of the file, but you are not obligated to do so. If
+ *  you do not wish to do so, delete this exception statement from your
+ *  version.
+ */
+#include "CstrikeDatas.h"
+#include "CstrikeUtils.h"
+#include "CDetour/detours.h"
 
-#if defined(__linux__) || defined(__APPLE__)
-#include <sys/mman.h>
-#define	PAGE_EXECUTE_READWRITE	PROT_READ|PROT_WRITE|PROT_EXEC
-
-#if defined(__linux)
-#include <malloc.h>
-#endif
-#endif
-
-#if defined(__APPLE__)
-#include <mach-o/nlist.h>
-#endif
-
-/* Utils */
-unsigned char *UTIL_CodeAlloc(size_t size);
-void UTIL_CodeFree(unsigned char *addr);
-void UTIL_MemProtect(void *addr, int length, int prot);
-bool UTIL_GetLibraryOfAddress(void *memInBase, char *buffer, size_t maxlength, uintptr_t *base);
-
-/* Detours */
-void CtrlDetour_ClientCommand(bool set);
-int Detour_ClientCommand(edict_t *pEdict);
+void CtrlDetours_ClientCommand(bool set);
+void CtrlDetours_BuyCommands(bool set);
 
 int g_CSCliCmdFwd = -1;
+int g_CSBuyCmdFwd = -1;
+
 int *g_UseBotArgs = NULL;
 const char **g_BotArgs = NULL;
 
-/* Called on startup */
+CDetour *g_ClientCommandDetour = NULL;
+CDetour *g_CanBuyThisDetour = NULL;
+CDetour *g_BuyItemDetour = NULL;
+CDetour *g_BuyGunAmmoDetour = NULL;
+
+
 void InitializeHacks()
 {
-	CtrlDetour_ClientCommand(true);
-}
+#if defined AMD64
+	#error UNSUPPORTED
+#endif
 
-void OnPluginsLoaded()
-{
-	g_CSCliCmdFwd = MF_RegisterForward("CS_InternalCommand", ET_STOP, FP_CELL, FP_STRING, FP_DONE);
+	CtrlDetours_ClientCommand(true);
+	CtrlDetours_BuyCommands(true);
 }
 
 void ShutdownHacks()
 {
-	CtrlDetour_ClientCommand(false);
+	CtrlDetours_ClientCommand(false);
+	CtrlDetours_BuyCommands(false);
 }
 
-void CtrlDetour_ClientCommand(bool set)
-{
-#if defined AMD64
-#error UNSUPPORTED
-#endif
-	static unsigned char DetourOps[] = 
-	{
-		0x50,									/* push eax         ; just for safety */
-		0xff, 0x74, 0x24, 0x08,			/* push [esp+0x8]	; push the edict pointer */
-		0xe8, 0x00, 0x00, 0x00, 0x00, /* call <gate>		; call our function */
-		0x83, 0xc4, 0x08,					/* add esp, 8		; correct stack */
-		0x85, 0xc0,							/* test eax, eax	; do != 0 test */
-		0x74, 0x01,							/* je <cont>		; if == 0, jump to where old func is saved */
-		0xc3									/* ret				; return otherwise */
-	};
-	static unsigned char DetourJmp = '\xE9';
 
-	const unsigned int DetourBytes = 18;
-	const unsigned int DetourCallPos = 6;
-	const unsigned int DetourJmpPos = DetourBytes + CS_DETOURCOPYBYTES_CLIENTCOMMAND;
-	const unsigned int DetourJmpBytes = 5;
-	static unsigned char *FullDetour = NULL;
-
-	void *target = (void *)MDLL_ClientCommand;
-	unsigned char *paddr;
-
-	if (!g_UseBotArgs)
-	{
-#if defined(__linux__) || defined(__APPLE__)
-		/* Find the DLL */
-		char dll[256];
-		uintptr_t base;
-		if (!UTIL_GetLibraryOfAddress(target, dll, sizeof(dll), &base))
-		{
-			return;
-		}
-#if defined(__linux__)
-		void *handle = dlopen(dll, RTLD_NOW);
-		if (!handle)
-		{
-			return;
-		}
-		g_UseBotArgs = (int *)dlsym(handle, "UseBotArgs");
-		g_BotArgs = (const char **)dlsym(handle, "BotArgs");
-		dlclose(handle);
-#elif defined(__APPLE__)
-		/* Using dlsym on OS X won't work because the symbols are hidden */
-		struct nlist symbols[3];
-		memset(symbols, 0, sizeof(symbols));
-		symbols[0].n_un.n_name = (char *)"_UseBotArgs";
-		symbols[1].n_un.n_name = (char *)"_BotArgs";
-		if (nlist(dll, symbols) != 0)
-		{
-			return;
-		}
-		g_UseBotArgs = (int *)(base + symbols[0].n_value);
-		g_BotArgs = (const char **)(base + symbols[1].n_value);
-#endif
-#else /* Windows */
-		/* Find the bot args addresses */
-		paddr = (unsigned char *)target + CS_CLICMD_OFFS_USEBOTARGS;
-		g_UseBotArgs = *(int **)paddr;
-		paddr = (unsigned char *)target + CS_CLICMD_OFFS_BOTARGS;
-		g_BotArgs = (const char **)*(const char **)paddr;
-#endif
-	}
-
-	if (set)
-	{
-		assert(FullDetour == NULL);
-		FullDetour = UTIL_CodeAlloc(DetourBytes + CS_DETOURCOPYBYTES_CLIENTCOMMAND + DetourJmpBytes);
-	
-		/* Copy the main trampoline function */
-		memcpy(FullDetour, DetourOps, DetourBytes);
-	
-		/* Copy our detour call into the trampoline */
-		paddr = &FullDetour[DetourCallPos];
-		*(unsigned long *)paddr = (unsigned long)Detour_ClientCommand - (unsigned long)(paddr + 4);
-	
-		/* Copy original bytes onto the end of the function */
-	    	memcpy(&FullDetour[DetourBytes], target, CS_DETOURCOPYBYTES_CLIENTCOMMAND);
-		
-		/* Patch and copy the final jmp */
-		paddr = &FullDetour[DetourJmpPos];
-		*paddr++ = DetourJmp;
-		*(unsigned long *)paddr = ((unsigned long)target + CS_DETOURCOPYBYTES_CLIENTCOMMAND)
-									- (unsigned long)(paddr + 4);
-	
-		/* Now overwrite the target function with our trampoline */
-		UTIL_MemProtect(target, CS_DETOURCOPYBYTES_CLIENTCOMMAND + 10, PAGE_EXECUTE_READWRITE);
-		paddr = (unsigned char *)target;
-		*paddr++ = DetourJmp;
-		*(unsigned long *)paddr = (unsigned long)FullDetour - (unsigned long)(paddr + 4);
-	} else {
-		assert(FullDetour != NULL);
-
-		/* Copy back the original function bytes */
-		memcpy(target, &FullDetour[DetourBytes], CS_DETOURCOPYBYTES_CLIENTCOMMAND);
-
-		/* Free memory used */
-		UTIL_CodeFree(FullDetour);
-		FullDetour = NULL;
-	}
-}
-
-int Detour_ClientCommand(edict_t *pEdict)
+DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientCommand(edict_t *pEntity)
 {
 	if (*g_UseBotArgs)
 	{
 		int client = ENTINDEX(pEdict);
 		const char *args = *g_BotArgs;
-		return MF_ExecuteForward(g_CSCliCmdFwd, (cell)client, args);
+
+		if (MF_ExecuteForward(g_CSCliCmdFwd, static_cast<cell>(client), args) > 0)
+		{
+			return;
+		}
 	}
-	return 0;
+
+	DETOUR_STATIC_CALL(C_ClientCommand)(pEdict);
 }
 
-unsigned char *UTIL_CodeAlloc(size_t size)
+DETOUR_DECL_STATIC2(CanBuyThis, bool, void*, pvPlayer, int, weaponId) // bool CanBuyThis(CBasePlayer *pPlayer, int weaponId)
 {
-#if defined WIN32
-	return (unsigned char *)VirtualAlloc(NULL, size, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-#elif defined __GNUC__
-#if defined __APPLE__
-	unsigned char *addr = (unsigned char *)valloc(size);
-#else
-	unsigned char *addr = (unsigned char *)memalign(sysconf(_SC_PAGESIZE), size);
-#endif
-	mprotect(addr, size, PROT_READ|PROT_WRITE|PROT_EXEC);
-	return addr;
-#endif
+	if (weaponId != CSI_SHIELDGUN) // This will be handled before with BuyItem. Avoiding duplicated call.
+	{
+		int player = PrivateToIndex(pvPlayer);
+
+		if (MF_IsPlayerAlive(player) && MF_ExecuteForward(g_CSBuyCmdFwd, static_cast<cell>(player), static_cast<cell>(weaponId)) > 0)
+		{
+			return false;
+		}
+	}
+	
+	return DETOUR_STATIC_CALL(CanBuyThis)(pvPlayer, weaponId);
 }
 
-void UTIL_CodeFree(unsigned char *addr)
+DETOUR_DECL_STATIC2(BuyItem, void, void*, pvPlayer, int, iSlot) // void BuyItem(CBasePlayer *pPlayer, int iSlot)
 {
-#if defined WIN32
-	VirtualFree(addr, 0, MEM_RELEASE);
-#else
-	free(addr);
-#endif
+	int player = PrivateToIndex(pvPlayer);
+
+	if (MF_IsPlayerAlive(player))
+	{
+		static const int itemSlotToWeaponId[] = {-1, CSI_VEST, CSI_VESTHELM, CSI_FLASHBANG, CSI_HEGRENADE, CSI_SMOKEGRENADE, CSI_NVGS, CSI_DEFUSER, CSI_SHIELDGUN};
+
+		if (iSlot >= 1 && iSlot <= 8 && MF_ExecuteForward(g_CSBuyCmdFwd, static_cast<cell>(player), static_cast<cell>(itemSlotToWeaponId[iSlot])) > 0)
+		{
+			return;
+		}
+	}
+
+	DETOUR_STATIC_CALL(BuyItem)(pvPlayer, iSlot);
 }
 
-void UTIL_MemProtect(void *addr, int length, int prot)
+DETOUR_DECL_STATIC3(BuyGunAmmo, bool, void*, pvPlayer, void*, pvWeapon, bool, bBlinkMoney) // bool BuyGunAmmo(CBasePlayer *player, CBasePlayerItem *weapon, bool bBlinkMoney)
 {
-#if defined(__linux__) || defined(__APPLE__)
-#define ALIGN(ar) ((long)ar & ~(sysconf(_SC_PAGESIZE)-1))
-	void *addr2 = (void *)ALIGN(addr);
-	mprotect(addr2, sysconf(_SC_PAGESIZE), prot);
-#else
-	DWORD old_prot;
-	VirtualProtect(addr, length, prot, &old_prot);
-#endif
+	int player = PrivateToIndex(pvPlayer);
+
+	if (MF_IsPlayerAlive(player))
+	{
+		edict_t *pWeapon = PrivateToEdict(pvWeapon);
+
+		if (pWeapon)
+		{
+			int weaponId = *((int *)pWeapon->pvPrivateData + OFFSET_WEAPONTYPE);
+			int ammoId = (1<<weaponId & BITS_PISTOLS) ? CSI_SECAMMO : CSI_PRIMAMMO;
+
+			if (MF_ExecuteForward(g_CSBuyCmdFwd, static_cast<cell>(player), static_cast<cell>(ammoId)) > 0)
+			{
+				return false;
+			}
+		}
+	}
+
+	return DETOUR_STATIC_CALL(BuyGunAmmo)(pvPlayer, pvWeapon, bBlinkMoney);
 }
 
-bool UTIL_GetLibraryOfAddress(void *memInBase, char *buffer, size_t maxlength, uintptr_t *base)
+
+void CtrlDetours_ClientCommand(bool set)
 {
-#if defined(__linux__) || defined(__APPLE__)
-	Dl_info info;
-	if (!dladdr(memInBase, &info))
+	if (set)
 	{
-		return false;
-	}
-	if (!info.dli_fbase || !info.dli_fname)
-	{
-		return false;
-	}
-	const char *dllpath = info.dli_fname;
-	snprintf(buffer, maxlength, "%s", dllpath);
-	if (base)
-	{
-		*base = (uintptr_t)info.dli_fbase;
-	}
-#else
-	MEMORY_BASIC_INFORMATION mem;
-	if (!VirtualQuery(memInBase, &mem, sizeof(mem)))
-	{
-		return false;
-	}
-	if (mem.AllocationBase == NULL)
-	{
-		return false;
-	}
-	HMODULE dll = (HMODULE)mem.AllocationBase;
-	GetModuleFileName(dll, (LPTSTR)buffer, maxlength);
-	if (base)
-	{
-		*base = (uintptr_t)mem.AllocationBase;
-	}
+		void *target = (void *)MDLL_ClientCommand;
+
+#if defined(WIN32)
+
+		g_UseBotArgs = *(int **)((unsigned char *)target + CS_CLICMD_OFFS_USEBOTARGS);
+		g_BotArgs = (const char **)*(const char **)((unsigned char *)target + CS_CLICMD_OFFS_BOTARGS);
+
+#elif defined(__linux__) || defined(__APPLE__)
+
+		g_UseBotArgs = (int *)UTIL_FindAddressFromEntry(CS_IDENT_USEBOTARGS, CS_IDENT_HIDDEN_STATE);
+		g_BotArgs = (const char **)UTIL_FindAddressFromEntry(CS_IDENT_BOTARGS, CS_IDENT_HIDDEN_STATE);
+
 #endif
-	return true;
+		g_ClientCommandDetour = DETOUR_CREATE_STATIC_FIXED(C_ClientCommand, target);
+
+		if (g_ClientCommandDetour == NULL)
+		{
+			MF_Log("No Client Commands detour could be initialized - Disabled Client Command forward.");
+		}
+	}
+	else
+	{
+		if (g_ClientCommandDetour) 
+			g_ClientCommandDetour->Destroy();
+	}
 }
 
+void ToggleDetour_ClientCommands(bool enable)
+{
+	if (g_ClientCommandDetour)
+		(enable) ? g_ClientCommandDetour->EnableDetour() : g_ClientCommandDetour->DisableDetour();
+}
+
+
+void CtrlDetours_BuyCommands(bool set)
+{
+	if (set)
+	{
+		void *canBuyThisAddress = UTIL_FindAddressFromEntry(CS_IDENT_CANBUYTHIS, CS_IDENT_HIDDEN_STATE);
+		void *buyItemAddress	= UTIL_FindAddressFromEntry(CS_IDENT_BUYITEM, CS_IDENT_HIDDEN_STATE);
+		void *buyGunAmmoAddress = UTIL_FindAddressFromEntry(CS_IDENT_BUYGUNAMMO, CS_IDENT_HIDDEN_STATE);
+
+		g_CanBuyThisDetour	= DETOUR_CREATE_STATIC_FIXED(CanBuyThis, canBuyThisAddress);
+		g_BuyItemDetour		= DETOUR_CREATE_STATIC_FIXED(BuyItem, buyItemAddress);
+		g_BuyGunAmmoDetour	= DETOUR_CREATE_STATIC_FIXED(BuyGunAmmo, buyGunAmmoAddress);
+
+		if (g_CanBuyThisDetour == NULL || g_BuyItemDetour == NULL || g_BuyGunAmmoDetour == NULL)
+		{
+			MF_Log("No Buy Commands detours could be initialized - Disabled Buy forward.");
+		}
+	}
+	else
+	{
+		if (g_CanBuyThisDetour)
+			g_CanBuyThisDetour->Destroy();
+
+		if (g_BuyItemDetour)
+			g_BuyItemDetour->Destroy();
+
+		if (g_BuyGunAmmoDetour)
+			g_BuyGunAmmoDetour->Destroy();
+	}
+}
+
+void ToggleDetour_BuyCommands(bool enable)
+{
+	if (g_CanBuyThisDetour)
+		(enable) ? g_CanBuyThisDetour->EnableDetour() : g_CanBuyThisDetour->DisableDetour();
+
+	if (g_BuyItemDetour)
+		(enable) ? g_BuyItemDetour->EnableDetour() : g_BuyItemDetour->DisableDetour();
+
+	if (g_BuyGunAmmoDetour)
+		(enable) ? g_BuyGunAmmoDetour->EnableDetour() : g_BuyGunAmmoDetour->DisableDetour();
+}

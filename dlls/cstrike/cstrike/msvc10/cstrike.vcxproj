@@ -62,7 +62,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\;..\sdk;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\..\..\public; ..\..\..\..\public\amtl;..\..\..\..\public\memtools;..\sdk;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;CSTRIKE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -105,7 +105,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\;..\sdk;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\..\..\public; ..\..\..\..\public\amtl;..\..\..\..\public\memtools;..\sdk;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;CSTRIKE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -135,20 +135,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\cstrike.cpp" />
+    <ClCompile Include="..\..\..\..\public\memtools\CDetour\asm\asm.c" />
+    <ClCompile Include="..\..\..\..\public\memtools\CDetour\detours.cpp" />
+    <ClCompile Include="..\..\..\..\public\memtools\MemoryUtils.cpp" />
+    <ClCompile Include="..\amxx_api.cpp" />
     <ClCompile Include="..\CstrikeHacks.cpp" />
+    <ClCompile Include="..\CstrikeNatives.cpp" />
     <ClCompile Include="..\CstrikePlayer.cpp" />
+    <ClCompile Include="..\CstrikeUtils.cpp" />
     <ClCompile Include="..\sdk\amxxmodule.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\cstrike.h" />
+    <ClInclude Include="..\..\..\..\public\memtools\CDetour\asm\asm.h" />
+    <ClInclude Include="..\..\..\..\public\memtools\CDetour\detourhelpers.h" />
+    <ClInclude Include="..\..\..\..\public\memtools\CDetour\detours.h" />
+    <ClInclude Include="..\..\..\..\public\memtools\MemoryUtils.h" />
+    <ClInclude Include="..\CstrikeDatas.h" />
     <ClInclude Include="..\CstrikePlayer.h" />
-    <ClInclude Include="..\svn_version.h" />
     <ClInclude Include="..\sdk\moduleconfig.h" />
     <ClInclude Include="..\sdk\amxxmodule.h" />
+    <ClInclude Include="..\CstrikeUtils.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\plugins\include\cstrike.inc" />
+    <None Include="..\..\..\..\plugins\include\cstrike.inc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

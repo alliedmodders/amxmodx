@@ -1,48 +1,39 @@
-/* AMX Mod X 
-   *   Counter-Strike Module 
-   * 
-   * by the AMX Mod X Development Team 
-   * 
-   * This file is part of AMX Mod X. 
-   * 
-   * 
-   *  This program is free software; you can redistribute it and/or modify it 
-   *  under the terms of the GNU General Public License as published by the 
-   *  Free Software Foundation; either version 2 of the License, or (at 
-   *  your option) any later version. 
-   * 
-   *  This program is distributed in the hope that it will be useful, but 
-   *  WITHOUT ANY WARRANTY; without even the implied warranty of 
-   *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-   *  General Public License for more details. 
-   * 
-   *  You should have received a copy of the GNU General Public License 
-   *  along with this program; if not, write to the Free Software Foundation, 
-   *  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
-   * 
-   *  In addition, as a special exception, the author gives permission to 
-   *  link the code of this program with the Half-Life Game Engine ("HL 
-   *  Engine") and Modified Game Libraries ("MODs") developed by Valve, 
-   *  L.L.C ("Valve"). You must obey the GNU General Public License in all 
-   *  respects for all of the code used other than the HL Engine and MODs 
-   *  from Valve. If you modify this file, you may extend this exception 
-   *  to your version of the file, but you are not obligated to do so. If 
-   *  you do not wish to do so, delete this exception statement from your 
-   *  version. 
-   */ 
-
-// cstrike MODULE TO DO HERE: http://www.amxmodx.org/forums/viewtopic.php?t=45
-// This implementation uses Vexd's way (lightly modified) of setting models on players.
+/* AMX Mod X
+ *   Counter-Strike Module
+ *
+ * by the AMX Mod X Development Team
+ *
+ * This file is part of AMX Mod X.
+ *
+ *
+ *  This program is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation; either version 2 of the License, or (at
+ *  your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ *  General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software Foundation,
+ *  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ *  In addition, as a special exception, the author gives permission to
+ *  link the code of this program with the Half-Life Game Engine ("HL
+ *  Engine") and Modified Game Libraries ("MODs") developed by Valve,
+ *  L.L.C ("Valve"). You must obey the GNU General Public License in all
+ *  respects for all of the code used other than the HL Engine and MODs
+ *  from Valve. If you modify this file, you may extend this exception
+ *  to your version of the file, but you are not obligated to do so. If
+ *  you do not wish to do so, delete this exception statement from your
+ *  version.
+ */
+#ifndef CSTRIKE_DATA_H
+#define CSTRIKE_DATA_H
 
 #include "amxxmodule.h"
-#include <extdll.h>
-#include <meta_api.h>
-#include "CstrikePlayer.h"
-
-#define GETINFOKEYBUFFER				(*g_engfuncs.pfnGetInfoKeyBuffer)
-#define	SETCLIENTKEYVALUE				(*g_engfuncs.pfnSetClientKeyValue)
-#define GETCLIENTKEYVALUE				(*g_engfuncs.pfnInfoKeyValue)
-#define CREATENAMEDENTITY				(*g_engfuncs.pfnCreateNamedEntity)
 
 #if defined(__linux__) || defined (__APPLE__)
 	#define EXTRAOFFSET					5 // offsets 5 higher in Linux builds
@@ -52,7 +43,8 @@
 	#define EXTRAOFFSET					0 // no change in Windows builds
 	#define EXTRAOFFSET_WEAPONS			0
 	#define ACTUAL_EXTRA_OFFSET			0
-#endif // defined(__linux__) || defined(__APPLE__)
+#endif
+
 /*
 	Offset history:
 	041029:
@@ -61,9 +53,6 @@
 	Also backpack ammo offsets were all obviously 5 steps too high since unknown time...
 
 */
-
-#define HAS_SHIELD      (1<<24) //16777216 
-
 // "player" entities
 #if !defined __amd64__
 	// 32 bit offsets here
@@ -156,20 +145,80 @@
 	#define OFFSET_HOSTAGEID			516 + EXTRAOFFSET // +29
 #endif
 
-#if defined __linux__
-#define CS_DETOURCOPYBYTES_CLIENTCOMMAND		6
-#elif defined __APPLE__
-#define CS_DETOURCOPYBYTES_CLIENTCOMMAND		5
+#if defined(__linux__)
+	#define CS_IDENT_USEBOTARGS					"UseBotArgs"
+	#define CS_IDENT_BOTARGS					"BotArgs"
+	#define CS_IDENT_HIDDEN_STATE				false
+#elif defined(__APPLE__)
+	#define CS_IDENT_USEBOTARGS					"UseBotArgs"
+	#define CS_IDENT_BOTARGS					"BotArgs"
+	#define CS_IDENT_HIDDEN_STATE				true
 #else
-#define CS_DETOURCOPYBYTES_CLIENTCOMMAND		6
-#define CS_CLICMD_OFFS_USEBOTARGS				2
-#define CS_CLICMD_OFFS_BOTARGS					22
+	#define CS_CLICMD_OFFS_USEBOTARGS			2
+	#define CS_CLICMD_OFFS_BOTARGS				22
 #endif
 
+/** 
+ * CS_OnBuy forward 
+ */
+#if defined(__linux__)
+	#define CS_IDENT_CANBUYTHIS			"_Z10CanBuyThisP11CBasePlayeri"
+	#define CS_IDENT_BUYITEM			"_Z7BuyItemP11CBasePlayeri" 
+	#define CS_IDENT_BUYGUNAMMO			"_Z10BuyGunAmmoR11CBasePlayerR15CBasePlayerItemb"
+	#define CS_IDENT_HIDDEN_STATE		false
+#elif defined(__APPLE__)
+	#define CS_IDENT_CANBUYTHIS			"_Z10CanBuyThisP11CBasePlayeri"
+	#define CS_IDENT_BUYITEM			"_Z7BuyItemP11CBasePlayeri" 
+	#define CS_IDENT_BUYGUNAMMO			"_Z10BuyGunAmmoR11CBasePlayerR15CBasePlayerItemb"
+	#define CS_IDENT_HIDDEN_STATE		true
+#elif defined(WIN32)
+	#define CS_IDENT_CANBUYTHIS			"\\x53\\x8B\\x2A\\x2A\\x2A\\x2A\\x2A\\x56\\x8B\\x2A\\x2A\\x2A\\x57"
+	#define CS_IDENT_BUYITEM			"\\x53\\x56\\x8B\\x2A\\x2A\\x2A\\xBB\\x2A\\x2A\\x2A\\x2A\\x57\\x53"
+	#define CS_IDENT_BUYGUNAMMO			"\\x56\\x57\\x8B\\x2A\\x2A\\x2A\\x6A\\x2A\\x8B\\x2A\\xE8\\x2A\\x2A\\x2A\\x2A\\x84\\x2A\\x0F"
+	#define CS_IDENT_HIDDEN_STATE		false
+#endif
+
+#define CSI_P228						CSW_P228
+#define CSI_SCOUT						CSW_SCOUT
+#define CSI_HEGRENADE					CSW_HEGRENADE
+#define CSI_XM1014						CSW_XM1014
+#define CSI_C4							CSW_C4
+#define CSI_MAC10						CSW_MAC10
+#define CSI_AUG							CSW_AUG
+#define CSI_SMOKEGRENADE				CSW_SMOKEGRENADE
+#define CSI_ELITE						CSW_ELITE
+#define CSI_FIVESEVEN					CSW_FIVESEVEN
+#define CSI_UMP45						CSW_UMP45
+#define CSI_SG550						CSW_SG550
+#define CSI_GALI						CSW_GALI
+#define CSI_FAMAS						CSW_FAMAS
+#define CSI_USP							CSW_USP
+#define CSI_GLOCK18						CSW_GLOCK18
+#define CSI_AWP							CSW_AWP
+#define CSI_MP5NAVY						CSW_MP5NAVY
+#define CSI_M249						CSW_M249
+#define CSI_M3							CSW_M3
+#define CSI_M4A1						CSW_M4A1
+#define CSI_TMP							CSW_TMP
+#define CSI_G3SG1						CSW_G3SG1
+#define CSI_FLASHBANG					CSW_FLASHBANG
+#define CSI_DEAGLE						CSW_DEAGLE
+#define CSI_SG552						CSW_SG552
+#define CSI_AK47						CSW_AK47
+#define CSI_KNIFE						CSW_KNIFE
+#define CSI_P90							CSW_P90
+#define CSI_SHIELDGUN					CSW_SHIELDGUN
+#define CSI_VEST						CSW_VEST		 // Custom
+#define CSI_VESTHELM					CSW_VESTHELM	 // Custom
+#define CSI_DEFUSER						33				 // Custom
+#define CSI_NVGS						34				 // Custom
+#define CSI_PRIMAMMO					36				 // Custom
+#define CSI_SECAMMO						37				 // Custom
+
+#define BITS_PISTOLS					(1<<CSI_GLOCK18 | 1<<CSI_USP | 1<<CSI_P228 | 1<<CSI_DEAGLE | 1<<CSI_ELITE | 1<<CSI_FIVESEVEN)
 
 // Ids of weapons in CS
 #define CSW_P228						1
-//#define CSW_SHIELD					2
 #define CSW_SCOUT						3
 #define CSW_HEGRENADE					4
 #define CSW_XM1014						5
@@ -200,6 +249,7 @@
 #define CSW_P90							30
 #define CSW_VEST						31 // Brand new invention!
 #define CSW_VESTHELM					32 // Brand new invention!
+#define CSW_SHIELDGUN					99
 
 // These are used with armoury_entity:s.
 #define CSA_MP5NAVY						0
@@ -270,6 +320,9 @@
 #define CS_AUGSG552_ZOOM				0x37
 #define CS_NO_ZOOM						0x5A
 
+#define HAS_SHIELD						(1<<24) //16777216 
+
+
 enum CS_Internal_Models {
 	CS_DONTCHANGE = 0,
 	CS_CT_URBAN = 1,
@@ -293,57 +346,5 @@ enum
 	CS_SET_SECOND_ZOOM,
 	CS_SET_AUGSG552_ZOOM,
 };
-// cstrike-specific defines above
 
-extern CCstrikePlayer g_players[33];
-extern int g_zooming[33];
-extern bool g_precachedknife;
-extern bool g_noknives;
-// Globals above
-
-void InitializeHacks();
-void ShutdownHacks();
-
-#define CHECK_ENTITY(x) \
-	if (x < 0 || x > gpGlobals->maxEntities) { \
-		MF_LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", x); \
-		return 0; \
-	} else { \
-		if (x <= gpGlobals->maxClients) { \
-			if (!MF_IsPlayerIngame(x)) { \
-				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d (not in-game)", x); \
-				return 0; \
-			} \
-		} else { \
-			if (x != 0 && FNullEnt(INDEXENT(x))) { \
-				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", x); \
-				return 0; \
-			} \
-		} \
-	}
-
-#define CHECK_PLAYER(x) \
-	if (x < 1 || x > gpGlobals->maxClients) { \
-		MF_LogError(amx, AMX_ERR_NATIVE, "Player out of range (%d)", x); \
-		return 0; \
-	} else { \
-		if (!MF_IsPlayerIngame(x) || FNullEnt(MF_GetPlayerEdict(x))) { \
-			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", x); \
-			return 0; \
-		} \
-	}
-
-#define CHECK_NONPLAYER(x) \
-	if (x < 1 || x <= gpGlobals->maxClients || x > gpGlobals->maxEntities) { \
-		MF_LogError(amx, AMX_ERR_NATIVE, "Non-player entity %d out of range", x); \
-		return 0; \
-	} else { \
-		if (FNullEnt(INDEXENT(x))) { \
-			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid non-player entity %d", x); \
-			return 0; \
-		} \
-	}
-
-#define GETEDICT(n) \
-	((n >= 1 && n <= gpGlobals->maxClients) ? MF_GetPlayerEdict(n) : INDEXENT(n))
-
+#endif // CSTRIKE_DATA_H

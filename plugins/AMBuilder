@@ -106,9 +106,3 @@ build_plugin(
   amxx_file = 'admin_sql.amxx',
   extra_argv = ['USING_SQL=1']
 )
-
-# amxmod_compat is multi-file.
-build_plugin(
-  script_path = os.path.join(builder.currentSourcePath, 'amxmod_compat', 'amxmod_compat.sma'),
-  amxx_file = 'amxmod_compat.amxx'
-)

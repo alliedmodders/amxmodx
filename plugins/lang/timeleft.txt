@@ -59,7 +59,7 @@ NO_T_LIMIT = Ingen tidsbegraensning
 MINUTE = minut
 MINUTES = minutter
 SECOND = sekund
-SECONDs = sekunder
+SECONDS = sekunder
 
 [pl]
 THE_TIME = Czas
@@ -195,4 +195,3 @@ MINUTE = minut
 MINUTES = minute
 SECOND = sekund
 SECONDS = sekunde
-

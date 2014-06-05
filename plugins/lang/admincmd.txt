@@ -831,6 +831,7 @@ ADMIN_UNBAN_2 = ADMIN %s: unban %s
 ADMIN_ADDBAN_1 = ADMIN: ban %s
 ADMIN_ADDBAN_2 = ADMIN %s: ban %s
 BANNED = zabanovan
+REASON = duvod
 FOR_MIN = na %s minut
 PERM = permanentne
 CLIENT_BANNED = Klient "%s" zabanovan

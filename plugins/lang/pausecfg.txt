@@ -457,6 +457,11 @@ COM_PAUSE_SAVE = ^tsave - ulozi seznam stopnutych pluginu
 COM_PAUSE_CLEAR = ^tclear - vycisti seznam stopnutych plugins
 COM_PAUSE_LIST = ^tlist [id] - seznamy pluginu
 COM_PAUSE_ADD = ^tadd <title> - oznaci plugin jako nepauznutelny
+SAVE_PAUSED = Ulozit pauznute
+COM_PAUSE_SAVE_PAUSED = ^tsave - ulozi seznam pauznutych pluginu
+COM_PAUSE_CLEAR_PAUSED = ^tclear - vyprazdni seznam pauznutych pluginu
+CANT_UNPAUSE_PLUGIN = Plugin "%s" je stopnuty a nemuze byt pauznuty nebo odpauznuty.
+CLEAR_PAUSED = Vyprazdnit soubor s pauznutymi
 
 [fi]
 PAUSE_COULDNT_FIND = Ei loydetty pluginia, joka sopisi kuvaukseen "%s"
@@ -831,4 +836,3 @@ COM_PAUSE_SAVE = ^tsave - snima listu zaustavljenih pluginova
 COM_PAUSE_CLEAR = ^tclear - prazni listu zaustavljenih pluginova
 COM_PAUSE_LIST = ^tlist [id] - lista pluginove
 COM_PAUSE_ADD = ^tadd <title> - zakljucava plugin
-

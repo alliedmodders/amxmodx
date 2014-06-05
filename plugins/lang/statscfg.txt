@@ -480,7 +480,6 @@ ST_SAY_RANK = Say /rank
 ST_SAY_REPORT = Say /report
 ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
-ST_SAY_FLOP15 = Say /flop15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Spec. Rank Info
 ST_BOMB_PLANTED_SOUND = Bomb Planted Sound
@@ -1801,4 +1800,3 @@ ST_BOMB_CD_HUD = Bomb Countdown Hud
 ST_LAST_MAN_SOUND = Last Man Sound
 ST_HE_KILL_SOUND = Grenade Kill Sound
 ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
-

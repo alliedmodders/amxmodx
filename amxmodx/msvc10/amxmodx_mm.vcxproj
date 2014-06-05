@@ -428,15 +428,6 @@
     <None Include="..\..\plugins\include\vault.inc" />
     <None Include="..\..\plugins\include\vector.inc" />
     <None Include="..\..\plugins\include\xs.inc" />
-    <None Include="..\..\plugins\include\amxmod_compat\amxmod.inc" />
-    <None Include="..\..\plugins\include\amxmod_compat\maths.inc" />
-    <None Include="..\..\plugins\include\amxmod_compat\mysql.inc" />
-    <None Include="..\..\plugins\include\amxmod_compat\translator.inc" />
-    <None Include="..\..\plugins\include\amxmod_compat\Vexd_Utilities.inc" />
-    <None Include="..\..\plugins\include\amxmod_compat\VexdUM.inc" />
-    <None Include="..\..\plugins\include\amxmod_compat\VexdUM_const.inc" />
-    <None Include="..\..\plugins\include\amxmod_compat\VexdUM_stock.inc" />
-    <None Include="..\..\plugins\include\amxmod_compat\xtrafun.inc" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="..\Jit\helpers-x86.obj" />

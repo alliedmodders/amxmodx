@@ -25,9 +25,6 @@
     <Filter Include="Pawn Includes">
       <UniqueIdentifier>{4022451d-eb5f-4f14-b8d8-2ce23fec6e59}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pawn Includes\AMX Mod Compat">
-      <UniqueIdentifier>{d4419052-0ddd-415e-bb16-4393b99751be}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\amx.cpp">
@@ -404,33 +401,6 @@
     </None>
     <None Include="..\..\plugins\include\xs.inc">
       <Filter>Pawn Includes</Filter>
-    </None>
-    <None Include="..\..\plugins\include\amxmod_compat\amxmod.inc">
-      <Filter>Pawn Includes\AMX Mod Compat</Filter>
-    </None>
-    <None Include="..\..\plugins\include\amxmod_compat\maths.inc">
-      <Filter>Pawn Includes\AMX Mod Compat</Filter>
-    </None>
-    <None Include="..\..\plugins\include\amxmod_compat\mysql.inc">
-      <Filter>Pawn Includes\AMX Mod Compat</Filter>
-    </None>
-    <None Include="..\..\plugins\include\amxmod_compat\translator.inc">
-      <Filter>Pawn Includes\AMX Mod Compat</Filter>
-    </None>
-    <None Include="..\..\plugins\include\amxmod_compat\Vexd_Utilities.inc">
-      <Filter>Pawn Includes\AMX Mod Compat</Filter>
-    </None>
-    <None Include="..\..\plugins\include\amxmod_compat\VexdUM.inc">
-      <Filter>Pawn Includes\AMX Mod Compat</Filter>
-    </None>
-    <None Include="..\..\plugins\include\amxmod_compat\VexdUM_const.inc">
-      <Filter>Pawn Includes\AMX Mod Compat</Filter>
-    </None>
-    <None Include="..\..\plugins\include\amxmod_compat\VexdUM_stock.inc">
-      <Filter>Pawn Includes\AMX Mod Compat</Filter>
-    </None>
-    <None Include="..\..\plugins\include\amxmod_compat\xtrafun.inc">
-      <Filter>Pawn Includes\AMX Mod Compat</Filter>
     </None>
     <None Include="..\..\plugins\include\cellarray.inc">
       <Filter>Pawn Includes</Filter>

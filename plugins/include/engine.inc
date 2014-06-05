@@ -121,9 +121,7 @@ native fake_touch(entTouched, entToucher);
 /* 2 formats.
    Format: DispatchKeyValue("KeyName","Value") - sets keyvalues for the entity specified in the keyvalue() forward.
    Format: DispatchKeyValue(index,"KeyName","Value") - Sets keyvalue for entity not specified in keyvalue() forward. */
-#if !defined AMXMOD_BCOMPAT
 native DispatchKeyValue(...);
-#endif
 
 native get_keyvalue(entity, const szKey[], value[], maxLength);
 
@@ -133,18 +131,14 @@ native copy_keyvalue(szClassName[],sizea,szKeyName[],sizeb,szValue[],sizec);
 native DispatchSpawn(iIndex);
 
 /* Hurts/Kills players in a sphere, like an explosion, Multiplier determines damage. */
-#if !defined AMXMOD_BCOMPAT
 native radius_damage(const Float:fExplodeAt[3], iDamageMultiplier, iRadiusMultiplier);
-#endif
 
 /* Will return the contents of a point (inside map? in sky? outside map? etc.). */
 native point_contents(const Float:fCheckAt[3]);
 
 /* Trace a line from Start(X, Y, Z) to End(X, Y, Z), will return the point hit in vReturn[3]
  * and an entity index if an entity is hit. */
-#if !defined AMXMOD_BCOMPAT
 native trace_line(iIgnoreEnt, const Float:fStart[3], const Float:fEnd[3], Float:vReturn[3]);
-#endif
 
 /* Traces a hull. */
 native trace_hull(const Float:origin[3],hull,ignoredent=0,ignoremonsters=0);

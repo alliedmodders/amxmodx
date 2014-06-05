@@ -101,25 +101,6 @@
 	#define XS_REPLACEBUF_SIZE 3072
 #endif
 
-// **** Detect platform
-#define XS_AMX		0
-#define XS_AMXX		1
-
-#if defined _amxmodx_included
-	#define XS_PLATFORM XS_AMXX
-#endif
-
-#if defined _amxmod_included && !defined _amxmodx_included
-	#define XS_PLATFORM XS_AMX
-#endif
-
-#if !defined XS_PLATFORM
-	// Could not detect platform.
-	// Make sure you include amxmodx.inc or amxmod.inc before including xs.inc
-	#assert 0
-	#endinput
-#endif
-
 // Turn on for release
 #define XS__LIBRELEASE 1
 
@@ -167,19 +148,9 @@
 		format_args(buffer, XS_LOGBUFFER_SIZE, 1 /* go from SECOND argument*/);
 		new bool:addLogTypeName = strlen(xs__logtypenames[logtype]) ? true : false;
 	
-		#if XS_PLATFORM == XS_AMX
-			new plugname[32];
-			new dummy[1];
-			get_plugin(-1, plugname, 31, dummy, 0, dummy, 0, dummy, 0, dummy, 0, dummy[0]);
-			// log into HL Logs
-			log_message("[AMX][%s]: %s%s%s", plugname, addLogTypeName ? xs__logtypenames[logtype] : "",
-				addLogTypeName ? ": " : "", buffer);
-		#else	// assume AMXX
-	
-			// Use AMXX's logging system
-			log_amx("%s%s%s", addLogTypeName ? xs__logtypenames[logtype] : "",
-				addLogTypeName ? ": " : "", buffer);	
-		#endif
+		// Use AMXX's logging system
+		log_amx("%s%s%s", addLogTypeName ? xs__logtypenames[logtype] : "",
+			addLogTypeName ? ": " : "", buffer);
 	}
 	
 	// Assertion
@@ -213,15 +184,6 @@
 /****** MATH FUNCTIONS ******/
 
 	/****** BASIC STUFF ******/
-	
-	#if XS_PLATFORM == XS_AMX
-		enum anglemode
-		{
-			radian = 0,
-			degrees,
-			grades
-		} 
-	#endif
 	
 	// Returns -1 if num is negative, 0 if num is 0, 1 if num is positive
 	// tested
@@ -284,36 +246,14 @@
 	// tested
 	XS_LIBFUNC_ATTRIB Float:xs_rsqrt(Float:x)
 	{
-		#if XS_PLATFORM == XS_AMX
-			// store half
-			new Float:xhalf = x * 0.5;
-			
-			// compute initial guess
-			new i = _:x;
-			i = 0x5f375a84 - (i >> 1);
-			x = Float:i;
-			
-			// refine 3 times
-			x = x * (1.5 - xhalf * x * x);
-			x = x * (1.5 - xhalf * x * x);
-			x = x * (1.5 - xhalf * x * x);
-			
-			return x;
-		#else
-			return 1.0 / floatsqroot(x);
-		#endif
+		return 1.0 / floatsqroot(x);
 	}
 	
 	// sqrt
 	// tested
 	XS_LIBFUNC_ATTRIB Float:xs_sqrt(Float:x)
 	{
-		#if XS_PLATFORM == XS_AMX
-			// 1.0 / rsqrt should still be faster than loop-using-approximation-methods
-			return 1.0 / xs_rsqrt(x);
-		#else
-			return floatsqroot(x);
-		#endif
+		return floatsqroot(x);
 	}
 	
 	// These functions generate errors if you use the macros with wrong parameter count.
@@ -373,47 +313,14 @@
 		#pragma unused rawr
 	}
 	
-	#if XS_PLATFORM == XS_AMX
-		#pragma semicolon 0
-		#include <VexdUM>
-		#pragma semicolon 1
-		// We need stocks to provide radian / degrees / grades functionality
-		
-		XS_LIBFUNC_ATTRIB Float:xs__2rad(Float:x, anglemode:mod)
-		{
-			switch (mod)
-			{
-			case radian:
-				return x;
-			case degrees:
-				return xs_deg2rad(x);
-			case grades:
-				return xs_gra2rad(x);
-			default:
-				xs_assert(0, "xs_asin, xs_sin, xs_acos, xs_cos, xs_atan, xs_atan2 or xs_tan called with invalid mod param");
-			}
-			
-			return 0.0;		// compiler warning
-		}
-		
-		#define xs_fabs(%1) fabs(%1)
-		#define xs_asin(%1,%2) asin(xs__2rad(%1, %2))
-		#define xs_sin(%1,%2) sin(xs__2rad(%1, %2))
-		#define xs_acos(%1,%2) acos(xs__2rad(%1, %2))
-		#define xs_cos(%1,%2) cos(xs__2rad(%1, %2))
-		#define xs_atan(%1,%2) atan(xs__2rad(%1, %2))
-		#define xs_atan2(%1,%2) atan2(xs__2rad(%1, %2))
-		#define xs_tan(%1,%2) tan(xs__2rad(%1, %2))
-	#else
-		#define xs_fabs(%1) floatabs(%1)
-		#define xs_asin(%1,%2) floatasin(%1, %2)
-		#define xs_sin(%1,%2) floatsin(%1, %2)
-		#define xs_acos(%1,%2) floatacos(%1, %2)
-		#define xs_cos(%1,%2) floatcos(%1, %2)
-		#define xs_atan(%1,%2) floatatan(%1, %2)
-		#define xs_atan2(%1,%2) floatatan2(%1, %2)
-		#define xs_tan(%1,%2) floattan(%1, %2)
-	#endif
+	#define xs_fabs(%1) floatabs(%1)
+	#define xs_asin(%1,%2) floatasin(%1, %2)
+	#define xs_sin(%1,%2) floatsin(%1, %2)
+	#define xs_acos(%1,%2) floatacos(%1, %2)
+	#define xs_cos(%1,%2) floatcos(%1, %2)
+	#define xs_atan(%1,%2) floatatan(%1, %2)
+	#define xs_atan2(%1,%2) floatatan2(%1, %2)
+	#define xs_tan(%1,%2) floattan(%1, %2)
 	
 	/****** RANDOM NUMBERS ******/
 	// This routine comes from the book "Inner Loops" by Rick Booth, Addison-Wesley
@@ -961,16 +868,6 @@
 		return xs_replace(text, len, arr[0], arr[2]);
 	}
 	
-	#if XS_PLATFORM == XS_AMX
-		// message_begin checking for AMX
-		xs__hook_message_begin(dest, msg_type, origin[3]={0,0,0}, player = 0)
-		{
-			xs_assert(xs_is_msg_valid(msg_type), "message_begin called with bogus message type");
-			return message_begin(dest, msg_type, origin, player);
-		}
-		
-		#define message_begin xs__hook_message_begin
-	#endif
 /****** MISC FUNCS *******/
 	// sets namestr to name of the command identified by cid
 	// half-tested

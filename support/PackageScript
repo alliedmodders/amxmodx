@@ -259,7 +259,6 @@ scripting_files = [
   'include/geoip.inc',
   'include/lang.inc',
   'include/ns.inc',
-  'include/ns2amx.inc',
   'include/ns_const.inc',
   'include/nvault.inc',
   'include/regex.inc',

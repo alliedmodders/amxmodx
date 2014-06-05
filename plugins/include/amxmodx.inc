@@ -1087,14 +1087,6 @@ native set_addr_val(addr, val);
 native CreateMultiForward(const name[], stop_type, ...);
 
 /**
- * Creates a multi-forward plugin that can filter between old/new plugins.
- * Old plugins are used by the AMX Mod backwards compatibility layer.
- * Stop type must be one of the ET_ values in amxconst.inc
- * Forward type must be one of the FORWARD_ values in amxconst.inc.
- */
-native CreateMultiForwardEx(const name[], stop_type, forward_type, ...);
-
-/**
  * Creates a forward for one plugin.
  * Results will be > 0 for success.
  * id should be an id such as returned by find_plugin_byfile.

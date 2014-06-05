@@ -302,10 +302,6 @@ enum {
 #define FP_STRING		2
 #define FP_ARRAY		4
 
-#define FORWARD_ONLY_OLD	1
-#define FORWARD_ONLY_NEW	2
-#define FORWARD_ALL		3
-
 #define SND_SPAWNING		(1<<8)		// we're spawing, used in some cases for ambients 
 #define SND_STOP		(1<<5)		// stop sound
 #define SND_CHANGE_VOL		(1<<6)		// change sound vol

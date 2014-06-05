@@ -46,7 +46,6 @@
 #include "optimizer.h"
 #include "libraries.h"
 #include "messages.h"
-#include "amxmod_compat.h"
 
 #include "datastructs.h"
 #include "CFlagManager.h"

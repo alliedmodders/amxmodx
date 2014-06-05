@@ -285,7 +285,6 @@
     <ClCompile Include="..\amx.cpp" />
     <ClCompile Include="..\amxcore.cpp" />
     <ClCompile Include="..\amxdbg.cpp" />
-    <ClCompile Include="..\amxmod_compat.cpp" />
     <ClCompile Include="..\amxmodx.cpp" />
     <ClCompile Include="..\amxtime.cpp" />
     <ClCompile Include="..\amxxfile.cpp" />
@@ -350,7 +349,6 @@
   <ItemGroup>
     <ClInclude Include="..\amx.h" />
     <ClInclude Include="..\amxdbg.h" />
-    <ClInclude Include="..\amxmod_compat.h" />
     <ClInclude Include="..\amxmodx.h" />
     <ClInclude Include="..\amxxfile.h" />
     <ClInclude Include="..\amxxlog.h" />

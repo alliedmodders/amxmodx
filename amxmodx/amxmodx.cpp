@@ -1859,18 +1859,6 @@ static cell AMX_NATIVE_CALL server_cmd(AMX *amx, cell *params) /* 1 param */
 	g_langMngr.SetDefLang(LANG_SERVER);
 	char* cmd = format_amxstring(amx, params, 1, len);
 
-	if (amx->flags & AMX_FLAG_OLDFILE)
-	{
-		if (strncmp("meta ",cmd,5)==0)
-		{
-			return len+1;
-		}
-		if (strncmp("quit", cmd,4)==0)
-		{
-			return len+1;
-		}
-	}
-	
 	cmd[len++] = '\n';
 	cmd[len] = 0;
 	
@@ -1929,19 +1917,6 @@ static cell AMX_NATIVE_CALL get_cvar_string(AMX *amx, cell *params) /* 3 param *
 	int ilen;
 	char* sptemp = get_amxstring(amx, params[1], 0, ilen);
 
-	if (amx->flags & AMX_FLAG_OLDFILE)
-	{
-		/* :HACKHACK: Pretend we're invisible to old plugins for backward compatibility */
-		char *cvar = sptemp;
-		for (unsigned int i=0; i<5; i++)
-		{
-			if (strcmp(cvar, invis_cvar_list[i]) == 0)
-			{
-				return 0;
-			}
-		}
-	}
-	
 	const char *value = CVAR_GET_STRING(sptemp);
 	return set_amxstring_utf8(amx, params[2], value, strlen(value), params[3] + 1); // + EOS
 }
@@ -1963,19 +1938,6 @@ static cell AMX_NATIVE_CALL get_pcvar_float(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_cvar_float(AMX *amx, cell *params) /* 1 param */
 {
 	int ilen;
-
-	if (amx->flags & AMX_FLAG_OLDFILE)
-	{
-		/* :HACKHACK: Pretend we're invisible to old plugins for backward compatibility */
-		char *cvar = get_amxstring(amx, params[1], 0, ilen);
-		for (unsigned int i=0; i<5; i++)
-		{
-			if (strcmp(cvar, invis_cvar_list[i]) == 0)
-			{
-				return 0;
-			}
-		}
-	}
 
 	REAL pFloat = CVAR_GET_FLOAT(get_amxstring(amx, params[1], 0, ilen));
 	
@@ -2019,18 +1981,6 @@ static cell AMX_NATIVE_CALL get_pcvar_num(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_cvar_num(AMX *amx, cell *params) /* 1 param */
 {
 	int ilen;
-	if (amx->flags & AMX_FLAG_OLDFILE)
-	{
-		/* :HACKHACK: Pretend we're invisible to old plugins for backward compatibility */
-		char *cvar = get_amxstring(amx, params[1], 0, ilen);
-		for (unsigned int i=0; i<5; i++)
-		{
-			if (strcmp(cvar, invis_cvar_list[i]) == 0)
-			{
-				return 0;
-			}
-		}
-	}
 	return (int)CVAR_GET_FLOAT(get_amxstring(amx, params[1], 0, ilen));
 }
 
@@ -2627,18 +2577,6 @@ static cell AMX_NATIVE_CALL task_exists(AMX *amx, cell *params) /* 1 param */
 static cell AMX_NATIVE_CALL cvar_exists(AMX *amx, cell *params) /* 1 param */
 {
 	int ilen;
-	if (amx->flags & AMX_FLAG_OLDFILE)
-	{
-		/* :HACKHACK: Pretend we're invisible to old plugins for backward compatibility */
-		char *cvar = get_amxstring(amx, params[1], 0, ilen);
-		for (unsigned int i=0; i<5; i++)
-		{
-			if (strcmp(cvar, invis_cvar_list[i]) == 0)
-			{
-				return 0;
-			}
-		}
-	}
 	return (CVAR_GET_POINTER(get_amxstring(amx, params[1], 0, ilen)) ? 1 : 0);
 }
 
@@ -3175,19 +3113,6 @@ static cell AMX_NATIVE_CALL get_cvar_flags(AMX *amx, cell *params)
 {
 	int ilen;
 	char* sCvar = get_amxstring(amx, params[1], 0, ilen);
-
-	if (amx->flags & AMX_FLAG_OLDFILE)
-	{
-		/* :HACKHACK: Pretend we're invisible to old plugins for backward compatibility */
-		char *cvar = sCvar;
-		for (unsigned int i=0; i<5; i++)
-		{
-			if (strcmp(cvar, invis_cvar_list[i]) == 0)
-			{
-				return 0;
-			}
-		}
-	}
 
 	cvar_t* pCvar = CVAR_GET_POINTER(sCvar);
 	

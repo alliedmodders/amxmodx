@@ -36,9 +36,6 @@
     <ClCompile Include="..\amxdbg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\amxmod_compat.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\amxmodx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -183,9 +180,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\amxdbg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\amxmod_compat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\amxmodx.h">

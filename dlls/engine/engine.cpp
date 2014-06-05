@@ -1,5 +1,4 @@
 #include "engine.h"
-#include "amxmod_compat.h"
 
 struct usercmd_s *g_cmd;
 struct PlayerInfo plinfo[33];

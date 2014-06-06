@@ -1130,6 +1130,7 @@ ADMIN_UNBAN_2 = ADMIN %s: unban %s
 ADMIN_ADDBAN_1 = ADMIN: ban %s
 ADMIN_ADDBAN_2 = ADMIN %s: ban %s
 BANNED = banat
+REASON = motiv
 FOR_MIN = pentru %s min
 PERM = permanent
 CLIENT_BANNED = Jucatorul "%s" a primit ban

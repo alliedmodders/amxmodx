@@ -112,6 +112,11 @@ COM_PAUSE_SAVE = ^tsave - snima listu zaustavljenih pluginova
 COM_PAUSE_CLEAR = ^tclear - prazni listu zaustavljenih pluginova
 COM_PAUSE_LIST = ^tlist [id] - lista pluginove
 COM_PAUSE_ADD = ^tadd <title> - zakljucava plugin
+SAVE_PAUSED = Sacuvati pauzirane
+COM_PAUSE_SAVE_PAUSED = ^tsave - cuva listu pauziranih plugina
+COM_PAUSE_CLEAR_PAUSED = ^tclear - brise listu pauziranih plugina
+CANT_UNPAUSE_PLUGIN = Plugin "%s" je stopiran i ne moze se pauzirati ili otpauzirati.
+CLEAR_PAUSED = obrisati fajl sa pauziranim
 
 [tr]
 PAUSE_COULDNT_FIND = "%s" Buna benzer bir plugin bulunamadi

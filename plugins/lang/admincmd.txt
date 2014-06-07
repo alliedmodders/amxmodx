@@ -158,6 +158,7 @@ ADMIN_UNBAN_2 = ADMIN %s: unban %s
 ADMIN_ADDBAN_1 = ADMIN: ban %s
 ADMIN_ADDBAN_2 = ADMIN %s: ban %s
 BANNED = banovan
+REASON = razlog
 FOR_MIN = na %s min
 PERM = za stalno
 CLIENT_BANNED = Klijent "%s" je banovan

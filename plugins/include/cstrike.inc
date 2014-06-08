@@ -371,7 +371,7 @@ forward CS_InternalCommand(id, const cmd[]);
 #define CSI_FIVESEVEN			CSW_FIVESEVEN
 #define CSI_UMP45				CSW_UMP45
 #define CSI_SG550				CSW_SG550
-#define CSI_GALI				CSW_GALI
+#define CSI_GALIL				CSW_GALIL
 #define CSI_FAMAS				CSW_FAMAS
 #define CSI_USP					CSW_USP
 #define CSI_GLOCK18				CSW_GLOCK18
@@ -392,7 +392,7 @@ forward CS_InternalCommand(id, const cmd[]);
 #define CSI_VESTHELM			CSW_VESTHELM	// Custom
 #define CSI_DEFUSER				33				// Custom
 #define CSI_NVGS				34				// Custom
-#define CSI_PRIMAMMO			36				// Custom
+#define CSI_PRIAMMO				36				// Custom
 #define CSI_SECAMMO				37				// Custom
 
 /**

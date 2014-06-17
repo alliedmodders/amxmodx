@@ -858,11 +858,6 @@ AMMO = tolteny
 HEALTH = elet
 ARMOR = pancel
 GAME_SCORE = Jatek pont
-TIME_REM = Hatralevo ido
-NO_T_LIMIT = Nincs idohatar
-THE_TIME = Az ido
-PLAYED_MAP = Mostani palya
-FRIEND_FIRE = Csapattars sebzes
 STATS_ANNOUNCE = Neked van %s stats announcements
 ENABLED = engedelyezve
 DISABLED = letiltva
@@ -1124,4 +1119,3 @@ DISABLED = iskljucen
 SERVER_STATS = Statistika Servera
 X_RANK_IS = %s rank je %d od %d
 DISABLED_MSG = Server je iskljucio tu opcij
-

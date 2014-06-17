@@ -415,8 +415,8 @@ COM_REST_USAGE = Kaytto: amx_restrict <komento> [arvo]
 COM_REST_COMMANDS = Komennot:
 COM_REST_ON = ^ton - Aseta kielto koko varustukselle
 COM_REST_OFF = ^toff - Poista kielto koko varustukselta
-COM_REST_ON = ^ton <arvo> [...] - Aseta maaritetty kielto
-COM_REST_OFF = ^toff <value> [...] - Poista maaritelty kielto
+COM_REST_ONV = ^ton <arvo> [...] - Aseta maaritetty kielto
+COM_REST_OFFV = ^toff <value> [...] - Poista maaritelty kielto
 COM_REST_LIST = ^tlist - Nayta lista saatavilla olevista aseista ja varusteista
 COM_REST_SAVE = ^tsave - Tallenna kiellot
 COM_REST_LOAD = ^tload [file] - Lataa kiellot [tiedostosta]
@@ -723,4 +723,3 @@ REST_WEAP = Zabrani oruzja
 SAVE_SET = Sacuvaj Podesavanja
 CONF_SAV_SUC = Konfiguracija je uspjesno sacuvana
 CONF_SAV_FAIL = Konfiguracija je neuspjesno sacuvana!!
-

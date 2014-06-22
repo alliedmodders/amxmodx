@@ -703,7 +703,7 @@ public Event_TextMsg( id ) // #Only_1_Team_Change
 	{
 		new name[32]
 		get_user_name(id, name, charsmax(name))
-		client_print(g_transferingAdmin, print_chat, "%L", g_transferingAdmin, "CANT_PERF_CLIENT", name);
+		client_print(g_transferingAdmin, print_chat, "%L", g_transferingAdmin, "CANT_PERF_PLAYER", name);
 	}
 }
 

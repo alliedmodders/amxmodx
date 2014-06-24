@@ -173,7 +173,7 @@ setTimeVoice(text[], len, flags, tmlf)
 	
 	if (mins > 0)
 	{
-		num_to_word(mins, temp[2], charsmax(temp))
+		num_to_word(mins, temp[2], charsmax(temp[]))
 		
 		if ( ~flags & TD_NO_HOURS_MINS_SECS_VOICE )
 			temp[3] = "minutes "

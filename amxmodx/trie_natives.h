@@ -165,6 +165,10 @@ public:
 		this->clear();
 	}
 
+	size_t size()
+	{
+		return m_tries.size();
+	}
 	void clear()
 	{
 		for (size_t i = 0; i < m_tries.size(); i++)
@@ -223,9 +227,22 @@ public:
 	}
 };
 
+enum TrieIterStatus
+{
+	IterStatus_Valid = 0,
+	IterStatus_Outdated = 1,
+	IterStatus_Closed = 2,
+};
+
+struct CellTrieIter
+{
+	CellTrie *trie;
+	StringHashMap<Entry>::iterator *iter;
+};
 
 extern TrieHandles<CellTrie> g_TrieHandles;
 extern TrieHandles<TrieSnapshot> g_TrieSnapshotHandles;
+extern TrieHandles<CellTrieIter> g_TrieIterHandles;
 extern AMX_NATIVE_INFO trie_Natives[];
 
 #endif

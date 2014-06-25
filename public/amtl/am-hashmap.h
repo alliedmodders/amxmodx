@@ -164,6 +164,10 @@ class HashMap : public AllocPolicy
     return iterator(&table_);
   }
 
+  iterator *p_iter() {
+    return new iterator(&table_);
+  }
+
   void clear() {
     table_.clear();
   }

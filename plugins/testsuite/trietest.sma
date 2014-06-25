@@ -253,7 +253,7 @@ public trietest()
 		fail("Exists/Delete");
 
 	ok = true;
-		
+
 	TrieClear(t);
 
 	if (TrieGetSize(t))
@@ -284,7 +284,7 @@ public trietest()
 			else if (strcmp(buffer, "egg") == 0)			found[2] = true;
 			else { server_print("unexpected key: %s", buffer); ok = false; }
 		}
-		
+
 		if (!found[0] || !found[1] || !found[2])
 		{
 			server_print("did not find all keys"); ok = false;
@@ -293,12 +293,188 @@ public trietest()
 
 	TrieSnapshotDestroy(keys);
 	TrieDestroy(t);
-	
+
 	if (ok)
 		pass("Snapshot");
 	else
 		fail("Snapshot");
 
+	ok = true;
+
+	t = TrieCreate();
+
+	TrieSetString(t, "full", "throttle");
+	TrieSetString(t, "brutal", "legend");
+	TrieSetString(t, "broken", "age");
+
+	new TrieIter:iter = TrieIterCreate(t);
+	{
+		if (TrieIterGetStatus(iter) != IterStatus_Valid)
+		{
+			server_print("Trie iterator should report itself as valid (create)");
+			ok = false;
+		}
+
+		if (!TrieIterGetKey(iter))
+		{
+			server_print("Trie iterator should not be empty at this point (no key retrieval)");
+			ok = false;
+		}
+
+		if (!TrieIterNext(iter))
+		{
+			server_print("Trie iterator should have a next key/value pair at this point");
+			ok = false;
+		}
+
+		TrieIterRefresh(iter);
+
+		new key[32], value[32], bool:valid[4], klen, vlen;
+		if (!TrieIterGetKey(iter, key, charsmax(key), klen) || klen == 0)
+		{
+			server_print("Trie iterator should not be empty at this point (key retrieval)");
+			ok = false;
+		}
+		else
+		{
+			// This tests calling IterGetKey first and then looping with TrieIterNext
+			do
+			{
+				TrieIterGetString(iter, value, charsmax(value), vlen);
+
+				if (strcmp(key, "full") == 0 && strcmp(value, "throttle") == 0)
+					valid[0] = true;
+				else if (strcmp(key, "brutal") == 0 && strcmp(value, "legend") == 0)
+					valid[1] = true;
+				else if (strcmp(key, "broken") == 0 && strcmp(value, "age") == 0)
+					valid[2] = true;
+
+				if (strlen(key) != klen)
+				{
+					server_print("Key string length does not match. %d != %d", strlen(key), klen);
+					ok = false;
+				}
+
+				if (strlen(value) != vlen)
+				{
+					server_print("Value string length does not match. %d != %d", strlen(key), vlen);
+					ok = false;
+				}
+			}
+			while (TrieIterNext(iter, key, charsmax(key), klen))
+
+			if (!valid[0] || !valid[1] || !valid[2])
+			{
+				server_print("Did not find all value pairs (1)");
+				ok = false;
+			}
+		}
+
+		TrieSetString(t, "monkey", "island");
+		TrieSetString(t, "grim", "fandango");
+
+		if (TrieIterGetStatus(iter) != IterStatus_Outdated)
+		{
+			server_print("Trie iterator should report itself as outdated (add)");
+			ok = false;
+		}
+
+		TrieIterRefresh(iter);
+		TrieDeleteKey(t, "full");
+
+		if (TrieIterGetStatus(iter) != IterStatus_Outdated)
+		{
+			server_print("Trie iterator should report itself as outdated (remove)");
+			ok = false;
+		}
+
+		if (TrieIterSetPos(iter, "monkey"))
+		{
+			if (TrieIterGetStatus(iter) != IterStatus_Valid)
+			{
+				server_print("Trie iterator should report itself as valid (setpos)");
+				ok = false;
+			}
+
+			TrieIterGetKey(iter, key, charsmax(key));
+			TrieIterGetString(iter, value, charsmax(value));
+
+			if (strcmp(key, "monkey") != 0 || strcmp(value, "island") != 0)
+			{
+				server_print("Trie iterator key/value pair doesn't match after setpos |%s|%s|", key, value);
+				ok = false;
+			}
+		}
+		else
+		{
+			server_print("Trie iterator positioning failed");
+			ok = false;
+		}
+
+		TrieIterRefresh(iter);
+		arrayset(valid, false, sizeof(valid));
+
+		if (TrieIterGetSize(iter) != 4)
+		{
+			server_print("Trie iterator size should be 4, is %d", TrieIterGetSize(iter));
+			ok = false;
+		}
+
+		// This tests looping with IterGetKey and doing intermediate calls to TrieNextIter
+		while (TrieIterGetKey(iter, key, charsmax(key)))
+		{
+			TrieIterGetString(iter, value, charsmax(value));
+
+			if (strcmp(key, "monkey") == 0 && strcmp(value, "island") == 0)
+				valid[0] = true;
+			else if (strcmp(key, "brutal") == 0 && strcmp(value, "legend") == 0)
+				valid[1] = true;
+			else if (strcmp(key, "broken") == 0 && strcmp(value, "age") == 0)
+				valid[2] = true;
+			else if (strcmp(key, "grim") == 0 && strcmp(value, "fandango") == 0)
+				valid[3] = true;
+
+			TrieIterNext(iter);
+		}
+
+		if (!valid[0] || !valid[1] || !valid[2] || !valid[3])
+		{
+			server_print("Did not find all value pairs (2)");
+			ok = false;
+		}
+
+ 		// Overwriting an existing key should not invalidate our iterator
+		TrieSetString(t, "monkey", "island 2");
+
+		if (TrieIterGetStatus(iter) != IterStatus_Valid)
+		{
+			server_print("Trie iterator should report itself as valid (update)");
+			ok = false;
+		}
+
+		TrieClear(t);
+
+		if (TrieIterGetStatus(iter) != IterStatus_Outdated)
+		{
+			server_print("Trie iterator should report itself as outdated (clear)");
+			ok = false;
+		}
+
+		TrieDestroy(t);
+
+		if (TrieIterGetStatus(iter) != IterStatus_Closed)
+		{
+			server_print("Trie iterator should report itself as closed");
+			ok = false;
+		}
+
+		TrieIterDestroy(iter);
+	}
+
+	if (ok)
+		pass("Iterator");
+	else
+		fail("Iterator");
 
 	done();
 }

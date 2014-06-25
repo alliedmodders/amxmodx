@@ -415,6 +415,15 @@ int	C_Spawn(edict_t *pent)
 
 	g_TrieHandles.clear();
 	g_TrieSnapshotHandles.clear();
+
+	CellTrieIter *i;
+	for (size_t index = 1; index <= g_TrieIterHandles.size(); index++)
+	{
+		if ((i = g_TrieIterHandles.lookup(index)) != NULL)
+			delete i->iter;
+	}
+
+	g_TrieIterHandles.clear();
 	g_DataPackHandles.clear();
 
 	char map_pluginsfile_path[256];

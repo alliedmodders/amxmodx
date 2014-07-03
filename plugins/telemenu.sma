@@ -115,7 +115,6 @@ public actionTelMenu(id, key)
 						|| equal(modname, "czero")	// Counter-Strike: Condition Zero
 						|| equal(modname, "valve")	// Half-Life
 						|| equal(modname, "tfc")	// Team Fortress Classic
-						|| equal(modname, "ns")		// Natural Selection
 						|| equal(modname, "gearbox"))	// Half-Life: Opposing Force
 							VEC_DUCK_VIEW[2] = 12.0
 						else if (equal(modname, "dod"))	// Day of Defeat

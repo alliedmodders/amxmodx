@@ -2,8 +2,8 @@
 #define _TRIE_NATIVES_H_
 
 #include "amxmodx.h"
-#include "sm_stringhashmap.h"
-#include "sm_memtable.h"
+#include <sm_stringhashmap.h>
+#include <sm_memtable.h>
 #include "CVector.h"
 
 using namespace SourceMod;

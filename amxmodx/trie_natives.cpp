@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 #include "amxmodx.h"
-#include "sm_trie_tpl.h"
 #include "trie_natives.h"
 
 using namespace SourceMod;

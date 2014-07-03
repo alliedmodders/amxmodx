@@ -47,7 +47,8 @@ CDetour *g_ClientCommandDetour = NULL;
 CDetour *g_CanBuyThisDetour = NULL;
 CDetour *g_BuyItemDetour = NULL;
 CDetour *g_BuyGunAmmoDetour = NULL;
-
+CDetour *g_GiveNamedItemDetour = NULL;
+CDetour *g_AddAccountDetour = NULL;
 
 void InitializeHacks()
 {
@@ -137,6 +138,17 @@ DETOUR_DECL_STATIC3(BuyGunAmmo, bool, void*, pvPlayer, void*, pvWeapon, bool, bB
 	return DETOUR_STATIC_CALL(BuyGunAmmo)(pvPlayer, pvWeapon, bBlinkMoney);
 }
 
+DETOUR_DECL_MEMBER1(GiveNamedItem, void, const char*, pszName) // void CBasePlayer::GiveNamedItem(const char *pszName)
+{
+	DETOUR_MEMBER_CALL(GiveNamedItem)(pszName);
+}
+
+
+DETOUR_DECL_MEMBER2(AddAccount, void, int, amount, bool, bTrackChange) // void CBasePlayer::AddAccount(int amount, bool bTrackChange)
+{
+	DETOUR_MEMBER_CALL(AddAccount)(amount, bTrackChange);
+}
+
 
 void CtrlDetours_ClientCommand(bool set)
 {
@@ -180,15 +192,23 @@ void CtrlDetours_BuyCommands(bool set)
 {
 	if (set)
 	{
-		void *canBuyThisAddress = UTIL_FindAddressFromEntry(CS_IDENT_CANBUYTHIS, CS_IDENT_HIDDEN_STATE);
-		void *buyItemAddress	= UTIL_FindAddressFromEntry(CS_IDENT_BUYITEM, CS_IDENT_HIDDEN_STATE);
-		void *buyGunAmmoAddress = UTIL_FindAddressFromEntry(CS_IDENT_BUYGUNAMMO, CS_IDENT_HIDDEN_STATE);
+		void *canBuyThisAddress    = UTIL_FindAddressFromEntry(CS_IDENT_CANBUYTHIS   , CS_IDENT_HIDDEN_STATE);
+		void *buyItemAddress	   = UTIL_FindAddressFromEntry(CS_IDENT_BUYITEM      , CS_IDENT_HIDDEN_STATE);
+		void *buyGunAmmoAddress    = UTIL_FindAddressFromEntry(CS_IDENT_BUYGUNAMMO   , CS_IDENT_HIDDEN_STATE);
+		void *giveNamedItemAddress = UTIL_FindAddressFromEntry(CS_IDENT_GIVENAMEDITEM, CS_IDENT_HIDDEN_STATE);
+		void *addAccountAddress    = UTIL_FindAddressFromEntry(CS_IDENT_ADDACCOUNT   , CS_IDENT_HIDDEN_STATE);
 
-		g_CanBuyThisDetour	= DETOUR_CREATE_STATIC_FIXED(CanBuyThis, canBuyThisAddress);
-		g_BuyItemDetour		= DETOUR_CREATE_STATIC_FIXED(BuyItem, buyItemAddress);
-		g_BuyGunAmmoDetour	= DETOUR_CREATE_STATIC_FIXED(BuyGunAmmo, buyGunAmmoAddress);
+		g_CanBuyThisDetour	  = DETOUR_CREATE_STATIC_FIXED(CanBuyThis, canBuyThisAddress);
+		g_BuyItemDetour		  = DETOUR_CREATE_STATIC_FIXED(BuyItem, buyItemAddress);
+		g_BuyGunAmmoDetour	  = DETOUR_CREATE_STATIC_FIXED(BuyGunAmmo, buyGunAmmoAddress);
+		g_GiveNamedItemDetour = DETOUR_CREATE_MEMBER_FIXED(GiveNamedItem, giveNamedItemAddress);
+		g_AddAccountDetour    = DETOUR_CREATE_MEMBER_FIXED(AddAccount, addAccountAddress);
 
-		if (g_CanBuyThisDetour == NULL || g_BuyItemDetour == NULL || g_BuyGunAmmoDetour == NULL)
+		if (g_CanBuyThisDetour == NULL    || 
+			g_BuyItemDetour == NULL       || 
+			g_BuyGunAmmoDetour == NULL    || 
+			g_GiveNamedItemDetour == NULL || 
+			g_AddAccountDetour == NULL)
 		{
 			MF_Log("No Buy Commands detours could be initialized - Disabled Buy forward.");
 		}
@@ -203,6 +223,12 @@ void CtrlDetours_BuyCommands(bool set)
 
 		if (g_BuyGunAmmoDetour)
 			g_BuyGunAmmoDetour->Destroy();
+
+		if (g_GiveNamedItemDetour)
+			g_GiveNamedItemDetour->Destroy();
+
+		if (g_AddAccountDetour)
+			g_AddAccountDetour->Destroy();
 	}
 }
 
@@ -216,4 +242,10 @@ void ToggleDetour_BuyCommands(bool enable)
 
 	if (g_BuyGunAmmoDetour)
 		(enable) ? g_BuyGunAmmoDetour->EnableDetour() : g_BuyGunAmmoDetour->DisableDetour();
+
+	if (g_GiveNamedItemDetour)
+		(enable) ? g_GiveNamedItemDetour->EnableDetour() : g_GiveNamedItemDetour->DisableDetour();
+
+	if (g_AddAccountDetour)
+		(enable) ? g_AddAccountDetour->EnableDetour() : g_AddAccountDetour->DisableDetour();
 }

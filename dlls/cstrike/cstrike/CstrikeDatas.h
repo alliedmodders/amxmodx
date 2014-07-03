@@ -165,16 +165,22 @@
 	#define CS_IDENT_CANBUYTHIS			"_Z10CanBuyThisP11CBasePlayeri"
 	#define CS_IDENT_BUYITEM			"_Z7BuyItemP11CBasePlayeri" 
 	#define CS_IDENT_BUYGUNAMMO			"_Z10BuyGunAmmoR11CBasePlayerR15CBasePlayerItemb"
+	#define CS_IDENT_GIVENAMEDITEM		"_ZN11CBasePlayer13GiveNamedItemEPKc"
+	#define CS_IDENT_ADDACCOUNT			"_ZN11CBasePlayer10AddAccountEib"
 	#define CS_IDENT_HIDDEN_STATE		false
 #elif defined(__APPLE__)
 	#define CS_IDENT_CANBUYTHIS			"_Z10CanBuyThisP11CBasePlayeri"
 	#define CS_IDENT_BUYITEM			"_Z7BuyItemP11CBasePlayeri" 
 	#define CS_IDENT_BUYGUNAMMO			"_Z10BuyGunAmmoR11CBasePlayerR15CBasePlayerItemb"
+	#define CS_IDENT_GIVENAMEDITEM		"_ZN11CBasePlayer13GiveNamedItemEPKc"
+	#define CS_IDENT_ADDACCOUNT			"_ZN11CBasePlayer10AddAccountEib"
 	#define CS_IDENT_HIDDEN_STATE		true
 #elif defined(WIN32)
 	#define CS_IDENT_CANBUYTHIS			"\\x53\\x8B\\x2A\\x2A\\x2A\\x2A\\x2A\\x56\\x8B\\x2A\\x2A\\x2A\\x57"
 	#define CS_IDENT_BUYITEM			"\\x53\\x56\\x8B\\x2A\\x2A\\x2A\\xBB\\x2A\\x2A\\x2A\\x2A\\x57\\x53"
 	#define CS_IDENT_BUYGUNAMMO			"\\x56\\x57\\x8B\\x2A\\x2A\\x2A\\x6A\\x2A\\x8B\\x2A\\xE8\\x2A\\x2A\\x2A\\x2A\\x84\\x2A\\x0F"
+	#define CS_IDENT_GIVENAMEDITEM		"\\x8B\\x2A\\x2A\\x2A\\x56\\x57\\x8B\\x2A\\x8B\\x2A\\x2A\\x2A\\x2A\\x2A\\x2B"
+	#define CS_IDENT_ADDACCOUNT			"\\x8B\\x2A\\x2A\\x2A\\x56\\x8B\\x2A\\x8B\\x2A\\x2A\\x2A\\x2A\\x2A\\x03"
 	#define CS_IDENT_HIDDEN_STATE		false
 #endif
 

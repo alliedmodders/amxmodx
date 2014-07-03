@@ -86,22 +86,14 @@ class Vector : public AllocPolicy
   }
 
   // Shift all elements including |at| up by one, and insert |item| at the
-  // given position. If |at| is one greater than the last usable index,
-  // i.e. |at == length()|, then this is the same as append(). No other
-  // invalid indexes are allowed.
-  //
-  // This is a linear-time operation.
+  // given position. This is a linear-time operation.
   bool insert(size_t at, const T &item) {
-    if (at == length())
-      return append(item);
     if (!moveUp(at))
       return false;
     new (&data_[at]) T(item);
     return true;
   }
   bool insert(size_t at, Moveable<T> item) {
-    if (at == length())
-      return append(item);
     if (!moveUp(at))
       return false;
     new (&data_[at]) T(item);
@@ -112,7 +104,7 @@ class Vector : public AllocPolicy
   // element. This is a linear-time operation.
   void remove(size_t at) {
     for (size_t i = at; i < length() - 1; i++)
-      data_[i] = Moveable<T>(data_[i + 1]);
+      data_[i] = T(Moveable<T>(data_[i + 1]));
     pop();
   }
 
@@ -167,6 +159,14 @@ class Vector : public AllocPolicy
     return growIfNeeded(desired - length());
   }
 
+  Vector &operator =(Moveable<Vector<T, AllocPolicy> > other) {
+    data_ = other->data_;
+    nitems_ = other->nitems_;
+    maxsize_ = other->maxsize_;
+    other->reset();
+    return *this;
+  }
+
  private:
   // These are disallowed because they basically violate the failure handling
   // model for AllocPolicies and are also likely to have abysmal performance.
@@ -186,10 +186,15 @@ class Vector : public AllocPolicy
   }
 
   bool moveUp(size_t at) {
-    assert(at < nitems_);
-    if (!append(Moveable<T>(data_[nitems_ - 1])))
+    // Note: we don't use append() here. Passing an element as a Moveable into
+    // insert() or append() can break, since the underlying storage could be
+    // reallocated, invalidating the Moveable reference. Instead, we inline
+    // the logic to append() to ensure growIfNeeded occurs before any
+    // references are taken.
+    if (!growIfNeeded(1))
       return false;
-
+    new (&data_[nitems_]) T(Moveable<T>(data_[nitems_ - 1]));
+    nitems_++;
     for (size_t i = nitems_ - 2; i > at; i--)
       data_[i] = Moveable<T>(data_[i - 1]);
     return true;

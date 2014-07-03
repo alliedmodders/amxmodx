@@ -34,14 +34,21 @@
 
 #include <amxmodx>
 #include <amxmisc>
-#include <fun>
+#include <fakemeta>
 
-new g_menuPosition[33]
-new g_menuPlayers[33][32]
-new g_menuPlayersNum[33]
-new g_menuOption[33] = {-1, ...}
-new g_menuOrgin[33][3]
+#define MAX_PLAYERS 32 + 1
+new g_menuPosition[MAX_PLAYERS]
+new g_menuPlayers[MAX_PLAYERS][32]
+new g_menuPlayersNum[MAX_PLAYERS]
+new g_menuOption[MAX_PLAYERS] = {-1, ...}
+new Float:g_menuOrigin[MAX_PLAYERS][3]
+new Float:g_menuVAngle[MAX_PLAYERS][3]
 new g_coloredMenus
+
+new g_bDuckingStateSaved
+#define SaveInDuckingState(%1)		g_bDuckingStateSaved |= 1<<(%1&31)
+#define SaveNoDuckingState(%1)		g_bDuckingStateSaved &= ~(1<<(%1&31))
+#define HasInDuckingStateSaved(%1)	g_bDuckingStateSaved & 1<<(%1&31)
 
 public plugin_init()
 {
@@ -67,8 +74,14 @@ public actionTelMenu(id, key)
 		{
 			if (g_menuOption[id] < 0)	/* unlocking position for the first time */
 				g_menuOption[id] = 0
-			
-			get_user_origin(id, g_menuOrgin[id])
+
+			getTeleportData(id, g_menuOrigin[id], g_menuVAngle[id])
+
+			if (pev(id, pev_flags) & FL_DUCKING && is_user_alive(id))
+				SaveInDuckingState(id)
+			else
+				SaveNoDuckingState(id)
+
 			displayTelMenu(id, g_menuPosition[id])
 		}
 		case 8: displayTelMenu(id, ++g_menuPosition[id])
@@ -77,8 +90,8 @@ public actionTelMenu(id, key)
 		{
 			new player = g_menuPlayers[id][g_menuPosition[id] * 6 + key]
 			new name2[32]
-		
-			get_user_name(player, name2, 31)
+
+			get_user_name(player, name2, charsmax(name2))
 
 			if (!is_user_alive(player))
 			{
@@ -89,33 +102,74 @@ public actionTelMenu(id, key)
 
 			if (g_menuOption[id] > 0)
 			{
-				set_user_origin(player, g_menuOrgin[id])
+				if (HasInDuckingStateSaved(id))
+				{
+					static Float:VEC_DUCK_VIEW[3] = {0.0, 0.0, -1.0}
+
+					if (VEC_DUCK_VIEW[2] == -1.0)
+					{
+						new modname[16]
+
+						get_modname(modname, charsmax(modname))
+						if (equal(modname, "cstrike")	// Counter-Strike 1.6
+						|| equal(modname, "czero")	// Counter-Strike: Condition Zero
+						|| equal(modname, "valve")	// Half-Life
+						|| equal(modname, "tfc")	// Team Fortress Classic
+						|| equal(modname, "gearbox"))	// Half-Life: Opposing Force
+							VEC_DUCK_VIEW[2] = 12.0
+						else if (equal(modname, "dod"))	// Day of Defeat
+							VEC_DUCK_VIEW[2] = 18.0
+						else if (equal(modname, "ts"))	// The Specialists
+							VEC_DUCK_VIEW[2] = 16.0
+						else
+							VEC_DUCK_VIEW[2] = 0.0
+					}
+					if (VEC_DUCK_VIEW[2] > 0.0)
+					{
+						set_pev(id, pev_flags, pev(id, pev_flags) | FL_DUCKING)
+						set_pev(id, pev_view_ofs, VEC_DUCK_VIEW)
+					}
+				}
+				doTeleport(player, g_menuOrigin[id], g_menuVAngle[id])
 			} else {
-				new origin[3]
-				
-				get_user_origin(id, origin)
-				set_user_origin(player, origin)
+				new Float:origin[3], Float:vAngle[3]
+
+				getTeleportData(id, origin, vAngle)
+				doTeleport(player, origin, vAngle)
 			}
 
 			new authid[32], authid2[32], name[32]
 
-			get_user_authid(id, authid, 31)
-			get_user_authid(player, authid2, 31)
-			get_user_name(id, name, 31)
+			get_user_authid(id, authid, charsmax(authid))
+			get_user_authid(player, authid2, charsmax(authid2))
+			get_user_name(id, name, charsmax(name))
 
 			log_amx("Cmd: ^"%s<%d><%s><>^" teleport ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2)
 
-			show_activity_key("ADMIN_TELEPORT_1", "ADMIN_TELEPORT_2", name, name2);
+			show_activity_key("ADMIN_TELEPORT_1", "ADMIN_TELEPORT_2", name, name2)
 
 			displayTelMenu(id, g_menuPosition[id])
 		}
 	}
-	
+
 	return PLUGIN_HANDLED
 }
 
+getTeleportData(id, Float:origin[3], Float:vAngle[3])
+{
+	pev(id, pev_origin, origin)
+	pev(id, pev_v_angle, vAngle)
+}
+
+doTeleport(id, const Float:origin[3], const Float:vAngle[3])
+{
+	engfunc(EngFunc_SetOrigin, id, origin)
+	set_pev(id, pev_angles, vAngle)
+	set_pev(id, pev_fixangle, 1)
+}
+
 displayTelMenu(id, pos)
-{ 
+{
 	if (pos < 0)
 		return
 
@@ -131,7 +185,7 @@ displayTelMenu(id, pos)
 	if (start >= g_menuPlayersNum[id])
 		start = pos = g_menuPosition[id] = 0
 
-	new len = format(menuBody, 511, g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, "TELE_MENU", pos + 1, (g_menuPlayersNum[id] / 6 + ((g_menuPlayersNum[id] % 6) ? 1 : 0)))
+	new len = formatex(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, "TELE_MENU", pos + 1, (g_menuPlayersNum[id] / 6 + ((g_menuPlayersNum[id] % 6) ? 1 : 0)))
 	new end = start + 6
 	new keys = MENU_KEY_0|MENU_KEY_8
 
@@ -141,51 +195,51 @@ displayTelMenu(id, pos)
 	for (new a = start; a < end; ++a)
 	{
 		i = g_menuPlayers[id][a]
-		get_user_name(i, name, 31)
+		get_user_name(i, name, charsmax(name))
 
 		if (blockMenu || !is_user_alive(i) || (id != i && get_user_flags(i) & ADMIN_IMMUNITY))
 		{
 			++b
-		
+
 			if (g_coloredMenus)
-				len += format(menuBody[len], 511-len, "\d%d. %s^n\w", b, name)
+				len += formatex(menuBody[len], charsmax(menuBody)-len, "\d%d. %s^n\w", b, name)
 			else
-				len += format(menuBody[len], 511-len, "#. %s^n", name)
+				len += formatex(menuBody[len], charsmax(menuBody)-len, "#. %s^n", name)
 		} else {
 			keys |= (1<<b)
-			
+
 			if (is_user_admin(i))
-				len += format(menuBody[len], 511-len, g_coloredMenus ? "%d. %s \r*^n\w" : "%d. %s *^n", ++b, name)
+				len += formatex(menuBody[len], charsmax(menuBody)-len, g_coloredMenus ? "%d. %s \r*^n\w" : "%d. %s *^n", ++b, name)
 			else
-				len += format(menuBody[len], 511-len, "%d. %s^n", ++b, name)
+				len += formatex(menuBody[len], charsmax(menuBody)-len, "%d. %s^n", ++b, name)
 		}
 	}
 
 	if (g_menuOption[id] > 0)	// 1
 	{
 		keys |= MENU_KEY_7
-		len += format(menuBody[len], 511-len, "^n7. To location: %d %d %d^n", g_menuOrgin[id][0], g_menuOrgin[id][1], g_menuOrgin[id][2])
+		len += formatex(menuBody[len], charsmax(menuBody)-len, "^n7. To location: %.0f %.0f %.0f^n", g_menuOrigin[id][0], g_menuOrigin[id][1], g_menuOrigin[id][2])
 	}
 	else if (g_menuOption[id])	// -1
 	{
 		if (g_coloredMenus)
-			len += format(menuBody[len], 511-len, "^n\d7. %L^n\w", id, "CUR_LOC")
+			len += formatex(menuBody[len], charsmax(menuBody)-len, "^n\d7. %L^n\w", id, "CUR_LOC")
 		else
-			len += format(menuBody[len], 511-len, "^n#. %L^n", id, "CUR_LOC")
+			len += formatex(menuBody[len], charsmax(menuBody)-len, "^n#. %L^n", id, "CUR_LOC")
 	} else {					// 0
 		keys |= MENU_KEY_7
-		len += format(menuBody[len], 511-len, "^n7. %L^n", id, "CUR_LOC")
+		len += formatex(menuBody[len], charsmax(menuBody)-len, "^n7. %L^n", id, "CUR_LOC")
 	}
 
-	len += format(menuBody[len], 511-len, "8. %L^n", id, "SAVE_LOC")
+	len += formatex(menuBody[len], charsmax(menuBody)-len, "8. %L^n", id, "SAVE_LOC")
 
 	if (end != g_menuPlayersNum[id])
 	{
-		format(menuBody[len], 511-len, "^n9. %L...^n0. %L", id, "MORE", id, pos ? "BACK" : "EXIT")
+		formatex(menuBody[len], charsmax(menuBody)-len, "^n9. %L...^n0. %L", id, "MORE", id, pos ? "BACK" : "EXIT")
 		keys |= MENU_KEY_9
 	}
 	else
-		format(menuBody[len], 511-len, "^n0. %L", id, pos ? "BACK" : "EXIT")
+		formatex(menuBody[len], charsmax(menuBody)-len, "^n0. %L", id, pos ? "BACK" : "EXIT")
 
 	show_menu(id, keys, menuBody, -1, "Teleport Menu")
 }

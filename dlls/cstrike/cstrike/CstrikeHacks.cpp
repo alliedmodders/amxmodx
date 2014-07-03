@@ -172,58 +172,6 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 	DETOUR_STATIC_CALL(C_ClientCommand)(pEdict);
 }
 
-DETOUR_DECL_STATIC2(CanBuyThis, bool, void*, pvPlayer, int, weaponId) // bool CanBuyThis(CBasePlayer *pPlayer, int weaponId)
-{
-	if (weaponId != CSI_SHIELDGUN) // This will be handled before with BuyItem. Avoiding duplicated call.
-	{
-		int player = PrivateToIndex(pvPlayer);
-
-		if (MF_IsPlayerAlive(player))
-		{
-			g_CurrentItemId = weaponId;
-		}
-	}
-	
-	return DETOUR_STATIC_CALL(CanBuyThis)(pvPlayer, weaponId);
-}
-
-DETOUR_DECL_STATIC2(BuyItem, void, void*, pvPlayer, int, iSlot) // void BuyItem(CBasePlayer *pPlayer, int iSlot)
-{
-	int player = PrivateToIndex(pvPlayer);
-
-	if (MF_IsPlayerAlive(player))
-	{
-		static const int itemSlotToWeaponId[] = {-1, CSI_VEST, CSI_VESTHELM, CSI_FLASHBANG, CSI_HEGRENADE, CSI_SMOKEGRENADE, CSI_NVGS, CSI_DEFUSER, CSI_SHIELDGUN};
-
-		if (iSlot >= 1 && iSlot <= 8)
-		{
-			g_CurrentItemId = itemSlotToWeaponId[iSlot];
-		}
-	}
-
-	DETOUR_STATIC_CALL(BuyItem)(pvPlayer, iSlot);
-}
-
-DETOUR_DECL_STATIC3(BuyGunAmmo, bool, void*, pvPlayer, void*, pvWeapon, bool, bBlinkMoney) // bool BuyGunAmmo(CBasePlayer *player, CBasePlayerItem *weapon, bool bBlinkMoney)
-{
-	int player = PrivateToIndex(pvPlayer);
-
-	if (MF_IsPlayerAlive(player))
-	{
-		edict_t *pWeapon = PrivateToEdict(pvWeapon);
-
-		if (pWeapon)
-		{
-			int weaponId = *((int *)pWeapon->pvPrivateData + OFFSET_WEAPONTYPE);
-			int ammoId = (1<<weaponId & BITS_PISTOLS) ? CSI_SECAMMO : CSI_PRIMAMMO;
-
-			g_CurrentItemId = ammoId;
-		}
-	}
-
-	return DETOUR_STATIC_CALL(BuyGunAmmo)(pvPlayer, pvWeapon, bBlinkMoney);
-}
-
 DETOUR_DECL_MEMBER1(GiveNamedItem, void, const char*, pszName) // void CBasePlayer::GiveNamedItem(const char *pszName)
 {
 	if (g_CurrentItemId && MF_ExecuteForward(g_CSBuyCmdFwd, static_cast<cell>(PrivateToIndex(this)), static_cast<cell>(g_CurrentItemId)) > 0)
@@ -291,23 +239,13 @@ void CtrlDetours_BuyCommands(bool set)
 {
 	if (set)
 	{
-		void *canBuyThisAddress    = UTIL_FindAddressFromEntry(CS_IDENT_CANBUYTHIS   , CS_IDENT_HIDDEN_STATE);
-		void *buyItemAddress	   = UTIL_FindAddressFromEntry(CS_IDENT_BUYITEM      , CS_IDENT_HIDDEN_STATE);
-		void *buyGunAmmoAddress    = UTIL_FindAddressFromEntry(CS_IDENT_BUYGUNAMMO   , CS_IDENT_HIDDEN_STATE);
 		void *giveNamedItemAddress = UTIL_FindAddressFromEntry(CS_IDENT_GIVENAMEDITEM, CS_IDENT_HIDDEN_STATE);
 		void *addAccountAddress    = UTIL_FindAddressFromEntry(CS_IDENT_ADDACCOUNT   , CS_IDENT_HIDDEN_STATE);
 
-		g_CanBuyThisDetour	  = DETOUR_CREATE_STATIC_FIXED(CanBuyThis, canBuyThisAddress);
-		g_BuyItemDetour		  = DETOUR_CREATE_STATIC_FIXED(BuyItem, buyItemAddress);
-		g_BuyGunAmmoDetour	  = DETOUR_CREATE_STATIC_FIXED(BuyGunAmmo, buyGunAmmoAddress);
 		g_GiveNamedItemDetour = DETOUR_CREATE_MEMBER_FIXED(GiveNamedItem, giveNamedItemAddress);
 		g_AddAccountDetour    = DETOUR_CREATE_MEMBER_FIXED(AddAccount, addAccountAddress);
 
-		if (g_CanBuyThisDetour == NULL    || 
-			g_BuyItemDetour == NULL       || 
-			g_BuyGunAmmoDetour == NULL    || 
-			g_GiveNamedItemDetour == NULL || 
-			g_AddAccountDetour == NULL)
+		if (g_GiveNamedItemDetour == NULL || g_AddAccountDetour == NULL)
 		{
 			MF_Log("No Buy Commands detours could be initialized - Disabled Buy forward.");
 		}
@@ -360,15 +298,6 @@ void CtrlDetours_BuyCommands(bool set)
 	}
 	else
 	{
-		if (g_CanBuyThisDetour)
-			g_CanBuyThisDetour->Destroy();
-
-		if (g_BuyItemDetour)
-			g_BuyItemDetour->Destroy();
-
-		if (g_BuyGunAmmoDetour)
-			g_BuyGunAmmoDetour->Destroy();
-
 		if (g_GiveNamedItemDetour)
 			g_GiveNamedItemDetour->Destroy();
 
@@ -381,15 +310,6 @@ void CtrlDetours_BuyCommands(bool set)
 
 void ToggleDetour_BuyCommands(bool enable)
 {
-	if (g_CanBuyThisDetour)
-		(enable) ? g_CanBuyThisDetour->EnableDetour() : g_CanBuyThisDetour->DisableDetour();
-
-	if (g_BuyItemDetour)
-		(enable) ? g_BuyItemDetour->EnableDetour() : g_BuyItemDetour->DisableDetour();
-
-	if (g_BuyGunAmmoDetour)
-		(enable) ? g_BuyGunAmmoDetour->EnableDetour() : g_BuyGunAmmoDetour->DisableDetour();
-
 	if (g_GiveNamedItemDetour)
 		(enable) ? g_GiveNamedItemDetour->EnableDetour() : g_GiveNamedItemDetour->DisableDetour();
 

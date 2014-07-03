@@ -3,6 +3,10 @@ import os.path
 
 binary = AMXX.MetaModule(builder, 'cstrike')
 
+binary.compiler.defines += [
+  'HAVE_STDINT_H',
+]
+
 binary.sources = [
   'sdk/amxxmodule.cpp',
   'amxx_api.cpp',

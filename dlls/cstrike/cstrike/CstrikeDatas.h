@@ -64,6 +64,7 @@
 	#define OFFSET_INTERNALMODEL		126 + EXTRAOFFSET
 	#define OFFSET_NVGOGGLES			129 + EXTRAOFFSET
 	#define OFFSET_DEFUSE_PLANT			193 + EXTRAOFFSET
+	#define OFFSET_MENU					205 + EXTRAOFFSET
 	#define OFFSET_VIP					209 + EXTRAOFFSET
 	#define OFFSET_TK					216 + EXTRAOFFSET // 040926
 	#define OFFSET_HOSTAGEKILLS			217 + EXTRAOFFSET
@@ -352,5 +353,25 @@ enum
 	CS_SET_SECOND_ZOOM,
 	CS_SET_AUGSG552_ZOOM,
 };
+
+typedef enum
+{
+	Menu_OFF,
+	Menu_ChooseTeam,
+	Menu_IGChooseTeam,
+	Menu_ChooseAppearance,
+	Menu_Buy,
+	Menu_BuyPistol,
+	Menu_BuyRifle,
+	Menu_BuyMachineGun,
+	Menu_BuyShotgun,
+	Menu_BuySubMachineGun,
+	Menu_BuyItem,
+	Menu_Radio1,
+	Menu_Radio2,
+	Menu_Radio3,
+	Menu_ClientBuy
+
+} Menu;
 
 #endif // CSTRIKE_DATA_H

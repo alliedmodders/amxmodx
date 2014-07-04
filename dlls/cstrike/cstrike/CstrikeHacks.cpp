@@ -159,9 +159,10 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 		}
 	}
 
+	int client = ENTINDEX(pEdict);
+
 	if (*g_UseBotArgs)
 	{
-		int client = ENTINDEX(pEdict);
 		const char *args = *g_BotArgs;
 
 		if (MF_ExecuteForward(g_CSCliCmdFwd, static_cast<cell>(client), args) > 0)
@@ -170,7 +171,7 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 		}
 	}
 
-	if (g_CurrentItemId && MF_ExecuteForward(g_CSBuyAttemptCmdFwd, static_cast<cell>(ENTINDEX(pEdict)), static_cast<cell>(g_CurrentItemId)) > 0)
+	if (g_CurrentItemId && MF_IsPlayerAlive(client) && MF_ExecuteForward(g_CSBuyAttemptCmdFwd, static_cast<cell>(client), static_cast<cell>(g_CurrentItemId)) > 0)
 	{
 		return;
 	}
@@ -181,9 +182,14 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 DETOUR_DECL_MEMBER1(GiveNamedItem, void, const char*, pszName) // void CBasePlayer::GiveNamedItem(const char *pszName)
 {
 	// If the current item id is not null, this means player has triggers a buy command.
-	if (g_CurrentItemId && MF_ExecuteForward(g_CSBuyCmdFwd, static_cast<cell>(PrivateToIndex(this)), static_cast<cell>(g_CurrentItemId)) > 0)
+	if (g_CurrentItemId)
 	{
-		return;
+		int client = PrivateToIndex(this);
+
+		if (MF_IsPlayerAlive(client) && MF_ExecuteForward(g_CSBuyCmdFwd, static_cast<cell>(client), static_cast<cell>(g_CurrentItemId)) > 0)
+		{
+			return;
+		}
 	}
 
 	// From here, forward is not blocked, resetting this
@@ -197,9 +203,14 @@ DETOUR_DECL_MEMBER1(GiveNamedItem, void, const char*, pszName) // void CBasePlay
 DETOUR_DECL_MEMBER1(GiveShield, void, bool, bRetire) // void CBasePlayer::GiveShield(bool bRetire)
 {
 	// Special case for shield. Game doesn't use GiveNamedItem() to give a shield.
-	if (g_CurrentItemId == CSI_SHIELDGUN && MF_ExecuteForward(g_CSBuyCmdFwd, static_cast<cell>(PrivateToIndex(this)), CSI_SHIELDGUN) > 0)
+	if (g_CurrentItemId == CSI_SHIELDGUN)
 	{
-		return;
+		int client = PrivateToIndex(this);
+
+		if (MF_IsPlayerAlive(client) && MF_ExecuteForward(g_CSBuyCmdFwd, static_cast<cell>(client), CSI_SHIELDGUN) > 0)
+		{
+			return;
+		}
 	}
 
 	// From here, forward is not blocked, resetting this

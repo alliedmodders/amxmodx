@@ -97,7 +97,7 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 
 	// Purpose is to retrieve an item id based on alias name or selected item from menu,
 	// to be used in OnBuy* forwards.
-	if (command && *command)
+	if ((g_CSBuyAttemptCmdFwd != -1 || g_CSBuyCmdFwd != -1) && command && *command)
 	{
 		// Just for safety.
 		command = UTIL_StringToLower((char *)command);
@@ -161,7 +161,7 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 
 	int client = ENTINDEX(pEdict);
 
-	if (*g_UseBotArgs)
+	if (g_CSCliCmdFwd != -1 && *g_UseBotArgs)
 	{
 		const char *args = *g_BotArgs;
 
@@ -171,7 +171,10 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 		}
 	}
 
-	if (g_CurrentItemId && MF_IsPlayerAlive(client) && MF_ExecuteForward(g_CSBuyAttemptCmdFwd, static_cast<cell>(client), static_cast<cell>(g_CurrentItemId)) > 0)
+	if (g_CSBuyAttemptCmdFwd != -1 && 
+		g_CurrentItemId            && 
+		MF_IsPlayerAlive(client)   && 
+		MF_ExecuteForward(g_CSBuyAttemptCmdFwd, static_cast<cell>(client), static_cast<cell>(g_CurrentItemId)) > 0)
 	{
 		return;
 	}
@@ -263,6 +266,8 @@ void CtrlDetours_ClientCommand(bool set)
 	{
 		if (g_ClientCommandDetour) 
 			g_ClientCommandDetour->Destroy();
+
+		g_ItemAliasList.clear();
 	}
 }
 
@@ -270,51 +275,6 @@ void ToggleDetour_ClientCommands(bool enable)
 {
 	if (g_ClientCommandDetour)
 		(enable) ? g_ClientCommandDetour->EnableDetour() : g_ClientCommandDetour->DisableDetour();
-}
-
-
-void CtrlDetours_BuyCommands(bool set)
-{
-	if (set)
-	{
-		void *giveShieldAddress    = UTIL_FindAddressFromEntry(CS_IDENT_GIVENSHIELD  , CS_IDENT_HIDDEN_STATE);
-		void *giveNamedItemAddress = UTIL_FindAddressFromEntry(CS_IDENT_GIVENAMEDITEM, CS_IDENT_HIDDEN_STATE);
-		void *addAccountAddress    = UTIL_FindAddressFromEntry(CS_IDENT_ADDACCOUNT   , CS_IDENT_HIDDEN_STATE);
-
-		g_GiveShieldDetour    = DETOUR_CREATE_MEMBER_FIXED(GiveShield, giveShieldAddress);
-		g_GiveNamedItemDetour = DETOUR_CREATE_MEMBER_FIXED(GiveNamedItem, giveNamedItemAddress);
-		g_AddAccountDetour    = DETOUR_CREATE_MEMBER_FIXED(AddAccount, addAccountAddress);
-
-		if (g_GiveNamedItemDetour == NULL || g_AddAccountDetour == NULL)
-		{
-			MF_Log("No Buy Commands detours could be initialized - Disabled Buy forward.");
-		}
-	}
-	else
-	{
-		if (g_GiveShieldDetour)
-			g_GiveShieldDetour->Destroy();
-
-		if (g_GiveNamedItemDetour)
-			g_GiveNamedItemDetour->Destroy();
-
-		if (g_AddAccountDetour)
-			g_AddAccountDetour->Destroy();
-
-		g_ItemAliasList.clear();
-	}
-}
-
-void ToggleDetour_BuyCommands(bool enable)
-{
-	if (g_GiveShieldDetour)
-		(enable) ? g_GiveShieldDetour->EnableDetour() : g_GiveShieldDetour->DisableDetour();
-
-	if (g_GiveNamedItemDetour)
-		(enable) ? g_GiveNamedItemDetour->EnableDetour() : g_GiveNamedItemDetour->DisableDetour();
-
-	if (g_AddAccountDetour)
-		(enable) ? g_AddAccountDetour->EnableDetour() : g_AddAccountDetour->DisableDetour();
 
 	if (enable)
 	{
@@ -368,4 +328,49 @@ void ToggleDetour_BuyCommands(bool enable)
 	{
 		g_ItemAliasList.clear();
 	}
+}
+
+
+void CtrlDetours_BuyCommands(bool set)
+{
+	if (set)
+	{
+		void *giveShieldAddress    = UTIL_FindAddressFromEntry(CS_IDENT_GIVENSHIELD  , CS_IDENT_HIDDEN_STATE);
+		void *giveNamedItemAddress = UTIL_FindAddressFromEntry(CS_IDENT_GIVENAMEDITEM, CS_IDENT_HIDDEN_STATE);
+		void *addAccountAddress    = UTIL_FindAddressFromEntry(CS_IDENT_ADDACCOUNT   , CS_IDENT_HIDDEN_STATE);
+
+		g_GiveShieldDetour    = DETOUR_CREATE_MEMBER_FIXED(GiveShield, giveShieldAddress);
+		g_GiveNamedItemDetour = DETOUR_CREATE_MEMBER_FIXED(GiveNamedItem, giveNamedItemAddress);
+		g_AddAccountDetour    = DETOUR_CREATE_MEMBER_FIXED(AddAccount, addAccountAddress);
+
+		if (g_GiveNamedItemDetour == NULL || g_AddAccountDetour == NULL)
+		{
+			MF_Log("No Buy Commands detours could be initialized - Disabled Buy forward.");
+		}
+	}
+	else
+	{
+		if (g_GiveShieldDetour)
+			g_GiveShieldDetour->Destroy();
+
+		if (g_GiveNamedItemDetour)
+			g_GiveNamedItemDetour->Destroy();
+
+		if (g_AddAccountDetour)
+			g_AddAccountDetour->Destroy();
+
+		g_ItemAliasList.clear();
+	}
+}
+
+void ToggleDetour_BuyCommands(bool enable)
+{
+	if (g_GiveShieldDetour)
+		(enable) ? g_GiveShieldDetour->EnableDetour() : g_GiveShieldDetour->DisableDetour();
+
+	if (g_GiveNamedItemDetour)
+		(enable) ? g_GiveNamedItemDetour->EnableDetour() : g_GiveNamedItemDetour->DisableDetour();
+
+	if (g_AddAccountDetour)
+		(enable) ? g_AddAccountDetour->EnableDetour() : g_AddAccountDetour->DisableDetour();
 }

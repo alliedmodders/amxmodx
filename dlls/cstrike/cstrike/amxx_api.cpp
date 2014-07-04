@@ -63,12 +63,21 @@ void OnAmxxAttach()
 
 void OnPluginsLoaded()
 {
-	g_CSCliCmdFwd = MF_RegisterForward("CS_InternalCommand", ET_STOP, FP_CELL, FP_STRING, FP_DONE);
-	g_CSBuyCmdFwd = MF_RegisterForward("CS_OnBuy", ET_STOP, FP_CELL, FP_CELL, FP_DONE);
-	g_CSBuyAttemptCmdFwd = MF_RegisterForward("CS_OnBuyAttempt", ET_STOP, FP_CELL, FP_CELL, FP_DONE);
+	g_CSCliCmdFwd        = MF_RegisterForward("CS_InternalCommand", ET_STOP, FP_CELL, FP_STRING, FP_DONE);
+	g_CSBuyCmdFwd        = MF_RegisterForward("CS_OnBuy"          , ET_STOP, FP_CELL, FP_CELL, FP_DONE);
+	g_CSBuyAttemptCmdFwd = MF_RegisterForward("CS_OnBuyAttempt"   , ET_STOP, FP_CELL, FP_CELL, FP_DONE);
 
-	ToggleDetour_ClientCommands(UTIL_CheckForPublic("CS_InternalCommand"));
-	ToggleDetour_BuyCommands(UTIL_CheckForPublic("CS_OnBuy") || UTIL_CheckForPublic("CS_OnBuyAttempt"));
+	// Checking whether such public forwards are used in plugins.
+	// Resetting variable to -1 to avoid running unnecessary code in ClientCommand.
+
+	if (!UTIL_CheckForPublic("CS_InternalCommand"))   { g_CSCliCmdFwd = -1; }
+	if (!UTIL_CheckForPublic("CS_OnBuy"))             { g_CSBuyCmdFwd = -1; }
+	if (!UTIL_CheckForPublic("CS_OnBuyAttempt"))      { g_CSBuyAttemptCmdFwd = -1; }
+
+	// And enable/disable detours when necessary.
+
+	ToggleDetour_ClientCommands(g_CSCliCmdFwd != -1 || g_CSBuyCmdFwd != -1 || g_CSBuyCmdFwd != -1);
+	ToggleDetour_BuyCommands(g_CSBuyCmdFwd != -1);
 }
 
 void OnAmxxDetach()

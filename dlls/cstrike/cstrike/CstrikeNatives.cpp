@@ -1749,7 +1749,7 @@ static cell AMX_NATIVE_CALL not_on_64(AMX* amx, cell* params)
 #endif
 
 
-AMX_NATIVE_INFO cstrikeNatives[] = {
+AMX_NATIVE_INFO CstrikeNatives[] = {
 	{"cs_set_user_money",			cs_set_user_money},
 	{"cs_get_user_money",			cs_get_user_money},
 	{"cs_get_user_deaths",			cs_get_user_deaths},

@@ -33,11 +33,11 @@
 #include "amxxmodule.h"
 #include "CstrikeUtils.h"
 
-extern AMX_NATIVE_INFO cstrikeNatives[];
+extern AMX_NATIVE_INFO CstrikeNatives[];
 
-extern int g_CSCliCmdFwd;
-extern int g_CSBuyCmdFwd;
-extern int g_CSBuyAttemptCmdFwd;
+extern int ForwardInternalCommand;
+extern int ForwardOnBuy;
+extern int ForwardOnBuyAttempt;
 
 void InitializeHacks();
 void ShutdownHacks();
@@ -57,27 +57,25 @@ int AmxxCheckGame(const char *game)
 
 void OnAmxxAttach()
 {
-	MF_AddNatives(cstrikeNatives);
+	MF_AddNatives(CstrikeNatives);
 	InitializeHacks();
 }
 
 void OnPluginsLoaded()
 {
-	g_CSCliCmdFwd        = MF_RegisterForward("CS_InternalCommand", ET_STOP, FP_CELL, FP_STRING, FP_DONE);
-	g_CSBuyCmdFwd        = MF_RegisterForward("CS_OnBuy"          , ET_STOP, FP_CELL, FP_CELL, FP_DONE);
-	g_CSBuyAttemptCmdFwd = MF_RegisterForward("CS_OnBuyAttempt"   , ET_STOP, FP_CELL, FP_CELL, FP_DONE);
+	ForwardInternalCommand = MF_RegisterForward("CS_InternalCommand", ET_STOP, FP_CELL, FP_STRING, FP_DONE);
+	ForwardOnBuy           = MF_RegisterForward("CS_OnBuy"          , ET_STOP, FP_CELL, FP_CELL, FP_DONE);
+	ForwardOnBuyAttempt    = MF_RegisterForward("CS_OnBuyAttempt"   , ET_STOP, FP_CELL, FP_CELL, FP_DONE);
 
 	// Checking whether such public forwards are used in plugins.
 	// Resetting variable to -1 to avoid running unnecessary code in ClientCommand.
-
-	if (!UTIL_CheckForPublic("CS_InternalCommand"))   { g_CSCliCmdFwd = -1; }
-	if (!UTIL_CheckForPublic("CS_OnBuy"))             { g_CSBuyCmdFwd = -1; }
-	if (!UTIL_CheckForPublic("CS_OnBuyAttempt"))      { g_CSBuyAttemptCmdFwd = -1; }
+	if (!UTIL_CheckForPublic("CS_InternalCommand"))   { ForwardInternalCommand = -1; }
+	if (!UTIL_CheckForPublic("CS_OnBuy"))             { ForwardOnBuy = -1; }
+	if (!UTIL_CheckForPublic("CS_OnBuyAttempt"))      { ForwardOnBuyAttempt = -1; }
 
 	// And enable/disable detours when necessary.
-
-	ToggleDetour_ClientCommands(g_CSCliCmdFwd != -1 || g_CSBuyCmdFwd != -1 || g_CSBuyCmdFwd != -1);
-	ToggleDetour_BuyCommands(g_CSBuyCmdFwd != -1);
+	ToggleDetour_ClientCommands(ForwardInternalCommand != -1 || ForwardOnBuy != -1 || ForwardOnBuy != -1);
+	ToggleDetour_BuyCommands(ForwardOnBuy != -1);
 }
 
 void OnAmxxDetach()

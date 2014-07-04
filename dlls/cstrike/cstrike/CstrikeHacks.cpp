@@ -40,20 +40,20 @@ using namespace SourceMod; // hashmap
 void CtrlDetours_ClientCommand(bool set);
 void CtrlDetours_BuyCommands(bool set);
 
-int g_CSCliCmdFwd = -1;
-int g_CSBuyCmdFwd = -1;
-int g_CSBuyAttemptCmdFwd = -1;
+int ForwardInternalCommand = -1;
+int ForwardOnBuy = -1;
+int ForwardOnBuyAttempt = -1;
 
-int *g_UseBotArgs      = NULL;
-const char **g_BotArgs = NULL;
+int *UseBotArgs      = NULL;
+const char **BotArgs = NULL;
 
-CDetour *g_ClientCommandDetour = NULL;
-CDetour *g_GiveShieldDetour    = NULL;
-CDetour *g_GiveNamedItemDetour = NULL;
-CDetour *g_AddAccountDetour    = NULL;
+CDetour *ClientCommandDetour = NULL;
+CDetour *GiveShieldDetour    = NULL;
+CDetour *GiveNamedItemDetour = NULL;
+CDetour *AddAccountDetour    = NULL;
 
-int g_CurrentItemId = 0;
-StringHashMap<int> g_ItemAliasList;
+int CurrentItemId = 0;
+StringHashMap<int> ItemAliasList;
 
 void InitializeHacks()
 {
@@ -75,11 +75,11 @@ void ShutdownHacks()
 
 const char *CMD_ARGV(int i)
 {
-	if (*g_UseBotArgs)
+	if (*UseBotArgs)
 	{
 		if (i < 4)
 		{
-			return g_BotArgs[i];
+			return BotArgs[i];
 		}
 
 		return NULL;
@@ -93,11 +93,11 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 	const char *command = CMD_ARGV(0);
 	
 	// A new command is triggered, reset variable, always.
-	g_CurrentItemId = 0;
+	CurrentItemId = 0;
 
 	// Purpose is to retrieve an item id based on alias name or selected item from menu,
 	// to be used in OnBuy* forwards.
-	if ((g_CSBuyAttemptCmdFwd != -1 || g_CSBuyCmdFwd != -1) && command && *command)
+	if ((ForwardOnBuyAttempt != -1 || ForwardOnBuy != -1) && command && *command)
 	{
 		// Just for safety.
 		command = UTIL_StringToLower((char *)command);
@@ -145,36 +145,36 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 
 					if (itemId)
 					{
-						g_CurrentItemId = itemId;
+						CurrentItemId = itemId;
 					}
 				}
 			}
 		}
 		else // Handling buy via alias
 		{
-			if (g_ItemAliasList.retrieve(command, &itemId))
+			if (ItemAliasList.retrieve(command, &itemId))
 			{
-				g_CurrentItemId = itemId;
+				CurrentItemId = itemId;
 			}
 		}
 	}
 
 	int client = ENTINDEX(pEdict);
 
-	if (g_CSCliCmdFwd != -1 && *g_UseBotArgs)
+	if (ForwardInternalCommand != -1 && *UseBotArgs)
 	{
-		const char *args = *g_BotArgs;
+		const char *args = *BotArgs;
 
-		if (MF_ExecuteForward(g_CSCliCmdFwd, static_cast<cell>(client), args) > 0)
+		if (MF_ExecuteForward(ForwardInternalCommand, static_cast<cell>(client), args) > 0)
 		{
 			return;
 		}
 	}
 
-	if (g_CSBuyAttemptCmdFwd != -1 && 
-		g_CurrentItemId            && 
-		MF_IsPlayerAlive(client)   && 
-		MF_ExecuteForward(g_CSBuyAttemptCmdFwd, static_cast<cell>(client), static_cast<cell>(g_CurrentItemId)) > 0)
+	if (ForwardOnBuyAttempt != -1 && 
+		CurrentItemId             && 
+		MF_IsPlayerAlive(client)  && 
+		MF_ExecuteForward(ForwardOnBuyAttempt, static_cast<cell>(client), static_cast<cell>(CurrentItemId)) > 0)
 	{
 		return;
 	}
@@ -185,11 +185,11 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 DETOUR_DECL_MEMBER1(GiveNamedItem, void, const char*, pszName) // void CBasePlayer::GiveNamedItem(const char *pszName)
 {
 	// If the current item id is not null, this means player has triggers a buy command.
-	if (g_CurrentItemId)
+	if (CurrentItemId)
 	{
 		int client = PrivateToIndex(this);
 
-		if (MF_IsPlayerAlive(client) && MF_ExecuteForward(g_CSBuyCmdFwd, static_cast<cell>(client), static_cast<cell>(g_CurrentItemId)) > 0)
+		if (MF_IsPlayerAlive(client) && MF_ExecuteForward(ForwardOnBuy, static_cast<cell>(client), static_cast<cell>(CurrentItemId)) > 0)
 		{
 			return;
 		}
@@ -197,7 +197,7 @@ DETOUR_DECL_MEMBER1(GiveNamedItem, void, const char*, pszName) // void CBasePlay
 
 	// From here, forward is not blocked, resetting this
 	// to ignore code in AddAccount which is called right after.
-	g_CurrentItemId = 0;
+	CurrentItemId = 0;
 
 	// Give me my item!
 	DETOUR_MEMBER_CALL(GiveNamedItem)(pszName);
@@ -206,11 +206,11 @@ DETOUR_DECL_MEMBER1(GiveNamedItem, void, const char*, pszName) // void CBasePlay
 DETOUR_DECL_MEMBER1(GiveShield, void, bool, bRetire) // void CBasePlayer::GiveShield(bool bRetire)
 {
 	// Special case for shield. Game doesn't use GiveNamedItem() to give a shield.
-	if (g_CurrentItemId == CSI_SHIELDGUN)
+	if (CurrentItemId == CSI_SHIELDGUN)
 	{
 		int client = PrivateToIndex(this);
 
-		if (MF_IsPlayerAlive(client) && MF_ExecuteForward(g_CSBuyCmdFwd, static_cast<cell>(client), CSI_SHIELDGUN) > 0)
+		if (MF_IsPlayerAlive(client) && MF_ExecuteForward(ForwardOnBuy, static_cast<cell>(client), CSI_SHIELDGUN) > 0)
 		{
 			return;
 		}
@@ -218,7 +218,7 @@ DETOUR_DECL_MEMBER1(GiveShield, void, bool, bRetire) // void CBasePlayer::GiveSh
 
 	// From here, forward is not blocked, resetting this
 	// to ignore code in AddAccount which is called right after.
-	g_CurrentItemId = 0;
+	CurrentItemId = 0;
 
 	// Give me my shield!
 	DETOUR_MEMBER_CALL(GiveShield)(bRetire);
@@ -228,13 +228,13 @@ DETOUR_DECL_MEMBER2(AddAccount, void, int, amount, bool, bTrackChange) // void C
 {
 	// No buy command or forward not blocked.
 	// Resuming game flow.
-	if (!g_CurrentItemId)
+	if (!CurrentItemId)
 	{
 		DETOUR_MEMBER_CALL(AddAccount)(amount, bTrackChange);
 	}
 
 	// Let's reset this right away to avoid issues.
-	g_CurrentItemId = 0;
+	CurrentItemId = 0;
 }
 
 
@@ -246,35 +246,35 @@ void CtrlDetours_ClientCommand(bool set)
 
 #if defined(WIN32)
 
-		g_UseBotArgs = *(int **)((unsigned char *)target + CS_CLICMD_OFFS_USEBOTARGS);
-		g_BotArgs = (const char **)*(const char **)((unsigned char *)target + CS_CLICMD_OFFS_BOTARGS);
+		UseBotArgs = *(int **)((unsigned char *)target + CS_CLICMD_OFFS_USEBOTARGS);
+		BotArgs = (const char **)*(const char **)((unsigned char *)target + CS_CLICMD_OFFS_BOTARGS);
 
 #elif defined(__linux__) || defined(__APPLE__)
 
-		g_UseBotArgs = (int *)UTIL_FindAddressFromEntry(CS_IDENT_USEBOTARGS, CS_IDENT_HIDDEN_STATE);
-		g_BotArgs = (const char **)UTIL_FindAddressFromEntry(CS_IDENT_BOTARGS, CS_IDENT_HIDDEN_STATE);
+		UseBotArgs = (int *)UTIL_FindAddressFromEntry(CS_IDENT_USEBOTARGS, CS_IDENT_HIDDEN_STATE);
+		BotArgs = (const char **)UTIL_FindAddressFromEntry(CS_IDENT_BOTARGS, CS_IDENT_HIDDEN_STATE);
 
 #endif
-		g_ClientCommandDetour = DETOUR_CREATE_STATIC_FIXED(C_ClientCommand, target);
+		ClientCommandDetour = DETOUR_CREATE_STATIC_FIXED(C_ClientCommand, target);
 
-		if (g_ClientCommandDetour == NULL)
+		if (ClientCommandDetour == NULL)
 		{
 			MF_Log("No Client Commands detour could be initialized - Disabled Client Command forward.");
 		}
 	}
 	else
 	{
-		if (g_ClientCommandDetour) 
-			g_ClientCommandDetour->Destroy();
+		if (ClientCommandDetour) 
+			ClientCommandDetour->Destroy();
 
-		g_ItemAliasList.clear();
+		ItemAliasList.clear();
 	}
 }
 
 void ToggleDetour_ClientCommands(bool enable)
 {
-	if (g_ClientCommandDetour)
-		(enable) ? g_ClientCommandDetour->EnableDetour() : g_ClientCommandDetour->DisableDetour();
+	if (ClientCommandDetour)
+		(enable) ? ClientCommandDetour->EnableDetour() : ClientCommandDetour->DisableDetour();
 
 	if (enable)
 	{
@@ -321,12 +321,12 @@ void ToggleDetour_ClientCommands(bool enable)
 
 		for (size_t i = 0; aliasToId[i].alias != NULL; ++i)
 		{
-			g_ItemAliasList.insert(aliasToId[i].alias, aliasToId[i].id);
+			ItemAliasList.insert(aliasToId[i].alias, aliasToId[i].id);
 		}
 	}
 	else
 	{
-		g_ItemAliasList.clear();
+		ItemAliasList.clear();
 	}
 }
 
@@ -339,38 +339,38 @@ void CtrlDetours_BuyCommands(bool set)
 		void *giveNamedItemAddress = UTIL_FindAddressFromEntry(CS_IDENT_GIVENAMEDITEM, CS_IDENT_HIDDEN_STATE);
 		void *addAccountAddress    = UTIL_FindAddressFromEntry(CS_IDENT_ADDACCOUNT   , CS_IDENT_HIDDEN_STATE);
 
-		g_GiveShieldDetour    = DETOUR_CREATE_MEMBER_FIXED(GiveShield, giveShieldAddress);
-		g_GiveNamedItemDetour = DETOUR_CREATE_MEMBER_FIXED(GiveNamedItem, giveNamedItemAddress);
-		g_AddAccountDetour    = DETOUR_CREATE_MEMBER_FIXED(AddAccount, addAccountAddress);
+		GiveShieldDetour    = DETOUR_CREATE_MEMBER_FIXED(GiveShield, giveShieldAddress);
+		GiveNamedItemDetour = DETOUR_CREATE_MEMBER_FIXED(GiveNamedItem, giveNamedItemAddress);
+		AddAccountDetour    = DETOUR_CREATE_MEMBER_FIXED(AddAccount, addAccountAddress);
 
-		if (g_GiveNamedItemDetour == NULL || g_AddAccountDetour == NULL)
+		if (GiveNamedItemDetour == NULL || AddAccountDetour == NULL)
 		{
 			MF_Log("No Buy Commands detours could be initialized - Disabled Buy forward.");
 		}
 	}
 	else
 	{
-		if (g_GiveShieldDetour)
-			g_GiveShieldDetour->Destroy();
+		if (GiveShieldDetour)
+			GiveShieldDetour->Destroy();
 
-		if (g_GiveNamedItemDetour)
-			g_GiveNamedItemDetour->Destroy();
+		if (GiveNamedItemDetour)
+			GiveNamedItemDetour->Destroy();
 
-		if (g_AddAccountDetour)
-			g_AddAccountDetour->Destroy();
+		if (AddAccountDetour)
+			AddAccountDetour->Destroy();
 
-		g_ItemAliasList.clear();
+		ItemAliasList.clear();
 	}
 }
 
 void ToggleDetour_BuyCommands(bool enable)
 {
-	if (g_GiveShieldDetour)
-		(enable) ? g_GiveShieldDetour->EnableDetour() : g_GiveShieldDetour->DisableDetour();
+	if (GiveShieldDetour)
+		(enable) ? GiveShieldDetour->EnableDetour() : GiveShieldDetour->DisableDetour();
 
-	if (g_GiveNamedItemDetour)
-		(enable) ? g_GiveNamedItemDetour->EnableDetour() : g_GiveNamedItemDetour->DisableDetour();
+	if (GiveNamedItemDetour)
+		(enable) ? GiveNamedItemDetour->EnableDetour() : GiveNamedItemDetour->DisableDetour();
 
-	if (g_AddAccountDetour)
-		(enable) ? g_AddAccountDetour->EnableDetour() : g_AddAccountDetour->DisableDetour();
+	if (AddAccountDetour)
+		(enable) ? AddAccountDetour->EnableDetour() : AddAccountDetour->DisableDetour();
 }

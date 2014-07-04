@@ -357,7 +357,7 @@ forward CS_InternalCommand(id, const cmd[]);
 
 
 /**
- * The following constants are used with CS_OnBuy forward.
+ * The following constants are used with CS_OnBuy[Attempt] forwards.
  */
 #define CSI_P228				CSW_P228
 #define CSI_SCOUT				CSW_SCOUT
@@ -397,7 +397,20 @@ forward CS_InternalCommand(id, const cmd[]);
 
 /**
  * Called when a player attempts to purchase an item.
- * Return PLUGIN_CONTINUE to allow the purchase or return a higher action to deny.
+ * This is ususally called right away on buy commands issued by a player.
+ * 
+ * @note Return PLUGIN_CONTINUE to allow the purchase or return a higher action to deny.
+ *
+ * @param index			Player index.
+ * @param item			Item index, see CSI_* constants.
+ */
+forward CS_OnBuyAttempt(index, item);
+
+/**
+ * Called when a player purchases an item.
+ * This usually called right before a player gets the purchased item.
+ *
+ * @note Return PLUGIN_CONTINUE to allow the purchase or return a higher action to deny.
  *
  * @param index			Player index.
  * @param item			Item index, see CSI_* constants.

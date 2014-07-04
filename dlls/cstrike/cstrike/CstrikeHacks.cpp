@@ -42,6 +42,7 @@ void CtrlDetours_BuyCommands(bool set);
 
 int g_CSCliCmdFwd = -1;
 int g_CSBuyCmdFwd = -1;
+int g_CSBuyAttemptCmdFwd = -1;
 
 int *g_UseBotArgs      = NULL;
 const char **g_BotArgs = NULL;
@@ -98,6 +99,9 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 	// to be used in OnBuy* forwards.
 	if (command && *command)
 	{
+		// Just for safety.
+		command = UTIL_StringToLower((char *)command);
+
 		int itemId = 0;
 		
 		// Handling buy via menu.
@@ -164,6 +168,11 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 		{
 			return;
 		}
+	}
+
+	if (g_CurrentItemId && MF_ExecuteForward(g_CSBuyAttemptCmdFwd, static_cast<cell>(ENTINDEX(pEdict)), static_cast<cell>(g_CurrentItemId)) > 0)
+	{
+		return;
 	}
 
 	DETOUR_STATIC_CALL(C_ClientCommand)(pEdict);

@@ -37,6 +37,7 @@ extern AMX_NATIVE_INFO cstrikeNatives[];
 
 extern int g_CSCliCmdFwd;
 extern int g_CSBuyCmdFwd;
+extern int g_CSBuyAttemptCmdFwd;
 
 void InitializeHacks();
 void ShutdownHacks();
@@ -64,9 +65,10 @@ void OnPluginsLoaded()
 {
 	g_CSCliCmdFwd = MF_RegisterForward("CS_InternalCommand", ET_STOP, FP_CELL, FP_STRING, FP_DONE);
 	g_CSBuyCmdFwd = MF_RegisterForward("CS_OnBuy", ET_STOP, FP_CELL, FP_CELL, FP_DONE);
+	g_CSBuyAttemptCmdFwd = MF_RegisterForward("CS_OnBuyAttempt", ET_STOP, FP_CELL, FP_CELL, FP_DONE);
 
 	ToggleDetour_ClientCommands(UTIL_CheckForPublic("CS_InternalCommand"));
-	ToggleDetour_BuyCommands(UTIL_CheckForPublic("CS_OnBuy"));
+	ToggleDetour_BuyCommands(UTIL_CheckForPublic("CS_OnBuy") || UTIL_CheckForPublic("CS_OnBuyAttempt"));
 }
 
 void OnAmxxDetach()

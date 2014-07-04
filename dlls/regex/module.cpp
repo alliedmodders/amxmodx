@@ -1,3 +1,35 @@
+/* AMX Mod X
+*   Regular Expressions Module
+*
+* by the AMX Mod X Development Team
+*
+* This file is part of AMX Mod X.
+*
+*
+*  This program is free software; you can redistribute it and/or modify it
+*  under the terms of the GNU General Public License as published by the
+*  Free Software Foundation; either version 2 of the License, or (at
+*  your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful, but
+*  WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+*  General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with this program; if not, write to the Free Software Foundation,
+*  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+*
+*  In addition, as a special exception, the author gives permission to
+*  link the code of this program with the Half-Life Game Engine ("HL
+*  Engine") and Modified Game Libraries ("MODs") developed by Valve,
+*  L.L.C ("Valve"). You must obey the GNU General Public License in all
+*  respects for all of the code used other than the HL Engine and MODs
+*  from Valve. If you modify this file, you may extend this exception
+*  to your version of the file, but you are not obligated to do so. If
+*  you do not wish to do so, delete this exception statement from your
+*  version.
+*/
 #include <string.h>
 #include "pcre.h"
 #include "amxxmodule.h"
@@ -19,6 +51,7 @@ int GetPEL()
 
 	return (int)PEL.size() - 1;
 }
+
 // native Regex:regex_compile(const pattern[], &ret, error[], maxLen, const flags[]="");
 static cell AMX_NATIVE_CALL regex_compile(AMX *amx, cell *params)
 {
@@ -39,7 +72,30 @@ static cell AMX_NATIVE_CALL regex_compile(AMX *amx, cell *params)
 	}
 	
 	return id+1;
-}// 1.8 includes the last parameter
+}
+
+// native Regex:regex_compile_ex(const pattern[], flags = 0, error[] = "", maxLen = 0, &RegexError:errcode = REGEX_ERROR_NONE);
+static cell AMX_NATIVE_CALL regex_compile_ex(AMX *amx, cell *params)
+{
+	int len;
+	const char *regex = MF_GetAmxString(amx, params[1], 0, &len);
+	
+	int id = GetPEL();
+	RegEx *x = PEL[id];
+
+	if (x->Compile(regex, params[2]) == 0)
+	{
+		cell *eOff = MF_GetAmxAddr(amx, params[5]);
+		const char *err = x->mError;
+		*eOff = x->mErrorOffset;
+		MF_SetAmxString(amx, params[3], err ? err : "unknown", params[4]);
+		return -1;
+	}
+
+	return id + 1;
+}
+
+// 1.8 includes the last parameter
 // Regex:regex_match(const string[], const pattern[], &ret, error[], maxLen, const flags[] = "");
 static cell AMX_NATIVE_CALL regex_match(AMX *amx, cell *params)
 {
@@ -86,6 +142,7 @@ static cell AMX_NATIVE_CALL regex_match(AMX *amx, cell *params)
 
 	return id+1;
 }
+
 // native regex_match_c(const string[], Regex:id, &ret);
 static cell AMX_NATIVE_CALL regex_match_c(AMX *amx, cell *params)
 {
@@ -121,6 +178,47 @@ static cell AMX_NATIVE_CALL regex_match_c(AMX *amx, cell *params)
 	} else {
 		cell *res = MF_GetAmxAddr(amx, params[3]);
 		*res = x->mSubStrings;
+		return x->mSubStrings;
+	}
+}
+
+// native regex_match_ex(Regex:id, const string[], &RegexError:ret = REGEX_ERROR_NONE);
+static cell AMX_NATIVE_CALL regex_match_ex(AMX *amx, cell *params)
+{
+	int id = params[1] - 1;
+	
+	if (id >= (int)PEL.size() || id < 0 || PEL[id]->isFree())
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid regex handle %d", id);
+		return 0;
+	}
+
+	int len;
+	const char *str = MF_GetAmxString(amx, params[2], 0, &len);
+		
+	RegEx *x = PEL[id];
+
+	int e = x->Match(str);
+	if (e == -1)
+	{
+		/* there was a match error.  move on. */
+		cell *res = MF_GetAmxAddr(amx, params[3]);
+		*res = x->mErrorOffset;
+
+		/* only clear the match results, since the regex object
+		may still be referenced later */
+		x->ClearMatch();
+		return -2;
+	}
+	else if (e == 0) 
+	{
+		/* only clear the match results, since the regex object
+		may still be referenced later */
+		x->ClearMatch();
+		return 0;
+	}
+	else 
+	{
 		return x->mSubStrings;
 	}
 }
@@ -168,8 +266,10 @@ static cell AMX_NATIVE_CALL regex_free(AMX *amx, cell *params)
 
 AMX_NATIVE_INFO regex_Natives[] = {
 	{"regex_compile",			regex_compile},
+	{"regex_compile_ex",		regex_compile_ex},
 	{"regex_match",				regex_match},
 	{"regex_match_c",			regex_match_c},
+	{"regex_match_ex",			regex_match_ex},
 	{"regex_substr",			regex_substr},
 	{"regex_free",				regex_free},
 	{NULL,						NULL},

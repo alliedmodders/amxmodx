@@ -15,7 +15,7 @@
 @rem tests 4 5 9 15 and 18 require utf support
 @rem tests 6 7 10 16 and 19 require ucp support
 @rem 11 requires ucp and link size 2
-@rem 12 requires presense of jit support
+@rem 12 requires presence of jit support
 @rem 13 requires absence of jit support
 @rem Sheri P also added override tests for study and jit testing
 @rem Zoltan Herczeg added libpcre16 support

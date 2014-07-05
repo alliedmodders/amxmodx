@@ -77,7 +77,7 @@
 #endif
 
 /* The following header file defines useful macros for fine tuning
-sljit based code generators. They are listed in the begining
+sljit based code generators. They are listed in the beginning
 of sljitConfigInternal.h */
 
 #include "sljitConfigInternal.h"
@@ -161,12 +161,14 @@ of sljitConfigInternal.h */
 /* Floating point operations are performed on double or
    single precision values. */
 
-#define SLJIT_FLOAT_REG1	1
-#define SLJIT_FLOAT_REG2	2
-#define SLJIT_FLOAT_REG3	3
-#define SLJIT_FLOAT_REG4	4
-#define SLJIT_FLOAT_REG5	5
-#define SLJIT_FLOAT_REG6	6
+#define SLJIT_FLOAT_REG1		1
+#define SLJIT_FLOAT_REG2		2
+#define SLJIT_FLOAT_REG3		3
+#define SLJIT_FLOAT_REG4		4
+#define SLJIT_FLOAT_REG5		5
+#define SLJIT_FLOAT_REG6		6
+
+#define SLJIT_NO_FLOAT_REGISTERS	6
 
 /* --------------------------------------------------------------------- */
 /*  Main structures and functions                                        */
@@ -263,13 +265,19 @@ struct sljit_compiler {
 	sljit_sw cache_argw;
 #endif
 
+#if (defined SLJIT_CONFIG_ARM_64 && SLJIT_CONFIG_ARM_64)
+	sljit_si locals_offset;
+	sljit_si cache_arg;
+	sljit_sw cache_argw;
+#endif
+
 #if (defined SLJIT_CONFIG_PPC_32 && SLJIT_CONFIG_PPC_32) || (defined SLJIT_CONFIG_PPC_64 && SLJIT_CONFIG_PPC_64)
 	sljit_sw imm;
 	sljit_si cache_arg;
 	sljit_sw cache_argw;
 #endif
 
-#if (defined SLJIT_CONFIG_MIPS_32 && SLJIT_CONFIG_MIPS_32)
+#if (defined SLJIT_CONFIG_MIPS_32 && SLJIT_CONFIG_MIPS_32) || (defined SLJIT_CONFIG_MIPS_64 && SLJIT_CONFIG_MIPS_64)
 	sljit_si delay_slot;
 	sljit_si cache_arg;
 	sljit_sw cache_argw;
@@ -277,6 +285,11 @@ struct sljit_compiler {
 
 #if (defined SLJIT_CONFIG_SPARC_32 && SLJIT_CONFIG_SPARC_32)
 	sljit_si delay_slot;
+	sljit_si cache_arg;
+	sljit_sw cache_argw;
+#endif
+
+#if (defined SLJIT_CONFIG_TILEGX && SLJIT_CONFIG_TILEGX)
 	sljit_si cache_arg;
 	sljit_sw cache_argw;
 #endif
@@ -306,7 +319,7 @@ SLJIT_API_FUNC_ATTRIBUTE struct sljit_compiler* sljit_create_compiler(void);
 /* Free everything except the compiled machine code. */
 SLJIT_API_FUNC_ATTRIBUTE void sljit_free_compiler(struct sljit_compiler *compiler);
 
-/* Returns the current error code. If an error is occured, future sljit
+/* Returns the current error code. If an error is occurred, future sljit
    calls which uses the same compiler argument returns early with the same
    error code. Thus there is no need for checking the error after every
    call, it is enough to do it before the code is compiled. Removing
@@ -447,7 +460,7 @@ SLJIT_API_FUNC_ATTRIBUTE sljit_si sljit_emit_fast_return(struct sljit_compiler *
            sequences. This information could help to improve those code
            generators which focuses only a few architectures.
 
-   x86:    [reg+imm], -2^32+1 <= imm <= 2^32-1 (full adress space on x86-32)
+   x86:    [reg+imm], -2^32+1 <= imm <= 2^32-1 (full address space on x86-32)
            [reg+(reg<<imm)] is supported
            [imm], -2^32+1 <= imm <= 2^32-1 is supported
            Write-back is not supported
@@ -471,11 +484,11 @@ SLJIT_API_FUNC_ATTRIBUTE sljit_si sljit_emit_fast_return(struct sljit_compiler *
 
 /* Register output: simply the name of the register.
    For destination, you can use SLJIT_UNUSED as well. */
-#define SLJIT_MEM		0x100
+#define SLJIT_MEM		0x80
 #define SLJIT_MEM0()		(SLJIT_MEM)
 #define SLJIT_MEM1(r1)		(SLJIT_MEM | (r1))
-#define SLJIT_MEM2(r1, r2)	(SLJIT_MEM | (r1) | ((r2) << 4))
-#define SLJIT_IMM		0x200
+#define SLJIT_MEM2(r1, r2)	(SLJIT_MEM | (r1) | ((r2) << 8))
+#define SLJIT_IMM		0x40
 
 /* Set 32 bit operation mode (I) on 64 bit CPUs. The flag is totally ignored on
    32 bit CPUs. If this flag is set for an arithmetic operation, it uses only the
@@ -487,12 +500,12 @@ SLJIT_API_FUNC_ATTRIBUTE sljit_si sljit_emit_fast_return(struct sljit_compiler *
    is specified, all register arguments must be the result of other operations with
    the same SLJIT_INT_OP flag. In other words, although a register can hold either
    a 64 or 32 bit value, these values cannot be mixed. The only exceptions are
-   SLJIT_IMOV and SLJIT_IMOVU (SLJIT_MOV_SI/SLJIT_MOV_UI/SLJIT_MOVU_SI/SLJIT_MOV_UI
-   with SLJIT_INT_OP flag) which can convert any source argument to SLJIT_INT_OP
-   compatible result. This conversion might be unnecessary on some CPUs like x86-64,
-   since the upper 32 bit is always ignored. In this case SLJIT is clever enough
-   to not generate any instructions if the source and destination operands are the
-   same registers. Affects sljit_emit_op0, sljit_emit_op1 and sljit_emit_op2. */
+   SLJIT_IMOV and SLJIT_IMOVU (SLJIT_MOV_SI/SLJIT_MOVU_SI with SLJIT_INT_OP flag)
+   which can convert any source argument to SLJIT_INT_OP compatible result. This
+   conversion might be unnecessary on some CPUs like x86-64, since the upper 32
+   bit is always ignored. In this case SLJIT is clever enough to not generate any
+   instructions if the source and destination operands are the same registers.
+   Affects sljit_emit_op0, sljit_emit_op1 and sljit_emit_op2. */
 #define SLJIT_INT_OP		0x100
 
 /* Single precision mode (SP). This flag is similar to SLJIT_INT_OP, just
@@ -518,10 +531,10 @@ SLJIT_API_FUNC_ATTRIBUTE sljit_si sljit_emit_fast_return(struct sljit_compiler *
 
 /* Set Equal (Zero) status flag (E). */
 #define SLJIT_SET_E			0x0200
+/* Set unsigned status flag (U). */
+#define SLJIT_SET_U			0x0400
 /* Set signed status flag (S). */
-#define SLJIT_SET_S			0x0400
-/* Set unsgined status flag (U). */
-#define SLJIT_SET_U			0x0800
+#define SLJIT_SET_S			0x0800
 /* Set signed overflow flag (O). */
 #define SLJIT_SET_O			0x1000
 /* Set carry flag (C).
@@ -568,7 +581,7 @@ SLJIT_API_FUNC_ATTRIBUTE sljit_si sljit_emit_fast_return(struct sljit_compiler *
 SLJIT_API_FUNC_ATTRIBUTE sljit_si sljit_emit_op0(struct sljit_compiler *compiler, sljit_si op);
 
 /* Notes for MOV instructions:
-   U = Mov with update (post form). If source or destination defined as SLJIT_MEM1(r1)
+   U = Mov with update (pre form). If source or destination defined as SLJIT_MEM1(r1)
        or SLJIT_MEM2(r1, r2), r1 is increased by the sum of r2 and the constant argument
    UB = unsigned byte (8 bit)
    SB = signed byte (8 bit)
@@ -595,7 +608,7 @@ SLJIT_API_FUNC_ATTRIBUTE sljit_si sljit_emit_op0(struct sljit_compiler *compiler
 /* Flags: I - (never set any flags)
    Note: see SLJIT_INT_OP for further details. */
 #define SLJIT_MOV_UI			11
-/* No SLJIT_INT_OP form, since it the same as SLJIT_IMOVU. */
+/* No SLJIT_INT_OP form, since it is the same as SLJIT_IMOV. */
 /* Flags: I - (never set any flags)
    Note: see SLJIT_INT_OP for further details. */
 #define SLJIT_MOV_SI			12
@@ -619,7 +632,7 @@ SLJIT_API_FUNC_ATTRIBUTE sljit_si sljit_emit_op0(struct sljit_compiler *compiler
 /* Flags: I - (never set any flags)
    Note: see SLJIT_INT_OP for further details. */
 #define SLJIT_MOVU_UI			19
-/* No SLJIT_INT_OP form, since it the same as SLJIT_IMOVU. */
+/* No SLJIT_INT_OP form, since it is the same as SLJIT_IMOVU. */
 /* Flags: I - (never set any flags)
    Note: see SLJIT_INT_OP for further details. */
 #define SLJIT_MOVU_SI			20
@@ -649,7 +662,7 @@ SLJIT_API_FUNC_ATTRIBUTE sljit_si sljit_emit_op1(struct sljit_compiler *compiler
 /* Flags: I | C | K */
 #define SLJIT_ADDC			26
 #define SLJIT_IADDC			(SLJIT_ADDC | SLJIT_INT_OP)
-/* Flags: I | E | S | U | O | C | K */
+/* Flags: I | E | U | S | O | C | K */
 #define SLJIT_SUB			27
 #define SLJIT_ISUB			(SLJIT_SUB | SLJIT_INT_OP)
 /* Flags: I | C | K */
@@ -698,11 +711,15 @@ SLJIT_API_FUNC_ATTRIBUTE sljit_si sljit_emit_op2(struct sljit_compiler *compiler
 /* The following function is a helper function for sljit_emit_op_custom.
    It returns with the real machine register index of any SLJIT_SCRATCH
    SLJIT_SAVED or SLJIT_LOCALS register.
-   Note: it returns with -1 for virtual registers (all EREGs on x86-32).
-   Note: register returned by SLJIT_LOCALS_REG is not necessary the real
-         stack pointer register of the target architecture. */
+   Note: it returns with -1 for virtual registers (all EREGs on x86-32). */
 
 SLJIT_API_FUNC_ATTRIBUTE sljit_si sljit_get_register_index(sljit_si reg);
+
+/* The following function is a helper function for sljit_emit_op_custom.
+   It returns with the real machine register index of any SLJIT_FLOAT register.
+   Note: the index is divided by 2 on ARM 32 bit architectures. */
+
+SLJIT_API_FUNC_ATTRIBUTE sljit_si sljit_get_float_register_index(sljit_si reg);
 
 /* Any instruction can be inserted into the instruction stream by
    sljit_emit_op_custom. It has a similar purpose as inline assembly.
@@ -840,8 +857,7 @@ SLJIT_API_FUNC_ATTRIBUTE struct sljit_jump* sljit_emit_fcmp(struct sljit_compile
 
 /* Set the destination of the jump to this label. */
 SLJIT_API_FUNC_ATTRIBUTE void sljit_set_label(struct sljit_jump *jump, struct sljit_label* label);
-/* Only for jumps defined with SLJIT_REWRITABLE_JUMP flag.
-   Note: use sljit_emit_ijump for fixed jumps. */
+/* Set the destination address of the jump to this label. */
 SLJIT_API_FUNC_ATTRIBUTE void sljit_set_target(struct sljit_jump *jump, sljit_uw target);
 
 /* Call function or jump anywhere. Both direct and indirect form
@@ -896,7 +912,7 @@ SLJIT_API_FUNC_ATTRIBUTE void sljit_set_const(sljit_uw addr, sljit_sw new_consta
 /* --------------------------------------------------------------------- */
 
 #define SLJIT_MAJOR_VERSION	0
-#define SLJIT_MINOR_VERSION	90
+#define SLJIT_MINOR_VERSION	91
 
 /* Get the human readable name of the platform. Can be useful on platforms
    like ARM, where ARM and Thumb2 functions can be mixed, and

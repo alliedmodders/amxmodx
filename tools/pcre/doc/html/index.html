@@ -11,12 +11,17 @@
 <body bgcolor="#FFFFFF" text="#00005A" link="#0066FF" alink="#3399FF" vlink="#2222BB">
 <h1>Perl-compatible Regular Expressions (PCRE)</h1>
 <p>
-The HTML documentation for PCRE comprises the following pages:
+The HTML documentation for PCRE consists of a number of pages that are listed
+below in alphabetical order. If you are new to PCRE, please read the first one
+first.
 </p>
 
 <table>
 <tr><td><a href="pcre.html">pcre</a></td>
     <td>&nbsp;&nbsp;Introductory page</td></tr>
+
+<tr><td><a href="pcre-config.html">pcre-config</a></td>
+    <td>&nbsp;&nbsp;Information about the installation configuration</td></tr>
 
 <tr><td><a href="pcre16.html">pcre16</a></td>
     <td>&nbsp;&nbsp;Discussion of the 16-bit PCRE library</td></tr>
@@ -24,14 +29,11 @@ The HTML documentation for PCRE comprises the following pages:
 <tr><td><a href="pcre32.html">pcre32</a></td>
     <td>&nbsp;&nbsp;Discussion of the 32-bit PCRE library</td></tr>
 
-<tr><td><a href="pcre-config.html">pcre-config</a></td>
-    <td>&nbsp;&nbsp;Information about the installation configuration</td></tr>
-
 <tr><td><a href="pcreapi.html">pcreapi</a></td>
     <td>&nbsp;&nbsp;PCRE's native API</td></tr>
 
 <tr><td><a href="pcrebuild.html">pcrebuild</a></td>
-    <td>&nbsp;&nbsp;Options for building PCRE</td></tr>
+    <td>&nbsp;&nbsp;Building PCRE</td></tr>
 
 <tr><td><a href="pcrecallout.html">pcrecallout</a></td>
     <td>&nbsp;&nbsp;The <i>callout</i> facility</td></tr>
@@ -67,7 +69,7 @@ The HTML documentation for PCRE comprises the following pages:
     <td>&nbsp;&nbsp;Some comments on performance</td></tr>
 
 <tr><td><a href="pcreposix.html">pcreposix</a></td>
-    <td>&nbsp;&nbsp;The POSIX API to the PCRE library</td></tr>
+    <td>&nbsp;&nbsp;The POSIX API to the PCRE 8-bit library</td></tr>
 
 <tr><td><a href="pcreprecompile.html">pcreprecompile</a></td>
     <td>&nbsp;&nbsp;How to save and re-use compiled patterns</td></tr>
@@ -118,12 +120,12 @@ functions.
     <td>&nbsp;&nbsp;Match a compiled pattern to a subject string
     (DFA algorithm; <i>not</i> Perl compatible)</td></tr>
 
-<tr><td><a href="pcre_free_study.html">pcre_free_study</a></td>
-    <td>&nbsp;&nbsp;Free study data</td></tr>
-
 <tr><td><a href="pcre_exec.html">pcre_exec</a></td>
     <td>&nbsp;&nbsp;Match a compiled pattern to a subject string
     (Perl compatible)</td></tr>
+
+<tr><td><a href="pcre_free_study.html">pcre_free_study</a></td>
+    <td>&nbsp;&nbsp;Free study data</td></tr>
 
 <tr><td><a href="pcre_free_substring.html">pcre_free_substring</a></td>
     <td>&nbsp;&nbsp;Free extracted substring</td></tr>
@@ -140,14 +142,17 @@ functions.
 <tr><td><a href="pcre_get_stringnumber.html">pcre_get_stringnumber</a></td>
     <td>&nbsp;&nbsp;Convert captured string name to number</td></tr>
 
+<tr><td><a href="pcre_get_stringtable_entries.html">pcre_get_stringtable_entries</a></td>
+    <td>&nbsp;&nbsp;Find table entries for given string name</td></tr>
+
 <tr><td><a href="pcre_get_substring.html">pcre_get_substring</a></td>
     <td>&nbsp;&nbsp;Extract numbered substring into new memory</td></tr>
 
 <tr><td><a href="pcre_get_substring_list.html">pcre_get_substring_list</a></td>
     <td>&nbsp;&nbsp;Extract all substrings into new memory</td></tr>
 
-<tr><td><a href="pcre_info.html">pcre_info</a></td>
-    <td>&nbsp;&nbsp;Obsolete information extraction function</td></tr>
+<tr><td><a href="pcre_jit_exec.html">pcre_jit_exec</a></td>
+    <td>&nbsp;&nbsp;Fast path interface to JIT matching</td></tr>
 
 <tr><td><a href="pcre_jit_stack_alloc.html">pcre_jit_stack_alloc</a></td>
     <td>&nbsp;&nbsp;Create a stack for JIT matching</td></tr>

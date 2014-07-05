@@ -29,9 +29,9 @@ while (scalar(@ARGV) > 0)
             ^\.TH\s\S|
             ^\.SH\s\S|
             ^\.SS\s\S|
-            ^\.TP(?:\s\d+)?\s*$|
-            ^\.ti\s\S| 
+            ^\.TP(?:\s?\d+)?\s*$|
             ^\.SM\s*$|
+            ^\.br\s*$| 
             ^\.rs\s*$| 
             ^\.sp\s*$| 
             ^\.nf\s*$| 

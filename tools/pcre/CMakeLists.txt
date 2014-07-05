@@ -60,6 +60,11 @@
 # 2012-09-06 PH added support for PCRE_EBCDIC_NL25
 # 2012-09-08 ChPe added PCRE32 support
 # 2012-10-23 PH added support for VALGRIND and GCOV
+# 2012-12-08 PH added patch from Daniel Richard G to quash some MSVC warnings
+# 2013-07-01 PH realized that the "support" for GCOV was a total nonsense and
+#            so it has been removed.
+# 2013-10-08 PH got rid of the "source" command, which is a bash-ism (use ".")
+# 2013-11-05 PH added support for PARENS_NEST_LIMIT
 
 PROJECT(PCRE C CXX)
 
@@ -128,6 +133,9 @@ SET(PCRE_EBCDIC_NL25 OFF CACHE BOOL
 SET(PCRE_LINK_SIZE "2" CACHE STRING
     "Internal link size (2, 3 or 4 allowed). See LINK_SIZE in config.h.in for details.")
 
+SET(PCRE_PARENS_NEST_LIMIT "250" CACHE STRING
+    "Default nested parentheses limit. See PARENS_NEST_LIMIT in config.h.in for details.")
+
 SET(PCRE_MATCH_LIMIT "10000000" CACHE STRING
     "Default limit on internal looping. See MATCH_LIMIT in config.h.in for details.")
 
@@ -164,9 +172,6 @@ SET(PCRE_SUPPORT_BSR_ANYCRLF OFF CACHE BOOL
 SET(PCRE_SUPPORT_VALGRIND OFF CACHE BOOL
     "Enable Valgrind support.")
 
-SET(PCRE_SUPPORT_COVERAGE OFF CACHE BOOL
-    "Enable code coverage support using gcov.")
-
 OPTION(PCRE_SHOW_REPORT    "Show the final configuration report" ON)
 OPTION(PCRE_BUILD_PCREGREP "Build pcregrep" ON)
 OPTION(PCRE_BUILD_TESTS    "Build the tests" ON)
@@ -180,6 +185,12 @@ IF (MINGW)
          "ON=Shared libraries built in mingw will be named libpcre-0.dll, etc., instead of libpcre.dll, etc."
          OFF)
 ENDIF(MINGW)
+
+IF(MSVC)
+  OPTION(INSTALL_MSVC_PDB
+         "ON=Install .pdb files built by MSVC, if generated"
+         OFF)
+ENDIF(MSVC)
 
 # bzip2 lib
 IF(BZIP2_FOUND)
@@ -295,13 +306,6 @@ ENDIF(PCRE_SUPPORT_PCREGREP_JIT)
 IF(PCRE_SUPPORT_VALGRIND)
         SET(SUPPORT_VALGRIND 1)
 ENDIF(PCRE_SUPPORT_VALGRIND)
-
-IF(PCRE_SUPPORT_COVERAGE)
-        SET(SUPPORT_GCOV 1)
-        IF(NOT CMAKE_COMPILER_IS_GNUCC)
-            MESSAGE(FATAL_ERROR "Code coverage reports can only be generated when using GCC")
-        ENDIF(NOT CMAKE_COMPILER_IS_GNUCC)
-ENDIF(PCRE_SUPPORT_COVERAGE)
 
 # This next one used to contain
 #       SET(PCRETEST_LIBS ${READLINE_LIBRARY})
@@ -552,6 +556,17 @@ SET(PCREPOSIX_SOURCES
 ENDIF(EXISTS ${PROJECT_SOURCE_DIR}/pcreposix.rc)
 ENDIF(MINGW AND NOT PCRE_STATIC)
 
+IF(MSVC AND NOT PCRE_STATIC)
+IF (EXISTS ${PROJECT_SOURCE_DIR}/pcre.rc)
+SET(PCRE_SOURCES
+  ${PCRE_SOURCES} pcre.rc)
+ENDIF(EXISTS ${PROJECT_SOURCE_DIR}/pcre.rc)
+IF (EXISTS ${PROJECT_SOURCE_DIR}/pcreposix.rc)
+SET(PCREPOSIX_SOURCES
+  ${PCREPOSIX_SOURCES} pcreposix.rc)
+ENDIF (EXISTS ${PROJECT_SOURCE_DIR}/pcreposix.rc)
+ENDIF(MSVC AND NOT PCRE_STATIC)
+
 SET(PCRECPP_HEADERS
   pcrecpp.h
   pcre_scanner.h
@@ -570,7 +585,7 @@ SET(PCRECPP_SOURCES
 ADD_DEFINITIONS(-DHAVE_CONFIG_H)
 
 IF(MSVC)
-        ADD_DEFINITIONS(-D_CRT_SECURE_NO_DEPRECATE)
+        ADD_DEFINITIONS(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS)
 ENDIF(MSVC)
 
 SET(CMAKE_INCLUDE_CURRENT_DIR 1)
@@ -772,7 +787,7 @@ MESSAGE(\" \")
 # This is a generated file.
 srcdir=${PROJECT_SOURCE_DIR}
 pcretest=${PCRETEST_EXE}
-source ${PROJECT_SOURCE_DIR}/RunTest
+. ${PROJECT_SOURCE_DIR}/RunTest
 if test \"$?\" != \"0\"; then exit 1; fi
 # End
 ")
@@ -788,7 +803,7 @@ if test \"$?\" != \"0\"; then exit 1; fi
 srcdir=${PROJECT_SOURCE_DIR}
 pcregrep=${PCREGREP_EXE}
 pcretest=${PCRETEST_EXE}
-source ${PROJECT_SOURCE_DIR}/RunGrepTest
+. ${PROJECT_SOURCE_DIR}/RunGrepTest
 if test \"$?\" != \"0\"; then exit 1; fi
 # End
 ")
@@ -877,6 +892,17 @@ INSTALL(FILES ${man1} DESTINATION man/man1)
 INSTALL(FILES ${man3} DESTINATION man/man3)
 INSTALL(FILES ${html} DESTINATION share/doc/pcre/html)
 
+IF(MSVC AND INSTALL_MSVC_PDB)
+    INSTALL(FILES ${PROJECT_BINARY_DIR}/pcre.pdb
+                  ${PROJECT_BINARY_DIR}/pcreposix.pdb
+            DESTINATION bin
+            CONFIGURATIONS RelWithDebInfo)
+    INSTALL(FILES ${PROJECT_BINARY_DIR}/pcred.pdb
+                  ${PROJECT_BINARY_DIR}/pcreposixd.pdb
+            DESTINATION bin
+            CONFIGURATIONS Debug)
+ENDIF(MSVC AND INSTALL_MSVC_PDB)
+
 # help, only for nice output
 IF(BUILD_SHARED_LIBS)
   SET(BUILD_STATIC_LIBS OFF)
@@ -917,6 +943,7 @@ IF(PCRE_SHOW_REPORT)
   MESSAGE(STATUS "  No stack recursion .............. : ${PCRE_NO_RECURSE}")
   MESSAGE(STATUS "  POSIX mem threshold ............. : ${PCRE_POSIX_MALLOC_THRESHOLD}")
   MESSAGE(STATUS "  Internal link size .............. : ${PCRE_LINK_SIZE}")
+  MESSAGE(STATUS "  Parentheses nest limit .......... : ${PCRE_PARENS_NEST_LIMIT}")
   MESSAGE(STATUS "  Match limit ..................... : ${PCRE_MATCH_LIMIT}")
   MESSAGE(STATUS "  Match limit recursion ........... : ${PCRE_MATCH_LIMIT_RECURSION}")
   MESSAGE(STATUS "  Build shared libs ............... : ${BUILD_SHARED_LIBS}")
@@ -953,6 +980,11 @@ IF(PCRE_SHOW_REPORT)
     MESSAGE(STATUS "  Non-standard dll names (prefix) . : ${NON_STANDARD_LIB_PREFIX}")
     MESSAGE(STATUS "  Non-standard dll names (suffix) . : ${NON_STANDARD_LIB_SUFFIX}")
   ENDIF(MINGW AND NOT PCRE_STATIC)
+
+  IF(MSVC)
+    MESSAGE(STATUS "  Install MSVC .pdb files ..........: ${INSTALL_MSVC_PDB}")
+  ENDIF(MSVC)
+
   MESSAGE(STATUS "")
 ENDIF(PCRE_SHOW_REPORT)
 

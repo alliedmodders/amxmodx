@@ -59,10 +59,13 @@
 	|| (defined SLJIT_CONFIG_ARM_V5 && SLJIT_CONFIG_ARM_V5) \
 	|| (defined SLJIT_CONFIG_ARM_V7 && SLJIT_CONFIG_ARM_V7) \
 	|| (defined SLJIT_CONFIG_ARM_THUMB2 && SLJIT_CONFIG_ARM_THUMB2) \
+	|| (defined SLJIT_CONFIG_ARM_64 && SLJIT_CONFIG_ARM_64) \
 	|| (defined SLJIT_CONFIG_PPC_32 && SLJIT_CONFIG_PPC_32) \
 	|| (defined SLJIT_CONFIG_PPC_64 && SLJIT_CONFIG_PPC_64) \
 	|| (defined SLJIT_CONFIG_MIPS_32 && SLJIT_CONFIG_MIPS_32) \
+	|| (defined SLJIT_CONFIG_MIPS_64 && SLJIT_CONFIG_MIPS_64) \
 	|| (defined SLJIT_CONFIG_SPARC_32 && SLJIT_CONFIG_SPARC_32) \
+	|| (defined SLJIT_CONFIG_TILEGX && SLJIT_CONFIG_TILEGX) \
 	|| (defined SLJIT_CONFIG_AUTO && SLJIT_CONFIG_AUTO) \
 	|| (defined SLJIT_CONFIG_UNSUPPORTED && SLJIT_CONFIG_UNSUPPORTED))
 #error "An architecture must be selected"
@@ -74,9 +77,12 @@
 	+ (defined SLJIT_CONFIG_ARM_V5 && SLJIT_CONFIG_ARM_V5) \
 	+ (defined SLJIT_CONFIG_ARM_V7 && SLJIT_CONFIG_ARM_V7) \
 	+ (defined SLJIT_CONFIG_ARM_THUMB2 && SLJIT_CONFIG_ARM_THUMB2) \
+	+ (defined SLJIT_CONFIG_ARM_64 && SLJIT_CONFIG_ARM_64) \
 	+ (defined SLJIT_CONFIG_PPC_32 && SLJIT_CONFIG_PPC_32) \
 	+ (defined SLJIT_CONFIG_PPC_64 && SLJIT_CONFIG_PPC_64) \
+	+ (defined SLJIT_CONFIG_TILEGX && SLJIT_CONFIG_TILEGX) \
 	+ (defined SLJIT_CONFIG_MIPS_32 && SLJIT_CONFIG_MIPS_32) \
+	+ (defined SLJIT_CONFIG_MIPS_64 && SLJIT_CONFIG_MIPS_64) \
 	+ (defined SLJIT_CONFIG_SPARC_32 && SLJIT_CONFIG_SPARC_32) \
 	+ (defined SLJIT_CONFIG_AUTO && SLJIT_CONFIG_AUTO) \
 	+ (defined SLJIT_CONFIG_UNSUPPORTED && SLJIT_CONFIG_UNSUPPORTED) >= 2
@@ -100,14 +106,20 @@
 #else
 #define SLJIT_CONFIG_ARM_V5 1
 #endif
+#elif defined (__aarch64__)
+#define SLJIT_CONFIG_ARM_64 1
 #elif defined(__ppc64__) || defined(__powerpc64__) || defined(_ARCH_PPC64) || (defined(_POWER) && defined(__64BIT__))
 #define SLJIT_CONFIG_PPC_64 1
 #elif defined(__ppc__) || defined(__powerpc__) || defined(_ARCH_PPC) || defined(_ARCH_PWR) || defined(_ARCH_PWR2) || defined(_POWER)
 #define SLJIT_CONFIG_PPC_32 1
-#elif defined(__mips__)
+#elif defined(__mips__) && !defined(_LP64)
 #define SLJIT_CONFIG_MIPS_32 1
+#elif defined(__mips64)
+#define SLJIT_CONFIG_MIPS_64 1
 #elif defined(__sparc__) || defined(__sparc)
 #define SLJIT_CONFIG_SPARC_32 1
+#elif defined(__tilegx__)
+#define SLJIT_CONFIG_TILEGX 1
 #else
 /* Unsupported architecture */
 #define SLJIT_CONFIG_UNSUPPORTED 1
@@ -173,9 +185,13 @@
 #endif /* !defined(SLJIT_LIKELY) && !defined(SLJIT_UNLIKELY) */
 
 #ifndef SLJIT_INLINE
-/* Inline functions. */
+/* Inline functions. Some old compilers do not support them. */
+#if defined(__SUNPRO_C) && __SUNPRO_C <= 0x510
+#define SLJIT_INLINE
+#else
 #define SLJIT_INLINE __inline
 #endif
+#endif /* !SLJIT_INLINE */
 
 #ifndef SLJIT_CONST
 /* Const variables. */
@@ -216,6 +232,13 @@
 
 #define SLJIT_CACHE_FLUSH(from, to) \
 	sys_icache_invalidate((char*)(from), (char*)(to) - (char*)(from))
+
+#elif defined __ANDROID__
+
+/* Android lacks __clear_cache; instead, cacheflush should be used. */
+
+#define SLJIT_CACHE_FLUSH(from, to) \
+    cacheflush((long)(from), (long)(to), 0)
 
 #elif (defined SLJIT_CONFIG_PPC_32 && SLJIT_CONFIG_PPC_32) || (defined SLJIT_CONFIG_PPC_64 && SLJIT_CONFIG_PPC_64)
 
@@ -259,7 +282,11 @@ typedef signed int sljit_si;
 #define SLJIT_WORD_SHIFT 0
 typedef unsigned long int sljit_uw;
 typedef long int sljit_sw;
-#elif !(defined SLJIT_CONFIG_X86_64 && SLJIT_CONFIG_X86_64) && !(defined SLJIT_CONFIG_PPC_64 && SLJIT_CONFIG_PPC_64)
+#elif !(defined SLJIT_CONFIG_X86_64 && SLJIT_CONFIG_X86_64) \
+	&& !(defined SLJIT_CONFIG_ARM_64 && SLJIT_CONFIG_ARM_64) \
+	&& !(defined SLJIT_CONFIG_PPC_64 && SLJIT_CONFIG_PPC_64) \
+	&& !(defined SLJIT_CONFIG_MIPS_64 && SLJIT_CONFIG_MIPS_64) \
+	&& !(defined SLJIT_CONFIG_TILEGX && SLJIT_CONFIG_TILEGX)
 #define SLJIT_32BIT_ARCHITECTURE 1
 #define SLJIT_WORD_SHIFT 2
 typedef unsigned int sljit_uw;
@@ -304,7 +331,7 @@ typedef double sljit_d;
 /* ABI (Application Binary Interface) types. */
 #if (defined SLJIT_CONFIG_X86_32 && SLJIT_CONFIG_X86_32)
 
-#if defined(__GNUC__)
+#if defined(__GNUC__) && !defined(__APPLE__)
 
 #define SLJIT_CALL __attribute__ ((fastcall))
 #define SLJIT_X86_32_FASTCALL 1
@@ -336,19 +363,28 @@ typedef double sljit_d;
 
 #if !defined(SLJIT_BIG_ENDIAN) && !defined(SLJIT_LITTLE_ENDIAN)
 
-/* These macros are useful for the application. */
+/* These macros are useful for the applications. */
 #if (defined SLJIT_CONFIG_PPC_32 && SLJIT_CONFIG_PPC_32) \
-	|| (defined SLJIT_CONFIG_PPC_64 && SLJIT_CONFIG_PPC_64) \
-	|| (defined SLJIT_CONFIG_SPARC_32 && SLJIT_CONFIG_SPARC_32)
-#define SLJIT_BIG_ENDIAN 1
+	|| (defined SLJIT_CONFIG_PPC_64 && SLJIT_CONFIG_PPC_64)
 
-#elif (defined SLJIT_CONFIG_MIPS_32 && SLJIT_CONFIG_MIPS_32)
+#ifdef __LITTLE_ENDIAN__
+#define SLJIT_LITTLE_ENDIAN 1
+#else
+#define SLJIT_BIG_ENDIAN 1
+#endif
+
+#elif (defined SLJIT_CONFIG_MIPS_32 && SLJIT_CONFIG_MIPS_32) \
+	|| (defined SLJIT_CONFIG_MIPS_64 && SLJIT_CONFIG_MIPS_64)
 
 #ifdef __MIPSEL__
 #define SLJIT_LITTLE_ENDIAN 1
 #else
 #define SLJIT_BIG_ENDIAN 1
 #endif
+
+#elif (defined SLJIT_CONFIG_SPARC_32 && SLJIT_CONFIG_SPARC_32)
+
+#define SLJIT_BIG_ENDIAN 1
 
 #else
 #define SLJIT_LITTLE_ENDIAN 1
@@ -366,7 +402,8 @@ typedef double sljit_d;
 #endif
 
 #ifndef SLJIT_INDIRECT_CALL
-#if (defined SLJIT_CONFIG_PPC_64 && SLJIT_CONFIG_PPC_64) || (defined SLJIT_CONFIG_PPC_32 && SLJIT_CONFIG_PPC_32 && defined _AIX)
+#if ((defined SLJIT_CONFIG_PPC_64 && SLJIT_CONFIG_PPC_64) && (defined SLJIT_BIG_ENDIAN && SLJIT_BIG_ENDIAN)) \
+	|| ((defined SLJIT_CONFIG_PPC_32 && SLJIT_CONFIG_PPC_32) && defined _AIX)
 /* It seems certain ppc compilers use an indirect addressing for functions
    which makes things complicated. */
 #define SLJIT_INDIRECT_CALL 1
@@ -403,6 +440,7 @@ typedef double sljit_d;
 	|| (defined SLJIT_CONFIG_X86_64 && SLJIT_CONFIG_X86_64) \
 	|| (defined SLJIT_CONFIG_ARM_V7 && SLJIT_CONFIG_ARM_V7) \
 	|| (defined SLJIT_CONFIG_ARM_THUMB2 && SLJIT_CONFIG_ARM_THUMB2) \
+	|| (defined SLJIT_CONFIG_ARM_64 && SLJIT_CONFIG_ARM_64) \
 	|| (defined SLJIT_CONFIG_PPC_32 && SLJIT_CONFIG_PPC_32) \
 	|| (defined SLJIT_CONFIG_PPC_64 && SLJIT_CONFIG_PPC_64)
 #define SLJIT_UNALIGNED 1
@@ -413,6 +451,7 @@ typedef double sljit_d;
 #if (defined SLJIT_EXECUTABLE_ALLOCATOR && SLJIT_EXECUTABLE_ALLOCATOR)
 SLJIT_API_FUNC_ATTRIBUTE void* sljit_malloc_exec(sljit_uw size);
 SLJIT_API_FUNC_ATTRIBUTE void sljit_free_exec(void* ptr);
+SLJIT_API_FUNC_ATTRIBUTE void sljit_free_unused_memory_exec(void);
 #define SLJIT_MALLOC_EXEC(size) sljit_malloc_exec(size)
 #define SLJIT_FREE_EXEC(ptr) sljit_free_exec(ptr)
 #endif

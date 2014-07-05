@@ -85,5 +85,5 @@ AC_DEFUN([PCRE_VISIBILITY],
   AC_SUBST([VISIBILITY_CXXFLAGS])
   AC_SUBST([HAVE_VISIBILITY])
   AC_DEFINE_UNQUOTED([HAVE_VISIBILITY], [$HAVE_VISIBILITY],
-    [Define to 1 or 0, depending whether the compiler supports simple visibility declarations.])
+    [Define to 1 if the compiler supports simple visibility declarations.])
 ])

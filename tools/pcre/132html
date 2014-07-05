@@ -108,9 +108,9 @@ while (<STDIN>)
 
     # Handling .sp is subtle. If it is inside a literal section, do nothing if
     # the next line is a non literal text line; similarly, if not inside a
-    # literal section, do nothing if a literal follows. The point being that
-    # the <pre> and </pre> that delimit literal sections will do the spacing.
-    # Always skip if no previous output.
+    # literal section, do nothing if a literal follows, unless we are inside
+    # a .nf/.ne section. The point being that the <pre> and </pre> that delimit
+    # literal sections will do the spacing. Always skip if no previous output.
 
     elsif (/^\.sp/)
       {
@@ -123,7 +123,7 @@ while (<STDIN>)
           }
         else
           {
-          print TEMP "<br>\n<br>\n" if (!/^[\s.]/);
+          print TEMP "<br>\n<br>\n" if ($innf || !/^[\s.]/);
           }
         redo;    # Now process the lookahead line we just read
         }

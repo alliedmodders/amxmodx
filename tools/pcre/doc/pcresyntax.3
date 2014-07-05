@@ -1,4 +1,4 @@
-.TH PCRESYNTAX 3 "11 November 2012" "PCRE 8.32"
+.TH PCRESYNTAX 3 "08 January 2014" "PCRE 8.35"
 .SH NAME
 PCRE - Perl-compatible regular expressions
 .SH "PCRE REGULAR EXPRESSION SYNTAX SUMMARY"
@@ -29,9 +29,14 @@ documentation. This document contains a quick-reference summary of the syntax.
   \en         newline (hex 0A)
   \er         carriage return (hex 0D)
   \et         tab (hex 09)
+  \e0dd       character with octal code 0dd
   \eddd       character with octal code ddd, or backreference
+  \eo{ddd..}  character with octal code ddd..
   \exhh       character with hex code hh
   \ex{hhh..}  character with hex code hhh..
+.sp
+Note that \e0dd is always an octal code, and that \e8 and \e9 are the literal
+characters "8" and "9".
 .
 .
 .SH "CHARACTER TYPES"
@@ -56,9 +61,11 @@ documentation. This document contains a quick-reference summary of the syntax.
   \eW         a "non-word" character
   \eX         a Unicode extended grapheme cluster
 .sp
-In PCRE, by default, \ed, \eD, \es, \eS, \ew, and \eW recognize only ASCII
-characters, even in a UTF mode. However, this can be changed by setting the
-PCRE_UCP option.
+By default, \ed, \es, and \ew match only ASCII characters, even in UTF-8 mode
+or in the 16- bit and 32-bit libraries. However, if locale-specific matching is
+happening, \es and \ew may also match characters with code points in the range
+128-255. If the PCRE_UCP option is set, the behaviour of these escape sequences
+is changed to use Unicode properties and they match many more characters.
 .
 .
 .SH "GENERAL CATEGORY PROPERTIES FOR \ep and \eP"
@@ -115,8 +122,13 @@ PCRE_UCP option.
 .sp
   Xan        Alphanumeric: union of properties L and N
   Xps        POSIX space: property Z or tab, NL, VT, FF, CR
-  Xsp        Perl space: property Z or tab, NL, FF, CR
+  Xsp        Perl space: property Z or tab, NL, VT, FF, CR
+  Xuc        Univerally-named character: one that can be
+               represented by a Universal Character Name
   Xwd        Perl word: property Xan or underscore
+.sp
+Perl and POSIX space are now the same. Perl added VT to its space character set
+at release 5.18 and PCRE changed at release 8.34.
 .
 .
 .SH "SCRIPT NAMES FOR \ep AND \eP"
@@ -297,6 +309,8 @@ but some of them use Unicode properties if PCRE_UCP is set. You can use
 .rs
 .sp
   \eK          reset start of match
+.sp
+\eK is honoured in positive assertions, but ignored in negative ones.
 .
 .
 .SH "ALTERNATION"
@@ -342,15 +356,45 @@ but some of them use Unicode properties if PCRE_UCP is set. You can use
   (?x)            extended (ignore white space)
   (?-...)         unset option(s)
 .sp
-The following are recognized only at the start of a pattern or after one of the
-newline-setting options with similar syntax:
+The following are recognized only at the very start of a pattern or after one
+of the newline or \eR options with similar syntax. More than one of them may
+appear.
 .sp
+  (*LIMIT_MATCH=d) set the match limit to d (decimal number)
+  (*LIMIT_RECURSION=d) set the recursion limit to d (decimal number)
+  (*NO_AUTO_POSSESS) no auto-possessification (PCRE_NO_AUTO_POSSESS)
   (*NO_START_OPT) no start-match optimization (PCRE_NO_START_OPTIMIZE)
   (*UTF8)         set UTF-8 mode: 8-bit library (PCRE_UTF8)
   (*UTF16)        set UTF-16 mode: 16-bit library (PCRE_UTF16)
   (*UTF32)        set UTF-32 mode: 32-bit library (PCRE_UTF32)
   (*UTF)          set appropriate UTF mode for the library in use
   (*UCP)          set PCRE_UCP (use Unicode properties for \ed etc)
+.sp
+Note that LIMIT_MATCH and LIMIT_RECURSION can only reduce the value of the
+limits set by the caller of pcre_exec(), not increase them.
+.
+.
+.SH "NEWLINE CONVENTION"
+.rs
+.sp
+These are recognized only at the very start of the pattern or after option
+settings with a similar syntax.
+.sp
+  (*CR)           carriage return only
+  (*LF)           linefeed only
+  (*CRLF)         carriage return followed by linefeed
+  (*ANYCRLF)      all three of the above
+  (*ANY)          any Unicode newline sequence
+.
+.
+.SH "WHAT \eR MATCHES"
+.rs
+.sp
+These are recognized only at the very start of the pattern or after option
+setting with a similar syntax.
+.sp
+  (*BSR_ANYCRLF)  CR, LF, or CRLF
+  (*BSR_UNICODE)  any Unicode newline sequence
 .
 .
 .SH "LOOKAHEAD AND LOOKBEHIND ASSERTIONS"
@@ -440,29 +484,6 @@ pattern is not anchored.
   (*THEN:NAME)    equivalent to (*MARK:NAME)(*THEN)
 .
 .
-.SH "NEWLINE CONVENTIONS"
-.rs
-.sp
-These are recognized only at the very start of the pattern or after a
-(*BSR_...), (*UTF8), (*UTF16), (*UTF32) or (*UCP) option.
-.sp
-  (*CR)           carriage return only
-  (*LF)           linefeed only
-  (*CRLF)         carriage return followed by linefeed
-  (*ANYCRLF)      all three of the above
-  (*ANY)          any Unicode newline sequence
-.
-.
-.SH "WHAT \eR MATCHES"
-.rs
-.sp
-These are recognized only at the very start of the pattern or after a
-(*...) option that sets the newline convention or a UTF or UCP mode.
-.sp
-  (*BSR_ANYCRLF)  CR, LF, or CRLF
-  (*BSR_UNICODE)  any Unicode newline sequence
-.
-.
 .SH "CALLOUTS"
 .rs
 .sp
@@ -491,6 +512,6 @@ Cambridge CB2 3QH, England.
 .rs
 .sp
 .nf
-Last updated: 11 November 2012
-Copyright (c) 1997-2012 University of Cambridge.
+Last updated: 08 January 2014
+Copyright (c) 1997-2014 University of Cambridge.
 .fi

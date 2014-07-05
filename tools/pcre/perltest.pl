@@ -1,19 +1,16 @@
 #! /usr/bin/env perl
 
 # Program for testing regular expressions with perl to check that PCRE handles
-# them the same. This version supports /8 for UTF-8 testing. However, it needs
-# to have "use utf8" at the start for running the UTF-8 tests, but *not* for
-# the other tests. The only way I've found for doing this is to cat this line
-# in explicitly in the RunPerlTest script. I've also used this method to supply
-# "require Encode" for the UTF-8 tests, so that the main test will still run
-# where Encode is not installed.
-
-# use locale;  # With this included, \x0b matches \s!
-
-# Function for turning a string into a string of printing chars.
+# them the same. This version needs to have "use utf8" at the start for running
+# the UTF-8 tests, but *not* for the other tests. The only way I've found for
+# doing this is to cat this line in explicitly in the RunPerlTest script. I've
+# also used this method to supply "require Encode" for the UTF-8 tests, so that
+# the main test will still run where Encode is not installed.
 
 #use utf8;
 #require Encode;
+
+# Function for turning a string into a string of printing chars.
 
 sub pchars {
 my($t) = "";
@@ -71,7 +68,7 @@ for (;;)
   printf "  re> " if $infile eq "STDIN";
   last if ! ($_ = <$infile>);
   printf $outfile "$_" if $infile ne "STDIN";
-  next if ($_ eq "");
+  next if ($_ =~ /^\s*$/ || $_ =~ /^< forbid/);
 
   $pattern = $_;
 
@@ -106,17 +103,17 @@ for (;;)
 
   $pattern =~ s/K(?=[a-zA-Z]*$)//;
 
-  # Remove /W from a pattern (asks pcretest to set PCRE_UCP)
+  # /W asks pcretest to set PCRE_UCP; change this to /u for Perl
 
-  $pattern =~ s/W(?=[a-zA-Z]*$)//;
+  $pattern =~ s/W(?=[a-zA-Z]*$)/u/;
 
   # Remove /S or /SS from a pattern (asks pcretest to study or not to study)
 
   $pattern =~ s/S(?=[a-zA-Z]*$)//g;
 
-  # Remove /Y from a pattern (asks pcretest to disable PCRE optimization)
+  # Remove /Y and /O from a pattern (disable PCRE optimizations)
 
-  $pattern =~ s/Y(?=[a-zA-Z]*$)//;
+  $pattern =~ s/[YO](?=[a-zA-Z]*$)//;
 
   # Check that the pattern is valid
 

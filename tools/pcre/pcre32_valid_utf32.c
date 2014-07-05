@@ -6,7 +6,7 @@
 and semantics are as close as possible to those of the Perl 5 language.
 
                        Written by Philip Hazel
-           Copyright (c) 1997-2012 University of Cambridge
+           Copyright (c) 1997-2013 University of Cambridge
 
 -----------------------------------------------------------------------------
 Redistribution and use in source and binary forms, with or without
@@ -66,7 +66,7 @@ back in the returned value:
 
 PCRE_UTF32_ERR0  No error
 PCRE_UTF32_ERR1  Surrogate character
-PCRE_UTF32_ERR2  Non-character
+PCRE_UTF32_ERR2  Unused (was non-character)
 PCRE_UTF32_ERR3  Character > 0x10ffff
 
 Arguments:
@@ -98,14 +98,7 @@ for (p = string; length-- > 0; p++)
   if ((c & 0xfffff800u) != 0xd800u)
     {
     /* Normal UTF-32 code point. Neither high nor low surrogate. */
-
-    /* Check for non-characters */
-    if ((c & 0xfffeu) == 0xfffeu || (c >= 0xfdd0u && c <= 0xfdefu))
-      {
-      *erroroffset = p - string;
-      return PCRE_UTF32_ERR2;
-      }
-    else if (c > 0x10ffffu)
+    if (c > 0x10ffffu)
       {
       *erroroffset = p - string;
       return PCRE_UTF32_ERR3;

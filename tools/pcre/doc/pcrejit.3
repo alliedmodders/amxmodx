@@ -1,4 +1,4 @@
-.TH PCREJIT 3 "31 October 2012" "PCRE 8.32"
+.TH PCREJIT 3 "17 March 2013" "PCRE 8.33"
 .SH NAME
 PCRE - Perl-compatible regular expressions
 .SH "PCRE JUST-IN-TIME COMPILER SUPPORT"
@@ -151,15 +151,9 @@ PCRE_NO_UTF8_CHECK, PCRE_NO_UTF16_CHECK, PCRE_NO_UTF32_CHECK, PCRE_NOTBOL,
 PCRE_NOTEOL, PCRE_NOTEMPTY, PCRE_NOTEMPTY_ATSTART, PCRE_PARTIAL_HARD, and
 PCRE_PARTIAL_SOFT.
 .P
-The unsupported pattern items are:
-.sp
-  \eC             match a single byte; not supported in UTF-8 mode
-  (?Cn)          callouts
-  (*PRUNE)       )
-  (*SKIP)        ) backtracking control verbs
-  (*THEN)        )
-.sp
-Support for some of these may be added in future.
+The only unsupported pattern items are \eC (match a single data unit) when
+running in a UTF mode, and a callout immediately before an assertion condition
+in a conditional group.
 .
 .
 .SH "RETURN VALUES FROM JIT EXECUTION"
@@ -432,6 +426,6 @@ Cambridge CB2 3QH, England.
 .rs
 .sp
 .nf
-Last updated: 31 October 2012
-Copyright (c) 1997-2012 University of Cambridge.
+Last updated: 17 March 2013
+Copyright (c) 1997-2013 University of Cambridge.
 .fi

@@ -25,6 +25,12 @@
 #             when the HTML documentation is built. It works like this so that
 #             doc/html can be deleted and re-created from scratch.
 
+# README & NON-AUTOTOOLS-BUILD
+#             These files are copied into the doc/html directory, with .txt
+#             extensions so that they can by hyperlinked from the HTML 
+#             documentation, because some people just go to the HTML without
+#             looking for text files.
+
 
 # First, sort out the documentation. Remove pcredemo.3 first because it won't
 # pass the markup check (it is created below, using markup that none of the
@@ -122,6 +128,8 @@ if [ $? != 0 ] ; then exit 1; fi
 echo "Making HTML documentation"
 /bin/rm html/*
 cp index.html.src html/index.html
+cp ../README html/README.txt
+cp ../NON-AUTOTOOLS-BUILD html/NON-AUTOTOOLS-BUILD.txt
 
 for file in *.1 ; do
   base=`basename $file .1`
@@ -218,7 +226,6 @@ files="\
   pcre_string_utils.c \
   pcre_study.c \
   pcre_tables.c \
-  pcre_ucp_searchfuncs.c \
   pcre_valid_utf8.c \
   pcre_version.c \
   pcre_xclass.c \
@@ -238,8 +245,6 @@ files="\
   pcre_stringpiece_unittest.cc \
   perltest.pl \
   ucp.h \
-  ucpinternal.h \
-  ucptable.h \
   makevp.bat \
   pcre.def \
   libpcre.def \

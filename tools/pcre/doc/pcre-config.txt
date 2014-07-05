@@ -1,4 +1,4 @@
-PCRE-CONFIG(1)                                                  PCRE-CONFIG(1)
+PCRE-CONFIG(1)              General Commands Manual             PCRE-CONFIG(1)
 
 
 
@@ -8,8 +8,8 @@ NAME
 SYNOPSIS
 
        pcre-config [--prefix] [--exec-prefix] [--version] [--libs]
-            [--libs16] [--libs32] [--libs-cpp] [--libs-posix]
-            [--cflags] [--cflags-posix]
+                   [--libs16] [--libs32] [--libs-cpp] [--libs-posix]
+                   [--cflags] [--cflags-posix]
 
 
 DESCRIPTION

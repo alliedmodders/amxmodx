@@ -172,15 +172,9 @@ PCRE_NOTEOL, PCRE_NOTEMPTY, PCRE_NOTEMPTY_ATSTART, PCRE_PARTIAL_HARD, and
 PCRE_PARTIAL_SOFT.
 </P>
 <P>
-The unsupported pattern items are:
-<pre>
-  \C             match a single byte; not supported in UTF-8 mode
-  (?Cn)          callouts
-  (*PRUNE)       )
-  (*SKIP)        ) backtracking control verbs
-  (*THEN)        )
-</pre>
-Support for some of these may be added in future.
+The only unsupported pattern items are \C (match a single data unit) when
+running in a UTF mode, and a callout immediately before an assertion condition
+in a conditional group.
 </P>
 <br><a name="SEC6" href="#TOC1">RETURN VALUES FROM JIT EXECUTION</a><br>
 <P>
@@ -449,9 +443,9 @@ Cambridge CB2 3QH, England.
 </P>
 <br><a name="SEC14" href="#TOC1">REVISION</a><br>
 <P>
-Last updated: 31 October 2012
+Last updated: 17 March 2013
 <br>
-Copyright &copy; 1997-2012 University of Cambridge.
+Copyright &copy; 1997-2013 University of Cambridge.
 <br>
 <p>
 Return to the <a href="index.html">PCRE index page</a>.

@@ -1,5 +1,7 @@
-/-- This set of tests is for UTF-8 support, and is relevant only to the 8-bit 
-    library. --/
+/-- This set of tests is for UTF-8 support but not Unicode property support,
+    and is relevant only to the 8-bit library. --/
+
+< forbid W
 
 /X(\C{3})/8
     X\x{1234}
@@ -47,7 +49,7 @@
 
 /ÃÃÃxxx/8
 
-/ÃÃÃxxx/8?DZSS
+/ÃÃÃxxx/8?DZSSO
 
 /badutf/8
     \xdf
@@ -89,7 +91,6 @@
     \x80
     \xfe
     \xff
-    \xef\xb7\x90
 
 /badutf/8
     \xfb\x80\x80\x80\x80
@@ -135,74 +136,6 @@
     \?\xf9\x87\x80\x80\x80  
     \?\xfc\x84\x80\x80\x80\x80
     \?\xfd\x83\x80\x80\x80\x80
-
-/noncharacter/8
-    \x{fffe}
-    \x{ffff}
-    \x{1fffe}
-    \x{1ffff}
-    \x{2fffe}
-    \x{2ffff}
-    \x{3fffe}
-    \x{3ffff}
-    \x{4fffe}
-    \x{4ffff}
-    \x{5fffe}
-    \x{5ffff}
-    \x{6fffe}
-    \x{6ffff}
-    \x{7fffe}
-    \x{7ffff}
-    \x{8fffe}
-    \x{8ffff}
-    \x{9fffe}
-    \x{9ffff}
-    \x{afffe}
-    \x{affff}
-    \x{bfffe}
-    \x{bffff}
-    \x{cfffe}
-    \x{cffff}
-    \x{dfffe}
-    \x{dffff}
-    \x{efffe}
-    \x{effff}
-    \x{ffffe}
-    \x{fffff}
-    \x{10fffe}
-    \x{10ffff}
-    \x{fdd0}
-    \x{fdd1}
-    \x{fdd2}
-    \x{fdd3}
-    \x{fdd4}
-    \x{fdd5}
-    \x{fdd6}
-    \x{fdd7}
-    \x{fdd8}
-    \x{fdd9}
-    \x{fdda}
-    \x{fddb}
-    \x{fddc}
-    \x{fddd}
-    \x{fdde}
-    \x{fddf}
-    \x{fde0}
-    \x{fde1}
-    \x{fde2}
-    \x{fde3}
-    \x{fde4}
-    \x{fde5}
-    \x{fde6}
-    \x{fde7}
-    \x{fde8}
-    \x{fde9}
-    \x{fdea}
-    \x{fdeb}
-    \x{fdec}
-    \x{fded}
-    \x{fdee}
-    \x{fdef}
 
 /\x{100}/8DZ
 
@@ -310,7 +243,6 @@ correctly, but that messes up comparisons). --/
 /-- This tests the stricter UTF-8 check according to RFC 3629. --/ 
     
 /X/8
-    \x{0}\x{d7ff}\x{e000}\x{10ffff}
     \x{d800}
     \x{d800}\?
     \x{da00}
@@ -426,5 +358,9 @@ correctly, but that messes up comparisons). --/
 /A/8
   \x{ff000041}
   \x{7f000041} 
+
+/(*UTF8)abc/9
+
+/abc/89
 
 /-- End of testinput15 --/

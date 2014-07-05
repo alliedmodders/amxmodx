@@ -1,5 +1,7 @@
-/-- This set of tests is for UTF-16 and UTF-32 support, and is relevant only to the
-    16- and 32-bit library. --/
+/-- This set of tests is for UTF-16 and UTF-32 support, and is relevant only to
+    the 16- and 32-bit libraries. --/
+    
+< forbid W 
 
 /ÃÃÃxxx/8?DZSS
 
@@ -156,7 +158,6 @@ correctly, but that messes up comparisons). --/
 /^[\QÄ€\E-\QÅ\E/BZ8
 
 /X/8
-    \x{0}\x{d7ff}\x{e000}\x{10ffff}
     \x{d800}
     \x{d800}\?
     \x{da00}
@@ -169,7 +170,6 @@ correctly, but that messes up comparisons). --/
     \x{dfff}\?
     \x{110000}
     \x{d800}\x{1234}
-    \x{fffe}
 
 /(*UTF16)\x{11234}/
   abcd\x{11234}pqr
@@ -207,7 +207,7 @@ correctly, but that messes up comparisons). --/
     CDBABC
     \x{2000}ABC 
 
-/\R*A/SI8
+/\R*A/SI8<bsr_unicode>
     CDBABC
     \x{2028}A  
 
@@ -292,5 +292,9 @@ correctly, but that messes up comparisons). --/
 
 /\x{a0}+\s!/8BZT1
     \x{a0}\x20!
+
+/(*UTF)abc/9
+
+/abc/89
 
 /-- End of testinput18 --/

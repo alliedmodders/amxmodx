@@ -36,10 +36,8 @@ these do not seem to have any use.
 </P>
 <P>
 3. Capturing subpatterns that occur inside negative lookahead assertions are
-counted, but their entries in the offsets vector are never set. Perl sets its
-numerical variables from any such patterns that are matched before the
-assertion fails to match something (thereby succeeding), but only if the
-negative lookahead assertion contains just one branch.
+counted, but their entries in the offsets vector are never set. Perl sometimes
+(but not always) sets its numerical variables from inside negative assertions.
 </P>
 <P>
 4. Though binary zero characters are supported in the subject string, they are
@@ -102,24 +100,32 @@ in the
 page.
 </P>
 <P>
-10. If any of the backtracking control verbs are used in an assertion or in a
-subpattern that is called as a subroutine (whether or not recursively), their
-effect is confined to that subpattern; it does not extend to the surrounding
-pattern. This is not always the case in Perl. In particular, if (*THEN) is
-present in a group that is called as a subroutine, its action is limited to
-that group, even if the group does not contain any | characters. There is one
-exception to this: the name from a *(MARK), (*PRUNE), or (*THEN) that is
-encountered in a successful positive assertion <i>is</i> passed back when a
-match succeeds (compare capturing parentheses in assertions). Note that such
-subpatterns are processed as anchored at the point where they are tested.
+10. If any of the backtracking control verbs are used in a subpattern that is
+called as a subroutine (whether or not recursively), their effect is confined
+to that subpattern; it does not extend to the surrounding pattern. This is not
+always the case in Perl. In particular, if (*THEN) is present in a group that
+is called as a subroutine, its action is limited to that group, even if the
+group does not contain any | characters. Note that such subpatterns are
+processed as anchored at the point where they are tested.
 </P>
 <P>
-11. There are some differences that are concerned with the settings of captured
+11. If a pattern contains more than one backtracking control verb, the first
+one that is backtracked onto acts. For example, in the pattern
+A(*COMMIT)B(*PRUNE)C a failure in B triggers (*COMMIT), but a failure in C
+triggers (*PRUNE). Perl's behaviour is more complex; in many cases it is the
+same as PCRE, but there are examples where it differs.
+</P>
+<P>
+12. Most backtracking verbs in assertions have their normal actions. They are
+not confined to the assertion.
+</P>
+<P>
+13. There are some differences that are concerned with the settings of captured
 strings when part of a pattern is repeated. For example, matching "aba" against
 the pattern /^(a(b)?)+$/ in Perl leaves $2 unset, but in PCRE it is set to "b".
 </P>
 <P>
-12. PCRE's handling of duplicate subpattern numbers and duplicate subpattern
+14. PCRE's handling of duplicate subpattern numbers and duplicate subpattern
 names is not as general as Perl's. This is a consequence of the fact the PCRE
 works internally just with numbers, using an external table to translate
 between numbers and names. In particular, a pattern such as (?|(?&#60;a&#62;A)|(?&#60;b)B),
@@ -130,13 +136,26 @@ names map to capturing subpattern number 1. To avoid this confusing situation,
 an error is given at compile time.
 </P>
 <P>
-13. Perl recognizes comments in some places that PCRE does not, for example,
+15. Perl recognizes comments in some places that PCRE does not, for example,
 between the ( and ? at the start of a subpattern. If the /x modifier is set,
-Perl allows white space between ( and ? but PCRE never does, even if the
-PCRE_EXTENDED option is set.
+Perl allows white space between ( and ? (though current Perls warn that this is
+deprecated) but PCRE never does, even if the PCRE_EXTENDED option is set.
 </P>
 <P>
-14. PCRE provides some extensions to the Perl regular expression facilities.
+16. Perl, when in warning mode, gives warnings for character classes such as
+[A-\d] or [a-[:digit:]]. It then treats the hyphens as literals. PCRE has no
+warning features, so it gives an error in these cases because they are almost
+certainly user mistakes.
+</P>
+<P>
+17. In PCRE, the upper/lower case character properties Lu and Ll are not
+affected when case-independent matching is specified. For example, \p{Lu}
+always matches an upper case letter. I think Perl has changed in this respect;
+in the release at the time of writing (5.16), \p{Lu} and \p{Ll} match all
+letters, regardless of case, when case independence is specified.
+</P>
+<P>
+18. PCRE provides some extensions to the Perl regular expression facilities.
 Perl 5.10 includes new features that are not in earlier versions of Perl, some
 of which (such as named parentheses) have been in PCRE for some time. This list
 is with respect to Perl 5.10:
@@ -207,9 +226,9 @@ Cambridge CB2 3QH, England.
 REVISION
 </b><br>
 <P>
-Last updated: 25 August 2012
+Last updated: 10 November 2013
 <br>
-Copyright &copy; 1997-2012 University of Cambridge.
+Copyright &copy; 1997-2013 University of Cambridge.
 <br>
 <p>
 Return to the <a href="index.html">PCRE index page</a>.

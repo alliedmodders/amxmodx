@@ -4,7 +4,9 @@ and a couple of things that are different with JIT. --/
 
 /abc/S+I
 
-/ab(*THEN)/S+I
+/(?(?C1)(?=a)a)/S+I
+
+/(?(?C1)(?=a)a)/S!+I
 
 /abc/S+I>testsavedregex
 
@@ -82,8 +84,7 @@ and a couple of things that are different with JIT. --/
 /(*NO_START_OPT)a(*:m)b/KS++
     a
 
-/.?(*THEN)/S+I
-
-/.?(*THEN)/S!+I
+/^12345678abcd/mS++
+    12345678abcd
 
 /-- End of testinput12 --/

@@ -9,18 +9,18 @@ dnl The PCRE_PRERELEASE feature is for identifying release candidates. It might
 dnl be defined as -RC2, for example. For real releases, it should be empty.
 
 m4_define(pcre_major, [8])
-m4_define(pcre_minor, [32])
+m4_define(pcre_minor, [35])
 m4_define(pcre_prerelease, [])
-m4_define(pcre_date, [2012-11-30])
+m4_define(pcre_date, [2014-04-04])
 
 # NOTE: The CMakeLists.txt file searches for the above variables in the first
 # 50 lines of this file. Please update that if the variables above are moved.
 
 # Libtool shared library interface versions (current:revision:age)
-m4_define(libpcre_version, [3:0:2])
-m4_define(libpcre16_version, [2:0:2])
-m4_define(libpcre32_version, [0:0:0])
-m4_define(libpcreposix_version, [0:1:0])
+m4_define(libpcre_version, [3:3:2])
+m4_define(libpcre16_version, [2:3:2])
+m4_define(libpcre32_version, [0:3:0])
+m4_define(libpcreposix_version, [0:2:0])
 m4_define(libpcrecpp_version, [0:0:0])
 
 AC_PREREQ(2.57)
@@ -29,6 +29,9 @@ AC_CONFIG_SRCDIR([pcre.h.in])
 AM_INIT_AUTOMAKE([dist-bzip2 dist-zip])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AC_CONFIG_HEADERS(config.h)
+
+# This is a new thing required to stop a warning from automake 1.12
+m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 
 # This was added at the suggestion of libtoolize (03-Jan-10)
 AC_CONFIG_MACRO_DIR([m4])
@@ -245,7 +248,7 @@ AC_ARG_ENABLE(pcregrep-libbz2,
 # Handle --with-pcregrep-bufsize=N
 AC_ARG_WITH(pcregrep-bufsize,
               AS_HELP_STRING([--with-pcregrep-bufsize=N],
-                             [pcregrep buffer size (default=20480)]),
+                             [pcregrep buffer size (default=20480, minimum=8192)]),
               , with_pcregrep_bufsize=20480)
 
 # Handle --enable-pcretest-libedit
@@ -271,6 +274,12 @@ AC_ARG_WITH(link-size,
             AS_HELP_STRING([--with-link-size=N],
                            [internal link size (2, 3, or 4 allowed; default=2)]),
             , with_link_size=2)
+
+# Handle --with-parens-nest-limit=N
+AC_ARG_WITH(parens-nest-limit,
+            AS_HELP_STRING([--with-parens-nest-limit=N],
+                           [nested parentheses limit (default=250)]),
+            , with_parens_nest_limit=250)
 
 # Handle --with-match-limit=N
 AC_ARG_WITH(match-limit,
@@ -427,24 +436,33 @@ AH_TOP([
 can cope with, allowing it to run on SunOS4 and other "close to standard"
 systems.
 
-In environments that support the facilities, config.h.in is converted by
-"configure", or config-cmake.h.in is converted by CMake, into config.h. If you
-are going to build PCRE "by hand" without using "configure" or CMake, you
-should copy the distributed config.h.generic to config.h, and then edit the
-macro definitions to be the way you need them. You must then add
--DHAVE_CONFIG_H to all of your compile commands, so that config.h is included
-at the start of every source.
+In environments that support the GNU autotools, config.h.in is converted into
+config.h by the "configure" script. In environments that use CMake,
+config-cmake.in is converted into config.h. If you are going to build PCRE "by
+hand" without using "configure" or CMake, you should copy the distributed
+config.h.generic to config.h, and edit the macro definitions to be the way you
+need them. You must then add -DHAVE_CONFIG_H to all of your compile commands,
+so that config.h is included at the start of every source.
 
 Alternatively, you can avoid editing by using -D on the compiler command line
-to set the macro values. In this case, you do not have to set -DHAVE_CONFIG_H.
+to set the macro values. In this case, you do not have to set -DHAVE_CONFIG_H,
+but if you do, default values will be taken from config.h for non-boolean
+macros that are not defined on the command line.
 
-PCRE uses memmove() if HAVE_MEMMOVE is set to 1; otherwise it uses bcopy() if
-HAVE_BCOPY is set to 1. If your system has neither bcopy() nor memmove(), set
-them both to 0; an emulation function will be used. */])
+Boolean macros such as HAVE_STDLIB_H and SUPPORT_PCRE8 should either be defined
+(conventionally to 1) for TRUE, and not defined at all for FALSE. All such
+macros are listed as a commented #undef in config.h.generic. Macros such as
+MATCH_LIMIT, whose actual value is relevant, have defaults defined, but are
+surrounded by #ifndef/#endif lines so that the value can be overridden by -D.
+
+PCRE uses memmove() if HAVE_MEMMOVE is defined; otherwise it uses bcopy() if
+HAVE_BCOPY is defined. If your system has neither bcopy() nor memmove(), make
+sure both macros are undefined; an emulation function will then be used. */])
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS(limits.h sys/types.h sys/stat.h dirent.h windows.h)
+AC_CHECK_HEADERS(limits.h sys/types.h sys/stat.h dirent.h)
+AC_CHECK_HEADERS([windows.h], [HAVE_WINDOWS_H=1])
 
 # The files below are C++ header files.
 pcre_have_type_traits="0"
@@ -669,11 +687,15 @@ if test "$enable_pcre32" = "yes"; then
     Define to any value to enable the 32 bit PCRE library.])
 fi
 
+# Unless running under Windows, JIT support requires pthreads.
+
 if test "$enable_jit" = "yes"; then
-  AX_PTHREAD([], [AC_MSG_ERROR([JIT support requires pthreads])])
-  CC="$PTHREAD_CC"
-  CFLAGS="$PTHREAD_CFLAGS $CFLAGS"
-  LIBS="$PTHREAD_LIBS $LIBS"
+  if test "$HAVE_WINDOWS_H" != "1"; then
+    AX_PTHREAD([], [AC_MSG_ERROR([JIT support requires pthreads])])
+    CC="$PTHREAD_CC"
+    CFLAGS="$PTHREAD_CFLAGS $CFLAGS"
+    LIBS="$PTHREAD_LIBS $LIBS"
+  fi
   AC_DEFINE([SUPPORT_JIT], [], [
     Define to any value to enable support for Just-In-Time compiling.])
 else
@@ -722,7 +744,12 @@ if test "$enable_pcregrep_libbz2" = "yes"; then
 fi
 
 if test $with_pcregrep_bufsize -lt 8192 ; then
+  AC_MSG_WARN([$with_pcregrep_bufsize is too small for --with-pcregrep-bufsize; using 8192])
   with_pcregrep_bufsize="8192"
+else
+  if test $? -gt 1 ; then
+  AC_MSG_ERROR([Bad value for  --with-pcregrep-bufsize])
+  fi
 fi
 
 AC_DEFINE_UNQUOTED([PCREGREP_BUFSIZE], [$with_pcregrep_bufsize], [
@@ -772,6 +799,11 @@ AC_DEFINE_UNQUOTED([POSIX_MALLOC_THRESHOLD], [$with_posix_malloc_threshold], [
   small, the wrapper function uses space on the stack, because this is
   faster than using malloc() for each call. The threshold above which
   the stack is no longer used is defined by POSIX_MALLOC_THRESHOLD.])
+
+AC_DEFINE_UNQUOTED([PARENS_NEST_LIMIT], [$with_parens_nest_limit], [
+  The value of PARENS_NEST_LIMIT specifies the maximum depth of nested
+  parentheses (of any kind) in a pattern. This limits the amount of system
+  stack that is used while compiling a pattern.])
 
 AC_DEFINE_UNQUOTED([MATCH_LIMIT], [$with_match_limit], [
   The value of MATCH_LIMIT determines the default number of times the
@@ -838,7 +870,7 @@ fi
 
 if test "$enable_valgrind" = "yes"; then
   AC_DEFINE_UNQUOTED([SUPPORT_VALGRIND], [], [
-     Valgrind support to find invalid memory reads.])
+     Define to any value for valgrind support to find invalid memory reads.])
 fi
 
 # Platform specific issues
@@ -946,7 +978,7 @@ if test "$enable_pcretest_libreadline" = "yes"; then
   fi
 fi
 
-# Check for valgrind
+# Handle valgrind support
 
 if test "$enable_valgrind" = "yes"; then
   m4_ifdef([PKG_CHECK_MODULES],
@@ -954,7 +986,7 @@ if test "$enable_valgrind" = "yes"; then
            [AC_MSG_ERROR([pkg-config not supported])])
 fi
 
-# test code coverage reporting
+# Handle code coverage reporting support
 if test "$enable_coverage" = "yes"; then
   if test "x$GCC" != "xyes"; then
     AC_MSG_ERROR([Code coverage reports can only be generated when using GCC])
@@ -985,11 +1017,7 @@ if test "$enable_coverage" = "yes"; then
     AC_MSG_ERROR([genhtml not found])
   fi
 
-  AC_DEFINE([SUPPORT_GCOV],[1], [
-    Define to allow pcretest and pcregrep to be linked with gcov, so that they
-    are able to generate code coverage reports.])
-
-  # And add flags needed for gcov
+  # Set flags needed for gcov
   GCOV_CFLAGS="-O0 -ggdb3 -fprofile-arcs -ftest-coverage"
   GCOV_CXXFLAGS="-O0 -ggdb3 -fprofile-arcs -ftest-coverage"
   GCOV_LIBS="-lgcov"
@@ -1064,6 +1092,7 @@ $PACKAGE-$VERSION configuration summary:
     Use stack recursion ............. : ${enable_stack_for_recursion}
     POSIX mem threshold ............. : ${with_posix_malloc_threshold}
     Internal link size .............. : ${with_link_size}
+    Nested parentheses limit ........ : ${with_parens_nest_limit}
     Match limit ..................... : ${with_match_limit}
     Match limit recursion ........... : ${with_match_limit_recursion}
     Build shared libs ............... : ${enable_shared}

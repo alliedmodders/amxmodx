@@ -1,4 +1,4 @@
-.TH PCRE 3 "11 November 2012" "PCRE 8.32"
+.TH PCRE 3 "08 January 2014" "PCRE 8.35"
 .SH NAME
 PCRE - Perl-compatible regular expressions
 .SH INTRODUCTION
@@ -19,9 +19,9 @@ built. The majority of the work to make this possible was done by Zoltan
 Herczeg.
 .P
 Starting with release 8.32 it is possible to compile a third separate PCRE
-library, which supports 32-bit character strings (including
-UTF-32 strings). The build process allows any set of the 8-, 16- and 32-bit
-libraries. The work to make this possible was done by Christian Persch.
+library that supports 32-bit character strings (including UTF-32 strings). The
+build process allows any combination of the 8-, 16- and 32-bit libraries. The
+work to make this possible was done by Christian Persch.
 .P
 The three libraries contain identical sets of functions, except that the names
 in the 16-bit library start with \fBpcre16_\fP instead of \fBpcre_\fP, and the
@@ -44,7 +44,7 @@ The current implementation of PCRE corresponds approximately with Perl 5.12,
 including support for UTF-8/16/32 encoded strings and Unicode general category
 properties. However, UTF-8/16/32 and Unicode support has to be explicitly
 enabled; it is not the default. The Unicode tables correspond to Unicode
-release 6.2.0.
+release 6.3.0.
 .P
 In addition to the Perl-compatible matching function, PCRE contains an
 alternative function that matches the same compiled patterns in a different
@@ -68,6 +68,7 @@ in the \fIContrib\fP directory at the primary FTP site, which is:
 .\" HTML <a href="ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre">
 .\" </a>
 ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre
+.\"
 .P
 Details of exactly which Perl regular expression features are and are not
 supported by PCRE are given in separate documents. See the
@@ -95,8 +96,17 @@ available. The features themselves are described in the
 \fBpcrebuild\fP
 .\"
 page. Documentation about building PCRE for various operating systems can be
-found in the \fBREADME\fP and \fBNON-AUTOTOOLS_BUILD\fP files in the source
-distribution.
+found in the
+.\" HTML <a href="README.txt">
+.\" </a>
+\fBREADME\fP
+.\"
+and
+.\" HTML <a href="NON-AUTOTOOLS-BUILD.txt">
+.\" </a>
+\fBNON-AUTOTOOLS_BUILD\fP
+.\"
+files in the source distribution.
 .P
 The libraries contains a number of undocumented internal functions and data
 tables that are used by more than one of the exported external functions, but
@@ -121,8 +131,11 @@ checked for UTF-8 validity. If the data string is very long, such a check might
 use sufficiently many resources as to cause your application to lose
 performance.
 .P
-The best way of guarding against this possibility is to use the
+One way of guarding against this possibility is to use the
 \fBpcre_fullinfo()\fP function to check the compiled pattern's options for UTF.
+Alternatively, from release 8.33, you can set the PCRE_NEVER_UTF option at
+compile time. This causes an compile time error if a pattern contains a
+UTF-setting sequence.
 .P
 If your application is one that supports UTF, be aware that validity checking
 can take time. If the same data string is to be matched many times, you can use
@@ -145,15 +158,18 @@ page.
 The user documentation for PCRE comprises a number of different sections. In
 the "man" format, each of these is a separate "man page". In the HTML format,
 each is a separate page, linked from the index page. In the plain text format,
-all the sections, except the \fBpcredemo\fP section, are concatenated, for ease
-of searching. The sections are as follows:
+the descriptions of the \fBpcregrep\fP and \fBpcretest\fP programs are in files
+called \fBpcregrep.txt\fP and \fBpcretest.txt\fP, respectively. The remaining
+sections, except for the \fBpcredemo\fP section (which is a program listing),
+are concatenated in \fBpcre.txt\fP, for ease of searching. The sections are as
+follows:
 .sp
   pcre              this document
+  pcre-config       show PCRE installation configuration information
   pcre16            details of the 16-bit library
   pcre32            details of the 32-bit library
-  pcre-config       show PCRE installation configuration information
   pcreapi           details of PCRE's native C API
-  pcrebuild         options for building PCRE
+  pcrebuild         building PCRE
   pcrecallout       details of the callout feature
   pcrecompat        discussion of Perl compatibility
   pcrecpp           details of the C++ wrapper for the 8-bit library
@@ -175,8 +191,8 @@ of searching. The sections are as follows:
   pcretest          description of the \fBpcretest\fP testing command
   pcreunicode       discussion of Unicode and UTF-8/16/32 support
 .sp
-In addition, in the "man" and HTML formats, there is a short page for each
-C library function, listing its arguments and results.
+In the "man" and HTML formats, there is also a short page for each C library
+function, listing its arguments and results.
 .
 .
 .SH AUTHOR
@@ -197,6 +213,6 @@ two digits 10, at the domain cam.ac.uk.
 .rs
 .sp
 .nf
-Last updated: 11 November 2012
-Copyright (c) 1997-2012 University of Cambridge.
+Last updated: 08 January 2014
+Copyright (c) 1997-2014 University of Cambridge.
 .fi

@@ -14,21 +14,22 @@ man page, in case the conversion went wrong.
 <br>
 <ul>
 <li><a name="TOC1" href="#SEC1">SYNOPSIS</a>
-<li><a name="TOC2" href="#SEC2">PCRE's 8-BIT, 16-BIT AND 32-BIT LIBRARIES</a>
-<li><a name="TOC3" href="#SEC3">COMMAND LINE OPTIONS</a>
-<li><a name="TOC4" href="#SEC4">DESCRIPTION</a>
-<li><a name="TOC5" href="#SEC5">PATTERN MODIFIERS</a>
-<li><a name="TOC6" href="#SEC6">DATA LINES</a>
-<li><a name="TOC7" href="#SEC7">THE ALTERNATIVE MATCHING FUNCTION</a>
-<li><a name="TOC8" href="#SEC8">DEFAULT OUTPUT FROM PCRETEST</a>
-<li><a name="TOC9" href="#SEC9">OUTPUT FROM THE ALTERNATIVE MATCHING FUNCTION</a>
-<li><a name="TOC10" href="#SEC10">RESTARTING AFTER A PARTIAL MATCH</a>
-<li><a name="TOC11" href="#SEC11">CALLOUTS</a>
-<li><a name="TOC12" href="#SEC12">NON-PRINTING CHARACTERS</a>
-<li><a name="TOC13" href="#SEC13">SAVING AND RELOADING COMPILED PATTERNS</a>
-<li><a name="TOC14" href="#SEC14">SEE ALSO</a>
-<li><a name="TOC15" href="#SEC15">AUTHOR</a>
-<li><a name="TOC16" href="#SEC16">REVISION</a>
+<li><a name="TOC2" href="#SEC2">INPUT DATA FORMAT</a>
+<li><a name="TOC3" href="#SEC3">PCRE's 8-BIT, 16-BIT AND 32-BIT LIBRARIES</a>
+<li><a name="TOC4" href="#SEC4">COMMAND LINE OPTIONS</a>
+<li><a name="TOC5" href="#SEC5">DESCRIPTION</a>
+<li><a name="TOC6" href="#SEC6">PATTERN MODIFIERS</a>
+<li><a name="TOC7" href="#SEC7">DATA LINES</a>
+<li><a name="TOC8" href="#SEC8">THE ALTERNATIVE MATCHING FUNCTION</a>
+<li><a name="TOC9" href="#SEC9">DEFAULT OUTPUT FROM PCRETEST</a>
+<li><a name="TOC10" href="#SEC10">OUTPUT FROM THE ALTERNATIVE MATCHING FUNCTION</a>
+<li><a name="TOC11" href="#SEC11">RESTARTING AFTER A PARTIAL MATCH</a>
+<li><a name="TOC12" href="#SEC12">CALLOUTS</a>
+<li><a name="TOC13" href="#SEC13">NON-PRINTING CHARACTERS</a>
+<li><a name="TOC14" href="#SEC14">SAVING AND RELOADING COMPILED PATTERNS</a>
+<li><a name="TOC15" href="#SEC15">SEE ALSO</a>
+<li><a name="TOC16" href="#SEC16">AUTHOR</a>
+<li><a name="TOC17" href="#SEC17">REVISION</a>
 </ul>
 <br><a name="SEC1" href="#TOC1">SYNOPSIS</a><br>
 <P>
@@ -63,25 +64,34 @@ conjunction with the test script and data files that are distributed as part of
 PCRE, and are unlikely to be of use otherwise. They are all documented here,
 but without much justification.
 </P>
-<br><a name="SEC2" href="#TOC1">PCRE's 8-BIT, 16-BIT AND 32-BIT LIBRARIES</a><br>
+<br><a name="SEC2" href="#TOC1">INPUT DATA FORMAT</a><br>
+<P>
+Input to <b>pcretest</b> is processed line by line, either by calling the C
+library's <b>fgets()</b> function, or via the <b>libreadline</b> library (see
+below). In Unix-like environments, <b>fgets()</b> treats any bytes other than
+newline as data characters. However, in some Windows environments character 26
+(hex 1A) causes an immediate end of file, and no further data is read. For
+maximum portability, therefore, it is safest to use only ASCII characters in
+<b>pcretest</b> input files.
+</P>
+<br><a name="SEC3" href="#TOC1">PCRE's 8-BIT, 16-BIT AND 32-BIT LIBRARIES</a><br>
 <P>
 From release 8.30, two separate PCRE libraries can be built. The original one
 supports 8-bit character strings, whereas the newer 16-bit library supports
-character strings encoded in 16-bit units. From release 8.32, a third
-library can be built, supporting character strings encoded in 32-bit units.
-The <b>pcretest</b> program can be
-used to test all three libraries. However, it is itself still an 8-bit program,
-reading 8-bit input and writing 8-bit output. When testing the 16-bit or 32-bit
-library, the patterns and data strings are converted to 16- or 32-bit format
-before being passed to the PCRE library functions. Results are converted to
-8-bit for output.
+character strings encoded in 16-bit units. From release 8.32, a third library
+can be built, supporting character strings encoded in 32-bit units. The
+<b>pcretest</b> program can be used to test all three libraries. However, it is
+itself still an 8-bit program, reading 8-bit input and writing 8-bit output.
+When testing the 16-bit or 32-bit library, the patterns and data strings are
+converted to 16- or 32-bit format before being passed to the PCRE library
+functions. Results are converted to 8-bit for output.
 </P>
 <P>
 References to functions and structures of the form <b>pcre[16|32]_xx</b> below
-mean "<b>pcre_xx</b> when using the 8-bit library or <b>pcre16_xx</b> when using
-the 16-bit library".
+mean "<b>pcre_xx</b> when using the 8-bit library, <b>pcre16_xx</b> when using
+the 16-bit library, or <b>pcre32_xx</b> when using the 32-bit library".
 </P>
-<br><a name="SEC3" href="#TOC1">COMMAND LINE OPTIONS</a><br>
+<br><a name="SEC4" href="#TOC1">COMMAND LINE OPTIONS</a><br>
 <P>
 <b>-8</b>
 If both the 8-bit library has been built, this option causes the 8-bit library
@@ -110,23 +120,30 @@ internal form is output after compilation.
 <P>
 <b>-C</b>
 Output the version number of the PCRE library, and all available information
-about the optional features that are included, and then exit. All other options
-are ignored.
+about the optional features that are included, and then exit with zero exit
+code. All other options are ignored.
 </P>
 <P>
 <b>-C</b> <i>option</i>
 Output information about a specific build-time option, then exit. This
 functionality is intended for use in scripts such as <b>RunTest</b>. The
-following options output the value indicated:
+following options output the value and set the exit code as indicated:
 <pre>
   ebcdic-nl  the code for LF (= NL) in an EBCDIC environment:
                0x15 or 0x25
                0 if used in an ASCII environment
-  linksize   the internal link size (2, 3, or 4)
+               exit code is always 0
+  linksize   the configured internal link size (2, 3, or 4)
+               exit code is set to the link size
   newline    the default newline setting:
                CR, LF, CRLF, ANYCRLF, or ANY
+               exit code is always 0
+  bsr        the default setting for what \R matches:
+               ANYCRLF or ANY
+               exit code is always 0
 </pre>
-The following options output 1 for true or zero for false:
+The following options output 1 for true or 0 for false, and set the exit code
+to the same value:
 <pre>
   ebcdic     compiled for an EBCDIC environment
   jit        just-in-time support is available
@@ -134,8 +151,10 @@ The following options output 1 for true or zero for false:
   pcre32     the 32-bit library was built
   pcre8      the 8-bit library was built
   ucp        Unicode property support is available
-  utf        UTF-8 and/or UTF-16 and/or UTF-32 support is available
-</PRE>
+  utf        UTF-8 and/or UTF-16 and/or UTF-32 support
+               is available
+</pre>
+If an unknown option is given, an error message is output; the exit code is 0.
 </P>
 <P>
 <b>-d</b>
@@ -169,6 +188,11 @@ calling <b>pcre[16|32]_exec()</b> repeatedly with different limits.
 Output the size of each compiled pattern after it has been compiled. This is
 equivalent to adding <b>/M</b> to each regular expression. The size is given in
 bytes for both libraries.
+</P>
+<P>
+<b>-O</b>
+Behave as if each pattern has the <b>/O</b> modifier, that is disable
+auto-possessification for all patterns.
 </P>
 <P>
 <b>-o</b> <i>osize</i>
@@ -240,20 +264,25 @@ should never be studied (see the <b>/S</b> pattern modifier below).
 </P>
 <P>
 <b>-t</b>
-Run each compile, study, and match many times with a timer, and output
-resulting time per compile or match (in milliseconds). Do not set <b>-m</b> with
-<b>-t</b>, because you will then get the size output a zillion times, and the
-timing will be distorted. You can control the number of iterations that are
-used for timing by following <b>-t</b> with a number (as a separate item on the
-command line). For example, "-t 1000" would iterate 1000 times. The default is
-to iterate 500000 times.
+Run each compile, study, and match many times with a timer, and output the
+resulting times per compile, study, or match (in milliseconds). Do not set
+<b>-m</b> with <b>-t</b>, because you will then get the size output a zillion
+times, and the timing will be distorted. You can control the number of
+iterations that are used for timing by following <b>-t</b> with a number (as a
+separate item on the command line). For example, "-t 1000" iterates 1000 times.
+The default is to iterate 500000 times.
 </P>
 <P>
 <b>-tm</b>
 This is like <b>-t</b> except that it times only the matching phase, not the
 compile or study phases.
 </P>
-<br><a name="SEC4" href="#TOC1">DESCRIPTION</a><br>
+<P>
+<b>-T</b> <b>-TM</b>
+These behave like <b>-t</b> and <b>-tm</b>, but in addition, at the end of a run,
+the total times for all compiles, studies, and matches are output.
+</P>
+<br><a name="SEC5" href="#TOC1">DESCRIPTION</a><br>
 <P>
 If <b>pcretest</b> is given two filename arguments, it reads from the first and
 writes to the second. If it is given only one filename argument, it reads from
@@ -271,7 +300,7 @@ option states whether or not <b>readline()</b> will be used.
 <P>
 The program handles any number of sets of input on a single input file. Each
 set starts with a regular expression, and continues with any number of data
-lines to be matched against the pattern.
+lines to be matched against that pattern.
 </P>
 <P>
 Each data line is matched separately and independently. If you want to do
@@ -310,7 +339,7 @@ backslash, because
 is interpreted as the first line of a pattern that starts with "abc/", causing
 pcretest to read the next line as a continuation of the regular expression.
 </P>
-<br><a name="SEC5" href="#TOC1">PATTERN MODIFIERS</a><br>
+<br><a name="SEC6" href="#TOC1">PATTERN MODIFIERS</a><br>
 <P>
 A pattern may be followed by any number of modifiers, which are mostly single
 characters, though some of these can be qualified by further characters.
@@ -323,6 +352,7 @@ fall into several groups that are described in detail in the following
 sections.
 <pre>
   <b>/8</b>              set UTF mode
+  <b>/9</b>              set PCRE_NEVER_UTF (locks out UTF mode)
   <b>/?</b>              disable UTF validity check
   <b>/+</b>              show remainder of subject after match
   <b>/=</b>              show all captures (not just those that are set)
@@ -344,7 +374,9 @@ sections.
   <b>/M</b>              show compiled memory size
   <b>/m</b>              set PCRE_MULTILINE
   <b>/N</b>              set PCRE_NO_AUTO_CAPTURE
+  <b>/O</b>              set PCRE_NO_AUTO_POSSESS
   <b>/P</b>              use the POSIX wrapper
+  <b>/Q</b>              test external stack check function
   <b>/S</b>              study the pattern after compilation
   <b>/s</b>              set PCRE_DOTALL
   <b>/T</b>              select character tables
@@ -395,12 +427,14 @@ options that do not correspond to anything in Perl:
   <b>/8</b>              PCRE_UTF32          ) when using the 32-bit
   <b>/?</b>              PCRE_NO_UTF32_CHECK )   library
 
+  <b>/9</b>              PCRE_NEVER_UTF
   <b>/A</b>              PCRE_ANCHORED
   <b>/C</b>              PCRE_AUTO_CALLOUT
   <b>/E</b>              PCRE_DOLLAR_ENDONLY
   <b>/f</b>              PCRE_FIRSTLINE
   <b>/J</b>              PCRE_DUPNAMES
   <b>/N</b>              PCRE_NO_AUTO_CAPTURE
+  <b>/O</b>              PCRE_NO_AUTO_POSSESS
   <b>/U</b>              PCRE_UNGREEDY
   <b>/W</b>              PCRE_UCP
   <b>/X</b>              PCRE_EXTRA
@@ -504,7 +538,10 @@ below.
 The <b>/I</b> modifier requests that <b>pcretest</b> output information about the
 compiled pattern (whether it is anchored, has a fixed first character, and
 so on). It does this by calling <b>pcre[16|32]_fullinfo()</b> after compiling a
-pattern. If the pattern is studied, the results of that are also output.
+pattern. If the pattern is studied, the results of that are also output. In
+this output, the word "char" means a non-UTF character, that is, the value of a
+single data item (8-bit, 16-bit, or 32-bit, depending on the library that is
+being tested).
 </P>
 <P>
 The <b>/K</b> modifier requests <b>pcretest</b> to show names from backtracking
@@ -538,14 +575,22 @@ successfully studied with the PCRE_STUDY_JIT_COMPILE option, the size of the
 JIT compiled code is also output.
 </P>
 <P>
+The <b>/Q</b> modifier is used to test the use of <b>pcre_stack_guard</b>. It
+must be followed by '0' or '1', specifying the return code to be given from an
+external function that is passed to PCRE and used for stack checking during
+compilation (see the
+<a href="pcreapi.html"><b>pcreapi</b></a>
+documentation for details).
+</P>
+<P>
 The <b>/S</b> modifier causes <b>pcre[16|32]_study()</b> to be called after the
 expression has been compiled, and the results used when the expression is
 matched. There are a number of qualifying characters that may follow <b>/S</b>.
 They may appear in any order.
 </P>
 <P>
-If <b>S</b> is followed by an exclamation mark, <b>pcre[16|32]_study()</b> is called
-with the PCRE_STUDY_EXTRA_NEEDED option, causing it always to return a
+If <b>/S</b> is followed by an exclamation mark, <b>pcre[16|32]_study()</b> is
+called with the PCRE_STUDY_EXTRA_NEEDED option, causing it always to return a
 <b>pcre_extra</b> block, even when studying discovers no useful information.
 </P>
 <P>
@@ -624,7 +669,38 @@ function:
 The <b>/+</b> modifier works as described above. All other modifiers are
 ignored.
 </P>
-<br><a name="SEC6" href="#TOC1">DATA LINES</a><br>
+<br><b>
+Locking out certain modifiers
+</b><br>
+<P>
+PCRE can be compiled with or without support for certain features such as
+UTF-8/16/32 or Unicode properties. Accordingly, the standard tests are split up
+into a number of different files that are selected for running depending on
+which features are available. When updating the tests, it is all too easy to
+put a new test into the wrong file by mistake; for example, to put a test that
+requires UTF support into a file that is used when it is not available. To help
+detect such mistakes as early as possible, there is a facility for locking out
+specific modifiers. If an input line for <b>pcretest</b> starts with the string
+"&#60; forbid " the following sequence of characters is taken as a list of
+forbidden modifiers. For example, in the test files that must not use UTF or
+Unicode property support, this line appears:
+<pre>
+  &#60; forbid 8W
+</pre>
+This locks out the /8 and /W modifiers. An immediate error is given if they are
+subsequently encountered. If the character string contains &#60; but not &#62;, all the
+multi-character modifiers that begin with &#60; are locked out. Otherwise, such
+modifiers must be explicitly listed, for example:
+<pre>
+  &#60; forbid &#60;JS&#62;&#60;cr&#62;
+</pre>
+There must be a single space between &#60; and "forbid" for this feature to be
+recognised. If there is not, the line is interpreted either as a request to
+re-load a pre-compiled pattern (see "SAVING AND RELOADING COMPILED PATTERNS"
+below) or, if there is a another &#60; character, as a pattern that uses &#60; as its
+delimiter.
+</P>
+<br><a name="SEC7" href="#TOC1">DATA LINES</a><br>
 <P>
 Before each data line is passed to <b>pcre[16|32]_exec()</b>, leading and trailing
 white space is removed, and it is then scanned for \ escapes. Some of these
@@ -644,6 +720,7 @@ recognized:
   \v         vertical tab (\x0b)
   \nnn       octal character (up to 3 octal digits); always
                a byte unless &#62; 255 in UTF-8 or 16-bit or 32-bit mode
+  \o{dd...}  octal character (any number of octal digits}
   \xhh       hexadecimal byte (up to 2 hex digits)
   \x{hh...}  hexadecimal character (any number of hex digits)
   \A         pass the PCRE_ANCHORED option to <b>pcre[16|32]_exec()</b> or <b>pcre[16|32]_dfa_exec()</b>
@@ -748,7 +825,7 @@ API to be used, the only option-setting sequences that have any effect are \B,
 \N, and \Z, causing REG_NOTBOL, REG_NOTEMPTY, and REG_NOTEOL, respectively,
 to be passed to <b>regexec()</b>.
 </P>
-<br><a name="SEC7" href="#TOC1">THE ALTERNATIVE MATCHING FUNCTION</a><br>
+<br><a name="SEC8" href="#TOC1">THE ALTERNATIVE MATCHING FUNCTION</a><br>
 <P>
 By default, <b>pcretest</b> uses the standard PCRE matching function,
 <b>pcre[16|32]_exec()</b> to match each data line. PCRE also supports an
@@ -765,7 +842,7 @@ This function finds all possible matches at a given point. If, however, the \F
 escape sequence is present in the data line, it stops after the first match is
 found. This is always the shortest possible match.
 </P>
-<br><a name="SEC8" href="#TOC1">DEFAULT OUTPUT FROM PCRETEST</a><br>
+<br><a name="SEC9" href="#TOC1">DEFAULT OUTPUT FROM PCRETEST</a><br>
 <P>
 This section describes the output when the normal matching function,
 <b>pcre[16|32]_exec()</b>, is being used.
@@ -856,7 +933,7 @@ prompt is used for continuations), data lines may not. However newlines can be
 included in data by means of the \n escape (or \r, \r\n, etc., depending on
 the newline sequence setting).
 </P>
-<br><a name="SEC9" href="#TOC1">OUTPUT FROM THE ALTERNATIVE MATCHING FUNCTION</a><br>
+<br><a name="SEC10" href="#TOC1">OUTPUT FROM THE ALTERNATIVE MATCHING FUNCTION</a><br>
 <P>
 When the alternative matching function, <b>pcre[16|32]_dfa_exec()</b>, is used (by
 means of the \D escape sequence or the <b>-dfa</b> command line option), the
@@ -892,7 +969,7 @@ at the end of the longest match. For example:
 Since the matching function does not support substring capture, the escape
 sequences that are concerned with captured substrings are not relevant.
 </P>
-<br><a name="SEC10" href="#TOC1">RESTARTING AFTER A PARTIAL MATCH</a><br>
+<br><a name="SEC11" href="#TOC1">RESTARTING AFTER A PARTIAL MATCH</a><br>
 <P>
 When the alternative matching function has given the PCRE_ERROR_PARTIAL return,
 indicating that the subject partially matched the pattern, you can restart the
@@ -909,7 +986,7 @@ For further information about partial matching, see the
 <a href="pcrepartial.html"><b>pcrepartial</b></a>
 documentation.
 </P>
-<br><a name="SEC11" href="#TOC1">CALLOUTS</a><br>
+<br><a name="SEC12" href="#TOC1">CALLOUTS</a><br>
 <P>
 If the pattern contains any callout requests, <b>pcretest</b>'s callout function
 is called during matching. This works with both matching functions. By default,
@@ -970,7 +1047,7 @@ the
 <a href="pcrecallout.html"><b>pcrecallout</b></a>
 documentation.
 </P>
-<br><a name="SEC12" href="#TOC1">NON-PRINTING CHARACTERS</a><br>
+<br><a name="SEC13" href="#TOC1">NON-PRINTING CHARACTERS</a><br>
 <P>
 When <b>pcretest</b> is outputting text in the compiled version of a pattern,
 bytes other than 32-126 are always treated as non-printing characters are are
@@ -982,7 +1059,7 @@ string, it behaves in the same way, unless a different locale has been set for
 the pattern (using the <b>/L</b> modifier). In this case, the <b>isprint()</b>
 function to distinguish printing and non-printing characters.
 </P>
-<br><a name="SEC13" href="#TOC1">SAVING AND RELOADING COMPILED PATTERNS</a><br>
+<br><a name="SEC14" href="#TOC1">SAVING AND RELOADING COMPILED PATTERNS</a><br>
 <P>
 The facilities described in this section are not available when the POSIX
 interface to PCRE is being used, that is, when the <b>/P</b> pattern modifier is
@@ -1013,10 +1090,9 @@ writing the file, <b>pcretest</b> expects to read a new pattern.
 </P>
 <P>
 A saved pattern can be reloaded into <b>pcretest</b> by specifying &#60; and a file
-name instead of a pattern. The name of the file must not contain a &#60; character,
-as otherwise <b>pcretest</b> will interpret the line as a pattern delimited by &#60;
-characters.
-For example:
+name instead of a pattern. There must be no space between &#60; and the file name,
+which must not contain a &#60; character, as otherwise <b>pcretest</b> will
+interpret the line as a pattern delimited by &#60; characters. For example:
 <pre>
    re&#62; &#60;/some/file
   Compiled pattern loaded from /some/file
@@ -1055,14 +1131,14 @@ string using a reloaded pattern is likely to cause <b>pcretest</b> to crash.
 Finally, if you attempt to load a file that is not in the correct format, the
 result is undefined.
 </P>
-<br><a name="SEC14" href="#TOC1">SEE ALSO</a><br>
+<br><a name="SEC15" href="#TOC1">SEE ALSO</a><br>
 <P>
 <b>pcre</b>(3), <b>pcre16</b>(3), <b>pcre32</b>(3), <b>pcreapi</b>(3),
 <b>pcrecallout</b>(3),
 <b>pcrejit</b>, <b>pcrematching</b>(3), <b>pcrepartial</b>(d),
 <b>pcrepattern</b>(3), <b>pcreprecompile</b>(3).
 </P>
-<br><a name="SEC15" href="#TOC1">AUTHOR</a><br>
+<br><a name="SEC16" href="#TOC1">AUTHOR</a><br>
 <P>
 Philip Hazel
 <br>
@@ -1071,11 +1147,11 @@ University Computing Service
 Cambridge CB2 3QH, England.
 <br>
 </P>
-<br><a name="SEC16" href="#TOC1">REVISION</a><br>
+<br><a name="SEC17" href="#TOC1">REVISION</a><br>
 <P>
-Last updated: 10 September 2012
+Last updated: 09 February 2014
 <br>
-Copyright &copy; 1997-2012 University of Cambridge.
+Copyright &copy; 1997-2014 University of Cambridge.
 <br>
 <p>
 Return to the <a href="index.html">PCRE index page</a>.

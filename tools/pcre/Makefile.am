@@ -14,11 +14,16 @@ dist_doc_DATA = \
   NEWS \
   README
 
+# Note that pcrecpp.html is not in this list; it is listed separately below.
+
 dist_html_DATA = \
+  doc/html/NON-AUTOTOOLS-BUILD.txt \
+  doc/html/README.txt \
   doc/html/index.html \
+  doc/html/pcre-config.html \
   doc/html/pcre.html \
   doc/html/pcre16.html \
-  doc/html/pcre-config.html \
+  doc/html/pcre32.html \
   doc/html/pcre_assign_jit_stack.html \
   doc/html/pcre_compile.html \
   doc/html/pcre_compile2.html \
@@ -44,6 +49,7 @@ dist_html_DATA = \
   doc/html/pcre_refcount.html \
   doc/html/pcre_study.html \
   doc/html/pcre_utf16_to_host_byte_order.html \
+  doc/html/pcre_utf32_to_host_byte_order.html \
   doc/html/pcre_version.html \
   doc/html/pcreapi.html \
   doc/html/pcrebuild.html \
@@ -64,10 +70,6 @@ dist_html_DATA = \
   doc/html/pcresyntax.html \
   doc/html/pcretest.html \
   doc/html/pcreunicode.html
-
-#   doc/html/pcre32.html \
-#   doc/html/pcre_utf32_to_host_byte_order.html \
-#
 
 pcrecpp_html = doc/html/pcrecpp.html
 dist_noinst_DATA = $(pcrecpp_html)
@@ -140,14 +142,16 @@ pcre.h.generic: pcre.h.in configure.ac
 	cp -p pcre.h $@
 
 # It is more complicated for config.h.generic. We need the version that results
-# from a default configuration. We can get this by doing a configure in a
-# temporary directory. However, some trickery is needed,
-# because the source directory may already be configured. If you
-# just try running configure in a new directory, it complains. For this reason,
-# we move config.status out of the way while doing the default configuration.
-# The resulting config.h is munged by perl to put #ifdefs round any #defines
-# and to get rid of any gcc-specific visibility settings. Make sure that
-# PCRE_EXP_DEFN is unset (in case it has visibility settings).
+# from a default configuration so as to get all the default values for PCRE
+# configuration macros such as MATCH_LIMIT and NEWLINE. We can get this by
+# doing a configure in a temporary directory. However, some trickery is needed,
+# because the source directory may already be configured. If you just try
+# running configure in a new directory, it complains. For this reason, we move
+# config.status out of the way while doing the default configuration. The
+# resulting config.h is munged by perl to put #ifdefs round any #defines for
+# macros with values, and to #undef all boolean macros such as HAVE_xxx and
+# SUPPORT_xxx. We also get rid of any gcc-specific visibility settings. Make
+# sure that PCRE_EXP_DEFN is unset (in case it has visibility settings).
 config.h.generic: configure.ac
 	rm -rf $@ _generic
 	mkdir _generic
@@ -160,8 +164,10 @@ config.h.generic: configure.ac
 	  -e 'if(/PCRE_EXP_DEFN/){print"/* #undef PCRE_EXP_DEFN */\n";$$blank=0;next;}' \
 	  -e 'if(/to make a symbol visible/){next;}' \
 	  -e 'if(/__attribute__ \(\(visibility/){next;}' \
-	  -e 'if(/^#define\s(?!PACKAGE)(\w+)/){print"#ifndef $$1\n$$_#endif\n";$$blank=0;}' \
-	  -e 'else {if(/^\s*$$/){print unless $$blank; $$blank=1;} else{print;$$blank=0;}}' \
+	  -e 'if(/LT_OBJDIR/){print"/* This is ignored unless you are using libtool. */\n";}' \
+	  -e 'if(/^#define\s((?:HAVE|SUPPORT|STDC)_\w+)/){print"/* #undef $$1 */\n";$$blank=0;next;}' \
+	  -e 'if(/^#define\s(?!PACKAGE|VERSION)(\w+)/){print"#ifndef $$1\n$$_#endif\n";$$blank=0;next;}' \
+	  -e 'if(/^\s*$$/){print unless $$blank; $$blank=1;} else{print;$$blank=0;}' \
 	  _generic/config.h >$@
 	rm -rf _generic
 
@@ -344,15 +350,19 @@ EXTRA_DIST += \
   sljit/sljitExecAllocator.c \
   sljit/sljitLir.c \
   sljit/sljitLir.h \
-  sljit/sljitNativeARM_Thumb2.c \
-  sljit/sljitNativeARM_v5.c \
+  sljit/sljitNativeARM_32.c \
+  sljit/sljitNativeARM_64.c \
+  sljit/sljitNativeARM_T2_32.c \
   sljit/sljitNativeMIPS_32.c \
+  sljit/sljitNativeMIPS_64.c \
   sljit/sljitNativeMIPS_common.c \
   sljit/sljitNativePPC_32.c \
   sljit/sljitNativePPC_64.c \
   sljit/sljitNativePPC_common.c \
   sljit/sljitNativeSPARC_32.c \
   sljit/sljitNativeSPARC_common.c \
+  sljit/sljitNativeTILEGX_64.c \
+  sljit/sljitNativeTILEGX-encoder.c \
   sljit/sljitNativeX86_32.c \
   sljit/sljitNativeX86_64.c \
   sljit/sljitNativeX86_common.c \
@@ -572,6 +582,8 @@ EXTRA_DIST += \
   testdata/testoutput1 \
   testdata/testoutput2 \
   testdata/testoutput3 \
+  testdata/testoutput3A \
+  testdata/testoutput3B \
   testdata/testoutput4 \
   testdata/testoutput5 \
   testdata/testoutput6 \
@@ -610,8 +622,10 @@ CLEANFILES += \
 	teststderr \
         testtemp* \
 	testtry \
-        testNinput
-
+        testNinput \
+        testtrygrep \
+        teststderrgrep \
+        testNinputgrep
 
 # PCRE demonstration program. No longer built automatcally. The point is that
 # the users should build it themselves. So just distribute the source.
@@ -659,11 +673,13 @@ if WITH_PCRE_CPP
 pkgconfig_DATA += libpcrecpp.pc
 endif
 
+# Note that pcrecpp.3 is not in this list, but is included separately below.
+
 dist_man_MANS = \
+  doc/pcre-config.1 \
   doc/pcre.3 \
   doc/pcre16.3 \
   doc/pcre32.3 \
-  doc/pcre-config.1 \
   doc/pcre_assign_jit_stack.3 \
   doc/pcre_compile.3 \
   doc/pcre_compile2.3 \
@@ -695,6 +711,7 @@ dist_man_MANS = \
   doc/pcrebuild.3 \
   doc/pcrecallout.3 \
   doc/pcrecompat.3 \
+  doc/pcredemo.3 \
   doc/pcregrep.1 \
   doc/pcrejit.3 \
   doc/pcrelimits.3 \

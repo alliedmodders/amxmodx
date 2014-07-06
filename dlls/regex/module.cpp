@@ -1,55 +1,55 @@
 /* AMX Mod X
-*   Regular Expressions Module
-*
-* by the AMX Mod X Development Team
-*
-* This file is part of AMX Mod X.
-*
-*
-*  This program is free software; you can redistribute it and/or modify it
-*  under the terms of the GNU General Public License as published by the
-*  Free Software Foundation; either version 2 of the License, or (at
-*  your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful, but
-*  WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-*  General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software Foundation,
-*  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-*
-*  In addition, as a special exception, the author gives permission to
-*  link the code of this program with the Half-Life Game Engine ("HL
-*  Engine") and Modified Game Libraries ("MODs") developed by Valve,
-*  L.L.C ("Valve"). You must obey the GNU General Public License in all
-*  respects for all of the code used other than the HL Engine and MODs
-*  from Valve. If you modify this file, you may extend this exception
-*  to your version of the file, but you are not obligated to do so. If
-*  you do not wish to do so, delete this exception statement from your
-*  version.
-*/
+ *   Regular Expressions Module
+ *
+ * by the AMX Mod X Development Team
+ *
+ * This file is part of AMX Mod X.
+ *
+ *
+ *  This program is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation; either version 2 of the License, or (at
+ *  your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ *  General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software Foundation,
+ *  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ *  In addition, as a special exception, the author gives permission to
+ *  link the code of this program with the Half-Life Game Engine ("HL
+ *  Engine") and Modified Game Libraries ("MODs") developed by Valve,
+ *  L.L.C ("Valve"). You must obey the GNU General Public License in all
+ *  respects for all of the code used other than the HL Engine and MODs
+ *  from Valve. If you modify this file, you may extend this exception
+ *  to your version of the file, but you are not obligated to do so. If
+ *  you do not wish to do so, delete this exception statement from your
+ *  version.
+ */
 #include <string.h>
 #include "pcre.h"
 #include "amxxmodule.h"
-#include "CVector.h"
+#include <am-vector.h>
 #include "CRegEx.h"
 
-CVector<RegEx *> PEL;
+ke::Vector<RegEx *> PEL;
 
 int GetPEL()
 {
-	for (int i=0; i<(int)PEL.size(); i++)
+	for (int i=0; i<(int)PEL.length(); i++)
 	{
 		if (PEL[i]->isFree())
 			return i;
 	}
 
 	RegEx *x = new RegEx();
-	PEL.push_back(x);
+	PEL.append(x);
 
-	return (int)PEL.size() - 1;
+	return (int)PEL.length() - 1;
 }
 
 // native Regex:regex_compile(const pattern[], &ret, error[], maxLen, const flags[]="");
@@ -150,7 +150,7 @@ static cell AMX_NATIVE_CALL regex_match_c(AMX *amx, cell *params)
 	int id = params[2]-1;
 	const char *str = MF_GetAmxString(amx, params[1], 0, &len);
 
-	if (id >= (int)PEL.size() || id < 0 || PEL[id]->isFree())
+	if (id >= (int)PEL.length() || id < 0 || PEL[id]->isFree())
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid regex handle %d", id);
 		return 0;
@@ -187,7 +187,7 @@ static cell AMX_NATIVE_CALL regex_match_ex(AMX *amx, cell *params)
 {
 	int id = params[1] - 1;
 	
-	if (id >= (int)PEL.size() || id < 0 || PEL[id]->isFree())
+	if (id >= (int)PEL.length() || id < 0 || PEL[id]->isFree())
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid regex handle %d", id);
 		return 0;
@@ -226,7 +226,7 @@ static cell AMX_NATIVE_CALL regex_match_ex(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL regex_substr(AMX *amx, cell *params)
 {
 	int id = params[1]-1;
-	if (id >= (int)PEL.size() || id < 0 || PEL[id]->isFree())
+	if (id >= (int)PEL.length() || id < 0 || PEL[id]->isFree())
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid regex handle %d", id);
 		return 0;
@@ -252,7 +252,7 @@ static cell AMX_NATIVE_CALL regex_free(AMX *amx, cell *params)
 	int id = *c;
 	*c = 0;
 	id -= 1;
-	if (id >= (int)PEL.size() || id < 0 || PEL[id]->isFree())
+	if (id >= (int)PEL.length() || id < 0 || PEL[id]->isFree())
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid regex handle %d", id);
 		return 0;
@@ -282,7 +282,7 @@ void OnAmxxAttach()
 
 void OnAmxxDetach()
 {
-	for (int i = 0; i<(int)PEL.size(); i++)
+	for (int i = 0; i<(int)PEL.length(); i++)
 	{
 		if (PEL[i])
 		{

@@ -267,6 +267,61 @@ native Regex:regex_compile_ex(const pattern[], flags = 0, error[]= "", maxLen = 
 native regex_match_ex(Handle:regex, const str[], &RegexError:ret = REGEX_ERROR_NONE);
 
 /**
+ * Matches a string against a pre-compiled regular expression pattern, matching all 
+ * occurances of the pattern inside the string. This is similar to using the "g" flag 
+ * in perl regex.
+ *
+ *
+ * @param pattern		The regular expression pattern.
+ * @param string		The string to check.
+ * @param ret			Error code, if applicable, or number of results on success.
+ *
+ * @return				-2 = Matching error (error code is stored in ret)
+ *						 0 = No match.
+ *						>1 = Number of results.
+ *
+ * @note				You should free the returned handle (with regex_free())
+ *						when you are done with this pattern.
+ *
+ * @note				Use the regex handle passed to this function to extract
+ *						matches with regex_substr().
+ */
+native regex_match_all_c(const string[], Regex:pattern, &ret);
+
+/**
+ * Matches a string against a regular expression pattern, matching all occurances of the
+ * pattern inside the string. This is similar to using the "g" flag in perl regex.
+ *
+ * @note				If you intend on using the same regular expression pattern
+ *						multiple times, consider using regex_compile and regex_match_c 
+ *						instead of making this function reparse the expression each time.
+ *
+ * @param string		The string to check.
+ * @param pattern		The regular expression pattern.
+ * @param ret			Error code, or result state of the match.
+ * @param error		Error message, if applicable.
+ * @param maxLen		Maximum length of the error buffer.
+ * @param flags		General flags for the regular expression.
+ *						i = Ignore case
+ *						m = Multilines (affects ^ and $ so that they match 
+ *							the start/end of a line rather than matching the 
+ *							start/end of the string).
+ *						s = Single line (affects . so that it matches any character, 
+ *							even new line characters).
+ *						x = Pattern extension (ignore whitespace and # comments).
+ *
+ * @return				-2 = Matching error (error code is stored in ret)
+ *						-1 = Error in pattern (error message and offset # in error and ret)
+ *						 0 = No match.
+ *						>1 = Handle for getting more information (via regex_substr)
+ *
+ * @note				Flags only exist in amxmodx 1.8 and later.
+ * @note				You should free the returned handle (with regex_free())
+ *						when you are done extracting all of the substrings.
+ */
+native Regex:regex_match_all(const string[], const pattern[], &ret, error[], maxLen, const flags[] = "");
+
+/**
  * Matches a string against a regular expression pattern.
  *
  * @note  If you intend on using the same regular expression pattern
@@ -298,4 +353,4 @@ stock regex_match_simple(const str[], const pattern[], flags = 0, error[]="", ma
 	regex_free(regex);
 
 	return substrings;
-}
+} 

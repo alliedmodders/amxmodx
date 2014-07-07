@@ -42,7 +42,7 @@ RegEx::RegEx()
 	re = NULL;
 	mFree = true;
 	subject = NULL;
-	mSubStrings = 0;
+	mSubStrings.clear();
 }
 
 void RegEx::Clear()
@@ -54,9 +54,9 @@ void RegEx::Clear()
 	re = NULL;
 	mFree = true;
 	if (subject)
-		delete [] subject;
+		delete[] subject;
 	subject = NULL;
-	mSubStrings = 0;
+	mSubStrings.clear();
 }
 
 RegEx::~RegEx()
@@ -152,11 +152,11 @@ int RegEx::Match(const char *str)
 
 	if (mFree || re == NULL)
 		return -1;
-		
+
 	this->ClearMatch();
 
 	//save str
-	subject = new char[strlen(str)+1];
+	subject = new char[strlen(str) + 1];
 	strcpy(subject, str);
 
 	rc = pcre_exec(re, NULL, subject, (int)strlen(subject), 0, 0, ovector, 30);
@@ -166,37 +166,110 @@ int RegEx::Match(const char *str)
 		if (rc == PCRE_ERROR_NOMATCH)
 		{
 			return 0;
-		} else {
+		}
+		else {
 			mErrorOffset = rc;
 			return -1;
 		}
 	}
 
-	mSubStrings = rc;
+	RegExSub res;
+	mSubStrings.ensure(rc);
+
+	for (int s = 0; s < rc; ++s)
+	{
+		res.start = ovector[2 * s];
+		res.end = ovector[2 * s + 1];
+		mSubStrings.append(res);
+	}
 
 	return 1;
 }
+
+int RegEx::MatchAll(const char *str)
+{
+	int rc = 0;
+	int rr = 0;
+	int offset = 0;
+
+	if (mFree || re == NULL)
+		return -1;
+
+	this->ClearMatch();
+
+	//save str
+	subject = new char[strlen(str) + 1];
+	strcpy(subject, str);
+
+	RegExSub sub, whole;
+	while ((rr = pcre_exec(re, NULL, subject, (int)strlen(subject), offset, 0, ovector, 30)))
+	{
+		if (rr < 0)
+		{
+			if (rr == PCRE_ERROR_NOMATCH)
+			{
+				break;
+			}
+			else
+			{
+				mErrorOffset = rr;
+
+				if (rc)
+					this->ClearMatch();
+
+				return -1;
+			}
+		}
+
+		rc += rr;
+		mSubStrings.ensure(rc);
+
+		for (int s = 1; s < rr; ++s)
+		{
+			sub.start = ovector[2 * s];
+			sub.end = ovector[2 * s + 1];
+			mSubStrings.append(sub);
+		}
+
+		offset = ovector[1];
+	}
+
+	if (!rc)
+		return 0;
+
+	sub = mSubStrings.at(0);
+	whole.start = sub.start;
+	sub = mSubStrings.back();
+	whole.end = sub.end;
+
+	mSubStrings.insert(0, whole);
+
+	return 1;
+}
+
 void RegEx::ClearMatch()
 {
 	// Clears match results
 	mErrorOffset = 0;
 	mError = NULL;
 	if (subject)
-		delete [] subject;
+		delete[] subject;
 	subject = NULL;
-	mSubStrings = 0;
+	mSubStrings.clear();
 }
 
 const char *RegEx::GetSubstring(int s, char buffer[], int max)
 {
 	int i = 0;
-	if (s >= mSubStrings || s < 0)
+	if ((size_t)s >= mSubStrings.length() || s < 0)
 		return NULL;
 
-	char *substr_a = subject + ovector[2*s];
-	int substr_l = ovector[2*s+1] - ovector[2*s];
+	RegExSub sub = mSubStrings.at(s);
 
-	for (i = 0; i<substr_l; i++)
+	char *substr_a = subject + sub.start;
+	int substr_l = sub.end - sub.start;
+
+	for (i = 0; i < substr_l; i++)
 	{
 		if (i >= max)
 			break;
@@ -207,4 +280,3 @@ const char *RegEx::GetSubstring(int s, char buffer[], int max)
 
 	return buffer;
 }
-

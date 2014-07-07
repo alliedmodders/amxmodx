@@ -32,29 +32,40 @@
  */
 #ifndef _INCLUDE_CREGEX_H
 #define _INCLUDE_CREGEX_H
+ 
+#include <am-vector.h>
 
 class RegEx
 {
 public:
+	struct RegExSub {
+		int start, end;
+	};
+
 	RegEx();
 	~RegEx();
+
 	bool isFree(bool set=false, bool val=false);
 	void Clear();
 
 	int Compile(const char *pattern, const char* flags = NULL);
 	int Compile(const char *pattern, int iFlags);
 	int Match(const char *str);
+	int MatchAll(const char *str);
 	void ClearMatch();
 	const char *GetSubstring(int s, char buffer[], int max);
+
 public:
 	int mErrorOffset;
 	const char *mError;
-	int mSubStrings;
+	int Count() { return mSubStrings.length(); }
+
 private:
 	pcre *re;
 	bool mFree;
 	int ovector[30];
 	char *subject;
+	ke::Vector<RegExSub> mSubStrings;
 };
 
 #endif //_INCLUDE_CREGEX_H

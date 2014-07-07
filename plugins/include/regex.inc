@@ -51,121 +51,6 @@ enum Regex
 };
 
 /**
- * Precompile a regular expression.
- *
- * @note  Use this if you intend on using the ame expression multiple times.
- *        Pass the regex handle returned here to regex_match_c to check for matches.
- *
- * @note  This handle is automatically freed on map change.  However,
- *        if you are completely done with it before then, you should
- *        call regex_free on this handle.
- *
- * @param pattern       The regular expression pattern.
- * @param ret           Error code encountered, if applicable.
- * @param error         Error message encountered, if applicable.
- * @param maxLen        Maximum string length of the error buffer.
- * @param flags         General flags for the regular expression.
- *                      i = Ignore case
- *                      m = Multilines (affects ^ and $ so that they match
- *                          the start/end of a line rather than matching the
- *                          start/end of the string).
- *                      s = Single line (affects . so that it matches any character,
- *                          even new line characters).
- *                      x = Pattern extension (ignore whitespace and # comments).
- *
- * @return              -1 on error in the pattern, > valid regex handle (> 0) on success.
- */
-native Regex:regex_compile(const pattern[], &ret, error[], maxLen, const flags[]="");
-
-/**
- * Matches a string against a pre-compiled regular expression pattern.
- *
- * @note  You should free the returned handle with regex_free()
- *        when you are done with this pattern.
- *
- * @note  Use the regex handle passed to this function to extract
- *        matches with regex_substr().
- *
- * @param string        The string to check.
- * @param pattern       The regular expression pattern.
- * @param ret           Error code, if applicable, or number of results on success.
- *
- * @return              -2 = Matching error (error code is stored in ret)
- *                       0 = No match.
- *                      >1 = Number of results.
- */
-native regex_match_c(const string[], Regex:pattern, &ret);
-
-/**
- * Matches a string against a regular expression pattern.
- *
- * @note  If you intend on using the same regular expression pattern
- *        multiple times, consider using regex_compile and regex_match_ex
- *        instead of making this function reparse the expression each time.
- *
- * @note  Flags only exist in amxmodx 1.8 and later.
- *
- * @note  You should free the returned handle with regex_free()
- *        when you are done extracting all of the substrings.
- *
- * @param string        The string to check.
- * @param pattern       The regular expression pattern.
- * @param ret           Error code, or result state of the match.
- * @param error         Error message, if applicable.
- * @param maxLen        Maximum length of the error buffer.
- * @param flags         General flags for the regular expression.
- *                      i = Ignore case
- *                      m = Multilines (affects ^ and $ so that they match
- *                          the start/end of a line rather than matching the
- *                          start/end of the string).
- *                      s = Single line (affects . so that it matches any character,
- *                          even new line characters).
- *                      x = Pattern extension (ignore whitespace and # comments).
- *
- * @return              -2 = Matching error (error code is stored in ret)
- *                      -1 = Error in pattern (error message and offset # in error and ret)
- *                       0 = No match.
- *                      >1 = Handle for getting more information (via regex_substr)
- */
-native Regex:regex_match(const string[], const pattern[], &ret, error[], maxLen, const flags[] = "");
-
-/**
- * Returns a matched substring from a regex handle.
- *
- * @note  Substring ids start at 0 and end at ret - 1, where ret is from the corresponding
- *        regex_match, regex_match_c or regex_match_ex function call.
- *
- * @param id            The regex handle to extract data from.
- * @param str_id        The index of the expression to get - starts at 0, and ends at ret - 1.
- * @param buffer        The buffer to set to the matching substring.
- * @param maxLen        The maximum string length of the buffer.
- *
- * @return              1 on success, otherwise 0 on failure.
- */
-native regex_substr(Regex:id, str_id, buffer[], maxLen);
-
-/**
- * Frees the memory associated with a regex result, and sets the handle to 0.
- *
- * @note  This must be called on all results from regex_match() when you are done extracting
- *        the results with regex_substr().
- *
- * @note  The results of regex_compile() or regex_compile_ex() (and subsequently, regex_match_c() or regex_match_ex())
- *        only need to be freed when you are done using the pattern.
- *
- * @note  Do not use the handle again after freeing it!
- *
- * @param id            The regex handle to free.
- * @noreturn
- */
-native regex_free(&Regex:id);
-
-
-/**
- * The following natives are only available in 1.8.3 and above.
- */
-
-/**
  * Flags for compiling regex expressions.
  * These come directly from the pcre library and can be used in regex_compile_ex.
  */
@@ -187,7 +72,7 @@ native regex_free(&Regex:id);
  * Regex expression error codes.
  * This can be used with regex_compile_ex and regex_match_ex.
  */
-enum RegexError
+enum /*RegexError*/
 {
 	REGEX_ERROR_NONE           =  0,    /* No error */
 	REGEX_ERROR_NOMATCH        = -1,    /* No match was found */
@@ -229,6 +114,121 @@ enum RegexError
  * Precompile a regular expression.
  *
  * @note  Use this if you intend on using the ame expression multiple times.
+ *        Pass the regex handle returned here to regex_match_c to check for matches.
+ *
+ * @note  This handle is automatically freed on map change.  However,
+ *        if you are completely done with it before then, you should
+ *        call regex_free on this handle.
+ *
+ * @param pattern       The regular expression pattern.
+ * @param ret           Error code encountered, if applicable.
+ * @param error         Error message encountered, if applicable.
+ * @param maxLen        Maximum string length of the error buffer.
+ * @param flags         General flags for the regular expression.
+ *                      i = Ignore case
+ *                      m = Multilines (affects ^ and $ so that they match
+ *                          the start/end of a line rather than matching the
+ *                          start/end of the string).
+ *                      s = Single line (affects . so that it matches any character,
+ *                          even new line characters).
+ *                      x = Pattern extension (ignore whitespace and # comments).
+ *
+ * @return              -1 on error in the pattern, > valid regex handle (> 0) on success.
+ */
+native Regex:regex_compile(const pattern[], &ret = 0, error[] = "", maxLen = 0, const flags[]="");
+
+/**
+ * Matches a string against a pre-compiled regular expression pattern.
+ *
+ * @note  You should free the returned handle with regex_free()
+ *        when you are done with this pattern.
+ *
+ * @note  Use the regex handle passed to this function to extract
+ *        matches with regex_substr().
+ *
+ * @param string        The string to check.
+ * @param pattern       The regular expression pattern.
+ * @param ret           Error code, if applicable, or number of results on success. See REGEX_ERROR_* defines.
+ *                      
+ * @return              -2 = Matching error (error code is stored in ret)
+ *                       0 = No match.
+ *                      >1 = Number of results.
+ */
+native regex_match_c(const string[], Regex:pattern, &ret = 0);
+
+/**
+ * Matches a string against a regular expression pattern.
+ *
+ * @note  If you intend on using the same regular expression pattern
+ *        multiple times, consider using regex_compile and regex_match_ex
+ *        instead of making this function reparse the expression each time.
+ *
+ * @note  Flags only exist in amxmodx 1.8 and later.
+ *
+ * @note  You should free the returned handle with regex_free()
+ *        when you are done extracting all of the substrings.
+ *
+ * @param string        The string to check.
+ * @param pattern       The regular expression pattern.
+ * @param ret           Error code, or result state of the match.
+ * @param error         Error message, if applicable.
+ * @param maxLen        Maximum length of the error buffer.
+ * @param flags         General flags for the regular expression.
+ *                      i = Ignore case
+ *                      m = Multilines (affects ^ and $ so that they match
+ *                          the start/end of a line rather than matching the
+ *                          start/end of the string).
+ *                      s = Single line (affects . so that it matches any character,
+ *                          even new line characters).
+ *                      x = Pattern extension (ignore whitespace and # comments).
+ *
+ * @return              -2 = Matching error (error code is stored in ret)
+ *                      -1 = Error in pattern (error message and offset # in error and ret)
+ *                       0 = No match.
+ *                      >1 = Handle for getting more information (via regex_substr)
+ */
+native Regex:regex_match(const string[], const pattern[], &ret = 0, error[] = "", maxLen = 0, const flags[] = "");
+
+/**
+ * Returns a matched substring from a regex handle.
+ *
+ * @note  Substring ids start at 0 and end at ret - 1, where ret is from the corresponding
+ *        regex_match, regex_match_c or regex_match_ex function call.
+ *
+ * @param id            The regex handle to extract data from.
+ * @param str_id        The index of the expression to get - starts at 0, and ends at ret - 1.
+ * @param buffer        The buffer to set to the matching substring.
+ * @param maxLen        The maximum string length of the buffer.
+ *
+ * @return              1 on success, otherwise 0 on failure.
+ */
+native regex_substr(Regex:id, str_id, buffer[], maxLen);
+
+/**
+ * Frees the memory associated with a regex result, and sets the handle to 0.
+ *
+ * @note  This must be called on all results from regex_match() when you are done extracting
+ *        the results with regex_substr().
+ *
+ * @note  The results of regex_compile() or regex_compile_ex() (and subsequently, regex_match_c() or regex_match_ex())
+ *        only need to be freed when you are done using the pattern.
+ *
+ * @note  Do not use the handle again after freeing it!
+ *
+ * @param id            The regex handle to free.
+ * @noreturn
+ */
+native regex_free(&Regex:id);
+
+
+/**
+ * The following natives are only available in 1.8.3 and above.
+ */
+
+/**
+ * Precompile a regular expression.
+ *
+ * @note  Use this if you intend on using the ame expression multiple times.
  *        Pass the regex handle returned here to regex_match_ex() to check for matches.
  *
  * @note  Unlike regex_compile(), this allows you to use directly PCRE flags, and
@@ -238,33 +238,11 @@ enum RegexError
  * @param flags         General flags for the regular expression, see PCRE_* defines.
  * @param error         Error message encountered, if applicable.
  * @param maxLen        Maximum string length of the error buffer.
- * @param errcode       Regex type error code encountered, if applicable.
+ * @param errcode       Regex type error code encountered, if applicable. See REGEX_ERROR_* defines.
  *
  * @return              Valid regex handle (> 0) on success, or -1 on failure.
  */
-native Regex:regex_compile_ex(const pattern[], flags = 0, error[]= "", maxLen = 0, &RegexError:errcode = REGEX_ERROR_NONE);
-
-/**
- * Matches a string against a pre-compiled regular expression pattern.
- *
- * @note  Use the regex handle passed to this function to extract
- *        matches with regex_substr().
- *
- * @note  You should free the returned handle with regex_free()
- *        when you are done with this pattern.
- *
- * @note  Unlike regex_match_c(), this allows you to get a more complete
- *        set of regular expression error codes and parameter is optional.
- *
- * @param str           The string to check.
- * @param regex         Regex Handle from regex_compile_ex()
- * @param ret           Error code, if applicable.
- *
- * @return              -2 = Matching error (error code is stored in ret)
- *                       0 = No match.
- *                      >1 = Number of results.
- */
-native regex_match_ex(Handle:regex, const str[], &RegexError:ret = REGEX_ERROR_NONE);
+native Regex:regex_compile_ex(const pattern[], flags = 0, error[]= "", maxLen = 0, &errcode = 0);
 
 /**
  * Matches a string against a pre-compiled regular expression pattern, matching all 
@@ -272,54 +250,49 @@ native regex_match_ex(Handle:regex, const str[], &RegexError:ret = REGEX_ERROR_N
  * in perl regex.
  *
  *
- * @param pattern		The regular expression pattern.
- * @param string		The string to check.
- * @param ret			Error code, if applicable, or number of results on success.
+ * @param pattern       The regular expression pattern.
+ * @param string        The string to check.
+ * @param ret           Error code, if applicable, or number of results on success. 
+ *                      See REGEX_ERROR_* defines.
  *
- * @return				-2 = Matching error (error code is stored in ret)
- *						 0 = No match.
- *						>1 = Number of results.
+ * @return              -2 = Matching error (error code is stored in ret)
+ *                       0 = No match.
+ *                      >1 = Number of results.
  *
- * @note				You should free the returned handle (with regex_free())
- *						when you are done with this pattern.
+ * @note                You should free the returned handle (with regex_free())
+ *                      when you are done with this pattern.
  *
- * @note				Use the regex handle passed to this function to extract
- *						matches with regex_substr().
+ * @note                Use the regex handle passed to this function to extract
+ *                      matches with regex_substr().
  */
-native regex_match_all_c(const string[], Regex:pattern, &ret);
+native regex_match_all_c(const string[], Regex:pattern, &ret = 0);
 
 /**
  * Matches a string against a regular expression pattern, matching all occurances of the
  * pattern inside the string. This is similar to using the "g" flag in perl regex.
  *
- * @note				If you intend on using the same regular expression pattern
- *						multiple times, consider using regex_compile and regex_match_c 
- *						instead of making this function reparse the expression each time.
+ * @note  If you intend on using the same regular expression pattern
+ *        multiple times, consider using regex_compile and regex_match_ex
+ *        instead of making this function reparse the expression each time.
  *
- * @param string		The string to check.
- * @param pattern		The regular expression pattern.
- * @param ret			Error code, or result state of the match.
- * @param error		Error message, if applicable.
- * @param maxLen		Maximum length of the error buffer.
- * @param flags		General flags for the regular expression.
- *						i = Ignore case
- *						m = Multilines (affects ^ and $ so that they match 
- *							the start/end of a line rather than matching the 
- *							start/end of the string).
- *						s = Single line (affects . so that it matches any character, 
- *							even new line characters).
- *						x = Pattern extension (ignore whitespace and # comments).
+ * @note  Flags only exist in amxmodx 1.8 and later.
  *
- * @return				-2 = Matching error (error code is stored in ret)
- *						-1 = Error in pattern (error message and offset # in error and ret)
- *						 0 = No match.
- *						>1 = Handle for getting more information (via regex_substr)
+ * @note  You should free the returned handle with regex_free()
+ *        when you are done extracting all of the substrings.
  *
- * @note				Flags only exist in amxmodx 1.8 and later.
- * @note				You should free the returned handle (with regex_free())
- *						when you are done extracting all of the substrings.
+ * @param string        The string to check.
+ * @param pattern       The regular expression pattern.
+ * @param flags         General flags for the regular expression, see PCRE_* defines.
+ * @param error         Error message encountered, if applicable.
+ * @param maxLen        Maximum string length of the error buffer.
+ * @param errcode       Regex type error code encountered, if applicable. See REGEX_ERROR_* defines.
+ *
+ * @return              -2 = Matching error (error code is stored in ret)
+ *                      -1 = Error in pattern (error message and offset # in error and ret)
+ *                       0 = No match.
+ *                      >1 = Handle for getting more information (via regex_substr)
  */
-native Regex:regex_match_all(const string[], const pattern[], &ret, error[], maxLen, const flags[] = "");
+native Regex:regex_match_all(const string[], const pattern[], flags = 0, error[]= "", maxLen = 0, &errcode = 0);
 
 /**
  * Matches a string against a regular expression pattern.
@@ -339,16 +312,16 @@ native Regex:regex_match_all(const string[], const pattern[], &ret, error[], max
  *                       0 = No match.
  *                      >1 = Number of results.
  */
-stock regex_match_simple(const str[], const pattern[], flags = 0, error[]="", maxLen = 0)
+stock regex_match_simple(const str[], const pattern[], flags = 0, error[]= "", maxLen = 0, &errcode = 0)
 {
-	new Regex:regex = regex_compile_ex(pattern, flags, error, maxLen);
+	new Regex:regex = regex_compile_ex(pattern, flags, error, maxLen, errcode);
 
 	if (regex < 0)
 	{
 		return -1;
 	}
 
-	new substrings = regex_match_ex(regex, str);
+	new substrings = regex_match_c(regex, str);
 
 	regex_free(regex);
 

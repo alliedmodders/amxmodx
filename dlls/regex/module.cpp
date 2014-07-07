@@ -64,9 +64,8 @@ static cell AMX_NATIVE_CALL regex_compile(AMX *amx, cell *params)
 	
 	if (x->Compile(regex, flags) == 0)
 	{
-		cell *eOff = MF_GetAmxAddr(amx, params[2]);
 		const char *err = x->mError;
-		*eOff = x->mErrorOffset;
+		*MF_GetAmxAddr(amx, params[2]) = x->mErrorOffset;
 		MF_SetAmxString(amx, params[3], err?err:"unknown", params[4]);
 		return -1;
 	}
@@ -74,7 +73,7 @@ static cell AMX_NATIVE_CALL regex_compile(AMX *amx, cell *params)
 	return id+1;
 }
 
-// native Regex:regex_compile_ex(const pattern[], flags = 0, error[] = "", maxLen = 0, &RegexError:errcode = REGEX_ERROR_NONE);
+// native Regex:regex_compile_ex(const pattern[], flags = 0, error[] = "", maxLen = 0, &errcode = 0);
 static cell AMX_NATIVE_CALL regex_compile_ex(AMX *amx, cell *params)
 {
 	int len;
@@ -85,9 +84,8 @@ static cell AMX_NATIVE_CALL regex_compile_ex(AMX *amx, cell *params)
 
 	if (x->Compile(regex, params[2]) == 0)
 	{
-		cell *eOff = MF_GetAmxAddr(amx, params[5]);
 		const char *err = x->mError;
-		*eOff = x->mErrorOffset;
+		*MF_GetAmxAddr(amx, params[5]) = x->mErrorOffset;
 		MF_SetAmxString(amx, params[3], err ? err : "unknown", params[4]);
 		return -1;
 	}
@@ -104,23 +102,36 @@ cell match(AMX *amx, cell *params, bool all)
 	int id = GetPEL();
 	RegEx *x = PEL[id];
 
-	char* flags = NULL;
+	char *flags = NULL;
+	cell *errorCode;
+	int result = 0;
 
-	if ((params[0] / sizeof(cell)) >= 6) // compiled with 1.8's extra parameter
+	if (!all)
 	{
-		flags = MF_GetAmxString(amx, params[6], 2, &len);
+		if (*params / sizeof(cell) >= 6) // compiled with 1.8's extra parameter
+		{
+			flags = MF_GetAmxString(amx, params[6], 2, &len);
+		}
+
+		result = x->Compile(regex, flags);
+		errorCode = MF_GetAmxAddr(amx, params[3]);
+	}
+	else
+	{
+		result = x->Compile(regex, params[3]);
+		errorCode = MF_GetAmxAddr(amx, params[6]);
 	}
 
-	if (x->Compile(regex, flags) == 0)
+	if (!result)
 	{
-		cell *eOff = MF_GetAmxAddr(amx, params[3]);
 		const char *err = x->mError;
-		*eOff = x->mErrorOffset;
+		*errorCode = x->mErrorOffset;
 		MF_SetAmxString(amx, params[4], err ? err : "unknown", params[5]);
 		return -1;
 	}
 
 	int e;
+
 	if (all)
 		e = x->MatchAll(str);
 	else
@@ -129,33 +140,31 @@ cell match(AMX *amx, cell *params, bool all)
 	if (e == -1)
 	{
 		/* there was a match error.  destroy this and move on. */
-		cell *res = MF_GetAmxAddr(amx, params[3]);
-		*res = x->mErrorOffset;
+		*errorCode = x->mErrorOffset;
 		x->Clear();
 		return -2;
 	}
-	else if (e == 0) {
-		cell *res = MF_GetAmxAddr(amx, params[3]);
-		*res = 0;
+	else if (e == 0) 
+	{
+		*errorCode = 0;
 		x->Clear();
 		return 0;
 	}
-	else {
-		cell *res = MF_GetAmxAddr(amx, params[3]);
-		*res = x->Count();
+	else 
+	{
+		*errorCode = x->Count();
 	}
 
 	return id + 1;
 }
 
-// 1.8 includes the last parameter
-// Regex:regex_match(const string[], const pattern[], &ret, error[], maxLen, const flags[] = "");
+// native Regex:regex_match(const string[], const pattern[], &ret, error[], maxLen, const flags[] = "");
 static cell AMX_NATIVE_CALL regex_match(AMX *amx, cell *params)
 {
 	return match(amx, params, false);
 }
 
-// Regex:regex_match_all(const string[], const pattern[], &ret, error[], maxLen, const flags[] = "");
+// native Regex:regex_match_all(const string[], const pattern[], flags = 0, error[] = "", maxLen = 0, &errcode = 0);
 static cell AMX_NATIVE_CALL regex_match_all(AMX *amx, cell *params)
 {
 	return match(amx, params, true);
@@ -163,15 +172,17 @@ static cell AMX_NATIVE_CALL regex_match_all(AMX *amx, cell *params)
 
 cell match_c(AMX *amx, cell *params, bool all)
 {
-	int len;
 	int id = params[2] - 1;
-	const char *str = MF_GetAmxString(amx, params[1], 0, &len);
 
 	if (id >= (int)PEL.length() || id < 0 || PEL[id]->isFree())
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid regex handle %d", id);
 		return 0;
 	}
+
+	int len;
+	const char *str = MF_GetAmxString(amx, params[1], 0, &len);
+	cell *errorCode = MF_GetAmxAddr(amx, params[3]);
 
 	RegEx *x = PEL[id];
 
@@ -184,24 +195,25 @@ cell match_c(AMX *amx, cell *params, bool all)
 	if (e == -1)
 	{
 		/* there was a match error.  move on. */
-		cell *res = MF_GetAmxAddr(amx, params[3]);
-		*res = x->mErrorOffset;
+		*errorCode = x->mErrorOffset;
+
 		/* only clear the match results, since the regex object
 		may still be referenced later */
 		x->ClearMatch();
 		return -2;
 	}
-	else if (e == 0) {
-		cell *res = MF_GetAmxAddr(amx, params[3]);
-		*res = 0;
+	else if (e == 0) 
+	{
+		*errorCode = 0;
+
 		/* only clear the match results, since the regex object
 		may still be referenced later */
 		x->ClearMatch();
 		return 0;
 	}
-	else {
-		cell *res = MF_GetAmxAddr(amx, params[3]);
-		*res = x->Count();
+	else 
+	{
+		*errorCode = x->Count();
 		return x->Count();
 	}
 }
@@ -218,47 +230,7 @@ static cell AMX_NATIVE_CALL regex_match_all_c(AMX *amx, cell *params)
 	return match_c(amx, params, true);
 }
 
-// native regex_match_ex(Regex:id, const string[], &RegexError:ret = REGEX_ERROR_NONE);
-static cell AMX_NATIVE_CALL regex_match_ex(AMX *amx, cell *params)
-{
-	int id = params[1] - 1;
-	
-	if (id >= (int)PEL.length() || id < 0 || PEL[id]->isFree())
-	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid regex handle %d", id);
-		return 0;
-	}
-
-	int len;
-	const char *str = MF_GetAmxString(amx, params[2], 0, &len);
-		
-	RegEx *x = PEL[id];
-
-	int e = x->Match(str);
-	if (e == -1)
-	{
-		/* there was a match error.  move on. */
-		cell *res = MF_GetAmxAddr(amx, params[3]);
-		*res = x->mErrorOffset;
-
-		/* only clear the match results, since the regex object
-		may still be referenced later */
-		x->ClearMatch();
-		return -2;
-	}
-	else if (e == 0) 
-	{
-		/* only clear the match results, since the regex object
-		may still be referenced later */
-		x->ClearMatch();
-		return 0;
-	}
-	else 
-	{
-		return x->Count();
-	}
-}
-
+// native regex_substr(Regex:id, str_id, buffer[], maxLen);
 static cell AMX_NATIVE_CALL regex_substr(AMX *amx, cell *params)
 {
 	int id = params[1]-1;
@@ -305,7 +277,6 @@ AMX_NATIVE_INFO regex_Natives[] = {
 	{"regex_compile_ex",		regex_compile_ex},
 	{"regex_match",				regex_match},
 	{"regex_match_c",			regex_match_c},
-	{"regex_match_ex",			regex_match_ex},
 	{"regex_match_all",			regex_match_all},
 	{"regex_match_all_c",		regex_match_all_c},
 	{"regex_substr",			regex_substr},

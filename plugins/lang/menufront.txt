@@ -394,3 +394,20 @@ PAUSE_PLUG = Pauza Pluginova
 RES_WEAP = Ogranici Oruzja
 TELE_PLAYER = Teleport Igraca
 
+[ru]
+KICK_PLAYER = Кикнуть игрока
+BAN_PLAYER = Забанить игрока
+SLAP_SLAY = Ударить/Убить игрока
+TEAM_PLAYER = Команда игрока ^n
+CHANGEL = Смена карты
+VOTE_MAPS = Голосование за карту ^n
+SPECH_STUFF = Голосовые сообщения
+CLIENT_COM = Команды для клиента
+SERVER_COM = Серверные команды
+CVARS_SET = Значения переменных
+CONFIG = Конфигурации
+LANG_SET = Настройки языка
+STATS_SET = Настройки статистики ^n
+PAUSE_PLUG = Управление плагинами
+RES_WEAP = Запрет оружия
+TELE_PLAYER = Телепортировать игрока

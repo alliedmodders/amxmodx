@@ -108,3 +108,7 @@ NEXT_MAP = Slijedeca Mapa:
 PLAYED_MAP = Igrana mapa
 FRIEND_FIRE = Friendly fire
 
+[ru]
+NEXT_MAP = Следующая карта:
+PLAYED_MAP = Сыграна карта
+FRIEND_FIRE = Огонь в своих

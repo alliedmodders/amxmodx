@@ -86,3 +86,6 @@ LANG_NAME_NATIVE = Hrvatski
 LANG_NAME = Bosnian
 LANG_NAME_NATIVE = Bosanski
 
+[ru]
+LANG_NAME = Russian
+LANG_NAME_NATIVE = Русский

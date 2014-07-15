@@ -108,3 +108,7 @@ MIN_FREQ = Minimalno vrijeme prikazivanja za ovu poruku je %d sekundi
 MSG_FREQ = Vrijeme prikazivanja prolazece poruke: %d:%02d minut(a)
 MSG_DISABLED = Prolazeca poruka iskljucena
 
+[ru]
+MIN_FREQ = Частота появления этого сообщения %d секунд
+MSG_FREQ = Частота появления бегущей строки: %d:%02d минут
+MSG_DISABLED = Бегущая строка заблокирована

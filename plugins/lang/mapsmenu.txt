@@ -526,3 +526,26 @@ ADMIN_CHANGEL_1 = ADMIN: changelevel %s
 ADMIN_CHANGEL_2 = ADMIN %s: changelevel %s
 CHANGLE_MENU = Meni za mijenjanje map
 
+[ru]
+RESULT_REF = Результат не принят
+RESULT_ACC = Результат принят
+VOTE_SUCCESS = Голосование завершено. Следующая карта
+VOTE_FAILED = Голосование не состоялось
+THE_WINNER = Победитель
+WANT_CONT = Продолжить?
+VOT_CANC = Голосование отменено
+X_VOTED_FOR = %s проголосовал за #%d
+VOTEMAP_MENU = Меню создания голосования за карту
+START_VOT = Начало голосования
+SEL_MAPS = Выбранные карты
+ALREADY_VOT = Голосование уже начато...
+NO_MAPS_MENU = В меню нет карт
+VOT_NOW_ALLOW = В данный момент голосование запрещено
+WHICH_MAP = Какую карту вы бы хотели?
+CHANGE_MAP_TO = Сменить карту на
+CANC_VOTE = Отменить голосование
+ADMIN_V_MAP_1 = АДМИНИСТРАТОР: создал голосование за карту
+ADMIN_V_MAP_2 = АДМИНИСТРАТОР %s: создал голосование за карту
+ADMIN_CHANGEL_1 = АДМИНИСТРАТОР: сменил карту на %s
+ADMIN_CHANGEL_2 = АДМИНИСТРАТОР %s: сменил карту на %s
+CHANGLE_MENU = Меню для смены карты

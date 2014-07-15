@@ -283,3 +283,16 @@ INV_PAS = Pogresna lozinka!
 PAS_ACC = Lozinka prihvacena
 PRIV_SET = Privilegije podesene
 NO_ENTRY = Nemate pristup serveru...
+
+[ru]
+LOADED_ADMIN = Загружен 1 администратор из файле
+LOADED_ADMINS = Загружен список из %d администраторов из файла
+SQL_CANT_CON = Ошибка SQL: невозможно соединится с базой данных '%s'
+SQL_CANT_LOAD_ADMINS = Ошибка SQL: невозможно загрузить список администраторов из '%s
+NO_ADMINS = Не найдено ни одного администратора.
+SQL_LOADED_ADMIN = Загружен 1 администратор из базы данных
+SQL_LOADED_ADMINS = Загружен список из %d администраторов из базы данных
+INV_PAS = Неверный пароль!
+PAS_ACC = Пароль принят!
+PRIV_SET = Права доступа предоставлены
+NO_ENTRY = Вы не имеете права входа на этот сервер...

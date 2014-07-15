@@ -63,3 +63,6 @@ DROPPED_RES = Server je pun, nemate pristup rezerviranim mjestima
 
 [bs]
 DROPPED_RES = Server je pun, nemate pristup rezervisanim mjestima
+
+[ru]
+DROPPED_RES = Извините мест нет, это зарезервированный слот!

@@ -108,3 +108,7 @@ CMD_MENU = Komande
 CONF_MENU = Podesavanja
 SPE_MENU = Govorne Komande
 
+[bs]
+CMD_MENU = Меню серверных команд
+CONF_MENU = Меню конфигураций
+SPE_MENU = Меню голосовых сообщений

@@ -195,3 +195,12 @@ HELP_USE_BEGIN = Koristi 'amx_help 1' za pocetak
 TYPE_HELP = Ukucajte 'amx_help' u konzoli da bi ste vidjeli moguce komande
 TIME_INFO_1 = Preostalo Vrijeme: %d:%02d min. Slijedeca Mapa: %s
 TIME_INFO_2 = Nema vremenskog ogranicenja. Slijedeca Mapa: %s
+
+[ru]
+HELP_COMS = AMX Mod X Помощь: Команды
+HELP_ENTRIES = Список доступных команд с %d по %d. Всего команд - %d
+HELP_USE_MORE = Напишите 'amx_help %d" для продолжения
+HELP_USE_BEGIN = Напишите 'amx_help 1' для просмотра с начала
+TYPE_HELP = Напишите в консоле 'amx_help' для просмотра доступных команд
+TIME_INFO_1 = До смены карты осталось: %d:%02d мин. Следующая карта: %s
+TIME_INFO_2 = Ограничения по времени - НЕТ. Следующая карта: %s

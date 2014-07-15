@@ -482,3 +482,24 @@ CANT_PERF_BOT = Komanda ne moze biti izvrsena na botu "%s"
 ON = Ukljucen
 OFF = Iskljucen
 
+[ru]
+BACK = Назад
+EXIT = Выход
+MORE = Дальше
+NONE = Ничего
+ADMIN = АДМИНИСТРАТОР
+PLAYER = Игрок
+ERROR = ошибка
+YES = Да
+NO = Нет
+BAN = бан
+KICK = кикнуть
+NO_ACC_COM = У вас недостаточно прав для использования этой команд
+USAGE = Использование
+MORE_CL_MATCHT = По вашему запросу найден не один игрок
+CL_NOT_FOUND = Игрок с таким ником или userid не найден
+CLIENT_IMM = Игрок "%s" имеет иммунитет
+CANT_PERF_DEAD = Неприменимо к мертвому игроку "%s"
+CANT_PERF_BOT = Непременимо к боту "%s"
+ON = Вкл.
+OFF = Выкл.

@@ -196,3 +196,11 @@ CHOOSE_NEXTM = AMX izaberi slijedecu mapu
 EXTED_MAP = Produzi mapu %s
 TIME_CHOOSE = Vrijeme je da se izabere slijedeca mapa...
 
+[ru]
+CHO_FIN_EXT = Голосование завершено. Карта продлена на %.0f минут
+CHO_FIN_NEXT = Голосование завершено. Следующая карта %s
+CHOSE_EXT = %s выбрал продление карты
+X_CHOSE_X = %s выбрал %s
+CHOOSE_NEXTM = AMX Выбор следующей карты
+EXTED_MAP = Продление карты на %s
+TIME_CHOOSE = Пора выбирать следующую карту...

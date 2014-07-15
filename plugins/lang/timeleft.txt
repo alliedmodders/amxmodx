@@ -195,3 +195,12 @@ MINUTE = minut
 MINUTES = minute
 SECOND = sekund
 SECONDS = sekunde
+
+[ru]
+THE_TIME = Время
+TIME_LEFT = Осталось
+NO_T_LIMIT = Неограниченно
+MINUTE = минута
+MINUTES = минут
+SECOND = секунда
+SECONDS = секунд

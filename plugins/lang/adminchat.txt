@@ -283,3 +283,16 @@ COL_ORANGE = narandzasta
 COL_OCEAN = okean
 COL_MAROON = modra
 PRINT_ALL = (SVE) %s : %s
+
+[ru]
+COL_WHITE = белый
+COL_RED = красный
+COL_GREEN = зеленый
+COL_BLUE = синий
+COL_YELLOW = желтый
+COL_MAGENTA = пурпурный
+COL_CYAN = голубой
+COL_ORANGE = оранжевый
+COL_OCEAN = океанический
+COL_MAROON = коричневый
+PRINT_ALL = (ВСЕМ) %s :  %s

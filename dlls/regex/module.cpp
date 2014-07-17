@@ -34,7 +34,9 @@
 #include "pcre.h"
 #include "amxxmodule.h"
 #include <am-vector.h>
+#include <am-utility.h>
 #include "CRegEx.h"
+#include "utils.h"
 
 ke::Vector<RegEx *> PEL;
 
@@ -243,15 +245,24 @@ static cell AMX_NATIVE_CALL regex_substr(AMX *amx, cell *params)
 	}
 
 	RegEx *x = PEL[id];
-	//good idea? probably not.
-	static char buffer[4096];
+	static char buffer[16384]; // Same as AMXX buffer.
 
-	const char *ret = x->GetSubstring(params[2], buffer, 4095);
+	size_t length;
+	size_t maxLength = ke::Min<size_t>(params[4], sizeof(buffer) - 1);
+
+	const char *ret = x->GetSubstring(params[2], buffer, maxLength, &length);
 
 	if (ret == NULL)
+	{
 		return 0;
+	}
 
-	MF_SetAmxString(amx, params[3], ret, params[4]);
+	if (length >= maxLength && ret[length - 1] & 1 << 7)
+	{
+		maxLength -= UTIL_CheckValidChar((char *)ret + length - 1);
+	}
+
+	MF_SetAmxString(amx, params[3], ret, maxLength);
 
 	return 1;
 }

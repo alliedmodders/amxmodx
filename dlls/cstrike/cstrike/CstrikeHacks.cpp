@@ -282,7 +282,7 @@ void ToggleDetour_ClientCommands(bool enable)
 		// Used in ClientCommand to check and get fastly item id from alias name.
 		typedef struct
 		{
-			char *alias;
+			const char *alias;
 			int id;
 
 		} itemBuyAliasInfo;

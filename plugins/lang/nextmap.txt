@@ -110,5 +110,5 @@ FRIEND_FIRE = Friendly fire
 
 [ru]
 NEXT_MAP = Следующая карта:
-PLAYED_MAP = Сыграна карта
-FRIEND_FIRE = Огонь в своих
+PLAYED_MAP = Текущая карта
+FRIEND_FIRE = Огонь по своим

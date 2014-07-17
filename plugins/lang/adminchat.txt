@@ -295,4 +295,4 @@ COL_CYAN = голубой
 COL_ORANGE = оранжевый
 COL_OCEAN = морская волна
 COL_MAROON = коричневый
-PRINT_ALL = (для всех) %s : %s
+PRINT_ALL = (ВСЕМ) %s : %s

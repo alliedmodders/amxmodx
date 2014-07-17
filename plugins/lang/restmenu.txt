@@ -724,7 +724,7 @@ SAVE_SET = Sacuvaj Podesavanja
 CONF_SAV_SUC = Konfiguracija je uspjesno sacuvana
 CONF_SAV_FAIL = Konfiguracija je neuspjesno sacuvana!!
 
-[en]
+[ru]
 EQ_WE_RES = Аммуниция и оружие запрещены
 EQ_WE_UNRES = Аммуниция и оружие разрещены
 HAVE_BEEN = были

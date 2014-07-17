@@ -64,9 +64,14 @@ enum Regex
 #define PCRE_NOTEMPTY           0x00000400  /* An empty string is not a valid match. */
 #define PCRE_UTF8               0x00000800  /* Use UTF-8 Chars */
 #define PCRE_NO_UTF8_CHECK      0x00002000  /* Do not check the pattern for UTF-8 validity (only relevant if PCRE_UTF8 is set) */
+#define PCRE_NEVER_UTF          0x00010000  /* Lock out interpretation of the pattern as UTF-8 */
 #define PCRE_FIRSTLINE          0x00040000  /* Force matching to be before newline */
 #define PCRE_DUPNAMES           0x00080000  /* Allow duplicate names for subpattern */
-#define PCRE_UCP                0x20000000  /* Use Unicode properties for \ed, \ew, etc. */
+#define PCRE_NEWLINE_CR         0x00100000  /* Specify that a newline is indicated by a single character CR           )                            */
+#define PCRE_NEWLINE_CRLF       0x00300000  /* specify that a newline is indicated by the two-character CRLF sequence )  Overrides the default     */
+#define PCRE_NEWLINE_ANY        0x00400000  /* Specify that any Unicode newline sequence should be recognized.        )  newline definition (LF)   */
+#define PCRE_NEWLINE_ANYCRLF    0x00500000  /* Specify that any of CR, LF and CRLF sequences should be recognized     )                            */
+#define PCRE_UCP                0x20000000  /* Change the way PCRE processes \B, \b, \D, \d, \S, \s, \W, \w etc. to use Unicode properties */
 
 /**
  * Regex expression error codes.
@@ -120,6 +125,8 @@ enum /*RegexError*/
  *        if you are completely done with it before then, you should
  *        call regex_free on this handle.
  *
+ * @note  Consider to use regex_compilex_ex instead if you want to use PCRE_* flags.
+ *
  * @param pattern       The regular expression pattern.
  * @param ret           Error code encountered, if applicable.
  * @param error         Error message encountered, if applicable.
@@ -149,7 +156,7 @@ native Regex:regex_compile(const pattern[], &ret = 0, error[] = "", maxLen = 0, 
  * @param string        The string to check.
  * @param pattern       The regular expression pattern.
  * @param ret           Error code, if applicable, or number of results on success. See REGEX_ERROR_* defines.
- *                      
+ *
  * @return              -2 = Matching error (error code is stored in ret)
  *                       0 = No match.
  *                      >1 = Number of results.
@@ -193,7 +200,7 @@ native Regex:regex_match(const string[], const pattern[], &ret = 0, error[] = ""
  * Returns a matched substring from a regex handle.
  *
  * @note  Substring ids start at 0 and end at ret - 1, where ret is from the corresponding
- *        regex_match, regex_match_c or regex_match_ex function call.
+ *        regex_match* function call.
  *
  * @param id            The regex handle to extract data from.
  * @param str_id        The index of the expression to get - starts at 0, and ends at ret - 1.
@@ -210,7 +217,7 @@ native regex_substr(Regex:id, str_id, buffer[], maxLen);
  * @note  This must be called on all results from regex_match() when you are done extracting
  *        the results with regex_substr().
  *
- * @note  The results of regex_compile() or regex_compile_ex() (and subsequently, regex_match_c() or regex_match_ex())
+ * @note  The results of regex_compile() or regex_compile_ex() (and subsequently, regex_match_c())
  *        only need to be freed when you are done using the pattern.
  *
  * @note  Do not use the handle again after freeing it!
@@ -229,7 +236,7 @@ native regex_free(&Regex:id);
  * Precompile a regular expression.
  *
  * @note  Use this if you intend on using the ame expression multiple times.
- *        Pass the regex handle returned here to regex_match_ex() to check for matches.
+ *        Pass the regex handle returned here to regex_match_c() to check for matches.
  *
  * @note  Unlike regex_compile(), this allows you to use directly PCRE flags.
  *
@@ -244,25 +251,24 @@ native regex_free(&Regex:id);
 native Regex:regex_compile_ex(const pattern[], flags = 0, error[]= "", maxLen = 0, &errcode = 0);
 
 /**
- * Matches a string against a pre-compiled regular expression pattern, matching all 
- * occurances of the pattern inside the string. This is similar to using the "g" flag 
+ * Matches a string against a pre-compiled regular expression pattern, matching all
+ * occurances of the pattern inside the string. This is similar to using the "g" flag
  * in perl regex.
  *
+ * @note  You should free the returned handle (with regex_free())
+ *        when you are done with this pattern.
+ *
+ * @note  Use the regex handle passed to this function to extract
+ *        matches with regex_substr().
  *
  * @param pattern       The regular expression pattern.
  * @param string        The string to check.
- * @param ret           Error code, if applicable, or number of results on success. 
+ * @param ret           Error code, if applicable, or number of results on success.
  *                      See REGEX_ERROR_* defines.
  *
  * @return              -2 = Matching error (error code is stored in ret)
  *                       0 = No match.
  *                      >1 = Number of results.
- *
- * @note                You should free the returned handle (with regex_free())
- *                      when you are done with this pattern.
- *
- * @note                Use the regex handle passed to this function to extract
- *                      matches with regex_substr().
  */
 native regex_match_all_c(const string[], Regex:pattern, &ret = 0);
 
@@ -297,7 +303,7 @@ native Regex:regex_match_all(const string[], const pattern[], flags = 0, error[]
  * Matches a string against a regular expression pattern.
  *
  * @note  If you intend on using the same regular expression pattern
- *        multiple times, consider using compile regex_compilex_ex and regex_match_ex
+ *        multiple times, consider using compile regex_compile_ex and regex_match*
  *        instead of making this function reparse the expression each time.
  *
  * @param str           The string to check.
@@ -332,22 +338,22 @@ stock regex_match_simple(const str[], const pattern[], flags = 0, error[]= "", m
  * Flags to used with regex_replace, to control the replacement behavior.
  */
 #define REGEX_FORMAT_DEFAULT   0       /* Uses the standard formatting rules to replace matches */
-#define REGEX_FORMAT_NOCOPY    (1<<0)  /* The sectionsthat do not match the regular expression are not copied when replacing matches. */
-#define REGEX_FORMAT_FIRSTONLY (1<<1)  /* Only the first occurrence of a regular expression is replaced. */ 
+#define REGEX_FORMAT_NOCOPY    (1<<0)  /* The sections that do not match the regular expression are not copied when replacing matches. */
+#define REGEX_FORMAT_FIRSTONLY (1<<1)  /* Only the first occurrence of a regular expression is replaced. */
 
 /**
  * Perform a regular expression search and replace.
  *
  * An optional parameter, flags, allows to specify options on how format the expression.
  * Supported format specifiers for replace parameter:
- *   $number  : Substitutes the substring matched by group number. 
+ *   $number  : Substitutes the substring matched by group number.
  *              n must be an integer value designating a valid backreference, greater than 0, and of two digits at most.
  *   ${name}  : Substitutes the substring matched by the named group name (a maximum of 32 characters).
  *   $&       : Substitutes a copy of the whole match.
  *   $`       : Substitutes all the text of the input string before the match.
  *   $'       : Substitutes all the text of the input string after the match.
  *   $+       : Substitutes the last group that was captured.
- *   $_       : Substitutes the entire input string. 
+ *   $_       : Substitutes the entire input string.
  *   $$       : Substitutes a literal "$".
  * As note, the character \ can be also used with format specifier, this is same hehavior as $.
  *

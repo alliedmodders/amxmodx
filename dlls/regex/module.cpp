@@ -153,6 +153,8 @@ cell match(AMX *amx, cell *params, bool all)
 	else 
 	{
 		*errorCode = x->Count();
+		if (all)
+			return x->Count();
 	}
 
 	return id + 1;
@@ -272,6 +274,43 @@ static cell AMX_NATIVE_CALL regex_free(AMX *amx, cell *params)
 	return 1;
 }
 
+//native regex_replace(Regex:pattern, string[], maxLen, const replace[], flags = REGEX_FORMAT_DEFAULT, &errcode = 0);
+static cell AMX_NATIVE_CALL regex_replace(AMX *amx, cell *params)
+{
+	int id = params[1] - 1;
+	if (id >= (int)PEL.length() || id < 0 || PEL[id]->isFree())
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid regex handle %d", id);
+		return 0;
+	}
+
+	int textLen, replaceLen;
+	char *text = MF_GetAmxString(amx, params[2], 0, &textLen);
+	const char *replace = MF_GetAmxString(amx, params[4], 1, &replaceLen);
+
+	cell *erroCode = MF_GetAmxAddr(amx, params[6]);
+
+	RegEx *x = PEL[id]; 
+	int e = x->Replace(text, params[3] + 1, replace, replaceLen, params[5]);
+
+	if (e == -1)
+	{
+		*erroCode = x->mErrorOffset;
+		x->ClearMatch();
+		return -2;
+	}
+	else if (e == 0)
+	{
+		*erroCode = 0;
+		x->ClearMatch();
+		return 0;
+	}
+
+	MF_SetAmxString(amx, params[2], text, params[3]);
+
+	return e;
+}
+
 AMX_NATIVE_INFO regex_Natives[] = {
 	{"regex_compile",			regex_compile},
 	{"regex_compile_ex",		regex_compile_ex},
@@ -280,6 +319,7 @@ AMX_NATIVE_INFO regex_Natives[] = {
 	{"regex_match_all",			regex_match_all},
 	{"regex_match_all_c",		regex_match_all_c},
 	{"regex_substr",			regex_substr},
+	{"regex_replace",			regex_replace},
 	{"regex_free",				regex_free},
 	{NULL,						NULL},
 };

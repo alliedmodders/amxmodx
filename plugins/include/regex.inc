@@ -44,10 +44,10 @@
 
 enum Regex
 {
-	REGEX_MATCH_FAIL = -2,
-	REGEX_PATTERN_FAIL,
-	REGEX_NO_MATCH,
-	REGEX_OK
+	REGEX_MATCH_FAIL   = -2,
+	REGEX_PATTERN_FAIL = -1,
+	REGEX_NO_MATCH     =  0,
+	REGEX_OK           =  1
 };
 
 /**
@@ -231,8 +231,7 @@ native regex_free(&Regex:id);
  * @note  Use this if you intend on using the ame expression multiple times.
  *        Pass the regex handle returned here to regex_match_ex() to check for matches.
  *
- * @note  Unlike regex_compile(), this allows you to use directly PCRE flags, and
- *        to get a more complete set of regular expression error codes.
+ * @note  Unlike regex_compile(), this allows you to use directly PCRE flags.
  *
  * @param pattern       The regular expression pattern.
  * @param flags         General flags for the regular expression, see PCRE_* defines.
@@ -306,6 +305,7 @@ native Regex:regex_match_all(const string[], const pattern[], flags = 0, error[]
  * @param flags         General flags for the regular expression.
  * @param error         Error message, if applicable.
  * @param maxLen        Maximum length of the error buffer.
+ * @param errcode       Regex type error code encountered, if applicable. See REGEX_ERROR_* defines.
  *
  * @return              -2 = Matching error (error code is stored in ret)
  *                      -1 = Pattern error (error code is stored in ret)
@@ -326,4 +326,41 @@ stock regex_match_simple(const str[], const pattern[], flags = 0, error[]= "", m
 	regex_free(regex);
 
 	return substrings;
-} 
+}
+
+/**
+ * Flags to used with regex_replace, to control the replacement behavior.
+ */
+#define REGEX_FORMAT_DEFAULT   0       /* Uses the standard formatting rules to replace matches */
+#define REGEX_FORMAT_NOCOPY    (1<<0)  /* The sectionsthat do not match the regular expression are not copied when replacing matches. */
+#define REGEX_FORMAT_FIRSTONLY (1<<1)  /* Only the first occurrence of a regular expression is replaced. */ 
+
+/**
+ * Perform a regular expression search and replace.
+ *
+ * An optional parameter, flags, allows to specify options on how format the expression.
+ * Supported format specifiers for replace parameter:
+ *   $number  : Substitutes the substring matched by group number. 
+ *              n must be an integer value designating a valid backreference, greater than 0, and of two digits at most.
+ *   ${name}  : Substitutes the substring matched by the named group name (a maximum of 32 characters).
+ *   $&       : Substitutes a copy of the whole match.
+ *   $`       : Substitutes all the text of the input string before the match.
+ *   $'       : Substitutes all the text of the input string after the match.
+ *   $+       : Substitutes the last group that was captured.
+ *   $_       : Substitutes the entire input string. 
+ *   $$       : Substitutes a literal "$".
+ * As note, the character \ can be also used with format specifier, this is same hehavior as $.
+ *
+ * @param pattern       The regular expression pattern.
+ * @param string        The string to check.
+ * @param error         Error message, if applicable.
+ * @param maxLen        Maximum length of the error buffer.
+ * @param replace       The string will be used to replace any matches. See above for format specifiers.
+ * @param flags         General flags to control how is replaced the string. See REGEX_FORMAT_* defines.
+ * @param errcode       Regex type error code encountered, if applicable. See REGEX_ERROR_* defines.
+ *
+ * @return              -2 = Matching error (error code is stored in ret)
+ *                       0 = No match.
+ *                      >1 = Number of matches.
+ */
+native regex_replace(Regex:pattern, string[], maxLen, const replace[], flags = REGEX_FORMAT_DEFAULT, &errcode = 0);

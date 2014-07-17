@@ -99,6 +99,7 @@
     <ClCompile Include="..\CRegEx.cpp" />
     <ClCompile Include="..\module.cpp" />
     <ClCompile Include="..\sdk\amxxmodule.cpp" />
+    <ClCompile Include="..\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CRegEx.h" />
@@ -107,6 +108,7 @@
     <ClInclude Include="..\sdk\moduleconfig.h" />
     <ClInclude Include="..\sdk\CVector.h" />
     <ClInclude Include="..\sdk\amxxmodule.h" />
+    <ClInclude Include="..\utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\plugins\include\regex.inc" />

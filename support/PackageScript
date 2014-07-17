@@ -225,6 +225,7 @@ scripting_files = [
   'testsuite/menutest.sma',
   'testsuite/native_test.sma',
   'testsuite/nvault_test.sma',
+  'testsuite/regex_test.sma',
   'testsuite/sorttest.sma',
   'testsuite/strbreak.sma',
   'testsuite/sqlxtest.sma',

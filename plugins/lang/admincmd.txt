@@ -96,7 +96,7 @@ CLIENT_SLAPED = Spieler "%s" wurde mit %d Schaden geschlagen
 MAP_NOT_FOUND = Diese Map ist nicht vorhanden oder unzulaessig
 ADMIN_MAP_1 = ADMIN: wechselt zur Map %s
 ADMIN_MAP_2 = ADMIN %s: wechselt zur Map %s
-NO_MORE_CVARS = Kann keine weiteren CVAR�s fuer rcon-Berechtigung hinzufuegen!
+NO_MORE_CVARS = Kann keine weiteren CVAR´s fuer rcon-Berechtigung hinzufuegen!
 UNKNOWN_CVAR = Unbekannte CVAR: %s
 UNKNOWN_XVAR = Unbekannte XVAR: %s
 CVAR_NO_ACC = Du hast keine Berechtigung fuer diese CVAR!
@@ -968,8 +968,8 @@ ADMIN_LEAVE_2 = ADMIN %s: leave %s %s %s %s
 ADMIN_NICK_1 = ADMIN: vaihtoi pelaajan %s nickin: "%s"
 ADMIN_NICK_2 = ADMIN %s: vaihtoi pelaajan %s nickin: "%s"
 CHANGED_NICK = Vaihdoit pelaajan %s nickin: "%s"
-ADMIN_EXTEND_1 = ADMIN: Pident�� kartta varten %d minuuttia
-ADMIN_EXTEND_2 = ADMIN %s: Pident�� kartta varten %d minuuttia
+ADMIN_EXTEND_1 = ADMIN: Pidentää kartta varten %d minuuttia
+ADMIN_EXTEND_2 = ADMIN %s: Pidentää kartta varten %d minuuttia
 MAP_EXTENDED = Kartta "%s" Has ollut laajennettu varten %d minuuttia
 
 [ls]

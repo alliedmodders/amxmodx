@@ -73,7 +73,6 @@ public:
 	int Replace(char *text, size_t text_maxlen, const char *replace, size_t replaceLen, int flags = 0);
 	void ClearMatch();
 	const char *GetSubstring(size_t start, char buffer[], size_t max, size_t *outlen = NULL);
-	const char *GetSubstring(size_t start, size_t end, char buffer[], size_t max, size_t *outlen = NULL);
 	void MakeSubpatternsTable(int numSubpatterns);
 
 public:

@@ -347,7 +347,7 @@ const char *getSubstring(char *subject, size_t start, size_t end, char buffer[],
 
 const char *RegEx::GetSubstring(size_t start, char buffer[], size_t max, size_t *outlen)
 {
-	if (start < 0 || start >= mSubStrings.length())
+	if (start >= mSubStrings.length())
 	{
 		return NULL;
 	}
@@ -355,16 +355,6 @@ const char *RegEx::GetSubstring(size_t start, char buffer[], size_t max, size_t 
 	RegExSub sub = mSubStrings.at(start);
 
 	return getSubstring(subject, sub.start, sub.end, buffer, max, outlen);
-}
-
-const char *RegEx::GetSubstring(size_t startOffset, size_t endOffset, char buffer[], size_t max, size_t *outlen)
-{
-	if (startOffset < 0 || endOffset < 0)
-	{
-		return NULL;
-	}
-
-	return getSubstring(subject, startOffset, endOffset, buffer, max, outlen);
 }
 
 void RegEx::MakeSubpatternsTable(int numSubpatterns)
@@ -556,7 +546,7 @@ int RegEx::Replace(char *text, size_t textMaxLen, const char *replace, size_t re
 						 * Checking backreference.
 						 * Which can be either $n, ${n} or ${name}.
 						 */
-						size_t backref = -1;
+						int backref = -1;
 						const char *walk = s;
 						bool inBrace = false;
 						bool nameCheck = false;

@@ -1518,7 +1518,7 @@ static cell AMX_NATIVE_CALL get_grenade_id(AMX *amx, cell *params)  /* 4 param *
 	return 0;
 }
 
-static cell AMX_NATIVE_CALL set_ent_rendering(AMX *amx, cell *params) // set_user_rendering(index, fx = kRenderFxNone, r = 0, g = 0, b = 0, render = kRenderNormal, amount = 0); = 7 arguments
+static cell AMX_NATIVE_CALL set_ent_rendering(AMX *amx, cell *params) // set_ent_rendering(index, fx = kRenderFxNone, r = 0, g = 0, b = 0, render = kRenderNormal, amount = 0); = 7 arguments
 {
 	// params[1] = index
 	// params[2] = fx
@@ -1530,7 +1530,7 @@ static cell AMX_NATIVE_CALL set_ent_rendering(AMX *amx, cell *params) // set_use
 
 	CHECK_ENTITY_SIMPLE(params[1]);
 
-	edict_t *pEntity = MF_GetPlayerEdict(params[1]);
+	edict_t *pEntity = INDEXENT2(params[1]);
 
 	pEntity->v.renderfx = params[2];
 	pEntity->v.rendercolor = Vector(float(params[3]), float(params[4]), float(params[5]));

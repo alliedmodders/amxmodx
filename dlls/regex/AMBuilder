@@ -10,12 +10,15 @@ elif builder.target_platform == 'mac':
 elif builder.target_platform == 'windows':
   binary.compiler.postlink += [binary.Dep('lib_win\\pcre.lib')]
 
-binary.compiler.defines += ['PCRE_STATIC']
-
+binary.compiler.defines += [
+  'PCRE_STATIC',
+  'HAVE_STDINT_H',
+]
 binary.sources = [
   'sdk/amxxmodule.cpp',
   'module.cpp',
   'CRegEx.cpp',
+  'utils.cpp',
 ]
 
 AMXX.modules += [builder.Add(binary)]

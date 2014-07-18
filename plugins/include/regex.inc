@@ -118,14 +118,14 @@ enum /*RegexError*/
 /**
  * Precompile a regular expression.
  *
- * @note  Use this if you intend on using the ame expression multiple times.
+ * @note  Use this if you intend on using the same expression multiple times.
  *        Pass the regex handle returned here to regex_match_c to check for matches.
  *
  * @note  This handle is automatically freed on map change.  However,
  *        if you are completely done with it before then, you should
  *        call regex_free on this handle.
  *
- * @note  Consider to use regex_compilex_ex instead if you want to use PCRE_* flags.
+ * @note  Consider using regex_compile_ex instead if you want to use PCRE_* flags.
  *
  * @param pattern       The regular expression pattern.
  * @param ret           Error code encountered, if applicable.
@@ -235,10 +235,10 @@ native regex_free(&Regex:id);
 /**
  * Precompile a regular expression.
  *
- * @note  Use this if you intend on using the ame expression multiple times.
+ * @note  Use this if you intend on using the same expression multiple times.
  *        Pass the regex handle returned here to regex_match_c() to check for matches.
  *
- * @note  Unlike regex_compile(), this allows you to use directly PCRE flags.
+ * @note  Unlike regex_compile(), this allows you to use PCRE flags directly.
  *
  * @param pattern       The regular expression pattern.
  * @param flags         General flags for the regular expression, see PCRE_* defines.
@@ -252,7 +252,7 @@ native Regex:regex_compile_ex(const pattern[], flags = 0, error[]= "", maxLen = 
 
 /**
  * Matches a string against a pre-compiled regular expression pattern, matching all
- * occurances of the pattern inside the string. This is similar to using the "g" flag
+ * occurrences of the pattern inside the string. This is similar to using the "g" flag
  * in perl regex.
  *
  * @note  You should free the returned handle (with regex_free())
@@ -273,7 +273,7 @@ native Regex:regex_compile_ex(const pattern[], flags = 0, error[]= "", maxLen = 
 native regex_match_all_c(const string[], Regex:pattern, &ret = 0);
 
 /**
- * Matches a string against a regular expression pattern, matching all occurances of the
+ * Matches a string against a regular expression pattern, matching all occurrences of the
  * pattern inside the string. This is similar to using the "g" flag in perl regex.
  *
  * @note  If you intend on using the same regular expression pattern
@@ -335,7 +335,7 @@ stock regex_match_simple(const str[], const pattern[], flags = 0, error[]= "", m
 }
 
 /**
- * Flags to used with regex_replace, to control the replacement behavior.
+ * Flags used with regex_replace to control the replacement behavior.
  */
 #define REGEX_FORMAT_DEFAULT   0       /* Uses the standard formatting rules to replace matches */
 #define REGEX_FORMAT_NOCOPY    (1<<0)  /* The sections that do not match the regular expression are not copied when replacing matches. */
@@ -344,7 +344,7 @@ stock regex_match_simple(const str[], const pattern[], flags = 0, error[]= "", m
 /**
  * Perform a regular expression search and replace.
  *
- * An optional parameter, flags, allows to specify options on how format the expression.
+ * An optional parameter, flags, allows you to specify options on how the replacement is performed.
  * Supported format specifiers for replace parameter:
  *   $number  : Substitutes the substring matched by group number.
  *              n must be an integer value designating a valid backreference, greater than 0, and of two digits at most.
@@ -362,7 +362,7 @@ stock regex_match_simple(const str[], const pattern[], flags = 0, error[]= "", m
  * @param error         Error message, if applicable.
  * @param maxLen        Maximum length of the error buffer.
  * @param replace       The string will be used to replace any matches. See above for format specifiers.
- * @param flags         General flags to control how is replaced the string. See REGEX_FORMAT_* defines.
+ * @param flags         General flags to control how the string is replaced. See REGEX_FORMAT_* defines.
  * @param errcode       Regex type error code encountered, if applicable. See REGEX_ERROR_* defines.
  *
  * @return              -2 = Matching error (error code is stored in ret)

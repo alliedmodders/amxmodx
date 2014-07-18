@@ -250,4 +250,15 @@ native trace_forward(const Float:start[3], const Float:angle[3], Float:give, ign
  */
 native set_ent_rendering(index, fx = kRenderFxNone, r = 0, g = 0, b = 0, render = kRenderNormal, amount = 0);
 
+/**
+ * Checks whether two entities intersect by comparing
+ * their absolute minimum and maximum coordinates.
+ * 
+ * @param entity    The first entity index to check.
+ * @param other     The second entity index to check.
+ *
+ * @return          true on success, false otherwise.
+ */
+native bool:entity_intersects(entity, other);
+
 #include <engine_stocks>

@@ -1540,11 +1540,35 @@ static cell AMX_NATIVE_CALL set_ent_rendering(AMX *amx, cell *params) // set_use
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL entity_intersects(AMX *amx, cell *params) // bool:entity_intersects(entity, other); = 2 arguments
+{
+	// params[1] = entity
+	// params[2] = other
+
+	CHECK_ENTITY_SIMPLE(params[1]);
+	CHECK_ENTITY_SIMPLE(params[2]);
+
+	entvars_s *pevEntity = VARS(INDEXENT2(params[1]));
+	entvars_s *pevOther = VARS(INDEXENT2(params[2]));
+
+	if (pevOther->absmin.x > pevEntity->absmax.x ||
+		pevOther->absmin.y > pevEntity->absmax.y ||
+		pevOther->absmin.z > pevEntity->absmax.z ||
+		pevOther->absmax.x < pevEntity->absmin.x ||
+		pevOther->absmax.y < pevEntity->absmin.y ||
+		pevOther->absmax.z < pevEntity->absmin.z)
+	{
+		return 1;
+	}
+
+	return 0;
+}
 
 AMX_NATIVE_INFO ent_NewNatives[] =
 {
 	{"DispatchKeyValue",	DispatchKeyValue},
 	{"set_ent_rendering",	set_ent_rendering},
+	{"entity_intersects",	entity_intersects},
 	{NULL,					NULL}
 };
 

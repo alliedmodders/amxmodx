@@ -64,6 +64,7 @@
 	#define OFFSET_INTERNALMODEL		126 + EXTRAOFFSET
 	#define OFFSET_NVGOGGLES			129 + EXTRAOFFSET
 	#define OFFSET_DEFUSE_PLANT			193 + EXTRAOFFSET
+	#define OFFSET_MENU					205 + EXTRAOFFSET
 	#define OFFSET_VIP					209 + EXTRAOFFSET
 	#define OFFSET_TK					216 + EXTRAOFFSET // 040926
 	#define OFFSET_HOSTAGEKILLS			217 + EXTRAOFFSET
@@ -162,19 +163,19 @@
  * CS_OnBuy forward 
  */
 #if defined(__linux__)
-	#define CS_IDENT_CANBUYTHIS			"_Z10CanBuyThisP11CBasePlayeri"
-	#define CS_IDENT_BUYITEM			"_Z7BuyItemP11CBasePlayeri" 
-	#define CS_IDENT_BUYGUNAMMO			"_Z10BuyGunAmmoR11CBasePlayerR15CBasePlayerItemb"
+	#define CS_IDENT_GIVENSHIELD        "_ZN11CBasePlayer10GiveShieldEb"
+	#define CS_IDENT_GIVENAMEDITEM		"_ZN11CBasePlayer13GiveNamedItemEPKc"
+	#define CS_IDENT_ADDACCOUNT			"_ZN11CBasePlayer10AddAccountEib"
 	#define CS_IDENT_HIDDEN_STATE		false
 #elif defined(__APPLE__)
-	#define CS_IDENT_CANBUYTHIS			"_Z10CanBuyThisP11CBasePlayeri"
-	#define CS_IDENT_BUYITEM			"_Z7BuyItemP11CBasePlayeri" 
-	#define CS_IDENT_BUYGUNAMMO			"_Z10BuyGunAmmoR11CBasePlayerR15CBasePlayerItemb"
+	#define CS_IDENT_GIVENSHIELD        "_ZN11CBasePlayer10GiveShieldEb"
+	#define CS_IDENT_GIVENAMEDITEM		"_ZN11CBasePlayer13GiveNamedItemEPKc"
+	#define CS_IDENT_ADDACCOUNT			"_ZN11CBasePlayer10AddAccountEib"
 	#define CS_IDENT_HIDDEN_STATE		true
 #elif defined(WIN32)
-	#define CS_IDENT_CANBUYTHIS			"\\x53\\x8B\\x2A\\x2A\\x2A\\x2A\\x2A\\x56\\x8B\\x2A\\x2A\\x2A\\x57"
-	#define CS_IDENT_BUYITEM			"\\x53\\x56\\x8B\\x2A\\x2A\\x2A\\xBB\\x2A\\x2A\\x2A\\x2A\\x57\\x53"
-	#define CS_IDENT_BUYGUNAMMO			"\\x56\\x57\\x8B\\x2A\\x2A\\x2A\\x6A\\x2A\\x8B\\x2A\\xE8\\x2A\\x2A\\x2A\\x2A\\x84\\x2A\\x0F"
+	#define CS_IDENT_GIVENSHIELD        "\\x56\\x8B\\x2A\\x57\\x33\\x2A\\x8B\\x2A\\x2A\\x2A\\x2A\\x2A\\xB0"
+	#define CS_IDENT_GIVENAMEDITEM		"\\x8B\\x2A\\x2A\\x2A\\x56\\x57\\x8B\\x2A\\x8B\\x2A\\x2A\\x2A\\x2A\\x2A\\x2B"
+	#define CS_IDENT_ADDACCOUNT			"\\x8B\\x2A\\x2A\\x2A\\x56\\x8B\\x2A\\x8B\\x2A\\x2A\\x2A\\x2A\\x2A\\x03"
 	#define CS_IDENT_HIDDEN_STATE		false
 #endif
 
@@ -346,5 +347,25 @@ enum
 	CS_SET_SECOND_ZOOM,
 	CS_SET_AUGSG552_ZOOM,
 };
+
+typedef enum
+{
+	Menu_OFF,
+	Menu_ChooseTeam,
+	Menu_IGChooseTeam,
+	Menu_ChooseAppearance,
+	Menu_Buy,
+	Menu_BuyPistol,
+	Menu_BuyRifle,
+	Menu_BuyMachineGun,
+	Menu_BuyShotgun,
+	Menu_BuySubMachineGun,
+	Menu_BuyItem,
+	Menu_Radio1,
+	Menu_Radio2,
+	Menu_Radio3,
+	Menu_ClientBuy
+
+} Menu;
 
 #endif // CSTRIKE_DATA_H

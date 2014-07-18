@@ -3,14 +3,6 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "CstrikePlayer.h"
-
-#if defined _MSC_VER
-	#if _MSC_VER >= 1400
-		// MSVC8 - disable deprecation warnings for "unsafe" CRT functions
-		#define _CRT_SECURE_NO_DEPRECATE
-	#endif
-#endif
-
 #include <string.h> // strcpy()
 
 //////////////////////////////////////////////////////////////////////

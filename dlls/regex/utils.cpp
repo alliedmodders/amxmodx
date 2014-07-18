@@ -3,6 +3,11 @@
 #include <string.h>
 #include "utils.h"
 
+#if defined(WIN32)
+	#define strcasecmp	 stricmp
+	#define strncasecmp	_strnicmp
+#endif
+
 int UTIL_CheckValidChar(char *c)
 {
 	int count;
@@ -59,18 +64,18 @@ unsigned int strncopy(char *dest, const char *src, size_t count)
 }
 
 /**
-* NOTE: Do not edit this for the love of god unless you have
-* read the test cases and understand the code behind each one.
-* While I don't guarantee there aren't mistakes, I do guarantee
-* that plugins will end up relying on tiny idiosyncrasies of this
-* function, just like they did with AMX Mod X.
-*
-* There are explicitly more cases than the AMX Mod X version because
-* we're not doing a blind copy.  Each case is specifically optimized
-* for what needs to be done.  Even better, we don't have to error on
-* bad buffer sizes.  Instead, this function will smartly cut off the
-* string in a way that pushes old data out.
-*/
+ * NOTE: Do not edit this for the love of god unless you have
+ * read the test cases and understand the code behind each one.
+ * While I don't guarantee there aren't mistakes, I do guarantee
+ * that plugins will end up relying on tiny idiosyncrasies of this
+ * function, just like they did with AMX Mod X.
+ *
+ * There are explicitly more cases than the AMX Mod X version because
+ * we're not doing a blind copy.  Each case is specifically optimized
+ * for what needs to be done.  Even better, we don't have to error on
+ * bad buffer sizes.  Instead, this function will smartly cut off the
+ * string in a way that pushes old data out.
+ */
 char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t searchLen, const char *replace, size_t replaceLen, bool caseSensitive)
 {
 	char *ptr = subject;
@@ -91,7 +96,7 @@ char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t se
 		/* If the search matches and the replace length is 0,
 		* we can just terminate the string and be done.
 		*/
-		if ((caseSensitive ? strcmp(subject, search) : stricmp(subject, search)) == 0 && replaceLen == 0)
+		if ((caseSensitive ? strcmp(subject, search) : strcasecmp(subject, search)) == 0 && replaceLen == 0)
 		{
 			*subject = '\0';
 			return subject;
@@ -108,7 +113,7 @@ char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t se
 	while (*ptr != '\0' && (browsed <= textLen - searchLen))
 	{
 		/* See if we get a comparison */
-		if ((caseSensitive ? strncmp(ptr, search, searchLen) : strnicmp(ptr, search, searchLen)) == 0)
+		if ((caseSensitive ? strncmp(ptr, search, searchLen) : strncasecmp(ptr, search, searchLen)) == 0)
 		{
 			if (replaceLen > searchLen)
 			{

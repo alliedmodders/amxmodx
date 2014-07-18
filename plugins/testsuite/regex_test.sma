@@ -7,7 +7,7 @@
 
 public plugin_init()
 {
-    register_plugin("UTF-8 Test", AMXX_VERSION_STR, "AMXX Dev Team");
+    register_plugin("Regex Test", AMXX_VERSION_STR, "AMXX Dev Team");
     register_srvcmd("regex_test", "OnServerCommand");
 }
 

@@ -29,7 +29,7 @@
  * MAX_PLAYERS is not the same as MaxClients.
  * MAX_PLAYERS is a hardcoded value as an upper limit.  MaxClients changes based on the server.
  */
-#define MAX_PLAYERS		32	/* Maximum number of players Half-Life 1 based games support */
+#define MAX_PLAYERS		33	/* Maximum number of players AMX Mod X supports */
 #define MAX_NAME_LENGTH 32	/* Maximum buffer required to store a client name */
 
 public const MaxClients;	/* Maximum number of players the server supports (dynamic) */

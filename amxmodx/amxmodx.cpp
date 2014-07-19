@@ -72,7 +72,7 @@ static cell AMX_NATIVE_CALL get_xvar_id(AMX *amx, cell *params)
 
 	for (CPluginMngr::iterator a = g_plugins.begin(); a ; ++a)
 	{
-		if ((*a).isValid() && amx_FindPubVar((*a).getAMX(), sName, &ptr) == AMX_ERR_NONE)
+		if ((*a).isValid() && amx_FindPubVar((*a).getAMX(), sName, &ptr) == AMX_ERR_NONE && strcmp(sName, "MaxClients")) 
 			return g_xvars.put((*a).getAMX(), get_amxaddr((*a).getAMX(), ptr));
 	}
 

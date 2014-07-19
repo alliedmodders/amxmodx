@@ -25,6 +25,16 @@
  */
 #define MAX_STRING_LENGTH 16384
 
+/**
+ * MAX_PLAYERS is not the same as MaxClients.
+ * MAX_PLAYERS is a hardcoded value as an upper limit.  MaxClients changes based on the server.
+ */
+#define MAX_PLAYERS		33	/* Maximum number of players AMX Mod X supports */
+#define MAX_NAME_LENGTH 32	/* Maximum buffer required to store a client name */
+
+public const MaxClients;	/* Maximum number of players the server supports (dynamic) */
+
+
 #define M_PI 3.1415926535
 
 #define ADMIN_ALL		0	/* everyone */

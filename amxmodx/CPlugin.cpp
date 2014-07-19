@@ -167,6 +167,14 @@ int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 			plugin->setError(errorMsg);
 			AMXXLOG_Error("[AMXX] %s", plugin->getError());
 		}
+		else
+		{
+			cell addr;
+			if (amx_FindPubVar(plugin->getAMX(), "MaxClients", &addr) != AMX_ERR_NOTFOUND)
+			{
+				*get_amxaddr(plugin->getAMX(), addr) = gpGlobals->maxClients;
+			}
+		}
 	}
 
 	fclose(fp);

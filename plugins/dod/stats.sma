@@ -834,7 +834,7 @@ public client_disconnect(id) {
       else if ( NumOfLeaders == 1 ) 
         client_cmd( LeaderID,"spk misc/takenlead" ) 
       else if ( NumOfLeaders > 1 ) 
-        for ( new i=1; i<MaxClients; i++ ) 
+        for ( new i=1; i<=MaxClients; i++ ) 
           if ( PScore[i] == LeaderScore ) 
             client_cmd( i,"spk misc/tiedlead") 
       //else no players on server or have 0 score 

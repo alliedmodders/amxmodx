@@ -1257,7 +1257,7 @@ public cmdLeave(id, level, cid)
 	
 	new nick[MAX_NAME_LENGTH], ires, pnum = MaxClients, count = 0, lReason[128]
 	
-	for (new b = 1; b < pnum; ++b)
+	for (new b = 1; b <= pnum; ++b)
 	{
 		if (!is_user_connected(b) && !is_user_connecting(b)) continue
 

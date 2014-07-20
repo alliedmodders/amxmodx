@@ -248,7 +248,7 @@ public cmdReadyRoom(id,level,cid) {
   else {
     new cur=0;
     new i=1;
-    while (i<MaxClients) {
+    while (i<=MaxClients) {
       if (is_user_connected(i)) {
         if (UTIL_IsSpectator(i) == 1 || g_Team[i] != 0) {
           cur++;
@@ -279,7 +279,7 @@ public rrStep(index) {
     if (is_user_connected(index) && g_Team[index]!=0) {
       client_cmd(index, "%s", g_ReadyRoomAck)
     }
-    if (++index > MaxClients) {
+    if (++index >= MaxClients) {
     	return PLUGIN_HANDLED_MAIN
     }
 	}

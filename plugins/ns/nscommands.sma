@@ -215,7 +215,7 @@ public randomStep(index) {
     if (g_Team[index] == 0 && !(get_user_flags(index) & ADMIN_IMMUNITY)) {
       client_cmd(index, "%s", g_AutoAssignAck);
     }
-    if (++index > MaxClients) {
+    if (++index >= MaxClients) {
     	return PLUGIN_HANDLED_MAIN
     }
 	}

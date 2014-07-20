@@ -17,31 +17,50 @@
 
 stock is_user_admin(id)
 {
-	new iFlags = get_user_flags(id);
-	return (iFlags > 0 && ~iFlags & ADMIN_USER);
+	new __flags=get_user_flags(id);
+	return (__flags>0 && !(__flags&ADMIN_USER));
 }
 
 stock cmd_access(id, level, cid, num, bool:accesssilent = false) 
 {
-	if(id == is_dedicated_server() ? 0 : 1 ||
-		level == ADMIN_ALL ||
-		level == ADMIN_ADMIN && is_user_admin(id) ||
-		level != ADMIN_ADMIN && get_user_flags(id) & level)
+	new has_access = 0;
+	if ( id==(is_dedicated_server()?0:1) ) 
 	{
-		if(read_argc() < num) 
+		has_access = 1;
+	}
+	else if ( level==ADMIN_ADMIN )
+	{
+		if ( is_user_admin(id) )
 		{
-			new hcmd[32], hinfo[128], hflag;
-			get_concmd(cid, hcmd, 31, hflag, hinfo, 127, level);
-			console_print(id, "%L:  %s %s", id, "USAGE", hcmd, hinfo);
-			return 0;
+			has_access = 1;
 		}
-		return 1;
 	}
-	if(!accesssilent)
+	else if ( get_user_flags(id) & level )
 	{
-		console_print(id, "%L", id, "NO_ACC_COM");
+		has_access = 1;
 	}
-	return 0;
+	else if (level == ADMIN_ALL) 
+	{
+		has_access = 1;
+	}
+
+	if ( has_access==0 ) 
+	{
+		if (!accesssilent)
+		{
+			console_print(id,"%L",id,"NO_ACC_COM");
+		}
+		return 0;
+	}
+	if (read_argc() < num) 
+	{
+		new hcmd[32], hinfo[128], hflag;
+		get_concmd(cid,hcmd,31,hflag,hinfo,127,level);
+		console_print(id,"%L:  %s %s",id,"USAGE",hcmd,hinfo);
+		return 0;
+	}
+	
+	return 1;
 }
 
 stock access(id,level) 
@@ -433,17 +452,20 @@ stock is_running(const mod[])
 	return equal(mod_name,mod);
 }
 
-#define get_basedir(%0,%1) get_localinfo("amxx_basedir",%0,%1)
-/* stock get_basedir(name[],len)
-	return get_localinfo("amxx_basedir",name,len); */
+stock get_basedir(name[],len)
+{
+	return get_localinfo("amxx_basedir",name,len);
+}
 
-#define get_configsdir(%0,%1) get_localinfo("amxx_configsdir",%0,%1)
-/* stock get_configsdir(name[],len)
-	return get_localinfo("amxx_configsdir",name,len); */
+stock get_configsdir(name[],len)
+{
+	return get_localinfo("amxx_configsdir",name,len);
+}
 
-#define get_datadir(%0,%1) get_localinfo("amxx_datadir",%0,%1)
-/* stock get_datadir(name[],len)
-	return get_localinfo("amxx_datadir",name,len); */
+stock get_datadir(name[],len)
+{
+	return get_localinfo("amxx_datadir",name,len);
+}
 
 stock register_menu(const title[],keys,const function[],outside=0)
 {
@@ -452,9 +474,10 @@ stock register_menu(const title[],keys,const function[],outside=0)
 
 /* Backwards Compatibility
 * don't use it! */
-#define get_customdir(%0,%1) get_localinfo("amxx_configsdir",%0,%1)
-/* stock get_customdir(name[],len)
-	return get_localinfo("amxx_configsdir",name,len); */
+stock get_customdir(name[],len)
+{
+	return get_localinfo("amxx_configsdir",name,len);
+}
 
 /* Add a menu item to Menus Front-End plugin ("amxmodmenu"):
 * MENU_TEXT: Text that will be shown for this item in menu
@@ -531,10 +554,10 @@ stock constraint_offset(low, high, seed, offset)
 /* Returns true if the user has ANY of the provided flags
  * false if they have none 
  */
-#define has_flag(%0,%1) get_user_flags(%0) & read_flags(%1)
-/* stock has_flag(id, const flags[]) 
-	return (get_user_flags(id) & read_flags(flags)); */
-
+stock has_flag(id, const flags[]) 
+{
+	return (get_user_flags(id) & read_flags(flags));
+}
 /* Returns true if the user has ALL of the provided flags
  * false otherwise
  */

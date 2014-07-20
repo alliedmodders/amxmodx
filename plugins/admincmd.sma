@@ -50,7 +50,7 @@ new timelimit;
 new p_amx_tempban_maxtime;
 
 // Old connection queue
-new g_Names[OLD_CONNECTION_QUEUE][32];
+new g_Names[OLD_CONNECTION_QUEUE][MAX_NAME_LENGTH];
 new g_SteamIDs[OLD_CONNECTION_QUEUE][32];
 new g_IPs[OLD_CONNECTION_QUEUE][32];
 new g_Access[OLD_CONNECTION_QUEUE];
@@ -229,7 +229,7 @@ public cmdKick(id, level, cid)
 	if (!player)
 		return PLUGIN_HANDLED
 	
-	new authid[32], authid2[32], name2[32], name[32], userid2, reason[32]
+	new authid[32], authid2[32], name2[MAX_NAME_LENGTH], name[MAX_NAME_LENGTH], userid2, reason[32]
 	
 	get_user_authid(id, authid, charsmax(authid))
 	get_user_authid(player, authid2, charsmax(authid2))
@@ -263,7 +263,7 @@ public cmdUnban(id, level, cid)
 	if (!cmd_access(id, level, cid, 2))
 		return PLUGIN_HANDLED
 	
-	new arg[32], authid[32], name[32]
+	new arg[32], authid[32], name[MAX_NAME_LENGTH]
 	
 	read_argv(1, arg, charsmax(arg))
 
@@ -320,7 +320,7 @@ public cmdAddBan(id, level, cid)
 		}
 	}
 
-	new arg[32], authid[32], name[32], minutes[32], reason[32]
+	new arg[32], authid[32], name[MAX_NAME_LENGTH], minutes[32], reason[32]
 	
 	read_argv(1, arg, charsmax(arg))
 	read_argv(2, minutes, charsmax(minutes))
@@ -353,7 +353,7 @@ public cmdAddBan(id, level, cid)
 		if (isip)
 		{
 			new IP[32];
-			new Name[32];
+			new Name[MAX_NAME_LENGTH];
 			new dummy[1];
 			new Access;
 			for (new i = 0; i < g_Size; i++)
@@ -455,7 +455,7 @@ public cmdBan(id, level, cid)
 		return PLUGIN_HANDLED
 	}
 
-	new authid[32], name2[32], authid2[32], name[32]
+	new authid[32], name2[MAX_NAME_LENGTH], authid2[32], name[MAX_NAME_LENGTH]
 	new userid2 = get_user_userid(player)
 
 	get_user_authid(player, authid2, charsmax(authid2))
@@ -485,7 +485,7 @@ public cmdBan(id, level, cid)
 
 	new msg[256];
 	new len;
-	new players[32], pnum, plr
+	new players[MAX_PLAYERS], pnum, plr
 	get_players(players, pnum, "ch")
 	for (new i; i<pnum; i++)
 	{
@@ -541,7 +541,7 @@ public cmdBanIP(id, level, cid)
 		return PLUGIN_HANDLED
 	}
 	
-	new authid[32], name2[32], authid2[32], name[32]
+	new authid[32], name2[MAX_NAME_LENGTH], authid2[32], name[MAX_NAME_LENGTH]
 	new userid2 = get_user_userid(player)
 	
 	get_user_authid(player, authid2, charsmax(authid2))
@@ -572,7 +572,7 @@ public cmdBanIP(id, level, cid)
 
 	new msg[256];
 	new len;
-	new players[32], pnum, plr
+	new players[MAX_PLAYERS], pnum, plr
 	get_players(players, pnum, "ch")
 	for (new i; i<pnum; i++)
 	{
@@ -616,7 +616,7 @@ public cmdSlay(id, level, cid)
 	
 	user_kill(player)
 	
-	new authid[32], name2[32], authid2[32], name[32]
+	new authid[32], name2[MAX_NAME_LENGTH], authid2[32], name[MAX_NAME_LENGTH]
 	
 	get_user_authid(id, authid, charsmax(authid))
 	get_user_name(id, name, charsmax(name))
@@ -645,7 +645,7 @@ public cmdSlap(id, level, cid)
 	if (!player)
 		return PLUGIN_HANDLED
 
-	new spower[32], authid[32], name2[32], authid2[32], name[32]
+	new spower[32], authid[32], name2[MAX_NAME_LENGTH], authid2[32], name[MAX_NAME_LENGTH]
 	
 	read_argv(2, spower, charsmax(spower))
 	
@@ -686,7 +686,7 @@ public cmdMap(id, level, cid)
 		return PLUGIN_HANDLED
 	}
 
-	new authid[32], name[32]
+	new authid[32], name[MAX_NAME_LENGTH]
 	
 	get_user_authid(id, authid, charsmax(authid))
 	get_user_name(id, name, charsmax(name))
@@ -725,7 +725,7 @@ public cmdExtendMap(id, level, cid)
 	get_mapname(mapname, charsmax(mapname))
 	set_pcvar_num( timelimit , get_pcvar_num( timelimit ) + mns)
 	
-	new authid[32], name[32]
+	new authid[32], name[MAX_NAME_LENGTH]
 	
 	get_user_authid(id, authid, charsmax(authid))
 	get_user_name(id, name, charsmax(name))
@@ -798,7 +798,7 @@ public cmdCvar(id, level, cid)
 		return PLUGIN_HANDLED
 	}
 
-	new authid[32], name[32]
+	new authid[32], name[MAX_NAME_LENGTH]
 	
 	get_user_authid(id, authid, charsmax(authid))
 	get_user_name(id, name, charsmax(name))
@@ -810,7 +810,7 @@ public cmdCvar(id, level, cid)
 	// Display the message to all clients
 
 	new cvar_val[64];
-	new players[32], pnum, plr
+	new players[MAX_PLAYERS], pnum, plr
 	get_players(players, pnum, "ch")
 	for (new i; i<pnum; i++)
 	{
@@ -926,7 +926,7 @@ public cmdXvar(id, level, cid)
 		num_to_str(value, arg2, charsmax(arg2));
 	}
 
-	new authid[32], name[32];
+	new authid[32], name[MAX_NAME_LENGTH];
 	
 	get_user_authid(id, authid, charsmax(authid));
 	get_user_name(id, name, charsmax(name));
@@ -934,7 +934,7 @@ public cmdXvar(id, level, cid)
 	log_amx("Cmd: ^"%s<%d><%s><>^" set xvar (name ^"%s^") (value ^"%s^")", name, get_user_userid(id), authid, arg1, arg2);
 	
 	// Display the message to all clients
-	new players[32], pnum, plr;
+	new players[MAX_PLAYERS], pnum, plr;
 	get_players(players, pnum, "ch");
 	for (new i; i<pnum; i++)
 	{
@@ -959,7 +959,7 @@ public cmdPlugins(id, level, cid)
 		return PLUGIN_HANDLED;
 	}
 
-	new name[32], version[32], author[32], filename[32], status[32]
+	new name[MAX_NAME_LENGTH], version[32], author[32], filename[32], status[32]
 	new lName[32], lVersion[32], lAuthor[32], lFile[32], lStatus[32]
 
 	format(lName, charsmax(lName), "%L", id, "NAME")
@@ -1071,7 +1071,7 @@ public cmdCfg(id, level, cid)
 		return PLUGIN_HANDLED
 	}
 	
-	new authid[32], name[32]
+	new authid[32], name[MAX_NAME_LENGTH]
 	
 	get_user_authid(id, authid, charsmax(authid))
 	get_user_name(id, name, charsmax(name))
@@ -1111,7 +1111,7 @@ public cmdPause(id, level, cid)
 	if (!cmd_access(id, level, cid, 1))
 		return PLUGIN_HANDLED 
 	
-	new authid[32], name[32], slayer = id
+	new authid[32], name[MAX_NAME_LENGTH], slayer = id
 	
 	get_user_authid(id, authid, charsmax(authid)) 
 	get_user_name(id, name, charsmax(name)) 
@@ -1139,7 +1139,7 @@ public cmdPause(id, level, cid)
 
 	// Display the message to all clients
 
-	new players[32], pnum
+	new players[MAX_PLAYERS], pnum
 	get_players(players, pnum, "ch")
 	for (new i; i<pnum; i++)
 	{
@@ -1179,7 +1179,7 @@ public cmdRcon(id, level, cid)
 	if (!cmd_access(id, level, cid, 2))
 		return PLUGIN_HANDLED
 	
-	new arg[128], authid[32], name[32]
+	new arg[128], authid[32], name[MAX_NAME_LENGTH]
 	
 	read_args(arg, charsmax(arg))
 	get_user_authid(id, authid, charsmax(authid))
@@ -1198,7 +1198,7 @@ public cmdWho(id, level, cid)
 	if (!cmd_access(id, level, cid, 1))
 		return PLUGIN_HANDLED
 
-	new players[32], inum, cl_on_server[64], authid[32], name[32], flags, sflags[32], plr
+	new players[MAX_PLAYERS], inum, cl_on_server[64], authid[32], name[MAX_NAME_LENGTH], flags, sflags[32], plr
 	new lImm[16], lRes[16], lAccess[16], lYes[16], lNo[16]
 	
 	formatex(lImm, charsmax(lImm), "%L", id, "IMMU")
@@ -1255,7 +1255,7 @@ public cmdLeave(id, level, cid)
 			ltags[ltagsnum++][0] = 0
 	}
 	
-	new nick[32], ires, pnum = get_maxplayers() + 1, count = 0, lReason[128]
+	new nick[MAX_NAME_LENGTH], ires, pnum = MaxClients, count = 0, lReason[128]
 	
 	for (new b = 1; b < pnum; ++b)
 	{
@@ -1290,7 +1290,7 @@ public cmdLeave(id, level, cid)
 	
 	console_print(id, "[AMXX] %L", id, "KICKED_CLIENTS", count)
 	
-	new authid[32], name[32]
+	new authid[32], name[MAX_NAME_LENGTH]
 
 	get_user_authid(id, authid, charsmax(authid))
 	get_user_name(id, name, charsmax(name))
@@ -1339,7 +1339,7 @@ public cmdLast(id, level, cid)
 		return PLUGIN_HANDLED;
 	}
 	
-	new name[32];
+	new name[MAX_NAME_LENGTH];
 	new authid[32];
 	new ip[32];
 	new flags[32];

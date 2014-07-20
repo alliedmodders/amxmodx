@@ -42,7 +42,7 @@
 
 #define MAX_SYSTEM 32
  
-new g_menuPos[33]
+new g_menuPos[MAX_PLAYERS]
 new g_fileToSave[64]
 new g_coloredMenus
 new g_Modified

@@ -111,7 +111,7 @@ stock cmd_target(id,const arg[],flags = CMDTARGET_OBEY_IMMUNITY)
 		if ((get_user_flags(player) & ADMIN_IMMUNITY) && 
 			((flags & CMDTARGET_ALLOW_SELF) ? (id != player) : true) ) 
 		{
-			new imname[32];
+			new imname[MAX_NAME_LENGTH];
 			get_user_name(player,imname,31);
 			console_print(id,"%L",id,"CLIENT_IMM",imname);
 			return 0;
@@ -121,7 +121,7 @@ stock cmd_target(id,const arg[],flags = CMDTARGET_OBEY_IMMUNITY)
 	{
 		if (!is_user_alive(player)) 
 		{
-			new imname[32];
+			new imname[MAX_NAME_LENGTH];
 			get_user_name(player,imname,31);
 			console_print(id,"%L",id,"CANT_PERF_DEAD",imname);
 			return 0;
@@ -131,7 +131,7 @@ stock cmd_target(id,const arg[],flags = CMDTARGET_OBEY_IMMUNITY)
 	{
 		if (is_user_bot(player)) 
 		{
-			new imname[32];
+			new imname[MAX_NAME_LENGTH];
 			get_user_name(player,imname,31);
 			console_print(id,"%L",id,"CANT_PERF_BOT",imname);
 			return 0;
@@ -178,10 +178,7 @@ stock show_activity( id, const name[], const fmt[], any:... )
 	{
 		case 5: // hide name only to admins, show nothing to normal users
 		{
-			new __maxclients=get_maxplayers();
-			
-			
-			for (new i=1; i<=__maxclients; i++)
+			for (new i=1; i<=MaxClients; i++)
 			{
 				if (is_user_connected(i))
 				{
@@ -194,9 +191,7 @@ stock show_activity( id, const name[], const fmt[], any:... )
 		}
 		case 4: // show name only to admins, show nothing to normal users
 		{
-			new __maxclients=get_maxplayers();
-			
-			for (new i=1; i<=__maxclients; i++)
+			for (new i=1; i<=MaxClients; i++)
 			{
 				if (is_user_connected(i))
 				{
@@ -209,9 +204,7 @@ stock show_activity( id, const name[], const fmt[], any:... )
 		}
 		case 3: // show name only to admins, hide name from normal users
 		{
-			new __maxclients=get_maxplayers();
-			
-			for (new i=1; i<=__maxclients; i++)
+			for (new i=1; i<=MaxClients; i++)
 			{
 				if (is_user_connected(i))
 				{
@@ -350,12 +343,10 @@ stock show_activity_key(const KeyWithoutName[], const KeyWithName[], const ___Ad
 	new keyfmt[256];
 	new i;
 	
-	new __maxclients=get_maxplayers();
-	
 	switch( get_pcvar_num(__amx_show_activity) )
 	{
 	case 5: // hide name to admins, display nothing to normal players
-		while (i++ < __maxclients)
+		while (i++ < MaxClients)
 		{
 			if ( is_user_connected(i) )
 			{
@@ -370,7 +361,7 @@ stock show_activity_key(const KeyWithoutName[], const KeyWithName[], const ___Ad
 			}
 		}
 	case 4: // show name only to admins, display nothing to normal players
-		while (i++ < __maxclients)
+		while (i++ < MaxClients)
 		{
 			if ( is_user_connected(i) )
 			{
@@ -383,7 +374,7 @@ stock show_activity_key(const KeyWithoutName[], const KeyWithName[], const ___Ad
 			}
 		}
 	case 3: // show name only to admins, hide name from normal users
-		while (i++ < __maxclients)
+		while (i++ < MaxClients)
 		{
 			if ( is_user_connected(i) )
 			{
@@ -403,7 +394,7 @@ stock show_activity_key(const KeyWithoutName[], const KeyWithName[], const ___Ad
 			}
 		}
 	case 2: // show name to all users
-		while (i++ < __maxclients)
+		while (i++ < MaxClients)
 		{
 			if ( is_user_connected(i) )
 			{
@@ -413,7 +404,7 @@ stock show_activity_key(const KeyWithoutName[], const KeyWithName[], const ___Ad
 			}
 		}
 	case 1: // hide name from all users
-		while (i++ < __maxclients)
+		while (i++ < MaxClients)
 		{
 			if ( is_user_connected(i) )
 			{

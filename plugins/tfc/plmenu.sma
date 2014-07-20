@@ -36,14 +36,14 @@
 #include <amxmisc>
 #include <tfcx>
 
-new g_menuPosition[33]
-new g_menuPlayers[33][32]
-new g_menuPlayersNum[33]
-new g_menuOption[33]
-new g_menuSettings[33]
+new g_menuPosition[MAX_PLAYERS]
+new g_menuPlayers[MAX_PLAYERS][MAX_PLAYERS]
+new g_menuPlayersNum[MAX_PLAYERS]
+new g_menuOption[MAX_PLAYERS]
+new g_menuSettings[MAX_PLAYERS]
 
-new g_menuSelect[33][64]
-new g_menuSelectNum[33]
+new g_menuSelect[MAX_PLAYERS][64]
+new g_menuSelectNum[MAX_PLAYERS]
 
 #define MAX_CLCMDS 24
 
@@ -138,7 +138,7 @@ public actionBanMenu(id, key)
 			}
 			new player = g_menuPlayers[id][g_menuPosition[id] * 7 + key]
       
-			new name[32], name2[32], authid[32], authid2[32]
+			new name[MAX_NAME_LENGTH], name2[MAX_NAME_LENGTH], authid[32], authid2[32]
 			get_user_name(player, name2, 31)
 			get_user_authid(id, authid, 31)
 			get_user_authid(player, authid2, 31)
@@ -215,7 +215,7 @@ displayBanMenu(id, pos)
 	new menuBody[512]
 	new b = 0
 	new i
-	new name[32]
+	new name[MAX_NAME_LENGTH]
 	new start = pos * 7
 
 	if (start >= g_menuPlayersNum[id])
@@ -298,7 +298,7 @@ public actionSlapMenu(id,key) {
     default: {
       new player = g_menuPlayers[id][g_menuPosition[id] * 7 + key]
       
-      new name2[32]
+      new name2[MAX_NAME_LENGTH]
       get_user_name(player,name2,31)
       
       if (!is_user_alive(player)) {
@@ -307,7 +307,7 @@ public actionSlapMenu(id,key) {
         return PLUGIN_HANDLED
       }
             
-      new authid[32],authid2[32], name[32]
+      new authid[32],authid2[32], name[MAX_NAME_LENGTH]
 
       get_user_authid(id,authid,31)
       get_user_authid(player,authid2,31)
@@ -351,7 +351,7 @@ displaySlapMenu(id, pos)
 	new menuBody[512]
 	new b = 0
 	new i
-	new name[32]
+	new name[MAX_NAME_LENGTH]
 	new start = pos * 7
 
 	if (start >= g_menuPlayersNum[id])
@@ -427,7 +427,7 @@ public actionKickMenu(id,key)
     default: {
       new player = g_menuPlayers[id][g_menuPosition[id] * 8 + key]
 
-      new authid[32],authid2[32], name[32], name2[32]
+      new authid[32],authid2[32], name[MAX_NAME_LENGTH], name2[MAX_NAME_LENGTH]
       get_user_authid(id,authid,31)
       get_user_authid(player,authid2,31)
       get_user_name(id,name,31)
@@ -461,7 +461,7 @@ displayKickMenu(id, pos)
 	new menuBody[512]
 	new b = 0
 	new i
-	new name[32]
+	new name[MAX_NAME_LENGTH]
 	new start = pos * 8
 
 	if (start >= g_menuPlayersNum[id])
@@ -530,7 +530,7 @@ public actionTeamMenu(id,key) {
     case 9: displayTeamMenu(id,--g_menuPosition[id])
     default: {
       new player = g_menuPlayers[id][g_menuPosition[id] * 7 + key]
-      new authid[32],authid2[32], name[32], name2[32]
+      new authid[32],authid2[32], name[MAX_NAME_LENGTH], name2[MAX_NAME_LENGTH]
       get_user_name(player,name2,31)
       get_user_authid(id,authid,31)
       get_user_authid(player,authid2,31)
@@ -570,7 +570,7 @@ displayTeamMenu(id, pos)
 	new menuBody[512]
 	new b = 0
 	new i, iteam
-	new name[32]
+	new name[MAX_NAME_LENGTH]
 	new start = pos * 7
 
 	if (start >= g_menuPlayersNum[id])
@@ -647,7 +647,7 @@ public actionClcmdMenu(id,key) {
       new player = g_menuPlayers[id][g_menuPosition[id] * 7 + key]
       new flags = g_clcmdMisc[g_menuSelect[id][g_menuOption[id]]][1]
       if (is_user_connected(player)) {
-        new command[64], authid[32], name[32], userid[32]
+        new command[64], authid[32], name[MAX_NAME_LENGTH], userid[32]
         copy(command,63,g_clcmdCmd[g_menuSelect[id][g_menuOption[id]]])
         get_user_authid(player,authid,31)
         get_user_name(player,name,31)
@@ -680,7 +680,7 @@ displayClcmdMenu(id, pos)
 	new menuBody[512]
 	new b = 0
 	new i
-	new name[32]
+	new name[MAX_NAME_LENGTH]
 	new start = pos * 7
 
 	if (start >= g_menuPlayersNum[id])

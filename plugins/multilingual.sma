@@ -36,7 +36,7 @@
 
 #define DISPLAY_MSG		// Comment to disable message on join
 
-new g_menuLang[33][2]
+new g_menuLang[MAX_PLAYERS][2]
 new g_serverLang
 new g_langNum
 new g_coloredMenus

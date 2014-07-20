@@ -1,4 +1,4 @@
-/* AMX Mod X
+ /* AMX Mod X
 *   StatsX Plugin
 *
 * by the AMX Mod X Development Team
@@ -95,9 +95,6 @@ public SpecRankInfo         = 0 // displays rank info when spectating
 
 // Standard Contstants.
 #define MAX_TEAMS               2
-#define MAX_PLAYERS             32 + 1
-
-#define MAX_NAME_LENGTH         31
 #define MAX_WEAPON_LENGTH       31
 #define MAX_TEXT_LENGTH         255
 #define MAX_BUFFER_LENGTH       2047
@@ -141,7 +138,7 @@ new g_iPluginMode                                   = 0
 
 new g_izUserMenuPosition[MAX_PLAYERS]               = {0, ...}
 new g_izUserMenuAction[MAX_PLAYERS]                 = {0, ...}
-new g_izUserMenuPlayers[MAX_PLAYERS][32]
+new g_izUserMenuPlayers[MAX_PLAYERS][MAX_PLAYERS]
 
 new g_izSpecMode[MAX_PLAYERS]                       = {0, ...}
 
@@ -371,7 +368,6 @@ get_attackers(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 	new izStats[8], izBody[8]
 	new iAttacker
 	new iFound, iLen
-	new iMaxPlayer = get_maxplayers()
 
 	iFound = 0
 	sBuffer[0] = 0
@@ -394,7 +390,7 @@ get_attackers(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 		iLen = formatex(sBuffer, charsmax(sBuffer), "%L:^n", id, "ATTACKERS")
 
 	// Get and format attacker list.
-	for (iAttacker = 1; iAttacker <= iMaxPlayer; iAttacker++)
+	for (iAttacker = 1; iAttacker <= MaxClients; iAttacker++)
 	{
 		if (get_user_astats(id, iAttacker, izStats, izBody, t_sWpn, charsmax(t_sWpn)))
 		{
@@ -430,7 +426,6 @@ get_victims(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 	new izStats[8], izBody[8]
 	new iVictim
 	new iFound, iLen
-	new iMaxPlayer = get_maxplayers()
 
 	iFound = 0
 	sBuffer[0] = 0
@@ -446,7 +441,7 @@ get_victims(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 	else
 		iLen = formatex(sBuffer, charsmax(sBuffer), "%L:^n", id, "VICTIMS")
 
-	for (iVictim = 1; iVictim <= iMaxPlayer; iVictim++)
+	for (iVictim = 1; iVictim <= MaxClients; iVictim++)
 	{
 		if (get_user_vstats(id, iVictim, izStats, izBody, t_sWpn, charsmax(t_sWpn)))
 		{
@@ -1585,7 +1580,7 @@ endround_stats()
 	if (g_iRoundEndProcessed || !g_iRoundEndTriggered)
 		return
 
-	new iaPlayers[32], iPlayer, iPlayers, id
+	new iaPlayers[MAX_PLAYERS], iPlayer, iPlayers, id
 
 	get_players(iaPlayers, iPlayers)
 
@@ -1637,7 +1632,7 @@ public eventIntermission()
 
 public end_game_stats()
 {
-	new iaPlayers[32], iPlayer, iPlayers, id
+	new iaPlayers[MAX_PLAYERS], iPlayer, iPlayers, id
 
 	if (EndPlayer)
 	{

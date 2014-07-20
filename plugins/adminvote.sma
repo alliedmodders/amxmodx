@@ -77,16 +77,14 @@ public cmdCancelVote(id, level, cid)
 
 	if (task_exists(99889988, 1))
 	{
-		new authid[32], name[32]
+		new authid[32], name[MAX_NAME_LENGTH]
 		
 		get_user_authid(id, authid, 31)
 		get_user_name(id, name, 31)
 		log_amx("Vote: ^"%s<%d><%s><>^" cancel vote session", name, get_user_userid(id), authid)
 	
-
-		new maxpl=get_maxplayers();
 		new msg[256];
-		for (new i = 1; i <= maxpl; i++)
+		for (new i = 1; i <= MaxClients; i++)
 		{
 			if (is_user_connected(i) && !is_user_bot(i))
 			{
@@ -152,7 +150,7 @@ public checkVotes()
 	new votesNum = g_voteCount[0] + g_voteCount[1] + g_voteCount[2] + g_voteCount[3]
 	new iRatio = votesNum ? floatround(g_voteRatio * float(votesNum), floatround_ceil) : 1
 	new iResult = g_voteCount[best]
-	new players[32], pnum, i
+	new players[MAX_PLAYERS], pnum, i
 	
 	get_players(players, pnum, "c")
 	
@@ -218,7 +216,7 @@ public voteCount(id, key)
 {
 	if (get_cvar_num("amx_vote_answers"))
 	{
-		new name[32]
+		new name[MAX_NAME_LENGTH]
 		get_user_name(id, name, 31)
 		
 		if (g_yesNoVote)
@@ -304,7 +302,7 @@ public cmdVoteMap(id, level, cid)
 		g_yesNoVote = 1
 	}
 	
-	new authid[32], name[32]
+	new authid[32], name[MAX_NAME_LENGTH]
 	
 	get_user_authid(id, authid, 31)
 	get_user_name(id, name, 31)
@@ -314,9 +312,8 @@ public cmdVoteMap(id, level, cid)
 	else
 		log_amx("Vote: ^"%s<%d><%s><>^" vote maps (map#1 ^"%s^") (map#2 ^"%s^") (map#3 ^"%s^") (map#4 ^"%s^")", name, get_user_userid(id), authid, g_optionName[0], g_optionName[1], g_optionName[2], g_optionName[3])
 
-	new maxpl=get_maxplayers();
 	new msg[256];
-	for (new i = 1; i <= maxpl; i++)
+	for (new i = 1; i <= MaxClients; i++)
 	{
 		if (is_user_connected(i) && !is_user_bot(i))
 		{
@@ -378,15 +375,14 @@ public cmdVote(id, level, cid)
 		read_argv(i+2, g_optionName[i], sizeof(g_optionName[])-1);
 	}
 
-	new authid[32], name[32]
+	new authid[32], name[MAX_NAME_LENGTH]
 	
 	get_user_authid(id, authid, 31)
 	get_user_name(id, name, 31)
 	log_amx("Vote: ^"%s<%d><%s><>^" vote custom (question ^"%s^") (option#1 ^"%s^") (option#2 ^"%s^")", name, get_user_userid(id), authid, quest, g_optionName[0], g_optionName[1])
 
-	new maxpl=get_maxplayers();
 	new msg[256];
-	for (new i = 1; i <= maxpl; i++)
+	for (new i = 1; i <= MaxClients; i++)
 	{
 		if (is_user_connected(i) && !is_user_bot(i))
 		{
@@ -513,17 +509,16 @@ public cmdVoteKickBan(id, level, cid)
 		num_to_str(get_user_userid(player), g_optionName[0], 31)
 	}
 	
-	new authid[32], name[32]
+	new authid[32], name[MAX_NAME_LENGTH]
 	
 	get_user_authid(id, authid, 31)
 	get_user_name(id, name, 31)
 	log_amx("Vote: ^"%s<%d><%s><>^" vote %s (target ^"%s^")", name, get_user_userid(id), authid, voteban ? "ban" : "kick", arg)
 
-	new maxpl=get_maxplayers();
 	new msg[256];
 	new right[256];
 	new dummy[1];
-	for (new i = 1; i <= maxpl; i++)
+	for (new i = 1; i <= MaxClients; i++)
 	{
 		if (is_user_connected(i) && !is_user_bot(i))
 		{

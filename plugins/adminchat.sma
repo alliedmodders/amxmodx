@@ -47,8 +47,8 @@ new amx_show_activity;
 new amx_flood_time;
 new g_AdminChatFlag = ADMIN_CHAT;
 
-new Float:g_Flooding[33] = {0.0, ...}
-new g_Flood[33] = {0, ...}
+new Float:g_Flooding[MAX_PLAYERS] = {0.0, ...}
+new g_Flood[MAX_PLAYERS] = {0, ...}
 
 public plugin_init()
 {
@@ -138,7 +138,7 @@ public cmdSayChat(id, level)
 	}
 	
 
-	new name[32], authid[32], userid
+	new name[MAX_NAME_LENGTH], authid[32], userid
 	
 	get_user_authid(id, authid, charsmax(authid))
 	get_user_name(id, name, charsmax(name))
@@ -160,7 +160,7 @@ public cmdSayChat(id, level)
 	{
 		case 3, 4:
 		{
-			new players[32], plrsnum, pl
+			new players[MAX_PLAYERS], plrsnum, pl
 			get_players(players, plrsnum, "ch")
 			for(new j; j<plrsnum; j++)
 			{
@@ -225,8 +225,8 @@ public cmdSayAdmin(id)
 		g_Flooding[id] = nexTime + maxChat
 	}
 
-	new message[192], name[32], authid[32], userid
-	new players[32], inum, pl
+	new message[192], name[MAX_NAME_LENGTH], authid[32], userid
+	new players[MAX_PLAYERS], inum, pl
 	
 	read_args(message, charsmax(message))
 	remove_quotes(message)
@@ -267,7 +267,7 @@ public cmdChat(id, level, cid)
 	if (!message[0])
 		return PLUGIN_HANDLED
 	
-	new name[32], players[32], inum, authid[32], userid, pl
+	new name[MAX_NAME_LENGTH], players[MAX_PLAYERS], inum, authid[32], userid, pl
 	
 	get_user_authid(id, authid, charsmax(authid))
 	get_user_name(id, name, charsmax(name))
@@ -295,7 +295,7 @@ public cmdSay(id, level, cid)
 	if (!cmd_access(id, level, cid, 2))
 		return PLUGIN_HANDLED
 
-	new message[192], name[32], authid[32], userid
+	new message[192], name[MAX_NAME_LENGTH], authid[32], userid
 	
 	read_args(message, charsmax(message))
 	remove_quotes(message)
@@ -316,7 +316,7 @@ public cmdPsay(id, level, cid)
 	if (!cmd_access(id, level, cid, 3))
 		return PLUGIN_HANDLED
 	
-	new name[32]
+	new name[MAX_NAME_LENGTH]
 	read_argv(1, name, charsmax(name))
 	new priv = cmd_target(id, name, 0)
 
@@ -325,7 +325,7 @@ public cmdPsay(id, level, cid)
 	
 	new length = strlen(name) + 1
 
-	new message[192], name2[32], authid[32], authid2[32], userid, userid2
+	new message[192], name2[MAX_NAME_LENGTH], authid[32], authid2[32], userid, userid2
 	
 	get_user_authid(id, authid, charsmax(authid))
 	get_user_name(id, name2, charsmax(name2))
@@ -361,7 +361,7 @@ public cmdTsay(id, level, cid)
 	if (!cmd_access(id, level, cid, 3))
 		return PLUGIN_HANDLED
 	
-	new cmd[16], color[16], color2[16], message[192], name[32], authid[32], userid = 0
+	new cmd[16], color[16], color2[16], message[192], name[MAX_NAME_LENGTH], authid[32], userid = 0
 	
 	read_argv(0, cmd, charsmax(cmd))
 	new bool:tsay = (tolower(cmd[4]) == 't')
@@ -407,7 +407,7 @@ public cmdTsay(id, level, cid)
 	{
 		case 3, 4:
 		{
-			new players[32], plrsnum, pl
+			new players[MAX_PLAYERS], plrsnum, pl
 			get_players(players, plrsnum, "ch")
 			for(new i; i<plrsnum; i++)
 			{

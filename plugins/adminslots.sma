@@ -48,7 +48,7 @@ public plugin_init()
 	g_ResPtr = register_cvar("amx_reservation", "0")
 	g_HidePtr = register_cvar("amx_hideslots", "0")
 	g_sv_visiblemaxplayers = get_cvar_pointer("sv_visiblemaxplayers")
-	g_maxplayers = get_maxplayers()
+	g_maxplayers = MaxClients
 }
 
 public plugin_cfg()

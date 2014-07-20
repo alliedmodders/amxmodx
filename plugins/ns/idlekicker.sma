@@ -39,17 +39,15 @@
 #define CHECK_FREQ		5			// This is also the warning message frequency.
 #define CLASS_GESTATE	9
 
-new g_oldangles[33][3]
-new g_idletime[33]
-new bool:g_spawned[33] = {true, ...}
-new g_class[33]	// stored info from the "ScoreInfo" message
+new g_oldangles[MAX_PLAYERS][3]
+new g_idletime[MAX_PLAYERS]
+new bool:g_spawned[MAX_PLAYERS] = {true, ...}
+new g_class[MAX_PLAYERS]	// stored info from the "ScoreInfo" message
 
 new mp_tournamentmode;
 new amx_idle_time;
 new amx_idle_min_players;
 new amx_idle_ignore_immunity;
-
-new maxplayers;
 
 public plugin_init() {
 	register_plugin("Idle Player Remover",AMXX_VERSION_STR,"AMXX Dev Team") 
@@ -71,15 +69,12 @@ public plugin_init() {
 	{
 		register_event("ScoreInfo","msgScoreInfo","a")
 	}
-	
-	
-	maxplayers=get_maxplayers();
 }
 
 public checkPlayers() {
 	if (get_pcvar_num(mp_tournamentmode)) return PLUGIN_HANDLED
 
-	for (new i = 1; i <= maxplayers; i++) {
+	for (new i = 1; i <= MaxClients; i++) {
 		if (is_user_alive(i) && g_class[i]!=CLASS_GESTATE && is_user_connected(i) && !is_user_bot(i) && !is_user_hltv(i) && g_spawned[i]) {
 			if ( !get_pcvar_num(amx_idle_ignore_immunity) ) {
 				if ( access(i, ADMIN_IMMUNITY) ) continue
@@ -116,7 +111,7 @@ check_idletime(id) {
 			new timeleft = maxidletime - g_idletime[id]
 			client_print(id, print_chat, "[AMXX] You have %d seconds to move or you will be kicked for being idle", timeleft)
 		} else if (g_idletime[id] > maxidletime) {
-			new name[32]
+			new name[MAX_NAME_LENGTH]
 			get_user_name(id, name, 31)
 			client_print(0, print_chat, "[AMXX] %s was kicked for being idle longer than %d seconds", name, maxidletime)
 			log_amx("%s was kicked for being idle longer than %d seconds", name, maxidletime)

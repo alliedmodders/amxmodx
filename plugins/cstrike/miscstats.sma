@@ -77,8 +77,8 @@ public GrenadeSuicideSound
 const SOUNDFILE_PATH_MAXLEN = 64
 const SOUND_SHORTPATH_MAXLEN = SOUNDFILE_PATH_MAXLEN - 10 // 64 (sound/ [ 54 ] .wav) critical value for fast dl
 
-new g_streakKills[33][2]
-new g_multiKills[33][2]
+new g_streakKills[MAX_PLAYERS][2]
+new g_multiKills[MAX_PLAYERS][2]
 new g_C4Timer
 new g_Defusing
 new g_Planter 
@@ -87,7 +87,7 @@ new g_LastAnnounce
 new g_roundCount
 new Float:g_doubleKill
 new g_doubleKillId
-new g_friend[33]
+new g_friend[MAX_PLAYERS]
 new g_firstBlood
 new g_center1_sync
 new g_announce_sync
@@ -104,8 +104,8 @@ const TASK_DELAYED_NEW_ROUND = 98038
 const TEAM_T = 1
 const TEAM_CT = 2
 
-new g_connected[33]
-new g_msounds[33]
+new g_connected[MAX_PLAYERS]
+new g_msounds[MAX_PLAYERS]
 new const _msound[] = "_msound"
 
 new g_MultiKillMsg[7][] =
@@ -527,7 +527,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 
 			if ((a > -1) && !(a % 2))
 			{
-				new name[32]
+				new name[MAX_NAME_LENGTH]
 				get_user_name(killer, name, charsmax(name))
 				
 				if ((a >>= 1) > 6)
@@ -567,7 +567,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 	{
 		if( TEAM_T <= team <= TEAM_CT )
 		{
-			new ppl[32], pplnum, epplnum, a
+			new ppl[MAX_PLAYERS], pplnum, epplnum, a
 			get_players(ppl, epplnum, "ae", team == TEAM_T ? "CT" : "TERRORIST")
 			get_players(ppl, pplnum, "ae", team == TEAM_T ? "TERRORIST" : "CT")
 			if( victim_alive )
@@ -611,7 +611,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 
 	if (LastMan || LastManSound)
 	{
-		new cts[32], ts[32], ctsnum, tsnum, b
+		new cts[MAX_PLAYERS], ts[MAX_PLAYERS], ctsnum, tsnum, b
 		get_players(cts, ctsnum, "ae", "CT")
 		get_players(ts, tsnum, "ae", "TERRORIST")
 		
@@ -648,7 +648,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 		{
 			if( LastMan )
 			{
-				new ctname[32], tname[32]
+				new ctname[MAX_NAME_LENGTH], tname[MAX_NAME_LENGTH]
 				
 				get_user_name(cts[0], ctname, charsmax(ctname))
 				get_user_name(ts[0], tname, charsmax(tname))
@@ -681,7 +681,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 			{
 				if( LastMan )
 				{
-					new name[32]
+					new name[MAX_NAME_LENGTH]
 				
 					get_user_name(g_LastAnnounce, name, charsmax(name))
 				
@@ -700,7 +700,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 	{
 		if (KnifeKill)
 		{
-			new killer_name[32], victim_name[32]
+			new killer_name[MAX_NAME_LENGTH], victim_name[MAX_NAME_LENGTH]
 			
 			get_user_name(killer, killer_name, charsmax(killer_name))
 			get_user_name(victim, victim_name, charsmax(victim_name))
@@ -715,7 +715,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 
 	if (wpnindex == CSW_HEGRENADE)
 	{
-		new killer_name[32], victim_name[32]
+		new killer_name[MAX_NAME_LENGTH], victim_name[MAX_NAME_LENGTH]
 		if( GrenadeKill || GrenadeSuicide )
 		{
 			get_user_name(killer, killer_name, charsmax(killer_name))
@@ -744,7 +744,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 	{
 		if (HeadShotKill && wpnindex)
 		{
-			new killer_name[32], victim_name[32], weapon_name[32], message[256], players[32], pnum, plr
+			new killer_name[MAX_NAME_LENGTH], victim_name[MAX_NAME_LENGTH], weapon_name[32], message[256], players[MAX_PLAYERS], pnum, plr
 			
 			xmod_get_wpnname(wpnindex, weapon_name, charsmax(weapon_name))
 			get_user_name(killer, killer_name, charsmax(killer_name))
@@ -781,7 +781,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 		{
 			if (DoubleKill)
 			{
-				new name[32]
+				new name[MAX_NAME_LENGTH]
 				
 				get_user_name(killer, name, charsmax(name))
 				
@@ -813,7 +813,7 @@ public showStatus(id)
 {
 	if( PlayerName) 
 	{
-		new name[32], pid = read_data(2)
+		new name[MAX_NAME_LENGTH], pid = read_data(2)
 	
 		get_user_name(pid, name, charsmax(name))
 		new color1 = 0, color2 = 0
@@ -866,7 +866,7 @@ public LogEvent_Round_Start()
 {
 	if (KillingStreak)
 	{
-		new appl[32], ppl, i
+		new appl[MAX_PLAYERS], ppl, i
 		get_players(appl, ppl, "ac")
 		
 		for (new a = 0; a < ppl; ++a)
@@ -914,7 +914,7 @@ public checkKills(param[])
 			
 			if (MultiKill)
 			{
-				new name[32]
+				new name[MAX_NAME_LENGTH]
 				
 				get_user_name(id, name, charsmax(name))
 				set_hudmessage(255, 0, 100, 0.05, 0.50, 2, 0.02, 6.0, 0.01, 0.1, -1)
@@ -945,7 +945,7 @@ public radioKill()
 
 announceEvent(id, message[])
 {
-	new name[32]
+	new name[MAX_NAME_LENGTH]
 	
 	get_user_name(id, name, charsmax(name))
 	set_hudmessage(255, 100, 50, -1.0, 0.30, 0, 6.0, 6.0, 0.5, 0.15, -1)
@@ -1088,7 +1088,7 @@ play_sound(id, sound[])
 	}
 	else
 	{
-		new players[32], pnum, id
+		new players[MAX_PLAYERS], pnum, id
 		get_players(players, pnum, "ch")
 
 		for(--pnum; pnum>=0; pnum--)

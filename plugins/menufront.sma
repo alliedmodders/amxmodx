@@ -41,7 +41,7 @@
 #define MENUITEMSPERPAGE	8
 //#define MENUS_NUMBER 16
 
-new g_menuPosition[33]
+new g_menuPosition[MAX_PLAYERS]
 new g_menusNumber = 0
 new g_menuBody[MAXMENUS][STRINGSIZE]
 new bool:g_menuBodyPhrase[MAXMENUS]
@@ -51,7 +51,7 @@ new g_menuPlugin[MAXMENUS][STRINGSIZE]
 
 new g_coloredMenus
 
-new g_clientMenuPosition[33]
+new g_clientMenuPosition[MAX_PLAYERS]
 new g_clientMenusNumber = 0
 new g_clientMenuBody[MAXMENUS][STRINGSIZE]
 new bool:g_clientMenuBodyPhrase[MAXMENUS]

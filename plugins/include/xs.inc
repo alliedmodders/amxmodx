@@ -884,7 +884,7 @@
 	{	
 		new maxplayers = get_cvar_num("sv_visiblemaxplayers");
 		if (maxplayers <= 0)
-			maxplayers = get_maxplayers();
+			maxplayers = MaxClients;
 		
 		return (get_playersnum(1) <= maxplayers-num) ? true : false;
 	}

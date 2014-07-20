@@ -8,8 +8,8 @@
 #include <amxmodx>
 #include <dodx>
 
-new g_pingSum[33]
-new g_pingCount[33]
+new g_pingSum[MAX_PLAYERS]
+new g_pingCount[MAX_PLAYERS]
 
 public plugin_init()
   register_plugin("Stats Logging",AMXX_VERSION_STR,"AMXX Dev Team")
@@ -17,7 +17,7 @@ public plugin_init()
 public client_disconnect(id) {
   if ( is_user_bot( id ) || !is_user_connected(id) || !isDSMActive() ) return PLUGIN_CONTINUE
   remove_task( id )
-  new szTeam[16],szName[32],szAuthid[32], iStats[9], iHits[8], szWeapon[16]
+  new szTeam[16],szName[MAX_NAME_LENGTH],szAuthid[32], iStats[9], iHits[8], szWeapon[16]
   new iUserid = get_user_userid( id )
   get_user_info(id,"team", szTeam, 15 )
   szTeam[0] -= 32;

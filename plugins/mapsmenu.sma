@@ -37,12 +37,12 @@
 
 new Array:g_mapName;
 new g_mapNums
-new g_menuPosition[33]
+new g_menuPosition[MAX_PLAYERS]
 
 new g_voteCount[5]
 
-new g_voteSelected[33][4]
-new g_voteSelectedNum[33]
+new g_voteSelected[MAX_PLAYERS][4]
+new g_voteSelectedNum[MAX_PLAYERS]
 
 new g_coloredMenus
 
@@ -118,7 +118,7 @@ public actionResult(id, key)
 public checkVotes(id)
 {
 	id -= 34567
-	new num, ppl[32], a = 0
+	new num, ppl[MAX_PLAYERS], a = 0
 	
 	get_players(ppl, num, "c")
 	if (num == 0) num = 1
@@ -190,7 +190,7 @@ public voteCount(id, key)
 	
 	if (get_cvar_float("amx_vote_answers"))
 	{
-		new name[32]
+		new name[MAX_NAME_LENGTH]
 		
 		get_user_name(id, name, 31)
 		client_print(0, print_chat, "%L", LANG_PLAYER, "X_VOTED_FOR", name, key + 1)
@@ -353,7 +353,7 @@ public actionVoteMapMenu(id, key)
 			set_task(vote_time, "checkVotes", 34567 + id)
 
 			new menuBody[512]
-			new players[32]
+			new players[MAX_PLAYERS]
 			new pnum, keys, len
 
 			get_players(players, pnum)
@@ -388,7 +388,7 @@ public actionVoteMapMenu(id, key)
 			keys |= MENU_KEY_0
 			show_menu(id, keys, menuBody, iVoteTime, menuName)
 
-			new authid[32], name[32]
+			new authid[32], name[MAX_NAME_LENGTH]
 			
 			get_user_authid(id, authid, 31)
 			get_user_name(id, name, 31)
@@ -466,7 +466,7 @@ public actionMapsMenu(id, key)
 				message_end()
 			}
 			
-			new authid[32], name[32]
+			new authid[32], name[MAX_NAME_LENGTH]
 			
 			get_user_authid(id, authid, 31)
 			get_user_name(id, name, 31)

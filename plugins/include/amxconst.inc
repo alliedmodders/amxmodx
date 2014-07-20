@@ -32,7 +32,7 @@
 #define MAX_PLAYERS		33	/* Maximum number of players AMX Mod X supports */
 #define MAX_NAME_LENGTH 32	/* Maximum buffer required to store a client name */
 
-public const MaxClients;	/* Maximum number of players the server supports (dynamic) */
+public const MaxClients = 0;	/* Maximum number of players the server supports (dynamic) */
 
 
 #define M_PI 3.1415926535

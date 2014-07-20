@@ -138,7 +138,7 @@ new g_iPluginMode                                   = 0
 
 new g_izUserMenuPosition[MAX_PLAYERS]               = {0, ...}
 new g_izUserMenuAction[MAX_PLAYERS]                 = {0, ...}
-new g_izUserMenuPlayers[MAX_PLAYERS][MAX_PLAYERS]
+new g_izUserMenuPlayers[MAX_PLAYERS][32]
 
 new g_izSpecMode[MAX_PLAYERS]                       = {0, ...}
 
@@ -165,7 +165,7 @@ new g_izTeamRndStats[MAX_TEAMS][8]
 new g_izTeamGameStats[MAX_TEAMS][8]
 new g_izUserUserID[MAX_PLAYERS]                     = {0, ...}
 new g_izUserAttackerDistance[MAX_PLAYERS]           = {0, ...}
-new g_izUserVictimDistance[MAX_PLAYERS][MAX_PLAYERS]
+new g_izUserVictimDistance[MAX_PLAYERS][32]
 new g_izUserRndName[MAX_PLAYERS][MAX_NAME_LENGTH + 1]
 new g_izUserRndStats[MAX_PLAYERS][8]
 new g_izUserGameStats[MAX_PLAYERS][8]
@@ -1580,7 +1580,7 @@ endround_stats()
 	if (g_iRoundEndProcessed || !g_iRoundEndTriggered)
 		return
 
-	new iaPlayers[MAX_PLAYERS], iPlayer, iPlayers, id
+	new iaPlayers[32], iPlayer, iPlayers, id
 
 	get_players(iaPlayers, iPlayers)
 
@@ -1632,7 +1632,7 @@ public eventIntermission()
 
 public end_game_stats()
 {
-	new iaPlayers[MAX_PLAYERS], iPlayer, iPlayers, id
+	new iaPlayers[32], iPlayer, iPlayers, id
 
 	if (EndPlayer)
 	{

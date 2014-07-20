@@ -118,7 +118,7 @@ public actionResult(id, key)
 public checkVotes(id)
 {
 	id -= 34567
-	new num, ppl[MAX_PLAYERS], a = 0
+	new num, ppl[32], a = 0
 	
 	get_players(ppl, num, "c")
 	if (num == 0) num = 1
@@ -353,7 +353,7 @@ public actionVoteMapMenu(id, key)
 			set_task(vote_time, "checkVotes", 34567 + id)
 
 			new menuBody[512]
-			new players[MAX_PLAYERS]
+			new players[32]
 			new pnum, keys, len
 
 			get_players(players, pnum)

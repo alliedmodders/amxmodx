@@ -165,7 +165,7 @@ public addadminfn(id, level, cid)
 			player = cmd_target(id, arg, CMDTARGET_ALLOW_SELF | CMDTARGET_NO_BOTS)
 		} else {
 			new _steamid[44]
-			static _players[MAX_PLAYERS], _num, _pv
+			static _players[32], _num, _pv
 			get_players(_players, _num)
 			for (new _i=0; _i<_num; _i++)
 			{
@@ -602,7 +602,7 @@ public cmdReload(id, level, cid)
 	}
 #endif
 
-	new players[MAX_PLAYERS], num, pv
+	new players[32], num, pv
 	new name[MAX_NAME_LENGTH]
 	get_players(players, num)
 	for (new i=0; i<num; i++)

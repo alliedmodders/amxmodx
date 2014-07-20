@@ -567,7 +567,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 	{
 		if( TEAM_T <= team <= TEAM_CT )
 		{
-			new ppl[MAX_PLAYERS], pplnum, epplnum, a
+			new ppl[32], pplnum, epplnum, a
 			get_players(ppl, epplnum, "ae", team == TEAM_T ? "CT" : "TERRORIST")
 			get_players(ppl, pplnum, "ae", team == TEAM_T ? "TERRORIST" : "CT")
 			if( victim_alive )
@@ -611,7 +611,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 
 	if (LastMan || LastManSound)
 	{
-		new cts[MAX_PLAYERS], ts[MAX_PLAYERS], ctsnum, tsnum, b
+		new cts[32], ts[32], ctsnum, tsnum, b
 		get_players(cts, ctsnum, "ae", "CT")
 		get_players(ts, tsnum, "ae", "TERRORIST")
 		
@@ -744,7 +744,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 	{
 		if (HeadShotKill && wpnindex)
 		{
-			new killer_name[MAX_NAME_LENGTH], victim_name[MAX_NAME_LENGTH], weapon_name[32], message[256], players[MAX_PLAYERS], pnum, plr
+			new killer_name[MAX_NAME_LENGTH], victim_name[MAX_NAME_LENGTH], weapon_name[32], message[256], players[32], pnum, plr
 			
 			xmod_get_wpnname(wpnindex, weapon_name, charsmax(weapon_name))
 			get_user_name(killer, killer_name, charsmax(killer_name))
@@ -866,7 +866,7 @@ public LogEvent_Round_Start()
 {
 	if (KillingStreak)
 	{
-		new appl[MAX_PLAYERS], ppl, i
+		new appl[32], ppl, i
 		get_players(appl, ppl, "ac")
 		
 		for (new a = 0; a < ppl; ++a)
@@ -1088,7 +1088,7 @@ play_sound(id, sound[])
 	}
 	else
 	{
-		new players[MAX_PLAYERS], pnum, id
+		new players[32], pnum, id
 		get_players(players, pnum, "ch")
 
 		for(--pnum; pnum>=0; pnum--)

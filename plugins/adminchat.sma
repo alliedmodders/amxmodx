@@ -160,7 +160,7 @@ public cmdSayChat(id, level)
 	{
 		case 3, 4:
 		{
-			new players[MAX_PLAYERS], plrsnum, pl
+			new players[32], plrsnum, pl
 			get_players(players, plrsnum, "ch")
 			for(new j; j<plrsnum; j++)
 			{
@@ -226,7 +226,7 @@ public cmdSayAdmin(id)
 	}
 
 	new message[192], name[MAX_NAME_LENGTH], authid[32], userid
-	new players[MAX_PLAYERS], inum, pl
+	new players[32], inum, pl
 	
 	read_args(message, charsmax(message))
 	remove_quotes(message)
@@ -267,7 +267,7 @@ public cmdChat(id, level, cid)
 	if (!message[0])
 		return PLUGIN_HANDLED
 	
-	new name[MAX_NAME_LENGTH], players[MAX_PLAYERS], inum, authid[32], userid, pl
+	new name[MAX_NAME_LENGTH], players[32], inum, authid[32], userid, pl
 	
 	get_user_authid(id, authid, charsmax(authid))
 	get_user_name(id, name, charsmax(name))
@@ -407,7 +407,7 @@ public cmdTsay(id, level, cid)
 	{
 		case 3, 4:
 		{
-			new players[MAX_PLAYERS], plrsnum, pl
+			new players[32], plrsnum, pl
 			get_players(players, plrsnum, "ch")
 			for(new i; i<plrsnum; i++)
 			{

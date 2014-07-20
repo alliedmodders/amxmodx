@@ -67,7 +67,7 @@ new g_RoundScore[2]
 
 new g_userPosition[MAX_PLAYERS]
 new g_userState[MAX_PLAYERS]
-new g_userPlayers[MAX_PLAYERS][MAX_PLAYERS]
+new g_userPlayers[MAX_PLAYERS][32]
 new g_Buffer[2048]
 
 new g_Killers[MAX_PLAYERS][3]
@@ -251,14 +251,14 @@ public cmdFF(id){
 public endGameStats(){
   new i
   if ( EndPlayer ){
-    new players[MAX_PLAYERS], inum
+    new players[32], inum
     get_players(players,inum)
     for(i = 0; i < inum; ++i){
         displayStats_steam(players[i],players[i])
     }
   } 
   else if ( EndTop15 ){
-    new players[MAX_PLAYERS], inum
+    new players[32], inum
     get_players(players,inum)
 
     new g_Top[8], top = get_cvar_num("dodstats_topvalue") 
@@ -471,7 +471,7 @@ public round_end(){
 
   if ( !EndRoundStats ) return PLUGIN_CONTINUE
 
-  new g_Buffer2[1024], len, players[MAX_PLAYERS], pnum, stats[9],bodyhits[8]
+  new g_Buffer2[1024], len, players[32], pnum, stats[9],bodyhits[8]
   get_players( players , pnum ) 
 
 
@@ -711,7 +711,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK)
 
   if ( headshot && (HeadShotKill || HeadShotKillSound) && !xmod_is_melee_wpn(wpnindex) ){
     if ( HeadShotKill ){
-      new weapon[32], message[256], players[MAX_PLAYERS], pnum
+      new weapon[32], message[256], players[32], pnum
       xmod_get_wpnname(wpnindex,weapon,31) 
 
       get_players(players,pnum,"c")

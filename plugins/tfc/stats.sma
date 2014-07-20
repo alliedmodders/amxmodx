@@ -55,7 +55,7 @@ new g_KillCount;
 
 new g_userPosition[MAX_PLAYERS]
 new g_userState[MAX_PLAYERS]
-new g_userPlayers[MAX_PLAYERS][MAX_PLAYERS]
+new g_userPlayers[MAX_PLAYERS][32]
 new g_Buffer[2048]
 
 
@@ -278,14 +278,14 @@ getTop15(){
 
 public endGameStats(){
   if ( EndPlayer ){
-    new players[MAX_PLAYERS], inum
+    new players[32], inum
     get_players(players,inum)
     for(new i = 0; i < inum; ++i){
       displayStats(players[i],players[i])
     }
   } 
   else if ( EndTop15 ){
-    new players[MAX_PLAYERS], inum
+    new players[32], inum
     get_players(players,inum)
     getTop15()
     for(new i = 0; i < inum; ++i)

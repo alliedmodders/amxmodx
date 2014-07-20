@@ -266,7 +266,7 @@ public timeRemain(param[])
 			
 			if (flags & TD_BOTTOM_WHITE_TEXT)
 			{
-				new players[MAX_PLAYERS], pnum, plr
+				new players[32], pnum, plr
 				
 				get_players(players, pnum, "c")
 

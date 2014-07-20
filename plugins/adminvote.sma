@@ -150,7 +150,7 @@ public checkVotes()
 	new votesNum = g_voteCount[0] + g_voteCount[1] + g_voteCount[2] + g_voteCount[3]
 	new iRatio = votesNum ? floatround(g_voteRatio * float(votesNum), floatround_ceil) : 1
 	new iResult = g_voteCount[best]
-	new players[MAX_PLAYERS], pnum, i
+	new players[32], pnum, i
 	
 	get_players(players, pnum, "c")
 	

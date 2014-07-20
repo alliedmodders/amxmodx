@@ -38,7 +38,7 @@
 
 #define MAX_PLAYERS 32 + 1
 new g_menuPosition[MAX_PLAYERS]
-new g_menuPlayers[MAX_PLAYERS][MAX_PLAYERS]
+new g_menuPlayers[MAX_PLAYERS][32]
 new g_menuPlayersNum[MAX_PLAYERS]
 new g_menuOption[MAX_PLAYERS] = {-1, ...}
 new Float:g_menuOrigin[MAX_PLAYERS][3]

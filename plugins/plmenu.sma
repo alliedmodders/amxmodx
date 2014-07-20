@@ -41,7 +41,7 @@
 #include <fakemeta>
 
 new g_menuPosition[MAX_PLAYERS]
-new g_menuPlayers[MAX_PLAYERS][MAX_PLAYERS]
+new g_menuPlayers[MAX_PLAYERS][32]
 new g_menuPlayersNum[MAX_PLAYERS]
 new g_menuOption[MAX_PLAYERS]
 new g_menuSettings[MAX_PLAYERS]

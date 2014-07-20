@@ -405,7 +405,7 @@ native get_playersnum(flag=0);
 * "g" - ignore case sensitivity.
 * "h" - skip HLTV.
 * Example: Get all alive CTs: get_players(players,num,"ae","CT") */
-native get_players(players[MAX_PLAYERS], &num ,const flags[]="", const team[]="");
+native get_players(players[32], &num ,const flags[]="", const team[]="");
 
 /* Gets argument from command. */
 native read_argv(id,output[],len);

@@ -296,3 +296,16 @@ COL_ORANGE = оранжевый
 COL_OCEAN = океанический
 COL_MAROON = коричневый
 PRINT_ALL = (ВСЕМ) %s :  %s
+
+[cn]
+COL_WHITE = 白色
+COL_RED = 红色
+COL_GREEN = 绿色
+COL_BLUE = 蓝色
+COL_YELLOW = 黄色
+COL_MAGENTA = 紫红色
+COL_CYAN = 蓝绿色
+COL_ORANGE = 橙色
+COL_OCEAN = 深蓝色
+COL_MAROON = 褐红色
+PRINT_ALL = (全部) %s :   %s

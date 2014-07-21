@@ -503,3 +503,25 @@ CANT_PERF_DEAD = Неприменимо к мертвому игроку "%s"
 CANT_PERF_BOT = Непременимо к боту "%s"
 ON = Вкл.
 OFF = Выкл.
+
+[cn]
+BACK = 返回
+EXIT = 退出
+MORE = 更多
+NONE = 无
+ADMIN = 管理员
+PLAYER = 玩家
+ERROR = 错误
+YES = 是
+NO = 否
+BAN = 封禁
+KICK = 踢除
+NO_ACC_COM = 你无权执行该命令
+USAGE = 用法
+MORE_CL_MATCHT = 有一个以上的玩家符合你这个参数
+CL_NOT_FOUND = 未找到使用该名字或用户ID的玩家
+CLIENT_IMM = 客户端 "%s" 已经免疫
+CANT_PERF_DEAD = 玩家 "%s" 已经死亡,无法执行该命令
+CANT_PERF_BOT = 机器人 "%s" 无法执行该命令
+ON = 开启
+OFF = 关闭

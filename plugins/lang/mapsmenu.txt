@@ -550,7 +550,7 @@ ADMIN_CHANGEL_1 = АДМИНИСТРАТОР: сменил карту на %s
 ADMIN_CHANGEL_2 = АДМИНИСТРАТОР %s: сменил карту на %s
 CHANGLE_MENU = Меню для смены карты
 
-[en]
+[cn]
 RESULT_REF = 结果被否决
 RESULT_ACC = 结果通过
 VOTE_SUCCESS = 投票成功. 地图将被更改为

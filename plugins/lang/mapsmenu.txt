@@ -549,3 +549,27 @@ ADMIN_V_MAP_2 = АДМИНИСТРАТОР %s: создал голосовани
 ADMIN_CHANGEL_1 = АДМИНИСТРАТОР: сменил карту на %s
 ADMIN_CHANGEL_2 = АДМИНИСТРАТОР %s: сменил карту на %s
 CHANGLE_MENU = Меню для смены карты
+
+[en]
+RESULT_REF = 结果被否决
+RESULT_ACC = 结果通过
+VOTE_SUCCESS = 投票成功. 地图将被更改为
+VOTE_FAILED = 投票失败
+THE_WINNER = 胜利者
+WANT_CONT = 你是否要继续?
+VOT_CANC = 投票已经被取消
+X_VOTED_FOR = %s 选择选项 #%d
+VOTEMAP_MENU = 地图投票菜单
+START_VOT = 开始投票
+SEL_MAPS = 选择地图
+ALREADY_VOT = 已经有一个投票在进行当中...
+NO_MAPS_MENU = 菜单里没有可选的地图
+VOT_NOW_ALLOW = 当前不允许进行投票
+WHICH_MAP = 你想要哪个地图?
+CHANGE_MAP_TO = 更改地图为
+CANC_VOTE = 取消投票
+ADMIN_V_MAP_1 = 管理员: 进行投票更改地图
+ADMIN_V_MAP_2 = 管理员 %s: 进行投票更改地图
+ADMIN_CHANGEL_1 = 管理员: 更改地图为 %s
+ADMIN_CHANGEL_2 = 管理员 %s: 更改地图为 %s
+CHANGLE_MENU = 更改地图菜单

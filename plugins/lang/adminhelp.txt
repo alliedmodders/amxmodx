@@ -204,3 +204,12 @@ HELP_USE_BEGIN = Напишите 'amx_help 1' для просмотра с на
 TYPE_HELP = Напишите в консоле 'amx_help' для просмотра доступных команд
 TIME_INFO_1 = До смены карты осталось: %d:%02d мин. Следующая карта: %s
 TIME_INFO_2 = Ограничения по времени нет. Следующая карта: %s
+
+[cn]
+HELP_COMS = AMX Mod X 帮助: 命令
+HELP_ENTRIES = 目前第 %d 条 - %d 条,共 %d 条
+HELP_USE_MORE = 使用 'amx_help %d' 获取更多
+HELP_USE_BEGIN = 使用 'amx_help 1' 返回首页
+TYPE_HELP = 在控制台输入 'amx_help' 查看有效的命令
+TIME_INFO_1 = 剩余时间: %d:%02d 分钏. 下一张地图为: %s
+TIME_INFO_2 = 无时间限制. 下一张地图为: %s

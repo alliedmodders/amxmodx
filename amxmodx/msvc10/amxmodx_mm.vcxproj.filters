@@ -177,6 +177,12 @@
     <ClCompile Include="..\stackstructs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\CTextParsers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\textparse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\amx.h">
@@ -317,6 +323,18 @@
     <ClInclude Include="..\CDataPack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
+=======
+    <ClInclude Include="..\sm_stringhashmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sm_memtable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CTextParsers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+>>>>>>> Introduce TextParser API.
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\version.rc">

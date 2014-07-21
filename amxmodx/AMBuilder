@@ -94,6 +94,8 @@ binary.sources = [
   'CDataPack.cpp',
   'datapacks.cpp',
   'stackstructs.cpp',
+  'CTextParsers.cpp',
+  'textparse.cpp',
 ]
 
 if builder.target_platform == 'windows':

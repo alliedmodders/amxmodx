@@ -204,3 +204,12 @@ X_CHOSE_X = %s выбрал %s
 CHOOSE_NEXTM = AMX Выбор следующей карты
 EXTED_MAP = Продление карты на %s
 TIME_CHOOSE = Пора выбирать следующую карту...
+
+[cn]
+CHO_FIN_EXT = 选择结束. 当前地图将被延长 %.0f 分钟
+CHO_FIN_NEXT = 选择结束. 下一张地图为 %s
+CHOSE_EXT = %s 选择延长当前地图
+X_CHOSE_X = %s 选择了 %s
+CHOOSE_NEXTM = AMX 选择下一张地图
+EXTED_MAP = 延长地图 %s
+TIME_CHOOSE = 是该选择下一张地图了...

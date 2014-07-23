@@ -92,7 +92,8 @@ binary.sources = [
   'datastructs.cpp',
   'trie_natives.cpp',
   'CDataPack.cpp',
-  'datapacks.cpp'
+  'datapacks.cpp',
+  'stackstructs.cpp',
 ]
 
 if builder.target_platform == 'windows':

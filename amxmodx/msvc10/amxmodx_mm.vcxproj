@@ -329,6 +329,7 @@
     <ClCompile Include="..\power.cpp" />
     <ClCompile Include="..\sorting.cpp" />
     <ClCompile Include="..\srvcmd.cpp" />
+    <ClCompile Include="..\stackstructs.cpp" />
     <ClCompile Include="..\string.cpp">
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='JITReleaseBinLog|Win32'">All</AssemblerOutput>
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">All</AssemblerOutput>
@@ -400,6 +401,7 @@
     <ResourceCompile Include="..\version.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\plugins\include\cellstack.inc" />
     <None Include="..\..\plugins\include\datapack.inc" />
     <None Include="..\amxdefn.asm" />
     <None Include="..\amxexecn.asm" />

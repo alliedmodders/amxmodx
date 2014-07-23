@@ -6,17 +6,24 @@ new Trie:ExpectedKVData;
 
 public plugin_init()
 {
-    register_concmd("textparse_vdf", "ConsoleCommand_TextParseVDF");
-    register_clcmd("textparse_ini", "ServerCommand_TextParseINI");
+    register_concmd("textparse", "ConsoleCommand_TextParse");
+}
+
+public ConsoleCommand_TextParse()
+{
+    InitializeTextParseSMC();
+    InitializeTextParseINI();
 }
 
 /**
- * VDF Config format
+ * SMC Config format
  */
 
-public ConsoleCommand_TextParseVDF()
+InitializeTextParseSMC()
 {
-    server_print("Testing text parser with VDF config file format...");
+    SuccessCount = 0;
+
+    server_print("Testing text parser with SMC config file format...");
 
     new const configFile[] = "addons/amxmodx/scripting/testsuite/textparse_test.cfg";
 
@@ -53,7 +60,7 @@ public ConsoleCommand_TextParseVDF()
     SMC_SetParseEnd(parser, "ReadCore_ParseEnd");
 
     new line, col;
-    new SMCError:err = SMC_ParseFile_VDF(parser, configFile, line, col);
+    new SMCError:err = SMC_ParseFile(parser, configFile, line, col);
 
     if (err != SMCError_Okay)
     {
@@ -66,22 +73,24 @@ public ConsoleCommand_TextParseVDF()
         ++SuccessCount;
     }
 
-    SMC_DestroyParser(parser);
-
     server_print("^tTests successful: %d/%d", SuccessCount, expectedStartEndCount + expectedSectionCount + expectedKeyValueCount + expectedLineCount + 1);
+
+    SMC_DestroyParser(parser);
+    TrieDestroy(ExpectedKVData);
+    SuccessCount = 0;
 }
 
-public ReadCore_ParseStart(TextParser:smc)
+public ReadCore_ParseStart(TextParser:handle)
 {
     ++SuccessCount;
 }
 
-public ReadCore_NewSection(TextParser:smc, const name[])
+public ReadCore_NewSection(TextParser:handle, const name[])
 {
     ++SuccessCount;
 }
 
-public ReadCore_KeyValue(TextParser:smc, const key[], const value[])
+public ReadCore_KeyValue(TextParser:handle, const key[], const value[])
 {
     new buffer[128];
     if (TrieGetString(ExpectedKVData, key, buffer, charsmax(buffer)) && equal(value, buffer))
@@ -90,27 +99,124 @@ public ReadCore_KeyValue(TextParser:smc, const key[], const value[])
     }
 }
 
-public ReadCore_EndSection(TextParser:smc)
+public ReadCore_EndSection(TextParser:handle)
 {
     ++SuccessCount;
 }
 
-public ReadCore_CurrentLine(TextParser:smc, const line[], lineno)
+public ReadCore_CurrentLine(TextParser:handle, const line[], lineno)
 {
    ++SuccessCount;
 }
 
-public ReadCore_ParseEnd(TextParser:smc)
+public ReadCore_ParseEnd(TextParser:handle, bool:halted, bool:failed)
 {
     ++SuccessCount;
 }
-
 
 
 /**
  * INI Config format
  */
-public ServerCommand_TextParseINI()
-{
 
+public InitializeTextParseINI()
+{
+    SuccessCount = 0;
+
+    server_print("Testing text parser with INI config file format...");
+
+    new const configFile[] = "addons/amxmodx/scripting/testsuite/textparse_test.ini";
+
+    ExpectedKVData = TrieCreate();
+    TrieSetString(ExpectedKVData, "settings", "");
+    TrieSetString(ExpectedKVData, "enabled", "1");
+    TrieSetString(ExpectedKVData, "strip_weapons", "1");
+    TrieSetString(ExpectedKVData, "weapons_stay", "0");
+    TrieSetString(ExpectedKVData, "spawnmode", "preset");
+    TrieSetString(ExpectedKVData, "remove_bomb", "1");
+    TrieSetString(ExpectedKVData, "spawn_wait_time", "0.75");
+    TrieSetString(ExpectedKVData, "protection", "");
+    TrieSetString(ExpectedKVData, "colors", "0 255 0 200");
+    TrieSetString(ExpectedKVData, "time", "time");
+    TrieSetString(ExpectedKVData, "secondary", "");
+    TrieSetString(ExpectedKVData, "usp USP 1", "");
+    TrieSetString(ExpectedKVData, "glock18 Glock 1", "");
+    TrieSetString(ExpectedKVData, "deagle Deagle 1", "");
+    TrieSetString(ExpectedKVData, "botsecondary", "");
+    TrieSetString(ExpectedKVData, "deagle", "");
+    TrieSetString(ExpectedKVData, "usp", "");
+
+    new const expectedSectionCount  = 4;
+    new const expectedStartEndCount = 2;
+    new const expectedKeyValueCount = TrieGetSize(ExpectedKVData) - expectedSectionCount;
+    new const expectedLineCount     = TrieGetSize(ExpectedKVData); // This doesn't include blanck/comments line.
+
+    new TextParser:parser = SMC_CreateParser(.ini_format = true);
+
+    SMC_SetReaders(parser, "ReadCSDM_NewSection", "ReadCSDM_KeyValue");
+    SMC_SetParseStart(parser, "ReadCSDM_ParseStart");
+    SMC_SetRawLine(parser, "ReadCSDM_CurrentLine");
+    SMC_SetParseEnd(parser, "ReadCSDM_ParseEnd");
+
+    new line, col;
+    new SMCError:err = SMC_ParseFile(parser, configFile, line, col);
+
+    if (err != SMCError_Okay)
+    {
+        new buffer[64];
+        server_print("Error: %s", SMC_GetErrorString(err, buffer, charsmax(buffer)) ? buffer : "Fatal parse error");
+    }
+
+    if (line == expectedLineCount + 1)
+    {
+        ++SuccessCount;
+    }
+
+    server_print("^tTests successful: %d/%d", SuccessCount, expectedStartEndCount + expectedSectionCount + expectedKeyValueCount + expectedLineCount + 1);
+
+    SMC_DestroyParser(parser);
+    TrieDestroy(ExpectedKVData);
+}
+
+public ReadCSDM_ParseStart(TextParser:handle)
+{
+    ++SuccessCount;
+}
+
+public ReadCSDM_NewSection(TextParser:handle, const section[], bool:invalid_tokens, bool:close_bracket, bool:extra_tokens, curtok)
+{
+    if (TrieKeyExists(ExpectedKVData, section))
+    {
+        if ((equal(section, "secondary") && !extra_tokens) ||
+            (equal(section, "botsecondary") && close_bracket))
+        {
+            return;
+        }
+
+        ++SuccessCount;
+    }
+}
+
+public ReadCSDM_KeyValue(TextParser:handle, const key[], const value[], bool:invalid_tokens, bool:equal_token, bool:quotes, curtok)
+{
+    new buffer[128];
+    if (TrieGetString(ExpectedKVData, key, buffer, charsmax(buffer)) && equal(value, buffer))
+    {
+        if (equal(value, "colors") && !quotes)
+        {
+            return;
+        }
+
+        ++SuccessCount;
+    }
+}
+
+public ReadCSDM_CurrentLine(TextParser:handle, const line[], lineno, curtok)
+{
+   ++SuccessCount;
+}
+
+public ReadCSDM_ParseEnd(TextParser:handle, bool:halted, bool:failed)
+{
+    ++SuccessCount;
 }

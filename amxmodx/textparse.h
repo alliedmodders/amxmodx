@@ -35,7 +35,9 @@
 #include "amxmodx.h"
 #include "CTextParsers.h"
 
-class ParseInfo : public ITextListener_SMC
+class ParseInfo :
+	public ITextListener_SMC,
+	public ITextListener_INI
 {
 public:
 	ParseInfo()
@@ -47,31 +49,43 @@ public:
 		end_section = -1;
 		raw_line = -1;
 		handle = -1;
+		ini_format = false;
 	}
-	~ParseInfo() {}
+
 public:
 	void ReadSMC_ParseStart()
 	{
-		if (parse_start != -1)
-		{
+		if (parse_start != -1)	
 			executeForwards(parse_start, handle);
-		}
+	}
+	void ReadINI_ParseStart()
+	{
+		if (parse_start != -1)	
+			executeForwards(parse_start, handle);
 	}
 
 	void ReadSMC_ParseEnd(bool halted, bool failed)
 	{
-		if (parse_end != -1)
-		{
+		if (parse_end != -1)	
 			executeForwards(parse_end, handle, halted ? 1 : 0, failed ? 1 : 0);
-		}
+	}
+	void ReadINI_ParseEnd(bool halted, bool failed)
+	{
+		if (parse_end != -1)	
+			executeForwards(parse_end, handle, halted ? 1 : 0, failed ? 1 : 0);
 	}
 
 	SMCResult ReadSMC_NewSection(const SMCStates *states, const char *name)
 	{
 		if (new_section != -1)
-		{
 			return (SMCResult)executeForwards(new_section, handle, name);
-		}
+
+		return SMCResult_Continue;
+	}
+	SMCResult ReadINI_NewSection(const char *section, bool invalid_tokens, bool close_bracket, bool extra_tokens, unsigned int *curtok)
+	{
+		if (new_section != -1) 
+			return (SMCResult)executeForwards(new_section, handle, section, invalid_tokens, close_bracket, extra_tokens, *curtok);
 
 		return SMCResult_Continue;
 	}
@@ -79,9 +93,14 @@ public:
 	SMCResult ReadSMC_KeyValue(const SMCStates *states, const char *key, const char *value)
 	{
 		if (key_value != -1)
-		{
 			return (SMCResult)executeForwards(key_value, handle, key, value);
-		}
+
+		return SMCResult_Continue;
+	}
+	SMCResult ReadINI_KeyValue(const char *key, const char *value, bool invalid_tokens, bool equal_token, bool quotes, unsigned int *curtok)
+	{
+		if (key_value != -1)
+			return (SMCResult)executeForwards(key_value, handle, key, value, invalid_tokens, equal_token, quotes, *curtok);
 
 		return SMCResult_Continue;
 	}
@@ -89,9 +108,7 @@ public:
 	SMCResult ReadSMC_LeavingSection(const SMCStates *states)
 	{
 		if (end_section != -1)
-		{
-			return (SMCResult)executeForwards(end_section, handle, handle);
-		}
+			return (SMCResult)executeForwards(end_section, handle);
 
 		return SMCResult_Continue;
 	}
@@ -99,9 +116,14 @@ public:
 	SMCResult ReadSMC_RawLine(const SMCStates *states, const char *line)
 	{
 		if (raw_line != -1)
-		{
 			return (SMCResult)executeForwards(raw_line, handle, line, states->line);
-		}
+
+		return SMCResult_Continue;
+	}
+	SMCResult ReadINI_RawLine(const char *line, unsigned int lineno, unsigned int *curtok)
+	{
+		if (raw_line != -1)
+			return (SMCResult)executeForwards(raw_line, handle, line, lineno, *curtok);
 
 		return SMCResult_Continue;
 	}
@@ -113,6 +135,7 @@ public:
 	int end_section;
 	int raw_line;
 	int handle;
+	bool ini_format;
 };
 
 template <typename T>

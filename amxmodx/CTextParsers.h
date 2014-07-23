@@ -51,7 +51,7 @@ class TextParsers :	public ITextParsers
 public:
 	TextParsers();
 public:
-	bool ParseFile_INI(const char *file,
+	SMCError ParseFile_INI(const char *file,
 		ITextListener_INI *ini_listener,
 		unsigned int *line,
 		unsigned int *col);

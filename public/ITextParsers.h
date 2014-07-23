@@ -82,6 +82,35 @@ namespace SourceMod
 	 */
 
 	/**
+	 * @brief Lists actions to take when an SMC parse hook is done.
+	 */
+	enum SMCResult
+	{
+		SMCResult_Continue,		/**< Continue parsing */
+		SMCResult_Halt,			/**< Stop parsing here */
+		SMCResult_HaltFail		/**< Stop parsing and return SMCError_Custom */
+	};
+
+	/**
+	 * @brief Lists error codes possible from parsing an SMC file.
+	 */
+	enum SMCError
+	{
+		SMCError_Okay = 0,			/**< No error */
+		SMCError_StreamOpen,		/**< Stream failed to open */
+		SMCError_StreamError,		/**< The stream died... somehow */
+		SMCError_Custom,			/**< A custom handler threw an error */
+		SMCError_InvalidSection1,	/**< A section was declared without quotes, and had extra tokens */
+		SMCError_InvalidSection2,	/**< A section was declared without any header */
+		SMCError_InvalidSection3,	/**< A section ending was declared with too many unknown tokens */
+		SMCError_InvalidSection4,	/**< A section ending has no matching beginning */
+		SMCError_InvalidSection5,	/**< A section beginning has no matching ending */
+		SMCError_InvalidTokens,		/**< There were too many unidentifiable strings on one line */
+		SMCError_TokenOverflow,		/**< The token buffer overflowed */
+		SMCError_InvalidProperty1,	/**< A property was declared outside of any section */
+	};
+
+	/**
 	 * @brief Contains parse events for INI files.
 	 */
 	class ITextListener_INI
@@ -96,6 +125,23 @@ namespace SourceMod
 		}
 	public:
 		/**
+		* @brief Called when starting parsing.
+		*/
+		virtual void ReadINI_ParseStart()
+		{
+		};
+
+		/**
+		* @brief Called when ending parsing.
+		*
+		* @param halted			True if abnormally halted, false otherwise.
+		* @param failed			True if parsing failed, false otherwise.
+		*/
+		virtual void ReadINI_ParseEnd(bool halted, bool failed)
+		{
+		}
+
+		/**
 		 * @brief Called when a new section is encountered in an INI file.
 		 * 
 		 * @param section		Name of section in between the [ and ] characters.
@@ -104,15 +150,11 @@ namespace SourceMod
 		 * @param extra_tokens	True if extra tokens were detected on the line.
 		 * @param curtok		Contains current token in the line where the section name starts.
 		 *						You can add to this offset when failing to point to a token.
-		 * @return				True to keep parsing, false otherwise.
+		 * @return				SMCResult directive.
 		 */
-		virtual bool ReadINI_NewSection(const char *section,
-										bool invalid_tokens,
-										bool close_bracket,
-										bool extra_tokens,
-										unsigned int *curtok)
+		virtual SMCResult ReadINI_NewSection(const char *section, bool invalid_tokens, bool close_bracket, bool extra_tokens, unsigned int *curtok)
 		{
-			return true;
+			return SMCResult_Continue;
 		}
 
 		/**
@@ -125,28 +167,24 @@ namespace SourceMod
 		 * @param quotes		Whether value was enclosed in quotes.
 		 * @param curtok		Contains the token index of the start of the value string.  
 		 *						This can be changed when returning false.
-		 * @return				True to keep parsing, false otherwise.
+		 * @return				SMCResult directive.
 		 */
-		virtual bool ReadINI_KeyValue(const char *key, 
-									  const char *value, 
-									  bool invalid_tokens,
-									  bool equal_token,
-									  bool quotes,
-									  unsigned int *curtok)
+		virtual SMCResult ReadINI_KeyValue(const char *key, const char *value, bool invalid_tokens, bool equal_token, bool quotes, unsigned int *curtok)
 		{
-			return true;
+			return SMCResult_Continue;
 		}
 
 		/**
 		 * @brief Called after a line has been preprocessed, if it has text.
 		 *
 		 * @param line			Contents of line.
+		 * @param lineno		The line number it occurs on.
 		 * @param curtok		Pointer to optionally store failed position in string.
-		 * @return				True to keep parsing, false otherwise.
+		 * @return				SMCResult directive.
 		 */
-		virtual bool ReadINI_RawLine(const char *line, unsigned int *curtok)
+		virtual SMCResult ReadINI_RawLine(const char *line, unsigned int lineno, unsigned int *curtok)
 		{
-			return true;
+			return SMCResult_Continue;
 		}
 	};
 
@@ -188,35 +226,6 @@ namespace SourceMod
 	 *  ;<TEXT>
 	 *  //<TEXT>
 	 *  / *<TEXT> */
-
-	/**
-	 * @brief Lists actions to take when an SMC parse hook is done.
-	 */
-	enum SMCResult
-	{
-		SMCResult_Continue,		/**< Continue parsing */
-		SMCResult_Halt,			/**< Stop parsing here */
-		SMCResult_HaltFail		/**< Stop parsing and return SMCError_Custom */
-	};
-
-	/**
-	 * @brief Lists error codes possible from parsing an SMC file.
-	 */
-	enum SMCError
-	{
-		SMCError_Okay = 0,			/**< No error */
-		SMCError_StreamOpen,		/**< Stream failed to open */
-		SMCError_StreamError,		/**< The stream died... somehow */
-		SMCError_Custom,			/**< A custom handler threw an error */
-		SMCError_InvalidSection1,	/**< A section was declared without quotes, and had extra tokens */
-		SMCError_InvalidSection2,	/**< A section was declared without any header */
-		SMCError_InvalidSection3,	/**< A section ending was declared with too many unknown tokens */
-		SMCError_InvalidSection4,	/**< A section ending has no matching beginning */
-		SMCError_InvalidSection5,	/**< A section beginning has no matching ending */
-		SMCError_InvalidTokens,		/**< There were too many unidentifiable strings on one line */
-		SMCError_TokenOverflow,		/**< The token buffer overflowed */
-		SMCError_InvalidProperty1,	/**< A property was declared outside of any section */
-	};
 
 	/**
 	 * @brief States for line/column
@@ -341,9 +350,9 @@ namespace SourceMod
 		 * @param ini_listener	Event handler for reading file.
 		 * @param line			If non-NULL, will contain last line parsed (0 if file could not be opened).
 		 * @param col			If non-NULL, will contain last column parsed (undefined if file could not be opened).
-		 * @return				True if parsing succeeded, false if file couldn't be opened or there was a syntax error.
+		 * @return				An SMCError result code.
 		 */
-		virtual bool ParseFile_INI(const char *file, 
+		virtual SMCError ParseFile_INI(const char *file,
 									ITextListener_INI *ini_listener,
 									unsigned int *line,
 									unsigned int *col) =0;

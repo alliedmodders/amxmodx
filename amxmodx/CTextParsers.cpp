@@ -778,7 +778,7 @@ failed:
 * INI parser
 */
 
-bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listener, unsigned int *line, unsigned int *col)
+SMCError TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listener, unsigned int *line, unsigned int *col)
 {
 	FILE *fp = fopen(file, "rt");
 	unsigned int curline = 0;
@@ -792,12 +792,16 @@ bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listene
 			*line = 0;
 		}
 
-		return false;
+		return SMCError_StreamOpen;
 	}
+
+	ini_listener->ReadINI_ParseStart();
 
 	char buffer[2048];
 	char *ptr, *save_ptr;
 	bool in_quote;
+	SMCError  err = SMCError_Okay;
+	SMCResult res = SMCResult_Continue;
 
 	while (!feof(fp))
 	{
@@ -897,8 +901,9 @@ bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listene
 			continue;
 		}
 
-		if (!ini_listener->ReadINI_RawLine(ptr, &curtok))
+		if ((res = ini_listener->ReadINI_RawLine(ptr, curline,  &curtok)) != SMCResult_Continue)
 		{
+			err = (res == SMCResult_HaltFail) ? SMCError_Custom : SMCError_Okay;
 			goto event_failed;
 		}
 
@@ -951,8 +956,9 @@ bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listene
 			}
 
 			/* Tell the handler */
-			if (!ini_listener->ReadINI_NewSection(&ptr[1], invalid_tokens, got_bracket, extra_tokens, &curtok))
+			if ((res = ini_listener->ReadINI_NewSection(&ptr[1], invalid_tokens, got_bracket, extra_tokens, &curtok)) != SMCResult_Continue)
 			{
+				err = (res == SMCResult_HaltFail) ? SMCError_Custom : SMCError_Okay;
 				goto event_failed;
 			}
 		}
@@ -1052,9 +1058,14 @@ bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listene
 			}
 		skip_value:
 			/* We're done! */
-			curtok = val_ptr - buffer;
-			if (!ini_listener->ReadINI_KeyValue(key_ptr, val_ptr, invalid_tokens, equal_token, quotes, &curtok))
+			if (val_ptr)
+				curtok = val_ptr - buffer;
+			else
+				curtok = 0;
+
+			if ((res = ini_listener->ReadINI_KeyValue(key_ptr, val_ptr, invalid_tokens, equal_token, quotes, &curtok)) != SMCResult_Continue)
 			{
+				err = (res == SMCResult_HaltFail) ? SMCError_Custom : SMCError_Okay;
 				curtok = 0;
 				goto event_failed;
 			}
@@ -1066,9 +1077,16 @@ bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listene
 		*line = curline;
 	}
 
+	if (col)
+	{
+		*col = curtok;
+	}
+
 	fclose(fp);
 
-	return true;
+	ini_listener->ReadINI_ParseEnd(false, false);
+
+	return SMCError_Okay;
 
 event_failed:
 	if (line)
@@ -1083,7 +1101,9 @@ event_failed:
 
 	fclose(fp);
 
-	return false;
+	ini_listener->ReadINI_ParseEnd(true, (err == SMCError_Custom));
+
+	return err;
 }
 
 const char *TextParsers::GetSMCErrorString(SMCError err)

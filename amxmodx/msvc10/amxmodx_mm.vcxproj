@@ -392,6 +392,7 @@
     <ClInclude Include="..\sh_stack.h" />
     <ClInclude Include="..\sh_tinyhash.h" />
     <ClInclude Include="..\svn_version.h" />
+    <ClInclude Include="..\textparse.h" />
     <ClInclude Include="..\trie_natives.h" />
     <ClInclude Include="..\zlib\zconf.h" />
     <ClInclude Include="..\zlib\zlib.h" />

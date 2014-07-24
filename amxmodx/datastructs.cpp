@@ -30,13 +30,13 @@
 
 #include "amxmodx.h"
 #include "datastructs.h"
-
+#include <am-utility.h>
 
 // Note: All handles start at 1. 0 and below are invalid handles.
 //       This way, a plugin that doesn't initialize a vector or
 //       string will not be able to modify another plugin's data
 //       on accident.
-CVector<CellVector*> VectorHolder;
+ke::Vector<CellArray*> VectorHolder;
 
 
 // Array:ArrayCreate(cellsize=1, reserved=32);
@@ -44,19 +44,19 @@ static cell AMX_NATIVE_CALL ArrayCreate(AMX* amx, cell* params)
 {
 	// params[1] (cellsize) is how big in cells each element is.
 	// this MUST be greater than 0!
-	int cellsize=params[1];
+	int cellsize = params[1];
 
 	// params[2] (reserved) is how many elements to allocate
 	// immediately when the list is created.
 	// this MUST be greater than 0!
-	int reserved=params[2];
+	int reserved = params[2];
 
-	if (cellsize<=0)
+	if (cellsize <= 0)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid array size (%d)", cellsize);
 		return -1;
 	}
-	if (reserved<=0)
+	if (reserved <= 0)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid reserved size (%d)", reserved);
 		return -1;
@@ -64,64 +64,64 @@ static cell AMX_NATIVE_CALL ArrayCreate(AMX* amx, cell* params)
 
 	// Scan through the vector list to see if any are NULL.
 	// NULL means the vector was previously destroyed.
-	for (unsigned int i=0; i < VectorHolder.size(); ++i)
+	for (unsigned int i=0; i < VectorHolder.length(); ++i)
 	{
 		if (VectorHolder[i]==NULL)
 		{
-			VectorHolder[i]=new CellVector(cellsize);
-			VectorHolder[i]->Grow(reserved);
+			VectorHolder[i] = new CellArray(cellsize);
+			//VectorHolder[i]->resize(reserved);
 			return i + 1;
 		}
 	}
 
 	// None are NULL, create a new vector
-	CellVector* NewVector=new CellVector(cellsize);
-	NewVector->Grow(reserved);
+	CellArray* NewVector = new CellArray(cellsize);
+	//NewVector->resize(reserved);
 
-	VectorHolder.push_back(NewVector);
+	VectorHolder.append(NewVector);
 
-	return VectorHolder.size();
+	return VectorHolder.length();
 }
 
-// ArrayClear(Array:which)
+// native ArrayClear(Array:which);
 static cell AMX_NATIVE_CALL ArrayClear(AMX* amx, cell* params)
 {
-	CellVector* vec=HandleToVector(amx, params[1]);
-
-	if (vec==NULL)
-	{
-		return 0;
-	}
-
-	vec->Clear();
-
-	return 1;
-}
-
-// ArraySize(Array:which)
-static cell AMX_NATIVE_CALL ArraySize(AMX* amx, cell* params)
-{
-	CellVector* vec=HandleToVector(amx, params[1]);
-
-	if (vec==NULL)
-	{
-		return 0;
-	}
-
-	return vec->Size();
-}
-
-// ArrayResize(Array:which, newsize);
-static cell AMX_NATIVE_CALL ArrayResize(AMX* amx, cell* params)
-{
-	CellVector* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = HandleToVector(amx, params[1]);
 
 	if (vec == NULL)
 	{
 		return 0;
 	}
 
-	if (!vec->Resize(params[2]))
+	vec->clear();
+
+	return 1;
+}
+
+// native ArraySize(Array:which);
+static cell AMX_NATIVE_CALL ArraySize(AMX* amx, cell* params)
+{
+	CellArray* vec = HandleToVector(amx, params[1]);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	return vec->size();
+}
+
+// native bool:ArrayResize(Array:which, newsize);
+static cell AMX_NATIVE_CALL ArrayResize(AMX* amx, cell* params)
+{
+	CellArray* vec = HandleToVector(amx, params[1]);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	if (!vec->resize(params[2]))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Unable to resize array to \"%u\"", params[2]);
 		return 0;
@@ -130,21 +130,21 @@ static cell AMX_NATIVE_CALL ArrayResize(AMX* amx, cell* params)
 	return 1;
 }
 
-// ArrayClone(Array:which)
+// native Array:ArrayClone(Array:which);
 static cell AMX_NATIVE_CALL ArrayClone(AMX* amx, cell* params)
 {
-	CellVector* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = HandleToVector(amx, params[1]);
 
 	if (vec == NULL)
 	{
 		return 0;
 	}
 
-	CellVector *clonevec = vec->Clone();
+	CellArray *clonevec = vec->clone();
 
 	// Scan through the vector list to see if any are NULL.
 	// NULL means the vector was previously destroyed.
-	for (unsigned int i = 0; i < VectorHolder.size(); ++i)
+	for (unsigned int i = 0; i < VectorHolder.length(); ++i)
 	{
 		if (VectorHolder[i] == NULL)
 		{
@@ -153,172 +153,310 @@ static cell AMX_NATIVE_CALL ArrayClone(AMX* amx, cell* params)
 		}
 	}
 
-	VectorHolder.push_back(clonevec);
+	VectorHolder.append(clonevec);
 
-	return VectorHolder.size();
+	return VectorHolder.length();
 }
 
-// ArrayGetArray(Array:which, item, any:output[]);
+// native ArrayGetArray(Array:which, item, any:output[], size = -1);
 static cell AMX_NATIVE_CALL ArrayGetArray(AMX* amx, cell* params)
 {
-	CellVector* vec=HandleToVector(amx, params[1]);
-
-	if (vec==NULL)
-	{
-		return 0;
-	}
-
-	if (vec->GetArray(params[2],get_amxaddr(amx, params[3]))!=1)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid cellvector handle provided (%d:%d:%d)", params[1], params[2], vec->Size());
-		return 0;
-	}
-
-	return 1;
-}
-// ArrayGetCell(Array:which, item, any:&output);
-static cell AMX_NATIVE_CALL ArrayGetCell(AMX* amx, cell* params)
-{
-	CellVector* vec=HandleToVector(amx, params[1]);
-
-	if (vec==NULL)
-	{
-		return 0;
-	}
-
-	cell ret;
-	if (vec->GetCell(params[2],&ret)!=1)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid cellvector handle provided (%d:%d:%d)", params[1], params[2], vec->Size());
-		return 0;
-	}
-
-	return ret;
-}
-// ArrayGetString(Array:which, item, any:output[], size);
-static cell AMX_NATIVE_CALL ArrayGetString(AMX* amx, cell* params)
-{
-	CellVector* vec=HandleToVector(amx, params[1]);
-
-	if (vec==NULL)
-	{
-		return 0;
-	}
-
-	if (vec->GetString(params[2],get_amxaddr(amx, params[3]),params[4])!=1)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid cellvector handle provided (%d:%d:%d)", params[1], params[2], vec->Size());
-		return 0;
-	}
-
-	return 1;
-}
-// ArraySetArray(Array:which, item, any:output[]);
-static cell AMX_NATIVE_CALL ArraySetArray(AMX* amx, cell* params)
-{
-	CellVector* vec=HandleToVector(amx, params[1]);
-
-	if (vec==NULL)
-	{
-		return 0;
-	}
-
-	if (vec->SetArray(params[2],get_amxaddr(amx, params[3]))!=1)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid cellvector handle provided (%d:%d:%d)", params[1], params[2], vec->Size());
-		return 0;
-	}
-
-	return 1;
-}
-// ArraySetCell(Array:which, item, any:&output);
-static cell AMX_NATIVE_CALL ArraySetCell(AMX* amx, cell* params)
-{
-	CellVector* vec=HandleToVector(amx, params[1]);
-
-	if (vec==NULL)
-	{
-		return 0;
-	}
-
-	if (vec->SetCell(params[2], params[3])!=1)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid cellvector handle provided (%d:%d:%d)", params[1], params[2], vec->Size());
-		return 0;
-	}
-
-	return 1;
-}
-// ArraySetString(Array:which, item, any:output[]);
-static cell AMX_NATIVE_CALL ArraySetString(AMX* amx, cell* params)
-{
-	CellVector* vec=HandleToVector(amx, params[1]);
-
-	if (vec==NULL)
-	{
-		return 0;
-	}
-
-	if (vec->SetString(params[2],get_amxaddr(amx, params[3]))!=1)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid cellvector handle provided (%d:%d:%d)", params[1], params[2], vec->Size());
-		return 0;
-	}
-
-	return 1;
-}
-// ArrayPushArray(Array:which, any:output[]);
-static cell AMX_NATIVE_CALL ArrayPushArray(AMX* amx, cell* params)
-{
-	CellVector* vec=HandleToVector(amx, params[1]);
-
-	if (vec==NULL)
-	{
-		return 0;
-	}
-
-	vec->SetArray(vec->Push(),get_amxaddr(amx, params[2]));
-
-	return 1;
-}
-// ArrayPushCell(Array:which, &any:output);
-static cell AMX_NATIVE_CALL ArrayPushCell(AMX* amx, cell* params)
-{
-	CellVector* vec=HandleToVector(amx, params[1]);
-
-	if (vec==NULL)
-	{
-		return 0;
-	}
-
-	vec->SetCell(vec->Push(), params[2]);
-
-	return 1;
-}
-// ArrayPushString(Array:which, any:output[]);
-static cell AMX_NATIVE_CALL ArrayPushString(AMX* amx, cell* params)
-{
-	CellVector* vec=HandleToVector(amx, params[1]);
-
-	if (vec==NULL)
-	{
-		return 0;
-	}
-
-	vec->SetString(vec->Push(),get_amxaddr(amx, params[2]));
-
-	return 1;
-}
-static cell AMX_NATIVE_CALL ArrayGetStringHandle(AMX* amx, cell* params)
-{
-	CellVector* vec=HandleToVector(amx, params[1]);
+	CellArray* vec = HandleToVector(amx, params[1]);
 
 	if (vec == NULL)
 	{
 		return 0;
 	}
 
-	cell* ptr=vec->GetCellPointer(params[2]);
+	size_t idx = (size_t)params[2];
+
+	if (idx >= vec->size())
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid index %d (count: %d)", idx, vec->size());
+		return 0;
+	}
+
+	cell *blk = vec->at(idx);
+	size_t indexes = vec->blocksize();
+
+	if (params[4] != -1 && (size_t)params[4] <= vec->blocksize())
+	{
+		indexes = params[4];
+	}
+
+	cell *addr = get_amxaddr(amx, params[3]);
+
+	memcpy(addr, blk, sizeof(cell) * indexes);
+
+	return 1;
+}
+
+// native any:ArrayGetCell(Array:which, item, block = 0, bool:asChar = false);
+static cell AMX_NATIVE_CALL ArrayGetCell(AMX* amx, cell* params)
+{
+	CellArray* vec = HandleToVector(amx, params[1]);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	size_t idx = (size_t)params[2];
+
+	if (idx >= vec->size())
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid index %d (count: %d)", idx, vec->size());
+		return 0;
+	}
+
+	cell *blk = vec->at(idx);
+	idx = (size_t)params[3];
+
+	if (!params[4])
+	{
+		if (idx >= vec->blocksize())
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Invalid block %d (blocksize: %d)", idx, vec->blocksize());
+			return 0;
+		}
+
+		return blk[idx];
+	}
+	else 
+	{
+		if (idx >= vec->blocksize() * 4)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Invalid byte %d (blocksize: %d bytes)", idx, vec->blocksize() * 4);
+			return 0;
+		}
+
+		return (cell)*((char *)blk + idx);
+	}
+
+	return 0;
+}
+
+// native ArrayGetString(Array:which, item, output[], size);
+static cell AMX_NATIVE_CALL ArrayGetString(AMX* amx, cell* params)
+{
+	CellArray* vec = HandleToVector(amx, params[1]);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	size_t idx = (size_t)params[2];
+
+	if (idx >= vec->size())
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid index %d (count: %d)", idx, vec->size());
+		return 0;
+	}
+
+	cell *blk = vec->at(idx);
+	return set_amxstring_utf8(amx, params[3], blk, amxstring_len(blk), params[4] + 1); // + EOS.
+}
+
+// native ArraySetArray(Array:which, item, const any:input[], size =-1);
+static cell AMX_NATIVE_CALL ArraySetArray(AMX* amx, cell* params)
+{
+	CellArray* vec = HandleToVector(amx, params[1]);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	size_t idx = (size_t)params[2];
+
+	if (idx >= vec->size())
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid index %d (count: %d)", idx, vec->size());
+		return 0;
+	}
+
+	cell *blk = vec->at(idx);
+	size_t indexes = vec->blocksize();
+
+	if (params[4] != -1 && (size_t)params[4] <= vec->blocksize())
+	{
+		indexes = params[4];
+	}
+
+	cell *addr = get_amxaddr(amx, params[3]);
+
+	memcpy(blk, addr, sizeof(cell) * indexes);
+
+	return 1;
+}
+
+// native ArraySetCell(Array:which, item, any:input, block = 0, bool:asChar = false);
+static cell AMX_NATIVE_CALL ArraySetCell(AMX* amx, cell* params)
+{
+	CellArray* vec = HandleToVector(amx, params[1]);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	size_t idx = (size_t)params[2];
+
+	if (idx >= vec->size())
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid index %d (count: %d)", idx, vec->size());
+		return 0;
+	}
+
+	cell *blk = vec->at(idx);
+	idx = (size_t)params[4];
+
+	if (params[5] == 0)
+	{
+		if (idx >= vec->blocksize())
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Invalid block %d (blocksize: %d)", idx, vec->blocksize());
+			return 0;
+		}
+		blk[idx] = params[3];
+	}
+	else 
+	{
+		if (idx >= vec->blocksize() * 4)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Invalid byte %d (blocksize: %d bytes)", idx, vec->blocksize() * 4);
+			return 0;
+		}
+		*((char *)blk + idx) = (char)params[3];
+	}
+
+	return 1;
+}
+
+// native ArraySetString(Array:which, item, const input[]);
+static cell AMX_NATIVE_CALL ArraySetString(AMX* amx, cell* params)
+{
+	CellArray* vec = HandleToVector(amx, params[1]);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	size_t idx = (size_t)params[2];
+
+	if (idx >= vec->size())
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid index %d (count: %d)", idx, vec->size());
+		return 0;
+	}
+
+	cell *blk = vec->at(idx);
+
+	int len;
+	char *str = get_amxstring(amx, params[3], 0, len);
+
+	return strncopy(blk, str, ke::Min((size_t)len + 1, vec->blocksize()));
+}
+
+// native ArrayPushArray(Array:which, const any:input[], size = -1);
+static cell AMX_NATIVE_CALL ArrayPushArray(AMX* amx, cell* params)
+{
+	CellArray* vec = HandleToVector(amx, params[1]);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	cell *blk = vec->push();
+
+	if (!blk)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Failed to grow array");
+		return 0;
+	}
+
+	cell *addr = get_amxaddr(amx, params[2]);
+	size_t indexes = vec->blocksize();
+
+	if (params[3] != -1 && (size_t)params[3] <= vec->blocksize())
+	{
+		indexes = params[3];
+	}
+
+	memcpy(blk, addr, sizeof(cell) * indexes);
+
+	return static_cast<cell>((vec->size() - 1));
+}
+
+// native ArrayPushCell(Array:which, any:input);
+static cell AMX_NATIVE_CALL ArrayPushCell(AMX* amx, cell* params)
+{
+	CellArray* vec = HandleToVector(amx, params[1]);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	cell *blk = vec->push();
+
+	if (!blk)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Failed to grow array");
+		return 0;
+	}
+
+	*blk = params[2];
+
+	return static_cast<cell>((vec->size() - 1));
+}
+
+// native ArrayPushString(Array:which, const input[]);
+static cell AMX_NATIVE_CALL ArrayPushString(AMX* amx, cell* params)
+{
+	CellArray* vec = HandleToVector(amx, params[1]);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	cell *blk = vec->push();
+	cell *start = blk;
+	if (!blk)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Failed to grow array");
+		return 0;
+	}
+
+	memcpy(blk, get_amxaddr(amx, params[2]), sizeof(cell) * vec->blocksize());
+	blk[vec->blocksize() - 1]= '\0';
+
+	return static_cast<cell>((vec->size() - 1));
+}
+
+// native DoNotUse : ArrayGetStringHandle(Array : which, item);
+static cell AMX_NATIVE_CALL ArrayGetStringHandle(AMX* amx, cell* params)
+{
+	CellArray* vec = HandleToVector(amx, params[1]);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	size_t idx = (size_t)params[2];
+
+	if (idx >= vec->size())
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid index %d (count: %d)", idx, vec->size());
+		return 0;
+	}
+
+	cell* ptr = vec->at(idx);
 
 	if (ptr == NULL)
 	{
@@ -326,437 +464,394 @@ static cell AMX_NATIVE_CALL ArrayGetStringHandle(AMX* amx, cell* params)
 	}
 
 	return reinterpret_cast<cell>(ptr);
-
 }
-// ArrayInsertArrayAfter(Array:which, item, const value[])
+
+// native ArrayInsertArrayAfter(Array:which, item, const any:input[]);
 static cell AMX_NATIVE_CALL ArrayInsertArrayAfter(AMX* amx, cell* params)
 {
-	CellVector* vec=HandleToVector(amx, params[1]);
+	CellArray* vec = HandleToVector(amx, params[1]);
 
-	if (!vec)
+	if (vec == NULL)
 	{
 		return 0;
 	}
 
-	int item=params[2]+1;
+	size_t idx = params[2] + 1;
 
-	if (vec->ShiftUpFrom(item)!=1)
+	if (idx > vec->size())
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid item specified in ArrayInsertArrayAfter (%d:%d)", params[1], vec->Size());
+		LogError(amx, AMX_ERR_NATIVE, "Invalid item specified in ArrayInsertArrayAfter (%d:%d)", idx, vec->size());
 		return 0;
 	}
 
-	vec->SetArray(item, get_amxaddr(amx, params[3]));
+	cell *addr = get_amxaddr(amx, params[3]);
+
+	memcpy(vec->insert_at(idx), addr, sizeof(cell) * vec->blocksize());
 
 	return 1;
 }
-// ArrayInsertCellAfter(Array:which, item, value[])
+
+// native ArrayInsertCellAfter(Array:which, item, any:input);
 static cell AMX_NATIVE_CALL ArrayInsertCellAfter(AMX* amx, cell* params)
 {
-	CellVector* vec=HandleToVector(amx, params[1]);
+	CellArray* vec = HandleToVector(amx, params[1]);
 
-	if (!vec)
+	if (vec == NULL)
 	{
 		return 0;
 	}
 
-	int item=params[2]+1;
+	size_t idx = params[2] + 1;
 
-	if (vec->ShiftUpFrom(item)!=1)
+	if (idx > vec->size())
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid item specified in ArrayInsertCellAfter (%d:%d)", params[1], vec->Size());
+		LogError(amx, AMX_ERR_NATIVE, "Invalid item specified in ArrayInsertCellAfter (%d:%d)", idx, vec->size());
 		return 0;
 	}
 
-	vec->SetCell(item, params[3]);
+	*vec->insert_at(idx) = params[3];
 
 	return 1;
 }
-// ArrayInsertStringAfter(Array:which, item, const value[])
+
+// native ArrayInsertStringAfter(Array:which, item, const input[]);
 static cell AMX_NATIVE_CALL ArrayInsertStringAfter(AMX* amx, cell* params)
 {
-	CellVector* vec=HandleToVector(amx, params[1]);
+	CellArray* vec = HandleToVector(amx, params[1]);
 
-	if (!vec)
+	if (vec == NULL)
 	{
 		return 0;
 	}
 
-	int item=params[2]+1;
+	size_t idx = params[2] + 1;
 
-	if (vec->ShiftUpFrom(item)!=1)
+	if (idx > vec->size())
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid item specified in ArrayInsertStringAfter (%d:%d)", params[1], vec->Size());
+		LogError(amx, AMX_ERR_NATIVE, "Invalid item specified in ArrayInsertStringAfter (%d:%d)", idx, vec->size());
 		return 0;
 	}
 
-	vec->SetString(item, get_amxaddr(amx, params[3]));
+	int len;
+	const char *str = get_amxstring(amx, params[3], 0, len);
 
-	return 1;
+	return strncopy(vec->insert_at(idx), str, ke::Min((size_t)len + 1, vec->blocksize()));
 }
-// ArrayInsertArrayBefore(Array:which, item, const value[])
+
+// native ArrayInsertArrayBefore(Array:which, item, const any:input[]);
 static cell AMX_NATIVE_CALL ArrayInsertArrayBefore(AMX* amx, cell* params)
 {
-	CellVector* vec=HandleToVector(amx, params[1]);
+	CellArray* vec = HandleToVector(amx, params[1]);
 
-	if (!vec)
+	if (vec == NULL)
 	{
 		return 0;
 	}
 
-	int item=params[2];
+	size_t idx = params[2];
 
-	if (item==vec->Size())
+	if (idx >= vec->size())
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid item specified in ArrayInsertArrayBefore (%d:%d)", params[2], vec->Size());
-		return 0;
-	}
-	if (vec->ShiftUpFrom(item)!=1)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid item specified in ArrayInsertArrayBefore (%d:%d)", params[2], vec->Size());
+		LogError(amx, AMX_ERR_NATIVE, "Invalid item specified in ArrayInsertArrayBefore (%d:%d)", idx, vec->size());
 		return 0;
 	}
 
-	vec->SetArray(item, get_amxaddr(amx, params[3]));
+	cell *addr = get_amxaddr(amx, params[3]);
+
+	memcpy(vec->insert_at(idx), addr, vec->blocksize() * sizeof(cell));
 
 	return 1;
 }
-// ArrayInsertCellBefore(Array:which, item, const value)
+
+// native ArrayInsertCellBefore(Array:which, item, const any:input);
 static cell AMX_NATIVE_CALL ArrayInsertCellBefore(AMX* amx, cell* params)
 {
-	CellVector* vec=HandleToVector(amx, params[1]);
+	CellArray* vec = HandleToVector(amx, params[1]);
 
-	if (!vec)
+	if (vec == NULL)
 	{
 		return 0;
 	}
 
-	int item=params[2];
+	size_t idx = params[2];
 
-	if (item==vec->Size())
+	if (idx >= vec->size())
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid item specified in ArrayInsertCellBefore (%d:%d)", params[2], vec->Size());
-		return 0;
-	}
-	if (vec->ShiftUpFrom(item)!=1)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid item specified in ArrayInsertCellBefore (%d:%d)", params[2], vec->Size());
+		LogError(amx, AMX_ERR_NATIVE, "Invalid item specified in ArrayInsertCellBefore (%d:%d)", idx, vec->size());
 		return 0;
 	}
 
-	vec->SetCell(item, params[3]);
+	*vec->insert_at(idx) = params[3];
 
 	return 1;
 }
-// ArrayInsertStringBefore(Array:which, item, const value[])
+// native ArrayInsertStringBefore(Array:which, item, const input[]);
 static cell AMX_NATIVE_CALL ArrayInsertStringBefore(AMX* amx, cell* params)
 {
-	CellVector* vec=HandleToVector(amx, params[1]);
+	CellArray* vec = HandleToVector(amx, params[1]);
 
-	if (!vec)
+	if (vec == NULL)
 	{
 		return 0;
 	}
 
-	int item=params[2];
+	size_t idx = params[2];
 
-	if (item==vec->Size())
+	if (idx >= vec->size())
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid item specified in ArrayInsertStringBefore (%d:%d)", params[2], vec->Size());
-		return 0;
-	}
-	if (vec->ShiftUpFrom(item)!=1)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid item specified in ArrayInsertStringBefore (%d:%d)", params[2], vec->Size());
+		LogError(amx, AMX_ERR_NATIVE, "Invalid item specified in ArrayInsertStringBefore (%d:%d)", idx, vec->size());
 		return 0;
 	}
 
-	vec->SetString(item, get_amxaddr(amx, params[3]));
+	int len;
+	const char *str = get_amxstring(amx, params[3], 0, len);
 
-	return 1;
+	return strncopy(vec->insert_at(idx), str, ke::Min((size_t)len + 1, vec->blocksize()));
 }
 
-// ArraySwap(Array:which, item1, item2)
+// native ArraySwap(Array:which, item1, item2);
 static cell AMX_NATIVE_CALL ArraySwap(AMX* amx, cell* params)
 {
-	CellVector* vec=HandleToVector(amx, params[1]);
+	CellArray* vec = HandleToVector(amx, params[1]);
+	
+	if (vec == NULL)
+	{
+		return 0;
+	}
 
-	if (!vec)
+	size_t idx1 = (size_t)params[2];
+	size_t idx2 = (size_t)params[3];
+
+	if (idx1 >= vec->size())
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid index %d (count: %d)", idx1, vec->size());
 		return 0;
 	}
-	if (vec->Swap(params[2], params[3])!=1)
+
+	if (idx2 >= vec->size())
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid item specified in ArraySwap (%d , %d:%d)",params[2], params[3], vec->Size());
+		LogError(amx, AMX_ERR_NATIVE, "Invalid index %d (count: %d)", idx2, vec->size());
 		return 0;
 	}
+
+	vec->swap(params[2], params[3]);
 
 	return 1;
 }
 
-// ArrayDeleteItem(Array:which, item);
+// native ArrayDeleteItem(Array:which, item);
 static cell AMX_NATIVE_CALL ArrayDeleteItem(AMX* amx, cell* params)
 {
-	CellVector* vec=HandleToVector(amx, params[1]);
+	CellArray* vec = HandleToVector(amx, params[1]);
 
-	if (!vec)
+	if (vec == NULL)
 	{
 		return 0;
 	}
 
-	if (vec->Delete(params[2])!=1)
+	size_t idx = (size_t)params[2];
+
+	if (idx >= vec->size())
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid item specified in ArrayDeleteItem (%d:%d)", params[2], vec->Size());
+		LogError(amx, AMX_ERR_NATIVE, "Invalid index %d (count: %d)", idx, vec->size());
 		return 0;
 	}
+
+	vec->remove(idx);
+
 	return 1;
 }
 
-
-// ArrayDestroy(Array:&which)
+// native ArrayDestroy(&Array:which);
 static cell AMX_NATIVE_CALL ArrayDestroy(AMX* amx, cell* params)
 {
-	// byref the handle here so we can zero it out after destroying
-	// this way they cannot accidentally reuse it
-	cell* handle=get_amxaddr(amx,params[1]);
-	CellVector* vec=HandleToVector(amx, *handle);
+	cell* handle = get_amxaddr(amx, params[1]);
+	CellArray* vec = HandleToVector(amx, *handle);
 
-	if (!vec)
+	if (vec == NULL)
 	{
 		return 0;
 	}
 
 	delete vec;
 
-	VectorHolder[*handle-1]=NULL;
+	VectorHolder[*handle-1] = NULL;
 
-	*handle=0;
+	*handle = 0;
 
 	return 1;
 }
 
-typedef struct ArraySort_s
+
+struct ArraySort_s
 {
-	int    handle;
-	int    forward;
-	cell   data;
-	cell   size;
-	CellVector *vec;
-	AMX*   amx;
-	cell   addr1;
-	cell   addr2;
+	int   func;
+	cell  array_hndl;
+	cell* array_base;
+	cell  array_bsize;
+	cell  data;
+	cell  size;
+	cell  addr1;
+	cell  addr2;
+	AMX  *amx;
+};
 
-} ArraySort_t;
+ArraySort_s SortInfo;
 
-static CStack<ArraySort_t *> ArraySortStack;
-
-int SortArrayList(const void *itema, const void *itemb)
+int SortArrayList(const void *elem1, const void *elem2)
 {
-	ArraySort_t *Info = ArraySortStack.front();
-
-	return executeForwards(Info->forward, Info->handle, *((int *)itema), *((int *)itemb), Info->data, Info->size);
-
+	return executeForwards(
+		SortInfo.func,
+		SortInfo.array_hndl,
+		((cell)((cell *)elem1 - SortInfo.array_base)) / SortInfo.array_bsize,
+		((cell)((cell *)elem2 - SortInfo.array_base)) / SortInfo.array_bsize,
+		SortInfo.data,
+		SortInfo.size
+	);
 }
+
 // native ArraySort(Array:array, const comparefunc[], data[]="", data_size=0);
 static cell AMX_NATIVE_CALL ArraySort(AMX* amx, cell* params)
 {
-	int handle=params[1];
-	CellVector* vec=HandleToVector(amx, handle);
+	int handle = params[1];
+	CellArray* vec = HandleToVector(amx, handle);
 
-	if (!vec)
+	if (vec ==  NULL)
 	{
 		return 0;
 	}
-	
-	// This is kind of a cheating way to go about this but...
-	// Create an array of integers as big as however many elements are in the vector.
-	// Pass that array to qsort
-	// After the array is sorted out, then create a NEW cellvector
-	// and copy in the old data in the order of what was sorted
+
 	int len;
-	char* FuncName=get_amxstring(amx, params[2], 0, len);
+	char* funcName = get_amxstring(amx, params[2], 0, len);
+	
 	// MySortFunc(Array:array, item1, item2, const data[], data_size)
-	int Forward = registerSPForwardByName(amx, FuncName, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
-	if (Forward < 0)
+	int func = registerSPForwardByName(amx, funcName, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	if (func < 0)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "The public function \"%s\" was not found.", FuncName);
+		LogError(amx, AMX_ERR_NATIVE, "The public function \"%s\" was not found.", funcName);
 		return 0;
 	}
 
-	int *IntList=new int[vec->Size()];
+	size_t arraysize = vec->size();
+	size_t blocksize = vec->blocksize();
+	cell *array = vec->base();
 
-	for (int i=0; i< vec->Size(); i++)
-	{
-		IntList[i]=i;
-	}
+	ArraySort_s oldinfo = SortInfo;
 
-	ArraySort_t *Info=new ArraySort_t;
+	SortInfo.func        = func;
+	SortInfo.array_base  = array;
+	SortInfo.array_bsize = static_cast<cell>(blocksize);
+	SortInfo.array_hndl  = handle;
+	SortInfo.data        = params[3];
+	SortInfo.size        = params[4];
 
-	Info->handle=handle;
-	Info->forward=Forward;
-	Info->data=params[3];
-	Info->size=params[4];
+	qsort(array, arraysize, blocksize * sizeof(cell), SortArrayList);
 
-	ArraySortStack.push(Info);
-	qsort(IntList, vec->Size(), sizeof(int), SortArrayList);
-	ArraySortStack.pop();
+	SortInfo = oldinfo;
 
-	CellVector* newvec=new CellVector(vec->GetCellCount());
-
-	// Set the new vector's values
-	for (int i=0; i< vec->Size(); i++)
-	{
-		if (newvec->SetArray(newvec->Push(), vec->GetCellPointer(IntList[i]))!=1)
-		{
-			// This should never happen..
-			LogError(amx, AMX_ERR_NATIVE, "Failed to SetArray in ArraySort (i=%d, IntList=%d)",i,IntList[i]);
-
-			return 0;
-		}
-	}
-
-	// Delete the old vector
-	delete vec;
-
-	// Now save the new vector in its handle location
-	VectorHolder[handle-1]=newvec;
-
-	// Cleanup
-	delete Info;
-	delete IntList;
-
-	unregisterSPForward(Forward);
+	unregisterSPForward(func);
 
 	return 1;
 }
 
 
-int SortArrayListExCell(const void *itema, const void *itemb)
+int SortArrayListExCell(const void *elem1, const void *elem2)
 {
-	ArraySort_t *Info = ArraySortStack.front();
-	cell vala = 0, valb = 0;
+	size_t index1 = ((cell)((cell *)elem1 - SortInfo.array_base)) / SortInfo.array_bsize;
+	size_t index2 = ((cell)((cell *)elem2 - SortInfo.array_base)) / SortInfo.array_bsize;
 
-	Info->vec->GetCell(*((int *)itema), &vala);
-	Info->vec->GetCell(*((int *)itemb), &valb);
-
-	return executeForwards(Info->forward, Info->handle, vala, valb, Info->data, Info->size);
+	return executeForwards(
+		SortInfo.func,
+		SortInfo.array_hndl,
+		*&SortInfo.array_base[index1 * SortInfo.array_bsize], 
+		*&SortInfo.array_base[index2 * SortInfo.array_bsize],
+		SortInfo.data,
+		SortInfo.size
+	);
 }
 
-int SortArrayListExArray(const void *itema, const void *itemb)
+int SortArrayListExArray(const void *elem1, const void *elem2)
 {
-	ArraySort_t *Info = ArraySortStack.front();
+	size_t index1 = ((cell)((cell *)elem1 - SortInfo.array_base)) / SortInfo.array_bsize;
+	size_t index2 = ((cell)((cell *)elem2 - SortInfo.array_base)) / SortInfo.array_bsize;
 
-	Info->vec->GetArray(*((int *)itema), get_amxaddr(Info->amx, Info->addr1));
-	Info->vec->GetArray(*((int *)itemb), get_amxaddr(Info->amx, Info->addr2));
+	cell *addr1 = get_amxaddr(SortInfo.amx, SortInfo.addr1);
+	cell *addr2 = get_amxaddr(SortInfo.amx, SortInfo.addr2);
 
-	return executeForwards(Info->forward, Info->handle, Info->addr1, Info->addr2, Info->data, Info->size);
+	memcpy(addr1, &SortInfo.array_base[index1 * SortInfo.array_bsize], SortInfo.array_bsize * sizeof(cell));
+	memcpy(addr2, &SortInfo.array_base[index2 * SortInfo.array_bsize], SortInfo.array_bsize * sizeof(cell));
+
+	return executeForwards(
+		SortInfo.func,
+		SortInfo.array_hndl,
+		SortInfo.addr1,
+		SortInfo.addr2,
+		SortInfo.data,
+		SortInfo.size
+	);
 }
 
 // native ArraySortEx(Array:array, const comparefunc[], data[]="", data_size=0);
 static cell AMX_NATIVE_CALL ArraySortEx(AMX* amx, cell* params)
 {
-	int handle=params[1];
-	CellVector* vec=HandleToVector(amx, handle);
+	int handle = params[1];
+	CellArray* vec = HandleToVector(amx, handle);
 
-	if (!vec)
+	if (vec == NULL)
 	{
 		return 0;
 	}
 
-	cell amx_addr1 = 0, amx_addr2 = 0, *phys_addr = NULL;
-	size_t cellcount = vec->GetCellCount();
+	int len;
+	char* funcName = get_amxstring(amx, params[2], 0, len);
 
-	if (cellcount > 1)
+	int func = registerSPForwardByName(amx, funcName, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+
+	if (!func)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "The public function \"%s\" was not found.", funcName);
+		return 0;
+	}
+
+	size_t arraysize = vec->size();
+	size_t blocksize = vec->blocksize();
+	cell *array = vec->base();
+	cell amx_addr1 = 0, amx_addr2 = 0, *phys_addr = NULL;
+
+	if (blocksize > 1)
 	{
 		int err;
-		if ((err=amx_Allot(amx, cellcount, &amx_addr1, &phys_addr)) != AMX_ERR_NONE
-			|| (err=amx_Allot(amx, cellcount, &amx_addr2, &phys_addr)) != AMX_ERR_NONE)
+		if ((err = amx_Allot(amx, blocksize, &amx_addr1, &phys_addr)) != AMX_ERR_NONE
+		|| ( err = amx_Allot(amx, blocksize, &amx_addr2, &phys_addr)) != AMX_ERR_NONE)
 		{
 			LogError(amx, err, "Ran out of memory");
 			return 0;
 		}
 	}
 
-	// This is kind of a cheating way to go about this but...
-	// Create an array of integers as big as however many elements are in the vector.
-	// Pass that array to qsort
-	// After the array is sorted out, then create a NEW cellvector
-	// and copy in the old data in the order of what was sorted
-	int len;
-	char* FuncName=get_amxstring(amx, params[2], 0, len);
-	// MySortFunc(Array:array, item1, item2, const data[], data_size)
-	int Forward = registerSPForwardByName(amx, FuncName, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
-	if (Forward < 0)
-	{
-		if (cellcount > 1)
-		{
-			amx_Release(amx, amx_addr1);
-			amx_Release(amx, amx_addr2);
-		}
+	ArraySort_s oldinfo = SortInfo;
 
-		LogError(amx, AMX_ERR_NATIVE, "The public function \"%s\" was not found.", FuncName);
-		return 0;
-	}
+	SortInfo.func        = func;
+	SortInfo.array_base  = array;
+	SortInfo.array_bsize = static_cast<cell>(blocksize);
+	SortInfo.array_hndl  = params[1];
+	SortInfo.data        = params[3];
+	SortInfo.size        = params[4];
+	SortInfo.amx         = amx;
+	SortInfo.addr1       = amx_addr1;
+	SortInfo.addr2       = amx_addr2;
 
-	int *IntList=new int[vec->Size()];
+	qsort(array, arraysize, blocksize * sizeof(cell), blocksize > 1 ? SortArrayListExArray : SortArrayListExCell);
 
-	for (int i=0; i< vec->Size(); i++)
-	{
-		IntList[i]=i;
-	}
+	SortInfo = oldinfo;
 
-	ArraySort_t *Info=new ArraySort_t;
-
-	Info->handle=handle;
-	Info->forward=Forward;
-	Info->data=params[3];
-	Info->size=params[4];
-	Info->vec = vec;
-	Info->amx = amx;
-	Info->addr1 = amx_addr1;
-	Info->addr2 = amx_addr2;
-
-	ArraySortStack.push(Info);
-	qsort(IntList, vec->Size(), sizeof(int), cellcount > 1 ? SortArrayListExArray : SortArrayListExCell);
-	ArraySortStack.pop();
-
-	CellVector* newvec=new CellVector(vec->GetCellCount());
-
-	// Set the new vector's values
-	for (int i=0; i< vec->Size(); i++)
-	{
-		if (newvec->SetArray(newvec->Push(), vec->GetCellPointer(IntList[i]))!=1)
-		{
-			// This should never happen..
-			LogError(amx, AMX_ERR_NATIVE, "Failed to SetArray in ArraySort (i=%d, IntList=%d)",i,IntList[i]);
-
-			if (cellcount > 1)
-			{
-				amx_Release(amx, amx_addr1);
-				amx_Release(amx, amx_addr2);
-			}
-
-			return 0;
-		}
-	}
-
-	// Delete the old vector
-	delete vec;
-
-	// Now save the new vector in its handle location
-	VectorHolder[handle-1]=newvec;
-
-	// Cleanup
-	delete Info;
-	delete IntList;
-
-	unregisterSPForward(Forward);
-
-	if (cellcount > 1)
+	if (blocksize > 1)
 	{
 		amx_Release(amx, amx_addr1);
 		amx_Release(amx, amx_addr2);
 	}
+
+	unregisterSPForward(func);
 
 	return 1;
 }
@@ -764,53 +859,49 @@ static cell AMX_NATIVE_CALL ArraySortEx(AMX* amx, cell* params)
 extern bool fastcellcmp(cell *a, cell *b, cell len);
 extern int amxstring_len(cell* a);
 
-// ArrayFindString(Array:which, const item[])
+// native ArrayFindString(Array:which, const item[]);
 static cell AMX_NATIVE_CALL ArrayFindString(AMX* amx, cell* params)
 {
-	int handle = params[1];
-	CellVector* vec = HandleToVector(amx, handle);
+	CellArray* vec = HandleToVector(amx, params[1]);
 
-	if (!vec)
+	if (vec == NULL)
 	{
 		return -1;
 	}
 
 	cell *b, *a = get_amxaddr(amx, params[2]);
-	size_t cellcount = vec->GetCellCount();
-	size_t a_len = amxstring_len(a);
-	if (a_len < 1)
-		a_len = 1;
+	size_t cellcount = vec->blocksize();
+	size_t a_len = ke::Max(1, amxstring_len(a));
 	size_t len = a_len > cellcount ? cellcount : a_len;
 
-	for (int i = 0; i < vec->Size(); i++)
+	for (size_t i = 0; i < vec->size(); i++)
 	{	
-		b = vec->GetCellPointer(i);
+		b = vec->at(i);
 
 		if (fastcellcmp(a, b, len))
 		{
-			return (cell)i;
+			return static_cast<cell>(i);
 		}
 	}
 
 	return -1;
 }
 
-// ArrayFindValue(Array:which, any:item);
+// native ArrayFindValue(Array:which, any:item); 
 static cell AMX_NATIVE_CALL ArrayFindValue(AMX* amx, cell* params)
 {
-	int handle = params[1];
-	CellVector* vec = HandleToVector(amx, handle);
+	CellArray* vec = HandleToVector(amx, params[1]);
 
-	if (!vec)
+	if (vec == NULL)
 	{
 		return -1;
 	}
 
-	for (int i = 0; i < vec->Size(); i++)
+	for (size_t i = 0; i < vec->size(); i++)
 	{
-		if (params[2] == *vec->GetCellPointer(i))
+		if (params[2] == *vec->at(i))
 		{
-			return (cell)i;
+			return static_cast<cell>(i);
 		}
 	}
 

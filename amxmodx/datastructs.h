@@ -31,352 +31,193 @@
 #ifndef DATASTRUCTS_H
 #define DATASTRUCTS_H
 
-class CellVector
+#include <am-vector.h>
+
+class CellArray
 {
-private:
-	cell*  data;       // allocated with malloc
-	size_t cellcount;  // how many cells per element
-	size_t cursize;    // current size of the vector (maximum elements)
-	size_t count;      // how many units of the vector are in use
-	
-	bool GrowIfNeeded(size_t howmany)
-	{
-		/* Shortcut out if we can store this */
-		if (count + howmany <= cursize)
-		{
-			return true;
-		}
-
-		/* Set a base allocation size of 8 items */
-		if (!cursize)
-		{
-			cursize = 8;
-		}
-
-		/* If it's not enough, keep doubling */
-		while (count + howmany > cursize)
-		{
-			cursize *= 2;
-		}
-
-		if (data)
-		{
-			data = (cell*)realloc(data, (sizeof(cell)* cellcount) * cursize);
-		}
-		else
-		{
-			data = (cell*)malloc((sizeof(cell)* cellcount) * cursize);
-		}
-
-		return (data != NULL);
-	};
-
 public:
-	CellVector(): data(NULL), cellcount(0), cursize(0), count(0)
+	CellArray(size_t blocksize) : m_Data(NULL), m_BlockSize(blocksize), m_AllocSize(0), m_Size(0)
 	{
-	};
-	CellVector(int cellsize): data(NULL), cellcount(cellsize), cursize(0), count(0)
-	{
-	};
-	~CellVector()
-	{
-		if (data)
-		{
-			free(data);
-		}
-	};
-	size_t GetCellCount()
-	{
-		return cellcount;
-	};
-	void Grow(size_t howmany)
-	{
-		cursize+=howmany;
-		if (data)
-		{
-			data=(cell*)realloc(data, (sizeof(cell) * cellcount) * cursize);
-		}
-		else
-		{
-			data=(cell*)malloc((sizeof(cell) * cellcount) * cursize);
-		}
-	};
-	void FreeUnused(void)
-	{
-		if (cursize != count &&
-			data != NULL)
-		{
-			cursize=count;
-			data=(cell*)realloc(data, cursize * (sizeof(cell) * cellcount));
-		}
-	};
-	// Returns 1 on success
-	// 0 on out of bounds.
-	int GetArray(size_t which, cell* output)
-	{
-		// make sure it is in bounds.
-		if (which >= count)
-		{
-			return 0;
-		}
-		// align output data
-		cell* out=data + (cellcount * which);
-		
-		memcpy(output, out, sizeof(cell) * cellcount);
-
-		return 1;
-	};
-	// Returns 1 on success
-	// 0 on out of bounds
-	int GetCell(size_t which, cell* output)
-	{
-		// check bounds
-		if (which >= count)
-		{
-			return 0;
-		}
-		*output=*(data + (cellcount * which));
-
-		return 1;
 	}
-	// Returns 1 on success
-	// 0 on out of bounds
-	int GetString(size_t which, cell* output, size_t size)
+
+	~CellArray()
 	{
-		// check bounds
-		if (which >= count)
-		{
-			return 0;
-		}
-		cell* out=data + (cellcount * which);
-
-		size_t count=cellcount;
-
-		while (size-- && 
-			count-- &&
-			(*output++=*out++)!='\0')
-			/* do nothing */ ;
-
-		// If size is zero here, then the string was never null terminated.
-		if (size==0)
-		{
-			*out='\0';
-		}
-
-		/* Don't truncate a multi-byte character */
-		if (*(output - 1) & 1 << 7)
-		{
-			size = UTIL_CheckValidChar(output - 1);
-			*(output - size) = '\0';
-		}
-
-		return 1;
+		free(m_Data);
 	}
-	// Returns 1 on success
-	// 0 on out of bounds
-	int SetArray(size_t which, cell* output)
+
+	size_t size() const
 	{
-		if (which >= count)
+		return m_Size;
+	}
+
+	cell *push()
+	{
+		if (!GrowIfNeeded(1))
 		{
-			return 0;
+			return NULL;
 		}
-		// align output
-		cell* out=data + (cellcount * which);
+		cell *arr = &m_Data[m_Size * m_BlockSize];
+		m_Size++;
+		return arr;
+	}
 
-		memcpy(out, output, sizeof(cell) * cellcount);
-
-		return 1;
-	};
-	// Returns 1 on success
-	// 0 on out of bounds
-	int SetCell(size_t which, cell output)
+	cell *at(size_t b) const
 	{
-		if (which >= count)
-		{
-			return 0;
-		}
-		// align output
-		*(data + (cellcount * which))=output;
+		return &m_Data[b * m_BlockSize];
+	}
 
-		return 1;
-	};
-	// Returns 1 on success
-	// 0 on out of bounds
-	int SetString(size_t which, cell* output)
+	size_t blocksize() const
 	{
-		if (which >= count)
-		{
-			return 0;
-		}
-		// align output
-		cell* out=data + (cellcount * which);
+		return m_BlockSize;
+	}
 
-		memcpy(out, output, sizeof(cell) * cellcount);
-
-		// now force a null terminator on the last entry.
-		out+=(cellcount - 1);
-		*out='\0';
-
-		return 1;
-	};
-	int Push()
+	void clear()
 	{
-		if (count >= cursize)
-		{
-			// Grow in 8s to cause less reallocation
-			this->Grow(8);
-		};
-		
-		this->count++;
+		m_Size = 0;
+	}
 
-		return this->count-1;
-	};
-	int Size() 
+	bool swap(size_t item1, size_t item2)
 	{
-		return this->count;
-	};
-
-	bool Resize(size_t newsize)
-	{
-		if (newsize <= count)
-		{
-			count = newsize;
-			return true;
-		}
-
-		if (!GrowIfNeeded(newsize - count))
+		/* Make sure there is extra space available */
+		if (!GrowIfNeeded(1))
 		{
 			return false;
 		}
 
-		count = newsize;
+		cell *pri = at(item1);
+		cell *alt = at(item2);
+
+		/* Get our temporary array 1 after the limit */
+		cell *temp = &m_Data[m_Size * m_BlockSize];
+
+		memcpy(temp, pri, sizeof(cell)* m_BlockSize);
+		memcpy(pri, alt, sizeof(cell)* m_BlockSize);
+		memcpy(alt, temp, sizeof(cell)* m_BlockSize);
+
 		return true;
 	}
 
-	CellVector *Clone()
+	void remove(size_t index)
 	{
-		CellVector *array = new CellVector(cellcount);
-		array->count = count;
-		array->cursize = cursize;
-		array->data = (cell *)malloc((sizeof(cell)* cellcount) * cursize);
-		memcpy(array->data, data, (sizeof(cell)* cellcount) * count);
-		return array;
+		/* If we're at the end, take the easy way out */
+		if (index == m_Size - 1)
+		{
+			m_Size--;
+			return;
+		}
+
+		/* Otherwise, it's time to move stuff! */
+		size_t remaining_indexes = (m_Size - 1) - index;
+		cell *src = at(index + 1);
+		cell *dest = at(index);
+		memmove(dest, src, sizeof(cell)* m_BlockSize * remaining_indexes);
+
+		m_Size--;
 	}
 
-	void Clear()
+	cell *insert_at(size_t index)
 	{
-		free(data);
-		data=(cell*)malloc(sizeof(cell) * cellcount);
-		cursize=1;
-		count=0;
-	};
-	cell* Base()
-	{
-		return data;
-	}
-	cell* GetCellPointer(size_t which)
-	{
-		if (which >= count)
+		/* Make sure it'll fit */
+		if (!GrowIfNeeded(1))
 		{
 			return NULL;
 		}
-		return data + (which * cellcount);
-	};
-	// Shifts all items from this item, and including this item up 1.
-	int ShiftUpFrom(size_t which)
+
+		/* move everything up */
+		cell *src = at(index);
+		cell *dst = at(index + 1);
+		memmove(dst, src, sizeof(cell)* m_BlockSize * (m_Size - index));
+
+		m_Size++;
+
+		return src;
+	}
+
+	bool resize(size_t count)
 	{
-		// No point shifting this.
-		if (which > this->count)
+		if (count <= m_Size)
 		{
-
-			return 0;
-		}
-		// First make a new item.
-		this->Push();
-
-		// If we got an InsertAfter(lastitem), then which will equal this->count - 1
-		// all we needed to do was Push()
-		if (which == this->count || 
-			which == this->count - 1)
-		{
-			return 1;
+			m_Size = count;
+			return true;
 		}
 
-		// Allocate a temporary buffer to store data in
-		size_t tempbuffsize=(sizeof(cell) * cellcount) * (this->count - 1 - which);
+		if (!GrowIfNeeded(count - m_Size))
+		{
+			return false;
+		}
 
-		cell* temp=(cell*)malloc(tempbuffsize); 
+		m_Size = count;
+		return true;
+	}
 
-		// Copy old data to temp buffer
-		memcpy(temp, GetCellPointer(which), tempbuffsize);
-
-		// Now copy temp buffer to adjusted location
-		memcpy(GetCellPointer(which+1), temp, tempbuffsize);
-
-		// cleanup
-		free(temp);
-
-		return 1;
-
-	};
-	// Shifts all items from this item, and including this item down 1.
-	// This deletes the item specified.
-	int Delete(size_t which)
+	CellArray *clone()
 	{
-		// No point shifting this.
-		if (which >= this->count)
-		{
-			return 0;
-		}
+		CellArray *array = new CellArray(m_BlockSize);
+		array->m_AllocSize = m_AllocSize;
+		array->m_Size = m_Size;
+		array->m_Data = (cell *)malloc(sizeof(cell)* m_BlockSize * m_AllocSize);
+		memcpy(array->m_Data, m_Data, sizeof(cell)* m_BlockSize * m_Size);
+		return array;
+	}
 
-
-		for (size_t i=which; i<this->count - 1; i++)
-		{
-			memcpy(GetCellPointer(i), GetCellPointer(i + 1), sizeof(cell) * cellcount);
-		}
-		this->count--;
-		return 1;
-	};
-	int Swap(size_t item1, size_t item2)
+	cell *base()
 	{
-		if (item1 >= this->count ||
-			item2 >= this->count)
+		return m_Data;
+	}
+
+	size_t mem_usage()
+	{
+		return m_AllocSize * m_BlockSize * sizeof(cell);
+	}
+
+private:
+	bool GrowIfNeeded(size_t count)
+	{
+		/* Shortcut out if we can store this */
+		if (m_Size + count <= m_AllocSize)
 		{
-			return 0;
+			return true;
 		}
-
-		// Make a temp buffer to store item2
-		cell* temp=(cell*)malloc(sizeof(cell) * cellcount);
-		memcpy(temp, GetCellPointer(item2), sizeof(cell) * cellcount);
-		
-		// copy item1 to item2
-		memcpy(GetCellPointer(item2), GetCellPointer(item1), sizeof(cell) * cellcount);
-
-		// copy item2 to item1
-		memcpy(GetCellPointer(item1), temp, sizeof(cell) * cellcount);
-
-		// Cleanup
-		free(temp);
-
-		return 1;
-	};
-
+		/* Set a base allocation size of 8 items */
+		if (!m_AllocSize)
+		{
+			m_AllocSize = 8;
+		}
+		/* If it's not enough, keep doubling */
+		while (m_Size + count > m_AllocSize)
+		{
+			m_AllocSize *= 2;
+		}
+		/* finally, allocate the new block */
+		if (m_Data)
+		{
+			m_Data = (cell *)realloc(m_Data, sizeof(cell)* m_BlockSize * m_AllocSize);
+		}
+		else {
+			m_Data = (cell *)malloc(sizeof(cell)* m_BlockSize * m_AllocSize);
+		}
+		return (m_Data != NULL);
+	}
+private:
+	cell  *m_Data;
+	size_t m_BlockSize;
+	size_t m_AllocSize;
+	size_t m_Size;
 };
 
-extern CVector<CellVector*> VectorHolder;
+extern ke::Vector<CellArray*> VectorHolder;
 
 
-inline CellVector* HandleToVector(AMX* amx, int handle)
+inline CellArray* HandleToVector(AMX* amx, int handle)
 {
-	if (handle <= 0 ||
-		handle > (int)VectorHolder.size())
+	if (handle <= 0 || handle > (int)VectorHolder.length())
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", handle);
 
 		return NULL;
 	}
 
-	CellVector* ret=VectorHolder[handle-1];
+	CellArray* ret = VectorHolder[handle - 1];
 
 	if (ret == NULL)
 	{

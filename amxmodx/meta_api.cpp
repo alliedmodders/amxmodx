@@ -407,7 +407,7 @@ int	C_Spawn(edict_t *pent)
 
 	FlagMan.LoadFile();
 
-	for (unsigned int i=0; i<VectorHolder.size(); i++)
+	for (unsigned int i=0; i<VectorHolder.length(); i++)
 	{
 		delete VectorHolder[i];
 	};

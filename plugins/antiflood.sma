@@ -34,8 +34,8 @@
 
 #include <amxmodx>
 
-new Float:g_Flooding[33] = {0.0, ...}
-new g_Flood[33] = {0, ...}
+new Float:g_Flooding[MAX_PLAYERS] = {0.0, ...}
+new g_Flood[MAX_PLAYERS] = {0, ...}
 
 new amx_flood_time;
 

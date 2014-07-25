@@ -53,7 +53,7 @@ new PLUGINNAME[] = "AMX Mod X"
 #define ADMIN_IPADDR	(1<<3)
 #define ADMIN_NAME		(1<<4)
 
-new bool:g_CaseSensitiveName[33];
+new bool:g_CaseSensitiveName[MAX_PLAYERS];
 
 // pcvars
 new amx_mode;
@@ -236,7 +236,7 @@ public addadminfn(id, level, cid)
 		read_argv(3, password, 63)
 
 	new auth[33]
-	new Comment[33]; // name of player to pass to comment field
+	new Comment[MAX_NAME_LENGTH]; // name of player to pass to comment field
 	if (idtype & ADMIN_LOOKUP)
 	{
 		get_user_name(player, Comment, sizeof(Comment)-1)
@@ -273,7 +273,7 @@ public addadminfn(id, level, cid)
 
 	if (player > 0)
 	{
-		new name[32]
+		new name[MAX_NAME_LENGTH]
 		get_user_info(player, "name", name, 31)
 		accessUser(player, name)
 	}
@@ -603,7 +603,7 @@ public cmdReload(id, level, cid)
 #endif
 
 	new players[32], num, pv
-	new name[32]
+	new name[MAX_NAME_LENGTH]
 	get_players(players, num)
 	for (new i=0; i<num; i++)
 	{
@@ -821,7 +821,7 @@ public client_infochanged(id)
 		return PLUGIN_CONTINUE
 	}
 
-	new newname[32], oldname[32]
+	new newname[MAX_NAME_LENGTH], oldname[MAX_NAME_LENGTH]
 	
 	get_user_name(id, oldname, 31)
 	get_user_info(id, "name", newname, 31)

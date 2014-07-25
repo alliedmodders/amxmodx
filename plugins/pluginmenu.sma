@@ -40,25 +40,25 @@ new DisabledCallback;
 new EnabledCallback;
 
 // pcvar that the client is currently modifying
-new CurrentCvar[33];
+new CurrentCvar[MAX_PLAYERS];
 
 // Name of the cvar being modified
-new CurrentCvarName[33][32];
+new CurrentCvarName[MAX_PLAYERS][32];
 
 // Plugin ID that the client is modifying
-new CurrentPlid[33];
+new CurrentPlid[MAX_PLAYERS];
 
 // Page that the client is currently on
-new CurrentPage[33];
+new CurrentPage[MAX_PLAYERS];
 
 // Menu function ID that the client is in
-new CurrentMenuFunction[33] = { -1,... };
+new CurrentMenuFunction[MAX_PLAYERS] = { -1,... };
 
-new CurrentCommand[33][32];
+new CurrentCommand[MAX_PLAYERS][32];
 new cvarmenu_cmdid;
 new cmdmenu_cmdid;
 
-new ExplicitPlugin[33];
+new ExplicitPlugin[MAX_PLAYERS];
 
 public plugin_init()
 {
@@ -431,7 +431,7 @@ public CommandChangeCvar(id)
 		
 		// Copy of admincmd's global output.
 		
-		new Name[32];
+		new Name[MAX_NAME_LENGTH];
 		new AuthID[40];
 		
 		get_user_name(id,Name,sizeof(Name)-1);
@@ -441,8 +441,7 @@ public CommandChangeCvar(id)
 	
 	
 		new cvar_val[64];
-		new maxpl = get_maxplayers();
-		for (new i = 1; i <= maxpl; i++)
+		for (new i = 1; i <= MaxClients; i++)
 		{
 			if (is_user_connected(i) && !is_user_bot(i))
 			{

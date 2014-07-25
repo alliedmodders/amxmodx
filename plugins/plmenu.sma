@@ -40,14 +40,14 @@
 #include <cstrike>
 #include <fakemeta>
 
-new g_menuPosition[33]
-new g_menuPlayers[33][32]
-new g_menuPlayersNum[33]
-new g_menuOption[33]
-new g_menuSettings[33]
+new g_menuPosition[MAX_PLAYERS]
+new g_menuPlayers[MAX_PLAYERS][32]
+new g_menuPlayersNum[MAX_PLAYERS]
+new g_menuOption[MAX_PLAYERS]
+new g_menuSettings[MAX_PLAYERS]
 
-new g_menuSelect[33][64]
-new g_menuSelectNum[33]
+new g_menuSelect[MAX_PLAYERS][64]
+new g_menuSelectNum[MAX_PLAYERS]
 
 #define MAX_CLCMDS 24
 
@@ -79,7 +79,7 @@ new g_CSTeamiNumbers[3] = {
 	3
 }
 
-new g_CSPlayerCanSwitchFromSpec[33]
+new g_CSPlayerCanSwitchFromSpec[MAX_PLAYERS]
 new g_transferingAdmin
 
 new allow_spectators, mp_limitteams
@@ -273,7 +273,7 @@ public actionBanMenu(id, key)
 				return PLUGIN_HANDLED
 			}
 			new player = g_menuPlayers[id][g_menuPosition[id] * 7 + key]
-			new name[32], name2[32], authid[32], authid2[32]
+			new name[MAX_NAME_LENGTH], name2[MAX_NAME_LENGTH], authid[32], authid2[32]
 		
 			get_user_name(player, name2, 31)
 			get_user_authid(id, authid, 31)
@@ -286,8 +286,7 @@ public actionBanMenu(id, key)
 
 			if ( !banTime ) // permanent
 			{
-				new maxpl = get_maxplayers();
-				for (new i = 1; i <= maxpl; i++)
+				for (new i = 1; i <= MaxClients; i++)
 				{
 					show_activity_id(i, id, name, "%L %s %L", i, "BAN", name2, i, "PERM");
 				}
@@ -296,8 +295,7 @@ public actionBanMenu(id, key)
 			{
 				new tempTime[32];
 				formatex(tempTime,sizeof(tempTime)-1,"%d",banTime);
-				new maxpl = get_maxplayers();
-				for (new i = 1; i <= maxpl; i++)
+				for (new i = 1; i <= MaxClients; i++)
 				{
 					show_activity_id(i, id, name, "%L %s %L", i, "BAN", name2, i, "FOR_MIN", tempTime);
 				}
@@ -348,7 +346,7 @@ displayBanMenu(id, pos)
 	new menuBody[512]
 	new b = 0
 	new i
-	new name[32]
+	new name[MAX_NAME_LENGTH]
 	new start = pos * 7
 
 	if (start >= g_menuPlayersNum[id])
@@ -442,7 +440,7 @@ public actionSlapMenu(id, key)
 		default:
 		{
 			new player = g_menuPlayers[id][g_menuPosition[id] * 7 + key]
-			new name2[32]
+			new name2[MAX_NAME_LENGTH]
 			
 			get_user_name(player, name2, 31)
 
@@ -453,7 +451,7 @@ public actionSlapMenu(id, key)
 				return PLUGIN_HANDLED
 			}
 
-			new authid[32], authid2[32], name[32]
+			new authid[32], authid2[32], name[MAX_NAME_LENGTH]
 
 			get_user_authid(id, authid, 31)
 			get_user_authid(player, authid2, 31)
@@ -492,7 +490,7 @@ displaySlapMenu(id, pos)
 	new menuBody[512]
 	new b = 0
 	new i
-	new name[32], team[4]
+	new name[MAX_NAME_LENGTH], team[4]
 	new start = pos * 7
 
 	if (start >= g_menuPlayersNum[id])
@@ -592,7 +590,7 @@ public actionKickMenu(id, key)
 		default:
 		{
 			new player = g_menuPlayers[id][g_menuPosition[id] * 8 + key]
-			new authid[32], authid2[32], name[32], name2[32]
+			new authid[32], authid2[32], name[MAX_NAME_LENGTH], name2[MAX_NAME_LENGTH]
 			
 			get_user_authid(id, authid, 31)
 			get_user_authid(player, authid2, 31)
@@ -626,7 +624,7 @@ displayKickMenu(id, pos)
 	new menuBody[512]
 	new b = 0
 	new i
-	new name[32]
+	new name[MAX_NAME_LENGTH]
 	new start = pos * 8
 
 	if (start >= g_menuPlayersNum[id])
@@ -701,7 +699,7 @@ public Event_TextMsg( id ) // #Only_1_Team_Change
 {
 	if( g_transferingAdmin && is_user_connected(id) && (id == g_transferingAdmin || is_user_connected(g_transferingAdmin)) )
 	{
-		new name[32]
+		new name[MAX_NAME_LENGTH]
 		get_user_name(id, name, charsmax(name))
 		client_print(g_transferingAdmin, print_chat, "%L", g_transferingAdmin, "CANT_PERF_PLAYER", name);
 	}
@@ -729,7 +727,7 @@ public actionTeamMenu(id, key)
 
 			g_transferingAdmin = id
 
-			new authid[32], authid2[32], name[32], name2[32]
+			new authid[32], authid2[32], name[MAX_NAME_LENGTH], name2[MAX_NAME_LENGTH]
 
 			get_user_name(player, name2, 31)
 			get_user_authid(id, authid, 31)
@@ -838,7 +836,7 @@ displayTeamMenu(id, pos)
 	new menuBody[512]
 	new b = 0
 	new i, iteam
-	new name[32], team[4]
+	new name[MAX_NAME_LENGTH], team[4]
 	new start = pos * 7
 
 	if (start >= g_menuPlayersNum[id])
@@ -947,7 +945,7 @@ public actionClcmdMenu(id, key)
 			
 			if (is_user_connected(player))
 			{
-				new command[512], authid[32], name[32], userid[32]
+				new command[512], authid[32], name[MAX_NAME_LENGTH], userid[32]
 				
 				copy(command, charsmax(command), g_clcmdCmd[g_menuSelect[id][g_menuOption[id]]])
 				get_user_authid(player, authid, 31)
@@ -986,7 +984,7 @@ displayClcmdMenu(id, pos)
 	new menuBody[512]
 	new b = 0
 	new i
-	new name[32]
+	new name[MAX_NAME_LENGTH]
 	new start = pos * 7
 
 	if (start >= g_menuPlayersNum[id])

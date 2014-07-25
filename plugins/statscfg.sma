@@ -41,7 +41,7 @@ new g_menuData[MAX_MENU_DATA][32]
 new g_menuDataVar[MAX_MENU_DATA][32]
 new g_menuDataId[MAX_MENU_DATA]
 new g_menuDataNum
-new g_menuPosition[33]
+new g_menuPosition[MAX_PLAYERS]
 new g_fileToSave[64]
 new bool:g_modified
 new g_coloredMenus

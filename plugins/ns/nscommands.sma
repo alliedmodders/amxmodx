@@ -71,8 +71,8 @@ enum {
 };
 
 
-new g_Class[33]; // stored info from the "ScoreInfo" message
-new g_Team[33];
+new g_Class[MAX_PLAYERS]; // stored info from the "ScoreInfo" message
+new g_Team[MAX_PLAYERS];
 
 new g_ScoreInfo_Class;
 new g_ScoreInfo_Team;
@@ -102,7 +102,7 @@ public plugin_init() {
 
   // clear class info..
   new i=0;
-  while (i<33) {
+  while (i<MAX_PLAYERS) {
     g_Class[i]=0;
     g_Team[i]=-1;
     i++;
@@ -152,7 +152,7 @@ stock UTIL_FindCommander() {
 
 }
 stock UTIL_IsSpectator(id) {
-  if (id<1||id>get_maxplayers())
+  if (id<1||id>MaxClients)
     return -1;
   if (g_Class[id]==PLAYERCLASS_SPECTATOR)
     return 1;
@@ -167,7 +167,7 @@ public cmdRandom(id,level,cid) {
     read_argv(1,arg,31)
     new player = cmd_target(id,arg,CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF)
     if (!player) return PLUGIN_HANDLED
-    new name[32],name_targ[32];
+    new name[MAX_NAME_LENGTH],name_targ[MAX_NAME_LENGTH];
     new auth[32],auth_targ[32];
     get_user_name(id,name,31);
     get_user_name(player,name_targ,31);
@@ -182,7 +182,7 @@ public cmdRandom(id,level,cid) {
   else {
     new cur=0;
     new i=1;
-    while (i<get_maxplayers()) {
+    while (i<MaxClients) {
       if (is_user_connected(i)) {
         if (!(get_user_flags(i) & ADMIN_IMMUNITY)) {
           if (g_Team[i] == 0) {
@@ -193,7 +193,7 @@ public cmdRandom(id,level,cid) {
       i++;
     }
     if (cur) {
-      new name[32],auth[32];
+      new name[MAX_NAME_LENGTH],auth[32];
       get_user_name(id,name,31);
       get_user_authid(id,auth,31);
       log_amx("Cmd: ^"%s<%d><%s><>^" random all",name,get_user_userid(id),auth);
@@ -215,7 +215,7 @@ public randomStep(index) {
     if (g_Team[index] == 0 && !(get_user_flags(index) & ADMIN_IMMUNITY)) {
       client_cmd(index, "%s", g_AutoAssignAck);
     }
-    if (++index > get_maxplayers()) {
+    if (++index >= MaxClients) {
     	return PLUGIN_HANDLED_MAIN
     }
 	}
@@ -233,7 +233,7 @@ public cmdReadyRoom(id,level,cid) {
     read_argv(1,arg,31)
     new player = cmd_target(id,arg,CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF)
     if (!player) return PLUGIN_HANDLED
-    new name[32],name_targ[32];
+    new name[MAX_NAME_LENGTH],name_targ[MAX_NAME_LENGTH];
     new auth[32],auth_targ[32];
     get_user_name(id,name,31);
     get_user_name(player,name_targ,31);
@@ -248,7 +248,7 @@ public cmdReadyRoom(id,level,cid) {
   else {
     new cur=0;
     new i=1;
-    while (i<get_maxplayers()) {
+    while (i<=MaxClients) {
       if (is_user_connected(i)) {
         if (UTIL_IsSpectator(i) == 1 || g_Team[i] != 0) {
           cur++;
@@ -257,7 +257,7 @@ public cmdReadyRoom(id,level,cid) {
       i++;
     }
     if (cur) {
-      new name[32],auth[32];
+      new name[MAX_NAME_LENGTH],auth[32];
       get_user_name(id,name,31);
       get_user_authid(id,auth,31);
       log_amx("Cmd: ^"%s<%d><%s><>^" ready room all",name,get_user_userid(id),auth);
@@ -279,7 +279,7 @@ public rrStep(index) {
     if (is_user_connected(index) && g_Team[index]!=0) {
       client_cmd(index, "%s", g_ReadyRoomAck)
     }
-    if (++index > get_maxplayers()) {
+    if (++index >= MaxClients) {
     	return PLUGIN_HANDLED_MAIN
     }
 	}
@@ -300,7 +300,7 @@ public cmdTeamTwo(id,level,cid) {
       client_print(id,print_chat,"[AMXX] That user is already on team two.");
       return PLUGIN_HANDLED_MAIN;
     }
-    new name[32],name_targ[32];
+    new name[MAX_NAME_LENGTH],name_targ[MAX_NAME_LENGTH];
     new auth[32],auth_targ[32];
     get_user_name(id,name,31);
     get_user_name(player,name_targ,31);
@@ -328,7 +328,7 @@ public cmdTeamOne(id,level,cid) {
       client_print(id,print_chat,"[AMXX] That user is already on team one.");
       return PLUGIN_HANDLED_MAIN;
     }
-    new name[32],name_targ[32];
+    new name[MAX_NAME_LENGTH],name_targ[MAX_NAME_LENGTH];
     new auth[32],auth_targ[32];
     get_user_name(id,name,31);
     get_user_name(player,name_targ,31);
@@ -350,9 +350,9 @@ public cmdUnComm(id,level,cid) {
   if (!cmd_access(id,level,cid,1))
     return PLUGIN_HANDLED
   new comm = UTIL_FindCommander();
-  if (comm>0&&comm<=get_maxplayers()) {
+  if (comm>0&&comm<=MaxClients) {
     client_cmd(comm, "%s", g_StopCommAck);
-    new name[32],name_targ[32];
+    new name[MAX_NAME_LENGTH],name_targ[MAX_NAME_LENGTH];
     new auth[32],auth_targ[32];
     get_user_name(id,name,31);
     get_user_name(comm,name_targ,31);

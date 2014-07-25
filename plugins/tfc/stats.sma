@@ -47,20 +47,20 @@ public DoubleKill
 public DoubleKillSound
 public BulletDamage
 
-new g_streakKills[33][2]
-new g_multiKills[33][2]
+new g_streakKills[MAX_PLAYERS][2]
+new g_multiKills[MAX_PLAYERS][2]
 new Float:g_prevKill
 new g_prevKillerId
 new g_KillCount;
 
-new g_userPosition[33]
-new g_userState[33]
-new g_userPlayers[33][32]
+new g_userPosition[MAX_PLAYERS]
+new g_userState[MAX_PLAYERS]
+new g_userPlayers[MAX_PLAYERS][32]
 new g_Buffer[2048]
 
 
-new g_Killers[33][4]
-new Float:g_DeathStats[33]
+new g_Killers[MAX_PLAYERS][4]
+new Float:g_DeathStats[MAX_PLAYERS]
 
 new g_center1_sync
 new g_center2_sync
@@ -240,7 +240,7 @@ public cmdRank(id){
 }
 
 displayRank(id,dest) {
-  new name[32], stats[8], body[8]
+  new name[MAX_NAME_LENGTH], stats[8], body[8]
   new rank_pos = get_user_stats(id,stats,body)
   new pos = format(g_Buffer,2047,"Kills: %d^nDeaths: %d^nTKs: %d^nDamage: %d^nHits: %d^nShots: %d^n^n",
     stats[0],stats[1],stats[3],stats[6],stats[5],stats[4])
@@ -264,7 +264,7 @@ public cmdTop15(id) {
 
 /* get top 15 */
 getTop15(){
-  new stats[8], body[8], name[32]
+  new stats[8], body[8], name[MAX_NAME_LENGTH]
   new pos = copy(g_Buffer,2047,"#   nick                           kills/deaths    TKs      hits/shots/headshots^n")
   new imax = get_statsnum()
   if (imax > 15) imax = 15
@@ -310,10 +310,9 @@ public cmdStats(id){
 
 /* build list of attackers */ 
 getAttackers(id) { 
-  new name[32],wpn[32], stats[8],body[8],found=0 
+  new name[MAX_NAME_LENGTH],wpn[32], stats[8],body[8],found=0 
   new pos = copy(g_Buffer,2047,"Attackers:^n") 
-  new amax = get_maxplayers() 
-  for(new a = 1; a <= amax; ++a){ 
+  for(new a = 1; a <= MaxClients; ++a){ 
 
     if(get_user_astats(id,a,stats,body,wpn,31)){ 
       found = 1 
@@ -331,10 +330,9 @@ getAttackers(id) {
 
 /* build list of victims */ 
 getVictims(id) { 
-  new name[32],wpn[32], stats[8],body[8],found=0 
+  new name[MAX_NAME_LENGTH],wpn[32], stats[8],body[8],found=0 
   new pos = copy(g_Buffer,2047,"Victims:^n") 
-  new amax = get_maxplayers() 
-  for(new a = 1; a <= amax; ++a){ 
+  for(new a = 1; a <= MaxClients; ++a){ 
     if(get_user_vstats(id,a,stats,body,wpn,31)){ 
       found = 1 
       if (stats[1]) 
@@ -361,7 +359,7 @@ getHits(id,killer) {
 
 /* build list of hits for say hp */ 
 getMyHits(id,killed) { 
-  new name[32], stats[8], body[8], found = 0 
+  new name[MAX_NAME_LENGTH], stats[8], body[8], found = 0 
   get_user_name(killed,name,31) 
   new pos = format(g_Buffer,2047,"You hit %s in:",name) 
   get_user_vstats(id,killed,stats,body) 
@@ -384,7 +382,7 @@ public cmdKiller(id) {
     return PLUGIN_HANDLED
   }
   if (g_Killers[id][0]) {
-    new name[32], stats[8], body[8], wpn[33], mstats[8], mbody[8]
+    new name[MAX_NAME_LENGTH], stats[8], body[8], wpn[33], mstats[8], mbody[8]
     get_user_name(g_Killers[id][0],name,31)
     get_user_astats(id,g_Killers[id][0],stats,body,wpn,31)
     client_print(id,print_chat,"%s killed you with %s from distance of %.2f meters",  name,wpn,float(g_Killers[id][3]) * 0.0254 )
@@ -436,7 +434,7 @@ showStatsMenu(id,pos){
   if (start >= inum) start = pos = g_userPosition[id] = 0
 
   new len = format(menu_body,511,"Server Stats %d/%d^n^n",pos + 1,((inum/max_menupos)+((inum%max_menupos)?1:0)))
-  new name[32], end = start + max_menupos, keys = (1<<9)|(1<<7)
+  new name[MAX_NAME_LENGTH], end = start + max_menupos, keys = (1<<9)|(1<<7)
   if (end > inum) end = inum
   for(new a = start; a < end; ++a){
     get_user_name(g_userPlayers[id][a],name,31)
@@ -474,7 +472,7 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 
 /* save state at death */ 
 public client_death(killer,victim,wpnindex,hitplace,TK){
-  new killer_name[32]
+  new killer_name[MAX_NAME_LENGTH]
   get_user_name(killer,killer_name,31) 
 
   if ( KillingStreak || KillingStreakSound ){ 
@@ -486,7 +484,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
   new headshot = ( hitplace == HIT_HEAD ) ? 1:0
   new selfKill = ( killer == victim ) ? 1:0
 
-  new victim_name[32] 
+  new victim_name[MAX_NAME_LENGTH] 
   get_user_name(victim,victim_name,31) 
 
   new Float:statstime = get_cvar_float("tfcstats_statstime")
@@ -548,7 +546,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
       if ( (a >>= 1) > 6 ) a = 6
       if ( KillingStreak ){
         set_hudmessage(0, 100, 255, 0.05, 0.55, 2, 0.02, 6.0, 0.01, 0.1, -1)
-        for (new i=1;i<=get_maxplayers();i++){
+        for (new i=1;i<=MaxClients;i++){
           if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
             continue
           ShowSyncHudMsg(i, g_left_sync, g_KillingMsg[ a ], killer_name) 
@@ -572,7 +570,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
   if ( xmod_is_melee_wpn(wpnindex) && ( KnifeKill || KnifeKillSound )  ){
     if ( KnifeKill ){
       set_hudmessage(255, 100, 100, -1.0, 0.15, 1, 6.0, 6.0, 0.5, 0.15, -1)
-      for (new i=1;i<=get_maxplayers();i++){
+      for (new i=1;i<=MaxClients;i++){
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
 
           continue
@@ -584,7 +582,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
   else if ( grenade ){
     if ( GrenadeKill ){
       set_hudmessage(255, 100, 100, -1.0, 0.15, 1, 6.0, 6.0, 0.5, 0.15, -1) 
-      for (new i=1;i<=get_maxplayers();i++){
+      for (new i=1;i<=MaxClients;i++){
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
           continue
         ShowSyncHudMsg(i, g_center1_sync, g_HeMessages[ random_num(0,3)],killer_name,victim_name) 
@@ -601,7 +599,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
       replace( message, sizeof(message)-1, "$wn", weapon )    
       replace( message, sizeof(message)-1, "$kn", killer_name )
       set_hudmessage(100, 100, 255, -1.0, 0.19, 0, 6.0, 6.0, 0.5, 0.15, -1) 
-      for (new i=1;i<=get_maxplayers();i++){
+      for (new i=1;i<=MaxClients;i++){
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
           continue
         ShowSyncHudMsg(i, g_center2_sync, "%s", message) 
@@ -635,7 +633,7 @@ public showDoubleKill(){
 	  return PLUGIN_CONTINUE
 
   if ( DoubleKill ) {
-    new name[32],message[128]
+    new name[MAX_NAME_LENGTH],message[128]
     get_user_name(g_prevKillerId,name,31)
     copy( message, 127, g_DoubleKillMsg[pos] )
     replace( message, 127 , "$kn", name )
@@ -645,7 +643,7 @@ public showDoubleKill(){
       replace( message, 127 , "$kk", kills )
     }
     set_hudmessage(65, 102, 158, -1.0, 0.25, 0, 6.0, 6.0, 0.5, 0.15, -1)
-    for (new i=1;i<=get_maxplayers();i++){
+    for (new i=1;i<=MaxClients;i++){
       if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
         continue
       show_hudmessage(i, "%s", message) 
@@ -664,11 +662,11 @@ public checkKills(param[]){
     a -= 3 
     if ( a > -1 ){
       if ( MultiKill ) {
-        new name[32]
+        new name[MAX_NAME_LENGTH]
         get_user_name(id,name,31)
         set_hudmessage(255, 0, 100, 0.05, 0.65, 2, 0.02, 6.0, 0.01, 0.1, -1)
         if ( a > 6 ) a = 6
-        for (new i=1;i<=get_maxplayers();i++){
+        for (new i=1;i<=MaxClients;i++){
           if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
             continue
           ShowSyncHudMsg(i, g_left_sync, g_MultiKillMsg[a],name,g_multiKills[id][0],g_multiKills[id][1]) 

@@ -35,9 +35,9 @@
 #include <amxmodx>
 #include <csx>
 
-new g_pingSum[33]
-new g_pingCount[33]
-new g_inGame[33]
+new g_pingSum[MAX_PLAYERS]
+new g_pingCount[MAX_PLAYERS]
+new g_inGame[MAX_PLAYERS]
 
 public plugin_init()
 {
@@ -58,7 +58,7 @@ public client_disconnect(id)
 
 	remove_task(id)
 	
-	new szTeam[16], szName[32], szAuthid[32], iStats[8], iHits[8], szWeapon[24]
+	new szTeam[16], szName[MAX_NAME_LENGTH], szAuthid[32], iStats[8], iHits[8], szWeapon[24]
 	new iUserid = get_user_userid(id)
 	new _max = xmod_get_maxweapons()
 	

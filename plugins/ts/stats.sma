@@ -49,12 +49,12 @@ public BulletDamage
 public TAInfo
 public FragInfo 
 
-new g_userPosition[33]
-new g_userState[33]
-new g_userPlayers[33][32]
+new g_userPosition[MAX_PLAYERS]
+new g_userState[MAX_PLAYERS]
+new g_userPlayers[MAX_PLAYERS][32]
 new g_Buffer[2048]
-new g_Killers[33][3] 
-new Float:g_DeathStats[33]
+new g_Killers[MAX_PLAYERS][3] 
+new Float:g_DeathStats[MAX_PLAYERS]
 
 new g_center1_sync
 new g_damage_sync
@@ -209,7 +209,7 @@ public cmdTop15(id) {
 
 /* get top 15 */
 getTop15(){
-  new stats[8], body[8], name[32]
+  new stats[8], body[8], name[MAX_NAME_LENGTH]
   new pos = copy(g_Buffer,2047,"#   nick                           kills/deaths    TKs      hits/shots/headshots^n")
   new imax = get_statsnum()
   if (imax > 15) imax = 15
@@ -252,10 +252,9 @@ public cmdStats(id){
 
 /* build list of attackers */ 
 getAttackers(id) { 
-  new name[32],wpn[32], stats[8],body[8],found=0 
+  new name[MAX_NAME_LENGTH],wpn[32], stats[8],body[8],found=0 
   new pos = copy(g_Buffer,2047,"Attackers:^n") 
-  new amax = get_maxplayers() 
-  for(new a = 1; a <= amax; ++a){ 
+  for(new a = 1; a <= MaxClients; ++a){ 
     if(get_user_astats(id,a,stats,body,wpn,31)){ 
       found = 1 
       if (stats[0]) 
@@ -271,10 +270,9 @@ getAttackers(id) {
 
 /* build list of victims */ 
 getVictims(id) { 
-  new name[32],wpn[32], stats[8],body[8],found=0 
+  new name[MAX_NAME_LENGTH],wpn[32], stats[8],body[8],found=0 
   new pos = copy(g_Buffer,2047,"Victims:^n") 
-  new amax = get_maxplayers() 
-  for(new a = 1; a <= amax; ++a){ 
+  for(new a = 1; a <= MaxClients; ++a){ 
     if(get_user_vstats(id,a,stats,body,wpn,31)){ 
       found = 1 
       if (stats[1]) 
@@ -301,7 +299,7 @@ getHits(id,killer) {
 
 /* build list of hits for say hp */ 
 getMyHits(id,killed) { 
-  new name[32], stats[8], body[8], found = 0 
+  new name[MAX_NAME_LENGTH], stats[8], body[8], found = 0 
   get_user_name(killed,name,31) 
   new pos = format(g_Buffer,2047,"You hit %s in:",name) 
   get_user_vstats(id,killed,stats,body) 
@@ -317,7 +315,7 @@ getMyHits(id,killed) {
 public client_damage(attacker,victim,damage,wpnindex,hitplace,TA) { 
   if ( TA ){
     if ( TAInfo && is_user_alive(victim) ){
-      new attacker_name[32]
+      new attacker_name[MAX_NAME_LENGTH]
       get_user_name(attacker,attacker_name,31) 
       client_print(0,print_chat,"%s attacked a teammate",attacker_name)
     }
@@ -334,7 +332,7 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA) {
 }
 
 public client_death(killer,victim,wpnindex,hitplace,TK){
-  new killer_name[32]
+  new killer_name[MAX_NAME_LENGTH]
   get_user_name(killer,killer_name,31) 
 
   if ( TK ){
@@ -348,7 +346,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
   new grenade = ( wpnindex == TSW_M61GRENADE ) ? 1:0
   new headshot = ( hitplace == HIT_HEAD ) ? 1:0
 
-  new victim_name[32] 
+  new victim_name[MAX_NAME_LENGTH] 
   get_user_name(victim,victim_name,31) 
 
   if ( killer == victim ){
@@ -375,7 +373,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
 
   if ( grenade && GrenadeKill ){
       set_hudmessage(255, 100, 100, -1.0, 0.25, 1, 6.0, 6.0, 0.5, 0.15, -1) 
-      for (new i=1;i<=get_maxplayers();i++){
+      for (new i=1;i<=MaxClients;i++){
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
           continue
         show_hudmessage(i, g_HeMessages[ random_num(0,3)],killer_name,victim_name) 
@@ -390,7 +388,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
       replace( message, sizeof(message)-1 , "$wn", weapon )    
       replace( message, sizeof(message)-1, "$kn", killer_name )
       set_hudmessage(100, 100, 255, -1.0, 0.29, 0, 6.0, 6.0, 0.5, 0.15, -1)  
-      for (new i=1;i<=get_maxplayers();i++){
+      for (new i=1;i<=MaxClients;i++){
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
           continue
         ShowSyncHudMsg(i, g_center1_sync, "%s", message) 
@@ -402,7 +400,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
   if ( killFlags & TSKF_DOUBLEKILL ){
     if ( DoubleKill ){
       set_hudmessage(65, 102, 158, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, -1)
-      for (new i=1;i<=get_maxplayers();i++){
+      for (new i=1;i<=MaxClients;i++){
         if ( g_Killers[i][0] && g_DeathStats[i] > get_gametime() )
           continue
         show_hudmessage(i,"Wow! %s made a double kill !!!",killer_name) 
@@ -444,7 +442,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
 
 DisplayKillInfo(victim){
   if ( ShowKiller ){ 
-    new name[32], stats[8], body[8], wpn[33], mstats[8], mbody[8] 
+    new name[MAX_NAME_LENGTH], stats[8], body[8], wpn[33], mstats[8], mbody[8] 
     get_user_name(g_Killers[victim][0],name,31) 
     get_user_astats(victim,g_Killers[victim][0],stats,body,wpn,31) 
     get_user_vstats(victim,g_Killers[victim][0],mstats,mbody) 
@@ -469,7 +467,7 @@ DisplayAVList(victim){
 
 DisplayKillerHp(victim,con){
   if ( KillerHp ){
-    new name[32], kmsg[128]
+    new name[MAX_NAME_LENGTH], kmsg[128]
     get_user_name(g_Killers[victim][0],name,31)
     format(kmsg,127,"%s still has %dhp",name,g_Killers[victim][1])
     if ( con ) client_print(victim,print_console, "%s", kmsg)
@@ -497,7 +495,7 @@ public cmdKiller(id) {
     return PLUGIN_HANDLED 
   } 
   if (g_Killers[id][0]) { 
-    new name[32], stats[8], body[8], wpn[33], mstats[8], mbody[8] 
+    new name[MAX_NAME_LENGTH], stats[8], body[8], wpn[33], mstats[8], mbody[8] 
     get_user_name(g_Killers[id][0],name,31) 
     get_user_astats(id,g_Killers[id][0],stats,body,wpn,31) 
     get_user_vstats(id,g_Killers[id][0],mstats,mbody) 
@@ -542,7 +540,7 @@ showStatsMenu(id,pos){
   get_players(g_userPlayers[id],inum)
   if (start >= inum) start = pos = g_userPosition[id] = 0
   new len = format(menu_body,511,"Server Stats %d/%d^n^n",pos + 1,((inum/MAX_MENUPOS)+((inum%MAX_MENUPOS)?1:0)))
-  new name[32], end = start + MAX_MENUPOS, keys = (1<<9)|(1<<7)
+  new name[MAX_NAME_LENGTH], end = start + MAX_MENUPOS, keys = (1<<9)|(1<<7)
   if (end > inum) end = inum
   for(new a = start; a < end; ++a){
     get_user_name(g_userPlayers[id][a],name,31)

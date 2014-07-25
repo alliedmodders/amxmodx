@@ -38,7 +38,6 @@
 new g_ResPtr
 new g_HidePtr
 new g_sv_visiblemaxplayers
-new g_maxplayers
 
 public plugin_init()
 {
@@ -48,7 +47,6 @@ public plugin_init()
 	g_ResPtr = register_cvar("amx_reservation", "0")
 	g_HidePtr = register_cvar("amx_hideslots", "0")
 	g_sv_visiblemaxplayers = get_cvar_pointer("sv_visiblemaxplayers")
-	g_maxplayers = get_maxplayers()
 }
 
 public plugin_cfg()
@@ -60,14 +58,14 @@ public MapLoaded()
 {
 	if (get_pcvar_num(g_HidePtr))
 	{
-		setVisibleSlots(get_playersnum(1), g_maxplayers - get_pcvar_num(g_ResPtr))
+		setVisibleSlots(get_playersnum(1), MaxClients - get_pcvar_num(g_ResPtr))
 	}
 }
 
 public client_authorized(id)
 {
 	new players = get_playersnum(1)
-	new limit = g_maxplayers - get_pcvar_num(g_ResPtr)
+	new limit = MaxClients - get_pcvar_num(g_ResPtr)
 
 	if (access(id, ADMIN_RESERVATION) || (players <= limit))
 	{
@@ -83,7 +81,7 @@ public client_disconnect(id)
 {
 	if (get_pcvar_num(g_HidePtr))
 	{
-		setVisibleSlots(get_playersnum(1) - 1, g_maxplayers - get_pcvar_num(g_ResPtr))
+		setVisibleSlots(get_playersnum(1) - 1, MaxClients - get_pcvar_num(g_ResPtr))
 	}
 }
 
@@ -91,8 +89,8 @@ setVisibleSlots(players, limit)
 {
 	new num = players + 1
 
-	if (players == g_maxplayers)
-		num = g_maxplayers
+	if (players == MaxClients)
+		num = MaxClients
 	else if (players < limit)
 		num = limit
 	

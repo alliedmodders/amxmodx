@@ -36,7 +36,6 @@
 #include <amxmisc>
 #include <fakemeta>
 
-#define MAX_PLAYERS 32 + 1
 new g_menuPosition[MAX_PLAYERS]
 new g_menuPlayers[MAX_PLAYERS][32]
 new g_menuPlayersNum[MAX_PLAYERS]
@@ -89,7 +88,7 @@ public actionTelMenu(id, key)
 		default:
 		{
 			new player = g_menuPlayers[id][g_menuPosition[id] * 6 + key]
-			new name2[32]
+			new name2[MAX_NAME_LENGTH]
 
 			get_user_name(player, name2, charsmax(name2))
 
@@ -138,7 +137,7 @@ public actionTelMenu(id, key)
 				doTeleport(player, origin, vAngle)
 			}
 
-			new authid[32], authid2[32], name[32]
+			new authid[32], authid2[32], name[MAX_NAME_LENGTH]
 
 			get_user_authid(id, authid, charsmax(authid))
 			get_user_authid(player, authid2, charsmax(authid2))
@@ -178,7 +177,7 @@ displayTelMenu(id, pos)
 	new menuBody[512]
 	new b = 0
 	new i
-	new name[32]
+	new name[MAX_NAME_LENGTH]
 	new start = pos * 6
 	new bool:blockMenu = (is_user_alive(id) && g_menuOption[id] < 1) ? true : false
 

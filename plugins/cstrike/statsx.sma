@@ -166,7 +166,7 @@ new g_izTeamGameStats[MAX_TEAMS][8]
 new g_izUserUserID[MAX_PLAYERS]                     = {0, ...}
 new g_izUserAttackerDistance[MAX_PLAYERS]           = {0, ...}
 new g_izUserVictimDistance[MAX_PLAYERS][MAX_PLAYERS]
-new g_izUserRndName[MAX_PLAYERS][MAX_NAME_LENGTH + 1]
+new g_izUserRndName[MAX_PLAYERS][MAX_NAME_LENGTH]
 new g_izUserRndStats[MAX_PLAYERS][8]
 new g_izUserGameStats[MAX_PLAYERS][8]
 

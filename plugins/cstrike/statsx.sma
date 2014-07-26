@@ -165,8 +165,8 @@ new g_izTeamRndStats[MAX_TEAMS][8]
 new g_izTeamGameStats[MAX_TEAMS][8]
 new g_izUserUserID[MAX_PLAYERS]                     = {0, ...}
 new g_izUserAttackerDistance[MAX_PLAYERS]           = {0, ...}
-new g_izUserVictimDistance[MAX_PLAYERS][32]
-new g_izUserRndName[MAX_PLAYERS][MAX_NAME_LENGTH + 1]
+new g_izUserVictimDistance[MAX_PLAYERS][MAX_PLAYERS]
+new g_izUserRndName[MAX_PLAYERS][MAX_NAME_LENGTH]
 new g_izUserRndStats[MAX_PLAYERS][8]
 new g_izUserGameStats[MAX_PLAYERS][8]
 
@@ -314,18 +314,12 @@ public cmdHudTest(id)
 // Stats formulas
 Float:accuracy(izStats[8])
 {
-	if (!izStats[STATS_SHOTS])
-		return (0.0)
-
-	return (100.0 * float(izStats[STATS_HITS]) / float(izStats[STATS_SHOTS]))
+	return izStats[STATS_SHOTS] ? (100.0 * float(izStats[STATS_HITS]) / float(izStats[STATS_SHOTS])) : (0.0);
 }
 
 Float:effec(izStats[8])
 {
-	if (!izStats[STATS_KILLS])
-		return (0.0)
-
-	return (100.0 * float(izStats[STATS_KILLS]) / float(izStats[STATS_KILLS] + izStats[STATS_DEATHS]))
+	return izStats[STATS_KILLS] ? (100.0 * float(izStats[STATS_KILLS]) / float(izStats[STATS_KILLS] + izStats[STATS_DEATHS])) : (0.0);
 }
 
 // Distance formula (metric)
@@ -349,15 +343,9 @@ set_plugin_mode(id, sFlags[])
 // Get config parameters.
 get_config_cvars()
 {
-	g_fFreezeTime = get_pcvar_float(g_pFreezeTime)
+	g_fFreezeTime = floatmax(get_pcvar_float(g_pFreezeTime), 0.0);
 
-	if (g_fFreezeTime < 0.0)
-		g_fFreezeTime = 0.0
-
-	g_fHUDDuration = get_pcvar_float(g_pHudDuration)
-
-	if (g_fHUDDuration < 1.0)
-		g_fHUDDuration = 1.0
+	g_fHUDDuration = floatmax(get_pcvar_float(g_pHudDuration), 1.0);
 
 	g_fFreezeLimitTime = get_pcvar_float(g_pHudFreezeLimit)
 }
@@ -513,7 +501,7 @@ add_most_disruptive(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 	iMaxHeadShots = 0
 
 	// Find player.
-	for (iPlayer = 1; iPlayer < MAX_PLAYERS; iPlayer++)
+	for (iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (g_izUserRndStats[iPlayer][STATS_DAMAGE] >= iMaxDamage && (g_izUserRndStats[iPlayer][STATS_DAMAGE] > iMaxDamage || g_izUserRndStats[iPlayer][STATS_HS] > iMaxHeadShots))
 		{
@@ -549,7 +537,7 @@ add_best_score(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 	iMaxHeadShots = 0
 
 	// Find player
-	for (iPlayer = 1; iPlayer < MAX_PLAYERS; iPlayer++)
+	for (iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (g_izUserRndStats[iPlayer][STATS_KILLS] >= iMaxKills && (g_izUserRndStats[iPlayer][STATS_KILLS] > iMaxKills || g_izUserRndStats[iPlayer][STATS_HS] > iMaxHeadShots))
 		{
@@ -1330,7 +1318,7 @@ public eventStartRound()
 			}
 
 			// Clear game stats, incl '0' that is sum of all users.
-			for (id = 0; id < MAX_PLAYERS; id++)
+			for (id = 0; id <= MaxClients; id++)
 			{
 				for (i = 0; i < 8; i++)
 					g_izUserGameStats[id][i] = 0
@@ -1348,7 +1336,7 @@ public eventStartRound()
 		}
 
 		// Clear user round stats, incl '0' that is sum of all users.
-		for (id = 0; id < MAX_PLAYERS; id++)
+		for (id = 0; id <= MaxClients; id++)
 		{
 			g_izUserRndName[id][0] = 0
 
@@ -1412,7 +1400,7 @@ public delay_spawn(args[])
 	g_fzShowUserStatsTime[id] = 0.0
 	g_izUserAttackerDistance[id] = 0
 
-	for (new i = 0; i < MAX_PLAYERS; i++)
+	for (new i = 1; i <= MaxClients; i++)
 		g_izUserVictimDistance[id][i] = 0
 
 	return PLUGIN_CONTINUE

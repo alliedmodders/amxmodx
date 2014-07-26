@@ -1412,7 +1412,7 @@ public delay_spawn(args[])
 	g_fzShowUserStatsTime[id] = 0.0
 	g_izUserAttackerDistance[id] = 0
 
-	for (new i = 0; i < MaxClients; i++)
+	for (new i = 1; i <= MaxClients; i++)
 		g_izUserVictimDistance[id][i] = 0
 
 	return PLUGIN_CONTINUE

@@ -513,7 +513,7 @@ add_most_disruptive(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 	iMaxHeadShots = 0
 
 	// Find player.
-	for (iPlayer = 1; iPlayer < MaxClients; iPlayer++)
+	for (iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (g_izUserRndStats[iPlayer][STATS_DAMAGE] >= iMaxDamage && (g_izUserRndStats[iPlayer][STATS_DAMAGE] > iMaxDamage || g_izUserRndStats[iPlayer][STATS_HS] > iMaxHeadShots))
 		{
@@ -549,7 +549,7 @@ add_best_score(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 	iMaxHeadShots = 0
 
 	// Find player
-	for (iPlayer = 1; iPlayer < MaxClients; iPlayer++)
+	for (iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (g_izUserRndStats[iPlayer][STATS_KILLS] >= iMaxKills && (g_izUserRndStats[iPlayer][STATS_KILLS] > iMaxKills || g_izUserRndStats[iPlayer][STATS_HS] > iMaxHeadShots))
 		{

@@ -1599,8 +1599,6 @@ void Hook_Void_Vector_Entvar_Entvar_Float_Int_Int(Hook *hook, void *pthis, Vecto
 	P_INT(classignore)
 	P_INT(damagebits)
 
-	printf("HOok - %.2f %.2f %.2f, %d, %d, %f, %d %d\n", source.x, source.y, source.z, iInflictor, iAttacker, damage, classignore, damagebits);
-
 	PRE_START()
 		,MF_PrepareCellArrayA(reinterpret_cast<cell *>(&source), 3, false)
 		,iInflictor, iAttacker, damage, classignore, damagebits

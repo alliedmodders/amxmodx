@@ -153,7 +153,7 @@ unsigned int UTIL_GetUTF8CharBytes(const char *stream);
 unsigned int UTIL_ReplaceAll(char *subject, size_t maxlength, const char *search, const char *replace, bool caseSensitive);
 char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t searchLen, const char *replace, size_t replaceLen, bool caseSensitive);
 char *UTIL_VarArgs(const char *fmt, ...);
-
+size_t UTIL_Format(char *buffer, size_t maxlength, const char *fmt, ...);
 
 #define GET_PLAYER_POINTER(e)   (&g_players[ENTINDEX(e)])
 //#define GET_PLAYER_POINTER(e)   (&g_players[(((int)e-g_edict_point)/sizeof(edict_t))])

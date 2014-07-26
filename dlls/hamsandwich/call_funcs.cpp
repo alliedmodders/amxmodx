@@ -82,13 +82,11 @@ inline void *_GetFunction(void *pthis, int id)
 		// function.
 		if (func==(*i)->tramp)
 		{
-			printf("Func=0x%08X\n",reinterpret_cast<unsigned int>((*i)->func));
 			return (*i)->func;
 		}
 	}
 
 	// this is an original function
-	printf("Func=0x%08X\n",reinterpret_cast<unsigned int>(func));
 	return func;
 }
 
@@ -1002,15 +1000,11 @@ cell Call_Void_Vector_Entvar_Entvar_Float_Int_Int(AMX *amx, cell *params)
 	entvars_t *ev4=&(INDEXENT_NEW(id4)->v);
 	entvars_t *ev5=&(INDEXENT_NEW(id5)->v);
 
-	printf("%.2f %.2f %.2f, %d, %d, %f, %d %d\n", v3.x, v3.y, v3.z, id4, id5, f6, i7, i8 );
-
 #if defined(_WIN32)
 	reinterpret_cast<void (__fastcall *)(void *, int, Vector, entvars_t *, entvars_t *, float, int, int)>(__func)(pv, 0, v3, ev4, ev5, f6, i7, i8);
 #elif defined(__linux__) || defined(__APPLE__)
 	reinterpret_cast<void (*)(void *, Vector, entvars_t *, entvars_t *, float, int, int)>(__func)(pv, v3, ev4, ev5, f6, i7, i8);
 #endif
-
-	printf("%.2f %.2f %.2f, %d, %d, %f, %d %d\n", v3.x, v3.y, v3.z, id4, id5, f6, i7, i8);
 
 	return 1;
 }

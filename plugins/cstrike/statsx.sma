@@ -513,7 +513,7 @@ add_most_disruptive(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 	iMaxHeadShots = 0
 
 	// Find player.
-	for (iPlayer = 1; iPlayer < MAX_PLAYERS; iPlayer++)
+	for (iPlayer = 1; iPlayer < MaxClients; iPlayer++)
 	{
 		if (g_izUserRndStats[iPlayer][STATS_DAMAGE] >= iMaxDamage && (g_izUserRndStats[iPlayer][STATS_DAMAGE] > iMaxDamage || g_izUserRndStats[iPlayer][STATS_HS] > iMaxHeadShots))
 		{
@@ -549,7 +549,7 @@ add_best_score(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 	iMaxHeadShots = 0
 
 	// Find player
-	for (iPlayer = 1; iPlayer < MAX_PLAYERS; iPlayer++)
+	for (iPlayer = 1; iPlayer < MaxClients; iPlayer++)
 	{
 		if (g_izUserRndStats[iPlayer][STATS_KILLS] >= iMaxKills && (g_izUserRndStats[iPlayer][STATS_KILLS] > iMaxKills || g_izUserRndStats[iPlayer][STATS_HS] > iMaxHeadShots))
 		{
@@ -1330,7 +1330,7 @@ public eventStartRound()
 			}
 
 			// Clear game stats, incl '0' that is sum of all users.
-			for (id = 0; id < MAX_PLAYERS; id++)
+			for (id = 0; id < MaxClients; id++)
 			{
 				for (i = 0; i < 8; i++)
 					g_izUserGameStats[id][i] = 0
@@ -1348,7 +1348,7 @@ public eventStartRound()
 		}
 
 		// Clear user round stats, incl '0' that is sum of all users.
-		for (id = 0; id < MAX_PLAYERS; id++)
+		for (id = 0; id < MaxClients; id++)
 		{
 			g_izUserRndName[id][0] = 0
 
@@ -1412,7 +1412,7 @@ public delay_spawn(args[])
 	g_fzShowUserStatsTime[id] = 0.0
 	g_izUserAttackerDistance[id] = 0
 
-	for (new i = 0; i < MAX_PLAYERS; i++)
+	for (new i = 0; i < MaxClients; i++)
 		g_izUserVictimDistance[id][i] = 0
 
 	return PLUGIN_CONTINUE

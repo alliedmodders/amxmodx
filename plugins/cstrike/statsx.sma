@@ -1318,7 +1318,7 @@ public eventStartRound()
 			}
 
 			// Clear game stats, incl '0' that is sum of all users.
-			for (id = 1; id <= MaxClients; id++)
+			for (id = 0; id <= MaxClients; id++)
 			{
 				for (i = 0; i < 8; i++)
 					g_izUserGameStats[id][i] = 0
@@ -1336,7 +1336,7 @@ public eventStartRound()
 		}
 
 		// Clear user round stats, incl '0' that is sum of all users.
-		for (id = 1; id <= MaxClients; id++)
+		for (id = 0; id <= MaxClients; id++)
 		{
 			g_izUserRndName[id][0] = 0
 

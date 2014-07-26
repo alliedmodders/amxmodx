@@ -314,18 +314,12 @@ public cmdHudTest(id)
 // Stats formulas
 Float:accuracy(izStats[8])
 {
-	if (!izStats[STATS_SHOTS])
-		return (0.0)
-
-	return (100.0 * float(izStats[STATS_HITS]) / float(izStats[STATS_SHOTS]))
+	return izStats[STATS_SHOTS] ? (100.0 * float(izStats[STATS_HITS]) / float(izStats[STATS_SHOTS])) : (0.0);
 }
 
 Float:effec(izStats[8])
 {
-	if (!izStats[STATS_KILLS])
-		return (0.0)
-
-	return (100.0 * float(izStats[STATS_KILLS]) / float(izStats[STATS_KILLS] + izStats[STATS_DEATHS]))
+	return izStats[STATS_KILLS] ? (100.0 * float(izStats[STATS_KILLS]) / float(izStats[STATS_KILLS] + izStats[STATS_DEATHS])) : (0.0);
 }
 
 // Distance formula (metric)
@@ -349,15 +343,9 @@ set_plugin_mode(id, sFlags[])
 // Get config parameters.
 get_config_cvars()
 {
-	g_fFreezeTime = get_pcvar_float(g_pFreezeTime)
+	g_fFreezeTime = max(get_pcvar_float(g_pFreezeTime), 0.0);
 
-	if (g_fFreezeTime < 0.0)
-		g_fFreezeTime = 0.0
-
-	g_fHUDDuration = get_pcvar_float(g_pHudDuration)
-
-	if (g_fHUDDuration < 1.0)
-		g_fHUDDuration = 1.0
+	g_fHUDDuration = max(get_pcvar_float(g_pHudDuration), 1.0);
 
 	g_fFreezeLimitTime = get_pcvar_float(g_pHudFreezeLimit)
 }

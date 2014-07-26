@@ -880,7 +880,7 @@ native param_convert(num);
 native get_string(param, dest[], maxlen);
 
 // Sets a string in the calling plugin
-native set_string(param, dest[], maxlen);
+native set_string(param, src[], maxlen);
 
 // Gets a normal int or float parameter
 native get_param(param);

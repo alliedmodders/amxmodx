@@ -343,9 +343,9 @@ set_plugin_mode(id, sFlags[])
 // Get config parameters.
 get_config_cvars()
 {
-	g_fFreezeTime = max(get_pcvar_float(g_pFreezeTime), 0.0);
+	g_fFreezeTime = floatmax(get_pcvar_float(g_pFreezeTime), 0.0);
 
-	g_fHUDDuration = max(get_pcvar_float(g_pHudDuration), 1.0);
+	g_fHUDDuration = floatmax(get_pcvar_float(g_pHudDuration), 1.0);
 
 	g_fFreezeLimitTime = get_pcvar_float(g_pHudFreezeLimit)
 }

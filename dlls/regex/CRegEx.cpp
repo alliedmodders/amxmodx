@@ -705,12 +705,12 @@ int RegEx::Replace(char *text, size_t textMaxLen, const char *replace, size_t re
 						 * We can't provide a capture number >= to total that pcre_exec has found.
 						 * 0 is implicitly accepted, same behavior as $&.
 						 */
-						if (backref >= 0 && (int)backref < mNumSubpatterns)
+						if (backref >= 0 && backref < mNumSubpatterns)
 						{
 							/**
 							 * Valid available index for a given match.
 							 */
-							if (backref < mMatchesSubs.at(i))
+							if ((size_t)backref < mMatchesSubs.at(i))
 							{
 								/**
 								 * Concatenate retrieved sub-string.

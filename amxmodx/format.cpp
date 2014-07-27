@@ -52,18 +52,18 @@ const char *translate(AMX *amx, cell amxaddr, const char *key)
 			amx_cl_langs = CVAR_GET_POINTER("amx_client_languages");
 		if ( (int)amx_cl_langs->value == 0 )
 		{
-			pLangName = g_vault.get("server_language");
+			pLangName = amxmodx_language->string;
 		} else {
 			pLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(g_langMngr.GetDefLang())->pEdict, "lang");
 		}
 	} else if (addr[0] == LANG_SERVER) {
-		pLangName = g_vault.get("server_language");
+		pLangName = amxmodx_language->string;
 	} else if (addr[0] >= 1 && addr[0] <= gpGlobals->maxClients) {
 		if (!amx_cl_langs)
 			amx_cl_langs = CVAR_GET_POINTER("amx_client_languages");
 		if ( (int)amx_cl_langs->value == 0 )
 		{
-			pLangName = g_vault.get("server_language");
+			pLangName = amxmodx_language->string;
 		} else {
 			pLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(addr[0])->pEdict, "lang");
 		}
@@ -110,9 +110,9 @@ const char *translate(AMX *amx, cell amxaddr, const char *key)
 		}
 
 		if (addr[0] != LANG_SERVER)
-			def = g_langMngr.GetDef(g_vault.get("server_language"), key, status);
+			def = g_langMngr.GetDef(amxmodx_language->string, key, status);
 		
-		if (!def && (strcmp(pLangName, "en") != 0 && strcmp(g_vault.get("server_language"), "en") != 0))
+		if (!def && (strcmp(pLangName, "en") != 0 && strcmp(amxmodx_language->string, "en") != 0))
 			def = g_langMngr.GetDef("en", key, status);
 	}
 

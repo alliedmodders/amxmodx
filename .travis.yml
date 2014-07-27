@@ -7,5 +7,5 @@ before_script:
   - CHECKOUT_DIR=$PWD && cd .. && $CHECKOUT_DIR/support/checkout-deps.sh && cd $CHECKOUT_DIR
 script:
   - mkdir build && cd build
-  - python ../configure.py --enable-optimize
+  - python ../configure.py --enable-optimize --no-mysql
   - ambuild

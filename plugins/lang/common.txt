@@ -284,28 +284,6 @@ CANT_PERF_BOT = Tuota toimintoa ei voida suorittaa bottiin "%s"
 ON = Paalla
 OFF = Poissa paalta
 
-[ls]
-BACK = l3ws3
-EXIT = G!v3 u|> b4$3
-MORE = t0 v!ct0ry
-NONE = c3r0
-ADMIN = l33t s3rv3r 0P
-PLAYER = un-l33t n0 |200t'3d n00b
-ERROR = 3rr0r: | N0T 3NUFF M4N4! |
-YES = h4!
-NO = n0
-BAN = b4nz0|2
-KICK = k!ckz0|2
-NO_ACC_COM = 3rr0r: | N0T 3NUFF M4N4! | n0t 3nu77 |200t
-USAGE = uzig3
-MORE_CL_MATCHT = 3rr0r: | N0T 3NUFF M4N4! | t00 m4ny un-l33t n0 |200t'3d n00b fi7!
-CL_NOT_FOUND = 3rr0r: | N0T 3NUFF M4N4! | t00 f3w un-l33t n0 |200t'3d n00b fi7!
-CLIENT_IMM = l33t s3rv3r 0P "%s" h4z |200t
-CANT_PERF_DEAD = un-l33t n0 |200t'3d n00b "%s" iz d34d!
-CANT_PERF_BOT = "%s" iz 4 l33t b0t!
-ON = 0|\|
-OFF = 077
-
 [bg]
 BACK = Nazad
 EXIT = Izhot

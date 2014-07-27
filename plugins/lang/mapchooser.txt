@@ -115,15 +115,6 @@ CHOOSE_NEXTM = Valitse seuraava mappi
 EXTED_MAP = Jatka mappia %s
 TIME_CHOOSE = On aika valita seruaava mappi...
 
-[ls]
-CHO_FIN_EXT = N0 M0|23 \/0TI|\| F0 j00! cu|2|2ent m4p f0 %.0f M0 m!nut3z
-CHO_FIN_NEXT = N0 M0|23 \/0TI|\| F0 j00! The nextmap will be %s
-CHOSE_EXT = %s w4ntz M0 cu|2|2ent m4p!
-X_CHOSE_X = %s \/0TI3'd %s
-CHOOSE_NEXTM = AMXTR3M3 \/0TI3 n3xtm4p
-EXTED_MAP = M0 m4p %s
-TIME_CHOOSE = \/0TI3 f0 n3xtm4p M0TH4FU|<4!
-
 [bg]
 CHO_FIN_EXT = Izbiraneto priklu4i. Nastoq6tata karta 6te e odaljena za o6te %.0f minuti
 CHO_FIN_NEXT = Izbiraneto priklu4i. Sledva6tata karta 6te e %s

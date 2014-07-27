@@ -427,39 +427,6 @@ SAVE_SET = Tallenna asetukset
 CONF_SAV_SUC = Saadot tallennettu onnistuneesti
 CONF_SAV_FAIL = Saatojen tallentaminen epaonnistui
 
-[ls]
-EQ_WE_RES = Eq|_|!pm3|\|7 4|\|d w34p0|\|s h4v3 b33|\| r3s7r!c73d
-EQ_WE_UNRES = Eq|_|!pm3|\|7 4|\|d w34p0|\|s h4v3 b33|\| |_||\|r3s7r!c73d
-HAVE_BEEN = h4v3 b33|\|
-HAS_BEEN = h4s b33|\|
-RESTRICTED = r3s7r!c73d
-UNRESTRICTED = |_||\|r3s7r!c73d
-NO_EQ_WE = C0|_|ld|\|'7 f!|\|d s|_|ch 3q|_|!pm3|\|7 0r w34p0|\|
-WEAP_RES = W34p0|\|s R3s7r!c7!0|\|
-VALUE = v4l|_|3
-REST_ENTRIES_OF = E|\|7r!3s %i - %i 0f %i
-REST_USE_MORE = Us3 'amx_restrict list %i' f0r m0r3
-REST_USE_BEGIN = Us3 'amx_restrict list 1' f0r b3g!|\|
-REST_CONF_SAVED = C0|\|f!g|_|r47!0|\| h4s b33|\| s4v3d (f!l3 "%s")
-REST_COULDNT_SAVE = C0|_|ld|\|'7 s4v3 c0|\|f!g|_|r47!0|\| (f!l3 "%s")
-REST_CONF_LOADED = C0|\|f!g|_|r47!0|\| h4s b33|\| l04d3d (f!l3 "%s")
-REST_COULDNT_LOAD = C0|_|ld|\|'7 l04d c0|\|f!g|_|r47!0|\| (f!l3 "%s")
-COM_REST_USAGE = Us4g3: amx_restrict <command> [value]
-COM_REST_COMMANDS = C0mm4|\|ds:
-COM_REST_ON = ^ton - s37 r3s7r!c7!0|\| 0|\| wh0l3 3q|_|!pm3|\|7
-COM_REST_OFF = ^toff - r3m0v3 r3s7r!c7!0|\| fr0m wh0l3 3q|_|!pm3|\|7
-COM_REST_ONV = ^ton <value> [...] - s37 sp3c!f!3d r3s7r!c7!0|\|
-COM_REST_OFFV = ^toff <value> [...] - r3m0v3 sp3c!f!3d r3s7r!c7!0|\|
-COM_REST_LIST = ^tlist - d!spl4y l!s7 0f 4v4!l4bl3 3q|_|!pm3|\|7 4|\|d w34p0|\|s
-COM_REST_SAVE = ^tsave - s4v3 r3s7r!c7!0|\|
-COM_REST_LOAD = ^tload [file] - l04d r3s7r!c7!0|\| [fr0m 4 f!l3]
-COM_REST_VALUES = Av4!l4bl3 v4l|_|3s 70 r3s7r!c7 4r3:^nammo, equip, pistol, shotgun, sub, rifle, machine
-COM_REST_TYPE = Typ3 'amx_restrict list' f0r m0r3 sp3c!f!3d v4l|_|3s
-REST_WEAP = R3s7r!c7 W34p0|\|s
-SAVE_SET = S4v3 s377!|\|gs
-CONF_SAV_SUC = C0|\|f!g|_|r47!0|\| s4v3d s|_|cc3ssf|_|lly
-CONF_SAV_FAIL = C0|\|f!g|_|r47!0|\| s4v!|\|g f4!l3d!!!
-
 [bg]
 EQ_WE_RES = Orajiata ne sa pozvoleni
 EQ_WE_UNRES = Orajiata sa pozvoleni

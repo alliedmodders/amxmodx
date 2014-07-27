@@ -50,10 +50,6 @@ LANG_NAME_NATIVE = Cestina
 LANG_NAME = Finnish
 LANG_NAME_NATIVE = Suomi
 
-[ls]
-LANG_NAME = l33t
-LANG_NAME_NATIVE = l33t
-
 [bg]
 LANG_NAME = Bulgarian
 LANG_NAME_NATIVE = Bulgarski

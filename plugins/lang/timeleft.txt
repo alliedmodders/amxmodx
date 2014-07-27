@@ -115,15 +115,6 @@ MINUTES = minuuttia
 SECOND = sekunti
 SECONDS = sekuntia
 
-[ls]
-THE_TIME = T3h t!m3
-TIME_LEFT = T!m3 L3ft
-NO_T_LIMIT = N0 T!m3 L!m!t
-MINUTE = m!nut3
-MINUTES = m!nut3z
-SECOND = s3c0nd
-SECONDS = s3c0ndz
-
 [bg]
 THE_TIME = 4asa
 TIME_LEFT = Ostanalo Vreme

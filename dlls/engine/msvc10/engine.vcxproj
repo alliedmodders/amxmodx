@@ -94,7 +94,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\amxmod_compat.cpp" />
     <ClCompile Include="..\amxxapi.cpp" />
     <ClCompile Include="..\engine.cpp" />
     <ClCompile Include="..\entity.cpp" />
@@ -103,7 +102,6 @@
     <ClCompile Include="..\sdk\amxxmodule.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\amxmod_compat.h" />
     <ClInclude Include="..\engine.h" />
     <ClInclude Include="..\entity.h" />
     <ClInclude Include="..\gpglobals.h" />

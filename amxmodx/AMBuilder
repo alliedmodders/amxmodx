@@ -87,7 +87,6 @@ binary.sources = [
   'libraries.cpp',
   'vector.cpp',
   'sorting.cpp',
-  'amxmod_compat.cpp',
   'nongpl_matches.cpp',
   'CFlagManager.cpp',
   'datastructs.cpp',

@@ -33,7 +33,6 @@
 #include "amxmodx.h"
 #include "format.h"
 #include "binlog.h"
-#include "amxmod_compat.h"
 
 const char* stristr(const char* str, const char* substr)
 {
@@ -147,21 +146,8 @@ extern "C" size_t get_amxstring_r(AMX *amx, cell amx_addr, char *destination, in
 	register char *dest = destination;
 	char *start = dest;
 
-	if ( (amx->flags & AMX_FLAG_OLDFILE) &&
-		(*source & BCOMPAT_TRANSLATE_BITS) )
-	{
-		const char *def, *key;
-		if (!translate_bcompat(amx, source, &key, &def))
-		{
-			goto normal_string;
-		}
-		while (maxlen-- && *def)
-			*dest++=(*source++);
-	} else {
-normal_string:
-		while (maxlen-- && *source)
-			*dest++=(char)(*source++);
-	}
+	while (maxlen-- && *source)
+		*dest++=(char)(*source++);
 
 	*dest = '\0';
 
@@ -536,40 +522,16 @@ static cell AMX_NATIVE_CALL copy(AMX *amx, cell *params) /* 4 param */
 	cell *src = get_amxaddr(amx, params[3]);
 	int c = params[2];
 
-	if (amx->flags & AMX_FLAG_OLDFILE)
+	cell *dest = get_amxaddr(amx, params[1]);
+	cell *start = dest;
+
+	while (c-- && *src)
 	{
-		if (*src & BCOMPAT_TRANSLATE_BITS)
-		{
-			const char *key, *def;
-			if (!translate_bcompat(amx, src, &key, &def))
-			{
-				goto normal_string;
-			}
-			cell *dest = get_amxaddr(amx, params[1]);
-			cell *start = dest;
-			while (c-- && *def)
-			{
-				*dest++ = static_cast<cell>(*def++);
-			}
-			*dest = '\0';
-
-			return dest-start;
-		} else {
-			goto normal_string;
-		}
-	} else {
-normal_string:
-		cell *dest = get_amxaddr(amx, params[1]);
-		cell *start = dest;
-		
-		while (c-- && *src)
-		{
-			*dest++ = *src++;
-		}
-		*dest = '\0';
-
-		return (dest - start);
+		*dest++ = *src++;
 	}
+	*dest = '\0';
+
+	return (dest - start);
 }
 
 static cell AMX_NATIVE_CALL copyc(AMX *amx, cell *params) /* 4 param */
@@ -688,23 +650,7 @@ static cell AMX_NATIVE_CALL format(AMX *amx, cell *params) /* 3 param */
 	int param = 4;
 	size_t total = 0;
 
-	if (amx->flags & AMX_FLAG_OLDFILE)
-	{
-		if (*fmt & BCOMPAT_TRANSLATE_BITS)
-		{
-			const char *key, *def;
-			if (!translate_bcompat(amx, fmt, &key, &def))
-			{
-				goto normal_string;
-			}
-			total = atcprintf(buf, maxlen, def, amx, params, &param);
-		} else {
-			goto normal_string;
-		}
-	} else {
-normal_string:
-		total = atcprintf(buf, maxlen, fmt, amx, params, &param);
-	}
+	total = atcprintf(buf, maxlen, fmt, amx, params, &param);
 
 	if (copy)
 	{

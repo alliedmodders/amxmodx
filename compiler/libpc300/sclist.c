@@ -236,15 +236,6 @@ static stringlist includepaths = {NULL, NULL};  /* directory list for include fi
 
 SC_FUNC stringlist *insert_path(char *path)
 {
-  char *extra_path = malloc(strlen(path) + 16);
-  strcpy(extra_path, path);
-#if defined __linux__ || defined __APPLE__
-  strcat(extra_path, "/amxmod_compat/");
-#elif defined WIN32 || defined _WIN32
-  strcat(extra_path, "\\amxmod_compat\\");
-#endif
-  insert_string(&includepaths, extra_path);
-  free(extra_path);
   return insert_string(&includepaths,path);
 }
 

@@ -51,7 +51,6 @@
 #include "binlog.h"
 #include "libraries.h"
 #include "messages.h"
-#include "amxmod_compat.h"
 #include "trie_natives.h"
 #include "CDataPack.h"
 
@@ -171,7 +170,6 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 	*error = 0;
 	size_t bufSize;
 	*program = (void *)g_plugins.ReadIntoOrFromCache(filename, bufSize);
-	bool oldfile = false;
 	if (!*program)
 	{
 		CAmxxReader reader(filename, PAWN_CELL_SIZE / 8);
@@ -225,8 +223,6 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 				strcpy(error, "Unknown error");
 				return (amx->error = AMX_ERR_NOTFOUND);
 		}
-
-		oldfile = reader.IsOldFile();
 	} else {
 		g_plugins.InvalidateFileInCache(filename, false);
 	}
@@ -380,17 +376,6 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 		}
 	}
 #endif
-
-	if (oldfile)
-	{
-		amx->flags |= AMX_FLAG_OLDFILE;
-	} else {
-		cell addr;
-		if (amx_FindPubVar(amx, "__b_old_plugin", &addr) == AMX_ERR_NONE)
-		{
-			amx->flags |= AMX_FLAG_OLDFILE;
-		}
-	}
 
 	CScript* aa = new CScript(amx, *program, filename);
 
@@ -568,8 +553,7 @@ int set_amxnatives(AMX* amx, char error[128])
 
 		for (size_t i = 0; i < cm->m_NewNatives.size(); i++)
 		{
-			if (!(amx->flags & AMX_FLAG_OLDFILE))
-				amx_Register(amx, cm->m_NewNatives[i], -1);
+			amx_Register(amx, cm->m_NewNatives[i], -1);
 		}
 	}
 
@@ -590,11 +574,6 @@ int set_amxnatives(AMX* amx, char error[128])
 	amx_Register(amx, trie_Natives, -1);
 	amx_Register(amx, g_DatapackNatives, -1);
 	
-	if (amx->flags & AMX_FLAG_OLDFILE)
-	{
-		amx_Register(amx, g_BcompatNatives, -1);
-	}
-
 	//we're not actually gonna check these here anymore
 	amx->flags |= AMX_FLAG_PRENIT;
 

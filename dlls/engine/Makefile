@@ -14,8 +14,7 @@ MM_ROOT = ../../../metamod/metamod
 
 PROJECT = engine
 
-OBJECTS = sdk/amxxmodule.cpp amxxapi.cpp engine.cpp entity.cpp globals.cpp forwards.cpp \
-          amxmod_compat.cpp
+OBJECTS = sdk/amxxmodule.cpp amxxapi.cpp engine.cpp entity.cpp globals.cpp forwards.cpp
 
 ##############################################
 ### CONFIGURE ANY OTHER FLAGS/OPTIONS HERE ###

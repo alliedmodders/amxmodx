@@ -10,7 +10,6 @@ binary.sources = [
   'entity.cpp',
   'globals.cpp',
   'forwards.cpp',
-  'amxmod_compat.cpp',
 ]
 
 AMXX.modules += [builder.Add(binary)]

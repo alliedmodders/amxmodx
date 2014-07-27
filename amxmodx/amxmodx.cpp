@@ -1864,18 +1864,6 @@ static cell AMX_NATIVE_CALL server_cmd(AMX *amx, cell *params) /* 1 param */
 	g_langMngr.SetDefLang(LANG_SERVER);
 	char* cmd = format_amxstring(amx, params, 1, len);
 
-	if (amx->flags & AMX_FLAG_OLDFILE)
-	{
-		if (strncmp("meta ",cmd,5)==0)
-		{
-			return len+1;
-		}
-		if (strncmp("quit", cmd,4)==0)
-		{
-			return len+1;
-		}
-	}
-	
 	cmd[len++] = '\n';
 	cmd[len] = 0;
 	
@@ -1934,19 +1922,6 @@ static cell AMX_NATIVE_CALL get_cvar_string(AMX *amx, cell *params) /* 3 param *
 	int ilen;
 	char* sptemp = get_amxstring(amx, params[1], 0, ilen);
 
-	if (amx->flags & AMX_FLAG_OLDFILE)
-	{
-		/* :HACKHACK: Pretend we're invisible to old plugins for backward compatibility */
-		char *cvar = sptemp;
-		for (unsigned int i=0; i<5; i++)
-		{
-			if (strcmp(cvar, invis_cvar_list[i]) == 0)
-			{
-				return 0;
-			}
-		}
-	}
-	
 	const char *value = CVAR_GET_STRING(sptemp);
 	return set_amxstring_utf8(amx, params[2], value, strlen(value), params[3] + 1); // + EOS
 }
@@ -1968,19 +1943,6 @@ static cell AMX_NATIVE_CALL get_pcvar_float(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_cvar_float(AMX *amx, cell *params) /* 1 param */
 {
 	int ilen;
-
-	if (amx->flags & AMX_FLAG_OLDFILE)
-	{
-		/* :HACKHACK: Pretend we're invisible to old plugins for backward compatibility */
-		char *cvar = get_amxstring(amx, params[1], 0, ilen);
-		for (unsigned int i=0; i<5; i++)
-		{
-			if (strcmp(cvar, invis_cvar_list[i]) == 0)
-			{
-				return 0;
-			}
-		}
-	}
 
 	REAL pFloat = CVAR_GET_FLOAT(get_amxstring(amx, params[1], 0, ilen));
 	
@@ -2024,18 +1986,6 @@ static cell AMX_NATIVE_CALL get_pcvar_num(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_cvar_num(AMX *amx, cell *params) /* 1 param */
 {
 	int ilen;
-	if (amx->flags & AMX_FLAG_OLDFILE)
-	{
-		/* :HACKHACK: Pretend we're invisible to old plugins for backward compatibility */
-		char *cvar = get_amxstring(amx, params[1], 0, ilen);
-		for (unsigned int i=0; i<5; i++)
-		{
-			if (strcmp(cvar, invis_cvar_list[i]) == 0)
-			{
-				return 0;
-			}
-		}
-	}
 	return (int)CVAR_GET_FLOAT(get_amxstring(amx, params[1], 0, ilen));
 }
 
@@ -2632,18 +2582,6 @@ static cell AMX_NATIVE_CALL task_exists(AMX *amx, cell *params) /* 1 param */
 static cell AMX_NATIVE_CALL cvar_exists(AMX *amx, cell *params) /* 1 param */
 {
 	int ilen;
-	if (amx->flags & AMX_FLAG_OLDFILE)
-	{
-		/* :HACKHACK: Pretend we're invisible to old plugins for backward compatibility */
-		char *cvar = get_amxstring(amx, params[1], 0, ilen);
-		for (unsigned int i=0; i<5; i++)
-		{
-			if (strcmp(cvar, invis_cvar_list[i]) == 0)
-			{
-				return 0;
-			}
-		}
-	}
 	return (CVAR_GET_POINTER(get_amxstring(amx, params[1], 0, ilen)) ? 1 : 0);
 }
 
@@ -3180,19 +3118,6 @@ static cell AMX_NATIVE_CALL get_cvar_flags(AMX *amx, cell *params)
 {
 	int ilen;
 	char* sCvar = get_amxstring(amx, params[1], 0, ilen);
-
-	if (amx->flags & AMX_FLAG_OLDFILE)
-	{
-		/* :HACKHACK: Pretend we're invisible to old plugins for backward compatibility */
-		char *cvar = sCvar;
-		for (unsigned int i=0; i<5; i++)
-		{
-			if (strcmp(cvar, invis_cvar_list[i]) == 0)
-			{
-				return 0;
-			}
-		}
-	}
 
 	cvar_t* pCvar = CVAR_GET_POINTER(sCvar);
 	
@@ -4405,21 +4330,6 @@ static cell AMX_NATIVE_CALL CreateMultiForward(AMX *amx, cell *params)
 	return registerForwardC(funcname, static_cast<ForwardExecType>(params[2]), ps, count-2);
 }
 
-static cell AMX_NATIVE_CALL CreateMultiForwardEx(AMX *amx, cell *params)
-{
-	int len;
-	char *funcname = get_amxstring(amx, params[1], 0, len);
-
-	cell ps[FORWARD_MAX_PARAMS];
-	cell count = params[0] / sizeof(cell);
-	for (cell i=4; i<=count; i++)
-	{
-		ps[i-4] = *get_amxaddr(amx, params[i]);
-	}
-
-	return registerForwardC(funcname, static_cast<ForwardExecType>(params[2]), ps, count-3, params[3]);
-}
-
 static cell AMX_NATIVE_CALL CreateOneForward(AMX *amx, cell *params)
 {
 	CPluginMngr::CPlugin *p = g_plugins.findPlugin(params[1]);
@@ -5103,7 +5013,6 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"CreateHudSyncObj",		CreateHudSyncObj},
 	{"CreateLangKey",			CreateLangKey},
 	{"CreateMultiForward",		CreateMultiForward},
-	{"CreateMultiForwardEx",	CreateMultiForwardEx},
 	{"CreateOneForward",		CreateOneForward},
 	{"DestroyForward",			DestroyForward},
 	{"ExecuteForward",			ExecuteForward},

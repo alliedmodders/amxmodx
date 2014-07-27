@@ -272,7 +272,7 @@ enum {
 #define AMX_FLAG_COMPACT  0x04  /* compact encoding */
 #define AMX_FLAG_BYTEOPC  0x08  /* opcode is a byte (not a cell) */
 #define AMX_FLAG_NOCHECKS 0x10  /* no array bounds checking; no STMT opcode */
-#define AMX_FLAG_OLDFILE  0x20	/* Old AMX Mod plugin */
+/*      AMX_FLAG_OLDFILE  0x20	   Old AMX Mod plugin */
 #define AMX_FLAG_NTVREG 0x1000  /* all native functions are registered */
 #define AMX_FLAG_JITC   0x2000  /* abstract machine is JIT compiled */
 #define AMX_FLAG_BROWSE 0x4000  /* busy browsing */
@@ -311,10 +311,6 @@ enum {
 #define FP_FLOAT		1
 #define FP_STRING		2
 #define FP_ARRAY		4
-
-#define FORWARD_ONLY_OLD	1
-#define FORWARD_ONLY_NEW	2
-#define FORWARD_ALL		3
 
 #define SND_SPAWNING		(1<<8)		// we're spawing, used in some cases for ambients 
 #define SND_STOP		(1<<5)		// stop sound

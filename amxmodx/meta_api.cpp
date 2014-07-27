@@ -142,9 +142,11 @@ cvar_t init_amxmodx_version = {"amxmodx_version", "", FCVAR_SERVER | FCVAR_SPONL
 cvar_t init_amxmodx_modules = {"amxmodx_modules", "", FCVAR_SPONLY};
 cvar_t init_amxmodx_debug = {"amx_debug", "1", FCVAR_SPONLY};
 cvar_t init_amxmodx_mldebug = {"amx_mldebug", "", FCVAR_SPONLY};
+cvar_t init_amxmodx_language = {"amx_language", "en", FCVAR_SERVER};
 cvar_t init_amxmodx_cl_langs = {"amx_client_languages", "", FCVAR_SERVER};
 cvar_t* amxmodx_version = NULL;
 cvar_t* amxmodx_modules = NULL;
+cvar_t* amxmodx_language = NULL;
 cvar_t* hostname = NULL;
 cvar_t* mp_timelimit = NULL;
 
@@ -464,12 +466,6 @@ int	C_Spawn(edict_t *pent)
 	char file[255];
 	g_vault.setSource(build_pathname_r(file, sizeof(file) - 1, "%s", get_localinfo("amxx_vault", "addons/amxmodx/configs/vault.ini")));
 	g_vault.loadVault();
-	
-	if (strlen(g_vault.get("server_language")) < 1)
-	{
-		g_vault.put("server_language", "en");
-		g_vault.saveVault();
-	}
 
 	// ###### Init time and freeze tasks
 	g_game_timeleft = g_bmod_dod ? 1.0f : 0.0f;
@@ -1446,9 +1442,11 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	CVAR_REGISTER(&init_amxmodx_modules);
 	CVAR_REGISTER(&init_amxmodx_debug);
 	CVAR_REGISTER(&init_amxmodx_mldebug);
+	CVAR_REGISTER(&init_amxmodx_language);
 	CVAR_REGISTER(&init_amxmodx_cl_langs);
 	
 	amxmodx_version = CVAR_GET_POINTER(init_amxmodx_version.name);
+	amxmodx_language = CVAR_GET_POINTER(init_amxmodx_language.name);
 	
 	REG_SVR_COMMAND("amxx", amx_command);
 

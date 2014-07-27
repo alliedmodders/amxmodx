@@ -60,7 +60,9 @@ public plugin_init()
 public client_putinserver(id)
 {
 	if (get_pcvar_num(g_cvarDisplayClientMessage) && get_pcvar_num(g_cvarClientLanguages) && !is_user_bot(id))
+	{
 		set_task(10.0, "dispInfo", id)
+	}
 }
 
 public client_disconnect(id)
@@ -93,17 +95,19 @@ public cmdLangMenu(id, level, cid)
 showMenu(id)
 {
 	if (!get_pcvar_num(g_cvarClientLanguages))
+	{
 		return
+	}
 	
 	new menuBody[512], pLang[3]
 	
 	get_lang(g_menuLang[id], pLang)
 	
-	new len = format(menuBody, 511, (g_coloredMenus ? "\y%L\w^n^n" : "%L^n^n"), id, "LANG_MENU")
+	new len = formatex(menuBody, charsmax(menuBody), (g_coloredMenus ? "\y%L\w^n^n" : "%L^n^n"), id, "LANG_MENU")
 	
-	len += format(menuBody[len], 511-len, (g_coloredMenus ? "1. %L\R\r%L\w^n" : "1. %L %L^n"), id, "PERSO_LANG", pLang, "LANG_NAME")
-	len += format(menuBody[len], 511-len, "^n2. %L", id, "SAVE_LANG")
-	format(menuBody[len], 511-len, "^n^n0. %L", id, "EXIT")
+	len += formatex(menuBody[len], charsmax(menuBody) - len, (g_coloredMenus ? "1. %L\R\r%L\w^n" : "1. %L %L^n"), id, "PERSO_LANG", pLang, "LANG_NAME")
+	len += formatex(menuBody[len], charsmax(menuBody) - len, "^n2. %L", id, "SAVE_LANG")
+	formatex(menuBody[len], charsmax(menuBody) - len, "^n^n0. %L", id, "EXIT")
 	
 	show_menu(id, MENU_KEY_0|MENU_KEY_1|MENU_KEY_2, menuBody, -1, "Language Menu")
 }
@@ -111,14 +115,20 @@ showMenu(id)
 public actionMenu(id, key)
 {
 	if (!get_pcvar_num(g_cvarClientLanguages))
+	{
 		return 0
+	}
 
 	if (key == 0)
 	{
-		if (g_menuLang[id] < (g_langNum-1))
+		if (g_menuLang[id] < (g_langNum - 1))
+		{
 			g_menuLang[id]++
+		}
 		else
+		{
 			g_menuLang[id] = 0
+		}
 		
 		showMenu(id)
 	}
@@ -135,7 +145,7 @@ public actionMenu(id, key)
 			set_user_info(id, "lang", pLang); // In case setinfo breaks (slowhacking and all), this will at least be a fallback while the user is connect
 			
 			new lName[64]
-			format(lName, 63, "%L", pLang, "LANG_NAME")
+			formatex(lName, charsmax(lName), "%L", pLang, "LANG_NAME")
 			client_print(id, print_chat, "%L", pLang, "SET_LANG_USER", lName)
 		}
 	}
@@ -150,8 +160,11 @@ get_lang_id(lang[])
 	for (new i = 0; i < g_langNum; i++)
 	{
 		get_lang(i, tLang)
+		
 		if (equali(tLang, lang))
+		{
 			return i
+		}
 	}
 
 	return 0

@@ -412,6 +412,7 @@
     <None Include="..\..\plugins\include\amxconst.inc" />
     <None Include="..\..\plugins\include\amxmisc.inc" />
     <None Include="..\..\plugins\include\amxmodx.inc" />
+    <None Include="..\..\plugins\include\amxmodx_version.inc" />
     <None Include="..\..\plugins\include\cellarray.inc" />
     <None Include="..\..\plugins\include\celltrie.inc" />
     <None Include="..\..\plugins\include\core.inc" />
@@ -423,7 +424,6 @@
     <None Include="..\..\plugins\include\messages.inc" />
     <None Include="..\..\plugins\include\sorting.inc" />
     <None Include="..\..\plugins\include\string.inc" />
-    <None Include="..\..\plugins\include\svn_version.inc" />
     <None Include="..\..\plugins\include\time.inc" />
     <None Include="..\..\plugins\include\vault.inc" />
     <None Include="..\..\plugins\include\vector.inc" />

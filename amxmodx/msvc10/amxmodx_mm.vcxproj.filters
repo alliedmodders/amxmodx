@@ -360,6 +360,9 @@
     <None Include="..\..\plugins\include\amxmodx.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+    <None Include="..\..\plugins\include\amxmodx_version.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
     <None Include="..\..\plugins\include\core.inc">
       <Filter>Pawn Includes</Filter>
     </None>
@@ -385,9 +388,6 @@
       <Filter>Pawn Includes</Filter>
     </None>
     <None Include="..\..\plugins\include\string.inc">
-      <Filter>Pawn Includes</Filter>
-    </None>
-    <None Include="..\..\plugins\include\svn_version.inc">
       <Filter>Pawn Includes</Filter>
     </None>
     <None Include="..\..\plugins\include\time.inc">

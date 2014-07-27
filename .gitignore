@@ -27,3 +27,7 @@ Thumbs.db
 # Build directories
 build/
 obj-*/
+
+# AMXX plugin build related files
+plugins/compile.dat
+plugins/compiled/

@@ -120,7 +120,7 @@ for amxx_file in AMXX.plugins:
 
 # Copy the generated version .inc.
 for generated_header in AMXX.generated_headers:
-  if 'inc' in generated_header.path:
+  if 'amxmodx_version.inc' in generated_header.path:
     builder.AddCopy(generated_header, folder_map['base/addons/amxmodx/scripting/include'])
     break
 
@@ -286,7 +286,6 @@ scripting_files = [
   'include/newmenus.inc',
   'include/sorting.inc',
   'include/sqlx.inc',
-  'include/svn_version.inc',
   'include/time.inc',
   'include/vector.inc',
 ]

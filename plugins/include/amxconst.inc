@@ -11,7 +11,7 @@
 #endif
 #define _amxconst_included
 
-#include <svn_version>
+#include <amxmodx_version>
 
 /**
  * This is the buffer size AMX Mod X uses internally to retrieve strings from plugins.

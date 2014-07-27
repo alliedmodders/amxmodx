@@ -34,7 +34,7 @@
 #include <amxmodx>
 #include <amxmisc>
 
-new g_menuLang[33]
+new g_menuLang[MAX_PLAYERS]
 new g_langNum
 new g_coloredMenus
 

@@ -286,7 +286,6 @@ scripting_files = [
   'include/newmenus.inc',
   'include/sorting.inc',
   'include/sqlx.inc',
-  'include/svn_version.inc',
   'include/time.inc',
   'include/vector.inc',
 ]

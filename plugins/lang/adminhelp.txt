@@ -115,15 +115,6 @@ TYPE_HELP = Kirjoita 'amx_help' konsoliin nahdaksesi komennot
 TIME_INFO_1 = Aikaa jaljella: %d:%02d minuuttia. Seuraava mappi: %s
 TIME_INFO_2 = Ei aikarajaa. Seuraava mappi: %s
 
-[ls]
-HELP_COMS = 4MXTR3M3 M0d XTR3M3 |-|3l|>: |200t C0mm4ndz
-HELP_ENTRIES = 3nt|2i3z %d - %d 0v %d
-HELP_USE_MORE = uzi 'amx_help %d' f0r m0r3 b4$3
-HELP_USE_BEGIN = uzi 'amx_help 1' f0r b3g!n h4x0rin'
-TYPE_HELP = uzi 'amx_help' t4 s33 r00tz
-TIME_INFO_1 = N0t T!m3 3nu77: %d:%02d min. N3x\ M4|>: %s
-TIME_INFO_2 = T!m3 i$ r3l4t!v3 t0 j00r |200t.  N3x\ M4|>: %s
-
 [bg]
 HELP_COMS = AMX Mod X Help: Comandi
 HELP_ENTRIES = Vkarani %d - %d ot %d

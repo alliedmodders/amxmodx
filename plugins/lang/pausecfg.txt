@@ -503,45 +503,6 @@ COM_PAUSE_CLEAR = ^tclear - nollaa pysaytettyjen pluginien listan
 COM_PAUSE_LIST = ^tlist [id] - listaa pluginit
 COM_PAUSE_ADD = ^tadd <title> - merkkaa kaikki pluginit pysayttamattomiksi
 
-[ls]
-PAUSE_COULDNT_FIND = n0 l33t p|ug!n "%s"
-PAUSE_PLUGIN_MATCH = l33t p|ug!n "%s"
-PAUSE_CONF_CLEARED = |200t s3tt!nz g0n3
-PAUSE_ALR_CLEARED = |200t s3tt!nz g0n3!
-PAUSE_CONF_SAVED = |200t s3tt!nz s4v3d!
-PAUSE_SAVE_FAILED = |200t s3tt!nz n0t s4v3dz0r!
-LOCKED = N0!
-PAUSE_UNPAUSE = P4us3/Unp4us3 l33t p|ug!ns
-CLEAR_STOPPED = Cl34r
-SAVE_STOPPED = $t0p3dz0r
-PAUSED_PLUGIN =  %d l33t p|ug!nz |>4UZ3D
-PAUSED_PLUGINS = %d l33t p|ug!nz |>4UZ3D
-UNPAUSED_PLUGIN = %d l33t p|ug!nz d3-|>4UZ3D
-UNPAUSED_PLUGINS = %d l33t p|ug!nz d3-|>4UZ3D
-CANT_MARK_MORE = l33t p|ug!nz  un-d3-|>4UZ3Dab|3
-PAUSE_LOADED = |>4UZ3D l33t p|ug!ns: L04d3d l33t p|ug!nz
-STOPPED = c|_|7
-VERSION = v3r$!0n
-FILE = f!l3
-PAUSE_ENTRIES = %d - %d of %d (%d j0ggin')
-PAUSE_USE_MORE = uz3 'amx_pausecfg list %d' for more
-PAUSE_USE_BEGIN = uz3 'amx_pausecfg list 1' for begin
-PAUSE_USAGE = Us4g3: amx_pausecfg <command> [name]
-PAUSE_COMMANDS = (mdz
-COM_PAUSE_OFF = ^toff - |>4UZ3z all l33t p|ug!nz g0n3
-COM_PAUSE_ON = ^ton - un|>4UZ3z 4ll l33t p|ug!nz
-COM_PAUSE_STOP = ^tstop <file> - l33t p|ug!nz l34v3z
-COM_PAUSE_PAUSE = ^tpause <file> - |>4UZ3z a l33t p|ug!nz
-COM_PAUSE_ENABLE = ^tenable <file> - l33t p|ug!nz c0m3z b4ck
-COM_PAUSE_SAVE = ^tsave - s4v3z $t0|>|>3dz l33t p|ug!nz
-COM_PAUSE_CLEAR = ^tclear - cl34rz  $t0|>|>3dz l33t p|ug!nz
-COM_PAUSE_LIST = ^tlist [id] - sh0wz l33t p|ug!nz
-COM_PAUSE_ADD = ^tadd <title> - l33t p|ug!nz = un|>4UZ3able
-SAVE_PAUSED = $4\/3 P4U$3D
-COM_PAUSE_SAVE_PAUSED = ^tsave - $4\/3$ 4 1!$+ 0|= P4U$3D P1UG!|\|$
-COM_PAUSE_CLEAR_PAUSED = ^tclear - C134R$ 4 1!$+ 0|= P4U$3D P1UG!|\|$
-CANT_UNPAUSE_PLUGIN = P1UG!|\| "%s" !$ $+0PP3D 4|\|D C$|\||\|p+ |33 P4U$3D 0|2 U|\|P4U$3D.
-
 [bg]
 PAUSE_COULDNT_FIND = Ne uspq da nameri plugin koito da savbada s "%s"
 PAUSE_PLUGIN_MATCH = Plugin savpada "%s"

@@ -89,13 +89,6 @@ TELE_MENU = Teleportvalikko
 CUR_LOC = Nykyinen sijainti
 SAVE_LOC = Tallenna sijainti
 
-[ls]
-ADMIN_TELEPORT_1 = l33t s3rv3r 0P: h4x3d %s t0 n3w ISP
-ADMIN_TELEPORT_2 = l33t s3rv3r 0P %s: h4x3d %s t0 n3w ISP
-TELE_MENU = l33t T3l3p0rt M3nu
-CUR_LOC = Cu|2|2en7 ISP
-SAVE_LOC = S4v3 ISP
-
 [bg]
 ADMIN_TELEPORT_1 = ADMININISTRATOR: teleportira %s
 ADMIN_TELEPORT_2 = ADMINISTRATOR %s: teleportira %s

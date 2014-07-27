@@ -37,9 +37,6 @@ INF_REACH = Limit informacnich zprav presazen!
 [fi]
 INF_REACH = Information Message -raja ylitetty!
 
-[ls]
-INF_REACH = l!m!tz r34ch3d
-
 [bg]
 INF_REACH = Informacionnoto saob6tenie dostigna limita!
 

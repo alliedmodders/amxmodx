@@ -63,11 +63,6 @@ CMD_MENU = Komentovalikko
 CONF_MENU = Saatovalikko
 SPE_MENU = Puhevalikko
 
-[ls]
-CMD_MENU = l33t cmdz M3nu
-CONF_MENU = l33t c0nf!gz M3nu
-SPE_MENU = l33t $p33ch M3nu
-
 [bg]
 CMD_MENU = Comandnoto Menu
 CONF_MENU = Configuracionno Menu

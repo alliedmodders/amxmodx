@@ -167,19 +167,6 @@ PAS_ACC = Salasana oikein
 PRIV_SET = Etuoikeudet laitettu
 NO_ENTRY = Sinulla ei ole merkintaa palvelimella...
 
-[ls]
-LOADED_ADMIN = | l33t s3rv3r 0P l04d'3d f|20|\/| |200t
-LOADED_ADMINS = fu||y l04d'3d %d l33t 3nf0rc3rz f|20|\/| |200t
-SQL_CANT_CON = $Q|_ 3rr0r: | N0T 3NUFF M4N4! | c0nn3ct!0n f4!|_u|2: '%s'
-SQL_CANT_LOAD_ADMINS = $Q|_ 3rr0r: | N0T 3NUFF M4N4! | l04d f4!|_u|2: '%s'
-NO_ADMINS = N0T 3NUFF M4N4: n0 s3rv3r 0P'z t0 f33d fr0m!
-SQL_LOADED_ADMIN = l04d'3d 1 l33t s3rv3r f|20|\/| n0n-|200t |)|3!
-SQL_LOADED_ADMINS = l04d'3d %d l33t s3rv3r f|20|\/| n0n-|200t |)|3!
-INV_PAS = a((e$$ d3|\|i3d. FA(3!
-PAS_ACC = \/\/3|_C0|\/|3 l33t 0|\|3! $3cu|2e |200t, |=0|2 G|234t Ju$t!c3!
-PRIV_SET = l3v3l up!
-NO_ENTRY = D3|\|i3d, n00b...
-
 [bg]
 LOADED_ADMIN = Nameren e edin administrator ot fila.
 LOADED_ADMINS = Namereni sa %d administratori ot fila

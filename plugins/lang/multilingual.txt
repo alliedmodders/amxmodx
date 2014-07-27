@@ -141,17 +141,6 @@ SET_LANG_USER = Kielesi on nyt "%s"
 TYPE_LANGMENU = Kirjoita 'amx_langmenu' konsoliin nahdaksesi kielivalikon
 LANG_MENU_DISABLED = Kielivalikko poistettu kaytosta
 
-[ls]
-LANG_NOT_EXISTS = s0z, b4d ch0!c3, nub
-PERSO_LANG = j00|2 l4ngu4g3
-LANG_MENU = l4ngu4g3 Menu
-SERVER_LANG = S3rv3r l4ngu4g3
-SAVE_LANG = S4v3 l4ngu4g3
-SET_LANG_SERVER = S3rv3r l4ngu4g3 = "%s"
-SET_LANG_USER = j00|2 l4ngu4g3 =  "%s"
-TYPE_LANGMENU = j00 u$3 'amx_langmenu' f0 j00|2 l4ngu4g3, k?
-LANG_MENU_DISABLED = l4ngu4g3 m3n|_| |3l0ck3d, f4c3!
-
 [bg]
 LANG_NOT_EXISTS = Nqma takav ezik
 PERSO_LANG = Li4ni Ezici

@@ -70,7 +70,7 @@ public plugin_init()
 	
 	if (amx_show_activity == 0)
 	{
-		amx_show_activity = register_cvar("amx_show_activity", "2");
+		amx_show_activity = register_cvar("amx_show_activity", "2", FCVAR_PROTECTED);
 	}
 
 	new str[1]

@@ -42,7 +42,6 @@ new g_pauseCon
 new Float:g_pausAble
 new bool:g_Paused
 new bool:g_PauseAllowed = false
-new g_addCvar[] = "amx_cvar add %s"
 
 new pausable;
 new rcon_password;
@@ -162,8 +161,7 @@ public plugin_init()
 	register_dictionary("admincmd.txt")
 	register_dictionary("common.txt")
 	register_dictionary("adminhelp.txt")
-	
-	
+
 	register_concmd("amx_kick", "cmdKick", ADMIN_KICK, "<name or #userid> [reason]")
 	register_concmd("amx_ban", "cmdBan", ADMIN_BAN|ADMIN_BAN_TEMP, "<name or #userid> <minutes> [reason]")
 	register_concmd("amx_banip", "cmdBanIP", ADMIN_BAN|ADMIN_BAN_TEMP, "<name or #userid> <minutes> [reason]")
@@ -188,33 +186,19 @@ public plugin_init()
 	register_clcmd("amx_showrcon", "cmdShowRcon", ADMIN_RCON, "<command line>")
 	register_clcmd("pauseAck", "cmdLBack")
 
-
 	rcon_password=get_cvar_pointer("rcon_password");
 	pausable=get_cvar_pointer("pausable");
 	timelimit=get_cvar_pointer( "mp_timelimit" );
-	p_amx_tempban_maxtime = register_cvar("amx_tempban_maxtime", "4320");
+	p_amx_tempban_maxtime = register_cvar("amx_tempban_maxtime", "4320", FCVAR_PROTECTED);
 
 	g_tempBans = TrieCreate();
-}
 
-public plugin_cfg()
-{
-	// Cvars which can be changed only with rcon access
-	server_cmd(g_addCvar, "rcon_password")
-	server_cmd(g_addCvar, "amx_show_activity")
-	server_cmd(g_addCvar, "amx_mode")
-	server_cmd(g_addCvar, "amx_password_field")
-	server_cmd(g_addCvar, "amx_default_access")
-	server_cmd(g_addCvar, "amx_reserved_slots")
-	server_cmd(g_addCvar, "amx_reservation")
-	server_cmd(g_addCvar, "amx_sql_table");
-	server_cmd(g_addCvar, "amx_sql_host");
-	server_cmd(g_addCvar, "amx_sql_user");
-	server_cmd(g_addCvar, "amx_sql_pass");
-	server_cmd(g_addCvar, "amx_sql_db");
-	server_cmd(g_addCvar, "amx_sql_type");
-	server_cmd(g_addCvar, "amx_tempban_maxtime");
+	new flags = get_pcvar_flags(rcon_password);
 
+	if (!(flags & FCVAR_PROTECTED))
+	{
+		set_pcvar_flags(rcon_password, flags | FCVAR_PROTECTED);
+	}
 }
 
 public cmdKick(id, level, cid)
@@ -773,6 +757,8 @@ public cmdCvar(id, level, cid)
 		}
 		return PLUGIN_HANDLED
 	}
+	
+	trim(arg);
 	
 	if ((pointer=get_cvar_pointer(arg))==0)
 	{

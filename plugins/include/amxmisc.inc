@@ -158,7 +158,7 @@ stock show_activity( id, const name[], const fmt[], any:... )
 		// if still not found, then register the cvar as a dummy
 		if (__amx_show_activity == 0)
 		{
-			__amx_show_activity = register_cvar("amx_show_activity", "2");
+			__amx_show_activity = register_cvar("amx_show_activity", "2", FCVAR_PROTECTED);
 		}
 	}
 	
@@ -256,7 +256,7 @@ stock show_activity_id(idtarget, idadmin, const name[], const fmt[], any:...)
 		// if still not found, then register the cvar as a dummy
 		if (__amx_show_activity == 0)
 		{
-			__amx_show_activity = register_cvar("amx_show_activity", "2");
+			__amx_show_activity = register_cvar("amx_show_activity", "2", FCVAR_PROTECTED);
 		}
 	}
 
@@ -335,7 +335,7 @@ stock show_activity_key(const KeyWithoutName[], const KeyWithName[], const ___Ad
 		// if still not found, then register the cvar as a dummy
 		if (__amx_show_activity == 0)
 		{
-			__amx_show_activity = register_cvar("amx_show_activity", "2");
+			__amx_show_activity = register_cvar("amx_show_activity", "2", FCVAR_PROTECTED);
 		}
 	}
 	

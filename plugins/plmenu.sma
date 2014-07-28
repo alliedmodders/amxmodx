@@ -175,7 +175,7 @@ public plugin_cfg()
 	p_amx_tempban_maxtime = get_cvar_pointer(amx_tempban_maxtime);
 	if( !p_amx_tempban_maxtime )
 	{
-		p_amx_tempban_maxtime = register_cvar(amx_tempban_maxtime, "4320");
+		p_amx_tempban_maxtime = register_cvar(amx_tempban_maxtime, "4320", FCVAR_PROTECTED);
 		server_cmd("amx_cvar add %s", amx_tempban_maxtime);
 	}
 }

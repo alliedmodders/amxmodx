@@ -326,6 +326,7 @@ public cmdAddBan(id, level, cid)
 	read_argv(2, minutes, charsmax(minutes))
 	read_argv(3, reason, charsmax(reason))
 	
+	trim(arg);
 	
 	if (!(get_user_flags(id) & ADMIN_RCON))
 	{

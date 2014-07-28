@@ -233,6 +233,7 @@ ADMIN_UNBAN_2 = ADMIN %s: ban kalkdi %s
 ADMIN_ADDBAN_1 = ADMIN: banla %s
 ADMIN_ADDBAN_2 = ADMIN %s: banla %s
 BANNED = banlandi
+REASON = Neden
 FOR_MIN = %s dakika ban
 PERM = suresiz
 CLIENT_BANNED = Oyuncu "%s" banlandi

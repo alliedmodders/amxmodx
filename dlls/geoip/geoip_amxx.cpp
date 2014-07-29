@@ -11,8 +11,7 @@
 // GeoIP Module
 //
 
-#include <stdio.h>
-#include "geoip_amxx.h"
+﻿#include "geoip_amxx.h"
 
 GeoIP *gi = NULL;
 
@@ -113,3 +112,4 @@ AMX_NATIVE_INFO geoip_natives[] = {
 	{"geoip_country",	amx_geoip_country},
 	{NULL,				NULL},
 };
+

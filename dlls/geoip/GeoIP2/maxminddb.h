@@ -5,18 +5,21 @@
 #define _POSIX_C_SOURCE 200112L
 #endif
 
-#include <maxminddb_config.h>
+#include "maxminddb_config.h"
 #include <stdarg.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <sys/types.h>
 
 #ifdef _WIN32
+#include "stdbool.h" /* Arksnine: Not supported by MSVC */
+#include <BaseTsd.h> /* Arkshine: ssize_t replacement */
+typedef SSIZE_T ssize_t;
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 typedef ADDRESS_FAMILY sa_family_t;
 #else
+#include <stdbool.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <sys/socket.h>

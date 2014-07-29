@@ -4,10 +4,12 @@
 #include "maxminddb.h"
 #include "maxminddb-compat-util.h"
 #include <fcntl.h>
-#include <inttypes.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+
+#define __STDC_FORMAT_MACROS /* Arkshine: Force to use C99 format macros */ 
+#include <inttypes.h>        /* MSVC doesn't fully support C99, so we provide the file */
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -120,10 +122,10 @@ LOCAL const uint8_t *find_metadata(const uint8_t *file_content,
                                    ssize_t file_size, uint32_t *metadata_size);
 LOCAL int read_metadata(MMDB_s *mmdb);
 LOCAL MMDB_s make_fake_metadata_db(MMDB_s *mmdb);
-LOCAL uint16_t value_for_key_as_uint16(MMDB_entry_s *start, char *key);
-LOCAL uint32_t value_for_key_as_uint32(MMDB_entry_s *start, char *key);
-LOCAL uint64_t value_for_key_as_uint64(MMDB_entry_s *start, char *key);
-LOCAL char *value_for_key_as_string(MMDB_entry_s *start, char *key);
+LOCAL uint16_t value_for_key_as_uint16(MMDB_entry_s *start, const char *key);
+LOCAL uint32_t value_for_key_as_uint32(MMDB_entry_s *start, const char *key);
+LOCAL uint64_t value_for_key_as_uint64(MMDB_entry_s *start, const char *key);
+LOCAL char *value_for_key_as_string(MMDB_entry_s *start, const char *key);
 LOCAL int populate_languages_metadata(MMDB_s *mmdb, MMDB_s *metadata_db,
                                       MMDB_entry_s *metadata_start);
 LOCAL int populate_description_metadata(MMDB_s *mmdb, MMDB_s *metadata_db,
@@ -152,8 +154,8 @@ LOCAL uint32_t get_ptr_from(uint8_t ctrl, uint8_t const *const ptr,
                             int ptr_size);
 LOCAL int get_entry_data_list(MMDB_s *mmdb, uint32_t offset,
                               MMDB_entry_data_list_s *const entry_data_list);
-LOCAL float get_ieee754_float(const uint8_t *restrict p);
-LOCAL double get_ieee754_double(const uint8_t *restrict p);
+LOCAL float get_ieee754_float(const uint8_t *__restrict p);
+LOCAL double get_ieee754_double(const uint8_t *__restrict p);
 LOCAL uint32_t get_uint32(const uint8_t *p);
 LOCAL uint32_t get_uint24(const uint8_t *p);
 LOCAL uint32_t get_uint16(const uint8_t *p);
@@ -299,7 +301,7 @@ LOCAL const uint8_t *find_metadata(const uint8_t *file_content,
     uint8_t *search_area = (uint8_t *)(file_content + (file_size - max_size));
     uint8_t *tmp = search_area;
     do {
-        tmp = mmdb_memmem(search_area, max_size,
+        tmp = (uint8_t *)mmdb_memmem(search_area, max_size,
                           METADATA_MARKER, strlen(METADATA_MARKER));
 
         if (NULL != tmp) {
@@ -322,10 +324,9 @@ LOCAL int read_metadata(MMDB_s *mmdb)
        values. */
     MMDB_s metadata_db = make_fake_metadata_db(mmdb);
 
-    MMDB_entry_s metadata_start = {
-        .mmdb   = &metadata_db,
-        .offset = 0
-    };
+    MMDB_entry_s metadata_start;
+    metadata_start.mmdb = &metadata_db;
+    metadata_start.offset = 0;
 
     mmdb->metadata.node_count =
         value_for_key_as_uint32(&metadata_start, "node_count");
@@ -407,15 +408,14 @@ LOCAL int read_metadata(MMDB_s *mmdb)
 
 LOCAL MMDB_s make_fake_metadata_db(MMDB_s *mmdb)
 {
-    MMDB_s fake_metadata_db = {
-        .data_section      = mmdb->metadata_section,
-        .data_section_size = mmdb->metadata_section_size
-    };
+    MMDB_s fake_metadata_db;
+    fake_metadata_db.data_section = mmdb->metadata_section;
+    fake_metadata_db.data_section_size = mmdb->metadata_section_size;
 
     return fake_metadata_db;
 }
 
-LOCAL uint16_t value_for_key_as_uint16(MMDB_entry_s *start, char *key)
+LOCAL uint16_t value_for_key_as_uint16(MMDB_entry_s *start, const char *key)
 {
     MMDB_entry_data_s entry_data;
     const char *path[] = { key, NULL };
@@ -423,7 +423,7 @@ LOCAL uint16_t value_for_key_as_uint16(MMDB_entry_s *start, char *key)
     return entry_data.uint16;
 }
 
-LOCAL uint32_t value_for_key_as_uint32(MMDB_entry_s *start, char *key)
+LOCAL uint32_t value_for_key_as_uint32(MMDB_entry_s *start, const char *key)
 {
     MMDB_entry_data_s entry_data;
     const char *path[] = { key, NULL };
@@ -431,7 +431,7 @@ LOCAL uint32_t value_for_key_as_uint32(MMDB_entry_s *start, char *key)
     return entry_data.uint32;
 }
 
-LOCAL uint64_t value_for_key_as_uint64(MMDB_entry_s *start, char *key)
+LOCAL uint64_t value_for_key_as_uint64(MMDB_entry_s *start, const char *key)
 {
     MMDB_entry_data_s entry_data;
     const char *path[] = { key, NULL };
@@ -439,7 +439,7 @@ LOCAL uint64_t value_for_key_as_uint64(MMDB_entry_s *start, char *key)
     return entry_data.uint64;
 }
 
-LOCAL char *value_for_key_as_string(MMDB_entry_s *start, char *key)
+LOCAL char *value_for_key_as_string(MMDB_entry_s *start, const char *key)
 {
     MMDB_entry_data_s entry_data;
     const char *path[] = { key, NULL };
@@ -459,10 +459,9 @@ LOCAL int populate_languages_metadata(MMDB_s *mmdb, MMDB_s *metadata_db,
         return MMDB_INVALID_METADATA_ERROR;
     }
 
-    MMDB_entry_s array_start = {
-        .mmdb   = metadata_db,
-        .offset = entry_data.offset
-    };
+    MMDB_entry_s array_start;
+    array_start.mmdb = metadata_db;
+    array_start.offset = entry_data.offset;
 
     MMDB_entry_data_list_s *member;
     MMDB_get_entry_data_list(&array_start, &member);
@@ -471,7 +470,7 @@ LOCAL int populate_languages_metadata(MMDB_s *mmdb, MMDB_s *metadata_db,
 
     uint32_t array_size = member->entry_data.data_size;
     mmdb->metadata.languages.count = 0;
-    mmdb->metadata.languages.names = malloc(array_size * sizeof(char *));
+    mmdb->metadata.languages.names = (const char **)malloc(array_size * sizeof(char *));
     if (NULL == mmdb->metadata.languages.names) {
         return MMDB_OUT_OF_MEMORY_ERROR;
     }
@@ -511,10 +510,9 @@ LOCAL int populate_description_metadata(MMDB_s *mmdb, MMDB_s *metadata_db,
         return MMDB_INVALID_METADATA_ERROR;
     }
 
-    MMDB_entry_s map_start = {
-        .mmdb   = metadata_db,
-        .offset = entry_data.offset
-    };
+    MMDB_entry_s map_start;
+    map_start.mmdb = metadata_db;
+    map_start.offset = entry_data.offset;
 
     MMDB_entry_data_list_s *member;
     MMDB_get_entry_data_list(&map_start, &member);
@@ -524,14 +522,14 @@ LOCAL int populate_description_metadata(MMDB_s *mmdb, MMDB_s *metadata_db,
     uint32_t map_size = member->entry_data.data_size;
     mmdb->metadata.description.count = 0;
     mmdb->metadata.description.descriptions =
-        malloc(map_size * sizeof(MMDB_description_s *));
+        (MMDB_description_s **)malloc(map_size * sizeof(MMDB_description_s *));
     if (NULL == mmdb->metadata.description.descriptions) {
         return MMDB_OUT_OF_MEMORY_ERROR;
     }
 
     for (uint32_t i = 0; i < map_size; i++) {
         mmdb->metadata.description.descriptions[i] =
-            malloc(sizeof(MMDB_description_s));
+            (MMDB_description_s *)malloc(sizeof(MMDB_description_s));
         if (NULL == mmdb->metadata.description.descriptions[i]) {
             return MMDB_OUT_OF_MEMORY_ERROR;
         }
@@ -579,14 +577,11 @@ MMDB_lookup_result_s MMDB_lookup_string(MMDB_s *const mmdb,
                                         int *const gai_error,
                                         int *const mmdb_error)
 {
-    MMDB_lookup_result_s result = {
-        .found_entry = false,
-        .netmask     = 0,
-        .entry       = {
-            .mmdb    = mmdb,
-            .offset  = 0
-        }
-    };
+    MMDB_lookup_result_s result;
+    result.found_entry = false;
+    result.netmask = 0;
+    result.entry.mmdb = mmdb;
+    result.entry.offset = 0;
 
     struct addrinfo *addresses = NULL;
     *gai_error = resolve_any_address(ipstr, &addresses);
@@ -615,9 +610,8 @@ MMDB_lookup_result_s MMDB_lookup_string(MMDB_s *const mmdb,
 
 LOCAL int resolve_any_address(const char *ipstr, struct addrinfo **addresses)
 {
-    struct addrinfo hints = {
-        .ai_socktype = SOCK_STREAM
-    };
+    struct addrinfo hints;
+    hints.ai_socktype = SOCK_STREAM;
     int gai_status;
 
     if (NULL != strchr(ipstr, ':')) {
@@ -644,14 +638,11 @@ MMDB_lookup_result_s MMDB_lookup_sockaddr(
     const struct sockaddr *const sockaddr,
     int *const mmdb_error)
 {
-    MMDB_lookup_result_s result = {
-        .found_entry = false,
-        .netmask     = 0,
-        .entry       = {
-            .mmdb    = mmdb,
-            .offset  = 0
-        }
-    };
+    MMDB_lookup_result_s result;
+    result.found_entry = false;
+    result.netmask = 0;
+    result.entry.mmdb = mmdb;
+    result.entry.offset = 0;
 
     uint8_t mapped_address[16], *address;
     if (mmdb->metadata.ip_version == 4) {
@@ -754,10 +745,9 @@ LOCAL int find_address_in_search_tree(MMDB_s *mmdb, uint8_t *address,
 
 LOCAL record_info_s record_info_for_database(MMDB_s *mmdb)
 {
-    record_info_s record_info = {
-        .record_length       = mmdb->full_record_byte_size,
-        .right_record_offset = 0
-    };
+    record_info_s record_info;
+    record_info.record_length = mmdb->full_record_byte_size;
+    record_info.right_record_offset = 0;
 
     if (record_info.record_length == 6) {
         record_info.left_record_getter = &get_uint24;
@@ -877,7 +867,7 @@ int MMDB_vget_value(MMDB_entry_s *const start,
     int i = 0;
     const char *path_elem;
     while (NULL != (path_elem = va_arg(va_path, char *))) {
-        path = realloc(path, sizeof(const char *) * (i + 1));
+        path = (const char **)realloc(path, sizeof(const char *) * (i + 1));
         if (NULL == path) {
             return MMDB_OUT_OF_MEMORY_ERROR;
         }
@@ -889,7 +879,7 @@ int MMDB_vget_value(MMDB_entry_s *const start,
         i++;
     }
 
-    path = realloc(path, sizeof(char *) * (i + 1));
+    path = (const char **)realloc(path, sizeof(char *) * (i + 1));
     if (NULL == path) {
         return MMDB_OUT_OF_MEMORY_ERROR;
     }
@@ -1273,10 +1263,9 @@ int MMDB_get_metadata_as_entry_data_list(
 {
     MMDB_s metadata_db = make_fake_metadata_db(mmdb);
 
-    MMDB_entry_s metadata_start = {
-        .mmdb   = &metadata_db,
-        .offset = 0
-    };
+    MMDB_entry_s metadata_start;
+    metadata_start.mmdb = &metadata_db;
+    metadata_start.offset = 0;
 
     return MMDB_get_entry_data_list(&metadata_start, entry_data_list);
 }
@@ -1398,10 +1387,10 @@ LOCAL int get_entry_data_list(MMDB_s *mmdb, uint32_t offset,
     return MMDB_SUCCESS;
 }
 
-LOCAL float get_ieee754_float(const uint8_t *restrict p)
+LOCAL float get_ieee754_float(const uint8_t *__restrict p)
 {
     volatile float f;
-    uint8_t *q = (void *)&f;
+    uint8_t *q = (uint8_t *)(void *)&f;
 #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
     q[3] = p[0];
     q[2] = p[1];
@@ -1413,10 +1402,10 @@ LOCAL float get_ieee754_float(const uint8_t *restrict p)
     return f;
 }
 
-LOCAL double get_ieee754_double(const uint8_t *restrict p)
+LOCAL double get_ieee754_double(const uint8_t *__restrict p)
 {
     volatile double d;
-    uint8_t *q = (void *)&d;
+    uint8_t *q = (uint8_t *)(void *)&d;
 #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
     q[7] = p[0];
     q[6] = p[1];
@@ -1467,7 +1456,7 @@ LOCAL MMDB_entry_data_list_s *new_entry_data_list(void)
 {
     /* We need calloc here in order to ensure that the ->next pointer in the
      * struct doesn't point to some random address. */
-    return calloc(1, sizeof(MMDB_entry_data_list_s));
+    return (MMDB_entry_data_list_s *)calloc(1, sizeof(MMDB_entry_data_list_s));
 }
 
 void MMDB_free_entry_data_list(MMDB_entry_data_list_s *const entry_data_list)
@@ -1701,7 +1690,7 @@ LOCAL MMDB_entry_data_list_s *dump_entry_data_list(
                 entry_data_list->entry_data.uint64);
         entry_data_list = entry_data_list->next;
         break;
-    case MMDB_DATA_TYPE_UINT128:
+    case MMDB_DATA_TYPE_UINT128: { /* Error C2360 if hex_string initialization is not inside a block */
         print_indentation(stream, indent);
 #if MMDB_UINT128_IS_BYTE_ARRAY
         char *hex_string =
@@ -1715,7 +1704,8 @@ LOCAL MMDB_entry_data_list_s *dump_entry_data_list(
                 low);
 #endif
         entry_data_list = entry_data_list->next;
-        break;
+        break; 
+    }
     case MMDB_DATA_TYPE_INT32:
         print_indentation(stream, indent);
         fprintf(stream, "%d <int32>\n", entry_data_list->entry_data.int32);
@@ -1741,7 +1731,7 @@ LOCAL void print_indentation(FILE *stream, int i)
 
 LOCAL char *bytes_to_hex(uint8_t *bytes, uint32_t size)
 {
-    char *hex_string = malloc((size * 2) + 1);
+    char *hex_string = (char *)malloc((size * 2) + 1);
     char *hex_pointer = hex_string;
 
     for (uint32_t i = 0; i < size; i++) {

@@ -792,7 +792,7 @@ accessUser(id, name[] = "")
 	
 	if (result & 1)
 	{
-		client_cmd(id, "echo ^"* %L^"", id, "INV_PAS")
+		console_print(id, "* %L, id, "INV_PAS")
 	}
 	
 	if (result & 2)
@@ -803,12 +803,12 @@ accessUser(id, name[] = "")
 	
 	if (result & 4)
 	{
-		client_cmd(id, "echo ^"* %L^"", id, "PAS_ACC")
+		console_print(id, "* %L, id, "PAS_ACC")
 	}
 	
 	if (result & 8)
 	{
-		client_cmd(id, "echo ^"* %L^"", id, "PRIV_SET")
+		console_print(id, "* %L, id, "PRIV_SET")
 	}
 	
 	return PLUGIN_CONTINUE

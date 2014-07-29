@@ -84,7 +84,7 @@ public cmdLangMenu(id, level, cid)
 	}
 	
 	new buffer[3]
-	get_user_info(id, "lang", buffer, 2)
+	get_user_info(id, "lang", buffer, charsmax(buffer))
 	g_menuLang[id] = get_lang_id(buffer)
 	
 	showMenu(id)
@@ -137,7 +137,7 @@ public actionMenu(id, key)
 		new pLang[3], pLang_old[3]
 		
 		get_lang(g_menuLang[id], pLang)
-		get_user_info(id, "lang", pLang_old, 2)
+		get_user_info(id, "lang", pLang_old, charsmax(pLang_old))
 		
 		if (!equali(pLang, pLang_old))
 		{

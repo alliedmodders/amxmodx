@@ -44,8 +44,6 @@ new Array:g_Messages
 new g_MessagesNum
 new g_Current
 
-#define charsof(%1) (sizeof(%1)-1)
-
 new amx_freq_imessage;
 
 public plugin_init()
@@ -59,7 +57,7 @@ public plugin_init()
 	amx_freq_imessage=register_cvar("amx_freq_imessage", "10")
 	
 	new lastinfo[8]
-	get_localinfo("lastinfomsg", lastinfo, 7)
+	get_localinfo("lastinfomsg", lastinfo, charsmax(lastinfo))
 	g_Current = str_to_num(lastinfo)
 	set_localinfo("lastinfomsg", "")
 }
@@ -78,13 +76,13 @@ public infoMessage()
 	new values[3];
 	new Message[384];
 	
-	ArrayGetString(g_Messages, g_Current, Message, charsof(Message));
+	ArrayGetString(g_Messages, g_Current, Message, charsmax(Message));
 	ArrayGetArray(g_Values, g_Current, values);
 	
 	new hostname[64];
 	
-	get_cvar_string("hostname", hostname, 63);
-	replace(Message, 380, "%hostname%", hostname);
+	get_cvar_string("hostname", hostname, charsmax(hostname));
+	replace(Message, charsmax(Message), "%hostname%", hostname);
 	
 	set_hudmessage(values[0], values[1], values[2], X_POS, Y_POS, 0, 0.5, HOLD_TIME, 2.0, 2.0, -1);
 	
@@ -105,14 +103,14 @@ public setMessage()
 	new Message[384];
 	
 	remove_task(12345)
-	read_argv(1, Message, 380)
+	read_argv(1, Message, charsmax(Message))
 	
-	while (replace(Message, 380, "\n", "^n")) {}
+	while (replace(Message, charsmax(Message), "\n", "^n")) {}
 	
 	new mycol[12]
 	new vals[3];
 	
-	read_argv(2, mycol, 11)		// RRRGGGBBB
+	read_argv(2, mycol, charsmax(mycol))		// RRRGGGBBB
 	vals[2] = str_to_num(mycol[6])
 	
 	mycol[6] = 0
@@ -138,6 +136,6 @@ public plugin_end()
 {
 	new lastinfo[8]
 
-	num_to_str(g_Current, lastinfo, 7)
+	num_to_str(g_Current, lastinfo, charsmax(lastinfo))
 	set_localinfo("lastinfomsg", lastinfo)
 }

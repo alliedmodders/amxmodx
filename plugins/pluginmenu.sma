@@ -488,7 +488,7 @@ public CvarMenuSelection(id, menu, item)
 		
 		if (ExplicitPlugin[id]==-1)
 		{
-			client_cmd(id,"amx_plugincvarmenu");
+			DisplayPluginMenuDefault(id);
 		}
 		return PLUGIN_HANDLED;
 	}
@@ -943,7 +943,7 @@ public CommandMenuCommand(id, level, cid)
 	{
 		// We need to display a list of the plugins, instead of a specific plugin.
 		ExplicitPlugin[id]=-1;
-		DisplayPluginMenu(id,"Plugin Command Menu:", "PluginMenuSelection","DisplayCmdMenu","GetNumberOfCmdsForPlid");
+		DisplayPluginMenuDefault(id);
 	}
 	else
 	{
@@ -953,4 +953,9 @@ public CommandMenuCommand(id, level, cid)
 		DisplayCmdMenu(id,plid,0);
 	}
 	return PLUGIN_HANDLED;
+}
+
+DisplayPluginMenuDefault(id)
+{
+	DisplayPluginMenu(id,"Plugin Command Menu:", "PluginMenuSelection","DisplayCmdMenu","GetNumberOfCmdsForPlid");
 }

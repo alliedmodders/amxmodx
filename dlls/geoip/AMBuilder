@@ -3,9 +3,12 @@ import os.path
 
 binary = AMXX.Module(builder, 'geoip')
 
+binary.compiler.defines += ['HAVE_STDINT_H']
+binary.compiler.includes += [os.path.join(builder.sourcePath, 'dlls', 'geoip', 'GeoIP2')]
+
 binary.sources = [
   'sdk/amxxmodule.cpp',
-  'GeoIP.c',
+  'GeoIP2/maxminddb.cpp',
   'geoip_amxx.cpp',
 ]
 

@@ -80,3 +80,21 @@ native geoip_code3(const ip[], result[4]);
  * @param len		The maximum length of the result buffer.
  */
 native geoip_country(const ip[], result[], len=45);
+
+
+
+/**
+ * The following natives require GeoIP City database, which can be retrieved from:
+ * http://dev.maxmind.com/geoip/geoip2/geolite2/ (MaxMind DB binary)
+ */
+
+/** 
+ * Look up the full city name for the given IP address.
+ * 
+ * @param ip		The IP address to look up. 
+ * @param result	The result of the geoip look up. 
+ * @param len		The maximum length of the result buffer.
+ *
+ * @return          The result length on successful lookup, 0 otherwise.
+ */ 
+native geoip_city(const ip[], result[], len); 

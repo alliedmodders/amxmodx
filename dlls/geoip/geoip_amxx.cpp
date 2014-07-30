@@ -147,7 +147,24 @@ static cell AMX_NATIVE_CALL amx_geoip_country(AMX *amx, cell *params)
 	const char *path[] = { "country", "names", "en", NULL };
 	const char *country = lookupByIp(stripPort(ip), path, &length);
 
+	if (!country)
+	{
+		return 0;
+	}
+
 	return MF_SetAmxString(amx, params[2], country, length >= params[3] ? params[3] : length); // TODO: make this utf8 safe.
+}
+
+// native geoip_city(const ip[], result[], len);
+static cell AMX_NATIVE_CALL amx_geoip_city(AMX *amx, cell *params)
+{
+	int length;
+	char *ip = MF_GetAmxString(amx, params[1], 0, &length);
+
+	const char *path[] = { "city", "names", "en", NULL };
+	const char *city = lookupByIp(stripPort(ip), path, &length);
+
+	return MF_SetAmxString(amx, params[2], city ? city : "", length >= params[3] ? params[3] : length); // TODO: make this utf8 safe.
 }
 
 
@@ -215,6 +232,8 @@ AMX_NATIVE_INFO geoip_natives[] =
 	{ "geoip_code3_ex", amx_geoip_code3_ex },
 
 	{ "geoip_country", amx_geoip_country },
+	{ "geoip_city"   , amx_geoip_city },
+
 	{ NULL, NULL },
 };
 

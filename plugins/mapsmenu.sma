@@ -365,12 +365,12 @@ public actionVoteMapMenu(id, key)
 				for (new c = 0; c < g_voteSelectedNum[id]; ++c)
 				{
 					ArrayGetString(g_mapName, g_voteSelected[id][c], tempMap, charsmax(tempMap));
-					len += format(menuBody[len], charsmax(menuBody), "%d. %s^n", c + 1, tempMap)
+					len += format(menuBody[len], charsmax(menuBody) - len, "%d. %s^n", c + 1, tempMap)
 					keys |= (1<<c)
 				}
 				
 				keys |= (1<<8)
-				len += format(menuBody[len], charsmax(menuBody), "^n9. %L^n", id, "NONE")
+				len += format(menuBody[len], charsmax(menuBody) - len, "^n9. %L^n", id, "NONE")
 			} else {
 				ArrayGetString(g_mapName, g_voteSelected[id][0], tempMap, charsmax(tempMap));
 				len = format(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L^n%s?^n\w^n1. %L^n2. %L^n" : "%L^n%s?^n^n1. %L^n2. %L^n", id, "CHANGE_MAP_TO", tempMap, id, "YES", id, "NO")

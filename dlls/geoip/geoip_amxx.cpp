@@ -206,6 +206,18 @@ static cell AMX_NATIVE_CALL amx_geoip_region_code(AMX *amx, cell *params)
 	return MF_SetAmxString(amx, params[2], finalLength ? code : "", finalLength >= params[3] ? params[3] : finalLength);
 }
 
+// native geoip_region_name(const ip[], result[], len);
+static cell AMX_NATIVE_CALL amx_geoip_region_name(AMX *amx, cell *params)
+{
+	int length;
+	char *ip = MF_GetAmxString(amx, params[1], 0, &length);
+
+	const char *path[] = { "subdivisions", "0", "names", "en", NULL }; // First result.
+	const char *region = lookupByIp(stripPort(ip), path, &length);
+
+	return MF_SetAmxString(amx, params[2], region ? region : "", length >= params[3] ? params[3] : length); // TODO: make this utf8 safe.
+}
+
 
 void OnAmxxAttach()
 {

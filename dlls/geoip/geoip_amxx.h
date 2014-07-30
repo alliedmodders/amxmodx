@@ -14,10 +14,12 @@
 #ifndef _INCLUDE_GEOIPAMXX_H
 #define _INCLUDE_GEOIPAMXX_H
 
-#define GEOIPDATADIR ""
-
+#include "GeoIP2/maxminddb.h"
 #include "amxxmodule.h"
-#include "GeoIP.h"
+
+#if defined(WIN32)
+	#define snprintf _snprintf
+#endif
 
 extern AMX_NATIVE_INFO geoip_natives[];
 

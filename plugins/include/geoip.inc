@@ -133,3 +133,21 @@ native geoip_region_name(const ip[], result[], len);
  * @return			The result length on successful lookup, 0 otherwise.
  */
 native geoip_timezone(const ip[], result[], len);
+
+/** 
+ * Look up the city's latitude for the given IP address.
+ * 
+ * @param ip		The IP address to look up. 
+ *
+ * @return			The result of the geoip look up, 0 if latitude is not found.
+ */ 
+native Float:geoip_latitude(const ip[]); 
+
+/** 
+ * Look up the city's longitude for the given IP address. 
+ * 
+ * @param ip		The IP address to look up.
+ *
+ * @return			The result of the geoip look up, 0 if longitude is not found. 
+ */ 
+native Float:geoip_longitude(const ip[]);

@@ -79,8 +79,8 @@ public cmdCancelVote(id, level, cid)
 	{
 		new authid[32], name[MAX_NAME_LENGTH]
 		
-		get_user_authid(id, authid, 31)
-		get_user_name(id, name, 31)
+		get_user_authid(id, authid, charsmax(authid))
+		get_user_name(id, name, charsmax(name))
 		log_amx("Vote: ^"%s<%d><%s><>^" cancel vote session", name, get_user_userid(id), authid)
 	
 		new msg[256];
@@ -173,7 +173,7 @@ public checkVotes()
 		return PLUGIN_CONTINUE
 	}
 
-	g_execLen = format(g_Execute, 255, g_Answer, g_optionName[best]) + 1
+	g_execLen = format(g_Execute, charsmax(g_Execute), g_Answer, g_optionName[best]) + 1
 	
 	if (g_execResult)
 	{
@@ -183,14 +183,14 @@ public checkVotes()
 		{
 			new menuBody[512], lTheResult[32], lYes[16], lNo[16]
 			
-			format(lTheResult, 31, "%L", g_voteCaller, "THE_RESULT")
-			format(lYes, 15, "%L", g_voteCaller, "YES")
-			format(lNo, 15, "%L", g_voteCaller, "NO")
+			format(lTheResult, charsmax(lTheResult), "%L", g_voteCaller, "THE_RESULT")
+			format(lYes, charsmax(lYes), "%L", g_voteCaller, "YES")
+			format(lNo, charsmax(lNo), "%L", g_voteCaller, "NO")
 			
-			new len = format(menuBody, 511, g_coloredMenus ? "\y%s: \w%s^n^n" : "%s: %s^n^n", lTheResult, g_Execute)
+			new len = format(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%s: \w%s^n^n" : "%s: %s^n^n", lTheResult, g_Execute)
 			
-			len += format(menuBody[len], 511 - len, g_coloredMenus ? "\y%L^n\w" : "%L^n", g_voteCaller, "WANT_CONTINUE")
-			format(menuBody[len], 511 - len, "^n1. %s^n2. %s", lYes, lNo)
+			len += format(menuBody[len], charsmax(menuBody) - len, g_coloredMenus ? "\y%L^n\w" : "%L^n", g_voteCaller, "WANT_CONTINUE")
+			format(menuBody[len], charsmax(menuBody) - len, "^n1. %s^n2. %s", lYes, lNo)
 			show_menu(g_voteCaller, 0x03, menuBody, 10, "The result: ")
 			set_task(10.0, "autoRefuse", 4545454)
 		}
@@ -202,11 +202,11 @@ public checkVotes()
 	
 	for (i = 0; i < pnum; i++)
 	{
-		format(lVotingSuccess, 31, "%L", players[i], "VOTING_SUCCESS")
+		format(lVotingSuccess, charsmax(lVotingSuccess), "%L", players[i], "VOTING_SUCCESS")
 		client_print(players[i], print_chat, "%L", players[i], "VOTING_RES_3", lVotingSuccess, iResult, iRatio, g_Execute)
 	}
 	
-	format(lVotingSuccess, 31, "%L", "en", "VOTING_SUCCESS")
+	format(lVotingSuccess, charsmax(lVotingSuccess), "%L", "en", "VOTING_SUCCESS")
 	log_amx("Vote: %s (got ^"%d^") (needed ^"%d^") (result ^"%s^")", lVotingSuccess, iResult, iRatio, g_Execute)
 	
 	return PLUGIN_CONTINUE
@@ -217,7 +217,7 @@ public voteCount(id, key)
 	if (get_cvar_num("amx_vote_answers"))
 	{
 		new name[MAX_NAME_LENGTH]
-		get_user_name(id, name, 31)
+		get_user_name(id, name, charsmax(name))
 		
 		if (g_yesNoVote)
 			client_print(0, print_chat, "%L", LANG_PLAYER, key ? "VOTED_AGAINST" : "VOTED_FOR", name)
@@ -268,7 +268,7 @@ public cmdVoteMap(id, level, cid)
 	{
 		new lMaps[16]
 		
-		format(lMaps, 15, "%L", id, (argc == 2) ? "MAP_IS" : "MAPS_ARE")
+		format(lMaps, charsmax(lMaps), "%L", id, (argc == 2) ? "MAP_IS" : "MAPS_ARE")
 		console_print(id, "%L", id, "GIVEN_NOT_VALID", lMaps)
 		return PLUGIN_HANDLED
 	}
@@ -279,33 +279,33 @@ public cmdVoteMap(id, level, cid)
 	if (g_validMaps > 1)
 	{
 		keys = MENU_KEY_0
-		len = format(menu_msg, 255, g_coloredMenus ? "\y%L: \w^n^n" : "%L: ^n^n", LANG_SERVER, "CHOOSE_MAP")
+		len = format(menu_msg, charsmax(menu_msg), g_coloredMenus ? "\y%L: \w^n^n" : "%L: ^n^n", LANG_SERVER, "CHOOSE_MAP")
 		new temp[128]
 		
 		for (new a = 0; a < g_validMaps; ++a)
 		{
-			format(temp, 127, "%d.  %s^n", a+1, g_optionName[a])
-			len += copy(menu_msg[len], 255-len, temp)
+			format(temp, charsmax(temp), "%d.  %s^n", a+1, g_optionName[a])
+			len += copy(menu_msg[len], charsmax(menu_msg) - len, temp)
 			keys |= (1<<a)
 		}
 		
-		format(menu_msg[len], 255-len, "^n0.  %L", LANG_SERVER, "NONE")
+		format(menu_msg[len], charsmax(menu_msg) - len, "^n0.  %L", LANG_SERVER, "NONE")
 		g_yesNoVote = 0
 	} else {
 		new lChangeMap[32], lYes[16], lNo[16]
 		
-		format(lChangeMap, 31, "%L", LANG_SERVER, "CHANGE_MAP_TO")
-		format(lYes, 15, "%L", LANG_SERVER, "YES")
-		format(lNo, 15, "%L", LANG_SERVER, "NO")
-		format(menu_msg, 255, g_coloredMenus ? "\y%s %s?\w^n^n1.  %s^n2.  %s" : "%s %s?^n^n1.  %s^n2.  %s", lChangeMap, g_optionName[0], lYes, lNo)
+		format(lChangeMap, charsmax(lChangeMap), "%L", LANG_SERVER, "CHANGE_MAP_TO")
+		format(lYes, charsmax(lYes), "%L", LANG_SERVER, "YES")
+		format(lNo, charsmax(lNo), "%L", LANG_SERVER, "NO")
+		format(menu_msg, charsmax(menu_msg), g_coloredMenus ? "\y%s %s?\w^n^n1.  %s^n2.  %s" : "%s %s?^n^n1.  %s^n2.  %s", lChangeMap, g_optionName[0], lYes, lNo)
 		keys = MENU_KEY_1|MENU_KEY_2
 		g_yesNoVote = 1
 	}
 	
 	new authid[32], name[MAX_NAME_LENGTH]
 	
-	get_user_authid(id, authid, 31)
-	get_user_name(id, name, 31)
+	get_user_authid(id, authid, charsmax(authid))
+	get_user_name(id, name, charsmax(name))
 	
 	if (argc == 2)
 		log_amx("Vote: ^"%s<%d><%s><>^" vote map (map ^"%s^")", name, get_user_userid(id), authid, g_optionName[0])
@@ -360,7 +360,7 @@ public cmdVote(id, level, cid)
 	}
 
 	new quest[48]
-	read_argv(1, quest, 47)
+	read_argv(1, quest, charsmax(quest))
 	
 	trim(quest);
 	
@@ -374,13 +374,13 @@ public cmdVote(id, level, cid)
 
 	for (new i=0;i<4 && (i+2)<count;i++)
 	{
-		read_argv(i+2, g_optionName[i], sizeof(g_optionName[])-1);
+		read_argv(i+2, g_optionName[i], charsmax(g_optionName[]));
 	}
 
 	new authid[32], name[MAX_NAME_LENGTH]
 	
-	get_user_authid(id, authid, 31)
-	get_user_name(id, name, 31)
+	get_user_authid(id, authid, charsmax(authid))
+	get_user_name(id, name, charsmax(name))
 	log_amx("Vote: ^"%s<%d><%s><>^" vote custom (question ^"%s^") (option#1 ^"%s^") (option#2 ^"%s^")", name, get_user_userid(id), authid, quest, g_optionName[0], g_optionName[1])
 
 	new msg[256];
@@ -399,7 +399,7 @@ public cmdVote(id, level, cid)
 
 	new menu_msg[512], lVote[16]
 	
-	format(lVote, 15, "%L", LANG_SERVER, "VOTE")
+	format(lVote, charsmax(lVote), "%L", LANG_SERVER, "VOTE")
 	
 	count-=2;
 	if (count>4)
@@ -413,11 +413,11 @@ public cmdVote(id, level, cid)
 		keys |= (1<<i);
 	}
 	
-	new len=formatex(menu_msg, sizeof(menu_msg)-1, g_coloredMenus ? "\y%s: %s\w^n^n" : "%s: %s^n^n", lVote, quest);
+	new len=formatex(menu_msg, charsmax(menu_msg), g_coloredMenus ? "\y%s: %s\w^n^n" : "%s: %s^n^n", lVote, quest);
 	
 	for (new i=0;i<count;i++)
 	{
-		len+=formatex(menu_msg[len], sizeof(menu_msg) - 1 - len ,"%d.  %s^n",i+1,g_optionName[i]);
+		len+=formatex(menu_msg[len], charsmax(menu_msg) - len ,"%d.  %s^n",i+1,g_optionName[i]);
 	}
 	g_execResult = false
 	
@@ -425,8 +425,8 @@ public cmdVote(id, level, cid)
 	
 	set_cvar_float("amx_last_voting", get_gametime() + vote_time)
 	g_voteRatio = get_cvar_float("amx_vote_ratio")
-	replace_all(quest,sizeof(quest)-1,"%","");
-	format(g_Answer, 127, "%s - %%s", quest)
+	replace_all(quest, charsmax(quest), "%", "");
+	format(g_Answer, charsmax(g_Answer), "%s - %%s", quest)
 	show_menu(0, keys, menu_msg, floatround(vote_time), "Vote: ")
 	set_task(vote_time, "checkVotes", 99889988)
 	g_voteCaller = id
@@ -457,11 +457,11 @@ public cmdVoteKickBan(id, level, cid)
 
 	new cmd[32]
 	
-	read_argv(0, cmd, 31)
+	read_argv(0, cmd, charsmax(cmd))
 	
 	new voteban = equal(cmd, "amx_voteban")
 	new arg[32]
-	read_argv(1, arg, 31)
+	read_argv(1, arg, charsmax(arg))
 	
 	new player = cmd_target(id, arg, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF)
 	
@@ -472,7 +472,7 @@ public cmdVoteKickBan(id, level, cid)
 	{
 		new imname[32]
 		
-		get_user_name(player, imname, 31)
+		get_user_name(player, imname, charsmax(imname))
 		console_print(id, "%L", id, "ACTION_PERFORMED", imname)
 		return PLUGIN_HANDLED
 	}
@@ -480,19 +480,19 @@ public cmdVoteKickBan(id, level, cid)
 	new keys = MENU_KEY_1|MENU_KEY_2
 	new menu_msg[256], lYes[16], lNo[16], lKickBan[16]
 	
-	format(lYes, 15, "%L", LANG_SERVER, "YES")
-	format(lNo, 15, "%L", LANG_SERVER, "NO")
-	format(lKickBan, 15, "%L", LANG_SERVER, voteban ? "BAN" : "KICK")
+	format(lYes, charsmax(lYes), "%L", LANG_SERVER, "YES")
+	format(lNo, charsmax(lNo), "%L", LANG_SERVER, "NO")
+	format(lKickBan, charsmax(lKickBan), "%L", LANG_SERVER, voteban ? "BAN" : "KICK")
 	ucfirst(lKickBan)
 	get_user_name(player, arg, 31)
-	format(menu_msg, 255, g_coloredMenus ? "\y%s %s?\w^n^n1.  %s^n2.  %s" : "%s %s?^n^n1.  %s^n2.  %s", lKickBan, arg, lYes, lNo)
+	format(menu_msg, charsmax(menu_msg), g_coloredMenus ? "\y%s %s?\w^n^n1.  %s^n2.  %s" : "%s %s?^n^n1.  %s^n2.  %s", lKickBan, arg, lYes, lNo)
 	g_yesNoVote = 1
 	
 	new bool:ipban=false;
 	
 	if (voteban)
 	{
-		get_user_authid(player, g_optionName[0], sizeof(g_optionName[])-1);
+		get_user_authid(player, g_optionName[0], charsmax(g_optionName[]));
 		
 		// Do the same check that's in plmenu to determine if this should be an IP ban instead
 		if (equal("4294967295", g_optionName[0])
@@ -500,7 +500,7 @@ public cmdVoteKickBan(id, level, cid)
 			|| equal("STEAM_ID_LAN", g_optionName[0])
 			|| equali("VALVE_ID_LAN", g_optionName[0]))
 		{
-			get_user_ip(player, g_optionName[0], sizeof(g_optionName[])-1, 1);
+			get_user_ip(player, g_optionName[0], charsmax(g_optionName[]), 1);
 			
 			ipban=true;
 		}
@@ -508,13 +508,13 @@ public cmdVoteKickBan(id, level, cid)
 	}
 	else
 	{
-		num_to_str(get_user_userid(player), g_optionName[0], 31)
+		num_to_str(get_user_userid(player), g_optionName[0], charsmax(g_optionName[]))
 	}
 	
 	new authid[32], name[MAX_NAME_LENGTH]
 	
-	get_user_authid(id, authid, 31)
-	get_user_name(id, name, 31)
+	get_user_authid(id, authid, charsmax(authid))
+	get_user_name(id, name, charsmax(name))
 	log_amx("Vote: ^"%s<%d><%s><>^" vote %s (target ^"%s^")", name, get_user_userid(id), authid, voteban ? "ban" : "kick", arg)
 
 	new msg[256];

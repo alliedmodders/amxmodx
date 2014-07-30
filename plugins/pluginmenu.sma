@@ -152,11 +152,11 @@ stock DisplayPluginMenu(id,const MenuText[], const Handler[], const Command[], c
 			callfunc_push_int(i); // push the plid
 			if ((tally=callfunc_end())>0)
 			{
-				get_plugin(i,"",0,PluginName,sizeof(PluginName)-1,"",0,"",0,PluginState,sizeof(PluginState)-1);
+				get_plugin(i,"",0,PluginName,charsmax(PluginName),"",0,"",0,PluginState,charsmax(PluginState));
 						
 				// Command syntax is: "# Function", # being plugin ID, function being public function to call.
-				formatex(PluginCmd,sizeof(PluginCmd)-1,"%d %s",i,Command);
-				formatex(MenuText,sizeof(MenuText)-1,"%s - %d",PluginName,tally);
+				formatex(PluginCmd,charsmax(PluginCmd),"%d %s",i,Command);
+				formatex(MenuText,charsmax(MenuText),"%s - %d",PluginName,tally);
 				// If the plugin is running, add this as an activated menu item.
 				if (strcmp(PluginState,"running",true)==0 ||
 					strcmp(PluginState,"debug",  true)==0)
@@ -192,7 +192,7 @@ stock bool:GetPlidForValidPlugins(id, &plid)
 	{ 
 		// Yes, we were provided a plugin.
 		new TargetPlugin[64];
-		read_argv(1,TargetPlugin,sizeof(TargetPlugin)-1);
+		read_argv(1,TargetPlugin,charsmax(TargetPlugin));
 		
 		new BufferName[64];
 		new BufferFile[64];
@@ -202,7 +202,7 @@ stock bool:GetPlidForValidPlugins(id, &plid)
 			 i<max;
 			 i++)
 		{
-			get_plugin(i,BufferFile,sizeof(BufferFile)-1,BufferName,sizeof(BufferName)-1,"",0,"",0,BufferState,sizeof(BufferState)-1);
+			get_plugin(i,BufferFile,charsmax(BufferFile),BufferName,charsmax(BufferName),"",0,"",0,BufferState,charsmax(BufferState));
 			
 			if (strcmp(BufferFile,TargetPlugin,true) != 0||
 				strcmp(BufferName,TargetPlugin,true) != 0)
@@ -360,19 +360,19 @@ public PluginMenuSelection(id, menu, item)
 	// Note the menu is destroyed BEFORE the command
 	// gets executed.
 	// The command retrieved is in the format: "PLID Command"
-	menu_item_getinfo(menu, item, Dummy[0], Command, sizeof(Command)-1,Dummy,0,Dummy[0]);
+	menu_item_getinfo(menu, item, Dummy[0], Command, charsmax(Command),Dummy,0,Dummy[0]);
 	
 	
 	new plid=str_to_num(Command);
 	new Function[32];
 	
-	for (new i=0;i<sizeof(Command)-1;i++)
+	for (new i=0;i<charsmax(Command);i++)
 	{
 		if (Command[i]==' ')
 		{
 			// we're at the break. move up one space.
 			i++;
-			copy(Function,sizeof(Function)-1,Command[i]);
+			copy(Function,charsmax(Function),Command[i]);
 			break;
 		}
 	}
@@ -411,7 +411,7 @@ public CommandChangeCvar(id)
 	
 	new Args[256];
 	
-	read_args(Args,sizeof(Args)-1);
+	read_args(Args,charsmax(Args));
 	
 	remove_quotes(Args);
 	
@@ -434,8 +434,8 @@ public CommandChangeCvar(id)
 		new Name[MAX_NAME_LENGTH];
 		new AuthID[40];
 		
-		get_user_name(id,Name,sizeof(Name)-1);
-		get_user_authid(id,AuthID,sizeof(AuthID)-1);
+		get_user_name(id,Name,charsmax(Name));
+		get_user_authid(id,AuthID,charsmax(AuthID));
 		
 		log_amx("Cmd: ^"%s<%d><%s><>^" set cvar (name ^"%s^") (value ^"%s^")", Name, get_user_userid(id), AuthID, CurrentCvarName[id], Args);
 	
@@ -510,7 +510,7 @@ public CvarMenuSelection(id, menu, item)
 		new Command[32];
 		new Dummy[1];
 		// pcvar pointer is stored in command, extract the name of the cvar from the name field.
-		menu_item_getinfo(menu, item, Dummy[0], Command, sizeof(Command)-1,CvarName,sizeof(CvarName)-1,Dummy[0]);
+		menu_item_getinfo(menu, item, Dummy[0], Command, charsmax(Command),CvarName,charsmax(CvarName),Dummy[0]);
 		
 		CurrentCvar[id]=str_to_num(Command);
 		
@@ -522,7 +522,7 @@ public CvarMenuSelection(id, menu, item)
 		// TODO: ML this
 		
 		// Scan up "CvarName" and stop at the first space
-		for (new i=0;i<sizeof(CvarName)-1;i++)
+		for (new i=0;i<charsmax(CvarName);i++)
 		{
 			if (CvarName[i]==' ')
 			{
@@ -530,7 +530,7 @@ public CvarMenuSelection(id, menu, item)
 				break;
 			}
 		}
-		copy(CurrentCvarName[id],sizeof(CurrentCvarName[])-1,CvarName);
+		copy(CurrentCvarName[id],charsmax(CurrentCvarName[]),CvarName);
 		client_print(id,print_chat,"[AMXX] Type in the new value for %s, or !cancel to cancel.",CvarName);
 		client_cmd(id,"messagemode amx_changecvar");
 		
@@ -551,9 +551,9 @@ public DisplayCvarMenu(id, plid, page)
 {
 	new PluginName[32];
 	new MenuTitle[64];
-	get_plugin(plid,"",0,PluginName,sizeof(PluginName)-1,"",0,"",0,"",0);
+	get_plugin(plid,"",0,PluginName,charsmax(PluginName),"",0,"",0,"",0);
 	
-	formatex(MenuTitle,sizeof(MenuTitle)-1,"%s Cvars:",PluginName);
+	formatex(MenuTitle,charsmax(MenuTitle),"%s Cvars:",PluginName);
 	
 	new Menu=menu_create(MenuTitle,"CvarMenuSelection");
 	
@@ -567,17 +567,17 @@ public DisplayCvarMenu(id, plid, page)
 		 i<max;
 		 i++)
 	{
-		get_plugins_cvar(i, Cvar, sizeof(Cvar),_, CvarPlid, CvarPtr);
+		get_plugins_cvar(i, Cvar, charsmax(Cvar),_, CvarPlid, CvarPtr);
 		
 		if (CvarPlid==plid)
 		{
 			if (CanIModifyCvar(id,Cvar))
 			{
-				get_pcvar_string(CvarPtr,CvarData,sizeof(CvarData)-1);
-				formatex(CvarText,sizeof(CvarText)-1,"%s - %s",Cvar,CvarData);
+				get_pcvar_string(CvarPtr,CvarData,charsmax(CvarData));
+				formatex(CvarText,charsmax(CvarText),"%s - %s",Cvar,CvarData);
 				
 				// Now store the pcvar data in Cvar
-				num_to_str(CvarPtr,Cvar,sizeof(Cvar)-1);
+				num_to_str(CvarPtr,Cvar,charsmax(Cvar));
 				menu_additem(Menu,CvarText,Cvar,_,EnabledCallback);
 			}
 			else
@@ -659,7 +659,7 @@ public SpecificCommandHandler(id,menu,item)
 	new Dummy[1];
 	if (item==0)  // "With params"
 	{
-		menu_item_getinfo(menu, item, Dummy[0], CurrentCommand[id], sizeof(CurrentCommand[])-1,"",0,Dummy[0]);
+		menu_item_getinfo(menu, item, Dummy[0], CurrentCommand[id], charsmax(CurrentCommand[]),"",0,Dummy[0]);
 		if (CurrentCommand[id][0]==0) // This should never happen, but just incase..
 		{
 			client_print(id,print_chat,"[AMXX] There was an error extracting the command name.");
@@ -676,7 +676,7 @@ public SpecificCommandHandler(id,menu,item)
 	}
 	else if (item==1) // "No params"
 	{
-		menu_item_getinfo(menu, item, Dummy[0], CurrentCommand[id], sizeof(CurrentCommand[])-1,"",0,Dummy[0]);
+		menu_item_getinfo(menu, item, Dummy[0], CurrentCommand[id], charsmax(CurrentCommand[]),"",0,Dummy[0]);
 		if (CurrentCommand[id][0]==0) // This should never happen, but just incase..
 		{
 			client_print(id,print_chat,"[AMXX] There was an error extracting the command name.");
@@ -721,11 +721,11 @@ stock DisplaySpecificCommand(id,cid)
 	new CommandAccess;
 	new Menu;
 	
-	get_concmd(cid,CommandName,sizeof(CommandName)-1,CommandAccess, CommandDesc,sizeof(CommandDesc)-1, -1, -1);
+	get_concmd(cid,CommandName,charsmax(CommandName),CommandAccess, CommandDesc, charsmax(CommandDesc), -1, -1);
 	
 	if (CommandDesc[0]!='^0')
 	{
-		formatex(CommandTitle,sizeof(CommandTitle)-1,"%s^n%s",CommandName,CommandDesc);
+		formatex(CommandTitle,charsmax(CommandTitle),"%s^n%s",CommandName,CommandDesc);
 		Menu=menu_create(CommandTitle,"SpecificCommandHandler");
 	}
 	else
@@ -754,7 +754,7 @@ public CommandExecuteCommand(id)
 	
 	new Args[256];
 	
-	read_args(Args,sizeof(Args)-1);
+	read_args(Args,charsmax(Args));
 	
 	remove_quotes(Args);
 	
@@ -836,7 +836,7 @@ public CommandMenuSelection(id, menu, item)
 		new Command[32];
 		new Dummy[1];
 		// pcvar pointer is stored in command, extract the name of the cvar from the name field.
-		menu_item_getinfo(menu, item, Dummy[0], Command, sizeof(Command)-1,"",0,Dummy[0]);
+		menu_item_getinfo(menu, item, Dummy[0], Command, charsmax(Command),"",0,Dummy[0]);
 		
 		menu_destroy(menu);
 		
@@ -873,9 +873,9 @@ public DisplayCmdMenu(id, plid, page)
 {
 	new PluginName[32];
 	new MenuTitle[64];
-	get_plugin(plid,"",0,PluginName,sizeof(PluginName)-1,"",0,"",0,"",0);
+	get_plugin(plid,"",0,PluginName,charsmax(PluginName),"",0,"",0,"",0);
 	
-	formatex(MenuTitle,sizeof(MenuTitle)-1,"%s Commands:",PluginName);
+	formatex(MenuTitle,charsmax(MenuTitle),"%s Commands:",PluginName);
 	
 	new Menu=menu_create(MenuTitle,"CommandMenuSelection");
 	
@@ -892,7 +892,7 @@ public DisplayCmdMenu(id, plid, page)
 	{
 		if (get_concmd_plid(i,-1,-1)==plid)
 		{
-			get_concmd(i,Command,sizeof(Command)-1,CommandAccess, "",0, -1, -1);
+			get_concmd(i,Command,charsmax(Command),CommandAccess, "",0, -1, -1);
 			
 			if (IsDisplayableCmd(Command))
 			{
@@ -901,7 +901,7 @@ public DisplayCmdMenu(id, plid, page)
 					 CommandAccess==ADMIN_USER ||
 					 CommandAccess==ADMIN_ALL)
 				{
-					num_to_str(i,CidString,sizeof(CidString)-1);
+					num_to_str(i,CidString,charsmax(CidString));
 					menu_additem(Menu,Command,CidString,0,EnabledCallback);
 				}
 				else

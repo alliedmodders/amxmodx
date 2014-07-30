@@ -86,8 +86,8 @@ public msgInit()
 	
 	new hostname[64]
 	
-	get_cvar_string("hostname", hostname, 63)
-	replace(g_scrollMsg, SCROLLMSG_SIZE-1, "%hostname%", hostname)
+	get_cvar_string("hostname", hostname, charsmax(hostname))
+	replace(g_scrollMsg, charsmax(g_scrollMsg), "%hostname%", hostname)
 	
 	g_Length = strlen(g_scrollMsg)
 	
@@ -98,13 +98,13 @@ public msgInit()
 public setMessage()
 {
 	remove_task(123)		/* remove current messaging */
-	read_argv(1, g_scrollMsg, SCROLLMSG_SIZE-1)
+	read_argv(1, g_scrollMsg, charsmax(g_scrollMsg))
 	
 	g_Length = strlen(g_scrollMsg)
 	
 	new mytime[32]
 	
-	read_argv(2, mytime, 31)
+	read_argv(2, mytime, charsmax(mytime))
 	
 	g_Frequency = str_to_num(mytime)
 	

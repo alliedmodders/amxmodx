@@ -37,8 +37,6 @@
 
 #define SELECTMAPS  5
 
-#define charsof(%1) (sizeof(%1)-1)
-
 new Array:g_mapName;
 new g_mapNums;
 
@@ -61,7 +59,7 @@ public plugin_init()
 	
 	new MenuName[64]
 	
-	format(MenuName, 63, "%L", "en", "CHOOSE_NEXTM")
+	format(MenuName, charsmax(MenuName), "%L", "en", "CHOOSE_NEXTM")
 	register_menucmd(register_menuid(MenuName), (-1^(-1<<(SELECTMAPS+2))), "countVote")
 	register_cvar("amx_extendmap_max", "90")
 	register_cvar("amx_extendmap_step", "15")
@@ -69,15 +67,15 @@ public plugin_init()
 	if (cstrike_running())
 		register_event("TeamScore", "team_score", "a")
 
-	get_localinfo("lastMap", g_lastMap, 31)
+	get_localinfo("lastMap", g_lastMap, charsmax(g_lastMap))
 	set_localinfo("lastMap", "")
 
 	new maps_ini_file[64]
-	get_configsdir(maps_ini_file, 63);
-	format(maps_ini_file, 63, "%s/maps.ini", maps_ini_file);
+	get_configsdir(maps_ini_file, charsmax(maps_ini_file));
+	format(maps_ini_file, charsmax(maps_ini_file), "%s/maps.ini", maps_ini_file);
 	
 	if (!file_exists(maps_ini_file))
-		get_cvar_string("mapcyclefile", maps_ini_file, 63)
+		get_cvar_string("mapcyclefile", maps_ini_file, charsmax(maps_ini_file))
 	if (loadSettings(maps_ini_file))
 		set_task(15.0, "voteNextmap", 987456, "", 0, "b")
 
@@ -99,7 +97,7 @@ public checkVotes()
 	{
 		new mapname[32]
 		
-		get_mapname(mapname, 31)
+		get_mapname(mapname, charsmax(mapname))
 		new Float:steptime = get_cvar_float("amx_extendmap_step")
 		set_cvar_float("mp_timelimit", get_cvar_float("mp_timelimit") + steptime)
 		client_print(0, print_chat, "%L", LANG_PLAYER, "CHO_FIN_EXT", steptime)
@@ -111,12 +109,12 @@ public checkVotes()
 	new smap[32]
 	if (g_voteCount[b] && g_voteCount[SELECTMAPS + 1] <= g_voteCount[b])
 	{
-		ArrayGetString(g_mapName, g_nextName[b], smap, charsof(smap));
+		ArrayGetString(g_mapName, g_nextName[b], smap, charsmax(smap));
 		set_cvar_string("amx_nextmap", smap);
 	}
 
 	
-	get_cvar_string("amx_nextmap", smap, 31)
+	get_cvar_string("amx_nextmap", smap, charsmax(smap))
 	client_print(0, print_chat, "%L", LANG_PLAYER, "CHO_FIN_NEXT", smap)
 	log_amx("Vote: Voting for the nextmap finished. The nextmap will be %s", smap)
 }
@@ -126,14 +124,14 @@ public countVote(id, key)
 	if (get_cvar_float("amx_vote_answers"))
 	{
 		new name[MAX_NAME_LENGTH]
-		get_user_name(id, name, 31)
+		get_user_name(id, name, charsmax(name))
 		
 		if (key == SELECTMAPS)
 			client_print(0, print_chat, "%L", LANG_PLAYER, "CHOSE_EXT", name)
 		else if (key < SELECTMAPS)
 		{
 			new map[32];
-			ArrayGetString(g_mapName, g_nextName[key], map, charsof(map));
+			ArrayGetString(g_mapName, g_nextName[key], map, charsmax(map));
 			client_print(0, print_chat, "%L", LANG_PLAYER, "X_CHOSE_X", name, map);
 		}
 	}
@@ -189,7 +187,7 @@ public voteNextmap()
 	
 	new menu[512], a, mkeys = (1<<SELECTMAPS + 1)
 
-	new pos = format(menu, 511, g_coloredMenus ? "\y%L:\w^n^n" : "%L:^n^n", LANG_SERVER, "CHOOSE_NEXTM")
+	new pos = format(menu, charsmax(menu), g_coloredMenus ? "\y%L:\w^n^n" : "%L:^n^n", LANG_SERVER, "CHOOSE_NEXTM")
 	new dmax = (g_mapNums > SELECTMAPS) ? SELECTMAPS : g_mapNums
 	
 	for (g_mapVoteNum = 0; g_mapVoteNum < dmax; ++g_mapVoteNum)
@@ -200,7 +198,7 @@ public voteNextmap()
 			if (++a >= g_mapNums) a = 0
 		
 		g_nextName[g_mapVoteNum] = a
-		pos += format(menu[pos], 511, "%d. %a^n", g_mapVoteNum + 1, ArrayGetStringHandle(g_mapName, a));
+		pos += format(menu[pos], charsmax(menu), "%d. %a^n", g_mapVoteNum + 1, ArrayGetStringHandle(g_mapName, a));
 		mkeys |= (1<<g_mapVoteNum)
 		g_voteCount[g_mapVoteNum] = 0
 	}
@@ -210,18 +208,18 @@ public voteNextmap()
 	g_voteCount[SELECTMAPS + 1] = 0
 	
 	new mapname[32]
-	get_mapname(mapname, 31)
+	get_mapname(mapname, charsmax(mapname))
 
 	if ((winlimit + maxrounds) == 0 && (get_cvar_float("mp_timelimit") < get_cvar_float("amx_extendmap_max")))
 	{
-		pos += format(menu[pos], 511, "%d. %L^n", SELECTMAPS + 1, LANG_SERVER, "EXTED_MAP", mapname)
+		pos += format(menu[pos], charsmax(menu), "%d. %L^n", SELECTMAPS + 1, LANG_SERVER, "EXTED_MAP", mapname)
 		mkeys |= (1<<SELECTMAPS)
 	}
 
-	format(menu[pos], 511, "%d. %L", SELECTMAPS+2, LANG_SERVER, "NONE")
+	format(menu[pos], charsmax(menu), "%d. %L", SELECTMAPS+2, LANG_SERVER, "NONE")
 	new MenuName[64]
 	
-	format(MenuName, 63, "%L", "en", "CHOOSE_NEXTM")
+	format(MenuName, charsmax(MenuName), "%L", "en", "CHOOSE_NEXTM")
 	show_menu(0, mkeys, menu, 15, MenuName)
 	set_task(15.0, "checkVotes")
 	client_print(0, print_chat, "%L", LANG_SERVER, "TIME_CHOOSE")
@@ -268,7 +266,7 @@ loadSettings(filename[])
 	
 	new buff[256];
 	
-	get_mapname(currentMap, 31)
+	get_mapname(currentMap, charsmax(currentMap))
 
 	new fp=fopen(filename,"r");
 	
@@ -277,9 +275,9 @@ loadSettings(filename[])
 		buff[0]='^0';
 		szText[0]='^0';
 		
-		fgets(fp, buff, charsof(buff));
+		fgets(fp, buff, charsmax(buff));
 		
-		parse(buff, szText, charsof(szText));
+		parse(buff, szText, charsmax(szText));
 		
 		
 		if (szText[0] != ';' &&
@@ -302,7 +300,7 @@ public team_score()
 {
 	new team[2]
 	
-	read_data(1, team, 1)
+	read_data(1, team, charsmax(team))
 	g_teamScore[(team[0]=='C') ? 0 : 1] = read_data(2)
 }
 
@@ -310,6 +308,6 @@ public plugin_end()
 {
 	new current_map[32]
 
-	get_mapname(current_map, 31)
+	get_mapname(current_map, charsmax(current_map))
 	set_localinfo("lastMap", current_map)
 }

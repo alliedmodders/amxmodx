@@ -121,3 +121,15 @@ native geoip_region_code(const ip[], result[], len);
  * @return			The result length on successful lookup, 0 otherwise.
  */
 native geoip_region_name(const ip[], result[], len);
+
+/**
+ * Look up the full time zone for the given IP address.
+ * e.g. America/Los_Angeles, Europe/Paris.
+ *
+ * @param ip		The IP address to look up.
+ * @param result	The result of the geoip look up.
+ * @param len		The maximum length of the result buffer.
+ *
+ * @return			The result length on successful lookup, 0 otherwise.
+ */
+native geoip_timezone(const ip[], result[], len);

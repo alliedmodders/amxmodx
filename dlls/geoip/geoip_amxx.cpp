@@ -218,6 +218,18 @@ static cell AMX_NATIVE_CALL amx_geoip_region_name(AMX *amx, cell *params)
 	return MF_SetAmxString(amx, params[2], region ? region : "", length >= params[3] ? params[3] : length); // TODO: make this utf8 safe.
 }
 
+// native geoip_timezone(const ip[], result[], len);
+static cell AMX_NATIVE_CALL amx_geoip_timezone(AMX *amx, cell *params)
+{
+	int length;
+	char *ip = MF_GetAmxString(amx, params[1], 0, &length);
+
+	const char *path[] = { "location", "time_zone", NULL };
+	const char *timezone = lookupByIp(stripPort(ip), path, &length);
+
+	return MF_SetAmxString(amx, params[2], timezone ? timezone : "", length >= params[3] ? params[3] : length);
+}
+
 
 void OnAmxxAttach()
 {
@@ -287,6 +299,8 @@ AMX_NATIVE_INFO geoip_natives[] =
 
 	{ "geoip_region_code", amx_geoip_region_code },
 	{ "geoip_region_name", amx_geoip_region_name },
+
+	{ "geoip_timezone", amx_geoip_timezone },
 
 	{ NULL, NULL },
 };

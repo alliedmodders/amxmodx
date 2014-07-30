@@ -32,7 +32,9 @@ char *stripPort(char *ip_port)
 
 const char *lookupByIp(const char *ip, const char **path, int *length = NULL)
 {
+	static char buffer[64];
 	int gai_error = 0, mmdb_error = 0;
+
 	MMDB_lookup_result_s lookup = MMDB_lookup_string(&HandleDB, ip, &gai_error, &mmdb_error);
 
 	if (gai_error != 0 || MMDB_SUCCESS != mmdb_error || !lookup.found_entry)
@@ -53,7 +55,10 @@ const char *lookupByIp(const char *ip, const char **path, int *length = NULL)
 		*length = entry_data.data_size;
 	}
 
-	return entry_data.utf8_string;
+	memcpy(buffer, entry_data.utf8_string, entry_data.data_size);
+	buffer[entry_data.data_size] = '\0';
+
+	return buffer;
 }
 
 // native geoip_code2(const ip[], ccode[3]);
@@ -167,6 +172,40 @@ static cell AMX_NATIVE_CALL amx_geoip_city(AMX *amx, cell *params)
 	return MF_SetAmxString(amx, params[2], city ? city : "", length >= params[3] ? params[3] : length); // TODO: make this utf8 safe.
 }
 
+// native geoip_region_code(const ip[], result[], len);
+static cell AMX_NATIVE_CALL amx_geoip_region_code(AMX *amx, cell *params)
+{
+	int length;
+	int finalLength = 0;
+	char code[12]; // This should be largely enough to hold xx-yyyy and more if needed.
+
+	char *ip = MF_GetAmxString(amx, params[1], 0, &length);
+
+	const char *pathCountry[] = { "country", "iso_code", NULL };
+	const char *countryCode = lookupByIp(stripPort(ip), pathCountry, &length);
+
+	if (countryCode)
+	{
+		finalLength = length + 1; // + 1 for dash.
+		snprintf(code, finalLength + 1, "%s-", countryCode); // + EOS.
+
+		const char *pathRegion[] = { "subdivisions",  "0", "iso_code", NULL }; // First result.
+		const char *regionCode = lookupByIp(ip, pathRegion, &length);
+
+		if (regionCode)
+		{
+			finalLength += length;
+			strncat(code, regionCode, length);
+		}
+		else
+		{
+			finalLength = 0;
+		}
+	}
+
+	return MF_SetAmxString(amx, params[2], finalLength ? code : "", finalLength >= params[3] ? params[3] : finalLength);
+}
+
 
 void OnAmxxAttach()
 {
@@ -233,6 +272,9 @@ AMX_NATIVE_INFO geoip_natives[] =
 
 	{ "geoip_country", amx_geoip_country },
 	{ "geoip_city"   , amx_geoip_city },
+
+	{ "geoip_region_code", amx_geoip_region_code },
+	{ "geoip_region_name", amx_geoip_region_name },
 
 	{ NULL, NULL },
 };

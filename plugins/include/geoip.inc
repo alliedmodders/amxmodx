@@ -98,3 +98,15 @@ native geoip_country(const ip[], result[], len=45);
  * @return          The result length on successful lookup, 0 otherwise.
  */ 
 native geoip_city(const ip[], result[], len); 
+
+/**
+ * Look up the region/state code for the given IP address.
+ * e.g. "US-OH", "DE-HH", IT-82, "FR-U", etc.
+ *
+ * @param ip		The IP address to look up.
+ * @param result	The result of the geoip look up.
+ * @param len		The maximum length of the result buffer.
+ *
+ * @return			The result length on successful lookup, 0 otherwise.
+ */
+native geoip_region_code(const ip[], result[], len);

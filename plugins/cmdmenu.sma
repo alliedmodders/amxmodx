@@ -465,18 +465,18 @@ loadCvarSettings(szFilename[])
 		if (text[0] == ';') continue
 		
 		inum = parse(text, g_cvarNames[g_cvarNum], charsmax(g_cvarNames[]), 
-		szValues[0], charsmax(szValue[]),
-		szValues[1], charsmax(szValue[]),
-		szValues[2], charsmax(szValue[]), 
-		szValues[3], charsmax(szValue[]),
-		szValues[4], charsmax(szValue[]),
-		szValues[5], charsmax(szValue[]), 
-		szValues[6], charsmax(szValue[]),
-		szValues[7], charsmax(szValue[]),
-		szValues[8], charsmax(szValue[]), 
-		szValues[9], charsmax(szValue[]),
-		szValues[10], charsmax(szValue[]),
-		szValues[11], charsmax(szValue[]))
+		szValues[0], charsmax(szValues[]),
+		szValues[1], charsmax(szValues[]),
+		szValues[2], charsmax(szValues[]), 
+		szValues[3], charsmax(szValues[]),
+		szValues[4], charsmax(szValues[]),
+		szValues[5], charsmax(szValues[]), 
+		szValues[6], charsmax(szValues[]),
+		szValues[7], charsmax(szValues[]),
+		szValues[8], charsmax(szValues[]), 
+		szValues[9], charsmax(szValues[]),
+		szValues[10], charsmax(szValues[]),
+		szValues[11], charsmax(szValues[]))
 
 		inum -= 2
 		if (inum < 2) continue
@@ -484,12 +484,12 @@ loadCvarSettings(szFilename[])
 
 		for (a = 0; a < inum && g_cvarCmdNum < cvar_values; ++a)
 		{
-			while (replace(szValues[a], charsmax(szValue[]), "\'", "^""))
+			while (replace(szValues[a], charsmax(szValues[]), "\'", "^""))
 			{
 				// do nothing
 			}
 			
-			copy(g_cvarCmd[g_cvarCmdNum], charsmax(g_cvarCmdNum[]), szValues[a])
+			copy(g_cvarCmd[g_cvarCmdNum], charsmax(g_cvarCmd[]), szValues[a])
 			g_cvarCmdNum++
 		}
 

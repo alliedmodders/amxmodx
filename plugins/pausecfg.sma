@@ -480,7 +480,7 @@ public cmdPlugin(id, level, cid)
 		
 		for (new a = start; a < end; ++a)
 		{
-			get_plugin(a, plugin, charsmax(plugin), title, charsmax(title), version, charsmax(version), author, charsmax(authod), status, charsmax(status))
+			get_plugin(a, plugin, charsmax(plugin), title, charsmax(title), version, charsmax(version), author, charsmax(author), status, charsmax(status))
 			if (status[0] == 'r') ++running
 			console_print(id, " [%3d] %-18.17s %-8.7s %-17.16s %-16.15s %-9.8s", a + 1, title, version, author, plugin, status)
 		}

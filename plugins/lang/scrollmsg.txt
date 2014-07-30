@@ -112,3 +112,8 @@ MSG_DISABLED = Prolazeca poruka iskljucena
 MIN_FREQ = Частота появления этого сообщения %d секунд
 MSG_FREQ = Частота появления бегущей строки: %d:%02d минут
 MSG_DISABLED = Бегущая строка заблокирована
+
+[cn]
+MIN_FREQ = 此消息的最小频率为 %d 秒
+MSG_FREQ = 滚动信息的显示频率为每 ％d：％02d 分钟显示一次
+MSG_DISABLED = 滚动消息已禁用

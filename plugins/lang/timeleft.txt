@@ -204,3 +204,12 @@ MINUTE = минута
 MINUTES = минут
 SECOND = секунда
 SECONDS = секунд
+
+[cn]
+THE_TIME = 当前时间
+TIME_LEFT = 剩余时间
+NO_T_LIMIT = 无时间限制
+MINUTE = 分钟
+MINUTES = 分钟
+SECOND = 秒
+SECONDS = 秒

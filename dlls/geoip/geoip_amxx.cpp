@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -12,9 +13,12 @@
 // GeoIP Module
 //
 
-﻿#include "geoip_amxx.h"
+#include "geoip_amxx.h"
+#include <am-string.h>
+#include <am-vector.h>
 
 MMDB_s HandleDB;
+ke::Vector<ke::AString> LangList;
 
 char *stripPort(char *ip)
 {
@@ -26,6 +30,33 @@ char *stripPort(char *ip)
 	}
 
 	return ip;
+}
+
+const char* stristr(const char* str, const char* substr)
+{
+	register char *needle = (char *)substr;
+	register char *prevloc = (char *)str;
+	register char *haystack = (char *)str;
+
+	while (*haystack)
+	{
+		if (tolower(*haystack) == tolower(*needle))
+		{
+			haystack++;
+
+			if (!*++needle)
+			{
+				return prevloc;
+			}
+		}
+		else 
+		{
+			haystack = ++prevloc;
+			needle = (char *)substr;
+		}
+	}
+
+	return NULL;
 }
 
 bool lookupByIp(const char *ip, const char **path, MMDB_entry_data_s *result)
@@ -118,6 +149,49 @@ int getContinentId(const char *code)
 	return index;
 }
 
+const char *getLang(int playerIndex)
+{
+	static cvar_t *amxmodx_language = NULL;
+	static cvar_t *amxmodx_cl_langs = NULL;
+
+	if (!amxmodx_language)
+		 amxmodx_language = CVAR_GET_POINTER("amx_language");
+
+	if (!amxmodx_cl_langs)
+		 amxmodx_cl_langs = CVAR_GET_POINTER("amx_client_languages");
+
+	if (playerIndex >= 0 && amxmodx_cl_langs && amxmodx_language)
+	{
+		const char *value;
+		const char *lang;
+
+		if (playerIndex == 0 || amxmodx_cl_langs->value <= 0 || !MF_IsPlayerIngame(playerIndex))
+		{
+			value = amxmodx_language->string;
+		}
+		else
+		{
+			value = ENTITY_KEYVALUE(MF_GetPlayerEdict(playerIndex), "lang");
+		}
+
+		if (value && *value)
+		{
+			for (size_t i = 0; i < LangList.length(); ++i)
+			{
+				lang = LangList.at(i).chars();
+
+				if (stristr(lang, value) != NULL)
+				{
+					return lang;
+				}
+			}
+		}
+	}
+
+	return "en";
+}
+
+
 // native geoip_code2(const ip[], ccode[3]);
 // Deprecated.
 static cell AMX_NATIVE_CALL amx_geoip_code2(AMX *amx, cell *params)
@@ -200,13 +274,13 @@ static cell AMX_NATIVE_CALL amx_geoip_code3_ex(AMX *amx, cell *params)
 	return 1;
 }
 
-// native geoip_country(const ip[], result[], len);
+// native geoip_country(const ip[], result[], len, id = -1);
 static cell AMX_NATIVE_CALL amx_geoip_country(AMX *amx, cell *params)
 {
 	int length;
 	char *ip = stripPort(MF_GetAmxString(amx, params[1], 0, &length));
 
-	const char *path[] = { "country", "names", "en", NULL };
+	const char *path[] = { "country", "names", getLang(params[4]), NULL };
 	const char *country = lookupString(ip, path, &length);
 
 	if (!country)
@@ -217,13 +291,13 @@ static cell AMX_NATIVE_CALL amx_geoip_country(AMX *amx, cell *params)
 	return MF_SetAmxString(amx, params[2], country, length >= params[3] ? params[3] : length); // TODO: make this utf8 safe.
 }
 
-// native geoip_city(const ip[], result[], len);
+// native geoip_city(const ip[], result[], len, id = -1);
 static cell AMX_NATIVE_CALL amx_geoip_city(AMX *amx, cell *params)
 {
 	int length;
 	char *ip = stripPort(MF_GetAmxString(amx, params[1], 0, &length));
 
-	const char *path[] = { "city", "names", "en", NULL };
+	const char *path[] = { "city", "names", getLang(params[4]), NULL };
 	const char *city = lookupString(ip, path, &length);
 
 	return MF_SetAmxString(amx, params[2], city ? city : "", length >= params[3] ? params[3] : length); // TODO: make this utf8 safe.
@@ -263,13 +337,13 @@ static cell AMX_NATIVE_CALL amx_geoip_region_code(AMX *amx, cell *params)
 	return MF_SetAmxString(amx, params[2], finalLength ? code : "", finalLength >= params[3] ? params[3] : finalLength);
 }
 
-// native geoip_region_name(const ip[], result[], len);
+// native geoip_region_name(const ip[], result[], len, id = -1);
 static cell AMX_NATIVE_CALL amx_geoip_region_name(AMX *amx, cell *params)
 {
 	int length;
 	char *ip = stripPort(MF_GetAmxString(amx, params[1], 0, &length));
 
-	const char *path[] = { "subdivisions", "0", "names", "en", NULL }; // First result.
+	const char *path[] = { "subdivisions", "0", "names", getLang(params[4]), NULL }; // First result.
 	const char *region = lookupString(ip, path, &length);
 
 	return MF_SetAmxString(amx, params[2], region ? region : "", length >= params[3] ? params[3] : length); // TODO: make this utf8 safe.
@@ -338,13 +412,13 @@ static cell AMX_NATIVE_CALL amx_geoip_continent_code(AMX *amx, cell *params)
 	return getContinentId(code);
 }
 
-// native geoip_continent_name(const ip[], result[], len);
+// native geoip_continent_name(const ip[], result[], len, id = -1);
 static cell AMX_NATIVE_CALL amx_geoip_continent_name(AMX *amx, cell *params)
 {
 	int length;
 	char *ip = stripPort(MF_GetAmxString(amx, params[1], 0, &length));
 
-	const char *path[] = { "continent", "names", "en", NULL };
+	const char *path[] = { "continent", "names", getLang(params[4]), NULL };
 	const char *continent = lookupString(ip, path, &length);
 
 	return MF_SetAmxString(amx, params[2], continent ? continent : "", length >= params[3] ? params[3] : length); // TODO: make this utf8 safe.
@@ -397,12 +471,20 @@ void OnAmxxAttach()
 		HandleDB.metadata.binary_format_major_version,
 		HandleDB.metadata.binary_format_minor_version);
 
+	// Retrieve supported languages.
+	for (size_t i = 0; i < HandleDB.metadata.languages.count; i++) 
+	{
+		LangList.append(ke::AString(HandleDB.metadata.languages.names[i]));
+	}
+
 	MF_AddNatives(geoip_natives);
 }
 
 void OnAmxxDetach()
 {
 	MMDB_close(&HandleDB);
+
+	LangList.clear();
 }
 
 

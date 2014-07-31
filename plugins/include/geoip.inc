@@ -78,8 +78,13 @@ native geoip_code3(const ip[], result[4]);
  * @param ip		The IP address to lookup.
  * @param result	The result of the geoip lookup.
  * @param len		The maximum length of the result buffer.
+ * @param id		An optional player's index in order to return the result 
+ *                  in the player's language, if supported.
+ *                  -1: the default language, which is english.
+ *                   0: the server language. You can use LANG_SERVER define.
+ *                 >=1: the player's language. 
  */
-native geoip_country(const ip[], result[], len=45);
+native geoip_country(const ip[], result[], len, id = -1);
 
 
 
@@ -94,10 +99,15 @@ native geoip_country(const ip[], result[], len=45);
  * @param ip		The IP address to look up. 
  * @param result	The result of the geoip look up. 
  * @param len		The maximum length of the result buffer.
+ * @param id		An optional player's index in order to return the result 
+ *                  in the player's language, if supported.
+ *                  -1: the default language, which is english.
+ *                   0: the server language. You can use LANG_SERVER define.
+ *                 >=1: the player's language. 
  *
  * @return          The result length on successful lookup, 0 otherwise.
  */ 
-native geoip_city(const ip[], result[], len); 
+native geoip_city(const ip[], result[], len, id = -1); 
 
 /**
  * Look up the region/state code for the given IP address.
@@ -117,10 +127,15 @@ native geoip_region_code(const ip[], result[], len);
  * @param ip		The IP address to look up.
  * @param result	The result of the geoip look up.
  * @param len		The maximum length of the result buffer.
+ * @param id		An optional player's index in order to return the result 
+ *                  in the player's language, if supported.
+ *                  -1: the default language, which is english.
+ *                   0: the server language. You can use LANG_SERVER define.
+ *                 >=1: the player's language. 
  *
  * @return			The result length on successful lookup, 0 otherwise.
  */
-native geoip_region_name(const ip[], result[], len);
+native geoip_region_name(const ip[], result[], len, id = -1);
 
 /**
  * Look up the full time zone for the given IP address.
@@ -198,7 +213,12 @@ native Continent:geoip_continent_code(const ip[], result[3]);
  * @param ip		The IP address to look up.
  * @param result	The result of the geoip look up.
  * @param len		The maximum length of the result buffer.
+ * @param id		An optional player's index in order to return the result 
+ *                  in the player's language, if supported.
+ *                  -1: the default language, which is english.
+ *                   0: the server language. You can use LANG_SERVER define.
+ *                 >=1: the player's language. 
  *
  * @return			The result length on successful lookup, 0 otherwise.
  */
-native geoip_continent_name(const ip[], result[], len);
+native geoip_continent_name(const ip[], result[], len, id = -1);

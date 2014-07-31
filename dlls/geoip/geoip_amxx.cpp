@@ -16,18 +16,16 @@
 
 MMDB_s HandleDB;
 
-char *stripPort(char *ip_port)
+char *stripPort(char *ip)
 {
-	char *tmp = strchr(ip_port, ':');
+	char *tmp = strchr(ip, ':');
 
-	if (!tmp)
+	if (tmp)
 	{
-		return ip_port;
+		*tmp = '\0';
 	}
 
-	*tmp = '\0';
-
-	return tmp;
+	return ip;
 }
 
 bool lookupByIp(const char *ip, const char **path, MMDB_entry_data_s *result)
@@ -125,10 +123,10 @@ int getContinentId(const char *code)
 static cell AMX_NATIVE_CALL amx_geoip_code2(AMX *amx, cell *params)
 {
 	int length;
-	char *ip = MF_GetAmxString(amx, params[1], 0, &length);
+	char *ip = stripPort(MF_GetAmxString(amx, params[1], 0, &length));
 
 	const char *path[] = { "country", "iso_code", NULL };
-	const char *code = lookupString(stripPort(ip), path);
+	const char *code = lookupString(ip, path);
 
 	return MF_SetAmxString(amx, params[2], code ? code : "error", 3);
 }
@@ -138,10 +136,10 @@ static cell AMX_NATIVE_CALL amx_geoip_code2(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amx_geoip_code3(AMX *amx, cell *params)
 {
 	int length;
-	char *ip = MF_GetAmxString(amx, params[1], 0, &length);
+	char *ip = stripPort(MF_GetAmxString(amx, params[1], 0, &length));
 
 	const char *path[] = { "country", "iso_code", NULL };
-	const char *code = lookupString(stripPort(ip), path);
+	const char *code = lookupString(ip, path);
 
 	for (size_t i = 0; i < ARRAYSIZE(GeoIPCountryCode); ++i)
 	{
@@ -159,10 +157,10 @@ static cell AMX_NATIVE_CALL amx_geoip_code3(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amx_geoip_code2_ex(AMX *amx, cell *params)
 {
 	int length;
-	char *ip = MF_GetAmxString(amx, params[1], 0, &length);
+	char *ip = stripPort(MF_GetAmxString(amx, params[1], 0, &length));
 
 	const char *path[] = { "country", "iso_code", NULL };
-	const char *code = lookupString(stripPort(ip), path);
+	const char *code = lookupString(ip, path);
 
 	if (!code)
 	{
@@ -178,10 +176,10 @@ static cell AMX_NATIVE_CALL amx_geoip_code2_ex(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amx_geoip_code3_ex(AMX *amx, cell *params)
 {
 	int length;
-	char *ip = MF_GetAmxString(amx, params[1], 0, &length);
+	char *ip = stripPort(MF_GetAmxString(amx, params[1], 0, &length));
 
 	const char *path[] = { "country", "iso_code", NULL };
-	const char *code = lookupString(stripPort(ip), path, &length);
+	const char *code = lookupString(ip, path, &length);
 
 	if (!code)
 	{
@@ -206,10 +204,10 @@ static cell AMX_NATIVE_CALL amx_geoip_code3_ex(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amx_geoip_country(AMX *amx, cell *params)
 {
 	int length;
-	char *ip = MF_GetAmxString(amx, params[1], 0, &length);
+	char *ip = stripPort(MF_GetAmxString(amx, params[1], 0, &length));
 
 	const char *path[] = { "country", "names", "en", NULL };
-	const char *country = lookupString(stripPort(ip), path, &length);
+	const char *country = lookupString(ip, path, &length);
 
 	if (!country)
 	{
@@ -223,10 +221,10 @@ static cell AMX_NATIVE_CALL amx_geoip_country(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amx_geoip_city(AMX *amx, cell *params)
 {
 	int length;
-	char *ip = MF_GetAmxString(amx, params[1], 0, &length);
+	char *ip = stripPort(MF_GetAmxString(amx, params[1], 0, &length));
 
 	const char *path[] = { "city", "names", "en", NULL };
-	const char *city = lookupString(stripPort(ip), path, &length);
+	const char *city = lookupString(ip, path, &length);
 
 	return MF_SetAmxString(amx, params[2], city ? city : "", length >= params[3] ? params[3] : length); // TODO: make this utf8 safe.
 }
@@ -238,10 +236,10 @@ static cell AMX_NATIVE_CALL amx_geoip_region_code(AMX *amx, cell *params)
 	int finalLength = 0;
 	char code[12]; // This should be largely enough to hold xx-yyyy and more if needed.
 
-	char *ip = MF_GetAmxString(amx, params[1], 0, &length);
+	char *ip = stripPort(MF_GetAmxString(amx, params[1], 0, &length));
 
 	const char *pathCountry[] = { "country", "iso_code", NULL };
-	const char *countryCode = lookupString(stripPort(ip), pathCountry, &length);
+	const char *countryCode = lookupString(ip, pathCountry, &length);
 
 	if (countryCode)
 	{
@@ -269,10 +267,10 @@ static cell AMX_NATIVE_CALL amx_geoip_region_code(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amx_geoip_region_name(AMX *amx, cell *params)
 {
 	int length;
-	char *ip = MF_GetAmxString(amx, params[1], 0, &length);
+	char *ip = stripPort(MF_GetAmxString(amx, params[1], 0, &length));
 
 	const char *path[] = { "subdivisions", "0", "names", "en", NULL }; // First result.
-	const char *region = lookupString(stripPort(ip), path, &length);
+	const char *region = lookupString(ip, path, &length);
 
 	return MF_SetAmxString(amx, params[2], region ? region : "", length >= params[3] ? params[3] : length); // TODO: make this utf8 safe.
 }
@@ -281,10 +279,10 @@ static cell AMX_NATIVE_CALL amx_geoip_region_name(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amx_geoip_timezone(AMX *amx, cell *params)
 {
 	int length;
-	char *ip = MF_GetAmxString(amx, params[1], 0, &length);
+	char *ip = stripPort(MF_GetAmxString(amx, params[1], 0, &length));
 
 	const char *path[] = { "location", "time_zone", NULL };
-	const char *timezone = lookupString(stripPort(ip), path, &length);
+	const char *timezone = lookupString(ip, path, &length);
 
 	return MF_SetAmxString(amx, params[2], timezone ? timezone : "", length >= params[3] ? params[3] : length);
 }
@@ -293,10 +291,10 @@ static cell AMX_NATIVE_CALL amx_geoip_timezone(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amx_geoip_latitude(AMX *amx, cell *params)
 {
 	int length;
-	char *ip = MF_GetAmxString(amx, params[1], 0, &length);
+	char *ip = stripPort(MF_GetAmxString(amx, params[1], 0, &length));
 
 	const char *path[] = { "location", "latitude", NULL };
-	double latitude = lookupDouble(stripPort(ip), path);
+	double latitude = lookupDouble(ip, path);
 
 	return amx_ftoc(latitude);
 }
@@ -305,10 +303,10 @@ static cell AMX_NATIVE_CALL amx_geoip_latitude(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amx_geoip_longitude(AMX *amx, cell *params)
 {
 	int length;
-	char *ip = MF_GetAmxString(amx, params[1], 0, &length);
+	char *ip = stripPort(MF_GetAmxString(amx, params[1], 0, &length));
 
 	const char *path[] = { "location", "longitude", NULL };
-	double longitude = lookupDouble(stripPort(ip), path);
+	double longitude = lookupDouble(ip, path);
 
 	return amx_ftoc(longitude);
 }
@@ -330,10 +328,10 @@ static cell AMX_NATIVE_CALL amx_geoip_distance(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amx_geoip_continent_code(AMX *amx, cell *params)
 {
 	int length;
-	char *ip = MF_GetAmxString(amx, params[1], 0, &length);
+	char *ip = stripPort(MF_GetAmxString(amx, params[1], 0, &length));
 
 	const char *path[] = { "continent", "code", NULL };
-	const char *code = lookupString(stripPort(ip), path, &length);
+	const char *code = lookupString(ip, path, &length);
 
 	MF_SetAmxString(amx, params[2], code ? code : "", code ? 2 : 0);
 
@@ -344,10 +342,10 @@ static cell AMX_NATIVE_CALL amx_geoip_continent_code(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amx_geoip_continent_name(AMX *amx, cell *params)
 {
 	int length;
-	char *ip = MF_GetAmxString(amx, params[1], 0, &length);
+	char *ip = stripPort(MF_GetAmxString(amx, params[1], 0, &length));
 
 	const char *path[] = { "continent", "names", "en", NULL };
-	const char *continent = lookupString(stripPort(ip), path, &length);
+	const char *continent = lookupString(ip, path, &length);
 
 	return MF_SetAmxString(amx, params[2], continent ? continent : "", length >= params[3] ? params[3] : length); // TODO: make this utf8 safe.
 }

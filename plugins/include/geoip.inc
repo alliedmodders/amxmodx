@@ -151,3 +151,19 @@ native Float:geoip_latitude(const ip[]);
  * @return			The result of the geoip look up, 0 if longitude is not found. 
  */ 
 native Float:geoip_longitude(const ip[]);
+
+/**
+ * Calculate the distance between geographical coordinates, latitude and longitude.
+ *
+ * @param lat1		The first IP latitude.
+ * @param lon1		The first IP longitude.
+ * @param lat2		The second IP latitude.
+ * @param lon2		The second IP longitude.
+ * @param system    The system of measurement, 0 = Metric(kilometers) or 1 = English(miles).  
+ *
+ * @return			The distance as result in specified system of measurement.
+ */
+#define SYSTEM_METRIC   0 // kilometers
+#define SYSTEM_IMPERIAL 1 // statute miles
+
+native Float:geoip_distance(Float:lat1, Float:lon1, Float:lat2, Float:lon2, system = SYSTEM_METRIC);

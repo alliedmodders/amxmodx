@@ -279,6 +279,19 @@ static cell AMX_NATIVE_CALL amx_geoip_longitude(AMX *amx, cell *params)
 	return amx_ftoc(longitude);
 }
 
+// native Float:geoip_distance(Float:lat1, Float:lon1, Float:lat2, Float:lon2, system = SYSTEM_METRIC);
+static cell AMX_NATIVE_CALL amx_geoip_distance(AMX *amx, cell *params)
+{
+	float earthRadius = params[5] ? 3958.0 : 6370.997; // miles / km
+
+	float lat1 = amx_ctof(params[1]) * (M_PI / 180);
+	float lon1 = amx_ctof(params[2]) * (M_PI / 180);
+	float lat2 = amx_ctof(params[3]) * (M_PI / 180);
+	float lon2 = amx_ctof(params[4]) * (M_PI / 180);
+
+	return amx_ftoc(earthRadius * acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2 - lon1)));
+}
+
 
 void OnAmxxAttach()
 {
@@ -352,6 +365,7 @@ AMX_NATIVE_INFO geoip_natives[] =
 	{ "geoip_timezone" , amx_geoip_timezone  },
 	{ "geoip_latitude" , amx_geoip_latitude  },
 	{ "geoip_longitude", amx_geoip_longitude },
+	{ "geoip_distance" , amx_geoip_distance  },
 
 	{ NULL, NULL },
 };

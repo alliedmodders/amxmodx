@@ -1,24 +1,22 @@
 <?php
 
 function Main_template(){
- 	global $context, $scripturl;
+ 	global $context;
  	
  	$search = isset($_GET['query']) ? $_GET['query'] : "";
  	
  	echo '<html><head>
 	<title>'.$context['optheader'] .' - AMXX Scripting API Reference</title>
 	<script src="script.js"></script>
-	<script src="SMfuncs.js"></script>
-	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="style.css">
 	
 	</head>
 	<body>
-	<div id="serverbox" class="descript"></div>
 	<div id="AdminPopUP" class="LoadingBox" style="display:none;">Loading...</div>
 	
 	<table width="100%" cellpadding="0" cellspacing="0">
 	<tr><td style="border-right-style: groove; background-color: #D0D2D6;width: 12%; height: 42;text-align:centerf">
-	<a href="'.$scripturl.'"><img src="imgs/header.gif" alt="AMXX"></a>';
+	<a href="http://amxmodx.net/api/"><img src="imgs/header.gif" alt="AMXX"></a>';
 	
 	echo '	</td><td style="background-color: WhiteSmoke; font-size: 9pt" rowspan="2" id="MainBody" valign="top">
 	<br><br>
@@ -48,11 +46,35 @@ function Main_template(){
 	
 	if(!empty($context['fileinfo']))
 	{
-		foreach($context['fileinfo'] as $file){
-			echo '<div style="margin: 2px;" onclick="SpanArea('.$file['id'].')">
-				<img style="vertical-align: bottom" src="imgs/channel.gif" alt="#" /> 
-				'.$file['name'].'
-			</div><font id="'.$file['name'].'"></font>';
+		asort( $context['fileinfo'] );
+		
+		foreach( $context['fileinfo'] as $id => $file )
+		{
+			echo '<div style="margin: 2px;" onclick="SpanArea(\''.$id.'\', \''.$file.'\')">
+				<img style="vertical-align: bottom" src="imgs/channel.gif" alt=""> 
+				'.$file.'
+			</div><font id="'.$file.'" style="display:none">';
+			
+			$TreeCount = Count( $context['filefunctions'][ $id ] ) - 1;
+			$TreeCurrent = 0;
+			
+			foreach( $context['filefunctions'][ $id ] as $id2 => $function )
+			{
+				echo '<img style="vertical-align: bottom" src="imgs/tree_';
+				
+				if( ++$TreeCount === $TreeCount )
+				{
+					echo 'end';
+				}
+				else
+				{
+					echo 'mid';
+				}
+				
+				echo '.gif" alt=""><a onclick="ShowFunction(\'' . $id2 . '\')">' . $function . '</a><br>';
+			}
+			
+			echo '</font>';
 		}
 	}
 	

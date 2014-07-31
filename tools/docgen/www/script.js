@@ -1,4 +1,4 @@
-opnedtab = -1;
+opnedtab = false;
 
 function myMouseMove(e){
 	if (!e){
@@ -18,39 +18,8 @@ function ResetSearch(){
 	showHint("");
 }
 
-function hideSMFunc(){
-	myDiv = document.getElementById("serverbox");
-	myDiv.style.visibility = "hidden";
-	document.onmousemove = "";
-}
-
-function LoadPopUP(html){
-	myDiv = document.getElementById("serverbox");
-	myDiv.innerHTML = html;
-	myDiv.style.visibility = "visible";
-	document.onmousemove = myMouseMove;
-}
-
-
-function showSMfunc(id){
- 	html = '<div style="background-color: #00AAAA"><b>';
- 	html += SMfunctions[id][0]; 	
- 	html += '</b></div><div style="padding: 2px;">'; 
- 	html += SMfunctions[id][1]; 
- 	html += '</div>';
- 	
- 	LoadPopUP(html);
-}
-
 String.prototype.trim = function () {
     return this.replace(/^\s*/, "").replace(/\s*$/, "");
-}
-
-function PrintMain(x){
-	html = '<div style="margin: 2px;" onclick="SpanArea('+x+')">';
-	html += '<img style="vertical-align: bottom" src="imgs/channel.gif" alt="#" /> ';
-	html += SMfiles[x] + '</div><div id="'+ SMfiles[x] +'"></div>';
-	return html;
 }
 
 var xmlHttp
@@ -110,7 +79,6 @@ function ShowCustomLink(page){
 }
 
 function ShowFunction(id){
-	hideSMFunc()
 	LoadMainPage("index.php?action=show&id="+id);
 }
 
@@ -128,33 +96,18 @@ function HideLoading(){
 	document.getElementById("AdminPopUP").style.display = "none";
 }
 
-function SpanArea(id, hashtml){
-	if(opnedtab >= 0){
-		document.getElementById( SMfiles[opnedtab] ).innerHTML="";
-		if(opnedtab == id){
-			opnedtab = -1;
+function SpanArea(id, name){
+	if(opnedtab !== false ){
+		document.getElementById( opnedtab ).style.display = 'none';
+		if(opnedtab == name){
+			opnedtab = false;
 			return
 		}
 	}
-	opnedtab = id;
+	opnedtab = name;
 	ShowFileInfo(id);
 	
-	if(!SMfiledata[id])
-		return;
-	
-	html = "";
-	arycount = SMfiledata[id].length -1
-	
-	for (x in SMfiledata[id]){
-		html += '<img style="vertical-align: bottom" src="imgs/tree_';
-		if(x == arycount) html+= 'end'; else html+= 'mid';
-		html += '.gif" alt="&#9500;" /><a onclick="ShowFunction('+ SMfiledata[id][x] +')" onmouseout="hideSMFunc()" onmouseover="showSMfunc('+ SMfiledata[id][x] +')">';
-		html += SMfunctions[ SMfiledata[id][x] ][0] + "</a><br>";
-		
-	}
-	if(html != "")
-		document.getElementById( SMfiles[id] ).innerHTML=html
-	
+	document.getElementById( name ).style.display = 'block';
 }
 
 function getHTMLDocument(url, callback)

@@ -9,16 +9,10 @@ $user = '';
 $password = '';
 $database = '';
 
-// Output filename.
-$filename = '../www/SMfuncs.js';
-
 // Start defines
 $funcs = Array();
-$filefunclist = Array();
 $tableinfo = Array();
 $consts = Array();
-$thebasedir = dirname(__FILE__);
-$javascript = "var SMfunctions=new Array()\nvar SMfiles=new Array()\nvar SMfiledata=new Array()\n";
 
 function GetFunctionType($str){
 	switch (strtolower($str)) {
@@ -303,10 +297,13 @@ while($file = readdir($dir_handle)){
 }
 closedir($dir_handle);
 
+echo 'Connecting to MySQL...' . PHP_EOL;
+
 $link = mysql_connect($host, $user, $password)
     or die('Could not connect: ' . mysql_error());
 mysql_select_db($database) or die('Could not select database');
 
+echo 'Truncating tables...' . PHP_EOL;
 
 db_query("TRUNCATE TABLE `sm_smconst`");
 db_query("TRUNCATE TABLE `sm_smfilescon`");
@@ -339,11 +336,7 @@ foreach($files as $file){
 	}
 	
 	db_query('INSERT INTO `sm_smfilescon` VALUES ('. $tableinfo['sm_smfiles'][ $file['name'] ] .',\''.  addslashes( htmlspecialchars($file['content']) ) .'\')');
-
-	$javascript .= 'SMfiles['. $tableinfo['sm_smfiles'][ $file['name'] ] .'] = "'. $onlyname .'"' . "\n";
-	
 }
-
 
 foreach($funcs as $go){
  	$gop = str_replace('"', '\"', $go );
@@ -379,10 +372,6 @@ foreach($funcs as $go){
 		'.$gop['typeof'].')';
 	}
 	
-	$javascript .= 'SMfunctions['. $tableinfo['sm_smfunctions'][ $gop['function'] ] .'] = Array ("'.$gop['function'].'","'.$javacontent.'");' . "\n";
-	
-	$filefunclist[$fid][] = $tableinfo['sm_smfunctions'][ $gop['function'] ];
-	
 	$query = db_query($sql);	
 }
 
@@ -399,10 +388,6 @@ foreach($consts as $go){
 	$query = db_query($sql);	
 }
 
-foreach($filefunclist as $id => $go){
-	$javascript .= 'SMfiledata['. $id .'] = Array ('. implode(",",$go) .');' . "\n";
-}
-
 foreach($tableinfo['sm_smfiles'] as $fid){
 	db_query('UPDATE sm_smfiles SET
 `fcount` = (SELECT COUNT(*) FROM sm_smfunctions WHERE inc = '.$fid.'),
@@ -411,17 +396,3 @@ WHERE id = '.$fid.'');
 }
 
 mysql_close($link);
-
-if (!$handle = fopen($filename, 'w')) {
-	echo "Cannot open file ($filename)";
-	exit;
-}
-
-// Write $somecontent to our opened file.
-if (fwrite($handle, $javascript) === FALSE) {
-	fclose($handle);
-	echo "Cannot write to file ($filename)";
-	exit;
-}
-
-fclose($handle);

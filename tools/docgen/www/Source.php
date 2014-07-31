@@ -15,28 +15,17 @@ function Main(){
  	global $context;
 	$context['optheader'] = "Main";
 	
-	$resul = db_query('SELECT id,name,fcount,ccount FROM `sm_smfiles`',__FILE__,__LINE__);
+	$resul = db_query('SELECT id, name FROM `sm_smfiles`',__FILE__,__LINE__);
 	while ($line = mysql_fetch_array($resul, MYSQL_ASSOC)) {
-	    $context['fileinfo'][] = Array(
-			'id' => $line['id'],
-			'name' => $line['name'],
-		);
+		$context['fileinfo'][$line['id']] = $line['name'];
+		$context['filefunctions'][$line['id']] = Array();
 	}
 	
-	if(!empty($context['fileinfo']))
-	{
-		usort($context['fileinfo'], "SortByName");
+	$resul = db_query('SELECT id, func, inc FROM `sm_smfunctions`',__FILE__,__LINE__);
+	while ($line = mysql_fetch_array($resul, MYSQL_ASSOC)) {
+		$context['filefunctions'][$line['inc']][$line['id']] = $line['func'];
 	}
 }
-
-function SortByName($a, $b)
-{
-    if ($a['name'] == $b['name']) {
-        return 0;
-    }
-    return ($a['name'] < $b['name']) ? -1 : 1;
-}
-
 
 function ShowOpts(){
 	global $context;
@@ -49,7 +38,7 @@ function ShowOpts(){
 		
 	$context['usetopandbo'] = Array ( false,false);
 		
-	$query = 'SELECT id,func,inc FROM `sm_smfunctions` WHERE LCASE(func) LIKE \'%'.strtolower(mysql_real_escape_string($_GET['id'])).'%\' OR description LIKE \'%'.mysql_real_escape_string($_GET['id']).' %\' COLLATE latin1_swedish_ci';
+	$query = 'SELECT id,func,inc FROM `sm_smfunctions` WHERE LCASE(func) LIKE \'%'.strtolower(mysql_real_escape_string($_GET['id'])).'%\' OR description LIKE \'%'.mysql_real_escape_string($_GET['id']).' %\'';
 	$result = db_query($query,__FILE__,__LINE__);
 	
 	$context['answers'] = Array();

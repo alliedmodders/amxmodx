@@ -191,3 +191,14 @@ enum Continent
 	CONTINENT_SOUTH_AMERICA
 };
 native Continent:geoip_continent_code(const ip[], result[3]);
+
+/**
+ * Look up the full continent name for the given IP address.
+ *
+ * @param ip		The IP address to look up.
+ * @param result	The result of the geoip look up.
+ * @param len		The maximum length of the result buffer.
+ *
+ * @return			The result length on successful lookup, 0 otherwise.
+ */
+native geoip_continent_name(const ip[], result[], len);

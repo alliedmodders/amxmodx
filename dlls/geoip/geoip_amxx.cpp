@@ -340,6 +340,18 @@ static cell AMX_NATIVE_CALL amx_geoip_continent_code(AMX *amx, cell *params)
 	return getContinentId(code);
 }
 
+// native geoip_continent_name(const ip[], result[], len);
+static cell AMX_NATIVE_CALL amx_geoip_continent_name(AMX *amx, cell *params)
+{
+	int length;
+	char *ip = MF_GetAmxString(amx, params[1], 0, &length);
+
+	const char *path[] = { "continent", "names", "en", NULL };
+	const char *continent = lookupString(stripPort(ip), path, &length);
+
+	return MF_SetAmxString(amx, params[2], continent ? continent : "", length >= params[3] ? params[3] : length); // TODO: make this utf8 safe.
+}
+
 
 void OnAmxxAttach()
 {
@@ -416,6 +428,7 @@ AMX_NATIVE_INFO geoip_natives[] =
 	{ "geoip_distance" , amx_geoip_distance  },
 
 	{ "geoip_continent_code", amx_geoip_continent_code },
+	{ "geoip_continent_name", amx_geoip_continent_name },
 
 	{ NULL, NULL },
 };

@@ -1,7 +1,7 @@
 #ifndef MAXMINDDB_CONFIG_H
 #define MAXMINDDB_CONFIG_H
 
-#define PACKAGE_VERSION "0.5.6" 
+#define PACKAGE_VERSION "0.5.6" // Arkshine: added manually.
 
 #ifndef MMDB_UINT128_USING_MODE
 /* Define as 1 if we we use unsigned int __atribute__ ((__mode__(TI))) for uint128 values */

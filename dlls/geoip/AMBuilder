@@ -10,7 +10,9 @@ binary.compiler.defines += [
 binary.sources = [
   'sdk/amxxmodule.cpp',
   'GeoIP2/maxminddb.cpp',
-  'geoip_amxx.cpp',
+  'geoip_main.cpp',
+  'geoip_natives.cpp',
+  'geoip_util.cpp',
 ]
 
 if builder.target_platform == 'windows':

@@ -14,7 +14,7 @@ MM_ROOT = ../../../metamod/metamod
 
 PROJECT = geoip
 
-OBJECTS = sdk/amxxmodule.cpp GeoIP.c geoip_amxx.cpp
+OBJECTS = sdk/amxxmodule.cpp GeoIP2/maxminddb.cpp geoip_main.cpp geoip_natives.cpp geoip_util.cpp
 
 ##############################################
 ### CONFIGURE ANY OTHER FLAGS/OPTIONS HERE ###

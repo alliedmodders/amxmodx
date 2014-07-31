@@ -126,7 +126,7 @@ public voteNextmap(){
     while( isInMenu(a) )
       if (++a >= g_mapNums) a = 0
     g_nextName[g_mapVoteNum] = a
-    pos += format(menu[pos],511,"%d. %s^n",g_mapVoteNum+1,g_mapName[a])
+    pos += format(menu[pos], charsmax(menu) - pos, "%d. %s^n", g_mapVoteNum + 1, g_mapName[a])
     mkeys |= (1<<g_mapVoteNum)
     g_voteCount[g_mapVoteNum] = 0
   }
@@ -137,7 +137,7 @@ public voteNextmap(){
   get_mapname(mapname,31)
 
   if ( get_cvar_float("mp_timelimit") < get_cvar_float("amx_extendmap_max") ){
-    pos += format(menu[pos],511,"%d. Extend map %s^n",SELECTMAPS+1,mapname)
+    pos += format(menu[pos], charsmax(menu) - pos, "%d. Extend map %s^n", SELECTMAPS+1, mapname)
     mkeys |= (1<<SELECTMAPS)
   }
 

@@ -1,0 +1,81 @@
+tr.tpc:hover
+{
+	background-color: #595959;
+}
+
+a
+{
+	text-decoration: none;
+	color: blue;
+}
+a:hover
+{
+	text-decoration: underline;
+}
+
+a img{
+	border: 0;
+}
+
+body, td, th , tr
+{
+	font-size: small;
+	font-family: verdana, sans-serif;
+}
+
+/* The main body of the entire forum. */
+body
+{	
+	background-color: #bebebe;
+	margin: 0px;
+}
+
+.descript{
+	visibility: hidden;
+	z-index: 200;
+	position: absolute;
+	background-color: #FFFFFF;
+	border: 1px solid black;
+	font-size: x-small;
+	font-family: verdana, sans-serif;
+}
+
+.UpperTab{
+	background-color: #D0D2D6; 
+	width: 100px;
+	font-size: 12pt;
+	text-align:center;
+}
+
+.LoadingBox{
+	background-color: #D8D8D8;
+	border: 1px solid black;
+	position: absolute;
+	padding: 10px;
+	right: 50px;
+	top: 50px;
+}
+
+.phpcode
+{
+	color: #000000;
+	background-color: #D7DADC;
+	border: 1px solid #000000;
+	margin: 1px;
+	padding: 1px;
+	font-size: x-small;
+	line-height: 1.4em;
+	width:  95%;
+}
+
+.smfunc
+{
+	color: black;
+	font-weight: bold;
+}
+
+.smconst
+{
+	color: blue;
+	font-weight: bold;
+}

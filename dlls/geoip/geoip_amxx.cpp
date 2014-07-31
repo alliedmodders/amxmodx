@@ -86,6 +86,40 @@ double lookupDouble(const char *ip, const char **path)
 	return result.double_value;
 }
 
+int getContinentId(const char *code)
+{
+	#define CONTINENT_UNKNOWN        0
+	#define CONTINENT_AFRICA         1    
+	#define CONTINENT_ASIA           2
+	#define CONTINENT_EUROPE         3
+	#define CONTINENT_NORTH_AMERICA  4
+	#define CONTINENT_OCEANIA        5
+	#define CONTINENT_SOUTH_AMERICA  6
+
+	int index = CONTINENT_UNKNOWN;
+
+	if (code)
+	{
+		switch (code[0])
+		{
+			case 'A':
+			{
+				switch (code[1])
+				{
+					case 'F': index = CONTINENT_AFRICA; break;
+					case 'S': index = CONTINENT_ASIA; break;
+				}
+			}
+			case 'E': index = CONTINENT_EUROPE; break;
+			case 'O': index = CONTINENT_OCEANIA; break;
+			case 'N': index = CONTINENT_NORTH_AMERICA; break;
+			case 'S': index = CONTINENT_SOUTH_AMERICA; break;
+		}
+	}
+
+	return index;
+}
+
 // native geoip_code2(const ip[], ccode[3]);
 // Deprecated.
 static cell AMX_NATIVE_CALL amx_geoip_code2(AMX *amx, cell *params)
@@ -292,6 +326,20 @@ static cell AMX_NATIVE_CALL amx_geoip_distance(AMX *amx, cell *params)
 	return amx_ftoc(earthRadius * acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2 - lon1)));
 }
 
+// native Continent:geoip_continent_code(const ip[], result[3] = "");
+static cell AMX_NATIVE_CALL amx_geoip_continent_code(AMX *amx, cell *params)
+{
+	int length;
+	char *ip = MF_GetAmxString(amx, params[1], 0, &length);
+
+	const char *path[] = { "continent", "code", NULL };
+	const char *code = lookupString(stripPort(ip), path, &length);
+
+	MF_SetAmxString(amx, params[2], code ? code : "", code ? 2 : 0);
+
+	return getContinentId(code);
+}
+
 
 void OnAmxxAttach()
 {
@@ -366,6 +414,8 @@ AMX_NATIVE_INFO geoip_natives[] =
 	{ "geoip_latitude" , amx_geoip_latitude  },
 	{ "geoip_longitude", amx_geoip_longitude },
 	{ "geoip_distance" , amx_geoip_distance  },
+
+	{ "geoip_continent_code", amx_geoip_continent_code },
 
 	{ NULL, NULL },
 };

@@ -167,3 +167,27 @@ native Float:geoip_longitude(const ip[]);
 #define SYSTEM_IMPERIAL 1 // statute miles
 
 native Float:geoip_distance(Float:lat1, Float:lon1, Float:lat2, Float:lon2, system = SYSTEM_METRIC);
+
+/**
+ * Look up the continent code for a given IP address.
+ *
+ * @note  The code can be retrieved as integer (See CONTINENT_* constants.) or string (2 characters).
+ * @note  Possible continent codes are AF, AS, EU, NA, OC, SA for 
+ *        Africa(1), Asia(2), Europe(3), North America(4), Oceania(5) and South America(6).
+ *
+ * @param ip		The IP address to look up.
+ * @param result	The result of the geoip look up.
+ *
+ * @return			The continent id on successful lookup, 0 otherwise. 
+ */
+enum Continent
+{
+	CONTINENT_UNKNOW = 0,
+	CONTINENT_AFRICA,
+	CONTINENT_ASIA,
+	CONTINENT_EUROPE,
+	CONTINENT_NORTH_AMERICA,
+	CONTINENT_OCEANIA,
+	CONTINENT_SOUTH_AMERICA
+};
+native Continent:geoip_continent_code(const ip[], result[3]);

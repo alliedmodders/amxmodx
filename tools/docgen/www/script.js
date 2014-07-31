@@ -1,21 +1,4 @@
 opnedtab = -1;
-var previewPopupWindow;
-MainInformation = "";
-var smf_images_url = "http://nican132.com/forum/Themes/halflife_11final/images";
-var smf_formSubmitted = false;
-var currentSwap = true;
-
-function FlipPostSpan(){
-	document.getElementById("postspan").style.display = currentSwap ? "" : "none";
-	currentSwap = !currentSwap;
-}
-
-currentLoginSwap = true;
-
-function FlipLoginBox(){
-	document.getElementById("LoginBox").style.display = currentLoginSwap ? "" : "none";
-	currentLoginSwap = !currentLoginSwap;
-}
 
 function myMouseMove(e){
 	if (!e){
@@ -59,18 +42,6 @@ function showSMfunc(id){
  	LoadPopUP(html);
 }
 
-function showSMconst(id){
- 	html = '<div style="background-color: #00AAAA"><b>';
- 	html += SMconstant[id][0]; 	
- 	html += '</b></div><div style="padding: 2px;"><i>'; 
- 	html += SMconstant[id][1];
- 	html += '</i><br/>';
- 	html += SMconstant[id][2];
- 	html += '</div>';
- 	
- 	LoadPopUP(html);
-}
-
 String.prototype.trim = function () {
     return this.replace(/^\s*/, "").replace(/\s*$/, "");
 }
@@ -87,12 +58,8 @@ var BodyHttp
 
 function showHint(str){
     str=str.trim();
-	if (str.length==0){ 
-		//html = "";
-		//for (x in SMfiles){
-		//	html += PrintMain(x);
-		//}
-  		document.getElementById("txtHint").innerHTML= MainInformation;
+	if (str.length==0){
+  		document.getElementById("txtHint").innerHTML = "";
   		return
   	}
   	
@@ -214,31 +181,6 @@ function getHTMLDocument(url, callback)
 	return true;
 }
 
-function SubmitLoginInfo(){
-  	ShowLoading();
-  	
-  	var url = "index.php?action=login&user=" + document.getElementById("user").value;
-  	url += "&pw=" + hex_md5(document.getElementById("pw").value);
-  	if(document.getElementById("forever").checked)
-  		url += "&forever=1";
-  	else
-  		url += "&forever=0";
-	
-	getHTMLDocument(url, Revivelogin);
-	
-	return false;
-}
-
-function Revivelogin(html){ 
-	HideLoading();
- 	if(html == "ok"){
- 		window.location="index.php"
- 		return;
- 	}
- 		
-	alert(html); 		
-}
-
 // Send a post form to the server using XMLHttpRequest.
 function senHTMLDocument(url, content, callback)
 {
@@ -346,76 +288,3 @@ function textToEntities(text)
 
 	return entities;
 }
-
-function bbc_highlight(something, mode){
-	something.style.backgroundImage = "url(" + smf_images_url + (mode ? "/bbc/bbc_hoverbg.gif)" : "/bbc/bbc_bg.gif)");
-}
-
-function PreviewPost(){
-	x = new Array();
-	var textFields = ["message"];
-	
-	ShowLoading();
-	
-	for (i in textFields)
-		if (document.forms.postmodify.elements[textFields[i]])
-			x[x.length] = textFields[i] + "=" + escape(textToEntities(document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
-
-	senHTMLDocument("index.php?action=previewpost", x.join("&"), PreviewPostSent);
-	
-	return false;
-}
-
-function PreviewPostSent(html){
-	if (previewPopupWindow)
-		previewPopupWindow.close();
-		
-	HideLoading();
-	
-	thespan = document.getElementById("previewspan");
-	
-	thespan.style.display = "";
-	thespan.innerHTML = "Preview: <br/> <div style=\"padding: 5px\">" + html + "</div>";			
-}
-
-function submitThisOnce(form,id,post)
-{
-	if (typeof(form.form) != "undefined")
-		form = form.form;
-
-	for (var i = 0; i < form.length; i++)
-		if (typeof(form[i]) != "undefined" && form[i].tagName.toLowerCase() == "textarea")
-			form[i].readOnly = true;
-
-	x = new Array();
-	var textFields = ["message","poster"];
-	
-	ShowLoading();
-	
-	
-	for (i in textFields)
-		if (document.forms.postmodify.elements[textFields[i]])
-			x[x.length] = textFields[i] + "=" + escape(textToEntities(document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
-	
-	senHTMLDocument("index.php?action=post&id=" + id + "&type=" + post, x.join("&"), SentPost);
-	
-	return false;
-}
-
-function SentPost(html){
-	HideLoading();
-	html=html.trim();
-	
-	if(html == "0")
-		return alert("Invalid data.")
-	else if (html == "1")
-		return alert("No body data.")
-	else if (html == "2")
-		return alert("Please at least wait 15 secs between each post.");
-	else if (html == "3")
-		return alert("Please login before posting.");
-	else
-		document.getElementById("MainBody").innerHTML= html;	
-							
-}
-

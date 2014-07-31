@@ -15,5 +15,3 @@ $cookieaddr = 'docs.sourcemod.net';
 
 
 $cookiename = '';
-
-?>

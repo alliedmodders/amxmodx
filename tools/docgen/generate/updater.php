@@ -1,8 +1,7 @@
 <pre><?php
 
 set_time_limit(300);
-$downloadnew = FALSE;
-$dir = ''; // Put DIR here
+$dir = __DIR__ . '/include'; // Put DIR here
 
 // Database credentials.
 $host = '';
@@ -18,23 +17,20 @@ $funcs = Array();
 $filefunclist = Array();
 $tableinfo = Array();
 $consts = Array();
-$version = "";
 $thebasedir = dirname(__FILE__);
-$defines = Array();
-$javascript = "var SMfunctions=new Array()\nvar SMconstant=new Array()\nvar SMfiles=new Array()\nvar SMfiledata=new Array()\n";
+$javascript = "var SMfunctions=new Array()\nvar SMfiles=new Array()\nvar SMfiledata=new Array()\n";
 
 function GetFunctionType($str){
 	switch (strtolower($str)) {
 		case "native": return 1; break;
 		case "stock": return 2; break;
 		case "forward": return 3; break;
-    	case "functag": return 4; break;
 	}
 	return 0;
 }
 
 function PrepareJava($string){
-	return addslashes(str_replace("\n","",nl2br($string)));	
+	return addslashes(htmlspecialchars($string));	
 }
 
 function DecodeTheFile($file){
@@ -47,23 +43,30 @@ function DecodeTheFile($file){
 	
 	$lines = Array();
 	$isanotherone = false;
+	$commented = false;
 	
 	foreach ($thelines as $line_num => $lin) {
 	 	$line = trim($lin);
 	 	
 	 	if($line == "")	continue;
 	 	
-	 	if(substr($line,0,7) == "#define")
-	 		AddDefine(substr($line,8));
+	 	//if(substr($line,0,7) == "#define")
+	 	//	AddDefine(substr($line,8));
 	 	
-	 	if(($line == "/**" && !$isanotherone) || $linescount == $line_num){
-	 	 	if(isset($lines[1])){
+	 	if(( ( $line == "/**" || substr( $line, 0, 2 ) == '/*' ) && !$isanotherone) || $linescount == $line_num)
+	 	{
+	 	 	if(isset($lines[1]))
+	 	 	{
 		 		$temp = explode(" ",$lines[1][0]);	 		
 		 		$type = GetFunctionType($temp[0]);
-		 	 	if($type > 0){
+		 	 	if($type > 0)
+		 	 	{
 					MakeFunction($lines, implode("", $lines[1]) ,$type,$basename);
-				}else
+				}
+				else
+				{
 					MakeConstant($lines,$basename);
+				}
 			}
 	 	 
 			$lines = Array();
@@ -88,87 +91,23 @@ function DecodeTheFile($file){
 	return implode("",$thelines);
 }
 
-function AddDefine($str){
- 	if($str{0} == "_")
- 		return;
- 	global $defines;
- 	
- 	//Sryl, Preg match is just not working out, too much iregularitires
- 	//The * will bug the preg_match
- 	/*$str = str_replace("*","",$str);
-	$pattern = '/([$A-Z|8|_^]+)\b([^.*]+)([	| |	]\/)/';
-	
-	if(!preg_match($pattern, $str, $matches,PREG_OFFSET_CAPTURE)){
-		echo $str . "\n";
-		return;
-	}
-	
-	$new = substr($str , $matches[2][1] + strlen($matches[2][0]) );
-	if(strlen($new) > 0){
-		$new = str_replace(
-			Array ("/**", "<" , "","/"),
-			Array ("", "" , "",""),
-			$new	
-		);
-	} 
-	*/
-	$stage = 0;
-	$stageinfo = Array('','','');
-
-	$strlen = strlen($str);
-	for($i=0; $i < $strlen; $i++){	 
-	 	if(trim($str{$i}) == "" && $stage == 0){
-			$stage++;
-	 		continue; 		
-	 	}
-	 	
-	 	if($str{$i} == "/"){
-			if(substr($str,$i,3) == "/**"){
-			 	$stage++;
-				$i += 3;
-				continue;
-			}
-		}
-		
-		if($str{$i} == "*"){
-			if(substr($str,$i,2) == '*/'){
-			 	break;
-			}
-		}
-		$stageinfo[$stage] .= $str{$i};
-	}
-	
-	foreach($stageinfo as $i => $a)
-		$stageinfo[$i] = trim($a);
-	
-	if($stageinfo[1] != ""){
-		$defines[] = Array (
-			'variable' => $stageinfo[0],
-			'value' => wordwrap(trim($stageinfo[1]) , 35, " " , true ),
-			'comment' => isset($stageinfo[2]) ? trim($stageinfo[2]) : "",
-		);
-	}
-	
-		
-	if($stageinfo[0] == "SOURCEMOD_VERSION"){
-		global $version;
-		$version = str_replace('"',"",$stageinfo[1]);
-	}
-}
-
 function MakeConstant($lines,$file){
  	global $consts;
  	
  	$info = Array();
  	$content = Array();
  	
-	foreach($lines[0] as $line){
-		if(substr($line,0,1) != "*") continue;
-		$thesub = trim(substr($line,2));
-		if($thesub == "") continue;
-		
-		$info[] = $thesub;		
-	}
+ 	if( !empty( $lines[0] ) )
+ 	{
+	 	foreach($lines[0] as $line){
+			if(substr($line,0,1) != "*") continue;
+			$thesub = trim(substr($line,2));
+			if($thesub == "") continue;
+			
+			$info[] = $thesub;		
+		}
+ 	}
+	
 	
 	$theinfo = str_replace("@section","", implode("\n",$info));
 	
@@ -192,6 +131,7 @@ function MakeConstant($lines,$file){
 		'content' => trim(implode('',$lines[1])),
 		'file' => $file,
 	);
+	
 }
 
 function MakeFunction($lines,$function,$type,$file){ 
@@ -202,17 +142,16 @@ function MakeFunction($lines,$function,$type,$file){
  	$return = Array();
  	$onerror = Array();
  	$notes = Array();
- 	$depreached = 0;
  	
  	$infostarted = false;
  	$lastone = 0;
- 	
+ 	$depreached = 0;
  	
 	foreach($lines[0] as $line){
 		if(substr($line,0,1) != "*") continue;
-		$thesub = trim(substr($line,2));
-		if($thesub == "") continue;
-	
+		$thesub = substr($line,2);
+		
+		if(trim($thesub == "")) continue;
 		
 		if ($thesub{0} == "@")
 			$infostarted = true;
@@ -220,13 +159,20 @@ function MakeFunction($lines,$function,$type,$file){
 		if(!$infostarted){
 			$description[] =  $thesub;
 		}
-
-		if ($infostarted && $thesub{0} != "@"){
+		
+		if ($lastone === 5 && $infostarted && $thesub{0} != "@")
+		{
+			$infostarted = false;
+		}
+		
+		if ($infostarted && $thesub{0} != "@")
+		{
 			switch ($lastone) {
 				case 0:
-	//				if(!isset($funcinput[ count($funcinput) - 1 ]))
-	//					echo $file . "\n" . $function . "\n\n";
-					$funcinput[ count($funcinput) - 1 ] .= " " . $thesub; 
+					if(!isset($funcinput[ count($funcinput) - 1 ]))
+						echo $file . "\n" . $function . "\n\n";
+					else
+						$funcinput[ count($funcinput) - 1 ] .= " " . $thesub; 
 					break;
 				case 1: $return[ count($return) - 1 ] .= " " . $thesub; break;
 				case 2: $onerror[ count($onerror) - 1 ]  .= " " . $thesub; break;
@@ -243,6 +189,7 @@ function MakeFunction($lines,$function,$type,$file){
 			$lastone = 1;
 		} elseif(substr($thesub, 0, 11) == "@deprecated"){
 			$depreached = 1;
+			$lastone = 5;
 		} elseif(substr($thesub, 0, 6) == "@error"){
 			$onerror[] = trim(substr($thesub, 6));
 			$lastone = 2;
@@ -302,67 +249,14 @@ function db_query($query){
 	return $q;
 }
 
-function GetFileAddr(){
-	$lines = file("http://www.sourcemod.net/builds.php");
-	
-	foreach ($lines as $line_num => $lin) {
-		if(substr($lin, 0, 13) == "<li><a href='"){
-		 	$explode = explode("<a href='", $lin);
-		 	foreach($explode as $a){
-				if(strpos($a, ".zip")){
-					$b = explode("'>", $a);
-					return $b[0];
-				}
-			}
-		}
-	}
-}
-
-function DownloadNew(){
- 	global $thebasedir;
-	copy( GetFileAddr() ,'build.zip');
-	
-	$zip = new ZipArchive;
-	if ($zip->open('build.zip') === TRUE) {
-	    $zip->extractTo($thebasedir . "/build/" );
-	    $zip->close();
-	} else {
-		exit( 'Failed to zip' );
-	}
-}
-
-function full_rmdir( $dir ){
-	if ( !is_writable( $dir ) ){
-		if ( !@chmod( $dir, 0777 ) ){
-                return FALSE;
-		}
-	}
-	$d = dir( $dir );
-	while ( FALSE !== ( $entry = $d->read() ) ){
-		if ( $entry == '.' || $entry == '..' ){
-			continue;
-		}
-		$entry = $dir . '/' . $entry;
-		if ( is_dir( $entry ) ){
-			if ( !$this->full_rmdir( $entry ) ){
-				return FALSE;
-			}
-			continue;
-		}
-		if ( !@unlink( $entry ) ){
-			$d->close();
-			return FALSE;
-		}
-	}
-	$d->close();
-	return rmdir( $dir );
-}
-
 function FindFileID($file){
 	global $tableinfo;
-	foreach($tableinfo['sm_smfiles'] as $fname => $id)
-		if($file == $fname)
-			return $id;
+	
+	if( isset( $tableinfo['sm_smfiles'][ $file ] ) )
+	{
+		return $tableinfo['sm_smfiles'][ $file ];
+	}
+	
 	return -1;
 }
 
@@ -382,11 +276,6 @@ function FindUnusedid($arrayname){
 	}
 }
 
-
-if($downloadnew)
-	DownloadNew();
-if(strlen(trim($dir)) == 0)
-	$dir = $thebasedir . '/build/addons/sourcemod/scripting/include';
 $files = Array();
 
 if(!($dir_handle = opendir($dir))){
@@ -421,11 +310,7 @@ mysql_select_db($database) or die('Could not select database');
 
 db_query("TRUNCATE TABLE `sm_smconst`");
 db_query("TRUNCATE TABLE `sm_smfilescon`");
-db_query("TRUNCATE TABLE `sm_smdefine`"); 
-db_query("UPDATE sm_smfunctions SET depreached = 2 WHERE typeof <> 4");
-
-//db_query("TRUNCATE TABLE `smfiles`");
-//db_query("TRUNCATE TABLE `smfunctions`");
+//db_query("TRUNCATE TABLE `sm_smfunctions`");
 
 $tables = Array (
 	'sm_smfiles' => Array ('filename','id'),
@@ -453,7 +338,7 @@ foreach($files as $file){
 		db_query('INSERT INTO sm_smfiles(id,name,filename) VALUES ('. $tableinfo['sm_smfiles'][ $file['name'] ] .',"'.$onlyname.'","'.$file['name'].'")');
 	}
 	
-	db_query('INSERT INTO `sm_smfilescon` VALUES ('. $tableinfo['sm_smfiles'][ $file['name'] ] .',\''.  addslashes( $file['content'] ) .'\')');
+	db_query('INSERT INTO `sm_smfilescon` VALUES ('. $tableinfo['sm_smfiles'][ $file['name'] ] .',\''.  addslashes( htmlspecialchars($file['content']) ) .'\')');
 
 	$javascript .= 'SMfiles['. $tableinfo['sm_smfiles'][ $file['name'] ] .'] = "'. $onlyname .'"' . "\n";
 	
@@ -470,7 +355,7 @@ foreach($funcs as $go){
  	if(isset($tableinfo['sm_smfunctions'][ $gop['function'] ])){
 		$sql = 'UPDATE sm_smfunctions
 			SET fullfunc = "'.$gop['fullfunc'].'",
-			description = "'.$gop['description'].'",
+			description = "'.$javacontent.'",
 			`treturn` = "'.$gop['return'].'",
 			`onerror` = "'.$gop['onerror'].'",
 			`funcinput` = "'.$gop['input'].'",
@@ -481,7 +366,7 @@ foreach($funcs as $go){
 			WHERE id = '. $tableinfo['sm_smfunctions'][ $gop['function'] ] .'';
 	} else {
 		$tableinfo['sm_smfunctions'][ $gop['function'] ] =  FindUnusedid('sm_smfunctions');
-	 	$sql = 'INSERT INTO sm_smfunctions(id,func,fullfunc,description,`treturn`,`onerror`,`funcinput`,inc,incname,typeof,version) VALUES
+	 	$sql = 'INSERT INTO sm_smfunctions(id,func,fullfunc,description,`treturn`,`onerror`,`funcinput`,inc,incname,typeof) VALUES
 		('. $tableinfo['sm_smfunctions'][ $gop['function'] ] .',
 		"'.$gop['function'].'",
 		"'.$gop['fullfunc'].'",
@@ -491,9 +376,7 @@ foreach($funcs as $go){
 		"'.$gop['input'].'",
 		'.$fid.',
 		"'.$gop['file'].'",
-		'.$gop['typeof'].', 
-		\''.$version.'\'
-		)';
+		'.$gop['typeof'].')';
 	}
 	
 	$javascript .= 'SMfunctions['. $tableinfo['sm_smfunctions'][ $gop['function'] ] .'] = Array ("'.$gop['function'].'","'.$javacontent.'");' . "\n";
@@ -509,8 +392,8 @@ foreach($consts as $go){
  
  	$sql = 'INSERT INTO sm_smconst(fileid,descrip,`fulltext`) VALUES
 	('.$fid.',
-	"'.$gop['info'].'",
-	"'.$gop['content'].'"
+	"'.htmlspecialchars($gop['info']).'",
+	"'.htmlspecialchars($gop['content']).'"
 	)';
 	
 	$query = db_query($sql);	
@@ -520,15 +403,6 @@ foreach($filefunclist as $id => $go){
 	$javascript .= 'SMfiledata['. $id .'] = Array ('. implode(",",$go) .');' . "\n";
 }
 
-foreach($defines as $id => $go){
-	$gop = str_replace('"', '\"', $go );
- 	$sql = 'INSERT INTO `sm_smdefine` (`id`,`variable` ,`value` ,`comment`) VALUES ('.$id.',"'.$gop['variable'].'", "'.$gop['value'].'", "'.$gop['comment'].'")';
- 	$javascript .= 'SMconstant['.$id.'] = Array ("'. PrepareJava($gop['variable']) .'","'. PrepareJava($gop['value']) .'","'. PrepareJava($gop['comment']) .'");' . "\n";
- 	db_query($sql);
-}
-
-db_query('UPDATE `sm_sminfo` SET infob = "'.$version.'" WHERE master = "version"');
-
 foreach($tableinfo['sm_smfiles'] as $fid){
 	db_query('UPDATE sm_smfiles SET
 `fcount` = (SELECT COUNT(*) FROM sm_smfunctions WHERE inc = '.$fid.'),
@@ -536,31 +410,18 @@ foreach($tableinfo['sm_smfiles'] as $fid){
 WHERE id = '.$fid.'');
 }
 
-$res = mysql_query("SELECT id FROM sm_smfunctions WHERE depreached = 2");
-while (($row = mysql_fetch_array($res)) !== FALSE)
-{
-	db_query("DELETE FROM sm_smposts WHERE func = " . $row[0]);
-	db_query("DELETE FROM sm_smfunctions WHERE id = " . $row[0]);
-}
-
-mysql_free_result($res);
-
 mysql_close($link);
 
-//$filename = "SMfuncs.js";
 if (!$handle = fopen($filename, 'w')) {
 	echo "Cannot open file ($filename)";
 	exit;
 }
 
-echo $javascript;
-
-    // Write $somecontent to our opened file.
+// Write $somecontent to our opened file.
 if (fwrite($handle, $javascript) === FALSE) {
+	fclose($handle);
 	echo "Cannot write to file ($filename)";
 	exit;
 }
 
 fclose($handle);
-
-?>

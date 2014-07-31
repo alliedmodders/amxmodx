@@ -84,7 +84,7 @@ bool lookupByIp(const char *ip, const char **path, MMDB_entry_data_s *result)
 
 const char *lookupString(const char *ip, const char **path, int *length = NULL)
 {
-	static char buffer[64];
+	static char buffer[256]; // This should be large enough for long name in UTF-8.
 	MMDB_entry_data_s result;
 
 	if (!lookupByIp(ip, path, &result))
@@ -92,13 +92,17 @@ const char *lookupString(const char *ip, const char **path, int *length = NULL)
 		return NULL;
 	}
 
+	// Let's avoid a crash in case we go over the buffer size.
+	size_t maxLength = ke::Min(result.data_size, sizeof(buffer));
+
+	// Strings from database are not null terminated.
+	memcpy(buffer, result.utf8_string, maxLength); 
+	buffer[result.data_size] = '\0';
+
 	if (length)
 	{
-		*length = result.data_size;
+		*length = maxLength;
 	}
-
-	memcpy(buffer, result.utf8_string, result.data_size);
-	buffer[result.data_size] = '\0';
 
 	return buffer;
 }

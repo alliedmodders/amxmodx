@@ -111,12 +111,12 @@
 #define EF_LIGHT                        64          // Rocket flare glow sprite
 #define EF_NODRAW                       128         // Don't draw entity
 
-/*
+/**
 * Spectating camera mode constants
 *
-* those constants are linked to differents camera mode available when you are spectating.
+* Those constants are linked to differents camera mode available when you are spectating.
 * (death or spectator team)
-* they are usually stored in pev_iuser1 field in Counter-Strike and Half-Life games
+* They are usually stored in pev_iuser1 field in Counter-Strike and Half-Life games.
 */
 #define OBS_NONE                        0
 #define OBS_CHASE_LOCKED                1           // Locked Chase Cam

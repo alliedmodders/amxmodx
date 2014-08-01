@@ -73,7 +73,7 @@ bool lookupByIp(const char *ip, const char **path, MMDB_entry_data_s *result)
 	int gai_error = 0, mmdb_error = 0;
 	MMDB_lookup_result_s lookup = MMDB_lookup_string(&HandleDB, ip, &gai_error, &mmdb_error);
 
-	if (gai_error != 0 || MMDB_SUCCESS != mmdb_error || !lookup.found_entry)
+	if (gai_error != 0 || mmdb_error != MMDB_SUCCESS || !lookup.found_entry)
 	{
 		return false;
 	}
@@ -83,7 +83,30 @@ bool lookupByIp(const char *ip, const char **path, MMDB_entry_data_s *result)
 
 	if (!entry_data.has_data)
 	{
-		return false;
+		size_t i = 0;
+
+		// Dirty fall back to default language ("en") in case provided user's language is not localized.
+
+		// Searh "names" position.
+		while (strcmp(path[i++], "names"));  
+
+		// No localized entry or we use already default language.
+		if (!*path[i] || !strcmp(path[i], "en")) 
+		{
+			return false;
+		}
+
+		// Overwrite user's language.
+		path[i] = "en"; 
+		
+		// Try again.
+		gai_error = mmdb_error = 0;
+		MMDB_aget_value(&lookup.entry, &entry_data, path); 
+
+		if (!entry_data.has_data)
+		{
+			return false;
+		}
 	}
 
 	*result = entry_data;

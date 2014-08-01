@@ -48,17 +48,11 @@ static cell AMX_NATIVE_CALL ArrayCreate(AMX* amx, cell* params)
 
 	// params[2] (reserved) is how many elements to allocate
 	// immediately when the list is created.
-	// this MUST be greater than 0!
 	int reserved = params[2];
 
 	if (cellsize <= 0)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid array size (%d)", cellsize);
-		return -1;
-	}
-	if (reserved <= 0)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid reserved size (%d)", reserved);
 		return -1;
 	}
 
@@ -69,14 +63,23 @@ static cell AMX_NATIVE_CALL ArrayCreate(AMX* amx, cell* params)
 		if (VectorHolder[i]==NULL)
 		{
 			VectorHolder[i] = new CellArray(cellsize);
-			//VectorHolder[i]->resize(reserved);
+			
+			if (reserved > 0)
+			{
+				VectorHolder[i]->resize(reserved);
+			}
+
 			return i + 1;
 		}
 	}
 
 	// None are NULL, create a new vector
 	CellArray* NewVector = new CellArray(cellsize);
-	//NewVector->resize(reserved);
+	
+	if (reserved > 0)
+	{
+		NewVector->resize(reserved);
+	}
 
 	VectorHolder.append(NewVector);
 
@@ -188,7 +191,7 @@ static cell AMX_NATIVE_CALL ArrayGetArray(AMX* amx, cell* params)
 
 	memcpy(addr, blk, sizeof(cell) * indexes);
 
-	return 1;
+	return indexes;
 }
 
 // native any:ArrayGetCell(Array:which, item, block = 0, bool:asChar = false);
@@ -288,7 +291,7 @@ static cell AMX_NATIVE_CALL ArraySetArray(AMX* amx, cell* params)
 
 	memcpy(blk, addr, sizeof(cell) * indexes);
 
-	return 1;
+	return indexes;
 }
 
 // native ArraySetCell(Array:which, item, any:input, block = 0, bool:asChar = false);
@@ -425,15 +428,13 @@ static cell AMX_NATIVE_CALL ArrayPushString(AMX* amx, cell* params)
 	}
 
 	cell *blk = vec->push();
-	cell *start = blk;
 	if (!blk)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Failed to grow array");
 		return 0;
 	}
 
-	memcpy(blk, get_amxaddr(amx, params[2]), sizeof(cell) * vec->blocksize());
-	blk[vec->blocksize() - 1]= '\0';
+	strncopy(blk, get_amxaddr(amx, params[2]), vec->blocksize());
 
 	return static_cast<cell>((vec->size() - 1));
 }
@@ -634,7 +635,7 @@ static cell AMX_NATIVE_CALL ArraySwap(AMX* amx, cell* params)
 		return 0;
 	}
 
-	vec->swap(params[2], params[3]);
+	vec->swap(idx1, idx2);
 
 	return 1;
 }

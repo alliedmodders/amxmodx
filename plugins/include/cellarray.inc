@@ -39,15 +39,13 @@ stock ByteCountToCells(size)
  * It is very important that the cellsize you provide matches up with the buffer sizes
  * that you pass with subsequent Array{Get,Set,Push} calls.
  *
- * @note  As per AMX Mod X 1.8.3, reserved parameter has no effect.
- *
  * @param cellsize      How many cells each entry in the array is.
  * @param reserved      How many blank entries are created immediately when the array is created.  
  *                      These entries are not valid to read from until called with ArraySet.
  *
  * @return              Handle to the array.
  */
-native Array:ArrayCreate(cellsize = 1, reserved = 32);
+native Array:ArrayCreate(cellsize = 1, reserved = 0);
 
 /**
  * Clones an array, returning a new handle with the same size and data. 
@@ -98,9 +96,9 @@ native bool:ArrayResize(Array:which, newsize);
  *
  * @param which         The array to retrieve the item from.
  * @param item          The item to retrieve (zero-based).
+ * @param output        The output buffer to write.
  * @param size          If not set, assumes the buffer size is equal to the
  *                      cellsize.  Otherwise, the size passed is used.
- * @param output        The output buffer to write.
  *
  * @return              Number of cells copied.
  * @error               Invalid handle or invalid index.
@@ -109,7 +107,6 @@ native ArrayGetArray(Array:which, item, any:output[], size = -1);
 
 /**
  * Returns a single cell of data from an array.  
- * Use this only with arrays that were created with a cellsize of 1!
  *
  * @param which         The array to retrieve the item from.
  * @param item          The item to retrieve (zero-based).

@@ -147,8 +147,8 @@ void UTIL_ShowMenu(edict_t* pEntity, int slots, int time, char *menu, int mlen);
 void UTIL_ClientSayText(edict_t *pEntity, int sender, char *msg);
 void UTIL_TeamInfo(edict_t *pEntity, int playerIndex, const char *pszTeamName);
 
-template <typename D> int UTIL_CheckValidChar(D *c);
-template <typename D> unsigned int strncopy(D *dest, const char *src, size_t count);
+template <typename D> int UTIL_CheckValidChar(D *c); 
+template <typename D, typename S> unsigned int strncopy(D *dest, const S *src, size_t count);
 unsigned int UTIL_GetUTF8CharBytes(const char *stream);
 unsigned int UTIL_ReplaceAll(char *subject, size_t maxlength, const char *search, const char *replace, bool caseSensitive);
 char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t searchLen, const char *replace, size_t replaceLen, bool caseSensitive);

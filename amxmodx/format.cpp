@@ -659,10 +659,16 @@ reswitch:
 				CHECK_ARGS(0);
 				cell *addr = get_amxaddr(amx, params[arg]);
 				char buffer[255];
-				if (*addr >= 1 && *addr <= gpGlobals->maxClients)
+				if (*addr)
 				{
-					CPlayer *player = GET_PLAYER_POINTER_I(*addr);
-					if (!player->ingame)
+					CPlayer *player = NULL;
+
+					if (*addr >= 1 && *addr <= gpGlobals->maxClients)
+					{
+						player = GET_PLAYER_POINTER_I(*addr);
+					}
+
+					if (!player || !player->initialized)
 					{
 						LogError(amx, AMX_ERR_NATIVE, "Client index %d is invalid", *addr);
 						return 0;
@@ -682,7 +688,7 @@ reswitch:
 					UTIL_Format(buffer, sizeof(buffer), "Console<0><Console><Console>");
 				}
 
-				AddString(&buf_p, llen, (const char*)&buffer, width, prec);
+				AddString(&buf_p, llen, buffer, width, prec);
 				arg++;
 				break;
 			}
@@ -690,24 +696,29 @@ reswitch:
 			{
 				CHECK_ARGS(0);
 				cell *addr = get_amxaddr(amx, params[arg]);
-				char name[32] = "Console";
+				const char *name = "Console";
 
-				if (*addr >= 1 && *addr <= gpGlobals->maxClients)
+				if (*addr)
 				{
-					CPlayer *player = GET_PLAYER_POINTER_I(*addr);
+					CPlayer *player = NULL;
 
-					if (player->ingame)
+					if (*addr >= 1 && *addr <= gpGlobals->maxClients)
 					{
-						strncopy(name, player->name.c_str(), sizeof(name));
-
-						AddString(&buf_p, llen, (const char*)&name, width, prec);
-						arg++;
-						break;
+						player = GET_PLAYER_POINTER_I(*addr);
 					}
-				}
 
-				LogError(amx, AMX_ERR_NATIVE, "Client index %d is invalid", *addr);
-				return 0;
+					if (!player || !player->initialized)
+					{
+						LogError(amx, AMX_ERR_NATIVE, "Client index %d is invalid", *addr);
+						return 0;
+					}
+
+					name = player->name.c_str();
+				}
+			
+				AddString(&buf_p, llen, name, width, prec);
+				arg++;
+				break;
 			}
 		case '%':
 			*buf_p++ = static_cast<D>(ch);

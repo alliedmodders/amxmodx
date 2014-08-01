@@ -403,9 +403,9 @@ int sort_adtarray_strings_desc(const void *str1, const void *str2)
 	return strcmp((char *) str2, (char *) str1);
 }
 
-void sort_adt_random(CellVector *cArray)
+void sort_adt_random(CellArray *cArray)
 {
-	size_t arraysize = cArray->Size();
+	size_t arraysize = cArray->size();
 
 	srand((unsigned int)time(NULL));
 
@@ -413,15 +413,15 @@ void sort_adt_random(CellVector *cArray)
 	{
 		int n = rand() % (i + 1);
 
-		cArray->Swap(i, n);
+		cArray->swap(i, n);
 	}
 }
 
 static cell AMX_NATIVE_CALL SortADTArray(AMX *amx, cell *params)
 {
-	CellVector* vec=HandleToVector(amx, params[1]);
+	CellArray* vec = HandleToVector(amx, params[1]);
 
-	if (vec==NULL)
+	if (vec == NULL)
 	{
 		return 0;
 	}
@@ -436,9 +436,9 @@ static cell AMX_NATIVE_CALL SortADTArray(AMX *amx, cell *params)
 	}
 
 	cell type = params[3];
-	size_t arraysize = vec->Size();
-	size_t blocksize = vec->GetCellCount();
-	cell *array = vec->Base();
+	size_t arraysize = vec->size();
+	size_t blocksize = vec->blocksize();
+	cell *array = vec->base();
 
 	if (type == Sort_Integer)
 	{

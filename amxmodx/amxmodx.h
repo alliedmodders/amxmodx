@@ -147,8 +147,8 @@ void UTIL_ShowMenu(edict_t* pEntity, int slots, int time, char *menu, int mlen);
 void UTIL_ClientSayText(edict_t *pEntity, int sender, char *msg);
 void UTIL_TeamInfo(edict_t *pEntity, int playerIndex, const char *pszTeamName);
 
-template <typename D>
-int UTIL_CheckValidChar(D *c);
+template <typename D> int UTIL_CheckValidChar(D *c); 
+template <typename D, typename S> unsigned int strncopy(D *dest, const S *src, size_t count);
 unsigned int UTIL_GetUTF8CharBytes(const char *stream);
 unsigned int UTIL_ReplaceAll(char *subject, size_t maxlength, const char *search, const char *replace, bool caseSensitive);
 char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t searchLen, const char *replace, size_t replaceLen, bool caseSensitive);
@@ -301,7 +301,7 @@ int amxstring_len(cell* cstr);
 int load_amxscript(AMX* amx, void** program, const char* path, char error[64], int debug);
 int set_amxnatives(AMX* amx, char error[64]);
 int set_amxstring(AMX *amx, cell amx_addr, const char *source, int max);
-int set_amxstring_utf8(AMX *amx, cell amx_addr, const char *source, size_t sourcelen, size_t maxlen);
+template <typename T> int set_amxstring_utf8(AMX *amx, cell amx_addr, const T *source, size_t sourcelen, size_t maxlen);
 int unload_amxscript(AMX* amx, void** program);
 
 void copy_amxmemory(cell* dest, cell* src, int len);

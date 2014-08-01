@@ -109,7 +109,11 @@ int set_amxstring(AMX *amx, cell amx_addr, const char *source, int max)
 	return dest - start;
 }
 
-int set_amxstring_utf8(AMX *amx, cell amx_addr, const char *source, size_t sourcelen, size_t maxlen)
+template int set_amxstring_utf8<cell>(AMX *, cell, const cell *, size_t, size_t);
+template int set_amxstring_utf8<char>(AMX *, cell, const char *, size_t, size_t);
+
+template <typename T>
+int set_amxstring_utf8(AMX *amx, cell amx_addr, const T *source, size_t sourcelen, size_t maxlen)
 {
 	size_t len = sourcelen;
 	bool needtocheck = false;

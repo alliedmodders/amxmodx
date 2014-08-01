@@ -514,18 +514,25 @@ unsigned int UTIL_ReplaceAll(char *subject, size_t maxlength, const char *search
 	return total;
 }
 
-unsigned int strncopy(char *dest, const char *src, size_t count)
+template unsigned int strncopy<char, char>(char *, const char *src, size_t count);
+template unsigned int strncopy<cell, char>(cell *, const char *src, size_t count);
+template unsigned int strncopy<cell, cell>(cell *, const cell *src, size_t count);
+
+template <typename D, typename S>
+unsigned int strncopy(D *dest, const S *src, size_t count)
 {
 	if (!count)
 	{
 		return 0;
 	}
 
-	char *start = dest;
+	D *start = dest;
+
 	while ((*src) && (--count))
 	{
-		*dest++ = *src++;
+		*dest++ = *(unsigned char*)src++;
 	}
+
 	*dest = '\0';
 
 	return (dest - start);

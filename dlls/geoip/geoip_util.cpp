@@ -102,7 +102,7 @@ const char *lookupString(const char *ip, const char **path, int *length)
 	}
 
 	// Let's avoid a crash in case we go over the buffer size.
-	size_t maxLength = ke::Min((size_t)result.data_size, sizeof(buffer));
+	size_t maxLength = ke::Min((size_t)result.data_size, sizeof(buffer)-1);
 
 	// Strings from database are not null terminated.
 	memcpy(buffer, result.utf8_string, maxLength);

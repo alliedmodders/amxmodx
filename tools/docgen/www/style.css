@@ -7,13 +7,14 @@ a
 {
 	text-decoration: none;
 	color: blue;
+	cursor: pointer;
 }
 a:hover
 {
 	text-decoration: underline;
 }
 
-a img{
+img{
 	border: 0;
 }
 

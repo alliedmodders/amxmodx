@@ -233,6 +233,7 @@ scripting_files = [
   'testsuite/sqlxtest.sql',
   'testsuite/trietest.sma',
   'testsuite/utf8test.sma',
+  'testsuite/stacktest.sma',
   'include/amxconst.inc',
   'include/amxmisc.inc',
   'include/amxmodx.inc',

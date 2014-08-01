@@ -21,7 +21,7 @@ OBJECTS = meta_api.cpp CFile.cpp CVault.cpp vault.cpp float.cpp file.cpp modules
 	  CMenu.cpp util.cpp amx.cpp amxdbg.cpp natives.cpp newmenus.cpp debugger.cpp \
 	  optimizer.cpp format.cpp messages.cpp libraries.cpp vector.cpp sorting.cpp \
 	  nongpl_matches.cpp CFlagManager.cpp datastructs.cpp \
-	  trie_natives.cpp CDataPack.cpp datapacks.cpp
+	  trie_natives.cpp CDataPack.cpp datapacks.cpp stackstructs.cpp
 
 ##############################################
 ### CONFIGURE ANY OTHER FLAGS/OPTIONS HERE ###

@@ -22,6 +22,7 @@
 #include <vector>
 #include <sorting>
 #include <cellarray>
+#include <cellstack>
 #include <celltrie>
 #include <datapack>
 #include <newmenus>

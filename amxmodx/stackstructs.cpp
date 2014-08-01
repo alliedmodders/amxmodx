@@ -1,0 +1,293 @@
+/* AMX Mod X
+ *
+ * by the AMX Mod X Development Team
+ *  originally developed by OLO
+ *
+ *  This program is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation; either version 2 of the License, or (at
+ *  your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ *  General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software Foundation,
+ *   Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ *  In addition, as a special exception, the author gives permission to
+ *  link the code of this program with the Half-Life Game Engine ("HL
+ *  Engine") and Modified Game Libraries ("MODs") developed by Valve,
+ *  L.L.C ("Valve"). You must obey the GNU General Public License in all
+ *  respects for all of the code used other than the HL Engine and MODs
+ *  from Valve. If you modify this file, you may extend this exception
+ *  to your version of the file, but you are not obligated to do so. If
+ *  you do not wish to do so, delete this exception statement from your
+ *  version.
+ */
+#include "amxmodx.h"
+#include "datastructs.h"
+
+// native Stack:CreateStack(blocksize = 1);
+static cell AMX_NATIVE_CALL CreateStack(AMX* amx, cell* params)
+{
+	int cellsize = params[1];
+
+	if (cellsize <= 0)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid block size (must be > 0)", cellsize);
+		return -1;
+	}
+
+	// Scan through the vector list to see if any are NULL.
+	// NULL means the vector was previously destroyed.
+	for (unsigned int i = 0; i < VectorHolder.length(); ++i)
+	{
+		if (VectorHolder[i] == NULL)
+		{
+			VectorHolder[i] = new CellArray(cellsize);
+			return i + 1;
+		}
+	}
+
+	// None are NULL, create a new vector
+	CellArray* NewVector = new CellArray(cellsize);
+
+	VectorHolder.append(NewVector);
+
+	return VectorHolder.length();
+}
+
+// native PushStackCell(Stack:handle, any:value);
+static cell AMX_NATIVE_CALL PushStackCell(AMX* amx, cell* params)
+{
+	CellArray* vec = HandleToVector(amx, params[1]);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	cell *blk = vec->push();
+
+	if (!blk)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Failed to grow stack");
+		return 0;
+	}
+
+	*blk = params[2];
+
+	return 1;
+}
+
+// native PushStackString(Stack:handle, const value[]);
+static cell AMX_NATIVE_CALL PushStackString(AMX* amx, cell* params)
+{
+	CellArray* vec = HandleToVector(amx, params[1]);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	cell *blk = vec->push();
+
+	if (!blk)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Failed to grow stack");
+		return 0;
+	}
+
+	int len;
+	const char *value = get_amxstring(amx, params[2], 0, len);
+
+	strncopy(blk, value, vec->blocksize());
+
+	return 1;
+}
+
+// native PushStackArray(Stack:handle, const any:values[], size= -1);
+static cell AMX_NATIVE_CALL PushStackArray(AMX* amx, cell* params)
+{
+	CellArray* vec = HandleToVector(amx, params[1]);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	cell *blk = vec->push();
+
+	if (!blk)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Failed to grow stack");
+		return 0;
+	}
+
+	cell *addr = get_amxaddr(amx, params[2]);
+	size_t indexes = vec->blocksize();
+
+	if (params[3] != -1 && (size_t)params[3] <= vec->blocksize())
+	{
+		indexes = params[3];
+	}
+
+	memcpy(blk, addr, indexes * sizeof(cell));
+
+	return 1;
+}
+
+// native bool:PopStackCell(Stack:handle, &any:value, block = 0, bool:asChar = false);
+static cell AMX_NATIVE_CALL PopStackCell(AMX* amx, cell* params)
+{
+	CellArray* vec = HandleToVector(amx, params[1]);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	if (vec->size() == 0)
+	{
+		return 0;
+	}
+
+	cell *buffer = get_amxaddr(amx, params[2]);
+	size_t index = params[3];
+
+	cell *blk = vec->at(vec->size() - 1);
+	size_t idx = (size_t)params[3];
+
+	if (params[4] == 0)
+	{
+		if (idx >= vec->blocksize())
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Invalid block %d (blocksize: %d)", idx, vec->blocksize());
+			return 0;
+		}
+
+		*buffer = blk[idx];
+	}
+	else
+	{
+		if (idx >= vec->blocksize() * 4)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Invalid byte %d (blocksize: %d bytes)", idx, vec->blocksize() * 4);
+			return 0;
+		}
+
+		*buffer = (cell)*((char *)blk + idx);
+	}
+
+	vec->remove(vec->size() - 1);
+
+	return 1;
+}
+
+// native bool:PopStackString(Stack:handle, buffer[], maxlength, &written = 0);
+static cell AMX_NATIVE_CALL PopStackString(AMX* amx, cell* params)
+{
+	CellArray* vec = HandleToVector(amx, params[1]);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	if (vec->size() == 0)
+	{
+		return 0;
+	}
+
+	size_t idx = vec->size() - 1;
+	cell *blk = vec->at(idx);
+
+	int numWritten = set_amxstring_utf8(amx, params[2], blk, amxstring_len(blk), params[3] + 1);
+	*get_amxaddr(amx, params[4]) = numWritten;
+
+	vec->remove(idx);
+
+	return 1;
+}
+
+// native bool:PopStackArray(Stack:handle, any:buffer[], size=-1);
+static cell AMX_NATIVE_CALL PopStackArray(AMX* amx, cell* params)
+{
+	CellArray* vec = HandleToVector(amx, params[1]);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	if (vec->size() == 0)
+	{
+		return 0;
+	}
+
+	size_t idx = vec->size() - 1;
+	cell *blk = vec->at(idx);
+	size_t indexes = vec->blocksize();
+
+	if (params[3] != -1 && (size_t)params[3] <= vec->blocksize())
+	{
+		indexes = params[3];
+	}
+
+	cell *addr = get_amxaddr(amx, params[2]);
+	memcpy(addr, blk, indexes * sizeof(cell));
+
+	vec->remove(idx);
+
+	return 1;
+}
+
+// native bool:IsStackEmpty(Stack:handle);
+static cell AMX_NATIVE_CALL IsStackEmpty(AMX* amx, cell* params)
+{
+	CellArray* vec = HandleToVector(amx, params[1]);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	return vec->size() == 0;
+}
+
+// native DestroyStack(&Stack:which);
+static cell AMX_NATIVE_CALL DestroyStack(AMX* amx, cell* params)
+{
+	cell *handle = get_amxaddr(amx, params[1]);
+	CellArray *vec = HandleToVector(amx, *handle);
+
+	if (vec == NULL)
+	{
+		return 0;
+	}
+
+	delete vec;
+
+	VectorHolder[*handle - 1] = NULL;
+
+	*handle = 0;
+
+	return 1;
+}
+
+AMX_NATIVE_INFO g_StackNatives[] =
+{
+	{ "CreateStack",     CreateStack     },
+	{ "IsStackEmpty",    IsStackEmpty    },
+	{ "PopStackArray",   PopStackArray   },
+	{ "PopStackCell",    PopStackCell    },
+	{ "PopStackString",  PopStackString  },
+	{ "PushStackArray",  PushStackArray  },
+	{ "PushStackCell",   PushStackCell   },
+	{ "PushStackString", PushStackString },
+	{ "DestroyStack",    DestroyStack    },
+	{ NULL,              NULL            },
+};

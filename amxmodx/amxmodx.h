@@ -85,6 +85,7 @@ extern AMX_NATIVE_INFO msg_Natives[];
 extern AMX_NATIVE_INFO vector_Natives[];
 extern AMX_NATIVE_INFO g_SortNatives[];
 extern AMX_NATIVE_INFO g_DataStructNatives[];
+extern AMX_NATIVE_INFO g_StackNatives[];
 
 #if defined(_WIN32)
 #define DLLOAD(path) (DLHANDLE)LoadLibrary(path)

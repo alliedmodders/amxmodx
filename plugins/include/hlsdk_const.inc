@@ -111,7 +111,8 @@
 #define EF_LIGHT                        64          // Rocket flare glow sprite
 #define EF_NODRAW                       128         // Don't draw entity
 
-// pev(entity, pev_iuser1) values
+// Camera mode constants
+// Usually stored in pev_iuser1 field in Counter-Strike and Half-Life
 #define OBS_NONE                        0
 #define OBS_CHASE_LOCKED                1           // Locked Chase Cam
 #define OBS_CHASE_FREE                  2           // Free Chase Cam

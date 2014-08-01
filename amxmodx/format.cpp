@@ -118,12 +118,12 @@ const char *translate(AMX *amx, cell amxaddr, const char *key)
 	return def;
 }
 
-template <typename U>
-void AddString(U **buf_p, size_t &maxlen, const cell *string, int width, int prec)
+template <typename U, typename S>
+void AddString(U **buf_p, size_t &maxlen, const S *string, int width, int prec)
 {
 	int		size = 0;
 	U		*buf;
-	static cell nlstr[] = {'(','n','u','l','l',')','\0'};
+	static S nlstr[] = {'(','n','u','l','l',')','\0'};
 
 	buf = *buf_p;
 
@@ -652,6 +652,72 @@ reswitch:
 				size_t written = atcprintf(buf_p, llen, def, amx, params, &arg);
 				buf_p += written;
 				llen -= written;
+				break;
+			}
+		case 'N':
+			{
+				CHECK_ARGS(0);
+				cell *addr = get_amxaddr(amx, params[arg]);
+				char buffer[255];
+				if (*addr)
+				{
+					CPlayer *player = NULL;
+
+					if (*addr >= 1 && *addr <= gpGlobals->maxClients)
+					{
+						player = GET_PLAYER_POINTER_I(*addr);
+					}
+
+					if (!player || !player->initialized)
+					{
+						LogError(amx, AMX_ERR_NATIVE, "Client index %d is invalid", *addr);
+						return 0;
+					}
+
+					const char *auth = GETPLAYERAUTHID(player->pEdict);
+					if (!auth || auth[0] == '\0')
+					{
+						auth = "STEAM_ID_PENDING";
+					}
+
+					int userid = GETPLAYERUSERID(player->pEdict);
+					UTIL_Format(buffer, sizeof(buffer), "%s<%d><%s><%s>", player->name.c_str(), userid, auth, player->team.c_str());
+				}
+				else
+				{
+					UTIL_Format(buffer, sizeof(buffer), "Console<0><Console><Console>");
+				}
+
+				AddString(&buf_p, llen, buffer, width, prec);
+				arg++;
+				break;
+			}
+		case 'n':
+			{
+				CHECK_ARGS(0);
+				cell *addr = get_amxaddr(amx, params[arg]);
+				const char *name = "Console";
+
+				if (*addr)
+				{
+					CPlayer *player = NULL;
+
+					if (*addr >= 1 && *addr <= gpGlobals->maxClients)
+					{
+						player = GET_PLAYER_POINTER_I(*addr);
+					}
+
+					if (!player || !player->initialized)
+					{
+						LogError(amx, AMX_ERR_NATIVE, "Client index %d is invalid", *addr);
+						return 0;
+					}
+
+					name = player->name.c_str();
+				}
+			
+				AddString(&buf_p, llen, name, width, prec);
+				arg++;
 				break;
 			}
 		case '%':

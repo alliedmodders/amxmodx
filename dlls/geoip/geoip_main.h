@@ -33,5 +33,6 @@
 #include "amxxmodule.h"
 
 bool loadDatabase();
+void OnGeoipCommand();
 
 #endif // _INCLUDE_GEOIPMAIN_H

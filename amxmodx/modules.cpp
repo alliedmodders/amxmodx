@@ -1867,6 +1867,8 @@ void Module_CacheFunctions()
 
 	// String / mem in amx scripts support
 	REGISTER_FUNC("SetAmxString", set_amxstring)
+	REGISTER_FUNC("SetAmxStringUTF8Char", set_amxstring_utf8_char)
+	REGISTER_FUNC("SetAmxStringUTF8Cell", set_amxstring_utf8_cell)
 	REGISTER_FUNC("GetAmxString", MNF_GetAmxString)
 	REGISTER_FUNC("GetAmxStringLen", MNF_GetAmxStringLen)
 	REGISTER_FUNC("FormatAmxString", MNF_FormatAmxString)

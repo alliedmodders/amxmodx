@@ -314,12 +314,6 @@
     <ClInclude Include="..\CDataPack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\sm_stringhashmap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sm_memtable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\version.rc">

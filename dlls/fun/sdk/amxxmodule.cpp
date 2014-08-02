@@ -2448,6 +2448,8 @@ PFN_GET_AMXSCRIPT			g_fn_GetAmxScript;
 PFN_FIND_AMXSCRIPT_BYAMX	g_fn_FindAmxScriptByAmx;
 PFN_FIND_AMXSCRIPT_BYNAME	g_fn_FindAmxScriptByName;
 PFN_SET_AMXSTRING			g_fn_SetAmxString;
+PFN_SET_AMXSTRING_UTF8_CHAR	g_fn_SetAmxStringUTF8Char;
+PFN_SET_AMXSTRING_UTF8_CELL	g_fn_SetAmxStringUTF8Cell;
 PFN_GET_AMXSTRING			g_fn_GetAmxString;
 PFN_GET_AMXSTRINGLEN		g_fn_GetAmxStringLen;
 PFN_FORMAT_AMXSTRING		g_fn_FormatAmxString;
@@ -2587,6 +2589,8 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 
 	// String / mem in amx scripts support
 	REQFUNC("SetAmxString", g_fn_SetAmxString, PFN_SET_AMXSTRING);
+	REQFUNC("SetAmxStringUTF8Char", g_fn_SetAmxStringUTF8Char, PFN_SET_AMXSTRING_UTF8_CHAR);
+	REQFUNC("SetAmxStringUTF8Cell", g_fn_SetAmxStringUTF8Cell, PFN_SET_AMXSTRING_UTF8_CELL);
 	REQFUNC("GetAmxString", g_fn_GetAmxString, PFN_GET_AMXSTRING);
 	REQFUNC("GetAmxStringLen", g_fn_GetAmxStringLen, PFN_GET_AMXSTRINGLEN);
 	REQFUNC("FormatAmxString", g_fn_FormatAmxString, PFN_FORMAT_AMXSTRING);
@@ -2739,6 +2743,8 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_FindScriptByAmx(NULL);
 	MF_FindScriptByName("str");
 	MF_SetAmxString(NULL, 0, "str", 0);
+	MF_SetAmxStringUTF8Char(NULL, 0, "str", 0, 0);
+	MF_SetAmxStringUTF8Cell(NULL, 0, "str", 0, 0);
 	MF_GetAmxString(NULL, 0, 0, 0);
 	MF_GetAmxStringLen(NULL);
 	MF_CopyAmxMemory(NULL, NULL, 0);

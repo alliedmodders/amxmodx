@@ -276,6 +276,7 @@ scripting_files = [
   'include/vault.inc',
   'include/xs.inc',
   'include/cellarray.inc',
+  'include/cellstack.inc',
   'include/celltrie.inc',
   'include/fakemeta_util.inc',
   'include/ham_const.inc',

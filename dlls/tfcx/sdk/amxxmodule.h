@@ -2128,6 +2128,8 @@ typedef AMX *			(*PFN_GET_AMXSCRIPT)			(int /*id*/);
 typedef int				(*PFN_FIND_AMXSCRIPT_BYAMX)		(const AMX * /*amx*/);
 typedef int				(*PFN_FIND_AMXSCRIPT_BYNAME)	(const char * /*name*/);
 typedef int				(*PFN_SET_AMXSTRING)			(AMX * /*amx*/, cell /*amx_addr*/, const char * /* source */, int /* max */);
+typedef int				(*PFN_SET_AMXSTRING_UTF8_CHAR)	(AMX *amx, cell amx_addr, const char *source, size_t sourcelen, size_t maxlen);
+typedef int				(*PFN_SET_AMXSTRING_UTF8_CELL)	(AMX *amx, cell amx_addr, const cell *source, size_t sourcelen, size_t maxlen);
 typedef char *			(*PFN_GET_AMXSTRING)			(AMX * /*amx*/, cell /*amx_addr*/, int /*bufferId*/, int * /*pLen*/);
 typedef int				(*PFN_GET_AMXSTRINGLEN)			(const cell *ptr);
 typedef char *			(*PFN_FORMAT_AMXSTRING)			(AMX * /*amx*/, cell * /*params*/, int /*startParam*/, int * /*pLen*/);
@@ -2217,6 +2219,8 @@ extern PFN_GET_AMXSCRIPT			g_fn_GetAmxScript;
 extern PFN_FIND_AMXSCRIPT_BYAMX		g_fn_FindAmxScriptByAmx;
 extern PFN_FIND_AMXSCRIPT_BYNAME	g_fn_FindAmxScriptByName;
 extern PFN_SET_AMXSTRING			g_fn_SetAmxString;
+extern PFN_SET_AMXSTRING_UTF8_CHAR	g_fn_SetAmxStringUTF8Char;
+extern PFN_SET_AMXSTRING_UTF8_CELL	g_fn_SetAmxStringUTF8Cell;
 extern PFN_GET_AMXSTRING			g_fn_GetAmxString;
 extern PFN_GET_AMXSTRINGLEN			g_fn_GetAmxStringLen;
 extern PFN_FORMAT_AMXSTRING			g_fn_FormatAmxString;
@@ -2296,6 +2300,8 @@ AMX *			MF_GetScriptAmx				(int id) { }
 int				MF_FindScriptByAmx			(const AMX * amx) { }
 int				MF_FindScriptByAmx			(const char * name) { }
 int				MF_SetAmxString				(AMX * amx, cell amx_addr, const char *  source , int  max ) { }
+int				MF_SetAmxStringUTF8Char		(AMX *amx, cell amx_addr, const char *source, size_t sourcelen, size_t maxlen) { }
+int				MF_SetAmxStringUTF8Cell		(AMX *amx, cell amx_addr, const cell *source, size_t sourcelen, size_t maxlen) { }
 char *			MF_GetAmxString				(AMX * amx, cell amx_addr, int bufferId, int * pLen) { }
 int				MF_GetAmxStringLen			(const cell *ptr) { }
 char *			MF_FormatAmxString			(AMX * amx, cell * params, int startParam, int * pLen) { }
@@ -2368,6 +2374,8 @@ void *			MF_MessageBlock				(int mode, int msg, int *opt) { }
 #define MF_FindScriptByAmx g_fn_FindAmxScriptByAmx
 #define MF_FindScriptByName g_fn_FindAmxScriptByName
 #define MF_SetAmxString g_fn_SetAmxString
+#define MF_SetAmxStringUTF8Char g_fn_SetAmxStringUTF8Char
+#define MF_SetAmxStringUTF8Cell g_fn_SetAmxStringUTF8Cell
 #define MF_GetAmxString g_fn_GetAmxString
 #define MF_GetAmxStringLen g_fn_GetAmxStringLen
 #define MF_CopyAmxMemory g_fn_CopyAmxMemory

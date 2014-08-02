@@ -114,7 +114,7 @@ static cell AMX_NATIVE_CALL amx_geoip_country(AMX *amx, cell *params)
 		return 0;
 	}
 
-	return MF_SetAmxString(amx, params[2], country, length >= params[3] ? params[3] : length); // TODO: make this utf8 safe.
+	return MF_SetAmxStringUTF8Char(amx, params[2], country, length, params[3] + 1);
 }
 
 // native geoip_city(const ip[], result[], len, id = -1);
@@ -126,7 +126,7 @@ static cell AMX_NATIVE_CALL amx_geoip_city(AMX *amx, cell *params)
 	const char *path[] = { "city", "names", getLang(params[4]), NULL };
 	const char *city = lookupString(ip, path, &length);
 
-	return MF_SetAmxString(amx, params[2], city ? city : "", length >= params[3] ? params[3] : length); // TODO: make this utf8 safe.
+	return MF_SetAmxStringUTF8Char(amx, params[2], city ? city : "", length, params[3] + 1);
 }
 
 // native geoip_region_code(const ip[], result[], len);
@@ -160,7 +160,7 @@ static cell AMX_NATIVE_CALL amx_geoip_region_code(AMX *amx, cell *params)
 		}
 	}
 
-	return MF_SetAmxString(amx, params[2], finalLength ? code : "", finalLength >= params[3] ? params[3] : finalLength);
+	return MF_SetAmxString(amx, params[2], finalLength ? code : "", ke::Min(finalLength, params[3]));
 }
 
 // native geoip_region_name(const ip[], result[], len, id = -1);
@@ -172,7 +172,7 @@ static cell AMX_NATIVE_CALL amx_geoip_region_name(AMX *amx, cell *params)
 	const char *path[] = { "subdivisions", "0", "names", getLang(params[4]), NULL }; // First result.
 	const char *region = lookupString(ip, path, &length);
 
-	return MF_SetAmxString(amx, params[2], region ? region : "", length >= params[3] ? params[3] : length); // TODO: make this utf8 safe.
+	return MF_SetAmxStringUTF8Char(amx, params[2], region ? region : "", length, params[3] + 1);
 }
 
 // native geoip_timezone(const ip[], result[], len);
@@ -184,7 +184,7 @@ static cell AMX_NATIVE_CALL amx_geoip_timezone(AMX *amx, cell *params)
 	const char *path[] = { "location", "time_zone", NULL };
 	const char *timezone = lookupString(ip, path, &length);
 
-	return MF_SetAmxString(amx, params[2], timezone ? timezone : "", length >= params[3] ? params[3] : length);
+	return MF_SetAmxString(amx, params[2], timezone ? timezone : "", ke::Min(length, params[3]));
 }
 
 // native geoip_latitude(const ip[]);
@@ -247,7 +247,7 @@ static cell AMX_NATIVE_CALL amx_geoip_continent_name(AMX *amx, cell *params)
 	const char *path[] = { "continent", "names", getLang(params[4]), NULL };
 	const char *continent = lookupString(ip, path, &length);
 
-	return MF_SetAmxString(amx, params[2], continent ? continent : "", length >= params[3] ? params[3] : length); // TODO: make this utf8 safe.
+	return MF_SetAmxStringUTF8Char(amx, params[2], continent ? continent : "", length, params[3] + 1);
 }
 
 

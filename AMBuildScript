@@ -13,9 +13,14 @@ class AMXXConfig(object):
     self.metamod_path = None
     self.hlsdk_path = None
     self.mysql_path = None
-    self.generated_headers = None
+    self.generated_headers = []
     self.csx_app = None
     self.stdcxx_path = None
+
+  def use_auto_versioning(self):
+    if builder.backend != 'amb2':
+      return False
+    return not getattr(builder.options, 'disable_auto_versioning', False)
 
   def detectProductVersion(self):
     builder.AddConfigureFile('product.version')
@@ -235,10 +240,11 @@ class AMXXConfig(object):
     cfg.defines += [
       'AMX_NOPROPLIST',
       'PAWN_CELL_SIZE=32',
-      'AMBUILD',
     ]
 
-    cfg.includes += [os.path.join(builder.buildPath, 'includes')]
+    if self.use_auto_versioning():
+        cfg.defines += ['AMBUILD']
+        cfg.includes += [os.path.join(builder.buildPath, 'includes')]
     cfg.includes += [os.path.join(builder.sourcePath, 'public')]
     cfg.includes += [os.path.join(builder.sourcePath, 'public', 'amtl')]
     cfg.includes += [os.path.join(builder.sourcePath, 'public', 'memtools')]
@@ -267,15 +273,18 @@ class AMXXConfig(object):
     if builder.target_platform == 'windows':
       binary.compiler.rcdefines += [
         'BINARY_NAME="{0}"'.format(binary.outputFile),
-        'AMBUILD',
         'RC_COMPILE',
       ]
+      if self.use_auto_versioning():
+        binary.compiler.rcdefines += ['AMBUILD']
     elif builder.target_platform == 'mac':
       binary.compiler.postlink += [
         '-compatibility_version', '1.0.0',
         '-current_version', self.productVersion
       ]
-    #binary.compiler.linkflags += [self.versionlib]
+      if self.use_auto_versioning():
+        binary.compiler.rcdefines += ['AMBUILD']
+
     binary.compiler.sourcedeps += AMXX.generated_headers
     return binary
 
@@ -341,10 +350,11 @@ AMXX.detectHlsdk()
 AMXX.detectMysql()
 AMXX.configure()
 
-AMXX.generated_headers = builder.RunScript(
-  'support/Versioning',
-  { 'AMXX': AMXX }
-)
+if AMXX.use_auto_versioning():
+  AMXX.generated_headers = builder.RunScript(
+    'support/Versioning',
+    { 'AMXX': AMXX }
+  )
 
 builder.RunBuildScripts(
   [
@@ -369,16 +379,19 @@ builder.RunBuildScripts(
     'dlls/tfcx/AMBuilder',
     'dlls/ts/tsfun/AMBuilder',
     'dlls/ts/tsx/AMBuilder',
-    'plugins/AMBuilder',
   ],
-  {
-    'AMXX': AMXX
-  }
+  { 'AMXX': AMXX }
 )
 
 # The csstats.dat reader is Windows-only.
 if builder.target_platform == 'windows':
   builder.RunScript('dlls/cstrike/csx/WinCSX/AMBuilder', { 'AMXX': AMXX })
 
-# Finally, do packaging.
-builder.RunScript('support/PackageScript', { 'AMXX': AMXX })
+if builder.backend == 'amb2':
+  builder.RunBuildScripts([
+      'plugins/AMBuilder',
+      'support/PackageScript',
+    ],
+    { 'AMXX': AMXX }
+  )
+

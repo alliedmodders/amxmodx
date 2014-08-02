@@ -7,7 +7,7 @@ binary.compiler.defines += [
   'AMX_ANSIONLY',
 ]
 
-if builder.target_platform != 'windows':
+if builder.compiler.like('gcc'):
   binary.compiler.cxxflags.remove('-fno-exceptions')
 
 if builder.target_platform == 'linux':

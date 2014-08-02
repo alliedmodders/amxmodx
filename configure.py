@@ -28,4 +28,6 @@ run.options.add_option('--hlsdk', type='string', dest='hlsdk_path', default='',
                        help='Path to the HLSDK')
 run.options.add_option('--mysql', type='string', dest='mysql_path', default='',
                        help='Path to MySQL')
+run.options.add_option('--disable-auto-versioning', action='store_true', dest='disable_auto_versioning',
+                       default=False, help='Disable the auto versioning script')
 run.Configure()

@@ -187,7 +187,7 @@ native formatex(output[], len, const format[], any:...);
  */
 native vformat(buffer[], len, const fmt[], vararg);
 
- /**
+/**
  * Formats a string according to the AMX Mod X format rules (see documentation).
  *
  * @note Same as vformat(), except works in normal style dynamic natives.
@@ -790,7 +790,7 @@ stock argbreak(const text[], left[], leftlen, right[], rightlen)
  */
 native split_string(const source[], const split[], part[], partLen);
 
- /**
+/**
  * It is basically strbreak but you have a delimiter that is more than one character in length. By Suicid3.
  *
  * @param szInput		Source input string.
@@ -826,7 +826,7 @@ stock split(const szInput[], szLeft[], pL_Max, szRight[], pR_Max, const szDelim[
 	return;
 }
 
- /**
+/**
  * Removes a path from szFilePath leaving the name of the file in szFile for a pMax length.
  *
  * @param szFilePath	String to perform search and replacements on.
@@ -846,7 +846,7 @@ stock remove_filepath(const szFilePath[], szFile[], pMax)
 	return;
 }
 
- /**
+/**
  * Replaces a contained string iteratively.
  *
  * @note Consider using replace_string() instead.

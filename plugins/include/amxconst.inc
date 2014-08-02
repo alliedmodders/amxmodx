@@ -37,6 +37,9 @@ public stock const MaxClients;	/* Maximum number of players the server supports 
 
 #define M_PI 3.1415926535
 
+/**
+ * Admin level constants
+ */
 #define ADMIN_ALL		0	/* everyone */
 #define ADMIN_IMMUNITY		(1<<0)	/* flag "a" */
 #define ADMIN_RESERVATION	(1<<1)	/* flag "b" */
@@ -70,11 +73,16 @@ public stock const MaxClients;	/* Maximum number of players the server supports 
 #define FLAG_NOPASS		(1<<4)	/* flag "e" */
 #define FLAG_CASE_SENSITIVE	(1<<10) /* flag "k" */
 
+/**
+ * Return codes
+ */
 #define PLUGIN_CONTINUE		0	/* Results returned by public functions */
 #define PLUGIN_HANDLED		1	/* stop other plugins */
 #define PLUGIN_HANDLED_MAIN	2	/* to use in client_command(), continue all plugins but stop the command */
 
-/* Flags for register_cvar() */
+/**
+ * CVAR constants for register_cvar()
+ */
 #define	FCVAR_ARCHIVE		1	/* set to cause it to be saved to vars.rc */
 #define	FCVAR_USERINFO		2	/* changes the client's info string */
 #define	FCVAR_SERVER		4	/* notifies players when changed */
@@ -85,8 +93,9 @@ public stock const MaxClients;	/* Maximum number of players the server supports 
 #define FCVAR_PRINTABLEONLY	128	/* This cvar's string cannot contain unprintable characters ( e.g., used for player name etc ). */
 #define FCVAR_UNLOGGED		256	/* If this is a FCVAR_SERVER, don't log changes to the log file / console if we are creating a log */
 
-
-/* Id of weapons in CS */
+/**
+ * IDs of weapons in CS
+ */
 #define CSW_P228			1
 #define CSW_SCOUT			3
 #define CSW_HEGRENADE		4
@@ -121,6 +130,9 @@ public stock const MaxClients;	/* Maximum number of players the server supports 
 #define CSW_VESTHELM		32	// Custom
 #define CSW_SHIELDGUN		99
 
+/**
+ * HI weapon constants
+ */
 #define HIW_BERETTA		1
 #define HIW_SPAS12		2
 #define HIW_M4A1		3
@@ -139,7 +151,9 @@ public stock const MaxClients;	/* Maximum number of players the server supports 
 #define HIW_TANGOGREN		16
 #define HIW_FLASHBANG		17
 
-/* Parts of body for hits */
+/**
+ * Parts of body for hits
+ */
 #define HIT_GENERIC		0	/* none */
 #define HIT_HEAD		1
 #define HIT_CHEST		2
@@ -149,8 +163,13 @@ public stock const MaxClients;	/* Maximum number of players the server supports 
 #define HIT_LEFTLEG		6
 #define HIT_RIGHTLEG		7
 
-/* Constants for emit_sound() */
-/* Channels */
+/**
+ * @section Constants for emit_sound()
+ */
+
+/**
+ * Channels
+ */
 #define CHAN_AUTO		0
 #define CHAN_WEAPON		1
 #define	CHAN_VOICE		2
@@ -161,21 +180,33 @@ public stock const MaxClients;	/* Maximum number of players the server supports 
 #define CHAN_NETWORKVOICE_BASE	7	/* voice data coming across the network */
 #define CHAN_NETWORKVOICE_END	500	/* network voice data reserves slots (CHAN_NETWORKVOICE_BASE through CHAN_NETWORKVOICE_END). */
 
-/* Attenuation values */
+/**
+ *Attenuation values
+ */
 #define ATTN_NONE		0.00
 #define	ATTN_NORM		0.80
 #define ATTN_IDLE		2.00
 #define ATTN_STATIC		1.25
 
-/* Pitch values */
+/**
+ * Pitch values
+ */
 #define	PITCH_NORM		100	/* non-pitch shifted */
 #define PITCH_LOW		95	/* other values are possible - 0-255, where 255 is very high */
 #define PITCH_HIGH		120
 
-/* Volume values */
+/**
+ * Volume values
+ */
 #define VOL_NORM		1.0
 
-/* Menu keys */
+/**
+ * @endsection
+ */
+
+/**
+ * Menu keys
+ */
 #define MENU_KEY_1		(1<<0)
 #define MENU_KEY_2		(1<<1)
 #define MENU_KEY_3		(1<<2)
@@ -187,11 +218,17 @@ public stock const MaxClients;	/* Maximum number of players the server supports 
 #define MENU_KEY_9		(1<<8)
 #define MENU_KEY_0		(1<<9)
 
+/**
+ * Language constants
+ */
 #define LANG_SERVER		0
 #define LANG_PLAYER		-1
 
-/* Destination types for client_print() */
-enum {
+/**
+ * Destination types for client_print()
+ */
+enum
+{
 	print_notify = 1,
 	print_console,
 	print_chat,
@@ -199,23 +236,32 @@ enum {
 	print_radio		/* Counter-Strike only */
 };
 
-/* Color types for client_print_color() */
-enum {
+/**
+ * Color types for client_print_color()
+ */
+enum 
+{
 	print_team_default = 0,
 	print_team_grey = -1,
 	print_team_red = -2,
 	print_team_blue = -3,
 };
 
-/* Destination types for engclient_print() */
-enum {
+/**
+ * Destination types for engclient_print()
+ */
+enum
+{
 	engprint_console = 0,
 	engprint_center,
 	engprint_chat,
 };
 
-/* Render for set_user_rendering() */
-enum {
+/**
+ * Render for set_user_rendering()
+ */
+enum
+{
 	kRenderNormal = 0,		/* src */
 	kRenderTransColor,		/* c*a+dest*(1-a) */
 	kRenderTransTexture,		/* src*a+dest*(1-a) */
@@ -224,8 +270,11 @@ enum {
 	kRenderTransAdd,		/* src*a+dest */
 };
 
-/* Fx for set_user_rendering() */
-enum {
+/**
+ * Fx for set_user_rendering()
+ */
+enum
+{
 	kRenderFxNone = 0,
 	kRenderFxPulseSlow,
 	kRenderFxPulseFast,
@@ -249,15 +298,21 @@ enum {
 	kRenderFxClampMinScale,		/* Keep this sprite from getting very small (SPRITES only!) */
 };
 
-/* Type for force_unmodified() */
-enum {
+/**
+ * Type for force_unmodified()
+ */
+enum
+{
 	force_exactfile = 0,		/* File on client must exactly match server's file */
 	force_model_samebounds,		/* For model files only, the geometry must fit in the same bbox */
 	force_model_specifybounds,	/* For model files only, the geometry must fit in the specified bbox */
 };
 
-/* Status for get_module() */
-enum {
+/**
+ * Status for get_module()
+ */
+enum
+{
 	module_none = 0,
 	module_query,
 	module_badload,
@@ -268,11 +323,13 @@ enum {
 	module_old,
 };
 
+/**
+ * AMX flag constants
+ */
 #define AMX_FLAG_DEBUG    0x02  /* symbolic info. available */
 #define AMX_FLAG_COMPACT  0x04  /* compact encoding */
 #define AMX_FLAG_BYTEOPC  0x08  /* opcode is a byte (not a cell) */
 #define AMX_FLAG_NOCHECKS 0x10  /* no array bounds checking; no STMT opcode */
-/*      AMX_FLAG_OLDFILE  0x20	   Old AMX Mod plugin */
 #define AMX_FLAG_NTVREG 0x1000  /* all native functions are registered */
 #define AMX_FLAG_JITC   0x2000  /* abstract machine is JIT compiled */
 #define AMX_FLAG_BROWSE 0x4000  /* busy browsing */
@@ -317,12 +374,18 @@ enum {
 #define SND_CHANGE_VOL		(1<<6)		// change sound vol
 #define SND_CHANGE_PITCH	(1<<7)		// change sound pitch
 
+/**
+ * LibType constants
+ */
 enum LibType
 {
 	LibType_Library,
 	LibType_Class
 };
 
+/**
+ * AdminProp constants
+ */
 enum AdminProp
 {
 	AdminProp_Auth = 0,

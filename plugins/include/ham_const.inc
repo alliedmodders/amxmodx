@@ -5,7 +5,7 @@
 
 /**
  * Ham return types.
- * -
+ *
  * Return these from hooks to disable calling the target function.
  * Numbers match up with fakemeta's FMRES_* for clarity.  They are interchangable.
  * 0 (or no return) is also interpretted as HAM_IGNORED.
@@ -3722,6 +3722,9 @@ enum Ham
 	HAM_LAST_ENTRY_DONT_USE_ME_LOL
 };
 
+/**
+ * Ham errors types.
+ */
 enum HamError
 {
 	HAM_OK = 0,
@@ -3732,8 +3735,10 @@ enum HamError
 	HAM_ERR_END
 };
 
-// To be used with [Get|Set]HamItemInfo.
-// Ham prefix to avoid collision. :(
+/**
+ * To be used with [Get|Set]HamItemInfo.
+ * Ham prefix to avoid collision. :(
+ */
 enum HamItemInfo
 {
 	Ham_ItemInfo_iSlot,

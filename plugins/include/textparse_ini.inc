@@ -1,0 +1,196 @@
+
+#if defined _textparse_ini_included
+	#endinput
+#endif
+#define _textparse_ini_included
+
+/**
+ * This parser API is entirely event based.  You must hook events to receive data.
+ * The file format can ben either INI or SMC (also known as "SourceMod Configuration".
+ * SMC format is nearly identical to  VDF (also known as "Valve's KeyValues format").
+ * Also please note INI format is handled differently. Because more "simple" to parse, some 
+ * event doesn't exist and callback prototype can be different.
+ */
+ 
+/**
+ * The INI file format is defined as:
+ *    WHITESPACE: 0x20, \n, \t, \r
+ *    IDENTIFIER: A-Z a-z 0-9 _ - , + . $ ? / 
+ *    STRING    : Any set of symbols
+ * 
+ * Basic syntax is comprised of SECTIONs.
+ *    A SECTION is defined as:
+ *    [SECTIONNAME]
+ *    OPTION
+ *    OPTION
+ *    OPTION...
+ *
+ * SECTIONNAME is an IDENTIFIER.
+ *    OPTION can be repeated any number of times, once per line.
+ *    OPTION is defined as one of:
+ *      KEY = "VALUE"
+ *      KEY = VALUE
+ *      KEY
+ *    Where KEY is an IDENTIFIER and VALUE is a STRING.
+ * 
+ * WHITESPACE should always be omitted.
+ *    COMMENTS should be stripped, and are defined as text occurring in:
+ *    ;<TEXT>
+ * 
+ * Example file below.  Note that the second line is technically invalid.  
+ * The event handler must decide whether this should be allowed.
+ *    --FILE BELOW--
+ *    [gaben]
+ *    hi = clams
+ *    bye = "NO CLAMS"
+ *
+ *    [valve]
+ *    cannot
+ *    maintain
+ *    products
+ */
+  
+/**
+ * Parser invalid code.
+ */
+enum INIParser
+{
+	Invalid_INIParser = 0
+};
+
+/**
+ * Creates a new INI parser.  
+ * This is used to set parse hooks.
+ *
+ * @return              A new handle to an INI Parse structure.
+ */
+native INIParser:INI_CreateParser();
+
+/**
+ * Disposes of a INI parser.
+ *
+ * @param handle        Handle to a INI Parse.
+ *
+ * @return              True if disposed, false otherwise.
+ */
+native INI_DestroyParser(&INIParser:handle);
+
+/**
+ * Parses a INI config file.
+ *
+ * @param handle        A handle to an INI Parse structure.
+ * @param file          A string containing the file path.
+ * @param line          An optional by reference cell to store the last line number read.
+ * @param col           An optional by reference cell to store the last column number read.
+ 
+ * @return              A SMCParseError result.
+ * @error               Invalid or corrupt handle. 
+ */
+native bool:INI_ParseFile(INIParser:handle, const file[], &line = 0, &col = 0);
+
+/**
+ * Sets the INI_ParseStart function of a parse handle.
+ *
+ * @note  Below is the prototype of callback:
+ *        -
+ *          Called when parsing is started.
+ *
+ *          @param handle        The INI Parse handle.
+ *
+ *          @noreturn
+ *
+ *          public OnParseStart(INIParser:handle)
+ *        -
+ * @param handle        Handle to a INI Parse.
+ * @param func          A ParseStart callback.
+ *
+ * @noreturn
+ * @error               Invalid or corrupt handle. 
+ */
+native INI_SetParseStart(INIParser:handle, const func[]);
+
+/**
+ * Sets the INI_ParseEnd of a parse handle.
+ *
+ * @note  Below is the prototype of callback:
+ *        -
+ *          Called when parsing is halted.
+ *
+ *          @param handle        The INI Parse handle.
+ *          @param halted        True if abnormally halted, false otherwise.
+ *
+ *          @noreturn
+ *
+ *          public OnParseEnd(INIParser:handle, bool:halted)
+ *        -
+ * @param handle        Handle to a INI Parse.
+ * @param func          A ParseEnd callback..
+ *
+ * @noreturn
+ * @error               Invalid or corrupt handle. 
+ */
+native INI_SetParseEnd(INIParser:handle, const func[]);
+
+/**
+ * Sets the three main reader functions.
+ *
+ * @note  Below is the prototype of callback:
+ *        -
+ *          NewSection: 
+ *              Called when the parser finds the end of the current section.
+ *
+ *              @param section          Name of section in between the [ and ] characters.
+ *              @param invalid_tokens   True if invalid tokens were detected in the name.
+ *              @param close_bracket    True if a closing bracket was detected, false otherwise.
+ *              @param extra_tokens     True if extra tokens were detected on the line.
+ *              @param curtok           Contains current token in the line where the section name starts.
+ *                                      can add to this offset when failing to point to a token.
+ *              @return                 True to keep parsing, false otherwise.
+ *
+ *              public bool:OnNewSection(INIParser:handle, const section[], bool:invalid_tokens, bool:close_bracket, bool:extra_tokens, curtok)
+ *
+ *          KeyValue: 
+ *              Called when the parser finds a new key/value pair.
+ *
+ *              @param handle           The INI Parse handle.
+ *              @param key              Name of key.
+ *              @param value            String containing value (with quotes stripped, if any).
+ *              @param invalid_tokens   Whether or not the key contained invalid tokens.
+ *              @param equal_token      There was an '=' sign present (in case the value is missing).
+ *              @param quotes           Whether value was enclosed in quotes.
+ *              @param curtok           Contains the token index of the start of the value string.  
+ *                                      This can be changed when returning false.
+ *              @return                 True to keep parsing, false otherwise.
+ * 
+ *              public bool:OnKeyValue(INIParser:handle, const key[], const value[], bool:invalid_tokens, bool:equal_token, bool:quotes, curtok)
+ *        -  
+ * @param handle        The INI parse handle.
+ * @param kv            A KeyValue callback. 
+ * @param ns            An optional NewSection callback. 
+ *
+ * @noreturn
+ */
+native INI_SetReaders(INIParser:smc, const kvFunc[], const nsFunc[] = "" );
+
+/**
+ * Sets a raw line reader on an INI parser handle.
+ *
+ * @note  Below is the prototype of callback:
+ *        -
+ *          Called whenever a raw line is read.
+ *
+ *          @param handle       The INI Parse handle.
+ *          @param line         Contents of line.
+ *          @param lineno       The line number it occurs on.
+ *          @param curtok       Pointer to optionally store failed position in string.
+ *
+ *          @return             True to keep parsing, false otherwise.
+ *
+ *          public bool:OnRawLine(INIParser:smc, const line[], lineno, curtok)
+ *
+ * @param handle        Handle to an INI Parse.
+ * @param func          A RawLine callback.
+ *
+ * @noreturn
+ */
+native INI_SetRawLine(INIParser:handle, const func[]);

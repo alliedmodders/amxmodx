@@ -27,6 +27,8 @@
 #include <celltrie>
 #include <datapack>
 #include <newmenus>
+#include <textparse_smc>
+#include <textparse_ini>
 
 /* Function is called just after server activation.
 * Good place for configuration loading, commands and cvars registration. */

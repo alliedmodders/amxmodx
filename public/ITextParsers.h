@@ -1,32 +1,12 @@
-/**
- * vim: set ts=4 :
- * =============================================================================
- * SourceMod
- * Copyright (C) 2004-2008 AlliedModders LLC.  All rights reserved.
- * =============================================================================
+/** 
+ * vim: set ts=4 sw=4 tw=99 noet:
  *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, version 3.0, as published by the
- * Free Software Foundation.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
- * details.
+ * AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
+ * Copyright (C) The AMX Mod X Development Team.
  *
- * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * As a special exception, AlliedModders LLC gives you permission to link the
- * code of this program (as well as its derivative works) to "Half-Life 2," the
- * "Source Engine," the "SourcePawn JIT," and any Game MODs that run on software
- * by the Valve Corporation.  You must obey the GNU General Public License in
- * all respects for all other code used.  Additionally, AlliedModders LLC grants
- * this exception to all derivative works.  AlliedModders LLC defines further
- * exceptions, found in LICENSE.txt (as of this writing, version JULY-31-2007),
- * or <http://www.sourcemod.net/license.php>.
- *
- * Version: $Id$
+ * This software is licensed under the GNU General Public License, version 3 or higher.
+ * Additional exceptions apply. For full license details, see LICENSE.txt or visit:
+ *     https://alliedmods.net/amxmodx-license
  */
 
 #ifndef _INCLUDE_SOURCEMOD_TEXTPARSERS_INTERFACE_H_
@@ -82,35 +62,6 @@ namespace SourceMod
 	 */
 
 	/**
-	 * @brief Lists actions to take when an SMC parse hook is done.
-	 */
-	enum SMCResult
-	{
-		SMCResult_Continue,		/**< Continue parsing */
-		SMCResult_Halt,			/**< Stop parsing here */
-		SMCResult_HaltFail		/**< Stop parsing and return SMCError_Custom */
-	};
-
-	/**
-	 * @brief Lists error codes possible from parsing an SMC file.
-	 */
-	enum SMCError
-	{
-		SMCError_Okay = 0,			/**< No error */
-		SMCError_StreamOpen,		/**< Stream failed to open */
-		SMCError_StreamError,		/**< The stream died... somehow */
-		SMCError_Custom,			/**< A custom handler threw an error */
-		SMCError_InvalidSection1,	/**< A section was declared without quotes, and had extra tokens */
-		SMCError_InvalidSection2,	/**< A section was declared without any header */
-		SMCError_InvalidSection3,	/**< A section ending was declared with too many unknown tokens */
-		SMCError_InvalidSection4,	/**< A section ending has no matching beginning */
-		SMCError_InvalidSection5,	/**< A section beginning has no matching ending */
-		SMCError_InvalidTokens,		/**< There were too many unidentifiable strings on one line */
-		SMCError_TokenOverflow,		/**< The token buffer overflowed */
-		SMCError_InvalidProperty1,	/**< A property was declared outside of any section */
-	};
-
-	/**
 	 * @brief Contains parse events for INI files.
 	 */
 	class ITextListener_INI
@@ -135,9 +86,8 @@ namespace SourceMod
 		* @brief Called when ending parsing.
 		*
 		* @param halted			True if abnormally halted, false otherwise.
-		* @param failed			True if parsing failed, false otherwise.
 		*/
-		virtual void ReadINI_ParseEnd(bool halted, bool failed)
+		virtual void ReadINI_ParseEnd(bool halted)
 		{
 		}
 
@@ -150,11 +100,11 @@ namespace SourceMod
 		 * @param extra_tokens	True if extra tokens were detected on the line.
 		 * @param curtok		Contains current token in the line where the section name starts.
 		 *						You can add to this offset when failing to point to a token.
-		 * @return				SMCResult directive.
+		 * @return				True to keep parsing, false otherwise.
 		 */
-		virtual SMCResult ReadINI_NewSection(const char *section, bool invalid_tokens, bool close_bracket, bool extra_tokens, unsigned int *curtok)
+		virtual bool ReadINI_NewSection(const char *section, bool invalid_tokens, bool close_bracket, bool extra_tokens, unsigned int *curtok)
 		{
-			return SMCResult_Continue;
+			return true;
 		}
 
 		/**
@@ -167,24 +117,24 @@ namespace SourceMod
 		 * @param quotes		Whether value was enclosed in quotes.
 		 * @param curtok		Contains the token index of the start of the value string.  
 		 *						This can be changed when returning false.
-		 * @return				SMCResult directive.
+		 * @return				True to keep parsing, false otherwise.
 		 */
-		virtual SMCResult ReadINI_KeyValue(const char *key, const char *value, bool invalid_tokens, bool equal_token, bool quotes, unsigned int *curtok)
+		virtual bool ReadINI_KeyValue(const char *key, const char *value, bool invalid_tokens, bool equal_token, bool quotes, unsigned int *curtok)
 		{
-			return SMCResult_Continue;
+			return true;
 		}
 
 		/**
 		 * @brief Called after a line has been preprocessed, if it has text.
 		 *
 		 * @param line			Contents of line.
-		 * @param lineno		The line number it occurs on.
 		 * @param curtok		Pointer to optionally store failed position in string.
-		 * @return				SMCResult directive.
+		 *
+		 * @return				True to keep parsing, false otherwise.
 		 */
-		virtual SMCResult ReadINI_RawLine(const char *line, unsigned int lineno, unsigned int *curtok)
+		virtual bool ReadINI_RawLine(const char *line, unsigned int *curtok)
 		{
-			return SMCResult_Continue;
+			return true;
 		}
 	};
 
@@ -226,6 +176,35 @@ namespace SourceMod
 	 *  ;<TEXT>
 	 *  //<TEXT>
 	 *  / *<TEXT> */
+
+	/**
+	* @brief Lists actions to take when an SMC parse hook is done.
+	*/
+	enum SMCResult
+	{
+		SMCResult_Continue,		/**< Continue parsing */
+		SMCResult_Halt,			/**< Stop parsing here */
+		SMCResult_HaltFail		/**< Stop parsing and return SMCError_Custom */
+	};
+
+	/**
+	* @brief Lists error codes possible from parsing an SMC file.
+	*/
+	enum SMCError
+	{
+		SMCError_Okay = 0,			/**< No error */
+		SMCError_StreamOpen,		/**< Stream failed to open */
+		SMCError_StreamError,		/**< The stream died... somehow */
+		SMCError_Custom,			/**< A custom handler threw an error */
+		SMCError_InvalidSection1,	/**< A section was declared without quotes, and had extra tokens */
+		SMCError_InvalidSection2,	/**< A section was declared without any header */
+		SMCError_InvalidSection3,	/**< A section ending was declared with too many unknown tokens */
+		SMCError_InvalidSection4,	/**< A section ending has no matching beginning */
+		SMCError_InvalidSection5,	/**< A section beginning has no matching ending */
+		SMCError_InvalidTokens,		/**< There were too many unidentifiable strings on one line */
+		SMCError_TokenOverflow,		/**< The token buffer overflowed */
+		SMCError_InvalidProperty1,	/**< A property was declared outside of any section */
+	};
 
 	/**
 	 * @brief States for line/column
@@ -350,9 +329,9 @@ namespace SourceMod
 		 * @param ini_listener	Event handler for reading file.
 		 * @param line			If non-NULL, will contain last line parsed (0 if file could not be opened).
 		 * @param col			If non-NULL, will contain last column parsed (undefined if file could not be opened).
-		 * @return				An SMCError result code.
+		 * @return				True if parsing succeeded, false if file couldn't be opened or there was a syntax error.
 		 */
-		virtual SMCError ParseFile_INI(const char *file,
+		virtual bool ParseFile_INI(const char *file,
 									ITextListener_INI *ini_listener,
 									unsigned int *line,
 									unsigned int *col) =0;

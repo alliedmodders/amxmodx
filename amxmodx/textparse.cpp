@@ -1,33 +1,13 @@
-/**
-* vim: set ts=4 :
-* =============================================================================
-* SourceMod
-* Copyright (C) 2004-2008 AlliedModders LLC.  All rights reserved.
-* =============================================================================
-*
-* This program is free software; you can redistribute it and/or modify it under
-* the terms of the GNU General Public License, version 3.0, as published by the
-* Free Software Foundation.
-*
-* This program is distributed in the hope that it will be useful, but WITHOUT
-* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-* FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-* details.
-*
-* You should have received a copy of the GNU General Public License along with
-* this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* As a special exception, AlliedModders LLC gives you permission to link the
-* code of this program (as well as its derivative works) to "Half-Life 2," the
-* "Source Engine," the "SourcePawn JIT," and any Game MODs that run on software
-* by the Valve Corporation.  You must obey the GNU General Public License in
-* all respects for all other code used.  Additionally, AlliedModders LLC grants
-* this exception to all derivative works.  AlliedModders LLC defines further
-* exceptions, found in LICENSE.txt (as of this writing, version JULY-31-2007),
-* or <http://www.sourcemod.net/license.php>.
-*
-* Version: $Id$
-*/
+/** 
+ * vim: set ts=4 sw=4 tw=99 noet:
+ *
+ * AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
+ * Copyright (C) The AMX Mod X Development Team.
+ *
+ * This software is licensed under the GNU General Public License, version 3 or higher.
+ * Additional exceptions apply. For full license details, see LICENSE.txt or visit:
+ *     https://alliedmods.net/amxmodx-license
+ */
 
 #include "amxmodx.h"
 #include <textparse.h>
@@ -35,16 +15,41 @@
 
 TextParserHandles<ParseInfo> g_TextParsersHandles;
 
-static cell AMX_NATIVE_CALL SMC_CreateParser(AMX *amx, cell *params)
+cell createParser()
 {
-	int handle   = g_TextParsersHandles.create();
-	ParseInfo *p = g_TextParsersHandles.lookup(handle);
-
-	p->ini_format = params[1] > 0 ? true : false;
-
-	return static_cast<cell>(handle);
+	return g_TextParsersHandles.create();
 }
 
+cell destroyParser(cell *handle)
+{
+	ParseInfo *p = g_TextParsersHandles.lookup(*handle);
+
+	if (p == NULL)
+	{
+		return 0;
+	}
+
+	if (g_TextParsersHandles.destroy(*handle))
+	{
+		*handle = 0;
+		return 1;
+	}
+
+	return 0;
+}
+
+
+/**
+ * SMC CONFIG.
+ */
+
+// native SMCParser:SMC_CreateParser();
+static cell AMX_NATIVE_CALL SMC_CreateParser(AMX *amx, cell *params)
+{
+	return createParser();
+}
+
+// native SMC_SetParseStart(SMCParser:handle, const func[]);
 static cell AMX_NATIVE_CALL SMC_SetParseStart(AMX *amx, cell *params)
 {
 	ParseInfo *p = g_TextParsersHandles.lookup(params[1]);
@@ -55,21 +60,24 @@ static cell AMX_NATIVE_CALL SMC_SetParseStart(AMX *amx, cell *params)
 		return 0;
 	}
 
-	int length;
-	const char* functionName = get_amxstring(amx, params[2], 0, length);
-	int function = registerSPForwardByName(amx, functionName, FP_CELL, FP_DONE);
+	int length = 0;
+	const char *funcName = NULL;
 
-	if (function == -1)
+	if ((funcName = get_amxstring(amx, params[2], 0, length)) && length)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Function is not present (function \"%s\") (plugin \"%s\")", functionName, g_plugins.findPluginFast(amx)->getName());
-		return 0;
+		p->parse_start = registerSPForwardByName(amx, funcName, FP_CELL, FP_DONE);
 	}
 
-	p->parse_start = function;
+	if (p->parse_start == -1)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Function is not present (function \"%s\") (plugin \"%s\")", funcName, g_plugins.findPluginFast(amx)->getName());
+		return 0;
+	}
 
 	return 1;
 }
 
+// native SMC_SetParseEnd(SMCParser:handle, const func[]);
 static cell AMX_NATIVE_CALL SMC_SetParseEnd(AMX *amx, cell *params)
 {
 	ParseInfo *p = g_TextParsersHandles.lookup(params[1]);
@@ -80,21 +88,24 @@ static cell AMX_NATIVE_CALL SMC_SetParseEnd(AMX *amx, cell *params)
 		return 0;
 	}
 
-	int length;
-	const char* funcName = get_amxstring(amx, params[2], 0, length);
-	int func = registerSPForwardByName(amx, funcName, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	int length = 0;
+	const char *funcName = NULL;
 
-	if (func == -1)
+	if ((funcName = get_amxstring(amx, params[2], 0, length)) && length)
+	{
+		p->parse_end = registerSPForwardByName(amx, funcName, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	}
+
+	if (p->parse_end == -1)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Function is not present (function \"%s\") (plugin \"%s\")", funcName, g_plugins.findPluginFast(amx)->getName());
 		return 0;
 	}
 
-	p->parse_end = func;
-
 	return 1;
 }
 
+// native SMC_SetReaders(SMCParser:smc, const kvFunc[], const nsFunc[] = "", const esFunc[] = "");
 static cell AMX_NATIVE_CALL SMC_SetReaders(AMX *amx, cell *params)
 {
 	ParseInfo *p = g_TextParsersHandles.lookup(params[1]);
@@ -105,55 +116,34 @@ static cell AMX_NATIVE_CALL SMC_SetReaders(AMX *amx, cell *params)
 		return 0;
 	}
 
-	int length;
-	const char* newSectionFuncName = get_amxstring(amx, params[2], 0, length);
-	const char* keyValueFuncName   = get_amxstring(amx, params[3], 1, length);
-	const char* endSectionFuncName = get_amxstring(amx, params[4], 2, length);
+	int kvLength = 0, nsLength = 0, esLength = 0;
+	const char *funcName = NULL;
 
-	int newSectionFunc;
-	int keyValueFunc;
-	int endSectionFunc;
-
-	if (p->ini_format)
-		newSectionFunc = registerSPForwardByName(amx, newSectionFuncName, FP_CELL, FP_STRING, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
-	else
-		newSectionFunc = registerSPForwardByName(amx, newSectionFuncName, FP_CELL, FP_STRING, FP_DONE);
-
-	if (newSectionFunc == -1)
+	if ((funcName = get_amxstring(amx, params[2], 0, kvLength)) && kvLength)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Function is not present (function \"%s\") (plugin \"%s\")", newSectionFuncName, g_plugins.findPluginFast(amx)->getName());
+		p->key_value = registerSPForwardByName(amx, funcName, FP_CELL, FP_STRING, FP_STRING, FP_DONE);  
+	}
+
+	if (kvLength && (funcName = get_amxstring(amx, params[3], 1, nsLength)) && nsLength)
+	{
+		p->new_section = registerSPForwardByName(amx, funcName, FP_CELL, FP_STRING, FP_DONE);
+	}
+
+	if (kvLength && (funcName = get_amxstring(amx, params[4], 2, esLength)) && esLength)
+	{
+		p->end_section = registerSPForwardByName(amx, funcName, FP_CELL, FP_DONE);
+	}
+
+	if (p->key_value == -1 || (nsLength && p->new_section == -1) || (esLength && p->end_section == -1))
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Function is not present (function \"%s\") (plugin \"%s\")", funcName, g_plugins.findPluginFast(amx)->getName());
 		return 0;
 	}
-
-	if (p->ini_format)
-		keyValueFunc = registerSPForwardByName(amx, keyValueFuncName, FP_CELL, FP_STRING, FP_STRING, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
-	else
-		keyValueFunc = registerSPForwardByName(amx, keyValueFuncName, FP_CELL, FP_STRING, FP_STRING, FP_DONE);
-
-	if (keyValueFunc == -1)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Function is not present (function \"%s\") (plugin \"%s\")", keyValueFuncName, g_plugins.findPluginFast(amx)->getName());
-		return 0;
-	}
-
-	if (!p->ini_format)
-	{
-		endSectionFunc = registerSPForwardByName(amx, endSectionFuncName, FP_CELL, FP_DONE);
-		if (endSectionFunc == -1)
-		{
-			LogError(amx, AMX_ERR_NATIVE, "Function is not present (function \"%s\") (plugin \"%s\")", endSectionFuncName, g_plugins.findPluginFast(amx)->getName());
-			return 0;
-		}
-
-		p->end_section = endSectionFunc;
-	}
-
-	p->new_section = newSectionFunc;
-	p->key_value   = keyValueFunc;
 
 	return 1;
 }
 
+// native SMC_SetRawLine(SMCParser:handle, const func[]);
 static cell AMX_NATIVE_CALL SMC_SetRawLine(AMX *amx, cell *params)
 {
 	ParseInfo *p = g_TextParsersHandles.lookup(params[1]);
@@ -164,26 +154,24 @@ static cell AMX_NATIVE_CALL SMC_SetRawLine(AMX *amx, cell *params)
 		return 0;
 	}
 
-	int length;
-	const char* funcName = get_amxstring(amx, params[2], 0, length);
+	int length = 0;
+	const char *funcName = NULL;
 
-	int func;
-	if (p->ini_format)
-		func = registerSPForwardByName(amx, funcName, FP_CELL, FP_STRING, FP_CELL, FP_CELL, FP_DONE);
-	else
-		func = registerSPForwardByName(amx, funcName, FP_CELL, FP_STRING, FP_CELL, FP_DONE);
+	if ((funcName = get_amxstring(amx, params[2], 0, length)) && length)
+	{
+		p->raw_line = registerSPForwardByName(amx, funcName, FP_CELL, FP_STRING, FP_CELL, FP_DONE);
+	}
 
-	if (func == -1)
+	if (p->raw_line == -1)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Function is not present (function \"%s\") (plugin \"%s\")", funcName, g_plugins.findPluginFast(amx)->getName());
 		return 0;
 	}
 
-	p->raw_line = func;
-
 	return 1;
 }
 
+// native SMCError:SMC_ParseFile(SMCParser:handle, const file[], &line = 0, &col = 0);
 static cell AMX_NATIVE_CALL SMC_ParseFile(AMX *amx, cell *params)
 {
 	ParseInfo *p = g_TextParsersHandles.lookup(params[1]);
@@ -197,28 +185,16 @@ static cell AMX_NATIVE_CALL SMC_ParseFile(AMX *amx, cell *params)
 	int length;
 	const char *file = build_pathname("%s", get_amxstring(amx, params[2], 0, length));
 
-	SMCError p_err;
+	SMCStates states;
+	SMCError p_err = textparsers->ParseFile_SMC(file, p, &states);
 
-	if (p->ini_format)
-	{
-		size_t line, col;
-		p_err = textparsers->ParseFile_INI(file, p, &line, &col);
-
-		*get_amxaddr(amx, params[3]) = line;
-		*get_amxaddr(amx, params[4]) = col;
-	}
-	else
-	{
-		SMCStates states;
-		p_err = textparsers->ParseFile_SMC(file, p, &states);
-
-		*get_amxaddr(amx, params[3]) = states.line;
-		*get_amxaddr(amx, params[4]) = states.col;
-	}
+	*get_amxaddr(amx, params[3]) = states.line;
+	*get_amxaddr(amx, params[4]) = states.col;
 
 	return static_cast<cell>(p_err);
 }
 
+// native bool:SMC_GetErrorString(SMCError:error, buffer[], buf_max);
 static cell AMX_NATIVE_CALL SMC_GetErrorString(AMX *amx, cell *params)
 {
 	const char *str = textparsers->GetSMCErrorString((SMCError)params[1]);
@@ -231,25 +207,169 @@ static cell AMX_NATIVE_CALL SMC_GetErrorString(AMX *amx, cell *params)
 	return set_amxstring(amx, params[2], str, params[3]);
 }
 
+// native SMC_DestroyParser(&SMCParser:handle);
 static cell AMX_NATIVE_CALL SMC_DestroyParser(AMX *amx, cell *params)
 {
-	cell *ptr = get_amxaddr(amx, params[1]);
+	return destroyParser(get_amxaddr(amx, params[1]));
+}
 
-	ParseInfo *p = g_TextParsersHandles.lookup(*ptr);
+
+/**
+ * INI CONFIG
+ */
+
+// native INIParser:INI_CreateParser();
+static cell AMX_NATIVE_CALL INI_CreateParser(AMX *amx, cell *params)
+{
+	return createParser();
+}
+
+// native bool:INI_ParseFile(INIParser:handle, const file[], &line = 0, &col = 0);
+static cell AMX_NATIVE_CALL INI_ParseFile(AMX *amx, cell *params)
+{
+	ParseInfo *p = g_TextParsersHandles.lookup(params[1]);
 
 	if (p == NULL)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
 		return 0;
 	}
 
-	if (g_TextParsersHandles.destroy(*ptr))
+	int length;
+	const char *file = build_pathname("%s", get_amxstring(amx, params[2], 0, length));
+
+	size_t line, col;
+	bool result = textparsers->ParseFile_INI(file, p, &line, &col);
+
+	*get_amxaddr(amx, params[3]) = line;
+	*get_amxaddr(amx, params[4]) = col;
+
+	return result;
+}
+
+// native INI_SetParseStart(INIParser:handle, const func[]);
+static cell AMX_NATIVE_CALL INI_SetParseStart(AMX *amx, cell *params)
+{
+	ParseInfo *p = g_TextParsersHandles.lookup(params[1]);
+
+	if (p == NULL)
 	{
-		*ptr = 0;
-		return 1;
+		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		return 0;
 	}
 
-	return 0;
+	int length = 0;
+	const char *funcName = NULL;
+
+	if ((funcName = get_amxstring(amx, params[2], 0, length)) && length)
+	{
+		p->parse_start = registerSPForwardByName(amx, funcName, FP_CELL, FP_DONE);
+	}
+
+	if (p->parse_start == -1)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Function is not present (function \"%s\") (plugin \"%s\")", funcName, g_plugins.findPluginFast(amx)->getName());
+		return 0;
+	}
+
+	return 1;
 }
+
+// native INI_SetParseEnd(INIParser:handle, const func[]);
+static cell AMX_NATIVE_CALL INI_SetParseEnd(AMX *amx, cell *params)
+{
+	ParseInfo *p = g_TextParsersHandles.lookup(params[1]);
+
+	if (p == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		return 0;
+	}
+
+	int length = 0;
+	const char *funcName = NULL;
+
+	if ((funcName = get_amxstring(amx, params[2], 0, length)))
+	{
+		p->parse_end = registerSPForwardByName(amx, funcName, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	}
+
+	if (p->parse_end == -1)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Function is not present (function \"%s\") (plugin \"%s\")", funcName, g_plugins.findPluginFast(amx)->getName());
+		return 0;
+	}
+
+	return 1;
+}
+
+// native INI_SetReaders(INIParser:smc, const kvFunc[], const nsFunc[] = "" );
+static cell AMX_NATIVE_CALL INI_SetReaders(AMX *amx, cell *params)
+{
+	ParseInfo *p = g_TextParsersHandles.lookup(params[1]);
+
+	if (p == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		return 0;
+	}
+
+	int kvLength = 0, nsLength = 0;
+	const char *funcName = NULL;
+
+	if ((funcName = get_amxstring(amx, params[2], 0, kvLength)) && kvLength)
+	{
+		p->key_value = registerSPForwardByName(amx, funcName, FP_CELL, FP_STRING, FP_STRING, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	}
+
+	if (kvLength && (funcName = get_amxstring(amx, params[3], 1, nsLength)) && nsLength)
+	{
+		p->new_section = registerSPForwardByName(amx, funcName, FP_CELL, FP_STRING, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	}
+
+	if (p->key_value == -1 || (nsLength && p->new_section == -1))
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Function is not present (function \"%s\") (plugin \"%s\")", funcName, g_plugins.findPluginFast(amx)->getName());
+		return 0;
+	}
+
+	return 1;
+}
+
+// native INI_SetRawLine(INIParser:handle, const func[]);
+static cell AMX_NATIVE_CALL INI_SetRawLine(AMX *amx, cell *params)
+{
+	ParseInfo *p = g_TextParsersHandles.lookup(params[1]);
+
+	if (p == NULL)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		return 0;
+	}
+
+	int length = 0;
+	const char *funcName = NULL;
+
+	if ((funcName = get_amxstring(amx, params[2], 0, length)) && length)
+	{
+		p->raw_line = registerSPForwardByName(amx, funcName, FP_CELL, FP_STRING, FP_CELL, FP_CELL, FP_DONE);
+	}
+
+	if (p->raw_line == -1)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Function is not present (function \"%s\") (plugin \"%s\")", funcName, g_plugins.findPluginFast(amx)->getName());
+		return 0;
+	}
+
+	return 1;
+}
+
+// native INI_DestroyParser(&INIParser:handle);
+static cell AMX_NATIVE_CALL INI_DestroyParser(AMX *amx, cell *params)
+{
+	return destroyParser(get_amxaddr(amx, params[1]));
+}
+
 
 AMX_NATIVE_INFO g_TextParserNatives[] =
 {
@@ -261,5 +381,14 @@ AMX_NATIVE_INFO g_TextParserNatives[] =
 	{ "SMC_SetReaders"    , SMC_SetReaders     },
 	{ "SMC_SetRawLine"    , SMC_SetRawLine     },
 	{ "SMC_DestroyParser" , SMC_DestroyParser  },
+
+	{ "INI_CreateParser"  , INI_CreateParser   },
+	{ "INI_ParseFile"     , INI_ParseFile      },
+	{ "INI_SetParseStart" , INI_SetParseStart  },
+	{ "INI_SetParseEnd"   , INI_SetParseEnd    },
+	{ "INI_SetReaders"    , INI_SetReaders     },
+	{ "INI_SetRawLine"    , INI_SetRawLine     },
+	{ "INI_DestroyParser" , INI_DestroyParser  },
+
 	{ NULL, NULL },
 };

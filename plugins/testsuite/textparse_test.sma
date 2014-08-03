@@ -1,12 +1,25 @@
+/** 
+ * vim: set ts=4 sw=4 tw=99 noet:
+ *
+ * AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
+ * Copyright (C) The AMX Mod X Development Team.
+ *
+ * This software is licensed under the GNU General Public License, version 3 or higher.
+ * Additional exceptions apply. For full license details, see LICENSE.txt or visit:
+ *     https://alliedmods.net/amxmodx-license
+ */
+ 
 #include <amxmodx>
-#include <textparse>
 
 new SuccessCount;
 new Trie:ExpectedKVData;
+new bool:Debug;
 
 public plugin_init()
 {
     register_concmd("textparse", "ConsoleCommand_TextParse");
+
+    Debug = !!(plugin_flags() & AMX_FLAG_DEBUG);
 }
 
 public ConsoleCommand_TextParse()
@@ -52,9 +65,9 @@ InitializeTextParseSMC()
     new const expectedKeyValueCount = TrieGetSize(ExpectedKVData);
     new const expectedLineCount     = file_size(configFile, .flag = 1) - 1;
 
-    new TextParser:parser = SMC_CreateParser();
+    new SMCParser:parser = SMC_CreateParser();
 
-    SMC_SetReaders(parser, "ReadCore_NewSection", "ReadCore_KeyValue", "ReadCore_EndSection");
+    SMC_SetReaders(parser, "ReadCore_KeyValue", "ReadCore_NewSection", "ReadCore_EndSection");
     SMC_SetParseStart(parser, "ReadCore_ParseStart");
     SMC_SetRawLine(parser, "ReadCore_CurrentLine");
     SMC_SetParseEnd(parser, "ReadCore_ParseEnd");
@@ -80,18 +93,22 @@ InitializeTextParseSMC()
     SuccessCount = 0;
 }
 
-public ReadCore_ParseStart(TextParser:handle)
+public ReadCore_ParseStart(SMCParser:handle)
 {
+    Debug && server_print("ReadCore_ParseStart");
     ++SuccessCount;
 }
 
-public ReadCore_NewSection(TextParser:handle, const name[])
+public ReadCore_NewSection(SMCParser:handle, const name[])
 {
+    Debug && server_print("^tReadCore_NewSection - %s", name);
     ++SuccessCount;
 }
 
-public ReadCore_KeyValue(TextParser:handle, const key[], const value[])
+public ReadCore_KeyValue(SMCParser:handle, const key[], const value[])
 {
+    Debug && server_print("^t^tReadCore_KeyValue - %-32s %s", key, value);
+    
     new buffer[128];
     if (TrieGetString(ExpectedKVData, key, buffer, charsmax(buffer)) && equal(value, buffer))
     {
@@ -99,18 +116,21 @@ public ReadCore_KeyValue(TextParser:handle, const key[], const value[])
     }
 }
 
-public ReadCore_EndSection(TextParser:handle)
+public ReadCore_EndSection(SMCParser:handle)
 {
+    Debug && server_print("^tReadCore_EndSection");
     ++SuccessCount;
 }
 
-public ReadCore_CurrentLine(TextParser:handle, const line[], lineno)
+public ReadCore_CurrentLine(SMCParser:handle, const line[], lineno)
 {
-   ++SuccessCount;
+    //Debug && server_print("^t^tReadCore_CurrentLine - %s", line);
+    ++SuccessCount;
 }
 
-public ReadCore_ParseEnd(TextParser:handle, bool:halted, bool:failed)
-{
+public ReadCore_ParseEnd(SMCParser:handle, bool:halted, bool:failed)
+{  
+    Debug &&server_print("ReadCore_ParseEnd - halted: %s, failed: %s", halted ? "yes" : "no", failed ? "yes" : "no");
     ++SuccessCount;
 }
 
@@ -151,20 +171,19 @@ public InitializeTextParseINI()
     new const expectedKeyValueCount = TrieGetSize(ExpectedKVData) - expectedSectionCount;
     new const expectedLineCount     = TrieGetSize(ExpectedKVData); // This doesn't include blanck/comments line.
 
-    new TextParser:parser = SMC_CreateParser(.ini_format = true);
+    new INIParser:parser = INI_CreateParser();
 
-    SMC_SetReaders(parser, "ReadCSDM_NewSection", "ReadCSDM_KeyValue");
-    SMC_SetParseStart(parser, "ReadCSDM_ParseStart");
-    SMC_SetRawLine(parser, "ReadCSDM_CurrentLine");
-    SMC_SetParseEnd(parser, "ReadCSDM_ParseEnd");
+    INI_SetReaders(parser, "ReadCSDM_KeyValue", "ReadCSDM_NewSection");
+    INI_SetParseStart(parser, "ReadCSDM_ParseStart");
+    INI_SetRawLine(parser, "ReadCSDM_CurrentLine");
+    INI_SetParseEnd(parser, "ReadCSDM_ParseEnd");
 
     new line, col;
-    new SMCError:err = SMC_ParseFile(parser, configFile, line, col);
+    new bool:result = INI_ParseFile(parser, configFile, line, col);
 
-    if (err != SMCError_Okay)
+    if (!result)
     {
-        new buffer[64];
-        server_print("Error: %s", SMC_GetErrorString(err, buffer, charsmax(buffer)) ? buffer : "Fatal parse error");
+        server_print("^tFatal parse error");
     }
 
     if (line == expectedLineCount + 1)
@@ -174,17 +193,20 @@ public InitializeTextParseINI()
 
     server_print("^tTests successful: %d/%d", SuccessCount, expectedStartEndCount + expectedSectionCount + expectedKeyValueCount + expectedLineCount + 1);
 
-    SMC_DestroyParser(parser);
+    INI_DestroyParser(parser);
     TrieDestroy(ExpectedKVData);
 }
 
-public ReadCSDM_ParseStart(TextParser:handle)
+public ReadCSDM_ParseStart(INIParser:handle)
 {
+    Debug && server_print("ReadCSDM_ParseStart");
     ++SuccessCount;
 }
 
-public ReadCSDM_NewSection(TextParser:handle, const section[], bool:invalid_tokens, bool:close_bracket, bool:extra_tokens, curtok)
+public ReadCSDM_NewSection(INIParser:handle, const section[], bool:invalid_tokens, bool:close_bracket, bool:extra_tokens, curtok)
 {
+    Debug && server_print("^tReadCSDM_NewSection - [%s]", section);
+    
     if (TrieKeyExists(ExpectedKVData, section))
     {
         if ((equal(section, "secondary") && !extra_tokens) ||
@@ -197,8 +219,10 @@ public ReadCSDM_NewSection(TextParser:handle, const section[], bool:invalid_toke
     }
 }
 
-public ReadCSDM_KeyValue(TextParser:handle, const key[], const value[], bool:invalid_tokens, bool:equal_token, bool:quotes, curtok)
+public ReadCSDM_KeyValue(INIParser:handle, const key[], const value[], bool:invalid_tokens, bool:equal_token, bool:quotes, curtok)
 {
+    Debug && server_print("^t^tReadCSDM_KeyValue - %-32s %s", key, value);
+
     new buffer[128];
     if (TrieGetString(ExpectedKVData, key, buffer, charsmax(buffer)) && equal(value, buffer))
     {
@@ -211,12 +235,14 @@ public ReadCSDM_KeyValue(TextParser:handle, const key[], const value[], bool:inv
     }
 }
 
-public ReadCSDM_CurrentLine(TextParser:handle, const line[], lineno, curtok)
+public ReadCSDM_CurrentLine(INIParser:handle, const line[], curtok)
 {
-   ++SuccessCount;
+    //Debug && server_print("^t^tReadCSDM_CurrentLine - %s", line);
+    ++SuccessCount;
 }
 
-public ReadCSDM_ParseEnd(TextParser:handle, bool:halted, bool:failed)
+public ReadCSDM_ParseEnd(INIParser:handle, bool:halted, bool:failed)
 {
+    Debug && server_print("ReadCSDM_ParseStart");
     ++SuccessCount;
 }

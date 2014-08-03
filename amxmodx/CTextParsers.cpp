@@ -1,33 +1,13 @@
-/**
-* vim: set ts=4 :
-* =============================================================================
-* SourceMod
-* Copyright (C) 2004-2008 AlliedModders LLC.  All rights reserved.
-* =============================================================================
-*
-* This program is free software; you can redistribute it and/or modify it under
-* the terms of the GNU General Public License, version 3.0, as published by the
-* Free Software Foundation.
-*
-* This program is distributed in the hope that it will be useful, but WITHOUT
-* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-* FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-* details.
-*
-* You should have received a copy of the GNU General Public License along with
-* this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* As a special exception, AlliedModders LLC gives you permission to link the
-* code of this program (as well as its derivative works) to "Half-Life 2," the
-* "Source Engine," the "SourcePawn JIT," and any Game MODs that run on software
-* by the Valve Corporation.  You must obey the GNU General Public License in
-* all respects for all other code used.  Additionally, AlliedModders LLC grants
-* this exception to all derivative works.  AlliedModders LLC defines further
-* exceptions, found in LICENSE.txt (as of this writing, version JULY-31-2007),
-* or <http://www.sourcemod.net/license.php>.
-*
-* Version: $Id$
-*/
+/** 
+ * vim: set ts=4 sw=4 tw=99 noet:
+ *
+ * AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
+ * Copyright (C) The AMX Mod X Development Team.
+ *
+ * This software is licensed under the GNU General Public License, version 3 or higher.
+ * Additional exceptions apply. For full license details, see LICENSE.txt or visit:
+ *     https://alliedmods.net/amxmodx-license
+ */
 
 #include "amxmodx.h"
 #include "CTextParsers.h"
@@ -778,7 +758,7 @@ failed:
 * INI parser
 */
 
-SMCError TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listener, unsigned int *line, unsigned int *col)
+bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listener, unsigned int *line, unsigned int *col)
 {
 	FILE *fp = fopen(file, "rt");
 	unsigned int curline = 0;
@@ -792,7 +772,7 @@ SMCError TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_lis
 			*line = 0;
 		}
 
-		return SMCError_StreamOpen;
+		return false;
 	}
 
 	ini_listener->ReadINI_ParseStart();
@@ -800,8 +780,6 @@ SMCError TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_lis
 	char buffer[2048];
 	char *ptr, *save_ptr;
 	bool in_quote;
-	SMCError  err = SMCError_Okay;
-	SMCResult res = SMCResult_Continue;
 
 	while (!feof(fp))
 	{
@@ -853,22 +831,24 @@ SMCError TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_lis
 			{
 				switch (*ptr)
 				{
-				case '"':
-				{
-							in_quote = true;
-							break;
-				}
-				case ';':
-				{
-							/* Stop the loop */
-							len = i;
-							/* Terminate the string here */
-							*ptr = '\0';
-							break;
-				}
+					case '"':
+					{
+						in_quote = true;
+						break;
+					}
+					case ';':
+					{
+						/* Stop the loop */
+						len = i;
+
+						/* Terminate the string here */
+						*ptr = '\0';
+						break;
+					}
 				}
 			}
-			else {
+			else 
+			{
 				if (*ptr == '"')
 				{
 					in_quote = false;
@@ -901,9 +881,8 @@ SMCError TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_lis
 			continue;
 		}
 
-		if ((res = ini_listener->ReadINI_RawLine(ptr, curline,  &curtok)) != SMCResult_Continue)
+		if (!ini_listener->ReadINI_RawLine(ptr, &curtok))
 		{
-			err = (res == SMCResult_HaltFail) ? SMCError_Custom : SMCError_Okay;
 			goto event_failed;
 		}
 
@@ -956,9 +935,8 @@ SMCError TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_lis
 			}
 
 			/* Tell the handler */
-			if ((res = ini_listener->ReadINI_NewSection(&ptr[1], invalid_tokens, got_bracket, extra_tokens, &curtok)) != SMCResult_Continue)
+			if (!ini_listener->ReadINI_NewSection(&ptr[1], invalid_tokens, got_bracket, extra_tokens, &curtok))
 			{
-				err = (res == SMCResult_HaltFail) ? SMCError_Custom : SMCError_Okay;
 				goto event_failed;
 			}
 		}
@@ -1063,9 +1041,8 @@ SMCError TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_lis
 			else
 				curtok = 0;
 
-			if ((res = ini_listener->ReadINI_KeyValue(key_ptr, val_ptr, invalid_tokens, equal_token, quotes, &curtok)) != SMCResult_Continue)
+			if (!ini_listener->ReadINI_KeyValue(key_ptr, val_ptr, invalid_tokens, equal_token, quotes, &curtok))
 			{
-				err = (res == SMCResult_HaltFail) ? SMCError_Custom : SMCError_Okay;
 				curtok = 0;
 				goto event_failed;
 			}
@@ -1084,9 +1061,9 @@ SMCError TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_lis
 
 	fclose(fp);
 
-	ini_listener->ReadINI_ParseEnd(false, false);
+	ini_listener->ReadINI_ParseEnd(false);
 
-	return SMCError_Okay;
+	return true;
 
 event_failed:
 	if (line)
@@ -1101,9 +1078,9 @@ event_failed:
 
 	fclose(fp);
 
-	ini_listener->ReadINI_ParseEnd(true, (err == SMCError_Custom));
+	ini_listener->ReadINI_ParseEnd(true);
 
-	return err;
+	return false;
 }
 
 const char *TextParsers::GetSMCErrorString(SMCError err)

@@ -101,7 +101,7 @@ public:
 	bool ReadINI_NewSection(const char *section, bool invalid_tokens, bool close_bracket, bool extra_tokens, unsigned int *curtok)
 	{
 		if (new_section != -1)
-			return executeForwards(new_section, handle, section, invalid_tokens, close_bracket, extra_tokens, *curtok) > 0 ? false : true;
+			return executeForwards(new_section, handle, section, invalid_tokens, close_bracket, extra_tokens, *curtok) > 0 ? true : false;
 
 		return true;
 	}
@@ -109,7 +109,7 @@ public:
 	bool ReadINI_KeyValue(const char *key, const char *value, bool invalid_tokens, bool equal_token, bool quotes, unsigned int *curtok)
 	{
 		if (key_value != -1)
-			return executeForwards(key_value, handle, key, value, invalid_tokens, equal_token, quotes, *curtok) > 0 ? false : true;
+			return executeForwards(key_value, handle, key, value, invalid_tokens, equal_token, quotes, *curtok) > 0 ? true : false;
 
 		return true;
 	}
@@ -117,7 +117,7 @@ public:
 	bool ReadINI_RawLine(const char *line, unsigned int *curtok)
 	{
 		if (raw_line != -1)
-			return executeForwards(raw_line, handle, line, *curtok) > 0 ? false : true;
+			return executeForwards(raw_line, handle, line, *curtok) > 0 ? true : false;
 
 		return true;
 	}

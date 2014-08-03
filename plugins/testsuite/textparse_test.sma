@@ -212,33 +212,38 @@ public ReadCSDM_NewSection(INIParser:handle, const section[], bool:invalid_token
         if ((equal(section, "secondary") && !extra_tokens) ||
             (equal(section, "botsecondary") && close_bracket))
         {
-            return;
+            return true;
         }
 
         ++SuccessCount;
     }
+    
+    return true;
 }
 
-public ReadCSDM_KeyValue(INIParser:handle, const key[], const value[], bool:invalid_tokens, bool:equal_token, bool:quotes, curtok)
+public bool:ReadCSDM_KeyValue(INIParser:handle, const key[], const value[], bool:invalid_tokens, bool:equal_token, bool:quotes, curtok)
 {
     Debug && server_print("^t^tReadCSDM_KeyValue - %-32s %s", key, value);
 
     new buffer[128];
     if (TrieGetString(ExpectedKVData, key, buffer, charsmax(buffer)) && equal(value, buffer))
     {
-        if (equal(value, "colors") && !quotes)
+        if (equal(key, "colors") && !quotes)
         {
-            return;
+            return true;
         }
 
         ++SuccessCount;
     }
+    
+    return true;
 }
 
-public ReadCSDM_CurrentLine(INIParser:handle, const line[], curtok)
+public bool:ReadCSDM_CurrentLine(INIParser:handle, const line[], curtok)
 {
     //Debug && server_print("^t^tReadCSDM_CurrentLine - %s", line);
     ++SuccessCount;
+    return true;
 }
 
 public ReadCSDM_ParseEnd(INIParser:handle, bool:halted, bool:failed)

@@ -238,7 +238,7 @@ static cell AMX_NATIVE_CALL INI_ParseFile(AMX *amx, cell *params)
 	int length;
 	const char *file = build_pathname("%s", get_amxstring(amx, params[2], 0, length));
 
-	size_t line, col;
+	unsigned int line, col;
 	bool result = textparsers->ParseFile_INI(file, p, &line, &col);
 
 	*get_amxaddr(amx, params[3]) = line;

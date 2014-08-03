@@ -14,11 +14,12 @@
 /*
 #include <stdio.h>
 #include <ctype.h>
-#include <wctype.h>
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <ILibrarySys.h>*/
+
+#include <wctype.h>
 
 TextParsers g_TextParser;
 ITextParsers *textparsers = &g_TextParser;

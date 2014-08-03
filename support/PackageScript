@@ -292,6 +292,8 @@ scripting_files = [
   'include/newmenus.inc',
   'include/sorting.inc',
   'include/sqlx.inc',
+  'include/textparse_ini.inc',
+  'include/textparse_smc.inc',
   'include/time.inc',
   'include/vector.inc',
 ]

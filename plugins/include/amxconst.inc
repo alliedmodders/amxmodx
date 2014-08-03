@@ -335,8 +335,14 @@ enum
 #define AMX_FLAG_BROWSE 0x4000  /* busy browsing */
 #define AMX_FLAG_RELOC  0x8000  /* jump/call addresses relocated */
 
+/**
+ * Invalid plugin id
+ */
 #define INVALID_PLUGIN_ID	-1
 
+/**
+ * Menu and menu item status codes
+ */
 #define MENU_TIMEOUT	-4
 #define MENU_EXIT		-3
 #define	MENU_BACK		-2
@@ -345,6 +351,9 @@ enum
 #define	ITEM_ENABLED	1
 #define ITEM_DISABLED	2
 
+/**
+ * AMX error codes
+ */
 #define	AMX_ERR_NATIVE		10
 #define	AMX_ERR_MEMACCESS	5
 #define	AMX_ERR_NONE		0
@@ -357,18 +366,30 @@ enum
 #define AMX_ERR_PARAMS		25
 #define AMX_ERR_GENERAL		27
 
+/**
+ * Generic invalid handle value
+ */
 #define	INVALID_HANDLE		-1
 
+/**
+ * Stop types for plugin forwards
+ */
 #define ET_IGNORE		0	//ignore return val
 #define ET_STOP			1	//stop on PLUGIN_HANDLED
 #define ET_STOP2		2	//same, except return biggest
 #define ET_CONTINUE		3	//no stop, return biggest
 
+/**
+ * Parameter types for plugin forwards
+ */
 #define FP_CELL			0
 #define FP_FLOAT		1
 #define FP_STRING		2
 #define FP_ARRAY		4
 
+/**
+ * Sound behavior constants
+ */
 #define SND_SPAWNING		(1<<8)		// we're spawing, used in some cases for ambients 
 #define SND_STOP		(1<<5)		// stop sound
 #define SND_CHANGE_VOL		(1<<6)		// change sound vol

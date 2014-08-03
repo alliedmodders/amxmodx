@@ -14,27 +14,40 @@
 #include <amxmodx_version>
 
 /**
- * This is the buffer size AMX Mod X uses internally to retrieve strings from plugins.
- * Most natives that take strings as arguments will implicitly truncate those to this maximum length.
- * This has been raised to the current value with AMXX 1.8.3. Previously the limit was 3072.
+ * Internal AMXX buffer size for string retrieval.
  *
- * @note This is here mainly for documentation purposes. By default plugins don't even have enough 
- *       memory available to create an array of this size. You probably should not use this to 
- *       actually *declare* a buffer unless you *absolutely* have to. Look at #pragma dynamic 
- *       to increase a plugins available memory.
+ * @note This is the buffer size AMX Mod X uses internally to retrieve strings
+ *       from plugins. Most natives that take strings as arguments will
+ *       implicitly truncate them to this maximum length. This has been raised
+ *       to the current value with AMXX 1.8.3. Previously the limit was 3072.
+ * @note This is here mainly for documentation purposes. By default plugins
+ *       don't have enough memory available to allocate an array of this size.
+ *       You probably should not use this to actually declare a buffer unless
+ *       you *absolutely* have to. Look at #pragma dynamic to increase a plugins
+ *       available memory.
  */
 #define MAX_STRING_LENGTH 16384
 
 /**
- * MAX_PLAYERS is not the same as MaxClients.
- * MAX_PLAYERS is a hardcoded value as an upper limit.  MaxClients changes based on the server.
+ * Defines and constants related to the maximum number of clients.
+ *
+ * @note  MAX_PLAYERS is not the same as MaxClients. MAX_PLAYERS is a hardcoded
+ *        value as an upper limit, used mainly to declare arrays big enough for
+ *        all possible server situations. MaxClients changes based on the
+ *        server the plugin is deployed on..
  */
-#define MAX_PLAYERS		33	/* Maximum number of players AMX Mod X supports */
-#define MAX_NAME_LENGTH 32	/* Maximum buffer required to store a client name */
+#define MAX_PLAYERS 33	/* Maximum number of players AMX Mod X supports */
 
-public stock const MaxClients;	/* Maximum number of players the server supports (dynamic) */
+public stock const MaxClients; /* Maximum number of players the server supports */
 
+/**
+ * The maximum buffer size required to store a clients name.
+ */
+#define MAX_NAME_LENGTH 32
 
+/**
+ * π
+ */
 #define M_PI 3.1415926535
 
 /**
@@ -239,7 +252,7 @@ enum
 /**
  * Color types for client_print_color()
  */
-enum 
+enum
 {
 	print_team_default = 0,
 	print_team_grey = -1,
@@ -390,7 +403,7 @@ enum
 /**
  * Sound behavior constants
  */
-#define SND_SPAWNING		(1<<8)		// we're spawing, used in some cases for ambients 
+#define SND_SPAWNING		(1<<8)		// we're spawing, used in some cases for ambients
 #define SND_STOP		(1<<5)		// stop sound
 #define SND_CHANGE_VOL		(1<<6)		// change sound vol
 #define SND_CHANGE_PITCH	(1<<7)		// change sound pitch

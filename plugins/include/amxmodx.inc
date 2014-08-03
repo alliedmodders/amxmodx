@@ -27,168 +27,503 @@
 #include <datapack>
 #include <newmenus>
 
-/* Function is called just after server activation.
-* Good place for configuration loading, commands and cvars registration. */
+/**
+ * Called just after server activation.
+ *
+ * @note Good place to initialize most of the plugin, such as registering
+ *       cvars, commands or forwards, creating data structures for later use or
+ *       generating and loading other required configuration.
+ *
+ * @noreturn
+ */
 forward plugin_init();
 
-/* Called when the plugin is paused. */
+/**
+ * Called just before the plugin is paused from execution.
+ *
+ * @noreturn
+ */
 forward plugin_pause();
 
-/* Called when the plugin is unpaused. */
-forward plugin_unpause();
-
-/* Called when the mod tries to change the map. */
-forward server_changelevel(map[]);
-
-/* Function is called when all plugin_init from plugins
-* were called, so all commmands and cvars should be already registered. */
-forward plugin_cfg();
-
-/* Function called before plugin unloading (server deactivation) */
-forward plugin_end();
-
-/* Called on log message. */
-forward plugin_log();
-
-/* Use here model_precache() and sound_precache() functions. */
-forward plugin_precache();
-
-/* Whenever player info is changed, this function is called. */
-forward client_infochanged(id);
-
-/* Called on client connection. */
-forward client_connect(id);
-
-/* Called when client gets valid STEAM id (usually
-* between client_connect() and client_putinserver()). */
-forward client_authorized(id);
-
-/* Called when client is disconnecting from server. */
-forward client_disconnect(id);
-
-/* Called when client is sending command. */
-forward client_command(id);
-
-/* Called when client is entering to a game. */
-forward client_putinserver(id);
-
-/* Sets informations about plugin. Returns the plugin id of the calling plugin. */
-native register_plugin(const plugin_name[],const version[],const author[]);
-
-/* Precache model. Can be used only in plugin_precache() function.*/
-native precache_model(const name[]);
-
-/* Precache sound. Can be used only in plugin_precache() function.*/
-native precache_sound(const name[]);
-
-/* Precaches any file. */
-native precache_generic(const szFile[]);
-
-/* Sets info for player. */
-native set_user_info(index,const info[],const value[]);
-
-/* Gets info from player. */
-native get_user_info(index,const info[],output[],len);
-
-/* Sets info for server. */
-native set_localinfo(const info[],const value[]);
-
-/* Gets info from server. */
-native get_localinfo(const info[],output[],len);
-
-/* Shows text in MOTD window. When there is no header, the MOTD title 
-* will be the name of server. If message is filename, then a contents
-* of this file will be displayed as MOTD. */
-native show_motd(player,const message[],const header[]="");
-
-/* Sends message to player. Set index to 0 to send text globaly. */
-native client_print(index,type,const message[],any:...);
 
 /**
- * Sends colored message to player.  Set index to 0 to send text globally.
- * This works only under Counter-Strike 1.6 and Counter-Strike: Condition Zero.
+ * Called just after the plugin is unpaused.
  *
- * The available colors identifiers are :
- *          green       ^4   ; use location color from this point forward
- *  red/blue/grey       ^3   ; use team color from this point forward
- *  red/blue/grey       ^2   ; use team color up to the end of the player name. This only works at the start of the string, and precludes using the other control characters.
- *          normal      ^1   ; use normal color from this point forward
+ * @noreturn
+ */
+forward plugin_unpause();
+
+/**
+ * Called when the mod tries to change the map.
  *
- * The team color is defined either with a sender's index, or a specific team color using print_team_* constants (print_team_blue, print_team_red, print_team_grey).
- * A message must start with a default color.
+ * @note This is *only* called if the mod itself handles the map change. The
+ *       server command "changelevel" which is also used by plugins will not
+ *       trigger this forward. Unfortunately this means that in practice this
+ *       forward is very unreliable, and will not be called in many situations.
  *
- * An example would be: client_print_color(id, print_team_red, "^4This is green ^3this is red, ^1this is your default chat text color");
- * Another with index : client_print_color(id, idOther, "^4This is green ^3this idOther's team color, ^1this is your default chat text color");
- * In multilingual file : KEY = ^1This is normal color, ^4this is green, ^1normal again ^3and now team color.
+ * @param map   Map that the mod tries to change to
  *
- * @param index         This is the player index (1 to maxplayer) you want to send the message, use 0 to send to all players.
- * @param sender        This is the player index you want to use the team color, see print_team_* constants if you want to force a color.
- * @param fmt           Format string in which patterns gonna be replaced with argument list.
- * 
- * @return              1 if the message has been sent, 
- *                      0 if the index specified is a not connected player, 
- *                        or if a global message has not been sent because there are no humans players.
+ * @return      PLUGIN_CONTINUE to let the mod change the map
+ *              PLUGIN_HANDLED or higher to prevent the map change
+ */
+forward server_changelevel(map[]);
+
+/**
+ * Called when all plugins went through plugin_init
+ *
+ * @note When this forward is called most plugins should have registered their
+ *       cvars and commands already.
+ *
+ * @noreturn
+ */
+forward plugin_cfg();
+
+/**
+ * Called just before server deactivation and subsequent
+ * unloading of the plugin.
+ *
+ * @note The plugin is required to manually free Handles it has acquired, such
+ *       as those from dynamic data structures. Failing to do that will result
+ *       in the plugin and AMXX leaking memory.
+ *
+ * @noreturn
+ */
+forward plugin_end();
+
+/**
+ * Called when a message is about to be logged.
+ *
+ * @note Message data and information can be retrieved using the read_log* set
+ *       of functions.
+ *
+ * @return      PLUGIN_CONTINUE to let the log message through
+ *              PLUGIN_HANDLED or higher to stop the log message
+ */
+forward plugin_log();
+
+/**
+ * This forward allows you to add models, sounds and generic files to the
+ * precache tables using the precache_* set of functions.
+ *
+ * @note Adding files to the precaching tables will trigger the client to
+ *       download them to its local filesystem.
+ * @note There is a hard upper limit of entries in the precaching tables for
+ *       every game, this limit is 512 in most cases. The entries will be filled
+ *       and indexed incrementally. Going over this limit will crash the server.
+ *
+ * @noreturn
+ */
+forward plugin_precache();
+
+/**
+ * Called when a clients info has changed
+ *
+ * @param id    Client index
+ *
+ * @noreturn
+ */
+forward client_infochanged(id);
+
+/**
+ * Called when a client is connecting.
+ *
+ * @note This forward is called too early to do anything that directly affects
+ *       the client.
+ *
+ * @param id    Client index
+ *
+ * @noreturn
+ */
+forward client_connect(id);
+
+/**
+ * Called when the client gets a valid SteamID.
+ *
+ * @note This may occur before or after client_putinserver has been called.
+ * @note This is called for bots, and the SteamID will be "BOT"
+ *
+ * @param id    Client index
+ *
+ * @noreturn
+ */
+forward client_authorized(id);
+
+/**
+ * Called when a client is disconnecting from the server.
+ *
+ * @note By this point it is already too late to do anything that directly
+ *       affects the client.
+ *
+ * @param id    Client index
+ *
+ * @noreturn
+ */
+forward client_disconnect(id);
+
+/**
+ * Called when a client attempts to execute a command.
+ *
+ * @note The command and its arguments can be read using the read_arg* set of
+ *       functions.
+ *
+ * @param id    Client index
+ *
+ * @return      PLUGIN_CONTINUE to let the client execute the command
+ *              PLUGIN_HANDLED or higher to stop the command
+ */
+forward client_command(id);
+
+/**
+ * Called when a client is entering the game.
+ *
+ * @note It is not defined whether the client already has a SteamID when this
+ *       forward is called. client_authorized may occur either before or after
+ *       this.
+ *
+ * @param id    Client index
+ *
+ * @noreturn
+ */
+forward client_putinserver(id);
+
+/**
+ * Sets informations about the calling plugin.
+ *
+ * @param plugin_name   Name of the plugin
+ * @param version       Version of the plugin
+ * @param author        Author of the plugin
+ *
+ * @return              Plugin id of the calling plugin
+ */
+native register_plugin(const plugin_name[], const version[], const author[]);
+
+/**
+ * Precaches a model file.
+ *
+ * @note Can only be used inside of the plugin_precache() forward.
+ *
+ * @param name  Path to the model file
+ *
+ * @return      Cache id of the model, even if the file was already precached
+ */
+native precache_model(const name[]);
+
+/**
+ * Precaches a sound file.
+ *
+ * @note Can only be used inside of the plugin_precache() forward.
+ * @note The filepath is always relative to the "sound" folder, and the file has
+ *       to be a wav file. Precaching a file with this will add it to the engine
+ *       sound table, making it available for usage in emit_sound for example.
+ * @note Precaching other filetypes (such as mp3 music), optionally in different
+ *       locations, has to be done with precache_generic.
+ *
+ *
+ * @param name  Path to the sound file
+ *
+ * @return      Cache id of the sound, even if the file was already precached
+ */
+native precache_sound(const name[]);
+
+/**
+ * Precaches a generic file.
+ *
+ * @note Can only be used inside of the plugin_precache() forward.
+ * @note Precaching sounds with this will not add them to the engine sound tables.
+ *
+ * @param szFile    Path to the file
+ *
+ * @return          Cache id of the file, even if the file was already precached
+ */
+native precache_generic(const szFile[]);
+
+/**
+ * Sets info on the client.
+ *
+ * @param index     Client index
+ * @param info      Info key
+ * @param value     New value
+ *
+ * @noreturn
+ * @error           If the index is not within the range of 1 to MaxClients or
+ *                  the client is not connected an error will be thrown.
+ */
+native set_user_info(index,const info[], const value[]);
+
+/**
+ * Gets info from the client.
+ *
+ * @param index     Client index
+ * @param info      Info key
+ * @param output    Buffer to copy value to
+ * @param len       Maximum size of the buffer
+ *
+ * @return          Number of cells written to buffer
+ * @error           If the index is not within the range of 1 to MaxClients or
+ *                  the client is not connected an error will be thrown.
+ */
+native get_user_info(index, const info[], output[], len);
+
+/**
+ * Sets info on the server.
+ *
+ * @param info      Info key
+ * @param value     New value
+ *
+ * @noreturn
+ */
+native set_localinfo(const info[], const value[]);
+
+/**
+ * Gets info from the server.
+ *
+ * @param info      Info key
+ * @param output    Buffer to copy value to
+ * @param len       Maximum size of the buffer
+ *
+ * @return          Number of cells written to buffer
+ */
+native get_localinfo(const info[], output[], len);
+
+/**
+ * Shows text or a file in MOTD window.
+ *
+ * @param player    Client index, use 0 to display to all players
+ * @param message   Message to display inside the MOTD window. If this is a
+ *                  filename the contents of this file will be displayed.
+ * @param header    Text for the MOTD header. If this is empty the servers
+ *                  hostname will be displayed instead.
+ *
+ * @noreturn
+ */
+native show_motd(player, const message[], const header[]="");
+
+/**
+ * Sends a message to the client.
+ *
+ * @param index     Client index, use 0 to display to all players
+ * @param type      Message type, see print_* destination constants in amxconst
+ * @param message   Formatting rules
+ * @param ...       Variable number of formatting parameters
+ *
+ * @return          The number of printed characters.
+ *                  If 0 is specified as the index then 0 will be returned if
+ *                  nothing has been sent. The number of printed characters will
+ *                  otherwise refer to the message that is sent last, to the
+ *                  client with the highest index.
+ * @error           If a single client is specified and the index is not
+ *                  within the range of 1 to MaxClients an error will be thrown
+ */
+native client_print(index, type, const message[], any:...);
+
+/**
+ * Sends colored chat messages to clients.
+ *
+ * @note This only works in Counter-Strike 1.6 and Condition Zero.
+ * @note The colors can be modified inside of the format string using special
+ *       characters. These characters can be included using the escape character
+ *          green           x04   ; use location color from this point forward
+ *          red/blue/grey   x03   ; use team color from this point forward
+ *          red/blue/grey   x02   ; use team color to the end of the player name
+ *                                ; This only works at the start of the string,
+ *                                ; and precludes using other control characters
+ *          default         x01   ; use default color from this point forward
+ * @note The team color is defined by the sender's index or a specific team
+ *       color using the print_team_* constants in amxconst
+ * @note Usage examples:
+ *       client_print_color(id, print_team_red, "^4Green ^3Red ^1Default")
+ *       client_print_color(id, id2, "^4Green ^3id2's team color, ^1Default")
+ * @note Including colors in ML can be done using the same escaping method:
+ *       EXAMPLE_ML_KEY = ^4Green ^3Team color ^1Default.
+ *
+ * @param index     Client index, use 0 to display to all players
+ * @param sender    Client index used as the sender, defining the team color
+ *                  used in the message. Use print_team_* constants to force
+ *                  a specific color.
+ * @param fmt       Formatting rules
+ * @param ...       Variable number of formatting parameters
+ *
+ * @return          The number of printed characters.
+ *                  If 0 is specified as the index then 0 will be returned if
+ *                  nothing has been sent. The number of printed characters will
+ *                  otherwise refer to the message that is sent last, to the
+ *                  client with the highest index.
+ * @error           If a single client is specified and the index is not
+ *                  within the range of 1 to MaxClients an error will be thrown
  */
 native client_print_color(index, sender, const message[], any:...);
 
-/* Sends message to player by engine. Set index to 0 to send text globaly. */
-native engclient_print(player,type,const message[],any:...);
-
-/* Sends message to console. */
-native console_print(id,const message[],any:...);
-
-/* Sends command to console. */
-native console_cmd(id,const cmd[],any:...);
-
-/* Registers event on which a given function will be called
-* Flags:
-* "a" - global event.
-* "b" - specified to client (human player and bot).
-* "c" - send only once when repeated to other players.
-* "d" - call if is send to dead player.
-* "e" - to alive.
-* "f" - to human player only ("b" flag must be set).
-* "g" - to bot only ("b" flag must be set).
-* NOTE: Due to a long-standing bug that would break compatibility with old plugins,
-*       the client id should be checked for alive/dead state if you use d or e.
-* Examples for conditions:
-* "2=c4" - 2nd parameter of message must be sting "c4".
-* "3>10" - 3rd parameter must be greater then 10.
-* "3!4" - 3rd must be different from 4.
-* "2&Buy" - 2nd parameter of message must contain "Buy" substring.
-* "2!Buy" - 2nd parameter of message can't contain "Buy" substring. */
-native register_event(const event[],const function[],const flags[],const cond[]="", ... );
-
-/* Registers log event on which the given function will be called
-* Examples for conditions:
-* "0=World triggered" "1=Game_Commencing"
-* "1=say"
-* "3=Terrorists_Win"
-* "1=entered the game"
-* "0=Server cvar"
-*/
-native register_logevent(const function[], argsnum,  ... );
+/**
+ * Sends a message to the client via the engine.
+ *
+ * @param player    Client index, use 0 to display to all players
+ * @param type      Message type, see print_* destination constants in amxconst
+ * @param message   Formatting rules
+ * @param ...       Variable number of formatting parameters
+ *
+ * @return          The number of printed characters.
+ *                  If 0 is specified as the index then 0 will be returned if
+ *                  nothing has been sent. The number of printed characters will
+ *                  otherwise refer to the message that is sent last, to the
+ *                  client with the highest index.
+ * @error           If a single client is specified and the index is not
+ *                  within the range of 1 to MaxClients an error will be thrown
+ */
+native engclient_print(player, type, const message[], any:...);
 
 /**
- * Sets format for hudmessage. 
- * Note - as of AMX Mod X 1.61, setting the channel to -1
- *  will automatically choose the next available HUD channel for a player.
- * Note - if you plan to make a permanent message, don't forget to specify a channel (1-4)
- *  to avoid flickering effect due to auto-channeling.
+ * Sends a message to the console of a client or the server.
+ *
+ * @param index     Client index, or 0 to print to the server console
+ * @param message   Formatting rules
+ * @param ...       Variable number of formatting parameters
+ *
+ * @return          The number of printed characters.
+ * @error           If a single client is specified and the index is not
+ *                  within the range of 1 to MaxClients an error will be thrown
+ */
+native console_print(id, const message[], any:...);
+
+/**
+ * Executes a command from the specified client or the server console.
+ *
+ * @param id    Client index, or 0 to print to the server console
+ * @param cmd   Formatting rules
+ * @param ...   Variable number of formatting parameters
+ *
+ * @return      The length of the formatted command.
+ */
+native console_cmd(id, const cmd[], any:...);
+
+/**
+ * Registers a function to be called on a given game event.
+ *
+ * @note Examples for event conditions:
+ *       "2=c4" - Second parameter of message must be the string "c4"
+ *       "3>10" - Third parameter of message must be greater than 10
+ *       "3!4" - Third parameter of message must not be equal to 4
+ *       "2&Buy" - Second parameter of message must contain "Buy" substring
+ *       "2!Buy" - Second parameter of message must not equal "Buy"
+ * @note Due to a long-standing bug that would break compatibility with older
+ *       plugins, the client id should be checked for alive/dead state if you
+ *       use flags "d" or "e".
+ *
+ * @param event     Name of event that should be hooked
+ * @param function  Name of callback function
+ * @param flags     Flags used for filtering events, the valid flags are:
+ *                  "a" - Global event (sent to every client)
+ *                  "b" - Event sent to single client
+ *                  "c" - Call only once when repeated to multiple clients
+ *                  "d" - Call only if sent to dead player
+ *                  "e" - Call only if sent to alive player
+ *                  "f" - Call only if sent to human player ("b" flag required)
+ *                  "g" - Call only if sent to bot ("b" flag required)
+ * @param cond      Condition string used for filtering events, built as:
+ *                  "<argument number><comparison operator><value>"
+ *                  Argument number is the argument position to be filtered
+ *                  The comparison operator may be:
+ *                    - "=" for equality comparison (all argument types)
+ *                    - "!" for inequality comparison (all argument types)
+ *                    - "&" for bitwise and (int argument) or substring
+ *                      comparison (string argument)
+ *                    - "<" for less than comparison (int/float arguments)
+ *                    - ">" for greater than comparison (int/float arguments)
+ *                  The argument is compared to the specified value accordingly
+ * @param ...       Any number of additional conditions
+ *
+ * @return          1 on successfully registering event
+ *                  0 on failure
+ * @error           Invalid event name or invalid callback function
+ */
+native register_event(const event[], const function[], const flags[], const cond[]="", ...);
+
+/**
+ * Registers a function to be called on a given log event.
+ *
+ * @note Examples for log conditions:
+ *       "0=World triggered" "1=Game_Commencing"
+ *       "1=say"
+ *       "3=Terrorists_Win"
+ *       "1=entered the game"
+ *       "0=Server cvar"
+ *
+ * @param function  Name of callback function
+ * @param argsnum   Number of arguments of the log event
+ * @param ...       Any number of conditions used for filtering events
+ *                  A condition string is built as:
+ *                  "<argument number><comparison operator><string>"
+ *                  Argument number is the argument position to be filtered
+ *                  The comparison operator may be:
+ *                    - "=" for equality comparison
+ *                    - "&" for substring comparison
+ *                  The argument is compared to the specified string accordingly
+ *
+ * @return          1 on successfully registering event
+ *                  0 on failure
+ * @error           Invalid callback function
+ */
+native register_logevent(const function[], argsnum,  ...);
+
+/**
+ * Sets display parameters for hudmessages.
+ *
+ * @note As of AMXX 1.61, setting the channel to -1 will automatically choose
+ *       the next available HUD channel for the client.
+ * @note There are four different HUD channels available on the client (1-4).
+ *       Sending a hudmessage to a channel will overwrite any existing messages
+ *       already displaying on that channel.
+ * @note If you plan to create a permanent message don't forget to specify a
+ *       specific channel to avoid possible flickering due to auto-channeling
+ * @note For the hudmessage coordinates x and y, -1.0 will center the message
+ *       on the respective axis.
+ * @note These parameters stay until the next call to set_hudmessage overwrites
+ *       them. Multiple calls to show_hudmessage will therefore re-use the same
+ *       parameters.
+ *
+ * @param red           Red component of hudmessage color
+ * @param green         Green component of hudmessage color
+ * @param blue          Blue component of hudmessage color
+ * @param x             Location of the message on the x axis in percent
+ * @param y             Location of the message on the y axis in percent
+ * @param effects       Display effect
+ * @param fxtime        Duration of the effect
+ * @param holdtime      Time the message stays on screen
+ * @param fadeintime    Time it takes for the message to fully appear (fade-in)
+ * @param fadeouttime   Time it takes for the message to fully disappear (fade-out)
+ * @param channel       Channel to use on the client
+ *
+ * @noreturn
  */
 native set_hudmessage(red=200, green=100, blue=0, Float:x=-1.0, Float:y=0.35, effects=0, Float:fxtime=6.0, Float:holdtime=12.0, Float:fadeintime=0.1, Float:fadeouttime=0.2,channel=-1);
 
 /* Displays HUD message to given player. */
+/**
+ * Displays a message on the client HUD.
+ *
+ * @note Use set_hudmessage to define how the message should look on screen.
+ *
+ * @param index     Client index, use 0 to display to all clients
+ * @param message   Formatting rules
+ * @param ...       Variable number of formatting parameters
+ *
+ * @return          The number of printed characters.
+ *                  If 0 is specified as the index then 0 will be returned if
+ *                  nothing has been sent. The number of printed characters will
+ *                  otherwise refer to the message that is sent last, to the
+ *                  client with the highest index.
+ * @error           If a single client is specified and the index is not
+ *                  within the range of 1 to MaxClients an error will be thrown
+ */
 native show_hudmessage(index,const message[],any:...);
 
 /**
- * Sets the Director HUD parameters for drawing text. 
+ * Sets the Director HUD parameters for drawing text.
  *
- * These parameters are stored globally, although nothing other than this function and set_hudmessage modify them. 
- * You must call this function before drawing text. If you are drawing text to multiple clients, you can set the 
- * parameters once, since they won't be modified. However, as soon as you pass control back to other plugins, 
+ * These parameters are stored globally, although nothing other than this function and set_hudmessage modify them.
+ * You must call this function before drawing text. If you are drawing text to multiple clients, you can set the
+ * parameters once, since they won't be modified. However, as soon as you pass control back to other plugins,
  * you must reset the parameters next time you draw.
- * 
+ *
  * @param red			The red color value.
  * @param green			The green color value.
  * @param blue			The blue color value.
@@ -197,14 +532,14 @@ native show_hudmessage(index,const message[],any:...);
  * @param effects		The effect value. 0 = fade in/fade out, 1 is flickery credits, 2 is write out (training room).
  * @param fxtime		The duration of chosen effect (may not apply to all effects).
  * @param holdtime		The Number of seconds to hold the text.
- * @param fadeintime	The number of seconds to spend fading in.	
- * @param fadeoutime	The number of seconds to spend fading out.	
+ * @param fadeintime	The number of seconds to spend fading in.
+ * @param fadeoutime	The number of seconds to spend fading out.
  */
 native set_dhudmessage(red=200, green=100, blue=0, Float:x=-1.0, Float:y=0.35, effects=0, Float:fxtime=6.0, Float:holdtime=12.0, Float:fadeintime=0.1, Float:fadeouttime=0.2);
 
 /**
  * Shows a Director HUD message to a client. Usually such message has a bigger letter size.
- * Ideally used to show static/persistent message. 
+ * Ideally used to show static/persistent message.
  *
  * Unlike classic HUD message which is channel-based, Director HUD message is stack-based. Don't expect same behavior.
  * You can have up to 8 messages displatying at once. If you try more, the first will be overwritten, then second, etc.
@@ -236,7 +571,7 @@ native read_datatype();
 /* Gets log message. Can be called only in plugin_log() forward function. */
 native read_logdata(output[],len);
 
-/* Returns number of log arguments. 
+/* Returns number of log arguments.
 * Can be called only in plugin_log() forward function. */
 native read_logargc();
 
@@ -284,7 +619,7 @@ native get_amxx_verstring(buffer[], length);
 /* If player is not attacked function returns 0, in other
  * case returns index of attacking player. On second and third
  * parameter you may get info about weapon and body hit place.
- * As of 1.75, get_user_attacker can return a non-player index if the player was attacked by a non-player entity. 
+ * As of 1.75, get_user_attacker can return a non-player index if the player was attacked by a non-player entity.
  */
 native get_user_attacker(index,...);
 
@@ -315,7 +650,7 @@ native get_user_ip(index,ip[],len, without_port = 0);
    set "setweapon" to 0 to turn the bit off, set to 1 to turn it on. */
 native user_has_weapon(index,weapon,setweapon=-1);
 
-/* Returns id of currently carried weapon. Gets also 
+/* Returns id of currently carried weapon. Gets also
 * ammount of ammo in clip and backpack. */
 native get_user_weapon(index,&clip=0,&ammo=0);
 
@@ -329,7 +664,7 @@ native num_to_word(num,output[],len);
 * then a name of team is set. */
 native get_user_team(index, team[]="", len = 0);
 
-/* Returns player playing time in seconds. 
+/* Returns player playing time in seconds.
 * If flag is set then result is without connection time. */
 native get_user_time(index, flag = 0);
 
@@ -341,17 +676,17 @@ native get_user_ping(index, &ping, &loss);
 * 0 - current position.
 * 1 - position from eyes (weapon aiming).
 * 2 - end position from player position.
-* 3 - end position from eyes (hit point for weapon). 
+* 3 - end position from eyes (hit point for weapon).
 * 4 - position of last bullet hit (only CS). */
 native get_user_origin(index, origin[3], mode = 0);
 
 /* Returns all carried weapons as bit sum. Gets
  *  also theirs indexes.
  * Note that num is incremental - if you pass 0, you get
- *  32 weapons towards the total.  Afterwards, num will 
+ *  32 weapons towards the total.  Afterwards, num will
  *  will contain the number of weapons retrieved.
  * However, subsequent calls to get_user_weapons() will
- *  return the next batch of weapons, in case the mod 
+ *  return the next batch of weapons, in case the mod
  *  supports more than 32 weapons.
  * This means to call get_user_weapons() on the same
  *  inputs twice, you must reset num to 0 to get the
@@ -391,7 +726,7 @@ native log_message(const message[],any:...);
 /* Sends log message to specified file. */
 native log_to_file(const file[],const message[],any:...);
 
-/* Returns number of players put in server. 
+/* Returns number of players put in server.
 * If flag is set then also connecting are counted. */
 native get_playersnum(flag=0);
 
@@ -436,7 +771,7 @@ native get_flags(flags,output[],len);
 * "g" - don't look in alive players.
 * "h" - skip bots.
 * "i" - skip real players.
-* "j" - return index of last found player. 
+* "j" - return index of last found player.
 * "k" - with given userid.
 * "l" - ignore case sensitivity. */
 native find_player(const flags[], ... );
@@ -455,9 +790,9 @@ native client_cmd(index,const command[],any:...);
  *
  * @param index			Index of the client, use 0 to send to all clients.
  * @param command		The client command to execute on.
- * @param arg1			Optionnal. The command arguments. 
+ * @param arg1			Optionnal. The command arguments.
  * @param arg2			Optionnal. The command arguments.
- * @noreturn		
+ * @noreturn
  */
 native engclient_cmd(index,const command[],const arg1[]="",const arg2[]="");
 
@@ -467,14 +802,14 @@ native engclient_cmd(index,const command[],const arg1[]="",const arg2[]="");
  * Function is excellent for forcing to do an action related to a game (not settings!).
  * The command must stand alone but in arguments you can use spaces.
  *
- * @note This is similar to engclient_cmd with the difference all plugins hooking  
+ * @note This is similar to engclient_cmd with the difference all plugins hooking
  *       the command will be notified as well.
  *
  * @param index			Index of the client, use 0 to send to all clients.
  * @param command		The client command to execute on.
- * @param arg1			Optionnal. The command arguments. 
+ * @param arg1			Optionnal. The command arguments.
  * @param arg2			Optionnal. The command arguments.
- * @noreturn		
+ * @noreturn
  */
 native amxclient_cmd(index, const command[], const arg1[] = "", const arg2[] = "");
 
@@ -535,7 +870,7 @@ native get_time(const format[],output[],len);
 * Last parameter sets time to format. */
 native format_time(output[],len, const format[],time = -1);
 
-/* Returns system time in seconds elapsed since 00:00:00 on January 1, 1970. 
+/* Returns system time in seconds elapsed since 00:00:00 on January 1, 1970.
 * Offset is given in seconds.*/
 native get_systime(offset = 0);
 
@@ -555,7 +890,7 @@ native parse_time(const input[],const format[], time = -1);
 * "d" - do task on time before a map timelimit. */
 native set_task(Float:time,const function[],id = 0,const parameter[]="",len = 0,const flags[]="", repeat = 0);
 
-/* Removes all tasks with given id. If outside var is 
+/* Removes all tasks with given id. If outside var is
 * set then a task can be removed also when
 * was set in another plugin. */
 native remove_task(id = 0, outside = 0);
@@ -575,21 +910,21 @@ native get_user_flags(index,id=0);
 /* Removes flags for player. */
 native remove_user_flags(index,flags=-1,id=0);
 
-/* Registers function which will be called from client console. 
+/* Registers function which will be called from client console.
  * Set FlagManager to 1 to make FlagManager always include this command
  * Set FlagManager to 0 to make FlagManager never include this command
  * Returns the command ID.
  */
 native register_clcmd(const client_cmd[],const function[],flags=-1, const info[]="", FlagManager=-1);
 
-/* Registers function which will be called from any console. 
+/* Registers function which will be called from any console.
  * Set FlagManager to 1 to make FlagManager always include this command
  * Set FlagManager to 0 to make FlagManager never include this command
  * Returns the command ID.
  */
 native register_concmd(const cmd[],const function[],flags=-1, const info[]="", FlagManager=-1);
 
-/* Registers function which will be called from server console. 
+/* Registers function which will be called from server console.
  * Returns the command ID.
  */
 native register_srvcmd(const server_cmd[],const function[],flags=-1, const info[]="");
@@ -725,7 +1060,7 @@ native get_modulesnum();
 native is_plugin_loaded(const name[], bool:usefilename=false);
 
 /* Gets info about plugin by given index.
- * Function returns -1 if plugin doesn't exist with given index. 
+ * Function returns -1 if plugin doesn't exist with given index.
  * Note: the [...] portion should not be used, and is only for backward compatibility.
  * Use index of -1 to use the calling plugin's ID.
  */
@@ -742,7 +1077,7 @@ native get_pluginsnum();
 * "c" - look outside the plugin (by given plugin name).
 * "d" - set "stopped" status when pausing whole plugin.
 *       In this status plugin is unpauseable.
-* Example: pause("ac","myplugin.amxx") 
+* Example: pause("ac","myplugin.amxx")
 *
 * Note: There used to be the b and e flags as well,
 * which have been deprecated and are no longer used.
@@ -794,7 +1129,7 @@ native callfunc_push_intrf(&value);
 native callfunc_push_floatrf(& Float: value);
 
 /* If copyback is 1 (default), any changes are copied back.
- * Note that this will defy the 'const' specifier for push_str(), 
+ * Note that this will defy the 'const' specifier for push_str(),
  *  which is only kept for special backwards compatibility.
  */
 native callfunc_push_str(const VALUE[], bool:copyback=true);
@@ -868,7 +1203,7 @@ native log_error(error, const fmt[], any:...);
 
 // More Dynamic Native System Stuff
 // Each of these natives affects one of the parameters sent to your native.
-// Parameters go from 1 to n, just like in modules, and it is important to 
+// Parameters go from 1 to n, just like in modules, and it is important to
 //  remember two things: The parameters are actually coming from another plugin
 //  (and just like modules, you must use these special natives).
 //  two: you CANNOT call your native from inside your native.  This is very bad.
@@ -877,7 +1212,7 @@ native log_error(error, const fmt[], any:...);
 //You only need to use it on by-reference parameters.
 native param_convert(num);
 
-// Gets a string from the calling plugin 
+// Gets a string from the calling plugin
 native get_string(param, dest[], maxlen);
 
 // Sets a string in the calling plugin
@@ -913,7 +1248,7 @@ native query_client_cvar(id, const cvar[], const resultFunc[], paramlen=0, const
 
 
 /**
- * Allows you to trap error messages that occur in your plugin.  
+ * Allows you to trap error messages that occur in your plugin.
  * You can use this to override the debug messages that occur when your plugin
  *  causes some sort of runtime error.  Your handler will be called in this style:
  *
@@ -957,15 +1292,15 @@ native dbg_fmt_error(buffer[], maxLength);
  * Sets a native filter.  This must be first set in plugin_natives(), but future calls will
  *  simply set a new filter.
  * This filter will allow your plugin to load even if its modules aren't loaded.  For example,
- *  if Fun isn't loaded and you use set_user_frags, your plugin will still load.  However, if you 
+ *  if Fun isn't loaded and you use set_user_frags, your plugin will still load.  However, if you
  *  attempt to call this native, your filter will intercept it with these parameters:
  *
  * public function native_filter(const native[], index, trap)
  *  native - name of native
  *  index - index of native
  *  trap - 0 if native couldn't be found, 1 if native use was attempted
- * 
- * If you return PLUGIN_HANDLED, no error is thrown.  If you return PLUGIN_CONTINUE, 
+ *
+ * If you return PLUGIN_HANDLED, no error is thrown.  If you return PLUGIN_CONTINUE,
  *  your plugin will have a run-time-error.  To print your own error, or change the default,
  *  you can return PLUGIN_HANDLED or return PLUGIN_CONTINUE and use set_error_filter.
  * If you return PLUGIN_CONTINUE when trap is 0, the plugin will ABORT AND FAIL TO LOAD!
@@ -974,20 +1309,20 @@ native dbg_fmt_error(buffer[], maxLength);
 native set_native_filter(const handler[]);
 
 /**
- * This function sets a module/library filter.  It will let you intercept the automatic requirement 
+ * This function sets a module/library filter.  It will let you intercept the automatic requirement
  *  of a module and return PLUGIN_CONTINUE to fail load or PLUGIN_HANDLED to imply that load
- *  can continue even without the module.  
- * 
+ *  can continue even without the module.
+ *
  * This is the most unforgiving of the filter functions.  You can ONLY call it during plugin_natives,
  *  and any error that occurs is not filtered -- instead your plugin will fail to load as if you
- *  returned PLUGIN_CONTINUE.  
+ *  returned PLUGIN_CONTINUE.
  *
  * Your handler will be called with this prototype:
  *
  * public module_filter(const library[], LibType:type);
  *  library - library or class name of the module that is required
  *  libtype - The type of requirement being checked (library/module or class).
- * 
+ *
  *
  * set_module_filter() returns 0 on success (unlike most natives).
  */
@@ -1005,7 +1340,7 @@ native set_module_filter(const handler[]);
 native abort(error, const fmt[]="", any:...);
 
 /**
- * Checks if a specific module is loaded.  This is the exact same method AMX Mod X 
+ * Checks if a specific module is loaded.  This is the exact same method AMX Mod X
  *  uses to see if a module is required by a plugin.  For example:
  *  module_exists("cstrike")
  *  module_exists("dbi")
@@ -1027,7 +1362,7 @@ native next_hudchannel(player);
  *  for each section of the screen that contains overlapping HUD messages.
  * For example, if you use both sides of the screen to display three messages
  *  that can potentially overlap, each side counts as a synchronizable area.
- * You can then use ShowSyncHudMsg() to correctly synchronize displaying the 
+ * You can then use ShowSyncHudMsg() to correctly synchronize displaying the
  *  HUD message with any other messages potentially in its class.  Note that this
  *  does not yet do anything like reserve screen area, its sole purpose is to be
  *  able to wipe an old message on an auto-channel and ensure that it will not
@@ -1042,7 +1377,7 @@ native CreateHudSyncObj(num=0, ...);
  *  it proceeds to write another.  It will only do this in the case
  *  of that channel not having been cleared already.
  * Target can be 0 for all players or 1-get_maxplayers().
- * You must use set_hudmessage, although the channel parameter is 
+ * You must use set_hudmessage, although the channel parameter is
  *  entirely ignored.
  */
 native ShowSyncHudMsg(target, syncObj, const fmt[], any:...);

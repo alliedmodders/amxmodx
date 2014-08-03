@@ -205,7 +205,7 @@ public ReadCSDM_ParseStart(INIParser:handle)
 
 public ReadCSDM_NewSection(INIParser:handle, const section[], bool:invalid_tokens, bool:close_bracket, bool:extra_tokens, curtok)
 {
-    Debug && server_print("^tReadCSDM_NewSection - [%s]", section);
+    Debug && server_print("^tReadCSDM_NewSection - [%s] (invalid_tokens: '%s', close_bracked: '%s', extra_tokens: '%s')", section, invalid_tokens ? "yes" : "no", close_bracket ? "yes" : "no", extra_tokens ? "yes" : "no");
     
     if (TrieKeyExists(ExpectedKVData, section))
     {

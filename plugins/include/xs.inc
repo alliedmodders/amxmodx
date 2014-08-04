@@ -1,70 +1,52 @@
-/* XS Library
-*   for AMX and AMXX
-*
-*  Copyright (C) 2004 Pavol "PM" Marko
-*
-*  This program is free software; you can redistribute it and/or modify it
-*  under the terms of the GNU General Public License as published by the
-*  Free Software Foundation; either version 2 of the License, or (at
-*  your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful, but
-*  WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-*  General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software Foundation,
-*  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-*
-*  In addition, as a special exception, the author gives permission to
-*  link the code of this program with the Half-Life Game Engine ("HL
-*  Engine") and Modified Game Libraries ("MODs") developed by Valve,
-*  L.L.C ("Valve"). You must obey the GNU General Public License in all
-*  respects for all of the code used other than the HL Engine and MODs
-*  from Valve. If you modify this file, you may extend this exception
-*  to your version of the file, but you are not obligated to do so. If
-*  you do not wish to do so, delete this exception statement from your
-*  version.
-*
-*  Version 0.1
-*
-*
-*  MACROS THAT YOU CAN DEFINE BEFORE INCLUDING XS.INC:
-*   XS_FLEQ_TOLERANCE:
-*    Tolerance that is used for XS_FLEQ float nearly-equal comparisions
-*     DEFAULT: 0.000005
-*   XS_DEBUG
-*    Turn debug logging on
-*     DEFAULT: 0
-*   XS_LOGBUFFER_SIZE
-*    Buffer size for logging
-*     DEFAULT: 512
-*   XS_TASK_MAXPARAMS
-*    Maximal parameter count for managed tasks
-*     DEFAULT: 8
-*   XS_TASK_MAXPARAMSIZE
-*    Maximal size of string parameter for tasks
-*    Has to be power of 2 and has to be >= 8
-*     DEFAULT: 512
-*   XS_TASK_MANAGEDIDS
-*    Number of managed IDs for tasks.
-*     DEFAULT: 2048
-*   XS_REPLACEBUF_SIZE
-*     DEFAULT: 3072
-*
-*
-*  NOTES:
-*   On AMX, VexdUM is required for some math functions
-*
-*   xs__ / XS__ (2 underscores) stuff is meant to be intern
-*
-*   untested: never tested
-*   half-tested: succesfully used in other applications; not extensively tested in xs though
-*   tested: fully tested
-*
-*   If you have any useful functions / ideas for functions, please tell me.
-*/
+// vim: set ts=4 sw=4 tw=99 noet:
+//
+// AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
+// Copyright (C) The AMX Mod X Development Team.
+// Copyright (C) 2004 Pavol "PM" Marko
+//
+// This software is licensed under the GNU General Public License, version 3 or higher.
+// Additional exceptions apply. For full license details, see LICENSE.txt or visit:
+//     https://alliedmods.net/amxmodx-license
+
+//
+// XS Library
+//  Version 0.1
+//
+// MACROS THAT YOU CAN DEFINE BEFORE INCLUDING XS.INC:
+//  XS_FLEQ_TOLERANCE:
+//   Tolerance that is used for XS_FLEQ float nearly-equal comparisions
+//    DEFAULT: 0.000005
+//   XS_DEBUG
+//    Turn debug logging on
+//     DEFAULT: 0
+//   XS_LOGBUFFER_SIZE
+//    Buffer size for logging
+//     DEFAULT: 512
+//   XS_TASK_MAXPARAMS
+//    Maximal parameter count for managed tasks
+//     DEFAULT: 8
+//   XS_TASK_MAXPARAMSIZE
+//    Maximal size of string parameter for tasks
+//   Has to be power of 2 and has to be >= 8
+//     DEFAULT: 512
+//  XS_TASK_MANAGEDIDS
+//   Number of managed IDs for tasks.
+//     DEFAULT: 2048
+//   XS_REPLACEBUF_SIZE
+//    DEFAULT: 3072
+//
+//
+//  NOTES:
+//   On AMX, VexdUM is required for some math functions
+//
+//   xs__ / XS__ (2 underscores) stuff is meant to be intern
+//
+//  untested: never tested
+//  half-tested: succesfully used in other applications; not extensively tested in xs though
+//  tested: fully tested
+//
+//  If you have any useful functions / ideas for functions, please tell me.
+//
 
 #if defined _xs_included
   #endinput

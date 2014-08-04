@@ -3,8 +3,6 @@
  * For conditions of distribution and use, see copyright notice in zlib.h
  */
 
-/* @(#) $Id: zconf.h 3734 2008-08-16 09:48:39Z damagedsoul $ */
-
 #ifndef ZCONF_H
 #define ZCONF_H
 

@@ -17,8 +17,6 @@
  *  2.  Altered source versions must be plainly marked as such, and must not be
  *      misrepresented as being the original software.
  *  3.  This notice may not be removed or altered from any source distribution.
- *
- *  Version: $Id: amx.h 3006 2006-08-28 11:08:18Z dvander $
  */
 
 #if defined FREEBSD && !defined __FreeBSD__

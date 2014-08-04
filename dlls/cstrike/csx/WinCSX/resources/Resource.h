@@ -1,7 +1,12 @@
-//{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ generated include file.
-// Used by WinCSX.rc
+// vim: set ts=4 sw=4 tw=99 noet:
 //
+// AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
+// Copyright (C) The AMX Mod X Development Team.
+//
+// This software is licensed under the GNU General Public License, version 3 or higher.
+// Additional exceptions apply. For full license details, see LICENSE.txt or visit:
+//     https://alliedmods.net/amxmodx-license
+
 #define IDC_MYICON                      2
 #define IDM_VISUALSTYLES                1
 #define IDD_WINCSX_DIALOG               102

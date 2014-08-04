@@ -1,20 +1,28 @@
-/* AMX Mod script.
-*
-* (c) 2004, SidLuke
-* This file is provided as is (no warranties).
-*
-* Plugin works with Stats Settings Plugin. Just run both of them.
-* By amx_statscfg command (from Stats Settings Plugin)
-* you will be able to set all settings and save them to a file.
-* 
-* Example of usage for some options:
-* amx_statscfg on SayTop15
-* amx_statscfg on SayRank
-* 
-* Accept able are also parts of name:
-* amx_statscfg off say
-* amx_statscfg on End
-*/
+// vim: set ts=4 sw=4 tw=99 noet:
+//
+// AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
+// Copyright (C) The AMX Mod X Development Team.
+// Copyright (C) 2004 SidLuke.
+//
+// This software is licensed under the GNU General Public License, version 3 or higher.
+// Additional exceptions apply. For full license details, see LICENSE.txt or visit:
+//     https://alliedmods.net/amxmodx-license
+
+//
+// DoD Stats Plugin
+//
+
+// Plugin works with Stats Settings Plugin. Just run both of them.
+// By amx_statscfg command (from Stats Settings Plugin)
+// you will be able to set all settings and save them to a file.
+//
+// Example usage for some options:
+// amx_statscfg on SayTop15
+// amx_statscfg on SayRank
+//
+// Acceptable are also parts of name:
+// amx_statscfg off say
+// amx_statscfg on End
 
 #include <amxmodx>
 #include <amxmisc>

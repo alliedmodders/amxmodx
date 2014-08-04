@@ -2,8 +2,6 @@
  *
  *  Copyright (c) ITB CompuPhase, 2001-2002
  *  This file may be freely used. No warranties of any kind.
- *
- *  Version: $Id: amxtime.cpp 2511 2006-04-06 12:56:45Z damagedsoul $
  */
 #include <time.h>
 #include <assert.h>

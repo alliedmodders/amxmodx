@@ -1,9 +1,12 @@
-/**
- * (C)2004-2005 AMX Mod X Development Team
- *   based on the stocks and information provided by LynX
- *   organized and released by BAILOPAN
- * This file is provided as is (no warranties).
- */
+// vim: set ts=4 sw=4 tw=99 noet:
+//
+// AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
+// Copyright (C) The AMX Mod X Development Team.
+// Based on stocks and information provided by LynX.
+//
+// This software is licensed under the GNU General Public License, version 3 or higher.
+// Additional exceptions apply. For full license details, see LICENSE.txt or visit:
+//     https://alliedmods.net/amxmodx-license
  
 #if defined _esfconst_included
   #endinput

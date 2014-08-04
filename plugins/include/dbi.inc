@@ -1,16 +1,29 @@
-/* SQL Database API
- * By the AMX Mod X Development Team
- * Notes - Read the comments! Make sure your plugins use 
- *  nice ANSI SQL and don't use database column names like "key"
- *  otherwise this API will be a nightmare
- * Never do error checking with the not operator! This is bad:
- *   if (!dbi_query())
- * You should do:
- *   ret = dbi_query()
- *   if (ret < 0)
- * This is because DBI functions can and will return negative numbers
- * Negative numbers evaluate to "true" in AMX.
- */
+// vim: set ts=4 sw=4 tw=99 noet:
+//
+// AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
+// Copyright (C) The AMX Mod X Development Team.
+//
+// This software is licensed under the GNU General Public License, version 3 or higher.
+// Additional exceptions apply. For full license details, see LICENSE.txt or visit:
+//     https://alliedmods.net/amxmodx-license
+
+//
+// SQL Database API
+//
+
+//
+// Notes - Read the comments! Make sure your plugins use
+//  nice ANSI SQL and don't use database column names like "key"
+//  otherwise this API will be a nightmare
+// 
+// Never do error checking with the not operator! This is bad:
+//   if (!dbi_query())
+// You should do:
+//   ret = dbi_query()
+//   if (ret < 0)
+// This is because DBI functions can and will return negative numbers
+// Negative numbers evaluate to "true" in AMX.
+//
 
 #if defined _dbi_included
   #endinput

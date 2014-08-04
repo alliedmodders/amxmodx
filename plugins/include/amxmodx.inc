@@ -205,6 +205,8 @@ native register_plugin(const plugin_name[], const version[], const author[]);
  * @param name  Path to the model file
  *
  * @return      Cache id of the model, even if the file was already precached
+ * @error       If called outside of the plugin_precache() forward, an error is
+ *              thrown.
  */
 native precache_model(const name[]);
 
@@ -222,6 +224,8 @@ native precache_model(const name[]);
  * @param name  Path to the sound file
  *
  * @return      Cache id of the sound, even if the file was already precached
+ * @error       If called outside of the plugin_precache() forward, an error is
+ *              thrown.
  */
 native precache_sound(const name[]);
 
@@ -229,11 +233,13 @@ native precache_sound(const name[]);
  * Precaches a generic file.
  *
  * @note Can only be used inside of the plugin_precache() forward.
- * @note Precaching sounds with this will not add them to the engine sound tables.
+ * @note Precaching sounds with this will not add them to the engine sound table
  *
  * @param szFile    Path to the file
  *
  * @return          Cache id of the file, even if the file was already precached
+ * @error           If called outside of the plugin_precache() forward, an error
+ *                  is thrown.
  */
 native precache_generic(const szFile[]);
 
@@ -247,6 +253,8 @@ native precache_generic(const szFile[]);
  * @noreturn
  * @error           If the index is not within the range of 1 to MaxClients or
  *                  the client is not connected an error will be thrown.
+ * @error           If called outside of the plugin_precache() forward, an error
+ *                  is thrown.
  */
 native set_user_info(index,const info[], const value[]);
 
@@ -306,7 +314,7 @@ native show_motd(player, const message[], const header[]="");
  * @param message   Formatting rules
  * @param ...       Variable number of formatting parameters
  *
- * @return          The number of printed characters.
+ * @return          Number of printed characters
  *                  If 0 is specified as the index then 0 will be returned if
  *                  nothing has been sent. The number of printed characters will
  *                  otherwise refer to the message that is sent last, to the
@@ -343,7 +351,7 @@ native client_print(index, type, const message[], any:...);
  * @param fmt       Formatting rules
  * @param ...       Variable number of formatting parameters
  *
- * @return          The number of printed characters.
+ * @return          Number of printed characters
  *                  If 0 is specified as the index then 0 will be returned if
  *                  nothing has been sent. The number of printed characters will
  *                  otherwise refer to the message that is sent last, to the
@@ -361,7 +369,7 @@ native client_print_color(index, sender, const message[], any:...);
  * @param message   Formatting rules
  * @param ...       Variable number of formatting parameters
  *
- * @return          The number of printed characters.
+ * @return          Number of printed characters
  *                  If 0 is specified as the index then 0 will be returned if
  *                  nothing has been sent. The number of printed characters will
  *                  otherwise refer to the message that is sent last, to the
@@ -378,7 +386,7 @@ native engclient_print(player, type, const message[], any:...);
  * @param message   Formatting rules
  * @param ...       Variable number of formatting parameters
  *
- * @return          The number of printed characters.
+ * @return          Number of printed characters
  * @error           If a single client is specified and the index is not
  *                  within the range of 1 to MaxClients an error will be thrown
  */
@@ -458,8 +466,7 @@ native register_event(const event[], const function[], const flags[], const cond
  *                    - "&" for substring comparison
  *                  The argument is compared to the specified string accordingly
  *
- * @return          1 on successfully registering event
- *                  0 on failure
+ * @return          1 on successfully registering event, 0 on failure
  * @error           Invalid callback function
  */
 native register_logevent(const function[], argsnum,  ...);
@@ -478,7 +485,8 @@ native register_logevent(const function[], argsnum,  ...);
  *       on the respective axis.
  * @note These parameters stay until the next call to set_hudmessage overwrites
  *       them. Multiple calls to show_hudmessage will therefore re-use the same
- *       parameters.
+ *       parameters. The parameters are not stored per-plugin, so other plugins
+ *       can overwrite them.
  *
  * @param red           Red component of hudmessage color
  * @param green         Green component of hudmessage color
@@ -488,15 +496,14 @@ native register_logevent(const function[], argsnum,  ...);
  * @param effects       Display effect
  * @param fxtime        Duration of the effect
  * @param holdtime      Time the message stays on screen
- * @param fadeintime    Time it takes for the message to fully appear (fade-in)
- * @param fadeouttime   Time it takes for the message to fully disappear (fade-out)
+ * @param fadeintime    Time it takes the message to fully appear (fade-in)
+ * @param fadeouttime   Time it takes the message to fully disappear (fade-out)
  * @param channel       Channel to use on the client
  *
  * @noreturn
  */
 native set_hudmessage(red=200, green=100, blue=0, Float:x=-1.0, Float:y=0.35, effects=0, Float:fxtime=6.0, Float:holdtime=12.0, Float:fadeintime=0.1, Float:fadeouttime=0.2,channel=-1);
 
-/* Displays HUD message to given player. */
 /**
  * Displays a message on the client HUD.
  *
@@ -506,7 +513,7 @@ native set_hudmessage(red=200, green=100, blue=0, Float:x=-1.0, Float:y=0.35, ef
  * @param message   Formatting rules
  * @param ...       Variable number of formatting parameters
  *
- * @return          The number of printed characters.
+ * @return          Number of printed characters
  *                  If 0 is specified as the index then 0 will be returned if
  *                  nothing has been sent. The number of printed characters will
  *                  otherwise refer to the message that is sent last, to the
@@ -514,137 +521,414 @@ native set_hudmessage(red=200, green=100, blue=0, Float:x=-1.0, Float:y=0.35, ef
  * @error           If a single client is specified and the index is not
  *                  within the range of 1 to MaxClients an error will be thrown
  */
-native show_hudmessage(index,const message[],any:...);
+native show_hudmessage(index, const message[], any:...);
 
 /**
- * Sets the Director HUD parameters for drawing text.
+ * Sets display parameters for director hudmessages.
  *
- * These parameters are stored globally, although nothing other than this function and set_hudmessage modify them.
- * You must call this function before drawing text. If you are drawing text to multiple clients, you can set the
- * parameters once, since they won't be modified. However, as soon as you pass control back to other plugins,
- * you must reset the parameters next time you draw.
+ * @note For the hudmessage coordinates x and y, -1.0 will center the message
+ *       on the respective axis.
+ * @note These parameters stay until the next call to set_dhudmessage overwrites
+ *       them. Multiple calls to show_dhudmessage will therefore re-use the same
+ *       parameters. The parameters are not stored per-plugin, so other plugins
+ *       can overwrite them.
  *
- * @param red			The red color value.
- * @param green			The green color value.
- * @param blue			The blue color value.
- * @param x				The x coordinate (abscissa). From 0,0 to 1.0.  -1.0 is the center.
- * @param y				The y coordinate (ordinate). From 0,0 to 1.0. - 1.0 is the center.
- * @param effects		The effect value. 0 = fade in/fade out, 1 is flickery credits, 2 is write out (training room).
- * @param fxtime		The duration of chosen effect (may not apply to all effects).
- * @param holdtime		The Number of seconds to hold the text.
- * @param fadeintime	The number of seconds to spend fading in.
- * @param fadeoutime	The number of seconds to spend fading out.
+ * @param red           Red component of hudmessage color
+ * @param green         Green component of hudmessage color
+ * @param blue          Blue component of hudmessage color
+ * @param x             Location of the message on the x axis in percent
+ * @param y             Location of the message on the y axis in percent
+ * @param effects       Display effect
+ * @param fxtime        Duration of the effect
+ * @param holdtime      Time the message stays on screen
+ * @param fadeintime    Time it takes the message to fully appear (fade-in)
+ * @param fadeouttime   Time it takes the message to fully disappear (fade-out)
+ *
+ * @noreturn
  */
 native set_dhudmessage(red=200, green=100, blue=0, Float:x=-1.0, Float:y=0.35, effects=0, Float:fxtime=6.0, Float:holdtime=12.0, Float:fadeintime=0.1, Float:fadeouttime=0.2);
 
 /**
- * Shows a Director HUD message to a client. Usually such message has a bigger letter size.
- * Ideally used to show static/persistent message.
+ * Displays a director message on the client HUD.
  *
- * Unlike classic HUD message which is channel-based, Director HUD message is stack-based. Don't expect same behavior.
- * You can have up to 8 messages displatying at once. If you try more, the first will be overwritten, then second, etc.
- * Each message is limited to 128 characters. This will be automatically truncated by the native.
- * Due to its way for working, there is no native to clear a specific message.
+ * @note Use set_dhudmessage to define how the message should look on screen.
+ * @note Unlike the classic HUD message which is channel-based, director
+ *       messages are stack-based. You can have up to 8 messages displaying at
+ *       once, if you add more they will be overwtitten in the order they were
+ *       sent. There is no way to clear a specific message.
+ * @note The message has a maximum length of 128 characters which this function
+ *       will automatically enforce.
  *
- * @param index			THe client index to send the message to. Use 0 to send to all connected clients.
- * @param message		The message text or formatting rules.
- * @param ...			The message formatting parameters.
- * @return				On success, the formatted message length. Otherwise 0.
+ * @param index     Client index, use 0 to display to all clients
+ * @param message   Formatting rules
+ * @param ...       Variable number of formatting parameters
+ *
+ * @return          Number of printed characters
+ *                  If 0 is specified as the index then 0 will be returned if
+ *                  nothing has been sent. The number of printed characters will
+ *                  otherwise refer to the message that is sent last, to the
+ *                  client with the highest index.
+ * @error           If a single client is specified and the index is not
+ *                  within the range of 1 to MaxClients an error will be thrown
  */
 native show_dhudmessage(index, const message[], any:...);
 
 /* Displays menu. Keys have bit values (key 1 is (1<<0), key 5 is (1<<4) etc.). */
+/**
+ * Displays a menu to the client.
+ *
+ * @note Keys is a bitflag value that represents which keys the user can press
+ *       on the menu. If you want to display disabled menu options or skip
+ *       certain number slots you should exclude that key from the bitflag.
+ *       amxconst.inc provides MENU_KEY_* constants for convenience.
+ * @note If a menu timeout is specified it does not automatically overwrite
+ *       the menu on the client's screen. But if a client acts upon a timeouted
+ *       displayed menu that action will not be sent to the plugin.
+ * @note The title parameter is not displayed to the client and is only used for
+ *       identifying menus internally and assigning them to their callbacks.
+ *       The title corresponds to the menu name that you register with
+ *       register_menuid().
+ *
+ * @param index     Client to display menu to, use 0 to display to all clients
+ * @param keys      Enabled keys
+ * @param menu      Menu body
+ * @param time      Menu timeout in seconds, -1 to disable
+ * @param title     Name of the menu for internal tracking purposes
+ */
 native show_menu(index,keys,const menu[], time = -1, const title[] = "");
 
-/* Gets value from client messages.
-* When you are asking for string the array and length is needed (read_data(2,name,len)).
-* Integer is returned by function (new me = read_data(3)).
-* Float is set in second parameter (read_data(3,value)). */
+/**
+ * Retrieves values from a client message.
+ *
+ * @note For use within callbacks registered with register_event().
+ * @note Usage examples:
+ *       value = read_data(1);
+ *       read_data(2, floatvalue);
+ *       written = read_data(3, buffer, buffersize);
+ *
+ *
+ * @param value     Argument number to retrieve value from
+ * @param ...       If 0 additional parameters are provided, the function
+ *                  will return the argument value directly.
+ *                  If 1 additional parameter is provided, the function will
+ *                  store a float value in that second parameter.
+ *                  If two additional parameters are provided, the function
+ *                  will copy a string to the buffer provided in the second
+ *                  parameter, using the third as the maximum buffer size.
+ *
+ * @return          If zero additional parameters are provided, the function
+ *                  will return an integer value.
+ *                  If one additional parameter is provided, the function will
+ *                  return the float value, converted (truncated) to an integer.
+ *                  If two additional parameters are provided, the function
+ *                  will return the number of cells written to the buffer.
+ */
 native read_data(value, any:... );
 
-/* Returns number of values in client message. */
+/**
+ * Returns the number of values in the client message.
+ *
+ * @note For use within callbacks registered with register_event().
+ *
+ * @return      Number of values in client message
+ */
 native read_datanum();
 
-/* Returns message id of client message */
+/**
+ * Returns the message id of the client message.
+ *
+ * @note For use within callbacks registered with register_event().
+ *
+ * @return      Message id of the client message
+ */
 native read_datatype();
 
-/* Gets log message. Can be called only in plugin_log() forward function. */
+/**
+ * Retrieves current log message.
+ *
+ * @note Can only be used inside of the plugin_log() forward.
+ *
+ * @param output    Buffer to copy log message to
+ * @param len       Maximum buffer size
+ *
+ * @return          Number of cells written to buffer
+ * @error           If called outside of the plugin_log() forward, an error is
+ *                  thrown.
+ */
 native read_logdata(output[],len);
 
-/* Returns number of log arguments.
-* Can be called only in plugin_log() forward function. */
+/**
+ * Returns number of log message arguments.
+ *
+ * @note Can only be used inside of the plugin_log() forward.
+ *
+ * @return          Number of arguments in the log message
+ * @error           If called outside of the plugin_log() forward, an error is
+ *                  thrown.
+ */
 native read_logargc();
 
-/* Gets log argument indexed from 0.
-* Can be called only in plugin_log() forward function. */
-native read_logargv(id,output[],len);
+/**
+ * Retrieves argument of log message.
+ *
+ * @note Can only be used inside of the plugin_log() forward.
+ *
+ * @param id        Argument index, starting from 0
+ * @param output    Buffer to copy log argument to
+ * @param len       Maximum buffer size
+ *
+ * @return          Number of arguments in the log message
+ * @error           If called outside of the plugin_log() forward, an error is
+ *                  thrown.
+ */
+native read_logargv(id, output[], len);
 
-/* Parse log data about user ( "Butcher<5><BOT><TERRORIST>" etc. ). */
+/**
+ * Parse log data about client.
+ *
+ * @note When client actions are logged they appear in the the format
+ *       "Name<#userid><SteamID><teamname>", this native extracts the individual
+ *       pieces of information.
+ *
+ * @param text      String to process
+ * @param name      Buffer to copy client name to
+ * @param nlen      Maximum name buffer size
+ * @param userid    Variable to store userid in
+ * @param authid    Buffer to copy client authid to
+ * @param alen      Maximum auth buffer size
+ * @param team      Buffer to copy client team to
+ * @param tlen      Maximum team buffer size
+ *
+ * @noreturn
+ * @error           If the provided string is not valid client log data, an
+ *                  error will be thrown.
+ */
 native parse_loguser(const text[], name[], nlen, &userid = -2, authid[] = "", alen = 0, team[]="", tlen=0);
 
-/* Prints message to server console.
-* You may use text formating (f.e. server_print("%-32s %.2f!","hello",7.345)) */
+/**
+ * Sends a message to the console of the server.
+ *
+ * @param message   Formatting rules
+ * @param ...       Variable number of formatting parameters
+ *
+ * @return          Number of printed characters
+ */
 native server_print(const message[], any:...);
 
-/* Returns 1 or 0. */
+/**
+ * Returns if the given mapname is deemed valid by the engine.
+ *
+ * @param mapname   Name of the map
+ *
+ * @return          1 if the map name is valid, 0 otherwise
+ */
 native is_map_valid(const mapname[]);
 
-/* Returns 1 or 0. */
+/**
+ * Returns if the client is a bot.
+ *
+ * @param index     Client index
+ *
+ * @return          1 if client is a bot, 0 otherwise
+ */
 native is_user_bot(index);
 
-/* Returns 1 or 0. */
+/**
+ * Returns if the client is a HLTV proxy.
+ *
+ * @param index     Client index
+ *
+ * @return          1 if client is a HLTV proxy, 0 otherwise
+ */
 native is_user_hltv(index);
 
-/* Returns 1 or 0. */
+/**
+ * Returns if the client is connected.
+ *
+ * @note This does not throw an error if the provided index is out of the
+ *       1 to MaxClients range. That means you can safely use this native
+ *       without manually verifying an index to be a valid player index.
+ *
+ * @param index     Client index
+ *
+ * @return          1 if client is connected, 0 otherwise
+ */
 native is_user_connected(index);
 
-/* Returns 1 or 0. */
+/**
+ * Returns if the client is connecting.
+ *
+ * @param index     Client index
+ *
+ * @return          1 if client is connecting, 0 otherwise
+ */
 native is_user_connecting(index);
 
-/* Returns 1 or 0. */
+/**
+ * Returns if the client is alive.
+ *
+ * @note This will never return true if a player is not connected. If you need
+ *       to know whether a player is alive, an additional call to
+ *       is_user_connected() is unnecessary.
+ *
+ * @param index     Client index
+ *
+ * @return          1 if client is alive, 0 otherwise
+ */
 native is_user_alive(index);
 
-/* Returns 1 or 0. */
+/**
+ * Returns if the server is a dedicated server.
+ *
+ * @param index     Client index
+ *
+ * @return          1 if server is a dedicated server, 0 otherwise
+ */
 native is_dedicated_server();
 
-/* Returns 1 or 0. */
+/**
+ * Returns if the server is running on Linux.
+ *
+ * @param index     Client index
+ *
+ * @return          1 if server is running on Linux, 0 otherwise
+ */
 native is_linux_server();
 
-/* Returns 1 or 0. */
+/**
+ * Returns if the AMXX installation has the JIT enabled.
+ *
+ * @param index     Client index
+ *
+ * @return          1 if JIT is enabled, 0 otherwise
+ */
 native is_jit_enabled();
 
-/* Returns AMXX's version string of the current gameserver */
+/**
+ * Retrieves the version string of the AMXX installation.
+ *
+ * @param buffer    Buffer to copy version to
+ * @param length    Maximum buffer size
+ *
+ * @return          Number of cells written to the buffer
+ */
 native get_amxx_verstring(buffer[], length);
 
-/* If player is not attacked function returns 0, in other
- * case returns index of attacking player. On second and third
- * parameter you may get info about weapon and body hit place.
- * As of 1.75, get_user_attacker can return a non-player index if the player was attacked by a non-player entity.
+/**
+ * Returns the last known attacker of a player.
+ *
+ * @note As of AMXX 1.75 this can return a non-player entity index if the player
+ *       was attacked by a non-player entity.
+ *
+ * @param index     Client index
+ * @param ...       Optionally a second byref parameter will be filled with the
+ *                  attacker weapon, and a third byref parameter will be filled
+ *                  with the hit place on the body.
+ *
+ * @return          Attacker client index, a non-player entity or 0 if no
+ *                  attacker was found
+ * @error           If the client index is not within the range of 1 to
+ *                  MaxClients an error will be thrown.
  */
-native get_user_attacker(index,...);
 
-/* If player doesn't hit at anything function returns 0.0,
-* in other case the distance between hit point and player is returned.
-* If player is aiming at another player then the id and part of body are set. */
-native Float:get_user_aiming(index,&id,&body,dist=9999);
+native get_user_attacker(index, ...);
 
-/* Returns player frags. */
+/**
+ * Traces the client's current aim vector to see if it hits something.
+ *
+ * @note If the trace does not hit a player id and body will be set to 0.
+ * @note If the trace hits nothing within the specified distance 0.0 is returned
+ *
+ * @param index     Client index to trace aim from
+ * @param id        Variable to store hit player index (if applicable)
+ * @param body      Variable to store hit player body part (if applicable)
+ * @param dist      Maximum distance of the trace
+ *
+ * @return          Distance between the trace start and end point
+ * @error           If the client index is not within the range of 1 to
+ *                  MaxClients an error will be thrown.
+ */
+native Float:get_user_aiming(index, &id, &body, dist=9999);
+
+/**
+ * Returns the player's frags.
+ *
+ * @note While this is mod-independent the mod may track frag count differently
+ *       so it can only be retrieved using another native or other methods.
+ * @note This will actually return the player's overall score, which may or may
+ *       not be equal to their scored frags depending on the mod.
+ *
+ * @param index     Client index
+ *
+ * @return          Frags/Score of the player. Also returns 0 if the client is
+ *                  not connected or the index is not within the range of
+ *                  1 to MaxClients
+ */
 native get_user_frags(index);
 
-/* Returns player armor. */
+/**
+ * Returns the player's armor value.
+ *
+ * @note While this is mod-independent the mod may track armor data differently
+ *       so it can only be retrieved using another native or other methods.
+ *
+ * @param index     Client index
+ *
+ * @return          Amount of armor the player has. Also returns 0 if the client
+ *                  is not connected or the index is not within the range of
+ *                  1 to MaxClients
+ */
 native get_user_armor(index);
 
-/* Returns player deaths. */
+/**
+ * Returns the player's death count.
+ *
+ * @note While this is mod-independent the mod may track death count differently
+ *       so it can only be retrieved using another native or other methods.
+ *
+ * @param index     Client index
+ *
+ * @return          Amount of deaths the player has. Also returns 0 if the
+ *                  client is not connected or the index is not within the range
+ *                  of 1 to MaxClients
+ */
 native get_user_deaths(index);
 
-/* Returns player health. */
+/**
+ * Returns the player's health points.
+ *
+ * @note While this is mod-independent the mod may track health points
+ *       differently so it can only be retrieved using another native or other
+ *       methods.
+ *
+ * @param index     Client index
+ *
+ * @return          Amount of health points the player has. Also returns 0 if
+ *                  the client is not connected or the index is not within the
+ *                  range of 1 to MaxClients
+ */
 native get_user_health(index);
 
-/* Returns index. */
+/**
+ * Retrieve a client's index by name.
+ *
+ * @param name  Name to search for
+ *
+ * @return      Client index on success, 0 otherwise
+ */
 native get_user_index(const name[]);
 
-/* Returns ip. */
-native get_user_ip(index,ip[],len, without_port = 0);
+/**
+ * Retrieves the IP of a client or the server.
+ *
+ * @param index         Client index, use 0 to retrieve the server IP
+ * @param ip            Buffer to copy IP to
+ * @param len           Maximum buffer size
+ * @param without_port  Remove the port from the IP if nonzero
+ *
+ * @return              Number of cells written to the buffer
+ */
+native get_user_ip(index, ip[], len, without_port = 0);
 
 /* Returns if the player has the weapon or not in their pev->weapons field.
    set "setweapon" to 0 to turn the bit off, set to 1 to turn it on. */
@@ -726,8 +1010,13 @@ native log_message(const message[],any:...);
 /* Sends log message to specified file. */
 native log_to_file(const file[],const message[],any:...);
 
-/* Returns number of players put in server.
-* If flag is set then also connecting are counted. */
+/**
+ * Returns the number of players on the server.
+ *
+ * @param flag      Count clients still in the connecting process if nonzero
+ *
+ * @return          Number of players on the server
+ */
 native get_playersnum(flag=0);
 
 /* Sets indexes of players.
@@ -752,12 +1041,29 @@ native read_args(output[],len);
 /* Returns number of arguments (+ one as command). */
 native read_argc();
 
-/* Converts string to sum of bits.
-* Example: "abcd" is a sum of 1, 2, 4 and 8. */
+/**
+ * Converts a flag string to a bitflag value.
+ *
+ * @note Example: The string "abcd" represents the sum of 1, 2, 4 and 8 - or
+ *       (1<<0)|(1<<1)|(1<<2)|(1<<3). The function will return 15.
+ *
+ * @param flags     Flag string to convert
+ *
+ * @return          Bitflag value
+ */
 native read_flags(const flags[]);
 
-/* Converts sum of bits to string.
-* Example: 3 will return "ab". */
+/**
+ * Converts a bitflag value to a flag string.
+ *
+ * @note Example: The value 3 will yield the string "ab"
+ *
+ * @param flags     Bitflag value to convert
+ * @param output    Buffer to copy flag string to
+ * @param len       Maximum buffer size
+ *
+ * @return          Number of cells written to buffer
+ */
 native get_flags(flags,output[],len);
 
 /* Find player.
@@ -816,7 +1122,19 @@ native amxclient_cmd(index, const command[], const arg1[] = "", const arg2[] = "
 /* Executes command on a server console. */
 native server_cmd(const command[],any:...);
 
-/* Sets a cvar to given value. */
+/**
+ * Sets a cvar to a given string value. The cvar is accessed by name.
+ *
+ * @note Accessing a Cvar by name requires this function to walk through the
+ *       engines cvar list every time, which can result in a considerable waste
+ *       of processing time, especially if many cvars have been registered. For
+ *       a vastly superior alternative look at the set_pcvar_* set of functions.
+ *
+ * @param cvar      cvar name to set
+ * @param value     value to set cvar to
+ *
+ * @noreturn
+ */
 native set_cvar_string(const cvar[],const value[]);
 
 /* If a cvar exists returns 1, in other case 0 */
@@ -833,19 +1151,78 @@ native set_cvar_flags(const cvar[],flags);
 /* Returns a cvar flags. */
 native get_cvar_flags(const cvar[]);
 
-/* Sets a cvar to given float. */
-native set_cvar_float(const cvar[],Float:value);
+/**
+ * Sets a cvar to a given float value. The cvar is accessed by name.
+ *
+ * @note Accessing a Cvar by name requires this function to walk through the
+ *       engines cvar list every time, which can result in a considerable waste
+ *       of processing time, especially if many cvars have been registered. For
+ *       a vastly superior alternative look at the set_pcvar_* set of functions.
+ *
+ * @param cvar      cvar name to set
+ * @param value     value to set cvar to
+ *
+ * @noreturn
+ */
+native set_cvar_float(const cvar[], Float:value);
 
-/* Gets a cvar float. */
+/**
+ * Gets a floating value from a cvar. The cvar is accessed by name.
+ *
+ * @note Accessing a Cvar by name requires this function to walk through the
+ *       engines cvar list every time, which can result in a considerable waste
+ *       of processing time, especially if many cvars have been registered. For
+ *       a vastly superior alternative look at the get_pcvar_* set of functions.
+ *
+ * @param cvarname  cvar name to get value from
+ *
+ * @return          Cvar value, converted to float
+ */
 native Float:get_cvar_float(const cvarname[]);
 
-/* Gets a cvar integer value. */
+/**
+ * Gets an integer value from a cvar. The cvar is accessed by name.
+ *
+ * @note Accessing a Cvar by name requires this function to walk through the
+ *       engines cvar list every time, which can result in a considerable waste
+ *       of processing time, especially if many cvars have been registered. For
+ *       a vastly superior alternative look at the get_pcvar_* set of functions.
+ *
+ * @param cvarname  cvar name to get value from
+ *
+ * @return          Cvar value, converted to int
+ */
 native get_cvar_num(const cvarname[]);
 
-/* Sets a cvar with integer value. */
+/**
+ * Sets a cvar to a given integer value. The cvar is accessed by name.
+ *
+ * @note Accessing a Cvar by name requires this function to walk through the
+ *       engines cvar list every time, which can result in a considerable waste
+ *       of processing time, especially if many cvars have been registered. For
+ *       a vastly superior alternative look at the set_pcvar_* set of functions.
+ *
+ * @param cvarname  cvar name to set
+ * @param value     value to set cvar to
+ *
+ * @noreturn
+ */
 native set_cvar_num(const cvarname[],value);
 
-/* Reads a cvar value. */
+/**
+ * Gets a string value from a cvar. The cvar is accessed by name.
+ *
+ * @note Accessing a Cvar by name requires this function to walk through the
+ *       engines cvar list every time, which can result in a considerable waste
+ *       of processing time, especially if many cvars have been registered. For
+ *       a vastly superior alternative look at the get_pcvar_* set of functions.
+ *
+ * @param cvar      cvar name to get value from
+ * @param output    Buffer to copy cvar value to
+ * @param iLen      Maximum size of the buffer
+ *
+ * @return          Number of cells written to buffer.
+ */
 native get_cvar_string(const cvarname[],output[],iLen);
 
 /* Returns a name of currently played map. */
@@ -1090,53 +1467,149 @@ native pause(const flag[], const param1[]="",const param2[]="");
 * "c" - look outside the plugin (by given plugin name). */
 native unpause(const flag[], const param1[]="",const param2[]="");
 
-/* Call a function in this / an another plugin by name.
-* Parameters:
-*  plugin - plugin filename; if "", the caller plugin is used.
-*           If specified, it has to be the exact filename (for example stats.amxx)
-*  func   - function name
-* Return value:
-*   1     - Success
-*   0     - Runtime error
-*  -1     - Plugin not found
-*  -2     - Function not found */
+/**
+ * Initiates a function call to this or another plugin by function name.
+ *
+ * @note This only sets up the function call and covers the pre-requisites.
+ *       Push parameters using the callfunc_push_* set of functions. The call
+ *       will be executed only upon using callfunc_end()
+ *
+ * @param func      Function name
+ * @param plugin    Plugin filename. If empty the calling plugin is targeted.
+ *                  The filename has to be the full exact name (e.g. stats.amxx)
+ *
+ * @return           1 on success
+ *                   0 on runtime error
+ *                  -1 if plugin was not found
+ *                  -2 if function was not found
+ * @error           If called while another callfunc has not yet been finished,
+ *                  an error is thrown.
+ */
 native callfunc_begin(const func[], const plugin[]="");
 
-/* Call a function in this / an another plugin by id.
-* Parameters:
-*  plugin - plugin id; the id you would pass to get_plugin
-*           If < 0, the current plugin is taken
-*  func   - function id
-* Return value:
-*   1     - Success
-*  -1     - Plugin not found
-*  -2     - Function not executable */
+/**
+ * Initiates a function call to this or another plugin by function id.
+ *
+ * @note This only sets up the function call and covers the pre-requisites.
+ *       Push parameters using the callfunc_push_* set of functions. The call
+ *       will be executed only upon using callfunc_end()
+ * @note The function id can be retrieved by get_func_id()
+ *
+ * @param func      Function id
+ * @param plugin    Plugin filename. If empty the calling plugin is targeted.
+ *                  The filename has to be the full exact name (e.g. stats.amxx)
+ *
+ * @return           1 on success
+ *                  -1 if plugin was not found
+ *                  -2 if function is not executable
+ * @error           If called while another callfunc has not yet been finished,
+ *                  or the specified function is invalid, an error is thrown.
+ */
 native callfunc_begin_i(func, plugin = -1);
 
-/* Get a function id (for callfunc_begin_i)
-   To get the plugin id, use the find_plugin stock
-*/
+/**
+ * Retrieve a functions id for use with callfunc_begin_i()
+ *
+ * @param funcName  Function name
+ * @param pluginId  Plugin id. If -1 the calling plugin is targeted. The plugin
+ *                  id can be retrieved using find_plugin_byfile()
+ *
+ * @return          >0 Function id on success
+ *                  -1 if plugin or function was not found
+ */
 native get_func_id(const funcName[], pluginId = -1);
 
-/* Push a parameter (integer, string, float)
- * Note that none of these values are const.
- * Anything pushed by intrf, floatrf, array, or str
- *  can be modified by the called function.
+/**
+ * Pushes an int value onto the current call.
+ *
+ * @param value     Int value to push
+ *
+ * @noreturn
+ * @error           If called without initiating a callfunc, or the maximum
+ *                  amount of parameters is reached, an error is thrown.
  */
 native callfunc_push_int(value);
-native callfunc_push_float(Float: value);
-native callfunc_push_intrf(&value);
-native callfunc_push_floatrf(& Float: value);
 
-/* If copyback is 1 (default), any changes are copied back.
- * Note that this will defy the 'const' specifier for push_str(),
- *  which is only kept for special backwards compatibility.
+/**
+ * Pushes a float value onto the current call.
+ *
+ * @param value     Float value to push
+ *
+ * @noreturn
+ * @error           If called without initiating a callfunc, or the maximum
+ *                  amount of parameters is reached, an error is thrown.
+ */
+native callfunc_push_float(Float: value);
+
+/**
+ * Pushes an int value reference onto the current call.
+ *
+ * @note Changes made to this value by the called function will be reflected
+ *       in the calling plugin.
+ *
+ * @param value     Int value to push
+ *
+ * @noreturn
+ * @error           If called without initiating a callfunc, or the maximum
+ *                  amount of parameters is reached, an error is thrown.
+ */
+native callfunc_push_intrf(&value);
+
+/**
+ * Pushes a float value reference onto the current call.
+ *
+ * @note Changes made to this value by the called function will be reflected
+ *       in the calling plugin.
+ *
+ * @param value     Float value to push
+ *
+ * @noreturn
+ * @error           If called without initiating a callfunc, or the maximum
+ *                  amount of parameters is reached, an error is thrown.
+ */
+native callfunc_push_floatrf(&Float:value);
+
+/**
+ * Pushes a string onto the current call.
+ *
+ * @note This will defy the "const" specifier if copyback is true, which is
+ *       only kept for special backwards compatibility.
+ *
+ * @param VALUE     String to push
+ * @param copyback  If true any changes made in the called function will be
+ *                  copied back to the calling plugin.
+ *
+ * @noreturn
+ * @error           If called without initiating a callfunc, or the maximum
+ *                  amount of parameters is reached, an error is thrown.
  */
 native callfunc_push_str(const VALUE[], bool:copyback=true);
+
+/**
+ * Pushes an array onto the current call.
+ *
+ * @note This will defy the "const" specifier if copyback is true, which is
+ *       only kept for special backwards compatibility.
+ *
+ * @param VALUE         Array to push
+ * @param array_size    Size of the array
+ * @param copyback      If true any changes made in the called function will be
+ *                      copied back to the calling plugin.
+ *
+ * @noreturn
+ * @error           If called without initiating a callfunc, or the maximum
+ *                  amount of parameters is reached, an error is thrown.
+ */
 native callfunc_push_array(const VALUE[], array_size, bool:copyback=true);
 
-/* Make the actual call.
-* Return value of the function called. */
+/**
+ * Completes the call to a function.
+ *
+ * @return       1 on success
+ *              -1 if the plugin was not found
+ *              -2 if the function was not found
+ * @error       If called without initiating a callfunc an error is thrown.
+ */
 native callfunc_end();
 
 /* Called on inconsistent file. You can put any text
@@ -1147,10 +1620,25 @@ forward inconsistent_file(id,const filename[], reason[64] );
 * version of the specified file ( e.g., a player model ). */
 native force_unmodified(force_type, const mins[3] , const maxs[3], const filename[]);
 
-/* Calculates the md5 keysum of a string */
+/**
+ * Calculates the MD5 keysum of a string.
+ *
+ * @param szString      String to calculate keysum of
+ * @param md5buffer     Buffer to copy the MD5 hash to
+ *
+ * @return              Number of cells written to the buffer (always 32)
+ */
 native md5(const szString[], md5buffer[34]);
 
-/* Calculates the md5 keysum of a file */
+/**
+ * Calculates the MD5 keysum of a file.
+ *
+ * @param file          Path to file to calculate keysum of
+ * @param md5buffer     Buffer to copy the MD5 hash to
+ *
+ * @return              Number of cells written to the buffer (always 32)
+ * @error               If the file can not be opened, and error is thrown.
+ */
 native md5_file(const file[], md5buffer[34]);
 
 /* Returns the internal flags set on the plugin's state

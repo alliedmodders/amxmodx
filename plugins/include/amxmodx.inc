@@ -573,7 +573,6 @@ native set_dhudmessage(red=200, green=100, blue=0, Float:x=-1.0, Float:y=0.35, e
  */
 native show_dhudmessage(index, const message[], any:...);
 
-/* Displays menu. Keys have bit values (key 1 is (1<<0), key 5 is (1<<4) etc.). */
 /**
  * Displays a menu to the client.
  *
@@ -595,7 +594,7 @@ native show_dhudmessage(index, const message[], any:...);
  * @param time      Menu timeout in seconds, -1 to disable
  * @param title     Name of the menu for internal tracking purposes
  */
-native show_menu(index,keys,const menu[], time = -1, const title[] = "");
+native show_menu(index, keys, const menu[], time = -1, const title[] = "");
 
 /**
  * Retrieves values from a client message.
@@ -930,16 +929,48 @@ native get_user_index(const name[]);
  */
 native get_user_ip(index, ip[], len, without_port = 0);
 
-/* Returns if the player has the weapon or not in their pev->weapons field.
-   set "setweapon" to 0 to turn the bit off, set to 1 to turn it on. */
-native user_has_weapon(index,weapon,setweapon=-1);
+/**
+ * Returns if the client has the specified weapon in their inventory.
+ *
+ * @param index         Client index
+ * @param weapon        Weapon index
+ * @param setweapon     If zero the weapon bit will be removed from the client's
+ *                      inventory, if 1 it will be set
+ *
+ * @return              1 if the weapon is present, 0 if it is not
+ * @error               If the client index is not within the range of 1 to
+ *                      MaxClients an error will be thrown.
+ */
+native user_has_weapon(index, weapon, setweapon=-1);
 
-/* Returns id of currently carried weapon. Gets also
-* ammount of ammo in clip and backpack. */
-native get_user_weapon(index,&clip=0,&ammo=0);
+/**
+ * Returns weapon index of the currently carried weapon. Also allows retrieval
+ * of ammo in the clip and backpack.
+ *
+ * @param index     Client index
+ * @param clip      Optional variable to store clip ammo to
+ * @param ammo      Optional variable to store backpack ammo to
+ *
+ * @return          Weapon index on success, or 0 if the client is not connected
+ * @error           If the client index is not within the range of 1 to
+ *                  MaxClients an error will be thrown.
+ */
+native get_user_weapon(index, &clip=0, &ammo=0);
 
-/* Gets ammo and clip from current weapon. */
-native get_user_ammo(index,weapon,&clip,&ammo);
+/**
+ * Retrieves ammo in the clip and backpack of the specified weapon.
+ *
+ * @param index     Client index
+ * @param weapon    Weapon index
+ * @param clip      Variable to store clip ammo to
+ * @param ammo      Variable to store backpack ammo to
+ *
+ * @return          1 on success, or 0 if the client is not connected
+ * @error           If the client index is not within the range of 1 to
+ *                  MaxClients, or the weapon index is invalid, an error will
+ *                  be thrown.
+ */
+native get_user_ammo(index, weapon, &clip, &ammo);
 
 /**
  * Converts an integer to a text string.
@@ -1028,7 +1059,7 @@ native get_user_origin(index, origin[3], mode = 0);
  * @error           If the client index is not within the range of 1 to
  *                  MaxClients an error will be thrown.
  */
-native get_user_weapons(index,weapons[32],&num);
+native get_user_weapons(index, weapons[32], &num);
 
 /**
  * Retrieves the full name of a weapon.
@@ -1088,7 +1119,7 @@ native get_user_userid(index);
  * @param rnddir    If set to zero the player will be slapped along it's aim
  *                  vector. If nonzero the direction will be randomized.
  */
-native user_slap(index,power,rnddir=1);
+native user_slap(index, power, rnddir=1);
 
 /**
  * Kills a client.
@@ -1099,7 +1130,7 @@ native user_slap(index,power,rnddir=1);
  * @return          1 on success, 0 if client index is invalid or the client
  *                  is not connected.
  */
-native user_kill(index,flag=0);
+native user_kill(index, flag=0);
 
 /**
  * Logs a message to the current AMXX log file.
@@ -1167,7 +1198,7 @@ native get_playersnum(flag=0);
  *
  * @noreturn
  */
-native get_players(players[32], &num ,const flags[]="", const team[]="");
+native get_players(players[32], &num, const flags[]="", const team[]="");
 
 /**
  * Retrieves argument of client command.
@@ -1192,7 +1223,7 @@ native read_argv(id, output[], len);
  *
  * @return          Number of cells written to buffer
  */
-native read_args(output[],len);
+native read_args(output[], len);
 
 /**
  * Returns number of client command arguments.
@@ -1228,7 +1259,7 @@ native read_flags(const flags[]);
  *
  * @return          Number of cells written to buffer
  */
-native get_flags(flags,output[],len);
+native get_flags(flags, output[], len);
 
 /**
  * Find a player given a filter.
@@ -1261,8 +1292,8 @@ native find_player(const flags[], ... );
  *       and not both the function will do nothing.
  * @note The function does not perform any trimming per-se. But if a
  *       double-quote is found at the beginning of the string, it will remove
- *       all ^r (carriage return) characters at the end of the string, even if
- *       no matching double-quote is found.
+ *       one ^r (carriage return) character at the end of the string if present,
+ *       even if no matching double-quote is found. This is for convenience.
  *
  * @param text      String to remove double-quotes from
  *
@@ -1308,7 +1339,7 @@ native client_cmd(index, const command[], any:...);
  * @error           If a single client is specified and the index is not
  *                  within the range of 1 to MaxClients an error will be thrown
  */
-native engclient_cmd(index,const command[],const arg1[]="",const arg2[]="");
+native engclient_cmd(index, const command[], const arg1[]="", const arg2[]="");
 
 /**
  * Execute a command from the client without actually sending it to the client's
@@ -1352,7 +1383,7 @@ native server_cmd(const command[],any:...);
  * @note Accessing a cvar by name requires this function to walk through the
  *       engine's cvar list every time, which can result in a considerable waste
  *       of processing time, especially if many cvars have been registered. For
- *       a vastly superior alternative look at the set_pcvar_* set of functions.
+ *       a vastly superior alternative look at the set_pcvar_string function.
  *
  * @param cvar      Cvar name to set value of
  * @param value     Value to set cvar to
@@ -1371,11 +1402,12 @@ native set_cvar_string(const cvar[], const value[]);
 native cvar_exists(const cvar[]);
 
 /**
- * Removes specified flags from a cvar
+ * Removes specified flags from a cvar. The cvar is accessed by name.
  *
- * @note Not permitted for the "amx_version", "fun_version" and "sv_cheats"
- *       cvars.
+ * @note Not permitted for the "amx_version", "amxmodx_version", "fun_version"
+ *       and "sv_cheats" cvars.
  * @note For a list of possible flags see the FCVAR_* constants in amxconst.inc
+ * @note This function removes the flags using a bitwise-and operation.
  * @note Accessing a Cvar by name requires this function to walk through the
  *       engine's cvar list every time, which can result in a considerable waste
  *       of processing time, especially if many cvars have been registered. For
@@ -1390,12 +1422,12 @@ native cvar_exists(const cvar[]);
 native remove_cvar_flags(const cvar[], flags = -1);
 
 /**
- * Sets specified flags to a cvar
+ * Sets specified flags to a cvar. The cvar is accessed by name.
  *
- * @note Not permitted for the "amx_version", "fun_version" and "sv_cheats"
- *       cvars.
+ * @note Not permitted for the "amx_version", "amxmodx_version", "fun_version"
+ *       and "sv_cheats" cvars.
  * @note For a list of possible flags see the FCVAR_* constants in amxconst.inc
- * @note This function just adds the flags using a bitwise-and operation. After
+ * @note This function just adds the flags using a bitwise-or operation. After
  *       it has run the flags may not exactly equal the specified bitflag sum.
  * @note Accessing a Cvar by name requires this function to walk through the
  *       engine's cvar list every time, which can result in a considerable waste
@@ -1410,20 +1442,15 @@ native remove_cvar_flags(const cvar[], flags = -1);
 native set_cvar_flags(const cvar[], flags);
 
 /**
- * Returns flags of a cvar
+ * Returns flags of a cvar. The cvar is accessed by name.
  *
- * @note Not permitted for the "amx_version", "fun_version" and "sv_cheats"
- *       cvars.
  * @note For a list of possible flags see the FCVAR_* constants in amxconst.inc
- * @note This function just adds the flags using a bitwise-and operation. After
- *       it has run the flags may not exactly equal the specified bitflag sum.
  * @note Accessing a Cvar by name requires this function to walk through the
  *       engine's cvar list every time, which can result in a considerable waste
  *       of processing time, especially if many cvars have been registered. For
  *       a vastly superior alternative look at the get_pcvar_flags function.
  *
- * @param cvar      Cvar name to remove flags from
- * @param flags     Bitflag sum of flags to set
+ * @param cvar      Cvar name to retrieve flags from
  *
  * @return          1 on success, 0 if cvar does not exist or is not permitted
  */
@@ -1435,7 +1462,7 @@ native get_cvar_flags(const cvar[]);
  * @note Accessing a Cvar by name requires this function to walk through the
  *       engine's cvar list every time, which can result in a considerable waste
  *       of processing time, especially if many cvars have been registered. For
- *       a vastly superior alternative look at the set_pcvar_* set of functions.
+ *       a vastly superior alternative look at the set_pcvar_float function.
  *
  * @param cvar      Cvar name to set value of
  * @param value     Value to set cvar to
@@ -1445,28 +1472,28 @@ native get_cvar_flags(const cvar[]);
 native set_cvar_float(const cvar[], Float:value);
 
 /**
- * Gets a floating value from a cvar. The cvar is accessed by name.
+ * Returns a floating value from a cvar. The cvar is accessed by name.
  *
  * @note Accessing a Cvar by name requires this function to walk through the
  *       engine's cvar list every time, which can result in a considerable waste
  *       of processing time, especially if many cvars have been registered. For
- *       a vastly superior alternative look at the get_pcvar_* set of functions.
+ *       a vastly superior alternative look at the get_pcvar_float function.
  *
- * @param cvarname  Cvar name to get value from
+ * @param cvarname  Cvar name to retrieve value from
  *
  * @return          Cvar value, converted to float
  */
 native Float:get_cvar_float(const cvarname[]);
 
 /**
- * Gets an integer value from a cvar. The cvar is accessed by name.
+ * Returns an integer value from a cvar. The cvar is accessed by name.
  *
  * @note Accessing a Cvar by name requires this function to walk through the
  *       engine's cvar list every time, which can result in a considerable waste
  *       of processing time, especially if many cvars have been registered. For
- *       a vastly superior alternative look at the get_pcvar_* set of functions.
+ *       a vastly superior alternative look at the get_pcvar_num function.
  *
- * @param cvarname  Cvar name to get value from
+ * @param cvarname  Cvar name to retrieve value from
  *
  * @return          Cvar value, converted to int
  */
@@ -1478,7 +1505,7 @@ native get_cvar_num(const cvarname[]);
  * @note Accessing a Cvar by name requires this function to walk through the
  *       engine's cvar list every time, which can result in a considerable waste
  *       of processing time, especially if many cvars have been registered. For
- *       a vastly superior alternative look at the set_pcvar_* set of functions.
+ *       a vastly superior alternative look at the set_pcvar_num function.
  *
  * @param cvar      Cvar name to set value of
  * @param value     Value to set cvar to
@@ -1493,77 +1520,237 @@ native set_cvar_num(const cvarname[], value);
  * @note Accessing a Cvar by name requires this function to walk through the
  *       engine's cvar list every time, which can result in a considerable waste
  *       of processing time, especially if many cvars have been registered. For
- *       a vastly superior alternative look at the get_pcvar_* set of functions.
+ *       a vastly superior alternative look at the get_pcvar_string function.
  *
- * @param cvar      cvar name to get value from
+ * @param cvar      Cvar name to retrieve value from
  * @param output    Buffer to copy cvar value to
  * @param iLen      Maximum size of the buffer
  *
  * @return          Number of cells written to buffer.
  */
-native get_cvar_string(const cvarname[],output[],iLen);
+native get_cvar_string(const cvarname[], output[], iLen);
 
-/* Returns a name of currently played map. */
-native get_mapname(name[],len);
+/**
+ * Retrieves the name of the currently played map.
+ *
+ * @param name      Buffer to copy map name to
+ * @param len       Maximum buffer size
+ *
+ * @return          Number of cells written to buffer
+ */
+native get_mapname(name[], len);
 
-/* Returns time remaining on map in seconds. */
+/**
+ * Returns time remaining on map.
+ *
+ * @return  Time left on map, in seconds
+ */
 native get_timeleft();
 
-/* Returns a game time. */
+/**
+ * Returns the game time based on the game tick.
+ *
+ * @note This time is counted up from map start. If the engine is not processing
+ *       this function will return the same value between calls, which makes it
+ *       unusable for profiling purposes.
+ *
+ * @return      Game time, in seconds
+ */
 native Float:get_gametime();
 
-/* Returns maxplayers setting. */
+/**
+ * Returns the maxplayers setting of the current server, that is how many
+ * clients it supports.
+ *
+ * @note As of AMXX 1.8.3 this value is also exposed through a dynamic constant
+ *       via the MaxClients variable, declared in amxconst.inc
+ *
+ * @return      Maxplayers setting
+ */
 native get_maxplayers();
 
-/* Returns a name of currently played mod. */
-native get_modname(name[],len);
+/**
+ * Retrieves the name of the currently played mod.
+ *
+ * @note This retrieves the short name of the mod. Example: for Counter-Strike
+ *       it will copy "cstrike" to the buffer.
+ *
+ * @param name      Buffer to copy mod name to
+ * @param len       Maximum size of the buffer
+ *
+ * @return          Number of cells written to buffer
+ */
+native get_modname(name[], len);
 
-/* Returns time in given format. The most popular is: "%m/%d/%Y - %H:%M:%S". */
-native get_time(const format[],output[],len);
+/**
+ * Retrieves the current time using the specified format string.
+ *
+ * @note Uses the strftime C function. For a list of valid format parameters,
+ *       see: http://cplusplus.com/reference/clibrary/ctime/strftime.html
+ *       A common example for a format string would be: "%m/%d/%Y - %H:%M:%S"
+ *
+ * @param format    Format string
+ * @param output    Buffer to copy formatted time string to
+ * @param len       Maximum size of buffer
+ *
+ * @return          Number of cells written to buffer
+ */
+native get_time(const format[], output[], len);
 
-/* Returns time in given format. The most popular is: "%m/%d/%Y - %H:%M:%S".
-* Last parameter sets time to format. */
-native format_time(output[],len, const format[],time = -1);
+/**
+ * Retrieves the provided time using using the specified format string.
+ *
+ * @note Uses the strftime C function. For a list of valid format parameters,
+ *       see: http://cplusplus.com/reference/clibrary/ctime/strftime.html
+ *       A common example for a format string would be: "%m/%d/%Y - %H:%M:%S"
+ *
+ * @param output    Buffer to copy formatted time string to
+ * @param len       Maximum size of buffer
+ * @param format    Format string
+ * @param time      Unix timestamp, use -1 to use the current time
+ *
+ * @return          Number of cells written to buffer
+ * @error           If the conversion process fails, an error will be thrown
+ */
+native format_time(output[], len, const format[], time = -1);
 
-/* Returns system time in seconds elapsed since 00:00:00 on January 1, 1970.
-* Offset is given in seconds.*/
+/**
+ * Returns the system time as a unix timestamp (number of seconds since unix
+ * epoch)
+ *
+ * @param offset    Optional offset value in seconds
+ *
+ * @return          Unix time stamp
+ * @error
+ */
 native get_systime(offset = 0);
 
-/* Returns time in input and additionaly fills missing information
-* with current time and date. If time is different than -1 then parsed
-* time is added to given time.
-* Example:
-* parset_time( "10:32:54 04/02/2003", "%H:%M:%S %m:%d:%Y" )
-* For more information see strptime(...) function from C libraries. */
-native parse_time(const input[],const format[], time = -1);
+/**
+ * Converts time string to unix time stamp.
+ *
+ * @note Uses the strptime C function. For a list of valid format parameters,
+ *       see: http://www.cplusplus.com/reference/ctime/strftime/
+ *       An example for a input/format combination would be:
+ *       Input: "10:32:54 04/02/2013"  Format: "%H:%M:%S %m:%d:%Y"
+ * @note Information missing from the input will be filled with the current
+ *       time and date.
+ *
+ * @param input     Time string to convert
+ * @param format    Formatting information for conversion
+ * @param time      If different from -1 the converted time will be added to
+ *                  this time stamp.
+ *
+ * @return          Unix time stamp
+ * @error           If the conversion process fails, an error will be thrown
+ */
+native parse_time(const input[], const format[], time = -1);
 
-/* Calls function on specified time.
-* Flags:
-* "a" - repeat.
-* "b" - loop task.
-* "c" - do task on time after a map timeleft.
-* "d" - do task on time before a map timelimit. */
-native set_task(Float:time,const function[],id = 0,const parameter[]="",len = 0,const flags[]="", repeat = 0);
+/**
+ * Calls a function after a specified time has elapsed.
+ *
+ * @param time          Time interval to assign
+ * @param function      Function to execute
+ * @param id            Task id to assign
+ * @param parameter     Data to pass through to callback
+ * @param len           Size of data
+ * @param flags         Optional set of flags:
+ *                        "a" - repeat timer a set amount of times
+ *                        "b" - loop indefinitely until timer is stopped
+ *                        "c" - time interval is treated as absolute time after
+ *                              map start
+ *                        "d" - time interval is treated as absolute time before
+ *                              map change
+ * @param repeat        If the "a" flag is set the task will be repeated this
+ *                      many times
+ */
+native set_task(Float:time, const function[], id = 0, const parameter[]="", len = 0, const flags[]="", repeat = 0);
 
-/* Removes all tasks with given id. If outside var is
-* set then a task can be removed also when
-* was set in another plugin. */
+/**
+ * Removes all tasks with the specified id.
+ *
+ * @param id        Task id to search for
+ * @param outside   Will remove tasks set by other plugins if nonzero
+ *
+ * @return          Number of removed tasks
+ */
 native remove_task(id = 0, outside = 0);
 
-/* Changes the time of a task */
+/**
+ * Modifies the time interval of all tasks with the specified id.
+ *
+ * @param id        Task id to search for
+ * @param newTime   New time interval to set
+ * @param outside   Will affect tasks set by other plugins if nonzero
+ *
+ * @return          Number of affected tasks
+ */
 native change_task(id = 0, Float:newTime=1.0, outside = 0);
 
-/* Returns 1 if task under given id exists. */
+/**
+ * Returns if a task with the specified id exists.
+ *
+ * @param id        Task id to search for
+ * @param outside   Search for tasks set by other plugins if nonzero
+ *
+ * @return          1 if a task was found, 0 otherwise
+ */
 native task_exists(id = 0, outside = 0);
 
-/* Sets the users flags with the assignment by bitwise OR operator. */
-native set_user_flags(index,flags=-1,id=0);
+/**
+ * Sets the specified admin flags to a client.
+ *
+ * @note For a list of possible flags see the ADMIN_* constants in amxconst.inc
+ * @note This function just adds the flags using a bitwise-or operation. After it
+ *       has run the flags may not exactly equal the specified bitflag sum.
+ * @note AMXX stores multiple sets of flags internally, but only flag set
+ *       0 is actively used. You should not change the value of the third
+ *       parameter from the default.
+ *
+ * @param index     Client index, 0 to set flags of server
+ * @param flags     Admin flags
+ * @param id        Flag set id, ranging from 0 to 31
+ *
+ * @noreturn
+ * @error           If the index is not within the range of 0 to MaxClients, an
+ *                  error will be thrown.
+ */
+native set_user_flags(index, flags=-1, id=0);
 
-/* Gets flags from player. Set index to 0 if you want to read flags from server. */
+/**
+ * Returns the client's admin flags as a bitflag sum.
+ *
+ * @note For a list of possible flags see the ADMIN_* constants in amxconst.inc
+ * @note AMXX stores multiple sets of flags internally, but only flag set
+ *       0 is actively used. You should not change the value of the second
+ *       parameter from the default.
+ *
+ * @param index     Client index, 0 to set flags of server
+ * @param id        Flag set id, ranging from 0 to 31
+ *
+ * @noreturn
+ * @error           If the index is not within the range of 0 to MaxClients, an
+ *                  error will be thrown.
+ */
 native get_user_flags(index,id=0);
 
-/* Removes flags for player. */
-native remove_user_flags(index,flags=-1,id=0);
+/**
+ * Removes the specified admin flags from a client.
+ *
+ * @note For a list of possible flags see the ADMIN_* constants in amxconst.inc
+ * @note This function just removes the flags using a bitwise-and operation.
+ * @note AMXX stores multiple sets of flags internally, but only flag set
+ *       0 is actively used. You should not change the value of the third
+ *       parameter from the default.
+ *
+ * @param index     Client index, 0 to set flags of server
+ * @param flags     Admin flags
+ * @param id        Flag set id, ranging from 0 to 31
+ *
+ * @noreturn
+ * @error           If the index is not within the range of 0 to MaxClients, an
+ *                  error will be thrown.
+ */
+native remove_user_flags(index, flags=-1, id=0);
 
 /* Registers function which will be called from client console.
  * Set FlagManager to 1 to make FlagManager always include this command
@@ -1714,14 +1901,32 @@ native get_modulesnum();
  */
 native is_plugin_loaded(const name[], bool:usefilename=false);
 
-/* Gets info about plugin by given index.
- * Function returns -1 if plugin doesn't exist with given index.
- * Note: the [...] portion should not be used, and is only for backward compatibility.
- * Use index of -1 to use the calling plugin's ID.
+/**
+ * Retrieves info about a plugin by plugin index.
+ *
+ * @param index     Plugin index, -1 to target calling plugin
+ * @param filename  Buffer to copy plugin filename to
+ * @param len1      Maximum filename buffer size
+ * @param name      Buffer to copy plugin name to
+ * @param len2      Maximum name buffer size
+ * @param version   Buffer to copy plugin version to
+ * @param len3      Maximum version buffer size
+ * @param author    Buffer to copy plugin author to
+ * @param len4      Maximum author buffer size
+ * @param status    Buffer to copy plugin status flags to
+ * @param len5      Maximum status buffer size
+ * @param ...       Unused and ignored
+ *
+ * @return          Plugin index on success, -1 if there is no plugin with given
+ *                  index
  */
 native get_plugin(index,filename[]="",len1=0,name[]="",len2=0,version[]="",len3=0,author[]="",len4=0,status[]="",len5=0,...);
 
-/* Returns number of all loaded plugins. */
+/**
+ * Returns the number of loaded AMXX plugins.
+ *
+ * @return  The number of loaded plugins
+ */
 native get_pluginsnum();
 
 /* Pauses function or plugin so it won't be executed.
@@ -2213,28 +2418,118 @@ native ExecuteForward(forward_handle, &ret, any:...);
  */
 native DestroyForward(forward_handle);
 
-
-/* CVAR Pointer natives.  Use these for
- *  more optimized CVAR usage.
- * register_cvar() returns a pointer you can use.
- */
-
 /**
- * Get a cvar pointer.  Returns 0 if not found.
+ * Returns the cvar pointer of the specified cvar.
+ *
+ * @note A pointer is also returned by register_cvar(). You can (and should)
+ *       retrieve and use pointers for already existing mod cvars.
+ *
+ * @param cvar      Cvar name to find
+ *
+ * @return          Cvar pointer on success, 0 if cvar was not found
  */
 native get_cvar_pointer(const cvar[]);
 
+/**
+ * Returns flags of a cvar via direct pointer access.
+ *
+ * @note For a list of possible flags see the FCVAR_* constants in amxconst.inc
+ *
+ * @param pcvar     Pointer to cvar to retrieve flags from
+ *
+ * @return          1 on success, 0 if cvar pointer is invalid
+ * @error           If an invalid cvar pointer is specified, an error is thrown.
+ */
 native get_pcvar_flags(pcvar);
+
+/**
+ * Sets specified flags to a cvar via direct pointer access.
+ *
+ * @note For a list of possible flags see the FCVAR_* constants in amxconst.inc
+ * @note This function directly sets the provided bitflag, unlike set_cvar_flags
+ *       which adds them using a bitwise OR.
+ *
+ * @param pcvar     Pointer to cvar to set flags of
+ * @param flags     Bitflag sum of flags to set
+ *
+ * @return          1 on success, 0 if cvar does not exist or is not permitted
+ * @error           If an invalid cvar pointer is specified, an error is thrown.
+ */
 native set_pcvar_flags(pcvar, flags);
+
+/**
+ * Returns an integer value from a cvar via direct pointer access.
+ *
+ * @param pcvar     Pointer to cvar to retrieve value from
+ *
+ * @return          Cvar value, converted to int
+ * @error           If an invalid cvar pointer is specified, an error is thrown.
+ */
 native get_pcvar_num(pcvar);
+
+/**
+ * Sets an integer value to a cvar via direct pointer access.
+ *
+ * @param pcvar     Pointer to cvar to set value of
+ * @param num       Value to set cvar to
+ *
+ * @noreturn
+ * @error           If an invalid cvar pointer is specified, an error is thrown.
+ */
 native set_pcvar_num(pcvar, num);
+
+/**
+ * Returns a float value from a cvar via direct pointer access.
+ *
+ * @param pcvar     Pointer to cvar to retrieve value from
+ *
+ * @return          Cvar value, converted to float
+ * @error           If an invalid cvar pointer is specified, an error is thrown.
+ */
 native Float:get_pcvar_float(pcvar);
+
+/**
+ * Sets a float value to a cvar via direct pointer access.
+ *
+ * @param pcvar     Pointer to cvar to set value of
+ * @param num       Value to set cvar to
+ *
+ * @noreturn
+ * @error           If an invalid cvar pointer is specified, an error is thrown.
+ */
 native set_pcvar_float(pcvar, Float:num);
+
+/**
+ * Returns a string value from a cvar via direct pointer access.
+ *
+ * @param pcvar     Pointer to cvar to retrieve value from
+ * @param string    Buffer to copy cvar value to
+ * @param maxlen    Maximum size of the buffer
+ *
+ * @return          Number of cells written to buffer.
+ * @error           If an invalid cvar pointer is specified, an error is thrown.
+ */
 native get_pcvar_string(pcvar, string[], maxlen);
+
+/**
+ * Sets a string value to a cvar via direct pointer access.
+ *
+ * @param pcvar     Pointer to cvar to retrieve value from
+ * @param string    Value to set cvar to
+ *
+ * @noreturn
+ * @error           If an invalid cvar pointer is specified, an error is thrown.
+ */
 native set_pcvar_string(pcvar, const string[]);
 
 /**
- * Sets a whole array to a certain value.
+ * Sets all elements of array to a specified value.
+ *
+ * @param array     Array to modify
+ * @param value     Value to set each element to
+ * @param size      Size of array
+ *
+ * @noreturn
  */
 native arrayset(array[], value, size);
 
@@ -2245,36 +2540,60 @@ native arrayset(array[], value, size);
 native get_weaponid(const name[]);
 
 /**
- * Adds an admin to the dynamic admin storage
- * for lookup at a later time
+ * Adds an admin to the dynamic admin storage for lookup at a later time
+ *
+ * @note For a list of possible access flags see the ADMIN_* constans in
+ *       amxconst.inc
+ * @note For a list of possible auth flags see the FLAG_* constants in
+ *       amxconst.inc
+ *
+ * @param AuthData      Auth information to set (can be name, IP or SteamID)
+ * @param Password      Password to set
+ * @param Access        Admin access flags
+ * @param Flags         Auth behavior flags
+ *
+ * @noreturn
  */
 native admins_push(const AuthData[], const Password[], Access, Flags);
 
 /**
- * Gets the number of admins in the dynamic admin
- * storage list
+ * Returns the number of admins in the dynamic admin storage
+ *
+ * @return  Number of admins
  */
 native admins_num();
 
 /**
- * Gets information about a dynamically stored admin
- * Use the enum AdminProp
- * Returns an integer value: AdminProp_Access, AdminProp_Flags
- * Sets the buffer string: AdminProp_Auth, AdminProp_Password
+ * Retrieves information about a dynamically stored admin.
+ *
+ * @note For a list of possible props see the AdminProp enum in amxconst.inc
+ *
+ * @param num           Admin storage index
+ * @param Property      Admin property to retrieve
+ * @param Buffer        Buffer to copy property information to if AdminProp_Auth
+ *                      or AdminProp_Password is specified
+ * @param BufferSize    Maximum buffer size
+ *
+ * @return              Property value if AdminProp_Access or AdminProp_Flags
+ *                      is requested. 0 otherwise.
+ * @error               If an invalid storage index is specified, an error will
+ *                      be thrown.
  */
 native admins_lookup(num, AdminProp:Property, Buffer[]="", BufferSize=0);
 
 /**
  * Clears the list of dynamically stored admins
+ *
+ * @noreturn
  */
 native admins_flush();
 
 /**
- * Searches whether a map contains at least one entity with the provided class name.
+ * Returns if a map contains at least one entity with the provided class name.
  *
- * @param classname		The entity classname to check.
+ * @param classname		Entity classname to match
  *
- * @return				Returns true if an entity is found, otherwise false.
+ * @return				True if an entity is found, false otherwise
  */
 native bool:has_map_ent_class(const classname[]);
 

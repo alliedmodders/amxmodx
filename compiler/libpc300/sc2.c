@@ -17,9 +17,8 @@
  *  2.  Altered source versions must be plainly marked as such, and must not be
  *      misrepresented as being the original software.
  *  3.  This notice may not be removed or altered from any source distribution.
- *
- *  Version: $Id: sc2.c 3318 2007-02-16 18:49:21Z sawce $
  */
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>

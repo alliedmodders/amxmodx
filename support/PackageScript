@@ -14,6 +14,7 @@ ModPackages = {
 }
 
 folder_list = [
+    'base/addons/amxmodx',
     'base/addons/amxmodx/configs',
     'base/addons/amxmodx/data',
     'base/addons/amxmodx/data/lang',
@@ -356,4 +357,18 @@ for datafile in datafiles:
   builder.AddCopy(
     source = os.path.join(builder.sourcePath, 'plugins', 'lang', datafile),
     output_path = folder_map['base/addons/amxmodx/data/lang']
+  )
+
+# Copy license files
+licenses = [
+  'ACKNOWLEDGEMENTS.txt',
+  'GPLv2.txt',
+  'GPLv3.txt',
+  'LICENSE.txt',
+]
+
+for license in licenses:
+  builder.AddCopy(
+    source = os.path.join(builder.sourcePath, 'public', 'licenses', license),
+    output_path = folder_map['base/addons/amxmodx']
   )

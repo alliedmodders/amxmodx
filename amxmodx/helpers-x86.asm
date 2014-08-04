@@ -1,10 +1,11 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; (C)2006 by David "BAILOPAN" Anderson			 ;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;Licensed under the GNU General Public License, version 2
-;;This is a portion of AMX Mod X 
-;; and is maintained by the AMX Mod X development team.
+; vim: set ts=4 sw=4 tw=99 noet ft=nasm:
+;
+; AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
+; Copyright (C) The AMX Mod X Development Team.
+;
+; This software is licensed under the GNU General Public License, version 3 or higher.
+; Additional exceptions apply. For full license details, see LICENSE.txt or visit:
+;     https://alliedmods.net/amxmodx-license
 
 section .text
 

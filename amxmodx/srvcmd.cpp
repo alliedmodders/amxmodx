@@ -218,33 +218,13 @@ void amx_command()
 	{
 		print_srvconsole("AMX Mod X\n");
 		print_srvconsole("\n");
-		print_srvconsole(" by the AMX Mod X Development Team\n");
-		print_srvconsole("  originally developed by OLO\n");
+		print_srvconsole(" Based on AMX Mod by Aleksander Naszko (\"OLO\").\n");
+		print_srvconsole(" Copyright (C) The AMX Mod X Development Team.\n");
 		print_srvconsole("\n");
-		print_srvconsole("\n");
-		print_srvconsole("  This program is free software; you can redistribute it and/or modify it\n");
-		print_srvconsole("  under the terms of the GNU General Public License as published by the\n");
-		print_srvconsole("  Free Software Foundation; either version 2 of the License, or (at\n");
-		print_srvconsole("  your option) any later version.\n");
-		print_srvconsole("\n");
-		print_srvconsole("  This program is distributed in the hope that it will be useful, but\n");
-		print_srvconsole("  WITHOUT ANY WARRANTY; without even the implied warranty of\n");
-		print_srvconsole("  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU\n");
-		print_srvconsole("  General Public License for more details.\n");
-		print_srvconsole("\n");
-		print_srvconsole("  You should have received a copy of the GNU General Public License\n");
-		print_srvconsole("  along with this program; if not, write to the Free Software Foundation,\n");
-		print_srvconsole("  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA\n");
-		print_srvconsole("\n");
-		print_srvconsole("  In addition, as a special exception, the author gives permission to\n");
-		print_srvconsole("  link the code of this program with the Half-Life Game Engine (\"HL\n");
-		print_srvconsole("  Engine\") and Modified Game Libraries (\"MODs\") developed by Valve,\n");
-		print_srvconsole("  L.L.C (\"Valve\"). You must obey the GNU General Public License in all\n");
-		print_srvconsole("  respects for all of the code used other than the HL Engine and MODs\n");
-		print_srvconsole("  from Valve. If you modify this file, you may extend this exception\n");
-		print_srvconsole("  to your version of the file, but you are not obligated to do so. If\n");
-		print_srvconsole("  you do not wish to do so, delete this exception statement from your\n");
-		print_srvconsole("  version.\n");
+		print_srvconsole(" This software is licensed under the GNU General Public License, version 3 or\n");
+		print_srvconsole(" higher. Additional exceptions apply. For full license details, see LICENSE.txt\n");
+		print_srvconsole(" or visit:\n");
+		print_srvconsole("      https://alliedmods.net/amxmodx-license\n");
 		print_srvconsole("\n");
 	}
 	else if (!strcmp(cmd, "\x74\x75\x72\x74\x6C\x65"))		// !! Hidden Command :D !!

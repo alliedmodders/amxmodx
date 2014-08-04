@@ -242,11 +242,11 @@ public stock const MaxClients; /* Maximum number of players the server supports 
  */
 enum
 {
-    print_notify = 1,
-    print_console,
-    print_chat,
-    print_center,
-    print_radio     /* Counter-Strike only */
+	print_notify = 1,
+	print_console,
+	print_chat,
+	print_center,
+	print_radio     /* Counter-Strike only */
 };
 
 /**
@@ -254,10 +254,10 @@ enum
  */
 enum
 {
-    print_team_default = 0,
-    print_team_grey = -1,
-    print_team_red = -2,
-    print_team_blue = -3,
+	print_team_default = 0,
+	print_team_grey = -1,
+	print_team_red = -2,
+	print_team_blue = -3,
 };
 
 /**
@@ -265,9 +265,9 @@ enum
  */
 enum
 {
-    engprint_console = 0,
-    engprint_center,
-    engprint_chat,
+	engprint_console = 0,
+	engprint_center,
+	engprint_chat,
 };
 
 /**
@@ -275,12 +275,12 @@ enum
  */
 enum
 {
-    kRenderNormal = 0,      /* src */
-    kRenderTransColor,      /* c*a+dest*(1-a) */
-    kRenderTransTexture,    /* src*a+dest*(1-a) */
-    kRenderGlow,            /* src*a+dest -- No Z buffer checks */
-    kRenderTransAlpha,      /* src*srca+dest*(1-srca) */
-    kRenderTransAdd,        /* src*a+dest */
+	kRenderNormal = 0,      /* src */
+	kRenderTransColor,      /* c*a+dest*(1-a) */
+	kRenderTransTexture,    /* src*a+dest*(1-a) */
+	kRenderGlow,            /* src*a+dest -- No Z buffer checks */
+	kRenderTransAlpha,      /* src*srca+dest*(1-srca) */
+	kRenderTransAdd,        /* src*a+dest */
 };
 
 /**
@@ -288,27 +288,27 @@ enum
  */
 enum
 {
-    kRenderFxNone = 0,
-    kRenderFxPulseSlow,
-    kRenderFxPulseFast,
-    kRenderFxPulseSlowWide,
-    kRenderFxPulseFastWide,
-    kRenderFxFadeSlow,
-    kRenderFxFadeFast,
-    kRenderFxSolidSlow,
-    kRenderFxSolidFast,
-    kRenderFxStrobeSlow,
-    kRenderFxStrobeFast,
-    kRenderFxStrobeFaster,
-    kRenderFxFlickerSlow,
-    kRenderFxFlickerFast,
-    kRenderFxNoDissipation,
-    kRenderFxDistort,           /* Distort/scale/translate flicker */
-    kRenderFxHologram,          /* kRenderFxDistort + distance fade */
-    kRenderFxDeadPlayer,        /* kRenderAmt is the player index */
-    kRenderFxExplode,           /* Scale up really big! */
-    kRenderFxGlowShell,         /* Glowing Shell */
-    kRenderFxClampMinScale,     /* Keep this sprite from getting very small (SPRITES only!) */
+	kRenderFxNone = 0,
+	kRenderFxPulseSlow,
+	kRenderFxPulseFast,
+	kRenderFxPulseSlowWide,
+	kRenderFxPulseFastWide,
+	kRenderFxFadeSlow,
+	kRenderFxFadeFast,
+	kRenderFxSolidSlow,
+	kRenderFxSolidFast,
+	kRenderFxStrobeSlow,
+	kRenderFxStrobeFast,
+	kRenderFxStrobeFaster,
+	kRenderFxFlickerSlow,
+	kRenderFxFlickerFast,
+	kRenderFxNoDissipation,
+	kRenderFxDistort,           /* Distort/scale/translate flicker */
+	kRenderFxHologram,          /* kRenderFxDistort + distance fade */
+	kRenderFxDeadPlayer,        /* kRenderAmt is the player index */
+	kRenderFxExplode,           /* Scale up really big! */
+	kRenderFxGlowShell,         /* Glowing Shell */
+	kRenderFxClampMinScale,     /* Keep this sprite from getting very small (SPRITES only!) */
 };
 
 /**
@@ -316,9 +316,9 @@ enum
  */
 enum
 {
-    force_exactfile = 0,        /* File on client must exactly match server's file */
-    force_model_samebounds,     /* For model files only, the geometry must fit in the same bbox */
-    force_model_specifybounds,  /* For model files only, the geometry must fit in the specified bbox */
+	force_exactfile = 0,        /* File on client must exactly match server's file */
+	force_model_samebounds,     /* For model files only, the geometry must fit in the same bbox */
+	force_model_specifybounds,  /* For model files only, the geometry must fit in the specified bbox */
 };
 
 /**
@@ -326,14 +326,14 @@ enum
  */
 enum
 {
-    module_none = 0,
-    module_query,
-    module_badload,
-    module_loaded,
-    module_noinfo,
-    module_noquery,
-    module_noattach,
-    module_old,
+	module_none = 0,
+	module_query,
+	module_badload,
+	module_loaded,
+	module_noinfo,
+	module_noquery,
+	module_noattach,
+	module_old,
 };
 
 /**
@@ -413,8 +413,8 @@ enum
  */
 enum LibType
 {
-    LibType_Library,
-    LibType_Class
+	LibType_Library,
+	LibType_Class
 };
 
 /**
@@ -422,8 +422,8 @@ enum LibType
  */
 enum AdminProp
 {
-    AdminProp_Auth = 0,
-    AdminProp_Password,
-    AdminProp_Access,
-    AdminProp_Flags
+	AdminProp_Auth = 0,
+	AdminProp_Password,
+	AdminProp_Access,
+	AdminProp_Flags
 };

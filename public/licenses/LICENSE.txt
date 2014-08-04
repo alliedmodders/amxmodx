@@ -1,5 +1,5 @@
 AMX MOD X LICENSE INFORMATION
-VERSION: AUGUST-03-2014
+VERSION: AUGUST-04-2014
 
 AMX Mod X is licensed under the GNU General Public License, version 3, or (at
 your option) any later version.
@@ -21,7 +21,7 @@ compatible with the GNU General Public License version 3, via the "or any higher
 version" clause. This is intended for compatibility with other software.
 
 As a final exception to the above, any derivative works created prior to this
-date (August 3, 2014) may be exclusively licensed under the GNU General Public
+date (August 4, 2014) may be exclusively licensed under the GNU General Public
 License version 2 (without an "or any higher version" clause) if and only if the
 work was already GNU General Public License 2.0 exclusive. This clause is
 provided for backwards compatibility only.

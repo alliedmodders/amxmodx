@@ -6,9 +6,9 @@
 /**
  * Ham return types.
  *
- * Return these from hooks to disable calling the target function.
- * Numbers match up with fakemeta's FMRES_* for clarity.  They are interchangable.
- * 0 (or no return) is also interpretted as HAM_IGNORED.
+ * @note Return these from hooks to disable calling the target function.
+ *       Numbers match up with fakemeta's FMRES_* for clarity. They are
+ *       interchangable. 0 (or no return) is also interpretted as HAM_IGNORED.
  */
 #define HAM_IGNORED		1	/**< Calls target function, returns normal value */
 #define HAM_HANDLED		2	/**< Tells the module you did something, still calls target function and returns normal value */
@@ -16,30 +16,27 @@
 #define HAM_SUPERCEDE	4	/**< Block the target call, and use your return value (if applicable) (Set with SetHamReturn*()) */
 
 /**
- * A few notes about all of the following functions:
- *   - Not all functions will do as you expect on all mods.
- *     If a function does not do what you would believe it should
- *     DO NOT file a bug report, you will be ignored.
+ * List of virtual functions made available through the hamsandwich module.
  *
- *   - Passing invalid parameters has potential to crash the server
- *     So be careful, and adequately test!
- *
- *   - All functions take (and pass) a "this" index as the first param.
- *     This is the entity from which the function is being executed on.
- *
- *   - All functions and forwards (eg: {Register,Execute}Ham[B]) require
- *     the mod to have the pev and base keys in addition to the function
- *     keys for the corresponding mod/operating system in hamdata.ini
- *
- *   - Some functions that return booleans may need to be logically ANDed
- *     to get the results desired.  e.g: if (ExecuteHam(Ham_TS_IsObjective, this) & 0x0000FFFF != 0) { // true.. }
- *     because the module will return the full integer value.
+ * @note Not all functions will do as you expect on all mods. If a function does
+ *       not do what you would believe it should DO NOT file a bug report, you
+ *       will be ignored.
+ * @note Passing invalid parameters has potential to crash the server, so be
+ *       careful, and test carefully and adequately!
+ * @note All functions take (and pass) a "this" index as the first param.
+ *       This is the entity from which the function is being executed on.
+ * @note All functions and forwards (eg: {Register,Execute}Ham[B]) require
+ *       the mod to have the pev and base keys in addition to the function
+ *       keys for the corresponding mod/operating system in hamdata.ini
+ * @note Some functions that return booleans may need to be logically ANDed
+ *       to get the desired results because the mod will return the full integer
+ *       value. E.g.: (ExecuteHam(Ham_TS_IsObjective, this) & 0x0000FFFF) != 0
  */
 
 enum Ham
 {
 	/**
-	 * Description:		This is typically called whenever an entity is created. 
+	 * Description:		This is typically called whenever an entity is created.
 	 *					It is the virtual equivilent of spawn from the engine.
 	 *					Some mods call this on player spawns too.
 	 * Forward params:	function(this)
@@ -249,7 +246,7 @@ enum Ham
 	 */
 	Ham_GetDelay,
 
-	/** 
+	/**
 	 * Description:		Whether or not the entity is moving.
 	 * Forward params:	function(this);
 	 * Return type:		Integer.
@@ -305,7 +302,7 @@ enum Ham
 	 */
 	Ham_OnControls,
 
-	/** 
+	/**
 	 * Description:		Whether or not the entity is sneaking.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
@@ -313,7 +310,7 @@ enum Ham
 	 */
 	Ham_IsSneaking,
 
-	/** 
+	/**
 	 * Description:		Whether or not the entity is alive.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
@@ -321,7 +318,7 @@ enum Ham
 	 */
 	Ham_IsAlive,
 
-	/** 
+	/**
 	 * Description:		Whether or not the entity uses a BSP model.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
@@ -329,7 +326,7 @@ enum Ham
 	 */
 	Ham_IsBSPModel,
 
-	/** 
+	/**
 	 * Description:		Whether or not the entity can reflect gauss shots..
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
@@ -348,7 +345,7 @@ enum Ham
 	 */
 	Ham_HasTarget,
 
-	/** 
+	/**
 	 * Description:		Whether or not the entity is in the world.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
@@ -356,7 +353,7 @@ enum Ham
 	 */
 	Ham_IsInWorld,
 
-	/** 
+	/**
 	 * Description:		Whether or not the entity is a player.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
@@ -364,7 +361,7 @@ enum Ham
 	 */
 	Ham_IsPlayer,
 
-	/** 
+	/**
 	 * Description:		Whether or not the entity is a net client.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
@@ -372,7 +369,7 @@ enum Ham
 	 */
 	Ham_IsNetClient,
 
-	/** 
+	/**
 	 * Description:		Get the entity's team id.
 	 *					This function is not supported by Team Fortress Classic mod.
 	 * Forward params:	function(this);
@@ -1273,8 +1270,8 @@ enum Ham
 	Ham_BestVisibleEnemy,
 
 	/**
-	 * Description:		Returns true if the passed ent is in the caller's forward view cone. 
-	 *					The dot product is performed in 2d, making the view cone infinitely tall. 
+	 * Description:		Returns true if the passed ent is in the caller's forward view cone.
+	 *					The dot product is performed in 2d, making the view cone infinitely tall.
 	 * Forward params:	function(this, idOther);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_FInViewCone, this, idOther);
@@ -1282,8 +1279,8 @@ enum Ham
 	Ham_FInViewCone,
 
 	/**
-	 * Description:		Returns true if the passed ent is in the caller's forward view cone. 
-	 *					The dot product is performed in 2d, making the view cone infinitely tall. 
+	 * Description:		Returns true if the passed ent is in the caller's forward view cone.
+	 *					The dot product is performed in 2d, making the view cone infinitely tall.
 	 * Forward params:	function(this, const Float:origin[3]);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_FVecInViewCone, this, const Float:origin[3]);
@@ -1433,7 +1430,7 @@ enum Ham
 
 	/**
 	 * Description:		Determines whether or not the monster can play the scripted sequence or AI sequence that is
-	 *					trying to possess it. If DisregardState is set, the monster will be sucked into the script 
+	 *					trying to possess it. If DisregardState is set, the monster will be sucked into the script
 	 *					no matter what state it is in. ONLY Scripted AI ents should allow this.
 	 *					This function is not supported by Counter-Strike, The Specialists and Natural Selection mods.
 	 * Forward params:	function(this, bool:disregardState, interruptLevel);
@@ -1497,7 +1494,7 @@ enum Ham
 	Ham_SetActivity,
 
 	/**
-	 * Description:		Part of the condition collection process gets and stores data and conditions 
+	 * Description:		Part of the condition collection process gets and stores data and conditions
 	 *					pertaining to a monster's enemy. Returns TRUE if Enemy LKP was updated.
 	 *					This function is not supported by Counter-Strike, The Specialists and Natural Selection mods.
 	 * Forward params:	function(this, idEnemy);
@@ -1537,7 +1534,7 @@ enum Ham
 	Ham_BuildNearestRoute,
 
 	/**
-	 * Description:		Tries to find a nearby node that will hide the caller from its enemy. 
+	 * Description:		Tries to find a nearby node that will hide the caller from its enemy.
 	 *					If supplied, search will return a node at least as far away as MinDist from vecThreat, but no farther than minDist.
 	 *					If maxDist isn't supplied, it defaults to a reasonable value.
 	 *					This function is not supported by Counter-Strike, The Specialists and Natural Selection mods.
@@ -1604,7 +1601,7 @@ enum Ham
 	Ham_FCanActiveIdle,
 
 	/**
-	 * Description:		Returns a bit mask indicating which types of sounds this monster regards. 
+	 * Description:		Returns a bit mask indicating which types of sounds this monster regards.
 	 *					In the base class implementation, monsters care about all sounds, but no scents.
 	 *					This function is not supported by Counter-Strike, The Specialists and Natural Selection mods.
 	 * Forward params:	function(this);
@@ -1869,7 +1866,7 @@ enum Ham
 	 * The following functions are specific to Team Fortress Classic.
 	 */
 
-	/** 
+	/**
 	 * Description:		Get the item name.
 	 * Forward params:	function(this, const buffer[]);
 	 * Return type:		String (string length returned and string byref'd in ExecuteHam).
@@ -2845,8 +2842,8 @@ enum Ham
 	 */
 
 	/**
-	 * Description:		Returns the type of group (i.e, "houndeye", or "human military" 
-	 *					so that monsters with different classnames still realize that they are teammates. 
+	 * Description:		Returns the type of group (i.e, "houndeye", or "human military"
+	 *					so that monsters with different classnames still realize that they are teammates.
 	 *					(overridden for monsters that form groups)
 	 *					Classes list:
 	 *						CLASS_NONE				0
@@ -2861,11 +2858,11 @@ enum Ham
 	 *						CLASS_ALIEN_PREDATOR	9
 	 *						CLASS_INSECT			10
 	 *						CLASS_PLAYER_ALLY		11
-	 *						CLASS_PLAYER_BIOWEAPON	12 
-	 *						CLASS_ALIEN_BIOWEAPON	13 
-	 *						CLASS_XRACE_PITDRONE	14 
+	 *						CLASS_PLAYER_BIOWEAPON	12
+	 *						CLASS_ALIEN_BIOWEAPON	13
+	 *						CLASS_XRACE_PITDRONE	14
 	 *						CLASS_XRACE_SHOCK		15
-	 *						CLASS_BARNACLE			99 
+	 *						CLASS_BARNACLE			99
 	 * Forward params:	function(this, class)
 	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_SC_GetClassification, this, class)
@@ -3022,7 +3019,7 @@ enum Ham
 	Ham_SC_Revive,
 
 	/**
-	 * Description:		Final bit of initization before a monster is turned over to the AI. 
+	 * Description:		Final bit of initization before a monster is turned over to the AI.
 	 * Forward params:	function(this)
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_SC_StartMonster, this)
@@ -3095,7 +3092,7 @@ enum Ham
 
 	/**
 	 * Description:		Tries to find a nearby node that will hide the caller from its enemy.
-	 *					If supplied, search will return a node at least as far away as minDist, but no farther than maxDist. 
+	 *					If supplied, search will return a node at least as far away as minDist, but no farther than maxDist.
 	 *					If maxDist isn't supplied, it defaults to a reasonable value.
 	 * Forward params:	function(this, const Float:threat[3], const Float:viewOffset[3], Float:minDist, Float:maxDist)
 	 * Return type:		Integer (boolean).
@@ -3105,7 +3102,7 @@ enum Ham
 
 	/**
 	 * Description:		Tries to find a nearby node that will hide the caller from its enemy.
-	 *					If supplied, search will return a node at least as far away as minDist, but no farther than maxDist. 
+	 *					If supplied, search will return a node at least as far away as minDist, but no farther than maxDist.
 	 *					If maxDist isn't supplied, it defaults to a reasonable value.
 	 * Forward params:	function(this, const Float:threat[3], const Float:viewOffset[3], Float:minDist, Float:maxDist)
 	 * Return type:		Integer (boolean).
@@ -3115,7 +3112,7 @@ enum Ham
 
 	/**
 	 * Description:		Tries to find a nearby node that will hide the caller from its enemy.
-	 *					If supplied, search will return a node at least as far away as minDist, but no farther than maxDist. 
+	 *					If supplied, search will return a node at least as far away as minDist, but no farther than maxDist.
 	 *					If maxDist isn't supplied, it defaults to a reasonable value.
 	 * Forward params:	function(this, const Float:threat[3], const Float:viewOffset[3], Float:minDist, Float:maxDist)
 	 * Return type:		Integer (boolean).
@@ -3124,7 +3121,7 @@ enum Ham
 	Ham_SC_FindAttackPoint,
 
 	/**
-	 * Description:		Determines whether or not the chosen cover location is a good one to move to. 
+	 * Description:		Determines whether or not the chosen cover location is a good one to move to.
 	 *					Currently based on proximity to others in the squad.
 	 * Forward params:	function(this, const Float:coverLocation[3])
 	 * Return type:		Integer (boolean).
@@ -3308,7 +3305,7 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_SC_MedicCallSound, this)
 	 */
 	Ham_SC_Player_MenuInputPerformed,
-	
+
 	/**
 	 * Description:		-
 	 * Forward params:	function(this)
@@ -3486,7 +3483,7 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_SC_Weapon_BurstSupplement, this)
 	 */
 	Ham_SC_Weapon_BurstSupplement,
-	
+
 	/**
 	 * Description:		-
 	 * Forward params:	function(this, const alternative[] = "")
@@ -3583,7 +3580,7 @@ enum Ham
 	 */
 	Ham_SC_Weapon_ChangeWeaponSkin,
 
-    
+
 	/**
 	 * LATE ADDITIONS (2013)
 	 */
@@ -3620,7 +3617,7 @@ enum Ham
 	 */
 	Ham_TFC_Weapon_GetNextAttackDelay,
 
-    
+
 	/**
 	 * Description:		Usually called whenever an entity gets a form of a heal.
 	 * Forward params:	function(this, Float:health, damagebits, health_cap);
@@ -3715,7 +3712,7 @@ enum Ham
 	 */
 	Ham_Item_GetItemInfo,
 
-    
+
 	/**
 	 * DONT USE ME LOL
 	 */
@@ -3723,7 +3720,7 @@ enum Ham
 };
 
 /**
- * Ham errors types.
+ * Ham error types.
  */
 enum HamError
 {
@@ -3736,8 +3733,7 @@ enum HamError
 };
 
 /**
- * To be used with [Get|Set]HamItemInfo.
- * Ham prefix to avoid collision. :(
+ * Constants for usage with [Get|Set]HamItemInfo
  */
 enum HamItemInfo
 {

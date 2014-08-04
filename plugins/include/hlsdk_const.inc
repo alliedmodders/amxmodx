@@ -7,7 +7,7 @@
 */
 
 #if defined _hlsdk_const_included
-	#endinput
+    #endinput
 #endif
 #define _hlsdk_const_included
 
@@ -34,25 +34,25 @@
 /**
  * pev(entity, pev_flags) values
  */
-#define	FL_FLY                          (1<<0)      // Changes the SV_Movestep() behavior to not need to be on ground
-#define	FL_SWIM                         (1<<1)      // Changes the SV_Movestep() behavior to not need to be on ground (but stay in water)
-#define	FL_CONVEYOR                     (1<<2)
-#define	FL_CLIENT                       (1<<3)
-#define	FL_INWATER                      (1<<4)
-#define	FL_MONSTER                      (1<<5)
-#define	FL_GODMODE                      (1<<6)
-#define	FL_NOTARGET                     (1<<7)
-#define	FL_SKIPLOCALHOST                (1<<8)      // Don't send entity to local host, it's predicting this entity itself
-#define	FL_ONGROUND	                    (1<<9)      // At rest / on the ground
-#define	FL_PARTIALGROUND                (1<<10)     // Not all corners are valid
-#define	FL_WATERJUMP                    (1<<11)     // Player jumping out of water
+#define FL_FLY                          (1<<0)      // Changes the SV_Movestep() behavior to not need to be on ground
+#define FL_SWIM                         (1<<1)      // Changes the SV_Movestep() behavior to not need to be on ground (but stay in water)
+#define FL_CONVEYOR                     (1<<2)
+#define FL_CLIENT                       (1<<3)
+#define FL_INWATER                      (1<<4)
+#define FL_MONSTER                      (1<<5)
+#define FL_GODMODE                      (1<<6)
+#define FL_NOTARGET                     (1<<7)
+#define FL_SKIPLOCALHOST                (1<<8)      // Don't send entity to local host, it's predicting this entity itself
+#define FL_ONGROUND                     (1<<9)      // At rest / on the ground
+#define FL_PARTIALGROUND                (1<<10)     // Not all corners are valid
+#define FL_WATERJUMP                    (1<<11)     // Player jumping out of water
 #define FL_FROZEN                       (1<<12)     // Player is frozen for 3rd person camera
 #define FL_FAKECLIENT                   (1<<13)     // JAC: fake client, simulated server side; don't send network messages to them
 #define FL_DUCKING                      (1<<14)     // Player flag -- Player is fully crouched
 #define FL_FLOAT                        (1<<15)     // Apply floating force to this entity when in water
 #define FL_GRAPHED                      (1<<16)     // Worldgraph has this ent listed as something that blocks a connection
 #define FL_IMMUNE_WATER                 (1<<17)
-#define	FL_IMMUNE_SLIME                 (1<<18)
+#define FL_IMMUNE_SLIME                 (1<<18)
 #define FL_IMMUNE_LAVA                  (1<<19)
 #define FL_PROXY                        (1<<20)     // This is a spectator proxy
 #define FL_ALWAYSTHINK                  (1<<21)     // Brush model flag -- call think every frame regardless of nextthink - ltime (for constantly changing velocity/path)
@@ -68,62 +68,62 @@
 /**
  * engfunc(EngFunc_WalkMove, entity, Float:yaw, Float:dist, iMode) iMode values
  */
-#define	WALKMOVE_NORMAL                 0           // Normal walkmove
+#define WALKMOVE_NORMAL                 0           // Normal walkmove
 #define WALKMOVE_WORLDONLY              1           // Doesn't hit ANY entities, no matter what the solid type
 #define WALKMOVE_CHECKONLY              2           // Move, but don't touch triggers
 
 /**
  * pev(entity, pev_movetype) values
  */
-#define	MOVETYPE_NONE                   0           // Never moves
-#define	MOVETYPE_WALK                   3           // Player only - moving on the ground
-#define	MOVETYPE_STEP                   4           // Gravity, special edge handling -- monsters use this
-#define	MOVETYPE_FLY                    5           // No gravity, but still collides with stuff
-#define	MOVETYPE_TOSS                   6           // Gravity/Collisions
-#define	MOVETYPE_PUSH                   7           // No clip to world, push and crush
-#define	MOVETYPE_NOCLIP                 8           // No gravity, no collisions, still do velocity/avelocity
-#define	MOVETYPE_FLYMISSILE             9           // Extra size to monsters
-#define	MOVETYPE_BOUNCE                 10          // Just like Toss, but reflect velocity when contacting surfaces
+#define MOVETYPE_NONE                   0           // Never moves
+#define MOVETYPE_WALK                   3           // Player only - moving on the ground
+#define MOVETYPE_STEP                   4           // Gravity, special edge handling -- monsters use this
+#define MOVETYPE_FLY                    5           // No gravity, but still collides with stuff
+#define MOVETYPE_TOSS                   6           // Gravity/Collisions
+#define MOVETYPE_PUSH                   7           // No clip to world, push and crush
+#define MOVETYPE_NOCLIP                 8           // No gravity, no collisions, still do velocity/avelocity
+#define MOVETYPE_FLYMISSILE             9           // Extra size to monsters
+#define MOVETYPE_BOUNCE                 10          // Just like Toss, but reflect velocity when contacting surfaces
 #define MOVETYPE_BOUNCEMISSILE          11          // Bounce w/o gravity
 #define MOVETYPE_FOLLOW                 12          // Track movement of aiment
-#define	MOVETYPE_PUSHSTEP               13          // BSP model that needs physics/world collisions (uses nearest hull for world collision)
+#define MOVETYPE_PUSHSTEP               13          // BSP model that needs physics/world collisions (uses nearest hull for world collision)
 
 /**
  * pev(entity, pev_solid) values
  *
  * @note Some movetypes will cause collisions independent of SOLID_NOT and
- * 		 SOLID_TRIGGER when the entity moves. SOLID only effects OTHER entities
- * 		 colliding with this one when they move - UGH!
+ *       SOLID_TRIGGER when the entity moves. SOLID only effects OTHER entities
+ *       colliding with this one when they move - UGH!
  */
-#define	SOLID_NOT                       0           // No interaction with other objects
-#define	SOLID_TRIGGER                   1           // Touch on edge, but not blocking
-#define	SOLID_BBOX                      2           // Touch on edge, block
-#define	SOLID_SLIDEBOX                  3           // Touch on edge, but not an onground
-#define	SOLID_BSP                       4           // BSP clip, touch on edge, block
+#define SOLID_NOT                       0           // No interaction with other objects
+#define SOLID_TRIGGER                   1           // Touch on edge, but not blocking
+#define SOLID_BBOX                      2           // Touch on edge, block
+#define SOLID_SLIDEBOX                  3           // Touch on edge, but not an onground
+#define SOLID_BSP                       4           // BSP clip, touch on edge, block
 
 /**
  * pev(entity, pev_deadflag) values
  */
-#define	DEAD_NO                         0           // Alive
-#define	DEAD_DYING                      1           // Playing death animation or still falling off of a ledge waiting to hit ground
-#define	DEAD_DEAD                       2           // Dead, lying still
+#define DEAD_NO                         0           // Alive
+#define DEAD_DYING                      1           // Playing death animation or still falling off of a ledge waiting to hit ground
+#define DEAD_DEAD                       2           // Dead, lying still
 #define DEAD_RESPAWNABLE                3
 #define DEAD_DISCARDBODY                4
 
 /**
  * new Float:takedamage, pev(entity, pev_takedamage, takedamage) values
  */
-#define	DAMAGE_NO                       0.0
-#define	DAMAGE_YES                      1.0
-#define	DAMAGE_AIM                      2.0
+#define DAMAGE_NO                       0.0
+#define DAMAGE_YES                      1.0
+#define DAMAGE_AIM                      2.0
 
 /**
  * pev(entity, pev_effects) values
  */
-#define	EF_BRIGHTFIELD                  1           // Swirling cloud of particles
-#define	EF_MUZZLEFLASH                  2           // Single frame ELIGHT on entity attachment 0
-#define	EF_BRIGHTLIGHT                  4           // DLIGHT centered at entity origin
-#define	EF_DIMLIGHT                     8           // Player flashlight
+#define EF_BRIGHTFIELD                  1           // Swirling cloud of particles
+#define EF_MUZZLEFLASH                  2           // Single frame ELIGHT on entity attachment 0
+#define EF_BRIGHTLIGHT                  4           // DLIGHT centered at entity origin
+#define EF_DIMLIGHT                     8           // Player flashlight
 #define EF_INVLIGHT                     16          // Get lighting from ceiling
 #define EF_NOINTERP                     32          // Don't interpolate the next frame
 #define EF_LIGHT                        64          // Rocket flare glow sprite
@@ -132,9 +132,9 @@
 /**
  * Spectating camera mode constants
  *
- * @node These constants are linked to different camera modes available when you
- * 		 are spectating (either dead or when in spectator team). Usually this is
- * 		 stored in the pev_iuser1 field in Counter-Strike and Half-Life games.
+ * @note These constants are linked to different camera modes available when you
+ *       are spectating (either dead or when in spectator team). Usually this is
+ *       stored in the pev_iuser1 field in Counter-Strike and Half-Life games.
  */
 #define OBS_NONE                        0
 #define OBS_CHASE_LOCKED                1           // Locked Chase Cam
@@ -147,25 +147,25 @@
 /**
  * engfunc(EngFunc_PointContents, Float:origin) return values
  */
-#define	CONTENTS_EMPTY                  -1
-#define	CONTENTS_SOLID                  -2
-#define	CONTENTS_WATER                  -3
-#define	CONTENTS_SLIME                  -4
-#define	CONTENTS_LAVA                   -5
-#define	CONTENTS_SKY                    -6
-#define	CONTENTS_ORIGIN                 -7          // Removed at csg time
-#define	CONTENTS_CLIP                   -8          // Changed to contents_solid
-#define	CONTENTS_CURRENT_0              -9
-#define	CONTENTS_CURRENT_90             -10
-#define	CONTENTS_CURRENT_180            -11
-#define	CONTENTS_CURRENT_270            -12
-#define	CONTENTS_CURRENT_UP             -13
-#define	CONTENTS_CURRENT_DOWN           -14
+#define CONTENTS_EMPTY                  -1
+#define CONTENTS_SOLID                  -2
+#define CONTENTS_WATER                  -3
+#define CONTENTS_SLIME                  -4
+#define CONTENTS_LAVA                   -5
+#define CONTENTS_SKY                    -6
+#define CONTENTS_ORIGIN                 -7          // Removed at csg time
+#define CONTENTS_CLIP                   -8          // Changed to contents_solid
+#define CONTENTS_CURRENT_0              -9
+#define CONTENTS_CURRENT_90             -10
+#define CONTENTS_CURRENT_180            -11
+#define CONTENTS_CURRENT_270            -12
+#define CONTENTS_CURRENT_UP             -13
+#define CONTENTS_CURRENT_DOWN           -14
 #define CONTENTS_TRANSLUCENT            -15
-#define	CONTENTS_LADDER                 -16
-#define	CONTENT_FLYFIELD                -17
-#define	CONTENT_GRAVITY_FLYFIELD        -18
-#define	CONTENT_FOG                     -19
+#define CONTENTS_LADDER                 -16
+#define CONTENT_FLYFIELD                -17
+#define CONTENT_GRAVITY_FLYFIELD        -18
+#define CONTENT_FOG                     -19
 
 /**
  * Instant damage values for use with the 3rd parameter of the "Damage" client
@@ -228,12 +228,11 @@
 
 /**
  * @section pev(entity, pev_spawnflags) values
- * @note Many of these flags apply to specific entities
  */
 /**
  * func_train
  */
-#define	SF_TRAIN_WAIT_RETRIGGER         1
+#define SF_TRAIN_WAIT_RETRIGGER         1
 #define SF_TRAIN_START_ON               4           // Train is initially moving
 #define SF_TRAIN_PASSABLE               8           // Train is not solid -- used to make water trains
 
@@ -252,8 +251,8 @@
  * func_button
  */
 #define SF_BUTTON_DONTMOVE              1
-#define	SF_BUTTON_TOGGLE                32          // Button stays pushed until reactivated
-#define	SF_BUTTON_SPARK_IF_OFF          64          // Button sparks in OFF state
+#define SF_BUTTON_TOGGLE                32          // Button stays pushed until reactivated
+#define SF_BUTTON_SPARK_IF_OFF          64          // Button sparks in OFF state
 #define SF_BUTTON_TOUCH_ONLY            256         // Button only fires as a result of USE key.
 
 /**
@@ -286,11 +285,11 @@
  * func_door, func_water, func_door_rotating, momementary_door
  */
 #define SF_DOOR_ROTATE_Y                0
-#define	SF_DOOR_START_OPEN              1
+#define SF_DOOR_START_OPEN              1
 #define SF_DOOR_ROTATE_BACKWARDS        2
 #define SF_DOOR_PASSABLE                8
 #define SF_DOOR_ONEWAY                  16
-#define	SF_DOOR_NO_AUTO_RETURN          32
+#define SF_DOOR_NO_AUTO_RETURN          32
 #define SF_DOOR_ROTATE_Z                64
 #define SF_DOOR_ROTATE_X                128
 #define SF_DOOR_USE_ONLY                256         // Door must be opened by player's use button
@@ -300,7 +299,7 @@
 /**
  * gibshooter
  */
-#define	SF_GIBSHOOTER_REPEATABLE        1           // Allows a gibshooter to be refired
+#define SF_GIBSHOOTER_REPEATABLE        1           // Allows a gibshooter to be refired
 
 /**
  * env_funnel
@@ -364,8 +363,8 @@
 /**
  * env_explosion
  */
-#define	SF_ENVEXPLOSION_NODAMAGE        (1<<0)      // When set, ENV_EXPLOSION will not actually inflict damage
-#define	SF_ENVEXPLOSION_REPEATABLE      (1<<1)      // Can this entity be refired?
+#define SF_ENVEXPLOSION_NODAMAGE        (1<<0)      // When set, ENV_EXPLOSION will not actually inflict damage
+#define SF_ENVEXPLOSION_REPEATABLE      (1<<1)      // Can this entity be refired?
 #define SF_ENVEXPLOSION_NOFIREBALL      (1<<2)      // Don't draw the fireball
 #define SF_ENVEXPLOSION_NOSMOKE         (1<<3)      // Don't draw the smoke
 #define SF_ENVEXPLOSION_NODECAL         (1<<4)      // Don't make a scorch mark
@@ -467,15 +466,15 @@
 /**
  * trigger_push
  */
-#define	SF_TRIGGER_PUSH_START_OFF       2           // Spawnflag that makes trigger_push spawn turned OFF
+#define SF_TRIGGER_PUSH_START_OFF       2           // Spawnflag that makes trigger_push spawn turned OFF
 
 /**
  * trigger_hurt
  */
 #define SF_TRIGGER_HURT_TARGETONCE      1           // Only fire hurt target once
-#define	SF_TRIGGER_HURT_START_OFF       2           // Spawnflag that makes trigger_push spawn turned OFF
-#define	SF_TRIGGER_HURT_NO_CLIENTS      8           // Spawnflag that makes trigger_push spawn turned OFF
-#define SF_TRIGGER_HURT_CLIENTONLYFIRE	16          // Trigger hurt will only fire its target if it is hurting a client
+#define SF_TRIGGER_HURT_START_OFF       2           // Spawnflag that makes trigger_push spawn turned OFF
+#define SF_TRIGGER_HURT_NO_CLIENTS      8           // Spawnflag that makes trigger_push spawn turned OFF
+#define SF_TRIGGER_HURT_CLIENTONLYFIRE  16          // Trigger hurt will only fire its target if it is hurting a client
 #define SF_TRIGGER_HURT_CLIENTONLYTOUCH 32          // Only clients may touch this trigger
 
 /**
@@ -530,7 +529,7 @@
 #define SF_BRUSH_ROTATE_Z_AXIS          4
 #define SF_BRUSH_ROTATE_X_AXIS          8
 #define SF_PENDULUM_AUTO_RETURN         16
-#define	SF_PENDULUM_PASSABLE            32
+#define SF_PENDULUM_PASSABLE            32
 #define SF_BRUSH_ROTATE_SMALLRADIUS     128
 #define SF_BRUSH_ROTATE_MEDIUMRADIUS    256
 #define SF_BRUSH_ROTATE_LARGERADIUS     512
@@ -538,8 +537,8 @@
 /**
  * triggers
  */
-#define	SF_TRIGGER_ALLOWMONSTERS        1           // Monsters allowed to fire this trigger
-#define	SF_TRIGGER_NOCLIENTS            2           // Players not allowed to fire this trigger
+#define SF_TRIGGER_ALLOWMONSTERS        1           // Monsters allowed to fire this trigger
+#define SF_TRIGGER_NOCLIENTS            2           // Players not allowed to fire this trigger
 #define SF_TRIGGER_PUSHABLES            4           // Only pushables can fire this trigger
 
 #define SF_TRIG_PUSH_ONCE               1
@@ -548,7 +547,7 @@
  * func_breakable
  */
 #define SF_BREAK_TRIGGER_ONLY           1           // May only be broken by trigger
-#define	SF_BREAK_TOUCH                  2           // Can be 'crashed through' by running player (plate glass)
+#define SF_BREAK_TOUCH                  2           // Can be 'crashed through' by running player (plate glass)
 #define SF_BREAK_PRESSURE               4           // Can be broken by a player standing on it
 #define SF_BREAK_CROWBAR                256         // Instant break if hit with crowbar
 
@@ -569,11 +568,11 @@
 /**
  * Monster Spawnflags
  */
-#define	SF_MONSTER_WAIT_TILL_SEEN       1           // Spawnflag that makes monsters wait until player can see them before attacking
-#define	SF_MONSTER_GAG                  2           // No idle noises from this monster
+#define SF_MONSTER_WAIT_TILL_SEEN       1           // Spawnflag that makes monsters wait until player can see them before attacking
+#define SF_MONSTER_GAG                  2           // No idle noises from this monster
 #define SF_MONSTER_HITMONSTERCLIP       4
 #define SF_MONSTER_PRISONER             16          // Monster won't attack anyone, no one will attacke him
-#define	SF_MONSTER_WAIT_FOR_SCRIPT      128         // Spawnflag that makes monsters wait to check for attacking until the script is done or they've been attacked
+#define SF_MONSTER_WAIT_FOR_SCRIPT      128         // Spawnflag that makes monsters wait to check for attacking until the script is done or they've been attacked
 #define SF_MONSTER_PREDISASTER          256         // This is a predisaster scientist or barney; influences how they speak
 #define SF_MONSTER_FADECORPSE           512         // Fade out corpse after death
 #define SF_MONSTER_FALL_TO_GROUND       0x80000000
@@ -605,53 +604,53 @@
 /**
  * Valve Mod Weapon Constants
  */
-#define HLI_HEALTHKIT			1
-#define HLI_ANTIDOTE			2
-#define HLI_SECURITY			3
-#define HLI_BATTERY			4
+#define HLI_HEALTHKIT       1
+#define HLI_ANTIDOTE        2
+#define HLI_SECURITY        3
+#define HLI_BATTERY         4
 
-#define HLW_NONE			0
-#define HLW_CROWBAR			1
-#define HLW_GLOCK			2
-#define HLW_PYTHON			3
-#define HLW_MP5				4
-#define HLW_CHAINGUN			5
-#define HLW_CROSSBOW			6
-#define HLW_SHOTGUN			7
-#define HLW_RPG				8
-#define HLW_GAUSS			9
-#define HLW_EGON			10
-#define HLW_HORNETGUN			11
-#define HLW_HANDGRENADE			12
-#define HLW_TRIPMINE			13
-#define HLW_SATCHEL			14
-#define HLW_SNARK			15
-#define HLW_SUIT			31
-#define HLW_ALLWEAPONS			(~(1<<HLW_SUIT))
+#define HLW_NONE            0
+#define HLW_CROWBAR         1
+#define HLW_GLOCK           2
+#define HLW_PYTHON          3
+#define HLW_MP5             4
+#define HLW_CHAINGUN        5
+#define HLW_CROSSBOW        6
+#define HLW_SHOTGUN         7
+#define HLW_RPG             8
+#define HLW_GAUSS           9
+#define HLW_EGON            10
+#define HLW_HORNETGUN       11
+#define HLW_HANDGRENADE     12
+#define HLW_TRIPMINE        13
+#define HLW_SATCHEL         14
+#define HLW_SNARK           15
+#define HLW_SUIT            31
+#define HLW_ALLWEAPONS      (~(1<<HLW_SUIT))
 
 
-#define FEV_NOTHOST		(1<<0)	// Skip local host for event send.
-#define FEV_RELIABLE	(1<<1)	// Send the event reliably.  You must specify the origin and angles
-								// for this to work correctly on the server for anything
-								// that depends on the event origin/angles.  I.e., the origin/angles are not
-								// taken from the invoking edict for reliable events.
-#define FEV_GLOBAL		(1<<2)	// Don't restrict to PAS/PVS, send this event to _everybody_ on the server ( useful for stopping CHAN_STATIC
-								//  sounds started by client event when client is not in PVS anymore ( hwguy in TFC e.g. ).
-#define FEV_UPDATE		(1<<3)	// If this client already has one of these events in its queue, just update the event instead of sending it as a duplicate
-#define	FEV_HOSTONLY	(1<<4)	// Only send to entity specified as the invoker
-#define FEV_SERVER		(1<<5)	// Only send if the event was created on the server.
-#define FEV_CLIENT		(1<<6)	// Only issue event client side ( from shared code )
+#define FEV_NOTHOST     (1<<0)  // Skip local host for event send.
+#define FEV_RELIABLE    (1<<1)  // Send the event reliably.  You must specify the origin and angles
+                                // for this to work correctly on the server for anything
+                                // that depends on the event origin/angles.  I.e., the origin/angles are not
+                                // taken from the invoking edict for reliable events.
+#define FEV_GLOBAL      (1<<2)  // Don't restrict to PAS/PVS, send this event to _everybody_ on the server ( useful for stopping CHAN_STATIC
+                                //  sounds started by client event when client is not in PVS anymore ( hwguy in TFC e.g. ).
+#define FEV_UPDATE      (1<<3)  // If this client already has one of these events in its queue, just update the event instead of sending it as a duplicate
+#define FEV_HOSTONLY    (1<<4)  // Only send to entity specified as the invoker
+#define FEV_SERVER      (1<<5)  // Only send if the event was created on the server.
+#define FEV_CLIENT      (1<<6)  // Only issue event client side ( from shared code )
 
 /**
  * Cap bits to indicate what an object's capabilities are, currently used for
  * save/restore and level transitions.
  */
-#define		FCAP_CUSTOMSAVE				0x00000001
-#define		FCAP_ACROSS_TRANSITION		0x00000002		// should transfer between transitions
-#define		FCAP_MUST_SPAWN				0x00000004		// Spawn after restore
-#define		FCAP_DONT_SAVE				0x80000000		// Don't save this
-#define		FCAP_IMPULSE_USE			0x00000008		// can be used by the player
-#define		FCAP_CONTINUOUS_USE			0x00000010		// can be used by the player
-#define		FCAP_ONOFF_USE				0x00000020		// can be used by the player
-#define		FCAP_DIRECTIONAL_USE		0x00000040		// Player sends +/- 1 when using (currently only tracktrains)
-#define		FCAP_MASTER					0x00000080		// Can be used to "master" other entities (like multisource)
+#define FCAP_CUSTOMSAVE                 0x00000001
+#define FCAP_ACROSS_TRANSITION          0x00000002      // should transfer between transitions
+#define FCAP_MUST_SPAWN                 0x00000004      // Spawn after restore
+#define FCAP_DONT_SAVE                  0x80000000      // Don't save this
+#define FCAP_IMPULSE_USE                0x00000008      // can be used by the player
+#define FCAP_CONTINUOUS_USE             0x00000010      // can be used by the player
+#define FCAP_ONOFF_USE                  0x00000020      // can be used by the player
+#define FCAP_DIRECTIONAL_USE            0x00000040      // Player sends +/- 1 when using (currently only tracktrains)
+#define FCAP_MASTER                     0x00000080      // Can be used to "master" other entities (like multisource)

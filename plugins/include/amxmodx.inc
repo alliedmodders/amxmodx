@@ -296,7 +296,7 @@ native get_localinfo(const info[], output[], len);
 /**
  * Shows text or a file in MOTD window.
  *
- * @param player    Client index, use 0 to display to all players
+ * @param player    Client index, use 0 to display to all clients
  * @param message   Message to display inside the MOTD window. If this is a
  *                  filename the contents of this file will be displayed.
  * @param header    Text for the MOTD header. If this is empty the servers
@@ -309,7 +309,7 @@ native show_motd(player, const message[], const header[]="");
 /**
  * Sends a message to the client.
  *
- * @param index     Client index, use 0 to display to all players
+ * @param index     Client index, use 0 to display to all clients
  * @param type      Message type, see print_* destination constants in amxconst
  * @param message   Formatting rules
  * @param ...       Variable number of formatting parameters
@@ -332,7 +332,7 @@ native client_print(index, type, const message[], any:...);
  *       characters. These characters can be included using the escape character
  *          green           x04   ; use location color from this point forward
  *          red/blue/grey   x03   ; use team color from this point forward
- *          red/blue/grey   x02   ; use team color to the end of the player name
+ *          red/blue/grey   x02   ; use team color to the end of the client name
  *                                ; This only works at the start of the string,
  *                                ; and precludes using other control characters
  *          default         x01   ; use default color from this point forward
@@ -344,7 +344,7 @@ native client_print(index, type, const message[], any:...);
  * @note Including colors in ML can be done using the same escaping method:
  *       EXAMPLE_ML_KEY = ^4Green ^3Team color ^1Default.
  *
- * @param index     Client index, use 0 to display to all players
+ * @param index     Client index, use 0 to display to all clients
  * @param sender    Client index used as the sender, defining the team color
  *                  used in the message. Use print_team_* constants to force
  *                  a specific color.
@@ -364,7 +364,7 @@ native client_print_color(index, sender, const message[], any:...);
 /**
  * Sends a message to the client via the engine.
  *
- * @param player    Client index, use 0 to display to all players
+ * @param player    Client index, use 0 to display to all clients
  * @param type      Message type, see print_* destination constants in amxconst
  * @param message   Formatting rules
  * @param ...       Variable number of formatting parameters
@@ -422,9 +422,9 @@ native console_cmd(id, const cmd[], any:...);
  *                  "a" - Global event (sent to every client)
  *                  "b" - Event sent to single client
  *                  "c" - Call only once when repeated to multiple clients
- *                  "d" - Call only if sent to dead player
- *                  "e" - Call only if sent to alive player
- *                  "f" - Call only if sent to human player ("b" flag required)
+ *                  "d" - Call only if sent to dead client
+ *                  "e" - Call only if sent to alive client
+ *                  "f" - Call only if sent to human client ("b" flag required)
  *                  "g" - Call only if sent to bot ("b" flag required)
  * @param cond      Condition string used for filtering events, built as:
  *                  "<argument number><comparison operator><value>"
@@ -677,7 +677,7 @@ native read_logargc();
  * @param output    Buffer to copy log argument to
  * @param len       Maximum buffer size
  *
- * @return          Number of arguments in the log message
+ * @return          Number of cells written to buffer
  * @error           If called outside of the plugin_log() forward, an error is
  *                  thrown.
  */
@@ -747,7 +747,7 @@ native is_user_hltv(index);
  *
  * @note This does not throw an error if the provided index is out of the
  *       1 to MaxClients range. That means you can safely use this native
- *       without manually verifying an index to be a valid player index.
+ *       without manually verifying an index to be a valid client index.
  *
  * @param index     Client index
  *
@@ -767,8 +767,8 @@ native is_user_connecting(index);
 /**
  * Returns if the client is alive.
  *
- * @note This will never return true if a player is not connected. If you need
- *       to know whether a player is alive, an additional call to
+ * @note This will never return true if a client is not connected. If you need
+ *       to know whether a client is alive, an additional call to
  *       is_user_connected() is unnecessary.
  *
  * @param index     Client index
@@ -815,17 +815,17 @@ native is_jit_enabled();
 native get_amxx_verstring(buffer[], length);
 
 /**
- * Returns the last known attacker of a player.
+ * Returns the last known attacker of a client.
  *
- * @note As of AMXX 1.75 this can return a non-player entity index if the player
- *       was attacked by a non-player entity.
+ * @note As of AMXX 1.75 this can return a non-client entity index if the client
+ *       was attacked by a non-client entity.
  *
  * @param index     Client index
  * @param ...       Optionally a second byref parameter will be filled with the
  *                  attacker weapon, and a third byref parameter will be filled
  *                  with the hit place on the body.
  *
- * @return          Attacker client index, a non-player entity or 0 if no
+ * @return          Attacker client index, a non-client entity or 0 if no
  *                  attacker was found
  * @error           If the client index is not within the range of 1 to
  *                  MaxClients an error will be thrown.
@@ -836,12 +836,12 @@ native get_user_attacker(index, ...);
 /**
  * Traces the client's current aim vector to see if it hits something.
  *
- * @note If the trace does not hit a player id and body will be set to 0.
+ * @note If the trace does not hit a client, id and body will be set to 0.
  * @note If the trace hits nothing within the specified distance 0.0 is returned
  *
  * @param index     Client index to trace aim from
- * @param id        Variable to store hit player index (if applicable)
- * @param body      Variable to store hit player body part (if applicable)
+ * @param id        Variable to store hit client index (if applicable)
+ * @param body      Variable to store hit client body part (if applicable)
  * @param dist      Maximum distance of the trace
  *
  * @return          Distance between the trace start and end point
@@ -851,51 +851,51 @@ native get_user_attacker(index, ...);
 native Float:get_user_aiming(index, &id, &body, dist=9999);
 
 /**
- * Returns the player's frags.
+ * Returns the client's frags.
  *
  * @note While this is mod-independent the mod may track frag count differently
  *       so it can only be retrieved using another native or other methods.
- * @note This will actually return the player's overall score, which may or may
+ * @note This will actually return the client's overall score, which may or may
  *       not be equal to their scored frags depending on the mod.
  *
  * @param index     Client index
  *
- * @return          Frags/Score of the player. Also returns 0 if the client is
+ * @return          Frags/Score of the client. Also returns 0 if the client is
  *                  not connected or the index is not within the range of
  *                  1 to MaxClients
  */
 native get_user_frags(index);
 
 /**
- * Returns the player's armor value.
+ * Returns the client's armor value.
  *
  * @note While this is mod-independent the mod may track armor data differently
  *       so it can only be retrieved using another native or other methods.
  *
  * @param index     Client index
  *
- * @return          Amount of armor the player has. Also returns 0 if the client
+ * @return          Amount of armor the client has. Also returns 0 if the client
  *                  is not connected or the index is not within the range of
  *                  1 to MaxClients
  */
 native get_user_armor(index);
 
 /**
- * Returns the player's death count.
+ * Returns the client's death count.
  *
  * @note While this is mod-independent the mod may track death count differently
  *       so it can only be retrieved using another native or other methods.
  *
  * @param index     Client index
  *
- * @return          Amount of deaths the player has. Also returns 0 if the
+ * @return          Amount of deaths the client has. Also returns 0 if the
  *                  client is not connected or the index is not within the range
  *                  of 1 to MaxClients
  */
 native get_user_deaths(index);
 
 /**
- * Returns the player's health points.
+ * Returns the client's health points.
  *
  * @note While this is mod-independent the mod may track health points
  *       differently so it can only be retrieved using another native or other
@@ -903,7 +903,7 @@ native get_user_deaths(index);
  *
  * @param index     Client index
  *
- * @return          Amount of health points the player has. Also returns 0 if
+ * @return          Amount of health points the client has. Also returns 0 if
  *                  the client is not connected or the index is not within the
  *                  range of 1 to MaxClients
  */
@@ -921,12 +921,12 @@ native get_user_index(const name[]);
 /**
  * Retrieves the IP of a client or the server.
  *
- * @param index         Client index, use 0 to retrieve the server IP
- * @param ip            Buffer to copy IP to
- * @param len           Maximum buffer size
- * @param without_port  Remove the port from the IP if nonzero
+ * @param index             Client index, use 0 to retrieve the server IP
+ * @param ip                Buffer to copy IP to
+ * @param len               Maximum buffer size
+ * @param without_port      Remove the port from the IP if nonzero
  *
- * @return              Number of cells written to the buffer
+ * @return                  Number of cells written to the buffer
  */
 native get_user_ip(index, ip[], len, without_port = 0);
 
@@ -941,104 +941,268 @@ native get_user_weapon(index,&clip=0,&ammo=0);
 /* Gets ammo and clip from current weapon. */
 native get_user_ammo(index,weapon,&clip,&ammo);
 
-/* Converts numbers from range 0 - 999 to words. */
-native num_to_word(num,output[],len);
+/**
+ * Converts an integer to a text string.
+ *
+ * @note The conversion algorithm is limited to a certain range of numbers, but
+ *       is guaranteed to work correctly for all numbers from 0 to 999. Outside
+ *       of that range the conversion will result in an incorrect string, but
+ *       not fail.
+ * @note The conversion is to english text, there is no way to change this.
+ *
+ * @param num       Integer to convert
+ * @param output    Buffer to copy string to
+ * @param len       Maximum buffer size
+ *
+ * @return          Number of cells written to buffer
+ */
+native num_to_word(num, output[], len);
 
-/* Returns team id. When length is greater then 0
-* then a name of team is set. */
+/**
+ * Returns the team id of the client, and optionally retrieves the name of
+ * the team.
+ *
+ * @param index     Client index
+ * @param team      Buffer to copy team name to
+ * @param len       Maximum size of buffer
+ *
+ * @return          Team index on success, -1 if client index is invalid or
+ *                  the client is not connected.
+ */
 native get_user_team(index, team[]="", len = 0);
 
-/* Returns player playing time in seconds.
-* If flag is set then result is without connection time. */
+/**
+ * Returns client's playing time in seconds.
+ *
+ * @param index     Client index
+ * @param flag      If nonzero the result will not include the time it took
+ *                  the client to connect.
+ *
+ * @return          Connection time in seconds, 0 if client index is invalid or
+ *                  client is not connected
+ */
 native get_user_time(index, flag = 0);
 
-/* Gets ping and loss at current time. */
+/**
+ * Retrieves the ping and loss of a client.
+ *
+ * @param index     Client index
+ * @param ping      Variable to store ping in
+ * @param loss      Variable to sote loss in
+ *
+ * @return          1 on success, 0 if client index is invalid or the client
+ *                  is not connected.
+ */
 native get_user_ping(index, &ping, &loss);
 
-/* Gets origin from player.
-* Modes:
-* 0 - current position.
-* 1 - position from eyes (weapon aiming).
-* 2 - end position from player position.
-* 3 - end position from eyes (hit point for weapon).
-* 4 - position of last bullet hit (only CS). */
+/**
+ * Retrieves an origin related to the client.
+ *
+ * @param index     Client index
+ * @param origin    Array to store origin in
+ * @param mode      What type of origin to retrieve:
+ *                    0 - current position
+ *                    1 - position of eyes (and weapon)
+ *                    2 - aim end position from client position
+ *                    3 - aim end position from eyes (hit point for weapon)
+ *                    4 - position of last bullet hit (only for Counter-Strike)
+ *
+ * @return          1 on succes, 0 if client is not connected
+ * @error           If the client index is not within the range of 1 to
+ *                  MaxClients an error will be thrown.
+ */
 native get_user_origin(index, origin[3], mode = 0);
 
-/* Returns all carried weapons as bit sum. Gets
- *  also theirs indexes.
- * Note that num is incremental - if you pass 0, you get
- *  32 weapons towards the total.  Afterwards, num will
- *  will contain the number of weapons retrieved.
- * However, subsequent calls to get_user_weapons() will
- *  return the next batch of weapons, in case the mod
- *  supports more than 32 weapons.
- * This means to call get_user_weapons() on the same
- *  inputs twice, you must reset num to 0 to get the
- *  original output again.
+/**
+ * Retrieves all weapons in the client inventory, stores them in an array and
+ * returns the inventory as a bitflag sum.
+ *
+ * @note Make sure that num has an initial value of 0, or the native will not
+ *       work correctly.
+ *
+ * @param index     Client index
+ * @param weapons   Array to store weapon indexes in
+ * @param num       Variable to store number of weapons in the inventory to
+ *
+ * @return          Bitflag sum of weapon indexes, 0 if client is not connected
+ * @error           If the client index is not within the range of 1 to
+ *                  MaxClients an error will be thrown.
  */
 native get_user_weapons(index,weapons[32],&num);
 
-/* Returns weapon name. */
-native get_weaponname(id,weapon[],len);
-
-/* Returns player name. */
-native get_user_name(index,name[],len);
-
-/* Gets player authid. */
-native get_user_authid(index, authid[] ,len);
-
-/* Returns player userid. */
-native get_user_userid(index);
-
-/* Slaps player with given power. */
-native user_slap(index,power,rnddir=1);
-
-/* Kills player. When flag is set to 1 then death won't decrase frags. */
-native user_kill(index,flag=0);
-
-/* Logs something into the current amx logfile
-* Parameters:
-*  string[] - format string
-*  ...      - optional parameters
-* Return value:
-*  always 0 */
-native log_amx(const string[], any:...);
-
-/* Sends message to standard HL logs. */
-native log_message(const message[],any:...);
-
-/* Sends log message to specified file. */
-native log_to_file(const file[],const message[],any:...);
+/**
+ * Retrieves the full name of a weapon.
+ *
+ * @param id        Weapon index
+ * @param weapon    Buffer to copy name to
+ * @param len       Maximum buffer size
+ */
+native get_weaponname(id, weapon[], len);
 
 /**
- * Returns the number of players on the server.
+ * Retrieves the name of a client or the server.
+ *
+ * @param index     Client index, or 0 to retrieve the server hostname
+ * @param name      Buffer to copy name to
+ * @param len       Maximum buffer size
+ *
+ * @return          Number of cells written to buffer
+ */
+native get_user_name(index, name[], len);
+
+/**
+ * Retrieves the SteamID of a client.
+ *
+ * @note The SteamID is only available once the client_authorized() forward has
+ *       been called for the client.
+ *
+ * @param index     Client index
+ * @param authid    Buffer to copy auth to
+ * @param len       Maximum buffer size
+ *
+ * @return          Number of cells written to buffer
+ */
+native get_user_authid(index, authid[] ,len);
+
+/**
+ * Returns the userid of a client.
+ *
+ * @param index     Client index
+ *
+ * @return          Client userid, 0 if the userid is not available or the
+ *                  client index is invalid.
+ */
+native get_user_userid(index);
+
+/**
+ * Slaps the client with specified power. Killing the client if applicable.
+ *
+ * @note This removes "power" amount of health from the client, performing
+ *       a kill if they have no health left after the slap.
+ * @note The function will apply a velocity to the client that is independent
+ *       of the slap power. The slap direction can be influenced by the third
+ *       parameter.
+ *
+ * @param index     Client idex
+ * @param power     Power of the slap
+ * @param rnddir    If set to zero the player will be slapped along it's aim
+ *                  vector. If nonzero the direction will be randomized.
+ */
+native user_slap(index,power,rnddir=1);
+
+/**
+ * Kills a client.
+ *
+ * @param index     Client index
+ * @param flag      If nonzero the death will not affect the client's score
+ *
+ * @return          1 on success, 0 if client index is invalid or the client
+ *                  is not connected.
+ */
+native user_kill(index,flag=0);
+
+/**
+ * Logs a message to the current AMXX log file.
+ *
+ * @note The message will automatically be tagged with the plugin's name and the
+ *       log will include a timestamp with the message.
+ *
+ * @param string    Formatting rules
+ * @param ...       Variable number of formatting parameters
+ *
+ * @noreturn
+ */
+native log_amx(const string[], any:...);
+
+/**
+ * Logs a message to the current server log file.
+ *
+ * @note The log will include a timestamp with the message.
+ *
+ * @param string    Formatting rules
+ * @param ...       Variable number of formatting parameters
+ *
+ * @return          Number of printed characters
+ */
+native log_message(const message[], any:...);
+
+/**
+ * Logs a message to the specified file
+ *
+ * @note The log will include a timestamp with the message.
+ *
+ * @param string    Formatting rules
+ * @param ...       Variable number of formatting parameters
+ *
+ * @noreturn
+ */
+native log_to_file(const file[], const message[], any:...);
+
+/**
+ * Returns the number of clients on the server.
  *
  * @param flag      Count clients still in the connecting process if nonzero
  *
- * @return          Number of players on the server
+ * @return          Number of clients on the server
  */
 native get_playersnum(flag=0);
 
-/* Sets indexes of players.
-* Flags:
-* "a" - don't collect dead players.
-* "b" - don't collect alive players.
-* "c" - skip bots.
-* "d" - skip real players.
-* "e" - match with team.
-* "f" - match with part of name.
-* "g" - ignore case sensitivity.
-* "h" - skip HLTV.
-* Example: Get all alive CTs: get_players(players,num,"ae","CT") */
+/**
+ * Stores a filtered list of client indexes to an array.
+ *
+ * @note Example retrieving all alive CTs: get_players(players, num "ae", "CT")
+ *
+ * @param players   Array to store indexes to
+ * @param num       Variable to store number of indexes to
+ * @param flags     Optional list of filtering flags:
+ *                    "a" - do not include dead clients
+ *                    "b" - do not include alive clients
+ *                    "c" - do not include bots
+ *                    "d" - do not include human clients
+ *                    "e" - match with team
+ *                    "f" - match with part of name
+ *                    "g" - match case insensitive
+ *                    "h" - do not include HLTV proxies
+ * @param team      String to match against if the "e" or "f" flag is specified
+ *
+ * @noreturn
+ */
 native get_players(players[32], &num ,const flags[]="", const team[]="");
 
-/* Gets argument from command. */
-native read_argv(id,output[],len);
+/**
+ * Retrieves argument of client command.
+ *
+ * @note Should only be used inside of the client_command() forward.
+ *
+ * @param id        Argument index starting from 1, 0 returns the command itself
+ * @param output    Buffer to copy command argument to
+ * @param len       Maximum buffer size
+ *
+ * @return          Number of cells written to buffer
+ */
+native read_argv(id, output[], len);
 
-/* Gets line of all arguments. */
+/**
+ * Retrieves full client command string.
+ *
+ * @note Should only be used inside of the client_command() forward.
+ *
+ * @param output    Buffer to copy command line to
+ * @param len       Maximum buffer size
+ *
+ * @return          Number of cells written to buffer
+ */
 native read_args(output[],len);
 
-/* Returns number of arguments (+ one as command). */
+/**
+ * Returns number of client command arguments.
+ *
+ * @note Should only be used inside of the client_command() forward.
+ * @note This count includes the command itself. I.e. in a command with 4
+ *       arguments this will return 5.
+ *
+ * @return          Number of arguments in the command
+ */
 native read_argc();
 
 /**
@@ -1066,101 +1230,215 @@ native read_flags(const flags[]);
  */
 native get_flags(flags,output[],len);
 
-/* Find player.
-* Flags:
-* "a" - with given name.
-* "b" - with given part of name.
-* "c" - with given authid.
-* "d" - with given ip.
-* "e" - with given team name.
-* "f" - don't look in dead players.
-* "g" - don't look in alive players.
-* "h" - skip bots.
-* "i" - skip real players.
-* "j" - return index of last found player.
-* "k" - with given userid.
-* "l" - ignore case sensitivity. */
+/**
+ * Find a player given a filter.
+ *
+ * @note If matching by userid, do not also specify the "a", "b" or "c" flags,
+ *       or the function may not return a correct result.
+ *
+ * @param flags     List of filtering flags:
+ *                    "a" - match with name
+ *                    "b" - match with name substring
+ *                    "c" - match with authid
+ *                    "d" - match with ip
+ *                    "e" - match with team name
+ *                    "f" - do not include dead clients
+ *                    "g" - do not include alive clients
+ *                    "h" - do not include bots
+ *                    "i" - do not include human clients
+ *                    "j" - return last matched client instead of the first
+ *                    "k" - match with userid
+ *                    "l" - match case insensitively
+ * @param ...       String to match against (integer if "k" flag is specified)
+ *
+ */
 native find_player(const flags[], ... );
 
-/* Removes quotes from sentence. */
+/**
+ * Removes double-quotes from the beginning and end of a string.
+ *
+ * @note If the string only has a double-quote at either the start *or* the end
+ *       and not both the function will do nothing.
+ * @note The function does not perform any trimming per-se. But if a
+ *       double-quote is found at the beginning of the string, it will remove
+ *       all ^r (carriage return) characters at the end of the string, even if
+ *       no matching double-quote is found.
+ *
+ * @param text      String to remove double-quotes from
+ *
+ * @return          1 if matching double-quotes have been removed, 0 otherwise
+ */
 native remove_quotes(text[]);
 
-/* Executes command on player. */
-native client_cmd(index,const command[],any:...);
+/**
+ * Executes a command on the client.
+ *
+ * @note Executing malicious commands on the client ("slowhacking") is frowned
+ *       upon.
+ * @note Valve has introduced a command filter to Counter-Strike 1.6. It is not
+ *       possible to execute many commands if the client has opted in to this.
+ *
+ * @param index     Client index, use 0 to execute on all clients
+ * @param command   Formatting rules
+ * @param ...       Variable number of formatting parameters
+ *
+ * @return          Lenght of formatted command string
+ * @error           If a single client is specified and the index is not
+ *                  within the range of 1 to MaxClients an error will be thrown
+ */
+native client_cmd(index, const command[], any:...);
 
 /**
- * This is an emulation of a client command (commands aren't send to client!).
- * It allows to execute some commands on players and bots.
- * Function is excellent for forcing to do an action related to a game (not settings!).
- * The command must stand alone but in arguments you can use spaces.
+ * Execute a command from the client without actually sending it to the client's
+ * DLL.
  *
- * @param index			Index of the client, use 0 to send to all clients.
- * @param command		The client command to execute on.
- * @param arg1			Optionnal. The command arguments.
- * @param arg2			Optionnal. The command arguments.
+ * @note This emulates a client command on the server side, and is an excellent
+ *       tool to force a client to do certain actions related to the game.
+ * @note The command has to stand alone in the command parameter, only add
+ *       arguments using the designated paramters.
+ * @note Commands emulated using this function will not trigger plugin command
+ *       hooks. For an alternative that does, see amxclient_cmd().
+ *
+ * @param index			Client index, use 0 to execute from all clients.
+ * @param command		The client command to execute on
+ * @param arg1			Optional command arguments
+ * @param arg2			Optional command arguments
+ *
  * @noreturn
+ * @error           If a single client is specified and the index is not
+ *                  within the range of 1 to MaxClients an error will be thrown
  */
 native engclient_cmd(index,const command[],const arg1[]="",const arg2[]="");
 
 /**
- * This is an emulation of a client command (commands aren't send to client!).
- * It allows to execute some commands on players and bots.
- * Function is excellent for forcing to do an action related to a game (not settings!).
- * The command must stand alone but in arguments you can use spaces.
+ * Execute a command from the client without actually sending it to the client's
+ * DLL. This triggers plugin command hooks.
  *
- * @note This is similar to engclient_cmd with the difference all plugins hooking
- *       the command will be notified as well.
+ * @note This emulates a client command on the server side, and is an excellent
+ *       tool to force a client to do certain actions related to the game.
+ * @note The command has to stand alone in the command parameter, only add
+ *       arguments using the designated paramters.
+ * @note Commands emulated using this function will trigger other plugin's
+ *       command hooks. For an alternative that doesn't, see engclient_cmd().
  *
- * @param index			Index of the client, use 0 to send to all clients.
- * @param command		The client command to execute on.
- * @param arg1			Optionnal. The command arguments.
- * @param arg2			Optionnal. The command arguments.
+ * @param index         Client index, use 0 to execute from all clients.
+ * @param command       The client command to execute on
+ * @param arg1          Optional command arguments
+ * @param arg2          Optional command arguments
+ *
  * @noreturn
+ * @error           If a single client is specified and the index is not
+ *                  within the range of 1 to MaxClients an error will be thrown
  */
 native amxclient_cmd(index, const command[], const arg1[] = "", const arg2[] = "");
 
-/* Executes command on a server console. */
+/**
+ * Executes a command from the server console.
+ *
+ * @note Warning: This is a potential source of command injection. Do not feed
+ *       client-controlled input (including client names) to this function
+ *       without sanitizing it first.
+ *
+ * @param command   Formatting rules
+ * @param ...       Variable number of formatting parameters
+ *
+ * @noreturn
+ */
 native server_cmd(const command[],any:...);
 
 /**
  * Sets a cvar to a given string value. The cvar is accessed by name.
  *
- * @note Accessing a Cvar by name requires this function to walk through the
- *       engines cvar list every time, which can result in a considerable waste
+ * @note Accessing a cvar by name requires this function to walk through the
+ *       engine's cvar list every time, which can result in a considerable waste
  *       of processing time, especially if many cvars have been registered. For
  *       a vastly superior alternative look at the set_pcvar_* set of functions.
  *
- * @param cvar      cvar name to set
- * @param value     value to set cvar to
+ * @param cvar      Cvar name to set value of
+ * @param value     Value to set cvar to
  *
  * @noreturn
  */
-native set_cvar_string(const cvar[],const value[]);
+native set_cvar_string(const cvar[], const value[]);
 
-/* If a cvar exists returns 1, in other case 0 */
+/**
+ * Returns if a cvar is registered on the server.
+ *
+ * @param cvar      Cvar name to check
+ *
+ * @return          1 if the cvar exists, 0 otherwise
+ */
 native cvar_exists(const cvar[]);
 
-/* Removes a cvar flags (not allowed for amx_version,
-* fun_version and sv_cheats cvars). */
-native remove_cvar_flags(const cvar[],flags = -1);
+/**
+ * Removes specified flags from a cvar
+ *
+ * @note Not permitted for the "amx_version", "fun_version" and "sv_cheats"
+ *       cvars.
+ * @note For a list of possible flags see the FCVAR_* constants in amxconst.inc
+ * @note Accessing a Cvar by name requires this function to walk through the
+ *       engine's cvar list every time, which can result in a considerable waste
+ *       of processing time, especially if many cvars have been registered. For
+ *       a vastly superior alternative look at the set_pcvar_flags function.
+ *
+ *
+ * @param cvar      Cvar name to remove flags from
+ * @param flags     Bitflag sum of flags to remove
+ *
+ * @return          1 on success, 0 if cvar does not exist or is not permitted
+ */
+native remove_cvar_flags(const cvar[], flags = -1);
 
-/* Sets a cvar flags (not allowed for amx_version,
-* fun_version and sv_cheats cvars). */
-native set_cvar_flags(const cvar[],flags);
+/**
+ * Sets specified flags to a cvar
+ *
+ * @note Not permitted for the "amx_version", "fun_version" and "sv_cheats"
+ *       cvars.
+ * @note For a list of possible flags see the FCVAR_* constants in amxconst.inc
+ * @note This function just adds the flags using a bitwise-and operation. After
+ *       it has run the flags may not exactly equal the specified bitflag sum.
+ * @note Accessing a Cvar by name requires this function to walk through the
+ *       engine's cvar list every time, which can result in a considerable waste
+ *       of processing time, especially if many cvars have been registered. For
+ *       a vastly superior alternative look at the set_pcvar_flags function.
+ *
+ * @param cvar      Cvar name to remove flags from
+ * @param flags     Bitflag sum of flags to set
+ *
+ * @return          1 on success, 0 if cvar does not exist or is not permitted
+ */
+native set_cvar_flags(const cvar[], flags);
 
-/* Returns a cvar flags. */
+/**
+ * Returns flags of a cvar
+ *
+ * @note Not permitted for the "amx_version", "fun_version" and "sv_cheats"
+ *       cvars.
+ * @note For a list of possible flags see the FCVAR_* constants in amxconst.inc
+ * @note This function just adds the flags using a bitwise-and operation. After
+ *       it has run the flags may not exactly equal the specified bitflag sum.
+ * @note Accessing a Cvar by name requires this function to walk through the
+ *       engine's cvar list every time, which can result in a considerable waste
+ *       of processing time, especially if many cvars have been registered. For
+ *       a vastly superior alternative look at the get_pcvar_flags function.
+ *
+ * @param cvar      Cvar name to remove flags from
+ * @param flags     Bitflag sum of flags to set
+ *
+ * @return          1 on success, 0 if cvar does not exist or is not permitted
+ */
 native get_cvar_flags(const cvar[]);
 
 /**
  * Sets a cvar to a given float value. The cvar is accessed by name.
  *
  * @note Accessing a Cvar by name requires this function to walk through the
- *       engines cvar list every time, which can result in a considerable waste
+ *       engine's cvar list every time, which can result in a considerable waste
  *       of processing time, especially if many cvars have been registered. For
  *       a vastly superior alternative look at the set_pcvar_* set of functions.
  *
- * @param cvar      cvar name to set
- * @param value     value to set cvar to
+ * @param cvar      Cvar name to set value of
+ * @param value     Value to set cvar to
  *
  * @noreturn
  */
@@ -1170,11 +1448,11 @@ native set_cvar_float(const cvar[], Float:value);
  * Gets a floating value from a cvar. The cvar is accessed by name.
  *
  * @note Accessing a Cvar by name requires this function to walk through the
- *       engines cvar list every time, which can result in a considerable waste
+ *       engine's cvar list every time, which can result in a considerable waste
  *       of processing time, especially if many cvars have been registered. For
  *       a vastly superior alternative look at the get_pcvar_* set of functions.
  *
- * @param cvarname  cvar name to get value from
+ * @param cvarname  Cvar name to get value from
  *
  * @return          Cvar value, converted to float
  */
@@ -1184,11 +1462,11 @@ native Float:get_cvar_float(const cvarname[]);
  * Gets an integer value from a cvar. The cvar is accessed by name.
  *
  * @note Accessing a Cvar by name requires this function to walk through the
- *       engines cvar list every time, which can result in a considerable waste
+ *       engine's cvar list every time, which can result in a considerable waste
  *       of processing time, especially if many cvars have been registered. For
  *       a vastly superior alternative look at the get_pcvar_* set of functions.
  *
- * @param cvarname  cvar name to get value from
+ * @param cvarname  Cvar name to get value from
  *
  * @return          Cvar value, converted to int
  */
@@ -1198,22 +1476,22 @@ native get_cvar_num(const cvarname[]);
  * Sets a cvar to a given integer value. The cvar is accessed by name.
  *
  * @note Accessing a Cvar by name requires this function to walk through the
- *       engines cvar list every time, which can result in a considerable waste
+ *       engine's cvar list every time, which can result in a considerable waste
  *       of processing time, especially if many cvars have been registered. For
  *       a vastly superior alternative look at the set_pcvar_* set of functions.
  *
- * @param cvarname  cvar name to set
- * @param value     value to set cvar to
+ * @param cvar      Cvar name to set value of
+ * @param value     Value to set cvar to
  *
  * @noreturn
  */
-native set_cvar_num(const cvarname[],value);
+native set_cvar_num(const cvarname[], value);
 
 /**
  * Gets a string value from a cvar. The cvar is accessed by name.
  *
  * @note Accessing a Cvar by name requires this function to walk through the
- *       engines cvar list every time, which can result in a considerable waste
+ *       engine's cvar list every time, which can result in a considerable waste
  *       of processing time, especially if many cvars have been registered. For
  *       a vastly superior alternative look at the get_pcvar_* set of functions.
  *

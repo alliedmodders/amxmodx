@@ -214,6 +214,14 @@ public stock const MaxClients; /* Maximum number of players the server supports 
 #define VOL_NORM        1.0
 
 /**
+ * Sound behavior constants
+ */
+#define SND_SPAWNING        (1<<8)      // we're spawing, used in some cases for ambients
+#define SND_STOP            (1<<5)      // stop sound
+#define SND_CHANGE_VOL      (1<<6)      // change sound vol
+#define SND_CHANGE_PITCH    (1<<7)      // change sound pitch
+
+/**
  * @endsection
  */
 
@@ -399,14 +407,6 @@ enum
 #define FP_FLOAT        1
 #define FP_STRING       2
 #define FP_ARRAY        4
-
-/**
- * Sound behavior constants
- */
-#define SND_SPAWNING        (1<<8)      // we're spawing, used in some cases for ambients
-#define SND_STOP            (1<<5)      // stop sound
-#define SND_CHANGE_VOL      (1<<6)      // change sound vol
-#define SND_CHANGE_PITCH    (1<<7)      // change sound pitch
 
 /**
  * LibType constants

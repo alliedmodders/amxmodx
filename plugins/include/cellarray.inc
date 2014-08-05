@@ -5,23 +5,28 @@
 #define _cellarray_included
 
 /**
- * These arrays are intended to be used for a form of global storage without 
- * requiring a #define that needs to be increased each time a person needs more 
- * storage.
- * These are not designed to be used as a replacement for normal arrays, as
- * normal arrays are faster and should be used whenever possible.
+ * Cellarray tag declaration
+ *
+ * @note These dynamic arrays are intended to be used for a form of global
+ *       storage without requiring a #define that needs to be increased each
+ *       time the plugin author requires more storage. These are not designed
+ *       to be a full replacement for normal arrays, as those are faster and
+ *       should be used whenever possible.
+ * @note Plugins are responsible for freeing all Array handles they acquire,
+ *       including those from ArrayClone. Failing to free handles will result
+ *       in the plugin and AMXX leaking memory.
  */
- 
 enum Array
 {
 	Invalid_Array = 0
 };
 
- /**
- * Given a maximum string size (including the null terminator), 
- * returns the number of cells required to fit that string.
+/**
+ * Returns the number of cells required to fit a string of the specified size
+ * (including the null terminator).
  *
  * @param size          Number of bytes.
+ *
  * @return              Minimum number of cells required to fit the byte count.
  */
 stock ByteCountToCells(size)
@@ -30,368 +35,419 @@ stock ByteCountToCells(size)
 	{
 		return 1;
 	}
-	
+
 	return (size + 3) / 4;
 }
 
 /**
  * Creates a handle to a dynamically sized array.
- * It is very important that the cellsize you provide matches up with the buffer sizes
- * that you pass with subsequent Array{Get,Set,Push} calls.
  *
- * @param cellsize      How many cells each entry in the array is.
- * @param reserved      How many blank entries are created immediately when the array is created.  
- *                      These entries are not valid to read from until called with ArraySet.
+ * @note It is very important that the provided cellsize matches up with the
+ *       buffer sizes that you pass with subsequent Array[Get|Set|Push] calls.
+ *
+ * @param cellsize      Size of each array entry in cells
+ * @param reserver      Amount of blank entries that are inserted immediately
+ *                      upon creation of the array. These are not readable until
+ *                      initialized with an ArraySet* function.
  *
  * @return              Handle to the array.
  */
 native Array:ArrayCreate(cellsize = 1, reserved = 0);
 
 /**
- * Clones an array, returning a new handle with the same size and data. 
- * You must close it.
+ * Clones an array, returning a new handle with the same size and data.
  *
- * @param which         Array handle to be cloned.
+ * @param which         Array handle
  *
- * @return              New handle to the cloned array object on success, 0 on failure.
- * @error               Invalid handle.
+ * @return              Handle to the cloned array on success, 0 otherwise
+ * @error               If an invalid handle is provided an error will be thrown
  */
 native Array:ArrayClone(Array:which);
 
 /**
  * Clears all entries from the array.
  *
- * @param which         The array to clear.
+ * @param which         Array handle
  *
  * @noreturn
- * @error               Invalid handle.
+ * @error               Invalid handle
  */
 native ArrayClear(Array:which);
 
 /**
  * Returns the number of elements in the array.
  *
- * @param which         The array to check.
+ * @param which         Array handle
  *
- * @return              How many elements are in the array.
- * @error               Invalid handle.
+ * @return              Number of elements in the array
+ * @error               If an invalid handle is provided an error will be thrown
  */
 native ArraySize(Array:which);
 
 /**
- * Resizes an array.  If the size is smaller than the current size,
- * the array is truncated.
+ * Resizes an array.
  *
- * @param which         Array handle.
- * @param newsize       New size.
+ * @note If the size is smaller than the current array size the array is
+ *       truncated and data lost.
+ *
+ * @param which         Array handle
+ * @param newsize       New size
  *
  * @noreturn
- * @error               Invalid handle or out of memory.
+ * @error               If an invalid handle is provided or the resizing
+ *                      operation runs out of memory, an error will be thrown
  */
 native bool:ArrayResize(Array:which, newsize);
 
 /**
- * Returns data within an array.  
- * Make sure the output buffer matches the size the array was created with!
+ * Retrieves an array of data from a cellarray.
  *
- * @param which         The array to retrieve the item from.
- * @param item          The item to retrieve (zero-based).
- * @param output        The output buffer to write.
+ * @note If the size parameter is specified as -1 the output buffer has to match
+ *       the size the array was created with.
+ *
+ * @param which         Array handle
+ * @param item          Item index in the array
+ * @param output        Buffer to copy value to
  * @param size          If not set, assumes the buffer size is equal to the
- *                      cellsize.  Otherwise, the size passed is used.
+ *                      cellsize. Otherwise, the specified size is used.
  *
- * @return              Number of cells copied.
- * @error               Invalid handle or invalid index.
+ * @return              Number of cells copied
+ * @error               If an invalid handle or index is provided an error will
+ *                      be thrown.
  */
 native ArrayGetArray(Array:which, item, any:output[], size = -1);
 
 /**
- * Returns a single cell of data from an array.  
+ * Returns a single cell of data from an array
  *
- * @param which         The array to retrieve the item from.
- * @param item          The item to retrieve (zero-based).
- * @param block         Optionally specify which block to read from
- *                      (useful if the blocksize > 0).
- * @param asChar        Optionally read as a byte instead of a cell.
+ * @param which         Array handle
+ * @param item          Item index in the array
+ * @param block         If the array has a cellsize >1 this optionally specifies
+ *                      which block to read from
+ * @param asChar        If true reads the value as a byte instead of a cell
  *
- * @return              Value read.
- * @error               Invalid handle, invalid index, or invalid block.
+ * @return              Integer value
+ * @error               If an invalid handle, index or block is provided an
+ *                      error will be thrown
  */
 native any:ArrayGetCell(Array:which, item, block = 0, bool:asChar = false);
 
 /**
- * Returns a string value from an array.
+ * Returieves string data from an array.
  *
- * @param which         The array to retrieve the item from.
- * @param item          The item to retrieve (zero-based).
- * @param output        The variable to store the value in.
- * @param size          Character size of the output buffer.
+ * @param which         Array handle
+ * @param item          Item index in the array
+ * @param output        Buffer to copy value to
+ * @param size          Maximum size of the buffer
  *
- * @return              Number of characters copied.
- * @error               Invalid handle or invalid index.
+ * @return              Number of characters copied
+ * @error               If an invalid handle or an invalid index is provided an
+ *                      error will be thrown
  */
 native ArrayGetString(Array:which, item, output[], size);
 
 /**
- * Sets an item's data with that of a local buffer.  
- * The buffer size must match what the cellsize that the array was created with!
- * The item must already exist, use ArrayPushArray to create a new item within the array.
+ * Fills an item's data with the contents of an array.
  *
- * @param which         The array to set the item from within.
- * @param item          The item to set (zero-based).
- * @param input         The input buffer to store.
+ * @note If the size parameter is specified as -1 the input buffer has to match
+ *       the size the array was created with.
+ * @note The item index must already be valid. Use ArrayPushArray to create
+ *       a new array item in the cellarray.
+ *
+ * @param which         Array handle
+ * @param item          Item index in the array
+ * @param input         Array to copy to the cellarray
  * @param size          If not set, assumes the buffer size is equal to the
- *                      blocksize.  Otherwise, the size passed is used.
+ *                      cellsize. Otherwise, the specified size is used.
  *
- * @return              Number of cells copied.
- * @error               Invalid handle or invalid index.
+ * @return              Number of cells copied
+ * @error               If an invalid handle or an invalid index is provided an
+ *                      error will be thrown
  */
 native ArraySetArray(Array:which, item, const any:input[], size =-1);
 
 /**
- * Sets an array's single cell value.  Use this only on array that were created with a cellsize of 1!
- * The item must already exist, use ArrayPushCell to create a new item within the array.
+ * Sets an item's data to a single cell value.
  *
- * @param which         The array to set the item from within.
- * @param item          The item to set (zero-based).
- * @param input         The value to set.
- * @param block         Optionally specify which block to write to
- *                      (useful if the blocksize > 0).
- * @param asChar        Optionally set as a byte instead of a cell.
+ * @note The item index must already be valid. Use ArrayPushArray to create
+ *       a new array item in the cellarray.
+ *
+ * @param which         Array handle
+ * @param item          Item index in the array
+ * @param input         Value to set
+ * @param block         If the array has a cellsize >1 this optionally specifies
+ *                      which block to write to
+ * @param asChar        If true writes the value as a byte instead of a cell
  *
  * @noreturn
- * @error               Invalid handle, invalid index, or invalid block.
+ * @error               If an invalid handle, index or block is provided an
+ *                      error will be thrown
  */
 native ArraySetCell(Array:which, item, any:input, block = 0, bool:asChar = false);
 
 /**
- * Sets a string value from an array.  
- * The stored string will be truncated if it is longer than the cellsize the array was created with!
- * The item must already exist, use ArrayPushString to create a new item within the array.
+ * Sets an item's data to a string value.
  *
- * @param which         The array to set the item from within.
- * @param item          The item to set (zero-based).
- * @param input         The string to set the item as.
+ * @note The input will be truncated if it is longer than the cellsize the array
+ *       was created with.
+ * @note The item index must already be valid. Use ArrayPushString to create
+ *       a new array item in the cellarray.
  *
- * @return              Number of characters copied.
- * @error               Invalid handle or invalid index.
+ * @param which         Array handle
+ * @param item          Item index in the array
+ * @param input         String to copy to the array
+ *
+ * @return              Number of characters copied
+ * @error               If an invalid handle or an invalid index is provided an
+ *                      error will be thrown
  */
 native ArraySetString(Array:which, item, const input[]);
 
 /**
- * Creates a new item at the end of the array and sets its data with that of a local buffer.  
- * The buffer size must match what the cellsize that the array was created with!
+ * Creates a new item at the end of the cellarray and copies the provided array
+ * into it.
  *
- * @param which         The array to add the item to.
- * @param input         The input buffer to store.
- * @param size          If not set, the number of elements copied from the array
- *                      will be equal to the blocksize.  If set higher than the 
- *                      blocksize, the operation will be truncated.
+ * @note The input will be truncated if it is bigger than the cellsize the array
+ *       was created with.
  *
- * @return              Index of the new entry.
- * @error               Invalid handle or out of memory.
+ * @param which         Array handle
+ * @param input         Array to copy to the cellarray
+ * @param size          If not set, assumes the buffer size is equal to the
+ *                      cellsize. Otherwise, the specified size is used.
+ *
+ * @return              Index of the new entry
+ * @error               If an invalid handle is provided or the resizing
+ *                      operation runs out of memory, an error will be thrown
  */
 native ArrayPushArray(Array:which, const any:input[], size = -1);
 
 /**
- * Creates a new item and sets the array's single cell value.  
- * Use this only on array that were created with a cellsize of 1!
+ * Creates a new item ath the end of the array and sets the item's single cell
+ * value.
  *
- * @param which         The array to add the item to.
- * @param input         The value to set.
+ * @param which         Array handle
+ * @param input         Value to set
  *
- * @return              Index of the new entry.
- * @error               Invalid handle or out of memory.
+ * @return              Index of the new entry
+ * @error               If an invalid handle is provided or the resizing
+ *                      operation runs out of memory, an error will be thrown
  */
 native ArrayPushCell(Array:which, any:input);
 
 /**
- * Creates a new element in the array and sets its value to the input buffer.
- * The stored string will be truncated if it is longer than the cellsize the array was created with!
+ * Creates a new item at the end of the array and copies the provided string
+ * into it.
  *
- * @param which         The array to add the item to.
- * @param input         The string to set the item as.
+ * @note The input will be truncated if it is longer than the cellsize the array
+ *       was created with.
  *
- * @return              Index of the new entry.
- * @error               Invalid handle or out of memory.
+ * @param which         Array handle
+ * @param input         String to copy to the array
+ *
+ * @return              Index of the new entry
+ * @error               If an invalid handle is provided or the resizing
+ *                      operation runs out of memory, an error will be thrown
  */
 native ArrayPushString(Array:which, const input[]);
 
 /**
- * Inserts an item after the selected item.  All items beyond it get shifted up 1 space.
- * The buffer size must match what the cellsize that the array was created with!
+ * Creates a new item behind the specified item and copies the provided array
+ * into it. All items beyond it get shifted up by one.
  *
- * @param which         The array to add the item to.
- * @param item          The item to insert after.
- * @param input         The input buffer to store.
+ * @param which         Array handle
+ * @param item          Item index in the array
+ * @param input         Array to copy to the cellarray
  *
  * @noreturn
- * @error               Invalid handle or invalid index.
+ * @error               If an invalid handle or an invalid index is provided an
+ *                      error will be thrown
  */
 native ArrayInsertArrayAfter(Array:which, item, const any:input[]);
 
 /**
- * Inserts an item after the selected item.  All items beyond it get shifted up 1 space.
- * Use this only on an array that was created with a cellsize of 1!
+ * Creates a new item behind the specified item and sets the item's single cell
+ * value. All items beyond it get shifted up by one.
  *
- * @param which         The array to add the item to.
- * @param item          The item to insert after.
+ * @param which         Array handle
+ * @param item          Item index in the array
  * @param input         The value to set.
  *
  * @noreturn
- * @error               Invalid handle or invalid index.
+ * @error               If an invalid handle or an invalid index is provided an
+ *                      error will be thrown
  */
 native ArrayInsertCellAfter(Array:which, item, any:input);
 
 /**
- * Inserts an item after the selected item.  All items beyond it get shifted up 1 space.
- * The stored string will be truncated if it is longer than the cellsize the array was created with!
+ * Creates a new item behind the specified item and copies the provided string
+ * into it. All items beyond it get shifted up by one.
  *
- * @param which         The array to add the item to.
- * @param item          The item to insert after.
- * @param input         The value to set.
+ * @note The input will be truncated if it is longer than the cellsize the array
+ *       was created with.
+ *
+ * @param which         Array handle
+ * @param item          Item index in the array
+ * @param input         String to copy to the array
  *
  * @noreturn
- * @error               Invalid handle or invalid index.
+ * @error               If an invalid handle or an invalid index is provided an
+ *                      error will be thrown
  */
 native ArrayInsertStringAfter(Array:which, item, const input[]);
 
 /**
- * Inserts an item before the selected item.  All items beyond it, and the selected item get shifted up 1 space.
- * The buffer size must match what the cellsize that the array was created with!
+ * Creates a new item in front of the specified item and copies the provided
+ * array into it. All items beyond it get shifted up by one.
  *
- * @param which         The array to add the item to.
- * @param item          The item to insert before.
- * @param input         The input buffer to store.
+ * @param which         Array handle
+ * @param item          Item index in the array
+ * @param input         Array to copy to the cellarray
  *
  * @noreturn
- * @error               Invalid handle or invalid index.
+ * @error               If an invalid handle or an invalid index is provided an
+ *                      error will be thrown
  */
 native ArrayInsertArrayBefore(Array:which, item, const any:input[]);
 
 /**
- * Inserts an item before the selected item.  All items beyond it, and the selected item get shifted up 1 space.
- * Use this only on an array that was created with a cellsize of 1!
+ * Creates a new item in front of the specified item and sets the item's single
+ * cell value. All items beyond it get shifted up by one.
  *
- * @param which         The array to add the item to.
- * @param item          The item to insert after.
- * @param input         The value to set.
+ * @param which         Array handle
+ * @param item          Item index in the array
+ * @param input         Value to set
  *
  * @noreturn
- * @error               Invalid handle or invalid index.
+ * @error               If an invalid handle or an invalid index is provided an
+ *                      error will be thrown
  */
 native ArrayInsertCellBefore(Array:which, item, const any:input);
 
 /**
- * Inserts an item before the selected item.  All items beyond it, and the selected item get shifted up 1 space.
- * The stored string will be truncated if it is longer than the cellsize the array was created with!
+ * Creates a new item in front of the specified item and copies the provided
+ * string into it. All items beyond it get shifted up by one.
  *
- * @param which         The array to add the item to.
- * @param item          The item to insert before.
- * @param input         The value to set.
+ * @note The input will be truncated if it is longer than the cellsize the array
+ *       was created with.
+ *
+ * @param which         Array handle
+ * @param item          Item index in the array
+ * @param input         String to copy to the array
  *
  * @noreturn
- * @error               Invalid handle or invalid index.
+ * @error               If an invalid handle or an invalid index is provided an
+ *                      error will be thrown
  */
 native ArrayInsertStringBefore(Array:which, item, const input[]);
 
 /**
  * Swaps the position of two items.
  *
- * @param which         The array that contains the items.
- * @param item1         The first item to swap.
- * @param item2         The second item to swap.
+ * @param which         Array handle
+ * @param item1,item2   Item pair to swap
  *
  * @noreturn
- * @error               Invalid handle or invalid index.
+ * @error               If an invalid handle or an invalid index is provided an
+ *                      error will be thrown
  */
 native ArraySwap(Array:which, item1, item2);
 
 /**
- * Deletes an item from the array.  All items beyond it get shifted down 1 space.
+ * Deletes an item from the array. All items beyond it get shifted down by one.
  *
  * @param which         The array that contains the item to delete.
  * @param item          The item to delete.
  *
  * @noreturn
- * @error               Invalid handle or invalid index.
+ * @error               If an invalid handle or an invalid index is provided an
+ *                      error will be thrown
  */
 native ArrayDeleteItem(Array:which, item);
 
 /**
- * Returns the index for the first occurance of the provided string. If the string
- * cannot be located, -1 will be returned.
+ * Searches through the array and returns the index of the first occurance of
+ * the specified string.
  *
- * @param which         Array handle.
- * @param item          String to search for.
+ * @param which         Array handle
+ * @param item          String to search for
  *
- * @return              Array index, or -1 on failure.
+ * @return              Array index on success, -1 if the string can't be found
  * @error               Invalid handle.
  */
 native ArrayFindString(Array:which, const item[]);
- 
-/**
- * Returns the index for the first occurance of the provided value. If the value
- * cannot be located, -1 will be returned.
- *
- * @param which         Array handle.
- * @param item          Value to search for.
- * 
- * @return              Array index, or -1 on failure.
- * @error               Invalid handle.
- */
-native ArrayFindValue(Array:which, any:item); 
 
 /**
- * Creates a handle that is passable to a format compliant routine for printing as a string (with the %a format option).  
- * It is suggested to pass the function directly as a parameter to the format routine.
- * The array contents must be a null-terminated string!
+ * Searches through the array and returns the index of the first occurance of
+ * the specified value.
  *
- * An example usage:  client_print(id, print_chat, "%a", ArrayGetStringHandle(MessageArray, i));
+ * @param which         Array handle.
+ * @param item          Value to search for
  *
- * @param which         The array the string is stored in.
- * @param item          Which item to print the string value of.
+ * @return              Array index on success, -1 if the value can't be found
+ * @error               Invalid handle.
+ */
+native ArrayFindValue(Array:which, any:item);
+
+/**
+ * Creates a special handle that can be passed to a string format routine for
+ * printing as a string (with the %a format option).
  *
- * @return              Handle to the item directly.  Do not use or save stale handles.
- * @error               Invalid handle or invalid index.
+ * @note It is recommended to pass the function as a parameter to the format
+ *       routine directly. The array item must contain a null-terminated string!
+ * @note Do not save or otherwise use the handles returned by this function.
+ * @note Example usage:
+ *       console_print(id, "%a", ArrayGetStringHandle(MessageArray, i));
+ *
+ * @param which         Array handle
+ * @param item          Item to retrieve handle of
+ *
+ * @return              Handle to the item
+ * @error               If an invalid handle or an invalid index is provided an
+ *                      error will be thrown
  */
 native DoNotUse:ArrayGetStringHandle(Array:which, item);
 
 /**
- * Destroys the array, and resets the handle to 0 to prevent accidental usage after it is destroyed.
+ * Destroys the array and frees its memory.
+ *
+ * @note The function automatically sets the variable passed to it to 0 to aid
+ *       in preventing accidental usage after destroy.
  *
  * @param which         The array to destroy.
  *
- * @noreturn
- * @error               Invalid handle.
+ * @return              1 if the array was destroyed, 0 if nothing had to be
+ *                      destroyed (invalid handle)
  */
 native ArrayDestroy(&Array:which);
 
 
 /**
- * Similar to sorting.inc's CustomSort.
- * The sorting algorithm then uses your comparison function to sort the data.
- * The function is called in the following manner:
- * 
+ * Similar to sorting.inc's CustomSort, the sorting algorithm then uses your
+ * custom comparison function to sort the data.
+ *
+ * @note The function is called in the following manner:
+ *
  * public MySortFunc(Array:array, item1, item2, const data[], data_size)
  *
- *  array           - Array handle in its current un-sorted state.
+ *  array           - Array handle in its current un-sorted state
  *  item1, item2    - Current item pair being compared
- *  data[]          - Extra data array you passed to the sort func.
- *  data_size       - Size of extra data you passed to the sort func.
+ *  data[]          - Extra data array passed to the sort func
+ *  data_size       - Size of extra data
  *
- * Your function should return:
- *  -1 if item1 should go before item2
- *   0 if item1 and item2 are equal
- *   1 if item1 should go after item2
+ * @note The comparison function should return:
+ *         -1 if item1 should go before item2
+ *          0 if item1 and item2 are equal
+ *          1 if item1 should go after item2
  *
- * Note that the parameters after item2 are all optional and you do not need to specify them.
- * Note that unlike the sorting.inc versions, the array passed to the callback is not in mid-sorted state.
+ * @note All parameters after item2 are optional and you do not need to specify
+ *       and use them.
+ * @note Unlike the sorting.inc version, the array passed to the callback is not
+ *       in mid-sorted state.
  *
- * @param array         Array handle.
- * @param comparefunc   A callback function used for comparison.
- * @param data          Extra data array you passed to the sort func.
- * @param data_size     Size of extra data you passed to the sort func.
+ * @param array         Array handle
+ * @param comparefunc   Callback function used for comparison
+ * @param data          Extra data that is passed through to the callback
+ * @param data_size     Size of extra data
  *
  * @noreturn
  * @error               Invalid handle or invalid callback.
@@ -399,47 +455,50 @@ native ArrayDestroy(&Array:which);
 native ArraySort(Array:array, const comparefunc[], data[]="", data_size=0);
 
 /**
- * A faster version of ArraySort. 
- * The sorting algorithm then uses your comparison function to sort the data.
+ * A faster version of ArraySort, the sorting algorithm then uses your custom
+ * comparison function to sort the data.
  *
- * The advantage of this native is that the Array elements being compared are 
- * directly passed into your function, instead of the item indexes that are passed by ArraySort. 
- * This removes the need for calling ArrayGet[Cell|String|Array] every time before being 
- * able to compare the elements.
- * 
- * For Arrays with a cellsize of 1 (used for storing integers and floats), 
- * the function is called in the following manner:
- * 
+ * @note The advantage of this function is that the data of the elements being
+ *       compared is directly passed to your function, instead of the item
+ *       indexes that are passed by ArraySort. This removes the need for calling
+ *       ArrayGet[Cell|String|Array] every time before being able to compare the
+ *       elements.
+ *
+ * @note For Arrays with a cellsize of 1 (used for storing integers and floats),
+ *       the function is called in the following manner:
+ *
  * public MySortFunc(Array:array, elem1, elem2, const data[], data_size)
  *
- *  array           - Array handle in its current un-sorted state.
+ *  array           - Array handle in its current un-sorted state
  *  elem1, elem2    - Current element pair being compared
- *  data[]          - Extra data array you passed to the sort func.
- *  data_size       - Size of extra data you passed to the sort func.
+ *  data[]          - Extra data array passed to the sort func
+ *  data_size       - Size of extra data
  *
- * For Arrays with a cellsize larger than 1 (used for storing arrays and strings),
- * the function is called in the following manner:
+ * @note For Arrays with a cellsize larger than 1 (used for storing arrays and
+ *       strings), the function is called in the following manner:
  *
  * public MySortFunc(Array:array, elem1[], elem2[], const data[], data_size)
  *
  *  array               - Array handle in its current un-sorted state.
  *  elem1[], elem2[]    - Current element pair being compared
- *  data[]              - Extra data array you passed to the sort func.
- *  data_size           - Size of extra data you passed to the sort func.
+ *  data[]              - Extra data array passed to the sort func
+ *  data_size           - Size of extra data
  *
  *
- * In both cases your function should return:
- *  -1 if elem1 should go before elem2
- *   0 if elem1 and elem2 are equal
- *   1 if elem1 should go after elem2
+ * @note The comparison function should return:
+ *         -1 if elem1 should go before elem2
+ *          0 if elem1 and elem2 are equal
+ *          1 if elem1 should go after elem2
  *
- * Note that the parameters after elem2 are all optional and you do not need to specify them.
- * Note that unlike the sorting.inc versions, the array passed to the callback is not in mid-sorted state.
+ * @note All parameters after item2 are optional and you do not need to specify
+ *       and use them.
+ * @note Unlike the sorting.inc version, the array passed to the callback is not
+ *       in mid-sorted state.
  *
- * @param array         Array handle.
- * @param comparefunc   A callback function used for comparison.
- * @param data          Extra data array you passed to the sort func.
- * @param data_size     Size of extra data you passed to the sort func.
+ * @param array         Array handle
+ * @param comparefunc   Callback function used for comparison
+ * @param data          Extra data that is passed through to the callback
+ * @param data_size     Size of extra data
  *
  * @noreturn
  * @error               Invalid handle, invalid callback or out of memory.

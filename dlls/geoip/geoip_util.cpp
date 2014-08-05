@@ -139,12 +139,13 @@ double lookupDouble(const char *ip, const char **path)
 int getContinentId(const char *code)
 {
 	#define CONTINENT_UNKNOWN        0
-	#define CONTINENT_AFRICA         1    
-	#define CONTINENT_ASIA           2
-	#define CONTINENT_EUROPE         3
-	#define CONTINENT_NORTH_AMERICA  4
-	#define CONTINENT_OCEANIA        5
-	#define CONTINENT_SOUTH_AMERICA  6
+	#define CONTINENT_AFRICA         1
+	#define CONTINENT_ANTARCTICA     2
+	#define CONTINENT_ASIA           3
+	#define CONTINENT_EUROPE         4
+	#define CONTINENT_NORTH_AMERICA  5
+	#define CONTINENT_OCEANIA        6
+	#define CONTINENT_SOUTH_AMERICA  7
 
 	int index = CONTINENT_UNKNOWN;
 
@@ -157,6 +158,7 @@ int getContinentId(const char *code)
 					switch (code[1])
 					{
 						case 'F': index = CONTINENT_AFRICA; break;
+						case 'N': index = CONTINENT_ANTARCTICA; break;
 						case 'S': index = CONTINENT_ASIA; break;
 					}
 			}

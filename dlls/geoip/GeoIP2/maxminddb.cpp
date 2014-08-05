@@ -611,7 +611,7 @@ MMDB_lookup_result_s MMDB_lookup_string(MMDB_s *const mmdb,
 LOCAL int resolve_any_address(const char *ipstr, struct addrinfo **addresses)
 {
     struct addrinfo hints;
-	memset(&hints, 0, sizeof(addrinfo)); // getaddrinfo doesn't like garbage.
+    memset(&hints, 0, sizeof(addrinfo)); // getaddrinfo doesn't like garbage.
 
     hints.ai_socktype = SOCK_STREAM;
     int gai_status;

@@ -2574,6 +2574,18 @@ static cell AMX_NATIVE_CALL change_task(AMX *amx, cell *params)
 	return g_tasksMngr.changeTasks(params[1], params[3] ? 0 : amx, flNewTime);
 }
 
+static cell AMX_NATIVE_CALL change_level(AMX *amx, cell *params)
+{
+	int length;
+	const char* new_map = get_amxstring(amx, params[1], 0, length);
+
+	// Same as calling "changelevel" command but will trigger "server_changelevel" AMXX forward as well.
+	// Filling second param will call "changelevel2" command, but this is not usable in multiplayer game. 
+	g_pEngTable->pfnChangeLevel(new_map, NULL);
+
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL task_exists(AMX *amx, cell *params) /* 1 param */
 {
 	return g_tasksMngr.taskExists(params[1], params[2] ? 0 : amx);
@@ -4838,6 +4850,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"callfunc_push_str",		callfunc_push_str},
 	{"callfunc_push_array",		callfunc_push_array},
 	{"change_task",				change_task},
+	{"change_level",			change_level},
 	{"client_cmd",				client_cmd},
 	{"client_print",			client_print},
 	{"client_print_color",		client_print_color},

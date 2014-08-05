@@ -84,6 +84,19 @@ native precache_sound(const name[]);
 /* Precaches any file. */
 native precache_generic(const szFile[]);
 
+/**
+ * Changes map.
+ *
+ * @note  This calls the pfnChangelLevel engine function.
+ * @note  This has the same behavior as calling "changelevel" server command,
+ *        but this will trigger properly server_changelevel() forward.
+ *
+ * @aparam map          The map name to change.
+ *
+ * @noreturn
+ */
+native change_level(const map[]);
+
 /* Sets info for player. */
 native set_user_info(index,const info[],const value[]);
 

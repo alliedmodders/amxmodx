@@ -254,7 +254,7 @@ enum
 #define	TE_LIGHTNING                7
 
 /**
- *
+ * TE_BEAMENTS
  *
  * @note
  * write_byte(TE_BEAMENTS)
@@ -490,7 +490,7 @@ enum
 #define TE_BEAMFOLLOW               22
 
 /**
- *
+ * TE_GLOWSPRITE
  *
  * @note
  * write_byte(TE_GLOWSPRITE)
@@ -580,7 +580,7 @@ enum
 #define TE_ELIGHT                   28
 
 /**
- *
+ * TE_TEXTMESSAGE
  *
  * @note
  * write_byte(TE_TEXTMESSAGE)
@@ -605,7 +605,7 @@ enum
 #define TE_TEXTMESSAGE              29
 
 /**
- *
+ * TE_LINE
  *
  * @note
  * write_byte(TE_LINE)
@@ -623,7 +623,7 @@ enum
 #define TE_LINE                     30
 
 /**
- *
+ * TE_BOX
  *
  * @note
  * write_byte(TE_BOX)
@@ -650,7 +650,7 @@ enum
 #define TE_KILLBEAM                 99
 
 /**
- *
+ * TE_LARGEFUNNEL
  *
  * @note
  * write_byte(TE_LARGEFUNNEL)
@@ -833,7 +833,7 @@ enum
 #define TE_ARMOR_RICOCHET           111
 
 /**
- *
+ * TE_PLAYERDECAL
  *
  * @note
  * write_byte(TE_PLAYERDECAL)
@@ -1032,7 +1032,7 @@ enum
 #define TE_PLAYERATTACHMENT         124
 
 /**
- *
+ * TE_KILLPLAYERATTACHMENTS
  *
  * @note
  * write_byte(TE_KILLPLAYERATTACHMENTS)

@@ -1,4 +1,4 @@
-// vim: set ts=4 sw=4 tw=99 noet:
+﻿// vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
 // Copyright (C) The AMX Mod X Development Team.

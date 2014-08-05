@@ -51,6 +51,10 @@ public stock const MaxClients; /* Maximum number of players the server supports 
 #define M_PI 3.1415926535
 
 /**
+ * @section Admin privilege and authentication constants
+ */
+
+/**
  * Admin level constants
  */
 #define ADMIN_ALL           0       /* everyone */
@@ -79,12 +83,19 @@ public stock const MaxClients; /* Maximum number of players the server supports 
 #define ADMIN_ADMIN         (1<<24) /* flag "y" */
 #define ADMIN_USER          (1<<25) /* flag "z" */
 
+/**
+ * Admin authentication behavior flags
+ */
 #define FLAG_KICK           (1<<0)  /* flag "a" */
 #define FLAG_TAG            (1<<1)  /* flag "b" */
 #define FLAG_AUTHID         (1<<2)  /* flag "c" */
 #define FLAG_IP             (1<<3)  /* flag "d" */
 #define FLAG_NOPASS         (1<<4)  /* flag "e" */
 #define FLAG_CASE_SENSITIVE (1<<10) /* flag "k" */
+
+/**
+ * @endsection
+ */
 
 /**
  * Return codes
@@ -94,7 +105,7 @@ public stock const MaxClients; /* Maximum number of players the server supports 
 #define PLUGIN_HANDLED_MAIN 2   /* to use in client_command(), continue all plugins but stop the command */
 
 /**
- * CVAR constants for register_cvar()
+ * CVAR flags for register_cvar()
  */
 #define FCVAR_ARCHIVE       1   /* set to cause it to be saved to vars.rc */
 #define FCVAR_USERINFO      2   /* changes the client's info string */
@@ -177,7 +188,7 @@ public stock const MaxClients; /* Maximum number of players the server supports 
 #define HIT_RIGHTLEG    7
 
 /**
- * @section Constants for emit_sound()
+ * @section emit_sound() constants
  */
 
 /**
@@ -246,6 +257,10 @@ public stock const MaxClients; /* Maximum number of players the server supports 
 #define LANG_PLAYER     -1
 
 /**
+ * @section Client print native constants
+ */
+
+/**
  * Destination types for client_print()
  */
 enum
@@ -279,7 +294,15 @@ enum
 };
 
 /**
- * Render for set_user_rendering()
+ * @endsection
+ */
+
+/**
+ * @section Entity rendering constants
+ */
+
+/**
+ * Rendering modes (i.e. for set_user_rendering())
  */
 enum
 {
@@ -292,7 +315,7 @@ enum
 };
 
 /**
- * Fx for set_user_rendering()
+ * Rendering fx (i.e. for set_user_rendering())
  */
 enum
 {
@@ -318,6 +341,10 @@ enum
 	kRenderFxGlowShell,         /* Glowing Shell */
 	kRenderFxClampMinScale,     /* Keep this sprite from getting very small (SPRITES only!) */
 };
+
+/**
+ * @endsection
+ */
 
 /**
  * Type for force_unmodified()
@@ -393,6 +420,10 @@ enum
 #define INVALID_HANDLE      -1
 
 /**
+ * @section Plugin forward related constants
+ */
+
+/**
  * Stop types for plugin forwards
  */
 #define ET_IGNORE       0   //ignore return val
@@ -407,6 +438,10 @@ enum
 #define FP_FLOAT        1
 #define FP_STRING       2
 #define FP_ARRAY        4
+
+/**
+ * @endsection
+ */
 
 /**
  * LibType constants

@@ -9,9 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="GeoIP">
-      <UniqueIdentifier>{2df41d4d-d80c-4557-88e6-0a8e902154d5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Module SDK">
       <UniqueIdentifier>{a6d73610-c960-4557-87c5-2d1b137ed3b3}</UniqueIdentifier>
     </Filter>
@@ -21,33 +18,51 @@
     <Filter Include="Pawn Includes">
       <UniqueIdentifier>{f31e7815-11bd-4a86-899e-43f85dfdc067}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GeoIP2">
+      <UniqueIdentifier>{0bd4b9fb-f847-4fe5-af3e-9000fc854c5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\geoip_amxx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\GeoIP.c">
-      <Filter>GeoIP</Filter>
-    </ClCompile>
     <ClCompile Include="..\sdk\amxxmodule.cpp">
       <Filter>Module SDK\SDK Base</Filter>
     </ClCompile>
+    <ClCompile Include="..\GeoIP2\maxminddb.cpp">
+      <Filter>GeoIP2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\geoip_util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\geoip_main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\geoip_natives.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\geoip_amxx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\svn_version.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\GeoIP.h">
-      <Filter>GeoIP</Filter>
-    </ClInclude>
     <ClInclude Include="..\sdk\moduleconfig.h">
       <Filter>Module SDK</Filter>
     </ClInclude>
     <ClInclude Include="..\sdk\amxxmodule.h">
       <Filter>Module SDK\SDK Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GeoIP2\maxminddb.h">
+      <Filter>GeoIP2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GeoIP2\maxminddb_config.h">
+      <Filter>GeoIP2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GeoIP2\maxminddb-compat-util.h">
+      <Filter>GeoIP2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\geoip_util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\geoip_natives.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\geoip_main.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

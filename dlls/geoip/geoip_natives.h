@@ -11,16 +11,14 @@
 // GeoIP Module
 //
 
-#ifndef _INCLUDE_GEOIPAMXX_H
-#define _INCLUDE_GEOIPAMXX_H
+#ifndef _INCLUDE_GEOIPNATIVES_H
+#define _INCLUDE_GEOIPNATIVES_H
 
-#include "GeoIP2/maxminddb.h"
-#include "amxxmodule.h"
+#include <am-string.h>
+#include <am-vector.h>
 
-#if defined(WIN32)
-	#define snprintf _snprintf
-#endif
+extern MMDB_s HandleDB;
+extern ke::Vector<ke::AString> LangList;
+extern AMX_NATIVE_INFO GeoipNatives[];
 
-extern AMX_NATIVE_INFO geoip_natives[];
-
-#endif //_INCLUDE_GEOIPAMXX_H
+#endif // _INCLUDE_GEOIPNATIVES_H

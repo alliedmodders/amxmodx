@@ -304,7 +304,7 @@ for filename in scripting_files:
 
 # Copy weird things.
 weirdfiles = [
-  ('dlls/geoip/GeoIP.dat', 'base/addons/amxmodx/data'),
+  ('dlls/geoip/GeoLite2-Country.mmdb', 'base/addons/amxmodx/data'),
   ('plugins/esf/ESF_mod_tutorial.txt', 'esf/addons/amxmodx/scripting'),
 ]
 

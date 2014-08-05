@@ -91,7 +91,7 @@ native precache_generic(const szFile[]);
  * @note  This has the same behavior as calling "changelevel" server command,
  *        but this will trigger properly server_changelevel() forward.
  *
- * @aparam map          The map name to change.
+ * @param map          The map name to change.
  *
  * @noreturn
  */

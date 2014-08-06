@@ -1,12 +1,18 @@
-/*
- *
- * AMX Mod X Module
- * Basic Socket Functions
- *
- * Codebase from Ivan, -g-s-ivan@web.de (AMX 0.9.3)
- * Modification by Olaf Reusch, kenterfie@hlsw.de (AMXX 0.16, AMX 0.96)
- *
- */
+// vim: set ts=4 sw=4 tw=99 noet:
+//
+// AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
+// Copyright (C) The AMX Mod X Development Team.
+//
+// Codebase from Ivan, -g-s-ivan@web.de (AMX 0.9.3)
+// Modification by Olaf Reusch, kenterfie@hlsw.de (AMXX 0.16, AMX 0.96)
+//
+// This software is licensed under the GNU General Public License, version 3 or higher.
+// Additional exceptions apply. For full license details, see LICENSE.txt or visit:
+//     https://alliedmods.net/amxmodx-license
+
+//
+// Socket Functions
+//
 
 #if defined _socket_included
 	#endinput

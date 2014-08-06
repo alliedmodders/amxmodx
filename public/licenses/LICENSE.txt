@@ -1,0 +1,34 @@
+AMX MOD X LICENSE INFORMATION
+VERSION: AUGUST-04-2014
+
+AMX Mod X is licensed under the GNU General Public License, version 3, or (at
+your option) any later version.
+
+As a special exception, the AMX Mod X Development Team gives permission to link
+the code of this program with the Half-Life Game Engine ("HL Engine") and
+Modified Game Libraries ("MODs") developed via the Half-Life 1 SDK as full
+replacements for Valve games. You must obey the GNU General Public License in
+all respects for all other code used other than the HL Engine and MODs. This
+extension, at your option, may also be granted to works based on AMX Mod X.
+
+As an additional special exception to the GNU General Public License 3.0,
+AlliedModders LLC permits dual-licensing of DERIVATIVE WORKS ONLY (that is,
+Pawn/AMX Mod X Plugins and AMX Mod X Modules, or any software built from the AMX
+Mod X header files) under the GNU General Public License version 2 "or any
+higher version." As such, you may choose for your derivative work(s) to be
+compatible with the GNU General Public License version 2 as long as it is also
+compatible with the GNU General Public License version 3, via the "or any higher
+version" clause. This is intended for compatibility with other software.
+
+As a final exception to the above, any derivative works created prior to this
+date (August 4, 2014) may be exclusively licensed under the GNU General Public
+License version 2 (without an "or any higher version" clause) if and only if the
+work was already GNU General Public License 2.0 exclusive. This clause is
+provided for backwards compatibility only.
+
+A copy of the GNU General Public License 2.0 is available in GPLv2.txt.
+A copy of the GNU General Public License 3.0 is available in GPLv3.txt.
+
+Some components of AMX Mod X use a license other than the GNU General Public
+License. You must also adhere to these additional licenses in all respects. See
+ACKNOWLEDGEMENTS.txt for further details.

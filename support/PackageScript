@@ -14,6 +14,7 @@ ModPackages = {
 }
 
 folder_list = [
+    'base/addons/amxmodx',
     'base/addons/amxmodx/configs',
     'base/addons/amxmodx/data',
     'base/addons/amxmodx/data/lang',
@@ -234,6 +235,9 @@ scripting_files = [
   'testsuite/trietest.sma',
   'testsuite/utf8test.sma',
   'testsuite/stacktest.sma',
+  'testsuite/textparse_test.sma',
+  'testsuite/textparse_test.cfg',
+  'testsuite/textparse_test.ini',
   'include/amxconst.inc',
   'include/amxmisc.inc',
   'include/amxmodx.inc',
@@ -288,6 +292,8 @@ scripting_files = [
   'include/newmenus.inc',
   'include/sorting.inc',
   'include/sqlx.inc',
+  'include/textparse_ini.inc',
+  'include/textparse_smc.inc',
   'include/time.inc',
   'include/vector.inc',
 ]
@@ -303,7 +309,7 @@ for filename in scripting_files:
 
 # Copy weird things.
 weirdfiles = [
-  ('dlls/geoip/GeoIP.dat', 'base/addons/amxmodx/data'),
+  ('dlls/geoip/GeoLite2-Country.mmdb', 'base/addons/amxmodx/data'),
   ('plugins/esf/ESF_mod_tutorial.txt', 'esf/addons/amxmodx/scripting'),
 ]
 
@@ -356,4 +362,18 @@ for datafile in datafiles:
   builder.AddCopy(
     source = os.path.join(builder.sourcePath, 'plugins', 'lang', datafile),
     output_path = folder_map['base/addons/amxmodx/data/lang']
+  )
+
+# Copy license files
+licenses = [
+  'ACKNOWLEDGEMENTS.txt',
+  'GPLv2.txt',
+  'GPLv3.txt',
+  'LICENSE.txt',
+]
+
+for license in licenses:
+  builder.AddCopy(
+    source = os.path.join(builder.sourcePath, 'public', 'licenses', license),
+    output_path = folder_map['base/addons/amxmodx']
   )

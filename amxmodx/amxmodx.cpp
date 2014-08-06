@@ -1,33 +1,11 @@
-/* AMX Mod X 
-*
-* by the AMX Mod X Development Team
-*  originally developed by OLO
-*
-*
-*  This program is free software; you can redistribute it and/or modify it
-*  under the terms of the GNU General Public License as published by the
-*  Free Software Foundation; either version 2 of the License, or (at
-*  your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful, but
-*  WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-*  General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software Foundation,
-*  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-*
-*  In addition, as a special exception, the author gives permission to
-*  link the code of this program with the Half-Life Game Engine ("HL
-*  Engine") and Modified Game Libraries ("MODs") developed by Valve,
-*  L.L.C ("Valve"). You must obey the GNU General Public License in all
-*  respects for all of the code used other than the HL Engine and MODs
-*  from Valve. If you modify this file, you may extend this exception
-*  to your version of the file, but you are not obligated to do so. If
-*  you do not wish to do so, delete this exception statement from your
-*  version.
-*/
+// vim: set ts=4 sw=4 tw=99 noet:
+//
+// AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
+// Copyright (C) The AMX Mod X Development Team.
+//
+// This software is licensed under the GNU General Public License, version 3 or higher.
+// Additional exceptions apply. For full license details, see LICENSE.txt or visit:
+//     https://alliedmods.net/amxmodx-license
 
 #include <time.h>
 #include "amxmodx.h"
@@ -2574,6 +2552,18 @@ static cell AMX_NATIVE_CALL change_task(AMX *amx, cell *params)
 	return g_tasksMngr.changeTasks(params[1], params[3] ? 0 : amx, flNewTime);
 }
 
+static cell AMX_NATIVE_CALL change_level(AMX *amx, cell *params)
+{
+	int length;
+	const char* new_map = get_amxstring(amx, params[1], 0, length);
+
+	// Same as calling "changelevel" command but will trigger "server_changelevel" AMXX forward as well.
+	// Filling second param will call "changelevel2" command, but this is not usable in multiplayer game. 
+	g_pEngTable->pfnChangeLevel(new_map, NULL);
+
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL task_exists(AMX *amx, cell *params) /* 1 param */
 {
 	return g_tasksMngr.taskExists(params[1], params[2] ? 0 : amx);
@@ -4838,6 +4828,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"callfunc_push_str",		callfunc_push_str},
 	{"callfunc_push_array",		callfunc_push_array},
 	{"change_task",				change_task},
+	{"change_level",			change_level},
 	{"client_cmd",				client_cmd},
 	{"client_print",			client_print},
 	{"client_print_color",		client_print_color},

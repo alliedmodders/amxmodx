@@ -1,10 +1,11 @@
-/* AMX Mod X functions
-*
-* by the AMX Mod X Development Team
-*  originally developed by OLO
-*
-* This file is provided as is (no warranties).
-*/
+// vim: set ts=4 sw=4 tw=99 noet:
+//
+// AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
+// Copyright (C) The AMX Mod X Development Team.
+//
+// This software is licensed under the GNU General Public License, version 3 or higher.
+// Additional exceptions apply. For full license details, see LICENSE.txt or visit:
+//     https://alliedmods.net/amxmodx-license
 
 #if defined _amxmodx_included
   #endinput
@@ -26,6 +27,8 @@
 #include <celltrie>
 #include <datapack>
 #include <newmenus>
+#include <textparse_smc>
+#include <textparse_ini>
 
 /**
  * Called just after server activation.
@@ -245,6 +248,20 @@ native precache_sound(const name[]);
  *                  is thrown.
  */
 native precache_generic(const szFile[]);
+
+/**
+ * Changes map.
+ *
+ * @note  This calls the pfnChangelLevel engine function.
+ * @note  This has the same behavior as calling the "changelevel" server command,
+ *        but this will also trigger the server_changelevel() forward in AMXX plugins.
+ *        It will also notify any Metamod plugins that are hooking pfnChangeLevel.
+ *
+ * @param map          The map name to change.
+ *
+ * @noreturn
+ */
+native change_level(const map[]);
 
 /**
  * Sets info on the client.

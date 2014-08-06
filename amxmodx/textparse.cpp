@@ -56,7 +56,7 @@ static cell AMX_NATIVE_CALL SMC_SetParseStart(AMX *amx, cell *params)
 
 	if (p == NULL)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid SMC parse handle (%d)", params[1]);
 		return 0;
 	}
 
@@ -84,7 +84,7 @@ static cell AMX_NATIVE_CALL SMC_SetParseEnd(AMX *amx, cell *params)
 
 	if (p == NULL)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid SMC parse handle (%d)", params[1]);
 		return 0;
 	}
 
@@ -112,7 +112,7 @@ static cell AMX_NATIVE_CALL SMC_SetReaders(AMX *amx, cell *params)
 
 	if (p == NULL)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid SMC parse handle (%d)", params[1]);
 		return 0;
 	}
 
@@ -150,7 +150,7 @@ static cell AMX_NATIVE_CALL SMC_SetRawLine(AMX *amx, cell *params)
 
 	if (p == NULL)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid SMC parse handle (%d)", params[1]);
 		return 0;
 	}
 
@@ -178,7 +178,7 @@ static cell AMX_NATIVE_CALL SMC_ParseFile(AMX *amx, cell *params)
 
 	if (p == NULL)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid SMC parse handle (%d)", params[1]);
 		return 0;
 	}
 
@@ -231,7 +231,7 @@ static cell AMX_NATIVE_CALL INI_ParseFile(AMX *amx, cell *params)
 
 	if (p == NULL)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid INI parse handle (%d)", params[1]);
 		return 0;
 	}
 
@@ -254,7 +254,7 @@ static cell AMX_NATIVE_CALL INI_SetParseStart(AMX *amx, cell *params)
 
 	if (p == NULL)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid INI parse handle (%d)", params[1]);
 		return 0;
 	}
 
@@ -282,7 +282,7 @@ static cell AMX_NATIVE_CALL INI_SetParseEnd(AMX *amx, cell *params)
 
 	if (p == NULL)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid INI parse handle (%d)", params[1]);
 		return 0;
 	}
 
@@ -310,7 +310,7 @@ static cell AMX_NATIVE_CALL INI_SetReaders(AMX *amx, cell *params)
 
 	if (p == NULL)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid INI parse handle (%d)", params[1]);
 		return 0;
 	}
 
@@ -343,7 +343,7 @@ static cell AMX_NATIVE_CALL INI_SetRawLine(AMX *amx, cell *params)
 
 	if (p == NULL)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid INI parse handle (%d)", params[1]);
 		return 0;
 	}
 

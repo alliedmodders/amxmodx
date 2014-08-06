@@ -97,14 +97,11 @@ native geoip_code3(const ip[], result[4]);
 native geoip_country(const ip[], result[], len, id = -1);
 
 
-
-/**
- * The following natives require GeoIP City database, which can be retrieved from:
- * http://dev.maxmind.com/geoip/geoip2/geolite2/ (MaxMind DB binary)
- */
-
 /**
  * Look up the full city name for the given IP address.
+ *
+ * @note  This native requires GeoIP City database, which can be retrieved from:
+ *        http://dev.maxmind.com/geoip/geoip2/geolite2/ (MaxMind DB binary)
  *
  * @param ip        The IP address to look up.
  * @param result    The result of the geoip look up.
@@ -123,6 +120,9 @@ native geoip_city(const ip[], result[], len, id = -1);
  * Look up the region/state code for the given IP address.
  * e.g. "US-OH", "DE-HH", IT-82, "FR-U", etc.
  *
+ * @note  This native requires GeoIP City database, which can be retrieved from:
+ *        http://dev.maxmind.com/geoip/geoip2/geolite2/ (MaxMind DB binary)
+ *
  * @param ip        The IP address to look up.
  * @param result    The result of the geoip look up.
  * @param len       The maximum length of the result buffer.
@@ -133,6 +133,9 @@ native geoip_region_code(const ip[], result[], len);
 
 /**
  * Look up the full region/state name for the given IP address.
+ *
+ * @note  This native requires GeoIP City database, which can be retrieved from:
+ *        http://dev.maxmind.com/geoip/geoip2/geolite2/ (MaxMind DB binary)
  *
  * @param ip        The IP address to look up.
  * @param result    The result of the geoip look up.
@@ -151,6 +154,9 @@ native geoip_region_name(const ip[], result[], len, id = -1);
  * Look up the full time zone for the given IP address.
  * e.g. America/Los_Angeles, Europe/Paris.
  *
+ * @note  This native requires GeoIP City database, which can be retrieved from:
+ *        http://dev.maxmind.com/geoip/geoip2/geolite2/ (MaxMind DB binary)
+ *
  * @param ip        The IP address to look up.
  * @param result    The result of the geoip look up.
  * @param len       The maximum length of the result buffer.
@@ -162,6 +168,9 @@ native geoip_timezone(const ip[], result[], len);
 /**
  * Look up the city's latitude for the given IP address.
  *
+ * @note  This native requires GeoIP City database, which can be retrieved from:
+ *        http://dev.maxmind.com/geoip/geoip2/geolite2/ (MaxMind DB binary)
+ *
  * @param ip        The IP address to look up.
  *
  * @return          The result of the geoip look up, 0 if latitude is not found.
@@ -171,6 +180,9 @@ native Float:geoip_latitude(const ip[]);
 /**
  * Look up the city's longitude for the given IP address.
  *
+ * @note  This native requires GeoIP City database, which can be retrieved from:
+ *        http://dev.maxmind.com/geoip/geoip2/geolite2/ (MaxMind DB binary)
+ *
  * @param ip        The IP address to look up.
  *
  * @return          The result of the geoip look up, 0 if longitude is not found.
@@ -179,6 +191,9 @@ native Float:geoip_longitude(const ip[]);
 
 /**
  * Calculate the distance between geographical coordinates, latitude and longitude.
+ *
+ * @note  This native requires GeoIP City database, which can be retrieved from:
+ *        http://dev.maxmind.com/geoip/geoip2/geolite2/ (MaxMind DB binary)
  *
  * @param lat1      The first IP latitude.
  * @param lon1      The first IP longitude.
@@ -196,6 +211,8 @@ native Float:geoip_distance(Float:lat1, Float:lon1, Float:lat2, Float:lon2, syst
 /**
  * Look up the continent code for a given IP address.
  *
+ * @note  This native requires GeoIP City database, which can be retrieved from:
+ *        http://dev.maxmind.com/geoip/geoip2/geolite2/ (MaxMind DB binary)
  * @note  The code can be retrieved as integer (See CONTINENT_* constants.) or string (2 characters).
  * @note  Possible continent codes are AF, AN, AS, EU, NA, OC, SA for
  *        Africa(1), Antarctica(2), Asia(3), Europe(4), North America(5), Oceania(6), South America(7).
@@ -207,7 +224,7 @@ native Float:geoip_distance(Float:lat1, Float:lon1, Float:lat2, Float:lon2, syst
  */
 enum Continent
 {
-	CONTINENT_UNKNOW = 0,
+	CONTINENT_UNKNOWN = 0,
 	CONTINENT_AFRICA,
 	CONTINENT_ANTARCTICA,
 	CONTINENT_ASIA,
@@ -220,6 +237,9 @@ native Continent:geoip_continent_code(const ip[], result[3]);
 
 /**
  * Look up the full continent name for the given IP address.
+ *
+ * @note  This native requires GeoIP City database, which can be retrieved from:
+ *        http://dev.maxmind.com/geoip/geoip2/geolite2/ (MaxMind DB binary)
  *
  * @param ip        The IP address to look up.
  * @param result    The result of the geoip look up.

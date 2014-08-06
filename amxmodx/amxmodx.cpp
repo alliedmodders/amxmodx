@@ -1936,7 +1936,7 @@ static cell AMX_NATIVE_CALL set_pcvar_float(AMX *amx, cell *params)
 		return 0;
 	}
 
-	snprintf(CVarTempBuffer,sizeof(CVarTempBuffer)-1,"%f",amx_ctof(params[2]));
+	UTIL_Format(CVarTempBuffer,sizeof(CVarTempBuffer)-1,"%f",amx_ctof(params[2]));
 	(*g_engfuncs.pfnCvar_DirectSet)(ptr, &CVarTempBuffer[0]);
 	return 1;
 }
@@ -1976,7 +1976,7 @@ static cell AMX_NATIVE_CALL set_pcvar_num(AMX *amx, cell *params)
 		return 0;
 	}
 
-	snprintf(CVarTempBuffer,sizeof(CVarTempBuffer)-1,"%d",params[2]);
+	UTIL_Format(CVarTempBuffer,sizeof(CVarTempBuffer)-1,"%d",params[2]);
 	(*g_engfuncs.pfnCvar_DirectSet)(ptr, &CVarTempBuffer[0]);
 
 	return 1;

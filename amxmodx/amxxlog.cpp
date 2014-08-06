@@ -81,7 +81,7 @@ void CLog::CreateNewFile()
 	
 	while (true)
 	{
-		snprintf(name, sizeof(name), "%s/L%02d%02d%03d.log", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday, i);
+		UTIL_Format(name, sizeof(name), "%s/L%02d%02d%03d.log", g_log_dir.c_str(), curTime->tm_mon + 1, curTime->tm_mday, i);
 		build_pathname_r(file, sizeof(file)-1, "%s", name);
 		FILE *pTmpFile = fopen(file, "r");			// open for reading to check whether the file exists
 		
@@ -237,7 +237,7 @@ void CLog::LogError(const char *fmt, ...)
 	va_end(arglst);
 
 	FILE *pF = NULL;
-	snprintf(name, sizeof(name), "%s/error_%04d%02d%02d.log", g_log_dir.c_str(), curTime->tm_year + 1900, curTime->tm_mon + 1, curTime->tm_mday);
+	UTIL_Format(name, sizeof(name), "%s/error_%04d%02d%02d.log", g_log_dir.c_str(), curTime->tm_year + 1900, curTime->tm_mon + 1, curTime->tm_mday);
 	build_pathname_r(file, sizeof(file)-1, "%s", name);
 	pF = fopen(file, "a+");
 

@@ -798,8 +798,8 @@ static cell AMX_NATIVE_CALL amx_rename(AMX *amx, cell *params)
 		build_pathname_r(f_old_r, sizeof(f_old_r)-1, "%s", fold);
 		build_pathname_r(f_new_r, sizeof(f_new_r)-1, "%s", fnew);
 	} else {
-		snprintf(f_old_r, sizeof(f_old_r)-1, "%s", fold);
-		snprintf(f_new_r, sizeof(f_new_r)-1, "%s", fnew);
+		UTIL_Format(f_old_r, sizeof(f_old_r)-1, "%s", fold);
+		UTIL_Format(f_new_r, sizeof(f_new_r)-1, "%s", fnew);
 	}
 
 #if defined(__linux__) || defined(__APPLE__)

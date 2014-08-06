@@ -11,10 +11,6 @@
 #include "debugger.h"
 #include "binlog.h"
 
-#if !defined WIN32 && !defined _WIN32
-#define _snprintf snprintf
-#endif
-
 /**
  * AMX Mod X Debugging Engine
  *  Written by David "BAILOPAN" Anderson
@@ -371,7 +367,7 @@ int Debugger::FormatError(char *buffer, size_t maxLength)
 	//cell *p_cip = NULL;
 	//int amx_err = AMX_ERR_NONE;
 
-	size += _snprintf(buffer, maxLength, "Run time error %d: %s ", error, gen_err);
+	size += UTIL_Format(buffer, maxLength, "Run time error %d: %s ", error, gen_err);
 	buffer += size;
 	maxLength -= size;
 
@@ -394,7 +390,7 @@ int Debugger::FormatError(char *buffer, size_t maxLength)
 		else 
 			amx_err = AMX_ERR_NOTFOUND;*/
 		//if (!amx_err)
-			size += _snprintf(buffer, maxLength, "(native \"%s\")", native_name);
+			size += UTIL_Format(buffer, maxLength, "(native \"%s\")", native_name);
 	}
 
 	return size;
@@ -621,12 +617,12 @@ void Debugger::FmtGenericMsg(AMX *amx, int error, char buffer[], size_t maxLengt
 
 	if (error == AMX_ERR_EXIT)
 	{
-		_snprintf(buffer, maxLength, "Run time error %d (plugin \"%s\") - %s", error, filename, GenericError(AMX_ERR_EXIT));
+		UTIL_Format(buffer, maxLength, "Run time error %d (plugin \"%s\") - %s", error, filename, GenericError(AMX_ERR_EXIT));
 	} else if (error == AMX_ERR_NATIVE) {
 		amx_GetNative(amx, reinterpret_cast<long>(amx->usertags[UT_NATIVE]), native);
-		_snprintf(buffer, maxLength, "Run time error %d (plugin \"%s\") (native \"%s\") - debug not enabled!", error, filename, native);
+		UTIL_Format(buffer, maxLength, "Run time error %d (plugin \"%s\") (native \"%s\") - debug not enabled!", error, filename, native);
 	} else {
-		_snprintf(buffer, maxLength, "Run time error %d (plugin \"%s\") - debug not enabled!", error, filename);
+		UTIL_Format(buffer, maxLength, "Run time error %d (plugin \"%s\") - debug not enabled!", error, filename);
 	}
 }
 

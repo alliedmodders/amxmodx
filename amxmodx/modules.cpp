@@ -691,7 +691,7 @@ char* build_pathname(const char *fmt, ...)
 {
 	static char string[256];
 	int b;
-	int a = b = snprintf(string, 255, "%s%c", g_mod_name.c_str(), PATH_SEP_CHAR);
+	int a = b = UTIL_Format(string, 255, "%s%c", g_mod_name.c_str(), PATH_SEP_CHAR);
 
 	va_list argptr;
 	va_start(argptr, fmt);
@@ -715,7 +715,7 @@ char* build_pathname(const char *fmt, ...)
 
 char *build_pathname_r(char *buffer, size_t maxlen, const char *fmt, ...)
 {
-	snprintf(buffer, maxlen, "%s%c", g_mod_name.c_str(), PATH_SEP_CHAR);
+	UTIL_Format(buffer, maxlen, "%s%c", g_mod_name.c_str(), PATH_SEP_CHAR);
 
 	size_t len = strlen(buffer);
 	char *ptr = buffer + len;

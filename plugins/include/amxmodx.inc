@@ -88,8 +88,9 @@ native precache_generic(const szFile[]);
  * Changes map.
  *
  * @note  This calls the pfnChangelLevel engine function.
- * @note  This has the same behavior as calling "changelevel" server command,
- *        but this will trigger properly server_changelevel() forward.
+ * @note  This has the same behavior as calling the "changelevel" server command,,
+ *        but this will also trigger the server_changelevel() forward in AMXX plugins.
+ *        It will also notify any Metamod plugins that are hooking pfnChangeLevel.
  *
  * @param map          The map name to change.
  *

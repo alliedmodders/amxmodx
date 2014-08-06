@@ -633,7 +633,7 @@ public cmdSlap(id, level, cid)
 
 public chMap(map[])
 {
-	server_cmd("changelevel %s", map)
+	change_level(map);
 }
 
 public cmdMap(id, level, cid)

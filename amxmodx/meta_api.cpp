@@ -30,6 +30,7 @@
 #include <amxmodx_version.h>
 #include "trie_natives.h"
 #include "CDataPack.h"
+#include "textparse.h"
 
 plugin_info_t Plugin_info = 
 {
@@ -395,6 +396,7 @@ int	C_Spawn(edict_t *pent)
 	g_TrieHandles.clear();
 	g_TrieSnapshotHandles.clear();
 	g_DataPackHandles.clear();
+	g_TextParsersHandles.clear();
 
 	char map_pluginsfile_path[256];
 	char prefixed_map_pluginsfile[256];

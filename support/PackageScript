@@ -235,6 +235,9 @@ scripting_files = [
   'testsuite/trietest.sma',
   'testsuite/utf8test.sma',
   'testsuite/stacktest.sma',
+  'testsuite/textparse_test.sma',
+  'testsuite/textparse_test.cfg',
+  'testsuite/textparse_test.ini',
   'include/amxconst.inc',
   'include/amxmisc.inc',
   'include/amxmodx.inc',
@@ -289,6 +292,8 @@ scripting_files = [
   'include/newmenus.inc',
   'include/sorting.inc',
   'include/sqlx.inc',
+  'include/textparse_ini.inc',
+  'include/textparse_smc.inc',
   'include/time.inc',
   'include/vector.inc',
 ]

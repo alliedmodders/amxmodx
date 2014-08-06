@@ -306,6 +306,7 @@
     <ClCompile Include="..\CModule.cpp" />
     <ClCompile Include="..\CPlugin.cpp" />
     <ClCompile Include="..\CTask.cpp" />
+    <ClCompile Include="..\CTextParsers.cpp" />
     <ClCompile Include="..\CVault.cpp" />
     <ClCompile Include="..\datapacks.cpp" />
     <ClCompile Include="..\debugger.cpp" />
@@ -335,6 +336,7 @@
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">All</AssemblerOutput>
     </ClCompile>
     <ClCompile Include="..\strptime.cpp" />
+    <ClCompile Include="..\textparse.cpp" />
     <ClCompile Include="..\trie_natives.cpp" />
     <ClCompile Include="..\util.cpp" />
     <ClCompile Include="..\vault.cpp" />
@@ -370,6 +372,7 @@
     <ClInclude Include="..\CQueue.h" />
     <ClInclude Include="..\CString.h" />
     <ClInclude Include="..\CTask.h" />
+    <ClInclude Include="..\CTextParsers.h" />
     <ClInclude Include="..\CVault.h" />
     <ClInclude Include="..\CVector.h" />
     <ClInclude Include="..\datastructs.h" />
@@ -389,6 +392,7 @@
     <ClInclude Include="..\sh_stack.h" />
     <ClInclude Include="..\sh_tinyhash.h" />
     <ClInclude Include="..\svn_version.h" />
+    <ClInclude Include="..\textparse.h" />
     <ClInclude Include="..\trie_natives.h" />
     <ClInclude Include="..\zlib\zconf.h" />
     <ClInclude Include="..\zlib\zlib.h" />
@@ -401,6 +405,8 @@
   <ItemGroup>
     <None Include="..\..\plugins\include\cellstack.inc" />
     <None Include="..\..\plugins\include\datapack.inc" />
+    <None Include="..\..\plugins\include\textparse_ini.inc" />
+    <None Include="..\..\plugins\include\textparse_smc.inc" />
     <None Include="..\amxdefn.asm" />
     <None Include="..\amxexecn.asm" />
     <None Include="..\amxjitsn.asm" />

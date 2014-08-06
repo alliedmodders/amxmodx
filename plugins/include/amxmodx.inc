@@ -250,14 +250,15 @@ native precache_sound(const name[]);
 native precache_generic(const szFile[]);
 
 /**
- * Changes map.
+ * Changes the map.
  *
  * @note  This calls the pfnChangelLevel engine function.
- * @note  This has the same behavior as calling the "changelevel" server command,
- *        but this will also trigger the server_changelevel() forward in AMXX plugins.
- *        It will also notify any Metamod plugins that are hooking pfnChangeLevel.
+ * @note  This has the same behavior as using the "changelevel" server command,
+ *        but will also trigger the server_changelevel() forward in AMXX
+ *        plugins. It will also notify any Metamod plugins that are hooking
+ *        the pfnChangeLevel function.
  *
- * @param map          The map name to change.
+ * @param map   Map name to change to
  *
  * @noreturn
  */

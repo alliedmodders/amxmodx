@@ -417,6 +417,12 @@
     <None Include="..\..\plugins\include\cellstack.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+    <None Include="..\..\plugins\include\textparse_ini.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
+    <None Include="..\..\plugins\include\textparse_smc.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Object Include="..\Jit\helpers-x86.obj">

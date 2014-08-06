@@ -57,9 +57,12 @@ forward plugin_unpause();
  * Called when the mod tries to change the map.
  *
  * @note This is *only* called if the mod itself handles the map change. The
- *       server command "changelevel" which is also used by plugins will not
+ *       server command "changelevel" which is used by many plugins will not
  *       trigger this forward. Unfortunately this means that in practice this
  *       forward is very unreliable, and will not be called in many situations.
+ * @note AMXX 1.8.3 has added the change_level() function which will utilize
+ *       the correct engine function to change the map and therefore trigger
+ *       this forward.
  *
  * @param map   Map that the mod tries to change to
  *
@@ -1364,11 +1367,13 @@ native engclient_cmd(index, const command[], const arg1[]="", const arg2[]="");
 native amxclient_cmd(index, const command[], const arg1[] = "", const arg2[] = "");
 
 /**
- * Executes a command from the server console.
+ * Queues a command to be executed from the server console.
  *
  * @note Warning: This is a potential source of command injection. Do not feed
  *       client-controlled input (including client names) to this function
  *       without sanitizing it first.
+ * @note The queued commands will be executed by the engine on the next frame.
+ *       If you require them to be executed immediately, see server_exec().
  *
  * @param command   Formatting rules
  * @param ...       Variable number of formatting parameters
@@ -1731,7 +1736,7 @@ native set_user_flags(index, flags=-1, id=0);
  * @error           If the index is not within the range of 0 to MaxClients, an
  *                  error will be thrown.
  */
-native get_user_flags(index,id=0);
+native get_user_flags(index, id=0);
 
 /**
  * Removes the specified admin flags from a client.
@@ -1757,19 +1762,19 @@ native remove_user_flags(index, flags=-1, id=0);
  * Set FlagManager to 0 to make FlagManager never include this command
  * Returns the command ID.
  */
-native register_clcmd(const client_cmd[],const function[],flags=-1, const info[]="", FlagManager=-1);
+native register_clcmd(const client_cmd[], const function[], flags=-1, const info[]="", FlagManager=-1);
 
 /* Registers function which will be called from any console.
  * Set FlagManager to 1 to make FlagManager always include this command
  * Set FlagManager to 0 to make FlagManager never include this command
  * Returns the command ID.
  */
-native register_concmd(const cmd[],const function[],flags=-1, const info[]="", FlagManager=-1);
+native register_concmd(const cmd[], const function[], flags=-1, const info[]="", FlagManager=-1);
 
 /* Registers function which will be called from server console.
  * Returns the command ID.
  */
-native register_srvcmd(const server_cmd[],const function[],flags=-1, const info[]="");
+native register_srvcmd(const server_cmd[], const function[], flags=-1, const info[]="");
 
 /* Gets info about client command. */
 native get_clcmd(index, command[], len1, &flags, info[], len2, flag);
@@ -1812,92 +1817,245 @@ native register_menucmd(menuid,keys, const function[] );
 * is VGUI in other case the id is from register_menuid() function. */
 native get_user_menu(index,&id,&keys);
 
-/* Forces server to execute sent server command at current time.
-* Very useful for map changes, setting cvars and other activities. */
+/**
+ * Forces the server to execute the command queue immediately.
+ *
+ * @note Commands can be added to the queue using server_cmd().
+ *
+ * @noreturn
+ */
 native server_exec();
 
-/* Emits sound. Sample must be precached. */
+/**
+ * Emits a sound from an entity from the engine.
+ *
+ * @note The sample must be precached using precache_sound() so it is available
+ *       in the engine's sound table.
+ * @note For a list of available channels see CHAN_* constants in amxconst.inc,
+ *       sounds emitted from the same channel will override each other.
+ * @note There are helpful reference constants in amxconst.inc for sound volume
+ *       (VOL_*), attenuation (ATTN_*), flags (SND_*), and pitch (PITCH_*).
+ *
+ * @param index     Entity index, use 0 to emit from all clients
+ * @param channel   Channel to emit from
+ * @param sample    Sound file to emit
+ * @param vol       Volume in percent
+ * @param att       Sound attenuation
+ * @param flags     Emit flags
+ * @param pitch     Sound pitch
+ */
 native emit_sound(index, channel, const sample[], Float:vol, Float:att,flags, pitch);
 
-/* Registers new cvar for HL engine.
- * Returns the cvar pointer for get/set_pcvar functions.
+/**
+ * Registers a new ccvar for the engine.
+ *
+ * @note For a list of possible cvar flags see FCVAR_* constants in amxconst.inc
+ * @note If an already existing cvar is registered it will not be duplicated.
+ * @note The returned cvar pointer should be used with the get_pcvar_* and
+ *       set_pcvar_* set of functions.
+ *
+ * @param name      Cvar name
+ * @param string    Default cvar value
+ * @param flags     Cvar flags
+ * @param fvalue
+ *
+ * @return          Unique cvar pointer
  */
-native register_cvar(const name[],const string[],flags = 0,Float:fvalue = 0.0);
+native register_cvar(const name[], const string[], flags = 0, Float:fvalue = 0.0);
 
-/* Generates random floating point number from a to b. */
-native Float:random_float(Float:a,Float:b);
+/**
+ * Returns a random floating point value generated by the engine.
+ *
+ * @param a,b   Range of generated value, inclusive
+ *
+ * @return      Generated random value
+ */
+native Float:random_float(Float:a, Float:b);
 
-/* Generates random integer from a to b. */
-native random_num(a,b);
+/**
+ * Returns a random integer value generated by the engine.
+ *
+ * @param a,b   Range of generated value, inclusive
+ *
+ * @return      Generated random value
+ */
+native random_num(a, b);
 
-/* Returns id of client message.
-* Example: get_user_msgid("TextMsg"). */
+/**
+ * Returns unique id of a client message
+ *
+ * @note Example usage: get_user_msgid("TextMsg")
+ * @note The message id is unique as long as the server is running, but might
+ *       change between updates. They should not be hardcoded into plugins.
+ *
+ * @param name      Client message name
+ *
+ * @return          Message id, 0 if message was not found
+ */
 native get_user_msgid(const name[]);
 
-/* Gets name of client message index. Return value is number of
-* characters copied into name. Returns 0 on invalid msgid. */
+/**
+ * Retrieves the client message name from a message id.
+ *
+ * @param msgid     Client message id
+ * @param name      Buffer to copy message name to
+ * @param len       Maximum buffer size
+ *
+ * @return          Number of cells written to buffer, 0 on invalid message id
+ */
 native get_user_msgname(msgid, name[], len);
 
-/* Checks if public variable with given name exists in loaded plugins. */
-native xvar_exists( const name[] );
+/**
+ * Returns a unique id for a public variable.
+ *
+ * @note Variables declared with the "public" specifier are accessible by-name
+ *       from outside of the declaring plugin.
+ * @note If multiple plugins declare the same public variable this native will
+ *       still return a unique id.
+ *
+ * @param name      Variable name
+ *
+ * @return          Xvar id on success, -1 on failure
+ */
+native get_xvar_id(const name[]);
 
-/* Returns an unique id for public variable specified by name. If such
-* variable doesn't exist then returned value is -1. */
-native get_xvar_id( const name[] );
+/**
+ * Returns if a public variable exists in any loaded plugin.
+ *
+ * @param name      Variable name
+ *
+ * @return          1 if public cvar exists, 0 otherwise
+ */
+native xvar_exists(const name[]);
 
-/* Returns an integer value of a public variable. Id is a value
-* returned by get_xvar_id(...) native. */
-native get_xvar_num( id );
+/**
+ * Returns the integer value of a public variable.
+ *
+ * @note If multiple plugins declare the same public variable they are not
+ *       automatically synchronized. The xvar system accesses only one of all
+ *       public variables directly. Xvars have to be read through the natives or
+ *       the value will be incorrect.
+ *
+ * @param id    Xvar id, an xvar id can be retrieved using get_xvar_id()
+ *
+ * @return      Xvar integer value
+ */
+native get_xvar_num(id);
 
-/* Returns a float value of a public variable. Id is a value
-* returned by get_xvar_id(...) native. */
-native Float:get_xvar_float( id );
+/**
+ * Returns the float value of a public variable.
+ *
+ * @note If multiple plugins declare the same public variable they are not
+ *       automatically synchronized. The xvar system accesses only one of all
+ *       public variables directly. Xvars have to be read through the natives or
+ *       the value will be incorrect.
+ *
+ * @param id    Xvar id, an xvar id can be retrieved using get_xvar_id()
+ *
+ * @return      Xvar float value
+ */
+native Float:get_xvar_float(id);
 
-/* Sets a value of a public variable. Id is a value
-* returned by get_xvar_id(...) native. */
-native set_xvar_num( id, value = 0 );
+/**
+ * Sets the integer value of a public variable.
+ *
+ * @note If multiple plugins declare the same public variable they are not
+ *       automatically synchronized. The xvar system accesses only one of all
+ *       public variables directly. Xvars have to be set through the natives or
+ *       the xvar will not be updated.
+ *
+ * @param id        Xvar id, an xvar id can be retrieved using get_xvar_id()
+ * @param value     Value to set
+ *
+ * @noreturn
+ * @error           If an invalid xvar id is specified an error will be thrown.
+ */
+native set_xvar_num(id, value = 0);
 
-/* Sets a float value of a public variable. Id is a value
-* returned by get_xvar_id(...) native. */
-native set_xvar_float( id, Float:value = 0.0 );
+/**
+ * Sets the float value of a public variable.
+ *
+ * @note If multiple plugins declare the same public variable they are not
+ *       automatically synchronized. The xvar system accesses only one of all
+ *       public variables directly. Xvars have to be set through the natives or
+ *       the xvar will not be updated.
+ *
+ * @param id        Xvar id, an xvar id can be retrieved using get_xvar_id()
+ * @param value     Value to set
+ *
+ * @noreturn
+ * @error           If an invalid xvar id is specified an error will be thrown.
+ */
+native set_xvar_float(id, Float:value = 0.0);
 
-/* Checks whether a module is loaded. If it is not, the return value is -1, otherwise
-* the return value is the module id. The function is case insensitive. */
+/**
+ * Returns if a module is loaded.
+ *
+ * @param name      Module name
+ *
+ * @return          Module id of the matching module, -1 otherwise
+ */
 native is_module_loaded(const name[]);
-
-/* Gets info about a module.
-* Parameters:
-*  id         - the id of the module
-*  name[]     - The name of the module will be stored here
-*  nameLen    - maximal length of the name
-*  author[]   - the author will be stored here
-*  authorLen  - maximal length of the author
-*  version[]  - the version of the module will be stored here
-*  versionLen - maximal length of the version
-*  status - the status of the module will be stored here
-* Return value:
-*  id         - success
-*  -1         - module not found */
+/**
+ * Retrieves info about a plugin by plugin index.
+ *
+ * @param index     Plugin index, -1 to target calling plugin
+ * @param filename  Buffer to copy plugin filename to
+ * @param len1      Maximum filename buffer size
+ * @param name      Buffer to copy plugin name to
+ * @param len2      Maximum name buffer size
+ * @param version   Buffer to copy plugin version to
+ * @param len3      Maximum version buffer size
+ * @param author    Buffer to copy plugin author to
+ * @param len4      Maximum author buffer size
+ * @param status    Buffer to copy plugin status flags to
+ * @param len5      Maximum status buffer size
+ * @param ...       Unused and ignored
+ *
+ * @return          Plugin index on success, -1 if there is no plugin with given
+ *                  index
+ */
+/**
+ * Retrieves info about a module by module index.
+ *
+ * @note For a list of possible status flags see module_* constants in
+ *       amxconst.inc
+ *
+ * @param id            Module id
+ * @param name          Buffer to copy module name to
+ * @param nameLen       Maximum name buffer size
+ * @param author        Buffer to copy module author to
+ * @param authorLen     Maximum author buffer size
+ * @param version       Buffer to copy module version to
+ * @param versionLen    Maximum version buffer size
+ * @param status        Variable to store module status to
+ *
+ * @return              Module id on succes, -1 on invalid module
+ */
 native get_module(id, name[], nameLen, author[], authorLen, version[], versionLen, &status);
 
-/* Returns number of currently registered modules */
+/**
+ * Returns the number of currently registered modules.
+ *
+ * @return  Number of modules
+ */
 native get_modulesnum();
 
 /**
- * Checks whether a plugin is loaded by the given registered name (such as "Admin Base"), or, optionally
- * the given filename ("admin.amxx").
+ * Returns if a plugin is loaded by registered name or filename.
  *
- * @param name			Either the plugin name to lookup, or the plugin filename to lookup.
- * @param usefilename	Set to true if you want to search for the plugin by the filename, false to search
- *						by the plugin's registered name.
+ * @note An example for a registered name would be "Admin Base" while a possible
+ *       filename would be "admin.amxx"
+ * @note Prior to AMXX 1.80 this function would only search for plugins
+ *       registered names, not the filename.
+ * @note The plugin name matching is case insensitive while the filename
+ *       matching is case sensitive.
  *
- * @return				Plugin ID of the matching plugin on a successful search, -1 on a failed search.
+ * @param name          Plugin name or filename
+ * @param usefilename   If true searches for plugin filename, false searches for
+ *                      plugin name
  *
- * @note				Prior to 1.8, this function would only search for plugins registered names, not
- *						the filename.
- *
- * @note				The plugin registered name search is a case insensitive search, however, the plugin
- *						filename search is case sensitive.
+ * @return              Plugin id of the matching plugin, -1 otherwise
  */
 native is_plugin_loaded(const name[], bool:usefilename=false);
 
@@ -1929,25 +2087,45 @@ native get_plugin(index,filename[]="",len1=0,name[]="",len2=0,version[]="",len3=
  */
 native get_pluginsnum();
 
-/* Pauses function or plugin so it won't be executed.
-* In most cases param1 is name of function and
-* param2 name of plugin (all depends on flags).
-* Flags:
-* "a" - pause whole plugin.
-* "c" - look outside the plugin (by given plugin name).
-* "d" - set "stopped" status when pausing whole plugin.
-*       In this status plugin is unpauseable.
-* Example: pause("ac","myplugin.amxx")
-*
-* Note: There used to be the b and e flags as well,
-* which have been deprecated and are no longer used.
-*/
+/**
+ * Pauses a plugin so it will not be executed until it is unpaused.
+ *
+ * @note This used to be able to pause specific functions but this functionality
+ *       (along with the flags "b" and "e") has been deprecated.
+ * @note If used without flag "c" this will pause the calling plugin.
+ *
+ * @param flag      Pause flags
+ *                    "a" - pause plugin
+ *                    "c" - search for other plugins using param1
+ *                    "d" - stop plugin, making it unavailable to unpause
+ * @param param1    Plugin filename
+ * @param param2    Unused and ignored
+ *
+ * @return          1 on success, 0 otherwise
+ * @error           If it is attempted to use the deprecated functionality,
+ *                  an error is thrown.
+ */
 native pause(const flag[], const param1[]="",const param2[]="");
 
-/* Unpauses function or plugin.
-* Flags:
-* "a" - unpause whole plugin.
-* "c" - look outside the plugin (by given plugin name). */
+/**
+ * Unpauses a plugin so it will resume execution if it was previously paused.
+ *
+ * @note This used to be able to unpause specific functions but this
+ *       functionality (along with the flags "b" and "e") has been deprecated.
+ * @note Without specifying flag "c" this function will do nothing, as a plugin
+ *       is incapable of unpausing itself. This is a relict of the deprecated
+ *       functionality.
+ *
+ * @param flag      Pause flags
+ *                    "a" - pause plugin
+ *                    "c" - search for other plugins using param1
+ * @param param1    Plugin filename
+ * @param param2    Unused and ignored
+ *
+ * @return          1 on success, 0 otherwise
+ * @error           If it is attempted to use the deprecated functionality,
+ *                  an error is thrown.
+ */
 native unpause(const flag[], const param1[]="",const param2[]="");
 
 /**
@@ -2095,12 +2273,32 @@ native callfunc_push_array(const VALUE[], array_size, bool:copyback=true);
  */
 native callfunc_end();
 
-/* Called on inconsistent file. You can put any text
-* into reason to change an original message. */
+/**
+ * Called when an inconsistent file is encountered by the engine.
+ *
+ * @param id        Client index
+ * @param filename  Detected file
+ * @param reason    Buffer storing the disconnect reason (can be overwritten)
+ *
+ * @return          PLUGIN_CONTINUE to let the engine kick the client
+ *                  PLUGIN_HANDLED to block the inconsistency kick
+ */
 forward inconsistent_file(id,const filename[], reason[64] );
 
-/* Forces the client and server to be running with the same
-* version of the specified file ( e.g., a player model ). */
+/**
+ * Forces the clients and server to be running with the same version of a
+ * specified file.
+ *
+ * @note For a list of possible enforcement types see the force_* constants
+ *       in amxconst.inc
+ *
+ * @param force_type    Enforcement type
+ * @param mins          Bounding box mins vector
+ * @param maxs          Bounding box maxs vector
+ * @param filename      Filename
+ *
+ * @return              1 on success, 0 otherwise
+ */
 native force_unmodified(force_type, const mins[3] , const maxs[3], const filename[]);
 
 /**
@@ -2124,27 +2322,63 @@ native md5(const szString[], md5buffer[34]);
  */
 native md5_file(const file[], md5buffer[34]);
 
-/* Returns the internal flags set on the plugin's state
- * If hdr is 1, it will return the pcode flags rather than state flags.
+/**
+ * Returns the internal flags set on the plugin's state.
  *
- * Use a plid of -1 to get the flags for the calling plugin.
+ * @param hdr       If nonzero the function will return the pcode rather than
+ *                  state flags
+ * @param plid      Plugin id, -1 to target calling plugin
  */
 native plugin_flags(hdr=0, plid=-1);
 
 /**
- * @deprecated
- * Do not use!
+ * Allows plugins to declare module dependencies using require_module()
+ *
+ * @deprecated Module dependency has been automatically handled by the compiler
+ *             since AMXX 1.50, released in 2005. This forward is no longer
+ *             called.
+ *
+ * @noreturn
  */
 forward plugin_modules();
 
+/**
+ * Adds a module dependency
+ *
+ * @deprecated Module dependency has been automatically handled by the compiler
+ *             since AMXX 1.50, released in 2005. This native has no effect.
+ *
+ * @noreturn
+ */
 native require_module(const module[]);
 
+/**
+ * Returns if the server is 64 bit.
+ *
+ * @deprecated As a result of valve dropping support for 64bit binaries AMXX is
+ *             also not shipping 64bit builds anymore. This native is basically
+ *             guaranteed to return 0.
+ *
+ * @return  1 if the server is 64 bit, 0 otherwise
+ */
 native is_amd64_server();
 
-/* Returns plugin id searched by file/name.  Returns INVALID_PLUGIN_ID on failure. */
+/**
+ * Returns plugin id by filename.
+ *
+ * @param filename      Filename to match
+ * @param ignoreCase    If nonzero matches case insensitively, case sensitively
+ *                      otherwise
+ *
+ * @return              Plugin id, -1 (INVALID_PLUGIN_ID) on failure
+ */
 native find_plugin_byfile(const filename[], ignoreCase=1);
 
-/* This is called before plugin_init and allows you to register natives. */
+/**
+ * Called before plugin_init(), allowing the plugin to register natives.
+ *
+ * @noreturn
+ */
 forward plugin_natives();
 
 /* Registers a NATIVE.  When a plugin uses your native (you should distribute a .inc),
@@ -2300,31 +2534,64 @@ native set_native_filter(const handler[]);
 native set_module_filter(const handler[]);
 
 /**
- * Aborts execution of the current callback.  Your script will throw a run time error.
- * You can also specify an optional message.
- * You should NOT call this function inside:
- *  - Error or module filters (native filters are safe if trap is 1)
- *  - plugin_natives()
- * Note that the plugin's filename is prepending to your message:
- *  [myplugin.amxx] MESSAGE
+ * Aborts execution of the current callback by throwing an error.
+ *
+ * @note Warning: This function should not be used inside error filters, module
+ *       filters (native filters are safe if trap equals 1) or the
+ *       plugin_natives() forward.
+ * @note The message will automatically be tagged with the plugin's name and the
+ *       log will include a timestamp with the message.
+ * @note For a list of possible error codes see AMX_* constants in amxconst.inc
+ *
+ * @param error     Error code
+ * @param fmt       Formatting rules
+ * @param ...       Variable list of formatting parameters
+ *
+ * @noreturn
+ * @error           The function is guaranteed to throw an error, using the
+ *                  specified custom log message.
  */
 native abort(error, const fmt[]="", any:...);
 
 /**
- * Checks if a specific module is loaded.  This is the exact same method AMX Mod X
- *  uses to see if a module is required by a plugin.  For example:
- *  module_exists("cstrike")
- *  module_exists("dbi")
+ * Returns if a specific module is loaded.
+ *
+ * @note This uses the same method AMXX uses internally to see if a module is
+ *       required by a plugin.
+ * @note Example usage: module_exists("cstrike")
+ *
+ * @param logtag    Module shortname
+ *
+ * @return          1 if module is loaded, 0 otherwise
  */
 native module_exists(const logtag[]);
 
 /**
- * Checks if a library/class is loaded.  This is the newer version of module_exists.
+ * Returns if a specific library or class is loaded.
+ *
+ * @note This is the newer version of module_exists(), enabling users to
+ *       distinguish between libraries and classes while module_exists() always
+ *       checks for both types.
+ * @note For a list of possible types see the LibType enum in amxconst.inc
+ *
+ * @param library   Library/Class shortname
+ * @param type      Type to search for
+ *
+ * @return          1 if module is loaded, 0 otherwise
  */
 native LibraryExists(const library[], LibType:type);
 
 /**
- * Returns the next valid hudchannel for a user, from 1-4.
+ * Returns the next valid hudchannel for the client.
+ *
+ * @note This function uses the same method set_hudmessage() uses to determine
+ *       the next channel if it is set to auto-select.
+ *
+ * @param player    Client index
+ *
+ * @return          Valid hudchannel (1-4)
+ * @error           If the index is not within the range of 1 to MaxClients or
+ *                  the client is not connected an error will be thrown.
  */
 native next_hudchannel(player);
 
@@ -2340,81 +2607,205 @@ native next_hudchannel(player);
  *  clear a message from another plugin.
  * The parameters are kept blank for future use.
  */
+/**
+ * Creates a HUD synchronization object.
+ *
+ * @note Create one of these for each section of the screen that contains
+ *       overlapping HUD messages. For example, if you use both sides of the
+ *       screen to display three messages that could potentially overlap,
+ *       each side is considered a synchronizable area. You can then use
+ *       ShowSyncHudMsg() to correctly synchronize displaying the HUD message
+ *       with any other messages potentially in its class.
+ * @note This does not do anything like reserving screen area. Its sole
+ *       purpose is to be able to wipe an old message on an auto-channel and
+ *       ensure that it will not clear a message from another plugin.
+ *
+ * @param num   Unused and ignored
+ * @param ...   Unused and ignored
+ *
+ * @return      HUD sync object handle
+ */
 native CreateHudSyncObj(num=0, ...);
 
 /**
- * Displays a synchronized HUD message.  This will check that your
- *  HUD object has its previous display on the screen cleared before
- *  it proceeds to write another.  It will only do this in the case
- *  of that channel not having been cleared already.
- * Target can be 0 for all players or 1-get_maxplayers().
- * You must use set_hudmessage, although the channel parameter is
- *  entirely ignored.
+ * Displays a synchronized HUD message.
+ *
+ * @note This will check that your HUD object has its previous display on the
+ *       screen cleared before it proceeds to write another message. It will
+ *       only do this in the case of that channel not having been cleared
+ *       already.
+ * @note This uses the display parameters set with set_hudmessage(), ignoring
+ *       the selected channel in favor of its own synchronization.
+ *
+ * @param target    Client index, use 0 to display to all clients
+ * @param syncObj   HUD sync object handle
+ * @param fmt       Formatting rules
+ * @param ...       Variable number of formatting parameters
+ *
+ * @return          Number of printed characters
+ *                  If 0 is specified as the index then 0 will be returned if
+ *                  nothing has been sent. The number of printed characters will
+ *                  otherwise refer to the message that is sent last, to the
+ *                  client with the highest index.
+ * @error           If a single client is specified and the index is not
+ *                  within the range of 1 to MaxClients an error will be thrown
  */
 native ShowSyncHudMsg(target, syncObj, const fmt[], any:...);
 
 /**
- * Clears the display on a HudSync Object.  This is essentially the same
- *  thing as: ShowSyncHudMsg(x, y, ""), except doing that would send
- *  out two messages and use up another channel.  This re-uses the last
- *  channel and clears it at the same time.
- * Note: for this you do not have to use set_hudmessage().
- * Note: target can be 0 for all players.
+ * Clears the display on a HUD sync object.
+ *
+ * @note This sends an empty message to the previously occupied HUD channel.
+ *       It is not quite the same as manually sending an empty message to the
+ *       sync object as that would send out two separate messages, one for
+ *       clearing the occupied channel and another using a new channel, which
+ *       will subsequently not mark the sync object as cleared.
+ *
+ * @param target    Client index, use 0 to display to all clients
+ * @param syncObj   HUD sync object handle
+ *
+ * @noreturn
+ * @error           If a single client is specified and the index is not
+ *                  within the range of 1 to MaxClients an error will be thrown
  */
 native ClearSyncHud(target, syncObj);
 
-//no
+/**
+ * Triggers the software interrupt 3, used for breaking into an attached
+ * debugger.
+ *
+ * @note Warning: This is a debugging function that is not intended for general
+ *       plugin use. Using this function will either halt the server and break
+ *       into the attached debugger, or outright crash the server if no
+ *       debugger is attached.
+ *
+ * @noreturn
+ */
 native int3();
 
-//Sets your plugin to a failed/error state.
-//If you use this, your plugin will cease operating.
-//This is a good idea to fatally, but gracefully, handle errors.
-//You can set a failed error message.
+/**
+ * Sets the calling plugin to a failed state.
+ *
+ * @note Calling this will cause the calling plugin to completely cease
+ *       operation. It is not possible to recover.
+ * @note This should be used to gracefully handle fatal errors. The log message
+ *       will appear in the AMXX error log.
+ *
+ * @param fmt   Formatting rules
+ * @param ...   Variable number of formatting parameters
+ *
+ * @noreturn
+ * @error       The function is guaranteed to throw a fatal error, ceasing
+ *              further operation of the plugin.
+ */
 native set_fail_state(const fmt[], any:...);
 
-//Returns the reference address of the variable passed in.
-//This address is local to the plugin, and not a full CPU address
-//pass the variable as the first parameter
+/**
+ * Returns the reference address of the variable passed in.
+ *
+ * @note Addresses are local to the plugin and do not represent a full CPU
+ *       address.
+ *
+ * @param ...   Variable to retrieve address from
+ *
+ * @return      Variable address
+ */
 native get_var_addr(any:...);
 
-//Returns the value of an address.  This dereferences something returned by
-// get_var_addr().  Attempting to pass in a value beyond stack or heap limits
-// will result in AMX_ERR_MEMACCESS.
+/**
+ * Returns the value of an address.
+ *
+ * @note Addresses can be acquired using get_var_addr().
+ *
+ * @param addr      Variable address
+ *
+ * @error           If the plugin attempts to access an address outside of the
+ *                  stack or heap limits of the plugin, an error will be thrown.
+ */
 native get_addr_val(addr);
 
-//Sets the value of an address.  same as above, essentially
+/**
+ * Sets the value of an address.
+ *
+ * @note Addresses can be acquired using get_var_addr().
+ *
+ * @param addr      Variable address
+ * @param val       Value to set
+ *
+ * @error           If the plugin attempts to access an address outside of the
+ *                  stack or heap limits of the plugin, an error will be thrown.
+ */
 native set_addr_val(addr, val);
 
-
 /**
- * Creates a multi-plugin forward.
- * Stop type must be one of the ET_ values in amxconst.inc
- * results will be > 0 for success
+ * Creates a global forward that will be called in all plugins.
+ *
+ * @note For a list of valid stop types see the ET_* constants in amxconst.inc
+ * @note For a list of valid parameter types see the FP_* constants in
+ *       amxconst.inc
+ *
+ * @param name          Function name to call
+ * @param stop_type     Treatment of the plugin return values
+ * @param ...           List of parameter types
+ *
+ * @return              Forward handle, -1 on failure
  */
 native CreateMultiForward(const name[], stop_type, ...);
 
 /**
- * Creates a forward for one plugin.
- * Results will be > 0 for success.
- * id should be an id such as returned by find_plugin_byfile.
- * Unlike get_plugin(), negative numbers will not work.
+ * Creates a private forward that will be called in a single plugin.
+ *
+ * @note Unlike other natives expecting a plugin id, specifying -1 will not
+ *       select the calling plugin and instead throw an error.
+ *
+ * @param plugin_id     Plugin to call forward in. The plugin id can be
+ *                      retrieved using find_plugin_byfile()
+ * @param name          Function name to call
+ * @param ...           List of parameter types
+ *
+ * @return              Forward handle, -1 on failure
+ * @error               If an invalid plugin id is specified an error will be
+ *                      thrown.
  */
 native CreateOneForward(plugin_id, const name[], ...);
 
 /**
- * prepares an array.  use this and pass the result into
- * ExecuteForward() instead of the array itself.
+ * Prepares an array for use in a forward. Pass the result ExecuteForward()
+ * instead of the array itself.
+ *
+ * @param array         Array to prepare
+ * @param size          Size of array
+ * @param copyback      If nonzero modifications made by the called plugin(s)
+ *                      will be copied back to the caller
+ *
+ * @return              Special handle for use in ExecuteForward()
  */
 native PrepareArray(const array[], size, copyback=0);
 
 /**
- * executes a forward.  returns result in ret.
- * returns 1 for success, 0 for failure.
+ * Executes a forward.
+ *
+ * @note Passing arrays requires them to be prepared using PrepareArray().
+ *
+ * @param forward_handle    Forward handle
+ * @param ret               Variable to store return value in
+ * @param ...               Variable number of parameters to pass through
+ *
+ * @return                  1 on success, 0 if forward can't be executed
+ * @error                   If the number of parameters mismatch from the number
+ *                          of parameters that the forward was declared with,
+ *                          an error is thrown.
  */
 native ExecuteForward(forward_handle, &ret, any:...);
 
 /**
- * Destroys/deallocates any type of forward
+ * Destroys and deallocates a forward.
+ *
+ * @note Does not distinguish between private and global forwards.
+ *
+ * @param forward_handle    Forward handle
+ *
+ * @noreturn
  */
 native DestroyForward(forward_handle);
 
@@ -2534,8 +2925,13 @@ native set_pcvar_string(pcvar, const string[]);
 native arrayset(array[], value, size);
 
 /**
- * Returns the weapon id, otherwise 0 when no id found.
- * The weapon name is case sensitive, and has the weapon_* form.
+ * Returns the weapon id associated with a weapon name.
+ *
+ * @note The weapon name is case sensitive and has the weapon_* form.
+ *
+ * @param name      Weapon name
+ *
+ * @return          Weapon id, or 0 if no id was found
  */
 native get_weaponid(const name[]);
 

@@ -2,10 +2,10 @@
  *
  * AMX Mod X Module
  * Basic Socket Functions
- * 
+ *
  * Codebase from Ivan, -g-s-ivan@web.de (AMX 0.9.3)
  * Modification by Olaf Reusch, kenterfie@hlsw.de (AMXX 0.16, AMX 0.96)
- * 
+ *
  */
 
 #if defined _socket_included
@@ -36,7 +36,7 @@
  * 0 - no error
  * 1 - error while creating socket
  * 2 - couldn't resolve hostname
- * 3 - couldn't connect to given hostname:port 
+ * 3 - couldn't connect to given hostname:port
 */
 
 native socket_open(const _hostname[], _port, _protocol = SOCKET_TCP, &_error);
@@ -58,7 +58,7 @@ native socket_send(_socket, const _data[], _length);
 native socket_send2(_socket, const _data[], _length);
 
 /* This function will return true if the state (buffer content) have changed within the last recieve or
-* the timeout, where timeout is a value in µSeconds, (1 sec =1000000 µsec). 
+* the timeout, where timeout is a value in ÂµSeconds, (1 sec =1000000 Âµsec).
 * Use to check if new data is in your socket. */
 
 native socket_change(_socket, _timeout=100000);

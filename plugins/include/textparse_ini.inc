@@ -110,7 +110,7 @@ native bool:INI_ParseFile(INIParser:handle, const file[], &line = 0, &col = 0);
  *
  *          public OnParseStart(INIParser:handle)
  *        -
- * @param handle        Handle to a INI Parse.
+ * @param handle        Handle to an INI Parse structure.
  * @param func          A ParseStart callback.
  *
  * @noreturn

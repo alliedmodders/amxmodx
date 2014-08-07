@@ -53,15 +53,19 @@ stock ByteCountToCells(size)
  *
  * @note It is very important that the provided cellsize matches up with the
  *       buffer sizes that you pass with subsequent Array[Get|Set|Push] calls.
+ * @note Initially the "reserved" parameter was intended to create blank entries
+ *       that would immediately be usable with Array[Get|Set] functions. This
+ *       functionality was never working as intended, and can now be achieved
+ *       using ArrayResize().
  *
  * @param cellsize      Size of each array entry in cells
- * @param reserver      Amount of blank entries that are inserted immediately
- *                      upon creation of the array. These are not readable until
- *                      initialized with an ArraySet* function.
+ * @param reserved      Pre-allocates space in the array for the specified
+ *                      number of items. The items are not valid to read or set
+ *                      until they have actually been pushed into the array.
  *
  * @return              Handle to the array.
  */
-native Array:ArrayCreate(cellsize = 1, reserved = 0);
+native Array:ArrayCreate(cellsize = 1, reserved = 32);
 
 /**
  * Clones an array, returning a new handle with the same size and data.

@@ -20,6 +20,7 @@ new g_coloredMenus
 
 new g_cvarDisplayClientMessage;
 new g_cvarClientLanguages;
+new g_cvarServerLanguage;
 
 public plugin_init()
 {
@@ -30,6 +31,8 @@ public plugin_init()
 	
 	g_cvarClientLanguages = register_cvar("amx_client_languages", "1")
 	g_cvarDisplayClientMessage = register_cvar("amx_language_display_msg", "1")
+	g_cvarServerLanguage = get_cvar_pointer("amx_language");
+	
 	register_clcmd("amx_langmenu", "cmdLangMenu", ADMIN_ALL)
 	register_menu("Language Menu", 1023, "actionMenu")
 	
@@ -65,6 +68,12 @@ public cmdLangMenu(id, level, cid)
 	
 	new buffer[3]
 	get_user_info(id, "lang", buffer, charsmax(buffer))
+	
+	if (buffer[0] == EOS) // if "lang" is not defined, by default it will use server language.
+	{
+		get_pcvar_string(g_cvarServerLanguage, buffer, charsmax(buffer));
+	}
+	
 	g_menuLang[id] = get_lang_id(buffer)
 	
 	showMenu(id)

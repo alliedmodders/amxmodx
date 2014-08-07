@@ -79,8 +79,12 @@ const char *translate(AMX *amx, cell amxaddr, const char *key)
 		get_amxstring_r(amx, amxaddr, name, 3);
 		pLangName = name;
 	}
+
 	if (!pLangName || !isalpha(pLangName[0]))
-		pLangName = "en";
+	{
+		pLangName = amxmodx_language->string;
+	}
+
 	//next parameter!
 	def = g_langMngr.GetDef(pLangName, key, status);
 			

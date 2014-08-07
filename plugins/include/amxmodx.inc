@@ -108,7 +108,7 @@ forward plugin_end();
 forward plugin_log();
 
 /**
- * This forward allows you to add models, sounds and generic files to the
+ * This forward allows plugins to add models, sounds and generic files to the
  * precache tables using the precache_* set of functions.
  *
  * @note Adding files to the precaching tables will trigger the client to
@@ -277,7 +277,7 @@ native change_level(const map[]);
  * @error           If called outside of the plugin_precache() forward, an error
  *                  is thrown.
  */
-native set_user_info(index,const info[], const value[]);
+native set_user_info(index, const info[], const value[]);
 
 /**
  * Gets info from the client.
@@ -434,8 +434,8 @@ native console_cmd(id, const cmd[], any:...);
  *       "2&Buy" - Second parameter of message must contain "Buy" substring
  *       "2!Buy" - Second parameter of message must not equal "Buy"
  * @note Due to a long-standing bug that would break compatibility with older
- *       plugins, the client id should be checked for alive/dead state if you
- *       use flags "d" or "e".
+ *       plugins, the client id should be checked for alive/dead state if using
+ *       flags "d" or "e".
  *
  * @param event     Name of event that should be hooked
  * @param function  Name of callback function
@@ -523,7 +523,7 @@ native register_logevent(const function[], argsnum,  ...);
  *
  * @noreturn
  */
-native set_hudmessage(red=200, green=100, blue=0, Float:x=-1.0, Float:y=0.35, effects=0, Float:fxtime=6.0, Float:holdtime=12.0, Float:fadeintime=0.1, Float:fadeouttime=0.2,channel=-1);
+native set_hudmessage(red=200, green=100, blue=0, Float:x=-1.0, Float:y=0.35, effects=0, Float:fxtime=6.0, Float:holdtime=12.0, Float:fadeintime=0.1, Float:fadeouttime=0.2, channel=-1);
 
 /**
  * Displays a message on the client HUD.
@@ -575,7 +575,7 @@ native set_dhudmessage(red=200, green=100, blue=0, Float:x=-1.0, Float:y=0.35, e
  * @note Use set_dhudmessage to define how the message should look on screen.
  * @note Unlike the classic HUD message which is channel-based, director
  *       messages are stack-based. You can have up to 8 messages displaying at
- *       once, if you add more they will be overwtitten in the order they were
+ *       once, if more are added they will be overwritten in the order they were
  *       sent. There is no way to clear a specific message.
  * @note The message has a maximum length of 128 characters which this function
  *       will automatically enforce.
@@ -643,7 +643,7 @@ native show_menu(index, keys, const menu[], time = -1, const title[] = "");
  *                  If two additional parameters are provided, the function
  *                  will return the number of cells written to the buffer.
  */
-native read_data(value, any:... );
+native read_data(value, any:...);
 
 /**
  * Returns the number of values in the client message.
@@ -675,7 +675,7 @@ native read_datatype();
  * @error           If called outside of the plugin_log() forward, an error is
  *                  thrown.
  */
-native read_logdata(output[],len);
+native read_logdata(output[], len);
 
 /**
  * Returns number of log message arguments.
@@ -1114,7 +1114,7 @@ native get_user_name(index, name[], len);
  *
  * @return          Number of cells written to buffer
  */
-native get_user_authid(index, authid[] ,len);
+native get_user_authid(index, authid[], len);
 
 /**
  * Returns the userid of a client.
@@ -1304,7 +1304,7 @@ native get_flags(flags, output[], len);
  * @param ...       String to match against (integer if "k" flag is specified)
  *
  */
-native find_player(const flags[], ... );
+native find_player(const flags[], ...);
 
 /**
  * Removes double-quotes from the beginning and end of a string.
@@ -1398,7 +1398,7 @@ native amxclient_cmd(index, const command[], const arg1[] = "", const arg2[] = "
  *
  * @noreturn
  */
-native server_cmd(const command[],any:...);
+native server_cmd(const command[], any:...);
 
 /**
  * Sets a cvar to a given string value. The cvar is accessed by name.
@@ -1775,65 +1775,255 @@ native get_user_flags(index, id=0);
  */
 native remove_user_flags(index, flags=-1, id=0);
 
-/* Registers function which will be called from client console.
- * Set FlagManager to 1 to make FlagManager always include this command
- * Set FlagManager to 0 to make FlagManager never include this command
- * Returns the command ID.
+/**
+ * Registers a callback to be called when the client executes a command from the
+ * console.
+ *
+ * @note For a list of possible access flags see the ADMIN_* constans in
+ *       amxconst.inc
+ * @note Opting in to FlagManager enables the admin privileges to be overwritten
+ *       by the end user via the cmdaccess.ini config file.
+ * @note Automatic detection for FlagManager will only include a command if it
+ *       has required privileges (flags is not -1) and it is not a command
+ *       starting with "say".
+ *
+ * @param client_cmd    Command to register
+ * @param function      Callback function
+ * @param flags         Admin privilege flags required
+ * @param info          Command description
+ * @param FlagManager   0 opts out of flag manager, 1 opts in, -1 selects
+ *                      automatically
+ *
+ * @return              Command id, 0 on failure
+ * @error               If an invalid callback function is specified, an error
+ *                      will be thrown.
  */
 native register_clcmd(const client_cmd[], const function[], flags=-1, const info[]="", FlagManager=-1);
 
-/* Registers function which will be called from any console.
- * Set FlagManager to 1 to make FlagManager always include this command
- * Set FlagManager to 0 to make FlagManager never include this command
- * Returns the command ID.
+/**
+ * Registers a callback to be called when the client or server executes a
+ * command from the console.
+ *
+ * @note For a list of possible access flags see the ADMIN_* constans in
+ *       amxconst.inc
+ * @note Opting in to FlagManager enables the admin privileges to be overwritten
+ *       by the end user via the cmdaccess.ini config file.
+ * @note Automatic detection for FlagManager will only include a command if it
+ *       has required privileges (flags is not -1) and it is not a command
+ *       starting with "say".
+ *
+ * @param client_cmd    Command to register
+ * @param function      Callback function
+ * @param flags         Admin privilege flags required
+ * @param info          Command description
+ * @param FlagManager   0 opts out of flag manager, 1 opts in, -1 selects
+ *                      automatically
+ *
+ * @return              Command id, 0 on failure
+ * @error               If an invalid callback function is specified, an error
+ *                      will be thrown.
  */
 native register_concmd(const cmd[], const function[], flags=-1, const info[]="", FlagManager=-1);
 
-/* Registers function which will be called from server console.
- * Returns the command ID.
+/**
+ * Registers a callback to be called when the server executes a command from the
+ * console.
+ *
+ * @note For a list of possible access flags see the ADMIN_* constans in
+ *       amxconst.inc
+ *
+ * @param client_cmd    Command to register
+ * @param function      Callback function
+ * @param flags         Admin privilege flags required
+ * @param info          Command description
+ *
+ * @return              Command id, 0 on failure
+ * @error               If an invalid callback function is specified, an error
+ *                      will be thrown.
  */
 native register_srvcmd(const server_cmd[], const function[], flags=-1, const info[]="");
 
-/* Gets info about client command. */
+/**
+ * Retrieves information about a client command.
+ *
+ * @note For a list of possible access flags see the ADMIN_* constans in
+ *       amxconst.inc
+ *
+ * @param index     Command index
+ * @param command   Buffer to copy command name to
+ * @param len1      Maximum name buffer size
+ * @param flags     Variable to store privilege flags to
+ * @param info      Buffer to copy command description to
+ * @param len2      Maximum description buffer size
+ * @param flag      Only considers commands that can be accessed with
+ *                  the specified privilege flags.
+ *
+ * @return          1 on succes, 0 if command was not found
+ */
 native get_clcmd(index, command[], len1, &flags, info[], len2, flag);
 
-/* Returns number of registered client commands. */
+/**
+ * Returns number of registered client commands.
+ *
+ * @note For a list of possible access flags see the ADMIN_* constans in
+ *       amxconst.inc
+ *
+ * @param flag      Only considers commands that can be accessed with
+ *                  the specified privilege flags.
+ *
+ * @return          Number of registered client commants
+ */
 native get_clcmdsnum(flag);
 
-/* Gets info about server command. */
-native get_srvcmd(index,server_cmd[],len1,&flags, info[],len2, flag);
+/**
+ * Retrieves information about a server command.
+ *
+ * @note For a list of possible access flags see the ADMIN_* constans in
+ *       amxconst.inc
+ *
+ * @param index     Command index
+ * @param command   Buffer to copy command name to
+ * @param len1      Maximum name buffer size
+ * @param flags     Variable to store privilege flags to
+ * @param info      Buffer to copy command description to
+ * @param len2      Maximum description buffer size
+ * @param flag      Only considers commands that can be accessed with
+ *                  the specified privilege flags.
+ *
+ * @return          1 on succes, 0 if command was not found
+ */
+native get_srvcmd(index, server_cmd[], len1, &flags, info[], len2, flag);
 
-/* Returns number of registered server commands. */
+/**
+ * Returns number of registered server commands.
+ *
+ * @note For a list of possible access flags see the ADMIN_* constans in
+ *       amxconst.inc
+ *
+ * @param flag      Only considers commands that can be accessed with
+ *                  the specified privilege flags.
+ *
+ * @return          Number of registered server commants
+ */
 native get_srvcmdsnum(flag);
 
-/* Gets info about console command. If id is set to 0,
-then function returns only server cmds, if positive then
-returns only client cmds. in other case returns all console commands. */
-native get_concmd(index,cmd[],len1,&flags, info[],len2, flag, id = -1);
+/**
+ * Retrieves information about a console command.
+ *
+ * @note For a list of possible access flags see the ADMIN_* constans in
+ *       amxconst.inc
+ *
+ * @param index     Command index
+ * @param command   Buffer to copy command name to
+ * @param len1      Maximum name buffer size
+ * @param flags     Variable to store privilege flags to
+ * @param info      Buffer to copy command description to
+ * @param len2      Maximum description buffer size
+ * @param flag      Only considers commands that can be accessed with
+ *                  the specified privilege flags.
+ * @param id        If set to 0 only server commands will be considered,
+ *                  positive will only consider client commands, otherwise
+ *                  all console commands will be considered.
+ *
+ * @return          1 on succes, 0 if command was not found
+ */
+native get_concmd(index, cmd[], len1, &flags, info[], len2, flag, id=-1);
 
-/* Gets the parent plugin id of a console command. */
+/**
+ * Returns the parent plugin id of a console command
+ *
+ * @note For a list of possible access flags see the ADMIN_* constans in
+ *       amxconst.inc
+ *
+ * @param cid           Command index
+ * @param flag_mask     Only considers commands that can be accessed with
+ *                      the specified privilege flags.
+ * @param id_type       If set to 0 only server commands will be considered,
+ *                      positive will only consider client commands, otherwise
+ *                      all console commands will be considered.
+ */
 native get_concmd_plid(cid, flag_mask, id_type);
 
-/* Returns number of registered console commands. */
-native get_concmdsnum(flag,id = -1);
+/**
+ * Returns number of registered console commands.
+ *
+ * @note For a list of possible access flags see the ADMIN_* constans in
+ *       amxconst.inc
+ *
+ * @param flag      Only considers commands that can be accessed with
+ *                  the specified privilege flags.
+ * @param id        If set to 0 only server commands will be considered,
+ *                  positive will only consider client commands, otherwise
+ *                  all console commands will be considered.
+ *
+ * @return          Number of registered console commants
+ */
+native get_concmdsnum(flag, id = -1);
 
-/* Returns the number of plugin-registered cvars. */
+/**
+ * Returns the number of plugin-registered cvars.
+ *
+ * @return  Number of registered cvars
+ */
 native get_plugins_cvarsnum();
 
-/* Returns information about a plugin-registered cvar. */
+/**
+ * Retrieves information about a plugin-registered cvar.
+ *
+ * @note The returned cvar pointer should be used with the get_pcvar_* and
+ *       set_pcvar_* set of functions.
+ *
+ * @param num           Cvar index, this does not equal the cvar pointer, it is
+ *                      the internal index, incremented for each registered cvar
+ * @param name          Buffer to copy cvar name to
+ * @param namelen       Maximum buffer size
+ * @param flags         Variable to store cvar flags to
+ * @param plugin_id     Variable to store id of the registering plugin to
+ * @param pcvar_handle  Variable to store cvar pointer to
+ *
+ * @return              1 on success, 0 if index is invalid
+ */
 native get_plugins_cvar(num, name[], namelen, &flags=0, &plugin_id=0, &pcvar_handle=0);
 
-/* Gets unique id of menu. Outside set to 1 allows
-* to catch menus outside a plugin where register_menuid is called. */
-native register_menuid(const menu[], outside=0 );
+/**
+ * Returns unique menu id of a menu.
+ *
+ * @param menu      Menu name
+ * @param outside   Catch menus outside the calling plugin
+ *
+ * @return          Menu id
+ */
+native register_menuid(const menu[], outside=0);
 
-/* Calls function when player uses specified menu and proper keys. */
-native register_menucmd(menuid,keys, const function[] );
+/**
+ * Registers a callback function to a menu id and keys.
+ *
+ * @param menuid        Menu id
+ * @param keys          Key flags
+ * @param function      Callback function
+ *
+ * @noreturn
+ * @error               If an invalid callback function is specified, an error
+ *                      will be thrown.
+ */
+native register_menucmd(menuid, keys, const function[]);
 
-/* Gets what menu the player is watching and what keys for menu he have.
-* When there is no menu the index is 0. If the id is negative then the menu
-* is VGUI in other case the id is from register_menuid() function. */
-native get_user_menu(index,&id,&keys);
+/**
+ * Returns if the client is watching a menu.
+ *
+ * @note If there is no menu the id is 0. If the id is negative then the client
+ *       views a VGUI menu. Otherwise the id is an id acquired from the
+ *       register_menuid() function.
+ *
+ * @param index     Client index
+ * @param id        Variable to store menu id to
+ * @param keys      Variable to store menu keys to
+ *
+ * @return          1 if client views a menu, 0 otherwise
+ * @error           If the client index is not within the range of 1 to
+ *                  MaxClients, an error will be thrown.
+ */
+native get_user_menu(index, &id, &keys);
 
 /**
  * Forces the server to execute the command queue immediately.
@@ -1862,7 +2052,7 @@ native server_exec();
  * @param flags     Emit flags
  * @param pitch     Sound pitch
  */
-native emit_sound(index, channel, const sample[], Float:vol, Float:att,flags, pitch);
+native emit_sound(index, channel, const sample[], Float:vol, Float:att, flags, pitch);
 
 /**
  * Registers a new cvar for the engine.
@@ -2080,7 +2270,7 @@ native is_plugin_loaded(const name[], bool:usefilename=false);
  * @return          Plugin index on success, -1 if there is no plugin with given
  *                  index
  */
-native get_plugin(index,filename[]="",len1=0,name[]="",len2=0,version[]="",len3=0,author[]="",len4=0,status[]="",len5=0,...);
+native get_plugin(index, filename[]="", len1=0, name[]="", len2=0, version[]="", len3=0, author[]="", len4=0, status[]="", len5=0, ...);
 
 /**
  * Returns the number of loaded AMXX plugins.
@@ -2107,7 +2297,7 @@ native get_pluginsnum();
  * @error           If it is attempted to use the deprecated functionality,
  *                  an error is thrown.
  */
-native pause(const flag[], const param1[]="",const param2[]="");
+native pause(const flag[], const param1[]="", const param2[]="");
 
 /**
  * Unpauses a plugin so it will resume execution if it was previously paused.
@@ -2128,7 +2318,7 @@ native pause(const flag[], const param1[]="",const param2[]="");
  * @error           If it is attempted to use the deprecated functionality,
  *                  an error is thrown.
  */
-native unpause(const flag[], const param1[]="",const param2[]="");
+native unpause(const flag[], const param1[]="", const param2[]="");
 
 /**
  * Initiates a function call to this or another plugin by function name.
@@ -2285,7 +2475,7 @@ native callfunc_end();
  * @return          PLUGIN_CONTINUE to let the engine kick the client
  *                  PLUGIN_HANDLED to block the inconsistency kick
  */
-forward inconsistent_file(id,const filename[], reason[64] );
+forward inconsistent_file(id, const filename[], reason[64]);
 
 /**
  * Forces the clients and server to be running with the same version of a
@@ -2301,7 +2491,7 @@ forward inconsistent_file(id,const filename[], reason[64] );
  *
  * @return              1 on success, 0 otherwise
  */
-native force_unmodified(force_type, const mins[3] , const maxs[3], const filename[]);
+native force_unmodified(force_type, const mins[3], const maxs[3], const filename[]);
 
 /**
  * Calculates the MD5 keysum of a string.
@@ -2377,163 +2567,385 @@ native is_amd64_server();
 native find_plugin_byfile(const filename[], ignoreCase=1);
 
 /**
- * Called before plugin_init(), allowing the plugin to register natives.
+ * Called before plugin_init(), allows the plugin to register natives.
  *
  * @noreturn
  */
 forward plugin_natives();
 
-/* Registers a NATIVE.  When a plugin uses your native (you should distribute a .inc),
- * the handler will be called with two parameters: the calling plugin id, and the
- * number of parameters.
- * If you set style=1, the method of parameter passing is a tad more efficient.
- * Instead of "id, numParams", you label the native exactly as how the parameters
- *  should, in theory, be sent.  Then for each byreference parameter, you call
- *  param_convert(num).  This is theoretically more efficient but quite hacky.
- *  The method was discovered by dJeyL, props to him!
+/**
+ * Registers a native.
+ *
+ * @note Stlye 0 natives call the handler in the following manner:
+ *
+ * public native_handler(plugin_id, argc)
+ *
+ * plugin_id    - plugin calling the native
+ * argc         - number of parameters
+ *
+ * @note Style 1 natives are deprecated. Plugins should not use them, they might
+ *       break.
+ * @note Style 1 natives work a little different. Instead of passing plugin id
+ *       and number of parameters the handler should be prototyped just like the
+ *       native would be called. For each by-reference parameter the plugin
+ *       then has to use param_convert() to properly use them.
+ * @note A native should *never* recurse. Bad things will happen.
+ *
+ * @param name      Native name
+ * @param handler   Callback function
+ * @param style     Native style
+ *
+ * @noreturn
+ * @error           If an invalid callback is specified, an error is thrown.
  */
 native register_native(const name[], const handler[], style=0);
 
-/* Registers a library.  To mark a library as required, place the following
- * in your include file:
- *  #pragma reqlib <name>
- *  #if !defined AMXMODX_NOAUTOLOAD
- *   #pragma loadlib <name>
- *  #endif
+/**
+ * Registers the plugin as a library.
+ *
+ * @note To mark a library as required, place the following in the include
+ *       file:
+ *       #pragma reqlib <name>
+ *       #if !defined AMXMODX_NOAUTOLOAD
+ *          #pragma loadlib <name>
+ *       #endif
+ *
+ * @noreturn
  */
 native register_library(const library[]);
 
-/* Logs an error in your native, and breaks into the debugger.
- * Acts as if the calling plugin had the error.
+/**
+ * Logs an error in the native and breaks into the AMXX debugger.
+ *
+ * @note This acts as if the calling plugin - the plugin that is calling the
+ *       native, not the plugin calling this function - triggered the error,
+ *       just like when AMXX natives error.
+ *
+ * @param error     Error number
+ * @param fmt       Formatting rules
+ * @param ...       Variable number of formatting parameters
+ *
+ * @noreturn
+ * @error           The function is guaranteed to throw an error, but will make
+ *                  it appear as if the plugin calling the native triggered it.
  */
 native log_error(error, const fmt[], any:...);
 
-// More Dynamic Native System Stuff
-// Each of these natives affects one of the parameters sent to your native.
-// Parameters go from 1 to n, just like in modules, and it is important to
-//  remember two things: The parameters are actually coming from another plugin
-//  (and just like modules, you must use these special natives).
-//  two: you CANNOT call your native from inside your native.  This is very bad.
-
-//This function should only be called if you registered with style=1
-//You only need to use it on by-reference parameters.
+/**
+ * Converts a parameter to work as a by-reference parameter.
+ *
+ * @deprecated Style 1 natives are deprecated and should be converted to
+ *             style 0. This should not be used.
+ *
+ * @note Only needs to be called this if the native was registered with style 1.
+ * @note Remember that arrays (and strings) are always by-reference and need to
+ *       be converted.
+ *
+ * @param num       Argument to convert, starting from 1
+ *
+ * @noreturn
+ * @error           If used outside of a native callback or the native was
+ *                  created with style 0, an error will be thrown.
+ */
 native param_convert(num);
 
-// Gets a string from the calling plugin
+/**
+ * Retrieves a string from the plugin calling the native.
+ *
+ * @param param     Argument to retrieve, starting from 1
+ * @param dest      Buffer to copy string to
+ * @param maxlen    Maximum size of buffer
+ *
+ * @return          Number of cells copied to buffer
+ * @error           If used outside of a native callback or the native was
+ *                  created with style 1, an error will be thrown.
+ */
 native get_string(param, dest[], maxlen);
 
-// Sets a string in the calling plugin
+/**
+ * Copies a string to the plugin calling the native.
+ *
+ * @param param     Argument to set, starting from 1
+ * @param dest      Buffer to copy string from
+ * @param maxlen    Maximum size of buffer
+ *
+ * @return          Number of cells copied from buffer
+ * @error           If used outside of a native callback or the native was
+ *                  created with style 1, an error will be thrown.
+ */
 native set_string(param, dest[], maxlen);
 
-// Gets a normal int or float parameter
+/**
+ * Returns the integer value of a parameter from the plugin calling the native.
+ *
+ * @param param     Argument to retrieve, starting from 1
+ *
+ * @return          Integer value
+ * @error           If used outside of a native callback or the native was
+ *                  created with style 1, an error will be thrown.
+ */
 native get_param(param);
-native Float:get_param_f(param);
-
-// Gets/Sets a float or int parameter by reference
-native get_param_byref(param);
-native Float:get_float_byref(param);
-native set_param_byref(param, value);
-native set_float_byref(param, Float:value);
-
-// Copies an array either from the calling plugin to you
-// Or copies an array from you to the calling plugin
-native get_array(param, dest[], size);
-native get_array_f(param, Float:dest[], size);
-native set_array(param, const source[], size);
-native set_array_f(param, const Float:source[], size);
-
-// Dispatches a client cvar query
-//  id: Player id
-//  cvar: cvar name
-//  resultFunc: public handler function
-//  paramLen + params: optional array parameter
-// resultFunc looks like:
-//  public callbackCvarValue(id, const cvar[], const value[])
-// or if you use the optional parameter:
-//  public callbackCvarValue(id, const cvar[], const value[], const param[])
-native query_client_cvar(id, const cvar[], const resultFunc[], paramlen=0, const params[] = "");
-
 
 /**
- * Allows you to trap error messages that occur in your plugin.
- * You can use this to override the debug messages that occur when your plugin
- *  causes some sort of runtime error.  Your handler will be called in this style:
+ * Returns the float value of a parameter from the plugin calling the native.
+ *
+ * @param param     Argument to retrieve, starting from 1
+ *
+ * @return          Float value
+ * @error           If used outside of a native callback or the native was
+ *                  created with style 1, an error will be thrown.
+ */
+native Float:get_param_f(param);
+
+/**
+ * Returns the integer value of a by-reference parameter from the plugin calling
+ * the native.
+ *
+ * @param param     Argument to retrieve, starting from 1
+ *
+ * @return          Integer value
+ * @error           If used outside of a native callback or the native was
+ *                  created with style 1, an error will be thrown.
+ */
+native get_param_byref(param);
+
+/**
+ * Returns the float value of a by-reference parameter from the plugin calling
+ * the native.
+ *
+ * @param param     Argument to retrieve, starting from 1
+ *
+ * @return          Float value
+ * @error           If used outside of a native callback or the native was
+ *                  created with style 1, an error will be thrown.
+ */
+native Float:get_float_byref(param);
+
+/**
+ * Sets the integer value of a by-reference parameter to the plugin calling the
+ * native.
+ *
+ * @param param     Argument to set, starting from 1
+ * @param value     Value to set parameter to
+ *
+ * @noreturn
+ * @error           If used outside of a native callback or the native was
+ *                  created with style 1, an error will be thrown.
+ */
+native set_param_byref(param, value);
+
+/**
+ * Sets the float value of a by-reference parameter to the plugin calling the
+ * native.
+ *
+ * @param param     Argument to set, starting from 1
+ * @param value     Value to set parameter to
+ *
+ * @noreturn
+ * @error           If used outside of a native callback or the native was
+ *                  created with style 1, an error will be thrown.
+ */
+native set_float_byref(param, Float:value);
+
+/**
+ * Retrieves an array from the plugin calling the native.
+ *
+ * @param param     Argument to retrieve, starting from 1
+ * @param dest      Buffer to copy array to
+ * @param maxlen    Size of buffer
+ *
+ * @noreturn
+ * @error           If used outside of a native callback or the native was
+ *                  created with style 1, an error will be thrown.
+ */
+native get_array(param, dest[], size);
+
+/**
+ * Retrieves a float array from the plugin calling the native.
+ *
+ * @param param     Argument to retrieve, starting from 1
+ * @param dest      Buffer to copy array to
+ * @param maxlen    Size of buffer
+ *
+ * @noreturn
+ * @error           If used outside of a native callback or the native was
+ *                  created with style 1, an error will be thrown.
+ */
+native get_array_f(param, Float:dest[], size);
+
+/**
+ * Copies an array to the plugin calling the native.
+ *
+ * @param param     Argument to set, starting from 1
+ * @param source    Buffer to copy array from
+ * @param maxlen    Size of buffer
+ *
+ * @noreturn
+ * @error           If used outside of a native callback or the native was
+ *                  created with style 1, an error will be thrown.
+ */
+native set_array(param, const source[], size);
+
+/**
+ * Copies a float array to the plugin calling the native.
+ *
+ * @param param     Argument to set, starting from 1
+ * @param source    Buffer to copy array from
+ * @param maxlen    Size of buffer
+ *
+ * @noreturn
+ * @error           If used outside of a native callback or the native was
+ *                  created with style 1, an error will be thrown.
+ */
+native set_array_f(param, const Float:source[], size);
+
+/**
+ * Dispatches a client cvar query, allowing the plugin to query for its value on
+ * the client.
+ *
+ * @note The callback will be called in the following manner:
+ *
+ * public cvar_query_callback(id, const cvar[], const value[], const param[])
+ *
+ *  id      - Client index
+ *  cvar    - Cvar queried
+ *  value   - Cvar value on the client
+ *  param   - Extra data [optional]
+ *
+ * @param id            Client index
+ * @param cvar          Cvar to query
+ * @param resultFunc    Callback function
+ * @param paramlen      Size of extra data
+ * @param params        Extra data to pass through to callback
+ *
+ * @noreturn
+ * @error               If the client index is not within the range of 1 to
+ *                      MaxClients or the client is not connected, an error
+ *                      will be thrown.
+ *                      If the callback function is invalid, cvar querying is
+ *                      unavailable or the querying process runs out of memory,
+ *                      an error will be thrown.
+ */
+native query_client_cvar(id, const cvar[], const resultFunc[], paramlen=0, const params[] = "");
+
+/**
+ * Allows to trap error messages that occur in a plugin.
+ *
+ * @note This can be used to override the debug messages that occur when the
+ *       plugin causes some kind of runtime error.
+ * @note The handler will be called in the following manner:
  *
  * public error_filter(error_code, bool:debugging, message[])
- *    error_code is the AMX_ERR code.  debugging is whether or not the plugin is in debug mode.
- *    message[] is any message that was sent along with the error.
- * Return PLUGIN_CONTINUE to let the error pass through the filter.
- * Return PLUGIN_HANDLED to block the error from displaying.
+ *
+ *  error_code      - AMX_ERR_* code.
+ *  debugging       - True if the plugin is in debug mode, false otherwise
+ *  message[]       - Message sent along with the error
+ *
+ * @note The handler should return PLUGIN_CONTINUE to let the error through the
+ *       filter, or PLUGIN_HANDLED to block the error from displaying.
+ *
+ * @param handler       Callback function
+ *
+ * @error               If an invalid callback is specified, an error is thrown.
  */
 native set_error_filter(const handler[]);
 
 /**
- * Gets a trace handle for the item at the top of the traced call stack.
- * Returns 0 if no debugging information is available.
+ * Returns a trace handle for the item at the top of the traced call stack.
+ *
+ * @note Intended for use inside an error handler set with set_error_filter().
+ *
+ * @return      Trace handle, 0 if no debugging information is available
  */
 native dbg_trace_begin();
 
 /**
- * Gets the next item in a traced call stack.  Returns 0 if no more traces exist.
+ * Returns the next item in a traced call stack.
+ *
+ * @param trace     Trace handle
+ *
+ * @return          New trace handle, 0 if no more traces exist
  */
 native dbg_trace_next(trace);
 
 /**
- * Gets the call stack info for a trace.
+ * Retrieves the call stack info for a trace.
+ *
+ * @param trace         Trace handle
+ * @param line          Variable to set line at which plugin failed to
+ * @param function      Buffer to copy function to
+ * @param maxLength1    Maximum function buffer size
+ * @param file          Buffer to copy filename to
+ * @param maxLength2    Maximum filename buffer size
+ *
+ * @return              1 on success, 0 if no trace data is available
  */
 native dbg_trace_info(trace, &line, function[], maxLength1, file[], maxLength2);
 
 /**
- * Gets the formatted error string, which looks like "Run time error X: (description)"
+ * Retrieves the formatted error string from a trace.
+ *
+ * @note The string format is generally: "Run time error <errno>: <description>"
+ *
+ * @param buffer        Buffer to copy error message to
+ * @param maxLength     Maximum buffer size
+ *
+ * @return              1 on success, 0 if no trace data is available
  */
 native dbg_fmt_error(buffer[], maxLength);
 
 /**
- * The following two natives are useful for creating cross-mod plugins
- *  where instead of #define flags to compile separate versions, you can
- *  filter out the natives and modules depending on the current mod.
- * Examples of this usage are in plmenu.sma, which filters out the cstrike module.
+ * Sets a native filter, letting the plugin intercept and handle an
+ * automatic native requirement.
  *
+ * @note This has to be used inside the plugin_native() forward, otherwise it
+ *       has no effect.
+ * @note This is useful for creating plugins that can dynamically decide which
+ *       modules or features to use at runtime, often necessary for cross-mod
+ *       plugins. It allows to deploy a single version of the plugin instead
+ *       of compiling multiple versions for each use-case.
+ * @note The handler will be called in the following manner:
  *
+ * public native_filter(const native[], index, trap)
  *
+ *  native      - Native name
+ *  index       - Native index
+ *  trap        - 0 if native couldn't be found, 1 if native use was attempted
  *
- *
- * Sets a native filter.  This must be first set in plugin_natives(), but future calls will
- *  simply set a new filter.
- * This filter will allow your plugin to load even if its modules aren't loaded.  For example,
- *  if Fun isn't loaded and you use set_user_frags, your plugin will still load.  However, if you
- *  attempt to call this native, your filter will intercept it with these parameters:
- *
- * public function native_filter(const native[], index, trap)
- *  native - name of native
- *  index - index of native
- *  trap - 0 if native couldn't be found, 1 if native use was attempted
- *
- * If you return PLUGIN_HANDLED, no error is thrown.  If you return PLUGIN_CONTINUE,
- *  your plugin will have a run-time-error.  To print your own error, or change the default,
- *  you can return PLUGIN_HANDLED or return PLUGIN_CONTINUE and use set_error_filter.
- * If you return PLUGIN_CONTINUE when trap is 0, the plugin will ABORT AND FAIL TO LOAD!
- * When trap is 0, it is unsafe to use natives that modify the server or use other plugins.
+ * @note The handler should return PLUGIN_CONTINUE to let the error through the
+ *       filter (which will throw a run-time error), or return PLUGIN_HANDLED
+ *       to continue operation.
+ * @note Returning PLUGIN_CONTINUE if trap is 0 will result in the plugin
+ *       failing to load!
  */
 native set_native_filter(const handler[]);
 
 /**
- * This function sets a module/library filter.  It will let you intercept the automatic requirement
- *  of a module and return PLUGIN_CONTINUE to fail load or PLUGIN_HANDLED to imply that load
- *  can continue even without the module.
+ * Sets a module/library filter, letting the plugin intercept and handle an
+ * automatic module requirement.
  *
- * This is the most unforgiving of the filter functions.  You can ONLY call it during plugin_natives,
- *  and any error that occurs is not filtered -- instead your plugin will fail to load as if you
- *  returned PLUGIN_CONTINUE.
+ * @note This has to be used inside the plugin_native() forward, otherwise it
+ *       has no effect.
+ * @note This is useful for creating plugins that can dynamically decide which
+ *       modules or features to use at runtime, often necessary for cross-mod
+ *       plugins. It allows to deploy a single version of the plugin instead
+ *       of compiling multiple versions for each use-case.
+ * @note For a list of possible libtypes see the LibType enum in amxconst.inc
+ * @note The handler will be called in the following manner:
  *
- * Your handler will be called with this prototype:
+ * public module_filter(const library[], LibType:type)
  *
- * public module_filter(const library[], LibType:type);
- *  library - library or class name of the module that is required
- *  libtype - The type of requirement being checked (library/module or class).
+ *  library     - Shortname of library or class that is required
+ *  libtrype    - Type of requirement being checked (library/module or class)
  *
+ * @note The handler should return PLUGIN_CONTINUE to let the error through the
+ *       filter (which will result in the plugin failing to load), or
+ *       PLUGIN_HANDLED to imply that load can continue without the module.
+ * @note Errors occuring inside the handler will not be filtered and cause the
+ *       plugin to fail load as if the handler returned PLUGIN_CONTINUE.
  *
- * set_module_filter() returns 0 on success (unlike most natives).
+ * @return      0 on success, -1 if filtering is not available, -2 if handler
+ *              could not be found.
  */
 native set_module_filter(const handler[]);
 
@@ -2603,7 +3015,7 @@ native next_hudchannel(player);
  * Creates a HUD synchronization object.
  *
  * @note Create one of these for each section of the screen that contains
- *       overlapping HUD messages. For example, if you use both sides of the
+ *       overlapping HUD messages. For example, if using both sides of the
  *       screen to display three messages that could potentially overlap,
  *       each side is considered a synchronizable area. You can then use
  *       ShowSyncHudMsg() to correctly synchronize displaying the HUD message
@@ -2622,7 +3034,7 @@ native CreateHudSyncObj(num=0, ...);
 /**
  * Displays a synchronized HUD message.
  *
- * @note This will check that your HUD object has its previous display on the
+ * @note This will check that the HUD object has its previous display on the
  *       screen cleared before it proceeds to write another message. It will
  *       only do this in the case of that channel not having been cleared
  *       already.
@@ -2804,7 +3216,7 @@ native DestroyForward(forward_handle);
 /**
  * Returns the cvar pointer of the specified cvar.
  *
- * @note A pointer is also returned by register_cvar(). You can (and should)
+ * @note A pointer is also returned by register_cvar(). Plugins can (and should)
  *       retrieve and use pointers for already existing mod cvars.
  *
  * @param cvar      Cvar name to find

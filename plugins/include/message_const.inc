@@ -1073,8 +1073,6 @@ enum
  * Larger message than the standard tracer, but allows some customization.
  *
  * @note
- */
-#define TE_USERTRACER               127
  * write_byte(TE_USERTRACER)
  * write_coord(origin.x)
  * write_coord(origin.y)
@@ -1085,6 +1083,8 @@ enum
  * write_byte(life * 10)
  * write_byte(color) this is an index into an array of color vectors in the engine. (0 - )
  * write_byte(length * 10)
+ */
+#define TE_USERTRACER               127
 
 /**
  * @endsection

@@ -35,6 +35,11 @@ static cell AMX_NATIVE_CALL ArrayCreate(AMX* amx, cell* params)
 		return -1;
 	}
 
+	if (reserved < 0)
+	{
+		reserved = 0;
+	}
+
 	// Scan through the vector list to see if any are NULL.
 	// NULL means the vector was previously destroyed.
 	for (unsigned int i=0; i < VectorHolder.length(); ++i)

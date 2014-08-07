@@ -52,7 +52,7 @@ stock ByteCountToCells(size)
  * Creates a handle to a dynamically sized array.
  *
  * @note It is very important that the provided cellsize matches up with the
- *       buffer sizes that you pass with subsequent Array[Get|Set|Push] calls.
+ *       buffer sizes that are passed with subsequent Array[Get|Set|Push] calls.
  * @note Initially the "reserved" parameter was intended to create blank entries
  *       that would immediately be usable with Array[Get|Set] functions. This
  *       functionality was never working as intended, and can now be achieved
@@ -73,7 +73,8 @@ native Array:ArrayCreate(cellsize = 1, reserved = 32);
  * @param which         Array handle
  *
  * @return              Handle to the cloned array on success, 0 otherwise
- * @error               If an invalid handle is provided an error will be thrown
+ * @error               If an invalid handle is provided an error will be
+ *                      thrown.
  */
 native Array:ArrayClone(Array:which);
 
@@ -93,7 +94,8 @@ native ArrayClear(Array:which);
  * @param which         Array handle
  *
  * @return              Number of elements in the array
- * @error               If an invalid handle is provided an error will be thrown
+ * @error               If an invalid handle is provided an error will be
+ *                      thrown.
  */
 native ArraySize(Array:which);
 
@@ -108,7 +110,7 @@ native ArraySize(Array:which);
  *
  * @noreturn
  * @error               If an invalid handle is provided or the resizing
- *                      operation runs out of memory, an error will be thrown
+ *                      operation runs out of memory, an error will be thrown.
  */
 native bool:ArrayResize(Array:which, newsize);
 
@@ -141,7 +143,7 @@ native ArrayGetArray(Array:which, item, any:output[], size = -1);
  *
  * @return              Integer value
  * @error               If an invalid handle, index or block is provided an
- *                      error will be thrown
+ *                      error will be thrown.
  */
 native any:ArrayGetCell(Array:which, item, block = 0, bool:asChar = false);
 
@@ -155,7 +157,7 @@ native any:ArrayGetCell(Array:which, item, block = 0, bool:asChar = false);
  *
  * @return              Number of characters copied
  * @error               If an invalid handle or an invalid index is provided an
- *                      error will be thrown
+ *                      error will be thrown.
  */
 native ArrayGetString(Array:which, item, output[], size);
 
@@ -175,7 +177,7 @@ native ArrayGetString(Array:which, item, output[], size);
  *
  * @return              Number of cells copied
  * @error               If an invalid handle or an invalid index is provided an
- *                      error will be thrown
+ *                      error will be thrown.
  */
 native ArraySetArray(Array:which, item, const any:input[], size =-1);
 
@@ -194,7 +196,7 @@ native ArraySetArray(Array:which, item, const any:input[], size =-1);
  *
  * @noreturn
  * @error               If an invalid handle, index or block is provided an
- *                      error will be thrown
+ *                      error will be thrown.
  */
 native ArraySetCell(Array:which, item, any:input, block = 0, bool:asChar = false);
 
@@ -212,7 +214,7 @@ native ArraySetCell(Array:which, item, any:input, block = 0, bool:asChar = false
  *
  * @return              Number of characters copied
  * @error               If an invalid handle or an invalid index is provided an
- *                      error will be thrown
+ *                      error will be thrown.
  */
 native ArraySetString(Array:which, item, const input[]);
 
@@ -230,7 +232,7 @@ native ArraySetString(Array:which, item, const input[]);
  *
  * @return              Index of the new entry
  * @error               If an invalid handle is provided or the resizing
- *                      operation runs out of memory, an error will be thrown
+ *                      operation runs out of memory, an error will be thrown.
  */
 native ArrayPushArray(Array:which, const any:input[], size = -1);
 
@@ -243,7 +245,7 @@ native ArrayPushArray(Array:which, const any:input[], size = -1);
  *
  * @return              Index of the new entry
  * @error               If an invalid handle is provided or the resizing
- *                      operation runs out of memory, an error will be thrown
+ *                      operation runs out of memory, an error will be thrown.
  */
 native ArrayPushCell(Array:which, any:input);
 
@@ -259,7 +261,7 @@ native ArrayPushCell(Array:which, any:input);
  *
  * @return              Index of the new entry
  * @error               If an invalid handle is provided or the resizing
- *                      operation runs out of memory, an error will be thrown
+ *                      operation runs out of memory, an error will be thrown.
  */
 native ArrayPushString(Array:which, const input[]);
 
@@ -273,7 +275,7 @@ native ArrayPushString(Array:which, const input[]);
  *
  * @noreturn
  * @error               If an invalid handle or an invalid index is provided an
- *                      error will be thrown
+ *                      error will be thrown.
  */
 native ArrayInsertArrayAfter(Array:which, item, const any:input[]);
 
@@ -283,11 +285,11 @@ native ArrayInsertArrayAfter(Array:which, item, const any:input[]);
  *
  * @param which         Array handle
  * @param item          Item index in the array
- * @param input         The value to set.
+ * @param input         Value to set
  *
  * @noreturn
  * @error               If an invalid handle or an invalid index is provided an
- *                      error will be thrown
+ *                      error will be thrown.
  */
 native ArrayInsertCellAfter(Array:which, item, any:input);
 
@@ -304,7 +306,7 @@ native ArrayInsertCellAfter(Array:which, item, any:input);
  *
  * @noreturn
  * @error               If an invalid handle or an invalid index is provided an
- *                      error will be thrown
+ *                      error will be thrown.
  */
 native ArrayInsertStringAfter(Array:which, item, const input[]);
 
@@ -318,7 +320,7 @@ native ArrayInsertStringAfter(Array:which, item, const input[]);
  *
  * @noreturn
  * @error               If an invalid handle or an invalid index is provided an
- *                      error will be thrown
+ *                      error will be thrown.
  */
 native ArrayInsertArrayBefore(Array:which, item, const any:input[]);
 
@@ -332,7 +334,7 @@ native ArrayInsertArrayBefore(Array:which, item, const any:input[]);
  *
  * @noreturn
  * @error               If an invalid handle or an invalid index is provided an
- *                      error will be thrown
+ *                      error will be thrown.
  */
 native ArrayInsertCellBefore(Array:which, item, const any:input);
 
@@ -349,7 +351,7 @@ native ArrayInsertCellBefore(Array:which, item, const any:input);
  *
  * @noreturn
  * @error               If an invalid handle or an invalid index is provided an
- *                      error will be thrown
+ *                      error will be thrown.
  */
 native ArrayInsertStringBefore(Array:which, item, const input[]);
 
@@ -361,24 +363,24 @@ native ArrayInsertStringBefore(Array:which, item, const input[]);
  *
  * @noreturn
  * @error               If an invalid handle or an invalid index is provided an
- *                      error will be thrown
+ *                      error will be thrown.
  */
 native ArraySwap(Array:which, item1, item2);
 
 /**
  * Deletes an item from the array. All items beyond it get shifted down by one.
  *
- * @param which         The array that contains the item to delete.
- * @param item          The item to delete.
+ * @param which         Array handle
+ * @param item          Item to delete
  *
  * @noreturn
  * @error               If an invalid handle or an invalid index is provided an
- *                      error will be thrown
+ *                      error will be thrown.
  */
 native ArrayDeleteItem(Array:which, item);
 
 /**
- * Searches through the array and returns the index of the first occurance of
+ * Searches through the array and returns the index of the first occurence of
  * the specified string.
  *
  * @param which         Array handle
@@ -390,14 +392,15 @@ native ArrayDeleteItem(Array:which, item);
 native ArrayFindString(Array:which, const item[]);
 
 /**
- * Searches through the array and returns the index of the first occurance of
+ * Searches through the array and returns the index of the first occurence of
  * the specified value.
  *
- * @param which         Array handle.
+ * @param which         Array handle
  * @param item          Value to search for
  *
  * @return              Array index on success, -1 if the value can't be found
- * @error               Invalid handle.
+ * @error               If an invalid handle is provided an error will be
+ *                      thrown.
  */
 native ArrayFindValue(Array:which, any:item);
 
@@ -416,7 +419,7 @@ native ArrayFindValue(Array:which, any:item);
  *
  * @return              Handle to the item
  * @error               If an invalid handle or an invalid index is provided an
- *                      error will be thrown
+ *                      error will be thrown.
  */
 native DoNotUse:ArrayGetStringHandle(Array:which, item);
 
@@ -426,16 +429,15 @@ native DoNotUse:ArrayGetStringHandle(Array:which, item);
  * @note The function automatically sets the variable passed to it to 0 to aid
  *       in preventing accidental usage after destroy.
  *
- * @param which         The array to destroy.
+ * @param which         Array to destroy
  *
  * @return              1 if the array was destroyed, 0 if nothing had to be
  *                      destroyed (invalid handle)
  */
 native ArrayDestroy(&Array:which);
 
-
 /**
- * Similar to sorting.inc's CustomSort, the sorting algorithm then uses your
+ * Similar to sorting.inc's CustomSort, the sorting algorithm then uses the
  * custom comparison function to sort the data.
  *
  * @note The function is called in the following manner:
@@ -452,8 +454,8 @@ native ArrayDestroy(&Array:which);
  *          0 if item1 and item2 are equal
  *          1 if item1 should go after item2
  *
- * @note All parameters after item2 are optional and you do not need to specify
- *       and use them.
+ * @note All parameters after item2 are optional and do not need to be specified
+ *       and used.
  * @note Unlike the sorting.inc version, the array passed to the callback is not
  *       in mid-sorted state.
  *
@@ -463,16 +465,17 @@ native ArrayDestroy(&Array:which);
  * @param data_size     Size of extra data
  *
  * @noreturn
- * @error               Invalid handle or invalid callback.
+ * @error               If an invalid handle or an invalid callback is provided
+ *                      an error will be thrown.
  */
 native ArraySort(Array:array, const comparefunc[], data[]="", data_size=0);
 
 /**
- * A faster version of ArraySort, the sorting algorithm then uses your custom
+ * A faster version of ArraySort, the sorting algorithm then uses the custom
  * comparison function to sort the data.
  *
  * @note The advantage of this function is that the data of the elements being
- *       compared is directly passed to your function, instead of the item
+ *       compared is directly passed to the function, instead of the item
  *       indexes that are passed by ArraySort. This removes the need for calling
  *       ArrayGet[Cell|String|Array] every time before being able to compare the
  *       elements.
@@ -492,7 +495,7 @@ native ArraySort(Array:array, const comparefunc[], data[]="", data_size=0);
  *
  * public MySortFunc(Array:array, elem1[], elem2[], const data[], data_size)
  *
- *  array               - Array handle in its current un-sorted state.
+ *  array               - Array handle in its current un-sorted state
  *  elem1[], elem2[]    - Current element pair being compared
  *  data[]              - Extra data array passed to the sort func
  *  data_size           - Size of extra data
@@ -503,8 +506,8 @@ native ArraySort(Array:array, const comparefunc[], data[]="", data_size=0);
  *          0 if elem1 and elem2 are equal
  *          1 if elem1 should go after elem2
  *
- * @note All parameters after item2 are optional and you do not need to specify
- *       and use them.
+ * @note All parameters after item2 are optional and do not need to be specified
+ *       and used.
  * @note Unlike the sorting.inc version, the array passed to the callback is not
  *       in mid-sorted state.
  *
@@ -514,6 +517,7 @@ native ArraySort(Array:array, const comparefunc[], data[]="", data_size=0);
  * @param data_size     Size of extra data
  *
  * @noreturn
- * @error               Invalid handle, invalid callback or out of memory.
+ * @error               If an invalid handle or an invalid callback is provided
+ *                      an error will be thrown.
  */
 native ArraySortEx(Array:array, const comparefunc[], data[]="", data_size=0);

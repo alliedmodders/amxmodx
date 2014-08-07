@@ -420,7 +420,7 @@ native console_print(id, const message[], any:...);
  * @param cmd   Formatting rules
  * @param ...   Variable number of formatting parameters
  *
- * @return      The length of the formatted command.
+ * @return      Length of the formatted command
  */
 native console_cmd(id, const cmd[], any:...);
 
@@ -615,7 +615,7 @@ native show_dhudmessage(index, const message[], any:...);
  * @param time      Menu timeout in seconds, -1 to disable
  * @param title     Name of the menu for internal tracking purposes
  */
-native show_menu(index, keys, const menu[], time = -1, const title[] = "");
+native show_menu(index, keys, const menu[], time=-1, const title[]="");
 
 /**
  * Retrieves values from a client message.
@@ -723,7 +723,7 @@ native read_logargv(id, output[], len);
  * @error           If the provided string is not valid client log data, an
  *                  error will be thrown.
  */
-native parse_loguser(const text[], name[], nlen, &userid = -2, authid[] = "", alen = 0, team[]="", tlen=0);
+native parse_loguser(const text[], name[], nlen, &userid=-2, authid[]="", alen=0, team[]="", tlen=0);
 
 /**
  * Sends a message to the console of the server.
@@ -930,7 +930,7 @@ native get_user_deaths(index);
 native get_user_health(index);
 
 /**
- * Retrieve a client's index by name.
+ * Retrieves a client's index by name.
  *
  * @param name  Name to search for
  *
@@ -948,7 +948,7 @@ native get_user_index(const name[]);
  *
  * @return                  Number of cells written to the buffer
  */
-native get_user_ip(index, ip[], len, without_port = 0);
+native get_user_ip(index, ip[], len, without_port=0);
 
 /**
  * Returns if the client has the specified weapon in their inventory.
@@ -1021,7 +1021,7 @@ native num_to_word(num, output[], len);
  * @return          Team index on success, -1 if client index is invalid or
  *                  the client is not connected.
  */
-native get_user_team(index, team[]="", len = 0);
+native get_user_team(index, team[]="", len=0);
 
 /**
  * Returns client's playing time in seconds.
@@ -1033,7 +1033,7 @@ native get_user_team(index, team[]="", len = 0);
  * @return          Connection time in seconds, 0 if client index is invalid or
  *                  client is not connected
  */
-native get_user_time(index, flag = 0);
+native get_user_time(index, flag=0);
 
 /**
  * Retrieves the ping and loss of a client.
@@ -1063,7 +1063,7 @@ native get_user_ping(index, &ping, &loss);
  * @error           If the client index is not within the range of 1 to
  *                  MaxClients an error will be thrown.
  */
-native get_user_origin(index, origin[3], mode = 0);
+native get_user_origin(index, origin[3], mode=0);
 
 /**
  * Retrieves all weapons in the client inventory, stores them in an array and
@@ -1374,7 +1374,7 @@ native engclient_cmd(index, const command[], const arg1[]="", const arg2[]="");
  *       command hooks. For an alternative that doesn't, see engclient_cmd().
  *
  * @param index         Client index, use 0 to execute from all clients.
- * @param command       The client command to execute on
+ * @param command       Client command to execute on
  * @param arg1          Optional command arguments
  * @param arg2          Optional command arguments
  *
@@ -1382,7 +1382,7 @@ native engclient_cmd(index, const command[], const arg1[]="", const arg2[]="");
  * @error           If a single client is specified and the index is not
  *                  within the range of 1 to MaxClients an error will be thrown
  */
-native amxclient_cmd(index, const command[], const arg1[] = "", const arg2[] = "");
+native amxclient_cmd(index, const command[], const arg1[]="", const arg2[]="");
 
 /**
  * Queues a command to be executed from the server console.
@@ -1442,7 +1442,7 @@ native cvar_exists(const cvar[]);
  *
  * @return          1 on success, 0 if cvar does not exist or is not permitted
  */
-native remove_cvar_flags(const cvar[], flags = -1);
+native remove_cvar_flags(const cvar[], flags=-1);
 
 /**
  * Sets specified flags to a cvar. The cvar is accessed by name.
@@ -1635,7 +1635,7 @@ native get_time(const format[], output[], len);
  * @return          Number of cells written to buffer
  * @error           If the conversion process fails, an error will be thrown
  */
-native format_time(output[], len, const format[], time = -1);
+native format_time(output[], len, const format[], time=-1);
 
 /**
  * Returns the system time as a unix timestamp (number of seconds since unix
@@ -1646,7 +1646,7 @@ native format_time(output[], len, const format[], time = -1);
  * @return          Unix time stamp
  * @error
  */
-native get_systime(offset = 0);
+native get_systime(offset=0);
 
 /**
  * Converts time string to unix time stamp.
@@ -1666,7 +1666,7 @@ native get_systime(offset = 0);
  * @return          Unix time stamp
  * @error           If the conversion process fails, an error will be thrown
  */
-native parse_time(const input[], const format[], time = -1);
+native parse_time(const input[], const format[], time=-1);
 
 /**
  * Calls a function after a specified time has elapsed.
@@ -1686,7 +1686,7 @@ native parse_time(const input[], const format[], time = -1);
  * @param repeat        If the "a" flag is set the task will be repeated this
  *                      many times
  */
-native set_task(Float:time, const function[], id = 0, const parameter[]="", len = 0, const flags[]="", repeat = 0);
+native set_task(Float:time, const function[], id=0, const parameter[]="", len=0, const flags[]="", repeat=0);
 
 /**
  * Removes all tasks with the specified id.
@@ -1696,7 +1696,7 @@ native set_task(Float:time, const function[], id = 0, const parameter[]="", len 
  *
  * @return          Number of removed tasks
  */
-native remove_task(id = 0, outside = 0);
+native remove_task(id=0, outside=0);
 
 /**
  * Modifies the time interval of all tasks with the specified id.
@@ -1707,7 +1707,7 @@ native remove_task(id = 0, outside = 0);
  *
  * @return          Number of affected tasks
  */
-native change_task(id = 0, Float:newTime=1.0, outside = 0);
+native change_task(id=0, Float:newTime=1.0, outside=0);
 
 /**
  * Returns if a task with the specified id exists.
@@ -1717,7 +1717,7 @@ native change_task(id = 0, Float:newTime=1.0, outside = 0);
  *
  * @return          1 if a task was found, 0 otherwise
  */
-native task_exists(id = 0, outside = 0);
+native task_exists(id=0, outside=0);
 
 /**
  * Sets the specified admin flags to a client.
@@ -1958,7 +1958,7 @@ native get_concmd_plid(cid, flag_mask, id_type);
  *
  * @return          Number of registered console commants
  */
-native get_concmdsnum(flag, id = -1);
+native get_concmdsnum(flag, id=-1);
 
 /**
  * Returns the number of plugin-registered cvars.
@@ -2069,7 +2069,7 @@ native emit_sound(index, channel, const sample[], Float:vol, Float:att, flags, p
  *
  * @return          Unique cvar pointer
  */
-native register_cvar(const name[], const string[], flags = 0, Float:fvalue = 0.0);
+native register_cvar(const name[], const string[], flags=0, Float:fvalue=0.0);
 
 /**
  * Returns a random floating point value generated by the engine.
@@ -2180,7 +2180,7 @@ native Float:get_xvar_float(id);
  * @noreturn
  * @error           If an invalid xvar id is specified an error will be thrown.
  */
-native set_xvar_num(id, value = 0);
+native set_xvar_num(id, value=0);
 
 /**
  * Sets the float value of a public variable.
@@ -2196,7 +2196,7 @@ native set_xvar_num(id, value = 0);
  * @noreturn
  * @error           If an invalid xvar id is specified an error will be thrown.
  */
-native set_xvar_float(id, Float:value = 0.0);
+native set_xvar_float(id, Float:value=0.0);
 
 /**
  * Returns if a module is loaded.
@@ -2275,7 +2275,7 @@ native get_plugin(index, filename[]="", len1=0, name[]="", len2=0, version[]="",
 /**
  * Returns the number of loaded AMXX plugins.
  *
- * @return  The number of loaded plugins
+ * @return  Number of loaded plugins
  */
 native get_pluginsnum();
 
@@ -2358,10 +2358,10 @@ native callfunc_begin(const func[], const plugin[]="");
  * @error           If called while another callfunc has not yet been finished,
  *                  or the specified function is invalid, an error is thrown.
  */
-native callfunc_begin_i(func, plugin = -1);
+native callfunc_begin_i(func, plugin=-1);
 
 /**
- * Retrieve a functions id for use with callfunc_begin_i()
+ * Retrieves a functions id for use with callfunc_begin_i()
  *
  * @param funcName  Function name
  * @param pluginId  Plugin id. If -1 the calling plugin is targeted. The plugin
@@ -2370,7 +2370,7 @@ native callfunc_begin_i(func, plugin = -1);
  * @return          >0 Function id on success
  *                  -1 if plugin or function was not found
  */
-native get_func_id(const funcName[], pluginId = -1);
+native get_func_id(const funcName[], pluginId=-1);
 
 /**
  * Pushes an int value onto the current call.
@@ -2826,7 +2826,7 @@ native set_array_f(param, const Float:source[], size);
  *                      unavailable or the querying process runs out of memory,
  *                      an error will be thrown.
  */
-native query_client_cvar(id, const cvar[], const resultFunc[], paramlen=0, const params[] = "");
+native query_client_cvar(id, const cvar[], const resultFunc[], paramlen=0, const params[]="");
 
 /**
  * Allows to trap error messages that occur in a plugin.

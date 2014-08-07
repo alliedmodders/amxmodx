@@ -41,25 +41,14 @@ static cell AMX_NATIVE_CALL ArrayCreate(AMX* amx, cell* params)
 	{
 		if (VectorHolder[i]==NULL)
 		{
-			VectorHolder[i] = new CellArray(cellsize);
-			
-			if (reserved > 0)
-			{
-				VectorHolder[i]->resize(reserved);
-			}
-
+			VectorHolder[i] = new CellArray(cellsize, reserved);
 			return i + 1;
 		}
 	}
 
 	// None are NULL, create a new vector
-	CellArray* NewVector = new CellArray(cellsize);
+	CellArray* NewVector = new CellArray(cellsize, reserved);
 	
-	if (reserved > 0)
-	{
-		NewVector->resize(reserved);
-	}
-
 	VectorHolder.append(NewVector);
 
 	return VectorHolder.length();

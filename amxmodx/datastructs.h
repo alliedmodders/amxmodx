@@ -15,7 +15,7 @@
 class CellArray
 {
 public:
-	CellArray(size_t blocksize) : m_Data(NULL), m_BlockSize(blocksize), m_AllocSize(0), m_Size(0)
+	CellArray(size_t blocksize, size_t basesize = 0) : m_Data(NULL), m_BlockSize(blocksize), m_AllocSize(0), m_BaseSize(basesize > 0 ? basesize : 8), m_Size(0)
 	{
 	}
 
@@ -160,7 +160,7 @@ private:
 		/* Set a base allocation size of 8 items */
 		if (!m_AllocSize)
 		{
-			m_AllocSize = 8;
+			m_AllocSize = m_BaseSize;
 		}
 		/* If it's not enough, keep doubling */
 		while (m_Size + count > m_AllocSize)
@@ -181,6 +181,7 @@ private:
 	cell  *m_Data;
 	size_t m_BlockSize;
 	size_t m_AllocSize;
+	size_t m_BaseSize;
 	size_t m_Size;
 };
 

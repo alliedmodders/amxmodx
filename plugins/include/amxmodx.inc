@@ -210,7 +210,7 @@ native register_plugin(const plugin_name[], const version[], const author[]);
  *
  * @param name  Path to the model file
  *
- * @return      Unique ache id of the model
+ * @return      Unique cache id of the model
  * @error       If called outside of the plugin_precache() forward, an error is
  *              thrown.
  */
